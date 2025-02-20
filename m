@@ -1,89 +1,199 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D17D1FDE35;
-	Thu, 20 Feb 2025 15:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 416B71FECB7;
+	Thu, 20 Feb 2025 15:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740065272; cv=none; b=YjhpHGFT8iXxKKyBO+/PtNQHTBc6axyHTR16Q4ZqiYhyR9AhMrKWRq2zr6gjtedGfPY9o3/Zb76+p1bcQo43nxyQEa6qeRFUczOA8bT1Zncd18qcJSkQRVJyMfTpxozv1Jr7PKty1mehgikM/e9eUamugqAEiU/yOkbsSCXC6vU=
+	t=1740065279; cv=none; b=GkALMfww5VmshV+RWC+/IraAAdNG6Ydz5FYuW6eL1BYSV3jVyJ+9UYfM4xhUhC2Lrk0MVIxNmwyWztlEW1TpokzTx0a65Rq2aQZl4JtR3L36JOeHBqQB7Nuph+yyo+E2XSziqxY6Dh3pe6PmfL58o55KjXJIN5y1aB7m9658t/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740065272; c=relaxed/simple;
-	bh=KGswvkIqG/8FWjEnabCRQkJO73Xpx/BMagFR70RGXgA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U+6xVs2Qd0mdLMOYguhQcuKZOfavhKTvyV7r8E2HCStoEMdTvDRlQN/Qz9io+dTShYWIvJkTlbcU42TdP9DVJxq1NBGoAXkac+iGxgkJpk0Y/Z+JnZZ0sDxWgHPS68TIBgUTk4JnJWiLSzhnTlHdQVkzXXx/sASJFCzkfQJ7r8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2f9d3d0f55dso1687262a91.1;
-        Thu, 20 Feb 2025 07:27:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740065270; x=1740670070;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lIQfSE0EI2Dxu23jjgqsNc/1C3k/ezRz6dk/fxTscZ0=;
-        b=u/lSzIFOgohRNx83PWSthig0x2uo6K/tl+YL6SlPgGfGxPotondDrWiJGQeY9ta/3i
-         sF82ezjpAT8+DFEAcIngdYkp/YD9zHgEyS35T4AGnz95N7KpzSfqtszohlzYlMoFW3FQ
-         9d2J9cpG9XnHrmuBZutwXiEvp4k8d3ehZWJ9aOgEcdr/7dhv7P35IcXZsPwzu08G+wVZ
-         ZFaF6oD8FO3xB8pN6qMLayN9CnNl71HS6BTJp7VBZlXPN9DN+GeMSaMp4pjbMR8X6Hc0
-         BJltRX39gHJn8MitEXXsqh+woF/8HEw8WpCAY7W1JW/h/o1a8rAKG3Zsv7gq17JopbcO
-         xZNA==
-X-Forwarded-Encrypted: i=1; AJvYcCUP6r8eO3eKmeLef7cFoYAszFPNsY+Qh4QyZru8rjHSqsePcuWAPPS2S2R3BEns4/b270ZnmqoB6MVK@vger.kernel.org, AJvYcCW6r5XVvCtqAdyUYDETPl6PT258LjbMZDRMOGBWlohS2VIqrCkQqNoT0BtTIvnWOeDFTPWL4GSqonNQp8I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygYgIxKkQxZ7WbdvsGmAyaJXcDrpiOOXWa2AXl/1Eq94qEVVmM
-	3v0Qn9k4cmfIMX983tzFj4wzPS9q7NxZkgA80C7XUpB5h0C00uit
-X-Gm-Gg: ASbGnctjmgQrOIGiZWcXUG7zhuvAJHJOxvitdmsGaXMNomkFkT3LHQINsjdJhh1Fx+K
-	JE3QvFsUNSoWzdhMaMNfepOLDPxsSf2OAOFIFNhOj572m2GOeL3vxTF1MJlx7HKXt7pbzWPEOM/
-	ShmiwYOwrLY24DihEMn3ECouiPpMQjnEHBqMZNO2ykLaLrFbMF9bwtdq5QE4rSolRKWTI3Yl2D8
-	iZx2Oxdqoq9tHyq24aLGlNszJVx/jXLxPq1Cc2YHyfoVjZA/uoA1bLvAbODgZOdOQkh54pwpuEb
-	G8JQvxq2aahZJ4AfcK51HE66ba0pWUaynhpCQk4Ukec+oryL+w==
-X-Google-Smtp-Source: AGHT+IHt5km9+jdGncPtkaresa3l6P2z7fy1FiddcxIvpdlML+Jrubp8HBKFMPY+knP4FO8RHlUnUw==
-X-Received: by 2002:a17:90b:3886:b0:2ee:dcf6:1c77 with SMTP id 98e67ed59e1d1-2fcb5a39f3bmr14293908a91.16.1740065270430;
-        Thu, 20 Feb 2025 07:27:50 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2fbf98b4c52sm15980264a91.4.2025.02.20.07.27.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 07:27:49 -0800 (PST)
-Date: Fri, 21 Feb 2025 00:27:47 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Christian Bruel <christian.bruel@foss.st.com>
-Cc: manivannan.sadhasivam@linaro.org, kishon@kernel.org,
-	bhelgaas@google.com, cassel@kernel.org, Frank.Li@nxp.com,
-	dlemoal@kernel.org, fabrice.gasnier@foss.st.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: endpoint: pci-epf-test: Fix double free Oops
-Message-ID: <20250220152747.GA2510987@rocinante>
-References: <20250124123043.96112-1-christian.bruel@foss.st.com>
+	s=arc-20240116; t=1740065279; c=relaxed/simple;
+	bh=lltjCxSACX4dIgRaewwZ3RjDCnc5CGhnssBfqxb+fO4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=C8qFddTpCJZSLk0lMyhP3Svo+00vkW90GSsJvNbB8Vsr8NDCd/0fVnJZFBLxwDzU8Ez9Uh6ka8oVVjTix/TfhmKlzG7syS/v/Q7sN5SYy7x7hW0H9FD0zewLn2tsFckMK6inE4xM0amOougcnlYTcvXN1I3NNcOIJp1WZu5+dVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-CSE-ConnectionGUID: HN3gl9ZlScWFVVc5LlRkdw==
+X-CSE-MsgGUID: IrStMltHSSaW9AU/DCDXzQ==
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 21 Feb 2025 00:27:56 +0900
+Received: from ubuntu.adwin.renesas.com (unknown [10.226.92.134])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 4F11B40436EB;
+	Fri, 21 Feb 2025 00:27:50 +0900 (JST)
+From: John Madieu <john.madieu.xa@bp.renesas.com>
+To: mturquette@baylibre.com,
+	magnus.damm@gmail.com,
+	krzk+dt@kernel.org,
+	rui.zhang@intel.com,
+	daniel.lezcano@linaro.org,
+	sboyd@kernel.org,
+	geert+renesas@glider.be,
+	lukasz.luba@arm.com,
+	rafael@kernel.org,
+	robh@kernel.org,
+	p.zabel@pengutronix.de
+Cc: biju.das.jz@bp.renesas.com,
+	claudiu.beznea.uj@bp.renesas.com,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	john.madieu@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	John Madieu <john.madieu.xa@bp.renesas.com>
+Subject: [PATCH 3/7] dt-bindings: thermal: r9a09g047-tsu: Document the TSU unit
+Date: Thu, 20 Feb 2025 16:26:08 +0100
+Message-ID: <20250220152640.49010-4-john.madieu.xa@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250220152640.49010-1-john.madieu.xa@bp.renesas.com>
+References: <20250220152640.49010-1-john.madieu.xa@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250124123043.96112-1-christian.bruel@foss.st.com>
+Content-Transfer-Encoding: 8bit
 
-Hello,
+The Renesas RZ/G3E SoC includes a Thermal Sensor Unit (TSU) block designed
+to measure the junction temperature. The device provides real-time temperature
+measurements for thermal management, utilizing a single dedicated channel
+(channel 1) for temperature sensing.
 
-> Fixes an oops found while testing the stm32_pcie ep driver with handling
-> of PERST# deassertion:
-> 
-> During EP initialization, pci_epf_test_alloc_space allocates all BARs,
-> which are further freed if epc_set_bar fails (for instance, due to
-> no free inbound window).
-> 
-> However, when pci_epc_set_bar fails, the error path:
->      pci_epc_set_bar -> pci_epf_free_space
-> does not reset epf_test->reg[bar].
-> 
-> Then, if the host reboots, PERST# deassertion restarts the BAR allocation
-> sequence with the same allocation failure (no free inbound window),
-> creating a double free situation since epf_test->reg[bar] was deallocated
-> and is still non-NULL.
-> 
-> Make sure that pci_epf_alloc_space/pci_epf_free_space are symmetric
-> by resetting epf_test->reg[bar] when memory is deallocated.
+Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
+---
+ .../thermal/renesas,r9a09g047-tsu.yaml        | 123 ++++++++++++++++++
+ 1 file changed, 123 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/renesas,r9a09g047-tsu.yaml
 
-Applied to endpoint, thank you!
+diff --git a/Documentation/devicetree/bindings/thermal/renesas,r9a09g047-tsu.yaml b/Documentation/devicetree/bindings/thermal/renesas,r9a09g047-tsu.yaml
+new file mode 100644
+index 000000000000..dbd3860a31d0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/renesas,r9a09g047-tsu.yaml
+@@ -0,0 +1,123 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/thermal/renesas,r9a09g047-tsu.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas RZ/G3E Temperature Sensor Unit (TSU)
++
++maintainers:
++  - John Madieu <john.madieu.xa@bp.renesas.com>
++
++description: |
++  The Temperature Sensor Unit (TSU) is an integrated thermal sensor that monitors
++  the chip temperature on the Renesas RZ/G3E SoC. The TSU provides real-time
++  temperature measurements for thermal management.
++
++properties:
++  compatible:
++    const: renesas,r9a09g047-tsu
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++  interrupts:
++    description: |
++      Interrupt specifiers for the TSU:
++      - S12TSUADI1: Conversion complete interrupt signal (pulse)
++      - S12TSUADCMPI1: Comparison result interrupt signal (level)
++
++  interrupt-names:
++    items:
++      - const: S12TSUADI1
++      - const: S12TSUADCMPI1
++
++  "#thermal-sensor-cells":
++    const: 0
++
++  renesas,tsu-calibration-sys:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: |
++      Phandle to the system controller (sys) that contains the TSU
++      calibration values used for temperature calculations.
++
++  renesas,tsu-operating-mode:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [0, 1]
++    description: |
++      TSU operating mode:
++      0: Mode 0 - Conversion started by software
++      1: Mode 1 - Conversion started by ELC trigger
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - resets
++  - power-domains
++  - interrupts
++  - interrupt-names
++  - "#thermal-sensor-cells"
++  - renesas,tsu-operating-mode
++  - renesas,tsu-calibration-sys
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/renesas,r9a09g047-cpg.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    tsu: thermal@14002000 {
++        compatible = "renesas,r9a09g047-tsu";
++        reg = <0 0x14002000 0 0x1000>;
++        clocks = <&cpg CPG_MOD 0x10a>;
++        resets = <&cpg 0xf8>;
++        power-domains = <&cpg>;
++        interrupts = <GIC_SPI 250 IRQ_TYPE_EDGE_RISING>,
++                     <GIC_SPI 251 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-names = "S12TSUADI1", "S12TSUADCMPI1";
++        #thermal-sensor-cells = <0>;
++        renesas,tsu-operating-mode = <0>;
++        renesas,tsu-calibration-sys = <&sys>;
++    };
++
++    thermal-zones {
++        cpu-thermal {
++            polling-delay = <1000>;
++            polling-delay-passive = <250>;
++            thermal-sensors = <&tsu>;
++
++            cooling-maps {
++                map0 {
++                    trip = <&target>;
++                    cooling-device = <&cpu0 0 3>, <&cpu1 0 3>,
++                                     <&cpu2 0 3>, <&cpu3 0 3>;
++                    contribution = <1024>;
++                };
++            };
++
++            trips {
++                target: trip-point {
++                    temperature = <95000>;
++                    hysteresis = <1000>;
++                    type = "passive";
++                };
++
++                sensor_crit: sensor-crit {
++                    temperature = <120000>;
++                    hysteresis = <1000>;
++                    type = "critical";
++                };
++            };
++        };
++    };
+-- 
+2.25.1
 
-	Krzysztof
