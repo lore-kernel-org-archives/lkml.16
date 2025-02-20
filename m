@@ -1,100 +1,134 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.avm.de (mail.avm.de [212.42.244.120])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA8C1DF754;
-	Thu, 20 Feb 2025 15:59:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B08A1FECD8;
+	Thu, 20 Feb 2025 16:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740067163; cv=none; b=RH0MI34vah1JjZRViOnPPtS32PrKHzZq3t4BH3C24A+f6cEsHQwKxXOyuucDDm6KzHgNfFkXyWSjPmlnxiVgGAd5JJ3PHAvB16QSy5Yn53DjIO5jeyU3nzyf4X2HPA8cwp/nk88XM58l6XO7VUhCa4GeSRhkxgf/FvHM+iTmVbg=
+	t=1740067207; cv=none; b=iBTEM1WyXgCqOhhzNA8a6N4oaoIm0mTFA6KhsU9zD6GBZ8Bj5g10GlJUa4b9CBJ2T/jaufFkNRx4ip2bOFjRThLby4u0QLvRgMospPo1EesWdzOyElx2xn8ZoePPrvxZYXVeNaSEoDXyYDPWsKDP4BbyPVSQg4RHSs2Yb605Foc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740067163; c=relaxed/simple;
-	bh=gd3mfG8VrcqHTh2pxAVnaphZe0jsHGM3eczfMJq9OPE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kqxJ/sh7i9MOohnx0aE4eM8kVIModQKkimV+2wzQKh4rHA6giWKFnjTym2zvyM+i+u+qRdoA785zBpqzeqZQP5SlDNzjq236kCg/Ex3O3ghnB1bXvrFvnyQbGXNgL7KkhjxkpRfSotwtAPfg9YvgvY5443bGMpxQE5gH3wipi34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-520af4b872bso332299e0c.2;
-        Thu, 20 Feb 2025 07:59:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740067159; x=1740671959;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eejQ75Vf2HsSAhkhKxQyUqAB1hwFl4RxUzvP3qgfJsw=;
-        b=DtofrCD6BtJSDeXPLaNYrer9Sg1YOW7eKuuCJEHMPVAknaatCHk8qDc+8u0/nHEQOY
-         oqU/oSnWhi7HW3k3kcWkGVAdTY0UegrtXyLn9yDxzOWZXrL+bKWlRlsC8M7xb3ARLbdw
-         Y0uxFLwkRxSMWzQ2s3EvFrFB2ibn2i4Kj9HeDyUhW7FgJ38yyeBxxhYSx6+x5VcygSlZ
-         iVelTc/3UQrB6LyL23V1BjJtR8dLwyjJnIZhUzvPLlYzdtJB921S7ArSh5ED0iOmY48z
-         lgBEoFM9ntZ82A200XymtEM9nDsxtoZarXvZPIi0+pl0ghrknvikRaK0ggsclyuPgUnb
-         D6rw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+Iar2g76pNaiKuWnX86JoDVXCdB++Awg18sT63rNQREbijro58AXAqEhLTOYwynsQXR+0YL2yhQzI@vger.kernel.org, AJvYcCUa/TT0rleQ22aNOx54WmF/mxqm8BS2mol2+l2OiZFVrPm3wwt3Krpguh5w4vHhIT+hU87lXFegpg8A7kSNxDphNwU=@vger.kernel.org, AJvYcCV9YML3XHRnTzrKsPW3A/n2YMSq3ERsx2L75xL950/Sdm6jYgjQcymnbOamJb8qH3fkTE03MqhSnoOIoe/T@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMen4j5BaZbxaJESlqG2c9yxUwiC0x7RAPJyaPUfsHYOdfZyI+
-	cwPU877qT8Piz3o5hZ6r/9it1F8o7yRRI1TyYX0VbjerY31cqXsyAMh8D6vk
-X-Gm-Gg: ASbGncu1QcHpUMmuDBBpDiCOoU2H+rAN3VF6mc585BbLvcMurjKJBlPShx2cWF3NhMP
-	fDlCnTvq+nr/iX5SIkojRiC4NlKvIRv0s5oaFiAhMkfsJ3H2AgYliyiLtnuonvcDwJSKPfVh871
-	edB6hWseENcKI1pkop6NEbQwNFJEV9liOb/tk4GqtChLXtYw8Aem32sGbiII9L5wzaV2yDjtsnw
-	cPcwbF/yoWQ7S8xJoah+eGCaCGMQCoDGvz5I2g47noadTL8ZGJqbEkBTShwwc7LyE/oDGBHFTzC
-	E9J2y/V9UW854bFewFNX3vWslaqjOz/RddTT9Fl9Y00arDsM7/aJOg==
-X-Google-Smtp-Source: AGHT+IFzO3vx/kmCi+q/6+phknscQnYuQODMakjCYFfBwP0Zi2CdRt9WyI66Lwp7ylBp+2RULXXwOg==
-X-Received: by 2002:a05:6122:308c:b0:520:60c2:3fd with SMTP id 71dfb90a1353d-5209da8bd81mr12004467e0c.3.1740067159674;
-        Thu, 20 Feb 2025 07:59:19 -0800 (PST)
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52097e27968sm3251110e0c.18.2025.02.20.07.59.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2025 07:59:19 -0800 (PST)
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-868ddc4c6b6so288175241.2;
-        Thu, 20 Feb 2025 07:59:19 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVEUuVgSYiMuzJZWGhlJU148qxizQT9wACtMCUD5YnAwhN2gh4ka1LZA9IfLAvkduSnPYWw0VOySolND7q3@vger.kernel.org, AJvYcCVW+girNYhMmnO1nsCA/kj8yraZ+jh1FrSku8dDwWkIkGtkvxydvG2cxyYJtjeM79vZPUXjBkp66GhV@vger.kernel.org, AJvYcCWX7pjbbDX9FtNaazyo5dY9YxE0+5CWPETgv1DPaIC64AY5cItHNBNk9hanmUoe0xP9f9tbxQ3WZvlWrSbE4bmX88s=@vger.kernel.org
-X-Received: by 2002:a05:6102:2c18:b0:4bb:c4ff:5cb9 with SMTP id
- ada2fe7eead31-4bd3fd5249cmr14319737137.15.1740067159114; Thu, 20 Feb 2025
- 07:59:19 -0800 (PST)
+	s=arc-20240116; t=1740067207; c=relaxed/simple;
+	bh=GLKbcC3ae72AZ7nESSdOgYNj0ol85ebzOyHSvnHXZHQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mEc2+TRzMYpF78smf6cFIBNIjoQoX3soWeoGEQmIDWZKub+YenUDW2Ff4HYrXgOJiN6RDmSD/DlxNiaulu5YKGTciMIzF7Ipet3zvsgQVADuhi/bYkfFn2ytO8XsArVFAQEHb+TcEi83+vzg7oPdpVkn+olvVIPQI1dxtzytYNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; spf=pass smtp.mailfrom=avm.de; dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b=jDqO7kjd; arc=none smtp.client-ip=212.42.244.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="jDqO7kjd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
+	t=1740066880; bh=GLKbcC3ae72AZ7nESSdOgYNj0ol85ebzOyHSvnHXZHQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jDqO7kjdUAwCYHOwrzNre8nXySaFwgR1XN+9uhYa9JKm3YsUFS/JC/diif4Pz+3fG
+	 5LvX8tp5JyQTQJFsGBz1+OOjNdc4JT0x8zlLQreb0QulHhPi4XHTxGVACn+kZ7ihrq
+	 7IvFPUSL589un9VtwLsqfAd5w7PdGEOGPmmTHU8o=
+Received: from [212.42.244.71] (helo=mail.avm.de)
+	by mail.avm.de with ESMTP (eXpurgate 4.52.1)
+	(envelope-from <n.schier@avm.de>)
+	id 67b75040-038b-7f0000032729-7f0000019174-1
+	for <multiple-recipients>; Thu, 20 Feb 2025 16:54:40 +0100
+Received: from mail-auth.avm.de (dovecot-mx-01.avm.de [212.42.244.71])
+	by mail.avm.de (Postfix) with ESMTPS;
+	Thu, 20 Feb 2025 16:54:40 +0100 (CET)
+Received: from l-nschier-nb (unknown [IPv6:2001:9e8:9e4:1f01:9fb7:d3c6:7f35:9b14])
+	by mail-auth.avm.de (Postfix) with ESMTPSA id 4DD318083B;
+	Thu, 20 Feb 2025 16:54:40 +0100 (CET)
+Date: Thu, 20 Feb 2025 16:54:39 +0100
+From: Nicolas Schier <n.schier@avm.de>
+To: Jeffrey Hugo <quic_jhugo@quicinc.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Kees Cook <kees@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Ben Hutchings <ben@decadent.org.uk>
+Subject: Re: [PATCH 3/4] kbuild: slim down package for building external
+ modules
+Message-ID: <20250220-kickass-famous-kittiwake-c11f5b@l-nschier-nb>
+References: <20240727074526.1771247-1-masahiroy@kernel.org>
+ <20240727074526.1771247-4-masahiroy@kernel.org>
+ <b3a8816c-3846-83ab-9750-fd12041d9495@quicinc.com>
+ <20250220-red-antelope-of-education-5417aa@l-nschier-nb>
+ <0ee862ec-4c36-4c3e-ae90-627c6b0e527b@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250215131235.228274-1-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20250215131235.228274-1-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 20 Feb 2025 16:59:06 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVSybU_J_Qn1oabQQv4fJv6eaT7YMQmB_zH=9+vLHs=YA@mail.gmail.com>
-X-Gm-Features: AWEUYZm7DzKUx_jdkzSQKOfhMhFA2yo5hukaEE1mGU2GECJf0FH1kAyIYF6joLY
-Message-ID: <CAMuHMdVSybU_J_Qn1oabQQv4fJv6eaT7YMQmB_zH=9+vLHs=YA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Suppress binding attributes
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: linus.walleij@linaro.org, prabhakar.mahadev-lad.rj@bp.renesas.com, 
-	biju.das.jz@bp.renesas.com, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <0ee862ec-4c36-4c3e-ae90-627c6b0e527b@quicinc.com>
+X-purgate-ID: 149429::1740066880-5220FE17-CD29D720/0/0
+X-purgate-type: clean
+X-purgate-size: 2696
+X-purgate-Ad: Categorized by eleven eXpurgate (R) https://www.eleven.de
+X-purgate: This mail is considered clean (visit https://www.eleven.de for further information)
+X-purgate: clean
 
-On Sat, 15 Feb 2025 at 14:12, Claudiu <claudiu.beznea@tuxon.dev> wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> Suppress binding attributes for the rzg2l pinctrl driver, as it is an
-> essential block for Renesas SoCs. Unbinding the driver leads to warnings
-> from __device_links_no_driver() and can eventually render the system
-> inaccessible.
->
-> Fixes: c4c4637eb57f ("pinctrl: renesas: Add RZ/G2L pin and gpio controller driver")
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On Thu, Feb 20, 2025 at 08:03:32AM -0700, Jeffrey Hugo wrote:
+> On 2/20/2025 3:03 AM, Nicolas Schier wrote:
+> > On Tue, Feb 18, 2025 at 01:25:38PM -0700, Jeffrey Hugo wrote:
+> > > On 7/27/2024 1:42 AM, Masahiro Yamada wrote:
+> > > > Exclude directories and files unnecessary for building external modules:
+> > > > 
+> > > >    - include/config/  (except include/config/auto.conf)
+> > > >    - scripts/atomic/
+> > > >    - scripts/dtc/
+> > > >    - scripts/kconfig/
+> > > >    - scripts/mod/mk_elfconfig
+> > > >    - scripts/package/
+> > > >    - scripts/unifdef
+> > > >    - .config
+> > > 
+> > > Please revert this (the removal of .config).
+> > > 
+> > > I got some strange reports that our external module install broke, and
+> > > traced it to this change.  Our external module references the .config
+> > > because we have different logic for the build depending on if other, related
+> > > modules are present or not.
+> > > 
+> > > Also, it looks like this broke DKMS for some configurations, which not only
+> > > impacts DKMS itself [1] but also downstream projects [2].
+> > > 
+> > > While DKMS may be updated going forward to avoid this issue, there are
+> > > plenty of affected version out in the wild.
+> > > 
+> > > Also, I haven't surveyed every distro, but it looks like Ubuntu still
+> > > packages the .config with their headers in their upcoming "Plucky" release
+> > > based on 6.12.  I suspect they wouldn't do that if they didn't feel it was
+> > > needed/useful.
+> > > 
+> > > -Jeff
+> > > 
+> > > [1]: https://github.com/dell/dkms/issues/464
+> > > [2]: https://github.com/linux-surface/linux-surface/issues/1654
+> > 
+> > Hi Jeff,
+> > 
+> > do you know the related thread [1]?  According to the last mail, DKMS
+> > has fixed its issue already in December.
+> 
+> DKMS tip might be fixed, but production versions are in various distros,
+> which are not updated.  Therefore actual users are impacted by this.
+> 
+> What happened to the #1 rule of kernel, that we do not break users?
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl for v6.15.
+I think, Masahiro already provided valid and profound reasons for
+keeping it the way it is.  Users of run-time kernel interfaces are not
+affected by the change.  Concretely reported issues were, as far as I
+know, only a matter of specific non-official way to work with .config
+for other reasons than just building external kernel modules in the way
+it is thought to work.
 
->  drivers/pinctrl/renesas/pinctrl-rzg2l.c | 1 +
+Kind regards,
+Nicolas
 
-Looks like there are more opportunities for similar changes?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> This still needs to be reverted.
+> 
+> -Jeff
+> 
+> > 
+> > Kind regards,
+> > Nicolas
+> > 
+> > [1]: https://lore.kernel.org/linux-kbuild/CAK7LNARqEOVOzP5vdUVF0KxQBNb9xtYs-COSXXWDMpBzGaLGow@mail.gmail.com/T/#m95f48caf46357a41c1df5e038e227a01ab89dbda
+> 
