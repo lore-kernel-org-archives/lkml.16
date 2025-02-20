@@ -1,90 +1,158 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E631A8F94;
-	Thu, 20 Feb 2025 14:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28ABC1A8F94;
+	Thu, 20 Feb 2025 14:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740060457; cv=none; b=LM1VpI8a+1AsqvdH6XH3WFRTMMMMZXI90GqFNAgClgNkLH0yt34sSHHK+mLSh/OumqVLdyB4/KmMm5ihJY75b5AwEng1jHuER4o4iZy+9kG3SmMP56zU7awR3EGMpboMpzDYy4mL4nGOhBCT8DHWqM0SQqQpP8e2mLF8ToYYJ10=
+	t=1740060484; cv=none; b=oR2br47hbmZ5ILOayV2daGpPiiL1IQvOv1aM2KWwIfdDxgZhw4Um1E3248iTqgnNKk6Ua17sivt66kusTeBaWvfK7b5qyrAebcPOkFuM+J3QTeDGoaY6U6fnmw2n0q0YPsuqJpzcwzDP65/QfdfpodiDjTKYBR9JxGSFAjBeUJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740060457; c=relaxed/simple;
-	bh=1/v+aE7ujIrr88SlyYox0ZnwxUrB1O/7TGByz1MUVXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qjYzyDtF1Miq0FONGGwGtBEfv8l0sY9f/d6PJbpSeeonIVnZifG3TflWleT7jo/i0agp/b18aU9IMWnHyQmR9dyFWXwG5eUV86pBilBH/JoRgLTvNSYQmhKv+IaWMD2acNwXd45xX8yOzuUiKkMCxCeIv78k9IMvOAMAAqK1Dmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Y3SZxUxb; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1740060484; c=relaxed/simple;
+	bh=BUAFupbmeOg5OQr/zoe76B/ATDMFC2NaHM0MAwh8poA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lBYxKKnILllAH3OGytTmy3dDLeuoq2W7AGwT1RK/cNHQBogSphxYorbUi8UlSKIK7U6qGlNdqEsKo/1HM/YbmVkCPVD0w4By9O5Fobbu4y7mzqdWOXXPw83U8z4DXvGPbXIl1nGzz5V5w7KV8A/xNAfzDD4ry3V1FFcpYKCiQ2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R1TcKTdZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Y3SZxUxb"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8EB1A442F6;
-	Thu, 20 Feb 2025 14:07:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1740060446;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xTtSd4tmydl/dct6URamw55L3a/uuGkjLvkhv6bX7i0=;
-	b=Y3SZxUxbDLph24OKEmLNOqxHDZ19kmaJMwfmgDBSErO2ayIrJDJLIwGmoYgsqwYbA1z0oq
-	GIiKKYU8PAiZb63Rle1ANdXZ8UR4OF8QVB3Jdq1jIpkIGQfdPQrIvxuDq9P8JUZCgqBLNh
-	t+bCE9gu8CjCEXrLPGFFfoVyGLfxQIdg4uVjH/JypPuT5P4avU1OsZ9q9OAOqHi1nOEjzU
-	4yFQxe1e4Dakv4SEv/p9W5wcwR/5hkN2MFrhEHUClCJLjsjNzX3tbf/mSmZW6hDWhFy/Kc
-	kDUlhfLDZOehWLsuBYMOfVss3prsIA2vPwd4jORrrVGgfGGm/ZSszVhsKxWu/Q==
-Date: Thu, 20 Feb 2025 15:07:23 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Alexander Stein <alexander.stein@ew.tq-group.com>, Andrzej Hajda
- <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
- Robert Foss <rfoss@kernel.org>, Laurent Pinchart
- <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Dave Stevenson
- <dave.stevenson@raspberrypi.com>, =?UTF-8?B?TWHDrXJh?= Canal
- <mcanal@igalia.com>, Raspberry Pi Kernel Maintenance
- <kernel-list@raspberrypi.com>, Marek Vasut <marex@denx.de>,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Louis Chauvet <louis.chauvet@bootlin.com>,
- Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v4 2/4] drm/atomic-helper: Introduce
- drm_atomic_helper_reset_crtc()
-Message-ID: <20250220150723.3cdf9d27@bootlin.com>
-In-Reply-To: <20250220-wooden-robin-of-discussion-6a36f1@houat>
-References: <20250203145824.155869-1-herve.codina@bootlin.com>
-	<20250203145824.155869-3-herve.codina@bootlin.com>
-	<Z7XfnPGDYspwG42y@phenom.ffwll.local>
-	<20250220-wooden-robin-of-discussion-6a36f1@houat>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R1TcKTdZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17F65C4CEE2;
+	Thu, 20 Feb 2025 14:08:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740060483;
+	bh=BUAFupbmeOg5OQr/zoe76B/ATDMFC2NaHM0MAwh8poA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R1TcKTdZUzXz/x1a39o81aw14MuhGwJsF4M6GpI2JB2Sma+oDayeqIdc8JPt6g4TX
+	 IJTT9xJhJi++YRfIV+qqM6v/VXvPipQXSTAP37Jjs9kMmTOdJ5nuVLonKeiGgli3KH
+	 dVGbzBlgGoMJi0/Ic1gK1WlnbuM+vHjPWhlIf3rHm0rBs5gCocNPZR+EFycoQ+PFSE
+	 X+4AIRclvO796gbR3MvWtACI8dbCJafMPViKtcZRaL9VmRSGYETupJ+MZp/YwEs5hq
+	 kqs8y9dE8WQrXJmajXx9YkmPR6B1eFCE5nbvRJIXw2MJbP9HVDBAivtmMQV+9Du95K
+	 Z4FPKEzV2b1hg==
+Date: Thu, 20 Feb 2025 16:07:58 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Fiona Behrens <me@kloenk.dev>
+Cc: Bart Van Assche <bvanassche@acm.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Jason Gunthorpe <jgg@nvidia.com>, Kees Cook <kees@kernel.org>,
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	rust-for-linux <rust-for-linux@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org,
+	ksummit@lists.linux.dev
+Subject: Re: Rust kernel policy
+Message-ID: <Z7c3PguDn-sEl3gm@kernel.org>
+References: <Z7SwcnUzjZYfuJ4-@infradead.org>
+ <CANiq72myjaA3Yyw_yyJ+uvUrZQcSLY_jNp65iKH8Y5xGY5tXPQ@mail.gmail.com>
+ <202502191026.8B6FD47A1@keescook>
+ <20250219140821.27fa1e8a@gandalf.local.home>
+ <202502191117.8E1BCD4615@keescook>
+ <20250219202751.GA42073@nvidia.com>
+ <20250219154610.30dc6223@gandalf.local.home>
+ <97841173-1de8-4221-8bf3-3470a5ac98a7@acm.org>
+ <89f2547edcaaba53d9965cab9133d809607330ac.camel@kernel.org>
+ <87pljc6d7s.fsf@kloenk.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeijeefvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvhfeljedtfedtjeevffegtddutdeghfettdduhfeuhfdttdffieeuiefgvdfhvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvhedprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgigrnhguvghrrdhsthgvihhnsegvfidrthhqqdhgrhhouhhprdgtohhmpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnt
- hgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnfgruhhrvghnthdrphhinhgthhgrrhhtsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehjohhnrghssehkfihisghoohdrshgvpdhrtghpthhtohepjhgvrhhnvghjrdhskhhrrggsvggtsehgmhgrihhlrdgtohhm
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87pljc6d7s.fsf@kloenk.dev>
 
-Hi Maxime,
-
-On Thu, 20 Feb 2025 11:44:37 +0100
-Maxime Ripard <mripard@kernel.org> wrote:
-
-...
+On Thu, Feb 20, 2025 at 12:57:11PM +0100, Fiona Behrens wrote:
+> Jarkko Sakkinen <jarkko@kernel.org> writes:
 > 
-> Given that the patch is already merged, Herve, could you send a
-> subsequent patch fixing up the doc at least?
+> > On Wed, 2025-02-19 at 12:52 -0800, Bart Van Assche wrote:
+> >> On 2/19/25 12:46 PM, Steven Rostedt wrote:
+> >> > I do feel that new drivers written in Rust would help with the
+> >> > vulnerabilities that new drivers usually add to the kernel.
+> >> 
+> >> For driver developers it is easier to learn C than to learn Rust. I'm
+> >> not sure that all driver developers, especially the "drive by"
+> >> developers, have the skills to learn Rust.
+> >
+> > IMHO, Rust is not that difficult to learn but it is difficult to
+> > run.
+> >
+> > One point of difficulty for me still is the QA part, not really the
+> > code. QuickStart discusses on how to install all the shenanigans
+> > with distribution package managers.
+> >
+> > The reality of actual kernel development is that you almost never
+> > compile/run host-to-host, rendering that part of the documentation
+> > in the battlefield next to useless.
+> >
+> > Instead it should have instructions for BuildRoot, Yocto and
+> > perhaps NixOS (via podman). It should really explain this instead
+> > of dnf/apt-get etc.
+> 
+> What do you mean with via podman for NixOS?
 
-Did the patch:
-  https://lore.kernel.org/all/20250220140406.593314-1-herve.codina@bootlin.com/
+I sometimes use NixOS to test more complex kernel configurations. See
 
-Best regards,
-Hervé
+https://social.kernel.org/notice/ArHkwNIVWamGvUzktU
+
+I'm planning to use this approach to check if I could use that to
+build efficiently kernels with Rust.
+
+I've not been so far successful to do it with BuildRoot, which has
+zeroed out any possible contributions for rust linux. Writing code
+is like 5% of kernel development. Edit-compile-run cycle is the
+95%.
+
+> I do still have on my ToDo list to build and publish a better nix
+> development shell for kernel with rust enabled, and could also add a
+> section on how to build a NixOS iso in the same nix code.
+> But sadly time is a finite resource and so did not yet got to it.
+
+Please do ping me if you move forward with this. IMHO, why wouldn't
+you contribute that straight to the kernel documentation? Right no
+there are exactly zero approaches in kernel documentation on how
+test all of this.
+
+The best known method I know is to extend this type of example I
+did year ago:
+
+#!/usr/bin/env bash
+
+set -e
+
+make defconfig
+scripts/config --set-str CONFIG_INITRAMFS_SOURCE "initramfs.txt"
+yes '' | make oldconfig
+
+cat > initramfs.txt << EOF
+dir /dev 755 0 0
+nod /dev/console 644 0 0 c 5 1
+nod /dev/loop0 644 0 0 b 7 0
+dir /bin 755 1000 1000
+slink /bin/sh busybox 777 0 0
+file /bin/busybox initramfs/busybox 755 0 0
+dir /proc 755 0 0
+dir /sys 755 0 0
+dir /mnt 755 0 0
+file /init initramfs/init.sh 755 0 0
+EOF
+
+mkdir initramfs
+
+curl -sSf https://dl-cdn.alpinelinux.org/alpine/edge/main/x86_64/busybox-static-1.36.1-r25.apk | tar zx --strip-components 1
+cp busybox.static initramfs/busybox
+
+cat > initramfs/init.sh << EOF
+#!/bin/sh
+mount -t proc none /proc
+mount -t sysfs none /sys
+sh
+EOF
+
+and then qemu-system-x86_64 -kernel arch/x86/boot/bzImage
+
+It's sad really.
+
+> 
+> Fiona
+
+BR, Jarkko
