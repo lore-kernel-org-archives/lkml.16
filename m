@@ -1,223 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93EBD1F30DE;
-	Thu, 20 Feb 2025 10:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81681F12E9
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 10:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740047263; cv=none; b=Hj0Eiy/c3vvyi883xvXbK5w1l+QWgVL34+T7r8jKUOlfc12E2nyi883qQMEaQhkgRNuF7eVbIpBpUajVX3OxHGIR3QTD5KwXiyyKXwtxat4WddFUSeadSV/OLO63qibUTT9D/bP/3kKhQznnseTnYuvOQp8lV22vejDFrVUyzHU=
+	t=1740047312; cv=none; b=AXojdqiQaoLfdq6ijxXfE1vFmFa+VUKVjHUg9udmvQYe/Q9heaYmWnoP54wKRz5b8+7Jn48IRuHkGi61ch4ZgRBuHQiLWXDUx0aFt3wYGqok3MBpRsMcKaUw3kaxp74uTXADSxk01U8sXZrhFSxQuezLT/k1ozQ23gIM8AogTbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740047263; c=relaxed/simple;
-	bh=guVlViceCpWzhyE0XNu0a1so6svtGjYT+uKK+f2b4B0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=miVkHs34nh+ytp011TVTKc/lJSZxiydfOwQ35LKvn8KM7ygHLm2mn9ggJMRs1Z6yCQSKRYvk5+ETFaq+GqmKJeF9ldqZ8K+RWE0CkuC5kFGoig08oOPmTJrPEcIYk+tjvOApMcenr0tGBGIklYLkqeR1fIRgmYMiM+YwVLzD7s8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GQctZt/A; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740047312; c=relaxed/simple;
+	bh=pbqCbnn3949AQ4E9A+0vVRKzntefI3rHN0xAk0SFsaE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EFzoWr9M1ivKX3s1mlmE1v+BWshMiSs76N1nngL5cdxHbmdvjS3AMC3exWFSTa8Diwd8XcIrxP4Y0pXjODcxAvKWbnAP6270qqi5TUYgH2kFfm66tncdMTr7cp/R9CL1jNSwispXs3FYRvLwrSgEEDSO8FNqSJaHnurMlkwMRJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=S5vEYE2i; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GQctZt/A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740047261; x=1771583261;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=guVlViceCpWzhyE0XNu0a1so6svtGjYT+uKK+f2b4B0=;
-  b=GQctZt/AZEGzk0lzms7lkk+adMU9SQkKXuvMvs1K7hKtaiDZoA5SS7rG
-   GesrHy7jvCZRATZ74IFkeede2sqnR8Cs20XhIbShSzGIxDk3fIHt1eTWE
-   2+HcRvmw6R9rdIpO7YtrDPt3lOWk462JhevEvLOCVm6LUAI4YCuZnMDMK
-   uw9WqvHzi50Iwe8TJj3pFT0kFaE0FGCFZngl/b+3dSGKbz2OKXkms5bfA
-   CTcndNgvlacBnu5pKDnKnsHKs5W7M4Mf4RlFJ1L2UpaAkIuudBz31aK1P
-   qqXOFBTvsGCrIerU7lObez49UtHU35KDRMeEF1zNVlQMqydXeN7BRyyOq
-   g==;
-X-CSE-ConnectionGUID: 9UnnlzgCQWW4qG9XNBeCaQ==
-X-CSE-MsgGUID: vg2VLb58Qh+71IVlakVG/w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="40674768"
-X-IronPort-AV: E=Sophos;i="6.13,301,1732608000"; 
-   d="scan'208";a="40674768"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 02:27:41 -0800
-X-CSE-ConnectionGUID: 4bW6r7wVSD2MxKV8fS5PNw==
-X-CSE-MsgGUID: OgJK/ykgShahoKJKgVtKLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,301,1732608000"; 
-   d="scan'208";a="115668509"
-Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 02:27:39 -0800
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: pbonzini@redhat.com,
-	seanjc@google.com
-Cc: rick.p.edgecombe@intel.com,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	Yan Zhao <yan.y.zhao@intel.com>
-Subject: [PATCH v2 1/2] KVM: TDX: Handle SEPT zap error due to page add error in premap
-Date: Thu, 20 Feb 2025 18:26:29 +0800
-Message-ID: <20250220102629.24476-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20250220102436.24373-1-yan.y.zhao@intel.com>
-References: <20250220102436.24373-1-yan.y.zhao@intel.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="S5vEYE2i"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5452e6f2999so806350e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 02:28:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740047309; x=1740652109; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pbqCbnn3949AQ4E9A+0vVRKzntefI3rHN0xAk0SFsaE=;
+        b=S5vEYE2iZs7zfqUnuG/NbJghV3PMYbcdJvqxWlGnw4mRohayyeJA27K8d6x4Ol8c/y
+         SxlpdNnLKk7WTpzizGExJ0LS0EIvmdEa3hUiTQ6m2l5yvVEz4Cgs+V+uJvRR0PqOqiic
+         5Uu4zOLPGjUXl6/uFcaMIBGlVqaPXMffdfxhiYJmQ11NtHt9rJqYZMsBdm9gY4cSb7cS
+         1zHDYqYp/uV4rHU3acOrq2FptSB4ZjjM2v3UsjK4g9O59/M2IQ8dxHzcmySlT64K0nAz
+         44DiWWYG/g8rfciYj3s6dXs68hDZqHMB7YidEIt0xcPmoh/gmEk5Opol8l7gIycX9OOy
+         mKZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740047309; x=1740652109;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pbqCbnn3949AQ4E9A+0vVRKzntefI3rHN0xAk0SFsaE=;
+        b=Sad+U4SIh+XVNAjnqSes6lvYqusR0tjN9+FOhpcW/DHSOSyEJDDi4/grQMCRWx3VVQ
+         k++sMoFC20s+//t9uM5cpart8/th6bJdwHKLCP5mPxJU/tMq2r45KaGxowNQoRLNBwDS
+         z4zsVA6P5xspjFTqr2Pf5dX7DuUccacs/v5/fUrijxVHY49HHVpt93WeBCw59csFUMRZ
+         XffwXKOHMUb4XwnYmxI+5a/MOO74Adx92slFOk4XCDtO3lO3elbpVMc3o/nltOhd06Ie
+         zuWVtX7yO2BxX78DzDTiSJEpRRx+Md6yj9Y0ZtbRVef94HBOcJXR0g6xbXA4/PBt5DO3
+         Ow6w==
+X-Forwarded-Encrypted: i=1; AJvYcCVXaadWNOS4xzxIYk+l4Pw5ArMFTAzTsHpAooaJWOXF8GjWOTK3bjtd0BhBPajkb++Z0GcpK7gH+6uOVpY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyasKu7BvaEU0c/Qw3oqug0rIqnauwO5ZCX53Ldk23Y9U5TGJJU
+	f26xteXFXDp+bERpwHdFVlr4euHfBEw4we5mYvwusQAC7FmNqwLQcjIKnHKoBHZnMbGxnKxDWHN
+	t3QWoBl66x7c5Gi/qLSQFchChLYC1jWj6FZT/LQ==
+X-Gm-Gg: ASbGncsqv7q6lcshS5BPSMp0TKqW5sL78VjFNdP8yUrX3uHwQBBmc0eA4MbMMhNi5kN
+	8akZXyTFIchabZBieACxbcedsFpo5KbpjwdOl8gOROWyxA25+Pp0IPpLaOnEhWnEzcwjica3Eel
+	ZU+0gnpMulIih3DrkfyQ8Lhryk2AY=
+X-Google-Smtp-Source: AGHT+IF0hQZ/o7X6oVYIqlG9AO4qIYWcUHjPU9+7r0G2SjwNswpvYumQDzBci9SP50JD992GaVeG7nqS05hEGDgUTbw=
+X-Received: by 2002:a05:6512:3d15:b0:545:ae6:d73f with SMTP id
+ 2adb3069b0e04-5452fe71c09mr7419846e87.46.1740047308933; Thu, 20 Feb 2025
+ 02:28:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250217-x1e80100-pwrseq-qcp-v3-1-a0525cc01666@linaro.org>
+In-Reply-To: <20250217-x1e80100-pwrseq-qcp-v3-1-a0525cc01666@linaro.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 20 Feb 2025 11:28:17 +0100
+X-Gm-Features: AWEUYZnBe24sPzSNetob_Hp5SUYrijNXBw3LzypTXZXkpFm_3GC1U29Nl3T-Itc
+Message-ID: <CAMRc=MeAYTz-z6PK8U9XmEdaxXNT2zN_sc+wybdp6GzxTgksBw@mail.gmail.com>
+Subject: Re: [PATCH v3] arm64: dts: qcom: x1e80100-qcp: Add WiFi/BT pwrseq
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>, 
+	Johan Hovold <johan@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Move the handling of SEPT zap errors caused by unsuccessful execution of
-tdh_mem_page_add() in KVM_TDX_INIT_MEM_REGION from
-tdx_sept_drop_private_spte() to tdx_sept_zap_private_spte(). Introduce a
-new helper function tdx_is_sept_zap_err_due_to_premap() to detect this
-specific error.
+On Mon, Feb 17, 2025 at 6:55=E2=80=AFPM Stephan Gerhold
+<stephan.gerhold@linaro.org> wrote:
+>
+> Add the WiFi/BT nodes for QCP and describe the regulators for the WCN7850
+> combo chip using the new power sequencing bindings. All voltages are
+> derived from chained fixed regulators controlled using a single GPIO.
+>
+> The same setup also works for CRD (and likely most of the other X1E80100
+> laptops). However, unlike the QCP they use soldered or removable M.2 card=
+s
+> supplied by a single 3.3V fixed regulator. The other necessary voltages a=
+re
+> then derived inside the M.2 card. Describing this properly requires
+> new bindings, so this commit only adds QCP for now.
+>
+> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
+> ---
 
-During the IOCTL KVM_TDX_INIT_MEM_REGION, KVM premaps leaf SPTEs in the
-mirror page table before the corresponding entry in the private page table
-is successfully installed by tdh_mem_page_add(). If an error occurs during
-the invocation of tdh_mem_page_add(), a mismatch between the mirror and
-private page tables results in SEAMCALLs for SEPT zap returning the error
-code TDX_EPT_ENTRY_STATE_INCORRECT.
-
-The error TDX_EPT_WALK_FAILED is not possible because, during
-KVM_TDX_INIT_MEM_REGION, KVM only premaps leaf SPTEs after successfully
-mapping non-leaf SPTEs. Unlike leaf SPTEs, there is no mismatch in non-leaf
-PTEs between the mirror and private page tables. Therefore, during zap,
-SEAMCALLs should find an empty leaf entry in the private EPT, leading to
-the error TDX_EPT_ENTRY_STATE_INCORRECT instead of TDX_EPT_WALK_FAILED.
-
-Since tdh_mem_range_block() is always invoked before tdh_mem_page_remove(),
-move the handling of SEPT zap errors from tdx_sept_drop_private_spte() to
-tdx_sept_zap_private_spte(). In tdx_sept_zap_private_spte(), return 0 for
-errors due to premap to skip executing other SEAMCALLs for zap, which are
-unnecessary. Return 1 to indicate no other errors, allowing the execution
-of other zap SEAMCALLs to continue.
-
-The failure of tdh_mem_page_add() is uncommon and has not been observed in
-real workloads. Currently, this failure is only hypothetically triggered by
-skipping the real SEAMCALL and faking the add error in the SEAMCALL
-wrapper. Additionally, without this fix, there will be no host crashes or
-other severe issues.
-
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
----
- arch/x86/kvm/vmx/tdx.c | 64 +++++++++++++++++++++++++++++-------------
- 1 file changed, 45 insertions(+), 19 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index ff28528d8d2c..b550ba5e9864 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -1606,20 +1606,6 @@ static int tdx_sept_drop_private_spte(struct kvm *kvm, gfn_t gfn,
- 		tdx_no_vcpus_enter_stop(kvm);
- 	}
- 
--	if (unlikely(kvm_tdx->state != TD_STATE_RUNNABLE &&
--		     err == (TDX_EPT_WALK_FAILED | TDX_OPERAND_ID_RCX))) {
--		/*
--		 * Page is mapped by KVM_TDX_INIT_MEM_REGION, but hasn't called
--		 * tdh_mem_page_add().
--		 */
--		if ((!is_last_spte(entry, level) || !(entry & VMX_EPT_RWX_MASK)) &&
--		    !KVM_BUG_ON(!atomic64_read(&kvm_tdx->nr_premapped), kvm)) {
--			atomic64_dec(&kvm_tdx->nr_premapped);
--			tdx_unpin(kvm, page);
--			return 0;
--		}
--	}
--
- 	if (KVM_BUG_ON(err, kvm)) {
- 		pr_tdx_error_2(TDH_MEM_PAGE_REMOVE, err, entry, level_state);
- 		return -EIO;
-@@ -1657,8 +1643,41 @@ int tdx_sept_link_private_spt(struct kvm *kvm, gfn_t gfn,
- 	return 0;
- }
- 
-+/*
-+ * Check if the error returned from a SEPT zap SEAMCALL is due to that a page is
-+ * mapped by KVM_TDX_INIT_MEM_REGION without tdh_mem_page_add() being called
-+ * successfully.
-+ *
-+ * Since tdh_mem_sept_add() must have been invoked successfully before a
-+ * non-leaf entry present in the mirrored page table, the SEPT ZAP related
-+ * SEAMCALLs should not encounter err TDX_EPT_WALK_FAILED. They should instead
-+ * find TDX_EPT_ENTRY_STATE_INCORRECT due to an empty leaf entry found in the
-+ * SEPT.
-+ *
-+ * Further check if the returned entry from SEPT walking is with RWX permissions
-+ * to filter out anything unexpected.
-+ *
-+ * Note: @level is pg_level, not the tdx_level. The tdx_level extracted from
-+ * level_state returned from a SEAMCALL error is the same as that passed into
-+ * the SEAMCALL.
-+ */
-+static int tdx_is_sept_zap_err_due_to_premap(struct kvm_tdx *kvm_tdx, u64 err,
-+					     u64 entry, int level)
-+{
-+	if (!err || kvm_tdx->state == TD_STATE_RUNNABLE)
-+		return false;
-+
-+	if (err != (TDX_EPT_ENTRY_STATE_INCORRECT | TDX_OPERAND_ID_RCX))
-+		return false;
-+
-+	if ((is_last_spte(entry, level) && (entry & VMX_EPT_RWX_MASK)))
-+		return false;
-+
-+	return true;
-+}
-+
- static int tdx_sept_zap_private_spte(struct kvm *kvm, gfn_t gfn,
--				     enum pg_level level)
-+				     enum pg_level level, struct page *page)
- {
- 	int tdx_level = pg_level_to_tdx_sept_level(level);
- 	struct kvm_tdx *kvm_tdx = to_kvm_tdx(kvm);
-@@ -1676,12 +1695,18 @@ static int tdx_sept_zap_private_spte(struct kvm *kvm, gfn_t gfn,
- 		err = tdh_mem_range_block(&kvm_tdx->td, gpa, tdx_level, &entry, &level_state);
- 		tdx_no_vcpus_enter_stop(kvm);
- 	}
-+	if (tdx_is_sept_zap_err_due_to_premap(kvm_tdx, err, entry, level) &&
-+	    !KVM_BUG_ON(!atomic64_read(&kvm_tdx->nr_premapped), kvm)) {
-+		atomic64_dec(&kvm_tdx->nr_premapped);
-+		tdx_unpin(kvm, page);
-+		return 0;
-+	}
- 
- 	if (KVM_BUG_ON(err, kvm)) {
- 		pr_tdx_error_2(TDH_MEM_RANGE_BLOCK, err, entry, level_state);
- 		return -EIO;
- 	}
--	return 0;
-+	return 1;
- }
- 
- /*
-@@ -1759,6 +1784,7 @@ int tdx_sept_free_private_spt(struct kvm *kvm, gfn_t gfn,
- int tdx_sept_remove_private_spte(struct kvm *kvm, gfn_t gfn,
- 				 enum pg_level level, kvm_pfn_t pfn)
- {
-+	struct page *page = pfn_to_page(pfn);
- 	int ret;
- 
- 	/*
-@@ -1769,8 +1795,8 @@ int tdx_sept_remove_private_spte(struct kvm *kvm, gfn_t gfn,
- 	if (KVM_BUG_ON(!is_hkid_assigned(to_kvm_tdx(kvm)), kvm))
- 		return -EINVAL;
- 
--	ret = tdx_sept_zap_private_spte(kvm, gfn, level);
--	if (ret)
-+	ret = tdx_sept_zap_private_spte(kvm, gfn, level, page);
-+	if (ret <= 0)
- 		return ret;
- 
- 	/*
-@@ -1779,7 +1805,7 @@ int tdx_sept_remove_private_spte(struct kvm *kvm, gfn_t gfn,
- 	 */
- 	tdx_track(kvm);
- 
--	return tdx_sept_drop_private_spte(kvm, gfn, level, pfn_to_page(pfn));
-+	return tdx_sept_drop_private_spte(kvm, gfn, level, page);
- }
- 
- void tdx_deliver_interrupt(struct kvm_lapic *apic, int delivery_mode,
--- 
-2.43.2
-
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
