@@ -1,145 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 178EF20485D;
-	Thu, 20 Feb 2025 18:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2CE7213E84
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 18:14:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740075185; cv=none; b=XK/uqf8xkkx5EuElAsqR5aMSxWAy/2/pmcxqVVfV+BsZhvK2JRLI0g52TXUGNwK0GWjWgejYVLjQ77uzoNluaFsjmEvgRmfBv+dqUUqWe5tLNarEn4KOqiqMH5H9CUN7cufHIgrabjknH58hCcUhTEAtBOhB4C2pJmQII/FTK1A=
+	t=1740075264; cv=none; b=cXl3+GGih6wVugJmKqgh96hNxr4KTXIN3/nu3n3MvJx1O4SPEWpmk4jRdOnWCx+SHECDqJqxkkZAfEtSyf1y4tce6hAHzA7BNQC+DMTApcqEk41S/RbFhClw1JVMzyOfkbH5yS3/cl2rHeR3sbvDq0Z/Cf8YK5HFJhN/KsEiRG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740075185; c=relaxed/simple;
-	bh=iOwyubfEwlgonjCBmwXc8PikMqd0oQVwQdZ+60PJrV4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S3HIwmrwFhpGp2duQ95batTKv4M2DGb5ypGuCyqiw0t+eHq/xhTVSsRN8VPBRmVVLIHKr08akoJRd/J2XG0cRB6fQiqvUI34djv4i7WT09z/OwfSHLUFpyzv+66S/cLmenxNPVIy0HB8it9IeJD1iIBZeHZlSEaIIx4KFU/rl5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jvrjRSc3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740075264; c=relaxed/simple;
+	bh=9LyArO1V6x/btSOf+YKP3+IhtB3t+HvWTzREOzTKzg4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=geoXKozCOMgFtRT46L2XDmZ/eQafUN3SFgba2wd6zf/2JQvF09CUZ7ZR7hQSPsvAaurmtTOF0+sWgGpHeXOwKJuZ9m2T2glkOpN5mITxTyeAHQ1MaKqWJeZji6RLvAjXzW0XrTqBP6YwN9i9aY4InVBxq0M4q+U60AXJBvTLWNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=LA80N+eI; arc=none smtp.client-ip=209.85.210.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jvrjRSc3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EF4DC4CEE3;
-	Thu, 20 Feb 2025 18:13:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740075184;
-	bh=iOwyubfEwlgonjCBmwXc8PikMqd0oQVwQdZ+60PJrV4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=jvrjRSc3Mewmsbw4uj7gV3Y8iVi71m28V6XJovvoioCzse6ZF3st6hPfADUdmKAnT
-	 k0TtCyEgKiJ1k3GXoEMHTBfJgaq4Kutz46lBH/oQYN8UPDpGle5uOAffGCBhrKKhcW
-	 CUr8dnIzy29JLZni+YQjvuiq0BhT7zL7fdrnPETV+bAXRsqg/eSmLAO5eTVr4xPcZa
-	 +060VNhj1pLVAnI5NLPHxN7HJV4dxaj48b6l6A+NOFhRxf7Sk7PlPcaiecHntIcjp0
-	 5oHl2VPJ58oHUz6bFKoVnOqb4Zj5a2EYeLO/++t7i/2JSeMk2cbpe/MKQmLkHVQR57
-	 5FlNFvwDK2q8A==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-543d8badc30so1535357e87.0;
-        Thu, 20 Feb 2025 10:13:04 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWM7pimAuU8GC+YZJFbEgs9RijOtmAjhwyw2tSipSzypb/IenbZBNQvqjRMrYRWcZkHgNSw+dlX+FS0zlat@vger.kernel.org, AJvYcCXWgFFYp0dFZ7/hYSzimKrQIYmAZr+eUZlXInWftu/xk9+p8PJwW9uucCCaE26BiZHyiw7yGfglsqBm4Ng=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1BlGMG+eI6JX6YeFCI0BwqNCZ1VgUGKXKyQvjUtBn4xmNnSvQ
-	ehxxuwbTzoi6L7hIgzwwDdpgpJXmtRhIrU914ASD3/MreRgxmpQOq1XSWJ4W6aK3FL5M90E6RdC
-	DUOIh4PNIyisrLqNs8xutZXmC80A=
-X-Google-Smtp-Source: AGHT+IHHVUrcL5rkcVLI1kVwE0GL8V4V3P5DP0PzgyCNVcQrxnx7WthKcd//qPDaSMSnPoYzVrVrQvELsanbaCpbQZU=
-X-Received: by 2002:a05:6512:ba6:b0:545:e19:ba1c with SMTP id
- 2adb3069b0e04-54838ef208bmr5168e87.19.1740075183320; Thu, 20 Feb 2025
- 10:13:03 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="LA80N+eI"
+Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-727118c4f9aso337397a34.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 10:14:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1740075262; x=1740680062; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=XFoKwRv8+iHXzA4sW8NR+HMTovNN52QXmnRE1AZkRlg=;
+        b=LA80N+eIlKgOT9AIRggsrqrCI2wD8OgsguhE4XSsey3V0NtA1NB28EbAXEpdBp7VqE
+         /gNlkYpFmDL2E/RLKQdeNTMAN9jIIuIhSAI6qq+k5r2DNb4jfo7iwq+0+WYX/6JsdLBH
+         s9+OVSGuavYM10nhV9MUmJRh71d85UpMrrhAQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740075262; x=1740680062;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XFoKwRv8+iHXzA4sW8NR+HMTovNN52QXmnRE1AZkRlg=;
+        b=dqzptIj5A0ZHZ1VgalUeFp1m5mujZTBDMLD1Sqfxjgejn8xUJib8dm2TFYkTMho5VT
+         ff0/IJiB0mvQWqnD17H5wDD84ulEbG4kxWSfwO+D6NQGV5XSzQbxwWyKt/JJW/zc8+3V
+         Ak91hjcctxJ7V8WsV+m2BGlUW0nkIbq3jenhtshNwBAcTxsu/v+NylscOd02Gep3ZzhU
+         OSp/mui0Wr/8MWEYqlAY0rekDp4KtDzZXb2qEjZ6lR/o/NbXP9jabRngBFazvG2GOmq4
+         whOVYkkBIarZv0BtEjYFhQB/L7Y8pb1CJjodBwuX/qwtG+Qbzt2ok6HU8j+iek99fWU+
+         TBdg==
+X-Forwarded-Encrypted: i=1; AJvYcCUX+Jc23hZllq9G2odNxfGneIX4EWWrP4F/ppr4PSCdFyaHSrMnTn3w15D4/y/4zDJnxSMWYuZgi/Ys6B0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzg1Hdo/pOwSVBK6lJvvmm4+uekGsMPtG3aP5++tQ7f4eVRC8TN
+	1dscGgHuRuFD63gzZHes8P3jNt0YVd+2ZewHBNje0FVUbj1hpEqW39vDfIHRhw==
+X-Gm-Gg: ASbGncs0H79800I58be2XxFuinwWvT6XlD3it2fiQfikPhmAc+cB4q1ivZf2OZYCm4N
+	hzTUB7A/IYn3jyrIEqT40tG7ZmuhjpluESXNI1SC/rh8ryWvgzFgHo7paHoJhc3cu+y+qq6mjmU
+	E78ewJUmikKwVmkciypbjJ+pIT8J3X65rS5CeLYeo7wNGcNFMu/j5Waxl2+Q4uwhYGXWYB+5jiO
+	YTKQQ/kD4PGk8OSv1ZULiwe6GnGjg73hjL66GsfGUj0ozT9n55V8Fl8SmTRstmPp/H1IrRYQFHX
+	dL8fH9upUH+cYHZ6apn94flbnfUHY198gs7XbZH2Ku1/EvpvSWrB8Tvk0eKf0t7BUA==
+X-Google-Smtp-Source: AGHT+IEV44L/jP80xEFxHDxYslNjpr4vxk6yxSG6deheV670R1As9ApbDG8AlvPhEH38+8Glf9FKlg==
+X-Received: by 2002:a05:6830:210c:b0:727:345d:3b72 with SMTP id 46e09a7af769-7274c1ebaa7mr20788a34.16.1740075261611;
+        Thu, 20 Feb 2025 10:14:21 -0800 (PST)
+Received: from [192.168.1.3] (ip68-4-215-93.oc.oc.cox.net. [68.4.215.93])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-727329c37d0sm1563186a34.31.2025.02.20.10.14.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2025 10:14:20 -0800 (PST)
+Message-ID: <c67c10fe-e279-4b37-ac9d-20485e86fc8f@broadcom.com>
+Date: Thu, 20 Feb 2025 10:14:11 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240727074526.1771247-1-masahiroy@kernel.org>
- <20240727074526.1771247-4-masahiroy@kernel.org> <b3a8816c-3846-83ab-9750-fd12041d9495@quicinc.com>
- <20250220-red-antelope-of-education-5417aa@l-nschier-nb> <0ee862ec-4c36-4c3e-ae90-627c6b0e527b@quicinc.com>
- <20250220-kickass-famous-kittiwake-c11f5b@l-nschier-nb> <80cf4e9a-5d49-4bc3-8160-1b23c31d4d36@quicinc.com>
- <2025022020-armband-clock-69af@gregkh> <13fac9ee-cad9-466b-9216-8c0516600b03@quicinc.com>
- <2025022057-reclusive-overreach-ac89@gregkh>
-In-Reply-To: <2025022057-reclusive-overreach-ac89@gregkh>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Fri, 21 Feb 2025 03:12:25 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARZon-tqr+oKfr0r+nSfK9R6iz1AZrY9pLoaAhOqWfL6w@mail.gmail.com>
-X-Gm-Features: AWEUYZlMlGicc1vOO01YGbQTwSZKn4jkM5kXZSNLg62qBjkuNlwITi8aKcn3HUU
-Message-ID: <CAK7LNARZon-tqr+oKfr0r+nSfK9R6iz1AZrY9pLoaAhOqWfL6w@mail.gmail.com>
-Subject: Re: [PATCH 3/4] kbuild: slim down package for building external modules
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Jeffrey Hugo <quic_jhugo@quicinc.com>, Nicolas Schier <n.schier@avm.de>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Kees Cook <kees@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Ben Hutchings <ben@decadent.org.uk>, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Feb 21, 2025 at 2:43=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> On Thu, Feb 20, 2025 at 10:24:32AM -0700, Jeffrey Hugo wrote:
-> > On 2/20/2025 9:49 AM, Greg KH wrote:
-> > > What do you need/want to parse the .config file in the first place?  =
-Why
-> > > not rely on the generated .h files instead as those can be parsed the
-> > > same way as before, right?
-> >
-> > Two usecases -
-> >
-> > First when secure boot is enabled, DKMS looks for CONFIG_MODULE_SIG_HAS=
-H to
-> > figure out signing the modules so that they can be loaded.  Removing .c=
-onfig
-> > causes an error in DKMS and the module signing process will fail.  The
-> > resulting modules (already compiled successfully) will fail to load.
-> > Whatever the user needed those modules for will no longer work.
->
-> Shouldn't the "normal" kbuild process properly sign the module if it
-> needs to be signed?  Or are you trying to do this "by hand"?
-
-You can ignore this.
-This is not related to the upstream module signing.
-
-He is just explaining how DKMS greps CONFIG_MODULE_SIG_HASH.
-
-See this line:
-https://github.com/dell/dkms/blob/v3.1.5/dkms.in#L1113
-
-The upstream kernel documentation said "do not grep .config" many years ago=
-.
-The latest DKMS has been fixed.
-
-
-
->
-> > If the user is on Ubuntu, and has built a kernel 6.12 or later, they ne=
-ed to
-> > build upstream DKMS and use it as none of the Canonical provided DKMS b=
-uilds
-> > have the fix.  This feels like a situation that would make the user afr=
-aid
-> > to upgrade their kernel (to your point above).
-> >
-> > This feels very much like an "at runtime" issue, assuming external modu=
-les
-> > are supported.  I may be wrong here.
->
-> external modules can be broken at any moment in time, you know that.
-> There's never a guarantee for that at all.
->
-> > Second, our usecase is that we look at the .config to tell if a particu=
-lar
-> > driver is included in the kernel build (config =3Dy or =3Dm). This driv=
-er
-> > provides diagnostic information which is useful to our product, but not
-> > required for operation.  It does not have headers that are exposed to t=
-he
-> > rest of the kernel, so checking the generated .h files does not work.  =
-If
-> > the driver is not built, we provide a backported version that is then b=
-uilt
-> > out of tree.
->
-> You can check the same .h files for those config options, no need to
-> manually parse a .config file.  What's wrong with including
-> include/generated/autoconf.h properly?  That's what the build system
-> uses, right?
-
-Upstream uses include/config/auto.conf
-External modules can do the same.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 6/8] PCI: brcmstb: Use same constant table for config
+ space access
+To: Jim Quinlan <james.quinlan@broadcom.com>, linux-pci@vger.kernel.org,
+ Nicolas Saenz Julienne <nsaenz@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Cyril Brulebois <kibi@debian.org>, Stanimir Varbanov <svarbanov@suse.de>,
+ bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-rpi-kernel@lists.infradead.org>,
+ "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20250214173944.47506-1-james.quinlan@broadcom.com>
+ <20250214173944.47506-7-james.quinlan@broadcom.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250214173944.47506-7-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
+On 2/14/2025 9:39 AM, Jim Quinlan wrote:
+> The constants EXT_CFG_DATA and EXT_CFG_INDEX vary by SOC. One of the
+> map_bus methods used these constants, the other used different constants.
+> Fortunately there was no problem because the SoCs that used the latter
+> map_bus method all had the same register constants.
+> 
+> Remove the redundant constants and adjust the code to use them.  In
+> addition, update EXT_CFG_DATA to use the 4k-page based config space access
+> system, which is what the second map_bus method was already using.
+> 
+> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
 
---=20
-Best Regards
-Masahiro Yamada
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
+
