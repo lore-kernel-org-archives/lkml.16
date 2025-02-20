@@ -1,141 +1,121 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFDC1FECA3
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 16:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6683A200B9F;
+	Thu, 20 Feb 2025 16:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740067336; cv=none; b=mtufFWBgt1A1+7bB/KQCtzV7IShvemtp8nFBQMjl0jiE/KgHJ5XIE2Z85lB6IDQWi/CI63Y+sD0LjW1QCposCkL7aO8UohwKLfFqtojya+jC63Oz+snToU511wcna0ZYvpOOFidSZXPdqc8aZZoPFOPEIfojvpFMNZ88HUjr9Ms=
+	t=1740067384; cv=none; b=azlhos3OTdrUEZecnYBUm9hPERz/PQpE9p0DDa9w8xALZiiCAgALhmc4BXw4+tW7iX2qyprLyfnuZ9bbEK/rWpwbzmQNSwFWiDEBsbMVaJNf6vsb47BiqbnojNS4SOViv3E/qTAL1k/nRY07NKVjUxiEQ6dc8E5V2UfWPzBaN5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740067336; c=relaxed/simple;
-	bh=Ycd4i0bncaJVHEdlZV00H3hIQXZTrcKhKlTHaRcghNg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gWua/XupA8dD1MHRNQMS+9spCl2iDcn2VjvbubcJCcsfF9YKA3HE6w1GUD6HoW5h98ykGYgDsJ3/zskbu9lFkP8R5zGMfslCDTWad66fUOfxnAXG8Yl8xTKPNNqiutz/89yYe7B2atBzh67CPZHBOqr1XccMciUigcwifAeSHdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mUiBEOnh; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740067384; c=relaxed/simple;
+	bh=DXh6ZOpLAsk+gnzEns7JS9itYOjku5L7H4Wx35b1dNw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HGPHKuHosx8h1M0naQ2dGNo0cvxvyKhxawY8wkq7/Vl5kvcqmPXFjbgid4IoyPrvBVyh4IS4ZHVAPrD1vTlGUOExq4Dh1T5tgRKnBYstUMLLx2kGevEzNmlsv/ndp7+X/toJFynNDUdaRq/IAs3swmCrVPt8wdDhaY1/zeY5Mt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BAyPfnQp; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mUiBEOnh"
-Message-ID: <451aca38-3b58-46c8-b6ce-6460f0504314@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740067330;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X0Y3+j7XSfdZ8z+5CWNHcH4kXI1FyK6N0PGbkacF2ag=;
-	b=mUiBEOnh+GmKlUIACFY8Lv4VGRHrCDFemOgIHbs23rmbFMPaewp/v8RXEQpdzc9NqR6gIY
-	61duQGLHZkN1Eyjw39NHNt1qjFb3vNdG2nfo+w7wt2kc8tkUm2j3T4qiqvR2gMK6XDLeSn
-	9J7XJYiFhoacjBzM42iBTNvi0UmeQu8=
-Date: Thu, 20 Feb 2025 11:02:07 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BAyPfnQp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740067382; x=1771603382;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=DXh6ZOpLAsk+gnzEns7JS9itYOjku5L7H4Wx35b1dNw=;
+  b=BAyPfnQpLHcZWeEWsxjo7zQkfPLNfLdOfNccJh0M8ix/QeK5NdfDGCkj
+   Sf+PoHMymzbMuGNBJfvu6Q1IjEsPNAPwHFNXmhZCt/NnOuDiBqTfV7vZU
+   PPPUPsAnP2jt5xQkCFddD9YMuR34d4eYkBr+ts7hfRg/U/sDHC99AQITL
+   /P9j7m24ADZ4Vg+/c0ODiuKzImzgxkNjcQq/Emhesmy8WosfOWC8XP0Bu
+   bHrowaNFpldz4ElgLj2aL3bY/AY6o5T0Mf4t/4+TRMU9MzSYn8vTJPjJZ
+   PHg0FqlRLkTC8Oh1RhDxlXY+GWx+YLDXIhy4MqUpNmOqoL3Ax36/PtKlF
+   g==;
+X-CSE-ConnectionGUID: QqOdCpU4R4CVB0P+OZVu4A==
+X-CSE-MsgGUID: utI27JtuQKuy2TAcXtA79w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="40990649"
+X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
+   d="scan'208";a="40990649"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 08:03:02 -0800
+X-CSE-ConnectionGUID: cVUGvr2UTRanblOXTiNY9Q==
+X-CSE-MsgGUID: +cNwrbWMT9y7Acj3Ue2+7A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
+   d="scan'208";a="120179048"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 08:02:59 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tl90q-0000000DNpn-2W4z;
+	Thu, 20 Feb 2025 18:02:56 +0200
+Date: Thu, 20 Feb 2025 18:02:56 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Zijun Hu <quic_zijuhu@quicinc.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v1 3/4] devres: Add devm_remove_action_optional() helper
+Message-ID: <Z7dSMK3tHC0Aq-GT@smile.fi.intel.com>
+References: <20250220141645.2694039-1-andriy.shevchenko@linux.intel.com>
+ <20250220141645.2694039-4-andriy.shevchenko@linux.intel.com>
+ <Z7dKfwOrAuhuZvQt@black.fi.intel.com>
+ <Z7dM6B-SFQ5Q77zy@smile.fi.intel.com>
+ <Z7dPjp4t0MrhulSt@black.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net] net: cadence: macb: Synchronize stats calculations
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, netdev@vger.kernel.org,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- linux-kernel@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Jakub Kicinski <kuba@kernel.org>
-References: <20250218195036.37137-1-sean.anderson@linux.dev>
- <20250219094851.0419759f@2a02-8440-d103-5c0b-874f-3af8-c06f-cd89.rev.sfr.net>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Sean Anderson <sean.anderson@linux.dev>
-In-Reply-To: <20250219094851.0419759f@2a02-8440-d103-5c0b-874f-3af8-c06f-cd89.rev.sfr.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z7dPjp4t0MrhulSt@black.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 2/19/25 03:48, Maxime Chevallier wrote:
-> Hello Sean,
-> 
-> On Tue, 18 Feb 2025 14:50:36 -0500
-> Sean Anderson <sean.anderson@linux.dev> wrote:
-> 
->> Stats calculations involve a RMW to add the stat update to the existing
->> value. This is currently not protected by any synchronization mechanism,
->> so data races are possible. Add a spinlock to protect the update. The
->> reader side could be protected using u64_stats, but we would still need
->> a spinlock for the update side anyway. And we always do an update
->> immediately before reading the stats anyway.
->> 
->> Fixes: 89e5785fc8a6 ("[PATCH] Atmel MACB ethernet driver")
->> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
->> ---
->> 
->>  drivers/net/ethernet/cadence/macb.h      |  2 ++
->>  drivers/net/ethernet/cadence/macb_main.c | 12 ++++++++++--
->>  2 files changed, 12 insertions(+), 2 deletions(-)
->> 
->> diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
->> index 5740c98d8c9f..2847278d9cd4 100644
->> --- a/drivers/net/ethernet/cadence/macb.h
->> +++ b/drivers/net/ethernet/cadence/macb.h
->> @@ -1279,6 +1279,8 @@ struct macb {
->>  	struct clk		*rx_clk;
->>  	struct clk		*tsu_clk;
->>  	struct net_device	*dev;
->> +	/* Protects hw_stats and ethtool_stats */
->> +	spinlock_t		stats_lock;
->>  	union {
->>  		struct macb_stats	macb;
->>  		struct gem_stats	gem;
->> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
->> index 48496209fb16..990a3863c6e1 100644
->> --- a/drivers/net/ethernet/cadence/macb_main.c
->> +++ b/drivers/net/ethernet/cadence/macb_main.c
->> @@ -1978,10 +1978,12 @@ static irqreturn_t macb_interrupt(int irq, void *dev_id)
->>  
->>  		if (status & MACB_BIT(ISR_ROVR)) {
->>  			/* We missed at least one packet */
->> +			spin_lock(&bp->stats_lock);
->>  			if (macb_is_gem(bp))
->>  				bp->hw_stats.gem.rx_overruns++;
->>  			else
->>  				bp->hw_stats.macb.rx_overruns++;
->> +			spin_unlock(&bp->stats_lock);
->>  
->>  			if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
->>  				queue_writel(queue, ISR, MACB_BIT(ISR_ROVR));
->> @@ -3102,6 +3104,7 @@ static struct net_device_stats *gem_get_stats(struct macb *bp)
->>  	if (!netif_running(bp->dev))
->>  		return nstat;
->>  
->> +	spin_lock(&bp->stats_lock);
->>  	gem_update_stats(bp);
->>  
->>  	nstat->rx_errors = (hwstat->rx_frame_check_sequence_errors +
->> @@ -3131,6 +3134,7 @@ static struct net_device_stats *gem_get_stats(struct macb *bp)
->>  	nstat->tx_aborted_errors = hwstat->tx_excessive_collisions;
->>  	nstat->tx_carrier_errors = hwstat->tx_carrier_sense_errors;
->>  	nstat->tx_fifo_errors = hwstat->tx_underrun;
->> +	spin_unlock(&bp->stats_lock);
->>  
->>  	return nstat;
->>  }
->> @@ -3138,12 +3142,13 @@ static struct net_device_stats *gem_get_stats(struct macb *bp)
->>  static void gem_get_ethtool_stats(struct net_device *dev,
->>  				  struct ethtool_stats *stats, u64 *data)
->>  {
->> -	struct macb *bp;
->> +	struct macb *bp = netdev_priv(dev);
->>  
->> -	bp = netdev_priv(dev);
->> +	spin_lock(&bp->stats_lock);
-> 
-> Sorry if I missed something, but as you're using that lock within the
-> macb_interrupt(), shouldn't it be a spin_lock_irqsave() for all the
-> callsites that aren't in irq context ?
-> 
-> You would risk a deadlock otherwise.
+On Thu, Feb 20, 2025 at 05:51:42PM +0200, Raag Jadav wrote:
+> On Thu, Feb 20, 2025 at 05:40:24PM +0200, Andy Shevchenko wrote:
+> > On Thu, Feb 20, 2025 at 05:30:07PM +0200, Raag Jadav wrote:
+> > > On Thu, Feb 20, 2025 at 03:44:59PM +0200, Andy Shevchenko wrote:
 
-Yeah, looks like I missed this. Although I tested on a kernel with
-lockdep enabled, and I thought that was supposed to catch this sort of
-thing. Will send a v2.
+...
 
---Sean
+> > > > +/* Same as devm_remove_action(), but doesn't WARN() if action wasn't added before */
+> > > > +static inline
+> > > > +void devm_remove_action_optional(struct device *dev, void (*action)(void *), void *data)
+> > > > +{
+> > > > +	int ret;
+> > > > +
+> > > > +	ret = devm_remove_action_nowarn(dev, action, data);
+> > > > +	if (ret == -ENOENT)
+> > > > +		return;
+> > > > +
+> > > > +	WARN_ON(ret);
+> > > > +}
+> > > 
+> > > Trying to wrap my head around this one, can't the user simply do
+> > > 
+> > > 	if (devm_is_action_added())
+> > > 		devm_remove_action/_nowarn();
+> > 
+> > Hmm... Actually it sounds like a good point. I will check
+> > (and I like the idea of dropping this patch).
+> 
+> And perhaps
+> 
+> s/devm_is_action_added/devm_action_is_added
+> 
+> But whichever you think _is best_ ;)
+
+I thought about that and that's why I would like to stick to the my variant.
+
+Thanks for the review!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
