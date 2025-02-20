@@ -1,115 +1,90 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F06EA2641DB
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 19:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCEC15A858;
+	Thu, 20 Feb 2025 19:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740079221; cv=none; b=sggwPeyayWgl9tJaWkkvZOkvB/YdMismCFbEkAR926ZnUCXlfOV4YrJrDW5LA2tUISQVnKstBp57a2VqES4nn6+VRyLO+0fVfQ8oqIDz1kYh1sPEQWNgBBth4lqT1wjmGaV4MmDViotxUmsL3Q1oBO6VB0Z6IyCD6gELVLv7nGQ=
+	t=1740079280; cv=none; b=ncmtyvGoce7QNF7fChgNyJjGRs01yO/Reom957tcYUfSz5yLUQwbVWgkNTL1nOYVBJg2NYz4YNng4F1vmapeY+soD9X3WXQDeSV9LoE60DhKyfGQWnkJ3kDCYTJhgMIZ08BTDV3/12IWyjLNxhLBArS3K/2RvRFOK/JHCuCi7x0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740079221; c=relaxed/simple;
-	bh=BF/qm35P4uKsbrKBn/gLwoY0GozMrLl3uevc+2xL6YQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cr2/nuJWK7+eJiF1wCmB+EtBZWgecgRq6oa9bS+iS+g593RhsIHSnv/88/vp16T9OP6Ubfo3diJ/Q4C5yZKQPotRwVJ2S7TBqSGNlOnB1dyjmF9n2931bGOlDOfFiioEKiLTiawSpc6mD+xnGceoKxgKyzXh8NQTK3038wL+ayk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=VGkh7s/H; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1740079280; c=relaxed/simple;
+	bh=xijanZ/YLwO40IngxhirU15paKuTo6pFuPDfECza+w0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EAk5F064Lzh9OyTEZPatXwovchR6damyyaqweC1hD1fqH/0hA8QWwl0bmsg28STsU7X6lX69c7gg+HJO9L6Z+S82XuKivbxu+s0hd5bA3BVqcwu/SE5QDywiYFjRuZ1YxcmLC2nOpsFgD7mcAS32MaUL5wtA8JTqfmKFrFi9ovo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KH2Tdof4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VGkh7s/H"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2217875d103so2939065ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 11:20:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740079219; x=1740684019; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RpS2FnqN2TDBERxg5I5MCZqVN24rvf9DEtZLCeAzcmo=;
-        b=VGkh7s/Hqx7a+052nW0gD2UVZ02YnIKSuosVjV4ZZs/Mu0+9eHlVQWAwtxxP5Rnffi
-         ve8F10WMwL5mQTFEefYFxjlhnAz5NpRyBImvji2j7E4e1Ou6GoZNPpzdbeRvsdhZFkJW
-         64Ou5UvdBCaNIs7KPhh70rXivjwfxNm40uW+Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740079219; x=1740684019;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RpS2FnqN2TDBERxg5I5MCZqVN24rvf9DEtZLCeAzcmo=;
-        b=mPPFNADTyFqo6sExJ9hZ3a/Wtvs4Bxj8Hvz1VZ+wjjoypfb0zHGtIqC/58hf3zHOOp
-         g2SmK4OkeT6w1Jdv8mHIaQjrLvY+ItIsZBJOy+/mQkNqk2WW5uQNWfqvxxetOazWVcgU
-         JCRHd4AuUQwPJfDPW/q/cQOWo6Q1nd83MoDE+XQ7tIUtE7nH/j9i5zbBa4vihVwRLOdk
-         wnnhepmz4LjDLTNeflXrFOf+zlhy8eCM/RbGN0QJUVWdmpcmhsQ1QpAq0hNkK5R7OUy3
-         thf3hlchmP/Hzb85LCvfd/bRgjT0Xsre0XK2pgztnjo3IdUfr9A8p1HZAQIi4aSBeAbN
-         Mc5A==
-X-Forwarded-Encrypted: i=1; AJvYcCWoOKIZR4QCDwBfawUpTzmDkxfJulHgfxNsolkxaGScK83yVFDEOUZM5PNiTJ6PcKEiFhWFzdNUpiVKFtk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8LN0icqKerBtiwMMvDH0Lh7wShJA5do2TQAq3hDN5jMlbSGMq
-	Q+5Y+a9hIang1Rr6CfeD1C5SOaDs8nK6l4JnKksQlXj6ERqvRClS12bgkZifBFo4RB535Ml5uZf
-	Dzg==
-X-Gm-Gg: ASbGncviejfRgXGbl0qlWS/BxNoq7ktjyvm8iMeBi7LN1XLvXXOQLpxOq9snpe63+K8
-	KKiwQBjKuRGBeG6gek2v8FJCI6qpzUbC5hbPrpP+NNOAyiJ6cIIWlSYW3P2HImY3IAAiwE0u2s/
-	rDBZIhuH30m4W5la0Mn03rQbsozH1ni0bAX+TMSsvYOatmIZ23TuJCYcYI+AI+Ga1cIvWmcnwQC
-	i799jWNbLE8grqJEEXZdQzPJ49NK42zkcVNtiLVujLGbmPM0Xs4POzB46mAG9LsHGXr1opYb5Sp
-	xYzygnV28PO6SvFzo/6kovxOMmE8/Mrug6k6dNYH7oSQ+hDuzTlGvbo=
-X-Google-Smtp-Source: AGHT+IG0Y0I5fPL9fPvLkpkMjjXiiYEpK2HEHGiBmLzrdPdiVZ6wQpOpotEJlIpKRFajhYScZYXDiQ==
-X-Received: by 2002:a17:902:cec6:b0:220:d71d:4666 with SMTP id d9443c01a7336-2219fff855emr1604355ad.13.1740079217625;
-        Thu, 20 Feb 2025 11:20:17 -0800 (PST)
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com. [209.85.216.51])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d556d473sm124614095ad.166.2025.02.20.11.20.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2025 11:20:16 -0800 (PST)
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2fc0bd358ccso2720418a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 11:20:15 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCU7CcmTcC01t2l64eK0u7fR/WiLKQNGZJMXd6lBlWBZraNG+4xMgujRuWQOtpW6AakYiTlpVRYvnOAKcvM=@vger.kernel.org
-X-Received: by 2002:a17:90b:3946:b0:2f4:434d:c7ed with SMTP id
- 98e67ed59e1d1-2fce78c7fd8mr609023a91.16.1740079215301; Thu, 20 Feb 2025
- 11:20:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KH2Tdof4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A395AC4CED1;
+	Thu, 20 Feb 2025 19:21:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740079279;
+	bh=xijanZ/YLwO40IngxhirU15paKuTo6pFuPDfECza+w0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=KH2Tdof45LYDDz/wAUkn438Yb+egn8SQ53QcjMgQm895HOBsId/GD21f/iNKLLmo9
+	 Z3O9lE5gtKcTPlY/Rdw84Ja54wkEkssdLPtHtMpNM9cGBW+U+W7J5EPrr5lHfRKOpk
+	 i4ZBBWQsSa4LiGRBkzd3PwOXvX2F9ryhFwDiznYfKbLmbQXY40o99PnlkpZhmjVZzY
+	 xojaPhu6NS+g4BxLvKojkXGo2E8kP+y4HmDbMkG95nmMSGQPWN2Wr0sAsqZ2T8yDlm
+	 JGI9jowaEcPKxXKo8muqMyTQ9fZshxFcei7l2F8T0Y0VHeb5WLrGsCGlBodUkb/Vtk
+	 uYS0gFZt+bDbA==
+From: cel@kernel.org
+To: Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+	Li Lingfeng <lilingfeng3@huawei.com>,
+	linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/5] nfsd: don't allow concurrent queueing of workqueue jobs
+Date: Thu, 20 Feb 2025 14:21:15 -0500
+Message-ID: <174007920440.104075.11286565001428092466.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <20250220-nfsd-callback-v2-0-6a57f46e1c3a@kernel.org>
+References: <20250220-nfsd-callback-v2-0-6a57f46e1c3a@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250220-virtio-shm-page-size-v3-0-874fff6f3979@redhat.com> <20250220-virtio-shm-page-size-v3-2-874fff6f3979@redhat.com>
-In-Reply-To: <20250220-virtio-shm-page-size-v3-2-874fff6f3979@redhat.com>
-From: Daniel Verkamp <dverkamp@chromium.org>
-Date: Thu, 20 Feb 2025 11:19:47 -0800
-X-Gmail-Original-Message-ID: <CABVzXA=_S2in+OzfwK6vGQR3VK3YhGRu4B+tp5oCZKHt0Qz=gw@mail.gmail.com>
-X-Gm-Features: AWEUYZlJc2Ri_gGb-xTYNfHBI9nY3KXtKqjPGrNSl2kv5ni8-vqVm6Z_S9XKcC4
-Message-ID: <CABVzXA=_S2in+OzfwK6vGQR3VK3YhGRu4B+tp5oCZKHt0Qz=gw@mail.gmail.com>
-Subject: Re: [PATCH RFC v3 2/4] virtio-pci: extend virtio_pci_cap with page_shift
-To: Sergio Lopez <slp@redhat.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>, 
-	Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu <olvaffe@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>, 
-	Dmitry Osipenko <dmitry.osipenko@collabora.com>, fnkl.kernel@gmail.com, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 20, 2025 at 6:30=E2=80=AFAM Sergio Lopez <slp@redhat.com> wrote=
-:
-[...]
-> @@ -829,6 +839,7 @@ static int virtio_pci_find_shm_cap(struct pci_dev *de=
-v, u8 required_id,
->                 *bar =3D res_bar;
->                 *offset =3D res_offset;
->                 *len =3D res_length;
-> +               *page_size =3D 1 << (page_shift + 12);
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Maybe this should validate that page_shift is in range to avoid any
-funny business from the device; since page_size is u32, this needs
-page_shift + 12 < 32. (If it's out of range, I am not sure what this
-should do; maybe just warn and set it to the default 4096?)
+On Thu, 20 Feb 2025 11:47:12 -0500, Jeff Layton wrote:
+> While looking at the problem that Li Lingfeng reported [1] around
+> callback queueing failures, I noticed that there were potential
+> scenarios where the callback workqueue jobs could run concurrently with
+> an rpc_task. Since they touch some of the same fields, this is incorrect
+> at best and potentially dangerous.
+> 
+> This patchset adds a new mechanism for ensuring that the same
+> nfsd4_callback can't run concurrently with itself, regardless of where
+> it is in its execution. This also gives us a more sure mechanism for
+> handling the places where we need to take and hold a reference on an
+> object while the callback is running.
+> 
+> [...]
 
-Also shifting into the sign bit is technically undefined (or
-implementation-defined? I don't recall) behavior, so perhaps make the
-constant unsigned, e.g. `1U << (page_shift + 12)`.
+Applied to nfsd-testing, thanks! This series replaces:
 
-Other than that, looks reasonable to me:
-Reviewed-by: Daniel Verkamp <dverkamp@chromium.org>
+https://lore.kernel.org/linux-nfs/20250218135423.1487309-1-lilingfeng3@huawei.com/
 
-Thanks,
--- Daniel
+Review is still open.
+
+[1/5] nfsd: prevent callback tasks running concurrently
+      commit: 9a03a9d82410bdb758a6b342689e0c235bba94f1
+[2/5] nfsd: eliminate cl_ra_cblist and NFSD4_CLIENT_CB_RECALL_ANY
+      commit: 743fda103062626c828dbac774716e718a74f81b
+[3/5] nfsd: replace CB_GETATTR_BUSY with NFSD4_CALLBACK_RUNNING
+      commit: d2d94554567f486eba111e953e75745eca09bee3
+[4/5] nfsd: move cb_need_restart flag into cb_flags
+      commit: 355f1ec5ce21ab324d9b3978d2d5abe6d0c84024
+[5/5] nfsd: handle errors from rpc_call_async()
+      commit: d0f1ba5ed270fbda06248ef8af822a9e14708ee1
+
+--
+Chuck Lever
+
