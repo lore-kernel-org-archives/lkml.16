@@ -1,262 +1,178 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C32E846C;
-	Thu, 20 Feb 2025 14:45:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A0F19D06E;
+	Thu, 20 Feb 2025 14:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740062759; cv=none; b=ZO8o26+TBgKGYiDppH6ZYu9EMuJUnn2IzWvR3xIYSuMJeUkPp7QpeM2Q93tZFFbfr3kO3aGybfL5VYYhLL/42sA4VjZwzFDDuTkeh7CFinRfnIqa7Q61VY8sB7NuuLMjz7lAuUXCvd0pBFKDJqYyimX+IfULQL0j52oqkjyezs4=
+	t=1740062920; cv=none; b=aFl+9DwTa7ElR1Ta0jyKOchfHfTfJgxuVGjoG29sH5EpAtXR17IEUjMEmPST+59Wm7JyNIwsJU8Kr3FUsBKot/k7DEibpsPrcWOXU7oUQXtYFVMh/Glg4Q12VuCp+PAJAr9ey/6qNPf5zQ1ffPk8MAjAq6x0Caa2ozx1Q4qYj+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740062759; c=relaxed/simple;
-	bh=j9scqRi6I8GcTBTGe4QdTetBP1XPewqGTTQJlgJfLXk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KVWKOKXNavdGi1jrUWWye3px14+Ureqq3VhnhcdE/lt9aCZRwxmk2LhGYSxLs91VJQb21j3IOLOZd0R7u17lLZ+fXyZ6T1rUO+INQFZXywHVDG2ihaD7dS+CqhLNEalPa8dDAq5Oo1ufDCMu7E4xNFzsYT6TTExqaQAo02QT8ZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rz+CJnnL; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740062920; c=relaxed/simple;
+	bh=PzEer1mTGvGb2m+KD/jgWxiPMBT75xyrk+ydbLeYI3Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aVxv3SOy3mpiiJX2+KbuhTNOaZp3S4Bc/ayN7kfXzz99jH+5qd8ZDg3/I4GOBx9r1qO+E/e3leTP/KdE4MBKN/vmAO4kr4pLK1YdF2mLS5I/6AlwrjhtMKjVmyj2vQ8BzTAdYlJ/nT3MvoN1jto32wqykcEVqu8LIpfEuV8ehLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=iWtjEsLy; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rz+CJnnL"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3ce85545983so3092545ab.0;
-        Thu, 20 Feb 2025 06:45:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740062756; x=1740667556; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FYP/9GAIimdjM+IGjvhwDYzgsVj4ddnh1ixjOBOXlsA=;
-        b=Rz+CJnnLqSAsUr98cIpnhwjmfzGTyJdtwmp++K1OufDFpkkMecXP1pypZAFzsd6QiM
-         4QgGYNJs2tE+5TLL5+ym/lF5PJojEvZ6BihjWlBPjQ7df7oI/MSeXyjk7YySfDhW9Eod
-         yDTGz8ErBIUCgg6EY9OrSZSkffTZYt1ejrDDdCvcHoR7oRq39lo8sDYupspophG9xzAz
-         JjxEPaRbKx2R9+57lJQrp1hUeJC61057dswpIHkXpJa6zJRQpCjngCgmA1++HCsWZifY
-         x5y7VhRGbek+XwjGtZf58y8KIyqe7hdshSSDifg0rRkCHKN/kN9/Gk963JMAEJFU8Lzq
-         50PQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740062756; x=1740667556;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FYP/9GAIimdjM+IGjvhwDYzgsVj4ddnh1ixjOBOXlsA=;
-        b=KJhAaP3Pg2qOB2yfDR3HslHpqPF+NRAuBD7gSC5+p+GnILs9bxbEvH8Pxta1wyrBrr
-         YY+T4y4xAcoOl0KvCUttM1si7uxVLzOVTaP/+pAcufMWxebi9t3BbQ+lYgLvGMZE8mtX
-         QcQBJOFFCbh4Vwalg2pT3TRIGBMkS8avhskLK37/frs+qxLdi2CRynP0FRkqSEE0bagy
-         6TjG2dhpk3jLD/+7HHQ6e61b3RyUcIwbNB07xwE5M20aPuHiGuitFhDJ42h1Nidtpmz1
-         7RjHvxnNuz5lJFQ5mmZ9i1UERj7NTK7WKbVx9kksyj1LXxLXrDm1DE1Tt7RAHazHi0s2
-         Kqrw==
-X-Forwarded-Encrypted: i=1; AJvYcCWTku5Zn3crCI9fxL/gAX2CeZgL9csE8OB2UaYM3PyVrUX/wUlC0bKf+9g7Ed53i1YLQxF8IZ1sLK2lrUY=@vger.kernel.org, AJvYcCXNp7RlgUBBzS4DUCLA1IFZeq1InYbiuCjKGGajU8benUtHPFRQrtFI+BagxJB7Smqa2B5aivx+@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrtcCdzImeIfvDJuHSd/f8cvdfehTwZmXKPcDwlAVEiegmFDQw
-	XQ/SYkz1mrEj6kN56CGC1L1xXQ502XmZkCQnNP8/nq9lhDuZ3KIYkcoclw10OS+AR6r/ycaOc9U
-	NEC1pBjCnJUauPHBo8TzY81XlKfM=
-X-Gm-Gg: ASbGncvqlnDyUNMlM5ZytMltw+mWNMPCTAskVSiCuX7v0mRp2UZyC/WOMqBypAaWHjm
-	djkUGI9wg9UUU+gJg5xXWDn227awB+WF/njAUDebWr139SF5VbN0m1EpAYjBXPElx+Tl2ZONC
-X-Google-Smtp-Source: AGHT+IHCrUbNJ7Gl5zO6NnigdyoY5MsD70MBQAQ1jyOmKYlCyPFEIHK4PrRa6gvf3tVxldfsfK+3LsIR1WifepQYmpc=
-X-Received: by 2002:a05:6e02:1565:b0:3cd:e9a0:3c3d with SMTP id
- e9e14a558f8ab-3d2c00b2fc5mr36834665ab.2.1740062756044; Thu, 20 Feb 2025
- 06:45:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="iWtjEsLy"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 8F81210382D37;
+	Thu, 20 Feb 2025 15:48:27 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1740062910;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ldqI1Le+GNbE+uBRLkLvuLrordSQ/bU414re+PDqRgg=;
+	b=iWtjEsLylFgr2+ddtCwYOKZnorICgZLXMimUifa+okc9WQqYoo6+u6UKCRYO1RI10IL3Di
+	46+qHJXpjf3Z43lYHQM2qvPZ3Ivnu2Kq7LTgrbBFi2ZopTitbRaImYsWZL5dodu7p0JW0N
+	h9BjrlQElNSaPiQLSlfeCMOnzRYNURThGfezcLWolcaueVQzlMQ+ZvAAg2ZGESCmNC92x0
+	mbQIDRlR2lMHYQ4Ary2yPugSaa7wIOsVdwNNhZQ2Nij0WKSk2EaUlB1N6QK5RjCbiUyz6h
+	4UU3C+wlpwa22XeoR9XVKXNwpPsbdIZ4iCt5fP8kV7//a2Zil6r/dxf1LhqsAw==
+Date: Thu, 20 Feb 2025 15:48:26 +0100
+From: Lukasz Majewski <lukma@denx.de>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Abel Vesa <abelvesa@kernel.org>, Peng Fan <peng.fan@nxp.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Shawn
+ Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam
+ <festevam@gmail.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ linux-clk@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+Subject: Re: [PATCH] arm: clk: Add ETH switch clock description for vf610
+ SoC
+Message-ID: <20250220154826.3455b15e@wsk>
+In-Reply-To: <5a9d9eef-f2ca-4168-aca4-4419dcfcacb6@lunn.ch>
+References: <20250219114936.3546530-1-lukma@denx.de>
+	<3cebe152-6326-454c-9da6-5cf5a64f71c9@lunn.ch>
+	<20250219233802.20ec53e5@wsk>
+	<5a9d9eef-f2ca-4168-aca4-4419dcfcacb6@lunn.ch>
+Organization: denx.de
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250218105824.34511-1-wanghai38@huawei.com> <CANn89iKF+LC_isruAAd+nyxgytr4LPeFTe9=ey0j=Xy5URMvkg@mail.gmail.com>
- <f3b279ea-92c3-457f-915a-2f4963746838@huawei.com> <CAL+tcoByx13C1Bk1E33C_TqhpXydNNMe=PF93-5daRQeUC=V7A@mail.gmail.com>
- <5fa8fc14-b67b-4da1-ac8e-339fd3e536c2@huawei.com> <CAL+tcoC3TuZPTwnHTDvXC+JPoJbgW2UywZ2=xv=E=utokb3pCQ@mail.gmail.com>
- <c52f3ef0-0ae0-4913-a3f0-19d55147874d@huawei.com>
-In-Reply-To: <c52f3ef0-0ae0-4913-a3f0-19d55147874d@huawei.com>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Thu, 20 Feb 2025 22:45:19 +0800
-X-Gm-Features: AWEUYZninMjSy3o1mu9gegixrATRpeg8K4AZ1bhtDzdz7LwjfNOUt6CoK5syttU
-Message-ID: <CAL+tcoACG4P9e7-7iZwvJc6njidcO1QUMr3oifjaj7+iS6dMBA@mail.gmail.com>
-Subject: Re: [PATCH net] tcp: Fix error ts_recent time during three-way handshake
-To: Wang Hai <wanghai38@huawei.com>
-Cc: Eric Dumazet <edumazet@google.com>, ncardwell@google.com, kuniyu@amazon.com, 
-	davem@davemloft.net, dsahern@kernel.org, kuba@kernel.org, pabeni@redhat.com, 
-	horms@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/EoF.xD3edO+ut3CeLCKvgE3";
+ protocol="application/pgp-signature"; micalg=pgp-sha512
+X-Last-TLS-Session-Version: TLSv1.3
+
+--Sig_/EoF.xD3edO+ut3CeLCKvgE3
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 20, 2025 at 10:03=E2=80=AFPM Wang Hai <wanghai38@huawei.com> wr=
-ote:
->
->
->
-> On 2025/2/20 11:04, Jason Xing wrote:
-> > On Wed, Feb 19, 2025 at 9:11=E2=80=AFPM Wang Hai <wanghai38@huawei.com>=
- wrote:
-> >>
-> >>
-> >>
-> >> On 2025/2/19 11:31, Jason Xing wrote:
-> >>> On Wed, Feb 19, 2025 at 10:16=E2=80=AFAM Wang Hai <wanghai38@huawei.c=
-om> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 2025/2/18 21:35, Eric Dumazet wrote:
-> >>>>> On Tue, Feb 18, 2025 at 12:00=E2=80=AFPM Wang Hai <wanghai38@huawei=
-.com> wrote:
-> >>>>>>
-> >>>>>> If two ack packets from a connection enter tcp_check_req at the sa=
-me time
-> >>>>>> through different cpu, it may happen that req->ts_recent is update=
-d with
-> >>>>>> with a more recent time and the skb with an older time creates a n=
-ew sock,
-> >>>>>> which will cause the tcp_validate_incoming check to fail.
-> >>>>>>
-> >>>>>> cpu1                                cpu2
-> >>>>>> tcp_check_req
-> >>>>>>                                        tcp_check_req
-> >>>>>> req->ts_recent =3D tmp_opt.rcv_tsval =3D t1
-> >>>>>>                                        req->ts_recent =3D tmp_opt.=
-rcv_tsval =3D t2
-> >>>>>>
-> >>>>>> newsk->ts_recent =3D req->ts_recent =3D t2 // t1 < t2
-> >>>>>> tcp_child_process
-> >>>>>> tcp_rcv_state_process
-> >>>>>> tcp_validate_incoming
-> >>>>>> tcp_paws_check
-> >>>>>> if ((s32)(rx_opt->ts_recent - rx_opt->rcv_tsval) <=3D paws_win) //=
- failed
-> >>>>>>
-> >>>>>> In tcp_check_req, restore ts_recent to this skb's to fix this bug.
-> >>>>>>
-> >>>>>> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> >>>>>> Signed-off-by: Wang Hai <wanghai38@huawei.com>
-> >>>>>> ---
-> >>>>>>     net/ipv4/tcp_minisocks.c | 4 ++++
-> >>>>>>     1 file changed, 4 insertions(+)
-> >>>>>>
-> >>>>>> diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
-> >>>>>> index b089b08e9617..0208455f9eb8 100644
-> >>>>>> --- a/net/ipv4/tcp_minisocks.c
-> >>>>>> +++ b/net/ipv4/tcp_minisocks.c
-> >>>>>> @@ -878,6 +878,10 @@ struct sock *tcp_check_req(struct sock *sk, s=
-truct sk_buff *skb,
-> >>>>>>            sock_rps_save_rxhash(child, skb);
-> >>>>>>            tcp_synack_rtt_meas(child, req);
-> >>>>>>            *req_stolen =3D !own_req;
-> >>>>>> +       if (own_req && tcp_sk(child)->rx_opt.tstamp_ok &&
-> >>>>>> +           unlikely(tcp_sk(child)->rx_opt.ts_recent !=3D tmp_opt.=
-rcv_tsval))
-> >>>>>> +               tcp_sk(child)->rx_opt.ts_recent =3D tmp_opt.rcv_ts=
-val;
-> >>>>>> +
-> >>>>>>            return inet_csk_complete_hashdance(sk, child, req, own_=
-req);
-> >>>>>
-> >>>>> Have you seen the comment at line 818 ?
-> >>>>>
-> >>>>> /* TODO: We probably should defer ts_recent change once
-> >>>>>     * we take ownership of @req.
-> >>>>>     */
-> >>>>>
-> >>>>> Plan was clear and explained. Why implement something else (and bug=
-gy) ?
-> >>>>>
-> >>>> Hi Eric,
-> >>>>
-> >>>> Currently we have a real problem, so we want to solve it. This bug
-> >>>> causes the upper layers to be unable to be notified to call accept a=
-fter
-> >>>> the successful three-way handshake.
-> >>>>
-> >>>> Skb from cpu1 that fails at tcp_paws_check (which it could have
-> >>>> succeeded) will not be able to enter the TCP_ESTABLISHED state, and
-> >>>> therefore parent->sk_data_ready(parent) will not be triggered, and s=
-kb
-> >>>> from cpu2 can complete the three-way handshake, but there is also no=
- way
-> >>>> to call parent->sk_data_ready(parent) to notify the upper layer, whi=
-ch
-> >>>> will result
-> >>>> in the upper layer not being able to sense and call accept to obtain=
- the
-> >>>> nsk.
-> >>>>
-> >>>> cpu1                                cpu2
-> >>>> tcp_check_req
-> >>>>                                        tcp_check_req
-> >>>> req->ts_recent =3D tmp_opt.rcv_tsval =3D t1
-> >>>>                                        req->ts_recent=3Dtmp_opt.rcv_=
-tsval=3D t2
-> >>>>
-> >>>> newsk->ts_recent =3D req->ts_recent =3D t2 // t1 < t2
-> >>>> tcp_child_process
-> >>>>     tcp_rcv_state_process
-> >>>>      tcp_validate_incoming
-> >>>>       tcp_paws_check // failed
-> >>>>     parent->sk_data_ready(parent); // will not be called
-> >>>>                                        tcp_v4_do_rcv
-> >>>>                                        tcp_rcv_state_process // Comp=
-lete the three-way handshake
-> >>>>                                                                     =
-                                      // missing parent->sk_data_ready(pare=
-nt);
-> >>>
-> >>> IIUC, the ack received from cpu1 triggered calling
-> >>> inet_csk_complete_hashdance() so its state transited from
-> >>> TCP_NEW_SYN_RECV to TCP_SYN_RECV, right? If so, the reason why not
-> >>> call sk_data_ready() if the skb entered into tcp_child_process() is
-> >>> that its state failed to transit to TCP_ESTABLISHED?
-> >>>
-> >> Yes, because it didn't switch to TCP_ESTABLISHED
-> >>> Here is another question. How did the skb on the right side enter int=
-o
-> >>> tcp_v4_do_rcv() after entering tcp_check_req() if the state of sk
-> >>> which the skb belongs to is TCP_NEW_SYN_RECV? Could you elaborate mor=
-e
-> >>> on this point?
-> >> Since cpu1 successfully created the child sock, cpu2 will return
-> >> null in tcp_check_req and req_stolen is set to true, so that it will
-> >> subsequently go to 'goto lookup' to re-process the packet, and at
-> >> this point, sk->sk_state is already in TCP_SYN_RECV state, and then
-> >> then tcp_v4_do_rcv is called.
-> >
-> > Now I can see what happened there. Perhaps it would be good to update
-> > the commit message
-> > in the next iteration.
-> Hi Jason,
->
-> Thanks for the suggestion, I'll test it out and improve the commit
-> message to send v2.
-> >
-> > Another key information I notice is that the second lookup process
-> > loses the chance to call sk_data_ready() for its parent socket. It's
-> > the one of the main reasons that cause your application to be unable
-> > to get notified. Taking a rough look at tcp_rcv_state_process(), I
-> > think it's not easy to acquire the parent socket there and then call
-> > sk_data_ready() without modifying more codes compared to the current
-> > solution. It's a different solution in theory.
-> Yes, I have considered this fix before, but the complexity of the fix
-> would be higher.
+Hi Andrew,
 
-Agreed.
+> On Wed, Feb 19, 2025 at 11:38:02PM +0100, Lukasz Majewski wrote:
+> > Hi Andrew,
+> >  =20
+> > > On Wed, Feb 19, 2025 at 12:49:36PM +0100, Lukasz Majewski wrote: =20
+> > > > The NXP's vf610 soc is equipped with L2 switch IP block from
+> > > > More Than IP (MTIP) vendor.
+> > > >=20
+> > > > It requires special clock (VF610_CLK_ESW) to be operational.   =20
+> > >=20
+> > > So you have a driver for this switch? It has been talked about in
+> > > the past, but nobody made any progress with it. Ah, it was you in
+> > > 2020. =20
+> >=20
+> > Yes, I'm going to try another time to upstream it.... :-)
+> >  =20
+> > > It
+> > > will be interesting to see what you came up with in the end, pure
+> > > switchdev or a DSA driver. =20
+> >=20
+> > I think it would be:
+> >=20
+> > 1. Standalone driver, which would configure the L2 switch from the
+> > very beginning to work (this is different from FEC on imx28/vf610
+> > where switch is bypassed)
+> >=20
+> > 2. It will use the in-switch registers to have two network
+> > interfaces separated. As a result - it may be slower than the
+> > fec_main.c in this use case. =20
+>=20
+> Seems like a reasonable compromise. You would only load this driver if
+> you intend to make use of the switch...
 
-> >
-> > If your new approach (like your previous reply) works, the following
-> > commit[1] will be reverted/overwritten.
-> I'm sorry, I may not have understood what you meant. Applying my fix,
-> commit[1] is still necessary because it doesn't solve the bug that
-> commit[1] fixes. can you explain in detail, why commit[1] will be
-> reverted/overwritten.
+Yes, the main use case would be the switch (after bridge ... command
+called).
 
-Right, what I was trying to say is that the commit[1] explains how it
-happened which is quite similar to your case from the commit message
-while your approach can avoid the failure of calling sk_data_ready()
-on the basis of commit[1]. IIUC, you postpone updating the recent time
-of the skb received from cpu1 which could let this pass
-tcp_paws_check() and have the chance to call sk_data_ready(). Then the
-issue you reported will be solved. After your patch, we will not
-resort to a second lookup. I'm just murmuring alone.
+However, until then we shall? have port separation.
 
-Sorry for my previous inaccurate/wrong words. The above is what I
-meant. So let it go. Please go ahead and post your patch :)
+>=20
+> > 3. When somebody call "bridge ..." on it - then the in-switch
+> > separation would be disabled. This is the "normal" state of
+> > operation for L2 switch, which would be a HW accelerator for
+> > bridging.
+> >=20
+> > 4. The switchdev would be used to manage it
+> >=20
+> > 5. This would be just a very simple driver - just bridging and
+> > startup of the L2 switch.
+> >=20
+> > After we would have a consensus (i.e. it would be pulled to
+> > mainline) - I would proceed further.
+> >=20
+> > I will try to not touch fec_main.c driver - just write standalone,
+> > new for MoreThanIP L2 switch driver. =20
+>=20
+> It might make sense to refactor the MDIO code into a helper which both
+> can share? No point duplicating that.
 
-Thanks,
-Jason
+This is a latter step (common MDIO library code), IMHO.=20
 
->
-> Thanks,
-> Wang
->
+>=20
+> > If somebody would like to use FEC, then he will insert the proper
+> > module. If switch, another one can be inserted, depending o the
+> > target use case. =20
+>=20
+> This all seems like a reasonable way forward.
+
++1
+
+>=20
+> MoreThanIP is now part of Synopsys. I wounder if this IP now exists in
+> other SoCs? The press release however suggests Synopsys was
+> interesting in the high speed interfaces, not a two ports Fast
+> Ethernet switch.
+
+I would need some detailed documentation....
+
+>=20
+> 	Andrew
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/EoF.xD3edO+ut3CeLCKvgE3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAme3QLoACgkQAR8vZIA0
+zr2Zzgf9HtLGK3Ux7Xf80L6yo2vvKfPiWZ/RuxE4tCAf9yjd5vk2Wfg9EizNIaaX
+ILs8pKZkCxVRQxUqQ7Cx2k02jDSZiHJ30GFYlE6EtUFGgk00siH1uUZA5ScSsHPj
+DZfO/gVB4MW+ofwapPvYEGyUdKQmyB2IOt5OfusD4f9p869BqoskJQpsESHDP16m
+qcDpAwgne46YXCHFpfzDFTEDmriOa0/iY04iTFAV/kbxGu+OwW23X7c5CJFE79KP
+AWxzzSzuu9iNAGcKEW1u9rH6H1iEb0GW9dVBDE/dX5VHwAqRct6S+tZonQGQzQab
+eNojXymqBTXSfY5w/1xzbDX5z4WPGw==
+=A4R8
+-----END PGP SIGNATURE-----
+
+--Sig_/EoF.xD3edO+ut3CeLCKvgE3--
