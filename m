@@ -1,100 +1,185 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24261FDE08;
-	Thu, 20 Feb 2025 15:27:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAAAC1FECC1;
+	Thu, 20 Feb 2025 15:27:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740065263; cv=none; b=goXG9H5Z1Oa26wj/uX+ByZ76nq5ygG7IFI1ZkjWak4AIwxI7IKCt3Ksp9GfG96cgk2cV8xyxzMnTjVnLeGhh+IyKIIU23EiDO80VbjxehHwe6HYQI06Ykprr0DpWfEfF4ktR4/2LuFSP+n7mvBmc0+t1Mmu0xuxP8BR0L9XtjwQ=
+	t=1740065266; cv=none; b=Q9dXloGMSBaLS4ABq80VRV5IsUQ+reaYQNAmROhloLGW9HRpxZd9F30LDq8XFgJScv1NPbSrm/u7acDLOFATm0o0shKF3IJB9WK3Q27gOhlJBBlimPSxdmCPKA4rtt7N+mUrEzAKGKempiiabuQJOyvcpvwpgp8SkXKqR+1H1c8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740065263; c=relaxed/simple;
-	bh=m1j9pVe50EmwhieBaHz88aACdf31p01e6DOvHsva5BE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LwbP/hiJ277PJ5BJn/dSnZ2KgjaFd3gt4e50OaWFQk6ON9UJDYALHABAOB2sEI4byiO/RRSd96tLcvrSJkX3ydfHSxLvUsQqQZ/EYKw116/924w/uw24eDz5ennQ1lzOmnFb9iOgn+hBA81uhTLF2aDRVYJXa6gJJyXUxq7lvi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bIMO1cTR; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bIMO1cTR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740065262; x=1771601262;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=m1j9pVe50EmwhieBaHz88aACdf31p01e6DOvHsva5BE=;
-  b=bIMO1cTRZJ2imD9qrb26SMDqp3mdIn6ppFWLoEBPLkc7doPIe84aAkw6
-   NSVZuGFXQ8arxQdKOKmri/YL2SdyWuzxabMf0mkEjjoCTbS3zwtfSerB5
-   bVMjzV9cXKQ3wFkND/m6oeJpFW7a9YO0PU/YKRGH5krm8A5oHCOU43KTH
-   +rgX9LgqHi/+oqB2zGOYBELizkPepi6WfnoZ23mD0WVLDt/MF7vSK8Mdf
-   6zD49bgHrS74rcQ/02Z0jaAImx2lVvLRNxqUaZJt3a0K71yfa5vsk3/o1
-   TkDLXGYK17gYKOJGI49tf/tSxEB2oGTMaxo/QCDqT66Nl4JCHABtzaRlF
-   g==;
-X-CSE-ConnectionGUID: guI+dRxDQ+iaeoN4cVKW8g==
-X-CSE-MsgGUID: llVgETIPRb6Rxqb25i8Skg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="52279934"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="52279934"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 07:27:41 -0800
-X-CSE-ConnectionGUID: 7/KyD8eNRvKtdwWOVqLJLg==
-X-CSE-MsgGUID: HuAX0+2mSMeYYOPdNUxDVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="145963578"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 07:27:39 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tl8Sf-0000000DNJI-09Lm;
-	Thu, 20 Feb 2025 17:27:37 +0200
-Date: Thu, 20 Feb 2025 17:27:36 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: Re: [PATCH 26/29] serial: 8250: use serial_in/out() helpers
-Message-ID: <Z7dJ6I3Qu5Ho35o5@smile.fi.intel.com>
-References: <20250220111606.138045-1-jirislaby@kernel.org>
- <20250220111606.138045-27-jirislaby@kernel.org>
- <Z7cfvXUCHXVXK_mp@smile.fi.intel.com>
- <2025022032-movie-citation-b267@gregkh>
- <Z7dCvmLLk6P9rbs7@smile.fi.intel.com>
+	s=arc-20240116; t=1740065266; c=relaxed/simple;
+	bh=SHlChQiznyOyaiXivocQyLCrL1hGRXdORENCrVo8+W8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QCAfMVFRZWQmYJse7Ftpnsp8HCYkywoNxWTj1Vb8mMTHhNHQSGiGsQkJuh85S1asLiujvzUraZc7L9N9OFvzsleAv21twgUbiG8iOZUh/wSoWiDC9HoICp2NUlwqy+168B6mOVb41r+AfP+26+7X51jOOACOhAl9xgVPPELqaOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-CSE-ConnectionGUID: Vtl4VarQRXCOXvQgX1p8fQ==
+X-CSE-MsgGUID: pBWOkeKqSpOsCaOkL+YiHQ==
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 21 Feb 2025 00:27:43 +0900
+Received: from ubuntu.adwin.renesas.com (unknown [10.226.92.134])
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id BDFC840436EB;
+	Fri, 21 Feb 2025 00:27:37 +0900 (JST)
+From: John Madieu <john.madieu.xa@bp.renesas.com>
+To: mturquette@baylibre.com,
+	magnus.damm@gmail.com,
+	krzk+dt@kernel.org,
+	rui.zhang@intel.com,
+	daniel.lezcano@linaro.org,
+	sboyd@kernel.org,
+	geert+renesas@glider.be,
+	lukasz.luba@arm.com,
+	rafael@kernel.org,
+	robh@kernel.org,
+	p.zabel@pengutronix.de
+Cc: biju.das.jz@bp.renesas.com,
+	claudiu.beznea.uj@bp.renesas.com,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	john.madieu@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	John Madieu <john.madieu.xa@bp.renesas.com>
+Subject: [PATCH 1/7] soc: renesas: rz-sysc: add syscon/regmap support
+Date: Thu, 20 Feb 2025 16:26:06 +0100
+Message-ID: <20250220152640.49010-2-john.madieu.xa@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250220152640.49010-1-john.madieu.xa@bp.renesas.com>
+References: <20250220152640.49010-1-john.madieu.xa@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7dCvmLLk6P9rbs7@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 20, 2025 at 04:57:02PM +0200, Andy Shevchenko wrote:
-> On Thu, Feb 20, 2025 at 03:39:40PM +0100, Greg KH wrote:
-> > On Thu, Feb 20, 2025 at 02:27:41PM +0200, Andy Shevchenko wrote:
-> > > On Thu, Feb 20, 2025 at 12:16:03PM +0100, Jiri Slaby (SUSE) wrote:
-> > > > There are serial_in/out() helpers to be used instead of direct
-> > > > p->serial_in/out(). Use them in various 8250 drivers.
-> > > 
-> > > Is this just a mechanical (compile-only) conversion?
-> > > IIRC 8250 DW code is twisted in some cases and it might
-> > > be a possibility of dead loops, but I don't remember it
-> > > by heart and haven't checked myself before writing this
-> > > reply.
-> > > 
-> > > TL;DR: this needs a thorough review.
-> > 
-> > Wonderful, are you going to do it?  :)
-> 
-> Why not. Just give me some time.
+The RZ/G3E system controller has various registers that control or report
+some properties specific to individual IPs. The regmap is registered as a
+syscon device to allow these IP drivers to access the registers through the
+regmap API.
 
-Just done it, I think we need small improvements as I suggested in the separate
-reply. Otherwise I like the idea to unify this.
+As other RZ SoCs might have custom read/write callbacks or max-offsets, let's
+register a custom regmap configuration.
 
+Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
+---
+ drivers/soc/renesas/Kconfig         |  1 +
+ drivers/soc/renesas/r9a09g047-sys.c |  1 +
+ drivers/soc/renesas/rz-sysc.c       | 30 ++++++++++++++++++++++++++++-
+ drivers/soc/renesas/rz-sysc.h       |  2 ++
+ 4 files changed, 33 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
+index 49648cf28bd2..3ffd3a4ca18d 100644
+--- a/drivers/soc/renesas/Kconfig
++++ b/drivers/soc/renesas/Kconfig
+@@ -388,6 +388,7 @@ config RST_RCAR
+ 
+ config SYSC_RZ
+ 	bool "System controller for RZ SoCs" if COMPILE_TEST
++	select MFD_SYSCON
+ 
+ config SYSC_R9A08G045
+ 	bool "Renesas RZ/G3S System controller support" if COMPILE_TEST
+diff --git a/drivers/soc/renesas/r9a09g047-sys.c b/drivers/soc/renesas/r9a09g047-sys.c
+index cd2eb7782cfe..5b010a519fab 100644
+--- a/drivers/soc/renesas/r9a09g047-sys.c
++++ b/drivers/soc/renesas/r9a09g047-sys.c
+@@ -64,4 +64,5 @@ static const struct rz_sysc_soc_id_init_data rzg3e_sys_soc_id_init_data __initco
+ 
+ const struct rz_sysc_init_data rzg3e_sys_init_data = {
+ 	.soc_id_init_data = &rzg3e_sys_soc_id_init_data,
++	.max_register_offset = 0x170c,
+ };
+diff --git a/drivers/soc/renesas/rz-sysc.c b/drivers/soc/renesas/rz-sysc.c
+index 1c98da37b7d1..bcbc23da954b 100644
+--- a/drivers/soc/renesas/rz-sysc.c
++++ b/drivers/soc/renesas/rz-sysc.c
+@@ -6,8 +6,10 @@
+  */
+ 
+ #include <linux/io.h>
++#include <linux/mfd/syscon.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
++#include <linux/regmap.h>
+ #include <linux/sys_soc.h>
+ 
+ #include "rz-sysc.h"
+@@ -81,6 +83,14 @@ static int rz_sysc_soc_init(struct rz_sysc *sysc, const struct of_device_id *mat
+ 	return 0;
+ }
+ 
++static struct regmap_config rz_sysc_regmap = {
++	.name = "rz_sysc_regs",
++	.reg_bits = 32,
++	.reg_stride = 4,
++	.val_bits = 32,
++	.fast_io = true,
++};
++
+ static const struct of_device_id rz_sysc_match[] = {
+ #ifdef CONFIG_SYSC_R9A08G045
+ 	{ .compatible = "renesas,r9a08g045-sysc", .data = &rzg3s_sysc_init_data },
+@@ -97,14 +107,21 @@ MODULE_DEVICE_TABLE(of, rz_sysc_match);
+ 
+ static int rz_sysc_probe(struct platform_device *pdev)
+ {
++	const struct rz_sysc_init_data *data;
+ 	const struct of_device_id *match;
+ 	struct device *dev = &pdev->dev;
++	struct regmap *regmap;
+ 	struct rz_sysc *sysc;
++	int ret;
+ 
+ 	match = of_match_node(rz_sysc_match, dev->of_node);
+ 	if (!match)
+ 		return -ENODEV;
+ 
++	data = match->data;
++	if (!data)
++		return -EINVAL;
++
+ 	sysc = devm_kzalloc(dev, sizeof(*sysc), GFP_KERNEL);
+ 	if (!sysc)
+ 		return -ENOMEM;
+@@ -114,7 +131,18 @@ static int rz_sysc_probe(struct platform_device *pdev)
+ 		return PTR_ERR(sysc->base);
+ 
+ 	sysc->dev = dev;
+-	return rz_sysc_soc_init(sysc, match);
++	ret = rz_sysc_soc_init(sysc, match);
++
++	if (data->max_register_offset) {
++		rz_sysc_regmap.max_register = data->max_register_offset;
++		regmap = devm_regmap_init_mmio(dev, sysc->base, &rz_sysc_regmap);
++		if (IS_ERR(regmap))
++			return PTR_ERR(regmap);
++
++		ret = of_syscon_register_regmap(dev->of_node, regmap);
++	}
++
++	return ret;
+ }
+ 
+ static struct platform_driver rz_sysc_driver = {
+diff --git a/drivers/soc/renesas/rz-sysc.h b/drivers/soc/renesas/rz-sysc.h
+index aa83948c5117..37a3bb2c87f8 100644
+--- a/drivers/soc/renesas/rz-sysc.h
++++ b/drivers/soc/renesas/rz-sysc.h
+@@ -34,9 +34,11 @@ struct rz_sysc_soc_id_init_data {
+ /**
+  * struct rz_sysc_init_data - RZ SYSC initialization data
+  * @soc_id_init_data: RZ SYSC SoC ID initialization data
++ * @max_register_offset: Maximum SYSC register offset to be used by the regmap config
+  */
+ struct rz_sysc_init_data {
+ 	const struct rz_sysc_soc_id_init_data *soc_id_init_data;
++	u32 max_register_offset;
+ };
+ 
+ extern const struct rz_sysc_init_data rzg3e_sys_init_data;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.25.1
 
