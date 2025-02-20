@@ -1,39 +1,46 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from ewsoutbound.kpnmail.nl (ewsoutbound.kpnmail.nl [195.121.94.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020891F8AE5
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 13:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329EC1F8BC5
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 13:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.121.94.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740058987; cv=none; b=i8iNS1zMxmAt1jmRh41yCQResmBnF5acX2E8itJsoNkJ8FbKTZ8shNKjDGjoBrp6BrTcNT3aqljV18JyKlEX6PbHLdaw28M017lcMRA+GPYsbycwRB+UpYKU2ytOFmBqyfb31xxbv2wqPJ77iqnb3MJXbxyI9SeDJFz5R2M9HtA=
+	t=1740059006; cv=none; b=cBUd1lIHymDdlJFe4XWSsqVExwqUH+kiQsRX0SqB0TkXT3HppMeTF9RN3h00r5r4IjWG3D96rTzns74jrxDv1M+pt6J9wuSPgbgEGknnEGMoyFXlgxMtOkSD+RU8ZAseA7SCHLuGNr73UdLqmWmUQB8drAzI7pu3CcPKRKadJj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740058987; c=relaxed/simple;
-	bh=Y7HnBZNToq7GKt7IX/nOZH5V/RcBolG0dGOlUbAzoO4=;
+	s=arc-20240116; t=1740059006; c=relaxed/simple;
+	bh=Ygl3Io+G6KqutlPU+fN7rhX49BRWWSTxgCi4pToE2yo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qEWNVIF6DLpBGDohNZX1ryQuBwkQ9gWuU+yS5npSIzGDBF/MNbOE5RXTgS2+7UqV5Fl10jb6L7A/+UVGVVOvdXH0Wc6i1Y4AFpiUBfZuJtd7iA0hRav2yieKKi6J+l1M8iQ/fp35MAQWd8OCOdtTw6n1uo4WZb03ScxgWNtsOCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=opj+ESPE; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	 In-Reply-To:Content-Type; b=OC5JHjA+vHbiXCItOdonbNnlzHWlE1Nrl+9zgVaxoEUdYSNgA4zy6kwbeq8VsVg1EtVLZePye+1Py6CC8UL6ogB4poOMFMRV0uWx1+tPIuXdDbFcDwMECdxqF/C5TWkqPQ41lbF/CBdsppLcv+uKaSQIvtfBLY12pYRGcyIE9no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xs4all.nl; spf=pass smtp.mailfrom=xs4all.nl; dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b=ZrNqmH+M; arc=none smtp.client-ip=195.121.94.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xs4all.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xs4all.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="opj+ESPE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=kOqBlnaxp/e8tP1Wyg8ye2+J2fQPL0Hv5eVWSf6ezbQ=; b=opj+ESPEvOlNdfcVwmMPRmqsA7
-	JaO696vGFSoUxj6QddrGB8fj8zW7h5LwDm79XLQeNc1JGbFE6IPXYC+EVEK+tQQ8+DmgdhsQhOQzx
-	Ur9arKBGMWvsULLBkltSCjmC0co1VoNwfLD20UrNW38lZOXVTHVDEVuAc3ULLNBVyERQ0vnLGPlDq
-	PKhuokC7ogcDuKLsu1IxjrD+l/tl7wjd3CZMPMVP27jdwVl1FNOCnCx0+bFhVHXJAKhjB+GUIo/Is
-	YBr5gEJ3OfLSDUnHQ2DRdE9jFtwvIeljeeAd7Y/p7toOiiBK6qX9OKvp/LtsGbUbEUotU4mZvD6Vp
-	s2zOtlAA==;
-Received: from [187.36.213.55] (helo=[192.168.1.103])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1tl6pC-00FNAe-JI; Thu, 20 Feb 2025 14:42:52 +0100
-Message-ID: <6ec16915-d7ae-4b1f-b156-80892d98e119@igalia.com>
-Date: Thu, 20 Feb 2025 10:42:46 -0300
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="ZrNqmH+M"
+X-KPN-MessageId: a2b237e4-ef90-11ef-a82b-005056abad63
+Received: from smtp.kpnmail.nl (unknown [10.31.155.38])
+	by ewsoutbound.so.kpn.org (Halon) with ESMTPS
+	id a2b237e4-ef90-11ef-a82b-005056abad63;
+	Thu, 20 Feb 2025 14:43:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=xs4all.nl; s=xs4all01;
+	h=content-type:from:to:subject:mime-version:date:message-id;
+	bh=EKsMcRh8yu35s4bHPNkPdYgdQb79+wz6oYDyj9ZvfMg=;
+	b=ZrNqmH+MUFV9RSKjYXnZkzJNnuZp7NrE8+dj+cYujSjNmTMKovbKN4qo/uPEYXtk2ZSW4DL9mdCI2
+	 V5LrdfIGzke6K3iSeA556+w7YAjnCCBHWTE5UdtO4eaTZdjPSNGiKv54BmnFSa673Z3x8GhLdKqxse
+	 Oiudzw165p97wdUrPXARL0cGgifb2+jAePEZ0WXMsPQVMr7oth5KYsGmQhjZPGtBsAgaaAKCcAVhlI
+	 tZdiKhMaz+eo3CY6DHYSfXJD60fqveV4rWGxtkHu+BXFnr5dd+F/Ik92El2zfYdaUYdse7gmQqwfbU
+	 d18zGue3tJ2UjMWHYsuYK3e+zRIdLKw==
+X-KPN-MID: 33|Eaes4jiC4gq/6GSUBflgNK6jQjPkayQpNLwk1yC2Jg/ldz/sMueDSDnkCJYFleA
+ ujuKRdtYYm0KpviVaqjc6ZuKficPf1ZztXjbHlAl0LDk=
+X-KPN-VerifiedSender: Yes
+X-CMASSUN: 33|XHi/ZriUdfwf0X3CR+WgT+xssa8CX/k3++rWXWzY8yfbLB5GJPl7lo158Z2otDZ
+ rHizjhSnc4m7nXkrsplu/mg==
+Received: from [10.47.75.249] (unknown [173.38.220.43])
+	by smtp.xs4all.nl (Halon) with ESMTPSA
+	id a1d21ade-ef90-11ef-957d-005056abf0db;
+	Thu, 20 Feb 2025 14:43:14 +0100 (CET)
+Message-ID: <eaf46d30-71a4-4200-b1e1-6b657372f5ef@xs4all.nl>
+Date: Thu, 20 Feb 2025 14:43:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,173 +48,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/3] drm/sched: Update timedout_job()'s documentation
-To: Philipp Stanner <phasta@kernel.org>,
- Matthew Brost <matthew.brost@intel.com>, Danilo Krummrich <dakr@kernel.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250220112813.87992-2-phasta@kernel.org>
- <20250220112813.87992-5-phasta@kernel.org>
+Subject: Re: [PATCH] drivers/media/pci/sta2x11: replace legacy GPIO APIs
 Content-Language: en-US
-From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
-In-Reply-To: <20250220112813.87992-5-phasta@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+To: Arnd Bergmann <arnd@arndb.de>, Song Chen <chensong_2000@189.cn>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+References: <20241203072742.191787-1-chensong_2000@189.cn>
+ <9489561e-bc41-481d-b542-07fed1161a03@app.fastmail.com>
+ <f552e0f5-6350-416f-89e5-e1a0e6aa2886@189.cn>
+ <070175a7-1bea-4dbb-8b5b-9edee06fec79@app.fastmail.com>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+In-Reply-To: <070175a7-1bea-4dbb-8b5b-9edee06fec79@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Philipp,
+Hi Arnd,
 
-On 20/02/25 08:28, Philipp Stanner wrote:
-> drm_sched_backend_ops.timedout_job()'s documentation is outdated. It
-> mentions the deprecated function drm_sched_resubmit_job(). Furthermore,
-> it does not point out the important distinction between hardware and
-> firmware schedulers.
+On 12/3/24 08:52, Arnd Bergmann wrote:
+> On Tue, Dec 3, 2024, at 08:48, Song Chen wrote:
+>> ok, then remove it.
+>>
+>> what about drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c,
+>> it has the same problem, are you going to remove it as well?
 > 
-> Since firmware schedulers tyipically only use one entity per scheduler,
-> timeout handling is significantly more simple because the entity the
-> faulted job came from can just be killed without affecting innocent
-> processes.
+> No, that one is likely to stay around for a while. I think it
+> was actually removed before and brought back because there are
+> users. That one is just the on-chip component on certain Atom
+> SoCs.
 > 
-> Update the documentation with that distinction and other details.
-> 
-> Reformat the docstring to work to a unified style with the other
-> handles.
-> 
-> Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> ---
->   include/drm/gpu_scheduler.h | 83 +++++++++++++++++++++++--------------
->   1 file changed, 52 insertions(+), 31 deletions(-)
-> 
-> diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
-> index 29e5bda91806..18cdeacf8651 100644
-> --- a/include/drm/gpu_scheduler.h
-> +++ b/include/drm/gpu_scheduler.h
-> @@ -393,8 +393,15 @@ static inline bool drm_sched_invalidate_job(struct drm_sched_job *s_job,
->   	return s_job && atomic_inc_return(&s_job->karma) > threshold;
->   }
->   
-> +/**
-> + * enum drm_gpu_sched_stat - the scheduler's status
-> + *
-> + * @DRM_GPU_SCHED_STAT_NONE: Reserved. Do not use.
-> + * @DRM_GPU_SCHED_STAT_NOMINAL: Operation succeeded.
-> + * @DRM_GPU_SCHED_STAT_ENODEV: Error: Device is not available anymore.
-> + */
->   enum drm_gpu_sched_stat {
-> -	DRM_GPU_SCHED_STAT_NONE, /* Reserve 0 */
-> +	DRM_GPU_SCHED_STAT_NONE,
->   	DRM_GPU_SCHED_STAT_NOMINAL,
->   	DRM_GPU_SCHED_STAT_ENODEV,
->   };
-> @@ -430,6 +437,11 @@ struct drm_sched_backend_ops {
->   	 *
->   	 * TODO: Document which fence rules above.
->   	 *
-> +	 * This method is called in a workqueue context - either from the
-> +	 * submit_wq the driver passed through &drm_sched_init(), or, if the
-> +	 * driver passed NULL, a separate, ordered workqueue the scheduler
-> +	 * allocated.
-> +	 *
+> The sta2x11 platform was never that widely used and I think might
+> have not been completely upstreamed.
 
-The commit message mentions "Update timedout_job()'s documentation". As
-this hunk is related to `run_job()`, maybe it would be a better fit to
-patch 2/3.
+So I can drop this patch, and in the near future I guess we'll receive
+a patch from you removing this driver? Is that correct?
 
->   	 * @sched_job: the job to run
->   	 *
->   	 * Note that the scheduler expects to 'inherit' its own reference to
-> @@ -449,43 +461,52 @@ struct drm_sched_backend_ops {
->   	 * @timedout_job: Called when a job has taken too long to execute,
->   	 * to trigger GPU recovery.
->   	 *
-> -	 * This method is called in a workqueue context.
-> +	 * @sched_job: The job that has timed out
->   	 *
-> -	 * Drivers typically issue a reset to recover from GPU hangs, and this
-> -	 * procedure usually follows the following workflow:
-> +	 * Drivers typically issue a reset to recover from GPU hangs.
-> +	 * This procedure looks very different depending on whether a firmware
-> +	 * or a hardware scheduler is being used.
->   	 *
-> -	 * 1. Stop the scheduler using drm_sched_stop(). This will park the
-> -	 *    scheduler thread and cancel the timeout work, guaranteeing that
-> -	 *    nothing is queued while we reset the hardware queue
-> -	 * 2. Try to gracefully stop non-faulty jobs (optional)
-> -	 * 3. Issue a GPU reset (driver-specific)
-> -	 * 4. Re-submit jobs using drm_sched_resubmit_jobs()
-> -	 * 5. Restart the scheduler using drm_sched_start(). At that point, new
-> -	 *    jobs can be queued, and the scheduler thread is unblocked
-> +	 * For a FIRMWARE SCHEDULER, each ring has one scheduler, and each
-> +	 * scheduler has one entity. Hence, the steps taken typically look as
-> +	 * follows:
-> +	 *
-> +	 * 1. Stop the scheduler using drm_sched_stop(). This will pause the
-> +	 *    scheduler workqueues and cancel the timeout work, guaranteeing
-> +	 *    that nothing is queued while the ring is being removed.
-> +	 * 2. Remove the ring. The firmware will make sure that the
-> +	 *    corresponding parts of the hardware are resetted, and that other
-> +	 *    rings are not impacted.
-> +	 * 3. Kill the entity and the associated scheduler.
-> +	 *
-> +	 *
-> +	 * For a HARDWARE SCHEDULER, a scheduler instance schedules jobs from
-> +	 * one or more entities to one ring. This implies that all entities
-> +	 * associated with the affected scheduler cannot be torn down, because
-> +	 * this would effectively also affect innocent userspace processes which
-> +	 * did not submit faulty jobs (for example).
-> +	 *
-> +	 * Consequently, the procedure to recover with a hardware scheduler
-> +	 * should look like this:
-> +	 *
-> +	 * 1. Stop all schedulers impacted by the reset using drm_sched_stop().
-> +	 * 2. Kill the entity the faulty job stems from.
-> +	 * 3. Issue a GPU reset on all faulty rings (driver-specific).
-> +	 * 4. Re-submit jobs on all schedulers impacted by re-submitting them to
-> +	 *    the entities which are still alive.
+Regards,
 
-I believe that a mention to `drm_sched_resubmit_jobs()` still worth it,
-even mentioning that it is a deprecated option and it shouldn't be used
-in new code. It is deprecated indeed, but we still have five users.
-
-Best Regards,
-- Maíra
-
-> +	 * 5. Restart all schedulers that were stopped in step #1 using
-> +	 *    drm_sched_start().
->   	 *
->   	 * Note that some GPUs have distinct hardware queues but need to reset
->   	 * the GPU globally, which requires extra synchronization between the
-> -	 * timeout handler of the different &drm_gpu_scheduler. One way to
-> -	 * achieve this synchronization is to create an ordered workqueue
-> -	 * (using alloc_ordered_workqueue()) at the driver level, and pass this
-> -	 * queue to drm_sched_init(), to guarantee that timeout handlers are
-> -	 * executed sequentially. The above workflow needs to be slightly
-> -	 * adjusted in that case:
-> +	 * timeout handlers of different schedulers. One way to achieve this
-> +	 * synchronization is to create an ordered workqueue (using
-> +	 * alloc_ordered_workqueue()) at the driver level, and pass this queue
-> +	 * as drm_sched_init()'s @timeout_wq parameter. This will guarantee
-> +	 * that timeout handlers are executed sequentially.
->   	 *
-> -	 * 1. Stop all schedulers impacted by the reset using drm_sched_stop()
-> -	 * 2. Try to gracefully stop non-faulty jobs on all queues impacted by
-> -	 *    the reset (optional)
-> -	 * 3. Issue a GPU reset on all faulty queues (driver-specific)
-> -	 * 4. Re-submit jobs on all schedulers impacted by the reset using
-> -	 *    drm_sched_resubmit_jobs()
-> -	 * 5. Restart all schedulers that were stopped in step #1 using
-> -	 *    drm_sched_start()
-> +	 * Return: The scheduler's status, defined by &drm_gpu_sched_stat
->   	 *
-> -	 * Return DRM_GPU_SCHED_STAT_NOMINAL, when all is normal,
-> -	 * and the underlying driver has started or completed recovery.
-> -	 *
-> -	 * Return DRM_GPU_SCHED_STAT_ENODEV, if the device is no longer
-> -	 * available, i.e. has been unplugged.
->   	 */
->   	enum drm_gpu_sched_stat (*timedout_job)(struct drm_sched_job *sched_job);
->   
+	Hans
 
