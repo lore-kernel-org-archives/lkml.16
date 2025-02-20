@@ -1,78 +1,112 @@
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70A611FDE08;
-	Thu, 20 Feb 2025 15:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A7E1FC7C1;
+	Thu, 20 Feb 2025 15:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740065303; cv=none; b=Be74Q/lh+lXmtlk6x+iCOufLqDOhDB11FN/ZnrfKEDoN29FWI+0hUlqQNOdzhaSv+2kP6SFK8ce0uYGcU5P1qPyVjRCbx/rmK5K4nD+A761Ypkbye2z7V2oHAYS8LrSx8DC58FZHIg1BhBUYaCO0xX8UsVOHDaqXhe1woUK9dz8=
+	t=1740065354; cv=none; b=dBQL6G2CUjlWCvN2K0MwJPWbXSyLmOK+xbEN6yo9RI7TBNv+LT2wMYfT4ZbG2P3W33+wxEqwDMmf7k8/WyvMy4u2YcOvwpl713LTZ2HkYl+UA77AFwAkOUjLmn7sEBXdzgWdB9K374aeURC1fPe9xpP2mPlt/pXm9GKtuKohv4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740065303; c=relaxed/simple;
-	bh=hEvVx6R5nLuwey1OcG7Bnt4lVUc5m4FkNLMpgBx6+hs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Yf7ig/0XPVTL9QL3nT66/FR9ybznd3QgQWLqdv7i9RqBWHCPCqw0pnh3rAnltOCXcLLS30RFIagI+5Yy/JQiP1o/okGU2N4hD0OjrksoyhZwr+dSJ6x6qfUshuBLReq50xqHwQrlBoJDp67UODIWr5+I1pnCOSA5jjieRQfBnLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: tOC581zNTPWctXl+3O2kJw==
-X-CSE-MsgGUID: Bt7qRyNlRSGlQ8rn88gHPg==
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 21 Feb 2025 00:28:21 +0900
-Received: from ubuntu.adwin.renesas.com (unknown [10.226.92.134])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 6CDC04043701;
-	Fri, 21 Feb 2025 00:28:15 +0900 (JST)
-From: John Madieu <john.madieu.xa@bp.renesas.com>
-To: mturquette@baylibre.com,
-	magnus.damm@gmail.com,
-	krzk+dt@kernel.org,
-	rui.zhang@intel.com,
-	daniel.lezcano@linaro.org,
-	sboyd@kernel.org,
-	geert+renesas@glider.be,
-	lukasz.luba@arm.com,
-	rafael@kernel.org,
-	robh@kernel.org,
-	p.zabel@pengutronix.de
-Cc: biju.das.jz@bp.renesas.com,
-	claudiu.beznea.uj@bp.renesas.com,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	john.madieu@gmail.com,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	John Madieu <john.madieu.xa@bp.renesas.com>
-Subject: [PATCH 7/7] arm64: defconfig: Enable RZ/G3E thermal
-Date: Thu, 20 Feb 2025 16:26:12 +0100
-Message-ID: <20250220152640.49010-8-john.madieu.xa@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250220152640.49010-1-john.madieu.xa@bp.renesas.com>
-References: <20250220152640.49010-1-john.madieu.xa@bp.renesas.com>
+	s=arc-20240116; t=1740065354; c=relaxed/simple;
+	bh=eKWU19n0WBr+VIGXdyoC3+/g/6CUv/SBl+AhU83JuOg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=G+/lxLDNinWD/dlWx+ZLJnedRh0GKcFUWAVPd+adgUKYtGG8qYmZ00EtT++24KJFRrV86f61QWnO67GpnAMB2hRGFBwcRdR9zv4YJqWaYsobCGrBNYF79oyUFFv0wawaX2oPDO7h3G9lx+zv1IMTETtwq+/7aQJTruG/BtWLqcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WrdraW2z; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WrdraW2z"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6e6711bbd00so1636416d6.1;
+        Thu, 20 Feb 2025 07:29:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740065352; x=1740670152; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=eKWU19n0WBr+VIGXdyoC3+/g/6CUv/SBl+AhU83JuOg=;
+        b=WrdraW2zIM/3ia0IuU++DOXLfoXjLfNKy3F3cPs4DQyllh+jkGTyuI8c2mD8T3lzzm
+         jAGs36Jt6Jv3cmSIQeznfs/CAyhPfa9UGUfetv9tI+9+Kf4ensqUrh/6cSIijPSelXRn
+         cLSMpKOhVr5n3uEvC6ocX+2SNODW48AGb0JANwM0+d7noRrgZDcF/ic2W8ZCNHKpeZ0n
+         +EO0Mp5dAyV2KwMmhGSliocBwRCiZix9zq5LduwSzssMcNcsbg/Yq6eQNbt0SjUGPLkG
+         PuzBzrIt810grrzSArHQPdZtLWug2RpeN/MOF5l0BiCnwT021o2tKt4W2+z2BZ7mXGDs
+         N7BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740065352; x=1740670152;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eKWU19n0WBr+VIGXdyoC3+/g/6CUv/SBl+AhU83JuOg=;
+        b=Io4+3kLzJUGIt8hYtzpeTcXSvZUyEOSNDnBYZYVN9Cs5EYjp87eS1ZjTu12OIHFb07
+         6G5w+5ux80KZwRlk9EikgHMl/90Ow6bWjjwG2L0UtdgL5+lkc3Gn56jLNj0IXK9+31At
+         m6yX7p+0fTLQX+axzy44lRQBpdeWYKJnvbFmYug1R/d2gXQZTMEcqclUELI0RUPu5g6z
+         XTb7IqFpdud2VF5wQow5JGH0LvJ113UvHMRilc6xZpiYjyYczM8eOntriX/5PiArjfdx
+         WKsw5VHB3AUO2nZkqkv0uybcaOylgWtCmls5BOEQeShoX/GavNM8pRRN55IzvR10ST9v
+         aOAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVPqC975CmTzwGCZZijlcO0/Z6vhum5g59lR4AK9fJ7zX4iVGVG+8fKPOymNpAp5JAAMFj7hjTpZP64FzE=@vger.kernel.org, AJvYcCVmxtPAs+Y2WUk6gFxxbo9JOQSCDo50PL+6VijiKXcfaSSsHUeIYoYLcPSM6QFDJ8EmIBuV1ffhBNdV2JE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywjc4xUibZYvrdcgLsiWvQ+AgBJGECapWQQevXzPDHN4j6HnHmQ
+	U2k+6q1Q5HdBrTxPbMy5FtMB9LOuy6P+U9/yenCMGtrh0UzTGTN8KmlKdw==
+X-Gm-Gg: ASbGncsIbzCxzoqUi8UnFiXI2EwIzBcMNmBx1QKHMEAU6AGTTV9ovqabjii5dP7kTZb
+	Dw0Z5F98SpS/QdWb1l2+NfVdHmDEtC92Sv4A953HA5yH9xnBCOnjh624JMIwd5PKOwlCKHPcYF0
+	qbTFiDpiwJ1vMZB6R5/5gjKNQFiwJVxokmkbNt0eUxr1HrAgIZBFhtioKpoBc2VYXNF5DmCLiDO
+	TxOthhurFfmw+LjtclStOhF+Urivohjng8tmCS+LWsEETY6dCbQvPbaqqaS/QRj8SRNAL4fQDUN
+	zNPRzzmh0PUPpVrTRmo5BJ1iQLNimO83XXmtXE17oZtJc/5RiQqxcCrBT/XOCt2VRlrj
+X-Google-Smtp-Source: AGHT+IE3BlHjHE+N3vVcpX9SIe1Drmm7gJavU4W/NFg9hMumG9l36jT00FR8pSGnnpptLdmpScHUvQ==
+X-Received: by 2002:ad4:5766:0:b0:6d8:8283:445c with SMTP id 6a1803df08f44-6e66ccc47d9mr109692786d6.4.1740065352096;
+        Thu, 20 Feb 2025 07:29:12 -0800 (PST)
+Received: from ?IPv6:2600:1002:a012:8f2c:1cd:572e:a9fb:7da4? ([2600:1002:a012:8f2c:1cd:572e:a9fb:7da4])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e65d785a4asm87656386d6.29.2025.02.20.07.29.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 07:29:11 -0800 (PST)
+Message-ID: <61bd42742ff8a8e5f409b0f2ccc4ab8875dfe7a4.camel@gmail.com>
+Subject: Re: [PATCH] media: vim2m: print device name after registering device
+From: Matthew Majewski <mattwmajewski@gmail.com>
+To: Shuah Khan <skhan@linuxfoundation.org>, Uwe Kleine-Konig
+	 <u.kleine-koenig@baylibre.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil	
+ <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Date: Thu, 20 Feb 2025 10:29:10 -0500
+In-Reply-To: <5051c252-f1ef-4731-b0cb-fedfcda04d98@linuxfoundation.org>
+References: <20250219190501.295976-1-mattwmajewski@gmail.com>
+	 <ym5q2cpn2lxk7sarylnf4o3ztvtnb47wroxdiibdsp6yz4gt2y@jfyfo2ekmdmj>
+	 <5051c252-f1ef-4731-b0cb-fedfcda04d98@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (by Flathub.org) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Enable the CONFIG_RZG3E_THERMAL flag for the RZ/G3E SoC.
+On Wed, 2025-02-19 at 17:21 -0700, Shuah Khan wrote:
+> On 2/19/25 14:58, Uwe Kleine-Konig wrote:
+> > On Wed, Feb 19, 2025 at 02:05:01PM -0500, Matthew Majewski wrote:
+> > > Move the v4l2_info() call displaying the video device name after
+> > > the
+> > > device is actually registered.
+> > >=20
+> > > This fixes a bug where the driver was always displaying
+> > > "/dev/video0"
+> > > since it was reading from the vfd before it was registered.
+> > >=20
+> > > Signed-off-by: Matthew Majewski <mattwmajewski@gmail.com>
+> >=20
+> > A Fixes: tag would be great.
+>=20
+> Matthew, there is no need to resend the patch. Just send me the
+> Fixes tag and I will update the repo.
+>=20
+>=20
 
-Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Ok, here is the fixes tag:
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index a1cc3814b09b..91136c0196b5 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -714,6 +714,7 @@ CONFIG_ROCKCHIP_THERMAL=m
- CONFIG_RCAR_THERMAL=y
- CONFIG_RCAR_GEN3_THERMAL=y
- CONFIG_RZG2L_THERMAL=y
-+CONFIG_RZG3E_THERMAL=y
- CONFIG_ARMADA_THERMAL=y
- CONFIG_MTK_THERMAL=m
- CONFIG_MTK_LVTS_THERMAL=m
--- 
-2.25.1
+Fixes: cf7f34777a5b4100a ("media: vim2m: Register video device after
+setting up internals")
+
+Thank you both for your time.
+
+Best,
+Matthew
 
