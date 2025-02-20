@@ -1,359 +1,296 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E97A1EF080;
-	Thu, 20 Feb 2025 10:23:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E271F0E37
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 10:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740047032; cv=none; b=q1esCJ9jIIu3mFoEetnCztNmxBlNyeh+OA5oeC4ivAiEV0ulOtcaasuR0mNn86D8rtC9e6oXBNuecknx1Muwcckkv6Irw+i/Z6xzu/K/RAkMYRonrIz/TpqMtX094W0HWSNo7RrqzfO7SXoJYVDVYE+nSEmNWtfMq2Zt3MQneAQ=
+	t=1740047050; cv=none; b=H6EJ65uVF3ba5aS0q49est8JsQ50S9GmNegV2SEznmOOt/+pE4hzgJPfDu9JYm9ekkTBdzeV8DFeRBo4ezwIRohk7f+h1F0eEi7o+yjV/oV8ITo5X1r/YZS9lw3n06aBlqLHFkYrB8xBZ+i2v9/zVO5Xkpx5KvWRvs9qXugiQCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740047032; c=relaxed/simple;
-	bh=0helDRaCYLnEE74Bkw6/ilIDyOIv9Iq8QcsN2XlLpFA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MFSXVCEIs1jIHGCUySF11cDbKnZ9QbT2hg/K+TahWlNAUFpulrOZ0P5kuFEg+q3gz3GVfEQMZVTpkME897SMlXu5GKLb5c46Bci3e1T736WhIFiOlDv7Ss0AvN3o6j1XX1KFk4sWiYIvWrx7BZZWAWWJjEDMZP8vF0KU36rHdLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QMaYtmhW; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740047050; c=relaxed/simple;
+	bh=T6C6/yt6mh3mFanDt8kCp8w3RSLW1X0SJGe4BfK/rLU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eFFtJ4JhjaOUCtYD6IZxyYVbmSS7yP9ZzoQYI3llscfiqrJY589cs6gYcD4t6/8M2+0nWw6/BpsQvG/7uzzDrZre/VyyTTFfFqmGCs6XTYDQsPtG3fgwDxz0fP9+E6qjkQ+do4nKym47rRPfij0H/joKYRMobCXFFhYdwuks2CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SmSFSVrq; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QMaYtmhW"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5dec996069aso1185072a12.2;
-        Thu, 20 Feb 2025 02:23:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740047028; x=1740651828; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JTW9JQ6BVPrLLka+lHFZ6vOQyZlCPwf9f6ytVArycVQ=;
-        b=QMaYtmhWR7ONfG2lhTlz8gRjyDqGJoIinVEvd0x5PtXUW0hwmq86iLx2FxfFnzhl2t
-         /2gKWr9XRdeu91TVWhBkn8QKh7+TbDZ3rTcW2+P9twW2QAkOplrrR9wVg7iJ7G6OCNVn
-         HRzgSDw2oLp7cgIabwIHHojiGprt6vajVEWM6fv4iGIW3xL3tijCVY4Qt/nVMCENRVWP
-         xf51pERxsdhzfVBXXNFloWL1Ce75fjES2MDFYBrnpEtFFrmYkCz1MP7m/n+YKgRdHhiX
-         zfG7QkkTtICVMhAgii88bKuHrVlpOyvtM6MU18lkE6sSx0QAB4MXd/sqMH7qDu/l6yMg
-         vnhA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SmSFSVrq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740047047;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=mf2cDKQ5L9gU2E8fN/2evuT1C1fjualTRcJKcrTRx4g=;
+	b=SmSFSVrqQ2mTciXoMg+I69RQGsQTr8NiFIrr/4MaaxsYtxN2bFVHo/XuC08ot91MwkUcaF
+	BYdwUAL5Uyq34+FN9BDeCtOI8aVBoPkTrn4CITTs2GOh2T5Dzzop+UsM06HxwOQ1x9EZ0w
+	8vpeRai5PaPhMupOO4IJoX93+Yi644o=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-573-222BMVzqM_2P1e0-4tANpA-1; Thu, 20 Feb 2025 05:24:05 -0500
+X-MC-Unique: 222BMVzqM_2P1e0-4tANpA-1
+X-Mimecast-MFC-AGG-ID: 222BMVzqM_2P1e0-4tANpA_1740047044
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43995bff469so4916315e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 02:24:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740047028; x=1740651828;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JTW9JQ6BVPrLLka+lHFZ6vOQyZlCPwf9f6ytVArycVQ=;
-        b=fGcdxPJZbTLw4d575v+2Mk53obsAeKNyJUMkk72p0BfwsJWz5l5qfuT32wLisjn2uj
-         oA+AOKC/bl7Vj95BWqPlW+Xq+6dZ7+kv+fPwGT+o3g9H/Q5jw8wxVu1Y4efbW+TgjweV
-         3NfJcxQIgbVnuuHjKg59zYIEH8M7aZf5e2AOJh4brSQtzPn9zqN8WZYhYn9fOWDtjN40
-         VY4vtOttsuEIEkskZunwQMzNfdhr4M3WkD9Uf5Tst7cAIzwpLmSQxHUoaVufc/NBHAlF
-         tNJwAMUy3p6gAT4pySRrUev8dCvZvcacXvvEG+QRla33ndF9Eoipt7Yfywngquw26fyu
-         r4vg==
-X-Forwarded-Encrypted: i=1; AJvYcCU/uHj9QpesZVN/TWuUOBAIO2/fssoWSOrJGnvuaDDNHp/3391f1YPl8iiYwQKlUvetOIgTGlv53cLpZkU=@vger.kernel.org, AJvYcCVbDZRHI3JTvJH3FvVPxcTtrI+8SaLV6kac3JguQURu01EjyUp9Bdp54wt979DL6x8O1VwezEOq5HO1@vger.kernel.org
-X-Gm-Message-State: AOJu0YzF2wYnnzQXKnvcbU18GRn6cuSvIGtwBYLGmpelBT6ZaMAXnPZv
-	hNvCXY96iep+Xyn5dIg29Jc4aB6WMsv0ebM0falVAt27EVtZOMWLVp5lsXBxlaYrdm0vIwFj+Qi
-	HLG2LQpHwwbhbWhXC1iw78UQbEDg=
-X-Gm-Gg: ASbGncvQNRnRPeuxyfKXawPYnOf6QSQfuYpHoNCVC0RHyNgZu+zhAxrJdqAKEWx7hcm
-	8pTqPacN9UXO9vwPaX5nvQsgE2eCFsx+tYqAATeNs2pmF7x9RIbuLnWyz3XPUD9PTH5jezF4N
-X-Google-Smtp-Source: AGHT+IG/YBcv0jlVxd1Dsly8KZN+lsED1+IXEzcMF/mPJVM7E5GmfDfmQEoy/eO99a4Eh905mqj/gm/Sz+sME9o8KZw=
-X-Received: by 2002:a05:6402:5411:b0:5d0:f9f1:cd73 with SMTP id
- 4fb4d7f45d1cf-5e08950d212mr6456185a12.13.1740047028024; Thu, 20 Feb 2025
- 02:23:48 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740047044; x=1740651844;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=mf2cDKQ5L9gU2E8fN/2evuT1C1fjualTRcJKcrTRx4g=;
+        b=MbIUAz2Hfpvp729rbAAhgKgnxdcPbVrqLvIVnD0Q08EYEEe6TANfBG+ISnxAdzCHJp
+         vwX21rI+uKrWdN1g94lYVUoPnUEfRkJNX7YdZUfI+B2KxB2nyT9sYqYv39x5K0Lha6Qr
+         hPZTXEKu7UvWEdnT6i8pDx0dET47JWz5BvSZyGZrLsjIzenAQfMBTGQ+mqogqQ26GCm6
+         TXoLNNOA73zOG7VDrs8rnBLQnKwW3gjR1D8Y1d1dbZmpiYy7Nd9exlZpUP2efHjwprRM
+         ClT6SiHXOWUfOyZupZ8YfT/n3iMNd8omoLPI0iL+NMTtLFhF+Tc8noCw0uhWlgelSAxG
+         ffUg==
+X-Forwarded-Encrypted: i=1; AJvYcCUmDBVrCNC3hH0fwlRsG0dnrPszt4eTN7q/zSEMp/SzqBZh+uHH3cfj5z8pwNX/o2Pz7ff6ZEAFvRvHWLc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwEw//VaouCX0bOwt/0GntHnmkeNLJ4p87zCOOB8MbGwuo4wVq
+	eRFWJeGRAo6Z5vgFc1KWKGFtLR2inKpMIiCEUky2XdWVHyLrpiUr3d/4Wjv8sDGSaMJmaexUWSo
+	D1ltm/SQo0ZSd9eQKWYHmFdYcFxx9nLUlvOiTW2oEXXWuE3GqPaAsRhADczLS3A==
+X-Gm-Gg: ASbGnctSwO0LD1S8CFXZuCDyERtjVTPMg/iN8ybZS+CJ2MIZm/xbL6js1OJcgWSzCSV
+	8m+CluzmDSqLYZHJjHA849Vubepl/e+5i1AjLoNCmKREFUuMEoPSH0XhGXIaIKMEJu6TpC8eVOI
+	jRHblqyQR52en6IQJAABM1hJ0afAhHteF28PMPIyZqGIdAbBMcWNGwj/e7XQXD8VAVGpdqjL8dp
+	rOMQ7CC7GQPo8ZPBUIZSNDDWYMdIjZW8VaSKvJFjwj37pC3kDbpAmVLT1tlCxemNCDGWQzbbvSi
+	FQiB9tT2kbwkKrU/fjG7vLsW6iaFJIjv6y+poZ1HjeHf4VgoFb9gXwS+XRd7FFwByRzlWDBXDZ9
+	KQDq+Ps4Zd8LYkRrRVPg/Y8l53HwVog==
+X-Received: by 2002:a05:600c:3b8c:b0:439:9ee2:5534 with SMTP id 5b1f17b1804b1-4399ee257f2mr54075465e9.12.1740047044175;
+        Thu, 20 Feb 2025 02:24:04 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHd9rEb7gsSDCdQFRuLZkwh4+ij2UtULFUF81rRtRtD1I3bB5L2syyipAqMmVY57Bued0MhDw==
+X-Received: by 2002:a05:600c:3b8c:b0:439:9ee2:5534 with SMTP id 5b1f17b1804b1-4399ee257f2mr54075125e9.12.1740047043745;
+        Thu, 20 Feb 2025 02:24:03 -0800 (PST)
+Received: from ?IPV6:2003:cb:c706:2000:e44c:bc46:d8d3:be5? (p200300cbc7062000e44cbc46d8d30be5.dip0.t-ipconnect.de. [2003:cb:c706:2000:e44c:bc46:d8d3:be5])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43982bcc607sm117006065e9.16.2025.02.20.02.24.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Feb 2025 02:24:02 -0800 (PST)
+Message-ID: <02f14ee1-923f-47e3-a994-4950afb9afcc@redhat.com>
+Date: Thu, 20 Feb 2025 11:24:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250208140110.2389-1-linux.amoon@gmail.com> <20250210174400.b63bhmtkuqhktb57@thinkpad>
- <CANAwSgQ20ANRh9wJ3E-T9yNi=g1g129mXq3cZYvPnK1bMx+w7g@mail.gmail.com>
- <20250214060935.cgnc436upawnfzn6@thinkpad> <CANAwSgTWa9gwpPhVCYzJM5BL5wUkpB4eyDtX+Vs3SX3a9541wA@mail.gmail.com>
-In-Reply-To: <CANAwSgTWa9gwpPhVCYzJM5BL5wUkpB4eyDtX+Vs3SX3a9541wA@mail.gmail.com>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Thu, 20 Feb 2025 15:53:31 +0530
-X-Gm-Features: AWEUYZmqz8wU1T6QmC-Vtq0Pg6l3DfCcfhyI17Ar7weexcUjspqcPZLiQMdvpto
-Message-ID: <CANAwSgRvT-Mqj3XPrME6oKhYmnCUZLnwHfFHmSL=PK+xVLHAqw@mail.gmail.com>
-Subject: Re: [PATCH v1] PCI: starfive: Fix kmemleak in StarFive PCIe driver's
- IRQ handling
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Kevin Xie <kevin.xie@starfivetech.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Conor Dooley <conor.dooley@microchip.com>, Minda Chen <minda.chen@starfivetech.com>, 
-	"open list:PCIE DRIVER FOR STARFIVE JH71x0" <linux-pci@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] mm: Fix kernel BUG when userfaultfd_move encounters
+ swapcache
+To: Barry Song <21cnbao@gmail.com>
+Cc: Liam.Howlett@oracle.com, aarcange@redhat.com, akpm@linux-foundation.org,
+ axelrasmussen@google.com, bgeffon@google.com, brauner@kernel.org,
+ hughd@google.com, jannh@google.com, kaleshsingh@google.com,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, lokeshgidra@google.com,
+ mhocko@suse.com, ngeoffray@google.com, peterx@redhat.com, rppt@kernel.org,
+ ryan.roberts@arm.com, shuah@kernel.org, surenb@google.com,
+ v-songbaohua@oppo.com, viro@zeniv.linux.org.uk, willy@infradead.org,
+ zhangpeng362@huawei.com, zhengtangquan@oppo.com, yuzhao@google.com,
+ stable@vger.kernel.org
+References: <69dbca2b-cf67-4fd8-ba22-7e6211b3e7c4@redhat.com>
+ <20250220092101.71966-1-21cnbao@gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250220092101.71966-1-21cnbao@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Manivannan,
+On 20.02.25 10:21, Barry Song wrote:
+> On Thu, Feb 20, 2025 at 9:40 PM David Hildenbrand <david@redhat.com> wrote:
+>>
+>> On 19.02.25 19:58, Suren Baghdasaryan wrote:
+>>> On Wed, Feb 19, 2025 at 10:30 AM David Hildenbrand <david@redhat.com> wrote:
+>>>>
+>>>> On 19.02.25 19:26, Suren Baghdasaryan wrote:
+>>>>> On Wed, Feb 19, 2025 at 3:25 AM Barry Song <21cnbao@gmail.com> wrote:
+>>>>>>
+>>>>>> From: Barry Song <v-songbaohua@oppo.com>
+>>>>>>
+>>>>>> userfaultfd_move() checks whether the PTE entry is present or a
+>>>>>> swap entry.
+>>>>>>
+>>>>>> - If the PTE entry is present, move_present_pte() handles folio
+>>>>>>      migration by setting:
+>>>>>>
+>>>>>>      src_folio->index = linear_page_index(dst_vma, dst_addr);
+>>>>>>
+>>>>>> - If the PTE entry is a swap entry, move_swap_pte() simply copies
+>>>>>>      the PTE to the new dst_addr.
+>>>>>>
+>>>>>> This approach is incorrect because even if the PTE is a swap
+>>>>>> entry, it can still reference a folio that remains in the swap
+>>>>>> cache.
+>>>>>>
+>>>>>> If do_swap_page() is triggered, it may locate the folio in the
+>>>>>> swap cache. However, during add_rmap operations, a kernel panic
+>>>>>> can occur due to:
+>>>>>>     page_pgoff(folio, page) != linear_page_index(vma, address)
+>>>>>
+>>>>> Thanks for the report and reproducer!
+>>>>>
+>>>>>>
+>>>>>> $./a.out > /dev/null
+>>>>>> [   13.336953] page: refcount:6 mapcount:1 mapping:00000000f43db19c index:0xffffaf150 pfn:0x4667c
+>>>>>> [   13.337520] head: order:2 mapcount:1 entire_mapcount:0 nr_pages_mapped:1 pincount:0
+>>>>>> [   13.337716] memcg:ffff00000405f000
+>>>>>> [   13.337849] anon flags: 0x3fffc0000020459(locked|uptodate|dirty|owner_priv_1|head|swapbacked|node=0|zone=0|lastcpupid=0xffff)
+>>>>>> [   13.338630] raw: 03fffc0000020459 ffff80008507b538 ffff80008507b538 ffff000006260361
+>>>>>> [   13.338831] raw: 0000000ffffaf150 0000000000004000 0000000600000000 ffff00000405f000
+>>>>>> [   13.339031] head: 03fffc0000020459 ffff80008507b538 ffff80008507b538 ffff000006260361
+>>>>>> [   13.339204] head: 0000000ffffaf150 0000000000004000 0000000600000000 ffff00000405f000
+>>>>>> [   13.339375] head: 03fffc0000000202 fffffdffc0199f01 ffffffff00000000 0000000000000001
+>>>>>> [   13.339546] head: 0000000000000004 0000000000000000 00000000ffffffff 0000000000000000
+>>>>>> [   13.339736] page dumped because: VM_BUG_ON_PAGE(page_pgoff(folio, page) != linear_page_index(vma, address))
+>>>>>> [   13.340190] ------------[ cut here ]------------
+>>>>>> [   13.340316] kernel BUG at mm/rmap.c:1380!
+>>>>>> [   13.340683] Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
+>>>>>> [   13.340969] Modules linked in:
+>>>>>> [   13.341257] CPU: 1 UID: 0 PID: 107 Comm: a.out Not tainted 6.14.0-rc3-gcf42737e247a-dirty #299
+>>>>>> [   13.341470] Hardware name: linux,dummy-virt (DT)
+>>>>>> [   13.341671] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>>>>>> [   13.341815] pc : __page_check_anon_rmap+0xa0/0xb0
+>>>>>> [   13.341920] lr : __page_check_anon_rmap+0xa0/0xb0
+>>>>>> [   13.342018] sp : ffff80008752bb20
+>>>>>> [   13.342093] x29: ffff80008752bb20 x28: fffffdffc0199f00 x27: 0000000000000001
+>>>>>> [   13.342404] x26: 0000000000000000 x25: 0000000000000001 x24: 0000000000000001
+>>>>>> [   13.342575] x23: 0000ffffaf0d0000 x22: 0000ffffaf0d0000 x21: fffffdffc0199f00
+>>>>>> [   13.342731] x20: fffffdffc0199f00 x19: ffff000006210700 x18: 00000000ffffffff
+>>>>>> [   13.342881] x17: 6c203d2120296567 x16: 6170202c6f696c6f x15: 662866666f67705f
+>>>>>> [   13.343033] x14: 6567617028454741 x13: 2929737365726464 x12: ffff800083728ab0
+>>>>>> [   13.343183] x11: ffff800082996bf8 x10: 0000000000000fd7 x9 : ffff80008011bc40
+>>>>>> [   13.343351] x8 : 0000000000017fe8 x7 : 00000000fffff000 x6 : ffff8000829eebf8
+>>>>>> [   13.343498] x5 : c0000000fffff000 x4 : 0000000000000000 x3 : 0000000000000000
+>>>>>> [   13.343645] x2 : 0000000000000000 x1 : ffff0000062db980 x0 : 000000000000005f
+>>>>>> [   13.343876] Call trace:
+>>>>>> [   13.344045]  __page_check_anon_rmap+0xa0/0xb0 (P)
+>>>>>> [   13.344234]  folio_add_anon_rmap_ptes+0x22c/0x320
+>>>>>> [   13.344333]  do_swap_page+0x1060/0x1400
+>>>>>> [   13.344417]  __handle_mm_fault+0x61c/0xbc8
+>>>>>> [   13.344504]  handle_mm_fault+0xd8/0x2e8
+>>>>>> [   13.344586]  do_page_fault+0x20c/0x770
+>>>>>> [   13.344673]  do_translation_fault+0xb4/0xf0
+>>>>>> [   13.344759]  do_mem_abort+0x48/0xa0
+>>>>>> [   13.344842]  el0_da+0x58/0x130
+>>>>>> [   13.344914]  el0t_64_sync_handler+0xc4/0x138
+>>>>>> [   13.345002]  el0t_64_sync+0x1ac/0x1b0
+>>>>>> [   13.345208] Code: aa1503e0 f000f801 910f6021 97ff5779 (d4210000)
+>>>>>> [   13.345504] ---[ end trace 0000000000000000 ]---
+>>>>>> [   13.345715] note: a.out[107] exited with irqs disabled
+>>>>>> [   13.345954] note: a.out[107] exited with preempt_count 2
+>>>>>>
+>>>>>> Fully fixing it would be quite complex, requiring similar handling
+>>>>>> of folios as done in move_present_pte.
+>>>>>
+>>>>> How complex would that be? Is it a matter of adding
+>>>>> folio_maybe_dma_pinned() checks, doing folio_move_anon_rmap() and
+>>>>> folio->index = linear_page_index like in move_present_pte() or
+>>>>> something more?
+>>>>
+>>>> If the entry is pte_swp_exclusive(), and the folio is order-0, it cannot
+>>>> be pinned and we may be able to move it I think.
+>>>>
+>>>> So all that's required is to check pte_swp_exclusive() and the folio size.
+>>>>
+>>>> ... in theory :) Not sure about the swap details.
+>>>
+>>> Looking some more into it, I think we would have to perform all the
+>>> folio and anon_vma locking and pinning that we do for present pages in
+>>> move_pages_pte(). If that's correct then maybe treating swapcache
+>>> pages like a present page inside move_pages_pte() would be simpler?
+>>
+>> I'd be more in favor of not doing that. Maybe there are parts we can
+>> move out into helper functions instead, so we can reuse them?
+> 
+> I actually have a v2 ready. Maybe we can discuss if some of the code can be
+> extracted as a helper based on the below before I send it formally?
+> 
+> I’d say there are many parts that can be shared with present PTE, but there
+> are two major differences:
+> 
+> 1. Page exclusivity – swapcache doesn’t require it (try_to_unmap_one has remove
+> Exclusive flag;)
+> 2. src_anon_vma and its lock – swapcache doesn’t require it（folio is not mapped）
+> 
 
-On Thu, 20 Feb 2025 at 13:43, Anand Moon <linux.amoon@gmail.com> wrote:
->
-> Hi Manivannan
->
-> On Fri, 14 Feb 2025 at 11:39, Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > On Tue, Feb 11, 2025 at 01:09:04AM +0530, Anand Moon wrote:
-> > > Hi Manivannan
-> > >
-> > > On Mon, 10 Feb 2025 at 23:14, Manivannan Sadhasivam
-> > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > >
-> > > > On Sat, Feb 08, 2025 at 07:31:08PM +0530, Anand Moon wrote:
-> > > > > kmemleak reported following debug log
-> > > > >
-> > > > > $ sudo cat /sys/kernel/debug/kmemleak
-> > > > > unreferenced object 0xffffffd6c47c2600 (size 128):
-> > > > >   comm "kworker/u16:2", pid 38, jiffies 4294942263
-> > > > >   hex dump (first 32 bytes):
-> > > > >     cc 7c 5a 8d ff ff ff ff 40 b0 47 c8 d6 ff ff ff  .|Z.....@.G.=
-....
-> > > > >     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ............=
-....
-> > > > >   backtrace (crc 4f07ff07):
-> > > > >     __create_object+0x2a/0xfc
-> > > > >     kmemleak_alloc+0x38/0x98
-> > > > >     __kmalloc_cache_noprof+0x296/0x444
-> > > > >     request_threaded_irq+0x168/0x284
-> > > > >     devm_request_threaded_irq+0xa8/0x13c
-> > > > >     plda_init_interrupts+0x46e/0x858
-> > > > >     plda_pcie_host_init+0x356/0x468
-> > > > >     starfive_pcie_probe+0x2f6/0x398
-> > > > >     platform_probe+0x106/0x150
-> > > > >     really_probe+0x30e/0x746
-> > > > >     __driver_probe_device+0x11c/0x2c2
-> > > > >     driver_probe_device+0x5e/0x316
-> > > > >     __device_attach_driver+0x296/0x3a4
-> > > > >     bus_for_each_drv+0x1d0/0x260
-> > > > >     __device_attach+0x1fa/0x2d6
-> > > > >     device_initial_probe+0x14/0x28
-> > > > > unreferenced object 0xffffffd6c47c2900 (size 128):
-> > > > >   comm "kworker/u16:2", pid 38, jiffies 4294942281
-> > > > >
-> > > > > This patch addresses a kmemleak reported during StarFive PCIe dri=
-ver
-> > > > > initialization. The leak was observed with kmemleak reporting
-> > > > > unreferenced objects related to IRQ handling. The backtrace point=
-ed
-> > > > > to the `request_threaded_irq` and related functions within the
-> > > > > `plda_init_interrupts` path, indicating that some allocated memor=
-y
-> > > > > related to IRQs was not being properly freed.
-> > > > >
-> > > > > The issue was that while the driver requested IRQs, it wasn't
-> > > > > correctly handling the lifecycle of the associated resources.
-> > > >
-> > > > What resources?
-> > > >
-> > > The Microchip PCIe host driver [1] handles  PCI, SEC, DEBUG, and LOCA=
-L
-> > > hardware events
-> > > through a dedicated framework [2]. This framework allows the core dri=
-ver [3]
-> > > to monitor and wait for these specific events.
-> > >
-> >
-> > Microchip driver also has its own 'event_ops' and 'event_irq_chip', so =
-defining
-> > 'request_event_irq()' callback makes sense to me.
-> >
-> > > [1]: https://github.com/torvalds/linux/blob/master/drivers/pci/contro=
-ller/plda/pcie-microchip-host.c#L90-L292
-> > > [2]: https://github.com/torvalds/linux/blob/master/drivers/pci/contro=
-ller/plda/pcie-microchip-host.c#L374-L499
-> > > [3]: https://github.com/torvalds/linux/blob/master/drivers/pci/contro=
-ller/plda/pcie-plda-host.c#L448-L466
-> > >
-> > > StarFive PCIe driver currently lacks the necessary `request_event_irq=
-`
-> > > implementation
-> > > to integrate with this event-handling mechanism, which prevents the c=
-ore driver
-> > > from properly responding to these events on StarFive platforms.
-> > >
-> > > static const struct plda_event mc_event =3D {
-> > > .  request_event_irq =3D mc_request_event_irq,
-> > >   .intx_event        =3D EVENT_LOCAL_PM_MSI_INT_INTX,
-> > >   .msi_event         =3D EVENT_LOCAL_PM_MSI_INT_MSI,
-> > > };
-> > >
-> > > This patch implements dummy `request_event_irq` for the StarFive PCIe=
- driver,
-> > > Since the core [3] driver is monitoring for these events
-> > >
-> >
-> > This still doesn't make sense to me. Under what condition you observed =
-the
-> > kmemleak? Since it points to devm_request_irq(), I can understand that =
-the
-> > memory allocated for the IRQ is not freed. But when does it happen?
-> >
-> The PCIe host driver is responsible for monitoring the PLDA PCIe EVENT ir=
-q.
-> However, I have been unable to locate the register map necessary to
-> implement the
-> required code updates,
->
-> alarm@archriscv:/media/nvme0/mainline/linux-riscv-6.y-devel$ cat
-> /proc/interrupts
->            CPU0       CPU1       CPU2       CPU3
->  10:     101145      76126      79040      80218 RISC-V INTC   5 Edge
->     riscv-timer
->  12:          3          0          0          0 SiFive PLIC 111 Edge
->     17030000.power-controller
->  13:         20          0          0          0 SiFive PLIC  30 Edge
->     1600c000.rng
->  14:          0          0          0          0 SiFive PLIC   1 Edge
->     ccache_ecc
->  15:          0          0          0          0 SiFive PLIC   3 Edge
->     ccache_ecc
->  16:          0          0          0          0 SiFive PLIC   4 Edge
->     ccache_ecc
->  17:          0          0          0          0 SiFive PLIC   2 Edge
->     ccache_ecc
->  20:          0          0          0          0 SiFive PLIC  73 Edge
->     dw_axi_dmac_platform
->  21:       1694          0          0          0 SiFive PLIC  32 Edge    =
-  ttyS0
->  22:          0          0          0          0 SiFive PLIC  35 Edge
->     10030000.i2c
->  23:          0          0          0          0 SiFive PLIC  75 Edge
->     dw-mci
->  24:          0          0          0          0 SiFive PLIC  37 Edge
->     10050000.i2c
->  25:        171          0          0          0 SiFive PLIC  50 Edge
->     12050000.i2c
->  26:          0          0          0          0 SiFive PLIC  51 Edge
->     12060000.i2c
->  27:      10419          0          0          0 SiFive PLIC  74 Edge
->     dw-mci
->  28:          6          0          0          0 SiFive PLIC  25 Edge
->     13010000.spi
->  29:          0          0          0          0 SiFive PLIC  38 Edge    =
-  pl022
->  31:          0          0          0          0 PLDA PCIe EVENT  16
-> Edge      940000000.pcie
->  32:          0          0          0          0 PLDA PCIe EVENT  17
-> Edge      940000000.pcie
->  33:          0          0          0          0 PLDA PCIe EVENT  18
-> Edge      940000000.pcie
->  34:          0          0          0          0 PLDA PCIe EVENT  20
-> Edge      940000000.pcie
->  35:          0          0          0          0 PLDA PCIe EVENT  21
-> Edge      940000000.pcie
->  36:          0          0          0          0 PLDA PCIe EVENT  22
-> Edge      940000000.pcie
->  39:          0          0          0          0 PLDA PCIe EVENT  26
-> Edge      940000000.pcie
->  40:          0          0          0          0 PLDA PCIe EVENT  27
-> Edge      940000000.pcie
->  41:          0          0          0          0 17020000.pinctrl  41
-> Edge      16020000.mmc cd
->  42:          0          0          0          0 PLDA PCIe EVENT  28
-> Edge      940000000.pcie
->  44:          0          0          0          0 PLDA PCIe MSI   0
-> Edge      PCIe PME, aerdrv, PCIe bwctrl
->  46:          0          0          0          0 PLDA PCIe EVENT  16
-> Edge      9c0000000.pcie
->  47:          0          0          0          0 PLDA PCIe EVENT  17
-> Edge      9c0000000.pcie
->  48:          0          0          0          0 PLDA PCIe EVENT  18
-> Edge      9c0000000.pcie
->  49:          0          0          0          0 PLDA PCIe EVENT  20
-> Edge      9c0000000.pcie
->  50:          0          0          0          0 PLDA PCIe EVENT  21
-> Edge      9c0000000.pcie
->  51:          0          0          0          0 PLDA PCIe EVENT  22
-> Edge      9c0000000.pcie
->  54:          0          0          0          0 PLDA PCIe EVENT  26
-> Edge      9c0000000.pcie
->  55:          0          0          0          0 PLDA PCIe EVENT  27
-> Edge      9c0000000.pcie
->  56:          0          0          0          0 PLDA PCIe EVENT  28
-> Edge      9c0000000.pcie
->  58:          0          0          0          0 PLDA PCIe MSI
-> 134217728 Edge      PCIe PME, aerdrv, PCIe bwctrl
->
-> Yep, Thanks for your review comment.
->
-> The following changes fix the kernel memory leak warning at my end.
->
-> $ git diff
-> diff --git a/drivers/pci/controller/plda/pcie-plda-host.c
-> b/drivers/pci/controller/plda/pcie-plda-host.c
-> index 4153214ca410..d4e7c1b49607 100644
-> --- a/drivers/pci/controller/plda/pcie-plda-host.c
-> +++ b/drivers/pci/controller/plda/pcie-plda-host.c
-> @@ -461,6 +461,7 @@ int plda_init_interrupts(struct platform_device *pdev=
-,
->
->                 if (ret) {
->                         dev_err(dev, "failed to request IRQ %d\n", event_=
-irq);
-> +                       irq_dispose_mapping(event_irq);
->                         return ret;
->                 }
->         }
+That's a lot of complicated code you have there (not your fault, it's 
+complicated stuff ... ) :)
 
-Following the change fix this warning in a kernel memory leak.
-Would you happen to have any comments on these changes?
+Some of it might be compressed/simplified by the use of "else if".
 
-diff --git a/drivers/pci/controller/plda/pcie-plda-host.c
-b/drivers/pci/controller/plda/pcie-plda-host.c
-index 4153214ca410..5a72a5a33074 100644
---- a/drivers/pci/controller/plda/pcie-plda-host.c
-+++ b/drivers/pci/controller/plda/pcie-plda-host.c
-@@ -280,11 +280,6 @@ static u32 plda_get_events(struct plda_pcie_rp *port)
-        return events;
- }
+I'll try to take a closer look later (will have to apply it to see the 
+context better). Just one independent comment because I stumbled over 
+this recently:
 
--static irqreturn_t plda_event_handler(int irq, void *dev_id)
--{
--       return IRQ_HANDLED;
--}
--
- static void plda_handle_event(struct irq_desc *desc)
- {
-        struct plda_pcie_rp *port =3D irq_desc_get_handler_data(desc);
-@@ -454,13 +449,10 @@ int plda_init_interrupts(struct platform_device *pdev=
-,
+[...]
 
-                if (event->request_event_irq)
-                        ret =3D event->request_event_irq(port, event_irq, i=
-);
--               else
--                       ret =3D devm_request_irq(dev, event_irq,
--                                              plda_event_handler,
--                                              0, NULL, port);
+> @@ -1062,10 +1063,13 @@ static int move_present_pte(struct mm_struct *mm,
+>   	folio_move_anon_rmap(src_folio, dst_vma);
+>   	src_folio->index = linear_page_index(dst_vma, dst_addr);
+>   
+> -	orig_dst_pte = mk_pte(&src_folio->page, dst_vma->vm_page_prot);
+> -	/* Follow mremap() behavior and treat the entry dirty after the move */
+> -	orig_dst_pte = pte_mkwrite(pte_mkdirty(orig_dst_pte), dst_vma);
+> -
+> +	if (pte_present(orig_src_pte)) {
+> +		orig_dst_pte = mk_pte(&src_folio->page, dst_vma->vm_page_prot);
+> +		/* Follow mremap() behavior and treat the entry dirty after the move */
+> +		orig_dst_pte = pte_mkwrite(pte_mkdirty(orig_dst_pte), dst_vma);
 
-                if (ret) {
-                        dev_err(dev, "failed to request IRQ %d\n", event_ir=
-q);
-+                       irq_dispose_mapping(event_irq);
-                        return ret;
-                }
-        }
-> > > > > This patch introduces an event IRQ handler and the necessary
-> > > > > infrastructure to manage these IRQs, preventing the memory leak.
-> > > > >
-> > > >
-> > > > These handles appear pointless to me. What purpose are they serving=
-?
-> > > >
-> > > Yes, you are correct, the core event monitoring framework [3] trigger=
-ed a
-> > > kernel memory leak. This patch adds a dummy IRQ callback as a
-> > > placeholder for proper event handling, which can be implemented in a
-> > > future patch.
-> > >
-> >
-> > The dummy request_event_irq() callback is not supposed to be needed in =
-the first
-> > place. So clearly, this patch is not fixing the actual memory leak but =
-trying to
-> > cover it up.
-> You are correct.
-> >
-> > - Mani
-> >
-> Thanks
-> -Anand
-Thanks
--Anand
-> > --
-> > =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=
-=A9=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=
-=AE=E0=AF=8D
+I'll note that the comment and mkdirty is misleading/wrong. It's 
+softdirty that we care about only. But that is something independent of 
+this change.
+
+For swp PTEs, we maybe also would want to set softdirty.
+
+See move_soft_dirty_pte() on what is actually done on the mremap path.
+
+-- 
+Cheers,
+
+David / dhildenb
+
