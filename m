@@ -1,89 +1,108 @@
-Received: from out-176.mta0.migadu.com (out-176.mta0.migadu.com [91.218.175.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DFB01EBFE0
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 11:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.176
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0AF41D79B6
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 11:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740049715; cv=none; b=LE876tonM2rtzRnFPaVAFgux/Tg1n9q9ZqM9piPXjSyzOXcLbW4LDVOtF/R0bgUdWBgtEHo8eIBPvicmuncBGVsFKwbrd1vyGgo1m+nOf6zfyTc/qLSqKko9+T9l1ZYBNJXRau1nODzMqXhYP1OGCTGs+0QRN9M5T1O9OfNbrkI=
+	t=1740049789; cv=none; b=ZpIrXDZ0Wc9proScszVY3LtZMq+IFSykP5IERFNNQmAAaVONNjyTQylzWIEYfFGdHVEZG0oil88L3urQF7CpUP1p+qfcOCkOlW4KzZh0sF2pMUsZSYl2SGmUvPJxMiwp1cIYNE+3yARr027fWhRJqGBs7Z5KewMi9xbvjfBe3ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740049715; c=relaxed/simple;
-	bh=oXJNr/gxxvxCZ5rhqqjVPyBrGe3PMFy7vb+NY47McLg=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=CwVvxJYXY6I9HNHOX7fJ9qCX1Aq5iN65N/XT9Q/blhrIS1LFMfXi47pPtLaGCigcnngjh2CH6oeWYOBkq4NST3J4bkUlI42n9eb7DcclMEepzPjfJz3wMAyX27BqCv+u0PGOJHdtJdKmS5kKXzK7cKMH5Ymcn2UHB9wfDrnfztY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FkQ9bk2A; arc=none smtp.client-ip=91.218.175.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FkQ9bk2A"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740049701;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DN4B67Rzb5ZccHJbDxzAn/tcklLewziqHZr7OFYX8jU=;
-	b=FkQ9bk2AuLs0vWYjGGMFl6Lj+vVHipDJNXzsfpR7qS2n8jL8M96eIdFpqZE0mkEsqBqrup
-	cXcIpwu3Kelk+l0cIb0cIlOSPBSR9iJueirwtjD9w41qDY85XqUVQ5MafO4G2AYBfQMMUO
-	sq+0vFTMJlrysK918r42sAWxc6fsiew=
+	s=arc-20240116; t=1740049789; c=relaxed/simple;
+	bh=lT83+dbljiF/9iIwJ+SC1zlhoroyt91FCB95C8Nac68=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W7Ix8oOIHp/CDTM6kSl7btrGSVFwVYxGh8mW8i2O+e62P232T8y5Ya/43rjdVXZHtDCEpPu68fKtJc5XRhBssJ5eMeyrQ+jCRQwL2x+1EIq23Rya1PU8ObzDyYauE05xxrMiYaewj8Ln4y8cS9v73VeShlBjmsq+jhfzOy5o63A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-3c9ff7000001d7ae-54-67b70d741b4e
+Date: Thu, 20 Feb 2025 20:09:35 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Hillf Danton <hdanton@sina.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com
+Subject: Re: [RFC PATCH v12 00/26] LUF(Lazy Unmap Flush) reducing tlb numbers
+ over 90%
+Message-ID: <20250220110935.GA64704@system.software.com>
+References: <20250220052027.58847-1-byungchul@sk.com>
+ <20250220103223.2360-1-hdanton@sina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.1\))
-Subject: Re: [PATCH] net/mlx5: Use secs_to_jiffies() instead of
- msecs_to_jiffies()
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <20250220071327.GL53094@unreal>
-Date: Thu, 20 Feb 2025 12:08:07 +0100
-Cc: Jacob Keller <jacob.e.keller@intel.com>,
- Saeed Mahameed <saeedm@nvidia.com>,
- Tariq Toukan <tariqt@nvidia.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>,
- Yevgeny Kliteynik <kliteyn@nvidia.com>,
- Mark Bloch <mbloch@nvidia.com>,
- Itamar Gozlan <igozlan@nvidia.com>,
- netdev@vger.kernel.org,
- linux-rdma@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <9694B455-87B0-4A70-93C0-93FE77E3CD17@linux.dev>
-References: <20250219205012.28249-2-thorsten.blum@linux.dev>
- <48456fc0-7832-4df1-8177-4346f74d3ccc@intel.com>
- <20250220071327.GL53094@unreal>
-To: Leon Romanovsky <leon@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250220103223.2360-1-hdanton@sina.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOLMWRmVeSWpSXmKPExsXC9ZZnoW4J7/Z0g3df1CwO/HzOYnF51xw2
+	i3tr/rM6MHts+jSJ3WPSC3ePz5vkApijuGxSUnMyy1KL9O0SuDJe7DnOVPBCqGLH3Y/MDYz7
+	+LoYOTkkBEwk9u36xAhjf51xjQXEZhFQlXj3aj07iM0moC5x48ZPZhBbREBZovPCLFYQm1nA
+	X2LCrQ1g9cICERJPDp1gArF5BSwkfn1+AGYLCSRIvJ66nx0iLihxcuYTFoheLYkb/14C1XAA
+	2dISy/9xgIQ5BUwlGs8fBRsvCrTqwLbjQCVcQKf9ZJW4fGYLC8SdkhIHV9xgmcAoMAvJ2FlI
+	xs5CGLuAkXkVo1BmXlluYmaOiV5GZV5mhV5yfu4mRmBwLqv9E72D8dOF4EOMAhyMSjy8M1q3
+	pQuxJpYVV+YeYpTgYFYS4W2r35IuxJuSWFmVWpQfX1Sak1p8iFGag0VJnNfoW3mKkEB6Yklq
+	dmpqQWoRTJaJg1OqgbEoirPzpurcnXzR4eGf0myen5pjYakSquW3zCahR5L17YZPi/94z7EO
+	mLNlD9O97gkFPbErnUsDN4qzNewqLYo7+SbupsOS3WHOfCI8822OlD4+qsOrO9H9bdWkI/KN
+	3ftS42yvnTvyIyGUd/2cq27Nn3YdZXF8trK/MnZ+1I5VUnvXqjGUvFdiKc5INNRiLipOBAAQ
+	bMCoSgIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHLMWRmVeSWpSXmKPExsXC5WfdrFvCuz3d4HOXpMWBn89ZLA7PPclq
+	cXnXHDaLe2v+szqweGz6NIndY9ILd4/FLz4weXzeJBfAEsVlk5Kak1mWWqRvl8CV8WLPcaaC
+	F0IVO+5+ZG5g3MfXxcjJISFgIvF1xjUWEJtFQFXi3av17CA2m4C6xI0bP5lBbBEBZYnOC7NY
+	QWxmAX+JCbc2gNULC0RIPDl0ggnE5hWwkPj1+QGYLSSQIPF66n52iLigxMmZT1ggerUkbvx7
+	CVTDAWRLSyz/xwES5hQwlWg8fxRsvCjQqgPbjjNNYOSdhaR7FpLuWQjdCxiZVzGKZOaV5SZm
+	5pjqFWdnVOZlVugl5+duYgSG2rLaPxN3MH657H6IUYCDUYmH98HjrelCrIllxZW5hxglOJiV
+	RHjb6rekC/GmJFZWpRblxxeV5qQWH2KU5mBREuf1Ck9NEBJITyxJzU5NLUgtgskycXBKNTAG
+	f/D5+Ln72MWFbFsmPA9dIvVF2virVPP7zXJm7FEdnFtnZvp2bLkbzFuxdsOnP/ufMitz7rh9
+	NvKL3Yk959kt5/VsVZ9uuMPWVafHK5Tnr9kZBff6s8+Mt6ieWhNl/nieS8Vf2dUnFPe3e3iX
+	/MhY4vdt7sMQ5gZbpX9FJTuVG8U+rLTN852sxFKckWioxVxUnAgAN+jY2jECAAA=
+X-CFilter-Loop: Reflected
 
-On 20. Feb 2025, at 08:13, Leon Romanovsky wrote:
-> On Wed, Feb 19, 2025 at 03:45:02PM -0800, Jacob Keller wrote:
->> On 2/19/2025 12:49 PM, Thorsten Blum wrote:
->>> Use secs_to_jiffies() and simplify the code.
->>> 
->>> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
->> 
->> nit: this is a cleanup which should have the net-next prefix applied,
->> since this doesn't fix any user visible behavior.
->> 
->> Otherwise, seems like an ok change.
-> 
-> IMHO, completely useless change for old code. I can see a value in new
-> secs_to_jiffies() function for new code, but not for old code. I want
-> to believe that people who write kernel patches aware that 1000 msec
-> equal to 1 sec.
+On Thu, Feb 20, 2025 at 06:32:22PM +0800, Hillf Danton wrote:
+> On Thu, 20 Feb 2025 14:20:01 +0900 Byungchul Park <byungchul@sk.com>
+> > To check luf's stability, I ran a heavy LLM inference workload consuming
+> > 210GiB over 7 days on a machine with 140GiB memory, and decided it's
+> > stable enough.
+> > 
+> > I'm posting the latest version so that anyone can try luf mechanism if
+> > wanted by any chance.  However, I tagged RFC again because there are
+> > still issues that should be resolved to merge to mainline:
+> > 
+> >    1. Even though system wide total cpu time for TLB shootdown is
+> >       reduced over 95%, page allocation paths should take additional cpu
+> >       time shifted from page reclaim to perform TLB shootdown.
+> > 
+> >    2. We need luf debug feature to detect when luf goes wrong by any
+> >       chance.  I implemented just a draft version that checks the sanity
+> >       on mkwrite(), kmap(), and so on.  I need to gather better ideas
+> >       to improve the debug feature.
+> > 
+> > ---
+> > 
+> > Hi everyone,
+> > 
+> > While I'm working with a tiered memory system e.g. CXL memory, I have
+> > been facing migration overhead esp. tlb shootdown on promotion or
+> > demotion between different tiers.  Yeah..  most tlb shootdowns on
+> > migration through hinting fault can be avoided thanks to Huang Ying's
+> > work, commit 4d4b6d66db ("mm,unmap: avoid flushing tlb in batch if PTE
+> > is inaccessible").
+> > 
+> > However, it's only for migration through hinting fault.  I thought it'd
+> > be much better if we have a general mechanism to reduce all the tlb
+> > numbers that we can apply to any unmap code, that we normally believe
+> > tlb flush should be followed.
+> > 
+> > I'm suggesting a new mechanism, LUF(Lazy Unmap Flush), that defers tlb
+> > flush until folios that have been unmapped and freed, eventually get
+> > allocated again.  It's safe for folios that had been mapped read-only
+> > and were unmapped, as long as the contents of the folios don't change
+> > while staying in pcp or buddy so we can still read the data through the
+> > stale tlb entries.
+> >
+> Given pcp or buddy, you are opening window for use after free which makes
+> no sense in 99% cases.
 
-Using secs_to_jiffies() is shorter and requires less cognitive load to
-read imo. Plus, it now fits within the preferred 80 columns limit.
+Just in case that I don't understand what you meant and for better
+understanding, can you provide a simple and problematic example from
+the u-a-f?
 
-This "old code" was added in d74ee6e197a2c ("net/mlx5: HWS, set timeout
-on polling for completion") in January 2025.
-
-Thanks,
-Thorsten
+	Byungchul
