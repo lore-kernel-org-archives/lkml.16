@@ -1,341 +1,137 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA851E9B00
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 07:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691F822F11;
+	Thu, 20 Feb 2025 07:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740037477; cv=none; b=hRO1uaVgAHcarq5OVRX7zf8FwkgRP7r4tdFaZNQqEfuAoqVd6g7dwyrnT563B+CAA5jZPmaJGXv/ky8y6emYJNcD+mONmDgy5GJRXdDLwyFcqHhD36HFuMTu5UzSFPsYjUbGtctvqVjGPGaBRv5nB2ZxZXmNkeysjsBDUYNEIpU=
+	t=1740037557; cv=none; b=Z44OQBpuHbYomAlS7Nkz4C1jgShvFTl+6SsXiZpSivElDiZlSCw7fB0OTNLOy5rUd/dodn76mdc2bh1bYTR0c8RaIA/ZUkWthHqLqnFvn51umXNcO1lfg90cb2NqLSgFnMGvoUxGsNP7sh9x47XUfrRUuhldV3MRWASRSgqD/Gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740037477; c=relaxed/simple;
-	bh=Pajo6n58YQjMYvbXjpmcT2nx5LNJ3QUBwJ7/2kJOKqM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FowogYRIHy/Ym9dIvlkQftZY6GOaEJtDXmgC6a7dO5tBAxHFeBb8iNyjbzjh1eCfO4SSqhxrOkPWvMjdOvWq/VeKCc+972h6/cX8Ep/JEqtSFi5gGJNDsRKXAmxqFopKxRQXZE8bvk3JIPOz9XV7ka1SB6zE4n0VpxhwTJXd3MM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tl1EV-0004TP-1C; Thu, 20 Feb 2025 08:44:31 +0100
-Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tl1EU-001tqO-1t;
-	Thu, 20 Feb 2025 08:44:30 +0100
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tl1EU-00CC1u-1g;
-	Thu, 20 Feb 2025 08:44:30 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org,
-	linux-mmc@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mark Brown <broonie@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>,
-	Christian Loehle <christian.loehle@arm.com>
-Subject: [PATCH v2 1/6] mmc: core: Handle undervoltage events and register regulator notifiers
-Date: Thu, 20 Feb 2025 08:44:24 +0100
-Message-Id: <20250220074429.2906141-2-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250220074429.2906141-1-o.rempel@pengutronix.de>
-References: <20250220074429.2906141-1-o.rempel@pengutronix.de>
+	s=arc-20240116; t=1740037557; c=relaxed/simple;
+	bh=y5g3F1Le/41CmpzEWqBi9nMV6VrPaIqZ7vVUOTU807o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jo2lo9REGqg3crNBKQYDJiDqJzw8/1sga2EeghFSHSF7bYRWNXcSFftef3xc41QaGAA/EiQBDvJ9hlrxS46InRWiADqtdVRcWB00x04QzjXOoT7SMpL4bGKe6V9HQc7azNsbPnN7/XVXvgvNhPcx3f1SHWb0Je/mvY9giRX5gBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=g2odZFGl; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="g2odZFGl"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51K1Act6006165;
+	Thu, 20 Feb 2025 07:45:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=THnapr
+	/xdmKpYJVnyumG675qIuSfCpRNBda0PrI90mo=; b=g2odZFGlIJAZ2ifLKOfL4A
+	YxqfrSNn9NZCRqbrv14O5NPZuj2Mp+lYDIwRk3BJWNppu+jygb+eMidJ9PgleUOQ
+	z4LTu144RHzjWZA+1++7ixQdJ+G/Iup2N9HrDFmKfpcuwjbt1ShSMPG8ZzeRBOSh
+	yHT/+pFp857OLwd5VQaLh5RaEYIKt6DqlTmYJcmXvedMo4QpXnBHFs9bA16Ro7bN
+	5EFCnTxw0hdpwyg3xIQIwlMWKbekfS906/NhGxo6104q6FIGES688YOoC+G2IToH
+	oNQdrcJrJOsZecQmXrc7KAMSgChecto1QaPw2+/G+z6G2sFoOwiRTOra3ZmbJs2A
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44wtfa1f55-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 07:45:49 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51K4MTWK029293;
+	Thu, 20 Feb 2025 07:45:48 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 44w024grna-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 07:45:46 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51K7jija48300310
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 20 Feb 2025 07:45:44 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 68A7E2004E;
+	Thu, 20 Feb 2025 07:45:44 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1DD7E20040;
+	Thu, 20 Feb 2025 07:45:43 +0000 (GMT)
+Received: from [9.39.30.67] (unknown [9.39.30.67])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 20 Feb 2025 07:45:42 +0000 (GMT)
+Message-ID: <74dddd26-4a0e-4bb6-958a-229cca3c24d1@linux.ibm.com>
+Date: Thu, 20 Feb 2025 13:15:42 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests: sched: add sched as a default selftest target
+To: Sinadin Shan <sinadin.shan@oracle.com>, chris.hyser@oracle.com
+Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shuah@kernel.org
+References: <20250219064658.449069-1-sinadin.shan@oracle.com>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <20250219064658.449069-1-sinadin.shan@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: NFnzcOZmzNNjnEcUzq55RgR1_srdLVU2
+X-Proofpoint-GUID: NFnzcOZmzNNjnEcUzq55RgR1_srdLVU2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-20_03,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
+ impostorscore=0 lowpriorityscore=0 priorityscore=1501 mlxlogscore=999
+ bulkscore=0 phishscore=0 malwarescore=0 mlxscore=0 adultscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502200052
 
-Extend the MMC core to handle undervoltage events by implementing
-infrastructure to notify the MMC bus about voltage drops.
 
-Background & Decision at LPC24:
 
-This solution was proposed and refined during LPC24 in the talk
-"Graceful Under Pressure: Prioritizing Shutdown to Protect Your Data in
-Embedded Systems," which aimed to address how Linux should handle power
-fluctuations in embedded devices to prevent data corruption or storage
-damage.
+On 2/19/25 12:16, Sinadin Shan wrote:
+> The sched tests are missing a target entry and hence out-of-tree build
+> support.
+> 
+> For instance:
+> make -C tools/testing/selftests install INSTALL_LOCATION=/foo/bar
+> 
+> is expected to build the sched tests and place them at /foo/bar.
+> But this is not observed since a TARGET entry is not present for sched.
+> 
+> This was suggested by Shuah in this conversation
+> Link: https://lore.kernel.org/linux-kselftest/60dd0240-8e45-4958-acf2-7eeee917785b@linuxfoundation.org/
+> 
+> Add support for sched selftests by adding sched as a default TARGET
+> 
+> Signed-off-by: Sinadin Shan <sinadin.shan@oracle.com>
+> ---
+>   tools/testing/selftests/Makefile | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+> index 8daac70c2f9d2..e2d0d389ad912 100644
+> --- a/tools/testing/selftests/Makefile
+> +++ b/tools/testing/selftests/Makefile
+> @@ -91,6 +91,7 @@ TARGETS += rlimits
+>   TARGETS += rseq
+>   TARGETS += rtc
+>   TARGETS += rust
+> +TARGETS += sched
+>   TARGETS += sched_ext
+>   TARGETS += seccomp
+>   TARGETS += sgx
 
-At the time, multiple possible solutions were considered:
-1. Triggering a system-wide suspend or shutdown: when undervoltage is
-   detected, with device-specific prioritization to ensure critical
-   components shut down first.
-   - This approach was disliked by Greg Kroah-Hartman, as it introduced
-     complexity and was not suitable for all use cases.
+There is only one test currently in sched: i.e cs_prctl_test.c. to see 
+the cookies validation when core scheduling is in effect.
 
-2. Notifying relevant devices through the regulator framework: to allow
-   graceful per-device handling.
-   - This approach was agreed upon as the most acceptable by participants
-     in the discussion, including Greg Kroah-Hartman, Mark Brown,
-     and Rafael J. Wysocki.
-   - This patch implements that decision by integrating undervoltage
-     handling into the MMC subsystem.
+If CONFIG_SCHED_CORE=n, the test fails. So you might end up seeing 
+default selftests failing on such systems? or this is only compiling?
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- drivers/mmc/core/core.c      |  20 ++++++
- drivers/mmc/core/core.h      |   2 +
- drivers/mmc/core/regulator.c | 115 +++++++++++++++++++++++++++++++++++
- include/linux/mmc/host.h     |   8 +++
- 4 files changed, 145 insertions(+)
+Likely the selftests/sched needs to modified for CONFIG_SCHED_CORE=n
 
-diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-index 5241528f8b90..3ee6d83eb354 100644
---- a/drivers/mmc/core/core.c
-+++ b/drivers/mmc/core/core.c
-@@ -1399,6 +1399,26 @@ void mmc_power_cycle(struct mmc_host *host, u32 ocr)
- 	mmc_power_up(host, ocr);
- }
- 
-+/**
-+ * mmc_handle_undervoltage - Handle an undervoltage event on the MMC bus
-+ * @host: The MMC host that detected the undervoltage condition
-+ *
-+ * This function is called when an undervoltage event is detected on one of
-+ * the MMC regulators.
-+ *
-+ * Returns: 0 on success or a negative error code on failure.
-+ */
-+int mmc_handle_undervoltage(struct mmc_host *host)
-+{
-+	if (!host->bus_ops->handle_undervoltage)
-+		return 0;
-+
-+	dev_warn(mmc_dev(host), "%s: Undervoltage detected, initiating emergency stop\n",
-+		 mmc_hostname(host));
-+
-+	return host->bus_ops->handle_undervoltage(host);
-+}
-+
- /*
-  * Assign a mmc bus handler to a host. Only one bus handler may control a
-  * host at any given time.
-diff --git a/drivers/mmc/core/core.h b/drivers/mmc/core/core.h
-index fc9c066e6468..b77f053039ab 100644
---- a/drivers/mmc/core/core.h
-+++ b/drivers/mmc/core/core.h
-@@ -31,6 +31,7 @@ struct mmc_bus_ops {
- 	int (*sw_reset)(struct mmc_host *);
- 	bool (*cache_enabled)(struct mmc_host *);
- 	int (*flush_cache)(struct mmc_host *);
-+	int (*handle_undervoltage)(struct mmc_host *host);
- };
- 
- void mmc_attach_bus(struct mmc_host *host, const struct mmc_bus_ops *ops);
-@@ -59,6 +60,7 @@ void mmc_power_off(struct mmc_host *host);
- void mmc_power_cycle(struct mmc_host *host, u32 ocr);
- void mmc_set_initial_state(struct mmc_host *host);
- u32 mmc_vddrange_to_ocrmask(int vdd_min, int vdd_max);
-+int mmc_handle_undervoltage(struct mmc_host *host);
- 
- static inline void mmc_delay(unsigned int ms)
- {
-diff --git a/drivers/mmc/core/regulator.c b/drivers/mmc/core/regulator.c
-index 3dae2e9b7978..d3f3eb8ea3d7 100644
---- a/drivers/mmc/core/regulator.c
-+++ b/drivers/mmc/core/regulator.c
-@@ -7,6 +7,7 @@
- #include <linux/err.h>
- #include <linux/log2.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/workqueue.h>
- 
- #include <linux/mmc/host.h>
- 
-@@ -262,6 +263,98 @@ static inline int mmc_regulator_get_ocrmask(struct regulator *supply)
- 
- #endif /* CONFIG_REGULATOR */
- 
-+static void mmc_undervoltage_workfn(struct work_struct *work)
-+{
-+	struct mmc_supply *supply;
-+	struct mmc_host *mmc;
-+
-+	supply = container_of(work, struct mmc_supply, uv_work);
-+	mmc = container_of(supply, struct mmc_host, supply);
-+
-+	mmc_handle_undervoltage(mmc);
-+}
-+
-+static int mmc_handle_regulator_event(struct mmc_host *mmc,
-+				      const char *regulator_name,
-+				      unsigned long event)
-+{
-+	switch (event) {
-+	case REGULATOR_EVENT_UNDER_VOLTAGE:
-+		if (mmc->undervoltage)
-+			return NOTIFY_OK;
-+
-+		mmc->undervoltage = true;
-+		queue_work(system_highpri_wq, &mmc->supply.uv_work);
-+		break;
-+	default:
-+		return NOTIFY_DONE;
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int mmc_vmmc_notifier_callback(struct notifier_block *nb,
-+				      unsigned long event, void *data)
-+{
-+	struct mmc_supply *supply;
-+	struct mmc_host *mmc;
-+
-+	supply = container_of(nb, struct mmc_supply, vmmc_nb);
-+	mmc = container_of(supply, struct mmc_host, supply);
-+
-+	return mmc_handle_regulator_event(mmc, "vmmc", event);
-+}
-+
-+static int mmc_vqmmc_notifier_callback(struct notifier_block *nb,
-+				       unsigned long event, void *data)
-+{
-+	struct mmc_supply *supply;
-+	struct mmc_host *mmc;
-+
-+	supply = container_of(nb, struct mmc_supply, vqmmc_nb);
-+	mmc = container_of(supply, struct mmc_host, supply);
-+
-+	return mmc_handle_regulator_event(mmc, "vqmmc", event);
-+}
-+
-+static int mmc_vqmmc2_notifier_callback(struct notifier_block *nb,
-+					unsigned long event, void *data)
-+{
-+	struct mmc_supply *supply;
-+	struct mmc_host *mmc;
-+
-+	supply = container_of(nb, struct mmc_supply, vqmmc2_nb);
-+	mmc = container_of(supply, struct mmc_host, supply);
-+
-+	return mmc_handle_regulator_event(mmc, "vqmmc2", event);
-+}
-+
-+static void
-+mmc_register_regulator_notifier(struct mmc_host *mmc,
-+				struct regulator *regulator,
-+				struct notifier_block *nb,
-+				int (*callback)(struct notifier_block *,
-+						unsigned long, void *),
-+				const char *name)
-+{
-+	struct device *dev = mmc_dev(mmc);
-+	int ret;
-+
-+	nb->notifier_call = callback;
-+	ret = devm_regulator_register_notifier(regulator, nb);
-+	if (ret)
-+		dev_warn(dev, "Failed to register %s notifier: %pe\n", name,
-+			 ERR_PTR(ret));
-+}
-+
-+static void mmc_undervoltage_work_cleanup(void *data)
-+{
-+	struct mmc_supply *supply = data;
-+
-+	/* Ensure the work is canceled or flushed here */
-+	cancel_work_sync(&supply->uv_work);
-+}
-+
- /**
-  * mmc_regulator_get_supply - try to get VMMC and VQMMC regulators for a host
-  * @mmc: the host to regulate
-@@ -281,6 +374,13 @@ int mmc_regulator_get_supply(struct mmc_host *mmc)
- 	mmc->supply.vqmmc = devm_regulator_get_optional(dev, "vqmmc");
- 	mmc->supply.vqmmc2 = devm_regulator_get_optional(dev, "vqmmc2");
- 
-+	INIT_WORK(&mmc->supply.uv_work, mmc_undervoltage_workfn);
-+
-+	ret = devm_add_action_or_reset(dev, mmc_undervoltage_work_cleanup,
-+				       &mmc->supply);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to add cleanup action\n");
-+
- 	if (IS_ERR(mmc->supply.vmmc)) {
- 		if (PTR_ERR(mmc->supply.vmmc) == -EPROBE_DEFER)
- 			return dev_err_probe(dev, -EPROBE_DEFER,
-@@ -293,6 +393,11 @@ int mmc_regulator_get_supply(struct mmc_host *mmc)
- 			mmc->ocr_avail = ret;
- 		else
- 			dev_warn(dev, "Failed getting OCR mask: %d\n", ret);
-+
-+		mmc_register_regulator_notifier(mmc, mmc->supply.vmmc,
-+						&mmc->supply.vmmc_nb,
-+						mmc_vmmc_notifier_callback,
-+						"vmmc");
- 	}
- 
- 	if (IS_ERR(mmc->supply.vqmmc)) {
-@@ -301,12 +406,22 @@ int mmc_regulator_get_supply(struct mmc_host *mmc)
- 					     "vqmmc regulator not available\n");
- 
- 		dev_dbg(dev, "No vqmmc regulator found\n");
-+	} else {
-+		mmc_register_regulator_notifier(mmc, mmc->supply.vqmmc,
-+						&mmc->supply.vqmmc_nb,
-+						mmc_vqmmc_notifier_callback,
-+						"vqmmc");
- 	}
- 
- 	if (IS_ERR(mmc->supply.vqmmc2)) {
- 		if (PTR_ERR(mmc->supply.vqmmc2) == -EPROBE_DEFER)
- 			return -EPROBE_DEFER;
- 		dev_dbg(dev, "No vqmmc2 regulator found\n");
-+	} else {
-+		mmc_register_regulator_notifier(mmc, mmc->supply.vqmmc2,
-+						&mmc->supply.vqmmc2_nb,
-+						mmc_vqmmc2_notifier_callback,
-+						"vqmmc2");
- 	}
- 
- 	return 0;
-diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-index 68f09a955a90..4e147ad82804 100644
---- a/include/linux/mmc/host.h
-+++ b/include/linux/mmc/host.h
-@@ -11,6 +11,7 @@
- #include <linux/device.h>
- #include <linux/fault-inject.h>
- #include <linux/debugfs.h>
-+#include <linux/workqueue.h>
- 
- #include <linux/mmc/core.h>
- #include <linux/mmc/card.h>
-@@ -342,6 +343,12 @@ struct mmc_supply {
- 	struct regulator *vmmc;		/* Card power supply */
- 	struct regulator *vqmmc;	/* Optional Vccq supply */
- 	struct regulator *vqmmc2;	/* Optional supply for phy */
-+
-+	struct notifier_block vmmc_nb;		/* Notifier for vmmc */
-+	struct notifier_block vqmmc_nb;		/* Notifier for vqmmc */
-+	struct notifier_block vqmmc2_nb;	/* Notifier for vqmmc2 */
-+
-+	struct work_struct uv_work;		/* Undervoltage work */
- };
- 
- struct mmc_ctx {
-@@ -493,6 +500,7 @@ struct mmc_host {
- 	unsigned int		retune_crc_disable:1; /* don't trigger retune upon crc */
- 	unsigned int		can_dma_map_merge:1; /* merging can be used */
- 	unsigned int		vqmmc_enabled:1; /* vqmmc regulator is enabled */
-+	unsigned int		undervoltage:1;	 /* Undervoltage state */
- 
- 	int			rescan_disable;	/* disable card detection */
- 	int			rescan_entered;	/* used with nonremovable devices */
--- 
-2.39.5
+When CONFIG_SCHED_CORE=n
+./cs_prctl_test
 
+## Create a thread/process/process group hierarchy
+Not a core sched system
+...
+Not a core sched system
+(283) FAILED: get_cs_cookie(0) == 0
