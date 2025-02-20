@@ -1,95 +1,44 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57847212FAD
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 16:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7812135A5;
+	Thu, 20 Feb 2025 16:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740068154; cv=none; b=frV2h/GFyLfpTUZCxlUfVzG0d8Bf6KtNFhya6ov7V05QC24IgkeQjLuMRUhbX/C6uDywKcoayEcvWJ4+OMeO7qsUo2mRP4boOOHq676iRn32qkdGFVpukQ1yvuwfDfH2ZQvsdyqhtYX6+BeyJs1Gu+Q7EvkGi/zdQGcZSxD0xA4=
+	t=1740068158; cv=none; b=neEZ9dw6RYOnG7dA1fIhzckzN8HmPxH90PuMfGyF2QfcRgWcfA4fC2VUgyILe/PSxDfvQ4ezMo2VksDQN2DCt8VvBQegoXHNUpZ+YwAiwIuDSEYweYy/ODj3cE20YDehJYhDG1p26Ulr/j6qVF0CG0scJLFbDpfXFgg2Ezahb7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740068154; c=relaxed/simple;
-	bh=sefj6hxNE4DKzJ9Uo+g0WJ+GyLGTay+PVJVsLpQlNGY=;
+	s=arc-20240116; t=1740068158; c=relaxed/simple;
+	bh=v5jU51XdS5IxHtGzZ0jSCWi4nb+5lghXAbNiqz17AXo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J/6TsRNJLzDaQDZBpTVNbvMitvmKMKXE0RyKOPy6xHyYuGVMn849uadDPSCwUHZXGNQ+aIf3GGtXK6zFPwTAdHjsHZfCMyRuZwysAzekN+z3G0Y53e2AUh0l69wuQrPgb9k6+jjofiOIiCVTZ33OEq8p8GAknrMa2CUS9XhJW5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QK7z78W2; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=MXpidfhOqiK1jrhH7EljeAZnvP7Ift89wlE2XpFTXdYFp71TnlUrNcbErWmb/pw+sSQl+vb6xqy3i19txyxWdhKlv/omhmmjg3O2d+JJwdgtmLg0XS1Rfp8uxgsvoxjXsK7HJpxbAir5Vy/PjZpzDxwUp8ilG0FaFFQUEc+eAt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fSEQdgil; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QK7z78W2"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22117c396baso172375ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:15:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740068151; x=1740672951; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=w9z6CJ8GEmOUY+R90CcF3D8uqozLmZO9LjzSZXbDX8o=;
-        b=QK7z78W2puJkm/e4WzNaLjgqCPZzGmRob1i3JzdKj9aAs7kILPT+75Ppo6D862n3MK
-         VmWcg8XZM2vk7vCrYL9kXopU0Bswy/C2Lo4LIEzDQJ6R4ntwFQbDNzQgXhHWD4nKqt0d
-         r6zBMYoR0FOmDuWiIR287BWwcADfhZ/QTmwa/6VCeYvqDdn0yRktRMg5itTYTbG7Z71e
-         ARFwtCIPAk/l4No1VlYd4u2+S2W59mePHENm10ecvO3CoGtgsDW+b5dqsUHA4vFU/kjD
-         XMHsZg+pKUEOJ4IoLjKiBBQyImvhRxG7x9yOxzi/JLcKmL+XXlbxWYrtgVYfuwbkyl9y
-         VkXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740068151; x=1740672951;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w9z6CJ8GEmOUY+R90CcF3D8uqozLmZO9LjzSZXbDX8o=;
-        b=ctr1nOItoZelWOA0LNgq44g2g/PfCSDXRhTFx2obR0U0nLn0WO10q/+UDxss1CPCLm
-         N73sosFpWrSPfuNcY8S4ExitH9SKnysj2r5Qk43lMl7hXdwUs2k42L6PMR9nR349ZJlW
-         VJkRvZwkzmZJdU1+WW2wK/8Dzo1n7jkVyoMP4GcODv2G1mkYx6CfbSeyw/nBdKQTYtit
-         UfsGbzilborAKD8pUkIISNdBoGBfd5fhVCwMw2RbT1QI+CbKMb1zonlPXiXjXnrytgbn
-         2SctA0FVOZmFp0MRkQHftWglgHplpnus9n8KlHcJbdElZ3TT2ufEJQLeEXIX4JYH4N1B
-         wd7g==
-X-Forwarded-Encrypted: i=1; AJvYcCWk9QYVK7DEWWNyGHJe2j7kkQmAa9m9tP7LFFpqErtQqM6Xz+bg5k8RXd8mqx/RAKfaWJROKJMV3EnKDnM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzd0YY4F9RAIkLt16uRrw3h9PU+1M5B+WveukakmdZ05TPmpHJv
-	yb6knew3dUBNiaTAqqYnpInq0C/SoXq948npFsLlBRpvd924j/Gsztm5SjnFxw==
-X-Gm-Gg: ASbGncsjuyxNuwwE7HYs6FgjMmszeFB7ml9GLQ8OELeaA9LoZeTfnJ2hpGbJjhLipty
-	ndXoSsjSvIQYfa2FhmoOCRinFUm3sjE9VvSth1WB1YDaSO68h5ZE5OBW0xd7byObKgeWAUd7+hG
-	mzgrYaw1t6KB/QVD37LuyXX1InQ6vuWwef9nccPf+UVVzHK34uxFW6FBGvcnCxuEzP16JRj9gUY
-	P34GLefiUhCFdarm83nETivwyezLTg33lTANmFsDiuBTblu2zZVZ6b8Fok+2Hk1O09NhRVrRGB7
-	GQXk85cN7bSbHxnIf8DkFIgM8YHVwV8bZrJ1sE8xegfSwwFvJM7I
-X-Google-Smtp-Source: AGHT+IEeeNO5YXG4GrTFzHJDa5KXpncdRPcsXRbYIZYGBm4w3MV78t3++PWrZwNmDnY5dth9MgRnnA==
-X-Received: by 2002:a17:902:dacf:b0:21f:3e29:9cd4 with SMTP id d9443c01a7336-2218debe8bamr3119545ad.20.1740068151245;
-        Thu, 20 Feb 2025 08:15:51 -0800 (PST)
-Received: from google.com (169.224.198.35.bc.googleusercontent.com. [35.198.224.169])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fc7e9325fesm8522382a91.46.2025.02.20.08.15.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 08:15:50 -0800 (PST)
-Date: Thu, 20 Feb 2025 16:15:40 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: "Tian, Kevin" <kevin.tian@intel.com>, "jgg@nvidia.com" <jgg@nvidia.com>,
-	"corbet@lwn.net" <corbet@lwn.net>,
-	"will@kernel.org" <will@kernel.org>,
-	"joro@8bytes.org" <joro@8bytes.org>,
-	"suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"dwmw2@infradead.org" <dwmw2@infradead.org>,
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-	"shuah@kernel.org" <shuah@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"eric.auger@redhat.com" <eric.auger@redhat.com>,
-	"jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-	"mdf@kernel.org" <mdf@kernel.org>,
-	"mshavit@google.com" <mshavit@google.com>,
-	"shameerali.kolothum.thodi@huawei.com" <shameerali.kolothum.thodi@huawei.com>,
-	"smostafa@google.com" <smostafa@google.com>,
-	"ddutile@redhat.com" <ddutile@redhat.com>,
-	"Liu, Yi L" <yi.l.liu@intel.com>,
-	"patches@lists.linux.dev" <patches@lists.linux.dev>
-Subject: Re: [PATCH v6 14/14] iommu/arm-smmu-v3: Set MEV bit in nested STE
- for DoS mitigations
-Message-ID: <Z7dVLNLhP7VfZ-Ph@google.com>
-References: <cover.1737754129.git.nicolinc@nvidia.com>
- <436ac2021bb3d75114ca0e45f25a6a8257489d3b.1737754129.git.nicolinc@nvidia.com>
- <BN9PR11MB5276291C74E2DF0C8821BE718CFA2@BN9PR11MB5276.namprd11.prod.outlook.com>
- <Z7TOq-gIGPY_ztW7@google.com>
- <Z7TXQ9EdyvHp/lmD@nvidia.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fSEQdgil"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=/v0e059AYWdCApNiIRf7ofl3oeJFZjMI+2NzL/MN+sA=; b=fSEQdgil+eU5Ey5bdxle+6sEXy
+	2jGSwL1/1bSyKEksuPVT+RKzowhvqnldQwuTQiIhBtSePe42QjCLkNb67YnEUEaLkAWHrv5Ym6+Vi
+	uDZbZW2W6Q0OfG/HxGypfBxH75KYG+2Jgx3sBR14qG7evqfnJTktW+YVk/rHbzHdHT5qgrlP7nIFa
+	xcx9xU12o+VB08HLU2uHS77KYBiMGbo81IQg6iJ5nRlUpp71aFufA9bo+IjJmmDavrDyoPs3s+Gv7
+	U11z9Yqkp3aldNMLrewhuDPZFZ5V4HqubXHWuRkF3yvV9XMEWVg4Bm5PcAHu3naXNQMmd0m9P2aL0
+	iZEmNnqQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tl9DN-0000000A9dX-408l;
+	Thu, 20 Feb 2025 16:15:53 +0000
+Date: Thu, 20 Feb 2025 16:15:53 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: syzbot <syzbot+c0dc46208750f063d0e0@syzkaller.appspotmail.com>
+Cc: Dominique Martinet <asmadeus@codewreck.org>, v9fs@lists.linux.dev,
+	dhowells@redhat.com, jlayton@kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netfs@lists.linux.dev, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [netfs?] kernel BUG in folio_unlock (3)
+Message-ID: <Z7dVOaTWTVCojNzr@casper.infradead.org>
+References: <67b75198.050a0220.14d86d.02e2.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -98,20 +47,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z7TXQ9EdyvHp/lmD@nvidia.com>
+In-Reply-To: <67b75198.050a0220.14d86d.02e2.GAE@google.com>
 
-On Tue, Feb 18, 2025 at 10:53:55AM -0800, Nicolin Chen wrote:
-> > > Is MEV available only in nested mode? Otherwise it perhaps makes
-> > > sense to turn it on in all configurations in IOMMUFD paths...
-> > 
-> > I think the arm-smmu-v3's iommufd implementation only supports nested
-> > which could be the reason.
-> 
-> I guess what Kevin says is that non-nested STE should set the MEV
-> as well, e.g. BYPASS and ABORT, and perhaps stage-1-only case too
-> where the attaching domain = UNMANAGED.
-> 
+On Thu, Feb 20, 2025 at 08:00:24AM -0800, syzbot wrote:
+> ------------[ cut here ]------------
+> kernel BUG at mm/filemap.c:1499!
 
-Ohh okay, got it. Thanks!
+Tried to unlock a folio that wasn't locked.
 
-Praan
+The entire log is interesting:
+
+https://syzkaller.appspot.com/x/log.txt?x=12af2fdf980000
+
+It injects a failure which hits p9_tag_alloc() (so adding the 9p people
+to the cc)
+
+The page dump is:
+
+ page: refcount:1 mapcount:0 mapping:ffff888035b30890 index:0x0 pfn:0x37e9a
+ memcg:ffff88801c6be000
+ aops:v9fs_addr_operations ino:2721d72 dentry name(?):"file0"
+ flags: 0xfff20000000020(lru|node=0|zone=1|lastcpupid=0x7ff)
+ raw: 00fff20000000020 ffffea0000e1d1c8 ffff88801b0b31a0 ffff888035b30890
+ raw: 0000000000000000 0000000000000000 00000001ffffffff ffff88801c6be000
+ page dumped because: VM_BUG_ON_FOLIO(!folio_test_locked(folio))
+
+> Call Trace:
+>  <TASK>
+>  netfs_perform_write+0xc04/0x2140 fs/netfs/buffered_write.c:400
+>  netfs_buffered_write_iter_locked fs/netfs/buffered_write.c:445 [inline]
+>  netfs_file_write_iter+0x494/0x550 fs/netfs/buffered_write.c:484
+>  v9fs_file_write_iter+0x9b/0x100 fs/9p/vfs_file.c:407
+>  new_sync_write fs/read_write.c:586 [inline]
+>  vfs_write+0x5ae/0x1150 fs/read_write.c:679
+>  ksys_write+0x12b/0x250 fs/read_write.c:731
