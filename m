@@ -1,132 +1,210 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24B1D1D5AD4
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 14:33:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01D3E28EA;
+	Thu, 20 Feb 2025 14:34:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740062034; cv=none; b=IBe9KEruU+oG3mbsr5LOHGmdxGZ7WdxhrFnk6jvm763PaajjmDdtWcmiMNgxVd2jg4S0+093QEobta0OxVl5feekCiSaidCUdOY3QcA8Skvwi+/Q4jc8tafK4kIMeA5GIdYzMGQ7DbOzDRtzuMScTyvs8Z+6vZh34/eOfWTLNUg=
+	t=1740062051; cv=none; b=ZHfEHlm8Q2rE93SIJvgb0b746PmpM6jODgrq7su2kdzqfIm8yyqy7kEuaAbJatFiy2GIjsHLpJCKgeCwdH94HLEg8h+Ve+g7uXhefueg9NCTipmCHBoQAsbvOy5Autwsj0wzwUGVIV3FnkyMCXeAb75aakuPhq403+Lnv0cKvHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740062034; c=relaxed/simple;
-	bh=eTRXOyYuqjmG3yKs/7WGPhoCMWejYfNznEcj29Z1f58=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=hYC+9kDtUceZ4fhE8quVX4uaQq4VQRhJ5fe9U6Yu090bE7uJ2Xi/S9PTkxjCcHYMug29ooRN8TudjTZ2kzqzYvzRkHYE+9hlCSc4t3aCIB6S9yDazzk7l1e/geQI1VgwkVlhkyb7WUhk5vV3X03kNOxqBx3o7PhzQDKQM09pC6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=EHJJAMrn; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1740062051; c=relaxed/simple;
+	bh=m6EWfbWqhNEv4YKFx0ZpQOhi4YTb8/Jvu+gSnhzL06o=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=X+vwek+xqzSjh8x+Fhb9Ny0qP2J6ojvdr+QLkSBn5QUy3lhIt2tfxBNP+KSx/xQjgOoVWj17DXB7UE1rt4t5ECUBUGy7wEeWi7Q6HJbt3UPu3qW6pFH9qoF/GYfIT3MkItsVBqiEAOlLbe452yh8K23OIi22FgMHmuxQFk0+OFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=f4RAmhu/; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="EHJJAMrn"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-438a3216fc2so9895815e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 06:33:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1740062029; x=1740666829; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0fLRneimGmzwm0JI2oa5ZakvVZkjPjyCGSlHEGhhfCo=;
-        b=EHJJAMrn58gUhmaqYC9dtxb7k/YeKpEnITI+xWFxwEhrMzfD+64c77WZAZCubm8PeC
-         q/c5v15JWnUhQIBYmt2kvida3gqX4loJGBrdIpV7yF9EfrpZVnJ5an6npVZIzAx83QQj
-         Ip/er16C7Q8sYjT+jsjtCyzV3pgHJhSAW8ztmyZfvjLDY38btIDLbWySNoRM9aoYSaev
-         wi90otYCPUriN7+/t460EPZxCmJUjIoGMQ8DHK9tTVw8lh2Rrb9+Y3QKJitvsQtxWfhZ
-         Snu1gbFgxHLHzYVYMQu9oubPXWvARnlgNUS+nBmbWo/W7x800AVHCwtlPUHv7Aymg0XE
-         +1ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740062029; x=1740666829;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0fLRneimGmzwm0JI2oa5ZakvVZkjPjyCGSlHEGhhfCo=;
-        b=sST/JbpI/NSIClWjwecoNmNjsiFSnhGEx39QN5aSSNfnN8MV/hIkJgUhGrh9i8d4k0
-         ECmyNDy7c2wVmCi3oIhy39o0TmDxY1F1RDcmSim8VAF/TE27zMKhqW6k+kt3vS+Ny9NU
-         ANzTix+x/KbffXB5FeMDTlFsu1g91MgsnFQv8EINDj5LxHx/dhGNq2QOcsFNvfxN6Idu
-         Jctx+ZquLzJm4XPiteRnIqADMKfbeFu7PdB69BUAs8hA5HFRqsXVa90yXJ2UaQqODoaj
-         JcwWaUdCTwed0mINDQLNSEjH9/zrkHUqQ3eN3u/L+SLA1OBQ4r9b5B4xTj8e9kk1czBd
-         +9ww==
-X-Forwarded-Encrypted: i=1; AJvYcCV97S6NxctGouS2vgJhR9yzBoZlyCQsyPdCapAgJ8SbmhyuRl2Q7rgVs00SwQgZvvyaJtEVo1ZoXx7oeDA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgZCMdM11pa66Rgodhz78V1lcvSjxMUgP0sDNVVTfXln5Jc3lQ
-	FcSmxAHIetET3B9Jt+o2AGsZe7PAL91Bl8Fm59o4hQWgwP1wfG/Z4RxX9f2qk74=
-X-Gm-Gg: ASbGnctenMFp/D8tYD2K7bzQALumn1q5jiqFawx7Lmzrb1F5kynPHjTxu/lt5fyJcm5
-	fSDDeiupsEyGBFMv7rFr3Vd8nIWUqjLZqdkUJVE1NCRWOa5apyNv52UrEvVuPA9OsXYwhClW7W1
-	vjdQ9BQY97pTudOcS0YaICmO36hD45VnaXH1H/1Ona8iT/eVl6Ke3EqpRXj8srKdDuDSfc+6QjT
-	84uytndTpfiMQn4ChMe7Wd7miDo7dEnDygr/W22H0M9Hhj51PWJDX2duRuLQWuE9mf+9CaRftx0
-	Q8P9xto8BjLrYyBRwS4=
-X-Google-Smtp-Source: AGHT+IGdl0++UlqTXUNR7gACpqCzd7MyieY3ey31m1e1WuRTW8wkYR95TKzvB0Cs2B7FjnJEVDg5eQ==
-X-Received: by 2002:a05:600c:1e11:b0:439:86fb:7326 with SMTP id 5b1f17b1804b1-43986fb7498mr136680405e9.22.1740062029245;
-        Thu, 20 Feb 2025 06:33:49 -0800 (PST)
-Received: from [127.0.1.1] ([2a01:e0a:e50:3860:4c32:9600:f4cc:3400])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258dcc50sm21194136f8f.34.2025.02.20.06.33.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 06:33:48 -0800 (PST)
-From: Guillaume La Roque <glaroque@baylibre.com>
-Date: Thu, 20 Feb 2025 15:31:55 +0100
-Subject: [PATCH] clocksource/drivers/timer-ti-dm: add module build support
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="f4RAmhu/"
+X-UUID: bc2be53cef9711efaae1fd9735fae912-20250220
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=LDoKuVQJ2EJOVY+wYzqwfD5konrYdOHBBkVXoeUifQw=;
+	b=f4RAmhu/w6/pM6SmBq+YEJ/jnXtKPu6b3KWxFazEGiJp/wRKHjVHFp7CtT65o6IEXJryzvBl1tGC2nEi0aHqqHOKUNi7eA9u8XSKRK/jLWd179tXUUv2WxWIfF4lAag1pQ1lkJRxrV43FGnNLKJ/P+FQlXcGVULj4RKLV/9XfWk=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.46,REQID:4f846745-ece4-494e-87af-2d53eb40ed44,IP:0,U
+	RL:0,TC:0,Content:0,EDM:-25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:-25
+X-CID-META: VersionHash:60aa074,CLOUDID:0d925aa4-5c06-4e72-8298-91cabc9efadf,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:1|19,IP:
+	nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,L
+	ES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: bc2be53cef9711efaae1fd9735fae912-20250220
+Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
+	(envelope-from <macpaul.lin@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1645261871; Thu, 20 Feb 2025 22:34:04 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Thu, 20 Feb 2025 22:34:03 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1258.28 via Frontend Transport; Thu, 20 Feb 2025 22:34:03 +0800
+From: Macpaul Lin <macpaul.lin@mediatek.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Matthias Brugger
+	<matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, Alexandre Mergnat
+	<amergnat@baylibre.com>
+CC: Bear Wang <bear.wang@mediatek.com>, Pablo Sun <pablo.sun@mediatek.com>,
+	Macpaul Lin <macpaul.lin@mediatek.com>, Macpaul Lin <macpaul@gmail.com>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
+	<linux-usb@vger.kernel.org>, Chris-qj chen <chris-qj.chen@mediatek.com>,
+	Fabien Parent <fparent@baylibre.com>, Yow-Shin Liou
+	<yow-shin.liou@mediatek.com>, Simon Sun <simon.sun@yunjingtech.com>
+Subject: [PATCH v4 1/2] arm64: dts: mediatek: mt8395-genio-1200-evk: add support for TCPC port
+Date: Thu, 20 Feb 2025 22:33:53 +0800
+Message-ID: <20250220143354.2532448-1-macpaul.lin@mediatek.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250220-timer-dm-v1-1-64b6dab5f4a5@baylibre.com>
-X-B4-Tracking: v=1; b=H4sIANo8t2cC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDIyMD3ZLM3NQi3ZRcXctUc8NEyyTTxKQUcyWg8oKi1LTMCrBR0bG1tQA
- Yb24NWgAAAA==
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, 
- Thomas Gleixner <tglx@linutronix.de>
-Cc: Nishanth Menon <nm@ti.com>, Andrew Davis <afd@ti.com>, 
- mkorpershoek@baylibre.com, linux-kernel@vger.kernel.org, 
- Guillaume La Roque <glaroque@baylibre.com>
-X-Mailer: b4 0.14.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-Add missing MODULE_LICENSE variable and convert bool to tristate in
-Kconfig to be able to build driver in module.
+From: Fabien Parent <fparent@baylibre.com>
 
-By default this driver was set at y when ARCH_K3=y.
+Enable USB Type-C support on MediaTek MT8395 Genio 1200 EVK by adding
+configuration for TCPC Port, USB-C connector, and related settings.
 
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+Configure dual role switch capability, set up PD (Power Delivery) profiles,
+and establish endpoints for SS (SuperSpeed) and HS (HighSpeed) USB.
+
+Update pinctrl configurations for U3 P0 VBus default pins and set dr_mode
+to "otg" for OTG (On-The-Go) mode operation.
+
+Signed-off-by: Fabien Parent <fparent@baylibre.com>
+Signed-off-by: Yow-Shin Liou <yow-shin.liou@mediatek.com>
+Signed-off-by: Simon Sun <simon.sun@yunjingtech.com>
+Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
 ---
-Enable possibility to build in module timer-ti-dm driver needed in
-Android context and Android Generic Kernel Image support.
+ .../dts/mediatek/mt8395-genio-1200-evk.dts    | 72 +++++++++++++++++++
+ 1 file changed, 72 insertions(+)
 
-I know any other clicksource driver support module build but i do test on AM62X and
-AM62P EVM board and i able to use this driver and test it with PWM.
+Changes for v2:
+ - Drop the no need '1/2' DT Schema update patch in the 1st version.  
+ - Fix indent for 'ports' node, it should under the 'connector' node.
+ - Correct the index for 'port@0' and 'port@1' node.
 
-By default this driver will be always enable in bultin when ARCH_K3=y so
-no impact for other TI SoC.
----
- drivers/clocksource/Kconfig       | 4 ++--
- drivers/clocksource/timer-ti-dm.c | 1 +
- 2 files changed, 3 insertions(+), 2 deletions(-)
+Changes for v3:
+ - Correct the order between new added nodes.
 
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 487c85259967..6ba4b2c48a76 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -57,8 +57,8 @@ config DIGICOLOR_TIMER
- 	  Enables the support for the digicolor timer driver.
+Changes for v4:
+ - Reorder for property 'op-sink-microwatt'.
+ - Fix indentation for 'source-pdos' and 'sink-pdos' nodes.
+ - Correct node 'pin-cmd-dat' with 'pins-vbus'.
+ - Add both Highspeed and Superspeed ports to ssusb0 port.
+ - Set 'role-switch-default-mode' = "peripheral" for ssusb0 port.
+ - Rename endpoint of USB data port to 'mtu3_hs0_role_sw' and
+   'mtu3_ss0_role_sw'.
+
+diff --git a/arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts b/arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts
+index 1ef6262b65c9..ca039c8e4c71 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts
+@@ -330,6 +330,47 @@ mt6360_ldo7: ldo7 {
+ 				regulator-always-on;
+ 			};
+ 		};
++
++		tcpc {
++			compatible = "mediatek,mt6360-tcpc";
++			interrupts-extended = <&pio 17 IRQ_TYPE_LEVEL_LOW>;
++			interrupt-names = "PD_IRQB";
++
++			connector {
++				compatible = "usb-c-connector";
++				label = "USB-C";
++				data-role = "dual";
++				op-sink-microwatt = <10000000>;
++				power-role = "dual";
++				try-power-role = "sink";
++
++				source-pdos = <PDO_FIXED(5000, 1000,
++							 PDO_FIXED_DUAL_ROLE |
++							 PDO_FIXED_DATA_SWAP)>;
++				sink-pdos = <PDO_FIXED(5000, 2000,
++						       PDO_FIXED_DUAL_ROLE |
++						       PDO_FIXED_DATA_SWAP)>;
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					port@0 {
++						reg = <0>;
++						typec_con_hs: endpoint {
++							remote-endpoint = <&mtu3_hs0_role_sw>;
++						};
++					};
++
++					port@1 {
++						reg = <1>;
++						typec_con_ss: endpoint {
++							remote-endpoint = <&mtu3_ss0_role_sw>;
++						};
++					};
++				};
++			};
++		};
+ 	};
+ };
  
- config OMAP_DM_TIMER
--	bool "OMAP dual-mode timer driver" if ARCH_K3 || COMPILE_TEST
--	default y if ARCH_K3
-+	tristate "OMAP dual-mode timer driver" if ARCH_K3 || COMPILE_TEST
-+	default ARCH_K3
- 	select TIMER_OF
- 	help
- 	  Enables the support for the TI dual-mode timer driver.
-diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
-index e9e32df6b566..c6183e1fdb5c 100644
---- a/drivers/clocksource/timer-ti-dm.c
-+++ b/drivers/clocksource/timer-ti-dm.c
-@@ -1307,3 +1307,4 @@ module_platform_driver(omap_dm_timer_driver);
+@@ -755,6 +796,13 @@ pins-reset {
+ 		};
+ 	};
  
- MODULE_DESCRIPTION("OMAP Dual-Mode Timer Driver");
- MODULE_AUTHOR("Texas Instruments Inc");
-+MODULE_LICENSE("GPL");
-
----
-base-commit: 87a132e73910e8689902aed7f2fc229d6908383b
-change-id: 20250220-timer-dm-9e71a9b5abd7
-
-Best regards,
++	u3_p0_vbus: u3-p0-vbus-default-pins {
++		pins-vbus {
++			pinmux = <PINMUX_GPIO63__FUNC_VBUSVALID>;
++			input-enable;
++		};
++	};
++
+ 	uart0_pins: uart0-pins {
+ 		pins {
+ 			pinmux = <PINMUX_GPIO98__FUNC_UTXD0>,
+@@ -885,8 +933,32 @@ &ufsphy {
+ };
+ 
+ &ssusb0 {
++	dr_mode = "otg";
++	pinctrl-names = "default";
++	pinctrl-0 = <&u3_p0_vbus>;
++	role-switch-default-mode = "peripheral";
++	usb-role-switch;
+ 	vusb33-supply = <&mt6359_vusb_ldo_reg>;
+ 	status = "okay";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++			mtu3_hs0_role_sw: endpoint {
++				remote-endpoint = <&typec_con_hs>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++			mtu3_ss0_role_sw: endpoint {
++				remote-endpoint = <&typec_con_ss>;
++			};
++		};
++	};
+ };
+ 
+ &ssusb2 {
 -- 
-Guillaume La Roque <glaroque@baylibre.com>
+2.45.2
 
