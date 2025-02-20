@@ -1,191 +1,203 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2064.outbound.protection.outlook.com [40.107.93.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from lf-2-54.ptr.blmpb.com (lf-2-54.ptr.blmpb.com [101.36.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 008E31E102D;
-	Thu, 20 Feb 2025 07:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740035812; cv=fail; b=Fc1AtHyzgSu4Vb4zainjyrex2JRs9BEFNStva6E1zHA9lsYRAkJEoXX2YbdI01CEFE8d5PoBAskR5Edg5bdVG6JOw6rhPQsAYO8VhWaPgWu19qVlFIswn9aXLZk8wJEYDxjiRm6vkHS0PkKUtlvAHnPYjkIrWxY8iajeyDwVrwU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740035812; c=relaxed/simple;
-	bh=rtzwZDKty5Vq4MOKpliucN9Iso4w41KpQqMkhHg1J4I=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oBh0cuSd4E3Eb7tSET6yfg1TxJnAfsxa8tFsW4uvjAxuCxATmNpDnXy5LZn7Q7ohIAWS0EMnqbThxWFzgFJ3nWv8D2ImWwOa2TjbOyrpcVY+2wr7bqKmCGY5CpLOYcpwa+Y/4BBQczm1cgqJaJSh5M/p6yd4VRNQnae/mlvfQSY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ieaiYHkZ; arc=fail smtp.client-ip=40.107.93.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30391E5B99
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 07:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.36.218.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740035818; cv=none; b=bahxcFDbaHFgH/sphOutCGM5zTbyVkILFXDfo17VpgRbhsBoN4pcJygvjN8coH9TT0BIpooKrqwD/KJCBc7oL4v4EdukvB09BgDXFoKFbcJInL4Zoki5IRAXerXgETav0Hh0cuvF1N52jB+M/R6oP6+mrn2HQzceO/H+xhuvnFM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740035818; c=relaxed/simple;
+	bh=EQlwESW28jy8H3w3MMdhsY3PYvVTowSGooaNS8KU2J0=;
+	h=To:From:Mime-Version:In-Reply-To:References:Date:Message-Id:Cc:
+	 Subject:Content-Type; b=E8m1n4JQOH+LZLbTInotprMA99gU3GEYm05Im8ZfSJkCNIhb5r82Lw7k3lNdZrWAxvXWBMVXxPdNyKPoieJzyCBsqfP4qMgAyi7AGSvM/DlKyA/3JHeOdpPyFbQ7RObi0wi2U4wnU1ejEmMNKqR4fcXDUGRRNT9IqC5iqzsW/JM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com; spf=pass smtp.mailfrom=lanxincomputing.com; dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b=TXWMQaL4; arc=none smtp.client-ip=101.36.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lanxincomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ieaiYHkZ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=d+gPxoVcZNhpPrSDbpXk4EfgBZwM5BkfXIETn12Y5f9Vl8YeFdoGe7S89OBv3G00iNWPi3kwGq5VGf5MxHLQ1P6pjrdc1m3qowAe5Sd2rcolwCqyA2tZJ+uSlSszr4LOfnpc8C9Dg1DjH5kUS5ELN8xMxMaunqVh58rkT10baLG20erMNRNcSNWiLFIJezbM0IRFJwJwlXEZF+c9CMS16jh6+qXuA0K0c8fOV+7c+r7Jr3xby+tRenjUiO2BKGjfBqJyLpt+RHM/IHQjU4lJ5luwtvaPUhnvxRKRPf5leEpj8N1cTxsRGL48GxmCNgS+i8+qHgqTPNxpSAjDucV72w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=I4VshHN551NXd67vqkdLkGoHMp+bv3MoP9hgf3lulZo=;
- b=i2hSDsxLRs8dm+JoOqXL++oNOzb5CmL/I7SteDO97aEW/C+X0X+Uqe6X6zmuwFYDC3zxArzY1iDsOHYTr1+Cyp+9URs4LaGQtHEDmQP8PMOWV63eULICN5MASxnA/1XQ7mDKpLiaQ54k+D74/HsnTVL21/Y+nCo/fLsUdGMSQx1rRvAS0gWckRaJd5TQYAtXLITT4nyE2D+P4mQHWupq7bWzaXGRMZcWdcAVsZSL4GAZ26tpsjFdXnlr2pwBf/LXdOQd7M19yzzlUSX8WzmfFhqJe2z73DDoft3SyBiW+A3X10Ij+pl4ND+PyrP6SBMAXEq2T8Xue/7UQ2XOcCl/2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I4VshHN551NXd67vqkdLkGoHMp+bv3MoP9hgf3lulZo=;
- b=ieaiYHkZwKnOjbAiujJ3Uq7Uuu8k9MFqPa8VUH8kHtc7xojkS6yldB9f4c+O7GwfOTtGRvjuP2yUCYnelmWDPKmtwzIIferc8IVWKT1h66fB3kjqbZFbN1JixbI2yRm0ziEB7ucJ7AP1CyAWPRfU7OVHM5MiM5IEtxirJmZirt5Vk7jwU4K8tdt4t58MKAzx6eQj7eNw/DUjBvt0nVO8AeBXX/CaHxPjrFA4ESDsYmS7TPc+8ix5BM3AhWdDAragY1I0stfLb0rUkic7Mc53YfOY37NjHgZQE5NgTj4sluzIbIpmVxGvWTMX7iGhfrXtHzlqiHNw/Yje7+LPChc12w==
-Received: from CH0PR03CA0029.namprd03.prod.outlook.com (2603:10b6:610:b0::34)
- by DM4PR12MB6470.namprd12.prod.outlook.com (2603:10b6:8:b8::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.15; Thu, 20 Feb
- 2025 07:16:47 +0000
-Received: from CH2PEPF00000143.namprd02.prod.outlook.com
- (2603:10b6:610:b0:cafe::6d) by CH0PR03CA0029.outlook.office365.com
- (2603:10b6:610:b0::34) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.14 via Frontend Transport; Thu,
- 20 Feb 2025 07:16:47 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CH2PEPF00000143.mail.protection.outlook.com (10.167.244.100) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8466.11 via Frontend Transport; Thu, 20 Feb 2025 07:16:47 +0000
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 19 Feb
- 2025 23:16:38 -0800
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail203.nvidia.com
- (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 19 Feb
- 2025 23:16:37 -0800
-Received: from Asurada-Nvidia (10.127.8.10) by mail.nvidia.com (10.129.68.8)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Wed, 19 Feb 2025 23:16:36 -0800
-Date: Wed, 19 Feb 2025 23:16:35 -0800
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-CC: <kevin.tian@intel.com>, <corbet@lwn.net>, <will@kernel.org>,
-	<joro@8bytes.org>, <suravee.suthikulpanit@amd.com>, <robin.murphy@arm.com>,
-	<dwmw2@infradead.org>, <baolu.lu@linux.intel.com>, <shuah@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <iommu@lists.linux.dev>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <eric.auger@redhat.com>,
-	<jean-philippe@linaro.org>, <mdf@kernel.org>, <mshavit@google.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <smostafa@google.com>,
-	<ddutile@redhat.com>, <yi.l.liu@intel.com>, <patches@lists.linux.dev>
-Subject: Re: [PATCH v6 12/14] iommu/arm-smmu-v3: Introduce struct
- arm_smmu_vmaster
-Message-ID: <Z7bW00+W1WkwtOLI@Asurada-Nvidia>
-References: <cover.1737754129.git.nicolinc@nvidia.com>
- <d68ca2f38f28c50a3109bc5a84716ca79bc3d7f3.1737754129.git.nicolinc@nvidia.com>
- <20250218170824.GF4099685@nvidia.com>
+	dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b="TXWMQaL4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=s1; d=lanxincomputing-com.20200927.dkim.feishu.cn; t=1740035581;
+  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
+ reply-to:content-type:mime-version:in-reply-to:message-id;
+ bh=EQlwESW28jy8H3w3MMdhsY3PYvVTowSGooaNS8KU2J0=;
+ b=TXWMQaL4r92kd/4/msL40bUej1du5Q2f6Wi6H+qgWGT3SsAr8qCZS/f33LbaNkfBC+zaJ8
+ WQxji9HJsd/OF8eonzba5eCrrGcAln4nuzkNo06NfSeug4BR42x+vunmgmrvrZavpdqRe+
+ YZAb8eBv6BxYHW0m3hBuTy88C0k+N+XmIkI4+vkr5vELr1q+D5ilwxVR4d/gn3kzQgRDsl
+ 2sBVToqvLBlB1/o7W6S5UlzoFv3XhAjVeY7X7GEZhwc3R3HnY5XUhYJ9VrcY8FkBcX03aT
+ a2A3Bb885FtZnqjpgOx6WmbKKJUO645ln1Bsek9TntpnGGL7Zcgy0rk4M/q8TA==
+To: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
+From: "xiangwencheng" <xiangwencheng@lanxincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250218170824.GF4099685@nvidia.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF00000143:EE_|DM4PR12MB6470:EE_
-X-MS-Office365-Filtering-Correlation-Id: 98c7a189-cc4a-4be1-367c-08dd517e89cc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|1800799024|36860700013|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?mQqwrjZK3oi/x8yX9Q7Wm/fsBGrMtkyT0LXakQM7ULlGXIA5CNc6sHddn1D7?=
- =?us-ascii?Q?/xPMQFNWn4iqnmyfpLbJxpoxwdRseZxqi5sWV9WRFWB+fqLDKF0BnyxGWdLE?=
- =?us-ascii?Q?iJS87UqhGP7q4eNxoTLekzXh2EDc1bOu596mmJ+Rrl950Cin3tNxKMoHmhq2?=
- =?us-ascii?Q?NoPwqpPHr20FLqi5c82PxlV10jZmY9bjHp1dZc9yw5UzmwgZvJtjVc6yOurr?=
- =?us-ascii?Q?Yf1kR/efCGrHr6oNLVMWAkDM/lo6lZWvpmuLmffe9dAPHgVrlW+nok85qclk?=
- =?us-ascii?Q?Lj5usWH61Qj7EwUeXazHFvDMO7DCjOM9hSg7n406qCxr5Kwu3Gzl8CgcscGQ?=
- =?us-ascii?Q?mMLwyb6etxudB4/lefNowofFZgZYeB9OeugT0L4sVq1nPGdnjzGfElA+ctta?=
- =?us-ascii?Q?FRKbE7E+rMnH89wave6h1jQK+4KN07inFsx1Tj4MX27NqM4AgXlhBu9iLBqG?=
- =?us-ascii?Q?lhD227z5CK4dmfu8yuoTFkBXByKPXBbfDbMM6uOURL9Wd+HfGqwoXWBzZlq/?=
- =?us-ascii?Q?Y9lZhaqFw/a7ZNhNfEqwyu40SgIrQ3V2Pe1xhu3h2PTlIf3sHkQLMAgRN+mK?=
- =?us-ascii?Q?4FWdULepKrt/gldEp4v5Fp9Opxkoq5hlTQMrRgbGq3djlEkHlau9kIsscWKX?=
- =?us-ascii?Q?wJCpomBW8jsUZDT8h6bNzIZ4hg6J9bCTPHS/apOLtwhwm0DoVqMOO1O6Wphj?=
- =?us-ascii?Q?gzrwZ4ale3o/VKqlVUULW4zltLZwbsbLssc45DWh86fCuwEoEHfQXBlGpFBw?=
- =?us-ascii?Q?qLORDLRpN7T9QofVIPlwa2MqXEHSKBjOynyCRriM8RoN3shyjZyIaGWw/MRf?=
- =?us-ascii?Q?z4hRJ83TAMo57cHT2axxOvThCYD8ubpMgAonMoPq9yXv+cko8A8883kX0D8z?=
- =?us-ascii?Q?bEXq8RZFdQ/eCPEPWLkHG0WXoLcqnquFByn+O0DJbfISVWX4cfXgxVPKY69n?=
- =?us-ascii?Q?heizQ3qejGTk/WD5wD8bm3UQlHDm++XW5KF9ZTWdWczDh1iwjnA8ln9Y4lGo?=
- =?us-ascii?Q?wg2y3CwubF6GO8Ygr5wx8Z8kPOLFcE/Bl+okVVmZI4z69xNgT07fJ+7NRw5D?=
- =?us-ascii?Q?DJVAi+Zfo133AEpwqZu0/Fbc9xUvcLb3GVgDDLZXc0shIGrQmvie8/DOt+ge?=
- =?us-ascii?Q?/60NA7qbrlQH+rIcMD8pT64v79qgrXTUdYNMFLMtXrGNAkyqSqkEfeON1x15?=
- =?us-ascii?Q?ZvdcyrsfXtisABChAMo6fJtjekLPkP7P9YhvLlJc8dhC77q/5MytYZrCZWPI?=
- =?us-ascii?Q?j/ZOVlzfq3Ul+dShEXtv8V0AnfJaXp5y+CfWrXfhWQkJLQq6kwe93Q+UjSy1?=
- =?us-ascii?Q?TxlJY2OOZzplnjRu/kcF8lQ9xejWCgPPkHYWDWaUTsS6DI2G4jxAgVEiVjtP?=
- =?us-ascii?Q?MJsAmu7jsNXQeF88CD7nqyZdMSCZYxJ1Hfu1DnxSMrIqmcE5jMwUgMtQRRPW?=
- =?us-ascii?Q?VMbfGHGokr8aefRHwATq/NtvIYJzSeyxX0N2xgBkZwHHZS3dWb17Dh7rS9vj?=
- =?us-ascii?Q?W6J3klr9/zrEbK0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(36860700013)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 07:16:47.4506
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 98c7a189-cc4a-4be1-367c-08dd517e89cc
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF00000143.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6470
+Mime-Version: 1.0
+In-Reply-To: <D7WALEFMK28X.13HQ0UL1S3NM5@ventanamicro.com>
+References: <20250219015426.1939-1-xiangwencheng@lanxincomputing.com>
+	<D7WALEFMK28X.13HQ0UL1S3NM5@ventanamicro.com>
+X-Lms-Return-Path: <lba+167b6d5fb+5aa47e+vger.kernel.org+xiangwencheng@lanxincomputing.com>
+Date: Thu, 20 Feb 2025 15:12:58 +0800
+Message-Id: <38cc241c40a8ef2775e304d366bcd07df733ecf0.f7f1d4c7.545f.42a8.90f5.c5d09b1d32ec@feishu.cn>
+Cc: <anup@brainfault.org>, <ajones@ventanamicro.com>, 
+	<kvm-riscv@lists.infradead.org>, <kvm@vger.kernel.org>, 
+	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>, 
+	<atishp@atishpatra.org>, <paul.walmsley@sifive.com>, 
+	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, 
+	"linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Subject: Re: [PATCH] riscv: KVM: Remove unnecessary vcpu kick
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 18, 2025 at 01:08:24PM -0400, Jason Gunthorpe wrote:
-> On Fri, Jan 24, 2025 at 04:30:41PM -0800, Nicolin Chen wrote:
-> > +	int ret;
-> >  	struct arm_smmu_ste ste;
-> >  	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
-> > +	struct arm_smmu_attach_state state = {
-> > +		.master = master,
-> > +	};
-> > +
-> > +	ret = arm_smmu_attach_prepare_vmaster(&state, domain);
-> > +	if (ret)
-> > +		return ret;
-> > +	arm_smmu_attach_commit_vmaster(&state);
-> 
-> I think you should make this into just a arm_smmu_clear_vmaster()
-> with less complication..
 
-Ack:
+> From: "Radim Kr=C4=8Dm=C3=A1=C5=99"<rkrcmar@ventanamicro.com>
+> Date:=C2=A0 Wed, Feb 19, 2025, 16:51
+> Subject:=C2=A0 Re: [PATCH] riscv: KVM: Remove unnecessary vcpu kick
+> To: "BillXiang"<xiangwencheng@lanxincomputing.com>, <anup@brainfault.org>
+> Cc: <ajones@ventanamicro.com>, <kvm-riscv@lists.infradead.org>, <kvm@vger=
+.kernel.org>, <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.=
+org>, <atishp@atishpatra.org>, <paul.walmsley@sifive.com>, <palmer@dabbelt.=
+com>, <aou@eecs.berkeley.edu>, "linux-riscv"<linux-riscv-bounces@lists.infr=
+adead.org>
+> 2025-02-19T09:54:26+08:00, BillXiang <xiangwencheng@lanxincomputing.com>:
 
-+void arm_smmu_master_clear_vmaster(struct arm_smmu_master *master)
-+{
-+       mutex_lock(&master->smmu->streams_mutex);
-+       kfree(master->vmaster);
-+       master->vmaster = NULL;
-+       mutex_unlock(&master->smmu->streams_mutex);
-+}
-[...]
-@@ -3162,6 +3172,7 @@ static int arm_smmu_attach_dev_identity(struct iommu_domain *domain,
-        struct arm_smmu_ste ste;
-        struct arm_smmu_master *master = dev_iommu_priv_get(dev);
- 
-+       arm_smmu_master_clear_vmaster(master);
-        arm_smmu_make_bypass_ste(master->smmu, &ste);
-        arm_smmu_attach_dev_ste(domain, dev, &ste, STRTAB_STE_1_S1DSS_BYPASS);
-        return 0;
-@@ -3180,7 +3191,9 @@ static int arm_smmu_attach_dev_blocked(struct iommu_domain *domain,
-                                        struct device *dev)
- {
-        struct arm_smmu_ste ste;
-+       struct arm_smmu_master *master = dev_iommu_priv_get(dev);
- 
-+       arm_smmu_master_clear_vmaster(master);
-        arm_smmu_make_abort_ste(&ste);
-        arm_smmu_attach_dev_ste(domain, dev, &ste,
-                                STRTAB_STE_1_S1DSS_TERMINATE);
+> > Thank you Andrew Jones, forgive my errors in the last email.
 
-Thanks
-Nicolin
+> > I'm wondering whether it's necessary to kick the virtual hart
+
+> > after writing to the vsfile of IMSIC.
+
+> > From my understanding, writing to the vsfile should directly
+
+> > forward the interrupt as MSI to the virtual hart. This means that
+
+> > an additional kick should not be necessary, as it would cause the
+
+> > vCPU to exit unnecessarily and potentially degrade performance.
+
+>=C2=A0
+> Andrew proposed to avoid the exit overhead, but do a wakeup if the VCPU
+
+> is "sleeping". =C2=A0I talked with Andrew and thought so as well, but now=
+ I
+
+> agree with you that we shouldn't have anything extra here.
+
+>=C2=A0
+> Direct MSIs from IOMMU or other harts won't perform anything afterwards,
+
+> so what you want to do correct and KVM has to properly handle the memory
+
+> write alone.
+
+>=C2=A0
+> > I've tested this behavior in QEMU, and it seems to work perfectly
+
+> > fine without the extra kick.
+
+>=C2=A0
+> If the rest of KVM behaves correctly is a different question.
+
+> A mistake might result in a very rare race condition, so it's better to
+
+> do verification rather than generic testing.
+
+>=C2=A0
+> For example, is `vsfile_cpu >=3D 0` the right condition for using direct
+
+> interrupts?
+
+>=C2=A0
+> I don't see KVM setting vsfile_cpu to -1 before descheduling after
+
+It's not necessary to set vsfile_cpu to -1 as it doesn't release it, and
+the vsfile still belongs to the vCPU after WFI.
+
+> emulating WFI, which could cause a bug as a MSI would never cause a wake
+
+> up. =C2=A0It might still look like it works, because something else could=
+ be
+
+> waking the VCPU up and then the VCPU would notice this MSI as well.
+
+>=C2=A0
+> Please note that I didn't actualy verify the KVM code, so it can be
+
+> correct, I just used this to give you an example of what can go wrong
+
+> without being able to see it in testing.
+
+>=C2=A0
+> I would like to know if KVM needs fixing before this change is accepted.
+
+> (It could make bad things worse.)
+
+As "KVM:=C2=A0 WFI wake-up using IMSIC VS-files" that described in [1], wri=
+ting to=C2=A0
+VS-FILE will wake up vCPU.
+
+KVM has also handled the situation of WFI. Here is the WFI emulation proces=
+s:
+kvm_riscv_vcpu_exit=C2=A0
+=C2=A0=C2=A0=C2=A0 -> kvm_riscv_vcpu_virtual_insn=C2=A0
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 -> system_opcode_insn=C2=A0
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=C2=A0 -> wfi_insn=C2=A0
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 -> kvm_riscv_=
+vcpu_wfi
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ -> kvm_vcpu_halt
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 -> kvm_vcpu_block
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 -> kvm_arch_vcpu_blocking
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 -> kvm_riscv_aia_wakeon_h=
+gei
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 -> c=
+sr_set(CSR_HGEIE, BIT(hgei));
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 -> set_current_state(TASK_INTERRUPTIBLE);
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 -> schedule
+
+In kvm_arch_vcpu_blocking it will enable guest external interrupt, which
+means wirting to VS_FILE will cause an interrupt. And the interrupt handler
+hgei_interrupt which is setted in aia_hgei_init will finally call kvm_vcpu_=
+kick
+to wake up vCPU.
+
+So I still think is not necessary to call another kvm_vcpu_kick after writi=
+ng to
+VS_FILE.
+
+Waiting for more info. Thanks.
+
+[1]=C2=A0 https://kvm-forum.qemu.org/2022/AIA_Virtualization_in_KVM_RISCV_f=
+inal.pdf
+
+>=C2=A0
+> > Would appreciate any insights or confirmation on this!
+
+>=C2=A0
+> Your patch is not acceptable because of its commit message, though.
+
+> Please look again at the document that Andrew posted and always reply
+
+> the previous thread if you do not send a new patch version.
+
+>=C2=A0
+> The commit message should be on point.
+
+> Please avoid extraneous information that won't help anyone reading the
+
+> commit. =C2=A0Greeting and commentary can go below the "---" line.
+
+> (And possibly above a "---8<---" line, although that is not official and
+
+> =C2=A0may cause issues with some maintainers.)
+
+>=C2=A0
+> Thanks.
+>=C2=A0
