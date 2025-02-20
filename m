@@ -1,131 +1,137 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874CE288A2;
-	Thu, 20 Feb 2025 13:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740058297; cv=none; b=SVqaEylj6hs18AOlJnsNw9ESrXtiGNQFwJQM89K+kGbO343qBK3BOVJRYkreYCatBAJ3zAQMuK37IBY5iM7iYmtY6IntPCSVPhC8PcPEyiJemwTNXnPNQYlFNjtC8mfDayF4etWS7AXSkRIWMhVohdjG0OCiz3o7+Xnhqi3O/Xk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740058297; c=relaxed/simple;
-	bh=+BLHUOTGg4Xc2Cd4lVLcPAZ39MPOBrnJ+minoVo+LZE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
-	 References:In-Reply-To; b=rWrekwomzUAYgjCJtWLfmp+0K9uvAY8AHWEPdVUkVIGdbBw/7VBg2YXvtUyVrAfrrYfM/XbACMqzfZ/2+H3Q8nKCsF9WjiImDmMKczpmwxh3ge1L8NIRaf+6wyBENL4aLyaXhY+ECVFCTlr5ZdyIpW/Wq8BlOtA5B3U2otnA3jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bwOJo+lI; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF5E1F4262
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 13:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740058309; cv=pass; b=evlxPHQYeFb4cwV7H0L9dQ8FG5Jf4sXH+LtPnz7sh3rYQM36JXuS7YJHxSxCeDVXbphXhMg23jDjTKwy7Vwu5Z8B4IkixRmyiCNGUH9xujRsxyShCoG6FLmoRzp8KXtqIXM1X59rl7dw0xsgIJg4KSr1w5jDWtkXRsSgMiEbY4Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740058309; c=relaxed/simple;
+	bh=38UpxZeOUsXipbUwygCbrqOljhMT3i+SL0fC+IRIiNY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UnwHfnO701EmHcfuoANJbqD3EZdH72CyD2JTf4eBvM6s7KbmJFM6FfYJCco1KQYcPOBG7uRs/dI1JCFLbiLjuR4NGt4d1U9MO7O/WWvZ9LiOi89npbm4fvvE96NSfsVJ0OAKfKnuBY+QO7HsMx57RjotMN72DPDMh6HjvZbdUVg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=UXoL0xvt; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bwOJo+lI"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7AB664329B;
-	Thu, 20 Feb 2025 13:31:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1740058292;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CkUjsmd0pVsmitb0WeguhFZha5DdicaUilLQLg4YgVA=;
-	b=bwOJo+lIPQFFU574qPjJZ2V7C45r99lHmH2oSTCQ2yKnmcrL2Ei5+4CvHysZrdIs9saOar
-	0hDeIGSy//DHPp3fwPKI35rErylX5qWTujxuA9uujmRaSFHNB8I3iZ78v4ejX8abfDncsE
-	ND4CHpeaYnGqrihatO3n4LD18RCIAZ2VTdw7y0vTO+j8/y2izOyzFY06+zPUsiAvMJUgbh
-	tA+98IWix4u2J8Tag8BnLuU+B52JVvCIFQLfQ10CdgpV70C53w8MXvhnyCuVnVo7lS9g6N
-	OFPRKsw/H0UH9RiE2Kbz1K/omGs8BqSwljQnuT+Br0X2ODuDB+a5elIJK00C4A==
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="UXoL0xvt"
+ARC-Seal: i=1; a=rsa-sha256; t=1740058282; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=nZ+99W4l2bOwH34wjrLy0cykDdkPJYNYyEnfRIVnig2i8J8r+j2f9e0y30C9hLSucrchccpVIPt9Uad4Pjqi5nbXVv22R8ssGE4WmGwX4pBG/MyyM0wIpImqtBw95f8N5NZfJXJ/E1WZzMzVcRvfc6ufuUpSDhIuqsi5fimDcw4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1740058282; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=WwGtYpVbiHbXyNtzNp28/hsmWCNhDI4FpbukfWmffb0=; 
+	b=iefjYKVOzPMb3GNZCgitH+a2lYbiFWDw4Bcl3xX73CZw9VXUFjYVEQLjL8V6uetqHMNehd0zXeb7wOacMf6M/NR72Fp2ocfN0mr2VLCSqafXqV4Hd2c2fy55KTLbGx3cfodvL46iG3NVEbE8c5QxwvZusn+GisBHU8Z1lGjiSb4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740058282;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=WwGtYpVbiHbXyNtzNp28/hsmWCNhDI4FpbukfWmffb0=;
+	b=UXoL0xvtm1lIvSi8Qhx3+eUWHgoWc6aT95gQemoue/dUPAH5uIAJ59Wxr8AUxK4Q
+	O53477u7GJjPs/aAThqhTxS4zQ0ghojo/vdGMtf5DM/o4b7VMWXm9640ZgsixJDsvYV
+	YSbGscqSf2gKSTkPxE6L7OsNsie8FYZPqsv+DEPQ=
+Received: by mx.zohomail.com with SMTPS id 1740058280296164.49908263796294;
+	Thu, 20 Feb 2025 05:31:20 -0800 (PST)
+Message-ID: <ca0dfb6d-4fc6-4963-a092-f4c0b3afb7a4@collabora.com>
+Date: Thu, 20 Feb 2025 16:31:14 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v2 4/5] virtio-mmio: read shm region page size
+To: Sergio Lopez Pascual <slp@redhat.com>, "Michael S. Tsirkin"
+ <mst@redhat.com>, Daniel Verkamp <dverkamp@chromium.org>,
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>,
+ Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
+ <olvaffe@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>,
+ fnkl.kernel@gmail.com
+Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org
+References: <20250214-virtio-shm-page-size-v2-0-aa1619e6908b@redhat.com>
+ <20250214-virtio-shm-page-size-v2-4-aa1619e6908b@redhat.com>
+ <1f9a86a5-97d6-41d5-9a30-0422fc9ec137@collabora.com>
+ <CAAiTLFXihV_DUpd25Mc-OcgsNJ5tVJx7XYsETgxh+7cFuicuHA@mail.gmail.com>
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+Content-Language: en-US
+In-Reply-To: <CAAiTLFXihV_DUpd25Mc-OcgsNJ5tVJx7XYsETgxh+7cFuicuHA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Date: Thu, 20 Feb 2025 14:31:29 +0100
-Message-Id: <D7XB6MXRYVLY.3RM4EJEWD1IQM@bootlin.com>
-To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: Re: [PATCH 0/2] driver core: platform: avoid use-after-free on
- device name
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich"
- <dakr@kernel.org>, "Rob Herring" <robh@kernel.org>, "Saravana Kannan"
- <saravanak@google.com>, "David S. Miller" <davem@davemloft.net>, "Grant
- Likely" <grant.likely@secretlab.ca>, <linux-kernel@vger.kernel.org>,
- <devicetree@vger.kernel.org>, "Liam Girdwood" <lgirdwood@gmail.com>, "Mark
- Brown" <broonie@kernel.org>, "Jaroslav Kysela" <perex@perex.cz>, "Takashi
- Iwai" <tiwai@suse.com>, "Binbin Zhou" <zhoubinbin@loongson.cn>,
- <linux-sound@vger.kernel.org>, "Vladimir Kondratiev"
- <vladimir.kondratiev@mobileye.com>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>, <stable@vger.kernel.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250218-pdev-uaf-v1-0-5ea1a0d3aba0@bootlin.com>
- <2025022005-affluent-hardcore-c595@gregkh>
-In-Reply-To: <2025022005-affluent-hardcore-c595@gregkh>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeijedviecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggfgtgffkffvhffuvefofhgjsehtqhertdertdejnecuhfhrohhmpefvhhorohcunfgvsghruhhnuceothhhvghordhlvggsrhhunhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgedvffeftddukedvffffjeehvedtueeuteefffeijeeiteelgefgfeeihfduheeinecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeiieegsgemfhdtfhhfmehfvgdutdemlegvfhgunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeiieegsgemfhdtfhhfmehfvgdutdemlegvfhgupdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrn
- hgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgrrhgrvhgrnhgrkhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehgrhgrnhhtrdhlihhkvghlhiesshgvtghrvghtlhgrsgdrtggrpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: theo.lebrun@bootlin.com
+Content-Transfer-Encoding: 7bit
+X-ZohoMailClient: External
 
-Hello Greg,
+On 2/20/25 13:24, Sergio Lopez Pascual wrote:
+> Dmitry Osipenko <dmitry.osipenko@collabora.com> writes:
+> 
+>> On 2/14/25 18:16, Sergio Lopez wrote:
+>>> Use the newly introduced SHM_PAGE_SHIFT register to read the page shift
+>>> for the shared memory region, derive the page size from it and store the
+>>> resulting value into virtio_shm_region.
+>>>
+>>> Signed-off-by: Sergio Lopez <slp@redhat.com>
+>>> ---
+>>>  drivers/virtio/virtio_mmio.c     | 11 ++++++++++-
+>>>  include/uapi/linux/virtio_mmio.h |  3 +++
+>>>  2 files changed, 13 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
+>>> index 1f594b626d7a7734e8ec58766737a118c26bad94..0f892770739ea84b3e7be5615332773049b10ab1 100644
+>>> --- a/drivers/virtio/virtio_mmio.c
+>>> +++ b/drivers/virtio/virtio_mmio.c
+>>> @@ -537,6 +537,7 @@ static bool vm_get_shm_region(struct virtio_device *vdev,
+>>>  			      struct virtio_shm_region *region, u8 id)
+>>>  {
+>>>  	struct virtio_mmio_device *vm_dev = to_virtio_mmio_device(vdev);
+>>> +	u8 page_shift = 0;
+>>>  	u64 len, addr;
+>>>
+>>>  	/* Select the region we're interested in */
+>>> @@ -560,7 +561,15 @@ static bool vm_get_shm_region(struct virtio_device *vdev,
+>>>
+>>>  	region->addr = addr;
+>>>
+>>> -	region->page_size = 4096;
+>>> +	/* If supported by the device transport, read the region page size.
+>>> +	 * The page_shift variable is initialized to zero above, so if this
+>>> +	 * feature isn't supported it will result in a page_size of 4096, a
+>>> +	 * default safe value.
+>>> +	 */
+>>> +	if (__virtio_test_bit(vdev, VIRTIO_F_SHM_PAGE_SIZE))
+>>> +		page_shift = (u8) readl(vm_dev->base + VIRTIO_MMIO_SHM_PAGE_SHIFT);
+>>> +
+>>> +	region->page_size = 1 << (page_shift + 12);
+>>>
+>>>  	return true;
+>>>  }
+>>> diff --git a/include/uapi/linux/virtio_mmio.h b/include/uapi/linux/virtio_mmio.h
+>>> index 0650f91bea6c70f935764070d825d181a2379afb..43348be30eff90ee228b6490b9d3c35ba4c50aa5 100644
+>>> --- a/include/uapi/linux/virtio_mmio.h
+>>> +++ b/include/uapi/linux/virtio_mmio.h
+>>> @@ -133,6 +133,9 @@
+>>>  #define VIRTIO_MMIO_SHM_BASE_LOW        0x0b8
+>>>  #define VIRTIO_MMIO_SHM_BASE_HIGH       0x0bc
+>>>
+>>> +/* Shared memory region page shift */
+>>> +#define VIRTIO_MMIO_SHM_PAGE_SHIFT      0x0c4
+>>
+>> What's the logic behind choosing 0x0c4, why not 0x0c0?
+> 
+> It seems like Linux doesn't support it yet, but in the specs 0x0c0 is
+> already reserved for QueueReset.
 
-On Thu Feb 20, 2025 at 1:41 PM CET, Greg Kroah-Hartman wrote:
-> On Tue, Feb 18, 2025 at 12:00:11PM +0100, Th=C3=A9o Lebrun wrote:
->> The use-after-free bug appears when:
->>  - A platform device is created from OF, by of_device_add();
->>  - The same device's name is changed afterwards using dev_set_name(),
->>    by its probe for example.
->>=20
->> Out of the 37 drivers that deal with platform devices and do a
->> dev_set_name() call, only one might be affected. That driver is
->> loongson-i2s-plat [0]. All other dev_set_name() calls are on children
->> devices created on the spot. The issue was found on downstream kernels
->> and we don't have what it takes to test loongson-i2s-plat.
->>=20
->> Note: loongson-i2s-plat maintainers are CCed.
->>=20
->>    =E2=9F=A9 # Finding potential trouble-makers:
->>    =E2=9F=A9 git grep -l 'struct platform_device' | xargs grep -l dev_se=
-t_name
->>=20
->> The solution proposed is to add a flag to platform_device that tells if
->> it is responsible for freeing its name. We can then duplicate the
->> device name inside of_device_add() instead of copying the pointer.
->
-> Ick.
->
->> What is done elsewhere?
->>  - Platform bus code does a copy of the argument name that is stored
->>    alongside the struct platform_device; see platform_device_alloc()[1].
->>  - Other busses duplicate the device name; either through a dynamic
->>    allocation [2] or through an array embedded inside devices [3].
->>  - Some busses don't have a separate name; when they want a name they
->>    take it from the device [4].
->
-> Really ick.
->
-> Let's do the right thing here and just get rid of the name pointer
-> entirely in struct platform_device please.  Isn't that the correct
-> thing that way the driver core logic will work properly for all of this.
+See QueueReset in the spec now, thanks.
 
-I would agree, if it wasn't for this consideration that is found in the
-commit message [0]:
+Reviewed-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
 
-> It is important to duplicate! pdev->name must not change to make sure
-> the platform_match() return value is stable over time. If we updated
-> pdev->name alongside dev->name, once a device probes and changes its
-> name then the platform_match() return value would change.
-
-I'd be fine sending a V2 that removes the field *and the fallback* [1],
-but I don't have the full scope in mind to know what would become broken.
-
-[0]: https://lore.kernel.org/lkml/20250218-pdev-uaf-v1-2-5ea1a0d3aba0@bootl=
-in.com/
-[1]: https://elixir.bootlin.com/linux/v6.13.3/source/drivers/base/platform.=
-c#L1357
-
-Regards,
-
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+-- 
+Best regards,
+Dmitry
