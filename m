@@ -1,155 +1,81 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCD31E990D
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 07:41:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D942E1E5734;
+	Thu, 20 Feb 2025 07:41:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740037290; cv=none; b=rJNcf5bh4+KUVf9WcvNxMGtcp7Vge8EY0BuPeAhR0Sdj21OnJtUB8dkWqbAaKlSdZyMYdMBeuG1mdg4xXwtzNwNEONbnbiGejWMrMNdhtDxypxS38sMnXANkeETwQH1WE24FS4uK3AKMkXYrjHR9hy/7KlGvHFavpE9e2cZxMKM=
+	t=1740037298; cv=none; b=oMHLopruFIc7wPCdtT9DY8ptSSi4Rs5nXbXGahNEE5U850DIvMI6BderADN+4NUpjilHZ6FETPBSzZuPufn0nwtPrmf2JTO7u6y9PtpdA8OkNvJIKP77ePSGQVymu3YejetMdpcgh+RqAEIdG55qhlWgKne837y5/D8/yYjh83o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740037290; c=relaxed/simple;
-	bh=FcvfMD+JBBVNDDsu7+aYWKzpf97y9eyX6wNGdgF4LxE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o0aOwLwmMLvhNQAXw5vNGdcbGJtQAVUon9cxbt1bBfZThVaHCWK5htLG4zSW4o2uoqnsKKym+MGEdQU2tlKINjW5Y67PzcO/kep8DT1HMsHpLG70quTfUoMIkgUwdK+MS4KIv1p3WZpH6TavaPfLn5+G79wzWwDKvdarRKwFej8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dWOcM0t1; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740037298; c=relaxed/simple;
+	bh=8qOPuIrpCkpLTX/ohjxufRRmyg1pZ3CQTJ7DCrnsPWU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JVtvcrGwMezMeB5BVIxpnLpG590CpXMD/V9RdTQ4QvKgO2QenETQzjEfJmAADvVN9yyVp2aaSuqE2f93H7w7n6Exri6OVGwc0kXjy9l2ZdjOXrq5/WTNUEFXs4RiOpebgNx+QqAO8LNIUnXawjOkSxpFCCNdIbC3sp5mWZlJ48Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gH2iFLqS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dWOcM0t1"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-220c92c857aso11174865ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 23:41:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740037288; x=1740642088; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=azToiCO+oZ/zxxr4mX51zUb1S/Hn5fc+tCyD7exrK9Y=;
-        b=dWOcM0t17tV11JLGEzr2KGJ3nNSjbcS/eN2UFGZ+d4Rv/hT+x1PYgB8I8JhJRPWEPM
-         2V0Cb9wxKJsY543PLSveE+4P05DuKp9GbFujxdExDtpXOZuSMktWiSSHRF9LUZZQWGra
-         hBKgf1KUYJ3nVoi1OiHvJLaZEMTx+Jeemf1f6MxFYYHXoHUj8GxmDWmKsYUHS7CvObI1
-         yEQmkCb2LN9qV1mItygMygEJ88p1Ds85aRukSwy/m3eWkmh3qBIDo6ISQpjK0H4j2Vkv
-         F1iBJLx6FrVebWHudPlozimDh1xqzbi7NQ3uGjqGjgT0R0YSe0U93D+0zEysHuU0wtdX
-         sgPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740037288; x=1740642088;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=azToiCO+oZ/zxxr4mX51zUb1S/Hn5fc+tCyD7exrK9Y=;
-        b=cyRuT2PLjWPLsUSGmT7AvBuH8ooBOguMEg7iy+mk/cAIYTdnTHIgS4Dw0WzLJbAigX
-         ymbqzw+LF0ZzaHcKm3yWnwGORXgy7BSHmGUUyH8o82UYUUzzXZMni6kKovXRfvSNrKTH
-         ZpDw5Z5BMwFRLsLnoZLwZcw9JtQFht63hymTbQOjLsqBYj14DMoRsCnC3i6OPH7A67kl
-         E4WgAzulh/xTP2u/c3Mr6WO8kQtxUfTHVba7V0m4N70TdEpuzYZSoQV9bOJtalBxeOEw
-         5l+qdIPiiS2/gauqZjYHxno0enkJjeS1X9q0cozW9RTSE7QqAzTNhbgN60CGAGuNm8EA
-         FIPg==
-X-Forwarded-Encrypted: i=1; AJvYcCX36Uzf2v6xe+0bwiTDJxNM3wv2otgTuEHSCzzNju5W9+LllXDkBUJrnRTX/zmjV8TZuVLEtCIXtLTNQxQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMj8r5GnBadRl3fB5gIfdwxrhm7EgPNvPrpcP1NrzPgVYGDdpq
-	hJsIb3MKR+RNcm28sHsiD9nVaJaSNpdhx7lH/Bn39wiKLXQIXZ5tQ8aKMD/JzMQxN77sWTsA35c
-	=
-X-Gm-Gg: ASbGnctcLiW/FLUaofSjOFGQhzjlh/QDqXnerWMuWm2ZluCSKhlogm0OtZJM0ZSocuP
-	a8Q69OUvJ/gDHjdXsrEB6s52ukeu5gM0ITd/CEbbzzeffpiMoI/SSzMkBvqsbCQ/iVJzMBDIbnG
-	/wl+/dybM8fs9THP1kJRNwtkySYvd+YkN3XCw04lvYl31sz1ruhl+YMQK0mqN939w9kVnnddqVc
-	UTocL+/kn87IQywNta7AC8p0mjzeEeCKjfcLndkfHFEeJAWgFlUVyAW/iH1AuCcV7EADKC4SUc1
-	IPA8Yi6L6wxleIDJEaZa5eg8Fg==
-X-Google-Smtp-Source: AGHT+IH0RZscPfw2CZq9/P1TKqceXF2BijFi/n0CVEH6aHnPTW2U7yD19fJ4fdTDIp7uABus7lNjyg==
-X-Received: by 2002:a17:902:ea05:b0:215:9eac:1857 with SMTP id d9443c01a7336-2218c3d080amr32992605ad.5.1740037287863;
-        Wed, 19 Feb 2025 23:41:27 -0800 (PST)
-Received: from thinkpad ([120.60.70.244])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d545cf76sm115597885ad.131.2025.02.19.23.41.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 23:41:27 -0800 (PST)
-Date: Thu, 20 Feb 2025 13:11:22 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Krzysztof Wilczynski <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v3 3/5] misc: pci_endpoint_test: Fix irq_type to convey
- the correct type
-Message-ID: <20250220074122.xaeefquqwh2xwsxz@thinkpad>
-References: <20250210075812.3900646-1-hayashi.kunihiko@socionext.com>
- <20250210075812.3900646-4-hayashi.kunihiko@socionext.com>
- <20250214172533.szrbreiv45c3g5lo@thinkpad>
- <36cc27be-4ba7-4d65-b32b-2a1e0b03b161@socionext.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gH2iFLqS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB5F5C4CEDD;
+	Thu, 20 Feb 2025 07:41:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740037298;
+	bh=8qOPuIrpCkpLTX/ohjxufRRmyg1pZ3CQTJ7DCrnsPWU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gH2iFLqSlLCzhuX2Vs8FVRcpai4Ya52i07ivSC1HJbMBEDDx96hxo6xE/QGU+wLWJ
+	 cNYtVUjQBweBxXbqN1cXL1i7mdF9TdFiJhyThRdmPDRaMP3t2Zwki6VsXt395iMl9L
+	 S1HtIXtqkDvm0ApW2rMnT94DQ3gEU9A7dmTinjKRaK2uWkcCz+nD9JImDmN2JQdKu5
+	 +C8EMZnulFydoa3ywzM2RQWJwhaxz3jEn14kufp8tDPEo7/okKaqrLNqD4iukoC4YO
+	 YL3U8bLJdp1bJv78qCgzvb7wfWaP7eCdqFYcayZtHB7zlulIIHthsrNbJJHMmITmrH
+	 53xTVDcOYgrlQ==
+From: "Naveen N Rao (AMD)" <naveen@kernel.org>
+To: <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	Vasant Hegde <vasant.hegde@amd.com>
+Subject: [PATCH v3 0/2] KVM: SVM: Add support for 4096 vcpus with x2AVIC
+Date: Thu, 20 Feb 2025 13:08:01 +0530
+Message-ID: <cover.1740036492.git.naveen@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <36cc27be-4ba7-4d65-b32b-2a1e0b03b161@socionext.com>
 
-On Mon, Feb 17, 2025 at 08:26:44PM +0900, Kunihiko Hayashi wrote:
-> Hi Manivannan,
-> 
-> On 2025/02/15 2:25, Manivannan Sadhasivam wrote:
-> > On Mon, Feb 10, 2025 at 04:58:10PM +0900, Kunihiko Hayashi wrote:
-> > > There are two variables that indicate the interrupt type to be used
-> > > in the next test execution, "irq_type" as global and test->irq_type.
-> > > 
-> > > The global is referenced from pci_endpoint_test_get_irq() to preserve
-> > > the current type for ioctl(PCITEST_GET_IRQTYPE).
-> > > 
-> > > The type set in this function isn't reflected in the global "irq_type",
-> > > so ioctl(PCITEST_GET_IRQTYPE) returns the previous type.
-> > > As a result, the wrong type will be displayed in "pcitest" as follows:
-> > > 
-> > >      # pcitest -i 0
-> > >      SET IRQ TYPE TO LEGACY:         OKAY
-> > >      # pcitest -I
-> > >      GET IRQ TYPE:           MSI
-> > > 
-> > 
-> > Could you please post the failure with kselftest that got merged into
-> > v6.14-rc1?
-> 
-> The kselftest doesn't call GET_IRQTYPE, so current kselftest doesn't fail.
-> 
-> If necessary, I can add GET_IRQTYPE test after SET_IRQTYPE of each
-> interrupt test prior to this patch.
-> 
->         pci_ep_ioctl(PCITEST_SET_IRQTYPE, 0);
->         ASSERT_EQ(0, ret) TH_LOG("Can't set Legacy IRQ type");
-> 
-> +       pci_ep_ioctl(PCITEST_GET_IRQTYPE, 0);
-> +       ASSERT_EQ(0, ret) TH_LOG("Can't get Legacy IRQ type");
-> 
+This is v3 of the series posted at:
+http://lkml.kernel.org/r/cover.1738563890.git.naveen@kernel.org
 
-Sure.
+The first patch adds support for up to 4096 vcpus with x2AVIC, while the 
+second patch limits the value that is programmed into 
+AVIC_PHYSICAL_MAX_INDEX in the VMCB based on the max APIC ID indicated 
+by the VMM.
 
-> However, pci_ep_ioctl() returns zero if OK, the return value should be
-> changed to the actual return value.
-> 
->  #define pci_ep_ioctl(cmd, arg)                 \
->  ({                                             \
->         ret = ioctl(self->fd, cmd, arg);        \
-> -       ret = ret < 0 ? -errno : 0;             \
-> +       ret = ret < 0 ? -errno : ret;           \
->  })
-> 
+Changes since v2:
+- Patch 1: Free allocated pages in avic_vm_destroy()
+- Patch 2: Rename x2apic_mode parameter of avic_get_max_physical_id() to 
+  just x2apic to avoid build issue with similarly named global variable.
 
-Ok.
 
-> Before applying the patch, this test fails.
-> 
-> #  RUN           pci_ep_basic.LEGACY_IRQ_TEST ...
-> # pci_endpoint_test.c:104:LEGACY_IRQ_TEST:Expected 0 (0) == ret (1)
-> # pci_endpoint_test.c:104:LEGACY_IRQ_TEST:Can't get Legacy IRQ type
-> # LEGACY_IRQ_TEST: Test terminated by assertion
-> #          FAIL  pci_ep_basic.LEGACY_IRQ_TEST
-> 
+- Naveen
 
-Looks good to me.
 
-- Mani
+Naveen N Rao (AMD) (1):
+  KVM: SVM: Limit AVIC physical max index based on configured
+    max_vcpu_ids
 
+Suravee Suthikulpanit (1):
+  KVM: SVM: Increase X2AVIC limit to 4096 vcpus
+
+ arch/x86/include/asm/svm.h |  4 ++
+ arch/x86/kvm/svm/avic.c    | 82 ++++++++++++++++++++++++++++----------
+ arch/x86/kvm/svm/svm.c     |  6 +++
+ arch/x86/kvm/svm/svm.h     |  1 +
+ 4 files changed, 73 insertions(+), 20 deletions(-)
+
+
+base-commit: fed48e2967f402f561d80075a20c5c9e16866e53
 -- 
-மணிவண்ணன் சதாசிவம்
+2.48.1
+
