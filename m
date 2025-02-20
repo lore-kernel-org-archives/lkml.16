@@ -1,122 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72A51FECD0;
-	Thu, 20 Feb 2025 16:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9D91FFC4B
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 16:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740068883; cv=none; b=DzT3VuMSGK7Lfb+lAVAxJdRGXt6S6VimbZ8bRAIfvJEq5pl9ifLWo5N31oONZ0IWZjzBTyYqI3Ppx+vzG37Y07Dicu8Z0MDRVZdkzH2Uw020lXKZIxPSg0RpYZQds5nPA5HMbUOJ6/O37sdQnuyLmoQCgbBM36opHCvSo3OMtM4=
+	t=1740068885; cv=none; b=c4LuYZ64/eMrB0yPpeFvsXZjb2wGmuJc0Gm5nlfUlmyRROhLGQEIxQLKaXHcc2CjZoUpfBJA8wLokVVFdPkVTaqTiUKw/XSRSZie0M7y+uBnP5RypgwInQZHgxJOhZdh2rM+BRIKEVHVhVtcZ3saiFzdFUwyOO2Im+3cacIB6qQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740068883; c=relaxed/simple;
-	bh=y76SfM5hjwAMD5FHU1SOziO7WJOlstQd3+V3l5AykNw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iPHwq6gnX1XGcF7XBJPVJs9ZuY3tMI2ps5V9vAKo3fmkrSlhQfNytdMrchzw1sVftNfZLeFwoS2vKOfMl9nyqe9HzDITloT1IyPpNRvoH5tbaki5kY8+Aecq0an/siUpFJoAaaQo1Dmr1aGt/vSWhcLs5p3o0dmLAOPZqtNtbEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V39zgquT; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740068885; c=relaxed/simple;
+	bh=xbuB4v9UY+AZQ9DxHNx0yrkkoAjU5kCgeOxjeEoyiCA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DO39Apb/ONXgR20UbjOluOh7G0rIWaSseokDgmjCYBnwn7b+tsVm7+8fENhsiagwz+X6NVDfZ91IFuvArG8z5RXnqY1yAE7mXp+93a7CTDtYijVHaifE/FB0LJ9lEvX92q6sqeeGowDJG+tV3TR2Z6B6rAYQN4EJw+KdtPRDwc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=EXwVsrVK; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V39zgquT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740068882; x=1771604882;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=y76SfM5hjwAMD5FHU1SOziO7WJOlstQd3+V3l5AykNw=;
-  b=V39zgquTONHkRyCbPnqzMz401NZ0F+vtnlFEGaY+jW8wGmGfAjUAfvni
-   2Eq3ArGV2y1nNsxJzEp/jLqhJ1g2QT0+sevv6dZhg6ym9wfrphCFdcUek
-   vpRleTT2PZtFyJtFSkcffbi9ZfGmSwvtlMq4iyOxaGW/jfK72cQOwFC6R
-   d+KawtGRe1lostkvPZiRkiZi9DCu3lXgcdm6qdrOnfWQtaWlMDO9UOcBJ
-   kZiVzUxuTfdXWfm+9APK7mZOrm1rm37BPhBqGSX/6W29v52oMCQ/+R+pW
-   4KdFWwI2U6MQp+GgdGKbuRSEUeA5FU4aghSaiTb8v9BxSArbydQVkK2wL
-   A==;
-X-CSE-ConnectionGUID: M6r1P7bcT/q1OIM+8gWu7w==
-X-CSE-MsgGUID: JfpVoY/yTOKNRXhQGWWoFQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="40724584"
-X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
-   d="scan'208";a="40724584"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 08:28:01 -0800
-X-CSE-ConnectionGUID: QPQ3ayuXRsWwW4MyBur1ag==
-X-CSE-MsgGUID: YdwgBcqmTUWIjGDGp1zMMg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,302,1732608000"; 
-   d="scan'208";a="120070989"
-Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.110.82]) ([10.125.110.82])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 08:28:00 -0800
-Message-ID: <d25ef356-3614-4e69-8cc1-d74dbbd2585f@intel.com>
-Date: Thu, 20 Feb 2025 08:28:01 -0800
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="EXwVsrVK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+	Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=eotf4X4yWZCzZmmNzhXG8/clvYwDsnXoUd843iZILzc=; b=EXwVsrVKDlIdDfrYtaclqkAmk8
+	CmeyvQU4fIFXtUP33OM6F19wpmb9YLeN6Vlm4C4XjofRWhUK5tTm4IJdiU+Bjq0OKBFdl1vYC8veS
+	bcrYzHSiVAXWQTFjsgT619Lpwo2lS/PQ923paHY1/aM3MW/3jUlFUPA7nlGbREPMoRNcxU8rlTXyG
+	R323O9tTjaXe52O0Jr3BveZKgHGP/JlV5IOS+7bzf1bVWoatKzpn95XrPN8JHiHMcjiQ1O9TnwXSM
+	ewWRT9OwV0qVBZjoXn5eGihVp0zUzu2uk3FNEoYa9nF3dCgMpJqy579onIC6gQEYaMz04npjEoH+j
+	JTQZkPVA==;
+Received: from [191.204.194.148] (helo=localhost.localdomain)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1tl9Ow-00FS04-Lg; Thu, 20 Feb 2025 17:27:56 +0100
+From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+To: Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?=27Christian=20K=C3=B6nig=27?= <christian.koenig@amd.com>,
+	Xinhui Pan <Xinhui.Pan@amd.com>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	kernel-dev@igalia.com,
+	siqueira@igalia.com
+Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+Subject: [PATCH v2 0/3] drm/amdgpu: Small reset improvements
+Date: Thu, 20 Feb 2025 13:27:47 -0300
+Message-ID: <20250220162750.343139-1-andrealmeid@igalia.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/rapl: Fix PP1 event for Intel Meteor/Lunar Lake
-To: Lucas De Marchi <lucas.demarchi@intel.com>,
- linux-perf-users@vger.kernel.org, x86@kernel.org,
- linux-kernel@vger.kernel.org
-Cc: dave.hansen@linux.intel.com, Zhang Rui <rui.zhang@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Ulisses Furquim <ulisses.furquim@intel.com>, intel-xe@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org
-References: <20250220153857.2593704-6-lucas.demarchi@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250220153857.2593704-6-lucas.demarchi@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2/20/25 07:36, Lucas De Marchi wrote:
-> On some boots the read of MSR_PP1_ENERGY_STATUS msr returns 0, causing
-> perf_msr_probe() to make the power/events/energy-gpu event non-visible.
-> When that happens, the msr always read 0 until the graphics module (i915
-> for Meteor Lake, xe for Lunar Lake) is loaded. Then it starts returning
-> something different and re-loading the rapl module "fixes" it.
+This series does some small improvements to GPU reset information collection.
 
-What's the root cause here? Did the kernel do something funky? Or is
-this a hardware bug?
+v2: Keep the wedge event in amdgpu_device_gpu_recover() and add and
+    extra check to avoid triggering two events.
+
+André Almeida (3):
+  drm/amdgpu: Log the creation of a coredump file
+  drm/amdgpu: Log after a successful ring reset
+  drm/amdgpu: Trigger a wedged event for every type of reset
+
+ .../gpu/drm/amd/amdgpu/amdgpu_dev_coredump.c  |  4 ++++
+ drivers/gpu/drm/amd/amdgpu/amdgpu_job.c       | 21 ++++++++++++-------
+ 2 files changed, 18 insertions(+), 7 deletions(-)
+
+-- 
+2.48.1
+
