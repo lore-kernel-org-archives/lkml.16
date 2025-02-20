@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0401EBA0B;
-	Thu, 20 Feb 2025 08:30:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B0C5223;
+	Thu, 20 Feb 2025 08:31:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740040201; cv=none; b=B8AI9NwoelnJbDXR8Lh1wO+LVOlbAlU5MsYJrp2fEg2hKmbaLELZAuLBK8cwqZB9IWHOKNpmDx81fNFnOYHQwgEpMFMrJ1s+aqDHgo5KWL8egNVWHXpTOC0OaXJC6ARpsgSUR1eDw4FOi144iSotAK8ftzKQWtfQddTmqQ+N5zg=
+	t=1740040287; cv=none; b=Uqo851LkA1b76eoCOPnYpamK+5r6OYQTGLwFpwBl39fS3fjuHTw+4Gtq9ixY4QLCmmvVK8iAOplFOit3X5PBbioO7zex0IOBS3Gy6fTJ93vgAUuiIoH3xaBKRp3BHPGtBrzq+x/NYPD+paSV/LjMZpMQIhNjFxjem5x7HmvwNqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740040201; c=relaxed/simple;
-	bh=1vibqR3G+O71ULLP8sf+4kfTQYZY3krLEakrtCV5AKE=;
+	s=arc-20240116; t=1740040287; c=relaxed/simple;
+	bh=mJzHMxuYDNmPbY//EwyEGH951YEZauw19SGS7kxc8qU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iufPwEJHgQJ7VOXkeaOWdJaYObD0yYCie5X/hQZjUA6+yWCWyg8ln+G/8zKBHFfnWviqmryGc6Geh4slFDsa2gfoRnQB8Y+DbJ5Dp+QvCsWkXVBKkpK+UIIDIXd8aSticI1FUyPR4nnVdm35A+7wmONTIHfSvBsIzzp3/Ix68D4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m2iNwu1S; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=DUz0XfwSD1fCKRGDMwq0vj9eqr0f5z10E7SsPN2PqlJlAR65VhLHcb0edlb+1GFir/cEqtAWM3qeoHaO67Ry+290wUEln6Pg9Tz5s44CdnsT+J+L1L44wWkjCkfR6hQXUdLvrmEkVBI4fRafAXBlG+bajGSjyJIbbME3ao56H6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hIknsfg2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m2iNwu1S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C52D3C4CEDD;
-	Thu, 20 Feb 2025 08:29:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hIknsfg2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C34CCC4CEDD;
+	Thu, 20 Feb 2025 08:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740040201;
-	bh=1vibqR3G+O71ULLP8sf+4kfTQYZY3krLEakrtCV5AKE=;
+	s=k20201202; t=1740040287;
+	bh=mJzHMxuYDNmPbY//EwyEGH951YEZauw19SGS7kxc8qU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=m2iNwu1SAzIX9cinXD2NyjbLtWzwprhwSSXFAXQrAeHuFQ/WBJBMjdnwxwb1oV9Pi
-	 xIDgDQIoONeBk14NolSe2mLG3Thj66aYZG6CMDiby71psdQHDaImCXqOPVpvnheAoE
-	 W8SsyoPWxa6SXMw7FKCkIZs+6iWyhEnhAjvsb4GDJ9tBsCR93slLIsdEPqTQSXmNmg
-	 EuoCKhHdArkwfP+Vd+IGngVYsd57xibAfH3/B/d3TALBQiAoc90MhcflGPbuMY/zVm
-	 Ou/DTeX9cY5k4bBHoapJl/+XdKnfyNjCPl0VVt8JVSUsGRGMUlFYbLguSDUfP7C1lM
-	 loFu3DylTB3AQ==
-Message-ID: <d7e788c5-0bec-4761-ad4a-1c4f642fe3e5@kernel.org>
-Date: Thu, 20 Feb 2025 09:29:55 +0100
+	b=hIknsfg2kvCpqa75g8T546VFMRonYE2PW/i3Iid4EgNAP2Iqt4YdkpMFkpU9jaQ10
+	 3SktCaDaV6O2pnDVhRLLpMSJ8wmsRouA+Gubz+0jQgUbK4pydz+HvzXLT9Iq1G0W/3
+	 NyCdrA3EWMlp99o9ZLFxgcHO951B6TrYl2iSvVD4cCNoY8YKiGc2sos3Ugic8dZqen
+	 cG80GqCZE+mCvXG8vHp3FMVa51YX5FGfIkLQDLUvs11H0Ilu1ThifxBQX+7G26MsnA
+	 11BalBJvHyJyK8qkIHgxT6pazTkkAvPLJi3uag94EYhgPiVszfoqJ3+pm9to2uLRAS
+	 gJ+BafrDAMCIw==
+Message-ID: <14863a52-f2ab-42ef-be86-b9da2a8d76df@kernel.org>
+Date: Thu, 20 Feb 2025 09:31:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,18 +35,21 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: usb: samsung,exynos-dwc3: add
- exynos7870 support
-To: Kaustabh Chakraborty <kauschluss@disroot.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+Subject: Re: [PATCH v2 3/3] dt-bindings: hwmon: emc2305: Add YAML binding
+ documentation for emc2305 driver
+To: Guenter Roeck <linux@roeck-us.net>, florin.leotescu@oss.nxp.com,
+ Jean Delvare <jdelvare@suse.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Michael Shych <michaelsh@nvidia.com>,
+ linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org
-References: <20250219-exynos7870-usb-v2-0-1de41a89c9d4@disroot.org>
- <20250219-exynos7870-usb-v2-1-1de41a89c9d4@disroot.org>
+Cc: viorel.suman@nxp.com, carlos.song@nxp.com,
+ linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+ Florin Leotescu <florin.leotescu@nxp.com>
+References: <20250219133221.2641041-1-florin.leotescu@oss.nxp.com>
+ <20250219133221.2641041-4-florin.leotescu@oss.nxp.com>
+ <fd70f78c-68a5-43ec-9eb2-3f06c5d7a20d@kernel.org>
+ <ae40d143-a5ca-4a38-844f-ca58a06834a5@roeck-us.net>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -92,34 +95,36 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250219-exynos7870-usb-v2-1-1de41a89c9d4@disroot.org>
+In-Reply-To: <ae40d143-a5ca-4a38-844f-ca58a06834a5@roeck-us.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 18/02/2025 19:54, Kaustabh Chakraborty wrote:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: samsung,exynos7870-dwusb3
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 3
-> +          maxItems: 3
-> +        clock-names:
-> +          items:
-> +            - const: bus_early
-> +            - const: ctrl
-> +            - const: ref
-
-Other device has order bus_early + ref, so use the same here, thus
-bus_early + ref + ctrl.
-
-Rest looks fine.
-
+On 19/02/2025 16:52, Guenter Roeck wrote:
+> On 2/19/25 06:01, Krzysztof Kozlowski wrote:
+> [ ... ]
 > 
+>>> +properties:
+>>> +  compatible:
+>>> +    enum:
+>>> +      - hwmon,emc2301
+>>> +      - hwmon,emc2302
+>>> +      - hwmon,emc2303
+>>> +      - hwmon,emc2305
+>>
+>> Nope.
+>>
+>> Was it ever internally reviewed?
+>>
+> No. I intentionally do not review bindings because I notoriously get it wrong,
+> and instead rely on DT maintainers.
+> 
+> I agree though that this one is really bad :-(
 
+
+Wait, my comment was not towards you, but towards NXP and their internal
+review. NXP is a big company, not individual contributor, so they should
+use internal review to catch obvious issues instead of using community
+resources for such trivial tasks.
 
 Best regards,
 Krzysztof
