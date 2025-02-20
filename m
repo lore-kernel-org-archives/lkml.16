@@ -1,118 +1,115 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from dispatch1-us1.ppe-hosted.com (dispatch1-us1.ppe-hosted.com [148.163.129.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96261FF60B
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 16:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BFD9215054
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 16:47:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.129.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740070064; cv=none; b=P1ADBXN1o9PM+EbDBZ4w/7e3J0AwUyiF1F/3VX5TodVmoqZow44i7MLd4kBGCUTZ7HjXOwt8o81rpyJszcypKRDRBhyX9UC6vCpW8FPjKLbTyFgXX2zFxu1jyua/pAnaOF5cTUFNvHf99ev5J6AW8onFWM+xx2b6B7cozTIzfVY=
+	t=1740070068; cv=none; b=QC/jX6m/QpZmJSmuoMBstkZcz4tgggwz0jaX23GTPZNW3j3zmI6n172BU27+bz5mfGdEoCuBWA3Zbpv6a5ixBykEGjTSJ/Tcyc6QY7SavD5iHzBPeXyEcWeQKgXZD6nwO3RHQs2oJJ2EpVQhLB4TIHKeRtZMZX58lKNTT5gEO3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740070064; c=relaxed/simple;
-	bh=07JJww02mJEeGAIuugM++K4ebk2f0Zd1D+gq+CAzgrw=;
+	s=arc-20240116; t=1740070068; c=relaxed/simple;
+	bh=G8Rvj1+RYM5PtCvCGhsKpVb42PxUTrWVFF4NYbTXBoo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JyVtf7S3sEehE9bH038ZTVozb3zZgPRy/205I+5RWo5wD/NBlmemQ1UvfLIPb3Hyvuqa3QcvpmU9TZ7SQ2Wnx4rRxZywlTDP+s1hZeSWWW03dAy8ciVb5ePs+MFKSc5/6LXlwXBpaYWbWUrI3typOdfBjc70XKWqsKeE5k9qJZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NtgqodyM; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=uo+4GZcW8sBo7B921cKqLqkMc7lr6MaF4hlg7fzL1BbgMKloQSmNgz7cTLCca2TXIRi97Fz4vUA4t5GJf7ZsH9Pyjznh28SwpOO3JiqQY2WBDhZS2INhkr4ClPJSUsV9kNwr8/O/wpLR+r3q+4vWClmrMp9f5+b+sVpNarjsrLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sladewatkins.net; spf=pass smtp.mailfrom=sladewatkins.com; dkim=pass (2048-bit key) header.d=sladewatkins.com header.i=@sladewatkins.com header.b=Frzm7BDE; dkim=pass (2048-bit key) header.d=sladewatkins.net header.i=@sladewatkins.net header.b=rE6oq4vS; arc=none smtp.client-ip=148.163.129.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sladewatkins.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sladewatkins.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NtgqodyM"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-abb81285d33so240756266b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:47:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sladewatkins.com header.i=@sladewatkins.com header.b="Frzm7BDE";
+	dkim=pass (2048-bit key) header.d=sladewatkins.net header.i=@sladewatkins.net header.b="rE6oq4vS"
+Received: from dispatch1-us1.ppe-hosted.com (ip6-localhost [127.0.0.1])
+	by dispatch1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTP id 61D602A2EE1
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 16:47:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sladewatkins.com;
+ h=cc:cc:content-transfer-encoding:content-transfer-encoding:content-type:content-type:date:date:from:from:in-reply-to:in-reply-to:message-id:message-id:mime-version:mime-version:references:references:subject:subject:to:to;
+ s=selector-1739986532; bh=LvrmbHNdQa4JVysc/FIbRXhYNUaX8nkPjWm+cWDvugI=;
+ b=Frzm7BDEU4kl2jqh8juk0J5UlPtaXXXlLuw8tOmbJq6uzNIeLF1assocYXiP/dKlrFBL1IwVTVTohchj7kFNkwYvLiDQiJ0q5c1fyNxEqGtK7OUWO1TFk4Es7QdSTqOyfOM8+kXtKWSH96FCguHwDI5zAVmm1o4nSFyhiZjI5LCk8QkcOW27vkmyxwLX3kFnH4njD2Ze+mD+Cf56VIr+nVRjy6pAI7B0zqtaq7BRWXYxP3Y/yNHXxsifzBsl5DVS06xwZk5j3lKtxBjrg2GGVQ/D+PLgiuwX1vdy1wmnlpqX+jtruy/s/NosjTMfPwBySVg72V5k3i1wHcQdApjeZw==
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com [209.85.218.70])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id C4676600099
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 16:47:22 +0000 (UTC)
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-abbe5ac36a9so139905566b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:47:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740070061; x=1740674861; darn=vger.kernel.org;
+        d=sladewatkins.net; s=google; t=1740070041; x=1740674841; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XMCL0K+C4GnoACxiUHOKxAWwwUOoQfv8+sE0BWNTm14=;
-        b=NtgqodyMEgtiiI68uGzkHKoibqil6IMmY3XQ5cackqnjOxGewdVR2v6F/l/Rd7tI42
-         J59sGfa6dM/Lefk3WbzLChH7Hex6MxgwKeZpaVesuMKmN48dT9wS3UI4l86F3R9Y/hlU
-         Zuzo5P57FRHQEptWwP+I3Sp42ZU9rpcVz1ceXbIS1de+3ZVeYxmNJDQNGglsgozNz2jK
-         JWyyb2Ma6F73s/y135qNmlp9ci+j0B2HgNuLkaZPaQCM7GmRICMDcWGmJ5v+p9Aram0X
-         J9YxNpc3pefG/CBXAqam+t6YgXFk5LOAyCKwd9GIi/ZaB1efANDIO1puy1LXDYZUvoU0
-         yDpA==
+        bh=LvrmbHNdQa4JVysc/FIbRXhYNUaX8nkPjWm+cWDvugI=;
+        b=rE6oq4vSeCi9p/d7podF3IFvjyRo+tOoOeVs9e9qLaZdP9rXWZYIHaBMag0fR6Xlrz
+         SEZfHMt5yeHhz/MUZcotDSXT/dn0UwMzl3HGZ4A/iQ7Tm9kDZJrwolda9kyg4Q3EEgQW
+         sfvX1nTHGE9Y8qB2JgfMzAV+twQIi/m7iQYhEixBaeZRNhRt/vGC5Et9jWtW8RxFoHP7
+         NC9a0FaE2LawZrWp1eqqlKpw7b+4kOjUA05VDXa1eecs6aGmacoM49ILohQasiS6ZPtm
+         jOG4TI9codCZy8Lomq/vNoVkLf3ViUhNopKNhDKeF4FEHidPKTayp9w7DUjn4GYUpQFS
+         PPcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740070061; x=1740674861;
+        d=1e100.net; s=20230601; t=1740070041; x=1740674841;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XMCL0K+C4GnoACxiUHOKxAWwwUOoQfv8+sE0BWNTm14=;
-        b=uE8IufHFAKvnWK6mmB2ovZo1sP4+SRTinw6s7mqLAoIXgijXd3NG4D3irz+3Vkcfn3
-         axvIZ3i7A5S+NFh6sGezXIRmseRzBPDeP7TwWQY+bkgf8+PqV24Y6zP/285bSfSdZAMx
-         0hR0eOysl5PXRh+1mXel5Gk2UYXKgNBGgFigKcIiFswNWVk+XaV4VABt1oumvYC9XU7l
-         hzvqkH0d7LIOc82BkzK1SynoBUF10P9bHRU6XXMtVQq9lIhV4vprKbAP/nkOIxA7zVik
-         elorM6P6qQEV8Bo+UgdXTZ5GxvjtZPUu9HAgHO3Pq9CkjGywaIxJKPaJ+Zf8NhUb2Vvz
-         KVjA==
-X-Forwarded-Encrypted: i=1; AJvYcCVu60ePvBn90Ye7oWpogQnpwZVH309svPJecfhi9GsZXO2TGk2/9uIh5u3459MJEUgdLoxw/+b/Gdr1UxA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAjogamYdCuNanu5lZ7WLYvOVjSLEBbCNahBzpjoZPx/6Fkeg+
-	N4Eey060follxGvANfuEhy1RUvB3YdzM3T3NkTu8jJ1NyrLCn4Zy8cNPv57j3VXLm8armrHYvWj
-	2qp2tz3Efl8nVX1pySYw7O0HG8LJm+29/ECEa
-X-Gm-Gg: ASbGnctKdoG082ffGnOIXYnn04GD4sTxMHO68Oj0NZGLCiLLrnYDkcJY+pD1VMMAsP0
-	nB/n9/ZTnOzwUPQMy3T6eaVmavx5yB4HOVOQQ1FvXfkOEtQXUTgW+pmcfTD6ZCG5ARneGsah0
-X-Google-Smtp-Source: AGHT+IFUN190VqKAbunKFBAi3FWBdH/R347wkO7ytCt3scT9na49h+zVGgXkcRMQmFGqWpBuREc1IPIa560YC5Jlbbg=
-X-Received: by 2002:a17:907:7ea0:b0:ab7:d361:11b4 with SMTP id
- a640c23a62f3a-abc099b7f3fmr3875566b.7.1740070061123; Thu, 20 Feb 2025
- 08:47:41 -0800 (PST)
+        bh=LvrmbHNdQa4JVysc/FIbRXhYNUaX8nkPjWm+cWDvugI=;
+        b=MoHe/4QNBPUGrmCfB3lhf4pj9N7HGwQnGMXEwAe8hvKN8ToOmg5cErqORhXXF7Pr9S
+         i91yFUBHRr0luVt6Cl52KFMaiyHr23/ljgQzq61DLOXfn4u2yhamqpkG+87t688FZdyI
+         d/Mt1sf37HZuzLjHySxxar+IAgSrWS+mMIg97qxy+O0e7L44Pf3OafAgpNNd3ajskjLh
+         XjmVkeFYciQcX635AmiriLZl2MaNFaAPC6XHUeUCIoirE1PfivMqZUBlfb7pMYsR7UeL
+         VKcrRydlfwBxfdK/IDCn5CcT8PNBsnGN8e5qzSP6MEGwNbHFNujD6gk7sgC8HPAPRP5S
+         VUEw==
+X-Forwarded-Encrypted: i=1; AJvYcCUok4P7DRgUppke0/hy1uQIRIUOKqPJp717iuw5c6sk768O2nV3RgSwp5qmLiwlVPyKvMQNlq3g+mfrC04=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzd/l/Z4SDl2m8YNQaSSLx//4QGhItEv7Raw1Ed8+Q1rHJtA9gP
+	MdS2fMnPf7o5xXd/HCdiTSCjgm+ZPmvsVPoGEdOynRA4VCZoPWrKyXxoHLHDRJAniF+YkSFgERq
+	oYyXUa71YocUmzmqgkihQE8AtEAghm4fJ1WEzHt+n9lBxU9rX1ORVIhINa2iAz/nIq6Q3PYOKqY
+	JsXRVi9LzKuKUtdO9lFwAvibrRC/eOTaDP0nyWswnf6QJD1JzEGnkJkBRqcg==
+X-Gm-Gg: ASbGnctibiJX97HFqowOrsIStrEsJifVNuIhqMdxhXjJMbRZd0xBgHrYBkjkW9IsRwp
+	LSInAKn583TzXc1G3jfBtyX2lruBcnt24WnpKCyATj+JEZbGZpueTacOTNL/qpA==
+X-Received: by 2002:a17:906:3083:b0:abb:83b9:4dbe with SMTP id a640c23a62f3a-abc09c0d19dmr509066b.47.1740070041336;
+        Thu, 20 Feb 2025 08:47:21 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEBCENTa9zojiB6+sevtUZcBrd1NLHq2XG6gSAX9QhN/ExTmOHUxbRZ1VeIW36PUVvO/3J3D44f/zHm02o796g=
+X-Received: by 2002:a17:906:3083:b0:abb:83b9:4dbe with SMTP id
+ a640c23a62f3a-abc09c0d19dmr506066b.47.1740070040871; Thu, 20 Feb 2025
+ 08:47:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1739997129.git.ashish.kalra@amd.com> <e13263246be91e4e0073b4c81d4d9e2fc41a6e1d.1739997129.git.ashish.kalra@amd.com>
-In-Reply-To: <e13263246be91e4e0073b4c81d4d9e2fc41a6e1d.1739997129.git.ashish.kalra@amd.com>
-From: Dionna Amalie Glaze <dionnaglaze@google.com>
-Date: Thu, 20 Feb 2025 08:47:28 -0800
-X-Gm-Features: AWEUYZlhHlxBHBWrZcmEspkPqwgF6rKQ9OpK2K5xOYbvc-va1cUZOfhJoJDPwGc
-Message-ID: <CAAH4kHZsC68+QPC+y-pycM+HfsLF-f_AuW8eZm-Dqqf5meFj+w@mail.gmail.com>
-Subject: Re: [PATCH v4 3/7] crypto: ccp: Reset TMR size at SNP Shutdown
-To: Ashish Kalra <Ashish.Kalra@amd.com>
-Cc: seanjc@google.com, pbonzini@redhat.com, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	hpa@zytor.com, thomas.lendacky@amd.com, john.allen@amd.com, 
-	herbert@gondor.apana.org.au, michael.roth@amd.com, nikunj@amd.com, 
-	ardb@kernel.org, kevinloughlin@google.com, Neeraj.Upadhyay@amd.com, 
-	aik@amd.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, linux-coco@lists.linux.dev
+References: <20250220104454.293283301@linuxfoundation.org>
+In-Reply-To: <20250220104454.293283301@linuxfoundation.org>
+From: Slade Watkins <srw@sladewatkins.net>
+Date: Thu, 20 Feb 2025 11:47:08 -0500
+X-Gm-Features: AWEUYZklFFz99Wzn4U-bFKpzlTK9ociJQmc_XORzn4XFpW7PpwbbhCLQN7WTZQs
+Message-ID: <CA+pv=HM=0yKe74WT8dDHYvxFvCSsHocGwjz-82mMU8oosn2mAA@mail.gmail.com>
+Subject: Re: [PATCH 6.12 000/225] 6.12.16-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-MDID: 1740070043-Y5G8Jz-jxH4g
+X-MDID-O:
+ us5;ut7;1740070043;Y5G8Jz-jxH4g;<slade@sladewatkins.com>;c71d53d8b4bf163c84f4470b0e4d7294
+X-PPE-TRUSTED: V=1;DIR=OUT;
 
-On Wed, Feb 19, 2025 at 12:53=E2=80=AFPM Ashish Kalra <Ashish.Kalra@amd.com=
-> wrote:
+On Thu, Feb 20, 2025 at 5:58=E2=80=AFAM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> From: Ashish Kalra <ashish.kalra@amd.com>
->
-> When SEV-SNP is enabled the TMR needs to be 2MB aligned and 2MB sized,
-> ensure that TMR size is reset back to default when SNP is shutdown as
-> SNP initialization and shutdown as part of some SNP ioctls may leave
-> TMR size modified and cause subsequent SEV only initialization to fail.
->
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> This is the start of the stable review cycle for the 6.12.16 release.
+> There are 225 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Acked-by: Dionna Glaze <dionnaglaze@google.com>
+Hi Greg,
+No regressions or any sort of issues to speak of. Builds fine on my
+x86_64 test machine.
 
-> ---
->  drivers/crypto/ccp/sev-dev.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
-> index b06f43eb18f7..be8a84ce24c7 100644
-> --- a/drivers/crypto/ccp/sev-dev.c
-> +++ b/drivers/crypto/ccp/sev-dev.c
-> @@ -1751,6 +1751,9 @@ static int __sev_snp_shutdown_locked(int *error, bo=
-ol panic)
->         sev->snp_initialized =3D false;
->         dev_dbg(sev->dev, "SEV-SNP firmware shutdown\n");
->
-> +       /* Reset TMR size back to default */
-> +       sev_es_tmr_size =3D SEV_TMR_SIZE;
-> +
->         return ret;
->  }
->
-> --
-> 2.34.1
->
+Tested-by: Slade Watkins <srw@sladewatkins.net>
 
-
---=20
--Dionna Glaze, PhD, CISSP, CCSP (she/her)
+All the best,
+Slade
