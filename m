@@ -1,92 +1,154 @@
-Received: from mailrelay.tugraz.at (mailrelay.tugraz.at [129.27.2.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C761E5B7B;
-	Thu, 20 Feb 2025 07:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.27.2.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39FD61EDA09;
+	Thu, 20 Feb 2025 07:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740035475; cv=none; b=bHK+SMmgcYyrrrxWUJLAQ9y10F64Sdw+M/kpyZi+wyEQ9hEQxZ4O4fMTHUN8DUnpe2Q6XC+qq2u7oFJRWEpfMVrsgXAhgyakYpi37xOodR2kycksHZO8YnNXVYLe3WSR6V7I7K42s7fK1VCTtckQl6vftzmjKMv579cR8jdIVWI=
+	t=1740035479; cv=none; b=AdgM9K4244b2UXP7vArEH9YsuloKONHT5b067/PrX+6NgQBjcrLNR7F245pAA04s6dMoREeA8GoTRSe95TCPrC8A2tmUbZ8oXDbWpilquGcW03Nf0vSO1qlUVPx1rTF2oJaPJEPwLHjAc3AnM6I74YMXeRp08gj+pZoX1McZMzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740035475; c=relaxed/simple;
-	bh=J0B0YXdvQsUgkAZoGQd5DGyef4ealLirHSCqBDZV8BM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gc+7njep0xt0JOjmc/CPz9SqCSwogNtsBliapH8fx+qF628XpoBe2p+MON1EI35/FslPFCkkYUgf2+JTjUhT3RgWFw6WroWyANIPjIQbgIxd3NcyaBaKDruPayUDKvmhulVhPjlxMLCgIgKi0acHUwJzHaR0nyaqu5yjpXsgim0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tugraz.at; spf=pass smtp.mailfrom=tugraz.at; dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b=eGWYjnnD; arc=none smtp.client-ip=129.27.2.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tugraz.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tugraz.at
+	s=arc-20240116; t=1740035479; c=relaxed/simple;
+	bh=p/LLNspP63XeDluK8n1bB3ApPN0HiknOfwCoEOeBPsY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WCskgST5Df3vaThuzD/gfImI7kq6BrdI/Od9QSpMvdTI7Os7Vwwa5GT0rH4O2X7rViTlmqyBo+CtAiGimkCKIgVDoHfecwFe7Vtf6UKLCZIY+8c+D0VK+fMHyD3sFosioQBfDKPpgXrNvakHeYRLNQGtjNRwDDk4bmTqmWRThmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EmN+9b6E; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b="eGWYjnnD"
-Received: from vra-171-197.tugraz.at (vra-171-197.tugraz.at [129.27.171.197])
-	by mailrelay.tugraz.at (Postfix) with ESMTPSA id 4Yz43B6Twbz1JJCN;
-	Thu, 20 Feb 2025 08:03:02 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailrelay.tugraz.at 4Yz43B6Twbz1JJCN
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tugraz.at;
-	s=mailrelay; t=1740034984;
-	bh=79iOrJleI/iz7iPUnPOpIes+Agw9KU6s5TsUDIe2kI8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=eGWYjnnDWcq2gSYJ3zhmIau23n3qUpPkDeNK3NIf2LI7sS6HcF1CpXmRrj8iS7ayS
-	 pa0aJJCHb5NzL4hJPb9NmNFtAsXdtbLtzKousOHESayZ28MvBFZL94LOQBjkFDtRRI
-	 1FRXeIeh5Yv2aH2YAsIhQkzn+qjgktzuGW26oFD4=
-Message-ID: <4e316b01634642cf4fbb087ec8809d93c4b7822c.camel@tugraz.at>
-Subject: Re: Rust kernel policy
-From: Martin Uecker <uecker@tugraz.at>
-To: Greg KH <gregkh@linuxfoundation.org>, Boqun Feng <boqun.feng@gmail.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, Miguel Ojeda
- <miguel.ojeda.sandonis@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
- rust-for-linux <rust-for-linux@vger.kernel.org>, Linus Torvalds
- <torvalds@linux-foundation.org>, David Airlie <airlied@gmail.com>,
- linux-kernel@vger.kernel.org, ksummit@lists.linux.dev
-Date: Thu, 20 Feb 2025 08:03:02 +0100
-In-Reply-To: <2025021954-flaccid-pucker-f7d9@gregkh>
-References: 
-	<CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
-	 <Z7SwcnUzjZYfuJ4-@infradead.org>
-	 <CANiq72myjaA3Yyw_yyJ+uvUrZQcSLY_jNp65iKH8Y5xGY5tXPQ@mail.gmail.com>
-	 <326CC09B-8565-4443-ACC5-045092260677@zytor.com>
-	 <CANiq72m+r1BZVdVHn2k8XeU37ZeY6VT2S9KswMuFA=ZO3e4uvQ@mail.gmail.com>
-	 <a7c5973a-497c-4f31-a7be-b3123bddb6dd@zytor.com>
-	 <Z7VKW3eul-kGaIT2@Mac.home> <2025021954-flaccid-pucker-f7d9@gregkh>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EmN+9b6E"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-220c8eb195aso11255395ad.0;
+        Wed, 19 Feb 2025 23:11:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740035476; x=1740640276; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R57PZ40vsMBhmQU5DVB3HkIVq/yRk+LSm6ONd5T9PSk=;
+        b=EmN+9b6EhknPszgZ8D9UrMz4TVHxSBZCQSawDPdWCJPlBsw5ARhQ+Wt1Iy/FXA51HU
+         IcFY/W1dPfPjytHxqJs2gZKiFPo+s179YzEZGjAnE5JhyRhVy9HVNYaGgsf1wUTqZ2ZR
+         X6dznxFA9FalQkMN52C+9cE4WbEkF2tRHxbXTUcWJ7JlfXlHDZvfSipW4z+qt0ZTmEdU
+         v8lDUjVx3bQ4SL909VoF3A3VbOh/2hKoplABHuaQNBM01P4IVG/5NCuJQxD9sS2Wccle
+         2vVkPsAwZkC14JLc9CDphMwWUJSnXgBxsgjImNC7ZVfquToCComzpTZrOAPZG71AvBPK
+         1lhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740035476; x=1740640276;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R57PZ40vsMBhmQU5DVB3HkIVq/yRk+LSm6ONd5T9PSk=;
+        b=ZlmEcL+vXdAKphXkGEjsGptJx5PpqQLYE4qU40e26BN2s8wW/QPgSqz5X73+W13VmE
+         jUSN0QHu7Le/FtoJJcFz1w9QjsIuvNFic+XTTgz2Jgyn9vHsAWq1t2UA4sry7ozih9p0
+         avGWE5F0UzjR7Wy7FOPsE8HIE0E+kZ3DnYLFrER9qTgiaWlWHQA6dvHdX71gH2Ncn5vF
+         w/arcquT96fHEqfvb9dnYm6Rj+Dw8teVXK4GLDqXtbKITSQsHC9gN7zH6ujklHqy6sEd
+         L6KFHNsXvioMHJbNso+mYhSjuyObETRR2oYqaBYdv34jP03pXtFKbQY1YtbCFZp7DRuF
+         hOow==
+X-Forwarded-Encrypted: i=1; AJvYcCUmG4zlOUDSxUkq097GrTDi0T58W7e4jN8s3z8bOUNAyMhh7eupUeHWPLognZ0XHg7ROre468DEKB0glrH93yg=@vger.kernel.org, AJvYcCXqBRH/miP7POEEp9vq7VvL8+iVdTn/KubKIwvVyeoGMcDpyqOd+x0pnCR4V58ZOFE5sIxhsGw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySw0DucvtsEJe6yYinxXqt/9o602cXOf0oPh/88JL3UKcgxOrb
+	CQ3W8eb0feq2ktJibEglA0vrI3KTBtUN+hc6ilQimWXMw8+QOOcktzZab4YP
+X-Gm-Gg: ASbGncvK7/cR5zMbVFKbav+4I0y3XLcpAPIiOVBMQDxy77HwnwCoI9QCN40a9KX33IR
+	k6gvnPADMk1sDSds7uXH1khaZzpptNVZkBvGj1G/tinew05TGco+Rv4ur8Nc9E5BYEX9q3KHvFR
+	m1VOxS0IFJ41bQRMDVJffesBvFPhgZH9YPzX549jDbOXsFt6iLYaiS/krgi5Mpj6bgUF5bqysW1
+	SgEj2vm2PxEoC9ZhuhMr4NLO2glwawgR43ViKspji9AGjt3oICQpSvUMR+JX6cugyGo7jVadOHi
+	Fv52KvVuYHwtkg98hYG7MAzMmHiiXaZJYAL7KLeueRto1278aMm5Xr/FKP8W+1XEj/A=
+X-Google-Smtp-Source: AGHT+IGgvvsOvoTjyFLbSMVPkqFMMTB4aJyC8QIwojlxrUp5IaE62lLYCwUR5sCAQaovzeTxC/kKkg==
+X-Received: by 2002:a05:6a00:2443:b0:732:5651:e897 with SMTP id d2e1a72fcca58-7329de80994mr8185974b3a.11.1740035476247;
+        Wed, 19 Feb 2025 23:11:16 -0800 (PST)
+Received: from mew.. (p3882177-ipxg22501hodogaya.kanagawa.ocn.ne.jp. [180.15.148.177])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73242568af8sm13059672b3a.48.2025.02.19.23.11.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 23:11:15 -0800 (PST)
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Gary Guo <gary@garyguo.net>,
+	rust-for-linux@vger.kernel.org,
+	netdev@vger.kernel.org,
+	hkallweit1@gmail.com,
+	tmgross@umich.edu,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@samsung.com,
+	anna-maria@linutronix.de,
+	frederic@kernel.org,
+	tglx@linutronix.de,
+	arnd@arndb.de,
+	jstultz@google.com,
+	sboyd@kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	vschneid@redhat.com,
+	tgunders@redhat.com,
+	me@kloenk.dev,
+	david.laight.linux@gmail.com
+Subject: [PATCH v11 8/8] net: phy: qt2025: Wait until PHY becomes ready
+Date: Thu, 20 Feb 2025 16:06:10 +0900
+Message-ID: <20250220070611.214262-9-fujita.tomonori@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250220070611.214262-1-fujita.tomonori@gmail.com>
+References: <20250220070611.214262-1-fujita.tomonori@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TUG-Backscatter-control: G/VXY7/6zeyuAY/PU2/0qw
-X-Spam-Scanner: SpamAssassin 3.003001 
-X-Spam-Score-relay: 0.0
-X-Scanned-By: MIMEDefang 2.74 on 129.27.10.117
+Content-Transfer-Encoding: 8bit
 
-Am Mittwoch, dem 19.02.2025 um 06:39 +0100 schrieb Greg KH:
-> On Tue, Feb 18, 2025 at 07:04:59PM -0800, Boqun Feng wrote:
-> > On Tue, Feb 18, 2025 at 04:58:27PM -0800, H. Peter Anvin wrote:
-> > [...]
-> > > > >=20
-...
->=20
->=20
-> I'm all for moving our C codebase toward making these types of problems
-> impossible to hit, the work that Kees and Gustavo and others are doing
-> here is wonderful and totally needed, we have 30 million lines of C code
-> that isn't going anywhere any year soon.  That's a worthy effort and is
-> not going to stop and should not stop no matter what.
+Wait until a PHY becomes ready in the probe callback by
+using read_poll_timeout function.
 
-It seems to me that these efforts do not see nearly as much attention
-as they deserve.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Reviewed-by: Gary Guo <gary@garyguo.net>
+Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+---
+ drivers/net/phy/qt2025.rs | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-I also would like to point out that there is not much investments
-done on C compiler frontends (I started to fix bugs in my spare time
-in GCC because nobody fixed the bugs I filed), and the kernel=C2=A0
-community also is not currently involved in ISO C standardization.
-
-I find this strange, because to me it is very obvious that a lot more
-could be done towards making C a lot safer (with many low hanging fruits),
-and also adding a memory safe=C2=A0subset seems possible.
-
-Martin
-
-
+diff --git a/drivers/net/phy/qt2025.rs b/drivers/net/phy/qt2025.rs
+index 1ab065798175..cdf0540f0a98 100644
+--- a/drivers/net/phy/qt2025.rs
++++ b/drivers/net/phy/qt2025.rs
+@@ -12,6 +12,7 @@
+ use kernel::c_str;
+ use kernel::error::code;
+ use kernel::firmware::Firmware;
++use kernel::io::poll::read_poll_timeout;
+ use kernel::net::phy::{
+     self,
+     reg::{Mmd, C45},
+@@ -19,6 +20,7 @@
+ };
+ use kernel::prelude::*;
+ use kernel::sizes::{SZ_16K, SZ_8K};
++use kernel::time::Delta;
+ 
+ kernel::module_phy_driver! {
+     drivers: [PhyQT2025],
+@@ -93,7 +95,13 @@ fn probe(dev: &mut phy::Device) -> Result<()> {
+         // The micro-controller will start running from SRAM.
+         dev.write(C45::new(Mmd::PCS, 0xe854), 0x0040)?;
+ 
+-        // TODO: sleep here until the hw becomes ready.
++        read_poll_timeout(
++            || dev.read(C45::new(Mmd::PCS, 0xd7fd)),
++            |val| *val != 0x00 && *val != 0x10,
++            Delta::from_millis(50),
++            Some(Delta::from_secs(3)),
++        )?;
++
+         Ok(())
+     }
+ 
+-- 
+2.43.0
 
