@@ -1,148 +1,83 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA67B1EE032;
-	Thu, 20 Feb 2025 10:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DDDB1EFF9B;
+	Thu, 20 Feb 2025 10:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740048929; cv=none; b=ZqK4GvfHZxPvshFMBiUT8N09iexthmW/k88Me+UIqgDYeshCUkGMY3r3pYwPm9vrjr4cCUypYo9lTzSoXefJUMkueYETvjDIVgB4OUqOAba2yvZATQvIEFebCRkSGCeJ3lIUpxCezI6e+qUdeKyNVfkS+hnY2xKZAyZyVOuvviI=
+	t=1740048947; cv=none; b=DRLY2d/MNFRTqlzsRY1a+q6BAYgHeneiYYf63HtyxPut2ZhFnC2NbgRKOzBG5A9PhwSh6+1YB00IC7NHoldx6dwt5KNAwabkqB7Wpa1j1jtl/kLkzQzJoSw3+C9FSxbYmdSbdKgEjbwuT98+gDE5VEWoEVPvdJf/zzCxctxD/zE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740048929; c=relaxed/simple;
-	bh=ZVhBmrsyGM13pc4FtlV7FgXQNriRkQVrrI5sFBrJxPg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E0cQmd1QsdPIv4Yo/6c6R+Pktgr49HBIkvS0EruGsqdqT0N5THGAYAZTU5VrDuTQYBZBzU6NmjNvq31wtmoZS2f30XvI16zag55Hfv2WoY42PlwEKUPJaEYuDysEux2SQi4LJEIx1FPGdv39DGRJMJGjEqK6fgSXID6c1nj62Dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BCBjE3Mb; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1740048947; c=relaxed/simple;
+	bh=Fe1NU5MSplDv5eB2zljQeoAX6aX1MK7BwDK75afdqts=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jJ9rq5NsS4QzRvUJw1b2RXzWdkO9ycE4rKorwNpHVuBN1J0e9E7Zo3HSAaFiykBdiCOnxnDKMWhIMklFVBV7iGlKaYW6eBC19gXjYpLScZX2OWvU0H1cVW7eqI1wGhgu5vcpL1IvXwNqV2vGxoGsRe+pqMD4/D6YBpl5JoRyNlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=RVTbQNmY; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BCBjE3Mb"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51K9P5Ko007707;
-	Thu, 20 Feb 2025 10:55:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=ujuHnR
-	76tvpz4/RK1mGB53DPQfOPMqw3IQtytJ4ILFE=; b=BCBjE3MbWzhhHiXm7FTfNs
-	kMYzFZ3jbJ6RpIRvdZRycbPk9IXsF3uSeak3HXGa4CgakTwR2zxVFgwVncxPAslz
-	Xe49aKbYy8btQfASk2zgOE/qicxYh9fFYWgXyBjdycn7TJa6xDyiGvYGXrN66SQp
-	bBZu+D4oKgQrcnzo+lRV4DUePkocOIhDQKsZWMDGr6AmH7qpA6B/IfFGz5mvCwWj
-	G9igAJ56eRrlMJL53PLMjD1iEu5X4cXGfZIFGbPvVGvYvv93MRAh8tB0bQI6h8VM
-	iDj/LVK9+ldPBCyv2tq3ACfRN+QA1AhsCev7XijbaEGS3dXD5bChHdhGMzpMt2Kg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44x1qy8cm3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 10:55:15 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51KArwS1012824;
-	Thu, 20 Feb 2025 10:55:15 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44x1qy8cm0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 10:55:15 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51K82TDA027050;
-	Thu, 20 Feb 2025 10:55:14 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44w0259h9a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 10:55:14 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51KAtCDD57606480
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 20 Feb 2025 10:55:12 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 82FC020043;
-	Thu, 20 Feb 2025 10:55:12 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BF1D220040;
-	Thu, 20 Feb 2025 10:55:11 +0000 (GMT)
-Received: from [9.171.63.18] (unknown [9.171.63.18])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 20 Feb 2025 10:55:11 +0000 (GMT)
-Message-ID: <e44c0761-ea50-4c44-b42c-415dffdb441d@linux.ibm.com>
-Date: Thu, 20 Feb 2025 11:55:12 +0100
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="RVTbQNmY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1740048943;
+	bh=Fe1NU5MSplDv5eB2zljQeoAX6aX1MK7BwDK75afdqts=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RVTbQNmYR35edytVQKzTBRi1sUJrKyaEktH+KwNhGZ+AK4KZlu6hY+BQbxbGivrzm
+	 xvw6OpD9jjSBlvANTwspWE1cOEKRkyV+1JLwjhVUAzC/kqQ2OtVjgkYHjdxaQDOvVC
+	 3THwTjqaIWerXQmtWVf4B0h6ozPF8zIF+zR/4scZ4Om6STX9DCo6a00Gw7woAk4GdG
+	 G2oSe+9Z/e+VAIkZ1gZLZuAhdQnGomYI6gZ6PAkel12n2ld2DCz9kyiHoOrTib9utD
+	 b9wyGz0zAF2FMwgxijai0uZUCIXac5lRQfzyxejMnpLGQmvTlG/G6qYoBfHKZ6EAIc
+	 NguSqriMxKbDw==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id A7D0517E0CD1;
+	Thu, 20 Feb 2025 11:55:42 +0100 (CET)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: chunfeng.yun@mediatek.com
+Cc: gregkh@linuxfoundation.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	linux-usb@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel@collabora.com,
+	pablo.sun@mediatek.com
+Subject: [PATCH v3 0/3] MediaTek MT8188 MTU3 USB and Genio 510/700 TypeC
+Date: Thu, 20 Feb 2025 11:55:11 +0100
+Message-ID: <20250220105514.43107-1-angelogioacchino.delregno@collabora.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 0/3] sched/fair: introduce new scheduler group type
- group_parked
-To: Shrikanth Hegde <sshegde@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        vschneid@redhat.com, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org
-References: <20250217113252.21796-1-huschle@linux.ibm.com>
- <cc6996cc-c5c1-429d-ade0-9978b859f207@linux.ibm.com>
-From: Tobias Huschle <huschle@linux.ibm.com>
-In-Reply-To: <cc6996cc-c5c1-429d-ade0-9978b859f207@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Ct2IvKZD6_Q5Diiqy7uyOzOnkv_JcEQ6
-X-Proofpoint-ORIG-GUID: vcZh0oNL4zuZdyycl9vyld7y6w1sAvJz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-20_04,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- phishscore=0 impostorscore=0 bulkscore=0 mlxlogscore=999 adultscore=0
- suspectscore=0 lowpriorityscore=0 priorityscore=1501 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502200078
 
+This series adds MTU3 nodes to the MT8188 base devicetree, fixes the
+Geralt Chromebooks to use it, and adds support for all of the USB
+ports, including TypeC Power Delivery, Alternate Modes, etc, found
+on the MediaTek Genio 510 and Genio 700 Evaluation Kits.
 
+This also adds the missing SuperSpeed port to the mtk-xhci binding.
 
-On 18/02/2025 06:58, Shrikanth Hegde wrote:
-[...]
->>
->> There are a couple of issues and corner cases which need further
->> considerations:
->> - rt & dl:      Realtime and deadline scheduling require some additional
->>                  attention.
-> 
-> I think we need to address atleast rt, there would be some non percpu 
-> kworker threads which need to move out of parked cpus.
-> 
+AngeloGioacchino Del Regno (3):
+  dt-bindings: usb: mediatek,mtk-xhci: Add port for SuperSpeed EP
+  arm64: dts: mediatek: mt8188: Add MTU3 nodes and correctly describe
+    USB
+  arm64: dts: mediatek: mt8390-genio-700: Add USB, TypeC Controller, MUX
 
-Yea, sounds reasonable. Would probably make sense to go next for that one.
+ .../bindings/usb/mediatek,mtk-xhci.yaml       |   4 +
+ .../boot/dts/mediatek/mt8188-geralt.dtsi      |  18 +++
+ arch/arm64/boot/dts/mediatek/mt8188.dtsi      | 121 +++++++++-----
+ .../dts/mediatek/mt8390-genio-common.dtsi     | 151 +++++++++++++++++-
+ 4 files changed, 251 insertions(+), 43 deletions(-)
 
->> - ext:          Probably affected as well. Needs some conceptional
->>                  thoughts first.
->> - raciness:     Right now, there are no synchronization efforts. It needs
->>                  to be considered whether those might be necessary or if
->>                  it is alright that the parked-state of a CPU might 
->> change
->>                  during load-balancing.
->>
->> Patches apply to tip:sched/core
->>
->> The s390 patch serves as a simplified implementation example.
-> 
-> 
-> Gave it a try on powerpc with the debugfs file. it works for 
-> sched_normal tasks.
-> 
-
-That's great to hear!
-
->>
->> Tobias Huschle (3):
->>    sched/fair: introduce new scheduler group type group_parked
->>    sched/fair: adapt scheduler group weight and capacity for parked CPUs
->>    s390/topology: Add initial implementation for selection of parked CPUs
->>
->>   arch/s390/include/asm/smp.h    |   2 +
->>   arch/s390/kernel/smp.c         |   5 ++
->>   include/linux/sched/topology.h |  19 ++++++
->>   kernel/sched/core.c            |  13 ++++-
->>   kernel/sched/fair.c            | 104 ++++++++++++++++++++++++++++-----
->>   kernel/sched/syscalls.c        |   3 +
->>   6 files changed, 130 insertions(+), 16 deletions(-)
->>
-> 
+-- 
+2.48.1
 
