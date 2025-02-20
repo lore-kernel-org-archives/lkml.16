@@ -1,44 +1,62 @@
-Received: from mail115-63.sinamail.sina.com.cn (mail115-63.sinamail.sina.com.cn [218.30.115.63])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E19266192
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 23:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.63
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE582673AB;
+	Thu, 20 Feb 2025 23:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740093918; cv=none; b=bRK5Z0PXOGNLNioG81eyKvwOzcvCPMo5RdTQWKiOqW9WRylSW1+To6opo3DF35Q/KXaqdMMGduTaABNSM+Xm4mZ7JNzwT/HQPeRZkT02DAdfpgFN6tT9/tLFt07NWdCnXK/J3dzTjt5kziL2Q9MYkRtI9LFS4nK08yHegyuyRPg=
+	t=1740093946; cv=none; b=mnSLuEi36YRvucbYTIM5nc3vizfnoCVj0QPRX4y4jZVgVVeQenc9IfZ7ZCR2Ozb6GbjUAjjdk8E09unT2O7rVgomdGXOgBuR7UNxJbLgqJevJ6evwlNfdS0ceB5/tiqekysZuxu7U498lhtiMjInw9XVMbLbbiubqu4I6hcQxeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740093918; c=relaxed/simple;
-	bh=GiBI+Ueev+BEL901ge+BPypu7Z9ti8bTpC31MMcUOsM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Zcc+8MoJ73fyMOv8YU6kN3NLRpsnJS3+/NTMorC3+oCF6MTDfe6lTe4ZQMuaAqFrPGkkpBCeBjFnrfaFCL4B06WZIjV0WRBN+rMC/vxgnJcXnHlXd3cqPuxBFKPtpLUjOtTfZ20eIyH7oWtJgqDMTFRbZ4MOZUZV5SVvkz9cet0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([116.24.8.75])
-	by sina.com (10.185.250.22) with ESMTP
-	id 67B7B9D500004F15; Thu, 21 Feb 2025 07:25:11 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 4121737602527
-X-SMAIL-UIID: 44415CC9A20146AB8789489C42E1A855-20250221-072511-1
-From: Hillf Danton <hdanton@sina.com>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Matthew Wilcox <willy@infradead.org>
-Cc: Byungchul Park <byungchul@sk.com>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	kernel_team@skhynix.com,
-	conduct@kernel.org
-Subject: Re: [RFC PATCH v12 00/26] LUF(Lazy Unmap Flush) reducing tlb numbers over 90%
-Date: Fri, 21 Feb 2025 07:25:02 +0800
-Message-ID: <20250220232503.2416-1-hdanton@sina.com>
-In-Reply-To: <Z7dFuTkdQ7PmP7sY@home.goodmis.org>
-References: <20250220052027.58847-1-byungchul@sk.com> <20250220103223.2360-1-hdanton@sina.com> <20250220114920.2383-1-hdanton@sina.com> <Z7c0BTteQoZKcSmJ@casper.infradead.org>
+	s=arc-20240116; t=1740093946; c=relaxed/simple;
+	bh=7n8vU1mDzNEJgHxmKtmshFKGwJhQB+ahwsmQS246Z7A=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Gt9OpZxc89GizzRRYjZgDNONA8A1cQRphWNCAW3ljUjFmLnmYHLSbePXAulv9eSuXU0WzT410OUpr9fkr3zdf8CK9mP+XeWvmcEm8Av7dmvcwmcAX1ZNYUlQImWUkwvWSEyL/avDhFECZvdN2hoN+1VXALIg9bx7OOwZ6zvPNmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=K70Q6mUT; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="K70Q6mUT"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51KL98lb029131;
+	Thu, 20 Feb 2025 15:25:31 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=I
+	4WNw3INmA6Tm9LKCn9lCpP+uwr0eB1K/hOe2FJk4xM=; b=K70Q6mUTvtI5nGZn6
+	1Hs++NyjQfsH4radtMiAMmn/egrnHrskS+dKGP9bHH0pMuggA4HadiSNNn57zMHK
+	lMeUGi1Y0wju413lYkiGfMhDKxtevuIs1wMonz0VFiy4SZOf5UYKUY9zMxxcyBQl
+	UOINnj62izlqcXDM4dDCbmNn/YL6qi9CEIUrFd/rT75C+1wNgVzbcn/fJcuMRbXT
+	DBfNdhFNvZVTh+Gcx5aMNtLE3PdzC7itYFvMQZQED58B60AyCp7qtbfm7GAkLUZV
+	5M4CWy9YVyZc8FNQpfvONuxaG/SIN1bk1xBCdlrGOgqWE15xfC3NWhzW8ZTspO+8
+	sMyFQ==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 44xc24r917-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 15:25:31 -0800 (PST)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Thu, 20 Feb 2025 15:25:30 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Thu, 20 Feb 2025 15:25:30 -0800
+Received: from wd-ubuntu-24-04.marvell.com (wd-ubuntu-24-04.marvell.com [10.111.132.113])
+	by maili.marvell.com (Postfix) with ESMTP id 2A2FA5B692F;
+	Thu, 20 Feb 2025 15:25:30 -0800 (PST)
+From: Wilson Ding <dingwei@marvell.com>
+To: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC: <andrew@lunn.ch>, <gregory.clement@bootlin.com>,
+        <sebastian.hesselbarth@gmail.com>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <p.zabel@pengutronix.de>,
+        <salee@marvell.com>, <gakula@marvell.com>,
+        Wilson Ding <dingwei@marvell.com>
+Subject: [PATCH v2 4/4] arm64: dts: marvell: cp11x: Add reset controller node
+Date: Thu, 20 Feb 2025 15:25:27 -0800
+Message-ID: <20250220232527.882888-5-dingwei@marvell.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250220232527.882888-1-dingwei@marvell.com>
+References: <20250220232527.882888-1-dingwei@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,24 +64,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: ZhSG1m-If48OwYoUY57nWW1XOUcCtsvo
+X-Proofpoint-ORIG-GUID: ZhSG1m-If48OwYoUY57nWW1XOUcCtsvo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-20_09,2025-02-20_02,2024-11-22_01
 
-On Thu, 20 Feb 2025 10:09:45 -0500 Steven Rostedt <rostedt@goodmis.org>
-> On Thu, Feb 20, 2025 at 01:54:13PM +0000, Matthew Wilcox wrote:
-> > On Thu, Feb 20, 2025 at 07:49:19PM +0800, Hillf Danton wrote:
-> > > On Thu, 20 Feb 2025 20:09:35 +0900 Byungchul Park wrote:
-> > > > Just in case that I don't understand what you meant and for better
-> > > > understanding, can you provide a simple and problematic example from
-> > > > the u-a-f?
-> > > > 
-> > > Tell us if it is illegal to commit rape without pregnancy in your home town?
-> > 
-> > Hillf, this is unacceptable language.  You need to apologise.
-> 
-> Agreed. WTF Hillf?  Where did that come from? Is this how you talk to your
-> co-workers?
-> 
-> I'll tell you what would happen in my home town. If someone said
-> that to a co-worker, they would likely be terminated.
-> 
-Interesting, I want to know if the three words, rape, pregnancy and WTK,
-could be used before judge in your hometown court by anyone like your lawyer.
+Add the reset controller node as a sub-node to the system controller
+node.
+
+Signed-off-by: Wilson Ding <dingwei@marvell.com>
+---
+ arch/arm64/boot/dts/marvell/armada-cp11x.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
+index 161beec0b6b0..4cd900c02b3b 100644
+--- a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
+@@ -273,6 +273,12 @@ CP11X_LABEL(gpio2): gpio@140 {
+ 					 <&CP11X_LABEL(clk) 1 17>;
+ 				status = "disabled";
+ 			};
++
++			CP11X_LABEL(unit_swrst): reset-controller@268 {
++				compatible = "marvell,armada8k-reset";
++				offset = <0x268>;
++				#reset-cells = <1>;
++			};
+ 		};
+ 
+ 		CP11X_LABEL(syscon1): system-controller@400000 {
+-- 
+2.43.0
+
