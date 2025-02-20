@@ -1,82 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8EC01F4E37;
-	Thu, 20 Feb 2025 12:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B441F582D;
+	Thu, 20 Feb 2025 12:56:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740056133; cv=none; b=vAbK/J+pwyk6p/KS8tcLwrSQP4hUTsnQ2+964Dt/8MpW0UhH/+62/6rkql1rQMhGaZUabM7+Zk/iFWQSo8+lucPS+Qq3S5eU1GkM5CeVSncZoCu6P75r/QN9ttCfbF0pbMeWdjtYEfU68puYy+lqDmPCc/GfAEP8l97kwcHK794=
+	t=1740056210; cv=none; b=NuRAkZntm6ahjvKc4lAo12U+NayGiL2/+NygGjf0S1m4KE2kmS6ss3HI75GXB0WirOrodCJVJbC/nBsdTsbS6BPdvomXIa6YNGB2ubTZBNVMfLUcgs38albLTeiiDvtypInHAFGDnYKFdVuvnYUtRoqCtqfcPXBqlDWORQPWVLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740056133; c=relaxed/simple;
-	bh=Ki1S5Wm5Lpi3mF5gV4M1NUKLNMD5/yyfIqIWEyP1NBA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L2pDg9TRjCRgYSNACTDbqUAjjmoSAaqfgKaF9fCZfe0Nq9dzn/L5RRlrBhRzQLiChpegStcar820oKdeJVibvJYj9gW7KWFy6TA/whYGtrjJ8Oa7zPHlioPEG139knuJj+Q2lkJ71AHIESif/QEuu2GySPrzw237d9JFHxPjTO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UicTgL8U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740056210; c=relaxed/simple;
+	bh=cQIhLi26tFIrH6kBJV8dUrYUU3ZnLxK7Why21ahopxc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=s4vqqT2iM4/AuqFodRxqtfnR5+EhnAepVeD8+aE1AFaX1793EfPZ1pQKGSk4k4U2dGiPI2JXshg9AjPafePrMlYInzHUvn/7f6gyRKikBxLPjCoX+1FrPWEtMOW0R57+A5aVRXtECMictKR97ACs7e4Rie9+3gtkRFxqhHqs3S0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=mr7m4nGM; arc=none smtp.client-ip=198.37.111.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UicTgL8U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE316C4CED1;
-	Thu, 20 Feb 2025 12:55:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740056133;
-	bh=Ki1S5Wm5Lpi3mF5gV4M1NUKLNMD5/yyfIqIWEyP1NBA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UicTgL8UlZ+H/Oz4R8KF69TxSKeXVcXZarN/U4ddOONtcClp/w5TdVFt4Wug8K2Sq
-	 PGTuOBECPSHbk2clTrnqZMdCz2i2L4Qk7lKIliWTb0qVZ3Z+ApupU+oovWuyHY0Q6y
-	 wJBLM1iVKSXqjn3LBqvGucMHV/pz7dcZ8wGhszhlxF0Jlt0fI3up65fgwR/kjsUbWa
-	 sgJmt76WRkObjj23iWczzwdhXc2kfOLMBPG+bUYDjcLpnIaMgvIYKYkiEtt2vIm42f
-	 diXkyJ90Eg5S9caXKbccmzg1hapr/IG+qQ8faJN7a9UPssvI5Z+c9AFMwBruKcLBr5
-	 Jy400wiY/BfWA==
-Date: Thu, 20 Feb 2025 12:55:29 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com
-Subject: Re: [PATCH 6.12 000/225] 6.12.16-rc2 review
-Message-ID: <Z7cmQRwYhbCYG7Zt@finisterre.sirena.org.uk>
-References: <20250220104454.293283301@linuxfoundation.org>
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="mr7m4nGM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1740056207;
+	bh=cQIhLi26tFIrH6kBJV8dUrYUU3ZnLxK7Why21ahopxc=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=mr7m4nGMHy5Ec0f7MeshFTLsebdq7j3mA86NUB/Y+8M8d+G+wS13LnwQQnyhNf62B
+	 RXQJu3AZJDnUeRTNJAY5EZL0mAuQHiJC37wx7iiy7WnoPYfucij+i/JWAnK3f/SDfA
+	 iY6dp4njEwpkZZdW5gj+zrhL1BgbZMBvgmuttnQg=
+Received: from [IPv6:2601:5c4:4302:c21::db7] (unknown [IPv6:2601:5c4:4302:c21::db7])
+	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id EBE621C254F;
+	Thu, 20 Feb 2025 07:56:46 -0500 (EST)
+Message-ID: <1f52fa44062e9395d54ed6733780aea0830ee6a5.camel@HansenPartnership.com>
+Subject: Re: Rust kernel policy
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, rust-for-linux
+ <rust-for-linux@vger.kernel.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>,  Greg KH <gregkh@linuxfoundation.org>,
+ David Airlie <airlied@gmail.com>,  linux-kernel@vger.kernel.org,
+ ksummit@lists.linux.dev
+Date: Thu, 20 Feb 2025 07:56:46 -0500
+In-Reply-To: <Z7bQRvHNcK_MmDQn@infradead.org>
+References: <Z7SwcnUzjZYfuJ4-@infradead.org>
+	 <b0a8ee53b767b7684de91eeb6924ecdf5929d31e.camel@HansenPartnership.com>
+	 <CANiq72nnnOsGZDrPDm8iWxYn2FL=wJqx-P8aS63dFYez3_FEOg@mail.gmail.com>
+	 <a627845f73f2f7bedc7a820cfdf476be9993e30f.camel@HansenPartnership.com>
+	 <Z7bQRvHNcK_MmDQn@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="LMOhex+tqeyGJ4Mh"
-Content-Disposition: inline
-In-Reply-To: <20250220104454.293283301@linuxfoundation.org>
-X-Cookie: Editing is a rewording activity.
+Content-Transfer-Encoding: 8bit
 
+On Wed, 2025-02-19 at 22:48 -0800, Christoph Hellwig wrote:
+> On Wed, Feb 19, 2025 at 11:03:28AM -0500, James Bottomley wrote:
+> > > This has come up a few times, and we indeed would like to have
+> > > some annotations in the C headers so that we can generate more
+> > > (and to keep the information local).
+> > > 
+> > > For instance, it would be nice to have bindgen's `__opaque` near
+> > > the C items, or being able to mark functions as `__safe`, or to
+> > > have other `enum`s-related annotations, or even custom
+> > > attributes, as well as "formatted-formally-enough" docs so that
+> > > can be rendered properly on the Rust side, or even
+> > > references/lifetimes with an eventual "Safe C"-like approach, and
+> > > so on and so forth.
+> > > 
+> > > However, even if we automate more and even reach a point where
+> > > most C APIs are e.g. "safe" (which would be great),
+> > 
+> > I wouldn't say C API safety would be the main goal, although it
+> > might be a nice add on feature.
+> 
+> Why not?  Why is safety suddenly less a goal when you don't use the
+> right syntactic sugar?
 
---LMOhex+tqeyGJ4Mh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Well a) because of the way C works, I don't believe you can get memory
+safety with just header annotations and b) even if we got safe C it
+still doesn't fix the unstable API propagation to rust problem, which
+is why I don't think it should be a goal in a project aiming to fix the
+unstable API issue. If we got it, I'd like it, which is why I listed it
+as a nice add on feature.
 
-On Thu, Feb 20, 2025 at 11:58:09AM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.16 release.
-> There are 225 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Regards,
 
-Tested-by: Mark Brown <broonie@kernel.org>
+James
 
---LMOhex+tqeyGJ4Mh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAme3Jj4ACgkQJNaLcl1U
-h9AxSAf/UB750crjTKHWIRF939HiB6PWUTrHkgF6GQawgJIudj++blI9vgsvxrEj
-bzywDTzA7oKtJtsLoerb4wPlTF4NvI5UBBbwv6CkkYXh+5fbagG20g10hggHhJ3a
-vl9TUcNkjVhHIXBZD5olrxuYWLsbE7hKVyfD9zzG0FGpAuHWsQdb1rShCg2y6sha
-NGPmdSvFKwHj4VgKRA/0yS0slUcYFv5aaTHmTMxcf8GQ+vbi67IPSecU/yIy8SCr
-l652Rrg+8wpHlu2h7m8VNKHTzvhkruecsLG8ZLbO/J/brYM399aacpgvjEMgn0dZ
-yN5z5pvZHwXfCQiAdVb3aMsR3vqqYQ==
-=6oEc
------END PGP SIGNATURE-----
-
---LMOhex+tqeyGJ4Mh--
