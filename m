@@ -1,116 +1,114 @@
-Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A1C1BE251
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:54:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7DA1B3927
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740041701; cv=none; b=lN4tB17IApDAqon+S432C4XSM3wsYP4zZanFu3RInKrI1d4dqdYHEarUpS02rNPV5desHx1/xmv5a5BUaApCvoZ7Qcjpgb3CebOBQ7Mo1JT+eSBgxvUaSCb6o7RTQZaEinjW4n4hQIKaDapQinAXV1vcAZ1qFmK0NSrwyOJNZ6w=
+	t=1740041735; cv=none; b=MNitJrdAceSnloZbDpu6TsoUmBL9BRZayETK7guenjdzJpP7O+7ZNQ2RWYEx16FpytfLC+j/kuPwZuDBtkNtTg1K670aznqIfjxDBdD8Rtarxh4zurPEpe8awI/oFzcDHAgBgcpPf96WQs4DGMav3iq6A+F1R37YuKTekmTkXCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740041701; c=relaxed/simple;
-	bh=OEGWZVbsLWuvgh0co4wT1Nb31YSZICtLKNGQ+KuQhMs=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=WixhL3q1HzzZkc5lMkgK8HStXcqRSdC9LrEuElFPCt5HxPT3Z9g/zfyIob0KhxSTi3vy6CwSboqHJU73B7nzkF8EEmfT8KyRRRGrEjL6fPagkEry6iK+2nxFlHwqZnkpwDIZ8zwi1kS7p73Z401W4BUshBXTgYy/aW5WQXh1hUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=J5zTtCwA; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DWEMX6AD; arc=none smtp.client-ip=103.168.172.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1740041735; c=relaxed/simple;
+	bh=SdNR4ClrBx/eeZAz7z2iazWjvr1avPuKNfaN72mYIGQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nH/7XVkhokCaLICWJqLX0AQdSd+g+TAUMc6KEsMD+DZaSG9y3+eUBgTBzh6jtxqbIJnU5A78f/l+WDn7Zc20SgwNNQxrqyBz6/ELzUaqgKstPaw5/80laP51QVaicDJ03aa3Oagjmw2wwIPTGXxDovH5aztzA14OqZrRJ08ON50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e0iFfj7f; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="J5zTtCwA";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DWEMX6AD"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfout.phl.internal (Postfix) with ESMTP id C297F1380990;
-	Thu, 20 Feb 2025 03:54:57 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-11.internal (MEProxy); Thu, 20 Feb 2025 03:54:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1740041697;
-	 x=1740128097; bh=98fWG4BoRmHvBUIB75tbyVaOGVodq0S3xsdfrIhruNE=; b=
-	J5zTtCwAuk+pWPNCDB9y1J1gXbOsO6TBZK9ic8GZxeZaMQ9yU1wr4v8AWVXLv8rK
-	CSWYsRR+5YwLK0nlra97Gr1k6Nz1qbSZnxucy8EN48h59eFL3Ym3pZ1jOcQgV3pi
-	aZMZjq7GnkqINth2Y3d+tCoaeOOTk4iFIcaL/JppyGAO/6m1BqiPy7peOWfKcwq+
-	aYfafN2QvhaluVIZ26QBIv0DvpCbeNGt8dSkBLSPYAdHB5tvoCLESeB9qGWzKzvP
-	3gxELYwSX4h3UkfGgazjxXCu1Gg4YYk+kMuv1r8Yxf+JG9FjlqDOtI8UbCJ3QVp3
-	2GVnkJoOrBZlgQwhUIXbuw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1740041697; x=
-	1740128097; bh=98fWG4BoRmHvBUIB75tbyVaOGVodq0S3xsdfrIhruNE=; b=D
-	WEMX6ADtsBv1fVomxLfUbnD3rxmv6ql8NbZmJihNCDn/kA476hEXlqHz0hb4Xzs1
-	pRDZZcTKY5EBfJwfhfUQJVF41WcnHH8KCqHdpg3HOCarlK30PRFFqENR2vV3PWIY
-	cJmlyCC2FY0hyz5ZOkwZx7jd7IrdBisX8CP+yPHZsqmukvj0Psj7GyCKjFvaYHqU
-	V1htbUYNiPOESzUN3XoTiPqz4wrkBsNv/nv5P5YsrNlMoqy0kRYiudmrXX05JEHx
-	fNMkOc5pwzJG5SFQ7U2GLdBfS1Vi5+jNLadfcycS4PIcwZ/0OvQEVjYupRMqh3P0
-	g/LEBeOa+bzwUgpaaofig==
-X-ME-Sender: <xms:4e22Z8hBu0rBuEVt7olWVFsxtBSJVA5aGva2DqQxXQOc3I2J9yNPjA>
-    <xme:4e22Z1DOKmtozoRhhw4HRvZ0BQTZTgCynnF_xX2_hQr2Gz3fIb7elEsMUrvPcQD6K
-    epHBDabTHkGIywznKI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdeiieejfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
-    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeej
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrlhgvgigrnhgurhgvrdgsvghllh
-    honhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopegurghnihgvlhdrlhgviigtrghnoheslhhinhgrrhhordhorh
-    hgpdhrtghpthhtohepthhglhigsehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtohep
-    nhhitgholhgrshdrfhgvrhhrvgesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhope
-    gtlhgruhguihhurdgsvgiinhgvrgesthhugihonhdruggvvhdprhgtphhtthhopehlihhn
-    uhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:4e22Z0EQtp-TOBKdDOpCv0BSP5MlVsVQxIt6Ed-XgqA6TkRR-pJYbQ>
-    <xmx:4e22Z9S97jF3hHmmsf1E-XtmOAMpJdbKZFaVnZZtEnD3H0fuGnLhvQ>
-    <xmx:4e22Z5wP59TLWXNYyPUQDtgtHRKbZgmBYJUoXbO41rAA3r-WBqSG8A>
-    <xmx:4e22Z75pHmsSSDx2murSg8YXrx9ATtxBR_d5JStXIX-43BUlmYUClA>
-    <xmx:4e22ZwmpHOqYlgmgSeLZLO8dqcxFMpBDzgKOEf_meTN-L4wXJqg4RhZ8>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 524E12220072; Thu, 20 Feb 2025 03:54:57 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e0iFfj7f"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-38dcac27bcbso1097687f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 00:55:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740041732; x=1740646532; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vJy3bOqSsh0t+h28vp9n62Av8VDeBRdvNoL1U3ajQ+A=;
+        b=e0iFfj7fvjnif3Xed9oONXHd5vUxnI4oqBi/HggDTRkG0AzjBLZOD5zlaCGo7NtnRA
+         JpCklRh6o8O9KCczsE0xot8gUnBO6r/PPA5izLRd2hywwfJyhw/5LTSDyiE86P5muTLD
+         p80KPtB9+G4mzwFMd39VpmKTLv//Ssyu3/WNI3eS59AdocyfLAn6bSpgPSrgAzKOqqNf
+         /wl9c7wx7PISM66nB/bgf0UEVRKXK5UsDr0xXAMFsQgpYkHfRO2pYeS5oyxVBEZYQC1l
+         wI6JQZqJ70oHrsHX4bwBgcxgcPoajzw/NfY918BQ+PHf0yOELbiuvzyTh/lkMYer3Qgt
+         3FHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740041732; x=1740646532;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vJy3bOqSsh0t+h28vp9n62Av8VDeBRdvNoL1U3ajQ+A=;
+        b=lAw64yv1AR4m/ullUg3PYsWcZqX2S6mLGVzDkGqeGaV7RlZIMnukaLoJFJDHJaNUp4
+         gDqh64qSCJl71qH68D7KnF1kiHpxOLxQfREGQ2NwTsFJvAjLkTbjv/8hTRXtiF9UoJNT
+         alATgyxLOP3+vIJj8or+/Q5LMJyahr4yWRd0kp5gj1DdXVTux22IosIS1evFo9Vg7WI1
+         ix3yw4gPTQ+Z4E75o1YEY9fJeJLhfXhSLu0hZnVS5fQKfh6LtnZfwbT0r9BP6DwBJQH0
+         V1G50A+qw3Cb5Ejc/s1ZsVYdhstbui/Q5KdJQllMK9ntAsG/Erhc8EBMlE4mTX6YiQka
+         XEZA==
+X-Forwarded-Encrypted: i=1; AJvYcCXvH1jfIgxr6ptpr2wgwJYL9bwW8SjaL7wxwZ5CX9wk+dJna3IqUs8S28dj0GsTJdriQu9qV39JtbKVgsE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzb0q8NwQ7tMNlQmbbtgJlYZ8uKJ0v8Q3VwVdQCnV2h8kVMoojk
+	zNmWoCBoxkbjgCkKoa5aWy0KzRJsu2x6kjcYJcEgkhp3kCISOQzO
+X-Gm-Gg: ASbGnctQWdc05EEXWd5/6HnqcSVM9rjn9UwyBC4J4WVtD0dMvysNNYlWCK2VOL23p4S
+	vdKR2+zM96rjJ9hod35rxfeSHimF/ocMD9wbjZ3sJ/x5JHonhOlvO9E5cXxTkmoNS1N3avHzazk
+	GHaDiVkwOP81Xpu9BoXQufWtTzwbKZhVxjiZZmV2fRB8vouUwo59Jr028mJuYjeZ078bT/TMh8j
+	5S/eTFAWrkADGUQ5gsV9MhJG3bJhSExJ+f8HDJ6WXn+LTR30rNWjL+75Ho6fazVanYhO/e04w9/
+	LxqN6hGv5fQsb2nLr+6PHVy3P3K7qqM=
+X-Google-Smtp-Source: AGHT+IFfnW0cyW8E119bHHz9+mtO1ESWRT3Yf6hjXrVMUeUMEiuamjADqrwKcqa55mog5vcRyrjChA==
+X-Received: by 2002:a5d:5847:0:b0:38f:3e0a:ca6a with SMTP id ffacd0b85a97d-38f614991c2mr1920875f8f.2.1740041731399;
+        Thu, 20 Feb 2025 00:55:31 -0800 (PST)
+Received: from egonzo (82-64-73-52.subs.proxad.net. [82.64.73.52])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5c36sm20239545f8f.67.2025.02.20.00.55.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 00:55:30 -0800 (PST)
+Date: Thu, 20 Feb 2025 09:55:28 +0100
+From: Dave Penkler <dpenkler@gmail.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/17] staging: gpib: Console messaging cleanup
+Message-ID: <Z7buAACkugsEOa13@egonzo>
+References: <20250214114708.28947-1-dpenkler@gmail.com>
+ <2025021923-leverage-endpoint-c06e@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Thu, 20 Feb 2025 09:54:36 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Arnd Bergmann" <arnd@kernel.org>,
- "Daniel Lezcano" <daniel.lezcano@linaro.org>,
- "Thomas Gleixner" <tglx@linutronix.de>
-Cc: "Nicolas Ferre" <nicolas.ferre@microchip.com>,
- "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
- "Claudiu Beznea" <claudiu.beznea@tuxon.dev>, linux-kernel@vger.kernel.org
-Message-Id: <cdce709e-b54a-4f06-9c67-b1e1a2fc8dbe@app.fastmail.com>
-In-Reply-To: <20250220085231.1719249-1-arnd@kernel.org>
-References: <20250220085231.1719249-1-arnd@kernel.org>
-Subject: Re: [PATCH] clocksource: atmel_tcb: fix kconfig dependency
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025021923-leverage-endpoint-c06e@gregkh>
 
-On Thu, Feb 20, 2025, at 09:52, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> Build-testing this driver on arm without CONFIG_OF produces a warning:
->
-> drivers/clocksource/timer-atmel-tcb.c:368:34: error: 
-> 'atmel_tcb_of_match' defined but not used 
-> [-Werror=unused-const-variable=]
->   368 | static const struct of_device_id atmel_tcb_of_match[] = {
->       |                                  ^~~~~~~~~~~~~~~~~~
->
-> Change the dependency to allow build-testing on all architectures but
-> instead require CONFIG_OF to be present.
->
-
-And the second I send this out, another failure pops up, please
-disregard this version as the CONFIG_ARM dependency is still needed
-for register_current_timer_delay().
-
-     Arnd
+On Wed, Feb 19, 2025 at 04:48:39PM +0100, Greg KH wrote:
+> On Fri, Feb 14, 2025 at 12:46:51PM +0100, Dave Penkler wrote:
+> > The GPIB drivers printed a lot of spurious console messages. This
+> > was linked to the level of code maturity, often using console
+> > messages for debug.
+> > 
+> > This patch set cleans up the console messaging in the spirit of Greg's
+> > recommendation: "When drivers are successful, they should be quiet"
+> > 
+> > All pr_info's have been removed except for one which is in the module
+> > init of the common core driver indicating that the GPIB subsystem is
+> > initialized.
+> > 
+> > All dev_info's have been removed or changed to dev_dbg except for the
+> > attach and probe messages in the agilent and ni usb drivers. This is
+> > to facilitate the creation of config and udev scripts to ensure that a
+> > particular usb device is systematically attached to the same gpib
+> > device file.
+> > 
+> > All custom debug and tty logging has been removed or replaced with
+> > dev_dbg.
+> > 
+> > Error messages where the user can figure out what went wrong with
+> > errno have also been removed, particularly timeouts and interrupts
+> > during reads and writes which can occur quite frequently uneccessarily
+> > cluttering up the console log.
+> > 
+> > The patches are 1 per driver.
+> 
+> All but 4 of these applied, can you rebase and resend the remaining
+> ones?
+> 
+> thanks,
+> 
+> greg k-h
+Sure, thanks.
+(Could only find 3 that were not applied, will send those)
+-dave
