@@ -1,100 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D662AD16
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 05:16:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CBA3A930;
+	Thu, 20 Feb 2025 05:16:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740028577; cv=none; b=hdlCnOjFB16/mQ8byEZssEQKJkAMqDsJsXZHzU5Opcv5k1gDYmB7FzrZjP2Av/2a6FHt+P4syxTfBJAOiGG1cxn1qfB2Gyqb68mqdZJTc4S+1Jmx+RdMsJbrKLR8gv2m1jPNPA10dOxyld9/E+0TB4GQn0MEOEOM/n3JoqstWww=
+	t=1740028587; cv=none; b=cBXjH3/A2eVRdwqMP2rUbBTKY8HmNoAkHE8Sy7cK8IxgCcgNM19UC9xLf/y1moLaCcRDioGJwNMNj3fWCeycLRXZeSnImiUuFxvtF3xaxDOsWU8iUd0+/4anhVbFqgv2IopBDzWcYpzI6/AyM5N+vooCwWYPxJM8pNKEpnwyedM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740028577; c=relaxed/simple;
-	bh=sQSfM4UIvI/WWiNjXD7va01EmRTY8o98hV7ZKJoRxNw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UjBKKzA7V2n4OF+IuIfXpbFbYihkeqhoQY3/fmty/EmA3+vEURIyxSUFuNLwJggAG1wTAhWMSchbQ4C4NjR4/SbjJug/pGE+vdJADwGv1wKdLLSKddz0YT+N4qOlLJjm/x5ZeaHfjcDoyo93VGmYiG+IGq3Aquls0rg2DvbEyfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=kJyI91oN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740028587; c=relaxed/simple;
+	bh=KqkamthdFH3SEg6xMpi7YCzCOJefi/zrVa3zI3N+U4s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pMPjyKhH6CxseieyZz0sEbbpfIOOK5LriCuQ2/qosRuNIiRoxHvaOLyFFRpN8bSiDZMlHec7Mtf50O4ndu3YVDihLNnBbpdmViFDadqopCBBIOcYK1v4/6FhJTwKl/pt/RRGAO74rHoCO73LCi0Dct/m0MI6vA4CT4sPRU2lzUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OXF3YBvO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kJyI91oN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EC85C4CED1;
-	Thu, 20 Feb 2025 05:16:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1740028573;
-	bh=sQSfM4UIvI/WWiNjXD7va01EmRTY8o98hV7ZKJoRxNw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kJyI91oNPkTzQPIYBcob1PsqP7cQlOBtseIASALYw9S1yFJaAaisUafPMxt8JtJCc
-	 7+L8S5vCGoGkyrgHyfWF9LE9NxXzMokxQNqq6mNcI6iimxztsTvYLAsFwoZPddFf50
-	 WiHDXf54DMljm9qHKOXrfhwDz8+HLgky4amZrzT4=
-Date: Thu, 20 Feb 2025 06:16:10 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Suraj Patil <surajpatil522@gmail.com>
-Cc: linux-kernel@vger.kernel.org, jirislaby@kernel.org
-Subject: Re: [PATCH] gpio: max732x: Remove deprecated irq_base assignment
-Message-ID: <2025022049-pout-garter-23d2@gregkh>
-References: <20250219192426.164654-1-surajpatil522@gmail.com>
- <20250219192426.164654-2-surajpatil522@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OXF3YBvO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74BF7C4CED1;
+	Thu, 20 Feb 2025 05:16:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740028586;
+	bh=KqkamthdFH3SEg6xMpi7YCzCOJefi/zrVa3zI3N+U4s=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OXF3YBvObn35kRPTlfRtpFvrzwxPX+uAOlUkjagWTF3kjChcWYUNP3wQOLSrJmvsw
+	 7bs2YY9nkvJ69rV6GyAR27KD603+h/Cs77zcrH66KdgKu6BjdzsxBLeFJHHBowhuSK
+	 f9dCh8srMNcKi6R4V3LbnYx4awoI1jE4abFSaJV3fsFOx1MqvBDlZ9SmykCl2ym3Xq
+	 LN06xmJthSfXbnG+g1KglEJi4VTW/c4pKEgcIWYRRGQtRVZGi+PIw9mOX7DlsKw7+D
+	 unMlSbXnZimWem3mPqk2gn7Gqkmzl9fE/qtycjRVPd0tWCysMZFZ025SdUTDUKX4ss
+	 fOdKaSW7JaHtQ==
+From: Eric Biggers <ebiggers@kernel.org>
+To: x86@kernel.org
+Cc: linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ben Greear <greearb@candelatech.com>,
+	Xiao Liang <shaw.leon@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>
+Subject: [RFC PATCH 0/2] Eliminate the no-SIMD en/decryption fallbacks on x86
+Date: Wed, 19 Feb 2025 21:13:23 -0800
+Message-ID: <20250220051325.340691-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250219192426.164654-2-surajpatil522@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 19, 2025 at 07:24:25PM +0000, Suraj Patil wrote:
-> Signed-off-by: Suraj Patil <surajpatil522@gmail.com>
-> ---
->  drivers/gpio/gpio-max732x.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpio/gpio-max732x.c b/drivers/gpio/gpio-max732x.c
-> index 49d362907bc7..bc30cb57e222 100644
-> --- a/drivers/gpio/gpio-max732x.c
-> +++ b/drivers/gpio/gpio-max732x.c
-> @@ -525,7 +525,7 @@ static int max732x_irq_setup(struct max732x_chip *chip,
->  		girq->default_type = IRQ_TYPE_NONE;
->  		girq->handler = handle_simple_irq;
->  		girq->threaded = true;
-> -		girq->first = irq_base; /* FIXME: get rid of this */
-> +		/* FIXME: get rid of this */
->  	}
->  
->  	return 0;
-> -- 
-> 2.43.0
-> 
+The patchset can also be retrieved from:
+ 
+    git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git x86-softirq-fpu-fix-v1
 
-Hi,
+This patchset fixes a longstanding issue where kernel-mode FPU (i.e.,
+SIMD) was not reliably usable in softirqs in x86, which was creating the
+need for a fallback.  The fallback was really bad for performance, and
+it even hurt performance for users that never encountered the edge case
+where kernel-mode FPU was not usable.
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+This patchset aligns x86 with other architectures such as arm, arm64,
+and riscv by making kernel-mode FPU work in softirqs reliably.  There
+are a few possible ways to achieve that, and for now I just went with
+the simplest way; see patch 1 for details.
 
-You are receiving this message because of the following common error(s)
-as indicated below:
+Patch 2 eliminates all uses of the "crypto SIMD helper" from x86, as
+patch 1 makes it unnecessary.  For the RFC it is just one big patch;
+I'll probably split patch 2 up if this progresses past RFC status.
 
-- You did not specify a description of why the patch is needed, or
-  possibly, any description at all, in the email body.  Please read the
-  section entitled "The canonical patch format" in the kernel file,
-  Documentation/process/submitting-patches.rst for what is needed in
-  order to properly describe the change.
+Performance results have been positive.  All en/decryption is now
+slightly faster on x86, as it no longer take a detour through
+crypto/simd.c.  I get a 7% or 23% improvement for AES-XTS, for example.
 
-- You did not write a descriptive Subject: for the patch, allowing Greg,
-  and everyone else, to know what this patch is all about.  Please read
-  the section entitled "The canonical patch format" in the kernel file,
-  Documentation/process/submitting-patches.rst for what a proper
-  Subject: line should look like.
+I also benchmarked bidirectional IPsec, which has been claimed to often
+hit the edge case where kernel-mode FPU was previously not usable in
+softirq context.  Ultimately, I was not actually able to reproduce that
+edge case being reached unless I reduced the number of CPUs to 1, in
+which case it then started being occasionally reached.  Regardless, even
+without that case being reached, IPsec throughput still improved by 2%.
+In situations where that case was being reached, or where users required
+a synchronous algorithm, a much larger improvement should be seen.
+
+Eric Biggers (2):
+  x86/fpu: make kernel-mode FPU reliably usable in softirqs
+  crypto: x86 - stop using the SIMD helper
+
+ arch/x86/crypto/Kconfig                    |  14 --
+ arch/x86/crypto/aegis128-aesni-glue.c      |  13 +-
+ arch/x86/crypto/aesni-intel_glue.c         | 168 ++++++++-------------
+ arch/x86/crypto/aria_aesni_avx2_glue.c     |  22 +--
+ arch/x86/crypto/aria_aesni_avx_glue.c      |  20 +--
+ arch/x86/crypto/aria_gfni_avx512_glue.c    |  22 +--
+ arch/x86/crypto/camellia_aesni_avx2_glue.c |  21 +--
+ arch/x86/crypto/camellia_aesni_avx_glue.c  |  21 +--
+ arch/x86/crypto/cast5_avx_glue.c           |  21 +--
+ arch/x86/crypto/cast6_avx_glue.c           |  20 +--
+ arch/x86/crypto/serpent_avx2_glue.c        |  21 +--
+ arch/x86/crypto/serpent_avx_glue.c         |  21 +--
+ arch/x86/crypto/serpent_sse2_glue.c        |  21 +--
+ arch/x86/crypto/sm4_aesni_avx2_glue.c      |  30 ++--
+ arch/x86/crypto/sm4_aesni_avx_glue.c       |  30 ++--
+ arch/x86/crypto/twofish_avx_glue.c         |  21 +--
+ arch/x86/include/asm/fpu/api.h             |  17 +--
+ arch/x86/kernel/fpu/core.c                 |  37 ++---
+ 18 files changed, 180 insertions(+), 360 deletions(-)
 
 
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
+base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
+prerequisite-patch-id: ec1feea7e6f4d03e4e4c64c492197b89c957611a
+-- 
+2.48.1
 
-thanks,
-
-greg k-h's patch email bot
