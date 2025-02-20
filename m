@@ -1,206 +1,174 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2060.outbound.protection.outlook.com [40.107.244.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C6481E98E0;
-	Thu, 20 Feb 2025 07:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740035596; cv=none; b=TYEmlHBzT0y5K1Yd8HnxcfECfMP6My2thg6TJG2LhV7fTu3Ds7IKqsc2BHrDQQDhbVDoWavmtl5dDOkH4BirLbZUyRHVcbFk4OCaxFv1tKngjVcRc2P5gf5+JWZm2yscA46QDDGSE2MRUReUEMPvbKybFgIdBsgoyqEp7sVdj+4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740035596; c=relaxed/simple;
-	bh=yaxjXWijVyI77ueaPwlvEeTDIMMGsvjTUWEjD+hCuEo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=MwX1UcQ3iTywM+v2F7f7cY+viOZnW93b2F1pXNt39MTOoEf78DAeUsT8Hun6z7aTgPmFU/GErc9H1NOWDFt4CP/wYBt5DeJBjfJN2vPAL8QrALaICAQ01yRVYJjX/8UZMoLnHG4OlmFyt27C8eSEWGqewprnPEc7Q0v0zhKFJmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HVUiokXz; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26A81E98F9;
+	Thu, 20 Feb 2025 07:13:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740035597; cv=fail; b=ZcTBzBmtzu0jT7zPQ+cx5u4e6syqCsBAsn7NCizEvtdWvBhU7zFau3gX2qvWcrpk9QaXopE3QMEfJDZBX+qc1ZXB0OJjdJc2s4H6bcnvWo3WG1lVVlphM1/dizvyaYTWurrzJN5CxkrtjbMNV59qik/VHWn0EFYP18lDJpFgdIU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740035597; c=relaxed/simple;
+	bh=lN2KkDCbVWYS3MtyBC95rm6eIta+GSq2qfH2+HUZAI8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hRkuQG1D6J4lof23lStYR+eAN9pLBjOhhAjYJT86t4rAGxuiEPQD31sLvu1UWCGxztfK9RXaicl0LJ4KB6e2GU2dYYa8iGsE3FgaCuzk7W/GuH3gCxr9b4Jhf1qaQlY4NUhsatZJEDGygbpCrb8bs1+5JF+Rzcu8NVI+FN2rFLg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=J3mG4KrV; arc=fail smtp.client-ip=40.107.244.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HVUiokXz"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51JH81QG009732;
-	Thu, 20 Feb 2025 07:13:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	m8Wmdm/C5lzqJIXVHm2jjl5gjWgQah+xD67gZLNzdcA=; b=HVUiokXzv8ydlXfK
-	D2xbPgXKeq7gpGH9wjnHyLhEJz6KTuZMoIb28uA4YM1OtBmoWLWHw3vHrNImjiLl
-	+f6Ytuz+OXw5yz70zd6SQScs4akD9CfM8AcfIXEM2XML+DSHe/d59x0RVbvCz1Xe
-	a2zO+7TTyiq8IqmbtmanGJT4os4edofek4ZQ56weKL/YrVz7UN2ePaHUuj9O0hwj
-	+s7k7goE2bmjtpV6G/qbsgH+b3nJ7KqQWsAEJ+WNM0+5SvD9aNPh4Ry0mjn2FbPa
-	fGhxOTdXUE0l3aZxpfJ047Ska3NAtuq3kcVf9d/G1lWERyrY/B9hfscwO+JVcWgL
-	8vEx1w==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy1wa4x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 07:13:09 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51K7D8wd010044
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 07:13:08 GMT
-Received: from [10.217.216.47] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 19 Feb
- 2025 23:13:03 -0800
-Message-ID: <a3903d37-03ab-4f1c-acf0-4683d1297906@quicinc.com>
-Date: Thu, 20 Feb 2025 12:43:00 +0530
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="J3mG4KrV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OupMGrvggHDBQxDH6HE6PQ8tWW3zUyRiTfb5D/GfQBBjE64omFeFjMWHbNTwCr7Sxp0CIc0Ry09JZ2g4yelbDWctUtu2nQYghVFbTZop58NoeX0HegKlMnwX1/4HgmcBumjRfShcR1DPkuv9prQtURqHpxMxs7Dx7u3TkIH61gkcgEyUobdp68ydCA79T9lUITJx3VfE2lNJ8AE2eNZx+gD6aXvdW8FjxRgPmfFmoGkoF8eOoEcSkPTOpN0roiWSKSzTopffxqoiYiI+r+0212PIY5vVyj4KsA5fBjbUH2dPXlGTQ1Ccc51qCTCh/wj1H7lrAm4aVwxyOlTDYYJe0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7yxK95LnRbROa6bs/D1NakOTn74GT6H8mhuoPMhcoHs=;
+ b=vNQrd3KUmg/bAhv0ZnBG5rATEiyFKnJlwfa4ixvGOgsuiZcp2xUCtBe+mMS22s9pB1OzfVuBGsJExKglxdYJsBlytqY6TKqzGheOwsQnx6fqaoFGy+6bnCesckA8YnhBFgYy0q2Z+vokLFyVYdYYcx2Psceatf+d9uqu1gP7GrNbRoxEy5fYsAV/jaQtZ5O3Ma+HRrkMip2nDG3kYQuIr5y4aJbItCqLmvPTjwqPqJ4Dz3yLSgPzPsHaoMbFSgMlW8uBH+6GmyjHQwx6TWWj5wkeL8WvZGJiCqXysydjh/O5yYu/MLI+bJd085wfUYQZps1qukv5NqEgFL7l/gWi3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7yxK95LnRbROa6bs/D1NakOTn74GT6H8mhuoPMhcoHs=;
+ b=J3mG4KrV95dXB5pbbZe2ooZzS3Xa/2bjqhk3asyb5QqEI4CHMfjxxJNQBIsoy/td1DmtOSDCuLi8Ln2w8aC4ujdhNl1Ux8NQaSpf0bSvRA4ClMSgXPaRPKYJ8RMfA8xz0aBYdvwFH/AOFatyCHlWPMVUooG3s7R2mdSjkI5/r/Th0bqyrGrvrAxKz3qANcbOlK7qIZlsL6/1bLS7UHQ5z98td7N/5HLRJug6tZNxCv+yAOKMA/kVRQrtqHnl8DV2xMZLgRd2T8HpFFluQqNqY1LrxcZ1is8RRJFKZFps5HISwm5OyqTe/bnjDC1RBmQivTSiPsVhqE2rNGnsgVrc4A==
+Received: from SJ0PR03CA0250.namprd03.prod.outlook.com (2603:10b6:a03:3a0::15)
+ by PH7PR12MB6537.namprd12.prod.outlook.com (2603:10b6:510:1f2::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.16; Thu, 20 Feb
+ 2025 07:13:09 +0000
+Received: from MWH0EPF000A6731.namprd04.prod.outlook.com
+ (2603:10b6:a03:3a0:cafe::4a) by SJ0PR03CA0250.outlook.office365.com
+ (2603:10b6:a03:3a0::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.14 via Frontend Transport; Thu,
+ 20 Feb 2025 07:13:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ MWH0EPF000A6731.mail.protection.outlook.com (10.167.249.23) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8466.11 via Frontend Transport; Thu, 20 Feb 2025 07:13:09 +0000
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 19 Feb
+ 2025 23:12:53 -0800
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail203.nvidia.com
+ (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 19 Feb
+ 2025 23:12:53 -0800
+Received: from Asurada-Nvidia (10.127.8.10) by mail.nvidia.com (10.129.68.7)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Wed, 19 Feb 2025 23:12:51 -0800
+Date: Wed, 19 Feb 2025 23:12:50 -0800
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: Pranjal Shrivastava <praan@google.com>, "Tian, Kevin"
+	<kevin.tian@intel.com>, "corbet@lwn.net" <corbet@lwn.net>, "will@kernel.org"
+	<will@kernel.org>, "joro@8bytes.org" <joro@8bytes.org>,
+	"suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>, "dwmw2@infradead.org"
+	<dwmw2@infradead.org>, "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+	"shuah@kernel.org" <shuah@kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "iommu@lists.linux.dev"
+	<iommu@lists.linux.dev>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kselftest@vger.kernel.org"
+	<linux-kselftest@vger.kernel.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "eric.auger@redhat.com" <eric.auger@redhat.com>,
+	"jean-philippe@linaro.org" <jean-philippe@linaro.org>, "mdf@kernel.org"
+	<mdf@kernel.org>, "mshavit@google.com" <mshavit@google.com>,
+	"shameerali.kolothum.thodi@huawei.com"
+	<shameerali.kolothum.thodi@huawei.com>, "smostafa@google.com"
+	<smostafa@google.com>, "ddutile@redhat.com" <ddutile@redhat.com>, "Liu, Yi L"
+	<yi.l.liu@intel.com>, "patches@lists.linux.dev" <patches@lists.linux.dev>
+Subject: Re: [PATCH v6 14/14] iommu/arm-smmu-v3: Set MEV bit in nested STE
+ for DoS mitigations
+Message-ID: <Z7bV8q8h5ssgiucv@Asurada-Nvidia>
+References: <cover.1737754129.git.nicolinc@nvidia.com>
+ <436ac2021bb3d75114ca0e45f25a6a8257489d3b.1737754129.git.nicolinc@nvidia.com>
+ <BN9PR11MB5276291C74E2DF0C8821BE718CFA2@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <Z7TOq-gIGPY_ztW7@google.com>
+ <20250218185229.GL4099685@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/5] clk: qcom: videocc: Add support to attach multiple
- power domains
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "Stephen
- Boyd" <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>,
-        Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik
-	<quic_imrashai@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        "Satya Priya
- Kakitapalli" <quic_skakitap@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250218-videocc-pll-multi-pd-voting-v1-0-cfe6289ea29b@quicinc.com>
- <20250218-videocc-pll-multi-pd-voting-v1-4-cfe6289ea29b@quicinc.com>
- <eec2869a-fa8f-4aaf-9fc5-e7a8baf0f864@linaro.org>
- <huluiiaqmunvmffoqadrhssd3kl2toutqtcw7rzamv3sqdglsf@7lz66x4sj3gv>
- <a8350d0f-2a63-46de-86f3-c156809cca0e@quicinc.com>
- <v744bey7hvqkhzx4f6tb7sqds4yh5ggpv2ftuhbjbose3wossd@hjf6sqaitjfx>
-Content-Language: en-US
-From: Jagadeesh Kona <quic_jkona@quicinc.com>
-In-Reply-To: <v744bey7hvqkhzx4f6tb7sqds4yh5ggpv2ftuhbjbose3wossd@hjf6sqaitjfx>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: uOQZILnm9Uv1qEDJFUDGoXdTXM3g0GUq
-X-Proofpoint-ORIG-GUID: uOQZILnm9Uv1qEDJFUDGoXdTXM3g0GUq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-20_02,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- bulkscore=0 phishscore=0 suspectscore=0 malwarescore=0 spamscore=0
- priorityscore=1501 impostorscore=0 lowpriorityscore=0 mlxscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502200050
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250218185229.GL4099685@nvidia.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000A6731:EE_|PH7PR12MB6537:EE_
+X-MS-Office365-Filtering-Correlation-Id: d04b840c-62e6-42f8-3303-08dd517e07b6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?5758ZJEftm8fwVsfK1Gn2dnNq/fSlRW8zzQSxQ7HOP0txiw23IyaVbYlLit4?=
+ =?us-ascii?Q?g6bH+G3k0r/O+PKiqJFelUx3PH0v1FWOTTsnbLBO1Ulu/YoGQ0L3owozGyBm?=
+ =?us-ascii?Q?JSPiH/ePqSo9FrdGjolvPiOVibXbSwPTA34ZyOtQMtIFBOkTa3+TpchZX6Cq?=
+ =?us-ascii?Q?k0SNqRRGdij8aPjKt1xEAiw/2cdxo38u4NKuFNmPMUVddFFDurIZcuAnMsXN?=
+ =?us-ascii?Q?N2PAKW325NngwrOXlOYoDl6S3x5UYOCxBp1s+3hdGumUxwHconT5IsFmQfdy?=
+ =?us-ascii?Q?N4IT8yJLTzPg/ux+fzR9LFnPlabmC3pgE1xGvkbj/VRxeXVMIJAfFrKX5Yro?=
+ =?us-ascii?Q?upsL0QUXZncgzp/SvyWe80EL++Csd9v/VoHRfNgctZt17YvOKtmAOHJ+pKRG?=
+ =?us-ascii?Q?MuMLMXT7Zv5uf/eQZkwIapbbTyzFJud6duhcqE7cDvMGB3ob1NXPPi5xx+WS?=
+ =?us-ascii?Q?OXKJIo+dEDqbx8wM//cWtQwYf8RjLa2MOXigcOPAScHK26AXYMoJ04wyOJjQ?=
+ =?us-ascii?Q?NctMMMLdkhVm3nDYSnK3Hc5p842EaAkf83B1pGm4B54JiMb9q5FPRc8Kqyqw?=
+ =?us-ascii?Q?jg6RXeLS04cS03R9VSeclKDo+nkh6IUAlvUCaGoARI+AsZ/43oweaBymntLc?=
+ =?us-ascii?Q?D3I1LgCumEI1sJjoNe285DUeolQGWX+xzslUqzU20s/U80ctzflcUV6dHEKm?=
+ =?us-ascii?Q?nB4OaSwrkzl0x34eO9tTF+f8Tia9JE+pNT9a8VG4VUCDC8VtF+8THz/ql8LR?=
+ =?us-ascii?Q?oSKJsGAo7FdxjQSe9CRnyNNQro8r/WkFoOu1/1Tz64vlgGfdAoaN362e7bYi?=
+ =?us-ascii?Q?XHnJthapHvoRsId2VMk3guL/j2t7NESWNARB1wiZBkuCjVHG71CO3rUeYQWW?=
+ =?us-ascii?Q?ER/l1tHykYwDPrEb2RSN68ferelqiKWEJfeKDLtTkTpU3yjVcRDXuKk2TjdI?=
+ =?us-ascii?Q?+SflfPkumaTpRYmhWaod94l7Q3wcHcKRisuf9tS0TxO4+yoC7ps/CAJ+B5TU?=
+ =?us-ascii?Q?dr2dWsBwZNxaw+yeM4M+jX5/MPoIze+3/wMFx1KawwwO4xtPN6ze8hHE0Lq8?=
+ =?us-ascii?Q?PJ8SxDA6jHmqKRBfvSsdqiH528NQ5wdgLiNZY1y7QxSNt5uhYxUu8wgNjsw1?=
+ =?us-ascii?Q?t5GtLpTdKPedI25PjzxvqNitOBzBsdzBBFG4x4RPuSnLrGBpv6jtop08bdNA?=
+ =?us-ascii?Q?1jQQyrO0UrQzCzHuKr/65Necy5vdxBaUU5nbZtq8EXe2Cn1HFfcftxuHCsRg?=
+ =?us-ascii?Q?H5lbQ/wGTnAs3nx0Q5sDFY+Bn+ShX5X12ZzSDrUxpUX4qlZx28/HFWYvHlSS?=
+ =?us-ascii?Q?eZv3uU3aoFZO9Wv76uBat/8Z7q8bEYLx/LyJpASYtEvmgsZzx1w3R/shMbjP?=
+ =?us-ascii?Q?53bMr+e2Br9vrJPPO+scX+OpUzeItOxFnRwG63RsfAbrIDZw8iN8w/7b8Jka?=
+ =?us-ascii?Q?LBmD5fdq0lBsD5dHZjcrzLQXGYyvubJi7yybc7MBMAGTc6kThrVCaEQ6jVig?=
+ =?us-ascii?Q?8P1orpTAJ0ez6QE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 07:13:09.2182
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d04b840c-62e6-42f8-3303-08dd517e07b6
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000A6731.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6537
 
-
-
-On 2/19/2025 5:32 PM, Dmitry Baryshkov wrote:
-> On Wed, Feb 19, 2025 at 05:08:52PM +0530, Jagadeesh Kona wrote:
->>
->>
->> On 2/18/2025 10:49 PM, Dmitry Baryshkov wrote:
->>> On Tue, Feb 18, 2025 at 03:46:15PM +0000, Bryan O'Donoghue wrote:
->>>> On 18/02/2025 14:26, Jagadeesh Kona wrote:
->>>>> During boot-up, the PLL configuration might be missed even after
->>>>> calling pll_configure() from the clock controller probe. This can
->>>>> happen because the PLL is connected to one or more rails that are
->>>>> turned off, and the current clock controller code cannot enable
->>>>> multiple rails during probe. Consequently, the PLL may be activated
->>>>> with suboptimal settings, causing functional issues.
->>>>>
->>>>> To properly configure the video PLLs in the probe on SM8450, SM8475,
->>>>> SM8550, and SM8650 platforms, the MXC rail must be ON along with MMCX.
->>>>> Therefore, add support to attach multiple power domains to videocc on
->>>>> these platforms.
->>>>>
->>>>> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
->>>>> ---
->>>>>   drivers/clk/qcom/videocc-sm8450.c | 4 ++++
->>>>>   drivers/clk/qcom/videocc-sm8550.c | 4 ++++
->>>>>   2 files changed, 8 insertions(+)
->>>>>
->>>>> diff --git a/drivers/clk/qcom/videocc-sm8450.c b/drivers/clk/qcom/videocc-sm8450.c
->>>>> index f26c7eccb62e7eb8dbd022e2f01fa496eb570b3f..b50a14547336580de88a741f1d33b126e9daa848 100644
->>>>> --- a/drivers/clk/qcom/videocc-sm8450.c
->>>>> +++ b/drivers/clk/qcom/videocc-sm8450.c
->>>>> @@ -437,6 +437,10 @@ static int video_cc_sm8450_probe(struct platform_device *pdev)
->>>>>   	struct regmap *regmap;
->>>>>   	int ret;
->>>>> +	ret = qcom_cc_attach_pds(&pdev->dev, &video_cc_sm8450_desc);
->>>>> +	if (ret)
->>>>> +		return ret;
->>>>> +
->>>>>   	ret = devm_pm_runtime_enable(&pdev->dev);
->>>>>   	if (ret)
->>>>>   		return ret;
->>>>> diff --git a/drivers/clk/qcom/videocc-sm8550.c b/drivers/clk/qcom/videocc-sm8550.c
->>>>> index 7c25a50cfa970dff55d701cb24bc3aa5924ca12d..d4b223d1392f0721afd1b582ed35d5061294079e 100644
->>>>> --- a/drivers/clk/qcom/videocc-sm8550.c
->>>>> +++ b/drivers/clk/qcom/videocc-sm8550.c
->>>>> @@ -542,6 +542,10 @@ static int video_cc_sm8550_probe(struct platform_device *pdev)
->>>>>   	int ret;
->>>>>   	u32 sleep_clk_offset = 0x8140;
->>>>> +	ret = qcom_cc_attach_pds(&pdev->dev, &video_cc_sm8550_desc);
->>>>> +	if (ret)
->>>>> +		return ret;
->>>>> +
->>>>>   	ret = devm_pm_runtime_enable(&pdev->dev);
->>>>>   	if (ret)
->>>>>   		return ret;
->>>>>
->>>>
->>>> What's the difference between doing the attach here or doing it in
->>>> really_probe() ?
->>>
->>> I'd second this. If the domains are to be attached before calling any
->>> other functions, move the call to the qcom_cc_map(), so that all drivers
->>> get all domains attached before configuring PLLs instead of manually
->>> calling the function.
->>>
->>
->> I earlier tried moving the attach PDs call to qcom_cc_map(), but I faced the below issues
->> 1. desc passed to qcom_cc_map() has const qualifier, so updating desc->pd_list
->>    inside qcom_cc_map() is leading to a warning.
+On Tue, Feb 18, 2025 at 02:52:29PM -0400, Jason Gunthorpe wrote:
+> On Tue, Feb 18, 2025 at 06:17:15PM +0000, Pranjal Shrivastava wrote:
 > 
-> And? Can you fix the warning?
+> > > Is MEV available only in nested mode? Otherwise it perhaps makes
+> > > sense to turn it on in all configurations in IOMMUFD paths...
+> > 
+> > I think the arm-smmu-v3's iommufd implementation only supports nested
+> > which could be the reason.
 > 
-
-I can remove the const qualifier in qcom_cc_map() prototype to fix this, but that requires changes
-in many other clock drivers also since they are currently passing const descriptor to qcom_cc_map().
-So would like to keep the qcom_cc_map() unchanged.
-
->> 2. If we attach the PDs after calling get_sync() on device, I observed
->>    that PDS are not getting enabled during probe. Currently qcom_cc_map()
->>    is called after get_sync() is already called on device.
+> I think starting with MEV in this limited case is reasonable.
 > 
-> Move PM handling into qcom_cc_map(). Then together with the Bryan's
-> proposal most of the probe() functions can just call qcom_cc_probe()
-> 
+> I agree it makes sense to always turn it on from a production
+> perspective..
 
-I agree with this approach to move entire PM handling to qcom_cc_map() but one concern is const
-qualifier mentioned above and it also enables runtime PM for clock controllers that doesn't need
-any runtime PM(e.g:- GCC/GPUCC). That may not cause any issue but we also need to see from where
-we need to call pm_runtime_put().
+Then, I will just add a line to the commit log:
+"In the future, we might want to enable the MEV for non-nested cases too
+ such as domain->type == IOMMU_DOMAIN_UNMANAGED or even IOMMU_DOMAIN_DMA."
 
-We may have to add pm_runtime_put() at the end of both qcom_cc_probe() and qcom_cc_really_probe()
-to move the device back to suspend after probe. But ideally runtime PM is not required for most
-clock controllers except MMCC's that have MMCX dependency. Please let me know your thoughts on this.
-
-Thanks,
-Jagadeesh
-
->>
->> Probably, we can add a new function qcom_cc_attach_pds_map() where we can
->> attach PDs and call qcom_cc_map() inside it. We can then invoke this new
->> function at the start of probe before get_sync(). I will post this change
->> in next version if this aligns with your thoughts.
->>
->> Thanks,
->> Jagadeesh
-> 
+Thanks
+Nicolin
