@@ -1,129 +1,155 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2120.outbound.protection.outlook.com [40.107.117.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2AFB1F1508
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 13:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740056598; cv=none; b=nt35r9ZGQwp8poXulNPrSNuhWJDYIzi85ZQ0rQUMSFsg0rGRpCdevO7tB5SaWWeGW/olm5qem0rr60MqCwms5WXo1V/Oal550eqx48ze2jDCVmMGUPgLnp8PR3svGqTiet9p1RqNYg82aLNC1XsE1oejIPxFW7ocToccikWjrCI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740056598; c=relaxed/simple;
-	bh=YDHwi4ZX5NpJ4uSkg1+T6EW70u8iGD5w+2zjSD2xUS0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YwyTB0tMRbw7NFrv9PIdOc7QDL8XBBchSKjNq5+SV3SFR/FKXoxpBFez/9OYTL7ZW5U99XLuSjx1S1Bg/+glYCZVvpXliD2TPZjajYaA1GkSFH6pNNnsMCX8DUze9bRH8wVx5PwLT8nVMdB7pAn05hoS/zkXC8avGVdWua5rq2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=iub5bwes; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8E11F5845;
+	Thu, 20 Feb 2025 13:03:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.120
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740056629; cv=fail; b=m859WComPxhpNlRAa+2cu4acdjL927DrFrDhoptNlM1ocZ+Ck1TLxeQAb2g9dvjT58ZG4Fkw9iu+M5BB50nJfb+kA/h+pkExlzfp6gNzSJwWZAmd80V9ce0n35BKzaNkUzIp/6noLewUdH1CuJfG2WK+hmLWPs06sYXClyuDvT8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740056629; c=relaxed/simple;
+	bh=Qfo+EOtmzS34sT4ACPnELe1104OurewLoEawCxinmr8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rloJ51SKbQjR5wSWcr0RllqSOpCH8UAcvxDEWGfuEff260ynaVlFimHtebIjnSrvbWmE/6Uat/7ggQi8l1uA78SXJcrI+15MRzyJMVIS4F9637ICtZjyecl+oQEncm/L40PNxSY7ir26BFU6C3Jk22cPdCygBLFge/lUftVijkQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; dkim=pass (2048-bit key) header.d=cixtech.com header.i=@cixtech.com header.b=FjYK8ioM; arc=fail smtp.client-ip=40.107.117.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="iub5bwes"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-38f265c6cb0so460025f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 05:03:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1740056593; x=1740661393; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PYNHFwLBPMiuE6a0KUHaSz0Gjwcyu1dBkTLSZJgvMTY=;
-        b=iub5bwesx4FCETIe3OW6PcioSXL7eq+8khnswL+YH0xCodZ4X5D9jltrRpgDKzBEFw
-         3NZ3GV/s+kR0U01pktpcyzLrEWkAY75RdAm6V9wZXFW54D0Sn6tZePdSHwEEonah658B
-         1ioeNbGw4/4paNwXmbQ+z6c7jYIumgkPxU2uxIOmxHSJfxagACjtARaOwssLfQHNd02w
-         74f4orE1c1cy3XzI8kXYa6H1CBNROjcK9/seLJXfvO5cYiupUWuAWU9ciXCvBzx2J5Au
-         1Vb4oPaXUxiy1pkUyFcIrBpnzEHJW9a/0rXp36RDbGJ+pEbitZUQ4s0OvecL9VY+QGU7
-         nW2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740056593; x=1740661393;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PYNHFwLBPMiuE6a0KUHaSz0Gjwcyu1dBkTLSZJgvMTY=;
-        b=V/WWAX2sGKcLCDPGLdMLrRRGW0GXK69Z0q58OUQVEGT7KMAu+cjp2CtTO3kPtr/6dw
-         p4jPHvsi9J5xhSu8hWuGZml8iuI4DsLrSzhlIbZmMuyn4Zm8srekELdZvxNYZEW/9pPG
-         9wQ4vc9modJT4vmASpkzISpgMLG/jzv41P5AaWRbEArxXnAshRKPnnf7FQhoxDbG8o3R
-         hPVGUw6TDKdzK5V7nkwXfs5X4XCIDOtR83uMK9yjOk0r1uESLU3EVks3LMowF4j4tiF4
-         RC60kLWHju3lpJNaBc0HdXvDlqN5x2Si3HcL2no2j8iv2RhSJwW/S3SDRlyHuVsEZq2H
-         MHqA==
-X-Forwarded-Encrypted: i=1; AJvYcCXb9vy47JhugoAP/KCPTUEYYwItdOl1oZ8oQWrMPthkzlKjB09i4R5GdcEUpgUdaf2pt0Y5qPNsI1eu3MU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzycpYCgyw+aRgH8CPuVKxuiLU/iqfe2S7TFDcXwONsG0RcrOg
-	wN6uS0Ab9EwYdHX02be3cktFbStEnHOJWPB3wzCtwyCavGDXr+yKMs8r0J6ORbI=
-X-Gm-Gg: ASbGnctFK8VsLc4U4wTL0B8k2cIVnymIM9XxkP2Vq0UU55ixWdkZZO+qGiIQSHCbJjR
-	KLm3v3Bb8rEb4XMKJva33buLyx/1CCpA7v3+FZz9wmPT5AIfiNEJUKbTzDbZjHfLI+TqYNfNjql
-	JzLVbKPsMMPJTvhi7EbiWzmgTDyqq5Vnxh02K09atttTiy1vU17HSVBtc8GrIVjojAFkz5FcXcS
-	ifMDN9okLX1xOPl99sLOStqVAqY9t0twRuM3+IaVXU+fgfA9U/Y884LBnu5MFuQVuJa7qdEOjSF
-	pVwmN1keyor1FhBexntmPs6KQ6XvBE7WFrgCRTu1S2KHKnwbOfzeLonlD3gieYg=
-X-Google-Smtp-Source: AGHT+IE+oBz+Bsv3JgfnD0JtZwzb1aLQt0+zm+GoaoUPVnk9517cD6yzlHLB/acLlXqZ8+4BcP2iaw==
-X-Received: by 2002:a05:6000:1f87:b0:38f:3073:708 with SMTP id ffacd0b85a97d-38f33f11888mr20574908f8f.3.1740056592485;
-        Thu, 20 Feb 2025 05:03:12 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:e50:3860:b630:86ab:c45b:5c2f? ([2a01:e0a:e50:3860:b630:86ab:c45b:5c2f])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f561bee3esm5976564f8f.21.2025.02.20.05.03.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2025 05:03:11 -0800 (PST)
-Message-ID: <c77e60ea-0a5d-4e27-bdca-e5b4f5904781@baylibre.com>
-Date: Thu, 20 Feb 2025 14:03:11 +0100
+	dkim=pass (2048-bit key) header.d=cixtech.com header.i=@cixtech.com header.b="FjYK8ioM"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=n/aiOQEGDPpmrecCyM2DbJfn0CdFA/EsYXCXPdtoMQ+tsaSKOZJ7/ZULluw0i+OQnRaBZCEStnp+vjT/Tav3p3DHo7eb/4EZoJ8THUhEOq+Y147cPsyQ5P3SNNTBXwUc9Cnx2LkrdbgVA/sAe07fgWdz2+dja7GEjUZvPdjF6R4jeVwvqeKp68HR95kWebSaiwzzMv1llreNWsAP7Gb1h91FLlFFPwZhxram0dFNgjerFkGsz0vnFikZFBZjUr3Gv7FKZn8cGdVL41QQUqJlz0igZPOE2d14EYE0AUBQH/L122yiieqglrbFNxQjFUfPbymJ7Qs/jk11RbvYrIKv6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rXGj8fOL7mzFSgM5TT4hmy45kIm0wjY4xEE1lcpyIfk=;
+ b=ytdvXqYimgE4l8rFDcp0z5Hyn96QuiejH5fZn1I439gtdcvJadNa/XqHZdoQV4qQsoxNH1DNILgXyK5py4yLwef++S8htBhalHivscGaJjxFakJqbCFTPnLz6kMDfF/HCrE7+Fb4oAosMU7BfobFON1MqHiLzsEZCM5OOqIii1xPHlSnwJnoPmEqgW/9DcZ0evXEjXol5qU5dSHobWXligr4HNYVlk3kPV2XhJ/QmVC969Uu/w/PQi5SkqwWlfIG5/b58ajuEgrSlWvP7aKCSLrpOuykhkPb1Yx0SkqnnhUYY+zrFSpYfIL7qTH+i/Yjx4XzHkUv2Y/Xjw16xlSgnA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cixtech.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rXGj8fOL7mzFSgM5TT4hmy45kIm0wjY4xEE1lcpyIfk=;
+ b=FjYK8ioMf8z8RzLSzywuj9f6lH5/MXH+OQGcp+LjGZDqzOXPgLDMxF/fJthhkBouvYRZpLrwdx/ig4uHJ8GNwUDyiqPwdpnD3gU4+avaKMtVG6yjkU69QwDhx5LaObX+VLerWHGzuelqqIbtt0UTYCQd0AJjDn/ncINOAD8lwdJMv2sPolPCQoisbxzba0qjMkw0ibMkF9IItEBntmGmNzFR81v9w0aWUZY99fpow44qdWtf69TUnWbGCzaGBdDuvg+T1A//3s4ZWNdRsrWMb+mqu5JxKMCZWL031zQezOtpJz7Nb13+161gqMfY0b8VNvwE/aBNi0fE84PXpDrUGg==
+Received: from SG2PR01CA0174.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:28::30) by KL1PR0601MB5512.apcprd06.prod.outlook.com
+ (2603:1096:820:bc::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.14; Thu, 20 Feb
+ 2025 13:03:44 +0000
+Received: from SG2PEPF000B66CA.apcprd03.prod.outlook.com
+ (2603:1096:4:28:cafe::d6) by SG2PR01CA0174.outlook.office365.com
+ (2603:1096:4:28::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8158.24 via Frontend Transport; Thu,
+ 20 Feb 2025 13:03:44 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ SG2PEPF000B66CA.mail.protection.outlook.com (10.167.240.22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8466.11 via Frontend Transport; Thu, 20 Feb 2025 13:03:43 +0000
+Received: from nchen-desktop (unknown [172.16.64.25])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id C2141512A743;
+	Thu, 20 Feb 2025 21:03:42 +0800 (CST)
+Date: Thu, 20 Feb 2025 21:03:41 +0800
+From: Peter Chen <peter.chen@cixtech.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
+	Fugang Duan <fugang.duan@cixtech.com>
+Subject: Re: [PATCH 4/6] arm64: Kconfig: add ARCH_CIX for cix silicons
+Message-ID: <Z7coLVPh7TkQWYU_@nchen-desktop>
+References: <20250220084020.628704-1-peter.chen@cixtech.com>
+ <20250220084020.628704-5-peter.chen@cixtech.com>
+ <22142d49-b6ba-43d3-aefe-ae64fd867e8e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] firmware: config: ti-sci: Default set to ARCH_K3 for the
- ti sci driver
-To: Nishanth Menon <nm@ti.com>
-Cc: Tero Kristo <kristo@kernel.org>, Andrew Davis <afd@ti.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250218-ti-firmware-v1-1-7a23aacfb9d3@baylibre.com>
- <20250218140537.wfagt3spwkcmc3uv@cushy>
-Content-Language: en-US
-From: Guillaume La Roque <glaroque@baylibre.com>
-In-Reply-To: <20250218140537.wfagt3spwkcmc3uv@cushy>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <22142d49-b6ba-43d3-aefe-ae64fd867e8e@kernel.org>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CA:EE_|KL1PR0601MB5512:EE_
+X-MS-Office365-Filtering-Correlation-Id: 84baf534-e4bb-4c73-6dc0-08dd51af0125
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?C2HHjMM2nmel0Xs7H8nWTpJ0bW2uQTHtOdA05/o7ZXsfz6aWxc9VqgR4JBrY?=
+ =?us-ascii?Q?g7B0ixtHN7d1/MPl/07ZnBhYx/0cgkZgmA0MG/l9w0I/CN2fDKdkuyRGKDzW?=
+ =?us-ascii?Q?yvlCMWnmmogFgbvzRe6Kv1pzTUidRZ6XI64lPvGbYa4I34jOx0UcNGD6B1+e?=
+ =?us-ascii?Q?lQQQBMfBHMWZQBlc8Qr/VfFIJC0nwQ2T254GUI1JFmb4nFE0JNk1ZygQuW3p?=
+ =?us-ascii?Q?yQVVdpVPF3vUo2pJdtUtBqaLkFDoxkNh71sjVj95bk49k/02Vpl8i74qwx8N?=
+ =?us-ascii?Q?UMecCu0OB4Wx9CZm1wIlay3skf8L+YCGI3BYhGkdc5v+1Z35YZat/v1xXiFO?=
+ =?us-ascii?Q?maJ5B8uOFV3L2PhSRZdQP9msDfNOYy/o8d7UKf4Nkt3Xl3XIvH34ccpfKjTY?=
+ =?us-ascii?Q?9u4WRqFRGWA4OsjK8n1jhLtmHWXAL0RsrBQ4tnyWYljfVwSw2182rT9LOBbK?=
+ =?us-ascii?Q?JO53BYv94/MiAqi07fH0NxkB0u6/e61spoPoFHccISw7gSF50SvqXJjMIVBd?=
+ =?us-ascii?Q?sMd25c+9LFfp9veQe+BSWLIXO5VakKGUcHbqnFrJMjrPabKS7o2JJdf3Nm2f?=
+ =?us-ascii?Q?o6yynBecZsH/NmbZHnvxb94R8KMtKr+lfTP9BE92SJ4KNhrhWmfjQrW87rmx?=
+ =?us-ascii?Q?BH/fD+nznW68Ze5zAqJO1ckYl7Wc2gdg0HnTeKSP3fPyL/s2bmhANBEiZdx4?=
+ =?us-ascii?Q?pyf2eLc0VzJhV6VkFUxaBs3hB15rIyPrvrO7Z2LAQ8huSD2dLzz7J5/PqyrZ?=
+ =?us-ascii?Q?rl5t6G82bzw1u/ASFS0XSxEi4GdqLN1D2GHc1U+o1kqbEtXfMZqMtMhpytAF?=
+ =?us-ascii?Q?fhYk0Tz+VTHIotgMy6gwXybgPlfb+0HuC04RKfcqjuoNOUH/Q3ioq6SQn4pY?=
+ =?us-ascii?Q?yVkfO250N2YgmYI+hUbt5MAsOgzyhXrjc1eb5v1e2XR4FOGRFtQDGBhPnO/i?=
+ =?us-ascii?Q?UaI572l43xbV7NthL0o/fjKqEnlAI7i5PVg9IptpVDqXPMd85lLxRU/64nSg?=
+ =?us-ascii?Q?1GuPyBxCXcNt40pBUTv49I1MQ6ni2rlvLYHSVLYUhQua8yypmAKVetOUq2xq?=
+ =?us-ascii?Q?gcCdx2gfdYQ/4nA9MV2NM9SAaypXKAmoRHZT8FvsNOgKu+qOxz1/1tFBkKf1?=
+ =?us-ascii?Q?VA4pUMI048U+1J4mNhvatxnyroIlZsqW8LAhWJnV88iSRf0dHlN9F6N5XkoT?=
+ =?us-ascii?Q?BF8mE7fDFJDkfd4SWpw935Ue1csV22FB5U1z5ArC9L19zF3AxEGy8iV+V30S?=
+ =?us-ascii?Q?eB9ibpZQkpKtk6NTWwlPIXMxEXpdhCr6zJC7dZFtvtchKn09Gw2xXFNzhWVt?=
+ =?us-ascii?Q?Be8DacLuoBWXSMfiI9XdliKwWuV+EBJ63TfpwyFihKilTeKP10yjO/wev5ec?=
+ =?us-ascii?Q?Lpg3fuA/2CLstsPnBB/UbhR+4SelQP4+W5Xccz0Xl4+D5gtscuk5+ZEXoyd4?=
+ =?us-ascii?Q?nKHyMdU5+Ynx+nlNYRMng8COE2CK9kaD9DLTvvJ81OjiIIMm97/8GYJmOKrQ?=
+ =?us-ascii?Q?UmZNqniTJvTI/d0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700013);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 13:03:43.4960
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 84baf534-e4bb-4c73-6dc0-08dd51af0125
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource: SG2PEPF000B66CA.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR0601MB5512
 
-Le 18/02/2025 à 15:05, Nishanth Menon a écrit :
-> On 13:57-20250218, Guillaume La Roque wrote:
->> Defaulting the build to ARCH_K3 for the TI SCI driver.
->>
->> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
->> ---
->> Link to comment done on last serie [1] we come back on first version of
->> series[2] to not use imply but set deps on ARCH_K3 in driver directly.
->> An other patch will be sent to update Kconfig.platform when this patch
->> is merged.
-> It would be good to expand the commit message providing the rationale
-> for this.
+On 25-02-20 13:18:38, Krzysztof Kozlowski wrote:
+> On 20/02/2025 09:40, Peter Chen wrote:
+> > From: Fugang Duan <fugang.duan@cixtech.com>
+> >
+> > Add ARCH_CIX for CIX SoC series support.
+> >
+> > Signed-off-by: Fugang Duan <fugang.duan@cixtech.com>
+> > Signed-off-by: Peter Chen <peter.chen@cixtech.com>
+> > ---
+> >  arch/arm64/Kconfig.platforms | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> > index 02f9248f7c84..977b61894cbc 100644
+> > --- a/arch/arm64/Kconfig.platforms
+> > +++ b/arch/arm64/Kconfig.platforms
+> > @@ -399,4 +399,10 @@ config ARCH_ZYNQMP
+> >       help
+> >         This enables support for Xilinx ZynqMP Family
+> >
+> > +config ARCH_CIX
+> C is not after Z... keep sane order.
+> 
 
+Will change, thanks.
 
-i will do , thanks for review
-
-
-Guillaume
-
->
->> [1] https://lore.kernel.org/all/20250123-timodulemailboxsci-v4-1-b1a31b56f162@baylibre.com/
->> [2] https://lore.kernel.org/all/20221122202245.449198-4-nfrayer@baylibre.com/
->> ---
->>   drivers/firmware/Kconfig | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
->> index 9f35f69e0f9e..109abe063093 100644
->> --- a/drivers/firmware/Kconfig
->> +++ b/drivers/firmware/Kconfig
->> @@ -215,6 +215,7 @@ config SYSFB_SIMPLEFB
->>   config TI_SCI_PROTOCOL
->>   	tristate "TI System Control Interface (TISCI) Message Protocol"
->>   	depends on TI_MESSAGE_MANAGER
->> +	default ARCH_K3
->>   	help
->>   	  TI System Control Interface (TISCI) Message Protocol is used to manage
->>   	  compute systems such as ARM, DSP etc with the system controller in
->>
->> ---
->> base-commit: 2408a807bfc3f738850ef5ad5e3fd59d66168996
->> change-id: 20250218-ti-firmware-1b7c7f485e5a
->>
->> Best regards,
->> -- 
->> Guillaume La Roque <glaroque@baylibre.com>
->>
-
+Regards,
+Peter
