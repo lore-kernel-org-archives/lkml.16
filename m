@@ -1,109 +1,182 @@
-Received: from smtp.smtpout.orange.fr (smtp-30.smtpout.orange.fr [80.12.242.30])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A357F339A8;
-	Thu, 20 Feb 2025 07:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED611339A8
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 07:21:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740036045; cv=none; b=ZIxacW2O6MAD9tQy8NcEjGO6zGkJLhoqIRlzZgu4W6W939M6Cp1jwcBX3VmyjOVLOPDNksw79IPZGaAgXaz8pUqHQ4Hwsnx8b0/g3XMmrfjRs0K82Ft794ejkBwNhf0NCZIx7/6qNOW14xBscrbLyyKp7nOrBcbh+rVFxY6tsdc=
+	t=1740036073; cv=none; b=NgAK4KL4bgN5EFHJqwDmjp0uyK3xd4j62+G5MIogP6Uoz08KbRs27zjNvEmHlhzODPVInnUudluj0wlhf9LAdPAd0A5iC9XxySW6y/7g8uXmA/0IPnT6bBhmj+7dpZnS7hLTRH0tnAbNInEJKV1GTGdXq9Z6D0jPX02Lez+UOik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740036045; c=relaxed/simple;
-	bh=6/f8W238BNZamCUmwGGc0unXgt1zsGiS4dRwpAbVjEM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GePJdTXTzRLBpbdBjhN9k48r3+yNH/1WCqVAfX1RQVQp+vdlCHaIGM8/yyncCOMgbUjV/iDUEs1fzYNBdrHOzhN5J431nYH2XojTIY9J5xE7+bi8l+2bVX4UHSk52OFwAKw8KpqbapQpZgAs/yuEc/4JCw4b6iwG8MUkipWYOow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=OC/HkBxV; arc=none smtp.client-ip=80.12.242.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1740036073; c=relaxed/simple;
+	bh=Bym1Bs55CLhC7Xty+/5TA4tLN9q86olDovzUIpCQInI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bRKO78jJh2Y5rYCoRPOJJ7Ww4A2XVf9BqYGRIFJNv5FiTfDx6VM+J8qTWTZnqc4mFissf0kf3nnDqBBB+2bzFrWaxWZv5Z5x1ES6FHqJE/c+hoDcyd1QObFAit16ygdeXBDP9+71mMd84Yq8deEm7q9m1N7ktYOvaQhtrCRbC7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i6v6HZ44; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="OC/HkBxV"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id l0iotu6FD5obUl0istOkR1; Thu, 20 Feb 2025 08:11:50 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1740035510;
-	bh=OqTdwTr1/cWlHB1WJoanOZERiAU7KnG/HsvdWmyLIeI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=OC/HkBxVmMAMd7krYxc7PX+WAz01oESrabJBgQgtnL8RPFqj3JsQJHVeqCJECBq5P
-	 A7AK+SngG2sESDLv+oB/0WPkucICG0NtaicdoqpeVm3aM+D9ZM0QniMyL5V2b+3H8g
-	 tMPPGVvdOX4Owr5NqmJrdPexEKh3S/22nVXDq7Kr66PmHsgVs+ep9YvyxiQNLZxuqa
-	 3lyGU+kLmSY2ii+vccwOtteOXpwYYl7UG30KGhv1GeIK1IDNftWaHY63Jj0q766TVs
-	 I2+YoGpYO1vXC4AjH9W/ANEpQyp7Pk7v9ANYrtb73jXxwAXt4mjD3R7TwWG2l/VSDX
-	 hYaLfAaoPa+BQ==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Thu, 20 Feb 2025 08:11:50 +0100
-X-ME-IP: 90.11.132.44
-Message-ID: <4cbdb517-2d4b-4f73-9822-a9c4ec794b54@wanadoo.fr>
-Date: Thu, 20 Feb 2025 08:11:46 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i6v6HZ44"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2f42992f608so990471a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 23:21:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740036071; x=1740640871; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=UBsm/I+a54tra3a5iBMTEq5y0nF/ygepot86NvUBme4=;
+        b=i6v6HZ44J1CR8OJKLqaxN5nbWdOhodI0td5GtYNjKoUKjEFwLSHM6BRoZpQHekJ6t6
+         jlRR5OiHNivcgCqWMxfwTADp/9HQW63QCb3oa1+2I++yUeBkw/WbZZRMOtixxnV/bBo0
+         cafewmhZ0O6JD1MvfFF9r5fiVJw3OkyYAq4y6JNP4JmWxHb/zkb/RKvNjGocccNVO5Pw
+         OEUajOt7fJWZkte7rNj5q6bmOcX9jriMs/3betSEESgmZE15qWcFw+DiFEShmzoD5P8T
+         5wuOVEc9oG0Uq73X6QwYA1AZomT7pK8+3LFZr6KWSoP3vTNkxnNQnA9Tp3fv6+pyQuG3
+         Vlnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740036071; x=1740640871;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UBsm/I+a54tra3a5iBMTEq5y0nF/ygepot86NvUBme4=;
+        b=RjLTexkd5+nSRyxSYOun+4AEUmq84nvTUMJnoPbdcOev2IXL8fnJ/BkJ8idBS6EN6r
+         K+ciw722NYp8rVFnX4sC9Nn2qSUhgc406zGDxmVci51i+R5khwTHmacAA9wsA/kwYhGb
+         ufqrQ5xZ89kJK7QJaHrrav2vmhqRAJpKVxDV+f6byGUVCB1E6O7sSUXYuN1qgi7Os9sp
+         ERfCDviXI8nFPrtpDM2TpIwAooSZEfoBKHPAAW09Q22iSE5KRnRaXDLHTLeuY+ANDKdK
+         g2WqtERucWgOs2cCSDWzcYGX1qVVunIm+cItyUqAVK+tRNEIHqLNPz8qymiVJyqwm2pP
+         niWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVUBrK3Wi168x+OJ9+YBW/ul06AT2LG9oxTNxPGSn9JaBuOBZ5Xy6rWgt79bip2nsOLi3SFA5YQzQO3X18=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpWdLJpUqRzBoMRPuM4A/XSC6RvqscSJYM6CVPQUXlV2fAmhFA
+	EDJYC6MlzDP2H78zMTXr1lOozSjrSPeAPTKrKZW6kt17PYsGK6AmnBBQ+hp6Ug==
+X-Gm-Gg: ASbGncvJ2W3vNthxIBUlbDncMyUWnkeeWg/DB5v2u+S0tT4oCVNHXJY0yuKmZ6tcFW5
+	rWegVuBNFly9PjgEj2aLIUsmYQf0oRFHteuLhmabnB/Q467ulaGt4shzN1YHFcupfjrOBGhay5C
+	UHjguLxSyY/8pXZB/fUebzpeRbY2/0ork/T2QWzSHMN/+m3j0nvphy6goXoOCG08D376tOYnP3g
+	jGAGM4n33sLEEqMN3ag9SnHjHzLbw51JDXRQmHtz5STXiJSGAq6oEM63sgBOfREWaLDkGyeuUXH
+	CGNq/dMypHKU8ug3NIWzgg4QLg==
+X-Google-Smtp-Source: AGHT+IGo13eihemjNhRVbN/TgufcZyz4jkdCJauWtThpeVP7VjKn/5bfJrC9AbtM3vE+LR7Mk6+u1A==
+X-Received: by 2002:a17:90b:3e8a:b0:2ee:4b8f:a5b1 with SMTP id 98e67ed59e1d1-2fc41045178mr34700119a91.24.1740036071344;
+        Wed, 19 Feb 2025 23:21:11 -0800 (PST)
+Received: from thinkpad ([120.60.70.244])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fc0ca14c04sm13594456a91.33.2025.02.19.23.21.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Feb 2025 23:21:11 -0800 (PST)
+Date: Thu, 20 Feb 2025 12:51:05 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Mrinmay Sarkar <quic_msarkar@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/6] dt-bindings: PCI: qcom-ep: add SAR2130P compatible
+Message-ID: <20250220072105.b3cd4w44pox7ko57@thinkpad>
+References: <20250217-sar2130p-pci-v1-0-94b20ec70a14@linaro.org>
+ <20250217-sar2130p-pci-v1-3-94b20ec70a14@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] btrfs: zoned: Remove some code duplication
-To: Naohiro Aota <Naohiro.Aota@wdc.com>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
- "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>
-References: <74072f83285f96aba98add7d24c9f944d22a721b.1739974151.git.christophe.jaillet@wanadoo.fr>
- <D7X1HAEVN3TO.Z7JG9SRUODCE@wdc.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <D7X1HAEVN3TO.Z7JG9SRUODCE@wdc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250217-sar2130p-pci-v1-3-94b20ec70a14@linaro.org>
 
-Le 20/02/2025 à 06:55, Naohiro Aota a écrit :
-> On Wed Feb 19, 2025 at 11:10 PM JST, Christophe JAILLET wrote:
->> This code snippet is written twice in row, so remove one of them.
->>
->> This was apparently added by accident in commit efe28fcf2e47 ("btrfs:
->> handle unexpected parent block offset in btrfs_alloc_tree_block()")
->>
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->> ---
->>   fs/btrfs/zoned.c | 9 ---------
->>   1 file changed, 9 deletions(-)
->>
->> diff --git a/fs/btrfs/zoned.c b/fs/btrfs/zoned.c
->> index b5b9d16664a8..6c4534316aad 100644
->> --- a/fs/btrfs/zoned.c
->> +++ b/fs/btrfs/zoned.c
->> @@ -1663,15 +1663,6 @@ int btrfs_load_block_group_zone_info(struct btrfs_block_group *cache, bool new)
->>   	}
->>   
->>   out:
->> -	/* Reject non SINGLE data profiles without RST */
->> -	if ((map->type & BTRFS_BLOCK_GROUP_DATA) &&
->> -	    (map->type & BTRFS_BLOCK_GROUP_PROFILE_MASK) &&
->> -	    !fs_info->stripe_root) {
->> -		btrfs_err(fs_info, "zoned: data %s needs raid-stripe-tree",
->> -			  btrfs_bg_type_to_raid_name(map->type));
->> -		return -EINVAL;
->> -	}
->> -
->>   	/* Reject non SINGLE data profiles without RST. */
->>   	if ((map->type & BTRFS_BLOCK_GROUP_DATA) &&
->>   	    (map->type & BTRFS_BLOCK_GROUP_PROFILE_MASK) &&
+On Mon, Feb 17, 2025 at 08:56:15PM +0200, Dmitry Baryshkov wrote:
+> Add support for using the PCI controller in the endpoint mode on the
+> SAR2130P platform.
 > 
-> Thanks, but which repository/branch are you working with? I cannot
-> find the duplicated lines in btrfs/for-next, linus/master, nor
-> linux-stable. Also, the pointed commit seems wrong too.
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Sorry for the lack of context.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-This is based on linux-next. In my case -next-20250219
+- Mani
 
-This can be seen at :
-  
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/fs/btrfs/zoned.c?id=efe28fcf2e47aa5142bff2c284ea7337b40901e8#n1666
+> ---
+>  .../devicetree/bindings/pci/qcom,pcie-ep.yaml      | 44 +++++++++++++++++++++-
+>  1 file changed, 42 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> index 460191fc4ff1b64206bce89e15ce38e59c112ba6..6e516589f0edb4dfec78f9ff5493c06ee25418f0 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
+> @@ -14,6 +14,7 @@ properties:
+>      oneOf:
+>        - enum:
+>            - qcom,sa8775p-pcie-ep
+> +          - qcom,sar2130p-pcie-ep
+>            - qcom,sdx55-pcie-ep
+>            - qcom,sm8450-pcie-ep
+>        - items:
+> @@ -44,11 +45,11 @@ properties:
+>  
+>    clocks:
+>      minItems: 5
+> -    maxItems: 8
+> +    maxItems: 9
+>  
+>    clock-names:
+>      minItems: 5
+> -    maxItems: 8
+> +    maxItems: 9
+>  
+>    qcom,perst-regs:
+>      description: Reference to a syscon representing TCSR followed by the two
+> @@ -129,6 +130,45 @@ required:
+>  
+>  allOf:
+>    - $ref: pci-ep.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - qcom,sar2130p-pcie-ep
+> +    then:
+> +      properties:
+> +        reg:
+> +          maxItems: 7
+> +        reg-names:
+> +          maxItems: 7
+> +        clocks:
+> +          items:
+> +            - description: PCIe Auxiliary clock
+> +            - description: PCIe CFG AHB clock
+> +            - description: PCIe Master AXI clock
+> +            - description: PCIe Slave AXI clock
+> +            - description: PCIe Slave Q2A AXI clock
+> +            - description: PCIe DDRSS SF TBU clock
+> +            - description: PCIe AGGRE NOC AXI clock
+> +            - description: PCIe CFG NOC AXI clock
+> +            - description: PCIe QMIP AHB clock
+> +        clock-names:
+> +          items:
+> +            - const: aux
+> +            - const: cfg
+> +            - const: bus_master
+> +            - const: bus_slave
+> +            - const: slave_q2a
+> +            - const: ddrss_sf_tbu
+> +            - const: aggre_noc_axi
+> +            - const: cnoc_sf_axi
+> +            - const: qmip_pcie_ahb
+> +        interrupts:
+> +          maxItems: 3
+> +        interrupt-names:
+> +          maxItems: 3
+> +
+>    - if:
+>        properties:
+>          compatible:
+> 
+> -- 
+> 2.39.5
+> 
 
-The commit Id is the one given at :
-  
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/fs/btrfs/zoned.c?id=efe28fcf2e47aa5142bff2c284ea7337b40901e8
-
-
-CJ
+-- 
+மணிவண்ணன் சதாசிவம்
