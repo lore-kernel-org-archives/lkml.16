@@ -1,226 +1,505 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802BA1B0F1E
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 01:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740014470; cv=fail; b=bO8UZL4c3ZaJQiUeCwt4iy6CTwfWyZv74Vzp8tOxMDS3xgzhhiIC6bHpNnHh/m/uKFX7rWftFU5op1ISJ1gNiU322bBcriXPaXLMoztPVWlU5k1BIggaz/3nV2B6UfPjpqLvhFdFq5GThKoQsqAGdnhZOwht4DnBn57sTnhyMt8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740014470; c=relaxed/simple;
-	bh=pFixP8RyNpoKR7JdLMhNy6FTKbB8tBN5xxnG7p2yC+w=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=LS6VxWu/XJ9mmcbhl5ripSPc5k8yAYQLGfY7h3vE49IP72dHWf7EAcxxmMscAco2DPCwTFpbWL3P9/ZNIt/RAOEnexzGV4Ea/OOKh6L3LbT+W0B68syokYN859hewBy027IaoNj2uTuSM6dSJ+FRZX88M7VVeDskd36Ykab4UGY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jO8iHBV/; arc=fail smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30200191F79
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 01:21:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740014478; cv=none; b=uu5T6uElXhV7P9YpbMlpCZf4ZF6bL9ss8X3XroGCIQt25fPOMmhSMfg4et+zhrQITKHxBR5iEcb99wD3z2O9J4PXGBsNh4m851G6dfYa6o3ZnqvwUNltaBhvjoRA4FFDbo8M1EUrLMbgcSwffCXURUi3QElRVjAj7j1XdZH7AZ4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740014478; c=relaxed/simple;
+	bh=urWFTuG+wRZOLclEMwumKQDTBnPNE1NlLYSAEDQhxtY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ZqN19SeZq5OzwwYICc3Go3LHq9utpuaXEuHW/jqMYUh8HtbXIPntmVJ3zr/Ww5UGduMUd8k2n71H8OIbjRD4y5WCRiwYiNJZs4tX96Vr6viW5t8XvzVlrb1tqLMTgT26FB44V0MLyxABRKNVX3bYGfw1CKp1h0aAGio6hxtKOew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yepeilin.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eG3N69OT; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yepeilin.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jO8iHBV/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740014469; x=1771550469;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=pFixP8RyNpoKR7JdLMhNy6FTKbB8tBN5xxnG7p2yC+w=;
-  b=jO8iHBV/dpk+sbP1BH8DJEPz6AqujBEwGY5QLnf9rGE5jb2BOQbRi2Ab
-   HScZhGw8oSyB2e+Ml+GNE4E2z8pcPpAayX4+9sHXKelkC4oavATz7oyOs
-   FR39nFpVdi5Yk31QJHwjGTLNYKq9PRpnI6dXJjEpsKBYoBbvgBSq20GD8
-   L8ovpwjAeb7vMVbAKQ6zh6kQJl/fkIPWxR0hVHeoAqYfHIeMvCjDt7jNO
-   1JYDKaWbyD5hp2spdhalH99mIdKlPzw6uZ0U3dnw5Rk3tKdE1l9VCCXwx
-   05qEkspYMumuddLoS3wmDTa6WlUAqW+jjzTSWt1c2Hev4+iCXHCWV4aLL
-   g==;
-X-CSE-ConnectionGUID: E+gQkp20SFmmRnBGsWm2Xg==
-X-CSE-MsgGUID: /QgODDthTTyvHEaoYFwJ2w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11350"; a="41036017"
-X-IronPort-AV: E=Sophos;i="6.13,300,1732608000"; 
-   d="scan'208";a="41036017"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 17:21:08 -0800
-X-CSE-ConnectionGUID: LPy7IGBdSXG2WPcI9TYOpw==
-X-CSE-MsgGUID: 9fZCxop3S46ezdc1xNVf3Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,300,1732608000"; 
-   d="scan'208";a="119824315"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2025 17:21:05 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 19 Feb 2025 17:21:03 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 19 Feb 2025 17:21:03 -0800
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.44) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 19 Feb 2025 17:21:02 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Vs5zxvXNbty/jvoQhvbLsID/NOzfzWid6+INL2o55B4Uuhq+VAaxaPjCnrZ9mmaxM9E010N4av3ZLgXcgL8E37zNl6e+vgcPlYdVTcPL8KKXdqYbUdTpYkYkv4qNfjgYLXnp5Q9buwS4oz8VlCzeMYwvvsz32rY9B8Ap8z7xIegFgqxIlsmqLbL2xKXe5VnS619332c/vIMRUfUpWuFf4rtztz84HcGQRmtEPYmv7aUs7GHr7LotdYUZ14OFa6TjkRubC1LpnyuWkfE0SsmN7EYTrH7gmqatvc5BiyiyO6foGl1wAWRQdB1ogwLlvTdpk+0h6bRv9n+qybtCybsS8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZVOhwoRgXOCAEtM9ZOcLfFeAhux2BwXMBh218xxhxBA=;
- b=mOpOgHhtFrnv+U7ExNBK5TmCtu63dWvgF5yyp8c4aUX/+VGCRFdXT5sgBycWO/h0KkHakYX4vGMMgzUrSbnud14j0vRzikWQfo0xY6PmjE7nwVOprXr/LfDkzH9RxEDdOySOCTX7di67lBIqt/FcMAPKrqGKikbEwP0pdEXlo/COqRLsxRQXvnF3o6RRI4aKTZaBH0jNF0ukqhl8yLBymTr2yZtvAxlLMDlUiqssDi1Su0p2weNg2ru6sf9LlXzVx5RWsyf1/d5GuDRfwBNSRrotdlP0hyaaVxXkHKFdJwaUelhefkGR7wyyIYGQthZmXNyD2/xCc9P3EGVLeTwq9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by MW4PR11MB6715.namprd11.prod.outlook.com (2603:10b6:303:20e::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.11; Thu, 20 Feb
- 2025 01:20:59 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%4]) with mapi id 15.20.8466.013; Thu, 20 Feb 2025
- 01:20:57 +0000
-Message-ID: <e11b33a7-ffdd-4280-ba3b-986c577199ab@intel.com>
-Date: Wed, 19 Feb 2025 17:20:53 -0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 28/42] x86/resctrl: Handle throttle_mode for SMBA
- resources
-To: James Morse <james.morse@arm.com>, <x86@kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>, Babu Moger
-	<Babu.Moger@amd.com>, <shameerali.kolothum.thodi@huawei.com>, "D Scott
- Phillips OS" <scott@os.amperecomputing.com>, <carl@os.amperecomputing.com>,
-	<lcherian@marvell.com>, <bobo.shaobowang@huawei.com>,
-	<tan.shaopeng@fujitsu.com>, <baolin.wang@linux.alibaba.com>, Jamie Iles
-	<quic_jiles@quicinc.com>, Xin Hao <xhao@linux.alibaba.com>,
-	<peternewman@google.com>, <dfustini@baylibre.com>, <amitsinght@marvell.com>,
-	David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
-	"Dave Martin" <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>, Shanker
- Donthineni <sdonthineni@nvidia.com>
-References: <20250207181823.6378-1-james.morse@arm.com>
- <20250207181823.6378-29-james.morse@arm.com>
-From: Reinette Chatre <reinette.chatre@intel.com>
-Content-Language: en-US
-In-Reply-To: <20250207181823.6378-29-james.morse@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR04CA0207.namprd04.prod.outlook.com
- (2603:10b6:303:86::32) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eG3N69OT"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fc1c3b3dc7so799799a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Feb 2025 17:21:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740014475; x=1740619275; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+BEA4nmaL1BpG7jNtHOlziLeLskEIyo+jY91ovy615w=;
+        b=eG3N69OTI5A4D83Byb2X0+O9aOJ316xyPfIo3Q4mOOH4VDgcdvxvV/x3vFKpXi8pF3
+         1xVEsTF22j1M49QxqpssrQOcu+s2dOq6DfY+YiMjNQmkQEuRtIy0wUlgGI7+1J/DmV1B
+         eP1n/GJHUHyPRvSA0LKcU9SxbGq0R2sWXSqWOORntks87IWfpObpA/IDV34DCFeA7uSV
+         fz7jbRGPCywmbUNcSkkhL4pQ06lRajlYbo5++AEJCIcf1NVVFibxvZI/5uLlwpnyCxhB
+         ZTR3gcn7xy5MpY60k1DzhxTM0vPUl4D0DmxVfLU3N3hwGp70qEvYQuhjsxhvYTQagSfN
+         oAhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740014475; x=1740619275;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+BEA4nmaL1BpG7jNtHOlziLeLskEIyo+jY91ovy615w=;
+        b=P1omQ9hv0w3TJKOHb2GQ2jjDkIYVDGymbmjAZdWB72v5wmY1HdhR7Ssi2LzPrn2LQp
+         yG9eqHiUWnz+aXsVSPAyuazf12LHfJwlcWSlnHj+nFk8p0Hmbq8myl342mhHtdERWZLV
+         +9ETOYdD9t0PYrifPMHY2zJbQXq3BPz1c+iTHNP7QHpxzHuUmVOQn9/7dj7+aC49f2NQ
+         C0frLGSpoP0INeGrORd8BeG/vbfW2KiVTF+Z7UzDfr9Rl814eum2KO2Um28ptXZqws7O
+         XjcSpnrqiJPewc7kTsYeB794h7GtYSdsEchO8ZjLslFWjStbt9Cd/SpfGQRnWJynBHNA
+         wNUg==
+X-Forwarded-Encrypted: i=1; AJvYcCXW1g5mDb/pv9z5UaLlQteVKRKoLkmOTHBE6mkYGkJpQWyrtTJXog8F3tUV+f2pQbvU03MZAXf7am6IDyc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwS99umPVx7G+SNLVAgefezLMtSXjJKy8XPborXHMqd3n2eoCvA
+	pDpX8/7bW1sGLLKs0eNOF1OPi0otpmD/Dt3VC5rMyW/pdCmsVzdFbY6Xyn7GWh8keiScYybnCkw
+	drSHkWZNQDg==
+X-Google-Smtp-Source: AGHT+IEIWUmVicMWkFB98XQ2yOyp4PvtwY7AwdBnj2SPFWwZdGjFsG4tsdvInNY9Ikt2OAE/aRcVpiWLa0y+Qg==
+X-Received: from pfbhw8.prod.google.com ([2002:a05:6a00:8908:b0:732:3440:ffcc])
+ (user=yepeilin job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:2e97:b0:730:87cf:a7cd with SMTP id d2e1a72fcca58-7329de6ecbdmr10600543b3a.8.1740014475374;
+ Wed, 19 Feb 2025 17:21:15 -0800 (PST)
+Date: Thu, 20 Feb 2025 01:21:07 +0000
+In-Reply-To: <cover.1740009184.git.yepeilin@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|MW4PR11MB6715:EE_
-X-MS-Office365-Filtering-Correlation-Id: a928152e-46da-4fbf-a370-08dd514cd40b
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?aWx1WTJPYU5PaHo5NWlhL3NGcEF1MEFqWXJLRnBPMURCc0V6aGZoMloyQTVo?=
- =?utf-8?B?NHNJUWp4d1NKSGhscFZkNy9FRU5KZ1ZPWlRhUnBwdFM0RmlGVXZYdThBdkIr?=
- =?utf-8?B?UVNLem1uTHZkNW03ejZZd2E4Zi85RGJFMnk5cktCYnptUlFOaFFHZ1pUdUpX?=
- =?utf-8?B?TDQ2UUF5N2tkUDBUbTJaa1hYV2IvR0lLRkZFVGFvSWExeUpFR0dFV3MzYzVw?=
- =?utf-8?B?Mm82TkdqTXZSMnZVeG5qZ29EcENjQTFTQVVVSEIyaDg4NE8xME5ld0szMGZa?=
- =?utf-8?B?SDdEVGZ1bFArODNXcTBvRUJydDFsaG1BS0MxRjZxUjMxMVNiWU1qL1krT0dU?=
- =?utf-8?B?WVk5enVUNURsZDIyTWNPdXh1a1JLVkZ6aEpTWGdVd1NPYTRIM3BrZ0FUd0JT?=
- =?utf-8?B?dU8zYU9TeEhXTXBuZzgvT05ZM0w4b0FCZ3ZKQzhzMHdxY05zRVl2M0ZTWTZP?=
- =?utf-8?B?R0dLcVJ4S1Q5VkpyciszbVNMZ0xHQUxNRENZZHoyU0svNXJRMFJaUElnd1E0?=
- =?utf-8?B?cjNBc1doOXcwWnVuZDB3Tis4ejYzTm96d0NxRXdDTEVUNGJRWUFuaTVYWjdQ?=
- =?utf-8?B?ZGczR3lKWnJ1V2I5eEFXNk5hME9kN08xcXVzZ09aM2psNGxFVVZEdzRvcGVS?=
- =?utf-8?B?SVdseTdVeTFWSkE5bXErZzNTWDFnL2ZZa240ZVRKQ0pZbEJVUlliZ2pZTDZR?=
- =?utf-8?B?K0JyOXdqdDljTEs3NlZOaW1HN3FwQWN6czZxNGJjUjVkMW4wREY2VEpKU25O?=
- =?utf-8?B?cHYvNE9USmNWdTljTjdFbW5MRXRrSmhTSlZNalZldWk0ZlpiN01vK0trd3pQ?=
- =?utf-8?B?NWRmYVFNaFQ5MU5QWUxkNGlPa3lWMlN1alV1Qm5xTW1DS0wzTmV2NEVuVElr?=
- =?utf-8?B?enBQTXlMZzhsOHVZT3d5NHdPYnN2bnBrankyNFYreHNubGRLS3RMNi9HMmh5?=
- =?utf-8?B?U2owemlvemszUk9mRzFRd202UjVMUnYwTm4yckFyT0dwd1d3QWhNcjFKelFt?=
- =?utf-8?B?MThVRGtJWm9pTUs5OFFxRENCSzFTelAvRkVIeGdVMFZVdzB4V1d1WU92TWov?=
- =?utf-8?B?cW1NTGlIZlUrTlBmdXZLWW10aVBSR3liUnNMYkdyQTZXZHFUTVpydlhoUG9O?=
- =?utf-8?B?ZzZLcWFBazdiMGpHWTJSdTYreTlVajNBaEJjV0V6b2x0ckFjeE9BbjIraHhW?=
- =?utf-8?B?SUxHaE9zWDVxRUQvVVh4eFozWFF6TXRDOXgyKzRQa0dDQlMyTE9CeDBqSHpU?=
- =?utf-8?B?a09nMFlhWWZRQjFIbHpvdCs3TkhhaFpKTXRta0tVL2tpSXhrSXVIZUE0M1d1?=
- =?utf-8?B?VHZSWEtmY245a1BKK3lmUm14K0JscDFoQmlGcndRbWtNMjQzVGk1MjhkVjBP?=
- =?utf-8?B?azVtSmRoV1RVelZaVExZR0dhNkFVNDFJQTgwZ3JOelROMkZ2Mi9yLzJ6amlS?=
- =?utf-8?B?Y3FNbXRXTDJ0MmVPcll0dytiT1Qwa2tjZFZJRFJXQW9kWnZTYURQRU5NSlpX?=
- =?utf-8?B?dFlVMWlnMkdqcVNUaWRzL3NabWFGNG1yK2todHlaUnF2dmxrMnZzVitoRjZ6?=
- =?utf-8?B?ZWlrMXRNT1R5MWNiWDUrS3hxMVFSVHlEaW5vcWxpOCtBaWRlSkEyRVJDSWpj?=
- =?utf-8?B?eld4aDRpK3ptbEpFMkN6SjdvRlBJSkl2Nk1xc0ltTXo4K1ltNXJvL0JTRmxw?=
- =?utf-8?B?dTUrTXU0bUhmVEE5Zm5zU1RZWlh3S0tSMUNnWjFySVFCNE1acmJnaVdMdmZP?=
- =?utf-8?B?eHJXcGRWdnlieHFsZXVBOEZKQU9nckdoUFVLU2pnbVFuU1o4MG90UUc1cnNB?=
- =?utf-8?B?ajdhcmEzVkI0V2t5S2V1TWEyVGVDTTlUMDBvb2VBRjVaNVJXbTFtU0ZXenN5?=
- =?utf-8?Q?7m9eSQqoK4Zeq?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?K3FMZ2xwSEh5aC9EbDZZRGRlVDB3VXoyNVVFbkFjdE9oT1ByYmJ5QjRmRlJL?=
- =?utf-8?B?Zldod1Bkejh5bzV4ZEhjTmc0ZzN1QnFkcytZbk8rVmZBRUlDUThrZG42M3ZV?=
- =?utf-8?B?QStHQVNkczU2T1ZMZ2JkZGd5UkhyeHQrUEVIVjZVNWczWGRQN3liY1V1WWJs?=
- =?utf-8?B?aURza0ZPa0xPRFZLOE52SkJsckpvbmw4SjVxWC9MK3pnRVpTc2J3YXl6MHlU?=
- =?utf-8?B?L3d2SzhWMXc3ZFFKZ0JNekRQcEZlZ1RwWGovTXJHVWw3UFBrWkVYdVFtTjF1?=
- =?utf-8?B?akYxalVhR01EWUFPNnA3NlkwZUJTN01BSFNBSEdZQkVlUUFadHZJd29YT3Ar?=
- =?utf-8?B?KzRyZ2R5QzNmNlNmQnhsdmxqZElMMlJvazBuSVFTMlZ0N0R3OVArV1FWeEpY?=
- =?utf-8?B?dkRiNjIxUmZtUXVxR2xhaFFIQ2d1YkZyOVlKb3lmcG9aR1dYVDkvWnljR3Jq?=
- =?utf-8?B?ZVpQUGp6UVJmK2M1MnRTbzBINE03bGlmdHczM2JDRmxEbC9kY3lZRk1BVWJj?=
- =?utf-8?B?VC9PeDR4WjhuWmdLNUlZa3Z3VkFuOHZIUXdHemJxcGJmN2k4SHFkVTAzZnc4?=
- =?utf-8?B?NVFiVU1vZkFwOVBLLzVrNGhweGlDMS9oa0VEUGJ0Ky8rYmE4ZTdMVmszM252?=
- =?utf-8?B?eGpRc2lKeitkcHBaSFErYmNRWHlQeDR0UlhydmY3KzRCRTAzU295amp5MU9h?=
- =?utf-8?B?dkhVcVdsU2FSTjhySzJmWFVHOVN2c01pbUVUdXc1ZFRjbWtXY1RKNkdCN0xy?=
- =?utf-8?B?MVF0VWhTeW93QVBYU25Hcnd2VFhFUE9saEVYU2RHZUpMM2MxS2tLcVo1cm1s?=
- =?utf-8?B?U3FYWmQyazBZSkV3ay9SOUFKNy9zQ1Bma0hGdkVQblpRUVJseFhPcW16Q1pp?=
- =?utf-8?B?Q1ZMUjlSek1nNFRjanQ4dnVOa2hPQ0REU1k2ODNHak5UN2xSeWxzU0NUb1lD?=
- =?utf-8?B?RDZ4YmVibldLSGpqVVBHS2QyMmVTd0xMTnJ5YlkwakRqbDlVSzRwVDFIZUZ5?=
- =?utf-8?B?ZjV1NVgyQ3BtaGRnaWF6OGhxL0ZXQWFUeFFQWDBOU2ZCd1ZWcmtzMUsvazJT?=
- =?utf-8?B?emZmU2lUSkxKR2xZWWl3MEgyMWRrakJvV3BLQlkzN3hQWlIrc0NIMmtJMEJx?=
- =?utf-8?B?ZGhsZnZqZGxWRkVpOU95NFllSFV5TXpsOVZqdEZ6VEdCUm9JakF5RkJMNGt4?=
- =?utf-8?B?dmxkeTdlNU4xcmFseWlJRmxmb0thcmRvQkg4Vy95SytGUGxweE4rem9QOFA3?=
- =?utf-8?B?VElyY3FxbFZSNkxPVC9GZFhCRTlmN1BnR1pCQno4U0NpMnJGVy9tNHkyelpC?=
- =?utf-8?B?VmF1WHlRMzNTSUQyVFpmTWNJK3RwdW5LbDVvc3VWckdkalBtK0JkSVlaY1J2?=
- =?utf-8?B?L0NTSk1xOGFCcThXWEN3UUFVRXVGM3NSZjFrN2pScVlZVjhvR1ZkY29IQ2hi?=
- =?utf-8?B?OVM2TDlZZXJTaGkwT0dGTE1hU3gyb3dsdnBuL0J2bmhrSDhXcC8rOWRPc1dN?=
- =?utf-8?B?U3FCN21mWEVGWlhOYzY4MTY0M0ZTRmF1TDdPZXpOdnRYb3BTNHNnKzV4Y1NB?=
- =?utf-8?B?OWlVNDNlbTVKSzhGZUpjTTc0d05xRFFtL2RnK1BxcWhLNldwUWNVVlBNRHRD?=
- =?utf-8?B?eXJBcmN2TlRSY0pXOEU2aVRqMVo2eVBKWHRPbSt0NkRMRVc1ZEhVZDNtY2NN?=
- =?utf-8?B?WXJRYjlWWjljRXVHRkJkTnVQcHAvWmtBM3daS28zK3gzU09IUzdWNEEzRFZu?=
- =?utf-8?B?OHlmQlJkalY0RmdPelZHUlJzK2U3czlNemFXaEtYRXBxZHVxSGMxUkdYZll4?=
- =?utf-8?B?OThqdithUWgycGFqQitIdDNuREZGT1hKSVgrdUpxNmJvMHpWa0FESDB3MjB1?=
- =?utf-8?B?VkM3SlpUQXMvaHBQWWZVNXJiT3F0c2l6UnJjS3BMZ3I1Q0xkY1hFZmpTNlg5?=
- =?utf-8?B?VGpqbVFUUUJmSzh5TmNoelpPV1NJUG5lV3lORi9wY3hKd3ZOUkVXYk5td2ZL?=
- =?utf-8?B?SDFsSFg0a0t3ak5USWQyMkpnR3BHalczYlVacm5hSlFpZmtMbk9oTXJINUJn?=
- =?utf-8?B?cWRHazZTZXZEUk45NjFIZGs5RzNGOXliTCtnd2V5cUZIMTZrUnIwUmtpMkZh?=
- =?utf-8?B?Z0JqYlo5ZnRxc1VuRzBtcFJObTFITm9GcnVra3RMcDN4NTR0L002UVVLNGdU?=
- =?utf-8?B?VXc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a928152e-46da-4fbf-a370-08dd514cd40b
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 01:20:57.4817
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: w/on8+jFdIFLW+tTKu6yO85wyUdO5LTf9XWuVE9BH0ugnl/2RK8HB8307RPGHHYiIqsYnYjo/c93PAmgSQgI7t4ROWaEKMrgTYyBekmOnzc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB6715
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0
+References: <cover.1740009184.git.yepeilin@google.com>
+X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
+Message-ID: <e2d7bfc155a26305a3024aaa102a3acfa693e565.1740009184.git.yepeilin@google.com>
+Subject: [PATCH bpf-next v3 4/9] bpf: Introduce load-acquire and store-release instructions
+From: Peilin Ye <yepeilin@google.com>
+To: bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Peilin Ye <yepeilin@google.com>, bpf@ietf.org, Xu Kuohai <xukuohai@huaweicloud.com>, 
+	Eduard Zingerman <eddyz87@gmail.com>, David Vernet <void@manifault.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
+	Ilya Leoshkevich <iii@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Quentin Monnet <qmo@kernel.org>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	Ihor Solodrai <ihor.solodrai@linux.dev>, Yingchi Long <longyingchi24s@ict.ac.cn>, 
+	Josh Don <joshdon@google.com>, Barret Rhoden <brho@google.com>, Neel Natu <neelnatu@google.com>, 
+	Benjamin Segall <bsegall@google.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi James,
+Introduce BPF instructions with load-acquire and store-release
+semantics, as discussed in [1].  Define 2 new flags:
 
-On 2/7/25 10:18 AM, James Morse wrote:
-> Now that the visibility of throttle_mode is being managed by resctrl, it
-> should consider resources other than MBA that may have a throttle_mode.
-> SMBA is one such resource.
-> 
-> Extend resctrl_file_fflags_init() to check SMBA for a throttle_mode.
-> 
+  #define BPF_LOAD_ACQ    0x100
+  #define BPF_STORE_REL   0x110
 
-"Extend resctrl_file_fflags_init()" -> "Extend thread_throttle_mode_init()"?
+A "load-acquire" is a BPF_STX | BPF_ATOMIC instruction with the 'imm'
+field set to BPF_LOAD_ACQ (0x100).
 
-> Adding support for multiple resources means it is possible for a platform
-> with both MBA and SMBA, but an undefined throttle_mode on one of them
-> to make the file visible.
-> 
-> Add the 'undefined' case to rdt_thread_throttle_mode_show().
-> 
-> Signed-off-by: James Morse <james.morse@arm.com>
-> ---
+Similarly, a "store-release" is a BPF_STX | BPF_ATOMIC instruction with
+the 'imm' field set to BPF_STORE_REL (0x110).
 
-| Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Unlike existing atomic read-modify-write operations that only support
+BPF_W (32-bit) and BPF_DW (64-bit) size modifiers, load-acquires and
+store-releases also support BPF_B (8-bit) and BPF_H (16-bit).  An 8- or
+16-bit load-acquire zero-extends the value before writing it to a 32-bit
+register, just like ARM64 instruction LDARH and friends.
 
-Reinette
+Similar to existing atomic read-modify-write operations, misaligned
+load-acquires/store-releases are not allowed (even if
+BPF_F_ANY_ALIGNMENT is set).
+
+As an example, consider the following 64-bit load-acquire BPF
+instruction (assuming little-endian):
+
+  db 10 00 00 00 01 00 00  r0 = load_acquire((u64 *)(r1 + 0x0))
+
+  opcode (0xdb): BPF_ATOMIC | BPF_DW | BPF_STX
+  imm (0x00000100): BPF_LOAD_ACQ
+
+Similarly, a 16-bit BPF store-release:
+
+  cb 21 00 00 10 01 00 00  store_release((u16 *)(r1 + 0x0), w2)
+
+  opcode (0xcb): BPF_ATOMIC | BPF_H | BPF_STX
+  imm (0x00000110): BPF_STORE_REL
+
+In arch/{arm64,s390,x86}/net/bpf_jit_comp.c, have
+bpf_jit_supports_insn(..., /*in_arena=*/true) return false for the new
+instructions, until the corresponding JIT compiler supports them.
+
+[1] https://lore.kernel.org/all/20240729183246.4110549-1-yepeilin@google.com/
+
+Acked-by: Eduard Zingerman <eddyz87@gmail.com>
+Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Signed-off-by: Peilin Ye <yepeilin@google.com>
+---
+ arch/arm64/net/bpf_jit_comp.c  |  4 +++
+ arch/s390/net/bpf_jit_comp.c   | 14 +++++---
+ arch/x86/net/bpf_jit_comp.c    |  4 +++
+ include/linux/bpf.h            | 15 ++++++++
+ include/linux/filter.h         |  2 ++
+ include/uapi/linux/bpf.h       |  3 ++
+ kernel/bpf/core.c              | 63 ++++++++++++++++++++++++++++++----
+ kernel/bpf/disasm.c            | 12 +++++++
+ kernel/bpf/verifier.c          | 45 ++++++++++++++++++++++--
+ tools/include/uapi/linux/bpf.h |  3 ++
+ 10 files changed, 152 insertions(+), 13 deletions(-)
+
+diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.c
+index 8446848edddb..8c3b47d9e441 100644
+--- a/arch/arm64/net/bpf_jit_comp.c
++++ b/arch/arm64/net/bpf_jit_comp.c
+@@ -2667,8 +2667,12 @@ bool bpf_jit_supports_insn(struct bpf_insn *insn, bool in_arena)
+ 	if (!in_arena)
+ 		return true;
+ 	switch (insn->code) {
++	case BPF_STX | BPF_ATOMIC | BPF_B:
++	case BPF_STX | BPF_ATOMIC | BPF_H:
+ 	case BPF_STX | BPF_ATOMIC | BPF_W:
+ 	case BPF_STX | BPF_ATOMIC | BPF_DW:
++		if (bpf_atomic_is_load_store(insn))
++			return false;
+ 		if (!cpus_have_cap(ARM64_HAS_LSE_ATOMICS))
+ 			return false;
+ 	}
+diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
+index 9d440a0b729e..0776dfde2dba 100644
+--- a/arch/s390/net/bpf_jit_comp.c
++++ b/arch/s390/net/bpf_jit_comp.c
+@@ -2919,10 +2919,16 @@ bool bpf_jit_supports_arena(void)
+ 
+ bool bpf_jit_supports_insn(struct bpf_insn *insn, bool in_arena)
+ {
+-	/*
+-	 * Currently the verifier uses this function only to check which
+-	 * atomic stores to arena are supported, and they all are.
+-	 */
++	if (!in_arena)
++		return true;
++	switch (insn->code) {
++	case BPF_STX | BPF_ATOMIC | BPF_B:
++	case BPF_STX | BPF_ATOMIC | BPF_H:
++	case BPF_STX | BPF_ATOMIC | BPF_W:
++	case BPF_STX | BPF_ATOMIC | BPF_DW:
++		if (bpf_atomic_is_load_store(insn))
++			return false;
++	}
+ 	return true;
+ }
+ 
+diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+index a43fc5af973d..f0c31c940fb8 100644
+--- a/arch/x86/net/bpf_jit_comp.c
++++ b/arch/x86/net/bpf_jit_comp.c
+@@ -3771,8 +3771,12 @@ bool bpf_jit_supports_insn(struct bpf_insn *insn, bool in_arena)
+ 	if (!in_arena)
+ 		return true;
+ 	switch (insn->code) {
++	case BPF_STX | BPF_ATOMIC | BPF_B:
++	case BPF_STX | BPF_ATOMIC | BPF_H:
+ 	case BPF_STX | BPF_ATOMIC | BPF_W:
+ 	case BPF_STX | BPF_ATOMIC | BPF_DW:
++		if (bpf_atomic_is_load_store(insn))
++			return false;
+ 		if (insn->imm == (BPF_AND | BPF_FETCH) ||
+ 		    insn->imm == (BPF_OR | BPF_FETCH) ||
+ 		    insn->imm == (BPF_XOR | BPF_FETCH))
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 15164787ce7f..9be9c586152f 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -991,6 +991,21 @@ static inline bool bpf_pseudo_func(const struct bpf_insn *insn)
+ 	return bpf_is_ldimm64(insn) && insn->src_reg == BPF_PSEUDO_FUNC;
+ }
+ 
++/* Given a BPF_ATOMIC instruction @atomic_insn, return true if it is an
++ * atomic load or store, and false if it is a read-modify-write instruction.
++ */
++static inline bool
++bpf_atomic_is_load_store(const struct bpf_insn *atomic_insn)
++{
++	switch (atomic_insn->imm) {
++	case BPF_LOAD_ACQ:
++	case BPF_STORE_REL:
++		return true;
++	default:
++		return false;
++	}
++}
++
+ struct bpf_prog_ops {
+ 	int (*test_run)(struct bpf_prog *prog, const union bpf_attr *kattr,
+ 			union bpf_attr __user *uattr);
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index a3ea46281595..e36812a5b01f 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -364,6 +364,8 @@ static inline bool insn_is_cast_user(const struct bpf_insn *insn)
+  *   BPF_XOR | BPF_FETCH      src_reg = atomic_fetch_xor(dst_reg + off16, src_reg);
+  *   BPF_XCHG                 src_reg = atomic_xchg(dst_reg + off16, src_reg)
+  *   BPF_CMPXCHG              r0 = atomic_cmpxchg(dst_reg + off16, r0, src_reg)
++ *   BPF_LOAD_ACQ             dst_reg = smp_load_acquire(src_reg + off16)
++ *   BPF_STORE_REL            smp_store_release(dst_reg + off16, src_reg)
+  */
+ 
+ #define BPF_ATOMIC_OP(SIZE, OP, DST, SRC, OFF)			\
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index fff6cdb8d11a..c52946c27822 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -51,6 +51,9 @@
+ #define BPF_XCHG	(0xe0 | BPF_FETCH)	/* atomic exchange */
+ #define BPF_CMPXCHG	(0xf0 | BPF_FETCH)	/* atomic compare-and-write */
+ 
++#define BPF_LOAD_ACQ	0x100	/* load-acquire */
++#define BPF_STORE_REL	0x110	/* store-release */
++
+ enum bpf_cond_pseudo_jmp {
+ 	BPF_MAY_GOTO = 0,
+ };
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index a0200fbbace9..323af18d7d49 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -1663,14 +1663,17 @@ EXPORT_SYMBOL_GPL(__bpf_call_base);
+ 	INSN_3(JMP, JSET, K),			\
+ 	INSN_2(JMP, JA),			\
+ 	INSN_2(JMP32, JA),			\
++	/* Atomic operations. */		\
++	INSN_3(STX, ATOMIC, B),			\
++	INSN_3(STX, ATOMIC, H),			\
++	INSN_3(STX, ATOMIC, W),			\
++	INSN_3(STX, ATOMIC, DW),		\
+ 	/* Store instructions. */		\
+ 	/*   Register based. */			\
+ 	INSN_3(STX, MEM,  B),			\
+ 	INSN_3(STX, MEM,  H),			\
+ 	INSN_3(STX, MEM,  W),			\
+ 	INSN_3(STX, MEM,  DW),			\
+-	INSN_3(STX, ATOMIC, W),			\
+-	INSN_3(STX, ATOMIC, DW),		\
+ 	/*   Immediate based. */		\
+ 	INSN_3(ST, MEM, B),			\
+ 	INSN_3(ST, MEM, H),			\
+@@ -2152,24 +2155,33 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn)
+ 			if (BPF_SIZE(insn->code) == BPF_W)		\
+ 				atomic_##KOP((u32) SRC, (atomic_t *)(unsigned long) \
+ 					     (DST + insn->off));	\
+-			else						\
++			else if (BPF_SIZE(insn->code) == BPF_DW)	\
+ 				atomic64_##KOP((u64) SRC, (atomic64_t *)(unsigned long) \
+ 					       (DST + insn->off));	\
++			else						\
++				goto default_label;			\
+ 			break;						\
+ 		case BOP | BPF_FETCH:					\
+ 			if (BPF_SIZE(insn->code) == BPF_W)		\
+ 				SRC = (u32) atomic_fetch_##KOP(		\
+ 					(u32) SRC,			\
+ 					(atomic_t *)(unsigned long) (DST + insn->off)); \
+-			else						\
++			else if (BPF_SIZE(insn->code) == BPF_DW)	\
+ 				SRC = (u64) atomic64_fetch_##KOP(	\
+ 					(u64) SRC,			\
+ 					(atomic64_t *)(unsigned long) (DST + insn->off)); \
++			else						\
++				goto default_label;			\
+ 			break;
+ 
+ 	STX_ATOMIC_DW:
+ 	STX_ATOMIC_W:
++	STX_ATOMIC_H:
++	STX_ATOMIC_B:
+ 		switch (IMM) {
++		/* Atomic read-modify-write instructions support only W and DW
++		 * size modifiers.
++		 */
+ 		ATOMIC_ALU_OP(BPF_ADD, add)
+ 		ATOMIC_ALU_OP(BPF_AND, and)
+ 		ATOMIC_ALU_OP(BPF_OR, or)
+@@ -2181,20 +2193,59 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn)
+ 				SRC = (u32) atomic_xchg(
+ 					(atomic_t *)(unsigned long) (DST + insn->off),
+ 					(u32) SRC);
+-			else
++			else if (BPF_SIZE(insn->code) == BPF_DW)
+ 				SRC = (u64) atomic64_xchg(
+ 					(atomic64_t *)(unsigned long) (DST + insn->off),
+ 					(u64) SRC);
++			else
++				goto default_label;
+ 			break;
+ 		case BPF_CMPXCHG:
+ 			if (BPF_SIZE(insn->code) == BPF_W)
+ 				BPF_R0 = (u32) atomic_cmpxchg(
+ 					(atomic_t *)(unsigned long) (DST + insn->off),
+ 					(u32) BPF_R0, (u32) SRC);
+-			else
++			else if (BPF_SIZE(insn->code) == BPF_DW)
+ 				BPF_R0 = (u64) atomic64_cmpxchg(
+ 					(atomic64_t *)(unsigned long) (DST + insn->off),
+ 					(u64) BPF_R0, (u64) SRC);
++			else
++				goto default_label;
++			break;
++		/* Atomic load and store instructions support all size
++		 * modifiers.
++		 */
++		case BPF_LOAD_ACQ:
++			switch (BPF_SIZE(insn->code)) {
++#define LOAD_ACQUIRE(SIZEOP, SIZE)				\
++			case BPF_##SIZEOP:			\
++				DST = (SIZE)smp_load_acquire(	\
++					(SIZE *)(unsigned long)(SRC + insn->off));	\
++				break;
++			LOAD_ACQUIRE(B,   u8)
++			LOAD_ACQUIRE(H,  u16)
++			LOAD_ACQUIRE(W,  u32)
++			LOAD_ACQUIRE(DW, u64)
++#undef LOAD_ACQUIRE
++			default:
++				goto default_label;
++			}
++			break;
++		case BPF_STORE_REL:
++			switch (BPF_SIZE(insn->code)) {
++#define STORE_RELEASE(SIZEOP, SIZE)			\
++			case BPF_##SIZEOP:		\
++				smp_store_release(	\
++					(SIZE *)(unsigned long)(DST + insn->off), (SIZE)SRC);	\
++				break;
++			STORE_RELEASE(B,   u8)
++			STORE_RELEASE(H,  u16)
++			STORE_RELEASE(W,  u32)
++			STORE_RELEASE(DW, u64)
++#undef STORE_RELEASE
++			default:
++				goto default_label;
++			}
+ 			break;
+ 
+ 		default:
+diff --git a/kernel/bpf/disasm.c b/kernel/bpf/disasm.c
+index 309c4aa1b026..974d172d6735 100644
+--- a/kernel/bpf/disasm.c
++++ b/kernel/bpf/disasm.c
+@@ -267,6 +267,18 @@ void print_bpf_insn(const struct bpf_insn_cbs *cbs,
+ 				BPF_SIZE(insn->code) == BPF_DW ? "64" : "",
+ 				bpf_ldst_string[BPF_SIZE(insn->code) >> 3],
+ 				insn->dst_reg, insn->off, insn->src_reg);
++		} else if (BPF_MODE(insn->code) == BPF_ATOMIC &&
++			   insn->imm == BPF_LOAD_ACQ) {
++			verbose(cbs->private_data, "(%02x) r%d = load_acquire((%s *)(r%d %+d))\n",
++				insn->code, insn->dst_reg,
++				bpf_ldst_string[BPF_SIZE(insn->code) >> 3],
++				insn->src_reg, insn->off);
++		} else if (BPF_MODE(insn->code) == BPF_ATOMIC &&
++			   insn->imm == BPF_STORE_REL) {
++			verbose(cbs->private_data, "(%02x) store_release((%s *)(r%d %+d), r%d)\n",
++				insn->code,
++				bpf_ldst_string[BPF_SIZE(insn->code) >> 3],
++				insn->dst_reg, insn->off, insn->src_reg);
+ 		} else {
+ 			verbose(cbs->private_data, "BUG_%02x\n", insn->code);
+ 		}
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 3b20bff1c5eb..89e06fce5ece 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -579,6 +579,13 @@ static bool is_cmpxchg_insn(const struct bpf_insn *insn)
+ 	       insn->imm == BPF_CMPXCHG;
+ }
+ 
++static bool is_atomic_load_insn(const struct bpf_insn *insn)
++{
++	return BPF_CLASS(insn->code) == BPF_STX &&
++	       BPF_MODE(insn->code) == BPF_ATOMIC &&
++	       insn->imm == BPF_LOAD_ACQ;
++}
++
+ static int __get_spi(s32 off)
+ {
+ 	return (-off - 1) / BPF_REG_SIZE;
+@@ -3550,7 +3557,7 @@ static bool is_reg64(struct bpf_verifier_env *env, struct bpf_insn *insn,
+ 	}
+ 
+ 	if (class == BPF_STX) {
+-		/* BPF_STX (including atomic variants) has multiple source
++		/* BPF_STX (including atomic variants) has one or more source
+ 		 * operands, one of which is a ptr. Check whether the caller is
+ 		 * asking about it.
+ 		 */
+@@ -4164,7 +4171,7 @@ static int backtrack_insn(struct bpf_verifier_env *env, int idx, int subseq_idx,
+ 			   * dreg still needs precision before this insn
+ 			   */
+ 		}
+-	} else if (class == BPF_LDX) {
++	} else if (class == BPF_LDX || is_atomic_load_insn(insn)) {
+ 		if (!bt_is_reg_set(bt, dreg))
+ 			return 0;
+ 		bt_clear_reg(bt, dreg);
+@@ -7765,6 +7772,32 @@ static int check_atomic_rmw(struct bpf_verifier_env *env,
+ 	return 0;
+ }
+ 
++static int check_atomic_load(struct bpf_verifier_env *env,
++			     struct bpf_insn *insn)
++{
++	if (!atomic_ptr_type_ok(env, insn->src_reg, insn)) {
++		verbose(env, "BPF_ATOMIC loads from R%d %s is not allowed\n",
++			insn->src_reg,
++			reg_type_str(env, reg_state(env, insn->src_reg)->type));
++		return -EACCES;
++	}
++
++	return check_load_mem(env, insn, true, false, false, "atomic_load");
++}
++
++static int check_atomic_store(struct bpf_verifier_env *env,
++			      struct bpf_insn *insn)
++{
++	if (!atomic_ptr_type_ok(env, insn->dst_reg, insn)) {
++		verbose(env, "BPF_ATOMIC stores into R%d %s is not allowed\n",
++			insn->dst_reg,
++			reg_type_str(env, reg_state(env, insn->dst_reg)->type));
++		return -EACCES;
++	}
++
++	return check_store_reg(env, insn, true);
++}
++
+ static int check_atomic(struct bpf_verifier_env *env, struct bpf_insn *insn)
+ {
+ 	switch (insn->imm) {
+@@ -7779,6 +7812,10 @@ static int check_atomic(struct bpf_verifier_env *env, struct bpf_insn *insn)
+ 	case BPF_XCHG:
+ 	case BPF_CMPXCHG:
+ 		return check_atomic_rmw(env, insn);
++	case BPF_LOAD_ACQ:
++		return check_atomic_load(env, insn);
++	case BPF_STORE_REL:
++		return check_atomic_store(env, insn);
+ 	default:
+ 		verbose(env, "BPF_ATOMIC uses invalid atomic opcode %02x\n",
+ 			insn->imm);
+@@ -20558,7 +20595,9 @@ static int convert_ctx_accesses(struct bpf_verifier_env *env)
+ 			   insn->code == (BPF_ST | BPF_MEM | BPF_W) ||
+ 			   insn->code == (BPF_ST | BPF_MEM | BPF_DW)) {
+ 			type = BPF_WRITE;
+-		} else if ((insn->code == (BPF_STX | BPF_ATOMIC | BPF_W) ||
++		} else if ((insn->code == (BPF_STX | BPF_ATOMIC | BPF_B) ||
++			    insn->code == (BPF_STX | BPF_ATOMIC | BPF_H) ||
++			    insn->code == (BPF_STX | BPF_ATOMIC | BPF_W) ||
+ 			    insn->code == (BPF_STX | BPF_ATOMIC | BPF_DW)) &&
+ 			   env->insn_aux_data[i + delta].ptr_type == PTR_TO_ARENA) {
+ 			insn->code = BPF_STX | BPF_PROBE_ATOMIC | BPF_SIZE(insn->code);
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index fff6cdb8d11a..c52946c27822 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -51,6 +51,9 @@
+ #define BPF_XCHG	(0xe0 | BPF_FETCH)	/* atomic exchange */
+ #define BPF_CMPXCHG	(0xf0 | BPF_FETCH)	/* atomic compare-and-write */
+ 
++#define BPF_LOAD_ACQ	0x100	/* load-acquire */
++#define BPF_STORE_REL	0x110	/* store-release */
++
+ enum bpf_cond_pseudo_jmp {
+ 	BPF_MAY_GOTO = 0,
+ };
+-- 
+2.48.1.601.g30ceb7b040-goog
+
