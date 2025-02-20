@@ -1,155 +1,87 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2074.outbound.protection.outlook.com [40.107.243.74])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314491F4632;
-	Thu, 20 Feb 2025 12:27:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740054464; cv=fail; b=cJ5fe/7iKvhPPjFHjXuivNUo59iGORPzzr+W5Eq959ILbPunBiuEMBY2xEnzU0mslJKxwS2VS8UAfISN5TDsSu2ZY2k9Dj5spBfl+LX235hOpQyrGEDXben0UFCiplwFXxakPoqmoz4CbA4ZIObok+L5ukhOZnTbsQKhzfHiL00=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740054464; c=relaxed/simple;
-	bh=sV//YLC0KFNJzc5zUtBTqkn5vGCzgzQVBIfoQpvC41k=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aVONIsr8j2hVKGtYmDp9WlPZ5T54AWRZMCS8cmN2esvMx1q9+xPGzSSuayYel1IYoVBM5mjHk0Hg01xCELBK7UFQEZMRZgekvGLu7ryQGIgtgTFOsd1E5Icl+3MRek/GGp4rpwWY8SlSgDhMKxoJ/yRo2enYXu0fy2YKjdC4SZ4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Xq4J8K6V; arc=fail smtp.client-ip=40.107.243.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B911F5845;
+	Thu, 20 Feb 2025 12:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740054467; cv=none; b=uzIb4y69sq84OejLwwaKyjhzOEYrQNPPWp+tPvDquA+WyI5/MbjdT0R0IG04xoPLSmjGj5bOBGNeEm6rMAsW4tL8b4D+xFyxS9TOhaxmUEkF59vmZEIOn7GyT/2E3lDKdFET6TKnhiVhSCLIj+useXD3vckVM6pRefO1UHlwkHo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740054467; c=relaxed/simple;
+	bh=z/5AJyHI0LKzLrcja6hFJ29UKN9qzCXhiR8+FdJShR8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O2e/GWh9TbWZZylN1EnbNiAwLoYzyYT/Y6pkELMOdvBVhuhw3GvyRCVVjrvP4+JiLLizmXC5CKFy3P+ODAKyIVBE2U7kpz0BZs8rIRaS+P0jvwLKAvho/rmSMHVXD9qCnfLftwU3CK2Wjygkin5YeTu1lKr8dMit6WsPcUgJcCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=COjHGeFW; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Xq4J8K6V"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lkA618zE+M1sAEnx/LJCx0xvD9CCEAEJKPVHdrlQKwwAEZGXeEW8/dBwu8mCsqsZtUXlkOZDfw96Lhdv+zr4JaY9ga3I2vVhQBB1h4RDI23QFFVv1AXkxDI3h6gL/8itvzjERJ+IpKLBOS0GHPw2+7y/JKW3FOGJD4hoMYdjJqGauxUL6AspaMO+48GnCiIGKvMi2WXDp7vck9FqAaZ1z9Q+UQ1h8EQn510oORlfyegggQj/a8SmZh8+YO0SWRHdgHwC3tvuptKOxXVRFKRBWZdjCCOtZMP7Bxq/xdKJFf94xFP4plp0KsMLFab+L3xrfPDPbpoL5zMhYZsQDL0rbA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=etB1G5mAzoQrK78l1YWY2LcFpuySs7wlwxKdhO/oWeI=;
- b=RatTJh9OPZPwpocA6uauINW9vWKxXp+HXZ4sZ3jsc2yQCQkxQMks4AZ/Yot3ukqKLsX3FMJTbn9upwK5cbA4MhQOP9WLjfXI36o/sGUp2lmhEPvx1Oh5FmMjqnxhRm+uwJH0G4rTrcuAe8dDpRjw7ablcA2SpVR9lFgdEszKGdyvkOOOguLmqM1Cte+Viq1a8nw8kmzbEZcEN/woR0+LZcGr9Ove5DwJoHWQdaCtb0E5pse/BvnmnI4i5PdNkT2p8T+zfowfrLMkStIv01KJaF5X++ys87eQy4zL0RXJ1EbYvliw6PKjb/kNBH/hKkgGsVGmK3WVM68IfBEorzTniA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lists.denx.de smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=etB1G5mAzoQrK78l1YWY2LcFpuySs7wlwxKdhO/oWeI=;
- b=Xq4J8K6Vrn4MTgDr9ng69dExU4S84a8/pW52S3u6TADl30nk+YgAGaoCKrQJgBs3vwSGjsyK6ob2U0R/pglRm/VzGeyidwRoX09VuzT0cLlFI5YpiKiol6kWu7gRmP0cneNyNPvuOKEzB1WXbHfiWtaTpceia4Nv/ClMAGwAqXc=
-Received: from MW4P223CA0014.NAMP223.PROD.OUTLOOK.COM (2603:10b6:303:80::19)
- by BL3PR12MB6595.namprd12.prod.outlook.com (2603:10b6:208:38e::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.18; Thu, 20 Feb
- 2025 12:27:37 +0000
-Received: from SJ1PEPF00002319.namprd03.prod.outlook.com
- (2603:10b6:303:80:cafe::ed) by MW4P223CA0014.outlook.office365.com
- (2603:10b6:303:80::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.15 via Frontend Transport; Thu,
- 20 Feb 2025 12:27:36 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00002319.mail.protection.outlook.com (10.167.242.229) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8466.11 via Frontend Transport; Thu, 20 Feb 2025 12:27:35 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 20 Feb
- 2025 06:27:32 -0600
-From: Michal Simek <michal.simek@amd.com>
-To: <u-boot@lists.denx.de>, <git@xilinx.com>
-CC: Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, "open list:OPEN FIRMWARE
- AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH] dt-bindings: trivial-devices: Add ti,tps53681
-Date: Thu, 20 Feb 2025 13:27:25 +0100
-Message-ID: <26aac15b8f0fdbcc2633d3843e216e6c8d30bb31.1740054443.git.michal.simek@amd.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="COjHGeFW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740054466; x=1771590466;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=z/5AJyHI0LKzLrcja6hFJ29UKN9qzCXhiR8+FdJShR8=;
+  b=COjHGeFWeAdnQDfnh2c8J4gM0F5Bcc/AkVAJyhPlMhsvAY9a+YM8IE3J
+   p63KFIQ3D9/RUIFUaMGTdCzPsyzFzRC8HZuYcgByqa9ulF/m2JkQ4fem/
+   GhejUoNgIj8ZKVgxV3dauSzQ7nc5L/pdw8v+6SvnggtpCGvS6rQVZ5XJX
+   GI57lCeZyhNFh96r5++ZT1eGfiPmknfZhZvh8o45T+NarcMgy4yzUsZk1
+   jvapP8xroBiG3hxvdNOKg4+vRB5nN6ZejgNqFIVYijCuU6BECf9CgroBc
+   Ts4skMFjb8nI1aC4CAmjEuSMOqwLBqFr7Z95KE5FVM00NPUwy957yXeQS
+   w==;
+X-CSE-ConnectionGUID: vpN4F/9zTxypfuxZ4K2SdQ==
+X-CSE-MsgGUID: jBcRMazQQPOnEhwHlEpkbg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="44479677"
+X-IronPort-AV: E=Sophos;i="6.13,301,1732608000"; 
+   d="scan'208";a="44479677"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 04:27:45 -0800
+X-CSE-ConnectionGUID: Q+Bm36xURVGaUGWHyBrZBQ==
+X-CSE-MsgGUID: RaXisJl/R4qNBFrq0aJzTg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,301,1732608000"; 
+   d="scan'208";a="145876971"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2025 04:27:44 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tl5eX-0000000DKRw-0wts;
+	Thu, 20 Feb 2025 14:27:41 +0200
+Date: Thu, 20 Feb 2025 14:27:41 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Cc: gregkh@linuxfoundation.org, linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [PATCH 26/29] serial: 8250: use serial_in/out() helpers
+Message-ID: <Z7cfvXUCHXVXK_mp@smile.fi.intel.com>
+References: <20250220111606.138045-1-jirislaby@kernel.org>
+ <20250220111606.138045-27-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1105; i=michal.simek@amd.com; h=from:subject:message-id; bh=sV//YLC0KFNJzc5zUtBTqkn5vGCzgzQVBIfoQpvC41k=; b=owGbwMvMwCR4yjP1tKYXjyLjabUkhvTt8utcboj88U4T3N8SY5i9t9N3fnDFmw6Dtp/7L109n Hspu0inI5aFQZCJQVZMkUXa5sqZvZUzpghfPCwHM4eVCWQIAxenAExE8D3Dgh7+/LmBXN639Bcc jZJSefPmVN3TKwzzy1hMUyu3efLYOu4Rt06wz3sg++wMAA==
-X-Developer-Key: i=michal.simek@amd.com; a=openpgp; fpr=67350C9BF5CCEE9B5364356A377C7F21FE3D1F91
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002319:EE_|BL3PR12MB6595:EE_
-X-MS-Office365-Filtering-Correlation-Id: 787a910e-fac9-4357-626c-08dd51a9f50f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|376014|82310400026|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?1z30hN4DqhFBpUsMMfLeVMaLQe1ufRpOVU9YwkHRR7mdSOlwikzkg+eUptSe?=
- =?us-ascii?Q?GNZQ7dmGHXY8w35HCyrgx/N8Mnz/dIzX/F5N33+AOY49AaKgJ8Gt8vI2FyjB?=
- =?us-ascii?Q?ocnW69mFyQk4qz6Mdj54NYKyd8/XR4KwvBZmRrQP1eiV47t7AlxtvBhuCnuv?=
- =?us-ascii?Q?OlOxG9wZNmdO2JI9lk+ybvB/wADsA5WcTSHaqhl3KRkmWD5Ef5gTCKFSXBat?=
- =?us-ascii?Q?oHMdHuGWo8zV9TJPRj5Zg4ZRS/xmXJ+BAAaL/xUbvLvn9v8C9EczQ891xMCY?=
- =?us-ascii?Q?rijIkcEaocLO1DCPHCfzIzNKZw1yy2IXG/aSZTlImddC5Hm0IksXW4MGii50?=
- =?us-ascii?Q?azO1eFTlW/a4yJ053qpY+Ke+C9Dgm+OBDzyyzNq1jFrmk6oD/R8AHiSyumYO?=
- =?us-ascii?Q?pNJkxG92/Ob0cPgwGIa/q+8pODQYAfQVsBBGPDZRwlMwid0vSSVzxDXVqBMP?=
- =?us-ascii?Q?HHeMUOS1JNMsWgUKVDHIBHuwPr+pVwe0yQ26Ekl0oVyVaZunpnE9hPXwoc1s?=
- =?us-ascii?Q?69LEAt8KowgBvTeHyZ2bS3wHRJKmaCBDxVn8dOxjl+bGiIKxIX/vBBk+MgV3?=
- =?us-ascii?Q?i2kLoqM4IwOk9Pxvky3A2gy8tiCYDG0tT01WGfMpaIGnL0A/QGzoYdynOGNC?=
- =?us-ascii?Q?qxvf2Shd1wQObZIXf2T8+/ZLvtr9nOnVGUAr+oluWaYUCMHjlJtzDglGKHw8?=
- =?us-ascii?Q?jkg+d8dYUjDXg2P2UtbYro20z+XfhouOqBQ9HG0WPKPgSCNYxsibr+lP8VE3?=
- =?us-ascii?Q?uDZiO6hRMc2W+/5AmWU9xv4811muLqtAItgT9hJYWkM0lYLV/Hal12gLn8pm?=
- =?us-ascii?Q?+8PAs3LNfmYUmDpod3mki9Xr3BT8JI1CZJw/NVNkYcDD0TcBUrvSnGdyda6o?=
- =?us-ascii?Q?6RP8YsB8cRl0cuju8gaFEUNYkXNEIPXTmHSAvkXDs985QRxSYkCYTh9+G9BJ?=
- =?us-ascii?Q?WKIkglsxNLlRTz7TtWdgnt0/jhUtHY0V7z6ADo8gz1axmBkSfSGu5Hy0U/j7?=
- =?us-ascii?Q?sSoOZjvS+0zMhBDtSJtohMVY/IOdF0FhW9BLE2fn+Xz2AffnloCnSok0PKU4?=
- =?us-ascii?Q?9mTGzwLaCz/MOcyzJH1/enzokgnaqWiO0gQw2M88qH0i+3OTWcVSmjALfwZq?=
- =?us-ascii?Q?1pg8MlVuIgEugvdlZTReVvH/jumNXAoqz9WcuMeV9tPno7Qy05q3xf+Y2ULm?=
- =?us-ascii?Q?hSI9bPQrB22Kl6lDY66SQJFnkP+RvxbXOTrplwkVjfGncAF8aOoV6GWpCzp5?=
- =?us-ascii?Q?y1fKWNnSO4gDEt+8yDUbysqyQBscsDoNoWF215L6ClNJ02lV23F0AoqRSMq4?=
- =?us-ascii?Q?qUkkuOdygw1edk4y2aQ3OzQ2fksQwbgnfSvKIv85lnnum4P8DiK1ni/Vef8N?=
- =?us-ascii?Q?xBAWGpNKoOACe/Qu4DjDpLBseTVPgRB5j5EtZsZfWOvKliAU3OGrL4IqbbCc?=
- =?us-ascii?Q?AVAwNP2EzwLymSPMQH9RRHlvai3vYuy7vuvpXWXRmCJx4uN8+Hzy/ciw0We5?=
- =?us-ascii?Q?qVNyFmhxsPFCJH8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(82310400026)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2025 12:27:35.7508
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 787a910e-fac9-4357-626c-08dd51a9f50f
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002319.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6595
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250220111606.138045-27-jirislaby@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Describe TI TPS5381 a dual-channel multiphase step-down controller
-supporting per-phase and per-channel output telemetry.
+On Thu, Feb 20, 2025 at 12:16:03PM +0100, Jiri Slaby (SUSE) wrote:
+> There are serial_in/out() helpers to be used instead of direct
+> p->serial_in/out(). Use them in various 8250 drivers.
 
-Signed-off-by: Michal Simek <michal.simek@amd.com>
----
+Is this just a mechanical (compile-only) conversion?
+IIRC 8250 DW code is twisted in some cases and it might
+be a possibility of dead loops, but I don't remember it
+by heart and haven't checked myself before writing this
+reply.
 
-Linux kernel driver support has been added by commit 53030bcc87e4 ("hwmon:
-(pmbus/tps53679) Add support for TPS53681").
----
- Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+TL;DR: this needs a thorough review.
 
-diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-index fadbd3c041c8..fd6389aefc30 100644
---- a/Documentation/devicetree/bindings/trivial-devices.yaml
-+++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-@@ -380,6 +380,8 @@ properties:
-           - ti,tps53676
-             # TI Dual channel DCAP+ multiphase controller TPS53679
-           - ti,tps53679
-+            # TI Dual channel DCAP+ multiphase controller TPS53681
-+          - ti,tps53681
-             # TI Dual channel DCAP+ multiphase controller TPS53688
-           - ti,tps53688
-             # TI DC-DC converters on PMBus
 -- 
-2.43.0
+With Best Regards,
+Andy Shevchenko
+
 
