@@ -1,44 +1,51 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF5F1EB1AA;
-	Thu, 20 Feb 2025 07:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D95F1E9912
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 07:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740037308; cv=none; b=ilY0rniJUwKiCzJt9oe7HpAkp8DXxZwoxcMbeTYF8H8WT6uWFIjda/g3tSwwS7zTDwt6LuHRXEdYrzYceZn6x7KciB1HsLvxVg/+F395kxlCogYvDnc6Jj/uvZRMoqvCePjvUUFkaWGlQJLS4yQN5tJRK9f+Z4lSozSPVZku0/U=
+	t=1740037476; cv=none; b=NGPiNJzufSkxT0wA/FsULVp5ZZ6kgWMH/AokGvcPpJPnlpleU87LysmJDPQHsAXfjMTi4mOidCwvEEV8ceR/swOBvAFOTUjas7cwTi3y8EH0ak4l/VI8fyM4PqLD3zy9At2zA1CcUJi1/y8eCfz7hXO+cl4wAOB8UGRFVWvNf8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740037308; c=relaxed/simple;
-	bh=2m5fMq0w89y2cVxObSFljzgnxj6ecbAOXIvZHg3WaRs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=M2B62/dn4xflWPIQ0ymQRxMwJxtK4heh2C5jCX9H++hL4lml3g3DYCeNSvVkWLe7OW6HOTFVvFL3eqaGCOp+q98y6zHh1vIbUXMWSZXawCkevby1CAKtWKgu5DBjAVqCOb/x1G6RXXpd3JJ3TZ5mlfEWo1B9QY6DYPU9idMQIy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=modqC0LJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="modqC0LJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07757C4CED1;
-	Thu, 20 Feb 2025 07:41:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740037307;
-	bh=2m5fMq0w89y2cVxObSFljzgnxj6ecbAOXIvZHg3WaRs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=modqC0LJcC7bgfBYPaLE7oc1nMfrcxeR9HtewLJuggSQgluMo4oLcOKZRiYIYdzBj
-	 izRGFZ2toDIfcJPUdARSICdfjOyCgWpS88Mdz8ZXEvRhc22HWiApgQbc/LfKuf/o8c
-	 /dz+u+jgE0S7Y8wHxJkfCu+82oxSybafr2be6P6KwJ/82CNQ8umdvMAK8yknswXUtk
-	 jbInxR+lE4cKDlhfmof10kzeRrjGsrnhuzcYnFwFOkUABvC33n9J7f6NQUV9EXD7SX
-	 bJxeXGTk+1DYvfG38uuTBIbytQikn8P/Aqu3S9nTefbr3YEu6qsUXdOAkHnRzdP+wO
-	 NwWLVeMqMVfkQ==
-From: "Naveen N Rao (AMD)" <naveen@kernel.org>
-To: <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Cc: Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-	Vasant Hegde <vasant.hegde@amd.com>
-Subject: [PATCH v3 2/2] KVM: SVM: Limit AVIC physical max index based on configured max_vcpu_ids
-Date: Thu, 20 Feb 2025 13:08:03 +0530
-Message-ID: <f4c832aef2f1bfb0eae314380171ece4693a67b2.1740036492.git.naveen@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1740036492.git.naveen@kernel.org>
-References: <cover.1740036492.git.naveen@kernel.org>
+	s=arc-20240116; t=1740037476; c=relaxed/simple;
+	bh=jBP3yn8EoczVygvEooEdxOeCaOGnWGEZlmynb+kkie8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=gpzgb673yKBGdzBEz7GwscS2Yo02c6COuunbxVq3O1Z3Bo3SsKLxKps949Kc+wEP13oOnyl53xV53vlQ5p9zZP6Rhel0B3HCEvNNxaeNXHxU/JM6dr1Qn4VBMUv5/7CayRbOHzeyw8aFVoTekCFanBQmcqRKP7IMByeRSWPiCwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1tl1EV-0004TT-1C; Thu, 20 Feb 2025 08:44:31 +0100
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1tl1EU-001tqV-2B;
+	Thu, 20 Feb 2025 08:44:30 +0100
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1tl1EU-00CC2Y-1x;
+	Thu, 20 Feb 2025 08:44:30 +0100
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	linux-mmc@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Mark Brown <broonie@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>,
+	Christian Loehle <christian.loehle@arm.com>
+Subject: [PATCH v2 5/6] mmc: block: abort requests and suppress errors after undervoltage shutdown
+Date: Thu, 20 Feb 2025 08:44:28 +0100
+Message-Id: <20250220074429.2906141-6-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250220074429.2906141-1-o.rempel@pengutronix.de>
+References: <20250220074429.2906141-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,175 +53,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-KVM allows VMMs to specify the maximum possible APIC ID for a virtual
-machine through KVM_CAP_MAX_VCPU_ID capability so as to limit data
-structures related to APIC/x2APIC. Utilize the same to set the AVIC
-physical max index in the VMCB, similar to VMX. This helps hardware
-limit the number of entries to be scanned in the physical APIC ID table
-speeding up IPI broadcasts for virtual machines with smaller number of
-vcpus.
+Extend the existing card removal checks in mmc_blk_mq_complete_rq() and
+mmc_mq_queue_rq() to also account for the undervoltage state. If the host
+has entered undervoltage shutdown, mark requests as quiet and abort them
+early to prevent unnecessary retries and error logging. This ensures no
+further operations are attempted on the card after an emergency stop.
 
-The minimum allocation required for the Physical APIC ID table is one 4k
-page supporting up to 512 entries. With AVIC support for 4096 vcpus
-though, it is sufficient to only allocate memory to accommodate the
-AVIC physical max index that will be programmed into the VMCB. Limit
-memory allocated for the Physical APIC ID table accordingly.
-
-Signed-off-by: Naveen N Rao (AMD) <naveen@kernel.org>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- arch/x86/kvm/svm/avic.c | 53 ++++++++++++++++++++++++++++++-----------
- arch/x86/kvm/svm/svm.c  |  6 +++++
- arch/x86/kvm/svm/svm.h  |  1 +
- 3 files changed, 46 insertions(+), 14 deletions(-)
+ drivers/mmc/core/block.c | 2 +-
+ drivers/mmc/core/queue.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
-index 1fb322d2ac18..dac4a6648919 100644
---- a/arch/x86/kvm/svm/avic.c
-+++ b/arch/x86/kvm/svm/avic.c
-@@ -85,6 +85,17 @@ struct amd_svm_iommu_ir {
- 	void *data;		/* Storing pointer to struct amd_ir_data */
- };
- 
-+static inline u32 avic_get_max_physical_id(struct kvm *kvm, bool is_x2apic)
-+{
-+	u32 avic_max_physical_id = is_x2apic ? x2avic_max_physical_id : AVIC_MAX_PHYSICAL_ID;
-+
-+	/*
-+	 * Assume vcpu_id is the same as APIC ID. Per KVM_CAP_MAX_VCPU_ID, max_vcpu_ids
-+	 * represents the max APIC ID for this vm, rather than the max vcpus.
-+	 */
-+	return min(kvm->arch.max_vcpu_ids - 1, avic_max_physical_id);
-+}
-+
- static void avic_activate_vmcb(struct vcpu_svm *svm)
- {
- 	struct vmcb *vmcb = svm->vmcb01.ptr;
-@@ -103,7 +114,7 @@ static void avic_activate_vmcb(struct vcpu_svm *svm)
- 	 */
- 	if (x2avic_enabled && apic_x2apic_mode(svm->vcpu.arch.apic)) {
- 		vmcb->control.int_ctl |= X2APIC_MODE_MASK;
--		vmcb->control.avic_physical_id |= x2avic_max_physical_id;
-+		vmcb->control.avic_physical_id |= avic_get_max_physical_id(svm->vcpu.kvm, true);
- 		/* Disabling MSR intercept for x2APIC registers */
- 		svm_set_x2apic_msr_interception(svm, false);
+diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
+index 4830628510e6..ecb87da0e257 100644
+--- a/drivers/mmc/core/block.c
++++ b/drivers/mmc/core/block.c
+@@ -2129,7 +2129,7 @@ static void mmc_blk_mq_complete_rq(struct mmc_queue *mq, struct request *req)
+ 	} else if (mqrq->retries++ < MMC_MAX_RETRIES) {
+ 		blk_mq_requeue_request(req, true);
  	} else {
-@@ -114,7 +125,7 @@ static void avic_activate_vmcb(struct vcpu_svm *svm)
- 		kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, &svm->vcpu);
- 
- 		/* For xAVIC and hybrid-xAVIC modes */
--		vmcb->control.avic_physical_id |= AVIC_MAX_PHYSICAL_ID;
-+		vmcb->control.avic_physical_id |= avic_get_max_physical_id(svm->vcpu.kvm, false);
- 		/* Enabling MSR intercept for x2APIC registers */
- 		svm_set_x2apic_msr_interception(svm, true);
+-		if (mmc_card_removed(mq->card))
++		if (mmc_card_removed(mq->card) || mq->card->host->undervoltage)
+ 			req->rq_flags |= RQF_QUIET;
+ 		blk_mq_end_request(req, BLK_STS_IOERR);
  	}
-@@ -174,6 +185,12 @@ int avic_ga_log_notifier(u32 ga_tag)
- 	return 0;
- }
+diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
+index ab662f502fe7..f46e01988fe8 100644
+--- a/drivers/mmc/core/queue.c
++++ b/drivers/mmc/core/queue.c
+@@ -239,7 +239,7 @@ static blk_status_t mmc_mq_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 	bool get_card, cqe_retune_ok;
+ 	blk_status_t ret;
  
-+static inline int avic_get_physical_id_table_order(struct kvm *kvm)
-+{
-+	/* Limit to the maximum physical ID supported in x2avic mode */
-+	return get_order((avic_get_max_physical_id(kvm, true) + 1) * sizeof(u64));
-+}
-+
- void avic_vm_destroy(struct kvm *kvm)
- {
- 	unsigned long flags;
-@@ -186,7 +203,7 @@ void avic_vm_destroy(struct kvm *kvm)
- 		__free_page(kvm_svm->avic_logical_id_table_page);
- 	if (kvm_svm->avic_physical_id_table_page)
- 		__free_pages(kvm_svm->avic_physical_id_table_page,
--			     get_order(sizeof(u64) * (x2avic_max_physical_id + 1)));
-+			     avic_get_physical_id_table_order(kvm));
- 
- 	spin_lock_irqsave(&svm_vm_data_hash_lock, flags);
- 	hash_del(&kvm_svm->hnode);
-@@ -199,22 +216,12 @@ int avic_vm_init(struct kvm *kvm)
- 	int err = -ENOMEM;
- 	struct kvm_svm *kvm_svm = to_kvm_svm(kvm);
- 	struct kvm_svm *k2;
--	struct page *p_page;
- 	struct page *l_page;
--	u32 vm_id, entries;
-+	u32 vm_id;
- 
- 	if (!enable_apicv)
- 		return 0;
- 
--	/* Allocating physical APIC ID table */
--	entries = x2avic_max_physical_id + 1;
--	p_page = alloc_pages(GFP_KERNEL_ACCOUNT | __GFP_ZERO,
--			     get_order(sizeof(u64) * entries));
--	if (!p_page)
--		goto free_avic;
--
--	kvm_svm->avic_physical_id_table_page = p_page;
--
- 	/* Allocating logical APIC ID table (4KB) */
- 	l_page = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
- 	if (!l_page)
-@@ -265,6 +272,24 @@ void avic_init_vmcb(struct vcpu_svm *svm, struct vmcb *vmcb)
- 		avic_deactivate_vmcb(svm);
- }
- 
-+int avic_alloc_physical_id_table(struct kvm *kvm)
-+{
-+	struct kvm_svm *kvm_svm = to_kvm_svm(kvm);
-+	struct page *p_page;
-+
-+	if (kvm_svm->avic_physical_id_table_page || !enable_apicv || !irqchip_in_kernel(kvm))
-+		return 0;
-+
-+	p_page = alloc_pages(GFP_KERNEL_ACCOUNT | __GFP_ZERO,
-+			     avic_get_physical_id_table_order(kvm));
-+	if (!p_page)
-+		return -ENOMEM;
-+
-+	kvm_svm->avic_physical_id_table_page = p_page;
-+
-+	return 0;
-+}
-+
- static u64 *avic_get_physical_id_entry(struct kvm_vcpu *vcpu,
- 				       unsigned int index)
- {
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index b8aa0f36850f..3cb23298cdc3 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -1423,6 +1423,11 @@ void svm_switch_vmcb(struct vcpu_svm *svm, struct kvm_vmcb_info *target_vmcb)
- 	svm->vmcb = target_vmcb->ptr;
- }
- 
-+static int svm_vcpu_precreate(struct kvm *kvm)
-+{
-+	return avic_alloc_physical_id_table(kvm);
-+}
-+
- static int svm_vcpu_create(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_svm *svm;
-@@ -5007,6 +5012,7 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
- 	.emergency_disable_virtualization_cpu = svm_emergency_disable_virtualization_cpu,
- 	.has_emulated_msr = svm_has_emulated_msr,
- 
-+	.vcpu_precreate = svm_vcpu_precreate,
- 	.vcpu_create = svm_vcpu_create,
- 	.vcpu_free = svm_vcpu_free,
- 	.vcpu_reset = svm_vcpu_reset,
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 5b159f017055..b4670afe0034 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -694,6 +694,7 @@ bool avic_hardware_setup(void);
- int avic_ga_log_notifier(u32 ga_tag);
- void avic_vm_destroy(struct kvm *kvm);
- int avic_vm_init(struct kvm *kvm);
-+int avic_alloc_physical_id_table(struct kvm *kvm);
- void avic_init_vmcb(struct vcpu_svm *svm, struct vmcb *vmcb);
- int avic_incomplete_ipi_interception(struct kvm_vcpu *vcpu);
- int avic_unaccelerated_access_interception(struct kvm_vcpu *vcpu);
+-	if (mmc_card_removed(mq->card)) {
++	if (mmc_card_removed(mq->card) || mq->card->host->undervoltage) {
+ 		req->rq_flags |= RQF_QUIET;
+ 		return BLK_STS_IOERR;
+ 	}
 -- 
-2.48.1
+2.39.5
 
