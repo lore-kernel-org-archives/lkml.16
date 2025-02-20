@@ -1,85 +1,111 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B8926389E
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 23:40:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26E026463B;
+	Thu, 20 Feb 2025 23:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740094850; cv=none; b=iDtc0g+uoT6YR6wh5l5unyWooOlOwlmcZRhADBoV8BQCvaw5DsZuAdH5ZGsOfXallG+u2l3jvlEdy/t2xrg1E+aVc/gCTzPu3vCPhyfR0/ZaqY+tC6St7Hg1qvs/6MWkn+cFUTmBrqmN/reuMkPIPyrndmsYR5T3Zv4vL46Lrc4=
+	t=1740094872; cv=none; b=p2i99PR9zlFMzkFmIQ9rzlfU/v583CfHBpLi9aLtH9LXu2coVh2QlrgXp3wS11yfxelapBzcnt/+MNtQdLbIC2wqd8PLQvB+NCzvXR3gpvLuoJxKO9oKGc3Q6v0RAcgn2km7Q4dv6KMyp0PT78+Kexvdyq6c+ygLhgN1iM/iO9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740094850; c=relaxed/simple;
-	bh=/eAMc3UR3kjJf3NPEKw2BvpiegPPiUL7zxp0YnBFdPw=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=ooDMRIHYXyYKP79Nkx0dqTFY8rJOfc+YwuKPp7ya62hdYgxyE2OWXLUYxHLGiv7mV4qcMi9BARpHr+Yl6v18JJEv18Raukv3M/HeOhqf+uCMSZ+eEe+Y43BmcHQyElnPtWS2bZ+YamSAysL5ChqhPzEcutClSm6YJMu9Lj8HRKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=l+ErdpT6; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1740094872; c=relaxed/simple;
+	bh=irbzh/oe51A79xVYF3jxZzKe+dVGiUXNJMFjUvq6beY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZF8QlyZfkzMOwdR5p26lotGLBxkFG9fl/BlYfaWUhfLhosbhEioASwcQ6cpLxpnPCAFDsYOUCujKeamjT6F/fMoZpGlRxPCRtFIMwZgWEjHofuY6eT7gAiAjz9E0CcIt00raAufFrcgnxaNY8FX1ihW4At22pzspu3lR6dwMUpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UxBspcVw; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="l+ErdpT6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1740094541; bh=VLDA73BVAeJVMPeUhBwuP3jCY55hbvalaLQ/p6JAU/Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=l+ErdpT6uthv/160RYD6sbQ9NAPg2aNgpajEjIUl/gzs4WaxZR8hIfauWuKCVnXaI
-	 EzL2AJwrwlgYQikEN51EmsTYtSX8jQsig22HxR1adJRMIJabmZjLflYIebX1j9Rjbd
-	 pfEMefwoMlhPVpwA16/7nUT7kCHlJg9h3BdsX4HU=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
-	by newxmesmtplogicsvrszgpua8-1.qq.com (NewEsmtp) with SMTP
-	id 74311CC8; Fri, 21 Feb 2025 07:29:03 +0800
-X-QQ-mid: xmsmtpt1740094143tmmwp9vzk
-Message-ID: <tencent_A5A3A64447B765576B46C09365A369A96605@qq.com>
-X-QQ-XMAILINFO: MIAHdi1iQo+zkFhFFlQicchYa4SqsFxX4R3T5UzD3XP93iz/Bj7Lyw5RXtEWcH
-	 z0Zd3bDxOgL9B7glOSSOKdDxioh3n/ffLrebm1LFgfCpr0C5CMGW91TuOxNMsoqlY7Bc9RO/Zj/r
-	 o9oIkx2BVsl2DM22ngrbIOD3OzOw7OF3JZKaiw7RVM2hVpkkOuM6FHaYxmVMGbHk+8XBjfNWgOPf
-	 ivjpyD/TIhfXCp7tup4fo5KZkDH4YrLvLibfWYpKFgeTb19HF/4fgv8o3fRyuyK+q7hZVIeC3DdW
-	 +h9CXUzy61u0V4SZ1Yg/KfOIUCRX8tuZ6TQQjkdgDTf2p6jHvTap/fqJYapkdsy/8ZAxpkLNrRAl
-	 YtpVMhVfyGo6aA8aNbMkcK1b6FpL1RFNxx9jYhSc2Iv8n93YqXamqTLnQmQRnDhw83RHLKnV8WOK
-	 IzO4Q7e4vUDVAZDxXMr8A4hn6XXdpKifJ43omlQKVsQ52t4Dcls4aNNbQjSDKgiC9b+2LuX8oCmv
-	 VrUyi6yE+3hkqmimC8XJfmgpIPGsffCfUbbiXlSwVC8Qf22q3rv+K1kcB0jLH/2F9qoo5IrZK/lG
-	 ucMh6HzOswdHGXIeniKt4DL7MJ88WwOabxlczAKb2/+wg8S9Ms26q40ltZ4tWsZP3EAheKHYLMCz
-	 1Z0i02H/Yl2ZatJd2wh4P2vq1iUqRUW/tFig1zjC3U7cmOl/V/KlTBwCURCac+96Z4r2kh2/irQ/
-	 nhBhQp+lNcDVMxT4s3LxspKTCKXZHEZQsA5LLRkp6AQsPa8TbyIKSwz4csH/igV2tY4Q4Mn/CHIo
-	 q5rEYePJrv5pqESyvvHcv9EAMb/4/eoD3Rw7qVA9UD7mAO81OJRvdBUzWJwN+0Gy/G4SLmDppPpd
-	 V82tT1THDi3/NdsNMIv+0kgElBB176Un87oBnEtWNBq6V4hukZWKxyhlA/bnz8I1NGHrSXVLI0lS
-	 MB0KnbxQbXNJDNd/oE1w==
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: dave.kleikamp@oracle.com
-Cc: eadavis@qq.com,
-	jfs-discussion@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	shaggy@kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH V2] jfs: Initialized first 8 members of the dinomap when creating imap
-Date: Fri, 21 Feb 2025 07:29:02 +0800
-X-OQ-MSGID: <20250220232901.2483093-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <4d47e3cc-d1e6-4281-9a7c-463e6fb0af62@oracle.com>
-References: <4d47e3cc-d1e6-4281-9a7c-463e6fb0af62@oracle.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UxBspcVw"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2f2f5e91393so368180a91.0;
+        Thu, 20 Feb 2025 15:41:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740094870; x=1740699670; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=irbzh/oe51A79xVYF3jxZzKe+dVGiUXNJMFjUvq6beY=;
+        b=UxBspcVw702KjLZ2SYc+H3HdVoZNipdIGC84Qviuy/FU1w5m2WLBdWIjIn2yFDLcOi
+         b5mOziwdkjqKBQsbSi/D+2mzpmalslm08ScWATcC84Iyo5FgVdr4RjVNeHZjN9+xJwlT
+         xcAykwv24GlhyvyH8tERbOGpvQN3jQNlQjT2YzSMMMXcrL9J/ZEoPiXtcp/FiEjD85iR
+         KWzwNVuA8+mFE5riTHvYCYvot3TFJucBm+0Qc9yPoB0MDyXJghemk3XmOlkMAbbqM1VI
+         yxivh5vjsfvO8z8YUq+aZxOXFGyDgdvn7p/SQCGC2N+7Rn5+vSldQnx5cMCNzOF2lxC4
+         GXgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740094870; x=1740699670;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=irbzh/oe51A79xVYF3jxZzKe+dVGiUXNJMFjUvq6beY=;
+        b=VXv7KyP64qsNxi75aErd0a6UQGTM4FktBfcJRZaXiw6ca3Jjovg8i2PX4dq7e+ND9K
+         acIdao/FCQJRhynB6s8l1oQXWT6rEtbDmULIdJg4qj37Ha0Zga61WksaUQJ5PCBLg7DI
+         vFd926y3F8u7MXSqQnPImxWsAQKp5xzdXgIzpxk6y/I/ZXPkaDS7+ysxFOHGT2JuFgFo
+         IkIa4delWVSCUC6falP48SrHTAKGd37rR/Bro3BeOCA7DR/LMcjNCxkU/yXoUPRVWCYB
+         uAaDyNnj5odj34FDzcBPk3tMb6+ia1SJNpsTPQRhUhLSz5w/ae7sqtzctmdBIdWYwAkx
+         GITQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWCuLIf6M+xxjwyOqXYdFDvjoAelGFIVI1yvCXWYYYd+Wk1vLRem3MNDdW/BgbGnjY9gGcpw5knvy4mdBc=@vger.kernel.org, AJvYcCXuxh3/Q00vSmgu7FMx8XCxpffxhZQ55zpeVfoZ1KmJUEOQ9HufnKmFh08AkDoXZEy0mQJl6MaqTn9mXzhNnrU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVJP5r0fBisYWtGHXeZOZEnoKevnXgrHULFOcEPH6Q15A5DX0U
+	T7NWNiUhdfHQnVDFrcAXhagrX8WBDw9CrifDNvNEDeW+Axx8ALvG7fLsFMa7+rF6d6j1Ip3nky/
+	EDxS6A9KSfnX7O/0r46LEULATVIc=
+X-Gm-Gg: ASbGnctuzOW6gFxvSmazkbsPgjRFc6Mg1/zv+C8VaLH1Xwh48Hgjyq5ZLiI32qjkxYy
+	bDa0tvFCYplP/wmQL1R5kBNu+Davhua1a4tXCN86LjvzfeI6N6RpNBNELssprAbbTAciKa523
+X-Google-Smtp-Source: AGHT+IE3tTMC50ciOK+8N/4de26wZ6Pg8vooUK40uWXc0KvimGcWwvs1xaU2vMuCSIhfeBeWHEofydflMa9Ma5wDnkg=
+X-Received: by 2002:a17:90b:1e05:b0:2fa:17d2:158 with SMTP id
+ 98e67ed59e1d1-2fce75dfdb1mr694090a91.0.1740094870138; Thu, 20 Feb 2025
+ 15:41:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <Z7SwcnUzjZYfuJ4-@infradead.org> <b0a8ee53b767b7684de91eeb6924ecdf5929d31e.camel@HansenPartnership.com>
+ <CANiq72nnnOsGZDrPDm8iWxYn2FL=wJqx-P8aS63dFYez3_FEOg@mail.gmail.com>
+ <a627845f73f2f7bedc7a820cfdf476be9993e30f.camel@HansenPartnership.com>
+ <CANiq72m5KB-X1zck1E43yffXOTeD4xRmZgDx_oUiNwR941ce0w@mail.gmail.com> <20250219170623.GB1789203@mit.edu>
+In-Reply-To: <20250219170623.GB1789203@mit.edu>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 21 Feb 2025 00:40:57 +0100
+X-Gm-Features: AWEUYZmuZcjvGrCyDvmTbEKuMO6tYd_p5yChnLfIZmwrF8AsdfajLNX5ZuOK-5U
+Message-ID: <CANiq72=O+sz0mU-urYmviCm55GL0jWzsbjAJviJpT+3MLmQSCA@mail.gmail.com>
+Subject: Re: Rust kernel policy
+To: "Theodore Ts'o" <tytso@mit.edu>
+Cc: James Bottomley <James.Bottomley@hansenpartnership.com>, 
+	Christoph Hellwig <hch@infradead.org>, rust-for-linux <rust-for-linux@vger.kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Greg KH <gregkh@linuxfoundation.org>, 
+	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org, ksummit@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> > syzbot reported a uninit-value in diFree. [1]
-> > 
-> > When print_hex_dump() is called to print the first 32 bytes of imap, the
-> > first 8 members in struct dinomap are the first 32 bytes of imap, because
-> > in_numinos, in_numfree, in_diskblock and in_maxag are not initialized when
-> > imap is created.
-> > 
-> > When creating imap, set in_numinos, in_numfree, in_diskblock and in_maxag
-> > to 0 to prevent this issue from happening.
-> 
-> I appreciate the patch, but I'm accepting a different patch to fix the 
-> problem:
-I am very disappointed with your choice. The design of "KMSAN: uninit-value X"
-is used to find improper data usage and defects in the program. If you directly
-use functions such as kzmalloc to clear the memory to 0, you will lose a valuable
-asset--KMSAN uninit-value.
+On Wed, Feb 19, 2025 at 6:06=E2=80=AFPM Theodore Ts'o <tytso@mit.edu> wrote=
+:
+>
+> I do understand (now) what Wedson was trying to do, was to show off
+> how expressive and powerful Rust can be, even in the face of a fairly
+> complex interface.
 
-BR,
-Edward
+Thanks for saying that.
 
+> It turns out there were some good reasons for why
+> the VFS handles inode creation, but in general, I'd encourage us to
+> consider whether there are ways to change the abstractions on the C
+> side so that:
+
+Definitely -- improving the C side (not just for Rust callers, but
+also for C ones) would be great, whether that is with extra
+annotations/extensions or redesigns.
+
+In the beginning (pre-merge), we tried hard not to require changes on
+the C side, because we wanted to show that it is possible to use Rust
+(i.e. create safe abstractions for C APIs) even with minimal or no
+changes to C headers. We thought it was a useful property.
+
+But then we got C maintainers that welcomed improvements that would
+benefit both sides, which was nice to see, and opens up some doors --
+as a simple example, Greg added made some APIs `const`-correct so that
+we got the right pointer type on the Rust bindings.
+
+So, yeah, anything in that direction (that either improves the C side
+and/or simplifies the Rust bindings/abstractions) would be great.
+
+Cheers,
+Miguel
