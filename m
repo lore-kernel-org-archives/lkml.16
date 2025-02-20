@@ -1,41 +1,33 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D702673B9
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 23:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A6141D5CDD
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 23:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740093772; cv=none; b=Km4ju0wi1dddgfIwKQy2fr/owmjrl/Ciitys7a4PEMr+W6vztzv2BhBCpUcfg78koSYzR9udcQ6vux/hihH8bQNlMChhl93vFd2EPCFv4rVklIjG2GGU6ubhUEbCqggQ99qfOJRtACMKzNbGv7DRxwytjD5dy491Azfxja4GM10=
+	t=1740093822; cv=none; b=TPqiejyc6TJ7suCVNjJlvH+AVpUIzWtjQcv2pp2bD5nZkxCgAbZq0lCm20mwnyUYKc+nhjD6togqRZBQLrwgqbeddgElA55OrOnfJJuWcsz6MVMBZ4pwBEV0FVSq/Gx40zVOqVtlwld6uPXj/Jtc8Uqp4lrQCu+tyqMLd+OMNCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740093772; c=relaxed/simple;
-	bh=xi8CB6l1shR+36y3uN/AUAwYc8WHx9Lty7ZTQj2LUq4=;
+	s=arc-20240116; t=1740093822; c=relaxed/simple;
+	bh=Hr+P/lUTONRuYGjGw07pt5nCppUo+OK5T7GMh7oyyKk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O/1XCNhANnROGZUqPwva6UpHFN9OLMyQKi+HqL4DZZ52cp2v9DblT3UgZbJ2tw4hbc+kTSREZ5Gq2qfXRCswS1VSZbcg65w0vbGIKgvt7Fe9NQlqYLtZOSzp+I3SxDTGD3wteD3qr1+i86Bl/9cJFXV/PoF7kgg+hkFjn/he6Jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mivzqwHE; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mivzqwHE"
-Date: Thu, 20 Feb 2025 18:22:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740093768;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dGbJ3WI15/5w/qh1lbHhAgnppvZMXGv3YJoFVrrmDPU=;
-	b=mivzqwHE7A/0ofjPrldQovdUN2bPRLeU7aZWJ+6DChEQRmd4IMeHYPtMLeJqEZHX8tsmIw
-	zv7zqFDuVIyBV8xkXvpw3I03TC/Ky3uOGePhFoQIUYU2zaVfxLKMfIB5bSmUojZQ0Ou2L6
-	0DgyuznLU3PPfFvYJ7A4Bf5d70sGNyU=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Youling Tang <youling.tang@linux.dev>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
-	k2ci <kernel-bot@kylinos.cn>, Youling Tang <tangyouling@kylinos.cn>
-Subject: Re: [PATCH] objtool: Add bch2_trans_unlocked_or_in_restart_error()
- to bcachefs noreturns
-Message-ID: <uhf4menbsgtgpyrsuwsipv56xgm6kbklsqgx5p3lfxfbkv43v4@7yjp4slw5dma>
-References: <20250218064230.219997-1-youling.tang@linux.dev>
+	 Content-Type:Content-Disposition:In-Reply-To; b=GLaVXwDX1f+DzOE5Km5+oouf7jOXxtifvvJPTTSs6ik2zTo7RG0xivCauYHCkKZV4juBw0SCvg8kxrdFyrgvsv5fJG9px7lqQgU/jd643CPSRxerwMRWCeDQjV3sOT/vvfyFLCTEx2x1DMWu2PivXHk2XlAZrd0WfC++AdPhjK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-3e1ff7000001d7ae-17-67b7b976c54b
+Date: Fri, 21 Feb 2025 08:23:29 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com, akpm@linux-foundation.org,
+	ying.huang@intel.com, vernhao@tencent.com,
+	mgorman@techsingularity.net, hughd@google.com, willy@infradead.org,
+	david@redhat.com, peterz@infradead.org, luto@kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, rjgolo@gmail.com
+Subject: Re: [RFC PATCH v12 00/26] LUF(Lazy Unmap Flush) reducing tlb numbers
+ over 90%
+Message-ID: <20250220232329.GA39373@system.software.com>
+References: <20250220052027.58847-1-byungchul@sk.com>
+ <8accbd91-ca59-43f8-b190-7e1ac3df5e11@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,42 +36,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250218064230.219997-1-youling.tang@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <8accbd91-ca59-43f8-b190-7e1ac3df5e11@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAIsWRmVeSWpSXmKPExsXC9ZZnkW7Zzu3pBguPKlrMWb+GzeLzhn9s
+	Fp9ePmC0eLGhndHi6/pfzBZPP/WxWFzeNYfN4t6a/6wW53etZbXYsXQfk8WlAwuYLI73HmCy
+	mH/vM5vF5k1TmS2OT5nKaPH7B1DxyVmTWRwEPb639rF47Jx1l91jwaZSj80rtDwW73nJ5LFp
+	VSebx6ZPk9g93p07x+5xYsZvFo95JwM93u+7yuax9ZedR+PUa2wenzfJBfBFcdmkpOZklqUW
+	6dslcGVMfrWCveARd8W2lj+sDYwLOLsYOTkkBEwkWnbfY+5i5ACzn/Skg4RZBFQllj7pZQax
+	2QTUJW7c+AlmiwDZp1YuZ+9i5OJgFvjPJHH/YStYQlggQuLJoRNMIDavgIXE74lLGUFsIYEM
+	iWkbHrNAxAUlTs58AmYzC2hJ3Pj3kglkL7OAtMTyfxwgYU4BW4k77Z/BxogKKEsc2HacCeLM
+	bewSyz9wQdiSEgdX3GCZwCgwC8nUWUimzkKYuoCReRWjUGZeWW5iZo6JXkZlXmaFXnJ+7iZG
+	YDwuq/0TvYPx04XgQ4wCHIxKPLwJptvThVgTy4orcw8xSnAwK4nwttVvSRfiTUmsrEotyo8v
+	Ks1JLT7EKM3BoiTOa/StPEVIID2xJDU7NbUgtQgmy8TBKdXAmG0Rxv+pv9xomd0fK64bSX6b
+	b7x+2NLLXPXJLF+nQ0L9/PNVfQn8L98IVLpa22lVMKRvbnuQVxkntLTldaY0r1CJ9qYtKXG9
+	ZlMe/TT+35n5rNSo6svkwG5/c9bC+3Ne3OyvlP0Zdn+57Alz3u21fj+Lj0idSE+M1P+20PKL
+	efT+OyViCsuUWIozEg21mIuKEwFFwUxXwwIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsXC5WfdrFu2c3u6wYfn4hZz1q9hs/i84R+b
+	xaeXDxgtXmxoZ7T4uv4Xs8XTT30sFofnnmS1uLxrDpvFvTX/WS3O71rLarFj6T4mi0sHFjBZ
+	HO89wGQx/95nNovNm6YyWxyfMpXR4vcPoOKTsyazOAh5fG/tY/HYOesuu8eCTaUem1doeSze
+	85LJY9OqTjaPTZ8msXu8O3eO3ePEjN8sHvNOBnq833eVzWPxiw9MHlt/2Xk0Tr3G5vF5k1wA
+	fxSXTUpqTmZZapG+XQJXxuRXK9gLHnFXbGv5w9rAuICzi5GDQ0LAROJJT3oXIycHi4CqxNIn
+	vcwgNpuAusSNGz/BbBEg+9TK5exdjFwczAL/mSTuP2wFSwgLREg8OXSCCcTmFbCQ+D1xKSOI
+	LSSQITFtw2MWiLigxMmZT8BsZgEtiRv/XjKB7GUWkJZY/o8DJMwpYCtxp/0z2BhRAWWJA9uO
+	M01g5J2FpHsWku5ZCN0LGJlXMYpk5pXlJmbmmOoVZ2dU5mVW6CXn525iBMbXsto/E3cwfrns
+	fohRgINRiYc3wXR7uhBrYllxZe4hRgkOZiUR3rb6LelCvCmJlVWpRfnxRaU5qcWHGKU5WJTE
+	eb3CUxOEBNITS1KzU1MLUotgskwcnFINjNKbX24SE1x3fcu1I8/nshUfv2nX8FZ5gdUb6Q28
+	d8oU9qc35zpu8H3X22R27c2MBUXy5Q199bfWhwp0pUr/698z8Upor9T7z5LJX/ecmcGzaYPy
+	7FN/rBlOzd/gZZ+zNZphWb37jerETsGfX6Ywi6zT8Co3n3th6sq33LEpPqsnXzaeWzhVx1+J
+	pTgj0VCLuag4EQDIkqvyqwIAAA==
+X-CFilter-Loop: Reflected
 
-On Tue, Feb 18, 2025 at 02:42:30PM +0800, Youling Tang wrote:
-> From: Youling Tang <tangyouling@kylinos.cn>
+On Thu, Feb 20, 2025 at 07:15:44AM -0800, Dave Hansen wrote:
+> On 2/19/25 21:20, Byungchul Park wrote:
+> > I'm posting the latest version so that anyone can try luf mechanism if
+> > wanted by any chance.  However, I tagged RFC again because there are
+> > still issues that should be resolved to merge to mainline:
 > 
-> Fix the following objtool warning during build time:
-> fs/bcachefs/btree_cache.o: warning: objtool: btree_node_lock.constprop.0() falls through to next function bch2_recalc_btree_reserve()
-> fs/bcachefs/btree_update.o: warning: objtool: bch2_trans_update_get_key_cache() falls through to next function need_whiteout_for_snapshot()
-> 
-> bch2_trans_unlocked_or_in_restart_error() is an Obviously Correct (tm)
-> panic() wrapper, add it to the list of known noreturns.
-> 
-> Fixes: b318882022a8 ("bcachefs: bch2_trans_verify_not_unlocked_or_in_restart()")
-> Reported-by: k2ci<kernel-bot@kylinos.cn>
-> Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+> I don't see anything fundamentally different here from the last 11
+> versions. I think the entire approach is dangerous and basically makes
+> things impossible to debug. It's not clear that some of the failure
+> scenarios that I've brought up in the past have actually been fixed.
 
-Reviewed-by: Kent Overstreet <kent.overstreet@linux.dev>
+Respect your opinion.
 
-> ---
->  tools/objtool/noreturns.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> What I've said here still stands:
 > 
-> diff --git a/tools/objtool/noreturns.h b/tools/objtool/noreturns.h
-> index b2174894f9f7..6bb7edda3094 100644
-> --- a/tools/objtool/noreturns.h
-> +++ b/tools/objtool/noreturns.h
-> @@ -19,7 +19,7 @@ NORETURN(__x64_sys_exit_group)
->  NORETURN(arch_cpu_idle_dead)
->  NORETURN(bch2_trans_in_restart_error)
->  NORETURN(bch2_trans_restart_error)
-> -NORETURN(bch2_trans_unlocked_error)
-> +NORETURN(bch2_trans_unlocked_or_in_restart_error)
->  NORETURN(cpu_bringup_and_idle)
->  NORETURN(cpu_startup_entry)
->  NORETURN(do_exit)
-> -- 
-> 2.34.1
+> > https://lore.kernel.org/all/fab1dd64-c652-4160-93b4-7b483a8874da@intel.com/
 > 
+> > I think tglx would call all of this "tinkering".  The approach to this
+> > series is to "fix" narrow, specific cases that reviewers point out, make
+> > it compile, then send it out again, hoping someone will apply it.
+> > 
+> > So, for me, until the approach to this series changes: NAK, for x86.
+> > Andrew, please don't take this series.  Or, if you do, please drop the
+> > patch enabling it on x86.
+> 
+> I think I'd also like to stop being cc'd on this. If LUF is merged into
+
+I will un-cc you from the next spin.
+
+	Byungchul
+
+> mainline and proven to work on arm64 or riscv for a year, I'd be happy
+> to take another look at enabling it on x86. I think that's just about
+> the only thing that would make me reconsider.
