@@ -1,142 +1,107 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0606D1AF0C8;
-	Thu, 20 Feb 2025 10:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9275A1F1510
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 10:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740048694; cv=none; b=l8ynQSeamHmuRq/Bl2i+rTJ1aVIWekBbr2UwGiviVu/JVNmGgsjuOAvfyEFZFXMqNvAW/rqHlaWNruzwKd3fy57XXYMGL3EMyotTXR0VbFNeZq4r/KsE3udDgoIiBWKFYF3Vc419Vw5WepdxWp8nIb37Cf3cbxMRqrBTuUmssfM=
+	t=1740048703; cv=none; b=D/Xni6nc+neiRszR7C3/QeCDDmnTGl9kEcqJgAobWxCyvbtU2TjW1y52KwnPpFHZwTsHyEa5HIH4+5BwEW32WPLjru1PxcikypaFKvbhAUIj3eRKrBIF7XtcEIq0qL+e8Wfud/mrqVs4T64NF/mz5LpMgECXWtmv1DDGmnjpZ20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740048694; c=relaxed/simple;
-	bh=kugZ4ICQ6eJujuYRRoD5lTeRhWACX+VCNrkorfJW3uk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=S+16FZ4PJaBifaQ4r7XHU7yLPfKcfeLZokN5MyM+xwxwMsFMAPmQ9OJOYH1UBImjuI1XV7m8miTxRHGGHhmw9DDSHEOCxxLGDxsnBsrcA43FCKDZvhFxI03Chhea217pKlHCHprPYuORzdPPNEtQNGAje61yGeXmTPEd4VAxCgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KVHEoTgg; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KVHEoTgg"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-abb9e81c408so13325666b.2;
-        Thu, 20 Feb 2025 02:51:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740048691; x=1740653491; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IRd79G85Q0LlojAdRFjUNytWpgLl02au24VSRlRs2qk=;
-        b=KVHEoTggEtAy4mx5CbZ1I9Lr3OyqWGZDDupIZybcE1n7C8MPOVGOxcJsqhmyyNl913
-         SqX8fmb1gADcJ8FVVjRN1q/A5joyareaLX+XlSOVud5F+hCAq6o3omkSRFYo6ZAg1VOo
-         HWs3UPe/4JbxXm30INlbLTbqThzJ6ACUtkk0odp8TwPcEEpnU5UkPHEg0wsgN2HSYysw
-         qjJ7qoD7SWjyh40L5C1SN6WnGFV5TfuB0boYwjdcpNx5v7eMK8zZ5+Q6GlDa+/TZO6N7
-         oW9Pt9NqeVVEXAt+gH8Ec+Jc0tRFJ7HWz4qeuYMSjnnUE/JZkYK7rrPgl97pbO5BRr3v
-         Z0uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740048691; x=1740653491;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IRd79G85Q0LlojAdRFjUNytWpgLl02au24VSRlRs2qk=;
-        b=r7VJFlkIQ+oyCJJzsv0cSL7Xg0GItdwJCD0YMxexCs9aXnw/ltzY72fEI0gTOLUePH
-         Ek90AZYPkbMF5PT0SeIfcpmC1azoxHzRj1VpWMW8ZsGlhyeD4+FtMZqb9r0b1Bi+jLIR
-         TPtZrWAnlU9gyMAnl/2WdRdXKqNre68WFi8zyBR4LWUNnfQte7e/VhVNJARaDgQX4Hfo
-         XGpeo40yIG2OJjwiZIdd12MFgscP18uMUF19wzJZBHCXQrLe/lIpDJdn8XAgLuEIkCQ3
-         /jng/AyU5NFRMd8qXFuNB8PAWRrUbzc2wQTqgl0lxEJrq6guqNBmV+bg6cxtioXniEzx
-         6qAg==
-X-Forwarded-Encrypted: i=1; AJvYcCWPWH4FqO58dthp5t8g8FOw9XTMjVEC9dG7I013hckSP3e8kr4ss+DpX3tVIymQDyTmuJlraAe1xY8IsIc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWusrpL1ut9LhehJTjOqyoKu7gPo5OoPLS5xYGt+lADT8Kjs50
-	cDMVriBub59bYf0B+E4iWLlu+S5jpiHEmfw9sy/Ojh3TNThyc/IlNM42XPYn
-X-Gm-Gg: ASbGncuEpgsL7Eb93cXXAAST38jh4PF+esY9jYVO/jRtmG9oN8b9xUR0MaczjGtouAA
-	r1KTr1ecgmVvJExPnXTvDTNr693HFGcS9OIkuvKiyfaohSq1ylvOvizVEPK0LHhLXe22rUuRpuU
-	oTwQXljQtw0GNJh8f3Pgqh8egS6gQvbvYfhW0Z2RR6OTBoj2rbhqgOB37V8K5pnl7dU649XR8EX
-	Dyl1pZcWe/AUYt4c0KYwt9pb26TtMqr+HEzOr/gDmmwVlCmYbP16NsRiLaFufDS0p4jCQQFfWuU
-	blVG5ngvg+UK/OJsL8nyxc2t1Qb0cr25lrOuv9+JXRTOAmux9SFRy7/WUUj3u6ue0orqxA==
-X-Google-Smtp-Source: AGHT+IE4hqobH8+b7LWMRSgrP9ZbrPbi2D5lsBSzNGgOgZ4XGJj2X49htf2Noo8lcu0wjPkadcjwWg==
-X-Received: by 2002:a17:906:dc8e:b0:ab6:ed8a:1593 with SMTP id a640c23a62f3a-abb70b49b86mr880405166b.7.1740048158395;
-        Thu, 20 Feb 2025 02:42:38 -0800 (PST)
-Received: from 0f997e1ceb21.v.cablecom.net (84-72-156-211.dclient.hispeed.ch. [84.72.156.211])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abbdfcaed55sm246474866b.137.2025.02.20.02.42.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 02:42:37 -0800 (PST)
-From: Lothar Rubusch <l.rubusch@gmail.com>
-To: lars@metafoo.de,
-	Michael.Hennerich@analog.com,
-	jic23@kernel.org
-Cc: linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	eraretuya@gmail.com,
-	l.rubusch@gmail.com
-Subject: [PATCH v3 00/15] iio: accel: adxl345: add interrupt based sensor events
-Date: Thu, 20 Feb 2025 10:42:19 +0000
-Message-Id: <20250220104234.40958-1-l.rubusch@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1740048703; c=relaxed/simple;
+	bh=2kDN3nPBO25fmfYMhJbafNSKD40Rzjf4VVY+oJncUCs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WFdiyiTSWPzliaM51dbM1St0JviL8AlRpQ07HSHFxKpeH0GpQ7fCN23eKagyVXWzJYtsce+ETwhU+PfZft25bJpLwDyvSMlsOd3G4nCIqkxX9+1zaKzXHWxKx10NBRUqR5X2eqyoM0PyfLcTvzM0ukv+Y3sYrQJaIonsqbgfsis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-3c9ff7000001d7ae-92-67b709367d78
+Date: Thu, 20 Feb 2025 19:51:29 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Hillf Danton <hdanton@sina.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kernel_team@skhynix.com
+Subject: Re: [RFC PATCH v12 00/26] LUF(Lazy Unmap Flush) reducing tlb numbers
+ over 90%
+Message-ID: <20250220105129.GA54095@system.software.com>
+References: <20250220052027.58847-1-byungchul@sk.com>
+ <20250220103223.2360-1-hdanton@sina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250220103223.2360-1-hdanton@sina.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOLMWRmVeSWpSXmKPExsXC9ZZnka4Z5/Z0g0fbNC0O/HzOYnF51xw2
+	i3tr/rM6MHts+jSJ3WPSC3ePz5vkApijuGxSUnMyy1KL9O0SuDL+bPzEXHBLqOJs2wq2BsZN
+	fF2MnBwSAiYSFw+cZYWxX9/8B2azCKhKfNuxngnEZhNQl7hx4ycziC0ioCzReWEWWA2zgL/E
+	hFsbWEBsYYEIiSeHToDV8wpYSJxceg6sXkggQeL11P3sEHFBiZMzn7BA9GpJ3Pj3EqieA8iW
+	llj+jwMkzClgKtF4/ijYeFGgVQe2HQcq4QI67SerxM7rEHMkBCQlDq64wTKBUWAWkrGzkIyd
+	hTB2ASPzKkahzLyy3MTMHBO9jMq8zAq95PzcTYzA4FxW+yd6B+OnC8GHGAU4GJV4eGe0bksX
+	Yk0sK67MPcQowcGsJMLbVr8lXYg3JbGyKrUoP76oNCe1+BCjNAeLkjiv0bfyFCGB9MSS1OzU
+	1ILUIpgsEwenVANj7GHHQAlevSimp4vOvVvvZjXv0xRGuedWIdHX8yW6ahnaWd8dnXPOPza6
+	6o7CfM2qCyrC26pm5+y/98+Pee2jXQayu7jWevu3616Vdm+auNhI9uw2LdHJf9MvTWMpVHr5
+	Lzj54mSuuJj5N/cvfya3yEz4dOl6+bQzt2YnFFa2r7eR8VZncctQYinOSDTUYi4qTgQAPtGW
+	zEoCAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHLMWRmVeSWpSXmKPExsXC5WfdrGvGuT3d4NZzRYsDP5+zWByee5LV
+	4vKuOWwW99b8Z3Vg8dj0aRK7x6QX7h6LX3xg8vi8SS6AJYrLJiU1J7MstUjfLoEr48/GT8wF
+	t4QqzratYGtg3MTXxcjJISFgIvH65j9WEJtFQFXi2471TCA2m4C6xI0bP5lBbBEBZYnOC7PA
+	apgF/CUm3NrAAmILC0RIPDl0AqyeV8BC4uTSc2D1QgIJEq+n7meHiAtKnJz5hAWiV0vixr+X
+	QPUcQLa0xPJ/HCBhTgFTicbzR8HGiwKtOrDtONMERt5ZSLpnIemehdC9gJF5FaNIZl5ZbmJm
+	jqlecXZGZV5mhV5yfu4mRmCoLav9M3EH45fL7ocYBTgYlXh4Hzzemi7EmlhWXJl7iFGCg1lJ
+	hLetfku6EG9KYmVValF+fFFpTmrxIUZpDhYlcV6v8NQEIYH0xJLU7NTUgtQimCwTB6dUA6ND
+	xMPJh/P5XrDeMbBmajbhsvIP26z6uPpLU9HrU3/q7MRWtaWLX78WeXpTa6r73naO8Pn6f7l2
+	2ffrcRUd/Hy9ZLrsLKZjeqZHflkp/OORmfxZi0fy5xZO+TudR85aLb13TF79yhIP98QdU97l
+	xk5ubxe6+Pn+xRsmNS1FAnv5FFS3r3kv91qJpTgj0VCLuag4EQB+4dwpMQIAAA==
+X-CFilter-Loop: Reflected
 
-Add several interrupt based sensor detection events:
-- single tap
-- double tap
-- free fall
-- activity
-- inactivity
-- sample frequency
-- full frequency g range approach
-- documentation
+On Thu, Feb 20, 2025 at 06:32:22PM +0800, Hillf Danton wrote:
+> On Thu, 20 Feb 2025 14:20:01 +0900 Byungchul Park <byungchul@sk.com>
+> > To check luf's stability, I ran a heavy LLM inference workload consuming
+> > 210GiB over 7 days on a machine with 140GiB memory, and decided it's
+> > stable enough.
+> > 
+> > I'm posting the latest version so that anyone can try luf mechanism if
+> > wanted by any chance.  However, I tagged RFC again because there are
+> > still issues that should be resolved to merge to mainline:
+> > 
+> >    1. Even though system wide total cpu time for TLB shootdown is
+> >       reduced over 95%, page allocation paths should take additional cpu
+> >       time shifted from page reclaim to perform TLB shootdown.
+> > 
+> >    2. We need luf debug feature to detect when luf goes wrong by any
+> >       chance.  I implemented just a draft version that checks the sanity
+> >       on mkwrite(), kmap(), and so on.  I need to gather better ideas
+> >       to improve the debug feature.
+> > 
+> > ---
+> > 
+> > Hi everyone,
+> > 
+> > While I'm working with a tiered memory system e.g. CXL memory, I have
+> > been facing migration overhead esp. tlb shootdown on promotion or
+> > demotion between different tiers.  Yeah..  most tlb shootdowns on
+> > migration through hinting fault can be avoided thanks to Huang Ying's
+> > work, commit 4d4b6d66db ("mm,unmap: avoid flushing tlb in batch if PTE
+> > is inaccessible").
+> > 
+> > However, it's only for migration through hinting fault.  I thought it'd
+> > be much better if we have a general mechanism to reduce all the tlb
+> > numbers that we can apply to any unmap code, that we normally believe
+> > tlb flush should be followed.
+> > 
+> > I'm suggesting a new mechanism, LUF(Lazy Unmap Flush), that defers tlb
+> > flush until folios that have been unmapped and freed, eventually get
+> > allocated again.  It's safe for folios that had been mapped read-only
+> > and were unmapped, as long as the contents of the folios don't change
+> > while staying in pcp or buddy so we can still read the data through the
+> > stale tlb entries.
+> >
+> Given pcp or buddy, you are opening window for use after free which makes
+> no sense in 99% cases.
 
-All the needed parameters for each and methods of adjusting them, and
-forward a resulting IIO event for each to the IIO channel.
+It's kinda 'use(= read only) after free' but luf ensures the data of the
+interesting pages doesn't change.  That's what luf works on.
 
-Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
----
-v2 -> v3:
-- generally introduction of regmap cache for all directly stored 8-bit
-  values, specification of volatile regs and cleanup
-- moving thresholds, unchanged values and flags to regmap cache, in
-  consequence removal of corresponding member values of the state
-  instance
-- removal of intio and int_map member fields due to regmap cache, thus
-  split of set_interrupts() patches in two parts
-- rework documentation
-- rework of ac-bit comment
-
-v1 -> v2:
-- implementation of all events (but tap2 suppress bit) by means IIO ABI
-- add sample frequency / ODR configuration
-- add g ranges configuration
-- add activity/inactivity using auto-sleep and powersave
-- add dynamic adjustment of default values for
-  activity/inactivity thresholds and time for inactivity based on ODR
-  and g range (can be overwritten)
-- add sensor documentation
-
----
-Lothar Rubusch (15):
-  iio: accel: adxl345: reorganize measurement enable
-  iio: accel: adxl345: add debug register access
-  iio: accel: adxl345: reorganize irq handler
-  iio: accel: adxl345: use regmap cache for INT mapping
-  iio: accel: adxl345: move INT enable to regmap cache
-  iio: accel: adxl345: add single tap feature
-  iio: accel: adxl345: add double tap feature
-  iio: accel: adxl345: add double tap suppress bit
-  iio: accel: adxl345: add freefall feature
-  iio: accel: adxl345: extend sample frequency adjustments
-  iio: accel: adxl345: add g-range configuration
-  iio: accel: adxl345: add activity event feature
-  iio: accel: adxl345: add inactivity feature
-  iio: accel: adxl345: add coupling detection for activity/inactivity
-  docs: iio: add documentation for adxl345 driver
-
- Documentation/iio/adxl345.rst    |  406 +++++++++
- drivers/iio/accel/adxl345.h      |    7 +-
- drivers/iio/accel/adxl345_core.c | 1449 +++++++++++++++++++++++++++---
- drivers/iio/accel/adxl345_i2c.c  |    2 +
- drivers/iio/accel/adxl345_spi.c  |    2 +
- 5 files changed, 1762 insertions(+), 104 deletions(-)
- create mode 100644 Documentation/iio/adxl345.rst
-
--- 
-2.39.5
-
+	Byungchul
