@@ -1,88 +1,89 @@
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BD921FDE06;
-	Thu, 20 Feb 2025 15:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D17D1FDE35;
+	Thu, 20 Feb 2025 15:27:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740065272; cv=none; b=g+huqd/Q2ue9xTD98n70QeKOrI10D69jWYutRLPiAslUaRqa9sAN2DczA06sk2CvZ/ora/y7a2hlp3YuwEYM7CDJeXZja9BlxcolvAljDKKcL8atYzFcib1qt2yXh/IT2SaLC85sxplRZDoDXnBFH0x2rU5Z2K/IC8UyhgxQZN4=
+	t=1740065272; cv=none; b=YjhpHGFT8iXxKKyBO+/PtNQHTBc6axyHTR16Q4ZqiYhyR9AhMrKWRq2zr6gjtedGfPY9o3/Zb76+p1bcQo43nxyQEa6qeRFUczOA8bT1Zncd18qcJSkQRVJyMfTpxozv1Jr7PKty1mehgikM/e9eUamugqAEiU/yOkbsSCXC6vU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740065272; c=relaxed/simple;
-	bh=rXnobFmrvMmMBwc7ssyoFJQ3Uz7vfCbIQpjOoOpSmXE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=g+EQrQtHMyKzDHsoj7ItM4SwHrLmquYcFW66KugpdyQuJV6NeDNrN8Nsb2MjIxerkKYvhv1XkEuKR2a+5JaTom6J+yY+DiLlr5AkbCDDJ49A/oK6W1vC9hudl/SI3CWDxspxeKVaiaMBz5awwGWocO9Eq8KPoOAn2QJKHkzQwC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-X-CSE-ConnectionGUID: ipAMMgacQB6VhWLVMse7Cw==
-X-CSE-MsgGUID: fvaJLnYeQV2q0VUFDfLJAg==
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 21 Feb 2025 00:27:49 +0900
-Received: from ubuntu.adwin.renesas.com (unknown [10.226.92.134])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 0CED040436EB;
-	Fri, 21 Feb 2025 00:27:43 +0900 (JST)
-From: John Madieu <john.madieu.xa@bp.renesas.com>
-To: mturquette@baylibre.com,
-	magnus.damm@gmail.com,
-	krzk+dt@kernel.org,
-	rui.zhang@intel.com,
-	daniel.lezcano@linaro.org,
-	sboyd@kernel.org,
-	geert+renesas@glider.be,
-	lukasz.luba@arm.com,
-	rafael@kernel.org,
-	robh@kernel.org,
-	p.zabel@pengutronix.de
-Cc: biju.das.jz@bp.renesas.com,
-	claudiu.beznea.uj@bp.renesas.com,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	john.madieu@gmail.com,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	John Madieu <john.madieu.xa@bp.renesas.com>
-Subject: [PATCH 2/7] clk: renesas: r9a09g047: Add clock and reset signals for the TSU IP
-Date: Thu, 20 Feb 2025 16:26:07 +0100
-Message-ID: <20250220152640.49010-3-john.madieu.xa@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250220152640.49010-1-john.madieu.xa@bp.renesas.com>
-References: <20250220152640.49010-1-john.madieu.xa@bp.renesas.com>
+	bh=KGswvkIqG/8FWjEnabCRQkJO73Xpx/BMagFR70RGXgA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U+6xVs2Qd0mdLMOYguhQcuKZOfavhKTvyV7r8E2HCStoEMdTvDRlQN/Qz9io+dTShYWIvJkTlbcU42TdP9DVJxq1NBGoAXkac+iGxgkJpk0Y/Z+JnZZ0sDxWgHPS68TIBgUTk4JnJWiLSzhnTlHdQVkzXXx/sASJFCzkfQJ7r8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2f9d3d0f55dso1687262a91.1;
+        Thu, 20 Feb 2025 07:27:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740065270; x=1740670070;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lIQfSE0EI2Dxu23jjgqsNc/1C3k/ezRz6dk/fxTscZ0=;
+        b=u/lSzIFOgohRNx83PWSthig0x2uo6K/tl+YL6SlPgGfGxPotondDrWiJGQeY9ta/3i
+         sF82ezjpAT8+DFEAcIngdYkp/YD9zHgEyS35T4AGnz95N7KpzSfqtszohlzYlMoFW3FQ
+         9d2J9cpG9XnHrmuBZutwXiEvp4k8d3ehZWJ9aOgEcdr/7dhv7P35IcXZsPwzu08G+wVZ
+         ZFaF6oD8FO3xB8pN6qMLayN9CnNl71HS6BTJp7VBZlXPN9DN+GeMSaMp4pjbMR8X6Hc0
+         BJltRX39gHJn8MitEXXsqh+woF/8HEw8WpCAY7W1JW/h/o1a8rAKG3Zsv7gq17JopbcO
+         xZNA==
+X-Forwarded-Encrypted: i=1; AJvYcCUP6r8eO3eKmeLef7cFoYAszFPNsY+Qh4QyZru8rjHSqsePcuWAPPS2S2R3BEns4/b270ZnmqoB6MVK@vger.kernel.org, AJvYcCW6r5XVvCtqAdyUYDETPl6PT258LjbMZDRMOGBWlohS2VIqrCkQqNoT0BtTIvnWOeDFTPWL4GSqonNQp8I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygYgIxKkQxZ7WbdvsGmAyaJXcDrpiOOXWa2AXl/1Eq94qEVVmM
+	3v0Qn9k4cmfIMX983tzFj4wzPS9q7NxZkgA80C7XUpB5h0C00uit
+X-Gm-Gg: ASbGnctjmgQrOIGiZWcXUG7zhuvAJHJOxvitdmsGaXMNomkFkT3LHQINsjdJhh1Fx+K
+	JE3QvFsUNSoWzdhMaMNfepOLDPxsSf2OAOFIFNhOj572m2GOeL3vxTF1MJlx7HKXt7pbzWPEOM/
+	ShmiwYOwrLY24DihEMn3ECouiPpMQjnEHBqMZNO2ykLaLrFbMF9bwtdq5QE4rSolRKWTI3Yl2D8
+	iZx2Oxdqoq9tHyq24aLGlNszJVx/jXLxPq1Cc2YHyfoVjZA/uoA1bLvAbODgZOdOQkh54pwpuEb
+	G8JQvxq2aahZJ4AfcK51HE66ba0pWUaynhpCQk4Ukec+oryL+w==
+X-Google-Smtp-Source: AGHT+IHt5km9+jdGncPtkaresa3l6P2z7fy1FiddcxIvpdlML+Jrubp8HBKFMPY+knP4FO8RHlUnUw==
+X-Received: by 2002:a17:90b:3886:b0:2ee:dcf6:1c77 with SMTP id 98e67ed59e1d1-2fcb5a39f3bmr14293908a91.16.1740065270430;
+        Thu, 20 Feb 2025 07:27:50 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2fbf98b4c52sm15980264a91.4.2025.02.20.07.27.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 07:27:49 -0800 (PST)
+Date: Fri, 21 Feb 2025 00:27:47 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Christian Bruel <christian.bruel@foss.st.com>
+Cc: manivannan.sadhasivam@linaro.org, kishon@kernel.org,
+	bhelgaas@google.com, cassel@kernel.org, Frank.Li@nxp.com,
+	dlemoal@kernel.org, fabrice.gasnier@foss.st.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: endpoint: pci-epf-test: Fix double free Oops
+Message-ID: <20250220152747.GA2510987@rocinante>
+References: <20250124123043.96112-1-christian.bruel@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250124123043.96112-1-christian.bruel@foss.st.com>
 
-Add required clocks and resets signals for the TSU IP available on the
-Renesas RZ/G3E SoC
+Hello,
 
-Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
----
- drivers/clk/renesas/r9a09g047-cpg.c | 3 +++
- 1 file changed, 3 insertions(+)
+> Fixes an oops found while testing the stm32_pcie ep driver with handling
+> of PERST# deassertion:
+> 
+> During EP initialization, pci_epf_test_alloc_space allocates all BARs,
+> which are further freed if epc_set_bar fails (for instance, due to
+> no free inbound window).
+> 
+> However, when pci_epc_set_bar fails, the error path:
+>      pci_epc_set_bar -> pci_epf_free_space
+> does not reset epf_test->reg[bar].
+> 
+> Then, if the host reboots, PERST# deassertion restarts the BAR allocation
+> sequence with the same allocation failure (no free inbound window),
+> creating a double free situation since epf_test->reg[bar] was deallocated
+> and is still non-NULL.
+> 
+> Make sure that pci_epf_alloc_space/pci_epf_free_space are symmetric
+> by resetting epf_test->reg[bar] when memory is deallocated.
 
-diff --git a/drivers/clk/renesas/r9a09g047-cpg.c b/drivers/clk/renesas/r9a09g047-cpg.c
-index 51fd24c20ed5..ada57964c132 100644
---- a/drivers/clk/renesas/r9a09g047-cpg.c
-+++ b/drivers/clk/renesas/r9a09g047-cpg.c
-@@ -154,6 +154,8 @@ static const struct rzv2h_mod_clk r9a09g047_mod_clks[] __initconst = {
- 						BUS_MSTOP(8, BIT(4))),
- 	DEF_MOD("sdhi_2_aclk",			CLK_PLLDTY_ACPU_DIV4, 10, 14, 5, 14,
- 						BUS_MSTOP(8, BIT(4))),
-+	DEF_MOD("tsu_1_pclk",			CLK_QEXTAL, 16, 10, 8, 10,
-+						BUS_MSTOP(2, BIT(15))),
- };
- 
- static const struct rzv2h_reset r9a09g047_resets[] __initconst = {
-@@ -177,6 +179,7 @@ static const struct rzv2h_reset r9a09g047_resets[] __initconst = {
- 	DEF_RST(10, 7, 4, 24),		/* SDHI_0_IXRST */
- 	DEF_RST(10, 8, 4, 25),		/* SDHI_1_IXRST */
- 	DEF_RST(10, 9, 4, 26),		/* SDHI_2_IXRST */
-+	DEF_RST(15, 8, 7, 9),		/* TSU_1_PRESETN */
- };
- 
- const struct rzv2h_cpg_info r9a09g047_cpg_info __initconst = {
--- 
-2.25.1
+Applied to endpoint, thank you!
 
+	Krzysztof
