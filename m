@@ -1,50 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from e3i103.smtp2go.com (e3i103.smtp2go.com [158.120.84.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E591F3D2C
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 11:28:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021751F236C
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 11:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.120.84.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740050909; cv=none; b=jeSRaMIa5lWuZlIsbkh/2Yfw8jx2jxciscTLQ6suSZJVeeWOaNuhlCnTk/1/bK+LMftcjuT7WtpLDQzRLFcuFj3XZI0CpgNrm0/TBVvczWdvOHxfzWURSFSAkFXzVSZ6nKVw8haM5KfNKry36M0A5nPzTg3NcbzO88PJyV629M8=
+	t=1740050908; cv=none; b=uxfGh/mGNZVnAEzTksEzehXx5bsB+Vauk996DhL4Wc7FxpipVk5wvcKeQ8giO/agjZV1EShDqUCCrPtN4Qj07R8mDL/7NQf4HiyNjBrHOhRkp1lxeSta/FVgCn1DreZ+LGxLhKJ0x9JJh9B/jIu9i890YbE3KI936kpHTH0GQHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740050909; c=relaxed/simple;
-	bh=WfPMRPu5h33yO/ZOjwVBBS1RB5ho4n5GU11BEOfYUvM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DQZnX1EDZ2+YUznPakfmP5T/ezESOT2rPUC+Pp1FIzi1MbQ1onq5KK/z260J5+ab96hri5urfZfy62H2Px8HzxHF1r0SEzTAuEYNWQWDpRkk5FYhR+ef3Vlrpjk26h/KVilYq3JOoFe7SxI6evDna+vWWnvmnkRDA9xKpX63ltM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eedjjoeY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740050908; c=relaxed/simple;
+	bh=YkiHPumBN8nAiPNaHtyQooOU01tx/EZ1O8QxZuFIQAw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IY4AiVRRbLbiJEyvuIz9i0kir5sEZsADTh7LwB91IphxKxg770JpzjaIVfS4brenf3GajJ0aulf/JKRsJww3lAri2Jt/A5FdIsEWisyGzsAMtDbSycf8vCviAK4nUqAmzxw572NE571inBnKh8gXJJ1rwqI69sX394J8uQql2Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=triplefau.lt; spf=pass smtp.mailfrom=em510616.triplefau.lt; dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=g+Az0dN4; dkim=pass (2048-bit key) header.d=triplefau.lt header.i=@triplefau.lt header.b=OpdFy3BB; arc=none smtp.client-ip=158.120.84.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=triplefau.lt
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em510616.triplefau.lt
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eedjjoeY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F4F1C4CEDD;
-	Thu, 20 Feb 2025 11:28:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740050908;
-	bh=WfPMRPu5h33yO/ZOjwVBBS1RB5ho4n5GU11BEOfYUvM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eedjjoeYuAp3/ryigJRwHUbmbYdv9K1V/wYIF7ctNP6IeRtyXojMNWlCY9RMrARPF
-	 QjOUw5MeiWZ/R9qTTL0FlNngwT5VJI5niN4Q58gYTEwx5g228C72dYhTl4upTfFbjJ
-	 Fx8Spnr0sTZD6bCfXSekE2Gjwj5vq6UYIbyQ3/SeJiyhX4sMceoJcU7HlG0N1GZnHN
-	 CLVwSOPdrzYhKPWBd6dvfAbZtmdDDjqjrnUY9NPyjghHc++3FLuArvMOsRN8dEyyfL
-	 d57O3YM0CQCtv0HlB5Md4QSvfdJHc4j4kqVWmszeuOh+yUI04RmzylbuxEGTrWQ9Fx
-	 qwpcd/dadm5mQ==
-From: Philipp Stanner <phasta@kernel.org>
-To: Matthew Brost <matthew.brost@intel.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Philipp Stanner <phasta@kernel.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-Cc: dri-devel@lists.freedesktop.org,
+	dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="g+Az0dN4";
+	dkim=pass (2048-bit key) header.d=triplefau.lt header.i=@triplefau.lt header.b="OpdFy3BB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smtpservice.net;
+ i=@smtpservice.net; q=dns/txt; s=a1-4; t=1740050898; h=feedback-id :
+ x-smtpcorp-track : date : message-id : to : subject : from : reply-to
+ : sender : list-unsubscribe : list-unsubscribe-post;
+ bh=M1W1nn58NLGVj+eWLt6EtKwldWjGNarRyKe0cNviRKI=;
+ b=g+Az0dN4XhCXVz/4c4Ms1zjv28DcJNw34A1vpLjtoisd9PsUccqG06h9WCTR9Gla6ykRq
+ q0aCDwdSCNeSUEhkqa6NlhERyE4X/meWxKX3rnoFiXGkKToj6LUIaclD0TlX72L9/zq7YqO
+ SU532AbZL0i09hoQOmTwNbF5T0n9P2lYiniPaV5+6sS7Mb4tkjAyUhjvWoamMvjmFHE74tz
+ waczQntZewOGhjBjNMSJ7HWDTnY/l5wBAgIL6EjBMCgz91AuKqWZrbjhRhFGvV2sJFlUMe9
+ RtKxnBabG4YAockUhFaJAdTNqDpx/Hdo+73U506FIjz2t7ar0BLkZkwqMInA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=triplefau.lt;
+ i=@triplefau.lt; q=dns/txt; s=s510616; t=1740050898; h=from : subject
+ : to : message-id : date;
+ bh=M1W1nn58NLGVj+eWLt6EtKwldWjGNarRyKe0cNviRKI=;
+ b=OpdFy3BBaxZ8UI0awjqzV1J0+LICnF+4LcfH/6is6QFsrqXm5m9HvFkEPx2XQM3Skvc43
+ YxbuQEswpDpyn2jqNCkjd0v+ufJsvXHrvPkZ/tIa/S53XY9qB6i/g6EelkQDwgoP+khWhMk
+ PROl0qtsxNtocJyXytqpHcZT+TUxgK2o8CudgwyIX1l7nfO166835z1RPkuffnpqdRypyM4
+ ZsQLykowZO96A99sbkSDLFlZQD/ZIWQbQPBHMMG30yTyfq1WJDyaV7TbbUWJUhjEia8zTqM
+ D72mzfiRKDvqsksm+HL5sqyDor0e2vfKOharqal5mrgJAHBT/y7Oj7CggJEA==
+Received: from [10.12.239.196] (helo=localhost)
+	by smtpcorp.com with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97.1-S2G)
+	(envelope-from <repk@triplefau.lt>)
+	id 1tl4iv-4o5NDgrvJ0D-lp0j;
+	Thu, 20 Feb 2025 11:28:09 +0000
+From: Remi Pommarel <repk@triplefau.lt>
+To: linux-leds@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/3] drm/sched: Adjust outdated docu for run_job()
-Date: Thu, 20 Feb 2025 12:28:13 +0100
-Message-ID: <20250220112813.87992-4-phasta@kernel.org>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250220112813.87992-2-phasta@kernel.org>
-References: <20250220112813.87992-2-phasta@kernel.org>
+Cc: Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+	Remi Pommarel <repk@triplefau.lt>
+Subject: [PATCH v2] leds: Fix LED_OFF brightness race
+Date: Thu, 20 Feb 2025 12:23:17 +0100
+Message-Id: <19c81177059dab7b656c42063958011a8e4d1a66.1740050412.git.repk@triplefau.lt>
+X-Mailer: git-send-email 2.40.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,60 +60,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Report-Abuse: Please forward a copy of this message, including all headers, to <abuse-report@smtp2go.com>
+Feedback-ID: 510616m:510616apGKSTK:510616sDHMaHdAgA
+X-smtpcorp-track: zcFvao-w_nmC.ipaOdkftC_MT.921AGQ20SmT
 
-The documentation for drm_sched_backend_ops.run_job() mentions a certain
-function called drm_sched_job_recovery(). This function does not exist.
-What's actually meant is drm_sched_resubmit_jobs(), which is by now also
-deprecated.
+While commit fa15d8c69238 ("leds: Fix set_brightness_delayed() race")
+successfully forces led_set_brightness() to be called with LED_OFF at
+least once when switching from blinking to LED on state so that
+hw-blinking can be disabled, another race remains. Indeed in
+led_set_brightness(LED_OFF) followed by led_set_brightness(any)
+scenario the following CPU scheduling can happen:
 
-Remove the mention of the removed function.
+    CPU0                                     CPU1
+    ----                                     ----
+ set_brightness_delayed() {
+   test_and_clear_bit(BRIGHTNESS_OFF)
+                                         led_set_brightness(LED_OFF) {
+                                           set_bit(BRIGHTNESS_OFF)
+					   queue_work()
+                                         }
+                                         led_set_brightness(any) {
+                                           set_bit(BRIGHTNESS)
+					   queue_work() //already queued
+                                         }
+   test_and_clear_bit(BRIGHTNESS)
+     /* LED set with brightness any */
+ }
 
-Discourage the behavior of drm_sched_backend_ops.run_job() being called
-multiple times for the same job.
+ /* From previous CPU1 queue_work() */
+ set_brightness_delayed() {
+   test_and_clear_bit(BRIGHTNESS_OFF)
+     /* LED turned off */
+   test_and_clear_bit(BRIGHTNESS)
+     /* Clear from previous run, LED remains off */
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
+In that case the led_set_brightness(LED_OFF)/led_set_brightness(any)
+sequence will be effectively executed in reverse order and LED will
+remain off.
+
+With the introduction of commit 32360bf6a5d4 ("leds: Introduce ordered
+workqueue for LEDs events instead of system_wq") the race is easier to
+trigger as sysfs brightness configuration does not wait for
+set_brightness_delayed() work to finish (flush_work() removal).
+
+Use delayed_set_value to optionnally re-configure brightness after a
+LED_OFF. That way a LED state could be configured more that once but
+final state will always be as expected. Ensure that delayed_set_value
+modification is seen before set_bit() using smp_mb__before_atomic().
+
+Fixes: fa15d8c69238 ("leds: Fix set_brightness_delayed() race")
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
 ---
- include/drm/gpu_scheduler.h | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+Changes for v1 to v2:
+  - Use smp_mb__before_atomic().
+---
+ drivers/leds/led-core.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
-index 916279b5aa00..29e5bda91806 100644
---- a/include/drm/gpu_scheduler.h
-+++ b/include/drm/gpu_scheduler.h
-@@ -421,20 +421,27 @@ struct drm_sched_backend_ops {
- 
- 	/**
- 	 * @run_job: Called to execute the job once all of the dependencies
--	 * have been resolved. This may be called multiple times, if
--	 * timedout_job() has happened and drm_sched_job_recovery() decides to
--	 * try it again.
-+	 * have been resolved.
-+	 *
-+	 * The deprecated drm_sched_resubmit_jobs() (called from
-+	 * drm_sched_backend_ops.timedout_job()) can invoke this again with the
-+	 * same parameters. Using this is discouraged because it, presumably,
-+	 * violates dma_fence rules.
-+	 *
-+	 * TODO: Document which fence rules above.
- 	 *
- 	 * @sched_job: the job to run
- 	 *
--	 * Returns: dma_fence the driver must signal once the hardware has
--	 *	completed the job ("hardware fence").
--	 *
- 	 * Note that the scheduler expects to 'inherit' its own reference to
- 	 * this fence from the callback. It does not invoke an extra
- 	 * dma_fence_get() on it. Consequently, this callback must take a
- 	 * reference for the scheduler, and additional ones for the driver's
- 	 * respective needs.
-+	 *
-+	 * Return:
-+	 * * On success: dma_fence the driver must signal once the hardware has
-+	 * completed the job ("hardware fence").
-+	 * * On failure: NULL or an ERR_PTR.
+diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+index f6c46d2e5276..e3d8ddcff567 100644
+--- a/drivers/leds/led-core.c
++++ b/drivers/leds/led-core.c
+@@ -159,8 +159,19 @@ static void set_brightness_delayed(struct work_struct *ws)
+ 	 * before this work item runs once. To make sure this works properly
+ 	 * handle LED_SET_BRIGHTNESS_OFF first.
  	 */
- 	struct dma_fence *(*run_job)(struct drm_sched_job *sched_job);
+-	if (test_and_clear_bit(LED_SET_BRIGHTNESS_OFF, &led_cdev->work_flags))
++	if (test_and_clear_bit(LED_SET_BRIGHTNESS_OFF, &led_cdev->work_flags)) {
+ 		set_brightness_delayed_set_brightness(led_cdev, LED_OFF);
++		/*
++		 * The consecutives led_set_brightness(LED_OFF),
++		 * led_set_brightness(LED_FULL) could have been executed out of
++		 * order (LED_FULL first), if the work_flags has been set
++		 * between LED_SET_BRIGHTNESS_OFF and LED_SET_BRIGHTNESS of this
++		 * work. To avoid ending with the LED turned off, turn the LED
++		 * on again.
++		 */
++		if (led_cdev->delayed_set_value != LED_OFF)
++			set_bit(LED_SET_BRIGHTNESS, &led_cdev->work_flags);
++	}
  
+ 	if (test_and_clear_bit(LED_SET_BRIGHTNESS, &led_cdev->work_flags))
+ 		set_brightness_delayed_set_brightness(led_cdev, led_cdev->delayed_set_value);
+@@ -331,10 +342,13 @@ void led_set_brightness_nopm(struct led_classdev *led_cdev, unsigned int value)
+ 	 * change is done immediately afterwards (before the work runs),
+ 	 * it uses a separate work_flag.
+ 	 */
+-	if (value) {
+-		led_cdev->delayed_set_value = value;
++	led_cdev->delayed_set_value = value;
++	/* Ensure delayed_set_value is seen before work_flags modification */
++	smp_mb__before_atomic();
++
++	if (value)
+ 		set_bit(LED_SET_BRIGHTNESS, &led_cdev->work_flags);
+-	} else {
++	else {
+ 		clear_bit(LED_SET_BRIGHTNESS, &led_cdev->work_flags);
+ 		clear_bit(LED_SET_BLINK, &led_cdev->work_flags);
+ 		set_bit(LED_SET_BRIGHTNESS_OFF, &led_cdev->work_flags);
 -- 
-2.47.1
+2.40.0
 
