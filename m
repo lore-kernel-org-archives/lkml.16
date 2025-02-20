@@ -1,40 +1,45 @@
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52EEE35942;
-	Thu, 20 Feb 2025 13:53:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F8C1F6679
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 13:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740059611; cv=none; b=dvmDqeL5252kdo4jChxoVuoIQTBJP3bV8NbUmnvhYsKU3ICMdjQqHRCxiIu8aQaqIb56RUGoT/CsxQZNtLAAbXdvlvWuVoxIlesXDm/4khUXN3XL/IW06Rdl4PIibrZCbcfz4ttY0QjZK6malvpsSD1KlUU/JGSkGCaaVx/fDTw=
+	t=1740059665; cv=none; b=fztMHHIDAlp6HK+RsyavUFh5TmCgXVCiknYBe0Uu51YUKREclElODS/PVSaVlh2XtII7mmwft8S9fiFySDZ8cXIHTeCPDmh8OdaAxUWv5pCOwV9NUR8dmmbRfIbf1UI7YpLwUKP22+7wngv4Byo7PwNjb9kisjW8ovbfJs1Hlik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740059611; c=relaxed/simple;
-	bh=YTrfqrXQzae09PdK/UYmPBhj3Ws6othGssExcxPJGyQ=;
+	s=arc-20240116; t=1740059665; c=relaxed/simple;
+	bh=GiFVPDoaAD8120zfp9n1d6xd6OyLKR6ml2ISkTBtH2A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TyjSsV5rTvAIbLiU7av9v1NJeWqX6NlDJlhbRjOOahPQyo9oVJMpwIkWs9BwQh9t86u3vqntyu+Kk1dr5gOwFOu4gsd4ou10z5JTWqMkWo69zGK9eXCl9GtatjiQYGTB7Zy7I0sJ3DKUpu2qOPoMMLs3/E65luke8foRRoxMc4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
-Received: (from willy@localhost)
-	by pcw.home.local (8.15.2/8.15.2/Submit) id 51KDrCqC031662;
-	Thu, 20 Feb 2025 14:53:12 +0100
-Date: Thu, 20 Feb 2025 14:53:12 +0100
-From: Willy Tarreau <w@1wt.eu>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>,
-        Kees Cook <kees@kernel.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        rust-for-linux <rust-for-linux@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org,
-        ksummit@lists.linux.dev
-Subject: Re: Rust kernel policy
-Message-ID: <20250220135312.GC31486@1wt.eu>
-References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
- <Z7SwcnUzjZYfuJ4-@infradead.org>
- <CANiq72myjaA3Yyw_yyJ+uvUrZQcSLY_jNp65iKH8Y5xGY5tXPQ@mail.gmail.com>
- <202502191026.8B6FD47A1@keescook>
- <785A9F60-F687-41DE-A116-34E37F5B407A@zytor.com>
- <f77d549c-b776-4182-b170-571d1e5bb288@p183>
- <2025022007-angelfish-smite-a69d@gregkh>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fm/4MGCCrNmLeBAIXONTSNPI6zjbrl038Qyn6TYDKzIeZYSfXNtatODunxZHfJmy1CppG+7Bi/nQHNkqymGZj+X/mWjiiZcLbaICgh8z8+zmSasMJDXMzkvdymZ12JGEfaSQgDa/UDYtNn75VenmpcMLuj2BCEhQGk/Wf+0vTuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lSGeaX1p; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lSGeaX1p"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=MrFuiU+UnUEZVdcjEa/1N/3aG0Qe3TuA+6xNDD8hFcw=; b=lSGeaX1pSjHoHqNtlvwG9vTEQd
+	PiXngFIMxYfVvumbtViHcmqBcoBM3P0uCVwWjVM1bRN75Rkg4/u4envfYbXbRDE7hzv42pCqh030g
+	Pn3Zt5aB1Yaj8aM0GKVtaExLCLDmYhLt3wD6+E9IYaVPF5+o8yYk8zse4tX2WQLa+o19UP6LYobAI
+	tIEajjF4fXfImBMSzvbBqPDHq76krn4yh0jQYUtSnfiC41Js1S0Zk3qMWaTdIcPYR0Ug5PeYp/AEu
+	MRWjFR9M9uAD5cKp5LiNgt4QDqsnDZiCifCzzh1tSaIa+vDMsbY9bsexr50asOEMxk1DrHlwQvfGj
+	KcjxOM3w==;
+Received: from willy by casper.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tl70H-00000009msv-3kB8;
+	Thu, 20 Feb 2025 13:54:13 +0000
+Date: Thu, 20 Feb 2025 13:54:13 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Hillf Danton <hdanton@sina.com>
+Cc: Byungchul Park <byungchul@sk.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, kernel_team@skhynix.com, conduct@kernel.org
+Subject: Re: [RFC PATCH v12 00/26] LUF(Lazy Unmap Flush) reducing tlb numbers
+ over 90%
+Message-ID: <Z7c0BTteQoZKcSmJ@casper.infradead.org>
+References: <20250220052027.58847-1-byungchul@sk.com>
+ <20250220103223.2360-1-hdanton@sina.com>
+ <20250220114920.2383-1-hdanton@sina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,19 +48,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2025022007-angelfish-smite-a69d@gregkh>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20250220114920.2383-1-hdanton@sina.com>
 
-On Thu, Feb 20, 2025 at 07:53:28AM +0100, Greg KH wrote:
-> the proposal from Google about
-> Carbon, a way to evolve a C++ codebase into something else that is
-> maintainable and better overall.  I recommend reading at least the
-> introduction here:
-> 	https://docs.carbon-lang.dev/
-> for details, and there are many other summaries like this one that go
-> into more:
-> 	https://herecomesthemoon.net/2025/02/carbon-is-not-a-language/
+On Thu, Feb 20, 2025 at 07:49:19PM +0800, Hillf Danton wrote:
+> On Thu, 20 Feb 2025 20:09:35 +0900 Byungchul Park wrote:
+> > Just in case that I don't understand what you meant and for better
+> > understanding, can you provide a simple and problematic example from
+> > the u-a-f?
+> > 
+> Tell us if it is illegal to commit rape without pregnancy in your home town?
 
-Interesting contents there, thanks for sharing!
-
-Willy
+Hillf, this is unacceptable language.  You need to apologise.
