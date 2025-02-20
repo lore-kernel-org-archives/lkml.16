@@ -1,108 +1,107 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4972C1FCF60;
-	Thu, 20 Feb 2025 11:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAECC1F584D;
+	Thu, 20 Feb 2025 11:23:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740050583; cv=none; b=Gyv7LF2wnCrl/KauB0Ax3peMEE5AmX586jBuuqFAfqCrp+lIZSoiRj3ihMwsB+qTPFjk/hZnNQQMK6FP6jCSTcuX7M9iSsXy1YsnWkJXjc224qNuyGW5Ab22sZMAisKT4jj5DcpvYFDDYxl5m38ec30HRobR78t1/gX7GHpcyt8=
+	t=1740050600; cv=none; b=oFGBTo32MWkemYUFh/+y0kFBigxyMKO615oDsg1VCjhXGTJpNALxH5kDgBrbGx45qxGMqSrFXj/7mPYL2qCIa2sEFIcIK3trbyvUXn8WdSpV1e6e9QcRXFGw95kZ/PPOmcyS2Pw26cxxjgZWZnYd+j4+TU/+YwPxQXqTqNadAGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740050583; c=relaxed/simple;
-	bh=937swDBv/4tESpJoLAiVpvmztTsdxbMeFlQ3HC4lwKI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OUcv8RGEPjl4qoUXrO4GFMQ3Wy/u+dy2JvuXt/fQOo/NorTx9MKa6SU5PccEVWDOV8dUbeL74lkKsJOrVcoLH5kcTA5PU1j1ovWhvz9zmgDNrxqXHfKFzySMWwBSO1uQFxWnQ9XFuD9tnbJqoVm6f2vj28xZ3LToX5cl3whP+cA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e0573a84fcso1080559a12.2;
-        Thu, 20 Feb 2025 03:23:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740050579; x=1740655379;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XD9odAiTaOoZIvBUhB+j1xV7nylcFW+OianwZ8HY0v8=;
-        b=o5o2vApjkBfAvorVgX+xcBMVBSwdUSFfYHHawyxJYWcIhKRb1kp5wOqt8Xxy0aNvVn
-         vbA5UNFjmWM4gI9vNPNFUKiyqDryQ4mY/6/eRa28ucxExbOCboJNKwgBeZ3edh94NRH2
-         zgJ+y++Jx86WOSi/PgOE7bBHH2my1KP4/MI4t/KW8Rfo7kdS8sp/NpeA72r5ht37zfX3
-         M+8bnX/aOuLdOBTwcGdDY3y77/RrQsWnb9qE9kZf3h3ZrPdtc2PY7k+v2KWmeIcZxQ0i
-         VMPl7FaFW6mXEKJ6Yv/r+QlckmL47Csx7h8hnPe54rBvXvSvjrx+JJyw6KbTCQQSxvDL
-         bk0g==
-X-Forwarded-Encrypted: i=1; AJvYcCU3nKK4JHkdu3X/2yIU2eXzfqa7eX8fEVLf2hDAb6/vAtqcY3A6iOT1bBwJ7Jx0oynyR/j+/OWLMQdpoUs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBNNl66DuXk/s5aTeTM67clyEImGDEHwP8w7XN1HiaU4uu4hEI
-	3qMqTRJmdGcHoUiT2b7vn+OznhrvCeWNZYsBZj9etB6tvM19S3LR
-X-Gm-Gg: ASbGncvYY36ejR1lZLeQhYg17X7/LJla72aL0wlb2Tv6do52/Zb+4qTvIGcBqzhJQNw
-	o+A9DY/i6L/KZLxlfSfzu5v468jV6uh8SIDZW1DOLCvpSUiACuN9GEQbxE61KBUkFsDB8SMh2X4
-	suxxCAapqKKPv36PP1h3NtuKabtLy3d/XaP4/opxQ4esAqjIkX+eS2XOht4niRtiuXcurJxYb/U
-	VjYEAEk+IFahJE7CZLpxUalqL3YoS1giDYLgKrI7qBFX1gWbi7tKBVoC87thsQMeWaGwM5Z+RZb
-	Wcg16A==
-X-Google-Smtp-Source: AGHT+IHT5LXolvtX2+Vm9JGvTxa3pFzLchGGSykVFvDSmRcx7IyyW9y2kALsn2C/3qJ5lwGFuTKviA==
-X-Received: by 2002:a17:907:72c8:b0:ab7:f245:fbc1 with SMTP id a640c23a62f3a-abb7091d9d6mr2190619566b.3.1740050579019;
-        Thu, 20 Feb 2025 03:22:59 -0800 (PST)
-Received: from gmail.com ([2a03:2880:30ff:2::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb9b81aacdsm755900766b.104.2025.02.20.03.22.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 03:22:58 -0800 (PST)
-Date: Thu, 20 Feb 2025 03:22:56 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	David Wei <dw@davidwei.uk>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3] netdevsim: call napi_schedule from a timer
- context
-Message-ID: <20250220-spotted-obedient-chameleon-2cda9b@leitao>
-References: <20250219-netdevsim-v3-1-811e2b8abc4c@debian.org>
+	s=arc-20240116; t=1740050600; c=relaxed/simple;
+	bh=XJ1rfVBdFtGgkqiX+cJQ7kfGCpepKbDiOO8u/69LAOc=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ubTZIisig3Ta+jmu5X/7zScWgq86FYLqERGrXQaJWdqLXWn1wmLnJYntdO7gRspDwDEkXn+aauNbwHkKPKbGlyJu+BFdKeAiUgTe64z6u5XcVMXzOWC5FMaFinPXHoWSu2X8GsaUlR5e/GmLpnqERPaAV2JA19gMh1sBQ9RBTqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.164])
+	by gateway (Coremail) with SMTP id _____8AxGHGjELdnYDp8AA--.17810S3;
+	Thu, 20 Feb 2025 19:23:15 +0800 (CST)
+Received: from [10.20.42.164] (unknown [10.20.42.164])
+	by front1 (Coremail) with SMTP id qMiowMDxDcehELdnODQeAA--.8092S2;
+	Thu, 20 Feb 2025 19:23:15 +0800 (CST)
+Subject: Re: [PATCH V3 5/6] tpm: Add a driver for Loongson TPM device
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: lee@kernel.org, herbert@gondor.apana.org.au, davem@davemloft.net,
+ peterhuewe@gmx.de, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+ linux-crypto@vger.kernel.org, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+ Yinggang Gu <guyinggang@loongson.cn>
+References: <20250219073350.16915-1-zhaoqunqin@loongson.cn>
+ <20250219073350.16915-2-zhaoqunqin@loongson.cn> <Z7XgLNU1xXqgOBIL@kernel.org>
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Message-ID: <4e0a3b40-07b8-06bf-8814-a121308ebf69@loongson.cn>
+Date: Thu, 20 Feb 2025 19:23:42 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250219-netdevsim-v3-1-811e2b8abc4c@debian.org>
-
-On Wed, Feb 19, 2025 at 08:41:20AM -0800, Breno Leitao wrote:
-> The netdevsim driver was experiencing NOHZ tick-stop errors during packet
-> transmission due to pending softirq work when calling napi_schedule().
-> This issue was observed when running the netconsole selftest, which
-> triggered the following error message:
-> 
->   NOHZ tick-stop error: local softirq work is pending, handler #08!!!
-> 
-> To fix this issue, introduce a timer that schedules napi_schedule()
-> from a timer context instead of calling it directly from the TX path.
-> 
-> Create an hrtimer for each queue and kick it from the TX path,
-> which then schedules napi_schedule() from the timer context.
-> 
-> Suggested-by: Jakub Kicinski <kuba@kernel.org>
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
-
-Looking at the tests, 3 of them are failing:
-
-https://netdev.bots.linux.dev/flakes.html
+In-Reply-To: <Z7XgLNU1xXqgOBIL@kernel.org>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMDxDcehELdnODQeAA--.8092S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj9xXoW7Gw17Kw1ktw4UKrWxAr4fWFX_yoWDAFc_Aa
+	12yF1xJr18uFyvgw4ruw13C3W2qayqyFnxt3WjyF4v93srJ345Z3Z8urn3Jay7Zr1kAFn8
+	AFnxGryfua4j9osvyTuYvTs0mTUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbDkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
+	oVCq3wAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa02
+	0Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_Wryl
+	Yx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI
+	0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC2
+	0s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr
+	0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0E
+	wIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JV
+	WxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAI
+	cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8KNt3UUUUU==
 
 
-2/3 passed when retried and just one of them (ip6gre-custom-multipath-hash-sh) failed
-also on the retry.
+ÔÚ 2025/2/19 ÏÂÎç9:44, Jarkko Sakkinen Ð´µÀ:
+>> +
+>> +static const struct tpm_class_ops lsse_tpm_ops = {
+>> +	.flags = TPM_OPS_AUTO_STARTUP,
+>> +	.recv = tpm_ls_recv,
+>> +	.send = tpm_ls_send,
+>> +};
+>> +
+>> +static int lsse_tpm_probe(struct platform_device *pdev)
+> tpm_lsse_
+OK.
+> +
+> +static struct platform_driver lsse_tpm_driver = {
+> +	.probe   = lsse_tpm_probe,
+> +	.driver  = {
+> +		.name  = "ls6000se-tpm",
+> +	},
+> +};
+> +module_platform_driver(lsse_tpm_driver);
+> +
+> +MODULE_ALIAS("platform:ls6000se-tpm");
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Yinggang Gu <guyinggang@loongson.cn>");
+> +MODULE_AUTHOR("Qunqin Zhao <zhaoqunqin@loongson.cn>");
+> Remove MODULE_AUTHOR fields. Git encodes this already.
 
-Looking at the flakes, I see that ip6gre-custom-multipath-hash-sh was
-flake during yesterday:
+Do you mean that "modinfo" will still show the author after removing 
+MODULE_AUTHOR fields?
 
-	https://netdev.bots.linux.dev/flakes.html?min-flip=0&tn-needle=ip6gre-custom-multipath-hash-sh
+>
+>> +MODULE_DESCRIPTION("Loongson TPM driver");
+>> -- 
+>> 2.43.0
+>>
+> Prefix all with tpm_lsse instead of tpm
 
-I've testd manually it, and the tests is passing:
+OK, thanks for your comments.
 
-	# vng -v --run . --user root --cpus 4 --
-		make -C tools/testing/selftests TARGETS=net/forwarding TEST_PROGS=ip6gre_custom_multipath_hash.sh TEST_GEN_PROGS="" run_tests
+BR, Qunqin.
 
-	...
+>
+> BR, Jarkko
 
-	ok 1 selftests: net/forwarding: ip6gre_custom_multipath_hash.sh
-
-
-So, from a NIPA testing perspective, it seems the patch is good
