@@ -1,106 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A457214803;
-	Thu, 20 Feb 2025 16:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96261FF60B
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 16:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740070053; cv=none; b=naVSYB2PViR79fHMzss2O6bPa4SZjHrxw+bDyBcPrGm3WTO9+ikk0HXtFdB3+Sd7/VzRoVrMnSBg5ipqWXDG7JcWQrELMBMiYeT4Bf77RhgP++QGZKOCUmLi1QAMZant3wJJRWIfq33915BA4ZCYbeh2W9nh6MjuOwtMC5O/iDY=
+	t=1740070064; cv=none; b=P1ADBXN1o9PM+EbDBZ4w/7e3J0AwUyiF1F/3VX5TodVmoqZow44i7MLd4kBGCUTZ7HjXOwt8o81rpyJszcypKRDRBhyX9UC6vCpW8FPjKLbTyFgXX2zFxu1jyua/pAnaOF5cTUFNvHf99ev5J6AW8onFWM+xx2b6B7cozTIzfVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740070053; c=relaxed/simple;
-	bh=Wft6oG6T8/oEeeQa1GWtph/ItnypOf1z1wIgrP2JdHE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=prJ9APZxbBCNaGc1aoC5sgqzXZEHW8mN8WVe9UZN5Rbtziuu2wHRbRvdNYOjSyceeqJWUCBkoyXbubwsaK1AYxLrdKM59hZ11nDfTUUxXjPcYIXTh1Te2jrevMkqfyHrs/6atK+ltjDKJB34zXC3Ge98mECTUXYM/Yz1En/n4OU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CFmuObO6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740070064; c=relaxed/simple;
+	bh=07JJww02mJEeGAIuugM++K4ebk2f0Zd1D+gq+CAzgrw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JyVtf7S3sEehE9bH038ZTVozb3zZgPRy/205I+5RWo5wD/NBlmemQ1UvfLIPb3Hyvuqa3QcvpmU9TZ7SQ2Wnx4rRxZywlTDP+s1hZeSWWW03dAy8ciVb5ePs+MFKSc5/6LXlwXBpaYWbWUrI3typOdfBjc70XKWqsKeE5k9qJZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NtgqodyM; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CFmuObO6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BC4AC4CEEB;
-	Thu, 20 Feb 2025 16:47:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740070052;
-	bh=Wft6oG6T8/oEeeQa1GWtph/ItnypOf1z1wIgrP2JdHE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=CFmuObO6Km08jTaUQ2diKRG0ueul0lafRhF/tjow4faEK1PLv14LVh7EsRgKAm8dO
-	 ol4z33DhmRWzF085w4Mrw2eywo7gv3MMdrFK3nw/s1dfCtaBz5N06bArA7N8B+GGUN
-	 hVrHwet3TtXKd8R2Nlp+fivB+AiKr3s+r6I2J2mKdOE/CB8OwFwKvfaJHhTFEHFAjD
-	 Y9FUFjJrj6S02qsCCkSc5/vI0w3OXl4u6YgUtSOAQzxcJdyjR09idFvt07JlEN/FiT
-	 56G/I73HOPlILcMMv5A4jOXZPuEcjMT8vv5VRUxhGJlwJQFsbUnrQvKBmgqVEYmvDt
-	 /m2+bnxb5YcIw==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 20 Feb 2025 11:47:17 -0500
-Subject: [PATCH v2 5/5] nfsd: handle errors from rpc_call_async()
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NtgqodyM"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-abb81285d33so240756266b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:47:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740070061; x=1740674861; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XMCL0K+C4GnoACxiUHOKxAWwwUOoQfv8+sE0BWNTm14=;
+        b=NtgqodyMEgtiiI68uGzkHKoibqil6IMmY3XQ5cackqnjOxGewdVR2v6F/l/Rd7tI42
+         J59sGfa6dM/Lefk3WbzLChH7Hex6MxgwKeZpaVesuMKmN48dT9wS3UI4l86F3R9Y/hlU
+         Zuzo5P57FRHQEptWwP+I3Sp42ZU9rpcVz1ceXbIS1de+3ZVeYxmNJDQNGglsgozNz2jK
+         JWyyb2Ma6F73s/y135qNmlp9ci+j0B2HgNuLkaZPaQCM7GmRICMDcWGmJ5v+p9Aram0X
+         J9YxNpc3pefG/CBXAqam+t6YgXFk5LOAyCKwd9GIi/ZaB1efANDIO1puy1LXDYZUvoU0
+         yDpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740070061; x=1740674861;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XMCL0K+C4GnoACxiUHOKxAWwwUOoQfv8+sE0BWNTm14=;
+        b=uE8IufHFAKvnWK6mmB2ovZo1sP4+SRTinw6s7mqLAoIXgijXd3NG4D3irz+3Vkcfn3
+         axvIZ3i7A5S+NFh6sGezXIRmseRzBPDeP7TwWQY+bkgf8+PqV24Y6zP/285bSfSdZAMx
+         0hR0eOysl5PXRh+1mXel5Gk2UYXKgNBGgFigKcIiFswNWVk+XaV4VABt1oumvYC9XU7l
+         hzvqkH0d7LIOc82BkzK1SynoBUF10P9bHRU6XXMtVQq9lIhV4vprKbAP/nkOIxA7zVik
+         elorM6P6qQEV8Bo+UgdXTZ5GxvjtZPUu9HAgHO3Pq9CkjGywaIxJKPaJ+Zf8NhUb2Vvz
+         KVjA==
+X-Forwarded-Encrypted: i=1; AJvYcCVu60ePvBn90Ye7oWpogQnpwZVH309svPJecfhi9GsZXO2TGk2/9uIh5u3459MJEUgdLoxw/+b/Gdr1UxA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAjogamYdCuNanu5lZ7WLYvOVjSLEBbCNahBzpjoZPx/6Fkeg+
+	N4Eey060follxGvANfuEhy1RUvB3YdzM3T3NkTu8jJ1NyrLCn4Zy8cNPv57j3VXLm8armrHYvWj
+	2qp2tz3Efl8nVX1pySYw7O0HG8LJm+29/ECEa
+X-Gm-Gg: ASbGnctKdoG082ffGnOIXYnn04GD4sTxMHO68Oj0NZGLCiLLrnYDkcJY+pD1VMMAsP0
+	nB/n9/ZTnOzwUPQMy3T6eaVmavx5yB4HOVOQQ1FvXfkOEtQXUTgW+pmcfTD6ZCG5ARneGsah0
+X-Google-Smtp-Source: AGHT+IFUN190VqKAbunKFBAi3FWBdH/R347wkO7ytCt3scT9na49h+zVGgXkcRMQmFGqWpBuREc1IPIa560YC5Jlbbg=
+X-Received: by 2002:a17:907:7ea0:b0:ab7:d361:11b4 with SMTP id
+ a640c23a62f3a-abc099b7f3fmr3875566b.7.1740070061123; Thu, 20 Feb 2025
+ 08:47:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250220-nfsd-callback-v2-5-6a57f46e1c3a@kernel.org>
-References: <20250220-nfsd-callback-v2-0-6a57f46e1c3a@kernel.org>
-In-Reply-To: <20250220-nfsd-callback-v2-0-6a57f46e1c3a@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>
-Cc: Li Lingfeng <lilingfeng3@huawei.com>, linux-nfs@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1442; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=Wft6oG6T8/oEeeQa1GWtph/ItnypOf1z1wIgrP2JdHE=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBnt1yemp+lyVjGK9VZRdurO3X1oCmfc3OCc3xy6
- LEbJOQvmLGJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZ7dcngAKCRAADmhBGVaC
- FR2kD/9ltlTi8jLn1usSf6osbYMROoo7/bZ8zaop6ikyJu59DSN3apuyGSdR3vl+qr+Eh/9OzVT
- sbKxufKda2W/ciSdGVmW38zZ/3BlvObGMttGPQK93y3k0lqAz3qLYTUWm7VEH7yPb/IrA2aoz09
- HIHstn0JajBNQrm44YJoozhFXIakGfLK7AkWjNqfleufqIzooJZhJRpCOmjde7jR8+1gP8gKHjn
- t3tAzOPEtKU8mSY38BZ1nDvKuQeUa1sfQe42E13Sm7/EQz/g70sY9mm1bqur+mb2OtY3vyzkRAr
- u0Shk6Ex+HD0RK9+LPDhBcv+ZKr8j7fSltLzVu8Yz0BCkeAhWbpu/5D3NZJ7Aqur0I58eA6a2aT
- 1p5p93JQkEaockCG/brCffe9ES++fAkWFRd3LTIqFGMhKwZxtqGhUGXE3oQoMuS+YBHrTdf8bmo
- Lqn9qx8W1rf12vxrJzgvRLGzJxrkvZ9/tF7r9QhDNXfuyuXo63qi2cCYe6aOb+N2joMSO0sQ4AI
- 1HrtkPb0lBvqCKlhaKR0iCojM9PNinsfopgnuCkiWFpP+HkJipmfSjObF4uE7R4dsNleMh1StAZ
- PReoR1bjDQQr3w0uiiE1VcLsReT/Wg43mNLjAaqNqnv3FqnVLQ9yMOeGWMLzglkg+WI1mHA2gRv
- BkjihJtmT8jZdZw==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+References: <cover.1739997129.git.ashish.kalra@amd.com> <e13263246be91e4e0073b4c81d4d9e2fc41a6e1d.1739997129.git.ashish.kalra@amd.com>
+In-Reply-To: <e13263246be91e4e0073b4c81d4d9e2fc41a6e1d.1739997129.git.ashish.kalra@amd.com>
+From: Dionna Amalie Glaze <dionnaglaze@google.com>
+Date: Thu, 20 Feb 2025 08:47:28 -0800
+X-Gm-Features: AWEUYZlhHlxBHBWrZcmEspkPqwgF6rKQ9OpK2K5xOYbvc-va1cUZOfhJoJDPwGc
+Message-ID: <CAAH4kHZsC68+QPC+y-pycM+HfsLF-f_AuW8eZm-Dqqf5meFj+w@mail.gmail.com>
+Subject: Re: [PATCH v4 3/7] crypto: ccp: Reset TMR size at SNP Shutdown
+To: Ashish Kalra <Ashish.Kalra@amd.com>
+Cc: seanjc@google.com, pbonzini@redhat.com, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, thomas.lendacky@amd.com, john.allen@amd.com, 
+	herbert@gondor.apana.org.au, michael.roth@amd.com, nikunj@amd.com, 
+	ardb@kernel.org, kevinloughlin@google.com, Neeraj.Upadhyay@amd.com, 
+	aik@amd.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-It's possible for rpc_call_async() to fail (mainly due to memory
-allocation failure). If it does, there isn't much recourse other than to
-requeue the callback and try again later.
+On Wed, Feb 19, 2025 at 12:53=E2=80=AFPM Ashish Kalra <Ashish.Kalra@amd.com=
+> wrote:
+>
+> From: Ashish Kalra <ashish.kalra@amd.com>
+>
+> When SEV-SNP is enabled the TMR needs to be 2MB aligned and 2MB sized,
+> ensure that TMR size is reset back to default when SNP is shutdown as
+> SNP initialization and shutdown as part of some SNP ioctls may leave
+> TMR size modified and cause subsequent SEV only initialization to fail.
+>
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/nfs4callback.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+Acked-by: Dionna Glaze <dionnaglaze@google.com>
 
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index 018533bb83a3ca6fda46e072eebca6d2583c393a..3f21de06154e3f80818c85a92d6044058339697f 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -1592,7 +1592,7 @@ nfsd4_run_cb_work(struct work_struct *work)
- 		container_of(work, struct nfsd4_callback, cb_work);
- 	struct nfs4_client *clp = cb->cb_clp;
- 	struct rpc_clnt *clnt;
--	int flags;
-+	int flags, ret;
- 
- 	trace_nfsd_cb_start(clp);
- 
-@@ -1625,8 +1625,12 @@ nfsd4_run_cb_work(struct work_struct *work)
- 
- 	cb->cb_msg.rpc_cred = clp->cl_cb_cred;
- 	flags = clp->cl_minorversion ? RPC_TASK_NOCONNECT : RPC_TASK_SOFTCONN;
--	rpc_call_async(clnt, &cb->cb_msg, RPC_TASK_SOFT | flags,
--			cb->cb_ops ? &nfsd4_cb_ops : &nfsd4_cb_probe_ops, cb);
-+	ret = rpc_call_async(clnt, &cb->cb_msg, RPC_TASK_SOFT | flags,
-+			     cb->cb_ops ? &nfsd4_cb_ops : &nfsd4_cb_probe_ops, cb);
-+	if (ret != 0) {
-+		set_bit(NFSD4_CALLBACK_REQUEUE, &cb->cb_flags);
-+		nfsd4_queue_cb(cb);
-+	}
- }
- 
- void nfsd4_init_cb(struct nfsd4_callback *cb, struct nfs4_client *clp,
+> ---
+>  drivers/crypto/ccp/sev-dev.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
+> index b06f43eb18f7..be8a84ce24c7 100644
+> --- a/drivers/crypto/ccp/sev-dev.c
+> +++ b/drivers/crypto/ccp/sev-dev.c
+> @@ -1751,6 +1751,9 @@ static int __sev_snp_shutdown_locked(int *error, bo=
+ol panic)
+>         sev->snp_initialized =3D false;
+>         dev_dbg(sev->dev, "SEV-SNP firmware shutdown\n");
+>
+> +       /* Reset TMR size back to default */
+> +       sev_es_tmr_size =3D SEV_TMR_SIZE;
+> +
+>         return ret;
+>  }
+>
+> --
+> 2.34.1
+>
 
--- 
-2.48.1
 
+--=20
+-Dionna Glaze, PhD, CISSP, CCSP (she/her)
