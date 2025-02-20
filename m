@@ -1,58 +1,57 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB7421518B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3748B21519B
 	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 17:06:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740071192; cv=none; b=VKyakMFjlKoJ4fg/treP9Bm524QkxJKTMGK6lC8hU+MJFHvrPY8MoWZ51m7xil74VQ8PWAlmIoFEfxwlB5K/FXKELWwpB+B0BMr4bEfNhWsc96dbv/837DfhY/iC6zFcoCzD1cpZVAdvNM4pS1Z2+eX0fvpiSuDsmOgEddhCAEU=
+	t=1740071192; cv=none; b=qlg1Jar5IrVfjOEh3oqn05hVXcPCwPgkISbtxwGX5MZSKG1XL6afAmMTFBUfFEtMFwkjNprfpW60saNXVexckYROWkWrto0FpvFrrxESpwZc2A64/z3AAOcZd3Ot5KljT4w7ZN2c5MF0ACmNtPzBTHqubs62pfS7e0dNPwc9Uos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740071192; c=relaxed/simple;
-	bh=MM+E2DhB6mP93V6kH9H0BWPQOci1r/gsNuB+UaxbiAY=;
+	bh=kTtQMfy0OPRiPKBZHPizpbmfPChuFBCdB4JGHlsRg48=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lVzIkGaJ0bt7todtDuJW1iZbwShn+uZ5pvtr+br2l47acpms1nfKLA9xKOILPPZo2zOdB4NoZF4YwZ4VCj4pRk7IGBqndoQbONj8gJwpc3JdDfv7n0djn0C+Bgz/7IrX8Gjf1nvWUwS7+LkWQb1T/hLBdke8zjfT2tH6OXegrN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cgOOrHRh; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=W2Z8YJT0SMuTCiVFHlKR+qYRYj4Iu/OmZf5eZtCnjqzlcwzxPmdraOurU22CtAkGWX5psZAddDNMkO7vZpDTKmlQu5DpoY4PtiYXHQsOtSuaT9/d9EEIWHI2VnfkMaiZRt+4VTUxHaJelNJPVnGeMUvDHpKCJuU7nQzTI7mWDz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UlPP4oEd; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cgOOrHRh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UlPP4oEd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740071189;
+	s=mimecast20190719; t=1740071190;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Jxlx/bW94Y2mBtTLd29pOhhWxpKoOzPdJnxQh04qFFg=;
-	b=cgOOrHRhMDdZD+hoyA8te9zQgnygYe9daL/CHZj4JIuif0eyY4wLfMVaonAfmUvIAAIEWj
-	W889gQ5+qNZEUwhVXiK87TndA86189bzdIjsUef/4PKo4c34Lw2UZf15XpDbwyxJWGuVcD
-	/oPpKaXNAQTSoIzDpgbhbRTLrQ6wHFk=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=NdSwM6D2J4s+/gws2Vf50KU/wQdM8P/TNvP4B/YaWQE=;
+	b=UlPP4oEdl6VYemttYnra9Nvcaq8iuENGEuXkcADdAhHFOlfWJshGhG4NT9Yesdy8u25ob1
+	hxqRH3urOQ3keXU5ptqddCYu+x9T8VerhdF0oB3H9WVwU7RHEsnndcol23UkmU/Liyd2rb
+	KBrVm0t1DmtwhvevDBZBNMqMah4JlPE=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-460-H-g80tNFMUm4AAs_JyMU4A-1; Thu,
- 20 Feb 2025 12:06:22 -0500
-X-MC-Unique: H-g80tNFMUm4AAs_JyMU4A-1
-X-Mimecast-MFC-AGG-ID: H-g80tNFMUm4AAs_JyMU4A_1740071181
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-307-swlP6Zl9OqmNpELfhhS6Iw-1; Thu,
+ 20 Feb 2025 12:06:26 -0500
+X-MC-Unique: swlP6Zl9OqmNpELfhhS6Iw-1
+X-Mimecast-MFC-AGG-ID: swlP6Zl9OqmNpELfhhS6Iw_1740071184
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 318AD1800879;
-	Thu, 20 Feb 2025 17:06:21 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 451BA19783B5;
+	Thu, 20 Feb 2025 17:06:24 +0000 (UTC)
 Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1CD321800D9B;
-	Thu, 20 Feb 2025 17:06:19 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4F5B81800359;
+	Thu, 20 Feb 2025 17:06:23 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
 Cc: seanjc@google.com,
 	Yan Zhao <yan.y.zhao@intel.com>,
 	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Isaku Yamahata <isaku.yamahata@intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Subject: [PATCH 09/30] x86/virt/tdx: Add tdx_guest_keyid_alloc/free() to alloc and free TDX guest KeyID
-Date: Thu, 20 Feb 2025 12:05:43 -0500
-Message-ID: <20250220170604.2279312-10-pbonzini@redhat.com>
+	Kai Huang <kai.huang@intel.com>
+Subject: [PATCH 11/30] KVM: VMX: Refactor VMX module init/exit functions
+Date: Thu, 20 Feb 2025 12:05:45 -0500
+Message-ID: <20250220170604.2279312-12-pbonzini@redhat.com>
 In-Reply-To: <20250220170604.2279312-1-pbonzini@redhat.com>
 References: <20250220170604.2279312-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -65,93 +64,175 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-From: Isaku Yamahata <isaku.yamahata@intel.com>
+From: Kai Huang <kai.huang@intel.com>
 
-Intel TDX protects guest VMs from malicious host and certain physical
-attacks. Pre-TDX Intel hardware has support for a memory encryption
-architecture called MK-TME, which repurposes several high bits of
-physical address as "KeyID". The BIOS reserves a sub-range of MK-TME
-KeyIDs as "TDX private KeyIDs".
+Add vt_init() and vt_exit() as the new module init/exit functions and
+refactor existing vmx_init()/vmx_exit() as helper to make room for TDX
+specific initialization and teardown.
 
-Each TDX guest must be assigned with a unique TDX KeyID when it is
-created. The kernel reserves the first TDX private KeyID for
-crypto-protection of specific TDX module data which has a lifecycle that
-exceeds the KeyID reserved for the TD's use. The rest of the KeyIDs are
-left for TDX guests to use.
+To support TDX, KVM will need to enable TDX during KVM module loading
+time.  Enabling TDX requires enabling hardware virtualization first so
+that all online CPUs (and the new CPU going online) are in post-VMXON
+state.
 
-Create a small KeyID allocator. Export
-tdx_guest_keyid_alloc()/tdx_guest_keyid_free() to allocate and free TDX
-guest KeyID for KVM to use.
+Currently, the vmx_init() flow is:
 
-Don't provide the stub functions when CONFIG_INTEL_TDX_HOST=n since they
-are not supposed to be called in this case.
+ 1) hv_init_evmcs(),
+ 2) kvm_x86_vendor_init(),
+ 3) Other VMX specific initialization,
+ 4) kvm_init()
 
-Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Signed-off-by: Rick Edgecombe <rick.p.edgecombe@intel.com>
-Message-ID: <20241030190039.77971-5-rick.p.edgecombe@intel.com>
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+The kvm_x86_vendor_init() invokes kvm_x86_init_ops::hardware_setup() to
+do VMX specific hardware setup and calls kvm_update_ops() to initialize
+kvm_x86_ops to VMX's version.
+
+TDX will have its own version for most of kvm_x86_ops callbacks.  It
+would be nice if kvm_x86_init_ops::hardware_setup() could also be used
+for TDX, but in practice it cannot.  The reason is, as mentioned above,
+TDX initialization requires hardware virtualization having been enabled,
+which must happen after kvm_update_ops(), but hardware_setup() is done
+before that.
+
+Also, TDX is based on VMX, and it makes sense to only initialize TDX
+after VMX has been initialized.  If VMX fails to initialize, TDX is
+likely broken anyway.
+
+So the new flow of KVM module init function will be:
+
+ 1) Current VMX initialization code in vmx_init() before kvm_init(),
+ 2) TDX initialization,
+ 3) kvm_init()
+
+Split vmx_init() into two parts based on above 1) and 3) so that TDX
+initialization can fit in between.  Make part 1) as the new helper
+vmx_init().  Introduce vt_init() as the new module init function which
+calls vmx_init() and kvm_init().  TDX initialization will be added
+later.
+
+Do the same thing for vmx_exit()/vt_exit().
+
+Signed-off-by: Kai Huang <kai.huang@intel.com>
+Message-ID: <3f23f24098bdcf42e213798893ffff7cdc7103be.1731664295.git.kai.huang@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/include/asm/tdx.h  |  3 +++
- arch/x86/virt/vmx/tdx/tdx.c | 17 +++++++++++++++++
- 2 files changed, 20 insertions(+)
+ arch/x86/kvm/vmx/main.c | 32 ++++++++++++++++++++++++++++++++
+ arch/x86/kvm/vmx/vmx.c  | 25 +++----------------------
+ arch/x86/kvm/vmx/vmx.h  |  3 +++
+ 3 files changed, 38 insertions(+), 22 deletions(-)
 
-diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
-index 53cdb4896856..26e29a7ba6f8 100644
---- a/arch/x86/include/asm/tdx.h
-+++ b/arch/x86/include/asm/tdx.h
-@@ -121,6 +121,9 @@ int tdx_cpu_enable(void);
- int tdx_enable(void);
- const char *tdx_dump_mce_info(struct mce *m);
- 
-+int tdx_guest_keyid_alloc(void);
-+void tdx_guest_keyid_free(unsigned int keyid);
+diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
+index 43ee9ed11291..54cf95cb8d42 100644
+--- a/arch/x86/kvm/vmx/main.c
++++ b/arch/x86/kvm/vmx/main.c
+@@ -168,3 +168,35 @@ struct kvm_x86_init_ops vt_init_ops __initdata = {
+ 	.runtime_ops = &vt_x86_ops,
+ 	.pmu_ops = &intel_pmu_ops,
+ };
 +
- struct tdx_td {
- 	/* TD root structure: */
- 	struct page *tdr_page;
-diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
-index 578ad468634b..0122051af6b3 100644
---- a/arch/x86/virt/vmx/tdx/tdx.c
-+++ b/arch/x86/virt/vmx/tdx/tdx.c
-@@ -28,6 +28,7 @@
- #include <linux/log2.h>
- #include <linux/acpi.h>
- #include <linux/suspend.h>
-+#include <linux/idr.h>
- #include <asm/page.h>
- #include <asm/special_insns.h>
- #include <asm/msr-index.h>
-@@ -43,6 +44,8 @@ static u32 tdx_global_keyid __ro_after_init;
- static u32 tdx_guest_keyid_start __ro_after_init;
- static u32 tdx_nr_guest_keyids __ro_after_init;
- 
-+static DEFINE_IDA(tdx_guest_keyid_pool);
++static void __exit vt_exit(void)
++{
++	kvm_exit();
++	vmx_exit();
++}
++module_exit(vt_exit);
 +
- static DEFINE_PER_CPU(bool, tdx_lp_initialized);
- 
- static struct tdmr_info_list tdx_tdmr_list;
-@@ -1459,6 +1462,20 @@ void __init tdx_init(void)
- 	check_tdx_erratum();
++static int __init vt_init(void)
++{
++	int r;
++
++	r = vmx_init();
++	if (r)
++		return r;
++
++	/*
++	 * Common KVM initialization _must_ come last, after this, /dev/kvm is
++	 * exposed to userspace!
++	 */
++	r = kvm_init(sizeof(struct vcpu_vmx), __alignof__(struct vcpu_vmx),
++		     THIS_MODULE);
++	if (r)
++		goto err_kvm_init;
++
++	return 0;
++
++err_kvm_init:
++	vmx_exit();
++	return r;
++}
++module_init(vt_init);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 6c56d5235f0f..8d3cfef0cf3b 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -8588,7 +8588,7 @@ __init int vmx_hardware_setup(void)
+ 	return r;
  }
  
-+int tdx_guest_keyid_alloc(void)
-+{
-+	return ida_alloc_range(&tdx_guest_keyid_pool, tdx_guest_keyid_start,
-+			       tdx_guest_keyid_start + tdx_nr_guest_keyids - 1,
-+			       GFP_KERNEL);
-+}
-+EXPORT_SYMBOL_GPL(tdx_guest_keyid_alloc);
-+
-+void tdx_guest_keyid_free(unsigned int keyid)
-+{
-+	ida_free(&tdx_guest_keyid_pool, keyid);
-+}
-+EXPORT_SYMBOL_GPL(tdx_guest_keyid_free);
-+
- static inline u64 tdx_tdr_pa(struct tdx_td *td)
+-static void vmx_cleanup_l1d_flush(void)
++static void __exit vmx_cleanup_l1d_flush(void)
  {
- 	return page_to_phys(td->tdr_page);
+ 	if (vmx_l1d_flush_pages) {
+ 		free_pages((unsigned long)vmx_l1d_flush_pages, L1D_CACHE_ORDER);
+@@ -8598,23 +8598,16 @@ static void vmx_cleanup_l1d_flush(void)
+ 	l1tf_vmx_mitigation = VMENTER_L1D_FLUSH_AUTO;
+ }
+ 
+-static void __vmx_exit(void)
++void __exit vmx_exit(void)
+ {
+ 	allow_smaller_maxphyaddr = false;
+ 
+ 	vmx_cleanup_l1d_flush();
+-}
+ 
+-static void __exit vmx_exit(void)
+-{
+-	kvm_exit();
+-	__vmx_exit();
+ 	kvm_x86_vendor_exit();
+-
+ }
+-module_exit(vmx_exit);
+ 
+-static int __init vmx_init(void)
++int __init vmx_init(void)
+ {
+ 	int r, cpu;
+ 
+@@ -8658,21 +8651,9 @@ static int __init vmx_init(void)
+ 	if (!enable_ept)
+ 		allow_smaller_maxphyaddr = true;
+ 
+-	/*
+-	 * Common KVM initialization _must_ come last, after this, /dev/kvm is
+-	 * exposed to userspace!
+-	 */
+-	r = kvm_init(sizeof(struct vcpu_vmx), __alignof__(struct vcpu_vmx),
+-		     THIS_MODULE);
+-	if (r)
+-		goto err_kvm_init;
+-
+ 	return 0;
+ 
+-err_kvm_init:
+-	__vmx_exit();
+ err_l1d_flush:
+ 	kvm_x86_vendor_exit();
+ 	return r;
+ }
+-module_init(vmx_init);
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index 8b111ce1087c..299fa1edf534 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -760,4 +760,7 @@ static inline void vmx_segment_cache_clear(struct vcpu_vmx *vmx)
+ 	vmx->segment_cache.bitmask = 0;
+ }
+ 
++int vmx_init(void);
++void vmx_exit(void);
++
+ #endif /* __KVM_X86_VMX_H */
 -- 
 2.43.5
 
