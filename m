@@ -1,100 +1,123 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66E011B4247;
-	Thu, 20 Feb 2025 21:16:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18A41B4247
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 21:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740086189; cv=none; b=bMmg9yLPdq0XZ+BqN7zCBQqFFqQWW3zQ0fT96CTNZPQLmGjPRc0lupVCzlZW3qy/40IWoe7CcyGVa5e1N2B+0zaIUgMRnr5XSDzRj7jgvJnDCxx3ikbfqTzCHuBeSjhjykSYENWECjq9kuFi7BwlS3UrJfw6yO1qwM4ZF/CEG/s=
+	t=1740086194; cv=none; b=qX9w0kvldtiyQV4yasNO1WNxPZJ4Hm7XNut6F8YR48CHN6sedV2PuL7HDTECpVKDdpPg8QW9peVb7/yZ8jYAuijqhZSWtQVlxUs27WRbFNxaQ5XSKizkOJJ49hGki3jiwJhidIdRJlYk3b8KRql+Z2pt6SXw76v4lbbDPS1bvow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740086189; c=relaxed/simple;
-	bh=7GGLIIkYslbO8zRGVnXkb3WYURsjoiGi39cJNZNjmYI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VZVAsXJizqpNb7TxIwfhTXhSXSSFBETLOKoEOKhW3KLMz6gfQEUWmT3L0IAHjH5Bl8F2aegqDWaf8HEjaIqGW8I8+03FxvEq+j4ignqI7cnq0bVi+cEkLkSVv3GjqyLzRC3gXUqwIiCdh8u3bHnQCkAlpQDdd8f1d/cwAYjlKx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hCpHWCUG; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740086194; c=relaxed/simple;
+	bh=AKgJ4IGqSbL/a88cyY+H0QYMx/Z7oG6hVYBBX9CiYOY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=pxUNwKHl8bNGB660WwzTEhBZhd+TYRpAZ7xenNAECzRVEkTswEzure8n7O3FB6dw5rQUmBaOVKTCSu7++ZSAx/UASmlCdr5NLsOVp2MPyTzex9EgB8eJCR5FgIYJqhKdsgF0S16Vfda45OTMMhx1HK4ofn/u5ZrcROIeZ+OJuLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vannapurve.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CsCn6+5y; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vannapurve.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hCpHWCUG"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-abb9709b5b5so272204666b.2;
-        Thu, 20 Feb 2025 13:16:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CsCn6+5y"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fc3e239675so4358698a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 13:16:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740086186; x=1740690986; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=srsd8MylrS8GZUhwfYa6y0G3qneboWaJc/Tcu8jhTJ8=;
-        b=hCpHWCUGSbf/5FjWqfrHGJJ9nRvI4dpHFdJZaCcCe6K80ZhthuxzGtFbE1TIvglQCJ
-         KFIH/neEC49lcWP8pvUJh1AZtQ8fS8I+AKwaUr5HQKG2UVVTgAhJ/TAuGYkv9CbzLO0Y
-         ogGkIWbBrdYx8vOmrUCvdeNaRJ+d6Q2IJLSEDlXYYE5lnvaLz06G7hBX0baH+BWJImhA
-         jCPkvpEYc114xLAqCYXoDhD97SNaVzY8GflQvpTFpAVopsKeEVlRb6mPzEUbmYulgwIC
-         bQdf6wd5q/KtlAQce6wEpPq10ZX5EM5lcmS9H3die4+UALpzJs1vEUbXP7mMzwhhTf19
-         iyKA==
+        d=google.com; s=20230601; t=1740086192; x=1740690992; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8qvrVN9kBrozRo5CUBDtUXOgIdzDynxQKxj+1pBd5xY=;
+        b=CsCn6+5yPzNKlDnn50sXpcEBAqaeiZ5oGeRJf/iSOsNMtISIVZ1/mIgUT/NIXzY8uZ
+         B7rzjE7OQFwOaV0qyuCnSrlRlLPSpMjEey50accTbWxnTAJU3E3y34zsBjMHdD+87l1Y
+         s/zEksd6rAgSW0a8Z7ucwE6H7ZA/hyfMFeDRbzn5UMDFTrIRgqkZynhcZJnNLWkf0oEg
+         KujfxVGZqrFMM6JujP2nbbdHCrNwkV79FY3fxVRFB566ng2l7rrAav0CbISkY/JFqdZz
+         xusjs+FhtFsf5VqSWqUfw/XIDJZCnjz38kRyGS1UVm0n2YOTxBhU7QdrbVAVhOFYtR1o
+         +nfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740086186; x=1740690986;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=srsd8MylrS8GZUhwfYa6y0G3qneboWaJc/Tcu8jhTJ8=;
-        b=MJMzLdunrPdUfV7vJThoipQvoJf4C2EO0suDv5+wG9YKFHzJB9SVZfvjELJnY7zArF
-         4xnkMlQBcqXhri7q76WPu+R/Lb6ISrQ89rg4z+ZQ+WgpQ3Sn1/ku/ZczoCi7rzAQW4Ix
-         xT+8LGqdg8ckwMwImPWJXaHV60X9EPRf0pLkoHN3mLK+vVutAzQw1IwD6WBnKCek7+nY
-         vXsWflbd+6AB2325My0G4nmfmHCOx4UbnzbJeDx4ddwfzWzFUJuZ6Cgxd9bSJHDEKlX2
-         6RpS2ptDdbIX87JZA2CzT7U3WwDClb2pUGW99E41lbeutMC47QN6tcn54AYWdjKzorXn
-         pytQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWN/LrWD4tXj6/S27lVkIV2AL1fTbseo72W5OAoKa0Y1gYIuTiYpjHsfqYKANClq6hAscjjwtVCyb/9UX4=@vger.kernel.org, AJvYcCWlwHvLwFmod9r9JlbpytmrBAZCEngqaNi0NWhZzA64byDPNJYjaue2hqKc3L2p2YGVFSmurgSz8p1aKg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXFq5l+8uTi+KVx1AFnexKrmhbOgOI1vkNczzYxwYDUERqxQoR
-	JyyapK35z64DzI04Me/lXJiRpD/UqogrK5p2d5x4XqIZ4Qi09tV3
-X-Gm-Gg: ASbGncvlEKdQRlgJ/f6UD89ejWMHzkYd4X05jIU0iZtUvFPeMBtXtcIH9tCi3nZur2z
-	ZcxrAvm3jBWF8mDwvFT15ZMwboyolv4bm7vES6ig1z1YlSo0I5s97noFtBArdYMqiHMakKJzyx6
-	kZe0XOHnASxHnJw5OIxMuzQapXOBZbvGkhR6I+U6PqX1es7U/ydjFmGr202ILKKdf2DNTgCwwV1
-	klNxhARXZuJdStNsg0WIg13ZZrjgvKCPsMOFl8WfErABNe86Nsd8RbeK1XWL1PF/bsreiGdspcn
-	h2FVf3CAToc3scLXDAUNyznTEw5Qyl5X
-X-Google-Smtp-Source: AGHT+IEUj/CgiGoiOl99Nkn1c8Zgw6wRPk7lBZ22xdnEjPyHKJGvYm7Scg5HRoMZw+0zfk1k1QFBHg==
-X-Received: by 2002:a17:907:6e8b:b0:abb:cbc8:81fa with SMTP id a640c23a62f3a-abc09c11056mr97957566b.42.1740086185413;
-        Thu, 20 Feb 2025 13:16:25 -0800 (PST)
-Received: from localhost.localdomain ([196.235.105.135])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb9acb9acdsm855914466b.66.2025.02.20.13.16.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 13:16:24 -0800 (PST)
-From: Salah Triki <salah.triki@gmail.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	sparclinux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Salah Triki <salah.triki@gmail.com>
-Subject: [PATCH] sparc: pci: Fix memory leak in pci_bus_slot_names()
-Date: Thu, 20 Feb 2025 22:00:19 +0100
-Message-Id: <20250220210019.138218-1-salah.triki@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1740086192; x=1740690992;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8qvrVN9kBrozRo5CUBDtUXOgIdzDynxQKxj+1pBd5xY=;
+        b=DBFKMRROxrYK5YvXcIEPw9cltXHFX3oKbRV0k2oztI9Xkuo5qy5fpLWXkvhLg1V/vH
+         Ho8+hcxvADDcjAqxtxemp+dZ5s0V3+f3iKpAdPzSqBP+5tlWWGZY/QjRZ5rB43rgNzUv
+         rt4/KoIzrCNNiqvOT9icVuF6mwMT6jRAZFD2v47YC2GxxpGZ6R/FC6Tpwwm8BAQR1qMT
+         DP5X62Akcd6uIjTminIrU41jrnojuEgUELCWhmrhL4kOmhcMCgN262UqfJyGQigzjlYP
+         56Wzj49AgkjsH/Ssc/02GazAFEK8e+/SdQjjrZpaL+/XBQNVZ4o7SyWsFCH2o0PRJEIQ
+         pZeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV2UHFfStjmBCJ7Us1sh/uegaIHng/ZJooItaQPqf+pmnDPfYwIHu4Ohj+oKAiilzmlKB9SFppKHCBdLQI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxfQjG1uPjHIgElW8+OxC0MkHWHmC5OnDKWMG4Je1HI4uj08X5
+	9ybLvFet2lX9TzKn1ZDwBwxNtbJznYzLbGtYq/Ihgv9i+QwTEA6WTRmuqZ3CkKoWF+roR1k/5k2
+	wz78bDQASYdHHeDo4BQ==
+X-Google-Smtp-Source: AGHT+IH/8YsBcP5uZYl0bmlmhw3cSkjvn5V2r10re47N885FbaitMXwjoVcr1y27PxvOM4eurK+/YRXaGJnRVEqq
+X-Received: from pfbei26.prod.google.com ([2002:a05:6a00:80da:b0:730:b665:d832])
+ (user=vannapurve job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:3d0a:b0:730:888a:251d with SMTP id d2e1a72fcca58-73426d9ee22mr716372b3a.20.1740086191802;
+ Thu, 20 Feb 2025 13:16:31 -0800 (PST)
+Date: Thu, 20 Feb 2025 21:16:24 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
+Message-ID: <20250220211628.1832258-1-vannapurve@google.com>
+Subject: [PATCH V5 0/4] x86/tdx: Fix HLT logic execution for TDX VMs
+From: Vishal Annapurve <vannapurve@google.com>
+To: x86@kernel.org, linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev, 
+	virtualization@lists.linux.dev
+Cc: pbonzini@redhat.com, seanjc@google.com, erdemaktas@google.com, 
+	ackerleytng@google.com, jxgao@google.com, sagis@google.com, oupton@google.com, 
+	pgonda@google.com, kirill@shutemov.name, dave.hansen@linux.intel.com, 
+	chao.p.peng@linux.intel.com, isaku.yamahata@gmail.com, 
+	sathyanarayanan.kuppuswamy@linux.intel.com, jgross@suse.com, 
+	ajay.kaher@broadcom.com, alexey.amakhalov@broadcom.com, 
+	Vishal Annapurve <vannapurve@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-prop is a local pointer in pci_bus_slot_names(). It is initialized
-by calling of_get_property() so the caller must free prop when done
-using it.
+Direct HLT instruction execution causes #VEs for TDX VMs which is routed
+to hypervisor via TDCALL. safe_halt() routines execute HLT in STI-shadow
+so IRQs need to remain disabled until the TDCALL to ensure that pending
+IRQs are correctly treated as wake events. So "sti;hlt" sequence needs to
+be replaced for TDX VMs with TDCALL execution followed by enabling of
+interrupts.
 
-Signed-off-by: Salah Triki <salah.triki@gmail.com>
----
- arch/sparc/kernel/pci.c | 2 ++
- 1 file changed, 2 insertions(+)
+Changes introduced by the series include:
+- Move *halt() variants outside CONFIG_PARAVIRT_XXL and under
+  CONFIG_PARAVIRT [1].
+- Route "sti; hlt" sequences via tdx_safe_halt() for reliability.
+- Route "hlt" sequences via tdx_halt() to avoid unnecessary #VEs.
+- Add explicit dependency on CONFIG_PARAVIRT for TDX VMs.
+- Warn and fail emulation if HLT #VE emulation executes with interrupts
+  enabled.
+- Clean up TDX specific idle routine override.
 
-diff --git a/arch/sparc/kernel/pci.c b/arch/sparc/kernel/pci.c
-index ddac216a2aff..fa0da8f45723 100644
---- a/arch/sparc/kernel/pci.c
-+++ b/arch/sparc/kernel/pci.c
-@@ -971,6 +971,8 @@ static void pci_bus_slot_names(struct device_node *node, struct pci_bus *bus)
- 		mask &= ~this_bit;
- 		i++;
- 	}
-+
-+	kfree(prop);
- }
- 
- static int __init of_pci_slot_init(void)
+Changes since v4:
+1) Addressed Kirill's comments.
+
+v4: https://lore.kernel.org/lkml/20250212000747.3403836-1-vannapurve@google.com/
+
+Changes since v3:
+1) Addressed comments from Sean.
+2) Included [1] in the series to fix the scenarios where
+CONFIG_PARAVIRT_XXL could be disabled.
+v3: https://lore.kernel.org/all/20250206222714.1079059-1-vannapurve@google.com/
+
+[1] https://lore.kernel.org/lkml/20210517235008.257241-1-sathyanarayanan.kuppuswamy@linux.intel.com/
+
+Kirill A. Shutemov (1):
+  x86/paravirt: Move halt paravirt calls under CONFIG_PARAVIRT
+
+Vishal Annapurve (3):
+  x86/tdx: Route safe halt execution via tdx_safe_halt()
+  x86/tdx: Emit warning if IRQs are enabled during HLT #VE handling
+  x86/tdx: Remove TDX specific idle routine
+
+ arch/x86/Kconfig                      |  1 +
+ arch/x86/coco/tdx/tdx.c               | 30 +++++++++++++++++++-
+ arch/x86/include/asm/irqflags.h       | 40 +++++++++++++++------------
+ arch/x86/include/asm/paravirt.h       | 20 +++++++-------
+ arch/x86/include/asm/paravirt_types.h |  3 +-
+ arch/x86/include/asm/tdx.h            |  2 --
+ arch/x86/kernel/paravirt.c            | 14 ++++++----
+ arch/x86/kernel/process.c             |  3 --
+ 8 files changed, 71 insertions(+), 42 deletions(-)
+
 -- 
-2.34.1
+2.48.1.601.g30ceb7b040-goog
 
