@@ -1,302 +1,261 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544621EEA35;
-	Thu, 20 Feb 2025 09:20:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918C01EDA1F
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 09:20:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740043250; cv=none; b=VsczEWppnaUVjbMsCMhp/O9kLVorgmG+96KH98Jk0TvroEhCALd/66XEC/LdGutVrczP0CaiwrQRt9HErkm8sDGFcv4gsP0iIt7XGCBeYz3WyhuJHuNaUaakwI8YxL8BWTFbt64hJZVwUDwqicmVurOLu6/5FC+VUV8/GtKs+R8=
+	t=1740043260; cv=none; b=WypHXvofKMo7fKqllLYkOR/gHEwcFcdBicPK5zoP2czum6cYyqHNfBNBMbuXdKQPxmynjdMMz4qyxgCj0/vy+TzbUfeuNaKyGYyoCUO+tCvAY+lAWJUKeXgKe3UQEwVnxJ9DACp8/PcOA8rTxTheRlfpUBv5YL9d4pmhjUUZRbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740043250; c=relaxed/simple;
-	bh=w4d0D4WVsIinUPHtArcYQiWglj6W0S5nl0XEwnm4vjI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S+sut9mfSZFIIXxVXQPCa6G61GgJGkoX1vb+QODzBdafhY1GmzirCYn5Z4eOY3kKxzfILJ2z1Ng6c1Y1T40XnFpMXSwaDFBCs4Msw+XOCbrLWMPTBddhtVTuR1YvkgGfQspd7Pr3vMXwNhJKe/ScUXaLc7utaqHzJkzZjfOcsYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c3eOQ/VQ; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740043260; c=relaxed/simple;
+	bh=3+gX9NZAeKKZKLfccNXAyveEs4Xna8ogxmySY79TnN0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j25JJkKw/lewkAt+d3vPQPUg4h/GomBxMAtVSb76TbD0hgOqR90I72vXRioFgi8AZybv6OzMeyT6F6i20OPAXOHrgOpHLRbqt1shPxVIvUg1Z5m3YG8inm1vWvSUSg0VSNt3G2W6o0SEWy5r4CJI1YhIyVdhQkeazcA4C0eDU7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lCOtHmap; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c3eOQ/VQ"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-abbdf897503so261450466b.0;
-        Thu, 20 Feb 2025 01:20:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740043246; x=1740648046; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C9t5ETeu0PXD9T03gr3t0rpnaMSHCppSAmRkHp3tbNs=;
-        b=c3eOQ/VQt1sRzaAHUUE5W99CZkEP8y5CZeBjYoplMMdrq7o+FqeodBj4EH/IyDm6gu
-         3uvjWuFPOyYnXAO6lkedEzrMBUNvrLvPuqz8eWfUCDbwQxs/rakBfnXA3QIh54wlF9Ji
-         bqSiEY27ICpiQua7vjHgy3iEehF1NoVdCESp8Of+nxyfz7Bu9HyxkQPVOVVeiSVlynAn
-         xmxugmBkVV+fxui2RtOTjHgulJ0AD9kzd89nzciVyYnWAEQ2uouKqTdMUzFy6Wu/L2Ga
-         YZ91Cp4pwHRkNuciSEhkd0TfyGLzD0lPPFOQQhC3rftZdDfOBRu13y+bhzdn7EJ06Uls
-         ioWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740043246; x=1740648046;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C9t5ETeu0PXD9T03gr3t0rpnaMSHCppSAmRkHp3tbNs=;
-        b=GyYn+m/nLIXlYVgxfjSZrvXB3sxOC/o5EUxY82KtHmeRlM2Uo3jv1LBlVj+0p/zn8w
-         uzImRO68sr098daoU0vg6aXGjFPsjLk58x681y/JfD4TmdRPotMsG2TdDdoq3hhksfF4
-         ZWBvmoM1l2wXwic6vkmsmSZFNkpKW5i8eRvdcunrS/dFACqacgmPrOngKY91dzimYivh
-         7rYEYsotfU5xMxv24EMTN65vg2iODtWmhDo7iJyWKBNr1dLByud07R7hM4nYvpBm/gi+
-         5Z3wJ8wTKkxxFz40gA/teMxPHbZjnv4SSbhW6LLD8UK+jSs7yGg0rkozYmowTSlmv1oG
-         b18Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU39IL5l6iYey4nn1PpXhgP/RYLI7gDHY9/k9zT0o+6Mt4+uzKf8AXNnj1s/YLE60aHBgnSVfOoiIH2HGA=@vger.kernel.org, AJvYcCWrt4ufkHAmbRBQHjoklsMnfrOH0vqZhx8k6HBU5K8IrDImlIRxXF/dFP/nbz+qHBd3T8YruR4AjCZUMXU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw++vuoLt/VMKoJtdOisTb3WVHs8ycT+ty3cwHhI9ueJYd/Ov/u
-	/kNkbeNsG7+zt5uQ4J7PpowPdxJChhF0+7Lxr4RG1pF9V1ZQDeU/
-X-Gm-Gg: ASbGncsMgvcupKYzjD4MuVQHVcsJnCRtQqCLFc50fDe8yXVBsDngXJwrzZ0LNduV/1r
-	755SuUXAvGF13X/5u1QVxxkTYDGHLRdChxaHqyOXmJbzY5kteaDbhpZIG0ynFpVCpn6wR14H7CN
-	qw7j4v2EclcEjxY0W8gaeXgjP3m5EMFECF2BTyXBUh0Oq3FD4dQMs7XvkKNE6DbsroKP+ycSdbz
-	h4+4WeiAj/YL1rJ/blNSngEwhJ6GTRfo0yEFgDyeXaK7kix8qrqpqLpgeKvvrE0cWfqeAhxVude
-	2KtPmuJ3SDLSCS20Ej5Oxb+u1ezD
-X-Google-Smtp-Source: AGHT+IEE28wc+KTqMadXPz0HUq5xegTrNkJUOB+B0TPRfEXrPgPkWCab8fU38OLa/faZdXdJ85ieJg==
-X-Received: by 2002:a17:907:c48f:b0:ab7:b9b5:60ff with SMTP id a640c23a62f3a-abbedd31efbmr244293866b.2.1740043245586;
-        Thu, 20 Feb 2025 01:20:45 -0800 (PST)
-Received: from demon-pc.localdomain ([188.27.130.21])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abba358ec3asm665574866b.35.2025.02.20.01.20.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 01:20:45 -0800 (PST)
-From: Cosmin Tanislav <demonsingur@gmail.com>
-To: 
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Julien Massot <julien.massot@collabora.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Bingbu Cao <bingbu.cao@intel.com>,
-	Tianshu Qiu <tian.shu.qiu@intel.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Umang Jain <umang.jain@ideasonboard.com>,
-	Cosmin Tanislav <demonsingur@gmail.com>,
-	=?UTF-8?q?Pawe=C5=82=20Anikiel?= <panikiel@google.com>,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 2/3] media: use v4l2_subdev_routing_xlate_streams()
-Date: Thu, 20 Feb 2025 11:20:34 +0200
-Message-ID: <20250220092036.6757-3-demonsingur@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250220092036.6757-1-demonsingur@gmail.com>
-References: <20250220092036.6757-1-demonsingur@gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lCOtHmap"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51K18D7C001689;
+	Thu, 20 Feb 2025 09:20:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=Wz2CADDCSOGwDpwSJ4PqY40LOEWkZ8
+	e4Mvo5KcOsb+w=; b=lCOtHmapvLYAHfViOrMHVsjUzXi4gakL7y4JDjgSMVidGI
+	vTDYdtlTkJPx/fAthBdPT7hRFL/G+XeiVCsKw7hkAwCiDGnP7gaJJhlYHP7T0IjT
+	zkkN+SrZN5gj4y8g0xg7MHQ0p6Y8OEw3hdvtVoizw5QQH3qDud/DHArTKMvGIWam
+	92CNo+uo6EgvmsHOnCayPPID7FQuwyoxn2+/qKObxDJ0mkzxrAdzbVcTw5CFc6z1
+	zALpoed6DIXwhC5Lqbiz6MQ6wWJ8wboZp+j6gpIH5mT8TuDiFdhGtFMBCgZDBkFy
+	LW90ProO1hwO7dlaU6UWaejEYmQpf8sg6AeUb2xQ==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44wtfa1vsu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 09:20:49 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51K82QXV009721;
+	Thu, 20 Feb 2025 09:20:48 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44w03y95m9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Feb 2025 09:20:48 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51K9KkdV15073604
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 20 Feb 2025 09:20:46 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BF82A2004B;
+	Thu, 20 Feb 2025 09:20:46 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CB55B20040;
+	Thu, 20 Feb 2025 09:20:44 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.124.208.191])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 20 Feb 2025 09:20:44 +0000 (GMT)
+Date: Thu, 20 Feb 2025 14:50:40 +0530
+From: Vishal Chourasia <vishalc@linux.ibm.com>
+To: Phil Auld <pauld@redhat.com>
+Cc: Madadi Vineeth Reddy <vineethr@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [CHANGE 1/2] sched/isolation: Make use of more than one
+ housekeeping cpu
+Message-ID: <Z7bz6ECsSfpcqqkc@linux.ibm.com>
+References: <20250211140104.420739-1-pauld@redhat.com>
+ <4a8d54e7-fa29-4ce4-9023-3cdffa0807e6@linux.ibm.com>
+ <20250213142653.GA472203@pauld.westford.csb>
+ <Z67Wy9Jjn0BZa01A@linux.ibm.com>
+ <20250218150059.GC547103@pauld.westford.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218150059.GC547103@pauld.westford.csb>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: LDccGYdC9xAJ72QttlYCxuynkXDNoz4z
+X-Proofpoint-GUID: LDccGYdC9xAJ72QttlYCxuynkXDNoz4z
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-20_03,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ impostorscore=0 lowpriorityscore=0 priorityscore=1501 mlxlogscore=999
+ bulkscore=0 phishscore=0 malwarescore=0 mlxscore=0 adultscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502200065
 
-Replace current usages of v4l2_subdev_state_xlate_streams() with
-v4l2_subdev_routing_xlate_streams() in preperations for the removal of
-v4l2_subdev_state_xlate_streams().
+On Tue, Feb 18, 2025 at 10:00:59AM -0500, Phil Auld wrote:
+> Hi Vishal.
+> 
+> On Fri, Feb 14, 2025 at 11:08:19AM +0530 Vishal Chourasia wrote:
+> > Hi Phil, Vineeth
+> > 
+> > On Thu, Feb 13, 2025 at 09:26:53AM -0500, Phil Auld wrote:
+> > > On Thu, Feb 13, 2025 at 10:14:04AM +0530 Madadi Vineeth Reddy wrote:
+> > > > Hi Phil Auld,
+> > > > 
+> > > > On 11/02/25 19:31, Phil Auld wrote:
+> > > > > The exising code uses housekeeping_any_cpu() to select a cpu for
+> > > > > a given housekeeping task. However, this often ends up calling
+> > > > > cpumask_any_and() which is defined as cpumask_first_and() which has
+> > > > > the effect of alyways using the first cpu among those available.
+> > > > > 
+> > > > > The same applies when multiple NUMA nodes are involved. In that
+> > > > > case the first cpu in the local node is chosen which does provide
+> > > > > a bit of spreading but with multiple HK cpus per node the same
+> > > > > issues arise.
+> > > > > 
+> > > > > Spread the HK work out by having housekeeping_any_cpu() and
+> > > > > sched_numa_find_closest() use cpumask_any_and_distribute()
+> > > > > instead of cpumask_any_and().
+> > > > > 
+> > > > 
+> > > > Got the overall intent of the patch for better load distribution on
+> > > > housekeeping tasks. However, one potential drawback could be that by
+> > > > spreading HK work across multiple CPUs might reduce the time that
+> > > > some cores can spend in deeper idle states which can be beneficial for
+> > > > power-sensitive systems.
+> > > > 
+> > > > Thoughts?
+> > > 
+> > > NOHZ_full setups are not generally used in power sensitive systems I think.
+> > > They aren't in our use cases at least. 
+> > > 
+> > > In cases with many cpus a single housekeeping cpu can not keep up. Having
+> > > other HK cpus in deep idle states while the one in use is overloaded is
+> > > not a win. 
+> > 
+> > To me, an overloaded CPU sounds like where more than one tasks are ready
+> > to run, and a HK CPU is one receiving periodic scheduling clock
+> > ticks, so HP CPU is bound to comes out of any power-saving state it is in.
+> 
+> If the overload is caused by HK and interrupts there is nothing in the
+> system to help. Tasks, sure, can get load balanced.
+> 
+> And as you say, the HK cpus will have generally ticks happening anyway.
+> 
+> > > 
+> > > If your single HK cpu can keep up then only configure that one HK cpu.
+> > > The others will go idle and stay there.  And since they are nohz_full
+> > > might get to stay idle even longer.
+> > While it is good to distribute the load across each HK CPU in the HK 
+> > cpumask (queuing jobs on different CPUs each time), this can cause
+> > jitter in virtualized environments. Unnecessaryily evicting other
+> > tenants, when it's better to overload a VP than to wake up other VPs of a
+> > tenant.
+> > 
+> 
+> Sorry I'm not sure I understand your setup. Are your running virtual
+> tenants on the HK cpus?  nohz_full in the guests? Maybe you only need
+> on HK then it won't matter.
+> 
+Firstly, I am unaware if nohz_full is being used in virtualized environment.
+Please correct me it is. I am not saying it can't or shouldn't be used, it's just
+I don't know if anybody is using it.
 
-Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
----
- drivers/media/i2c/ds90ub913.c                 | 14 ++++++-----
- drivers/media/i2c/ds90ub953.c                 | 14 ++++++-----
- drivers/media/i2c/max96714.c                  | 16 ++++++-------
- drivers/media/i2c/max96717.c                  | 23 ++++++++++---------
- drivers/media/pci/intel/ipu6/ipu6-isys-csi2.c | 14 ++++++-----
- .../platform/nxp/imx8-isi/imx8-isi-crossbar.c |  2 +-
- 6 files changed, 45 insertions(+), 38 deletions(-)
+nohz_full in guests would mean that tick is disabled inside the guest but
+the host might still be getting ticks. So, I am unsure, whether it is a good
+idea to have nohz_full in virtualized environment.
 
-diff --git a/drivers/media/i2c/ds90ub913.c b/drivers/media/i2c/ds90ub913.c
-index fd2d2d5272bfb..b8dfcf730baa2 100644
---- a/drivers/media/i2c/ds90ub913.c
-+++ b/drivers/media/i2c/ds90ub913.c
-@@ -252,9 +252,10 @@ static int ub913_enable_streams(struct v4l2_subdev *sd,
- 	u64 sink_streams;
- 	int ret;
- 
--	sink_streams = v4l2_subdev_state_xlate_streams(state, UB913_PAD_SOURCE,
--						       UB913_PAD_SINK,
--						       &streams_mask);
-+	sink_streams = v4l2_subdev_routing_xlate_streams(&state->routing,
-+							 UB913_PAD_SOURCE,
-+							 UB913_PAD_SINK,
-+							 &streams_mask);
- 
- 	ret = v4l2_subdev_enable_streams(priv->source_sd, priv->source_sd_pad,
- 					 sink_streams);
-@@ -274,9 +275,10 @@ static int ub913_disable_streams(struct v4l2_subdev *sd,
- 	u64 sink_streams;
- 	int ret;
- 
--	sink_streams = v4l2_subdev_state_xlate_streams(state, UB913_PAD_SOURCE,
--						       UB913_PAD_SINK,
--						       &streams_mask);
-+	sink_streams = v4l2_subdev_routing_xlate_streams(&state->routing,
-+							 UB913_PAD_SOURCE,
-+							 UB913_PAD_SINK,
-+							 &streams_mask);
- 
- 	ret = v4l2_subdev_disable_streams(priv->source_sd, priv->source_sd_pad,
- 					  sink_streams);
-diff --git a/drivers/media/i2c/ds90ub953.c b/drivers/media/i2c/ds90ub953.c
-index 46569381b332d..c239ede968423 100644
---- a/drivers/media/i2c/ds90ub953.c
-+++ b/drivers/media/i2c/ds90ub953.c
-@@ -683,9 +683,10 @@ static int ub953_enable_streams(struct v4l2_subdev *sd,
- 	u64 sink_streams;
- 	int ret;
- 
--	sink_streams = v4l2_subdev_state_xlate_streams(state, UB953_PAD_SOURCE,
--						       UB953_PAD_SINK,
--						       &streams_mask);
-+	sink_streams = v4l2_subdev_routing_xlate_streams(&state->routing,
-+							 UB953_PAD_SOURCE,
-+							 UB953_PAD_SINK,
-+							 &streams_mask);
- 
- 	ret = v4l2_subdev_enable_streams(priv->source_sd, priv->source_sd_pad,
- 					 sink_streams);
-@@ -705,9 +706,10 @@ static int ub953_disable_streams(struct v4l2_subdev *sd,
- 	u64 sink_streams;
- 	int ret;
- 
--	sink_streams = v4l2_subdev_state_xlate_streams(state, UB953_PAD_SOURCE,
--						       UB953_PAD_SINK,
--						       &streams_mask);
-+	sink_streams = v4l2_subdev_routing_xlate_streams(&state->routing,
-+							 UB953_PAD_SOURCE,
-+							 UB953_PAD_SINK,
-+							 &streams_mask);
- 
- 	ret = v4l2_subdev_disable_streams(priv->source_sd, priv->source_sd_pad,
- 					  sink_streams);
-diff --git a/drivers/media/i2c/max96714.c b/drivers/media/i2c/max96714.c
-index 159753b13777c..c982bca708ff5 100644
---- a/drivers/media/i2c/max96714.c
-+++ b/drivers/media/i2c/max96714.c
-@@ -272,10 +272,10 @@ static int max96714_enable_streams(struct v4l2_subdev *sd,
- 		}
- 
- 		sink_streams =
--			v4l2_subdev_state_xlate_streams(state,
--							MAX96714_PAD_SOURCE,
--							MAX96714_PAD_SINK,
--							&streams_mask);
-+			v4l2_subdev_routing_xlate_streams(&state->routing,
-+							  MAX96714_PAD_SOURCE,
-+							  MAX96714_PAD_SINK,
-+							  &streams_mask);
- 
- 		ret = v4l2_subdev_enable_streams(priv->rxport.source.sd,
- 						 priv->rxport.source.pad,
-@@ -306,10 +306,10 @@ static int max96714_disable_streams(struct v4l2_subdev *sd,
- 		int ret;
- 
- 		sink_streams =
--			v4l2_subdev_state_xlate_streams(state,
--							MAX96714_PAD_SOURCE,
--							MAX96714_PAD_SINK,
--							&streams_mask);
-+			v4l2_subdev_routing_xlate_streams(&state->routing,
-+							  MAX96714_PAD_SOURCE,
-+							  MAX96714_PAD_SINK,
-+							  &streams_mask);
- 
- 		ret = v4l2_subdev_disable_streams(priv->rxport.source.sd,
- 						  priv->rxport.source.pad,
-diff --git a/drivers/media/i2c/max96717.c b/drivers/media/i2c/max96717.c
-index 9259d58ba734e..e18b07b3259c1 100644
---- a/drivers/media/i2c/max96717.c
-+++ b/drivers/media/i2c/max96717.c
-@@ -446,9 +446,10 @@ static int max96717_set_fmt(struct v4l2_subdev *sd,
- 
- 	stream_source_mask = BIT(format->stream);
- 
--	return v4l2_subdev_state_xlate_streams(state, MAX96717_PAD_SOURCE,
--					       MAX96717_PAD_SINK,
--					       &stream_source_mask);
-+	return v4l2_subdev_routing_xlate_streams(&state->routing,
-+						 MAX96717_PAD_SOURCE,
-+						 MAX96717_PAD_SINK,
-+						 &stream_source_mask);
- }
- 
- static int max96717_init_state(struct v4l2_subdev *sd,
-@@ -508,10 +509,10 @@ static int max96717_enable_streams(struct v4l2_subdev *sd,
- 
- 	if (!priv->pattern) {
- 		sink_streams =
--			v4l2_subdev_state_xlate_streams(state,
--							MAX96717_PAD_SOURCE,
--							MAX96717_PAD_SINK,
--							&streams_mask);
-+			v4l2_subdev_routing_xlate_streams(&state->routing,
-+							  MAX96717_PAD_SOURCE,
-+							  MAX96717_PAD_SINK,
-+							  &streams_mask);
- 
- 		ret = v4l2_subdev_enable_streams(priv->source_sd,
- 						 priv->source_sd_pad,
-@@ -551,10 +552,10 @@ static int max96717_disable_streams(struct v4l2_subdev *sd,
- 		int ret;
- 
- 		sink_streams =
--			v4l2_subdev_state_xlate_streams(state,
--							MAX96717_PAD_SOURCE,
--							MAX96717_PAD_SINK,
--							&streams_mask);
-+			v4l2_subdev_routing_xlate_streams(&state->routing,
-+							  MAX96717_PAD_SOURCE,
-+							  MAX96717_PAD_SINK,
-+							  &streams_mask);
- 
- 		ret = v4l2_subdev_disable_streams(priv->source_sd,
- 						  priv->source_sd_pad,
-diff --git a/drivers/media/pci/intel/ipu6/ipu6-isys-csi2.c b/drivers/media/pci/intel/ipu6/ipu6-isys-csi2.c
-index da8581a37e220..31fcf1695cb7c 100644
---- a/drivers/media/pci/intel/ipu6/ipu6-isys-csi2.c
-+++ b/drivers/media/pci/intel/ipu6/ipu6-isys-csi2.c
-@@ -354,9 +354,10 @@ static int ipu6_isys_csi2_enable_streams(struct v4l2_subdev *sd,
- 	remote_pad = media_pad_remote_pad_first(&sd->entity.pads[CSI2_PAD_SINK]);
- 	remote_sd = media_entity_to_v4l2_subdev(remote_pad->entity);
- 
--	sink_streams = v4l2_subdev_state_xlate_streams(state, CSI2_PAD_SRC,
--						       CSI2_PAD_SINK,
--						       &streams_mask);
-+	sink_streams = v4l2_subdev_routing_xlate_streams(&state->routing,
-+							 CSI2_PAD_SRC,
-+							 CSI2_PAD_SINK,
-+							 &streams_mask);
- 
- 	ret = ipu6_isys_csi2_calc_timing(csi2, &timing, CSI2_ACCINV);
- 	if (ret)
-@@ -384,9 +385,10 @@ static int ipu6_isys_csi2_disable_streams(struct v4l2_subdev *sd,
- 	struct media_pad *remote_pad;
- 	u64 sink_streams;
- 
--	sink_streams = v4l2_subdev_state_xlate_streams(state, CSI2_PAD_SRC,
--						       CSI2_PAD_SINK,
--						       &streams_mask);
-+	sink_streams = v4l2_subdev_routing_xlate_streams(&state->routing,
-+							 CSI2_PAD_SRC,
-+							 CSI2_PAD_SINK,
-+							 &streams_mask);
- 
- 	remote_pad = media_pad_remote_pad_first(&sd->entity.pads[CSI2_PAD_SINK]);
- 	remote_sd = media_entity_to_v4l2_subdev(remote_pad->entity);
-diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
-index 93a55c97cd173..8f61145435e32 100644
---- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
-+++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
-@@ -141,7 +141,7 @@ mxc_isi_crossbar_xlate_streams(struct mxc_isi_crossbar *xbar,
- 	 * routing table are guaranteed to have the same sink pad.
- 	 *
- 	 * TODO: This is likely worth a helper function, it could perhaps be
--	 * supported by v4l2_subdev_state_xlate_streams() with pad1 set to -1.
-+	 * supported by v4l2_subdev_routing_xlate_streams() with pad1 set to -1.
- 	 */
- 	for_each_active_route(&state->routing, route) {
- 		if (route->source_pad != source_pad ||
--- 
-2.48.1
+Nevertheless, the idea of nohz_full is to reduce to the kernel interference
+for CPUs marked as nohz_full. And, it does help with guest interference.
 
+I would like to mention, In SPLPAR environment, scheduling work on
+different HK CPU each time can caused VM preemption in a multi-tenant
+setup in cases where CPUs in HK cpumask spans across VPs, its better to
+consolidate them within few VPs.
+
+VP is virtual core/processor.
+
+> My concern is that currently there is no point in having more than
+> one HK cpu (per node in a NUMA case). The code as currently implemented
+> is just not doing what it needs to.
+> 
+> We have numerous cases where a single HK cpu just cannot keep up and
+> the remote_tick warning fires. It also can lead to the other things
+> (orchastration sw, HA keepalives etc) on the HK cpus getting starved
+> which leads to other issues.  In these cases we recommend increasing
+> the number of HK cpus.  But... that only helps the userspace tasks
+> somewhat. It does not help the actual housekeeping part.
+> 
+> It seems clear to me that the intent of the cpumask_any_and() calls
+> is to pick _any_ cpu in the hk mask. Not just the first, otherwise
+> it would just use cpumask_first_and().
+> 
+> I'm open to alternate suggestions of how to fix this.
+Your approach looks good to me.
+
+I wanted to mention the case of overcommitted multi-tenant setup
+where this will cause noisy neighbour sort of situation, but this can be
+avoided by carefully selecting HK CPUs.
+
+Thanks,
+vishalc
+> 
+> 
+> Cheers,
+> Phil
+> 
+> > > 
+> > > I do have a patch that has this controlled by a sched feature if that
+> > > is of interest. Then it could be disabled if you don't want it.
+> > 
+> > Vishal
+> > > 
+> > > Cheers,
+> > > Phil
+> > > 
+> > > > 
+> > > > Thanks,
+> > > > Madadi Vineeth Reddy
+> > > > 
+> > > > > Signed-off-by: Phil Auld <pauld@redhat.com>
+> > > > > Cc: Peter Zijlstra <peterz@infradead.org>
+> > > > > Cc: Juri Lelli <juri.lelli@redhat.com>
+> > > > > Cc: Frederic Weisbecker <frederic@kernel.org>
+> > > > > Cc: Waiman Long <longman@redhat.com>
+> > > > > Cc: linux-kernel@vger.kernel.org
+> > > > > ---
+> > > > >  kernel/sched/isolation.c | 2 +-
+> > > > >  kernel/sched/topology.c  | 2 +-
+> > > > >  2 files changed, 2 insertions(+), 2 deletions(-)
+> > > > > 
+> > > > > diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+> > > > > index 81bc8b329ef1..93b038d48900 100644
+> > > > > --- a/kernel/sched/isolation.c
+> > > > > +++ b/kernel/sched/isolation.c
+> > > > > @@ -40,7 +40,7 @@ int housekeeping_any_cpu(enum hk_type type)
+> > > > >  			if (cpu < nr_cpu_ids)
+> > > > >  				return cpu;
+> > > > >  
+> > > > > -			cpu = cpumask_any_and(housekeeping.cpumasks[type], cpu_online_mask);
+> > > > > +			cpu = cpumask_any_and_distribute(housekeeping.cpumasks[type], cpu_online_mask);
+> > > > >  			if (likely(cpu < nr_cpu_ids))
+> > > > >  				return cpu;
+> > > > >  			/*
+> > > > > diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+> > > > > index c49aea8c1025..94133f843485 100644
+> > > > > --- a/kernel/sched/topology.c
+> > > > > +++ b/kernel/sched/topology.c
+> > > > > @@ -2101,7 +2101,7 @@ int sched_numa_find_closest(const struct cpumask *cpus, int cpu)
+> > > > >  	for (i = 0; i < sched_domains_numa_levels; i++) {
+> > > > >  		if (!masks[i][j])
+> > > > >  			break;
+> > > > > -		cpu = cpumask_any_and(cpus, masks[i][j]);
+> > > > > +		cpu = cpumask_any_and_distribute(cpus, masks[i][j]);
+> > > > >  		if (cpu < nr_cpu_ids) {
+> > > > >  			found = cpu;
+> > > > >  			break;
+> > > > 
+> > > 
+> > > -- 
+> > > 
+> > 
+> 
+> -- 
+> 
