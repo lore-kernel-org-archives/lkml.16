@@ -1,95 +1,74 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89C01E231E
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 23:22:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA121D5CDD;
+	Thu, 20 Feb 2025 23:22:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740093723; cv=none; b=kVOPCOkFMvdNaCjb2PcHHaoIs/N7UhfsCZYsk2YelMokZ+T73oJPKiDfMVxIj6nnwFoZmt2dS8HXrlLq9PRU9sC4hXXA2ROqgPfsd4BlocQG0xDr/mW2wystXDsUtvVTMvAjUehU46RT6aPBC7JP+CcpfNJBK8KKt4gNGoPemss=
+	t=1740093770; cv=none; b=pNDlmuNAa94pO44nKqOS1hqsoTKJxQYBWZs7gluX+oxn7or9D+shzjXS//4bue7dTTLBoHJ9K0W9ANN5SlR/zHA+BxRytYQUDqg5HGXd3O3UVxtMtnf3HczZseMvE69xJtcFHQGyquOhJtCphaUlGOoSeqfQSGyH8gyOnKO13Aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740093723; c=relaxed/simple;
-	bh=kZ68jG+Z1BV0709xXyDYBm20j2ctu+NNZbpplDZg+OM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nWOpITeOhqgHryEMCXrq3FJq2jpRiRMfLwLZfl7jScn3wOPow0YkXJ/ppUOSPWfs62fE43K1hOMkB91OnsdCJc/lmvMsSWAOcyfBKv6mM9IYrZSkIM4FzKn7LO431LYEeowVuBkcwV3aXcPevjdoQwE4R6uZFaWwYn408kPsKmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YT3oe8Cq; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740093770; c=relaxed/simple;
+	bh=k5aa28gQFx6ZWYhz97vvz1POUZSI9NWBUQ9gyT3GQkQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=afsQEtSoXtz72iHB6MzeiBIHKEl9KSK1X5hLMYVmvBdfznVfPVQqpQbywuhFUCNcT3tbw4lUTUZzOYKhddNRS7vBT/PPw+/mCPmi3O6k6y6hbeehu9MBixkez8JGfvNkBSv1ZruPbX4q3zpK2LOu2mhn+XXY9iRfSVVg/mjTi0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dFsFO/Oa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YT3oe8Cq"
-Date: Thu, 20 Feb 2025 18:21:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740093719;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zbxI6jjoMfZRkTAMh8XV6NUEnzyMU8+MvcUYYGyk+xY=;
-	b=YT3oe8CqDcy8JSqJUX42pb+fpajGdiEh17wUc88GdP2WAqsOWI8iFRscmAMJIzIpQBowuH
-	cEkz0CawIHPIU79Wc5pkAdFSwN3nUZLJ1GJBt4hNvd8NKmAv0yMpW34Jo6aIdKY1cpBuwa
-	/e5+BjsW8Z09k/MaNijnHuJ6AlGnqgM=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Matthew Wilcox <willy@infradead.org>, Hillf Danton <hdanton@sina.com>, 
-	Byungchul Park <byungchul@sk.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	kernel_team@skhynix.com, conduct@kernel.org
-Subject: Re: [RFC PATCH v12 00/26] LUF(Lazy Unmap Flush) reducing tlb numbers
- over 90%
-Message-ID: <sidjvovjq4erirlld46qostxcycju6ytm3ptvvcapvhd3lhbh3@6oktathem55a>
-References: <20250220052027.58847-1-byungchul@sk.com>
- <20250220103223.2360-1-hdanton@sina.com>
- <20250220114920.2383-1-hdanton@sina.com>
- <Z7c0BTteQoZKcSmJ@casper.infradead.org>
- <Z7dFuTkdQ7PmP7sY@home.goodmis.org>
- <ebna3dzn7aevgpzxjdb4vykmrheb7erqpdbos3ayl6tnimijpp@ibkvhcsa3pib>
- <20250220180539.0fadab4b@gandalf.local.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dFsFO/Oa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44D27C4CED6;
+	Thu, 20 Feb 2025 23:22:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740093769;
+	bh=k5aa28gQFx6ZWYhz97vvz1POUZSI9NWBUQ9gyT3GQkQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dFsFO/Oaes9rPOHMzfA0mZSMnTEHvqtt5uPz8hhdU5yy/tFm/wwIjkePeyBzRrS6j
+	 cEjBLDOqNkhRSPsechq2icSFmqHUp5E9ppCzPrtL95qQ+e31UTQhZcUQhyR4i5F+Ds
+	 ZSJz9rluWWVpQOhggJpjm2NLer69uGbahLEB+8/KZLdSU6AKoprCJRzR4Ju2FTu00X
+	 6TzeRlUtzJLCuOkIm6nFLm5jpimvuoBzsjuTlnuHzWCofhebFnOnZpDgfVKs6RastO
+	 E48C/U1+mrAtNzQB1vEBvcVdw0GEbodqOXw2vUX0TYqI0l+KwxfJexk/rd8UHEjef/
+	 8gxeYmQyp0B/g==
+Date: Thu, 20 Feb 2025 15:22:48 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+Cc: Jan Petrous <jan.petrous@oss.nxp.com>, NXP S32 Linux Team <s32@nxp.com>,
+ <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: fix DWMAC S32 entry
+Message-ID: <20250220152248.3c05878a@kernel.org>
+In-Reply-To: <E1tkJow-004Nfn-Cs@rmk-PC.armlinux.org.uk>
+References: <E1tkJow-004Nfn-Cs@rmk-PC.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250220180539.0fadab4b@gandalf.local.home>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 20, 2025 at 06:05:39PM -0500, Steven Rostedt wrote:
-> On Thu, 20 Feb 2025 17:53:41 -0500
-> Kent Overstreet <kent.overstreet@linux.dev> wrote:
+On Tue, 18 Feb 2025 09:23:14 +0000 Russell King (Oracle) wrote:
+> Using L: with more than a bare email address causes getmaintainer.pl
+> to be unable to parse the entry. Fix this by doing as other entries
+> that use this email address and convert it to an R: entry.
 > 
-> > > I'll tell you what would happen in my home town. If someone said
-> > > that to a co-worker, they would likely be terminated.  
-> > 
-> > I can't agree with the "this is a firing offence" approach.
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> My point was, if this was in a company, it could very well be a firing offense.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index de81a3d68396..7da5d2df1b45 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2877,7 +2877,7 @@ F:	drivers/pinctrl/nxp/
+>  
+>  ARM/NXP S32G/S32R DWMAC ETHERNET DRIVER
+>  M:	Jan Petrous <jan.petrous@oss.nxp.com>
+> -L:	NXP S32 Linux Team <s32@nxp.com>
+> +R:	NXP S32 Linux Team <s32@nxp.com>
+>  S:	Maintained
 
-Well, to a white color worker, yes. But to someone working a blue collor
-safety critical industry, that's going to come across as rather tame.
-
-(And I do get annoyed when people get overly focused on language and
-forget that _we_ are a safety critical industry. To a first
-approximation, all the critical infrastructure throughout the world runs
-on Linux, stuff that doesn't is a rounding error, and all the testing
-and validation that exists only provides a safety factor. We have to
-have our shit together, and that does need to come first).
-
-That aside - my point isn't about what should and shouldn't be allowed,
-it's just that norms are arbitrary and it's not the best argument if you
-want someone to change their behavior.
-
-> > We're a community, no one is employed by anyone else here; we work
-> > together because we have to and we have to figure out how to get along.
-> > We work via consensus, not appeals to authority.
-> 
-> As a community, yes, things are different. But we should not have to
-> tolerate such language.
-
-Agreed.
-
-And I think we're all aware at this point at how that sort of thing does
-drive people away, so best not take it so far people start to consider
-you a liability - or one way or another there's going to be an "or else".
-
-This place functions by making people feel respected and valued for the
-work they do, so a degree of respect and consideration is required.
+I had to look thru old commits, 8b0f64b113d61 specifically.
+Can we also strip the "NXP S32 Linux Team"
+It's pretty obvious from s32@nxp.com that it's a group address,
+and this way our scripts will know that this is not a real reviewer.
+-- 
+pw-bot: cr
