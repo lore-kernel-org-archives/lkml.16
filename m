@@ -1,221 +1,522 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058D620D4E2;
-	Thu, 20 Feb 2025 17:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740071067; cv=pass; b=ucUDCIlc05F7f9hTiaGaod7M2Du//2I7xyJOBreNDH0B76n6sxjeIA79dG53XmnPHsEnAXWbuydWCJxgWGL5r7tD7/upxSahDBb7btsaog7GlXP9ghuph2ljqegPwc82apdIz2gGOL+GXMw8XdZHRw+JE9hhAlbUvdz67oYPn5Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740071067; c=relaxed/simple;
-	bh=1eFK9osyTJtbHiC66D0wNYp1jhfVBtNoPsaqtV7u2a8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Rm81m7lMkgB9pneTGLiPpWr5SfgMQMGgHY/XlsIeXphm8S2i7RKO9pnS6EmoppmTnz4vDbIJZd69utpv7Zu8/5E+PWy0aJwdOauoyOc1MgMkxfGRN6qGQo1GVANpYrHjqGYgMVUoUdN7cRbHpXDyYYeTyqXltxaQf3Grcm+NQ+Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b=NELb89ZN; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E81C5212B0A;
+	Thu, 20 Feb 2025 17:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740071111; cv=none; b=IMWTykFWt4PGQfOHl/aO1PV22lnFrHZcrE3SK7nRFm3tbRlcOcvE4wfVcG2dPJn+OLqEyuxK6v+IXlZJpQELFwCHllBOvwnvwdM8lXgVN1RNjyq/j9fwHMdUpGfR1LWR780L3imu5N28iXm5gKFX3mcR5bfC6U9NAir6SZibEdM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740071111; c=relaxed/simple;
+	bh=lELVnAQcgzEFa/YbKH0F9fs23sdBMKYoXwEioyu65Yw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Wwxc364yEVKN8Q63vR9IS17Xm/d43JLNf1OcfbiROyqi+5rQ5I4KF/bIPDe0LXvkoYQwNoR60D/BKT9FGg5s44vVWnxL0FL68fYDvqi/0qwdPpDGayk+WHLkNZIgWkJFtPsYSChkawWwWE1nsSw4qRSR0xZQH87Uy052Vs4+1fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BdnmNJqT; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b="NELb89ZN"
-ARC-Seal: i=1; a=rsa-sha256; t=1740070995; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=H89tZtPw7hGWA9a6QAt88m0WFcYXkG5Shk09kN07BWC4axWYt9GNDZVOo9cm8gqKdIuyxlp+eTDURTlCIanQuanEpv+yche0oDkjwz5c6eP0IQgbahG4lJxd694XY98EFGKvJchBOPyvsHbveZCZFX5JEsc7jNsldWYVrK/dYyk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740070995; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=w2pzTobpi9TjSTtQRUPn0hmQfMoOEaBAec03sFh2SIY=; 
-	b=M3OpeGvfafnAuq6NV8y0Hhz6ZUI1aOEGkTngOe0sXIMQ4y7O4i5GresbkUnyO35KEt+eduI3r1HyHjKANSuBnn/8+PeY5v6fes2GuWOk7M1O59qsBIOnZdI6h7/2rssPSLwql77vZ0ao5qMazDEgfTS76c1UCIsRUbRLMiX2ty0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=detlev.casanova@collabora.com;
-	dmarc=pass header.from=<detlev.casanova@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740070995;
-	s=zohomail; d=collabora.com; i=detlev.casanova@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=w2pzTobpi9TjSTtQRUPn0hmQfMoOEaBAec03sFh2SIY=;
-	b=NELb89ZNA/vXF0KU9d+s8iAZUlWP1ItsG7o0stqFKUD5nWiCOsTLt9XovGPpdD/h
-	S+UrbkLBOPJawvm7CbURNWQk5ZNHga+QTdqIjkp7h5Pju5Se+rXy9RG6I0SY7wkyWIi
-	jxGaj47YWQDXlIlaxnKbaa63k5yd81xmDyncUIs4=
-Received: by mx.zohomail.com with SMTPS id 1740070993591486.8817863804003;
-	Thu, 20 Feb 2025 09:03:13 -0800 (PST)
-From: Detlev Casanova <detlev.casanova@collabora.com>
-To: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Algea Cao <algea.cao@rock-chips.com>,
- Heiko Stuebner <heiko@sntech.de>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- dri-devel@lists.freedesktop.org, Niklas Cassel <cassel@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Andrzej Hajda <andrzej.hajda@intel.com>, kernel@collabora.com,
- David Airlie <airlied@gmail.com>, Dragan Simic <dsimic@manjaro.org>,
- Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>,
- Robert Foss <rfoss@kernel.org>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Sugar Zhang <sugar.zhang@rock-chips.com>, linux-rockchip@lists.infradead.org,
- Chen-Yu Tsai <wens@csie.org>, FUKAUMI Naoki <naoki@radxa.com>,
- devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
- Jonas Karlman <jonas@kwiboo.se>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Johan Jonker <jbx6244@gmail.com>, linux-arm-kernel@lists.infradead.org,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Alexey Charkov <alchark@gmail.com>, Thomas Zimmermann <tzimmermann@suse.de>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>
-Subject: Re: [PATCH v7 0/3] Add HDMI audio on the rk3588 SoC
-Date: Thu, 20 Feb 2025 12:03:09 -0500
-Message-ID: <2357838.ElGaqSPkdT@earth>
-In-Reply-To: <B8EF5196-55FB-44EC-B93C-E327C791225B@gmail.com>
-References:
- <20250217215641.372723-1-detlev.casanova@collabora.com>
- <B8EF5196-55FB-44EC-B93C-E327C791225B@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BdnmNJqT"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-543e47e93a3so1430174e87.2;
+        Thu, 20 Feb 2025 09:05:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740071107; x=1740675907; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ciHSX2e1RzEuIlSFeHdrZNaxDBPdrWX6mpLIUoF0eIM=;
+        b=BdnmNJqTbfeqGlkvWJB2xbEYd0kx63mA2fyldt1cpUhhPgkALem1am96lT+NjSqOl+
+         zvIj5XcPwjXtNwnc+UNQjMDHnK2xqJV+bzkZpzqi6BcXR4KIJgp6yVdM8FDVXC+m+kV7
+         ucbsZNAQ5HqkWZiQIKaJfgvZLsYf2sWOU+P0/Au69JJz3/l9hNFasXpCtJQOOfBMaZ8u
+         9TrpaSKuujTI5BueLOKqforH4QJLVtb6w1Dm56ZR1eOSgwhvhGmSP41CVZzwfB+WOs40
+         DTcnPVZNXC+kLd9rhwsq1bB9FB2rvqq7VCTEPaADUqQMzflWn6vVTBDjhaCuoTcFGMcq
+         xkgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740071107; x=1740675907;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ciHSX2e1RzEuIlSFeHdrZNaxDBPdrWX6mpLIUoF0eIM=;
+        b=BXo0fpal/x1v0q0XQR6D0xj3GH/xJaX2dkX09peFJp4GOCz0rgSVlH9OBf6cC5qJMi
+         InduRgXft+rjiS8nhIAAANQO3Sgs5Kyg/vrp2dcEeHR03Pp2qeA/gOzIRYrTJuY9qcOI
+         u3GovyeyjWyFOfFQyEMNss7LVAeE5QbBYOtllL3nQRQNeOkm8yrLwSLzrU/adyJChOFl
+         cshrsWLI2CXWD7WdvnexeWiuvDXk7uNzuooGDEk2ftfAqfIrOvO3ROqdToZbeVAuRiyh
+         pUr0bCCFyNJ6sFnN+oQAxEtPPULFOVxXbVbaS0FVIrwkln2vN8R18Kssbc6OaSbaWRXA
+         Waqw==
+X-Forwarded-Encrypted: i=1; AJvYcCW9xkt4Vb4XlhebZbHq97t7eWEnS6W53jQ0kHnTsCDkptZUwIpK6/Evo/pV0uY9J9wdS2VcCjfglCD7JI4=@vger.kernel.org, AJvYcCXDc58au1qqxN1RWF2GY28YH/Xt4I+hXFRFep6w6sElTHY6o49Lr79tl7b6I8kn1T08h4pQ/zZrhjdqVL74psU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7enZ3Z4A4nqvMgFNQhegw+8TqXzeFBZQnW515pJqNKRgqghD6
+	RXhRh55idZDuff3hLyXa6uZ0RNrCK+9YFd3+Xbf7LKtxaGMveJ9aG+FLggCcAF6/CdWVRpFwwPu
+	rJJiS1TuN1AldbZda0NUqxZAF8uI=
+X-Gm-Gg: ASbGnct1enf1P2RGDiYdDl9E2lassiYDe5yRQivIa32ZFHFoaEY5gOcT8GRnByF7PFs
+	w//jqTSFAESAr2eQDqwXYfDI2sqKkI8MQbhY3dUPg468msVx+v8/aYq8X3P26SxPV90xasSp3WG
+	Wrs+5/PW71A3mF
+X-Google-Smtp-Source: AGHT+IGvskYac57SEuftdBv8ie0PbM1gsS3CqgSgY9CzEEgmC32+5ZUoz3s/Ng/lgizyr6+1BDcAZvzqv6StrG2UWXo=
+X-Received: by 2002:a05:6512:110b:b0:545:23bb:23f4 with SMTP id
+ 2adb3069b0e04-5452fe271ccmr7580938e87.8.1740071106592; Thu, 20 Feb 2025
+ 09:05:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org> <20250218-hrtimer-v3-v6-12-rc2-v8-2-48dedb015eb3@kernel.org>
+In-Reply-To: <20250218-hrtimer-v3-v6-12-rc2-v8-2-48dedb015eb3@kernel.org>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Thu, 20 Feb 2025 12:04:29 -0500
+X-Gm-Features: AWEUYZl15gaLfRMPxJZ7BxVAJmMSfdWYMLaKgF6ZiZXNrvzDOWM-cGbdNC2q4mw
+Message-ID: <CAJ-ks9ncOyGyQsDFOBxg-7wmXkrQYiZr6H6eEFWsFstk=p1uAA@mail.gmail.com>
+Subject: Re: [PATCH v8 02/14] rust: hrtimer: introduce hrtimer support
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Danilo Krummrich <dakr@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, Guangbo Cui <2407018371@qq.com>, 
+	Dirk Behme <dirk.behme@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-ZohoMailClient: External
 
-Hi Piotr,
+On Tue, Feb 18, 2025 at 8:29=E2=80=AFAM Andreas Hindborg <a.hindborg@kernel=
+.org> wrote:
+>
+> This patch adds support for intrusive use of the hrtimer system. For now,
+> only one timer can be embedded in a Rust struct.
+>
+> The hrtimer Rust API is based on the intrusive style pattern introduced b=
+y
+> the Rust workqueue API.
+>
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+> ---
+>  rust/kernel/time.rs         |   2 +
+>  rust/kernel/time/hrtimer.rs | 312 ++++++++++++++++++++++++++++++++++++++=
+++++++
+>  2 files changed, 314 insertions(+)
+>
+> diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
+> index 87e47f2f5618d..2cf365cfb412e 100644
+> --- a/rust/kernel/time.rs
+> +++ b/rust/kernel/time.rs
+> @@ -10,6 +10,8 @@
+>
+>  use core::convert::Into;
+>
+> +pub mod hrtimer;
+> +
+>  /// The number of nanoseconds per millisecond.
+>  pub const NSEC_PER_MSEC: i64 =3D bindings::NSEC_PER_MSEC as i64;
+>
+> diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
+> new file mode 100644
+> index 0000000000000..a6332924efabd
+> --- /dev/null
+> +++ b/rust/kernel/time/hrtimer.rs
+> @@ -0,0 +1,312 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Intrusive high resolution timers.
+> +//!
+> +//! Allows running timer callbacks without doing allocations at the time=
+ of
+> +//! starting the timer. For now, only one timer per type is allowed.
+> +//!
+> +//! # Vocabulary
+> +//!
+> +//! States:
+> +//!
+> +//! * Stopped
+> +//! * Running
+> +//!
+> +//! Operations:
+> +//!
+> +//! * Start
+> +//! * Cancel
+> +//! * Stop
+> +//! * Restart
+> +//!
+> +//! Events:
+> +//!
+> +//! * Expire
+> +//!
+> +//! ## State Diagram
+> +//!
+> +//! ```text
+> +//!                  <-- Stop ----
+> +//!                  <-- Cancel --
+> +//!                  --- Start -->
+> +//!        +---------+        +---------+
+> +//!   O--->| Stopped |        | Running |---o
+> +//!        +---------+        +---------+   |
+> +//!                                  ^      |
+> +//!                  <- Expire --    |      |
+> +//!                                  o------o
+> +//!                                   Restart
+> +//! ```
+> +//!
+> +//! A timer is initialized in the **stopped** state. A stopped timer can=
+ be
+> +//! **started** with an **expiry** time. After the timer is started, it =
+is
+> +//! **running**. When the timer **expires**, the timer handler is execut=
+ed.
+> +//! After the handler has executed, the timer may be **restarted** or
+> +//! **stopped**. A running timer can be **canceled** before it's handler=
+ is
 
-On Thursday, 20 February 2025 06:16:20 EST Piotr Oniszczuk wrote:
-> > Wiadomo=C5=9B=C4=87 napisana przez Detlev Casanova <detlev.casanova@col=
-labora.com> w
-> > dniu 17 lut 2025, o godz. 22:47:
-> >=20
-> > To support HDMI audio on the rk3588 based devices, the generic HDMI
-> > Codec framework is used in the dw-hdmi-qp DRM bridge driver.
-> >=20
-> > The implementation is mainly based on the downstream driver, ported to =
-the
-> > generic HDMI Codec framework [1] recently merged in the master branch.
-> > The parameters computation has been kept as is and the data stored in t=
-he
-> > dw_hdmi_qp struct as been cleaned up.
-> >=20
-> > The table for the N values has been edited to reflect N recommended val=
-ues
-> > as well as CTS recommended values.
-> >=20
-> > The downstream kernel also implements a machine driver for HDMI audio b=
-ut
-> > it is doing exactly what the simple-audio-card driver does, so use that
-> > instead in the RK3588 SoC device tree.
-> >=20
-> > This adds HDMI audio support for both HDMI TX ports.
-> >=20
-> > *** Dependencies ***
-> >=20
-> > Based on Linus' master branch, but also needs Cristian's dts patches for
-> > HDMI1 support [2], which depends on Heiko's patchset for
-> > phy-rockchip-samsung-hdptx [3]. Patches will apply without [3], but HDMI
-> > will not work (at all).
-> >=20
-> > [1]:
-> > https://lore.kernel.org/all/20241224-drm-bridge-hdmi-connector-v10-0-dc=
-89
-> > 577cd438@linaro.org [2]:
-> > https://lore.kernel.org/linux-rockchip/20241211-rk3588-hdmi1-v2-0-02cdc=
-a2
-> > 2ff68@collabora.com [3]:
-> > https://lore.kernel.org/lkml/20241206103401.1780416-3-heiko@sntech.de/
-> >=20
-> > Changes since v6:
-> > - Fix arguments alignement (checkpatch --strict warnings)
-> > - Add hdmi1 audio support too
-> > - Move hdmi0_sound node under hdmi0_out_con
-> >=20
-> > Changes since v5:
-> > - Simplify audio math computation for N
-> > - Move hdmi0-sound node up with other address-less nodes
-> >=20
-> > Changes since v4:
-> > - Moved hdmi0_audio node the rk3588-base.dtsi
-> > - Enable hdmi0_audio in rk3588-rock-5b.dts
-> >=20
-> > Changes since v3:
-> > - Renamed function to start with dw_hdmi_qp
-> >=20
-> > Changes since v2:
-> > - Also clear the audio infoframe
-> > - Write AUDI_CONTENTS0 to its default value in case it gets overwritten.
-> > - Store tmds_char_rate in the dw_hdmi_qp struct in atomic_enable
-> > - Clear tmds_char_rate in atomic_disable and only write registers when
-> >=20
-> >   tmds_char_rate is not 0.
-> >=20
-> > - Do not use connector_state duplicates
-> >=20
-> > Changes since v1:
-> > - Remove useless audio_mutex (was used downstream for multiple drivers
-> > access>=20
-> >   to audio functions)
-> >=20
-> > - Let hdmi_codec build and setup audio infoframes
-> > - Only access audio registers when connector is connected
-> > - Rebased on master branch
-> >=20
-> > Detlev Casanova (2):
-> >  arm64: dts: rockchip: Add HDMI audio outputs for rk3588 SoC
-> >  arm64: dts: rockchip: Enable HDMI audio outputs for Rock 5B
-> >=20
-> > Sugar Zhang (1):
-> >  drm/bridge: synopsys: Add audio support for dw-hdmi-qp
-> >=20
-> > arch/arm64/boot/dts/rockchip/rk3588-base.dtsi |  17 +
-> > .../arm64/boot/dts/rockchip/rk3588-extra.dtsi |  17 +
-> > .../boot/dts/rockchip/rk3588-rock-5b.dts      |  16 +
-> > drivers/gpu/drm/bridge/synopsys/dw-hdmi-qp.c  | 489 ++++++++++++++++++
-> > 4 files changed, 539 insertions(+)
->=20
-> Detelv,
->=20
-> Just curious of your opinion:
->=20
-> I=E2=80=99m on 6.14-rc3 and using
-> https://gitlab.collabora.com/cristicc/linux-next/-/commits/rk3588-hdmi-br=
-id
-> ge + this v7 series.
+"it's" =3D it is. This should be "its" (possessive).
 
-Do you have the branch available somewhere ?
-
-> On mine rock5b all works nicely but - at boot time - i=E2=80=99m getting =
-some oops
-> in kernel like this:
-> https://gist.github.com/warpme/e1668acbef7817e5d2a88a6840328722
-
-I did notice that at one point but it disappeard after a rebase on the the=
-=20
-latest master so I didn't look further into that.
-Could it be related to 2518a0e1b878042f9afa45ae063e544a16efc1a3 "ASoC: simp=
-le-
-card: use __free(device_node) for device node" ?
-
-I'm not exactly sure how __free(device_node) works though, but reverting th=
-at=20
-commit could fix the issue.
-
-> I=E2=80=99m not sure where issue is but it looks to me like kind of inter=
-ference
-> between analog audio and hdmi audio as commenting analog audio in dts (
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/arc=
-h/
-> arm64/boot/dts/rockchip/rk3588-rock-5b.dts?h=3Dv6.14-rc3#n24 ) stops kern=
-el
-> from oops=E2=80=99ing=E2=80=A6.
-
-I cannot reproduce anymore, so if you have a branch/config that you use, I=
-=20
-could try, looking into that.
-I don't see any relevant commits that would change this behavior on master=
-=20
-since v6.14-rc3, so I'm not sure what is going on.
-
->  rock5b dts i=E2=80=99m using is like this:
-> https://gist.github.com/warpme/a8a32afd4a05d4b7f25d2808984b05ac
-
-Regards,
-Detlev.
+Just to be clear, after the handler has executed and before the timer
+has been **restarted** or **stopped** the timer is still in the
+**running** state?
 
 
+> +//! executed. A timer that is cancelled enters the **stopped** state.
+> +//!
+> +
+> +use crate::{init::PinInit, prelude::*, time::Ktime, types::Opaque};
+> +use core::marker::PhantomData;
+> +
+> +/// A timer backed by a C `struct hrtimer`.
+> +///
+> +/// # Invariants
+> +///
+> +/// * `self.timer` is initialized by `bindings::hrtimer_setup`.
+> +#[pin_data]
+> +#[repr(C)]
+> +pub struct HrTimer<T> {
+> +    #[pin]
+> +    timer: Opaque<bindings::hrtimer>,
+> +    _t: PhantomData<T>,
+> +}
+> +
+> +// SAFETY: Ownership of an `HrTimer` can be moved to other threads and
+> +// used/dropped from there.
+> +unsafe impl<T> Send for HrTimer<T> {}
+> +
+> +// SAFETY: Timer operations are locked on C side, so it is safe to opera=
+te on a
+> +// timer from multiple threads
+> +unsafe impl<T> Sync for HrTimer<T> {}
+> +
+> +impl<T> HrTimer<T> {
+> +    /// Return an initializer for a new timer instance.
+> +    pub fn new() -> impl PinInit<Self>
+> +    where
+> +        T: HrTimerCallback,
+> +    {
+> +        pin_init!(Self {
+> +            // INVARIANTS: We initialize `timer` with `hrtimer_setup` be=
+low.
+> +            timer <- Opaque::ffi_init(move |place: *mut bindings::hrtime=
+r| {
+> +                // SAFETY: By design of `pin_init!`, `place` is a pointe=
+r to a
+> +                // live allocation. hrtimer_setup will initialize `place=
+` and
+> +                // does not require `place` to be initialized prior to t=
+he call.
+> +                unsafe {
+> +                    bindings::hrtimer_setup(
+> +                        place,
+> +                        Some(T::CallbackTarget::run),
+> +                        bindings::CLOCK_MONOTONIC as i32,
+> +                        bindings::hrtimer_mode_HRTIMER_MODE_REL,
+> +                    );
+> +                }
+> +            }),
+> +            _t: PhantomData,
+> +        })
+> +    }
+> +
+> +    /// Get a pointer to the contained `bindings::hrtimer`.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// `ptr` must point to a live allocation of at least the size of `S=
+elf`.
+> +    unsafe fn raw_get(ptr: *const Self) -> *mut bindings::hrtimer {
+> +        // SAFETY: The field projection to `timer` does not go out of bo=
+unds,
+> +        // because the caller of this function promises that `ptr` point=
+s to an
+> +        // allocation of at least the size of `Self`.
+> +        unsafe { Opaque::raw_get(core::ptr::addr_of!((*ptr).timer)) }
+> +    }
+
+Can you help me understand why the various functions here operate on
+*const Self? I understand the need to obtain a C pointer to interact
+with bindings, but I don't understand why we're dealing in raw
+pointers to the abstraction rather than references. This extends to
+HrTimerPointer, which is intended to be implemented by *pointers to*
+structs that embed `HrTimer`; why isn't it implemented on by the
+embedder itself?
+
+I realize we discussed this on v6, sorry for not keeping up there.
+
+> +
+> +    /// Cancel an initialized and potentially running timer.
+> +    ///
+> +    /// If the timer handler is running, this will block until the handl=
+er is
+> +    /// finished.
+> +    ///
+> +    /// Users of the `HrTimer` API would not usually call this method di=
+rectly.
+> +    /// Instead they would use the safe `cancel` method on the [`HrTimer=
+Handle`]
+> +    /// returned when the timer was started.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// `self_ptr` must point to a valid `Self`.
+> +    #[allow(dead_code)]
+> +    pub(crate) unsafe fn raw_cancel(self_ptr: *const Self) -> bool {
+> +        // SAFETY: timer_ptr points to an allocation of at least `HrTime=
+r` size.
+> +        let c_timer_ptr =3D unsafe { HrTimer::raw_get(self_ptr) };
+> +
+> +        // If the handler is running, this will wait for the handler to =
+finish
+> +        // before returning.
+> +        // SAFETY: `c_timer_ptr` is initialized and valid. Synchronizati=
+on is
+> +        // handled on C side.
+> +        unsafe { bindings::hrtimer_cancel(c_timer_ptr) !=3D 0 }
+> +    }
+> +}
+> +
+> +/// Implemented by pointer types that point to structs that embed a [`Hr=
+Timer`].
+> +///
+> +/// Target (pointee) must be [`Sync`] because timer callbacks happen in =
+another
+> +/// thread of execution (hard or soft interrupt context).
+> +///
+> +/// Starting a timer returns a [`HrTimerHandle`] that can be used to man=
+ipulate
+> +/// the timer. Note that it is OK to call the start function repeatedly,=
+ and
+> +/// that more than one [`HrTimerHandle`] associated with a [`HrTimerPoin=
+ter`] may
+> +/// exist. A timer can be manipulated through any of the handles, and a =
+handle
+> +/// may represent a cancelled timer.
+> +pub trait HrTimerPointer: Sync + Sized {
+> +    /// A handle representing a started or restarted timer.
+> +    ///
+> +    /// If the timer is running or if the timer callback is executing wh=
+en the
+> +    /// handle is dropped, the drop method of [`HrTimerHandle`] should n=
+ot return
+> +    /// until the timer is stopped and the callback has completed.
+> +    ///
+> +    /// Note: When implementing this trait, consider that it is not unsa=
+fe to
+> +    /// leak the handle.
+> +    type TimerHandle: HrTimerHandle;
+> +
+> +    /// Start the timer with expiry after `expires` time units. If the t=
+imer was
+> +    /// already running, it is restarted with the new expiry time.
+> +    fn start(self, expires: Ktime) -> Self::TimerHandle;
+> +}
+> +
+> +/// Implemented by [`HrTimerPointer`] implementers to give the C timer c=
+allback a
+> +/// function to call.
+> +// This is split from `HrTimerPointer` to make it easier to specify trai=
+t bounds.
+> +pub trait RawHrTimerCallback {
+> +    /// Callback to be called from C when timer fires.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// Only to be called by C code in `hrtimer` subsystem. `ptr` must p=
+oint to
+> +    /// the `bindings::hrtimer` structure that was used to start the tim=
+er.
+> +    unsafe extern "C" fn run(ptr: *mut bindings::hrtimer) -> bindings::h=
+rtimer_restart;
+> +}
+> +
+> +/// Implemented by structs that can be the target of a timer callback.
+> +pub trait HrTimerCallback {
+> +    /// The type whose [`RawHrTimerCallback::run`] method will be invoke=
+d when
+> +    /// the timer expires.
+> +    type CallbackTarget<'a>: RawHrTimerCallback;
+> +
+> +    /// This type is passed to the timer callback function. It may be a =
+borrow
+> +    /// of [`Self::CallbackTarget`], or it may be `Self::CallbackTarget`=
+ if the
+> +    /// implementation can guarantee exclusive access to the target duri=
+ng timer
+> +    /// handler execution.
+> +    type CallbackTargetParameter<'a>;
+> +
+> +    /// Called by the timer logic when the timer fires.
+> +    fn run(this: Self::CallbackTargetParameter<'_>)
+> +    where
+> +        Self: Sized;
+> +}
+> +
+> +/// A handle representing a potentially running timer.
+> +///
+> +/// More than one handle representing the same timer might exist.
+> +///
+> +/// # Safety
+> +///
+> +/// When dropped, the timer represented by this handle must be cancelled=
+, if it
+> +/// is running. If the timer handler is running when the handle is dropp=
+ed, the
+> +/// drop method must wait for the handler to finish before returning.
+
+Between this comment and the comment on cancel we say "if it is
+running" 3 times. Can we say it just once, on the method, and here say
+that cancel must be called in Drop?
+
+> +pub unsafe trait HrTimerHandle {
+> +    /// Cancel the timer, if it is running. If the timer handler is runn=
+ing, block
+> +    /// till the handler has finished.
+> +    fn cancel(&mut self) -> bool;
+> +}
+> +
+> +/// Implemented by structs that contain timer nodes.
+> +///
+> +/// Clients of the timer API would usually safely implement this trait b=
+y using
+> +/// the [`crate::impl_has_hr_timer`] macro.
+> +///
+> +/// # Safety
+> +///
+> +/// Implementers of this trait must ensure that the implementer has a [`=
+HrTimer`]
+> +/// field at the offset specified by `OFFSET` and that all trait methods=
+ are
+> +/// implemented according to their documentation.
+> +///
+> +/// [`impl_has_timer`]: crate::impl_has_timer
+> +pub unsafe trait HasHrTimer<T> {
+> +    /// Offset of the [`HrTimer`] field within `Self`
+> +    const OFFSET: usize;
+
+Does this need to be part of the trait? As an alternative the provided
+methods could be generated in the macro below and reduce the
+opportunity to implement this trait incorrectly.
+
+> +
+> +    /// Return a pointer to the [`HrTimer`] within `Self`.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// `ptr` must point to a valid struct of type `Self`.
+> +    unsafe fn raw_get_timer(ptr: *const Self) -> *const HrTimer<T> {
+> +        // SAFETY: By the safety requirement of this trait, the trait
+> +        // implementor will have a `HrTimer` field at the specified offs=
+et.
+> +        unsafe { ptr.cast::<u8>().add(Self::OFFSET).cast::<HrTimer<T>>()=
+ }
+> +    }
+> +
+> +    /// Return a pointer to the struct that is embedding the [`HrTimer`]=
+ pointed
+> +    /// to by `ptr`.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// `ptr` must point to a [`HrTimer<T>`] field in a struct of type `=
+Self`.
+> +    unsafe fn timer_container_of(ptr: *mut HrTimer<T>) -> *mut Self
+> +    where
+> +        Self: Sized,
+> +    {
+> +        // SAFETY: By the safety requirement of this function and the `H=
+asHrTimer`
+> +        // trait, the following expression will yield a pointer to the `=
+Self`
+> +        // containing the timer addressed by `ptr`.
+> +        unsafe { ptr.cast::<u8>().sub(Self::OFFSET).cast::<Self>() }
+> +    }
+> +
+> +    /// Get pointer to embedded `bindings::hrtimer` struct.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// `self_ptr` must point to a valid `Self`.
+> +    unsafe fn c_timer_ptr(self_ptr: *const Self) -> *const bindings::hrt=
+imer {
+> +        // SAFETY: `self_ptr` is a valid pointer to a `Self`.
+> +        let timer_ptr =3D unsafe { Self::raw_get_timer(self_ptr) };
+> +
+> +        // SAFETY: timer_ptr points to an allocation of at least `HrTime=
+r` size.
+> +        unsafe { HrTimer::raw_get(timer_ptr) }
+> +    }
+> +
+> +    /// Start the timer contained in the `Self` pointed to by `self_ptr`=
+. If
+> +    /// it is already running it is removed and inserted.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// `self_ptr` must point to a valid `Self`.
+> +    unsafe fn start(self_ptr: *const Self, expires: Ktime) {
+> +        // SAFETY: By function safety requirement, `self_ptr`is a valid =
+`Self`.
+> +        unsafe {
+> +            bindings::hrtimer_start_range_ns(
+> +                Self::c_timer_ptr(self_ptr).cast_mut(),
+> +                expires.to_ns(),
+> +                0,
+> +                bindings::hrtimer_mode_HRTIMER_MODE_REL,
+> +            );
+> +        }
+> +    }
+> +}
+> +
+> +/// Use to implement the [`HasHrTimer<T>`] trait.
+> +///
+> +/// See [`module`] documentation for an example.
+> +///
+> +/// [`module`]: crate::time::hrtimer
+> +#[macro_export]
+> +macro_rules! impl_has_hr_timer {
+> +    (
+> +        impl$({$($generics:tt)*})?
+> +            HasHrTimer<$timer_type:ty>
+> +            for $self:ty
+> +        { self.$field:ident }
+> +        $($rest:tt)*
+> +    ) =3D> {
+> +        // SAFETY: This implementation of `raw_get_timer` only compiles =
+if the
+> +        // field has the right type.
+> +        unsafe impl$(<$($generics)*>)? $crate::time::hrtimer::HasHrTimer=
+<$timer_type> for $self {
+> +            const OFFSET: usize =3D ::core::mem::offset_of!(Self, $field=
+) as usize;
+> +
+> +            #[inline]
+> +            unsafe fn raw_get_timer(ptr: *const Self) ->
+> +                *const $crate::time::hrtimer::HrTimer<$timer_type>
+> +            {
+> +                // SAFETY: The caller promises that the pointer is not d=
+angling.
+> +                unsafe {
+> +                    ::core::ptr::addr_of!((*ptr).$field)
+> +                }
+> +            }
+> +        }
+> +    }
+> +}
+>
+> --
+> 2.47.0
+>
+>
