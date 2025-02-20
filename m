@@ -1,146 +1,190 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13CF41D61A3
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 15:21:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 994411D5CFB;
+	Thu, 20 Feb 2025 15:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740064882; cv=none; b=WlJ6uu+1zWPND8IWztZgxom7CzOM0CyZ0kx+pB3D7gPb8vefYHVJc3v7dv6FsQzDDtH1lIXc6tiNP/la3DfcZqj49HJaIaffAFRumKGfSmAOTBFjGw4S/Pt7hN1T+WhpcFzlXqZgbRAr9hId/Ppn5z8EjD65p6Mqd1KyFov1mw4=
+	t=1740064904; cv=none; b=F6TVKWSpsZk7baisne5kYyCZCvZ5WkDB6TKGvfPPC7/ShGB7AZmZbGNPkoFvID31gwuXulQq3l5NiHQng7x8IQhsWW4mHuhmlIUEfvIJS0pveKWAqsVGJadGstUuCNhGxDUiSvQfrxcYFK4tCTD5rqWbG3QZxf4GBvKA08mR8SY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740064882; c=relaxed/simple;
-	bh=lc33ASecIyHOG/Bouzl84JzYnOwb0Ap4Hk7ODwMwDpg=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=a6eyiGXlqaSRY7bbdHkXuwJnG7cPbbqQjj1tCKouWDVboewxK3wBQlPYzf1dnqskdDv3TMXIlubKMNUin01U2cxvnlV9RVWINMK5P82y+sdcfrngHLeWEFqFbduTuz7T/vmW17PcS3uAjPkLtYY3c9a753Q0xaRbOLOXNhWG+NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mandelbit.com; spf=pass smtp.mailfrom=mandelbit.com; dkim=pass (2048-bit key) header.d=mandelbit.com header.i=@mandelbit.com header.b=FD+/nqgJ; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mandelbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mandelbit.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mandelbit.com header.i=@mandelbit.com header.b="FD+/nqgJ"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4394345e4d5so7376915e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 07:21:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mandelbit.com; s=google; t=1740064878; x=1740669678; darn=vger.kernel.org;
-        h=content-transfer-encoding:organization:autocrypt:subject:from:cc:to
-         :content-language:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9c6akN4U6N1j5lHvxO5m+AhJP87KfyoW4nGzGcG9XVw=;
-        b=FD+/nqgJXe55oHJ5nBylF0J1vOTOInARFVgzM3BrRF9YJzd43K7An6kkAVhKSl+Txt
-         i+tjZ1eqDPHAOQG1Jkp3px6wxRfG4xjuOQYQNIPw8lWWaXjH8R+Dvox5qvEiUxEY+K3T
-         n0nOKKzrFItBDR+bT9Mj43Arc7aQbsEzQb0rxfcmY3GQqgUmv2QOKm1a19svbYmxRus2
-         0d2s5O84dL4Eo6ORwzCV1lDe5M/5CBF6mIoJofAHmuEOLu1QawD9cRFK8JKkH6RQKQpd
-         BFkPWJ4QyEfn+o/nSUrorB9cW/49CQWQoSkPN7DhtsIfd6verqSbtzdu+rSdWKNfGOQ+
-         Q+OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740064878; x=1740669678;
-        h=content-transfer-encoding:organization:autocrypt:subject:from:cc:to
-         :content-language:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9c6akN4U6N1j5lHvxO5m+AhJP87KfyoW4nGzGcG9XVw=;
-        b=Dicv8ranGi49OH5ZQSEW5RdT05ZT8IsSnE1JSMTc55TOOjQ9FXvb1bU6VhfpoFOzOn
-         nOwMOvT1nLlNDos7dJV3/qponfjMrMfYjS1oYf6/aF6YGw0JgGdpPISH2Kaf0WCDczKO
-         qRP8ws0a/JfznHnBi97zSfZ4eaGZlvRBBqQi74YFMFNuL/2WgLY3rqEgudYhZpPfL59Z
-         SzBaTyMGdvV8NId8jH/g1tNktN1h+ifBtXSa/CgodQXfOiV/Ouml6i6WZ6emldiI7m5p
-         vyo97vVOvh2Zbhffa9Oq/OVECihWJG6St10+t79mV03K8T83yp7mtpoFKqJKKdYH7gN3
-         pc1A==
-X-Gm-Message-State: AOJu0Yx0ZiFy8eU5aF6PGcqk1erZJ+CARnGeIM1IxXW4dKUQUTl/y9HZ
-	KtBegIdWw/MfCfFVmHWlo9RNBnWakLH+wW85tVYKhWgEF/JQOv1rIS9cWNIlUlk=
-X-Gm-Gg: ASbGncu7TImOtnY+9WcjcVnP6VBuVlEetoGRXdcx4tvpxdNna5SE4dSmi/n9t7KDpIf
-	pAVyme4EGi39iHljAP/B2Msz0WUDH/AQbB+ubtwxI0Lyif4jk33vytdnyhpMlYjs0c7xlLZTFSm
-	QTQXH7b863Fr2RaCEUbSKf0fUYuKfMQDXyaXiyl9dDCGsJTqhOlHh/SMORmfmlgi5l+nhK6372O
-	z/e5CQGZ2uH0WAU9NPCPtcHJyrO0tHaHOl/bmcH4PGKz1IY3ih11AX9iflmjaS8qZ5+22tluTp8
-	W2faRTqnPEWx+3ACXuQKGC/L25HLI2fKkugdF1Ii267NQG8yGQHeNJdN
-X-Google-Smtp-Source: AGHT+IF72B8PeU55Z3sgL3tW6dfxk/MwISwqpinGcc+knKt0qvcvgeetMqZ5K54wjAsMBACSydwSkQ==
-X-Received: by 2002:a5d:47a3:0:b0:38f:37bd:1707 with SMTP id ffacd0b85a97d-38f37bd18f8mr18940578f8f.0.1740064878244;
-        Thu, 20 Feb 2025 07:21:18 -0800 (PST)
-Received: from ?IPV6:2001:67c:2fbc:1:7ff5:51b6:ef4f:eaf9? ([2001:67c:2fbc:1:7ff5:51b6:ef4f:eaf9])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4399c41022csm49752735e9.40.2025.02.20.07.21.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Feb 2025 07:21:17 -0800 (PST)
-Message-ID: <85894bbd-05ef-4e40-acf9-98a079c9e2ee@mandelbit.com>
-Date: Thu, 20 Feb 2025 16:21:22 +0100
+	s=arc-20240116; t=1740064904; c=relaxed/simple;
+	bh=1BJ3GLEeXmNh1bHUd2EtF6UaEHncLJ80UUAwqY7Rlz0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oRVwMgicGKB6Ky3iaJ4lTMGtxUwnPikh1STxJudbw13BLE/hluLBWL7xX912QpOuYQVAYuevVQfw2CMe2i/t9bvNxSuhcZn9n50v7reSPe1CrcEzurjKuhdMpLOTNujXvigLfCr2o+GuUxUFpN2Tcmm5QWargQwqe+iyfEMJoV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE06116F3;
+	Thu, 20 Feb 2025 07:21:58 -0800 (PST)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.43])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14F8B3F59E;
+	Thu, 20 Feb 2025 07:21:35 -0800 (PST)
+Date: Thu, 20 Feb 2025 15:21:33 +0000
+From: Dave Martin <Dave.Martin@arm.com>
+To: "Moger, Babu" <bmoger@amd.com>
+Cc: Babu Moger <babu.moger@amd.com>, corbet@lwn.net,
+	reinette.chatre@intel.com, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, tony.luck@intel.com,
+	peternewman@google.com, x86@kernel.org, hpa@zytor.com,
+	paulmck@kernel.org, akpm@linux-foundation.org, thuth@redhat.com,
+	rostedt@goodmis.org, xiongwei.song@windriver.com,
+	pawan.kumar.gupta@linux.intel.com, daniel.sneddon@linux.intel.com,
+	jpoimboe@kernel.org, perry.yuan@amd.com, sandipan.das@amd.com,
+	kai.huang@intel.com, xiaoyao.li@intel.com, seanjc@google.com,
+	xin3.li@intel.com, andrew.cooper3@citrix.com, ebiggers@google.com,
+	mario.limonciello@amd.com, james.morse@arm.com,
+	tan.shaopeng@fujitsu.com, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, maciej.wieczor-retman@intel.com,
+	eranian@google.com
+Subject: Re: [PATCH v11 23/23] x86/resctrl: Introduce interface to modify
+ assignment states of the groups
+Message-ID: <Z7dIfWAk+f4Gc54X@e133380.arm.com>
+References: <cover.1737577229.git.babu.moger@amd.com>
+ <fe1c0c4cebd353ccb3e588d7ea2fe9ef3dff0ef2.1737577229.git.babu.moger@amd.com>
+ <Z7YBxNIWb7dqOnfi@e133380.arm.com>
+ <1ccb907b-e8c9-4997-bc45-4a457ee84494@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham <kbingham@kernel.org>
-Cc: open list <linux-kernel@vger.kernel.org>
-From: Antonio Quartulli <antonio@mandelbit.com>
-Subject: scripts_gdb: Python Exception <class 'gdb.error'>: There is no member
- named nsections.
-Autocrypt: addr=antonio@mandelbit.com; keydata=
- xsFNBFN3k+ABEADEvXdJZVUfqxGOKByfkExNpKzFzAwHYjhOb3MTlzSLlVKLRIHxe/Etj13I
- X6tcViNYiIiJxmeHAH7FUj/yAISW56lynAEt7OdkGpZf3HGXRQz1Xi0PWuUINa4QW+ipaKmv
- voR4b1wZQ9cZ787KLmu10VF1duHW/IewDx9GUQIzChqQVI3lSHRCo90Z/NQ75ZL/rbR3UHB+
- EWLIh8Lz1cdE47VaVyX6f0yr3Itx0ZuyIWPrctlHwV5bUdA4JnyY3QvJh4yJPYh9I69HZWsj
- qplU2WxEfM6+OlaM9iKOUhVxjpkFXheD57EGdVkuG0YhizVF4p9MKGB42D70pfS3EiYdTaKf
- WzbiFUunOHLJ4hyAi75d4ugxU02DsUjw/0t0kfHtj2V0x1169Hp/NTW1jkqgPWtIsjn+dkde
- dG9mXk5QrvbpihgpcmNbtloSdkRZ02lsxkUzpG8U64X8WK6LuRz7BZ7p5t/WzaR/hCdOiQCG
- RNup2UTNDrZpWxpwadXMnJsyJcVX4BAKaWGsm5IQyXXBUdguHVa7To/JIBlhjlKackKWoBnI
- Ojl8VQhVLcD551iJ61w4aQH6bHxdTjz65MT2OrW/mFZbtIwWSeif6axrYpVCyERIDEKrX5AV
- rOmGEaUGsCd16FueoaM2Hf96BH3SI3/q2w+g058RedLOZVZtyQARAQABzSlBbnRvbmlvIFF1
- YXJ0dWxsaSA8YW50b25pb0BtYW5kZWxiaXQuY29tPsLBrQQTAQgAVwIbAwULCQgHAwUVCgkI
- CwUWAgMBAAIeAQIXgAUJFZDZMhYhBMq9oSggF8JnIZiFx0jwzLaPWdFMBQJhFSq4GBhoa3Bz
- Oi8va2V5cy5vcGVucGdwLm9yZwAKCRBI8My2j1nRTC6+EACi9cdzbzfIaLxGfn/anoQyiK8r
- FMgjYmWMSMukJMe0OA+v2+/VTX1Zy8fRwhjniFfiypMjtm08spZpLGZpzTQJ2i07jsAZ+0Kv
- ybRYBVovJQJeUmlkusY3H4dgodrK8RJ5XK0ukabQlRCe2gbMja3ec/p1sk26z25O/UclB2ti
- YAKnd/KtD9hoJZsq+sZFvPAhPEeMAxLdhRZRNGib82lU0iiQO+Bbox2+Xnh1+zQypxF6/q7n
- y5KH/Oa3ruCxo57sc+NDkFC2Q+N4IuMbvtJSpL1j6jRc66K9nwZPO4coffgacjwaD4jX2kAp
- saRdxTTr8npc1MkZ4N1Z+vJu6SQWVqKqQ6as03pB/FwLZIiU5Mut5RlDAcqXxFHsium+PKl3
- UDL1CowLL1/2Sl4NVDJAXSVv7BY51j5HiMuSLnI/+99OeLwoD5j4dnxyUXcTu0h3D8VRlYvz
- iqg+XY2sFugOouX5UaM00eR3Iw0xzi8SiWYXl2pfeNOwCsl4fy6RmZsoAc/SoU6/mvk82OgN
- ABHQRWuMOeJabpNyEzA6JISgeIrYWXnn1/KByd+QUIpLJOehSd0o2SSLTHyW4TOq0pJJrz03
- oRIe7kuJi8K2igJrfgWxN45ctdxTaNW1S6X1P5AKTs9DlP81ZiUYV9QkZkSS7gxpwvP7CCKF
- n11s24uF1c7ATQRmaEkXAQgA4BaIiPURiRuKTFdJI/cBrOQj5j8gLN0UOaJdetid/+ZgTM5E
- HQq+o1FA50vKNsso9DBKNgS3W6rApoPUtEtsDsWmS0BKEMrjIiWOTGG8Mjyx6Z9DlYT/UmP8
- j9BT7hVeGR3pS++nJC38uJa/IB+8TE8S+GIyeyDbORBsFD8zg2ztyTTNDgFMBXNb8aqhPbPT
- eaCnUWHGR/Mcwo9DoiYSm5jlxlNDCsFSBaJ/ofMK1AkvsilrZ8WcNogdB6IkbRFeX+D3HdiX
- BYazE4WulZayHoYjQyjZbaeSKcQi2zjz7A0MEIxwyU5oxinIAjt9PnOIO4bYIEDTrRlPuqp2
- XptpdQARAQABwsF8BBgBCAAmFiEEyr2hKCAXwmchmIXHSPDMto9Z0UwFAmZoSRcCGwwFCQHh
- M4AACgkQSPDMto9Z0UxtFQ//S3kWuMXwpjq4JThPHTb01goM33MmvQJXBIaw18LxZaicqzrp
- ATWl3rEFWgHO7kicVFZrZ53p3q8HDYFokcLRoyDeLDAFsSA+fgnHz1B9zMUwm8Wb4w1zYMsO
- uo3NpBKoHNDlK9SPGHyVD6KoCGLQw+/h7ZhtcPRE7I74hNGBBVkFVeg+bggkZhaCZWbE/fih
- RCEEzuKl8JVtw4VTk4+F33+OfUEIfOKv7+LR9jZn9p7ExgfBdQyFr+K2+wEcZwgRgqTs8v0U
- R+zCVur69agK1RNRzQCMOAHvoBxRXHEm3HGnK8RL1oXFYPtBz52cYmd/FUkjTNs3Zvft9fXf
- wF/bs24qmiS/SwGc0S2wPtNjiAHPhCG9E1IGWLQTlsZRuQzfWuHgjPbVCTRwLBH0P+/BBWyA
- +8aKhGqG8Va0uwS3/EqiU6ZRYD+M/SnzCdD7eNjpr8Mn6jkudUXMWpsrd9KiMpt+vdtjfeJl
- NKMNf0DgFyiFHKqGek1jIcvfqBo6c2c5z65cUJ2hCQjnfWFePMixWzY6V9G5+4OtbAC/56ba
- 45MGdFf2cXH2Q9I7jZOQUrnkOvkQN4E7e/fet5yxy4HxVU3nG+HQZXntCt772wmsSrsSz1br
- T1r4zTJElYkSMWcxr+OwZn5DIsPlBMvpIa5n2AojdbVJ8Vk7NXuEezE9Nno=
-Organization: Mandelbit SRL
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1ccb907b-e8c9-4997-bc45-4a457ee84494@amd.com>
 
 Hi,
 
-I have been working on the new ovpn linux kernel module since a while 
-and your gdb kernel debugging helper scripts have been of great help.
+On Wed, Feb 19, 2025 at 06:34:42PM -0600, Moger, Babu wrote:
+> Hi Dave,
+> 
+> On 2/19/2025 10:07 AM, Dave Martin wrote:
+> > Hi,
+> > 
+> > On Wed, Jan 22, 2025 at 02:20:31PM -0600, Babu Moger wrote:
 
-However, recently I have started hitting an issue I could not explain.
-When my qemu instance loads the ovpn.ko module, I get the following 
-output in gdb:
+> > [...]
+> > 
+> > > diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> > > index 6e29827239e0..299839bcf23f 100644
+> > > --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> > > +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> > > @@ -1050,6 +1050,244 @@ static int resctrl_mbm_assign_control_show(struct kernfs_open_file *of,
+> > 
+> > [...]
+> > 
+> > > +static ssize_t resctrl_mbm_assign_control_write(struct kernfs_open_file *of,
+> > > +						char *buf, size_t nbytes, loff_t off)
+> > > +{
 
-scanning for modules in /home/ordex/exp/openvpn_dev/linux-ovpn-dco
-loading @0xffffffffa0000000: 
-/home/ordex/exp/openvpn_dev/linux-ovpn-dco/drivers/net/ovpn/ovpn.ko
-Python Exception <class 'gdb.error'>: There is no member named nsections.
+[...]
 
-and the load of the symbols fails.
+> > > +	while ((token = strsep(&buf, "\n")) != NULL) {
+> > > +		/*
+> > > +		 * The write command follows the following format:
+> > > +		 * “<CTRL_MON group>/<MON group>/<domain_id><opcode><flags>”
+> > > +		 * Extract the CTRL_MON group.
+> > > +		 */
+> > > +		cmon_grp = strsep(&token, "/");
+> > > +
+> > 
+> > As when reading this file, I think that the data can grow larger than a
+> > page and get split into multiple write() calls.
+> > 
+> > I don't currently think the file needs to be redesigned, but there are
+> > some concerns about how userspace will work with it that need to be
+> > sorted out.
+> > 
+> > Every monitoring group can contribute a line to this file:
+> > 
+> > 	CTRL_GROUP / MON_GROUP / DOMAIN = [t][l] [ ; DOMAIN = [t][l] ]* LF
+> > 
+> > so, 2 * (NAME_MAX + 1) + NUM_DOMAINS * 5 - 1 + 1
+> > 
+> > NAME_MAX on Linux is 255, so with, say, up to 16 domains, that's about
+> > 600 bytes per monitoring group in the worst case.
+> > 
+> > We don't need to have many control and monitoring groups for this to
+> > grow potentially over 4K.
+> > 
+> > 
+> > We could simply place a limit on how much userspace is allowed to write
+> > to this file in one go, although this restriction feels difficult for
+> > userspace to follow -- but maybe this is workable in the short term, on
+> > current systems (?)
+> > 
+> > Otherwise, since we expect this interface to be written using scripting
+> > languages, I think we need to be prepared to accept fully-buffered
+> > I/O.  That means that the data may be cut at random places, not
+> > necessarily at newlines.  (For smaller files such as schemata this is
+> > not such an issue, since the whole file is likely to be small enough to
+> > fit into the default stdio buffers -- this is how sysfs gets away with
+> > it IIUC.)
+> > 
+> > For fully-buffered I/O, we may have to cache an incomplete line in
+> > between write() calls.  If there is a dangling incomplete line when the
+> > file is closed then it is hard to tell userspace, because people often
+> > don't bother to check the return value of close(), fclose() etc.
+> > However, since it's an ABI violation for userspace to end this file
+> > with a partial line, I think it's sufficient to report that via
+> > last_cmd_status.  (Making close() return -EIO still seems a good idea
+> > though, just in case userspace is listening.)
+> 
+> Seems like we can add a check in resctrl_mbm_assign_control_write() to
+> compare nbytes > PAGE_SIZE.
 
-Does it ring any bell?
-Any help debugging further?
+This might be a reasonable stopgap approach, if we are confident that the
+number of RMIDs and monitoring domains is small enough on known
+platforms that the problem is unlikely to be hit.  I can't really judge
+on this.
 
-I am running the latest net-next.
+> But do we really need this? I have no way of testing this. Help me
+> understand.
 
-Thanks a lot.
-Best Regards,
+It's easy to demonatrate this using the schemata file (which works in a
+similar way).  Open f in /sys/fs/resctrl/schemata, then:
 
--- 
-Antonio Quartulli
+	int n = 0;
 
-CEO and Co-Founder
-Mandelbit Srl
-https://www.mandelbit.com
+	for (n = 0; n < 1000; n++)
+		if (fputs("MB:0=100;1=100\n", f) == EOF)
+			fprintf(stderr, "Failed on interation %d\n", n);
 
+This will succeed a certain number of times (272, for me) and then fail
+when the stdio buffer for f overflows, triggering a write().
+
+Putting an explicit fflush() after every fputs() call (or doing a
+setlinebuf(f) before the loop) makes it work.  But this is awkward and
+unexpected for the user, and doing the right thing from a scripting
+language may be tricky.
+
+In this example I am doing something a bit artificial -- we don't
+officially say what happens when a pre-opened schemata file handle is
+reused in this way, AFAICT.  But for mbm_assign_control it is
+legitimate to write many lines, and we can hit this kind of problem.
+
+
+I'll leave it to others to judge whether we _need_ to fix this, but it
+feels like a problem waiting to happen.
+
+
+> All these file operations go thru generic call kernfs_fop_write_iter().
+> Doesn't it take care of buffer check and overflow?
+
+No, this is called for each iovec segment (where userspace used one of
+the iovec based I/O syscalls).  But there is no buffering or
+concatenation of the data read in: each segment gets passed down to the
+individual kernfs_file_operations write method for the file:
+
+	len = ops->write(of, buf, len, iocb->ki_pos)
+
+calls down to
+
+	resctrl_mbm_assign_control_write(of, buf, len, iocb->ki_pos).
+
+
+I'll try to port my buffering hack on top of the series -- that should
+help to illustrate what I mean.
+
+Cheers
+---Dave
