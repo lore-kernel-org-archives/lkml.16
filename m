@@ -1,242 +1,96 @@
-Received: from server-vie001.gnuweeb.org (server-vie001.gnuweeb.org [89.58.62.56])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6581D5AD4;
-	Thu, 20 Feb 2025 14:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.62.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25E0EEB1;
+	Thu, 20 Feb 2025 14:35:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740062105; cv=none; b=fHsRTbdd/gWBGlZiW3gCsRvp90fU0+JTKS0TSBXvciNWi+somUVDg6XJ8EbhNkjVVjmREeD+1/dlcioA+EfgjN4NE2oMJzxTZxa6QSbEzDSk7SRq7IngNQY7qFYIOkP1b7QdCSN2SxxCTPmc12WghrJ7GY2Yi0Bdcs50TrT5H80=
+	t=1740062145; cv=none; b=XvpOgAeHc4kMebgeITWdQgwObmP/noe1iXGsD/wB6+oSpe6An6G/WCEOZxUiWHE1xsouZUeMAcFjEfGo5UdQkSKd8xKOQWwScvMEBi6PGjTLKLzxKwS89r6RrndiO0Zpx+ZviPv/T+Rh4gAClDeD37S9CvZNSw9APOzSOyGByQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740062105; c=relaxed/simple;
-	bh=xxoB+UIOPvZk4BVlBN52bLxBYkRLA3Dg2MLLG17vDCw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ngz0MDM+sMIDKS4d6Bu7BhaMEucDrwXBVb6/ZBVyLexk+87KrweSsFC7IJ8nw2+eeJrtsqV9kn21TpyDjIL9ZKcRm2Di+YkbkXGMVcefGzYYn8mDqJC+aD8ipYiNr0yNKt/sfDqII1ykzlfjL/K5WAr5ccHW0Ljd6gBvZrbZtS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org; spf=pass smtp.mailfrom=gnuweeb.org; dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b=IgLFjm+4; arc=none smtp.client-ip=89.58.62.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gnuweeb.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnuweeb.org
+	s=arc-20240116; t=1740062145; c=relaxed/simple;
+	bh=ugP5jpr99O6sw+tgBK3MU2bsccWPuwqOlA7XywGTajM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hUQl26p3OJ8hpA6Vp9qvwWrV/ivE8JhFhI1a/R42XD8PHwSS3vF8nci4NiswGmdK6d7OtwT9Fr3Xwj9zYUqbjOluMQkbZ3JSIxE7/UmuLnkdwb7yMrtI9Mdoc0UiCV4rRyad3roHvJ5Ta57zi33Dh6TFwno0y45cDA0utYyWM/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=4IzDVfOP; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gnuweeb.org header.i=@gnuweeb.org header.b="IgLFjm+4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gnuweeb.org;
-	s=default; t=1740062101;
-	bh=xxoB+UIOPvZk4BVlBN52bLxBYkRLA3Dg2MLLG17vDCw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Transfer-Encoding:Message-ID:Date:From:
-	 Reply-To:Subject:To:Cc:In-Reply-To:References:Resent-Date:
-	 Resent-From:Resent-To:Resent-Cc:User-Agent:Content-Type:
-	 Content-Transfer-Encoding;
-	b=IgLFjm+4B5/jg7TpCYIrAhgnHeU9KYvsGApQEOzTGIK+JJh/50NFZiosrQ8ja1nHj
-	 RglqIjevgcqDo8TNjzQEUgFLZKsJZlCi9AxQuXikFa/BUuCdZDWS7aRmP5qFZts9EB
-	 uvX64oOvBSisPg5HlVhMxD+miPHftldtwfzLD62Gf4nnuMUptuSXx1nAuHNGOICjZr
-	 wvnAQMxqGY8dfXoHkJpArWr9juJKsdRLKZRfO+YZcoZxht/5tCZlfxKo7D+Wny3rbO
-	 oQTc3LQx66we3Lksx9wzRjVa2X0sqpwy22LXbxY5kScO+8A5RoE+5MRoQBjfUCZA2v
-	 MGkS3Q1TvvPgA==
-Received: from integral2.. (unknown [182.253.126.96])
-	by server-vie001.gnuweeb.org (Postfix) with ESMTPSA id 59E8320744A7;
-	Thu, 20 Feb 2025 14:34:59 +0000 (UTC)
-From: Ammar Faizi <ammarfaizi2@gnuweeb.org>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Ammar Faizi <ammarfaizi2@gnuweeb.org>,
-	Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>,
-	io-uring Mailing List <io-uring@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	GNU/Weeb Mailing List <gwml@vger.gnuweeb.org>
-Subject: [PATCH liburing v1 3/3] Fix missing `aligned_alloc()` on some Android devices
-X-Gw-Bpl: wU/cy49Bu1yAPm0bW2qiliFUIEVf+EkEatAboK6pk2H2LSy2bfWlPAiP3YIeQ5aElNkQEhTV9Q==
-Date: Thu, 20 Feb 2025 21:34:22 +0700
-Message-Id: <20250220143422.3597245-4-ammarfaizi2@gnuweeb.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250220143422.3597245-1-ammarfaizi2@gnuweeb.org>
-References: <20250220143422.3597245-1-ammarfaizi2@gnuweeb.org>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="4IzDVfOP"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=Ha1L+JSDqQv8B+82Y2MC2nDI3xCTQBY+yLysouv2OK0=; b=4IzDVfOPmSVlGIsLL+yrvsv89i
+	bVNU4TLuoAbSiyGAk/j16COvtDV0EWp5K3ncGaZk/VHlCJIjZV51x+Bd5esZ5o6kYYUiJPNW9/Zfh
+	cJz4zQCcBD9PrasMLVFdvdU4KAIWSk2EsRGNGesOofRBMFL5EqyCMouDvh8yV4iI0E5U=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tl7eA-00FzMD-B4; Thu, 20 Feb 2025 15:35:26 +0100
+Date: Thu, 20 Feb 2025 15:35:26 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: "Gupta, Suraj" <Suraj.Gupta2@amd.com>
+Cc: Russell King <linux@armlinux.org.uk>,
+	Sean Anderson <sean.anderson@linux.dev>,
+	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"Simek, Michal" <michal.simek@amd.com>,
+	"Pandey, Radhey Shyam" <radhey.shyam.pandey@amd.com>,
+	"horms@kernel.org" <horms@kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"git (AMD-Xilinx)" <git@amd.com>,
+	"Katakam, Harini" <harini.katakam@amd.com>
+Subject: Re: [PATCH net-next 2/2] net: axienet: Add support for AXI 2.5G MAC
+Message-ID: <ebf49977-fba7-4848-9a07-c187cabe6b17@lunn.ch>
+References: <20241118081822.19383-1-suraj.gupta2@amd.com>
+ <20241118081822.19383-3-suraj.gupta2@amd.com>
+ <ZztjvkxbCiLER-PJ@shell.armlinux.org.uk>
+ <657764fd-68a1-4826-b832-3bda91a0c13b@linux.dev>
+ <9d26a588-d9ac-43c5-bedc-22cb1f0923dd@lunn.ch>
+ <72ded972-cd16-4124-84af-8d8ddad049f0@linux.dev>
+ <ZzyzhCVBgXtQ_Aop@shell.armlinux.org.uk>
+ <BL3PR12MB6571FE73FA8D5AAB9FB4BB3CC9C42@BL3PR12MB6571.namprd12.prod.outlook.com>
+ <Z7cVlwPDtJ2fdTbY@shell.armlinux.org.uk>
+ <BL3PR12MB6571DD63F0AEE29BF2CDFC00C9C42@BL3PR12MB6571.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BL3PR12MB6571DD63F0AEE29BF2CDFC00C9C42@BL3PR12MB6571.namprd12.prod.outlook.com>
 
-Some Android versions lack `aligned_alloc()` in `<stdlib.h>`. Compiling
-on Termux 0.118.0 yields this error:
+> > Okay, so it's a synthesis option, where that may be one of:
+> >
+> > 1. SGMII/1000base-X only
+> > 2. 2500base-X only
+> > 3. dynamically switching between (1) and (2).
+> >
+> > > We'll use MAC ability register to detect if MAC is configured for
+> > > 2.5G. Will it be fine to advertise both 1G and 2.5G in that case?
+> >
+> > Please document in a comment that the above are synthesis options, and that
+> > dynamically changing between them is possible but not implemented by the driver.
+> > Note that should anyone use axienet for SFP modules, then (1) is essentially the
+> > base functionality, (2) is very limiting, and (3) would be best.
+> >
+> > Not only will one want to limit the MAC capabilities, but also the supported interface
+> > modes. As it's been so long since the patch was posted, I don't remember whether it
+> > did that or not.
+> >
+> 
+> Sure, will document in the comment and limit both mac capabilities and supported interfaces accordingly.
+> Thank you for your quick response and guidance. I really appreciate your support!
 
-```
-cmd-discard.c:383:11: warning: call to undeclared library function \
-'aligned_alloc' with type 'void *(unsigned long, unsigned long)'; ISO \
-C99 and later do not support implicit function declarations \
-[-Wimplicit-function-declaration]
+It is likely somebody will want 3 sometime in the future, since the
+current limitation is pretty silly. So please think about this, try
+not to put in any roadblocks to that extension.
 
-        buffer = aligned_alloc(lba_size, lba_size);
-                 ^
-```
-
-To avoid making large changes in tests, define a helper function that
-wraps `posix_memalign()` as our own `aligned_alloc()`.
-
-Just another day of working around platform quirks.
-
-Co-authored-by: Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>
-Signed-off-by: Alviro Iskandar Setiawan <alviro.iskandar@gnuweeb.org>
-Signed-off-by: Ammar Faizi <ammarfaizi2@gnuweeb.org>
----
- examples/helpers.c  | 10 ++++++++++
- examples/helpers.h  |  7 +++++++
- examples/reg-wait.c |  2 ++
- test/helpers.c      | 10 ++++++++++
- test/helpers.h      |  8 ++++++++
- 5 files changed, 37 insertions(+)
-
-diff --git a/examples/helpers.c b/examples/helpers.c
-index b70ce7c1f314..59b31ecb4aeb 100644
---- a/examples/helpers.c
-+++ b/examples/helpers.c
-@@ -51,12 +51,22 @@ int setup_listening_socket(int port, int ipv6)
- 	if (ret < 0) {
- 		perror("bind()");
- 		return -1;
- 	}
- 
- 	if (listen(fd, 1024) < 0) {
- 		perror("listen()");
- 		return -1;
- 	}
- 
- 	return fd;
- }
-+
-+void *aligned_alloc(size_t alignment, size_t size)
-+{
-+	void *ret;
-+
-+	if (posix_memalign(&ret, alignment, size))
-+		return NULL;
-+
-+	return ret;
-+}
-diff --git a/examples/helpers.h b/examples/helpers.h
-index 9b1cf34f9b0d..d73ee4a5bc1a 100644
---- a/examples/helpers.h
-+++ b/examples/helpers.h
-@@ -1,7 +1,14 @@
- /* SPDX-License-Identifier: MIT */
- #ifndef LIBURING_EX_HELPERS_H
- #define LIBURING_EX_HELPERS_H
- 
- int setup_listening_socket(int port, int ipv6);
- 
-+/*
-+ * Some Android versions lack aligned_alloc in stdlib.h.
-+ * To avoid making large changes in tests, define a helper
-+ * function that wraps posix_memalign as our own aligned_alloc.
-+ */
-+void *aligned_alloc(size_t alignment, size_t size);
-+
- #endif
-diff --git a/examples/reg-wait.c b/examples/reg-wait.c
-index 0e119aaf4f03..ff61b8d10387 100644
---- a/examples/reg-wait.c
-+++ b/examples/reg-wait.c
-@@ -4,24 +4,26 @@
-  *
-  * (C) 2024 Jens Axboe <axboe@kernel.dk>
-  */
- #include <stdint.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
- #include <unistd.h>
- #include <assert.h>
- #include <sys/time.h>
- #include <liburing.h>
- 
-+#include "helpers.h"
-+
- static unsigned long long mtime_since(const struct timeval *s,
- 				      const struct timeval *e)
- {
- 	long long sec, usec;
- 
- 	sec = e->tv_sec - s->tv_sec;
- 	usec = (e->tv_usec - s->tv_usec);
- 	if (sec > 0 && usec < 0) {
- 		sec--;
- 		usec += 1000000;
- 	}
- 
-diff --git a/test/helpers.c b/test/helpers.c
-index e84aaa7aee15..0718691174de 100644
---- a/test/helpers.c
-+++ b/test/helpers.c
-@@ -354,12 +354,22 @@ unsigned long long utime_since(const struct timeval *s, const struct timeval *e)
- 
- 	sec *= 1000000;
- 	return sec + usec;
- }
- 
- unsigned long long utime_since_now(struct timeval *tv)
- {
- 	struct timeval end;
- 
- 	gettimeofday(&end, NULL);
- 	return utime_since(tv, &end);
- }
-+
-+void *aligned_alloc(size_t alignment, size_t size)
-+{
-+	void *ret;
-+
-+	if (posix_memalign(&ret, alignment, size))
-+		return NULL;
-+
-+	return ret;
-+}
-diff --git a/test/helpers.h b/test/helpers.h
-index 9e1cdf5ec05c..d0294eba63e4 100644
---- a/test/helpers.h
-+++ b/test/helpers.h
-@@ -4,36 +4,44 @@
-  */
- #ifndef LIBURING_HELPERS_H
- #define LIBURING_HELPERS_H
- 
- #ifdef __cplusplus
- extern "C" {
- #endif
- 
- #include "liburing.h"
- #include "../src/setup.h"
- #include <arpa/inet.h>
- #include <sys/time.h>
-+#include <stdlib.h>
- 
- enum t_setup_ret {
- 	T_SETUP_OK	= 0,
- 	T_SETUP_SKIP,
- };
- 
- enum t_test_result {
- 	T_EXIT_PASS   = 0,
- 	T_EXIT_FAIL   = 1,
- 	T_EXIT_SKIP   = 77,
- };
- 
-+/*
-+ * Some Android versions lack aligned_alloc in stdlib.h.
-+ * To avoid making large changes in tests, define a helper
-+ * function that wraps posix_memalign as our own aligned_alloc.
-+ */
-+void *aligned_alloc(size_t alignment, size_t size);
-+
- /*
-  * Helper for binding socket to an ephemeral port.
-  * The port number to be bound is returned in @addr->sin_port.
-  */
- int t_bind_ephemeral_port(int fd, struct sockaddr_in *addr);
- 
- 
- /*
-  * Helper for allocating memory in tests.
-  */
- void *t_malloc(size_t size);
- 
--- 
-Ammar Faizi
-
+	Andrew
