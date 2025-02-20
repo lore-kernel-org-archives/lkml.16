@@ -1,73 +1,250 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6C85258;
-	Thu, 20 Feb 2025 15:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CCF71D5CF2;
+	Thu, 20 Feb 2025 15:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740063688; cv=none; b=QEpK7R3KJx/qtjQji6UBEoYnQBfvQMK7lnVtB00MwJ01TaFmRLp/TuYZifnwUGV/8nw24rDUyYCNeN36CtzFNNFnk80vEek12bZPI9QI1Ju4hC4jb822U4dBNjaja3D59bxYtnnuO1QhZpyL/xcpN/OxbSHOYiThfZK50/Q6aZY=
+	t=1740063694; cv=none; b=Jg/oDjlTx8etH/iSvX6Tf3/gvPSExywgllRVs0MpKwTFUW20kOyOsb2K7GC/alAx6oIt1oR+JfP9TqjNs+ClsJ52uzbYqWSjzMZ4oS5HpEeXLFGXxxe1BQ3+lygbOWxiBjAFraAMkQkjwrYmQGzJAf7zh7nfVlTSRfVuo//K7SU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740063688; c=relaxed/simple;
-	bh=94ImA64uIlnzboeoRY4vrSCi/VzI+cwRL+UuXNa/SLs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OiywS2Zad0PGrz61Vb2/RVjqlryGAKpMkXQdanlOYphy3ezsMwrLMJxKh9jwYVYhzuBQRfDR+10NBRg9YxZQ9Wu5hREIS0yAmgtYFGf0zeAQqLAAghuiQfkYHNCDeG/6viIKSi1QyWDlWa3GTKShyR0XVv0FFhOaA6RCNQOCIr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U2v74DSA; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U2v74DSA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45B14C4CEDD;
-	Thu, 20 Feb 2025 15:01:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740063687;
-	bh=94ImA64uIlnzboeoRY4vrSCi/VzI+cwRL+UuXNa/SLs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U2v74DSAVPKxwZWVivMnCo5KSnhBdn4f1U+zitFnUIUD9P0+EZo8oy/wGwXXUn7lm
-	 cWHjhgl8GYp31A0AHErNqFCjrdS3Sl7Ybxfaq/qNS4Srp2Vh2MaeoMcB8WgN80z7n0
-	 GQ+k6Wr3N2lnNB6LvYTNyMUujLvTLJMWg8mUx/nmNZcHg4HnYZ/k52oM53umDu1cNV
-	 FgoiGzFPd91yzoOAWtpKDyWhhIls+ce5JcEAFDVgpEbaOHGkEvXNS3AzCXKDnGosf6
-	 hX7Swfy+QTJ2JvcakC3DL17XDxNSCtKhZcaLlV9FJX+gUO1IFPvjhVS1VMVfXO5K46
-	 1SD3Tg/pdbDuA==
-Date: Thu, 20 Feb 2025 15:01:23 +0000
-From: Lee Jones <lee@kernel.org>
-To: Manuel Fombuena <fombuena@outlook.com>
-Cc: pavel@ucw.cz, corbet@lwn.net, linux-leds@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND 1/5] leds: leds-st1202: fix NULL pointer access on
- race condition
-Message-ID: <20250220150123.GD778229@google.com>
-References: <CWLP123MB5473933B9B97137828ACC6A6C5EB2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
- <CWLP123MB547377D20905AF224E682BFBC5EB2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
- <20250211133149.GN1868108@google.com>
- <CWLP123MB547308A731A2B7F1B7FF12DFC5FC2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
- <20250213102449.GC2756671@google.com>
- <CWLP123MB54739D3E587725A0E408E2E3C5FF2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
+	s=arc-20240116; t=1740063694; c=relaxed/simple;
+	bh=c4edLnlYaJztPjFMrGE2znXm3JwnJ3t7K78QCLZA6Kc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=YNNTrOb4sBlLPYkdfOMBymS6VrbpWL5OisXTMfeDsj9LSlpymC9VoHSpiWNfYROx0tPmu9LF1mjIZXGkMDXwlFPVXVm8E4AKUbytZYF4QqtLqRVSVIJGf4k0HeNCsCkEOsGl2+a2B68f2B5J+/Bi8z8GNivIo7uJ5yM4HzYnTXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+X-CSE-ConnectionGUID: rSBCXq1nRr+m/mxjfNDSBw==
+X-CSE-MsgGUID: eaUx7H5LS+aW6XpCVlNs2Q==
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 21 Feb 2025 00:01:30 +0900
+Received: from mulinux.example.org (unknown [10.226.92.65])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id B8C6542C8306;
+	Fri, 21 Feb 2025 00:01:26 +0900 (JST)
+From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	dmaengine@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v4 3/7] dt-bindings: dma: rz-dmac: Document RZ/V2H(P) family of SoCs
+Date: Thu, 20 Feb 2025 15:01:06 +0000
+Message-Id: <20250220150110.738619-4-fabrizio.castro.jz@renesas.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250220150110.738619-1-fabrizio.castro.jz@renesas.com>
+References: <20250220150110.738619-1-fabrizio.castro.jz@renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CWLP123MB54739D3E587725A0E408E2E3C5FF2@CWLP123MB5473.GBRP123.PROD.OUTLOOK.COM>
 
-On Thu, 13 Feb 2025, Manuel Fombuena wrote:
+Document the Renesas RZ/V2H(P) family of SoCs DMAC block.
+The Renesas RZ/V2H(P) DMAC is very similar to the one found on the
+Renesas RZ/G2L family of SoCs, but there are some differences:
+* It only uses one register area
+* It only uses one clock
+* It only uses one reset
+* Instead of using MID/IRD it uses REQ NO/ACK NO
+* It is connected to the Interrupt Control Unit (ICU)
 
-> On Thu, 13 Feb 2025, Lee Jones wrote:
-> 
-> > Then you need to separate the set into patches you expect to be
-> > submitted to the -rcs and ones which can be applied during the next
-> > cycle, then go to lengths to explain that either in the diff section of
-> > each patch (preferred) or in the cover-letter.
-> 
-> One question so I don't take more of your time later on on this. Should I 
-> continue the set with 5 patches as v2, applying the above and the other 
-> comments, or would it be preferable to send this patch with its 
-> cover letter separately and drop it from this set?
+Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+---
+v3->v4:
+* No change.
+v2->v3:
+* No change.
+v1->v2:
+* Removed RZ/V2H DMAC example.
+* Improved the readability of the `if` statement.
+---
+ .../bindings/dma/renesas,rz-dmac.yaml         | 107 +++++++++++++++---
+ 1 file changed, 89 insertions(+), 18 deletions(-)
 
-This and any other patches due for the -rcs need splitting out.
-
-Please submit them all again.
-
+diff --git a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+index 82de3b927479..4b89d199c022 100644
+--- a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
++++ b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+@@ -11,19 +11,23 @@ maintainers:
+ 
+ properties:
+   compatible:
+-    items:
+-      - enum:
+-          - renesas,r7s72100-dmac # RZ/A1H
+-          - renesas,r9a07g043-dmac # RZ/G2UL and RZ/Five
+-          - renesas,r9a07g044-dmac # RZ/G2{L,LC}
+-          - renesas,r9a07g054-dmac # RZ/V2L
+-          - renesas,r9a08g045-dmac # RZ/G3S
+-      - const: renesas,rz-dmac
++    oneOf:
++      - items:
++          - enum:
++              - renesas,r7s72100-dmac # RZ/A1H
++              - renesas,r9a07g043-dmac # RZ/G2UL and RZ/Five
++              - renesas,r9a07g044-dmac # RZ/G2{L,LC}
++              - renesas,r9a07g054-dmac # RZ/V2L
++              - renesas,r9a08g045-dmac # RZ/G3S
++          - const: renesas,rz-dmac
++
++      - const: renesas,r9a09g057-dmac # RZ/V2H(P)
+ 
+   reg:
+     items:
+       - description: Control and channel register block
+       - description: DMA extended resource selector block
++    minItems: 1
+ 
+   interrupts:
+     maxItems: 17
+@@ -52,6 +56,7 @@ properties:
+     items:
+       - description: DMA main clock
+       - description: DMA register access clock
++    minItems: 1
+ 
+   clock-names:
+     items:
+@@ -61,14 +66,22 @@ properties:
+   '#dma-cells':
+     const: 1
+     description:
+-      The cell specifies the encoded MID/RID values of the DMAC port
+-      connected to the DMA client and the slave channel configuration
+-      parameters.
++      For the RZ/A1H, RZ/Five, RZ/G2{L,LC,UL}, RZ/V2L, and RZ/G3S SoCs, the cell
++      specifies the encoded MID/RID values of the DMAC port connected to the
++      DMA client and the slave channel configuration parameters.
+       bits[0:9] - Specifies MID/RID value
+       bit[10] - Specifies DMA request high enable (HIEN)
+       bit[11] - Specifies DMA request detection type (LVL)
+       bits[12:14] - Specifies DMAACK output mode (AM)
+       bit[15] - Specifies Transfer Mode (TM)
++      For the RZ/V2H(P) SoC the cell specifies the REQ NO, the ACK NO, and the
++      slave channel configuration parameters.
++      bits[0:9] - Specifies the REQ NO
++      bits[10:16] - Specifies the ACK NO
++      bit[17] - Specifies DMA request high enable (HIEN)
++      bit[18] - Specifies DMA request detection type (LVL)
++      bits[19:21] - Specifies DMAACK output mode (AM)
++      bit[22] - Specifies Transfer Mode (TM)
+ 
+   dma-channels:
+     const: 16
+@@ -80,12 +93,29 @@ properties:
+     items:
+       - description: Reset for DMA ARESETN reset terminal
+       - description: Reset for DMA RST_ASYNC reset terminal
++    minItems: 1
+ 
+   reset-names:
+     items:
+       - const: arst
+       - const: rst_async
+ 
++  renesas,icu:
++    description:
++      On the RZ/V2H(P) SoC configures the ICU to which the DMAC is connected to.
++      It must contain the phandle to the ICU, and the index of the DMAC as seen
++      from the ICU (e.g. parameter k from register ICU_DMkSELy).
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    items:
++      - items:
++          - description: phandle to the ICU node.
++          - description: The DMAC index.
++              4 for DMAC0
++              0 for DMAC1
++              1 for DMAC2
++              2 for DMAC3
++              3 for DMAC4
++
+ required:
+   - compatible
+   - reg
+@@ -98,13 +128,25 @@ allOf:
+   - $ref: dma-controller.yaml#
+ 
+   - if:
+-      not:
+-        properties:
+-          compatible:
+-            contains:
+-              enum:
+-                - renesas,r7s72100-dmac
++      properties:
++        compatible:
++          contains:
++            enum:
++              - renesas,r9a07g043-dmac
++              - renesas,r9a07g044-dmac
++              - renesas,r9a07g054-dmac
++              - renesas,r9a08g045-dmac
+     then:
++      properties:
++        reg:
++          minItems: 2
++        clocks:
++          minItems: 2
++        resets:
++          minItems: 2
++
++        renesas,icu: false
++
+       required:
+         - clocks
+         - clock-names
+@@ -112,13 +154,42 @@ allOf:
+         - resets
+         - reset-names
+ 
+-    else:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: renesas,r7s72100-dmac
++    then:
+       properties:
+         clocks: false
+         clock-names: false
+         power-domains: false
+         resets: false
+         reset-names: false
++        renesas,icu: false
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: renesas,r9a09g057-dmac
++    then:
++      properties:
++        reg:
++          maxItems: 1
++        clocks:
++          maxItems: 1
++        resets:
++          maxItems: 1
++
++        clock-names: false
++        reset-names: false
++
++      required:
++        - clocks
++        - power-domains
++        - renesas,icu
++        - resets
+ 
+ additionalProperties: false
+ 
 -- 
-Lee Jones [李琼斯]
+2.34.1
+
