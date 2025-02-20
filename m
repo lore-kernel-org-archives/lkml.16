@@ -1,154 +1,461 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8AE20B211;
-	Thu, 20 Feb 2025 16:44:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145E5212B0B
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 16:44:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740069881; cv=none; b=VtmhRjP6qgPteJ2pyGMxf/YVbk1ksm8icJnWzDtOP0dBr8Ue1qWcQNM/f9feZgLay/U9VbFXxEV7yvmySgVkAf2Mo7CFZIyAzXK3wKL48a05dCn3Ca5V/MPInErPfMGkKsJoK/cCsa7K1r/8KX7xYbfmXSz7XCkCRdBPfn3BJ/c=
+	t=1740069886; cv=none; b=Azl1jyoaFqI+TwHbueo2VapDQ2LX3YXwE7U0NkJDNPwFUYIQkGrgp05lYnyUNaRftdXK3/yqu3KmMmq9S2xVE2/uPEG1o0oQsmbkxK4lOq91SNZHgoEHfKzpF4kR1eeqaZDK2gEDPk8kvf34Sktm+XS46l+5vCmuNshIt6iu/II=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740069881; c=relaxed/simple;
-	bh=s+DTl6tU3kF08I2UyldTi/y0xQ6rl5/cP2qUtibkU/w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KloeYfNcHB1Bs8B2wbpjYfGlM/qg5KPEa/AJVFv/QjTQDJiV0F9AKZ/R72gRTqUoYuXz2hOUCOI+K5dPBvMfJ05R9nfEscMoIywj67f5+T3Wxq/WhZEmVUeEkphIZ2HKGyrF2Tw1SfV032QwVWkcVrVq5m+q1GuROujqnQLsnZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Fg2ZdEdZ; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1740069886; c=relaxed/simple;
+	bh=9r0fYvX+zlp9IaR/Iw7NohIQaBQqp8BA2iLfsSq9B+o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kCF7rEcpbuEXgK71w61lUR8JDlZ/eAyGcqeNeNXeeD9MjTiF143tOWKCIPdoqN9SuvfqCv59qe0ZfQuwKbw98NL8CYzAksKL0NZkLyGspTkEM/yQleIxHTWuyl2zfYaRjnhdKuu48Xo2lGJJMvpO5FqiN2OMqHDu7QaZDaJh2wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vQRxiUfY; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Fg2ZdEdZ"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51KBld33001689;
-	Thu, 20 Feb 2025 16:43:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=2phGq1PASew3t0QitT+lz7mcsTOMpz
-	4L7ee8QirsuZU=; b=Fg2ZdEdZwarsWS57pS+/6IXcUxTrTtCLnhG9CBGZ/7HGWi
-	4zAWb3M539K8KPS0Ajmb/PEzTqkGG38Ai+zL1gYVY4anEms/XTxHY28EJ4xlx/AF
-	IUn+cXfqtcI5hv4hzHC4AL7ugPq0hKMuYbyTtcKHIbdd6lb7tMPr95gbVbiNVJH+
-	yzBsnvN0hGYuWJxvHvbXddPIPPhMLHzGJxo+0NEWCwpR/A6b6JLE7YAgE1qftFmU
-	X8qdol1P5giI4dqT57n6qb3N89dOmr8ZV58kAi7tkbB+YnfIhyNfQnGQOLkoz4M2
-	sXSo3k/o/GFXMpo2IP6vEkxcgwZaMd1wbjpTThkQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44wtfa4552-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 16:43:55 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51KGhsmH028733;
-	Thu, 20 Feb 2025 16:43:54 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44wtfa454x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 16:43:54 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51KF7PST027113;
-	Thu, 20 Feb 2025 16:43:53 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44w025b1sh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 16:43:53 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51KGhnA118088388
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 20 Feb 2025 16:43:49 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A8F0820043;
-	Thu, 20 Feb 2025 16:43:49 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4888520040;
-	Thu, 20 Feb 2025 16:43:49 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 20 Feb 2025 16:43:49 +0000 (GMT)
-Date: Thu, 20 Feb 2025 17:43:48 +0100
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Dave Young <dyoung@redhat.com>
-Cc: Alexander Graf <graf@amazon.com>, Mike Rapoport <rppt@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Anthony Yznaga <anthony.yznaga@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Eric Biederman <ebiederm@xmission.com>, Ingo Molnar <mingo@redhat.com>,
-        James Gowans <jgowans@amazon.com>, Jonathan Corbet <corbet@lwn.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Pasha Tatashin <pasha.tatashin@soleen.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Pratyush Yadav <ptyadav@amazon.de>, Rob Herring <robh+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-        Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Usama Arif <usama.arif@bytedance.com>, Will Deacon <will@kernel.org>,
-        devicetree@vger.kernel.org, kexec@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, x86@kernel.org, Philipp Rudo <prudo@redhat.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, linux-s390@vger.kernel.org
-Subject: Re: [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
-Message-ID: <Z7dbxJNxlW2EA_aa@tuxmaker.boeblingen.de.ibm.com>
-References: <20250206132754.2596694-1-rppt@kernel.org>
- <CALu+AoRMQyRDFS_4L0KQkmrFT_S+yk=uZ-Mqt86JQYKKnj-5Ug@mail.gmail.com>
- <Z7WJD6eBLuIRnLwk@kernel.org>
- <CALu+AoSaEthfed1NOYPiQgm_g-dhibVMRAp0+=_+9qTT4_x=tg@mail.gmail.com>
- <d8c43707-65a2-4176-85e2-acdb4c9d16ad@amazon.com>
- <CALu+AoR0BbmbZeOkLU55OpD8kxGsVnFs+pXgEC9Y_MpB4=GMvQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vQRxiUfY"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e0452f859cso1796976a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:44:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740069882; x=1740674682; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GtI+UqG4NWO8Dncx/I8qs5z9r1CXuicTbpGR8fFxBTU=;
+        b=vQRxiUfY4Dd0m4Oe7cqEMD8NOW+ybTCdc1rak9G4D9fIgl9gaPkyEjeduagwg/Z1lF
+         IqbfAMmSvUzGNndpUTZlgKN8y5I9jORQTa0ZG8EAK7ElnF3kfAuEqxHJwcPunkUkcsXw
+         Rb8mRUmhM7sRcTRi316EMtyZ+7YkIRJPHJ/al6hMkXMrJLhZUYTJGVl05fnGe61Y3CbD
+         ixbmKTGx39fOsNETfFZty+edrnyD4HjGssPQG/Czi3icOmooA9XCI32wrzFb6xgcKXUH
+         2XKUhGuue9BDZJjjOCq7B+Z1qhDp89P1n4kOzt1zTcUqnvhHeUpwrpC/4zsPbkLWyDh0
+         YzAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740069882; x=1740674682;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GtI+UqG4NWO8Dncx/I8qs5z9r1CXuicTbpGR8fFxBTU=;
+        b=S0U5xahNjREoBPSOA6257U5sGMoBUfpzQ2CABrjSKF827bZzqFWgvxNxWjC41uQJ94
+         r5GxGgoNcqxTPJKw2bHrM1V7LR5YltMh32RxU2K/vUnVzJmUBdMhI+AefpitpF2vrA+l
+         XN0tYGDIwkANJ6dcQ5/bQgnicktD2rlYTsdPxG+gEHsDe29aHDFM6crQElAREyTmFjAU
+         jtJ2D2bW9TZa8GblnUcopL7AP2k2e4WuDwYEm4vOd9s2gTTEJLqlc1BE1o/cTYILADV3
+         JqGlG2RRBr4uKJK5RF83hZTzFiu1WmogE2MuD38rhT3MQKJhfnKj8MH8os234rnRsDU/
+         OjJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXxxZtVFm1fhnoSU7jF2r3/jr6AYf6DBcvoyVvcGSKcArAZSqf3GZpXxbgOy7zDzDiU+FTSgGcbIAbJzJo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxawHemTzRbigL4zkEcDyhW+D3pwEg00DYdiYQ1TQClj/z1LeGg
+	ZWhjG3YAVKspHqkxFy+VYMbN3dU+tks4Gd3TAAn7Ws303nopvq+C2nHM9QUsHQ7pSTBm57R4ePs
+	VqupicVz3oLSxLwNKsIy28ZkGhLMV2HMdpt5Q
+X-Gm-Gg: ASbGncvlMmguU63fnrU+Dj3TSAb1lRWwJKczhxBDprDWC+Ux3U3t1AWfR1lH7u295t4
+	DXajY/SH66FJmRBwZQoyPid5ZdviqAl701znoD1qhMOON5h1WUaYCvzDAvqx8LsFwWaMgPoaI
+X-Google-Smtp-Source: AGHT+IG7AdiVY1G/TEK1pQrSvIh0n8nrZpdHC90LgKATvuCLj5ANZlaQ719DVlcDviDP0WAhINjce8I/k/BpFTR0Tcs=
+X-Received: by 2002:a17:906:f5a3:b0:ab7:eead:57f2 with SMTP id
+ a640c23a62f3a-abbcd0bafefmr908617066b.48.1740069882149; Thu, 20 Feb 2025
+ 08:44:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALu+AoR0BbmbZeOkLU55OpD8kxGsVnFs+pXgEC9Y_MpB4=GMvQ@mail.gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 02CmlzRAvH6gUhNjDul_d5grRXN4j5Cf
-X-Proofpoint-GUID: vqtrf0KyRdj5sNl93G5J7u-LcnzQFqNz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-20_07,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
- impostorscore=0 lowpriorityscore=0 priorityscore=1501 mlxlogscore=660
- bulkscore=0 phishscore=0 malwarescore=0 mlxscore=0 adultscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502200116
+References: <cover.1739997129.git.ashish.kalra@amd.com> <f1caff4423a46c50564e625fd98932fde2a9a3fc.1739997129.git.ashish.kalra@amd.com>
+In-Reply-To: <f1caff4423a46c50564e625fd98932fde2a9a3fc.1739997129.git.ashish.kalra@amd.com>
+From: Dionna Amalie Glaze <dionnaglaze@google.com>
+Date: Thu, 20 Feb 2025 08:44:30 -0800
+X-Gm-Features: AWEUYZm9TkBuiHGbmzSU9NGqTHcsQxo-1HeiZfqfYQzZqJyKatjDtVnyv2y94_U
+Message-ID: <CAAH4kHab8rvWCPX2x8cvv6Dm+uhZQxpJgwrrn2GAKzn8sqS9Kg@mail.gmail.com>
+Subject: Re: [PATCH v4 2/7] crypto: ccp: Ensure implicit SEV/SNP init and
+ shutdown in ioctls
+To: Ashish Kalra <Ashish.Kalra@amd.com>
+Cc: seanjc@google.com, pbonzini@redhat.com, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, thomas.lendacky@amd.com, john.allen@amd.com, 
+	herbert@gondor.apana.org.au, michael.roth@amd.com, nikunj@amd.com, 
+	ardb@kernel.org, kevinloughlin@google.com, Neeraj.Upadhyay@amd.com, 
+	aik@amd.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-coco@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 20, 2025 at 09:49:52AM +0800, Dave Young wrote:
-> On Wed, 19 Feb 2025 at 21:55, Alexander Graf <graf@amazon.com> wrote:
-> > >>> What architecture exactly does this KHO work fine?   Device Tree
-> > >>> should be ok on arm*, x86 and power*, but how about s390?
-> > >> KHO does not use device tree as the boot protocol, it uses FDT as a data
-> > >> structure and adds architecture specific bits to the boot structures to
-> > >> point to that data, very similar to how IMA_KEXEC works.
-> > >>
-> > >> Currently KHO is implemented on arm64 and x86, but there is no fundamental
-> > >> reason why it wouldn't work on any architecture that supports kexec.
-> > > Well,  the problem is whether there is a way to  add dtb in the early
-> > > boot path,  for X86 it is added via setup_data,  if there is no such
-> > > way I'm not sure if it is doable especially for passing some info for
-> > > early boot use.  Then the KHO will be only for limited use cases.
-> >
-> >
-> > Every architecture has a platform specific way of passing data into the
-> > kernel so it can find its command line and initrd. S390x for example has
-> > struct parmarea. To enable s390x, you would remove some of its padding
-> > and replace it with a KHO base addr + size, so that the new kernel can
-> > find the KHO state tree.
-> 
-> Ok, thanks for the info,  I cced s390 people maybe they can provide inputs.
+On Wed, Feb 19, 2025 at 12:53=E2=80=AFPM Ashish Kalra <Ashish.Kalra@amd.com=
+> wrote:
+>
+> From: Ashish Kalra <ashish.kalra@amd.com>
+>
+> Modify the behavior of implicit SEV initialization in some of the
+> SEV ioctls to do both SEV initialization and shutdown and add
+> implicit SNP initialization and shutdown to some of the SNP ioctls
+> so that the change of SEV/SNP platform initialization not being
+> done during PSP driver probe time does not break userspace tools
+> such as sevtool, etc.
+>
+> Prior to this patch, SEV has always been initialized before these
+> ioctls as SEV initialization is done as part of PSP module probe,
+> but now with SEV initialization being moved to KVM module load instead
+> of PSP driver probe, the implied SEV INIT actually makes sense and gets
+> used and additionally to maintain SEV platform state consistency
+> before and after the ioctl SEV shutdown needs to be done after the
+> firmware call.
+>
+> It is important to do SEV Shutdown here with the SEV/SNP initialization
+> moving to KVM, an implicit SEV INIT here as part of the SEV ioctls not
+> followed with SEV Shutdown will cause SEV to remain in INIT state and
+> then a future SNP INIT in KVM module load will fail.
+>
+> Similarly, prior to this patch, SNP has always been initialized before
+> these ioctls as SNP initialization is done as part of PSP module probe,
+> therefore, to keep a consistent behavior, SNP init needs to be done
+> here implicitly as part of these ioctls followed with SNP shutdown
+> before returning from the ioctl to maintain the consistent platform
+> state before and after the ioctl.
+>
+> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+> ---
+>  drivers/crypto/ccp/sev-dev.c | 117 ++++++++++++++++++++++++++++-------
+>  1 file changed, 93 insertions(+), 24 deletions(-)
+>
+> diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
+> index 8f5c474b9d1c..b06f43eb18f7 100644
+> --- a/drivers/crypto/ccp/sev-dev.c
+> +++ b/drivers/crypto/ccp/sev-dev.c
+> @@ -1461,7 +1461,8 @@ static int sev_ioctl_do_platform_status(struct sev_=
+issue_cmd *argp)
+>  static int sev_ioctl_do_pek_pdh_gen(int cmd, struct sev_issue_cmd *argp,=
+ bool writable)
+>  {
+>         struct sev_device *sev =3D psp_master->sev_data;
+> -       int rc;
+> +       bool shutdown_required =3D false;
+> +       int rc, error;
+>
+>         if (!writable)
+>                 return -EPERM;
+> @@ -1470,19 +1471,26 @@ static int sev_ioctl_do_pek_pdh_gen(int cmd, stru=
+ct sev_issue_cmd *argp, bool wr
+>                 rc =3D __sev_platform_init_locked(&argp->error);
+>                 if (rc)
+>                         return rc;
+> +               shutdown_required =3D true;
+>         }
+>
+> -       return __sev_do_cmd_locked(cmd, NULL, &argp->error);
+> +       rc =3D __sev_do_cmd_locked(cmd, NULL, &argp->error);
+> +
+> +       if (shutdown_required)
+> +               __sev_platform_shutdown_locked(&error);
 
-If I understand correctly, the parmarea would be used for passing the
-FDT address - which appears to be fine. However, s390 does not implement
-early_memremap()/early_memunmap(), which KHO needs.
+This error is discarded. Is that by design? If so, It'd be better to
+call this ignored_error.
 
-Thanks, Dave!
+> +
+> +       return rc;
+>  }
+>
+>  static int sev_ioctl_do_pek_csr(struct sev_issue_cmd *argp, bool writabl=
+e)
+>  {
+>         struct sev_device *sev =3D psp_master->sev_data;
+>         struct sev_user_data_pek_csr input;
+> +       bool shutdown_required =3D false;
+>         struct sev_data_pek_csr data;
+>         void __user *input_address;
+>         void *blob =3D NULL;
+> -       int ret;
+> +       int ret, error;
+>
+>         if (!writable)
+>                 return -EPERM;
+> @@ -1513,6 +1521,7 @@ static int sev_ioctl_do_pek_csr(struct sev_issue_cm=
+d *argp, bool writable)
+>                 ret =3D __sev_platform_init_locked(&argp->error);
+>                 if (ret)
+>                         goto e_free_blob;
+> +               shutdown_required =3D true;
+>         }
+>
+>         ret =3D __sev_do_cmd_locked(SEV_CMD_PEK_CSR, &data, &argp->error)=
+;
+> @@ -1531,6 +1540,9 @@ static int sev_ioctl_do_pek_csr(struct sev_issue_cm=
+d *argp, bool writable)
+>         }
+>
+>  e_free_blob:
+> +       if (shutdown_required)
+> +               __sev_platform_shutdown_locked(&error);
+
+Another discarded error. This function is called in different
+locations in sev-dev.c with and without checking the result, which
+seems problematic.
+
+> +
+>         kfree(blob);
+>         return ret;
+>  }
+> @@ -1747,8 +1759,9 @@ static int sev_ioctl_do_pek_import(struct sev_issue=
+_cmd *argp, bool writable)
+>         struct sev_device *sev =3D psp_master->sev_data;
+>         struct sev_user_data_pek_cert_import input;
+>         struct sev_data_pek_cert_import data;
+> +       bool shutdown_required =3D false;
+>         void *pek_blob, *oca_blob;
+> -       int ret;
+> +       int ret, error;
+>
+>         if (!writable)
+>                 return -EPERM;
+> @@ -1780,11 +1793,15 @@ static int sev_ioctl_do_pek_import(struct sev_iss=
+ue_cmd *argp, bool writable)
+>                 ret =3D __sev_platform_init_locked(&argp->error);
+>                 if (ret)
+>                         goto e_free_oca;
+> +               shutdown_required =3D true;
+>         }
+>
+>         ret =3D __sev_do_cmd_locked(SEV_CMD_PEK_CERT_IMPORT, &data, &argp=
+->error);
+>
+>  e_free_oca:
+> +       if (shutdown_required)
+> +               __sev_platform_shutdown_locked(&error);
+
+Again.
+
+> +
+>         kfree(oca_blob);
+>  e_free_pek:
+>         kfree(pek_blob);
+> @@ -1901,17 +1918,8 @@ static int sev_ioctl_do_pdh_export(struct sev_issu=
+e_cmd *argp, bool writable)
+>         struct sev_data_pdh_cert_export data;
+>         void __user *input_cert_chain_address;
+>         void __user *input_pdh_cert_address;
+> -       int ret;
+> -
+> -       /* If platform is not in INIT state then transition it to INIT. *=
+/
+> -       if (sev->state !=3D SEV_STATE_INIT) {
+> -               if (!writable)
+> -                       return -EPERM;
+> -
+> -               ret =3D __sev_platform_init_locked(&argp->error);
+> -               if (ret)
+> -                       return ret;
+> -       }
+> +       bool shutdown_required =3D false;
+> +       int ret, error;
+>
+>         if (copy_from_user(&input, (void __user *)argp->data, sizeof(inpu=
+t)))
+>                 return -EFAULT;
+> @@ -1952,6 +1960,16 @@ static int sev_ioctl_do_pdh_export(struct sev_issu=
+e_cmd *argp, bool writable)
+>         data.cert_chain_len =3D input.cert_chain_len;
+>
+>  cmd:
+> +       /* If platform is not in INIT state then transition it to INIT. *=
+/
+> +       if (sev->state !=3D SEV_STATE_INIT) {
+> +               if (!writable)
+> +                       goto e_free_cert;
+> +               ret =3D __sev_platform_init_locked(&argp->error);
+
+Using argp->error for init instead of the ioctl-requested command
+means that the user will have difficulty distinguishing which process
+is at fault, no?
+
+> +               if (ret)
+> +                       goto e_free_cert;
+> +               shutdown_required =3D true;
+> +       }
+> +
+>         ret =3D __sev_do_cmd_locked(SEV_CMD_PDH_CERT_EXPORT, &data, &argp=
+->error);
+>
+>         /* If we query the length, FW responded with expected data. */
+> @@ -1978,6 +1996,9 @@ static int sev_ioctl_do_pdh_export(struct sev_issue=
+_cmd *argp, bool writable)
+>         }
+>
+>  e_free_cert:
+> +       if (shutdown_required)
+> +               __sev_platform_shutdown_locked(&error);
+
+Again.
+
+> +
+>         kfree(cert_blob);
+>  e_free_pdh:
+>         kfree(pdh_blob);
+> @@ -1987,12 +2008,13 @@ static int sev_ioctl_do_pdh_export(struct sev_iss=
+ue_cmd *argp, bool writable)
+>  static int sev_ioctl_do_snp_platform_status(struct sev_issue_cmd *argp)
+>  {
+>         struct sev_device *sev =3D psp_master->sev_data;
+> +       bool shutdown_required =3D false;
+>         struct sev_data_snp_addr buf;
+>         struct page *status_page;
+> +       int ret, error;
+>         void *data;
+> -       int ret;
+>
+> -       if (!sev->snp_initialized || !argp->data)
+> +       if (!argp->data)
+>                 return -EINVAL;
+>
+>         status_page =3D alloc_page(GFP_KERNEL_ACCOUNT);
+> @@ -2001,6 +2023,13 @@ static int sev_ioctl_do_snp_platform_status(struct=
+ sev_issue_cmd *argp)
+>
+>         data =3D page_address(status_page);
+>
+> +       if (!sev->snp_initialized) {
+> +               ret =3D __sev_snp_init_locked(&argp->error);
+
+Error provenance confusion.
+
+> +               if (ret)
+> +                       goto cleanup;
+> +               shutdown_required =3D true;
+> +       }
+> +
+>         /*
+>          * Firmware expects status page to be in firmware-owned state, ot=
+herwise
+>          * it will report firmware error code INVALID_PAGE_STATE (0x1A).
+> @@ -2029,6 +2058,9 @@ static int sev_ioctl_do_snp_platform_status(struct =
+sev_issue_cmd *argp)
+>                 ret =3D -EFAULT;
+>
+>  cleanup:
+> +       if (shutdown_required)
+> +               __sev_snp_shutdown_locked(&error, false);
+> +
+>         __free_pages(status_page, 0);
+>         return ret;
+>  }
+> @@ -2037,21 +2069,34 @@ static int sev_ioctl_do_snp_commit(struct sev_iss=
+ue_cmd *argp)
+>  {
+>         struct sev_device *sev =3D psp_master->sev_data;
+>         struct sev_data_snp_commit buf;
+> +       bool shutdown_required =3D false;
+> +       int ret, error;
+>
+> -       if (!sev->snp_initialized)
+> -               return -EINVAL;
+> +       if (!sev->snp_initialized) {
+> +               ret =3D __sev_snp_init_locked(&argp->error);
+
+Error provenance confusion.
+
+> +               if (ret)
+> +                       return ret;
+> +               shutdown_required =3D true;
+> +       }
+>
+>         buf.len =3D sizeof(buf);
+>
+> -       return __sev_do_cmd_locked(SEV_CMD_SNP_COMMIT, &buf, &argp->error=
+);
+> +       ret =3D __sev_do_cmd_locked(SEV_CMD_SNP_COMMIT, &buf, &argp->erro=
+r);
+> +
+> +       if (shutdown_required)
+> +               __sev_snp_shutdown_locked(&error, false);
+
+Again.
+
+> +
+> +       return ret;
+>  }
+>
+>  static int sev_ioctl_do_snp_set_config(struct sev_issue_cmd *argp, bool =
+writable)
+>  {
+>         struct sev_device *sev =3D psp_master->sev_data;
+>         struct sev_user_data_snp_config config;
+> +       bool shutdown_required =3D false;
+> +       int ret, error;
+>
+> -       if (!sev->snp_initialized || !argp->data)
+> +       if (!argp->data)
+>                 return -EINVAL;
+>
+>         if (!writable)
+> @@ -2060,17 +2105,30 @@ static int sev_ioctl_do_snp_set_config(struct sev=
+_issue_cmd *argp, bool writable
+>         if (copy_from_user(&config, (void __user *)argp->data, sizeof(con=
+fig)))
+>                 return -EFAULT;
+>
+> -       return __sev_do_cmd_locked(SEV_CMD_SNP_CONFIG, &config, &argp->er=
+ror);
+> +       if (!sev->snp_initialized) {
+> +               ret =3D __sev_snp_init_locked(&argp->error);
+
+Error provenance problem again.
+
+> +               if (ret)
+> +                       return ret;
+> +               shutdown_required =3D true;
+> +       }
+> +
+> +       ret =3D __sev_do_cmd_locked(SEV_CMD_SNP_CONFIG, &config, &argp->e=
+rror);
+> +
+> +       if (shutdown_required)
+> +               __sev_snp_shutdown_locked(&error, false);
+> +
+> +       return ret;
+>  }
+>
+>  static int sev_ioctl_do_snp_vlek_load(struct sev_issue_cmd *argp, bool w=
+ritable)
+>  {
+>         struct sev_device *sev =3D psp_master->sev_data;
+>         struct sev_user_data_snp_vlek_load input;
+> +       bool shutdown_required =3D false;
+> +       int ret, error;
+>         void *blob;
+> -       int ret;
+>
+> -       if (!sev->snp_initialized || !argp->data)
+> +       if (!argp->data)
+>                 return -EINVAL;
+>
+>         if (!writable)
+> @@ -2089,8 +2147,19 @@ static int sev_ioctl_do_snp_vlek_load(struct sev_i=
+ssue_cmd *argp, bool writable)
+>
+>         input.vlek_wrapped_address =3D __psp_pa(blob);
+>
+> +       if (!sev->snp_initialized) {
+> +               ret =3D __sev_snp_init_locked(&argp->error);
+
+Error provenance confusion.
+
+> +               if (ret)
+> +                       goto cleanup;
+> +               shutdown_required =3D true;
+> +       }
+> +
+>         ret =3D __sev_do_cmd_locked(SEV_CMD_SNP_VLEK_LOAD, &input, &argp-=
+>error);
+>
+> +       if (shutdown_required)
+> +               __sev_snp_shutdown_locked(&error, false);
+
+Again.
+
+> +
+> +cleanup:
+>         kfree(blob);
+>
+>         return ret;
+> --
+> 2.34.1
+>
+
+
+--=20
+-Dionna Glaze, PhD, CISSP, CCSP (she/her)
