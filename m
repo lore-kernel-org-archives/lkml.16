@@ -1,93 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F9A264607;
-	Thu, 20 Feb 2025 19:57:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713351DED7C
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 19:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740081471; cv=none; b=cMSyvy0CfCKToEfgB/bBMgKC1MR79KWvfS3hWE/HMPIeoJSlS99nQ+H+OBdVbZGzi2WKlLomgBvAYuckAnz7Qr+jBOd7YdS1LV55kK3NCNn2xE8ukKK6FlzPgvkAPAkhCc4xp872Bws0UTch0EkBZ8KX6Rtz48RbsOg11BeID+4=
+	t=1740081484; cv=none; b=dKinpf7FEd6t5hxGLtWzar2LUTdCmIHZ/ohTfqxGb/lr4yx207aC/CcrciFx89nKcR8hx50iwpSCcippW1XcXzNh7OWrk/7ORBYD9+8grsQ0wheNYtyXGmu5Syyua+LyLC89ct5cNsxEreZfZ4o0hcZz1dttRNPLTw+KJZiAZws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740081471; c=relaxed/simple;
-	bh=IEEv2phHuz5CP5vjO4iUAg1ONnL5OS9b9QnH5fZS3Zc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CO6j3FrxwmsRfmhU4TfyPVNacu6ZvtzTpPzo3P25VryPaRA6xab2dk561KZrGj0x2eFm4kzG8C2smy+YbxTMpLlb8KqUajTq1MjCrxBy6ArXza3L+3axVQrXsKDbJDwZTRuqzmKxEnb72buMApjfNcsLYFN6XvY+WmKqzKzyq+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r1Hwu154; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740081484; c=relaxed/simple;
+	bh=jrlGTmgmhbT1peUN46Fe2MxKkTTrc+D4XgqIColiGGI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IOHOUvXbd5uQop6vIOAZHj6OsRajh1wRnEAES1MFtkpz7va/i28wcUlEZfYKm1q18fYcHDFQWvEsREFNUVJEfxLQw1WipQb7kOeNvps0mCDVkY2VjjI9yzjYnrlNKBKNKMO0EsVCg8tAdL9i09y75XJKJGB3iOhtojPHRGcSoBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=lC2NhlaR; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r1Hwu154"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1181C4CED1;
-	Thu, 20 Feb 2025 19:57:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740081470;
-	bh=IEEv2phHuz5CP5vjO4iUAg1ONnL5OS9b9QnH5fZS3Zc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=r1Hwu154ElCGh3lLX7S0WanN0fL2kklfEsINpoZbDgzT3fVon7oEfwaknFDiy09P5
-	 2e0eTasKKVphi8MyMoXGzIZSud1seI/9kFwBDJjjsAjuhympzvgpuYSUSdb1wSyKXr
-	 zizqvmbkHFcfp95dvD+XFxJvT2D7hKkKvuV+Th1UKncZzX+ZhEnydSUHNgfDWhdnpY
-	 5I/0c54FBn+nf8h9GWDf6vXnX3H8Sp4UBSzED/HxklvsOWOPEvkPYNR70dU+Xu1qK8
-	 QHY3fojOcpVNV2EKAR7rG+pPmp6o05+0z/PyMVbyN9MYMTQVESpkU02yXsu9LhDl0p
-	 W+XrntsNRdS6A==
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2bcbd92d5dbso484477fac.2;
-        Thu, 20 Feb 2025 11:57:50 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXMN5mLGDSD5GvDoj8UB8MRVAEYa9IrJCJeVYaLsiB3SwL22Nw4uC6PdHFXoNhqMdYsfgyYKENZvw==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyb39AksdWr7+x4hxnzuh/aZ39eBqyiP2HArvlHV0nFq1W5E1of
-	b4zBO7fl6nu+/cPImztbHfw2fe27jGIOAwilmRBOpi6EVZnXfhQrd5NT5PAQyHxXbdZ8jXeAJNs
-	DuPq62MLgNNXlijEAwu/xG6LzGsw=
-X-Google-Smtp-Source: AGHT+IF/vXVVQ8o+wGJLJfRygL1NI5IxEL6YwL/BIMqezQdhPfArHUPswm/f89VvOY9FAs5fezmKHaR5DkdhP/V+hwA=
-X-Received: by 2002:a05:6871:620e:b0:29e:5bb8:fb35 with SMTP id
- 586e51a60fabf-2bd5101952emr213838fac.37.1740081470178; Thu, 20 Feb 2025
- 11:57:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="lC2NhlaR"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6e67f377236so10563656d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 11:58:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1740081481; x=1740686281; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kr1joMIDiETyhMXa3u3wcO1t9R4bjZJsjINmgsHmqAs=;
+        b=lC2NhlaRmmo3P6GtYE0Y5L7gyeW00f1JV1B0MsYm9EBhQRGFxVvIaxMUo5yPBZL4vW
+         cTHKgRkwlFj8J6eMCCfgC1qUjLMaYT9YryefKL/ezr9wEy+uxVb5gPnvO5X/EgWlmqFB
+         XAO7iWDv/ECqx+4hPvvrpqSbHMlrFXncR73jIfYhhWDkbJ0RT/voxgrcAHsut72y82wF
+         D5rT0P5MpWywJ8ANXVQK5UcmlIFZ8M68A/pD9a7E3+dUgGPBwyvM1ETFv0eMpN48u5qd
+         TotGafwXuEG/UEe5yUjx5dR5IyQyjt+lsGgz+uIHHHoKsg5WdZLQizwEpPaUxXowMmx2
+         HLCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740081481; x=1740686281;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kr1joMIDiETyhMXa3u3wcO1t9R4bjZJsjINmgsHmqAs=;
+        b=sPB+CB26m2QBAbcF/IePFwlRvuugiuSV/qreH/TAIKSrqYtbtCNsDxRpIlUXH6HTQ0
+         DZ0XSsDAnR0jetIuNd/lJipcdTXkwzWm06hsTUS24nrBaeLvmzFST+e7CjGTjdZ4LLMx
+         EZIaEcPaoRs5p/2S/vMUGVzw6G3bf3MTgzcdd2n31BV7rQSXUMgm4Nj+SDBXu0QvkjKP
+         zCcE6tJ2IBKdhk2MuBQdqVT1/cW3sd8BB1GIjxaUBALIDkr+c0R5737YZ6t3c9KQsWxr
+         9Azs7mkdk8qxpnxazI+1xFk+JDyXVKqOLo49PnW0E4o6VlovNEdRcsbeNGrCvbOJLq75
+         vszA==
+X-Forwarded-Encrypted: i=1; AJvYcCWhVmFS1DjN6FefgN1/UuJk5rd39exYy7Ea+HWkT0IVRc5JHKZoO/2fUSC9U1jqboUO3sRbEtNtXG7uLhI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZtktsq7S8rbl0vdudszYk1MpkXsVsRPXW1Kd9sK++NZgDqpzs
+	dSnaJr0F43jpgQXnwfShWHiamwirvu/QfCL7b7TFy92mqc94OHg68jS7zKpo+sk=
+X-Gm-Gg: ASbGncuRD69npYJZWtp3IYvvXL6gAUhBFSzjO0pVC1qiulWsOuneT+gcLta6/GTg1AP
+	kHsvsNwhNqKjWkcWYF1RsRFlCBxGC8IyMtXTSW+Md2zEPkERvYDZIG3yz50MdNUDEzTfCqgZwm3
+	G1FVWNFWwmGS+kpHsitFlJiFlrzt7H4HWraPRKBeOV8y6CHPru0GR91l6b5l8Px4I5PjfyQ8QbM
+	SHewtKyWZALtBNYOy/h6P+tcMFvpZKzWgDmDUIEAaQXiiI3VKaRlQExl25t7ZzDbthDIIICr43W
+	klmVqWFSfmlD1efzU2UAbCSw1EYLhZ2RQEr47LJJUjzfgEtLfnMoRt48KKZVKPeyxrf0rdhjyg=
+	=
+X-Google-Smtp-Source: AGHT+IHZS+OAndXZ63oF13Bq+bLF0/Yd5FRQs22lEGLPEgYn8FK+myJuX9Qfgt1NDL+/ZMzp5hGhxg==
+X-Received: by 2002:a05:6214:4109:b0:6e4:2c6e:7cdc with SMTP id 6a1803df08f44-6e6ae84f6dfmr5284346d6.25.1740081481372;
+        Thu, 20 Feb 2025 11:58:01 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e65daff4fdsm88988706d6.96.2025.02.20.11.58.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 11:58:01 -0800 (PST)
+Date: Thu, 20 Feb 2025 14:57:59 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 13/15] cxl/x86: Prepare for architectural platform
+ setup
+Message-ID: <Z7eJR6U878BIwk1X@gourry-fedora-PF4VCD3F>
+References: <20250218132356.1809075-1-rrichter@amd.com>
+ <20250218132356.1809075-14-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250220114103.515278-1-lukasz.luba@arm.com>
-In-Reply-To: <20250220114103.515278-1-lukasz.luba@arm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 20 Feb 2025 20:57:39 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0jRg8=3xgUK8j0+PdNYPpiD4PhpwwRjFmKDxrNj-gRk3g@mail.gmail.com>
-X-Gm-Features: AWEUYZlIx0jrTFt6kR5MzpI2Cb7cSr7nnz3OBhYTJ4g-avArg_IZcvAkZbuFYFI
-Message-ID: <CAJZ5v0jRg8=3xgUK8j0+PdNYPpiD4PhpwwRjFmKDxrNj-gRk3g@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Add Energy Model framework as properly maintained
-To: Lukasz Luba <lukasz.luba@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, rafael@kernel.org, 
-	dietmar.eggemann@arm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218132356.1809075-14-rrichter@amd.com>
 
-On Thu, Feb 20, 2025 at 12:41=E2=80=AFPM Lukasz Luba <lukasz.luba@arm.com> =
-wrote:
->
-> The Energy Model framework had some recent grow and became a bit
-> more complex. Add the proper contact points to maintainers so
-> other developers can get the right support.
->
-> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
-> ---
->  MAINTAINERS | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index b9f7d2115b57d..2d0dd9100292c 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8529,6 +8529,15 @@ M:       Maxim Levitsky <maximlevitsky@gmail.com>
->  S:     Maintained
->  F:     drivers/media/rc/ene_ir.*
->
-> +ENERGY MODEL
-> +M:     Lukasz Luba <lukasz.luba@arm.com>
-> +M:     "Rafael J. Wysocki" <rafael@kernel.org>
-> +L:     linux-pm@vger.kernel.org
-> +S:     Maintained
-> +F:     kernel/power/energy_model.c
-> +F:     include/linux/energy_model.h
-> +F:     Documentation/power/energy-model.rst
-> +
->  EPAPR HYPERVISOR BYTE CHANNEL DEVICE DRIVER
->  M:     Laurentiu Tudor <laurentiu.tudor@nxp.com>
->  L:     linuxppc-dev@lists.ozlabs.org
-> --
+On Tue, Feb 18, 2025 at 02:23:54PM +0100, Robert Richter wrote:
+> In preparation of an architectural, vendor and platform specific port
+> setup, add a function arch_cxl_port_platform_setup() that can be used
+> to handle and implement architecture and platform specific code.
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
 
-Applied as 6.15 material, thanks!
+Reviewed-by: Gregory Price <gourry@gourry.net>
+
