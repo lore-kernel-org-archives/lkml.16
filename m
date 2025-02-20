@@ -1,127 +1,155 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F481212B0B
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 16:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E1520487F
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 16:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740068891; cv=none; b=hIWEkRKSN+0sl2JXJOftfxCUTCXrTrqlr5kiSx4VDwDvoS5dKwE6b1zUEKDXpsa1T6OyTmsRzd9EuBhNSBnlZKNT60HjzDKERnf930aX2bMfhKlf20zZuHIwamc2PDkouQaTLYAjfms312mFSd/4S6VFl15DATIMNQq4brJEhiI=
+	t=1740068925; cv=none; b=pJF7UUilLUA8cgFDM6N20OkYgKrR16+cjl83M/9IVOjcoC6+0GYA4hLJoO17ZTpGXcUiupzPnAbH6RSk6CW0MP/obD/6M0vny2e3CdRYNcC0hNEjUWYeEXSWq31bxTgo2+10++sFM8GlpHDfFW9GKl54lTo4XKdHc7zBcN4zrP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740068891; c=relaxed/simple;
-	bh=sGE7hNhiEeq3xAlLS05H4pGZx5fBJNUwbm2A+6GSnpM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=I82E6IimfIPNB1oCrFd9uD8UQKvrgiKh+gOi0X6qbfVphCJ+x1wtP/74xJF7t1TOXOJdn6GnUVQ3d0kZO0IoAuWvcHDjS+Wixjt5h0Y/rMCRv3GoQ10x3Z975mwjKIndxbobRLSRfmcStaH1+FT2G9ihL45qRbtJLBtVM28RRck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=DKV5Chvh; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1740068925; c=relaxed/simple;
+	bh=qtZvEjj3Lx7yqO+SKHcxEAF3FCWhyE/jBk/4XkhKUHE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tTvCMj327Ua1AXfs2Uu2zAtY6ynCm/Ds1+3zW6vKoGmhBrdrFd93iJBs0G8lpvD93gtniKYzybzsYY5d1yckfzfhZfxfOx2aTR45lnpXv30hQffxmHGTAH9/VA3qPa3EkJs5NkVCrsosR2KwF7smiUdQ6O83gGxLE9pRXnWbDUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=vCUzGkuM; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="DKV5Chvh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=Le8WVOEy30QeG3s/aHaLL2Z+h6Ona2+zkOtS7UkAOtQ=; b=DKV5Chvh9NBQCKNssE6KXWYZ5C
-	gfzVuHk11YYrXCu5hJOppqfZEr7kR7XVtXpFdnyr3s1WYKgaYYwaDnIoE8P2xXNX/jYxcOWeGRDzn
-	8xSHZUqBqHuqJc/RMSa5OtNTrTrof12cPo1y03QDYmWQ2SGQzsvY/w7VyoDZBe72GGXnR+/E3+IiL
-	fXlujtsYZ4PxMcNJvososVlYAKYXVigWPlE1Bsdp6YrhP7uBLZtrvBiouhLytKpLh4N6XS0SB2HQi
-	xEmsH9bDLUqMm49xlqlgZknOUgtTyaWZigF7iqqEtzCJ4LtAYmlGmleqJD8rA1Vb/w3JOJJHEoVGE
-	JmIYuSzg==;
-Received: from [191.204.194.148] (helo=localhost.localdomain)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1tl9P5-00FS04-7u; Thu, 20 Feb 2025 17:28:05 +0100
-From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
-To: Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?=27Christian=20K=C3=B6nig=27?= <christian.koenig@amd.com>,
-	Xinhui Pan <Xinhui.Pan@amd.com>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="vCUzGkuM"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-7c0b24cc566so92637085a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:28:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1740068923; x=1740673723; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6zPKPwpgMpfH3brPd29df7mwe+JvN1VwGQmS25Yuk50=;
+        b=vCUzGkuMsP9JQS/QWcl3XWgfSJ3fY6m8qeLG0kmNyNkt39Na2wQxRQ2uIX3dar1PuO
+         gKQ6UZAjKXnqHN6wnZfnIjHIY5UMlWbHYh/QsJUtmxIA2SseglV5roC4S2pM5DJXS7cJ
+         mZzSqdyF29ATpTa6e7oOUcE81dFMJ4OKj94Lk2qbM+k1HjEtNfS8SS33cMhBDTKhxaVo
+         TRMPNOCGkbaUTFJbvalO7lREpk34EajTxSku493IsM7VUI7F+bJqdkNtjXlfAvmz7oLm
+         xIr5uRAafsGj5VPREpxoOx1uiIfFeqAwcynhnvDAJ0hEfL3HprjVicYMzQfH8kO3j4mb
+         vCmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740068923; x=1740673723;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6zPKPwpgMpfH3brPd29df7mwe+JvN1VwGQmS25Yuk50=;
+        b=l8XH8I9F/E8fj9/e0PALsK3rMpW9qs7cflxrGoxziQTA8i3aPDmIIkWb83WnfxHnlr
+         FXwt1Mhfk9uWfCkQvSO9ui6xi3w+i+KuuTEoTRykzJqiLP6Dtg2aoY6TcVRTSx6PN3HZ
+         daS1+2CJfYMwuI1DGo1q0dvb8wmKkgv7DGf6jvvUPiNEuqDtNAlZE7V+H6tIRsnOgrKz
+         B1XHF10lS1diBG93+3EqqgIx7KHlamuGTvJUHFdd2uRW9QAE4Y86cK6Up7ucRjH7248D
+         SmLHpJhkzUUG6ZEZOXvNDtSVhzHeFvqcHCVzLbd3vfrsXakxWU0D1o03mwUWzMzkaRfc
+         0tNw==
+X-Forwarded-Encrypted: i=1; AJvYcCX0mFIRJWRvsjK4pO1v/KucTgZNLSDXj3Xd6yLhjsOcYpzNTILE8OfeE4aLd2KpHamkNgsb6lCCQdjPOgg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykJkVmMO8nzD/FLpEHzgHedCFqyh1/TcGADdCTCmSirr8fkQhL
+	gSWdHjcx52ZGHA6303SoYBPoT/XKyti+ea/3qNx1GqP0boyCO/m08h2jyJ7pwms=
+X-Gm-Gg: ASbGncth2CtiHDm0Smtcz3gV8R9heKd7x/Eh8k7+bc51TafSO1Q5qwGZHyn81wzLuB2
+	Pa1atpl84PkxLtib88uqoIpUE7lNr1xVbrEF+HVsdWqY4U2oY9Tbsh3+Zt6XSOq85sjn6M9Og5A
+	ajj9nbfFs7nd70a9fCnZ4RxsdbREztMFoSBYNdkfutC9D164a3PZHh9TBnJgWdiEbQ7KVZ26864
+	hJ41jIVSkTghxTfl5WKka5WPs956W5XUTDzoyaVdT8+h6tu/lL1bEnLB5v7zg1UMeFOcJv6QHLc
+	EO6JZtXQj3viLE84adYS5n7VSmfgX+bNir9CgdQL+1vpk9EonMfP0KSn8TvuPhNTTqTbqG5zaA=
+	=
+X-Google-Smtp-Source: AGHT+IGeFR8D7nMbaUp/3ATL7D3M3qMty7rR8JIiXinKvzPnvyJ/Rj3ZuPHNQJnrNccn1sWN2TpbjQ==
+X-Received: by 2002:a05:620a:28d1:b0:7c0:b0b7:493e with SMTP id af79cd13be357-7c0b51cdf04mr1099093585a.7.1740068923018;
+        Thu, 20 Feb 2025 08:28:43 -0800 (PST)
+Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c0a62e9865sm409747885a.59.2025.02.20.08.28.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 08:28:42 -0800 (PST)
+Date: Thu, 20 Feb 2025 11:28:40 -0500
+From: Gregory Price <gourry@gourry.net>
+To: Robert Richter <rrichter@amd.com>
+Cc: Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	kernel-dev@igalia.com,
-	siqueira@igalia.com
-Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
-Subject: [PATCH v2 3/3] drm/amdgpu: Trigger a wedged event for every type of reset
-Date: Thu, 20 Feb 2025 13:27:50 -0300
-Message-ID: <20250220162750.343139-4-andrealmeid@igalia.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250220162750.343139-1-andrealmeid@igalia.com>
-References: <20250220162750.343139-1-andrealmeid@igalia.com>
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
+	Terry Bowman <terry.bowman@amd.com>
+Subject: Re: [PATCH v2 03/15] cxl/region: Factor out code for interleaving
+ calculations
+Message-ID: <Z7dYODuRrRv1bXpV@gourry-fedora-PF4VCD3F>
+References: <20250218132356.1809075-1-rrichter@amd.com>
+ <20250218132356.1809075-4-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218132356.1809075-4-rrichter@amd.com>
 
-Instead of only triggering a wedged event for complete GPU resets,
-trigger for all types, like soft resets and ring resets. Regardless of
-the reset, it's useful for userspace to know that it happened because
-the kernel will reject further submissions from that app.
+On Tue, Feb 18, 2025 at 02:23:44PM +0100, Robert Richter wrote:
+> Function cxl_calc_interleave_pos() contains code to calculate the
+> interleaving parameters of a port. Factor out that code for later
+> reuse. Add function cxl_port_calc_interleave() for this and introduce
+> struct cxl_interleave_context to collect all interleaving data.
+> 
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> ---
+>  drivers/cxl/core/region.c | 63 ++++++++++++++++++++++++++-------------
+>  1 file changed, 43 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
+> index c118bda93e86..ad4a6ce37216 100644
+> --- a/drivers/cxl/core/region.c
+> +++ b/drivers/cxl/core/region.c
+> @@ -1800,27 +1800,34 @@ static int find_pos_and_ways(struct cxl_port *port, struct range *range,
+>  	return rc;
+>  }
+>  
+> +struct cxl_interleave_context {
+> +	struct range *hpa_range;
+> +	int pos;
+> +};
+> +
 
-Signed-off-by: André Almeida <andrealmeid@igalia.com>
----
-v2: Keep the wedge event in amdgpu_device_gpu_recover() and add and
-    extra check to avoid triggering two events.
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_job.c | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+I get that this will be used later to pass information back, but this
+patch by itself is a little confusing because ctx seems pointless since
+the function still returns the position and accesses the hpa_range directly
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
-index 698e5799e542..9948ea33d2c6 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
-@@ -91,8 +91,8 @@ static enum drm_gpu_sched_stat amdgpu_job_timedout(struct drm_sched_job *s_job)
- 	struct amdgpu_job *job = to_amdgpu_job(s_job);
- 	struct amdgpu_task_info *ti;
- 	struct amdgpu_device *adev = ring->adev;
--	int idx;
--	int r;
-+	bool gpu_recover = false;
-+	int idx, ret = 0;
- 
- 	if (!drm_dev_enter(adev_to_drm(adev), &idx)) {
- 		dev_info(adev->dev, "%s - device unplugged skipping recovery on scheduler:%s",
-@@ -141,8 +141,8 @@ static enum drm_gpu_sched_stat amdgpu_job_timedout(struct drm_sched_job *s_job)
- 		 * we'll fall back to full GPU reset.
- 		 */
- 		drm_sched_wqueue_stop(&ring->sched);
--		r = amdgpu_ring_reset(ring, job->vmid);
--		if (!r) {
-+		ret = amdgpu_ring_reset(ring, job->vmid);
-+		if (!ret) {
- 			if (amdgpu_ring_sched_ready(ring))
- 				drm_sched_stop(&ring->sched, s_job);
- 			atomic_inc(&ring->adev->gpu_reset_counter);
-@@ -170,9 +170,11 @@ static enum drm_gpu_sched_stat amdgpu_job_timedout(struct drm_sched_job *s_job)
- 		 */
- 		set_bit(AMDGPU_SKIP_COREDUMP, &reset_context.flags);
- 
--		r = amdgpu_device_gpu_recover(ring->adev, job, &reset_context);
--		if (r)
--			dev_err(adev->dev, "GPU Recovery Failed: %d\n", r);
-+		ret = amdgpu_device_gpu_recover(ring->adev, job, &reset_context);
-+		if (ret)
-+			dev_err(adev->dev, "GPU Recovery Failed: %d\n", ret);
-+		else
-+			gpu_recover = true;
- 	} else {
- 		drm_sched_suspend_timeout(&ring->sched);
- 		if (amdgpu_sriov_vf(adev))
-@@ -180,6 +182,10 @@ static enum drm_gpu_sched_stat amdgpu_job_timedout(struct drm_sched_job *s_job)
- 	}
- 
- exit:
-+	/* Avoid sending two wedge events for the same reset */
-+	if (!ret && !gpu_recover)
-+		drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE);
-+
- 	drm_dev_exit(idx);
- 	return DRM_GPU_SCHED_STAT_NOMINAL;
- }
--- 
-2.48.1
+Looked at in isolation, having the context structure change in this
+patch than just adding the hpa_range as an argument and adding the
+context later when it's actually relevant.
 
+static int cxl_port_calc_interleave(struct cxl_port *port,
+				    struct range *hpa_range);
+
+> +static int cxl_calc_interleave_pos(struct cxl_endpoint_decoder *cxled)
+> +{
+> +	struct cxl_port *iter, *port = cxled_to_port(cxled);
+> +	struct cxl_memdev *cxlmd = cxled_to_memdev(cxled);
+> +	struct cxl_interleave_context ctx;
+> +	int pos = 0;
+> +
+> +	ctx = (struct cxl_interleave_context) {
+> +		.hpa_range = &cxled->cxld.hpa_range,
+> +	};
+> +
+> +	for (iter = cxled_to_port(cxled); pos >= 0 && iter;
+> +	     iter = parent_port_of(iter))
+> +		pos = cxl_port_calc_interleave(iter, &ctx);
+>  
+>  	dev_dbg(&cxlmd->dev,
+>  		"decoder:%s parent:%s port:%s range:%#llx-%#llx pos:%d\n",
+>  		dev_name(&cxled->cxld.dev), dev_name(cxlmd->dev.parent),
+> -		dev_name(&port->dev), range->start, range->end, pos);
+> +		dev_name(&port->dev), ctx.hpa_range->start, ctx.hpa_range->end,
+> +		ctx.pos);
+> 
+
+	context just gets discarded here and hpa_range and pos are
+	otherwise still accessible if you just pass hpa_range as an
+	argument.  So I would push off adding the context argument to
+	the patch that actually needs it.
+
+>  	return pos;
+>  }
+
+~Gregory
