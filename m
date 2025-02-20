@@ -1,164 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1441E883A
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:45:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A651B3927
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 08:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740041122; cv=none; b=tNRdq4X1ITEsCJVco51drAsOgKvt/RHPRtdC3xMr3FyX3LVp9VadcsIAWfYlyl6BQZYph9F8Mu1oqRy+nn5oVVP34Jw4t4f2Evx6oKl/P1xpm2YXmYDHGekvWMBfTdCs3KnyIT6rptpMLI/6R6DUTMvVYIVHYHWpB8Yfv1F+2e4=
+	t=1740041300; cv=none; b=Fs1yRFabXpF1q3oUpuHl4ORKPM8yGAWvXvUhYab1FA/DHM6+bmldHGtudteUVXFW+lJRZ8F8LFetafbcLD8cTDXQvGtISweTxCFYvp65uU3ny78IhOptpj098fpSCKhyFEVQW0t5dcAXH10dVe7GgO7aQOWtstkxEP9QIbnu5GU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740041122; c=relaxed/simple;
-	bh=0SHhfqD/vA4cGXP3SZz7IhYLrGj9qnR4GeFeMVjfvsU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XR4wZpA62qajJNRVyzYFdFAznx2RL2GO9i+8NgHHnckdkLkK6662d7oDDgrowUs7f/qMlfWmCf/RhYxSwjOjIAEeuRU30jgSTllqywn1m6dYEvN96zG4U4Rq44qFGbFBkxx3AlzL3mb1oF/ASiaZEh5O9p+9aT8shwsiE/KTbz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HDKSYMxr; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740041300; c=relaxed/simple;
+	bh=eOJF46IaUTaNfT4QyMAMjESNMVY8lwoauqmqP5QZNAU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=On+EIFsx+SdFvRIyx5V4irXmsrGGeSk/3Hmp+whbNLSqQBTqGA4p8+6nwo8gYAa9TEPou0e6SEhlt7nNLW3IB/crAl2aAHHvLk5vUpsTI8nUTg5250DOqE1PZiDnM8LbK8N0axykhBF/3RWDTtJ9ut/vhLKlbhj8ncd6Uyxgflo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sbdmn09a; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HDKSYMxr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740041119;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QowQNzpCtCsCtxr+X2Hdu42nsXJZ78IqGs75xqGcCm4=;
-	b=HDKSYMxrL8zXxl/Ph5nORd77ppKkIQX5WuXnf7idofE1RO7wFTKfRWyK/1qiMNu0M/auzj
-	R2SX5X9PMHqYakbhVf2C8AgL3rYTqZfxaEERvQCxgJmyPjsXrsjmjCeTJW2IExefwQYHZi
-	L9eEJNrdn+NpxAVhWkWmfqKLNuBNPNA=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-122-mrbTQm3NO9-v42nOuJOQNg-1; Thu, 20 Feb 2025 03:45:18 -0500
-X-MC-Unique: mrbTQm3NO9-v42nOuJOQNg-1
-X-Mimecast-MFC-AGG-ID: mrbTQm3NO9-v42nOuJOQNg_1740041117
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-abbf1cebfa5so49842366b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 00:45:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740041117; x=1740645917;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sbdmn09a"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e058ca6806so1103492a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 00:48:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740041293; x=1740646093; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QowQNzpCtCsCtxr+X2Hdu42nsXJZ78IqGs75xqGcCm4=;
-        b=rTbmxW40XQvbU4DttiuGUu+dywnMrcIiFyEwGo12D4wFdi6nMa/h2AmyDTVBdoff2y
-         o8my4KsoE0lpMVd+D3G0H4J9s0nZwboh+fOa/xbi4JVttP9cVdJeCPuqjLIuQ7CbnGPA
-         n/kgaqcQhg8HZtMb6oXr0l7gqaLZWIs/be6JSoRMo9lJ7JlIBncX+XVOcTWyhfIZeoYe
-         03un/K+A4u+fTsYuR/Qd96Un0hfQJde2TAFGYguOafGCr/ryC0Mw0QGgtsXlcQM7nYIN
-         YxybIdslPX9p7Rsp3AR1MJtO1alYEdkedswMPf/jPDDgtXb/AXm/gGNHyCJj4AR9A+PG
-         /RcA==
-X-Forwarded-Encrypted: i=1; AJvYcCVKSi4LB9EgQSznpgTjx42m7nCBuOI38erVccwc0GZuT2Ld2bcm0XXDx/d364CNUlnnWLy7XWqu49cRd8U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVr6nm5VqSyhoA2ZpDlIGwDFksyXLntew4zE4lOc5BvBNWN+Vg
-	1TufXsE98U9Yt1nrp4nYKJ27D5ZyTt6lR2Ceb1msM7ZYaOoh5rK8ISku3VASygaqQYNGvt4okhC
-	bc1XDaoAhLjqD4depO5ckMRtnO+Y9jV7y9DwBOPePnKOrr7tOwWimtiyq38vjeg==
-X-Gm-Gg: ASbGncstPaQjT/u4JjFP63OsEoG3ivvqlO8FWJaiMg10lrneBhcPhTEZ56JIIZLblnE
-	lauqOA9M6jFiaaKVOTS0UGgB751CrVYSDH38jZuzKpK+d4neDAlmgkOm3BqPDnuNxuaVqhrBHF+
-	jM1ObyT5k0bkNGjS3aMDTttrRXBh7i7aP06Msx8e1hhd68OxGQ5y1z45puApV8FCzQMpu/U4hEY
-	jBNyt00mU5nNFWmb/NieGLKPgNZzOkhlb6Z2OV+csjhmjDa4ZYe9R5IU6nY4ekQ8g/8Bw==
-X-Received: by 2002:a17:906:f5a2:b0:ab7:e3cb:ca81 with SMTP id a640c23a62f3a-abbcce2dce7mr658329566b.30.1740041116668;
-        Thu, 20 Feb 2025 00:45:16 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE3dogKAU3XJfB97xx6QDkV7Yj2gPqLTO6qgUQYyB3pQmxLIK3jEJkScPsnctuvKKAeoojJDg==
-X-Received: by 2002:a17:906:f5a2:b0:ab7:e3cb:ca81 with SMTP id a640c23a62f3a-abbcce2dce7mr658325866b.30.1740041116195;
-        Thu, 20 Feb 2025 00:45:16 -0800 (PST)
-Received: from redhat.com ([2.55.163.174])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb9bc1c667sm731938266b.131.2025.02.20.00.45.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2025 00:45:15 -0800 (PST)
-Date: Thu, 20 Feb 2025 03:45:10 -0500
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Akihiko Odaki <akihiko.odaki@daynix.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Jason Wang <jasowang@redhat.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-	linux-kselftest@vger.kernel.org,
-	Yuri Benditovich <yuri.benditovich@daynix.com>,
-	Andrew Melnychenko <andrew@daynix.com>,
-	Stephen Hemminger <stephen@networkplumber.org>,
-	gur.stavi@huawei.com, devel@daynix.com
-Subject: Re: [PATCH net-next v2] tun: Pad virtio headers
-Message-ID: <20250220034042-mutt-send-email-mst@kernel.org>
-References: <20250215-buffers-v2-1-1fbc6aaf8ad6@daynix.com>
- <d4b7f8a0-db50-4b48-b5a3-f60eab76e96b@redhat.com>
+        bh=wn8U20v5f+rx/ps3pY4w1/ateGC6xo29Rt3tQiIDuAA=;
+        b=sbdmn09aMWBv+kofs1i/IjKf0HK7QwdVVYtKlQPRPVltnAmZzRwCCUNRlXhyfIWLS1
+         2BBOZwmGYURCIFja3ZpYtaR+EcThtVZt6O4ZSWJXw0N3gzSVv/kys8pM1SNnjTZn8LdI
+         aiqUhuY+kEbvY4ShBDZ1fODHmfn/WFg5OL2fLYgrmtkMFTyMICTDennEx2Yoykosu0F9
+         ++yhL5TOgKdfSac9sk66dQNvOd00+YBu8BnbdyOWrV6DhCDkENOT9hSfo4FkpCxMRh6H
+         ZidvINNCEzvXG5sjJt0A3+AWpJ9D/sOgdk1AU/VJWKMRoHxqYoimX43F9TUIcfLZ3Xg7
+         d32w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740041293; x=1740646093;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wn8U20v5f+rx/ps3pY4w1/ateGC6xo29Rt3tQiIDuAA=;
+        b=HNv47IMI0/pnmUmUkR1JH/O88ASXDcVTbcWHqe9Dq/Vs129TakRdF/F+xZTOjSoTzw
+         ygA1EHgD9QUpeRGeP8kPyI2Q5fZ2pHC8QXwRJ8Z1IYnZoBD0QlpQwTJoOkuI953f1J5u
+         zJqpqsZw53DkUAvxmcgVgCo8KW9K5s0bkOUbJzb2rkRLQqA0Ls/OQ43k5eCz7sf+K4P8
+         02bUzObElea+snB1F5CnWY5u6fwmGJH2OPu66e5780w1S+FdI68iQZaoNKmXwYE7hxSO
+         soZxhuTmEcGeXM7CXiewVVlx8yQxv7IpU6FSG2UTFvwdAdxJeaBMU80ofdzADcepUED9
+         ieVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXfz78i1GnNfPNdIUL+uhAK0mBBgcGMZ1ucUPl89tHupS2v/5GJ9vFz2/s7+5YnFJ7GD2KXQXLiGvMKqkI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWVo2G7pr2gGMY0G4DdGnVc24Do4MDB0XiiiZ4rKS0+YtuD4RF
+	PeE4Z7Mpf14de5IpKP/50ZbFqOZ0qZSSTQZtbIFaTpTYMr9wqHJVGS8AuK/UiAUowA1EK4F4Oci
+	+vezYVSimj7Maftzpm05xC8lZEfYBoYIoBKgNgD8/f+Q5kw921zSr
+X-Gm-Gg: ASbGncv6qnf1zNQo+UEEf+uqU7Y2JS59DMns4viKKSMEVzKnIdosnrNObFM9w8TMUMB
+	038Zo8UoTOwGiBCRHMPHHTxZ80XLOJWa3O6Qd/3zzrLuq3/JMBx8TL4Tj246rTrYWqRRza7k+Lg
+	O7bEk4GEaoPf9XsHynk18UBEtnIxRvvw==
+X-Google-Smtp-Source: AGHT+IFYZLNBrrxeZ0D/1Dd1enkXOye9zIxSSkI1C9v/ccGwQ2J88/lDeiWpn10jQOqgPMQUeWzt7xAhWI3SyCu5yrE=
+X-Received: by 2002:a05:6402:a001:b0:5e0:4408:6bcf with SMTP id
+ 4fb4d7f45d1cf-5e04408718bmr15446691a12.10.1740041293384; Thu, 20 Feb 2025
+ 00:48:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d4b7f8a0-db50-4b48-b5a3-f60eab76e96b@redhat.com>
+References: <20250219125522.2535263-1-edumazet@google.com> <20250219125522.2535263-3-edumazet@google.com>
+ <87tt8phw61.ffs@tglx>
+In-Reply-To: <87tt8phw61.ffs@tglx>
+From: Eric Dumazet <edumazet@google.com>
+Date: Thu, 20 Feb 2025 09:48:02 +0100
+X-Gm-Features: AWEUYZmkvPY51rZ39kRG4J0w-NvpyifR9W9MU2pp3GCuPxC4z2SZ_RGgJDL1kQs
+Message-ID: <CANn89iKQ2oVX6pzWxN1rEqHfrkDXkxEgcF6MHW-OiyGc2C=ybw@mail.gmail.com>
+Subject: Re: [PATCH V2 2/4] posix-timers: Initialise timer->it_id in posix_timer_add()
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, Benjamin Segall <bsegall@google.com>, 
+	Eric Dumazet <eric.dumazet@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 20, 2025 at 08:58:38AM +0100, Paolo Abeni wrote:
-> Hi,
-> 
-> On 2/15/25 7:04 AM, Akihiko Odaki wrote:
-> > tun simply advances iov_iter when it needs to pad virtio header,
-> > which leaves the garbage in the buffer as is. This will become
-> > especially problematic when tun starts to allow enabling the hash
-> > reporting feature; even if the feature is enabled, the packet may lack a
-> > hash value and may contain a hole in the virtio header because the
-> > packet arrived before the feature gets enabled or does not contain the
-> > header fields to be hashed. If the hole is not filled with zero, it is
-> > impossible to tell if the packet lacks a hash value.
-> 
-> Should virtio starting sending packets only after feature negotiation?
-> In other words, can the above happen without another bug somewhere else?
-
-
-Not if this is connected with a guest with the standard virtio driver, no.
-The issue is that tun has no concept of feature negotiation,
-and we don't know who uses the vnet header feature, or why.
-
-> I guess the following question is mostly for Jason and Michael: could be
-> possible (/would it make any sense) to use a virtio_net_hdr `flags` bit
-> to explicitly signal the hash fields presence? i.e. making the actual
-> virtio_net_hdr size 'dynamic'.
-
-But it is dynamic - that is why we have TUNSETVNETHDRSZ.
+On Thu, Feb 20, 2025 at 9:12=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
+> wrote:
+>
+> On Wed, Feb 19 2025 at 12:55, Eric Dumazet wrote:
+> > A timer is visible only when both timer->signal and timer->i_id
+> > are set to their final values.
+> >
+> > We can initialize timer->it_id sooner.
+>
+> This changelog tells nothing. What is this fixing, why is it required to
+> initialize this sooner?
 
 
+Just  to make the series more readable and bisectable.
 
-> > In theory, a user of tun can fill the buffer with zero before calling
-> > read() to avoid such a problem, but leaving the garbage in the buffer is
-> > awkward anyway so replace advancing the iterator with writing zeros.
-> > 
-> > A user might have initialized the buffer to some non-zero value,
-> > expecting tun to skip writing it. As this was never a documented
-> > feature, this seems unlikely.
-> > 
-> > The overhead of filling the hole in the header is negligible when the
-> > header size is specified according to the specification as doing so will
-> > not make another cache line dirty under a reasonable assumption. Below
-> > is a proof of this statement:
-> > 
-> > The first 10 bytes of the header is always written and tun also writes
-> > the packet itself immediately after the 
-> > packet unless the packet is
-> 
->  ^^^^^ this possibly should be 'virtio header'. Otherwise the sentence
-> is hard to follow for me.
-> 
-> > empty. This makes a hole between these writes whose size is: sz - 10
-> > where sz is the specified header size.
-> > 
-> > Therefore, we will never make another cache line dirty when:
-> > sz < L1_CACHE_BYTES + 10
-> > where L1_CACHE_BYTES is the cache line size. Assuming
-> > L1_CACHE_BYTES >= 16, this inequation holds when: sz < 26.
-> > 
-> > sz <= 20 according to the current specification so we even have a
-> > margin of 5 bytes in case that the header size grows in a future version
-> > of the specification.
-> 
-> FTR, the upcoming GSO over UDP tunnel support will add other 4 bytes to
-> the header. but that will still fit the given boundary.
-> 
-> /P
+>
+> We can... We also can not ... Aside of that please write changelogs in
+> imperative mood as Documentation asks for.
 
+I do not understand.
+
+I wrote more than 5000 upstream linux patches, you  are trying to
+educate me in 2025 ?
+
+>
+> > Signed-off-by: Eric Dumazet <edumazet@google.com>
+> > ---
+> >  kernel/time/posix-timers.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+> > index 204a351a2fd3..1f73ea955756 100644
+> > --- a/kernel/time/posix-timers.c
+> > +++ b/kernel/time/posix-timers.c
+> > @@ -114,6 +114,7 @@ static int posix_timer_add(struct k_itimer *timer)
+> >
+> >               spin_lock(&hash_lock);
+> >               if (!__posix_timers_find(head, sig, id)) {
+> > +                     timer->it_id =3D (timer_t)id;
+> >                       hlist_add_head_rcu(&timer->t_hash, head);
+> >                       spin_unlock(&hash_lock);
+> >                       return id;
+> > @@ -407,8 +408,7 @@ static int do_timer_create(clockid_t which_clock, s=
+truct sigevent *event,
+> >
+> >       /*
+> >        * Add the timer to the hash table. The timer is not yet valid
+> > -      * because new_timer::it_signal is still NULL. The timer id is al=
+so
+> > -      * not yet visible to user space.
+>
+> Even with this change the timer ID is not yet visible to user space
+> because it has not yet been copied back ....
+>
+
+It is seen in concurrent lookups.
