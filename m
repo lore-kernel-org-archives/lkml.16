@@ -1,173 +1,170 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D426021129C;
-	Fri, 21 Feb 2025 15:27:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DCF212B07;
+	Fri, 21 Feb 2025 15:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740151636; cv=none; b=qGMr3J/UXbBqhIBjZygiYI/J7k4S3YMiImjh9PUNQIMkwGzgcEd58opiUgBJdjcXuAhBoiCrQifu0iIG43kYUlM5dzlv5wA1KWclUmd1AFC8ce/lhcMjRA4gM0H+7kXf7zpvmlFun3LrKFT57jPxfW75DOgHW5G6QCxSXPUeq4o=
+	t=1740151649; cv=none; b=ORk+50aK8IwKc8gM3fO7WAYJ7MZUv1VC1FVaba9hYQLUG4JEDwQx7UHbp1fzOYVTBSPTQXW9cwMjVBD0/7EgA2eDq8FCxyLqKdqGF1WpqYpnAt1H2BHnrEqZY1Eg6BSBxzQlsbiRmv56YGTqUGQI9VRtbiSZNBdGRGkQzFvhQn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740151636; c=relaxed/simple;
-	bh=Sfehn+vxaohcVVAqSihS41naG90uu0O3ieV6HHFFTfg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ttuGl8Pn+ni7AyYi12PG5GTz9aUKcCiPBuv7l19joWXapYerbJTky4QgGJ1rMgkG3NHrCEK7+EeHOtDVEuuqR3RJ865YwEr7H418z01hPPDrQQzXK0JvjUB6+P2TwA/NnF4z9eF/Q38lK9VTsYZ4xu7KPJtUQKhBDMdBSt7vs2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RYhVXM39; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740151649; c=relaxed/simple;
+	bh=5yxGsMRYTXuIQYRwb+D3swc/pR+GWOkx1HET+lS/Qcg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YJD6WRDir83QjAYRabXWP+coes6OVGJdh3RG2r3G1YUJJ3TemO7uTmVZTugRkM7Snu0K8hU5L109XQyHELTqaC8eCyrMHZfCCBXNrKXxBcVI2Gj7WZrR2OD2WkyQwE0djoxiRPBlezjjUMw1/ydoXZInb2Z+A6+WR+iTtLUlS5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fR9/Oyoi; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RYhVXM39"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740151635; x=1771687635;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Sfehn+vxaohcVVAqSihS41naG90uu0O3ieV6HHFFTfg=;
-  b=RYhVXM39dyzhnSJeFNQBw60v7BzEv4dRfQEzXAu1k9uVi9Qpkm/R6miE
-   UmdaSYX6iTjS5bNKCq+6pV7D/08FLEY+lV1xBNUz+iN9gsu+i4NiF0VQF
-   GR+OYJcQONx0EINE8jb4YvdWClKio5f19Lx9Xz7Mxm5UQaFqND81qOgrv
-   8KVAozF2SMzT5j3xlW/M2qojm11suQ69+cR5L4nGpyRyFP+IztnPxJ+/c
-   O/AvQMwna6qoHO2KfR1PBrLOzMFibXWBvmHmU3DcTTjyzLwVal91sqKp9
-   tTI2N53o98tupdDGGHksUbaiki9gYfSJF5TaciyRHGUFcpHdjXyNmG98s
-   g==;
-X-CSE-ConnectionGUID: y7rbXHGLT6iWvay7ACYPUw==
-X-CSE-MsgGUID: /9UuDCOkTY6OJ9OqmEyfUQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11352"; a="51614284"
-X-IronPort-AV: E=Sophos;i="6.13,305,1732608000"; 
-   d="scan'208";a="51614284"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 07:27:14 -0800
-X-CSE-ConnectionGUID: LLjaei35SCi8ziZO34FEIg==
-X-CSE-MsgGUID: naEziUDpSTKMRNtO8rc0Vw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="152589752"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 07:27:06 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tlUvd-0000000Dg3A-1782;
-	Fri, 21 Feb 2025 17:27:01 +0200
-Date: Fri, 21 Feb 2025 17:27:00 +0200
-From: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
-To: Aditya Garg <gargaditya08@live.com>
-Cc: "pmladek@suse.com" <pmladek@suse.com>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>,
-	"linux@rasmusvillemoes.dk" <linux@rasmusvillemoes.dk>,
-	"senozhatsky@chromium.org" <senozhatsky@chromium.org>,
-	"corbet@lwn.net" <corbet@lwn.net>,
-	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-	"mripard@kernel.org" <mripard@kernel.org>,
-	"tzimmermann@suse.de" <tzimmermann@suse.de>,
-	"airlied@gmail.com" <airlied@gmail.com>,
-	"simona@ffwll.ch" <simona@ffwll.ch>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"apw@canonical.com" <apw@canonical.com>,
-	"joe@perches.com" <joe@perches.com>,
-	"dwaipayanray1@gmail.com" <dwaipayanray1@gmail.com>,
-	"lukas.bulwahn@gmail.com" <lukas.bulwahn@gmail.com>,
-	"sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
-	"christian.koenig@amd.com" <christian.koenig@amd.com>,
-	"kekrby@gmail.com" <kekrby@gmail.com>,
-	"admin@kodeit.net" <admin@kodeit.net>,
-	Orlando Chamberlain <orlandoch.dev@gmail.com>,
-	"evepolonium@gmail.com" <evepolonium@gmail.com>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-	Hector Martin <marcan@marcan.st>,
-	"linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-	"asahi@lists.linux.dev" <asahi@lists.linux.dev>,
-	Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>
-Subject: Re: [PATCH v2 2/3] lib/vsprintf: Add support for generic FOURCCs by
- extending %p4cc
-Message-ID: <Z7ibRHb2FS1cTx0O@smile.fi.intel.com>
-References: <716BCB0A-785B-463A-86C2-94BD66D5D22E@live.com>
- <C66F35BB-2ECC-4DB8-8154-DEC5177967ED@live.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fR9/Oyoi"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-38f3913569fso2018412f8f.1;
+        Fri, 21 Feb 2025 07:27:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740151646; x=1740756446; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4lCZ8MAj4Q/VEcZka8A73ItGpOE2Ji1aovZAZl6qhTA=;
+        b=fR9/Oyoi2UYmu7jZrGS/5a2/hT+hEOpRshRP+gYkEiS8EzdD6kGfRHtnM2Pcc3JtMJ
+         Jxizi8rUtX3Zf1ZC/dVnbs89Gd5oAVFuGnDh1C01hQiARjD8LHy+T8FGUnQ5J7oQmZJ+
+         SCPi64NKQ9rLBrz24o3fOEmfGzJ3hs/6o2V6CPSn8qQd8q5VOXczPij382vhm8eLpzvx
+         w+5TMTdUKeGZ0tK1bq1O/7u06tLG9MF16KQyBcU7tTrlyvREEjf2vM2lZlimxzRNTsDE
+         XzvkikiN80HpQr1y/XFarDP4BeyzO5+QqeHDj/ST9+Sb/5lcwAIpGSNX6upkA04ju7Vo
+         NhPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740151646; x=1740756446;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4lCZ8MAj4Q/VEcZka8A73ItGpOE2Ji1aovZAZl6qhTA=;
+        b=FMeHG7qhad+rlONxiWhCQTJBnj//aPf0+kgpGdbgyeH8BDARDyHU0KC/k2BmgaT1tw
+         /GUtwNWiA+MePoS/Mz0TqP1QgXboGMwDRGuTZ6dPJbNxSB2cOBQIaBNxfFaCvs4w+LWE
+         /QGoMVWCanVXpmYbwtBWbRh8pphVoknDJcBp7c/oPuIpCYWFk0wX3ADdeep0Ub1W3p8f
+         Sn08qvbDyrrq17mNt7jnFeCSOMPuI9W0ARZcXIxjZw4wRmgW+olw6uEWtlk0/bZ0wAT/
+         nFXJnV5OpEGbyWa0XWcwc+dlt1bU8niHxNJsemBkKUPqNorhsB/OyTfH6O2D22xUEm9h
+         2M2w==
+X-Forwarded-Encrypted: i=1; AJvYcCVjNhFKb74FkNl4d2EZQAsCA+Jql5QdzHeK72F4JtqbEnGYr4a/ZCST7ZKxBvOJ81ph3sMz6n7X/06Nna54@vger.kernel.org, AJvYcCXdHACOcv8gY/YtjldUtZZZUBpaG+nR7v58HG7MzgnAOGtJmw+HGVhMwVg6gkH7jKS2bFC02epUVA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoL8104NqDImGu2W5l8NQgCvCe+KOFV1aRHVVRrHMSGrpAmOVK
+	lQOMhaCP1T4JuLhhopKh6QsGO6rJ9w3lFSF9odEi2XefUl2TpCu7JWjcyg==
+X-Gm-Gg: ASbGnct0JlxnBW2w2Rv1dHUyH4RYmfuX+QhLYC2YQnQaR/ti3GFpQDDG/UGoUsAtGuO
+	KNcfDIbrfu3vFkpbV/8vF2+d0oOIMM1rxtWYOl3BmyqO7Tpb+2/U8sqp4lSOwcLP07BIf15EV3d
+	9wWMTb9bAlNbGxsCMZ0enQtmZ0DcC9XNoxEcJNpkf0GYNEZ64SrW5TGYFEQmQyzUjt0if+aStBR
+	6Q/bTZQt0kFidgAW/ToA3ih4Q7L8g1q/4mV60nxKYaWFJXEj9PFR9i2cOV63b8kritwZhx3VNht
+	sBBTLzRaA4SLZqkLKpEVx1j56UfmJDlTcWwa
+X-Google-Smtp-Source: AGHT+IGD/aMM2q3Rt2CDkJPFyBfFg5d7nPBarKdfXefG+hE2yGfdQ1oLqoKGdgaTbF12wddYzIBM6Q==
+X-Received: by 2002:a05:6000:1862:b0:38d:b349:2db2 with SMTP id ffacd0b85a97d-38f6f515313mr2830130f8f.22.1740151645193;
+        Fri, 21 Feb 2025 07:27:25 -0800 (PST)
+Received: from [192.168.8.100] ([148.252.141.194])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258ccd3bsm23702128f8f.22.2025.02.21.07.27.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2025 07:27:24 -0800 (PST)
+Message-ID: <b4e6ef48-6b3e-4b62-978c-6e80d3e9218e@gmail.com>
+Date: Fri, 21 Feb 2025 15:28:28 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <C66F35BB-2ECC-4DB8-8154-DEC5177967ED@live.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 2/2] io_uring/io-wq: try to batch multiple free work
+To: Bui Quang Minh <minhquangbui99@gmail.com>, io-uring@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org
+References: <20250221041927.8470-1-minhquangbui99@gmail.com>
+ <20250221041927.8470-3-minhquangbui99@gmail.com>
+ <f34a5715-fae0-406e-a27b-7e94e3113641@gmail.com>
+ <e4be0a96-8e09-4591-96fe-a1d38208875a@gmail.com>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <e4be0a96-8e09-4591-96fe-a1d38208875a@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 20, 2025 at 04:39:23PM +0000, Aditya Garg wrote:
-> From: Hector Martin <marcan@marcan.st>
+On 2/21/25 14:52, Bui Quang Minh wrote:
+> On 2/21/25 19:44, Pavel Begunkov wrote:
+>> On 2/21/25 04:19, Bui Quang Minh wrote:
+>>> Currently, in case we don't use IORING_SETUP_DEFER_TASKRUN, when io
+>>> worker frees work, it needs to add a task work. This creates contention
+>>> on tctx->task_list. With this commit, io work queues free work on a
+>>> local list and batch multiple free work in one call when the number of
+>>> free work in local list exceeds IO_REQ_ALLOC_BATCH.
+>>
+>> I see no relation to IO_REQ_ALLOC_BATCH, that should be
+>> a separate macro.
+>>
+>>> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+>>> ---
+>>>   io_uring/io-wq.c    | 62 +++++++++++++++++++++++++++++++++++++++++++--
+>>>   io_uring/io-wq.h    |  4 ++-
+>>>   io_uring/io_uring.c | 23 ++++++++++++++---
+>>>   io_uring/io_uring.h |  6 ++++-
+>>>   4 files changed, 87 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/io_uring/io-wq.c b/io_uring/io-wq.c
+>>> index 5d0928f37471..096711707db9 100644
+>>> --- a/io_uring/io-wq.c
+>>> +++ b/io_uring/io-wq.c
+>> ...
+>>> @@ -601,7 +622,41 @@ static void io_worker_handle_work(struct io_wq_acct *acct,
+>>>               wq->do_work(work);
+>>>               io_assign_current_work(worker, NULL);
+>>>   -            linked = wq->free_work(work);
+>>> +            /*
+>>> +             * All requests in free list must have the same
+>>> +             * io_ring_ctx.
+>>> +             */
+>>> +            if (last_added_ctx && last_added_ctx != req->ctx) {
+>>> +                flush_req_free_list(&free_list, tail);
+>>> +                tail = NULL;
+>>> +                last_added_ctx = NULL;
+>>> +                free_req = 0;
+>>> +            }
+>>> +
+>>> +            /*
+>>> +             * Try to batch free work when
+>>> +             * !IORING_SETUP_DEFER_TASKRUN to reduce contention
+>>> +             * on tctx->task_list.
+>>> +             */
+>>> +            if (req->ctx->flags & IORING_SETUP_DEFER_TASKRUN)
+>>> +                linked = wq->free_work(work, NULL, NULL);
+>>> +            else
+>>> +                linked = wq->free_work(work, &free_list, &did_free);
+>>
+>> The problem here is that iowq is blocking and hence you lock up resources
+>> of already completed request for who knows how long. In case of unbound
+>> requests (see IO_WQ_ACCT_UNBOUND) it's indefinite, and it's absolutely
+>> cannot be used without some kind of a timer. But even in case of bound
+>> work, it can be pretty long.
+> That's a good point, I've overlooked the fact that work handler might block indefinitely.
+>> Maybe, for bound requests it can target N like here, but read jiffies
+>> in between each request and flush if it has been too long. So in worst
+>> case the total delay is the last req execution time + DT. But even then
+>> it feels wrong, especially with filesystems sometimes not even
+>> honouring NOWAIT.
+>>
+>> The question is, why do you force it into the worker pool with the
+>> IOSQE_ASYNC flag? It's generally not recommended, and the name of the
+>> flag is confusing as it should've been more like "WORKER_OFFLOAD".
 > 
-> %p4cc is designed for DRM/V4L2 FOURCCs with their specific quirks, but
-> it's useful to be able to print generic 4-character codes formatted as
-> an integer. Extend it to add format specifiers for printing generic
-> 32-bit FOURCCs with various endian semantics:
 > 
-> %p4ch   Host-endian
-> %p4cl	Little-endian
-> %p4cb	Big-endian
-> %p4cr	Reverse-endian
-> 
-> The endianness determines how bytes are interpreted as a u32, and the
-> FOURCC is then always printed MSByte-first (this is the opposite of
-> V4L/DRM FOURCCs). This covers most practical cases, e.g. %p4cr would
-> allow printing LSByte-first FOURCCs stored in host endian order
-> (other than the hex form being in character order, not the integer
-> value).
+> I launched more workers to parallel the work handler, but as you said, it seems like an incorrect use case.
 
-...
+Not as much incorrect as generally inefficient and not recommended,
+especially not recommended before trying it without the flag. People
+often fall into the trap of "Oh, it's _async_, surely I have to set it",
+really unfortunate naming.
 
->  	orig = get_unaligned(fourcc);
-> -	val = orig & ~BIT(31);
-> +	switch (fmt[2]) {
-> +	case 'h':
-> +		val = orig;
-> +		break;
-> +	case 'r':
-> +		orig = swab32(orig);
-> +		val = orig;
-> +		break;
-> +	case 'l':
+> However, I think the request free seems heavy, we need to create a task work so that we can hold the uring_lock to queue the request to ctx->submit_state->compl_reqs. Let me play around more to see if I can find an optimization for this.
 
-> +		orig = le32_to_cpu(orig);
-> +		val = orig;
-> +		break;
-> +	case 'b':
-> +		orig = be32_to_cpu(orig);
+That's because it's a slow fallback path for cases that can't do
+async for one reason or another, and ideally we wouldn't have it
+at all. In reality it's used more than I'd wish for, but it's
+still a path we don't heavily optimise.
 
-I do not see that orig is a union of different types. Have you run sparse?
-It will definitely complain on this code.
-
-> +		val = orig;
-> +		break;
-> +	case 'c':
-> +		/* Pixel formats are printed LSB-first */
-> +		val = swab32(orig & ~BIT(31));
-> +		pixel_fmt = true;
-> +		break;
-> +	default:
-> +		return error_string(buf, end, "(%p4?)", spec);
-> +	}
-
-...
-
-> -	*p++ = ' ';
-> -	strcpy(p, orig & BIT(31) ? "big-endian" : "little-endian");
-> -	p += strlen(p);
-
-> +	if (pixel_fmt) {
-
-Technically we can avoid a boolean by checking fmt[2] again here, but I'm okay
-with a temporary holder.
-
-> +		*p++ = ' ';
-> +		strcpy(p, orig & BIT(31) ? "big-endian" : "little-endian");
-> +		p += strlen(p);
-> +	}
+Btw, if you're really spamming iowq threads, I'm surprised that's
+the only hotspot you have. There should be some contention for
+CQE posting (->completion_lock), and probably in the iowq queue
+locking, and so on.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Pavel Begunkov
 
