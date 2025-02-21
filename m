@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660DF204582;
-	Fri, 21 Feb 2025 09:30:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DDD204F80;
+	Fri, 21 Feb 2025 09:30:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740130207; cv=none; b=fzipwXiinSrknUREJt63bhh6Qv6t+OJ9RzFhQ5+nIkxkhd/BxaWkX3CxYPNIzAaP/HIyWvGmxIM32Gqw3ryhVmPrxCQERiSxSiXHpNqcyNG0BTMhskrU6C6uaTknY9gsdGDsfvTMMqlUQf5ZovomTwWsQ/8mAiI5RS5tEH73RJY=
+	t=1740130211; cv=none; b=WM3V0qmJ5Cd+8Vn6fFFQ5pj2i4DIe4cJ8Z6bXR1Bvde1eQlaDDd417xNFXLAYH1gk084q/MipjCUWVMzXOjX0b6OfK8iJ8o7cmtxhRNAputbD4uUtVOsK15kTRmmqqlrO3jMFizLHWgFmArMhDO0ts3DNncjrSI2Ll+skHX3/m0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740130207; c=relaxed/simple;
-	bh=/TRTM++2Nyi4h1NYSlRhaUan1RJwlkjtiN/tOj66uw4=;
+	s=arc-20240116; t=1740130211; c=relaxed/simple;
+	bh=phdfQPrKfgApIH7mf/yVXltPVQWBUOKvkJ/2k3qSj5Y=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=MjgWYNoWPFGW73GxCNPLT6bYtNnEt1wJVHSAmDcRYZbcVu2e6wie37O5feiIN1YBIBPny6UpCuGUi365oEJtaFx0sctjqrwlmWu4TS4P8dBsZ+Xq+V0clZRfUiLUqlepXz+Sn1NvKvsNrpUKGXvIKW5scc/ATSVC59GEX28S1pA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kTRURrWn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=WrOsFh74F2UeGouK2eznIiodLRzDJpzG23mHF/ZIa47YZCHuRFddG7K9JE6kf2FcfB6/jqNCPaJdxs64Z0nhVMMo/hF1XBw7GsLoi5XNaXRN95TiVO/1CYTcR6tzm/mrtpJE+fJxKd3V+Qjg6EXHSbbknakMw+Tuo3K4rKd4zTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ClMGxG0S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kTRURrWn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A323C4CED6;
-	Fri, 21 Feb 2025 09:30:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ClMGxG0S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97E1AC4CEDD;
+	Fri, 21 Feb 2025 09:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740130205;
-	bh=/TRTM++2Nyi4h1NYSlRhaUan1RJwlkjtiN/tOj66uw4=;
+	s=k20201202; t=1740130210;
+	bh=phdfQPrKfgApIH7mf/yVXltPVQWBUOKvkJ/2k3qSj5Y=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=kTRURrWnSjFYCD1pDgAIBiIEcy24OLXS31VbVpe2SkI4VbXUJpa6TT6Vq2ikkiVNp
-	 37/9GBN92d+5i+Kv1mLDqh7RTv+VvyCNxejbL/gxD923mZGCHEXSvYO3WxDJvXPBXG
-	 bfQJ3CCyYPNtWkO73zklXEeBGguzNIfYP8c9Q6drfEZydbaex/2XjOd/gA/s+nWKFJ
-	 WruVTnkiR7jmrwqJLAyA3/GtvJgz3JUpx0L7rSXmSmyhJOu0YUbAfUUQ+e2Cq2WpM3
-	 mOYiwMIy4sSryCPac8mnRhSy1+SUN0PqHKkTl6g3pDLZQsYDOc106NFDkx/iYyOWXC
-	 D+8mbTF57lEFQ==
+	b=ClMGxG0SZ6TY8Awe+wewVPlhaplwi16VlAcwbulj5LZALHg3CKfEqtPtcAbSYvLCk
+	 tlzFMwVgt/Y4CxNbYKF/ZsVh/Lx+MfUrfZZYK9WcULHszA0iefufHEBaK7vRUeciOm
+	 gK+h3WolRo+L0Aq0/abEkxKcoLV2FYq0lIzdTqC6sVVSTtjMqMAGJjljkLbIS3CKWh
+	 lywyzcWJbIjr9+yrzjs03Mr5/m+7xy31sogRgoKvhGNtm7TJ41AbAwfHTb4soEkdOx
+	 wYUfa+oVyr2kIJz/gh33+L7hMBZUPOSDuykYmH7VTElu0u2ESyvbOcSWcm0o7V2mkG
+	 QaXFwRBePGkyw==
 From: Andreas Hindborg <a.hindborg@kernel.org>
 To: "Benno Lossin" <benno.lossin@proton.me>
 Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Anna-Maria Behnsen"
@@ -39,18 +39,17 @@ Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Anna-Maria Behnsen"
  Cui" <2407018371@qq.com>,  "Dirk Behme" <dirk.behme@gmail.com>,  "Daniel
  Almeida" <daniel.almeida@collabora.com>,  "Tamir Duberstein"
  <tamird@gmail.com>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>, "Timothy G."
- <c6qchwbke@relay.firefox.com>
-Subject: Re: [PATCH v8 12/14] rust: hrtimer: add `HrTimerMode`
-In-Reply-To: <a87ef54e-9a09-4cf6-bfe8-4bb98850cdda@proton.me> (Benno Lossin's
-	message of "Thu, 20 Feb 2025 23:23:55 +0000")
+  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 10/14] rust: alloc: add `Box::into_pin`
+In-Reply-To: <2a7283fb-4c93-42c4-a895-36a6e3d1935d@proton.me> (Benno Lossin's
+	message of "Thu, 20 Feb 2025 23:20:03 +0000")
 References: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
-	<20250218-hrtimer-v3-v6-12-rc2-v8-12-48dedb015eb3@kernel.org>
-	<ysjzL6zVfMAm7OLlJMCtBkEnfdFAS2VeO4PYUFzUxcRZvKNxuRlLWPA29gJQOWa8QaH-S5K1WElhtuwWMBF4EA==@protonmail.internalid>
-	<a87ef54e-9a09-4cf6-bfe8-4bb98850cdda@proton.me>
+	<20250218-hrtimer-v3-v6-12-rc2-v8-10-48dedb015eb3@kernel.org>
+	<TykbJwFqJWXaHRmGzNQOcREWm8Avs7MNKSkQUNb93HmcQ5GhrTOvsxN-mkgHi1HtuFyemvajGA2qvFoDhSe4ag==@protonmail.internalid>
+	<2a7283fb-4c93-42c4-a895-36a6e3d1935d@proton.me>
 User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Fri, 21 Feb 2025 10:17:40 +0100
-Message-ID: <87mseffyh7.fsf@kernel.org>
+Date: Fri, 21 Feb 2025 10:10:40 +0100
+Message-ID: <87seo7fysv.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,104 +61,21 @@ Content-Type: text/plain
 "Benno Lossin" <benno.lossin@proton.me> writes:
 
 > On 18.02.25 14:27, Andreas Hindborg wrote:
->> +/// Operational mode of [`HrTimer`].
->> +#[derive(Clone, Copy)]
->> +pub enum HrTimerMode {
->> +    /// Timer expires at the given expiration time.
->> +    Absolute,
->> +    /// Timer expires after the given expiration time interpreted as a duration from now.
->> +    Relative,
->> +    /// Timer does not move between CPU cores.
->> +    Pinned,
->> +    /// Timer handler is executed in soft irq context.
->> +    Soft,
->> +    /// Timer handler is executed in hard irq context.
->> +    Hard,
->> +    /// Timer expires at the given expiration time.
->> +    /// Timer does not move between CPU cores.
->> +    AbsolutePinned,
->> +    /// Timer expires after the given expiration time interpreted as a duration from now.
->> +    /// Timer does not move between CPU cores.
->> +    RelativePinned,
->> +    /// Timer expires at the given expiration time.
->> +    /// Timer handler is executed in soft irq context.
->> +    AbsoluteSoft,
->> +    /// Timer expires after the given expiration time interpreted as a duration from now.
->> +    /// Timer handler is executed in soft irq context.
->> +    RelativeSoft,
->> +    /// Timer expires at the given expiration time.
->> +    /// Timer does not move between CPU cores.
->> +    /// Timer handler is executed in soft irq context.
->> +    AbsolutePinnedSoft,
->> +    /// Timer expires after the given expiration time interpreted as a duration from now.
->> +    /// Timer does not move between CPU cores.
->> +    /// Timer handler is executed in soft irq context.
->> +    RelativePinnedSoft,
->> +    /// Timer expires at the given expiration time.
->> +    /// Timer handler is executed in hard irq context.
->> +    AbsoluteHard,
->> +    /// Timer expires after the given expiration time interpreted as a duration from now.
->> +    /// Timer handler is executed in hard irq context.
->> +    RelativeHard,
->> +    /// Timer expires at the given expiration time.
->> +    /// Timer does not move between CPU cores.
->> +    /// Timer handler is executed in hard irq context.
->> +    AbsolutePinnedHard,
->> +    /// Timer expires after the given expiration time interpreted as a duration from now.
->> +    /// Timer does not move between CPU cores.
->> +    /// Timer handler is executed in hard irq context.
->> +    RelativePinnedHard,
->> +}
+>> Add an associated function to convert a `Box<T>` into a `Pin<Box<T>>`.
 >
-> At some point we probably want to move this to bitfields, or do you
-> think it's better to keep it like this?
+> Why don't you use `into()` directly where you need it? Do you want the
+> function call to be more descriptive?
+> (To be clear, I'm not against the addition, just wanting to check if our
+> motivation is the same)
 
-Yes, eventually the would transition. The main difficulty is that not
-all flag combinations are legal, and the zero value is also a flag.
-There was some promising work being shared on Zulip for this [1], but I
-don't think it is completed yet. Added Timothy to CC.
+Yes, I prefer the explicit name in a line like this:
 
-[1] https://rust-for-linux.zulipchat.com/#narrow/channel/291565-Help/topic/Best.20way.20to.20handle.20enum.2Fflags.20situation
-
->> +
->> +impl From<HrTimerMode> for bindings::hrtimer_mode {
->> +    fn from(value: HrTimerMode) -> Self {
->> +        use bindings::*;
->> +        match value {
->> +            HrTimerMode::Absolute => hrtimer_mode_HRTIMER_MODE_ABS,
->> +            HrTimerMode::Relative => hrtimer_mode_HRTIMER_MODE_REL,
->> +            HrTimerMode::Pinned => hrtimer_mode_HRTIMER_MODE_PINNED,
->> +            HrTimerMode::Soft => hrtimer_mode_HRTIMER_MODE_SOFT,
->> +            HrTimerMode::Hard => hrtimer_mode_HRTIMER_MODE_HARD,
->> +            HrTimerMode::AbsolutePinned => hrtimer_mode_HRTIMER_MODE_ABS_PINNED,
->> +            HrTimerMode::RelativePinned => hrtimer_mode_HRTIMER_MODE_REL_PINNED,
->> +            HrTimerMode::AbsoluteSoft => hrtimer_mode_HRTIMER_MODE_ABS_SOFT,
->> +            HrTimerMode::RelativeSoft => hrtimer_mode_HRTIMER_MODE_REL_SOFT,
->> +            HrTimerMode::AbsolutePinnedSoft => hrtimer_mode_HRTIMER_MODE_ABS_PINNED_SOFT,
->> +            HrTimerMode::RelativePinnedSoft => hrtimer_mode_HRTIMER_MODE_REL_PINNED_SOFT,
->> +            HrTimerMode::AbsoluteHard => hrtimer_mode_HRTIMER_MODE_ABS_HARD,
->> +            HrTimerMode::RelativeHard => hrtimer_mode_HRTIMER_MODE_REL_HARD,
->> +            HrTimerMode::AbsolutePinnedHard => hrtimer_mode_HRTIMER_MODE_ABS_PINNED_HARD,
->> +            HrTimerMode::RelativePinnedHard => hrtimer_mode_HRTIMER_MODE_REL_PINNED_HARD,
->> +        }
->> +    }
->> +}
->> +
->> +impl From<HrTimerMode> for u64 {
->> +    fn from(value: HrTimerMode) -> Self {
->> +        Into::<bindings::hrtimer_mode>::into(value) as u64
->> +    }
->> +}
->
-> Hmm do drivers really need these impls? If not, then you could also just
-> have a private function that does the conversion and use it only in the
-> abstraction layer.
-
-Similar to the other impls you commented on, I can move them private. I
-would prefer using `From` rather than some other function.
+        // SAFETY: We called `Box::into_raw` when we queued the timer.
+        let tbox = ManuallyDrop::new(Box::into_pin(unsafe { Box::<T, A>::from_raw(data_ptr) }));
 
 
 Best regards,
 Andreas Hindborg
+
 
 
