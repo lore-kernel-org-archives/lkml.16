@@ -1,95 +1,170 @@
-Received: from s2.avantea.pl (s2.avantea.pl [46.242.128.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BEF21F12EC;
-	Fri, 21 Feb 2025 16:40:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.242.128.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C433E20012D;
+	Fri, 21 Feb 2025 16:40:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740156037; cv=none; b=XSj3gVPZJ3q1S7DBYxULw1KZWgqc7XucTiQljOgYgqPRM84Xl/Y+QPtMNnaSH8BpfdFUePHURjNfntAxK67y1rgRkxF8Jqzjh8A81pBJ4jmOI4ODaCgtJK7j+vjVpWLua7ZlqM6h5D+1qSmT/bao7q/bafrwxjmSHMIJZJxoTyY=
+	t=1740156045; cv=none; b=eTY2c2h0h4g1R3s7hB7gLxF3Rc4MaxKwq6T3HY21x2ZUdjliZaC/FwiK5AYCCAWr1mGtDvfdvLC6EAQZC/fxEizGKs1UilZl+5lb1NvHGc2ZiKKuCgoG3qoXZQ/oF+M7nR/Fmt41xBb7TbyV/lBEjWuWEJRm0dFI16g9eAJII4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740156037; c=relaxed/simple;
-	bh=ZVmiymIAhMQOMLZ34be0QbNLgSkp+U56bA+I1slqbnI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=hSFAAzEBh4mMa+IVU+IncdZGc/asjs0a83G7mfmMp3lsky0b5BeGV5tDt+6S5gVOhLX8YnDVf9890io2m6QRu9QZOh1hLUSrFz9391Y+k4/K1G30DYgmltCbuu2ouVcUY2ynyXPuyTwriR24hgETuOGZhLA50CRefINbuP5ehYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=szczodrzynski.pl; spf=pass smtp.mailfrom=szczodrzynski.pl; dkim=pass (2048-bit key) header.d=szczodrzynski.pl header.i=@szczodrzynski.pl header.b=2hls+aUo; arc=none smtp.client-ip=46.242.128.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=szczodrzynski.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szczodrzynski.pl
+	s=arc-20240116; t=1740156045; c=relaxed/simple;
+	bh=GpoYUbvMHeDFXWzT7i5jYtr05xdjDSBLMsc7Xba85xU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jNisjRC02W3D5BN8KE1kDpF8gT+gKt1h6ziF+xw48HjH9AUZRDLOudV3Z7XnD+dzJQdEyBQPEmDFJ/Gn9Nr/SPjC2XtVAA7s+mIgum/o7Ss0RSYR870C4gnBWui39Cp8Rg1jyQl/4SOhIjS0Cwv9sE43FpGGDPMEpK/qV6JwmGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O6+FH+4N; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=szczodrzynski.pl header.i=@szczodrzynski.pl header.b="2hls+aUo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=szczodrzynski.pl; s=x; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=7RHCIXkAEB3Q6gvisTKmVhU8q9lDZL30dJeI5tINmhs=; b=2hls+aUoDtpBz0zvI2ZI+E++3Y
-	2siSdOmW4PBTuCYqdXDVDUjQQzkZolBRiM/lcNIyuEBi3qoke0fXe8kGHUj0EXivc5mMo90iPZlOj
-	UugrMUSaZD6WPVVUXYBxfZ8qRsQpzkHGvN6lGAQVlprOSt+fsD+ZFLtNob53O7VRou3OqBDqpToaD
-	O3Lmfdm+LI+F2GigjHqX68zctIEpDRVm+PgNmysmtiegJsoUH25nBghgwpD2+0aKgU5q7WPMf0xpv
-	OLkrjOlqMvbx5EFFJlFxp5sAIQKRbDi1NJXVyvPkA9JrUsf4gM3A21nFS/uNLty+KLTvVlBrRC7mA
-	SXhLlq+g==;
-Received: from [62.171.184.96] (helo=buildhost.contaboserver.net)
-	by s2.avantea.pl with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96-58-g4e9ed49f8)
-	(envelope-from <kuba@szczodrzynski.pl>)
-	id 1tlVit-00AOLX-29;
-	Fri, 21 Feb 2025 17:17:55 +0100
-From: =?UTF-8?q?Kuba=20Szczodrzy=C5=84ski?= <kuba@szczodrzynski.pl>
-To: Maxime Ripard <mripard@kernel.org>,
-	Samuel Holland <samuel@sholland.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH 0/5] drm/sun4i: Support LVDS on D1s/T113 combo D-PHY
-Date: Fri, 21 Feb 2025 17:17:46 +0100
-Message-Id: <20250221161751.1278049-1-kuba@szczodrzynski.pl>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O6+FH+4N"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2fc0bd358ccso4808737a91.2;
+        Fri, 21 Feb 2025 08:40:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740156043; x=1740760843; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8oriecgGQRM7a6Kxdnk4S3T7p3y/bp+RUK8BxU8K1jc=;
+        b=O6+FH+4NeKccMJ0DhZuEJcgWnNMwpuX8FW6xTsRSEIv9lw9s1988+URs2JAYVnRp2U
+         2sr9FIJ8+TgFZi0kqsB+FZa9IjoOfZz/03BYDbBaO0oF3tkMlsDVsXrS+yKfLR2Wb3O5
+         yw9pAws20WXzhzV/NCfQJhEL5ziEbQQP7hg3T3sDyxisDZgSjS3IVUqoh8pc/Nsv0KrL
+         2iArRbhvW4wv7M6OxM429flDzJIYl/WLKI8LnXtXQV5vY5Wtvjsxm43vYTbrgHJ6Ig5G
+         9A5WPUQrNPIBxokj/pwPuhij1v45uCtOY+zIYb+ckjJvbpZkVQZZTOj1HCsew88kOT4G
+         7ytQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740156043; x=1740760843;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8oriecgGQRM7a6Kxdnk4S3T7p3y/bp+RUK8BxU8K1jc=;
+        b=RmTCdeysVENG66KkPxYuOfnOs5LkgKpZn+ucIDLzwTqW60cAu0ChPLvKOIHBDw0qNr
+         +C/CcYCGG5IvlIzx/MLZv5Tn6YvAaO2MQZhXSiVbTioPeXNl/Ej4IAxVD5vJM9jCqDWw
+         SOGHtx+aEIoVDBTbbfEHfg8Kv0uIj9E6oID4OwB4jlVUJNk6gJkpz+BKAFW3gQ4PIml+
+         oiEPfxr6yds8noYJxas+LMijJiFdTob/n1EfQ2E1AEwuZGpXuFjwJH1OcPf3BmiFvc/P
+         VFJijOGwtE5AlpmwoQiwObONn64DvWEfXGsTepEaQXuQ25XdNyySSk0D7lXpimWeqnGk
+         9MNw==
+X-Forwarded-Encrypted: i=1; AJvYcCW9uCFdFY5j4Euo8O/eiamjvwuMx+xzd76JOPtWXKNgeCDEVs5lUXnr4EsAO4LSzd7yb+l7xwgdWyx1aBW6@vger.kernel.org, AJvYcCWJv71pT9EYQS51wno/Mb2bhit5vlwRSfzeJq9Id/7XrtvdY6D30k+Ev+2e77bDsWRH4/3jB3yyjN6O@vger.kernel.org, AJvYcCXBLYCxkM2PN5VtKPBuoDCpnpk5ssVixyvfYPYnt6q6X1U0GO0hpl0mZOEeQkUqehVtKAxr+Oz3VOy8JQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJYyFU4CaZujAkn6heObGv5hynbxCoxGNwi25c7HoKVeOS/ZWL
+	kQMPYTECnGFQctqADwprhjTX19zk0lHRglL2vaOPHVrkwhov5UXi7OZuERT7swQXU/6pMh3kGnf
+	jprO9YvOklyzOpCfzJeSNHGf+AMo=
+X-Gm-Gg: ASbGncvTOu3Pm9jqj6cDu3wqft9OA6hCJrFPio7Q8Ldk9PbPl/ERJA7tLE0Vz9KF198
+	P5zfsVvUafxWnwQYSsOg0ofMK5Cf9vYTW3gmVNzFXZ2vnF4Q1y2k7AF1iVq5FoqqREMAjid2e3N
+	XwuU+qAA==
+X-Google-Smtp-Source: AGHT+IE5DwaJf4Z30vTQF7YhDIZiPDJYIZdu3bh2rwyOO8cxVmUaTU1ujj+ntqMidNIo7C+7G9AHNXs0n4irABzLme4=
+X-Received: by 2002:a17:90b:3ec6:b0:2ee:ab11:fab2 with SMTP id
+ 98e67ed59e1d1-2fce7b083a3mr5328015a91.22.1740156042924; Fri, 21 Feb 2025
+ 08:40:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Id: kuba@szczodrzynski.pl
+References: <20250120092146.471951-1-sergio.paracuellos@gmail.com>
+ <CAMhs-H-VevC+_=HxhMU6-at0bKut_JqdgO7j2detuB4s8R_QFQ@mail.gmail.com>
+ <Z7iHorlRgtsi1LOo@alpha.franken.de> <CAMhs-H-fcWU-rz_3FeAuRe0xdCMmvffX2zrZwwmt=8RYpY4Lyg@mail.gmail.com>
+ <Z7idguBa2bxZRoxX@alpha.franken.de>
+In-Reply-To: <Z7idguBa2bxZRoxX@alpha.franken.de>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date: Fri, 21 Feb 2025 17:40:34 +0100
+X-Gm-Features: AWEUYZmBhqj8-3tVa95inuQXfZp89XjOlNWgufDeJ2KSqTBDe4ACRkfogOXIoD0
+Message-ID: <CAMhs-H91Pv4bygmL2jL0=swn-wHT0mRYGaYO6Hjm5O-xmmrJ0w@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] mips: dts: ralink: update system controller nodes
+ and its consumers
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: linux-clk@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com, 
+	p.zabel@pengutronix.de, linux-mips@vger.kernel.org, 
+	devicetree@vger.kernel.org, yangshiji66@outlook.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Some Allwinner chips (notably the D1s/T113 and the A100) have a "combo
-MIPI DSI D-PHY" which is required when using single-link LVDS0. The same
-PD0..PD9 pins are used for either DSI or LVDS.
+On Fri, Feb 21, 2025 at 4:37=E2=80=AFPM Thomas Bogendoerfer
+<tsbogend@alpha.franken.de> wrote:
+>
+> On Fri, Feb 21, 2025 at 03:50:09PM +0100, Sergio Paracuellos wrote:
+> > Hi Thomas,
+> >
+> > On Fri, Feb 21, 2025 at 3:05=E2=80=AFPM Thomas Bogendoerfer
+> > <tsbogend@alpha.franken.de> wrote:
+> > >
+> > > On Fri, Feb 21, 2025 at 11:48:34AM +0100, Sergio Paracuellos wrote:
+> > > > Hi Thomas,
+> > > >
+> > > > El El lun, 20 ene 2025 a las 10:21, Sergio Paracuellos <
+> > > > sergio.paracuellos@gmail.com> escribi=C3=B3:
+> > > >
+> > > > > Hi all!
+> > > > >
+> > > > > Ralinks SoCs have a system controller node which serves as clock =
+and reset
+> > > > > providers for the rest of the world. This patch series introduces=
+ clock
+> > > > > definitions for these SoCs. The clocks are registered in the driv=
+er using
+> > > > > a bunch of arrays in specific order so these definitions represen=
+t the
+> > > > > assigned
+> > > > > identifier that is used when this happens so client nodes can eas=
+ily use it
+> > > > > to specify the clock which they consume without the need of check=
+ing
+> > > > > driver code.
+> > > > >
+> > > > > DTS files which are currently on tree are not matching system con=
+troller
+> > > > > bindings. So all of them are updated to properly match them.
+> > > > >
+> > > > > I'd like this series to go through kernel mips git tree if possib=
+le.
+> > > > >
+> > > > > Thanks in advance for your time.
+> > > > >
+> > > > > Changes in v3:
+> > > > > - Address Krzysztof comments in v2 (Thanks!):
+> > > > >   + Drop reset include file since what it was defined there were =
+hardware
+> > > > >     constants and no binding related indexes at all.
+> > > > >   + Update patches for not referring to this reset removed file.
+> > > >
+> > > >
+> > > > I was expecting this series going through the mips tree.
+> > >
+> > >   DTC     arch/mips/boot/dts/ralink/rt3883_eval.dtb
+> > > Error: /local/tbogendoerfer/korg/linux/arch/mips/boot/dts/ralink/rt38=
+83.dtsi:2.1-9 syntax error
+> > > FATAL ERROR: Unable to parse input tree
+> >
+> > Weird, it looks like dtc is not happy with the "include" line with new
+> > definitions? Are you getting this only with rt3883? Since all the
+> > patches are almost the same and I compile tested this before sending..
+> > Something got corrupted? I don't have my laptop now to check but I
+> > will recheck again on monday.
+>
+> rt2880_eval.dts:/include/ "rt2880.dtsi"
+> rt3052_eval.dts:#include "rt3050.dtsi"
+> rt3883_eval.dts:/include/ "rt3883.dtsi"
+>
+> rt3052 works, rt2880 and rt3883 don't.
+>
+> changing the /include/ to #include makes them compile.
 
-Other than having to use the combo D-PHY, LVDS output is configured in
-the same way as on older chips.
+Mmmm...does this mean that this was broken before my patches? Since I
+have not touched the files that need the replacement. So I probably
+checked in the openwrt tree and missed this totally. Sorry for that.
+How do you want to handle this? Should I send v4 including these
+replacements? Or do you prefer to handle them directly?
 
-This series enables the sun6i MIPI D-PHY to also work in LVDS mode. It
-is then configured by the LCD TCON, which allows connecting a
-single-link LVDS display panel.
+Thanks again and sorry for the inconvenience.
 
-Kuba Szczodrzyński (5):
-  phy: allwinner: phy-sun6i-mipi-dphy: Support LVDS in combo D-PHY
-  drm/sun4i: Support LVDS using MIPI DSI combo D-PHY
-  drm/sun4i: Enable LVDS output on sun20i D1s/T113
-  riscv: dts: allwinner: d1s-t113: Add D-PHY to TCON LCD0
-  riscv: dts: allwinner: d1s-t113: Add LVDS0 pins
-
- .../boot/dts/allwinner/sunxi-d1s-t113.dtsi    | 10 +++
- drivers/gpu/drm/sun4i/sun4i_tcon.c            | 40 ++++++++++++
- drivers/gpu/drm/sun4i/sun4i_tcon.h            |  6 ++
- drivers/phy/allwinner/phy-sun6i-mipi-dphy.c   | 65 ++++++++++++++++++-
- 4 files changed, 119 insertions(+), 2 deletions(-)
-
--- 
-2.25.1
-
+Best regards,
+     Sergio Paracuellos
+>
+> Thomas.
+>
+> --
+> Crap can work. Given enough thrust pigs will fly, but it's not necessaril=
+y a
+> good idea.                                                [ RFC1925, 2.3 =
+]
