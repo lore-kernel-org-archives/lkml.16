@@ -1,482 +1,196 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2044.outbound.protection.outlook.com [40.107.21.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F722036E1;
-	Fri, 21 Feb 2025 09:21:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740129693; cv=none; b=rPLx5CCmw8ib7PG2YbzQaA+gAePilRMChWd3YvRqZyqDqtGsitRbFeQkV6fNF3ih8PXNDmbJRE+ls1u3XbxBGJjPTkykdNr4GvDNjkxrDCIxERgXjFDTQLI5nIutk+mIwTPkhBGchXgfc1/cIriaKzRqBL3vurkL5yg5U3hb4TI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740129693; c=relaxed/simple;
-	bh=t3qwrzZFlDjIRimQdOyiBMhUiEo7R93VKLhh9XDTJdg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=jwtpAFcxbs4x3xf0jzedSF8dwzblfAKnt5PmS2+rfsfj+4Uw9asdLN9dC+xVTA4+doCcevAHBmbSk9NBkfX18v5+fImnF3YzKAinuLmMil5LEJSf1Wd1iZzuMlJnms32gGdAMoWnkFIeI6LIE2+4VLMyDJc+tUfFkBuHHXHfr7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=F6w0VYRw; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB28200BBF;
+	Fri, 21 Feb 2025 09:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740129759; cv=fail; b=TXU+GNFHDCdqGJLbai3FRhvjDyCao/16nJjKQBx7YBO4MSmr8yddpNuRF7/J9WlzPN3WEX3C+MHdkey7xmID+QKsbWQcunjI/pN5sDIg5vdpMwyy9bmJyd9K8v9FCtjMzphyul1NAshOTmNze7Nst2MH3EsvyFTRMz4cWNRIW0U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740129759; c=relaxed/simple;
+	bh=0r/xeRBuHTF1/L8g1xGtBwZKfEvG28aCm6Q2Pgwgc3I=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=msp0sUtFKN0YxsO7A/6dRtdOPs0nEuDWOIxrgvHRVgobvagaQAzvkxgnNw3Dm0Af6hpUpfMCV6mxDMX90/jh2LkgDLCQbZg7C1qASicVU9/KJZdnPIKoZic6zDBwoCJbg3+zKEcYDi7J4r7Dhqe/qlKjJVU0WG0wc2T/xyrycgg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=W4vbagJx; arc=fail smtp.client-ip=40.107.21.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="F6w0VYRw"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51L5G5mK012259;
-	Fri, 21 Feb 2025 09:21:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Yb7+RoED5j1TTHbitP0RtHtx7iT5AqvLLEqDMScmBT0=; b=F6w0VYRwtde9HgDg
-	LjXp8ScVzsNFj6iDDwsxrScKd3Cl866O6WjWrOgaiHyGaXoXnuMSkcx3kpbw33lD
-	9lsf7KwoFzkmdqzYdlk6+NnX00bYEoNKX6wjTT4hF8zD+qynXhQepUCfrAJEAAQO
-	Bod9VFcDrNEIwBNuluOlPNWstxKDP6iz1/86aT4B0dWKBqTzlZwVZl/lLFQlq1Ha
-	vx6nBoXN7ETrQisYtvrv8X144dgN0sybRgKj+Mj7mM0q6wMJE3uMDxm8TYUTf9MQ
-	9oQx/n3XV8KALooTBTFUGESteUPrZRvLmeaYnJmKegg238vWeMq3gq4H2sXM2zel
-	cgzZkQ==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy1sft2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Feb 2025 09:21:22 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51L9LK0w002687
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Feb 2025 09:21:20 GMT
-Received: from hu-tdas-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 21 Feb 2025 01:21:15 -0800
-From: Taniya Das <quic_tdas@quicinc.com>
-Date: Fri, 21 Feb 2025 14:50:20 +0530
-Subject: [PATCH v5 09/10] clk: qcom: videocc-qcs615: Add QCS615 video clock
- controller driver
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="W4vbagJx"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=M9+ReYcbofuM3hTUzdhk2DDAdh851+yZKnWKHkFDox9j72WwT4qcPnnPEJxkmbMiD4ZTejFdqGz/jUbwUD9yvuDfw3eJzMwRy7tfZ1j4g7MWtOE20tmZoUosNte1HX363e5IHhQZgVnYJV8Z/UsDqSI046SkD/FHG+IfT984v4a5D0wDAZs9Lp00PW18zToWSxorVWJZ8EnXvBa/xl3YhtT8r502hSGnQYa4WLQ0GIBJwbNKq5bCDpE+rgXadqZz3xtQBuSHJXBfH/Uy3cuUIK+WVQABo3NLwZIOSEdEguStGSKEGw/tA924vKZAnaDz92AbqKsiz+81cTFuB2XdiQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0r/xeRBuHTF1/L8g1xGtBwZKfEvG28aCm6Q2Pgwgc3I=;
+ b=YRj8qzeDo4CtpDVvSn4OLENJPdTlr7mo0aEIoK5j9FRjyyIJY9m9SNJS4mtbdP8GFLTOGDkW1qitwg39utzO86h33umomR4e0yDNJe3V1weZEGHilTMHTp9Jn72ZHlv6x28tKcykiLWhOfmnLgC/W8QWJOG+I1O7tEFjKxZlxSFNnmFRO5t3aHVSTH7h2aw+T1UfAAgc5OL8jCn40wzeShmNNsjSzs+yvNB85Hs8Y656t3Wh/Gx43M8cmt/9E4TuIgh6dQYqsvWIdXc9c+eL2e0yPeehnCCX3K89AGWEBMRccO3ZBn2UhsrSzi8LZoXY9m9Px8bqMwLsSsxFDELSEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0r/xeRBuHTF1/L8g1xGtBwZKfEvG28aCm6Q2Pgwgc3I=;
+ b=W4vbagJxOtfPjS4fHBOrwy2nCK164GncNtBF1zSzphTZkp4AJ3Dk5d29uH1pWUaqjpEK5JjK7mwGNqS8Edd1bwDCZQMUUxYIJt13c+ueLZFbpzfiaubMUPO+3tem27yNXl7cLa9iKc8rLTB12PSZoAXLKgqycA81kdloHNrkXaezgL57ZmrbfA7EM+N5ztNseumAipCvGa0+kc4CEwPvO6AkPG/CcTCzxwuGxCYb+Alj0KkWCqeadu/+zIuhAOV3VhgRUD2n+UMo8oRH6rUMX8t+NE1xBwYVunw51K54FkwOLc+26llkIRkR2OQFEvvWzcicvMuCFZeMWVdiNKbmLg==
+Received: from AS8PR04MB8849.eurprd04.prod.outlook.com (2603:10a6:20b:42c::17)
+ by PA4PR04MB7662.eurprd04.prod.outlook.com (2603:10a6:102:f2::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.17; Fri, 21 Feb
+ 2025 09:22:34 +0000
+Received: from AS8PR04MB8849.eurprd04.prod.outlook.com
+ ([fe80::d8e2:1fd7:2395:b684]) by AS8PR04MB8849.eurprd04.prod.outlook.com
+ ([fe80::d8e2:1fd7:2395:b684%7]) with mapi id 15.20.8445.013; Fri, 21 Feb 2025
+ 09:22:34 +0000
+From: Claudiu Manoil <claudiu.manoil@nxp.com>
+To: Wei Fang <wei.fang@nxp.com>, Vladimir Oltean <vladimir.oltean@nxp.com>
+CC: Clark Wang <xiaoning.wang@nxp.com>, "andrew+netdev@lunn.ch"
+	<andrew+netdev@lunn.ch>, "davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org"
+	<kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>, Ioana Ciornei
+	<ioana.ciornei@nxp.com>, "Y.B. Lu" <yangbo.lu@nxp.com>,
+	"michal.swiatkowski@linux.intel.com" <michal.swiatkowski@linux.intel.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>
+Subject: RE: [PATCH v2 net 2/9] net: enetc: correct the tx_swbd statistics
+Thread-Topic: [PATCH v2 net 2/9] net: enetc: correct the tx_swbd statistics
+Thread-Index: AQHbgpN/wLtM4lMuwkuGi4ZYC/hIXbNQXDmAgACiP4CAAGZqcIAADMYAgAAJXMA=
+Date: Fri, 21 Feb 2025 09:22:34 +0000
+Message-ID:
+ <AS8PR04MB8849177C48CD9D04641D777596C72@AS8PR04MB8849.eurprd04.prod.outlook.com>
+References: <20250219054247.733243-1-wei.fang@nxp.com>
+ <20250219054247.733243-3-wei.fang@nxp.com>
+ <20250220160123.5evmuxlbuzo7djgr@skbuf>
+ <PAXPR04MB8510D3ACAB9DD6C86AC87E5488C72@PAXPR04MB8510.eurprd04.prod.outlook.com>
+ <AS8PR04MB88497C415FE73CCA84843CAC96C72@AS8PR04MB8849.eurprd04.prod.outlook.com>
+ <PAXPR04MB8510ECBBA69BD5E50DB1C03088C72@PAXPR04MB8510.eurprd04.prod.outlook.com>
+In-Reply-To:
+ <PAXPR04MB8510ECBBA69BD5E50DB1C03088C72@PAXPR04MB8510.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AS8PR04MB8849:EE_|PA4PR04MB7662:EE_
+x-ms-office365-filtering-correlation-id: ca08bd1d-a6fb-4dcc-9680-08dd5259469a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?KTm1run0iEWGAgmP1AUratyaW3ozqgLfJu/9KlxCSX9/9jd2Z52Q0c+V3iXN?=
+ =?us-ascii?Q?GVVuwwhvRi8Dn5KwpyPLVCglvkfuJynIeRDJwfSirmH86qJov2+ivtORts0d?=
+ =?us-ascii?Q?+gZrSpKih1ivwDJSjRWyWuXBSA07K3JlF5itB6g85hLwyPq2/Y1CVOOxZ5Tn?=
+ =?us-ascii?Q?v3HjBzP+09RG+yflOu65EDuZq5sMBGQg6jbenk2r0MYs1V7zChaccmbkaw/y?=
+ =?us-ascii?Q?Jdgw9HaDNJHDRcaB4UUIC2Gku3xdzpcisF/2X+9jv0X3h2gCwE4hiO9OUTU5?=
+ =?us-ascii?Q?aKQWOutBGWf5Z0fBSjkyvWYUtrclB6zIaMlF4me+NulJre9D+/OnYrFSx3sq?=
+ =?us-ascii?Q?Zw7JimertqItXtJOkJ8zT5EOITUH82+4Lb7inv8BIgodXxPG5v/YvCPZml/s?=
+ =?us-ascii?Q?aA+ZxIKPSoCSXjWRjmgiwa4Zio5SfeCfDcYov7BdKSApBaH/HwyrbYf/N4BF?=
+ =?us-ascii?Q?/98jfIumJRVwRGzO6JBu4vvCx2Rd82KDsxb5Y+neY6wjyX4uJeMq/Z8WhmvE?=
+ =?us-ascii?Q?yTNOT+tTtB41D+C9p/E3CK1mxiZ35JBSh+6IFPtD4++YU9OaUVF2c3ekoW8q?=
+ =?us-ascii?Q?KUwVBCwoPSgdMtClZdosdAkcdoeNblAznCG2E2V6mrJL/U8qd4BpaCiVdgTQ?=
+ =?us-ascii?Q?YfduLgo4+2X3W+mUe9DWPViAqL6Ow/nlv3GDxv/nhEpPrqCro2C0siP4YfQy?=
+ =?us-ascii?Q?UsvqfpfQauoZDUJV3pzLfkeAPMOUOLsByfk8NixaByMwFVub5wT2kxyyuV6/?=
+ =?us-ascii?Q?L9Uv93kBnW0KrHBRsNBovX2QD5/UhnLgTfXLNAkgmptfO2IilqzT+41ZLszR?=
+ =?us-ascii?Q?KApQQQJ2hblkRMreiRJqbIXrWP/cCJJ0mPUW9qjUdp+9BiBTwMn815f1YDk7?=
+ =?us-ascii?Q?+mN31IMEUvi0Vcf1PhpuP/sepwrV9/n1r4XLAHcGiEtzP1B1gCTt4/PLwk6N?=
+ =?us-ascii?Q?cKCcAUfHwaIvVrL6ity9jVFZH+kub2dIYIbhxVmHACvNKOk0sol25u9x2Tal?=
+ =?us-ascii?Q?K7z4sUK63zkiea0ULct49xwpHJmVX68nzWICD8f/Livi4RZE0x3HsZNfgaWo?=
+ =?us-ascii?Q?6R+4XcXkThaUSxSS2pGzQeKjxsTwHC91gGX5J6pstdIBQVeKtGaPwxtI1dWx?=
+ =?us-ascii?Q?lK6xN2OBoZICJ6axQqzeKHCDCUEkAWHYUfXqlPZTFX5zRZpknCCevSKmqKT4?=
+ =?us-ascii?Q?XVulYpZPxT+atxUoLnUyvGdPkXhSyuOlgHgAEKo24L9lY21mxW/a4KwlPLCk?=
+ =?us-ascii?Q?zLCTyR7KeXfLdgwn7ZWu9b9nZlVVzbMAac3Cix+KD+YYushUnaSHcC6PBt4z?=
+ =?us-ascii?Q?GRtlcHYhd7mNxclhtospIzCev66uFTAhpxqc0MfuWWSuMUgzZUa8ph6fUllW?=
+ =?us-ascii?Q?4iN3CPV9nJggghvExUTSxLdBPg/+NxB3Zm6iF8e2JwbmZzCoOSu/smOV70qK?=
+ =?us-ascii?Q?yWiqYJyrvPP6edkWX2AMT3s13nxuGuET?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8849.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?ig8YFzAU0poNimtjZ+dN23Mr+TIo5hfntsXpUK7jL9bphfXx2RDGdwrGeozL?=
+ =?us-ascii?Q?gegY7Y+5vIzmD15Hdci5alHKRHE3ciFJhGctxq00TfofYRCJuA4cVu4RgWac?=
+ =?us-ascii?Q?eJMg6MAlUpLtBek/yrV2cMCuaZJBamkKDICSR/HNfu9ZPnEYaQFe0/fEYoTS?=
+ =?us-ascii?Q?wmFAKW1H7eKv8S9cWir3RDMub4KZDTL7warRitr3HLDT6DwmsCWZekvpb6bw?=
+ =?us-ascii?Q?7QVXOpGBcBBdwRzjcCodU9Qips8eUFtXeiSw/GwTC9Hioazp2FNVJCBSfsDw?=
+ =?us-ascii?Q?Wnjeht8zygZbXZ3fXBG8KTzul0y6fV1WAPdgzlw+vrD7wwR631sPNcmr57e9?=
+ =?us-ascii?Q?oL5UHzlLmuZuV3nrPHGdkV6I2XK+pO8PCw4DinFONjMOIg6FxCUMHY0amIz6?=
+ =?us-ascii?Q?msVKdEzCGwh9UOfRBpLZ6ZZychvJRoyyv7YoXBWZj7oirox505/u+QfyDK6e?=
+ =?us-ascii?Q?7xeA9nUGWHMZN/4FiL4Mi3A0wkTQiAr/XvCnLX01pGD0Zaz5QXsq+WCbOuRq?=
+ =?us-ascii?Q?0O6gVaUTlZwmsmUaIGV4mhZDfh9/MbAGUo7CK7ZfOG2ZbzCfstmveGCUvEeZ?=
+ =?us-ascii?Q?Ln+sAtpLtPlLaMJYlUA+20LDR9pmYdHwYNefxD84S20w2SagL9r2JRCQbCcH?=
+ =?us-ascii?Q?k3NsVqfZvQp8RrZbvOnR5Hy9gAg4GuwrqNT5y3GlINQGYzhvtFiz/4rnJGdI?=
+ =?us-ascii?Q?tkXH6aHqr0szG+XdZkgfP1CuI3o8qJN/TssZOhr59JTcELRrQ20iBtbRaYij?=
+ =?us-ascii?Q?cDN9SOr7o6OY8GSDTL/lQ1lM6faBcmbXVXRn4L9BUXvnkVWc68humAZAkH/q?=
+ =?us-ascii?Q?d4JEF5GRiIT9v6T2kTxJFduX7sbDI5L9sV1Es4L2HfXmN8xZMtAhBawR0ZKQ?=
+ =?us-ascii?Q?mxn/UZGeJ9oqMdKbyr0UNUF0JkuwTAK5bOPcKjwnrbTDz6jLvXxWDYDYr/B+?=
+ =?us-ascii?Q?PXRFLQkLK3KVZavjrniXBFc8d866iWQPSpSY3Hvb9+0BVW+UWAwCpeEX+5ju?=
+ =?us-ascii?Q?p13YrL7ZrR6lvvWVDvAaasyiUDCV0lQla8Xyi6jc8KfcHOAbv3mAofEo0UTt?=
+ =?us-ascii?Q?H5uFHVI1PHQ+t6q3SRICG9Avk0Wc6ttRA876ecUoD3y5e7OI63J5GC+vMXy7?=
+ =?us-ascii?Q?C6QFE5o2pDNKG2QffIzdwXJhKd44OMWECvm/FnJFbpK/v7JBF6OlNzxA1R6P?=
+ =?us-ascii?Q?qrGhvwxK72GomyN3R8YlTLfbRNTkzepNjWhD9rd1YsYpIZu3H/Jnni1ynS/7?=
+ =?us-ascii?Q?kiU1QuW2tWGlsGLzSgEaVhxbC5HLIWHYjht2a7Okvzqve0Odc20IxGDtkZFP?=
+ =?us-ascii?Q?b9CAwqaYDrkdg867DR92RBozRAg2FcFFRRyk7XUXrMz2J8lc3KyGgibxyS3X?=
+ =?us-ascii?Q?WvjRbe+x/UfPRpWillZNt9Vtq0OKSzjEIl2mRoxNMIaNUNorUpkcFzifI9+3?=
+ =?us-ascii?Q?Y4agle76Cjx5wI3r4jwCkIQi28huXmX5cExOsXY1IxartsHLcCNbPJPVPooa?=
+ =?us-ascii?Q?g/ns1Plf191VQIpVrKNsWTSrMkXOu9S1xHsW5aI8aFdqxAI9yGhmTpl8zs/T?=
+ =?us-ascii?Q?bFIzybgazXGApwEwwrc4C1/B7IBggsl3iYLswVm9?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250221-qcs615-v5-mm-cc-v5-9-b6d9ddf2f28d@quicinc.com>
-References: <20250221-qcs615-v5-mm-cc-v5-0-b6d9ddf2f28d@quicinc.com>
-In-Reply-To: <20250221-qcs615-v5-mm-cc-v5-0-b6d9ddf2f28d@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon
-	<will@kernel.org>
-CC: Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik
-	<quic_imrashai@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>
-X-Mailer: b4 0.15-dev-aa3f6
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: lrTBviTjXx8r-SB0JmRRRW5PNQ_ReBmr
-X-Proofpoint-ORIG-GUID: lrTBviTjXx8r-SB0JmRRRW5PNQ_ReBmr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-21_01,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
- adultscore=0 malwarescore=0 mlxscore=0 priorityscore=1501
- lowpriorityscore=0 mlxlogscore=999 suspectscore=0 phishscore=0 spamscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502210071
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8849.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca08bd1d-a6fb-4dcc-9680-08dd5259469a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Feb 2025 09:22:34.6502
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Lq6XNFoWvc5KyrODnosDuVikiK3jomImSLh9gWQruI2l7cwoBaAJA0pD2ZncEXBMF6giyBdKEj78UHoRYoQwFw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB7662
 
-Add support for the video clock controller for video clients to
-be able to request for the clocks on QCS615 platform.
+> -----Original Message-----
+> From: Wei Fang <wei.fang@nxp.com>
+> Sent: Friday, February 21, 2025 10:34 AM
+[...]
+> Subject: RE: [PATCH v2 net 2/9] net: enetc: correct the tx_swbd statistic=
+s
+>=20
+> > > > I'm not sure "correct the statistics" is the best way to describe t=
+his
+> > > > change. Maybe "keep track of correct TXBD count in
+> > > > enetc_map_tx_tso_buffs()"?
+> > >
+> > > Hi Vladimir,
+> > >
+> > > Inspired by Michal, I think we don't need to keep the count variable,
+> because
+> > > we already have index "i", we just need to record the value of the in=
+itial i at
+> > the
+> > > beginning. So I plan to do this optimization on the net-next tree in =
+the
+> future.
+> > > So I don't think it is necessary to modify enetc_map_tx_tso_hdr().
+> > >
+> >
+> > And what if 'i' wraps around at least one time and becomes greater than=
+ the
+> > initial 'i'? Instead of 'count' you would have to record the number of =
+wraps.
+>=20
+> I think this situation will not happen, because when calling
+> enetc_map_tx_tso_buffs()/enetc_map_tx_buffs()/enetc_lso_hw_offload(),
+> we always check whether the current free BDs are enough. The number of
+> free BDs is always <=3D bdr->bd_count, in the case you mentioned, the fra=
+me
+> will occupy more BDs than bdr->bd_count.
+>=20
 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
----
- drivers/clk/qcom/Kconfig          |   9 ++
- drivers/clk/qcom/Makefile         |   1 +
- drivers/clk/qcom/videocc-qcs615.c | 332 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 342 insertions(+)
-
-diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-index 4b74f44ebdbf2f1cec83d311e004ce18091350c8..99c8e824abd372a7a661e3fc6233160829308120 100644
---- a/drivers/clk/qcom/Kconfig
-+++ b/drivers/clk/qcom/Kconfig
-@@ -551,6 +551,15 @@ config QCS_GPUCC_615
- 	  Say Y if you want to support graphics controller devices and
- 	  functionality such as 3D graphics.
- 
-+config QCS_VIDEOCC_615
-+	tristate "QCS615 Video Clock Controller"
-+	depends on ARM64 || COMPILE_TEST
-+	select QCS_GCC_615
-+	help
-+	  Support for the video clock controller on QCS615 devices.
-+	  Say Y if you want to support video devices and functionality such as
-+	  video encode and decode.
-+
- config SC_CAMCC_7180
- 	tristate "SC7180 Camera Clock Controller"
- 	depends on ARM64 || COMPILE_TEST
-diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index f9497e00d4fef8af05865a235fbb833fe6735528..14cdf485ad3d3166c9e639900a4745e5a7f12a96 100644
---- a/drivers/clk/qcom/Makefile
-+++ b/drivers/clk/qcom/Makefile
-@@ -78,6 +78,7 @@ obj-$(CONFIG_QCS_GCC_404) += gcc-qcs404.o
- obj-$(CONFIG_QCS_GCC_615) += gcc-qcs615.o
- obj-$(CONFIG_QCS_GCC_8300) += gcc-qcs8300.o
- obj-$(CONFIG_QCS_GPUCC_615) += gpucc-qcs615.o
-+obj-$(CONFIG_QCS_VIDEOCC_615) += videocc-qcs615.o
- obj-$(CONFIG_QCS_Q6SSTOP_404) += q6sstop-qcs404.o
- obj-$(CONFIG_QCS_TURING_404) += turingcc-qcs404.o
- obj-$(CONFIG_QDU_ECPRICC_1000) += ecpricc-qdu1000.o
-diff --git a/drivers/clk/qcom/videocc-qcs615.c b/drivers/clk/qcom/videocc-qcs615.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..14704185d9fa2548ade7dd60f4f9f5d378bb0938
---- /dev/null
-+++ b/drivers/clk/qcom/videocc-qcs615.c
-@@ -0,0 +1,332 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2024, Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#include <dt-bindings/clock/qcom,qcs615-videocc.h>
-+
-+#include "clk-alpha-pll.h"
-+#include "clk-branch.h"
-+#include "clk-pll.h"
-+#include "clk-rcg.h"
-+#include "clk-regmap.h"
-+#include "clk-regmap-divider.h"
-+#include "clk-regmap-mux.h"
-+#include "common.h"
-+#include "gdsc.h"
-+#include "reset.h"
-+
-+enum {
-+	DT_BI_TCXO,
-+	DT_SLEEP_CLK,
-+};
-+
-+enum {
-+	P_BI_TCXO,
-+	P_SLEEP_CLK,
-+	P_VIDEO_PLL0_OUT_AUX,
-+	P_VIDEO_PLL0_OUT_AUX2,
-+	P_VIDEO_PLL0_OUT_MAIN,
-+};
-+
-+static const struct pll_vco video_cc_pll0_vco[] = {
-+	{ 500000000, 1000000000, 2 },
-+};
-+
-+/* 600MHz configuration VCO - 2 */
-+static struct alpha_pll_config video_pll0_config = {
-+	.l = 0x1f,
-+	.alpha_hi = 0x40,
-+	.alpha = 0x00,
-+	.alpha_en_mask = BIT(24),
-+	.vco_val = BIT(21),
-+	.vco_mask = GENMASK(21, 20),
-+	.main_output_mask = BIT(0),
-+	.config_ctl_val = 0x4001055b,
-+	.test_ctl_hi_val = 0x1,
-+	.test_ctl_hi_mask = 0x1,
-+};
-+
-+static struct clk_alpha_pll video_pll0 = {
-+	.offset = 0x42c,
-+	.vco_table = video_cc_pll0_vco,
-+	.num_vco = ARRAY_SIZE(video_cc_pll0_vco),
-+	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
-+	.clkr = {
-+		.hw.init = &(const struct clk_init_data) {
-+			.name = "video_pll0",
-+			.parent_data = &(const struct clk_parent_data) {
-+				.index = DT_BI_TCXO,
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_alpha_pll_slew_ops,
-+		},
-+	},
-+};
-+
-+static const struct parent_map video_cc_parent_map_0[] = {
-+	{ P_SLEEP_CLK, 0 },
-+};
-+
-+static const struct clk_parent_data video_cc_parent_data_0_ao[] = {
-+	{ .index = DT_SLEEP_CLK },
-+};
-+
-+static const struct parent_map video_cc_parent_map_1[] = {
-+	{ P_BI_TCXO, 0 },
-+	{ P_VIDEO_PLL0_OUT_MAIN, 1 },
-+	{ P_VIDEO_PLL0_OUT_AUX, 2 },
-+	{ P_VIDEO_PLL0_OUT_AUX2, 3 },
-+};
-+
-+static const struct clk_parent_data video_cc_parent_data_1[] = {
-+	{ .index = DT_BI_TCXO },
-+	{ .hw = &video_pll0.clkr.hw },
-+	{ .hw = &video_pll0.clkr.hw },
-+	{ .hw = &video_pll0.clkr.hw },
-+};
-+
-+static const struct freq_tbl ftbl_video_cc_sleep_clk_src[] = {
-+	F(32000, P_SLEEP_CLK, 1, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 video_cc_sleep_clk_src = {
-+	.cmd_rcgr = 0xaf8,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = video_cc_parent_map_0,
-+	.freq_tbl = ftbl_video_cc_sleep_clk_src,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "video_cc_sleep_clk_src",
-+		.parent_data = video_cc_parent_data_0_ao,
-+		.num_parents = ARRAY_SIZE(video_cc_parent_data_0_ao),
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static const struct freq_tbl ftbl_video_cc_venus_clk_src[] = {
-+	F(19200000, P_BI_TCXO, 1, 0, 0),
-+	F(133333333, P_VIDEO_PLL0_OUT_MAIN, 4.5, 0, 0),
-+	F(240000000, P_VIDEO_PLL0_OUT_MAIN, 2.5, 0, 0),
-+	F(300000000, P_VIDEO_PLL0_OUT_MAIN, 2, 0, 0),
-+	F(380000000, P_VIDEO_PLL0_OUT_MAIN, 2, 0, 0),
-+	F(410000000, P_VIDEO_PLL0_OUT_MAIN, 2, 0, 0),
-+	F(460000000, P_VIDEO_PLL0_OUT_MAIN, 2, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 video_cc_venus_clk_src = {
-+	.cmd_rcgr = 0x7f0,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = video_cc_parent_map_1,
-+	.freq_tbl = ftbl_video_cc_venus_clk_src,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "video_cc_venus_clk_src",
-+		.parent_data = video_cc_parent_data_1,
-+		.num_parents = ARRAY_SIZE(video_cc_parent_data_1),
-+		.flags = CLK_SET_RATE_PARENT,
-+		.ops = &clk_rcg2_shared_ops,
-+	},
-+};
-+
-+static struct clk_branch video_cc_sleep_clk = {
-+	.halt_reg = 0xb18,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0xb18,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "video_cc_sleep_clk",
-+			.parent_data = &(const struct clk_parent_data){
-+				.hw = &video_cc_sleep_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch video_cc_vcodec0_axi_clk = {
-+	.halt_reg = 0x8f0,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x8f0,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(const struct clk_init_data) {
-+			.name = "video_cc_vcodec0_axi_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch video_cc_vcodec0_core_clk = {
-+	.halt_reg = 0x890,
-+	.halt_check = BRANCH_HALT_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x890,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(const struct clk_init_data) {
-+			.name = "video_cc_vcodec0_core_clk",
-+			.parent_hws = (const struct clk_hw*[]) {
-+				&video_cc_venus_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch video_cc_venus_ahb_clk = {
-+	.halt_reg = 0x9b0,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x9b0,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(const struct clk_init_data) {
-+			.name = "video_cc_venus_ahb_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch video_cc_venus_ctl_axi_clk = {
-+	.halt_reg = 0x8d0,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x8d0,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(const struct clk_init_data) {
-+			.name = "video_cc_venus_ctl_axi_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch video_cc_venus_ctl_core_clk = {
-+	.halt_reg = 0x850,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x850,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(const struct clk_init_data) {
-+			.name = "video_cc_venus_ctl_core_clk",
-+			.parent_hws = (const struct clk_hw*[]) {
-+				&video_cc_venus_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct gdsc vcodec0_gdsc = {
-+	.gdscr = 0x874,
-+	.en_rest_wait_val = 0x2,
-+	.en_few_wait_val = 0x2,
-+	.clk_dis_wait_val = 0x6,
-+	.pd = {
-+		.name = "vcodec0_gdsc",
-+	},
-+	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = HW_CTRL_TRIGGER | POLL_CFG_GDSCR,
-+};
-+
-+static struct gdsc venus_gdsc = {
-+	.gdscr = 0x814,
-+	.en_rest_wait_val = 0x2,
-+	.en_few_wait_val = 0x2,
-+	.clk_dis_wait_val = 0x6,
-+	.pd = {
-+		.name = "venus_gdsc",
-+	},
-+	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = POLL_CFG_GDSCR,
-+};
-+
-+static struct clk_regmap *video_cc_qcs615_clocks[] = {
-+	[VIDEO_CC_SLEEP_CLK] = &video_cc_sleep_clk.clkr,
-+	[VIDEO_CC_SLEEP_CLK_SRC] = &video_cc_sleep_clk_src.clkr,
-+	[VIDEO_CC_VCODEC0_AXI_CLK] = &video_cc_vcodec0_axi_clk.clkr,
-+	[VIDEO_CC_VCODEC0_CORE_CLK] = &video_cc_vcodec0_core_clk.clkr,
-+	[VIDEO_CC_VENUS_AHB_CLK] = &video_cc_venus_ahb_clk.clkr,
-+	[VIDEO_CC_VENUS_CLK_SRC] = &video_cc_venus_clk_src.clkr,
-+	[VIDEO_CC_VENUS_CTL_AXI_CLK] = &video_cc_venus_ctl_axi_clk.clkr,
-+	[VIDEO_CC_VENUS_CTL_CORE_CLK] = &video_cc_venus_ctl_core_clk.clkr,
-+	[VIDEO_PLL0] = &video_pll0.clkr,
-+};
-+
-+static struct gdsc *video_cc_qcs615_gdscs[] = {
-+	[VCODEC0_GDSC] = &vcodec0_gdsc,
-+	[VENUS_GDSC] = &venus_gdsc,
-+};
-+
-+static const struct qcom_reset_map video_cc_qcs615_resets[] = {
-+	[VIDEO_CC_INTERFACE_BCR] = { 0x8b0 },
-+	[VIDEO_CC_VCODEC0_BCR] = { 0x870 },
-+	[VIDEO_CC_VENUS_BCR] = { 0x810 },
-+};
-+
-+static const struct regmap_config video_cc_qcs615_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+	.max_register = 0xb94,
-+	.fast_io = true,
-+};
-+
-+static const struct qcom_cc_desc video_cc_qcs615_desc = {
-+	.config = &video_cc_qcs615_regmap_config,
-+	.clks = video_cc_qcs615_clocks,
-+	.num_clks = ARRAY_SIZE(video_cc_qcs615_clocks),
-+	.resets = video_cc_qcs615_resets,
-+	.num_resets = ARRAY_SIZE(video_cc_qcs615_resets),
-+	.gdscs = video_cc_qcs615_gdscs,
-+	.num_gdscs = ARRAY_SIZE(video_cc_qcs615_gdscs),
-+};
-+
-+static const struct of_device_id video_cc_qcs615_match_table[] = {
-+	{ .compatible = "qcom,qcs615-videocc" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, video_cc_qcs615_match_table);
-+
-+static int video_cc_qcs615_probe(struct platform_device *pdev)
-+{
-+	struct regmap *regmap;
-+
-+	regmap = qcom_cc_map(pdev, &video_cc_qcs615_desc);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	clk_alpha_pll_configure(&video_pll0, regmap, &video_pll0_config);
-+
-+	/* Keep some clocks always enabled */
-+	qcom_branch_set_clk_en(regmap, 0xab8); /* VIDEO_CC_XO_CLK */
-+
-+	return qcom_cc_really_probe(&pdev->dev, &video_cc_qcs615_desc, regmap);
-+}
-+
-+static struct platform_driver video_cc_qcs615_driver = {
-+	.probe = video_cc_qcs615_probe,
-+	.driver = {
-+		.name = "videocc-qcs615",
-+		.of_match_table = video_cc_qcs615_match_table,
-+	},
-+};
-+
-+module_platform_driver(video_cc_qcs615_driver);
-+
-+MODULE_DESCRIPTION("QTI VIDEOCC QCS615 Driver");
-+MODULE_LICENSE("GPL");
-
--- 
-2.48.1
-
+Ok, let's see the net-next patches and discuss then.
