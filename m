@@ -1,185 +1,129 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E353FD4;
-	Fri, 21 Feb 2025 09:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 407CD1FFC6A
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 09:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740130288; cv=none; b=ZyzgWClBSGHquYF0j5smxeadHv2YjfLPUBL7OjpiUEcinN2jYuSfltzR1oMd0G3ol6YYJs84snJzlE2G4LJCaUDhBIde7MbLhXAda+muL9+P8jURx237nY2wPDXrKJE4/Z7ZUR8RnbPpLF18xQbESiwSeS6yp4g+FVQIcB4FRSU=
+	t=1740130393; cv=none; b=dhY0YlmXricihgIV3n15Uqsihouo+QzCGnrF93clJqyZULuIhiEA8akzELspkINmnE1iBp4UwUCOaoDFYQ86KEXfUSVNx4iv8yzotxgtBsZbON6fVfH/e/ePedNVZr2YGeGrH2VHZwTjJWleWULctVTXjk6qHZl8mfEVOtKES6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740130288; c=relaxed/simple;
-	bh=ARTrsQ2nzk8syRF6hxGk2vNoNCrNelj+E7QXtFIvbDw=;
+	s=arc-20240116; t=1740130393; c=relaxed/simple;
+	bh=NGg3p2v26vAbcIHMvbB45bNMQyP6Fn3VrhfSKVoSKh0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hz3kNtSxS8tbyXkGbXEjiFeMEZeqHOSKsmEmmNm2exNPt0r80Od6b1MVoMRICOeEB/nqsCM4S3/5Y+NL8yhBs+P6/Nrd2xiYdDj5WcbHAPd//5aduzH5EBCtykMeqk7/GW12DOrjI5IkBhW5dlYzI0nVgfm2Kq446fdIFgW1IAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=SBUvjzX7; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=a4ymqEL6xEQIUgWrzITVKoy77ALT7bxchiRqmKfNQqRwtwyvO4OVAPHMhLYtnpFpRIWJJfMTMVLIMn3SbxsNuA2yklnB4DGLWodxg4EvMaNwfhx8LQgjPSmQoKoG+4NsrtijNkVoMVbBgLYuVNNGIFQXnxB1dMl743xfppKd1Jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=chEgiNjG; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="SBUvjzX7"
-Received: from ideasonboard.com (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A93E189A;
-	Fri, 21 Feb 2025 10:30:00 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1740130200;
-	bh=ARTrsQ2nzk8syRF6hxGk2vNoNCrNelj+E7QXtFIvbDw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SBUvjzX73O2WnT3fkTTbV4PE9ApZqpWCha49V+nqyNwwmsN/KS76Rwcu3zoLkxXeZ
-	 AydjBRi4g9c53HkZSjrRE7nAEJl2qoesHeVBjxmrnAuIqDHMc8S6cYhCQfN07IatcJ
-	 RhMot9rZJrS0RBJAXpEn3jSZhWXrAVUdeef2owSg=
-Date: Fri, 21 Feb 2025 10:31:21 +0100
-From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-To: Jai Luthra <jai.luthra@ideasonboard.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Dave Stevenson <dave.stevenson@raspberrypi.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Subject: Re: [PATCH 2/3] media: i2c: imx219: Simplify binning mode
-Message-ID: <hoh2rwql6qrzpdtuvof62jzipmba77xqottwdxqd2vqitgke5a@es6m3ghbp26d>
-References: <20250219-imx219_fixes_v2-v1-0-0e3f5dd9b024@ideasonboard.com>
- <20250219-imx219_fixes_v2-v1-2-0e3f5dd9b024@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="chEgiNjG"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-439950a45daso11523535e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 01:33:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1740130389; x=1740735189; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NGg3p2v26vAbcIHMvbB45bNMQyP6Fn3VrhfSKVoSKh0=;
+        b=chEgiNjGRHa9+xBD9Yh22tEAQ0NidzEzFhyafjKh/FDqFpV2K3rPH2GgyJn7pU+JDX
+         JFZ0lJX3Hb/sTHM7ZHkhnailidcz3u8MuLcj2eHujfTLIk5aLdRCBcSJJ0fVzh+KP7td
+         120wKC2lSsGhTm6JIO0Xqaop3sUdG4+V+ezzbcEzcrZums1ydCzKuAygtBhd6jKmkoUP
+         YsxZdOBj38AsMrZoILWX0GIsDe+l8SLi9peR1dhQQ5qXaTtTDV++1/1YFS/pwRV1PD8x
+         +HLx2p9FamUb5bBI6yqBidFYjKE4uABfHPDTkGozGprY1fmW+Kb7/vR2ZxLn0OgQgzQX
+         7E9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740130389; x=1740735189;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NGg3p2v26vAbcIHMvbB45bNMQyP6Fn3VrhfSKVoSKh0=;
+        b=qI1Wpb68PkapGbHL0pfN8/32gPO1aTnfrTkd4bceSjjfun9/rY2KjiStliU0lExgJy
+         7AokWlyUmvJL2QFJ60bNryDHb7ZNXQLELYcdlyHfCQ6aXquBRckn0hzpU0RlYvKK/v9g
+         pxOffrZ3mQtasQTJW6RkmPcjD8drEaqDsKzAlefZOw4og2tZ3o9pdovP4kEtjVRtk28e
+         UaQQjXGscEpmc5v9lsCPzPZCrmtZ9AaQyNSY1h+uD0bG2zyi9GcmtwApkDoMVhBB0sl4
+         GpeJCy3oXawdqqVlUdAOFMzFkHTAHbIwJLM7thK+DuzMIiCd0Cpo9f1JGT/BJ1LQHgz+
+         0yxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWbTRx7NfBpP1fpar8CztVOgeYqIBRbGNVnrCBs7OrPwdz3sJmBfiNCnjZT241JJAeG0yyDnIyzGqK3GHU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEAGgkSZkVFqVCB3NUVk5xkalzqSuPr4Isqp9sETZoLDThz5YN
+	lYr3GM5PAYpQ4/qJxroGRg4t3b5/LZJXuJmv1wFo089OQaUGn08B2ViiYvBYTqc=
+X-Gm-Gg: ASbGncvRCeaLuVm7rddVB4K6Iymt4barGAp+083pB2+qzStr2eyxd4u1hIAhT/6DfOv
+	NFkLWJQ9Qt4/IT+y4w2U1j5uBw8tzv1IXFsRO2cgLgwmFHFraAoZHCvmCM+oZd2zutsWjUaOYXl
+	dFZ1YEfuJpI64BfXK9e8oWVROVp1E3D30+PhyPpGV2nXwwxqViPX4u0g4owRKe2eFwjKUDuxh7s
+	gEMaM5VnEhy37+G6crPCP9xQPlhvs+bEgcvwebZ2iSfC20OcKL2AwnE0cTpD3wKX9A8aALf6nsx
+	rTiNWrWPdqw/3t9Un8e5dk9j4K5c6wqCd9q+jFb6gVSkFkABeICwK79799sY52St1wQQ
+X-Google-Smtp-Source: AGHT+IGt87vL6VHtDibcXnn7l4Vot51++YIbIpXyONWhhD00l415ZfN7rQ/oDaggzOuuyoMOkbdTPA==
+X-Received: by 2002:a05:600c:45c6:b0:439:84ba:5773 with SMTP id 5b1f17b1804b1-439ae225a44mr19266235e9.31.1740130389494;
+        Fri, 21 Feb 2025 01:33:09 -0800 (PST)
+Received: from localhost (p200300f65f083b0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f08:3b04::1b9])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b02ce685sm11635085e9.2.2025.02.21.01.33.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 01:33:08 -0800 (PST)
+Date: Fri, 21 Feb 2025 10:33:07 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Michael Walle <mwalle@kernel.org>, Bamvor Jian Zhang <bamv2005@gmail.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Keerthy <j-keerthy@ti.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	linux-leds@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v2 00/15] gpiolib: indicate errors in value setters
+Message-ID: <ms373jlzawhooi5j25pvvubu5hu2rueatglbdnils7sbihxnpz@5f6fbooiusf5>
+References: <20250220-gpio-set-retval-v2-0-bc4cfd38dae3@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="et6dryar3l656eqq"
 Content-Disposition: inline
-In-Reply-To: <20250219-imx219_fixes_v2-v1-2-0e3f5dd9b024@ideasonboard.com>
+In-Reply-To: <20250220-gpio-set-retval-v2-0-bc4cfd38dae3@linaro.org>
 
-Hi Jai
 
-On Wed, Feb 19, 2025 at 05:16:44PM +0530, Jai Luthra wrote:
-> The imx219_get_binning() function currently returns two separate pieces
-> of information, the return value is the binning mode enum, and the bin_h
-> and bin_v references are updated with whether to perform binning in
-> horizontal and vertical dimensions.
->
-> It is simpler to combine both of these pieces of information, and
-> directly update the bin_h and bin_v references with the register value
-> that we will write to the sensor, which includes if the binning is
-> digital or analog mode, thus allowing us to remove the superfluous
-> binning mode enum.
->
-> This is only a style change for the driver, with no functionality
-> updated.
->
-> Suggested-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-> Link: https://lore.kernel.org/linux-media/ubuuob7mb3o5bxoumrxv4rufutgk3lvdmdery6d3bfc6rytfti@tcchhlechzzp/
-> Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
+--et6dryar3l656eqq
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 00/15] gpiolib: indicate errors in value setters
+MIME-Version: 1.0
 
-Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Hello Bartosz,
 
-Thanks
-  j
+On Thu, Feb 20, 2025 at 10:56:57AM +0100, Bartosz Golaszewski wrote:
+> The value setter callbacks (both for single and multiple lines) return
+> void even though we have many types of controllers that can fail to set
+> a line's value: i2c, SPI, USB, etc.
+>=20
+> For the consumer API: single line setters return void. Multiple line
+> setters do have an integer return value but due to the above, they still
+> cannot be used to indicate problems within the driver.
+>=20
+> This series proposes to start the process of converting the setters to
+> returning int thus making it possible to propagate any errors to the
+> user.
 
-> ---
->  drivers/media/i2c/imx219.c | 55 +++++++++++++++++++++-------------------------
->  1 file changed, 25 insertions(+), 30 deletions(-)
->
-> diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-> index 6e51a7af5e2a05cacefb201d96a9fbdc349f17d8..f02732d8fa95de0a295f247d4f0b60017dbb2ed2 100644
-> --- a/drivers/media/i2c/imx219.c
-> +++ b/drivers/media/i2c/imx219.c
-> @@ -146,12 +146,6 @@
->  #define IMX219_PIXEL_ARRAY_WIDTH	3280U
->  #define IMX219_PIXEL_ARRAY_HEIGHT	2464U
->
-> -enum binning_mode {
-> -	BINNING_NONE = IMX219_BINNING_NONE,
-> -	BINNING_X2 = IMX219_BINNING_X2,
-> -	BINNING_ANALOG_X2 = IMX219_BINNING_X2_ANALOG,
-> -};
-> -
->  /* Mode : resolution and related config&values */
->  struct imx219_mode {
->  	/* Frame width */
-> @@ -406,39 +400,43 @@ static u32 imx219_get_format_bpp(const struct v4l2_mbus_framefmt *format)
->  	}
->  }
->
-> -static enum binning_mode imx219_get_binning(struct imx219 *imx219, u8 *bin_h,
-> -					    u8 *bin_v)
-> +static void imx219_get_binning(struct imx219 *imx219, u8 *bin_h, u8 *bin_v)
->  {
->  	struct v4l2_subdev_state *state =
->  		v4l2_subdev_get_locked_active_state(&imx219->sd);
->  	const struct v4l2_mbus_framefmt *format =
->  		v4l2_subdev_state_get_format(state, 0);
->  	const struct v4l2_rect *crop = v4l2_subdev_state_get_crop(state, 0);
-> +	u32 hbin = crop->width / format->width;
-> +	u32 vbin = crop->height / format->height;
->
-> -	*bin_h = crop->width / format->width;
-> -	*bin_v = crop->height / format->height;
-> +	*bin_h = IMX219_BINNING_NONE;
-> +	*bin_v = IMX219_BINNING_NONE;
->
-> -	if (*bin_h == 2 && *bin_v == 2)
-> -		return BINNING_ANALOG_X2;
-> -	else if (*bin_h == 2 || *bin_v == 2)
-> -		/*
-> -		 * Don't use analog binning if only one dimension
-> -		 * is binned, as it crops the other dimension
-> -		 */
-> -		return BINNING_X2;
-> -	else
-> -		return BINNING_NONE;
-> +	/*
-> +	 * Use analog binning only if both dimensions are binned, as it crops
-> +	 * the other dimension.
-> +	 */
-> +	if (hbin == 2 && vbin == 2) {
-> +		*bin_h = IMX219_BINNING_X2_ANALOG;
-> +		*bin_v = IMX219_BINNING_X2_ANALOG;
-> +
-> +		return;
-> +	}
-> +
-> +	if (hbin == 2)
-> +		*bin_h = IMX219_BINNING_X2;
-> +	if (vbin == 2)
-> +		*bin_v = IMX219_BINNING_X2;
->  }
->
->  static inline u32 imx219_get_rate_factor(struct imx219 *imx219)
->  {
->  	u8 bin_h, bin_v;
-> -	enum binning_mode binning = imx219_get_binning(imx219, &bin_h, &bin_v);
->
-> -	if (binning == BINNING_ANALOG_X2)
-> -		return 2;
-> +	imx219_get_binning(imx219, &bin_h, &bin_v);
->
-> -	return 1;
-> +	return (bin_h & bin_v) == IMX219_BINNING_X2_ANALOG ? 2 : 1;
->  }
->
->  /* -----------------------------------------------------------------------------
-> @@ -674,7 +672,6 @@ static int imx219_set_framefmt(struct imx219 *imx219,
->  {
->  	const struct v4l2_mbus_framefmt *format;
->  	const struct v4l2_rect *crop;
-> -	enum binning_mode binning;
->  	u8 bin_h, bin_v;
->  	u32 bpp;
->  	int ret = 0;
-> @@ -692,11 +689,9 @@ static int imx219_set_framefmt(struct imx219 *imx219,
->  	cci_write(imx219->regmap, IMX219_REG_Y_ADD_END_A,
->  		  crop->top - IMX219_PIXEL_ARRAY_TOP + crop->height - 1, &ret);
->
-> -	binning = imx219_get_binning(imx219, &bin_h, &bin_v);
-> -	cci_write(imx219->regmap, IMX219_REG_BINNING_MODE_H,
-> -		  (bin_h == 2) ? binning : BINNING_NONE, &ret);
-> -	cci_write(imx219->regmap, IMX219_REG_BINNING_MODE_V,
-> -		  (bin_v == 2) ? binning : BINNING_NONE, &ret);
-> +	imx219_get_binning(imx219, &bin_h, &bin_v);
-> +	cci_write(imx219->regmap, IMX219_REG_BINNING_MODE_H, bin_h, &ret);
-> +	cci_write(imx219->regmap, IMX219_REG_BINNING_MODE_V, bin_v, &ret);
->
->  	cci_write(imx219->regmap, IMX219_REG_X_OUTPUT_SIZE,
->  		  format->width, &ret);
->
-> --
-> 2.48.1
->
+The lack of error indication is something that bothered me already a few
+times in the past (but never to hard that I invested effort to change
+that). Great that you work on that.
+
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+
+Best regards
+Uwe
+
+--et6dryar3l656eqq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAme4SFEACgkQj4D7WH0S
+/k4l8wgAkzdhPhGUsAivrDz+n9J2/GJfIld9jGOHEMMiMXR593L37vPr+fgTTuRK
+NBrq56VRF5fy5rSfW25/AgTqikJ+z5Ne0i3aCntrNUnDxScKBQnNfUH/kQv1hFej
+BsDgBPjTnwj43F3dOUzAQVfze3ZSPheoMuFt+Tb+qAh8gxJP+X56ozXbqW0Y3oCm
+FJN++pH14aEFIw15p0ZWTpTg4EyKcGaNi+T8fWKHxnApkrgLdrXuzlEUpJ6XVIF5
+q1RO8aeJj806zcPKSlagH5hiepRn3szx07dT13KAAXqafFGpRWOTKK+c4FYdH/Ri
+phzUXU5/DjxMEa27RJoRC4oxUAxQHQ==
+=U0AB
+-----END PGP SIGNATURE-----
+
+--et6dryar3l656eqq--
