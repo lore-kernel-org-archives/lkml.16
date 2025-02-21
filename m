@@ -1,778 +1,193 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CY4PR05CU001.outbound.protection.outlook.com (mail-westcentralusazon11020087.outbound.protection.outlook.com [40.93.198.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2796253F1E;
-	Fri, 21 Feb 2025 20:34:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740170083; cv=none; b=n4ObpvrFrRvTtxP6GwWYaXFEqOQ5uLjek/DGLGoWfSC1bQNMQydA/6Q2Azj0epzdIrZNKfS9ttZZUfp9VMKUjkIQHpT/uvKc7eAE1zjCQG01SWf7YiPX4fxMA/+W6HAQ+yhtunv4riCDIy1tTFbk1mL4Wj+H8kAnMTtRciQsv0M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740170083; c=relaxed/simple;
-	bh=op8J5H9Zk6iycoIi+LKgLtooBiP74eLwgNV1Z2uNPOk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fNWQaHzr6aXpWVBEY4zu+rNOkBuiy36UwT5/+isxefKWG7JfN0ZjYIfdGAd9IBhzPN3kK75P6in5lGn/pouMOjCLhQZsuMdTrgO7MFm7Oh+nEZsQ6t65lszAC4FJ7bnQlenYGyc6m+ZnpiO4DSiwLkST2YUmOsAEp771m8Myd1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e05TczEd; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E1C254AF6;
+	Fri, 21 Feb 2025 20:34:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.198.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740170088; cv=fail; b=i6Ujd3jKJ13NyE9w8Ceq2qHru++yVaq601c5dsbrkGmzN9HBImI6cZnUu5dpbKoAQ3MLSxfNo/4CzfTnqcslWNBWQ72TRtzBRrn0TBfXse9ffY9I/uMlVF5aHM79l25R9AcX43gGRu4/oPjx/Immgc465JgBCqKPgtTW8Szv3tA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740170088; c=relaxed/simple;
+	bh=TV5eDWzrRodHTVgikpvQwhi/f/mMZGRw06+XwSgKFuU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=SkBi8SUB9thL9Yt3nuMQmItsjCF2gH7iCWnenlGSwvXXuRQYMnfFXvvuWadzMmJORc52Jd+z5XnZDKdpIwphHtW87ZftQUo0oVtZseFZEjrzenjme/kywVeXFyz+H8o/BsedZ2b/SY7zdev9M2hDSjTsc0CIB8GrT0GW00hz+AA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=Xpv5bxvI; arc=fail smtp.client-ip=40.93.198.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e05TczEd"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6e6827984b2so28501376d6.1;
-        Fri, 21 Feb 2025 12:34:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740170079; x=1740774879; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yp/fik0Bq8MeiTalrgED7w5zwFXacTez/4crY6Ad8+g=;
-        b=e05TczEdkhQbV7C6hzGnOKK3qDGzrER3T2EOr4wAl8Dblfqg6sLeDqtjSSqS62duwe
-         1XJuOSQuMRKdFfWGxUt2o3fXhyBLaNpRQtrhkJK6u7UkCRPH4Molw4A6nk3Y7bB8stxs
-         TTzt8b9C+6J3XTxsVYXDaz5ePPqy0JKh7SAu5uDE1sx5nqwYG0FCmvexbuLPdoxlMDdM
-         dNLVQkXhwLbqkrAzdHSEsH33g6uhrSEBbLeeD6KHOSGGACYsBI0E3RDyhKl0uNCOLt8e
-         ToZPGbfdBWyAzNbUyrX0pvkgkcVn3qH7TjvnxpfOEVZjWFFd+hc6xsqtXnAfIa/PbFte
-         OF3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740170079; x=1740774879;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yp/fik0Bq8MeiTalrgED7w5zwFXacTez/4crY6Ad8+g=;
-        b=UYOkc88jXGA9GHD0TtNugwC5wj2DdBP7ALrAXfF8+1stIXYugGovULA1gTU+t8brNE
-         MF5GcPbAGvrsRTHhak8uf3ZZ0m3ndLZNSGMfQ9W9EdGeYY+MilW3EUZdCJkrVocfyOEK
-         kMyO0McYgZkTjmwvPMFGVQYu4iH1UM2hYUPRNTOJRYDz05Gh/7fV/hXg+UHQVxQFbJlx
-         XSjEhEVWxSP75AUGq2IOvsjsM3EA/5CM1TcZtlkRlGo1cKtWP9v7djo1nMeZK/d1fJc4
-         Q3gnqZjfye6Tg5fWCVbgP9ZQSmXPWzy19B2CiZnMhmgRgtDDD3jpMIwX29EIL4oH3cog
-         lnEA==
-X-Forwarded-Encrypted: i=1; AJvYcCVBZXI6rkCNQqfUSK6cD3UsV7tWgls7BEOUgTd5Q7kX5B1iPsO76LyWK2uO0aJAQ26sxyY8EpdJoik=@vger.kernel.org, AJvYcCVFILumL6u9qI4AHS9V0A+MwSXsqHDJ2+A4sL8n5aMGBtWGVVt4s6q6eswwoFRHKOfWyvdjiPjMx9hzImkLH9vK@vger.kernel.org
-X-Gm-Message-State: AOJu0YwE4bqcJecBUXHA4lLF9mwwmpqsitGfKsU2CmO/fjPz7wRrgqZw
-	tuewtmet6j1tsSklnq5l2p+Ck0C2u7/m95YWSq6w8niw1gtT9xAunCPn6Hhahh0=
-X-Gm-Gg: ASbGnct9eXl6RI7ZQ659aZSHdz0WqS2IGPbmnnkNL+NttzRJ9V0qCQ1ddjo0hzVGxl9
-	EYknX+jEj72ugR/ZkvXMJRZSqNzlKJcwhN0d0ZIK6lFF3Z6vhYL996paUi0by4+1Z0uV+pgNV2d
-	3QYEZ+A/TuRuG/1Vo4tewFrJs7OtHDROarCfqNybSKdI6IEMk7BX3wOFgqoRW8bgmdQsAXJ61eE
-	Wzr8+1n4vOmghF7y7jsrvgXmdr+pAP8LyO6uycmoTu/FOKZvxp0l8JStdh0BT+zjMs94AFB6+M0
-	SKj79wj189YP3WCB4u/unnxcqW4snX1rvzwEgGNk/3vRUYPpkg==
-X-Google-Smtp-Source: AGHT+IFz2tXSjrpwxjV/XysnyFMt2nUzrtdW6rVZdgUV15U0PnaggwYOBJv/kJrhGdp2Jfzwq2eIoQ==
-X-Received: by 2002:a05:6214:f04:b0:6e6:6225:a910 with SMTP id 6a1803df08f44-6e6ae7f7231mr64944266d6.14.1740170079385;
-        Fri, 21 Feb 2025 12:34:39 -0800 (PST)
-Received: from tamird-mac.local ([2600:4041:5be7:7c00:880f:47d4:56c6:b852])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e65d9f36easm101677546d6.74.2025.02.21.12.34.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2025 12:34:37 -0800 (PST)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 21 Feb 2025 15:34:31 -0500
-Subject: [PATCH v5 2/3] printf: break kunit into test cases
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Xpv5bxvI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cwq/nXkIboc503ELWBtPake4+wJf77W1oeGSkQQgG5qZ48aBKs1E/PwRKDtGDKEbWyfJ/mGehsxklDT/8QzC7qnDPMAujbWUuROXPQlaq2cOO7VyUrEkMqCPlQcgZcUmI/6EtxbW32IxqTXbB4PtouG/Bsh9oKXGpeO01WiSR3cRJmoFX53sQII8CbfeWdrtg6jkmJGnyJkpN8jv53T5gGkBmT2xtyOKvXkyIrQDKDC2Z/ueXZxF2zE3gVVp/81vTMIEbRqCmuV5Pxt5MNi4n80vPsFD2fZhAgr8hIxgE2DWyGW7JcxCgpKWa5M7R/XtxtbJmAWf2kt1g37HVpPAow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=chun3cK4KSsrZKWkUkzYKZwrMgOTK8i7R5jO9MwCSpQ=;
+ b=prkCcHW6bAXdseyAvN09kAid81HzbtO2WehpkAfzElNfTtEbFMmjvctYSqet3VlyNybIGikAn4sDyes000tzjbEPS+v0klJl609ypVbC4V3oYWJKK2YCgGtQ17HMUcAj3X8g+ZE+t+cPeLCnH+iFi1xvqDpjC7LSBdQCs8ApLYWofAg5kxPy/pwAnwBFHxqoF4Sp/EneuWLwe5O3nKaVQE4c8LknnENB/D9oAC6arP8oJjbEWB3YrdZaC0AMc8WSaPE5yxY1UO6Fbl6N+Zh+10xOIVa4gPKCqgduY+LN+C0Y7VLx476wXFbRs/cFauDQ0C7b1EjHTp5ISsmphhPnsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=chun3cK4KSsrZKWkUkzYKZwrMgOTK8i7R5jO9MwCSpQ=;
+ b=Xpv5bxvIeT/Nh9ehrjSPvgTU3GAlA3SsTAPrVhuk+AL3gx8VyKBeqKrfZuSAHq/HIflORQAPcMpQkempBiNBOOJ863KT6AXXkqDELjy3zJMqaTOlTsr/ZkzKOKAmqARF1q5S0UuuWclYmxhVUb+HF2tMpsgQg6cgLpsL+CFIq0w=
+Received: from SA6PR21MB4231.namprd21.prod.outlook.com (2603:10b6:806:412::20)
+ by SA1PR21MB2067.namprd21.prod.outlook.com (2603:10b6:806:1c2::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.9; Fri, 21 Feb
+ 2025 20:34:43 +0000
+Received: from SA6PR21MB4231.namprd21.prod.outlook.com
+ ([fe80::5c62:d7c6:4531:3aff]) by SA6PR21MB4231.namprd21.prod.outlook.com
+ ([fe80::5c62:d7c6:4531:3aff%4]) with mapi id 15.20.8489.010; Fri, 21 Feb 2025
+ 20:34:43 +0000
+From: Long Li <longli@microsoft.com>
+To: Kees Bakker <kees@ijzerbout.nl>, Konstantin Taranov
+	<kotaranov@microsoft.com>, Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky
+	<leon@kernel.org>
+CC: "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXTERNAL] [PATCH] RDMA/mana_ib: Ensure variable err is
+ initialized
+Thread-Topic: [EXTERNAL] [PATCH] RDMA/mana_ib: Ensure variable err is
+ initialized
+Thread-Index: AQHbhJr/8Lryl8mBg0+HEUlqi4JsJLNSNp7Q
+Date: Fri, 21 Feb 2025 20:34:43 +0000
+Message-ID:
+ <SA6PR21MB4231810186481AF0A68AAC6ECEC72@SA6PR21MB4231.namprd21.prod.outlook.com>
+References: <20250221195833.7516C16290A@bout3.ijzerbout.nl>
+In-Reply-To: <20250221195833.7516C16290A@bout3.ijzerbout.nl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b66b7baf-60e6-4867-96e4-0a8946a7d9d2;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-02-21T20:33:50Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA6PR21MB4231:EE_|SA1PR21MB2067:EE_
+x-ms-office365-filtering-correlation-id: c4b4b409-1d56-4bfb-8e67-08dd52b72c87
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|10070799003|1800799024|366016|7053199007|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?Kh0jTzh6rPsjsKVbhmYPNEpd0u22fs/7YAfOXIa0thjRq0zBu1tLY9wvORbg?=
+ =?us-ascii?Q?pszLQ9BEwVumLg+IySMkp1LJheIxrjTKmlVpoxYbDmOvC5GoLQ6u5MJsm06w?=
+ =?us-ascii?Q?YAWZYgV9eTgbHyCuJ60Enxnj8vHbtepNFbqq67262diWEZYkr1p/k0Mj2xLp?=
+ =?us-ascii?Q?bLVs5noF4lYhbauZS41tTv9F6glnOu1hVNTJXtvarlJU+Hkwclui0csNIMed?=
+ =?us-ascii?Q?MVkT+fFYaMxZIHxjMzn++/57LeOd+kliCZG8FccEPs5c/1bscPH+sRf+M0TM?=
+ =?us-ascii?Q?PAPDTCNcds5vAdN25bBioP1SnnqSga41Dni5kF8F/gFxtMpJT2BbNHfnRLhB?=
+ =?us-ascii?Q?D/UV7tWxHFjfGlCn6sEXRUFvZi7RCphCdeYUTTxYc+UZ0Dk26bvR4C0pudff?=
+ =?us-ascii?Q?EGVC0iIZ3UZXwp6h2tw7TxMJiwqLu50afnYwQe6htNDbGlek4ZaCKQW5RaEc?=
+ =?us-ascii?Q?Pu3l7ng/5IUiZgLaY+/8B7xXsBwYmyld5xR3hBZ2jbXogdMf96ResR5zPNT/?=
+ =?us-ascii?Q?Rp1BeAincVnpWAH/MP6oNW8tJQmP6YpfR7MQLXyO6/f38KTKOpPo3mLjvmpM?=
+ =?us-ascii?Q?wK4hga+NubtFO8k50H4rO1rs/6qHzaipUYBIH7t3SThAFQeNVF/AlXDL5WUV?=
+ =?us-ascii?Q?sUNuzJ4EEmtzjoP0FQMAMkxIMiyuHvxH20rO5t/7kDzR1hBtk3TOsdEnOsD0?=
+ =?us-ascii?Q?o9gvdmL5z8ArHz5vNaa4zR0zlkh4FLURaDaYvpU+/e9+fWxbDjRgtMRBx1Tj?=
+ =?us-ascii?Q?JhxTptw8kr30iW6rfQUbylkBz45PKXqnapO18Zgl7PDO2tug3tSJtmD55KtQ?=
+ =?us-ascii?Q?cC6uTj46uQnN7sVniVxnYeogV8eoNnGBQTDx0i7PwtSpJsVi0gr2gclVfEdn?=
+ =?us-ascii?Q?ICgKVkO+FxJODYhw9TnI+kiGKrSbnE8b7CYlxqfUSBXTmJRWIUage7PPjgiA?=
+ =?us-ascii?Q?WxEEU9UJ1Ul2s8U10R0z7hVNK2ndRGY7fLoYKaydgivHsvWni290eVCHhIWH?=
+ =?us-ascii?Q?fj6gTde+qZLx8LTYgRdMai1FoclnWHZO8yAePPgPqWunPG4DrSVukaf8X9n6?=
+ =?us-ascii?Q?DYg/0I3wqIG6jQIOmmbXs9SubPHDcH1WF1hOLSE7Hy3dRf+IvDMgWKaOuET9?=
+ =?us-ascii?Q?JbusGOhpfS3CJ8kWyrUTBBaPdnRRomWpMU8Kitu2VIbXk8OI2Hlfm2RWbM5s?=
+ =?us-ascii?Q?JujhlPEu7ZkTREch9AoQIqPalpmTLRPv8W1wh/DBgJAUEKI71SH2ANms1Jcb?=
+ =?us-ascii?Q?WDJPTaDSyL4oS9Gp5Ck6H8TFIja1/Yz+8m3Hta9Cvtr2DkLhjP9f+wXWBtPX?=
+ =?us-ascii?Q?qzKd6MsjnUVChWs/rkbIFmavmQV4ihnn3iDJeRdlGJUNKqx1704NBffQyOhR?=
+ =?us-ascii?Q?29hUmozuvdWwEDrCGWSXL1cpBl6HcwVVhq8WXIYNnRXXJy/5tgYQKvnwK1JZ?=
+ =?us-ascii?Q?1U3lSpBKLimstC3sBJvV89ZHN6+yqXg8?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA6PR21MB4231.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(10070799003)(1800799024)(366016)(7053199007)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?Ftqtr0hjVol0XtZTLpcRigqK4+sE7fL3yuqb6jgqIPTFFlixdgb7ZmVV59Y3?=
+ =?us-ascii?Q?1PUYnzfFThMV1LCfagu9yhQ9PBLf/TaorNVfZOgMQMYz+p4ABwgIK2sS/Tgh?=
+ =?us-ascii?Q?Q3BrpPsyhM0Jj3ZGc2MMmuQ/iGnuVmsJxCl9xmW1cTbUrXkMGULG2yTpvwnn?=
+ =?us-ascii?Q?iHEcft0wzUToJffr+8ZLqRgX/17onkRH6tiu2Pux6fUoyTVFSNXf6UWEVPSe?=
+ =?us-ascii?Q?mltr0/0PpqxQKwF6MUiihfXzYs7Untb3uDBSphkbfaIB1TmnXY5H0hpFccam?=
+ =?us-ascii?Q?EyucZN4NBH+nsGcw0A920oU+IlmjM0WTWDXOzejnZ19dDifjQj5DtIZiiIqg?=
+ =?us-ascii?Q?Ving2RW8/wds7nd9SxXdfgo0QE9Y8ZpPMHJzDo9w0+nHVl8k7qfApngu3hDn?=
+ =?us-ascii?Q?7oo4g3ro1bvySdv4KJNyBuQAYFPN75oM05wL1Z1DXTZ35iI28zpZ9iFvm5g7?=
+ =?us-ascii?Q?UhXruvnHn2iJY1dSiSXrH6crl5CenSMsBzENU7kkmKouGIoTmVR8LmrSguzb?=
+ =?us-ascii?Q?QMHdAqYz/7OXZyTJrzaRITBtMWI3hJIbshSaL/ByHPofpq24l/vwuX1LIYzz?=
+ =?us-ascii?Q?/QefBHyZazOq7gvUbtXOKNWfs8F/eGmYdrBd0w1gKkKPh1CsOu9lGFyDh3Tf?=
+ =?us-ascii?Q?AqCk2tTsnGas1msruYJ9HW8usOW7xaewHVXKHFyjUOA75MNUFBmOkeKU3p8r?=
+ =?us-ascii?Q?oGm6mVYNkeLdWImBemH+KlSpleN7UjB/fjAAb0AiGV4qt7ae6qStZiNd4eCD?=
+ =?us-ascii?Q?7lKIET76WaMwTbtgQcc1ybImEqm0EDZK5ARJ1pnnO0CjiqfKCMBFCF8tYJ9b?=
+ =?us-ascii?Q?PH+bTS4RCmqvU51B5j9JtiFGIYMT24jOaFaM4GdG9dPyXuURhW6dris1TjwA?=
+ =?us-ascii?Q?IL8kB0+CvxHHnaJKHe8/aDePYHUVDzcYi93GzKfEIx4NEd4XeiQjs2zEmycX?=
+ =?us-ascii?Q?siqqQASeZmRZVC9sQZjAf5gsM05Hhd1JA2Q7cQceUdL7eGzqYQCeh6K8RlQs?=
+ =?us-ascii?Q?7x1izRE7oO3HiWtNjM9TzylaE+EJfu5LVb7qs1R91ylHaNPD9ZeJ24WlUKzV?=
+ =?us-ascii?Q?GLlg7M2sgj2de2Wa4gviO1Y7dp8wILGqhri61iHNr4sT7yAGblb1T1hUxQEm?=
+ =?us-ascii?Q?/KU+IYw1EOPiYH0ZyhnDd4Snz1/9HzAhB+deXE1MWUiqac6VUcRZL2Rp8B5+?=
+ =?us-ascii?Q?Wf4gtPGkVIjngHRo14YyviZqhNT1hDX4yOOcry7geXoeR+ZnlfpmY6coRfHH?=
+ =?us-ascii?Q?6ImHzwFFRMiRSwjIKexS31MOdHM3BWxFwkBjNUuT2m+OmmEq3sZcmGlcQ5qr?=
+ =?us-ascii?Q?JJR0ai1tzTjHcKOEu3ThrD69y0lsdrjIOU1CuMeLhT74DMcGCZ3aXgleRVAE?=
+ =?us-ascii?Q?6BWkt8kzJX/gS+53LJc/dZTYlDhFlLlnLIanyAsPRkIRKZ8DoO1IML77svw+?=
+ =?us-ascii?Q?nGrRaZFptrTwZ8XOzYZdXyCX8LCJwNAz9t2Frass2nQ+b/CpykxS12XF/dky?=
+ =?us-ascii?Q?eRPdm0Zo32XywWjlVhG3eOIz4Bonyv8mFDEheUpmlJ6q13UPqndrI6UaGNzk?=
+ =?us-ascii?Q?ENUFatNi6EdFT9HCNddo1jMQ30Qnt2BMV4vNg5VwaGGd8AoiKHRUskU78F6c?=
+ =?us-ascii?Q?6i76sVL6zVSY/nusb541WoOjFAJd7BcUH5JIVPAk3Rgr?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250221-printf-kunit-convert-v5-2-5db840301730@gmail.com>
-References: <20250221-printf-kunit-convert-v5-0-5db840301730@gmail.com>
-In-Reply-To: <20250221-printf-kunit-convert-v5-0-5db840301730@gmail.com>
-To: Arpitha Raghunandan <98.arpi@gmail.com>, 
- David Gow <davidgow@google.com>, Petr Mladek <pmladek@suse.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
- Sergey Senozhatsky <senozhatsky@chromium.org>, 
- Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>, Geert Uytterhoeven <geert@linux-m68k.org>, 
- Madhavan Srinivasan <maddy@linux.ibm.com>, 
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
- Christophe Leroy <christophe.leroy@csgroup.eu>, 
- Naveen N Rao <naveen@kernel.org>, 
- Brendan Higgins <brendan.higgins@linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-m68k@lists.linux-m68k.org, 
- linuxppc-dev@lists.ozlabs.org, Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA6PR21MB4231.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c4b4b409-1d56-4bfb-8e67-08dd52b72c87
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Feb 2025 20:34:43.6011
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: P2ahIzyd+xEdoeZcLn2wXw5J8+3I2PUuXWyHhFjGjYvwrVWsA6m6i7A7+ATLjkKJ+v8ND9SXgU9OdtNogqNRXg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR21MB2067
 
-Move all tests into `printf_test_cases`. This gives us nicer output in
-the event of a failure.
+> Subject: [EXTERNAL] [PATCH] RDMA/mana_ib: Ensure variable err is initiali=
+zed
+>=20
+> [Some people who received this message don't often get email from
+> kees@ijzerbout.nl. Learn why this is important at
+> https://aka.ms/LearnAboutSenderIdentification ]
+>=20
+> In the function mana_ib_gd_create_dma_region if there are no dma blocks t=
+o
+> process the variable `err` remains uninitialized.
+>=20
+> Fixes: 0266a177631d ("RDMA/mana_ib: Add a driver for Microsoft Azure
+> Network Adapter")
+> Signed-off-by: Kees Bakker <kees@ijzerbout.nl>
 
-Combine `plain_format` and `plain_hash` into `hash_pointer` since
-they're testing the same scenario.
+I think it's an impossible condition, but the patch looks good to me.
 
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
- lib/tests/printf_kunit.c | 331 +++++++++++++++++------------------------------
- 1 file changed, 121 insertions(+), 210 deletions(-)
+Reviewed-by: Long Li <longli@microsoft.com>
 
-diff --git a/lib/tests/printf_kunit.c b/lib/tests/printf_kunit.c
-index 287bbfb61148..013df6f6dd49 100644
---- a/lib/tests/printf_kunit.c
-+++ b/lib/tests/printf_kunit.c
-@@ -38,13 +38,8 @@ static unsigned int total_tests;
- static char *test_buffer;
- static char *alloced_buffer;
- 
--static struct kunit *kunittest;
--
--#define tc_fail(fmt, ...) \
--	KUNIT_FAIL(kunittest, fmt, ##__VA_ARGS__)
--
--static void __printf(4, 0)
--do_test(int bufsize, const char *expect, int elen,
-+static void __printf(5, 0)
-+do_test(struct kunit *kunittest, int bufsize, const char *expect, int elen,
- 	const char *fmt, va_list ap)
- {
- 	va_list aq;
-@@ -58,59 +53,64 @@ do_test(int bufsize, const char *expect, int elen,
- 	va_end(aq);
- 
- 	if (ret != elen) {
--		tc_fail("vsnprintf(buf, %d, \"%s\", ...) returned %d, expected %d",
--			bufsize, fmt, ret, elen);
-+		KUNIT_FAIL(kunittest, "vsnprintf(buf, %d, \"%s\", ...) returned %d, expected %d",
-+			   bufsize, fmt, ret, elen);
- 		return;
- 	}
- 
- 	if (memchr_inv(alloced_buffer, FILL_CHAR, PAD_SIZE)) {
--		tc_fail("vsnprintf(buf, %d, \"%s\", ...) wrote before buffer",
--			bufsize, fmt);
-+		KUNIT_FAIL(kunittest, "vsnprintf(buf, %d, \"%s\", ...) wrote before buffer",
-+			   bufsize, fmt);
- 		return;
- 	}
- 
- 	if (!bufsize) {
- 		if (memchr_inv(test_buffer, FILL_CHAR, BUF_SIZE + PAD_SIZE)) {
--			tc_fail("vsnprintf(buf, 0, \"%s\", ...) wrote to buffer", fmt);
-+			KUNIT_FAIL(kunittest, "vsnprintf(buf, 0, \"%s\", ...) wrote to buffer",
-+				   fmt);
- 		}
- 		return;
- 	}
- 
- 	written = min(bufsize-1, elen);
- 	if (test_buffer[written]) {
--		tc_fail("vsnprintf(buf, %d, \"%s\", ...) did not nul-terminate buffer",
--			bufsize, fmt);
-+		KUNIT_FAIL(kunittest,
-+			   "vsnprintf(buf, %d, \"%s\", ...) did not nul-terminate buffer",
-+			   bufsize, fmt);
- 		return;
- 	}
- 
- 	if (memchr_inv(test_buffer + written + 1, FILL_CHAR, bufsize - (written + 1))) {
--		tc_fail("vsnprintf(buf, %d, \"%s\", ...) wrote beyond the nul-terminator",
--			bufsize, fmt);
-+		KUNIT_FAIL(kunittest,
-+			   "vsnprintf(buf, %d, \"%s\", ...) wrote beyond the nul-terminator",
-+			   bufsize, fmt);
- 		return;
- 	}
- 
- 	if (memchr_inv(test_buffer + bufsize, FILL_CHAR, BUF_SIZE + PAD_SIZE - bufsize)) {
--		tc_fail("vsnprintf(buf, %d, \"%s\", ...) wrote beyond buffer", bufsize, fmt);
-+		KUNIT_FAIL(kunittest, "vsnprintf(buf, %d, \"%s\", ...) wrote beyond buffer",
-+			   bufsize, fmt);
- 		return;
- 	}
- 
- 	if (memcmp(test_buffer, expect, written)) {
--		tc_fail("vsnprintf(buf, %d, \"%s\", ...) wrote '%s', expected '%.*s'",
--			bufsize, fmt, test_buffer, written, expect);
-+		KUNIT_FAIL(kunittest, "vsnprintf(buf, %d, \"%s\", ...) wrote '%s', expected '%.*s'",
-+			   bufsize, fmt, test_buffer, written, expect);
- 		return;
- 	}
- }
- 
--static void __printf(3, 4)
--__test(const char *expect, int elen, const char *fmt, ...)
-+static void __printf(4, 0)
-+__test(struct kunit *kunittest, const char *expect, int elen, const char *fmt, ...)
- {
- 	va_list ap;
- 	int rand;
- 	char *p;
- 
- 	if (elen >= BUF_SIZE) {
--		tc_fail("error in test suite: expected output length %d too long. Format was '%s'.",
--			elen, fmt);
-+		KUNIT_FAIL(kunittest,
-+			   "error in test suite: expected length (%d) >= BUF_SIZE (%d). fmt=\"%s\"",
-+			   elen, BUF_SIZE, fmt);
- 		return;
- 	}
- 
-@@ -122,18 +122,19 @@ __test(const char *expect, int elen, const char *fmt, ...)
- 	 * enough and 0), and then we also test that kvasprintf would
- 	 * be able to print it as expected.
- 	 */
--	do_test(BUF_SIZE, expect, elen, fmt, ap);
-+	do_test(kunittest, BUF_SIZE, expect, elen, fmt, ap);
- 	rand = get_random_u32_inclusive(1, elen + 1);
- 	/* Since elen < BUF_SIZE, we have 1 <= rand <= BUF_SIZE. */
--	do_test(rand, expect, elen, fmt, ap);
--	do_test(0, expect, elen, fmt, ap);
-+	do_test(kunittest, rand, expect, elen, fmt, ap);
-+	do_test(kunittest, 0, expect, elen, fmt, ap);
- 
- 	p = kvasprintf(GFP_KERNEL, fmt, ap);
- 	if (p) {
- 		total_tests++;
- 		if (memcmp(p, expect, elen+1)) {
--			tc_fail("kvasprintf(..., \"%s\", ...) returned '%s', expected '%s'",
--				fmt, p, expect);
-+			KUNIT_FAIL(kunittest,
-+				   "kvasprintf(..., \"%s\", ...) returned '%s', expected '%s'",
-+				   fmt, p, expect);
- 		}
- 		kfree(p);
- 	}
-@@ -141,10 +142,10 @@ __test(const char *expect, int elen, const char *fmt, ...)
- }
- 
- #define test(expect, fmt, ...)					\
--	__test(expect, strlen(expect), fmt, ##__VA_ARGS__)
-+	__test(kunittest, expect, strlen(expect), fmt, ##__VA_ARGS__)
- 
- static void
--test_basic(void)
-+test_basic(struct kunit *kunittest)
- {
- 	/* Work around annoying "warning: zero-length gnu_printf format string". */
- 	char nul = '\0';
-@@ -152,11 +153,11 @@ test_basic(void)
- 	test("", &nul);
- 	test("100%", "100%%");
- 	test("xxx%yyy", "xxx%cyyy", '%');
--	__test("xxx\0yyy", 7, "xxx%cyyy", '\0');
-+	__test(kunittest, "xxx\0yyy", 7, "xxx%cyyy", '\0');
- }
- 
- static void
--test_number(void)
-+test_number(struct kunit *kunittest)
- {
- 	test("0x1234abcd  ", "%#-12x", 0x1234abcd);
- 	test("  0x1234abcd", "%#12x", 0x1234abcd);
-@@ -178,7 +179,7 @@ test_number(void)
- }
- 
- static void
--test_string(void)
-+test_string(struct kunit *kunittest)
- {
- 	test("", "%s%.0s", "", "123");
- 	test("ABCD|abc|123", "%s|%.3s|%.*s", "ABCD", "abcdef", 3, "123456");
-@@ -215,29 +216,6 @@ test_string(void)
- #define ZEROS "00000000"	/* hex 32 zero bits */
- #define ONES "ffffffff"		/* hex 32 one bits */
- 
--static int
--plain_format(void)
--{
--	char buf[PLAIN_BUF_SIZE];
--	int nchars;
--
--	nchars = snprintf(buf, PLAIN_BUF_SIZE, "%p", PTR);
--
--	if (nchars != PTR_WIDTH)
--		return -1;
--
--	if (strncmp(buf, PTR_VAL_NO_CRNG, PTR_WIDTH) == 0) {
--		kunit_warn(kunittest, "crng possibly not yet initialized. plain 'p' buffer contains \"%s\"",
--			PTR_VAL_NO_CRNG);
--		return 0;
--	}
--
--	if (strncmp(buf, ZEROS, strlen(ZEROS)) != 0)
--		return -1;
--
--	return 0;
--}
--
- #else
- 
- #define PTR_WIDTH 8
-@@ -247,89 +225,44 @@ plain_format(void)
- #define ZEROS ""
- #define ONES ""
- 
--static int
--plain_format(void)
--{
--	/* Format is implicitly tested for 32 bit machines by plain_hash() */
--	return 0;
--}
--
- #endif	/* BITS_PER_LONG == 64 */
- 
--static int
--plain_hash_to_buffer(const void *p, char *buf, size_t len)
-+static void
-+plain_hash_to_buffer(struct kunit *kunittest, const void *p, char *buf, size_t len)
- {
--	int nchars;
--
--	nchars = snprintf(buf, len, "%p", p);
--
--	if (nchars != PTR_WIDTH)
--		return -1;
-+	KUNIT_ASSERT_EQ(kunittest, snprintf(buf, len, "%p", p), PTR_WIDTH);
- 
- 	if (strncmp(buf, PTR_VAL_NO_CRNG, PTR_WIDTH) == 0) {
- 		kunit_warn(kunittest, "crng possibly not yet initialized. plain 'p' buffer contains \"%s\"",
- 			PTR_VAL_NO_CRNG);
--		return 0;
- 	}
--
--	return 0;
- }
- 
--static int
--plain_hash(void)
--{
--	char buf[PLAIN_BUF_SIZE];
--	int ret;
--
--	ret = plain_hash_to_buffer(PTR, buf, PLAIN_BUF_SIZE);
--	if (ret)
--		return ret;
--
--	if (strncmp(buf, PTR_STR, PTR_WIDTH) == 0)
--		return -1;
--
--	return 0;
--}
--
--/*
-- * We can't use test() to test %p because we don't know what output to expect
-- * after an address is hashed.
-- */
- static void
--plain(void)
-+hash_pointer(struct kunit *kunittest)
- {
--	int err;
-+	if (no_hash_pointers)
-+		kunit_skip(kunittest, "hash pointers disabled");
- 
--	if (no_hash_pointers) {
--		kunit_warn(kunittest, "skipping plain 'p' tests");
--		return;
--	}
-+	char buf[PLAIN_BUF_SIZE];
- 
--	err = plain_hash();
--	if (err) {
--		tc_fail("plain 'p' does not appear to be hashed");
--		return;
--	}
-+	plain_hash_to_buffer(kunittest, PTR, buf, PLAIN_BUF_SIZE);
- 
--	err = plain_format();
--	if (err) {
--		tc_fail("hashing plain 'p' has unexpected format");
--	}
-+	/*
-+	 * We can't use test() to test %p because we don't know what output to expect
-+	 * after an address is hashed.
-+	 */
-+
-+	KUNIT_EXPECT_MEMEQ(kunittest, buf, ZEROS, strlen(ZEROS));
-+	KUNIT_EXPECT_MEMNEQ(kunittest, buf+strlen(ZEROS), PTR_STR, PTR_WIDTH);
- }
- 
- static void
--test_hashed(const char *fmt, const void *p)
-+test_hashed(struct kunit *kunittest, const char *fmt, const void *p)
- {
- 	char buf[PLAIN_BUF_SIZE];
--	int ret;
- 
--	/*
--	 * No need to increase failed test counter since this is assumed
--	 * to be called after plain().
--	 */
--	ret = plain_hash_to_buffer(p, buf, PLAIN_BUF_SIZE);
--	if (ret)
--		return;
-+	plain_hash_to_buffer(kunittest, p, buf, PLAIN_BUF_SIZE);
- 
- 	test(buf, fmt, p);
- }
-@@ -338,7 +271,7 @@ test_hashed(const char *fmt, const void *p)
-  * NULL pointers aren't hashed.
-  */
- static void
--null_pointer(void)
-+null_pointer(struct kunit *kunittest)
- {
- 	test(ZEROS "00000000", "%p", NULL);
- 	test(ZEROS "00000000", "%px", NULL);
-@@ -349,7 +282,7 @@ null_pointer(void)
-  * Error pointers aren't hashed.
-  */
- static void
--error_pointer(void)
-+error_pointer(struct kunit *kunittest)
- {
- 	test(ONES "fffffff5", "%p", ERR_PTR(-11));
- 	test(ONES "fffffff5", "%px", ERR_PTR(-11));
-@@ -359,26 +292,26 @@ error_pointer(void)
- #define PTR_INVALID ((void *)0x000000ab)
- 
- static void
--invalid_pointer(void)
-+invalid_pointer(struct kunit *kunittest)
- {
--	test_hashed("%p", PTR_INVALID);
-+	test_hashed(kunittest, "%p", PTR_INVALID);
- 	test(ZEROS "000000ab", "%px", PTR_INVALID);
- 	test("(efault)", "%pE", PTR_INVALID);
- }
- 
- static void
--symbol_ptr(void)
-+symbol_ptr(struct kunit *kunittest)
- {
- }
- 
- static void
--kernel_ptr(void)
-+kernel_ptr(struct kunit *kunittest)
- {
- 	/* We can't test this without access to kptr_restrict. */
- }
- 
- static void
--struct_resource(void)
-+struct_resource(struct kunit *kunittest)
- {
- 	struct resource test_resource = {
- 		.start = 0xc0ffee00,
-@@ -427,7 +360,7 @@ struct_resource(void)
- }
- 
- static void
--struct_range(void)
-+struct_range(struct kunit *kunittest)
- {
- 	struct range test_range = DEFINE_RANGE(0xc0ffee00ba5eba11,
- 					       0xc0ffee00ba5eba11);
-@@ -443,17 +376,17 @@ struct_range(void)
- }
- 
- static void
--addr(void)
-+addr(struct kunit *kunittest)
- {
- }
- 
- static void
--escaped_str(void)
-+escaped_str(struct kunit *kunittest)
- {
- }
- 
- static void
--hex_string(void)
-+hex_string(struct kunit *kunittest)
- {
- 	const char buf[3] = {0xc0, 0xff, 0xee};
- 
-@@ -464,7 +397,7 @@ hex_string(void)
- }
- 
- static void
--mac(void)
-+mac(struct kunit *kunittest)
- {
- 	const u8 addr[6] = {0x2d, 0x48, 0xd6, 0xfc, 0x7a, 0x05};
- 
-@@ -476,7 +409,7 @@ mac(void)
- }
- 
- static void
--ip4(void)
-+ip4(struct kunit *kunittest)
- {
- 	struct sockaddr_in sa;
- 
-@@ -491,19 +424,12 @@ ip4(void)
- }
- 
- static void
--ip6(void)
-+ip6(struct kunit *kunittest)
- {
- }
- 
- static void
--ip(void)
--{
--	ip4();
--	ip6();
--}
--
--static void
--uuid(void)
-+uuid(struct kunit *kunittest)
- {
- 	const char uuid[16] = {0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7,
- 			       0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf};
-@@ -530,7 +456,7 @@ static struct dentry test_dentry[4] = {
- };
- 
- static void
--dentry(void)
-+dentry(struct kunit *kunittest)
- {
- 	test("foo", "%pd", &test_dentry[0]);
- 	test("foo", "%pd2", &test_dentry[0]);
-@@ -551,12 +477,12 @@ dentry(void)
- }
- 
- static void
--struct_va_format(void)
-+struct_va_format(struct kunit *kunittest)
- {
- }
- 
- static void
--time_and_date(void)
-+time_and_date(struct kunit *kunittest)
- {
- 	/* 1543210543 */
- 	const struct rtc_time tm = {
-@@ -590,12 +516,12 @@ time_and_date(void)
- }
- 
- static void
--struct_clk(void)
-+struct_clk(struct kunit *kunittest)
- {
- }
- 
- static void
--large_bitmap(void)
-+large_bitmap(struct kunit *kunittest)
- {
- 	const int nbits = 1 << 16;
- 	unsigned long *bits = bitmap_zalloc(nbits, GFP_KERNEL);
-@@ -609,7 +535,7 @@ large_bitmap(void)
- }
- 
- static void
--bitmap(void)
-+bitmap(struct kunit *kunittest)
- {
- 	DECLARE_BITMAP(bits, 20);
- 	const int primes[] = {2,3,5,7,11,13,17,19};
-@@ -628,11 +554,11 @@ bitmap(void)
- 	test("fffff|fffff", "%20pb|%*pb", bits, 20, bits);
- 	test("0-19|0-19", "%20pbl|%*pbl", bits, 20, bits);
- 
--	large_bitmap();
-+	large_bitmap(kunittest);
- }
- 
- static void
--netdev_features(void)
-+netdev_features(struct kunit *kunittest)
- {
- }
- 
-@@ -658,8 +584,8 @@ static const struct page_flags_test pft[] = {
- };
- 
- static void
--page_flags_test(int section, int node, int zone, int last_cpupid,
--		int kasan_tag, unsigned long flags, const char *name,
-+page_flags_test(struct kunit *kunittest, int section, int node, int zone,
-+		int last_cpupid, int kasan_tag, unsigned long flags, const char *name,
- 		char *cmp_buf)
- {
- 	unsigned long values[] = {section, node, zone, last_cpupid, kasan_tag};
-@@ -696,25 +622,24 @@ page_flags_test(int section, int node, int zone, int last_cpupid,
- }
- 
- static void
--flags(void)
-+flags(struct kunit *kunittest)
- {
- 	unsigned long flags;
- 	char *cmp_buffer;
- 	gfp_t gfp;
- 
--	cmp_buffer = kmalloc(BUF_SIZE, GFP_KERNEL);
--	if (!cmp_buffer)
--		return;
-+	cmp_buffer = kunit_kmalloc(kunittest, BUF_SIZE, GFP_KERNEL);
-+	KUNIT_ASSERT_NOT_NULL(kunittest, cmp_buffer);
- 
- 	flags = 0;
--	page_flags_test(0, 0, 0, 0, 0, flags, "", cmp_buffer);
-+	page_flags_test(kunittest, 0, 0, 0, 0, 0, flags, "", cmp_buffer);
- 
- 	flags = 1UL << NR_PAGEFLAGS;
--	page_flags_test(0, 0, 0, 0, 0, flags, "", cmp_buffer);
-+	page_flags_test(kunittest, 0, 0, 0, 0, 0, flags, "", cmp_buffer);
- 
- 	flags |= 1UL << PG_uptodate | 1UL << PG_dirty | 1UL << PG_lru
- 		| 1UL << PG_active | 1UL << PG_swapbacked;
--	page_flags_test(1, 1, 1, 0x1fffff, 1, flags,
-+	page_flags_test(kunittest, 1, 1, 1, 0x1fffff, 1, flags,
- 			"uptodate|dirty|lru|active|swapbacked",
- 			cmp_buffer);
- 
-@@ -739,11 +664,9 @@ flags(void)
- 							(unsigned long) gfp);
- 	gfp |= __GFP_HIGH;
- 	test(cmp_buffer, "%pGg", &gfp);
--
--	kfree(cmp_buffer);
- }
- 
--static void fwnode_pointer(void)
-+static void fwnode_pointer(struct kunit *kunittest)
- {
- 	const struct software_node first = { .name = "first" };
- 	const struct software_node second = { .name = "second", .parent = &first };
-@@ -757,8 +680,7 @@ static void fwnode_pointer(void)
- 
- 	rval = software_node_register_node_group(group);
- 	if (rval) {
--		kunit_warn(kunittest, "cannot register softnodes; rval %d", rval);
--		return;
-+		kunit_skip(kunittest, "cannot register softnodes; rval %d", rval);
- 	}
- 
- 	test(full_name_second, "%pfw", software_node_fwnode(&second));
-@@ -770,7 +692,7 @@ static void fwnode_pointer(void)
- 	software_node_unregister_node_group(group);
- }
- 
--static void fourcc_pointer(void)
-+static void fourcc_pointer(struct kunit *kunittest)
- {
- 	struct {
- 		u32 code;
-@@ -788,13 +710,13 @@ static void fourcc_pointer(void)
- }
- 
- static void
--errptr(void)
-+errptr(struct kunit *kunittest)
- {
- 	test("-1234", "%pe", ERR_PTR(-1234));
- 
- 	/* Check that %pe with a non-ERR_PTR gets treated as ordinary %p. */
- 	BUILD_BUG_ON(IS_ERR(PTR));
--	test_hashed("%pe", PTR);
-+	test_hashed(kunittest, "%pe", PTR);
- 
- #ifdef CONFIG_SYMBOLIC_ERRNAME
- 	test("(-ENOTSOCK)", "(%pe)", ERR_PTR(-ENOTSOCK));
-@@ -807,65 +729,54 @@ errptr(void)
- #endif
- }
- 
--static void
--test_pointer(void)
--{
--	plain();
--	null_pointer();
--	error_pointer();
--	invalid_pointer();
--	symbol_ptr();
--	kernel_ptr();
--	struct_resource();
--	struct_range();
--	addr();
--	escaped_str();
--	hex_string();
--	mac();
--	ip();
--	uuid();
--	dentry();
--	struct_va_format();
--	time_and_date();
--	struct_clk();
--	bitmap();
--	netdev_features();
--	flags();
--	errptr();
--	fwnode_pointer();
--	fourcc_pointer();
--}
--
--static void printf_test(struct kunit *test)
-+static int printf_suite_init(struct kunit_suite *suite)
- {
-+	total_tests = 0;
-+
- 	alloced_buffer = kmalloc(BUF_SIZE + 2*PAD_SIZE, GFP_KERNEL);
- 	if (!alloced_buffer)
--		return;
-+		return -ENOMEM;
- 	test_buffer = alloced_buffer + PAD_SIZE;
- 
--	kunittest = test;
--
--	test_basic();
--	test_number();
--	test_string();
--	test_pointer();
--
--	kfree(alloced_buffer);
--}
--
--static int printf_suite_init(struct kunit_suite *suite)
--{
--	total_tests = 0;
- 	return 0;
- }
- 
- static void printf_suite_exit(struct kunit_suite *suite)
- {
-+	kfree(alloced_buffer);
-+
- 	kunit_info(suite, "ran %u tests", total_tests);
- }
- 
- static struct kunit_case printf_test_cases[] = {
--	KUNIT_CASE(printf_test),
-+	KUNIT_CASE(test_basic),
-+	KUNIT_CASE(test_number),
-+	KUNIT_CASE(test_string),
-+	KUNIT_CASE(hash_pointer),
-+	KUNIT_CASE(null_pointer),
-+	KUNIT_CASE(error_pointer),
-+	KUNIT_CASE(invalid_pointer),
-+	KUNIT_CASE(symbol_ptr),
-+	KUNIT_CASE(kernel_ptr),
-+	KUNIT_CASE(struct_resource),
-+	KUNIT_CASE(struct_range),
-+	KUNIT_CASE(addr),
-+	KUNIT_CASE(escaped_str),
-+	KUNIT_CASE(hex_string),
-+	KUNIT_CASE(mac),
-+	KUNIT_CASE(ip4),
-+	KUNIT_CASE(ip6),
-+	KUNIT_CASE(uuid),
-+	KUNIT_CASE(dentry),
-+	KUNIT_CASE(struct_va_format),
-+	KUNIT_CASE(time_and_date),
-+	KUNIT_CASE(struct_clk),
-+	KUNIT_CASE(bitmap),
-+	KUNIT_CASE(netdev_features),
-+	KUNIT_CASE(flags),
-+	KUNIT_CASE(errptr),
-+	KUNIT_CASE(fwnode_pointer),
-+	KUNIT_CASE(fourcc_pointer),
- 	{}
- };
- 
-
--- 
-2.48.1
+> ---
+>  drivers/infiniband/hw/mana/main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/infiniband/hw/mana/main.c
+> b/drivers/infiniband/hw/mana/main.c
+> index 114ca8c509ce..eda9c5b971de 100644
+> --- a/drivers/infiniband/hw/mana/main.c
+> +++ b/drivers/infiniband/hw/mana/main.c
+> @@ -384,7 +384,7 @@ static int mana_ib_gd_create_dma_region(struct
+> mana_ib_dev *dev, struct ib_umem
+>         unsigned int tail =3D 0;
+>         u64 *page_addr_list;
+>         void *request_buf;
+> -       int err;
+> +       int err =3D 0;
+>=20
+>         gc =3D mdev_to_gc(dev);
+>         hwc =3D gc->hwc.driver_data;
+> --
+> 2.48.1
 
