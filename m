@@ -1,110 +1,120 @@
-Received: from out1.mail.ruhr-uni-bochum.de (out1.mail.ruhr-uni-bochum.de [134.147.53.149])
+Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C7E1F4E38;
-	Fri, 21 Feb 2025 03:22:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.147.53.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A601F5839;
+	Fri, 21 Feb 2025 03:25:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740108178; cv=none; b=PPpCv6kLeU463gyPOopA/NizTr3IYal3OnnGd3s+DLBMIwt/OkwUCutMpCT6bSycwIglyHskuoYWAqO6mTbAv2JIkfmBuc9OCLTbc87510BfPqT0zjo1LZP5ko6rv6znrxvn/1RQ9f6t1w92oI4TyKUwpLAqzU5M1Y+K92pb/rU=
+	t=1740108313; cv=none; b=MrYPk47om16/Gv9vaNQfX7o/FejHNTIkVdG4X0/GJfYpqNzSs7evzWtbOvW95DXvanUjxuz31TPma1Er+3a7NdqoJcqaS6Pc11aCqStMdtYKi001TYATvDFglVOCBX2IPFoCcGJv+ANE8XSegyHi2uHdfgCrmZkBKEChZLqkTvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740108178; c=relaxed/simple;
-	bh=k4vfaryULm0wVI7PaW//SBe7RD4zp/MFtgRUgrB4+IY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qQlCwkMSF1niOvnFyeTe+58ayFBlsbVq/kdFHBlxgREjmjpOJgHOrxJrEP0WUC5Wr22qBOa1wF4D8xrkg/M+jszGn5TZTRsEjhnwNzloqB8h8LvKN0Q6ca/i0HL7LvcNYaJikj8ELR9OCSkOcX2M08gwEYh8JL29PeuqB8NA/Qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ruhr-uni-bochum.de; spf=pass smtp.mailfrom=ruhr-uni-bochum.de; dkim=pass (2048-bit key) header.d=ruhr-uni-bochum.de header.i=@ruhr-uni-bochum.de header.b=JvTTDic9; arc=none smtp.client-ip=134.147.53.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ruhr-uni-bochum.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ruhr-uni-bochum.de
+	s=arc-20240116; t=1740108313; c=relaxed/simple;
+	bh=80AdJ7ZcONXQAx9BgLf5F2RhrRhVoagkS64xbotAsp4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fBOoR4o98hxQoEUUC/VqN+udBYoMRF9oW7kv2W2D8XZE6tN8uFEacxB9yZaS66F72IPkh17FuVaq1mWy6Kggce1fMOuAFi5NmPIRE/ZxGqb5JzUYr9W1kfvPSx0yXpTcomungU2VSHoRqH3KV+PBRKuZ6mgf1P79oUsXfaDc+Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=AdVglnvK; arc=none smtp.client-ip=99.78.197.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ruhr-uni-bochum.de header.i=@ruhr-uni-bochum.de header.b="JvTTDic9"
-Received: from mx1.mail.ruhr-uni-bochum.de (localhost [127.0.0.1])
-	by out1.mail.ruhr-uni-bochum.de (Postfix mo-ext) with ESMTP id 4YzZyt2s33z8S6s;
-	Fri, 21 Feb 2025 04:16:06 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ruhr-uni-bochum.de;
-	s=mail-2024; t=1740107766;
-	bh=k4vfaryULm0wVI7PaW//SBe7RD4zp/MFtgRUgrB4+IY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JvTTDic9UlIcexaw6dtFTBvlI8mc7PBunf+Q3W8PDBuRDKiTx0RCweIroiPne4u8x
-	 Cgf+sSgkDYQxXcpzmwXxmy41AV6ZiSusv3TmOmOLo/nkWRVeONC6Vj3iiZAQD1b/dQ
-	 LNLkNHytaRcQWTFxFBfwnNRczzhvqvV5/XVto7BG+Bp9XcSJZ8LWZ+RYRdIMpxFFAI
-	 kbbTqvYgeLLGjaoCMNNlM6dD1hu0VyyT7m4zlPymb2KukF6NmeuwC1USYW/rqlSGyk
-	 3yhR0Vxv3q05tU/h+z7WnUNsNykhIPL3Sy1Wdf4qYJxTef4jQjQSR5AZaXE57p3gec
-	 vlJNwSDetRNqg==
-Received: from out1.mail.ruhr-uni-bochum.de (localhost [127.0.0.1])
-	by mx1.mail.ruhr-uni-bochum.de (Postfix idis) with ESMTP id 4YzZyt11Xnz8S4P;
-	Fri, 21 Feb 2025 04:16:06 +0100 (CET)
-X-Envelope-Sender: <Jude.Gyimah@ruhr-uni-bochum.de>
-X-RUB-Notes: Internal origin=IPv6:2a05:3e00:c:1001::8693:2aec
-Received: from mail2.mail.ruhr-uni-bochum.de (mail2.mail.ruhr-uni-bochum.de [IPv6:2a05:3e00:c:1001::8693:2aec])
-	by out1.mail.ruhr-uni-bochum.de (Postfix mi-int) with ESMTPS id 4YzZys4wZ2z8S6L;
-	Fri, 21 Feb 2025 04:16:05 +0100 (CET)
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 1.0.7 at mx1.mail.ruhr-uni-bochum.de
-Received: from [192.168.0.102] (unknown [77.37.5.67])
-	by mail2.mail.ruhr-uni-bochum.de (Postfix) with ESMTPSA id 4YzZys0CsRzDgyN;
-	Fri, 21 Feb 2025 04:16:04 +0100 (CET)
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 1.4.1 at mail2.mail.ruhr-uni-bochum.de
-Message-ID: <4da401e6-bfd1-4fa1-9a4a-5ce3705e571d@ruhr-uni-bochum.de>
-Date: Fri, 21 Feb 2025 04:16:04 +0100
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="AdVglnvK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1740108312; x=1771644312;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=98eKIkOj5zDaaN0aeg/8QMarn/Dvke+2ZuIrd8oeP2I=;
+  b=AdVglnvK8TbVyXlEPRf84DUIqPCl0WrQk0NbkqBxgJh5ko65IBfPz26X
+   Y0pwlJ092oQArq8RmWNbgs/Zs0DHRN8mCdfg+Ys8H09+JiwwZl1whA7xT
+   Lp3jQP+wSg9h7EA1E89dmAYVdTN7QVpX6W2mwhSfrt4xbzl4/gPAoZo0j
+   E=;
+X-IronPort-AV: E=Sophos;i="6.13,303,1732579200"; 
+   d="scan'208";a="171680556"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 03:25:09 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.7.35:29611]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.34.181:2525] with esmtp (Farcaster)
+ id 878d6712-a911-4454-a3d1-f12dc573cc97; Fri, 21 Feb 2025 03:25:09 +0000 (UTC)
+X-Farcaster-Flow-ID: 878d6712-a911-4454-a3d1-f12dc573cc97
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
+ Fri, 21 Feb 2025 03:25:04 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.135.209.63) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Fri, 21 Feb 2025 03:24:58 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <shaw.leon@gmail.com>
+CC: <alex.aring@gmail.com>, <andrew+netdev@lunn.ch>,
+	<b.a.t.m.a.n@lists.open-mesh.org>, <bpf@vger.kernel.org>,
+	<bridge@lists.linux.dev>, <davem@davemloft.net>, <donald.hunter@gmail.com>,
+	<dsahern@kernel.org>, <edumazet@google.com>, <herbert@gondor.apana.org.au>,
+	<horms@kernel.org>, <kuba@kernel.org>, <kuniyu@amazon.com>,
+	<linux-can@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <linux-ppp@vger.kernel.org>,
+	<linux-rdma@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
+	<linux-wpan@vger.kernel.org>, <miquel.raynal@bootlin.com>,
+	<netdev@vger.kernel.org>, <osmocom-net-gprs@lists.osmocom.org>,
+	<pabeni@redhat.com>, <shuah@kernel.org>, <stefan@datenfreihafen.org>,
+	<steffen.klassert@secunet.com>, <wireguard@lists.zx2c4.com>
+Subject: Re: [PATCH net-next v10 02/13] rtnetlink: Pack newlink() params into struct
+Date: Thu, 20 Feb 2025 19:24:49 -0800
+Message-ID: <20250221032449.73597-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20250219125039.18024-3-shaw.leon@gmail.com>
+References: <20250219125039.18024-3-shaw.leon@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 00/11] kconfig: Add support for conflict resolution
-To: Masahiro Yamada <masahiroy@kernel.org>,
- Luis Chamberlain <mcgrof@kernel.org>
-Cc: Ole Schuerks <ole0811sch@gmail.com>, linux-kbuild@vger.kernel.org,
- jude.gyimah@rub.de, thorsten.berger@rub.de, deltaone@debian.org,
- jan.sollmann@rub.de, linux-kernel@vger.kernel.org, nathan@kernel.org,
- nicolas@fjasle.eu
-References: <20250208163959.3973163-1-ole0811sch@gmail.com>
- <CAK7LNAQBBKfSwQ=z3yBchg--gcrAykWz6xvpAYWKse9R9g8KVQ@mail.gmail.com>
- <Z6oeplCypN825pyR@bombadil.infradead.org>
- <CAK7LNAT48101gZzcHF3U-VL1i0Ekns6zXKpNDb3MnScoSNr-kw@mail.gmail.com>
-Content-Language: en-US
-From: Jude Gyimah <Jude.Gyimah@ruhr-uni-bochum.de>
-In-Reply-To: <CAK7LNAT48101gZzcHF3U-VL1i0Ekns6zXKpNDb3MnScoSNr-kw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D033UWC004.ant.amazon.com (10.13.139.225) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-Quick follow-up. On our end, our SAT-solver implementations can be 
-easily adapted to accommodate your future toolchain selection 
-refactorings. Also, could you share with us the timelines for your 
-refactorings so we can plan and deliver the adjusted SAT-solver patches. 
-Best Regards, Jude Gyimah
+From: Xiao Liang <shaw.leon@gmail.com>
+Date: Wed, 19 Feb 2025 20:50:28 +0800
+> There are 4 net namespaces involved when creating links:
+> 
+>  - source netns - where the netlink socket resides,
+>  - target netns - where to put the device being created,
+>  - link netns - netns associated with the device (backend),
+>  - peer netns - netns of peer device.
+> 
+> Currently, two nets are passed to newlink() callback - "src_net"
+> parameter and "dev_net" (implicitly in net_device). They are set as
+> follows, depending on netlink attributes in the request.
+> 
+>  +------------+-------------------+---------+---------+
+>  | peer netns | IFLA_LINK_NETNSID | src_net | dev_net |
+>  +------------+-------------------+---------+---------+
+>  |            | absent            | source  | target  |
+>  | absent     +-------------------+---------+---------+
+>  |            | present           | link    | link    |
+>  +------------+-------------------+---------+---------+
+>  |            | absent            | peer    | target  |
+>  | present    +-------------------+---------+---------+
+>  |            | present           | peer    | link    |
+>  +------------+-------------------+---------+---------+
+> 
+> When IFLA_LINK_NETNSID is present, the device is created in link netns
+> first and then moved to target netns. This has some side effects,
+> including extra ifindex allocation, ifname validation and link events.
+> These could be avoided if we create it in target netns from
+> the beginning.
+> 
+> On the other hand, the meaning of src_net parameter is ambiguous. It
+> varies depending on how parameters are passed. It is the effective
+> link (or peer netns) by design, but some drivers ignore it and use
+> dev_net instead.
+> 
+> To provide more netns context for drivers, this patch packs existing
+> newlink() parameters, along with the source netns, link netns and peer
+> netns, into a struct. The old "src_net" is renamed to "net" to avoid
+> confusion with real source netns, and will be deprecated later. The use
+> of src_net are converted to params->net trivially.
+> 
+> Signed-off-by: Xiao Liang <shaw.leon@gmail.com>
 
-On 2/11/25 01:46, Masahiro Yamada wrote:
-> On Tue, Feb 11, 2025 at 12:43 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
->> On Mon, Feb 10, 2025 at 02:00:52PM +0900, Masahiro Yamada wrote:
->>> Thanks for this, but I have no plans to merge the SAT solver.
->>>
->>> The reason is that my future plan is to move toolchain selection
->>> to the Kconfig stage instead of specifying it statically from the command line.
->> That makes sense.
->>
->>> This approach was suggested by Linus [1], and to achieve that,
->>> the shell evaluation must be dynamically re-evaluated [2].
->> Sure.
->>
->>> The SAT solver would likely conflict with this plan. At least due to the
->>> significant amount of additional code, which would be an obstacle.
->> I can't see how the toolchain selection, if set on Kconfig can't be
->> leveraged later to enable / disable the SAT solver, however I can
->> see the amount of code shuffling incurred to be an extra hurdle to
->> address and a preference to leave that for later.
->>
->> In other words, I susepct it is still possible to evaluate to
->> add support for the SAT solver post toolchain kconfig integration.
->>
->> Thoughts?
->
-> It depends on how the dynamic shell evaluation is implemented.
-> This is not limited to bool/tristate, but SAT solver only works for
-> those two types.
->
->
->
->
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
