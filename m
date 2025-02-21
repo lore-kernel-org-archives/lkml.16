@@ -1,91 +1,163 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1A2E1FF1AF;
-	Fri, 21 Feb 2025 10:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0F91FF1AF;
+	Fri, 21 Feb 2025 10:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740134135; cv=none; b=TT6Oz08genoPCmGHgNby0eDu86EPKHEddyIXtvX4EKYeOMzGc4q6ytMRl/g46peBMu+sQOoWkrJk1S/b4oPusR4WCbqwKjQQQ1BSSx6QLzYT/fWwuocrg4wpD36Hs/9Dz1fBQAX325GMICt7iQIuBwzTcEpCYjzheUrwAeYbZPM=
+	t=1740134244; cv=none; b=Xge4j9lS71JIN7tRP6QDAWdGn65ulOGLJj7WRQJAsOy6srt1ee8rosZ8KiDD27tCaPUQKmuEMa2I9xa6bmMt8YT/BIDgBsCTzqRnpP9E6X7uNRumZVpbIh7zvLaQkRQK9uS4lyV4a0z5Sot3X+nBM5fLlMDanreM307DrdQ80SM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740134135; c=relaxed/simple;
-	bh=9yfpDYwiRXTbAwNM4+S8KEq65OP2vDs72ScJnryKwII=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rUth7q4Tr3TfyITKUGR2WtMCDQ2xKv7qO8rYvNGC2exqQOg47d7w2K4A3D3odJi417zPKMgu4UyhAUIRHXvWYCrFSPh3X0y+jfu9+ln1xMoJYpPgdvEofjjAoYg9ADidrXDOQWU5Lr7w1ACz7N5eK/1KYpQ+6+acK04Ye99MDxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B5521169C;
-	Fri, 21 Feb 2025 02:35:50 -0800 (PST)
-Received: from [10.57.64.214] (unknown [10.57.64.214])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 669A63F5A1;
-	Fri, 21 Feb 2025 02:35:31 -0800 (PST)
-Message-ID: <9cc02f9e-9326-4fe1-820b-ca725f68de29@arm.com>
-Date: Fri, 21 Feb 2025 10:35:30 +0000
+	s=arc-20240116; t=1740134244; c=relaxed/simple;
+	bh=gRBgJtkXNndTygei2/WU8WKjZkABz8HcvljFdyBrIgo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LLFZDRIV2tKYGTHYohEC1SoaCv9TLKKqR8cgLvw4okndbpDy10IBfTgT9fS0VnmOSl79aGOHeV5RFJicb84SA8MVaLFZTzRGvWQqmG/T5XBYFWJL2GLg53OeibaqIL3lnbkGryUO7A5eSJODIvNRNlNCPhpQyBNor456he6feKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=gmbb0Xmb; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="gmbb0Xmb"
+Received: from mail.ideasonboard.com (unknown [IPv6:2401:4900:1c30:4abb:6de5:9248:813e:8db3])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B49342EC;
+	Fri, 21 Feb 2025 11:35:55 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1740134156;
+	bh=gRBgJtkXNndTygei2/WU8WKjZkABz8HcvljFdyBrIgo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gmbb0XmbO/gfQQ2P9CUic9YnHpaGA9RrxgDPyBrXWK0diB71jGF7PYw1uzI4DKDjY
+	 5U/TcMNX3aEYO7q1DCmdRO+XD0Hi43PgqcPHnjlYc1hH9M7MU42EUhwF88jQGCb4CG
+	 xybQKsMUMzyRAQm+tmGWUf8eYCasPe9xaFPkuYXI=
+Date: Fri, 21 Feb 2025 16:07:13 +0530
+From: Jai Luthra <jai.luthra@ideasonboard.com>
+To: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Dave Stevenson <dave.stevenson@raspberrypi.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] media: i2c: imx219: Only use higher LLP_MIN for
+ binned resolutions
+Message-ID: <attkqzfqwxjrozx27utbyh2q2jfci3ytjsq2we4db3nhf22l3e@7uv3j2imledv>
+References: <20250219-imx219_fixes_v2-v1-0-0e3f5dd9b024@ideasonboard.com>
+ <20250219-imx219_fixes_v2-v1-1-0e3f5dd9b024@ideasonboard.com>
+ <mloobyyocd5f4hbkenplebwyffacdjjhzhxefvlx2og5qz5xlx@zswcyzzfcpy3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] thermal: gov_power_allocator: Fix incorrect calculation
- in divvy_up_power
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Yu-Che Cheng <giver@chromium.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
- Zhang Rui <rui.zhang@intel.com>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, Chen-Yu Tsai <wenst@chromium.org>
-References: <20250219-fix-power-allocator-calc-v1-1-48b860291919@chromium.org>
- <CAJZ5v0jSh=aOfP7BKTCSxnPGy-XKJKcHNw8bN5PXPH0LA0tAGg@mail.gmail.com>
-Content-Language: en-US
-From: Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <CAJZ5v0jSh=aOfP7BKTCSxnPGy-XKJKcHNw8bN5PXPH0LA0tAGg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <mloobyyocd5f4hbkenplebwyffacdjjhzhxefvlx2og5qz5xlx@zswcyzzfcpy3>
 
+Hi Jacopo,
 
+Thanks for the review.
 
-On 2/20/25 19:45, Rafael J. Wysocki wrote:
-> On Wed, Feb 19, 2025 at 8:07 AM Yu-Che Cheng <giver@chromium.org> wrote:
->>
->> divvy_up_power should use weighted_req_power instead of req_power to
->> calculate the granted_power. Otherwise, the granted_power may be
->> unexpected as the denominator total_req_power is weighted sum.
+On Feb 21, 2025 at 10:28:40 +0100, Jacopo Mondi wrote:
+> Hi Jai
 > 
-> Yes, this is what's happening, to my eyes.
+> On Wed, Feb 19, 2025 at 05:16:43PM +0530, Jai Luthra wrote:
+> > The LLP_MIN of 3560 is only needed to fix artefacts seen with binned
+> > resolutions. As increasing the LLP reduces the highest possible
+> > framerate by ~3%, use the default minimum of 3448 for non-binned
+> > resolutions.
+> >
 > 
->> This is a mistake during the previous refactor.
->>
->> Replace the req_power with weighted_req_power in divvy_up_power
->> calculation.
->>
->> Fixes: 912e97c67cc3 ("thermal: gov_power_allocator: Move memory allocation out of throttle()")
->> Signed-off-by: Yu-Che Cheng <giver@chromium.org>
->> ---
->>   drivers/thermal/gov_power_allocator.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/thermal/gov_power_allocator.c b/drivers/thermal/gov_power_allocator.c
->> index 3b644de3292e..3b626db55b2b 100644
->> --- a/drivers/thermal/gov_power_allocator.c
->> +++ b/drivers/thermal/gov_power_allocator.c
->> @@ -370,7 +370,7 @@ static void divvy_up_power(struct power_actor *power, int num_actors,
->>
->>          for (i = 0; i < num_actors; i++) {
->>                  struct power_actor *pa = &power[i];
->> -               u64 req_range = (u64)pa->req_power * power_range;
->> +               u64 req_range = (u64)pa->weighted_req_power * power_range;
->>
->>                  pa->granted_power = DIV_ROUND_CLOSEST_ULL(req_range,
->>                                                            total_req_power);
->>
->> ---
+> Also restore the fll_def value for non-binned modes in the modes definition
+> to restore the default mode framerate to 30fps.
 > 
-> And the fix looks good to me.
+
+Will add in v2.
+
+> > Suggested-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+> > Link: https://lore.kernel.org/linux-media/CAPY8ntC1-S6zKtDvmc6EgyxP+j6rTShuG8Dr8PKb9XQr2PeS_w@mail.gmail.com/
+> > Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
+> > ---
+> >  drivers/media/i2c/imx219.c | 24 ++++++++++++++++--------
+> >  1 file changed, 16 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
+> > index f662c9d755114265aad46c5cc7f5031b9bc0dbba..6e51a7af5e2a05cacefb201d96a9fbdc349f17d8 100644
+> > --- a/drivers/media/i2c/imx219.c
+> > +++ b/drivers/media/i2c/imx219.c
+> > @@ -74,7 +74,8 @@
+> >  #define IMX219_FLL_MAX			0xffff
+> >  #define IMX219_VBLANK_MIN		32
+> >  #define IMX219_REG_LINE_LENGTH_A	CCI_REG16(0x0162)
+> > -#define IMX219_LLP_MIN			0x0de8
+> > +#define IMX219_LLP_MIN			0x0d78
+> > +#define IMX219_BINNED_LLP_MIN		0x0de8
+> >  #define IMX219_LLP_MAX			0x7ff0
+> >
+> >  #define IMX219_REG_X_ADD_STA_A		CCI_REG16(0x0164)
+> > @@ -317,13 +318,13 @@ static const struct imx219_mode supported_modes[] = {
+> >  		/* 8MPix 15fps mode */
+> >  		.width = 3280,
+> >  		.height = 2464,
+> > -		.fll_def = 3415,
+> > +		.fll_def = 3526,
+> >  	},
+> >  	{
+> >  		/* 1080P 30fps cropped */
+> >  		.width = 1920,
+> >  		.height = 1080,
+> > -		.fll_def = 1707,
+> > +		.fll_def = 1763,
+> >  	},
+> >  	{
+> >  		/* 2x2 binned 60fps mode */
+> > @@ -901,7 +902,7 @@ static int imx219_set_pad_format(struct v4l2_subdev *sd,
+> >  	if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
+> >  		int exposure_max;
+> >  		int exposure_def;
+> > -		int hblank;
+> > +		int hblank, llp_min;
+> >  		int pixel_rate;
+> >
+> >  		/* Update limits and set FPS to default */
+> > @@ -918,6 +919,17 @@ static int imx219_set_pad_format(struct v4l2_subdev *sd,
+> >  					 imx219->exposure->minimum,
+> >  					 exposure_max, imx219->exposure->step,
+> >  					 exposure_def);
+> > +
+> > +		/*
+> > +		 * With analog binning the default minimum line length of 3448
+> > +		 * can cause artefacts because the ADC operates on two lines
+> > +		 * together. Switch to higher minimum of 3560 if we are binning.
+> > +		 */
+> > +		llp_min = (bin_h || bin_v) ? IMX219_BINNED_LLP_MIN :
 > 
-> Lukasz, any concerns?
+> As you know, this is always true.
+> 
 
-Good catch! It went through since the test didn't set different weights.
+Oops my bad. Will fix in v2.
 
-Thanks for the fix!
+I realized it would be cleaner to use the new version of 
+imx219_get_binning() to check if analog binning is used before updating 
+the minimum.
 
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+> > +					     IMX219_LLP_MIN;
+> > +		__v4l2_ctrl_modify_range(imx219->hblank, llp_min - mode->width,
+> > +					 IMX219_LLP_MAX - mode->width, 1,
+> > +					 llp_min - mode->width);
+> >  		/*
+> >  		 * Retain PPL setting from previous mode so that the
+> >  		 * line time does not change on a mode change.
+> > @@ -926,10 +938,6 @@ static int imx219_set_pad_format(struct v4l2_subdev *sd,
+> >  		 * mode width subtracted.
+> >  		 */
+> >  		hblank = prev_line_len - mode->width;
+> > -		__v4l2_ctrl_modify_range(imx219->hblank,
+> > -					 IMX219_LLP_MIN - mode->width,
+> > -					 IMX219_LLP_MAX - mode->width, 1,
+> > -					 IMX219_LLP_MIN - mode->width);
+> >  		__v4l2_ctrl_s_ctrl(imx219->hblank, hblank);
+> >
+> >  		/* Scale the pixel rate based on the mode specific factor */
+> >
+> > --
+> > 2.48.1
+> >
+
+-- 
+Thanks,
+Jai
