@@ -1,94 +1,72 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDAD250BF6;
-	Fri, 21 Feb 2025 19:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from bout3.ijzerbout.nl (bout3.ijzerbout.nl [136.144.140.114])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B69F1FF1BD;
+	Fri, 21 Feb 2025 19:58:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=136.144.140.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740167846; cv=none; b=ty0tXuFg8kf0ip1zHY0XZjjr5qHIIG1pkHZ2sMJxNsY8mDcael7GuVG8x/KLMmuZiCb5vrHPxqVHIsW4xEdUJ8a17ZO/UL6hmeXkFhAlzci3xc07n2dZ4TD9+pxtrgegnBCQBOEcAIFayj8vuaRLXyfGRCOnztxYYcJtANxMlnU=
+	t=1740167919; cv=none; b=W7vZ1CiL9hpp71a+9M3IVyQOgumPUlKTkUgseQFA+w1CUnNInxS3Egs8R5LpB7ofEo3fgn6+j3jWcq60R7M2XxTftoAwFGlksCH4O5I3e62uxhXAVIlyuR+RFQRNLakZlkOrLoIG6XqxRt7t8m7hPFBDK4lFp6ZZafpWNff3ke4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740167846; c=relaxed/simple;
-	bh=hL9ZIhAp39JgGtPt+XHHRB4UdgOeBbU7cs9PT+4BMkc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NZ9b0BW8HHbpMplSPkg/6m0J266Rzi402REaSwOcuJO2aRx/E41CmJITPEhMpc8THXM3GN5X0mRBh5PgjMkAMQl9ilh/XQ+FR99Hh2tv3LzDzq3RZNnL8TzYhI7dsVwK/H486GlQYZHeze+I/BfDT/3BLb2gDDQ5J9B2ahVIo4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=SWBFReg0; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1740167919; c=relaxed/simple;
+	bh=eNfboFDHiMeOJ/SbjFt/oLkB+nM17iSP7YIzph4ek+U=;
+	h=From:Date:Subject:To:Cc:Message-Id; b=XEi0wv3Gy2h09IAm7UMvlYSbo66bNSgGK6cknKKVKIwi92CruBPKrJUlsAvar+8NUamSSPXGI+Hj/rKOVANC3y+lPp0Zb2k4seejEWlbRTgSEgMJbXlPg6vm+/HpLWwje/njq70t9XJrQFrLwMItuNFDpcXK7yD3xEdeht93CoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl; spf=none smtp.mailfrom=bout3.ijzerbout.nl; dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b=BBd7Eeyy; arc=none smtp.client-ip=136.144.140.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ijzerbout.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bout3.ijzerbout.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SWBFReg0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=hL9ZIhAp39JgGtPt+XHHRB4UdgOeBbU7cs9PT+4BMkc=; b=SWBFReg0sTydDxWqutWzxPGrwu
-	NCNVu3eNqj4Wt32yqzHXNXYFq/dyOvrIqMmx44qGbwLyeQjR2PiHTvWcoK78xp3M3gO4sngFAoY4b
-	bhz8pezCZQ/FJZVr1Dfyv0Xqz0aUAEFM8f1T4xTF59hDfzdDFRBQR4XOHEM4NJWYhAM1JlKpM+jkY
-	/LyjZAzTtQ5xy+u8UuzTbqQNAvW3R457uwsDz8neQExG1oIzKAwOTTeUjOQYj40xQkX4o4qm6iUKv
-	k6N9ywqwLf4oA5kqSN0cGZdINzvC1l3Kh+v38htfNQKSGlOPsClxI4Xm6LW1YBxkMj0bnuzJq/k67
-	MbwoCBXw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tlZ96-0000000Ew9O-2QH2;
-	Fri, 21 Feb 2025 19:57:12 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C10D730066A; Fri, 21 Feb 2025 20:57:11 +0100 (CET)
-Date: Fri, 21 Feb 2025 20:57:11 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Marco Elver <elver@google.com>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>,
-	Alexander Potapenko <glider@google.com>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Bill Wendling <morbo@google.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ingo Molnar <mingo@kernel.org>, Jann Horn <jannh@google.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>,
-	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, rcu@vger.kernel.org,
-	linux-crypto@vger.kernel.org
-Subject: Re: [PATCH RFC 15/24] rcu: Support Clang's capability analysis
-Message-ID: <20250221195711.GG7373@noisy.programming.kicks-ass.net>
-References: <20250206181711.1902989-16-elver@google.com>
- <a1483cb1-13a5-4d6e-87b0-fda5f66b0817@paulmck-laptop>
- <CANpmjNOPiZ=h69V207AfcvWOB=Q+6QWzBKoKk1qTPVdfKsDQDw@mail.gmail.com>
- <3f255ebb-80ca-4073-9d15-fa814d0d7528@paulmck-laptop>
- <CANpmjNNHTg+uLOe-LaT-5OFP+bHaNxnKUskXqVricTbAppm-Dw@mail.gmail.com>
- <772d8ec7-e743-4ea8-8d62-6acd80bdbc20@paulmck-laptop>
- <Z7izasDAOC_Vtaeh@elver.google.com>
- <aa50d616-fdbb-4c68-86ff-82bb57aaa26a@paulmck-laptop>
- <20250221185220.GA7373@noisy.programming.kicks-ass.net>
- <CANpmjNOreC6EqOntBEOAVZJ5QuSnftoa0bc7mopeMt76Bzs1Ag@mail.gmail.com>
+	dkim=pass (4096-bit key) header.d=ijzerbout.nl header.i=@ijzerbout.nl header.b="BBd7Eeyy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ijzerbout.nl; s=key;
+	t=1740167913; bh=eNfboFDHiMeOJ/SbjFt/oLkB+nM17iSP7YIzph4ek+U=;
+	h=From:Date:Subject:To:Cc:From;
+	b=BBd7EeyyodI0yf08/U0qvLDGUWgalBoEuqdCIcadP9Un28CpnXAdeojxIXs/5YU/h
+	 d4cTdr6AexJaESEM+J4+X8k97jLPVQiqFxfqVXnRk6tEG6UD7GkyEtlCcfHQQMH7dx
+	 1aC8HCpXTNisj0kNMyf2yDgNQftPI1wf0X/zLPgCyICRlJHB98Ly/I2YkkDdaj5XEv
+	 lwF476eo6Pnx439rqP5RirhsJQYZ9T+oBtsKBu3Eq0ou2OOwXLZ/ZdizQnXbXi6x+z
+	 Uw49jSOaYOvv0jDkCxhD5rsBMe3C+Lq7OmkNPIs3utVQWxbP9Io9wSBI5HkmvwFMaT
+	 sRveY4DtwYoDL5l8lpO5LSSj72zbCtShR+1ymiCGmLzZCA8uMvU78E0DzYFrW/3BgN
+	 OEABL+NWLF2HhNAxRGkFzMgL0cMSLRSqJBPeJnxi+id9kTr0ksw5KHIg9ch2BFIXog
+	 MJl6DPS4Fvp+a3kPQTWmKMOkB9XXHS538p4fihsK49BRFxSDp/Oo4LlQts8WRIvs76
+	 uErYnJmv0QTXYOlRHOI1OJPRGwb0bLT4rLRYyzlHetxPcWGA/m0RStss1XAJqq4wW+
+	 TPE5CHTSEbf+zOmPNcFlWtRPKgJWCOO+9/WE7Y9fhTG4ibv43P/6CcoFQ+zJmCZN0V
+	 rxlm9K7BY+Do4Ta4UbjDelb0=
+Received: by bout3.ijzerbout.nl (Postfix, from userid 1000)
+	id 7516C16290A; Fri, 21 Feb 2025 20:58:33 +0100 (CET)
+From: Kees Bakker <kees@ijzerbout.nl>
+Date: Fri, 21 Feb 2025 20:39:03 +0100
+Subject: [PATCH] RDMA/mana_ib: Ensure variable err is initialized
+To: Long Li <longli@microsoft.com>,
+    Konstantin Taranov <kotaranov@microsoft.com>,
+    Jason Gunthorpe <jgg@ziepe.ca>,
+    Leon Romanovsky <leon@kernel.org>
+Cc: linux-rdma@vger.kernel.org,
+    linux-kernel@vger.kernel.org
+Message-Id: <20250221195833.7516C16290A@bout3.ijzerbout.nl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNOreC6EqOntBEOAVZJ5QuSnftoa0bc7mopeMt76Bzs1Ag@mail.gmail.com>
 
-On Fri, Feb 21, 2025 at 08:46:45PM +0100, Marco Elver wrote:
+In the function mana_ib_gd_create_dma_region if there are no dma blocks
+to process the variable `err` remains uninitialized.
 
-> Anything else you see as urgent? Re-entrant locks support a deal breaker?
+Fixes: 0266a177631d ("RDMA/mana_ib: Add a driver for Microsoft Azure Network Adapter")
+Signed-off-by: Kees Bakker <kees@ijzerbout.nl>
+---
+ drivers/infiniband/hw/mana/main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Most actual locks are not recursive -- RCU being the big exception here.
-
-As to this being deal breakers, I don't think so. We should just start
-with the bits we can do and chip away at stuff. Raise the LLVM version
-requirement every time new stuff gets added.
+diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
+index 114ca8c509ce..eda9c5b971de 100644
+--- a/drivers/infiniband/hw/mana/main.c
++++ b/drivers/infiniband/hw/mana/main.c
+@@ -384,7 +384,7 @@ static int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem
+ 	unsigned int tail = 0;
+ 	u64 *page_addr_list;
+ 	void *request_buf;
+-	int err;
++	int err = 0;
+ 
+ 	gc = mdev_to_gc(dev);
+ 	hwc = gc->hwc.driver_data;
+-- 
+2.48.1
 
