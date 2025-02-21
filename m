@@ -1,99 +1,101 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0CF81D5CCD
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 21:01:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2BB41D5CCD;
+	Fri, 21 Feb 2025 21:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740171690; cv=none; b=QW00bkI1HBI19mIPWvAlQ9D8oWnVxSXdIGVRs0jEHiQqMLILsNeRczoyU7XM0T3FFyuT2PAsbsJnIk5VaVbkh/kpTq7YYFxtvZMwTXCQXmZf2c7hVNHVFD92FUXC+dYKIgn9c/tEqdHsBeyRh7yd5z+Wq80SV5g6K+9XO+cz7pg=
+	t=1740171739; cv=none; b=LNSZxCVNAwbnKoSKHZqLzq4w6oLkGnVE3szOX0l5Uz40zrjDnlkLwqkGyoCpwbpoy8eT2Ey8CJ3a/nKqvME/qw2Yw3s2IJxM6xrsdT7KBsAoVpBHaVdHDfxR8oTJAdjJY5wvjI317GWI1IZt3wWcN+rbD7u2U8+gqbDFqioo8Jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740171690; c=relaxed/simple;
-	bh=XSFShCnYMYY10Y7vBSTg39s9BZz7eybJ3/fTVBo6DPQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=okysU1tHZ3aAMCEj+SgJQdkZgryyTovZXLO1T+/UQYNpk4SIIE6YeGfqdU5g61kGu7KBY1/OXmWqLQxWDVtNMFgzoiodgOnrLlaafn2xjGTHZD4tOoYR4mxKu4ytstVfbPGZ4UNYZYssRt9MbuIAUkJwwHwf/vSeBgKLXWrb08c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=g6F30OrX; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g6F30OrX"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2f83a8afcbbso4603781a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 13:01:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740171688; x=1740776488; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KB7zOw8AFw5HwaiJLyXfCqtg75nhb187Vb/57RmyT1g=;
-        b=g6F30OrX2My7q862pf1rMMT++XYRh3CBipaEnPT6HEW3y/xiX8tvgDMLx1l4gOxm4Z
-         jt7P0tkJ5qyfdAG9xl8u14Lv4wp3KeHYXjROfYa/3PEPukKX96ZgmE8II0pn3yec7QL1
-         Tz0Khp0lkYs8tEnHZul8DBFf7+rXTWvbbSOq8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740171688; x=1740776488;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KB7zOw8AFw5HwaiJLyXfCqtg75nhb187Vb/57RmyT1g=;
-        b=USIm6BgGVPp0AbT3FTE9MqLl/oYgaovKi1KIi/CsuOMKIJU5eJwzPmeOlNAOoIMsbl
-         hRxv/JEGuNkUVK4+KBnor/8kkxyqAPdq3ZO9/G0NpR63CzJWeA4DMQzSRuQPjWxRLVTn
-         ok4ZuyhXsVV2aG4zLRXCv7KvIvkUfRXv2oaFYYeaYeGukqy0wx7iNdzyZthhsquDtSUV
-         7NsQpKzFLYIkOcCITZn+db9rkFTQJ3qR+QCAY1wiRUUyoFDmSkISRTdrdiLTNoUZJgM/
-         ocsxfNFm1lUkUOUGoASXGhgUnxnpagOKSMCSD+XeZiIyn98L54sKOB4klwlok+Pkd3SV
-         4hmw==
-X-Forwarded-Encrypted: i=1; AJvYcCVl6H18vsmU4BIeVbNd6XnzNNZkFWS2V7u6V6b4Jal1wsXnXv1JsFvFSVI9tuIlph5UmAOj8itJbrHnAOw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxc44XLeAzvEQok/5GHiCcpXMFEELRhdXGhUSi7SNcYrc7uqwtP
-	xKKdTprdBncW+aKPYnv1SoE4zTDhSh6bGUuaH0uWnNjyon2l1C3ISvYndjIxgyRdZyxI3OhvMek
-	=
-X-Gm-Gg: ASbGncticPR/oe5tNhKGdsR0Md4XsD9WLcTkiRGFmc6Jyo5992gNz3AtmSUla9SkcBU
-	PXwwuXeR3uMFhC9Fv7ixZkTcWjiqNJuCz+BKR6heE/17ZEz6Tt8OZHh44RINHvp3q2ErhyGkaRH
-	PhVonGfKy0XhFrWDI/6Cw802QprcOzNo0fhWQBsUsB/Wqs2sp1taS8riAzIkeRm8RMA1Ppgj6Dl
-	ctYJn2JQsnQVxy0bZ2uAfVgfX0Jeigw0Kh0tIG2veJqvVcQe3/OF9lcoSXfo3uwm+pdEBeceSIx
-	7Y2yEo8mmqOyzGVeFxAmy+P0MKuJ
-X-Google-Smtp-Source: AGHT+IEs01Hx2KIewi9vZQYw0yu8X2kEXs1yphv1va/bFuzNYCs+BRNeDhKdyaUblwTlOF6avYXpxA==
-X-Received: by 2002:a17:90b:3883:b0:2fa:42f3:e3e4 with SMTP id 98e67ed59e1d1-2fccc0f838amr13550504a91.3.1740171687113;
-        Fri, 21 Feb 2025 13:01:27 -0800 (PST)
-Received: from google.com ([2401:fa00:8f:203:f987:e1e:3dbb:2191])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fceb05f2basm1833275a91.21.2025.02.21.13.01.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2025 13:01:26 -0800 (PST)
-Date: Sat, 22 Feb 2025 06:01:20 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Hillf Danton <hdanton@sina.com>, Kairui Song <ryncsn@gmail.com>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 11/17] zsmalloc: make zspage lock preemptible
-Message-ID: <20250221-095831-265429292-neomutt-senozhatsky@chromium.org>
-References: <20250221093832.1949691-1-senozhatsky@chromium.org>
- <20250221093832.1949691-12-senozhatsky@chromium.org>
- <Z7jYiuRlC7_8_wzD@google.com>
+	s=arc-20240116; t=1740171739; c=relaxed/simple;
+	bh=60QCP9a1fc0i2qunXLPEKvoXFDdpZeQTtyvz1y+2kIo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P1TS/x7tsKzHklh3OZbwv0zDbiXDvotEP8Lr3PJ4ITUr8XcgnpJZ+VTAb24PYW/DkW9LuHOXM6W5fpm6aHT24kZYBqAfYOsw8BOw8BD6UqaUbXPi9rzXaDC/XAEh49zMUuKM4N/Csm+A8AQbMyAXUA7atNvIHPPpk32S8zFGL9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.2] (ip5f5af2a2.dynamic.kabel-deutschland.de [95.90.242.162])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 839C261E64783;
+	Fri, 21 Feb 2025 22:02:04 +0100 (CET)
+Message-ID: <36cace3b-7419-409d-95a9-e7c45d335bef@molgen.mpg.de>
+Date: Fri, 21 Feb 2025 22:02:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7jYiuRlC7_8_wzD@google.com>
-Message-ID: <20250221210120.TVOGW7dsBqVjilblIFqr3r9pH8hc5sNynRiVvnihYSQ@z>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Linux logs new warning `gpio gpiochip0:
+ gpiochip_add_data_with_key: get_direction failed: -22`
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <9ded85ef-46f1-4682-aabd-531401b511e5@molgen.mpg.de>
+ <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On (25/02/21 19:48), Yosry Ahmed wrote:
-[..]
-> > +#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> > +#define zsl_dep_map(zsl) (&(zsl)->dep_map)
-> > +#else
-> > +#define zsl_dep_map(zsl) NULL
-> > +#endif
-> > +
-> > +static void zspage_lock_init(struct zspage *zspage)
-> > +{
-> > +#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> > +	lockdep_init_map(&zspage->zsl.dep_map, "zspage->lock",
-> > +			 &zspage->pool->lock_class, 0);
-> 
-> Can't we remove this #ifdef as well by adding a similar macro? (e.g.
-> zsl_lock_class())
+Dear Bartosz,
 
-I thought about it but then was not sure if having a macro
-that we use in two place is worth it, but I guess we can.
-Let me send a v8.
+
+Thank you for your quick reply.
+
+Am 21.02.25 um 21:53 schrieb Bartosz Golaszewski:
+> On Fri, Feb 21, 2025 at 9:40 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
+
+>> On the Intel Kaby Lake Dell XPS 13 9360, Linux 6.14-rc3+ with your
+>> commit 9d846b1aebbe (gpiolib: check the return value of
+>> gpio_chip::get_direction()) prints 52 new warnings:
+>>
+>>       $ dmesg
+>>       […]
+>>       [    0.000000] DMI: Dell Inc. XPS 13 9360/0596KF, BIOS 2.21.0 06/02/2022
+>>       […]
+>>       [    5.148927] pci 0000:00:1d.0: PCI bridge to [bus 3c]
+>>       [    5.150955] gpio gpiochip0: gpiochip_add_data_with_key: get_direction failed: -22
+>>       [50 times the same]
+>>       [    5.151639] gpio gpiochip0: gpiochip_add_data_with_key: get_direction failed: -22
+>>       [    5.151768] ACPI: PCI: Interrupt link LNKA configured for IRQ 11
+>>       […]
+>>       $ lspci -nn -k -s 1d.0
+>>       00:1d.0 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI Express Root Port #9 [8086:9d18] (rev f1)
+>>          Subsystem: Dell Device [1028:075b]
+>>          Kernel driver in use: pcieport
+>>
+>> Judging from the commit messages, this is expected. But what should a
+>> user seeing this do now?
+>>
+>> Also, it probably should not be applied to the stable series, as people
+>> might monitor warnings and new warnings in stable series might be
+>> unexpected.
+
+
+>> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9d846b1aebbe488f245f1aa463802ff9c34cc078
+
+> What GPIO driver is it using? It's likely that it's not using the
+> provider API correctly and this change uncovered it, I'd like to take
+> a look at it and fix it.
+
+How do I find out? The commands below do not return anything.
+
+     $ lsmod | grep gpio
+     $ lspci -nn | grep -i gpio
+     $ sudo dmesg | grep gpio
+     [    5.150955] gpio gpiochip0: gpiochip_add_data_with_key: 
+get_direction failed: -22
+     [Just these lines match.]
+
+
+Kind regards,
+
+Paul
