@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868D224BCF0
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 17:06:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54ED824BCF0
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 17:07:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740157614; cv=none; b=jJNWHdTEXV8AXEU34e6kVYnnrXJnpoFHeiW/81u2YaEqsx2KvAJ+RiUqKQqgIwJDfb6j77bddxncwaGyUSDIsqoz1UWc258BIL7DYumEDL4ga3nk5QhRRS3fGQV3mLFfC8kphR53Ro9cxyMVcY/NSZ6+IelKe2dGngGeamotPi0=
+	t=1740157623; cv=none; b=XKd8LbcuVpWRKYmoXdy6iM3eJ+WpIwgiwrFFcsL58NGJytNHAOVm/BBGAPrcLEq8klYXwzSRxBjwaRs6Eonjo10i/LYirRtJ9xKCauhjvS1YnUWJ5/ZWaD5NiaZkphYtXlW7aagSFM3Jjw+NtFzd/UDicUir62EznlKDx+BNdP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740157614; c=relaxed/simple;
-	bh=dnyKyQdiAx+MIOYtEQwBaG4Tg9AZ5Ml83AH45CcpJZY=;
+	s=arc-20240116; t=1740157623; c=relaxed/simple;
+	bh=dmXZwGs+K9cXy4OVhaZVpVlHINi/95qyv6S5WYJHnRw=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UKFH3di04cRf310y0wXrdsfsGSKnm9XRjteunCuNqmUqE1RMIUC7pHMRMNUpn+VTAaOllhSi4Dab3H9oyhM0NLKXK5ZJB5lDe8lpd3K+mBm88Iup7tjrlEbYMtEwr6FkzFJ9mcyQitPG6rlPkEOSFS/C2Tm4brRBUxbmsJDKij4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A1KKycWR; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=dNybu32BRvkON2T2dNszjm4Q2E0wb2X4PtrQEtH6y+Y9P/uHM6GF3pEzVYFRgDKsA8t2C1lftsaO7cvgMy+bQVHOCLLLHcqNZ/5ls7jR+lZIW9PqHyaC6lDJd0kZyQ8aLOM8HJYqr+Nc+4Kuai4jQem3RvtOBSWQNNk0oh/+OY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KpKaVx//; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A1KKycWR"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KpKaVx//"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740157611;
+	s=mimecast20190719; t=1740157620;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=5vMNLyiGqRYP1Ao1e0bTH1gSI7/Qklv2j4DCuws+D/c=;
-	b=A1KKycWRhjrrhVLqA7SyUT2MuhWBMhPQYFTAHUkfJ+9FG3bgSiHSK/LdWfcQgsu5XJJUMl
-	kmlYYCjFlb0jf0/RiwTdRQbJAjxsnXIp1woKX2i9aUMJ4Qaap/D+BGs3FufEV+KR007/nO
-	bHBGfAvW9elJ+fm4bNGp6kC6WYJJvHo=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=DdFhks9dEBucFBSdGlrdrm2YLeGCqTXN1StzLlcWwlU=;
+	b=KpKaVx//jjKZSEXwCXrBk9hezbVM4wyRPsGPyDza0rPJH+zPAWCbsqwdC0RtBCZPg+OnOc
+	u+Z1jaStdgbfiqDFFpESR7W2lo407YIw51Wrut3ZiG5tROMPeHmfDTzQoy8LhkR/cpaVB6
+	4/YtXc8U4MaoMMYWnhawrZxDo3HpZe4=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-562-u025uieMMiurFWwQ6NPVOA-1; Fri,
- 21 Feb 2025 12:06:47 -0500
-X-MC-Unique: u025uieMMiurFWwQ6NPVOA-1
-X-Mimecast-MFC-AGG-ID: u025uieMMiurFWwQ6NPVOA_1740157606
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-518-m0a4VAWSOIaZmlHfhpDBIA-1; Fri,
+ 21 Feb 2025 12:06:59 -0500
+X-MC-Unique: m0a4VAWSOIaZmlHfhpDBIA-1
+X-Mimecast-MFC-AGG-ID: m0a4VAWSOIaZmlHfhpDBIA_1740157617
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2844418E6952;
-	Fri, 21 Feb 2025 17:06:46 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4A9A61800878;
+	Fri, 21 Feb 2025 17:06:57 +0000 (UTC)
 Received: from eperezma-thinkpadt480s.rmtes.csb (unknown [10.44.32.170])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9E55B1800358;
-	Fri, 21 Feb 2025 17:06:41 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AA946180087E;
+	Fri, 21 Feb 2025 17:06:52 +0000 (UTC)
 From: =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>
 To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
 	Stefan Hajnoczi <stefanha@redhat.com>,
@@ -55,9 +55,9 @@ To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
 	Miklos Szeredi <miklos@szeredi.hu>,
 	mst@redhat.com,
 	Jason Wang <jasowang@redhat.com>
-Subject: [RFC v2 2/5] virtiofs: Move stack sg to fuse_req
-Date: Fri, 21 Feb 2025 18:06:23 +0100
-Message-ID: <20250221170626.261687-3-eperezma@redhat.com>
+Subject: [RFC v2 4/5] virtiofs: perform DMA operations out of the spinlock
+Date: Fri, 21 Feb 2025 18:06:25 +0100
+Message-ID: <20250221170626.261687-5-eperezma@redhat.com>
 In-Reply-To: <20250221170626.261687-1-eperezma@redhat.com>
 References: <20250221170626.261687-1-eperezma@redhat.com>
 Precedence: bulk
@@ -70,142 +70,90 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-We need to move the map and unmap out of virtiofs queue lock.  We need to
-store the unmap sgs to call virtqueue_unmap_sgs, so use the request
-itself.
+This is useful for some setups like swiotlb or VDUSE where the DMA
+operations are expensive and/or need to be performed with a write lock.
 
-TODO: We need to store the forget sgs too.  In my tests it is not called
-so we're safe.  Find a way to force-call it.
+After applying this patch, fio read test goes from 1124MiB/s to 1191MiB/s.
 
 Signed-off-by: Eugenio Pérez <eperezma@redhat.com>
 ---
- fs/fuse/fuse_i.h    |  7 +++++++
- fs/fuse/virtio_fs.c | 45 +++++++++++++++++++++------------------------
- 2 files changed, 28 insertions(+), 24 deletions(-)
+ fs/fuse/virtio_fs.c | 40 ++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 38 insertions(+), 2 deletions(-)
 
-diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-index fee96fe7887b..0a77e28d8da6 100644
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -18,6 +18,7 @@
- #include <linux/mount.h>
- #include <linux/wait.h>
- #include <linux/list.h>
-+#include <linux/scatterlist.h>
- #include <linux/spinlock.h>
- #include <linux/mm.h>
- #include <linux/backing-dev.h>
-@@ -434,6 +435,12 @@ struct fuse_req {
- #if IS_ENABLED(CONFIG_VIRTIO_FS)
- 	/** virtio-fs's physically contiguous buffer for in and out args */
- 	void *argbuf;
-+
-+	/** virtio-fs's pre-mapped stuff */
-+	struct scatterlist sg_inline_data[6]; /* optimization for short requests */
-+	struct scatterlist *sg;
-+	unsigned int out_sgs;
-+	unsigned int in_sgs;
- #endif
- 
- 	/** fuse_mount this request belongs to */
 diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
-index 82afe78ec542..1344c5782a7c 100644
+index 1344c5782a7c..e19c78f2480e 100644
 --- a/fs/fuse/virtio_fs.c
 +++ b/fs/fuse/virtio_fs.c
-@@ -1377,14 +1377,10 @@ static int virtio_fs_enqueue_req(struct virtio_fs_vq *fsvq,
- {
- 	/* requests need at least 4 elements */
- 	struct scatterlist *stack_sgs[6];
--	struct scatterlist stack_sg[ARRAY_SIZE(stack_sgs)];
- 	struct scatterlist **sgs = stack_sgs;
--	struct scatterlist *sg = stack_sg;
- 	struct virtqueue *vq;
- 	struct fuse_args *args = req->args;
- 	unsigned int argbuf_used = 0;
--	unsigned int out_sgs = 0;
--	unsigned int in_sgs = 0;
- 	unsigned int total_sgs;
- 	unsigned int i;
- 	int ret;
-@@ -1392,11 +1388,13 @@ static int virtio_fs_enqueue_req(struct virtio_fs_vq *fsvq,
- 	struct fuse_pqueue *fpq;
+@@ -836,8 +836,19 @@ static void virtio_fs_requests_done_work(struct work_struct *work)
  
- 	/* Does the sglist fit on the stack? */
-+	/* TODO replace magic 6 by a macro */
-+	req->sg = req->sg_inline_data;
- 	total_sgs = sg_count_fuse_req(req);
--	if (total_sgs > ARRAY_SIZE(stack_sgs)) {
-+	if (total_sgs > 6) {
- 		sgs = kmalloc_array(total_sgs, sizeof(sgs[0]), gfp);
--		sg = kmalloc_array(total_sgs, sizeof(sg[0]), gfp);
--		if (!sgs || !sg) {
-+		req->sg = kmalloc_array(total_sgs, sizeof(req->sg[0]), gfp);
-+		if (!sgs || !req->sg) {
- 			ret = -ENOMEM;
- 			goto out;
- 		}
-@@ -1408,26 +1406,25 @@ static int virtio_fs_enqueue_req(struct virtio_fs_vq *fsvq,
- 		goto out;
+ 	/* End requests */
+ 	list_for_each_entry_safe(req, next, &reqs, list) {
++		unsigned int total_sgs = req->out_sgs + req->in_sgs;
++
+ 		list_del_init(&req->list);
  
- 	/* Request elements */
--	sg_init_one(&sg[out_sgs++], &req->in.h, sizeof(req->in.h));
--	out_sgs += sg_init_fuse_args(&sg[out_sgs], req,
--				     (struct fuse_arg *)args->in_args,
--				     args->in_numargs, args->in_pages,
--				     req->argbuf, &argbuf_used);
-+	sg_init_one(&req->sg[req->out_sgs++], &req->in.h, sizeof(req->in.h));
-+	req->out_sgs += sg_init_fuse_args(&req->sg[req->out_sgs], req,
-+					  (struct fuse_arg *)args->in_args,
-+					  args->in_numargs, args->in_pages,
-+					  req->argbuf, &argbuf_used);
++		for (unsigned int i = 0; i < total_sgs; ++i) {
++			enum dma_data_direction dir = (i < req->out_sgs) ?
++				DMA_TO_DEVICE : DMA_FROM_DEVICE;
++			dma_unmap_page(vq->vdev->dev.parent,
++				       sg_dma_address(&req->sg[i]),
++				       sg_dma_len(&req->sg[i]), dir);
++
++		}
++
+ 		/* blocking async request completes in a worker context */
+ 		if (req->args->may_block) {
+ 			struct virtio_fs_req_work *w;
+@@ -1426,6 +1437,24 @@ static int virtio_fs_enqueue_req(struct virtio_fs_vq *fsvq,
+ 		sgs[i] = &req->sg[i];
+ 	WARN_ON(req->out_sgs + req->in_sgs != total_sgs);
  
- 	/* Reply elements */
- 	if (test_bit(FR_ISREPLY, &req->flags)) {
--		sg_init_one(&sg[out_sgs + in_sgs++],
-+		sg_init_one(&req->sg[req->out_sgs + req->in_sgs++],
- 			    &req->out.h, sizeof(req->out.h));
--		in_sgs += sg_init_fuse_args(&sg[out_sgs + in_sgs], req,
--					    args->out_args, args->out_numargs,
--					    args->out_pages,
--					    req->argbuf + argbuf_used, NULL);
-+		req->in_sgs += sg_init_fuse_args(&req->sg[req->out_sgs + req->in_sgs], req,
-+						 args->out_args, args->out_numargs,
-+						 args->out_pages,
-+						 req->argbuf + argbuf_used, NULL);
- 	}
- 
--	WARN_ON(out_sgs + in_sgs != total_sgs);
--
- 	for (i = 0; i < total_sgs; i++)
--		sgs[i] = &sg[i];
-+		sgs[i] = &req->sg[i];
-+	WARN_ON(req->out_sgs + req->in_sgs != total_sgs);
- 
++	// TODO can we change this ptr out of the lock?
++	vq = fsvq->vq;
++	// TODO handle this and following errors
++	for (i = 0; i < total_sgs; i++) {
++		struct page *page = sg_page(&req->sg[i]);
++		enum dma_data_direction dir = (i < req->out_sgs) ?
++			DMA_TO_DEVICE : DMA_FROM_DEVICE;
++		dma_addr_t dma_addr = dma_map_page(vq->vdev->dev.parent, page,
++						   req->sg[i].offset, req->sg[i].length, dir);
++
++		if (dma_mapping_error(vq->vdev->dev.parent, dma_addr)) {
++			ret = -ENOMEM;
++			goto out;
++		}
++		sg_dma_address(&req->sg[i]) = dma_addr;
++		sg_dma_len(&req->sg[i]) = req->sg[i].length;
++	}
++
  	spin_lock(&fsvq->lock);
  
-@@ -1438,7 +1435,7 @@ static int virtio_fs_enqueue_req(struct virtio_fs_vq *fsvq,
+ 	if (!fsvq->connected) {
+@@ -1434,8 +1463,8 @@ static int virtio_fs_enqueue_req(struct virtio_fs_vq *fsvq,
+ 		goto out;
  	}
  
- 	vq = fsvq->vq;
--	ret = virtqueue_add_sgs(vq, sgs, out_sgs, in_sgs, req, GFP_ATOMIC);
-+	ret = virtqueue_add_sgs(vq, sgs, req->out_sgs, req->in_sgs, req, GFP_ATOMIC);
+-	vq = fsvq->vq;
+-	ret = virtqueue_add_sgs(vq, sgs, req->out_sgs, req->in_sgs, req, GFP_ATOMIC);
++	ret = virtqueue_add_sgs_premapped(vq, sgs, req->out_sgs,
++					  req->in_sgs, req, GFP_ATOMIC);
  	if (ret < 0) {
  		spin_unlock(&fsvq->lock);
  		goto out;
-@@ -1467,10 +1464,10 @@ static int virtio_fs_enqueue_req(struct virtio_fs_vq *fsvq,
+@@ -1460,6 +1489,13 @@ static int virtio_fs_enqueue_req(struct virtio_fs_vq *fsvq,
+ 		virtqueue_notify(vq);
+ 
+ out:
++	for (unsigned int j = 0; ret && j < total_sgs; ++j) {
++		enum dma_data_direction dir = (j < req->out_sgs) ?
++			DMA_TO_DEVICE : DMA_FROM_DEVICE;
++		dma_unmap_page(vq->vdev->dev.parent,
++			       sg_dma_address(&req->sg[j]),
++			       sg_dma_len(&req->sg[j]), dir);
++	}
+ 	if (ret < 0 && req->argbuf) {
  		kfree(req->argbuf);
  		req->argbuf = NULL;
- 	}
--	if (sgs != stack_sgs) {
-+	if (ret < 0 && req->sg != req->sg_inline_data)
-+		kfree(req->sg);
-+	if (sgs != stack_sgs)
- 		kfree(sgs);
--		kfree(sg);
--	}
- 
- 	return ret;
- }
 -- 
 2.48.1
 
