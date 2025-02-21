@@ -1,16 +1,15 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A41205E16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C08F205E0D
 	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 09:39:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740130771; cv=none; b=nqsBaDh57tVOVgBkR807Un7WZWdszLGpd6qTCMbvxnj1Zw5hJjxysxwKPptpcS02Ta9F/+jy+7hV0o/xx560rCCgxWj3aCricJm0fPskdJViYb6GL8Is1hKlqOcZVzcpUWQohLlQlGg78sV0K6fy6XzcBYfkovj6IGcJHPY8NRw=
+	t=1740130770; cv=none; b=E6yxw1oFupdbg3o/TK90279w+wiUdteH1f0Re+kXwGi7nPwGVHYwCtGPbDpt3yCT0kb4O+sfhEiBAMPwbyuNAlotI8MVERLkOgxpLTscrwEbzA3Vcx9tAfQ+BZtP5bvwkw+/9jnkUnVzWCE8Ok3YoNQle897WpFw1ysE/FdKAr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740130771; c=relaxed/simple;
-	bh=Adh/Q3rnUh98xXUXofXQcb8ZYwFqHSH9eh8GRfjl3Jg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=V2mqx+CHks8iYs1o7oQJW6QENGdrSmsnSl9RkC/NG+ZmYFhs0LSd+MEwKmOU3CtQFCIxHK5a4WLoPGTB9O9Uyp3MRwyQLHNFjW+n7XxwXmN8SZjTs1or10/he6PcZk+ZDQu1L8RBx0fudJ8NJypz7BONA5c/x44oGHqB/NibxY8=
+	s=arc-20240116; t=1740130770; c=relaxed/simple;
+	bh=Z4DNp7xqq+3Ld/eIVK1A3VdvlkMdpLILss1ol8DrC4o=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=opUdIeKD9OpK1jud1RChEsQM8F1V2w06jRlP/tQTV9bHrfpWEhNEyY3otCMiJyn6ujUf75Cevcc2eq/lWtKU79v7AoZef2SWoY/ViMqYqMBmCmk1F8aZOarwSG7No9LvmPHvJhncXGHL5rM52knX74cfQGQG3+57wAZwPAQmduE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,16 +17,16 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1tlPV9-0001zU-QE; Fri, 21 Feb 2025 10:39:19 +0100
+	id 1tlPV9-0001zS-QE; Fri, 21 Feb 2025 10:39:19 +0100
 Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1tlPV9-0024uu-1G;
+	id 1tlPV9-0024us-19;
 	Fri, 21 Feb 2025 10:39:19 +0100
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1tlPV9-00GXbZ-13;
+	id 1tlPV9-00GXbF-0t;
 	Fri, 21 Feb 2025 10:39:19 +0100
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: Ulf Hansson <ulf.hansson@linaro.org>
@@ -40,12 +39,10 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
 	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>,
 	Christian Loehle <christian.loehle@arm.com>
-Subject: [PATCH v3 2/6] mmc: core: make mmc_interrupt_hpi() global
-Date: Fri, 21 Feb 2025 10:39:14 +0100
-Message-Id: <20250221093918.3942378-3-o.rempel@pengutronix.de>
+Subject: [PATCH v3 0/6] mmc: handle undervoltage events and prevent eMMC corruption
+Date: Fri, 21 Feb 2025 10:39:12 +0100
+Message-Id: <20250221093918.3942378-1-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250221093918.3942378-1-o.rempel@pengutronix.de>
-References: <20250221093918.3942378-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,40 +55,83 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Make mmc_interrupt_hpi() non-static. This enables usage of HPI outside
-mmc_ops.c and will be used in a follow-up patch.
+This patch set introduces a framework for handling undervoltage events
+in the MMC subsystem. The goal is to improve system reliability by
+ensuring graceful handling of power fluctuations that could otherwise
+lead to metadata corruption, potentially rendering the eMMC chip
+unusable or causing significant data loss.
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- drivers/mmc/core/mmc_ops.c | 2 +-
- drivers/mmc/core/mmc_ops.h | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+## Problem Statement
 
-diff --git a/drivers/mmc/core/mmc_ops.c b/drivers/mmc/core/mmc_ops.c
-index 5c8e62e8f331..dbb1b5ec4132 100644
---- a/drivers/mmc/core/mmc_ops.c
-+++ b/drivers/mmc/core/mmc_ops.c
-@@ -903,7 +903,7 @@ static int mmc_send_hpi_cmd(struct mmc_card *card)
-  *	Issued High Priority Interrupt, and check for card status
-  *	until out-of prg-state.
-  */
--static int mmc_interrupt_hpi(struct mmc_card *card)
-+int mmc_interrupt_hpi(struct mmc_card *card)
- {
- 	int err;
- 	u32 status;
-diff --git a/drivers/mmc/core/mmc_ops.h b/drivers/mmc/core/mmc_ops.h
-index 0df3ebd900d1..a16361dc5909 100644
---- a/drivers/mmc/core/mmc_ops.h
-+++ b/drivers/mmc/core/mmc_ops.h
-@@ -37,6 +37,7 @@ int mmc_send_cid(struct mmc_host *host, u32 *cid);
- int mmc_spi_read_ocr(struct mmc_host *host, int highcap, u32 *ocrp);
- int mmc_spi_set_crc(struct mmc_host *host, int use_crc);
- int mmc_bus_test(struct mmc_card *card, u8 bus_width);
-+int mmc_interrupt_hpi(struct mmc_card *card);
- int mmc_can_ext_csd(struct mmc_card *card);
- int mmc_switch_status(struct mmc_card *card, bool crc_err_fatal);
- bool mmc_prepare_busy_cmd(struct mmc_host *host, struct mmc_command *cmd,
--- 
+Power fluctuations and sudden losses can leave eMMC devices in an
+undefined state, leading to severe consequences. The worst case can
+result in metadata corruption, making the entire storage inaccessible.
+While some eMMC devices promise to handle such situations internally,
+experience shows that some chip variants are still affected. This has
+led vendors to take a more protective approach, implementing external
+undervoltage handling as a precautionary measure to avoid costly field
+failures and returns.
+
+The existence of the "Power Off Notification" feature in the eMMC
+standard itself serves as indirect evidence that this is a real-world
+issue.  While some projects have already faced the consequences of
+ignoring this problem (often at significant cost), specific cases cannot
+be disclosed due to NDAs.
+
+## Challenges and Implementation Approach
+
+1. **Raising awareness of the problem**: While vendors have used
+   proprietary solutions for years, a unified approach is needed upstream.
+   This patch set is a first step in making that happen.
+
+2. **Finding an acceptable implementation path**: There are multiple
+   ways to handle undervoltage - either in the kernel or in user space,
+   through a global shutdown mechanism, or using the regulator framework.
+   This patch set takes the kernel-based approach but does not prevent
+   future extensions, such as allowing user-space handoff once available.
+
+3. **Preparing for vendor adoption and testing**: By providing a
+   structured solution upstream, this patch set lowers the barrier for
+   vendors to standardize their undervoltage handling instead of relying on
+   fragmented, out-of-tree implementations.
+
+## Current Limitations
+
+This patch set is an initial step and does not yet cover all possible
+design restrictions or edge cases. Future improvements may include
+better coordination with user space and enhancements based on broader
+testing.
+
+## Testing Details
+
+The implementation was tested on an iMX8MP-based system. The board had
+approximately 100ms of available power hold-up time. The Power Off
+Notification was sent ~4ms after the board was detached from the power
+supply, allowing sufficient time for the eMMC to handle the event
+properly.  Tests were conducted under both idle conditions and active
+read/write operations.
+
+Oleksij Rempel (6):
+  mmc: core: Handle undervoltage events and register regulator notifiers
+  mmc: core: make mmc_interrupt_hpi() global
+  mmc: core: refactor _mmc_suspend() for undervoltage handling
+  mmc: core: add undervoltage handler for MMC/eMMC devices
+  mmc: block: abort requests and suppress errors after undervoltage
+    shutdown
+  mmc: sdhci: prevent command execution after undervoltage shutdown
+
+ drivers/mmc/core/block.c     |   2 +-
+ drivers/mmc/core/core.c      |  30 +++++++
+ drivers/mmc/core/core.h      |   2 +
+ drivers/mmc/core/mmc.c       | 146 ++++++++++++++++++++++++++++++-----
+ drivers/mmc/core/mmc_ops.c   |   2 +-
+ drivers/mmc/core/mmc_ops.h   |   1 +
+ drivers/mmc/core/queue.c     |   2 +-
+ drivers/mmc/core/regulator.c | 124 +++++++++++++++++++++++++++++
+ drivers/mmc/host/sdhci.c     |   9 +++
+ include/linux/mmc/host.h     |   9 +++
+ 10 files changed, 305 insertions(+), 22 deletions(-)
+
+--
 2.39.5
 
