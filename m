@@ -1,64 +1,50 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABD02475E9;
-	Fri, 21 Feb 2025 17:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6674124BD11;
+	Fri, 21 Feb 2025 17:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740157513; cv=none; b=uRT82PgZ4D37PzMt/eHGeG5Jbblz8Bm/rhPd6ia/Wvc2aRFUctnhZa+TYJariMLbAOsWFevN2b7NVjFmAaXnYGI49L1eeiqHhnQ/IVs9dN242fUSm5a2rfyT4Zf3o8ZdV0275UX+Gm1PYPb2p+YQ8Q6mTvTxO2CQ3WPDg5Nl64A=
+	t=1740157516; cv=none; b=BCtkPYvWS2MZcQCbGEks15jz6GqBmfCGnwpuSR4VI9PHlG5kVo6tffIeagmfyYFRp2XgbDfYVNwTn8HvLNYHROkTdEZfbVAfU8YfvKy1GOuOjGLGt2stsprTaqyRA2n7Kp7uAit7d5I6FZPwYn0Tzfzg6V/SkwXbv73UM+X1woQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740157513; c=relaxed/simple;
-	bh=fApzqprR+kBcAG0IK+keq7VmTz0rdzUDdm/bBzx1Ydg=;
+	s=arc-20240116; t=1740157516; c=relaxed/simple;
+	bh=WbW3SAWLQJrmCpMzqPGX5MMUKli4PXDnNDOyEBLp3X0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F1en+BF7irakdsjAU3A5c35CpbOYAckK8VlE30BBVBv5YHQPzSHtpBOw3LVRWA15YiMKfNor8kOKIwp+Cq4n6LISZ+1wHVkE7nblDbv3y+MYxJW0jxiS6dSfDPqTvKA5AR1zaTCjSOKjgJeTn8I6pYLYfswkczmrhKh3o7GrIqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P/o2s9nf; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=bfLYm4+bdaexAvWrUIaqQXIVMBje2LpmTeVHKBxO3Fhsjw2t0F50IDd1PBH0biP0vQVM9TTKf3udUtPTEpAKZliXt5/rf5M0NQauzwSj3qezkQrAinCHjKcfln1HFAU5B8nnxlX9hrNSmfEJfc2xWubueAC0HkuJx9xCtr8teXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rmi5w32T; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P/o2s9nf"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-38f29a1a93bso1948844f8f.1;
-        Fri, 21 Feb 2025 09:05:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740157509; x=1740762309; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KRX3VkuTpvxQnJlyqWWAKHuLSqRVn8HPKCGBcwwEsXw=;
-        b=P/o2s9nfIFdaLVEhrOuaft9gJpm08Wl+KWXRki4VMM4YhjWJ1ni1zEo9i/XfROY9iC
-         VWedzgVqUhvi5kxg07YS58c8OM6noKuZ1UPLeutILcQKmaChFhmJI/Wwb9aCrSP0Lzlh
-         k/5mZqY+4pEII9v9VF+GQRN8m6s8BzgQdfC5GtbT8Yk9OazADoObvms3TMJMztUpXvOp
-         6+YTodxLyzgL8DU03efUw69nEai9iyGFZ6XEHDDyTXkX+myyey1VP9fDi3maIIlR01O1
-         1SELCp9NLr9LFv2GSBOCdr76ZL9tWwHBU19T6FJB8iXAmPrwQZu+OqDSXYBfF869Juj9
-         L2ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740157509; x=1740762309;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KRX3VkuTpvxQnJlyqWWAKHuLSqRVn8HPKCGBcwwEsXw=;
-        b=kZ5DKdmX/GTT3gZkwWPy3MHjva0HWmLAqgjWw1/4pk5QZ/n+EkGVyiiRV96fh2lpDr
-         tkyRPbh5pVKoFMciltEpWZVOLEl2dd8Ha0D6/VyCejf1Kh7RNC135Y82nVPuex7ujBpm
-         aGXIvDzIgxZnRGKYgJC6oXn4Pd98OUIyCz9lw59hR3dm0v53jSv3qSdjZrjZU6sjqABl
-         ThDCKayTKy5QmnUXYhX1vViV5eS2k9OpibEdTOGa1Frn61tsdqBevEi8b8DhYPAJN68p
-         ti5yXcIglJKLR/gc+379e6/vY3LcdYUvk6NBZbgrpDYWY/N2CWHD5uyhEXj8XoDVLo5x
-         BcFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXXadua7Oa2/ImINrp3lJEHRDvyoskD57YCLUxkG1ZxM2hHcWxNWh4EVju5zVv3hRk04b4Z2BSNDL1+mXTg@vger.kernel.org, AJvYcCXjnkDAnl0wq5qsB0/zePc2FHKFoqE6G4mBgZfL20vrEtLVCcscSOStxGHCw1uYOS/8KrCPxWUN8g==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxImLv1LSwneU7yaWD6E93DEENbZXM5ExgRHK1s0tV5bfHpfzxv
-	RfspWd/y1tIr0ornkSM2PIExvw2eblTwnJD+vkgNrK7zsTOxNy+/
-X-Gm-Gg: ASbGncutmA3Ur/ZY9JCaLXN63YGPb8rbtJy7+NOlkTXa8pyJ3mCt6jTxTzmMM4DXveh
-	l2U+NwVG4nEfDgv3lyTk5wmDXrBFwPJT6PmMpGRXpNMGf7TuXkpCISr2KKl6tNjZnhYPpX1EE4z
-	4bBfct2tb3iZtelaCu5I/XoZDDQ+Jwx80cvOXpfj1NEohu0E/QZ4tdVhbA6xybGGcoPFKEH81HA
-	YGv+qdlS6hKY2ON8+3FU6dosycpv/ZIWNwUZsEEE5CrC8WEoNto3xmw7E0aF/n/dT+a6KaqyGYQ
-	reF0EOCwbPgw/8DoAiEPqA84V+gkoxSLGXY2
-X-Google-Smtp-Source: AGHT+IEMlVnkqCxUzksHUs5LQ2R7/mAK+ghtouNkT9cEa99kYGtaZy3dL4QaNKlQYSqzVdLX0zWXFg==
-X-Received: by 2002:a5d:6c6f:0:b0:38f:2173:b7b7 with SMTP id ffacd0b85a97d-38f6e95c4a3mr3830573f8f.18.1740157508501;
-        Fri, 21 Feb 2025 09:05:08 -0800 (PST)
-Received: from [192.168.8.100] ([148.252.141.194])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5e9esm24271471f8f.61.2025.02.21.09.05.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2025 09:05:07 -0800 (PST)
-Message-ID: <d510f0c5-d25d-44cb-9974-46026964beca@gmail.com>
-Date: Fri, 21 Feb 2025 17:06:14 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rmi5w32T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740157515; x=1771693515;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=WbW3SAWLQJrmCpMzqPGX5MMUKli4PXDnNDOyEBLp3X0=;
+  b=Rmi5w32TT19WlOwhpmqR8vkhu9+CYyFc8BzfG4vdBriCconLKnc/AgdG
+   VgRT4ItwNIzQgOjBGTPf9GdPIIBOayC8MdNc5Xty4dm54VJQ5b03IXgI0
+   08N32gJ8KfG65p4+aSrl97F+LRr9e86hpJt/rtnvEm3KSGf0+qmYPSllj
+   LXFavFkV7Tt1IGScRWeS27GFUn/IMbZN41kAFFjAkrBl0IX7n+m2DNTHD
+   Xfj5Xtq1nCnNw62/CSTDCs1v946atiEpP3b35ZJEyBCOhAOTSVcPWPJn6
+   DKNLf7O6/pCU57Kl1KMHX30LW6eDl/tZsLWxeKI41Bap01VAY8PDPLlba
+   w==;
+X-CSE-ConnectionGUID: QRZs2qsfQyqr4Gb2I15gEg==
+X-CSE-MsgGUID: OKsH8ZkbRb+7Gitf4c382g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11352"; a="40902463"
+X-IronPort-AV: E=Sophos;i="6.13,305,1732608000"; 
+   d="scan'208";a="40902463"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 09:05:14 -0800
+X-CSE-ConnectionGUID: PYJDpfRXRe2YAt1iGJHvGA==
+X-CSE-MsgGUID: Yr500fwjSwuOm2NHrTIwOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,305,1732608000"; 
+   d="scan'208";a="115374665"
+Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.110.189]) ([10.125.110.189])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 09:05:13 -0800
+Message-ID: <43c873e1-737a-4119-abb7-49cc51acd6a0@intel.com>
+Date: Fri, 21 Feb 2025 10:05:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,56 +52,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] io_uring: add missing IORING_MAP_OFF_ZCRX_REGION in
- io_uring_mmap
-To: Jens Axboe <axboe@kernel.dk>, lizetao <lizetao1@huawei.com>,
- Bui Quang Minh <minhquangbui99@gmail.com>
-Cc: David Wei <dw@davidwei.uk>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>
-References: <20250221085933.26034-1-minhquangbui99@gmail.com>
- <590cff7ccda34b028706b9288f8928d3@huawei.com>
- <79189960-b645-4b51-a3d7-609708dc3ee2@gmail.com>
- <0c1faa58-b658-4a64-9d42-eaf603fdc69d@kernel.dk>
+Subject: Re: [PATCH v1 13/13] ntb: idt: use devm_kmemdup_array()
+To: Raag Jadav <raag.jadav@intel.com>, perex@perex.cz, tiwai@suse.com,
+ broonie@kernel.org, lgirdwood@gmail.com, deller@gmx.de,
+ andriy.shevchenko@linux.intel.com, sre@kernel.org,
+ sakari.ailus@linux.intel.com, mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
+ jdmason@kudzu.us, fancer.lancer@gmail.com
+Cc: linux-sound@vger.kernel.org, linux-fbdev@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-media@vger.kernel.org, ntb@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250221165333.2780888-1-raag.jadav@intel.com>
+ <20250221165333.2780888-14-raag.jadav@intel.com>
 Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <0c1faa58-b658-4a64-9d42-eaf603fdc69d@kernel.dk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250221165333.2780888-14-raag.jadav@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 2/21/25 16:39, Jens Axboe wrote:
-> On 2/21/25 5:20 AM, Pavel Begunkov wrote:
->> On 2/21/25 09:10, lizetao wrote:
->>> Hi,
->>>
->>>> -----Original Message-----
->>>> From: Bui Quang Minh <minhquangbui99@gmail.com>
->>>> Sent: Friday, February 21, 2025 5:00 PM
->>>> To: io-uring@vger.kernel.org
->>>> Cc: Jens Axboe <axboe@kernel.dk>; Pavel Begunkov
->>>> <asml.silence@gmail.com>; David Wei <dw@davidwei.uk>; linux-
->>>> kernel@vger.kernel.org; Bui Quang Minh <minhquangbui99@gmail.com>
->>>> Subject: [PATCH] io_uring: add missing IORING_MAP_OFF_ZCRX_REGION in
->>>> io_uring_mmap
->>>>
->>>> Allow user to mmap the kernel allocated zerocopy-rx refill queue.
->>>>
->>>
->>> Maybe fixed-tag should be added here.
->>
->> No need, it's not strictly a fix, and whlist it's not yet sent to
->> linus, the tags only cause confusion when hashes change, e.g. on rebase.
+
+
+On 2/21/25 9:53 AM, Raag Jadav wrote:
+> Convert to use devm_kmemdup_array() which is more robust.
 > 
-> I do like using fixes still, if only to provide a link to the original
-> commit without needing to dig for it. And yeah there's the occasional
-> rebase where I forget to update the sha, but those get discovered pretty
-> quick.
+> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
 
-Maybe a "Link" tag would be better or some more inconsequential
-"Refers-to", but otherwise you can call it a feature and avoid the
-hassle of fixing it up, and people getting spammed by tooling,
-and Stephen having to write about broken hashes.
+I think this patch [1] from earlier today makes this change unnecessary now.
 
--- 
-Pavel Begunkov
+[1]: https://lore.kernel.org/ntb/20250221085748.2298463-1-arnd@kernel.org/
+
+> ---
+>  drivers/ntb/hw/idt/ntb_hw_idt.c | 11 +++--------
+>  1 file changed, 3 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/ntb/hw/idt/ntb_hw_idt.c b/drivers/ntb/hw/idt/ntb_hw_idt.c
+> index 544d8a4d2af5..dbfc53d0ef0c 100644
+> --- a/drivers/ntb/hw/idt/ntb_hw_idt.c
+> +++ b/drivers/ntb/hw/idt/ntb_hw_idt.c
+> @@ -1103,16 +1103,11 @@ static struct idt_mw_cfg *idt_scan_mws(struct idt_ntb_dev *ndev, int port,
+>  		}
+>  	}
+>  
+> -	/* Allocate memory for memory window descriptors */
+> -	ret_mws = devm_kcalloc(&ndev->ntb.pdev->dev, *mw_cnt, sizeof(*ret_mws),
+> -			       GFP_KERNEL);
+> -	if (!ret_mws)
+> -		return ERR_PTR(-ENOMEM);
+> -
+>  	/* Copy the info of detected memory windows */
+> -	memcpy(ret_mws, mws, (*mw_cnt)*sizeof(*ret_mws));
+> +	ret_mws = devm_kmemdup_array(&ndev->ntb.pdev->dev, mws, *mw_cnt,
+> +				     sizeof(mws[0]), GFP_KERNEL);
+>  
+> -	return ret_mws;
+> +	return ret_mws ?: ERR_PTR(-ENOMEM);
+>  }
+>  
+>  /*
 
