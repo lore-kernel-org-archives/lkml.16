@@ -1,129 +1,112 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F81F1FFC62
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 16:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15BD61F1506;
+	Fri, 21 Feb 2025 16:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740155601; cv=none; b=lAqD9CLTvR4Ea96B1dHF3+0FgK3tVw013exR+Vho+s8yme/tzysh2IXDSplOgQ2+CGE+MWomf6XzIx5jnvTONgJ4F/ysY0KY84Ot7omOfNMPS+cPG/587XaGR1XDkUu/yanINLKCsZRBy1X4hKPWaklIffFycUfg2i9glUCYkX0=
+	t=1740155638; cv=none; b=DHu/2PARD5UjKE4SK00J6szlrsTlpHiY+KEsYrdpZINaPpCgktm3K5ocCp6COLsR8QpaFRKOgQBbOf8xyVEIuOxa4IxvEou3JAHCmHRQ5SjzXUPnIKn/np97AppX6wMesh/xcKo0DNfW1ENdQ7gRHtjzhS2rddf+dzCbS/4p1vY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740155601; c=relaxed/simple;
-	bh=k+eaoBDEiV/v/571srMqiYgCDvaRgVbpbTz+O7zIC7c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OLbKn7PXu/A/f4BzIJ3hIL9tJ23tJeLNgVlQ5SddCRlRIpObpUOY0+JsVfPSMRVUOR1ZD5tNDLhkdx7/lqq9q84W6mmZJWLInXBpgaeufElRh2zfz0K81S4Ivyt8ReQrdwS5rkmZbVVrTTDVdKrJQbDwVpId/j21zCfAqdhYB20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AqJPxeaX; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740155638; c=relaxed/simple;
+	bh=xDgKUa6FUU/WD8SJVO0id7N2H6JX+s0w4WOQanS2uGU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qGyLJn8j8Rzmh5OLpkB8soeR5pdXihRjFbJuvMtnq16ABuMue/gieDzCvDPCjJPfn1t+LNZ5IDvrKoCX/WLW9gPAsy8Lf2V//JgtD3hl6zlVDhVuIEGzeUGfyXeYRetJsURSGPaJf6AVJyB86iLYk2WBFXLhKTQKHcVSS36S+0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DBf+GFvr; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AqJPxeaX"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5ded7cb613eso400694a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 08:33:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740155598; x=1740760398; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=f3iw6hKjikBCxVEZdKgu4116iy//8boYuOpKYntKgu0=;
-        b=AqJPxeaXWZpO5niAhvqKyd+bpyirZl8sw9Sch0bKSACLKBE+fxHZBT/6FLBOXkkQHG
-         AXl0aHQa0wgWMh+rjTSEIMMmO5M/NuBdahploMIWsD72gX5iK179rAHKAuWRS18/QZhe
-         K9f8JwMdfPt/rVFB1Sh6KwBeMwCrWjrNEYcEbSGWFrnQVmkzCGw5xQEjbA0S2eL9S6o0
-         ZsSKOxoVX4aGxc7atG7ZKSIGZWiD49YUfP8EWjX8sYR0xkQ7xsw+6RbwnpKLZV0PwxKn
-         djEmR81NXZSpzs6GFxGhDra+oGn4xW+Dy4kSgDftDfFHJC4iLvqUqLw6ZWrlaXiqNlJX
-         h+OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740155598; x=1740760398;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f3iw6hKjikBCxVEZdKgu4116iy//8boYuOpKYntKgu0=;
-        b=ZLWEyQcN7pcQdBhAtIm9pHn3uHs7Rj/U9ZByjsxRjoVk8RAUBmWEdA0rLEe1X2auDz
-         N/A7bIB49YS2xKut4PBgjq+WkYz86jyjBqIy6uNCf0pj1ZLyzcLc9gImyODXylc8UDVt
-         rMOSGrp5bktk2ics8UqXhCBwYFAThPS4JWJLers0XzEkez/3gkcmC7HNBPTlra9B0ZeK
-         LTgJjxPq90GyspOM8Z0n/5UnPGp3wjOhl12MH/886kGwrf9yV3TGYAGiyO3wf4mATjQE
-         sM4jD7JjUxmx4amFIt7X6VVB36S/m46FRFTy0HJQGQBBhZwT6Yxq2l9KHJu+JJ2+AVMW
-         HHVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVr4z7A73W3uRSoQbzQtUB/dbCBVYwku8afST8Gov8sSggQ5xUTENNI4m8YdntjxtXm5cQs7/T6/5AeCvY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbdZRQxrctv4ZkwZUVgPO9GUNsM289/8vdmNRJYRLNc/i3l2Y2
-	ApKqA1LXMWg/liElMScypSxk0Tpob3erog16frmhiM+hn0hLyLtQ56FkEmaDErM=
-X-Gm-Gg: ASbGncuunX6I2CEwjWe+Fb01w7bYdz+OSCrDcCdGPsGe9xmQ8Cm6ItOiploaY8pdpc7
-	9OYk/a9gePDGCtPBL3KED77G6S7bnlaJ234BvkeRauzSrflylIn3pKLPxh2v4i7EGxSFChIpmBF
-	K7xfuBi5kQAHGv8K4r52KfQAYKhL0co9wVNxml4vv20tNEne/Dvlwnq+7qg4NxarGps1AifTGWg
-	8hIMjKWuT0oWM2I2DSN44CJpYQnbRXlTzHywGxWlJU7jtDvU7coAyXHpkLxZshkkRZqopLOT9sL
-	8Fk5sKAnmIu4WafyCnmyv6VsHbZm7Xyba1EEmof8vanwiMrAk/Yr9LeipS6fZ/gJ9op/gR9QD3x
-	7
-X-Google-Smtp-Source: AGHT+IEu7y+YxCXPnUsYn64daCxbLq5KBXVjYcY0SneRjy7cICXc6ytelS9iRMCcZFiC70h8skV9Dg==
-X-Received: by 2002:a17:907:3f90:b0:ab6:58e4:4fec with SMTP id a640c23a62f3a-abc099e895dmr150442966b.3.1740155597747;
-        Fri, 21 Feb 2025 08:33:17 -0800 (PST)
-Received: from [127.0.1.1] (78-11-220-99.static.ip.netia.com.pl. [78.11.220.99])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abba4fc0c29sm906814066b.157.2025.02.21.08.33.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2025 08:33:17 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Fri, 21 Feb 2025 17:33:07 +0100
-Subject: [PATCH RFC v3 3/3] arm64: dts: qcom: sm8750-qrd: Enable modem
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DBf+GFvr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740155637; x=1771691637;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=xDgKUa6FUU/WD8SJVO0id7N2H6JX+s0w4WOQanS2uGU=;
+  b=DBf+GFvrR9Dhml9Vk4PzBQz6fsYa7n5z0zErlZJXV4gqxK/ea285uqLB
+   QTwm0lmwISH3ROevWWIdMijSboxxtFHi73K/L9RLh01FvZ1qBhy+sMrOt
+   vNHCL5aIEGBLBVAdHs9cOBArlkusTmTTGq6Ct48pRwt2LQo/egMUJOWrU
+   M8PES7T3x0ZNTTuKHKL3nD9HkXL2fU5BK6j91hqGZWRWYN2XAbNWzRjMV
+   HzNIzYsX8haeBYaVB10KfENbIj1Cnz0qQdoUhd0CQbSEtl9iZ5vzrgk7h
+   CtWqfUCL1WyyUoyYsmN4xbsse2i5VLqoaXJ9JUpfnGmlYqj4qaXZi8PkZ
+   g==;
+X-CSE-ConnectionGUID: LI5X+QDyQOm4DEy9gjPIeA==
+X-CSE-MsgGUID: qc60KEu2RSyde/L8qb5eHw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11352"; a="44626362"
+X-IronPort-AV: E=Sophos;i="6.13,305,1732608000"; 
+   d="scan'208";a="44626362"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 08:33:57 -0800
+X-CSE-ConnectionGUID: oNN6IyQwQTq6U1o9Tb7ccQ==
+X-CSE-MsgGUID: QyU/5dwSS5+VH+NG5P2mTg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="116324844"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 08:33:55 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tlVyK-0000000DgxC-0RN6;
+	Fri, 21 Feb 2025 18:33:52 +0200
+Date: Fri, 21 Feb 2025 18:33:51 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] gpiolib: use the required minimum set of headers
+Message-ID: <Z7iq74pfOT-4gmIy@smile.fi.intel.com>
+References: <20250221123001.95887-1-brgl@bgdev.pl>
+ <Z7ijLu5Z9MiW4IAp@smile.fi.intel.com>
+ <CAMRc=MeJn4URkXoCTC_tpTKfQ7OL=BjytcY-k4BB2QUwsVXnBQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250221-b4-sm8750-modem-v3-3-462dae7303c7@linaro.org>
-References: <20250221-b4-sm8750-modem-v3-0-462dae7303c7@linaro.org>
-In-Reply-To: <20250221-b4-sm8750-modem-v3-0-462dae7303c7@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=797;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=k+eaoBDEiV/v/571srMqiYgCDvaRgVbpbTz+O7zIC7c=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBnuKrHA0/Af+/nk0PU5yoU8f3LJNXmLAEEaaCDK
- pTBuPjnWOuJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ7iqxwAKCRDBN2bmhouD
- 1wmcD/410/xPnOqzA0ntt6GOStQjSzlKYVHbApkU9vqaoigwukTy57MznTigG9NSVvsPfZ5NObs
- eRMYGMpGNtsRdDbcy1QpCdlmBNuPDeNUYVJUYHsamHb1/QSx+fQNmmDF999v72C1ZxlV3aw3EdI
- +Z6x/9H2QOMWpqSuGQ0o2B8SPlsHdMf9MepMsbCHlAFNvHjkwZ1oSuhplSniQh2yI1Hd2SWTb4q
- XNveF3qdGSnTs1Lw4ULfpecXUSuodmQducLAALBk+Wjk0sQXxS7JTC/ZGF28dRV8Tc3lMkDuuDk
- 5OrhppKcotcQ1UsLM8n0drxK8BM8H3Nle8YIPtFOAZphfI4rj6ZyZUzBeH7Lrys/aO8spSMrbSh
- LyDpN7MBD3tVgg8bu+eBLTZrqbZNFzydGf+UchFUWsuiT2XM3gyeE6XaUSv0NvqJ6LrVPKsGN3g
- t79cigdul6VqACBuW7JxTYCgRQ25naYp83M25UR19Bj+yPpLGmXB8BEX8/PuPJSKDxQ53nmIxrn
- N3ZtGINTzZ9o5j3QLkIA9CtwvHWkpKwo0PF+sMCItYVwwDnBPpWRNYtZ7TvlD/oAcgOk3SDSQ91
- E2mXEgKvxe/6dfPM9r42UcnVma8rWZGrkmDETrD+LorVG6TEoDhDCFslnAbgbV8PSxKTsYlFQTy
- suLqTL0AuM337Aw==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MeJn4URkXoCTC_tpTKfQ7OL=BjytcY-k4BB2QUwsVXnBQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Enable the modem (MPSS) on QRD8750 board.
+On Fri, Feb 21, 2025 at 05:17:50PM +0100, Bartosz Golaszewski wrote:
+> On Fri, Feb 21, 2025 at 5:00 PM Andy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
+> > On Fri, Feb 21, 2025 at 01:30:01PM +0100, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Thanks for taking my suggestion into account!
+> >
+> > > Andy suggested we should keep a fine-grained scheme for includes and
+> > > only pull in stuff required within individual ifdef sections. Let's
+> > > revert commit dea69f2d1cc8 ("gpiolib: move all includes to the top of
+> > > gpio/consumer.h") and make the headers situation even more fine-grained
+> > > by only including the first level headers containing requireded symbols
+> > > except for bug.h where checkpatch.pl warns against including asm/bug.h.
+> >
+> > I'm not sure we should consider the checkpatch.pl in this case.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- arch/arm64/boot/dts/qcom/sm8750-qrd.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+...
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8750-qrd.dts b/arch/arm64/boot/dts/qcom/sm8750-qrd.dts
-index 7f1d5d4e5b2813c59ea9dba2c57bee824f967481..840a6d8f8a24670a01376f8fce511da222159016 100644
---- a/arch/arm64/boot/dts/qcom/sm8750-qrd.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8750-qrd.dts
-@@ -796,6 +796,13 @@ &remoteproc_cdsp {
- 	status = "okay";
- };
- 
-+&remoteproc_mpss {
-+	firmware-name = "qcom/sm8750/modem.mbn",
-+			"qcom/sm8750/modem_dtb.mbn";
-+
-+	status = "okay";
-+};
-+
- &tlmm {
- 	/* reserved for secure world */
- 	gpio-reserved-ranges = <36 4>, <74 1>;
+> > This change is definitely an improvement from the current state in your
+> > gpio/for-next branch, if you are really strong about linux/bug.h, let me more
+> > time to check that header and see if there any potential issues.
+> 
+> Sure, take your time. For some reason checkpatch does recommend using
+> linux/foo.h over asm/foo.h if the former includes the latter but I
+> don't know the history of this.
+
+I know the history of this, lately (last year) it was again a discussion result
+of which is linux/unaligned.h. But this recommendation is only for the leaf files
+or custom (local) headers and code, it doesn't fully applicable to the globally
+accessed headers, like gpio/consumer.h. I consider this as false positive by
+checkpatch.
+
+Yes, I will check more on the header nevertheless.
 
 -- 
-2.43.0
+With Best Regards,
+Andy Shevchenko
+
 
