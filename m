@@ -1,138 +1,134 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45B9149C4D
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 02:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 105542AD0F
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 02:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740103469; cv=none; b=c8LL0JbLS4v81jCcvjVZ7lzrjdXPYwYXVmGYmnzAhojSZyX/8ErDETctCoIf0IlRRuOPdAyQxUjNGXsh4QNHYhvglHxiUHj3VjdXV6MFs6TGp4rb+ecwOgXY8B7A67fOzSd3Wnk+SQToIEKvW4cStEhUk/M7/6nxT2PTB2ZWMPc=
+	t=1740103586; cv=none; b=i37SDMLlyCaDYc396mMsK+ydQ//lIqeiVB4TKK5/X1ltAGOq3piW3M77uhJJ/MNQJYbwGl5MQn9uzylh4K9ctutgRTcyvRwG3Wtkl0r9nUaYX3LKLnUiCzcGD3+wLLkZfzP+Hasb+LRp57s7eJLPgqfjhwCIyrz1f5GcqL/ylpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740103469; c=relaxed/simple;
-	bh=N1yHkd6WcyNSVQbGsYczlSizRGhxXsmcqx1x0a+rzi4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HEDhL2p/1GCq+LA/vs3zsOOOCdQlfLAxXF7ygrNIGVQb4BkhIJbHb9jYQjmJro3xxOIPp5fiDiQ+QQlXsyKANv4fpjc+d7LxR0FLs7DXGaTxBhSoeXaThpIvQl7g32P1GiWRO8LyPm4bYErDer5IZNCeadQTCOIPlU8IP8P433A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t0AtTq4l; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1740103586; c=relaxed/simple;
+	bh=7bUYJkVR4LhZ5MDpF+WhZIC+c5Z7P28KhdMyqRYAle4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s9x5KmFeGoo7KaVtR23bN9j8H937Gea86tR+n77tuoeoqZMuNpZcUal2+Gj7GVfITMT5Pj/6US7fTmsQMt7+kIX/VRcADtgMkfLsmq6tw44TZ2DM6MkIlxvhMPXgY0nld5YiLMMicUkHK5Rda34snh2p8FDSbg/qMUsSoiro4mY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BGD2xc4s; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t0AtTq4l"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-471fa3b19bcso130501cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 18:04:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740103466; x=1740708266; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N1yHkd6WcyNSVQbGsYczlSizRGhxXsmcqx1x0a+rzi4=;
-        b=t0AtTq4lP9LfsczerQW+Epu5wAdRGMYG1ySqYNNl+06+XEn0v3khTxj5MITbA6fR5X
-         Rc4Ifi6gdvnKUz0PnNNUu2g7j8H3N0keBDMLLNXUxY/acRDiL/ea5UAiacluGMLn7pAu
-         L5wHJftJtoyUyrooZa19/8UnT4FCRz593jTVWjdyxw7mXpMthSFNPd2EOamE9PDjEjOC
-         E5mx/Cvk88mmItf1HIF8e8adi5AfQbep5d4uwI+yg7AjXFtrNcRycjfbanJawbKtKZZ/
-         G56suRtSU4enfWMvrVg9nZo1nzD2lkfMQ53myx0R5AbYlKi/q5swnSTQYwP/zNmfEIc4
-         hepg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740103466; x=1740708266;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N1yHkd6WcyNSVQbGsYczlSizRGhxXsmcqx1x0a+rzi4=;
-        b=kNP5Fnb7bLVdAzQTm6r0TKAf5QB88jhDwervjodPVVmoLUjUdhJMNGQTKSVwpFQBZ/
-         0GbfsgMupIRAv4StW6dCdDQj/qxgrEKv22ntnJbOdr0kdQq1kwc9vbI9jCyU7mhzQ9TY
-         PG+3qRy1acm5u0MU1MqLIP7VGx25eQmS1ZfBeGZtCZS1HZ2oaLtSMqM5kmiV0cu1SU5I
-         WfZofeAFvg+OhvCoounh5/MHIRuhTqRfCBGHZacfRkEXq0mfrkzy6LRUwNJWnAXhcjy9
-         PknoxRdL0s5FAAxSr8gHkfEteuCxcDLd779jM4WNYfwR8tLEFaSfRgSzTRlaH89VC3C8
-         mQCw==
-X-Forwarded-Encrypted: i=1; AJvYcCVSdWhpRUxCgZPXHdzrWMJUfECOqxR62xEjQ9eTUn383qahDbwu312nP+d33QxzMVobIyZmqoQucbRtDMY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvBK4dZhCv3DwSyEEkMEEfX9f2CJTCA+ntLDk/SyzeGkW8VDBS
-	7P78ewwk5H1ekJNvzkPlk99OKKMjYt9AVkZUrjelc6KhXZtH4W/+5l5Bc3jTFtWxLghp9yM1v9r
-	/M94Wk8B/IQC+y4qKSQLmx98jd2OCBPwO4yeL
-X-Gm-Gg: ASbGncvKXZt8RJx2HQJmUFUa+Q29PvKJBNwCiv2LZZRbksBuAQOAkxeOwq2mcT9D8ph
-	FzB8yDGzZIkKbUli5dI4e2IRzGCVRm/vIbii2D1Ga/B3lmDTUufCwEub88y7EpUN6kiLK/ZKeHw
-	MbPDPVci7W
-X-Google-Smtp-Source: AGHT+IFShkeKNa7hBQxM8WJImL27ya3TaFWjy9t41mcSCg8PXCJXsgBgjYpdo+tD3SDjLtFIoBf92VZ9oD1/FNTlZj0=
-X-Received: by 2002:ac8:5a10:0:b0:471:9ece:b13b with SMTP id
- d75a77b69052e-47225043af1mr904521cf.1.1740103466046; Thu, 20 Feb 2025
- 18:04:26 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BGD2xc4s"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740103569;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ZV49fxUaLuaAIe94fEcao8tPpI/oFMeLfe5oAC8i2bM=;
+	b=BGD2xc4sfo+EqSf0zxzex/zxxMANPBaXiq2p7+KZWEykfR1QHb5gVtFWk0yLdr0rUw3Iyh
+	NwOKqlTnAa2zDXoHBdNsc44d7nMwJdmhzFeROxu6XVIJ0cXz4a7UhYK86bPqRzh+JZ9gri
+	WNK/cIvXMSSoyYUlttZ6IYocwG8tOWw=
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>,
+	Leon Romanovsky <leon@kernel.org>,
+	Maher Sanalla <msanalla@nvidia.com>,
+	Parav Pandit <parav@mellanox.com>,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] RDMA/core: fix a NULL-pointer dereference in hw_stat_device_show()
+Date: Fri, 21 Feb 2025 02:05:55 +0000
+Message-ID: <20250221020555.4090014-1-roman.gushchin@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250220093257.9380-1-kprateek.nayak@amd.com> <20250220105558.GJ34567@noisy.programming.kicks-ass.net>
- <b2386349-2879-4dce-afb0-f6486c24c117@amd.com> <20250220113227.GL34567@noisy.programming.kicks-ass.net>
- <59d46dd3-33da-4e95-8674-d93fc00d73f6@amd.com>
-In-Reply-To: <59d46dd3-33da-4e95-8674-d93fc00d73f6@amd.com>
-From: Josh Don <joshdon@google.com>
-Date: Thu, 20 Feb 2025 18:04:14 -0800
-X-Gm-Features: AWEUYZkezBZ_8B7pnQOk5D6fE9Yi15jahsKLRimXrfXwGO-40LmlcMoAEdkjKjc
-Message-ID: <CABk29NuQZZsg+YYYyGh79Txkc=q6f8KUfKf8W8czB=ys=nPd=A@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/22] sched/fair: Defer CFS throttling to exit to
- user mode
-To: K Prateek Nayak <kprateek.nayak@amd.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: Ben Segall <bsegall@google.com>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Valentin Schneider <vschneid@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Mel Gorman <mgorman@suse.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Clark Williams <clrkwllms@kernel.org>, linux-rt-devel@lists.linux.dev, 
-	Tejun Heo <tj@kernel.org>, Frederic Weisbecker <frederic@kernel.org>, Barret Rhoden <brho@google.com>, 
-	Petr Mladek <pmladek@suse.com>, Qais Yousef <qyousef@layalina.io>, 
-	"Paul E. McKenney" <paulmck@kernel.org>, David Vernet <dvernet@meta.com>, 
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Feb 20, 2025 at 4:04=E2=80=AFAM K Prateek Nayak <kprateek.nayak@amd=
-.com> wrote:
->
-> Hello Peter,
->
-> On 2/20/2025 5:02 PM, Peter Zijlstra wrote:
-> > On Thu, Feb 20, 2025 at 04:48:58PM +0530, K Prateek Nayak wrote:
-> >> Any and all feedback is appreciated :)
-> >
-> > Pfff.. I hate it all :-)
-> >
-> > So the dequeue approach puts the pain on the people actually using the
-> > bandwidth crud, while this 'some extra accounting' crap has *everybody*
-> > pay for this nonsense, right?
+Commit 54747231150f ("RDMA: Introduce and use rdma_device_to_ibdev()")
+introduced rdma_device_to_ibdev() helper which has to be used to
+obtain an ib_device pointer from a device pointer.
 
-Doing the context tracking could also provide benefit beyond CFS
-bandwidth. As an example, we often see a pattern where a thread
-acquires one mutex, then sleeps on trying to take a second mutex. When
-the thread eventually is woken due to the second mutex now being
-available, the thread now needs to wait to get back on cpu, which can
-take an arbitrary amount of time depending on where it landed in the
-tree, its weight, etc. Other threads trying to acquire that first
-mutex now experience priority inversion as they must wait for the
-original thread to get back on cpu and release the mutex. Re-using the
-same context tracking, we could prioritize execution of threads in
-kernel critical sections, even if they aren't the fair next choice.
+hw_stat_device_show() and hw_stat_device_store() were missed.
 
-If that isn't convincing enough, we could certainly throw another
-kconfig or boot param for this behavior :)
+It causes a NULL pointer dereference panic on an attempt to read
+hw counters from a namespace, when the device structure is not
+embedded into the ib_device structure. In this case casting the device
+pointer into the ib_device pointer using container_of() is wrong.
+Instead, rdma_device_to_ibdev() should be used, which uses the
+back-reference (container_of(device, struct ib_core_device, dev))->owner.
 
-> Is the expectation that these deployments have to be managed more
-> smartly if we move to a per-task throttling model? Else it is just
-> hard lockup by a thousand tasks.
+[42021.807566] BUG: kernel NULL pointer dereference, address: 0000000000000028
+[42021.814463] #PF: supervisor read access in kernel mode
+[42021.819549] #PF: error_code(0x0000) - not-present page
+[42021.824636] PGD 0 P4D 0
+[42021.827145] Oops: 0000 [#1] SMP PTI
+[42021.830598] CPU: 82 PID: 2843922 Comm: switchto-defaul Kdump: loaded Tainted: G S      W I        XXX
+[42021.841697] Hardware name: XXX
+[42021.849619] RIP: 0010:hw_stat_device_show+0x1e/0x40 [ib_core]
+[42021.855362] Code: 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 49 89 d0 4c 8b 5e 20 48 8b 8f b8 04 00 00 48 81 c7 f0 fa ff ff <48> 8b 41 28 48 29 ce 48 83 c6 d0 48 c1 ee 04 69 d6 ab aa aa aa 48
+[42021.873931] RSP: 0018:ffff97fe90f03da0 EFLAGS: 00010287
+[42021.879108] RAX: ffff9406988a8c60 RBX: ffff940e1072d438 RCX: 0000000000000000
+[42021.886169] RDX: ffff94085f1aa000 RSI: ffff93c6cbbdbcb0 RDI: ffff940c7517aef0
+[42021.893230] RBP: ffff97fe90f03e70 R08: ffff94085f1aa000 R09: 0000000000000000
+[42021.900294] R10: ffff94085f1aa000 R11: ffffffffc0775680 R12: ffffffff87ca2530
+[42021.907355] R13: ffff940651602840 R14: ffff93c6cbbdbcb0 R15: ffff94085f1aa000
+[42021.914418] FS:  00007fda1a3b9700(0000) GS:ffff94453fb80000(0000) knlGS:0000000000000000
+[42021.922423] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[42021.928130] CR2: 0000000000000028 CR3: 00000042dcfb8003 CR4: 00000000003726f0
+[42021.935194] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[42021.942257] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[42021.949324] Call Trace:
+[42021.951756]  <TASK>
+[42021.953842]  [<ffffffff86c58674>] ? show_regs+0x64/0x70
+[42021.959030]  [<ffffffff86c58468>] ? __die+0x78/0xc0
+[42021.963874]  [<ffffffff86c9ef75>] ? page_fault_oops+0x2b5/0x3b0
+[42021.969749]  [<ffffffff87674b92>] ? exc_page_fault+0x1a2/0x3c0
+[42021.975549]  [<ffffffff87801326>] ? asm_exc_page_fault+0x26/0x30
+[42021.981517]  [<ffffffffc0775680>] ? __pfx_show_hw_stats+0x10/0x10 [ib_core]
+[42021.988482]  [<ffffffffc077564e>] ? hw_stat_device_show+0x1e/0x40 [ib_core]
+[42021.995438]  [<ffffffff86ac7f8e>] dev_attr_show+0x1e/0x50
+[42022.000803]  [<ffffffff86a3eeb1>] sysfs_kf_seq_show+0x81/0xe0
+[42022.006508]  [<ffffffff86a11134>] seq_read_iter+0xf4/0x410
+[42022.011954]  [<ffffffff869f4b2e>] vfs_read+0x16e/0x2f0
+[42022.017058]  [<ffffffff869f50ee>] ksys_read+0x6e/0xe0
+[42022.022073]  [<ffffffff8766f1ca>] do_syscall_64+0x6a/0xa0
+[42022.027441]  [<ffffffff8780013b>] entry_SYSCALL_64_after_hwframe+0x78/0xe2
 
-+1, I don't see the per-task throttling being able to scale here.
+Fixes: 54747231150f ("RDMA: Introduce and use rdma_device_to_ibdev()")
+Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Leon Romanovsky <leon@kernel.org>
+Cc: Maher Sanalla <msanalla@nvidia.com>
+Cc: Parav Pandit <parav@mellanox.com>
+Cc: linux-rdma@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/infiniband/core/sysfs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> If Ben or Josh can comment on any scalability issues they might have
-> seen on their deployment and any learning they have drawn from them
-> since LPC'24, it would be great. Any stats on number of tasks that
-> get throttled at one go would also be helpful.
+diff --git a/drivers/infiniband/core/sysfs.c b/drivers/infiniband/core/sysfs.c
+index 7491328ca5e6..0be77b8abeae 100644
+--- a/drivers/infiniband/core/sysfs.c
++++ b/drivers/infiniband/core/sysfs.c
+@@ -148,7 +148,7 @@ static ssize_t hw_stat_device_show(struct device *dev,
+ {
+ 	struct hw_stats_device_attribute *stat_attr =
+ 		container_of(attr, struct hw_stats_device_attribute, attr);
+-	struct ib_device *ibdev = container_of(dev, struct ib_device, dev);
++	struct ib_device *ibdev = rdma_device_to_ibdev(dev);
+ 
+ 	return stat_attr->show(ibdev, ibdev->hw_stats_data->stats,
+ 			       stat_attr - ibdev->hw_stats_data->attrs, 0, buf);
+@@ -160,7 +160,7 @@ static ssize_t hw_stat_device_store(struct device *dev,
+ {
+ 	struct hw_stats_device_attribute *stat_attr =
+ 		container_of(attr, struct hw_stats_device_attribute, attr);
+-	struct ib_device *ibdev = container_of(dev, struct ib_device, dev);
++	struct ib_device *ibdev = rdma_device_to_ibdev(dev);
+ 
+ 	return stat_attr->store(ibdev, ibdev->hw_stats_data->stats,
+ 				stat_attr - ibdev->hw_stats_data->attrs, 0, buf,
+-- 
+2.48.1.601.g30ceb7b040-goog
 
-Maybe just to emphasize that we continue to see the same type of
-slowness; throttle/unthrottle when traversing a large cgroup
-sub-hierarchy is still an issue for us and we're working on sending a
-patch to ideally break this up to do the updates more lazily, as
-described at LPC.
-
-In particular, throttle/unthrottle (whether it be on a group basis or
-a per-task basis) is a loop that is subject to a lot of cache misses.
-
-Best,
-Josh
