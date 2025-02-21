@@ -1,194 +1,286 @@
-Received: from YT3PR01CU008.outbound.protection.outlook.com (mail-canadacentralazon11020125.outbound.protection.outlook.com [52.101.189.125])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC6E1FBC93
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 19:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.189.125
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740166716; cv=fail; b=ETEaOruftSsmboISWqxXHYVwS/1MsjuB9Nd96YPxeAIu8ADMF2c9LxYEXDnClxVI51wW/UKzfX/REjSnKw/3P3c/LIAIK4Qm3VMFeqAJBNIDxQhHll3xVd5Na152bBK0O5ykVm0pmtGMwD8k6Pejdn/+5y035ViN00/2KZyAeBQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740166716; c=relaxed/simple;
-	bh=ZsMNOFgts6n7ani4m7HHoOQQO3u4uNboYiZdG56Fi5o=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=I7+39qAmtgO6TYMcKaXRP7teXWxSpffUHY2NX1S1OyRB0TZIMfIhko2m4idTYQYyyW7IIVjh3+N/UhVMxUaXXtYRwMnB77G3a3/9VrBvVmq5ss/dLm2VMgvcv19jXSBLhU3LXiGMFbXLz9YVkBJ2Bxaas2S/U7GQ2YXMRvKJ/jQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=El9VbEzS; arc=fail smtp.client-ip=52.101.189.125
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4461FBEB6;
+	Fri, 21 Feb 2025 19:39:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740166747; cv=none; b=MvZinL9lD1wfxK1emuqlf4jTuYT2hvw+5d5c2Kxjv4ZejjsQkWUFGm73nw7xmHceVQjN/wBUOHiPIabL9qA91mFl8A4p34hg5q7nFGtG60uQaLYeDuMU1/KW296+wU4Qe+Rk589oebEskpOclkScit1deXV2s7GBdxt0U7s69Xk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740166747; c=relaxed/simple;
+	bh=BH3WFspxGo2yGy/4z+nwK+niWQhW6cX9r26uo5byxoI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M7wDBuYVadClKGsyllbtpjiF33GTFXnOaxr4RDeEpZllQptBXT3YgzUjILSAJfJdxE7zaURQnmUofOtO0KsxIlX6bMg0pQapZoe0PUhQGp+AjSBVvtXi5HeXO0KWyFGy7Ec+o5TLIQuw31E2PvAbHoBiMl1QF+hU224LSkjzE90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C1M88aNM; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="El9VbEzS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UbxddmVFeyXd5RWgA0pc+drafWD/kja2V/AO+ehcWR3i1NdY8u3pkNOBraQle+hiTWFZFf5t1tAtkirxMvPSBLywDugfcQPaheCYlCZmZBhXeYuEhLDfhYTxvUO03i2z0DbI4+hWHrbUpYHROl2YmwAn4roh52tvsWP2WQ7KcIAtHKd7h1bbxtOliU4b/tJ9nikqTQwyMrk1s690AqP48ctwD4No/0RIMaLWrlA2NkTFUSaE0OVHwc0DSEKvWmG494F7SRHYMXCJqbSu+nNYciCmcj+vEN4O/8JI4zI89fxsNv0GTZS9ruJDLPskkatiidQXHXwj4l2+v6xiUhx9xQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4AliiehwxuadUWDaKu5NGhK94GLdHlyZeu8xZ+2s3/g=;
- b=cYH5Z0sVgyyXhbSBQ6btGE6ES5u32msosFq3EOuptB3Yhvz0zH+WGmkhJ7VjROsEmqCjjXB6mbylevE4p58IlfVE7+UKYmYPzW4eV0gDFQfnuNHNyxSta7SzQMrSTrwgqnzOjEdKqxMsu95xEWdpsFQsyXeJIPzpraieW/vzZzRgboh7gGWj/m2IYGrhvvGLOVH2djIATcfSUWzV4dyt3GEKmWCsujy+NN7pG+qRXLapcG0K+HDKKePhezL/PILJrYkcOBhhEKbsLaTmoL7lLX8CQvN5+/CMO7+1JWia/5vyOXm20MGK9US30DIouFBh88CYWVq6TvHVSegcUa+/NQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4AliiehwxuadUWDaKu5NGhK94GLdHlyZeu8xZ+2s3/g=;
- b=El9VbEzSBJW5Oulg2zhtCIIRbtFVudBrFAhgx4QJN66mlj84c0UbVfzl/A4ywD5L2iMFs11gJKe6mhWj5G5oUmykWem4HeBHq80iXdkx88K5CXc3F5NYJUqP+pq19vH+l2cm03WYuc4Axil9gMOjJSaH0UbFb1I1n1Qb/1eAMNBwgETlL/vnB7kZdO45Jb8CV3FVrHdWPklhjIRWxYCWKes4K4yn3ncF6nI4zSYHu38siQeuQ5+Z3uPqk29W+WBcgW4ilioS8Leq43RX6wmYdJr2t8YH97oZWABMJpkmXMlqfpVbxVFw5OcKztxQqyVy0m2E8jJYDM9jynacf0aKxg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
- by YT3PR01MB11084.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:140::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.18; Fri, 21 Feb
- 2025 19:38:31 +0000
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4%4]) with mapi id 15.20.8466.015; Fri, 21 Feb 2025
- 19:38:31 +0000
-Message-ID: <6ada635e-973d-4e32-ab47-1fda12ee7ce7@efficios.com>
-Date: Fri, 21 Feb 2025 14:38:30 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] rseq: Make rseq work with protection keys
-To: Dave Hansen <dave.hansen@intel.com>, Dmitry Vyukov <dvyukov@google.com>,
- peterz@infradead.org, boqun.feng@gmail.com, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- aruna.ramakrishna@oracle.com, elver@google.com
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-References: <cover.1739790300.git.dvyukov@google.com>
- <0d0e0a0a7136d49af9a8d6a849e1aa4bf086c472.1739790300.git.dvyukov@google.com>
- <81d94ec3-16af-45a7-87c6-ef76570953f8@intel.com>
-Content-Language: en-US
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-In-Reply-To: <81d94ec3-16af-45a7-87c6-ef76570953f8@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQZPR01CA0068.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:88::9) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:be::5)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C1M88aNM"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38dcac27bcbso2253721f8f.0;
+        Fri, 21 Feb 2025 11:39:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740166744; x=1740771544; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=+lg7YI8UWTEaXc8hJuz8pPloCdWidDKP4oBKmy+rdSA=;
+        b=C1M88aNMWdNnkHd93flhh5jPC7hNA/o98SGH8E/5z4JWwH59FY7/N/VvqCnm1uWUSm
+         AMebEkVswPH+vFk9z2sDbCuMH/NHFpLVFnyiJkLCbd6+LEDLWj2G3u/FCX5v6XXnHqB1
+         v9ULzGRDnTWirSaUPclrxaJX6Mf2MPmpjB2WmwdsfieRoQ5X1BWyDPjtUhEV+KpXhpwr
+         ck3EtZei/QyVjv2K9/kDX02x/4ltJ0Q6QNLBQWYF+eV+AE4HtSArnaCR0B4s6d4gihex
+         CXAjUxeRpS9m8jMVbogplwuWWJCdvfNvw7ObWHzLEXQ4MlnoKLE51aYlo5qRHAE1a4us
+         3cSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740166744; x=1740771544;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+lg7YI8UWTEaXc8hJuz8pPloCdWidDKP4oBKmy+rdSA=;
+        b=O9ubkasHjGwTiDDvf+HxcPxn0bZAdM+RgIBiIWeoD1CRbBiISX5PFdta/AJ26xxaYv
+         UASCrHNdVDMMRMydEbUJrytmWSoIS24+RyUzzg0sHCiveQZWCH8ngBdeTOK3MBHmixCr
+         O/FuLSa0zcMDWE9Tus403Lpv9bAXt7HWL8K98RztzrfAowhLUQP2vdNc5wjJD2yfnvqo
+         TXRxJFBhYZWkw6BPtoVg0M/fNRTveRTMhpJP5N87iHuqnZBlSRWXU+eylOxu/ZT3STIB
+         eJBb4Vk31xG2LOS79tCPGscL5FHdwMfzQ6jGyGEQlNzt9NaSrdu/vA2BJowT5hnbm2z+
+         DQMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWaoiZIAp7BakoaPcIaMKTJcULPHMII4Q32OUE/P0CMNPMTtkV7FxLmtMKP6QnzEr8tnGfbDsjaWpZn@vger.kernel.org, AJvYcCXYmzeK+jhLi/4E1gVPzS81TmoUHlXIT255/JZnrvA3IG0FPN5p8Kjr/lkmLHHWPmP59NvuDltvsfmsaqw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGcq59xFt+lNzjqhgP+gbXXZs83SX4zLY4VmO5PvvCas3fgPep
+	w6z97L8iuLo4gA2vgVyc2ywWOEzXCLOV44v7bKlydcWf2vfj5mni
+X-Gm-Gg: ASbGncsIuX5l/B6xh2NG0UoUYY+1epmggPs10/FQub641tdBtGQ0Ttw2MD5rIcHhsrG
+	ccG9QFraT/tr9UnwS7LeTGosBv49Hph2SO3GQh5WwN3ziU8hIJgcMAogcuSGti7Zi5nOtl/aQQ+
+	6mhqmZ9srKL2HzfSNgtX4Y2J09MUardNkj9UQi7NYF2YrwWwUCdddPwtOfo7dRjUGrG0oe4j78u
+	c0LeK+S2gUzAdP9FI6bj0txgzhCDnhZs9VgZChYYp3N9iozKx0ksvLUEEty59y+5JPQy8n0zCbt
+	QgpkebXSPcQbYLz+/4hKHOACe+TPiXSxvTu0Vr+IcUm1lG4pBeaP+9/b6usaSyQkG7mlomhc/MR
+	5qM7xSUB9FrHAQ9T09peTtIlgnRnD9wDaCcdiQHuJ+D5087tam0xYP7Z0rJzSfvIKagf2vGEKWy
+	w3HkdcFJGpVrDH
+X-Google-Smtp-Source: AGHT+IHkXL5wAOD/SMTvw/+F62cT789FbQ3is8nBiXilI9clcxgi/7AIxMeDFuW71rrOuThPF/XckA==
+X-Received: by 2002:a05:6000:401e:b0:38d:d414:124d with SMTP id ffacd0b85a97d-38f6160faedmr7260007f8f.19.1740166743734;
+        Fri, 21 Feb 2025 11:39:03 -0800 (PST)
+Received: from ?IPV6:2a02:3100:b29e:900:9dc2:647a:dfc:6311? (dynamic-2a02-3100-b29e-0900-9dc2-647a-0dfc-6311.310.pool.telefonica.de. [2a02:3100:b29e:900:9dc2:647a:dfc:6311])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-439b02ce60asm27361405e9.7.2025.02.21.11.39.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2025 11:39:02 -0800 (PST)
+Message-ID: <36d6094d-cc7c-4965-92ce-a271165a400a@gmail.com>
+Date: Fri, 21 Feb 2025 20:39:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YT3PR01MB11084:EE_
-X-MS-Office365-Filtering-Correlation-Id: f8c1d101-ee80-49ad-f9f0-08dd52af52b0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bFBld3c3MHpRQXl4TlVMRzhaY2R1Zk9sYVRzL3QvZW1nTFhWSTdma0ZJNWVX?=
- =?utf-8?B?WlVmMGlkUHR1ejNwbzNVRm9pY3FNeWU0WTJhVmdpVGlNdGVZUDRCalRUYnZS?=
- =?utf-8?B?ZUoxcDYrVElma0MxK080dEpxSkV6SmFYNGNSTjZXbGg4Tkg4TlFGYzZGWXpW?=
- =?utf-8?B?QzBUby9NVUwzWjJlZ1JiVjg4TkRmQnQwWnhBSXVOWDc0TUxOL1V1ZUkxam5w?=
- =?utf-8?B?WkdrUjd4UnZoQ3JIYmxSbXVZc0kzaDJmc2Y0NWd5dHhSTmswbEtrZ3pkLy84?=
- =?utf-8?B?V2V3NE5iTFY3MHdSeElBWUNZMGY5K000VFNyVzdYa05tanFnNWxkd1lhVmcz?=
- =?utf-8?B?dFNqbTF3NENtanRjcUc4OXZSQWk4SXk4b0I3NDk0RXNJOUhUM0NaY20vcTFQ?=
- =?utf-8?B?SkpXc0ttWXRSbWFBTE9hMWphU0Z4aUl2eHJvV1ZQZ3pWOG5NWGh5UHArNEgw?=
- =?utf-8?B?QmhkdXdNUUUwN25tcUcxelFQMHM1MHZoRHg4cUVxc1A1Y2J4REJYTGlwTHdB?=
- =?utf-8?B?dHBmbm10Z25kK0ZBVkZHQUZsaVhhb09GU0JodTRCaWhQQW5rNjd0WTBCY0dW?=
- =?utf-8?B?WGprUGpsR2w4TEJ4N1VOOGRLVlk2a3U5R2RKYmlXNW1CcWtxemZ3ZGhuSjZu?=
- =?utf-8?B?UUVsbW5tYWxtTndQdjZFRWRUMnhjR2hVbjcvTlBhbGF5QU0yY2ZJVGZOT3Mz?=
- =?utf-8?B?Vlc3K1FWK2l0Y0tPZ3RZTU9jenJwVldGdG5HeTNhT3V1UFo2SFBqbXkyMmor?=
- =?utf-8?B?WGFZbzYrQW5YeUVLYmpZekV5UHFoVUZlYk9WQUZuTm9QMUR2M3g0eGlUWmk1?=
- =?utf-8?B?SlliZWs4aUFBSVM1dUhiT05SRXVPK3RDbUcyUlBWeU5wdzF0ZitUQldML09X?=
- =?utf-8?B?c005SWhmTWl3MjVYS1RFMFZBOGU0eURxeHlhVFhJODZBZ0oyRFZJcnBZQ1Yz?=
- =?utf-8?B?VitUditjRjM5V0E3WS96WUxCUUdJd2RoTGNNdmVTM1VpMUZUellGUXl0bnBp?=
- =?utf-8?B?SmNacVgvSEJwVlNRUythQnZTK2FReUl3dkJTV0k5MmlDM01xeTJDT01GeDhp?=
- =?utf-8?B?b0NmMWhrMDdaRmlzcklYK2dzRFIvVFRUVnVnUkV1d3lGVnExejRYVTBKK0Y1?=
- =?utf-8?B?TDNScXI0Z3Ruc1ppV3VzdVY1dlNGK1BWSVhod0RwcWxjMWpLczEySDBnVXVY?=
- =?utf-8?B?Uk9pUnB3MitwcDhZOEhCV3NXbDQwWnRQWGVnZmNRKzJBK1BOdnpOMTd1L3Z1?=
- =?utf-8?B?VFpFSkhIV0RoUXJBdWxVWVQwNTJ3ZVdiSzdZU241Y2FEVHpwUWMydmhlRzBV?=
- =?utf-8?B?dytQSU5VMXEyNW1CTjhIays4UjVxZDNWT3Vsb0pHeWhCVC82V08vWUZNazZu?=
- =?utf-8?B?Q0RmaDZnRTRnejdJTFJ2ZGRpdUxjMnhpbkhyVjVKUW1wV2FHQUdkWVRLY29K?=
- =?utf-8?B?dUlmUC8xZi8xaTNFQkZGamdURUlFSk1jZUhSdXBzcHNXbUFMN05qM1gzaUxM?=
- =?utf-8?B?NE1WZ1U4dXFYUHRUbmMySlpyWXJVaGw5SDg3c1AyTVE5TXl3M3RJNnFseTdJ?=
- =?utf-8?B?ODMyZXhYSklobzdtUnR5UkQxN2FqTDRnVnMxeGJtajVkU1RBcDhzUTd1bmxT?=
- =?utf-8?B?MUR3TndvWHNTTW9RekZBU2tQcnkyRXloUTJTMTJGK3BYNWhPZlR6WjhoWXFs?=
- =?utf-8?B?QXNYSEU4bVFEaDhNUDJwR3BsR29WNU5OOWdEOFFMVC9WNCtNZ01rOHZQcnVQ?=
- =?utf-8?B?aG9qN0VvR0U5RlN0N0NCT2dOYnd4Y2R0SExLOUIrblZFZmc0K1RzNzQxMFNz?=
- =?utf-8?B?aWZEYUR2a0NndFEzTlhBa2JYKy9Tbk5FRmxGNDY1MEY0bjdvYks0b3NzZGFn?=
- =?utf-8?Q?xKTipNdhPjUZH?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(921020);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dUx2NS9PNFNDUWk3Uy9yWlVjQjB5U0p4OUpZN3I0TFgrWjc1Mk9JNHZTcHV3?=
- =?utf-8?B?RjBaZy9uT21YdXJ0S3Z6aXNtcGRGQUM1eERxMnQwMjkyQmVBSGJRUCtDTlRN?=
- =?utf-8?B?L1Bxei82bm1sc1BRVzdBbnQvUXFLbjRnNkhBUlczVzFTNkRZQnBjcDdQeS80?=
- =?utf-8?B?WEVObEl2LzlSNm9JTDBCTit2M1pEb2RHZFVuSUVMU1lSZEpuSXNBKzR6SWJo?=
- =?utf-8?B?WWZMVWJBRitpYi9aVytJSFl4Ykt6b1ZkY0h1NmRDWXpFQnZTSThueDBWSjV4?=
- =?utf-8?B?Y05Bb2xINDl5aThOb0cxZTJCaUl5RWJ4aVVlSmpwNSt2Z1J3eG5mUlV2eE5r?=
- =?utf-8?B?dW1PZ0RJVEtYT1djOVBtdnBBblBYZThodElhbkRVNmpPODVvVGVKL2xVUDVj?=
- =?utf-8?B?WndaNndpK1VNV3RONTIxT0tNQndNbDlLTW1ITE1iTHo1OERHenRSejdQa0hG?=
- =?utf-8?B?dXphNXBzUVRCY01NaDlOd3Y1eHg5RTlYdzduMFB4L1lubGo5OFNTN3NtQ25i?=
- =?utf-8?B?YkZQVHJnZ0YvMExHTDRFbTA3Y2VjdWNCLzh3RlZLbTNkZWRLalVhRmZJYXZC?=
- =?utf-8?B?STliU1BzeU0yRjZESVdlWTdyVnp0cTJNZTFmRUNTUUdabDgxUE5vZjYvRUVt?=
- =?utf-8?B?NHFIKzIvTjBWRTg4TWR3MkdHbjNoL0ZrM09LaytnOG5tbTgvcFUrTUtKQ2ZR?=
- =?utf-8?B?a3l5bnhPbDdwT0dWeWlxK1RPWExRR3VHQ2FyN29ycUxWM2pHazNxUk1MRGgv?=
- =?utf-8?B?eUF5Y1R5ZFhQN1lRQXl4anM2Nk9mMXg4eG5iOUhhVXZpZUNTR1pJMTJtVVJG?=
- =?utf-8?B?L3l5ZUxZZ21lWmpaVGtrU3JJZWlOSWpzK2pqdy9sM0RTcWk4R2ZDSlJ6djRK?=
- =?utf-8?B?QVgxeHkxMlltcndLTFdHRnc2MlZwcVQ3V3YzRk84WUl6TG5EdXpRR0ZCek1X?=
- =?utf-8?B?ZCs0cSsxMWNxWkNabkRiaE5oK3dMc3NqS3VOZWpYWlBpeVFzQ25Fa3p3eGhI?=
- =?utf-8?B?Z01oMkU2SlFxRUx3UnRMdzBXZHNQcUtseXB4WjMxNEY5UTRLMXNVb0p0VnA3?=
- =?utf-8?B?N1Vjek5PV0VRUkVHVXFCeHlFUFFXZEZFeHNRQWJWUXFVdUIzSno2N3k0a1NE?=
- =?utf-8?B?RURYOXRzdkxpNGNibndIczlsQVVDRWx4Z1B3MEJIMWt5Y2I4bnJaR0Fxd0to?=
- =?utf-8?B?ZHRCYnRmaVczRjFqc3hDQmw2U25DVlFzRzJTdHY0TmdjUGRrUWErMHZ5OTQv?=
- =?utf-8?B?VkxwakxXZ2s4dDRGcmYvb0lkUGdoc3IwU0xlaDNkNTJIdDl1V3NzN2VSamtt?=
- =?utf-8?B?OStZQzcxNlhvdjlEUjF5aHA4RU5GeVdtcWtqOThOYlNUUnhlVXR6aGQ2bUlW?=
- =?utf-8?B?TEl0dE5CaXRDaHdRZzdTaXRvL0tNOUdjUzg4UzlVZWV5TXJCSXl6eUk5WXB5?=
- =?utf-8?B?eVlHbDVabUdzamdVUW9BVnRkcG81anNGNEFnRld2ZmNhMXRrQWdKUmNTU1hE?=
- =?utf-8?B?SEN2T0xnNVgvWG1pZjVFYTB4eVNpMUZtM2lGT1Jqdkh6TDVtaUlaYU9zOHc2?=
- =?utf-8?B?M0dLRUY4SUNvdDIzVm9BN1ZJMEhtZThXV1NRZjZzMWlvZFVpSGp1Ni82NnI2?=
- =?utf-8?B?b2JKQTc2ekxudnVzNEx4Z2QzSU5jS1UwcDFlZ3FyVGM1VUJZZnVSeHdSSGpS?=
- =?utf-8?B?MHV4b21wQUVkUkZ5dG0rUjlJYldrL0lzNXl1S2dMUlBSUE81OFlPa0QwZEQ2?=
- =?utf-8?B?cFFiQVVwWlhvZ0ZwVjI2U2phWUtjTWtXcnFvN1c1NDlUVk1hcjdMS3c4YVFM?=
- =?utf-8?B?L3ZzQ09FdGxzMldXVW9xM1VDc3FJMGxLbTErdTJueVlURWFjOTcvRm9INU8w?=
- =?utf-8?B?Yk0vRHloSUp3eU0xdWhrMnAzRHNlNFZ4eEh5RFVJK2ljckxPdjlxSlZ0TytL?=
- =?utf-8?B?Q3RLOGw4WVJpcU1UeUVCcTdyd3VaMnZqL2RhZDNZTEIwaUVBOGpSTHk0VFl3?=
- =?utf-8?B?TmRuYmJROWpoVXZCckJuVWI5SWc0RDk2dnVXbWtGdjZ4c3lubE45MVNFNHhF?=
- =?utf-8?B?SndjNU5pdjBWRGwvcVJMMHJScm5ycVBjWktMMFF0MzZwbzVxWnA5NW1MUnFU?=
- =?utf-8?B?N1dEeXNnTGVVR3c4bDkvMnRlelFpWWZPbXgzZ2U4QUdHSkhNUUV1TldFbk00?=
- =?utf-8?Q?FvkEGY9KqtaHiA7VOgIAQ64=3D?=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f8c1d101-ee80-49ad-f9f0-08dd52af52b0
-X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2025 19:38:31.7874
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3t0N01MZXqDbWmpfcEkgDie4RQM04TqMWA0LGcLFn+JswuBsmxkBnG3Eki8Vw7SwnUE1XhXFEeAWV3gEv/vCqiNhmI7gJUo39MAvIAZkndY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT3PR01MB11084
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 2/3] r8169: enable
+ RTL8168H/RTL8168EP/RTL8168FP/RTL8125/RTL8126 LTR support
+To: ChunHao Lin <hau@realtek.com>, nic_swsd@realtek.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, Bjorn Helgaas <bhelgaas@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+References: <20250221071828.12323-439-nic_swsd@realtek.com>
+ <20250221071828.12323-441-nic_swsd@realtek.com>
+Content-Language: en-US
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Autocrypt: addr=hkallweit1@gmail.com; keydata=
+ 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
+In-Reply-To: <20250221071828.12323-441-nic_swsd@realtek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2025-02-21 12:17, Dave Hansen wrote:
-> On 2/17/25 03:07, Dmitry Vyukov wrote:
-[...]
-> This code flow is a bit hard to follow with the retry and all.
+On 21.02.2025 08:18, ChunHao Lin wrote:
+> This patch will enable RTL8168H/RTL8168EP/RTL8168FP/RTL8125/RTL8126 LTR
+> support on the platforms that have tested with LTR enabled.
 > 
-> I think the assumption here is that overwriting the pkey register is too
-> slow for the fast path. Instead, in the slow error path, there is a
-> one-time operation to make the register permissive and retry.
+
+Where in the code is the check whether platform has been tested with LTR?
+
+> Signed-off-by: ChunHao Lin <hau@realtek.com>
+> ---
+>  drivers/net/ethernet/realtek/r8169_main.c | 108 ++++++++++++++++++++++
+>  1 file changed, 108 insertions(+)
 > 
-> I guess it's your rseq code. But I'd probably just put the
-> switch_to_permissive_pkey_reg()/write_pkey_reg() in the fast/common path
-> for simplicity unless I knew it was causing a measurable performance
-> problem.
+> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+> index 731302361989..9953eaa01c9d 100644
+> --- a/drivers/net/ethernet/realtek/r8169_main.c
+> +++ b/drivers/net/ethernet/realtek/r8169_main.c
+> @@ -2955,6 +2955,111 @@ static void rtl_disable_exit_l1(struct rtl8169_private *tp)
+>  	}
+>  }
+>  
+> +static void rtl_set_ltr_latency(struct rtl8169_private *tp)
+> +{
+> +	switch (tp->mac_version) {
+> +	case RTL_GIGA_MAC_VER_70:
+> +	case RTL_GIGA_MAC_VER_71:
+> +		r8168_mac_ocp_write(tp, 0xcdd0, 0x9003);
+> +		r8168_mac_ocp_write(tp, 0xcdd2, 0x8c09);
+> +		r8168_mac_ocp_write(tp, 0xcdd8, 0x9003);
+> +		r8168_mac_ocp_write(tp, 0xcdd4, 0x9003);
+> +		r8168_mac_ocp_write(tp, 0xcdda, 0x9003);
+> +		r8168_mac_ocp_write(tp, 0xcdd6, 0x9003);
+> +		r8168_mac_ocp_write(tp, 0xcddc, 0x9003);
+> +		r8168_mac_ocp_write(tp, 0xcde8, 0x887a);
+> +		r8168_mac_ocp_write(tp, 0xcdea, 0x9003);
+> +		r8168_mac_ocp_write(tp, 0xcdec, 0x8c09);
+> +		r8168_mac_ocp_write(tp, 0xcdee, 0x9003);
+> +		r8168_mac_ocp_write(tp, 0xcdf0, 0x8a62);
+> +		r8168_mac_ocp_write(tp, 0xcdf2, 0x9003);
+> +		r8168_mac_ocp_write(tp, 0xcdf4, 0x883e);
+> +		r8168_mac_ocp_write(tp, 0xcdf6, 0x9003);
+> +		break;
+> +	case RTL_GIGA_MAC_VER_61 ... RTL_GIGA_MAC_VER_66:
+> +		r8168_mac_ocp_write(tp, 0xcdd0, 0x9003);
+> +		r8168_mac_ocp_write(tp, 0xcdd2, 0x889c);
+> +		r8168_mac_ocp_write(tp, 0xcdd8, 0x9003);
+> +		r8168_mac_ocp_write(tp, 0xcdd4, 0x8c30);
+> +		r8168_mac_ocp_write(tp, 0xcdda, 0x9003);
+> +		r8168_mac_ocp_write(tp, 0xcdd6, 0x9003);
+> +		r8168_mac_ocp_write(tp, 0xcddc, 0x9003);
+> +		r8168_mac_ocp_write(tp, 0xcde8, 0x883e);
+> +		r8168_mac_ocp_write(tp, 0xcdea, 0x9003);
+> +		r8168_mac_ocp_write(tp, 0xcdec, 0x889c);
+> +		r8168_mac_ocp_write(tp, 0xcdee, 0x9003);
+> +		r8168_mac_ocp_write(tp, 0xcdf0, 0x8C09);
+> +		r8168_mac_ocp_write(tp, 0xcdf2, 0x9003);
+> +		break;
+> +	case RTL_GIGA_MAC_VER_46 ... RTL_GIGA_MAC_VER_53:
+> +		r8168_mac_ocp_write(tp, 0xcdd8, 0x9003);
+> +		r8168_mac_ocp_write(tp, 0xcdda, 0x9003);
+> +		r8168_mac_ocp_write(tp, 0xcddc, 0x9003);
+> +		r8168_mac_ocp_write(tp, 0xcdd2, 0x883c);
+> +		r8168_mac_ocp_write(tp, 0xcdd4, 0x8c12);
+> +		r8168_mac_ocp_write(tp, 0xcdd6, 0x9003);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +}
+> +
+> +static void rtl_reset_pci_ltr(struct rtl8169_private *tp)
+> +{
+> +	struct pci_dev *pdev = tp->pci_dev;
+> +	u16 cap;
+> +
+> +	pcie_capability_read_word(pdev, PCI_EXP_DEVCTL2, &cap);
+> +	if (cap & PCI_EXP_DEVCTL2_LTR_EN) {
+> +		pcie_capability_clear_word(pdev, PCI_EXP_DEVCTL2,
+> +					   PCI_EXP_DEVCTL2_LTR_EN);
+> +		pcie_capability_set_word(pdev, PCI_EXP_DEVCTL2,
+> +					 PCI_EXP_DEVCTL2_LTR_EN);
 
-I agree that switching to permissive key in the fast path would be
-simpler. AFAIU, the switch_to_permissive_pkey_reg() is only a pkey
-read when the key is already permissive.
+I'd prefer that only PCI core deals with these registers (functions like
+pci_configure_ltr()). Any specific reason for this reset? Is it something
+which could be applicable for other devices too, so that the PCI core
+should be extended?
 
-I'd favor the simpler approach unless performance end up being an
-issue.
++Bjorn and PCI list, to get an opinion from the PCI folks.
 
-Thanks,
+> +	}
+> +}
+> +
+> +static void rtl_enable_ltr(struct rtl8169_private *tp)
+> +{
+> +	switch (tp->mac_version) {
+> +	case RTL_GIGA_MAC_VER_61 ... RTL_GIGA_MAC_VER_71:
+> +		r8168_mac_ocp_modify(tp, 0xe034, 0x0000, 0xc000);
+> +		r8168_mac_ocp_modify(tp, 0xe0a2, 0x0000, BIT(0));
+> +		r8168_mac_ocp_modify(tp, 0xe032, 0x0000, BIT(14));
+> +		break;
+> +	case RTL_GIGA_MAC_VER_46 ... RTL_GIGA_MAC_VER_48:
+> +	case RTL_GIGA_MAC_VER_52 ... RTL_GIGA_MAC_VER_53:
+> +		r8168_mac_ocp_modify(tp, 0xe0a2, 0x0000, BIT(0));
+> +		RTL_W8(tp, 0xb6, RTL_R8(tp, 0xb6) | BIT(0));
+> +		fallthrough;
+> +	case RTL_GIGA_MAC_VER_51:
+> +		r8168_mac_ocp_modify(tp, 0xe034, 0x0000, 0xc000);
+> +		r8168_mac_ocp_write(tp, 0xe02c, 0x1880);
+> +		r8168_mac_ocp_write(tp, 0xe02e, 0x4880);
+> +		break;
+> +	default:
+> +		return;
+> +	}
+> +
+> +	rtl_set_ltr_latency(tp);
+> +
+> +	/* chip can trigger LTR */
+> +	r8168_mac_ocp_modify(tp, 0xe032, 0x0003, BIT(0));
+> +
+> +	/* reset LTR to notify host */
+> +	rtl_reset_pci_ltr(tp);
+> +}
+> +
+> +static void rtl_disable_ltr(struct rtl8169_private *tp)
+> +{
+> +	switch (tp->mac_version) {
+> +	case RTL_GIGA_MAC_VER_46 ... RTL_GIGA_MAC_VER_71:
+> +		r8168_mac_ocp_modify(tp, 0xe032, 0x0003, 0);
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +}
+> +
+>  static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
+>  {
+>  	u8 val8;
+> @@ -2971,6 +3076,8 @@ static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
+>  		    tp->mac_version == RTL_GIGA_MAC_VER_43)
+>  			return;
+>  
+> +		rtl_enable_ltr(tp);
+> +
+>  		rtl_mod_config5(tp, 0, ASPM_en);
+>  		switch (tp->mac_version) {
+>  		case RTL_GIGA_MAC_VER_70:
+> @@ -4821,6 +4928,7 @@ static void rtl8169_down(struct rtl8169_private *tp)
+>  
+>  	rtl8169_cleanup(tp);
+>  	rtl_disable_exit_l1(tp);
+> +	rtl_disable_ltr(tp);
 
-Mathieu
+Any specific reason why LTR isn't configured just once, on driver load?
 
+>  	rtl_prepare_power_down(tp);
+>  
+>  	if (tp->dash_type != RTL_DASH_NONE)
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
