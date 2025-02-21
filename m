@@ -1,90 +1,85 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A71B32040AE;
-	Fri, 21 Feb 2025 09:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60962200136;
+	Fri, 21 Feb 2025 09:29:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740130132; cv=none; b=BqjvmEZamukuyBExFO4mz8okp0dZzALIMeM/MhUj7A3Mh2ZHoHbNn6qKw6BsbYRK5FSdAvkx28a/hQz3fUtxjdv8NnVptoM80AJ8JqcpB3fka3Un0FV+cXDdCyTuRnrssWjfW3jE9nF0YmUS8BmGrUXnYTg6vJIRXmNHckAm9u8=
+	t=1740130191; cv=none; b=n4CyK90XKXraIBDd/vDScg/81AIRkXfgIF3TaRo5FjvoQ4JHbs0p5ZL3WW4OoGIQYb4UvsZ6ukyzvHrCOFJRd1kzbElPpK63fqYpoDWtAN0wquBISDjnja88UG4y+4dUgNxJfrEv8hfl6v0NswRE5RIvYr2/wkgFbVq9Jiq7PXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740130132; c=relaxed/simple;
-	bh=iwUITOpMFwTi/W8s/xf6chXl/H4CSWnHTKuu/cNkV+Y=;
+	s=arc-20240116; t=1740130191; c=relaxed/simple;
+	bh=jSFGUiq9JED1xzgk3rpGKc7M1sHXoxnKnQ7G38B4wqQ=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=p6U/8RBYRwIVyIFj3qCSMUrauZxa1fBgy/tB5h3B5i5yaOp7i7D+KmC/I8q4MnhlT3Ku3dKNwR55ZOcztDiTh7jVn2NCNABU3eH0hjL8z6uMAEWkbhOxV4jIYzBGSp/SGn5Cc6/UTO4cZw5VV68cBmmtjMCz8aWgfUMspqeex78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Rft1jIC3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=T+KPnXw5; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 MIME-Version:Content-Type; b=o/P0ivg4X9+Ybyyk99qGHaoVSPJ/rWBclPQSbepZHln14G6WR2gmL+/S0LE5GpfqNu35hWWnRMzbsntqthDe9dt0oooPuN8CV7sVHbDTSsyrSjDBZQa/PZmMBZax4JgAyGfX+TFpj0R2CdBpQNL7KfXCUDJ7ECvC/EHkZ6WRHwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LFQm88om; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Rft1jIC3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T+KPnXw5"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740130129;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iwUITOpMFwTi/W8s/xf6chXl/H4CSWnHTKuu/cNkV+Y=;
-	b=Rft1jIC3rQkJoE7ktmxfkISLJACrDfiV6yT2t1mrEsrrvrMsFcMh9LAAsgjtcHjO+iGIV7
-	7Uimzs+uA08ag7Zw6Yd0AcgKAETr/ty5Cn9lnjuf1WrbsU/un+oG3S/7QLvlWvIB/Q3/Qa
-	JmUgGr15GKukhSOtvTAk4Ve/DWl2pvZ6xe5/8EbszUIp3HOotmQqXvMwF0Zfe74xJKvolq
-	JDc9LYS7weYz0Au5rIuJ3117mpJTUrUw0U6Mr9JxkmJiH8Eai2djymgBdfAAk1gRCItlQe
-	/YoGy/ImnMlFzjZfst6JAB2yRLMCbOcs4b1E/GfQjwMCM688FKot2ywYYCR+PQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740130129;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iwUITOpMFwTi/W8s/xf6chXl/H4CSWnHTKuu/cNkV+Y=;
-	b=T+KPnXw5Wr2dPlolH6aNGJaBaBOXcpbTXXzHKxX6PowtAno4QpBmWblRtwqYDSoMbjfhhW
-	5yDF1qjXgyrByPAg==
-To: Nicolin Chen <nicolinc@nvidia.com>, jgg@nvidia.com,
- kevin.tian@intel.com, maz@kernel.org
-Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
- shuah@kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org,
- eric.auger@redhat.com, baolu.lu@linux.intel.com, yi.l.liu@intel.com,
- yury.norov@gmail.com, jacob.pan@linux.microsoft.com,
- patches@lists.linux.dev
-Subject: Re: [PATCH v2 2/7] genirq/msi: Refactor iommu_dma_compose_msi_msg()
-In-Reply-To: <eda62a9bafa825e9cdabd7ddc61ad5a21c32af24.1740014950.git.nicolinc@nvidia.com>
-References: <cover.1740014950.git.nicolinc@nvidia.com>
- <eda62a9bafa825e9cdabd7ddc61ad5a21c32af24.1740014950.git.nicolinc@nvidia.com>
-Date: Fri, 21 Feb 2025 10:28:48 +0100
-Message-ID: <87ikp3hcj3.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LFQm88om"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D86CC4CED6;
+	Fri, 21 Feb 2025 09:29:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740130190;
+	bh=jSFGUiq9JED1xzgk3rpGKc7M1sHXoxnKnQ7G38B4wqQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=LFQm88om/4383Lrv/7Ek+dFeJIGasPorWjQednm2V47ECR+hIUSsBJbNu01GGwGr5
+	 qdaW/9JWzlD0B0ep55us/9oNGiu/yESw3VLHYNgVB9dwxeZDWq/uZWJz038m6KhmKB
+	 TeSypotvScoj+aEKTTkWDUpo8yP0JvIuKSy0WVtaFb3AEhp92vXzBgnrQdzOLhgS5X
+	 QraER06aYtUC5LKWYKeKJJ76wwpEBH1ko0Yjz2cmkNrEzqn8XqyXw/Az1eJyg0ktm2
+	 4IDjDrEzC0qciE9wwUsvVuplYISf61lomF28PmUbQu8XeqntX6AsYetTll2A4XOgvQ
+	 YuN0aMtPc2GdA==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <benno.lossin@proton.me>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Anna-Maria Behnsen"
+ <anna-maria@linutronix.de>,  "Frederic Weisbecker" <frederic@kernel.org>,
+  "Thomas Gleixner" <tglx@linutronix.de>,  "Danilo Krummrich"
+ <dakr@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
+ <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor
+ Gross" <tmgross@umich.edu>,  "Lyude Paul" <lyude@redhat.com>,  "Guangbo
+ Cui" <2407018371@qq.com>,  "Dirk Behme" <dirk.behme@gmail.com>,  "Daniel
+ Almeida" <daniel.almeida@collabora.com>,  "Tamir Duberstein"
+ <tamird@gmail.com>,  <rust-for-linux@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 02/14] rust: hrtimer: introduce hrtimer support
+In-Reply-To: <df748ac2-3551-460f-a16f-85d805671a3f@proton.me> (Benno Lossin's
+	message of "Thu, 20 Feb 2025 23:46:10 +0000")
+References: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
+	<20250218-hrtimer-v3-v6-12-rc2-v8-2-48dedb015eb3@kernel.org>
+	<1id7is_U22yzuGODgkUIoB5AFM6snF9CPu7F_sY7Mfkn3EwQRPfjB5JNkRFYu6DX1N8X_OQvdEB2BT-l3rFhwg==@protonmail.internalid>
+	<df748ac2-3551-460f-a16f-85d805671a3f@proton.me>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Fri, 21 Feb 2025 10:05:11 +0100
+Message-ID: <874j0nhdmg.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 19 2025 at 17:31, Nicolin Chen wrote:
-> From: Jason Gunthorpe <jgg@nvidia.com>
->
-> The two-step process to translate the MSI address involves two functions,
-> iommu_dma_prepare_msi() and iommu_dma_compose_msi_msg().
->
-> Previously iommu_dma_compose_msi_msg() needed to be in the iommu layer as
-> it had to dereference the opaque cookie pointer. Now, the previous patch
-> changed the cookie pointer into an integer so there is no longer any need
-> for the iommu layer to be involved.
->
-> Further, the call sites of iommu_dma_compose_msi_msg() all follow the same
-> pattern of setting an MSI message address_hi/lo to non-translated and then
-> immediately calling iommu_dma_compose_msi_msg().
->
-> Refactor iommu_dma_compose_msi_msg() into msi_msg_set_addr() that directly
-> accepts the u64 version of the address and simplifies all the callers.
->
-> Move the new helper to linux/msi.h since it has nothing to do with iommu.
->
-> Aside from refactoring, this logically prepares for the next patch, which
-> allows multiple implementation options for iommu_dma_prepare_msi(). So, it
-> does not make sense to have the iommu_dma_compose_msi_msg() in dma-iommu.c
-> as it no longer provides the only iommu_dma_prepare_msi() implementation.
->
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+"Benno Lossin" <benno.lossin@proton.me> writes:
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> On 18.02.25 14:27, Andreas Hindborg wrote:
+>> +
+>> +    /// Cancel an initialized and potentially running timer.
+>> +    ///
+>> +    /// If the timer handler is running, this will block until the hand=
+ler is
+>> +    /// finished.
+>> +    ///
+>> +    /// Users of the `HrTimer` API would not usually call this method d=
+irectly.
+>> +    /// Instead they would use the safe `cancel` method on the [`HrTime=
+rHandle`]
+>
+> Can you link to the `cancel` function?
+
+Yes =F0=9F=91=8D
+
+
+Best regards,
+Andreas Hindborg
+
+
