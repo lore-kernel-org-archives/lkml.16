@@ -1,113 +1,87 @@
-Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC70635979;
-	Fri, 21 Feb 2025 05:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.248.49.38
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFA135979;
+	Fri, 21 Feb 2025 05:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740115117; cv=none; b=BjDOkBarRUkz8joRcOvy+d5RGmyFeyKW0NTRLt4HdpiTGIbbsSMRL+7wbIlfwpbK/vTB83mFffaixiqdil2QQftW3KXYEcpmMwEkENDQ9rPw19zMDm40HmvertQHBESg2YrctTZjLpECmZomlSQ7QBXxIZE1tYtYzMRdtB9bSAg=
+	t=1740115156; cv=none; b=j5s0KI/BtIxFeQnWvhMB+ha1xcxAispV0Qgp3GA2kVg60SBCvJYvOQMd37VeLPorMBWMCG2U3TxX10qMrEGxn8LxZEPfoDL7cbjWZ2ZNQ3y0P5w1mLikZXhG10UYzIxzNv1jzBRMYApjxvNR0i+V6O94q6WdswYMq9TxCf+Ep7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740115117; c=relaxed/simple;
-	bh=EbUAX9Vl2P5753Jv8TWa4wWdEHrNy4FRvo0yPgix670=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=trzgaacN5WtpXQa5ewN3r3TAvV2ibSzEmtq8Vj6JTA2tVNeCSh8yb5z447i2hPIdEX+C5Xx53QltKyrwhk6m26BXHhrzXUvXa7pyyacrDCRCoa05nuMDEso+xlsfa7VFVAxVni/lAK3Lx8ff0R/uqTk5xP20TNR5pK3g2L4N+I8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com; spf=pass smtp.mailfrom=socionext.com; arc=none smtp.client-ip=202.248.49.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=socionext.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=socionext.com
-Received: from unknown (HELO kinkan2-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 21 Feb 2025 14:18:27 +0900
-Received: from mail.mfilter.local (mail-arc02.css.socionext.com [10.213.46.40])
-	by kinkan2-ex.css.socionext.com (Postfix) with ESMTP id 21B6E20AE29A;
-	Fri, 21 Feb 2025 14:18:27 +0900 (JST)
-Received: from kinkan2.css.socionext.com ([172.31.9.51]) by m-FILTER with ESMTP; Fri, 21 Feb 2025 14:18:27 +0900
-Received: from plum.e01.socionext.com (unknown [10.212.245.39])
-	by kinkan2.css.socionext.com (Postfix) with ESMTP id CAB493732;
-	Fri, 21 Feb 2025 14:18:26 +0900 (JST)
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To: Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH net-next v2] net: stmmac: Correct usage of maximum queue number macros
-Date: Fri, 21 Feb 2025 14:18:18 +0900
-Message-Id: <20250221051818.4163678-1-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1740115156; c=relaxed/simple;
+	bh=G2sYFmKDgcmctPUv9LfjwulkfT6rBBfEHb4k8eleh38=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ajgA7wtuZ9znm7WkjogkKXRMJOmJzlqyZ5RKaA5cTpz24edCNkykKIrbR5RHU9oLrQ4cu5yMjAeeH3iV+COhmY34WdI4uYloNoQn/lBFdD/AYrRj0qcMm8XjpinIb4yhbImFZNyMAPczvIsnJVx969zc0ROAQ5cXrVyJUg7l6WY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=WYal86XH; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WYal86XH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1740115152;
+	bh=zZO290pqZ3eV+KphmFe/4i45+1ijsv9z2eQw8XIgRtE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=WYal86XHOu0bqnAGycsJtttQozU/mK71iGUA4h+PrF/klqJUUkyakRsY/3Ib/T92m
+	 37M9wi1sphPP5P3XCYqmrBJ8MNtgOpSUv87Dp71qqkKR9tBDrIGXo8N3+SNRmGE64F
+	 eu7PC8TenkKYGHJeBPeyZ11nF6CzuhOC45th/S9jTs27YEcoFY/5YsETLz653muOup
+	 hHwNslK1aBwJ6RTrobZ7vTsBxnSOEmEbAP0jY5vPNmLSN8BjtAEr+XdvBC8x+yvqzk
+	 3P+5nWWMz2NvqaM9Hi4umT3kBNl2FnG/NapnqgHOEXb3JbH8akmZabZmN+gqW/fRBx
+	 QP0+LM6iDRoLQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Yzdhw1gvlz4wyw;
+	Fri, 21 Feb 2025 16:19:12 +1100 (AEDT)
+Date: Fri, 21 Feb 2025 16:19:11 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Joshua Ashton <joshua@froggi.es>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build warning after merge of the bcachefs tree
+Message-ID: <20250221161911.2d16138b@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/j7mxlMGWIUv963ovUSoKhNs";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-The maximum numbers of each Rx and Tx queues are defined by
-MTL_MAX_RX_QUEUES and MTL_MAX_TX_QUEUES respectively.
+--Sig_/j7mxlMGWIUv963ovUSoKhNs
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-There are some places where Rx and Tx are used in reverse. There is no
-issue when the Tx and Rx macros have the same value, but should correct
-usage of macros for maximum queue number to keep consistency and prevent
-unexpected mistakes.
+Hi all,
 
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Huacai Chen <chenhuacai@kernel.org>
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- drivers/net/ethernet/stmicro/stmmac/common.h | 4 ++--
- drivers/net/ethernet/stmicro/stmmac/stmmac.h | 7 +++----
- 2 files changed, 5 insertions(+), 6 deletions(-)
+After merging the bcachefs tree, today's linux-next build (htmldocs)
+produced this warning:
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index 55053528e498..412b07e77945 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -101,8 +101,8 @@ struct stmmac_rxq_stats {
- /* Updates on each CPU protected by not allowing nested irqs. */
- struct stmmac_pcpu_stats {
- 	struct u64_stats_sync syncp;
--	u64_stats_t rx_normal_irq_n[MTL_MAX_TX_QUEUES];
--	u64_stats_t tx_normal_irq_n[MTL_MAX_RX_QUEUES];
-+	u64_stats_t rx_normal_irq_n[MTL_MAX_RX_QUEUES];
-+	u64_stats_t tx_normal_irq_n[MTL_MAX_TX_QUEUES];
- };
- 
- /* Extra statistic and debug information exposed by ethtool */
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-index f05cae103d83..dae279ee2c28 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-@@ -257,7 +257,7 @@ struct stmmac_priv {
- 	/* Frequently used values are kept adjacent for cache effect */
- 	u32 tx_coal_frames[MTL_MAX_TX_QUEUES];
- 	u32 tx_coal_timer[MTL_MAX_TX_QUEUES];
--	u32 rx_coal_frames[MTL_MAX_TX_QUEUES];
-+	u32 rx_coal_frames[MTL_MAX_RX_QUEUES];
- 
- 	int hwts_tx_en;
- 	bool tx_path_in_lpi_mode;
-@@ -265,8 +265,7 @@ struct stmmac_priv {
- 	int sph;
- 	int sph_cap;
- 	u32 sarc_type;
--
--	u32 rx_riwt[MTL_MAX_TX_QUEUES];
-+	u32 rx_riwt[MTL_MAX_RX_QUEUES];
- 	int hwts_rx_en;
- 
- 	void __iomem *ioaddr;
-@@ -343,7 +342,7 @@ struct stmmac_priv {
- 	char int_name_sfty[IFNAMSIZ + 10];
- 	char int_name_sfty_ce[IFNAMSIZ + 10];
- 	char int_name_sfty_ue[IFNAMSIZ + 10];
--	char int_name_rx_irq[MTL_MAX_TX_QUEUES][IFNAMSIZ + 14];
-+	char int_name_rx_irq[MTL_MAX_RX_QUEUES][IFNAMSIZ + 14];
- 	char int_name_tx_irq[MTL_MAX_TX_QUEUES][IFNAMSIZ + 18];
- 
- #ifdef CONFIG_DEBUG_FS
--- 
-2.25.1
+Documentation/filesystems/bcachefs/casefolding.rst:84: WARNING: Definition =
+list ends without a blank line; unexpected unindent. [docutils]
 
+Introduced by commit
+
+  bc5cc09246c5 ("bcachefs: bcachefs_metadata_version_casefolding")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/j7mxlMGWIUv963ovUSoKhNs
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAme4DM8ACgkQAVBC80lX
+0GzYMwgAjsEI1u87t5qe3elIbmnvPek2irSMWmmQ9/abCmKun/nkBUOm/8GChSuu
+ftZzJ+qCvhFZuoQfvKn1WSawaviDMZeJEWVav/H/j68L0eR0NVSWeUuZAZyQvPuQ
+rrQo57EfafHi+DHqiDbxnZtcbF1GKQN53jTj2LYgQbt3p2J8i1lb87noe9jOHL+e
+8HwdsYgOuKJW/Pjw2ZNkP5Ln3QwfnvlBbwI6mpfU0qZ179CuX4OMldHSTujc2Yt4
+9ioQTjvOMDkLm8X+U9Og8SQ8DrLNzT8LSHeMHOYBgYooEuyCHfjnn2FHKhqGc1GX
+vRZOQAGzsCD/nuvCUSLH3BvGnGrftw==
+=6S4Q
+-----END PGP SIGNATURE-----
+
+--Sig_/j7mxlMGWIUv963ovUSoKhNs--
