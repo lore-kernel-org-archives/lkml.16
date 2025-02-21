@@ -1,192 +1,167 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF122528E4
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 18:08:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A080B253325;
+	Fri, 21 Feb 2025 18:08:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740161286; cv=none; b=GcG0bZHiJuJyFtJ4Z8+e2XJ0TqN1zix4qIDONbUU2IFLVuBv+/9uIaYO+g9DAlNxs5saXdB8IsvdItU5rIWcUqutvkdxZj+mflzrC9H3/2T4moYhQidsoUJjvmf4PADWBLn7x79RJ53Hd4RBXp7p7Y5/7KlUEidUA7JkeWBNYNg=
+	t=1740161287; cv=none; b=olBvQVR5Amn4dR/DzfHBmh++24QU1KCnHMaTOSsUJcslq2ILLTCKjVWoD7y5UnYmyWe7NW46Mn5tUJEGUy1orJzchPSDUCS9l+gDjUEQ/gqR73N/Hc6hIXT3HLHnGrBYXxiJP6i4ZSQXsxwH6qtGiN6IrMDZeeqFfzjK7Aaaaq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740161286; c=relaxed/simple;
-	bh=EAsGt2EqyVTOElAZitReGYYY5iRcKkQxdM7stcUnkZU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kW2GE8Rr4YYUKaRpZvCKKPN0oJMAeUsfhJG06w9CtePgq5mpdvTmTxPFCIb+VEH+JqSFrn0tHPaRB+VSy1f2cUOpVBWKplBr2GasWPLxQ9KrcxlfCfJ1C02utxobz/CE/MfVN3n46/D12lsmTlgsdLjTIpOYud5QUmYuaXd9dwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=IERHLh9k; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1740161287; c=relaxed/simple;
+	bh=Y/T/PdrZXuNEmM28jb0cjrrGJIUltIkZp2ReGmK4x2s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CFZdgDaQ0tLO8BeIrCYiXvd3FHCuYTS5/yRF0rvR+ba4ujFznrdM/smFcRk9k10mASefE5HbaGMG7F5b1gyeF58fEQbsoiM/LSxlX8iIXTGq0u2c5cOpFdx9cgMffdHbeprwHQ9RttCOzQCRbmk4JkyXbRxghqPb9Qfhm7KzNjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e9H5tiM+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="IERHLh9k"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e08064b4ddso3380505a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 10:08:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1740161282; x=1740766082; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0AG1owJnX9rC5c7qxcIfiTiPqKW23h3ZpuLUTgVKvNY=;
-        b=IERHLh9k4pX8Xq7TKJK3Z1UL2bgfXYOUD8gbBwULogezupFvaNqY3WXvL+HZw0VzpZ
-         VakL5ExA7hTD/OyUqFrQp6h1A+KtL94Pn9ocbp2tGE/M/B3wF2G1RGDfo+sYGnvHy4ED
-         EN72ZmH3RFE0lXubzrv2wbd7lMElnEsDPnxNo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740161282; x=1740766082;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0AG1owJnX9rC5c7qxcIfiTiPqKW23h3ZpuLUTgVKvNY=;
-        b=AMxpnaaqJ0LOWP1v5z59foxgx+Da6Cn2Wj1x5cb9Ohrftpufobly6118+LGRhA19Dz
-         zsIEB+8DFBkp/tpTvGcRKIZp0cOMleaNdwPJB7v5h/m8rRBmx6+pgqFb7PosSe9B74ww
-         GUeWQYUsNTZ3y4XehmCKBFSDMcGg8m570pWqgC9roxr2GDzw4ivl02HQ/VipjmxlKDKv
-         gcLE6cU6KPBzg//7BrJtwzK9g5gq/JBoN21aqbogYpnwaPVEIBJOMrlaIdO7/k+LIGlO
-         WRn3cqCfRt/oaGUeaQt82wHHlO8D/JjJN+UbQ7o4eCRqJikaFMmLTp0PHPZ/l1ZP9o8p
-         2IjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVMb2DyXWxaAsfETw0FRGVwocTYOSjVD5tiXCtGVuaWwwKMWpTyWj9au2DokCkWx609pRYk1zWywFaDhJY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQyQfIaTM9Rgw70a772+1uFcjA8FfRJY88rPbuso6WpW7YxWI8
-	Pmo7X9ptq3/sLb11P5WVR1yZVUIpKZxE4d8lPeRnRwYQ2oVk7dLhA1eVqNgrKX6KpI1v3OIWxj3
-	xCXc=
-X-Gm-Gg: ASbGncvTon56i6LUJP/CA/WECejVf/1xbcjmHnnKHDJ7SwrOx3KmO72JOwalk1ZEbKG
-	fUENWVasm+1lO/dZHjDZRTU+oFxtRlmAMxzkVRP03ylSUSIX7rOAixbDvCiioptherLc0a13J8I
-	rcBzmvEAnR3tnP1ilQLeLlsatGb2JYnv/26QOBTCro1PEUVAtyDt2ZYntBV47Gm9FIwu3cDuClk
-	gZJrKpAvyqLasnwzn/U8CeILfacjZWYHwdhOC4w7skK6aI3Iox1heboWc7lzHvVyhk6SDYa/mXu
-	CashbKLs6c/Xq/rnTXN0lq6zeP+28/uJmGe7Nnp55gb5ahZ6SYL9otUd1SzkHee+H6mIJqZ6Ffo
-	/
-X-Google-Smtp-Source: AGHT+IG1U6OEzyqhIvpj9Tlbr4gbgRESvGRo/qXg0mq61RGKDq9GtMPMh+Rzvr/7UGqrI3/qWsvXsQ==
-X-Received: by 2002:a17:907:7285:b0:ab6:f06b:4a26 with SMTP id a640c23a62f3a-abc0da33bf1mr461223866b.34.1740161281815;
-        Fri, 21 Feb 2025 10:08:01 -0800 (PST)
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com. [209.85.218.50])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb8b1767e8sm1148455066b.174.2025.02.21.10.08.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2025 10:08:00 -0800 (PST)
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-aaf900cc7fbso367689966b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 10:08:00 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV7noK3lzCGJbNKJpbKQdaxRFI4h0R7Obrxbu/uC+3DgP7yfQyQVGH2Aoj+j6IVlx23nYd4Pae0EnsDng8=@vger.kernel.org
-X-Received: by 2002:a17:907:7eaa:b0:ab7:5fcd:d4d9 with SMTP id
- a640c23a62f3a-abc0de0e4d6mr364513766b.43.1740161280179; Fri, 21 Feb 2025
- 10:08:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e9H5tiM+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2044C4CEE8;
+	Fri, 21 Feb 2025 18:08:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740161287;
+	bh=Y/T/PdrZXuNEmM28jb0cjrrGJIUltIkZp2ReGmK4x2s=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=e9H5tiM+fJIWbO6m5RlayMr8jnFSf4eV8gurRAmsvHkdSxsRjYPmbGLfRRDhRnQMf
+	 NY/acCPXS2FSbQYcO+3hPtVlohM8MQUv3eIv8TaPypTSYrcsSzlJUauwxnkhUvbNtE
+	 ZpfOSYcsBjKNM1se9fVYgMrY8TtjO5daXzzt0qUC27nN/v2yYMeJhXj6EhEi/EBTlS
+	 8FRJMSNGMhCgK3gTnX0eEGzWsn/jC5ARgOIRqFltWknWYmylq5Q2v0xbw+63/eLvmm
+	 AxMy8EHrppvSfo2z35qLk3eMRgd6sPUFJUOneeFGP4Ol9LI+tY9QllWxPwiJwHBxEk
+	 6UPGpnBPI+EjQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 94967CE059C; Fri, 21 Feb 2025 10:08:06 -0800 (PST)
+Date: Fri, 21 Feb 2025 10:08:06 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Marco Elver <elver@google.com>
+Cc: Alexander Potapenko <glider@google.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Bill Wendling <morbo@google.com>, Boqun Feng <boqun.feng@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ingo Molnar <mingo@kernel.org>, Jann Horn <jannh@google.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>,
+	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, rcu@vger.kernel.org,
+	linux-crypto@vger.kernel.org
+Subject: Re: [PATCH RFC 15/24] rcu: Support Clang's capability analysis
+Message-ID: <aa50d616-fdbb-4c68-86ff-82bb57aaa26a@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250206181711.1902989-1-elver@google.com>
+ <20250206181711.1902989-16-elver@google.com>
+ <a1483cb1-13a5-4d6e-87b0-fda5f66b0817@paulmck-laptop>
+ <CANpmjNOPiZ=h69V207AfcvWOB=Q+6QWzBKoKk1qTPVdfKsDQDw@mail.gmail.com>
+ <3f255ebb-80ca-4073-9d15-fa814d0d7528@paulmck-laptop>
+ <CANpmjNNHTg+uLOe-LaT-5OFP+bHaNxnKUskXqVricTbAppm-Dw@mail.gmail.com>
+ <772d8ec7-e743-4ea8-8d62-6acd80bdbc20@paulmck-laptop>
+ <Z7izasDAOC_Vtaeh@elver.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <326CC09B-8565-4443-ACC5-045092260677@zytor.com>
- <CANiq72m+r1BZVdVHn2k8XeU37ZeY6VT2S9KswMuFA=ZO3e4uvQ@mail.gmail.com>
- <a7c5973a-497c-4f31-a7be-b3123bddb6dd@zytor.com> <Z7VKW3eul-kGaIT2@Mac.home>
- <2025021954-flaccid-pucker-f7d9@gregkh> <4e316b01634642cf4fbb087ec8809d93c4b7822c.camel@tugraz.at>
- <2025022024-blooper-rippling-2667@gregkh> <1d43700546b82cf035e24d192e1f301c930432a3.camel@tugraz.at>
- <2025022042-jot-favored-e755@gregkh> <b9a5de64fe1ded2ad3111763f35af9901bd81cc4.camel@tugraz.at>
- <caea3e79-78e6-4d98-9f3b-f8e7f6f00196@stanley.mountain> <61a7e7db786d9549cbe201b153647689cbe12d75.camel@tugraz.at>
- <20250221124304.5dec31b2@gandalf.local.home>
-In-Reply-To: <20250221124304.5dec31b2@gandalf.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 21 Feb 2025 10:07:42 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgg2A_iHNwf_JDjYJF=XHnKVGOjGp50FzVWniA2Z010bw@mail.gmail.com>
-X-Gm-Features: AWEUYZmQJ76LofvaADGYz9wDxturcIzFXn8JOYMJIs8qre83YpKfkEfOvP9lwxA
-Message-ID: <CAHk-=wgg2A_iHNwf_JDjYJF=XHnKVGOjGp50FzVWniA2Z010bw@mail.gmail.com>
-Subject: Re: Rust kernel policy
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Martin Uecker <uecker@tugraz.at>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	Greg KH <gregkh@linuxfoundation.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	"H. Peter Anvin" <hpa@zytor.com>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, 
-	Christoph Hellwig <hch@infradead.org>, rust-for-linux <rust-for-linux@vger.kernel.org>, 
-	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org, ksummit@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z7izasDAOC_Vtaeh@elver.google.com>
 
-On Fri, 21 Feb 2025 at 09:42, Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> Because they are arcane and even the gcc documentation recommends avoiding
-> them.
->
->  "Note that in general we do not recommend the use of pragmas"
->  https://gcc.gnu.org/onlinedocs/gcc/Pragmas.html
+On Fri, Feb 21, 2025 at 06:10:02PM +0100, Marco Elver wrote:
+> On Thu, Feb 20, 2025 at 05:26PM -0800, Paul E. McKenney wrote:
+> [...]
+> > > That's what I've tried with this patch (rcu_read_lock_bh() also
+> > > acquires "RCU", on top of "RCU_BH"). I need to add a re-entrancy test,
+> > > and make sure it doesn't complain about that. At a later stage we
+> > > might also want to add more general "BH" and "IRQ" capabilities to
+> > > denote they're disabled when held, but that'd overcomplicate the first
+> > > version of this series.
+> > 
+> > Fair enough!  Then would it work to just do "RCU" now, and ad the "BH"
+> > and "IRQ" when those capabilities are added?
+> 
+> I tried if this kind of re-entrant locking works - a test like this:
+> 
+>  | --- a/lib/test_capability-analysis.c
+>  | +++ b/lib/test_capability-analysis.c
+>  | @@ -370,6 +370,15 @@ static void __used test_rcu_guarded_reader(struct test_rcu_data *d)
+>  |  	rcu_read_unlock_sched();
+>  |  }
+>  |  
+>  | +static void __used test_rcu_reentrancy(struct test_rcu_data *d)
+>  | +{
+>  | +	rcu_read_lock();
+>  | +	rcu_read_lock_bh();
+>  | +	(void)rcu_dereference(d->data);
+>  | +	rcu_read_unlock_bh();
+>  | +	rcu_read_unlock();
+>  | +}
+> 
+> 
+>  | $ make lib/test_capability-analysis.o
+>  |   DESCEND objtool
+>  |   CC      arch/x86/kernel/asm-offsets.s
+>  |   INSTALL libsubcmd_headers
+>  |   CALL    scripts/checksyscalls.sh
+>  |   CC      lib/test_capability-analysis.o
+>  | lib/test_capability-analysis.c:376:2: error: acquiring __capability_RCU 'RCU' that is already held [-Werror,-Wthread-safety-analysis]
+>  |   376 |         rcu_read_lock_bh();
+>  |       |         ^
+>  | lib/test_capability-analysis.c:375:2: note: __capability_RCU acquired here
+>  |   375 |         rcu_read_lock();
+>  |       |         ^
+>  | lib/test_capability-analysis.c:379:2: error: releasing __capability_RCU 'RCU' that was not held [-Werror,-Wthread-safety-analysis]
+>  |   379 |         rcu_read_unlock();
+>  |       |         ^
+>  | lib/test_capability-analysis.c:378:2: note: __capability_RCU released here
+>  |   378 |         rcu_read_unlock_bh();
+>  |       |         ^
+>  | 2 errors generated.
+>  | make[3]: *** [scripts/Makefile.build:207: lib/test_capability-analysis.o] Error 1
+>  | make[2]: *** [scripts/Makefile.build:465: lib] Error 2
 
-Yeah, #pragma is complete garbage and should never be used. It's a
-fundamentally broken feature because it doesn't work AT ALL with a
-very core piece of C infrastructure: the pre-processor.
+I was hoping!  Ah well...  ;-)
 
-Now, we all hopefully know that the C pre-processor is the _real_
-fundamental problem here in how limited it is, but it is what it is.
-Given the fact of how weak C pre-processing is, adding a feature like
-#pragma was a complete failure.
+> ... unfortunately even for shared locks, the compiler does not like
+> re-entrancy yet. It's not yet supported, and to fix that I'd have to go
+> and implement that in Clang first before coming back to this.
 
-So gcc - and other compilers - have figured out alternatives to pragma
-that actually work within the context of the C pre-processor. The main
-one tends to be to use __attribute__(()) to give magical extra
-context.
+This would be needed for some types of reader-writer locks, and also for
+reference counting, so here is hoping that such support is forthcoming
+sooner rather than later.
 
-Yes, yes, some kernel code ends up still using pragmas (typically
-"#pragma pack()"), but in almost every case I've seen it's because
-that code comes from some external project.
+> I see 2 options for now:
+> 
+>   a. Accepting the limitation that doing a rcu_read_lock() (and
+>      variants) while the RCU read lock is already held in the same function
+>      will result in a false positive warning (like above). Cases like that
+>      will need to disable the analysis for that piece of code.
+> 
+>   b. Make the compiler not warn about unbalanced rcu_read_lock/unlock(),
+>      but instead just help enforce a rcu_read_lock() was issued somewhere
+>      in the function before an RCU-guarded access.
+> 
+> Option (b) is obviously weaker than (a), but avoids the false positives
+> while accepting more false negatives.
+> 
+> For all the code that I have already tested this on I observed no false
+> positives, so I'd go with (a), but I'm also fine with the weaker
+> checking for now until the compiler gains re-entrancy support.
+> 
+> Preferences?
 
-We do have a small handful of "disable this compiler warning" uses,
-which isn't pretty but when there aren't any alternatives it can be
-the best that can be done.
+Whichever one provides the best checking without false positives.
+Which sounds to me like (a) unless and until false positives crop up,
+in which case (b).  Which looks to be where you were going anyway.  ;-)
 
-But *nobody* should design anything new around that horrendously broken concept.
-
-> Actually, I would be perfectly fine with fixing all locations that have
-> x < 0 where x is unsigned, even if it's in a macro or something. Those
-> could be changed to:
->
->        if ((signed)x < 0 || x >= 10) {
->
-> If they want to allow unsigned compares.
-
-Absolutely #%^$ing not!
-
-That's literally the whole REASON that broken warning is disabled -
-people making the above kinds of incorrect and stupid changes to code
-that
-
- (a) makes the code harder to read
-
-and
-
- (b) BREAKS THE CODE AND CAUSES BUGS
-
-adding that cast to "(signed)" is literally a bug. It's complete
-garbage. It's unbelievable crap. You literally just truncated things
-to a 32-bit integer and may have changed the test in fundamental ways.
-
-Sure, if the *other* part of the comparison is comparing against "10"
-it happens to be safe. But the keyword here really is "happens". It's
-not safe in general.
-
-The other "solution" I've seen to the warning is to remove the "< 0"
-check entirely, which is ALSO unbelievable garbage, because the sign
-of 'x' may not be at all obvious, and may in fact depend on config
-options or target architecture details.
-
-So removing the "< 0" comparison is a literal bug waiting to happen.
-And adding a cast is even worse.
-
-The *only* valid model is to say "the warning is fundamentally wrong".
-Seriously. Which is why the kernel does that. Because I'm not stupid.
-
-Which is why that warning HAS TO BE DISABLED. The warning literally
-causes bugs. It's not a safety net - it's the literal reverse of a
-safety net that encourages bad code, or leaving out good checks.
-
-The thing is, a compiler that complains about
-
-         if (x < 0 || x >= 10) {
-
-is simply PURE GARBAGE. That warning does not "help" anything. It's
-not a safety thing. It's literally only a "this copmpiler is shit"
-thing.
-
-And arguing that us disabling that warning is somehow relevant to
-other safety measures is either intellectually dishonest ("I'm making
-up shit knowing that it's shit") or a sign of not understanding how
-bad that warning is, and how
-
-This is non-negotiable. Anybody who thinks that a compiler is valid
-warning about
-
-         if (x < 0 || x >= 10) {
-
-just because 'x' may in some cases be an unsigned entity is not worth
-even discussing with.
-
-Educate yourself. The "unsigned smaller than 0" warning is not valid.
-
-             Linus
+							Thanx, Paul
