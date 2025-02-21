@@ -1,234 +1,308 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4140E1F4299;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0501E5B78;
 	Fri, 21 Feb 2025 10:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740132632; cv=none; b=tNnL/LmHaqnRLUEDhUX5Qf+4DRj7IxtxjUAYjG7RTIo/5Auh5Y7U+8Y700VluhHpY3+baW57pC7l9HkfWkZF8SF1qSFOUz6CPb+Q68reIkwFCGk6/IzdZI7rvPUNaF2MtsST+/1b6cnjT6Z9EWICHL3/E6a1/kuO02TYTYDWR0M=
+	t=1740132632; cv=none; b=JwEDVzM1fyJIQh6obt12ExyaXdw4GK0GKKQJPFxTkAeoVeGantWDvabuICITML5MuS+hMT6t9nOkAMlE3P9fXSVzXvnkikk0E1TwCD3OMmDZ4UKdTILWa2cWkJXkI5Lj/WzOaC01U+adP1R+6dUN3jsg69j/9XTOUmCFJjrRjfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740132632; c=relaxed/simple;
-	bh=GABZIa1yk+ME7OqVVkc9YSIBFoStKBRMFdZ+km85+xA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jc7/fZszjZ8ZNAO4l+lzazrA4QB6WvNVbOlnNJFTR4RZaZSK5n6h0k4lvQmeZIVwkVcPxPD5ZBd/lADp/TPSH1svtTJg8PeDX+igzoLAllvB7/qU63AYtSQC4aDNlH29aNFPSMGxGaEZqtXf/TM4mocUH0IEHO808cabffdyfwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T9F8oyq1; arc=none smtp.client-ip=209.85.208.172
+	bh=wlptftT9TNPT2Wcv9+geiPqs7J3eu1auQHoiSMtTSto=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UMtHbuVL2Iom7vtoJZvhJY2lZf5+Vd1UsetIegVCPFrb1/Xak3fFNRBnS3v0h5cYi9IoM62GkymkA8fjo44za9DfsQ/eLz+749PSHIlDecqkK+HQlWriVuJEGIHY8DuxN7eJO0xHufGUXmefoTJTENSSKnkeL7+AVKNvX7EbKds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G6gz5OvM; arc=none smtp.client-ip=209.85.167.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T9F8oyq1"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30737db1aa9so18378171fa.1;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G6gz5OvM"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5461cb12e39so1803201e87.2;
         Fri, 21 Feb 2025 02:10:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1740132628; x=1740737428; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bG0BbpFoyNoqsk135c328imcMJ0+Nr3ev0Mcwuo/rmM=;
-        b=T9F8oyq1hL0rRgqyIbsoObHQs7gYhQLyWFWQffnjgMteATI/nTSAKAs1rVILnj0g9x
-         bbHKMio9ilwgPpAnOJ9XK3ckTqqo707Ebr18C1CPbONQvkXa9jebs4q+YVzzOqL55xUD
-         7OyxOGz0ar03mneTGhR7Ib63zMvX5lbKK2Mk1iYpQSbBi0TSxnD3vVCE4mubMEezXLdI
-         C4iGeg7VN+nerJXOb3jmNMKdgseswV+SCXxrPlToEcQ+1BwwZte8uIHeBxdj7xvXRnB6
-         kObu1p1xtkIjd1M2DwyOBUS5W1V4B2k3sKyG9fs3fRSFUFRgjIKr5c83dmpkYRsnJ0mR
-         3R6w==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zqPEUM8CWBkBnaiq8nBKteDjqMZo/rUNGmbvJpBUdaY=;
+        b=G6gz5OvM8kSJN+WL52HHORFDynGE2/MU3Yt1Gybq5ExKLpPn1A6cISmdboIQIwDmdm
+         JrTWAsGWvDaNPggUTJG2Q0zfPnBslUlN9AHw3Ofs5u+gP7GT/781NGbpLQzqJkoU+mEe
+         9/u9TOEfODh4i8yeRqRtvQBRy3o9rEtq+RomVEw5l634/Zhu+ykp4HuNF1CCJ+wXbc5Z
+         4VmY3kuAWng6VM5U92+iJDk9EfMQR1h/0YuI0Itf3IGpkSSKvx3NexgTbZopMYJR3H9j
+         F8q/U8+2Q6GUKiEqBB+L941G9RVKrR5soN4pv4wEUxbklocrLqrz52eGNKpsDWmXZJgM
+         86bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1740132628; x=1740737428;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bG0BbpFoyNoqsk135c328imcMJ0+Nr3ev0Mcwuo/rmM=;
-        b=PedEQTvatG8Q5u5DmRt6YOcZcryjo49kOa+OhCw5+nK7t305pHDDKvfxxsvFqT99EP
-         UN9Iz3r71HxzWN6KnUqRI4aX3+kQJdFdunCp28ud0Tn555Q0HZxTTSLHXSxhbJh8mK+I
-         rGO/vdjyQg1uue6fwPj/t7KydToBmVF53QazeUtqDWOe1Kxd0GZxFvj0dtctmVFH6ZsN
-         dAMBUKaOMpX0ekKpaXUO7rlrG5yMKEE00G+QnChp3DHrNsFGqIq1P7cr6lYwvPf428Jm
-         oXmZhKdDpavPpUi6ZSt2GD4Li9yxJptH8sj21zd1dRqYspm0Riq74C0ttVSZi3RKya0a
-         7L9w==
-X-Forwarded-Encrypted: i=1; AJvYcCW/LmlL9ad/qNLiFMiPgR6WCLoV19Sn2kM/vSkiWZ5vTTdFBft0HfYZRn3yOFopjI+oPwLGA5TT3QAT@vger.kernel.org, AJvYcCW/ZjeVFMtU7NLTLmvwFeXquiTTy+cDfauKPq7nRDYDl338LWbq3Iv7NLbsGP9I0js4R1jxDtV2BDTO@vger.kernel.org, AJvYcCWGJX9tbQjcOErhduAIIdsA+w9/S1jDtWJuGb7tlqH/GoUPV6R5sCQpKM/zubIVBb7hZo7VCVA74cd1QLn89wn8Fbs=@vger.kernel.org, AJvYcCWxSI5li4tlr8TMzxFMBk6DOA/KgtuJYJ35aq0C5cCRry7jP6cM9DvCGMWEbfgDTsVcI6JpJjRIqeMn+kaO@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbpJktofVAn+4l8NmDuNieLEHNYLBdeon516m1M3QZEQbQvEGy
-	Ifn1wToaSFEWVF0NjRD+Jsx3Y6vDo/p86gU3dQLTcxNqXzHUDNnI
-X-Gm-Gg: ASbGncsY4keqD3Ok8ABJgIHZ4Lhha4G6+7rfOPZNXzHlCOTEVBPgf897i58BWXK6grQ
-	Jw2TSsq+GRKtpw65MXBK83RVM9CeLsFzfjcYiXPRTbTJb4mqqObSfQ87hjPQXjtd/6ixAwt7K5B
-	RVEMfRJHuWqHs1YoCkJ8kSlNeL/sjxwWDEYgNdf0R0EysQQEL6l57ZjFVjDn9HRw+QU7m45aVJ7
-	xejEw7zATiDN1g7WlEku4a57Uc++sboNUsxWHzvVFp/hVP4rrOcb5Zq28j30KIv5f5m8/Iv5Vdq
-	qt6mhkWaUpRvcwl5E06GmdYgT5yTNjLPfYK/T2uruhL0SdoD2JqNZlR/K+NefMPe624gaO4gPx8
-	2OL1we1A=
-X-Google-Smtp-Source: AGHT+IEF7HCPBupTpoTIufUdFzsU1NW7CnwkRmSqsaZ2XXJ41DlnitRvGydjhmN16iRmcwFrBfhXBA==
-X-Received: by 2002:a05:6512:3f05:b0:542:2e09:639a with SMTP id 2adb3069b0e04-54838edddd1mr724643e87.10.1740132627920;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zqPEUM8CWBkBnaiq8nBKteDjqMZo/rUNGmbvJpBUdaY=;
+        b=JfIrhc94pbas8iUItAHUt9mfIAt8Xzp17ajjYf7rsL2gQwMeoPP56ZP7alVlQ8NV2h
+         Gu44u8r0/WFZW5Apmt1xT6DvjkvxyRTbJCV2X+ukfkjs5rT/2EqKGCL0ldnZt5ucKZAl
+         LoU7/XYnoKm8JkHYXweas0tQQCNm0cNFocFrsKCcJL/W2dWlbexhU+xYXbyMGnYfDFEp
+         72pHauO1cFT7WbobGYGUEzDEB/JDVgEw60t2xEnYEx0t+jFguHGFWP+cBeD/bWheB/VP
+         gA6raND/VBsIw3KSuGckvd2SaEsGXgeG4G21Tj2TBBq27uVt/GCleUcXeJC1XOleJaI5
+         uFYw==
+X-Forwarded-Encrypted: i=1; AJvYcCXI7LknxVcBSPvgI5+ui2vjqeC1Agw1ves05Linebc4zRu9HHBkKi23Vk+AFNogr79VHooGMck=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+blMnELh0j7h4TKNKYmlWYkY0DFWclxVgOGoB/ZbZ9Hz4pNWq
+	thb6HTX1ycXfDZTF5AbteTemHxiTrV8ug+lBNvJMzKNxhkXvzjv+eWQiNybY1Vw=
+X-Gm-Gg: ASbGnctT7Xt5s5Z0OQ6x1YnrxK+BRn/rppSZm6fmv/ioYIthkPqsYGlxwzsc37yVO0R
+	68+ZItSB4v897zMOYtemhRAMADhRjNXSWw474NrbJXNKWc/EoF5HD1E9aWb4tMFwbA+CM4hiV3w
+	bTBoWKebo+kqVeCb+/DnU4LFWgxITKwifYSRxNv6OiKoBkxGAzdV7OmidEuber04Mu8v0Ew8rWD
+	4K1QhIR4N+6gQvTvbDBigz1kwin2mGuR2Ut5vidvseIzTsk22vx6wiQyE4k0QwA8t3kH0HRD7uW
+	00sWbltHOm7ba63J21URaHhjC1dMmivOM5Y543fkVoIhjOc=
+X-Google-Smtp-Source: AGHT+IFTGRCtCryddXyQLyypDgKtxmrlFtruuFq8ezc0f1owzy2Sl8SNaJCVsLrd3FGNLyFbWg7Ujw==
+X-Received: by 2002:a05:6512:3e0d:b0:545:25c6:d6f5 with SMTP id 2adb3069b0e04-54838f5c9ebmr829809e87.53.1740132627734;
         Fri, 21 Feb 2025 02:10:27 -0800 (PST)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5451f105c2fsm2638305e87.117.2025.02.21.02.10.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2025 02:10:26 -0800 (PST)
-Message-ID: <cb27d8b1-c978-4443-9ad2-96e930701976@gmail.com>
-Date: Fri, 21 Feb 2025 12:10:23 +0200
+Received: from FI-L-7486715.nmea.abb.com ([147.161.186.94])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3092bc01c45sm21255401fa.1.2025.02.21.02.10.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 02:10:27 -0800 (PST)
+From: Jaakko Karrenpalo <jkarrenpalo@gmail.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Lukasz Majewski <lukma@denx.de>,
+	MD Danish Anwar <danishanwar@ti.com>
+Cc: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Jaakko Karrenpalo <jaakko.karrenpalo@fi.abb.com>,
+	Jaakko Karrenpalo <jkarrenpalo@gmail.com>
+Subject: [PATCH net-next v2 1/2] net: hsr: Fix PRP duplicate detection
+Date: Fri, 21 Feb 2025 12:10:22 +0200
+Message-ID: <20250221101023.91915-1-jkarrenpalo@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/9] iio: adc: add helpers for parsing ADC nodes
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>,
- Hugo Villeneuve <hvilleneuve@dimonoff.com>, Nuno Sa <nuno.sa@analog.com>,
- David Lechner <dlechner@baylibre.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev
-References: <cover.1739967040.git.mazziesaccount@gmail.com>
- <6c5b678526e227488592d004c315a967b9809701.1739967040.git.mazziesaccount@gmail.com>
- <Z7ZB7RQhyI5Dohrq@smile.fi.intel.com>
- <b1c1ed68-2f4d-447c-9957-5a1bbc63ef6e@gmail.com>
- <Z7ci7tUlRQqZEZSN@smile.fi.intel.com>
- <ec76334b-bb13-4076-811d-9174170dd677@gmail.com>
- <Z7c2cBQpjoc9-Vyu@smile.fi.intel.com>
- <9018e23c-da28-41b0-b774-1598b946a2a1@gmail.com>
- <Z7dCnRzuQTaJXzmb@smile.fi.intel.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <Z7dCnRzuQTaJXzmb@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 20/02/2025 16:56, Andy Shevchenko wrote:
-> On Thu, Feb 20, 2025 at 04:21:37PM +0200, Matti Vaittinen wrote:
->> On 20/02/2025 16:04, Andy Shevchenko wrote:
->>> On Thu, Feb 20, 2025 at 03:40:30PM +0200, Matti Vaittinen wrote:
->>>> On 20/02/2025 14:41, Andy Shevchenko wrote:
->>>>> On Thu, Feb 20, 2025 at 09:13:00AM +0200, Matti Vaittinen wrote:
->>>>>> On 19/02/2025 22:41, Andy Shevchenko wrote:
->>>>>>> On Wed, Feb 19, 2025 at 02:30:27PM +0200, Matti Vaittinen wrote:
-> 
-> ...
-> 
->>>>>>>> +EXPORT_SYMBOL_GPL(iio_adc_device_num_channels);
->>>>>>>
->>>>>>> No namespace?
->>>>>>
->>>>>> I was considering also this. The IIO core functions don't belong into a
->>>>>> namespace - so I followed the convention to keep these similar to other IIO
->>>>>> core stuff.
->>>>>
->>>>> But it's historically. We have already started using namespaces
->>>>> in the parts of IIO, haven't we?
->>>>
->>>> Yes. But as I wrote, I don't think adding new namespaces for every helper
->>>> file with a function or two exported will scale. We either need something
->>>> common for IIO (or IIO "subsystems" like "adc", "accel", "light", ... ), or
->>>> then we just keep these small helpers same as most of the IIO core.
->>>
->>> It can be still pushed to IIO_CORE namespace. Do you see an issue with that?
->>
->> No. I've missed the fact we have IIO_CORE O_o. Thanks for pointing it out!
->>
->>> Or a new opaque namespace for the mentioned cases, something like IIO_HELPERS.
->>
->> I am unsure if it really benefits to split this out of the IIO_CORE. I've a
->> feeling it falls into the category of making things harder for user with no
->> apparent reason. But yes, the IIO_CORE makes sense.
-> 
-> Probably I was not clear, I mean to put this under a given namespace. There is
-> no a such, we have currently:
-> 
-> IIO_BACKEND
-> IIO_DMA_BUFFER
-> IIO_DMAENGINE_BUFFER
-> IIO_GTS_HELPER
-> IIO_RESCALE
+From: Jaakko Karrenpalo <jaakko.karrenpalo@fi.abb.com>
 
-Ah. So, the IIO core stuff is still not in a namespace. Those listed 
-above are all too specific (I believe, in general, and definitely to 
-carry ADC helpers).
+Add PRP specific function for handling duplicate
+packets. This is needed because of potential
+L2 802.1p prioritization done by network switches.
 
-Adding 'ADC_HELPERS' would just add yet another way too specific one. 
-So, currently there is no suitable namespace for these helpers, and I 
-still believe they fit best to where the rest of the IIO-core stuff is.
+Signed-off-by: Jaakko Karrenpalo <jaakko.karrenpalo@fi.abb.com>
+Signed-off-by: Jaakko Karrenpalo <jkarrenpalo@gmail.com>
+---
+ net/hsr/hsr_device.c   |  2 +
+ net/hsr/hsr_forward.c  |  4 +-
+ net/hsr/hsr_framereg.c | 93 ++++++++++++++++++++++++++++++++++++++++--
+ net/hsr/hsr_framereg.h |  8 +++-
+ net/hsr/hsr_main.h     |  2 +
+ 5 files changed, 102 insertions(+), 7 deletions(-)
 
-If we want really play the namespace game, then the existing IIO stuff 
-should be put in a IIO_CORE-namespace instead of creating more new small 
-ones. I am afraid that adding all existing IIO core to a IIO_CORE 
-namespace and converting all existing users to use the IIO_CORE is not a 
-reasonable request for a person trying to:
-
-1. Write a driver
-2. Add a small helper to aid others (instead of just melding it all in 
-the given new driver - which does not benefit anyone else and just leads 
-to code duplication in the long run...)
-
->>>>>> (Sometimes I have a feeling that the trend today is to try make things
->>>>>> intentionally difficult in the name of the safety. Like, "more difficult I
->>>>>> make this, more experience points I gain in the name of the safety".)
->>>>>>
->>>>>> Well, I suppose I could add a namespace for these functions - if this
->>>>>> approach stays - but I'd really prefer having all IIO core stuff in some
->>>>>> global IIO namespace and not to have dozens of fine-grained namespaces for
->>>>>> an IIO driver to use...
-> 
-> ...
-> 
->>>> foo &= (~bar);
->>>>
->>>> is _much_ faster than seeing:
->>>
->>> Strongly disagree. One need to parse an additional pair of parentheses,
->>> and especially when it's a big statement inside with nested ones along
->>> with understanding what the heck is going on that you need them in the
->>> first place.
->>>
->>> On top of that, we have a common practices in the LK project and
->>> with our history of communication it seems you are trying to do differently
->>> from time to time. Sounds like a rebellion to me :-)
->>
->> I only rebel when I (in my opinion) have a solid reason :)
->>
->>>> foo &= ~bar;
->>>>
->>>> and having to google the priorities.
->>>
->>> Again, this is something a (regular) kernel developer keeps refreshed.
->>> Or even wider, C-language developer.
->>
->> Ha. As I mentioned, I've been writing C on a daily bases for almost 25
->> years. I wonder if you intent to say I am not a kernel/C-language developer?
->> Bold claim.
-> 
-> I'm just surprised by seeing that style from a 25y experienced C developer,
-> that's all.
-
-I am not. If something, these 25 years have taught me to understand that 
-even if something is simple and obvious to me, it may not be simple and 
-obvious to someone else. Similarly, something obvious to someone else, 
-is not obvious to me. Hence, I am very careful when telling people that:
-
- >>> Again, this is something a (regular) kernel developer keeps refreshed.
- >>> Or even wider, C-language developer.
-
-I may however say that "this is something _I_ keep refreshed (as a 
-kernel/C-developer)".
-
-As an example,
-
- >>>> foo &= (~bar);
-
-This is something _I_ find very clear and exact, with zero doubt if 
-negation is applied before &=. For _me_ the parenthesis there _help_, 
-and for _me_ the parenthesis cause no confusion when reading the code.
-
-I won't go and tell that I'd expect any C or kernel developer to be able 
-to fluently parse "foo &= (~bar)". (Whether I think they should is 
-another matter).
-
-Oh well, let's wait and see what Jonathan thinks of these helpers in 
-general. We can continue the parenthesis discussion when we know whether 
-the code is going to stay.
-
-Yours,
-	-- Matti
+diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
+index b6fb18469439..2c43776b7c4f 100644
+--- a/net/hsr/hsr_device.c
++++ b/net/hsr/hsr_device.c
+@@ -616,6 +616,7 @@ static struct hsr_proto_ops hsr_ops = {
+ 	.drop_frame = hsr_drop_frame,
+ 	.fill_frame_info = hsr_fill_frame_info,
+ 	.invalid_dan_ingress_frame = hsr_invalid_dan_ingress_frame,
++	.register_frame_out = hsr_register_frame_out,
+ };
+ 
+ static struct hsr_proto_ops prp_ops = {
+@@ -626,6 +627,7 @@ static struct hsr_proto_ops prp_ops = {
+ 	.fill_frame_info = prp_fill_frame_info,
+ 	.handle_san_frame = prp_handle_san_frame,
+ 	.update_san_info = prp_update_san_info,
++	.register_frame_out = prp_register_frame_out,
+ };
+ 
+ void hsr_dev_setup(struct net_device *dev)
+diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
+index a4bacf198555..aebeced10ad8 100644
+--- a/net/hsr/hsr_forward.c
++++ b/net/hsr/hsr_forward.c
+@@ -536,8 +536,8 @@ static void hsr_forward_do(struct hsr_frame_info *frame)
+ 		 * Also for SAN, this shouldn't be done.
+ 		 */
+ 		if (!frame->is_from_san &&
+-		    hsr_register_frame_out(port, frame->node_src,
+-					   frame->sequence_nr))
++			hsr->proto_ops->register_frame_out &&
++		    hsr->proto_ops->register_frame_out(port, frame))
+ 			continue;
+ 
+ 		if (frame->is_supervision && port->type == HSR_PT_MASTER &&
+diff --git a/net/hsr/hsr_framereg.c b/net/hsr/hsr_framereg.c
+index 73bc6f659812..98898f05df6a 100644
+--- a/net/hsr/hsr_framereg.c
++++ b/net/hsr/hsr_framereg.c
+@@ -35,6 +35,7 @@ static bool seq_nr_after(u16 a, u16 b)
+ 
+ #define seq_nr_before(a, b)		seq_nr_after((b), (a))
+ #define seq_nr_before_or_eq(a, b)	(!seq_nr_after((a), (b)))
++#define PRP_DROP_WINDOW_LEN 32768
+ 
+ bool hsr_addr_is_redbox(struct hsr_priv *hsr, unsigned char *addr)
+ {
+@@ -176,8 +177,11 @@ static struct hsr_node *hsr_add_node(struct hsr_priv *hsr,
+ 		new_node->time_in[i] = now;
+ 		new_node->time_out[i] = now;
+ 	}
+-	for (i = 0; i < HSR_PT_PORTS; i++)
++	for (i = 0; i < HSR_PT_PORTS; i++) {
+ 		new_node->seq_out[i] = seq_out;
++		new_node->seq_expected[i] = seq_out + 1;
++		new_node->seq_start[i] = seq_out + 1;
++	}
+ 
+ 	if (san && hsr->proto_ops->handle_san_frame)
+ 		hsr->proto_ops->handle_san_frame(san, rx_port, new_node);
+@@ -482,9 +486,11 @@ void hsr_register_frame_in(struct hsr_node *node, struct hsr_port *port,
+  *	 0 otherwise, or
+  *	 negative error code on error
+  */
+-int hsr_register_frame_out(struct hsr_port *port, struct hsr_node *node,
+-			   u16 sequence_nr)
++int hsr_register_frame_out(struct hsr_port *port, struct hsr_frame_info *frame)
+ {
++	struct hsr_node *node = frame->node_src;
++	u16 sequence_nr = frame->sequence_nr;
++
+ 	spin_lock_bh(&node->seq_out_lock);
+ 	if (seq_nr_before_or_eq(sequence_nr, node->seq_out[port->type]) &&
+ 	    time_is_after_jiffies(node->time_out[port->type] +
+@@ -499,6 +505,87 @@ int hsr_register_frame_out(struct hsr_port *port, struct hsr_node *node,
+ 	return 0;
+ }
+ 
++/* Adaptation of the PRP duplicate discard algorithm described in wireshark
++ * wiki (https://wiki.wireshark.org/PRP)
++ *
++ * A drop window is maintained for both LANs with start sequence set to the
++ * first sequence accepted on the LAN that has not been seen on the other LAN,
++ * and expected sequence set to the latest received sequence number plus one.
++ *
++ * When a frame is received on either LAN it is compared against the received
++ * frames on the other LAN. If it is outside the drop window of the other LAN
++ * the frame is accepted and the drop window is updated.
++ * The drop window for the other LAN is reset.
++ *
++ * 'port' is the outgoing interface
++ * 'frame' is the frame to be sent
++ *
++ * Return:
++ *	 1 if frame can be shown to have been sent recently on this interface,
++ *	 0 otherwise
++ */
++int prp_register_frame_out(struct hsr_port *port, struct hsr_frame_info *frame)
++{
++	enum hsr_port_type other_port;
++	enum hsr_port_type rcv_port;
++	struct hsr_node *node;
++	u16 sequence_nr;
++
++	/* out-going frames are always in order
++	 *and can be checked the same way as for HSR
++	 */
++	if (frame->port_rcv->type == HSR_PT_MASTER)
++		return hsr_register_frame_out(port, frame);
++
++	/* for PRP we should only forward frames from the slave ports
++	 * to the master port
++	 */
++	if (port->type != HSR_PT_MASTER)
++		return 1;
++
++	node = frame->node_src;
++	sequence_nr = frame->sequence_nr;
++	rcv_port = frame->port_rcv->type;
++	other_port =
++		rcv_port == HSR_PT_SLAVE_A ? HSR_PT_SLAVE_B : HSR_PT_SLAVE_A;
++
++	spin_lock_bh(&node->seq_out_lock);
++	if (time_is_before_jiffies(node->time_out[port->type] +
++	    msecs_to_jiffies(HSR_ENTRY_FORGET_TIME)) ||
++	    (node->seq_start[rcv_port] == node->seq_expected[rcv_port] &&
++	    node->seq_start[other_port] == node->seq_expected[other_port])) {
++		/* the node hasn't been sending for a while
++		 * or both drop windows are empty, forward the frame
++		 */
++		node->seq_start[rcv_port] = sequence_nr;
++	} else if (seq_nr_before(sequence_nr, node->seq_expected[other_port]) &&
++	    seq_nr_before_or_eq(node->seq_start[other_port], sequence_nr)) {
++		/* drop the frame, update the drop window for the other port
++		 * and reset our drop window
++		 */
++		node->seq_start[other_port] = sequence_nr + 1;
++		node->seq_expected[rcv_port] = sequence_nr + 1;
++		node->seq_start[rcv_port] = node->seq_expected[rcv_port];
++		spin_unlock_bh(&node->seq_out_lock);
++		return 1;
++	}
++
++	/* update the drop window for the port where this frame was received
++	 * and clear the drop window for the other port
++	 */
++	node->seq_start[other_port] = node->seq_expected[other_port];
++	node->seq_expected[rcv_port] = sequence_nr + 1;
++	if ((u16)(node->seq_expected[rcv_port] - node->seq_start[rcv_port])
++	    > PRP_DROP_WINDOW_LEN)
++		node->seq_start[rcv_port] =
++			node->seq_expected[rcv_port] - PRP_DROP_WINDOW_LEN;
++
++	node->time_out[port->type] = jiffies;
++	node->seq_out[port->type] = sequence_nr;
++	spin_unlock_bh(&node->seq_out_lock);
++	return 0;
++}
++
+ static struct hsr_port *get_late_port(struct hsr_priv *hsr,
+ 				      struct hsr_node *node)
+ {
+diff --git a/net/hsr/hsr_framereg.h b/net/hsr/hsr_framereg.h
+index 993fa950d814..b04948659d84 100644
+--- a/net/hsr/hsr_framereg.h
++++ b/net/hsr/hsr_framereg.h
+@@ -44,8 +44,7 @@ void hsr_addr_subst_dest(struct hsr_node *node_src, struct sk_buff *skb,
+ 
+ void hsr_register_frame_in(struct hsr_node *node, struct hsr_port *port,
+ 			   u16 sequence_nr);
+-int hsr_register_frame_out(struct hsr_port *port, struct hsr_node *node,
+-			   u16 sequence_nr);
++int hsr_register_frame_out(struct hsr_port *port, struct hsr_frame_info *frame);
+ 
+ void hsr_prune_nodes(struct timer_list *t);
+ void hsr_prune_proxy_nodes(struct timer_list *t);
+@@ -73,6 +72,8 @@ void prp_update_san_info(struct hsr_node *node, bool is_sup);
+ bool hsr_is_node_in_db(struct list_head *node_db,
+ 		       const unsigned char addr[ETH_ALEN]);
+ 
++int prp_register_frame_out(struct hsr_port *port, struct hsr_frame_info *frame);
++
+ struct hsr_node {
+ 	struct list_head	mac_list;
+ 	/* Protect R/W access to seq_out */
+@@ -89,6 +90,9 @@ struct hsr_node {
+ 	bool			san_b;
+ 	u16			seq_out[HSR_PT_PORTS];
+ 	bool			removed;
++	/* PRP specific duplicate handling */
++	u16			seq_expected[HSR_PT_PORTS];
++	u16			seq_start[HSR_PT_PORTS];
+ 	struct rcu_head		rcu_head;
+ };
+ 
+diff --git a/net/hsr/hsr_main.h b/net/hsr/hsr_main.h
+index 7561845b8bf6..1bc47b17a296 100644
+--- a/net/hsr/hsr_main.h
++++ b/net/hsr/hsr_main.h
+@@ -175,6 +175,8 @@ struct hsr_proto_ops {
+ 			       struct hsr_frame_info *frame);
+ 	bool (*invalid_dan_ingress_frame)(__be16 protocol);
+ 	void (*update_san_info)(struct hsr_node *node, bool is_sup);
++	int (*register_frame_out)(struct hsr_port *port,
++				  struct hsr_frame_info *frame);
+ };
+ 
+ struct hsr_self_node {
+-- 
+2.43.0
 
