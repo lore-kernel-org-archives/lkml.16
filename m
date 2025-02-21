@@ -1,117 +1,128 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57794214A7D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9C5214A8A;
 	Fri, 21 Feb 2025 16:53:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740156822; cv=none; b=KRJ4PPjnF/0Mdv95EPMHyjYHPJEhp+WVlfz3xZ3j0lYwIlZGJvhpb14VV7CqQn5/JFZdTGsrtn7/goHJ0MTImbdkwtx21lb33nsRaad5Uh0GstIAYk35T1p/Zr7qKwzfW3uvdXTmZ9076baQceK5Y3Rabdlat00jbfGWFJU7YjM=
+	t=1740156823; cv=none; b=Yw00BtAdCWtdaif9eR4lYXACdAQNYYHveDFYtgBtei7vGml6Ej2Io3eoVl5K7pnhsjWCbTL64JNBrJfkicQ8yW3Y954DGmPnOSafO8Yho4WATwDArzQVFwEsGGK8Bi/7n1dS3jUtNmukKjZc8yC87t+WBnkznnWrjx33vbXETYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740156822; c=relaxed/simple;
-	bh=RNR8mEUOnIVJUD2/SSlodw5N9H3r9pd1pvfEYexodzw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WOnVrqhOL86sFrKzHJYx6msGX9j8M51+ERtiR9LPm+Ok+bvMusTJGO9Fahb1lSzPgJjNTw/7krUrsKp40+Xyf0WZv50iQ5N6j+dpydk4mL9U/mbIcFYxvTwvK34Ekn8Ps+3lw2p596zqGo1u+sJbK1/5W4fTKPisiv1AIECxrNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jVfNoyIU; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740156823; c=relaxed/simple;
+	bh=2rRlTeGBa/v+F/AVLqrsIcSSJAryM6w5Ldgl/1cCG8Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=nnk41xQJyqV8UZBmuOF3yduWM1dxTwhwAv4vCfl75LnNr4lXe8Zv0JypZerYthQLWm2Utjidwf4UClVTPiV+aMzlsYEmweoSAuMgBS42M187P23TCsQVSw/4v/uoZpS94t2nFcY0xU7Zam8Yxvv6I/xIT0QgvTtWNoqJ3C6e4dE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AK67MSOY; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jVfNoyIU"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22114b800f7so46546375ad.2;
-        Fri, 21 Feb 2025 08:53:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740156820; x=1740761620; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j/zBaSuV0apxI2fraq701Zzbl3a70mLl15KTuoHr3ig=;
-        b=jVfNoyIUf/4dRmDNGEkwd67K/BFu+DYb3qTW7V2KJh1yNhjxNAIaLeymHIeWvWAEX/
-         ShD0iZ+NEmNopiQnsFkKPpvZx0L282DwE4jUa66RWwHt9K5vOI2TfKZ8R90kdhfaCWMX
-         XReBYH9gwcaNlQPJ6QOl7cU+rp4CvV2++oEhRJIghthWydD/vDwDaA1dhKu2UPI7X13x
-         iYBnwATwBZOam6kr3n3fHFb0rFFLpPQ/uhdvdks2YmfStVKfRZ3+Kngleu6YhR3e2No4
-         8yKhF0vUj+izUogZnA8Z2Pr/5fJ8VjXXH8a+lcjq5VDM0PXqxD5OQsmk0XUObCdDOoQR
-         PwhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740156820; x=1740761620;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j/zBaSuV0apxI2fraq701Zzbl3a70mLl15KTuoHr3ig=;
-        b=JwS3esup63nQE06ioddP3lnMLfQsqmk05rkCpCjR5+qVCvlvWq4Av3brc2FnsIccaL
-         L7IRA62S1C/m9xMIphebBakPbIWyH3evKdG3OJlAzOBoArxyEqkyK7WQVhTO64iy+9Ks
-         ov3WydWGfJ/dYojTj869eSb8V4hxoSaOstYxVwQ3Inkmj+kWWrQUbILcdePQrwUQ77oF
-         P2TUmhTAhHihhcJPAS2v984D2rJsiI/Ab+mINghLXzx3N+P/HxcjYuIzQNcrfFIdaLPY
-         NykR2YSyjOZXcYjZmFvl/qSYBOiLDa7xG7r+s+7Y9IIBY1qLPSEF77DCvQIRYPn9Ba4g
-         T8BQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUOSsZBaoh12CctpzGzdK5AWpEDPuKZedmewlZ6YQCnGtrA9/H1bin1PyGMqjAdRwPcwVwBwsRViRIHaPVcHYQ=@vger.kernel.org, AJvYcCXa2Cagoz12f0ZYk6A620B1u6x3Wv/St9KEa6UXvzSBYLdj6gbBwTYMhlmmcbDSH26n5SDt5XQzVCs+7Z8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEH9iJZopqiB1iDZ8XKsTM4otDPexJQhBSGJyEW6sxqqcpkv++
-	TxzSOBHacy714wdvTnZAc2UzdNY1sXz0+AbpjbiP7DYdiKdugiJe
-X-Gm-Gg: ASbGncsGdqS8E5ZQEmGUTrUdJXN7v97QMaGvmz4tdQeAM7RIg+quXGnB8hGlfYfXeLd
-	yMzZyFipLoN+tJcwCufwStofcA5+5vmrE2x2A7iCVOafJVaZbi+vPpaSl801hM9IDJJByWPmQJW
-	gfWevLnfisykAmeDyy2NcRotjumAXnt+IiHf9Lf7DSTVMOSwUIAnDurNnl2QHpz5J/AAcb5FU+u
-	zghqlZY2AJ6BS+v0NsyllhuBLagC+oNKXe0rm0LoLQW17kUaG/MPulGuqSKpoIbLJYQdNHo5Mx1
-	bIBrDy9qaBXysNxXpxdj0iaSFKi7zjCOdQ==
-X-Google-Smtp-Source: AGHT+IF2YMDyHbwTmyW38BAvJ0G7QtBOaYJTYewQDESOFgJXibuRb0b6kmUsta1MzqxBRVKAe5316A==
-X-Received: by 2002:a05:6a00:3d0a:b0:730:87cf:a7cd with SMTP id d2e1a72fcca58-73426cb12bbmr7543385b3a.8.1740156820211;
-        Fri, 21 Feb 2025 08:53:40 -0800 (PST)
-Received: from linuxsimoes.. ([177.21.141.136])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7325b1afd0esm13525983b3a.137.2025.02.21.08.53.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2025 08:53:39 -0800 (PST)
-From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
-To: charmitro@posteo.net
-Cc: a.hindborg@kernel.org,
-	alex.gaynor@gmail.com,
-	aliceryhl@google.com,
-	apw@canonical.com,
-	arnd@arndb.de,
-	aswinunni01@gmail.com,
-	axboe@kernel.dk,
-	benno.lossin@proton.me,
-	bhelgaas@google.com,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	dakr@kernel.org,
-	dwaipayanray1@gmail.com,
-	ethan.twardy@gmail.com,
-	fujita.tomonori@gmail.com,
-	gary@garyguo.net,
-	gregkh@linuxfoundation.org,
-	joe@perches.com,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AK67MSOY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740156822; x=1771692822;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2rRlTeGBa/v+F/AVLqrsIcSSJAryM6w5Ldgl/1cCG8Y=;
+  b=AK67MSOYnSTrAH3kl+qSRcTBU0C1bHDyMGgWT+VJsDfkiRJg4YuptuAd
+   JfvbB4iDXiX0NwPfrhxTSDgIZ0qlAps/Z1bI4MG8D2XtT0Au1dePTYvV6
+   BL7VEcAqmbJyAhWLt8FcFO7Jp8oC4A3cuzyCW/Q/ZcFBAW8hzXInSrvls
+   c7xSxldXDpLQgP1GlouYm2W7VgWBWaMKo7Rb/I9zgPNUljgRdQ1HMpe39
+   otHgWhQ1Xd7iWA6AJLDjMtnZMvJa6TjahlAdTR8wVg6agR/Gpz6ZJFv69
+   WHZXdnor02rngGHzK1Q8az4U558JCz+5dz2Hzj9ndZrvzH72qUeU59nQR
+   A==;
+X-CSE-ConnectionGUID: CXGBvQJTTcudbmCc4Ppo+g==
+X-CSE-MsgGUID: qDERyGZOTJmY15xIPuGQ/A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="41186796"
+X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
+   d="scan'208";a="41186796"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 08:53:41 -0800
+X-CSE-ConnectionGUID: etn1Crk0T8mejC6g/A9O+g==
+X-CSE-MsgGUID: bHwbSUa4R7qC9s8Tvw6bSQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="119540590"
+Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
+  by fmviesa003.fm.intel.com with ESMTP; 21 Feb 2025 08:53:36 -0800
+From: Raag Jadav <raag.jadav@intel.com>
+To: perex@perex.cz,
+	tiwai@suse.com,
+	broonie@kernel.org,
+	lgirdwood@gmail.com,
+	deller@gmx.de,
+	andriy.shevchenko@linux.intel.com,
+	sre@kernel.org,
+	sakari.ailus@linux.intel.com,
+	mchehab@kernel.org,
+	hverkuil-cisco@xs4all.nl,
+	jdmason@kudzu.us,
+	fancer.lancer@gmail.com
+Cc: linux-sound@vger.kernel.org,
+	linux-fbdev@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	ntb@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	lukas.bulwahn@gmail.com,
-	ojeda@kernel.org,
-	pbonzini@redhat.com,
-	rust-for-linux@vger.kernel.org,
-	tmgross@umich.edu,
-	trintaeoitogc@gmail.com,
-	walmeida@microsoft.com
-Subject: Re: [PATCH V3 2/2] checkpatch: throw error for malformed arrays
-Date: Fri, 21 Feb 2025 13:53:27 -0300
-Message-Id: <20250221165327.5459-1-trintaeoitogc@gmail.com>
+	Raag Jadav <raag.jadav@intel.com>
+Subject: [PATCH v1 00/13] Convert to use devm_kmemdup_array()
+Date: Fri, 21 Feb 2025 22:23:20 +0530
+Message-Id: <20250221165333.2780888-1-raag.jadav@intel.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <m2pljcgpek.fsf@Mac.home>
-References: <m2pljcgpek.fsf@Mac.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Charalampos Mitrodimas <charmitro@posteo.net> wrote:
-> Hi Guilherme,
-> 
-> Will this work now that the field is called "authors" and not "author"?
-> I think you forgot to update the regex here.
-I don't know, I make change in modules and samples, and I forget runing again
-the checkpatch.
-Sorry .. 
-I will send a v4 
+This series is the second wave of patches to add users of newly introduced
+devm_kmemdup_array() helper. Original series on [1].
 
-> What do you think about this instead?
-> "Prefer each array element on a separate line$herevet"
-For me, looks like great
+This depends on changes available on immutable tag[2]. Feel free to pick
+your subsystem patches with it, or share your preferred way to route them.
 
-Thanks,
-Guilherme
+[1] https://lore.kernel.org/r/20250212062513.2254767-1-raag.jadav@intel.com
+[2] https://lore.kernel.org/r/Z7cqCaME4LxTTBn6@black.fi.intel.com
+
+Raag Jadav (13):
+  ASoC: Intel: avs: use devm_kmemdup_array()
+  ASoC: hdac_hdmi: use devm_kmemdup_array()
+  ASoC: tlv320dac33: use devm_kmemdup_array()
+  ASoC: uda1380: use devm_kmemdup_array()
+  ASoC: meson: axg-tdm-interface: use devm_kmemdup_array()
+  ASoC: uniphier: use devm_kmemdup_array()
+  fbdev: pxafb: use devm_kmemdup_array()
+  power: supply: sc27xx: use devm_kmemdup_array()
+  regulator: devres: use devm_kmemdup_array()
+  regulator: cros-ec: use devm_kmemdup_array()
+  media: atmel-isi: use devm_kmemdup_array()
+  media: stm32-dcmi: use devm_kmemdup_array()
+  ntb: idt: use devm_kmemdup_array()
+
+ drivers/media/platform/atmel/atmel-isi.c     |  8 ++------
+ drivers/media/platform/st/stm32/stm32-dcmi.c |  8 ++------
+ drivers/ntb/hw/idt/ntb_hw_idt.c              | 11 +++-------
+ drivers/power/supply/sc27xx_fuel_gauge.c     |  5 ++---
+ drivers/regulator/cros-ec-regulator.c        |  4 ++--
+ drivers/regulator/devres.c                   |  5 ++---
+ drivers/video/fbdev/pxafb.c                  | 21 ++++++++------------
+ sound/soc/codecs/hdac_hdmi.c                 |  3 +--
+ sound/soc/codecs/tlv320dac33.c               |  6 ++----
+ sound/soc/codecs/uda1380.c                   |  6 ++----
+ sound/soc/intel/avs/boards/da7219.c          |  3 ++-
+ sound/soc/intel/avs/boards/es8336.c          |  3 ++-
+ sound/soc/intel/avs/boards/nau8825.c         |  3 ++-
+ sound/soc/intel/avs/boards/rt274.c           |  3 ++-
+ sound/soc/intel/avs/boards/rt286.c           |  3 ++-
+ sound/soc/intel/avs/boards/rt298.c           |  3 ++-
+ sound/soc/intel/avs/boards/rt5663.c          |  3 ++-
+ sound/soc/intel/avs/boards/rt5682.c          |  3 ++-
+ sound/soc/meson/axg-tdm-interface.c          |  9 ++-------
+ sound/soc/uniphier/aio-cpu.c                 |  8 ++------
+ 20 files changed, 46 insertions(+), 72 deletions(-)
+
+
+base-commit: b16e9f8547a328b19af59afc213ce323124d11e9
+-- 
+2.34.1
+
