@@ -1,267 +1,212 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2AE200BB2;
-	Fri, 21 Feb 2025 08:50:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFF3202C3E
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 08:50:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740127855; cv=none; b=fCjqP7qHAo9moPLpW78r60ilzc/Pu6gNtd5n3CzDqUIblOVBXHjaJgCkWzkvPDXzvJrDgMk2ptsLJfg7yknCEz7WSg3Ox7mTESUsgxmr9/WGV8X0UgqQ6333m6bAZPHVIiDEHYAw0ASVdZrpVPQD+Gjfwur7NFHUEwdVpgIm3G0=
+	t=1740127861; cv=none; b=nE1PtrRMK4618a/LL9VkFFPRST2NTzFfOYikbvQVT7PIHimUb5GHBhGE1skFCCnLhPoQlQ4is5ahwvcZFOFbU+B7WdYxGPQfPAnA+kL0X1xdtH8OTaAe2NV228KGiSw7DWleps+eLPqT1lHYwJYErnmfQQaLzU/2BhMN2OR6mGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740127855; c=relaxed/simple;
-	bh=fILunFqm5OSyNPBDYQzZNGJZfLWZQSEB76z/NVRN2ls=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=kAoLzA3ULeF5LAXf1xBwg8RzpyUzS5eLwjj8qtQZ/D8hKRpx4mFY+40HBeIDzJ7yXqDHtpAi13XpILVdGEjTPjk97vZ9P4O+3/LrHGT29/kb7OalmIQXUI4zVpHs+i80JldrHwTPD8DbQf2OGwq6FDaz/Be357OqwcHP0RvcFJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=leqBR5vf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/ezAZ+XW; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="leqBR5vf";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/ezAZ+XW"
-Date: Fri, 21 Feb 2025 08:50:44 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740127851;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iGzMxisqqd0Myv9f3deXpKEqbdiY9DmxDyXm1RMK6aA=;
-	b=leqBR5vfmMnc/vqO9gUo3HJgeWngSpMt0ANyzoWqunjbxiqG8R0F5O8I0pbESAAyREWMox
-	L03GtNuXyjbopk+syiTyv8LgsfG0qwijgNZ9iCf0muO1UWeoubDQRpsVPFqoqnLXQmoXPy
-	TW+TtrUTpE6/LJaE0UnwKcaBi9I8W+Q5qiibB7fsGKs4MPCpzUSaenFE1LXUiYVscyRnya
-	2e2rKPCvu4lgUHEuvk85WnfBgh47YgMgs9tglPCIoUPlmYzSE54dvwlTKoxhjVp/kw+oSU
-	jBD9h90rUrEybG5EAsYNUZU9pvCOkmAhdSVXDLwR7CcYSlj2vjMPMupnxmvg9g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740127851;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iGzMxisqqd0Myv9f3deXpKEqbdiY9DmxDyXm1RMK6aA=;
-	b=/ezAZ+XWJXsIgTKHQnojFJP3Ci+zIWtT1KEXjr8QQbUzVbPEo5+EzGKXGPLZXyRhsbuaxH
-	dQv+enNjtP3YH8Aw==
-From: "tip-bot2 for Stephan Gerhold" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/urgent] irqchip/qcom-pdc: Workaround hardware register bug
- on X1E80100
-Cc: Stephan Gerhold <stephan.gerhold@linaro.org>,
- Thomas Gleixner <tglx@linutronix.de>, Johan Hovold <johan+linaro@kernel.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <20250218-x1e80100-pdc-hw-wa-v2-1-29be4c98e355@linaro.org>
-References: <20250218-x1e80100-pdc-hw-wa-v2-1-29be4c98e355@linaro.org>
+	s=arc-20240116; t=1740127861; c=relaxed/simple;
+	bh=nSKLy1Ix2qRvmMeeA07XwFeiYxHYgil0sFq6yP7REX4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FpRwdfh230Cvj7M4YnGnUtQD/PoAX1YyxYMW2N2VT7FJLOWUUl1NXO3jTaUHBg/vFVXjYzXBH01e3wrts+aLfqH+GZF9TQsw8MvUXBs6y8O3dnDOsptNd1kY4r5aLqSN35niCO15JlqKSZEMFpSRvAFU/rPG2B+wVcJrMzwkbuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1tlOk0-0003XF-RD; Fri, 21 Feb 2025 09:50:36 +0100
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1tlOjx-0024Vn-0c;
+	Fri, 21 Feb 2025 09:50:33 +0100
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1tlOjx-009tjk-07;
+	Fri, 21 Feb 2025 09:50:33 +0100
+Date: Fri, 21 Feb 2025 09:50:33 +0100
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	Simon Horman <horms@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+	Kyle Swenson <kyle.swenson@est.tech>,
+	Dent Project <dentproject@linuxfoundation.org>,
+	kernel@pengutronix.de,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 02/12] net: pse-pd: Add support for reporting
+ events
+Message-ID: <Z7g-WYQNpVp5w7my@pengutronix.de>
+References: <20250218-feature_poe_port_prio-v5-0-3da486e5fd64@bootlin.com>
+ <20250218-feature_poe_port_prio-v5-2-3da486e5fd64@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174012784484.10177.9781800944109345307.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250218-feature_poe_port_prio-v5-2-3da486e5fd64@bootlin.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the irq/urgent branch of tip:
+Hi Kory,
 
-Commit-ID:     e9a48ea4d90be251e0d057d41665745caccb0351
-Gitweb:        https://git.kernel.org/tip/e9a48ea4d90be251e0d057d41665745caccb0351
-Author:        Stephan Gerhold <stephan.gerhold@linaro.org>
-AuthorDate:    Tue, 18 Feb 2025 16:59:18 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 21 Feb 2025 09:47:06 +01:00
+On Tue, Feb 18, 2025 at 05:19:06PM +0100, Kory Maincent wrote:
+> From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+> 
+> Add support for devm_pse_irq_helper() to register PSE interrupts. This aims
+> to report events such as over-current or over-temperature conditions
+> similarly to how the regulator API handles them but using a specific PSE
+> ethtool netlink socket.
 
-irqchip/qcom-pdc: Workaround hardware register bug on X1E80100
+Thank you for your work. Here some comments.
 
-On X1E80100, there is a hardware bug in the register logic of the
-IRQ_ENABLE_BANK register: While read accesses work on the normal address,
-all write accesses must be made to a shifted address. Without a workaround
-for this, the wrong interrupt gets enabled in the PDC and it is impossible
-to wakeup from deep suspend (CX collapse). This has not caused problems so
-far, because the deep suspend state was not enabled. A workaround is
-required now since work is ongoing to fix this.
+...
 
-The PDC has multiple "DRV" regions, each one has a size of 0x10000 and
-provides the same set of registers for a particular client in the system.
-Linux is one the clients and uses DRV region 2 on X1E. Each "bank" inside
-the DRV region consists of 32 interrupt pins that can be enabled using the
-IRQ_ENABLE_BANK register:
+> --- a/drivers/net/mdio/fwnode_mdio.c
+> +++ b/drivers/net/mdio/fwnode_mdio.c
+> @@ -18,7 +18,8 @@ MODULE_LICENSE("GPL");
+>  MODULE_DESCRIPTION("FWNODE MDIO bus (Ethernet PHY) accessors");
+>  
+>  static struct pse_control *
+> -fwnode_find_pse_control(struct fwnode_handle *fwnode)
+> +fwnode_find_pse_control(struct fwnode_handle *fwnode,
+> +			struct phy_device *phydev)
+>  {
 
-  IRQ_ENABLE_BANK[bank] = base + IRQ_ENABLE_BANK + bank * sizeof(u32)
+This change seems to be not directly related to the commit message.
+Is it the preparation for the multi-phy support?
 
-On X1E, this works as intended for read access. However, write access to
-most banks is shifted by 2:
+>  	struct pse_control *psec;
+>  	struct device_node *np;
+> @@ -30,7 +31,7 @@ fwnode_find_pse_control(struct fwnode_handle *fwnode)
+>  	if (!np)
+>  		return NULL;
+>  
+> -	psec = of_pse_control_get(np);
+> +	psec = of_pse_control_get(np, phydev);
+>  	if (PTR_ERR(psec) == -ENOENT)
+>  		return NULL;
+>  
+> @@ -128,15 +129,9 @@ int fwnode_mdiobus_register_phy(struct mii_bus *bus,
+>  	u32 phy_id;
+>  	int rc;
+>  
+> -	psec = fwnode_find_pse_control(child);
+> -	if (IS_ERR(psec))
+> -		return PTR_ERR(psec);
+> -
+>  	mii_ts = fwnode_find_mii_timestamper(child);
+> -	if (IS_ERR(mii_ts)) {
+> -		rc = PTR_ERR(mii_ts);
+> -		goto clean_pse;
+> -	}
+> +	if (IS_ERR(mii_ts))
+> +		return PTR_ERR(mii_ts);
+>  
+>  	is_c45 = fwnode_device_is_compatible(child, "ethernet-phy-ieee802.3-c45");
+>  	if (is_c45 || fwnode_get_phy_id(child, &phy_id))
+> @@ -169,6 +164,12 @@ int fwnode_mdiobus_register_phy(struct mii_bus *bus,
+>  			goto clean_phy;
+>  	}
+>  
+> +	psec = fwnode_find_pse_control(child, phy);
+> +	if (IS_ERR(psec)) {
+> +		rc = PTR_ERR(psec);
+> +		goto unregister_phy;
+> +	}
+> +
+>  	phy->psec = psec;
+>  
+>  	/* phy->mii_ts may already be defined by the PHY driver. A
+> @@ -180,12 +181,13 @@ int fwnode_mdiobus_register_phy(struct mii_bus *bus,
+>  
+>  	return 0;
+>  
+> +unregister_phy:
+> +	if (is_acpi_node(child) || is_of_node(child))
+> +		phy_device_remove(phy);
+>  clean_phy:
+>  	phy_device_free(phy);
+>  clean_mii_ts:
+>  	unregister_mii_timestamper(mii_ts);
+> -clean_pse:
+> -	pse_control_put(psec);
+>  
+>  	return rc;
+>  }
+> diff --git a/drivers/net/pse-pd/pse_core.c b/drivers/net/pse-pd/pse_core.c
+> index 4602e26eb8c8..10a5ab30afdd 100644
+> --- a/drivers/net/pse-pd/pse_core.c
+> +++ b/drivers/net/pse-pd/pse_core.c
+> @@ -7,6 +7,7 @@
 
-  IRQ_ENABLE_BANK_X1E[0] = IRQ_ENABLE_BANK[-2]
-  IRQ_ENABLE_BANK_X1E[1] = IRQ_ENABLE_BANK[-1]
-  IRQ_ENABLE_BANK_X1E[2] = IRQ_ENABLE_BANK[0] = IRQ_ENABLE_BANK[2 - 2]
-  IRQ_ENABLE_BANK_X1E[3] = IRQ_ENABLE_BANK[1] = IRQ_ENABLE_BANK[3 - 2]
-  IRQ_ENABLE_BANK_X1E[4] = IRQ_ENABLE_BANK[2] = IRQ_ENABLE_BANK[4 - 2]
-  IRQ_ENABLE_BANK_X1E[5] = IRQ_ENABLE_BANK[5] (this one works as intended)
+...
 
-The negative indexes underflow to banks of the previous DRV/client region:
+> +/**
+> + * pse_to_regulator_notifs - Convert PSE notifications to Regulator
+> + *			     notifications
+> + * @notifs: PSE notifications
+> + *
+> + * Return: Regulator notifications
+> + */
+> +static unsigned long pse_to_regulator_notifs(unsigned long notifs)
 
-  IRQ_ENABLE_BANK_X1E[drv 2][bank 0] = IRQ_ENABLE_BANK[drv 2][bank -2]
-                                     = IRQ_ENABLE_BANK[drv 1][bank 5-2]
-                                     = IRQ_ENABLE_BANK[drv 1][bank 3]
-                                     = IRQ_ENABLE_BANK[drv 1][bank 0 + 3]
-  IRQ_ENABLE_BANK_X1E[drv 2][bank 1] = IRQ_ENABLE_BANK[drv 2][bank -1]
-                                     = IRQ_ENABLE_BANK[drv 1][bank 5-1]
-                                     = IRQ_ENABLE_BANK[drv 1][bank 4]
-                                     = IRQ_ENABLE_BANK[drv 1][bank 1 + 3]
+I prefer converting it the other way around to make it reusable for
+plain regulator-based PSEs. For example, the podl-pse-regulator driver
+won’t have its own interrupt handler but will instead use
+devm_regulator_register_notifier().
 
-Introduce a workaround for the bug by matching the qcom,x1e80100-pdc
-compatible and apply the offsets as shown above:
+Even full-fledged PSE controllers like the PD692x0 are just one part of
+a larger chain of regulators. An overcurrent event may originate from a
+downstream regulator that is not part of the PD692x0 itself. In this
+case, we need to process the event from the downstream regulator,
+convert it into an ethtool event, and forward it to the user.
 
- - Bank 0...1: previous DRV region, bank += 3
- - Bank 1...4: our DRV region, bank -= 2
- - Bank 5: our DRV region, no fixup required
+Here is one example how devm_regulator_register_notifier() can be used:
+https://lore.kernel.org/all/20250220074429.2906141-1-o.rempel@pengutronix.de/
 
-The PDC node in the device tree only describes the DRV region for the Linux
-client, but the workaround also requires to map parts of the previous DRV
-region to issue writes there. To maintain compatibility with old device
-trees, obtain the base address of the preceeding region by applying the
--0x10000 offset. Note that this is also more correct from a conceptual
-point of view:
+> +{
+> +	unsigned long rnotifs = 0;
+> +
+> +	if (notifs & ETHTOOL_PSE_EVENT_OVER_CURRENT)
+> +		rnotifs |= REGULATOR_EVENT_OVER_CURRENT;
+> +	if (notifs & ETHTOOL_PSE_EVENT_OVER_TEMP)
+> +		rnotifs |= REGULATOR_EVENT_OVER_TEMP;
+> +
+> +	return rnotifs;
+> +}
+> +
 
-It does not really make use of the other region; it just issues shifted
-writes that end up in the registers of the Linux associated DRV region 2.
+Other parts look ok for me.
 
-Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Johan Hovold <johan+linaro@kernel.org>
-Link: https://lore.kernel.org/all/20250218-x1e80100-pdc-hw-wa-v2-1-29be4c98e355@linaro.org
-
----
- drivers/irqchip/qcom-pdc.c | 67 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 64 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-index 74b2f12..52d7754 100644
---- a/drivers/irqchip/qcom-pdc.c
-+++ b/drivers/irqchip/qcom-pdc.c
-@@ -21,9 +21,11 @@
- #include <linux/types.h>
- 
- #define PDC_MAX_GPIO_IRQS	256
-+#define PDC_DRV_OFFSET		0x10000
- 
- /* Valid only on HW version < 3.2 */
- #define IRQ_ENABLE_BANK		0x10
-+#define IRQ_ENABLE_BANK_MAX	(IRQ_ENABLE_BANK + BITS_TO_BYTES(PDC_MAX_GPIO_IRQS))
- #define IRQ_i_CFG		0x110
- 
- /* Valid only on HW version >= 3.2 */
-@@ -46,13 +48,20 @@ struct pdc_pin_region {
- 
- static DEFINE_RAW_SPINLOCK(pdc_lock);
- static void __iomem *pdc_base;
-+static void __iomem *pdc_prev_base;
- static struct pdc_pin_region *pdc_region;
- static int pdc_region_cnt;
- static unsigned int pdc_version;
-+static bool pdc_x1e_quirk;
-+
-+static void pdc_base_reg_write(void __iomem *base, int reg, u32 i, u32 val)
-+{
-+	writel_relaxed(val, base + reg + i * sizeof(u32));
-+}
- 
- static void pdc_reg_write(int reg, u32 i, u32 val)
- {
--	writel_relaxed(val, pdc_base + reg + i * sizeof(u32));
-+	pdc_base_reg_write(pdc_base, reg, i, val);
- }
- 
- static u32 pdc_reg_read(int reg, u32 i)
-@@ -60,6 +69,34 @@ static u32 pdc_reg_read(int reg, u32 i)
- 	return readl_relaxed(pdc_base + reg + i * sizeof(u32));
- }
- 
-+static void pdc_x1e_irq_enable_write(u32 bank, u32 enable)
-+{
-+	void __iomem *base;
-+
-+	/* Remap the write access to work around a hardware bug on X1E */
-+	switch (bank) {
-+	case 0 ... 1:
-+		/* Use previous DRV (client) region and shift to bank 3-4 */
-+		base = pdc_prev_base;
-+		bank += 3;
-+		break;
-+	case 2 ... 4:
-+		/* Use our own region and shift to bank 0-2 */
-+		base = pdc_base;
-+		bank -= 2;
-+		break;
-+	case 5:
-+		/* No fixup required for bank 5 */
-+		base = pdc_base;
-+		break;
-+	default:
-+		WARN_ON(1);
-+		return;
-+	}
-+
-+	pdc_base_reg_write(base, IRQ_ENABLE_BANK, bank, enable);
-+}
-+
- static void __pdc_enable_intr(int pin_out, bool on)
- {
- 	unsigned long enable;
-@@ -72,7 +109,11 @@ static void __pdc_enable_intr(int pin_out, bool on)
- 
- 		enable = pdc_reg_read(IRQ_ENABLE_BANK, index);
- 		__assign_bit(mask, &enable, on);
--		pdc_reg_write(IRQ_ENABLE_BANK, index, enable);
-+
-+		if (pdc_x1e_quirk)
-+			pdc_x1e_irq_enable_write(index, enable);
-+		else
-+			pdc_reg_write(IRQ_ENABLE_BANK, index, enable);
- 	} else {
- 		enable = pdc_reg_read(IRQ_i_CFG, pin_out);
- 		__assign_bit(IRQ_i_CFG_IRQ_ENABLE, &enable, on);
-@@ -324,10 +365,29 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
- 	if (res_size > resource_size(&res))
- 		pr_warn("%pOF: invalid reg size, please fix DT\n", node);
- 
-+	/*
-+	 * PDC has multiple DRV regions, each one provides the same set of
-+	 * registers for a particular client in the system. Due to a hardware
-+	 * bug on X1E, some writes to the IRQ_ENABLE_BANK register must be
-+	 * issued inside the previous region. This region belongs to
-+	 * a different client and is not described in the device tree. Map the
-+	 * region with the expected offset to preserve support for old DTs.
-+	 */
-+	if (of_device_is_compatible(node, "qcom,x1e80100-pdc")) {
-+		pdc_prev_base = ioremap(res.start - PDC_DRV_OFFSET, IRQ_ENABLE_BANK_MAX);
-+		if (!pdc_prev_base) {
-+			pr_err("%pOF: unable to map previous PDC DRV region\n", node);
-+			return -ENXIO;
-+		}
-+
-+		pdc_x1e_quirk = true;
-+	}
-+
- 	pdc_base = ioremap(res.start, res_size);
- 	if (!pdc_base) {
- 		pr_err("%pOF: unable to map PDC registers\n", node);
--		return -ENXIO;
-+		ret = -ENXIO;
-+		goto fail;
- 	}
- 
- 	pdc_version = pdc_reg_read(PDC_VERSION_REG, 0);
-@@ -363,6 +423,7 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
- fail:
- 	kfree(pdc_region);
- 	iounmap(pdc_base);
-+	iounmap(pdc_prev_base);
- 	return ret;
- }
- 
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
