@@ -1,135 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50668214A92;
-	Fri, 21 Feb 2025 15:52:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7121DA612;
+	Fri, 21 Feb 2025 15:52:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740153143; cv=none; b=Nlk6YbI0UsmhxDdemUL85zr0IziwEbKTb8ZyguJBzyWED8mA7eYNSwvrEaY0zOe20CFF2fIt9akf3k8tMhGjyXbohspjkieysgAw8fFudwlfSoePg3ykCLlDSqs+cOwRC1qo8jlU0Qwa9GfjGeRmBapPUexFVKk/RpOMIq+46Sk=
+	t=1740153163; cv=none; b=GWgqq4fpvxD1nRObsluZwijzqpl4SD7KNNMfM9j75Y7jc9ggFnc6Ov6XkuQIoMGg0odkypeDEd0/nz7ChL1k6Qygg9mtjT9ZtTCFcgBzeYirewQXQ8QF304R+qIPnwSp65uZSEsRDKFrPkiA+vYftC/3OpEFaZtqBdFUFrfRuo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740153143; c=relaxed/simple;
-	bh=gfvKqUGxKg/CSvEe34ixn+IucpV97z40xA3ev3jcZtw=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=O6rvPs24XKOsQCcTp3XOa05ujvClST+ObMw/lUumx74ZmU3A5W6ldxIF2YN2G8C7mBow6B2SIJ3bvcp5mKiGWL1cId2VR7v5tq0zn4ofzrCcL9NkhMZ4paCUEWi6ofRXm/HXRHxwp2hkgdY2Ie6CkaU63S8o/h2AC9F3BY0CuuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB6A7C4CEE9;
-	Fri, 21 Feb 2025 15:52:22 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1tlVKe-00000006KT7-1P2l;
-	Fri, 21 Feb 2025 10:52:52 -0500
-Message-ID: <20250221155252.182535813@goodmis.org>
-User-Agent: quilt/0.68
-Date: Fri, 21 Feb 2025 10:52:14 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- stable@vger.kernel.org,
- Sven Schnelle <svens@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>
-Subject: [for-linus][PATCH 4/7] fprobe: Fix accounting of when to unregister from function graph
-References: <20250221155210.755295517@goodmis.org>
+	s=arc-20240116; t=1740153163; c=relaxed/simple;
+	bh=T2pIXkuccaH3wvzZZ+aaBnugn9hlqwMDeUUtq+JHoBQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mxdhiiHUPc5TGy7TaOgEfrMh7svQqpzIO6o8AmIvOQH/C0l8aQhWzwNu33qVYIJELgJRILPRtu5zg1lcFxz3MBb3ioDlRlLdaOZdxgenNNs0D/PGeOqDbM2A3m8UjLEmbCjD6WepF9d3FR1vF/Hm8G19YNDyPqJYv1DwjvAmGsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nHm2VAWa; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nHm2VAWa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A091C4CED6;
+	Fri, 21 Feb 2025 15:52:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740153162;
+	bh=T2pIXkuccaH3wvzZZ+aaBnugn9hlqwMDeUUtq+JHoBQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nHm2VAWaVJFVIpDDiqF9xlT4d9qDnMm9tvXttZutI3mEu8ev8XqBedNnx/CR5PK7i
+	 2FpuLycf+EHln6f61U0gGpNMn7hAaSxVRpeAJ4G5jTp1XpYLMfgzjXB/3phqm0tVhS
+	 lodUtL2/yFDmUHB87mp5K3dzhKRAf6VK1ASGIV7TNha4e5Psh062REqoNUDr+de/+P
+	 RqIU0sbx5mF17+djPtBk/A5oLNap3AcsNMgbj4pPmQQ2ILW+klQTIK5gLrY3znwDim
+	 PgkvpD7sYpL1NGd51ecpJhhae+dZ+UgkeOCR9grnvr1yvCGCe2YjHXYkFiPRAtreBu
+	 lC5dwBkmeinaQ==
+Date: Fri, 21 Feb 2025 16:52:39 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@amd.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>, rcu <rcu@vger.kernel.org>
+Subject: Re: [PATCH 3/3] rcu/exp: Remove needless CPU up quiescent state
+ report
+Message-ID: <Z7ihR0eMfoJMi-qx@localhost.localdomain>
+References: <20250213232559.34163-1-frederic@kernel.org>
+ <20250213232559.34163-4-frederic@kernel.org>
+ <fe931d3a-bf97-4be5-8420-f1fcb55e6a46@paulmck-laptop>
+ <Z68yzBURiIr_7Lmy@pavilion.home>
+ <610596cf-9836-473f-bcdc-15c69b7e0cd4@paulmck-laptop>
+ <Z7ET8S4HKqSPubQY@pavilion.home>
+ <c5ea9684-291f-4952-b834-ed8e39cfdf8f@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c5ea9684-291f-4952-b834-ed8e39cfdf8f@paulmck-laptop>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+Le Wed, Feb 19, 2025 at 06:58:36AM -0800, Paul E. McKenney a écrit :
+> On Sat, Feb 15, 2025 at 11:23:45PM +0100, Frederic Weisbecker wrote:
+> > > Before.  There was also some buggy debug code in play.  Also, to get the
+> > > failure, it was necessary to make TREE03 disable preemption, as stock
+> > > TREE03 has an empty sync_sched_exp_online_cleanup() function.
+> > > 
+> > > I am rerunning the test with a WARN_ON_ONCE() after the early exit from
+> > > the sync_sched_exp_online_cleanup().  Of course, lack of a failure does
+> > > not necessairly indicate
+> > 
+> > Cool, thanks!
+> 
+> No failures.  But might it be wise to put this WARN_ON_ONCE() in,
+> let things go for a year or two, and complete the removal if it never
+> triggers?  Or is the lack of forward progress warning enough?
 
-When adding a new fprobe, it will update the function hash to the
-functions the fprobe is attached to and register with function graph to
-have it call the registered functions. The fprobe_graph_active variable
-keeps track of the number of fprobes that are using function graph.
+Hmm, what prevents a WARN_ON_ONCE() after the early exit of
+sync_sched_exp_online_cleanup() to hit?
 
-If two fprobes attach to the same function, it increments the
-fprobe_graph_active for each of them. But when they are removed, the first
-fprobe to be removed will see that the function it is attached to is also
-used by another fprobe and it will not remove that function from
-function_graph. The logic will skip decrementing the fprobe_graph_active
-variable.
+All it takes is for sync_sched_exp_online_cleanup() to execute between
+sync_exp_reset_tree() and  __sync_rcu_exp_select_node_cpus() manage
+to send an IPI.
 
-This causes the fprobe_graph_active variable to not go to zero when all
-fprobes are removed, and in doing so it does not unregister from
-function graph. As the fgraph ops hash will now be empty, and an empty
-filter hash means all functions are enabled, this triggers function graph
-to add a callback to the fprobe infrastructure for every function!
+But we can warn about the lack of forward progress after a few iterations
+of the retry_ipi label in __sync_rcu_exp_select_node_cpus().
 
- # echo "f:myevent1 kernel_clone" >> /sys/kernel/tracing/dynamic_events
- # echo "f:myevent2 kernel_clone%return" >> /sys/kernel/tracing/dynamic_events
- # cat /sys/kernel/tracing/enabled_functions
-kernel_clone (1)           	tramp: 0xffffffffc0024000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
+> 
+> > > > And if after do we know why?
+> > > 
+> > > Here are some (possibly bogus) possibilities that came to mind:
+> > > 
+> > > 1.	There is some coming-online race that deprives the incoming
+> > > 	CPU of an IPI, but nevertheless marks that CPU as blocking the
+> > > 	current grace period.
+> > 
+> > Arguably there is a tiny window between rcutree_report_cpu_starting()
+> > and set_cpu_online() that could make ->qsmaskinitnext visible before
+> > cpu_online() and therefore delay the IPI a bit. But I don't expect
+> > more than a jiffy to fill up the gap. And if that's relevant, note that
+> > only !PREEMPT_RCU is then "fixed" by sync_sched_exp_online_cleanup() here.
+> 
+> Agreed.  And I vaguely recall that there was some difference due to
+> preemptible RCU's ability to clean up at the next rcu_read_unlock(),
+> though more recently, possibly deferred.
 
- # > /sys/kernel/tracing/dynamic_events
- # cat /sys/kernel/tracing/enabled_functions
-trace_initcall_start_cb (1)             tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
-run_init_process (1)            tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
-try_to_run_init_process (1)             tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
-x86_pmu_show_pmu_cap (1)                tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
-cleanup_rapl_pmus (1)                   tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
-uncore_free_pcibus_map (1)              tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
-uncore_types_exit (1)                   tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
-uncore_pci_exit.part.0 (1)              tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
-kvm_shutdown (1)                tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
-vmx_dump_msrs (1)               tramp: 0xffffffffc0026000 (function_trace_call+0x0/0x170) ->function_trace_call+0x0/0x170
-[..]
+Perhaps at the time but today at least I can't find any.
 
- # cat /sys/kernel/tracing/enabled_functions | wc -l
-54702
-
-If a fprobe is being removed and all its functions are also traced by
-other fprobes, still decrement the fprobe_graph_active counter.
-
-Cc: stable@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Sven Schnelle <svens@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-Link: https://lore.kernel.org/20250220202055.565129766@goodmis.org
-Fixes: 4346ba1604093 ("fprobe: Rewrite fprobe on function-graph tracer")
-Closes: https://lore.kernel.org/all/20250217114918.10397-A-hca@linux.ibm.com/
-Reported-by: Heiko Carstens <hca@linux.ibm.com>
-Tested-by: Heiko Carstens <hca@linux.ibm.com>
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/fprobe.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index 62e8f7d56602..33082c4e8154 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -407,7 +407,8 @@ static void fprobe_graph_remove_ips(unsigned long *addrs, int num)
- 	if (!fprobe_graph_active)
- 		unregister_ftrace_graph(&fprobe_graph_ops);
- 
--	ftrace_set_filter_ips(&fprobe_graph_ops.ops, addrs, num, 1, 0);
-+	if (num)
-+		ftrace_set_filter_ips(&fprobe_graph_ops.ops, addrs, num, 1, 0);
- }
- 
- static int symbols_cmp(const void *a, const void *b)
-@@ -677,8 +678,7 @@ int unregister_fprobe(struct fprobe *fp)
- 	}
- 	del_fprobe_hash(fp);
- 
--	if (count)
--		fprobe_graph_remove_ips(addrs, count);
-+	fprobe_graph_remove_ips(addrs, count);
- 
- 	kfree_rcu(hlist_array, rcu);
- 	fp->hlist_array = NULL;
--- 
-2.47.2
-
-
+Thanks.
