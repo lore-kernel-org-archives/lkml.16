@@ -1,118 +1,117 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BED5212D6E;
-	Fri, 21 Feb 2025 16:52:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57794214A7D;
+	Fri, 21 Feb 2025 16:53:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740156773; cv=none; b=TTbAOh5DkuwiXY0+0qAGE8UfyIJBJFlE4R8sd2RrnA9kFxvksz/4S6ouiuuHsy2yqOa6tn1WBgE80ZOMS0MLZHgkcPkwRR2uMjQtInzeKVeobykamlXtz4jefN5shwpAKltL+rdToxAmBl86x+3BRuM2nPsL6VtRmjAEUnrcZeA=
+	t=1740156822; cv=none; b=KRJ4PPjnF/0Mdv95EPMHyjYHPJEhp+WVlfz3xZ3j0lYwIlZGJvhpb14VV7CqQn5/JFZdTGsrtn7/goHJ0MTImbdkwtx21lb33nsRaad5Uh0GstIAYk35T1p/Zr7qKwzfW3uvdXTmZ9076baQceK5Y3Rabdlat00jbfGWFJU7YjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740156773; c=relaxed/simple;
-	bh=vO8sI//TeIWtExyYtaD4Exo5QVqQp3kkPzLWvb0G4ZQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DOblzdqg7OoArobBZUKyq8KMEopb1A+RZHaLgi7/V39FeKyKuXuAdPR8y6WatzD1aczpGyz4M4RsfAhqkM0+og2aqt7iIcBxh9j90qMtsrS+JyNfG503AHFXnDcdu+4mv8VMq2hFag6skU/zKDavJd6dsZHC5Xl2UiiVUT5uC1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kXkipCZ5; arc=none smtp.client-ip=209.85.218.45
+	s=arc-20240116; t=1740156822; c=relaxed/simple;
+	bh=RNR8mEUOnIVJUD2/SSlodw5N9H3r9pd1pvfEYexodzw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=WOnVrqhOL86sFrKzHJYx6msGX9j8M51+ERtiR9LPm+Ok+bvMusTJGO9Fahb1lSzPgJjNTw/7krUrsKp40+Xyf0WZv50iQ5N6j+dpydk4mL9U/mbIcFYxvTwvK34Ekn8Ps+3lw2p596zqGo1u+sJbK1/5W4fTKPisiv1AIECxrNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jVfNoyIU; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kXkipCZ5"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-abb81285d33so462218166b.0;
-        Fri, 21 Feb 2025 08:52:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jVfNoyIU"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22114b800f7so46546375ad.2;
+        Fri, 21 Feb 2025 08:53:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740156770; x=1740761570; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1740156820; x=1740761620; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vO8sI//TeIWtExyYtaD4Exo5QVqQp3kkPzLWvb0G4ZQ=;
-        b=kXkipCZ5MjxGNsvkeTGIJtPvxGEArCrlFXSM4M3s1UjSc4HgMs09PKmj9dLpKx8MSO
-         WUwnVotf4h7P63KZ14hCORpbmezWaevK0UdiCkABjN5BOkxpKpejpd888nVe4nTaE6vd
-         SZPEoAiYYThRCv7IdCpSskIGWTaCfG0+Kh4UypDOwzLVB9X+eJ8Br1dbjvV1rQa9gFMq
-         qe3RO8QmgzMftz8x/AB9Yw9+iUx30f032EKxsTYMuQBnYfP5SfZ4w4+MGbGli1DH6TzN
-         DTpqQ4KMYqpDRg8+4+a5kp9PA762KHy1BJc6/Mh0cS1TOqo7xlv5LbuLSqUIJVYXgtmy
-         JpHQ==
+        bh=j/zBaSuV0apxI2fraq701Zzbl3a70mLl15KTuoHr3ig=;
+        b=jVfNoyIUf/4dRmDNGEkwd67K/BFu+DYb3qTW7V2KJh1yNhjxNAIaLeymHIeWvWAEX/
+         ShD0iZ+NEmNopiQnsFkKPpvZx0L282DwE4jUa66RWwHt9K5vOI2TfKZ8R90kdhfaCWMX
+         XReBYH9gwcaNlQPJ6QOl7cU+rp4CvV2++oEhRJIghthWydD/vDwDaA1dhKu2UPI7X13x
+         iYBnwATwBZOam6kr3n3fHFb0rFFLpPQ/uhdvdks2YmfStVKfRZ3+Kngleu6YhR3e2No4
+         8yKhF0vUj+izUogZnA8Z2Pr/5fJ8VjXXH8a+lcjq5VDM0PXqxD5OQsmk0XUObCdDOoQR
+         PwhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740156770; x=1740761570;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1740156820; x=1740761620;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vO8sI//TeIWtExyYtaD4Exo5QVqQp3kkPzLWvb0G4ZQ=;
-        b=mzEeGnWlqIchll3lFAFfpuXzNLLkT3xbg/Lo7x5b9cj+IngHGLCMldCEgdbu6cOM1o
-         msillzqyiJEflkZGdjAnImJzuFJ5/rnuEEf9u3eCT+8iTDKBVpb0HsGTdFPKV8G2KuBT
-         OmbHVcaflxE2lNF/UZkoXZvCJgaL3K9NzRxjNUVjeEIKS295SpnlBa8m5RlmwlIqzWjv
-         jWFx99GdYtYqkEfFzukgvPDyCDZ5e19oE3P+4dPFaI9aS5QFL9A/BBU5OQ90la+ABrX4
-         SJ1koIElkjLv4OdKpmPa6ADTcgikkSJqAAk3x83NlnNh/i8gWrxlz2XSuOdr3+2F/xau
-         d9WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWNPe2J2IeUW+ptPVb/jJNFJWQsSEOAKg6uzSxUc5HyU5yTjiafnB4kjdYYd7gka9McgBHSMHsMSuUiSm8=@vger.kernel.org, AJvYcCWoPjGiGtAXbshvn2/DJiukGiK07RjBcY+ggWBzQ+DEWPyPKJdWCfhylucmVGnVacUmB1dv@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywtt39+YgEtgLcwSwn07GkJ3vDvRzfsz7pEpljcrT8Ek5JF1Ybd
-	kUsqaREbHmSpSYNkwvWSxMeE4IKvRQlAvXNPwn6XfJNnG3bF1+wGCkR3Sxs0TrmB9q1Kwzpz7Qu
-	Bx5rqwdE2+5F7mEK98c61H+UOEfA=
-X-Gm-Gg: ASbGncueqQ93R3kFcgErkJmd78Nivjm58RGoXa9sRS3k/G4+DkHIpbX6KClIK6OhBRx
-	GGXblzz/MG4H6378Yv1HU42QzPDgrJi71lFtMqKr34ktXJ2eau8KtFieG5FJP4+OJAK8yZORYyl
-	WuitEkmA==
-X-Google-Smtp-Source: AGHT+IHpa7dVTFfLnzKGtw2UdVJJ5Ox7pwmBS6uaFDBASq3wQSqM7Dh70sJDq3JmlljMQpfKXkg8quBGs3JbrAY90XA=
-X-Received: by 2002:a17:907:944b:b0:abb:c647:a4c1 with SMTP id
- a640c23a62f3a-abc09e37de2mr406314466b.52.1740156770066; Fri, 21 Feb 2025
- 08:52:50 -0800 (PST)
+        bh=j/zBaSuV0apxI2fraq701Zzbl3a70mLl15KTuoHr3ig=;
+        b=JwS3esup63nQE06ioddP3lnMLfQsqmk05rkCpCjR5+qVCvlvWq4Av3brc2FnsIccaL
+         L7IRA62S1C/m9xMIphebBakPbIWyH3evKdG3OJlAzOBoArxyEqkyK7WQVhTO64iy+9Ks
+         ov3WydWGfJ/dYojTj869eSb8V4hxoSaOstYxVwQ3Inkmj+kWWrQUbILcdePQrwUQ77oF
+         P2TUmhTAhHihhcJPAS2v984D2rJsiI/Ab+mINghLXzx3N+P/HxcjYuIzQNcrfFIdaLPY
+         NykR2YSyjOZXcYjZmFvl/qSYBOiLDa7xG7r+s+7Y9IIBY1qLPSEF77DCvQIRYPn9Ba4g
+         T8BQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUOSsZBaoh12CctpzGzdK5AWpEDPuKZedmewlZ6YQCnGtrA9/H1bin1PyGMqjAdRwPcwVwBwsRViRIHaPVcHYQ=@vger.kernel.org, AJvYcCXa2Cagoz12f0ZYk6A620B1u6x3Wv/St9KEa6UXvzSBYLdj6gbBwTYMhlmmcbDSH26n5SDt5XQzVCs+7Z8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEH9iJZopqiB1iDZ8XKsTM4otDPexJQhBSGJyEW6sxqqcpkv++
+	TxzSOBHacy714wdvTnZAc2UzdNY1sXz0+AbpjbiP7DYdiKdugiJe
+X-Gm-Gg: ASbGncsGdqS8E5ZQEmGUTrUdJXN7v97QMaGvmz4tdQeAM7RIg+quXGnB8hGlfYfXeLd
+	yMzZyFipLoN+tJcwCufwStofcA5+5vmrE2x2A7iCVOafJVaZbi+vPpaSl801hM9IDJJByWPmQJW
+	gfWevLnfisykAmeDyy2NcRotjumAXnt+IiHf9Lf7DSTVMOSwUIAnDurNnl2QHpz5J/AAcb5FU+u
+	zghqlZY2AJ6BS+v0NsyllhuBLagC+oNKXe0rm0LoLQW17kUaG/MPulGuqSKpoIbLJYQdNHo5Mx1
+	bIBrDy9qaBXysNxXpxdj0iaSFKi7zjCOdQ==
+X-Google-Smtp-Source: AGHT+IF2YMDyHbwTmyW38BAvJ0G7QtBOaYJTYewQDESOFgJXibuRb0b6kmUsta1MzqxBRVKAe5316A==
+X-Received: by 2002:a05:6a00:3d0a:b0:730:87cf:a7cd with SMTP id d2e1a72fcca58-73426cb12bbmr7543385b3a.8.1740156820211;
+        Fri, 21 Feb 2025 08:53:40 -0800 (PST)
+Received: from linuxsimoes.. ([177.21.141.136])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7325b1afd0esm13525983b3a.137.2025.02.21.08.53.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 08:53:39 -0800 (PST)
+From: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>
+To: charmitro@posteo.net
+Cc: a.hindborg@kernel.org,
+	alex.gaynor@gmail.com,
+	aliceryhl@google.com,
+	apw@canonical.com,
+	arnd@arndb.de,
+	aswinunni01@gmail.com,
+	axboe@kernel.dk,
+	benno.lossin@proton.me,
+	bhelgaas@google.com,
+	bjorn3_gh@protonmail.com,
+	boqun.feng@gmail.com,
+	dakr@kernel.org,
+	dwaipayanray1@gmail.com,
+	ethan.twardy@gmail.com,
+	fujita.tomonori@gmail.com,
+	gary@garyguo.net,
+	gregkh@linuxfoundation.org,
+	joe@perches.com,
+	linux-kernel@vger.kernel.org,
+	lukas.bulwahn@gmail.com,
+	ojeda@kernel.org,
+	pbonzini@redhat.com,
+	rust-for-linux@vger.kernel.org,
+	tmgross@umich.edu,
+	trintaeoitogc@gmail.com,
+	walmeida@microsoft.com
+Subject: Re: [PATCH V3 2/2] checkpatch: throw error for malformed arrays
+Date: Fri, 21 Feb 2025 13:53:27 -0300
+Message-Id: <20250221165327.5459-1-trintaeoitogc@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <m2pljcgpek.fsf@Mac.home>
+References: <m2pljcgpek.fsf@Mac.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240807-b4-slab-kfree_rcu-destroy-v2-0-ea79102f428c@suse.cz>
- <20240807-b4-slab-kfree_rcu-destroy-v2-6-ea79102f428c@suse.cz>
- <Z7iqJtCjHKfo8Kho@kbusch-mbp> <CAGudoHGF8ULGPEE5E6ZCTcVnm3qjY0BfT2DmBjKohW_rDK0JSw@mail.gmail.com>
-In-Reply-To: <CAGudoHGF8ULGPEE5E6ZCTcVnm3qjY0BfT2DmBjKohW_rDK0JSw@mail.gmail.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Fri, 21 Feb 2025 17:52:38 +0100
-X-Gm-Features: AWEUYZldjsBOz6dW6Mngy0JPyOmqYkSKLBXfGnQS2tXN2Unv8ZD0Hi38e_Hg0os
-Message-ID: <CAGudoHHeLDgSt2Lt7AO1qpN7uf-SOJ=LP9y+UG4zv0EY8gA2Jw@mail.gmail.com>
-Subject: Re: [PATCH v2 6/7] mm, slab: call kvfree_rcu_barrier() from kmem_cache_destroy()
-To: Keith Busch <kbusch@kernel.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Joel Fernandes <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Christoph Lameter <cl@linux.com>, 
-	David Rientjes <rientjes@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	Zqiang <qiang.zhang1211@gmail.com>, Julia Lawall <Julia.Lawall@inria.fr>, 
-	Jakub Kicinski <kuba@kernel.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>, 
-	"Uladzislau Rezki (Sony)" <urezki@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, rcu@vger.kernel.org, 
-	Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	kasan-dev@googlegroups.com, Jann Horn <jannh@google.com>, 
-	linux-nvme@lists.infradead.org, leitao@debian.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 21, 2025 at 5:51=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> w=
-rote:
->
-> On Fri, Feb 21, 2025 at 5:30=E2=80=AFPM Keith Busch <kbusch@kernel.org> w=
-rote:
-> > This patch appears to be triggering a new warning in certain conditions
-> > when tearing down an nvme namespace's block device. Stack trace is at
-> > the end.
-> >
-> > The warning indicates that this shouldn't be called from a
-> > WQ_MEM_RECLAIM workqueue. This workqueue is responsible for bringing up
-> > and tearing down block devices, so this is a memory reclaim use AIUI.
-> > I'm a bit confused why we can't tear down a disk from within a memory
-> > reclaim workqueue. Is the recommended solution to simply remove the WQ
-> > flag when creating the workqueue?
-> >
->
-> This ends up calling into bioset_exit -> bio_put_slab -> kmem_cache_destr=
-oy
->
-> Sizes of the bio- slabs are off the beaten path, so it may be they
-> make sense to exist.
->
-> With the assumption that caches should be there, this can instead
-> invoke kmem_cache_destroy from a queue where it is safe to do it. This
-> is not supposed to be a frequent operation.
+Charalampos Mitrodimas <charmitro@posteo.net> wrote:
+> Hi Guilherme,
+> 
+> Will this work now that the field is called "authors" and not "author"?
+> I think you forgot to update the regex here.
+I don't know, I make change in modules and samples, and I forget runing again
+the checkpatch.
+Sorry .. 
+I will send a v4 
 
-Erm, I mean defer the operation to a queue which can safely do it.
+> What do you think about this instead?
+> "Prefer each array element on a separate line$herevet"
+For me, looks like great
 
---=20
-Mateusz Guzik <mjguzik gmail.com>
+Thanks,
+Guilherme
