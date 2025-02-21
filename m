@@ -1,135 +1,114 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85149202C30;
-	Fri, 21 Feb 2025 09:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F81202F8F
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 09:37:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740130599; cv=none; b=Lqe81y3zcBoU+eMlXAL/vNcmyyaHxBMhNAM6vR1nH1Q5RCQetuhtJHv6Gm8qqAC82271xILz5RNGvRrXpe7lW6ZKEQYAdHVpqa4ThhqKxYwIQejo1TefsJniGSXzTwhIVVWmQ+9qG2Fps72YGkZr6zRLfcz4v8qzDLkxBq+1t5I=
+	t=1740130663; cv=none; b=fV6QJOc4eDmjJYr/bZxyZU1djwnML3Yx9pSahT1NbOUodRiBIstzAezDcYZNP56awjzrWqblVZC89Ks3oMWvnd2FrusmPENscX5xeDWnZ2MLkfId8fGxc74tb8A3nei/enlCX3vHMJmtDeX9J3j3ml3AYO0FJYx2/R1mQCJmyM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740130599; c=relaxed/simple;
-	bh=LcCshsTLz5TYNjtrU59EFDnTq5rwW6zHS0BJSQ45BL0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tPcP4578age+hceKWNgcD5qtISTbvOfQ7pLDSq4ARb5WDEYDchrF/InS+WPpBTFKJN+JlohZSplTHPtrYAT+TBF3fjlp3A2fqbOcxEQzY67dIdsGtz4XROV2w3MS+vuDSSjBhcQqhbJjrZYRcOeQfOFEySvB8prrlRuVFZfzc3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=av8yS7Af; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1740130663; c=relaxed/simple;
+	bh=ORSz/yeNFgVR2woTTTjZ9lchsO6kKpCFtqIIVpoGGfg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GFpsBS+5+CD0KbdWtwJki4UDvkJpqAlZq5cYDHxQAZuYiIN5WSXdj1pE29BsdV+W9G5F27icDLIMIiSvgY3iE1Yxkm/81vFq2l0yo1uLJUnzWDx28wGe/iil13qWdosX6VrheFVutffZRa0M4SYbx//YMhgTutqaynOKQw80tsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DT38rU2x; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="av8yS7Af"
-Received: from ideasonboard.com (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id AF03E89A;
-	Fri, 21 Feb 2025 10:35:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1740130511;
-	bh=LcCshsTLz5TYNjtrU59EFDnTq5rwW6zHS0BJSQ45BL0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=av8yS7AfwDcT0yDnyQPFUSLmz7TiJGA5aus/cQ6UCrmoCmclNHZF4UV4GtPu4SXUw
-	 YtHl3WhDeT2V/buLOLunudzpysZmbcKpFjAgMx5vyBjQYChDo3ZW+VDcsMkj6eBglp
-	 Vuztxo0iETOIo/GDCozZzl0pTVzMgL5qM32/Rgso=
-Date: Fri, 21 Feb 2025 10:36:32 +0100
-From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-To: Jai Luthra <jai.luthra@ideasonboard.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Dave Stevenson <dave.stevenson@raspberrypi.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Subject: Re: [PATCH 3/3] media: i2c: imx219: Use subdev state to calculate
- binning and pixelrate
-Message-ID: <ikq3xkkto566jmxvmc352l4cnjy42bx47nwbihqu77hx76o7c5@jkn37hi4pfe2>
-References: <20250219-imx219_fixes_v2-v1-0-0e3f5dd9b024@ideasonboard.com>
- <20250219-imx219_fixes_v2-v1-3-0e3f5dd9b024@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DT38rU2x"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-220f4dd756eso36920095ad.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 01:37:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740130661; x=1740735461; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qnMo1WEwQ/BmVupvZbzAM+bCOTzLXXqhIMeYEqG++fc=;
+        b=DT38rU2xNUzEz8Jk+MABvfcTcT+CB7s3V+KWe6Ft/dHFHvePWrM7vAFpQtJyduSTwH
+         lgTTyRHXDH6dgIAHv4/tlwQ+nOTTIIwxpT2djBB6mfF/1+0MMUY1WkV6GKuGSr/m2UVn
+         R6Y7JHPRLPU+Qw7I4OXuyLStV4z4PCkz38GGD56AYp7RGJala+tFhe0DHgYdSKUDaXAx
+         +xGMc0C6SJlnCU4c9f4trRzQEeHovP/OGCuiJ+LiOKF7KM/SS4+xR8jCrbE9HrLKJNvN
+         1n7/ipoBhz7vxarhMP5anPPQHb7qnsjD71/729K5GTUpHQZ2d1cQ9uPy/9FQvt0dgcEe
+         62Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740130661; x=1740735461;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qnMo1WEwQ/BmVupvZbzAM+bCOTzLXXqhIMeYEqG++fc=;
+        b=BHZCX6c2NuEcZ6gxWlHvUy4FKYBg98uP3tHd3RTPmgGVO+/2I+Icey390m8l1HY41b
+         2rJA5RoGFO+UwjfXilb4URPfdTcRSfzjE4LCePiO2zB3FuMZkV4FXgcOFqJa4nK8lfTj
+         o5Y2vBJmkOi3kdLkoS48iHCs4fw+Cc1ooqr098nK65S3jdDfEIeZSmaVwKyrMaEQnMPM
+         73otGuCJTpmZUk+7qZMCae3xqg8bXF3QSms9H4v7qbBQG+VSf38wZ1leVl17Sc/TeQ/P
+         6l7f42yFNmvJwZTE/reZ5KajuV+P+xf6c9PJcmEsO0lJ/BzPausdI9wSaN7xMK2fI4n/
+         9mmw==
+X-Forwarded-Encrypted: i=1; AJvYcCX+ZTE3z4QmqCJHgLc9n8k9wfAF/MSCryxHF2t9DUoANa/CZYNYtnsrMRcLgULplGXChnKXyrcP7Ch4+1M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+C3pXINfzZw/SmL1sazkgafodMLFvMh/8MMaqzs/RDyqZP7ev
+	Oe/q/2LLH4/f4XOaNy5zTqnyYEgXATjcq3jOs5zezlna1vrnz159ia3qxQ==
+X-Gm-Gg: ASbGnctYuxj0TdjJbESCCLRsU9ad4upJbGfA47VciK66cZQFqDbDkZKn54kirrAtcR0
+	IULjeIsrc62vo/a97TfSvKvAuNxh0NADVisC064tvAixJg7dljWIH0/I4WepZq1SuGyyOSHGlFP
+	S839lUNl0da6oncovJlw0CmUvXQjlTnXE8Blhz5D6HOHQ9yCNLbPdebqEV97DzhX7s6UgApPIwI
+	w43onbvWqEDdhUqoM8oY252QYfBbIJPuG/zBkbyQnp79dOfvIxdOtwMr+2oS6Ph8NO6eKSFRa/Y
+	di3bOCE+3ieB+XlXWMCQbwb6ov1YKCUEq/48UYwn7EDtKbPx7A==
+X-Google-Smtp-Source: AGHT+IFMGGM864UQUgG10ghybDKw9ooluRG1HgWZV1ZIVwKCndiDqk7V/e+nltWImTE2xNzNfDJIog==
+X-Received: by 2002:a17:903:2f06:b0:21f:2ded:76ea with SMTP id d9443c01a7336-2219ffa36d9mr41553025ad.36.1740130660877;
+        Fri, 21 Feb 2025 01:37:40 -0800 (PST)
+Received: from twhmp6px (mxsmtp211.mxic.com.tw. [211.75.127.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d536455esm134261835ad.74.2025.02.21.01.37.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 01:37:40 -0800 (PST)
+Received: from hqs-appsw-a2o.mp600.macronix.com (linux-patcher [172.17.236.67])
+	by twhmp6px (Postfix) with ESMTPS id 4CC56800B3;
+	Fri, 21 Feb 2025 17:47:53 +0800 (CST)
+From: Cheng Ming Lin <linchengming884@gmail.com>
+To: miquel.raynal@bootlin.com,
+	vigneshr@ti.com,
+	linux-mtd@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: richard@nod.at,
+	alvinzhou@mxic.com.tw,
+	leoyu@mxic.com.tw,
+	Cheng Ming Lin <chengminglin@mxic.com.tw>
+Subject: [PATCH v4 0/2] Add support for read retry
+Date: Fri, 21 Feb 2025 17:32:58 +0800
+Message-Id: <20250221093300.430994-1-linchengming884@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250219-imx219_fixes_v2-v1-3-0e3f5dd9b024@ideasonboard.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 19, 2025 at 05:16:45PM +0530, Jai Luthra wrote:
-> The pixel rate and binning calculations need the format and resolution
-> of the sensor, so pass the v4l2 subdev state directly instead of always
-> operating on the active state.
+From: Cheng Ming Lin <chengminglin@mxic.com.tw>
 
-Yeah I think it's saner, as even if v4l2 ctrl do not support TRY
-state (and thus the pixel rate calculation can't be "tryed") we should
-use the format information from the state at hand.
+When the host ECC fails to correct the data error of NAND device,
+there's a special read for data recovery method which can be setup
+by the host for the next read. There are several retry levels that
+can be attempted until the lost data is recovered or definitely
+assumed lost.
 
->
-> Suggested-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-> Link: https://lore.kernel.org/linux-media/sejl7xskif6rlpdsg3jhczjwe5gi6rs53ehbyka6omv2zeg7qq@4iis7i2lla5p/
-> Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
+For more detailed information, please refer to the link below:
+Link: https://www.macronix.com/Lists/Datasheet/Attachments/9034/MX35LF1G24AD,%203V,%201Gb,%20v1.4.pdf
 
-Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+v4:
+* If set_read_retry fails, it should back to read_retry level 0
 
-Thanks
-  j
+v3:
+* If set_read_retry fails, it should return an error
 
-> ---
->  drivers/media/i2c/imx219.c | 15 +++++++--------
->  1 file changed, 7 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
-> index f02732d8fa95de0a295f247d4f0b60017dbb2ed2..0adfe8e5775ba6661f7d06fedfd920d91c24cba5 100644
-> --- a/drivers/media/i2c/imx219.c
-> +++ b/drivers/media/i2c/imx219.c
-> @@ -400,10 +400,9 @@ static u32 imx219_get_format_bpp(const struct v4l2_mbus_framefmt *format)
->  	}
->  }
->
-> -static void imx219_get_binning(struct imx219 *imx219, u8 *bin_h, u8 *bin_v)
-> +static void imx219_get_binning(struct v4l2_subdev_state *state, u8 *bin_h,
-> +			       u8 *bin_v)
->  {
-> -	struct v4l2_subdev_state *state =
-> -		v4l2_subdev_get_locked_active_state(&imx219->sd);
->  	const struct v4l2_mbus_framefmt *format =
->  		v4l2_subdev_state_get_format(state, 0);
->  	const struct v4l2_rect *crop = v4l2_subdev_state_get_crop(state, 0);
-> @@ -430,11 +429,11 @@ static void imx219_get_binning(struct imx219 *imx219, u8 *bin_h, u8 *bin_v)
->  		*bin_v = IMX219_BINNING_X2;
->  }
->
-> -static inline u32 imx219_get_rate_factor(struct imx219 *imx219)
-> +static inline u32 imx219_get_rate_factor(struct v4l2_subdev_state *state)
->  {
->  	u8 bin_h, bin_v;
->
-> -	imx219_get_binning(imx219, &bin_h, &bin_v);
-> +	imx219_get_binning(state, &bin_h, &bin_v);
->
->  	return (bin_h & bin_v) == IMX219_BINNING_X2_ANALOG ? 2 : 1;
->  }
-> @@ -455,7 +454,7 @@ static int imx219_set_ctrl(struct v4l2_ctrl *ctrl)
->
->  	state = v4l2_subdev_get_locked_active_state(&imx219->sd);
->  	format = v4l2_subdev_state_get_format(state, 0);
-> -	rate_factor = imx219_get_rate_factor(imx219);
-> +	rate_factor = imx219_get_rate_factor(state);
->
->  	if (ctrl->id == V4L2_CID_VBLANK) {
->  		int exposure_max, exposure_def;
-> @@ -689,7 +688,7 @@ static int imx219_set_framefmt(struct imx219 *imx219,
->  	cci_write(imx219->regmap, IMX219_REG_Y_ADD_END_A,
->  		  crop->top - IMX219_PIXEL_ARRAY_TOP + crop->height - 1, &ret);
->
-> -	imx219_get_binning(imx219, &bin_h, &bin_v);
-> +	imx219_get_binning(state, &bin_h, &bin_v);
->  	cci_write(imx219->regmap, IMX219_REG_BINNING_MODE_H, bin_h, &ret);
->  	cci_write(imx219->regmap, IMX219_REG_BINNING_MODE_V, bin_v, &ret);
->
-> @@ -937,7 +936,7 @@ static int imx219_set_pad_format(struct v4l2_subdev *sd,
->
->  		/* Scale the pixel rate based on the mode specific factor */
->  		pixel_rate = imx219_get_pixel_rate(imx219) *
-> -			     imx219_get_rate_factor(imx219);
-> +			     imx219_get_rate_factor(state);
->  		__v4l2_ctrl_modify_range(imx219->pixel_rate, pixel_rate,
->  					 pixel_rate, 1, pixel_rate);
->  	}
->
-> --
-> 2.48.1
->
+v2:
+* Remove fixups
+* Remove the function of init_read_retry
+
+Cheng Ming Lin (2):
+  mtd: spi-nand: Add read retry support
+  mtd: spi-nand: macronix: Add support for read retry
+
+ drivers/mtd/nand/spi/core.c     | 35 ++++++++++++++-
+ drivers/mtd/nand/spi/macronix.c | 79 ++++++++++++++++++++++++++-------
+ include/linux/mtd/spinand.h     | 14 ++++++
+ 3 files changed, 111 insertions(+), 17 deletions(-)
+
+-- 
+2.25.1
+
