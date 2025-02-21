@@ -1,118 +1,147 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7EC31F3D31;
-	Fri, 21 Feb 2025 16:01:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F161F0E53
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 16:02:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740153668; cv=none; b=NJ6FqmKmXxssh7nUr97tPI19G2t8oczFvWKjlAAw6SKeGim8Pzo7CH2NqBzgoAKujeWZk4HnXDhkz2MuPRAmb6eylCkFklpI163HgABgItVL4IA82d70msCsTtaXi9SrhGFwZevLYKZugWgjMhQPVxPtmB+pAiwJD3MCXMrNYtg=
+	t=1740153723; cv=none; b=R2cYbB31KcIrzUun17N5tvH+MV4xwwhcNHE0wiQS6kf8061xa9ldc4OsUwhetSbOTvOSAqD/UKfPDaFPFkD/vM+UgjpQUOW99nBdjG6QTjv5Io77Jjn27YA+krLk90wnOyYrnNGljboY3hN7ekDhbtYbpBrKznJuUgs8u0POUwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740153668; c=relaxed/simple;
-	bh=RMa4BUecR5GYwSWEYE3fngk+ccDPuCm2p2dZu8+mFPs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OKxJIb0LkQc1ujk1Jc2brHOu0ad7OObQTYmaisy9fk8S1Q2oN91speylizEsRb2eVqWqg5xZ9dexbSp+Uw3dznUplHDL921hBA7sTY3q2TFXjFx1We4Y3Goaz5Y5AI6iiYBn0B3sZR1ieZA3ELWJM5uIkdbuqFV6b1D2i8happE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D088168F;
-	Fri, 21 Feb 2025 08:01:22 -0800 (PST)
-Received: from e133380.arm.com (e133380.arm.com [10.1.197.43])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C6093F5A1;
-	Fri, 21 Feb 2025 08:00:55 -0800 (PST)
-Date: Fri, 21 Feb 2025 16:00:49 +0000
-From: Dave Martin <Dave.Martin@arm.com>
-To: "Moger, Babu" <babu.moger@amd.com>
-Cc: corbet@lwn.net, reinette.chatre@intel.com, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	tony.luck@intel.com, peternewman@google.com, x86@kernel.org,
-	hpa@zytor.com, paulmck@kernel.org, akpm@linux-foundation.org,
-	thuth@redhat.com, rostedt@goodmis.org, xiongwei.song@windriver.com,
-	pawan.kumar.gupta@linux.intel.com, daniel.sneddon@linux.intel.com,
-	jpoimboe@kernel.org, perry.yuan@amd.com, sandipan.das@amd.com,
-	kai.huang@intel.com, xiaoyao.li@intel.com, seanjc@google.com,
-	xin3.li@intel.com, andrew.cooper3@citrix.com, ebiggers@google.com,
-	mario.limonciello@amd.com, james.morse@arm.com,
-	tan.shaopeng@fujitsu.com, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, maciej.wieczor-retman@intel.com,
-	eranian@google.com
-Subject: Re: [PATCH v11 22/23] x86/resctrl: Introduce interface to list
- assignment states of all the groups
-Message-ID: <Z7ijCphcSM58AqA6@e133380.arm.com>
-References: <cover.1737577229.git.babu.moger@amd.com>
- <52c66bf98480c0ab6bb0f0762497e328fcbdeaac.1737577229.git.babu.moger@amd.com>
- <Z7XiQ+u3Pc+uvJCK@e133380.arm.com>
- <45a0a88a-b31e-447e-9d62-bc0cdedf06f7@amd.com>
- <Z7dN2KpsQjVUb3KR@e133380.arm.com>
- <7802f9e9-9a63-463d-a51e-e9ad0e60f77f@amd.com>
+	s=arc-20240116; t=1740153723; c=relaxed/simple;
+	bh=GMHG4C6Vcw8ZEz9wWvsyryf+HolVtzqOEGBVMcI25eY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Di2mrFNeQ0OYNzYtdN1tmX+i/jWoGHvkYEk8x9oFmmQTr8BWk/BpsfG43bH+VEt+VfiBfKSajoCw2N60hnZb88zE0D1lhdUYXoAzoN7N7hOX8R9f9FvBhCTxekCcLGlyOIw8DnSRbST4y7d+fLDtsPXnXe0WNMrbJcMwrvnhsIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QaAza9vS; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QaAza9vS"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-307c13298eeso26346471fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 08:02:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740153720; x=1740758520; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r0iNKnGeXeaez/gx6/HmK7VLjj/3hIzwyl3vZ2XIY0c=;
+        b=QaAza9vSJlYWHVaP3SQpxGyCyNdXCBvAjQEpIVrR5UGzfcJerOE1gaTC46IyKm38lE
+         s0lAC9eSaunKLpLkEmC/CKaJOEtO06O7NlpvS7E5QhEQcvz4Pgv9inGC9dmti1It8LIg
+         1z6c63Rrg26sM4D0hW1rn9eLZX1ZxM7QCoZ6ZooeDG/+6yAwiPHUwwap4BXkj7yoD7/l
+         IBuCWBzaibTso62fDl2MOW4B6HjOEQfQL7vQj6xTvBTi9M0m3tb8U95vSo/UZG5BAWqF
+         eRi+AoIwMgAEAKtmeNCV4/Vgn7MnfPEo6iEzRwKnaziyMIwfdUNvZQd0+NtUyP1NxlGl
+         VWNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740153720; x=1740758520;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r0iNKnGeXeaez/gx6/HmK7VLjj/3hIzwyl3vZ2XIY0c=;
+        b=M92VeHzaZeWJ/DHo+XcmULTK5zOwJCELZu7W0FPEYoQoOf5W+GbnhVZqw3Tu4ERkOt
+         kNcK95Z0+ZgbpDzK+UlQ9ueLfGRdp52KYidDxih9NZ5YNKT7FKA7DLuYe3KzhE0fG0wi
+         iJyWb5k4byr0eLaviILCWs+APAerqQ7TUruzQtSYrnbPyKG2/c7brXZd0eDlaHF7lCo9
+         PxrZIrcychiO602fIT9AcW+1iQCcfyQ9P0o7as5L2qz8F/dKL5r+GrIbGOG4DIHlyfIO
+         BOCVDPuN66I64S6Ha7K9Ux640wG46jHIUcar29TnlrDtdJNMvaLMDgKnOusFX8EeKebz
+         uF+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXsQKah/2vbA/5RNERM9BlRP7nQhRBveOG7ne8u5PN9dBzGrpdeHRxutLmPJmhPgQzHexr6Lg0aAA56QBQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDVwjrF3T/qWUW9ChiPUwwXDb6Yj7vOC5PpRhJGEHci9TY3Uey
+	PtjwaU2OkX9mjzWKjlzvyeRdLEiE4wgzoZmy2OccqQ0dvfgaxfZ1uYgv8qxr5Z1SKnmMYypg1nz
+	lPPGUPg65Jk3zrzortjDewTZdR8U=
+X-Gm-Gg: ASbGncseh5LxG3h4haTtX3ZclvvB+YNHX81Wc0MCV0oJoj3PZm03h9l0wV2szXJqONT
+	LSglV5NnLiQfqW2Ydkh9c9Q108gyvIPmlHjhCOXrhJElJDfOREvw/6fMbsvVhnqD/bPH1dMHsLL
+	i4Gge1yQI=
+X-Google-Smtp-Source: AGHT+IGhbbNdldFlT1JsFIL/bZUc5QMgBcKD1C4p6UnyOxhq4bfqjR23qEPLevccNlxCUOZzD4GpIZBpocqW04uLGe4=
+X-Received: by 2002:a2e:9843:0:b0:308:e587:ca8e with SMTP id
+ 38308e7fff4ca-30a598ebcdcmr13483551fa.11.1740153717866; Fri, 21 Feb 2025
+ 08:01:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7802f9e9-9a63-463d-a51e-e9ad0e60f77f@amd.com>
+References: <20250220200439.4458-1-ubizjak@gmail.com> <CAMzpN2i8uR7L9DmL1AX1R9p__x5KwAtdey_4iJ5ZP_frTqu9vQ@mail.gmail.com>
+ <CAFULd4b8kgXfr1QcWud-n7PyuKKVUGTNd00GSZU=6va6Gr65EA@mail.gmail.com>
+ <CAMzpN2hHb_T3gZfueeVRbOxUFt8+syWsm8iWQxF4PaUOQA-k=w@mail.gmail.com>
+ <CAFULd4ZGW-FYtEe-BJ53QVjHMLr1jyj_6vJhNEwqqwW6Z77+Tg@mail.gmail.com>
+ <CAMj1kXGKDtWxcuWbPP+o=6_pwhOHKJF_NnOL8F95y0tXt-dQQg@mail.gmail.com>
+ <CAFULd4YuL9DCOs23Ev+iXooirLfKT3O_9poSUM7JeW_dO34o9A@mail.gmail.com>
+ <CAMj1kXG_zKei335-CqXwNi=+AkqtQt6xmoVw+qD1XzW7q-aPtA@mail.gmail.com> <CAMzpN2hPWSQudpmccDtCAQAy_rHFwbBwo+95GMaqw6P-E4RPZg@mail.gmail.com>
+In-Reply-To: <CAMzpN2hPWSQudpmccDtCAQAy_rHFwbBwo+95GMaqw6P-E4RPZg@mail.gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Fri, 21 Feb 2025 17:01:46 +0100
+X-Gm-Features: AWEUYZmNKAD8A2j9Ma4R7h6NowGZkHNhFHYvj-4JRRabihpdXa2tJy3el3sIHJo
+Message-ID: <CAFULd4aO6-1_FKXFyXW+QT5UL-3mU3Tr=yjjwt9-b1yM=TrN+w@mail.gmail.com>
+Subject: Re: [PATCH -tip] x86/stackprotector: Move stack canary to struct pcpu_hot
+To: Brian Gerst <brgerst@gmail.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 20, 2025 at 03:29:12PM -0600, Moger, Babu wrote:
-> Hi Dave,
-> 
-> On 2/20/25 09:44, Dave Martin wrote:
-> > Hi,
-> > 
-> > On Wed, Feb 19, 2025 at 03:09:51PM -0600, Moger, Babu wrote:
+On Fri, Feb 21, 2025 at 4:54=E2=80=AFPM Brian Gerst <brgerst@gmail.com> wro=
+te:
+>
+> On Fri, Feb 21, 2025 at 9:38=E2=80=AFAM Ard Biesheuvel <ardb@kernel.org> =
+wrote:
+> >
+> > On Fri, 21 Feb 2025 at 15:33, Uros Bizjak <ubizjak@gmail.com> wrote:
+> > >
+> > > On Fri, Feb 21, 2025 at 3:13=E2=80=AFPM Ard Biesheuvel <ardb@kernel.o=
+rg> wrote:
+> > >
+> > > > > > I got a warning from the relocs tool, but not a hard error.  Wh=
+at
+> > > > > > compiler/linker are you using?
+> > > > > >
+> > > > > > Does the attached patch build in your configuration?
+> > > > >
+> > > > > Ah, the attached patch is similar to my previous approach, where =
+the
+> > > > > build system *warned* on an offset (the patch was abandoned due t=
+o
+> > > > > Ard's request to put stack_canary to the *beginning* of struct
+> > > > > pcpu_hot, and this allowed for a simplified patch).
+> > > > >
+> > > > > The attached patch builds for me without warning/error for both, =
+SMP
+> > > > > and !SMP build.
+> > > > >
+> > > >
+> > > > Did you try building modules too?
+> > >
+> > > make -j 24 olddefconfig prepare modules_prepare bzImage modules
+> > >
+> > > for defconfig, SMP and !SMP.
+> > >
+> >
+> > OK.
+> >
+> > I think I prefer Brian's approach - the only nit is that the placement
+> > of stack_canary creates a padding hole in struct pcpu_hot. However,
+> > that does not actually matter until we run out of space so I think it
+> > is fine as is.
+>
+> Going off on a tangent, as struct pcpu_hot grows I think it can be
+> done better as a subsection of percpu data (".data..percpu..hot").
+> That way each variable has its own symbol again and it reduces header
+> dependencies.
 
-[...]
+Please note an optimization in common.h:
 
-> >> Good catch.
-> >>
-> >> I see similar buffer overflow is handled by calling seq_buf_clear()
-> >> (look at process_durations() or in show_user_instructions()).
-> >>
-> >> How about handling this by calling rdt_last_cmd_clear() before printing
-> >> each group?
-> > 
-> > Does this work?
-> > 
-> > Once seq_buf_has_overflowed() returns nonzero, data has been lost, no?
-> > So far as I can see, show_user_instructions() just gives up on printing
-> > the affected line, while process_durations() tries to anticipate
-> > overflow and prints out the accumulated text to dmesg before clearing
-> > the buffer.
-> 
-> Yea. Agree,
-> 
-> > 
-> > In our case, we cannot send more data to userspace than was requested
-> > in the read() call, so we might have nowhere to drain the seq_buf
-> > contents to in order to free up space.
-> > 
-> > sysfs "expects" userspace to do a big enough read() that this problem
-> > doesn't happen.  In practice this is OK because people usually read
-> > through a buffered I/O layer like stdio, and in realistic
-> > implementations the user-side I/O buffer is large enough to hide this
-> > issue.
-> > 
-> > But mbm_assign_control data is dynamically generated and potentially
-> > much bigger than a typical sysfs file.
-> 
-> I have no idea how to handle this case. We may have to live with this
-> problem. Let us know if there are any ideas.
+/* const-qualified alias to pcpu_hot, aliased by linker. */
+DECLARE_PER_CPU_ALIGNED(const struct pcpu_hot __percpu_seg_override,
+            const_pcpu_hot);
 
-I think the current implication is that this will work for now provided
-that the generated text fits in a page.
+struct pcpu_hot has its const alias, so we are able to use:
 
+    if (IS_ENABLED(CONFIG_USE_X86_SEG_SUPPORT))
+        return this_cpu_read_const(const_pcpu_hot.current_task);
 
-Reinette, what's your view on accepting this limitation in the interest
-of stabilising this series, and tidying up this corner case later?
+where the compiler is able to eliminate a sequence of reads to the
+const_pcpu_hot.current_task.
 
-As for writes to this file, we're unlikely to hit the limit unless
-there are a lot of RMIDs available and many groups with excessively
-long names.
+LTO does not like the approach, though, but clang does not use x86 seg
+support, and gcc does not perform LTO.
 
-This looks perfectly fixable, but it might be better to settle the
-design of this series first before we worry too much about it.
-
-[...]
-
-Cheers
----Dave
+Uros.
