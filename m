@@ -1,250 +1,486 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3FFE1FCFCC;
-	Fri, 21 Feb 2025 11:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=60.244.123.138
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740137975; cv=fail; b=Qxqinr4O7827A726/C4dBr0xC/MwJWTs4EdnvisR2sYm0LqU1SgZCqEj4lS3OxQsUUdApqaGvNh+hbre09DAb9bFLsQmLpKXDwASrW2kncZ5PsXumEGJ4Gjb5DuSuPdxFtwr3B439tWXqIKAIbAgFw5Z7hKC4/oDE3q49l1Sors=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740137975; c=relaxed/simple;
-	bh=k4ymkFCc8zjEFd7HCUvTlu03WZRil6PyJYkBGFXMbOo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=MDgd8+s/AfVljkXyXBwyvlBfFNjIuRooGvDZUO6xYmB/9o8agAOeDzJN1C8k6g5DEb6OK2GQ8D7sNywrgPcHTES86wtwHHDkli91ncvWw+eRORxo4m3mYpISbjibyesdMH1lSK1EGMMswg1CHFtntG6ywRPIq0seRyp0mjkPdr8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=gWfjwFT0; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=aJDolsWW; arc=fail smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="gWfjwFT0";
-	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="aJDolsWW"
-X-UUID: 81bd45b0f04811efaae1fd9735fae912-20250221
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=k4ymkFCc8zjEFd7HCUvTlu03WZRil6PyJYkBGFXMbOo=;
-	b=gWfjwFT0aolgBsdJ76mH8lE4jl7PMn++uvGrwhd1rK6z9hXT4h6wjUNejlhmyjmjA0EOXZEgi1hZxis/yqyJ+KHDg4sWN5SqJIUD0Xg3cvdJjoS7sra96H1zf2aw2neThyI/ON8TWgETOhaH6k6cDl04F4oADixvMcJ/vXnMI8c=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.46,REQID:6f77ab7e-0754-4d1f-8c2d-218ce56da3a5,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:60aa074,CLOUDID:2d6c65a4-5c06-4e72-8298-91cabc9efadf,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|50,
-	EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OS
-	A:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 81bd45b0f04811efaae1fd9735fae912-20250221
-Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw01.mediatek.com
-	(envelope-from <macpaul.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 813074498; Fri, 21 Feb 2025 19:39:27 +0800
-Received: from mtkmbs10n1.mediatek.inc (172.21.101.34) by
- mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Fri, 21 Feb 2025 19:39:26 +0800
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (172.21.101.237)
- by mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Fri, 21 Feb 2025 19:39:26 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Z/w6saG5ux2/9yqpOHReS443byezWalNHG9A6m04SyK6dFh8vPnyeKyRYqezd7YZy31iWSsJwvnW8MtJr+OJUvOQF+DFiyiDWWdK+ibyQGb9jZrgPNwbJB9rPfuBkP+JHmWDIHmcURdPaaygL1lgYz+DW55pKZuqGMjKlk+VheNq77GCqpi0rltOt/nRn66sk18I2J4ncalsJxdJUhJfJrxNjZMZiV4AS6xU77F0tx9OmcVF8JXSnRBETx8OrZ/OsRInR/pdXEDbivFCo02riyxZDHDFIgKSuBPUXoykg5bqAhpUEWtsDo75ieQbePBWxxrZEMMgxbg9+szP0xXjvQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=k4ymkFCc8zjEFd7HCUvTlu03WZRil6PyJYkBGFXMbOo=;
- b=YIRiSMiOVHq8DTzhMAn9+HhEa8K7OFoVxG1jkWeOuS5OTxflj788nzYt4ob7q0QG2SH0MaqhkkeQmVprh65uqmfD8Vfgot5C7LiRF8zmR9z887qW6GEXtEpaBVXkriTcRpWwOHRNAB0PY9alDurLWKqzTFYX6yCXj/UEgw+/qgbjmnUqAazGZ6q+Un7iOLiKM2Acq2hB59saHF5hvyruBHe6AQ+ayPOeLsCnxfm2qLjs3rzYOzCg5nHbK4nRdAhk/mZYAvbzJfMlggNq2Sv/TvCXtdPlSRpaQUVDnQy6kPYrZA09neC+Mkr43foABdSYiNrZ4Z5zWQ3ggC1MaR7Mkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
- dkim=pass header.d=mediatek.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k4ymkFCc8zjEFd7HCUvTlu03WZRil6PyJYkBGFXMbOo=;
- b=aJDolsWWfBhNYntxO7EjRyPxu5tjJ9dG3bYWVhdjElPZNAiuOoD2eYjGFPhshdVjb8BHHfJIcP/2W7URjhqstI7i79eqAVX1I0krs83vdUbG8V8kmsQvHtN07Hn+2Ymayh20g+jU8Aqk7IifRG57b6AAMvJu59jhNnJ/flUlSbg=
-Received: from SEZPR03MB7810.apcprd03.prod.outlook.com (2603:1096:101:184::13)
- by SEZPR03MB7299.apcprd03.prod.outlook.com (2603:1096:101:12d::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.16; Fri, 21 Feb
- 2025 11:39:11 +0000
-Received: from SEZPR03MB7810.apcprd03.prod.outlook.com
- ([fe80::2557:de4d:a3c7:41e8]) by SEZPR03MB7810.apcprd03.prod.outlook.com
- ([fe80::2557:de4d:a3c7:41e8%5]) with mapi id 15.20.8466.015; Fri, 21 Feb 2025
- 11:39:10 +0000
-From: =?utf-8?B?TWFjcGF1bCBMaW4gKOael+aZuuaWjCk=?= <Macpaul.Lin@mediatek.com>
-To: "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"cy_huang@richtek.com" <cy_huang@richtek.com>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, "conor+dt@kernel.org"
-	<conor+dt@kernel.org>, "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-	Alexandre Mergnat <amergnat@baylibre.com>
-CC: "fparent@baylibre.com" <fparent@baylibre.com>,
-	=?utf-8?B?QmVhciBXYW5nICjokKnljp/mg5/lvrcp?= <bear.wang@mediatek.com>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	Project_Global_Chrome_Upstream_Group
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>, "macpaul@gmail.com"
-	<macpaul@gmail.com>, =?utf-8?B?UGFibG8gU3VuICjlravmr5Pnv5Qp?=
-	<pablo.sun@mediatek.com>, "simon.sun@yunjingtech.com"
-	<simon.sun@yunjingtech.com>, =?utf-8?B?WW93LXNoaW4gTGlvdSAo5YqJ56WQ54KYKQ==?=
-	<yow-shin.liou@mediatek.com>,
-	=?utf-8?B?Q2hyaXMtcWogQ2hlbiAo6Zmz5aWH6YCyKQ==?= <Chris-qj.Chen@mediatek.com>
-Subject: Re: [PATCH v4 1/2] arm64: dts: mediatek: mt8395-genio-1200-evk: add
- support for TCPC port
-Thread-Topic: [PATCH v4 1/2] arm64: dts: mediatek: mt8395-genio-1200-evk: add
- support for TCPC port
-Thread-Index: AQHbg6SNhfGWmd7O1kKNZUdizLZ2K7NQWWMAgAFJxIA=
-Date: Fri, 21 Feb 2025 11:39:09 +0000
-Message-ID: <f09f880b7f9b642140109f17ed3f89aa44195b99.camel@mediatek.com>
-References: <20250220143354.2532448-1-macpaul.lin@mediatek.com>
-	 <cb392432-e452-4460-ace6-54b3649aed52@collabora.com>
-In-Reply-To: <cb392432-e452-4460-ace6-54b3649aed52@collabora.com>
-Accept-Language: zh-TW, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mediatek.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SEZPR03MB7810:EE_|SEZPR03MB7299:EE_
-x-ms-office365-filtering-correlation-id: 5ad93e32-e59a-4b83-9bd8-08dd526c5b60
-x-ld-processed: a7687ede-7a6b-4ef6-bace-642f677fbe31,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|7416014|1800799024|376014|366016|921020|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?RzQ5bXFvL3lsUjk0RFZxQXIwL2NlbitSeHkrUjBBaUlJMkJsSERFcVhXTFNi?=
- =?utf-8?B?ajRPNEdYOXdSdzM1RllYdDN2Q05jbWU4a3pGM1hBcjFRSFkrajRURTE4V1JI?=
- =?utf-8?B?SjVzQXZsNmNldzFIMExwMEU0Z1VoeUdmem5pUkhGUmo5eU5kMjFYbDEyMCs0?=
- =?utf-8?B?eFUrdDZnbGRXU21PU2lNdmZkV1lEUEZBdlpWRkkrSHR6QW5WMUlzUGhleFI2?=
- =?utf-8?B?clVnWmZzamU4blVqbTlBRjE3T05iY1RER1ptQmQyTnd0emF6NURKbThObDRI?=
- =?utf-8?B?OHF5Q1YybjJtWmw1VWJYZTNnSkhSZytqRnVRa25XdGVraVJCUUZMZ3RWQWo0?=
- =?utf-8?B?TVI0SXdzTlZ5L3hSZHVBZnFaNkJES1MraWhHVkFlSFBvbHhaRHI2Qk5hRFVJ?=
- =?utf-8?B?L0dyc1RmbkMrQjJyZEtEd00wa2NuQ2FOSzZkS1ArQU1NemRtU3lMRmdmeldK?=
- =?utf-8?B?YXpwSURJV0szUEZ4VlVzNGhoNlM0a0tuMHNQeE42ZkxkWmFlRHN3TG5xdzd5?=
- =?utf-8?B?RGZWd2VxQzJ6VHcrK1k2Nm1qaXJVODkwYW51WHBJa3hSbnpqUkpnamVjS3dV?=
- =?utf-8?B?eGorcWNVbzhOTVVpS3dQTjVrTFRZSFhJeVJ5K2hWL0NsZWhWZmZTRlhGYStk?=
- =?utf-8?B?bjMwUk5CVi9mZFh1K01ib1VNbDBIa2tBUWN3a21kamI5R0s5UTU3U3dRUzN6?=
- =?utf-8?B?eXJwN290TStObm9adGFqQnRwYUF1LzlVMW0zbG1pSE9rNW9YZm1PZDIvS2hl?=
- =?utf-8?B?L2xFelFGVnBsbjlRckhEOXBrdUdQSWRiNlNHczVER3JoTTZvR2RHc1RibkdH?=
- =?utf-8?B?djhGR2czbTNDSWJaa0lqbXdNa0hyZ21kaHNlb1lieEQ1VW93bnNDWHNDNjVK?=
- =?utf-8?B?RkFRMDNBMURFTXI1aHphdW1neUVWdlY5YjJwWTFTMldSSjdScGU5MFVncEFH?=
- =?utf-8?B?SmVORXo3c1BYRjhDWXhaVGozQlFLQzlyWDlsMGM1OEdYZWJhekk4TVFuSDJC?=
- =?utf-8?B?b3pOVU9RYTRKRllOUmEyR1pXV05kTC9DOUlpRjFSZmVTY0hROVVnQmhMT0M4?=
- =?utf-8?B?M0crM21NS3B3TTZuNG9pVkJhOUg1ZjB4bHpvYVJWWEdEekpvSjZpcGdvVHBV?=
- =?utf-8?B?K2RMaEZvQjEwRWYwcnBzT3JEQ3RJVjJSalVpM1hyT3FGT1U3S29MVlhHYmQ4?=
- =?utf-8?B?NysvNUVYZ3M3RW93N0VHeDVkMU9FZW9MSEVSVWdjdjAyQTBLQjdkMEpDU2Qz?=
- =?utf-8?B?K3hLaUg1Tm1mamFtS3lWRGlMUDRZZlo4NkpabnRLOEdVaUpCSk1PL3RmcDdl?=
- =?utf-8?B?SzVNU2FPUGJzVjhqODN4Z3AyV1lHRmxSKzgrV1AydHZianVhSmh6bGtZeDJH?=
- =?utf-8?B?VHNoQk93Tmtpd1BJYlUwa2wyMnZVc1dqT0hydVVTT0FqSmgreVkxNXNOTkV5?=
- =?utf-8?B?QldSY20wMS8yTENCazk5WU5BVXhPdDZYbEp6TnRvdmRValRLcW4ycy9qekRF?=
- =?utf-8?B?U3B1MGxZSytLZU5PY1dzVkdHV2FrdEdDMlN1Z2tybHFQYis4UitEeGh4S3lB?=
- =?utf-8?B?N2RSOHZCV3lLUUdXdG9LL3MxVFdXUU45V2FXeW9YUEhFUFhGNGo5Rm9SWURy?=
- =?utf-8?B?OXNiQ1M3Z3B4RUk0M1BQUy9lNzJ1WUE0b3VhWWFnN2taaTc1TDJHZ1d3VTQw?=
- =?utf-8?B?MS9HcjBVdHhsZHdIVThVcTlRakhWbWYzcy80RDRxdGo4N1grQXZEZDF3L0Qz?=
- =?utf-8?B?QkxXalZLdGk5bThwdnM3NlFnMTVLNWRpK21VMnpRZk5xc29IN0l4cnJmNTlC?=
- =?utf-8?B?dG54eFd0TVZxNmdjWVErS0JhdkxOY1orclFnWGswS04vZEhTd0JLUUZ0ZGFP?=
- =?utf-8?B?VXZIaXVRU1B2eGNjbGExMVA0c1hLbmlpZ1docENlQm9SSjRYMFE4NGlhZ3Z5?=
- =?utf-8?B?R2JZWGlaYm10dUtBYU9IWmlzQ1B2QVNzMVhPeEQzWFpwS2o3NVV0RFV4dDJj?=
- =?utf-8?B?bTh3M1BRUnNBPT0=?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR03MB7810.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016)(921020)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?V0FqMWxlWnFWSFRvN01PUmtsMWpCUWlHZm53RXlsYmlNb3pCc3RmT1UrV1h3?=
- =?utf-8?B?cmlvTUphNGtKSXRHLzI2amNzd1lVYXRVNGo1dy9pMDRmaE5tbisrSWRHV2Mz?=
- =?utf-8?B?cDUxVUJCM1ZKVnJKQkthMVdoMTlVUEExREtRRGxqd3VJRy9qbVVLY1VzMVQ2?=
- =?utf-8?B?eDl4RW01TVR1N1JpK1NMUyszWmFLYlQvUUJUV0pmb2Y4ZG1lUzRZRjJWVHdx?=
- =?utf-8?B?a2lXYmxXRGZ3eUkvd0RoUTkvRkt1MndlTXJqVmNrNTFoSHhJcXRCSFJQZ3B2?=
- =?utf-8?B?MXlNWVJkblZLQUZ3NHl6dU9zNUVuWk51NHJlNTgzTUVtWUFDN01Hd2xQYTVQ?=
- =?utf-8?B?SGZlL2VKK2NMcjRBUXJ4cEJaQjhVL09BdmJoM1ptelpxcTR4T0R3MzdabzlE?=
- =?utf-8?B?ZVpRV2krYmo2M3FxcmY4bHhBUHgzU0V6aFQ3VEpJazlHcnA1QXprYyt4Y3A3?=
- =?utf-8?B?VVp2cG84OEFLSTZKbG5teGcvUUl2WnI2VVdKSDdUMGZ2N3h6WlBKemUzTVlr?=
- =?utf-8?B?SzlVU0VQNlpQUE9GVXVUanQzdlpjcFRKbHBUd3BLdkpjM3lNc3dvalViVkpM?=
- =?utf-8?B?a0JvcytVd3FzcU16S1d5SENxaGtTbTFQMjB5Z1ZWQTlOaHR2VFlNb3dGQkVl?=
- =?utf-8?B?WEZhTU9MdUx1NU1YNnhWTnA1K09PbFkrcS9QTFJhWWlORmR6dTUrOEdObFRB?=
- =?utf-8?B?T0hQQ2ppai80RDN4R0JaU2Z5Z1pETW03M3V2ZXExK2kwRTdnYWhBNWdiTlg3?=
- =?utf-8?B?RDFoc1lwVDRnVk95bGNPcSswR2tsVkVHRFNMNlJSdU9QSUpvZURtUG5oaUxk?=
- =?utf-8?B?SDJvS2NCZFVMQmxzRFVBU3FYdlRoWStMVmpVbzRDK1p2aCtpTS84TFIwZTkr?=
- =?utf-8?B?QksrK2xCL0JUS0ZvQXFoekRWa2IycG40THEwY1BYbVlmbU13Nk1XWG9OcDli?=
- =?utf-8?B?cU1qdXIzNGFLNkc5aTkzV1NGamk4bXJ1cm5wa3EwdFY0dlhwd21PaFB4cW5o?=
- =?utf-8?B?bnVQZitaREc0bm1nZEMvNGpDK3hOZk1zdDNjbnM3TkJzVzRIMlRqeTZkL0N5?=
- =?utf-8?B?U3RYekw1aXVYWjRocUJZRjhxWkJIZkVYOWk4Z2tYYkZpcERUdG5EZEpGRHJH?=
- =?utf-8?B?bGRhZnlTQzA0Lzlnc2duUTFqR2Z3M0pJSW9MUkpnanZvVjU0TXVJYUFFekR1?=
- =?utf-8?B?YUFlcWNnWTJOYk1GbnRjblFyTnlCYWM2aERjNmNaUnFRbDU3ZlJoMVBzMkZI?=
- =?utf-8?B?ejZiT3ZEZkkyU0ZOaXp2b1dWNTRlTW43MDZ2TEdiU1FVWlZwVjJ4cHIxQWND?=
- =?utf-8?B?Ynpsd2hubzVpcHVWa0RoU0d2ME9xZnowa1RWWU11UGNzM3EwR3FlVU5PRWd4?=
- =?utf-8?B?elh3NjRhd3JvaVZMTHJRdGZkNTlXbkd3d2xEVFNtU2FLY1RLYkh2V2psTzFZ?=
- =?utf-8?B?aFMzMGx5NzVwSEFudzUxMmo3R01LRDlGOGlxOXFjL3BnMElGeCtkMG51TWht?=
- =?utf-8?B?a253Z2ZDRngxeWxSUGpxVWw4WFdNL0tYUzF0Z2xJY29FdkYwNjBCL0Y5T1Bl?=
- =?utf-8?B?cVgxZzdFVFk3VXdlNVNWdytxYWNKNmFYMGgzRGJFaDh3WWg1aStLOGpORnla?=
- =?utf-8?B?VUtnSmlzRWl3RXFJZXRvM3ZSTkcwS0JKeXVmL0VkRzJnNXkrUFIvWCszWkpx?=
- =?utf-8?B?Z1hrZStOTWxYbUZCOU9zVFVWOG1QZXBPK3pRSVN1WHlhbzJ2NzZtaDdXeDdE?=
- =?utf-8?B?anlZNUJ3MmxrZnhCMGJIUU51VGNuZ244a1IyN21XVzBXUXY0aVJ6K2Rpd1Zx?=
- =?utf-8?B?blp4WDI1RWVwREVPNHBxRzkzSWFTTUIrMTJod2E0Uk1adGxtWXBXTmFwckQw?=
- =?utf-8?B?QVJPUG1QT0xTTDc2ZDJCTko1RzNMWS9tR0JMVzB6VXhGVHQzZm5nbWR2bTRj?=
- =?utf-8?B?Zk4vbFdsRm05N2RmMms3Yk9EeEZnMXBxdmJsVEZyZHZnWUtoU2JLbzZxcnJV?=
- =?utf-8?B?R3lXcFFsZDQ2MlA2Vk1lS2l3dG5FN1RCV1V2M0xZd0xCVS82MGxrN3hNTEky?=
- =?utf-8?B?aXdubXZYRXBydzRVNVNFMUo2RXpUTGk5RnNUcGdVdVlKWTd4b2Y3R3RPQ2tn?=
- =?utf-8?B?RmluVmFZNm96OWt2ZENNUk0wQVJkQk9IM3BjdllFYWNIU2RNY2IyVFZWVU8w?=
- =?utf-8?B?Rmc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <07109190CBB17D458CD142E562AA9964@apcprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC4C7209F4C;
+	Fri, 21 Feb 2025 11:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740137982; cv=none; b=X59zClbo4whXaNFPr6GYPCGqN9k39G3Et+svWGIZIbOWJ8pVedZ4jjgVVuhjh9RbGV0wowhsMxhLg6YqonD7KiSTfWi8GFaIjvnobkibsc3niILLgO4Lh4uAEDq/Sh9QIiLKmc0R+szsVu01QZjEqT35ejrhn5mZ4p//nVrQ/k4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740137982; c=relaxed/simple;
+	bh=WVW/Db9zIDxlm5OikfMD3GGlk7oxbY2o81BysOmR3PU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WfBlRT4Q4Tcrv6Ora4znkidT/l28D+m1zkMifOH5q6u0gTtVEE92YyHDxntUPrl3HmsXs7AhBY1B8GJ87TOfio/gDXLLEjKiAbLEZgxKP5/DIJr2Rq5TV9d4rPqbgSrynjGhA7jTSmy+di9sbOoYBTB516CnIzsabnyWkWbVPSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C597E1516;
+	Fri, 21 Feb 2025 03:39:56 -0800 (PST)
+Received: from [10.57.36.38] (unknown [10.57.36.38])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D3F393F59E;
+	Fri, 21 Feb 2025 03:39:35 -0800 (PST)
+Message-ID: <35d1a923-4e8e-4fe2-bf4a-0b78b1d511e3@arm.com>
+Date: Fri, 21 Feb 2025 11:39:34 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR03MB7810.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ad93e32-e59a-4b83-9bd8-08dd526c5b60
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Feb 2025 11:39:09.9231
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lDHnohoAcLtUn8m6s3H8XBQdNsb7+QYsJ3fLm/CVtnFE0I9oXQNAtAZQNXWH1ZbfCSy80FWby+bjk4KkBM9VRHM4OFdCuvru/Ev1OC+YX3w=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR03MB7299
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 6/7] Coresight: Add Coresight TMC Control Unit driver
+Content-Language: en-GB
+To: Jie Gan <quic_jiegan@quicinc.com>, Mike Leach <mike.leach@linaro.org>,
+ James Clark <james.clark@linaro.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: Tingwei Zhang <quic_tingweiz@quicinc.com>,
+ Jinlong Mao <quic_jinlmao@quicinc.com>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com
+References: <20250217093024.1133096-1-quic_jiegan@quicinc.com>
+ <20250217093024.1133096-7-quic_jiegan@quicinc.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20250217093024.1133096-7-quic_jiegan@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-T24gVGh1LCAyMDI1LTAyLTIwIGF0IDE2OjU4ICswMTAwLCBBbmdlbG9HaW9hY2NoaW5vIERlbCBS
-ZWdubyB3cm90ZToKPiAKPiAKCltzbmlwXQoKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-dGNwYyB7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjb21w
-YXRpYmxlID0gIm1lZGlhdGVrLG10NjM2MC10Y3BjIjsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIGludGVycnVwdHMtZXh0ZW5kZWQgPSA8JnBpbyAxNwo+ID4g
-SVJRX1RZUEVfTEVWRUxfTE9XPjsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIGludGVycnVwdC1uYW1lcyA9ICJQRF9JUlFCIjsKPiA+ICsKPiA+ICvCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbm5lY3RvciB7Cj4gPiArwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY29tcGF0
-aWJsZSA9ICJ1c2ItYy1jb25uZWN0b3IiOwo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGxhYmVsID0gIlVTQi1DIjsKPiA+ICvCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkYXRh
-LXJvbGUgPSAiZHVhbCI7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgb3Atc2luay1taWNyb3dhdHQgPSA8MTAwMDAwMDA+Owo+ID4g
-K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IHBvd2VyLXJvbGUgPSAiZHVhbCI7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdHJ5LXBvd2VyLXJvbGUgPSAic2luayI7Cj4gCj4g
-V291bGQgYmUgYXBwcmVjaWF0ZWQgaWYgeW91IGNvdWxkIGFsc28gY29tcGxldGUgdGhlIG5vZGUg
-YnkgYWRkaW5nCj4gdGhlIHBkLXJldmlzaW9uCj4gcHJvcGVydHksIGVuYWJsaW5nIGZ1bGwgVVNC
-QyBQb3dlciBEZWxpdmVyeSBmb3IgdGhlIE1UNjM2MCBQTUlDLgo+IAoKV2VsbCwgSSBoYXZlIG5v
-IGlkZWEgYWJvdXQgdGhlIHBkLXJldmlzaW9uIG9mIE1UNjM2MC4KSSBjb3VsZCBmb3VuZCBNVDYz
-NjAgc3VwcG9ydHMgUEQgMy4wIGFjY29yZGluZyB0byB0aGUgZGF0YXNoZWV0LApob3dldmVyLCBJ
-IGhhdmUgbm8gaWRlYSBhYm91dCB0aGUgb3RoZXIgZmllbGRzIGxpa2UgbWFqb3IgYW5kIG1pbm9y
-CnZhbHVlcy4gRGVhciBDaGlZdWFuLCBjb3VsZCB5b3UgaGVscCB0byBwcm92aWRlIHRoZSB2YWx1
-ZSBvZiBwZC0KcmV2aXNpb24/IFRoZSBwcm9wZXJ0eSBoYXMgYmVlbiBkZWZpbmVkIGluIApEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY29ubmVjdG9yL3VzYi1jb25uZWN0b3IueWFt
-bC4KCgo+IFNhbWUgZm9yIHRoZSBhbHRlcm5hdGUgbW9kZXMsIGFkZGluZyB0aGUgRFAgYWx0IG1v
-ZGUgaXMgYSBtYXR0ZXIgb2YKPiBzZWNvbmRzLi4uIGFuZAo+IHdlbGwsIGl0IGRvZXMgc291bmQg
-YSBiaXQgd2VpcmQgdG8gYWRkIGFsdGVybmF0ZSBtb2RlcyB3aXRob3V0IGEKPiBtdXguLi4gc28s
-IGluIHRoaXMKPiBjYXNlIHlvdSBjYW4gY2hvb3NlIGVpdGhlciB0bzoKPiDCoCAtIFNxdWFzaCB0
-aGUgdHdvIGNvbW1pdHMgKHRjcGMsIGl0NTIwNSkgYW5kIGRvIGV2ZXJ5dGhpbmcgaW4gb25lOwo+
-IG9yCj4gwqAgLSBBZGQgdGhlIGFsdGVybmF0ZSBtb2RlIG5vZGUgdG8gdGhlIGNvbm5lY3RvciBp
-biB0aGUgY29tbWl0Cj4gaW50cm9kdWNpbmcgdGhlIG11eC4KPiAKPiBFaXRoZXIgb2YgdGhlIHR3
-byBvcHRpb25zIGlzIG9rYXkgZm9yIG1lLCBzbyB5b3UgY2hvb3NlLgo+ID4gCgpXZWxsLCBJIGNv
-dWxkIHNxdWFzaCB0aGUgdHdvIGNvbW1pdHMgdG9nZXRoZXIgYW5kIGFkZGluZyB0aGUgRFAgYWx0
-Cm1vZGUgdmFsdWVzIGluIG5leHQgdmVyc2lvbi4KCj4gPiAKPiA+IMKgICZzc3VzYjAgewo+ID4g
-K8KgwqDCoMKgIGRyX21vZGUgPSAib3RnIjsKPiA+ICvCoMKgwqDCoCBwaW5jdHJsLW5hbWVzID0g
-ImRlZmF1bHQiOwo+ID4gK8KgwqDCoMKgIHBpbmN0cmwtMCA9IDwmdTNfcDBfdmJ1cz47Cj4gPiAr
-wqDCoMKgwqAgcm9sZS1zd2l0Y2gtZGVmYXVsdC1tb2RlID0gInBlcmlwaGVyYWwiOwo+IAo+IFRo
-ZXJlJ3Mgbm8gbmVlZCBmb3IgYSBkZWZhdWx0IG1vZGUgaGVyZSwgbHVja2lseSB0aGUgTWVkaWFU
-ZWsgTVRVMwo+IGNvbnRyb2xsZXJzCj4gZG9uJ3QgbmVlZCB0aGF0IGZvciByZWFsIDotKQoKT2th
-eSwgd2lsbCBkcm9wIGl0IHRoYW4uCgoKVGhhbmtzLgpNYWNwYXVsIExpbgoKPiBEcm9wIHBsZWFz
-ZS4KPiAKPiBDaGVlcnMsCj4gQW5nZWxvCj4gCj4gCgo=
+On 17/02/2025 09:30, Jie Gan wrote:
+> The Coresight TMC Control Unit hosts miscellaneous configuration registers
+> which control various features related to TMC ETR sink.
+> 
+> Based on the trace ID, which is programmed in the related CTCU ATID
+> register of a specific ETR, trace data with that trace ID gets into
+> the ETR buffer, while other trace data gets dropped.
+> 
+> Enabling source device sets one bit of the ATID register based on
+> source device's trace ID.
+> Disabling source device resets the bit according to the source
+> device's trace ID.
+> 
+> Reviewed-by: James Clark <james.clark@linaro.org>
+> Signed-off-by: Jie Gan <quic_jiegan@quicinc.com>
+> ---
+>   drivers/hwtracing/coresight/Kconfig          |  12 +
+>   drivers/hwtracing/coresight/Makefile         |   1 +
+>   drivers/hwtracing/coresight/coresight-ctcu.c | 268 +++++++++++++++++++
+>   drivers/hwtracing/coresight/coresight-ctcu.h |  24 ++
+>   include/linux/coresight.h                    |   3 +-
+>   5 files changed, 307 insertions(+), 1 deletion(-)
+>   create mode 100644 drivers/hwtracing/coresight/coresight-ctcu.c
+>   create mode 100644 drivers/hwtracing/coresight/coresight-ctcu.h
+> 
+> diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
+> index 06f0a7594169..ecd7086a5b83 100644
+> --- a/drivers/hwtracing/coresight/Kconfig
+> +++ b/drivers/hwtracing/coresight/Kconfig
+> @@ -133,6 +133,18 @@ config CORESIGHT_STM
+>   	  To compile this driver as a module, choose M here: the
+>   	  module will be called coresight-stm.
+>   
+> +config CORESIGHT_CTCU
+> +	tristate "CoreSight TMC Control Unit driver"
+> +	depends on CORESIGHT_LINK_AND_SINK_TMC
+> +	help
+> +	  This driver provides support for CoreSight TMC Control Unit
+> +	  that hosts miscellaneous configuration registers. This is
+> +	  primarily used for controlling the behaviors of the TMC
+> +	  ETR device.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called coresight-ctcu.
+> +
+>   config CORESIGHT_CPU_DEBUG
+>   	tristate "CoreSight CPU Debug driver"
+>   	depends on ARM || ARM64
+> diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
+> index 4ba478211b31..1b7869910a12 100644
+> --- a/drivers/hwtracing/coresight/Makefile
+> +++ b/drivers/hwtracing/coresight/Makefile
+> @@ -51,3 +51,4 @@ coresight-cti-y := coresight-cti-core.o	coresight-cti-platform.o \
+>   		   coresight-cti-sysfs.o
+>   obj-$(CONFIG_ULTRASOC_SMB) += ultrasoc-smb.o
+>   obj-$(CONFIG_CORESIGHT_DUMMY) += coresight-dummy.o
+> +obj-$(CONFIG_CORESIGHT_CTCU) += coresight-ctcu.o
+> diff --git a/drivers/hwtracing/coresight/coresight-ctcu.c b/drivers/hwtracing/coresight/coresight-ctcu.c
+> new file mode 100644
+> index 000000000000..e1460a627c4d
+> --- /dev/null
+> +++ b/drivers/hwtracing/coresight/coresight-ctcu.c
+> @@ -0,0 +1,268 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2024-2025 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/coresight.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/kernel.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +
+> +#include "coresight-ctcu.h"
+> +#include "coresight-priv.h"
+> +
+> +DEFINE_CORESIGHT_DEVLIST(ctcu_devs, "ctcu");
+> +
+> +#define ctcu_writel(drvdata, val, offset)	__raw_writel((val), drvdata->base + offset)
+> +#define ctcu_readl(drvdata, offset)		__raw_readl(drvdata->base + offset)
+> +
+> +/*
+> + * The TMC Coresight Control Unit uses four ATID registers to control the data
+> + * filter function based on the trace ID for each TMC ETR sink. The length of
+> + * each ATID register is 32 bits. Therefore, the ETR has a related field in
+> + * CTCU that is 128 bits long. Each trace ID is represented by one bit in that
+> + * filed.
+> + * e.g. ETR0ATID0 layout, set bit 5 for traceid 5
+> + *                                           bit5
+> + * ------------------------------------------------------
+> + * |   |28|   |24|   |20|   |16|   |12|   |8|  1|4|   |0|
+> + * ------------------------------------------------------
+> + *
+> + * e.g. ETR0:
+> + * 127                     0 from ATID_offset for ETR0ATID0
+> + * -------------------------
+> + * |ATID3|ATID2|ATID1|ATID0|
+> + */
+> +#define CTCU_ATID_REG_OFFSET(traceid, atid_offset) \
+> +		((traceid / 32) * 4 + atid_offset)
+> +
+> +#define CTCU_ATID_REG_BIT(traceid)	(traceid % 32)
+> +#define CTCU_ATID_REG_SIZE		0x10
+> +
+> +struct ctcu_atid_config {
+> +	const u32 atid_offset;
+> +	const u32 port_num;
+> +};
+> +
+> +struct ctcu_config {
+> +	const struct ctcu_atid_config *atid_config;
+> +	int num_atid_config;
+> +};
+> +
+> +static const struct ctcu_atid_config sa8775p_atid_cfgs[] = {
+> +	{0xf8,  0},
+> +	{0x108, 1},
+> +};
+> +
+> +static const struct ctcu_config sa8775p_cfgs = {
+> +	.atid_config		= sa8775p_atid_cfgs,
+> +	.num_atid_config	= ARRAY_SIZE(sa8775p_atid_cfgs),
+> +};
+> +
+> +static void ctcu_program_atid_register(struct ctcu_drvdata *drvdata, u32 reg_offset,
+> +				       u8 bit, bool enable)
+> +{
+> +	u32 val;
+> +
+> +	CS_UNLOCK(drvdata->base);
+> +	val = ctcu_readl(drvdata, reg_offset);
+> +	val = enable? (val | BIT(bit)) : (val & ~BIT(bit));
+
+minor nit: If possible do not use the ternary operator like this. It is 
+much better readable as:
+
+	if (enable)
+		val |= BIT(bit);
+	else
+		val &= ~BIT(bit);
+
+> +	ctcu_writel(drvdata, val, reg_offset);
+> +	CS_LOCK(drvdata->base);
+> +}
+> +
+> +/*
+> + * __ctcu_set_etr_traceid: Set bit in the ATID register based on trace ID when enable is true.
+> + * Reset the bit of the ATID register based on trace ID when enable is false.
+> + *
+> + * @csdev:	coresight_device struct related to the device
+> + * @traceid:	trace ID of the source tracer.
+> + * @port_num:	port number from TMC ETR sink.
+> + * @enable:	True for set bit and false for reset bit.
+> + *
+> + * Returns 0 indicates success. Non-zero result means failure.
+> + */
+> +static int __ctcu_set_etr_traceid(struct coresight_device *csdev, u8 traceid, int port_num,
+> +				  bool enable)
+> +{
+> +	struct ctcu_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+> +	u32 atid_offset, reg_offset;
+> +	u8 refcnt, bit;
+> +
+> +	atid_offset = drvdata->atid_offset[port_num];
+> +	if (atid_offset == 0)
+> +		return -EINVAL;
+> +
+> +	bit = CTCU_ATID_REG_BIT(traceid);
+> +	reg_offset = CTCU_ATID_REG_OFFSET(traceid, atid_offset);
+> +	if (reg_offset - atid_offset > CTCU_ATID_REG_SIZE)
+> +		return -EINVAL;
+> +
+> +	guard(raw_spinlock_irqsave)(&drvdata->spin_lock);
+> +	refcnt = drvdata->traceid_refcnt[port_num][traceid];
+> +	/* Only program the atid register when the refcnt value is 0 or 1 */
+
+A normal trace source won't be enabled more than once (e.g., ETM). The 
+only odd one out is the STM, which may be driven by multiple agents.
+So this refcounting looks necessary.
+
+> +	if (enable && (++refcnt == 1))
+> +		ctcu_program_atid_register(drvdata, reg_offset, bit, enable);
+> +	else if (!enable && (--refcnt == 0))
+> +		ctcu_program_atid_register(drvdata, reg_offset, bit, enable);
+
+minor nit:
+
+	if ((enable && !refcount++) ||
+	    (!enable && --refcount))
+		ctcu_program_atid_register(drvdata, reg_offset, bit, enable);
+
+
+Also, see my comment the bottom for "refcount" being u8 .
+
+
+> +
+> +	drvdata->traceid_refcnt[port_num][traceid] = refcnt;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ctcu_get_active_port(struct coresight_device *sink, struct coresight_device *helper)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < sink->pdata->nr_outconns; ++i) {
+> +		if (sink->pdata->out_conns[i]->dest_dev)
+> +			return sink->pdata->out_conns[i]->dest_port;
+
+Don't we need to make sure it matches the helper ? What if there are 
+multiple helpers ? e.g, a CATU connected to the ETR and CTCU ?
+Or even try the opposite ? i.e. search the helper and find the port
+matching the sink ?
+
+	struct coresight_platform_data *pdata = helper->pdata;
+
+	for (i = 0; i < pdata->nr_inconns; ++i)
+		if (pdata->in_conns[i]->dest_dev == sink)
+			return pdata->in_conns[i]->src_port;
+
+Not sure if that works with the helper device connection, James ?
+
+
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int ctcu_set_etr_traceid(struct coresight_device *csdev, struct coresight_path *path,
+> +				bool enable)
+> +{
+> +	struct coresight_device *sink = coresight_get_sink(path);
+> +	u8 traceid = path->trace_id;
+> +	int port_num;
+> +
+> +	if ((sink == NULL) || !IS_VALID_CS_TRACE_ID(traceid)) {
+> +		dev_err(&csdev->dev, "Invalid parameters\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	port_num = ctcu_get_active_port(sink, csdev);
+> +	if (port_num < 0)
+> +		return -EINVAL;
+> +
+> +	dev_dbg(&csdev->dev, "traceid is %d\n", traceid);
+> +
+> +	return __ctcu_set_etr_traceid(csdev, traceid, port_num, enable);
+> +}
+> +
+> +static int ctcu_enable(struct coresight_device *csdev, enum cs_mode mode,
+> +		       void *data)
+> +{
+> +	struct coresight_path *path = (struct coresight_path *)data;
+> +
+> +	return ctcu_set_etr_traceid(csdev, path, true);
+> +}
+> +
+> +static int ctcu_disable(struct coresight_device *csdev, void *data)
+> +{
+> +	struct coresight_path *path = (struct coresight_path *)data;
+> +
+> +	return ctcu_set_etr_traceid(csdev, path, false);
+> +}
+> +
+> +static const struct coresight_ops_helper ctcu_helper_ops = {
+> +	.enable = ctcu_enable,
+> +	.disable = ctcu_disable,
+> +};
+> +
+> +static const struct coresight_ops ctcu_ops = {
+> +	.helper_ops = &ctcu_helper_ops,
+> +};
+> +
+> +static int ctcu_probe(struct platform_device *pdev)
+> +{
+> +	int i;
+> +	void __iomem *base;
+> +	struct device *dev = &pdev->dev;
+> +	struct coresight_platform_data *pdata;
+> +	struct ctcu_drvdata *drvdata;
+> +	struct coresight_desc desc = { 0 };
+> +	const struct ctcu_config *cfgs;
+> +	const struct ctcu_atid_config *atid_cfg;
+> +
+> +	desc.name = coresight_alloc_device_name(&ctcu_devs, dev);
+> +	if (!desc.name)
+> +		return -ENOMEM;
+> +
+> +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> +	if (!drvdata)
+> +		return -ENOMEM;
+> +
+> +	pdata = coresight_get_platform_data(dev);
+> +	if (IS_ERR(pdata))
+> +		return PTR_ERR(pdata);
+> +	dev->platform_data = pdata;
+> +
+> +	base = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
+> +	if (!base)
+> +		return -ENOMEM;
+> +
+> +	drvdata->apb_clk = coresight_get_enable_apb_pclk(dev);
+> +	if (IS_ERR(drvdata->apb_clk))
+> +		return -ENODEV;
+> +
+> +	cfgs = of_device_get_match_data(dev);
+> +	if (cfgs) {
+> +		if (cfgs->num_atid_config <= ATID_MAX_NUM) {
+> +			for (i = 0; i < cfgs->num_atid_config; i++) {
+> +				atid_cfg = &cfgs->atid_config[i];
+> +				drvdata->atid_offset[i] = atid_cfg->atid_offset;
+> +			}
+> +		}
+> +	}
+> +
+> +	drvdata->base = base;
+> +	drvdata->dev = dev;
+> +	platform_set_drvdata(pdev, drvdata);
+> +
+> +	desc.type = CORESIGHT_DEV_TYPE_HELPER;
+> +	desc.subtype.helper_subtype = CORESIGHT_DEV_SUBTYPE_HELPER_CTCU;
+> +	desc.pdata = pdata;
+> +	desc.dev = dev;
+> +	desc.ops = &ctcu_ops;
+
+Please set the desc.access
+
+	desc.access = CSDEV_ACCESS_IOMEM(drvdata->base);
+
+> +
+> +	drvdata->csdev = coresight_register(&desc);
+> +	if (IS_ERR(drvdata->csdev)) {
+> +		if (!IS_ERR_OR_NULL(drvdata->apb_clk))
+> +			clk_put(drvdata->apb_clk);
+> +
+> +		return PTR_ERR(drvdata->csdev);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void ctcu_remove(struct platform_device *pdev)
+> +{
+> +	struct ctcu_drvdata *drvdata = platform_get_drvdata(pdev);
+> +
+> +	coresight_unregister(drvdata->csdev);
+> +	if (!IS_ERR_OR_NULL(drvdata->apb_clk))
+> +		clk_put(drvdata->apb_clk);
+
+Why isn't the clock get/put at runtime via pm_runtime calls ?
+See coresight-replicator driver for e.g.
+
+
+> +}
+> +
+> +static const struct of_device_id ctcu_match[] = {
+> +	{.compatible = "qcom,sa8775p-ctcu", .data = &sa8775p_cfgs},
+> +	{}
+> +};
+> +
+> +static struct platform_driver ctcu_driver = {
+> +	.probe          = ctcu_probe,
+> +	.remove         = ctcu_remove,
+> +	.driver         = {
+> +		.name   = "coresight-ctcu",
+> +		.of_match_table = ctcu_match,
+> +		.suppress_bind_attrs = true,
+> +	},
+> +};
+> +module_platform_driver(ctcu_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("CoreSight TMC Control Unit driver");
+> diff --git a/drivers/hwtracing/coresight/coresight-ctcu.h b/drivers/hwtracing/coresight/coresight-ctcu.h
+> new file mode 100644
+> index 000000000000..9890c3da5ec8
+> --- /dev/null
+> +++ b/drivers/hwtracing/coresight/coresight-ctcu.h
+> @@ -0,0 +1,24 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2024-2025 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +#ifndef _CORESIGHT_CTCU_H
+> +#define _CORESIGHT_CTCU_H
+> +#include "coresight-trace-id.h"
+> +
+> +/* Maximum number of supported sink devices for a single CTCU in current projects. */
+> +#define ATID_MAX_NUM 	2
+> +
+> +struct ctcu_drvdata {
+> +	void __iomem		*base;
+> +	struct clk		*apb_clk;
+> +	phys_addr_t		pbase;
+
+Where is this used ?
+
+> +	struct device		*dev;
+> +	struct coresight_device	*csdev;
+> +	raw_spinlock_t		spin_lock;
+> +	u32			atid_offset[ATID_MAX_NUM];
+> +	/* refcnt for each traceid of each sink */
+> +	u8			traceid_refcnt[ATID_MAX_NUM][CORESIGHT_TRACE_ID_RES_TOP];
+
+Hopefully u8 is sufficient, but is it ? Why don't we check this in 
+"enable" path to see if we are going to overflow ?
+
+
+
+> +};
+> +#endif
+> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+> index 03d833a15726..55bb825d509e 100644
+> --- a/include/linux/coresight.h
+> +++ b/include/linux/coresight.h
+> @@ -71,7 +71,8 @@ enum coresight_dev_subtype_source {
+>   
+>   enum coresight_dev_subtype_helper {
+>   	CORESIGHT_DEV_SUBTYPE_HELPER_CATU,
+> -	CORESIGHT_DEV_SUBTYPE_HELPER_ECT_CTI
+> +	CORESIGHT_DEV_SUBTYPE_HELPER_ECT_CTI,
+> +	CORESIGHT_DEV_SUBTYPE_HELPER_CTCU,
+>   };
+>   
+>   /**
+
