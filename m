@@ -1,265 +1,189 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BF6720FAAD;
-	Fri, 21 Feb 2025 15:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B74B9211297
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 15:24:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740151435; cv=none; b=a8DDof2hBLeH8nTzEkmLdRs5Mb192OtIFaALVwmhmb88MvVP8XluQWS3u/HNhxKBVB6Ejk1jbIBSLNOtH/HGme6or3Qj8mtEFxoSZX9M7vTFZMikTv0KuGDAR769ksthla+0GmIH8F34dzrJwNXN46YgSi5ad48ZuqdLoDDrwBM=
+	t=1740151493; cv=none; b=IBqOR/bcaX9ApaJjP28ZO0TQKGjRO74CsoUW4HCLOjL+dFn9PSXMtCIzVauYC2HQ4mJZTrHjpR1wXQ9+qZ58tYDcIdr00S+DhHEDPldYYjpEBAjdzV5+bxggp0+CVmWv9igLdjT3di/ri+516XaF8Vg8mNmMPVWr46NmxNK7kzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740151435; c=relaxed/simple;
-	bh=uQxevZXpFMojCyH7DESAb1y03ZWoLwNE7lYXXVKgIK4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Imy9n7CSP62k7mJXfdm4JOpQMufDzu1Bd6V92ggQUvznC1JmYNGAwJSXXMEFcjdA+l5rFF4vJT/GXSQpvtvKVzeAHr5ka9r7ILf71MdQTIaRAup6KGc5k9pBNZgmLDSD5CVMF1zaCz+OroUaa1rb1zGOP/YIAzz03H7aVDuGBpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56E2D168F;
-	Fri, 21 Feb 2025 07:24:09 -0800 (PST)
-Received: from [10.57.36.60] (unknown [10.57.36.60])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B05253F59E;
-	Fri, 21 Feb 2025 07:23:46 -0800 (PST)
-Message-ID: <b9b4bfe3-9d2d-4009-b3d4-e179e8bccd9a@arm.com>
-Date: Fri, 21 Feb 2025 15:23:22 +0000
+	s=arc-20240116; t=1740151493; c=relaxed/simple;
+	bh=WK1lZZTa1x1pAgT3SVfcXVsjeamzVsyIDq5PHkT0TDo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j5zf7RxtKvWyfoupcVDyBUy/EXtbNWwUMvjuqJw5VnLYvfFl/1vzLQcV3E+Tq8U40VemAn6YAdB32fpWmcLM0C0Zaaf44P1zZVMlkZ06GbimdxcUxWzcpW8Za9zHDV6JO4kgkqXpzvQngC/R8HLLMYD5UBPORkKNLbS4KnJrvuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=aYZN3qJI; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="aYZN3qJI"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43996e95114so14900285e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 07:24:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1740151490; x=1740756290; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CT2C4f9jm5PWW5vBDYC1RD3DaXN0lCMpCnB9dLdCgXg=;
+        b=aYZN3qJI2qLv+njQmSse74KLKHfts3EznSBdbrexaXEJa2wo6SXQVhb1Yyu+hEFTNJ
+         6SWmwgjphq1RCMA8PBT+YfygV22hCtN7+3oQn7fToHPxkJOvpwMnHRpZ7HIIo/5xp5ee
+         xjm5z6DovxvdGpw42NrMUA1GlosmUK8jom99w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740151490; x=1740756290;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CT2C4f9jm5PWW5vBDYC1RD3DaXN0lCMpCnB9dLdCgXg=;
+        b=SRKSpx23XCmzuXrFGqJbDlpYzD25vxQ/FogBHCjpQbZJOzn3/ITDflgbxtBzSGR3M+
+         sXL3dCLK72prTMgeE2zI+4b2tfFpnEzFIEW1XgjqGdo/E+lHKmL3jmSLptv2OdwrmN71
+         DpHAVhrqFdxiSsytMmPZykaNzcfaxbSyfU1PI/b67sitE3dGYLrL0tmL3+k++TOsV3qQ
+         YbzPwbM1S2cd2J5BXOpvLSTvcbtZbYAzoLHg5D12EqZrPVuIMZDbZITe3v2n5XfIHi5r
+         6+TnOhJt3VdZYTSX0DytzYUSR95/Et1ZZr2bM50/L/2tMjyMgbooxXnJ01HCpHvIvjL3
+         hQ1A==
+X-Forwarded-Encrypted: i=1; AJvYcCU+J2bOXBehsARYCF/kdCdRsOaH75EeXNC3dXId8mTFjhVCNOkkpPk4IW/zDTE/DKUo2YLglaFKdDIB3CU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuZXRIbUhbq8kcPIMQbprM0hgmpvhFU9P9q+GrcD81IcCgdp8L
+	19yrbTYhx/xIRTSkP3Udqg9QZlYgXsC2Wce8TaxGWP4rVPTFquuxivTGwE5VR7Q=
+X-Gm-Gg: ASbGncsIf7yaTixwlqVRHuEO83rLYdfNtL8kHFQrXoX/x8ethSzvmOc9xdwQ/JZPara
+	R1c6cT21iuFBpPWuK+Q0YxxW/U5Dj+gI+fmRoAzJSdDHsFpHyS4wcWjRVywDmpNn3RmP4XUwVLW
+	P0xGBgLr75+M2Krj44jgX+xTdpnuxb0n7VZ/fInRauy6d0m29NZAEKb8cCauWTcEU9rCJaQOl4O
+	306n4sp0CTtVkgg0CrONkEv9VuvEDiA09WaPPkuHmTWLqyj+LggtcZdfLAiEQKnIz0Kn7IbiNW4
+	du0yeewaYqFD4L8ZwH2jfJg0kWeXTzkviFEhPw==
+X-Google-Smtp-Source: AGHT+IEtmkzFkOqaG3XvlyBf1nNbqOpqNG9470mVBupdomsnEpdGJKAmORNNEt1KQvh271XfF3xsZA==
+X-Received: by 2002:a05:600c:5487:b0:439:9946:af72 with SMTP id 5b1f17b1804b1-439aeae026amr27674585e9.3.1740151489706;
+        Fri, 21 Feb 2025 07:24:49 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b02ce735sm20492365e9.3.2025.02.21.07.24.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 07:24:49 -0800 (PST)
+Date: Fri, 21 Feb 2025 16:24:47 +0100
+From: Simona Vetter <simona.vetter@ffwll.ch>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	rust-for-linux <rust-for-linux@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org,
+	ksummit@lists.linux.dev
+Subject: Re: Rust kernel policy
+Message-ID: <Z7iav4U7k9AJDzay@phenom.ffwll.local>
+Mail-Followup-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	rust-for-linux <rust-for-linux@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org,
+	ksummit@lists.linux.dev
+References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
+ <Z7SwcnUzjZYfuJ4-@infradead.org>
+ <CANiq72myjaA3Yyw_yyJ+uvUrZQcSLY_jNp65iKH8Y5xGY5tXPQ@mail.gmail.com>
+ <Z7bO1jT2onZFZwgH@infradead.org>
+ <CANiq72mM3tVmT6MQZqpzGEW4hJABVHRiODL0SnP2u+0ES4=pjw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 7/7] iommu: Turn iova_cookie to dma-iommu private
- pointer
-To: Jason Gunthorpe <jgg@nvidia.com>, Nicolin Chen <nicolinc@nvidia.com>
-Cc: kevin.tian@intel.com, tglx@linutronix.de, maz@kernel.org,
- joro@8bytes.org, will@kernel.org, shuah@kernel.org, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kselftest@vger.kernel.org, eric.auger@redhat.com,
- baolu.lu@linux.intel.com, yi.l.liu@intel.com, yury.norov@gmail.com,
- jacob.pan@linux.microsoft.com, patches@lists.linux.dev
-References: <cover.1740014950.git.nicolinc@nvidia.com>
- <949e28875e01646feac5c4951b63723579d29b36.1740014950.git.nicolinc@nvidia.com>
- <20250221143959.GA272220@nvidia.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250221143959.GA272220@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72mM3tVmT6MQZqpzGEW4hJABVHRiODL0SnP2u+0ES4=pjw@mail.gmail.com>
+X-Operating-System: Linux phenom 6.12.11-amd64
 
-On 2025-02-21 2:39 pm, Jason Gunthorpe wrote:
-> On Wed, Feb 19, 2025 at 05:31:42PM -0800, Nicolin Chen wrote:
->> Now that iommufd does not rely on dma-iommu.c for any purpose. We can
->> combine the dma-iommu.c iova_cookie and the iommufd_hwpt under the same
->> union. This union is effectively 'owner data' and can be used by the
->> entity that allocated the domain. Note that legacy vfio type1 flows
->> continue to use dma-iommu.c for sw_msi and still need iova_cookie.
->>
->> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
->> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
->> ---
->>   include/linux/iommu.h | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
->> index e93d2e918599..99dd72998cb7 100644
->> --- a/include/linux/iommu.h
->> +++ b/include/linux/iommu.h
->> @@ -216,7 +216,6 @@ struct iommu_domain {
->>   	const struct iommu_ops *owner; /* Whose domain_alloc we came from */
->>   	unsigned long pgsize_bitmap;	/* Bitmap of page sizes in use */
->>   	struct iommu_domain_geometry geometry;
->> -	struct iommu_dma_cookie *iova_cookie;
->>   	int (*iopf_handler)(struct iopf_group *group);
->>   
->>   #if IS_ENABLED(CONFIG_IRQ_MSI_IOMMU)
->> @@ -225,6 +224,7 @@ struct iommu_domain {
->>   #endif
->>   
->>   	union { /* Pointer usable by owner of the domain */
->> +		struct iommu_dma_cookie *iova_cookie; /* dma-iommu */
->>   		struct iommufd_hw_pagetable *iommufd_hwpt; /* iommufd */
->>   	};
-> 
-> Ugh, there is a problem here:
-> 
-> void iommu_domain_free(struct iommu_domain *domain)
-> {
-> 	if (domain->type == IOMMU_DOMAIN_SVA)
-> 		mmdrop(domain->mm);
-> 	iommu_put_dma_cookie(domain);
-> 
-> It calls into dma-iommu for all domain types
-> 
-> And if !CONFIG_IRQ_MSI_IOMMU then this isn't possible to protect it
-> against iommufd owning the cookie union:
-> 
-> #if IS_ENABLED(CONFIG_IRQ_MSI_IOMMU)
-> 	if (domain->sw_msi != iommu_dma_sw_msi)
-> 		return;
-> #endif
-> 
-> I came up with the below, but I will drop this patch for now you can
-> repost it as a cleanup series..
+Hi Miguel
 
-Eww... What's the issue with just checking the domain type in 
-iommu_put_dma_cookie()? Is is that IOMMUFD and VFIO type 1 are both 
-doing their own different thing with IOMMU_DOMAIN_UNMANAGED?
+Disregarding the specific discussion here, but this just felt like a good
+place to thank you for your work to bring rust to linux. Your calm and
+understanding approach to figure out what fits best in each case, from "go
+away, don't bother me with rust" through "I like this, but I have no clue"
+all the way to "uh so we have four drivers now in progress, this is
+getting messy" has and continues to enormously help in making this all a
+success.
 
-In general it seems like a bad smell to have a union in a structure with 
-not enough information within that structire itself to know which union 
-member is valid... :/
+Thank you!
 
-Thanks,
-Robin.
+Obviously not diminishing everyone else's work here, just that Miguel's
+effort on the culture and people impact of r4l stands out to me.
 
+Cheers, Sima
+
+On Fri, Feb 21, 2025 at 12:44:31AM +0100, Miguel Ojeda wrote:
+> On Thu, Feb 20, 2025 at 7:42 AM Christoph Hellwig <hch@infradead.org> wrote:
+> >
+> > The document claims no subsystem is forced to take Rust.  That's proven
+> > to be wrong by Linus.  And while you might not have known that when
+> > writing the document, you absolutely did when posting it to the list.
+> >
+> > That is a very dishonest way of communication.
+> >
+> > And while you might not have known that when
+> > writing the document, you absolutely did when posting it to the list.
 > 
-> Jason
+> I did know -- Linus told both of us in the private thread. I am not
+> sure what that has to do with anything.
 > 
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index 3b58244e6344a5..31d53552dc4790 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -418,6 +418,7 @@ int iommu_get_dma_cookie(struct iommu_domain *domain)
->    * number of PAGE_SIZE mappings necessary to cover every MSI doorbell address
->    * used by the devices attached to @domain.
->    */
-> +#if IS_ENABLED(CONFIG_IRQ_MSI_IOMMU)
->   int iommu_get_msi_cookie(struct iommu_domain *domain, dma_addr_t base)
->   {
->   	struct iommu_dma_cookie *cookie;
-> @@ -439,6 +440,13 @@ int iommu_get_msi_cookie(struct iommu_domain *domain, dma_addr_t base)
->   }
->   EXPORT_SYMBOL(iommu_get_msi_cookie);
->   
-> +void iommu_put_msi_cookie(struct iommu_domain *domain)
-> +{
-> +	iommu_put_dma_cookie(domain);
-> +}
-> +EXPORT_SYMBOL_GPL(iommu_put_msi_cookie);
-> +#endif
-> +
->   /**
->    * iommu_put_dma_cookie - Release a domain's DMA mapping resources
->    * @domain: IOMMU domain previously prepared by iommu_get_dma_cookie() or
-> @@ -449,8 +457,10 @@ void iommu_put_dma_cookie(struct iommu_domain *domain)
->   	struct iommu_dma_cookie *cookie = domain->iova_cookie;
->   	struct iommu_dma_msi_page *msi, *tmp;
->   
-> +#if IS_ENABLED(CONFIG_IRQ_MSI_IOMMU)
->   	if (domain->sw_msi != iommu_dma_sw_msi)
->   		return;
-> +#endif
->   
->   	if (!cookie)
->   		return;
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index 022bf96a18c5e4..f07544b290e5b1 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -456,6 +456,12 @@ static int iommu_init_device(struct device *dev, const struct iommu_ops *ops)
->   	return ret;
->   }
->   
-> +static void iommu_default_domain_free(struct iommu_domain *domain)
-> +{
-> +	iommu_put_dma_cookie(domain);
-> +	iommu_domain_free(domain);
-> +}
-> +
->   static void iommu_deinit_device(struct device *dev)
->   {
->   	struct iommu_group *group = dev->iommu_group;
-> @@ -494,7 +500,7 @@ static void iommu_deinit_device(struct device *dev)
->   	 */
->   	if (list_empty(&group->devices)) {
->   		if (group->default_domain) {
-> -			iommu_domain_free(group->default_domain);
-> +			iommu_default_domain_free(group->default_domain);
->   			group->default_domain = NULL;
->   		}
->   		if (group->blocking_domain) {
-> @@ -2023,7 +2029,6 @@ void iommu_domain_free(struct iommu_domain *domain)
->   {
->   	if (domain->type == IOMMU_DOMAIN_SVA)
->   		mmdrop(domain->mm);
-> -	iommu_put_dma_cookie(domain);
->   	if (domain->ops->free)
->   		domain->ops->free(domain);
->   }
-> @@ -3000,7 +3005,7 @@ static int iommu_setup_default_domain(struct iommu_group *group,
->   
->   out_free_old:
->   	if (old_dom)
-> -		iommu_domain_free(old_dom);
-> +		iommu_default_domain_free(old_dom);
->   	return ret;
->   
->   err_restore_domain:
-> @@ -3009,7 +3014,7 @@ static int iommu_setup_default_domain(struct iommu_group *group,
->   			group, old_dom, IOMMU_SET_DOMAIN_MUST_SUCCEED);
->   err_restore_def_domain:
->   	if (old_dom) {
-> -		iommu_domain_free(dom);
-> +		iommu_default_domain_free(dom);
->   		group->default_domain = old_dom;
->   	}
->   	return ret;
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 50ebc9593c9d70..b5bb946c9c1b19 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -2271,6 +2271,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->   			if (!iommu_attach_group(d->domain,
->   						group->iommu_group)) {
->   				list_add(&group->next, &d->group_list);
-> +				iommu_put_msi_cookie(domain->domain);
->   				iommu_domain_free(domain->domain);
->   				kfree(domain);
->   				goto done;
-> @@ -2316,6 +2317,7 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->   out_detach:
->   	iommu_detach_group(domain->domain, group->iommu_group);
->   out_domain:
-> +	iommu_put_msi_cookie(domain->domain);
->   	iommu_domain_free(domain->domain);
->   	vfio_iommu_iova_free(&iova_copy);
->   	vfio_iommu_resv_free(&group_resv_regions);
-> @@ -2496,6 +2498,7 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
->   					vfio_iommu_unmap_unpin_reaccount(iommu);
->   				}
->   			}
-> +			iommu_put_msi_cookie(domain->domain);
->   			iommu_domain_free(domain->domain);
->   			list_del(&domain->next);
->   			kfree(domain);
-> @@ -2567,6 +2570,7 @@ static void vfio_release_domain(struct vfio_domain *domain)
->   		kfree(group);
->   	}
->   
-> +	iommu_put_msi_cookie(domain->domain);
->   	iommu_domain_free(domain->domain);
->   }
->   
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index 99dd72998cb7f7..082274e8ba6a3d 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -1534,12 +1534,16 @@ void iommu_debugfs_setup(void);
->   static inline void iommu_debugfs_setup(void) {}
->   #endif
->   
-> -#ifdef CONFIG_IOMMU_DMA
-> +#if defined(CONFIG_IOMMU_DMA) && IS_ENABLED(CONFIG_IRQ_MSI_IOMMU)
->   int iommu_get_msi_cookie(struct iommu_domain *domain, dma_addr_t base);
-> +void iommu_put_msi_cookie(struct iommu_domain *domain);
->   #else /* CONFIG_IOMMU_DMA */
->   static inline int iommu_get_msi_cookie(struct iommu_domain *domain, dma_addr_t base)
->   {
-> -	return -ENODEV;
-> +	return 0;
-> +}
-> +static inline void iommu_put_msi_cookie(struct iommu_domain *domain)
-> +{
->   }
->   #endif	/* CONFIG_IOMMU_DMA */
->   
+> As I told you in the previous reply, please read the next paragraph of
+> the document:
+> 
+>     Now, in the Kernel Maintainers Summit 2022, we asked for flexibility
+>     when the time comes that a major user of Rust in the kernel requires
+>     key APIs for which the maintainer may not be able to maintain Rust
+>     abstractions for it. This is the needed counterpart to the ability
+>     of maintainers to decide whether they want to allow Rust or not.
+> 
+> The point is that maintainers decide how to handle Rust (and some have
+> indeed rejected Rust), but that flexibility is needed if a maintainer
+> that owns a core API does not want Rust, because otherwise it blocks
+> everything, as is your case.
+> 
+> In summary: you were in that meeting, you own a core API, you do not
+> want Rust, you are blocking everything. So flexibility is needed. Thus
+> we asked you what can be done, how we can help, etc. You did not
+> accept other maintainers, did not want to have the code anywhere in
+> the tree, nor wanted to work on a compromise at all. You, in fact,
+> said "I will do everything I can do to stop this.". So that is not
+> providing flexibility, quite the opposite of it. So Linus eventually
+> had to make a decision to provide that flexibility.
+> 
+> I am not sure how that contradicts the document -- the document is
+> precisely talking about this situation.
+> 
+> By the way, I do not take lightly that you accuse me of dishonesty.
+> 
+> > Which given the binding creep means every single non-leaf subsystem
+> > eventually.
+> 
+> If Rust keeps growing in the kernel, then obviously more and more
+> non-leaf maintainers get affected.
+> 
+> But that just means more people is getting involved and more
+> subsystems are accepting Rust for their use cases. So that would just
+> mean it was, indeed, a good idea in the end.
+> 
+> > I'm not sure how that matters.  Of course your Rust testimonials are
+> > going to like it, otherwise you would not have quoted it.  They
+> 
+> Not at all. As I say in the talk, I included every single quote I got,
+> even up to the night before the keynote.
+> 
+> It is nevertheless very biased, because I asked people we interacted
+> with, which were mostly positive or neutral. I acknowledged this bias
+> in the talk too.
+> 
+> However, just so that others are aware, I did email others that are
+> negative about it too, such as you. And you did not reply.
+> 
+> > Well, obviously you do.  But as in many other things I would usually
+> > not count corporate pressure as a good thing.
+> 
+> Corporate pressure is not good. Corporate support is.
+> 
+> And we need that support to accomplish something like this.
+> 
+> Cheers,
+> Miguel
 
+-- 
+Simona Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
