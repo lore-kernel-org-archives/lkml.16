@@ -1,102 +1,78 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-42ab.mail.infomaniak.ch (smtp-42ab.mail.infomaniak.ch [84.16.66.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1C720E6FB
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 14:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3B41420DD;
+	Fri, 21 Feb 2025 14:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740147261; cv=none; b=MpD+/iRh9KYFbbptSsqCvxFYaYnsEutSp4hsw+0MwD7ogYQuHM7c4xL9Puhv2VJF0hqpgMP8m+p+sBMvUtWFX0ppKTJfye9mN+7EPQMYmRBYA9bDTmejGGPAT1f6lt6UWWCQ9GKnKcg5ySbkwlVa4m+2ht8MTjIqZYUZewb84X0=
+	t=1740147314; cv=none; b=EZr4s6KxKuWYbqnRYEVKV1f2CxZxnmt5zRuQVTbXNtu6gBfDTySvxntYWaYcg4Ejpp3HYcHS8lgNaPB9ujZM+QeZg/yvvgbLU4Nf7jmRXflLpyETgnr7GIpTWfA8IHO1EjdvGvz2xNQXwmemOZ3yDyRl/z47qJU/k4iDcC9g/u4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740147261; c=relaxed/simple;
-	bh=8R1ntMvdxgNOKHWq3nr/j34/07DXc1wBynfM1J+M5UQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UEDu+gDm+n0s6Y0pBV5MV6LWMbBZPUUclgbDBWsR4QBWipT+hdcAvWsuCx6O+Y65F4k1Frq18VWrrnBxSjSPLZdbOyfcG+ny/tivStScfhXiyngJ3oNv4UGqxJn1r2P23FRPK96PqTsSCc9tm4bBOr9Spp7eGboIHoFIHp0Jgz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H1dXC+xm; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H1dXC+xm"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30a303a656aso21462741fa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 06:14:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740147257; x=1740752057; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kjc5mojYE3t4OSrHJVJCVcArh6fCjBoE/KbptrPihx4=;
-        b=H1dXC+xm8xwCUrggGtHs/j+pHuuJfcs/GrE8Ohv9Ovv3T2hVzQUaZ/TzSIqeTNN4yb
-         4VcPgCyvNHhRVI7EGLpDvpFifDZkT6AeQOCPdA5I4KbZiXuqYE16My0AMA/iFk6JrB1o
-         aTPYN3JmOxHR5swrNAK+Rby+EE0SsD9tcoDq/MiaR71/YYE8mz7lbrUQfDbY265FKsFZ
-         Jk5fh0uoQK2CN4pzmuQubNO4U70wRHcWPnt3othhntAWEPImafRXc8aRyfbwsMbVnJK0
-         4C5OEb87m6i+a83jCCdyPoZPeHqepidDGV/2mHfTrPiRusk0F83I9D7RzG4R8eC/T6tw
-         e1bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740147257; x=1740752057;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kjc5mojYE3t4OSrHJVJCVcArh6fCjBoE/KbptrPihx4=;
-        b=pCJWzp4PzF8zRrBJ5a01K9f00WU9HgdgQLM4Di1UpXBHTtcuAOoaNjCNXTD1G2K5Ld
-         LhktJmnsEUirxQZfDaSYANiS0ra7Pip3QNkuriieI4lgdpRQceokVlXHgXDQefGKp8Qx
-         CM94FAvwpiGHBtHvc+zhyvGq42cB8lBE/COf9waLgXpaH2uVZy9L32XN1e9l8cIKXil2
-         Nu9xrMCbggj7hnCYCla2mlEVQ2clZkn2zeFIbDSi1GJkYpgqFSJQ3a1VWRCOHCeUVIMe
-         eT4yk9ettu1wZIZ3pP+lUcSJTWh6bbI/UeFIVsnddRjgQlGeMTnjZ3iX8j1SYUx2jEnF
-         fcGA==
-X-Forwarded-Encrypted: i=1; AJvYcCW56exen4fk2PmvWdz+8w67wPHmQLOvMoZ/g0CkrpTn+A0IxT/vu1EA4Vul3EYYbOJog+GSg1Q932GTql0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2rE2kw+g6qFrhZeKukFfm5KBZCPr5QngKndmtYa8FKDVSh9Uv
-	YRvOEEiXfC7TxrUpqC08Uf/tY7WZJx/Mj4H1q+GVePMbMsHZKhjLFXNp2v+Z/nY=
-X-Gm-Gg: ASbGncsHzV2EcviSc4n1X9CYDwKul3VAQg10HRoLrsvADcywjj2DJR2AVPxasomaoBH
-	9cRlvrSNCY+i1nM95Vt3Mj5pSDUtZ8p4IPVf2WTivmc0mVzRCBNwz+Uip4RW3b9BOpV8YKR1Cp9
-	4dRXlb6h7Op86mc8pZgpayn0RqbvS05B60b1ou8GpUdd/R15BQdmUYhkAn9i1C0fGKaOouIZjZ7
-	X8ee4hH7oYOB+POI20SZqkWAzUmlQJUxeDwlaGPCdtaAFCl0AXPBFHhtNsh5KjRRONderPEyvNT
-	uEMqjZba7LMNhodsUuSI8kzt8En8Tm/sweKbpMGf6LiAUbONSYPRo6MYajfmzehbHzbEehlDbwH
-	TTwSIog==
-X-Google-Smtp-Source: AGHT+IGE3i7E5NeJLGZxn4+JQpuFC+AkpZ8fzRpeljlxc9T2QsR4EDahxkpiTqdExMPqOpBH1TyfSQ==
-X-Received: by 2002:a05:6512:3a89:b0:545:2a96:34fc with SMTP id 2adb3069b0e04-5483914820dmr1344462e87.31.1740147257524;
-        Fri, 21 Feb 2025 06:14:17 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-545280ec98dsm2394749e87.42.2025.02.21.06.14.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2025 06:14:16 -0800 (PST)
-Date: Fri, 21 Feb 2025 16:14:14 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Taniya Das <quic_tdas@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Ajit Pandey <quic_ajipan@quicinc.com>, Imran Shaik <quic_imrashai@quicinc.com>, 
-	Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 04/10] dt-bindings: clock: Add Qualcomm QCS615 Display
- clock controller
-Message-ID: <5f5nt4g3fy7446gxnjg53n4uir57hm62ewgusekls5sbmadwez@pfxmhrkck3zi>
-References: <20250221-qcs615-v5-mm-cc-v5-0-b6d9ddf2f28d@quicinc.com>
- <20250221-qcs615-v5-mm-cc-v5-4-b6d9ddf2f28d@quicinc.com>
+	s=arc-20240116; t=1740147314; c=relaxed/simple;
+	bh=RXAxhxVzfrqG1qHIsuf8PzuIRfypisrlFp/ZVrBCPRA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=nACeeJBGv2gybvkK/Dayq6Ze5gBmJ7ZLv2ZbZWHj+5F9WI9Mpa/f0FQJxkjTqtmTqnDRckXhQF5qLI3vDbmzcegLXytI3Q3VeT+WhpNbufSjAYlnoAmxpsJoHomWkHm2pbOwAMItb744t/Mylsd/lqiGmzWotUV3bn32FY0ql8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=84.16.66.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
+Received: from smtp-4-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:0])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4YzsMc4NCDzVD1;
+	Fri, 21 Feb 2025 15:05:00 +0100 (CET)
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4YzsMb6vqwzYln;
+	Fri, 21 Feb 2025 15:04:59 +0100 (CET)
+From: Quentin Schulz <foss+kernel@0leil.net>
+Date: Fri, 21 Feb 2025 15:04:33 +0100
+Subject: [PATCH v2 1/5] arm64: dts: rockchip: fix pinmux of UART0 for PX30
+ Ringneck on Haikou
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250221-qcs615-v5-mm-cc-v5-4-b6d9ddf2f28d@quicinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250221-ringneck-dtbos-v2-1-310c0b9a3909@cherry.de>
+References: <20250221-ringneck-dtbos-v2-0-310c0b9a3909@cherry.de>
+In-Reply-To: <20250221-ringneck-dtbos-v2-0-310c0b9a3909@cherry.de>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Quentin Schulz <quentin.schulz@theobroma-systems.com>, 
+ Farouk Bouabid <farouk.bouabid@theobroma-systems.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Quentin Schulz <quentin.schulz@cherry.de>, stable@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Infomaniak-Routing: alpha
 
-On Fri, Feb 21, 2025 at 02:50:15PM +0530, Taniya Das wrote:
-> Add DT bindings for the Display clock on QCS615 platforms. Add the
-> relevant DT include definitions as well.
-> 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+From: Quentin Schulz <quentin.schulz@cherry.de>
 
-I don't remember responding with it, nor does lore find such an email.
-I'm totally confused, what is going on?
+UART0 pinmux by default configures GPIO0_B5 in its UART RTS function for
+UART0. However, by default on Haikou, it is used as GPIO as UART RTS for
+UART5.
 
-> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
-> ---
->  .../bindings/clock/qcom,qcs615-dispcc.yaml         | 73 ++++++++++++++++++++++
->  include/dt-bindings/clock/qcom,qcs615-dispcc.h     | 52 +++++++++++++++
->  2 files changed, 125 insertions(+)
+Therefore, let's update UART0 pinmux to not configure the pin in that
+mode, a later commit will make UART5 to request the GPIO pinmux.
+
+Fixes: c484cf93f61b ("arm64: dts: rockchip: add PX30-µQ7 (Ringneck) SoM with Haikou baseboard")
+Cc: stable@vger.kernel.org
+Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+---
+ arch/arm64/boot/dts/rockchip/px30-ringneck-haikou.dts | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/px30-ringneck-haikou.dts b/arch/arm64/boot/dts/rockchip/px30-ringneck-haikou.dts
+index e4517f47d519cc08ec9ee705a6f51a740687f6df..2321536c553fed20bc02d91f40a5d5a6dc20892c 100644
+--- a/arch/arm64/boot/dts/rockchip/px30-ringneck-haikou.dts
++++ b/arch/arm64/boot/dts/rockchip/px30-ringneck-haikou.dts
+@@ -222,6 +222,7 @@ &u2phy_otg {
+ };
+ 
+ &uart0 {
++	pinctrl-0 = <&uart0_xfer>;
+ 	status = "okay";
+ };
+ 
 
 -- 
-With best wishes
-Dmitry
+2.48.1
+
