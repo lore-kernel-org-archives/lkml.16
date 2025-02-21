@@ -1,180 +1,102 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D211C213226;
-	Fri, 21 Feb 2025 15:29:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E86ED215F40
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 15:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740151761; cv=none; b=HPS/zHPIvRdDi/Ysijnz9pbs3wByQUHCvM9D4WOVgvx+BPOp1U74ZhTE+MEm0WpgXWURAbFHFCV+ECpwnNquFM0HSwQBTGt44HSEvota5lIqxPitRsP5hGAd/RSzmHaIjQF1mi/xvbnuBxWANwQsjbc/tPX2BCEa35CWkx1hVJI=
+	t=1740151772; cv=none; b=N2QT4nMfiOwtVRpVGT2/zKNcscF5dUjFVO0ZcRHtUvwtCUbgg1VEOIZIIxyBj5iLZelmM14kOkfCI0882z5ZoeIwm+TjAP4qMRwv/H4rcyoK7s4Pgs1nsUBdc4akIdtnjwNAn8O8EZGUYq0qcqhc21vhydtq0Seh/vE26/HjM4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740151761; c=relaxed/simple;
-	bh=gvPE8ycjeYSXnQS/h4/vFc9oPAIaybODWv+nW2SUJKs=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=kvXj7WeRT1F3yvjil4lBM6kjrUjfb9aYJ8xCoF1R036cV4mxhFFlQKxrN0swLlfb7vavLC3XXWvPEs0w3EMe6Xzc3HphLTyqVqvNaKlGJWtuUlmGWKXhakvyIIiJG4i/QoG6gowA+lNR7euNCFY0hlsGbLLDAN2KVGGil+0qya8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gLFHHitJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qfdbHsmw; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1740151772; c=relaxed/simple;
+	bh=RPWq7Di80wCaezBdT5MKfthytldTTyeI8zqYu5ssG9A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DDvKG5ip7rwL5BrUHDXO8iw5zCJzZVvi7Bnmdf0G+aF27nIzscARr/hi6GIAYmZGIzgzueEZgq/rOBwiWCsOIiE2DCSkeUhQWcbQ7o4Eirc1041X2FFUULyWOuaNOzDK/RP2Z+BbR4lRbKdX1ZotoMtA5+9dc2WKnMtQ+MjXvAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h+qejeEB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gLFHHitJ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qfdbHsmw"
-Date: Fri, 21 Feb 2025 15:29:16 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740151757;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h+qejeEB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740151768;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=HmANWdnkLmAL8VMFwvfKur2p1nIr8KH1hojie2SY8Kk=;
-	b=gLFHHitJfksEOBTJD+utvKQm7TBgQCLHwH+h+7AIKY2cLIlQ1lbOilFjktOuGjg/dUy9OA
-	hVAYftaHFs+jQx83mNM0B2QYvX1hILtuQfaXAZPbGI75ixSLlyvrf6JBan0uunMQLoFErb
-	kCmEPlHOQRirZ+IccsAfrSboyrfSo/TiSKSOJ98pmiRt3XQ/BKltiWHZTPqq8eDgychZoD
-	fSkAyAatKUoJyaoo9oruWnED89h5pRRW7WV+Q1QKlx7X3Q6bgPzuvI/0UX6iNoMJAT29ac
-	YvrNH3iOIcYLxniJYPDNif5VIl1JiaW4s0/II/rO8vf+gZlxsNfJ0KLKPFzjyA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740151757;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HmANWdnkLmAL8VMFwvfKur2p1nIr8KH1hojie2SY8Kk=;
-	b=qfdbHsmwuNJd/yvV/LEPost8ZMVV0lb6cDpVew4CF+qOxMlwVVOxzO0yi4iEY0aYpu/lzi
-	EFi2h+af0xQfAJCQ==
-From: "tip-bot2 for Mike Rapoport (Microsoft)" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/boot] x86/boot: Move setting of memblock parameters to
- e820__memblock_setup()
-Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
- Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250214090651.3331663-2-rppt@kernel.org>
-References: <20250214090651.3331663-2-rppt@kernel.org>
+	bh=Ic1/uViOEImLUfOGxnGRSWveOc6wET399Ae2ZdSNHEc=;
+	b=h+qejeEBMi7n15RS4Ng0N3d2Rp74Lwg1RSMFqXHHwEJ7dsK+LscZ+xg0JQSxtdvxLSnINp
+	ClIbUDND+AHuH2oy1swcI2OKRkiTxGuLs0Ruoyrmc222yF0JQIwyqiD/cWpuigUN45aIvB
+	6Dj737DB5RHWeXAQxD6rJyk83w2gwVI=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-30-W3hhLAD0P8O_s-BkpsjBfQ-1; Fri,
+ 21 Feb 2025 10:29:25 -0500
+X-MC-Unique: W3hhLAD0P8O_s-BkpsjBfQ-1
+X-Mimecast-MFC-AGG-ID: W3hhLAD0P8O_s-BkpsjBfQ_1740151763
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E2F6619373D8;
+	Fri, 21 Feb 2025 15:29:20 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.32.97])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 3BE231800943;
+	Fri, 21 Feb 2025 15:29:11 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri, 21 Feb 2025 16:28:51 +0100 (CET)
+Date: Fri, 21 Feb 2025 16:28:41 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Tong Tiangen <tongtiangen@huawei.com>
+Cc: David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Peter Xu <peterx@redhat.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, wangkefeng.wang@huawei.com,
+	Guohanjun <guohanjun@huawei.com>
+Subject: Re: [PATCH -next v2] uprobes: fix two zero old_folio bugs in
+ __replace_page()
+Message-ID: <20250221152841.GA24705@redhat.com>
+References: <20250221015056.1269344-1-tongtiangen@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174015175614.10177.6726520992334916379.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250221015056.1269344-1-tongtiangen@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-The following commit has been merged into the x86/boot branch of tip:
+On 02/21, Tong Tiangen wrote:
+>
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -506,6 +506,11 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+>  	if (ret <= 0)
+>  		goto put_old;
+>
+> +	if (is_zero_page(old_page)) {
+> +		ret = -EINVAL;
+> +		goto put_old;
+> +	}
 
-Commit-ID:     2d6bff31399b2443aba230cd20f120acb2d4eeb1
-Gitweb:        https://git.kernel.org/tip/2d6bff31399b2443aba230cd20f120acb2d4eeb1
-Author:        Mike Rapoport (Microsoft) <rppt@kernel.org>
-AuthorDate:    Fri, 14 Feb 2025 11:06:48 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 21 Feb 2025 16:05:00 +01:00
+I agree with David, the subject looks a bit misleading.
 
-x86/boot: Move setting of memblock parameters to e820__memblock_setup()
+And. I won't insist, this is cosmetic, but if you send V2 please consider
+moving the "verify_opcode()" check down, after the is_zero_page/PageCompound
+checks.
 
-Changing memblock parameters, namely bottom_up and allocation upper
-limit does not have any effect before memblock initialization in
-e820__memblock_setup().
+Oleg.
 
-Move the calls to memblock_set_bottom_up() and memblock_set_current_limit()
-to e820__memblock_setup() to group all the memblock initial setup and make
-setup_arch() more readable.
-
-No functional changes.
-
-Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20250214090651.3331663-2-rppt@kernel.org
----
- arch/x86/kernel/e820.c  | 30 ++++++++++++++++++++++++++++++
- arch/x86/kernel/setup.c | 25 -------------------------
- 2 files changed, 30 insertions(+), 25 deletions(-)
-
-diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-index 82b96ed..8d8bd03 100644
---- a/arch/x86/kernel/e820.c
-+++ b/arch/x86/kernel/e820.c
-@@ -1302,6 +1302,36 @@ void __init e820__memblock_setup(void)
- 	int i;
- 	u64 end;
- 
-+#ifdef CONFIG_MEMORY_HOTPLUG
-+	/*
-+	 * Memory used by the kernel cannot be hot-removed because Linux
-+	 * cannot migrate the kernel pages. When memory hotplug is
-+	 * enabled, we should prevent memblock from allocating memory
-+	 * for the kernel.
-+	 *
-+	 * ACPI SRAT records all hotpluggable memory ranges. But before
-+	 * SRAT is parsed, we don't know about it.
-+	 *
-+	 * The kernel image is loaded into memory at very early time. We
-+	 * cannot prevent this anyway. So on NUMA system, we set any
-+	 * node the kernel resides in as un-hotpluggable.
-+	 *
-+	 * Since on modern servers, one node could have double-digit
-+	 * gigabytes memory, we can assume the memory around the kernel
-+	 * image is also un-hotpluggable. So before SRAT is parsed, just
-+	 * allocate memory near the kernel image to try the best to keep
-+	 * the kernel away from hotpluggable memory.
-+	 */
-+	if (movable_node_is_enabled())
-+		memblock_set_bottom_up(true);
-+#endif
-+
-+	/*
-+	 * At this point only the first megabyte is mapped for sure, the
-+	 * rest of the memory cannot be used for memblock resizing
-+	 */
-+	memblock_set_current_limit(ISA_END_ADDRESS);
-+
- 	/*
- 	 * The bootstrap memblock region count maximum is 128 entries
- 	 * (INIT_MEMBLOCK_REGIONS), but EFI might pass us more E820 entries
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index cebee31..4baadea 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -866,30 +866,6 @@ void __init setup_arch(char **cmdline_p)
- 	if (efi_enabled(EFI_BOOT))
- 		efi_memblock_x86_reserve_range();
- 
--#ifdef CONFIG_MEMORY_HOTPLUG
--	/*
--	 * Memory used by the kernel cannot be hot-removed because Linux
--	 * cannot migrate the kernel pages. When memory hotplug is
--	 * enabled, we should prevent memblock from allocating memory
--	 * for the kernel.
--	 *
--	 * ACPI SRAT records all hotpluggable memory ranges. But before
--	 * SRAT is parsed, we don't know about it.
--	 *
--	 * The kernel image is loaded into memory at very early time. We
--	 * cannot prevent this anyway. So on NUMA system, we set any
--	 * node the kernel resides in as un-hotpluggable.
--	 *
--	 * Since on modern servers, one node could have double-digit
--	 * gigabytes memory, we can assume the memory around the kernel
--	 * image is also un-hotpluggable. So before SRAT is parsed, just
--	 * allocate memory near the kernel image to try the best to keep
--	 * the kernel away from hotpluggable memory.
--	 */
--	if (movable_node_is_enabled())
--		memblock_set_bottom_up(true);
--#endif
--
- 	x86_report_nx();
- 
- 	apic_setup_apic_calls();
-@@ -990,7 +966,6 @@ void __init setup_arch(char **cmdline_p)
- 
- 	cleanup_highmap();
- 
--	memblock_set_current_limit(ISA_END_ADDRESS);
- 	e820__memblock_setup();
- 
- 	/*
