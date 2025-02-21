@@ -1,98 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A1BF4A04;
-	Fri, 21 Feb 2025 01:45:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C2F8F6C;
+	Fri, 21 Feb 2025 01:45:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740102315; cv=none; b=hTiUDHleMxp/qZ5SirMbdtamk5NoCfSKQK/RnL4XbSghHuweMIvK1TGhqsKt7wlEAyXyfRmlWLacNfsDklAotSPA4pcWG1AJeQSXh+OdKgUEGED6jyKA7dU0mlIiuAWsj5SqnDAjFcjcA+yASICbaPGmsyteHGCFmzFSQ43tZSY=
+	t=1740102342; cv=none; b=LA757u4JbmJa+YDTMvK63xEqpTSsSxyw+/EQO5AM6As4TrpikOy2OkVCaHeBOlm84McAOBlEjoJbQLTKzYwZEK9d0tK/0s/VDafmLUPv16fA7+16c4YUNCyJ2wvjvjhfFBAM0j/qoR+NM6PGFAtK36nXVqf9dhGYP563eJzkt4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740102315; c=relaxed/simple;
-	bh=MflqgNRZC8HrjsqgYUo/6L/lKQz+zC1RrHrV1YTvXLw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R5mlA22s+CQu20rd9HCmQA7rqtUE/Z5u27uSkCXcJodC7M4FqYsCHtnRyVUWgxTCt8PMykS/W7kscMa0ZFTdZO1VOMT45llYmAE6oi3ry+VBhTaBRqvzfiQdhoZZLTdhVvvsnAk9ykaD8/MsYrgEoGebjRlN9K9uJ4KaY3DLaMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IsgqRGkR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740102342; c=relaxed/simple;
+	bh=Shwixl52NKIW02h6Auc03dYSVQg1oQVDqFGBadkMH3E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jhhNV8unGumA7MeFa/7bdIFGkhfEnxk2kiJMAH0gP1caOHePzzeOdgK60ojHg+hHZz2Ox6GByn12CM0vUQ8tEta/ltlX5r+S8ZleLSCiH9OuZA43xHxemFlo8tIkDzJgD/rsIyK1nKzxmjech3aVpg5rPpfBZheth0CqEPzlQe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MYuxrHfW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IsgqRGkR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E736CC4CED1;
-	Fri, 21 Feb 2025 01:45:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MYuxrHfW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81FF6C4CED1;
+	Fri, 21 Feb 2025 01:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740102313;
-	bh=MflqgNRZC8HrjsqgYUo/6L/lKQz+zC1RrHrV1YTvXLw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=IsgqRGkRkqab7x+//LL3zBUQa+DGNxA0eecHXBF0PN7ugub8SScfvs2pDK+RwNt9H
-	 dDJkJSeY1tWmMxQxT6NoyrYT1MrbmoiSJDVtuK+m2qEJRAPXW1D7Dq+HEGH97lCB/F
-	 K0JHTOO8bmqsbjB8oABevXonfVr0acuVszlkpxG0tnoFl6X8MYpjSKcXpow0CBJFub
-	 8BZMSBV7nGCUTHdXlYjySIeggjjmy189vgaDgwq+hybnPkJUetRy/WFJvK4djp6GOF
-	 Bj0EyFgpPTWfVs2cpq+mfsnzOuPWhER9TSc0i4Gj5evdkfTkqjYgFMgBE+CNHxE9QS
-	 c/1NauROVApCQ==
-Date: Thu, 20 Feb 2025 17:45:12 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Cc: intel-wired-lan@lists.osuosl.org, Tony Nguyen
- <anthony.l.nguyen@intel.com>, Jiri Pirko <jiri@resnulli.us>, Cosmin Ratiu
- <cratiu@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
- netdev@vger.kernel.org, Konrad Knitter <konrad.knitter@intel.com>, Jacob
- Keller <jacob.e.keller@intel.com>, davem@davemloft.net, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Andrew Lunn
- <andrew@lunn.ch>, linux-kernel@vger.kernel.org, ITP Upstream
- <nxne.cnse.osdt.itp.upstreaming@intel.com>, Carolina Jubran
- <cjubran@nvidia.com>
-Subject: Re: [RFC net-next v2 1/2] devlink: add whole device devlink
- instance
-Message-ID: <20250220174512.578eebe8@kernel.org>
-In-Reply-To: <20250219164410.35665-2-przemyslaw.kitszel@intel.com>
-References: <20250219164410.35665-1-przemyslaw.kitszel@intel.com>
-	<20250219164410.35665-2-przemyslaw.kitszel@intel.com>
+	s=k20201202; t=1740102342;
+	bh=Shwixl52NKIW02h6Auc03dYSVQg1oQVDqFGBadkMH3E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MYuxrHfWJgebmXk9+MtN0jPfAzrMZgKSyBDjaawa4t6aVU04RXBCKu1WYLqDTsOWs
+	 zF6CF+ky5NxlTUWPxasFzBhFPC4c6zK+9DN8EbE41bQkvwEc/6eTwaP3LZR6wYSVbR
+	 UCnJEx0G8YmvVHVJwLnd+IPAOa4sFSLCI5bMnQPKtEvibVHlFQg6HqmgxCykTSenub
+	 7+a5khTzfpj+67gvKkRCAdoptHLG9BxUj8hs6VFL+PDVjEAD7TuAFlJWFj6fx1/Npr
+	 cJqBzgDuWCboXq3o/GrjpPSuOCfeIewpVeYk1trkoayclxVLO5PUw+VgaYcAPZLUxI
+	 3ArY3S7HvCrDQ==
+Date: Fri, 21 Feb 2025 01:45:38 +0000
+From: Tzung-Bi Shih <tzungbi@kernel.org>
+To: Andrei Kuchynski <akuchynski@chromium.org>
+Cc: Prashant Malani <pmalani@chromium.org>,
+	Benson Leung <bleung@chromium.org>,
+	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+	chrome-platform@lists.linux.dev, Jameson Thies <jthies@google.com>,
+	=?utf-8?Q?=C5=81ukasz?= Bartosik <ukaszb@chromium.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] platform/chrome: cros_ec_typec: Add support for setting
+ USB mode via sysfs
+Message-ID: <Z7fawtSb8ELbCNDL@google.com>
+References: <20250210130419.4110130-1-akuchynski@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210130419.4110130-1-akuchynski@chromium.org>
 
-On Wed, 19 Feb 2025 17:32:54 +0100 Przemek Kitszel wrote:
-> Add a support for whole device devlink instance. Intented as a entity
-> over all PF devices on given physical device.
+On Mon, Feb 10, 2025 at 01:04:19PM +0000, Andrei Kuchynski wrote:
+> This patch implements USB mode setting via a sysfs interface in
+> cros_ec_typec driver. User-space applications can now change the current
+> USB mode by writing to "usb_mode" sysfs entry, replacing the previous
+> ioctl-based method.
+> The embedded controller (EC) currently supports only entering USB4 mode
+> and exiting all modes (including altmodes). Both of these operations
+> trigger Data Reset Message, even if no USB Mode is active.
+> Additionally, the patch exposes the USB modes supported by the port via
+> "usb_capability" sysfs attribute.
 > 
-> In case of ice driver we have multiple PF devices (with their devlink
-> dev representation), that have separate drivers loaded. However those
-> still do share lots of resources due to being the on same HW. Examples
-> include PTP clock and RSS LUT. Historically such stuff was assigned to
-> PF0, but that was both not clear and not working well. Now such stuff
-> is moved to be covered into struct ice_adapter, there is just one instance
-> of such per HW.
-> 
-> This patch adds a devlink instance that corresponds to that ice_adapter,
-> to allow arbitrage over resources (as RSS LUT) via it (further in the
-> series (RFC NOTE: stripped out so far)).
-> 
-> Thanks to Wojciech Drewek for very nice naming of the devlink instance:
-> PF0:		pci/0000:00:18.0
-> whole-dev:	pci/0000:00:18
-> But I made this a param for now (driver is free to pass just "whole-dev").
+> [...]
 
-Which only works nicely if you're talking about functions not full
-separate links :) When I was thinking about it a while back my
-intuition was that we should have a single instance, just accessible
-under multiple names. But I'm not married to that direction if there
-are problems with it.
+Applied to
 
-> $ devlink dev # (Interesting part of output only)
-> pci/0000:af:00:
->   nested_devlink:
->     pci/0000:af:00.0
->     pci/0000:af:00.1
->     pci/0000:af:00.2
->     pci/0000:af:00.3
->     pci/0000:af:00.4
->     pci/0000:af:00.5
->     pci/0000:af:00.6
->     pci/0000:af:00.7
+    https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git for-next
 
-Could you go into more details on what stays on the "nested" instances
-and what moves to the "whole-dev"? Jiri recently pointed out to y'all
-cases where stuff that should be a port attribute was an instance
-attribute.
+[1/1] platform/chrome: cros_ec_typec: Add support for setting USB mode via sysfs
+      commit: 9fc83373f0ffb8834da48b1446a5c2fef9525bb1
+
+Thanks!
