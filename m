@@ -1,123 +1,121 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620831D6DDD;
-	Fri, 21 Feb 2025 02:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B2E381A3;
+	Fri, 21 Feb 2025 02:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740105385; cv=none; b=Ny7rK+AUeOW7/JOH2gnFrQNDI2SsBVYze7qYGBMLExR+5lxIFfnlZGK0UzM1ca9k+NWdW1XaNjsAznMsnMw+5h2kvTTYFySe0mRTwZrVzlj04Vt07TOD8riNdNGprQbm7ERBloWcJi492gN2lr2fZ2To98IlvdQXuzSYEYhykzE=
+	t=1740105436; cv=none; b=UFW8TCXwxDQ7FaPawHZbOUYpmVVKhbio1FNUIgdjtn6ba9HykmWJJb1oKlEd5L+70eIIT0u3OobLTOG6enPQB4BnBBDoBAFAIT/pHz+GQoEOFJFdF1kPaAwMSMb1yTXXmhaz91zTjAEwnMX2t8JJagQ7OPz/Y7ufVW4Xq7tkc2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740105385; c=relaxed/simple;
-	bh=VqTu4nppqqlBq/VZAIHyMyHkdtdVObY0u7hXFwd8HdU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YwwITpMQXIHz6Dk4ucN4Hk8wZbfAc4ktApm4XPhgMS6mKFOZCdb8tYf8hUoimrjqT0z1z25yBI5JqJP7UAIKmTVjlGVzi87x6jKfVq2GXXRfkgdi3zar/nsFtPWHxkOq5oyjRprrVpDugHdXQ+Fwc14OMC7ce9krSOmFOMScTps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=MjOyxfCS; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="MjOyxfCS"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51KL8v1q028904;
-	Thu, 20 Feb 2025 18:36:08 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pfpt0220; bh=y
-	udWezXlfftzuF3RFWfaWuFDvNQm9x3qNmDMXd3OOUY=; b=MjOyxfCSUrpDTYnh/
-	PfwpISIZMOYByPdXAty9MgFcxc2v0971UXO2EUzGGgAa6+di8E/D5svto/e59HSS
-	BqMqqLiaJt4gpaq/T8Zw7aZoopAebDDH3hA3OgF33E2HIhNRdy277MQgGtr/owLy
-	1Pku3lWeaNyoPkMYOov2HvyNTSOANho3mUDfNguLTRfPZh5SfE98J8vIM9dBi6zV
-	ssBQP93qXFJ+kL7ioZ4yQLnCZl5WcKH0LbD/INYO1pxPUIZRN+ZbIj01ocSmUf6J
-	qZvjkUdSMopF2EtVXWrg3RO9qjOXFpvZw3HiR8Xgk+pR7c7HVXUZb7PpzKFB5W6X
-	2ZEpQ==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 44xc24rnb8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Feb 2025 18:36:08 -0800 (PST)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+	s=arc-20240116; t=1740105436; c=relaxed/simple;
+	bh=9hBEf15GI5CInSAZGW3JKnzPz+fnxZVR2nUPv8ge4zA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=TG3ArSZkxsgwVIU42X+p+XKH4uSSF8jgc3KqTh+lOa4YQohKEjwzW6QrGWPmo7B0b9OwecoKYP1VC9RRMqhCyqAo9/y/ZQNNN71J6yUQAxQf52JPEjv27s7M6KPe/PoQ8hcZKSLB19Af7ohUy66eIWrDgSNPDpyPeU10/Mp2s4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4YzZ214FmTzLr4F;
+	Fri, 21 Feb 2025 10:33:45 +0800 (CST)
+Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id E572A180087;
+	Fri, 21 Feb 2025 10:37:09 +0800 (CST)
+Received: from [10.174.176.253] (10.174.176.253) by
+ dggpemf500002.china.huawei.com (7.185.36.57) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Thu, 20 Feb 2025 18:36:07 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Thu, 20 Feb 2025 18:36:07 -0800
-Received: from tx2-sever.caveonetworks.com (unknown [10.110.141.15])
-	by maili.marvell.com (Postfix) with ESMTP id 28C123F708C;
-	Thu, 20 Feb 2025 18:36:07 -0800 (PST)
-From: George Cherian <george.cherian@marvell.com>
-To: <wim@linux-watchdog.org>, <linux@roeck-us.net>, <corbet@lwn.net>
-CC: <linux-watchdog@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        George Cherian <george.cherian@marvell.com>
-Subject: [PATCH 2/2] watchdog: sbsa_gwdt: Enable the WDOG_STOP_ON_PANIC
-Date: Fri, 21 Feb 2025 02:35:50 +0000
-Message-ID: <20250221023550.2092232-2-george.cherian@marvell.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250221023550.2092232-1-george.cherian@marvell.com>
-References: <20250221023550.2092232-1-george.cherian@marvell.com>
+ 15.2.1544.11; Fri, 21 Feb 2025 10:37:09 +0800
+Message-ID: <f8811c44-0441-434e-8f3a-e8aec3032013@huawei.com>
+Date: Fri, 21 Feb 2025 10:36:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] scsi: libsas: Move sas_put_device() to libsas.h
+To: Xingui Yang <yangxingui@huawei.com>, <john.garry@huawei.com>,
+	<liyihang9@huawei.com>
+CC: <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+	<linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@huawei.com>, <prime.zeng@huawei.com>, <liuyonglong@huawei.com>,
+	<kangfenglong@huawei.com>, <liyangyang20@huawei.com>,
+	<f.fangjian@huawei.com>, <xiabing14@h-partners.com>
+References: <20250220130546.2289555-1-yangxingui@huawei.com>
+ <20250220130546.2289555-3-yangxingui@huawei.com>
+From: Jason Yan <yanaijie@huawei.com>
+In-Reply-To: <20250220130546.2289555-3-yangxingui@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: QwdYUEhnYmHFtEzpbHkNampRzp5I6eOb
-X-Proofpoint-ORIG-GUID: QwdYUEhnYmHFtEzpbHkNampRzp5I6eOb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-20_09,2025-02-20_02,2024-11-22_01
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemf500002.china.huawei.com (7.185.36.57)
 
-Enable the watchdog stop on panic feature if the module
-parameter panicnotify is set. sbsa_gwdt.panicnotify=1 will
-disable the watchdog in panic situations.
+在 2025/2/20 21:05, Xingui Yang 写道:
+> As sas_put_device() needs to be called in lldd, it is now moved to libsas.h
+> 
+> Signed-off-by: Xingui Yang <yangxingui@huawei.com>
+> ---
+>   drivers/scsi/libsas/sas_discover.c | 1 +
+>   drivers/scsi/libsas/sas_internal.h | 6 ------
+>   include/scsi/libsas.h              | 6 ++++++
+>   3 files changed, 7 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/scsi/libsas/sas_discover.c b/drivers/scsi/libsas/sas_discover.c
+> index 951bdc554a10..43a65d0542ab 100644
+> --- a/drivers/scsi/libsas/sas_discover.c
+> +++ b/drivers/scsi/libsas/sas_discover.c
+> @@ -309,6 +309,7 @@ void sas_free_device(struct kref *kref)
+>   
+>   	kfree(dev);
+>   }
+> +EXPORT_SYMBOL_GPL(sas_free_device);
+>   
+>   static void sas_unregister_common_dev(struct asd_sas_port *port, struct domain_device *dev)
+>   {
+> diff --git a/drivers/scsi/libsas/sas_internal.h b/drivers/scsi/libsas/sas_internal.h
+> index 03d6ec1eb970..a1e364deb3ee 100644
+> --- a/drivers/scsi/libsas/sas_internal.h
+> +++ b/drivers/scsi/libsas/sas_internal.h
+> @@ -98,7 +98,6 @@ int sas_get_phy_attached_dev(struct domain_device *dev, int phy_id,
+>   			     u8 *sas_addr, enum sas_device_type *type);
+>   int sas_try_ata_reset(struct asd_sas_phy *phy);
+>   
+> -void sas_free_device(struct kref *kref);
+>   void sas_destruct_devices(struct asd_sas_port *port);
+>   
+>   extern const work_func_t sas_phy_event_fns[PHY_NUM_EVENTS];
+> @@ -217,9 +216,4 @@ static inline struct domain_device *sas_alloc_device(void)
+>   	return dev;
+>   }
+>   
+> -static inline void sas_put_device(struct domain_device *dev)
+> -{
+> -	kref_put(&dev->kref, sas_free_device);
+> -}
+> -
+>   #endif /* _SAS_INTERNAL_H_ */
+> diff --git a/include/scsi/libsas.h b/include/scsi/libsas.h
+> index ba460b6c0374..f67137f50980 100644
+> --- a/include/scsi/libsas.h
+> +++ b/include/scsi/libsas.h
+> @@ -425,6 +425,12 @@ static inline void sas_put_local_phy(struct sas_phy *phy)
+>   	put_device(&phy->dev);
+>   }
+>   
+> +void sas_free_device(struct kref *kref);
+> +static inline void sas_put_device(struct domain_device *dev)
+> +{
+> +	kref_put(&dev->kref, sas_free_device);
+> +}
 
-This helps in avoiding watchdog reset while booting kdump kernel.
+As we have discussed internally, I still think exporting 
+sas_put_device() is not a good idea. I prefer exporting an interface to 
+iterate sas_port->dev_list and let the caller operate the domain device.
 
-Signed-off-by: George Cherian <george.cherian@marvell.com>
----
- Documentation/watchdog/watchdog-parameters.rst | 3 +++
- drivers/watchdog/sbsa_gwdt.c                   | 6 ++++++
- 2 files changed, 9 insertions(+)
+Thanks,
+Jason
 
-diff --git a/Documentation/watchdog/watchdog-parameters.rst b/Documentation/watchdog/watchdog-parameters.rst
-index 0a0119edfa82..3d7a02d12dc3 100644
---- a/Documentation/watchdog/watchdog-parameters.rst
-+++ b/Documentation/watchdog/watchdog-parameters.rst
-@@ -523,6 +523,9 @@ sbsa_gwdt:
-     nowayout:
- 	Watchdog cannot be stopped once started
- 	(default=kernel config parameter)
-+    panicnotify:
-+	Watchdog to be stopped after kernel panic
-+	(default=0, don't stop watchdog on panic)
- 
- -------------------------------------------------
- 
-diff --git a/drivers/watchdog/sbsa_gwdt.c b/drivers/watchdog/sbsa_gwdt.c
-index 5f23913ce3b4..f289a0b32d30 100644
---- a/drivers/watchdog/sbsa_gwdt.c
-+++ b/drivers/watchdog/sbsa_gwdt.c
-@@ -116,6 +116,9 @@ MODULE_PARM_DESC(nowayout,
- 		 "Watchdog cannot be stopped once started (default="
- 		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
- 
-+static int panicnotify;
-+module_param(panicnotify, int, 0);
-+MODULE_PARM_DESC(panicnotify, "after kernel panic, do: 0 = don't stop wd(*)  1 = stop wd");
- /*
-  * Arm Base System Architecture 1.0 introduces watchdog v1 which
-  * increases the length watchdog offset register to 48 bits.
-@@ -307,6 +310,9 @@ static int sbsa_gwdt_probe(struct platform_device *pdev)
- 	if (status & SBSA_GWDT_WCS_EN)
- 		set_bit(WDOG_HW_RUNNING, &wdd->status);
- 
-+	if (!nowayout && panicnotify)
-+		watchdog_stop_on_panic(wdd);
-+
- 	if (action) {
- 		irq = platform_get_irq(pdev, 0);
- 		if (irq < 0) {
--- 
-2.34.1
-
+> +
+>   #ifdef CONFIG_SCSI_SAS_HOST_SMP
+>   int try_test_sas_gpio_gp_bit(unsigned int od, u8 *data, u8 index, u8 count);
+>   #else
