@@ -1,77 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D65E203718;
-	Fri, 21 Feb 2025 09:12:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6291FC11E;
+	Fri, 21 Feb 2025 09:13:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740129177; cv=none; b=HKOr7PpwU2HYA7aUsQ4ZM0b32T0gvwopFynlT9iPrZ1PH5Vx1JcspNovuOOf9VMCwOBC1beCWQPDJklVSzK3ogI/2zBfGozQJJuohSGlzbj6985cMlkOJ2US0cPFQwvbYNj5fcmqJ0T2rLBMliV5dzQRz7WKY3dSptrv9bSipIw=
+	t=1740129219; cv=none; b=Vog2NBZnEjv8DqQhUU3zC8QiRDz2GRdCQmriVEq8sgYMrrSGbvtWjylid/Y9FZK2KJCcviOJV8CY+rHTxgYGJEN0JijrhqjvroejpnvhnTRJ6qni17y8vSt77k2ujBx2TO2c4cPA9hDbKe0NEb5RryX2dri0x8DGEdDID7vTCQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740129177; c=relaxed/simple;
-	bh=mGyruGLf48W9PdHCU/1T2pGmF4R+E3nW6UeeBVAtmrA=;
+	s=arc-20240116; t=1740129219; c=relaxed/simple;
+	bh=rDEihz2SYq+qWRIswF8iAj6c1YlBHyFHD/d/IEGQKvg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CVOTsU541qMwKuM2NFKASCok2xXBFINj1RVeIyfR6rq0JRLmUci+NiNiz2c2y6ztVi/xLRSleEDkhiCEzcC3F0meMubgQMCkvnWGAgW5Jb5dc2TvELLlh2grclVHyJjcRrKfkIMx0c3LWaz7R25lbine976jhUhOOCrIqJqMXnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eOvrXnia; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JBChZbL0JFpTNqklEgRFpcP2zePKyiZeUexAr2Kj0nh6tQ0JpPiFXbD43ohu47M6H+0MHOI+ilwKF12lj2RgGtJXiZ5snEUnFvKEGdYMacti00T1NqgPDtnMksV0FUHCfGdGWkYJTCwIrpKhcQaMsFkTwPZwFnGowd3m3pvBv9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ULDQ2ZjH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eOvrXnia"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CF0DC4CED6;
-	Fri, 21 Feb 2025 09:12:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ULDQ2ZjH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73B57C4CED6;
+	Fri, 21 Feb 2025 09:13:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740129177;
-	bh=mGyruGLf48W9PdHCU/1T2pGmF4R+E3nW6UeeBVAtmrA=;
+	s=k20201202; t=1740129219;
+	bh=rDEihz2SYq+qWRIswF8iAj6c1YlBHyFHD/d/IEGQKvg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eOvrXniaMi5ISUyFw5P3LDYA3GLaau6Z0hBefRURq22U28Gtx89/qJZqaKQAlFjFn
-	 NzsqPEeTOS/uB//GvmU2vykTyWBtxHH0fzQMsL9fpmSdqgr4kiX/qreqMIQdIsEilE
-	 0gpESbJ1rO+tUsJYxEIkKHiuweHLkPPSQo9UZ7D/Rix6NDr7pNTY5HlzlpDk7+bwe4
-	 2dmjKx7HrIYGyUgRWzAwCM31jwcf2L3OScZDa+jKwqi2TiloIutJDvIHu/s7Pw/cQ1
-	 rp1f+v5OPY28kaIS5uiLSkMMIqMDOSRqRNEAxfOYqZ67w/rjNERHsYnAN7zXJQKwhu
-	 n0zmklCfvEevQ==
-Date: Fri, 21 Feb 2025 10:12:54 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, drew@pdp7.com, guoren@kernel.org, 
-	wefu@redhat.com, jassisinghbrar@gmail.com, paul.walmsley@sifive.com, 
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, frank.binns@imgtec.com, 
-	matt.coster@imgtec.com, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
-	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch, ulf.hansson@linaro.org, 
-	jszhang@kernel.org, p.zabel@pengutronix.de, m.szyprowski@samsung.com, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v5 00/21] Enable drm/imagination BXM-4-64 Support for
- LicheePi 4A
-Message-ID: <20250221-eminent-squirrel-of-honor-dee80d@krzk-bin>
-References: <CGME20250219140249eucas1p1291eb86c932373c847a3314ae54789d5@eucas1p1.samsung.com>
- <20250219140239.1378758-1-m.wilczynski@samsung.com>
+	b=ULDQ2ZjH02Hj782GvcFfA82R6BeT8ck4xAGbF1R7G9A1V6rPQ+XUGRLwETaN5KaRH
+	 iJsup2Fu+bhvBseHfPDLh3UbOgoTzye12t+JfSzVVAu9tk5/Zviqzh8uSqjt0oFWPq
+	 k/Scy0aQAwbKtKeIDAaBF/6j6XRPGLqal+hgUbcwL2XIdtZj4a0GgEMYtREIFuEU0x
+	 Zv7bFWsLpR83Rwm/3dDdXlVa4jevjYdDmA080UR1FlIBH2uzTx+xNAYlKLNyUOLMLq
+	 nK4s2UecTMKwxGxVK2a+Z9MWB++Xg9c0Y7KjorfLW0oPTQBmSKyjeAwPWN93Xo2MXT
+	 IaQ0uqQjn2iIA==
+Date: Fri, 21 Feb 2025 08:59:54 +0100
+From: Joel Granados <joel.granados@kernel.org>
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, sparclinux@vger.kernel.org, 
+	linux-s390@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 7/8] s390: mv s390 sysctls into their own file under
+ arch/s390 dir
+Message-ID: <yiuirrlckwb5ressit6gcoi6yljcy6ggtopaf5bsgpxb5jp4v4@azntrnnk7zdr>
+References: <20250218-jag-mv_ctltables-v1-0-cd3698ab8d29@kernel.org>
+ <20250218-jag-mv_ctltables-v1-7-cd3698ab8d29@kernel.org>
+ <20250218140821.7740Ab5-hca@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250219140239.1378758-1-m.wilczynski@samsung.com>
+In-Reply-To: <20250218140821.7740Ab5-hca@linux.ibm.com>
 
-On Wed, Feb 19, 2025 at 03:02:18PM +0100, Michal Wilczynski wrote:
-> The LicheePi 4A board, featuring the T-HEAD TH1520 SoC, includes an Imagination
-> Technologies BXM-4-64 GPU. Initial support for this GPU was provided through a
-> downstream driver [1]. Recently, efforts have been made to upstream support for
-> the Rogue family GPUs, which the BXM-4-64 is part of [2].
+On Tue, Feb 18, 2025 at 03:08:21PM +0100, Heiko Carstens wrote:
+> On Tue, Feb 18, 2025 at 10:56:23AM +0100, joel granados wrote:
+> > Move s390 sysctls (spin_retry and userprocess_debug) into their own
+> > files under arch/s390. We create two new sysctl tables
+> > (2390_{fault,spin}_sysctl_table) which will be initialized with
+> > arch_initcall placing them after their original place in proc_root_init.
+> > 
+> > This is part of a greater effort to move ctl tables into their
+> > respective subsystems which will reduce the merge conflicts in
+> > kerenel/sysctl.c.
+>   ^^^^^^^
+> typo
+Fixed
+
 > 
-> While the initial upstream driver focused on the AXE-1-16 GPU, newer patches
-> have introduced support for the BXS-4-64 GPU [3]. The modern upstream
-> drm/imagination driver is expected to support the BXM-4-64 as well [4][5]. As
-> this support is being developed, it's crucial to upstream the necessary glue
-> code including clock and power-domain drivers so they're ready for integration
-> with the drm/imagination driver.
+> > diff --git a/arch/s390/lib/spinlock.c b/arch/s390/lib/spinlock.c
+> > index a81a01c44927..4483fdc9d472 100644
+> > --- a/arch/s390/lib/spinlock.c
+> > +++ b/arch/s390/lib/spinlock.c
+> > @@ -17,6 +17,10 @@
+> >  #include <asm/alternative.h>
+> >  #include <asm/asm.h>
+> >  
+> > +#if defined(CONFIG_SMP)
+> > +#include <linux/sysctl.h>
+> > +#endif
+> > +
+> ...
+> > +#if defined(CONFIG_SMP)
+> > +static const struct ctl_table s390_spin_sysctl_table[] = {
+> > +	{
+> > +		.procname	= "spin_retry",
+> > +		.data		= &spin_retry,
+> > +		.maxlen		= sizeof(int),
+> > +		.mode		= 0644,
+> > +		.proc_handler	= proc_dointvec,
+> > +	},
+> > +};
+> > +
+> > +static int __init init_s390_spin_sysctls(void)
+> > +{
+> > +	register_sysctl_init("kernel", s390_spin_sysctl_table);
+> > +	return 0;
+> > +}
+> > +arch_initcall(init_s390_spin_sysctls);
+> > +#endif
 > 
+> I see that you want to keep the existing CONFIG_SMP behaviour, but since a
+> long time s390 enforces CONFIG_SMP=y (this was obviously never reflected in
+> kernel/sysctl.c).
+> Therefore the above ifdefs should be removed, and in addition the include
+> statement should be added to the other linux includes at the top of the file.
+I'll add these changes to my V2
 
-This is v5 of big patchset which became huge. I understand you did like
-that for v1 which was RFC. But it stopped being RFC.
+Thx for the review
 
-Split your patchset, keeping versioning and changelog, per subsystem.
+-- 
 
-Best regards,
-Krzysztof
-
+Joel Granados
