@@ -1,121 +1,107 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail8.out.flockmail.com (mail8.out.flockmail.com [18.213.226.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A02204587;
-	Fri, 21 Feb 2025 10:22:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7EB2046B0;
+	Fri, 21 Feb 2025 10:22:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.213.226.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740133338; cv=none; b=ZyZvxxW/WzLqMFso+6KjmwgQOW2Amt5IifPleuvxOLx/tXdDvuTzCzTA5hPS3quPwQpBUm0P+ImIITl7qL08pnfvZa36qvthtCprKtqznkcDwy+7ON0TCbH4sUdc4lJ70cJfSHXhF5q05UqI3pLckfxJAfjKCL2DX6htj9w4wtI=
+	t=1740133348; cv=none; b=Nw9V9pOal0re7UxjxFigqkp6nfN2DE2GfkDMPxtkQs1Q87EJNu3nlGQcQxNIFjz0BDGL4pMfJpxOExBCeOdefrMY7v50o8TFQdK/2xWmNdnqgPjwxSYV+YKCbMAa1/8cJ5c0JhUMmxSz2WiMvTwjwSxrvEklzqB3AJ5JRZgUWTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740133338; c=relaxed/simple;
-	bh=Sjc1BaSMeJRPeCcL/epzdtctw6/nuuB3OAwal9CBkZ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PAFNBrW4dlKnu0XvVGxED7Kl37yH7753gr7kisZAiK+KbRY4FhETYYum8z7NgBp6FRwcl2zfNxjsZVJDEKi4oMX9S1X8FQPr2UNEQ6p5X/jdFRymw4/clP/a6Ey0f7vqV3emLneNJwElEuJesTN+h47rAa+LdOF3HqU8h7tApVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cl1EevkJ; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740133348; c=relaxed/simple;
+	bh=ttghBKtfmBaf6W/eC6gBjd1xmqSctrMbOIo9Izajkz8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XKM4Eghk2kaMPWLPWW+fvptU3/9am9sEmroYh8Frepg/FtuneIwYHGLeUxA+K7WWqjMx7MpxEs8ZhkuL2r+KzylTZPUH8ktHoMxdPVDUrItMfAGbZRvrg33htxbD0kqHMAUh336cnOH8sBS9XVzNaarizv/aOUEMwWUeuXvSbXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=T+pOjcbK; arc=none smtp.client-ip=18.213.226.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cl1EevkJ"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-220f4dd756eso37502375ad.3;
-        Fri, 21 Feb 2025 02:22:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740133335; x=1740738135; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BUiInESylQ443K1PbNMFuTYC6xpLt2zG6UzEqWDU58A=;
-        b=Cl1EevkJ/k5SdM1wbb4OxJ77Gw3N8hFViYg1dGRvK9r2CngsKuVqAFv6JMPo40JAAx
-         aXfGtNf/+yIKNTKgFkLLnJqOJIIVhJTEnYb3vtsZYJ1RX6Nhgymx7y0x0i9Qcn2Xpe2O
-         +ZbTYOgNJ7ZSAxWe0JyexoMNxPS9vmNRBdFpM062Xnv67NVuDWeHdBKZKZyxIC6WnKU7
-         y2fy+RMlA67aR774L8PXNwrWr/uCGDL6ENUaSVwRiwFMA4oFX83gCyO77VFvo5mMYNyP
-         1ZWGyvp8wxkaTqM03DN9i38GQuJMaGh6wRuAPvMUddx9kaRVcbTkgPnfD29wH2UXfbC8
-         8CAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740133335; x=1740738135;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BUiInESylQ443K1PbNMFuTYC6xpLt2zG6UzEqWDU58A=;
-        b=d3rOu3FIsnS1MGXZ32sbrDG3xGtEb4JhT9DWCVqjkto3h1XTHtyEFqaCkRjhMouNvU
-         5ORod+f1tsIiqMT0QaessCmlD6yFkwo69V/rZVr59OkBfYZV7evBLN90o3CO2mbU0ewp
-         nkwWGJZ4m3SGc+SLzYpkFY95enR8lqk0kehPFn9q/n59HwulApzeCbvbAOlUkIh+45LN
-         rZ2z0JsGEds94L5NKuUU4si4P0lwdLjvgFgNXBpY3MZvpP6OER85c44He7qZTz/TadXz
-         zw+qBYGEjPyf2jOX8mvEZYGYdfQ26jU8uZYf6tE1/pMdc/7PQ/vj4ROF+/KcuM7KfJkQ
-         6a0A==
-X-Forwarded-Encrypted: i=1; AJvYcCUp0O79QO3+cNNdUpbfDixq6ngAPSHUcs2tD/qTqvGE06YuSLK6S9Ciui2JC06l4u1t1/cvSKlctOA3yLnrYITB@vger.kernel.org, AJvYcCVZn9LMjcG1fe4rdxW3bF0snzoSWcT3/J+uWBABlOTnrG6GE9u5SlEVpAQB6uYMvnsV0KpXp5kWqu+6uPg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy20nfKx6e6XtiJ/DkNoi/CMklymduFE8kY6+UFeK2Y8wIa+a59
-	bY0abtcz+BCliKAD1ndNcot8eDvnJFzpwzjATxSJ0CpxVBhnAIJk
-X-Gm-Gg: ASbGncvIzDkhYC+zQ0qMVPX/e+0h2lH1SwF93bEJimm8WUXq46MSupezUY6SvJa4zAx
-	Utwd24+YqzMSjXLoOo2fXQ6S0ca4lhq00MtleKYMWGRbyeBOV1gSgvq7SfoPFGp8h6GFqWeRT+U
-	qO108e8Hn3R8zrwKdRzX7JGCgieQm+7h6S9OuyHAdcrzBRxmIqzyNFGeSS6gJTkZIad3viPCUFt
-	ukfYBznuJjRQ5Ym+GMr/J1dRJGIiaHTozipTQJdVxrLuZaXAdVrcq9NK7jrABc5iIEzV5T+aiVZ
-	nH/84xWoSng6r8FA1B2bx5P1S7xy50KXCyt0QdE+m6CZNm0=
-X-Google-Smtp-Source: AGHT+IHDNNa9+STTHVJu9rG3iYk4wdYRkirFxgdhDuCzUpvTXWsEe5U1+ypJwPqU6S1lu1S8FtE5Xw==
-X-Received: by 2002:a17:902:e5d0:b0:21f:9107:fca3 with SMTP id d9443c01a7336-2219ff5efccmr36540465ad.30.1740133334784;
-        Fri, 21 Feb 2025 02:22:14 -0800 (PST)
-Received: from localhost.localdomain ([14.139.69.34])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2211d4c9c64sm87690365ad.214.2025.02.21.02.22.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2025 02:22:14 -0800 (PST)
-From: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
-To: kees@kernel.org
-Cc: Bharadwaj Raju <bharadwaj.raju777@gmail.com>,
-	joel.granados@kernel.org,
-	shuah@kernel.org,
-	skhan@linuxfoundation.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: [PATCH sysctl-next v2] selftests/sysctl: fix wording of help messages
-Date: Fri, 21 Feb 2025 15:51:49 +0530
-Message-ID: <20250221102151.5593-1-bharadwaj.raju777@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="T+pOjcbK"
+DKIM-Signature: a=rsa-sha256; bh=wANmo5Vtnc/jU4ejAERcYTCS0of3r3IMDpNVJqe6D8w=;
+	c=relaxed/relaxed; d=t12smtp-sign004.email;
+	h=mime-version:date:from:cc:message-id:references:to:subject:in-reply-to:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
+	q=dns/txt; s=titan1; t=1740133345; v=1;
+	b=T+pOjcbKVifJTuhaF8ueGstAl/qLiBu9Y+6DBYPMa+wr7KUK3M4N7BZmatBz3NL7m9dU6cAS
+	pAk3V4mnZxqx3TfwlwI0k2mZdyV/ZmrTrP2GYNMouiiNz49R/ktsbgnR4HJNIJl9X6IJMWtcjmY
+	TAKRUyzXrQuNxsqB+ffyXq0E=
+Received: from studio.local (tk2-248-33924.vs.sakura.ne.jp [160.16.213.178])
+	by smtp-out.flockmail.com (Postfix) with ESMTPA id 2B4C5100253;
+	Fri, 21 Feb 2025 10:22:18 +0000 (UTC)
+Date: Fri, 21 Feb 2025 18:22:01 +0800
+Feedback-ID: :i@coly.li:coly.li:flockmailId
+From: Coly Li <i@coly.li>
+To: Zheng Qixing <zhengqixing@huaweicloud.com>
+Cc: axboe@kernel.dk, song@kernel.org, colyli@kernel.org, 
+	yukuai3@huawei.com, dan.j.williams@intel.com, vishal.l.verma@intel.com, 
+	dave.jiang@intel.com, ira.weiny@intel.com, dlemoal@kernel.org, yanjun.zhu@linux.dev, 
+	kch@nvidia.com, hare@suse.de, zhengqixing@huawei.com, john.g.garry@oracle.com, 
+	geliang@kernel.org, xni@redhat.com, colyli@suse.de, linux-block@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, nvdimm@lists.linux.dev, 
+	yi.zhang@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH 06/12] badblocks: fix the using of MAX_BADBLOCKS
+Message-ID: <ehghja4fxqxvc2s7popqz363bitvxvbu6sdtovetfvx6neiate@5qe4ivr7zyzs>
+References: <20250221081109.734170-1-zhengqixing@huaweicloud.com>
+ <20250221081109.734170-7-zhengqixing@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250221081109.734170-7-zhengqixing@huaweicloud.com>
+X-F-Verdict: SPFVALID
+X-Titan-Src-Out: 1740133345741267071.29396.2836886487781970934@prod-use1-smtp-out1002.
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.4 cv=bq22BFai c=1 sm=1 tr=0 ts=67b853e1
+	a=0OgjFgg9iTm4RD4XR/h7Lw==:117 a=0OgjFgg9iTm4RD4XR/h7Lw==:17
+	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=i0EeH86SAAAA:8 a=VwQbUJbxAAAA:8
+	a=ZuRJGKQMYiGAcWkIlfYA:9 a=QEXdDO2ut3YA:10
 
-Fix grammar such as "number amount of times is
-recommended" etc -> "the recommended number of
-times".
+On Fri, Feb 21, 2025 at 04:11:03PM +0800, Zheng Qixing wrote:
+> From: Li Nan <linan122@huawei.com>
+> 
+> The number of badblocks cannot exceed MAX_BADBLOCKS, but it should be
+> allowed to equal MAX_BADBLOCKS.
+> 
+> Fixes: aa511ff8218b ("badblocks: switch to the improved badblock handling code")
+> Signed-off-by: Li Nan <linan122@huawei.com>
 
-Signed-off-by: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
----
- tools/testing/selftests/sysctl/sysctl.sh | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Looks good to me.
 
-diff --git a/tools/testing/selftests/sysctl/sysctl.sh b/tools/testing/selftests/sysctl/sysctl.sh
-index f6e129a82ffd..db1616857d89 100755
---- a/tools/testing/selftests/sysctl/sysctl.sh
-+++ b/tools/testing/selftests/sysctl/sysctl.sh
-@@ -857,7 +857,7 @@ list_tests()
- 	echo
- 	echo "TEST_ID x NUM_TEST"
- 	echo "TEST_ID:   Test ID"
--	echo "NUM_TESTS: Number of recommended times to run the test"
-+	echo "NUM_TESTS: Recommended number of times to run the test"
- 	echo
- 	echo "0001 x $(get_test_count 0001) - tests proc_dointvec_minmax()"
- 	echo "0002 x $(get_test_count 0002) - tests proc_dostring()"
-@@ -884,7 +884,7 @@ usage()
- 	echo "Valid tests: 0001-$MAX_TEST"
- 	echo ""
- 	echo "    all     Runs all tests (default)"
--	echo "    -t      Run test ID the number amount of times is recommended"
-+	echo "    -t      Run test ID the recommended number of times"
- 	echo "    -w      Watch test ID run until it runs into an error"
- 	echo "    -c      Run test ID once"
- 	echo "    -s      Run test ID x test-count number of times"
-@@ -898,7 +898,7 @@ usage()
- 	echo Example uses:
- 	echo
- 	echo "$TEST_NAME.sh            -- executes all tests"
--	echo "$TEST_NAME.sh -t 0002    -- Executes test ID 0002 number of times is recommended"
-+	echo "$TEST_NAME.sh -t 0002    -- Executes test ID 0002 the recommended number of times"
- 	echo "$TEST_NAME.sh -w 0002    -- Watch test ID 0002 run until an error occurs"
- 	echo "$TEST_NAME.sh -s 0002    -- Run test ID 0002 once"
- 	echo "$TEST_NAME.sh -c 0002 3  -- Run test ID 0002 three times"
+Acked-by: Coly Li <colyli@kernel.org>
+
+Thanks.
+
+> ---
+>  block/badblocks.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/block/badblocks.c b/block/badblocks.c
+> index a953d2e9417f..87267bae6836 100644
+> --- a/block/badblocks.c
+> +++ b/block/badblocks.c
+> @@ -700,7 +700,7 @@ static bool can_front_overwrite(struct badblocks *bb, int prev,
+>  			*extra = 2;
+>  	}
+>  
+> -	if ((bb->count + (*extra)) >= MAX_BADBLOCKS)
+> +	if ((bb->count + (*extra)) > MAX_BADBLOCKS)
+>  		return false;
+>  
+>  	return true;
+> @@ -1135,7 +1135,7 @@ static int _badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
+>  		if ((BB_OFFSET(p[prev]) < bad.start) &&
+>  		    (BB_END(p[prev]) > (bad.start + bad.len))) {
+>  			/* Splitting */
+> -			if ((bb->count + 1) < MAX_BADBLOCKS) {
+> +			if ((bb->count + 1) <= MAX_BADBLOCKS) {
+>  				len = front_splitting_clear(bb, prev, &bad);
+>  				bb->count += 1;
+>  				cleared++;
+> -- 
+> 2.39.2
+> 
+
 -- 
-2.48.1
-
+Coly Li
