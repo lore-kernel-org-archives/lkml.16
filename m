@@ -1,238 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D60AA1B0406;
-	Fri, 21 Feb 2025 08:37:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72DEE1FF7D7
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 08:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740127027; cv=none; b=YimP81dOeJLWQFftKyof0OiE4m06T2pOTLeQkhdaKdoS7xyqoIr28u627UHzabC8QBhbFJHKPOuVjFY1xNS/+OUBDJSqi6sd7zFuEXrJy9h/dnJMsejqEVw6//W21sYwUdk24IFQa+zf5dxQ9RzQ/R69NVxHWeWYuBlSSdZRlHI=
+	t=1740127051; cv=none; b=QwjnbaIoj2KWyolpOavgxsM7G7TgCiaqgOsmRYjd5yuOg5scIzVOgiUXq3mgYwfrP6d2zfoABCjF+4E9SDEp1EMeME26axOIpqmpWAGaKQSUzR2qFVwnZ4qnbELvB86WZIDT66Vm/0fOR5FaKLnCX0bC66oupdAnsxzSFfWlzc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740127027; c=relaxed/simple;
-	bh=Ye+aypySTGZoFKRZuyvmrFq8zKJQvD+3wytveh8qUHE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=AejBw5IGimHJhU49KHBUDNqXyDhsZ9hl+iJbsq6kHCOvL8Sk1HmmqmfZNH2eKSuoyU8Y3AsG5EakExZRAGVmoYin98xGNkVtReF1n+fPA0+TkS//FAC8lcFmsW7WaGE0bx67hfFkeS7zhn2E8O8k4gW8+YZt2bcJWSoAveQqLjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gNvPRWu0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740127051; c=relaxed/simple;
+	bh=1Pyc5XSXk8/KpOI0I+Y0iOOSNDehTqvQGNhqxWmM4TE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gZ6o2ojMuTysOqAjcHnHEL/gD2MabyYnD1qG473sp1WOPTMnFNrgbWSgxxirOXhC7zAd0QB/+XOL0P6dlBlg7h7CaEqCBKO/k05x0NEeKPkEDVL5whoTJGmdcw9iFUQPsqoqgO6xZcxy1tGTPtODAOGQudwDjrBN+cBVYCrgxRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=N2CLjoRF; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gNvPRWu0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3A03C4CED6;
-	Fri, 21 Feb 2025 08:37:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740127027;
-	bh=Ye+aypySTGZoFKRZuyvmrFq8zKJQvD+3wytveh8qUHE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=gNvPRWu0NplUrzQGG9GqnLi+3Q6K8r8mVfISF9BQP9eTMkSIr2U57Gh87x7Z3nZ+k
-	 T2YXmf40W05Wanwpup3fS5QrDmS5CemjKrS4MJ5OwrDycBnHXXczZoq1ZmgAEUUGoX
-	 lAEB/yC2hC76DyXcl+8nk//GbUhSisT1OA4q7eG+IS0m5IEZD0E4VzANiA854u2oe4
-	 POh043EgB/eZIo7E2IjTTs++UP2CdgtMiUZE9jxFpJ6lm1SCzQ1+C7QH1ngp5/fkTx
-	 UQWJfPtEQKivBpxZz2FH2OKBeyrLKwCXkiosmPIaDHKKcpwWaR+nwUo+XQVgWrZQ6J
-	 5KRsCFsJq7kkQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Tamir Duberstein" <tamird@gmail.com>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Anna-Maria Behnsen"
- <anna-maria@linutronix.de>,  "Frederic Weisbecker" <frederic@kernel.org>,
-  "Thomas Gleixner" <tglx@linutronix.de>,  "Danilo Krummrich"
- <dakr@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
- <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno Lossin" <benno.lossin@proton.me>,
-  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Lyude Paul" <lyude@redhat.com>,  "Guangbo Cui" <2407018371@qq.com>,
-  "Dirk Behme" <dirk.behme@gmail.com>,  "Daniel Almeida"
- <daniel.almeida@collabora.com>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v8 02/14] rust: hrtimer: introduce hrtimer support
-In-Reply-To: <CAJ-ks9mNidHZvWkFJE1jExc2oVk_bbJpiO_DRMrWu5nYhTpKgg@mail.gmail.com>
- (Tamir
-	Duberstein's message of "Thu, 20 Feb 2025 16:37:13 -0500")
-References: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
-	<20250218-hrtimer-v3-v6-12-rc2-v8-2-48dedb015eb3@kernel.org>
-	<KDmrJnQA2_Ojf67mD8WA_UafgVCACRRleB9t-D_1yl_bua8e1VWdGQAUvmMGHscqRHu1gzPJCKe_BfotutZm5Q==@protonmail.internalid>
-	<CAJ-ks9ncOyGyQsDFOBxg-7wmXkrQYiZr6H6eEFWsFstk=p1uAA@mail.gmail.com>
-	<87wmdkgvr0.fsf@kernel.org>
-	<djAeSx8DNZwss2-UqXGmhVPqYm2z4LhKWC70jPHPisd1w70qmpmOfVbHfhqJErhoFwVFM8IpbTv4MKkk_BIpQw==@protonmail.internalid>
-	<CAJ-ks9mNidHZvWkFJE1jExc2oVk_bbJpiO_DRMrWu5nYhTpKgg@mail.gmail.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Fri, 21 Feb 2025 09:36:57 +0100
-Message-ID: <87ldtzhexi.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="N2CLjoRF"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5452e6f2999so1925172e87.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 00:37:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740127047; x=1740731847; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fW/FAUY+BtuxgqThnl6ySpYQqHb8f9LhIhu4HPMnZ10=;
+        b=N2CLjoRFHcoshO2ncCSOlJbY+mx4oO6D0aFI5TFfFT6oe01+/VcP0Kq7EfOrOR6+nE
+         KDfo4RhqnXmSYSpsdrX69MTYP33TAXvGeN4HBtGKpoMkXAEZI4pGUcolWMIyyP4e/kT4
+         RfROlg08rffd2AWfCu6nFhiTp/rYYcXjMKvF4cA37ECEhSM1penkRhlJw/HBD6i6BTCc
+         5HG1dGQ0JGdcPnYS5iMFM/omdul/l70eKl6NfcUTratis0zsYyTftkTF6Yq1+2XpDV6Q
+         hLmYRqba22AToEmwjvyHnszwJba0Wutkg6XNonuq1e8ae/poJRHOdxw2Gi+nfCrFl6x1
+         Fp2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740127047; x=1740731847;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fW/FAUY+BtuxgqThnl6ySpYQqHb8f9LhIhu4HPMnZ10=;
+        b=RCcVJ5bGePnmgPjBOPJZBXxXQuiCyEEXVWjbT2+6lw3JGE0iJq5E0dcRK9h3Uyokxz
+         2a2T+pvWLjN84XtgbBgbooyRcwRvXpQCsHHJ79qlO4cqEGV9XgqtvP9GqbB1DRICbwUQ
+         Giv0Gk1mLRW5/UnUEUC2+8Z8WkE8EUWWzXq5DesfFS4okcpjWxQGOIq/5Ymr9uk7+SUb
+         QJIZZ5K47M+kJW3EzguWK6gPa4opARe0GLmBAzLynEn+FOPdujfAavdkfgYV2D6SsMYi
+         Q9xbwtVJr+wv6t5d3VX78/M5JhzJL/3/IAxfVuJjRF3NigbAbkwe3KkbL+ukwyg4QJG8
+         iTBw==
+X-Forwarded-Encrypted: i=1; AJvYcCUJ7cT2i7jr/7mPeTa9lyGyHz1/70A80Oeifx2fV352JFFj8l8NJ/Ng5OpUT2y32jh05vyZHIXFROWDy6A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZUuwWYyIXMRkfn5T5Z2VUOa8KGP/Ge4jej5hr6e9HlDprCaLm
+	XbjFYWxT9CvhO1P4vr7PT//0luU+eM8a83jk2rB0UvuC6HjeGMSbXUUMJqAwXeox5h7bfMvO8T2
+	ebYbubl+QdO2bqK2ZC54MPLZihezlixNiRzQWcQ==
+X-Gm-Gg: ASbGncsvihH/nAJ3fO/Linb5SXut17BuT1ButtSS/RnRgiXhMDREg644feq/csFVRMA
+	KBv57q9Z4xpF8VIT05FmYaOUYUtXV7xep381Js86ZmrcbcJTlR1eLqm7OGH6jUDhPn9ZYNXu4Sr
+	mAgycHp3McrNgPrfXl5ieVV/wI0WQPxCFTgrHUFCU=
+X-Google-Smtp-Source: AGHT+IEVJYqpV94JpnSSmFsbKfheCNp8/0iZB0ZSGoVT/MInSsid5S3N4SwldmQ4L5O1E7gpGonbz4t6nSMa3dwR6i0=
+X-Received: by 2002:a05:6512:230a:b0:545:17b:3cf9 with SMTP id
+ 2adb3069b0e04-54838f5c910mr744359e87.48.1740127047367; Fri, 21 Feb 2025
+ 00:37:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250217-03-k1-gpio-v5-0-2863ec3e7b67@gentoo.org>
+ <20250217-03-k1-gpio-v5-3-2863ec3e7b67@gentoo.org> <CAMRc=MdJszmZ8d1MGo=bfJ8TwqOYBPLe2Jfc9MfbErDUCMQktg@mail.gmail.com>
+ <MA0PR01MB567180C0FE89E3BEBAF2B12EFEC42@MA0PR01MB5671.INDPRD01.PROD.OUTLOOK.COM>
+In-Reply-To: <MA0PR01MB567180C0FE89E3BEBAF2B12EFEC42@MA0PR01MB5671.INDPRD01.PROD.OUTLOOK.COM>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 21 Feb 2025 09:37:16 +0100
+X-Gm-Features: AWEUYZkPeZ_f9Qkm0Zlcw9GzT4Sb60CF7RDIsxK-TmMLrjs_ajHOShwiT4OIdzI
+Message-ID: <CAMRc=MdX6KiGk1zBRK3bZpN3iM16-8mDq40sTez6YO2kJEq0zQ@mail.gmail.com>
+Subject: Re: [PATCH v5 3/5] gpio: spacemit: add support for K1 SoC
+To: Chen Wang <unicorn_wang@outlook.com>
+Cc: Yixun Lan <dlan@gentoo.org>, Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>, linux-gpio@vger.kernel.org, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, 
+	Conor Dooley <conor@kernel.org>, Yangyu Chen <cyy@cyyself.name>, devicetree@vger.kernel.org, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Jesse Taube <mr.bossman075@gmail.com>, 
+	Jisheng Zhang <jszhang@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Inochi Amaoto <inochiama@outlook.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, spacemit@lists.linux.dev, 
+	linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-"Tamir Duberstein" <tamird@gmail.com> writes:
-
-> On Thu, Feb 20, 2025 at 4:19=E2=80=AFPM Andreas Hindborg <a.hindborg@kern=
-el.org> wrote:
->>
->> "Tamir Duberstein" <tamird@gmail.com> writes:
->>
->> > On Tue, Feb 18, 2025 at 8:29=E2=80=AFAM Andreas Hindborg <a.hindborg@k=
-ernel.org> wrote:
->> >>
->>
->> [...]
->>
->> >> +//! ## State Diagram
->> >> +//!
->> >> +//! ```text
->> >> +//!                  <-- Stop ----
->> >> +//!                  <-- Cancel --
->> >> +//!                  --- Start -->
->> >> +//!        +---------+        +---------+
->> >> +//!   O--->| Stopped |        | Running |---o
->> >> +//!        +---------+        +---------+   |
->> >> +//!                                  ^      |
->> >> +//!                  <- Expire --    |      |
->> >> +//!                                  o------o
->> >> +//!                                   Restart
->> >> +//! ```
->> >> +//!
->> >> +//! A timer is initialized in the **stopped** state. A stopped timer=
- can be
->> >> +//! **started** with an **expiry** time. After the timer is started,=
- it is
->> >> +//! **running**. When the timer **expires**, the timer handler is ex=
-ecuted.
->> >> +//! After the handler has executed, the timer may be **restarted** or
->> >> +//! **stopped**. A running timer can be **canceled** before it's han=
-dler is
->> >
->> > "it's" =3D it is. This should be "its" (possessive).
->>
->> Thanks =F0=9F=91=8D
->>
->> > Just to be clear, after the handler has executed and before the timer
->> > has been **restarted** or **stopped** the timer is still in the
->> > **running** state?
->>
->> It depends on the return value of the handler. If the handler returns re=
-start,
->> the timer the timer does not enter the stopped state. If the handler
->> returns stop, the timer enters the stopped state.
->>
->> The timer is still considered to be in running state the handler is
->> running.
->>
->> I can add this info to the section.
+On Fri, Feb 21, 2025 at 12:36=E2=80=AFAM Chen Wang <unicorn_wang@outlook.co=
+m> wrote:
 >
-> Yeah, some clarification here would be useful.
-
-I'll add a paragraph =F0=9F=91=8D
-
-[...]
-
->> >> +    /// Get a pointer to the contained `bindings::hrtimer`.
->> >> +    ///
->> >> +    /// # Safety
->> >> +    ///
->> >> +    /// `ptr` must point to a live allocation of at least the size o=
-f `Self`.
->> >> +    unsafe fn raw_get(ptr: *const Self) -> *mut bindings::hrtimer {
->> >> +        // SAFETY: The field projection to `timer` does not go out o=
-f bounds,
->> >> +        // because the caller of this function promises that `ptr` p=
-oints to an
->> >> +        // allocation of at least the size of `Self`.
->> >> +        unsafe { Opaque::raw_get(core::ptr::addr_of!((*ptr).timer)) }
->> >> +    }
->> >
->> > Can you help me understand why the various functions here operate on
->> > *const Self? I understand the need to obtain a C pointer to interact
->> > with bindings, but I don't understand why we're dealing in raw
->> > pointers to the abstraction rather than references.
->>
->> We cannot reference the `bindings::hrtimer` without wrapping it in
->> `Opaque`. This would be the primary reason. At other times, we cannot
->> produce references because we might not be able to prove that we satisfy
->> the safety requirements for turning a pointer into a reference. If we
->> are just doing offset arithmetic anyway, we don't need a reference.
 >
-> Why do we have a pointer, rather than a reference, to Self in the
-> first place? I think this is the key thing I don't understand.
-
-Perhaps it makes more sense if you look at the context. One of the entry
-points to `HrTimer::raw_get` is via `<ArcHrTimerHandle as
-HrTimerHandle>::cancel`. This user facing method takes `&mut self`. The
-handle contains an arc to a type that contains a `Timer` and implements
-`HasHrTImer`. To get to the timer, we need to do pointer manipulation.
-We only know how to get the `Timer` field via the `OFFSET`. The natural
-return value from the offset operation is a raw pointer. Rather than
-convert back to a reference, we stay in pointer land when we call
-`HrTimer::raw_cancel`, because we need a pointer to the
-`bindings::hrtimer` anyway, not a reference.
-
+> On 2025/2/20 21:34, Bartosz Golaszewski wrote:
+> > On Mon, Feb 17, 2025 at 1:58=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wro=
+te:
+> [......]
+> >> +#define to_spacemit_gpio_bank(x) container_of((x), struct spacemit_gp=
+io_bank, gc)
+> >> +
+> >> +struct spacemit_gpio;
+> >> +
+> >> +struct spacemit_gpio_bank {
+> >> +       struct gpio_chip                gc;
+> >> +       struct spacemit_gpio            *sg;
+> >> +       void __iomem                    *base;
+> >> +       u32                             index;
+> >> +       u32                             irq_mask;
+> >> +       u32                             irq_rising_edge;
+> >> +       u32                             irq_falling_edge;
+> >> +};
+> >> +
+> >> +struct spacemit_gpio {
+> >> +       struct  device                  *dev;
+> >> +       struct  spacemit_gpio_bank      sgb[NR_BANKS];
+> >> +};
+> > Please don't use tabs in struct definitions.
 >
->>
->>
->> > This extends to
->> > HrTimerPointer, which is intended to be implemented by *pointers to*
->> > structs that embed `HrTimer`; why isn't it implemented on by the
->> > embedder itself?
->>
->> Not sure what you mean here. If you refer to for instance the
->> implementation of `HrTimerPointer for Arc<T>`, I get why you might
->> wonder, why does `HasHrTimer::start` not take a reference instead of a
->> pointer? We could do that, but we would just immediately break it down
->> again in the implementation of `HasHrTimer::start`. Might still be a
->> good idea though.
+> Why not=EF=BC=9FI see
+> https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#struct=
+-declarations-and-initializers
 >
-> I was trying to say that my question (which I clarified above,
-> hopefully) extends to the description and name of this trait.
-> Specifically for this trait I don't understand why its semantics are
-> described in terms of pointers rather than references (and AsRef, to
-> allow for Arc and friends).
 
-All user facing APIs use references, not pointers. The raw pointer
-interfaces are for internal use only. I don't think we would gain
-anything from using `AsRef` internally. Perhaps you could clarify a bit mor=
-e?
+This is for the tip tree, not treewide.
 
->
->> >
->> > I realize we discussed this on v6, sorry for not keeping up there.
->>
->> No worries, it is good that we discuss this.
->>
->> [...]
->>
->> >> +
->> >> +/// A handle representing a potentially running timer.
->> >> +///
->> >> +/// More than one handle representing the same timer might exist.
->> >> +///
->> >> +/// # Safety
->> >> +///
->> >> +/// When dropped, the timer represented by this handle must be cance=
-lled, if it
->> >> +/// is running. If the timer handler is running when the handle is d=
-ropped, the
->> >> +/// drop method must wait for the handler to finish before returning.
->> >
->> > Between this comment and the comment on cancel we say "if it is
->> > running" 3 times. Can we say it just once, on the method, and here say
->> > that cancel must be called in Drop?
->>
->> Well, the comment on `cancel` is just a description of what the function
->> does. This piece of text is a safety requirement.
->>
->> We could make the safety requirement for implementing the trait "Impleme=
-nt
->> the methods according to their documentation". But that would not help w=
-ith
->> the drop requirement.
->
-> My suggestion is that the safety comment read: when dropped,
-> [Self::cancel] must be called. Something like that.
+It's my personal maintainer preference. We do use both under
+drivers/gpio/ but I prefer no-tabs in new code.
 
-We don't care how the timer is canceled, it just has to be canceled. It
-does not have to be by calling `Self::cancel`.
-
-
-Best regards,
-Andreas Hindborg
-
-
+Bart
