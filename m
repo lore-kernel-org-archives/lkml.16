@@ -1,133 +1,95 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from s2.avantea.pl (s2.avantea.pl [46.242.128.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71908215066
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 16:40:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BEF21F12EC;
+	Fri, 21 Feb 2025 16:40:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.242.128.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740156025; cv=none; b=SyUTRtvPSB1+oTS1KxuV3ijbenLAljGdQjwBw7gSQmTY5aqwsAICOkW8MxoFYl3Ne/3zdwwBx7a2uo9xaS3v7NPiqUnQjSm3QlRaAAEy10KmCw6AHRIxJKv0x27LteydbTxvZOXuhHuO0nH442zw5PJyO1blqCUT7FKS6bAyKS0=
+	t=1740156037; cv=none; b=XSj3gVPZJ3q1S7DBYxULw1KZWgqc7XucTiQljOgYgqPRM84Xl/Y+QPtMNnaSH8BpfdFUePHURjNfntAxK67y1rgRkxF8Jqzjh8A81pBJ4jmOI4ODaCgtJK7j+vjVpWLua7ZlqM6h5D+1qSmT/bao7q/bafrwxjmSHMIJZJxoTyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740156025; c=relaxed/simple;
-	bh=17uKUo9FOPy07r+XAiIBseIm0cdymLN5f3xEcVtffWs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aiZT9/4EpKzctitF0mWAYhJtMI2A4VAzYkBRathJMKRhv3XbpEhKNT7yPL6Pv0wcT1jd4z4yMZpSmMcDdbIDB6T1lCH2HxeRknuEqa9rUFAvGOd3OLclmkfg02jz0mfLndnCGftQuiN+UxR3ZOzYO+97UnMlPwhr4jbqm0N2ntY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E6Q3n6QC; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740156037; c=relaxed/simple;
+	bh=ZVmiymIAhMQOMLZ34be0QbNLgSkp+U56bA+I1slqbnI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=hSFAAzEBh4mMa+IVU+IncdZGc/asjs0a83G7mfmMp3lsky0b5BeGV5tDt+6S5gVOhLX8YnDVf9890io2m6QRu9QZOh1hLUSrFz9391Y+k4/K1G30DYgmltCbuu2ouVcUY2ynyXPuyTwriR24hgETuOGZhLA50CRefINbuP5ehYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=szczodrzynski.pl; spf=pass smtp.mailfrom=szczodrzynski.pl; dkim=pass (2048-bit key) header.d=szczodrzynski.pl header.i=@szczodrzynski.pl header.b=2hls+aUo; arc=none smtp.client-ip=46.242.128.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=szczodrzynski.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szczodrzynski.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E6Q3n6QC"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5452e6f2999so2397283e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 08:40:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740156021; x=1740760821; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XeJTx/vmHBx5GNuwonywXW9ioDFWEnQJoc6Kq60Yt8U=;
-        b=E6Q3n6QCPyYl/qtLwU94xCNQSql6zjpvWVCqvzHGb6UqQ4GTFRZoLr7ICjxNqSlcE2
-         qsl0jhY3Ba9owghfbvkztyjirHiAbiYHdaawZCk5ncuHIg6DVKXliQWxhwQ2nbbp+9q1
-         oNi0HM03UnlWfwjn24mGvDTbpnvBjQtHAGGnidVxswCT2FF8+JWNQLfaSQpZDBpsOacD
-         +ID5ubx4lamDsB5MoKMxZ9kI/GhoD3RJAsHk5Ce5shPcCGO2gJIjMEWTWxs7ibOmIkJz
-         QYRWeOSgRj46oQ0YQDkkSGPs/1NdZ6a+FXWNNP96NXRLr1/kXb3h9YWM1nPom4Cp9yZN
-         nNxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740156021; x=1740760821;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XeJTx/vmHBx5GNuwonywXW9ioDFWEnQJoc6Kq60Yt8U=;
-        b=s7wMtxcokhcFlsq4DLnF/FbbZMAAi3n4kZ9zCK6RjXhryBYVH5x98IF38KIejSl6ju
-         m7jKGCRb8MxZ/p3bvhhl7wLuWBaA/Cmb8vHfz+jFqmqh0ObqoVfQgDDQac0u5XJfKnV/
-         Ejl8Aw26OGb8xh30kWGF5Cn722JQBmVUH4ZavU9A6QCa6cem3k27381FBTRTEp8ef63A
-         UCom+YRDScYjlVoMLJCN1Jm6rul49NiXry+3M9uR+tL1qpxdrgQqPmoQTLm9TJuq3EP/
-         IkddDYFju49WDrylTG5HgQRwITGia6qEclnqtBtO6SItj7Epgk8KL7Om59SdBVJAXziq
-         d9AA==
-X-Forwarded-Encrypted: i=1; AJvYcCVz+pNpeOToIremypf0+KW7RBrPqG2Wbp4hecCOyZ3k55AID4g6qZfSyspVY6mXWp30szQuf7EuJsHJGjU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrFcaWYOp7bqyt+o7Py8B1RbOv1F53UodTQBbtFvE6/3QPPKTY
-	XuV1jTgw6EZAL8XeTJEAGPW+y/jHDVh847iKFaA6znWphqooR+3U/nwpakFGkP8=
-X-Gm-Gg: ASbGncvCq19GkVBqHh2TH9g+9JT4GUTePCYV2dIHBZifWqJE/gIVPKv6GGPOwYrXNgC
-	c9LxEjUsQgET3jez4XQCUimA3yD4WkXld6ar7E+EECEExyPS9wugcTfLk6Y/YRUnsesmo3DbDqf
-	Ik7SSmMfVstp7MIgTGlLfiPHq6fXyK/Hv192T72CtoCV4Nc0btE0pk1jcgIFquIUj2IgcxsPIhX
-	e1NTMQ8cNoB6i5GY4FajMAFIhHoJni7EWnxRNlkCUjwB8Q+KaVm344/yewGFSENEg/rsz3AkUq9
-	LJgnGeH/9j9OVmWsz89pPhhuT15Gm2Ez3ErJ8qWdVyuIGs35zztn3qhBrLodhPmwFvVFJxlAcwT
-	WXzd9jw==
-X-Google-Smtp-Source: AGHT+IG3sGSgu3fmfjjVa5dP0zopYhRJHZeGFgM+rQzAw/dbKCd7icrIJbdMAouX19sYLz/WmVSHOA==
-X-Received: by 2002:a05:6512:e97:b0:544:11cf:10c1 with SMTP id 2adb3069b0e04-54838ef8ae9mr1535911e87.30.1740156021503;
-        Fri, 21 Feb 2025 08:40:21 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54531815e02sm1992234e87.228.2025.02.21.08.40.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2025 08:40:20 -0800 (PST)
-Date: Fri, 21 Feb 2025 18:40:17 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Jun Nie <jun.nie@linaro.org>
-Cc: Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 15/15] drm/msm/dpu: Enable quad-pipe for DSC and
- dual-DSI case
-Message-ID: <kouoar4xfsyuxmxjg3pc5jkbddpc7kbyvdpqkwnzecuroilnra@4aa4cpdkr7gc>
-References: <20250217-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v6-0-c11402574367@linaro.org>
- <20250217-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v6-15-c11402574367@linaro.org>
+	dkim=pass (2048-bit key) header.d=szczodrzynski.pl header.i=@szczodrzynski.pl header.b="2hls+aUo"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=szczodrzynski.pl; s=x; h=Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=7RHCIXkAEB3Q6gvisTKmVhU8q9lDZL30dJeI5tINmhs=; b=2hls+aUoDtpBz0zvI2ZI+E++3Y
+	2siSdOmW4PBTuCYqdXDVDUjQQzkZolBRiM/lcNIyuEBi3qoke0fXe8kGHUj0EXivc5mMo90iPZlOj
+	UugrMUSaZD6WPVVUXYBxfZ8qRsQpzkHGvN6lGAQVlprOSt+fsD+ZFLtNob53O7VRou3OqBDqpToaD
+	O3Lmfdm+LI+F2GigjHqX68zctIEpDRVm+PgNmysmtiegJsoUH25nBghgwpD2+0aKgU5q7WPMf0xpv
+	OLkrjOlqMvbx5EFFJlFxp5sAIQKRbDi1NJXVyvPkA9JrUsf4gM3A21nFS/uNLty+KLTvVlBrRC7mA
+	SXhLlq+g==;
+Received: from [62.171.184.96] (helo=buildhost.contaboserver.net)
+	by s2.avantea.pl with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96-58-g4e9ed49f8)
+	(envelope-from <kuba@szczodrzynski.pl>)
+	id 1tlVit-00AOLX-29;
+	Fri, 21 Feb 2025 17:17:55 +0100
+From: =?UTF-8?q?Kuba=20Szczodrzy=C5=84ski?= <kuba@szczodrzynski.pl>
+To: Maxime Ripard <mripard@kernel.org>,
+	Samuel Holland <samuel@sholland.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH 0/5] drm/sun4i: Support LVDS on D1s/T113 combo D-PHY
+Date: Fri, 21 Feb 2025 17:17:46 +0100
+Message-Id: <20250221161751.1278049-1-kuba@szczodrzynski.pl>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250217-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v6-15-c11402574367@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Id: kuba@szczodrzynski.pl
 
-On Mon, Feb 17, 2025 at 10:16:04PM +0800, Jun Nie wrote:
-> To support high-resolution cases that exceed the width limitation of
-> a pair of SSPPs, or scenarios that surpass the maximum MDP clock rate,
-> additional pipes are necessary to enable parallel data processing
-> within the SSPP width constraints and MDP clock rate.
-> 
-> Request 4 mixers and 4 DSCs for high-resolution cases where both DSC
-> and dual interfaces are enabled. More use cases can be incorporated
-> later if quad-pipe capabilities are required.
-> 
-> Signed-off-by: Jun Nie <jun.nie@linaro.org>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c         |  2 +-
->  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.h         |  6 ++---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c      | 28 ++++++++++++++++++------
->  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys.h |  2 +-
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h   |  2 +-
->  drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h      |  2 +-
->  6 files changed, 28 insertions(+), 14 deletions(-)
-> 
+Some Allwinner chips (notably the D1s/T113 and the A100) have a "combo
+MIPI DSI D-PHY" which is required when using single-link LVDS0. The same
+PD0..PD9 pins are used for either DSI or LVDS.
 
->  
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-> index 64e220987be5682f26d02074505c5474a547a814..804858e69e7da1c8c67c725aa462c1a558d1b402 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
-> @@ -35,8 +35,8 @@
->  #endif
->  
->  #define STAGES_PER_PLANE		2
-> -#define PIPES_PER_PLANE			2
->  #define PIPES_PER_STAGE			2
-> +#define PIPES_PER_PLANE			(PIPES_PER_STAGE * STAGES_PER_PLANE)
+Other than having to use the combo D-PHY, LVDS output is configured in
+the same way as on older chips.
 
-This should be changes when STAGES_PER_PLANE is introduced. With that
-fixed:
+This series enables the sun6i MIPI D-PHY to also work in LVDS mode. It
+is then configured by the LCD TCON, which allows connecting a
+single-link LVDS display panel.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Kuba Szczodrzyński (5):
+  phy: allwinner: phy-sun6i-mipi-dphy: Support LVDS in combo D-PHY
+  drm/sun4i: Support LVDS using MIPI DSI combo D-PHY
+  drm/sun4i: Enable LVDS output on sun20i D1s/T113
+  riscv: dts: allwinner: d1s-t113: Add D-PHY to TCON LCD0
+  riscv: dts: allwinner: d1s-t113: Add LVDS0 pins
 
->  #ifndef DPU_MAX_DE_CURVES
->  #define DPU_MAX_DE_CURVES		3
->  #endif
-> 
-> -- 
-> 2.34.1
-> 
+ .../boot/dts/allwinner/sunxi-d1s-t113.dtsi    | 10 +++
+ drivers/gpu/drm/sun4i/sun4i_tcon.c            | 40 ++++++++++++
+ drivers/gpu/drm/sun4i/sun4i_tcon.h            |  6 ++
+ drivers/phy/allwinner/phy-sun6i-mipi-dphy.c   | 65 ++++++++++++++++++-
+ 4 files changed, 119 insertions(+), 2 deletions(-)
 
 -- 
-With best wishes
-Dmitry
+2.25.1
+
