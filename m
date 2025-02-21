@@ -1,46 +1,39 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80DAF33EA;
-	Fri, 21 Feb 2025 08:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD4D033EA;
+	Fri, 21 Feb 2025 08:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740128276; cv=none; b=aHIgtNJ9AvcxQQ2WwcKs3ogCQ3paI6RCg5CkxA2ps0HAlHnojVK9U/azDEvzIULepG6q2d/4Fo9Ep5LUh19apvAzbJ9nYFx92ZFbf3EQ+YU8ET5pSMh8ZaQSP0SmsaknuFK9S16XukPn4FlV6FsTvU7QiFh2cnvO1wbVWA6dXMk=
+	t=1740128300; cv=none; b=o+Yoriq/2arEOsaeOgjE1MwJQeV+qDZPmdT/+Su9GVZTlFsb9KV0getxvJ7pRL+B8X5/ACuqp+yLcdhbqISALvP2Z83WjOrocwZhiENGmxxBHQVgSI9LIqwAPjxfVKovkrXtRKeoZSsm/zS9DjeyMFQB23jrcE2z5YqhnCv7pRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740128276; c=relaxed/simple;
-	bh=fBw0UDC89FHrebKrtI/LVhQbDEBN1NoKY48D4jfNI/4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=g+BTgLbcQNE7ww/NskVQO3Ap4YXgIRyfl8oXBaEfhkRba1k2YQbGdi+Dir0iFxFuusPjRsigC5Pbp9a0qWA8vrtyDksSaf20KpnI304sxhwIBZ5Kp0HMGPkmvpFhQSouj9MedI3iec/V0LKt/fh6ZFlgKPdPVoCiWineu3zksOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e7osRNB1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740128300; c=relaxed/simple;
+	bh=UyexAoCF90msn3EpRu+01QsmJ98TJOg4xx80bhAjidw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BJPPmC9GBG7Cx1Im8m5o7psyB5pNIgPEhGYNENT8XwHi3OjVfAcQ21dfszI9vwr+Ix1D0M5B8omwf+xzn4vljQlbbP7mhaKKT2JHVBTtWS7i15kDjp/u7GXElDXYTlofMZKPFeQO/3uNcxyHexOgL/jUHp4Tjz8Kcy149tSk6TU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=OG22an2v; arc=none smtp.client-ip=117.135.210.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e7osRNB1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEF7FC4CED6;
-	Fri, 21 Feb 2025 08:57:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740128275;
-	bh=fBw0UDC89FHrebKrtI/LVhQbDEBN1NoKY48D4jfNI/4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=e7osRNB1vgiJM2lAyOgcJTiKzPsS4C9vEWWgtvHhyI+qQ5MYeb/DrEEcUxbRF92cS
-	 r1tfUJW/bGTWJDRoo/JmGIkybzYak7KUd45njB/NKpE08vJkHvtzDOM8v6t5n2yP78
-	 oZ99aVg/b0tvW245qk2ktNfDYzWkeubMvcTMe+HVpzg8feb4ZYNnFyN0fYwCgYKGWg
-	 dZzQ9r9W2SsMvyYtB1CJBK8+/6azVbi3OZOYwEELSujq8JNRTxSk6dp10TYCHzslPn
-	 Y4ZmtzuHW5rHbqD3IREwleZr+a/K4XQUFRc+CtugNLNjErcX0k/rzjVC/tuYoXCITo
-	 i0bDJYxaquWWw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Jon Mason <jdmason@kudzu.us>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Allen Hubbe <allenbh@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	kernel test robot <lkp@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	zhang jiao <zhangjiao2@cmss.chinamobile.com>,
-	Philipp Stanner <pstanner@redhat.com>,
-	ntb@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ntb: reduce stack usage in idt_scan_mws
-Date: Fri, 21 Feb 2025 09:57:25 +0100
-Message-Id: <20250221085748.2298463-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="OG22an2v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=cLdYr
+	DKnT+YqC55FWMJBE8T5WHN7xWlY7jZoam5g8go=; b=OG22an2vFmq2J1aOQDTfU
+	QHDLzuvqtNf/kTZGxHanO+kUluLpUlaWxyq1g7sULnJwXgsM4gwtyH8KYKuQvFjO
+	z0cjBySXnLgwPyqNklaQ+EBJvcqTBrqXu9fMlZkkzQfRW6fzxkh6byFR0DdlWhPu
+	MPhPdZZRWUwpdB/XvHBEDo=
+Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
+	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wD312YbQLhng8gYNw--.55440S4;
+	Fri, 21 Feb 2025 16:58:04 +0800 (CST)
+From: Haoxiang Li <haoxiang_li2024@163.com>
+To: marcel@holtmann.org,
+	johan.hedberg@gmail.com,
+	luiz.dentz@gmail.com
+Cc: linux-bluetooth@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Haoxiang Li <haoxiang_li2024@163.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] Bluetooth: Add check for mgmt_alloc_skb() in mgmt_device_connected()
+Date: Fri, 21 Feb 2025 16:58:01 +0800
+Message-Id: <20250221085801.2760571-1-haoxiang_li2024@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,73 +41,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD312YbQLhng8gYNw--.55440S4
+X-Coremail-Antispam: 1Uf129KBjvdXoW7Xr18JFy7tw48Jw18ZFW3trb_yoWDtrcEgr
+	1vv3s3uFyUJas7XF1vkw43urnIyw1rAr97WrW3t3s7A3y5Gr1Uur1DXrnxJ39rua17Cr4x
+	Aws8GFWDZw40gjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRWGQhUUUUUU==
+X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/xtbB0h-6bme4OkyLEgAAsp
 
-From: Arnd Bergmann <arnd@arndb.de>
+Add check for the return value of mgmt_alloc_skb() in
+mgmt_device_connected() to prevent null pointer dereference.
 
-idt_scan_mws() puts a large fixed-size array on the stack and copies
-it into a smaller dynamically allocated array at the end. On 32-bit
-targets, the fixed size can easily exceed the warning limit for
-possible stack overflow:
-
-drivers/ntb/hw/idt/ntb_hw_idt.c:1041:27: error: stack frame size (1032) exceeds limit (1024) in 'idt_scan_mws' [-Werror,-Wframe-larger-than]
-
-Change it to instead just always use dynamic allocation for the
-array from the start. It's too big for the stack, but not actually
-all that much for a permanent allocation.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/all/202205111109.PiKTruEj-lkp@intel.com/
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: e96741437ef0 ("Bluetooth: mgmt: Make use of mgmt_send_event_skb in MGMT_EV_DEVICE_CONNECTED")
+Cc: stable@vger.kernel.org
+Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
 ---
-A number of users have reported this in the past, but I couldn't
-find any other patch for it so far.
+Changes in v2:
+- modify the title description.
 ---
- drivers/ntb/hw/idt/ntb_hw_idt.c | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
+ net/bluetooth/mgmt.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/ntb/hw/idt/ntb_hw_idt.c b/drivers/ntb/hw/idt/ntb_hw_idt.c
-index 544d8a4d2af5..f27df8d7f3b9 100644
---- a/drivers/ntb/hw/idt/ntb_hw_idt.c
-+++ b/drivers/ntb/hw/idt/ntb_hw_idt.c
-@@ -1041,7 +1041,7 @@ static inline char *idt_get_mw_name(enum idt_mw_type mw_type)
- static struct idt_mw_cfg *idt_scan_mws(struct idt_ntb_dev *ndev, int port,
- 				       unsigned char *mw_cnt)
- {
--	struct idt_mw_cfg mws[IDT_MAX_NR_MWS], *ret_mws;
-+	struct idt_mw_cfg *mws;
- 	const struct idt_ntb_bar *bars;
- 	enum idt_mw_type mw_type;
- 	unsigned char widx, bidx, en_cnt;
-@@ -1049,6 +1049,11 @@ static struct idt_mw_cfg *idt_scan_mws(struct idt_ntb_dev *ndev, int port,
- 	int aprt_size;
- 	u32 data;
- 
-+	mws = devm_kcalloc(&ndev->ntb.pdev->dev, IDT_MAX_NR_MWS,
-+			   sizeof(*mws), GFP_KERNEL);
-+	if (!mws)
-+		return ERR_PTR(-ENOMEM);
-+
- 	/* Retrieve the array of the BARs registers */
- 	bars = portdata_tbl[port].bars;
- 
-@@ -1103,16 +1108,7 @@ static struct idt_mw_cfg *idt_scan_mws(struct idt_ntb_dev *ndev, int port,
- 		}
- 	}
- 
--	/* Allocate memory for memory window descriptors */
--	ret_mws = devm_kcalloc(&ndev->ntb.pdev->dev, *mw_cnt, sizeof(*ret_mws),
--			       GFP_KERNEL);
--	if (!ret_mws)
--		return ERR_PTR(-ENOMEM);
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index f53304cb09db..f1a9f58d1c7e 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -9659,7 +9659,8 @@ void mgmt_device_connected(struct hci_dev *hdev, struct hci_conn *conn,
+ 		skb = mgmt_alloc_skb(hdev, MGMT_EV_DEVICE_CONNECTED,
+ 				     sizeof(*ev) + (name ? eir_precalc_len(name_len) : 0) +
+ 				     eir_precalc_len(sizeof(conn->dev_class)));
 -
--	/* Copy the info of detected memory windows */
--	memcpy(ret_mws, mws, (*mw_cnt)*sizeof(*ret_mws));
--
--	return ret_mws;
-+	return mws;
- }
- 
- /*
++	if (!skb)
++		return;
+ 	ev = skb_put(skb, sizeof(*ev));
+ 	bacpy(&ev->addr.bdaddr, &conn->dst);
+ 	ev->addr.type = link_to_bdaddr(conn->type, conn->dst_type);
 -- 
-2.39.5
+2.25.1
 
