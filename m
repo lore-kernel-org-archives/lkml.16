@@ -1,162 +1,245 @@
-Received: from mx.ssi.bg (mx.ssi.bg [193.238.174.39])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F39209669;
-	Fri, 21 Feb 2025 11:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.238.174.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A77F51F4E3B;
+	Fri, 21 Feb 2025 11:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740138175; cv=none; b=XuFzdMiV8yJaIw+qgiBPYOwzgLbbv44/4YznQRIgpY5e+xYz9x/B3hp62fnlmYxyqEgr9OcdOWD8ryDRvcMsWtvi9IrdQ9kI01OTuvo9esAv5B8SE8JSXaqJU3N+Vmf9QeY59hd6pmrLOKjIkPKA1Fw4bQZfPN5r1q9wiJQQ7xI=
+	t=1740138193; cv=none; b=DUfA85TWU1rBUZzxeTgzpvSLXhfWeClGu4pB9iRxS0M+1wfhT8IpsdA4o1ebC23koXcV4YSu9Hisfq+nh6mStI+eTpZLCKkYQ6E+B/Rfiy8OWLYq6VNsYXfQ7GSMXSXEj6bPu98dkqa9sJuhgi345+tN4acu7qhx+zBHYH4cLs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740138175; c=relaxed/simple;
-	bh=rHO1TE402i+X64ecIGyWE4iQT9eVIwC498+u0VfYSmM=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=oGj6/oa2cgzqmUYdNhFw4qYZr+sdMr3gpPMl8UvBL+Pq+PuBEDu4vI7spKCaNG4xmG7IIBI087GwA64XlceyAYo7lT+v75ySOvNM17B/qgwTTVOQTzz9BHnhY/eB6wfWhEWFSX+Jz84uEq0UXqGaov5bMtURP1X/7zmLMktiVgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ssi.bg; spf=pass smtp.mailfrom=ssi.bg; dkim=pass (4096-bit key) header.d=ssi.bg header.i=@ssi.bg header.b=ymShszHt; arc=none smtp.client-ip=193.238.174.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ssi.bg
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ssi.bg
+	s=arc-20240116; t=1740138193; c=relaxed/simple;
+	bh=3hH0roRCcLz4sS5DMVPEnjWhxH3Sjt1/xxmZLnBbHm4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=E5rrFMQUo4b1uBKX6nqHQQk8T/7C/DDYDDtiF0cOOSFx9e1F1z3BFF4lFuvOSGdzP5N2Yd7VqsuzxoPyp7qjrojn+TK6snijjpz0qHR8v4agYETcUftzxfFHJ8gjCG74maS/4cDavLEigZuEEFnt5ZIL3rhU0ydJCVe6euKQot0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AG5FXi9L; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=ssi.bg header.i=@ssi.bg header.b="ymShszHt"
-Received: from mx.ssi.bg (localhost [127.0.0.1])
-	by mx.ssi.bg (Potsfix) with ESMTP id 7DD7822C81;
-	Fri, 21 Feb 2025 13:42:36 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ssi.bg; h=cc:cc
-	:content-type:content-type:date:from:from:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=ssi;
-	 bh=Rvmmn/22ErC/lFdIKwmR7DRAR2odvCfMBz7Z7y4EnLs=; b=ymShszHtW9yj
-	NVSoY/HVnCviiGK64bWkr3OF0NU1esvPFv1zwF2SaJgTi/BEkF9jCEG/yy3WF6tQ
-	XZ2Bl4LfgNwWIw759/4pYk60BjSLuQ0AsmL+jXFBZlpgScS7dId1Zz5I+IJxswUD
-	F+d0D8cZYc6f64Q+XXLjVTQaW3fpOBN5soUTdOGtTezEH9DNXS6tsZ4y4QGrurYP
-	chDZZ/kwncjh5sVZiipXNmZFXtNGSkLNt4F26QspBIqYfI4EqfhLj6kT1cOerD/b
-	/bYU/L5jKwwfI+P/glvtLHZCphSQnqB2NzEuvkdzZE69zNdKOvZPO7oRO6wct0Hn
-	WidWEYmlX4/5buNFASeiqMwPmWsV6MH7dMvhHsadMm7Rplqbl/YB+4tRQtNo4uvC
-	7laVojkyBWtETNYxUq0to1Q72sSQvcAYbQsXjUfUKf6U2TWPvddzCmiu74dh1xD6
-	hN0zDhPGTcPXddusn3Sek2y/RI0MP7dsPJ9uPsoO799SoWC47kQTW7X+OO10GaeQ
-	uC9zYhsRZA/Y9dzunplwUU/kqiM2j2ps+UpnqyTgBimRE9PfLNbkm2flXYF6F/GD
-	HiGFFTreSpj48pJTDfdTyLIBrmZsSB06iesRVfT2PQaYBWiLiY17litAe1Qa7PZ1
-	+JTmdWuNz/N3U8hUAxNi3XCmstiS4gs=
-Received: from ink.ssi.bg (ink.ssi.bg [193.238.174.40])
-	by mx.ssi.bg (Potsfix) with ESMTPS;
-	Fri, 21 Feb 2025 13:42:35 +0200 (EET)
-Received: from ja.ssi.bg (unknown [213.16.62.126])
-	by ink.ssi.bg (Postfix) with ESMTPSA id 93ECD15EA8;
-	Fri, 21 Feb 2025 13:42:25 +0200 (EET)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by ja.ssi.bg (8.18.1/8.17.1) with ESMTP id 51LBgGPs027564;
-	Fri, 21 Feb 2025 13:42:17 +0200
-Date: Fri, 21 Feb 2025 13:42:16 +0200 (EET)
-From: Julian Anastasov <ja@ssi.bg>
-To: Philo Lu <lulie@linux.alibaba.com>
-cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
-        asml.silence@gmail.com, willemb@google.com, almasrymina@google.com,
-        chopps@labn.net, aleksander.lobakin@intel.com,
-        nicolas.dichtel@6wind.com, dust.li@linux.alibaba.com,
-        hustcat@gmail.com, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] ipvs: Always clear ipvs_property flag in
- skb_scrub_packet()
-In-Reply-To: <20250221013648.35716-1-lulie@linux.alibaba.com>
-Message-ID: <610b255c-51e4-0460-05a2-ab9cd8c43295@ssi.bg>
-References: <20250221013648.35716-1-lulie@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AG5FXi9L"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51L5VDLM012173;
+	Fri, 21 Feb 2025 11:43:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ZwcPHelaXI8L8nejP7UHjJnno81zL6w+b4NxNFzbR6U=; b=AG5FXi9LtspVBLQB
+	9fgQPlaCQ1VF1Hg6LMHvZfSSrq+anLpyFQiKmJENn6daVi89/2uBMKgIAHcfKgNU
+	KyFmlerBbCEmtJ9Y90NyFd841UxTQIZVgHkOR1I8zqcbelHPL3EICPvoRR/OBWdd
+	scVbC70Q8IqlCCEJ3usuEs9WtD53fZfk5PBLqRvrIQ9oyeY/A7/el8Sd+iVwx4+S
+	dyUR5HLhssbbaEC1XLSYaA46osoURInA6g2j8ByNE6EVpqTwLnvkGIFO+rtwGSDt
+	JazCHiDJI5Qk2oH2KJSj1t0EzJkYR5Z1IZuVdSsrWf2AsZoh40zPwn4osDZNKlDq
+	ATBQ/Q==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy1svug-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Feb 2025 11:43:07 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51LBh61R006226
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Feb 2025 11:43:06 GMT
+Received: from [10.217.216.47] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 21 Feb
+ 2025 03:43:01 -0800
+Message-ID: <10fc47a3-a58d-4ee8-8f88-fea7d69f38d1@quicinc.com>
+Date: Fri, 21 Feb 2025 17:12:58 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/5] clk: qcom: common: Attach clock power domains
+ conditionally
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette
+	<mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Ajit Pandey
+	<quic_ajipan@quicinc.com>,
+        Imran Shaik <quic_imrashai@quicinc.com>,
+        "Taniya
+ Das" <quic_tdas@quicinc.com>,
+        Satya Priya Kakitapalli
+	<quic_skakitap@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250218-videocc-pll-multi-pd-voting-v1-0-cfe6289ea29b@quicinc.com>
+ <20250218-videocc-pll-multi-pd-voting-v1-3-cfe6289ea29b@quicinc.com>
+ <2c5rbbpe5muw53oemyq6vhsmhzpzcpn7on4ujl5v7i7s3fdlob@eh37gy5dpfnp>
+ <bb4cd14e-a9ea-4c13-9774-cca169dcb8d1@quicinc.com>
+ <fvcmc3ibqcwzokvqomntxn2vkgduvbdsx3gd5vkctzwrik7bis@iyjrejmqkpfp>
+ <bf217f30-967c-4ffb-a3ee-f47e8ee97ad4@quicinc.com>
+ <bap2qy5cqhdzphc7qeoqztp65g6jsmwpxkghpgagxpj4qdifts@ogj7nb34rv6f>
+Content-Language: en-US
+From: Jagadeesh Kona <quic_jkona@quicinc.com>
+In-Reply-To: <bap2qy5cqhdzphc7qeoqztp65g6jsmwpxkghpgagxpj4qdifts@ogj7nb34rv6f>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 3CLcKd6wPvGQLb905-WlPTG7XTK-IayK
+X-Proofpoint-ORIG-GUID: 3CLcKd6wPvGQLb905-WlPTG7XTK-IayK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-21_03,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
+ adultscore=0 malwarescore=0 mlxscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=979 suspectscore=0 phishscore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502210086
 
 
-	Hello,
 
-On Fri, 21 Feb 2025, Philo Lu wrote:
-
-> We found an issue when using bpf_redirect with ipvs NAT mode after
-> commit ff70202b2d1a ("dev_forward_skb: do not scrub skb mark within
-> the same name space"). Particularly, we use bpf_redirect to return
-> the skb directly back to the netif it comes from, i.e., xnet is
-> false in skb_scrub_packet(), and then ipvs_property is preserved
-> and SNAT is skipped in the rx path.
+On 2/20/2025 4:18 PM, Dmitry Baryshkov wrote:
+> On Thu, Feb 20, 2025 at 12:43:42PM +0530, Jagadeesh Kona wrote:
+>>
+>>
+>> On 2/19/2025 5:27 PM, Dmitry Baryshkov wrote:
+>>> On Wed, Feb 19, 2025 at 05:06:11PM +0530, Jagadeesh Kona wrote:
+>>>>
+>>>>
+>>>> On 2/18/2025 10:48 PM, Dmitry Baryshkov wrote:
+>>>>> On Tue, Feb 18, 2025 at 07:56:48PM +0530, Jagadeesh Kona wrote:
+>>>>>> Attach clock power domains in qcom_cc_really_probe() only
+>>>>>> if the clock controller has not already attached to them.
+>>>>>
+>>>>> Squash this to the previous patch and call the new function. No need to
+>>>>> duplicate the code.
+>>>>>
+>>>>
+>>>> I tried calling the new function here instead of duplicating code, but that
+>>>> is leading to below warning since the desc passed to qcom_cc_really_probe()
+>>>> has a const qualifier and hence we cannot update desc->pd_list inside
+>>>> qcom_cc_really_probe().
+>>>>
+>>>> drivers/clk/qcom/common.c:305:33:   WARNING : passing argument 2 of ‘qcom_cc_attach_pds’ discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
+>>>
+>>> It sounds like this can be fixed with a one-line patch.
+>>>
+>>
+>> Removing const qualifier to qcom_cc_really_probe() will fix this, but that requires changes in
+>> many other drivers which are currently passing const descriptor to it.
 > 
-> ipvs_property has been already cleared when netns is changed in
-> commit 2b5ec1a5f973 ("netfilter/ipvs: clear ipvs_property flag when
-> SKB net namespace changed"). This patch just clears it in spite of
-> netns.
+> And this points out that the pd_list should not be a part of the
+> struct qcom_cc_desc. You are not using it in the code, so allocate that
+> memory on the fly, pass it to devm_pm_domain_attach_list() and then
+> forget about it.
 > 
-> Signed-off-by: Philo Lu <lulie@linux.alibaba.com>
-> ---
-> This is in fact a fix patch, and the issue was found after commit
-> ff70202b2d1a ("dev_forward_skb: do not scrub skb mark within
-> the same name space"). But I'm not sure if a "Fixes" tag should be
-> added to that commit.
 
-	You can add 2b5ec1a5f973 as a Fixes tag in v2 and I'll ack it.
+Above suggestion looks good, but we need to store the pd_list to pass it to GDSC driver to attach
+the power domains as GDSC parent domains. Instead, we can add a new API wrapper for attaching PDs
+and to map the regmap(qcom_cc_attach_pds_map) and all clock drivers that need multiple power domains
+support can update to use below new API and all new clock drivers can just use the new API.
 
-	Nowadays, ipvs_property prevents unneeded connection
-lookups while the packet traverses the hooks (different IPVS
-hook handlers can see the same packet in same or next hook).
-This includes the case where packet can be routed to local server,
-eg. via loopback_xmit(), for example:
+The implementation would be something like below
 
-Packet from device:
-	LOCAL_IN: set ipvs_property=1
-	Reroute to local server ?
-		Then to hit the local server continue the NF hook
-	Otherwise, route via device:
-		LOCAL_OUT: use ipvs_property to avoid conn lookup
-			and rerouting
-		LOCAL_OUT:
-			Unexpected divert to local server by someone else?
-			=> LOCAL_IN: use ipvs_property to avoid conn
-			lookup and rerouting
+--- a/drivers/clk/qcom/common.c
++++ b/drivers/clk/qcom/common.c
++struct regmap *qcom_cc_attach_pds_map(struct platform_device *pdev, struct qcom_cc_desc *desc)
++{
++       int ret;
++
++       ret = devm_pm_domain_attach_list(&pdev->dev, NULL, &desc->pd_list);
++       if (ret < 0 && ret != -EEXIST)
++               return ERR_PTR(ret);
++
++       return qcom_cc_map(pdev, desc);
++}
++EXPORT_SYMBOL_GPL(qcom_cc_attach_pds_map);
++
 
-Packet from local client:
-	LOCAL_OUT: set ipvs_property=1
-	Reroute to local server?
-		Then continue via loopback_xmit() without 
-			skb_scrub_packet()
-		LOCAL_IN: use ipvs_property to avoid conn lookup and
-			rerouting
-		Hit the local server
-	Otherwise, route via device:
-		Others at LOCAL_OUT: Unexpected divert to local server by 
-			someone else ?
-			=> LOCAL_IN: use ipvs_property to avoid conn 
-			lookup and rerouting
 
-	So, we need ipvs_property set only during the normal
-path where packet is received and sent, possibly to local
-server via local route. We do not care if the packet leaves
-this path. Currently, ipvs_property was cleared if netns
-changes but it is a safe option. What matters is if packet
-is routed via local route. Other paths can reset the flag
-safely.
+--- a/drivers/clk/qcom/videocc-sm8550.c
++++ b/drivers/clk/qcom/videocc-sm8550.c
+@@ -542,6 +542,12 @@ static int video_cc_sm8550_probe(struct platform_device *pdev)
+        int ret;
+        u32 sleep_clk_offset = 0x8140;
 
-> ---
->  net/core/skbuff.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
++       regmap = qcom_cc_attach_pds_map(pdev, &video_cc_sm8550_desc);
++       if (IS_ERR(regmap)) {
++               pm_runtime_put(&pdev->dev);
++               return PTR_ERR(regmap);
++       }
++
+        ret = devm_pm_runtime_enable(&pdev->dev);
+        if (ret)
+                return ret;
+@@ -550,12 +556,6 @@ static int video_cc_sm8550_probe(struct platform_device *pdev)
+        if (ret)
+                return ret;
+
+-       regmap = qcom_cc_map(pdev, &video_cc_sm8550_desc);
+-       if (IS_ERR(regmap)) {
+-               pm_runtime_put(&pdev->dev);
+-               return PTR_ERR(regmap);
+-       }
+-
+
+This way also, we are aligning more towards common code and the code will be uniform across all
+clock drivers and this doesn't require separate callback in each individual clock driver.
+
+Thanks,
+Jagadeesh 
+
+>>
+>> But I can squash this to my previous patch by updating my qcom_cc_attach_pds() function
+>> prototype as below and then calling that new function here
+>>
+>> -int qcom_cc_attach_pds(struct device *dev, struct qcom_cc_desc *desc)
+>> +int qcom_cc_attach_pds(struct device *dev, struct dev_pm_domain_list *pd_list)
+>>
+>> -               ret = devm_pm_domain_attach_list(dev, NULL, &cc->pd_list);
+>> -               if (ret < 0 && ret != -EEXIST)
+>> +               ret = qcom_cc_attach_pds(dev, cc->pd_list);
+>> +               if (ret)
+>>
+>> Thanks,
+>> Jagadeesh
+>>
+>>>>
+>>>> Thanks,
+>>>> Jagadeesh
+>>>>
+>>>>>>
+>>>>>> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
+>>>>>> ---
+>>>>>>  drivers/clk/qcom/common.c | 9 ++++++---
+>>>>>>  1 file changed, 6 insertions(+), 3 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/clk/qcom/common.c b/drivers/clk/qcom/common.c
+>>>>>> index ec27f70b24bdec24edd2f6b3df0d766fc1cdcbf0..eb7e2a56d1d135f839fd9bd470ba6231ce775a8c 100644
+>>>>>> --- a/drivers/clk/qcom/common.c
+>>>>>> +++ b/drivers/clk/qcom/common.c
+>>>>>> @@ -300,9 +300,12 @@ int qcom_cc_really_probe(struct device *dev,
+>>>>>>  	if (!cc)
+>>>>>>  		return -ENOMEM;
+>>>>>>  
+>>>>>> -	ret = devm_pm_domain_attach_list(dev, NULL, &cc->pd_list);
+>>>>>> -	if (ret < 0 && ret != -EEXIST)
+>>>>>> -		return ret;
+>>>>>> +	cc->pd_list = desc->pd_list;
+>>>>>> +	if (!cc->pd_list) {
+>>>>>> +		ret = devm_pm_domain_attach_list(dev, NULL, &cc->pd_list);
+>>>>>> +		if (ret < 0 && ret != -EEXIST)
+>>>>>> +			return ret;
+>>>>>> +	}
+>>>>>>  
+>>>>>>  	reset = &cc->reset;
+>>>>>>  	reset->rcdev.of_node = dev->of_node;
+>>>>>>
+>>>>>> -- 
+>>>>>> 2.34.1
+>>>>>>
+>>>>>
+>>>
 > 
-> diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-> index 7b03b64fdcb2..b1c81687e9d8 100644
-> --- a/net/core/skbuff.c
-> +++ b/net/core/skbuff.c
-> @@ -6033,11 +6033,11 @@ void skb_scrub_packet(struct sk_buff *skb, bool xnet)
->  	skb->offload_fwd_mark = 0;
->  	skb->offload_l3_fwd_mark = 0;
->  #endif
-> +	ipvs_reset(skb);
->  
->  	if (!xnet)
->  		return;
->  
-> -	ipvs_reset(skb);
->  	skb->mark = 0;
->  	skb_clear_tstamp(skb);
->  }
-> -- 
-> 2.32.0.3.g01195cf9f
-
-Regards
-
---
-Julian Anastasov <ja@ssi.bg>
-
