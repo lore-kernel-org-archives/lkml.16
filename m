@@ -1,111 +1,184 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B08204599
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 22:31:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7FB1FF612;
+	Fri, 21 Feb 2025 22:33:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740177107; cv=none; b=VuKvDCKmJ8HK+QsXj/ym9DibLXA3wS15hY5087psvrQTMmg57QsfMeXZ3jl1SHrnEFP5pKQMkPAZQJfvOfNoYKn5ZkOMeT0ASr8Zv9YvZh3+dMkZVBQh4OnfLq1QygIVwpOYVvmhzNu1yWnAalN9uWH77yYBaVDL7WNdxQ05lw8=
+	t=1740177188; cv=none; b=AbPMo1rQARJtGCYGozecnc1Xa3P1QhuPWXicLKiF+rMJBhB2rlx7zoDwnJuvLh9cJsC3mldhVfhz/yf4hPYYwkePWLHJ2ZEvnT4fdGNX9C+KVgzXGBci9ts6s14YcqiJxbTvSFY0q2b7ICRQkeybslypvTLgOWQ2eR4AzubcGFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740177107; c=relaxed/simple;
-	bh=/fYuZtpqwtnnGkN/fr/wmgCPg2VCEfWFjvPSN5XmwhA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZALdyo9Caz18b5JTkoZheBgHQ3P/DZJ8wd8yjQmuuFRuRkLcWWvjC919gKMv4PuX+6PS8cGTNlGwIZyeL2g/GmRixc4itpYeh7f1EpDU3n0ifxu2h1AlRbcMLCQUlYUvOlJn1GxtVUb1OlULLgKDHZT87TZAjKrOvZvSiQHlHCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=HUVZcPA2; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1740177188; c=relaxed/simple;
+	bh=jhNLKKmZdBg6gC6tf7E+ph0/0dRu9QCUxQqNNWqYgC0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J+ljDK6OwJBlTDADdpAY84LqqsIlxlZktv6GChKUrQJCEYkBBobDkOQGQMFzxHniY2jS6Mmw1dvOyfsCFpoV32DBINXmWl5JXa5utC5ectAOYNlStVdX7lLq7MtURlEzG2hiYrxq58U+fpRUWeJxbJpqgy0V/ldG7Tov9WJDc4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dYjhTcww; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HUVZcPA2"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22128b7d587so52439995ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 14:31:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740177105; x=1740781905; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sFE2Vkh4W4kK9IrN6erQ+4Og/P/7Lb06X2GD4vSsp54=;
-        b=HUVZcPA2oOetOP64ebYeg+J4EsWRwNtHVqSHadIzPBw1aI2mQ0Ok8RAVIICafJNNan
-         M07YTb/hle1rnmMDEpAxZzbAlg3vNxOOxtPurNNekXFc0oZLKIkP1t2ZroUJU/t43/uF
-         BiZp6wLfZRI4E0Sv9sxJRqVVnbbxjCjHsjD94=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740177105; x=1740781905;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sFE2Vkh4W4kK9IrN6erQ+4Og/P/7Lb06X2GD4vSsp54=;
-        b=OwvNtxXxQJoz/9XC9mTYQro7SADHyBF7uaOKkxQRmMz55DKfhH616dLVUyeVBwNphs
-         BkHfncxNK9g1eDTL5TakT/QsaXZ1Ry4ZQzUDhgD52g2HI/vw7/QpfO8Vwzd7uqsUXuqF
-         7GXbrkgvolqjeEIygKx6Ov47ZOtP/Tby8Nxgt9nQJTgVzy5Y23gimKRC88zyNPPMlsnN
-         ofUbkq7/jnXFoz/WbYvYHialZsgVkVGnjPI2l1IlFeZ+74/B1ZpthsbHP2qGadkpPWqJ
-         ISH8QtNcRmbfdLYMP9KmOC4AHtCyiPwqXJb4qQ4wGx8oGoFUdRjnRAZ1c1wa46uUcEc1
-         Ejiw==
-X-Forwarded-Encrypted: i=1; AJvYcCXMoP2xNLLhkLecAdeKOyMPMVfg7aN780cmTquQl6qyuoE12FLwX51TWjQE6ssNFwb3JKx7YqwbFWNtL+E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0+tSJWH5MbeLo+SmpNMv04MfQkB5ckCSMGDEi9QmoSoqS9O+Y
-	LO0OwfhC+czGt1reHKIArET9lxn2GZP6pXha0Qya3ZQhiR6gDlaPdSsFcFvObg==
-X-Gm-Gg: ASbGncv011O5dLw7hzeYolluiMtK4trqVCL3AxqSI8ElUoIEpkS3U5ANf3F7qB2d9U7
-	TBjydMSic6XBVXw76G8gUM6jZXCe8ENUW5ZKwEJCOgo3E2+cifW523KQTyEO8gjjXSv1uW5TQN/
-	FJJz29f9aKdm4Dxq32kySUXapZZatMWwAFXFButRR5b2SG2GkwwG596WV8iQE+64i1TznQHZDC1
-	mmTGa6yd86yWjh2/fYBsjKAY8AgilEOpP48o8Tl1We1IBsgn3OuE93lZYLAfpqqmXpnG6zgyaww
-	15n7BxYGX4Zj/23ZSrRfGLrPGL0=
-X-Google-Smtp-Source: AGHT+IGOUS6jHqktZGGxZojaBlDO9HK4TxnHkyGnN8Mo5dF34H643X32/pKEEVPpk8gt15j52Rs5cA==
-X-Received: by 2002:a17:902:d507:b0:220:c2bf:e8c6 with SMTP id d9443c01a7336-221a000add9mr82113705ad.53.1740177104772;
-        Fri, 21 Feb 2025 14:31:44 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:f987:e1e:3dbb:2191])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7326abf096csm12468634b3a.170.2025.02.21.14.31.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2025 14:31:44 -0800 (PST)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Hillf Danton <hdanton@sina.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Minchan Kim <minchan@kernel.org>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH v8 17/17] zram: add might_sleep to zcomp API
-Date: Sat, 22 Feb 2025 07:25:48 +0900
-Message-ID: <20250221222958.2225035-18-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
-In-Reply-To: <20250221222958.2225035-1-senozhatsky@chromium.org>
-References: <20250221222958.2225035-1-senozhatsky@chromium.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dYjhTcww"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3D05C4CEEA;
+	Fri, 21 Feb 2025 22:33:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740177187;
+	bh=jhNLKKmZdBg6gC6tf7E+ph0/0dRu9QCUxQqNNWqYgC0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dYjhTcwwqkB+c0oQIgk5fXqY7qD4VMlHaawaWAbdLAgVxTx4vfF28H23IGQVv6/wW
+	 F5djNnKngrl0f+naFDP4anowjcC+UUlJBfW2G90yCVkA8fnDxg9wUaVQUhJE5Rftwe
+	 x6hyPuSRyFIIAjNBIj9ZU2BH0iHb2D5wtYv/wOgzovzxXuOuy365iHa/Ztyb5Vlnuw
+	 C0VTKNpHdMGINUOuHbM3InaaOMmyisQGF6ZmDQbkC7iPgj1+zH7el90AjnSPPCFqc3
+	 osWpNaSTdCDmB23MaI9DbNlpajc5ecKR025rkdU3EETMUctdciuGxyoF/ejPSHz9AM
+	 vlLgeM8y2HUSQ==
+Date: Fri, 21 Feb 2025 16:33:06 -0600
+From: Rob Herring <robh@kernel.org>
+To: "bo.kong" <bo.kong@mediatek.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Conor Dooley <conor+dt@kernel.org>, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Project_Global_Chrome_Upstream_Group@mediatek.com,
+	zhaoyuan.chen@mediatek.com, teddy.chen@mediatek.com
+Subject: Re: [PATCH v4 1/4] media: dt-bindings: add MT8188 AIE
+Message-ID: <20250221223306.GA190439-robh@kernel.org>
+References: <20250220070114.15015-1-bo.kong@mediatek.com>
+ <20250220070114.15015-2-bo.kong@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250220070114.15015-2-bo.kong@mediatek.com>
 
-Explicitly state that zcomp compress/decompress must be
-called from non-atomic context.
+On Thu, Feb 20, 2025 at 02:59:50PM +0800, bo.kong wrote:
+> From: Bo Kong <Bo.Kong@mediatek.com>
+> 
+> Add YAML device tree bindings for MT8188 AIE.
+> 
+> Signed-off-by: Bo Kong <Bo.Kong@mediatek.com>
+> ---
+> Changes in v4:
+> 1. Remove address-cells and size-cells
+> 2. Remove larb12 related content
+> 3. Update id content
+> 
+> Changes in v3:
+> None
+> 
+> Changes in v2:
+> 1. Fix coding style
+> ---
+>  .../bindings/media/mediatek,mt8188-aie.yaml   | 90 +++++++++++++++++++
+>  1 file changed, 90 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/mediatek,mt8188-aie.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/media/mediatek,mt8188-aie.yaml b/Documentation/devicetree/bindings/media/mediatek,mt8188-aie.yaml
+> new file mode 100644
+> index 000000000000..232b5afc2ad3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/mediatek,mt8188-aie.yaml
+> @@ -0,0 +1,90 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/mediatek,mt8188-aie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: The AI Engine Unit of MediaTek Camera System
+> +
+> +maintainers:
+> +  - Bo Kong <bo.kong@mediatek.com>
+> +
+> +description:
+> +  AIE(AI Engine) is one of the units in mt8188 ISP which
+> +  provides hardware accelerated face detection function,
+> +  it can detect different sizes of faces in a raw image.
 
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
----
- drivers/block/zram/zcomp.c | 2 ++
- 1 file changed, 2 insertions(+)
+Wrap lines at 80 char.
 
-diff --git a/drivers/block/zram/zcomp.c b/drivers/block/zram/zcomp.c
-index a1d627054bb1..d26a58c67e95 100644
---- a/drivers/block/zram/zcomp.c
-+++ b/drivers/block/zram/zcomp.c
-@@ -146,6 +146,7 @@ int zcomp_compress(struct zcomp *comp, struct zcomp_strm *zstrm,
- 	};
- 	int ret;
- 
-+	might_sleep();
- 	ret = comp->ops->compress(comp->params, &zstrm->ctx, &req);
- 	if (!ret)
- 		*dst_len = req.dst_len;
-@@ -162,6 +163,7 @@ int zcomp_decompress(struct zcomp *comp, struct zcomp_strm *zstrm,
- 		.dst_len = PAGE_SIZE,
- 	};
- 
-+	might_sleep();
- 	return comp->ops->decompress(comp->params, &zstrm->ctx, &req);
- }
- 
--- 
-2.48.1.601.g30ceb7b040-goog
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: mediatek,mt8188-aie
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: Physical base address and length of the register space.
 
+Drop description. That's every 'reg' entry.
+
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  mediatek,larb:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      Must contain the local arbiters in the current SoCs, see
+> +      Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.yaml
+> +      for details.
+> +
+> +  iommus:
+> +    maxItems: 4
+> +    description:
+> +      Points to the respective IOMMU block with master port as argument, see
+> +      Documentation/devicetree/bindings/iommu/mediatek,iommu.yaml for details.
+> +      Ports are according to the HW.
+
+It's not really clear what the 4 entries are. Like any other property, 
+the order should be defined.
+
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: clock for imgsys main ipe
+> +      - description: clock for ipe fdvt
+> +      - description: clock for ipe top
+> +
+> +  clock-names:
+> +    items:
+> +      - const: img_ipe
+> +      - const: ipe_fdvt
+> +      - const: ipe_top
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - iommus
+> +  - power-domains
+> +  - clocks
+> +  - clock-names
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/memory/mediatek,mt8188-memory-port.h>
+> +    #include <dt-bindings/power/mediatek,mt8188-power.h>
+> +    #include <dt-bindings/clock/mediatek,mt8188-clk.h>
+> +    aie@15310000 {
+> +      compatible = "mediatek,mt8188-aie";
+> +      reg = <0x15310000 0x1000>;
+> +      interrupts = <GIC_SPI 787 IRQ_TYPE_LEVEL_HIGH 0>;
+> +      iommus = <&vpp_iommu M4U_PORT_L12_FDVT_RDA_0>,
+> +               <&vpp_iommu M4U_PORT_L12_FDVT_RDB_0>,
+> +               <&vpp_iommu M4U_PORT_L12_FDVT_WRA_0>,
+> +               <&vpp_iommu M4U_PORT_L12_FDVT_WRB_0>;
+> +      power-domains = <&spm MT8188_POWER_DOMAIN_IPE>;
+> +      clocks = <&imgsys CLK_IMGSYS_MAIN_IPE>,
+> +               <&ipesys CLK_IPE_FDVT>,
+> +               <&ipesys CLK_IPESYS_TOP>;
+> +      clock-names = "img_ipe",
+> +                    "ipe_fdvt",
+> +                    "ipe_top";
+> +    };
+> -- 
+> 2.45.2
+> 
