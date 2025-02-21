@@ -1,102 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DCE81EEA59
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 05:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBCD11F758F;
+	Fri, 21 Feb 2025 05:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740117514; cv=none; b=l4DuSK/dOgElMRZY8VuIRDDrN8fgXgvVu2HXvkNSLUj2fb3Xy5tIebrJByNSJFyi6kX9GMqS+Ip2Yh5zDKQMWqCIr9fMZXTWGp9xd48C/IAQP+8MoRZxqDLe3Lx35Q/INuuHP8dxOObTAXuEWK04TXbF4CgCXzKPT1VG+2eNSKQ=
+	t=1740117564; cv=none; b=qnvGJBooNAjoPKbqRAw+lxmUF3jHp8GiKEqyWkpDcZPNuHB7I7f7F/TdbxMqRowrHVwygAyBsn2k/i+qRfgW1tqYUOJzirTTOayfnYRKsy6Rahzj6a/iS9sLuQdB+j1j9urbKkbYSfiFe7q8XZfGMvAe7G6Mwco0UUb5x4zvlS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740117514; c=relaxed/simple;
-	bh=eAuYwlysZ7m/8cEe+oEJgI+h3VQhPc9pSBGB6ags7Uc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XO8VD6+4ysB/6wrZXEAzw/1+XEo4sVM626zjc0qAA4/EUx8PeYH2EOgT8ng+95slPEZrkDAsxYwAKab07Er6kAbGZWU7EfjXBMUSQpl28+jZjxnEoDD+aL5/n3RUz0Mg/WCNI2YUQh7Qqh8xW0W1GsIr4FzeYoK/aZ2MqTjCuEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=HaBXhcLM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740117564; c=relaxed/simple;
+	bh=ibHzWRvBjhxfOa5MDrD8eYfboMb902KHcCF3VtsllUw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cjp9OY6t9MYQy8RSgFB1G7h+P6AAGr+xb3Xe/NWU+wufbxXWQLBE82k4HUMg02crvrCvSJ1J4qmtdmrxbUnZQjTc3uouZtF4P/DjR1c/raIf/ks1Ppg81KI3lq3hfvYcI8LdAePDtTCFsxiFwI979zTxjefqW5GnDfSHhFiFhNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JP2QvTkz; arc=none smtp.client-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="HaBXhcLM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F60BC4CEE2;
-	Fri, 21 Feb 2025 05:58:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1740117513;
-	bh=eAuYwlysZ7m/8cEe+oEJgI+h3VQhPc9pSBGB6ags7Uc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HaBXhcLMbmXEktGS8xExYWOIRJx4iu28bJYpKdWe6sFRAQEk7X3FmLFtZzdLWTWSE
-	 aqGB6WtsmkM80XRAlrAG7qTMEPf795k1FfkObOKuRVqreJSMiKUBSo//CqBUH4gaKP
-	 zG6aTDW17Ohe2etUth4Y8w1RT7l3GFtaSk6ggGhI=
-Date: Fri, 21 Feb 2025 06:57:26 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: linux-kernel@vger.kernel.org, Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	dri-devel@lists.freedesktop.org, Danilo Krummrich <dakr@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 1/6] drivers: base: devres: Allow to release group on
- device release
-Message-ID: <2025022102-another-balmy-fe4d@gregkh>
-References: <20250212200542.515493-1-lucas.demarchi@intel.com>
- <20250212200542.515493-2-lucas.demarchi@intel.com>
- <2025022007-judiciary-broadly-a1f8@gregkh>
- <ky3kd4rwuwm6lehmb3n7bplnaoxiwuje67q6m7tvuz6vt7bnnb@lool6xnskx32>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JP2QvTkz"
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-520847ad493so1052870e0c.1;
+        Thu, 20 Feb 2025 21:59:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740117562; x=1740722362; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Gwyvrx/Jezq/07hjLkAb8nbo563bqDJpeescdjeTq+k=;
+        b=JP2QvTkzx4+HyfkJmdgLCPUMovyM5bqAFrlhCGDtrLRWS7YfZiTpEMFi6yQ3yZTmSq
+         +cYTC4JVI2I1oCLymzP6jyWWnlWowXXhu38eDSWfTsAzSquTk1SXa3JxDEopqZbpH5TB
+         gArdiSY0waVv7rqd55G0z4wx9dprsZ8vzPit/BWHXIjsoYmW0HBE/bw8453QcXIbAqU/
+         vgBpevfbZL8du4rFw7QW8z7HMy+V6WTD/es2itM1RsBP8MHGD9eUooEcDUT4bQy/xOUF
+         WBCbekmjTHvnla/n0V/8TiHYzLhIDplMU0NppNem3/B5vjZIhjR9WycqghdrfNRsfno3
+         JKqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740117562; x=1740722362;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Gwyvrx/Jezq/07hjLkAb8nbo563bqDJpeescdjeTq+k=;
+        b=D02IBSMMeTGsaz3MieObNSAB/hm0FIuaiKCKEeEQ02tM8THKCBRVMZOnjSFaVlm5b0
+         vxae1Fxw8dW5XojGhi/XsSa/RHjE1UhkgyS54r123zwU6QPAUaqux1ZxZwZkfWhhIgm4
+         bbrnMXKcN2t2tJ3iUJ5tEjcTwml5HiXAf8Ay0jOsdzCxYR0M1QyFnJVgs7H5FcHm/2+p
+         M9yr3WUp/iF55XlJyXhS/uu+0s9/x4ZNVFvqXCK99wSrYeRWbaLHGJriDoXx7J9+jqn5
+         J37Y74f3LUzr0DaE1FVm6Yrb80cLx/EUtGF7hS8qX8I401d5n9NLjIDZHe/cbkZokd+f
+         qw5w==
+X-Forwarded-Encrypted: i=1; AJvYcCVGF9WIlT3xa6X1WLRZ/m7hB4OdmmlCXes/lsj3jIUMwjDmSyW66V/as4etZecvt7L+M6UMkManT8wdAjXhcO4=@vger.kernel.org, AJvYcCXNxVGRgES+wrXcPojGFdRLSyHXVQ8thnVq7sRMdIuR3FcqgmyJqw2LwxOvxR2+Q2doGk2ujS35p9kkhgo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgTnkMkprCSDPNoYx934i9cLncxmEvpfHC3cuxAz2pcaI15wAT
+	xHtBM4a6enRfJys6Gsgi6LFgLR6DNcYXnQJCs+Y9X6sJv5q2R+cwP4ZzvahviUYenniDt7VTtCL
+	wrJjGlkDFFwHSIHGPsChfHl2vGOw=
+X-Gm-Gg: ASbGnctcWa3+KLouFbua9r7zVIzeHKkn6SmBMwqCYuGthsAhaQv3dBCXkSChVMk4pv7
+	X/or3xo4qG/qVGUhxJ1E2mdyqr8m3RZcgZUaWg062x3I/6TbRjUoN3PAC2+1K6zL/1uwBsTbSoh
+	kyuwNGpGcg2pKjFdqQAJlFADTfjdB/lcq75VUspTFW
+X-Google-Smtp-Source: AGHT+IFK0Te2gAAu9/ippDJ8IfNRI2f4AiOjMhPMlVJgO17ZMIkw5wXZbxAhshYN4Tkjwgte5xFD1iXsknqV9tsPGRY=
+X-Received: by 2002:a05:6122:3d03:b0:51f:3fa3:d9af with SMTP id
+ 71dfb90a1353d-521efb1aa44mr620312e0c.1.1740117561686; Thu, 20 Feb 2025
+ 21:59:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ky3kd4rwuwm6lehmb3n7bplnaoxiwuje67q6m7tvuz6vt7bnnb@lool6xnskx32>
+References: <2025021954-flaccid-pucker-f7d9@gregkh> <20250221051909.37478-1-felipe.contreras@gmail.com>
+ <Z7gQ3kSeCf7gY1i9@Mac.home>
+In-Reply-To: <Z7gQ3kSeCf7gY1i9@Mac.home>
+From: Felipe Contreras <felipe.contreras@gmail.com>
+Date: Thu, 20 Feb 2025 23:59:10 -0600
+X-Gm-Features: AWEUYZm-dCCYDK7IVFbcHBzJ3z4WArMhXwpI8ggrnPh3sijx9AIfdIEQ8lnlDjM
+Message-ID: <CAMP44s1Ai5qMU4yV+Rwz4cY869ZA=cxBcTf2wuaUY1oyLKUNCg@mail.gmail.com>
+Subject: Re: Rust kernel policy
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: gregkh@linuxfoundation.org, airlied@gmail.com, hch@infradead.org, 
+	hpa@zytor.com, ksummit@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	miguel.ojeda.sandonis@gmail.com, rust-for-linux@vger.kernel.org, 
+	torvalds@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Feb 20, 2025 at 05:48:10PM -0600, Lucas De Marchi wrote:
-> On Thu, Feb 20, 2025 at 01:24:20PM +0100, Greg Kroah-Hartman wrote:
-> > On Wed, Feb 12, 2025 at 12:05:37PM -0800, Lucas De Marchi wrote:
-> > > When releasing a device, if the release action causes a group to be
-> > > released, a warning is emitted because it can't find the group. This
-> > > happens because devres_release_all() moves the entire list to a todo
-> > > list and also move the group markers. Considering r* normal resource
-> > > nodes and g1 a group resource node:
-> > > 
-> > > 		    g1 -----------.
-> > > 		    v		  v
-> > > 	r1 -> r2 -> g1[0] -> r3-> g[1] -> r4
-> > > 
-> > > After devres_release_all(), dev->devres_head becomes empty and the todo
-> > > list it iterates on becomes:
-> > > 
-> > > 			       g1
-> > > 			       v
-> > > 	r1 -> r2 -> r3-> r4 -> g1[0]
-> > > 
-> > > When a call to component_del() is made and takes down the aggregate
-> > > device, a warning like this happen:
-> > > 
-> > > 	RIP: 0010:devres_release_group+0x362/0x530
-> > > 	...
-> > > 	Call Trace:
-> > > 	 <TASK>
-> > > 	 component_unbind+0x156/0x380
-> > > 	 component_unbind_all+0x1d0/0x270
-> > > 	 mei_component_master_unbind+0x28/0x80 [mei_hdcp]
-> > > 	 take_down_aggregate_device+0xc1/0x160
-> > > 	 component_del+0x1c6/0x3e0
-> > > 	 intel_hdcp_component_fini+0xf1/0x170 [xe]
-> > > 	 xe_display_fini+0x1e/0x40 [xe]
-> > > 
-> > > Because the devres group corresponding to the hdcp component cannot be
-> > > found. Just ignore this corner case: if the dev->devres_head is empty
-> > > and the caller is trying to remove a group, it's likely in the process
-> > > of device cleanup so just ignore it instead of warning.
-> > > 
-> > > Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
-> > > ---
-> > 
-> > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> Thanks. Is it ok to take these 3 through the drm tree or are you taking
-> it through yours?
+Boqun Feng wrote:
+>
+> On Thu, Feb 20, 2025 at 11:19:09PM -0600, Felipe Contreras wrote:
+> > Greg KH wrote:
+> > > But for new code / drivers, writing them in rust where these types of
+> > > bugs just can't happen (or happen much much less) is a win for all of
+> > > us, why wouldn't we do this?
+> >
+> > *If* they can be written in Rust in the first place. You are skipping that
+> > very important precondition.
+>
+> Hmm.. there are multiple old/new drivers (not a complete list) already
+> in Rust:
 
-As the drm patches depened on these, I figured they should all go
-through the drm tree, so please feel free to take them.
+That is a black swan fallacy. Just because you've seen 4 white swans
+that doesn't mean all swans are white.
 
-thanks,
+> , so is there still a question that drivers can be written in Rust?
 
-greg k-h
+I didn't say no driver can be written Rust, I questioned whether *all*
+drivers can be written in Rust.
+
+People are operating under that assumption, but it isn't necessarily true.
+
+-- 
+Felipe Contreras
