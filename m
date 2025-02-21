@@ -1,109 +1,121 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D894E1DA53;
-	Fri, 21 Feb 2025 14:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F174353AC
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 14:47:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740149209; cv=none; b=o4WVHDXguwrXmJe1Jr3n+OXGH4PAN8yKaIPjBcvEyP5K0iiCWOguoA0EOvTz3vMLrvNwtt1Tg5i/kEwvDSB4FW9ZZ6/zYTAqQ+2JaHKW6P2neqFFGeJWCFlDTAPaZ1GKiD1KbSA+W7AoWUoqXhP27+4cpghP15rCKAGnp0qC8g4=
+	t=1740149282; cv=none; b=HDg6VFLclRwOh0ZziXpQKiPN5lKRehhYcccCiVyhB335Je5g7LCW0wrpjU15J2ZqstUd2B792CIaJm3odvb2sbvM/S9PNnzK0UW46z+x0b1Ee0hXYIcX8e6Nmn09/5RczllrmswZr/k3t1t5eg4xAe2qz1pb0hXGlj6Kq6eAsgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740149209; c=relaxed/simple;
-	bh=5GOU+RIMfCC5N0gNEUaBFnynin/UwOsQsntoyaSlWqk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OzAvU1teZ4fP5J47hD38wacnykhbisrA+LfUoc6pIv6OCopq3OyuUhVfaCAbKKZrkVsK0zcavwAPwrc6t5uFl2pU0dm+Euv8YddQzGIFR+DTalh0AuvPJTO+NvwO27Pbx9TJ9Pu6Pjpwx3aCKuYU09TM9YBPTlVJDkAE0guB7Yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KghgJ7Vy; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740149282; c=relaxed/simple;
+	bh=VJc2fD5OV7xtJnzZHXcMaP4k2Fxqrl7cLt4EomVW+yU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WoHtNRRiHzh02badJJLpcX2SWtsYoobs75EZGhLPiFOCwWQabB8F3oazaMSBasWn7u0DmHdWgbDx8MTMZNAJAK93YvDyLvSLh7C9/ok+VA60i+va7wv30vXN4EGoVkYkbw9BpGDHYaPJp30p1w7ybIYtYr/6y5eQ6rXu7rdGORE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=uU7Z6Lc/; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KghgJ7Vy"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-307bc125e2eso20791801fa.3;
-        Fri, 21 Feb 2025 06:46:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="uU7Z6Lc/"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4398e3dfc66so19132095e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 06:47:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740149206; x=1740754006; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6W8WbGFo8CWgWYywBvp5OKFnvaxV0YCRUMlkTvha3ZE=;
-        b=KghgJ7Vy9jtpqHUnxJY2zaCrOWxngN5wRmk8XP7ZHV6QpEuRjo8kXJHt6+JFnBcPso
-         jXuVw1U7elw4kQO6b0sZRAnrED69Yd/Meer6reiXCUX2wIZsB30C65x3PzfQuB5Mvnxf
-         sPZw6wdUul448uVaTaO1I4AQb+pPc1Cg0Z25HCIv5/hxddFd8dHPLQqqI2k+Mz2wIXC4
-         AiJZEgCZ/qMuDs1iWPmujCjgA54tw5bC7FyxJBc+4SGRDBQJI2eG6DbRAtIyQm8w/TNH
-         B9v8GPh5m5OxHauD9Sx+18bC/rZRjGFq4u20JCh+QzgwL+l6i7YR7L+Xh1nwvLY1PqdD
-         lJ3w==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740149278; x=1740754078; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KHIl+3dGIE27mXpj3uMGQAy606qGwuorLow6X3a4wQA=;
+        b=uU7Z6Lc//HK/B+fyKRd9vNxCF8psr3VBmDzlhyn+lu7FSjWbmWH9Fr+5sWoIdFqRZn
+         TYx6TYFCISuYrZElVqAUYnXLZaz3D3fcJJuFZynxqKPEwLcWv4X/XgeYSaPWtMP9c7Bf
+         povI1yVtD8d0DwCEZD0hVL+093hef1OGWJirICBFwsi9gfs0xZkX8XyHW83IXp7MQVZx
+         SWJvv8ul82eMRWhoGQqRA0GkfeedrE20PIkOGyAu4Zo9HsjlxFtMP1p+NQNrmCgfGt/G
+         7C9j66E/LE7xWJVNQh81qh88wGiYHyVJPtVY9h9MNfUJJmZUn2jksXa/TlSvUSX++Yya
+         pCDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740149206; x=1740754006;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6W8WbGFo8CWgWYywBvp5OKFnvaxV0YCRUMlkTvha3ZE=;
-        b=ixY0UiqHrbpgZH/fWFprL5BQg/9sXVAMIbuRbtSeXq6a0kgGjJhqMRKW6Tr0mkFOh/
-         LoSHhJpXy8Umoc3G4UTv4HOHA8r7RA4WYk9hpbbuH0DTtmrmP2LAVCVYG7YHMOUjr3Eo
-         PEOf+JK9/uydbdH3Ot6uRe5yuhOxQWt3TjunnD06n5SDmdbYcYpMyCQgw6AgQ5o6zn58
-         ZLpd0nirGfijPMw6bloTdUNm9pSz6ritwUoPSVtjAQd8g+SF4HGaiIFUmWzPyl5tVbW9
-         6Jjo9cnaAoGMz3UbOxcSmT2q35HInss8mnozQ8obhSm81iOsSk+vhOSLM8NdA8GVGB9L
-         lb4g==
-X-Forwarded-Encrypted: i=1; AJvYcCVzM4gr3VSZk49LUFR6fUdiDNFOYY9wh8PvK0twEl53MYa+fteQwGDF9trCa4ByHd1wjMxqMvUvPvwMrw8=@vger.kernel.org, AJvYcCW6dFgBbdtGsLm9GAwHgOyYGp03oImo4qk5gj6p1f3mKzAPA2ve+nCMiO0XA4eulDrWHSu2F6JB0tkOBPFEQqg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUWFjSSdupdit6OARPj6YooFt416i+ZxiRSt9VmdGtqCwIzuhV
-	ak91kpmBSaNNAMRUgp9+LExBaFCWwChOZ1tjYbgRs5ukvNs1YMWv1AcAOuU+5rOz8dMRQpmJ+pW
-	esBZxE8xHgdmALjdgYZKsDWywa3Q=
-X-Gm-Gg: ASbGncs9v9GpYw1bNP+PjuI/p13fMiDKOKxx+DIgL4k+l5WJobUZkBXkD5TyTc4/Oc9
-	nFYjMhwAcSUcZCmHjCVIbsfLv9BJh40OqmKSGhdsAOelV0ZAduAvQtqrVanrVHvcL7mo9A1u2nA
-	xdRGPIJPlObd1JI9Lx+cKIZQdbNWWTqoBCXfPAeURs
-X-Google-Smtp-Source: AGHT+IElrI9KTo+gODJDgq/zIjPYKjl+Qr5uMMLPLsXW0QDD+KQtvWuMXiFonZl3R8QnrJ/25gE9xkg47ViIKsFgU1w=
-X-Received: by 2002:a2e:98cd:0:b0:309:2283:bea8 with SMTP id
- 38308e7fff4ca-30a59994e41mr14438821fa.34.1740149205041; Fri, 21 Feb 2025
- 06:46:45 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740149278; x=1740754078;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KHIl+3dGIE27mXpj3uMGQAy606qGwuorLow6X3a4wQA=;
+        b=jmEnag8vqb00cISU1XMHSfxP33bt4YYfnRCPHHBBn9x3Q/xVCnNkEdWGAn7d83aLGj
+         yq3slN2OamMd/Zk2wlhLiWTakEhjWkmc/J1O6IlJsjsjh70C6vW3aL1Fnr+8J2QVD8WO
+         c2Ju5isK4ygYMlepgYNY7N74aD0WEFzLMoMHNjTt3D+shW6keMgaO3T7IpEf2/5oNj3Z
+         jseZ1hI7enf39oDZjLGJS8D9NYWVX+pIDx3UYTaIm8nRd1xlc/7Et0qGBOLsG4mvh6oD
+         m9itgkQuL1hxtiiBTHwa9YwPe+xGn1ZIikR9rsPPWSRcd1r2ogjyXhVTbcj+ovk+kA0j
+         SxZw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQpXm/MQvunz7Q1HLcMHKs9iFi92EndgJpRizumy9doZbtMfypKxIogm8OgPnRKc7ViWFVasl8MVsugmU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkeKIjYfZya28vv6JIXAEUQyPxqT2MOEWSjV2a8vt370pdFSvr
+	6XhfnjjEKiUdJi0jYgfg9a4C056jQ1rWAwpxQBqR+NzzWgE0yTeBgyilpSHmj2g=
+X-Gm-Gg: ASbGncto7y92uem/oHlEy9tsatuJFSVBt7UQ8naG8MtIkFlJdzSzLV8hjuuLrtFjKW4
+	YkbTCbSvdqdPYJA6HIdmzHP8cywNxQ8JQM5RvUVVOWwVCRr7HD9+sANnFYZynK66vU/1GNOyhwG
+	09OdpFZkuZY0y3rtyhChq1+VS4C6UURsfyUId5rNYgv5j7fQfYr75vdLkQq45O4iHAoIHv4cgOG
+	VECJddIcnSMbJysLeUO/3qEaq9EaSMhO6QD1Ssa4rLZlNTqgHOKtTPpdIAjuAPrS5HAjg6v+0XH
+	jBXYi6hgb9CGXFwqROBiOgdunQ==
+X-Google-Smtp-Source: AGHT+IGZ83OKySBHkM2i7Fteix9HZI2XYcQ7YK7UCGOFlxTyWB4ysreuxLKAdoAc9mvwA33dt4t4AQ==
+X-Received: by 2002:a05:600c:4f91:b0:439:98b0:f8db with SMTP id 5b1f17b1804b1-439ae1f1903mr36508685e9.16.1740149277752;
+        Fri, 21 Feb 2025 06:47:57 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:6cbc:77f7:6f0e:5a7c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4399be79d92sm57998475e9.0.2025.02.21.06.47.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 06:47:57 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio fixes for v6.14-rc4
+Date: Fri, 21 Feb 2025 15:47:50 +0100
+Message-ID: <20250221144750.108147-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
- <20250218-hrtimer-v3-v6-12-rc2-v8-2-48dedb015eb3@kernel.org>
- <KDmrJnQA2_Ojf67mD8WA_UafgVCACRRleB9t-D_1yl_bua8e1VWdGQAUvmMGHscqRHu1gzPJCKe_BfotutZm5Q==@protonmail.internalid>
- <CAJ-ks9ncOyGyQsDFOBxg-7wmXkrQYiZr6H6eEFWsFstk=p1uAA@mail.gmail.com>
- <87wmdkgvr0.fsf@kernel.org> <djAeSx8DNZwss2-UqXGmhVPqYm2z4LhKWC70jPHPisd1w70qmpmOfVbHfhqJErhoFwVFM8IpbTv4MKkk_BIpQw==@protonmail.internalid>
- <CAJ-ks9mNidHZvWkFJE1jExc2oVk_bbJpiO_DRMrWu5nYhTpKgg@mail.gmail.com>
- <87ldtzhexi.fsf@kernel.org> <87cyfbe89x.fsf@kernel.org> <Z7iQcDa72XnJ5zGC@Mac.home>
-In-Reply-To: <Z7iQcDa72XnJ5zGC@Mac.home>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 21 Feb 2025 09:46:08 -0500
-X-Gm-Features: AWEUYZk1J2lmqhCaJhG6uOBA7TXJ46zV-bEeC2VNizbAo2dhpik8C1JEQG5L9q0
-Message-ID: <CAJ-ks9kQccoa7znFNzWAgi6_G0TKvLUARWPZ_Dbed1C-d4Lr+Q@mail.gmail.com>
-Subject: Re: [PATCH v8 02/14] rust: hrtimer: introduce hrtimer support
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, Guangbo Cui <2407018371@qq.com>, 
-	Dirk Behme <dirk.behme@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 21, 2025 at 9:40=E2=80=AFAM Boqun Feng <boqun.feng@gmail.com> w=
-rote:
->
-> Hmm... if you mean:
->
-> trait HasHrTimer {
->     unsafe fn start(&self, expires: Ktime) {
->         ...
->     }
-> }
->
-> Then it'll be problematic because the pointer derived from `&self`
-> doesn't have write provenance, therefore in a timer callback, the
-> pointer cannot be used for write, which means for example you cannot
-> convert the pointer back into a `Pin<Box<HasTimer>>`.
->
-> To answer Tamir's question, pointers are heavily used here because we
-> need to preserve the provenance.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Wouldn't the natural implication be that &mut self is needed? Maybe
-you can help me understand why pointers can express a contract that
-references can't?
+Linus,
+
+Please pull the following set of GPIO fixes for the upcoming RC. There
+are two fixes for GPIO core: one adds missing retval checks to older
+code, while the second adds SRCU synchronization to legs in code that
+were missed during the big rework a few cycles back. There's also one
+small driver fix.
+
+Best Regards,
+Bartosz Golaszewski
+
+The following changes since commit 0ad2507d5d93f39619fc42372c347d6006b64319:
+
+  Linux 6.14-rc3 (2025-02-16 14:02:44 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.14-rc4
+
+for you to fetch changes up to 96fa9ec477ff60bed87e1441fd43e003179f3253:
+
+  gpiolib: don't bail out if get_direction() fails in gpiochip_add_data() (2025-02-20 14:08:18 +0100)
+
+----------------------------------------------------------------
+gpio fixes for v6.14-rc4
+
+- check the return value of the get_direction() callback in struct
+  gpio_chip
+- protect the multi-line get/set legs in GPIO core with SRCU
+- fix a race condition in gpio-vf610
+
+----------------------------------------------------------------
+Bartosz Golaszewski (3):
+      gpiolib: check the return value of gpio_chip::get_direction()
+      gpiolib: protect gpio_chip with SRCU in array_info paths in multi get/set
+      gpiolib: don't bail out if get_direction() fails in gpiochip_add_data()
+
+Johan Korsnes (1):
+      gpio: vf610: add locking to gpio direction functions
+
+ drivers/gpio/gpio-vf610.c |   4 ++
+ drivers/gpio/gpiolib.c    | 100 ++++++++++++++++++++++++++++++++--------------
+ drivers/gpio/gpiolib.h    |   4 +-
+ 3 files changed, 76 insertions(+), 32 deletions(-)
