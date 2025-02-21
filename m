@@ -1,169 +1,80 @@
-Received: from mail123.out.titan.email (mail123.out.titan.email [34.198.80.90])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7AF204588
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 10:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.198.80.90
+Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.9])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88E80204588;
+	Fri, 21 Feb 2025 10:38:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740134287; cv=none; b=boK7hiVRBL4zf5jaynRdgSDlxhpDMgWWaQLd3lW+lHCs/v0efgTcD5lmo9wXXF/iFQ8/oOcvNp1VzgsvU54jn6/z50sntf9k2cF1I6ImAkyxDhLfn7/byZCtXvKBmYYZX8T+z5S7BkGkDWQaUH2GW/gSt9pur16dt+Hw3rw6eCk=
+	t=1740134295; cv=none; b=K5MgbiTK8yk58I35NVWVWS1LzjNN72fPqWiOAM6F26jpwNrJvkjlODbXUYc0Bc/73ZGzoEV1h5DcTqoc6dGwOeSmp6tX3AvXyvrGeReBOgIaA94CivnKAW9S5LbjXbgwaY1DhIYDQJCxLEjOX6icwMcy48I0tZxWV2BCrAFg9Nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740134287; c=relaxed/simple;
-	bh=ST+REIAvtLM2EfHTQdejogwwPWs0d5CZXLFqhlK+QKs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VLPJgf4upUibD8SJWbKvhSM1SJmevvs1eHIzhf6VxncriadLaTgwOhsJgMnhqpHNKS7MoDbyXuJ+MRPk+tHYCCC6blvD2dqvTMcmBU7r5kf0yRYUlH0NjhT6a/T0CRvz6ZbdapF3XD3I/F9fL1jCaxW0C2YP0IxJZWIj9UR0WyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=BvQOp7m4; arc=none smtp.client-ip=34.198.80.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
+	s=arc-20240116; t=1740134295; c=relaxed/simple;
+	bh=zsuGkG9pt7DR8lIBmmpcoQmZuYi7n9jRkvURlQJZYoI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fYqOz9mFdNv5y+fa0ApasnN2t1bMf2IzTebTJVGS3ELNJcYyuZ2F4y32XyRZwzbAVlhIPFSEFotKlAJ5ZFMPKI8+Y61qDWcdOcTrRkAlB62Eqo5Ut+CquWVmiJJfTY0E4Ds9OIG35Hc9MT2jTwhCgYFN74qY4DdC75bpLsqckwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=Zaacu6yf; arc=none smtp.client-ip=220.197.31.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="BvQOp7m4"
-DKIM-Signature: a=rsa-sha256; bh=HJViwRYJWG0zNvDaTVc4+RRFIFm3biUDQdBU/Kmd2zQ=;
-	c=relaxed/relaxed; d=t12smtp-sign004.email;
-	h=from:message-id:in-reply-to:to:cc:mime-version:date:subject:references:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
-	q=dns/txt; s=titan1; t=1740133684; v=1;
-	b=BvQOp7m46YRQYV50svyQ6koecodDG/5NMZ1UF38ZuolCivbcflH9CYqfws8I3uuV0QqBQ9Tt
-	ne/tv2u/zpF7pqJjplOvpOMEfJc25LVrgVcSnYuTYDElRO0wMIQ1u4AHTiy90cBq3YAccdrTLdX
-	EQ+Fg+8qEfkLJxQeH/Z55vho=
-Received: from studio.local (unknown [141.11.218.23])
-	by smtp-out.flockmail.com (Postfix) with ESMTPA id AC874E04DF;
-	Fri, 21 Feb 2025 10:27:55 +0000 (UTC)
-Date: Fri, 21 Feb 2025 18:27:52 +0800
-Feedback-ID: :i@coly.li:coly.li:flockmailId
-From: Coly Li <i@coly.li>
-To: Zheng Qixing <zhengqixing@huaweicloud.com>
-Cc: axboe@kernel.dk, song@kernel.org, colyli@kernel.org, 
-	yukuai3@huawei.com, dan.j.williams@intel.com, vishal.l.verma@intel.com, 
-	dave.jiang@intel.com, ira.weiny@intel.com, dlemoal@kernel.org, yanjun.zhu@linux.dev, 
-	kch@nvidia.com, hare@suse.de, zhengqixing@huawei.com, john.g.garry@oracle.com, 
-	geliang@kernel.org, xni@redhat.com, colyli@suse.de, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, nvdimm@lists.linux.dev, 
-	yi.zhang@huawei.com, yangerkun@huawei.com
-Subject: Re: [PATCH 09/12] badblocks: fix missing bad blocks on retry in
- _badblocks_check()
-Message-ID: <e6iwuml7p5hql4zo4jzkxpr2wgcbqne75xpqva6onteqcxve43@kcr2qzes35ix>
-References: <20250221081109.734170-1-zhengqixing@huaweicloud.com>
- <20250221081109.734170-10-zhengqixing@huaweicloud.com>
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="Zaacu6yf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=4wsFt
+	kC/20HRHnGDtuXh0yXz80WT2rBNa6hfJHDeBME=; b=Zaacu6yfs0qHHjg4DEJMj
+	QkSPtptluZiHuUdTEd0GCsyEETN8GuqkFCKinoERecPPWPA5NZVNf7GfEAnEW0Zu
+	1lpArqGlF0OhbC1Sh7VWecETumJWxa33xNIX36Ru4shGLYGHKgueSHiWLwb3tvQz
+	tWCDssmGaW+tPJjhBajal8=
+Received: from ubuntu.. (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wDnzzbSU7hnU7KwBA--.55096S2;
+	Fri, 21 Feb 2025 18:22:11 +0800 (CST)
+From: wh_bin@126.com
+To: pablo@netfilter.org,
+	kadlec@netfilter.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: horms@kernel.org,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	hongbin wang <wh_bin@126.com>
+Subject: [PATCH] netfilter: conntrack do not print ah and esp as unknown via /proc
+Date: Fri, 21 Feb 2025 10:21:53 +0000
+Message-Id: <20250221102153.4625-1-wh_bin@126.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250221081109.734170-10-zhengqixing@huaweicloud.com>
-X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1740133684737100912.19601.5384099801505103637@prod-use1-smtp-out1004.
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=bq22BFai c=1 sm=1 tr=0 ts=67b85534
-	a=USBFZE4A2Ag4MGBBroF6Xg==:117 a=USBFZE4A2Ag4MGBBroF6Xg==:17
-	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=i0EeH86SAAAA:8 a=VwQbUJbxAAAA:8
-	a=MOos5VJAO8cRspPxsMUA:9 a=QEXdDO2ut3YA:10
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDnzzbSU7hnU7KwBA--.55096S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7JF47CrykJFW8XF4fWry3Jwb_yoW3Arg_A3
+	97WF18XFs5JF9Fvr4Duw4fCry2ka4rZr93Xr9ruayI9a45GryI9rWkWrnYv345GwsYgFyx
+	Crs8try2v3yvkjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRKksgUUUUUU==
+X-CM-SenderInfo: xzkbuxbq6rjloofrz/1tbiOgb6ome4TsNZowAAsM
 
-On Fri, Feb 21, 2025 at 04:11:06PM +0800, Zheng Qixing wrote:
-> From: Zheng Qixing <zhengqixing@huawei.com>
-> 
-> The bad blocks check would miss bad blocks when retrying under contention,
-> as checking parameters are not reset. These stale values from the previous
-> attempt could lead to incorrect scanning in the subsequent retry.
-> 
-> Move seqlock to outer function and reinitialize checking state for each
-> retry. This ensures a clean state for each check attempt, preventing any
-> missed bad blocks.
-> 
-> Fixes: 3ea3354cb9f0 ("badblocks: improve badblocks_check() for multiple ranges handling")
-> Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
+From: hongbin wang <wh_bin@126.com>
 
-Looks good to me.
+/proc/net/nf_conntrack shows ah and esp as unknown.
 
-Acked-by: Coly Li <colyli@kernel.org>
+Signed-off-by: hongbin wang <wh_bin@126.com>
+---
+ net/netfilter/nf_conntrack_standalone.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks.
-
-> ---
->  block/badblocks.c | 50 +++++++++++++++++++++++------------------------
->  1 file changed, 24 insertions(+), 26 deletions(-)
-> 
-> diff --git a/block/badblocks.c b/block/badblocks.c
-> index 381f9db423d6..79d91be468c4 100644
-> --- a/block/badblocks.c
-> +++ b/block/badblocks.c
-> @@ -1191,31 +1191,12 @@ static int _badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
->  static int _badblocks_check(struct badblocks *bb, sector_t s, int sectors,
->  			    sector_t *first_bad, int *bad_sectors)
->  {
-> -	int unacked_badblocks, acked_badblocks;
->  	int prev = -1, hint = -1, set = 0;
->  	struct badblocks_context bad;
-> -	unsigned int seq;
-> +	int unacked_badblocks = 0;
-> +	int acked_badblocks = 0;
-> +	u64 *p = bb->page;
->  	int len, rv;
-> -	u64 *p;
-> -
-> -	WARN_ON(bb->shift < 0 || sectors == 0);
-> -
-> -	if (bb->shift > 0) {
-> -		sector_t target;
-> -
-> -		/* round the start down, and the end up */
-> -		target = s + sectors;
-> -		rounddown(s, 1 << bb->shift);
-> -		roundup(target, 1 << bb->shift);
-> -		sectors = target - s;
-> -	}
-> -
-> -retry:
-> -	seq = read_seqbegin(&bb->lock);
-> -
-> -	p = bb->page;
-> -	unacked_badblocks = 0;
-> -	acked_badblocks = 0;
->  
->  re_check:
->  	bad.start = s;
-> @@ -1281,9 +1262,6 @@ static int _badblocks_check(struct badblocks *bb, sector_t s, int sectors,
->  	else
->  		rv = 0;
->  
-> -	if (read_seqretry(&bb->lock, seq))
-> -		goto retry;
-> -
->  	return rv;
->  }
->  
-> @@ -1324,7 +1302,27 @@ static int _badblocks_check(struct badblocks *bb, sector_t s, int sectors,
->  int badblocks_check(struct badblocks *bb, sector_t s, int sectors,
->  			sector_t *first_bad, int *bad_sectors)
->  {
-> -	return _badblocks_check(bb, s, sectors, first_bad, bad_sectors);
-> +	unsigned int seq;
-> +	int rv;
-> +
-> +	WARN_ON(bb->shift < 0 || sectors == 0);
-> +
-> +	if (bb->shift > 0) {
-> +		/* round the start down, and the end up */
-> +		sector_t target = s + sectors;
-> +
-> +		rounddown(s, 1 << bb->shift);
-> +		roundup(target, 1 << bb->shift);
-> +		sectors = target - s;
-> +	}
-> +
-> +retry:
-> +	seq = read_seqbegin(&bb->lock);
-> +	rv = _badblocks_check(bb, s, sectors, first_bad, bad_sectors);
-> +	if (read_seqretry(&bb->lock, seq))
-> +		goto retry;
-> +
-> +	return rv;
->  }
->  EXPORT_SYMBOL_GPL(badblocks_check);
->  
-> -- 
-> 2.39.2
-> 
-
+diff --git a/net/netfilter/nf_conntrack_standalone.c b/net/netfilter/nf_conntrack_standalone.c
+index 502cf10aab41..29fb5a07a6c2 100644
+--- a/net/netfilter/nf_conntrack_standalone.c
++++ b/net/netfilter/nf_conntrack_standalone.c
+@@ -266,6 +266,8 @@ static const char* l4proto_name(u16 proto)
+ 	case IPPROTO_SCTP: return "sctp";
+ 	case IPPROTO_UDPLITE: return "udplite";
+ 	case IPPROTO_ICMPV6: return "icmpv6";
++	case IPPROTO_ESP: return "esp";
++	case IPPROTO_AH: return "ah";
+ 	}
+ 
+ 	return "unknown";
 -- 
-Coly Li
+2.34.1
+
