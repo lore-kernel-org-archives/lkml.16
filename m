@@ -1,257 +1,101 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D22B1FCF43
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 05:43:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262041EEA59
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 05:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740116629; cv=none; b=bW6WKRoqn8KyLaNCo6lgyz9qe3csAFfU4yKZWX895TaDpsjerdYNUfGcqEtCoXoTVpALn6fGRoDCBrbWUbyyQMbZpbtYvsOOpFNdzPr+JUNEPHx9PnMDsLPK1CIu4FzVttama0nCIy9Ts2XrfubmP2fLaPbvHyKlfTJKwFDuzOQ=
+	t=1740116786; cv=none; b=tIm99C5Ip/k68Fp6fTAHvJ2f/C27e3eRtb97t0mytU0f9a68pdMfCJhOHE/Sw86+HVp8GX+XBCyWkAGXe9rGCEFG/AIyNTJxaNk5nw61YJMlN+YiwQInqzK3y5O2Nzyb/r5Adr4qKSu3hkpSbKjx5E3M/dmJx80ddAeRzqvf0TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740116629; c=relaxed/simple;
-	bh=9td+5QAFlDQ4gS9R+li+mHECumkPC5BadWWw5yxsMOg=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=OOF1/FaSYDEr1YEBPH/7HFNHIVGiAEysIWicx+ez4S8c7HlXd6vsBoPHAj16hhjU7zLsjfftWf8jJGZc8EWPsLaihKJKh/Hqo9iMGUj/G+MppHXhomGH7EWq2FjxDiRD86aC9HjUzHTf0UmkcE2CW6r35XUOLu2TwsIyMLGXw18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--suleiman.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ek1+WTmp; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--suleiman.bounces.google.com
+	s=arc-20240116; t=1740116786; c=relaxed/simple;
+	bh=eTE5Qb00NNZE3F+GfObQZ4TzzZjogZ+hCA40EodSgn8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SaYOFpPCfjRxqBfKHn1J8xnv5Lhg6cAn4tOQZ3dgOq25G7QqxCTRW5N3r/c9qnSvBkqqXgDSGx/zW0ViFT+fA90g+A9dkGcFdCIp0OAvisb/9d9ZdZnPf1qN4zgBEw1lDgngyY0Z43GJsD5WW077m50ZoGSUnBBA+cWlRToYLO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Grm+KJKX; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ek1+WTmp"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6f4348c854eso24749087b3.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 21:43:47 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Grm+KJKX"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-220c92c857aso30692925ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 21:46:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740116626; x=1740721426; darn=vger.kernel.org;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nSP5h6VjVASnPaTv8FDkwmXUQfe0K3qH38hMzi1K7BE=;
-        b=ek1+WTmpSxjjdNW+oiLG9PA+gcJm/TjUca6AF910W0mY20rYG7QiXptOJf7uuew6ML
-         1WqdijCyJ4SJ3t6IbRtJtWZTZBldW4mkhz3JulsEpFOOdaAdNU8Ep7m1ROox3dqJ+as8
-         LZ5fMiijaLexV/aABjdUjOju/uqf9KC9oW17j8tGR9pmZ+URKsJQxYjpOqUJpKUmXZp6
-         7md1cfNHcUm2M93QO5XnPMd6geWuv1z0f6xw/WlND/iM2jTKS2GiAg1h2NX0S4zVDdOm
-         2PL3JRnRHEWMzG9FbLMW6So4D95hWwOTpo31CfWtpF2cwJld6UWovQLC8FdULZ7zjOCg
-         3zOQ==
+        d=linaro.org; s=google; t=1740116784; x=1740721584; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ouei2VTwRQWmGRLyAl+cvX6cCvzvQcBTYQL0O5+vXXw=;
+        b=Grm+KJKXmYTw5Gc3Wnb3ClhiIsF5J1NJ1UPg2jGlqXnqOXIFWGCZRc/LJq3L2LTDD+
+         +tU8gANpM/Kp18DpEI9Ld/9QzxC3nWbz+d65lp/x7YGidlLWCnPvBXIHtrQHgCV4ibeh
+         jrriTCZpWH0+/VgcCljCr4z6h6WTApslkVBDZYFMB0VnV8tUHdAx1tp2UM5zT05KC+wg
+         WuKD8Xkdgt1x/7KDWYcCdA4dBVpsE635baF510SqxQVbEElN8LZivaSBeMv0ZntPedrT
+         3FW7bUE4AUHgyVr+xUgsTs6Jzp4MzyvWvrHpSdmZZT469aWlxaq9L8b4y7c6k07Yfl7E
+         pxoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740116626; x=1740721426;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nSP5h6VjVASnPaTv8FDkwmXUQfe0K3qH38hMzi1K7BE=;
-        b=V6IAXs4wDrZ9aEomcoqBJDu+HmD/beP9a+fwvfsSdmtkJqY90FLEhTicgH0oVQepVt
-         GW1nMj7VmJxox2m1pl9rMeskoMBpEwiKemmnbP0cJpp4ZESiCQh3K+uJbZfeQlw4FE2M
-         wcHMvl/yMvmer5JPeac0WkUM8Il/Hvk2/jFL+7DPuf5LiRyAtAaXuo3xq764C4grAK6v
-         5g9z6TTu1U+8B2K2c6GAjNVSWwHoy0yjOPnGAuy8PG49kA542aWPDpLiquU/bI8COzRT
-         Y4m7NWMenXJKpJrg0JJn0DyT7F6o0nBqh+Np6jRGksgy4If0ZDA4zRPk+brsZV7cQG3T
-         GPRg==
-X-Forwarded-Encrypted: i=1; AJvYcCWfQA2pcgQiWcMze0cO4/CqhfG15jGu/2GCuSR+MitTvr7R/fs0cEe/omxpbEuLD7/EkAweBnwER2uZ+8Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwW7m7E/FNo0IzZvuu8bpqSA2GowhSSQbW39MUedfsZg3+MkMan
-	GLZJuehywzeuBleES0aZPmAGAydRaBDusXntEWuDICWn2qWBTLPjo2Inp0zA8v9yiV+t05WoccJ
-	7YSXTnDSSJQ==
-X-Google-Smtp-Source: AGHT+IH41sWcdZJzGHIKN+Pi59JJZfBB57XJubRsl3TsNOq0mHwvuiN0Jgu/0NLERFKNmalTV7pevEwHAss34w==
-X-Received: from suleiman1.tok.corp.google.com ([2401:fa00:8f:203:62aa:45ca:6f53:8c2a])
- (user=suleiman job=sendgmr) by 2002:a0d:d383:0:b0:6eb:ac7:b4bc with SMTP id
- 00721157ae682-6fbcc1f8586mr2147317b3.2.1740116626397; Thu, 20 Feb 2025
- 21:43:46 -0800 (PST)
-Date: Fri, 21 Feb 2025 14:39:27 +0900
-In-Reply-To: <20250221053927.486476-1-suleiman@google.com>
-Message-Id: <20250221053927.486476-3-suleiman@google.com>
+        d=1e100.net; s=20230601; t=1740116784; x=1740721584;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ouei2VTwRQWmGRLyAl+cvX6cCvzvQcBTYQL0O5+vXXw=;
+        b=tcGMSc9e1frP3bfgdejbsFSkte5mrchKOgO8shYJezT6zB47bWuQHTrNEyRJZA44Xw
+         SR0YjNHBVntc0XzE9W1qj19A986UY/Q6CGToqXKCVAB+baVuQlho8DRrjyH7SDe7F7s1
+         2MsO8xwm6bFX90WsQItd/d1Sg6LXLXOpOy/hfFZgosWCezPph0JXciztKCsoRaAnFqzC
+         zj6+92G+nYpCYeQYAoaMkhp7iMugfJDlWgmRiaMECZ5BwZnCusDSYa/a+dC/hwG1kg/d
+         aOaDNgRDmR9+GP/eu7SuG1CxxkeVrJdBTQI71w4Y4jQhww56zfJyzn/fzRpRkuOjJpTP
+         eSWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVO6zVd2DPAo6QwGIzFWkH3C+/T0lGKp+U/FRZWUe7PBYMadqSlaM6gpNO4kO/EOAIpkfretgQ/WVjiJc4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5Y4PS7iQ5YdksN0YDo6N9nBlUq+/lN/fiLVP+fDOUAQAoZshN
+	b7v1OVJ8IY0C4mLYLmPJG60jIR9GXjPIQpoBdFqi56PwebiRBBY7jpsR0wJGuShc84ZAOEYxVcQ
+	=
+X-Gm-Gg: ASbGncsoxdshL7guHJvVr9MC62XaNBXqF0QebIeV1lAZcgOgFP7RJ9D/wlPahSGp3ei
+	vJW0uYTpW7KfGre1CXmYrZKYrYX/yXSaWRKyAVInVPHXkUTMAapHtayZn63a1y7pvMEqpYdWc8+
+	MmRVQIaqVw/3Z89/W5CPnkVDR+eK+6gfNOsNjmafb1UAUNi0VJZ1mDnl0rd5KvX1wEJgFg3YQZ4
+	4wKqIFvTzRWOxseUGqfL1J74RfT5rs9N0+gqqxlsKidA1dVVBCyWZp8XUjDlyff5CtY1VfUIbTM
+	ChNmbh618d8pbZPhz+b5Vp0x3Rei6OSwUEw=
+X-Google-Smtp-Source: AGHT+IEA54pL1ip8cSRNGmHkvOyN53AOFfgXrzau/VI9IcNo/aqckoQg9m/vNMh4kPIt3AOE0f4CIQ==
+X-Received: by 2002:a17:903:41d2:b0:21f:ba77:c49a with SMTP id d9443c01a7336-2218c3cfaebmr93354775ad.4.1740116784400;
+        Thu, 20 Feb 2025 21:46:24 -0800 (PST)
+Received: from thinkpad ([120.60.73.12])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-221040434d9sm97367635ad.196.2025.02.20.21.46.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 21:46:23 -0800 (PST)
+Date: Fri, 21 Feb 2025 11:16:20 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: duplicate patch in the mhi tree
+Message-ID: <20250221054620.orulewump6jgzstz@thinkpad>
+References: <20250221161344.09a6cf09@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250221053927.486476-1-suleiman@google.com>
-X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
-Subject: [PATCH v4 2/2] KVM: x86: Include host suspended time in steal time
-From: Suleiman Souhlal <suleiman@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Chao Gao <chao.gao@intel.com>, 
-	David Woodhouse <dwmw2@infradead.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, ssouhlal@freebsd.org, 
-	Suleiman Souhlal <suleiman@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250221161344.09a6cf09@canb.auug.org.au>
 
-When the host resumes from a suspend, the guest thinks any task
-that was running during the suspend ran for a long time, even though
-the effective run time was much shorter, which can end up having
-negative effects with scheduling.
+On Fri, Feb 21, 2025 at 04:13:44PM +1100, Stephen Rothwell wrote:
+> Hi all,
+> 
+> The following commit is also in the char-misc.current tree as a different
+> commit (but the same patch):
+> 
+>   0f96e4d32983 ("bus: mhi: host: pci_generic: Use pci_try_reset_function() to avoid deadlock")
+> 
+> This is commit
+> 
+>   a321d163de3d ("bus: mhi: host: pci_generic: Use pci_try_reset_function() to avoid deadlock")
+> 
+> in the char-misc.current tree.
+> 
 
-To mitigate this issue, the time that the host was suspended is included
-in steal time, which lets the guest can subtract the duration from the
-tasks' runtime.
+Dropped the commit from mhi-next now!
 
-In order to implement this behavior, once the suspend notifier fires,
-vCPUs trying to run block until the resume notifier finishes. This is
-because the freezing of userspace tasks happens between these two points,
-which means that vCPUs could otherwise run and get their suspend steal
-time misaccounted, particularly if a vCPU would run after resume before
-the resume notifier.
-Incidentally, doing this also addresses a potential race with the
-suspend notifier setting PVCLOCK_GUEST_STOPPED, which could then get
-cleared before the suspend actually happened.
+- Mani
 
-One potential caveat is that in the case of a suspend happening during
-a VM migration, the suspend time might not be accounted.
-A workaround would be for the VMM to ensure that the guest is entered
-with KVM_RUN after resuming from suspend.
-
-Signed-off-by: Suleiman Souhlal <suleiman@google.com>
----
- Documentation/virt/kvm/x86/msr.rst | 10 ++++--
- arch/x86/include/asm/kvm_host.h    |  6 ++++
- arch/x86/kvm/x86.c                 | 51 ++++++++++++++++++++++++++++++
- 3 files changed, 65 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/virt/kvm/x86/msr.rst b/Documentation/virt/kvm/x86/msr.rst
-index 3aecf2a70e7b43..48f2a8ca519548 100644
---- a/Documentation/virt/kvm/x86/msr.rst
-+++ b/Documentation/virt/kvm/x86/msr.rst
-@@ -294,8 +294,14 @@ data:
- 
- 	steal:
- 		the amount of time in which this vCPU did not run, in
--		nanoseconds. Time during which the vcpu is idle, will not be
--		reported as steal time.
-+		nanoseconds. This includes the time during which the host is
-+		suspended. Time during which the vcpu is idle, might not be
-+		reported as steal time. The case where the host suspends
-+		during a VM migration might not be accounted if VCPUs aren't
-+		entered post-resume, because KVM does not currently support
-+		suspend/resuming the associated metadata. A workaround would
-+		be for the VMM to ensure that the guest is entered with
-+		KVM_RUN after resuming from suspend.
- 
- 	preempted:
- 		indicate the vCPU who owns this struct is running or
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 452dd0204609af..007656ceac9a71 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -124,6 +124,7 @@
- #define KVM_REQ_HV_TLB_FLUSH \
- 	KVM_ARCH_REQ_FLAGS(32, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
- #define KVM_REQ_UPDATE_PROTECTED_GUEST_STATE	KVM_ARCH_REQ(34)
-+#define KVM_REQ_WAIT_FOR_RESUME		KVM_ARCH_REQ(35)
- 
- #define CR0_RESERVED_BITS                                               \
- 	(~(unsigned long)(X86_CR0_PE | X86_CR0_MP | X86_CR0_EM | X86_CR0_TS \
-@@ -916,8 +917,13 @@ struct kvm_vcpu_arch {
- 
- 	struct {
- 		u8 preempted;
-+		bool host_suspended;
- 		u64 msr_val;
- 		u64 last_steal;
-+		u64 last_suspend;
-+		u64 suspend_ns;
-+		u64 last_suspend_ns;
-+		wait_queue_head_t resume_waitq;
- 		struct gfn_to_hva_cache cache;
- 	} st;
- 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 06464ec0d1c8d2..f34edcf77cca0a 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3717,6 +3717,8 @@ static void record_steal_time(struct kvm_vcpu *vcpu)
- 	steal += current->sched_info.run_delay -
- 		vcpu->arch.st.last_steal;
- 	vcpu->arch.st.last_steal = current->sched_info.run_delay;
-+	steal += vcpu->arch.st.suspend_ns - vcpu->arch.st.last_suspend_ns;
-+	vcpu->arch.st.last_suspend_ns = vcpu->arch.st.suspend_ns;
- 	unsafe_put_user(steal, &st->steal, out);
- 
- 	version += 1;
-@@ -6930,6 +6932,19 @@ long kvm_arch_vm_compat_ioctl(struct file *filp, unsigned int ioctl,
- }
- #endif
- 
-+static void wait_for_resume(struct kvm_vcpu *vcpu)
-+{
-+	wait_event_interruptible(vcpu->arch.st.resume_waitq,
-+	    vcpu->arch.st.host_suspended == 0);
-+
-+	/*
-+	 * This might happen if we blocked here before the freezing of tasks
-+	 * and we get woken up by the freezer.
-+	 */
-+	if (vcpu->arch.st.host_suspended)
-+		kvm_make_request(KVM_REQ_WAIT_FOR_RESUME, vcpu);
-+}
-+
- #ifdef CONFIG_HAVE_KVM_PM_NOTIFIER
- static int kvm_arch_suspend_notifier(struct kvm *kvm)
- {
-@@ -6939,6 +6954,19 @@ static int kvm_arch_suspend_notifier(struct kvm *kvm)
- 
- 	mutex_lock(&kvm->lock);
- 	kvm_for_each_vcpu(i, vcpu, kvm) {
-+		vcpu->arch.st.last_suspend = ktime_get_boottime_ns();
-+		/*
-+		 * Tasks get thawed before the resume notifier has been called
-+		 * so we need to block vCPUs until the resume notifier has run.
-+		 * Otherwise, suspend steal time might get applied too late,
-+		 * and get accounted to the wrong guest task.
-+		 * This also ensures that the guest paused bit set below
-+		 * doesn't get checked and cleared before the host actually
-+		 * suspends.
-+		 */
-+		vcpu->arch.st.host_suspended = 1;
-+		kvm_make_request(KVM_REQ_WAIT_FOR_RESUME, vcpu);
-+
- 		if (!vcpu->arch.pv_time.active)
- 			continue;
- 
-@@ -6954,12 +6982,32 @@ static int kvm_arch_suspend_notifier(struct kvm *kvm)
- 	return ret ? NOTIFY_BAD : NOTIFY_DONE;
- }
- 
-+static int kvm_arch_resume_notifier(struct kvm *kvm)
-+{
-+	struct kvm_vcpu *vcpu;
-+	unsigned long i;
-+
-+	mutex_lock(&kvm->lock);
-+	kvm_for_each_vcpu(i, vcpu, kvm) {
-+		vcpu->arch.st.host_suspended = 0;
-+		vcpu->arch.st.suspend_ns += ktime_get_boottime_ns() -
-+		    vcpu->arch.st.last_suspend;
-+		wake_up_interruptible(&vcpu->arch.st.resume_waitq);
-+	}
-+	mutex_unlock(&kvm->lock);
-+
-+	return NOTIFY_DONE;
-+}
-+
- int kvm_arch_pm_notifier(struct kvm *kvm, unsigned long state)
- {
- 	switch (state) {
- 	case PM_HIBERNATION_PREPARE:
- 	case PM_SUSPEND_PREPARE:
- 		return kvm_arch_suspend_notifier(kvm);
-+	case PM_POST_HIBERNATION:
-+	case PM_POST_SUSPEND:
-+		return kvm_arch_resume_notifier(kvm);
- 	}
- 
- 	return NOTIFY_DONE;
-@@ -10813,6 +10861,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 			r = 1;
- 			goto out;
- 		}
-+		if (kvm_check_request(KVM_REQ_WAIT_FOR_RESUME, vcpu))
-+			wait_for_resume(vcpu);
- 		if (kvm_check_request(KVM_REQ_STEAL_UPDATE, vcpu))
- 			record_steal_time(vcpu);
- 		if (kvm_check_request(KVM_REQ_PMU, vcpu))
-@@ -12341,6 +12391,7 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- 	if (r)
- 		goto free_guest_fpu;
- 
-+	init_waitqueue_head(&vcpu->arch.st.resume_waitq);
- 	kvm_xen_init_vcpu(vcpu);
- 	vcpu_load(vcpu);
- 	kvm_vcpu_after_set_cpuid(vcpu);
 -- 
-2.48.1.601.g30ceb7b040-goog
-
+மணிவண்ணன் சதாசிவம்
