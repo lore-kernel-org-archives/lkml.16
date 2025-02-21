@@ -1,181 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320F024F58E
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 17:17:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C512424FBE8;
+	Fri, 21 Feb 2025 17:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740158247; cv=none; b=h/DK+j54iRH4Y2aP5mn/dAzuOB7/3lCeavKp+V4W4szVTLWL8s4NKIJCmxSVZ+uG4Yj+M8mOrU6GJ5TXYCNd7haLMLcMuFglVPTL0zH15BQtZFqtDmUALdMNFlILOd1XrqZkyALj9dbPCjmSsirR3rj9ATgmGGHqygl3AdSsdpA=
+	t=1740158389; cv=none; b=P1FEvQw/6hUcyyz2uFfInzUV+vjt3/jaXKo8IJnXZs5QxLggiJZ+qveigJEOHAJqr1qxH6FZde6oLDDgJa8MZ3wFlocccqmjO0Ac0rIT/2RXMETqNQZ41J6m7c1iq8VPwARbp0Xuwk6D4gkdB9sXOlFYgCest+h4PHzo0oLfAOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740158247; c=relaxed/simple;
-	bh=MDfzAUMKryuV15YAAh1iVXakgE0hLgot6RuOnyiVcqk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mtkEBYlEienwVN6/fEdd+p2wKnNGYzav7h5hHtwQ5yX2/m2QcFTlH5J2lxP6dzv3uTkI3kVoMEsuVNtf031DeiL7E3OXyrJKfMmEmNtkYZIzvFb+WQ2slsqRgVwpDC/lXke7h7bgf7naHq2CnUSBgI1nzHCJN096YNn1x77NH6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MQ3gSOf/; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MQ3gSOf/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740158246; x=1771694246;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=MDfzAUMKryuV15YAAh1iVXakgE0hLgot6RuOnyiVcqk=;
-  b=MQ3gSOf/a80Arr1qlpPMIJBehM4QvUkBFqbbiJPcwkiALIqLNWRAD4SO
-   LO6BAeGCMpkxnZkQ8UrxqusxRi8vPCYahIUZV6aO8yx1JwPgSNVVR4wUR
-   YzvBO9VX/6hpC/n1EdU9AuP1nl/VIgGc/kiQGb5pPqdLsNLKV2pzXSnPZ
-   Njh4Q50dXgNyD9ma7C0GF3Gl2qWky64gQ4PT5quVOsOPcLRAtgH7cEvqK
-   xC5Jc2/qSPhog0ueIzXi438cZUZMCYryEibEF0nr9R0+DbQXcEDIhf0PX
-   WjPPgFOeyI/90vqYgheBRnUWXcTHEcgspxYu04hx8z/J2374vLg7EYQAN
-   Q==;
-X-CSE-ConnectionGUID: AxcuYFyETlWVaQPW1FHKuA==
-X-CSE-MsgGUID: oTE/A1s6T2KhK+Lv9YsacA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11352"; a="58395440"
-X-IronPort-AV: E=Sophos;i="6.13,305,1732608000"; 
-   d="scan'208";a="58395440"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 09:17:25 -0800
-X-CSE-ConnectionGUID: 4cUEoefjSP2u7rYGcvY4lg==
-X-CSE-MsgGUID: f+84b3D+TEi80SrI30yPqA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,305,1732608000"; 
-   d="scan'208";a="120404085"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.110.177]) ([10.125.110.177])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 09:17:25 -0800
-Message-ID: <81d94ec3-16af-45a7-87c6-ef76570953f8@intel.com>
-Date: Fri, 21 Feb 2025 09:17:26 -0800
+	s=arc-20240116; t=1740158389; c=relaxed/simple;
+	bh=sPJHQfpUupiT6nv3HxYQj2vh/Kzsci4cr5S3NYoTg+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SowsPYnV8xVC1PhWJcdzxDiEDS2nYTpmrj5SUE/p4grlugnbmFEdG0Bch/bBAtfGQkCCdQK4cNKe4kcsW6x99MnSyxRDDUGXvrYPmjhCsxOinz5MCRmspKQzJ2LQYYPPY9zaMO3btG7tRVVaTPqbAd+Mdo28tXZKjtgYvX0GnIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1tlWgj-00028K-00; Fri, 21 Feb 2025 18:19:45 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 17851C03B4; Fri, 21 Feb 2025 18:18:57 +0100 (CET)
+Date: Fri, 21 Feb 2025 18:18:57 +0100
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc: linux-clk@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
+	p.zabel@pengutronix.de, linux-mips@vger.kernel.org,
+	devicetree@vger.kernel.org, yangshiji66@outlook.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/6] mips: dts: ralink: update system controller nodes
+ and its consumers
+Message-ID: <Z7i1gV3tlcR22u-W@alpha.franken.de>
+References: <20250120092146.471951-1-sergio.paracuellos@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/4] rseq: Make rseq work with protection keys
-To: Dmitry Vyukov <dvyukov@google.com>, mathieu.desnoyers@efficios.com,
- peterz@infradead.org, boqun.feng@gmail.com, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
- aruna.ramakrishna@oracle.com, elver@google.com
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-References: <cover.1739790300.git.dvyukov@google.com>
- <0d0e0a0a7136d49af9a8d6a849e1aa4bf086c472.1739790300.git.dvyukov@google.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <0d0e0a0a7136d49af9a8d6a849e1aa4bf086c472.1739790300.git.dvyukov@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250120092146.471951-1-sergio.paracuellos@gmail.com>
 
-On 2/17/25 03:07, Dmitry Vyukov wrote:
->  
->  error:
-> +	/*
-> +	 * If the application registers rseq, and ever switches to another
-> +	 * pkey protection (such that the rseq becomes inaccessible), then
-> +	 * any context switch will cause failure here attempting to read/write
-> +	 * struct rseq and/or rseq_cs. Since context switches are
-> +	 * asynchronous and are outside of the application control
-> +	 * (not part of the restricted code scope), we temporarily switch
-> +	 * to premissive pkey register to read/write rseq/rseq_cs,
-> +	 * similarly to signal delivery accesses to altstack.
-> +	 *
-> +	 * We don't bother to check if the failure really happened due to
-> +	 * pkeys or not, since it does not matter (performance-wise and
-> +	 * otherwise).
-> +	 *
-> +	 * If the restricted code installs rseq_cs in inaccessible to it
-> +	 * due to pkeys memory, we still let this function read the rseq_cs.
-> +	 * It's unclear what benefits the resticted code gets by doing this
-> +	 * (it probably already hijacked control flow at this point), and
-> +	 * presumably any sane sandbox should prohibit restricted code
-> +	 * from accessing struct rseq, and this is still better than
-> +	 * terminating the app unconditionally (it always has a choice
-> +	 * of not using rseq and pkeys together).
-> +	 */
+On Mon, Jan 20, 2025 at 10:21:40AM +0100, Sergio Paracuellos wrote:
+> Hi all!
+> 
+> Ralinks SoCs have a system controller node which serves as clock and reset
+> providers for the rest of the world. This patch series introduces clock
+> definitions for these SoCs. The clocks are registered in the driver using
+> a bunch of arrays in specific order so these definitions represent the assigned
+> identifier that is used when this happens so client nodes can easily use it
+> to specify the clock which they consume without the need of checking driver code.
+> 
+> DTS files which are currently on tree are not matching system controller
+> bindings. So all of them are updated to properly match them.
+> 
+> I'd like this series to go through kernel mips git tree if possible.
+> 
+> Thanks in advance for your time.
+> 
+> Changes in v3:
+> - Address Krzysztof comments in v2 (Thanks!):
+>   + Drop reset include file since what it was defined there were hardware
+>     constants and no binding related indexes at all.
+>   + Update patches for not referring to this reset removed file.
+> 
+> Changes in v2:
+> - Redo commit messages in all the patches in the series to clarify why the changes
+>   are needed asked by Krzysztof in v1.
+>   
+> v2 of this series:
+> - https://lore.kernel.org/linux-clk/20250119154447.462857-1-sergio.paracuellos@gmail.com/T/#t 
+> 
+> v1 of this series:
+> - https://lore.kernel.org/linux-clk/20250115153019.407646-1-sergio.paracuellos@gmail.com/T/#t
+> 
+> Best regards,
+>     Sergio Paracuellos
+> 
+> Sergio Paracuellos (6):
+>   dt-bindings: clock: add clock definitions for Ralink SoCs
+>   mips: dts: ralink: rt2880: update system controller node and its
+>     consumers
+>   mips: dts: ralink: rt3050: update system controller node and its
+>     consumers
+>   mips: dts: ralink: rt3883: update system controller node and its
+>     consumers
+>   mips: dts: ralink: mt7620a: update system controller node and its
+>     consumers
+>   mips: dts: ralink: mt7628a: update system controller node and its
+>     consumers
+> 
+>  .../bindings/clock/mediatek,mtmips-sysc.yaml  |  11 +-
+>  arch/mips/boot/dts/ralink/mt7620a.dtsi        |  10 +-
+>  arch/mips/boot/dts/ralink/mt7628a.dtsi        |  38 +++--
+>  arch/mips/boot/dts/ralink/rt2880.dtsi         |  10 +-
+>  arch/mips/boot/dts/ralink/rt3050.dtsi         |  10 +-
+>  arch/mips/boot/dts/ralink/rt3883.dtsi         |  10 +-
+>  .../dt-bindings/clock/mediatek,mtmips-sysc.h  | 130 ++++++++++++++++++
+>  7 files changed, 196 insertions(+), 23 deletions(-)
+>  create mode 100644 include/dt-bindings/clock/mediatek,mtmips-sysc.h
 
-I would trim this comment down. I'd keep the discussion more in the
-changelog than in here. I'd also suggest breaking out the spell checker.
+applied patches 1-5 to mips-next
 
-Also, as usual, changing this to imperative voice makes it more compact too:
+Thomas.
 
-	Don't bother to check if the failure really happened due to
-	pkeys or not, since it does not matter (performance-wise and
-	otherwise).
-
-Basically, zap the "we's".
-
-> +	if (!switched_pkey_reg) {
-> +		switched_pkey_reg = true;
-> +		saved = switch_to_permissive_pkey_reg();
-> +		goto retry;
-> +	} else {
-> +		write_pkey_reg(saved);
-> +	}
-
-This code flow is a bit hard to follow with the retry and all.
-
-I think the assumption here is that overwriting the pkey register is too
-slow for the fast path. Instead, in the slow error path, there is a
-one-time operation to make the register permissive and retry.
-
-I guess it's your rseq code. But I'd probably just put the
-switch_to_permissive_pkey_reg()/write_pkey_reg() in the fast/common path
-for simplicity unless I knew it was causing a measurable performance
-problem.
-
-In either case, it would be great to comment that design choice in the
-changelog.
-
-Oh, and cover letters are most appreciated for these kinds of things.
-I'd normally reply to the cover letter and say this, but I'll put it
-here instead:
-
-The series overall looks fine. It just needs a few cosmetic tweaks.
-
-I don't see any Cc:stable@ or Fixes: tags. Is this a bug fix that you
-want backported? If so, those tags would be appropriate and it woudl be
-appreciated if you could dig out what it actually fixes.
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
