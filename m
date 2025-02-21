@@ -1,25 +1,64 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8477745009;
-	Fri, 21 Feb 2025 15:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C8D125B9;
+	Fri, 21 Feb 2025 15:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740152394; cv=none; b=cNuMcZA5pHDm3ZGm43pukON7/fC74iNCx40std/RzFxOegWqkBZ7Mwy82w6PCwFZAYbxqJCF4/wWyTrd3p/MneZPLyOGGdUeH/5MLc0DNPQntX94M3e/SMuU6ZVEUhjjNDU/GhhS0xnQan1KiYDZtFNf2SlvK+kM4Xtxmj3shoc=
+	t=1740152445; cv=none; b=lZgbZX6oTv4ceWSBMXUGJbqAJxaM5lIMbxAZlKJpPXBp806VUPOWK+Kghv4N1NvX03QpwUxRoOmplkR4D7iO/+WAJwkKkfj0/Ve9MNhhbwXwkduxbiThEwWFzK+T329J8gjUjYjB+16AjjsniCRNKiNx/glRAAXVD0X6mrj47so=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740152394; c=relaxed/simple;
-	bh=93zTaU6eg48C24RtWHpt4n45x2dQUGHjZDmPY7Frpw4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CbodVo47AH1tQ48GOMJ5Erp4QIPzW1jbgYE0Iz/qA/+c7GHEUhMUF1trYonNaz2NiWArrm5wo6qAbv+uFW8lriUFio4Ke+rgoJFPDsZDd6JV7mbdkrS0uMEwCQcZM/DS0CFgShC5UMvr3flaDYs2BnxJH4XoEuV9cmkL0uAf8HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9FD4C168F;
-	Fri, 21 Feb 2025 07:40:08 -0800 (PST)
-Received: from [10.57.36.60] (unknown [10.57.36.60])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 381703F59E;
-	Fri, 21 Feb 2025 07:39:47 -0800 (PST)
-Message-ID: <5b9e15e1-8081-46ef-b9db-3872e98a6f35@arm.com>
-Date: Fri, 21 Feb 2025 15:39:45 +0000
+	s=arc-20240116; t=1740152445; c=relaxed/simple;
+	bh=2bG/X7eyvLm8M6IJi8iaPhzGXLIPRfdB0gRqfbkRSdA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=MdddqBx3ejethRSVMCXETngQQRlo3NAs4BqBgS80RWngGrkXvJB3pzESuPmZI8sjuo237uTksnkiJYUW/aCcQQRqYE4/J49TKYd8uxyNev4MaB6Hi1T4SBl8KYj1G5ui3DSeSJ+YiA9siMXEgJ1Gcgfb/fjexFIOcv0yHmWXyKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MyPJgO5b; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MyPJgO5b"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-38f2b7ce319so1875419f8f.2;
+        Fri, 21 Feb 2025 07:40:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740152440; x=1740757240; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rk44QtnfjgtVNcKcENEDGVtkZ1QDJQv4Z2TzsMxhL2U=;
+        b=MyPJgO5bNVYeC/g4tTdG0vh1GCwPYWf1UWghiIDGku6xTMhldGt7nF4n2ByVxuJbR+
+         isB4Ofdc29jZgQTiGlS6wDYFemWXxVLeqmHO9b59/vsMVUEXuJ3HuMkcrSXie1owEFQV
+         mRPC4T+kf/O7yJtEdzaB4dT9R4S7T+NfwlwW87o6mNLaAa+GsSj/99eac/6EvZ2/PYtd
+         Ahs4dYWUdRyIKPV6tGrIrro6oNZb7Xd6jltzpvET7ArBa+3glZ7zsS+OMCzlCFqRJUU6
+         WWu1OVJuEV12+0hH4f8LxlmfaPmnACC2Bghrs+v4oeV3xs+gK74E6kXpp6bORIFRUUsr
+         NPAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740152440; x=1740757240;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rk44QtnfjgtVNcKcENEDGVtkZ1QDJQv4Z2TzsMxhL2U=;
+        b=GHhsXq9X3Q6GasOtWOVGssV8TRngKPZSPj4/YLroYW4SaU+Zuoi7hSCzA63JtWX3a/
+         obnUpAnkNAbft2eE8y4vpPZxAkG96kMqQPdorwXqh6Ut8xTdc044fqSWKkdxemx7Kise
+         khslQTqPjp1lJ/kKkgUowNmQ554GXaPY1sk0uYKzaWnxrO7ifbY/zZ9dPQ+uvDFBplyA
+         WsvxCHGw7wX4xhlFN3P/bb+TibsVV3940rClSJM9wZYC4dt9guGho+VCQ2+r1p3tKbz5
+         SXVmFpzUMVnS6Hsg8M9bG/MZHwlkyIdUFDgp35QQc8QsJPPyNPi3rkGsv1A5ZCz5NWSd
+         iIAA==
+X-Forwarded-Encrypted: i=1; AJvYcCVwplkm2bSVDHZ3esm2z63VUjEJUvwyd0mRjnz7Fnd5xvySxi/fNxTLf43UXMclI9TrNgcrxb6coQ==@vger.kernel.org, AJvYcCWOIhLKqxa8O7uhLGs1USqV/DKAvprq+R/tArRAPER1XGjaGLXTIrTsr2I+GZRwNVJHqudn56cDumWq/qeZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGwWL0QsnVZlk5W/07gVUofuVfA99z/zvJGAnLKqMGsIOfiJoW
+	ynnTLIPZFvFlCyyAL34wA4/GOcaA7uIwEtFodgt/Rx0yIV3gbGc8
+X-Gm-Gg: ASbGnct+G5je0J8BWPOEG6JrBI9FeaFEYOE0pQMDDrcH2IAEvswm/h+fXlKCx450Wn2
+	o3jzqK1zJv4cN3L9+PmYpemYZU43VZu7s5fbWXrxW08tnR24GMON3uCIVf2Ws+3iH6xx5xkNpmt
+	6L0LB+avGtIz4e5CRzJibfbAgnruMhAn9F+Et8zNv2XTCezFEq+5qqPVQ5JkfO21Cpiz06JOLBv
+	nzY5pAE6/IOYkHgMNNuDXttZhw1328OGpM3zKBbZiXKxqqdSoZIQpd5C3FRww/+3Sl6yXiXK6rh
+	DWfvK2HCZ5Ji/epLYuE7OonRCdA4CmBAqYow
+X-Google-Smtp-Source: AGHT+IE0D2+0v5XAMz0QpFurol3gWayIysE4X6rTQmc5nOhKidCqWu3G0BFWVINKBVa5Nz5sZpOwkg==
+X-Received: by 2002:a05:6000:178c:b0:38f:32ac:7e55 with SMTP id ffacd0b85a97d-38f6f0bd36dmr3736605f8f.48.1740152439675;
+        Fri, 21 Feb 2025 07:40:39 -0800 (PST)
+Received: from [192.168.8.100] ([148.252.141.194])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b02ce336sm21001345e9.2.2025.02.21.07.40.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2025 07:40:39 -0800 (PST)
+Message-ID: <e90dbf62-0416-4754-be16-fedc1d48a3d7@gmail.com>
+Date: Fri, 21 Feb 2025 15:41:43 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,283 +66,113 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/7] iommu: Make iommu_dma_prepare_msi() into a generic
- operation
-To: Nicolin Chen <nicolinc@nvidia.com>, jgg@nvidia.com, kevin.tian@intel.com,
- tglx@linutronix.de, maz@kernel.org
-Cc: joro@8bytes.org, will@kernel.org, shuah@kernel.org,
- iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org,
- eric.auger@redhat.com, baolu.lu@linux.intel.com, yi.l.liu@intel.com,
- yury.norov@gmail.com, jacob.pan@linux.microsoft.com, patches@lists.linux.dev
-References: <cover.1740014950.git.nicolinc@nvidia.com>
- <4ca696150d2baee03af27c4ddefdb7b0b0280e7b.1740014950.git.nicolinc@nvidia.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <4ca696150d2baee03af27c4ddefdb7b0b0280e7b.1740014950.git.nicolinc@nvidia.com>
+Subject: Re: [RFC PATCH 2/2] io_uring/io-wq: try to batch multiple free work
+From: Pavel Begunkov <asml.silence@gmail.com>
+To: Bui Quang Minh <minhquangbui99@gmail.com>, io-uring@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>, linux-kernel@vger.kernel.org
+References: <20250221041927.8470-1-minhquangbui99@gmail.com>
+ <20250221041927.8470-3-minhquangbui99@gmail.com>
+ <f34a5715-fae0-406e-a27b-7e94e3113641@gmail.com>
+ <e4be0a96-8e09-4591-96fe-a1d38208875a@gmail.com>
+ <b4e6ef48-6b3e-4b62-978c-6e80d3e9218e@gmail.com>
+Content-Language: en-US
+In-Reply-To: <b4e6ef48-6b3e-4b62-978c-6e80d3e9218e@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2025-02-20 1:31 am, Nicolin Chen wrote:
-> From: Jason Gunthorpe <jgg@nvidia.com>
+On 2/21/25 15:28, Pavel Begunkov wrote:
+> On 2/21/25 14:52, Bui Quang Minh wrote:
+>> On 2/21/25 19:44, Pavel Begunkov wrote:
+>>> On 2/21/25 04:19, Bui Quang Minh wrote:
+>>>> Currently, in case we don't use IORING_SETUP_DEFER_TASKRUN, when io
+>>>> worker frees work, it needs to add a task work. This creates contention
+>>>> on tctx->task_list. With this commit, io work queues free work on a
+>>>> local list and batch multiple free work in one call when the number of
+>>>> free work in local list exceeds IO_REQ_ALLOC_BATCH.
+>>>
+>>> I see no relation to IO_REQ_ALLOC_BATCH, that should be
+>>> a separate macro.
+>>>
+>>>> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+>>>> ---
+>>>>   io_uring/io-wq.c    | 62 +++++++++++++++++++++++++++++++++++++++++++--
+>>>>   io_uring/io-wq.h    |  4 ++-
+>>>>   io_uring/io_uring.c | 23 ++++++++++++++---
+>>>>   io_uring/io_uring.h |  6 ++++-
+>>>>   4 files changed, 87 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/io_uring/io-wq.c b/io_uring/io-wq.c
+>>>> index 5d0928f37471..096711707db9 100644
+>>>> --- a/io_uring/io-wq.c
+>>>> +++ b/io_uring/io-wq.c
+>>> ...
+>>>> @@ -601,7 +622,41 @@ static void io_worker_handle_work(struct io_wq_acct *acct,
+>>>>               wq->do_work(work);
+>>>>               io_assign_current_work(worker, NULL);
+>>>>   -            linked = wq->free_work(work);
+>>>> +            /*
+>>>> +             * All requests in free list must have the same
+>>>> +             * io_ring_ctx.
+>>>> +             */
+>>>> +            if (last_added_ctx && last_added_ctx != req->ctx) {
+>>>> +                flush_req_free_list(&free_list, tail);
+>>>> +                tail = NULL;
+>>>> +                last_added_ctx = NULL;
+>>>> +                free_req = 0;
+>>>> +            }
+>>>> +
+>>>> +            /*
+>>>> +             * Try to batch free work when
+>>>> +             * !IORING_SETUP_DEFER_TASKRUN to reduce contention
+>>>> +             * on tctx->task_list.
+>>>> +             */
+>>>> +            if (req->ctx->flags & IORING_SETUP_DEFER_TASKRUN)
+>>>> +                linked = wq->free_work(work, NULL, NULL);
+>>>> +            else
+>>>> +                linked = wq->free_work(work, &free_list, &did_free);
+>>>
+>>> The problem here is that iowq is blocking and hence you lock up resources
+>>> of already completed request for who knows how long. In case of unbound
+>>> requests (see IO_WQ_ACCT_UNBOUND) it's indefinite, and it's absolutely
+>>> cannot be used without some kind of a timer. But even in case of bound
+>>> work, it can be pretty long.
+>> That's a good point, I've overlooked the fact that work handler might block indefinitely.
+>>> Maybe, for bound requests it can target N like here, but read jiffies
+>>> in between each request and flush if it has been too long. So in worst
+>>> case the total delay is the last req execution time + DT. But even then
+>>> it feels wrong, especially with filesystems sometimes not even
+>>> honouring NOWAIT.
+>>>
+>>> The question is, why do you force it into the worker pool with the
+>>> IOSQE_ASYNC flag? It's generally not recommended, and the name of the
+>>> flag is confusing as it should've been more like "WORKER_OFFLOAD".
+>>
+>>
+>> I launched more workers to parallel the work handler, but as you said, it seems like an incorrect use case.
 > 
-> SW_MSI supports IOMMU to translate an MSI message before the MSI message
-> is delivered to the interrupt controller. On such systems, an iommu_domain
-> must have a translation for the MSI message for interrupts to work.
+> Not as much incorrect as generally inefficient and not recommended,
+> especially not recommended before trying it without the flag. People
+> often fall into the trap of "Oh, it's _async_, surely I have to set it",
+> really unfortunate naming.
 > 
-> The IRQ subsystem will call into IOMMU to request that a physical page be
-> set up to receive MSI messages, and the IOMMU then sets an IOVA that maps
-> to that physical page. Ultimately the IOVA is programmed into the device
-> via the msi_msg.
+>> However, I think the request free seems heavy, we need to create a task work so that we can hold the uring_lock to queue the request to ctx->submit_state->compl_reqs. Let me play around more to see if I can find an optimization for this.
 > 
-> Generalize this by allowing iommu_domain owners to provide implementations
-> of this mapping. Add a function pointer in struct iommu_domain to allow a
-> domain owner to provide its own implementation.
-> 
-> Have dma-iommu supply its implementation for IOMMU_DOMAIN_DMA types during
-> the iommu_get_dma_cookie() path. For IOMMU_DOMAIN_UNMANAGED types used by
-> VFIO (and iommufd for now), have the same iommu_dma_sw_msi set as well in
-> the iommu_get_msi_cookie() path.
-> 
-> Hold the group mutex while in iommu_dma_prepare_msi() to ensure the domain
-> doesn't change or become freed while running. Races with IRQ operations
-> from VFIO and domain changes from iommufd are possible here.
-> 
-> Replace the msi_prepare_lock with a lockdep assertion for the group mutex
-> as documentation. For the dmau_iommu.c each iommu_domain is unique to a
-> group.
-> 
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> ---
->   include/linux/iommu.h     | 44 ++++++++++++++++++++++++++-------------
->   drivers/iommu/dma-iommu.c | 33 +++++++++++++----------------
->   drivers/iommu/iommu.c     | 29 ++++++++++++++++++++++++++
->   3 files changed, 73 insertions(+), 33 deletions(-)
-> 
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index caee952febd4..761c5e186de9 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -44,6 +44,8 @@ struct iommu_dma_cookie;
->   struct iommu_fault_param;
->   struct iommufd_ctx;
->   struct iommufd_viommu;
-> +struct msi_desc;
-> +struct msi_msg;
->   
->   #define IOMMU_FAULT_PERM_READ	(1 << 0) /* read */
->   #define IOMMU_FAULT_PERM_WRITE	(1 << 1) /* write */
-> @@ -216,6 +218,12 @@ struct iommu_domain {
->   	struct iommu_domain_geometry geometry;
->   	struct iommu_dma_cookie *iova_cookie;
->   	int (*iopf_handler)(struct iopf_group *group);
-> +
-> +#if IS_ENABLED(CONFIG_IRQ_MSI_IOMMU)
-> +	int (*sw_msi)(struct iommu_domain *domain, struct msi_desc *desc,
-> +		      phys_addr_t msi_addr);
-> +#endif
-> +
->   	void *fault_data;
->   	union {
->   		struct {
-> @@ -234,6 +242,16 @@ struct iommu_domain {
->   	};
->   };
->   
-> +static inline void iommu_domain_set_sw_msi(
-> +	struct iommu_domain *domain,
-> +	int (*sw_msi)(struct iommu_domain *domain, struct msi_desc *desc,
-> +		      phys_addr_t msi_addr))
-> +{
-> +#if IS_ENABLED(CONFIG_IRQ_MSI_IOMMU)
-> +	domain->sw_msi = sw_msi;
-> +#endif
-> +}
+> That's because it's a slow fallback path for cases that can't do
+> async for one reason or another, and ideally we wouldn't have it
+> at all. In reality it's used more than I'd wish for, but it's
+> still a path we don't heavily optimise.
 
-Yuck. Realistically we are going to have no more than two different 
-implementations of this; a fiddly callback interface seems overkill. All 
-we should need in the domain is a simple indicator of *which* MSI 
-translation scheme is in use (if it can't be squeezed into the domain 
-type itself), then iommu_dma_prepare_msi() can simply dispatch between 
-iommu-dma and IOMMUFD based on that, and then it's easy to solve all the 
-other fragility issues too.
+Regardless of that, we probably can optimise bound requests
+like above with jiffies, but sockets would fall into
+the unbound bucket. Otherwise, someone would need to be able
+to forcibly flush the list, like on timeout every N ms or
+something similar.
 
-Thanks,
-Robin.
+> Btw, if you're really spamming iowq threads, I'm surprised that's
+> the only hotspot you have. There should be some contention for
+> CQE posting (->completion_lock), and probably in the iowq queue
+> locking, and so on.
 
-> +
->   static inline bool iommu_is_dma_domain(struct iommu_domain *domain)
->   {
->   	return domain->type & __IOMMU_DOMAIN_DMA_API;
-> @@ -1470,6 +1488,18 @@ static inline ioasid_t iommu_alloc_global_pasid(struct device *dev)
->   static inline void iommu_free_global_pasid(ioasid_t pasid) {}
->   #endif /* CONFIG_IOMMU_API */
->   
-> +#ifdef CONFIG_IRQ_MSI_IOMMU
-> +#ifdef CONFIG_IOMMU_API
-> +int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr);
-> +#else
-> +static inline int iommu_dma_prepare_msi(struct msi_desc *desc,
-> +					phys_addr_t msi_addr)
-> +{
-> +	return 0;
-> +}
-> +#endif /* CONFIG_IOMMU_API */
-> +#endif /* CONFIG_IRQ_MSI_IOMMU */
-> +
->   #if IS_ENABLED(CONFIG_LOCKDEP) && IS_ENABLED(CONFIG_IOMMU_API)
->   void iommu_group_mutex_assert(struct device *dev);
->   #else
-> @@ -1503,26 +1533,12 @@ static inline void iommu_debugfs_setup(void) {}
->   #endif
->   
->   #ifdef CONFIG_IOMMU_DMA
-> -#include <linux/msi.h>
-> -
->   int iommu_get_msi_cookie(struct iommu_domain *domain, dma_addr_t base);
-> -
-> -int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr);
-> -
->   #else /* CONFIG_IOMMU_DMA */
-> -
-> -struct msi_desc;
-> -struct msi_msg;
-> -
->   static inline int iommu_get_msi_cookie(struct iommu_domain *domain, dma_addr_t base)
->   {
->   	return -ENODEV;
->   }
-> -
-> -static inline int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
-> -{
-> -	return 0;
-> -}
->   #endif	/* CONFIG_IOMMU_DMA */
->   
->   /*
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index bf91e014d179..3b58244e6344 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -24,6 +24,7 @@
->   #include <linux/memremap.h>
->   #include <linux/mm.h>
->   #include <linux/mutex.h>
-> +#include <linux/msi.h>
->   #include <linux/of_iommu.h>
->   #include <linux/pci.h>
->   #include <linux/scatterlist.h>
-> @@ -102,6 +103,9 @@ static int __init iommu_dma_forcedac_setup(char *str)
->   }
->   early_param("iommu.forcedac", iommu_dma_forcedac_setup);
->   
-> +static int iommu_dma_sw_msi(struct iommu_domain *domain, struct msi_desc *desc,
-> +			    phys_addr_t msi_addr);
-> +
->   /* Number of entries per flush queue */
->   #define IOVA_DEFAULT_FQ_SIZE	256
->   #define IOVA_SINGLE_FQ_SIZE	32768
-> @@ -398,6 +402,7 @@ int iommu_get_dma_cookie(struct iommu_domain *domain)
->   		return -ENOMEM;
->   
->   	mutex_init(&domain->iova_cookie->mutex);
-> +	iommu_domain_set_sw_msi(domain, iommu_dma_sw_msi);
->   	return 0;
->   }
->   
-> @@ -429,6 +434,7 @@ int iommu_get_msi_cookie(struct iommu_domain *domain, dma_addr_t base)
->   
->   	cookie->msi_iova = base;
->   	domain->iova_cookie = cookie;
-> +	iommu_domain_set_sw_msi(domain, iommu_dma_sw_msi);
->   	return 0;
->   }
->   EXPORT_SYMBOL(iommu_get_msi_cookie);
-> @@ -443,6 +449,9 @@ void iommu_put_dma_cookie(struct iommu_domain *domain)
->   	struct iommu_dma_cookie *cookie = domain->iova_cookie;
->   	struct iommu_dma_msi_page *msi, *tmp;
->   
-> +	if (domain->sw_msi != iommu_dma_sw_msi)
-> +		return;
-> +
->   	if (!cookie)
->   		return;
->   
-> @@ -1800,33 +1809,19 @@ static struct iommu_dma_msi_page *iommu_dma_get_msi_page(struct device *dev,
->   	return NULL;
->   }
->   
-> -/**
-> - * iommu_dma_prepare_msi() - Map the MSI page in the IOMMU domain
-> - * @desc: MSI descriptor, will store the MSI page
-> - * @msi_addr: MSI target address to be mapped
-> - *
-> - * Return: 0 on success or negative error code if the mapping failed.
-> - */
-> -int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
-> +static int iommu_dma_sw_msi(struct iommu_domain *domain, struct msi_desc *desc,
-> +			    phys_addr_t msi_addr)
->   {
->   	struct device *dev = msi_desc_to_dev(desc);
-> -	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
-> -	struct iommu_dma_msi_page *msi_page;
-> -	static DEFINE_MUTEX(msi_prepare_lock); /* see below */
-> +	const struct iommu_dma_msi_page *msi_page;
->   
-> -	if (!domain || !domain->iova_cookie) {
-> +	if (!domain->iova_cookie) {
->   		msi_desc_set_iommu_msi_iova(desc, 0, 0);
->   		return 0;
->   	}
->   
-> -	/*
-> -	 * In fact the whole prepare operation should already be serialised by
-> -	 * irq_domain_mutex further up the callchain, but that's pretty subtle
-> -	 * on its own, so consider this locking as failsafe documentation...
-> -	 */
-> -	mutex_lock(&msi_prepare_lock);
-> +	iommu_group_mutex_assert(dev);
->   	msi_page = iommu_dma_get_msi_page(dev, msi_addr, domain);
-> -	mutex_unlock(&msi_prepare_lock);
->   	if (!msi_page)
->   		return -ENOMEM;
->   
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index 870c3cdbd0f6..022bf96a18c5 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -3596,3 +3596,32 @@ int iommu_replace_group_handle(struct iommu_group *group,
->   	return ret;
->   }
->   EXPORT_SYMBOL_NS_GPL(iommu_replace_group_handle, "IOMMUFD_INTERNAL");
-> +
-> +#if IS_ENABLED(CONFIG_IRQ_MSI_IOMMU)
-> +/**
-> + * iommu_dma_prepare_msi() - Map the MSI page in the IOMMU domain
-> + * @desc: MSI descriptor, will store the MSI page
-> + * @msi_addr: MSI target address to be mapped
-> + *
-> + * The implementation of sw_msi() should take msi_addr and map it to
-> + * an IOVA in the domain and call msi_desc_set_iommu_msi_iova() with the
-> + * mapping information.
-> + *
-> + * Return: 0 on success or negative error code if the mapping failed.
-> + */
-> +int iommu_dma_prepare_msi(struct msi_desc *desc, phys_addr_t msi_addr)
-> +{
-> +	struct device *dev = msi_desc_to_dev(desc);
-> +	struct iommu_group *group = dev->iommu_group;
-> +	int ret = 0;
-> +
-> +	if (!group)
-> +		return 0;
-> +
-> +	mutex_lock(&group->mutex);
-> +	if (group->domain && group->domain->sw_msi)
-> +		ret = group->domain->sw_msi(group->domain, desc, msi_addr);
-> +	mutex_unlock(&group->mutex);
-> +	return ret;
-> +}
-> +#endif /* CONFIG_IRQ_MSI_IOMMU */
+-- 
+Pavel Begunkov
 
