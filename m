@@ -1,135 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF10213E89;
-	Fri, 21 Feb 2025 15:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B7E1E260C
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 15:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740152675; cv=none; b=rbrx+wLkGwHT8b2MHRn/FPqv4PcFiqTqHHr96k01CGwZy64tOF2XWj+AuLM65lNerTctITCDcuOcIMFVi9c0P8f77TGyfUeEgOC/n7mEKOkff8xEJjijZqvCCUEJ256wL/CSM+byUWjdqWnekoY0mllxntoRGKnEyfR0Fg3Dulc=
+	t=1740152795; cv=none; b=k5sxyv5gWDwtjvJRl/MK5CgI2UAJaFNTGdFHBErBUuUnE04IfmW6+myiNmAq7slshULp9RakyrWM+WIenautoaVE/nlFEloKbbnwQ49a+TPSWUZFaDEgZpqcQWSFBZbt8UAS6bp6ClqRJic7J4SQKVTZAigS+tKQpAMiZV+flW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740152675; c=relaxed/simple;
-	bh=Wom1Z6Yf2iTnch8UEgQeD2janPDVRVMz/fyDLs5de9w=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WXuVpbaHswLJd6e59epX4B/X+S5TFbA0cQL3axOQn9l5foN0n0pYEUxbLTl/P0P9mIlKvkH6BKw+T+0Xa1jZn5LxwMM4MEEI0r9bYEV7MdMEhlypdmpZndXznFLeSCgDsM23O7SO7mpNz8OOSVM1Bn5Qiclq46cBscDMB2OETno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S7BO3Q/A; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740152795; c=relaxed/simple;
+	bh=WBcmWGrMeB4GHMlv6u5IaHPt74W6BHCLh+gX5YUMXik=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u5098/mfvg7n3Az7KUiDq9NI3aARC35dQ/TR6bHV4R9SIjwXXJ/DmrFmHrDp2MKXXpgEAFITcAztbhTDcpmRdbyXJBGvQLRI7buJFPCJY+WwEZykhS2yTvtjnnuuLg4HF3DvISj63szDxUaQfHz4msFo/fsbxTgFyfJjN/cm1cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gtPhxIaQ; arc=none smtp.client-ip=209.85.166.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S7BO3Q/A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16E13C4CEE4;
-	Fri, 21 Feb 2025 15:44:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740152675;
-	bh=Wom1Z6Yf2iTnch8UEgQeD2janPDVRVMz/fyDLs5de9w=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=S7BO3Q/APfHsjQjaGHhS6sHXal6pvXJL3tKyA9mwHcbqfwMupAlmEGCcnbUR3RaqV
-	 8/ER9Rj6bzcQQ8FENb+UhBWF28zoo/RueVMGSo6/W8X4rMUyObRPNPSekg9OfqXgbb
-	 1EfxbO/hehgtEi2ydPYS5ny8trrUYpdpaSEZNipj/ikyZ/aI6Gcpp3r9KwuZ5cOAk3
-	 zrGfo5mYGmi1z1JSsZcARaD977xmvtYOHte1pIAH9lK0dhfRIGIfP78Uutt/jAyIo7
-	 MD7DE7h1po+DcuGLwnfWJRyEa89JeaFhmFTOJ5bdYn0zE5PCNABauuq5IogoKL8Dp4
-	 Mpys5VwqVdUCA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 21 Feb 2025 16:44:03 +0100
-Subject: [PATCH net-next 10/10] mptcp: blackhole: avoid checking the state
- twice
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gtPhxIaQ"
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-855b77783e9so63533539f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 07:46:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1740152792; x=1740757592; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NBiYF95UsjyWdAhHtcE9LoaRvojgCkUDYAXBAvVvRiE=;
+        b=gtPhxIaQu+jO8yh2mJqNJRuxkLw1LHsQQMQ57D/lMBLDh31CcfzeUXm1smB35JVIUd
+         sY4kwcRbygz5D87nD6q7NRro8wnZRQZqOgjC0GekDy3F33o3uSyWvTnbCW6cPCARSAYd
+         zKDq3oE55+HGBGOAiq+692u21DNFgv9HiWyb0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740152792; x=1740757592;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NBiYF95UsjyWdAhHtcE9LoaRvojgCkUDYAXBAvVvRiE=;
+        b=cdAHw0bDrpjUias2Jvgesd3X7Woay4H79ej6SOgj418a4Gv/ZV9vDlIrOiom5MDVGj
+         TqqDlE5pLYiNeCUqWKRbNcx9jhYw2KO7IPz+VuC4QY2R6xLqhh0U43oLENA6AgnAOFsi
+         g0ATwuMOyJgIk4jGkseuhsaBXsOlfppVE5NNpP1JZPP0di/KMCJBsEbgBbHMHx2r62VN
+         SJ6hBNeLzrWvFASmi+Ex2MD6efUJPACWAFi4wJmAcw1Jxriaz5sGT9f5hsi/63ud9EDk
+         9k84uWGZZG5uchlkgfbmkzFCjVn3p5yy9b5zPhOomVYOG2j8H8gs/i65+qLV5tgZNtXJ
+         LIEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUE1rAaDNfGeJo04wyjG1fvspY1OBn02satNcEeQ4EhM8CGDTDOyksvEimChAeuAY+zHbb05t6XgOlAimk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/8keP+97NelDhjlQ7v7QLiwL8h3do9feYfPdmK1h3dMNbSGih
+	wAENlrF1UYaBr9tB/XH64/KCtSmG/teA8+52NkgYm7cM2uHFB1IG6xWJnqHhCak=
+X-Gm-Gg: ASbGncuOlUs7KICrM+MCPuMZv5Bk1s1iRr+MN5RVV5Z+4Dc2xCH19grtbLIHJxJ7g55
+	AuDcQIFjvBjKoizwYSqWbPocNXghNnX6f2Q/WjZ7DrWb5H0LxFzyhmZ5kGvbjH57ceFr8Z+ZwqL
+	vxiDii1NgOthAntVqXP1QahV6X+anuYQeGoCetL8lQ+PZIwMHA/xEt+XoDuIzqE6uFnDtXull2V
+	ST53LwwWZhz2sdimncRYNXhpnDuMdhZI9ol/exkOIcN32+LOk95Z34qcZmeNjcRUGsq9JT1Xwon
+	mrBGPMw+qE2RhpTxmAZnf+ez6vjNlXEBulxj
+X-Google-Smtp-Source: AGHT+IEga5vn53JmlL3d8Oi0yyIj7dh/m2xR1iBFPscuiMuFWIE4D6fI6Y3cq/aGDee5PHEi6Nlu6A==
+X-Received: by 2002:a05:6602:6004:b0:855:8f17:cd8d with SMTP id ca18e2360f4ac-855dac41ffamr424960539f.14.1740152792517;
+        Fri, 21 Feb 2025 07:46:32 -0800 (PST)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4eea5b25cafsm2158929173.118.2025.02.21.07.46.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2025 07:46:32 -0800 (PST)
+Message-ID: <b62b6dbf-eeb1-495d-a86b-38f05a17d60e@linuxfoundation.org>
+Date: Fri, 21 Feb 2025 08:46:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250221-net-next-mptcp-pm-misc-cleanup-3-v1-10-2b70ab1cee79@kernel.org>
-References: <20250221-net-next-mptcp-pm-misc-cleanup-3-v1-0-2b70ab1cee79@kernel.org>
-In-Reply-To: <20250221-net-next-mptcp-pm-misc-cleanup-3-v1-0-2b70ab1cee79@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2258; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=Wom1Z6Yf2iTnch8UEgQeD2janPDVRVMz/fyDLs5de9w=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnuJ9HgoWs/Elej6GEIci+QQQIkFOFv8zV3mfAb
- Do2FbfkzCOJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ7ifRwAKCRD2t4JPQmmg
- c7MhEACYVK1iUWhT53jM4LB417iKAbXrfjFNNb2JFET8a4PSK9fs4TBD+tIOzJbbCG0aDoj/6Th
- xWt3rzxPgiLe/r18Jad51x+gS0y90kmjVD8YV/YzACS3h6c7OsMH0C6UyEzWFBFR9DZ0biFUdSB
- nViI+AlfoJ9t/aCL6cVHvsdUm2r+/B28heR2VHot7m+56CiMadgxmLbmBeRrva+qa7WlEy987we
- 49I/C4zd4umS1+93fH9nInTokAsIC3t9GmO/ipT6g6OSYtaoF/XWie9+jSLSQBf2cdsJ0uM0cOV
- 7rxPvEfBlxCdX2vniOft69WFpMdmt3CEWOyDlyyKk6nu9jA0TAhx1cSBYI95UxwyS/f4onIvMHw
- yTQ1/WQ7Uw2rxR2WGqnKqriq17B4ZI1TmQnkL4D8CKM0egodgMoGtkGgTORcUsAtIiS7BLxhNCX
- EDeaXDI2EMnUlmTKioeANfDE2hIkPIt+tp2+/ixplrRuIPuXfJOAmSBWQf6sx3HdhEOsmqS/g9T
- Uf6jfyo3Qby7p8AkwcUfOCgugKbHQeUsZSeXir6YVYisQ8tAAsCAOdmso/XLkRa+FdhcFxFWr2A
- 0vo6ImkjP9qj43KtE5og7+rjf5SAnnTjWRjQN9/c8uRyzMq7l7Pjr2LVImADND0oH6m8cjjcjjU
- JgRU7GD6zSSEHWA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] selftests/user_events: Fix failures caused by test
+ code
+To: realxxyq@163.com, shuah@kernel.org, Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Yiqian Xun <xunyiqian@kylinos.cn>, Shuah Khan <skhan@linuxfoundation.org>
+References: <20250221033555.326716-1-realxxyq@163.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250221033555.326716-1-realxxyq@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-A small cleanup, reordering the conditions to avoid checking things
-twice.
+On 2/20/25 20:35, realxxyq@163.com wrote:
+> From: Yiqian Xun <xunyiqian@kylinos.cn>
+> 
+> In parse_abi function,the dyn_test fails because the
+> enable_file isn’t closed after successfully registering an event.
+> By adding wait_for_delete(), the dyn_test now passes as expected.
+> 
+> Signed-off-by: Yiqian Xun <xunyiqian@kylinos.cn>
+> ---
+>   tools/testing/selftests/user_events/dyn_test.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/user_events/dyn_test.c b/tools/testing/selftests/user_events/dyn_test.c
+> index bdf9ab127488..54c9412f8dee 100644
+> --- a/tools/testing/selftests/user_events/dyn_test.c
+> +++ b/tools/testing/selftests/user_events/dyn_test.c
+> @@ -127,6 +127,8 @@ static int parse_abi(int *check, const char *value)
+>   
+>   	close(fd);
+>   
+> +	wait_for_delete();
+> +
+>   	return ret;
+>   }
+>   
 
-The code here is called in case of timeout on a TCP connection, before
-triggering a retransmission. But it only acts on SYN + MPC packets.
+Adding Steve for review.
 
-So the conditions can be re-order to exit early in case of non-MPTCP
-SYN + MPC. This also reduce the indentation levels.
+Steve, please review the patch. If you are happy with it
+give me Ack or Reviewed-by if you want to take this through
+my tree.
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/ctrl.c | 32 ++++++++++++++++++--------------
- 1 file changed, 18 insertions(+), 14 deletions(-)
+thanks,
+-- Shuah
 
-diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-index 2dd81e6c26bdb5220abed68e26d70d2dc3ab14fb..be6c0237e10bfd7520edd3c57ec43ce4377b97d5 100644
---- a/net/mptcp/ctrl.c
-+++ b/net/mptcp/ctrl.c
-@@ -401,26 +401,30 @@ void mptcp_active_enable(struct sock *sk)
- void mptcp_active_detect_blackhole(struct sock *ssk, bool expired)
- {
- 	struct mptcp_subflow_context *subflow;
-+	u8 timeouts, to_max;
-+	struct net *net;
- 
--	if (!sk_is_mptcp(ssk))
-+	/* Only check MPTCP SYN ... */
-+	if (likely(!sk_is_mptcp(ssk) || ssk->sk_state != TCP_SYN_SENT))
- 		return;
- 
- 	subflow = mptcp_subflow_ctx(ssk);
- 
--	if (subflow->request_mptcp && ssk->sk_state == TCP_SYN_SENT) {
--		struct net *net = sock_net(ssk);
--		u8 timeouts, to_max;
--
--		timeouts = inet_csk(ssk)->icsk_retransmits;
--		to_max = mptcp_get_pernet(net)->syn_retrans_before_tcp_fallback;
--
--		if (timeouts == to_max || (timeouts < to_max && expired)) {
--			MPTCP_INC_STATS(net, MPTCP_MIB_MPCAPABLEACTIVEDROP);
--			subflow->mpc_drop = 1;
--			mptcp_subflow_early_fallback(mptcp_sk(subflow->conn), subflow);
--		}
--	} else if (ssk->sk_state == TCP_SYN_SENT) {
-+	/* ... + MP_CAPABLE */
-+	if (!subflow->request_mptcp) {
-+		/* Mark as blackhole iif the 1st non-MPTCP SYN is accepted */
- 		subflow->mpc_drop = 0;
-+		return;
-+	}
-+
-+	net = sock_net(ssk);
-+	timeouts = inet_csk(ssk)->icsk_retransmits;
-+	to_max = mptcp_get_pernet(net)->syn_retrans_before_tcp_fallback;
-+
-+	if (timeouts == to_max || (timeouts < to_max && expired)) {
-+		MPTCP_INC_STATS(net, MPTCP_MIB_MPCAPABLEACTIVEDROP);
-+		subflow->mpc_drop = 1;
-+		mptcp_subflow_early_fallback(mptcp_sk(subflow->conn), subflow);
- 	}
- }
- 
-
--- 
-2.47.1
 
