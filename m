@@ -1,260 +1,243 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FDF6216619
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 16:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8593C20012D;
+	Fri, 21 Feb 2025 16:36:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740155799; cv=none; b=gJbJJSbzR3t8kUQLXZnSOcDmYfRfOKw3n1Iny/z+A8m5qGYVUJUHbp93X3BBCrBUmpqJRCDNld48wQsMo9/P22fKuhkrpSzIwY2FJXYFrdrdnKLDOK9d2Dy2UJzMZyBXvyZAYlwc/OHJgnLO197ysGAJejYjzU3vjrX9z7gDDl4=
+	t=1740155813; cv=none; b=TZwh07ejTVZqeXt6axfYYBaoPVdfPuPpTXG2mgQQ/hYQpEf5qhfKvpI95CqQad+NEFuIe/OT8AqX/qaygakYKeXwirLcV9xmgEozqa5HxQ13eLlcfBpAb+6tpaLhUOwVdZ3idZsOc5DCAE7uYtH2uqGA9TyQsz9kDH+5QD8q3XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740155799; c=relaxed/simple;
-	bh=iX7YqtTQujLLqaNAUh00iVuqffF/jAbti+QBntYH1tk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mX2oOSrq7sa66+JFWdOGhJYxmZgTMkr59vYKuPEy00pDzLH7HQXbbmRSuDoEJjzlREiL/I7TV/AsZa0cUKeQbY369Tiz0LhH6gjtPre3CuYGgl8v6tPY0ZYkLwcl928xCnCIA4iUIKpL8Ojc51ggi9WdSu/4e/1fUI5YZb1Gi6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZGo9rfnH; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740155813; c=relaxed/simple;
+	bh=h95P4AcDHTPKa8n4KBUFfHZ3f+SCiz2fCZdKlS89CWU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qrmXqh9OUOppoUq/cJIin2wdTUm99tnLRd8OI7qO4Kg6krdg6LtHlgpaQnno9zgh61XJs9lHKPdvxuYQ8fi9mGwp93mBVx9sxTxklmGCGoUXIS9TaS9/boZ6hvnxrYbjetu0terSCj0JAgMBcTaMkMtnsUew7r0xbaV169bLY6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J9oYJyXx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZGo9rfnH"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740155795;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v8rj6X3iOa/EdVnWOpvJZa4qIATKiMnTI+AiRDP2lgg=;
-	b=ZGo9rfnHFOI2ll6L/pxZZNSZSsn/4h5DSdVFjyEdQYLlc8UnhLe5XY82bobN1nzc0oazwH
-	Bxv1OuqV3p7zEmae3s83rtmCfkTtjMLZnTBdyW7hxlCYzltskSzIZ4x4lunPZKSsAuXs8N
-	mcwAGJOeM0BBuTogYobqSZmAbSDmuiE=
-From: Tao Chen <chen.dylane@linux.dev>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	eddyz87@gmail.com,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	qmo@kernel.org
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	chen.dylane@gmail.com,
-	Tao Chen <chen.dylane@linux.dev>,
-	Tao Chen <dylane.chen@didiglobal.com>
-Subject: [PATCH bpf-next v8 4/4] selftests/bpf: Add libbpf_probe_bpf_kfunc API selftests
-Date: Sat, 22 Feb 2025 00:33:35 +0800
-Message-Id: <20250221163335.262143-5-chen.dylane@linux.dev>
-In-Reply-To: <20250221163335.262143-1-chen.dylane@linux.dev>
-References: <20250221163335.262143-1-chen.dylane@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J9oYJyXx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9ECBC4CED6;
+	Fri, 21 Feb 2025 16:36:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740155812;
+	bh=h95P4AcDHTPKa8n4KBUFfHZ3f+SCiz2fCZdKlS89CWU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J9oYJyXxX4MdcyAuOisFvnDlgwwDcb5BH5LlKs2wk8v2pCx9rLsEHijLRegH6EPqk
+	 JXL/8iZapYZZXHInsOQ7/E4RY1RQ1PQ+qn5bHLm/FfUDNWG8dJgmHUBBM7SookSnfI
+	 psfIYVIwviM2wIQf6YpMqnl4v5JZgjPF6lcYaFjWD0YA5P5fcqHfCQbE4kPNVdp0yw
+	 JojTcAladLZDa8tVjXGYuOZjvAi3VQ8FDiEsQZq0Qq+9mKSo2/j964WTUOrDb0fdEj
+	 W4rsSNAOZARO2kxwfFuvj5c9UN3ZA4MhNsfU/Aq+0jqXsgGG8/ek7G/G9WGWGAQS0z
+	 cBU8TxvC3RQ3g==
+Date: Fri, 21 Feb 2025 10:36:51 -0600
+From: Rob Herring <robh@kernel.org>
+To: =?iso-8859-1?Q?J=2E_Neusch=E4fer?= <j.ne@posteo.net>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] dt-bindings: net: Convert fsl,gianfar-{mdio,tbi} to
+ YAML
+Message-ID: <20250221163651.GA4130188-robh@kernel.org>
+References: <20250220-gianfar-yaml-v1-0-0ba97fd1ef92@posteo.net>
+ <20250220-gianfar-yaml-v1-1-0ba97fd1ef92@posteo.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250220-gianfar-yaml-v1-1-0ba97fd1ef92@posteo.net>
 
-Add selftests for prog_kfunc feature probing. Thanks for
-Eduard providing the libbpf_probe_func_many test case.
+On Thu, Feb 20, 2025 at 06:29:21PM +0100, J. Neuschäfer wrote:
+> Move the information related to the Freescale Gianfar (TSEC) MDIO bus
+> and the Ten-Bit Interface (TBI) from fsl-tsec-phy.txt to a new binding
+> file in YAML format, fsl,gianfar-mdio.yaml.
+> 
+> Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+> ---
+> 
+> dt-bindings: net: Convert fsl,gianfar-tbi to YAML
+> ---
+>  .../devicetree/bindings/net/fsl,gianfar-mdio.yaml  | 94 ++++++++++++++++++++++
+>  .../devicetree/bindings/net/fsl-tsec-phy.txt       | 41 +---------
+>  2 files changed, 96 insertions(+), 39 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/fsl,gianfar-mdio.yaml b/Documentation/devicetree/bindings/net/fsl,gianfar-mdio.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..2dade7f48c366b7f5c7408e1f7de1a6f5fc80787
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/fsl,gianfar-mdio.yaml
+> @@ -0,0 +1,94 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/fsl,gianfar-mdio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale Gianfar (TSEC) MDIO Device
+> +
+> +description:
+> +  This binding describes the MDIO is a bus to which the PHY devices are
+> +  connected. For each device that exists on this bus, a child node should be
+> +  created.
+> +
+> +  As of this writing, every TSEC is associated with an internal Ten-Bit
+> +  Interface (TBI) PHY. This PHY is accessed through the local MDIO bus. These
+> +  buses are defined similarly to the mdio buses, except they are compatible
+> +  with "fsl,gianfar-tbi". The TBI PHYs underneath them are similar to normal
+> +  PHYs, but the reg property is considered instructive, rather than
+> +  descriptive. The reg property should be chosen so it doesn't interfere with
+> +  other PHYs on the bus.
+> +
+> +maintainers:
+> +  - J. Neuschäfer <j.ne@posteo.net>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - fsl,gianfar-tbi
+> +      - fsl,gianfar-mdio
+> +      - fsl,etsec2-tbi
+> +      - fsl,etsec2-mdio
+> +      - fsl,ucc-mdio
+> +      - gianfar
 
- ./test_progs -t libbpf_probe_kfuncs
- #153     libbpf_probe_kfuncs:OK
- Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
+Can you just comment out this to avoid the duplicate issue.
 
- ./test_progs -t libbpf_probe_kfuncs_many
- #154     libbpf_probe_kfuncs_many:OK
- Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
+Though I think if you write a custom 'select' which looks for 
+'device_type = "mdio"' with gianfar compatible and similar in the other 
+binding, then the warning will go away. 
 
-Cc: Tao Chen <dylane.chen@didiglobal.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Co-developed-by: Eduard Zingerman <eddyz87@gmail.com>
-Signed-off-by: Eduard Zingerman <eddyz87@gmail.com>
-Signed-off-by: Tao Chen <chen.dylane@linux.dev>
----
- .../selftests/bpf/prog_tests/libbpf_probes.c  | 173 ++++++++++++++++++
- 1 file changed, 173 insertions(+)
+> +      - ucc_geth_phy
+> +
+> +  reg:
+> +    minItems: 1
+> +    items:
+> +      - description:
+> +          Offset and length of the register set for the device
+> +
+> +      - description:
+> +          Optionally, the offset and length of the TBIPA register (TBI PHY
+> +          address register). If TBIPA register is not specified, the driver
+> +          will attempt to infer it from the register set specified (your
+> +          mileage may vary).
+> +
+> +  device_type:
+> +    const: mdio
+> +
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/libbpf_probes.c b/tools/testing/selftests/bpf/prog_tests/libbpf_probes.c
-index 4ed46ed58a7b..db408fd67add 100644
---- a/tools/testing/selftests/bpf/prog_tests/libbpf_probes.c
-+++ b/tools/testing/selftests/bpf/prog_tests/libbpf_probes.c
-@@ -126,3 +126,176 @@ void test_libbpf_probe_helpers(void)
- 		ASSERT_EQ(res, d->supported, buf);
- 	}
- }
-+
-+static int module_btf_fd(char *module)
-+{
-+	int fd, err;
-+	__u32 id = 0, len;
-+	struct bpf_btf_info info;
-+	char name[64];
-+
-+	while (true) {
-+		err = bpf_btf_get_next_id(id, &id);
-+		if (err)
-+			return -1;
-+
-+		fd = bpf_btf_get_fd_by_id(id);
-+		if (fd < 0) {
-+			if (errno == ENOENT)
-+				continue;
-+			return -1;
-+		}
-+		len = sizeof(info);
-+		memset(&info, 0, sizeof(info));
-+		info.name = ptr_to_u64(name);
-+		info.name_len = sizeof(name);
-+		err = bpf_btf_get_info_by_fd(fd, &info, &len);
-+		if (err) {
-+			close(fd);
-+			return -1;
-+		}
-+		/* find target module BTF */
-+		if (!strcmp(name, module))
-+			break;
-+
-+		close(fd);
-+	}
-+
-+	return fd;
-+}
-+
-+void test_libbpf_probe_kfuncs(void)
-+{
-+	int ret, kfunc_id, fd;
-+	char *kfunc = "bpf_cpumask_create";
-+	struct btf *vmlinux_btf = NULL;
-+	struct btf *module_btf = NULL;
-+
-+	vmlinux_btf = btf__parse("/sys/kernel/btf/vmlinux", NULL);
-+	if (!ASSERT_OK_PTR(vmlinux_btf, "btf_parse"))
-+		return;
-+
-+	kfunc_id = btf__find_by_name_kind(vmlinux_btf, kfunc, BTF_KIND_FUNC);
-+	if (!ASSERT_GT(kfunc_id, 0, kfunc))
-+		goto cleanup;
-+
-+	/* prog BPF_PROG_TYPE_SYSCALL supports kfunc bpf_cpumask_create */
-+	ret = libbpf_probe_bpf_kfunc(BPF_PROG_TYPE_SYSCALL, kfunc_id, -1, NULL);
-+	if (!ASSERT_EQ(ret, 1, "kfunc in vmlinux support"))
-+		goto cleanup;
-+
-+	/* prog BPF_PROG_TYPE_KPROBE does not support kfunc bpf_cpumask_create */
-+	ret = libbpf_probe_bpf_kfunc(BPF_PROG_TYPE_KPROBE, kfunc_id, -1, NULL);
-+	if (!ASSERT_EQ(ret, 0, "kfunc in vmlinux not suuport"))
-+		goto cleanup;
-+
-+	ret = libbpf_probe_bpf_kfunc(BPF_PROG_TYPE_KPROBE, -1, -1, NULL);
-+	if (!ASSERT_EQ(ret, 0, "invalid kfunc id:-1"))
-+		goto cleanup;
-+
-+	ret = libbpf_probe_bpf_kfunc(100000, kfunc_id, -1, NULL);
-+	if (!ASSERT_ERR(ret, "invalid prog type:100000"))
-+		goto cleanup;
-+
-+	if (!env.has_testmod)
-+		goto cleanup;
-+
-+	module_btf = btf__load_module_btf("bpf_testmod", vmlinux_btf);
-+	if (!ASSERT_OK_PTR(module_btf, "load module BTF"))
-+		goto cleanup;
-+
-+	kfunc_id = btf__find_by_name(module_btf, "bpf_kfunc_call_test1");
-+	if (!ASSERT_GT(kfunc_id, 0, "func not found"))
-+		goto cleanup;
-+
-+	fd = module_btf_fd("bpf_testmod");
-+	if (!ASSERT_GE(fd, 0, "module BTF fd"))
-+		goto cleanup;
-+
-+	/* prog BPF_PROG_TYPE_SYSCALL supports kfunc bpf_kfunc_call_test1 in bpf_testmod */
-+	ret = libbpf_probe_bpf_kfunc(BPF_PROG_TYPE_SYSCALL, kfunc_id, fd, NULL);
-+	if (!ASSERT_EQ(ret, 1, "kfunc in module BTF support"))
-+		goto cleanup_fd;
-+
-+	/* prog BPF_PROG_TYPE_KPROBE does not support kfunc bpf_kfunc_call_test1
-+	 * in bpf_testmod
-+	 */
-+	ret = libbpf_probe_bpf_kfunc(BPF_PROG_TYPE_KPROBE, kfunc_id, fd, NULL);
-+	if (!ASSERT_EQ(ret, 0, "kfunc in module BTF not support"))
-+		goto cleanup_fd;
-+
-+	ret = libbpf_probe_bpf_kfunc(BPF_PROG_TYPE_SYSCALL, -1, fd, NULL);
-+	if (!ASSERT_EQ(ret, 0, "invalid kfunc id in module BTF"))
-+		goto cleanup_fd;
-+
-+	ret = libbpf_probe_bpf_kfunc(BPF_PROG_TYPE_SYSCALL, kfunc_id, 100, NULL);
-+	ASSERT_EQ(ret, 0, "invalid BTF fd in module BTF");
-+
-+cleanup_fd:
-+	close(fd);
-+cleanup:
-+	btf__free(vmlinux_btf);
-+	btf__free(module_btf);
-+}
-+
-+static const struct {
-+	const char *name;
-+	int code;
-+} program_types[] = {
-+#define _T(n) { #n, BPF_PROG_TYPE_##n }
-+	_T(KPROBE),
-+	_T(XDP),
-+	_T(SYSCALL),
-+	_T(SCHED_CLS),
-+	_T(SCHED_ACT),
-+	_T(SK_SKB),
-+	_T(SOCKET_FILTER),
-+	_T(CGROUP_SKB),
-+	_T(LWT_OUT),
-+	_T(LWT_IN),
-+	_T(LWT_XMIT),
-+	_T(LWT_SEG6LOCAL),
-+	_T(NETFILTER),
-+	_T(CGROUP_SOCK_ADDR),
-+	_T(SCHED_ACT)
-+#undef _T
-+};
-+
-+void test_libbpf_probe_kfuncs_many(void)
-+{
-+	int i, kfunc_id, ret, id;
-+	const struct btf_type *t;
-+	struct btf *btf = NULL;
-+	const char *kfunc;
-+	const char *tag;
-+
-+	btf = btf__parse("/sys/kernel/btf/vmlinux", NULL);
-+	if (!ASSERT_OK_PTR(btf, "btf_parse"))
-+		return;
-+	for (id = 0; id < btf__type_cnt(btf); ++id) {
-+		t = btf__type_by_id(btf, id);
-+		if (!t)
-+			continue;
-+		if (!btf_is_decl_tag(t))
-+			continue;
-+		tag = btf__name_by_offset(btf, t->name_off);
-+		if (strcmp(tag, "bpf_kfunc") != 0)
-+			continue;
-+		kfunc_id = t->type;
-+		t = btf__type_by_id(btf, kfunc_id);
-+		if (!btf_is_func(t))
-+			continue;
-+		kfunc = btf__name_by_offset(btf, t->name_off);
-+		for (i = 0; i < ARRAY_SIZE(program_types); ++i) {
-+			ret = libbpf_probe_bpf_kfunc(program_types[i].code,
-+						     kfunc_id, -1, NULL);
-+			if (ret < 0) {
-+				ASSERT_FAIL("kfunc:%s use prog type:%d",
-+				      kfunc, program_types[i].code);
-+				goto cleanup;
-+			}
-+		}
-+	}
-+cleanup:
-+	btf__free(btf);
-+}
--- 
-2.43.0
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
 
+These are defined in mdio.yaml, so drop them here.
+
+> +
+> +required:
+> +  - reg
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +
+> +allOf:
+> +  - $ref: mdio.yaml#
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - gianfar
+> +              - ucc_geth_phy
+> +    then:
+> +      required:
+> +        - device_type
+
+Essentially, move this to the 'select' schema and add that property 
+device_type must be 'mdio'. You won't need it here anymore because it 
+had to be true for the schema to be applied.
+
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    soc {
+> +        #address-cells = <1>;
+> +        #size-cells = <1>;
+> +
+> +        mdio@24520 {
+> +            reg = <0x24520 0x20>;
+> +            compatible = "fsl,gianfar-mdio";
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            ethernet-phy@0 {
+> +                reg = <0>;
+> +            };
+> +        };
+> +    };
+> diff --git a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+> index 9c9668c1b6a24edff7b7cf625b9f14c3cbc2e0c8..0e55e0af7d6f59cfb571dd3fcff704b7f4c140d2 100644
+> --- a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+> +++ b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+> @@ -1,47 +1,10 @@
+>  * MDIO IO device
+>  
+> -The MDIO is a bus to which the PHY devices are connected.  For each
+> -device that exists on this bus, a child node should be created.  See
+> -the definition of the PHY node in booting-without-of.txt for an example
+> -of how to define a PHY.
+> -
+> -Required properties:
+> -  - reg : Offset and length of the register set for the device, and optionally
+> -          the offset and length of the TBIPA register (TBI PHY address
+> -	  register).  If TBIPA register is not specified, the driver will
+> -	  attempt to infer it from the register set specified (your mileage may
+> -	  vary).
+> -  - compatible : Should define the compatible device type for the
+> -    mdio. Currently supported strings/devices are:
+> -	- "fsl,gianfar-tbi"
+> -	- "fsl,gianfar-mdio"
+> -	- "fsl,etsec2-tbi"
+> -	- "fsl,etsec2-mdio"
+> -	- "fsl,ucc-mdio"
+> -	- "fsl,fman-mdio"
+> -    When device_type is "mdio", the following strings are also considered:
+> -	- "gianfar"
+> -	- "ucc_geth_phy"
+> -
+> -Example:
+> -
+> -	mdio@24520 {
+> -		reg = <24520 20>;
+> -		compatible = "fsl,gianfar-mdio";
+> -
+> -		ethernet-phy@0 {
+> -			......
+> -		};
+> -	};
+> +Refer to Documentation/devicetree/bindings/net/fsl,gianfar-mdio.yaml
+>  
+>  * TBI Internal MDIO bus
+>  
+> -As of this writing, every tsec is associated with an internal TBI PHY.
+> -This PHY is accessed through the local MDIO bus.  These buses are defined
+> -similarly to the mdio buses, except they are compatible with "fsl,gianfar-tbi".
+> -The TBI PHYs underneath them are similar to normal PHYs, but the reg property
+> -is considered instructive, rather than descriptive.  The reg property should
+> -be chosen so it doesn't interfere with other PHYs on the bus.
+> +Refer to Documentation/devicetree/bindings/net/fsl,gianfar-mdio.yaml
+>  
+>  * Gianfar-compatible ethernet nodes
+>  
+> 
+> -- 
+> 2.48.0.rc1.219.gb6b6757d772
+> 
