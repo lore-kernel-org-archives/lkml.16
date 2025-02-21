@@ -1,124 +1,157 @@
-Received: from mail-10629.protonmail.ch (mail-10629.protonmail.ch [79.135.106.29])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB5E1FECC2
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 10:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58D5205E1B;
+	Fri, 21 Feb 2025 10:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740132926; cv=none; b=UIi7Xca/D4j87P953C16XgZX0vFqG5mB/401pxOOqqJiobuhC7RwBZjdmHPjEqjUv9gCJwB0/9bkxRpdTBxAWLW+k4bF+RSTYq4ET4gtLJz/TgC9whVVNngOMigX8acS40jsZ6iX82+C5AgKvZkeTEB6lJ1d/r9s1l8GvvUKFOU=
+	t=1740132930; cv=none; b=JfTRSuKrakAL+D6SyGgyxV5vCh3VdZeA59t0fBfzv0XCdO/zHxX4NKWZJ22ZVgJZFqmRPsQDNTCeSDdvSg21JQMHlvLotw1Vpwlx65D7PXKkjevqNW5ZaG/WfFtnFpH0ei1jkFU3Pw/GFpUdI5ewcLOTkdJvsFI7AIYiXdhMhCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740132926; c=relaxed/simple;
-	bh=pYlG2WV/q5fgqaIrf4eiL8NfB35rdADEB88ims0ixMs=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LzQwVVZ0LkFzccA69pI8eGbl/rgmdgtJBA8LGDC0btvOBsDbvXiL1wjp9ulYPjpv6oxGBOBwQ9QmEGKlNVKjm156QLlT3VAhahk0wUvOYB6w70mztVWoeL604YaF+OlC+o7uarV1deNBUBdCsuNj6dDa7QSBME9ljrDvFiC7Nns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=llpjHVYH; arc=none smtp.client-ip=79.135.106.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1740132930; c=relaxed/simple;
+	bh=1vznFYSoeqK4WULqDA/ouXkxSQ6ThQs46OMs7yesxDo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=osWypz+aN5/tMFgrA3+qFuJaFsWKVQcyZXdDsV6x7HM1cPvJCIYP+8Ksr32JMrrMBWpEVBMEgac1Im0E9RswJH5uK98Pi4BHveNho5SUoNqdZm9ugFgp5cbr7EHmxN5zswb2DH/IVYNKWtojpC+EAUumiuUGfB4CDz4xhgq37FY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ml++WQPy; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="llpjHVYH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1740132921; x=1740392121;
-	bh=utLG4Pvkh7OuzllYzzEViXcvOHNbmHD6EALvUcEmpus=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=llpjHVYHqo+8Fpbh2ZQxl3c6jV1AX1pd4gDGXe5EFrGHsKrGA/vl2m9cu5cFgp4+h
-	 ZGmKLsUeNjDJVinEOJZ3rGhaOESB4tWNatofQVmefIxj1KQOvdye2hQA0TyOCoTN5A
-	 xcgtLMZgRS5nNB6QQI2h0oGQrxSSiGE5WRjTZtKSKm6K83IWg8ynq5gvfrkUJStpqW
-	 epZZ4CpWakuIH1JEyhFEwr7ZSP61+b5j4QbiLaTcrng49rcrbKINu4xDmajejh5V5T
-	 tuKCoXqbpyN212iavjvek8plF7iechTHnE6yMeld0BNWmAG4TNrLsrQHKI9CCY0RRB
-	 T4Eo9f0oyYjHQ==
-Date: Fri, 21 Feb 2025 10:15:16 +0000
-To: Andreas Hindborg <a.hindborg@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, Guangbo Cui <2407018371@qq.com>, Dirk Behme <dirk.behme@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 05/14] rust: hrtimer: allow timer restart from timer handler
-Message-ID: <7536dcf0-ed86-48ab-af35-bf86fcdc5601@proton.me>
-In-Reply-To: <87y0xzfyv8.fsf@kernel.org>
-References: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org> <20250218-hrtimer-v3-v6-12-rc2-v8-5-48dedb015eb3@kernel.org> <F56YWuamHrpLM1KaPiwECr4Ta19VkAWdbhcMhII5pfM1kSjl3_RAR6elrNAjL6ZqVurGdjj1Fn-0wyfZNDHKRg==@protonmail.internalid> <8e32c3e1-0b55-4809-92ad-f968252a05f8@proton.me> <87y0xzfyv8.fsf@kernel.org>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: fbbba1720b3bf99016645cb74a0b38280a71e469
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ml++WQPy"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51L6cTsU009360;
+	Fri, 21 Feb 2025 10:14:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=FuLgO3UHYcvVgACNXyKK8N
+	/z39nFVkNySO5odzxU4Jk=; b=ml++WQPyAZCJvjFFy4MqIgJbAfGMny7J9xhKvB
+	Y5VJsRvT5KLlqriWwcpgBH0I62B0Ms6+s0tiUxfJbfm0AwHqAY27t3h2yVL4hVw1
+	Pgnfo+F+eiYdewD7utHWIH0bW/kPLS4XD66kjZtCrwIEOgrovwfyrTbwEzxIILFP
+	0/uNF7ex1gv5eBPVaO0GW0eIng73hrUHatyWUcJJbmQG3HGXuwlxAMXnwkVamAMo
+	Jj5xjf4IGCdGVSG1hGueLqaLUJlap9HpHalUOV7B0ldUv3oC4qcvt28hsgBVU+te
+	D7eZtA8njD63N4uRRzp4nGUPD3e/nXwsIycR8yZTM/YxP3Dg==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy3hn27-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Feb 2025 10:14:57 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51LAEuZI001146
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Feb 2025 10:14:56 GMT
+Received: from hu-mmanikan-blr.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 21 Feb 2025 02:14:47 -0800
+From: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
+To: <andersson@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <konradybcio@kernel.org>, <catalin.marinas@arm.com>, <will@kernel.org>,
+        <p.zabel@pengutronix.de>, <richardcochran@gmail.com>,
+        <geert+renesas@glider.be>, <dmitry.baryshkov@linaro.org>,
+        <arnd@arndb.de>, <nfraprado@collabora.com>, <quic_tdas@quicinc.com>,
+        <biju.das.jz@bp.renesas.com>, <elinor.montmasson@savoirfairelinux.com>,
+        <ross.burton@arm.com>, <javier.carrasco@wolfvision.net>,
+        <quic_anusha@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <netdev@vger.kernel.org>
+CC: <quic_srichara@quicinc.com>, <quic_varada@quicinc.com>
+Subject: [PATCH v10 0/6] Add NSS clock controller support for IPQ9574 
+Date: Fri, 21 Feb 2025 15:44:20 +0530
+Message-ID: <20250221101426.776377-1-quic_mmanikan@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 4Fh9b7yRR1h8oOLA24KMLGFydN0BPkI2
+X-Proofpoint-GUID: 4Fh9b7yRR1h8oOLA24KMLGFydN0BPkI2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-21_01,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1011
+ phishscore=0 adultscore=0 lowpriorityscore=0 bulkscore=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 spamscore=0 mlxlogscore=799 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2502210077
 
-On 21.02.25 10:09, Andreas Hindborg wrote:
-> "Benno Lossin" <benno.lossin@proton.me> writes:
->=20
->> On 18.02.25 14:27, Andreas Hindborg wrote:
->>> This patch allows timer handlers to report that they want a timer to be
->>> restarted after the timer handler has finished executing.
->>>
->>> Also update the `hrtimer` documentation to showcase the new feature.
->>>
->>> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
->>> ---
->>>  rust/kernel/time/hrtimer.rs     | 28 +++++++++++++++++++++++++++-
->>>  rust/kernel/time/hrtimer/arc.rs |  4 +---
->>>  2 files changed, 28 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
->>> index b2a3130bc21d7..e342193f985eb 100644
->>> --- a/rust/kernel/time/hrtimer.rs
->>> +++ b/rust/kernel/time/hrtimer.rs
->>> @@ -183,7 +183,7 @@ pub trait HrTimerCallback {
->>>      type CallbackTargetParameter<'a>;
->>>
->>>      /// Called by the timer logic when the timer fires.
->>> -    fn run(this: Self::CallbackTargetParameter<'_>)
->>> +    fn run(this: Self::CallbackTargetParameter<'_>) -> HrTimerRestart
->>>      where
->>>          Self: Sized;
->>>  }
->>> @@ -278,6 +278,32 @@ unsafe fn start(self_ptr: *const Self, expires: Kt=
-ime) {
->>>      }
->>>  }
->>>
->>> +/// Restart policy for timers.
->>> +pub enum HrTimerRestart {
->>> +    /// Timer should not be restarted.
->>> +    NoRestart,
->>> +    /// Timer should be restarted.
->>> +    Restart,
->>> +}
->>> +
->>> +impl From<bindings::hrtimer_restart> for HrTimerRestart {
->>> +    fn from(value: u32) -> Self {
->>> +        match value {
->>> +            bindings::hrtimer_restart_HRTIMER_NORESTART =3D> Self::NoR=
-estart,
->>> +            _ =3D> Self::Restart,
->>> +        }
->>> +    }
->>> +}
->>> +
->>> +impl From<HrTimerRestart> for bindings::hrtimer_restart {
->>> +    fn from(value: HrTimerRestart) -> Self {
->>> +        match value {
->>> +            HrTimerRestart::NoRestart =3D> bindings::hrtimer_restart_H=
-RTIMER_NORESTART,
->>> +            HrTimerRestart::Restart =3D> bindings::hrtimer_restart_HRT=
-IMER_RESTART,
->>> +        }
->>> +    }
->>> +}
->>
->> Do drivers need these impls? If no, I would prefer a private conversion
->> function just for the abstraction.
->=20
-> No, drivers would not need these. I can hide them.
+Add bindings, driver and devicetree node for networking sub system clock
+controller on IPQ9574. Also add support for gpll0_out_aux clock
+which serves as the parent for some nss clocks.
 
-Sounds good, you can add:
+Changes in V10:
+	- nsscc dt-bindings
+		- Added clock-names in dt-bindings to obtain the nsscc clock and
+		  enable it using PM API's, as this clock is required to access
+		  nsscc block.
+		- Dropped #power-domain-cells from example, because nsscc doesn't
+		  provide any power domains.
+		- Update copy right year in include files.
+	- nsscc driver
+		- Enable nsscc clock with the help of PM API's
+		  because this clock is needed to access nsscc block. 
+		- Dropped R-b tag.
+	- dtsi
+		- Added clock-names in nsscc node.
+		- Dropped #power-domain-cells from nsscc node, because nsscc doesn't
+		  provide any power domains.
+	- Fixed review comments from Konrad.
+ 
+V9 can be found at:
+https://lore.kernel.org/linux-arm-msm/20250207073926.2735129-1-quic_mmanikan@quicinc.com/
 
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+V8 can be found at:
+https://lore.kernel.org/linux-arm-msm/20241025035520.1841792-1-quic_mmanikan@quicinc.com/
 
----
-Cheers,
-Benno
+V7 can be found at:
+https://lore.kernel.org/linux-arm-msm/20241009074125.794997-1-quic_mmanikan@quicinc.com/
+
+V6 can be found at:
+https://lore.kernel.org/linux-arm-msm/20241004080332.853503-1-quic_mmanikan@quicinc.com/
+
+V5 can be found at:
+https://lore.kernel.org/linux-arm-msm/20240626143302.810632-1-quic_devipriy@quicinc.com/
+
+V4 can be found at:
+https://lore.kernel.org/linux-arm-msm/20240625070536.3043630-1-quic_devipriy@quicinc.com/
+
+V3 can be found at:
+https://lore.kernel.org/linux-arm-msm/20240129051104.1855487-1-quic_devipriy@quicinc.com/
+
+V2 can be found at:
+https://lore.kernel.org/linux-arm-msm/20230825091234.32713-1-quic_devipriy@quicinc.com/
+
+Devi Priya (6):
+  dt-bindings: clock: gcc-ipq9574: Add definition for GPLL0_OUT_AUX
+  clk: qcom: gcc-ipq9574: Add support for gpll0_out_aux clock
+  dt-bindings: clock: Add ipq9574 NSSCC clock and reset definitions
+  clk: qcom: Add NSS clock Controller driver for IPQ9574
+  arm64: dts: qcom: ipq9574: Add nsscc node
+  arm64: defconfig: Build NSS Clock Controller driver for IPQ9574
+
+ .../bindings/clock/qcom,ipq9574-nsscc.yaml    |   98 +
+ arch/arm64/boot/dts/qcom/ipq9574.dtsi         |   29 +
+ arch/arm64/configs/defconfig                  |    1 +
+ drivers/clk/qcom/Kconfig                      |    7 +
+ drivers/clk/qcom/Makefile                     |    1 +
+ drivers/clk/qcom/gcc-ipq9574.c                |   15 +
+ drivers/clk/qcom/nsscc-ipq9574.c              | 3107 +++++++++++++++++
+ include/dt-bindings/clock/qcom,ipq9574-gcc.h  |    1 +
+ .../dt-bindings/clock/qcom,ipq9574-nsscc.h    |  152 +
+ .../dt-bindings/reset/qcom,ipq9574-nsscc.h    |  134 +
+ 10 files changed, 3545 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,ipq9574-nsscc.yaml
+ create mode 100644 drivers/clk/qcom/nsscc-ipq9574.c
+ create mode 100644 include/dt-bindings/clock/qcom,ipq9574-nsscc.h
+ create mode 100644 include/dt-bindings/reset/qcom,ipq9574-nsscc.h
+
+
+base-commit: 8936cec5cb6e27649b86fabf383d7ce4113bba49
+-- 
+2.34.1
 
