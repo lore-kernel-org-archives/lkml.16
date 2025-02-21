@@ -1,122 +1,135 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B6291FC11E;
-	Fri, 21 Feb 2025 09:13:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47E9F1E9B21;
+	Fri, 21 Feb 2025 09:14:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740129219; cv=none; b=Vog2NBZnEjv8DqQhUU3zC8QiRDz2GRdCQmriVEq8sgYMrrSGbvtWjylid/Y9FZK2KJCcviOJV8CY+rHTxgYGJEN0JijrhqjvroejpnvhnTRJ6qni17y8vSt77k2ujBx2TO2c4cPA9hDbKe0NEb5RryX2dri0x8DGEdDID7vTCQE=
+	t=1740129298; cv=none; b=XfBrRdRoZIiP5c7u0HbPsWa8c1D/JTsWTZRXGaYsvo2Z2SGk26tw8ogKjYVAvjGRDiT+l9iGezWaP1Or51EMJ4yAJg+j2b5Xw3Rz1prYxAVRkxLNda3m3KcDEDyrD+ymf6FUbgjV28lT8PMxC/aKCEuPD611nEAULbH0FQWKvzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740129219; c=relaxed/simple;
-	bh=rDEihz2SYq+qWRIswF8iAj6c1YlBHyFHD/d/IEGQKvg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JBChZbL0JFpTNqklEgRFpcP2zePKyiZeUexAr2Kj0nh6tQ0JpPiFXbD43ohu47M6H+0MHOI+ilwKF12lj2RgGtJXiZ5snEUnFvKEGdYMacti00T1NqgPDtnMksV0FUHCfGdGWkYJTCwIrpKhcQaMsFkTwPZwFnGowd3m3pvBv9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ULDQ2ZjH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740129298; c=relaxed/simple;
+	bh=FPSnej4gRORvz9fIoO0ZHKVoxlk58vTwK5PRU598Dfk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Uzm1fpBeFmu4MswTMeLXXS/mMpBXtG0DMyxHRso7ftBh4WtNcOiy3syLwQbmc4CORORE1oYVleoUY84P3azMh0VeKwp1gtUIsRFQzS5b5zq8I9ZQ07+XuvzFz46Me2dtiqZTFBdMbFoaVZuRgvhgvchCXzZznDqIZJoQ1MexEGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iT8H/NJ9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ULDQ2ZjH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73B57C4CED6;
-	Fri, 21 Feb 2025 09:13:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iT8H/NJ9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4E32C4CEE7;
+	Fri, 21 Feb 2025 09:14:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740129219;
-	bh=rDEihz2SYq+qWRIswF8iAj6c1YlBHyFHD/d/IEGQKvg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ULDQ2ZjH02Hj782GvcFfA82R6BeT8ck4xAGbF1R7G9A1V6rPQ+XUGRLwETaN5KaRH
-	 iJsup2Fu+bhvBseHfPDLh3UbOgoTzye12t+JfSzVVAu9tk5/Zviqzh8uSqjt0oFWPq
-	 k/Scy0aQAwbKtKeIDAaBF/6j6XRPGLqal+hgUbcwL2XIdtZj4a0GgEMYtREIFuEU0x
-	 Zv7bFWsLpR83Rwm/3dDdXlVa4jevjYdDmA080UR1FlIBH2uzTx+xNAYlKLNyUOLMLq
-	 nK4s2UecTMKwxGxVK2a+Z9MWB++Xg9c0Y7KjorfLW0oPTQBmSKyjeAwPWN93Xo2MXT
-	 IaQ0uqQjn2iIA==
-Date: Fri, 21 Feb 2025 08:59:54 +0100
-From: Joel Granados <joel.granados@kernel.org>
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: Kees Cook <kees@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, sparclinux@vger.kernel.org, 
-	linux-s390@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH 7/8] s390: mv s390 sysctls into their own file under
- arch/s390 dir
-Message-ID: <yiuirrlckwb5ressit6gcoi6yljcy6ggtopaf5bsgpxb5jp4v4@azntrnnk7zdr>
-References: <20250218-jag-mv_ctltables-v1-0-cd3698ab8d29@kernel.org>
- <20250218-jag-mv_ctltables-v1-7-cd3698ab8d29@kernel.org>
- <20250218140821.7740Ab5-hca@linux.ibm.com>
+	s=k20201202; t=1740129297;
+	bh=FPSnej4gRORvz9fIoO0ZHKVoxlk58vTwK5PRU598Dfk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=iT8H/NJ9b3Nb0+G0ar4ucq4X7ucegkJRj4HYn1Urba6EsbH0WMjy/Ivi1CXS1IoyE
+	 /wumnkPZYHrIDSfMbfw3e/AHfFwh3Fk87Tvhg2/CGEkQVqy03Be90x6ObhnxiBbLeF
+	 V1qASkjq2K8SqczFy3H1vwxp2iKN6Ax96ikLus0a3LbvDFPo6GRQOtPDzf+OJlo1oJ
+	 mYhic2hQlq1YPJOdkpdLySZfeIVeOf3TiTEe3JZC/SPnX+ffz8ufV2K5nEr83sSaT/
+	 UTeQJBSbAemajlSfDYgQMWOMyD5J7/8Wb35dYDOJ36RLSNmHdVl0i1Vr/WyFzUXp/0
+	 O3RAiCLqSdcKw==
+From: Michael Walle <mwalle@kernel.org>
+To: Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Jared McArthur <j-mcarthur@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Michael Walle <mwalle@kernel.org>
+Subject: [PATCH 1/2] arm64: dts: ti: k3-am62p: fix pinctrl settings
+Date: Fri, 21 Feb 2025 10:14:46 +0100
+Message-Id: <20250221091447.595199-1-mwalle@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250218140821.7740Ab5-hca@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 18, 2025 at 03:08:21PM +0100, Heiko Carstens wrote:
-> On Tue, Feb 18, 2025 at 10:56:23AM +0100, joel granados wrote:
-> > Move s390 sysctls (spin_retry and userprocess_debug) into their own
-> > files under arch/s390. We create two new sysctl tables
-> > (2390_{fault,spin}_sysctl_table) which will be initialized with
-> > arch_initcall placing them after their original place in proc_root_init.
-> > 
-> > This is part of a greater effort to move ctl tables into their
-> > respective subsystems which will reduce the merge conflicts in
-> > kerenel/sysctl.c.
->   ^^^^^^^
-> typo
-Fixed
+It appears that pinctrl-single is misused on this SoC to control both
+the mux and the input and output and bias settings. This results in
+non-working pinctrl configurations for GPIOs within the device tree.
 
-> 
-> > diff --git a/arch/s390/lib/spinlock.c b/arch/s390/lib/spinlock.c
-> > index a81a01c44927..4483fdc9d472 100644
-> > --- a/arch/s390/lib/spinlock.c
-> > +++ b/arch/s390/lib/spinlock.c
-> > @@ -17,6 +17,10 @@
-> >  #include <asm/alternative.h>
-> >  #include <asm/asm.h>
-> >  
-> > +#if defined(CONFIG_SMP)
-> > +#include <linux/sysctl.h>
-> > +#endif
-> > +
-> ...
-> > +#if defined(CONFIG_SMP)
-> > +static const struct ctl_table s390_spin_sysctl_table[] = {
-> > +	{
-> > +		.procname	= "spin_retry",
-> > +		.data		= &spin_retry,
-> > +		.maxlen		= sizeof(int),
-> > +		.mode		= 0644,
-> > +		.proc_handler	= proc_dointvec,
-> > +	},
-> > +};
-> > +
-> > +static int __init init_s390_spin_sysctls(void)
-> > +{
-> > +	register_sysctl_init("kernel", s390_spin_sysctl_table);
-> > +	return 0;
-> > +}
-> > +arch_initcall(init_s390_spin_sysctls);
-> > +#endif
-> 
-> I see that you want to keep the existing CONFIG_SMP behaviour, but since a
-> long time s390 enforces CONFIG_SMP=y (this was obviously never reflected in
-> kernel/sysctl.c).
-> Therefore the above ifdefs should be removed, and in addition the include
-> statement should be added to the other linux includes at the top of the file.
-I'll add these changes to my V2
+This is what happens:
+ (1) During startup the pinctrl settings are applied according to the
+     device tree. I.e. the pin is configured as output and with
+     pull-ups enabled.
+ (2) During startup a device driver requests a GPIO.
+ (3) pinctrl-single is applying the default GPIO setting according to
+     the pinctrl-single,gpio-range property.
 
-Thx for the review
+This would work as expected if the pinctrl-single is only controlling
+the function mux, but it also controls the input/output buffer enable,
+the pull-up and pull-down settings etc (pinctrl-single,function-mask
+covers the entire pad setting instead of just the mux field).
 
+Remove the pinctrl-single,gpio-range property, so that no settings are
+applied during a gpio_request() call.
+
+Fixes: d72d73a44c3c ("arm64: dts: ti: k3-am62p: Add gpio-ranges properties")
+Signed-off-by: Michael Walle <mwalle@kernel.org>
+---
+
+Maybe one could also switch the pinctrl-single to a pinconf-single node
+which is able to control all the bias settings and restrict
+"pinctrl-single,function-mask" to just the actual function. Not
+sure.
+
+ .../boot/dts/ti/k3-am62p-j722s-common-mcu.dtsi     |  8 --------
+ arch/arm64/boot/dts/ti/k3-am62p-main.dtsi          | 14 --------------
+ 2 files changed, 22 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-mcu.dtsi
+index b33aff0d65c9..bd6a00d13aea 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-mcu.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-mcu.dtsi
+@@ -12,15 +12,7 @@ mcu_pmx0: pinctrl@4084000 {
+ 		#pinctrl-cells = <1>;
+ 		pinctrl-single,register-width = <32>;
+ 		pinctrl-single,function-mask = <0xffffffff>;
+-		pinctrl-single,gpio-range =
+-			<&mcu_pmx_range 0 21 PIN_GPIO_RANGE_IOPAD>,
+-			<&mcu_pmx_range 23 1 PIN_GPIO_RANGE_IOPAD>,
+-			<&mcu_pmx_range 32 2 PIN_GPIO_RANGE_IOPAD>;
+ 		bootph-all;
+-
+-		mcu_pmx_range: gpio-range {
+-			#pinctrl-single,gpio-range-cells = <3>;
+-		};
+ 	};
+ 
+ 	mcu_esm: esm@4100000 {
+diff --git a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
+index 420c77c8e9e5..0a888392137c 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
+@@ -42,20 +42,6 @@ &inta_main_dmss {
+ 	ti,interrupt-ranges = <5 69 35>;
+ };
+ 
+-&main_pmx0 {
+-	pinctrl-single,gpio-range =
+-		<&main_pmx0_range 0 32 PIN_GPIO_RANGE_IOPAD>,
+-		<&main_pmx0_range 33 38 PIN_GPIO_RANGE_IOPAD>,
+-		<&main_pmx0_range 72 22 PIN_GPIO_RANGE_IOPAD>,
+-		<&main_pmx0_range 137 5 PIN_GPIO_RANGE_IOPAD>,
+-		<&main_pmx0_range 143 3 PIN_GPIO_RANGE_IOPAD>,
+-		<&main_pmx0_range 149 2 PIN_GPIO_RANGE_IOPAD>;
+-
+-	main_pmx0_range: gpio-range {
+-		#pinctrl-single,gpio-range-cells = <3>;
+-	};
+-};
+-
+ &main_gpio0 {
+ 	gpio-ranges = <&main_pmx0 0 0 32>, <&main_pmx0 32 33 38>,
+ 			<&main_pmx0 70 72 22>;
 -- 
+2.39.5
 
-Joel Granados
