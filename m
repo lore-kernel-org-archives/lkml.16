@@ -1,81 +1,61 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1504204F8E
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 16:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9DD213E9E
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 16:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740154334; cv=none; b=ePA0reWb7pe89f1acxpc1s75JA6Orli/XtsAYvZk4UMadAANwPaG+3jcVkw4yuUQQT6tb98IxRVLx7Z4GVJpBVt3p7T94u6/AV+9V+li7wzuGNVmdEXtUAHQJKRfB4DU73c5rCBLdj6A4s3zlx7sOH3HOsJfN7VYruxieEMHu14=
+	t=1740154346; cv=none; b=tHqrZmdiYHo4niH/pGnIbL0hPUQNUcDSNfMfkpUqq9q8P+0cVq4yN13jPcP5bToPXDBFIFj9pUIfdQ20Uk9DakcPcCFRbKkRz7/yBjEDxsAn+hg+WIUrwzEL3ua/FDYnPxwks5gi/mlqDtKiim+jC/+UvcjCRvqoSj04LfW6sc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740154334; c=relaxed/simple;
-	bh=5H4PEf9E9yk8XT2swQY06hLeXngmDP4x4LJ+LIwvvO0=;
+	s=arc-20240116; t=1740154346; c=relaxed/simple;
+	bh=mxjeAdq+aNd+avhSnTHUTRgXcTwL1FgHUD13IQX+Cjk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eo5oK593LATnypgJzWcJLgV3C6RwPOKFB/FVWPCKLWOAtL3M2q8w/a5xD/rjMWi4PWz8IAowP5OiZ1obj4e9pQmwMRQwCUomkTomYtH+B03vQO3BbzNXT7IrQyIDb3NiuXC8ULAvLEGPUjMuVooF5vioVUsBL1tjBz2Zg71OAxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tCQCdmlZ; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=CqcmIKEY69ICjy1I2aWxoVOZJbbCABGHtqxtWIZVbI3KAI95ZAiNm1ZUCdX3a8t1HVD5b6w+cBRIce/hZ/G46EfGks/sMluHDAQHgeArg8tfl7eAEKorf0pbN46FwwATT2Qf/6biEEnvxtcUNEPvpx1zYTGkXr4WELMN4XNbS6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nn7xhSWZ; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tCQCdmlZ"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-309311e7b39so20809951fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 08:12:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740154331; x=1740759131; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IbnhtJEa4SquPfm19GzdxAOTsJ3ZtzFT/hW1Tsd7YMA=;
-        b=tCQCdmlZrK5safywGUkkygQaJbsKc+gaZcMtb/4y4lvzf1VJ08M8p32AL72hYKTjkw
-         8rMvO23OXJTmrrMeaaoNmxMuhhPG1iMt6nMY2DZU9k4Ar2tmCwc2F2d9NTWzwD8hHtnL
-         fMDvcRFqpobj05moA5HNa0yVPLaaxeeasy4SZMagewU0sswpK4zYYMVxjvwTFMmnpG6x
-         gC5qjo1SZSIpW1A0w4Pn2Sl+/xx0A0iCYalSyKMaUlJKTXNDZeKsUNf7o+Z3rqK25/bD
-         6x8U/IyC4hqDFGpkzKL46bGspjsmNjFV1i2JrMJFJK0MJRkIr0y8tPwF5LTxpcdN0S+G
-         RvAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740154331; x=1740759131;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IbnhtJEa4SquPfm19GzdxAOTsJ3ZtzFT/hW1Tsd7YMA=;
-        b=sBGUMcZctZdiF5tQKiIgX5zbUyPWBGT4N1FegUOo3k8qTb2uoOyRM47drgrMHL0i3B
-         kxNOjQ+GQxIZZOS6lMs/T1oKFGZ25omPzEPNCm5QguIvHdKSzxddyIBbS9dUMek/y874
-         zq9R4hVKOupJiJXpbVOTi4lzOzE7/xpxrji33IBmbAlqK9IAolGmHkTgcbqtU5LpDaiz
-         VRsNsnjMJ9bqzgm3H4KEQk0ZtYWJy+px2gC1tSmZO+WnDDcZYlwdQr+/EFKEaSUjYbKP
-         kWgFmc9Ms7xpQx5eDRknpqMts4hbOpKQy6R4mF4q+CvQvWKVyClFTAdjBbFlV44oD3cb
-         hDWg==
-X-Forwarded-Encrypted: i=1; AJvYcCXPn6uEfpuiuKgCF/oTij6UzCIZW1C7uFPZlr+yHH5binsXDHNAaNvFYdHw8H6ctSCV/67TN2GV2H/dhbk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+3BH7rJaf1WqhHta5Jy9goaftL6gWtG9kQXJLHUts8XSblTJY
-	wMq26a+iGnwtpCYw0FUg1v7yT3HKaNOWZJFifpyqDdsOvZ37bK8JzK3Yl8P3Its=
-X-Gm-Gg: ASbGnctZ97o1Au9OPVE8u2e1QQg/mJAz2FYsYObKmgnDmBN8z/cFkxUYDMOGrlrJ+Ds
-	E5gnVZV9FC4S+5EMDc1db+iMl9KJBV2sSgHVUpuR2JlPFxm4wrfd0tXaBOrrs04e7RhD0buj7qY
-	iio5FiWToDy6bbSCadze/B6PAJZsytmotSw3B0WL1K9BdPiRMMTh/dnFJ5PcP4P8Tb3ZryqBt2+
-	rQLhFhCPj5M7GbUyfDjc9oUwJBwR8DWnu1P/AnCe2F29F5rLU77oA/XRb06Bbu5n9rREqBzDFQL
-	Ax2o/OU+uF23bWBicgOMHwnzbYnXvhMTjZBjS1UI0UKKnnXwX6xLClvufybqhWtes4noxGjS6FH
-	2gMmmPg==
-X-Google-Smtp-Source: AGHT+IEKm09ffSc5M3frvvgU3E9J1EUpouTHSwPL5rhTUfv0oqJAypzPAMmviTh4qLAjGZjUYSJxPQ==
-X-Received: by 2002:a2e:7d07:0:b0:308:ec6f:7022 with SMTP id 38308e7fff4ca-30a598e29c8mr15100431fa.17.1740154330646;
-        Fri, 21 Feb 2025 08:12:10 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30a25195701sm20109501fa.4.2025.02.21.08.12.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2025 08:12:10 -0800 (PST)
-Date: Fri, 21 Feb 2025 18:12:08 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Krishna Manikandan <quic_mkrishn@quicinc.com>, 
-	Jonathan Marek <jonathan@marek.ca>, Kuogee Hsieh <quic_khsieh@quicinc.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Srini Kandagatla <srinivas.kandagatla@linaro.org>, Rob Clark <robdclark@chromium.org>
-Subject: Re: [PATCH v3 11/21] drm/msm/dpu: Clear CTL_FETCH_PIPE_ACTIVE before
- blend setup
-Message-ID: <7nd7j7wslq5fclik6trs2egwj7kx5wy246ljaqmwbkvnutu547@qgxcx66kjsw2>
-References: <20250221-b4-sm8750-display-v3-0-3ea95b1630ea@linaro.org>
- <20250221-b4-sm8750-display-v3-11-3ea95b1630ea@linaro.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nn7xhSWZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740154345; x=1771690345;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=mxjeAdq+aNd+avhSnTHUTRgXcTwL1FgHUD13IQX+Cjk=;
+  b=Nn7xhSWZztZeDzYBGokblTW8CAlC58DX+cPW5vapDNSPDvnt8hZtZ4+U
+   uLR8VkmMcHIQxxtZ83MosVZvHnZ06LlG80cV7NLjMETfQmRFQZOXTH+In
+   0mYxQ8pQV24EQtv/JHITMCbP5ghzXuw25UyLbibt+2gGqIEIemd6QGIVo
+   u/XZhKsNZJUx6eB8dwsAOIRw+Na+LpkbZf79BccqeOQFLx+dMrKnO7DCW
+   MrKQbvB1wLM/hUCuNks2A642Mztow0ATJiPmaU+zl60WFIkUa5L1wQgV5
+   aUiHuoY3+zLNwkEKdqqUtAVcySzzhXpGk3J7MWXxojdEYdQc4bBJuMbb7
+   Q==;
+X-CSE-ConnectionGUID: bPBUGCJES+GI9K9xvRirew==
+X-CSE-MsgGUID: svWTpMDvQdy9OySjgmuSXQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11352"; a="51192656"
+X-IronPort-AV: E=Sophos;i="6.13,305,1732608000"; 
+   d="scan'208";a="51192656"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 08:12:25 -0800
+X-CSE-ConnectionGUID: dOzPSP9JQTqAExshd1Xbng==
+X-CSE-MsgGUID: LWwAZrIOR6Se5JtclW+b5w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="152601240"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 08:12:22 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tlVdT-0000000DgfD-21CW;
+	Fri, 21 Feb 2025 18:12:19 +0200
+Date: Fri, 21 Feb 2025 18:12:19 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: arnd@arndb.de, gregkh@linuxfoundation.org, airlied@gmail.com,
+	simona@ffwll.ch, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] Cleanup io.h
+Message-ID: <Z7il497RBiiga4Js@smile.fi.intel.com>
+References: <20250221050804.2764553-1-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,20 +64,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250221-b4-sm8750-display-v3-11-3ea95b1630ea@linaro.org>
+In-Reply-To: <20250221050804.2764553-1-raag.jadav@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Feb 21, 2025 at 04:24:21PM +0100, Krzysztof Kozlowski wrote:
-> Before blend setup, all existing blend stages are cleared, so shall be
-> active fetch pipes.
+On Fri, Feb 21, 2025 at 10:38:02AM +0530, Raag Jadav wrote:
+> In a wider effort to improve build speeds, we're attempting to split/cleanup
+> core headers.
 > 
-> Fixes: b3652e87c03c ("drm/msm/disp/dpu1: add support to program fetch active in ctl path")
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> This series attempts to cleanup io.h with "include what you need" approach.
 > 
-> ---
+> This depends on earlier modifications available in immutable tag[1]. Feel
+> free to carry your subsystem patches with it, or let Andy know if you'd
+> rather let him carry them.
 > 
+> [1] https://lore.kernel.org/r/Z7cqCaME4LxTTBn6@black.fi.intel.com/
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Oh, you are fast! Please, read my comments in v1 as well an take them into
+account.
 
 -- 
-With best wishes
-Dmitry
+With Best Regards,
+Andy Shevchenko
+
+
