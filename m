@@ -1,62 +1,47 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mail-m49194.qiye.163.com (mail-m49194.qiye.163.com [45.254.49.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBE7C20ADFE;
-	Fri, 21 Feb 2025 11:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9077F209F41;
+	Fri, 21 Feb 2025 11:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740139110; cv=none; b=lP3uWf0/1vLIukMiqkUiTgx1lAzWIG3rIV0BXXSclxt8AzeZtbkAVAd7HYdYOh5QHvHg0YwXv5dD0HPqZYn7gh/UPQ2htmyIUeHcbsT6rmLBh7U+zOjSLyHpGq5/O8FQYdZfgW3VOyG69wOlJguaPVqGAumlnrEDEMaZryIcPL4=
+	t=1740139198; cv=none; b=QdReJAqEk0PYE7CI5KkSGmVcKCR6FKV8/zhkVLqwFCGMJXcclbAWxgqS8/xiFE+4Z6glmTT0xYx6dUxBypKbRH766zEowRl1U6keG1aAUIzR4kMACFpxPzQtu573wapoDaccpSrmMgqDlqlFg+SsXkIpNG2lJcuJxtg6CWrK2mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740139110; c=relaxed/simple;
-	bh=evbJe7R8esv335XEyu6cJsBot0ywjESiPOxZmU2lAfo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pPmMcyGA94/Uc7FgAkaFhlFVkr9T/0TPI4wuzH6N1nzb7kivQpCLqLzlCyBp4aBC/rEPt0R/yCcjRayFp7bhEOFP6nxwfDg7pLahiUFXZXRIlaXg5fRtgjFxSiAzrwzMTR6OGiC+aHB03P0TbAPojn8u0EyvBJANTAuUhpTCOrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=UE6Jw2pK; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1740139198; c=relaxed/simple;
+	bh=H66Br++P4bPNEqs39+jUcQdRgRuy2vL3PhuQWk8G2s0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=uhTUNT6sGvY0R2Fdh4M4ZgypO9bJlPUeUb3eNT3+UAmRd6l8s9UrjBYcAM5pqP4a6XxaaEQcJ5UfWukfxdQV/lG5fiPswkzEu5Z5t3892bm8YuF2pssMJ11qdL4jYyHOA5gLhlcjXL3piuFc72ZEhEqLNQGfUgomARY29dKg7zU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=jYrENAaX; arc=none smtp.client-ip=45.254.49.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UE6Jw2pK"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51L8faq7002297;
-	Fri, 21 Feb 2025 11:58:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2023-11-20; bh=9uhCK
-	v5D2kVNL+//YA3nKHRImLpCzpU+kAkU6nfgUe8=; b=UE6Jw2pKINdf21G6TypwJ
-	tfHbaDBxbVGSi1NxzIJYAXSm4Z7dZqrrC02Eiatugi9ZAnsHiyxI3GTQeZToQfrS
-	3Lw1Dt21cB8rScMmEXexyBd5qCvsuRUGJk6o9S7/sAB/QKBUEHwwur0sb0en26Lm
-	wdJgIi9gIzfo2ZP2nNHG2ivCH7kd+kgEGdCghCcQwEiHvV5rq6mFQCi0ysQYhFwb
-	x3ILV5RMzaPoor5DVJl41r4kBWdR0/8TZ65ZMYkuOyS43JGvU67fN3EY5/loCZVv
-	ySTLnfoEv30hm3HBUoCUeZ3jiK5WY+PYNmXFoIsuJda6XHsxZtdAAfylKtiOm7Qw
-	g==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44w00m67cw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 21 Feb 2025 11:58:23 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51LBSs6i025265;
-	Fri, 21 Feb 2025 11:58:22 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44w090fsug-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 21 Feb 2025 11:58:22 +0000
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 51LBwE9B029660;
-	Fri, 21 Feb 2025 11:58:22 GMT
-Received: from sishan-bugs.osdevelopmeniad.oraclevcn.com (sishan-bug36880967.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.254.109])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 44w090fsnx-3;
-	Fri, 21 Feb 2025 11:58:22 +0000
-From: Sinadin Shan <sinadin.shan@oracle.com>
-To: shuah@kernel.org
-Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        chris.hyser@oracle.com, sshegde@linux.ibm.com,
-        Sinadin Shan <sinadin.shan@oracle.com>
-Subject: [PATCH v2 2/2] selftests: sched: skip cs_prctl_test for systems with core scheduling disabled
-Date: Fri, 21 Feb 2025 11:57:50 +0000
-Message-ID: <20250221115750.631990-3-sinadin.shan@oracle.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250221115750.631990-1-sinadin.shan@oracle.com>
-References: <20250221115750.631990-1-sinadin.shan@oracle.com>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="jYrENAaX"
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id bca250ba;
+	Fri, 21 Feb 2025 18:44:13 +0800 (GMT+08:00)
+From: Kever Yang <kever.yang@rock-chips.com>
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Simon Xue <xxm@rock-chips.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-arm-kernel@lists.infradead.org
+Subject: [RFC PATCH v6 1/2] dt-bindings: PCI: dw: rockchip: Add rk3576 support
+Date: Fri, 21 Feb 2025 18:43:56 +0800
+Message-Id: <20250221104357.1514128-2-kever.yang@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250221104357.1514128-1-kever.yang@rock-chips.com>
+References: <20250221104357.1514128-1-kever.yang@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,90 +49,154 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-21_03,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 adultscore=0 bulkscore=0
- mlxscore=0 spamscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502100000
- definitions=main-2502210088
-X-Proofpoint-ORIG-GUID: PUZk4VcSkA_FBp8vns6gieOHfAnLG-5d
-X-Proofpoint-GUID: PUZk4VcSkA_FBp8vns6gieOHfAnLG-5d
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUNJGVZOGBpMT0kfTB0dTx5WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a95281b9ed103afkunmbca250ba
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OCo6GCo6DzIUThk4Nww5GEsv
+	CzNPFFFVSlVKTE9LSkhPTU5OS05LVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFIQ09MNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=jYrENAaXI/q/GIYW7Yvgf9InsIiCz3Ei7bvBTGdYQC5O1XfNu9hGFbX+muAKo75/tBxSNhttlMqTzQtWvEuqNGZpO25JxMr64u78X0cF7CZQ7iqT0P4tcqq2OGqCzTBSJMsSNiTZp9K1Y3/HO3Px5GnfYh+DCOr+A/BK5421A5k=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=ukC/diYj/SOkXqmZAXU5Lp6DcD2S1bRVcWV6nw0f+Ro=;
+	h=date:mime-version:subject:message-id:from;
 
-For kernels with CONFIG_SCHED_CORE=n, the sched selftest cs_prctl_test
-fails with "Not a core sched system" error. Change this to gracefully
-skip the test for systems with core scheduling disabled. Exiting early
-would also ensure failures reported in obtaining cookie are valid
-failures and not due to the config.
+rk3576 is using dwc controller, with msi interrupt directly to gic instead
+of to gic its, so
+- no its support is required and the 'msi-map' is not need anymore,
+- a new 'msi' interrupt is needed.
 
-Skip cs_prctl_test for systems with CONFIG_SCHED_CORE=n
-
-Signed-off-by: Sinadin Shan <sinadin.shan@oracle.com>
+Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
 ---
- tools/testing/selftests/sched/cs_prctl_test.c | 29 ++++++++++++++++++-
- 1 file changed, 28 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/sched/cs_prctl_test.c b/tools/testing/selftests/sched/cs_prctl_test.c
-index 52d97fae4dbd8..60fd657b56c84 100644
---- a/tools/testing/selftests/sched/cs_prctl_test.c
-+++ b/tools/testing/selftests/sched/cs_prctl_test.c
-@@ -23,6 +23,7 @@
- #include <sys/eventfd.h>
- #include <sys/wait.h>
- #include <sys/types.h>
-+#include <sys/utsname.h>
- #include <sched.h>
- #include <sys/prctl.h>
- #include <unistd.h>
-@@ -109,6 +110,30 @@ static void handle_usage(int rc, char *msg)
- 	exit(rc);
- }
+Changes in v6:
+- Fix make dt_binding_check and make CHECK_DTBS=y
+
+Changes in v5:
+- Add constraints per device for interrupt-names due to the interrupt is
+different from rk3588.
+
+Changes in v4:
+- Fix wrong indentation in dt_binding_check report by Rob
+
+Changes in v3:
+- Fix dtb check broken on rk3588
+- Update commit message
+
+Changes in v2:
+- remove required 'msi-map'
+- add interrupt name 'msi'
+
+ .../bindings/pci/rockchip-dw-pcie-common.yaml | 59 +++++++++++++++----
+ .../bindings/pci/rockchip-dw-pcie.yaml        |  4 +-
+ 2 files changed, 50 insertions(+), 13 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml
+index cc9adfc7611c..069eb267c0bb 100644
+--- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml
++++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie-common.yaml
+@@ -64,6 +64,10 @@ properties:
+           interrupts - aer_rc_err, aer_rc_err_msi, rx_cpl_timeout,
+           tx_cpl_timeout, cor_err_sent, nf_err_sent, f_err_sent, cor_err_rx,
+           nf_err_rx, f_err_rx, radm_qoverflow
++      - description:
++          Combinded MSI line interrupt, which is to support MSI interrupts
++          output to GIC controller via GIC SPI interrupt instead of GIC its
++          interrupt.
+       - description:
+           eDMA write channel 0 interrupt
+       - description:
+@@ -75,16 +79,6 @@ properties:
  
-+static void check_core_sched_support(void)
-+{
-+	char config[128] = "/proc/config.gz";
-+	char cmd[128];
-+	struct utsname kernel;
-+
-+	printf("## Checking for CONFIG_SCHED_CORE support\n");
-+
-+	if (access(config, F_OK) != 0)
-+		if (uname(&kernel) == 0)
-+			snprintf(config, sizeof(config), "/boot/config-%s", kernel.release);
-+
-+	if (access(config, F_OK) != 0) {
-+		printf("Cannot find kernel config in /proc or /boot\n");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	snprintf(cmd, sizeof(cmd), "zgrep CONFIG_SCHED_CORE=[ym] %s", config);
-+	if (system(cmd)) {
-+		printf("Core scheduling not enabled in kernel, hence skipping tests\n");
-+		exit(4);
-+	}
-+}
-+
- static unsigned long get_cs_cookie(int pid)
- {
- 	unsigned long long cookie;
-@@ -117,7 +142,7 @@ static unsigned long get_cs_cookie(int pid)
- 	ret = prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, pid, PIDTYPE_PID,
- 		    (unsigned long)&cookie);
- 	if (ret) {
--		printf("Not a core sched system\n");
-+		printf("Failed to get cookie\n");
- 		return -1UL;
- 	}
+   interrupt-names:
+     minItems: 5
+-    items:
+-      - const: sys
+-      - const: pmc
+-      - const: msg
+-      - const: legacy
+-      - const: err
+-      - const: dma0
+-      - const: dma1
+-      - const: dma2
+-      - const: dma3
  
-@@ -270,6 +295,8 @@ int main(int argc, char *argv[])
- 	if (keypress)
- 		delay = -1;
+   num-lanes: true
  
-+	check_core_sched_support();
+@@ -123,4 +117,49 @@ required:
+ 
+ additionalProperties: true
+ 
++anyOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - rockchip,rk3568-pcie
++              - rockchip,rk3588-pcie
++              - rockchip,rk3588-pcie-ep
++    then:
++      properties:
++        interrupt-names:
++          minItems: 5
++          type: array
++          items:
++            - const: sys
++            - const: pmc
++            - const: msg
++            - const: legacy
++            - const: err
++            - const: dma0
++            - const: dma1
++            - const: dma2
++            - const: dma3
 +
- 	srand(time(NULL));
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - rockchip,rk3576-pcie
++    then:
++      properties:
++        interrupt-names:
++          type: array
++          items:
++            - const: sys
++            - const: pmc
++            - const: msg
++            - const: legacy
++            - const: err
++            - const: msi
++          minItems: 6
++          maxItems: 6
++
+ ...
+diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+index 550d8a684af3..9a464731fa4a 100644
+--- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+@@ -26,6 +26,7 @@ properties:
+       - const: rockchip,rk3568-pcie
+       - items:
+           - enum:
++              - rockchip,rk3576-pcie
+               - rockchip,rk3588-pcie
+           - const: rockchip,rk3568-pcie
  
- 	/* put into separate process group */
+@@ -71,9 +72,6 @@ properties:
+ 
+   vpcie3v3-supply: true
+ 
+-required:
+-  - msi-map
+-
+ unevaluatedProperties: false
+ 
+ examples:
 -- 
-2.43.5
+2.25.1
 
