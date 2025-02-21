@@ -1,175 +1,171 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D46B20F08B;
-	Fri, 21 Feb 2025 14:28:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9478420B1EE
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 14:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740148123; cv=none; b=Yq7nE0a7BCE0gf7H+pNqVARsDag4JONOYVpXtfrMXpx3pn/dGTMvfCEsXOSgdJv68Ot7yDEMk6LNEqb0cc0QLVMi2v+Atif7cZo6gWvjd9SJ25NSJT31QgBAsl+j4kvIVaS6idM6PjZ464rWoYf2C4dn/+apl/RSgyilbhM6knk=
+	t=1740148196; cv=none; b=Q+Oj3MQlnv84pLjDf63nylJlBNrgnqtqTeIL+UnJsMeG2eN522OwiDF+8JILmdZ+nWr2WqyGGHYpyiyFqHMU3VY49Nm3PllF0D5oLqKeWs4r51FjnQlZXlEgOKZrZZgkPyOZFxY5IW2RqXQj16kHp1osQ68ccm5e3ABa++fhegA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740148123; c=relaxed/simple;
-	bh=Mx89Y6vurAWslm7Kn5lsZo1EfDTPBclLo/eWx5fRuVI=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=eAc8skeuRY9/b7fLdt5RyRXNv/sqMcBFKiHYhmELE33nsxFLa04OJ2Pky7xHe3qiKoLAMpslF5FjnyOQBTGtjGb1EcWmOS5gF5svzrq2sYWvUt1ax0/LQxHbkcjRGNqwaCwyYmivUjDXbFW1L4ea7FkA6JmYPJMkTJe4uvH40sQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WwYJDxOk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OhmXpsIH; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1740148196; c=relaxed/simple;
+	bh=jiAtYkJ93H+bXGtd4GAtjs0YWd901kf8MHW9Qhn4ztk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=F08dbjjYyqLtY5B2+fwRACf5bxuu7s18U4Rqyu5lLpqbiB6mv3i+w/10oe6b8uyOebxH57TortDO5BD1UfipPQMjM9AJwOCo9L3dm+qPHJB9kNLfhdtEWZpXxZVBfeKhU2sc2uRUoXT+mYvSSq+7NMhPtvnJgqehFVhN1vXSgCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QiQFTrOx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WwYJDxOk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OhmXpsIH"
-Date: Fri, 21 Feb 2025 14:28:38 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740148119;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KWndIPAXGE91G/D4TOAKxIsbHn8ei0K5UzfIIzlINAI=;
-	b=WwYJDxOk7ieQwcquxiZW4fyM/CD9NC8re3G3C/mnYHwnan9ag8SzWQxNHvbKf82xzYNgVl
-	WsJ+SkGGxyK7nIYw7fQhaKEVoiwktNvuyVPbpXptsNJXBLNFE7IyCWrUhuzoHS2I07zvN2
-	auILsO/E6iBxYIqpLVmdDouTivZo3mjRlNJdHvoMlczgt7c/aHYHkbgcC/Nn3HqyxtQUAC
-	dNhCK5jPeLMVURUQ+QxXm8x0Ibo4gj1zB7p4ttXpoweJf+DS2OUu3Gr6XNsZPBwtPcWetU
-	RtTmVEiCLmzlSRMocdChmE33s8vXG/o29QxKYjhpZqtUp6Tl7mv4L6bxAaERGQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740148119;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KWndIPAXGE91G/D4TOAKxIsbHn8ei0K5UzfIIzlINAI=;
-	b=OhmXpsIHCHk66LVxzlotJzoEoOSP2NZJU3f+36Tdk+u33z0nXJad6Yh2C2V85aW6Duz5GU
-	/yr7tfPAhiEN24BQ==
-From: "tip-bot2 for Kirill A. Shutemov" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/mm] mm/memremap: Pass down MEMREMAP_* flags to arch_memremap_wb()
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Ingo Molnar <mingo@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, linux-mm@kvack.org, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250217163822.343400-2-kirill.shutemov@linux.intel.com>
-References: <20250217163822.343400-2-kirill.shutemov@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QiQFTrOx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EC86C4CED6;
+	Fri, 21 Feb 2025 14:29:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740148196;
+	bh=jiAtYkJ93H+bXGtd4GAtjs0YWd901kf8MHW9Qhn4ztk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QiQFTrOxx6hu7gaU9+j36xYhUYNz073ryM1ZE+jGwt3tuvzhNIP8c9Nm2RXVH4O/s
+	 3SZaliO5Tfe4+CGKQw8VDBOj3wLrnst/T6DjljjytsZ1ujo8/k3oaxwxyEr/h83ZKM
+	 WUyVyzmklqkcs23E19OMjB/EwQuZhTZNC7b0wpLuEwOrcTqoRXNbkJqDgTgxGUat1G
+	 Pyj3/9aAgujCCQxK2nZfXrtHaoVXtWX367KB2WZHQqT6ptdetSz26PApZfF3aJ5+qr
+	 NzER9PqiUUnrE08Bc9F1vvY4+VI4IWV0f+ZX8B18T504UCbhc/rzJMFuo6DJ60MxR+
+	 yx/C/KGNha3ow==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Waiman Long <longman@redhat.com>,
+	Joel Granados <joel.granados@kernel.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Anna Schumaker <anna.schumaker@oracle.com>,
+	Lance Yang <ioworker0@gmail.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Yongliang Gao <leonylgao@tencent.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Tomasz Figa <tfiga@chromium.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] hung_task: Dump the blocking task stacktrace
+Date: Fri, 21 Feb 2025 23:29:51 +0900
+Message-ID:  <174014819072.967666.10146255401631551816.stgit@mhiramat.tok.corp.google.com>
+X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174014811865.10177.8934046854387322499.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the x86/mm branch of tip:
+Hi,
 
-Commit-ID:     a9ebcb88136ca80cb53de27ca5ae77de18bbe368
-Gitweb:        https://git.kernel.org/tip/a9ebcb88136ca80cb53de27ca5ae77de18bbe368
-Author:        Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-AuthorDate:    Mon, 17 Feb 2025 18:38:20 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 21 Feb 2025 15:05:38 +01:00
+Here is the 2nd version of the dumping mutex blocker in hung_task
+message. The previous version is here;
 
-mm/memremap: Pass down MEMREMAP_* flags to arch_memremap_wb()
+https://lore.kernel.org/all/173997003868.2137198.9462617208992136056.stgit@mhiramat.tok.corp.google.com/
 
-x86 version of arch_memremap_wb() needs the flags to decide if the mapping
-has to be encrypted or decrypted.
+This version introduced CONFIG_DETECT_HUNG_TASK_BLOCKER and
+save the mutex on task_struct as blocker_mutex field.
 
-Pass down the flag to arch_memremap_wb(). All current implementations
-ignore the argument.
+The hung_task detector is very useful for detecting the lockup.
+However, since it only dumps the blocked (uninterruptible sleep)
+processes, it is not enough to identify the root cause of that
+lockup.
 
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: linux-mm@kvack.org
-Link: https://lore.kernel.org/r/20250217163822.343400-2-kirill.shutemov@linux.intel.com
+For example, if a process holds a mutex and sleep an event in
+interruptible state long time, the other processes will wait on
+the mutex in uninterruptible state. In this case, the waiter
+processes are dumped, but the blocker process is not shown
+because it is sleep in interruptible state.
+
+This adds a feature to dump the blocker task which holds a mutex
+when detecting a hung task. e.g.
+
+ INFO: task cat:113 blocked for more than 122 seconds.
+       Not tainted 6.14.0-rc3-00002-g6afe972e1b9b #152
+ "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+ task:cat             state:D stack:13432 pid:113   tgid:113   ppid:103    task_flags:0x400100 flags:0x00000002
+ Call Trace:
+  <TASK>
+  __schedule+0x731/0x960
+  ? schedule_preempt_disabled+0x54/0xa0
+  schedule+0xb7/0x140
+  ? __mutex_lock+0x51d/0xa50
+  ? __mutex_lock+0x51d/0xa50
+  schedule_preempt_disabled+0x54/0xa0
+  __mutex_lock+0x51d/0xa50
+  ? current_time+0x3a/0x120
+  read_dummy+0x23/0x70
+  full_proxy_read+0x6a/0xc0
+  vfs_read+0xc2/0x340
+  ? __pfx_direct_file_splice_eof+0x10/0x10
+  ? do_sendfile+0x1bd/0x2e0
+  ksys_read+0x76/0xe0
+  do_syscall_64+0xe3/0x1c0
+  ? exc_page_fault+0xa9/0x1d0
+  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+ RIP: 0033:0x4840cd
+ RSP: 002b:00007ffe632b76c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+ RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004840cd
+ RDX: 0000000000001000 RSI: 00007ffe632b7710 RDI: 0000000000000003
+ RBP: 00007ffe632b7710 R08: 0000000000000000 R09: 0000000000000000
+ R10: 0000000001000000 R11: 0000000000000246 R12: 0000000000001000
+ R13: 000000003a8b63a0 R14: 0000000000000001 R15: ffffffffffffffff
+  </TASK>
+ INFO: task cat:113 is blocked on a mutex owned by task cat:112.
+ task:cat             state:S stack:13432 pid:112   tgid:112   ppid:103    task_flags:0x400100 flags:0x00000002
+ Call Trace:
+  <TASK>
+  __schedule+0x731/0x960
+  ? schedule_timeout+0xa8/0x120
+  schedule+0xb7/0x140
+  schedule_timeout+0xa8/0x120
+  ? __pfx_process_timeout+0x10/0x10
+  msleep_interruptible+0x3e/0x60
+  read_dummy+0x2d/0x70
+  full_proxy_read+0x6a/0xc0
+  vfs_read+0xc2/0x340
+  ? __pfx_direct_file_splice_eof+0x10/0x10
+  ? do_sendfile+0x1bd/0x2e0
+  ksys_read+0x76/0xe0
+  do_syscall_64+0xe3/0x1c0
+  ? exc_page_fault+0xa9/0x1d0
+  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+ RIP: 0033:0x4840cd
+ RSP: 002b:00007ffd69513748 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+ RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004840cd
+ RDX: 0000000000001000 RSI: 00007ffd69513790 RDI: 0000000000000003
+ RBP: 00007ffd69513790 R08: 0000000000000000 R09: 0000000000000000
+ R10: 0000000001000000 R11: 0000000000000246 R12: 0000000000001000
+ R13: 0000000029d8d3a0 R14: 0000000000000001 R15: ffffffffffffffff
+  </TASK>
+
+TBD:
+We can extend this feature to cover other locks like rwsem and rt_mutex,
+but rwsem requires to dump all the tasks which acquire and wait that
+rwsem. We can follow the waiter link but the output will be a bit
+different compared with mutex case.
+
+Thank you,
+
 ---
- arch/arm/include/asm/io.h   | 2 +-
- arch/arm/mm/ioremap.c       | 2 +-
- arch/arm/mm/nommu.c         | 2 +-
- arch/riscv/include/asm/io.h | 2 +-
- kernel/iomem.c              | 5 +++--
- 5 files changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/include/asm/io.h b/arch/arm/include/asm/io.h
-index 1815748..bae5edf 100644
---- a/arch/arm/include/asm/io.h
-+++ b/arch/arm/include/asm/io.h
-@@ -381,7 +381,7 @@ void __iomem *ioremap_wc(resource_size_t res_cookie, size_t size);
- void iounmap(volatile void __iomem *io_addr);
- #define iounmap iounmap
- 
--void *arch_memremap_wb(phys_addr_t phys_addr, size_t size);
-+void *arch_memremap_wb(phys_addr_t phys_addr, size_t size, unsigned long flags);
- #define arch_memremap_wb arch_memremap_wb
- 
- /*
-diff --git a/arch/arm/mm/ioremap.c b/arch/arm/mm/ioremap.c
-index 89f1c97..748698e 100644
---- a/arch/arm/mm/ioremap.c
-+++ b/arch/arm/mm/ioremap.c
-@@ -436,7 +436,7 @@ void __arm_iomem_set_ro(void __iomem *ptr, size_t size)
- 	set_memory_ro((unsigned long)ptr, PAGE_ALIGN(size) / PAGE_SIZE);
- }
- 
--void *arch_memremap_wb(phys_addr_t phys_addr, size_t size)
-+void *arch_memremap_wb(phys_addr_t phys_addr, size_t size, unsigned long flags)
- {
- 	return (__force void *)arch_ioremap_caller(phys_addr, size,
- 						   MT_MEMORY_RW,
-diff --git a/arch/arm/mm/nommu.c b/arch/arm/mm/nommu.c
-index 1a8f691..d638cc8 100644
---- a/arch/arm/mm/nommu.c
-+++ b/arch/arm/mm/nommu.c
-@@ -248,7 +248,7 @@ void __iomem *pci_remap_cfgspace(resource_size_t res_cookie, size_t size)
- EXPORT_SYMBOL_GPL(pci_remap_cfgspace);
- #endif
- 
--void *arch_memremap_wb(phys_addr_t phys_addr, size_t size)
-+void *arch_memremap_wb(phys_addr_t phys_addr, size_t size, unsigned long flags)
- {
- 	return (void *)phys_addr;
- }
-diff --git a/arch/riscv/include/asm/io.h b/arch/riscv/include/asm/io.h
-index 1c5c641..0257f4a 100644
---- a/arch/riscv/include/asm/io.h
-+++ b/arch/riscv/include/asm/io.h
-@@ -136,7 +136,7 @@ __io_writes_outs(outs, u64, q, __io_pbr(), __io_paw())
- #include <asm-generic/io.h>
- 
- #ifdef CONFIG_MMU
--#define arch_memremap_wb(addr, size)	\
-+#define arch_memremap_wb(addr, size, flags)	\
- 	((__force void *)ioremap_prot((addr), (size), _PAGE_KERNEL))
- #endif
- 
-diff --git a/kernel/iomem.c b/kernel/iomem.c
-index dc21207..75e61c1 100644
---- a/kernel/iomem.c
-+++ b/kernel/iomem.c
-@@ -6,7 +6,8 @@
- #include <linux/ioremap.h>
- 
- #ifndef arch_memremap_wb
--static void *arch_memremap_wb(resource_size_t offset, unsigned long size)
-+static void *arch_memremap_wb(resource_size_t offset, unsigned long size,
-+			      unsigned long flags)
- {
- #ifdef ioremap_cache
- 	return (__force void *)ioremap_cache(offset, size);
-@@ -91,7 +92,7 @@ void *memremap(resource_size_t offset, size_t size, unsigned long flags)
- 		if (is_ram == REGION_INTERSECTS)
- 			addr = try_ram_remap(offset, size, flags);
- 		if (!addr)
--			addr = arch_memremap_wb(offset, size);
-+			addr = arch_memremap_wb(offset, size, flags);
- 	}
- 
- 	/*
+Masami Hiramatsu (Google) (2):
+      hung_task: Show the blocker task if the task is hung on mutex
+      samples: Add hung_task detector mutex blocking sample
+
+
+ include/linux/mutex.h               |    2 +
+ include/linux/sched.h               |    4 ++
+ kernel/hung_task.c                  |   31 ++++++++++++++++
+ kernel/locking/mutex.c              |   14 +++++++
+ lib/Kconfig.debug                   |   10 +++++
+ samples/Kconfig                     |    9 +++++
+ samples/Makefile                    |    1 +
+ samples/hung_task/Makefile          |    2 +
+ samples/hung_task/hung_task_mutex.c |   66 +++++++++++++++++++++++++++++++++++
+ 9 files changed, 139 insertions(+)
+ create mode 100644 samples/hung_task/Makefile
+ create mode 100644 samples/hung_task/hung_task_mutex.c
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
