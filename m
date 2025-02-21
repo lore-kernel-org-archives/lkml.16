@@ -1,123 +1,88 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79ABC201103;
-	Fri, 21 Feb 2025 09:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE91202F68;
+	Fri, 21 Feb 2025 09:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740128709; cv=none; b=ELzTgjjukhCWsaN4Eur4yTshrAdrdKOr5fV4sCV4+TriX+nBGjG6ORKEwSt4ln1EHLDhD9Y73fzwtwFGoX+iQF0pYDUPNOu42wzq6kffKExU05X/7ncc+PZArp6tOqurEEZgFAh5kU/eHA7qzfoWdOfegoUNt9Nod7IqYJDhXd8=
+	t=1740128729; cv=none; b=M/AiSQ5iYwj85DzMNPtkpr7dzi8FBI9+GG1niqOlMmWWgm+svuqT7JeP+oHGaPrSfI5+KhYK65sUBO1wGCkol64kd9Bn2s2q7qQjhkj5nqjCMbu0D/sjwESkH/OrvVPPbL+Idgw1zSnHJ41H7Yk76Dh9jcjK5Y+wHcRoxgMcSmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740128709; c=relaxed/simple;
-	bh=N8/wlm3/Kh2z6281y/qhT89jW4sGX8ovwWLK+ph1WiM=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Ule4liXfNggijgWargDMsxS75PShqL9pU37PLHe5DJLvyyTR6dXgm3BB27607c5y6e9oAyqtLgZ8AO+rZRcEeIZU5Fz1HxgisQ5XdgiLP79nfZnTOmasfyj6UTYodOswtyirtTQeN+5j7L3EHNDnKwmgJIYI6fxwWWPYtuBQhhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YzkjC709kz4f3jsy;
-	Fri, 21 Feb 2025 17:04:47 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 4AFD91A16FB;
-	Fri, 21 Feb 2025 17:05:04 +0800 (CST)
-Received: from [10.174.179.143] (unknown [10.174.179.143])
-	by APP4 (Coremail) with SMTP id gCh0CgCnC2C+QbhnXLrhEQ--.6525S3;
-	Fri, 21 Feb 2025 17:05:03 +0800 (CST)
-Subject: Re: [PATCH 01/12] badblocks: Fix error shitf ops
-To: Zheng Qixing <zhengqixing@huaweicloud.com>, axboe@kernel.dk,
- song@kernel.org, colyli@kernel.org, dan.j.williams@intel.com,
- vishal.l.verma@intel.com, dave.jiang@intel.com, ira.weiny@intel.com,
- dlemoal@kernel.org, yanjun.zhu@linux.dev, kch@nvidia.com, hare@suse.de,
- zhengqixing@huawei.com, john.g.garry@oracle.com, geliang@kernel.org,
- xni@redhat.com, colyli@suse.de
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, nvdimm@lists.linux.dev, yi.zhang@huawei.com,
- yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-References: <20250221081109.734170-1-zhengqixing@huaweicloud.com>
- <20250221081109.734170-2-zhengqixing@huaweicloud.com>
-From: Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <5bc52368-ed61-f3f6-324b-6e036d50d334@huaweicloud.com>
-Date: Fri, 21 Feb 2025 17:05:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+	s=arc-20240116; t=1740128729; c=relaxed/simple;
+	bh=n4bRGNxDN26lyonAAX2Cqmt70QP0t6GFVCF8d+MlfWs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N+lw4LMYaNGEqoGJ2GwRjc0Em8dav4oMWAjmxySLm7gS5H9fhu5B1An0cyTSpyF8jP/VdZD4/DF15leNlQXlXVj24WRfHZ3WLGD54IGXuVq9da4WbE5ib9oYRkVI/91Cz0uYN9QWBm6SKQD+5A+ZMintE3lXC6y3+kkrfBoaCJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EkEj/k9h; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EkEj/k9h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE4A4C4CED6;
+	Fri, 21 Feb 2025 09:05:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740128728;
+	bh=n4bRGNxDN26lyonAAX2Cqmt70QP0t6GFVCF8d+MlfWs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=EkEj/k9h3IEdxhWdffZBn0DlFynQ0JULuX8ruZGFquv/BGQayWBt+/K32Iyi6LzuY
+	 e5dHqSDIWa6jnv7jrRh42e/VIfVJlg66SMzm6FhzTzLuNVLL5iHC4v/zw8SgGM9VQI
+	 BHXwShBPnPJrWKPitTEoQdT4AQn5EP5IRz0M7uKhvq3XXeA3nw7/eT4uXVZxNcQdat
+	 SEYqgurTeT5vMvaMkW3pDj60Y4WEx5Kne+JAzQxiozYWjjqYQAb/8nKmI2xSlnNqZC
+	 N9mP/rC+eGe+BdPsNQo27VYzv6lU1pezSEI7xpoo6VS4u4xZVZt/QUTT+D2YHmgGQ4
+	 HFWSTtQ5BE32A==
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5452c29bacfso2045828e87.3;
+        Fri, 21 Feb 2025 01:05:28 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXw1WX6VZQlUQu0Fc4pg9+PWNekljr/vIGrIbbwW8fRP6x4Oz+131oYUfTKRcWLrF74oTm1dLLGCRy57Xs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDJGys9+CgEvRERH4P3kIgVCTNuikl+P9aiVvPTXyN7DDf22dx
+	Q7yEk2EVTtiLeRve/I6OSYmp/3Z1u2HJ76zhqIcqvYRHikKdC1P540IvwXLMOr8qE6zww5b4K7V
+	rMpKGNdH7bocGoFZrukNJZvG7vvI=
+X-Google-Smtp-Source: AGHT+IECqsANGNMcVTNA/AzQxsb3KxDLT4R1LPxSCc9QnJ/pSsL/Yh+PrpKleSevVUhUornlaB/5EXQnyptPWeQo0Dc=
+X-Received: by 2002:a05:6512:1189:b0:545:10cf:3468 with SMTP id
+ 2adb3069b0e04-548392685a7mr789242e87.37.1740128727263; Fri, 21 Feb 2025
+ 01:05:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250221081109.734170-2-zhengqixing@huaweicloud.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCnC2C+QbhnXLrhEQ--.6525S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Zw45Kw43AF1Utr4kurW5Awb_yoW8Wry8pr
-	1DG3sxGrW7G34j93W5X3WUGr9aq345GF43Cw4xJ348Cry5K3s7tw1kXrySv3Wa9FW3Grn0
-	v3WruryrurWIy37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Ib4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-	e2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4I
-	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
-	WwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
-	0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWU
-	JVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
-	IYCTnIWIevJa73UjIFyTuYvjxUxo7KDUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+References: <20250221081242.1411553-1-patrick.rudolph@9elements.com>
+In-Reply-To: <20250221081242.1411553-1-patrick.rudolph@9elements.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 21 Feb 2025 10:05:15 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXEcd33qWJHDxwOun=EF4mDLHRw9YtiPKUaeMAmsbpfLYQ@mail.gmail.com>
+X-Gm-Features: AWEUYZnpce6BpEnKNwLRLDmazylhtSYCyqekWrYbrgJhqvX5y4lYR1ABZVSmlQg
+Message-ID: <CAMj1kXEcd33qWJHDxwOun=EF4mDLHRw9YtiPKUaeMAmsbpfLYQ@mail.gmail.com>
+Subject: Re: [PATCH] drivers/firmware/efi: Fix cper_ia_proc_ctx alignment
+To: Patrick Rudolph <patrick.rudolph@9elements.com>
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-ÔÚ 2025/02/21 16:10, Zheng Qixing Ð´µÀ:
-> From: Li Nan <linan122@huawei.com>
-> 
-> 'bb->shift' is used directly in badblocks. It is wrong, fix it.
-> 
-> Fixes: 3ea3354cb9f0 ("badblocks: improve badblocks_check() for multiple ranges handling")
-> Signed-off-by: Li Nan <linan122@huawei.com>
+On Fri, 21 Feb 2025 at 09:13, Patrick Rudolph
+<patrick.rudolph@9elements.com> wrote:
+>
+> According to the UEFI Common Platform Error Record appendix, the
+> IA32/X64 Processor Context Information Structure is a variable length
+> structure, but "is padded with zeros if the size is not a multiple
+> of 16 bytes".
+>
+> Currently this isn't honoured, causing all but the first structure to
+> be garbage when printed. Thus align the size to be a multiple of 16.
+>
+> Signed-off-by: Patrick Rudolph <patrick.rudolph@9elements.com>
 > ---
->   block/badblocks.c | 12 ++++++------
->   1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-LGTM
-Reviewed-by: Yu Kuai <yukuai3@huawei.com>
+>  drivers/firmware/efi/cper-x86.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/firmware/efi/cper-x86.c b/drivers/firmware/efi/cper-x86.c
+> index 438ed9eff6d0..3949d7b5e808 100644
+> --- a/drivers/firmware/efi/cper-x86.c
+> +++ b/drivers/firmware/efi/cper-x86.c
+> @@ -325,7 +325,7 @@ void cper_print_proc_ia(const char *pfx, const struct cper_sec_proc_ia *proc)
+>
+>         ctx_info = (struct cper_ia_proc_ctx *)err_info;
+>         for (i = 0; i < VALID_PROC_CXT_INFO_NUM(proc->validation_bits); i++) {
+> -               int size = sizeof(*ctx_info) + ctx_info->reg_arr_size;
+> +               int size = ALIGN(sizeof(*ctx_info) + ctx_info->reg_arr_size, 16);
+>                 int groupsize = 4;
+>
+>                 printk("%sContext Information Structure %d:\n", pfx, i);
 
-> diff --git a/block/badblocks.c b/block/badblocks.c
-> index db4ec8b9b2a8..bcee057efc47 100644
-> --- a/block/badblocks.c
-> +++ b/block/badblocks.c
-> @@ -880,8 +880,8 @@ static int _badblocks_set(struct badblocks *bb, sector_t s, int sectors,
->   		/* round the start down, and the end up */
->   		sector_t next = s + sectors;
->   
-> -		rounddown(s, bb->shift);
-> -		roundup(next, bb->shift);
-> +		rounddown(s, 1 << bb->shift);
-> +		roundup(next, 1 << bb->shift);
->   		sectors = next - s;
->   	}
->   
-> @@ -1157,8 +1157,8 @@ static int _badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
->   		 * isn't than to think a block is not bad when it is.
->   		 */
->   		target = s + sectors;
-> -		roundup(s, bb->shift);
-> -		rounddown(target, bb->shift);
-> +		roundup(s, 1 << bb->shift);
-> +		rounddown(target, 1 << bb->shift);
->   		sectors = target - s;
->   	}
->   
-> @@ -1288,8 +1288,8 @@ static int _badblocks_check(struct badblocks *bb, sector_t s, int sectors,
->   
->   		/* round the start down, and the end up */
->   		target = s + sectors;
-> -		rounddown(s, bb->shift);
-> -		roundup(target, bb->shift);
-> +		rounddown(s, 1 << bb->shift);
-> +		roundup(target, 1 << bb->shift);
->   		sectors = target - s;
->   	}
->   
-> 
-
+Thanks for the patch. It seems ARM suffers from the same issue, mind
+fixing that too?
