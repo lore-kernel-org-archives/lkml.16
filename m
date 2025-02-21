@@ -1,66 +1,278 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9482046B6;
-	Fri, 21 Feb 2025 09:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7A6204F64
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 09:39:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740130749; cv=none; b=K37evrlB2oY03iiNbDb2jCQ0797LGTLU70WutTdBFXShN2uKg15oQJaHl7FMKQk5WJfY5DdQyokY15f2/dAvXYn++Tq67r9uvRzUeXC1VqXl7Zj5SRzuIiorQN7bJlTrieuYBvFCRnu8tgd0PGo4O287xHJH61zCQ/DJxFR6avk=
+	t=1740130748; cv=none; b=KrCr1Mio+yaUHphA8bwu5hn6Fk1NK/IKS8790+bcjnbhz/SVWHJW3I0VI4w9zk1RWNaYRK8OA0CsIqlv2AYnJgZX5C8RJ0oINyrSOabk9QDTmrnub3wSLLLsnP3mOnb6ILtYgycYsCIPnAL6vdTyCwBf4+iZFbXZdMQX/ywtI58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740130749; c=relaxed/simple;
-	bh=7iSC6jX/BBYZhH5CaMvHMaDMArGW/YNl+vqAADY7Ryo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lUfUFALNz7pk5urY/S82cguHPGIfd0+c+4Fy13QdPm+rdds/ibR+UxvENAPZd5LOpxvKJz60cjoVlGJl/EzARlXUQHUsCuOGNpB4fJGtVfp6iMICTjl5BSh5o1zy8xjJs2WxnNxMInWhI/9W8bmzR9bPFHM6ruQBI5lG1V0olGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LPYUgpNU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740130748; c=relaxed/simple;
+	bh=NM0Mwtz66MpPm3L6SQxCvGbK6fY+DqlCy7/lxKNXPjs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SJQE8V6COTpDdr5AUARsyvgpFaQL+I32TkqlRoammQzJuf/kUhCTp3cclXgZ1sHxq0lp2g7U2Dr0B9oS6P11hE9V2ktXz1Xz3WeWO0o/lFG4235i0JtKPSDpWdJhjiuUdtZMM99Gl3kcJa1jUzCUS65IUqCQm5svoCC63syHAqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KZ11zuZV; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LPYUgpNU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41675C4CED6;
-	Fri, 21 Feb 2025 09:39:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740130748;
-	bh=7iSC6jX/BBYZhH5CaMvHMaDMArGW/YNl+vqAADY7Ryo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LPYUgpNUY6pSswlFIBr7Sc7Jt7au5PvMrBxeQRljl90tC9FK685BZQaXbYqm8lk0+
-	 G05lEdamwdcfC9P5awa+51GjhhSHmY5kXPfyE++ev9CVcuFS91FVc6qGCzCtw3u3kq
-	 DVXcvlbu8SPq0RLTGPnamPS8F5eywE0BT1MDl/i+kl0R6iNZr3AuNuR0oeTj0jI+dC
-	 BgQNxQTQy2dbIXAPv6HNdxmsQ9XCZZc9qtq1I+BK/XQ/bASOz+9DMrv4jl/SFc19Pc
-	 ku+synFWgrAeQQGcAmJcnkYIY4sL2hmx+/UemrDn4BdzT6i7/gaPHczw5Kj9hGSYBd
-	 4pTbZdSAlFJdQ==
-Date: Fri, 21 Feb 2025 10:39:06 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Kaustabh Chakraborty <kauschluss@disroot.org>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>, Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 3/7] soc: samsung: exynos-chipid: add support for
- exynos7870
-Message-ID: <20250221-stimulating-sophisticated-armadillo-0a72bb@krzk-bin>
-References: <20250219-exynos7870-v3-0-e384fb610cad@disroot.org>
- <20250219-exynos7870-v3-3-e384fb610cad@disroot.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KZ11zuZV"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-220dc3831e3so46243775ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 01:39:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1740130746; x=1740735546; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gNAdjSZPdBAH3LrqV88ZZwXLFy97UrlICUdu5mXaygY=;
+        b=KZ11zuZVBFRSRNFGoIQLLykbtwSDYAlLzSplfjjAiKFwF4JYuQrXjfqlQBrzKwlymV
+         1EZBzmR5JAWUd1F1HbKWtKovrAXei/ryW+8jLwuBcf1RzC9+abV2rjrCp/maRSYvTxxY
+         p5HbDk3Rv2n/1zLCW9Y1QKwsMMrUKh6Bf5qXE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740130746; x=1740735546;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gNAdjSZPdBAH3LrqV88ZZwXLFy97UrlICUdu5mXaygY=;
+        b=Jrv+kO5+ZrxsPxFVegJheODVdagzRLjv4mJMmUbzUzvZTr7pjr5fp0oiIon71emDP3
+         afDkNSG3rMi3tkXDJJoU8WfjMqukl4hnqfaXziZPLDROON2Ie7EOS/1uAH1jY3SOQA8F
+         xFoNhvz5rELgY2qMn9WqDubuFknTCTOdAm59xhWfEzY4y07WHaOdXhYOhj135rzbJUWb
+         ix5yvNQnUI+YdORkPQJseNlEauRRzTGuEQiF8Hf2MUIap1Y96p6NzU2/4ZuxKTbVtoBA
+         cIBjLUKI6ZZLlf+rk+v9RyIIM94ws2aulmp3KMlXcQBtZnmc9xRAqx4OvPYISERg+kYR
+         3mYw==
+X-Forwarded-Encrypted: i=1; AJvYcCXHtCkJwTeuZ4fiRyIfBX2rZa3qMWA5LXuueTVc5ZHRTgEtfK5BfBaU+NKQp+l8j4tmN74l0GcgkUsjSGI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzyd3RYZdREQM+pQuUKAqvnbv0Rksa5G5zCu8UFmXqSUK9MlVad
+	PvMCNvyYtom7GorxjLRdVvNqXgW7Nqu+7KXIikXuhQ/dgEMZHl363ZduQ2VfGQ==
+X-Gm-Gg: ASbGncuTeuE0ahnu+iSD4vYx/AbT5KVrzCv8pakYBFJvXuOoRrBWBEmsRSDJdeYQIqL
+	IuWcOtTb7Vq7pvqCOhh+lfqLjIgSuiKGMqSk9CEKh0WHsIN5ohfH+UkPyZ3z6yVkuQb81107CNc
+	ZfjJd1pLkEpCLZPg1Kypa47WjK9EZqNX9imD0EjS/emS6Wvj+zg8aVohs2/LV0Qd6PlKfZBSchv
+	2ORVOrvRT2B1VpJEDlSU1nmPE1e+MmuIviGMGOGi2KaMyHtvEjI4x5XYD2/f3cFgMOqgulNbDlM
+	R7zGXOD/r/7ZJjbbA3wQ9qgYXH8=
+X-Google-Smtp-Source: AGHT+IFV3Kv4elyYdLzHIwLUKC2Z7+Or+dH9Vd4/YSg3c0Jz7xi+JB7UxI+JSjhGhix3fONvjyLTTw==
+X-Received: by 2002:a05:6a00:2e14:b0:730:9637:b2ff with SMTP id d2e1a72fcca58-73425ca201fmr3949487b3a.7.1740130746241;
+        Fri, 21 Feb 2025 01:39:06 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:f987:e1e:3dbb:2191])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7326b5ef448sm11220174b3a.173.2025.02.21.01.39.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2025 01:39:05 -0800 (PST)
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Yosry Ahmed <yosry.ahmed@linux.dev>,
+	Hillf Danton <hdanton@sina.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Minchan Kim <minchan@kernel.org>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCH v7 04/17] zram: remove max_comp_streams device attr
+Date: Fri, 21 Feb 2025 18:37:57 +0900
+Message-ID: <20250221093832.1949691-5-senozhatsky@chromium.org>
+X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
+In-Reply-To: <20250221093832.1949691-1-senozhatsky@chromium.org>
+References: <20250221093832.1949691-1-senozhatsky@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250219-exynos7870-v3-3-e384fb610cad@disroot.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 19, 2025 at 12:33:13AM +0530, Kaustabh Chakraborty wrote:
-> Add the product ID of Exynos7870 (S5E7870) to the existing list.
-> 
-> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
-> ---
->  drivers/soc/samsung/exynos-chipid.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
+max_comp_streams device attribute has been defunct since
+May 2016 when zram switched to per-CPU compression streams,
+remove it.
 
-This does not apply anymore - conflict. Please rebase and resend.
+Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+---
+ Documentation/ABI/testing/sysfs-block-zram  |  8 -----
+ Documentation/admin-guide/blockdev/zram.rst | 36 ++++++---------------
+ drivers/block/zram/zram_drv.c               | 23 -------------
+ 3 files changed, 10 insertions(+), 57 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/Documentation/ABI/testing/sysfs-block-zram b/Documentation/ABI/testing/sysfs-block-zram
+index 1ef69e0271f9..36c57de0a10a 100644
+--- a/Documentation/ABI/testing/sysfs-block-zram
++++ b/Documentation/ABI/testing/sysfs-block-zram
+@@ -22,14 +22,6 @@ Description:
+ 		device. The reset operation frees all the memory associated
+ 		with this device.
+ 
+-What:		/sys/block/zram<id>/max_comp_streams
+-Date:		February 2014
+-Contact:	Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+-Description:
+-		The max_comp_streams file is read-write and specifies the
+-		number of backend's zcomp_strm compression streams (number of
+-		concurrent compress operations).
+-
+ What:		/sys/block/zram<id>/comp_algorithm
+ Date:		February 2014
+ Contact:	Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+diff --git a/Documentation/admin-guide/blockdev/zram.rst b/Documentation/admin-guide/blockdev/zram.rst
+index 714a5171bfc0..7ad4c86f8258 100644
+--- a/Documentation/admin-guide/blockdev/zram.rst
++++ b/Documentation/admin-guide/blockdev/zram.rst
+@@ -54,7 +54,7 @@ The list of possible return codes:
+ If you use 'echo', the returned value is set by the 'echo' utility,
+ and, in general case, something like::
+ 
+-	echo 3 > /sys/block/zram0/max_comp_streams
++	echo foo > /sys/block/zram0/comp_algorithm
+ 	if [ $? -ne 0 ]; then
+ 		handle_error
+ 	fi
+@@ -73,21 +73,7 @@ This creates 4 devices: /dev/zram{0,1,2,3}
+ num_devices parameter is optional and tells zram how many devices should be
+ pre-created. Default: 1.
+ 
+-2) Set max number of compression streams
+-========================================
+-
+-Regardless of the value passed to this attribute, ZRAM will always
+-allocate multiple compression streams - one per online CPU - thus
+-allowing several concurrent compression operations. The number of
+-allocated compression streams goes down when some of the CPUs
+-become offline. There is no single-compression-stream mode anymore,
+-unless you are running a UP system or have only 1 CPU online.
+-
+-To find out how many streams are currently available::
+-
+-	cat /sys/block/zram0/max_comp_streams
+-
+-3) Select compression algorithm
++2) Select compression algorithm
+ ===============================
+ 
+ Using comp_algorithm device attribute one can see available and
+@@ -107,7 +93,7 @@ Examples::
+ For the time being, the `comp_algorithm` content shows only compression
+ algorithms that are supported by zram.
+ 
+-4) Set compression algorithm parameters: Optional
++3) Set compression algorithm parameters: Optional
+ =================================================
+ 
+ Compression algorithms may support specific parameters which can be
+@@ -138,7 +124,7 @@ better the compression ratio, it even can take negatives values for some
+ algorithms), for other algorithms `level` is acceleration level (the higher
+ the value the lower the compression ratio).
+ 
+-5) Set Disksize
++4) Set Disksize
+ ===============
+ 
+ Set disk size by writing the value to sysfs node 'disksize'.
+@@ -158,7 +144,7 @@ There is little point creating a zram of greater than twice the size of memory
+ since we expect a 2:1 compression ratio. Note that zram uses about 0.1% of the
+ size of the disk when not in use so a huge zram is wasteful.
+ 
+-6) Set memory limit: Optional
++5) Set memory limit: Optional
+ =============================
+ 
+ Set memory limit by writing the value to sysfs node 'mem_limit'.
+@@ -177,7 +163,7 @@ Examples::
+ 	# To disable memory limit
+ 	echo 0 > /sys/block/zram0/mem_limit
+ 
+-7) Activate
++6) Activate
+ ===========
+ 
+ ::
+@@ -188,7 +174,7 @@ Examples::
+ 	mkfs.ext4 /dev/zram1
+ 	mount /dev/zram1 /tmp
+ 
+-8) Add/remove zram devices
++7) Add/remove zram devices
+ ==========================
+ 
+ zram provides a control interface, which enables dynamic (on-demand) device
+@@ -208,7 +194,7 @@ execute::
+ 
+ 	echo X > /sys/class/zram-control/hot_remove
+ 
+-9) Stats
++8) Stats
+ ========
+ 
+ Per-device statistics are exported as various nodes under /sys/block/zram<id>/
+@@ -228,8 +214,6 @@ mem_limit         	WO	specifies the maximum amount of memory ZRAM can
+ writeback_limit   	WO	specifies the maximum amount of write IO zram
+ 				can write out to backing device as 4KB unit
+ writeback_limit_enable  RW	show and set writeback_limit feature
+-max_comp_streams  	RW	the number of possible concurrent compress
+-				operations
+ comp_algorithm    	RW	show and change the compression algorithm
+ algorithm_params	WO	setup compression algorithm parameters
+ compact           	WO	trigger memory compaction
+@@ -310,7 +294,7 @@ a single line of text and contains the following stats separated by whitespace:
+ 		Unit: 4K bytes
+  ============== =============================================================
+ 
+-10) Deactivate
++9) Deactivate
+ ==============
+ 
+ ::
+@@ -318,7 +302,7 @@ a single line of text and contains the following stats separated by whitespace:
+ 	swapoff /dev/zram0
+ 	umount /dev/zram1
+ 
+-11) Reset
++10) Reset
+ =========
+ 
+ 	Write any positive value to 'reset' sysfs node::
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index 424ed1128fb3..d3b70aae2660 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -1109,27 +1109,6 @@ static void zram_debugfs_register(struct zram *zram) {};
+ static void zram_debugfs_unregister(struct zram *zram) {};
+ #endif
+ 
+-/*
+- * We switched to per-cpu streams and this attr is not needed anymore.
+- * However, we will keep it around for some time, because:
+- * a) we may revert per-cpu streams in the future
+- * b) it's visible to user space and we need to follow our 2 years
+- *    retirement rule; but we already have a number of 'soon to be
+- *    altered' attrs, so max_comp_streams need to wait for the next
+- *    layoff cycle.
+- */
+-static ssize_t max_comp_streams_show(struct device *dev,
+-		struct device_attribute *attr, char *buf)
+-{
+-	return scnprintf(buf, PAGE_SIZE, "%d\n", num_online_cpus());
+-}
+-
+-static ssize_t max_comp_streams_store(struct device *dev,
+-		struct device_attribute *attr, const char *buf, size_t len)
+-{
+-	return len;
+-}
+-
+ static void comp_algorithm_set(struct zram *zram, u32 prio, const char *alg)
+ {
+ 	/* Do not free statically defined compression algorithms */
+@@ -2546,7 +2525,6 @@ static DEVICE_ATTR_WO(reset);
+ static DEVICE_ATTR_WO(mem_limit);
+ static DEVICE_ATTR_WO(mem_used_max);
+ static DEVICE_ATTR_WO(idle);
+-static DEVICE_ATTR_RW(max_comp_streams);
+ static DEVICE_ATTR_RW(comp_algorithm);
+ #ifdef CONFIG_ZRAM_WRITEBACK
+ static DEVICE_ATTR_RW(backing_dev);
+@@ -2568,7 +2546,6 @@ static struct attribute *zram_disk_attrs[] = {
+ 	&dev_attr_mem_limit.attr,
+ 	&dev_attr_mem_used_max.attr,
+ 	&dev_attr_idle.attr,
+-	&dev_attr_max_comp_streams.attr,
+ 	&dev_attr_comp_algorithm.attr,
+ #ifdef CONFIG_ZRAM_WRITEBACK
+ 	&dev_attr_backing_dev.attr,
+-- 
+2.48.1.601.g30ceb7b040-goog
 
