@@ -1,78 +1,82 @@
-Received: from va-2-37.ptr.blmpb.com (va-2-37.ptr.blmpb.com [209.127.231.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD4619D087
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 02:13:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0BF286298;
+	Fri, 21 Feb 2025 02:16:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740104000; cv=none; b=jmv8qTKQY04Rd26d0h0GxeygGegfdH9nL8k9YwIllsqSJtk76tFO0s37QIMvKJv3il3Q0ZN3ZMJ5/GeL8OIb+C8fvIRmtOb3puikkNBRUHw2aoXuAsvV8riroLbLvGoMFUAyzPAQTfBlQHIyzqvYTra2OpALHK64JDdFjMG2yYY=
+	t=1740104208; cv=none; b=YhZP29jVNI65QXDkqyx/tGxy4dS/AiPid+tdsxA4pyCODjggU+K9bPW+wCnTJgofOHaOnLF6BC/zi8Y0s+gTlWmgjKBHrM1oB1CKpp6vnA5z1lXSi1q9yjx04cKW19nEO/PNHICf2xO/ltC9WaNf5gikI+oWBEGfGDRahgHA79A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740104000; c=relaxed/simple;
-	bh=hlm1M6ahY0CYSiVTuxAdUw59lv8G+DoHwmaCHg6AnIg=;
-	h=Mime-Version:Date:Content-Type:From:To:Cc:Subject:Message-Id; b=U+v5ZjV1mHPVxjSV0lM+aDu/0MWAZqrE/Hnsf9Lv67+IXfxeb1JdUMzC0tNFQOHTDSc0PQKQWGs9nWuD3brcYDDyxyzxvjv75lthCTIvsvG+MJ0r34HNKQzfiGALInj6gP5ginWRG3xonHuBuTGGmQcEeh032gsTkzww1BF+7F4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=deepcomputing.io; spf=pass smtp.mailfrom=deepcomputing.io; dkim=pass (2048-bit key) header.d=deepcomputing-io.20200927.dkim.feishu.cn header.i=@deepcomputing-io.20200927.dkim.feishu.cn header.b=U1GWQHhI; arc=none smtp.client-ip=209.127.231.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=deepcomputing.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=deepcomputing.io
+	s=arc-20240116; t=1740104208; c=relaxed/simple;
+	bh=Lmb3eiB2fyBd9+A5hO5hXqYmpD+2eXQd0NJcmWFxFrU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=k8wof4+QNRbGO7royfo4QB91QQPW2UGwNZaCrrpVuvE/iJeUNrOrhh9+rQp4HJyOooHyajjuZwnWiPYiSn0tX2NEv8qXB/CQ64FxJiJpThcEgEwawWTcQpgzB4ZHm0XOjxec6fXkY42Xy/wHp2BXePoFXrXqkbpICzMjLfs1iW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VTV3l/Kn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=deepcomputing-io.20200927.dkim.feishu.cn header.i=@deepcomputing-io.20200927.dkim.feishu.cn header.b="U1GWQHhI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=deepcomputing-io.20200927.dkim.feishu.cn; t=1740103985;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=252guJ30wHEGOM0mF3VIvyLsmSRltl8PT5yIko8TGpg=;
- b=U1GWQHhI0ARL5PG7Xgie+/CNClhTdeO2ve7wCOp7Kf//AaUNKmfAEbW341E2xagS6CjjHf
- gfmbLo8lKQCyfZjs/UpYDYgQFunmpc1gLZcxUd3iiZRyXH9na638QDhVe8r/AGXlpUecj5
- NWHrIUntkxUY5+Y768xql8QgdBice+o5V4VAT66+RK7d4NQX3VyFl9l1pqKEREwMPbDIyY
- 2r2vLKbE85N3L2XEQtoYZf5t8rEtiJ5xyDFAk/bYM6fboEEKF1rwfOHupi01RmeUeYhWc4
- CJ9tHfQmAdYzj3tPRSoxZqB6GKAHlNLjvQ+mFnETvtmaAaCQvBImSyzqKB976g==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VTV3l/Kn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5A37C4CED1;
+	Fri, 21 Feb 2025 02:16:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740104207;
+	bh=Lmb3eiB2fyBd9+A5hO5hXqYmpD+2eXQd0NJcmWFxFrU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=VTV3l/KntL6NwIsUTpQbjMG0Kd36qbER3VQSsP4FTjI4NYFqCYWuYDyT0wEe3+NQi
+	 fkOwxYLaLumg/xHi/7F/VXAF+IfcsJ1MiQ7jD5ITYVOyOuekjImjZCr76uyS3VNLvw
+	 LcxYLyjnD0JnjOTWcCQDHuhSVg9GOR71hbM5tUodJYiI3ivO1ti0iPqQw+cAmEF5l0
+	 8IfSmsJwsZvLR5VHirrCdo7QxMtfvh7eDzD1dMzbAGkk2NFlk2KRGbNXIHu4s7yeBv
+	 axEHmRHqiO1kEa3xOPin4KB5V1Ob/UygmxfQZc6l2ebZHL4wTnxnc7ia2vz7fq9rCW
+	 1FzwC9Pq9iIBA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADE693806641;
+	Fri, 21 Feb 2025 02:17:19 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Fri, 21 Feb 2025 10:12:15 +0800
-Content-Transfer-Encoding: 7bit
-X-Lms-Return-Path: <lba+267b7e12f+a6b4fe+vger.kernel.org+sandie.cao@deepcomputing.io>
-Received: from roma-MacBookPro.. ([113.110.143.117]) by smtp.feishu.cn with ESMTPS; Fri, 21 Feb 2025 10:13:02 +0800
-Content-Type: text/plain; charset=UTF-8
-From: "Sandie Cao" <sandie.cao@deepcomputing.io>
-X-Original-From: Sandie Cao <sandie.cao@deepcomputing.io>
-X-Mailer: git-send-email 2.34.1
-To: "Emil Renner Berthing" <kernel@esmil.dk>, 
-	"Conor Dooley" <conor@kernel.org>, "Rob Herring" <robh@kernel.org>, 
-	"Krzysztof Kozlowski" <krzk+dt@kernel.org>
-Cc: "Paul Walmsley" <paul.walmsley@sifive.com>, 
-	"Palmer Dabbelt" <palmer@dabbelt.com>, 
-	"Albert Ou" <aou@eecs.berkeley.edu>, <linux-riscv@lists.infradead.org>, 
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, 
-	<sandie.cao@deepcomputing.io>
-Subject: [PATCH] riscv: dts: starfive: fml13v01: enable USB 3.0 port
-Message-Id: <20250221021215.407988-1-sandie.cao@deepcomputing.io>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net V3] net: stmmac: dwmac-loongson: Add fix_soc_reset()
+ callback
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174010423851.1545236.8099662229327070133.git-patchwork-notify@kernel.org>
+Date: Fri, 21 Feb 2025 02:17:18 +0000
+References: <20250219020701.15139-1-zhaoqunqin@loongson.cn>
+In-Reply-To: <20250219020701.15139-1-zhaoqunqin@loongson.cn>
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: kuba@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, pabeni@redhat.com, chenhuacai@kernel.org,
+ si.yanteng@linux.dev, fancer.lancer@gmail.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, chenhuacai@loongson.cn
 
-Add usb_cdns3 configuration to support super speed USB device on the
-FML13V01 board.
+Hello:
 
-Signed-off-by: Sandie Cao <sandie.cao@deepcomputing.io>
----
- .../boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts     | 6 ++++++
- 1 file changed, 6 insertions(+)
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-diff --git a/arch/riscv/boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts b/arch/riscv/boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts
-index 8d9ce8b69a71..221c91696ffd 100644
---- a/arch/riscv/boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts
-+++ b/arch/riscv/boot/dts/starfive/jh7110-deepcomputing-fml13v01.dts
-@@ -49,3 +49,9 @@ &usb0 {
- 	dr_mode = "host";
- 	status = "okay";
- };
-+
-+&usb_cdns3 {
-+       phys = <&usbphy0>, <&pciephy0>;
-+       phy-names = "cdns3,usb2-phy", "cdns3,usb3-phy";
-+};
-+
+On Wed, 19 Feb 2025 10:07:01 +0800 you wrote:
+> Loongson's DWMAC device may take nearly two seconds to complete DMA reset,
+> however, the default waiting time for reset is 200 milliseconds.
+> Therefore, the following error message may appear:
+> 
+> [14.427169] dwmac-loongson-pci 0000:00:03.2: Failed to reset the dma
+> 
+> Fixes: 803fc61df261 ("net: stmmac: dwmac-loongson: Add Loongson Multi-channels GMAC support")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> 
+> [...]
 
-base-commit: 38818f7c9c179351334b1faffc4d40bd28cc9c72
+Here is the summary with links:
+  - [net,V3] net: stmmac: dwmac-loongson: Add fix_soc_reset() callback
+    https://git.kernel.org/netdev/net/c/f06e4bfd010f
+
+You are awesome, thank you!
 -- 
-2.34.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
