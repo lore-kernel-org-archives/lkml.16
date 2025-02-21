@@ -1,184 +1,130 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A41202C4A;
-	Fri, 21 Feb 2025 08:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20D633EA;
+	Fri, 21 Feb 2025 08:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740127935; cv=none; b=fKf1ilykVkVfTGIyUdyFU5LDQMejapLdyFH6ap3ODlr80eu3RdIIY8pdqMolmvao5I8akVCSEdVifUk+YOZGL6whZyJ3oPMZtPcjd0NedbrHwK75ifes29KN6Vu3XG5DzdfEE/wuoxnOKxTxn726y9OTyqLEf6TpjOlceWDwFAs=
+	t=1740127992; cv=none; b=GUKpvNrUHfnUhsvvPS1hSNjjn3UFyue+6mAphZSAmvYTHTDMav+rKP6zD2of3fk9UsJbOvUOUlCqwk+3+8LWW+8gPeEamS+gNbZIWERVNJ2oTALd3AyjecXJBsvyc4hNtBxJHAbqU9//U/RU837bHS0n/hukf7bSIW+zE/ffP+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740127935; c=relaxed/simple;
-	bh=jWobIjjmDN3S6Fnk2dQ+DGar/Fi8dKd+0Wo0aj7gSUk=;
+	s=arc-20240116; t=1740127992; c=relaxed/simple;
+	bh=AvdfNC/0fw6razFiLTY/gc9KZ7drgzB6pWKOjhOrLtc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z6RcoDIxhz6VyfQgXRWdN4xKoF5zkPqOGzYNQMc2FUK/ySJy+6Qbn5kT1iqf0lGIR9WxeWn+xoAtfd8WsP8bwqLpgG3Ocokr+LPXSWljskHcSzZhW35UKVIX/C5vZ3PB2UK0uC03cbyOUiaQFhZgzNvAcAwySWyLJ7puV06omDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Op/2W77Z; arc=none smtp.client-ip=209.85.214.176
+	 To:Cc:Content-Type; b=D5WtD3qdRA22DNJoXD+ru+V9A+bepUJJG//is+yzlLlmi1VnUWS5kignSryzXr3tnPynqCi6lPrC5hbpm39lkPRnF9IiJ1y2mGnBBey1QuLb7QSrRvr5zdIqVAaobkKRc9YL1qf5H0TBOVA4eFv9HFC52tvSUvfqf6yAZQ+CTqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BcZy8D0z; arc=none smtp.client-ip=209.85.128.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Op/2W77Z"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22100006bc8so32386865ad.0;
-        Fri, 21 Feb 2025 00:52:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BcZy8D0z"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6f7031ea11cso16164097b3.2;
+        Fri, 21 Feb 2025 00:53:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740127933; x=1740732733; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1740127989; x=1740732789; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DlIgqCz0Bm+91Vdon2hQ0cQM2Da+fTaQGYYMw9HsqC4=;
-        b=Op/2W77Zjpz0Nzo5SGI3A2s9nVVPubLdj7uWHmjo44KTmJ7O4ivYL01oON8UT9BpX/
-         1DyhUnWDO67Aoj3tk6+QDLutA3GPYhFWZTac7ST3xOKzafaMMUX5z8EcTZy9AMYpsGtj
-         riRxE6tiqUjJvYlpMcTG7n5Qcj9QTHYTSRtn54mcKFXDwz4TlcbTgydaOjC3FHoc5HkC
-         oEcGRPWm3HijJw7NyX+DcBzp6ZK4jC2BBztJkAIDmjmvjyDYFqg3FhRhkvf7SYz3sjMF
-         WYpPC9Wo3JSaADfakjZQy7LKgAygOs21GEsjTKLX6GeUQ72XhPd14yUPvlYZwno0jjqQ
-         nMBg==
+        bh=+jR358HQpp23LJWIOUBf9DeNyqJuGtgcMhAeCjLmW/U=;
+        b=BcZy8D0zto9bjrGUALgdbZvc/nZroEIhS+3OzzreZRG1XCfkn0YF4qhIHHK+Q5e8ss
+         xpUUiFx5evDgFkzF7l/J9VCLs0ldWZW4VZgb+v85U51vsbBmSTDraa8A8bceAdyG+0op
+         9l6JhmrVQPTtN9eQmMD+V6nCj/Agt9uFezCu/lBqhT388n834In7S2Cjf0qmmdK1WxW+
+         KVnRTTGDIJfEZ4inqnv8Ndm3MsSGsArgo8q6opvKAWSllktM1+CHF9+wVZ99EcLZMIX1
+         qngGiMpvKREXrxJq+ravfW3qkU8y+yITohanqx14OhPZH9VQNFFKmkeUqjEX/ZqkpRjt
+         aoVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740127933; x=1740732733;
+        d=1e100.net; s=20230601; t=1740127989; x=1740732789;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DlIgqCz0Bm+91Vdon2hQ0cQM2Da+fTaQGYYMw9HsqC4=;
-        b=rWPSqkIYpaWpOSGqYdZTAeEUb115Z3bSpBBAtDjvz/qNeKEmYZ9msN0Q/O7opdTPpY
-         Yd81TAI4+XxuG95CSwzELDNsswOsIfnJ9uKVQXWeC7PHbip9ffqmTra3Z/Po3VOCxzjC
-         4y9nYYkIOvfffnL09OhnxFFMZ1d+BZSRM1WV/QMca+4BMNTeklYMVMfSGHweP1uYh8kJ
-         YErHMTu38rA48KrToe20InKM3WDOFY+HgrhrVwL+MH71cGaAJIuRvFixbiNOChr+1XHo
-         pSVNbHodtYvhB17vr+AXp1SULh6DYvKZ17EZ4+5IZdGBarufqfOw/qvEspwDOzi/wJmL
-         mC4g==
-X-Forwarded-Encrypted: i=1; AJvYcCWdAAkec8HZZGQ0ityS+vNG0jkCgYhk5e7HbQGZZnhtQ06EYE+XhLLtlxYM8ukKU3mLZvHBGKPeYpaVw4km@vger.kernel.org, AJvYcCX4x2kyYQRmvXIRNfAgJQDjHtZw2oI8Cc2Ui/VT82svTteP66SzdB9Iyj+POXTexzrLH61ZsWZt6hcX@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsVsmyrEEn9LvUV5PLNy5FqHLcOgq2NtpAMzCxLz7xZDodTPfp
-	3NljnNBNpxFMYVmM703pZUurMwgUXmQL1aVcKnP0r22NvPqUN0xhu3kIo0vr2dlksrRkaAME5r2
-	u8Emt0tsaZ49okEnuLUR3MA90dgQ=
-X-Gm-Gg: ASbGnctz3aOXIkPnIFm5cb2sL+MvTFQfLavUhKYVmDjy6JbC46ye80mD1Dd3WNTwzz7
-	YgbDTzSEjmTs3reWH6HtAyjc2ZVxvN/lDZ55Iyjz7/KCH9VRhqEFuGcoEfcZuAEoG9OzwxGiRYs
-	eugZIgnHI0VXu4gltemiJeSXWZm3IFPxAezrHzdI1IOQ==
-X-Google-Smtp-Source: AGHT+IE4RNFZsUdcC+Az/pPyn8dX9rljdP/Z5hfEIBv+Z54mKOPsANtz1C01SeJk4ImSyu09+DbDaPKDwVb/a6c1c1E=
-X-Received: by 2002:a17:902:e80b:b0:215:6b4c:89fa with SMTP id
- d9443c01a7336-2219ff3604dmr36634085ad.8.1740127932926; Fri, 21 Feb 2025
- 00:52:12 -0800 (PST)
+        bh=+jR358HQpp23LJWIOUBf9DeNyqJuGtgcMhAeCjLmW/U=;
+        b=pw1KJiewqGZO3Ul9nb8hHiNzAVD11V9i1+Jl/4RMcL6dHn8ZY2kK4fTIcun4buoTyR
+         1Wv+DDLwxf8PXSCyyY/aP4koG0i0Wcty4GbHFLxLjTxFesvrxugmdAWL1maUzSUofgaP
+         83GBfxdaNYffycF8jugevhy/DTeRLAYbOuQPo9ha2ieCBmAhTgI0wPw9w0lrRUcFpUf1
+         vmvKMZ5HF72yykvhgSKS83gYbbd6gaoE4X3GVpHFQoBKA4Vdhohvr/jpiNLFV22G//MB
+         zuQi3ELw0Or33aHOBb3Y/mjJhrTyGsM2zWYl+3HP9llZBvGjnWT4UnRARsfUanRxFhIw
+         BQ0w==
+X-Forwarded-Encrypted: i=1; AJvYcCU5mJSkHEHcZB9YiY89VxGl/C0YHD3jckCLQhsecmaZAHyWhzV5s4/JCRvTDehV//N9qobuO38c0E8d@vger.kernel.org, AJvYcCUQZywXUxSOFy8zYuyqYGUDww2mrqurpkBs3FFB+yVCwiVsSGyLqz4Q2Onk5PBxdazI9vZrc8XwO6YXIkE=@vger.kernel.org, AJvYcCV39mu1d6k0eholjyEd+3JQR9ynfMX15am0fqvQlReoZ2hWMBrZ5KHEkgK77naQ7GCHb8W3UCMBVUx3@vger.kernel.org, AJvYcCVyp2XVrou/0GVWi45WLX96f4CWtdRiSaeHnLWGMQbxQAFbYO4leZnu1/RcR42kklW8r7DZNaw+yVozjTQJ@vger.kernel.org, AJvYcCW0JhW8LWooe3xt+9zXjSuOt4532MYJGFruWC9LyDsa6LfVeG9BXQs9FwuJf3qS/bwfBBDCfrn4F0c=@vger.kernel.org, AJvYcCW9LyWJKwZ3EL8Vbca7I5pfs69dfv233WjskQqwBs+M/EbeR6R0iC8t0YS0nX3O38CwIF6HvlUpWJZDCh734OQ=@vger.kernel.org, AJvYcCWRVG0Mts+744JG/7ZKH2aCfXi0Fe3re02d5m82mnDp6ie66LFlbWlUwyOnTqpM+G+rEEoU8xBnn3mpQQ==@vger.kernel.org, AJvYcCWsLr7OIjJiAEAYKzCGeMsWLxYiC2LskkBF2tf0L+bQh69YcU6/6sknu0vz8Agd6aaN0012JGDyt7Lq@vger.kernel.org, AJvYcCXkA87qHcCLpd67LPxH5FwH9v5v7pP2y+6jU7YCV6e5q605S7mE97+YTrAxH8xGbaPxSqt2F0j8@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfD4zQQMt5vn+FYW7Dj3JFe+lmrTe6Fo6WCx2B/WMMmMNETNyC
+	VAByooZInZeknR7VEJUJiOoxLdlr4nn+8LOW778KnNny8xfbRLwUWPuYUhOA2fgkOdKltsWVZtH
+	44CfuiUJklvc05xyuMmw5Uno4OJ8=
+X-Gm-Gg: ASbGncuTtMSpJjKNNJKVNMmu3n09ys+BHDXvKGdFVYQ3Xwy7BH+3mxVOjrcD2fmMSKs
+	0amYW/mMMO13TE/Dxq2REksD088qPhGSfbAerx/7R4lyFvkJN5NX1w3wsvDTHkwfv5pUgeDwzbG
+	K+DEFOQcNdNOW0mbK7tDUz4+og6CXuqUnn55RTV36ntw==
+X-Google-Smtp-Source: AGHT+IFFTv7mQS14e9HKcqRG3/KsgEtYDi7b0s/xnrbTYOGNNlU/jBMS8OnkWwa2w46rPzinCnYjeg60XgLeZT96Nxo=
+X-Received: by 2002:a05:690c:6404:b0:6f9:a33a:4c09 with SMTP id
+ 00721157ae682-6fbcc25ef84mr21019997b3.18.1740127989379; Fri, 21 Feb 2025
+ 00:53:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250219192102.423850-1-daniel.baluta@nxp.com>
- <20250219192102.423850-9-daniel.baluta@nxp.com> <c52e6c5c-f49e-4727-b669-086ae7cb0e1e@gmail.com>
- <6e03b0c09c4e6d222670025c6540f73a0a0a819d.camel@pengutronix.de> <9028f7a8-7cf7-4ebf-86a6-0d894c66edb1@gmail.com>
-In-Reply-To: <9028f7a8-7cf7-4ebf-86a6-0d894c66edb1@gmail.com>
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Date: Fri, 21 Feb 2025 10:52:00 +0200
-X-Gm-Features: AWEUYZk3O0UDfRBUUGtaK3pMjLH9rJuAF3_7PiIGx3Zt9ZlWm0Pjpm4mYFBC0o4
-Message-ID: <CAEnQRZC=U_Bw7Hzr14qu7O9YM=qcXeMTSGQnM-ZX_hqSyg4sqA@mail.gmail.com>
-Subject: Re: [PATCH v2 8/8] imx_dsp_rproc: Use reset controller API to control
- the DSP
-To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Daniel Baluta <daniel.baluta@nxp.com>, robh@kernel.org, 
-	shawnguo@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org, 
-	shengjiu.wang@nxp.com, Frank.Li@nxp.com, peng.fan@nxp.com, 
-	laurentiu.mihalcea@nxp.com, iuliana.prodan@nxp.com
+References: <20250207074502.1055111-1-a0282524688@gmail.com>
+ <20250207074502.1055111-5-a0282524688@gmail.com> <20250207-savvy-beaver-of-culture-45698d-mkl@pengutronix.de>
+ <CAOoeyxX4guHzUap1ieQ_L3PrvpBAYbMiQKrb6ko=MGsF5RcXLg@mail.gmail.com> <20250221-light-neat-doberman-1166a5-mkl@pengutronix.de>
+In-Reply-To: <20250221-light-neat-doberman-1166a5-mkl@pengutronix.de>
+From: Ming Yu <a0282524688@gmail.com>
+Date: Fri, 21 Feb 2025 16:52:58 +0800
+X-Gm-Features: AWEUYZk6by-3vXQ6oDlfBy8kG3O6ZrNx-AUodUyxeYU9X_L9LPdI1eCwguWgvdM
+Message-ID: <CAOoeyxXaCdFS+BLh_2ESyHF3Sf50iVM2A7ys5R+sRFx4gK_U0Q@mail.gmail.com>
+Subject: Re: [PATCH v7 4/7] can: Add Nuvoton NCT6694 CANFD support
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 21, 2025 at 3:20=E2=80=AFAM Laurentiu Mihalcea
-<laurentiumihalcea111@gmail.com> wrote:
+Marc Kleine-Budde <mkl@pengutronix.de> =E6=96=BC 2025=E5=B9=B42=E6=9C=8821=
+=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:08=E5=AF=AB=E9=81=93=EF=BC=
+=9A
 >
+> On 21.02.2025 16:01:07, Ming Yu wrote:
+> > Hi Marc,
+> >
+> > Marc Kleine-Budde <mkl@pengutronix.de> =E6=96=BC 2025=E5=B9=B42=E6=9C=
+=887=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=888:15=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+> > >
+> > > > +static irqreturn_t nct6694_can_irq(int irq, void *data)
+> > > > +{
+> > > > +     struct net_device *ndev =3D data;
+> > > > +     struct nct6694_can_priv *priv =3D netdev_priv(ndev);
+> > > > +     struct nct6694_can_event *evt =3D priv->event;
+> > > > +     struct nct6694_cmd_header cmd_hd =3D {
+> > > > +             .mod =3D NCT6694_CAN_MOD,
+> > > > +             .cmd =3D NCT6694_CAN_EVENT,
+> > > > +             .sel =3D NCT6694_CAN_EVENT_SEL(priv->can_idx, NCT6694=
+_CAN_EVENT_MASK),
+> > > > +             .len =3D cpu_to_le16(sizeof(priv->event))
+> > > > +     };
+> > > > +     irqreturn_t handled =3D IRQ_NONE;
+> > > > +     int can_idx =3D priv->can_idx;
+> > > > +     int ret;
+> > >
+> > > it would make sense to have a event pointer here instead of the can_i=
+dx?
+> > >
+> > >         const struct nct6694_can_event *event =3D &priv->event[priv->=
+can_idx];
+> > >
+> > The CAN Event command always returns 16bytes: the first 8 bytes
+> > correspond to the CAN0 event, and the last 8 bytes correspond to the
+> > CAN1 event. Therefore, the event pointer here refers to both event
+> > buffers.
 >
+> Yes, but in the following code uses "priv->event[can_idx]" several
+> times, this is why I proposed to have a dedicated "struct
+> nct6694_can_event *event" variable.
 >
-> On 2/20/2025 5:45 PM, Philipp Zabel wrote:
-> > On Do, 2025-02-20 at 00:22 +0200, Laurentiu Mihalcea wrote:
-> >> On 2/19/2025 9:21 PM, Daniel Baluta wrote:
-> >>> Use the reset controller API to control the DSP on i.MX8MP. This way
-> >>> we can have a better control of the resources and avoid using a sysco=
-n
-> >>> to access the audiomix bits.
-> >>>
-> >>> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> >>> Reviewed-by: Peng Fan <peng.fan@nxp.com>
-> >>> ---
-> >>>  drivers/remoteproc/imx_dsp_rproc.c | 25 +++++++++++++++++--------
-> >>>  drivers/remoteproc/imx_rproc.h     |  2 ++
-> >>>  2 files changed, 19 insertions(+), 8 deletions(-)
-> >>>
-> >>> diff --git a/drivers/remoteproc/imx_dsp_rproc.c b/drivers/remoteproc/=
-imx_dsp_rproc.c
-> >>> index ea5024919c2f..631563e4f86d 100644
-> >>> --- a/drivers/remoteproc/imx_dsp_rproc.c
-> >>> +++ b/drivers/remoteproc/imx_dsp_rproc.c
-> >>> @@ -19,6 +19,7 @@
-> >>>  #include <linux/pm_runtime.h>
-> >>>  #include <linux/regmap.h>
-> >>>  #include <linux/remoteproc.h>
-> >>> +#include <linux/reset.h>
-> >>>  #include <linux/slab.h>
-> >>>
-> >>>  #include "imx_rproc.h"
-> >>> @@ -111,6 +112,7 @@ enum imx_dsp_rp_mbox_messages {
-> >>>   */
-> >>>  struct imx_dsp_rproc {
-> >>>     struct regmap                           *regmap;
-> >>> +   struct reset_control                    *reset;
-> >> Maybe rename this to "stall"? There's also the DAP stuff that's actual=
-ly used
-> >> to reset the core so this might be a bit confusing?
-> > So Run/Stall does not actually reset anything? Maybe then it should not
-> > be modeled as a reset control. It looks to me like the
-> > DAP_PWRCTL[CORERESET] bit in the Audio Processor Debug region would be
-> > a much better fit.
->
-> Yep, it does not as far as I'm aware. This bit is used to insert stall cy=
-cles
-> into the accelerator's pipeline. As for the DAP bit: agreed.
->
-> (Daniel pls feel free to correct me if I got something wrong here)
->
-> For a bit of context here:
->
-> Previous approach used a syscon to manage the Run/Stall bit (see [1], "fs=
-l,dsp-ctrl"
-> property). The main issue with that is that syscon doesn't enforce any de=
-vice dependency
-> (e.g: PM) and you do need the AUDIOMIX power domain to be powered on befo=
-re accessing
-> the registers from said syscon.
->
-> Now, AUDIO_BLK_CTRL offers multiple DSP-related configuration bits (Run/S=
-tall bit included).
-> If we ever decide we want to access those bits we can't model them as res=
-et controllers as it
-> makes no sense whatsoever. As such, I think that modelling Run/Stall as a=
- reset controller is
-> just an arguably unneeded and inaccurate (assuming reset controllers are =
-supposed
-> to model only actual reset signals) solution.
->
-> IMO, unless someone can think of a scenario in which this would break, we=
- should just cut our
-> losses and go back to the syscon-based approach. The DSP is already attac=
-hed to the AUDIOMIX
-> power domain so it should be on when attempting to access its registers. =
-Also, the DSP
-> should be the only device wanting to configure the DSP-related AUDIO_BLK_=
-CTRL bits anyways?
->
-> What are your thoughts on this?
+Okay, I'll update the code.
 
-Thanks Laurentiu. Your summary is spot on.
 
-Controlling DSP is done via two memory areas:
- (1) Audiomix area for Run/Stall bits
- (2) Debug Acces Port (DAP)  area for software reset
-
-We need to model this in our drivers and we need both of the areas.
-
-For (1) the DSP node needs somehow to refer to audiomix dt node and our
-initial choice was to use a syscon binding to Audiomix. This got us a NACK
-from Frank  and  Krzysztof as we naturally should always bring syscon in
-discussion if we can model the behavior using an existing system like reset
-for example.
-
-Modelling the Run/Stall bits as a reset controller is a little bit in
-the grey area
-but Frank Li made some valid points in the patch 2/8 of the series.
-
-Daniel.
+Thanks,
+Ming
