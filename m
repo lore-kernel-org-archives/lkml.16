@@ -1,99 +1,106 @@
-Received: from mail102.out.titan.email (mail102.out.titan.email [52.45.239.238])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAECC20102C
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 10:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.45.239.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5C720102C;
+	Fri, 21 Feb 2025 10:15:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740132908; cv=none; b=QvZMBbQoLoTaZrpijYFwMdURgUhXtwHNNzuJBYINa4iTiOtlX/nu1XjXq9Z1nZHOmjIK/yIQZ2+UycJaw26GKng93vVDYto81KLQ0mJRIsy7s3ZKKFV2YFybcIsvoaBLkIVkqRLCVgbrInZCfS9UBYDquHT64GRSDvu53ESGOc0=
+	t=1740132913; cv=none; b=Oh/UAPJ+4JTYXWt5eroSrH2QqUqNxXCsedolw5crBLkVBZEx+5zEFZfm60fxOcHJ26HHUI9Rla1KPCKC8yVpcj01iOaUYOLWJP5gJADTMCp7+hico8VQt92ill7lc4E1CZkdwyXofXM05u8CEQF9qnePQwLJWEmZ8uMCbK1L6fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740132908; c=relaxed/simple;
-	bh=OCNBLGjhq7P3rCWeCNzmUkTv7vySlkefy44pB4kpVfE=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=se4ZnK8XnfMHXCJGEsPCEgEsDhFSyrALRb1pnGTlqbxz5eD/2gBN7yx28yQ4zd530RLNUAtAa8S38sDLE8VRbkXF/6Th3jea2/YA1ocdme1CsYCigRN5rV4i2emBg5Iv+1bvl2y38MToyTUZLdHnRWlGMn6Wb8M9utn6hEBBfaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=kO6MvcX0; arc=none smtp.client-ip=52.45.239.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
+	s=arc-20240116; t=1740132913; c=relaxed/simple;
+	bh=wSC1GjhCo5yf/kHGrfCrHB0JMy0/s+ydsKQOikv6YFk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=u0ooObf0AXSzQVrzMd/vxjoc/8oXVXONCZydPj3nEigTORmgc3BBUA7B3m6xg68CYQ+63ZZ0oivWZFCto+r+fymN9uXGHCrVV170LVFMpGjiG1Of+GW3GR6xLUeyn1U+kIP7ZdECDzcrTqLAneAj16SKDCK0XYG7uE/i7eUsIf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uhnm/i47; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="kO6MvcX0"
-DKIM-Signature: a=rsa-sha256; bh=iV8YCNjejtbcc05TVav5ewkWbUeHHVZvkhZrrE0KVD8=;
-	c=relaxed/relaxed; d=t12smtp-sign004.email;
-	h=subject:in-reply-to:cc:to:mime-version:message-id:references:date:from:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
-	q=dns/txt; s=titan1; t=1740132387; v=1;
-	b=kO6MvcX00hlwOk1XFictjJn6d+nmp42kR7UxdTamUW3Wqg15Up8dUUTaj1RpICWIWKzj96BL
-	OJZYGeYNZugaLRaXHYv4tVCClHdrWrmULeBtKzqRz9mpWhvwFBVakOvWWehe8/V5Fk15pUQR3Cs
-	Q2NTgH/oB1RRch7U/E3tGrKc=
-Received: from smtpclient.apple (unknown [141.11.218.23])
-	by smtp-out.flockmail.com (Postfix) with ESMTPA id CA0376023D;
-	Fri, 21 Feb 2025 10:06:19 +0000 (UTC)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uhnm/i47"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18DCCC4CEDD;
+	Fri, 21 Feb 2025 10:15:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740132913;
+	bh=wSC1GjhCo5yf/kHGrfCrHB0JMy0/s+ydsKQOikv6YFk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=uhnm/i47xWKDTDC+WORmaeS/i9A6T5FDykwbHKd776VLG5f1RrUNO2K5yVdfErkTt
+	 fNPDsa865hKmr2WZeXju5lqF1czCiGW2HuA0WspjtfGUAl9LF1wzWCS7I0UfvHXlA+
+	 4caO8sDfcm0n1N3Z73kWO13xFARf9TIVGc7PgwFfG4VQt44rAH9SxXWbzHjfgvkxxl
+	 pE5s1IAsh3+w/ricieEwmZN6J/JYnEHBTEtGARiqO78roRzUAIBFyYo6Z59M9Q6Xiy
+	 14p4+AuCUktMZ0nqB8w8mvlWq28SNGeulZdTRpx6JZoGHozISBfWag114ptIuHDsHu
+	 SeaMI6kWHjJLg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <benno.lossin@proton.me>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Anna-Maria Behnsen"
+ <anna-maria@linutronix.de>,  "Frederic Weisbecker" <frederic@kernel.org>,
+  "Thomas Gleixner" <tglx@linutronix.de>,  "Danilo Krummrich"
+ <dakr@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
+ <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor
+ Gross" <tmgross@umich.edu>,  "Lyude Paul" <lyude@redhat.com>,  "Guangbo
+ Cui" <2407018371@qq.com>,  "Dirk Behme" <dirk.behme@gmail.com>,  "Daniel
+ Almeida" <daniel.almeida@collabora.com>,  "Tamir Duberstein"
+ <tamird@gmail.com>,  <rust-for-linux@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 02/14] rust: hrtimer: introduce hrtimer support
+In-Reply-To: <87a5afhdq0.fsf@kernel.org> (Andreas Hindborg's message of "Fri,
+	21 Feb 2025 10:03:03 +0100")
+References: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
+	<20250218-hrtimer-v3-v6-12-rc2-v8-2-48dedb015eb3@kernel.org>
+	<1id7is_U22yzuGODgkUIoB5AFM6snF9CPu7F_sY7Mfkn3EwQRPfjB5JNkRFYu6DX1N8X_OQvdEB2BT-l3rFhwg==@protonmail.internalid>
+	<df748ac2-3551-460f-a16f-85d805671a3f@proton.me>
+ <87a5afhdq0.fsf@kernel.org>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Fri, 21 Feb 2025 11:15:01 +0100
+Message-ID: <875xl3fvtm.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH 02/12] badblocks: factor out a helper try_adjacent_combine
-Feedback-ID: :i@coly.li:coly.li:flockmailId
-From: Coly Li <i@coly.li>
-In-Reply-To: <i5vkxswklce2wtn3aolrd6qrtlib3obtlzgmdix22afcurp7lz@jkxbieqcitx4>
-Date: Fri, 21 Feb 2025 18:06:07 +0800
-Cc: axboe@kernel.dk,
- song@kernel.org,
- colyli@kernel.org,
- yukuai3@huawei.com,
- dan.j.williams@intel.com,
- vishal.l.verma@intel.com,
- dave.jiang@intel.com,
- ira.weiny@intel.com,
- dlemoal@kernel.org,
- yanjun.zhu@linux.dev,
- kch@nvidia.com,
- Hannes Reinecke <hare@suse.de>,
- zhengqixing@huawei.com,
- john.g.garry@oracle.com,
- geliang@kernel.org,
- xni@redhat.com,
- colyli@suse.de,
- linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org,
- nvdimm@lists.linux.dev,
- yi.zhang@huawei.com,
- yangerkun@huawei.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0C74DE43-1DE1-4B35-8EDB-A6A088B522F8@coly.li>
-References: <20250221081109.734170-1-zhengqixing@huaweicloud.com>
- <20250221081109.734170-3-zhengqixing@huaweicloud.com>
- <i5vkxswklce2wtn3aolrd6qrtlib3obtlzgmdix22afcurp7lz@jkxbieqcitx4>
-To: Zheng Qixing <zhengqixing@huaweicloud.com>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
-X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1740132387684621551.7782.6706041692806606252@prod-use1-smtp-out1001.
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=bq22BFai c=1 sm=1 tr=0 ts=67b85023
-	a=USBFZE4A2Ag4MGBBroF6Xg==:117 a=USBFZE4A2Ag4MGBBroF6Xg==:17
-	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=i0EeH86SAAAA:8
-	a=sdqv7Ts4B3WvE9CFP6AA:9 a=QEXdDO2ut3YA:10
+MIME-Version: 1.0
+Content-Type: text/plain
+
+Andreas Hindborg <a.hindborg@kernel.org> writes:
+
+> "Benno Lossin" <benno.lossin@proton.me> writes:
+>
+>> On 18.02.25 14:27, Andreas Hindborg wrote:
+>>> +pub trait HrTimerCallback {
+>>> +    /// The type whose [`RawHrTimerCallback::run`] method will be invoked when
+>>> +    /// the timer expires.
+>>> +    type CallbackTarget<'a>: RawHrTimerCallback;
+>>> +
+>>> +    /// This type is passed to the timer callback function. It may be a borrow
+>>> +    /// of [`Self::CallbackTarget`], or it may be `Self::CallbackTarget` if the
+>>> +    /// implementation can guarantee exclusive access to the target during timer
+>>
+>> Technically "exclusive" access is correct if the `CallbackTarget` is
+>> `Pin<&Self>`, since you will get exclusive access to a `Pin<&Self>`, but
+>> it might confuse people, because there can be multiple `Pin<&Self>`. So
+>> I would just drop the word "exclusive" here.
+>
+> Yes, maybe it should be "shared or exclusive access, depending on the type"?
+>
+>>
+>>> +    /// handler execution.
+>>> +    type CallbackTargetParameter<'a>;
+>>
+>> Also why can't this type be an associated type of `HrTimerPointer`?
+>> Since this seems to always be constrained in the impls of
+>> `RawHrTimerCallback`.
+>
+> That might be a nice improvement, I'll try that out.
+
+Looking closer at this, I don't see how to achieve this. We need access
+to the type here, because it is used in the signature of `run`.
+`HrTimerCallback` has no bounds on it, and that is nice. If we want to
+move these associated types, we have to introduce a bound here.
+
+We need to be generic over the type of the parameter to `run`, and by
+the time the user implements this trait, the type must be known and so
+the user has to specify somehow.
 
 
+Best regards,
+Andreas Hindborg
 
-> 2025=E5=B9=B42=E6=9C=8821=E6=97=A5 18:04=EF=BC=8CColy Li <i@coly.li> =
-=E5=86=99=E9=81=93=EF=BC=9A
->=20
-> On Fri, Feb 21, 2025 at 04:10:59PM +0800, Zheng Qixing wrote:
->> From: Li Nan <linan122@huawei.com>
->>=20
->> Factor out try_adjacent_combine(), and it will be used in the later =
-patch.
->>=20
->=20
-> Which patch is try_adjacent_combine() used in? I don't see that at a =
-quick glance.
-
-
-OK, I see it is in ack_all_badblocks().  Ignore the above question.
-
-Coly Li
 
