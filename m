@@ -1,16 +1,16 @@
 Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88252B9CD
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 00:54:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C76433DE
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 00:54:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740099254; cv=none; b=dvp0Q3AMztBMcMqCX3chHkLgCPY2Og5/F18nm8ogB+1/71kk0poV45GdgnULMdfH69it5zVmKeVybfaikOntLmBwr9UCMnpbOE+4qxmnpv5jdWqgumZpwvZp+xo0eW9sPc5d/GTYoRTVjvJD5Jhvk/NPNnf0qGKIWQZixq20OIU=
+	t=1740099255; cv=none; b=Q4bf3118xDRCylgyghF1jB3ECQBCXpdA0pXDr4IYWMEG8iWKk9iMQm8/mGoWjf3PvmzrOfNqi9Xtrh+g3FTrlmry9EQzUy+GS3EbfCCXN35XUAE3uXYR+0tftscvlIcz0X8GVlaqwgaLvk0RJyJHcDNO7LURiAQKxIQhyvHJ5IU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740099254; c=relaxed/simple;
-	bh=Auerij6VqA92kR9c6kyhLmRb/jviiaUdie5e/5mmxB8=;
+	s=arc-20240116; t=1740099255; c=relaxed/simple;
+	bh=/ismHT2L4b9+0bR74H/fJWOiKvPlSNrqsu4FtBvE2dM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q4biaT9ruBqDx3UOJjwXRQCE6jn9Sa21KjkQ99KJmkbcgu5y1ZzmOcygG3SMHtmmkGYWc3Chth++ZKISW8Cf3fIB9i8du09sq44wvl0JYiOfdWbEl+sLnkukdbbKXpwPybm4auOLmGZ4J9VUJLaoWpnLIQ4G4CZG64zOZRbszsc=
+	 MIME-Version; b=EHhTrMeWdTW4Xc5c1PFW/LsWuNngJ8gXGKF77YNvbCvPkgGM0Rx03sYpCxVuqwsj3I/pfKjOB9vkpHGam8gLnVnc+n88BjwVf9yiaHilNP1fcAb1Iy1XcFCWhIykHmPnlua0oyjKb4F2w8Vm1VhEnJwKGhud6lXvsgKLhyizu+4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
@@ -18,7 +18,7 @@ Received: from fangorn.home.surriel.com ([10.0.13.7])
 	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.97.1)
 	(envelope-from <riel@shelob.surriel.com>)
-	id 1tlHIZ-000000003Qf-0b2u;
+	id 1tlHIZ-000000003Qf-0zou;
 	Thu, 20 Feb 2025 19:53:47 -0500
 From: Rik van Riel <riel@surriel.com>
 To: x86@kernel.org
@@ -37,10 +37,11 @@ Cc: linux-kernel@vger.kernel.org,
 	mhklinux@outlook.com,
 	andrew.cooper3@citrix.com,
 	Manali.Shukla@amd.com,
-	Rik van Riel <riel@surriel.com>
-Subject: [PATCH v12 01/16] x86/mm: make MMU_GATHER_RCU_TABLE_FREE unconditional
-Date: Thu, 20 Feb 2025 19:53:00 -0500
-Message-ID: <20250221005345.2156760-2-riel@surriel.com>
+	Rik van Riel <riel@surriel.com>,
+	Dave Hansen <dave.hansen@intel.com>
+Subject: [PATCH v12 05/16] x86/mm: add INVLPGB support code
+Date: Thu, 20 Feb 2025 19:53:04 -0500
+Message-ID: <20250221005345.2156760-6-riel@surriel.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250221005345.2156760-1-riel@surriel.com>
 References: <20250221005345.2156760-1-riel@surriel.com>
@@ -53,153 +54,159 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: riel@surriel.com
 
-Currently x86 uses CONFIG_MMU_GATHER_TABLE_FREE when using
-paravirt, and not when running on bare metal.
+Add invlpgb.h with the helper functions and definitions needed to use
+broadcast TLB invalidation on AMD EPYC 3 and newer CPUs.
 
-There is no real good reason to do things differently for
-each setup. Make them all the same.
+All the functions defined in invlpgb.h are used later in the series.
 
-Currently get_user_pages_fast synchronizes against page table
-freeing in two different ways:
-- on bare metal, by blocking IRQs, which block TLB flush IPIs
-- on paravirt, with MMU_GATHER_RCU_TABLE_FREE
-
-This is done because some paravirt TLB flush implementations
-handle the TLB flush in the hypervisor, and will do the flush
-even when the target CPU has interrupts disabled.
-
-Always handle page table freeing with MMU_GATHER_RCU_TABLE_FREE.
-Using RCU synchronization between page table freeing and get_user_pages_fast()
-allows bare metal to also do TLB flushing while interrupts are disabled.
-
-Various places in the mm do still block IRQs or disable preemption
-as an implicit way to block RCU frees.
-
-That makes it safe to use INVLPGB on AMD CPUs.
+Compile time disabling X86_FEATURE_INVLPGB when the config
+option is not set allows the compiler to omit unnecessary code.
 
 Signed-off-by: Rik van Riel <riel@surriel.com>
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Tested-by: Manali Shukla <Manali.Shukla@amd.com>
 Tested-by: Brendan Jackman <jackmanb@google.com>
 Tested-by: Michael Kelley <mhklinux@outlook.com>
+Acked-by: Dave Hansen <dave.hansen@intel.com>
 ---
- arch/x86/Kconfig           |  2 +-
- arch/x86/kernel/paravirt.c | 17 +----------------
- arch/x86/mm/pgtable.c      | 27 ++++-----------------------
- 3 files changed, 6 insertions(+), 40 deletions(-)
+ arch/x86/include/asm/disabled-features.h |  9 ++-
+ arch/x86/include/asm/tlb.h               | 92 ++++++++++++++++++++++++
+ 2 files changed, 100 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 6df7779ed6da..aeb07da762fc 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -278,7 +278,7 @@ config X86
- 	select HAVE_PCI
- 	select HAVE_PERF_REGS
- 	select HAVE_PERF_USER_STACK_DUMP
--	select MMU_GATHER_RCU_TABLE_FREE	if PARAVIRT
-+	select MMU_GATHER_RCU_TABLE_FREE
- 	select MMU_GATHER_MERGE_VMAS
- 	select HAVE_POSIX_CPU_TIMERS_TASK_WORK
- 	select HAVE_REGS_AND_STACK_ACCESS_API
-diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
-index 1ccaa3397a67..527f5605aa3e 100644
---- a/arch/x86/kernel/paravirt.c
-+++ b/arch/x86/kernel/paravirt.c
-@@ -59,21 +59,6 @@ void __init native_pv_lock_init(void)
- 		static_branch_enable(&virt_spin_lock_key);
- }
- 
--#ifndef CONFIG_PT_RECLAIM
--static void native_tlb_remove_table(struct mmu_gather *tlb, void *table)
--{
--	struct ptdesc *ptdesc = (struct ptdesc *)table;
--
--	pagetable_dtor(ptdesc);
--	tlb_remove_page(tlb, ptdesc_page(ptdesc));
--}
--#else
--static void native_tlb_remove_table(struct mmu_gather *tlb, void *table)
--{
--	tlb_remove_table(tlb, table);
--}
--#endif
--
- struct static_key paravirt_steal_enabled;
- struct static_key paravirt_steal_rq_enabled;
- 
-@@ -195,7 +180,7 @@ struct paravirt_patch_template pv_ops = {
- 	.mmu.flush_tlb_kernel	= native_flush_tlb_global,
- 	.mmu.flush_tlb_one_user	= native_flush_tlb_one_user,
- 	.mmu.flush_tlb_multi	= native_flush_tlb_multi,
--	.mmu.tlb_remove_table	= native_tlb_remove_table,
-+	.mmu.tlb_remove_table	= tlb_remove_table,
- 
- 	.mmu.exit_mmap		= paravirt_nop,
- 	.mmu.notify_page_enc_status_changed	= paravirt_nop,
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index 1fef5ad32d5a..b1c1f72c1fd1 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -18,25 +18,6 @@ EXPORT_SYMBOL(physical_mask);
- #define PGTABLE_HIGHMEM 0
+diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
+index c492bdc97b05..95997caf0935 100644
+--- a/arch/x86/include/asm/disabled-features.h
++++ b/arch/x86/include/asm/disabled-features.h
+@@ -129,6 +129,13 @@
+ #define DISABLE_SEV_SNP		(1 << (X86_FEATURE_SEV_SNP & 31))
  #endif
  
--#ifndef CONFIG_PARAVIRT
--#ifndef CONFIG_PT_RECLAIM
--static inline
--void paravirt_tlb_remove_table(struct mmu_gather *tlb, void *table)
--{
--	struct ptdesc *ptdesc = (struct ptdesc *)table;
--
--	pagetable_dtor(ptdesc);
--	tlb_remove_page(tlb, ptdesc_page(ptdesc));
--}
--#else
--static inline
--void paravirt_tlb_remove_table(struct mmu_gather *tlb, void *table)
--{
--	tlb_remove_table(tlb, table);
--}
--#endif /* !CONFIG_PT_RECLAIM */
--#endif /* !CONFIG_PARAVIRT */
--
- gfp_t __userpte_alloc_gfp = GFP_PGTABLE_USER | PGTABLE_HIGHMEM;
++#ifdef CONFIG_X86_BROADCAST_TLB_FLUSH
++#define DISABLE_INVLPGB		0
++#else
++/* Keep 32 bit kernels smaller by compiling out the INVLPGB code. */
++#define DISABLE_INVLPGB		(1 << (X86_FEATURE_INVLPGB & 31))
++#endif
++
+ /*
+  * Make sure to add features to the correct mask
+  */
+@@ -146,7 +153,7 @@
+ #define DISABLED_MASK11	(DISABLE_RETPOLINE|DISABLE_RETHUNK|DISABLE_UNRET| \
+ 			 DISABLE_CALL_DEPTH_TRACKING|DISABLE_USER_SHSTK)
+ #define DISABLED_MASK12	(DISABLE_FRED|DISABLE_LAM)
+-#define DISABLED_MASK13	0
++#define DISABLED_MASK13	(DISABLE_INVLPGB)
+ #define DISABLED_MASK14	0
+ #define DISABLED_MASK15	0
+ #define DISABLED_MASK16	(DISABLE_PKU|DISABLE_OSPKE|DISABLE_LA57|DISABLE_UMIP| \
+diff --git a/arch/x86/include/asm/tlb.h b/arch/x86/include/asm/tlb.h
+index 77f52bc1578a..b3cd521e5e2f 100644
+--- a/arch/x86/include/asm/tlb.h
++++ b/arch/x86/include/asm/tlb.h
+@@ -6,6 +6,9 @@
+ static inline void tlb_flush(struct mmu_gather *tlb);
  
- pgtable_t pte_alloc_one(struct mm_struct *mm)
-@@ -64,7 +45,7 @@ early_param("userpte", setup_userpte);
- void ___pte_free_tlb(struct mmu_gather *tlb, struct page *pte)
+ #include <asm-generic/tlb.h>
++#include <linux/kernel.h>
++#include <vdso/bits.h>
++#include <vdso/page.h>
+ 
+ static inline void tlb_flush(struct mmu_gather *tlb)
  {
- 	paravirt_release_pte(page_to_pfn(pte));
--	paravirt_tlb_remove_table(tlb, page_ptdesc(pte));
-+	tlb_remove_table(tlb, page_ptdesc(pte));
+@@ -25,4 +28,93 @@ static inline void invlpg(unsigned long addr)
+ 	asm volatile("invlpg (%0)" ::"r" (addr) : "memory");
  }
  
- #if CONFIG_PGTABLE_LEVELS > 2
-@@ -78,21 +59,21 @@ void ___pmd_free_tlb(struct mmu_gather *tlb, pmd_t *pmd)
- #ifdef CONFIG_X86_PAE
- 	tlb->need_flush_all = 1;
- #endif
--	paravirt_tlb_remove_table(tlb, virt_to_ptdesc(pmd));
-+	tlb_remove_table(tlb, virt_to_ptdesc(pmd));
- }
- 
- #if CONFIG_PGTABLE_LEVELS > 3
- void ___pud_free_tlb(struct mmu_gather *tlb, pud_t *pud)
- {
- 	paravirt_release_pud(__pa(pud) >> PAGE_SHIFT);
--	paravirt_tlb_remove_table(tlb, virt_to_ptdesc(pud));
-+	tlb_remove_table(tlb, virt_to_ptdesc(pud));
- }
- 
- #if CONFIG_PGTABLE_LEVELS > 4
- void ___p4d_free_tlb(struct mmu_gather *tlb, p4d_t *p4d)
- {
- 	paravirt_release_p4d(__pa(p4d) >> PAGE_SHIFT);
--	paravirt_tlb_remove_table(tlb, virt_to_ptdesc(p4d));
-+	tlb_remove_table(tlb, virt_to_ptdesc(p4d));
- }
- #endif	/* CONFIG_PGTABLE_LEVELS > 4 */
- #endif	/* CONFIG_PGTABLE_LEVELS > 3 */
++
++/*
++ * INVLPGB does broadcast TLB invalidation across all the CPUs in the system.
++ *
++ * The INVLPGB instruction is weakly ordered, and a batch of invalidations can
++ * be done in a parallel fashion.
++ *
++ * The instruction takes the number of extra pages to invalidate, beyond
++ * the first page, while __invlpgb gets the more human readable number of
++ * pages to invalidate.
++ *
++ * TLBSYNC is used to ensure that pending INVLPGB invalidations initiated from
++ * this CPU have completed.
++ */
++static inline void __invlpgb(unsigned long asid, unsigned long pcid,
++			     unsigned long addr, u16 nr_pages,
++			     bool pmd_stride, u8 flags)
++{
++	u32 edx = (pcid << 16) | asid;
++	u32 ecx = (pmd_stride << 31) | (nr_pages - 1);
++	u64 rax = addr | flags;
++
++	/* The low bits in rax are for flags. Verify addr is clean. */
++	VM_WARN_ON_ONCE(addr & ~PAGE_MASK);
++
++	/* INVLPGB; supported in binutils >= 2.36. */
++	asm volatile(".byte 0x0f, 0x01, 0xfe" : : "a" (rax), "c" (ecx), "d" (edx));
++}
++
++/* Wait for INVLPGB originated by this CPU to complete. */
++static inline void __tlbsync(void)
++{
++	cant_migrate();
++	/* TLBSYNC: supported in binutils >= 0.36. */
++	asm volatile(".byte 0x0f, 0x01, 0xff" ::: "memory");
++}
++
++/*
++ * INVLPGB can be targeted by virtual address, PCID, ASID, or any combination
++ * of the three. For example:
++ * - INVLPGB_VA | INVLPGB_INCLUDE_GLOBAL: invalidate all TLB entries at the address
++ * - INVLPGB_PCID:			  invalidate all TLB entries matching the PCID
++ *
++ * The first can be used to invalidate (kernel) mappings at a particular
++ * address across all processes.
++ *
++ * The latter invalidates all TLB entries matching a PCID.
++ */
++#define INVLPGB_VA			BIT(0)
++#define INVLPGB_PCID			BIT(1)
++#define INVLPGB_ASID			BIT(2)
++#define INVLPGB_INCLUDE_GLOBAL		BIT(3)
++#define INVLPGB_FINAL_ONLY		BIT(4)
++#define INVLPGB_INCLUDE_NESTED		BIT(5)
++
++static inline void invlpgb_flush_user_nr_nosync(unsigned long pcid,
++						unsigned long addr,
++						u16 nr,
++						bool pmd_stride)
++{
++	__invlpgb(0, pcid, addr, nr, pmd_stride, INVLPGB_PCID | INVLPGB_VA);
++}
++
++/* Flush all mappings for a given PCID, not including globals. */
++static inline void invlpgb_flush_single_pcid_nosync(unsigned long pcid)
++{
++	__invlpgb(0, pcid, 0, 1, 0, INVLPGB_PCID);
++}
++
++/* Flush all mappings, including globals, for all PCIDs. */
++static inline void invlpgb_flush_all(void)
++{
++	__invlpgb(0, 0, 0, 1, 0, INVLPGB_INCLUDE_GLOBAL);
++	__tlbsync();
++}
++
++/* Flush addr, including globals, for all PCIDs. */
++static inline void invlpgb_flush_addr_nosync(unsigned long addr, u16 nr)
++{
++	__invlpgb(0, 0, addr, nr, 0, INVLPGB_INCLUDE_GLOBAL);
++}
++
++/* Flush all mappings for all PCIDs except globals. */
++static inline void invlpgb_flush_all_nonglobals(void)
++{
++	__invlpgb(0, 0, 0, 1, 0, 0);
++	__tlbsync();
++}
++
+ #endif /* _ASM_X86_TLB_H */
 -- 
 2.47.1
 
