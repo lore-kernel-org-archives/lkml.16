@@ -1,66 +1,62 @@
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486CE200B99;
-	Fri, 21 Feb 2025 08:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C97F200B99;
+	Fri, 21 Feb 2025 08:54:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740128074; cv=none; b=hNS2Rl+58Vlj3wGBX/BH0cdqAIFIyFtSujhjqeM/zvuo3lPoIM8M4xrtz3fTcVAu/6ceEyAAaI/IfzAwWUKdjiW36kF5KGAIVeZrtcx151m4LVUVIiFbh0HBlgZMlQ0envsOmK4RoRuXLDPbGSlp4yzxpdbpbflcaDXIWQoDWW8=
+	t=1740128091; cv=none; b=KTAKwLPm/7YJS3OKy3VigJj6ypHhqfsGGri6n4exAXZGPYEHf+TTLXM1RkwbIhgRDdws8Zx2EhDx4ZORh7d16r/pciwxopfjYznqZzOt2ADD9cZ+q9mLPnSW0FaGUcunIftRsQ98/GXhazFo6w4KARO9M9fhm+55GO55uZprOPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740128074; c=relaxed/simple;
-	bh=sOpoaaYi70tIuun+k4bCpzt72Cgn3AbfOmLUzsM8dlo=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=A2kD1/jw/0haU+aBjoFCRZvSjoF76UW62GKVwtIINX87X7nH+p888CcasQ7c4BdLNumnKHRPE49pLyX/Nph5qMKpAL7Sp6m+LeZ8LOkElcyk0Y0d3La6BERybknDUvebOsPy5lZMKn4H1bfJ/bc99/aE66cmXoeCcQCv4mV/Tso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=E8+H5pAu; arc=none smtp.client-ip=162.62.57.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1740128091; c=relaxed/simple;
+	bh=KtMiSHce4lRjUTepH2etKp94BCq34faigpGqneDuHcQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=shTKRSZZs36FLIO5ywhIgKIrPg1i5lavZ7ffIPHdqtE7GR3zOw7Y3Nb/GpbkcuvLxbfxgaie/rcRN2DWUhDKKPW9P5OVrXQiNyjcY4wUJ52cdf6yBXwumtJ/5s7i/CN+BaqR6Y1pnu4vccws6IBhgGV+czrMcxerU/oiCpnkuqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=psktk0M5; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="E8+H5pAu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1740128058;
-	bh=sOpoaaYi70tIuun+k4bCpzt72Cgn3AbfOmLUzsM8dlo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=E8+H5pAuiy2qfrB4e4BISZp/rtcEF7Q7lg2V5kHxwBuKek0x0J5+uCZopzUA82Pme
-	 bS26LK0wOly3w0JbeAYENaZSGsoIM/48y+BckS/lAbQ/CwfFzJpnkpjN83TK0j0uX4
-	 ykWudvPj72Zf/YBDQAQdbdfUqNb3EKIrz/bxDhuw=
-Received: from localhost.localdomain ([112.2.252.119])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id 7DB05E70; Fri, 21 Feb 2025 16:31:27 +0800
-X-QQ-mid: xmsmtpt1740126687tmzom3y51
-Message-ID: <tencent_9877F4C8240A0DDA7399A0F8E2EEE71E5D0A@qq.com>
-X-QQ-XMAILINFO: MqswyhUqVe0Clb7vetySGil+QBrDiZ9UDLfyhWTRdv38s6p/9DZL03cObi+ps0
-	 TDR4+jSOSddH6EeX/N6vw14iDreotcGMJncR7grnxz/hhvQOKO6DGoisUr99ENwKtkMq6bVEwO+9
-	 0uY/E7wKnrK32VyqrtrPxok7fYlBE/+BxKTGssd9dAi3uAIWJcctxirSauwGkB3rdbCGu0gNMQiv
-	 7Na68RqwSaq6hsa7jrt3KroV8gl5Q6CX904QZ6axfUOQ5YJ0Hg2UcB153paY0LLRkk75Cc4EEQJ/
-	 Qx5Ro0hM9z8Fj76T8v5mf1GSYBRxAfTDat5+PRjstW/fljah10yRD/Lb4phn1CfnnggFKlRs7lzg
-	 Nf471kOdeMeUgSTFc/6X4/+Hun9lWe76DaBX4XL1UMqT+z6MHQyCowz2WZSv6IZ63FITCVZtgqRG
-	 wsu7JtBfN4/PxcEwPk2xlSzMqZ90sHgEFbaWA6lJ2Hd8/CqB6rVv7MgpoCwG3uewLaRmkINK6Oj0
-	 4Ytr4N9ss3UKUB4kABWjtsvYGc0mdME+rbqJcOvOfKXsgaTI02zWImp5f6r/hy4XzyjBHYXgZtSi
-	 31HhRDDE+4rRDpYhEMO45eQ7tj/bkZPtOIhtWcOdrc7uV0kbJIgQLyJ21/+hME7fwEvG7YAOXa9V
-	 bxjyioJGGeum0EURXYldvF6t867LkxzMXU1LD6j620wJOpgsj14vQb6a7ysTWlNJukFSq+YJuOni
-	 nrLo8Hj46sBXMsQLzkkVF3eYE/T/Qbee1T44fsoe/zPdHp2w0LYBuQM+eAgKJmGimUdGoBEYlb07
-	 cDnmadBraNUxaS/wmmb2Kkd1Y2HUGn6VwJcMRqqZoRJzSaiwbL2hig0j4ooj4HALPbl5YyOxHCUv
-	 /RWgWJyU3JRbMdqc0Vg6q6LKRqs2VbNDgyTagdwCFfY1Gp68VqmJZaVcieaUQKHk7rwNWrll/tmN
-	 l/yKSDWoA16sbnGqiRglgBnS067o4gG6AT7YKM2DOmfff1sibmYw==
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-From: HUANG Zhaobin <huang_zhaobin@foxmail.com>
-To: ej@inai.de
-Cc: airlied@gmail.com,
-	boqun.feng@gmail.com,
-	gregkh@linuxfoundation.org,
-	hch@infradead.org,
-	hpa@zytor.com,
-	ksummit@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	miguel.ojeda.sandonis@gmail.com,
-	rust-for-linux@vger.kernel.org,
-	torvalds@linux-foundation.org
-Subject: Re: C aggregate passing (Rust kernel policy)
-Date: Fri, 21 Feb 2025 16:31:27 +0800
-X-OQ-MSGID: <20250221083127.54494-1-huang_zhaobin@foxmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <n05p910s-r5o3-0n36-5s44-qr769prp69r5@vanv.qr>
-References: <n05p910s-r5o3-0n36-5s44-qr769prp69r5@vanv.qr>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="psktk0M5"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51L56ClB012255;
+	Fri, 21 Feb 2025 08:54:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=snK73cHucFzq9FphM3O4awcD8yaZJ6wAMZ6
+	VahdBckE=; b=psktk0M5cDq92WxkFH/tAXFaEV4PTjcpZSbOMpOYAqr72UlPYIx
+	5Yigzd8hHnlu+bQPoazEVnqr+U0On9XDNEDv95LecNKogtrT9BBL9ytp2qItT0KN
+	HPwCXkVTTNh5k84jfqfsydSnYxsLvgJL4YTpJpyVIEGmeqQocZFsuBmR9Z/bSzYt
+	IgwjsJIwTHer0GPgBc3sbO9xTKQdXAsXH7ETYmkPzySjJHPSvqpe2uwTTmTVmr70
+	JV00hAv7GIm1d6jpDQ/5DCo6SQp95LOJZTUe4zkXLlGB/f0Hlf0d3sKYSxmsy9aM
+	FURVg7lyMbj0J9WsPxbTD8cLkAW6MkoqcZw==
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy1s9xa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Feb 2025 08:54:46 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 51L8sggq002983;
+	Fri, 21 Feb 2025 08:54:42 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 44tm0mfmar-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Feb 2025 08:54:42 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 51L8sgYO002977;
+	Fri, 21 Feb 2025 08:54:42 GMT
+Received: from hu-devc-hyd-u22-c.qualcomm.com ([10.213.97.252])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 51L8sgX5002975
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Feb 2025 08:54:42 +0000
+Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 4047106)
+	id 77D7E4D4; Fri, 21 Feb 2025 14:24:41 +0530 (+0530)
+From: Viken Dadhaniya <quic_vdadhani@quicinc.com>
+To: andersson@kernel.org, konrad.dybcio@linaro.org, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: quic_msavaliy@quicinc.com, quic_anupkulk@quicinc.com,
+        Viken Dadhaniya <quic_vdadhani@quicinc.com>
+Subject: [PATCH v1] dt-bindings: qcom: geni-se: Rename qcom,geni-se.yaml to qcom,geni-se-qup.yaml
+Date: Fri, 21 Feb 2025 14:24:39 +0530
+Message-Id: <20250221085439.235821-1-quic_vdadhani@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,22 +64,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 6tjWtUfD2351y2LNYwKQmNu76TTt4OXD
+X-Proofpoint-ORIG-GUID: 6tjWtUfD2351y2LNYwKQmNu76TTt4OXD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-21_01,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1011
+ adultscore=0 malwarescore=0 mlxscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=866 suspectscore=0 phishscore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502210067
 
-On Thu, 20 Feb 2025 16:17:07 +0100 (CET), Jan Engelhardt <ej@inai.de> wrote:
->
-> Returning aggregates in C++ is often implemented with a secret extra
-> pointer argument passed to the function. The C backend does not
-> perform that kind of transformation automatically. I surmise ABI reasons.
+The qcom,geni-se.yaml file describes the Qualcomm Universal Peripheral
+(QUP) wrapper and the common entities required by QUP to run any Serial
+Engine (SE) as I2C, SPI, UART, or I3C protocol.
 
-No, in both C and C++, fff accepts a secret extra pointer argument.
+Rename qcom,geni-se.yaml to qcom,geni-se-qup.yaml to better reflect its
+association with QUP (Qualcomm Universal Peripheral) and the compatible
+string.
 
-https://godbolt.org/z/13K9aEffe
+Signed-off-by: Viken Dadhaniya <quic_vdadhani@quicinc.com>
+---
+ .../soc/qcom/{qcom,geni-se.yaml => qcom,geni-se-qup.yaml}       | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+ rename Documentation/devicetree/bindings/soc/qcom/{qcom,geni-se.yaml => qcom,geni-se-qup.yaml} (98%)
 
-For gcc, the difference is that `sb` is allocated then copied back in C,
-while in C++ NRVO is applied so there is no extra allocation and copy.
-
-Clang does NRVO for both C and C++ in this case, thus generating exactly
-the same codes for them.
-
-I have no idea why gcc doesn't do the same.
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se-qup.yaml
+similarity index 98%
+rename from Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
+rename to Documentation/devicetree/bindings/soc/qcom/qcom,geni-se-qup.yaml
+index 7b031ef09669..26f806fd627a 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.yaml
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se-qup.yaml
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+ %YAML 1.2
+ ---
+-$id: http://devicetree.org/schemas/soc/qcom/qcom,geni-se.yaml#
++$id: http://devicetree.org/schemas/soc/qcom/qcom,geni-se-qup.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ 
+ title: GENI Serial Engine QUP Wrapper Controller
+-- 
+2.34.1
 
