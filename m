@@ -1,94 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E90D3FD1;
-	Fri, 21 Feb 2025 22:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19E882528E5;
+	Fri, 21 Feb 2025 22:17:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740176254; cv=none; b=VWGVNobiNLyqJDvf1K7SIxwk6pJfDVLYO99wgbM7rNQBB+ByEEP1RXW7w0tN1daUjIqHVPSW8nCjNNEWkpQ2CqgTfi9JkswnKpPDpy1CgRL3heS9LbtSC4GYihRJ0C6DW1TDFREicfrysaOo4k4MVVe/U1ix82hxRdiSoIYQCQw=
+	t=1740176257; cv=none; b=u4zTz87JdUDPbi2xvKB0Uqqv/H7G49bzh3HKuad5kyfLl/ML9Sv+jlO7cdBNmStbx0rR9kTkl14yHyW2R6o9fJrobYOItgT26BJ7kSMGmkFiL+20f6wrqHDj/nTqg0GJ13MCsqyLEl04sC376kHdX+SfynnQW+6ZSejN1bLy5hE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740176254; c=relaxed/simple;
-	bh=zqSQJ2nItJxAmcLhpr+YNwKtAwSoDSxjxXX4H9cP31E=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=Hjb1NkwqdcjDnI+Q7rF04379Dc2lmNYNhkPOyiQlGtyukK0pEEbeQnN3CJwAW3iasR/FLSEY12pfG5xdFQetMfx9d9XsPV0ajv/qHIC+Y1mTo2QXbBUPqY7ER6qTjSOE9MRByaecQ0fCya7LCC8t8M9IFmd5m86L5PvrZURgMZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZuSHkfzf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740176257; c=relaxed/simple;
+	bh=Ci3gisbLXRxROB64O9pHO44MI+ObXvntWq5pIqDL81k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rEuafgCeYJGGz9weDfJ6f0z7YE3oHWy0Fluym1Hk7nGj/l4e0SDXVBSo/o66EZjaMHx1888o16eJZs/y19Kh4JPGAubGLiV7IqAbzYOZw6eu9PCAeexMbleMcjMT7aU9u+FplUpVZMJyk91VQYTCcAOdWpEUVT5VvHMOUq1h43o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=0U6dckmc; arc=none smtp.client-ip=199.89.3.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZuSHkfzf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66D9EC4CED6;
-	Fri, 21 Feb 2025 22:17:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740176253;
-	bh=zqSQJ2nItJxAmcLhpr+YNwKtAwSoDSxjxXX4H9cP31E=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=ZuSHkfzfm3y+C6pKoGDXkq6uKMeA1PFNKvqIQSmopCIU3PSS3028k0smW8r/TgTmu
-	 TdpsFwaMhrnCIUmtZKf9zJIXMB9gsb1FVdKpbbZHiR/aIJKmJKg9n+jdmMhaMKlYP/
-	 F7iwULDR9e6ogLVAXBEN9e4Q1IFO0mE/zikMbne2254GJBQfk08WFQ6MNpRsNeHuDX
-	 vDFM3M7j0jHWtPPRlWxH6mFUyCezNbKPYLgkfm6pFVsnNhnQzE77ORPgQpp945e5hW
-	 Qpf+FVEiCwGWAj56/HkeysTYCwLLEESlOgEOm+LNwTLQ79685juFCbNQYuwJ2qBIx0
-	 YUdlPo4W4rjcw==
-Date: Fri, 21 Feb 2025 16:17:31 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="0U6dckmc"
+Received: from localhost (localhost [127.0.0.1])
+	by 003.mia.mailroute.net (Postfix) with ESMTP id 4Z04Cd1HlWzlrwfX;
+	Fri, 21 Feb 2025 22:13:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1740176026; x=1742768027; bh=Rpv6qg5LJ6vh68awsAl0E+as
+	qhk7CuPogw8UREwVqAg=; b=0U6dckmcqX9LtnZXE5xmuCnA3ixG9loGUnrl/dvI
+	UEbXsokv+pv7MF+U1z9CNP2p5TJybCDDWW/PGOSBfBhxpRKuoQDnunWzgl7Kti+u
+	ybJODXttnYQM8JfLAqqqigh8dRLXWkAA73yASlRQKkAOK25k44DHhEa/X9P0G5fc
+	lc30W59Q2VhFKGHzXXoOlOa//iGn0QspjivRW4ciwH+jJAtXVTEab0/OUFQ8d6oc
+	8o1jcQHUHyfuyx+5hMZeG1C9I4EKBlSj8G60/NxnKKFzEy3Af7SKtihbP5+JkWTz
+	wiXmkEfXeIv5B7W11AWJ1mUbV4qaPzT1f9CSaZKPdozmYg==
+X-Virus-Scanned: by MailRoute
+Received: from 003.mia.mailroute.net ([127.0.0.1])
+ by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id Wx3eBg_UPJEB; Fri, 21 Feb 2025 22:13:46 +0000 (UTC)
+Received: from [100.66.154.22] (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4Z04CX48QtzlrnRt;
+	Fri, 21 Feb 2025 22:13:43 +0000 (UTC)
+Message-ID: <917f49a5-dae4-4810-8116-9bc93ddcd9f5@acm.org>
+Date: Fri, 21 Feb 2025 14:13:42 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: broonie@kernel.org, Guenter Roeck <linux@roeck-us.net>, 
- conor@kernel.org, Jean Delvare <jdelvare@suse.com>, 
- linux-hwmon@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
- devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, 
- linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: Naresh Solanki <naresh.solanki@9elements.com>
-In-Reply-To: <20250221213837.1594057-1-naresh.solanki@9elements.com>
-References: <20250221213837.1594057-1-naresh.solanki@9elements.com>
-Message-Id: <174017625167.177256.18090844178565157862.robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: hwmon: ir38060: Move & update dt
- binding
+User-Agent: Mozilla Thunderbird
+Subject: Re: C aggregate passing (Rust kernel policy)
+To: David Laight <david.laight.linux@gmail.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Jan Engelhardt <ej@inai.de>, "H. Peter Anvin" <hpa@zytor.com>,
+ Greg KH <gregkh@linuxfoundation.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+ Christoph Hellwig <hch@infradead.org>,
+ rust-for-linux <rust-for-linux@vger.kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org,
+ ksummit@lists.linux.dev
+References: <CANiq72m+r1BZVdVHn2k8XeU37ZeY6VT2S9KswMuFA=ZO3e4uvQ@mail.gmail.com>
+ <a7c5973a-497c-4f31-a7be-b3123bddb6dd@zytor.com> <Z7VKW3eul-kGaIT2@Mac.home>
+ <2025021954-flaccid-pucker-f7d9@gregkh>
+ <2nn05osp-9538-11n6-5650-p87s31pnnqn0@vanv.qr>
+ <2025022052-ferment-vice-a30b@gregkh>
+ <9B01858A-7EBD-4570-AC51-3F66B2B1E868@zytor.com>
+ <n05p910s-r5o3-0n36-5s44-qr769prp69r5@vanv.qr>
+ <20250221183437.1e2b5b94@pumpkin>
+ <p7946077-rn30-n3p3-ppp0-80o9n9p07718@vanv.qr>
+ <20250221202332.GA6576@pendragon.ideasonboard.com>
+ <20250221220201.7068dfa3@pumpkin>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20250221220201.7068dfa3@pumpkin>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 2/21/25 2:02 PM, David Laight wrote:
+> And there is nothing to stop (I think even std::string) using ref-counted
+> buffers for large malloc()ed strings.
 
-On Sat, 22 Feb 2025 03:08:34 +0530, Naresh Solanki wrote:
-> Move dt binding under hwmon/pmbus & align accordingly.
-> 
-> Previously the DT binding was invalid & wouldn't work with pmbus driver.
-> Pmbus driver expects a regulator node & hence added the same.
-> 
-> Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
-> ---
-> Changes in V2:
-> 1. Update commit message
-> ---
->  .../hwmon/pmbus/infineon,ir38060.yaml         | 61 +++++++++++++++++++
->  .../bindings/regulator/infineon,ir38060.yaml  | 45 --------------
->  2 files changed, 61 insertions(+), 45 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/pmbus/infineon,ir38060.yaml
->  delete mode 100644 Documentation/devicetree/bindings/regulator/infineon,ir38060.yaml
-> 
+This is what an LLM told me about this topic (this matches what I 
+remember about the std::string implementation):
 
-My bot found errors running 'make dt_binding_check' on your patch:
+<quote>
+Does the std::string implementation use a reference count?
 
-yamllint warnings/errors:
+No. [ ... ]
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/hwmon/pmbus/infineon,ir38060.yaml: maintainers:0: 'Not Me.' does not match '@'
-	from schema $id: http://devicetree.org/meta-schemas/base.yaml#
+Why does std::string not use a reference count? Has this always been the
+case?
 
-doc reference errors (make refcheckdocs):
+[ ... ]
+Reference counting adds overhead. Every time a string is copied or 
+assigned, the reference count has to be incremented or decremented, and 
+when it reaches zero, memory has to be deallocated. This adds both time 
+complexity (due to the need to update the reference count) and space 
+complexity (to store the count alongside the string data).
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250221213837.1594057-1-naresh.solanki@9elements.com
+The goal with std::string is to minimize this overhead as much as 
+possible for the most common cases, particularly short strings, which 
+are frequent in real-world applications. The small string optimization 
+(SSO) allows short strings to be stored directly within the std::string 
+object itself, avoiding heap allocation and reference counting 
+altogether. For long strings, reference counting might not provide much 
+of an advantage anyway because memory management would still have to 
+involve the heap.
+[ ... ]
+Reference counting introduces unpredictable performance in terms of 
+memory management, especially in multithreaded applications. Each string 
+operation might require atomic operations on the reference count, 
+leading to potential contention in multithreaded environments.
+[ ... ]
+Initially, early implementations of std::string may have used CoW or 
+reference counting techniques. However, over time, as the language 
+evolved and as multithreading and performance became more of a priority, 
+the C++ standard moved away from these features. Notably, the C++11 
+standard explicitly banned CoW for std::string in order to avoid its 
+pitfalls.
+[ ... ]
+</quote>
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Bart.
