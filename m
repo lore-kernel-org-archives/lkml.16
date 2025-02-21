@@ -1,141 +1,110 @@
-Received: from mx.ssi.bg (mx.ssi.bg [193.238.174.39])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80325215172;
-	Fri, 21 Feb 2025 15:59:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.238.174.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400F6215172;
+	Fri, 21 Feb 2025 15:59:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740153583; cv=none; b=J1zVbsdN9mxTa3ucDOqLAoSL+aVjk5pmWNdwMSdiFSCIM61VNZ3CQT3onacXAmQxMUGmaVhuavOUhAmlfGrR1MFvu8nliqe/XEWQvwwNyJo++9ERK9/X07vyUQtjvDacjMpoCBicxbhEgqxrvZX8Grxmo3fOXDiPjZ1+NaX90+A=
+	t=1740153588; cv=none; b=Qis7etahk0Zi+5XDoAxamPQWxqPMUZwu4H+OkS9cP9bkT/zgvZl47VmTjSW8mApPcTiC/DVn/hUHDqtVekcuesL6bA17/963i1QT2JVnoR8+Ud9aTv6J32I6M+OGRjxO4Q8uNgpoaZsxYgDAOTv4w7Mj5vgTM6Axs2/CowuRsKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740153583; c=relaxed/simple;
-	bh=PxWdT8KjTiBPV/g4HJF+n40rUM1VBmqecO5CnMu24IA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Yqnm+fGMufPcjokiQ4jFRZPiEC3yFj6XFF0lSyK/kIc16UgHJzEA1lawWKJAQAsgx3mUl2JKjjEYN1GzkLZJvwJx2z7c8cWK4NMrO+hH17zTKFXeR2ArmTQtMKiFpwwG7p80ifXtrGjaCFoxuqAnEWRTywupGkyL4NNcUTZIX5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ssi.bg; spf=pass smtp.mailfrom=ssi.bg; dkim=pass (4096-bit key) header.d=ssi.bg header.i=@ssi.bg header.b=e2LjwSLl; arc=none smtp.client-ip=193.238.174.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ssi.bg
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ssi.bg
+	s=arc-20240116; t=1740153588; c=relaxed/simple;
+	bh=cv2aE2ogqK6WiB8BoizF8HzO8Gnll38EidxSY7+yxso=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=bpRfiRCIZDTuYuESRieGGkGdvMqtOI9BCuLWCHp7axLGzBUapbORiU0Sl3X9kOtYhuzEZ9vm2FUclljicFDRv8fumI3q/XUeAf8AOVBgr2N/7GEE1cqY2bXdH2sNuIs1avOzkPisu/w3mgjjd1gW6mOQILYZkb2tYeWhOAbCXZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qzuVzjl7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=T/Cr+VOp; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=ssi.bg header.i=@ssi.bg header.b="e2LjwSLl"
-Received: from mx.ssi.bg (localhost [127.0.0.1])
-	by mx.ssi.bg (Potsfix) with ESMTP id 1FA6522C7A;
-	Fri, 21 Feb 2025 17:59:29 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ssi.bg; h=cc:cc
-	:content-id:content-type:content-type:date:from:from:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to; s=ssi; bh=l0LitblEbtKMznCE8ElI65Dsh7jKX6yGyHzIVUzjF3Y=; b=e
-	2LjwSLl5+EYHomTJoMOTz4DY7QMKP8G/D7yNORzx9ofgBuaUJY71z1vWUOttHiA6
-	B5uzFErZBitwS81baLG1h2kMjl4LPv7fjC0KlDqmTIFtTN1Iq9LrPWhl2X8XnhHq
-	lqPCucFNdiyaOaKHDVotSjiu1IER+LTTCcyr09JfUf5UYIIFnLEgShjr6umisKuB
-	+T4mxnpokBOuGnC0T9YvXK9TUYiM5cl466KtesU0TRtqjftmJHerJzpO0jNk8Ee1
-	R+useezaxQRo66xuHnTSC51Q8SZUaqNo+hK76vnIekU/X/MpB9mdCH7r1BRtn+Vi
-	XC3a9vXFc6YSyf0x331zt1jhWSW0TmrucAskn9Z4AFxJKO1NRiBv72cDaGGpVd6j
-	cWPR2+eQq+pfwJqzYhzdrIF8Ppp/RAZgiS/Q9d9Yrg7lUcYEV5RZx6qUUcaUlbdL
-	CMIEFFlA/Ev5UZdhPbzcS4ULnoODALMmuNRCYqcObWRpcI1+MUZ/crpxYK7cdRXy
-	HUdXt4NaYvTmf2SksTpSyUdihnp/Wk9zPYZOElhuhfnlfi9r7rUxSsgCvreYySf6
-	w3RTIxPyY2gWZ4cZCJHuT1rqSy89gBZopooAZUtoElCYcTMYgJU9MtQYdHocMb9x
-	+8C1bZNrMIa0ZCmzh4VLSpYhXskukJWmN7haKKiaC4=
-Received: from ink.ssi.bg (ink.ssi.bg [193.238.174.40])
-	by mx.ssi.bg (Potsfix) with ESMTPS;
-	Fri, 21 Feb 2025 17:59:28 +0200 (EET)
-Received: from ja.ssi.bg (unknown [213.16.62.126])
-	by ink.ssi.bg (Postfix) with ESMTPSA id 119DB15EA8;
-	Fri, 21 Feb 2025 17:59:17 +0200 (EET)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by ja.ssi.bg (8.18.1/8.17.1) with ESMTP id 51LFxFk5041810;
-	Fri, 21 Feb 2025 17:59:16 +0200
-Date: Fri, 21 Feb 2025 17:59:15 +0200 (EET)
-From: Julian Anastasov <ja@ssi.bg>
-To: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-cc: Philo Lu <lulie@linux.alibaba.com>, netdev@vger.kernel.org,
-        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, horms@kernel.org, asml.silence@gmail.com,
-        willemb@google.com, almasrymina@google.com, chopps@labn.net,
-        aleksander.lobakin@intel.com, dust.li@linux.alibaba.com,
-        hustcat@gmail.com, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] ipvs: Always clear ipvs_property flag in
- skb_scrub_packet()
-In-Reply-To: <6202010a-412f-4d63-92a5-d78ba216c65e@6wind.com>
-Message-ID: <c42296ae-e7ad-7063-f87c-ddf516e72ed0@ssi.bg>
-References: <20250221013648.35716-1-lulie@linux.alibaba.com> <6202010a-412f-4d63-92a5-d78ba216c65e@6wind.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qzuVzjl7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T/Cr+VOp"
+Date: Fri, 21 Feb 2025 15:59:43 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740153585;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MGhvyAoD0GTAtdofD5O+7aLeYSHOcoxWpEIXqH8kzXs=;
+	b=qzuVzjl7zeNdHXcRNmu594bZ1mMnhq97V5eoGJdwrAJ0uSAbBuiTSvxwHGq2GS8PN5hhKj
+	LC1tSH5f46+5InClSB5O+0HxS/5/Dgv0wOMED9egZ/Ro35EicCFF78lHJl8794sEFn58lF
+	jU+znSX5q2bAttmCwkydD3sqnjsBrOFaaD+xKWzfx0ZX17XpecG+TQ8dCurOzC/6H0yZO/
+	bf3EsS0SbuVcimurNfbDMniuTaQ2qOIYQSFpgah59oCbTFGUOzvbuXco5fthdIrwZDDsh3
+	8BF+IWKmr2YR7E7udzF/2aFdXbkJBiYzbB0eJJwD9yW2RvzbJq9NK5JfAZpR+g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740153585;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MGhvyAoD0GTAtdofD5O+7aLeYSHOcoxWpEIXqH8kzXs=;
+	b=T/Cr+VOppnuWLliKvMfDl2FzBzMwS86qzCGDu3qH+ynS9K6kFDviMGz2GpA5WeCprDAO4f
+	TRsUm5Jbk7meAzCw==
+From: "tip-bot2 for Thorsten Blum" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] x86/apic: Use str_disabled_enabled() helper in
+ print_ipi_mode()
+Cc: Thorsten Blum <thorsten.blum@linux.dev>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250209210333.5666-2-thorsten.blum@linux.dev>
+References: <20250209210333.5666-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="-1463811672-1664573096-1740151264=:14998"
-Content-ID: <e8109416-79ae-e910-da52-6d372102b395@ssi.bg>
+Message-ID: <174015358396.10177.13576394441598085729.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+The following commit has been merged into the x86/cleanups branch of tip:
 
----1463811672-1664573096-1740151264=:14998
-Content-Type: text/plain; CHARSET=UTF-8
-Content-Transfer-Encoding: 8BIT
-Content-ID: <4fabcb62-9a35-763a-78d6-a694768e425f@ssi.bg>
+Commit-ID:     0156338a18eba7ee229e59c8928c7056e9753c61
+Gitweb:        https://git.kernel.org/tip/0156338a18eba7ee229e59c8928c7056e9753c61
+Author:        Thorsten Blum <thorsten.blum@linux.dev>
+AuthorDate:    Sun, 09 Feb 2025 22:03:32 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 21 Feb 2025 16:54:22 +01:00
 
+x86/apic: Use str_disabled_enabled() helper in print_ipi_mode()
 
-	Hello,
+Remove hard-coded strings by using the str_disabled_enabled() helper.
 
-On Fri, 21 Feb 2025, Nicolas Dichtel wrote:
+No change in functionality intended.
 
-> Le 21/02/2025 à 02:36, Philo Lu a écrit :
-> > We found an issue when using bpf_redirect with ipvs NAT mode after
-> > commit ff70202b2d1a ("dev_forward_skb: do not scrub skb mark within
-> > the same name space"). Particularly, we use bpf_redirect to return
-> > the skb directly back to the netif it comes from, i.e., xnet is
-> > false in skb_scrub_packet(), and then ipvs_property is preserved
-> > and SNAT is skipped in the rx path.
-> > 
-> > ipvs_property has been already cleared when netns is changed in
-> > commit 2b5ec1a5f973 ("netfilter/ipvs: clear ipvs_property flag when
-> > SKB net namespace changed"). This patch just clears it in spite of
-> > netns.
-> > 
-> > Signed-off-by: Philo Lu <lulie@linux.alibaba.com>
-> > ---
-> > This is in fact a fix patch, and the issue was found after commit
-> > ff70202b2d1a ("dev_forward_skb: do not scrub skb mark within
-> > the same name space"). But I'm not sure if a "Fixes" tag should be
-> > added to that commit.
-> > ---
-> >  net/core/skbuff.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-> > index 7b03b64fdcb2..b1c81687e9d8 100644
-> > --- a/net/core/skbuff.c
-> > +++ b/net/core/skbuff.c
-> > @@ -6033,11 +6033,11 @@ void skb_scrub_packet(struct sk_buff *skb, bool xnet)
-> >  	skb->offload_fwd_mark = 0;
-> >  	skb->offload_l3_fwd_mark = 0;
-> >  #endif
-> > +	ipvs_reset(skb);
-> >  
-> >  	if (!xnet)
-> >  		return;
-> >  
-> > -	ipvs_reset(skb);
-> I don't know IPVS, but I wonder if this patch will not introduce a regression
-> for other users. skb_scrub_packet() is used by a lot of tunnels, it's not
-> specific to bpf_redirect().
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20250209210333.5666-2-thorsten.blum@linux.dev
+---
+ arch/x86/kernel/apic/ipi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-	Indeed, now we will start to clear the flag for tunnels
-and it can cause IPVS to attempt rerouting for UDP tunnels, i.e.
-once the packet is routed by IPVS to tunnel and second time later 
-after tunneling again when ip_local_out() is called and we see 
-ipvs_property=0 for the outer UDP header. Before such patch
-ipvs_property remains 1 and we do not try to balance the UDP
-traffic. So, for now, this patch may be can spend more cycles for
-the traffic via UDP tunnels but this looks like a rare IPVS setup,
-i.e. real servers reachable via UDP tunnels. Note that IPVS
-has own support for UDP tunnels where it is set as forwarding
-method + tunnel type GUE for the real server. It is not affected
-by this patch.
-
-Regards
-
---
-Julian Anastasov <ja@ssi.bg>
----1463811672-1664573096-1740151264=:14998--
-
+diff --git a/arch/x86/kernel/apic/ipi.c b/arch/x86/kernel/apic/ipi.c
+index 5da693d..942168d 100644
+--- a/arch/x86/kernel/apic/ipi.c
++++ b/arch/x86/kernel/apic/ipi.c
+@@ -3,6 +3,7 @@
+ #include <linux/cpumask.h>
+ #include <linux/delay.h>
+ #include <linux/smp.h>
++#include <linux/string_choices.h>
+ 
+ #include <asm/io_apic.h>
+ 
+@@ -23,7 +24,7 @@ __setup("no_ipi_broadcast=", apic_ipi_shorthand);
+ static int __init print_ipi_mode(void)
+ {
+ 	pr_info("IPI shorthand broadcast: %s\n",
+-		apic_ipi_shorthand_off ? "disabled" : "enabled");
++		str_disabled_enabled(apic_ipi_shorthand_off));
+ 	return 0;
+ }
+ late_initcall(print_ipi_mode);
