@@ -1,64 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1720209F4C;
-	Fri, 21 Feb 2025 15:06:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1F474BED;
+	Fri, 21 Feb 2025 15:08:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740150390; cv=none; b=HHGjI9QmXWoid2yszTzi9ouwIK/CkpdHR3SlyNJtGkoEI5iB5k+s3vUjghO+lSxrnkiF/3SbILyJh4uarARItexkrYJ7Wdia4dtXIxPPi1Y2sXsGyQ9BaxsRndkbDQTEPaLH7EyiSoQjCVwupOAxPZTO1AX9pRAQzyVClRBNyug=
+	t=1740150489; cv=none; b=emY/zE8L3csYhFNcYs9Z56GV0xlB60Bx3nUOgFMUcgjktxNwEy98jEXUVRUc3jwToYiaAfS2RgRRogUUtGMSW9yzlmVulXgP7xv0PAjDCnoNE/FmSgd9lE3qCjzdzsJd6p1nSGW4t0dphKTEKcXcpA10JuiJROYOIIxSouIj/8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740150390; c=relaxed/simple;
-	bh=5N30X5GegcN4tvKnns5lWRgQW6Spy99LaxMzHWGVVO8=;
+	s=arc-20240116; t=1740150489; c=relaxed/simple;
+	bh=UoJLtFhgBEmILKuPV5PmWow2I7yrilaHeQwiz1VkK3Y=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=We93dubUtOCvsTVfaFLMmg5g0bo8/bFvBn2dwIfy4gI6pQBSG1rr7kGJn/+7CwH2abd6MWMmFqF3rb4l53vEHFX3Ha37iWmrglVhoYeG6NneDXluH+Ul1XHWtbTH78UtJyrA+Fj/YBwAQ+POnWakDf1JHNiV8XUSVZ0aP3jNQdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CeydFfSA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=COtQHoUU; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=S4/3XVOIL7vANOrrdc3RkUOIcpuNc/ESTxd1fDkw4A1fiyFbVq03tvaVhdjnG02wb1dZ6d37VKDMDfGuP6I1OA0EX8ZT+St3//tkS+Y4wGaSAfIydGRuObBL0T9/+V/XLTR3DuflIDOcUT6vb47vSxzwhW6gm2xQa1bIThDj+QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aPWYnMyu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=r8Y39V+2; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CeydFfSA";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="COtQHoUU"
-Date: Fri, 21 Feb 2025 15:06:23 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aPWYnMyu";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="r8Y39V+2"
+Date: Fri, 21 Feb 2025 15:08:05 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740150387;
+	s=2020; t=1740150486;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IDUA85Dl4ouJ6yu+EaBZ7gRIsCnGssJRcJ6sW0Fu9ZY=;
-	b=CeydFfSAAdQAuxx/mqoRtZFYjW6VWw/lUEDpOX9Z65eoeoaKYfJ2zzwGxOQEhjW5ZOnf7q
-	6kxf2yJT1hbsEK6Qra2XMwDiCvig0m9YCUxZl20QqOByG/ercNW7HDdyrge+5v4CnJu89g
-	3hyLOMd7ePvP0+vLJaTu4mKB4aX1cw6HKkRI0fRDYgira9rbujKcbO0z8KOnaWSzSJurnt
-	JI8w9Urhg4gREgbkoDG56wuIWS9voNkJn8lFAqync72em3aLST1jlG5UQTFdslsfHn7MiY
-	P3f8IVy4E58IRfdWyAN0uk1QQcEa+W8E5SrjNHoS+OIxUPpF3FbZ4SRThvJ9GA==
+	bh=xs+Lj91zAobjC8WIHkTSOdAdAbewkgnh8/JUyYEOlC0=;
+	b=aPWYnMyuRf/fXxgBEOFXuNOTMVDrCGHOoJi4axgyRMDgCbyI77OBWIa4+j6vz5moOcSQJ6
+	m/d9sAWN8ERZkW0iEsaEyx/vsDgG3LGvFrUwixW+yq6Hg9awNirvTYiasTmWynWFuBbLGa
+	/YShY4O4D+2+zy+6ZMNZhCnjtadkbcxPgXRvrdR6bh3nXMKOEZJFJgklrifSPJSYLvRx5S
+	g+t/sG+taJOhfCQPhu+s5h0NBAQbg4KgPr6PozwywBueAYJR4/EIQ9v3LVihFxQZSTaXIp
+	oOdFiyqoe1gEAM8p/UlmoU8VBfpgHP8H0RnQn2xilVb+Dy9U9CFTcYE/v3+Pmw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740150387;
+	s=2020e; t=1740150486;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IDUA85Dl4ouJ6yu+EaBZ7gRIsCnGssJRcJ6sW0Fu9ZY=;
-	b=COtQHoUUYSc9JWFqFfY/6MqppDQ9Y0tWfFGOUZIP3R0mUmvD9rbHvugdPXuhhHVzHVHnhI
-	6jnxFVf+gOVLP9Bg==
-From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
+	bh=xs+Lj91zAobjC8WIHkTSOdAdAbewkgnh8/JUyYEOlC0=;
+	b=r8Y39V+2Ohc9nx/qihPobEnosm2t5iyi0PnjZkCCNaZsIa3z0fDZQyBxyVsArmxYC1MU0C
+	O9/sCSxNDnUMKsDw==
+From: "tip-bot2 for Kees Cook" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/core] x86/locking: Use asm_inline for
- {,try_}cmpxchg{64,128} emulations
-Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250214150929.5780-2-ubizjak@gmail.com>
-References: <20250214150929.5780-2-ubizjak@gmail.com>
+Subject: [tip: x86/cpu] x86/kcfi: Require FRED for FineIBT
+Cc: Kees Cook <kees@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250214192210.work.253-kees@kernel.org>
+References: <20250214192210.work.253-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174015038309.10177.3818298325558179.tip-bot2@tip-bot2>
+Message-ID: <174015048551.10177.4353365227122906077.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -66,231 +66,89 @@ Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the locking/core branch of tip:
+The following commit has been merged into the x86/cpu branch of tip:
 
-Commit-ID:     2d352ec9fcb5d965318e7855b2406a7a14e9ae13
-Gitweb:        https://git.kernel.org/tip/2d352ec9fcb5d965318e7855b2406a7a14e9ae13
-Author:        Uros Bizjak <ubizjak@gmail.com>
-AuthorDate:    Fri, 14 Feb 2025 16:07:47 +01:00
+Commit-ID:     f12315780faf1cbfe00991077a1e8c8e4c201f3b
+Gitweb:        https://git.kernel.org/tip/f12315780faf1cbfe00991077a1e8c8e4c201f3b
+Author:        Kees Cook <kees@kernel.org>
+AuthorDate:    Fri, 14 Feb 2025 11:22:21 -08:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 21 Feb 2025 15:56:08 +01:00
+CommitterDate: Fri, 21 Feb 2025 15:38:11 +01:00
 
-x86/locking: Use asm_inline for {,try_}cmpxchg{64,128} emulations
+x86/kcfi: Require FRED for FineIBT
 
-According to:
+With what appears to be an unavoidable pivot gadget always present in
+the kernel (the entry code), FineIBT's lack of caller-side CFI hash
+validation leaves it critically flawed:
 
-  https://gcc.gnu.org/onlinedocs/gcc/Size-of-an-asm.html
+  https://lore.kernel.org/linux-hardening/Z60NwR4w%2F28Z7XUa@ubun/ [1]
 
-the usage of asm pseudo directives in the asm template can confuse
-the compiler to wrongly estimate the size of the generated
-code.
+Require FRED for FineIBT:
 
-The ALTERNATIVE macro expands to several asm pseudo directives,
-so its usage in {,try_}cmpxchg{64,128} causes instruction length estimate
-to fail by an order of magnitude (the specially instrumented compiler
-reports the estimated length of these asm templates to be more than 20
-instructions long).
+  https://lore.kernel.org/linux-hardening/c46f5614-a82e-42fc-91eb-05e483a7df9c@citrix.com/
 
-This incorrect estimate further causes unoptimal inlining
-decisions, unoptimal instruction scheduling and unoptimal code block
-alignments for functions that use these locking primitives.
+(and probably should also require eXecute-Only memory too), and default
+to kCFI when CFI is built in.
 
-Use asm_inline instead:
-
-  https://gcc.gnu.org/pipermail/gcc-patches/2018-December/512349.html
-
-which is a feature that makes GCC pretend some inline assembler code
-is tiny (while it would think it is huge), instead of just asm.
-
-For code size estimation, the size of the asm is then taken as
-the minimum size of one instruction, ignoring how many instructions
-compiler thinks it is.
-
-The effect of this patch on x86_64 target is minor, since 128-bit
-functions are rarely used on this target. The code size of the resulting
-defconfig object file stays the same:
-
-      text       data     bss      dec         hex filename
-  27456612    4638523  814148 32909283     1f627e3 vmlinux-old.o
-  27456612    4638523  814148 32909283     1f627e3 vmlinux-new.o
-
-but the patch has minor effect on code layout due to the different
-scheduling decisions in functions containing changed macros.
-
-There is no effect on the x64_32 target, the code size of the resulting
-defconfig object file and the code layout stays the same:
-
-      text       data     bss      dec         hex filename
-  18883870    2679275 1707916 23271061     1631695 vmlinux-old.o
-  18883870    2679275 1707916 23271061     1631695 vmlinux-new.o
-
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Signed-off-by: Kees Cook <kees@kernel.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250214150929.5780-2-ubizjak@gmail.com
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20250214192210.work.253-kees@kernel.org
 ---
- arch/x86/include/asm/cmpxchg_32.h | 32 ++++++------
- arch/x86/include/asm/percpu.h     | 77 ++++++++++++++----------------
- 2 files changed, 55 insertions(+), 54 deletions(-)
+ arch/x86/Kconfig              |  9 +++++----
+ arch/x86/include/asm/cfi.h    |  2 +-
+ arch/x86/kernel/alternative.c |  4 +++-
+ 3 files changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/include/asm/cmpxchg_32.h b/arch/x86/include/asm/cmpxchg_32.h
-index fd1282a..95b5f99 100644
---- a/arch/x86/include/asm/cmpxchg_32.h
-+++ b/arch/x86/include/asm/cmpxchg_32.h
-@@ -91,12 +91,14 @@ static __always_inline bool __try_cmpxchg64_local(volatile u64 *ptr, u64 *oldp, 
- 	union __u64_halves o = { .full = (_old), },			\
- 			   n = { .full = (_new), };			\
- 									\
--	asm volatile(ALTERNATIVE(_lock_loc				\
--				 "call cmpxchg8b_emu",			\
--				 _lock "cmpxchg8b %a[ptr]", X86_FEATURE_CX8) \
--		     : ALT_OUTPUT_SP("+a" (o.low), "+d" (o.high))	\
--		     : "b" (n.low), "c" (n.high), [ptr] "S" (_ptr)	\
--		     : "memory");					\
-+	asm_inline volatile(						\
-+		ALTERNATIVE(_lock_loc					\
-+			    "call cmpxchg8b_emu",			\
-+			    _lock "cmpxchg8b %a[ptr]", X86_FEATURE_CX8)	\
-+		: ALT_OUTPUT_SP("+a" (o.low), "+d" (o.high))		\
-+		: "b" (n.low), "c" (n.high),				\
-+		  [ptr] "S" (_ptr)					\
-+		: "memory");						\
- 									\
- 	o.full;								\
- })
-@@ -119,14 +121,16 @@ static __always_inline u64 arch_cmpxchg64_local(volatile u64 *ptr, u64 old, u64 
- 			   n = { .full = (_new), };			\
- 	bool ret;							\
- 									\
--	asm volatile(ALTERNATIVE(_lock_loc				\
--				 "call cmpxchg8b_emu",			\
--				 _lock "cmpxchg8b %a[ptr]", X86_FEATURE_CX8) \
--		     CC_SET(e)						\
--		     : ALT_OUTPUT_SP(CC_OUT(e) (ret),			\
--				     "+a" (o.low), "+d" (o.high))	\
--		     : "b" (n.low), "c" (n.high), [ptr] "S" (_ptr)	\
--		     : "memory");					\
-+	asm_inline volatile(						\
-+		ALTERNATIVE(_lock_loc					\
-+			    "call cmpxchg8b_emu",			\
-+			    _lock "cmpxchg8b %a[ptr]", X86_FEATURE_CX8) \
-+		CC_SET(e)						\
-+		: ALT_OUTPUT_SP(CC_OUT(e) (ret),			\
-+				"+a" (o.low), "+d" (o.high))		\
-+		: "b" (n.low), "c" (n.high),				\
-+		  [ptr] "S" (_ptr)					\
-+		: "memory");						\
- 									\
- 	if (unlikely(!ret))						\
- 		*(_oldp) = o.full;					\
-diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
-index 0ab991f..08f5f61 100644
---- a/arch/x86/include/asm/percpu.h
-+++ b/arch/x86/include/asm/percpu.h
-@@ -348,15 +348,14 @@ do {									\
- 	old__.var = _oval;						\
- 	new__.var = _nval;						\
- 									\
--	asm qual (ALTERNATIVE("call this_cpu_cmpxchg8b_emu",		\
--			      "cmpxchg8b " __percpu_arg([var]), X86_FEATURE_CX8) \
--		  : ALT_OUTPUT_SP([var] "+m" (__my_cpu_var(_var)),	\
--				  "+a" (old__.low),			\
--				  "+d" (old__.high))			\
--		  : "b" (new__.low),					\
--		    "c" (new__.high),					\
--		    "S" (&(_var))					\
--		  : "memory");						\
-+	asm_inline qual (						\
-+		ALTERNATIVE("call this_cpu_cmpxchg8b_emu",		\
-+			    "cmpxchg8b " __percpu_arg([var]), X86_FEATURE_CX8) \
-+		: ALT_OUTPUT_SP([var] "+m" (__my_cpu_var(_var)),	\
-+				"+a" (old__.low), "+d" (old__.high))	\
-+		: "b" (new__.low), "c" (new__.high),			\
-+		  "S" (&(_var))						\
-+		: "memory");						\
- 									\
- 	old__.var;							\
- })
-@@ -378,17 +377,16 @@ do {									\
- 	old__.var = *_oval;						\
- 	new__.var = _nval;						\
- 									\
--	asm qual (ALTERNATIVE("call this_cpu_cmpxchg8b_emu",		\
--			      "cmpxchg8b " __percpu_arg([var]), X86_FEATURE_CX8) \
--		  CC_SET(z)						\
--		  : ALT_OUTPUT_SP(CC_OUT(z) (success),			\
--				  [var] "+m" (__my_cpu_var(_var)),	\
--				  "+a" (old__.low),			\
--				  "+d" (old__.high))			\
--		  : "b" (new__.low),					\
--		    "c" (new__.high),					\
--		    "S" (&(_var))					\
--		  : "memory");						\
-+	asm_inline qual (						\
-+		ALTERNATIVE("call this_cpu_cmpxchg8b_emu",		\
-+			    "cmpxchg8b " __percpu_arg([var]), X86_FEATURE_CX8) \
-+		CC_SET(z)						\
-+		: ALT_OUTPUT_SP(CC_OUT(z) (success),			\
-+				[var] "+m" (__my_cpu_var(_var)),	\
-+				"+a" (old__.low), "+d" (old__.high))	\
-+		: "b" (new__.low), "c" (new__.high),			\
-+		  "S" (&(_var))						\
-+		: "memory");						\
- 	if (unlikely(!success))						\
- 		*_oval = old__.var;					\
- 									\
-@@ -419,15 +417,14 @@ do {									\
- 	old__.var = _oval;						\
- 	new__.var = _nval;						\
- 									\
--	asm qual (ALTERNATIVE("call this_cpu_cmpxchg16b_emu",		\
--			      "cmpxchg16b " __percpu_arg([var]), X86_FEATURE_CX16) \
--		  : ALT_OUTPUT_SP([var] "+m" (__my_cpu_var(_var)),	\
--				  "+a" (old__.low),			\
--				  "+d" (old__.high))			\
--		  : "b" (new__.low),					\
--		    "c" (new__.high),					\
--		    "S" (&(_var))					\
--		  : "memory");						\
-+	asm_inline qual (						\
-+		ALTERNATIVE("call this_cpu_cmpxchg16b_emu",		\
-+			    "cmpxchg16b " __percpu_arg([var]), X86_FEATURE_CX16) \
-+		: ALT_OUTPUT_SP([var] "+m" (__my_cpu_var(_var)),	\
-+				"+a" (old__.low), "+d" (old__.high))	\
-+		: "b" (new__.low), "c" (new__.high),			\
-+		  "S" (&(_var))						\
-+		: "memory");						\
- 									\
- 	old__.var;							\
- })
-@@ -449,19 +446,19 @@ do {									\
- 	old__.var = *_oval;						\
- 	new__.var = _nval;						\
- 									\
--	asm qual (ALTERNATIVE("call this_cpu_cmpxchg16b_emu",		\
--			      "cmpxchg16b " __percpu_arg([var]), X86_FEATURE_CX16) \
--		  CC_SET(z)						\
--		  : ALT_OUTPUT_SP(CC_OUT(z) (success),			\
--				  [var] "+m" (__my_cpu_var(_var)),	\
--				  "+a" (old__.low),			\
--				  "+d" (old__.high))			\
--		  : "b" (new__.low),					\
--		    "c" (new__.high),					\
--		    "S" (&(_var))					\
--		  : "memory");						\
-+	asm_inline qual (						\
-+		ALTERNATIVE("call this_cpu_cmpxchg16b_emu",		\
-+			    "cmpxchg16b " __percpu_arg([var]), X86_FEATURE_CX16) \
-+		CC_SET(z)						\
-+		: ALT_OUTPUT_SP(CC_OUT(z) (success),			\
-+				[var] "+m" (__my_cpu_var(_var)),	\
-+				"+a" (old__.low), "+d" (old__.high))	\
-+		: "b" (new__.low), "c" (new__.high),			\
-+		  "S" (&(_var))						\
-+		: "memory");						\
- 	if (unlikely(!success))						\
- 		*_oval = old__.var;					\
-+									\
- 	likely(success);						\
- })
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 87198d9..754bcd6 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2427,12 +2427,13 @@ config STRICT_SIGALTSTACK_SIZE
+ 
+ config CFI_AUTO_DEFAULT
+ 	bool "Attempt to use FineIBT by default at boot time"
+-	depends on FINEIBT
++	depends on FINEIBT && X86_FRED
+ 	default y
+ 	help
+-	  Attempt to use FineIBT by default at boot time. If enabled,
+-	  this is the same as booting with "cfi=auto". If disabled,
+-	  this is the same as booting with "cfi=kcfi".
++	  Attempt to use FineIBT by default at boot time if supported
++	  and sensible for the hardware. If enabled, this is the same
++	  as booting with "cfi=auto". If disabled, this is the same as
++	  booting with "cfi=kcfi".
+ 
+ source "kernel/livepatch/Kconfig"
+ 
+diff --git a/arch/x86/include/asm/cfi.h b/arch/x86/include/asm/cfi.h
+index 31d19c8..547377e 100644
+--- a/arch/x86/include/asm/cfi.h
++++ b/arch/x86/include/asm/cfi.h
+@@ -93,7 +93,7 @@
+  *
+  */
+ enum cfi_mode {
+-	CFI_AUTO,	/* FineIBT if hardware has IBT, otherwise kCFI */
++	CFI_AUTO,	/* FineIBT if hardware has IBT, FRED, and XOM */
+ 	CFI_OFF,	/* Taditional / IBT depending on .config */
+ 	CFI_KCFI,	/* Optionally CALL_PADDING, IBT, RETPOLINE */
+ 	CFI_FINEIBT,	/* see arch/x86/kernel/alternative.c */
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index c71b575..42f8184 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -1302,7 +1302,9 @@ static void __apply_fineibt(s32 *start_retpoline, s32 *end_retpoline,
+ 
+ 	if (cfi_mode == CFI_AUTO) {
+ 		cfi_mode = CFI_KCFI;
+-		if (HAS_KERNEL_IBT && cpu_feature_enabled(X86_FEATURE_IBT))
++		/* FineIBT requires IBT and will only be safe with FRED */
++		if (HAS_KERNEL_IBT && cpu_feature_enabled(X86_FEATURE_IBT) &&
++		    cpu_feature_enabled(X86_FEATURE_FRED))
+ 			cfi_mode = CFI_FINEIBT;
+ 	}
  
