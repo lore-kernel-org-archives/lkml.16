@@ -1,183 +1,115 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8139218DB0B;
-	Fri, 21 Feb 2025 22:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C01918DB0B
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 22:03:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740175327; cv=none; b=UlR/1AMa0ZsWAHQjc+XimR7uU6wGfggUERX14sEKyTSQe/hPSC8vciOLkXA53eQ/30uAPr1HML0nGFbvDtNCffAlT0gXj/nHxssIW1kF48M7dTBPbHqeHWR5D8MiR800dUS3J6eqW+Cg1jgM3SdrykuctdcissUsOeFEcepSXDA=
+	t=1740175430; cv=none; b=Oaf48/BqSUwWjXAgWqgVPJk3NJbYxoq4SFIXIOmzqFVoQsBnyQ7vAlbrjAE5z6Cek6zDACNX8RksLkMreAen6cf2L8GFsjNWykesAlQxkdb1gkwwkM6c7GPbWcr63fFEf1lKyFB3P8muC1abLPQyPENPghj2IWlFvm2dr+Zviyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740175327; c=relaxed/simple;
-	bh=VuZcuBGGTaU1S/eDL8RLJUuYcasTLJ3q8msICjDjT4s=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g0Pq4Vg6ym3fTtKg2A++CGwzM8xxBbFzu+va+4U0oXt9LDrrVg9JH31KW8HIEO6mN9uQKdUV2082n5lP0zdSLBs8wi98WTZkou0Fzp1VIX+R5f4jxTne/0enrXdfF/xh2ZFenFgldykRbUua+iOXD7rk+2h3BnkGSQ1CdMSFJNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Iv9vFzz6; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740175430; c=relaxed/simple;
+	bh=otM4pVilEJQ+Z6ARx2EyLLQgCTG9XEl5i6JjIyrxgB0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kM1NQkRlL1GxMPjkT3A985uMbmp6j8s3oathso0WbrYkgRisroPJmFnjHeQ9Wr9vzU/sh1d8lTZPZhlTBH+pX2nUMHceuRiLfRg4Wyq85CTfiT14TGtZz6pKlDGkb07qzx7lqGwsZ4SE+guwyxe+K8EMI4Y46v0UNGPTMBw23vU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VbYdz+rm; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iv9vFzz6"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-438a39e659cso17237945e9.2;
-        Fri, 21 Feb 2025 14:02:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740175324; x=1740780124; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H8//BbINdigUGhI3vG32BvD2ovM86xEn4SPyKThRhFI=;
-        b=Iv9vFzz6sqiy6kldz71vdlIsZ1BjftC95eniVvoF4Jsx9mi73Qr42rgE4DNv/Ur0MZ
-         pYK/+AyNRw/CcYqeZG+eHLZKoDeHmeq2oxb6ONDDpqx5m87UGUXL80Zn2Vc5mYKmWN3H
-         VQwPi3Z3LRLnnQc2ZJUU4z5/1Olh3NgLAruM37GGcStZiHMvELEmxzlPOmSofQ2RDzoD
-         PlteGIYWO/9eTm/XQJYufM/eKrcaDyNNYSWo4DMrZM+CRubeKJMJBmQFmW4cRV2yp8kj
-         hzJIafKCHC/HJ4SFAnXXkgtLIuege4GY9c1VW8gkFzRKpoWZ/Uy/d2Dv7tCXADj3V4ul
-         GdjA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VbYdz+rm"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51LCYtoD012259
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 22:03:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	mn1elD3IHQjpApM4cUuNBscJHGKeSRDBzEug3ElCCWE=; b=VbYdz+rmFVW6a5uw
+	U6f3+AbD8Yht23gx7bWz8lfrOxLoHQQe0aVFNJ1Z+ae4nCvevzYRwrSuzDFFiauL
+	LGFNyB0GfmzWbpPdH6LFRnPeIKj6PHF6kFI2EuggruOmo0GvUzGe29f2r+tWnnqJ
+	UhH3DUGz7OKJOdyQwocJL5HwtBugq0xYgx6iTCYxOS7S51/4lQ9/De9zqaGiL6Y5
+	Z6siIz0pJWcX+aGK8OoxyRFLqZ/Gsinz6at1jOeRd/36favwyIzeLO74/8DurfPu
+	QAGMXaPBqfilUQ4mGH6orujXrEw5uX617ggM3ObP5oaYpnwTmniTxSwTB+8kOGrz
+	7q3t9A==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy1ucsr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 22:03:48 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c0a9b6c146so23210685a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 14:03:47 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740175324; x=1740780124;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H8//BbINdigUGhI3vG32BvD2ovM86xEn4SPyKThRhFI=;
-        b=jDudsjUKb1eIaoyM82Il/E0CEE83GBitzTfrbnIhaDe+QRJP39fYKq/+/HVEdHmBs8
-         plpnBkrKI9v4uWaYEeAqPF/dHquMA+oDz9UV2+2Ah5Li+Y38cVqhMKeQzoTkurTbEBXQ
-         1pb9N0SrUjEVvdXDIqdysmbqsmfUtNs+WgNMjabRW9h1zCUswF6rjVhsGPpd54KZ5c+X
-         HMzNgW9NsZWfarbiw9uGZOHF7ynI47k4jNo4JJ+57Pr/AGidib/PIg2kOuEqLtZbd8E+
-         qPGJcEYaaxx/jseB4jfswcHh+KbTiVcWo38g+Oc41I/1Jkfzm1LvCS/VRxdG4eWmdYI9
-         A+/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUSzaaEh+V2s0i5LV4pc4Mos/s6ZqMKJLgHp31eI66wqPzHl/ndBZG/Onzey9jkiG8ZNf9VOjO9x0MmTl0=@vger.kernel.org, AJvYcCX6ix2Nyhyj2T1KFXgAQoU5mdwgk7frI14wC2PqMAW3qiogQ2nVi0z9hVqL8TFBXlNWtR/v1xlVvsg2W+tnHQw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyfil8MDi1MXS1CcFAsqoEdyGsDXFLFA7iQMl2GlyXyOQDVO73a
-	dXY6f1wW7ulwK/6NYfZenpLwVyRIfnMs4N2JWS6MHnNtF738yH3Z
-X-Gm-Gg: ASbGncvibHfFVBxMV6onRIycpAiDEhzmczhO46cy3FAHIp1t8iP2t/+mvMktKadbLbK
-	Wr4YhWmaK4T6UTvNWRyGJX78v1rKRfeiD3ltMO1GCJmY/WFcyxClUYjCfUaRhaG2dXHnrf58Grv
-	Gv3W2ltOi6HYpYovGwlQNSz6dSbHNt0i0szgLdWYn4PtiJFcdACnN6i2wmYtxvNeKoCqvpKP0ye
-	78eDQ56k76UugwGu95zEn6I5wy8ZwehDQQ2XrgbYHrrhgLMZT7RTbiBykiG1p1It+SumI5t9Yzs
-	GIn1kPO+hyu4piLrg77HFhXb/rgfb0BR4N8qHn2SRqSlFJRArqmmEq4OQ9rjrcVj
-X-Google-Smtp-Source: AGHT+IE4FA0oLziTVHdJF6hJ+k7szSovVH9EHqDlmFPGZ69qfh4moBtlT3+WMJ3xrpSuFx2fwpGLoA==
-X-Received: by 2002:a05:600c:5106:b0:439:a25a:1686 with SMTP id 5b1f17b1804b1-439aebda0bbmr33296765e9.25.1740175323409;
-        Fri, 21 Feb 2025 14:02:03 -0800 (PST)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b02d684dsm29205015e9.16.2025.02.21.14.02.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2025 14:02:02 -0800 (PST)
-Date: Fri, 21 Feb 2025 22:02:01 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Jan Engelhardt <ej@inai.de>, "H. Peter Anvin" <hpa@zytor.com>, Greg KH
- <gregkh@linuxfoundation.org>, Boqun Feng <boqun.feng@gmail.com>, Miguel
- Ojeda <miguel.ojeda.sandonis@gmail.com>, Christoph Hellwig
- <hch@infradead.org>, rust-for-linux <rust-for-linux@vger.kernel.org>, Linus
- Torvalds <torvalds@linux-foundation.org>, David Airlie <airlied@gmail.com>,
- linux-kernel@vger.kernel.org, ksummit@lists.linux.dev
-Subject: Re: C aggregate passing (Rust kernel policy)
-Message-ID: <20250221220201.7068dfa3@pumpkin>
-In-Reply-To: <20250221202332.GA6576@pendragon.ideasonboard.com>
-References: <CANiq72m+r1BZVdVHn2k8XeU37ZeY6VT2S9KswMuFA=ZO3e4uvQ@mail.gmail.com>
-	<a7c5973a-497c-4f31-a7be-b3123bddb6dd@zytor.com>
-	<Z7VKW3eul-kGaIT2@Mac.home>
-	<2025021954-flaccid-pucker-f7d9@gregkh>
-	<2nn05osp-9538-11n6-5650-p87s31pnnqn0@vanv.qr>
-	<2025022052-ferment-vice-a30b@gregkh>
-	<9B01858A-7EBD-4570-AC51-3F66B2B1E868@zytor.com>
-	<n05p910s-r5o3-0n36-5s44-qr769prp69r5@vanv.qr>
-	<20250221183437.1e2b5b94@pumpkin>
-	<p7946077-rn30-n3p3-ppp0-80o9n9p07718@vanv.qr>
-	<20250221202332.GA6576@pendragon.ideasonboard.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        d=1e100.net; s=20230601; t=1740175426; x=1740780226;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mn1elD3IHQjpApM4cUuNBscJHGKeSRDBzEug3ElCCWE=;
+        b=mgEZk4Idado6PjezwpVv2DUXiDwcnYOnjf9u8ZjN/0xLnia+h51R6N0TvwTCr8Quxx
+         SAPCUUJ9CBBc+VHcRjpte0ExDovwbOLceRl5NXJ2w6OKZw3oE0Fdnd/rQjiKZUghSCNw
+         0Y6M/ztlRYdWqQZ48h8vn+XamBXDF5jfMA02rhBHZUTJT51btiUAimUSjteg2JyrUn91
+         o7LR+3pMslrHdoNzBx0lqsGsUmb2KhL/g0JzeXFVXAjrju2czIAVSDnw6EQkMhNfpRl7
+         1JieaVHChHzGjIZCKsPYJW+c/budjq1vl/PLRUnABVLfHv+9iDoAp4mw7LbviUzGGbQH
+         4t8A==
+X-Forwarded-Encrypted: i=1; AJvYcCUX0OTXPUVyZCFCO9n2Xrp3OFWveyLjCJ3xazSffa0keCcqxmQ7FbsdNacoM8mIc7Jnl5Szt4YecX3NJ4Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWu92h9zzBkprewzym8NUatCRh/D7cZ2t7P21zF8UdIY/41R1c
+	cpjmlIpwRAgcZCWzOG07SH3/VVi0bTQC8qeH+l0CHZN988epnEgkA8p9nWTA5KSbSi0FPWziL5e
+	jZa2WMOaqLDg8PwZNm5ULhwbcND30VipALF9YpFglqk7MpCevhAxm82Mn/4Fn7t8=
+X-Gm-Gg: ASbGnctIo4Gi0YfI1i6kyRTO6oEMGmrmhWUAgA714um3SP938dAFnI01XPc7PxLzhYw
+	LMQ7IRY2xk2Cjy065Vmpa62xVy2ZaVGRjVqgR1cXKhaqDLKCJonfsRN2NyMun5mwRnYukczN75Y
+	efizybsE7Uy6oFaU2znYSezHRbRJHa9J4usGuZeHGxeSYEp2qraWq8vthFEBpN3HJUsvslTWEMH
+	X2mPbGmv5EkQXydWUwVf0Q6hHewEPZ1nusks/0nhp+2rJZOosYLntomlAEezBCy0K1OZtMWtrKx
+	r1xibBWUZpN0NGnWdcDcQy/D6ezB42Z/8Lu/04omnFq1dseygEB1cIx1xv3b9CD9+68hEw==
+X-Received: by 2002:a05:620a:46a3:b0:7c0:9ac5:7f97 with SMTP id af79cd13be357-7c0ceeebca9mr295777885a.1.1740174970780;
+        Fri, 21 Feb 2025 13:56:10 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGZvOu0eJXztulv0V5Q7f7sK5RIJKM6aqAnzhe71Fe6vNwS33Dm/VlYp62UvFkTF5N75nE3eg==
+X-Received: by 2002:a05:620a:46a3:b0:7c0:9ac5:7f97 with SMTP id af79cd13be357-7c0ceeebca9mr295776385a.1.1740174970332;
+        Fri, 21 Feb 2025 13:56:10 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece1c43b6sm14401910a12.26.2025.02.21.13.56.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2025 13:56:09 -0800 (PST)
+Message-ID: <eb78eb2b-e35b-4744-ab09-6aa350ec81bd@oss.qualcomm.com>
+Date: Fri, 21 Feb 2025 22:56:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] ARM: dts: qcom: msm8960: Add BAM
+To: Rudraksha Gupta <guptarud@gmail.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sam Day <me@samcday.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+References: <20250213-expressatt-bam-v3-1-0ff338f488b2@gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250213-expressatt-bam-v3-1-0ff338f488b2@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: UOT6D6GMhEpRnP-kD2DPtmVdVLRAyVp5
+X-Proofpoint-ORIG-GUID: UOT6D6GMhEpRnP-kD2DPtmVdVLRAyVp5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-21_08,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
+ adultscore=0 malwarescore=0 mlxscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=700 suspectscore=0 phishscore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502210149
 
-On Fri, 21 Feb 2025 22:23:32 +0200
-Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+On 14.02.2025 7:28 AM, Rudraksha Gupta wrote:
+> Copy bam nodes from qcom-ipq8064.dtsi and change
+> the reg values to match msm8960.
+> 
+> Co-developed-by: Sam Day <me@samcday.com>
+> Signed-off-by: Sam Day <me@samcday.com>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Rudraksha Gupta <guptarud@gmail.com>
+> ---
 
-> On Fri, Feb 21, 2025 at 09:06:14PM +0100, Jan Engelhardt wrote:
-> > On Friday 2025-02-21 19:34, David Laight wrote:  
-> > >> 
-> > >> Returning aggregates in C++ is often implemented with a secret extra
-> > >> pointer argument passed to the function. The C backend does not
-> > >> perform that kind of transformation automatically. I surmise ABI reasons.  
-> > >
-> > > Have you really looked at the generated code?
-> > > For anything non-trivial if gets truly horrid.
-> > >
-> > > To pass a class by value the compiler has to call the C++ copy-operator to
-> > > generate a deep copy prior to the call, and then call the destructor after
-> > > the function returns - compare against passing a pointer to an existing
-> > > item (and not letting it be written to).  
-> > 
-> > And that is why people generally don't pass aggregates by value,
-> > irrespective of the programming language.  
-> 
-> It's actually sometimes more efficient to pass aggregates by value.
-> Considering std::string for instance,
-> 
-> std::string global;
-> 
-> void setSomething(std::string s)
-> {
-> 	global = std::move(s);
-> }
-> 
-> void foo(int x)
-> {
-> 	std::string s = std::to_string(x);
-> 
-> 	setSomething(std::move(s));
-> }
-> 
-> Passing by value is the most efficient option. The backing storage for
-> the string is allocated once in foo(). If you instead did
-> 
-> std::string global;
-> 
-> void setSomething(const std::string &s)
-> {
-> 	global = s;
-> }
-> 
-> void foo(int x)
-> {
-> 	std::string s = std::to_string(x);
-> 
-> 	setSomething(s);
-> }
-> 
-> then the data would have to be copied when assigned global.
-> 
-> The std::string object itself needs to be copied in the first case of
-> course, but that doesn't require heap allocation. 
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-It is still a copy though.
-And there is nothing to stop (I think even std::string) using ref-counted
-buffers for large malloc()ed strings.
-
-And, even without it, you just need access to the operator that 'moves'
-the actual char data from one std::string to another.
-Since that is all you are relying on.
-You can then pass the std::string themselves by reference.
-
-Although I can't remember if you can assign different allocators to
-different std::string - I'm not really a C++ expert.
-
-> The best solution
-> depends on the type of aggregates you need to pass. It's one of the
-> reasons string handling is messy in C++, due to the need to interoperate
-> with zero-terminated strings, the optimal API convention depends on the
-> expected usage pattern in both callers and callees. std::string_view is
-> no silver bullet :-(
-
-The only thing the zero-termination stops is generating sub-strings by
-reference.
-The bigger problem is that a C function is allowed to advance a pointer
-along the array. So str.c_str() is just &str[0].
-That stops any form of fragmented strings - which might be useful for
-large ones, even though the cost of the accesses may well balloon.
-
-The same is true for std::vector - it has to be implemented using realloc().
-So lots of pushback() of non-trival classes gets very, very slow.
-and it is what people tend to write.
-
-	David
+Konrad
