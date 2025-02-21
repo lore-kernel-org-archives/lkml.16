@@ -1,76 +1,42 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5C31E9B31;
-	Fri, 21 Feb 2025 17:37:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9B124C66F;
+	Fri, 21 Feb 2025 17:38:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740159479; cv=none; b=SqkTxrUimJC90bVmm1fizEz/CzHdoRv8ij6Q+RyL9oreC7u1Ce7DYAkPeqRC0ziCGKU9jzhX7qAzF43EAXn7d6x5COKDO+b+9RL3xdr2lxh3qcKSIpHEG5orTfBySu0BDuJz4AlgB2k0T+Ie9jLA6r+Gi7+v4f9Xl/9LIjZMDy4=
+	t=1740159496; cv=none; b=Lo9Kowpwur8ZILY8eER7qAnqR58EXYyKkh3LaVunG3UOKQcLj0M1nA0EgdZ2E9E/4Vo7MQktdZgn5jfZF9CkxbdeZyLfLJw2efKcHTsJ1Yle6L1/zvC9QyhRjDDEPZ53Iw1eLyEEaWs+jcU2BJEzK6o/qW21rvBgKdWlTz6ILoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740159479; c=relaxed/simple;
-	bh=wIc0LcJDOs1i48hZA97m2pwA+nhyQVyiw2aP2OkNwEc=;
+	s=arc-20240116; t=1740159496; c=relaxed/simple;
+	bh=M0xkvub62ij39qNlsVKwNmNYQRQYXeThmbhJUaA3gZ4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hL7Lv+HEZGCpItVEZy1HTYPqGXmMAc4gr3Nh6W6tcDKA5Tw0nwfEMCAKBA/yN4EoBIPQs/ANBeRMT2efoUK/xijoxvLivkhXbjheL+ufXR0hV72Sx5SyN93KMSjvxAmhyhP+nsUZs+vFNprdVdtn+ouylJ0WmmD9O2GPY5yyG4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hXIN3Z5O; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=MK9vep5ybMk6mwmKAEHPnTGLl1/qPJVvP+bq1g4rMPG2ZYK9GQEYLbmrkpheR+HDk+T430eDcjCaOIGH4mWjeEKFO1CPMddFHgSWdZBMwwIETI74ysV0X4SVv6HGVu7BcRh2vpRaUxEppKyxgx4sJJ9TBRQIQt0/1VR59qbWnWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PyN+lkgy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hXIN3Z5O"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51LB9LDm001350;
-	Fri, 21 Feb 2025 17:37:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=669DWXN4P39AfzDosqBdxQgy1+JPQG
-	AZQsinsyWix10=; b=hXIN3Z5OQhdJBooRXXuRybv72DWfi0kzbRw3tBKXSmyexI
-	l/1r0sxqOHQLqTM7omTY0IpqkOHdxY9kMV1dcyuZHujcnmRXWLS8IcmNiki0JXrn
-	O85p/x2//JuwQPxAFmbt5hz8VGJ1d1dTlkb3hKMKP59lM0gs5fOvtWwOUvJ0lJXs
-	IboyORKLziWRIJBm2//6Kj9re4WKeEszYUzJj74W4WJAWbDFBTkqAhX0rd0Y4IrS
-	A+xmuesKCPEQ5DV7VY7qjS7ITCk0lFKlrYqFIl15gZg2ZPzrgeSlkTm6RdMo52Qs
-	HbEH0SatpHGDzAWJooa67Cuw3rzyegxO3ousRgdg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44xdhaw01a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Feb 2025 17:37:49 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51LHbmpr032575;
-	Fri, 21 Feb 2025 17:37:49 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44xdhaw016-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Feb 2025 17:37:48 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51LFZSUF002348;
-	Fri, 21 Feb 2025 17:37:48 GMT
-Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44w03xh906-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Feb 2025 17:37:48 +0000
-Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
-	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51LHblr828836508
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 21 Feb 2025 17:37:47 GMT
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5379858059;
-	Fri, 21 Feb 2025 17:37:47 +0000 (GMT)
-Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 327565804B;
-	Fri, 21 Feb 2025 17:37:47 +0000 (GMT)
-Received: from localhost (unknown [9.61.179.202])
-	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 21 Feb 2025 17:37:47 +0000 (GMT)
-Date: Fri, 21 Feb 2025 11:37:46 -0600
-From: Nick Child <nnac123@linux.ibm.com>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, horms@kernel.org,
-        nick.child@ibm.com, pmladek@suse.com, rostedt@goodmis.org,
-        john.ogness@linutronix.de, senozhatsky@chromium.org
-Subject: Re: [PATCH net-next v3 1/3] hexdump: Implement macro for converting
- large buffers
-Message-ID: <Z7i56s7jwc_y0cIz@li-4c4c4544-0047-5210-804b-b8c04f323634.ibm.com>
-References: <20250219211102.225324-1-nnac123@linux.ibm.com>
- <20250219211102.225324-2-nnac123@linux.ibm.com>
- <20250220220050.61aa504d@pumpkin>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PyN+lkgy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92C62C4CED6;
+	Fri, 21 Feb 2025 17:38:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740159494;
+	bh=M0xkvub62ij39qNlsVKwNmNYQRQYXeThmbhJUaA3gZ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PyN+lkgyL/OYiGKfYOLeqT940xLokBS34QCmwAtAvt05Ah3VW5gtpQl32nAP1MB4N
+	 YMfV48lpqihiB7bccVxJxpe1q0iH5RouO/g8ZMOnsNXjPO5nEmMGUWDHkRyMmvkNbu
+	 bFd6ChTvr9+Ea4ZO3yUt5fENsnbJopipae/ARnQP5yFszwdM6RE7n/doceWc2wkW8C
+	 0WZkKr/32mkZF9gBUijG5xBzqAGr3gBmFWiZaWlbxbJTqKatMgAB1xIGZpscH9cqWz
+	 cSc+ExPXkxqoMKqZXMRN9eCEhrRnv2Wos8FBz6Z7aim71voZxac4YnjF2GEMUrrIj3
+	 eQKN4an5RpEKA==
+Date: Fri, 21 Feb 2025 09:38:11 -0800
+From: Kees Cook <kees@kernel.org>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: Ronald Monthero <debug.penguin32@gmail.com>, al@alarsen.net,
+	gustavoars@kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, brauner@kernel.org, jack@suse.cz,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] qnx4: fix to avoid panic due to buffer overflow
+Message-ID: <202502210936.8A4F1AB@keescook>
+References: <20231112095353.579855-1-debug.penguin32@gmail.com>
+ <gfnn2owle4abn3bhhrmesubed5asqxdicuzypfrcvchz7wbwyv@bdyn7bkpwwut>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,100 +45,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250220220050.61aa504d@pumpkin>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 5xECC4AGJpgVrmjDK2pr7w7ca8IzgKH_
-X-Proofpoint-ORIG-GUID: UX1jSzdChIvbnXu7-wKNUaqVzIJJz7xz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-21_05,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- mlxlogscore=927 mlxscore=0 bulkscore=0 priorityscore=1501 adultscore=0
- clxscore=1015 suspectscore=0 phishscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502210122
+In-Reply-To: <gfnn2owle4abn3bhhrmesubed5asqxdicuzypfrcvchz7wbwyv@bdyn7bkpwwut>
 
-Hi David,
-
-On Thu, Feb 20, 2025 at 10:00:50PM +0000, David Laight wrote:
-> On Wed, 19 Feb 2025 15:11:00 -0600
-> Nick Child <nnac123@linux.ibm.com> wrote:
-> 
-> > ---
-> >  include/linux/printk.h | 20 ++++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
+On Fri, Feb 21, 2025 at 03:51:23PM +0100, Mateusz Guzik wrote:
+> On Sun, Nov 12, 2023 at 07:53:53PM +1000, Ronald Monthero wrote:
+> > qnx4 dir name length can vary to be of maximum size
+> > QNX4_NAME_MAX or QNX4_SHORT_NAME_MAX depending on whether
+> > 'link info' entry is stored and the status byte is set.
+> > So to avoid buffer overflow check di_fname length
+> > fetched from (struct qnx4_inode_entry *)
+> > before use in strlen to avoid buffer overflow.
 > > 
-> > diff --git a/include/linux/printk.h b/include/linux/printk.h
-> > index 4217a9f412b2..12e51b1cdca5 100644
-> > --- a/include/linux/printk.h
-> > +++ b/include/linux/printk.h
-> > +				   buf, len) \
-> > +	for ((i) = 0;							\
-> > +	     (i) < (len) &&						\
-> > +	     hex_dump_to_buffer((unsigned char *)(buf) + (i),		\
-> > +				(len) - (i), (rowsize), (groupsize),	\
-> > +				(linebuf), (linebuflen), false);	\
 > 
-> You can avoid the compiler actually checking the function result
-> it you try a bit harder - see below.
-> 
+> Inspired by removals of reiserfs and sysv I decided to try to whack
+> qnx4.
 
-This was an extra precaution against infinite loops, breaking when
-hex_dump_to_buffer returns 0 when len is 0. Technically this won't happen
-since we check i < len first, and increment i by at least 16 (though
-your proposal removes the latter assertion). 
+I have no strong opinion here beyond just pointing out that it appears
+that the qnx4 fs is still extant in the world. QNX itself is still alive
+and well and using this filesystem based on what I can find.
 
-My other thought was to check for error case by checking if
-the return value was > linebuflen. But I actually prefer the behavior
-of continuing with the truncated result.
+-Kees
 
-I think I prefer it how it is rather than completely ignoring it.
-Open to other opinons though.
-
-> > +	     (i) += (rowsize) == 32 ? 32 : 16				\
-> > +	    )
-> 
-> If you are doing this as a #define you really shouldn't evaluate the
-> arguments more than once.
-> I'd also not add more code that relies on the perverse and pointless
-> code that enforces rowsize of 16 or 32.
-> Maybe document it, but there is no point changing the stride without
-> doing the equivalent change to the rowsize passed to hex_dump_to_buffer.
-> 
-
-The equivalent conditonal exists in hex_dump_to_buffer so doing it
-again seemed unnecessary. I understand your recent patch [1] is trying
-to replace the rowsize is 16 or 32 rule with rowsize is a power of 2
-and multiple of groupsize. I suppose the most straightforward and
-flexible thing the for_each loop can do is to just assume rowsize is
-valid.
-
-> You could do:
-> #define for_each_line_in_hex_dump(buf_offset, rowsize, linebuf, linebuflen, groupsize, buf, len, ascii) \
-> for (unsigned int _offset = 0, _rowsize = (rowsize), _len = (len); \
-> 	((offset) = _offset) < _len && (hex_dump_to_buffer((const char *)(buf) + _offset, _len - _offset, \
-> 		_rowsize, (groupsize), (linebuf), (linebuflen), (ascii)), 1); \
-> 	_offset += _rowsize )
-> 
-> (Assuming I've not mistyped it.)
-> 
-
-Trying to understand the reasoning for declaring new tmp variables;
-Is this to prevent the values from changing in the body of the loop?
-I tried to avoid declaring new vars in this design because I thought it
-would recive pushback due to possible name collision and variable
-declaration inside for loop initializer.
-I suppose both implementations come with tradeoffs.
-
-> As soon as 'ascii' gets replaced by 'flags' you'll need to pass it through.
-> 
-
-Yes, if hex_dump_to_buffer becomes a wrapper around a new function
-(which accepts flag arg), I think there is an opportunity for a lot
-of confusion to clear up. Old behaviour of hex_dump_to_buffer will be
-respected but the underlying function will be more flexible.
-
-Appreciate the review!
-- Nick
-
-[1] - https://lore.kernel.org/lkml/20250216201901.161781-1-david.laight.linux@gmail.com/
+-- 
+Kees Cook
