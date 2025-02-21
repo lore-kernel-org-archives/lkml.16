@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D9224C683
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 17:07:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8B824C694
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 17:07:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740157623; cv=none; b=LI2CInXbEHhXyCWMBKf1YcnJl748HAS7MO0+Oo4e9w3oKi17HRyd6WgDktySF55i+Jt0bIIYuS6JbUzCAOXtxVhp2m6OOSW3RTwav1DeBGn2upZVPIIRsKzLR4wywN3A1wo9EVCEotX0dTL/dd5S6ACJPEHeyGNRR1Y8rMbuHzo=
+	t=1740157630; cv=none; b=V3BqaVE5IlF90ooXytUINT14tY7ukMLCo1DYijAFMoWEG7oCl+4qj99NgCJ1jiKhzbjYgfu/oYb7wgmPDOvcHbeWpW0qBWBHx+AwwyBzTmm8PM+Z5wLRBstyJBi7n0s4kKd8gtVzjC76DL3gy9559atm5mCmElZshvhPsVbF/IQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740157623; c=relaxed/simple;
-	bh=R2pHPtQbZxMeE8vsZFIHnNQdPLF23xfHO+AwC7CTpog=;
+	s=arc-20240116; t=1740157630; c=relaxed/simple;
+	bh=kk51s7J3anVkFfT7F/aodbxST59c5FZiYH2rR7cImhk=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EYDZXUMp7eijSL9k5O5jgLwzMD5UZoegZyFBRGcG8ei23/iADrVyEnH/XaD0RbzdOTqKMr+uBFz9sAJVryQj3COo74EGgIdWCDFWeFT5OjyVxcfmZtGFRcldwFLv2DPb4gKI1C+r0kSM8lUUTpbtMXzPTD7jgP0l9GaMoehwak0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LN9EzxvJ; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=RZkogCcWmvGPQz50NxjDm4SI+f7eiQwygUrbwO/8CKv6M2Uwl8LL4L+aNCauKLWXB6h89mSZd11fiPMs4fSzB655DA9xM841P7uUGfa9AvtCnxEuR1onrrQz2nqYyaA8G1b4KeT7OCG4K0/m/O50EqRSvsbRygmUNXBNfLOLYQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DbuGiDjU; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LN9EzxvJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DbuGiDjU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740157620;
+	s=mimecast20190719; t=1740157627;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=yKpHdC3+C0gWAiFeQvQHPEenqVM4VXEfdc+nfLPbzg4=;
-	b=LN9EzxvJPQ9ROJ/S+6Iul6/pQADYPSkfhtU4eny38i78gJyvpHsXhPNI15piDWt//Bf9gy
-	hCWNHmm1EJgmtvaIHs9aw+vocawmVsHFz06ufByuMyQ1Nm4Ts8fqhufxxU4wNf3WYhCSpG
-	al8sz87ToczgC1vXNxfklKlbxlRQqg8=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=5VKeHk03WHwQgaZaTfgIKUzZliixkLtjHpWevmfgD1Q=;
+	b=DbuGiDjUkB0j5jrudUc1ayFyzUiK73zHM7+lcYGfnmL+RdrHXP/qR3dvwsLu2tnheC4iZT
+	eSfHqQDl+Y/wFp5B13pzJ2Ebr9Z1J8Gc4jtjgYJdAcqOSoLDhvyrxn0gMYKdigF2kQfe9v
+	7e6Xxhq16hMG7X+aK2IRdsH/oW9VJ0c=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-654-qeDPwVdyNaiNa6U3es7YEw-1; Fri,
- 21 Feb 2025 12:06:53 -0500
-X-MC-Unique: qeDPwVdyNaiNa6U3es7YEw-1
-X-Mimecast-MFC-AGG-ID: qeDPwVdyNaiNa6U3es7YEw_1740157612
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-479-P476CK1tOI2mKZv3PlzE8Q-1; Fri,
+ 21 Feb 2025 12:07:03 -0500
+X-MC-Unique: P476CK1tOI2mKZv3PlzE8Q-1
+X-Mimecast-MFC-AGG-ID: P476CK1tOI2mKZv3PlzE8Q_1740157622
 Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E7C9C190F9E9;
-	Fri, 21 Feb 2025 17:06:51 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5BE6618D95F3;
+	Fri, 21 Feb 2025 17:07:02 +0000 (UTC)
 Received: from eperezma-thinkpadt480s.rmtes.csb (unknown [10.44.32.170])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DB4711800941;
-	Fri, 21 Feb 2025 17:06:46 +0000 (UTC)
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id D9AD51800358;
+	Fri, 21 Feb 2025 17:06:57 +0000 (UTC)
 From: =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>
 To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
 	Stefan Hajnoczi <stefanha@redhat.com>,
@@ -55,9 +55,9 @@ To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
 	Miklos Szeredi <miklos@szeredi.hu>,
 	mst@redhat.com,
 	Jason Wang <jasowang@redhat.com>
-Subject: [RFC v2 3/5] virtio_ring: add api for premapped out and in buffer chain
-Date: Fri, 21 Feb 2025 18:06:24 +0100
-Message-ID: <20250221170626.261687-4-eperezma@redhat.com>
+Subject: [RFC v2 5/5] virtiofs: Disable notifications more aggresively
+Date: Fri, 21 Feb 2025 18:06:26 +0100
+Message-ID: <20250221170626.261687-6-eperezma@redhat.com>
 In-Reply-To: <20250221170626.261687-1-eperezma@redhat.com>
 References: <20250221170626.261687-1-eperezma@redhat.com>
 Precedence: bulk
@@ -70,80 +70,30 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Commit 3ef66af31fea ("virtio_ring: introduce add api for premapped")
-add functions to add premapped input or output chains to a virtqueue.
-Add a generic one that supports out+in buffers chains.
+Disable notifications right before scheduling, instead of waiting until
+the work is running.
+
+After applying this patch, fio read test goes from 1191MiB/s to
+1263.14Mib/s
 
 Signed-off-by: Eugenio Pérez <eperezma@redhat.com>
 ---
- drivers/virtio/virtio_ring.c | 35 +++++++++++++++++++++++++++++++++++
- include/linux/virtio.h       |  7 +++++++
- 2 files changed, 42 insertions(+)
+ fs/fuse/virtio_fs.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index fdd2d2b07b5a..7ef1f37e025f 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -2318,6 +2318,41 @@ int virtqueue_add_sgs(struct virtqueue *_vq,
+diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
+index e19c78f2480e..3d6981c0f3c3 100644
+--- a/fs/fuse/virtio_fs.c
++++ b/fs/fuse/virtio_fs.c
+@@ -915,6 +915,8 @@ static void virtio_fs_vq_done(struct virtqueue *vq)
+ 
+ 	dev_dbg(&vq->vdev->dev, "%s %s\n", __func__, fsvq->name);
+ 
++	/* Shceduled, don't send more notifications */
++	virtqueue_disable_cb(vq);
+ 	schedule_work(&fsvq->done_work);
  }
- EXPORT_SYMBOL_GPL(virtqueue_add_sgs);
  
-+/**
-+ * virtqueue_add_sgs_premapped - expose buffers to other end
-+ * @_vq: the struct virtqueue we're talking about.
-+ * @sgs: array of terminated scatterlists.
-+ * @out_sgs: the number of scatterlists readable by other side
-+ * @in_sgs: the number of scatterlists which are writable (after readable ones)
-+ * @data: the token identifying the buffer.
-+ * @gfp: how to do memory allocations (if necessary).
-+ *
-+ * Caller must ensure we don't call this with other virtqueue operations
-+ * at the same time (except where noted).
-+ *
-+ * Returns zero or a negative error (ie. ENOSPC, ENOMEM, EIO).
-+ */
-+int virtqueue_add_sgs_premapped(struct virtqueue *_vq,
-+				struct scatterlist *sgs[],
-+				unsigned int out_sgs,
-+				unsigned int in_sgs,
-+				void *data,
-+				gfp_t gfp)
-+{
-+	unsigned int i, total_sg = 0;
-+
-+	/* Count them first. */
-+	for (i = 0; i < out_sgs + in_sgs; i++) {
-+		struct scatterlist *sg;
-+
-+		for (sg = sgs[i]; sg; sg = sg_next(sg))
-+			total_sg++;
-+	}
-+	return virtqueue_add(_vq, sgs, total_sg, out_sgs, in_sgs,
-+			     data, NULL, true, gfp);
-+}
-+EXPORT_SYMBOL_GPL(virtqueue_add_sgs_premapped);
-+
- /**
-  * virtqueue_add_outbuf - expose output buffers to other end
-  * @vq: the struct virtqueue we're talking about.
-diff --git a/include/linux/virtio.h b/include/linux/virtio.h
-index 4d16c13d0df5..7f61f66ddaa2 100644
---- a/include/linux/virtio.h
-+++ b/include/linux/virtio.h
-@@ -74,6 +74,13 @@ int virtqueue_add_sgs(struct virtqueue *vq,
- 		      void *data,
- 		      gfp_t gfp);
- 
-+int virtqueue_add_sgs_premapped(struct virtqueue *vq,
-+				struct scatterlist *sgs[],
-+				unsigned int out_sgs,
-+				unsigned int in_sgs,
-+				void *data,
-+				gfp_t gfp);
-+
- struct device *virtqueue_dma_dev(struct virtqueue *vq);
- 
- bool virtqueue_kick(struct virtqueue *vq);
 -- 
 2.48.1
 
