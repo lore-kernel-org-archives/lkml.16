@@ -1,109 +1,167 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2A541CD1E1
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 04:43:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F761D8DFB
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 04:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740113003; cv=none; b=ahhavdcV1AfXfYB5ASyLtLO4R0dS5kBiZiiy/hK9jCxkQnjPVljCvBsdwffyNZ6fGZxwppMCVEd7V7WM/ufMGrNPhyrVN6t6tmB85hH1xlh+pdBHC9TDuODs5+KBX4lREIecngCf1Skc1MXv9Ty4LYkUsbcVixn6tEKYXyGWyfo=
+	t=1740113387; cv=none; b=lNVJXOhXirOTk6o6p2TtsFrOVVFVPhfDanhFAd5+3hlA7mJ/08y27plcAb7DAl8Q9noBT1XtfPML93CJc0y+z+cFs9okwr66/aCB8jASfHUAlCV43qNUNA/RDZlEOgr7+G5Zni7t2fK05czNReWLeqH/tNxu74C+ezjowoG3sKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740113003; c=relaxed/simple;
-	bh=D2OKJrx1OW0VXw8kaAyRpIYZbuy2DmVlwH6ECyJpnJM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=N7ai37Md5zeRBEC0ADQO6oG+p/w707LwbMuigFGg0JJhZjAIgHQGnjxIzzfi3WrfUeBzs/OSfCj3sAJ3DuCqWNMM36CNye8L/PzdNBKSanHL2gCbAhRFh7Aj/Z8LxNvoHfPS2YGplOC7uLPFXvRGlh7Mltze/g+hRAkR5uPY1lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A1DD271B;
-	Thu, 20 Feb 2025 20:43:39 -0800 (PST)
-Received: from a077893.blr.arm.com (a077893.blr.arm.com [10.162.40.21])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DCE923F6A8;
-	Thu, 20 Feb 2025 20:43:16 -0800 (PST)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: arm-kernel@lists.infradead.org
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH V2 8/8] arm64/mm: Drop PXD_TABLE_BIT
-Date: Fri, 21 Feb 2025 10:12:27 +0530
-Message-Id: <20250221044227.1145393-9-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250221044227.1145393-1-anshuman.khandual@arm.com>
-References: <20250221044227.1145393-1-anshuman.khandual@arm.com>
+	s=arc-20240116; t=1740113387; c=relaxed/simple;
+	bh=fn6SPHX/tcnnve4tTFK8cDxojPBkNX1AWRBMvSARYew=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QPHQVZLF5IUYLWKjEJMJPHy72lzTNn/RXDbM8vY9CqfccXZ345ZyB4oGcmRavaZ3IUvCuOkjuhQvmheV0JX6M/Z3gnkLwgCo8P8FR3CaE4aVNDkMSYG36n+PUKy6+tp4V279Ywap8WtC5t62zf3c8WqDa91Xe8WAgz9e8UZFWck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=M4BXBTjo; arc=none smtp.client-ip=95.215.58.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="M4BXBTjo"
+Date: Fri, 21 Feb 2025 04:49:33 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740113383;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9MC9KUOR9F3fzdshxIn31GmmTBR4r7x740xG42mMsfI=;
+	b=M4BXBTjoV0yly7UQeNRdlaQjH5INvV4HEbKP9CMh2iWrVB2zc+eYEeyCmYONp//0pw/FXE
+	4gyHJw2UQrO8TTaV70ymx5bNklWGCY6AqeFclYkq2YVDXS0pvLsohRKJHsjn2E5LPrl5Rs
+	F4XdXCNzW6NllbD6ELT5iQ1CLIz4b3U=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Parav Pandit <parav@mellanox.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	Maher Sanalla <msanalla@nvidia.com>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] RDMA/core: fix a NULL-pointer dereference in
+ hw_stat_device_show()
+Message-ID: <Z7gF3UC7PvVxeRcq@google.com>
+References: <20250221020555.4090014-1-roman.gushchin@linux.dev>
+ <CY8PR12MB71958C150D7604EAD4463F4ADCC72@CY8PR12MB7195.namprd12.prod.outlook.com>
+ <Z7gARTF0mpbOj7gN@google.com>
+ <CY8PR12MB7195F3ACB8CFA05C4B8D26D3DCC72@CY8PR12MB7195.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CY8PR12MB7195F3ACB8CFA05C4B8D26D3DCC72@CY8PR12MB7195.namprd12.prod.outlook.com>
+X-Migadu-Flow: FLOW_OUT
 
-Drop all PXD_TABLE_BIT macros as they are not used any more.
+On Fri, Feb 21, 2025 at 04:34:25AM +0000, Parav Pandit wrote:
+> 
+> > From: Roman Gushchin <roman.gushchin@linux.dev>
+> > Sent: Friday, February 21, 2025 9:56 AM
+> > 
+> > On Fri, Feb 21, 2025 at 03:14:16AM +0000, Parav Pandit wrote:
+> > >
+> > > > From: Roman Gushchin <roman.gushchin@linux.dev>
+> > > > Sent: Friday, February 21, 2025 7:36 AM
+> > > >
+> > > > Commit 54747231150f ("RDMA: Introduce and use
+> > > > rdma_device_to_ibdev()") introduced rdma_device_to_ibdev() helper
+> > > > which has to be used to obtain an ib_device pointer from a device pointer.
+> > > >
+> > >
+> > > > hw_stat_device_show() and hw_stat_device_store() were missed.
+> > > >
+> > > > It causes a NULL pointer dereference panic on an attempt to read hw
+> > > > counters from a namespace, when the device structure is not embedded
+> > > > into the ib_device structure.
+> > > Do you mean net namespace other than default init_net?
+> > > Assuming the answer is yes, some question below.
+> > >
+> > > > In this case casting the device pointer into the ib_device pointer
+> > > > using container_of() is wrong.
+> > > > Instead, rdma_device_to_ibdev() should be used, which uses the back-
+> > > > reference (container_of(device, struct ib_core_device, dev))->owner.
+> > > >
+> > > > [42021.807566] BUG: kernel NULL pointer dereference, address:
+> > > > 0000000000000028 [42021.814463] #PF: supervisor read access in
+> > > > kernel mode [42021.819549] #PF: error_code(0x0000) - not-present
+> > > > page [42021.824636] PGD 0 P4D 0 [42021.827145] Oops: 0000 [#1] SMP
+> > > > PTI [42021.830598] CPU: 82 PID: 2843922 Comm: switchto-defaul Kdump:
+> > loaded
+> > > > Tainted: G S      W I        XXX
+> > > > [42021.841697] Hardware name: XXX
+> > > > [42021.849619] RIP: 0010:hw_stat_device_show+0x1e/0x40 [ib_core]
+> > > > [42021.855362] Code: 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa
+> > > > 0f 1f
+> > > > 44 00 00 49 89 d0 4c 8b 5e 20 48 8b 8f b8 04 00 00 48 81 c7 f0 fa ff
+> > > > ff <48> 8b
+> > > > 41 28 48 29 ce 48 83 c6 d0 48 c1 ee 04 69 d6 ab aa aa aa 48
+> > > > [42021.873931]
+> > > > RSP: 0018:ffff97fe90f03da0 EFLAGS: 00010287 [42021.879108] RAX:
+> > > > ffff9406988a8c60 RBX: ffff940e1072d438 RCX: 0000000000000000
+> > > > [42021.886169] RDX: ffff94085f1aa000 RSI: ffff93c6cbbdbcb0 RDI:
+> > > > ffff940c7517aef0 [42021.893230] RBP: ffff97fe90f03e70 R08:
+> > > > ffff94085f1aa000 R09: 0000000000000000 [42021.900294] R10:
+> > > > ffff94085f1aa000 R11: ffffffffc0775680 R12: ffffffff87ca2530
+> > > > [42021.907355]
+> > > > R13: ffff940651602840 R14: ffff93c6cbbdbcb0 R15: ffff94085f1aa000
+> > > > [42021.914418] FS:  00007fda1a3b9700(0000)
+> > GS:ffff94453fb80000(0000)
+> > > > knlGS:0000000000000000 [42021.922423] CS:  0010 DS: 0000 ES: 0000
+> > CR0:
+> > > > 0000000080050033 [42021.928130] CR2: 0000000000000028 CR3:
+> > > > 00000042dcfb8003 CR4: 00000000003726f0 [42021.935194] DR0:
+> > > > 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > > [42021.942257] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
+> > > > 0000000000000400 [42021.949324] Call Trace:
+> > > > [42021.951756]  <TASK>
+> > > > [42021.953842]  [<ffffffff86c58674>] ? show_regs+0x64/0x70
+> > > > [42021.959030] [<ffffffff86c58468>] ? __die+0x78/0xc0 [42021.963874]
+> > [<ffffffff86c9ef75>] ?
+> > > > page_fault_oops+0x2b5/0x3b0 [42021.969749]  [<ffffffff87674b92>] ?
+> > > > exc_page_fault+0x1a2/0x3c0 [42021.975549]  [<ffffffff87801326>] ?
+> > > > asm_exc_page_fault+0x26/0x30 [42021.981517]  [<ffffffffc0775680>] ?
+> > > > __pfx_show_hw_stats+0x10/0x10 [ib_core] [42021.988482]
+> > > > [<ffffffffc077564e>] ? hw_stat_device_show+0x1e/0x40 [ib_core]
+> > > > [42021.995438]  [<ffffffff86ac7f8e>] dev_attr_show+0x1e/0x50
+> > > > [42022.000803]  [<ffffffff86a3eeb1>] sysfs_kf_seq_show+0x81/0xe0
+> > > > [42022.006508]  [<ffffffff86a11134>] seq_read_iter+0xf4/0x410
+> > > > [42022.011954]  [<ffffffff869f4b2e>] vfs_read+0x16e/0x2f0
+> > > > [42022.017058] [<ffffffff869f50ee>] ksys_read+0x6e/0xe0
+> > > > [42022.022073]  [<ffffffff8766f1ca>]
+> > > > do_syscall_64+0x6a/0xa0 [42022.027441]  [<ffffffff8780013b>]
+> > > > entry_SYSCALL_64_after_hwframe+0x78/0xe2
+> > > >
+> > > > Fixes: 54747231150f ("RDMA: Introduce and use
+> > > > rdma_device_to_ibdev()")
+> > > Commit eb15c78b05bd9 eliminated hw_counters sysfs directory into the
+> > net namespace.
+> > > I don't see it created in any other net ns other than init_net with kernel
+> > 6.12+.
+> > >
+> > > I am puzzled. Can you please explain/share the reproduction steps for
+> > generating above call trace?
+> > 
+> > Hi Parav!
+> > 
+> > This bug was spotted in the production on a small number of machines. They
+> > were running a 6.6-based kernel (with no changes around this code). I don't
+> > have a reproducer (and there is no simple way for me to reproduce the
+> > problem), but I've several core dumps and from inspecting them it was clear
+> > that a ib_device pointer obtained in hw_stat_device_show() was wrong. At
+> > the same time the ib_pointer obtained in the way rdma_device_to_ibdev()
+> > works was correct.
+> > 
+> I just tried reproducing now on 6.12+ kernel manually.
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- arch/arm64/include/asm/pgtable-hwdef.h | 5 -----
- 1 file changed, 5 deletions(-)
+Can you, please, share your steps? Or try the 6.6 kernel?
 
-diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
-index a9136cc551cc..d2a13c329702 100644
---- a/arch/arm64/include/asm/pgtable-hwdef.h
-+++ b/arch/arm64/include/asm/pgtable-hwdef.h
-@@ -97,7 +97,6 @@
-  * Level -1 descriptor (PGD).
-  */
- #define PGD_TYPE_TABLE		(_AT(pgdval_t, 3) << 0)
--#define PGD_TABLE_BIT		(_AT(pgdval_t, 1) << 1)
- #define PGD_TYPE_MASK		(_AT(pgdval_t, 3) << 0)
- #define PGD_TABLE_AF		(_AT(pgdval_t, 1) << 10)	/* Ignored if no FEAT_HAFT */
- #define PGD_TABLE_PXN		(_AT(pgdval_t, 1) << 59)
-@@ -107,7 +106,6 @@
-  * Level 0 descriptor (P4D).
-  */
- #define P4D_TYPE_TABLE		(_AT(p4dval_t, 3) << 0)
--#define P4D_TABLE_BIT		(_AT(p4dval_t, 1) << 1)
- #define P4D_TYPE_MASK		(_AT(p4dval_t, 3) << 0)
- #define P4D_TYPE_SECT		(_AT(p4dval_t, 1) << 0)
- #define P4D_SECT_RDONLY		(_AT(p4dval_t, 1) << 7)		/* AP[2] */
-@@ -119,7 +117,6 @@
-  * Level 1 descriptor (PUD).
-  */
- #define PUD_TYPE_TABLE		(_AT(pudval_t, 3) << 0)
--#define PUD_TABLE_BIT		(_AT(pudval_t, 1) << 1)
- #define PUD_TYPE_MASK		(_AT(pudval_t, 3) << 0)
- #define PUD_TYPE_SECT		(_AT(pudval_t, 1) << 0)
- #define PUD_SECT_RDONLY		(_AT(pudval_t, 1) << 7)		/* AP[2] */
-@@ -133,7 +130,6 @@
- #define PMD_TYPE_MASK		(_AT(pmdval_t, 3) << 0)
- #define PMD_TYPE_TABLE		(_AT(pmdval_t, 3) << 0)
- #define PMD_TYPE_SECT		(_AT(pmdval_t, 1) << 0)
--#define PMD_TABLE_BIT		(_AT(pmdval_t, 1) << 1)
- #define PMD_TABLE_AF		(_AT(pmdval_t, 1) << 10)	/* Ignored if no FEAT_HAFT */
- 
- /*
-@@ -162,7 +158,6 @@
- #define PTE_VALID		(_AT(pteval_t, 1) << 0)
- #define PTE_TYPE_MASK		(_AT(pteval_t, 3) << 0)
- #define PTE_TYPE_PAGE		(_AT(pteval_t, 3) << 0)
--#define PTE_TABLE_BIT		(_AT(pteval_t, 1) << 1)
- #define PTE_USER		(_AT(pteval_t, 1) << 6)		/* AP[1] */
- #define PTE_RDONLY		(_AT(pteval_t, 1) << 7)		/* AP[2] */
- #define PTE_SHARED		(_AT(pteval_t, 3) << 8)		/* SH[1:0], inner shareable */
--- 
-2.25.1
+> It appears impossible to reach flow to me as intended in the commit I listed.
+> And the call trace shows opposite.
+> So please gather the information from the production system on reproducing it or configuration wise.
+> We still need to block the hw counters from net ns and will have to generate different fix if it was reached somehow.
 
+I'll try, but it'll take a lot of time - I'm very limited in terms of what I can
+do because it's a production workload.
+
+So if you have any suggestions on where to look at or what to try, I'll
+appreciate it.
+
+Thanks!
