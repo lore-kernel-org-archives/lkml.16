@@ -1,129 +1,99 @@
-Received: from smtp-bc08.mail.infomaniak.ch (smtp-bc08.mail.infomaniak.ch [45.157.188.8])
+Received: from mail102.out.titan.email (mail102.out.titan.email [52.45.239.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99CD7205AC0
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 10:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAECC20102C
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 10:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.45.239.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740132889; cv=none; b=a7nuAUyDscEeZiTGwxP52/ymKDGBDBcLQVaw4OvdIdgn0EkZhI2lLiGeLmB3X8lwHdnOPn3N+SzU9g4RWbn+H2cyAjJqr9cWrk0258cZt+VqehjmWJ95rRTrpnCc/J88FNWA5whDp+J3Ca8nfsXEKAv7ar+Ts/7i72JOx5LVhJA=
+	t=1740132908; cv=none; b=QvZMBbQoLoTaZrpijYFwMdURgUhXtwHNNzuJBYINa4iTiOtlX/nu1XjXq9Z1nZHOmjIK/yIQZ2+UycJaw26GKng93vVDYto81KLQ0mJRIsy7s3ZKKFV2YFybcIsvoaBLkIVkqRLCVgbrInZCfS9UBYDquHT64GRSDvu53ESGOc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740132889; c=relaxed/simple;
-	bh=s6kvTlBWs3QTc69KNC5Ob0gAjwaprTQipz5QovyifGg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Asb82vXlayn7Zw3QgHykGI1P31nskaJ3ldlUSN8wUsfBajMjig56UxyuW2R874bIf3T720FgfhcEIc7xkM7m4bAQOjeIdLqf+5V5cLVFm4/3dbErNH+uAhI8fdr9j3OFWqq92SU6cdDIX/BLZwDhQGkDWaTlKFLcznP3HuI2t8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=45.157.188.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
-Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4YzmFr4N0wz4Fy;
-	Fri, 21 Feb 2025 11:14:40 +0100 (CET)
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4YzmFr0MTFzJSZ;
-	Fri, 21 Feb 2025 11:14:40 +0100 (CET)
-From: Quentin Schulz <foss+kernel@0leil.net>
-Date: Fri, 21 Feb 2025 11:14:26 +0100
-Subject: [PATCH v2 1/2] dt-bindings: gpio: nxp,pcf8575: add reset GPIO
+	s=arc-20240116; t=1740132908; c=relaxed/simple;
+	bh=OCNBLGjhq7P3rCWeCNzmUkTv7vySlkefy44pB4kpVfE=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=se4ZnK8XnfMHXCJGEsPCEgEsDhFSyrALRb1pnGTlqbxz5eD/2gBN7yx28yQ4zd530RLNUAtAa8S38sDLE8VRbkXF/6Th3jea2/YA1ocdme1CsYCigRN5rV4i2emBg5Iv+1bvl2y38MToyTUZLdHnRWlGMn6Wb8M9utn6hEBBfaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li; spf=pass smtp.mailfrom=coly.li; dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b=kO6MvcX0; arc=none smtp.client-ip=52.45.239.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=coly.li
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=coly.li
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=t12smtp-sign004.email header.i=@t12smtp-sign004.email header.b="kO6MvcX0"
+DKIM-Signature: a=rsa-sha256; bh=iV8YCNjejtbcc05TVav5ewkWbUeHHVZvkhZrrE0KVD8=;
+	c=relaxed/relaxed; d=t12smtp-sign004.email;
+	h=subject:in-reply-to:cc:to:mime-version:message-id:references:date:from:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
+	q=dns/txt; s=titan1; t=1740132387; v=1;
+	b=kO6MvcX00hlwOk1XFictjJn6d+nmp42kR7UxdTamUW3Wqg15Up8dUUTaj1RpICWIWKzj96BL
+	OJZYGeYNZugaLRaXHYv4tVCClHdrWrmULeBtKzqRz9mpWhvwFBVakOvWWehe8/V5Fk15pUQR3Cs
+	Q2NTgH/oB1RRch7U/E3tGrKc=
+Received: from smtpclient.apple (unknown [141.11.218.23])
+	by smtp-out.flockmail.com (Postfix) with ESMTPA id CA0376023D;
+	Fri, 21 Feb 2025 10:06:19 +0000 (UTC)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250221-pca976x-reset-driver-v2-1-a2bcb9fdc256@cherry.de>
-References: <20250221-pca976x-reset-driver-v2-0-a2bcb9fdc256@cherry.de>
-In-Reply-To: <20250221-pca976x-reset-driver-v2-0-a2bcb9fdc256@cherry.de>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Quentin Schulz <quentin.schulz@cherry.de>
-X-Mailer: b4 0.14.2
-X-Infomaniak-Routing: alpha
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH 02/12] badblocks: factor out a helper try_adjacent_combine
+Feedback-ID: :i@coly.li:coly.li:flockmailId
+From: Coly Li <i@coly.li>
+In-Reply-To: <i5vkxswklce2wtn3aolrd6qrtlib3obtlzgmdix22afcurp7lz@jkxbieqcitx4>
+Date: Fri, 21 Feb 2025 18:06:07 +0800
+Cc: axboe@kernel.dk,
+ song@kernel.org,
+ colyli@kernel.org,
+ yukuai3@huawei.com,
+ dan.j.williams@intel.com,
+ vishal.l.verma@intel.com,
+ dave.jiang@intel.com,
+ ira.weiny@intel.com,
+ dlemoal@kernel.org,
+ yanjun.zhu@linux.dev,
+ kch@nvidia.com,
+ Hannes Reinecke <hare@suse.de>,
+ zhengqixing@huawei.com,
+ john.g.garry@oracle.com,
+ geliang@kernel.org,
+ xni@redhat.com,
+ colyli@suse.de,
+ linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-raid@vger.kernel.org,
+ nvdimm@lists.linux.dev,
+ yi.zhang@huawei.com,
+ yangerkun@huawei.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0C74DE43-1DE1-4B35-8EDB-A6A088B522F8@coly.li>
+References: <20250221081109.734170-1-zhengqixing@huaweicloud.com>
+ <20250221081109.734170-3-zhengqixing@huaweicloud.com>
+ <i5vkxswklce2wtn3aolrd6qrtlib3obtlzgmdix22afcurp7lz@jkxbieqcitx4>
+To: Zheng Qixing <zhengqixing@huaweicloud.com>
+X-Mailer: Apple Mail (2.3826.400.131.1.6)
+X-F-Verdict: SPFVALID
+X-Titan-Src-Out: 1740132387684621551.7782.6706041692806606252@prod-use1-smtp-out1001.
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.4 cv=bq22BFai c=1 sm=1 tr=0 ts=67b85023
+	a=USBFZE4A2Ag4MGBBroF6Xg==:117 a=USBFZE4A2Ag4MGBBroF6Xg==:17
+	a=IkcTkHD0fZMA:10 a=CEWIc4RMnpUA:10 a=i0EeH86SAAAA:8
+	a=sdqv7Ts4B3WvE9CFP6AA:9 a=QEXdDO2ut3YA:10
 
-From: Quentin Schulz <quentin.schulz@cherry.de>
 
-A few of the I2C GPIO expander chips supported by this binding have a
-RESETN pin to be able to reset the chip. The chip is held in reset while
-the pin is low, therefore the polarity of reset-gpios is expected to
-reflect that, i.e. a GPIO_ACTIVE_HIGH means the GPIO will be driven high
-for reset and then driven low, GPIO_ACTIVE_LOW means the GPIO will be
-driven low for reset and then driven high. If a GPIO is directly routed
-to RESETN pin on the IC without any inverter, GPIO_ACTIVE_LOW is thus
-expected.
 
-Out of the supported chips, only PCA9670, PCA9671, PCA9672 and PCA9673
-show a RESETN pin in their datasheets. They all share the same reset
-timings, that is 4+us reset pulse[0] and 100+us reset time[0].
+> 2025=E5=B9=B42=E6=9C=8821=E6=97=A5 18:04=EF=BC=8CColy Li <i@coly.li> =
+=E5=86=99=E9=81=93=EF=BC=9A
+>=20
+> On Fri, Feb 21, 2025 at 04:10:59PM +0800, Zheng Qixing wrote:
+>> From: Li Nan <linan122@huawei.com>
+>>=20
+>> Factor out try_adjacent_combine(), and it will be used in the later =
+patch.
+>>=20
+>=20
+> Which patch is try_adjacent_combine() used in? I don't see that at a =
+quick glance.
 
-When performing a reset, "The PCA9670 registers and I2C-bus state
-machine will be held in their default state until the RESET input is
-once again HIGH."[1] meaning we now know the state of each line
-controlled by the GPIO expander. Therefore, setting lines-initial-states
-and reset-gpios both does not make sense and their presence is XOR'ed.
 
-[0] https://www.nxp.com/docs/en/data-sheet/PCA9670.pdf Fig 22.
-[1] https://www.nxp.com/docs/en/data-sheet/PCA9670.pdf 8.5
+OK, I see it is in ack_all_badblocks().  Ignore the above question.
 
-Tested-by: Heiko Stuebner <heiko@sntech.de> # exclusion logic
-Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
----
- .../devicetree/bindings/gpio/nxp,pcf8575.yaml      | 38 ++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml b/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
-index 3718103e966a13e1d77f73335ff73c18a3199469..633ac5cfa04a10bcbb748b6580938cddae9e5596 100644
---- a/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
-+++ b/Documentation/devicetree/bindings/gpio/nxp,pcf8575.yaml
-@@ -73,6 +73,44 @@ properties:
- 
-   wakeup-source: true
- 
-+  reset-gpios:
-+    maxItems: 1
-+    description:
-+      GPIO controlling the (reset active LOW) RESET# pin.
-+
-+      The active polarity of the GPIO must translate to the low state
-+      of the RESET# pin on the IC, i.e. if a GPIO is directly routed
-+      to the RESET# pin without any inverter, GPIO_ACTIVE_LOW is
-+      expected.
-+
-+      Performing a reset makes all lines initialized to their input (pulled-up)
-+      state.
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          not:
-+            contains:
-+              enum:
-+                - nxp,pca9670
-+                - nxp,pca9671
-+                - nxp,pca9672
-+                - nxp,pca9673
-+    then:
-+      properties:
-+        reset-gpios: false
-+
-+  # lines-initial-states XOR reset-gpios
-+  # Performing a reset reinitializes all lines to a known state which
-+  # may not match passed lines-initial-states
-+  - if:
-+      required:
-+        - lines-initial-states
-+    then:
-+      properties:
-+        reset-gpios: false
-+
- patternProperties:
-   "^(.+-hog(-[0-9]+)?)$":
-     type: object
-
--- 
-2.48.1
+Coly Li
 
