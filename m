@@ -1,75 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53872AE89;
-	Fri, 21 Feb 2025 08:47:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA6462AE89;
+	Fri, 21 Feb 2025 08:48:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740127653; cv=none; b=CWbDsxPFAIr0NjLWQnBKPIdq1oW5EzfHlVXvUxWtfeAnWdNpfBSi+ztG5hgJe19TJ53jDSppuuZOrzpEM723vFpE9A9wuGjoUsutKS6EWotHvV74KpR+zH6wdXwf6FwWZkiW1/zEYZ57cSPoY/j3HeDhVaqE1qdzqRh5z7GvAfE=
+	t=1740127693; cv=none; b=ghrkbbLxiyzAOUEkY38xIu/1DPqkKTKK3+HLgkmbNfjNbUOXHVj0gdv0tcwn0zwZPIDfQRYUslrkM5ZZGgrEAS3t9pwVx3mM4x8iF4uA7wEvTcjzyHq7Scf3Gtl0hZeZ1PhSz4nG81cQx4tWEDL7wvF+30KjNcgRnoM/D7u5cQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740127653; c=relaxed/simple;
-	bh=Q6R2QTZZ/LkeT1rRcRWPfG6wHMIMkwW77Qivvtr9ez0=;
+	s=arc-20240116; t=1740127693; c=relaxed/simple;
+	bh=C99AYwNTpzaXnAlVKR4VAvbAR0R5QJS4EGZLJiCOB6M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZQyu8YVeRimcqdrRiA37mu6tLcZCpva+MkDfNno7SVlTZhMLKbE2VWmnlG431R5OmcrnawFwouECNyLgJRL2oI6PQAGoPgto9ZOZ4P+S8zjq4uu2/xXciNo/nrJv0WQI2achxscGqcdYVHeu1nA67RAEwHYkxDMh5yMWC4OiSOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pA12SeK2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=lRLs397ZIHXiu91bpjXbGW3zOuQJVqsqaQQStXZWJcvUh9orJ3KrxMRx9ruxQNWZfk9IKPOLEfUHMbe7CjHTxVjg9WZwkiXphIYTTdAxQofmYr4xErZQ2TYym3LX3G1PvQMBOA4sobO5TFU3DXp2XcKuCB8R3rR8qhsHzCeOh6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e5L59o6p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pA12SeK2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B71E2C4CED6;
-	Fri, 21 Feb 2025 08:47:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e5L59o6p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1374C4CED6;
+	Fri, 21 Feb 2025 08:48:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740127652;
-	bh=Q6R2QTZZ/LkeT1rRcRWPfG6wHMIMkwW77Qivvtr9ez0=;
+	s=k20201202; t=1740127693;
+	bh=C99AYwNTpzaXnAlVKR4VAvbAR0R5QJS4EGZLJiCOB6M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pA12SeK2hrTEOvLyIhrLLK9l2gkUQBiT8i71oXg2cu7FpAaY/yXaRZizSm0TQ2E1D
-	 gjDhb/QEHRm3++GXXJsRJ3uDQM73BgeY63OILk8dp5+M8eaUOdTz/0DTp9o+DBwQxV
-	 Otg6m0ep7sKY1qqGdONPqeTNWwP4izNkYSJkj7udeX07ycI4b7nXenGUkHUKr05nJL
-	 aEP1+nqETTI0ll5nH281D8Y7QpwL0wnWqx8Dulrs7sXigOpZyHcYp9oT2PFm4nshIy
-	 D6kjw3gOmBDm92Iv7EoRB3k0W8H6z8fUicOm9n/5BCJr47klYjY1N5i7XE7Zw/0WuK
-	 AD4tapFr9m9Lw==
-Date: Fri, 21 Feb 2025 09:47:29 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Wilson Ding <dingwei@marvell.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, andrew@lunn.ch, gregory.clement@bootlin.com, 
-	sebastian.hesselbarth@gmail.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	p.zabel@pengutronix.de, salee@marvell.com, gakula@marvell.com
-Subject: Re: [PATCH v2 4/4] arm64: dts: marvell: cp11x: Add reset controller
- node
-Message-ID: <20250221-majestic-opal-ermine-cfe5a3@krzk-bin>
-References: <20250220232527.882888-1-dingwei@marvell.com>
- <20250220232527.882888-5-dingwei@marvell.com>
+	b=e5L59o6pec+qeXV/DtiEOJFRO9M1Ixv/AB+KSKHF7w59CLZJIIBiv0fh3lygJe1r8
+	 u48hsxVsShgj2cl5WTNO9EtjBdtsXFsBjW0yp0gHpf1qB9HNzR3/oG/An+i7vN8nCT
+	 WpNymiY2kdCq9FtDvQF+dm6IkFEbYnI/VfiqZSuDE1ekMPk013MA9/0IvPbc6hb2BX
+	 mMc+gDoXvYwzH/n6QbuCJk7dqTTO1r7WaFdT7aL9pE9UsakikdXK7tvZWoIlz+fy5J
+	 T8pd8aovPXa0cI3e8BrmwmdCChRR6BikHJWQyqKDyQHcSK2f3hHEe9F42ySdREnw2c
+	 P/2MKxmEyyEvQ==
+Date: Fri, 21 Feb 2025 09:48:08 +0100
+From: Joel Granados <joel.granados@kernel.org>
+To: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
+Cc: kees@kernel.org, shuah@kernel.org, skhan@linuxfoundation.org, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH] selftests/sysctl: fix wording of help messages
+Message-ID: <jwbsuecaakpeuekxy2p6i4ycklso7rbvh6opv6ezpjcm7sfald@3y7v3e6avw6g>
+References: <20250216060151.6155-1-bharadwaj.raju777@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250220232527.882888-5-dingwei@marvell.com>
+In-Reply-To: <20250216060151.6155-1-bharadwaj.raju777@gmail.com>
 
-On Thu, Feb 20, 2025 at 03:25:27PM -0800, Wilson Ding wrote:
-> Add the reset controller node as a sub-node to the system controller
-> node.
+On Sun, Feb 16, 2025 at 11:31:50AM +0530, Bharadwaj Raju wrote:
+> Fix paramter -> parameter, and recomended ->
+> recommended in sysctl.sh's help messages.
 > 
-> Signed-off-by: Wilson Ding <dingwei@marvell.com>
+> Also correct grammar: "number amount of times
+> is recommended" etc -> "the recommended number of
+> times".
+> 
+> Signed-off-by: Bharadwaj Raju <bharadwaj.raju777@gmail.com>
 > ---
->  arch/arm64/boot/dts/marvell/armada-cp11x.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  tools/testing/selftests/sysctl/sysctl.sh | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
-> index 161beec0b6b0..4cd900c02b3b 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
-> +++ b/arch/arm64/boot/dts/marvell/armada-cp11x.dtsi
-> @@ -273,6 +273,12 @@ CP11X_LABEL(gpio2): gpio@140 {
->  					 <&CP11X_LABEL(clk) 1 17>;
->  				status = "disabled";
->  			};
-> +
-> +			CP11X_LABEL(unit_swrst): reset-controller@268 {
+> diff --git a/tools/testing/selftests/sysctl/sysctl.sh b/tools/testing/selftests/sysctl/sysctl.sh
+> index 84472b436c07..a8e5736e89a8 100755
+> --- a/tools/testing/selftests/sysctl/sysctl.sh
+> +++ b/tools/testing/selftests/sysctl/sysctl.sh
+> @@ -764,7 +764,7 @@ sysctl_test_0007()
+>  	fi
+>  
+>  	if [ ! -f /proc/cmdline ]; then
+> -		echo -e "SKIPPING\nThere is no /proc/cmdline to check for paramter"
+> +		echo -e "SKIPPING\nThere is no /proc/cmdline to check for parameter"
+>  		return $ksft_skip
+>  	fi
+I have already taken this
 
-Test your patches before posting. You have here warnings - see W=1.
+>  
+> @@ -884,7 +884,7 @@ usage()
+>  	echo "Valid tests: 0001-$MAX_TEST"
+>  	echo ""
+>  	echo "    all     Runs all tests (default)"
+> -	echo "    -t      Run test ID the number amount of times is recommended"
+> +	echo "    -t      Run test ID the recommended number of times"
+>  	echo "    -w      Watch test ID run until it runs into an error"
+>  	echo "    -c      Run test ID once"
+>  	echo "    -s      Run test ID x test-count number of times"
+> @@ -898,7 +898,7 @@ usage()
+>  	echo Example uses:
+>  	echo
+>  	echo "$TEST_NAME.sh            -- executes all tests"
+> -	echo "$TEST_NAME.sh -t 0002    -- Executes test ID 0002 number of times is recomended"
+> +	echo "$TEST_NAME.sh -t 0002    -- Executes test ID 0002 the recommended number of times"
+>  	echo "$TEST_NAME.sh -w 0002    -- Watch test ID 0002 run until an error occurs"
+>  	echo "$TEST_NAME.sh -s 0002    -- Run test ID 0002 once"
+>  	echo "$TEST_NAME.sh -c 0002 3  -- Run test ID 0002 three times"
+> -- 
+> 2.48.1
+> 
 
-Best regards,
-Krzysztof
+Can you please resend based on sysclt-next
 
+https://git.kernel.org/pub/scm/linux/kernel/git/sysctl/sysctl.git/log/?h=sysctl-next
+
+Best
+
+-- 
+
+Joel Granados
