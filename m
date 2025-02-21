@@ -1,184 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C43D20A5D2;
-	Fri, 21 Feb 2025 12:17:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55C95155336;
+	Fri, 21 Feb 2025 12:18:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740140262; cv=none; b=p6yn9LjFeiau07tbS91f9kcymgsoSJlykni4o60TywxKQc4lKLxa79I9RInNZA46cwjwwmJ6UlzMsWZTU4ytIcbNeVYkKNfw+M6KaDIZaXcjRCXv0+OGPCW+qocKIICa3x0toeR5lRTZN/Sb0RGgRgkWIhVr/4VxLQR3HQaQ30Q=
+	t=1740140286; cv=none; b=Pd/tvT1EAT45LXtvmABccn4Xox1iDoNSoy6GQORq1XGUMhkZLkfIGlUkb1bl0KQJ2QEfx0gCI6Cjk0GtaVU1aSABbiGRu7UNhjTMN10kewtknhyP9Y6iy9dMhFK8qi6o7Ws670ovKHd9OL3YfLCWynnVuAmlDoPDD/HgeK3K0uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740140262; c=relaxed/simple;
-	bh=2wtTNZErjn1SqfWUbPF2f49AL1ImwjpkG6hFzaWY16o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Z5jaZb3nlFoVP+E6uzJgYp1/WbLEMHrRnT3vQF0bNLOrKMWiXy9tijQqSZI/vmB1RgxHdrPdqrTezPI9Pj5cRDaq6FXyoHHLAosEKsOGWHVK2zDPPPELGFhJuIZfpFusI9iLG4yeTvEt/bUTmfE/J6hwjvdbWjzB33TiSTbslpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hiZbOIHB; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hiZbOIHB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74D51C4CED6;
-	Fri, 21 Feb 2025 12:17:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740140261;
-	bh=2wtTNZErjn1SqfWUbPF2f49AL1ImwjpkG6hFzaWY16o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=hiZbOIHBg+3gKpFdnS9fpc/4Gt1itvBGqGC2BBqIJHnX/JyspISk3/qrnK6ddxakz
-	 q3BtBxLNzjtQIzeH581rkU3nVg8Ocne1thbGqIaT/EzQTFwSUWjswY3N0Iwn6EixB0
-	 lSaq0z0A2N0grUvIqldxxV54OtSyJkP20jnhGS9/Qss+jmC6Gee5TY3Zr9DMQQKBRe
-	 7yEVxtmJfcuBJ68sZOnJ8URl5ZI4wWPfFBSxdZY6FC1u6sQDH2yZbMrRF6CcYIKJSf
-	 rfoIV/S8cdID30bdS3ulGpONsi34d+h21ft3HUZVTgqTQuJdxaPpvXnZECb39/xItO
-	 BPEh0RWLUrZgQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Frederic Weisbecker" <frederic@kernel.org>
-Cc: "Benno Lossin" <benno.lossin@proton.me>,  "Miguel Ojeda"
- <ojeda@kernel.org>,  "Anna-Maria Behnsen" <anna-maria@linutronix.de>,
-  "Thomas Gleixner" <tglx@linutronix.de>,  "Danilo Krummrich"
- <dakr@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
- <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor
- Gross" <tmgross@umich.edu>,  "Lyude Paul" <lyude@redhat.com>,  "Guangbo
- Cui" <2407018371@qq.com>,  "Dirk Behme" <dirk.behme@gmail.com>,  "Daniel
- Almeida" <daniel.almeida@collabora.com>,  "Tamir Duberstein"
- <tamird@gmail.com>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v8 02/14] rust: hrtimer: introduce hrtimer support
-In-Reply-To: <Z7hjrzyVNd5BIcEy@pavilion.home> (Frederic Weisbecker's message
-	of "Fri, 21 Feb 2025 12:29:51 +0100")
-References: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
-	<20250218-hrtimer-v3-v6-12-rc2-v8-2-48dedb015eb3@kernel.org>
-	<df748ac2-3551-460f-a16f-85d805671a3f@proton.me>
-	<knRTiXibND0ILf7cUQ5sOLy-c9oVveVdLy2b4iN1kIh0_XPwARxjXset0ads8-7zJAaG2YnLHx3WK6vY-nXyEw==@protonmail.internalid>
-	<Z7hjrzyVNd5BIcEy@pavilion.home>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Fri, 21 Feb 2025 12:44:53 +0100
-Message-ID: <87tt8ned3e.fsf@kernel.org>
+	s=arc-20240116; t=1740140286; c=relaxed/simple;
+	bh=NLQWaa80tOvBh6IiKZSELjUKIjjvaf5SFJm3FYBVDC0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UEUXttPjFRblTojHbkmxfIL2IrUy+DTz9G9bJJGAAmfUI1RbvQv5Xh2V0GRw/rmja8YZHA6aXVJEkirEHG0dcXqhYDMOd8aWHLc15QBSDWsZs0zKuzq/CTx8L1urXtj3CUZ3M14iNy6j/myp9CuMZvFBjIOLT9gITADgqKbDiO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FFE1C4CED6;
+	Fri, 21 Feb 2025 12:18:03 +0000 (UTC)
+Message-ID: <f2b80558-40bd-4823-a43f-96d46e036bd2@xs4all.nl>
+Date: Fri, 21 Feb 2025 13:18:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 09/11] media: cx231xx: Replace s_ctrl with s_ext_ctrls
+To: Ricardo Ribalda <ribalda@chromium.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Mike Isely <isely@pobox.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Andy Shevchenko <andy@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-staging@lists.linux.dev
+References: <20241210-queryctrl-v2-0-c0a33d69f416@chromium.org>
+ <20241210-queryctrl-v2-9-c0a33d69f416@chromium.org>
+Content-Language: en-US, nl
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Autocrypt: addr=hverkuil@xs4all.nl; keydata=
+ xsFNBFQ84W0BEAC7EF1iL4s3tY8cRTVkJT/297h0Hz0ypA+ByVM4CdU9sN6ua/YoFlr9k0K4
+ BFUlg7JzJoUuRbKxkYb8mmqOe722j7N3HO8+ofnio5cAP5W0WwDpM0kM84BeHU0aPSTsWiGR
+ yw55SOK2JBSq7hueotWLfJLobMWhQii0Zd83hGT9SIt9uHaHjgwmtTH7MSTIiaY6N14nw2Ud
+ C6Uykc1va0Wqqc2ov5ihgk/2k2SKa02ookQI3e79laOrbZl5BOXNKR9LguuOZdX4XYR3Zi6/
+ BsJ7pVCK9xkiVf8svlEl94IHb+sa1KrlgGv3fn5xgzDw8Z222TfFceDL/2EzUyTdWc4GaPMC
+ E/c1B4UOle6ZHg02+I8tZicjzj5+yffv1lB5A1btG+AmoZrgf0X2O1B96fqgHx8w9PIpVERN
+ YsmkfxvhfP3MO3oHh8UY1OLKdlKamMneCLk2up1Zlli347KMjHAVjBAiy8qOguKF9k7HOjif
+ JCLYTkggrRiEiE1xg4tblBNj8WGyKH+u/hwwwBqCd/Px2HvhAsJQ7DwuuB3vBAp845BJYUU3
+ 06kRihFqbO0vEt4QmcQDcbWINeZ2zX5TK7QQ91ldHdqJn6MhXulPKcM8tCkdD8YNXXKyKqNl
+ UVqXnarz8m2JCbHgjEkUlAJCNd6m3pfESLZwSWsLYL49R5yxIwARAQABzSFIYW5zIFZlcmt1
+ aWwgPGh2ZXJrdWlsQHhzNGFsbC5ubD7CwZUEEwEKAD8CGwMGCwkIBwMCBhUIAgkKCwQWAgMB
+ Ah4BAheAFiEEBSzee8IVBTtonxvKvS1hSGYUO0wFAmaU3GkFCRf7lXsACgkQvS1hSGYUO0wZ
+ cw//cLMiaV+p2rCyzdpDjWon2XD6M646THYvqXLb9eVWicFlVG78kNtHrHyEWKPhN3OdWWjn
+ kOzXseVR/nS6vZvqCaT3rwgh3ZMb0GvOQk1/7V8UbcIERy036AjQoZmKo5tEDIv48MSvqxjj
+ H6wbKXbCyvnIwpGICLyb0xAwvvpTaJkwZjvGqeo5EL0Z+cQ8fCelfKNO5CFFP3FNd3dH8wU6
+ CHRtdZE03iIVEWpgCTjsG2zwsX/CKfPx0EKcrQajW3Tc50Jm0uuRUEKCVphlYORAPtFAF1dj
+ Ly8zpN1bEXH+0FDXe/SHhzbvgS4sL0J4KQCCZ/GcbKh/vsDC1VLsGS5C7fKOhAtOkUPWRjF+
+ kOEEcTOROMMvSUVokO+gCdb9nA/e3WMgiTwWRumWy5eCEnCpM9+rfI2HzTeACrVgGEDkOTHW
+ eaGHEy8nS9a25ejQzsBhi+T7MW53ZTIjklR7dFl/uuK+EJ6DLbDpVbwyYo2oeiwP+sf8/Rgv
+ WfJv4wzfUo/JABwrsbfWfycVZwFWBzqq+TaKFkMPm017dkLdg4MzxvvTMP7nKfJxU1bQ2OOr
+ xkPk5KDcz+aRYBvTqEXgYZ6OZtnOUFKD+uPlbWf68vuz/1iFbQYnNJkTxwWhiIMN7BULK74d
+ Ek89MU7JlbYNSv0v21lRF+uDo0J6zyoTt0ZxSPzOwU0EVDzhbQEQANzLiI6gHkIhBQKeQaYs
+ p2SSqF9c++9LOy5x6nbQ4s0X3oTKaMGfBZuiKkkU6NnHCSa0Az5ScRWLaRGu1PzjgcVwzl5O
+ sDawR1BtOG/XoPRNB2351PRp++W8TWo2viYYY0uJHKFHML+ku9q0P+NkdTzFGJLP+hn7x0RT
+ DMbhKTHO3H2xJz5TXNE9zTJuIfGAz3ShDpijvzYieY330BzZYfpgvCllDVM5E4XgfF4F/N90
+ wWKu50fMA01ufwu+99GEwTFVG2az5T9SXd7vfSgRSkzXy7hcnxj4IhOfM6Ts85/BjMeIpeqy
+ TDdsuetBgX9DMMWxMWl7BLeiMzMGrfkJ4tvlof0sVjurXibTibZyfyGR2ricg8iTbHyFaAzX
+ 2uFVoZaPxrp7udDfQ96sfz0hesF9Zi8d7NnNnMYbUmUtaS083L/l2EDKvCIkhSjd48XF+aO8
+ VhrCfbXWpGRaLcY/gxi2TXRYG9xCa7PINgz9SyO34sL6TeFPSZn4bPQV5O1j85Dj4jBecB1k
+ z2arzwlWWKMZUbR04HTeAuuvYvCKEMnfW3ABzdonh70QdqJbpQGfAF2p4/iCETKWuqefiOYn
+ pR8PqoQA1DYv3t7y9DIN5Jw/8Oj5wOeEybw6vTMB0rrnx+JaXvxeHSlFzHiD6il/ChDDkJ9J
+ /ejCHUQIl40wLSDRABEBAAHCwXwEGAEKACYCGwwWIQQFLN57whUFO2ifG8q9LWFIZhQ7TAUC
+ ZpTcxwUJF/uV2gAKCRC9LWFIZhQ7TMlPD/9ppgrN4Z9gXta9IdS8a+0E7lj/dc0LnF9T6MMq
+ aUC+CFffTiOoNDnfXh8sfsqTjAT50TsVpdlH6YyPlbU5FR8bC8wntrJ6ZRWDdHJiCDLqNA/l
+ GVtIKP1YW8fA01thMcVUyQCdVUqnByMJiJQDzZYrX+E/YKUTh2RL5Ye0foAGE7SGzfZagI0D
+ OZN92w59e1Jg3zBhYXQIjzBbhGIy7usBfvE882GdUbP29bKfTpcOKkJIgO6K+w82D/1d5TON
+ SD146+UySmEnjYxHI8kBYaZJ4ubyYrDGgXT3jIBPq8i9iZP3JSeZ/0F9UIlX4KeMSG8ymgCR
+ SqL1y9pl9R2ewCepCahEkTT7IieGUzJZz7fGUaxrSyexPE1+qNosfrUIu3yhRA6AIjhwPisl
+ aSwDxLI6qWDEQeeWNQaYUSEIFQ5XkZxd/VN8JeMwGIAq17Hlym+JzjBkgkm1LV9LXw9D8MQL
+ e8tSeEXX8BZIen6y/y+U2CedzEsMKGjy5WNmufiPOzB3q2JwFQCw8AoNic7soPN9CVCEgd2r
+ XS+OUZb8VvEDVRSK5Yf79RveqHvmhAdNOVh70f5CvwR/bfX/Ei2Szxz47KhZXpn1lxmcds6b
+ LYjTAZF0anym44vsvOEuQg3rqxj/7Hiz4A3HIkrpTWclV6ru1tuGp/ZJ7aY8bdvztP2KTw==
+In-Reply-To: <20241210-queryctrl-v2-9-c0a33d69f416@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-"Frederic Weisbecker" <frederic@kernel.org> writes:
+On 10/12/2024 10:28, Ricardo Ribalda wrote:
+> The v4l2 ioctl framework can provide support for s_ctrl. This the last
+> driver implementing s_ctrl.
+> 
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> ---
+>  drivers/media/usb/cx231xx/cx231xx-417.c | 21 ++++++++++++++-------
+>  1 file changed, 14 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/media/usb/cx231xx/cx231xx-417.c b/drivers/media/usb/cx231xx/cx231xx-417.c
+> index a4a9781328c5..3c1941709ebf 100644
+> --- a/drivers/media/usb/cx231xx/cx231xx-417.c
+> +++ b/drivers/media/usb/cx231xx/cx231xx-417.c
+> @@ -1538,17 +1538,24 @@ static int vidioc_s_std(struct file *file, void *priv, v4l2_std_id id)
+>  	return 0;
+>  }
+>  
+> -static int vidioc_s_ctrl(struct file *file, void *priv,
+> -				struct v4l2_control *ctl)
+> +static int cx231xx_s_ext_ctrls(struct file *file, void *priv,
+> +			       struct v4l2_ext_controls *ctls)
+>  {
+>  	struct cx231xx *dev = video_drvdata(file);
+> +	struct v4l2_control ctl;
+>  	struct v4l2_subdev *sd;
+> +	unsigned int i;
+>  
+> -	dprintk(3, "enter vidioc_s_ctrl()\n");
+> +	dprintk(3, "enter vidioc_s_ext_ctrl()\n");
+>  	/* Update the A/V core */
+> -	v4l2_device_for_each_subdev(sd, &dev->v4l2_dev)
+> -		v4l2_s_ctrl(NULL, sd->ctrl_handler, ctl);
+> -	dprintk(3, "exit vidioc_s_ctrl()\n");
+> +	for (i = 0; i < ctls->count; i++) {
+> +		ctl.id = ctls->controls[i].id;
+> +		ctl.value = ctls->controls[i].value;
+> +		v4l2_device_for_each_subdev(sd, &dev->v4l2_dev)
+> +			v4l2_s_ctrl(NULL, sd->ctrl_handler, &ctl);
+> +		ctls->controls[i].value = ctl.value;
+> +	}
+> +	dprintk(3, "exit vidioc_s_ext_ctrl()\n");
+>  	return 0;
+>  }
+>  
+> @@ -1627,7 +1634,7 @@ static const struct v4l2_ioctl_ops mpeg_ioctl_ops = {
+>  	.vidioc_enum_input	 = cx231xx_enum_input,
+>  	.vidioc_g_input		 = cx231xx_g_input,
+>  	.vidioc_s_input		 = cx231xx_s_input,
+> -	.vidioc_s_ctrl		 = vidioc_s_ctrl,
+> +	.vidioc_s_ext_ctrls	 = cx231xx_s_ext_ctrls,
 
-> Le Thu, Feb 20, 2025 at 11:46:10PM +0000, Benno Lossin a =C3=A9crit :
->> On 18.02.25 14:27, Andreas Hindborg wrote:
->> > This patch adds support for intrusive use of the hrtimer system. For n=
-ow,
->> > only one timer can be embedded in a Rust struct.
->> >
->> > The hrtimer Rust API is based on the intrusive style pattern introduce=
-d by
->> > the Rust workqueue API.
->> >
->> > Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
->> > ---
->> >  rust/kernel/time.rs         |   2 +
->> >  rust/kernel/time/hrtimer.rs | 312 +++++++++++++++++++++++++++++++++++=
-+++++++++
->> >  2 files changed, 314 insertions(+)
->> >
->> > diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
->> > index 87e47f2f5618d..2cf365cfb412e 100644
->> > --- a/rust/kernel/time.rs
->> > +++ b/rust/kernel/time.rs
->> > @@ -10,6 +10,8 @@
->> >
->> >  use core::convert::Into;
->> >
->> > +pub mod hrtimer;
->> > +
->> >  /// The number of nanoseconds per millisecond.
->> >  pub const NSEC_PER_MSEC: i64 =3D bindings::NSEC_PER_MSEC as i64;
->> >
->> > diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
->> > new file mode 100644
->> > index 0000000000000..a6332924efabd
->> > --- /dev/null
->> > +++ b/rust/kernel/time/hrtimer.rs
->> > @@ -0,0 +1,312 @@
->> > +// SPDX-License-Identifier: GPL-2.0
->> > +
->> > +//! Intrusive high resolution timers.
->> > +//!
->> > +//! Allows running timer callbacks without doing allocations at the t=
-ime of
->> > +//! starting the timer. For now, only one timer per type is allowed.
->> > +//!
->> > +//! # Vocabulary
->> > +//!
->> > +//! States:
->> > +//!
->> > +//! * Stopped
->> > +//! * Running
->> > +//!
->> > +//! Operations:
->> > +//!
->> > +//! * Start
->> > +//! * Cancel
->> > +//! * Stop
->> > +//! * Restart
->> > +//!
->> > +//! Events:
->> > +//!
->> > +//! * Expire
->> > +//!
->> > +//! ## State Diagram
->> > +//!
->> > +//! ```text
->> > +//!                  <-- Stop ----
->> > +//!                  <-- Cancel --
->> > +//!                  --- Start -->
->> > +//!        +---------+        +---------+
->> > +//!   O--->| Stopped |        | Running |---o
->> > +//!        +---------+        +---------+   |
->> > +//!                                  ^      |
->> > +//!                  <- Expire --    |      |
->> > +//!                                  o------o
->> > +//!                                   Restart
->> > +//! ```
->> > +//!
->> > +//! A timer is initialized in the **stopped** state. A stopped timer =
-can be
->> > +//! **started** with an **expiry** time. After the timer is started, =
-it is
->> > +//! **running**. When the timer **expires**, the timer handler is exe=
-cuted.
->> > +//! After the handler has executed, the timer may be **restarted** or
->> > +//! **stopped**. A running timer can be **canceled** before it's hand=
-ler is
->>
->> This confuses me a bit, in the other thread you wrote that the handler
->> decides if the timer should restart or be stopped. But What happens when
->> I call `cancel` on the `HrTimerHandle` while the handler is running, but
->> finishes shortly after with a restart request? Will it be canceled?
->>
->> I also have a bit of a wording issue with "the timer is running" IIUC,
->> this means that the timer subsystem keeps track of the expiry time and
->> when the time is elapsed, it fires the code that you registered prior.
->> At first, I thought that "the timer is running" meant that the
->> registered code is running. Maybe we should have two different terms for
->> that? I personally would prefer "active timer" for "the timer subsystem
->> is currently tracking the time and when it is elapsed, it will run the
->> code" and "running timer" for "the timer's expiry time has elapsed and
->> the timer callback is currently being executed".
->
-> Good point. "Running" in the hrtimer terminology is usually to
-> describe a running callback and not just an elapsing (or say started) tim=
-er.
->
-> I would rather have:
->
-> Stopped: initialized but not started, or cancelled, or not restarted
-> Started: initialized and started or restarted
-> Running: executing the callback
+Actually, this is dead code. This driver has been converted to use the control
+framework in commit 88b6ffedd901 ("[media] cx231xx-417: convert to the control framework"),
+and it looks like that forgot to remove this function.
 
-Alright, we can do that. That makes sense =F0=9F=91=8D
+It is never called, since the core sees that it uses the control framework and
+uses that instead.
+
+Regards,
+
+	Hans
 
 
-
-Best regards,
-Andreas Hindborg
-
+>  	.vidioc_g_pixelaspect	 = vidioc_g_pixelaspect,
+>  	.vidioc_g_selection	 = vidioc_g_selection,
+>  	.vidioc_querycap	 = cx231xx_querycap,
+> 
 
