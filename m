@@ -1,99 +1,75 @@
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 976DE253B7E
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 21:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 226851CB501;
+	Fri, 21 Feb 2025 21:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740172463; cv=none; b=hu5pvjVdh84yk+axICNpFMmYBJ9sSB9oH9zkILYCf11GUJyjZmQPSRcBCbLVS5OQ/HswY08L1MtFZnCP1GCc/98xDsfdm7i02b18yszj+hI9n+PD7rXaoqzIhEI4KsfthZeQHCzJUienz3NHvWVSXzC7tSj0xkOPNr0F2vcymgc=
+	t=1740172537; cv=none; b=L8vmGByINhL+XHhEcloLW57lezRmOJtXnML+olHgch0HCtya1jwayff/stKbzZ9QLi88DzU5F/A4ITErkw1GIXPRRy3302/IgAREu01iMmIZ9llPevzk2xR+2zDA0PgqZ7w3iD6Tknxig6DXSMw6WwCLJkpnj9oxhrfFTn9Vdp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740172463; c=relaxed/simple;
-	bh=LUST0WfY2YYH8MixRvQVt0HfCogiQFfD5LD4HDRjTGs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nMPbP0CBAk7KO8vpy6T8d4pfLrFRVhMqaskh5w/g9oN9Ngn+rzfylQEzO3TBc8pCqthTpldkafdSWJz3zwi9c/3bDKJF2c9g6Sv114zur+WtvToEtMbWDEc+ustM/LYrUIzK9xlNCyVdBk9tPkOjEKOT5b+XR+6Lip400S4wFgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=DggnDjAl; arc=none smtp.client-ip=209.85.166.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1740172537; c=relaxed/simple;
+	bh=fWo2H7ApwGYIDfbBi+A8D7zvz0guh1DOl6kTWm14hKA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PDTogPSphzuYehy90LKCNaYwlf+seE29DyEcONo+zTX3EDQAhSao0qVIKss4yQBlQeic9tianUdXgj+IbwrtC7yKXRhkpgqYb9+F4L8srfMHVkdt8/2x6Z3WBo/BrwQYTZnOs9XyWZRfiU85X7gIxrW7W4yIoEnQ82ki3nfx20I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=usiTLATP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="DggnDjAl"
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3d19e40a891so8026055ab.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 13:14:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1740172460; x=1740777260; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cl2P2JOYJNBx1mtaYBayROisqQOMPgvFm8FiItSAUM8=;
-        b=DggnDjAl6GpDqoVT7yu5rvRJunyrlidW2SMS+sWDipW3UsaZSHTJ/VA+o82jx0dK3u
-         gU4JLW2db0a5ooygz1bMYEJ7WKhEmi5PEOlRKNwLKp6j+nJa3+Pz0oGNV27FKH9AZOtP
-         nXho8bWRQl8P8FG5iNYjLW77Vrp2LSWcw+Eria77FOmCCS02P7AxYAP9d87QNiFrGyR1
-         AB3gIxiMB81VaXP7WbpAV8CNuipxbWupn9U6PcWVJUS1oPb4b3FYHl0YAT1NxssRkJy3
-         cxa8AmfPxvKq2mVx4C8eo5oCV1u+WyCpnoDmFivCXMbfyeDqSPk1lyh7syNre35pubeo
-         hnNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740172460; x=1740777260;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cl2P2JOYJNBx1mtaYBayROisqQOMPgvFm8FiItSAUM8=;
-        b=vH9rogtHI69e8lQnR33bYC/vwZ8bPh6j+i9uaRLlZulJMHNMulMPvho4CnRegpsUVK
-         eQUau4CTyi/Hkqq+MhF/boNYyixv8hLrx2HbuP8OswzowLelGsw39EkilBhh5uZrdoxh
-         e9u4Opoy5pnSjr9GWfMU2Ux+S1B729n4gnhyDBzAJxkjMWcacNbXs9zpuVW7K4bWA6hC
-         TKTRKdDQtqx2GLj+1ol88Kp/+MHd2VGP+pw/8+Ew6h2VSjxy40MuOpY0/aCUpPXG2WF2
-         SnfIbIs/s2dVe35epOlAkq4qYn78HHeBIlld4SIF6A35MJi5CyTqRZ7tZ8ZR3wlCKIvw
-         lZww==
-X-Forwarded-Encrypted: i=1; AJvYcCXQ5AGchS+rThRhkdx5L83T0uGi4fguQ7ToaZqiq9VDfI1fk1qP7TFpISJHtp5TA38y18mlEQNBaxntBSE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyZMYWkg0sE86pNU/8jQZl2NbSksYU4PP1ZQKe+hJuaVWQsmJA
-	kVxUda94iIwCI/kLsMJdHJpGiVc25bum1ixvuhOI/HXkea32LTFvm9AQ6bpVu+Y=
-X-Gm-Gg: ASbGnctaAa9f7lb25LM33vp1PPK2wNDeAGVF/Kxv+c6+GFVU9g/PozVdAE8c1i5G/Db
-	mWzy1SfgJzRMDppCrC1NCIdBsWm+oY1o4fFPvcxnHIo1QFgFVYZ9rA+R856S6aUufAAi07pnsWN
-	HvFjvvPups03SFO7U32Fk3+KFs2G8LTw9nDMU6lLPD6NGMQwoqlNMZEf43n3ujbXjGdDAY400TL
-	4CZc6WBzkQLiUZENFqNFzcWS5DH4e4SIemAh5bMGyzII32uuqCHH4GMqxfHOOLH8oK+LBVTxWt5
-	WwAN7cdknXqUSF/iMcs2Am8=
-X-Google-Smtp-Source: AGHT+IHGUx3T72p6QUiwnKjXxwo0LmjfmkSlf2+w+lCN8J9EyU2JybXz1K2UEwewJnnNAq4zeENvnA==
-X-Received: by 2002:a05:6e02:156e:b0:3d0:4ba1:adf1 with SMTP id e9e14a558f8ab-3d2caf1a20emr50626825ab.22.1740172460685;
-        Fri, 21 Feb 2025 13:14:20 -0800 (PST)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d18f9c5a21sm40521905ab.21.2025.02.21.13.14.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2025 13:14:20 -0800 (PST)
-Message-ID: <3a3644d2-1762-4504-938a-6776c137aab8@kernel.dk>
-Date: Fri, 21 Feb 2025 14:14:18 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="usiTLATP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9128C4CED6;
+	Fri, 21 Feb 2025 21:15:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740172536;
+	bh=fWo2H7ApwGYIDfbBi+A8D7zvz0guh1DOl6kTWm14hKA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=usiTLATPheqd6kimJTx4Wl1bOR4c8d1mkje4/bZ7k0tEL2MjCM9QCuc+o2jGuE+XQ
+	 UkOyWzcAfBtcrxIzll/fcEkqzsN7GI/LZS5/59pNhqPlbiWCpTtk5JgGOd2jwv6WHt
+	 7Pulw4uAKx1Y8HEpGFIFEZtybq3nGQyWDGJaw8yx8SzrHMNIZEDl8qCjojWWaYxb2/
+	 TunytUu8bm5lLhwIIMmkoGrWFagXZ1YM8XY/woILfCkHsmbT2dmvGgwiI3OSK1Bgdk
+	 A1ECcPNu+WBkQeONHzODaKOui55/edzhQ7IU1H+Vk1H5YYKQWghhNTd4RghowbRIGH
+	 T/CCAvWQh55Lw==
+Date: Fri, 21 Feb 2025 22:15:27 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+	Kees Cook <kees@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Subject: Re: [tip: x86/cpu] x86/kcfi: Require FRED for FineIBT
+Message-ID: <Z7js71Q8Fl2E8mt7@gmail.com>
+References: <20250214192210.work.253-kees@kernel.org>
+ <174015048551.10177.4353365227122906077.tip-bot2@tip-bot2>
+ <20250221190024.GC7373@noisy.programming.kicks-ass.net>
+ <20250221190236.GD7373@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v18 0/3] rust: xarray: Add a minimal abstraction for
- XArray
-To: Tamir Duberstein <tamird@gmail.com>, Danilo Krummrich <dakr@kernel.org>,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Matthew Wilcox <willy@infradead.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- FUJITA Tomonori <fujita.tomonori@gmail.com>,
- "Rob Herring (Arm)" <robh@kernel.org>
-Cc: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>,
- Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org
-References: <20250221-rust-xarray-bindings-v18-0-cbabe5ddfc32@gmail.com>
-From: Jens Axboe <axboe@kernel.dk>
-Content-Language: en-US
-In-Reply-To: <20250221-rust-xarray-bindings-v18-0-cbabe5ddfc32@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250221190236.GD7373@noisy.programming.kicks-ass.net>
 
-Please have (at least) a 24h cool down between versions, spamming
-versions within hours of the last one is not productive for (or
-conducive to) review.
 
--- 
-Jens Axboe
+* Peter Zijlstra <peterz@infradead.org> wrote:
+
+> On Fri, Feb 21, 2025 at 08:00:24PM +0100, Peter Zijlstra wrote:
+> > On Fri, Feb 21, 2025 at 03:08:05PM -0000, tip-bot2 for Kees Cook wrote:
+> > > The following commit has been merged into the x86/cpu branch of tip:
+> > > 
+> > > Commit-ID:     f12315780faf1cbfe00991077a1e8c8e4c201f3b
+> > > Gitweb:        https://git.kernel.org/tip/f12315780faf1cbfe00991077a1e8c8e4c201f3b
+> > > Author:        Kees Cook <kees@kernel.org>
+> > > AuthorDate:    Fri, 14 Feb 2025 11:22:21 -08:00
+> > > Committer:     Ingo Molnar <mingo@kernel.org>
+> > > CommitterDate: Fri, 21 Feb 2025 15:38:11 +01:00
+> > 
+> > Ingo, seriously NO!
+> 
+> I've zapped the commit.
+
+I've also re-integrated tip:master to make sure it doesn't go out to -next.
+Sorry about that ...
+
+Thanks,
+
+	Ingo
