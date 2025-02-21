@@ -1,139 +1,132 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1532C1FECD9;
-	Fri, 21 Feb 2025 15:19:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740151176; cv=pass; b=WKAFckhRPuXq9qGS5VykgT6PXYnPrVW8QVcEnCmFZF60cqzme3uNqS4gikp8NuCPbjAzfsboO+Nu3dnc7odP5OTunQZbrQWb0BoKZzm7fNFrjukuspOnnHT+zj+arWuvDEZf3KewEd10nOGJwHs03BR8gq8HppwrtDU6KQDf9oA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740151176; c=relaxed/simple;
-	bh=c11apE4KyetOBxX2ZcYLZYt40rmLUhIJWe6ojYWaWjg=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=u0dllSbgi6hggRBmRESnAnH/wcSk065Tn8MZQucjctHfkKUEWy7sYpvY8szotCe4zHwWH9djIGUQKeVkv6faNypAiqSw/4ymsqXKySROxDfHOyLB4AWUJoipfd2aZFN9RPSXkKO0XoJJyDDX1Q2hbJJk7y13U2zKfjcXgBUnCLw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=If+Hh8Te; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A7E9210F5D;
+	Fri, 21 Feb 2025 15:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.2
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740151186; cv=none; b=Dc2p5O67l5eao6nQx8Vn1BOSvGXW4gmyGw9B2a2tM+YXhw1tqJaI3J7AMQpo/0nf8GXmtu9sDAz4wFNTJF43DDmJV7gfQxiNAwL8aX+ogF7C8nCTf2+lWJ6Lo/Wjm+r/c6gjzv5HRIm2uqyFyvgLBl14uJ/L1tjpDtYqlXeIvQI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740151186; c=relaxed/simple;
+	bh=636J0L2L57i85Fk1pbRRH32NY1pol6A8kSUF0OXuRvQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AWKPm3WGULSDm6VPl4LlZSE78yJLX3+OxPPeGueQaaZ+mlrhTgeEE2fNDh3rRynrNpa9//QKdY5smv3fU2CKD8PCs/fs4ycXo+pJ/u81ckxqkumh01VyY494LGv5GwiMZhDt1/J2QS7UADQLIZ+ZpZlA9MMJ+t0AzYNO59xZIJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org; spf=pass smtp.mailfrom=morinfr.org; dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b=RfYU+tH6; arc=none smtp.client-ip=212.27.42.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=morinfr.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=morinfr.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="If+Hh8Te"
-ARC-Seal: i=1; a=rsa-sha256; t=1740151123; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Vb/21qAMD7WKHEAE7bihQnNekvu5lHgNF2gLArzbG00Kjoyya93Mmw0W+LxrP0z6eB1nNylQ/D6XAb87EJCEqIqAXTUbQTeWK+P9uopXgZ/0BlFQrs0pKyDFW8nJtwY3KRwbi9y+NurBn4QbeHUkX7HJCoTSWggN1HD0R68OhFQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740151123; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=sBwO97KzPhVvIgN0rKIzQNTIANncm1Be9D5nF3F7nA4=; 
-	b=RN53GOGQHSXZtbs1bHgcupBL2ShXrshksvJBDsYSTLn+d4DAPCLsvr9VxEZpdUQNmlyGKzf9DI/kbjpDNaJ008hT5brQ9EfKb+3tsQflOqWRfcDKilsJRlIHsYHpzw9ecUtGGBd65kA6LDDnBxnzJQEadukKXHuMiTLyCH8hMgo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740151123;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=sBwO97KzPhVvIgN0rKIzQNTIANncm1Be9D5nF3F7nA4=;
-	b=If+Hh8TeMBSQxX+/49eTXO37Dxnih/BeTE5aIulaeuXILIMe1z1CZj7O4g4kOCpr
-	4VKBnwYrXxRFIG1Odz0FTyaiuRCzFoE8hHnG/sRFuyhqVsZZNHNEcCbecVBE6i9EQxe
-	JoMLd6JlXCh7UNuStlOuIWtfqWO/0ZMnKXd1Ue7c=
-Received: by mx.zohomail.com with SMTPS id 1740151120758203.9884280564803;
-	Fri, 21 Feb 2025 07:18:40 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=morinfr.org header.i=@morinfr.org header.b="RfYU+tH6"
+Received: from bender.morinfr.org (unknown [82.66.66.112])
+	by smtp2-g21.free.fr (Postfix) with ESMTPS id AFC3B200406;
+	Fri, 21 Feb 2025 16:19:36 +0100 (CET)
+Authentication-Results: smtp2-g21.free.fr;
+	dkim=pass (1024-bit key; unprotected) header.d=morinfr.org header.i=@morinfr.org header.a=rsa-sha256 header.s=20170427 header.b=RfYU+tH6;
+	dkim-atps=neutral
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=morinfr.org
+	; s=20170427; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=emYbpo5GLAv7fQmupNkR79c6pzM8OUd6OqHZnaplvZU=; b=RfYU+tH6iBU9TZdmw/tEFaVT8f
+	+7KV23IDFfLNN7DePzO9jJuiKQQWm/n18fn++y32XOrmnZO5yrP0Eqvrrk1FG9KsepfttJAVogWgB
+	jaIJBHeo1oNhjcb19XIY4FHey+Oj7HK4DTARIqSitrEtDDkl0lYVm1UvzF5muc6cWt+g=;
+Received: from guillaum by bender.morinfr.org with local (Exim 4.96)
+	(envelope-from <guillaume@morinfr.org>)
+	id 1tlUoR-001F74-2G;
+	Fri, 21 Feb 2025 16:19:35 +0100
+Date: Fri, 21 Feb 2025 16:19:35 +0100
+From: Guillaume Morin <guillaume@morinfr.org>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: Guillaume Morin <guillaume@morinfr.org>, linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org, song@kernel.org,
+	"yukuai (C)" <yukuai3@huawei.com>
+Subject: Re: [BUG] possible race between md_free_disk and md_notify_reboot
+Message-ID: <Z7iZh56mykLW82SN@bender.morinfr.org>
+References: <ad286d5c-fd60-682f-bd89-710a79a710a0@huaweicloud.com>
+ <82BF5B2B-7508-47DB-9845-8A5F19E0D0E5@morinfr.org>
+ <53e93d6e-7b73-968b-c5f2-92d1b124ecd5@huawei.com>
+ <Z7alWBZfQLlP-EO7@bender.morinfr.org>
+ <1e288eb5-c67b-c9ca-c57e-2855b18785b1@huaweicloud.com>
+ <6748f138-ad52-b7c5-ac53-1c7fa6fab9b7@huaweicloud.com>
+ <Z7cwexr7tLRIOlNx@bender.morinfr.org>
+ <40203778-f217-6789-9c83-ebed3720627b@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
-Subject: Re: [PATCH v3 0/4] rust: configfs abstractions
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20250218-configfs-v3-0-0e40c0778187@kernel.org>
-Date: Fri, 21 Feb 2025 12:18:24 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>,
- Will Deacon <will@kernel.org>,
- Waiman Long <longman@redhat.com>,
- Danilo Krummrich <dakr@kernel.org>,
- Joel Becker <jlbec@evilplan.org>,
- Christoph Hellwig <hch@lst.de>,
- Fiona Behrens <me@kloenk.dev>,
- Charalampos Mitrodimas <charmitro@posteo.net>,
- rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <50E0963F-2CFA-462E-9767-626F0D18C77F@collabora.com>
-References: <20250218-configfs-v3-0-0e40c0778187@kernel.org>
-To: Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: Apple Mail (2.3826.300.87.4.3)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <40203778-f217-6789-9c83-ebed3720627b@huaweicloud.com>
 
-Hi Andreas,
+On 21 Feb  9:27, Yu Kuai wrote:
+> > The issue with the next pointer seems to be fixed with your change.
+> > Though I am still unclear how the 2nd potential issue I mentioned -
+> > where the current item would be freed concurrently by mddev_free() - is
+> > prevented. I am not finding anything in the code that seems to prevent a
+> > concurrent call to mddev_free() for the current item in the
+> > list_for_each_entry() loop (and therefore accessing mddev after the
+> > kfree()).
+> > 
+> > I understand that we are getting a reference through the active atomic
+> > in mddev_get() under the lock in md_notify_reboot() but how is that
+> > preventing mddev_free() from freeing the mddev as soon as we release the
+> > all_mddevs_lock in the loop?
+> > 
+> > I am not not familiar with this code so I am most likely missing
+> > osmething but if you had the time to explain, that would be very
+> > helpful.
+> 
+> I'm not quite sure what you're confused. mddev lifetime are both
+> protected by lock and reference.
+> 
+> In this case:
+> 
+> hold lock
+> get first mddev
+> release lock
+> // handle first mddev
+> 
+> hold lock
+> release mddev
+> get next mddev
+> release lock
+> -> mddev can be freed now
+> // handle the next mddev
+> ...
+> 
 
-> On 18 Feb 2025, at 09:57, Andreas Hindborg <a.hindborg@kernel.org> =
-wrote:
->=20
-> This series adds a safe Rust API that allows Rust modules to interface
-> the `configfs` machinery.
->=20
-> The series contains an example for the samples folder to demonstrate
-> usage of the API. As such, there is no inline example in the
-> documentation.
->=20
-> The last patch adds a maintainer entry for the Rust configfs
-> abstractions, to make it absolutely clear that I will commit to =
-maintain
-> these abstractions, if required. Feel free to drop this patch if this =
-is
-> not required.
->=20
-> The series is a dependency of `rnull`, the Rust null block driver.
-> Please see [1] for initial `configfs` support in `rnull`.
->=20
-> [1] =
-https://github.com/metaspace/linux/tree/9ac53130f5fb05b9b3074fa261b445b8fd=
-e547dd/drivers/block/rnull
->=20
+In my original message, I mentioned 2 potential issues
+Let's say md_notify_reboot() is handling mddev N from the all_mddevs
+list.
 
-I am trying to test this before reviewing, but I get this error:
+1) The GPF we pasted in the original message happened when mddev_free()
+is called concurrently for mddev N+1. This lead to the GPF since the cpu
+would try to load the list poisoned values from the 'n' pointer.
 
+Your patch definitely fixes this race and we cannot reproduce the GPF
+anymore.
 
-```
-error[E0308]: mismatched types
-   --> linux/rust/kernel/miscdevice.rs:300:62
-    |
-300 |     let device =3D unsafe { <T::Ptr as =
-ForeignOwnable>::borrow(private) };
-    |                           ---------------------------------- =
-^^^^^^^ expected `*mut <... as ForeignOwnable>::PointedTo`, found `*mut =
-c_void`
-    |                           |
-    |                           arguments to this function are incorrect
-    |
-    =3D note: expected raw pointer `*mut <<T as =
-miscdevice::MiscDevice>::Ptr as types::ForeignOwnable>::PointedTo`
-               found raw pointer `*mut ffi::c_void`
-    =3D help: consider constraining the associated type `<<T as =
-miscdevice::MiscDevice>::Ptr as types::ForeignOwnable>::PointedTo` to =
-`ffi::c_void` or calling a method that returns `<<T as =
-miscdevice::MiscDevice>::Ptr as types::ForeignOwnable>::PointedTo`
-    =3D note: for more information, visit =
-https://doc.rust-lang.org/book/ch19-03-advanced-traits.html
-note: associated function defined here
-   --> /home/dwls/dev/linux/rust/kernel/types.rs:98:15
-    |
-98  |     unsafe fn borrow<'a>(ptr: *mut Self::PointedTo) -> =
-Self::Borrowed<'a>;
-    |               ^^^^^^
+2) Instead of mddev_free() being called for mddev N+1 like in 1, I wonder
+what's preventing mddev_free() being called for mddev N (the one we're
+iterating about). Something like
 
-error: aborting due to 1 previous error
-```
+CPU1							CPU2
+list_for_each_entry(mddev, &all_mddevs, all_mddevs) {
+if (!mddev_get(mddev))
+    continue;
+spin_unlock(&all_mddevs_lock);
+						        mddev_free(mddev) (same mddev as CPU1)
 
+mddev_free() does not check the active atomic, or acquire the
+reconfig_mutex/md_lock and will kfree() mddev. So the loop execution
+on CPU1 after spin_unlock() could be a UAF.
 
-=E2=80=94 Daniel=
+So I was wondering if you could clarify what is preventing race 2?
+i.e what is preventing mddev_free(mddev) from being calling kfree(mddev)
+while the md_notify_reboot() loop is handling mddev.
+
+-- 
+Guillaume Morin <guillaume@morinfr.org>
