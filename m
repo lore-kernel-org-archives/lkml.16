@@ -1,85 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A3320897B;
-	Fri, 21 Feb 2025 13:10:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3623F1E87B;
+	Fri, 21 Feb 2025 13:12:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740143457; cv=none; b=gLljlIQp5AtB7xRmsPWSCZRULtWvVLFLpYrseRMKO+bKIAzI70uAtsswL8MIZYt60yOrS4zQMsEVWwd1DV7RIkplGuGWUPJyKyyRZ4uYnkzFYr8jF4Kp1qzb+4RYUKHxViyQFVqDvdEdAoQJlljZ+GVM8B+RwhqnSckrpmR2O5I=
+	t=1740143540; cv=none; b=BiXcpMBYHd1sQIvjSG81qVOaYt3ZUGw6QER2rtW4gelbY2BJn9Gl6ZzfZwzTlDYHJEwSJ8jCt/K25Pe2WIbUwp2x4SzpMqNkT9u7Sx2C12rPugtcJdISE5N4PhUfEO91c5X0nqLD1RZZG8SI9dOXDtQaJ4x8GRUeaBRxuhpWLmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740143457; c=relaxed/simple;
-	bh=kVxpbB7ukPKF0hngaX8sy4bvmn9YwBcQRU6OVUKcEyg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LLse8JuCWLFM36QeqEwl2ElJNKbeVUyKAesQinPetGJn1Qg4QXxpcfacTLXHIG37e/zxdsNRmLEElJUqcgI0kU8Og2vYrBObFceTV4zVJk+wKCQTuw0jl2InvykYZC7k3noAzoycI+Ot5hdJjvs2TPA9pXm71sODKhCfbl0ogt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ufr+i0sV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740143540; c=relaxed/simple;
+	bh=OaIEfRGrNHujGIM2xLDrlaaE7zfxvSiYKjihwGmoU78=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V7fZ/I4x3XgCkfU6kS+AsyyHt8uAp11SW7/GwoW+PTttHWPk+5KpFzithrdPARbxzfYItRybU34ZfUniUSIAo/oRr1VhSCL1xgHdOsFskwebGmtvOljkBhqmaW3ctsUPqzyS5p3TPZa4J0ImnRGl7u45vPkBH0s8kYoNH2UfCjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=tyXONUDb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ufr+i0sV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEA98C4CED6;
-	Fri, 21 Feb 2025 13:10:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740143456;
-	bh=kVxpbB7ukPKF0hngaX8sy4bvmn9YwBcQRU6OVUKcEyg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ufr+i0sVTtYunwmtaXO6odAh50ln2BOBOWifXKHmWEPM52yYrPhPiU/1+v7m6OvI3
-	 SdmSNGSR+LJqWFPmHrf0+ZIIqhXlsco73kc7/cn96Bcj7+b3VH96+T50Atwafvzvz8
-	 GPqP7KK3SeRXcX8Uu4TuDbx08VpEgaQPPlbDFrpSL0baiwU/lOkxpVB2D4ptyLT+eP
-	 iqDQJLVHOZpi1oM9rD5MfR+GTsBGYR2kZcCAfe4TB3ZeC/Sy30bY87TlcFbwMAIMo1
-	 6FQRAEcWDSyFiIh+p2x948nNI4LimIKGzel5JItG6usyu1Xp05onN2Lgz0+5r58b/k
-	 8MICMQOzInsbA==
-From: Christian Brauner <brauner@kernel.org>
-To: Jingbo Xu <jefflexu@linux.alibaba.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	viro@zeniv.linux.org.uk,
-	axboe@kernel.dk,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH 0/2] fixes for uncached IO
-Date: Fri, 21 Feb 2025 14:10:38 +0100
-Message-ID: <20250221-kleben-ordnen-8138127aafe2@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250218120209.88093-1-jefflexu@linux.alibaba.com>
-References: <20250218120209.88093-1-jefflexu@linux.alibaba.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="tyXONUDb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FF81C4CED6;
+	Fri, 21 Feb 2025 13:12:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1740143539;
+	bh=OaIEfRGrNHujGIM2xLDrlaaE7zfxvSiYKjihwGmoU78=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tyXONUDbGQ78MxsudewWlzaPrGsFnl2q/eB10uxmLxkUWIEIPE62xYNKYKKcUGAhr
+	 RPQvR4591QqFmp/SBvlWCc55VgxYql2SEwFsM+Ss8aba8JFiNjATNYZ43c6E0SVGDQ
+	 WgAk6f+2vY/eqZV/Iie1hLQLtLIh5+agINDhu+wU=
+Date: Fri, 21 Feb 2025 14:12:16 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Zijun Hu <quic_zijuhu@quicinc.com>
+Cc: Will Deacon <will@kernel.org>,
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Nick Piggin <npiggin@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Jamal Hadi Salim <jhs@mojatatu.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>,
+	Thomas Graf <tgraf@suug.ch>, Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Zijun Hu <zijun_hu@icloud.com>, linux-arch@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org, netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org, linux-rdma@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+	iommu@lists.linux.dev, linux-mtd@lists.infradead.org
+Subject: Re: [PATCH *-next 00/18] Remove weird and needless 'return' for void
+ APIs
+Message-ID: <2025022145-ungodly-hanky-499e@gregkh>
+References: <20250221-rmv_return-v1-0-cc8dff275827@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1304; i=brauner@kernel.org; h=from:subject:message-id; bh=kVxpbB7ukPKF0hngaX8sy4bvmn9YwBcQRU6OVUKcEyg=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaTvqI40TX70RvtH0DK7R2x76lpeemZclFd/W3N58m+3t Y/E/U9d7ShlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZiINTMjw1nxX6U9kxlXSv5Q LOIzu/XhbMf0Sc7bNv9jPaL5Jn2nhDvDX4k3LTMTveMe1YYk2Cw9v4V33rcd7ldXLDu985TH2iu XqzgA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250221-rmv_return-v1-0-cc8dff275827@quicinc.com>
 
-On Tue, 18 Feb 2025 20:02:07 +0800, Jingbo Xu wrote:
-> Jingbo Xu (2):
->   mm/filemap: fix miscalculated file range for
->     filemap_fdatawrite_range_kick()
->   mm/truncate: don't skip dirty page in folio_unmap_invalidate()
+On Fri, Feb 21, 2025 at 05:02:05AM -0800, Zijun Hu wrote:
+> This patch series is to remove weird and needless 'return' for
+> void APIs under include/ with the following pattern:
 > 
-> include/linux/fs.h | 4 ++--
->  mm/filemap.c       | 2 +-
->  mm/truncate.c      | 2 --
->  3 files changed, 3 insertions(+), 5 deletions(-)
+> api_header.h:
 > 
-> [...]
+> void api_func_a(...);
+> 
+> static inline void api_func_b(...)
+> {
+> 	return api_func_a(...);
+> }
+> 
+> Remove the needless 'return' in api_func_b().
+> 
+> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+> ---
+> Zijun Hu (18):
+>       mm/mmu_gather: Remove needless return in void API tlb_remove_page()
+>       cpu: Remove needless return in void API suspend_enable_secondary_cpus()
+>       crypto: api - Remove needless return in void API crypto_free_tfm()
+>       crypto: scomp - Remove needless return in void API crypto_scomp_free_ctx()
+>       sysfs: Remove needless return in void API sysfs_enable_ns()
+>       skbuff: Remove needless return in void API consume_skb()
+>       wifi: mac80211: Remove needless return in void API _ieee80211_hw_set()
+>       net: sched: Remove needless return in void API qdisc_watchdog_schedule_ns()
+>       ipv4/igmp: Remove needless return in void API ip_mc_dec_group()
+>       IB/rdmavt: Remove needless return in void API rvt_mod_retry_timer()
+>       ratelimit: Remove needless return in void API ratelimit_default_init()
+>       siox: Remove needless return in void API siox_driver_unregister()
+>       gpiolib: Remove needless return in two void APIs
+>       PM: wakeup: Remove needless return in three void APIs
+>       mfd: db8500-prcmu: Remove needless return in three void APIs
+>       rhashtable: Remove needless return in three void APIs
+>       dma-mapping: Remove needless return in five void APIs
+>       mtd: nand: Do not return void function in void function
 
-Applied to the vfs.fixes branch of the vfs/vfs.git tree.
-Patches in the vfs.fixes branch should appear in linux-next soon.
+These span loads of different subsystems, please just submit them all to
+the different subsystems directly, not as one big patch series which
+none of us could take individually.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+thanks,
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.fixes
-
-[1/2] mm/filemap: fix miscalculated file range for filemap_fdatawrite_range_kick()
-      https://git.kernel.org/vfs/vfs/c/8510edf191d2
-[2/2] mm/truncate: don't skip dirty page in folio_unmap_invalidate()
-      https://git.kernel.org/vfs/vfs/c/927289988068
+greg k-h
