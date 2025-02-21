@@ -1,82 +1,111 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F4D4433BE;
-	Fri, 21 Feb 2025 08:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20881433BE;
+	Fri, 21 Feb 2025 08:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740127811; cv=none; b=nYl7cORSJuXfVl67akIag+gbkhRsiyyAK+tItSp+xaof6x52FDpjts2aKKNqrypuKs/16t8Jy6wnNZSbck8j4MFYtrOgz+5WmywSmCrwwojhJ2Ad0bjvt7Zui/qjmWRHYLZ9H78gzghoIVvGvl0paSoq6+yct3F1uzu4HTpTPSc=
+	t=1740127829; cv=none; b=seILYsmFXdFPwmHxkZc/c6KWSjGv2EKSmmlPL5NzNGNwWzvGhw9w561oDBMBUUS9fyx7vqR+wF4H5ngMFcuS49i9usVhkN5uId7QHZh5t5hZc7l4hAyHJ7TGL7TBvzcG++KWFn7N7D9UM5ZCBwdjXw15BuJ1LQ03XkAiJ1Enfkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740127811; c=relaxed/simple;
-	bh=cET2VAydaHrPR4tiVeI/VYj9jokwGPaK2EJTZppT38g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sE5QVpVFnBqU7oEctdEkEtl0y+ux4/Xfo43wg90Kik0XukQoPrzGnlVudyzryFF2al36FL+Gyl8MeJOaYuhTBJ4sRCFYuPMshZHssnidyNIIIY0OjVzgWTfy/7o6UIE7sSWfV05C4Vw3sOpLQAXCpIQQYbarPn1GX49RpzJY7Nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=W3Vd2e41; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1740127829; c=relaxed/simple;
+	bh=axQi25O4nTiog6gbJDtb/nAnfcR7uVFto49NXDcOyws=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SVKlLfZ/hA02HZRN7Lns6oTsIY6hh09WPR/LGndPmi8rDK4SDtMXjAPh/RuaTZIrQcxYBvV93b0U2tLQ3ile6lImpDDWJrFR3oP+MYWJLeHcC54bUjb0fgob2nXj9Nd0othwHYNfh60p0AmL8hEPDguv1QgAqIu8wzN2vbj6Sns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DU92QVKI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="W3Vd2e41"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=pf/dh
-	IOA+r1jNHu2BLMVQF106XUi9CBfUXR0eDnU5Cc=; b=W3Vd2e41CKOydg8xPTwVE
-	JgcVw9+cXM7rHeg2gMY5lMpoDDsTQO0WQj+KSEbsHv8PjhdpQiHJmKdWONOY7Job
-	DiUedZ5Jk9W/5I9KHwdMGaqLpQNO0SSKFdOpeYW9uARMMusp87moazfYy3Vdlzf2
-	+s4D/h+nurpeulOhlp2mDw=
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wDneyktPrhnkx91Ng--.60119S4;
-	Fri, 21 Feb 2025 16:49:50 +0800 (CST)
-From: Haoxiang Li <haoxiang_li2024@163.com>
-To: marcel@holtmann.org,
-	johan.hedberg@gmail.com,
-	luiz.dentz@gmail.com,
-	mm@semihalf.com,
-	acz@semihalf.com,
-	rad@semihalf.com
-Cc: linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Haoxiang Li <haoxiang_li2024@163.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] Bluetooth: Add check for mgmt_alloc_skb() in mgmt_remote_name()
-Date: Fri, 21 Feb 2025 16:49:47 +0800
-Message-Id: <20250221084947.2756859-1-haoxiang_li2024@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DU92QVKI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 491D8C4CED6;
+	Fri, 21 Feb 2025 08:50:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740127828;
+	bh=axQi25O4nTiog6gbJDtb/nAnfcR7uVFto49NXDcOyws=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DU92QVKIXIRvKkuf0Oavi/6oyYKG3Gtbdn+QZ2+yTWXwNtJfg9sfQbI4HS9RIwLPY
+	 P10cLbjArgzUpGJ3F2MiUtOL2S2y4/lPVUC7kYUQRB+Gs+j9Y1h4jtL3AQJmj+DJYD
+	 QpmcA0BynA5BtrpDvdXabz/8aV7ghoRYL5yE1rOHGAQ8gVbsD8hfhYxgGjEsZaBMtf
+	 GzV08g++FLQwR24KzgZ5p6Kg8KdCsJXmViV55muo/m98P604Ew3bIEDLKGNDneZpJh
+	 hU6ma4y+9TNut/025BpGrS1UR2P3XVW8dydOR0AdP2p07yuJ6jxvPvQ1yjscN2BrIg
+	 /TYVKh9/WBMUw==
+Date: Fri, 21 Feb 2025 09:50:23 +0100
+From: Joel Granados <joel.granados@kernel.org>
+To: Ruiwu Chen <rwchen404@gmail.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, kees@kernel.org
+Subject: Re: [PATCH] drop_caches: re-enable message after disabling
+Message-ID: <virvi6vh663p5ypdjr2v2fr3o77w5st3cagr4fe6z7nhhqehc6@xb7nqlop6nct>
+References: <20250216100514.3948-1-rwchen404@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDneyktPrhnkx91Ng--.60119S4
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Xr15JrW5Zry5XrWUGryUKFg_yoWfZrg_Kr
-	n2v3yfuFWUJryDAF4jkF4xWwnIyw1FyrySgwsIgas3ZrZ8Ww1Utr1xursxA397W3WUCrZ7
-	CF4DCFs5Zw10qjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRNvtCUUUUUU==
-X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/1tbiqBf5bme23pywzwAFsB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250216100514.3948-1-rwchen404@gmail.com>
 
-Add check for the return value of mgmt_alloc_skb() in
-mgmt_remote_name() to prevent null pointer dereference.
+On Sun, Feb 16, 2025 at 06:05:14PM +0800, Ruiwu Chen wrote:
+> When 'echo 4 > /proc/sys/vm/drop_caches' the message is disabled,
+> but there is no interface to enable the message, only by restarting
+> the way, so I want to add the 'echo 0 > /proc/sys/vm/drop_caches'
+> way to enabled the message again.
+> 
+> Signed-off-by: Ruiwu Chen <rwchen404@gmail.com>
+> ---
+>  fs/drop_caches.c | 7 +++++--
+>  kernel/sysctl.c  | 2 +-
+>  2 files changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/drop_caches.c b/fs/drop_caches.c
+> index d45ef541d848..c90cfaf9756d 100644
+> --- a/fs/drop_caches.c
+> +++ b/fs/drop_caches.c
+> @@ -57,7 +57,7 @@ int drop_caches_sysctl_handler(const struct ctl_table *table, int write,
+>  	if (ret)
+>  		return ret;
+>  	if (write) {
+> -		static int stfu;
+> +		static bool stfu;
+>  
+>  		if (sysctl_drop_caches & 1) {
+>  			lru_add_drain_all();
+> @@ -73,7 +73,10 @@ int drop_caches_sysctl_handler(const struct ctl_table *table, int write,
+>  				current->comm, task_pid_nr(current),
+>  				sysctl_drop_caches);
+>  		}
+> -		stfu |= sysctl_drop_caches & 4;
+> +		if (sysctl_drop_caches == 0)
+> +			stfu = false;
+> +		else if (sysctl_drop_caches == 4)
+> +			stfu = true;
+>  	}
+>  	return 0;
+>  }
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index cb57da499ebb..f2e06e074724 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -2088,7 +2088,7 @@ static const struct ctl_table vm_table[] = {
+>  		.maxlen		= sizeof(int),
+>  		.mode		= 0200,
+>  		.proc_handler	= drop_caches_sysctl_handler,
+> -		.extra1		= SYSCTL_ONE,
+> +		.extra1		= SYSCTL_ZERO,
+>  		.extra2		= SYSCTL_FOUR,
+>  	},
+>  	{
+> -- 
+> 2.27.0
+> 
 
-Fixes: ba17bb62ce41 ("Bluetooth: Fix skb allocation in mgmt_remote_name() & mgmt_device_connected()")
-Cc: stable@vger.kernel.org
-Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
----
-Changes in v2:
-- modify the title description.
----
- net/bluetooth/mgmt.c | 2 ++
- 1 file changed, 2 insertions(+)
+All this has changed with Kaixiong's move of the vm_table.
 
-diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
-index f53304cb09db..3e0f88cd975c 100644
---- a/net/bluetooth/mgmt.c
-+++ b/net/bluetooth/mgmt.c
-@@ -10413,6 +10413,8 @@ void mgmt_remote_name(struct hci_dev *hdev, bdaddr_t *bdaddr, u8 link_type,
- 
- 	skb = mgmt_alloc_skb(hdev, MGMT_EV_DEVICE_FOUND,
- 			     sizeof(*ev) + (name ? eir_precalc_len(name_len) : 0));
-+	if (!skb)
-+		return;
- 
- 	ev = skb_put(skb, sizeof(*ev));
- 	bacpy(&ev->addr.bdaddr, bdaddr);
+Please rebase this on top of sysctl-next [1] and send a V2
+
+Best
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/sysctl/sysctl.git/log/?h=sysctl-next
+
 -- 
-2.25.1
 
+Joel Granados
