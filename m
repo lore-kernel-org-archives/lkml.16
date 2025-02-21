@@ -1,112 +1,160 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 057AF202C5C;
-	Fri, 21 Feb 2025 09:34:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFBD2045BC;
+	Fri, 21 Feb 2025 09:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740130472; cv=none; b=dVmlYYlfe2fByfwUSqrNhHhe+VDuYvlq89x4nnh6yrdyTHz2qxK507lQvrhoDN2rBW+W1S86GQ6pknrZqMcJ4HY2ArdMoAmbIynTwvPzs0kKLnQEtae7kX9wlQeVqAPHAlpVHgSv4UUKblCD363EIhJBVS9W0oNjLRj6idcwZFY=
+	t=1740130475; cv=none; b=nkn5hnSjvnb1hnRAD/aQEN5qR+Sl0X80VAslbPS4y4el6CvUu9wJ/BtRzeVCUw59TD9+PPr2SSzcwqkpLtxF3m0f8ThvfhyIUxK64PFI5d/9OhtMq6BAUwEpFzFV3TAdCVT8QiYcm/SIzZCkAEMswIKhba583JUjU9fVDwF2yko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740130472; c=relaxed/simple;
-	bh=t0vL2LedbIQ02mNqvNshm9rPPgqB8sr16vgLT3f1JY0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mnmpu1t1K/rjvBjcriYouqfh3Uac56UJUq4Gbv/oLjN/T8nYRaXC2bT8msmmL1rF9w02J7DmNh4rLYoE2ccJVy7Rendcihua80CbHYVKZPEZujiY3/nsl08ND165vlepR93UqfmZqSV8LSJSb7YfN+BnJUG4mdNeajgJVtj6SsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1tlPQJ-0006BV-00; Fri, 21 Feb 2025 10:34:19 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 04C22C0135; Fri, 21 Feb 2025 10:31:25 +0100 (CET)
-Date: Fri, 21 Feb 2025 10:31:24 +0100
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Aleksandar Rikalo <arikalo@gmail.com>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Paul Burton <paulburton@kernel.org>, Chao-ying Fu <cfu@mips.com>,
-	Djordje Todorovic <djordje.todorovic@htecgroup.com>
-Subject: Re: [PATCH v9 0/4] MIPS: Support I6500 multi-cluster configuration
-Message-ID: <Z7hH7CYPXynbwAU1@alpha.franken.de>
-References: <20250129123250.711910-1-arikalo@gmail.com>
+	s=arc-20240116; t=1740130475; c=relaxed/simple;
+	bh=UrE4zNeA6rGUajNEitvvWzIh6MglysOpeI2P5JxANP8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=WU55k9ffti/1mCydPUJ82xGOQpXMrMkL5tnQreBqwBJyw/yr5pNBA/VfG6kTwdGxpgmd+hwh+OoTse7BVfPFREkMsWM7KmPnya/X3cLlI1v7OoD4ttF1EeXO8+KXe9RXjdijPcO5BNcAROYNCi1I7irotd+LMukh7XNENgOq3mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4YzlG03WHwzdb9B;
+	Fri, 21 Feb 2025 17:29:44 +0800 (CST)
+Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 57A03140158;
+	Fri, 21 Feb 2025 17:34:23 +0800 (CST)
+Received: from [10.67.120.129] (10.67.120.129) by
+ dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 21 Feb 2025 17:34:22 +0800
+Message-ID: <e55e4dd4-9f80-4b2b-a84e-4bcfa4cf40be@huawei.com>
+Date: Fri, 21 Feb 2025 17:34:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] mm: alloc_pages_bulk: remove assumption of populating only
+ NULL elements
+To: Chuck Lever <chuck.lever@oracle.com>, Yishai Hadas <yishaih@nvidia.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Shameer Kolothum
+	<shameerali.kolothum.thodi@huawei.com>, Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>, Chris Mason <clm@fb.com>, Josef
+ Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Gao Xiang
+	<xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>,
+	Carlos Maiolino <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>, Jesper Dangaard Brouer
+	<hawk@kernel.org>, Ilias Apalodimas <ilias.apalodimas@linaro.org>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+	<horms@kernel.org>, Trond Myklebust <trondmy@kernel.org>, Anna Schumaker
+	<anna@kernel.org>, Jeff Layton <jlayton@kernel.org>, Neil Brown
+	<neilb@suse.de>, Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo
+	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+CC: Luiz Capitulino <luizcap@redhat.com>, Mel Gorman
+	<mgorman@techsingularity.net>, <kvm@vger.kernel.org>,
+	<virtualization@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<linux-btrfs@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+	<linux-xfs@vger.kernel.org>, <linux-mm@kvack.org>, <netdev@vger.kernel.org>,
+	<linux-nfs@vger.kernel.org>
+References: <20250217123127.3674033-1-linyunsheng@huawei.com>
+ <abc3ae0b-620a-4e4a-8dd8-f8e7d3764b3a@oracle.com>
+ <cc6fc730-e5f4-485b-b0b6-ec70374b3ab1@huawei.com>
+ <7b7492c0-a3a7-470b-b7aa-697ac790a94b@oracle.com>
+Content-Language: en-US
+From: Yunsheng Lin <linyunsheng@huawei.com>
+In-Reply-To: <7b7492c0-a3a7-470b-b7aa-697ac790a94b@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250129123250.711910-1-arikalo@gmail.com>
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemf200006.china.huawei.com (7.185.36.61)
 
-On Wed, Jan 29, 2025 at 01:32:46PM +0100, Aleksandar Rikalo wrote:
-> Taken from Paul Burton MIPS repo with minor changes from Chao-ying Fu.
-> Tested with 64r6el_defconfig on Boston board in 2 cluster/2 VPU and
-> 1 cluster/4 VPU configurations.
+On 2025/2/18 22:17, Chuck Lever wrote:
+> On 2/18/25 4:16 AM, Yunsheng Lin wrote:
+>> On 2025/2/17 22:20, Chuck Lever wrote:
+>>> On 2/17/25 7:31 AM, Yunsheng Lin wrote:
+>>>> As mentioned in [1], it seems odd to check NULL elements in
+>>>> the middle of page bulk allocating,
+>>>
+>>> I think I requested that check to be added to the bulk page allocator.
+>>>
+>>> When sending an RPC reply, NFSD might release pages in the middle of
+>>
+>> It seems there is no usage of the page bulk allocation API in fs/nfsd/
+>> or fs/nfs/, which specific fs the above 'NFSD' is referring to?
 > 
-> v9:
->  - The changes related to the broken HCI have been removed as they are now part of a different series:
->    https://lore.kernel.org/linux-mips/20250123-cluster-hci-broken-v3-0-8a7ec57cbf68@bootlin.com/
->  - Re-base onto the master branch, with no functionality impact.
+> NFSD is in fs/nfsd/, and it is the major consumer of
+> net/sunrpc/svc_xprt.c.
 > 
-> v8:
->  - irqchip: mips-gic: Handle case with cluster without CPU cores.
->  - Add Tested-by: Gregory CLEMENT <gregory.clement@bootlin.com> for the entire series.
->  - Re-base onto the master branch, with no functionality impact.
 > 
-> v7:
->  - Add fixes for specific CM3.5 which is used in EyeQ6H SoCs,
->    suggested by Gregory Clement.
->  - Re-base onto the master branch, with no functionality impact.
+>>> the rq_pages array, marking each of those array entries with a NULL
+>>> pointer. We want to ensure that the array is refilled completely in this
+>>> case.
+>>>
+>>
+>> I did some researching, it seems you requested that in [1]?
+>> It seems the 'holes are always at the start' for the case in that
+>> discussion too, I am not sure if the case is referring to the caller
+>> in net/sunrpc/svc_xprt.c? If yes, it seems caller can do a better
+>> job of bulk allocating pages into a whole array sequentially without
+>> checking NULL elements first before doing the page bulk allocation
+>> as something below:
+>>
+>> +++ b/net/sunrpc/svc_xprt.c
+>> @@ -663,9 +663,10 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
+>>                 pages = RPCSVC_MAXPAGES;
+>>         }
+>>
+>> -       for (filled = 0; filled < pages; filled = ret) {
+>> -               ret = alloc_pages_bulk(GFP_KERNEL, pages, rqstp->rq_pages);
+>> -               if (ret > filled)
+>> +       for (filled = 0; filled < pages; filled += ret) {
+>> +               ret = alloc_pages_bulk(GFP_KERNEL, pages - filled,
+>> +                                      rqstp->rq_pages + filled);
+>> +               if (ret)
+>>                         /* Made progress, don't sleep yet */
+>>                         continue;
+>>
+>> @@ -674,7 +675,7 @@ static bool svc_alloc_arg(struct svc_rqst *rqstp)
+>>                         set_current_state(TASK_RUNNING);
+>>                         return false;
+>>                 }
+>> -               trace_svc_alloc_arg_err(pages, ret);
+>> +               trace_svc_alloc_arg_err(pages, filled);
+>>                 memalloc_retry_wait(GFP_KERNEL);
+>>         }
+>>         rqstp->rq_page_end = &rqstp->rq_pages[pages];
+>>
+>>
+>> 1. https://lkml.iu.edu/hypermail/linux/kernel/2103.2/09060.html
 > 
-> v6:
->  - Re-base onto the master branch, with no functionality impact.
->  - Correct the issue reported by the kernel test robot.
-> 
-> v5:
->  - Drop FDC related changes (patches 12, 13, and 14).
->  - Apply changes suggested by Thomas Gleixner (patches 3 and 4).
->  - Add #include <linux/cpumask.h> to patch 1, suggested by Thomas Bogendoerfer.
->  - Add Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org> for the patch 08/11.
->  - Add Tested-by: Serge Semin <fancer.lancer@gmail.com> for the entire series.
->  - Correct some commit messages.
-> 
-> v4:
->  - Re-base onto the master branch, with no functionality impact.
->  - Refactor MIPS FDC driver in the context of multicluster support.
-> 
-> v3:
->  - Add Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com> for the patch 02/12.
->  - Add the changes requested by Marc Zyngier for the 3/12 patch.
->  - Remove the patch 11/12 (a consequence of a discussion between Jiaxun Yang
->    and Marc Zyngier.
->  - Re-base onto the master branch, with no functionality impact.
-> 
-> v2:
->  - Apply correct Signed-off-by to avoid confusion.
-> 
-> Paul Burton (4):
->   clocksource: mips-gic-timer: Enable counter when CPUs start
->   MIPS: pm-cps: Use per-CPU variables as per-CPU, not per-core
->   MIPS: CPS: Introduce struct cluster_boot_config
->   MIPS: CPS: Boot CPUs in secondary clusters
-> 
->  arch/mips/include/asm/mips-cm.h      |  18 ++
->  arch/mips/include/asm/smp-cps.h      |   7 +-
->  arch/mips/kernel/asm-offsets.c       |   3 +
->  arch/mips/kernel/cps-vec.S           |  19 +-
->  arch/mips/kernel/mips-cm.c           |   4 +-
->  arch/mips/kernel/pm-cps.c            |  35 ++--
->  arch/mips/kernel/smp-cps.c           | 285 ++++++++++++++++++++++-----
->  drivers/clocksource/mips-gic-timer.c |   6 +-
->  8 files changed, 307 insertions(+), 70 deletions(-)
+> I still don't see what is broken about the current API.
 
-series applied to mips-next.
+As mentioned in [1], the page bulk alloc API before this patch may
+have some space for improvement from performance and easy-to-use
+perspective as the most existing calllers of page bulk alloc API
+are trying to bulk allocate the page for the whole array sequentially.
 
-Thomas.
+1. https://lore.kernel.org/all/c9950a79-7bcb-41c2-a59e-af315dc6d7ff@huawei.com/
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+> 
+> Anyway, any changes in svc_alloc_arg() will need to be run through the
+> upstream NFSD CI suite before they are merged.
+
+Is there any web link pointing to the above NFSD CI suite, so that I can
+test it if removing assumption of populating only NULL elements is indeed
+possible?
+
+Look more closely, it seems svc_rqst_release_pages()/svc_rdma_save_io_pages()
+does set rqstp->rq_respages[i] to NULL based on rqstp->rq_next_page,
+and the original code before using the page bulk alloc API does seem to only
+allocate page for NULL elements as can see from the below patchï¼š
+https://lore.kernel.org/all/20210325114228.27719-8-mgorman@techsingularity.net/T/#u
+
+The clearing of rqstp->rq_respages[] to NULL does seems sequentially, is it
+possible to only pass NULL elements in rqstp->rq_respages[] to alloc_pages_bulk()
+so that bulk alloc API does not have to do the NULL checking and use the array only
+as output parameter?
+
+> 
+> 
