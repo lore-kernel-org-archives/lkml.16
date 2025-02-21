@@ -1,63 +1,65 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C8B2046A5;
-	Fri, 21 Feb 2025 09:03:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55342204595;
+	Fri, 21 Feb 2025 09:03:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740128598; cv=none; b=YQORo6JsYWvJBRFJD819LPqBBq3UU9XY1nms0xJNI3FaaeHJNQjSeeSgHI5QnBAS+XSKZU2akHkhMdLqNmoXtMhlNCKSVSOukrX/eykfY9Vu3y9I7cEv2iMAkoMgBkIUFSSxVOFOMpiOQ2FcpyFtl6mUuybgXNlnjbJKZ2TSzmo=
+	t=1740128596; cv=none; b=tBHdbRL2z2c8kF2odAvSF0xWaPwfxbe9oYckaF8yrNJ9I/C6DjE/ydgpSf7DAUcc+uQNBksN+reckl0d582v7Cq3BV75cKDAHhiw90EvUp8MBpFD8sOJiBwuRnDjkXPHUEnqaPu8XJdqIWP70PpCHMAnn50Wfgar5EU5Z48RDIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740128598; c=relaxed/simple;
-	bh=MRc65aZJxEWWt6kIRzXe6aV4w5Ip31bnXI2lOCp//t4=;
+	s=arc-20240116; t=1740128596; c=relaxed/simple;
+	bh=UHvKiLzPXJIg6Ls+NVcp8f4uY2sH6ypQQpu+w6inNPE=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=rHnJX0QjPIv5yfUmOfzC8jY5s9T3Hr26Q8pnSWRBXVcve0cGuwXyQNZPVdXwGB6AOX8kOO0ZTYXZ9QgD1dIN47yEkxHX6RnMB65IiVutPWZSfb+ucxZIJL9c2gUaGLfc3LSoLHrlIUotd7nH6112I/TNxWGeqbb+xyRj4axQvzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=keMLvI96; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WJgfRPXV; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=K0px5u/hvqscN79lRWSrGGGA0pwuc1r9BAMoPM8De5qN0r+kUrNzqdWbbLlkNJuN2D7hlfKjabZ7DL/Ifs9M3Ii3erklWhU54squycZVrastmTg79drfJJY4FKwVKakTJO0LPxdeF+wSCt0r/5/IaagbgvOXztncHSZxpDQD3bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=frwBzZJD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FcPPHPI/; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="keMLvI96";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WJgfRPXV"
-Date: Fri, 21 Feb 2025 09:03:14 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="frwBzZJD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FcPPHPI/"
+Date: Fri, 21 Feb 2025 09:03:11 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740128594;
+	s=2020; t=1740128592;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hG2SZ0AewhtwXdhv9NUYuA2hIlS8OPuDUqZVD8g0r+w=;
-	b=keMLvI964QTuG85382X4VNvcoS8RHRsoABc1pL4yw7DgH/J3MAA7KndNkC6KTHSVa1efUN
-	2L0uUiNIoyJ59X4gC9N/aa+4gl9tHjtlkcymTTn0MujYn8iQN/20XV7XeQp4CAH8EhZJQs
-	8oU+WcmAWAa86sF8Dle1F364Mz0D2uK6ytMEm4Vq3C4HbM/+mVIlKQvoU8zJBQYr8gwLUW
-	OJx/6knKNeBTgoAsjsbwAoAdn3ZW617AxlwX52nvoF6bh8blzQ7NtpznQTHJLz5aDSPmWQ
-	0UeShuFY00f7EX53KdBhAki4pnR70qvdL4zTFxAidKXS8pR65Yt3p5qPWFrQQw==
+	bh=RTO53vMncVztHz3nVgvkhWeJZvQ9JPCq5gSHrUqCdW8=;
+	b=frwBzZJD+xC0UY+Vmc2K0p9nkMVwcaoAX68IFhLTB30uVqyhMNe4LIjO6FSDfF0OzmGZAd
+	3Gmtz9mV2FIz595mKik1jUIykbSbCi+BDQsuMwO8eO1Ad9XzSjoECKaknacAhsFU7SYiS2
+	4cCXrliPu4ZXyAsBgjBnuuZWVpbGFjZMX5oFCBSmOvWjRN70APly9m/IZv7+MhX3zhSLHT
+	5w4DMJHYkmo7hF7d0wYmL25Emrm+8oUj58lL8Wjpk74990ynxVIGn2j/6xUlSEEh74MYRX
+	8suk87lNbbWJE3YsdwG0j6HjjQttBPimiKrjsnKExP3LXvKJsBX31E+uY4BNrQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740128594;
+	s=2020e; t=1740128592;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hG2SZ0AewhtwXdhv9NUYuA2hIlS8OPuDUqZVD8g0r+w=;
-	b=WJgfRPXV/3Z7uwBHnnSmuMJaS/Hv6sFTIbjqoBTg4AoIaZs7VuxMiggB/S5miubpfgdIxq
-	sSdtF2ROUtJsrEAg==
+	bh=RTO53vMncVztHz3nVgvkhWeJZvQ9JPCq5gSHrUqCdW8=;
+	b=FcPPHPI/S06CK7JyL1PtAF6mJ5IXJv4faqz5GrhheSGYLQ+RtEvF8Jlfg/vVD9C3a5CreY
+	y+IW/wolmyzie6Aw==
 From:
  tip-bot2 for Thomas =?utf-8?q?Wei=C3=9Fschuh?= <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/vdso] vdso: Add generic random data storage
-Cc: thomas.weissschuh@linutronix.de, Thomas Gleixner <tglx@linutronix.de>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250204-vdso-store-rng-v3-6-13a4669dfc8c@linutronix.de>
-References: <20250204-vdso-store-rng-v3-6-13a4669dfc8c@linutronix.de>
+Subject:
+ [tip: timers/vdso] riscv: vdso: Switch to generic storage implementation
+Cc: Nam Cao <namcao@linutronix.de>, thomas.weissschuh@linutronix.de,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250204-vdso-store-rng-v3-9-13a4669dfc8c@linutronix.de>
+References: <20250204-vdso-store-rng-v3-9-13a4669dfc8c@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174012859410.10177.5161727261224241718.tip-bot2@tip-bot2>
+Message-ID: <174012859198.10177.2179760003717176109.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,216 +69,373 @@ Content-Transfer-Encoding: quoted-printable
 
 The following commit has been merged into the timers/vdso branch of tip:
 
-Commit-ID:     51d6ca373f459fa6c91743e14ae69854d844aa38
-Gitweb:        https://git.kernel.org/tip/51d6ca373f459fa6c91743e14ae69854d84=
-4aa38
+Commit-ID:     46fe55b204bfb007e0f0a5409dcda063ad98b089
+Gitweb:        https://git.kernel.org/tip/46fe55b204bfb007e0f0a5409dcda063ad9=
+8b089
 Author:        Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
-AuthorDate:    Tue, 04 Feb 2025 13:05:38 +01:00
+AuthorDate:    Tue, 04 Feb 2025 13:05:41 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 21 Feb 2025 09:54:01 +01:00
+CommitterDate: Fri, 21 Feb 2025 09:54:02 +01:00
 
-vdso: Add generic random data storage
+riscv: vdso: Switch to generic storage implementation
 
-Extend the generic vDSO data storage with a page for the random state data.
-The random state data is stored in a dedicated page, as the existing
-storage page is only meant for time-related, time-namespace-aware data.
-This simplifies to access logic to not need to handle time namespaces
-anymore and also frees up more space in the time-related page.
+The generic storage implementation provides the same features as the
+custom one. However it can be shared between architectures, making
+maintenance easier.
 
-In case further generic vDSO data store is required it can be added to
-the random state page.
-
+Co-developed-by: Nam Cao <namcao@linutronix.de>
+Signed-off-by: Nam Cao <namcao@linutronix.de>
 Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250204-vdso-store-rng-v3-6-13a4669dfc8c@l=
+Link: https://lore.kernel.org/all/20250204-vdso-store-rng-v3-9-13a4669dfc8c@l=
 inutronix.de
 
 ---
- drivers/char/random.c               |  6 +++---
- include/asm-generic/vdso/vsyscall.h | 12 ++++++++++++
- include/vdso/datapage.h             | 10 ++++++++++
- lib/vdso/datastore.c                | 14 ++++++++++++++
- lib/vdso/getrandom.c                |  8 ++++++--
- 5 files changed, 45 insertions(+), 5 deletions(-)
+ arch/riscv/Kconfig                         |  3 +-
+ arch/riscv/include/asm/vdso.h              |  2 +-
+ arch/riscv/include/asm/vdso/arch_data.h    | 17 ++++-
+ arch/riscv/include/asm/vdso/gettimeofday.h | 14 +---
+ arch/riscv/include/asm/vdso/time_data.h    | 17 +----
+ arch/riscv/include/asm/vdso/vsyscall.h     |  9 +--
+ arch/riscv/kernel/sys_hwprobe.c            |  3 +-
+ arch/riscv/kernel/vdso.c                   | 90 +---------------------
+ arch/riscv/kernel/vdso/hwprobe.c           |  6 +-
+ arch/riscv/kernel/vdso/vdso.lds.S          |  7 +--
+ 10 files changed, 31 insertions(+), 137 deletions(-)
+ create mode 100644 arch/riscv/include/asm/vdso/arch_data.h
+ delete mode 100644 arch/riscv/include/asm/vdso/time_data.h
 
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 2581186..92cbd24 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -278,7 +278,7 @@ static void crng_reseed(struct work_struct *work)
- 	WRITE_ONCE(base_crng.generation, next_gen);
- #ifdef CONFIG_VDSO_GETRANDOM
- 	/* base_crng.generation's invalid value is ULONG_MAX, while
--	 * _vdso_rng_data.generation's invalid value is 0, so add one to the
-+	 * vdso_k_rng_data->generation's invalid value is 0, so add one to the
- 	 * former to arrive at the latter. Use smp_store_release so that this
- 	 * is ordered with the write above to base_crng.generation. Pairs with
- 	 * the smp_rmb() before the syscall in the vDSO code.
-@@ -290,7 +290,7 @@ static void crng_reseed(struct work_struct *work)
- 	 * because the vDSO side only checks whether the value changed, without
- 	 * actually using or interpreting the value.
- 	 */
--	smp_store_release((unsigned long *)&__arch_get_k_vdso_rng_data()->generatio=
-n, next_gen + 1);
-+	smp_store_release((unsigned long *)&vdso_k_rng_data->generation, next_gen +=
- 1);
- #endif
- 	if (!static_branch_likely(&crng_is_ready))
- 		crng_init =3D CRNG_READY;
-@@ -743,7 +743,7 @@ static void __cold _credit_init_bits(size_t bits)
- 			queue_work(system_unbound_wq, &set_ready);
- 		atomic_notifier_call_chain(&random_ready_notifier, 0, NULL);
- #ifdef CONFIG_VDSO_GETRANDOM
--		WRITE_ONCE(__arch_get_k_vdso_rng_data()->is_ready, true);
-+		WRITE_ONCE(vdso_k_rng_data->is_ready, true);
- #endif
- 		wake_up_interruptible(&crng_init_wait);
- 		kill_fasync(&fasync, SIGIO, POLL_IN);
-diff --git a/include/asm-generic/vdso/vsyscall.h b/include/asm-generic/vdso/v=
-syscall.h
-index ac5b93b..a5f973e 100644
---- a/include/asm-generic/vdso/vsyscall.h
-+++ b/include/asm-generic/vdso/vsyscall.h
-@@ -13,6 +13,13 @@ static __always_inline const struct vdso_time_data *__arch=
-_get_vdso_u_time_data(
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 7612c52..aa8ea53 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -53,7 +53,7 @@ config RISCV
+ 	select ARCH_HAS_SYSCALL_WRAPPER
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+ 	select ARCH_HAS_UBSAN
+-	select ARCH_HAS_VDSO_TIME_DATA
++	select ARCH_HAS_VDSO_ARCH_DATA if GENERIC_VDSO_DATA_STORE
+ 	select ARCH_KEEP_MEMBLOCK if ACPI
+ 	select ARCH_MHP_MEMMAP_ON_MEMORY_ENABLE	if 64BIT && MMU
+ 	select ARCH_OPTIONAL_KERNEL_RWX if ARCH_HAS_STRICT_KERNEL_RWX
+@@ -116,6 +116,7 @@ config RISCV
+ 	select GENERIC_SCHED_CLOCK
+ 	select GENERIC_SMP_IDLE_THREAD
+ 	select GENERIC_TIME_VSYSCALL if MMU && 64BIT
++	select GENERIC_VDSO_DATA_STORE if MMU
+ 	select GENERIC_VDSO_TIME_NS if HAVE_GENERIC_VDSO
+ 	select HARDIRQS_SW_RESEND
+ 	select HAS_IOPORT if MMU
+diff --git a/arch/riscv/include/asm/vdso.h b/arch/riscv/include/asm/vdso.h
+index f891478..c130d81 100644
+--- a/arch/riscv/include/asm/vdso.h
++++ b/arch/riscv/include/asm/vdso.h
+@@ -14,7 +14,7 @@
+  */
+ #ifdef CONFIG_MMU
+=20
+-#define __VVAR_PAGES    2
++#define __VDSO_PAGES    4
+=20
+ #ifndef __ASSEMBLY__
+ #include <generated/vdso-offsets.h>
+diff --git a/arch/riscv/include/asm/vdso/arch_data.h b/arch/riscv/include/asm=
+/vdso/arch_data.h
+new file mode 100644
+index 0000000..da57a37
+--- /dev/null
++++ b/arch/riscv/include/asm/vdso/arch_data.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __RISCV_ASM_VDSO_ARCH_DATA_H
++#define __RISCV_ASM_VDSO_ARCH_DATA_H
++
++#include <linux/types.h>
++#include <vdso/datapage.h>
++#include <asm/hwprobe.h>
++
++struct vdso_arch_data {
++	/* Stash static answers to the hwprobe queries when all CPUs are selected. =
+*/
++	__u64 all_cpu_hwprobe_values[RISCV_HWPROBE_MAX_KEY + 1];
++
++	/* Boolean indicating all CPUs have the same static hwprobe values. */
++	__u8 homogeneous_cpus;
++};
++
++#endif /* __RISCV_ASM_VDSO_ARCH_DATA_H */
+diff --git a/arch/riscv/include/asm/vdso/gettimeofday.h b/arch/riscv/include/=
+asm/vdso/gettimeofday.h
+index ba3283c..29164f8 100644
+--- a/arch/riscv/include/asm/vdso/gettimeofday.h
++++ b/arch/riscv/include/asm/vdso/gettimeofday.h
+@@ -69,7 +69,7 @@ int clock_getres_fallback(clockid_t _clkid, struct __kernel=
+_timespec *_ts)
+ #endif /* CONFIG_GENERIC_TIME_VSYSCALL */
+=20
+ static __always_inline u64 __arch_get_hw_counter(s32 clock_mode,
+-						 const struct vdso_data *vd)
++						 const struct vdso_time_data *vd)
+ {
+ 	/*
+ 	 * The purpose of csr_read(CSR_TIME) is to trap the system into
+@@ -79,18 +79,6 @@ static __always_inline u64 __arch_get_hw_counter(s32 clock=
+_mode,
+ 	return csr_read(CSR_TIME);
  }
- #endif
 =20
-+#ifndef __arch_get_vdso_u_rng_data
-+static __always_inline const struct vdso_rng_data *__arch_get_vdso_u_rng_dat=
-a(void)
-+{
-+	return &vdso_u_rng_data;
-+}
-+#endif
-+
- #else  /* !CONFIG_GENERIC_VDSO_DATA_STORE */
-=20
- #ifndef __arch_get_k_vdso_data
-@@ -25,6 +32,11 @@ static __always_inline struct vdso_data *__arch_get_k_vdso=
-_data(void)
-=20
- #define __arch_get_vdso_u_time_data __arch_get_vdso_data
-=20
-+#ifndef __arch_get_vdso_u_rng_data
-+#define __arch_get_vdso_u_rng_data() __arch_get_vdso_rng_data()
-+#endif
-+#define vdso_k_rng_data __arch_get_k_vdso_rng_data()
-+
- #endif /* CONFIG_GENERIC_VDSO_DATA_STORE */
-=20
- #ifndef __arch_update_vsyscall
-diff --git a/include/vdso/datapage.h b/include/vdso/datapage.h
-index b3d8087..7dbc879 100644
---- a/include/vdso/datapage.h
-+++ b/include/vdso/datapage.h
-@@ -144,8 +144,10 @@ extern struct vdso_time_data _timens_data[CS_BASES] __at=
-tribute__((visibility("h
- extern struct vdso_rng_data _vdso_rng_data __attribute__((visibility("hidden=
-")));
- #else
- extern struct vdso_time_data vdso_u_time_data[CS_BASES] __attribute__((visib=
-ility("hidden")));
-+extern struct vdso_rng_data vdso_u_rng_data __attribute__((visibility("hidde=
-n")));
-=20
- extern struct vdso_time_data *vdso_k_time_data;
-+extern struct vdso_rng_data *vdso_k_rng_data;
- #endif
-=20
- /**
-@@ -161,6 +163,7 @@ union vdso_data_store {
- enum vdso_pages {
- 	VDSO_TIME_PAGE_OFFSET,
- 	VDSO_TIMENS_PAGE_OFFSET,
-+	VDSO_RNG_PAGE_OFFSET,
- 	VDSO_NR_PAGES
- };
-=20
-@@ -184,9 +187,16 @@ enum vdso_pages {
-=20
- #else /* !__ASSEMBLY__ */
-=20
-+#ifdef CONFIG_VDSO_GETRANDOM
-+#define __vdso_u_rng_data	PROVIDE(vdso_u_rng_data =3D vdso_u_data + 2 * PAGE=
-_SIZE);
-+#else
-+#define __vdso_u_rng_data
-+#endif
-+
- #define VDSO_VVAR_SYMS						\
- 	PROVIDE(vdso_u_data =3D . - __VDSO_PAGES * PAGE_SIZE);	\
- 	PROVIDE(vdso_u_time_data =3D vdso_u_data);		\
-+	__vdso_u_rng_data					\
-=20
-=20
+-static __always_inline const struct vdso_data *__arch_get_vdso_data(void)
+-{
+-	return _vdso_data;
+-}
+-
+-#ifdef CONFIG_TIME_NS
+-static __always_inline
+-const struct vdso_data *__arch_get_timens_vdso_data(const struct vdso_data *=
+vd)
+-{
+-	return _timens_data;
+-}
+-#endif
  #endif /* !__ASSEMBLY__ */
-diff --git a/lib/vdso/datastore.c b/lib/vdso/datastore.c
-index d318176..9260b00 100644
---- a/lib/vdso/datastore.c
-+++ b/lib/vdso/datastore.c
-@@ -17,6 +17,15 @@ struct vdso_time_data *vdso_k_time_data =3D vdso_time_data=
-_store.data;
- static_assert(sizeof(vdso_time_data_store) =3D=3D PAGE_SIZE);
- #endif /* CONFIG_HAVE_GENERIC_VDSO */
 =20
-+#ifdef CONFIG_VDSO_GETRANDOM
-+static union {
-+	struct vdso_rng_data	data;
-+	u8			page[PAGE_SIZE];
-+} vdso_rng_data_store __page_aligned_data;
-+struct vdso_rng_data *vdso_k_rng_data =3D &vdso_rng_data_store.data;
-+static_assert(sizeof(vdso_rng_data_store) =3D=3D PAGE_SIZE);
-+#endif /* CONFIG_VDSO_GETRANDOM */
-+
- static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
- 			     struct vm_area_struct *vma, struct vm_fault *vmf)
+ #endif /* __ASM_VDSO_GETTIMEOFDAY_H */
+diff --git a/arch/riscv/include/asm/vdso/time_data.h b/arch/riscv/include/asm=
+/vdso/time_data.h
+deleted file mode 100644
+index dfa6522..0000000
+--- a/arch/riscv/include/asm/vdso/time_data.h
++++ /dev/null
+@@ -1,17 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __RISCV_ASM_VDSO_TIME_DATA_H
+-#define __RISCV_ASM_VDSO_TIME_DATA_H
+-
+-#include <linux/types.h>
+-#include <vdso/datapage.h>
+-#include <asm/hwprobe.h>
+-
+-struct arch_vdso_time_data {
+-	/* Stash static answers to the hwprobe queries when all CPUs are selected. =
+*/
+-	__u64 all_cpu_hwprobe_values[RISCV_HWPROBE_MAX_KEY + 1];
+-
+-	/* Boolean indicating all CPUs have the same static hwprobe values. */
+-	__u8 homogeneous_cpus;
+-};
+-
+-#endif /* __RISCV_ASM_VDSO_TIME_DATA_H */
+diff --git a/arch/riscv/include/asm/vdso/vsyscall.h b/arch/riscv/include/asm/=
+vdso/vsyscall.h
+index e8a9c4b..1140b54 100644
+--- a/arch/riscv/include/asm/vdso/vsyscall.h
++++ b/arch/riscv/include/asm/vdso/vsyscall.h
+@@ -6,15 +6,6 @@
+=20
+ #include <vdso/datapage.h>
+=20
+-extern struct vdso_data *vdso_data;
+-
+-static __always_inline struct vdso_data *__riscv_get_k_vdso_data(void)
+-{
+-	return vdso_data;
+-}
+-
+-#define __arch_get_k_vdso_data __riscv_get_k_vdso_data
+-
+ /* The asm-generic header needs to be included after the definitions above */
+ #include <asm-generic/vdso/vsyscall.h>
+=20
+diff --git a/arch/riscv/kernel/sys_hwprobe.c b/arch/riscv/kernel/sys_hwprobe.c
+index bcd3b81..04a4e54 100644
+--- a/arch/riscv/kernel/sys_hwprobe.c
++++ b/arch/riscv/kernel/sys_hwprobe.c
+@@ -450,8 +450,7 @@ static int do_riscv_hwprobe(struct riscv_hwprobe __user *=
+pairs,
+=20
+ static int __init init_hwprobe_vdso_data(void)
  {
-@@ -53,6 +62,11 @@ static vm_fault_t vvar_fault(const struct vm_special_mappi=
-ng *sm,
- 			return VM_FAULT_SIGBUS;
- 		pfn =3D __phys_to_pfn(__pa_symbol(vdso_k_time_data));
- 		break;
-+	case VDSO_RNG_PAGE_OFFSET:
-+		if (!IS_ENABLED(CONFIG_VDSO_GETRANDOM))
-+			return VM_FAULT_SIGBUS;
-+		pfn =3D __phys_to_pfn(__pa_symbol(vdso_k_rng_data));
-+		break;
- 	default:
- 		return VM_FAULT_SIGBUS;
- 	}
-diff --git a/lib/vdso/getrandom.c b/lib/vdso/getrandom.c
-index 938ca53..440f8a6 100644
---- a/lib/vdso/getrandom.c
-+++ b/lib/vdso/getrandom.c
-@@ -12,6 +12,9 @@
- #include <uapi/linux/mman.h>
- #include <uapi/linux/random.h>
+-	struct vdso_data *vd =3D __arch_get_k_vdso_data();
+-	struct arch_vdso_time_data *avd =3D &vd->arch_data;
++	struct vdso_arch_data *avd =3D vdso_k_arch_data;
+ 	u64 id_bitsmash =3D 0;
+ 	struct riscv_hwprobe pair;
+ 	int key;
+diff --git a/arch/riscv/kernel/vdso.c b/arch/riscv/kernel/vdso.c
+index 3ca3ae4..cc2895d 100644
+--- a/arch/riscv/kernel/vdso.c
++++ b/arch/riscv/kernel/vdso.c
+@@ -13,20 +13,11 @@
+ #include <linux/err.h>
+ #include <asm/page.h>
+ #include <asm/vdso.h>
+-#include <linux/time_namespace.h>
++#include <linux/vdso_datastore.h>
+ #include <vdso/datapage.h>
+ #include <vdso/vsyscall.h>
 =20
-+/* Bring in default accessors */
-+#include <vdso/vsyscall.h>
-+
- #undef PAGE_SIZE
- #undef PAGE_MASK
- #define PAGE_SIZE (1UL << CONFIG_PAGE_SHIFT)
-@@ -152,7 +155,7 @@ retry_generation:
+-enum vvar_pages {
+-	VVAR_DATA_PAGE_OFFSET,
+-	VVAR_TIMENS_PAGE_OFFSET,
+-	VVAR_NR_PAGES,
+-};
+-
+-#define VVAR_SIZE  (VVAR_NR_PAGES << PAGE_SHIFT)
+-
+-static union vdso_data_store vdso_data_store __page_aligned_data;
+-struct vdso_data *vdso_data =3D vdso_data_store.data;
++#define VVAR_SIZE  (VDSO_NR_PAGES << PAGE_SHIFT)
 =20
- 		/*
- 		 * Prevent the syscall from being reordered wrt current_generation. Pairs =
-with the
--		 * smp_store_release(&_vdso_rng_data.generation) in random.c.
-+		 * smp_store_release(&vdso_k_rng_data->generation) in random.c.
- 		 */
- 		smp_rmb();
-=20
-@@ -256,5 +259,6 @@ fallback_syscall:
- static __always_inline ssize_t
- __cvdso_getrandom(void *buffer, size_t len, unsigned int flags, void *opaque=
-_state, size_t opaque_len)
- {
--	return __cvdso_getrandom_data(__arch_get_vdso_rng_data(), buffer, len, flag=
-s, opaque_state, opaque_len);
-+	return __cvdso_getrandom_data(__arch_get_vdso_u_rng_data(), buffer, len, fl=
-ags,
-+				      opaque_state, opaque_len);
+ struct __vdso_info {
+ 	const char *name;
+@@ -79,78 +70,6 @@ static void __init __vdso_init(struct __vdso_info *vdso_in=
+fo)
+ 	vdso_info->cm->pages =3D vdso_pagelist;
  }
+=20
+-#ifdef CONFIG_TIME_NS
+-struct vdso_data *arch_get_vdso_data(void *vvar_page)
+-{
+-	return (struct vdso_data *)(vvar_page);
+-}
+-
+-static const struct vm_special_mapping rv_vvar_map;
+-
+-/*
+- * The vvar mapping contains data for a specific time namespace, so when a t=
+ask
+- * changes namespace we must unmap its vvar data for the old namespace.
+- * Subsequent faults will map in data for the new namespace.
+- *
+- * For more details see timens_setup_vdso_data().
+- */
+-int vdso_join_timens(struct task_struct *task, struct time_namespace *ns)
+-{
+-	struct mm_struct *mm =3D task->mm;
+-	struct vm_area_struct *vma;
+-	VMA_ITERATOR(vmi, mm, 0);
+-
+-	mmap_read_lock(mm);
+-
+-	for_each_vma(vmi, vma) {
+-		if (vma_is_special_mapping(vma, &rv_vvar_map))
+-			zap_vma_pages(vma);
+-	}
+-
+-	mmap_read_unlock(mm);
+-	return 0;
+-}
+-#endif
+-
+-static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
+-			     struct vm_area_struct *vma, struct vm_fault *vmf)
+-{
+-	struct page *timens_page =3D find_timens_vvar_page(vma);
+-	unsigned long pfn;
+-
+-	switch (vmf->pgoff) {
+-	case VVAR_DATA_PAGE_OFFSET:
+-		if (timens_page)
+-			pfn =3D page_to_pfn(timens_page);
+-		else
+-			pfn =3D sym_to_pfn(vdso_data);
+-		break;
+-#ifdef CONFIG_TIME_NS
+-	case VVAR_TIMENS_PAGE_OFFSET:
+-		/*
+-		 * If a task belongs to a time namespace then a namespace
+-		 * specific VVAR is mapped with the VVAR_DATA_PAGE_OFFSET and
+-		 * the real VVAR page is mapped with the VVAR_TIMENS_PAGE_OFFSET
+-		 * offset.
+-		 * See also the comment near timens_setup_vdso_data().
+-		 */
+-		if (!timens_page)
+-			return VM_FAULT_SIGBUS;
+-		pfn =3D sym_to_pfn(vdso_data);
+-		break;
+-#endif /* CONFIG_TIME_NS */
+-	default:
+-		return VM_FAULT_SIGBUS;
+-	}
+-
+-	return vmf_insert_pfn(vma, vmf->address, pfn);
+-}
+-
+-static const struct vm_special_mapping rv_vvar_map =3D {
+-	.name   =3D "[vvar]",
+-	.fault =3D vvar_fault,
+-};
+-
+ static struct vm_special_mapping rv_vdso_map __ro_after_init =3D {
+ 	.name   =3D "[vdso]",
+ 	.mremap =3D vdso_mremap,
+@@ -196,7 +115,7 @@ static int __setup_additional_pages(struct mm_struct *mm,
+ 	unsigned long vdso_base, vdso_text_len, vdso_mapping_len;
+ 	void *ret;
+=20
+-	BUILD_BUG_ON(VVAR_NR_PAGES !=3D __VVAR_PAGES);
++	BUILD_BUG_ON(VDSO_NR_PAGES !=3D __VDSO_PAGES);
+=20
+ 	vdso_text_len =3D vdso_info->vdso_pages << PAGE_SHIFT;
+ 	/* Be sure to map the data page */
+@@ -208,8 +127,7 @@ static int __setup_additional_pages(struct mm_struct *mm,
+ 		goto up_fail;
+ 	}
+=20
+-	ret =3D _install_special_mapping(mm, vdso_base, VVAR_SIZE,
+-		(VM_READ | VM_MAYREAD | VM_PFNMAP), &rv_vvar_map);
++	ret =3D vdso_install_vvar_mapping(mm, vdso_base);
+ 	if (IS_ERR(ret))
+ 		goto up_fail;
+=20
+diff --git a/arch/riscv/kernel/vdso/hwprobe.c b/arch/riscv/kernel/vdso/hwprob=
+e.c
+index a158c02..2ddeba6 100644
+--- a/arch/riscv/kernel/vdso/hwprobe.c
++++ b/arch/riscv/kernel/vdso/hwprobe.c
+@@ -16,8 +16,7 @@ static int riscv_vdso_get_values(struct riscv_hwprobe *pair=
+s, size_t pair_count,
+ 				 size_t cpusetsize, unsigned long *cpus,
+ 				 unsigned int flags)
+ {
+-	const struct vdso_data *vd =3D __arch_get_vdso_data();
+-	const struct arch_vdso_time_data *avd =3D &vd->arch_data;
++	const struct vdso_arch_data *avd =3D &vdso_u_arch_data;
+ 	bool all_cpus =3D !cpusetsize && !cpus;
+ 	struct riscv_hwprobe *p =3D pairs;
+ 	struct riscv_hwprobe *end =3D pairs + pair_count;
+@@ -51,8 +50,7 @@ static int riscv_vdso_get_cpus(struct riscv_hwprobe *pairs,=
+ size_t pair_count,
+ 			       size_t cpusetsize, unsigned long *cpus,
+ 			       unsigned int flags)
+ {
+-	const struct vdso_data *vd =3D __arch_get_vdso_data();
+-	const struct arch_vdso_time_data *avd =3D &vd->arch_data;
++	const struct vdso_arch_data *avd =3D &vdso_u_arch_data;
+ 	struct riscv_hwprobe *p =3D pairs;
+ 	struct riscv_hwprobe *end =3D pairs + pair_count;
+ 	unsigned char *c =3D (unsigned char *)cpus;
+diff --git a/arch/riscv/kernel/vdso/vdso.lds.S b/arch/riscv/kernel/vdso/vdso.=
+lds.S
+index cbe2a17..8e86965 100644
+--- a/arch/riscv/kernel/vdso/vdso.lds.S
++++ b/arch/riscv/kernel/vdso/vdso.lds.S
+@@ -4,15 +4,14 @@
+  */
+ #include <asm/page.h>
+ #include <asm/vdso.h>
++#include <vdso/datapage.h>
+=20
+ OUTPUT_ARCH(riscv)
+=20
+ SECTIONS
+ {
+-	PROVIDE(_vdso_data =3D . - __VVAR_PAGES * PAGE_SIZE);
+-#ifdef CONFIG_TIME_NS
+-	PROVIDE(_timens_data =3D _vdso_data + PAGE_SIZE);
+-#endif
++	VDSO_VVAR_SYMS
++
+ 	. =3D SIZEOF_HEADERS;
+=20
+ 	.hash		: { *(.hash) }			:text
