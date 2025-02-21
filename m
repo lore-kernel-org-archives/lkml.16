@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DFF20E319;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4E7120E326;
 	Fri, 21 Feb 2025 13:49:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740145747; cv=none; b=F0gzfJlCVYmp68ZASIC2EgZJydLbhYAFKiDvJObLlDlIilxQnI45qxk4ZWpSkTGkWNdSEvpLY08SDXLxl01pl8pTdZfGmFkg80seigggjAoEXAeY6eax//FyWtfrMWQODkSSEdQ3YyNdOTbW4h5fgNe4Usz90n6JWBp0Dxukkck=
+	t=1740145747; cv=none; b=O9Cf3uowtJqSPUcs7QLOwtl5Ox3j498idU7sSWHLMNryh+y+Oy8sycaE3XzPJ8y00XUmnLl+0NPYFqX8ftIuD+XN3zUGDjn9tbLAE3hZXGQY0EFhsc/OOlVOGKXBD1IvSf3a7UkRDVQ/fE1J4UKIa302prktkhyBYT+XUZzb54w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740145747; c=relaxed/simple;
-	bh=C0EAePF53lIXFleUHeMPzsteLlLG26sy4F3rDVZs/WI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HuFQo09ZpD0bYTIoqPPcgDwh3LWdimM+Wzlngxjx4yXARig7DomsoWNRojOWdkr7MuByle1dScuDp9vHWqQjfp1hUvASK2OHRMnKBJZJRGxj6QWxpDnl5lDwQ0izi3yTqvlJAuouNhV5Nor+WdqykPuX3mSNKrUqF04hkCNGINk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=beyYBABR; arc=none smtp.client-ip=10.30.226.201
+	bh=UalauN8XWtUsTEbYj+PKqhYtpX3u+/YFSuhA5nmw7d8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=uytRxnODpgsgOQ3LzFAdfTimyzFWo7kDp00EA43c6X1GwcR/NkODWmsxoImoO2PtpflC4W/kgtc8dIrSB9KLtn3O2vGuWqpqt3i0P4TVofhpFK5JlMiLaf2SbY5uJdzB+jBtS68Jv/PCJl4YED3VZvj/J5kbtHUgz9YodUaNb6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OqIM6cEj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="beyYBABR"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 456D3C4CEE8;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OqIM6cEj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1C192C4CED6;
 	Fri, 21 Feb 2025 13:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740145747;
-	bh=C0EAePF53lIXFleUHeMPzsteLlLG26sy4F3rDVZs/WI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=beyYBABRNIJEUcIKdaE6ZUxIcbBE06xl56SR6bwRLYN12s/eGS5U1gZSVYnQsEDDN
-	 ZHPBzLi8KKjGDwfcXlfc/Dz5VFnVR2c7Z3p5awl4nXLv8aTc+7ViX4SLjsQnJEBM6g
-	 JTLYLDtIIZSG4JhI5tAtYma+AlAy2UDkUy3tBs1a77OHFm+KeEnoOte/dNblrSGj27
-	 d4PVZQT0BfiHYzwWUnDJkLjHUY3ukqbDdrtgI4rtvR0TbVE7DNAksTPb5By2xxDMVc
-	 b9AijH8Kg5o3GgWu6y6sEG3AmVQq/mBq1H6u+H1D5xHLRwPwy53ImwsM1okMXEWrfq
-	 5l4/SYly93MxQ==
+	bh=UalauN8XWtUsTEbYj+PKqhYtpX3u+/YFSuhA5nmw7d8=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=OqIM6cEjo3PReFp0MiT4cETfcuDeJR++Qyi/nsQZIVM9FghBSr78fRoMt1IGLkEky
+	 NMMAAONQX8UGJCYx5Q1I9bjESM+RtWoHGyq1U7kKBHsxQ39DGUXq6GOuQULzqMsn8R
+	 qgqQBPkoV64wpPYAlR95a/XXzoiIupQiK5m6Kc/sLUYjhyfuqZg4KNoymJ2O7OVPN6
+	 ARqSX9gE3y2P/0OCJGJ+0uO2bMhfe5iT9bYZdCx57NEEhyAXN3MEYwYwAS9krcH/Rw
+	 yJdOiaBsnta9j4Q6G4btoRuKeeQ1wXwdnLkE7Oj3W3WzD3nOJpu7UgMBAufAiTZvmn
+	 jGEf0SH3zuxdA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36038C021B6;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1101EC021B3;
 	Fri, 21 Feb 2025 13:49:07 +0000 (UTC)
 From: Thomas Prescher via B4 Relay <devnull+thomas.prescher.cyberus-technology.de@kernel.org>
-Date: Fri, 21 Feb 2025 14:49:04 +0100
-Subject: [PATCH 2/2] mm: hugetlb: log time needed to allocate hugepages
+Subject: [PATCH 0/2] Add a command line option that enables control of how
+ many threads per NUMA node should be used to allocate huge pages.
+Date: Fri, 21 Feb 2025 14:49:02 +0100
+Message-Id: <20250221-hugepage-parameter-v1-0-fa49a77c87c8@cyberus-technology.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,20 +41,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250221-hugepage-parameter-v1-2-fa49a77c87c8@cyberus-technology.de>
-References: <20250221-hugepage-parameter-v1-0-fa49a77c87c8@cyberus-technology.de>
-In-Reply-To: <20250221-hugepage-parameter-v1-0-fa49a77c87c8@cyberus-technology.de>
+X-B4-Tracking: v=1; b=H4sIAE+EuGcC/x2M0QpAQBBFf0XzbGtNlPyKPEzcZR6wzSIl/27ze
+ E6d81CCKRJ1xUOGS5PuW4aqLGhcZJvhdMpM7LnxzJVbzhlRso9isuKAObRNzWEKoxdQDqMh6P1
+ P++F9P6ZOKcZkAAAA
+X-Change-ID: 20250221-hugepage-parameter-e8542fdfc0ae
 To: Jonathan Corbet <corbet@lwn.net>, Muchun Song <muchun.song@linux.dev>, 
  Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-mm@kvack.org, Thomas Prescher <thomas.prescher@cyberus-technology.de>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740145745; l=1236;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740145745; l=1895;
  i=thomas.prescher@cyberus-technology.de; s=20250221;
  h=from:subject:message-id;
- bh=+RVZ6u1nzdp1931lwTDAnLSee61rdleZduyoY/lMDIA=;
- b=4+fAS5E5X1tj0juCLlk8wApea1Mw0hFQMhgVoxUvNua6eliTe5IqQoAihZ6t8J1ZOqKoXwCkS
- PyHzdDBHY34C9m3qRY5CD7zL8gr1jDVg1stVn8oZoDsw6CVRLFkgv8z
+ bh=UalauN8XWtUsTEbYj+PKqhYtpX3u+/YFSuhA5nmw7d8=;
+ b=JfCkdFsZg1zFxVgHw1RR2OOZrwWQQ4+CJPZufzTC/zoCX918Y1i8T5b22UG2JM5RDv9J1D80m
+ Uwxd5zbJJTADWO9UMhCRe7u8qHjPlCmGfjpSD4XvLx4UDMa4ecmxOg0
 X-Developer-Key: i=thomas.prescher@cyberus-technology.de; a=ed25519;
  pk=T5MVdLVCc/0UUyv5IcSqGVvGcVkgWW/KtuEo2RRJwM8=
 X-Endpoint-Received: by B4 Relay for
@@ -61,46 +63,51 @@ X-Endpoint-Received: by B4 Relay for
 X-Original-From: Thomas Prescher <thomas.prescher@cyberus-technology.de>
 Reply-To: thomas.prescher@cyberus-technology.de
 
-From: Thomas Prescher <thomas.prescher@cyberus-technology.de>
+Allocating huge pages can take a very long time on servers
+with terabytes of memory even when they are allocated at
+boot time where the allocation happens in parallel.
 
-Having this information allows users to easily tune
-the hugepages_node_threads parameter.
+The kernel currently uses a hard coded value of 2 threads per
+NUMA node for these allocations. This value might have been good
+enough in the past but it is not sufficient to fully utilize
+newer systems.
+
+This patch allows to override this value.
+
+We tested this on 2 generations of Xeon CPUs and the results
+show a big improvement of the overall allocation time.
+
++--------------------+-------+-------+-------+-------+-------+
+| threads per node   |   2   |   4   |   8   |   16  |    32 |
++--------------------+-------+-------+-------+-------+-------+
+| skylake 4node      |   44s |   22s |   16s |   19s |   20s |
+| cascade lake 4node |   39s |   20s |   11s |   10s |    9s |
++--------------------+-------+-------+-------+-------+-------+
+
+On skylake, we see an improvment of 2.75x when using 8 threads,
+on cascade lake we can get even better at 4.3x when we use
+32 threads per node.
+
+This speedup is quite significant and users of large machines
+like these should have the option to make the machines boot
+as fast as possible.
 
 Signed-off-by: Thomas Prescher <thomas.prescher@cyberus-technology.de>
 ---
- mm/hugetlb.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Thomas Prescher (2):
+      mm: hugetlb: add hugetlb_alloc_threads cmdline option
+      mm: hugetlb: log time needed to allocate hugepages
 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index b7d24c41e0f9d22f5b86c253e29a2eca28460026..2aa5724a385494f9d6f1d644a2bfe547591fc96c 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -3428,6 +3428,9 @@ static unsigned long __init hugetlb_pages_alloc_boot(struct hstate *h)
- 		.numa_aware	= true
- 	};
- 
-+	unsigned long jiffies_start;
-+	unsigned long jiffies_end;
-+
- 	job.thread_fn	= hugetlb_pages_alloc_boot_node;
- 	job.start	= 0;
- 	job.size	= h->max_huge_pages;
-@@ -3450,7 +3453,13 @@ static unsigned long __init hugetlb_pages_alloc_boot(struct hstate *h)
- 	 */
- 	job.max_threads	= num_node_state(N_MEMORY) * allocation_threads_per_node;
- 	job.min_chunk	= h->max_huge_pages / num_node_state(N_MEMORY) / allocation_threads_per_node;
-+
-+	jiffies_start = jiffies;
- 	padata_do_multithreaded(&job);
-+	jiffies_end = jiffies;
-+
-+	printk(KERN_DEBUG "HugeTLB: allocation took %dms\n",
-+	    jiffies_to_msecs(jiffies_end - jiffies_start));
- 
- 	return h->nr_huge_pages;
- }
+ Documentation/admin-guide/kernel-parameters.txt |  7 +++
+ Documentation/admin-guide/mm/hugetlbpage.rst    |  9 +++-
+ mm/hugetlb.c                                    | 59 ++++++++++++++++++-------
+ 3 files changed, 58 insertions(+), 17 deletions(-)
+---
+base-commit: 334426094588f8179fe175a09ecc887ff0c75758
+change-id: 20250221-hugepage-parameter-e8542fdfc0ae
 
+Best regards,
 -- 
-2.48.1
+Thomas Prescher <thomas.prescher@cyberus-technology.de>
 
 
