@@ -1,27 +1,27 @@
-Received: from smtp-190d.mail.infomaniak.ch (smtp-190d.mail.infomaniak.ch [185.125.25.13])
+Received: from smtp-bc0b.mail.infomaniak.ch (smtp-bc0b.mail.infomaniak.ch [45.157.188.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A033E1F4281
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B75204C02
 	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 14:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.13
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740146712; cv=none; b=GKGChuYcPC1o4O4a6HXB6wa94HzvTTsUQO5M5JuQnMnH+hdLpVWXJVOjjJXuF1haFLmVD/xCZ1YVeNVhY82dvNqDlWCCXyTJ85mducHixb6zQIZTKZoZ7d3zqFIFmto9ubtOen0XLFB4RWfruGbOpEMroNnDkv0IMZIrVoCEQ5c=
+	t=1740146712; cv=none; b=IenLOZ4oJTn6isSAJ+VDSZl0ENljRJ/QmNlRZgKwMe2SblLqQ9G/qjpC6hjn1f6UIN0egMuwfbp9AsFm67HZsbuQeEvr+Cw2zU6NioJask4j0X9WylmvMDSjh4cLY83gohG9bCsRySeyW3EoIN0TxmOYJ+KUt2ZSdWIDs/M/xOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740146712; c=relaxed/simple;
-	bh=Fhu01hguLpxdSCdRiUt6ZoqGPPHRYI7QuUAEHmrpgaE=;
+	bh=+JLjXWKiRg+EQ4ENsImXRR1E80JN9eVBk/Ontn9bJF4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VskyHRt2QIzAA5LT2S0/dqXr4EdXWzp1HffbIGtDm1ztaK6h/Md2wlo6c1/JEOPfhI4iHzSReREGFeKxHqfShThbqRs0VRlvkU6H+34yZfbF2DVJ7RI3cGLxwAqY8kwOnL8Wf4KoHiFws5Um+hkjz6RODqH53ctu9dwB1lfZUkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=185.125.25.13
+	 In-Reply-To:To:Cc; b=heW76YQo0HaPH51EttTCX0Tke7fikxTENIRZ+Wajlrh7dvvKxhCS2kxp5EinMOrXMgsuu5mrYYK/NHTMDUrosqDIuoqsBrXzj1/StDTaT8PDvx8lQgmRNprN1gtYTI9Shc3M90wU6UEDEz1PqkJonytJQw6UBxj2J/Xs34iRdDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=45.157.188.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
-Received: from smtp-4-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:0])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4YzsMg2wt0zRTj;
-	Fri, 21 Feb 2025 15:05:03 +0100 (CET)
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4YzsMf5Yy2zYKb;
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4YzsMf5YhgzRdr;
 	Fri, 21 Feb 2025 15:05:02 +0100 (CET)
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4YzsMd6ZDmzX2K;
+	Fri, 21 Feb 2025 15:05:01 +0100 (CET)
 From: Quentin Schulz <foss+kernel@0leil.net>
-Date: Fri, 21 Feb 2025 15:04:37 +0100
-Subject: [PATCH v2 5/5] arm64: dts: rockchip: add overlay for RK3399 Puma
+Date: Fri, 21 Feb 2025 15:04:36 +0100
+Subject: [PATCH v2 4/5] arm64: dts: rockchip: add overlay for PX30 Ringneck
  Haikou Video Demo adapter
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -31,7 +31,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250221-ringneck-dtbos-v2-5-310c0b9a3909@cherry.de>
+Message-Id: <20250221-ringneck-dtbos-v2-4-310c0b9a3909@cherry.de>
 References: <20250221-ringneck-dtbos-v2-0-310c0b9a3909@cherry.de>
 In-Reply-To: <20250221-ringneck-dtbos-v2-0-310c0b9a3909@cherry.de>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -48,12 +48,12 @@ From: Quentin Schulz <quentin.schulz@cherry.de>
 
 This adds support for the video-demo-adapter DEVKIT ADDON CAM-TS-A01
 (https://embedded.cherry.de/product/development-kit/) for the Haikou
-devkit with RK3399 Puma SoM.
+devkit with PX30 Ringneck SoM.
 
 The Video Demo adapter is an adapter connected to the fake PCIe slot
 labeled "Video Connector" on the Haikou devkit.
 
-Its main feature is a Leadtek DSI-display with touchscreen and a camera
+Itss main feature is a Leadtek DSI-display with touchscreen and a camera
 (that is not supported yet because the expected clock rate by the driver
 cannot be exactly reached by the clock driver). To drive these
 components a number of additional regulators are grouped on the adapter
@@ -63,38 +63,38 @@ gpio-lines.
 Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
 ---
  arch/arm64/boot/dts/rockchip/Makefile              |   5 +
- .../rockchip/rk3399-puma-haikou-video-demo.dtso    | 166 +++++++++++++++++++++
- 2 files changed, 171 insertions(+)
+ .../rockchip/px30-ringneck-haikou-video-demo.dtso  | 190 +++++++++++++++++++++
+ 2 files changed, 195 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index 0f7c5c55c8b8be11e3fd7a69995ce1c17b22c80d..a46ed20e977aedb7cca1a9c0ad15f5441e4fe177 100644
+index b40b82bd07223f542c17704e7844f002bb31e1c5..0f7c5c55c8b8be11e3fd7a69995ce1c17b22c80d 100644
 --- a/arch/arm64/boot/dts/rockchip/Makefile
 +++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -63,6 +63,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-orangepi.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-pinebook-pro.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-pinephone-pro.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-puma-haikou.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-puma-haikou-video-demo.dtbo
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc-mezzanine.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc-plus.dtb
-@@ -201,6 +202,10 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-ringneck-haikou-haikou-video-demo.dtb
- px30-ringneck-haikou-haikou-video-demo-dtbs := px30-ringneck-haikou.dtb \
- 	px30-ringneck-haikou-video-demo.dtbo
+@@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-engicam-px30-core-edimm2.2.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-firefly-jd4-core-mb.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-ringneck-haikou.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-ringneck-haikou-lvds-9904379.dtbo
++dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-ringneck-haikou-video-demo.dtbo
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-bpi-p2-pro.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-evb.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3308-roc-cc.dtb
+@@ -196,6 +197,10 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-ringneck-haikou-haikou-lvds-9904379.dtb
+ px30-ringneck-haikou-haikou-lvds-9904379-dtbs := px30-ringneck-haikou.dtb \
+ 	px30-ringneck-haikou-lvds-9904379.dtbo
  
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-puma-haikou-haikou-video-demo.dtb
-+rk3399-puma-haikou-haikou-video-demo-dtbs := rk3399-puma-haikou.dtb \
-+	rk3399-puma-haikou-video-demo.dtbo
++dtb-$(CONFIG_ARCH_ROCKCHIP) += px30-ringneck-haikou-haikou-video-demo.dtb
++px30-ringneck-haikou-haikou-video-demo-dtbs := px30-ringneck-haikou.dtb \
++	px30-ringneck-haikou-video-demo.dtbo
 +
  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3568-wolfvision-pf5-vz-2-uhd.dtb
  rk3568-wolfvision-pf5-vz-2-uhd-dtbs := rk3568-wolfvision-pf5.dtb \
  	rk3568-wolfvision-pf5-display-vz.dtbo \
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou-video-demo.dtso b/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou-video-demo.dtso
+diff --git a/arch/arm64/boot/dts/rockchip/px30-ringneck-haikou-video-demo.dtso b/arch/arm64/boot/dts/rockchip/px30-ringneck-haikou-video-demo.dtso
 new file mode 100644
-index 0000000000000000000000000000000000000000..0377ec860d35461b7d2d4ee1f20bdd4a076a5fe6
+index 0000000000000000000000000000000000000000..7d9ea5aa598486680191d52e4c87af59f7b0e579
 --- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou-video-demo.dtso
-@@ -0,0 +1,166 @@
++++ b/arch/arm64/boot/dts/rockchip/px30-ringneck-haikou-video-demo.dtso
+@@ -0,0 +1,190 @@
 +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 +/*
 + * Copyright (c) 2025 Cherry Embedded Solutions GmbH
@@ -103,13 +103,13 @@ index 0000000000000000000000000000000000000000..0377ec860d35461b7d2d4ee1f20bdd4a
 + * https://embedded.cherry.de/product/development-kit/
 + *
 + * DT-overlay for the camera / DSI demo appliance for Haikou boards.
-+ * In the flavour for use with a Puma system-on-module.
++ * In the flavour for use with a Ringneck system-on-module.
 + */
 +
 +/dts-v1/;
 +/plugin/;
 +
-+#include <dt-bindings/clock/rk3399-cru.h>
++#include <dt-bindings/clock/px30-cru.h>
 +#include <dt-bindings/gpio/gpio.h>
 +#include <dt-bindings/interrupt-controller/irq.h>
 +#include <dt-bindings/leds/common.h>
@@ -191,43 +191,11 @@ index 0000000000000000000000000000000000000000..0377ec860d35461b7d2d4ee1f20bdd4a
 +	};
 +};
 +
-+&i2c1 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	/* OV5675, GT911, DW9714 are limited to 400KHz */
-+	clock-frequency = <400000>;
-+
-+	touchscreen@14 {
-+		compatible = "goodix,gt911";
-+		reg = <0x14>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <RK_PC7 IRQ_TYPE_LEVEL_LOW>;
-+		irq-gpios = <&gpio1 RK_PC7 GPIO_ACTIVE_HIGH>;
-+		pinctrl-0 = <&touch_int>;
-+		pinctrl-names = "default";
-+		reset-gpios = <&pca9670 1 GPIO_ACTIVE_HIGH>;
-+		AVDD28-supply = <&vcc2v8_video>;
-+		VDDIO-supply = <&vcc3v3_baseboard>;
-+	};
-+
-+	pca9670: gpio@27 {
-+		compatible = "nxp,pca9670";
-+		reg = <0x27>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		pinctrl-0 = <&pca9670_resetn>;
-+		pinctrl-names = "default";
-+		reset-gpios = <&gpio4 RK_PD6 GPIO_ACTIVE_LOW>;
-+	};
++&display_subsystem {
++	status = "okay";
 +};
 +
-+&mipi_out {
-+	mipi_out_panel: endpoint {
-+		remote-endpoint = <&mipi_in_panel>;
-+	};
-+};
-+
-+&mipi_dsi {
++&dsi {
 +	#address-cells = <1>;
 +	#size-cells = <0>;
 +	status = "okay";
@@ -248,18 +216,74 @@ index 0000000000000000000000000000000000000000..0377ec860d35461b7d2d4ee1f20bdd4a
 +	};
 +};
 +
++&dsi_dphy {
++	status = "okay";
++};
++
++&dsi_out {
++	mipi_out_panel: endpoint {
++		remote-endpoint = <&mipi_in_panel>;
++	};
++};
++
++&i2c1 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	/* OV5675, GT911, DW9714 are limited to 400KHz */
++	clock-frequency = <400000>;
++
++	touchscreen@14 {
++		compatible = "goodix,gt911";
++		reg = <0x14>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <RK_PA0 IRQ_TYPE_LEVEL_LOW>;
++		irq-gpios = <&gpio0 RK_PA0 GPIO_ACTIVE_HIGH>;
++		pinctrl-0 = <&touch_int>;
++		pinctrl-names = "default";
++		reset-gpios = <&pca9670 1 GPIO_ACTIVE_HIGH>;
++		AVDD28-supply = <&vcc2v8_video>;
++		VDDIO-supply = <&vcc3v3_baseboard>;
++	};
++
++	pca9670: gpio@27 {
++		compatible = "nxp,pca9670";
++		reg = <0x27>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		pinctrl-0 = <&pca9670_resetn>;
++		pinctrl-names = "default";
++		reset-gpios = <&gpio0 RK_PA2 GPIO_ACTIVE_LOW>;
++	};
++};
++
 +&pinctrl {
 +	pca9670 {
 +		pca9670_resetn: pca9670-resetn {
-+			rockchip,pins = <4 RK_PD6 RK_FUNC_GPIO &pcfg_pull_none>;
++			rockchip,pins = <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
 +		};
 +	};
 +
 +	touch {
 +		touch_int: touch-int {
-+			rockchip,pins = <1 RK_PC7 RK_FUNC_GPIO &pcfg_pull_none>;
++			rockchip,pins = <0 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
 +		};
 +	};
++};
++
++&vopb {
++	status = "okay";
++};
++
++&vopb_mmu {
++	status = "okay";
++};
++
++&vopl {
++	status = "okay";
++};
++
++&vopl_mmu {
++	status = "okay";
 +};
 
 -- 
