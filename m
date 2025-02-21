@@ -1,116 +1,191 @@
-Received: from mail.crpt.ru (mail.crpt.ru [91.236.205.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687E11FBCBD;
-	Fri, 21 Feb 2025 07:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.236.205.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87B71FBCAF
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 07:22:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740122391; cv=none; b=OZg0VyEQkivibJDF+YklEeYApE464RvhxDQT/G6pBwX6Pf6Z+wuMS567usKXnmd8EyqiVdUkP+p40g/KhJ3aOIhaPzR8B+/vMOX9Pww52BSLjX8AKXQ2SQ6DA/5IrgBswuZvh6Tb9piriZpA9y/6wxvuNnv+smsBfh/R6jHJ2n0=
+	t=1740122548; cv=none; b=sSdVau32tJqz/SjBNFwom2vXZ37l5AkN1ojZlMrAFwz9jOO7Z+abmixK1AM2IajX0EwlGlGErrsnzfVbrQNkIHVfgWFDzVxAGVe/xFUUezMXkz/RQbrPU8ApZcbDfuPKF96YfSRnizb5OMw+9YuH/PGToxWjjNcVECS2j/PEuOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740122391; c=relaxed/simple;
-	bh=sObIvvCiUAn9qXnHNJpDFM36vWf1/wfpwgBNnrtetPc=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=lOvuQDQuoeoAh00/ZzXoj7/QJC26mCsCUBdkjkB4ACdbJCJ8soc2cjRMDzxrjrInQteSwloB2P7ct2yXsCzfX/4RR7AC2WZtWv6JOhnha2iOyUOS8PcqZZKwmmbAEAetdW+ojzFgT2d8B1mehvYkmDixRYXLJWyEDzX88z4Xzq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru; spf=pass smtp.mailfrom=crpt.ru; dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b=uLFS1n03; arc=none smtp.client-ip=91.236.205.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crpt.ru
+	s=arc-20240116; t=1740122548; c=relaxed/simple;
+	bh=4galSgFsGYnT0uNc+01/qw+khY3O4Ie+lbzxyIfHweU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Y9ZB6kMwddDc+bvFtJNjH4aMJ683e22bRlA6kK4jThNd+IVpqVn4wE721TZtiowwkNFo9KvMn3JTHC6rcDoHlJ73YphZ9P/AEb4nfX/482Rn58fJh2+MLT4IRSMeUmZF2VRB2dM9jDSYLkm5q/av6f1Vkc+4JwlKF1UygKhaNwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloud.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=cloud.com header.i=@cloud.com header.b=X+cZ+HOa; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b="uLFS1n03"
-Received: from mail.crpt.ru ([192.168.60.3])
-	by mail.crpt.ru  with ESMTP id 51L73AUP029765-51L73AUR029765
-	(version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=OK);
-	Fri, 21 Feb 2025 10:03:10 +0300
-Received: from EX02-PR-BO.crpt.local (10.200.60.52) by ex1.crpt.local
- (192.168.60.3) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Fri, 21 Feb
- 2025 10:03:09 +0300
-Received: from EX1.crpt.local (192.168.60.3) by EX02-PR-BO.crpt.local
- (10.200.60.52) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.6; Fri, 21 Feb
- 2025 10:03:09 +0300
-Received: from EX1.crpt.local ([192.168.60.3]) by EX1.crpt.local
- ([192.168.60.3]) with mapi id 15.01.2507.044; Fri, 21 Feb 2025 10:03:09 +0300
-From: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>
-To: Kai Shen <kaishen@linux.alibaba.com>
-CC: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>, "Jason
- Gunthorpe" <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, Wei Yongjun
-	<weiyongjun1@huawei.com>, Yang Li <yang.lee@linux.alibaba.com>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>
-Subject: [PATCH] RDMA/erdma: handle ib_umem_find_best_pgsz() return value
-Thread-Topic: [PATCH] RDMA/erdma: handle ib_umem_find_best_pgsz() return value
-Thread-Index: AQHbhC6pbGv+eguF8Uexqo4ANK64zw==
-Date: Fri, 21 Feb 2025 07:03:09 +0000
-Message-ID: <20250221070301.18010-1-a.vatoropin@crpt.ru>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-kse-serverinfo: EX02-PR-BO.crpt.local, 9
-x-kse-antivirus-interceptor-info: scan successful
-x-kse-antivirus-info: Clean, bases: 17.02.2025 9:52:00
-x-kse-attachment-filter-triggered-rules: Clean
-x-kse-attachment-filter-triggered-filters: Clean
-x-kse-bulkmessagesfiltering-scan-result: protection disabled
-Content-Type: text/plain; charset="koi8-r"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=cloud.com header.i=@cloud.com header.b="X+cZ+HOa"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2fc0026eb79so3702923a91.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 23:22:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.com; s=cloud; t=1740122546; x=1740727346; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aRn7UMgJJ9CtP4bx+5Tz5wQQz9tVQhHMiwxX40kg0Xg=;
+        b=X+cZ+HOa+Z7Ex+HP/2LKnwrdyMkpC79e3ZZvxZ59jJHUDy1afmBaQ1c3aP3pkEvVW7
+         rWbhY06jomj1+rdP1EhyGSKwNOf5BKvxkiL/AmeH28a3yr8F4FaJySHWmiEbCaTVqHvw
+         GkookkdobfrnonhIdEOrhQ7ZEsZLx/yxiASPk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740122546; x=1740727346;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aRn7UMgJJ9CtP4bx+5Tz5wQQz9tVQhHMiwxX40kg0Xg=;
+        b=qWYb5pWUfD9v0ZYz1n0hpox7TyKeBvyFBON5zZAQzeORu4DRgBXD5ECPVdlYK6djFO
+         UutwIqhpQKyw7hol8vn7zHPRjSCZ9IBjIVcc54eD5e5Ya+ni2ZFKBpQ0o085OILFmiPJ
+         LKIgUCa1BlvE9z+bY5z55GLESGf9GQyuJuiiE14EPSaS22Tvdng2YVNVJ0CpkLWcarQu
+         6Sfi0cUbfjNzKPWd16DWetdcn3Mii3EiLPg4O/XttODj4Zpd9Aa7X+WJuTcAXYL7C1if
+         BHOSFS7wfWwCo0ynMCcYs6tjq2ZyCujywqbxTiO/18CRLllFfBSKGPEhSD+2b2eHGEY1
+         4QqA==
+X-Forwarded-Encrypted: i=1; AJvYcCWARkwEup9VOidltCllpDrTNxAy1s9QVWkEgCvNFl/mCbn2R7vURFhEKrPQZo20RocmbpndQfEmbMhj0/8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvAgplxSHBGPz6Vcz2x7yrD1Gfi4yAxpeklKlRxuInlW6DHGhV
+	9/WhPu6xBRKl0zTy0gf2jrUm9JqaXBqcmcRTUFFLLDLOHYsWscVEgbWWmq9nW7Y=
+X-Gm-Gg: ASbGnctI6ZLU13PywtWOU86tZOhLs0Lzjp9Zr3YGTdD5Eql1cqzps0fnQ7iYk/DaPgw
+	uKPssOBJgRL/rpTQFfy+EC32ZdTByZtovCr7uu3PC/l190NUZ0C5vi8/PFa62ntW0Yizeltr95u
+	DfK4fxz1whvLo+s+0vMZea1K9/HuNIlE0GBxRL1szB4gNapXMvAVfyDDGz8LSjP4uOxgqJVlqsX
+	nBxRBR/ugmbbatsc0y01w8j6YjyWvDwo0RyedYAURfieWoamRYvIeZxzWRu4kE7rEOUpJsTAG1U
+	0lhzZKgynJ9VqOwrEzM5JttPg9wX7+mvrjJlR67F5zQM4C6G
+X-Google-Smtp-Source: AGHT+IHh2Jn2AbD/Xc3leYv4f4sD8+CODyddXbAeGCIOTPj+/WjLB0AGCue5w5SMMye8xoI4pyZTrQ==
+X-Received: by 2002:a05:6a00:810:b0:730:74f8:25c1 with SMTP id d2e1a72fcca58-73426d82a0emr2893395b3a.15.1740122545961;
+        Thu, 20 Feb 2025 23:22:25 -0800 (PST)
+Received: from localhost.localdomain ([154.91.3.20])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73413894baesm2848276b3a.153.2025.02.20.23.22.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Feb 2025 23:22:24 -0800 (PST)
+From: Chunjie Zhu <chunjie.zhu@cloud.com>
+To: chunjie.zhu@cloud.com
+Cc: agruenba@redhat.com,
+	andreas.gruenbacher@gmail.com,
+	gfs2@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: Re: Re: [PATCH] fix gfs2 umount timeout bug
+Date: Fri, 21 Feb 2025 07:21:13 +0000
+Message-Id: <20250221072114.69344-1-chunjie.zhu@cloud.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250219040854.46062-1-chunjie.zhu@cloud.com>
+References: <20250219040854.46062-1-chunjie.zhu@cloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KSE-ServerInfo: EX1.crpt.local, 9
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: protection disabled
-X-FEAS-Client-IP: 192.168.60.3
-X-FE-Policy-ID: 2:4:0:SYSTEM
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; d=crpt.ru; s=crpt.ru; c=relaxed/relaxed;
- h=from:to:cc:subject:date:message-id:content-type:mime-version;
- bh=rM29OcfKSzG0Xvr/iq7K+TDmsX7muLKw5JXGtiH19iw=;
- b=uLFS1n03admF9tfidPvwn/BC2su4qLerS0j6nq2kVEW4Rh6wuJffcft7mwqJOfXDiyVMznpqIdot
-	MYEa2W2q8lHL1hXKKf4BH9v6tVBnMUE3tw2TfmfVaDCv4sdT++cdnMkvX15S3H/kfQxWveB8LSyr
-	AytOu8sHwIiswjrAhOQQe/Nj+I2UXM/fteRoeqPdI6ohHHeqYagELhOeyPYcLjxRLu8GN8iosYxU
-	730s1r442jxwxo1HZsuAkUP5P972SKZR0sfMr/4FKVpn7S2hBloYImDj2/Akd0ShDAxzSnnweZD2
-	x200rurhsv+7QZooGg3xMjRI80u2al9D6LWTjQ==
+Content-Transfer-Encoding: 8bit
 
-From: Andrey Vatoropin <a.vatoropin@crpt.ru>
+The time ordered events,
 
-The ib_umem_find_best_pgsz function is necessary for obtaining the optimal
-hardware page size. In the comment above, function has statement:=20
-"Drivers always supporting PAGE_SIZE or smaller will never see a 0 result."
+IO app -> do_xmote -> gdlm_lock -> gfs2_glock_complete (ret is CANCEL) ->
+__gfs2_glock_queue_work
 
-But it's hard to prove this holds true for the erdma driver.
+kworker A -> glock_work_func -> finish_xmote -> gfs2_holder_wake ->
+-> retry do_xmote (set GLF_LOCK flag) -> gdlm_lock (DLM does not invoke
+GFS2 callbacks) -> run_queue (do nothing as glock has GLF_LOCK flag)
 
-Similar to other drivers that use ib_umem_find_best_pgsz, it is essential=20
-to add an error handler to manage potential error situations in the future.
+glock refcount is 1
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+umount -> clear_glock (refcount +1) -> glock_work_func -> run_queue (do
+nothing as glock has GLF_LOCK flag) -> refcount -1
 
-Fixes: 155055771704 ("RDMA/erdma: Add verbs implementation")
-Signed-off-by: Andrey Vatoropin <a.vatoropin@crpt.ru>
----
- drivers/infiniband/hw/erdma/erdma_verbs.c | 4 ++++
- 1 file changed, 4 insertions(+)
+glock refcount is 1, still in memory
 
-diff --git a/drivers/infiniband/hw/erdma/erdma_verbs.c b/drivers/infiniband=
-/hw/erdma/erdma_verbs.c
-index 51d619edb6c5..7ad38fb84661 100644
---- a/drivers/infiniband/hw/erdma/erdma_verbs.c
-+++ b/drivers/infiniband/hw/erdma/erdma_verbs.c
-@@ -781,6 +781,10 @@ static int get_mtt_entries(struct erdma_dev *dev, stru=
-ct erdma_mem *mem,
- 	mem->page_size =3D ib_umem_find_best_pgsz(mem->umem, req_page_size, virt)=
-;
-+	if (!mem->page_size) {
-+		ret =3D -EINVAL;
-+		goto error_ret;
-+	}
- 	mem->page_offset =3D start & (mem->page_size - 1);
- 	mem->mtt_nents =3D ib_umem_num_dma_blocks(mem->umem, mem->page_size);
- 	mem->page_cnt =3D mem->mtt_nents;
- 	mem->mtt =3D erdma_create_mtt(dev, MTT_SIZE(mem->page_cnt),
- 				    force_continuous);
---=20
-2.43.0
+> 
+> INFO: task umount:75342 blocked for more than 483 seconds.
+>       Not tainted 6.6.22+0 #1
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> task:umount          state:D stack:0     pid:75342 ppid:75335  flags:0x00004002
+> Call Trace:
+>  <TASK>
+>  __schedule+0x3a0/0x1330
+>  ? srso_alias_return_thunk+0x5/0x7f
+>  ? srso_alias_return_thunk+0x5/0x7f
+>  schedule+0x53/0xc0
+>  schedule_timeout+0x76/0xf0
+>  ? __pfx_process_timeout+0x10/0x10
+>  gfs2_gl_hash_clear+0x135/0x140 [gfs2]
+>  ? __pfx_autoremove_wake_function+0x10/0x10
+>  gfs2_put_super+0x175/0x220 [gfs2]
+>  generic_shutdown_super+0x7e/0x170
+>  kill_block_super+0x16/0x40
+>  deactivate_locked_super+0x2f/0xa0
+>  cleanup_mnt+0xbd/0x150
+>  task_work_run+0x60/0xa0
+>  exit_to_user_mode_prepare+0x117/0x120
+>  syscall_exit_to_user_mode+0x22/0x40
+>  ? srso_alias_return_thunk+0x5/0x7f
+>  do_syscall_64+0x67/0x80
+>  ? srso_alias_return_thunk+0x5/0x7f
+>  ? syscall_exit_to_user_mode+0x27/0x40
+>  ? srso_alias_return_thunk+0x5/0x7f
+>  ? do_syscall_64+0x67/0x80
+>  ? srso_alias_return_thunk+0x5/0x7f
+>  ? syscall_exit_to_user_mode+0x27/0x40
+>  ? srso_alias_return_thunk+0x5/0x7f
+>  ? do_syscall_64+0x67/0x80
+>  ? syscall_exit_to_user_mode+0x27/0x40
+>  ? srso_alias_return_thunk+0x5/0x7f
+>  ? do_syscall_64+0x67/0x80
+>  ? do_syscall_64+0x67/0x80
+>  ? do_syscall_64+0x67/0x80
+>  ? exc_page_fault+0x72/0x130
+>  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+> RIP: 0033:0x7fb0823ebeab
+> RSP: 002b:00007ffcd0d45b68 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
+> RAX: 0000000000000000 RBX: 00007fb081257000 RCX: 00007fb0823ebeab
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007fb081219980
+> RBP: 00007fb081257118 R08: 0000000000000073 R09: 0000000000000001
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> R13: 00007fb081219980 R14: 0000000000000000 R15: 00007fb081257000
+>  </TASK>
+> 
+> > 
+> > > Signed-off-by: Chunjie Zhu <chunjie.zhu@cloud.com>
+> > > ---
+> > >  fs/gfs2/glock.c | 20 +++++++++++++++++++-
+> > >  1 file changed, 19 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/fs/gfs2/glock.c b/fs/gfs2/glock.c
+> > > index 4a280be229a6..bf2445f0afa9 100644
+> > > --- a/fs/gfs2/glock.c
+> > > +++ b/fs/gfs2/glock.c
+> > > @@ -2120,6 +2120,23 @@ static void thaw_glock(struct gfs2_glock *gl)
+> > >         gfs2_glock_queue_work(gl, 0);
+> > >  }
+> > >
+> > > +/**
+> > > + * IOPEN glock might be a zombie glock instance due to lock contention
+> > > + * between nodes in the cluster during fs umount, then it causes umount
+> > > + * timeout
+> > > + */
+> > > +
+> > > +static int is_zombie_glock(struct gfs2_glock *gl)
+> > > +{
+> > > +       if (test_bit(GLF_LOCK, &gl->gl_flags) &&
+> > > +               test_bit(GLF_DEMOTE, &gl->gl_flags) &&
+> > > +               test_bit(GLF_BLOCKING, &gl->gl_flags) &&
+> > > +               (gl->gl_name.ln_type == LM_TYPE_IOPEN) &&
+> > > +               list_empty(&gl->gl_holders))
+> > > +               return 1;
+> > > +       return 0;
+> > > +}
+> > > +
+> > >  /**
+> > >   * clear_glock - look at a glock and see if we can free it from glock cache
+> > >   * @gl: the glock to look at
+> > > @@ -2132,7 +2149,8 @@ static void clear_glock(struct gfs2_glock *gl)
+> > >
+> > >         spin_lock(&gl->gl_lockref.lock);
+> > >         if (!__lockref_is_dead(&gl->gl_lockref)) {
+> > > -               gl->gl_lockref.count++;
+> > > +               if (!is_zombie_glock(gl))
+> > > +                       gl->gl_lockref.count++;
+> > >                 if (gl->gl_state != LM_ST_UNLOCKED)
+> > >                         handle_callback(gl, LM_ST_UNLOCKED, 0, false);
+> > >                 __gfs2_glock_queue_work(gl, 0);
+> > > --
+> > > 2.34.1
+> > >
+> > >
+> > 
+> 
