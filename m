@@ -1,338 +1,211 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF5653AC;
-	Fri, 21 Feb 2025 14:45:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740149139; cv=fail; b=SxqWXKS/rRQqyQg2FPsrAK5tZbFOgBwp2OyeOpZZ2KVcEnO21LwOpytWjoiC6pXPvtfGyJIdHEycesuS0Plrrs0DSLHHszh4bimklaCDk0b24EcimaegvkL3RpEeVl/+foplo2WTYDesVmeyLgLuKAWikx+11jJfzS6G82+Fg0E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740149139; c=relaxed/simple;
-	bh=KB5K180KLaC4zw390u/d2a0B91GHQjrJB25Xvll6jbo=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=RiXYF5Ymelw5Fd5q9PqvI4ydDKlTPPWH9z6Pht7WS+hzg/YYa/mwqiIudJIwtiQVFOlbmVzgTjovIIui0n3FtEHdQYio96YTpDA2Flzvf9kOEkW/0qy0hAjYVuGy+0gTYvncPw2/5DzY4+3thrlbcERav/GEuTJgBNq7I47+fMY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wp84yYVY; arc=fail smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97BBC53AC
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 14:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740149199; cv=none; b=HujsYuNhdp/adUI918RFLDdMXZ0EuFerb3msR7JhRXYfzflvok0edRsCrE2jEH42Pbj6Tc2wnTSXb6rZMUZ2Q6eePnMipWAqjU4n3yDNwIksK1lLzkSfFEj7dQZ58fkTnnZdkR3N9Em0FfV4q8eSQHSJRRHc2XYjRptbwfSgYXo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740149199; c=relaxed/simple;
+	bh=Rzk5I7Yp7wvQV0AOfohWaQqQLCabVcp8xw8pH5I2ZBs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Zht8rR1nFLTI/BiGDZnFgpvbAL7MZ6+0+4fmPgSk7BVEUOu9R8ZXViwwJMe5wTMxMQYb08Q4idcO3O0cX1kpiC2fPhMGLWBjYGtId4KayF61eq7ZQs+PwUf8D5aJrPYvsjE6ynUPf16iuh6MgIKhl2FsJyAhBTqJLp0GO7hoJt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YHmgk+kO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wp84yYVY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740149138; x=1771685138;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=KB5K180KLaC4zw390u/d2a0B91GHQjrJB25Xvll6jbo=;
-  b=Wp84yYVYM6jyzPTdudzJc5a6HO0s3ofWpQMtB45mVAqTyqQaZnvq7jH5
-   1jvcYC/WM4F1P3xf5MEc0Ug1WXdpcFxZe6WXjVtMwCO8h+FOuJcUtEew1
-   owjIUpQblQl+zJ8NGIuV+5xTVpSJs/I4p30TI222bOGj5IoiYFUowd59J
-   iWt3iM2p+Rst/BbUg9zycUgGNkb/tYUiEETlHENtjOztUiqog8C2ZWWES
-   qEC5BXteH1ICX+7b++haY+AFODYJCvYbkhdW3MI4vOq5kH3iuEbOyE3xs
-   5YyFKryHvbj4D6VUR2e7j4u9IkfkE7tF89crsfnfuOXzoFCfqWKEYgw/B
-   Q==;
-X-CSE-ConnectionGUID: XZYBYIAlRha/KFvuM91CtA==
-X-CSE-MsgGUID: KIVDeLmETJG5PPoU+f2UnQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11352"; a="40846374"
-X-IronPort-AV: E=Sophos;i="6.13,305,1732608000"; 
-   d="scan'208";a="40846374"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 06:45:37 -0800
-X-CSE-ConnectionGUID: XIYZ9mytSDaRWjpiEU+4AQ==
-X-CSE-MsgGUID: 6W5lgCXLT+ys44JEyI2EqA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,305,1732608000"; 
-   d="scan'208";a="120368837"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 06:45:36 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Fri, 21 Feb 2025 06:45:36 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Fri, 21 Feb 2025 06:45:36 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.171)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Fri, 21 Feb 2025 06:45:35 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mKYAgA+KLTw8KRbqrL+nac5F2m0G4qao3Xo+IyhIBjq2WX4LuDEB9qTZYtZdYJxQ1JZlH48mZIl+CWZG+WWAxlTa/Y0DYfZHzv0CEjc6ZWiCSvxnHEJLg50RWuDUGNgkonMnIwHv/w4yQeOw9cDu1/7FVISb2IvARz0owHXhs7bWRSTLAmvi2moZqpqoYnez/8lYTiR+YXWcoKKTI8le8h0nIT/hgkB+t1KBNGpoUNUtwwadwLh+cmnCgqCdrmyS6wNHCs1zdJCp9t02J0cUBj7iiQle596LLexDZkhBDLpzTTv1ry0gvYDVI+EDIwaPI9hytNLzHkuA3ffU7wILLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6AShZNeROo825tTT7CQ07Aeq0mG3a/fPAQcXhVEWYr4=;
- b=rUgR+Nh1ZICiT87fXBmHnKwrzVGf0/ddZLNHwCymFiIPa5p45aLhyNtne5C7/sjVbMDa+kStHr0uDsrefj7CxAwisU7a/tjBetIieTDGzW+efSk+Z7/FUSyYrNcGjncH6YE+E6ZYqcfGyjXqg8rWZOUy39pTQWPq3Kq0PYmiaSCp3T9qh24uUC4Y2vmjBfNuAjX28cjgyGMe/l6KBqkDlz16b5XUJkCPWAPYPmbKcjwUOHAt/DTCVEzUU2pBx2dhVdmO6ijkvjgFVhS1TTV0a8n40Hbuuq3bF4MPYu6Wc+iyI9sukvLBqJfl91c2zQ4pH5cA5gKUNOx16qzjLA9/hw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MN0PR11MB6231.namprd11.prod.outlook.com (2603:10b6:208:3c4::15)
- by PH7PR11MB6521.namprd11.prod.outlook.com (2603:10b6:510:213::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.15; Fri, 21 Feb
- 2025 14:45:32 +0000
-Received: from MN0PR11MB6231.namprd11.prod.outlook.com
- ([fe80::a137:ffd0:97a3:1db4]) by MN0PR11MB6231.namprd11.prod.outlook.com
- ([fe80::a137:ffd0:97a3:1db4%4]) with mapi id 15.20.8466.015; Fri, 21 Feb 2025
- 14:45:32 +0000
-Date: Fri, 21 Feb 2025 15:44:56 +0100
-From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-To: Andrey Konovalov <andreyknvl@gmail.com>
-CC: <kees@kernel.org>, <julian.stecklina@cyberus-technology.de>,
-	<kevinloughlin@google.com>, <peterz@infradead.org>, <tglx@linutronix.de>,
-	<justinstitt@google.com>, <catalin.marinas@arm.com>,
-	<wangkefeng.wang@huawei.com>, <bhe@redhat.com>, <ryabinin.a.a@gmail.com>,
-	<kirill.shutemov@linux.intel.com>, <will@kernel.org>, <ardb@kernel.org>,
-	<jason.andryuk@amd.com>, <dave.hansen@linux.intel.com>,
-	<pasha.tatashin@soleen.com>, <ndesaulniers@google.com>,
-	<guoweikang.kernel@gmail.com>, <dwmw@amazon.co.uk>, <mark.rutland@arm.com>,
-	<broonie@kernel.org>, <apopple@nvidia.com>, <bp@alien8.de>,
-	<rppt@kernel.org>, <kaleshsingh@google.com>, <richard.weiyang@gmail.com>,
-	<luto@kernel.org>, <glider@google.com>, <pankaj.gupta@amd.com>,
-	<pawan.kumar.gupta@linux.intel.com>, <kuan-ying.lee@canonical.com>,
-	<tony.luck@intel.com>, <tj@kernel.org>, <jgross@suse.com>,
-	<dvyukov@google.com>, <baohua@kernel.org>, <samuel.holland@sifive.com>,
-	<dennis@kernel.org>, <akpm@linux-foundation.org>,
-	<thomas.weissschuh@linutronix.de>, <surenb@google.com>,
-	<kbingham@kernel.org>, <ankita@nvidia.com>, <nathan@kernel.org>,
-	<ziy@nvidia.com>, <xin@zytor.com>, <rafael.j.wysocki@intel.com>,
-	<andriy.shevchenko@linux.intel.com>, <cl@linux.com>, <jhubbard@nvidia.com>,
-	<hpa@zytor.com>, <scott@os.amperecomputing.com>, <david@redhat.com>,
-	<jan.kiszka@siemens.com>, <vincenzo.frascino@arm.com>, <corbet@lwn.net>,
-	<maz@kernel.org>, <mingo@redhat.com>, <arnd@arndb.de>, <ytcoode@gmail.com>,
-	<xur@google.com>, <morbo@google.com>, <thiago.bauermann@linaro.org>,
-	<linux-doc@vger.kernel.org>, <kasan-dev@googlegroups.com>,
-	<linux-kernel@vger.kernel.org>, <llvm@lists.linux.dev>, <linux-mm@kvack.org>,
-	<linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>
-Subject: Re: [PATCH v2 14/14] x86: Make software tag-based kasan available
-Message-ID: <afc4db6mt3uuimj4lokfeglhqc22u5ckgvunqtiwecjan5vjj2@lvphketnxhhr>
-References: <cover.1739866028.git.maciej.wieczor-retman@intel.com>
- <d266338a0eae1f673802e41d7230c4c92c3532b3.1739866028.git.maciej.wieczor-retman@intel.com>
- <CA+fCnZezPtE+xaZpsf3B5MwhpfdQV+5b4EgAa9PX0FR1+iawfA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+fCnZezPtE+xaZpsf3B5MwhpfdQV+5b4EgAa9PX0FR1+iawfA@mail.gmail.com>
-X-ClientProxiedBy: DUZPR01CA0316.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:4ba::14) To MN0PR11MB6231.namprd11.prod.outlook.com
- (2603:10b6:208:3c4::15)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YHmgk+kO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740149196;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=emcVIs6BI4Wj62Wj3L/WpukI2UxFVMWsSh2R8GXrlgk=;
+	b=YHmgk+kOZh1KwW+TKF8RwZ+5ACgkkPjGgINz1r+U137piday9y2wB31Kg3LZIieSkumnB8
+	zXCUdCpiz8YOYMPYKOgmnGcwEuqE04hUjlZMCVUa9uDQb89i3gvNZb1SLrJE/M25LTxtp2
+	OosdsIkMLAnCzqvt0JpbdCNG6GfMx9w=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-520-QAmZEhKZPCCloI7r4Srw8g-1; Fri,
+ 21 Feb 2025 09:46:31 -0500
+X-MC-Unique: QAmZEhKZPCCloI7r4Srw8g-1
+X-Mimecast-MFC-AGG-ID: QAmZEhKZPCCloI7r4Srw8g_1740149189
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A3F2018E6952;
+	Fri, 21 Feb 2025 14:46:28 +0000 (UTC)
+Received: from [192.168.37.1] (unknown [10.22.74.11])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4C3AA180087E;
+	Fri, 21 Feb 2025 14:46:25 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>,
+ Li Lingfeng <lilingfeng3@huawei.com>, neilb@suse.de, okorniev@redhat.com,
+ Dai.Ngo@oracle.com, tom@talpey.com, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yukuai1@huaweicloud.com, houtao1@huawei.com,
+ yi.zhang@huawei.com, yangerkun@huawei.com, lilingfeng@huaweicloud.com
+Subject: Re: [PATCH] nfsd: decrease cl_cb_inflight if fail to queue cb_work
+Date: Fri, 21 Feb 2025 09:46:22 -0500
+Message-ID: <9272C75B-F102-4D42-9970-DF3D267E0629@redhat.com>
+In-Reply-To: <c3f3c740498368905dd4adbabb75ee9e6728730b.camel@kernel.org>
+References: <20250218135423.1487309-1-lilingfeng3@huawei.com>
+ <0ae8a05272c2eb8a503102788341e1d9c49109dd.camel@kernel.org>
+ <04ed0c70b85a1e8b66c25b9ad4d0aa4c2fb91198.camel@kernel.org>
+ <9cea3133-d17c-48c5-8eb9-265fbfc5708b@oracle.com>
+ <8afc09d0728c4b71397d6b055dc86ab12310c297.camel@kernel.org>
+ <C9BBD33C-0077-44B0-BCE9-7E4962428382@redhat.com>
+ <c3f3c740498368905dd4adbabb75ee9e6728730b.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR11MB6231:EE_|PH7PR11MB6521:EE_
-X-MS-Office365-Filtering-Correlation-Id: a4cc087b-9f3c-453a-0f54-08dd5286647c
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016|27256017;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?cnJma3NBRTlET09ZUlhBTmQ0Um9yU2RhKzdxRnN0Y1F1UEU5NWMyUy9zMEIz?=
- =?utf-8?B?TEdUdXRXZm85WjAzb2pzY1ZZV2ttcW1vTTNNTTV5MmQva0Nha3VOaUN0ei9H?=
- =?utf-8?B?VXQ5Z0hOOUl4a3dCQXhPbXRSK0FDU3pYWVNZenVIdDNPTmNsMndmTzZQdmZW?=
- =?utf-8?B?RG5QNjBPdWJKV2JiWklOMVp2VFlmenA2OGUxcFhSeU1sL1RUSUZ4QnNvU1ZF?=
- =?utf-8?B?Qy8veUhZbmZpUzlOaXd1TU5vWEZ5UU9pd2JrRUJRY0w1eHBiTUU2OHd2MWlQ?=
- =?utf-8?B?OSthK3BRRlpmaDdocmZnbFEwWnZGWE9PNDZVZjZtdE5pek5lTG5ORWVRNHo2?=
- =?utf-8?B?TnpOcnM0TnMxOXpEWHpHSTYxYzJHYlVSTFFLVkh1OG1oSmphbVU3UEpXOHND?=
- =?utf-8?B?eGJIWFZpVzVwRnFqZnIwMEtucVFtODQrZ0gyZGVDc2NQSzBXaC96SERCWjJM?=
- =?utf-8?B?OEhkcWNReEwwa0dMa0JHVWJYZTV2RTAzNFJzUzVHd0JJaEs3RzNWUFppZ21s?=
- =?utf-8?B?M2tmUkcxQzVkWnNWNzIxVWdhTkdxL2tqelE0bEdzRVJZay92dmY2aGI3MHZS?=
- =?utf-8?B?V1g0TVNURXBjZE02WEZTaTVJT3ZiQStwcDVyZVl3NG1QVzlKYVVVMzFtQnpS?=
- =?utf-8?B?bC9SNDN2U1h6VkhVZGNjZ1JQcVZHRHlra2N0NlNuNHkxWXpsV0R3THJnZGl4?=
- =?utf-8?B?eTRJSkVlMHE0MTlnVW1JTVFVRDZsYTgrdTNlaHp6RlJxTXhZMTVQdGRBd0Z6?=
- =?utf-8?B?UkxOZTZLUGpVNVFpeXJjSFRYTldJb1ZobnBBVXhoMEQ2MUEzWk8vdjBpUHNT?=
- =?utf-8?B?ZjBxWlMxMHRNSTlrdldwYmlFV3lqMEJlVnBKY2cxRFZxS0g2WmR4R2pxcDlQ?=
- =?utf-8?B?ZG5JZExXVjBBRDk4dlBUbWZaanlGQndNZ0EvWXNQTXRmbjQ3bTlndEQvWnU4?=
- =?utf-8?B?WmJCQk9PNGpCYUVBeUNZRW43VU8yS2lRRS9kVFBib0svOStRKzRpNU5yM1Ey?=
- =?utf-8?B?c2s4Z1JwbFZXR1ExTVZZd0RZZE5oVkUrSDMwb2ZhWVYraDJNK0tuUU4ybDhV?=
- =?utf-8?B?WDgydStIRTRuZGZ3SVZPU1pYOFdkYjNKRkdzdmliOVBGaUhNT1FIMThRZmJp?=
- =?utf-8?B?YXE4OHd2a1hVY2Z3RCtvQzVMK0p3MFgzaHlvNkVHbUp3SzN1Vno0V2hGdFQw?=
- =?utf-8?B?d0ZsRHVqTGxlUFBNZE5ObWliTXpJQlUyL3grbU5QTllOTGpWYnAxQXkvcFZn?=
- =?utf-8?B?bVM0NFNBZEVLbW9WT1JTcy9vemRMei9SZXcvaTVRZWhoZG9wS0Fqd3F5b09y?=
- =?utf-8?B?RjNRaVFEYTRORlJncS96cllRdU0vQU1LSVVtdkgySVVHUkFOQkgzSFVhZmFL?=
- =?utf-8?B?ZFdmQkdiaEVWSmNMZGlLZXdqMExTSmI5a2YwUFYrWW9oSEhjeFdYNVVwbVRL?=
- =?utf-8?B?enBTM3huYy85azlSd1hJRGk4dDZXeGkwZUd4bmpNR2ZHWk9UQndNREJhUHgx?=
- =?utf-8?B?SEFSNFY1Y2VPeVBJSm5tMTNiY1BReW9rM25qa2ZuT1F0bmVsRHRyVUdxVVY1?=
- =?utf-8?B?dzBiVWtmMjNkTjRLcTBzYnpIU3lUWjA1UldtaElpL1JEbXQ4VHVOWDJneFRy?=
- =?utf-8?B?Y3cvVVA4aXA5Y29CV3hXN1NxaWx1UjJmb2txTGR0QTNiMlRSeTdvd083cmpT?=
- =?utf-8?B?eGVGd3czQjBZVVg3blF5Y3VDejlDN3A3RGprUkYwZi93eEYwWEs4cVJSc1g3?=
- =?utf-8?B?bGwvVG5lclkrc0lpdGo5UU5OdkxhZFJ5V0Y3bFVaVnJyRmd6QnJFblVJaCsy?=
- =?utf-8?B?Qkh6YU1hTHhTUGdVcUx6QW9QSHpsaC8xTGgrODZFZDlXVTVJbDB4OVRzMUZi?=
- =?utf-8?B?di9veWRqaGpNMUFBbzU5cnRVOThDT1Vva2Q2TDk0YUJkUUU1VjB3USs5eHpa?=
- =?utf-8?Q?mEO7LB7W7/eq2XgHaNuXcd+janWBCYSW?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB6231.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(27256017);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Zkl5L3pLNkJsY1MxdW1iVEFvdGszRXVlbEtVTllXRHBzOVVOSUo1ZHVZOEN2?=
- =?utf-8?B?c2V5RFhDMkU3d1ZYN25WTkwzQTZDbEx3aDdFR1RRbmpHK216TzZkUnQ0bnQ1?=
- =?utf-8?B?NDZzdEYvblRlSXNpekxSQmc4Mjh6NjVPZ0g2dE9CNnNTK0NWdm1XY1lxMlJU?=
- =?utf-8?B?dW9nbkg3MHk5U1dMNHZTLy9Lcm9YZzBMR1Q3REk1bklCcFFNamdzZlFKMEcv?=
- =?utf-8?B?QVI1a3JHZVd2ZnloMko4cUpvSjluM0FUbW1wcFpGL3A0MElWU09LM2pueU4z?=
- =?utf-8?B?blpkMHVhMkVwSFpCN29laGZnQlZtR1dLUzNUNnZBNUE4Z1ZyeFNiYngrcVoy?=
- =?utf-8?B?cmd2cDBON0FDVzV2a2tPanlYSXhjbTYrNTB3SDhWZFJaaGFSUUgzTTduN2pi?=
- =?utf-8?B?bjNtSXBSMGhac3lqQ290SUhpMDlNNmZCUkdldE00K1B3ZzE5Nng5dWdETmdm?=
- =?utf-8?B?RndTRHRENklBN212RGZ5WHU4U0dpeUlwRUx6NnBGRmRyaHVPeENNV3czY3pt?=
- =?utf-8?B?d2EzTVRvbWVRbFdFa2dUMGgvVFd0UDBzM0JTRXZYUHVXZWp0WjhSam9Odmlt?=
- =?utf-8?B?cm55QWFzVEhkWlFaSGY4SlQ5NytSZzcvNjJOMHNyUDJXWVFTdDlwN0lDZkRB?=
- =?utf-8?B?S3dTc0ZlN0FQbHRQODRycUQvaU1MZ2sxVmtYQS9mZ1NUUTBjOE9Bb1duZmxK?=
- =?utf-8?B?bjd2cFNQSHNEcktpUzR4N2lJWmFOSFRtMzhITGFWN0xwOVpHdTNIUTRweWlE?=
- =?utf-8?B?ZzFqc0F2c0dlRzNXNHFaWllxRmowNjhmU2hWVnF3eUFOWWxtNUNEdU9qZWI2?=
- =?utf-8?B?eWwyWGVZOTlyQXJPQXBqTlJ1Q2xIWGMzZkVyWEo0THN1VHdsM0ZjOHVjdExS?=
- =?utf-8?B?RXFBaFBsNGRZMkdwd0lEdEkreCtGTWhacFNBTWRDWUJzdXNQSXJ6clVOczl3?=
- =?utf-8?B?Qm1TNmNtMW94SU5VK2dXQm9KQzJkSlU2Y2dBVzBEYWVqMkxvcDJseWpmUnV2?=
- =?utf-8?B?L0lxQ3prZnZOOUJFRUEwTE5DSUpPN0pMVFM3Mk5wTkZLa1pML1lMZHNqbGlx?=
- =?utf-8?B?NFRFRjIzZVoxcGlqd3BZVjFrNmVrM1ZtVG1uZGRBb2VZa0Irb0hRYm8zeFQ0?=
- =?utf-8?B?YTZYL2RDUWZRQitETlBPaFMxbzNSM3pDVVVIbVMyMWF4bE42OGl5NkVGZnF4?=
- =?utf-8?B?N2RBOFNXdnYxOWM1eDJNRGJFaUQrWmR6TFFXcVV2a0QxcllSdFF1cmJJcG5q?=
- =?utf-8?B?MWlIT3MyUDlIVitOUEx4VEpLNVdNSTd1MnNwdnp5TGJjZmQ4RnJqLzJtVE5l?=
- =?utf-8?B?dTdFZER3Y1ZqK1ZKcDgrbitHSFF5VEhEQTBGSnRNbTJBcngyeXZZSURFcFF4?=
- =?utf-8?B?QlFyQ1ZaM2wrOXFTejlobUxOdzM5OEJOZU1DNldNd1RtMjgyeUpEdHZWRUxw?=
- =?utf-8?B?KzlMTitsekRJQ2hDSHZIaVRVeWpVTlVFQzVXaW12TmZ0KzAzRjcyb3piOFVV?=
- =?utf-8?B?d3NSMXpiL0V2L0ljMHpLeEhIZHRETW1KUXE4b0VkRWlqSXNOWUVZRjUzL3RU?=
- =?utf-8?B?STRIeWs0bVBzODMxWGNqZTlzQzV3ZTIwcUVEUHVUUVFvOUp5dEpNc09xMi9x?=
- =?utf-8?B?TXNkTm5sMHJnT01EaHl4Um5DaVR4VWM4bm02TU1RVndHdUhRbkZjOVF6Mnly?=
- =?utf-8?B?YmZmWWdHVFMvUnNtb21CV1F1V05nNGkxUXFEdlBpaExPSUxKeGNDNmR6S25I?=
- =?utf-8?B?M2d6M3Zxdml3bVVtblZLeksyUTRYM1BYNTg4c3ZwS1Q4ZnBCZldNNVBxVmZn?=
- =?utf-8?B?dFVHNFZSS0Y3eFRjWDdQczlrcWJhSWdJS1hJc05NYWNFWWt4V2ZBV1I5SERl?=
- =?utf-8?B?dndxSkZPOVF4bnlSQ0lEVHJPVE42WDZMcll1NTFDcmovOUl4ZFBqUjhDb2x2?=
- =?utf-8?B?dEt3Wm40dkNWbG5BUGkyZXZLaUJmZ09HMHVWVzZ1VHByQTZvV2Q3T2VpaUxo?=
- =?utf-8?B?bi9lT3JaUDlEU3d0Q3dSZmhhV2JwcWtjaFM1Zi9EMjJ4bDQ0bU9FV3JBQ2Qw?=
- =?utf-8?B?UUZsZmJEa04rSzUyaWJXQ1FwK2psanBIVWttRkNCSEZZR0NxUStDaVNmaFI0?=
- =?utf-8?B?YXJYUStsNDQ5Q214S2lza2xPMlk4QlFtODNBYnJraWJBc1EzZ3oyVC9ETnBH?=
- =?utf-8?Q?ycHwb+3JSOQPMnQp2fX3470=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4cc087b-9f3c-453a-0f54-08dd5286647c
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB6231.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2025 14:45:32.3840
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2AVJDYMZJyoVrHFyeL/leD3q3xuIG3T2VDwLwQOk5GbvsOg/86q24CzZxQE3SB1yqpEihwm2U5GKpHg1CXLrw2+9it//jzuG+4YwJQ90zPc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6521
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On 2025-02-20 at 00:31:26 +0100, Andrey Konovalov wrote:
->On Tue, Feb 18, 2025 at 9:20 AM Maciej Wieczor-Retman
-><maciej.wieczor-retman@intel.com> wrote:
+On 21 Feb 2025, at 9:37, Jeff Layton wrote:
+
+> On Fri, 2025-02-21 at 09:06 -0500, Benjamin Coddington wrote:
+>> On 18 Feb 2025, at 9:40, Jeff Layton wrote:
 >>
->> Make CONFIG_KASAN_SW_TAGS available for x86 machines if they have
->> ADDRESS_MASKING enabled (LAM) as that works similarly to Top-Byte Ignore
->> (TBI) that allows the software tag-based mode on arm64 platform.
+>>> On Tue, 2025-02-18 at 09:31 -0500, Chuck Lever wrote:
+>>>> On 2/18/25 9:29 AM, Jeff Layton wrote:
+>>>>> On Tue, 2025-02-18 at 08:58 -0500, Jeff Layton wrote:
+>>>>>> On Tue, 2025-02-18 at 21:54 +0800, Li Lingfeng wrote:
+>>>>>>> In nfsd4_run_cb, cl_cb_inflight is increased before attempting to=
+ queue
+>>>>>>> cb_work to callback_wq. This count can be decreased in three situ=
+ations:
+>>>>>>> 1) If queuing fails in nfsd4_run_cb, the count will be decremente=
+d
+>>>>>>> accordingly.
+>>>>>>> 2) After cb_work is running, the count is decreased in the except=
+ion
+>>>>>>> branch of nfsd4_run_cb_work via nfsd41_destroy_cb.
+>>>>>>> 3) The count is decreased in the release callback of rpc_task =E2=
+=80=94 either
+>>>>>>> directly calling nfsd41_cb_inflight_end in nfsd4_cb_probe_release=
+, or
+>>>>>>> calling nfsd41_destroy_cb in 	.
+>>>>>>>
+>>>>>>> However, in nfsd4_cb_release, if the current cb_work needs to res=
+tart, the
+>>>>>>> count will not be decreased, with the expectation that it will be=
+ reduced
+>>>>>>> once cb_work is running.
+>>>>>>> If queuing fails here, then the count will leak, ultimately causi=
+ng the
+>>>>>>> nfsd service to be unable to exit as shown below:
+>>>>>>> [root@nfs_test2 ~]# cat /proc/2271/stack
+>>>>>>> [<0>] nfsd4_shutdown_callback+0x22b/0x290
+>>>>>>> [<0>] __destroy_client+0x3cd/0x5c0
+>>>>>>> [<0>] nfs4_state_destroy_net+0xd2/0x330
+>>>>>>> [<0>] nfs4_state_shutdown_net+0x2ad/0x410
+>>>>>>> [<0>] nfsd_shutdown_net+0xb7/0x250
+>>>>>>> [<0>] nfsd_last_thread+0x15f/0x2a0
+>>>>>>> [<0>] nfsd_svc+0x388/0x3f0
+>>>>>>> [<0>] write_threads+0x17e/0x2b0
+>>>>>>> [<0>] nfsctl_transaction_write+0x91/0xf0
+>>>>>>> [<0>] vfs_write+0x1c4/0x750
+>>>>>>> [<0>] ksys_write+0xcb/0x170
+>>>>>>> [<0>] do_syscall_64+0x70/0x120
+>>>>>>> [<0>] entry_SYSCALL_64_after_hwframe+0x78/0xe2
+>>>>>>> [root@nfs_test2 ~]#
+>>>>>>>
+>>>>>>> Fix this by decreasing cl_cb_inflight if the restart fails.
+>>>>>>>
+>>>>>>> Fixes: cba5f62b1830 ("nfsd: fix callback restarts")
+>>>>>>> Signed-off-by: Li Lingfeng <lilingfeng3@huawei.com>
+>>>>>>> ---
+>>>>>>>  fs/nfsd/nfs4callback.c | 10 +++++++---
+>>>>>>>  1 file changed, 7 insertions(+), 3 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+>>>>>>> index 484077200c5d..8a7d24efdd08 100644
+>>>>>>> --- a/fs/nfsd/nfs4callback.c
+>>>>>>> +++ b/fs/nfsd/nfs4callback.c
+>>>>>>> @@ -1459,12 +1459,16 @@ static void nfsd4_cb_done(struct rpc_task=
+ *task, void *calldata)
+>>>>>>>  static void nfsd4_cb_release(void *calldata)
+>>>>>>>  {
+>>>>>>>  	struct nfsd4_callback *cb =3D calldata;
+>>>>>>> +	struct nfs4_client *clp =3D cb->cb_clp;
+>>>>>>> +	int queued;
+>>>>>>>
+>>>>>>>  	trace_nfsd_cb_rpc_release(cb->cb_clp);
+>>>>>>>
+>>>>>>> -	if (cb->cb_need_restart)
+>>>>>>> -		nfsd4_queue_cb(cb);
+>>>>>>> -	else
+>>>>>>> +	if (cb->cb_need_restart) {
+>>>>>>> +		queued =3D nfsd4_queue_cb(cb);
+>>>>>>> +		if (!queued)
+>>>>>>> +			nfsd41_cb_inflight_end(clp);
+>>>>>>> +	} else
+>>>>>>>  		nfsd41_destroy_cb(cb);
+>>>>>>>
+>>>>>>>  }
+>>>>>>
+>>>>>> Good catch!
+>>>>>>
+>>>>>> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+>>>>>>
+>>>>>
+>>>>> Actually, I think this is not quite right. It's a bit more subtle t=
+han
+>>>>> it first appears. The problem of course is that the callback workqu=
+eue
+>>>>> jobs run in a different task than the RPC workqueue jobs, so they c=
+an
+>>>>> race.
+>>>>>
+>>>>> cl_cb_inflight gets bumped when the callback is first queued, and o=
+nly
+>>>>> gets released in nfsd41_destroy_cb(). If it fails to be queued, it'=
+s
+>>>>> because something else has queued the workqueue job in the meantime=
+=2E
+>>>>>
+>>>>> There are two places that can occur: nfsd4_cb_release() and
+>>>>> nfsd4_run_cb(). Since this is occurring in nfsd4_cb_release(), the =
+only
+>>>>> other option is that something raced in and queued it via
+>>>>> nfsd4_run_cb().
+>>>>
+>>>> What would be the "something" that raced in?
+>>>>
+>>>
+>>> I think we may be able to get there via multiple __break_lease() call=
+s
+>>> on the same layout or delegation. That could mean multiple calls to t=
+he
+>>> ->lm_break operation on the same object.
 >>
->> Set scale macro based on KASAN mode: in software tag-based mode 32 bytes
->> of memory map to one shadow byte and 16 in generic mode.
+>> Sorry for the late response, but isn't ->lm_break() already serialized=
+ in
+>> __break_lease for the same file_lease?  We don't call lm_break(fl) if
+>> lease_breaking(fl).
+>>
 >
->These should be 16 and 8.
-
-Thanks, I thought I got all the dense mode stuff from this series.
-
+> lease_breaking() is only checked when want_write is false. IOW, if
+> you're breaking the lease for write, then lm_break is always called.
 >
->>
->> Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
->> ---
->> Changelog v2:
->> - Remove KASAN dense code.
->>
->>  arch/x86/Kconfig                | 6 ++++++
->>  arch/x86/boot/compressed/misc.h | 1 +
->>  arch/x86/include/asm/kasan.h    | 2 +-
->>  arch/x86/kernel/setup.c         | 2 ++
->>  4 files changed, 10 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->> index f4ef64bf824a..dc48eb5b664f 100644
->> --- a/arch/x86/Kconfig
->> +++ b/arch/x86/Kconfig
->> @@ -195,6 +195,7 @@ config X86
->>         select HAVE_ARCH_JUMP_LABEL_RELATIVE
->>         select HAVE_ARCH_KASAN                  if X86_64
->>         select HAVE_ARCH_KASAN_VMALLOC          if X86_64
->> +       select HAVE_ARCH_KASAN_SW_TAGS          if ADDRESS_MASKING
->>         select HAVE_ARCH_KFENCE
->>         select HAVE_ARCH_KMSAN                  if X86_64
->>         select HAVE_ARCH_KGDB
->> @@ -402,6 +403,11 @@ config KASAN_SHADOW_OFFSET
->>         hex
->>         default 0xdffffc0000000000 if KASAN_GENERIC
->>
->> +config KASAN_SHADOW_SCALE_SHIFT
->> +       int
->> +       default 4 if KASAN_SW_TAGS
->> +       default 3
->
->What's the purpose of this config option? I think we can just change
->the value of the KASAN_SHADOW_SCALE_SHIFT define when KASAN_SW_TAGS is
->enabled.
+> Is that a bug or a feature? I'm not sure, but it's been that way since
+> ~2011.
 
-Well, I was aiming at later adding the "default 5 if KASAN_SW_TAGS_DENSE", and
-this way it would look much cleaner than the:
+Yeah.. why?
 
-if KASAN_SW_TAGS
-	if KASAN_SW_TAGS_DENSE
-		KASAN_SHADOW_SCALE_SHIFT = 5
-	else
-		KASAN_SHADOW_SCALE_SHIFT = 4
-else
-	KASAN_SHADOW_SCALE_SHIFT = 3
+Thanks I missed that detail when I refreshed my memory of it just now.
+Seems like you'd want to avoid constantly calling lm_break for both cases=
+,
+spamming the lock manager adds nothing.  2 cents.
 
-But now that I think of it, it should be possible to overwrite the
-KASAN_SHADOW_SCALE_SHIFT from non-arch code if dense mode is enabled.
+Ben
 
-That's a topic for the next series but I'd imagine all architectures would
-normally use the 16 memory bytes / shadow byte and if they'd care for the dense
-mode they'd go for 32 memory bytes / shadow byte. Or do you think that's a
-faulty assumption?
-
->
->> +
->>  config HAVE_INTEL_TXT
->>         def_bool y
->>         depends on INTEL_IOMMU && ACPI
->> diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
->> index dd8d1a85f671..f6a87e9ad200 100644
->> --- a/arch/x86/boot/compressed/misc.h
->> +++ b/arch/x86/boot/compressed/misc.h
->> @@ -13,6 +13,7 @@
->>  #undef CONFIG_PARAVIRT_SPINLOCKS
->>  #undef CONFIG_KASAN
->>  #undef CONFIG_KASAN_GENERIC
->> +#undef CONFIG_KASAN_SW_TAGS
->>
->>  #define __NO_FORTIFY
->>
->> diff --git a/arch/x86/include/asm/kasan.h b/arch/x86/include/asm/kasan.h
->> index 4bfd3641af84..cfc31e4a2f70 100644
->> --- a/arch/x86/include/asm/kasan.h
->> +++ b/arch/x86/include/asm/kasan.h
->> @@ -6,7 +6,7 @@
->>  #include <linux/kasan-tags.h>
->>  #include <linux/types.h>
->>
->> -#define KASAN_SHADOW_SCALE_SHIFT 3
->> +#define KASAN_SHADOW_SCALE_SHIFT CONFIG_KASAN_SHADOW_SCALE_SHIFT
->>
->>  /*
->>   * Compiler uses shadow offset assuming that addresses start
->> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
->> index cebee310e200..768990c573ea 100644
->> --- a/arch/x86/kernel/setup.c
->> +++ b/arch/x86/kernel/setup.c
->> @@ -1124,6 +1124,8 @@ void __init setup_arch(char **cmdline_p)
->>
->>         kasan_init();
->>
->> +       kasan_init_sw_tags();
->> +
->>         /*
->>          * Sync back kernel address range.
->>          *
->> --
->> 2.47.1
->>
-
--- 
-Kind regards
-Maciej Wieczór-Retman
