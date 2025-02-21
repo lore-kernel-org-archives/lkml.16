@@ -1,82 +1,130 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA912045B9
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 09:41:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6153B2045B9
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 09:41:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740130884; cv=none; b=kpOLNGlyFllYGhrHB+q8e9bfN3QBDXcf4N0Qv2g3Dqs9OiMpU4CQYDurmrIFP1YjNPVb00XVz/lxEObNoVC7gNFn8fpeWNbBlPT/AmbWmLRuLeXEdo1AH5v15Yn5FOvqiKQQgDxn92aqDdERnONPQ9PONVQl8pguoF8WRM1/LIA=
+	t=1740130914; cv=none; b=WlF1tCqyX9kWv1FOJ08F3NMW/+eZLJoc5WPZwfbZR9y6LFRUON2AJp9iu6iatbN5jZR07wiRsJSV9lQ2GwEaMejHz3rv+D1iE8ARZ+VwTQBaauGwkTHwcIakyFOy/81zShIawKA1Ccfllh4NYablu2kUjJJWxeJ8i04LtetVl/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740130884; c=relaxed/simple;
-	bh=ZkkWKXP5VI04+XhhK4BFzZn5nqZ0ICb2qmJ7kldPgGc=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=S+hXVTXuoEabvS1Ig2gLOfS29HYsF1v3cwQZIvZ4N1npK4YP2p0XU45NU+Dzx4CUEs7pRfE1HD3Cc2E88O3rlgVsn3YcrJ2rBwGSAy7cxo9aG0KVVgc1xrmKsF8udqWwOSerJQNTaLFgviOyeAJMLCfo6So777OwAJ7uXG7xCMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-8559aa4b853so140853839f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 01:41:22 -0800 (PST)
+	s=arc-20240116; t=1740130914; c=relaxed/simple;
+	bh=Ekj3mlDaIzCTqaCGVbDb2HM9pKkxti3ayHLfFEuWNB4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b4j1bvp3N8boSjlh4kA1bwyLplz3juhbNd9hE6ZZvx3u+06esFphEsvXdzcJ1rO9XzJD/HGDCTIlvCCM+AeqDZsPgE5xHV/ljX/vWA0KFD0CEgrPSU/FPWMJqPOCXCrRqmV4IF/0E+LKU+PP2kBkJU7lYrvw3gbRB8pqeWJRiKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XHUjeeBY; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XHUjeeBY"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e0373c7f55so2853062a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 01:41:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740130911; x=1740735711; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hf5UFYhuzwCYSZfhV/w3wT5Q92fYNVjy6s3M1z5Zdlw=;
+        b=XHUjeeBYb8sZNEgp9l7fGPOIxO33Tu5eOAnP/sbzrQzHe3EqSxunMmaP2qbb7TiiHr
+         bDkzuFxen1SmQ2DqbDEBNJJzoynktqTeg4SJ3olHREsZv+sxVqNWiq9AZlg5fyiN33bq
+         NuqntajhvBkRCEd0QH7wlRzXEVvbDeJv4F6xNJzwKeDOyZTDgdviBtHHoSin9PMLfFHe
+         6/neaiaqHgNG5TENClCIZ1PKThJKn/WL54vxJQxfKifs7kv84s9i22Q3quB3ryr8Rh2x
+         B9pJPhtNumPMOPj+cUzzHpI1kqIT6T2qo5jTk3KuNe79eb8blL9Et1y9bZLHZOLKmF8K
+         5sgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740130881; x=1740735681;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=T95fukwRaCyhjkDTbTMQl87Lxi7TRA8tZuBkDLMn1N4=;
-        b=nKiJxc9VZ/ko6PA4tq/OUP3d9qntcvnB7XU0CdV0SxkGtOfnz6mSZvDixehO9LO7Tw
-         +xs8i35yZGQi/Jgw4tOfHBAv9LtgXmjL1Rm1aeHZ7mRzhL34RAAJfHz78dSxlKkfNilU
-         aNwe4qre8IBIlAJPD0GySvaUA6mZE0dHLEeTsi051tty5TPWUO6KedeGFQdk5FOc+w6y
-         B6o6jm4wL8ZxKJtJBS8fyzJkrm4VqJdrlUiZJDEqFJ5iOG4HCVWe+oHxp5uTVFf4hrPB
-         ZZEszUSedH/qLYVEoEOISg034qEQk5M2TViPcw+uezARvYpGjQ7u68LOoJBVV8wV1kPB
-         gBqg==
-X-Gm-Message-State: AOJu0YxvPphzQShJtY1vebG0qI7UbxPdPf7/Sl/uVBACQNzF/mKlGiRQ
-	6qCgSmVB0wlYr8eAUcb1cN20P1z4haQ9CNfHqWx4rf+kb+p4NRJ4lEvWzii7fK93s6gYTVvp15w
-	FJswMEtMo/aJFJtOtdG3l5qvWSUZWYxtPeKgHPPbY1FIwafz1XnLlD2U=
-X-Google-Smtp-Source: AGHT+IEF5bFtK+eCANJbgUQqmfBu+0vXYeTFRBcR8iV7drnQDTpoOIsrcWPIDwV5HrQ9LgxOXhepfrQaeAw9suS96bC1WqcVv1Jo
+        d=1e100.net; s=20230601; t=1740130911; x=1740735711;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Hf5UFYhuzwCYSZfhV/w3wT5Q92fYNVjy6s3M1z5Zdlw=;
+        b=RSHD6rfevP0PNWEyzXrhUKLbwdfcvhjJWQMCp/DKDAoem0sl65QB7x2xovhqtWQve0
+         aHDr177O+rgmWLUyLLL9hzWJuBqoIOz4VerwefY/7TN/AwKfIJV3aa/wtYaa+R7Sihkd
+         RFV9WSMiNlK1Jc6OH7mA44iL+FqdEwngJa9B/qRslqQTSPwPY5p7YQfAQEFGY75xdmrd
+         oFNMftZJdu/XLYQstMZ0LwVucZ+jVJohh71URrCS5l2FkgWyagcedAK10N7UyYS2SyKI
+         YYVX1upf91UMS6NeACz+iBubMkS//qD0cMxbaBKHaFEu3tKedaEYjDkq8oR1h6fqssKG
+         Mx3g==
+X-Forwarded-Encrypted: i=1; AJvYcCX5vVOe+UWk8zzqahxsm0JHMcu3rRYkBKr5Y3wMJm871fCWFZvl41QDcuJrrYQF/y339Ekxdp5bg18LXWU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLQNbzw12y1ldvCy8gySgQxokKX//pfT2xVIoqz0UzXwtMEcy2
+	Qr7vLaJ2Bc4lsBa3MPKgYfAgtdCzReX5+jljyanslKH8cpHxctMSvuSG1DnF/XQ=
+X-Gm-Gg: ASbGncuXbzI+iACxZSbit0WqyPcckG7LTRKSkdSP6ULmjLfqOnpvAgSTgqCRKK5qBXw
+	ywTaIdqvMa66fzzqdDY/J5eS0I7fNaGMGDKYaR0dZNFZsGem0IE3rVyp0Qf9bBChzugyz1un/g4
+	SRrdOp636DKHcaD0PRz9q/1Fl27GPaoazyaHU2WAjvlKei8wHEI0LpKHH1gDA3zgDm0enJY0Int
+	zSdJBkAkHI40BfdypdS8iKzZCSRlroxDEkMc0dL86ka8rc/KaMJsrtZH+FJ6mpm+7c9SDQL9tPN
+	pf3ZvpmK+tBgiL0JDobbyqU=
+X-Google-Smtp-Source: AGHT+IGbaRycsJ0mOBkrChn5+O4lWjguYUx2LL4IDLzJpPhuq5e6fQovvvo7BGaxVVcet2Lgi3vlnA==
+X-Received: by 2002:a17:907:7ea0:b0:ab7:e8d6:3b12 with SMTP id a640c23a62f3a-abc099b83e0mr313942266b.1.1740130910690;
+        Fri, 21 Feb 2025 01:41:50 -0800 (PST)
+Received: from linaro.org ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abbaa56026fsm814380366b.113.2025.02.21.01.41.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 01:41:50 -0800 (PST)
+Date: Fri, 21 Feb 2025 11:41:48 +0200
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Rajendra Nayak <quic_rjendra@quicinc.com>,
+	Sibi Sankar <quic_sibis@quicinc.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Trilok Soni <quic_tsoni@quicinc.com>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v5 0/4] arm64: dts: qcom: x1e80100: crd/t14s:
+ Enable Parade Type-C retimers
+Message-ID: <Z7hKXNOwHlLLNtNx@linaro.org>
+References: <20250220-x1e80100-dts-crd-t14s-enable-typec-retimers-v5-0-380a3e0e7edc@linaro.org>
+ <Z7hGbEUsQU_MUL5t@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1908:b0:3d0:21aa:a752 with SMTP id
- e9e14a558f8ab-3d2cae47e92mr26100285ab.2.1740130881644; Fri, 21 Feb 2025
- 01:41:21 -0800 (PST)
-Date: Fri, 21 Feb 2025 01:41:21 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67b84a41.050a0220.14d86d.0358.GAE@google.com>
-Subject: [syzbot] Monthly pm report (Feb 2025)
-From: syzbot <syzbot+liste374d52634bb41a6b682@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z7hGbEUsQU_MUL5t@hovoldconsulting.com>
 
-Hello pm maintainers/developers,
+On 25-02-21 10:25:00, Johan Hovold wrote:
+> On Thu, Feb 20, 2025 at 07:42:29PM +0200, Abel Vesa wrote:
+> > Since the driver and dt-bindings have been alread merged, it has been
+> > agreed offline that there is no point of holding on to these DT patches
+> > even though there are some issues with plug/unplug during suspend in
+> > both pmic-glink-altmode and ucsi-glink. These issues are being worked on
+> > meanwhile. Merging these means that even though this will provide external DP
+> > and USB orientation, plug/unplug during suspend will give some splats
+> > and render both the USB orientation and DP broken. But then, other
+> > X Elite boards already have these nodes described, so lets bring the crd
+> > and t14s to the same level.
+> > 
+> > These patches are just a resend of the ones found in v5 and dropped in the v6
+> > patchset of the driver and dt-bindings.
+> > 
+> > Link to v5: https://lore.kernel.org/all/20241112-x1e80100-ps8830-v5-0-4ad83af4d162@linaro.org/
+> > 
+> > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> > ---
+> > Abel Vesa (4):
+> >       arm64: dts: qcom: x1e80100-crd: Describe the Parade PS8830 retimers
+> >       arm64: dts: qcom: x1e80100-crd: Enable external DisplayPort support
+> >       arm64: dts: qcom: x1e80100-t14s: Describe the Parade PS8830 retimers
+> >       arm64: dts: qcom: x1e80100-t14s: Enable external DisplayPort support
+> 
+> It looks like you've addressed all the comments I had on v1 (except for
 
-This is a 31-day syzbot report for the pm subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/pm
+Oh, sorry, missed that one.
 
-During the period, 1 new issues were detected and 0 were fixed.
-In total, 5 issues are still open and 9 have already been fixed.
+Let me respin.
 
-Some of the still happening issues:
+> a stray newline after a t14s port@2 node) and I've been running with
+> these patches for a long time now without any issues (other than the
+> glink hotplug issues mentioned above):
+> 
+> Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+> Tested-by: Johan Hovold <johan+linaro@kernel.org>
+> 
+> Johan
 
-Ref Crashes Repro Title
-<1> 586     Yes   WARNING in enable_work
-                  https://syzkaller.appspot.com/bug?extid=7053fbd8757fecbbe492
-<2> 3       Yes   possible deadlock in lock_system_sleep
-                  https://syzkaller.appspot.com/bug?extid=ace60642828c074eb913
-<3> 2       Yes   possible deadlock in dpm_for_each_dev
-                  https://syzkaller.appspot.com/bug?extid=2a03726f1d4eff48b278
+Thanks for reviewing and testing!
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
-
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
+Abel
