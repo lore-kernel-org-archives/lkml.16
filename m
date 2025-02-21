@@ -1,16 +1,16 @@
 Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2881A270
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 00:54:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DD71BDC3
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 00:54:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740099251; cv=none; b=lsT4sSGYJ/sDGUs52r2X7L+w1dfjo5bgXGIfJC/wCsTCqbrYieyznkoZAp+u6lJmehTWGery0MPXjJyJtxmRK9zrGZQeuNHOI32rFvCSOH1qgx8BgX8KMjjZGJCtrMaEjmF0z1hi7eeeRrwSoRAoiUaCTocA5CNKYXKiLjWJRwY=
+	t=1740099252; cv=none; b=VHjNcW3U6weQmwAJAkY8Vj/lwJChQSQd51N0qcnsiIVXnbWMSt1x4OGTqkUuXxoHXwKnlFzqkHSQN1cWGkYvk9J00J3x8in2+9O/GkAEOSwlQnO8TjRzFN+rGTsPErsfZEyxug1U9FOQBA/DpA0YDzpZM/4LDsv6zMY8+YDGwEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740099251; c=relaxed/simple;
-	bh=HfTOpIq5dgsz6p3tzayxks03I3xlKRiNPwpNctJEvpo=;
+	s=arc-20240116; t=1740099252; c=relaxed/simple;
+	bh=zlfz1ZVFQiGJXQEMWXYabmOodmJJcIh2c1j+uC8AoQg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JqpFEG4+yUjS/H25Ky/H6IlpWV7oTF1H4ggeW2tLzD4tRJtnbMYl5DJMiqEVzLYI9kLeQYLlZ/WPZ2Rah/JXbFobOunqHkkSIFKZiHaObY2U6DbFM4l0X8nXt+mgqU7FQ9hmBnTA+cPd55xosrZ4n+6nNYKb0GC4/LeKexRNhxY=
+	 MIME-Version; b=I7HGuH/rjHanesm/AFq716gbw/HED6cXpjv6iFrG7yN/7wK9ewZ7v/7XCMtI+ZXm5jlXajfK9DprcPPPAbqEffTSGdPqSnj3RqSeQOz7a/5xz1tw4PkApVsv9QzQ9VpsF7z5Nu9ElIX6Aug5CMXBr/4htdKKOjWR/IWyuGo9c/U=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
@@ -18,7 +18,7 @@ Received: from fangorn.home.surriel.com ([10.0.13.7])
 	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.97.1)
 	(envelope-from <riel@shelob.surriel.com>)
-	id 1tlHIZ-000000003Qf-1l2C;
+	id 1tlHIZ-000000003Qf-1C5m;
 	Thu, 20 Feb 2025 19:53:47 -0500
 From: Rik van Riel <riel@surriel.com>
 To: x86@kernel.org
@@ -38,9 +38,9 @@ Cc: linux-kernel@vger.kernel.org,
 	andrew.cooper3@citrix.com,
 	Manali.Shukla@amd.com,
 	Rik van Riel <riel@surriel.com>
-Subject: [PATCH v12 12/16] x86/mm: enable broadcast TLB invalidation for multi-threaded processes
-Date: Thu, 20 Feb 2025 19:53:11 -0500
-Message-ID: <20250221005345.2156760-13-riel@surriel.com>
+Subject: [PATCH v12 07/16] x86/mm: use INVLPGB in flush_tlb_all
+Date: Thu, 20 Feb 2025 19:53:06 -0500
+Message-ID: <20250221005345.2156760-8-riel@surriel.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250221005345.2156760-1-riel@surriel.com>
 References: <20250221005345.2156760-1-riel@surriel.com>
@@ -53,152 +53,51 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: riel@surriel.com
 
-Use broadcast TLB invalidation, using the INVPLGB instruction.
-
-There is not enough room in the 12-bit ASID address space to hand
-out broadcast ASIDs to every process. Only hand out broadcast ASIDs
-to processes when they are observed to be simultaneously running
-on 4 or more CPUs.
-
-This also allows single threaded process to continue using the
-cheaper, local TLB invalidation instructions like INVLPGB.
+The flush_tlb_all() function is not used a whole lot, but we might
+as well use broadcast TLB flushing there, too.
 
 Signed-off-by: Rik van Riel <riel@surriel.com>
-Reviewed-by: Nadav Amit <nadav.amit@gmail.com>
 Tested-by: Manali Shukla <Manali.Shukla@amd.com>
 Tested-by: Brendan Jackman <jackmanb@google.com>
 Tested-by: Michael Kelley <mhklinux@outlook.com>
 ---
- arch/x86/mm/tlb.c | 107 +++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 106 insertions(+), 1 deletion(-)
+ arch/x86/mm/tlb.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
 diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index d8a04e398615..01a5edb51ebe 100644
+index 59396a3c6e9c..2d7ed0fda61f 100644
 --- a/arch/x86/mm/tlb.c
 +++ b/arch/x86/mm/tlb.c
-@@ -420,6 +420,108 @@ static bool needs_global_asid_reload(struct mm_struct *next, u16 prev_asid)
- 	return false;
+@@ -1065,6 +1065,16 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
  }
  
-+/*
-+ * x86 has 4k ASIDs (2k when compiled with KPTI), but the largest
-+ * x86 systems have over 8k CPUs. Because of this potential ASID
-+ * shortage, global ASIDs are handed out to processes that have
-+ * frequent TLB flushes and are active on 4 or more CPUs simultaneously.
-+ */
-+static void consider_global_asid(struct mm_struct *mm)
+ 
++static bool broadcast_flush_tlb_all(void)
 +{
-+	if (!static_cpu_has(X86_FEATURE_INVLPGB))
-+		return;
++	if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
++		return false;
 +
-+	/* Check every once in a while. */
-+	if ((current->pid & 0x1f) != (jiffies & 0x1f))
-+		return;
-+
-+	if (!READ_ONCE(global_asid_available))
-+		return;
-+
-+	/*
-+	 * Assign a global ASID if the process is active on
-+	 * 4 or more CPUs simultaneously.
-+	 */
-+	if (mm_active_cpus_exceeds(mm, 3))
-+		use_global_asid(mm);
++	guard(preempt)();
++	invlpgb_flush_all();
++	return true;
 +}
 +
-+static void finish_asid_transition(struct flush_tlb_info *info)
-+{
-+	struct mm_struct *mm = info->mm;
-+	int bc_asid = mm_global_asid(mm);
-+	int cpu;
+ static void do_flush_tlb_all(void *info)
+ {
+ 	count_vm_tlb_event(NR_TLB_REMOTE_FLUSH_RECEIVED);
+@@ -1074,6 +1084,12 @@ static void do_flush_tlb_all(void *info)
+ void flush_tlb_all(void)
+ {
+ 	count_vm_tlb_event(NR_TLB_REMOTE_FLUSH);
 +
-+	if (!READ_ONCE(mm->context.asid_transition))
++	/* First try (faster) hardware-assisted TLB invalidation. */
++	if (broadcast_flush_tlb_all())
 +		return;
 +
-+	for_each_cpu(cpu, mm_cpumask(mm)) {
-+		/*
-+		 * The remote CPU is context switching. Wait for that to
-+		 * finish, to catch the unlikely case of it switching to
-+		 * the target mm with an out of date ASID.
-+		 */
-+		while (READ_ONCE(per_cpu(cpu_tlbstate.loaded_mm, cpu)) == LOADED_MM_SWITCHING)
-+			cpu_relax();
-+
-+		if (READ_ONCE(per_cpu(cpu_tlbstate.loaded_mm, cpu)) != mm)
-+			continue;
-+
-+		/*
-+		 * If at least one CPU is not using the global ASID yet,
-+		 * send a TLB flush IPI. The IPI should cause stragglers
-+		 * to transition soon.
-+		 *
-+		 * This can race with the CPU switching to another task;
-+		 * that results in a (harmless) extra IPI.
-+		 */
-+		if (READ_ONCE(per_cpu(cpu_tlbstate.loaded_mm_asid, cpu)) != bc_asid) {
-+			flush_tlb_multi(mm_cpumask(info->mm), info);
-+			return;
-+		}
-+	}
-+
-+	/* All the CPUs running this process are using the global ASID. */
-+	WRITE_ONCE(mm->context.asid_transition, false);
-+}
-+
-+static void broadcast_tlb_flush(struct flush_tlb_info *info)
-+{
-+	bool pmd = info->stride_shift == PMD_SHIFT;
-+	unsigned long asid = info->mm->context.global_asid;
-+	unsigned long addr = info->start;
-+
-+	/*
-+	 * TLB flushes with INVLPGB are kicked off asynchronously.
-+	 * The inc_mm_tlb_gen() guarantees page table updates are done
-+	 * before these TLB flushes happen.
-+	 */
-+	if (info->end == TLB_FLUSH_ALL) {
-+		invlpgb_flush_single_pcid_nosync(kern_pcid(asid));
-+		/* Do any CPUs supporting INVLPGB need PTI? */
-+		if (static_cpu_has(X86_FEATURE_PTI))
-+			invlpgb_flush_single_pcid_nosync(user_pcid(asid));
-+	} else do {
-+		unsigned long nr = 1;
-+
-+		if (info->stride_shift <= PMD_SHIFT) {
-+			nr = (info->end - addr) >> info->stride_shift;
-+			nr = clamp_val(nr, 1, invlpgb_count_max);
-+		}
-+
-+		invlpgb_flush_user_nr_nosync(kern_pcid(asid), addr, nr, pmd);
-+		if (static_cpu_has(X86_FEATURE_PTI))
-+			invlpgb_flush_user_nr_nosync(user_pcid(asid), addr, nr, pmd);
-+
-+		addr += nr << info->stride_shift;
-+	} while (addr < info->end);
-+
-+	finish_asid_transition(info);
-+
-+	/* Wait for the INVLPGBs kicked off above to finish. */
-+	__tlbsync();
-+}
-+
- /*
-  * Given an ASID, flush the corresponding user ASID.  We can delay this
-  * until the next time we switch to it.
-@@ -1250,9 +1352,12 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
- 	 * a local TLB flush is needed. Optimize this use-case by calling
- 	 * flush_tlb_func_local() directly in this case.
- 	 */
--	if (cpumask_any_but(mm_cpumask(mm), cpu) < nr_cpu_ids) {
-+	if (mm_global_asid(mm)) {
-+		broadcast_tlb_flush(info);
-+	} else if (cpumask_any_but(mm_cpumask(mm), cpu) < nr_cpu_ids) {
- 		info->trim_cpumask = should_trim_cpumask(mm);
- 		flush_tlb_multi(mm_cpumask(mm), info);
-+		consider_global_asid(mm);
- 	} else if (mm == this_cpu_read(cpu_tlbstate.loaded_mm)) {
- 		lockdep_assert_irqs_enabled();
- 		local_irq_disable();
++	/* Fall back to the IPI-based invalidation. */
+ 	on_each_cpu(do_flush_tlb_all, NULL, 1);
+ }
+ 
 -- 
 2.47.1
 
