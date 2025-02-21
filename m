@@ -1,167 +1,102 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7571FBEBE;
-	Fri, 21 Feb 2025 19:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FADA1FBEBE;
+	Fri, 21 Feb 2025 19:47:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740167207; cv=none; b=uiRLcekPnouaYNasPbMhioRanoshpcpCnJiLJzfT6u6Sm/JEHkcfEYiB8i9v2fkxuDdlER+QUNLVtZbczqbo7We5EK+8ShFPzM9toe6reOc1zIXbWcNRhp389gw6ImbKh5d8ZbcaGNg+BeDvzKN5cU+MqZIk/jkWFghz0azPbpA=
+	t=1740167227; cv=none; b=Hxcnp4krIvnDPIbxrVBpQtpF8KSRIyjuIkL//9Kly64kNTZ2mZ9z5fQUjEqOdg1QJSpQTGJgrpcS5rvDD9iQQtjQRsoST+xt87YovZTtQ2k23UAffT2X7VOpn1bZudg6JuzreGIQq3dv8ZQez+Q4hUNZBp9zLqCHfBnu2t4h9gA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740167207; c=relaxed/simple;
-	bh=EvNaOjdpYA/Meze32ov+VQ+P3oHG1oAT5LZpWYvWbUY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lyDXtFPno/OdSqqD1gUfbIKfHbs7AziZD2hWDlGfsAH0F11+K9bboDgXsGpopSdZll25excsheyOkGS/xEcArQnTR4oAN1jxyzNMUyzJ1EO0nxAxcJtm6X11xd1Sf1uitJioOKqxu+jwXBx7Zs/JWrl9IA8lXAVAl6+Vv3DUawc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S4yHutMz; arc=none smtp.client-ip=209.85.208.173
+	s=arc-20240116; t=1740167227; c=relaxed/simple;
+	bh=TBw2bScEcDUBo9NzXVvHKFBz8rLRywVubQjdxqtB6fM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OoamQ9ekZDNaZcUi1wdOv9KHFCVL6wAPX1uLR/ZqcfptpDCeGLWjkqgMGRKOKY18h/AKVFrvvzAD/8dlFGuQh0QazVT/FWO29GbcbZxH6ooOeKpYXZ7PVM9qyeH2LIwJvLrnsEVZHXyAgd+D9A9c0shfLmdahwCUK9P1a9BNNPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C2T2AIj/; arc=none smtp.client-ip=209.85.208.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S4yHutMz"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-3091fecb637so19945981fa.1;
-        Fri, 21 Feb 2025 11:46:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C2T2AIj/"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5dbe706f94fso428526a12.2;
+        Fri, 21 Feb 2025 11:47:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740167203; x=1740772003; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3bYx7lKloKyg+UYaN5Q/XJxk/HLY0nsNiep4bhpWcTA=;
-        b=S4yHutMzLA3T0OlDFElJ6aGu3hBjoXuaMF0ulXF9Z9jPi84bCMqGenpwoblIsEJnp5
-         8GHcwQXvmQikEKrn0d3X/MtGY53ozhGVA1hE4OdNh1HXBglQmUi8jrCt8rM8a/qw8buZ
-         XXIEyOro8lQJ68b0qv7SfgIZvBYa8RtjaHTOYH8+yW35veSZCE9n90Dkvzpo7E76GEcz
-         igiWA9N+fgzICPkEnnpzynxdaS4GEyDcl/jIQe3zmOOcbwWL7301OPMAS+oYHl1en0GG
-         9YVimiqAowTSB2H6WV3CTJxvxGqw0ssESJSay7cx1cJycaP6EPlpjS08wYacdSxE14Ty
-         ZviA==
+        d=gmail.com; s=20230601; t=1740167224; x=1740772024; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yJdMcXw32Tg7Kx0gm7Vb+MSaJ2s2bdvGzbLZ44o42MY=;
+        b=C2T2AIj/j+G64wA4LZ9QojYsEeI0mBUfT+DHkVE9QPY/ONcurd8YtvmGqodl7h39BI
+         TfAsrTLePKvQhXzMsygtz6Rt8IRN4ngsDITnsDkqZR4+DryzRlQzEBx6sleHMiZYSZzS
+         iHfC4T4ETwrrtQLLaD+kPl3VbKtfD5so2dL55av0y+nPf/8DMks22VZIrje8vOxa8w5X
+         zSxJIElvWH0msyQvFuYShZ7kZHd7vHpl9MOWmJhQ5p/wfvIH0zVagouHsnUd64/N9LRk
+         0mb3L1GRI4SmV/xIbqd0X/5k+xdrMRcNqEhzSVY2Cmm/WcCEHQCJCfhRneC2hBo9ct51
+         mduw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740167203; x=1740772003;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3bYx7lKloKyg+UYaN5Q/XJxk/HLY0nsNiep4bhpWcTA=;
-        b=qtEE2EHp4xE543o/FOIvYw2MTO01KWgG3GtyMzGZg4RrqX+c7WqyJGPBYFNkuMFNeG
-         nHWP95GIIBLkH0Yfo9Ven5O0XjFMZVmdH9/cauQa+SoDZPLjFZSLm9/9SUmglPwJ0/zB
-         W3VczxROMNo4JlYxs7zj38armDX8hoZtcN2HJMl+h3JNuTEilPaZzmueA4SBSrEi0Skx
-         Mxy48cyFewsWMlzPmPm4DdN5G+kA1vWZDUWPpz6xc9wyU+p2qIDfFymWk+0TOj6IBTxW
-         Gk3fN2Avo465U0IGvCjGj62bMcLI27EsYWxWKAulLXBlwKn2RKwit9VxSXl9QudMAHtI
-         cBJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVqUQOirxwZjLUPwZJqEFctl17Zyc5zgFrQOppkH9ZjwlRiiMAtL3Oa3y5vi2ROoXflZjgwpAdmA9xWV1A=@vger.kernel.org, AJvYcCXKIfiabukrxQ+luz6cAiDnqnJEjP82YKmINK4MUonPW5WPtiYuyaF0rQ6YFE2qrwwBlnqw7vkXTTOY53MFVXk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRYD8jEOS4z3xzzY9bIcJm4mtCd8alhu7eZmwTPa8Mn6NzYWuJ
-	W/LC7ZWhAVtdpTDW3QNhL31NUbh/uyC91YuuVn0l1beSHIdDMvbZokvn2XJT4Do4Ton/v4ryjYw
-	3OQkR9PEtcWpIpEVbc0hNhwd/Rb0=
-X-Gm-Gg: ASbGncsvSriK2D+XErfnaa9B0TR65qpU0GBSuCsSaZ5aG6XZhmZdY8sFg9C8LNTFeeC
-	3GCCyccD8hiLmDvhl4deLO7RZZ1XkpCze/QQyZG9uwJ19WIBPpG82D8IRlli1EUORsgBPyZjCRV
-	h3rshVagsrvlBZ9W3UMuDGdAjjEuDcCbr/R1EKssCfFg==
-X-Google-Smtp-Source: AGHT+IEssYdLCQMaKWr9Fsmsz96kxOj8CVC+OVps927oFZ1uFTyt9hGj5b2TFamn7WpPzQEvImXyxlQ0/pqSzt5/0sA=
-X-Received: by 2002:a2e:9b0e:0:b0:308:fedf:8c26 with SMTP id
- 38308e7fff4ca-30a5985e000mr13638691fa.7.1740167203144; Fri, 21 Feb 2025
- 11:46:43 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740167224; x=1740772024;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yJdMcXw32Tg7Kx0gm7Vb+MSaJ2s2bdvGzbLZ44o42MY=;
+        b=ChBUmdalVIN+5lz5siFrVhRnBNrb/JTuRFoPK+EuQh7lfZmmB5+Lsuiajwpvz5QOpG
+         KTtSaT7vhTmdkdxcLObDgVvdF/3kVHYmohnBK7Sq1UaM6PBXBf49QHvkg+52BYjM4jmz
+         8Mufe+4XZjs29un2a0uu57DFbYHrdo9iZ25lCNmGSCmGfKJ8qy7y3J7oz6nE9HN41/zc
+         plr6iVBmUiNE2ez3axP8A9pnkMHJ2yx2dlQoocRJecXvTiaYdIque7AbH2KnXUf6waLE
+         X6HgCFYm2oEpCGL2vBYxQqK1rFovcYryWpm1MNlJIZw5fNjUzO4dNOZSOeDyMxdX5p74
+         0tzw==
+X-Forwarded-Encrypted: i=1; AJvYcCVSUiSBaWDh6r5z9lHjrBINAx4N8V06mE1y/USAYWCUbjSMMNChma+M2nIjYrdHLO6qWScXEABXsBRoN9JI@vger.kernel.org, AJvYcCXZ02pPkYzfCQSxswaQU1mEL/fQlXAGj2Yj9slR7XZgHf2H9TIm8gPffSj6YyBTr03hRibIcFZdwsQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyI1ljSm4Ieixumpu54IYo4MMVFKiF0HCxA/NS3t9aGLVtJJw2B
+	Cv/nitUCuex5IEkwwXDM3PW+Xoj+UahO/1X+tq1faL/3/rQxqDwS
+X-Gm-Gg: ASbGncvq8U5rmW2HP7mKjUdkfYChlJO5NUO2UqHcTeIMqxC14gbUf58sj/2GK+cBP8u
+	duds6K7v53SxigFEZd4zfbJPrLqJwos8ZlugYkGvjKvjYGOLJboYbjDxR90xZBuXewJr6eNVloX
+	3Ic1wcOyrEZP4tmSBgwPbCamQSf9eC0OS6NaENB5gudbk/FXKe+a6aJtiSkPpWGyPA4NpS2AQNd
+	hZ/xTTPSeFwqGHKqkZAQ1gGxYdHrMIWmwk1HV9bm6DrNawKw4ksA2njdfcEyclW78gJDkEGMbZF
+	34f3KMoMAkOWM52Jqu070oQZ2pOfImo8A4vUQa0wmo0NrFPcE+hAWngqtzcwwyK8mNWL+/xlgjU
+	NoiIF
+X-Google-Smtp-Source: AGHT+IFRzksiLhzL1WUTWwraJUWiPJmyeGyuG22NVuRfAS2xcwghkGqN4VRc1ouD+hNtBDaOqEqKrQ==
+X-Received: by 2002:a05:6402:5110:b0:5e0:36da:7ae4 with SMTP id 4fb4d7f45d1cf-5e0b70b5f1cmr1438219a12.1.1740167223656;
+        Fri, 21 Feb 2025 11:47:03 -0800 (PST)
+Received: from 0f997e1ceb21.v.cablecom.net (84-72-156-211.dclient.hispeed.ch. [84.72.156.211])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e076048c05sm6819525a12.35.2025.02.21.11.47.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 11:47:02 -0800 (PST)
+From: Lothar Rubusch <l.rubusch@gmail.com>
+To: lars@metafoo.de,
+	corbet@lwn.net,
+	jic23@kernel.org
+Cc: linux-doc@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	l.rubusch@gmail.com
+Subject: [PATCH v1 1/1] docs: iio: fix wrong driver name in documentation
+Date: Fri, 21 Feb 2025 19:46:58 +0000
+Message-Id: <20250221194658.41358-1-l.rubusch@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250218-hrtimer-v3-v6-12-rc2-v8-2-48dedb015eb3@kernel.org>
- <KDmrJnQA2_Ojf67mD8WA_UafgVCACRRleB9t-D_1yl_bua8e1VWdGQAUvmMGHscqRHu1gzPJCKe_BfotutZm5Q==@protonmail.internalid>
- <CAJ-ks9ncOyGyQsDFOBxg-7wmXkrQYiZr6H6eEFWsFstk=p1uAA@mail.gmail.com>
- <87wmdkgvr0.fsf@kernel.org> <djAeSx8DNZwss2-UqXGmhVPqYm2z4LhKWC70jPHPisd1w70qmpmOfVbHfhqJErhoFwVFM8IpbTv4MKkk_BIpQw==@protonmail.internalid>
- <CAJ-ks9mNidHZvWkFJE1jExc2oVk_bbJpiO_DRMrWu5nYhTpKgg@mail.gmail.com>
- <87ldtzhexi.fsf@kernel.org> <87cyfbe89x.fsf@kernel.org> <Z7iQcDa72XnJ5zGC@Mac.home>
- <CAJ-ks9kQccoa7znFNzWAgi6_G0TKvLUARWPZ_Dbed1C-d4Lr+Q@mail.gmail.com> <Z7iZevQkYVGDoeTa@Mac.home>
-In-Reply-To: <Z7iZevQkYVGDoeTa@Mac.home>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 21 Feb 2025 14:46:07 -0500
-X-Gm-Features: AWEUYZkhuy5uUEVC6MbUc90Erat1K-bUPqslx53fLBY9rVvn-TXqcFsbGm6329I
-Message-ID: <CAJ-ks9=f45WJKFwB4J0_a4j_Urf=yR_wukmfhRwRqtczDXfSPg@mail.gmail.com>
-Subject: Re: [PATCH v8 02/14] rust: hrtimer: introduce hrtimer support
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, Guangbo Cui <2407018371@qq.com>, 
-	Dirk Behme <dirk.behme@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 21, 2025 at 10:19=E2=80=AFAM Boqun Feng <boqun.feng@gmail.com> =
-wrote:
->
-> On Fri, Feb 21, 2025 at 09:46:08AM -0500, Tamir Duberstein wrote:
-> > On Fri, Feb 21, 2025 at 9:40=E2=80=AFAM Boqun Feng <boqun.feng@gmail.co=
-m> wrote:
-> > >
-> > > Hmm... if you mean:
-> > >
-> > > trait HasHrTimer {
-> > >     unsafe fn start(&self, expires: Ktime) {
-> > >         ...
-> > >     }
-> > > }
-> > >
-> > > Then it'll be problematic because the pointer derived from `&self`
-> > > doesn't have write provenance, therefore in a timer callback, the
-> > > pointer cannot be used for write, which means for example you cannot
-> > > convert the pointer back into a `Pin<Box<HasTimer>>`.
-> > >
-> > > To answer Tamir's question, pointers are heavily used here because we
-> > > need to preserve the provenance.
-> >
-> > Wouldn't the natural implication be that &mut self is needed? Maybe
->
-> For an `Arc<HasTimer>`, you cannot get `&mut self`.
->
-> > you can help me understand why pointers can express a contract that
-> > references can't?
->
-> I assume you already know what a pointer provenance is?
->
->         http://doc.rust-lang.org/std/ptr/index.html#provenance
->
-> Passing a pointer (including offset operation on it) preserves the
-> provenance (determined as derive time), however, deriving a pointer from
-> a reference gives the pointer a provenance based on the reference type.
-> For example, let's say we have an `Arc<i32>` and a clone:
->
->         let arc =3D Arc::new(42);
->         let clone =3D arc.clone();
->
-> you can obviously do a into_raw() + from_raw() pair:
->
->         let ptr =3D Arc::into_raw(arc);
->         let arc =3D unsafe { Arc::from_raw(arc) };
->
-> however, if you create a reference based on `Arc::into_raw()`, and then
-> derive a pointer from that, you change the provenance, therefore the
-> below code would generate UB:
->
->         // cannot mutably borrow because of clone.
->         let ptr =3D unsafe { &*Arc::into_raw(arc) } as *const i32;
->
->         let arc =3D unsafe { Arc::from_raw(ptr) };
->
->
-> (playground code snippet for this example)
->
->         https://play.rust-lang.org/?version=3Dstable&mode=3Ddebug&edition=
-=3D2021&gist=3D15e051db46c3886b29ed02e579562278
->
-> As you already know, the whole thing about pointers/references here is
-> passing the value to the callback and the callback can "reconstruct" the
-> data, in such a case, reborrowing in the middle of the chain into a
-> reference is not necessary, and as the above shows, it can be
-> problematic.
->
-> Hope this could be helpful.
->
-> Regards,
-> Boqun
+The ADXL380/382 documentation uses in one place a wrong driver name.
+Adds no functional change.
 
-Thanks for the explanation. I think where I'm still confused is that
-provenance is to pointers as the type system is to references. In
-other words, it's not clear to me how using pointers solves the
-problem of wanting to write through an Arc. Is the idea that the
-pointer inside the Arc has write provenance, and that by doing pointer
-offsets instead of going through references we get to break rules
-about mutability?
+Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+---
+ Documentation/iio/adxl380.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/iio/adxl380.rst b/Documentation/iio/adxl380.rst
+index 376dee5fe1dd..66c8a4d4f767 100644
+--- a/Documentation/iio/adxl380.rst
++++ b/Documentation/iio/adxl380.rst
+@@ -94,7 +94,7 @@ apply the following formula:
+ Where _offset and _scale are device attributes. If no _offset attribute is
+ present, simply assume its value is 0.
+ 
+-The adis16475 driver offers data for 2 types of channels, the table below shows
++The ADXL380 driver offers data for 2 types of channels, the table below shows
+ the measurement units for the processed value, which are defined by the IIO
+ framework:
+ 
+-- 
+2.39.5
+
