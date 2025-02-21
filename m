@@ -1,206 +1,96 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0388820469D
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 10:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624092046A6;
+	Fri, 21 Feb 2025 10:00:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740132006; cv=none; b=D9pi95eTjyO9DdWeFT9O8Go9IwY34q3CE3BlY9wtnCRKClEb+J5A82poBTiVpdzTFASWs6m3/BTIWdWeaempWSXGtU8KlSCwG21vjQQYCsziXDNnMZUUsvRaUOfH6p0coqYp4FoyFY5xZZrRzAkd7eofTsX64iXZ+/CZppK4+9E=
+	t=1740132008; cv=none; b=WAZiHZdGjbYIEOtiDFuJmP5u5TCH4vMU+UbiAP4FrXyIJODafkIGhhSXAs3/pyNwO2B1J7WuOcAwww/VbCAip6bOpfOnk/VxuTYioBCGxzWSy3bchPT+lMIugkxvm43xH/l020YS38C/gDKl1c2ch1RNnlSh/JiC3X2Qt5Ldl7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740132006; c=relaxed/simple;
-	bh=+bqvsqplc0ix2nD9cIkceoFFGaEb8J9OFFWRXYVz0Z4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZZ1E7DCQ2mvyJygK+JIVJLmI+w7R2PPvC8VUUHnRDPAsOVEq+VbL6oWCKydvFVqwsrQZREO00AmBM7Pawxn63KUU0BxlVMWmK0vM9sDFjZF0NHO4IOp0jvHP7VrxP++KFHysU6vX7ehDVjFd/qrTf9YCYuVDDOMBqCu4O9yndl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wifdL6lk; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740132008; c=relaxed/simple;
+	bh=Se+ktXeGp1G/eESkOhJ3QXv058/3RbGnqgzXQHPUT/0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XBaPI3ytjYDGo/RPsj0F2Ms8MPZ7Be0Q3Wme2XkfsP63Ya8Z7InfZhWoHQoRlP4Aq66VprBiUqMrjVg09xrbLgVt1UZ9StRSX5mMu0/bPDjp7gkcENt4aUqmTOD0EddvYlCwyp/zooRl+lZEWzYL6Dr0DRP9ziWI77kbo1ZRHMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EqiL4e0x; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wifdL6lk"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e02e77ea3cso294517a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 02:00:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EqiL4e0x"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-543e47e93a3so2189704e87.2;
+        Fri, 21 Feb 2025 02:00:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740132003; x=1740736803; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=xJWFyO2a6/QdicebMQYJMnjza8WWQ4TTI6mk3gJi0oU=;
-        b=wifdL6lkRK/LeJodFdSkKFeuDB0brsATVxeMKwM4Un6H8k68oRGoizt1gYEh+Bjqm2
-         DvOxVNU0a2liSFEwlvkNp1PWLICLNGHEkJupED8tzfk7SJAl8+IpYuWL50evOMNsAaZn
-         WlbcxKPeSpCUWsYPjAt/CLTTsKm/P1nZGY4RnmDfpOgeN3hEbUnARAR3nlJYgycYUGi0
-         AvPqoJxovMHysyd5oHbP3N26EeOP0BXKYFFWIJwHwcUxyA9dHIxNH/g6O76EnCmuibfM
-         SeQVXFHjWFDOLl2Qc5mSZNjyBVTkKf7z+06M1yMigzlZ7wI5F8YBHnFLLcT1yePlmkp2
-         XYYA==
+        d=gmail.com; s=20230601; t=1740132003; x=1740736803; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iLVwB+GU8xfxQzzItDC5z6HQk73kuURkW63I+L7hNAs=;
+        b=EqiL4e0xNPSarXirmwAXg5TU3LXLNn4E7M4LfmZwd8uwKY3sXR++47o9/Qz/4HOpr6
+         9Rt7ZwNgvUR4tv38pSTBS3IECgm2kHmS52OUWpHkqQtHlPFa4QjnfIqGztfjqM6PoWV5
+         AKaZRthqbg9MZXN5il4UGf55290wq2/uQvivgcjbebCUX/WlQ5unzmiEV1yIGkBvclou
+         aLzlRgwJ7+ZRCCjXKovYWDLpnXMKIab9GuSDNnvE0QshDL0oaZLWC7lcplILY/yIHWqL
+         DRdNa/FnRKc3EFp4QImIaAwWTEURrRDu7BvS1nuF7aLISjUPwHPhd04WVmZkPuZm4Ed5
+         /jcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1740132003; x=1740736803;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=xJWFyO2a6/QdicebMQYJMnjza8WWQ4TTI6mk3gJi0oU=;
-        b=ZAhnS0y0y7E6KFDBivL2MJTIurwlYJIoiEb5S0l/5oOTC5SxWS8vWvuwz052TAuJnT
-         6l3AUOp2i3hDSfL2NzrvjFY1qvFtkRJ/SF+EaJsKyZS+cWryLTacSqqefrF+nMPb7nij
-         ddH6izPP6wBKslMqM+NYS4//2BhZwVJt0P1iOIQ6b3PvjxzN8yS3Sf8sGPS8QEJn4O7g
-         DFzr5JEdwXOJDVylo+Ucli1i3zOoP5u0AhHB1tIHRKFxTkTgX0l9M4ekPegA6eXHrOKQ
-         V3C7aUjDD3KcLFrblPJimxuq9s7sJDlvAiMyZwjoad/5/5GhIIZ6FBQGzL7yu8N7HC1a
-         Qd1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWVePdo9x/uN38zQ33W7+8A8DmyxzeBikgGORYh/HBoWgalCByo5OJpmGVBIKWzm/7fnL5WgPRHH6xz7QU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/fND+f5XA7Wj6gTsMEwCx3kvkxtUIdJ9FLtxoz0xc18kWqnK4
-	+5DjI8BblnuoUq7li+A4O+YRfyCqztPRXd1i3FEhp2Ra4Fztr9NhCIkhlrRS9SE=
-X-Gm-Gg: ASbGncsX8zsObTb/Wu2+GCTbw/eysccX0PXQR7i/KZcStrFnVXORi0uaITrVWRBJ38F
-	7Lz9mjWXJF1d4YUaUqZOgwzttk+UpebPkP8GThj+bFDj1IwXYplg9QJKrt57tJ/EIUMlrf7fd6a
-	eOmBH3n6Ri8Q6Zi+kHVQx1CHYVRq5mpeTUMasMT9oSfNGYgOqRFQjyvZXQzlEGvM52B1zgBOTna
-	M7rNgXIVDonzCMK+hsAolXL0K775B50aD2jqfaK+YLTv1pJcU2OgroPDWrE74/ph0F3B7NVbvrg
-	MEogMQZyptoTWOPcLWUGoLg3sGlXcb+WLHUVqN1ZKG3ekpUG9crPwnZcnHlMOHwFRzMCCMTVIsY
-	hgcUj
-X-Google-Smtp-Source: AGHT+IH7qiTw3apgnrhqU/bLzLhb/NQ5sAnmLAR2GEvnO67FFYvNkxIa/eQDBY1qL2i6u2CP7HcXwg==
-X-Received: by 2002:a05:6402:27cf:b0:5e0:8275:e9dd with SMTP id 4fb4d7f45d1cf-5e0b7252e4fmr745151a12.10.1740132003314;
+        bh=iLVwB+GU8xfxQzzItDC5z6HQk73kuURkW63I+L7hNAs=;
+        b=OaL2ofhnT2Z3RWndZd+xMH7udS012AJOdBLHb1Zt/X7D6uVYjVbmKnxqPdpiX+16Pl
+         56mgMH6kyIipFt0Ke2K9tYuBvffcQvC7tTQoubOxNwFOeAMYBZTvr7qsW6zK2Wi32xc3
+         C7PAq07ENxg6GMV+OgoCGmgTOT34xoK8IysvcwpPs/Oaa5zx+HCb0GoM6lUsEwXfV+So
+         020x+buhNnrFtQEX+3eGYKjB797XCui7Fe7iSg4/eLqux+VjkDmLiFoaEcDoCb0uR//x
+         RUQE0a1Vb2y9VU6dYZ02En6NZjqs2b8vw9LU0oYBS84eCCdNFu6nkc0BgFVCpuJA4oFe
+         fu3g==
+X-Forwarded-Encrypted: i=1; AJvYcCWZwQTEYjItkQTJLVsxiuPMkTG40kJTNi5dhEvQkaZw0K6knrTlcaTC1lockNAm89+kX6z1sAoQ+nt8ZOsh@vger.kernel.org, AJvYcCXTdrbEsATtnYcJVwCWuFf89Kr1mnAi8PcUH/SJwosutqHWfYZEzm+8RaxnWEiDElrTiEu0YhclQyOp@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywb6WeYUTZYDx4Lt1egs6+TxneykfTzJt+qZkr92BPTJZe+s8Le
+	j5O5c7YxggrX9pJ6SHJB8oBzG0fUChWGU4SpAkbi/tLiBm52HCAs
+X-Gm-Gg: ASbGncuokLW4RehPmztatQ/6Lh95RjLqve8y9j9M8LelRYYONUAXdpHX8IbhqI8qFGF
+	sQ8Yo3LF/99SqZ+4XMNnozJ25YOXHSLUAGgxhU8B7CfXl52SHiagFPX181SrKLLWkcfy/LJh6qO
+	J1Alp97hN3Z7FUCFHVDzor1vcl5biaQh3+/KyM6r11SiPTL+bOCk3rr3pX9qcMXFIA/I/p4vIhe
+	cg5F/ib6yXrIYWKQDtN19SnePkmQ5dmUO6Uf3ubzRnzJi7i9wBbf42Uo4++uDvte4wf+qQEIbiW
+	Y1iY8CEX6YbEWj6b8Q==
+X-Google-Smtp-Source: AGHT+IErZdCZmqT/hVmV9VGsyyRFvsLHJ5ZEyrPE/KSJnPfmO0ICWRGIiXwTWZAc0VGXA+jxodYyMQ==
+X-Received: by 2002:a05:6512:3c99:b0:545:944:aaf4 with SMTP id 2adb3069b0e04-54839129a67mr913108e87.11.1740132003083;
         Fri, 21 Feb 2025 02:00:03 -0800 (PST)
-Received: from [192.168.0.18] (78-11-220-99.static.ip.netia.com.pl. [78.11.220.99])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece1c4687sm13513289a12.22.2025.02.21.01.59.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2025 02:00:01 -0800 (PST)
-Message-ID: <4f95cce5-53b2-4eb9-be28-6136eb89dcaa@linaro.org>
-Date: Fri, 21 Feb 2025 10:59:59 +0100
+Received: from xeon.. ([188.163.112.51])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5461eb04602sm1604805e87.68.2025.02.21.02.00.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 02:00:02 -0800 (PST)
+From: Svyatoslav Ryhel <clamor95@gmail.com>
+To: Sebastian Reichel <sre@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/2] power: supply: Add support for Maxim MAX8971 charger
+Date: Fri, 21 Feb 2025 11:59:41 +0200
+Message-ID: <20250221095943.57297-1-clamor95@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/6] dt-bindings: PCI: qcom-ep: add SAR2130P compatible
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Mrinmay Sarkar <quic_msarkar@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250221-sar2130p-pci-v2-0-cc87590ffbeb@linaro.org>
- <20250221-sar2130p-pci-v2-3-cc87590ffbeb@linaro.org>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20250221-sar2130p-pci-v2-3-cc87590ffbeb@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 21/02/2025 04:06, Dmitry Baryshkov wrote:
->    qcom,perst-regs:
->      description: Reference to a syscon representing TCSR followed by the two
-> @@ -129,6 +130,45 @@ required:
->  
->  allOf:
->    - $ref: pci-ep.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - qcom,sar2130p-pcie-ep
-> +    then:
-> +      properties:
-> +        reg:
+The MAX8971 is a compact, high-frequency, high-efficiency
+switch-mode charger for a one-cell lithium-ion (Li+) battery.
 
+Svyatoslav Ryhel (2):
+  dt-bindings: power: supply: Document Maxim MAX8971 charger
+  power: supply: Add support for Maxim MAX8971 charger
 
-minItems: 7
+ .../bindings/power/supply/maxim,max8971.yaml  | 133 ++++
+ drivers/power/supply/Kconfig                  |  14 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/max8971_charger.c        | 685 ++++++++++++++++++
+ 4 files changed, 833 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/maxim,max8971.yaml
+ create mode 100644 drivers/power/supply/max8971_charger.c
 
-> +          maxItems: 7
-> +        reg-names:
+-- 
+2.43.0
 
-
-minItems: 7
-
-
-> +          maxItems: 7
-> +        clocks:
-> +          items:
-> +            - description: PCIe Auxiliary clock
-> +            - description: PCIe CFG AHB clock
-> +            - description: PCIe Master AXI clock
-> +            - description: PCIe Slave AXI clock
-> +            - description: PCIe Slave Q2A AXI clock
-> +            - description: PCIe DDRSS SF TBU clock
-> +            - description: PCIe AGGRE NOC AXI clock
-> +            - description: PCIe CFG NOC AXI clock
-> +            - description: PCIe QMIP AHB clock
-> +        clock-names:
-> +          items:
-> +            - const: aux
-> +            - const: cfg
-> +            - const: bus_master
-> +            - const: bus_slave
-> +            - const: slave_q2a
-> +            - const: ddrss_sf_tbu
-> +            - const: aggre_noc_axi
-> +            - const: cnoc_sf_axi
-> +            - const: qmip_pcie_ahb
-> +        interrupts:
-
-
-minItems: 3
-
-> +          maxItems: 3
-> +        interrupt-names:
-
-
-minItems: 3
-
-> +          maxItems: 3
-> +
->    - if:
->        properties:
->          compatible:
-> 
-
-
-Best regards,
-Krzysztof
