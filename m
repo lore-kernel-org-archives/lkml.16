@@ -1,387 +1,233 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2069C20551C;
-	Fri, 21 Feb 2025 08:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740125709; cv=none; b=tN6+zuMSirmDT9ZUpae21CPFAzezYuhOXHhANhFlo9dPUJKwVGla8BPAs/rBDKsLoglUuqA9K1DceUItxwlNF043qA8EgYvIxOFfeK7nkXVXyeLMrN6qxjkcNT84fjWKhvFkncyE2B2yDD02Dq+sdimdVJnQulp0TMztcrFVJRE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740125709; c=relaxed/simple;
-	bh=/3Nv2WH63vhmb0IIk1pnnQl9RFsEL+I20wtkbhg6JHc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YpJ2A4tyBvre/CfRdZaSpzPCO8slPVkZzmblI/MG/mWIYPrjKnadtIWZvweQN2wwJNEgztpu308vAQRv2k4xSrlKReM3pIv5/96YYyFyO9T3PmHDNemBRAjFUg/jFpJxJASz7gRapK/AlQ5U5Bt1NIBdnUIcq1OsOvedQ2Ti5U4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4YzjbQ4N64z4f3jYQ;
-	Fri, 21 Feb 2025 16:14:42 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 4269E1A058E;
-	Fri, 21 Feb 2025 16:15:04 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgC3Gl_8NbhnHF3eEQ--.3944S16;
-	Fri, 21 Feb 2025 16:15:03 +0800 (CST)
-From: Zheng Qixing <zhengqixing@huaweicloud.com>
-To: axboe@kernel.dk,
-	song@kernel.org,
-	colyli@kernel.org,
-	yukuai3@huawei.com,
-	dan.j.williams@intel.com,
-	vishal.l.verma@intel.com,
-	dave.jiang@intel.com,
-	ira.weiny@intel.com,
-	dlemoal@kernel.org,
-	yanjun.zhu@linux.dev,
-	kch@nvidia.com,
-	hare@suse.de,
-	zhengqixing@huawei.com,
-	john.g.garry@oracle.com,
-	geliang@kernel.org,
-	xni@redhat.com,
-	colyli@suse.de
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-raid@vger.kernel.org,
-	nvdimm@lists.linux.dev,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH 12/12] badblocks: use sector_t instead of int to avoid truncation of badblocks length
-Date: Fri, 21 Feb 2025 16:11:09 +0800
-Message-Id: <20250221081109.734170-13-zhengqixing@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250221081109.734170-1-zhengqixing@huaweicloud.com>
-References: <20250221081109.734170-1-zhengqixing@huaweicloud.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C84200118
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 08:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740125803; cv=fail; b=gW9uGBvGE6726pDN8YVphym3u+/nw+/ygGNa4JPdXQZClErme5ckYyWi0b6+UG1rNHS8nRN2V6KaidrmaFS8QJEAn8USajPTneJNmp+eZU0uAdNZ++Z/vdBTThyEytpKrzQw8oSc0yy2ZbR6TASaZQASAiySdYJ8jkVArRiOTIo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740125803; c=relaxed/simple;
+	bh=UFv7JYUaxrAIsS5Z1nSRdsRlGlZvcItmfTTX8/kGO9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=tb25zAGN6WvaCQh2O8cM2BcPeJM7Z0Bdo+dKx7+945+/CRyESoWxYCGntVez1Op+jmFAtMtzXe5ZpCdmvxviwktuGB1Bn9VATV5ahmLvUNlx5olmFnDmR8VQljCaPZLpGeoWdTaJQBQguekTQPz6PbTIm7XmbpO2VwHprJHZUyg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=gBxPJWbT; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=opFeJPMJ; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gBxPJWbT";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="opFeJPMJ"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51KLrd4a013624;
+	Fri, 21 Feb 2025 08:16:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2023-11-20; bh=8Je9RRTsxLq1ZbAFoI
+	Rc17OxSl9K4VLUTM962c0TzWw=; b=gBxPJWbTPBTPQo+X83QfxPGk0oZZKoUlHC
+	PA7oTvZR4Kt45KV07MI3KKOd4jnBfkXwPxwz4d9HWZrJo0/wxxoGOg4GCHBmWVvH
+	Xpc46Oq6X1EpWlA9emy8b5rjKFxZMAeXKabKvPtXVOADdCPAmBtppXGcaWhMcKK0
+	ZN8KKDC876x/AGaAqnKsbFlvTt4OV5njLtrS3+sjBh+6CoxU8jgz9h/O/ln2RZA9
+	Kl4MDiejBmnpDIJFQ/r1rb4RztJPOAo2hTm/eTldyCPZk+cLMdrrydGG0Bql1Fq0
+	nUAGIthtOIiRZGQf7N9hkoA8HBMoERG4rd8kLH7I6/uuUESCVzrw==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44w00nns8f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 21 Feb 2025 08:16:16 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51L84n9D002183;
+	Fri, 21 Feb 2025 08:16:12 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2177.outbound.protection.outlook.com [104.47.58.177])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44w0tpfe1r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 21 Feb 2025 08:16:12 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=yAFJNl0hrD/mu4PUuRrIuoy0ZrEnltASvpuedq2GTXm4tSUczrx+ENOg8YZbgvLS6rFOF2T0IzbWUx3oVOle1yu/0jPsJGF00XV91rK1a/E0FkiHQroSpwg1izsIM8vcRvNYPhnNoXc+IYYji6EFgEZMYpkyxOIQJbIxw9ctF/CcBurG+jj3rXuZmwpuDDqZf6ajjin0jkwi4ysleaXZh1FUR1lfNwgRnYeTc3pjZIVQ3QOKjPqITw8JRHju1AR10UXPbTaIP+AXWlV/Liwf/sRB+OeShzK1jyFuYjfULJqyx1DIW7zVxij4I5I7aQH1TxtfLvXvWHYuiYDjR8z6qQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8Je9RRTsxLq1ZbAFoIRc17OxSl9K4VLUTM962c0TzWw=;
+ b=T79/BlnVULWVuLESJUX8CbSrL4Qy5DkPXhqJvopWTU2ug9ztg6TnURvceqZmHbIBH/owvUY3HYSVb352qax8RdQQzDfs/kp7kYvQ1KZwWH35erHv+p8TGreaWrs9758+vfqcwe+zGgrxcy9124IxGzdp4PEGNYa62+Nnb2CYH5v+8wyanjgdUbAP/lIyhr+7GiWQ3grJjluhrrKzC2rmGD3fnDhcliKm2YYFzmg2/fLeqsE+a1A2AGF8CfO2m81b3PcZFf+RgD5fBPq8MclMPXu7ufOVDRApNosXIv0JMGZtgYMSAsnGDANUF6tgyRabtWyDN4rfsNENZM0rxvWEUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8Je9RRTsxLq1ZbAFoIRc17OxSl9K4VLUTM962c0TzWw=;
+ b=opFeJPMJe9vGUj/5ZXkFyZ+Zv6NAwsW73U2btrznasSAffS70pedJhSaJWev9nGqSr4fAvwnqrRf1FXo3QzvGaafcAZhqunVGiVUb/nBXUGb9Wzk2TBjMu26cp6w5WwjLb1LrpYcZqQzwyd46IuTuef98l/YSpHbkGV+2VnviLA=
+Received: from CH3PR10MB7329.namprd10.prod.outlook.com (2603:10b6:610:12c::16)
+ by PH7PR10MB6275.namprd10.prod.outlook.com (2603:10b6:510:211::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.14; Fri, 21 Feb
+ 2025 08:16:10 +0000
+Received: from CH3PR10MB7329.namprd10.prod.outlook.com
+ ([fe80::f238:6143:104c:da23]) by CH3PR10MB7329.namprd10.prod.outlook.com
+ ([fe80::f238:6143:104c:da23%6]) with mapi id 15.20.8466.015; Fri, 21 Feb 2025
+ 08:16:10 +0000
+Date: Fri, 21 Feb 2025 17:16:01 +0900
+From: Harry Yoo <harry.yoo@oracle.com>
+To: Hyesoo Yu <hyesoo.yu@samsung.com>
+Cc: janghyuck.kim@samsung.com, vbabka@suse.cz,
+        Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] mm: slub: Print the broken data before restoring
+ slub.
+Message-ID: <Z7g2QeQp6HkyqCol@harry>
+References: <20250220033953.1606820-1-hyesoo.yu@samsung.com>
+ <CGME20250220034153epcas2p286194dda687b47a3dec8fb89b868f96f@epcas2p2.samsung.com>
+ <20250220033953.1606820-2-hyesoo.yu@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250220033953.1606820-2-hyesoo.yu@samsung.com>
+X-ClientProxiedBy: SL2P216CA0208.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:101:19::12) To CH3PR10MB7329.namprd10.prod.outlook.com
+ (2603:10b6:610:12c::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgC3Gl_8NbhnHF3eEQ--.3944S16
-X-Coremail-Antispam: 1UD129KBjvJXoW3KrW3KrW7XF1DWF1Duw1kuFg_yoWkAr13pa
-	1DJa4fJryUWF18W3WUZayq9r1Fy34ftFWUK3yUW34jgFykK3s7tF1kXFyYqFyjgFW3Grn0
-	q3WY9rW3ua4kGrJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPqb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
-	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
-	rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267
-	AKxVWxJr0_GcWl84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2
-	WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkE
-	bVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY1x0262kKe7
-	AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
-	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_Wr
-	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI
-	0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x
-	07jxwIDUUUUU=
-X-CM-SenderInfo: x2kh0wptl0x03j6k3tpzhluzxrxghudrp/
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR10MB7329:EE_|PH7PR10MB6275:EE_
+X-MS-Office365-Filtering-Correlation-Id: 55f87736-df26-4ef7-fd26-08dd524fff86
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?BfSZbnYHUDCRbYYwJJLmdhz91tadK2t41nPBoRhSWHhrx2cEyBcC9gwJ+/2C?=
+ =?us-ascii?Q?BpVZU0QG3QfJkeBlMAwYHhFe1wvF0egsEpdEJB7W49tPcBeijWTcUjL2lUpT?=
+ =?us-ascii?Q?je3iodnjT/eULzIFviBbXfIV1OKM0OLRzDLBkUn3jjJv0CxfAikvpk2hsQy7?=
+ =?us-ascii?Q?KnDZMSC0XbMWh3kaScTvS0gh5eKcz96RBQ/Jq1lZQt2IbFsvmzESz4vNEktt?=
+ =?us-ascii?Q?BQT1vbxFpkoO3y67gA2ep8XH0kULyZh4k7ONHEJWpyGgYt727BwP8bw2r0a0?=
+ =?us-ascii?Q?yofnbCmyF51ReoLBy3Ap6SO0yPujVziJDdfjM9guJp34BHmxpLdkdxV5WIuz?=
+ =?us-ascii?Q?CcvGPj9wK1zZeF/cn2c2K09yGGo6YDUMCKH3EEIfrr2lm9ufsS48xMd3g0aX?=
+ =?us-ascii?Q?x+2d4criAE9MbDv8lkfCYqS/VNVGKdGOnITeH5L/V21rihTTF5mmmzYXld7t?=
+ =?us-ascii?Q?3vwNoq21OORlAy7CkaEHBvvuWdIVKT15XL9sk81zrkcGGjr4VUA6e5IAd7Wr?=
+ =?us-ascii?Q?Y3U91J5MBZDhhMHIBPqhOsiLttNosiFZgSbyHonpN+wYTF9nA+cHrWb/o80N?=
+ =?us-ascii?Q?GeVAvBDxy2wQKuaE6D4OPE31Fu4rKBO3pw1/gU2xeuuXMxPAayFp+HW9JVkV?=
+ =?us-ascii?Q?kUIN5yjEZN6szOuXXdLfW3zwPRTKj177oGZfUpmUtXwHqFJ2LhmFk5T4wUR5?=
+ =?us-ascii?Q?OAAeK+rOhwPWw21Mdb70p+64ZQC9ZeUvt6KsPRVpn31JMxKoVkI+2vq2dEol?=
+ =?us-ascii?Q?kJOjvSer1JVdIOeuUUMGgYRsnX2v5qlabDTr3sHWdZWNk8cc+L0jZc/fK92+?=
+ =?us-ascii?Q?rjW1ZT09FtLzRhQCqm2EddyG2D2i9e+SXuFLYemGoxm+q34q6u/fXrGCT4Q0?=
+ =?us-ascii?Q?r52fRUhUYXg1HhTpAlvQ0dNcQiqdVlYg/Hsqr9tGf3R2yTQhDFGd+K5svTjC?=
+ =?us-ascii?Q?SxA6V8MLNXkm5dL7b1nK2poJHwglb3InzoHke2kh8Tr/8PBVMalePigXVrA1?=
+ =?us-ascii?Q?et9MTsQxx/5kEz1ATUEzcn3tn095jMC5EnL1AzhUjU8wkL/4TVjlnac8fntU?=
+ =?us-ascii?Q?rBPjqzTzL41T2h681VUynW7bZNdbceWj3UrzHi9lTYIZ9GGK+VrVIlr2bt8P?=
+ =?us-ascii?Q?xKuF03kTSp7ow7sWacSSrqEKZHnX0//JSX4lx/nCM65bjmu2UTOsJSNAH1sV?=
+ =?us-ascii?Q?KfEkBHIDgc8LSywaABuLM7yM+eXxqkz9BSDGZYeO2Jun9GJ/iQMUnw3hsY76?=
+ =?us-ascii?Q?tMz7GfCZmusAnbZ3AyEvIVkIK4beqObt+GhVVZeyDGkWb4bTr6n4adXECIUh?=
+ =?us-ascii?Q?LKyqRwjY/8LQsq87UsjMWU+Zuu+efb9yZYkujMaafRkc7UgVvWDKnt32ms1K?=
+ =?us-ascii?Q?VDddS16I3LPVRv+TvwpKY/Zr/3Rd?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR10MB7329.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?mHepIFHRZ1lZrYdmBWjU//cm5rj7HTAvFrdOfv+I4/ja8I280QQDlnKPyM1k?=
+ =?us-ascii?Q?GGl+xuec0Qbv+5JZU4dTOxmoxllJPChF7kIzaclkCmoVk20HzQlAEjgKq7Is?=
+ =?us-ascii?Q?foFapdY4VWq1flYjqdpnULR8cd4tXJW35DSEY9crFa7zGq0cDRMmRiO8v916?=
+ =?us-ascii?Q?yhL2RUXMeOvM1hlQN9e9hsJ8xQIBybFhcntjVHVH9PGR6pq04Mqon3XxzFuI?=
+ =?us-ascii?Q?CrYKCBDJP2WZiR8mrogf2/syrLaPRAkp9iwZEc5nWPTIk+bF6REEa3KjR1I3?=
+ =?us-ascii?Q?RNPhRLVoizIzNpLWy17rB66Gd6HwsyObtJAbdeqjIuFUyS9g5x/9GaS2TU43?=
+ =?us-ascii?Q?IyCx+J2LvcJ5Vi9qWSdbB4kU1gX1KQwHTRYLjYFc5tBJQHR+Sw88wX9uHOc/?=
+ =?us-ascii?Q?oTTD8zJ4/OLucxiIe1mfXoqGMUtF1Ha3Hmo6ys23eKzjhC8RVHIBRc9of++9?=
+ =?us-ascii?Q?hZ62gB+ilRK9gDGtKHcmpdqSNgxKJa0Gdv4Nz48xcB8woxCPs0QAwfzIpLGZ?=
+ =?us-ascii?Q?XS9mY8EIWqG7jXNrL8wvQjyfJmDMFfUIuqC9Utz3PoUaqQfrPn62uT9wiltE?=
+ =?us-ascii?Q?6FCcWj7a1ggUgcnc5rfWtzC6ul0Pc2lzQKVTP30hkEeGa4QC69zjVB9X6NpQ?=
+ =?us-ascii?Q?OSoZcPwGkKFjNgtmV5tvv1+FgLrX+brhlLzQ0esHPeSPY3eyFpJn40DLy6L9?=
+ =?us-ascii?Q?xOsc9Z9jk8UvzB62MNa4Ws3RVK0k0OWy5pauzbcPEqswIDhzvuIJ2XyZe4l0?=
+ =?us-ascii?Q?vS6bz8iFmMWZRUWnJrhjNsndyD+GEmYuORSE3+FrwEtiw/weR5izvO/EjV9i?=
+ =?us-ascii?Q?yaKkas1OoNconkqlgC0j0iSe9JBD0QeKJl0KrbZ29G+Tw83Qojn5DfzVCUm7?=
+ =?us-ascii?Q?BDYkYcSIFkqkttd4kUTqn6JYfaorp4gN1w6oV+VXRZylb1T5pH71KWze07Q3?=
+ =?us-ascii?Q?JWPL6sc/Sgm9s9Yti5dOvJ5THnlVKLg0AbpnW5VtKL32xnCwMSS9+FGRXesH?=
+ =?us-ascii?Q?aNh6Q4D1bfaWBr313VW0Wi1q46UDeImQFJ4paBHZW5R2lRiEkclFBHzEpYVe?=
+ =?us-ascii?Q?Zlm9NvYlMZXChjurp4X8zMRsP/puPokK8Rhn88PMFMba65hMR+q/SANLiwo2?=
+ =?us-ascii?Q?6n2Ej91YwdOLE9Wzl/pUB34fEAaUkY1AJIXzNKfJYBvrU9nN4t7Z6XMoPDWG?=
+ =?us-ascii?Q?ZjHb1d6VzOXzmZSsSvAT3ZjHB6fLRoyL5GubMcm6E5FWGcXWZFHu/pUJyOfO?=
+ =?us-ascii?Q?ggSDQ8R323O7ObNf5ASwhBl4bT7GQOqvJtIKwb9/RGSB1zJ1HEImzl7Jvb3J?=
+ =?us-ascii?Q?VuY8+dwqIEnyxDQyMYI6oio3Ka8h3oZWF1tpH1/P9C08f1IJicoWngbnC1WY?=
+ =?us-ascii?Q?x+FBZbDtnmWZLWtU5/QMpD2HgVKFyMIOmwg4f9RlII/zDhh5oAiazTeqgaFi?=
+ =?us-ascii?Q?f9dGqxutHxAmxudlylMPGyrG0zL3DIsqQRcu+sv6DIXtaySKp+fL3rxlmHE/?=
+ =?us-ascii?Q?o0QqYVJ7bqAHWdfn28vC4VtzODJ3RXzCsoP+XeH5frm2ohgpuCXA/RM+itJ9?=
+ =?us-ascii?Q?kiYHFG0211yGi6isod87ZA+2IyM14hCkrTdoJNyW?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	EXc2H2/gIlJjp5AuPebafh5kwhAtGuFGjH4CHfWmbcXhZlJsnxBEPtfNn8LdcOcww+po5ajh5pVRfhwfxGY01Apq8UiIuIyMq6M8NGf0571RGh1DwfS/po1Q+yYzTIDNdYt38LiFZcz3GPiQJNH1KbuMl1oPx0QJ6EHINAc35iCBLv00IOc8QZ3i1Q3TceUb7rrBEuEzG+A8JWDcPR3L6PEPJ/RZUYUgWrySKYw7lx1jSE1b2pcKcYJANgd8HLb5IxGL5M2T5q7ZQlUF5yTnW9vFPqgCOh997G+5kBlNrIIXHeZZFc5JPCVbcKIXEa8EFBPAgTOWLX83KPrDL0du1MqechajFUznWXk+HikV8mJ5XtHwhTT7lgqFoIr8bBlNuw4/Grqtb4bbkIRKys8J1ZNI14eL3oT9yX9/eZTs/RXN/ajhyYe0RY4vXAknnjaYvpGo3fy6lpJXHRO3hEbdsEPoIDwYTNer3QYG6GLvnT7mPsDmMRUPC7V1DMcDr27AsIhEGSrGFUOBYAH4TnX+KJD2bc9nw5IgYhQKLEY52CHtJP4Pf2c20mj0KE+xnL7sJZrLo28mK9dHShfTxRw409shCD5crOzi+NZ8SvE+qZI=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 55f87736-df26-4ef7-fd26-08dd524fff86
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR10MB7329.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2025 08:16:10.1950
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MauwE/h8DyBna4n/9745ev5QdweI/tRUS7qS4sSOgLE1sd7SHWZ/NwRXon6BK/wKIp9Aiwb3lAM5FHpd10wlQA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6275
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-21_01,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 malwarescore=0
+ mlxscore=0 spamscore=0 phishscore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502100000
+ definitions=main-2502210061
+X-Proofpoint-ORIG-GUID: _Ums_CLQuJPkLo0A1GBqKMXu8kLBAIHl
+X-Proofpoint-GUID: _Ums_CLQuJPkLo0A1GBqKMXu8kLBAIHl
 
-From: Zheng Qixing <zhengqixing@huawei.com>
+On Thu, Feb 20, 2025 at 12:39:43PM +0900, Hyesoo Yu wrote:
+> Previously, the restore occured after printing the object in slub.
+> After commit 47d911b02cbe ("slab: make check_object() more consistent"),
+> the bytes are printed after the restore. This information about the bytes
+> before the restore is highly valuable for debugging purpose.
+> For instance, in a event of cache issue, it displays byte patterns
+> by breaking them down into 64-bytes units. Without this information,
+> we can only speculate on how it was broken. Hence the corrupted regions
+> should be printed prior to the restoration process. However if an object
+> breaks in multiple places, the same log may be output multiple times.
+> Therefore the slub log is reported only once to prevent redundant printing,
+> by sending a parameter indicating whether an error has occurred previously.
+> 
+> Changes in v3:
+> - Change the parameter type of check_bytes_and_report.
+> 
+> Changes in v2:
+> - Instead of using print_section every time on check_bytes_and_report,
+> just print it once for the entire slub object before the restore.
+> 
+> Signed-off-by: Hyesoo Yu <hyesoo.yu@samsung.com>
+> Change-Id: I73cf76c110eed62506643913517c957c05a29520
+> ---
+>  mm/slub.c | 29 ++++++++++++++---------------
+>  1 file changed, 14 insertions(+), 15 deletions(-)
+> 
 
-There is a truncation of badblocks length issue when set badblocks as
-follow:
+> @@ -1212,11 +1213,14 @@ check_bytes_and_report(struct kmem_cache *s, struct slab *slab,
+>  	if (slab_add_kunit_errors())
+>  		goto skip_bug_print;
+>  
+> -	slab_bug(s, "%s overwritten", what);
+>  	pr_err("0x%p-0x%p @offset=%tu. First byte 0x%x instead of 0x%x\n",
+>  					fault, end - 1, fault - addr,
+>  					fault[0], value);
+>  
+> +	scnprintf(buf, 100, "%s overwritten", what);
+> +	if (slab_obj_print)
+> +		object_err(s, slab, object, buf);
 
-echo "2055 4294967299" > bad_blocks
-cat bad_blocks
-2055 3
 
-Change 'sectors' argument type from 'int' to 'sector_t'.
+Wait, I think it's better to keep printing "%s overwritten" regardless
+of slab_obj_print and only call __slab_err() if slab_obj_print == true
+as discussed here [1]? Becuase in case there are multiple errors,
+users should know.
 
-This change avoids truncation of badblocks length for large sectors by
-replacing 'int' with 'sector_t' (u64), enabling proper handling of larger
-disk sizes and ensuring compatibility with 64-bit sector addressing.
+[1] https://lore.kernel.org/all/2ff52c5e-4b6b-4b3d-9047-f00967315d3e@suse.cz
 
-Fixes: 9e0e252a048b ("badblocks: Add core badblock management code")
-Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
----
- block/badblocks.c             | 20 ++++++++------------
- drivers/block/null_blk/main.c |  2 +-
- drivers/md/md.h               |  6 +++---
- drivers/md/raid1-10.c         |  2 +-
- drivers/md/raid1.c            |  4 ++--
- drivers/md/raid10.c           |  8 ++++----
- drivers/nvdimm/nd.h           |  2 +-
- drivers/nvdimm/pfn_devs.c     |  7 ++++---
- drivers/nvdimm/pmem.c         |  2 +-
- include/linux/badblocks.h     |  8 ++++----
- 10 files changed, 29 insertions(+), 32 deletions(-)
-
-diff --git a/block/badblocks.c b/block/badblocks.c
-index 8f057563488a..14e3be47d22d 100644
---- a/block/badblocks.c
-+++ b/block/badblocks.c
-@@ -836,7 +836,7 @@ static bool try_adjacent_combine(struct badblocks *bb, int prev)
- }
- 
- /* Do exact work to set bad block range into the bad block table */
--static bool _badblocks_set(struct badblocks *bb, sector_t s, int sectors,
-+static bool _badblocks_set(struct badblocks *bb, sector_t s, sector_t sectors,
- 			   int acknowledged)
- {
- 	int len = 0, added = 0;
-@@ -956,8 +956,6 @@ static bool _badblocks_set(struct badblocks *bb, sector_t s, int sectors,
- 	if (sectors > 0)
- 		goto re_insert;
- 
--	WARN_ON(sectors < 0);
--
- 	/*
- 	 * Check whether the following already set range can be
- 	 * merged. (prev < 0) condition is not handled here,
-@@ -1048,7 +1046,7 @@ static int front_splitting_clear(struct badblocks *bb, int prev,
- }
- 
- /* Do the exact work to clear bad block range from the bad block table */
--static bool _badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
-+static bool _badblocks_clear(struct badblocks *bb, sector_t s, sector_t sectors)
- {
- 	struct badblocks_context bad;
- 	int prev = -1, hint = -1;
-@@ -1171,8 +1169,6 @@ static bool _badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
- 	if (sectors > 0)
- 		goto re_clear;
- 
--	WARN_ON(sectors < 0);
--
- 	if (cleared) {
- 		badblocks_update_acked(bb);
- 		set_changed(bb);
-@@ -1187,8 +1183,8 @@ static bool _badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
- }
- 
- /* Do the exact work to check bad blocks range from the bad block table */
--static int _badblocks_check(struct badblocks *bb, sector_t s, int sectors,
--			    sector_t *first_bad, int *bad_sectors)
-+static int _badblocks_check(struct badblocks *bb, sector_t s, sector_t sectors,
-+			    sector_t *first_bad, sector_t *bad_sectors)
- {
- 	int prev = -1, hint = -1, set = 0;
- 	struct badblocks_context bad;
-@@ -1298,8 +1294,8 @@ static int _badblocks_check(struct badblocks *bb, sector_t s, int sectors,
-  * -1: there are bad blocks which have not yet been acknowledged in metadata.
-  * plus the start/length of the first bad section we overlap.
-  */
--int badblocks_check(struct badblocks *bb, sector_t s, int sectors,
--			sector_t *first_bad, int *bad_sectors)
-+int badblocks_check(struct badblocks *bb, sector_t s, sector_t sectors,
-+			sector_t *first_bad, sector_t *bad_sectors)
- {
- 	unsigned int seq;
- 	int rv;
-@@ -1340,7 +1336,7 @@ EXPORT_SYMBOL_GPL(badblocks_check);
-  *  true: success
-  *  false: failed to set badblocks (out of space)
-  */
--bool badblocks_set(struct badblocks *bb, sector_t s, int sectors,
-+bool badblocks_set(struct badblocks *bb, sector_t s, sector_t sectors,
- 		   int acknowledged)
- {
- 	return _badblocks_set(bb, s, sectors, acknowledged);
-@@ -1361,7 +1357,7 @@ EXPORT_SYMBOL_GPL(badblocks_set);
-  *  true: success
-  *  false: failed to clear badblocks
-  */
--bool badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
-+bool badblocks_clear(struct badblocks *bb, sector_t s, sector_t sectors)
- {
- 	return _badblocks_clear(bb, s, sectors);
- }
-diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.c
-index 623db72ad66b..6e7d80b6e92b 100644
---- a/drivers/block/null_blk/main.c
-+++ b/drivers/block/null_blk/main.c
-@@ -1302,7 +1302,7 @@ static inline blk_status_t null_handle_badblocks(struct nullb_cmd *cmd,
- {
- 	struct badblocks *bb = &cmd->nq->dev->badblocks;
- 	sector_t first_bad;
--	int bad_sectors;
-+	sector_t bad_sectors;
- 
- 	if (badblocks_check(bb, sector, nr_sectors, &first_bad, &bad_sectors))
- 		return BLK_STS_IOERR;
-diff --git a/drivers/md/md.h b/drivers/md/md.h
-index 923a0ef51efe..6edc0f71b7d4 100644
---- a/drivers/md/md.h
-+++ b/drivers/md/md.h
-@@ -266,8 +266,8 @@ enum flag_bits {
- 	Nonrot,			/* non-rotational device (SSD) */
- };
- 
--static inline int is_badblock(struct md_rdev *rdev, sector_t s, int sectors,
--			      sector_t *first_bad, int *bad_sectors)
-+static inline int is_badblock(struct md_rdev *rdev, sector_t s, sector_t sectors,
-+			      sector_t *first_bad, sector_t *bad_sectors)
- {
- 	if (unlikely(rdev->badblocks.count)) {
- 		int rv = badblocks_check(&rdev->badblocks, rdev->data_offset + s,
-@@ -284,7 +284,7 @@ static inline int rdev_has_badblock(struct md_rdev *rdev, sector_t s,
- 				    int sectors)
- {
- 	sector_t first_bad;
--	int bad_sectors;
-+	sector_t bad_sectors;
- 
- 	return is_badblock(rdev, s, sectors, &first_bad, &bad_sectors);
- }
-diff --git a/drivers/md/raid1-10.c b/drivers/md/raid1-10.c
-index 4378d3250bd7..62b980b12f93 100644
---- a/drivers/md/raid1-10.c
-+++ b/drivers/md/raid1-10.c
-@@ -247,7 +247,7 @@ static inline int raid1_check_read_range(struct md_rdev *rdev,
- 					 sector_t this_sector, int *len)
- {
- 	sector_t first_bad;
--	int bad_sectors;
-+	sector_t bad_sectors;
- 
- 	/* no bad block overlap */
- 	if (!is_badblock(rdev, this_sector, *len, &first_bad, &bad_sectors))
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index 8beb8cccc6af..0b2839105857 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -1537,7 +1537,7 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
- 		atomic_inc(&rdev->nr_pending);
- 		if (test_bit(WriteErrorSeen, &rdev->flags)) {
- 			sector_t first_bad;
--			int bad_sectors;
-+			sector_t bad_sectors;
- 			int is_bad;
- 
- 			is_bad = is_badblock(rdev, r1_bio->sector, max_sectors,
-@@ -2886,7 +2886,7 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
- 		} else {
- 			/* may need to read from here */
- 			sector_t first_bad = MaxSector;
--			int bad_sectors;
-+			sector_t bad_sectors;
- 
- 			if (is_badblock(rdev, sector_nr, good_sectors,
- 					&first_bad, &bad_sectors)) {
-diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-index 7ed933181712..a8664e29aada 100644
---- a/drivers/md/raid10.c
-+++ b/drivers/md/raid10.c
-@@ -747,7 +747,7 @@ static struct md_rdev *read_balance(struct r10conf *conf,
- 
- 	for (slot = 0; slot < conf->copies ; slot++) {
- 		sector_t first_bad;
--		int bad_sectors;
-+		sector_t bad_sectors;
- 		sector_t dev_sector;
- 		unsigned int pending;
- 		bool nonrot;
-@@ -1438,7 +1438,7 @@ static void raid10_write_request(struct mddev *mddev, struct bio *bio,
- 		if (rdev && test_bit(WriteErrorSeen, &rdev->flags)) {
- 			sector_t first_bad;
- 			sector_t dev_sector = r10_bio->devs[i].addr;
--			int bad_sectors;
-+			sector_t bad_sectors;
- 			int is_bad;
- 
- 			is_bad = is_badblock(rdev, dev_sector, max_sectors,
-@@ -3413,7 +3413,7 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
- 				sector_t from_addr, to_addr;
- 				struct md_rdev *rdev = conf->mirrors[d].rdev;
- 				sector_t sector, first_bad;
--				int bad_sectors;
-+				sector_t bad_sectors;
- 				if (!rdev ||
- 				    !test_bit(In_sync, &rdev->flags))
- 					continue;
-@@ -3609,7 +3609,7 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
- 		for (i = 0; i < conf->copies; i++) {
- 			int d = r10_bio->devs[i].devnum;
- 			sector_t first_bad, sector;
--			int bad_sectors;
-+			sector_t bad_sectors;
- 			struct md_rdev *rdev;
- 
- 			if (r10_bio->devs[i].repl_bio)
-diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
-index 5ca06e9a2d29..cc5c8f3f81e8 100644
---- a/drivers/nvdimm/nd.h
-+++ b/drivers/nvdimm/nd.h
-@@ -673,7 +673,7 @@ static inline bool is_bad_pmem(struct badblocks *bb, sector_t sector,
- {
- 	if (bb->count) {
- 		sector_t first_bad;
--		int num_bad;
-+		sector_t num_bad;
- 
- 		return !!badblocks_check(bb, sector, len / 512, &first_bad,
- 				&num_bad);
-diff --git a/drivers/nvdimm/pfn_devs.c b/drivers/nvdimm/pfn_devs.c
-index cfdfe0eaa512..8f3e816e805d 100644
---- a/drivers/nvdimm/pfn_devs.c
-+++ b/drivers/nvdimm/pfn_devs.c
-@@ -367,9 +367,10 @@ static int nd_pfn_clear_memmap_errors(struct nd_pfn *nd_pfn)
- 	struct nd_namespace_common *ndns = nd_pfn->ndns;
- 	void *zero_page = page_address(ZERO_PAGE(0));
- 	struct nd_pfn_sb *pfn_sb = nd_pfn->pfn_sb;
--	int num_bad, meta_num, rc, bb_present;
-+	int meta_num, rc, bb_present;
- 	sector_t first_bad, meta_start;
- 	struct nd_namespace_io *nsio;
-+	sector_t num_bad;
- 
- 	if (nd_pfn->mode != PFN_MODE_PMEM)
- 		return 0;
-@@ -394,7 +395,7 @@ static int nd_pfn_clear_memmap_errors(struct nd_pfn *nd_pfn)
- 		bb_present = badblocks_check(&nd_region->bb, meta_start,
- 				meta_num, &first_bad, &num_bad);
- 		if (bb_present) {
--			dev_dbg(&nd_pfn->dev, "meta: %x badblocks at %llx\n",
-+			dev_dbg(&nd_pfn->dev, "meta: %llx badblocks at %llx\n",
- 					num_bad, first_bad);
- 			nsoff = ALIGN_DOWN((nd_region->ndr_start
- 					+ (first_bad << 9)) - nsio->res.start,
-@@ -413,7 +414,7 @@ static int nd_pfn_clear_memmap_errors(struct nd_pfn *nd_pfn)
- 			}
- 			if (rc) {
- 				dev_err(&nd_pfn->dev,
--					"error clearing %x badblocks at %llx\n",
-+					"error clearing %llx badblocks at %llx\n",
- 					num_bad, first_bad);
- 				return rc;
- 			}
-diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-index d81faa9d89c9..43156e1576c9 100644
---- a/drivers/nvdimm/pmem.c
-+++ b/drivers/nvdimm/pmem.c
-@@ -249,7 +249,7 @@ __weak long __pmem_direct_access(struct pmem_device *pmem, pgoff_t pgoff,
- 	unsigned int num = PFN_PHYS(nr_pages) >> SECTOR_SHIFT;
- 	struct badblocks *bb = &pmem->bb;
- 	sector_t first_bad;
--	int num_bad;
-+	sector_t num_bad;
- 
- 	if (kaddr)
- 		*kaddr = pmem->virt_addr + offset;
-diff --git a/include/linux/badblocks.h b/include/linux/badblocks.h
-index 8764bed9ff16..996493917f36 100644
---- a/include/linux/badblocks.h
-+++ b/include/linux/badblocks.h
-@@ -48,11 +48,11 @@ struct badblocks_context {
- 	int		ack;
- };
- 
--int badblocks_check(struct badblocks *bb, sector_t s, int sectors,
--		   sector_t *first_bad, int *bad_sectors);
--bool badblocks_set(struct badblocks *bb, sector_t s, int sectors,
-+int badblocks_check(struct badblocks *bb, sector_t s, sector_t sectors,
-+		    sector_t *first_bad, sector_t *bad_sectors);
-+bool badblocks_set(struct badblocks *bb, sector_t s, sector_t sectors,
- 		   int acknowledged);
--bool badblocks_clear(struct badblocks *bb, sector_t s, int sectors);
-+bool badblocks_clear(struct badblocks *bb, sector_t s, sector_t sectors);
- void ack_all_badblocks(struct badblocks *bb);
- ssize_t badblocks_show(struct badblocks *bb, char *page, int unack);
- ssize_t badblocks_store(struct badblocks *bb, const char *page, size_t len,
 -- 
-2.39.2
-
+Cheers,
+Harry
