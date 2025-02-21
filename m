@@ -1,120 +1,121 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5102139DD;
-	Fri, 21 Feb 2025 15:52:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740153142; cv=pass; b=abiUVTPSS1b+v/lcmVAlt8wVD+21gkuKT6/xBLiv6iGVR1AdL3yEDOsscztm+yER8CGSH6pU6nsYUOWJ9ZMyJ7z7YbsTDjhO1AZK2DCsKIbgsucu9HPOqIeSnAMHoJMdfX88I79RZm56uJGASjhS/AY7kmJR7SIQYqMmiN3Dwxg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740153142; c=relaxed/simple;
-	bh=iaQ+8410xKoAcD7janib56GRmsqyMB9cJ17s5UofjeM=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=riU1lRuy2eBGjlP3YLlscfk2IeTRrQuex8Qv05SgUyDibFQt5FcQzCLJJl6WPvvcL0xkwAhnNptFiF3AImcgcKM8zNH/f4p6hQFSYHPslVdxVELBsVjA5JRUEdhsd30la8XLqVGbWv1JaWLFnAbWpdMdc2Jnl0PA1B9HE3xd09w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=hmxIeYl4; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="hmxIeYl4"
-ARC-Seal: i=1; a=rsa-sha256; t=1740153098; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Ur8DFaCXw/kfGxqm2t3KTY/RqUQ9/Hm7NPzbLZo907lsoPJtfhPofBmeoRETtZIzKy7XKnfr8jM3E04GcOp00g11fWii7pTAQepqxHLlntonTdcfv1if8m5QwME8VMmMI1rDrnrIASCZlNmizdQViJ9psupxliVrXjqGx8xzkVY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740153098; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=HlQHYE1pagm2zjFO6/6LR3Vvs32N93jmTgtwHYFPo48=; 
-	b=CUb+cps4DvmJ92jWd4kjfM772bDK7IebZrfq41FAMwBGajdgF5Rd6gxT2k2+ZDuudFT97gaJdvSBhmbj15u4CGbkoSO2GZRL5okUbxbo3QyM7ey85aCy+KnO2H2Trgd0oLAAblmrDOAIxCwwf2UfkZfEfEgpzEUOMcQ2Z1hRzrc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740153098;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=HlQHYE1pagm2zjFO6/6LR3Vvs32N93jmTgtwHYFPo48=;
-	b=hmxIeYl48SOWkT35ShjoRjzHy48BbupoVwnc1RTMvjQ1bWk8RvIqEDg52ggG87fH
-	D4qJ/Ctk4ZlA5imdzpkQQfG6jW/3P2u2JTTMKbUymnMnArX/2xgBGEZwS9uaBUSSF+e
-	goUrc3U3SI2GT1d5tWzDiLFRFFksjDzXz1MUwRkA=
-Received: by mx.zohomail.com with SMTPS id 1740153097184404.12164099489894;
-	Fri, 21 Feb 2025 07:51:37 -0800 (PST)
-Content-Type: text/plain;
-	charset=us-ascii
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16ED215068
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 15:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740153143; cv=none; b=jSx90yfdPcIGNq/+fNLH5UVSMSjVsS9kGagSjPi60RQS/LeLfbIFFLX+ni2A9OMmqjxMQ7fPksqAts0/UtI9QUQJTCbyfBDO2O6I8QskU9xXdONZWN7lbOX6ReLzt3OAvItFn6o4Hxb8gLpASmqhhXuXicRbArC8yX37yTpkjHE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740153143; c=relaxed/simple;
+	bh=ExI5ZpYBi/5UTqZaA7Z6ckV9+8IPcCLb6nL/KC20IhE=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=D1wnEru1vtWD8ugiCa8VObbak3HlHQzf88AJk/Y6eMIbdl6EbB05maPT1KxNwPVyVw5nZbaMChWpUAm6yvRui+mX2a8Wu53MtsTodlXnCbZcOguErPKg5Xk2k0emRcGLoJxtUbFxdxRu4XCq+7+kQXbdsiaQGm6XE7U1m6QeWRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6789BC4CEE7;
+	Fri, 21 Feb 2025 15:52:23 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1tlVKe-00000006KUa-3WdE;
+	Fri, 21 Feb 2025 10:52:52 -0500
+Message-ID: <20250221155252.692026476@goodmis.org>
+User-Agent: quilt/0.68
+Date: Fri, 21 Feb 2025 10:52:17 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Adrian Huang <ahuang12@lenovo.com>
+Subject: [for-linus][PATCH 7/7] tracing: Fix memory leak when reading set_event file
+References: <20250221155210.755295517@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
-Subject: Re: [PATCH v7 1/6] rust: str: implement `PartialEq` for `BStr`
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20250218-module-params-v3-v7-1-5e1afabcac1b@kernel.org>
-Date: Fri, 21 Feb 2025 12:51:20 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Masahiro Yamada <masahiroy@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nicolas@fjasle.eu>,
- Luis Chamberlain <mcgrof@kernel.org>,
- rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Adam Bratschi-Kaye <ark.email@gmail.com>,
- linux-kbuild@vger.kernel.org,
- Petr Pavlu <petr.pavlu@suse.com>,
- Sami Tolvanen <samitolvanen@google.com>,
- Daniel Gomez <da.gomez@samsung.com>,
- Simona Vetter <simona.vetter@ffwll.ch>,
- Greg KH <gregkh@linuxfoundation.org>,
- linux-modules@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <FB41A276-5A3A-4878-8DA6-CE0EA751E768@collabora.com>
-References: <20250218-module-params-v3-v7-0-5e1afabcac1b@kernel.org>
- <20250218-module-params-v3-v7-1-5e1afabcac1b@kernel.org>
-To: Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: Apple Mail (2.3826.300.87.4.3)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+From: Adrian Huang <ahuang12@lenovo.com>
+
+kmemleak reports the following memory leak after reading set_event file:
+
+  # cat /sys/kernel/tracing/set_event
+
+  # cat /sys/kernel/debug/kmemleak
+  unreferenced object 0xff110001234449e0 (size 16):
+  comm "cat", pid 13645, jiffies 4294981880
+  hex dump (first 16 bytes):
+    01 00 00 00 00 00 00 00 a8 71 e7 84 ff ff ff ff  .........q......
+  backtrace (crc c43abbc):
+    __kmalloc_cache_noprof+0x3ca/0x4b0
+    s_start+0x72/0x2d0
+    seq_read_iter+0x265/0x1080
+    seq_read+0x2c9/0x420
+    vfs_read+0x166/0xc30
+    ksys_read+0xf4/0x1d0
+    do_syscall_64+0x79/0x150
+    entry_SYSCALL_64_after_hwframe+0x76/0x7e
+
+The issue can be reproduced regardless of whether set_event is empty or
+not. Here is an example about the valid content of set_event.
+
+  # cat /sys/kernel/tracing/set_event
+  sched:sched_process_fork
+  sched:sched_switch
+  sched:sched_wakeup
+  *:*:mod:trace_events_sample
+
+The root cause is that s_next() returns NULL when nothing is found.
+This results in s_stop() attempting to free a NULL pointer because its
+parameter is NULL.
+
+Fix the issue by freeing the memory appropriately when s_next() fails
+to find anything.
+
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Link: https://lore.kernel.org/20250220031528.7373-1-ahuang12@lenovo.com
+Fixes: b355247df104 ("tracing: Cache ":mod:" events for modules not loaded yet")
+Signed-off-by: Adrian Huang <ahuang12@lenovo.com>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 4cb275316e51..513de9ceb80e 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -1591,6 +1591,13 @@ s_next(struct seq_file *m, void *v, loff_t *pos)
+ 		return iter;
+ #endif
+ 
++	/*
++	 * The iter is allocated in s_start() and passed via the 'v'
++	 * parameter. To stop the iterator, NULL must be returned. But
++	 * the return value is what the 'v' parameter in s_stop() receives
++	 * and frees. Free iter here as it will no longer be used.
++	 */
++	kfree(iter);
+ 	return NULL;
+ }
+ 
+@@ -1667,9 +1674,9 @@ static int s_show(struct seq_file *m, void *v)
+ }
+ #endif
+ 
+-static void s_stop(struct seq_file *m, void *p)
++static void s_stop(struct seq_file *m, void *v)
+ {
+-	kfree(p);
++	kfree(v);
+ 	t_stop(m, NULL);
+ }
+ 
+-- 
+2.47.2
 
 
-
-> On 18 Feb 2025, at 10:00, Andreas Hindborg <a.hindborg@kernel.org> =
-wrote:
->=20
-> Implement `PartialEq` for `BStr` by comparing underlying byte slices.
->=20
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> Reviewed-by: Gary Guo <gary@garyguo.net>
-> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
-> ---
-> rust/kernel/str.rs | 6 ++++++
-> 1 file changed, 6 insertions(+)
->=20
-> diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-> index 28e2201604d67..002dcddf7c768 100644
-> --- a/rust/kernel/str.rs
-> +++ b/rust/kernel/str.rs
-> @@ -108,6 +108,12 @@ fn deref(&self) -> &Self::Target {
->     }
-> }
->=20
-> +impl PartialEq for BStr {
-> +    fn eq(&self, other: &Self) -> bool {
-> +        self.deref().eq(other.deref())
-> +    }
-> +}
-> +
-> /// Creates a new [`BStr`] from a string literal.
-> ///
-> /// `b_str!` converts the supplied string literal to byte string, so =
-non-ASCII
->=20
-> --=20
-> 2.47.0
->=20
->=20
->=20
-
-Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>=
