@@ -1,136 +1,67 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A70200BBF;
-	Fri, 21 Feb 2025 09:23:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937BF2036E6;
+	Fri, 21 Feb 2025 09:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740129786; cv=none; b=lJC3mpXnZbCmyCA4HAfaix1WxDS0H6mlSi6PU8lu6K/0U/snNU2+C3WxXRGAE9koIxaDsUKktfvaHaE4WtWTLmr0LMncKGxE3vyRso9BcoOkgO/X1Vqta9OExdUlCIl9VEfnWd2t9AF8dALaYMMKFoW/Liq9orIQBvVl6Xb3jLU=
+	t=1740129840; cv=none; b=oqgq+PwjilyPSqFfvLjhDz7XREorfEp7iX7YvgsMr8+7FHxxrUqILIqwqgWodibTRDN6PcRys6U7t37MiDJby+kN8g0d8Q15Vxhc4dv70YK8Lkh9iIYjNCa23EAahyyPMIkEdRYN09RD7InKBu0ZCVu6XPsNRcvQau4Og81T9TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740129786; c=relaxed/simple;
-	bh=xBKnQrbFq+DZ81DeESCjTS/8FxFGSDzN45oZZOj+6XU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ULuIMS1QGPE7NoNzgnXTxscxZ9jMQDrr8io1SIxrJaHQ5rEJ8DaNWZ4ybA3YfOWze3pSJ4ajqSNMXoN+isP73ZyXvjOov5BfQggogJoA7kVIeCQPUr2b1+m496JH1ogXEouXpsRe8Omt9PmJAQ8nklTEZpGMH4HV415Ta8AjGQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aBJl9f+Y; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1740129840; c=relaxed/simple;
+	bh=VTqL2XnC5htnZiKF5ASywBWWTl4Tel6bubj25oDkTgE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BVasmdAC/Fgym6HqbaNYTxVbZ1gvUl4HEe4gHOf0dHqpFrxu1xysDJSqT4V7Xb0zzAkaK+GOeMqKgtdH8AmE+oeZhCgaQcFeNYb9JXtumMTBy3CEm29zK8TxRhqiW7vlkbhpNwy+U+xtC9IgalZyNOEJ5achixuS6mFUToaQJLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=jZD5AFoU; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aBJl9f+Y"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51L8pGeL011936;
-	Fri, 21 Feb 2025 09:23:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	FIGvqXYsEca9hsO6i4pUmiiXqNZHW9zFCMAy+11jNx4=; b=aBJl9f+Y8+E0Y5Lk
-	8dTprqz6Arnwq/xmzdUlYaFz0xcdzO1B8PQ8Jl9rqdAQiGfu/qFvJbAFiFLC8bOv
-	gNDlG30UyRqTWHTC9/5OmKzYjtbzCWRo0ey853UBxMVMC8Ar3zrGF6CUyrKpLvfD
-	RrZ/MmiBn27iCKza85cdKpICZt/cnJvXruWzpjrZgoOO+1I31j96rBTBAJFKTtPZ
-	7iDQPwy26oCyimHnEWQLleyuMLqQY73ZZPZkQ2DPhi3aSAIXAEgpMU9zR5G7yzzx
-	EMv2RDVAwpPLrEOAC/wx/POH8QQIg1rV/iV2higCIzxz2bs+CfKP+bbXg/utpuzn
-	gtjUwg==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44x2xbbm54-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Feb 2025 09:23:00 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51L9N0P1017344
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Feb 2025 09:23:00 GMT
-Received: from [10.217.216.53] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 21 Feb
- 2025 01:22:55 -0800
-Message-ID: <cc72420c-65f1-4ea7-a702-60188c89aa64@quicinc.com>
-Date: Fri, 21 Feb 2025 14:52:52 +0530
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="jZD5AFoU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=Y9aW+uSlw899RI1Ws5DGQNOt3u1p2nKiuPgW2U6+1sQ=; b=jZD5AFoUSKiuFfFs8EWzCea1nq
+	s6YMIqpyjK3DypitcAdoh9CvHiikU2VXk4Ru1t7BlyJuPzHNDV4dJf2f6MBOd2PHk4X+xdVdcXekB
+	y1czngYJ9YbeHFyOvuYoSz6VOHWh6AxjDKQF7RPJQmNYFRG2v59HEXclc8PCzFPOCW2t1BrjOXOiC
+	VA+VAALP24HLW3+feEcIMPaWwAILcn0xu0oRtJeGse6NELDgXWFYA+sgfWeuxFBOpgOagmEOGMko3
+	def3IxoMWitwjr4ENy/rLtvm9W/teOh2F1+UBigp7wYhkDVQC1jXe/F6cVCdggbTIrS3WHvbddASH
+	qwJ4NH6g==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1tlPGC-000YM4-06;
+	Fri, 21 Feb 2025 17:23:53 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 21 Feb 2025 17:23:52 +0800
+Date: Fri, 21 Feb 2025 17:23:52 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: aead - use str_yes_no() helper in
+ crypto_aead_show()
+Message-ID: <Z7hGKAehdRV4OswO@gondor.apana.org.au>
+References: <20250211095255.520170-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/4] dt-bindings: clock: qcom: Add compatible for
- QCM6490 boards
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Ajit Pandey
-	<quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        "Jagadeesh Kona" <quic_jkona@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250220-lpass_qcm6490_resets-v4-0-68dbed85c485@quicinc.com>
- <20250220-lpass_qcm6490_resets-v4-1-68dbed85c485@quicinc.com>
- <20250221-rainbow-goldfish-of-masquerade-7d7627@krzk-bin>
-Content-Language: en-US
-From: Taniya Das <quic_tdas@quicinc.com>
-In-Reply-To: <20250221-rainbow-goldfish-of-masquerade-7d7627@krzk-bin>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: B3slYTwysz-VbHc3mgaBmrIGPFpl7txn
-X-Proofpoint-ORIG-GUID: B3slYTwysz-VbHc3mgaBmrIGPFpl7txn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-21_01,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- malwarescore=0 lowpriorityscore=0 phishscore=0 impostorscore=0 spamscore=0
- mlxlogscore=999 clxscore=1015 priorityscore=1501 adultscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2502210071
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250211095255.520170-1-thorsten.blum@linux.dev>
 
-
-
-On 2/21/2025 2:50 PM, Krzysztof Kozlowski wrote:
-> On Thu, Feb 20, 2025 at 09:52:50AM +0530, Taniya Das wrote:
->> Add the new QCM6490 compatible to support the reset functionality for
->> Low Power Audio subsystem.
->>
->> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
->> ---
->>  Documentation/devicetree/bindings/clock/qcom,sc7280-lpasscorecc.yaml | 5 ++++-
->>  1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7280-lpasscorecc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7280-lpasscorecc.yaml
->> index 488d63959424088ede67835eb4dcf3feef6d0848..64efb2c533d1e71a9bdc3bf0d245b00cec00841a 100644
->> --- a/Documentation/devicetree/bindings/clock/qcom,sc7280-lpasscorecc.yaml
->> +++ b/Documentation/devicetree/bindings/clock/qcom,sc7280-lpasscorecc.yaml
->> @@ -20,6 +20,7 @@ description: |
->>  properties:
->>    compatible:
->>      enum:
->> +      - qcom,qcm6490-lpassaudiocc
->>        - qcom,sc7280-lpassaoncc
->>        - qcom,sc7280-lpassaudiocc
->>        - qcom,sc7280-lpasscorecc
->> @@ -68,7 +69,9 @@ allOf:
->>        properties:
->>          compatible:
->>            contains:
->> -            const: qcom,sc7280-lpassaudiocc
->> +            enum:
->> +              - qcom,sc7280-lpassaudiocc
->> +              - qcom,qcm6490-lpassaudiocc
+On Tue, Feb 11, 2025 at 10:52:54AM +0100, Thorsten Blum wrote:
+> Remove hard-coded strings by using the str_yes_no() helper function.
 > 
-> Alphabetical order... although now I question whether these are
-> compatible. Nothing in commit msg explains this, but it should.
-> 
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>  crypto/aead.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 
-Sure, I will add the details of why we need this in the commit.
-
-> Best regards,
-> Krzysztof
-> 
-
+Patch applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
