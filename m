@@ -1,122 +1,66 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3FC202F64
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 08:51:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B84720124E;
+	Fri, 21 Feb 2025 08:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740127887; cv=none; b=seKpivrMtnG9Sl9wPfvB9R2PHmyUU7sYkGaQN/U2Z4tTrhwOtsfnANSFK+fXktH4qfsdYlu3zigRTMTc6iU05/xLxbsT/pDU+4FvOJkbceqKBITQdD5Xs7Y5pQeTAQ1pNTDgtZs9UfiOY5XgkF6k9HOQ6uIfFrtyKIFMOvc5dBU=
+	t=1740127899; cv=none; b=PUbCSpHdBWMmt+f53Lw645wLby6zukLgMUJikIOei9kBGc+G/l9V+sYDdp/7VjvZD89HMqJSTa8SaCgIpscnqvY4dm2prPu7ZjX/YfR58yWUbcg+UozLtQxeSRCDyQKTiVYZTgMd1+hw8fN5/c/dYsHTvXJy6b2A4/cfBaaHZfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740127887; c=relaxed/simple;
-	bh=j/wOYnB67jjGhylOIqHHXdLyAsqr7kq9q2ecSsLgwdI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hE3Y2Bf7l0THHaYYmADwNWOTgyjjVuDD34BgJdDFojxJN+3AJ2txjn4I++CM4qsjVMzxlPcRik+gTpy4LuyzQIJCnUaUflUXExHetT6qtTPXaamz54BWeD7IGP9/ldJ450Kr2JF9hZDFtXbNvi3vu1+uWjRIPQXCfmmyBX1+u0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com; spf=pass smtp.mailfrom=futuring-girl.com; dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b=aB/+4/3L; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=futuring-girl.com
+	s=arc-20240116; t=1740127899; c=relaxed/simple;
+	bh=HRPaOfyt1hWwbxmZ/KhgRgx6as51nZnrdfLsa1K/2f4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XZjhOI/WeTp/z3qGBc04I42L0I615tnpaR2Xy6gj7yZeGoMYTHE0tX/tXqtvYCDA5aDEGkWCz8F3Ce7kS0vuj5JmkKfRA1cUYivlRMKITyXXlS/LSu9Ss6HIwMnLOriX0laogVm7MvfRtgFcJwyU0WsAFCnsYuU+8So4OEjcA5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ELrQVGRU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b="aB/+4/3L"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2fa5af6d743so2978912a91.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 00:51:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=futuring-girl.com; s=google; t=1740127885; x=1740732685; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XO8S0SaLHILveS4ht7ABmq8EQhy1d2PZCdXORUNN1qU=;
-        b=aB/+4/3LeZY2VcBpWCSw1l76RmbN5kLS5h5DCWOocNB5ZGmuaP4Y6uEAzJiw7ny/Ri
-         /w5QEa9ENrXr1lRwB7GqCKBwUYhy1h5ebdLWIgvfYh6PF+W//xT5vG75KZ3L8Qrpria3
-         zpmbqKmJNLiX9CPbKqjaItqV3w8Hz/AC9jjJH6AAm3uMmy3pJ7no1DAxGudMyYKEgyal
-         zvgg12RmZwfVqe3XnS3PcpxzB4JbseLQGVre65Hji1Lg6eNUMApGazNmR/RdHSC1tItb
-         rcpByZRlt7WeuOK8JkQSrsW08bVsCwuJO/AzFEsC1PdN5fW6U4ScARBNWsps2vdbj/Ro
-         RI8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740127885; x=1740732685;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XO8S0SaLHILveS4ht7ABmq8EQhy1d2PZCdXORUNN1qU=;
-        b=bMkyhXhO3df7q1cBXwVaZ8x9aDuXvUyfxiGR7UhX1xsYb9oIc6uVqHLWRTKCTwtGlq
-         RArSXSdL48sZXvyVr9QuF5tIeCPHEY3P2aXXhljWpHbqdNw0SyThTjwIS1Q7/W1HHvX9
-         t4ZsJK1S5l+d1k602LrkEYm7VdB25VbCvGkIxLofU2mUro7rKL359Lju6Spa+4oHh365
-         QS8dHtH3hEuVxep9Piog/WuT/McBG3eBiwLk7bYafZgPDJAbfbHOahVa+BxEEhXQJ4d+
-         3cv061MhWH+CllUHowvMvfgSrNJ2pKftvd3ZC57qERkDasdxK24cqXhh9ShjAa6+UMRL
-         IADw==
-X-Forwarded-Encrypted: i=1; AJvYcCWtvMwNuRKMrX9VLPSfaWMLdedP4ktmOv7Hei6fvOEudGWf2miDXpngj7GluEGeCteA0tZx4TzNmDIJEoM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPLf9Oc7d1t/zB+rIxJnj8ENqrLHyZYweJ4Nby01eX0p/A4UAi
-	MnnJAKxdLwzu8r+J0NYybxFtwCpJN5Lajsl3Dw/cKzbiFHKjIn0gFCvzPjzSSzL38yQm/WQmrXp
-	a6vrDNVKL5pK2qVoiKP/qrnN00mUuqPj6++veVQ==
-X-Gm-Gg: ASbGncsm/7uDXyHEWZmT4Rvr80C4z5gYAM3yhfYN8G9etl0HCFZZV9f8XWFCnbPOoHI
-	02YGNoBnYv9HOkTeYgud1mSBqfuyKD37HLlBT8r1qap2zHoiK30xd/yaKyap9sIx2b+jaOGov1T
-	RfVkmwtxs=
-X-Google-Smtp-Source: AGHT+IEys1/8M/P5ptc+GdcwlwtIRcEANusxbYrUGgN9ECPEJXUzZ5K8uZ0Zj8B3SEJuEhZa535B38wLxLJpyCPHfMY=
-X-Received: by 2002:a17:90b:1dcb:b0:2f8:4a3f:dd2d with SMTP id
- 98e67ed59e1d1-2fce78d1b51mr4418486a91.15.1740127885545; Fri, 21 Feb 2025
- 00:51:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ELrQVGRU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02025C4CED6;
+	Fri, 21 Feb 2025 08:51:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740127898;
+	bh=HRPaOfyt1hWwbxmZ/KhgRgx6as51nZnrdfLsa1K/2f4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ELrQVGRUnBceU/QKxQX4FRiuvV3EnBTn4zEKg8qPJvvGWg1FuEUcuCRD7eUl8prnP
+	 hiVoltNSf7NyGoSd6yX34swKlj9vHJZZ/JZ8z+rxW9BACPWtvfgxu8C9QUuConnmnM
+	 7dYXfpV2tasqDl3JWmt1rs3FyK6FMANuWbwDcHcYo3ZI5FOMPJTtH3jpzIy/xScXZc
+	 yPH5srNXLrGQhRb4BwPsgdPenqvwhuPErO0L0tNNTZaP9qncZlMkswPBGSRpujJALV
+	 SOFheJbfbc9ncHO6U91igI4u7AT80lGN+r2Fb/iZOBDoxMFpbZ3l2eUCpcwcEonIrr
+	 Uk4pFi7WYFYYw==
+Date: Fri, 21 Feb 2025 09:51:35 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Russell King <linux@armlinux.org.uk>, Will Deacon <will@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Jessica Clarke <jrtc27@jrtc27.com>
+Subject: Re: [PATCH v6 05/10] dt-bindings: arm-pmu: Add support for ARM
+ Rainier PMU
+Message-ID: <20250221-bipedal-cobalt-eagle-d31ac3@krzk-bin>
+References: <20250220180427.3382482-1-vincenzo.frascino@arm.com>
+ <20250220180427.3382482-6-vincenzo.frascino@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250220104454.293283301@linuxfoundation.org>
-In-Reply-To: <20250220104454.293283301@linuxfoundation.org>
-From: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
-Date: Fri, 21 Feb 2025 17:50:49 +0900
-X-Gm-Features: AWEUYZmUcCpUlvaYFgWvcXhbRnoQJXLD6KDcZQvtYu61SAoEEDpaEQOuReQ8_i8
-Message-ID: <CAKL4bV7rLDPWnveigQc3ak9O5aUMNM6iQ+h7Bki39fGH31GcPA@mail.gmail.com>
-Subject: Re: [PATCH 6.12 000/225] 6.12.16-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250220180427.3382482-6-vincenzo.frascino@arm.com>
 
-Hi Greg
+On Thu, Feb 20, 2025 at 06:04:23PM +0000, Vincenzo Frascino wrote:
+> Add support for the ARM Rainier CPU core PMU.
+> 
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> ---
+>  Documentation/devicetree/bindings/arm/pmu.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
-On Thu, Feb 20, 2025 at 8:00=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.12.16 release.
-> There are 225 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 22 Feb 2025 10:44:04 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.12.16-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.12.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-6.12.16-rc2rv tested.
+Best regards,
+Krzysztof
 
-Build successfully completed.
-Boot successfully completed.
-No dmesg regressions.
-Video output normal.
-Sound output normal.
-
-Lenovo ThinkPad X1 Carbon Gen10(Intel i7-1260P(x86_64) arch linux)
-
-[    0.000000] Linux version 6.12.16-rc2rv-gc3d6b353438e
-(takeshi@ThinkPadX1Gen10J0764) (gcc (GCC) 14.2.1 20250207, GNU ld (GNU
-Binutils) 2.44) #1 SMP PREEMPT_DYNAMIC Fri Feb 21 17:21:36 JST 2025
-
-Thanks
-
-Tested-by: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
