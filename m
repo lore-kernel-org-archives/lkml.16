@@ -1,156 +1,132 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFCF25290F;
-	Fri, 21 Feb 2025 19:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8072512C9;
+	Fri, 21 Feb 2025 19:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740165564; cv=none; b=SQycYhyatcvCOYg6gSLViwjWQaYvTEvmG63QnKunsuryWo48UCSdhZoJ47MkQAiHS1V4a5i5SvS13owxdoewJSYo7l03JKIuHHtEYUjuZkow1yQJ7k88pX/l2ACIrvfw06/ypypDMcKGP52S29CS0tV8EfkSIUPZXr/GvZQhxfs=
+	t=1740165590; cv=none; b=sFUPTquAS+S6EGUSMfP7J2qnrIkwy149AJG5/PKaL/Y6NaZKr9+0nW5pnrhr5xQVBNjZxP2k0YkKCdN6eNNRSuCbNpRy7/lnFDO/C/kkSq7uRlC3BN9sG6B+Xd8R5VYhL81FL0meQZa3u5QQ7tgkVrKy3HsYrqjKdouw0NQx2mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740165564; c=relaxed/simple;
-	bh=zxmsWUgNWZNFgsvJHAhCYpf+ENmRHkY81EjWL4vEQGM=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=GUaYwF7DyOiJynjcyCimdEb/ixaZNAfClJ4PHCQbzmVc6m53/aKav95stwEHTd3lMBoaJ2hvxGFNmnyPWmYsPvyScbeUFeTio+sHJgEA6xR37SoNexdukCVh7O0G4DfBxuycTwMgWMqjZzhOHcFK0tflKMW4jyVP11Q8EYG1T+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vRtcJACA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=9Vj/MPO0; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1740165590; c=relaxed/simple;
+	bh=RPDPvXXCdl5OOS5xVDWyVGfRoFTm67EFsfdf8l0PY2I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KTJ8mh2YaWZcU1VKeWrnq2TOUEnboo/FrCKMf/wYwF5R6/4mN2AfGldzLV2/NlWKC+AXsAwnZ9WBQ8g4oaFFKRR15KeEZM+ff3zcpts2lX7ZZI4K6tVPoxmHZoxaTgz7fSPYB/Ap45r4mopWeYNVVyBbDhtC0TR+ThINiaYQDhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cb0lQbBN; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vRtcJACA";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="9Vj/MPO0"
-Date: Fri, 21 Feb 2025 19:19:15 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740165560;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jxsITrpGY7G/KPdxKChAGRdgrO7clA1QnRdJzmj1QB0=;
-	b=vRtcJACAh5yLwFHxpTnmkDxxgcef1LgOs49n7dL4XXJXgEDPUYa0Y4qDO/PbGIoDKTwitO
-	1dc8bAaGmkLIuk/78tQmwzXSkeecZv7SJLH9tFPdPIXK9Icagcsrvd+tesTK+PbP/ZxIhr
-	sKbLzOgmiDAOl3wVRvTMI0DURxVZ4FnF53smH8zy69KtDI8JTqoSdoVay3ZGNpctZb7Q0h
-	WMhP9/IB+Cjc+wCn2ZLixVC/cgXnywhFz6wcnWUZEfDV4zNpXecW8oUVl7GJ+6DQiNfn72
-	a3qzzr3XC4U71MkCPUsKfjpfNqx4RNw8yaAbWzVR20SxKKtIKn6UOXpM6D928A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740165560;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jxsITrpGY7G/KPdxKChAGRdgrO7clA1QnRdJzmj1QB0=;
-	b=9Vj/MPO0A+Mn5muwxrnjAhZ9KdZt3v0OJtP0/YS5hKp7Zry0REZxDjs7EceW999WsROGvQ
-	yZyAeBwZNuXo7eCQ==
-From: "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf/x86/intel: Fix event constraints for LNC
-Cc: Amiri Khalil <amiri.khalil@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, stable@vger.kernel.org,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250219141005.2446823-1-kan.liang@linux.intel.com>
-References: <20250219141005.2446823-1-kan.liang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cb0lQbBN"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-abbd96bef64so395401866b.3;
+        Fri, 21 Feb 2025 11:19:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740165587; x=1740770387; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=W/2Y+JVQ+n3qognQWqPMWeNlR2lyIlTcpQrbV4OKmFc=;
+        b=Cb0lQbBNPPRRgn2tUSHky3wJ4UzhIFDOghRsvNNB1fAO6Z1QK5kgWMHC7zHWLB2jFL
+         N5Hs75aCuqSugT2wPJWwcKu9mYPBbp8tAK4QfOkhJPx9mdu7qTUuum/7DWCin7h9F9hd
+         E3v4nRqma77VpK/pL2pLtHSA2H74WkR31NlJrCn5f4FjbK7uqEPB5dr0FA3ZuDfzbTbA
+         OnhrWF+NEUqOEgnqBfXeGhb4+rbatHHstqa89cxK1Fhh5MUkOLKc/LIM+0/Vr229wu/n
+         vwe6L7Yc+5QuDeEoga68DNXSUGSY8YQbG3K1jGE7xMx0p+J8FKg/3W5tELCxNgjaWF2O
+         gNWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740165587; x=1740770387;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=W/2Y+JVQ+n3qognQWqPMWeNlR2lyIlTcpQrbV4OKmFc=;
+        b=HscrX3asKg4wNev2YdD9UxazHSXiW/7qDzQuFkUQXRb8ypMTNapK0BhrSi9+SHRUH7
+         gRUcWPfrVNW6YO7V/okijdihqarzWrO1cWWZxu5Hm1ja88JnQVJsBEo5bNtzy1kIrUP8
+         TNNjwTnhH2j6p8jW3O9o0VC2P5PlZzs5rvzXVUoefylrMRhYQk+IYxqu/iHlZd/z87zW
+         4HuxI1eLGVINmuPuwlS2qn2BnPJ4wQM6MIdImlIwSWuksEIxgSsyqfciqpPZfCMm8QqR
+         vyFrXNy7ok5+NEq5P1EzzHt/Xg7bcaLHoqDRso4U1hBiJJnqqwyOYclm4rN6VL+2JcEu
+         eWBA==
+X-Forwarded-Encrypted: i=1; AJvYcCVYGM63Z1MWntf4NWLL01xoA1ONXMZhx8v7eD39NBf66Oap9dmR1Ky4eGxIar411oaVvaAGpXc3cxehdClR@vger.kernel.org, AJvYcCWCuHZmI4zBUS36RsP0ouWqVxwT+9A4QU1Y556ydOG2rkpeisZi/0pd4cme7P1Bu0VG9WV15wp+FHE+@vger.kernel.org
+X-Gm-Message-State: AOJu0YxE09qfyNl+Cmqlzp0a/8ZhJOIwZy/pk0tbzkFfIuX/7ZJMrVWr
+	VXuMjOFatYJ0UJIofJnCv9h0tVgRjrkThIP3AZIU0fPJOfQJ7Zpg
+X-Gm-Gg: ASbGnctnu3tU0czx2OvcS2z3vJb5ppeb/2clRPvOIqypbV2Qzd1zSAAqTme1BJoxSOk
+	/1vu/07fCPIzPl6jNaz8t8cPrGOKfdo2NNrsoykqhB6WnVgnHe6TfgnYRabWVgFGqMXLGBNlmo3
+	89/9Oqdm+P++GfsXswXSgbeUUyiTtIDiWq+lRBr88vSEThfk9hLOWVDu3lBmlb1Zr/Oo8RKf5R+
+	hJVgh/a1s1+zUkBHk9qeY9Iqajg1vuKXBqHO/Wg8ivin8ykCyM+7diDNQhlrmhChYmoZ9byeVyT
+	pk3oheetXbhP2dNatt7AzBG04qnsHFE3KgSuQ8S9kHGHyOf9wEZDs/INHfM=
+X-Google-Smtp-Source: AGHT+IF9tApOtHa/eVZuK45pBA9WYfu0ZGkbzV+G11JP6nOVObxv/pxkKji13DPey3g2T7mpP51GsA==
+X-Received: by 2002:a17:906:c113:b0:ab7:8930:5669 with SMTP id a640c23a62f3a-abc09a43488mr529740466b.18.1740165587254;
+        Fri, 21 Feb 2025 11:19:47 -0800 (PST)
+Received: from playground.nxp.com ([82.79.237.175])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb9cee79fasm995276266b.129.2025.02.21.11.19.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 11:19:46 -0800 (PST)
+From: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Daniel Baluta <daniel.baluta@nxp.com>,
+	Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] imx8mp: add support for the IMX AIPSTZ bridge
+Date: Fri, 21 Feb 2025 14:19:04 -0500
+Message-Id: <20250221191909.31874-1-laurentiumihalcea111@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174016555617.10177.644960926822500092.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the perf/urgent branch of tip:
+From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
 
-Commit-ID:     782cffeec9ad96daa64ffb2d527b2a052fb02552
-Gitweb:        https://git.kernel.org/tip/782cffeec9ad96daa64ffb2d527b2a052fb02552
-Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Wed, 19 Feb 2025 06:10:05 -08:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Thu, 20 Feb 2025 16:07:10 +01:00
+The AIPSTZ bridge offers some security-related configurations which can
+be used to restrict master access to certain peripherals on the bridge.
 
-perf/x86/intel: Fix event constraints for LNC
+Normally, this could be done from a secure environment such as ATF before
+Linux boots but the configuration of AIPSTZ5 is lost each time the power
+domain is powered off and then powered on. Because of this, it has to be
+configured each time the power domain is turned on and before any master
+tries to access the peripherals (e.g: AP, CM7, DSP, on i.MX8MP).
 
-According to the latest event list, update the event constraint tables
-for Lion Cove core.
+The child-parent relationship between the bridge and its peripherals
+should guarantee that the bridge is configured before the AP attempts
+to access the IPs.
 
-The general rule (the event codes < 0x90 are restricted to counters
-0-3.) has been removed. There is no restriction for most of the
-performance monitoring events.
+Other masters should use the 'access-controllers' property to enforce
+a dependency between their device and the bridge device (see the DSP,
+for example).
 
-Fixes: a932aa0e868f ("perf/x86: Add Lunar Lake and Arrow Lake support")
-Reported-by: Amiri Khalil <amiri.khalil@intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20250219141005.2446823-1-kan.liang@linux.intel.com
----
- arch/x86/events/intel/core.c | 20 +++++++-------------
- arch/x86/events/intel/ds.c   |  2 +-
- 2 files changed, 8 insertions(+), 14 deletions(-)
+At the moment, we only want to apply a default, more relaxed
+configuration, which is why the number of access controller cells
+is 0.
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index e86333e..cdcebf3 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -397,34 +397,28 @@ static struct event_constraint intel_lnc_event_constraints[] = {
- 	METRIC_EVENT_CONSTRAINT(INTEL_TD_METRIC_FETCH_LAT, 6),
- 	METRIC_EVENT_CONSTRAINT(INTEL_TD_METRIC_MEM_BOUND, 7),
- 
-+	INTEL_EVENT_CONSTRAINT(0x20, 0xf),
-+
-+	INTEL_UEVENT_CONSTRAINT(0x012a, 0xf),
-+	INTEL_UEVENT_CONSTRAINT(0x012b, 0xf),
- 	INTEL_UEVENT_CONSTRAINT(0x0148, 0x4),
- 	INTEL_UEVENT_CONSTRAINT(0x0175, 0x4),
- 
- 	INTEL_EVENT_CONSTRAINT(0x2e, 0x3ff),
- 	INTEL_EVENT_CONSTRAINT(0x3c, 0x3ff),
--	/*
--	 * Generally event codes < 0x90 are restricted to counters 0-3.
--	 * The 0x2E and 0x3C are exception, which has no restriction.
--	 */
--	INTEL_EVENT_CONSTRAINT_RANGE(0x01, 0x8f, 0xf),
- 
--	INTEL_UEVENT_CONSTRAINT(0x01a3, 0xf),
--	INTEL_UEVENT_CONSTRAINT(0x02a3, 0xf),
- 	INTEL_UEVENT_CONSTRAINT(0x08a3, 0x4),
- 	INTEL_UEVENT_CONSTRAINT(0x0ca3, 0x4),
- 	INTEL_UEVENT_CONSTRAINT(0x04a4, 0x1),
- 	INTEL_UEVENT_CONSTRAINT(0x08a4, 0x1),
- 	INTEL_UEVENT_CONSTRAINT(0x10a4, 0x1),
- 	INTEL_UEVENT_CONSTRAINT(0x01b1, 0x8),
-+	INTEL_UEVENT_CONSTRAINT(0x01cd, 0x3fc),
- 	INTEL_UEVENT_CONSTRAINT(0x02cd, 0x3),
--	INTEL_EVENT_CONSTRAINT(0xce, 0x1),
- 
- 	INTEL_EVENT_CONSTRAINT_RANGE(0xd0, 0xdf, 0xf),
--	/*
--	 * Generally event codes >= 0x90 are likely to have no restrictions.
--	 * The exception are defined as above.
--	 */
--	INTEL_EVENT_CONSTRAINT_RANGE(0x90, 0xfe, 0x3ff),
-+
-+	INTEL_UEVENT_CONSTRAINT(0x00e0, 0xf),
- 
- 	EVENT_CONSTRAINT_END
- };
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index c2e2eae..f122882 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1199,7 +1199,7 @@ struct event_constraint intel_lnc_pebs_event_constraints[] = {
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x100, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x800000000ULL),
- 
--	INTEL_HYBRID_LDLAT_CONSTRAINT(0x1cd, 0x3ff),
-+	INTEL_HYBRID_LDLAT_CONSTRAINT(0x1cd, 0x3fc),
- 	INTEL_HYBRID_STLAT_CONSTRAINT(0x2cd, 0x3),
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf),	/* MEM_INST_RETIRED.STLB_MISS_LOADS */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x12d0, 0xf),	/* MEM_INST_RETIRED.STLB_MISS_STORES */
+The initial version of the series can be found at [1]. The new version
+should provide better management of the device dependencies.
+
+[1]: https://lore.kernel.org/linux-arm-kernel/20241119130726.2761726-1-daniel.baluta@nxp.com/
+
+
+Laurentiu Mihalcea (5):
+  dt-bindings: bus: add documentation for the IMX AIPSTZ bridge
+  dt-bindings: dsp: fsl,dsp: document 'access-controllers' property
+  bus: add driver for IMX AIPSTZ bridge
+  arm64: dts: imx8mp: convert 'aips5' to 'aipstz5'
+  arm64: dts: imx8mp: make 'dsp' node depend on 'aips5'
+
+ .../bindings/bus/fsl,imx8mp-aipstz.yaml       | 62 +++++++++++++
+ .../devicetree/bindings/dsp/fsl,dsp.yaml      |  3 +
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi     |  9 +-
+ drivers/bus/Kconfig                           |  6 ++
+ drivers/bus/Makefile                          |  1 +
+ drivers/bus/imx-aipstz.c                      | 92 +++++++++++++++++++
+ 6 files changed, 170 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/bus/fsl,imx8mp-aipstz.yaml
+ create mode 100644 drivers/bus/imx-aipstz.c
+
+-- 
+2.34.1
+
