@@ -1,127 +1,130 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 223B124336E;
-	Fri, 21 Feb 2025 17:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from mail-ej1-f66.google.com (mail-ej1-f66.google.com [209.85.218.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC39244E98
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 17:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740157342; cv=none; b=s+C31e0r4U/ZdR1EaBb4qE3TDddkVZs3NyXeC12rCMna1IDhRGKcrypHRU31swXMxoiv/sXN0LKH8WcSJLpyeU7Or37lYrUQ5NnsBA7cu+JWufFU+ebMn4D4CuWtjIh9OhnRE3zec+LWiTlnXvtHYTgG1CFapuUyU68qbTdx5jI=
+	t=1740157378; cv=none; b=qGHpHFYa92/mt8a2qvXUNkOQeOM07MqgQFym1iVMy9lC8Pd7K6znHdJI917Ib9QV/IdsCqHEr16ocpXSRMA3CDti+TpPnAYRm31Amnkpj9/JC57NxjwvgmVX/qlZFFfRSYdcPWqWItyAT9k0rl7VeDzKgrG8o5sMfBPhtOG1b5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740157342; c=relaxed/simple;
-	bh=eDJSMOr+h1SSZEQ8kxz+WyG6t2AUCYwQFo5uAoH21rY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IKXvoldzEQHLUKEmbr65s7f6mavb7nXrmxiGKooxvZGgHhpxTtr0acbHjSVM+A+x60NAFRowm3JeXf6QQY9p3a5uO/rwf0s74SOy1uzLXPDOxHHHbH9EvRJMsIOCK8P72o4i6tTTftc9WaQxDCAlOzWt/J4v23ojwr68nanTnvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1tlWPn-00020g-00; Fri, 21 Feb 2025 18:02:15 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id A1DE8C0135; Fri, 21 Feb 2025 18:01:48 +0100 (CET)
-Date: Fri, 21 Feb 2025 18:01:48 +0100
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc: linux-clk@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
-	p.zabel@pengutronix.de, linux-mips@vger.kernel.org,
-	devicetree@vger.kernel.org, yangshiji66@outlook.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] mips: dts: ralink: update system controller nodes
- and its consumers
-Message-ID: <Z7ixfMbpePvkpp2q@alpha.franken.de>
-References: <20250120092146.471951-1-sergio.paracuellos@gmail.com>
- <CAMhs-H-VevC+_=HxhMU6-at0bKut_JqdgO7j2detuB4s8R_QFQ@mail.gmail.com>
- <Z7iHorlRgtsi1LOo@alpha.franken.de>
- <CAMhs-H-fcWU-rz_3FeAuRe0xdCMmvffX2zrZwwmt=8RYpY4Lyg@mail.gmail.com>
- <Z7idguBa2bxZRoxX@alpha.franken.de>
- <CAMhs-H91Pv4bygmL2jL0=swn-wHT0mRYGaYO6Hjm5O-xmmrJ0w@mail.gmail.com>
+	s=arc-20240116; t=1740157378; c=relaxed/simple;
+	bh=CSW10IqiNdAkspr2IgyTQkreJmoj1lkd5Vs5Tjhn4Lk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pjFtzd30SSK9UNtkyCNIKjUaYsgBDHf+lXZb5wqsXMlp041rO5B+IwApuz78odOfTEBir1kiDK17xIHaM3hq9uYscv7mS2bQwsrUV6vtnOE7JHaEBsFTJKBFc4+WSd4rtmvN7L6AUXyXs8VVdVdURmRQThWehEJJPN5N2PwLwg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=QwFh39Je; arc=none smtp.client-ip=209.85.218.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="QwFh39Je"
+Received: by mail-ej1-f66.google.com with SMTP id a640c23a62f3a-aaf900cc7fbso357798566b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 09:02:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1740157373; x=1740762173; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wDByaDv2MeIoDkWDRCtDD68r/JuubevBl9+EY++FX5Y=;
+        b=QwFh39JeqOC/L5XL2f66VTxmJj5cJEme7AAXfK7OIAhcQzpFmYaqe3QFX4KX9mGDFh
+         qbNHWeHSYk6JhstjFSsNC7K6aM04+ogSFIoYYv2WfyvLDN3R0y7RKg46xtpVKtFm3Xue
+         YhexQFdNPaYEasZdUdakA6iFKkyIbOPLzG0JY/pZnB2aD+buf4yRG0IidRVF42tm24Dw
+         TUtZe0CkwRjyZnMzSgxJy2EBRcxkF+V9W/cZoYDVJGAytYxVEMG9s74v/+mUwPc2dXKg
+         TIXRy3MEu+voy5q4afxEUFUvSf8dtozHP/qkecmN7AQigSGElxDfXk444p+C5Dn8zw7O
+         iFGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740157373; x=1740762173;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wDByaDv2MeIoDkWDRCtDD68r/JuubevBl9+EY++FX5Y=;
+        b=dZbHffEyQXSAzDXBwtdTaScMU9FtCt2zhWby6Qh6000pFehNHMvKZtS6p/qZpxDspJ
+         BQ0pj5dLQK4KFQOox2jttgNVEDksXDTL/K4ZVUgbXv2TcBccKEpRjC0lEPRGt2y1I9D8
+         5+ZrHljzUCftBTjB0VEqpMV5rnOqAM+XKfz5y8MdluSfOpQkxyJeOIcwSX2DkiJl3VpJ
+         yUN2m+Y83xZY5y/EvA6SeAtqVH4XCrSWdV7JRO1NFWa5zCaxcet2eC5PJTafX3Bs4Y8J
+         aJwMS5zkChKsf9wm/qFbCYiGg+S6g64Hfmd7tZIUlGNYhwP6cHGWIWdgMkB9aYNkc1HH
+         mMFw==
+X-Forwarded-Encrypted: i=1; AJvYcCXAsxgAlribJ4j9bOX8c0J9xRClEV3wZdrnzBtH1+DUA63LCE/1qEJAHortrIpKQDOpv7B6yDPz7gII16g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9gR+Dw9boI3O6S/1Qcha/jOEIdHZEsCbaYsuwKZK10MtPcbsp
+	Mvllvo93ZqFdO+S9jTgDAdJiNrCQyOH/bL0MUrtK7+z6eLeif49gfg3YsippD74=
+X-Gm-Gg: ASbGncsP86e0yHbyr/9blbxqoTYDxTIVaC1qbl96CYrfvaqkLdTrDiC1IeuN38IQccK
+	mD6zIc3xqyHqu/Ah5eEZt/b8Az8rN8IF5FpbkArdEjhTtX6JTDsLEMOeyAIee4ivGcpv93YKTE1
+	ADCDGPjAD4oPL4CuOeQUVuD5BQJ6HTdZDomLJIesIfWGOcreY5DZ5A3oYkFlsvvas94PFkp10Kb
+	VXCilT5rs5I+yybotiXP6srnu0kClcXqo6Tn7zlXyrgILeJEBH6Wm0eUYjcb2fKA1VpxDZS/r15
+	npmVsgZPZ1aNruR6exBabdT9I8Ys
+X-Google-Smtp-Source: AGHT+IGfcJwK8DsLRDynNMYZTxbIxb0l+jqrdkXEpzFnvtKSRwocRJ46u22XwIA9pSi82Z9VX3nCQA==
+X-Received: by 2002:a17:907:7855:b0:abb:b092:dade with SMTP id a640c23a62f3a-abc0de0de6dmr329918266b.38.1740157373377;
+        Fri, 21 Feb 2025 09:02:53 -0800 (PST)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb8eea4d65sm1105668766b.161.2025.02.21.09.02.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 09:02:52 -0800 (PST)
+From: =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
+To: Christian Brauner <brauner@kernel.org>,
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Kees Cook <kees@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Eric W . Biederman" <ebiederm@xmission.com>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+	Oleg Nesterov <oleg@redhat.com>
+Subject: [PATCH 0/2] Alternative "pid_max" for 32-bit userspace
+Date: Fri, 21 Feb 2025 18:02:47 +0100
+Message-ID: <20250221170249.890014-1-mkoutny@suse.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMhs-H91Pv4bygmL2jL0=swn-wHT0mRYGaYO6Hjm5O-xmmrJ0w@mail.gmail.com>
 
-On Fri, Feb 21, 2025 at 05:40:34PM +0100, Sergio Paracuellos wrote:
-> On Fri, Feb 21, 2025 at 4:37 PM Thomas Bogendoerfer
-> <tsbogend@alpha.franken.de> wrote:
-> >
-> > On Fri, Feb 21, 2025 at 03:50:09PM +0100, Sergio Paracuellos wrote:
-> > > Hi Thomas,
-> > >
-> > > On Fri, Feb 21, 2025 at 3:05 PM Thomas Bogendoerfer
-> > > <tsbogend@alpha.franken.de> wrote:
-> > > >
-> > > > On Fri, Feb 21, 2025 at 11:48:34AM +0100, Sergio Paracuellos wrote:
-> > > > > Hi Thomas,
-> > > > >
-> > > > > El El lun, 20 ene 2025 a las 10:21, Sergio Paracuellos <
-> > > > > sergio.paracuellos@gmail.com> escribió:
-> > > > >
-> > > > > > Hi all!
-> > > > > >
-> > > > > > Ralinks SoCs have a system controller node which serves as clock and reset
-> > > > > > providers for the rest of the world. This patch series introduces clock
-> > > > > > definitions for these SoCs. The clocks are registered in the driver using
-> > > > > > a bunch of arrays in specific order so these definitions represent the
-> > > > > > assigned
-> > > > > > identifier that is used when this happens so client nodes can easily use it
-> > > > > > to specify the clock which they consume without the need of checking
-> > > > > > driver code.
-> > > > > >
-> > > > > > DTS files which are currently on tree are not matching system controller
-> > > > > > bindings. So all of them are updated to properly match them.
-> > > > > >
-> > > > > > I'd like this series to go through kernel mips git tree if possible.
-> > > > > >
-> > > > > > Thanks in advance for your time.
-> > > > > >
-> > > > > > Changes in v3:
-> > > > > > - Address Krzysztof comments in v2 (Thanks!):
-> > > > > >   + Drop reset include file since what it was defined there were hardware
-> > > > > >     constants and no binding related indexes at all.
-> > > > > >   + Update patches for not referring to this reset removed file.
-> > > > >
-> > > > >
-> > > > > I was expecting this series going through the mips tree.
-> > > >
-> > > >   DTC     arch/mips/boot/dts/ralink/rt3883_eval.dtb
-> > > > Error: /local/tbogendoerfer/korg/linux/arch/mips/boot/dts/ralink/rt3883.dtsi:2.1-9 syntax error
-> > > > FATAL ERROR: Unable to parse input tree
-> > >
-> > > Weird, it looks like dtc is not happy with the "include" line with new
-> > > definitions? Are you getting this only with rt3883? Since all the
-> > > patches are almost the same and I compile tested this before sending..
-> > > Something got corrupted? I don't have my laptop now to check but I
-> > > will recheck again on monday.
-> >
-> > rt2880_eval.dts:/include/ "rt2880.dtsi"
-> > rt3052_eval.dts:#include "rt3050.dtsi"
-> > rt3883_eval.dts:/include/ "rt3883.dtsi"
-> >
-> > rt3052 works, rt2880 and rt3883 don't.
-> >
-> > changing the /include/ to #include makes them compile.
-> 
-> Mmmm...does this mean that this was broken before my patches? Since I
-> have not touched the files that need the replacement.
+pid_max is sort of a legacy limit (its value and partially the concept
+too, given the existence of pids cgroup controller).
+It is tempting to make the pid_max value part of a pid namespace to
+provide compat environment for 32-bit applications [1].  On the other
+hand, it provides yet another mechanism for limitation of task count.
+Even without namespacing of pid_max value, the configuration of
+conscious limit is confusing for users [2].
 
-no, without your patches everything compiles. I guess dtc (?) doesn't
-allow #include in files, which were included via / include /. But that's
-just guesswork
+This series builds upon the idea of restricting the number (amount) of
+tasks by pids controller and ensuring that number (pid) never exceeds
+the amount of tasks. This would not currently work out of the box
+because next-fit pid allocation would continue to assign numbers (pids)
+higher than the actual amount (there would be gaps in the lower range of
+the interval). The patch 2/2 implements this idea by extending semantics
+of ns_last_pid knob to allow first-fit numbering. (The implementation
+has clumsy ifdefery, which can might be dropped since it's too
+x86-centric.)
 
- So I probably
-> checked in the openwrt tree and missed this totally. Sorry for that.
-> How do you want to handle this? Should I send v4 including these
-> replacements? Or do you prefer to handle them directly?
+The patch 1/2 is a mere revert to simplify pid_max to one global limit
+only.
 
-I'll fix the includes while applying.
+(I pruned Cc: list from scripts/get_maintainer.pl for better focus, feel
+free to bounce as necessary.)
 
-Thomas.
+[1] https://lore.kernel.org/r/20241122132459.135120-1-aleksandr.mikhalitsyn@canonical.com/
+[2] https://lore.kernel.org/r/bnxhqrq7tip6jl2hu6jsvxxogdfii7ugmafbhgsogovrchxfyp@kagotkztqurt/
 
+Michal Koutný (2):
+  Revert "pid: allow pid_max to be set per pid namespace"
+  pid: Optional first-fit pid allocation
+
+ Documentation/admin-guide/sysctl/kernel.rst |   2 +
+ include/linux/pid.h                         |   3 +
+ include/linux/pid_namespace.h               |  11 +-
+ kernel/pid.c                                | 137 +++-----------------
+ kernel/pid_namespace.c                      |  71 +++++-----
+ kernel/sysctl.c                             |   9 ++
+ kernel/trace/pid_list.c                     |   2 +-
+ kernel/trace/trace.h                        |   2 +
+ kernel/trace/trace_sched_switch.c           |   2 +-
+ 9 files changed, 70 insertions(+), 169 deletions(-)
+
+
+base-commit: 334426094588f8179fe175a09ecc887ff0c75758
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+2.48.1
+
