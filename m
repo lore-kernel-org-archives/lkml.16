@@ -1,113 +1,85 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973F820968E
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 11:55:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0C9202F65;
+	Fri, 21 Feb 2025 11:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740138912; cv=none; b=rj8fXKiRsHaLk7Eu5MGMTdv/7It/mjpDl9Qzo9tp5FZLlQzrt1rmeXgFMj8x3I1ZheAv/5YBYHzp4md+6dmHgI3Gttjsl6CYjWu0f274wfwf5nibthtbdHJxwXR6yKhD8cqGCDoi1ZSfT60xdR9edOURlo+2ZG7ugImkiWfY3+8=
+	t=1740138937; cv=none; b=gn2qvIvX2WJQ7DSYSVICbR9EfCsfG+5a5gQS+nD03asjC7kzKVqXMgjii8pIoAJuZfwnAhyqHCyYLHmcP5RQhChXeURUHTW275W34Z9HVqOm1jXXOH8i6pmfYF378fOixYItV6Bk+NyiBIoWJcOGsgK29dKNNEBGMY+0J8D3BRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740138912; c=relaxed/simple;
-	bh=o9hQaggU3Tdo3Rs75yT1Fva2Gn/BPjhpQH2KzuyJ2gg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G76r2HlDM0i5AaBYSbo8qtDgvmeYQDXyUjxyi5c8vMwocEqk/o8Gm9gipxnyFv9UaFiZecFXVq74TbTlh69l4UfDf2gfGPRjhvImaPKZQZY+smj7HgLzZMWmVZyCS6DcfEfuy8NZav4+ZjELHGxPMzYaL7JUn4L5a/EQuSvdpvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk; spf=pass smtp.mailfrom=rasmusvillemoes.dk; dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b=PEwTXyFW; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rasmusvillemoes.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rasmusvillemoes.dk
+	s=arc-20240116; t=1740138937; c=relaxed/simple;
+	bh=JC8ogyqOI8xN8zaQhdtMlNxpZBkM46jcluP/sZz9IUk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TpGRO7rHeBtUEfBpjazBMxrFpT6HErFXe9rchhOCygk1PAIivuO/s8GIJ9vW5riZlbi/iY6hG8o1fUdJMf0RuE7rQVB8q20sHROStVM2QvKBmwvlWi0Mx5WUcUH06k1mZYTdLL29SLfyAMcGHXItTSTpbH7Eg68yVwP8QRiv4+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=J4o+ey0M; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="PEwTXyFW"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30930b0b420so17641011fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 03:55:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google; t=1740138909; x=1740743709; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3/iRbyF06sKBSuXAXawsdJPOX5Xxar4Ru2tRuKb6D2o=;
-        b=PEwTXyFWcoHXeYuZSt6B89z7njQlQ9r6soBg6Axpyt8IaMsdAiV4tja9DltEeEcY9N
-         6bCcWqagByNttbz+14oOH6YO4YRQgrCU+6/mtn6Ggk0nJeM0i/sj6zJaZEZQAd8PUTKP
-         OG6xYHq0atNlMJ8NfDdAWaDl9VVAkMXcF8MZ8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740138909; x=1740743709;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3/iRbyF06sKBSuXAXawsdJPOX5Xxar4Ru2tRuKb6D2o=;
-        b=gL3s7wFVUjfZcMyC56fZl5tFtedtPuMU3q5/bjwCELl4I5l42DpT7NxQShafBItMN9
-         JeZgIwvGo7k8083vIHY/4EsnmTflZjZA6mvnYu+3AT+lnwTTac1GCt2WBqppNf4eKoln
-         9rKEymzo5gZl3Gh+nU0218WyZ/Cm3ZLjdYy/qU+JTcggnwD5i2mB2Avtrg+XYVFNIfIx
-         2BoiStbM3FRxyonPvxRc/Wr+RDlPSYDc1tXluwXIGxjeS+ivoHA0UffDM6r002BGfFmJ
-         5xEBUOv98k4maOcGDf1w1LsbDhvYxSSSy2EWifpj5z0V6HvE2iovof/8QpA6god37T6A
-         vZvg==
-X-Forwarded-Encrypted: i=1; AJvYcCXf/x9wqt2oEoAm5GNNwkUrh6WyWhhczZ2pPs8nfP5M45UoyMXUZ24xzagEjJTOdMXSp4Bb6+iZWjHVgwU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIwwv7CgVAY/yZcDXQXaSWV1sDxNpC4AP2YhiKpKOovkgbvaPb
-	Qy44gKl8vLhgZOUh1zqAQlKBmAKaGExsONm399cYa2ZN7SE45b3m0xwuTXAeqeLO5cOVxuPpmRO
-	hsMsge16MLqwN+cJmJC9BNG8kTsvOAaFbPk+kKA==
-X-Gm-Gg: ASbGnctPTPTdlfHv6elMYwO2pKFODbIh5cfGE16k9Rmg8H7woNzRXQKjfuSYkhQp8by
-	gDYMl2g3k/dhh91IrOTxXuV7EbAbaYzhdsXhRK4uWPVq99/+Ps+5aLkhx0txAikXmr1y6Ik1jXs
-	tx8udS6Kw=
-X-Google-Smtp-Source: AGHT+IGq/dIo+A2JknCfxBPtCWEXSb1e8s5WLFM0DZHAgz+xRkivavGxrBcVWQ1kfkiIjnKC8wn9G/O8JUziZ5NiZwc=
-X-Received: by 2002:a2e:9b97:0:b0:308:db61:34cf with SMTP id
- 38308e7fff4ca-30a59899cafmr8679651fa.14.1740138908700; Fri, 21 Feb 2025
- 03:55:08 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="J4o+ey0M"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1740138929; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=rhCWKZ300d1LYGozeyZzfCVOrsA+uIHUJ8oJ+AoQ8Fw=;
+	b=J4o+ey0MdqpYv+khiciAaqTqGoIShlNMfrBa7/8RXZ1N5Q/50PTC96y1nSQjDqFeI6GKpQ0eW7fGmYOZQOM+FKiPAZKG6Nh9GkjllH/hAT/okO2rmlKk4cf3zuc5dXW45HJd+DINg73C8Y5Tm0iQGqvMYg0tWWcLtIW0h+izYZI=
+Received: from 30.221.144.133(mailfrom:lulie@linux.alibaba.com fp:SMTPD_---0WPwJ1x1_1740138927 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 21 Feb 2025 19:55:28 +0800
+Message-ID: <365859bd-1457-4f83-91f4-34a7f21e1d8f@linux.alibaba.com>
+Date: Fri, 21 Feb 2025 19:55:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <DC5079B2-9D3D-4917-A50D-20D633071808@live.com> <98289BC4-D5E1-41B8-AC89-632DBD2C2789@live.com>
-In-Reply-To: <98289BC4-D5E1-41B8-AC89-632DBD2C2789@live.com>
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Date: Fri, 21 Feb 2025 12:54:57 +0100
-X-Gm-Features: AWEUYZkag0YCbmK4501eSholWPOVfmEf5FjMGyae-nYt_GMpw1QMs3yS9iwYbxw
-Message-ID: <CAKwiHFi_nngthth0wZkaPviVeS+8SWDtTw6gJcDAHCqiwXAG2A@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] lib/vsprintf: Add support for generic FOURCCs by
- extending %p4cc
-To: Aditya Garg <gargaditya08@live.com>
-Cc: "pmladek@suse.com" <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	"andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, 
-	"senozhatsky@chromium.org" <senozhatsky@chromium.org>, Jonathan Corbet <corbet@lwn.net>, 
-	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>, 
-	"mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de" <tzimmermann@suse.de>, 
-	"airlied@gmail.com" <airlied@gmail.com>, "simona@ffwll.ch" <simona@ffwll.ch>, 
-	Andrew Morton <akpm@linux-foundation.org>, "apw@canonical.com" <apw@canonical.com>, 
-	"joe@perches.com" <joe@perches.com>, "dwaipayanray1@gmail.com" <dwaipayanray1@gmail.com>, 
-	"lukas.bulwahn@gmail.com" <lukas.bulwahn@gmail.com>, 
-	"sumit.semwal@linaro.org" <sumit.semwal@linaro.org>, 
-	"christian.koenig@amd.com" <christian.koenig@amd.com>, Kerem Karabay <kekrby@gmail.com>, 
-	Aun-Ali Zaidi <admin@kodeit.net>, Orlando Chamberlain <orlandoch.dev@gmail.com>, 
-	Atharva Tiwari <evepolonium@gmail.com>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, 
-	"linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>, Hector Martin <marcan@marcan.st>, 
-	"linux@armlinux.org.uk" <linux@armlinux.org.uk>, Asahi Linux Mailing List <asahi@lists.linux.dev>, 
-	Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] ipvs: Always clear ipvs_property flag in
+ skb_scrub_packet()
+To: Julian Anastasov <ja@ssi.bg>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ asml.silence@gmail.com, willemb@google.com, almasrymina@google.com,
+ chopps@labn.net, aleksander.lobakin@intel.com, nicolas.dichtel@6wind.com,
+ dust.li@linux.alibaba.com, hustcat@gmail.com, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250221013648.35716-1-lulie@linux.alibaba.com>
+ <610b255c-51e4-0460-05a2-ab9cd8c43295@ssi.bg>
+From: Philo Lu <lulie@linux.alibaba.com>
+In-Reply-To: <610b255c-51e4-0460-05a2-ab9cd8c43295@ssi.bg>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 21 Feb 2025 at 12:37, Aditya Garg <gargaditya08@live.com> wrote:
->
-> From: Hector Martin <marcan@marcan.st>
->
-> %p4cc is designed for DRM/V4L2 FOURCCs with their specific quirks, but
-> it's useful to be able to print generic 4-character codes formatted as
-> an integer. Extend it to add format specifiers for printing generic
-> 32-bit FOURCCs with various endian semantics:
->
-> %p4ch   Host-endian
-> %p4cl   Little-endian
-> %p4cb   Big-endian
-> %p4cr   Reverse-endian
->
-> The endianness determines how bytes are interpreted as a u32, and the
-> FOURCC is then always printed MSByte-first (this is the opposite of
-> V4L/DRM FOURCCs). This covers most practical cases, e.g. %p4cr would
-> allow printing LSByte-first FOURCCs stored in host endian order
-> (other than the hex form being in character order, not the integer
-> value).
->
-> Signed-off-by: Hector Martin <marcan@marcan.st>
-> Signed-off-by: Aditya Garg <gargaditya08@live.com>
 
-Acked-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+
+On 2025/2/21 19:42, Julian Anastasov wrote:
+> 
+> 	Hello,
+> 
+> On Fri, 21 Feb 2025, Philo Lu wrote:
+> 
+>> We found an issue when using bpf_redirect with ipvs NAT mode after
+>> commit ff70202b2d1a ("dev_forward_skb: do not scrub skb mark within
+>> the same name space"). Particularly, we use bpf_redirect to return
+>> the skb directly back to the netif it comes from, i.e., xnet is
+>> false in skb_scrub_packet(), and then ipvs_property is preserved
+>> and SNAT is skipped in the rx path.
+>>
+>> ipvs_property has been already cleared when netns is changed in
+>> commit 2b5ec1a5f973 ("netfilter/ipvs: clear ipvs_property flag when
+>> SKB net namespace changed"). This patch just clears it in spite of
+>> netns.
+>>
+>> Signed-off-by: Philo Lu <lulie@linux.alibaba.com>
+>> ---
+>> This is in fact a fix patch, and the issue was found after commit
+>> ff70202b2d1a ("dev_forward_skb: do not scrub skb mark within
+>> the same name space"). But I'm not sure if a "Fixes" tag should be
+>> added to that commit.
+> 
+> 	You can add 2b5ec1a5f973 as a Fixes tag in v2 and I'll ack it.
+
+Thank you, Julian. You also solve my worries. I'll post v2 soon.
+
+-- 
+Philo
+
