@@ -1,145 +1,150 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC2521147D;
-	Fri, 21 Feb 2025 15:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740151735; cv=pass; b=k3q/ropHf1fnlbrhzL0woU+bJDgm6lJEsBa/ZTj8bdtBmGCZ/O4qzU1Z3H9SZQa1aJoOMBCGTkbyi2HEjhkwboJa/CrCaQ2Z3yH1YFqyRi7NlgYUYfLRGyooTddjhrhaS1wNbPGO9Z65ODEZntpe3qFm/APmMFl4TnZ6Rxetn8Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740151735; c=relaxed/simple;
-	bh=btfqHh6gmsSIJcjU3GbXMDgWDvFVm8dzoDhioK/7wOI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g4QBT6Fez0Ij+2XJm7XK09HN+L7fhiBSkly32QFooBhjOk1tWAIy2Kilwps5hj8XVsDCwesqGTMOEPIwDTVXZCzjRPC6AcJ9KmE2qWLUahSlHDkkzPTzHWjUkRbHTGJkg/EOoT1iFBs7pPrt9PDmFhsiwyNoUn/792GJg66SwkE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=igFUWHSG; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212C2212FB2;
+	Fri, 21 Feb 2025 15:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740151759; cv=none; b=F8PoiVpw3QuvIelL+Sf9RGsFKn8j8DiLfKKocUn+OdcnekXaYbg60ZRLnDEUYhHly3Sfls2ZllifqBsaIl4dEiGsXidVcVJI3izMqmroHD22Fz9ZztVB7yXuC1BczsHH7NQY/kb9RnIkuQNB/DCGpMPrzkpD/3Wjl+pPJfH8d70=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740151759; c=relaxed/simple;
+	bh=Sgb4lRNOsH9ev03x6BLtr2ijGeo8RxWdQEtTFJy1oPs=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=H1WHoE3zXoWVKhk2C5ct6mXQJ8NvwYjlTqVv9r+otG9X3Cn3UoYIsXhCLf18JcE/7aPnWrQZW9qqb2rxSAyea4JnWW9CPfm6aE3PEtntnLayEstvhRy8p5+l4yURrdTJUh3WFf4w6mK7NjLA2GpETQzlT9B9tre6HMtKpsBsmTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xBAGsdPP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=w7ejTtFK; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="igFUWHSG"
-ARC-Seal: i=1; a=rsa-sha256; t=1740151705; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ETIPuLM6VzvUWWHUMIH7mvkbk+G00Mc52iuUtqTsQjo/FcOhLTllrie0OVJeiq2TCNXOlZ7QK5CL05uY7fR8JWfFGdONNSR0iNN4DP/8evV5WKXEzsB0rUt3fzYmU6Zmzb9DHzBuhxM+eCa4KDkfURwvYJuJCDt6Km9JvRbuJOg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740151705; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=btfqHh6gmsSIJcjU3GbXMDgWDvFVm8dzoDhioK/7wOI=; 
-	b=lYkTsng4RjSYwfRMWG+t3ZfcbH+Zof52remAbATqeErSTKXSnGeuFA2yttTRt04KTxVvr8aQy1nWTWMWORryLgEPF1f14pAnOohgEup3ql3HpU1KplokTZgo692ZCIu4GoYtIbOHQZ+IGTFYFvwovSCVk4psPr5zEIJvHOeMAWw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740151705;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=btfqHh6gmsSIJcjU3GbXMDgWDvFVm8dzoDhioK/7wOI=;
-	b=igFUWHSGKkX9Vaftwno4xBOvaOCkuK2X1S/vdVFYFUgj+mxT8BCmZfUxBAvNo3iF
-	RTeKXOQqsnztJzj+NOQHtkiQ5V8qAMoMZx8xoD7RTjkFLRVllFzhJ9tmx5O6l6pSjV8
-	q3ERmLpe1ldSN0fXXPWFhAPd/RmRzL7j5xJem4kY=
-Received: by mx.zohomail.com with SMTPS id 1740151703226401.9144883348604;
-	Fri, 21 Feb 2025 07:28:23 -0800 (PST)
-Received: by venus (Postfix, from userid 1000)
-	id 1DF301826F6; Fri, 21 Feb 2025 16:28:18 +0100 (CET)
-Date: Fri, 21 Feb 2025 16:28:18 +0100
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH V2 2/2] rust: Add basic bindings for clk APIs
-Message-ID: <aoprvojsnmkbzmmpgx5wxjqtamnr3jyhyqfcqnwhxulp34gn32@aau57u4cotpe>
-References: <cover.1740118863.git.viresh.kumar@linaro.org>
- <a0a1ba4e27c3a0d9e38c677611eb88027e463287.1740118863.git.viresh.kumar@linaro.org>
- <Z7iGHiQcqa-_AXli@pollux>
- <4AD8A8F3-EA7E-4FBE-9F0D-58CF7BB09ED5@collabora.com>
- <Z7iSHR0F2QpiNpMZ@pollux>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xBAGsdPP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="w7ejTtFK"
+Date: Fri, 21 Feb 2025 15:29:15 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740151756;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ItqkKD3hqEcV/WAXnBzwfgjapNbA8d2EOk+m9pooXCg=;
+	b=xBAGsdPPh9Xn2EQbUXVB3yVkYs/E5I84s3dkM+5mYdf/IfeUHSpzqDYs9oPjKoDO7cU1KD
+	gfoA6NnziReu6RnifZTj94z0YAei/M/gQPjl3UjBi9fS5fZ4pdvyvS4epgPVQcFHSJEJKF
+	YZyUjA+h7jb4csY975LLndpcFh9OS98+pumV63EAmS3MzaERBjpCEnQs5dUhosRqBac0jQ
+	54k4tW1yT3u7dSg3aXVg/6/4bxzyfVsi+TUL/Y5ymkIiY0A+UVXSkKtfWRhiXXxnr3HgcZ
+	Ur4FFpGbES4oUvxAoPvBJt38kV7VY9+m3uvs7YR0wmOgmaBD5xHIvaR3mif7zw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740151756;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ItqkKD3hqEcV/WAXnBzwfgjapNbA8d2EOk+m9pooXCg=;
+	b=w7ejTtFKTn0rywKxunxDMGSDd88sqDeBw1fgEJxzbFaxBZjMEdLguRB4NBgT7rLnqcpFHb
+	DSs52/SsKnF6chAg==
+From: "tip-bot2 for Mike Rapoport (Microsoft)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/boot] x86/boot: Split kernel resources setup into the
+ setup_kernel_resources() helper function
+Cc: "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+ Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250214090651.3331663-3-rppt@kernel.org>
+References: <20250214090651.3331663-3-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="k3zauxydw4h5jdhh"
-Content-Disposition: inline
-In-Reply-To: <Z7iSHR0F2QpiNpMZ@pollux>
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.2/240.10.19
-X-ZohoMailClient: External
+Message-ID: <174015175568.10177.15710753609296534257.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
+The following commit has been merged into the x86/boot branch of tip:
 
---k3zauxydw4h5jdhh
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH V2 2/2] rust: Add basic bindings for clk APIs
-MIME-Version: 1.0
+Commit-ID:     297fb82ebaad50e1c40aab7ac61897bf372842ba
+Gitweb:        https://git.kernel.org/tip/297fb82ebaad50e1c40aab7ac61897bf372842ba
+Author:        Mike Rapoport (Microsoft) <rppt@kernel.org>
+AuthorDate:    Fri, 14 Feb 2025 11:06:49 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Fri, 21 Feb 2025 16:05:00 +01:00
 
-Hi,
+x86/boot: Split kernel resources setup into the setup_kernel_resources() helper function
 
-On Fri, Feb 21, 2025 at 03:47:57PM +0100, Danilo Krummrich wrote:
-> On Fri, Feb 21, 2025 at 11:29:21AM -0300, Daniel Almeida wrote:
-> > > On 21 Feb 2025, at 10:56, Danilo Krummrich <dakr@kernel.org> wrote:
-> > > On Fri, Feb 21, 2025 at 12:03:39PM +0530, Viresh Kumar wrote:
-> > >> +/// A simple implementation of `struct clk` from the C code.
-> > >> +#[repr(transparent)]
-> > >> +pub struct Clk(*mut bindings::clk);
-> > >=20
-> > > I remember that Stephen explained that NULL is valid value for struct=
- clk. As a
-> > > consequence, all functions implemented for `Clk` have to consider thi=
-s.
-> >=20
-> > I am a bit confused here. If NULL is valid, then why should we have to =
-specifically
-> > consider that in the functions? No functions so far explicitly derefere=
-nces that value,
-> > they only pass it to the clk framework.
->=20
-> This was badly phrased, the current implementation does not need to consi=
-der it
-> indeed. What I meant is that we have to consider it potentially. Especial=
-ly,
-> when adding new functionality later on. For instance, when accessing fiel=
-ds of
-> struct clk directly.=20
+Makes setup_arch() a bit easier to comprehend.
 
-Just a drive-by comment - the current implementation will never have
-a NULL clock anyways. That is only returned by the clk_get functions
-with the _optional() suffix. You are right now only using clk_get(),
-which will instead returns ERR_PTR(-ENOENT).
+No functional changes.
 
-> Maybe this only becomes relevant once we write a clk driver itself
-> in Rust, but still.
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20250214090651.3331663-3-rppt@kernel.org
+---
+ arch/x86/kernel/setup.c | 36 ++++++++++++++++++++++--------------
+ 1 file changed, 22 insertions(+), 14 deletions(-)
 
-For a clock provider implementation you will mainly use 'struct
-clk_hw', which is different from 'struct clk'.
-
-Greetings,
-
--- Sebastian
-
---k3zauxydw4h5jdhh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAme4m4cACgkQ2O7X88g7
-+prYUQ//f59hToVXMAIGJ333jfHjvWUJFxssHgqDUIQPMSlxxpg9H6v8PiiZeIQf
-wFMPxKupdjH8J97e5hZy0U4NLVwDvj/RzyBPObVtV1f1/1RF2l4dp/gLqj25Hx3u
-zl2ZZhIFQRcfpbawE2FE10Dlk0Yswehiw5wB8HAbdHusjCzSFCZRkt51mEorFpPd
-7IwV/f+lpUgXueohG8JWVoQk2SsW0BOlsvZ3CMv6BuTtFfNDDUubEwja6ZzxV8ZW
-bRdUfEWnQuEd5ukSn39azfQ8obRwEJsmwuennHY0IR699PJIpPNqhCq5p7G6ldSy
-VsirllZ9OX4H2hR0PExn28VX6E6cln3vWlmh3Cw7zIwfaa6FvGL8hY75HkH+IEOq
-bOolzIJAcgTsqb9IFAbsCbPEl4OII87eBf6pABL8DSKnhFzu9KfNYvSKGhCiAiqe
-rHCsX2kElQud5R186pkoDKPNdfQEPuMFUa6eDt465hHP+fKbZ6Oso8PaRxZ8mGCw
-PeCwR5uKVhr7UQCPosrKRRJEZWBiP7lf3wE7TIPEYKl3sZyl8PW5mRUUt+mrIXs9
-AasBjvmHLzVm/TrAYop8vUx8Gcz9GiKKkGNVTTZ3ATvQoeyIyGa3rbxB5wRuynGt
-opY/3Sm3EjAObQTfAnMH5/A9CYnGSpwZtYdY01QxD0hPzZb2uNU=
-=khOL
------END PGP SIGNATURE-----
-
---k3zauxydw4h5jdhh--
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 4baadea..3d95946 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -527,6 +527,23 @@ void __init reserve_standard_io_resources(void)
+ 
+ }
+ 
++static void __init setup_kernel_resources(void)
++{
++	code_resource.start = __pa_symbol(_text);
++	code_resource.end = __pa_symbol(_etext)-1;
++	rodata_resource.start = __pa_symbol(__start_rodata);
++	rodata_resource.end = __pa_symbol(__end_rodata)-1;
++	data_resource.start = __pa_symbol(_sdata);
++	data_resource.end = __pa_symbol(_edata)-1;
++	bss_resource.start = __pa_symbol(__bss_start);
++	bss_resource.end = __pa_symbol(__bss_stop)-1;
++
++	insert_resource(&iomem_resource, &code_resource);
++	insert_resource(&iomem_resource, &rodata_resource);
++	insert_resource(&iomem_resource, &data_resource);
++	insert_resource(&iomem_resource, &bss_resource);
++}
++
+ static bool __init snb_gfx_workaround_needed(void)
+ {
+ #ifdef CONFIG_PCI
+@@ -845,15 +862,6 @@ void __init setup_arch(char **cmdline_p)
+ 		root_mountflags &= ~MS_RDONLY;
+ 	setup_initial_init_mm(_text, _etext, _edata, (void *)_brk_end);
+ 
+-	code_resource.start = __pa_symbol(_text);
+-	code_resource.end = __pa_symbol(_etext)-1;
+-	rodata_resource.start = __pa_symbol(__start_rodata);
+-	rodata_resource.end = __pa_symbol(__end_rodata)-1;
+-	data_resource.start = __pa_symbol(_sdata);
+-	data_resource.end = __pa_symbol(_edata)-1;
+-	bss_resource.start = __pa_symbol(__bss_start);
+-	bss_resource.end = __pa_symbol(__bss_stop)-1;
+-
+ 	/*
+ 	 * x86_configure_nx() is called before parse_early_param() to detect
+ 	 * whether hardware doesn't support NX (so that the early EHCI debug
+@@ -897,11 +905,11 @@ void __init setup_arch(char **cmdline_p)
+ 	tsc_early_init();
+ 	x86_init.resources.probe_roms();
+ 
+-	/* after parse_early_param, so could debug it */
+-	insert_resource(&iomem_resource, &code_resource);
+-	insert_resource(&iomem_resource, &rodata_resource);
+-	insert_resource(&iomem_resource, &data_resource);
+-	insert_resource(&iomem_resource, &bss_resource);
++	/*
++	 * Add resources for kernel text and data to the iomem_resource.
++	 * Do it after parse_early_param, so it can be debugged.
++	 */
++	setup_kernel_resources();
+ 
+ 	e820_add_kernel_range();
+ 	trim_bios_range();
