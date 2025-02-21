@@ -1,293 +1,270 @@
-Received: from server.wki.vra.mybluehostin.me (server.wki.vra.mybluehostin.me [162.240.238.73])
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD0E1FFC5E;
-	Fri, 21 Feb 2025 12:32:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.238.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18242205AC0;
+	Fri, 21 Feb 2025 12:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740141175; cv=none; b=gG4CmYOO8eyYZffnoh/srr+vDLlB0FvLgOLBsBLQc0+ys0q94qlcbHYZDTxnOyVGERch3TOscD78lvwLE2vWAdgnhRT2YVlhuOAzdL1+0xNag9j6+uD2xVnZ6PlR8sqXO1vZwDPieHUTvYmoROWe/wtSCKdRCfPTGH+qL/5bvJg=
+	t=1740141184; cv=none; b=V4VKF5DV/5dWO/b6QsiVD84yPfzZkAjokae98kdIEOqywCxNdJaS3bDUPn/ASE6bMIJ3K3CRi/mnJ32ThnwnMNnBkN+j/SSwyye147jnLT+gBMjpsHf3Y8sDxmjvSiLkENZ1LLWonoLL8y3p6JkQDPjtgIzi5JJg7dsPpFOERYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740141175; c=relaxed/simple;
-	bh=UvuNzrjWzUCNXqNxslrELogG9BuyJy742ODapOuk9M8=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=srN9LOuptak/3jKtHNQJ7wGWLOcArmJE0nyykua/gnCJeVqk1G/E4N2bO6P8tMA3Bzs+h7KIN6y0m4XOXgY1y6c4/Nxb6gHqfj+1u0UqdhOa1Ak2PJu/WEHSSLVqm2ZDlDNFN+rA7gnyo1hFLkxJ3IbbivQvZIk2qD6c4ZKgxNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=q8Fu59eo; arc=none smtp.client-ip=162.240.238.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="q8Fu59eo"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
-	; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:
-	References:In-Reply-To:Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=EePyCqMIhGKqIC1G3UvKUVRy6wdzao/mm6Xcy0Z4PeM=; b=q8Fu59eoITJ4uwVAHCv+k4jSk+
-	2uQj7IaWVfvVk5alcCSqyuvyE1eXqZifmZKnMomhSIMwj0w0jUeNztLwllN2z8mxbPSMeaQeisSNG
-	DnSYr3hqgQaRw1xSilPXAxPXZKSalyO7zeb3O71lzfZN0UjStGCp9vdhCPera5rF11P1zIDfuzwfR
-	qTYKMIRPJTIA5TtNXT2jXD4nXmmkRdqOtjCTE7BX+3YHchuMm1XGzVoFUu0N57YIrjXHEhS8t/Zao
-	9e7NG7xRF3YIZhNpJEVwgxvxhWgD4v1MwjKTPrFa7bdRDm5kCSUkoA80WloMkplmvjkzSRMTLXGvl
-	gtGqpCyg==;
-Received: from [122.175.9.182] (port=49585 helo=zimbra.couthit.local)
-	by server.wki.vra.mybluehostin.me with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <parvathi@couthit.com>)
-	id 1tlSCu-0002Su-1z;
-	Fri, 21 Feb 2025 18:02:41 +0530
-Received: from zimbra.couthit.local (localhost [127.0.0.1])
-	by zimbra.couthit.local (Postfix) with ESMTPS id 2EA9B178215A;
-	Fri, 21 Feb 2025 18:02:33 +0530 (IST)
-Received: from localhost (localhost [127.0.0.1])
-	by zimbra.couthit.local (Postfix) with ESMTP id 0A48A178247D;
-	Fri, 21 Feb 2025 18:02:33 +0530 (IST)
-Received: from zimbra.couthit.local ([127.0.0.1])
-	by localhost (zimbra.couthit.local [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id M0wu_t15pFmA; Fri, 21 Feb 2025 18:02:32 +0530 (IST)
-Received: from zimbra.couthit.local (zimbra.couthit.local [10.10.10.103])
-	by zimbra.couthit.local (Postfix) with ESMTP id C198D178215A;
-	Fri, 21 Feb 2025 18:02:32 +0530 (IST)
-Date: Fri, 21 Feb 2025 18:02:32 +0530 (IST)
-From: Parvathi Pudi <parvathi@couthit.com>
-To: robh <robh@kernel.org>
-Cc: parvathi <parvathi@couthit.com>, danishanwar <danishanwar@ti.com>, 
-	rogerq <rogerq@kernel.org>, andrew+netdev <andrew+netdev@lunn.ch>, 
-	davem <davem@davemloft.net>, edumazet <edumazet@google.com>, 
-	kuba <kuba@kernel.org>, pabeni <pabeni@redhat.com>, 
-	krzk+dt <krzk+dt@kernel.org>, conor+dt <conor+dt@kernel.org>, 
-	nm <nm@ti.com>, ssantosh <ssantosh@kernel.org>, 
-	richardcochran <richardcochran@gmail.com>, 
-	basharath <basharath@couthit.com>, schnelle <schnelle@linux.ibm.com>, 
-	diogo ivo <diogo.ivo@siemens.com>, 
-	m-karicheri2 <m-karicheri2@ti.com>, horms <horms@kernel.org>, 
-	jacob e keller <jacob.e.keller@intel.com>, 
-	m-malladi <m-malladi@ti.com>, 
-	javier carrasco cruz <javier.carrasco.cruz@gmail.com>, 
-	afd <afd@ti.com>, s-anna <s-anna@ti.com>, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	netdev <netdev@vger.kernel.org>, 
-	devicetree <devicetree@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	pratheesh <pratheesh@ti.com>, Prajith Jayarajan <prajith@ti.com>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, praneeth <praneeth@ti.com>, 
-	srk <srk@ti.com>, rogerq <rogerq@ti.com>, 
-	krishna <krishna@couthit.com>, pmohan <pmohan@couthit.com>, 
-	mohan <mohan@couthit.com>
-Message-ID: <1240320242.634119.1740141152414.JavaMail.zimbra@couthit.local>
-In-Reply-To: <20250219225130.GA3107198-robh@kernel.org>
-References: <20250214054702.1073139-1-parvathi@couthit.com> <20250214054702.1073139-2-parvathi@couthit.com> <20250219225130.GA3107198-robh@kernel.org>
-Subject: Re: [PATCH net-next v3 01/10] dt-bindings: net: ti: Adds DUAL-EMAC
- mode support on PRU-ICSS2 for AM57xx SOCs
+	s=arc-20240116; t=1740141184; c=relaxed/simple;
+	bh=90TfP5jXQYwWBrwIkUpVFfbHBgMZU+TCOG5HjiMhVLE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PJQZDxegfvTylyAu8nLPMQC+AKSrwPbFf85miFJES95TlpxkCHCSDe7gKx/6K540AC6XhrnVSy95FaFEVrBhsmQoO3QdAEzEfdgB6G8m8o0rK0Q9d29Oznbr4s/KaML2rjjl8Tmy7XatA03pTnEIoQEL0VOHqJ+W1vVN3jTY/PY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51LAvePr019431;
+	Fri, 21 Feb 2025 12:32:42 GMT
+Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 44w00kknje-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Fri, 21 Feb 2025 12:32:42 +0000 (GMT)
+Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Fri, 21 Feb 2025 04:32:41 -0800
+Received: from pek-lpd-ccm6.wrs.com (147.11.136.210) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Fri, 21 Feb 2025 04:32:38 -0800
+From: Lizhi Xu <lizhi.xu@windriver.com>
+To: <rafael@kernel.org>
+CC: <len.brown@intel.com>, <linux-kernel@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <lizhi.xu@windriver.com>,
+        <pavel@kernel.org>,
+        <syzbot+ace60642828c074eb913@syzkaller.appspotmail.com>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: Re: [PATCH] module: replace the mutex lock acquisition method
+Date: Fri, 21 Feb 2025 20:32:38 +0800
+Message-ID: <20250221123238.2944525-1-lizhi.xu@windriver.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <CAJZ5v0h38FRwpYeTgw0VKqKVT=RDSrLnSt+31E6i=XOAoCor9w@mail.gmail.com>
+References: <CAJZ5v0h38FRwpYeTgw0VKqKVT=RDSrLnSt+31E6i=XOAoCor9w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.8.15_GA_3968 (ZimbraWebClient - FF113 (Linux)/8.8.15_GA_3968)
-Thread-Topic: dt-bindings: net: ti: Adds DUAL-EMAC mode support on PRU-ICSS2 for AM57xx SOCs
-Thread-Index: /oo/U1rbh8omFI7E9oVZggUetPMfQw==
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.wki.vra.mybluehostin.me
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - couthit.com
-X-Get-Message-Sender-Via: server.wki.vra.mybluehostin.me: authenticated_id: smtp@couthit.com
-X-Authenticated-Sender: server.wki.vra.mybluehostin.me: smtp@couthit.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: LOwDmXSJh5Hsp0p8_NrIwa91q6YAIbJ_
+X-Proofpoint-ORIG-GUID: LOwDmXSJh5Hsp0p8_NrIwa91q6YAIbJ_
+X-Authority-Analysis: v=2.4 cv=BvtnwZX5 c=1 sm=1 tr=0 ts=67b8726a cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=T2h4t0Lz3GQA:10 a=edf1wS77AAAA:8 a=VwQbUJbxAAAA:8 a=hSkVLCK3AAAA:8 a=t7CeM3EgAAAA:8 a=SLfiVI-Nn90k1xSBRfIA:9
+ a=DcSpbTIhAlouE1Uv7lRv:22 a=cQPPKAXgyycSBL8etih5:22 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-21_03,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0 clxscore=1015
+ malwarescore=0 phishscore=0 mlxscore=0 spamscore=0 impostorscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502100000
+ definitions=main-2502210092
 
-
-Hi,
-
-> On Fri, Feb 14, 2025 at 11:16:53AM +0530, parvathi wrote:
->> From: Parvathi Pudi <parvathi@couthit.com>
->> 
->> Documentation update for the newly added "pruss2_eth" device tree
->> node and its dependencies along with compatibility for PRU-ICSS
->> Industrial Ethernet Peripheral (IEP), PRU-ICSS Enhanced Capture
->> (eCAP) peripheral and using YAML binding document for AM57xx SoCs.
->> 
->> Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
->> Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
+On Fri, 21 Feb 2025 12:41:32 +0100, Rafael J. Wysocki" <rafael@kernel.org> wrote:
+> > syzbot reported a deadlock in lock_system_sleep. [1]
+> >
+> > The write operation to "/sys/module/hibernate/parameters/compressor"
+> > conflicts with the registration of ieee80211 device, resulting in a deadlock
+> > in the lock param_lock.
+> >
+> > Since the conflict cannot be avoided, the way to obtain param_lock is changed
+> > to trylock to avoid deadlock.
+> >
+> > [1]
+> > syz-executor895/5833 is trying to acquire lock:
+> > ffffffff8e0828c8 (system_transition_mutex){+.+.}-{4:4}, at: lock_system_sleep+0x87/0xa0 kernel/power/main.c:56
+> >
+> > but task is already holding lock:
+> > ffffffff8e07dc68 (param_lock){+.+.}-{4:4}, at: kernel_param_lock kernel/params.c:607 [inline]
+> > ffffffff8e07dc68 (param_lock){+.+.}-{4:4}, at: param_attr_store+0xe6/0x300 kernel/params.c:586
+> >
+> > which lock already depends on the new lock.
+> >
+> >
+> > the existing dependency chain (in reverse order) is:
+> >
+> > -> #3 (param_lock){+.+.}-{4:4}:
+> >        __mutex_lock_common kernel/locking/mutex.c:585 [inline]
+> >        __mutex_lock+0x19b/0xb10 kernel/locking/mutex.c:730
+> >        ieee80211_rate_control_ops_get net/mac80211/rate.c:220 [inline]
+> >        rate_control_alloc net/mac80211/rate.c:266 [inline]
+> >        ieee80211_init_rate_ctrl_alg+0x18d/0x6b0 net/mac80211/rate.c:1015
+> >        ieee80211_register_hw+0x20cd/0x4060 net/mac80211/main.c:1531
+> >        mac80211_hwsim_new_radio+0x304e/0x54e0 drivers/net/wireless/virtual/mac80211_hwsim.c:5558
+> >        init_mac80211_hwsim+0x432/0x8c0 drivers/net/wireless/virtual/mac80211_hwsim.c:6910
+> >        do_one_initcall+0x128/0x700 init/main.c:1257
+> >        do_initcall_level init/main.c:1319 [inline]
+> >        do_initcalls init/main.c:1335 [inline]
+> >        do_basic_setup init/main.c:1354 [inline]
+> >        kernel_init_freeable+0x5c7/0x900 init/main.c:1568
+> >        kernel_init+0x1c/0x2b0 init/main.c:1457
+> >        ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:148
+> >        ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+> >
+> > -> #2 (rtnl_mutex){+.+.}-{4:4}:
+> >        __mutex_lock_common kernel/locking/mutex.c:585 [inline]
+> >        __mutex_lock+0x19b/0xb10 kernel/locking/mutex.c:730
+> >        wg_pm_notification drivers/net/wireguard/device.c:80 [inline]
+> >        wg_pm_notification+0x49/0x180 drivers/net/wireguard/device.c:64
+> >        notifier_call_chain+0xb7/0x410 kernel/notifier.c:85
+> >        notifier_call_chain_robust kernel/notifier.c:120 [inline]
+> >        blocking_notifier_call_chain_robust kernel/notifier.c:345 [inline]
+> >        blocking_notifier_call_chain_robust+0xc9/0x170 kernel/notifier.c:333
+> >        pm_notifier_call_chain_robust+0x27/0x60 kernel/power/main.c:102
+> >        snapshot_open+0x189/0x2b0 kernel/power/user.c:77
+> >        misc_open+0x35a/0x420 drivers/char/misc.c:179
+> >        chrdev_open+0x237/0x6a0 fs/char_dev.c:414
+> >        do_dentry_open+0x735/0x1c40 fs/open.c:956
+> >        vfs_open+0x82/0x3f0 fs/open.c:1086
+> >        do_open fs/namei.c:3830 [inline]
+> >        path_openat+0x1e88/0x2d80 fs/namei.c:3989
+> >        do_filp_open+0x20c/0x470 fs/namei.c:4016
+> >        do_sys_openat2+0x17a/0x1e0 fs/open.c:1428
+> >        do_sys_open fs/open.c:1443 [inline]
+> >        __do_sys_openat fs/open.c:1459 [inline]
+> >        __se_sys_openat fs/open.c:1454 [inline]
+> >        __x64_sys_openat+0x175/0x210 fs/open.c:1454
+> >        do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+> >        do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+> >        entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> >
+> > -> #1 ((pm_chain_head).rwsem){++++}-{4:4}:
+> >        down_read+0x9a/0x330 kernel/locking/rwsem.c:1524
+> >        blocking_notifier_call_chain_robust kernel/notifier.c:344 [inline]
+> >        blocking_notifier_call_chain_robust+0xa9/0x170 kernel/notifier.c:333
+> >        pm_notifier_call_chain_robust+0x27/0x60 kernel/power/main.c:102
+> >        snapshot_open+0x189/0x2b0 kernel/power/user.c:77
+> >        misc_open+0x35a/0x420 drivers/char/misc.c:179
+> >        chrdev_open+0x237/0x6a0 fs/char_dev.c:414
+> >        do_dentry_open+0x735/0x1c40 fs/open.c:956
+> >        vfs_open+0x82/0x3f0 fs/open.c:1086
+> >        do_open fs/namei.c:3830 [inline]
+> >        path_openat+0x1e88/0x2d80 fs/namei.c:3989
+> >        do_filp_open+0x20c/0x470 fs/namei.c:4016
+> >        do_sys_openat2+0x17a/0x1e0 fs/open.c:1428
+> >        do_sys_open fs/open.c:1443 [inline]
+> >        __do_sys_openat fs/open.c:1459 [inline]
+> >        __se_sys_openat fs/open.c:1454 [inline]
+> >        __x64_sys_openat+0x175/0x210 fs/open.c:1454
+> >        do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+> >        do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+> >        entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> >
+> > -> #0 (system_transition_mutex){+.+.}-{4:4}:
+> >        check_prev_add kernel/locking/lockdep.c:3163 [inline]
+> >        check_prevs_add kernel/locking/lockdep.c:3282 [inline]
+> >        validate_chain kernel/locking/lockdep.c:3906 [inline]
+> >        __lock_acquire+0x249e/0x3c40 kernel/locking/lockdep.c:5228
+> >        lock_acquire.part.0+0x11b/0x380 kernel/locking/lockdep.c:5851
+> >        __mutex_lock_common kernel/locking/mutex.c:585 [inline]
+> >        __mutex_lock+0x19b/0xb10 kernel/locking/mutex.c:730
+> >        lock_system_sleep+0x87/0xa0 kernel/power/main.c:56
+> >        hibernate_compressor_param_set+0x1c/0x210 kernel/power/hibernate.c:1452
+> >        param_attr_store+0x18f/0x300 kernel/params.c:588
+> >        module_attr_store+0x55/0x80 kernel/params.c:924
+> >        sysfs_kf_write+0x117/0x170 fs/sysfs/file.c:139
+> >        kernfs_fop_write_iter+0x33d/0x500 fs/kernfs/file.c:334
+> >        new_sync_write fs/read_write.c:586 [inline]
+> >        vfs_write+0x5ae/0x1150 fs/read_write.c:679
+> >        ksys_write+0x12b/0x250 fs/read_write.c:731
+> >        do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+> >        do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+> >        entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> >
+> > other info that might help us debug this:
+> >
+> > Chain exists of:
+> >   system_transition_mutex --> rtnl_mutex --> param_lock
+> >
+> >  Possible unsafe locking scenario:
+> >
+> >        CPU0                    CPU1
+> >        ----                    ----
+> >   lock(param_lock);
+> >                                lock(rtnl_mutex);
+> >                                lock(param_lock);
+> >   lock(system_transition_mutex);
+> >
+> >  *** DEADLOCK ***
+> >
+> > Reported-by: syzbot+ace60642828c074eb913@syzkaller.appspotmail.com
+> > Closes: https://syzkaller.appspot.com/bug?extid=ace60642828c074eb913
+> > Tested-by: syzbot+ace60642828c074eb913@syzkaller.appspotmail.com
+> > Signed-off-by: Lizhi Xu <lizhi.xu@windriver.com>
+> > ---
+> >  include/linux/moduleparam.h | 4 ++++
+> >  kernel/params.c             | 9 ++++++++-
+> >  net/mac80211/rate.c         | 4 +++-
+> >  3 files changed, 15 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/include/linux/moduleparam.h b/include/linux/moduleparam.h
+> > index bfb85fd13e1f..cbcbfd8db721 100644
+> > --- a/include/linux/moduleparam.h
+> > +++ b/include/linux/moduleparam.h
+> > @@ -306,11 +306,15 @@ struct kparam_array
+> >
+> >  #ifdef CONFIG_SYSFS
+> >  extern void kernel_param_lock(struct module *mod);
+> > +extern int kernel_param_trylock(struct module *mod);
+> >  extern void kernel_param_unlock(struct module *mod);
+> >  #else
+> >  static inline void kernel_param_lock(struct module *mod)
+> >  {
+> >  }
+> > +static inline int kernel_param_trylock(struct module *mod)
+> > +{
+> > +}
+> >  static inline void kernel_param_unlock(struct module *mod)
+> >  {
+> >  }
+> > diff --git a/kernel/params.c b/kernel/params.c
+> > index 0074d29c9b80..d19881fbb2ec 100644
+> > --- a/kernel/params.c
+> > +++ b/kernel/params.c
+> > @@ -583,7 +583,9 @@ static ssize_t param_attr_store(const struct module_attribute *mattr,
+> >         if (!attribute->param->ops->set)
+> >                 return -EPERM;
+> >
+> > -       kernel_param_lock(mk->mod);
+> > +       if (!kernel_param_trylock(mk->mod))
+> > +               return -EPERM;
 > 
-> The sender of the patch S-o-b goes last. And maybe you want a
-> Co-developed-by tag here too?
+> -EAGAIN would be better I think?
+Agree, -EAGAIN is more clear.
+I will send a V2 patch to use -EAGAIN.
 > 
-
-Yes, you are correct. We will address this in the next version.
-
->> ---
->>  .../devicetree/bindings/net/ti,icss-iep.yaml  |   4 +-
->>  .../bindings/net/ti,icssm-prueth.yaml         | 147 ++++++++++++++++++
->>  .../bindings/net/ti,pruss-ecap.yaml           |  32 ++++
->>  .../devicetree/bindings/soc/ti/ti,pruss.yaml  |   9 ++
->>  4 files changed, 191 insertions(+), 1 deletion(-)
->>  create mode 100644 Documentation/devicetree/bindings/net/ti,icssm-prueth.yaml
->>  create mode 100644 Documentation/devicetree/bindings/net/ti,pruss-ecap.yaml
->> 
->> diff --git a/Documentation/devicetree/bindings/net/ti,icss-iep.yaml
->> b/Documentation/devicetree/bindings/net/ti,icss-iep.yaml
->> index e36e3a622904..858d74638167 100644
->> --- a/Documentation/devicetree/bindings/net/ti,icss-iep.yaml
->> +++ b/Documentation/devicetree/bindings/net/ti,icss-iep.yaml
->> @@ -8,6 +8,8 @@ title: Texas Instruments ICSS Industrial Ethernet Peripheral
->> (IEP) module
->>  
->>  maintainers:
->>    - Md Danish Anwar <danishanwar@ti.com>
->> +  - Parvathi Pudi <parvathi@couthit.com>
->> +  - Basharath Hussain Khaja <basharath@couthit.com>
->>  
->>  properties:
->>    compatible:
->> @@ -19,7 +21,7 @@ properties:
->>            - const: ti,am654-icss-iep
->>  
->>        - const: ti,am654-icss-iep
->> -
->> +      - const: ti,am5728-icss-iep
-> 
-> Use enum adding to the prior entry.
-> 
-
-We will check whether we can use "enum" for 2 consts and address
-this in the next version.
-
->>  
->>    reg:
->>      maxItems: 1
->> diff --git a/Documentation/devicetree/bindings/net/ti,icssm-prueth.yaml
->> b/Documentation/devicetree/bindings/net/ti,icssm-prueth.yaml
->> new file mode 100644
->> index 000000000000..1dffa6bd7a88
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/ti,icssm-prueth.yaml
->> @@ -0,0 +1,147 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/net/ti,icssm-prueth.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Texas Instruments ICSSM PRUSS Ethernet
->> +
->> +maintainers:
->> +  - Roger Quadros <rogerq@ti.com>
->> +  - Andrew F. Davis <afd@ti.com>
->> +  - Parvathi Pudi <parvathi@couthit.com>
->> +  - Basharath Hussain Khaja <basharath@couthit.com>
->> +
->> +description:
->> +  Ethernet based on the Programmable Real-Time Unit and Industrial
->> +  Communication Subsystem.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - ti,am57-prueth     # for AM57x SoC family
->> +
->> +  sram:
->> +    $ref: /schemas/types.yaml#/definitions/phandle
->> +    description:
->> +      phandle to OCMC SRAM node
->> +
->> +  ti,mii-rt:
->> +    $ref: /schemas/types.yaml#/definitions/phandle
->> +    description:
->> +      phandle to MII_RT module's syscon regmap
->> +
->> +  ti,iep:
->> +    $ref: /schemas/types.yaml#/definitions/phandle
->> +    description:
->> +      phandle to IEP (Industrial Ethernet Peripheral) for ICSS
->> +
->> +  ti,ecap:
->> +    $ref: /schemas/types.yaml#/definitions/phandle
->> +    description:
->> +      phandle to Enhanced Capture (eCAP) event for ICSS
->> +
->> +  interrupts:
->> +    items:
->> +      - description: High priority Rx Interrupt specifier.
->> +      - description: Low priority Rx Interrupt specifier.
->> +
->> +  interrupt-names:
->> +    items:
->> +      - const: rx_hp
->> +      - const: rx_lp
->> +
->> +  ethernet-ports:
->> +    type: object
->> +    additionalProperties: false
->> +
->> +    properties:
->> +      '#address-cells':
->> +        const: 1
->> +      '#size-cells':
->> +        const: 0
->> +
->> +    patternProperties:
->> +      ^ethernet-port@[0-1]$:
->> +        type: object
->> +        description: ICSSM PRUETH external ports
->> +        $ref: ethernet-controller.yaml#
->> +        unevaluatedProperties: false
->> +
->> +        properties:
->> +          reg:
->> +            items:
->> +              - enum: [0, 1]
->> +            description: ICSSM PRUETH port number
->> +
->> +          interrupts:
->> +            maxItems: 3
->> +
->> +          interrupt-names:
->> +            items:
->> +              - const: rx
->> +              - const: emac_ptp_tx
->> +              - const: hsr_ptp_tx
->> +
->> +        required:
->> +          - reg
->> +
->> +    anyOf:
->> +      - required:
->> +          - ethernet-port@0
->> +      - required:
->> +          - ethernet-port@1
->> +
->> +required:
->> +  - compatible
->> +  - sram
->> +  - ti,mii-rt
->> +  - ti,iep
->> +  - ti,ecap
->> +  - ethernet-ports
->> +  - interrupts
->> +  - interrupt-names
->> +
->> +allOf:
->> +  - $ref: /schemas/remoteproc/ti,pru-consumer.yaml#
->> +
->> +unevaluatedProperties: false
->> +
->> +examples:
->> +  - |
->> +    /* Dual-MAC Ethernet application node on PRU-ICSS2 */
->> +    pruss2_eth: pruss2-eth {
-> 
-> Drop unused labels.
-> 
-
-We did verified and all the labels were appropriately used,
-could you point us to the exact label you are referring to.
-
-
-Thanks and Regards,
-Parvathi.
-
-
+> > +
+> >         if (param_check_unsafe(attribute->param))
+> >                 err = attribute->param->ops->set(buf, attribute->param);
+> >         else
+> > @@ -607,6 +609,11 @@ void kernel_param_lock(struct module *mod)
+> >         mutex_lock(KPARAM_MUTEX(mod));
+> >  }
+> >
+> > +int kernel_param_trylock(struct module *mod)
+> > +{
+> > +       return mutex_trylock(KPARAM_MUTEX(mod));
+> > +}
+> > +
+> >  void kernel_param_unlock(struct module *mod)
+> >  {
+> >         mutex_unlock(KPARAM_MUTEX(mod));
+> > diff --git a/net/mac80211/rate.c b/net/mac80211/rate.c
+> > index 0d056db9f81e..aecf7ff51cd9 100644
+> > --- a/net/mac80211/rate.c
+> > +++ b/net/mac80211/rate.c
+> > @@ -217,7 +217,9 @@ ieee80211_rate_control_ops_get(const char *name)
+> >         const struct rate_control_ops *ops;
+> >         const char *alg_name;
+> >
+> > -       kernel_param_lock(THIS_MODULE);
+> > +       if (!kernel_param_trylock(THIS_MODULE))
+> > +               return NULL;
+> > +
+> >         if (!name)
+> >                 alg_name = ieee80211_default_rc_algo;
+> >         else
+> > --
