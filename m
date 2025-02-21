@@ -1,147 +1,238 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B25C7080D;
-	Fri, 21 Feb 2025 01:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E103594E;
+	Fri, 21 Feb 2025 01:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740099851; cv=none; b=YMCpn3K5fqw+mUET+PHD6KEzvZRhH8v41Vj3FWEynhTP1l5lO+A6HE3VOZyx3Bfn6HoaPYfduaIxpwrIEqTtye3klilnfJIKmMQ3vklG3AKLaC+SrX45VXHtvr1gM3Fj/NQYX2PIJx01igquqjyWKg8G+223gvkeEZXbxAMtwv4=
+	t=1740100058; cv=none; b=kUsaJjuh9rxBgshJRQEfiQgYEm7ojUCUgEUeeWM3//S4kQEcfwqHivW5bloFkhHLzpIK5tRy2Z03sFe2j0hNll34r1h5+UwS970JYlWHa7GCgPBlBEnMEELbVLbOt5+AzV8LMUfWbLXOPDF2dvOVriFTzLI1IWbSNE5m7CnCU6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740099851; c=relaxed/simple;
-	bh=XDOcSSu0rDcbE3pPzb8t2eP2JuFEMVZB5io3X9ORrmE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=adixGZaSfFSSfODsNzEusqMylpu4Gs81xzicGTx/0eNGXSty32X7O+3brbVr1eLlH8REXggQGSSgKdbNKQjkDe4eLCBBOXjOvDFribgbALXHRjXDtNDVLL7+tgzo2bKvbfhlV89LJSGi/kl0D378umDZvsVeFCMOIKX/mIamGR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uyc25Qeo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740100058; c=relaxed/simple;
+	bh=2g8oNieasSQT1QPvU7TEQo0RSe+QF1XO8YP8P7wA2co=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fBEwqboYJAOyzADo7JNiSl/Ge24WFbHy/u6q61zOpkDAEwPs1eLxSzn44oMhggB/BpkGYokti0C5E31mX3bD4TQARM4r7fH4Tewh4PjzGbknMmVByE75jDLEZHocytuAWTGJ2KeiIizs4yqZFr5YadVvPPSldgDAO8lRTFnTASo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IMITTjhB; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uyc25Qeo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6033CC4CED1;
-	Fri, 21 Feb 2025 01:04:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740099850;
-	bh=XDOcSSu0rDcbE3pPzb8t2eP2JuFEMVZB5io3X9ORrmE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=uyc25QeobqYnzKDgAhcZ9cLZwGYw/jAYJpZBhYLRSFQeAGzVa6tuuqlHMtvJt2NWc
-	 u8hJPnbQkE2bkB5l0vE9t2vQ/Canbq6h3d2haPKU6LbrAnhiCDXuO31z7GDrSrsN0n
-	 fQBeTaCUmQGIajV80zqhSA3G52FSksAHegUimUDEy0hgxwLQEZ0vy5EnHIFIV8/O2x
-	 MmSfGckrhP7SFZhzxQeuP66+bSEU69oJJgO9tB+e9hPQtOcdTanG1hZ+5PVfCLSFlL
-	 rIBT2+JcKr6f4VuDVDAKjkvfEUCg0SPb7Ng5tCGHqPdn2PLV0JkMIq7JYqjgPxAWVr
-	 1yMN2K8NuMQpw==
-Date: Thu, 20 Feb 2025 17:04:09 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Kevin Krakauer <krakauer@google.com>
-Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
- Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Shuah Khan
- <shuah@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests/net: deflake GRO tests and fix return value
- and output
-Message-ID: <20250220170409.42cce424@kernel.org>
-In-Reply-To: <20250218164555.1955400-1-krakauer@google.com>
-References: <20250218164555.1955400-1-krakauer@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IMITTjhB"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2fcc99efe9bso2509765a91.2;
+        Thu, 20 Feb 2025 17:07:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740100056; x=1740704856; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xoj4+GfmmJXx597AEiArFiq+jfsACOsOdKSiW+SWgWI=;
+        b=IMITTjhBFmOVXEqWOTUM4k083NOEVYPO8FXVgRKhEFCYifyoZnXKQLr6B+z1Qr19tt
+         o9enzdNeuFhRdIUWq9i0Kk43QDQ7j+HU1PkW8Q+8/lX+ZNiwi5jm7oNqqZVBzNwFnnHd
+         EU+e4lMUBdolM4e51HTWKBD1JHVNcOOWFwKzjj4lglJo0uEi1SeAIlixmpPo4cGAFL1Z
+         HoAffTx5dIj1Ty6ziuvf+eBuIf8X39BmsOoxaIzjUDljEVazMrhg2QgMZjnGobQcBs1/
+         Kzzri32gPrxolGvQR2Pzu8kOHIlNEqOfKR0eTikdlzrqnmvkT1wFSjvT+2kd3Ud+JP+o
+         H/pA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740100056; x=1740704856;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xoj4+GfmmJXx597AEiArFiq+jfsACOsOdKSiW+SWgWI=;
+        b=lKYqNmG8Ia8qctFBDu6KykUsxv9HTU9TrXwl7ux7llakDnlJUkM7nOL54LnNMcp4I2
+         3LBPK4aWlXNYeKaBuREz+WvJOf15xW6pX14E485BuJzmdkW56hp1HNy2bCoOLEB6tHhh
+         ZdDVPG70nMfKrfUPNOoqBvVFXGSasM68pKZfgh7kNOkvlRDrNRztlSzOF9p3c1Z00HNq
+         jHeOqyfwgS584IZuq6Wzo+B9XuMAl4IGh2uwyOGdPzkpVC1Tdd4z0PjFMq+k/61N+gMN
+         4xItvO5LvriZsftakW1bFIsw/QoWPEZS9IJTg8z+cswagNU0PqgUtlIMEl7sv9Ft9jsX
+         IqwA==
+X-Forwarded-Encrypted: i=1; AJvYcCURePCSR4VIpRwoRcOttEQjgOAVyVRzPsSGxChSGSjc73vhYs070AuH+51Loh875ByCzMdmgFfXUsCTVuel@vger.kernel.org, AJvYcCVxnRkofv9bu1YqXdKMY/j8zRmCldqg9/B0Y3k+dnWvR/oc+zEG9lFEPsmHfiYS3C7ROrI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSaiFBbM455QyMteeBuuUERYb4zhXsJNVvrcGzixNCUE7E3e56
+	P/ZJKXrSLoz3deHfclVnWRUyUxH+saFu2I589AvU5NqR5ga5vIz8QFOFmLXkbQCW1Xe97sP6TzE
+	ygvulIIOv7NGtCwEHVoxLNGlQU/0=
+X-Gm-Gg: ASbGnctHouebHjWvfbn+Ih+XfRvgUR8GJBqQ934EvX6jtsT+MHMdgy/bGFWSGZgsKUS
+	KRh0q/GNAnH4xulwd6Upo0cAbsR9RPs8CiQdk3La8ZnYdoPT7Ne7QqUHIYZs5LLYe9GMTGtfmGX
+	JGNTQfmEac2rW6
+X-Google-Smtp-Source: AGHT+IE1x5MV8fPXVRSn8nvItza1FwLhDZR/wmkfbON5BEbuV+Qy5Rdnel/iXrp2rYviXo5ZN56X5Q3o0So8P6HOjK4=
+X-Received: by 2002:a17:90b:5201:b0:2ee:c6c8:d89f with SMTP id
+ 98e67ed59e1d1-2fce86af0b9mr1721474a91.14.1740100055928; Thu, 20 Feb 2025
+ 17:07:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20250212153912.24116-1-chen.dylane@gmail.com> <2b025df3-144b-4909-a2b4-66356540f71c@gmail.com>
+ <598a7d089936b18472937679d4131286f102cb18.camel@gmail.com>
+In-Reply-To: <598a7d089936b18472937679d4131286f102cb18.camel@gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 20 Feb 2025 17:07:24 -0800
+X-Gm-Features: AWEUYZklNpNYJotUClQoF-3pgJL_VeYuQKw0D528FsdEtUwuATrGIy81FBXFwvQ
+Message-ID: <CAEf4BzYsGnhmnhkHdUPN8yBfbv57R9h4N2R8RcqdjhmHWvJVkg@mail.gmail.com>
+Subject: Re: [PATCH RESEND bpf-next v7 0/4] Add prog_kfunc feature probe
+To: Eduard Zingerman <eddyz87@gmail.com>
+Cc: Tao Chen <chen.dylane@gmail.com>, ast@kernel.org, daniel@iogearbox.net, 
+	andrii@kernel.org, haoluo@google.com, jolsa@kernel.org, qmo@kernel.org, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 18 Feb 2025 08:45:55 -0800 Kevin Krakauer wrote:
-> GRO tests are timing dependent and can easily flake. This is partially
-> mitigated in gro.sh by giving each subtest 3 chances to pass. However,
-> this still flakes on some machines.
+On Tue, Feb 18, 2025 at 2:51=E2=80=AFPM Eduard Zingerman <eddyz87@gmail.com=
+> wrote:
+>
+> On Mon, 2025-02-17 at 13:21 +0800, Tao Chen wrote:
+> > =E5=9C=A8 2025/2/12 23:39, Tao Chen =E5=86=99=E9=81=93:
+> > > More and more kfunc functions are being added to the kernel.
+> > > Different prog types have different restrictions when using kfunc.
+> > > Therefore, prog_kfunc probe is added to check whether it is supported=
+,
+> > > and the use of this api will be added to bpftool later.
+> > >
+> > > Change list:
+> > > - v6 -> v7:
+> > >    - wrap err with libbpf_err
+> > >    - comments fix
+> > >    - handle btf_fd < 0 as vmlinux
+> > >    - patchset Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+> > > - v6
+> > >    https://lore.kernel.org/bpf/20250211111859.6029-1-chen.dylane@gmai=
+l.com
+> > >
+> > > - v5 -> v6:
+> > >    - remove fd_array_cnt
+> > >    - test case clean code
+> > > - v5
+> > >    https://lore.kernel.org/bpf/20250210055945.27192-1-chen.dylane@gma=
+il.com
+> > >
+> > > - v4 -> v5:
+> > >    - use fd_array on stack
+> > >    - declare the scope of use of btf_fd
+> > > - v4
+> > >    https://lore.kernel.org/bpf/20250206051557.27913-1-chen.dylane@gma=
+il.com/
+> > >
+> > > - v3 -> v4:
+> > >    - add fd_array init for kfunc in mod btf
+> > >    - add test case for kfunc in mod btf
+> > >    - refactor common part as prog load type check for
+> > >      libbpf_probe_bpf_{helper,kfunc}
+> > > - v3
+> > >    https://lore.kernel.org/bpf/20250124144411.13468-1-chen.dylane@gma=
+il.com
+> > >
+> > > - v2 -> v3:
+> > >    - rename parameter off with btf_fd
+> > >    - extract the common part for libbpf_probe_bpf_{helper,kfunc}
+> > > - v2
+> > >    https://lore.kernel.org/bpf/20250123170555.291896-1-chen.dylane@gm=
+ail.com
+> > >
+> > > - v1 -> v2:
+> > >    - check unsupported prog type like probe_bpf_helper
+> > >    - add off parameter for module btf
+> > >    - check verifier info when kfunc id invalid
+> > > - v1
+> > >    https://lore.kernel.org/bpf/20250122171359.232791-1-chen.dylane@gm=
+ail.com
+> > >
+> > > Tao Chen (4):
+> > >    libbpf: Extract prog load type check from libbpf_probe_bpf_helper
+> > >    libbpf: Init fd_array when prog probe load
+> > >    libbpf: Add libbpf_probe_bpf_kfunc API
+> > >    selftests/bpf: Add libbpf_probe_bpf_kfunc API selftests
+> > >
+> > >   tools/lib/bpf/libbpf.h                        |  19 ++-
+> > >   tools/lib/bpf/libbpf.map                      |   1 +
+> > >   tools/lib/bpf/libbpf_probes.c                 |  86 +++++++++++---
+> > >   .../selftests/bpf/prog_tests/libbpf_probes.c  | 111 +++++++++++++++=
++++
+> > >   4 files changed, 201 insertions(+), 16 deletions(-)
+> > >
+> >
+> > Ping...
+> >
+> > Hi Andrii, Eduard,
+> >
+> > I've revised the previous suggestions. Please review it again. Thanks.
+> >
+>
+> I tried the test enumerating all kfuncs in BTF and doing
+> libbpf_probe_bpf_kfunc for BPF_PROG_TYPE_{KPROBE,XDP}.
+> (Source code at the end of the email).
+>
+> The set of kfuncs returned for XDP looks correct.
+> The set of kfuncs returned for KPROBE contains a few incorrect entries:
+> - bpf_xdp_metadata_rx_hash
+> - bpf_xdp_metadata_rx_timestamp
+> - bpf_xdp_metadata_rx_vlan_tag
+>
+> This is because of a different string reported by verifier for these
+> three functions.
+>
+> Ideally, I'd write some script looking for
+> register_btf_kfunc_id_set(BPF_PROG_TYPE_***, kfunc_set)
+> calls in the kernel source code and extracting the prog type /
+> functions in the set, and comparing results of this script with
+> output of the test below for all program types.
+> But up to you if you'd like to do such rigorous verification or not.
+>
+> Otherwise patch-set looks good to me, for all patch-set:
+>
+> Reviewed-by: Eduard Zingerman <eddyz87@gmail.com>
 
-To be clear - are you running this over veth or a real device?
+Shouldn't we fix the issue with those bpf_xdp_metadata_* kfuncs? Do
+you have details on what different string verifier reports?
 
-> Set the device's napi_defer_hard_irqs to 50 so that GRO is less likely
-> to immediately flush. This already happened in setup_loopback.sh, but
-> wasn't added to setup_veth.sh. This accounts for most of the reduction
-> in flakiness.
-
-That doesn't make intuitive sense to me. If we already defer flushes
-why do we need to also defer IRQs?
-
-> We also increase the number of chances for success from 3 to 6.
-> 
-> `gro.sh -t <test>` now returns a passing/failing exit code as expected.
-> 
-> gro.c:main no longer erroneously claims a test passes when running as a
-> server.
-> 
-> Tested: Ran `gro.sh -t large` 100 times with and without this change.
-> Passed 100/100 with and 64/100 without. Ran inside strace to increase
-> flakiness.
-> 
-> Signed-off-by: Kevin Krakauer <krakauer@google.com>
-> ---
->  tools/testing/selftests/net/gro.c         | 8 +++++---
->  tools/testing/selftests/net/gro.sh        | 5 +++--
->  tools/testing/selftests/net/setup_veth.sh | 1 +
->  3 files changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/gro.c b/tools/testing/selftests/net/gro.c
-> index b2184847e388..d5824eadea10 100644
-> --- a/tools/testing/selftests/net/gro.c
-> +++ b/tools/testing/selftests/net/gro.c
-> @@ -1318,11 +1318,13 @@ int main(int argc, char **argv)
->  	read_MAC(src_mac, smac);
->  	read_MAC(dst_mac, dmac);
->  
-> -	if (tx_socket)
-> +	if (tx_socket) {
->  		gro_sender();
-> -	else
-> +	} else {
-> +		/* Only the receiver exit status determines test success. */
->  		gro_receiver();
-> +		fprintf(stderr, "Gro::%s test passed.\n", testname);
-> +	}
->  
-> -	fprintf(stderr, "Gro::%s test passed.\n", testname);
-
-
-That seems quite separate to the stability fix?
-
->  	return 0;
->  }
-> diff --git a/tools/testing/selftests/net/gro.sh b/tools/testing/selftests/net/gro.sh
-> index 02c21ff4ca81..703173f8c8a9 100755
-> --- a/tools/testing/selftests/net/gro.sh
-> +++ b/tools/testing/selftests/net/gro.sh
-> @@ -21,7 +21,7 @@ run_test() {
->    # Each test is run 3 times to deflake, because given the receive timing,
->    # not all packets that should coalesce will be considered in the same flow
->    # on every try.
-> -  for tries in {1..3}; do
-> +  for tries in {1..6}; do
->      # Actual test starts here
->      ip netns exec $server_ns ./gro "${ARGS[@]}" "--rx" "--iface" "server" \
->        1>>log.txt &  
-> @@ -100,5 +100,6 @@ trap cleanup EXIT
->  if [[ "${test}" == "all" ]]; then
->    run_all_tests
->  else
-> -  run_test "${proto}" "${test}"
-> +  exit_code=$(run_test "${proto}" "${test}")
-> +  exit $exit_code
-
-Also separate from stability?
-
-Let's split the patch up into logically separate changes.
-
->  fi;
-> diff --git a/tools/testing/selftests/net/setup_veth.sh b/tools/testing/selftests/net/setup_veth.sh
-> index 1f78a87f6f37..9882ad730c24 100644
-> --- a/tools/testing/selftests/net/setup_veth.sh
-> +++ b/tools/testing/selftests/net/setup_veth.sh
-> @@ -12,6 +12,7 @@ setup_veth_ns() {
->  
->  	[[ -e /var/run/netns/"${ns_name}" ]] || ip netns add "${ns_name}"
->  	echo 1000000 > "/sys/class/net/${ns_dev}/gro_flush_timeout"
-> +	echo 50 > "/sys/class/net/${ns_dev}/napi_defer_hard_irqs"
->  	ip link set dev "${ns_dev}" netns "${ns_name}" mtu 65535
->  	ip -netns "${ns_name}" link set dev "${ns_dev}" up
->  
--- 
-pw-bot: cr
+>
+> --- 8< -----------------------------------------------------
+>
+> static const struct {
+>         const char *name;
+>         int code;
+> } program_types[] =3D {
+> #define _T(n) { #n, BPF_PROG_TYPE_ ## n }
+>         _T(KPROBE),
+>         _T(XDP),
+> #undef _T
+> };
+>
+> void test_libbpf_probe_kfuncs_many(void)
+> {
+>         int i, kfunc_id, ret, id;
+>         const struct btf_type *t;
+>         struct btf *btf =3D NULL;
+>         const char *kfunc;
+>         const char *tag;
+>
+>         btf =3D btf__parse("/sys/kernel/btf/vmlinux", NULL);
+>         if (!ASSERT_OK_PTR(btf, "btf_parse"))
+>                 return;
+>
+>         for (id =3D 0; id < btf__type_cnt(btf); ++id) {
+>                 t =3D btf__type_by_id(btf, id);
+>                 if (!btf_is_decl_tag(t))
+>                         continue;
+>                 tag =3D btf__name_by_offset(btf, t->name_off);
+>                 if (strcmp(tag, "bpf_kfunc") !=3D 0)
+>                         continue;
+>                 kfunc_id =3D t->type;
+>                 t =3D btf__type_by_id(btf, kfunc_id);
+>                 if (!btf_is_func(t))
+>                         continue;
+>                 kfunc =3D btf__name_by_offset(btf, t->name_off);
+>                 printf("[%-6d] %-42s ", kfunc_id, kfunc);
+>                 for (i =3D 0; i < ARRAY_SIZE(program_types); ++i) {
+>                         ret =3D libbpf_probe_bpf_kfunc(program_types[i].c=
+ode, kfunc_id, -1, NULL);
+>                         if (ret < 0)
+>                                 printf("%-8d  ", ret);
+>                         else if (ret =3D=3D 0)
+>                                 printf("%8s  ", "");
+>                         else
+>                                 printf("%8s  ", program_types[i].name);
+>                 }
+>                 printf("\n");
+>         }
+>         btf__free(btf);
+> }
+>
+> ----------------------------------------------------- >8 ---
+>
