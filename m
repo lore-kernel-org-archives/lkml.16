@@ -1,50 +1,62 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778B320FA86
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 16:36:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7F0215F57
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 16:36:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740155793; cv=none; b=CpQUDv4eR6I+qABlMMB3XHTSkcOD3Lf80FEUw3oNuwykP9LGh6ZgV2hN2DdQlGHfjzUicZlHFmMnN2r2l4l+TGShpqMFVsz9U+XrZTuPLw12WA6zjcRemxQYEjuCjQqRD1xr9yYzaCPsSpKMqv7DMujMf2nyX9UGexHNRoQYw1s=
+	t=1740155796; cv=none; b=pTNMJFzuKz/WYVyftdNw5Tz7DOQyX8yQbV/+wOh+RskcqoXqhJhH2KKn+YPR4fiV9usK4qefA9S8dSV5Ou3/oOKUZ02bM0K6g82obm0/tauBokvSFSTGvcpCdzaDw8LfklQHpCbiIXmpqX9/7zmS8uAey/CqrrSe0BhnI0NDzwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740155793; c=relaxed/simple;
-	bh=pWXtRo6gHo4DEJYISY33x6GfcFgrTWBD7e3ZWdUBELE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BJNGLsLRCWUe5T+hAVd2eOgW7j1v76tclTiLxRUTkK00QJ8GmZ0IXoFNdWkaBDnr929la4yDP7deLr+2tsxxriulxry3LOtU4vW7gUGDuHnUdXVuTTECfv8lIJVhzgNiN3baLRwsXvxgUXvHWoI0r+MdE/6Id3K7NniNxnooy18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kDCLDEcF; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740155796; c=relaxed/simple;
+	bh=EmVSlHRmBsQWgi34aCLcoVGsSdM4LdVzCCaAC2Yhwb4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AEg1/YyzwFJJ467XoiRJnaevU6dCuEHTMeZOUHs11CTzSJZAqQV9rVCpoGbJXM+hPpFU6KUl7vYzCe96T6krv13NCPu6Z2pP9/Y1J5XLmiPmznZ4IBCMnzm8QFBQ6kvFGt8p9IAv9xPSwKMeRtNmeiRs6b3KgN5W3jmeIL9uqmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=eAbp4WFU; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kDCLDEcF"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740155789;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vB83pcYOlAu6TvcgZccjSdqVZZ3UtGjDlwpT4jeGmb0=;
-	b=kDCLDEcFzNmdb93Nm5TYmHvhLUoeyk70BPC12DJ75fHQSkmqpW/CvtrD0z0NTJBcSAKB+m
-	GG72WyeMITRgC0dTq3RnT14bobqFvGdZe6N5jophG4izfinGCV9hs74j7+A9S/kb1LZ6AN
-	QAx026QBlwhel5knRCgUjGlH4QrB7xE=
-From: Tao Chen <chen.dylane@linux.dev>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	eddyz87@gmail.com,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	qmo@kernel.org
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	chen.dylane@gmail.com,
-	Tao Chen <chen.dylane@linux.dev>,
-	Tao Chen <dylane.chen@didiglobal.com>
-Subject: [PATCH bpf-next v8 3/4] libbpf: Add libbpf_probe_bpf_kfunc API
-Date: Sat, 22 Feb 2025 00:33:34 +0800
-Message-Id: <20250221163335.262143-4-chen.dylane@linux.dev>
-In-Reply-To: <20250221163335.262143-1-chen.dylane@linux.dev>
-References: <20250221163335.262143-1-chen.dylane@linux.dev>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eAbp4WFU"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51L8fcXp002374;
+	Fri, 21 Feb 2025 16:36:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=corp-2023-11-20; bh=m5qZM
+	tJyHxKtlfah8mpfmJ81/MTbcNVeb2GVVQ6Wzio=; b=eAbp4WFUVNS4ckfmwdP25
+	L+81aVdS5CGUwwQqIh58kVtfnD9cs0ALZogF+oW/zWrVKkkYBqTny2HvwErWZJGl
+	/FIhRY0dnqiNRCAO1I3zag+H1EHw8BZd9c+Ab/zI/VwGvTodNN1NEJbYUPaJ5hUe
+	vhiiHtQlVzpxGVtZ/CDPtVVshErMj/Tq0RENcTUViiC3OhMt6KrJvatyFAtRiYYZ
+	LvuOkpY7NH3OgTFE9UnvFeh1Ab4/tFPuBGSl6eZS4siORXUwQldxpIZVHku3QzKm
+	FoVo+fEzdDIDqgrawYrtGPDNbJ8+i6wAu1cMyGF2/iemcYql0FYSPL0k6cTivhox
+	A==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44w00m6r2h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 21 Feb 2025 16:36:27 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51LFaxtO010538;
+	Fri, 21 Feb 2025 16:36:15 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44w07gxm8n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 21 Feb 2025 16:36:15 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 51LGUIXL005786;
+	Fri, 21 Feb 2025 16:36:14 GMT
+Received: from sidhakum-ubuntu.osdevelopmeniad.oraclevcn.com (sidhakum-ubuntu.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.250.108])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 44w07gxm69-6;
+	Fri, 21 Feb 2025 16:36:14 +0000
+From: Sidhartha Kumar <sidhartha.kumar@oracle.com>
+To: linux-kernel@vger.kernel.org, maple-tree@lists.infradead.org
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, liam.howlett@oracle.com,
+        richard.weiyang@gmail.com,
+        Sidhartha Kumar <sidhartha.kumar@oracle.com>
+Subject: [PATCH v2 5/6] maple_tree: add sufficient height
+Date: Fri, 21 Feb 2025 16:36:09 +0000
+Message-ID: <20250221163610.578409-6-sidhartha.kumar@oracle.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250221163610.578409-1-sidhartha.kumar@oracle.com>
+References: <20250221163610.578409-1-sidhartha.kumar@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,124 +64,138 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-21_05,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 bulkscore=0
+ mlxlogscore=999 malwarescore=0 suspectscore=0 spamscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502100000
+ definitions=main-2502210118
+X-Proofpoint-ORIG-GUID: XYYj4G4kU-p-4171gN7Xba356-yhrB6z
+X-Proofpoint-GUID: XYYj4G4kU-p-4171gN7Xba356-yhrB6z
 
-Similarly to libbpf_probe_bpf_helper, the libbpf_probe_bpf_kfunc
-used to test the availability of the different eBPF kfuncs on the
-current system.
+If a parent node is vacant but holds mt_min_slots + 1 entries,
+rebalancing with a leaf node could cause this parent node to become
+insufficient. This will lead to another level of rebalancing in the tree
+and requires more node allocations. Therefore, we also have to track the
+level at which there is a node with > mt_min_slots entries. We can use
+this as the worst case for the spanning and rebalacning stores.
 
-Cc: Tao Chen <dylane.chen@didiglobal.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Reviewed-by: Eduard Zingerman <eddyz87@gmail.com>
-Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+Signed-off-by: Sidhartha Kumar <sidhartha.kumar@oracle.com>
 ---
- tools/lib/bpf/libbpf.h        | 19 ++++++++++++-
- tools/lib/bpf/libbpf.map      |  1 +
- tools/lib/bpf/libbpf_probes.c | 51 +++++++++++++++++++++++++++++++++++
- 3 files changed, 70 insertions(+), 1 deletion(-)
+ include/linux/maple_tree.h       |  4 +++-
+ lib/maple_tree.c                 | 17 +++++++++++++++--
+ tools/testing/radix-tree/maple.c | 28 ++++++++++++++++++++++++++++
+ 3 files changed, 46 insertions(+), 3 deletions(-)
 
-diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
-index 3020ee45303a..c79b4475b956 100644
---- a/tools/lib/bpf/libbpf.h
-+++ b/tools/lib/bpf/libbpf.h
-@@ -1680,7 +1680,24 @@ LIBBPF_API int libbpf_probe_bpf_map_type(enum bpf_map_type map_type, const void
-  */
- LIBBPF_API int libbpf_probe_bpf_helper(enum bpf_prog_type prog_type,
- 				       enum bpf_func_id helper_id, const void *opts);
--
-+/**
-+ * @brief **libbpf_probe_bpf_kfunc()** detects if host kernel supports the
-+ * use of a given BPF kfunc from specified BPF program type.
-+ * @param prog_type BPF program type used to check the support of BPF kfunc
-+ * @param kfunc_id The btf ID of BPF kfunc to check support for
-+ * @param btf_fd The module BTF FD, if kfunc is defined in kernel module,
-+ * btf_fd is used to point to module's BTF, which is >= 0, and < 0 means kfunc
-+ * defined in vmlinux.
-+ * @param opts reserved for future extensibility, should be NULL
-+ * @return 1, if given combination of program type and kfunc is supported; 0,
-+ * if the combination is not supported; negative error code if feature
-+ * detection for provided input arguments failed or can't be performed
-+ *
-+ * Make sure the process has required set of CAP_* permissions (or runs as
-+ * root) when performing feature checking.
-+ */
-+LIBBPF_API int libbpf_probe_bpf_kfunc(enum bpf_prog_type prog_type,
-+				      int kfunc_id, int btf_fd, const void *opts);
- /**
-  * @brief **libbpf_num_possible_cpus()** is a helper function to get the
-  * number of possible CPUs that the host kernel supports and expects.
-diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
-index b5a838de6f47..3bbfe13aeb6a 100644
---- a/tools/lib/bpf/libbpf.map
-+++ b/tools/lib/bpf/libbpf.map
-@@ -438,4 +438,5 @@ LIBBPF_1.6.0 {
- 		bpf_linker__new_fd;
- 		btf__add_decl_attr;
- 		btf__add_type_attr;
-+		libbpf_probe_bpf_kfunc;
- } LIBBPF_1.5.0;
-diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
-index de2b1205b436..8efebc18a215 100644
---- a/tools/lib/bpf/libbpf_probes.c
-+++ b/tools/lib/bpf/libbpf_probes.c
-@@ -431,6 +431,57 @@ static bool can_probe_prog_type(enum bpf_prog_type prog_type)
- 	return true;
- }
+diff --git a/include/linux/maple_tree.h b/include/linux/maple_tree.h
+index 7d777aa2d9ed..37dc9525dff6 100644
+--- a/include/linux/maple_tree.h
++++ b/include/linux/maple_tree.h
+@@ -464,6 +464,7 @@ struct ma_wr_state {
+ 	void *entry;			/* The entry to write */
+ 	void *content;			/* The existing entry that is being overwritten */
+ 	unsigned char vacant_height;	/* Depth of lowest node with free space */
++	unsigned char sufficient_height;/* Depth of lowest node with min sufficiency + 1 nodes */
+ };
  
-+int libbpf_probe_bpf_kfunc(enum bpf_prog_type prog_type, int kfunc_id, int btf_fd,
-+			   const void *opts)
+ #define mas_lock(mas)           spin_lock(&((mas)->tree->ma_lock))
+@@ -499,7 +500,8 @@ struct ma_wr_state {
+ 		.mas = ma_state,					\
+ 		.content = NULL,					\
+ 		.entry = wr_entry,					\
+-		.vacant_height = 0					\
++		.vacant_height = 0,					\
++		.sufficient_height = 0					\
+ 	}
+ 
+ #define MA_TOPIARY(name, tree)						\
+diff --git a/lib/maple_tree.c b/lib/maple_tree.c
+index 4de257003251..8fdd3f477198 100644
+--- a/lib/maple_tree.c
++++ b/lib/maple_tree.c
+@@ -3558,6 +3558,13 @@ static bool mas_wr_walk(struct ma_wr_state *wr_mas)
+ 		if (mas->end < mt_slots[wr_mas->type] - 1)
+ 			wr_mas->vacant_height = mas->depth + 1;
+ 
++		if (ma_is_root(mas_mn(mas))) {
++			/* root needs more than 2 entries to be sufficient + 1 */
++			if (mas->end > 2)
++				wr_mas->sufficient_height = 1;
++		} else if (mas->end > mt_min_slots[wr_mas->type] + 1)
++			wr_mas->sufficient_height = mas->depth + 1;
++
+ 		mas_wr_walk_traverse(wr_mas);
+ 	}
+ 
+@@ -4193,13 +4200,19 @@ static inline int mas_prealloc_calc(struct ma_wr_state *wr_mas, void *entry)
+ 			ret = 0;
+ 		break;
+ 	case wr_spanning_store:
+-		ret = height * 3 + 1;
++		if (wr_mas->sufficient_height < wr_mas->vacant_height)
++			ret = (height - wr_mas->sufficient_height) * 3 + 1;
++		else
++			ret = delta * 3 + 1;
+ 		break;
+ 	case wr_split_store:
+ 		ret = delta * 2 + 1;
+ 		break;
+ 	case wr_rebalance:
+-		ret = height * 2 + 1;
++		if (wr_mas->sufficient_height < wr_mas->vacant_height)
++			ret = (height - wr_mas->sufficient_height) * 2 + 1;
++		else
++			ret = delta * 2 + 1;
+ 		break;
+ 	case wr_node_store:
+ 		ret = mt_in_rcu(mas->tree) ? 1 : 0;
+diff --git a/tools/testing/radix-tree/maple.c b/tools/testing/radix-tree/maple.c
+index d22c1008dffe..d40f70671cb8 100644
+--- a/tools/testing/radix-tree/maple.c
++++ b/tools/testing/radix-tree/maple.c
+@@ -36334,6 +36334,30 @@ static noinline void __init check_mtree_dup(struct maple_tree *mt)
+ 
+ extern void test_kmem_cache_bulk(void);
+ 
++/*
++ * Test to check the path of a spanning rebalance which results in
++ * a collapse where the rebalancing of the child node leads to
++ * insufficieny in the parent node.
++ */
++static void check_collapsing_rebalance(struct maple_tree *mt)
 +{
-+	struct bpf_insn insns[] = {
-+		BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, BPF_PSEUDO_KFUNC_CALL, 1, kfunc_id),
-+		BPF_EXIT_INSN(),
-+	};
-+	const size_t insn_cnt = ARRAY_SIZE(insns);
-+	char buf[4096];
-+	int fd_array[2] = {-1};
-+	int ret;
++	int i = 0;
++	MA_STATE(mas, mt, ULONG_MAX, ULONG_MAX);
 +
-+	if (opts)
-+		return libbpf_err(-EINVAL);
++	/* create a height 4 tree */
++	while (mt_height(mt) < 4) {
++		mtree_store_range(mt, i, i + 10, xa_mk_value(i), GFP_KERNEL);
++		i += 9;
++	}
 +
-+	if (!can_probe_prog_type(prog_type))
-+		return libbpf_err(-EOPNOTSUPP);
++	/* delete all entries one at a time, starting from the right */
++	do {
++		mas_erase(&mas);
++	} while (mas_prev(&mas, 0) != NULL);
 +
-+	if (btf_fd >= 0)
-+		fd_array[1] = btf_fd;
-+	else
-+		/* insn.off = 0, means vmlinux btf */
-+		insns[0].off = 0;
-+
-+	buf[0] = '\0';
-+	ret = probe_prog_load(prog_type, insns, insn_cnt, btf_fd >= 0 ? fd_array : NULL,
-+			      buf, sizeof(buf));
-+	if (ret < 0)
-+		return libbpf_err(ret);
-+
-+	if (ret > 0)
-+		return 1; /* assume supported */
-+
-+	/* If BPF verifier recognizes BPF kfunc but it's not supported for
-+	 * given BPF program type, it will emit "calling kernel function
-+	 * <name> is not allowed". If the kfunc id is invalid,
-+	 * it will emit "kernel btf_id <id> is not a function". If BTF fd
-+	 * invalid in module BTF, it will emit "invalid module BTF fd specified" or
-+	 * "negative offset disallowed for kernel module function call". If
-+	 * kfunc prog not dev buound, it will emit "metadata kfuncs require
-+	 * device-bound program".
-+	 */
-+	if (strstr(buf, "not allowed") || strstr(buf, "not a function") ||
-+	   strstr(buf, "invalid module BTF fd") ||
-+	   strstr(buf, "negative offset disallowed") ||
-+	   strstr(buf, "device-bound program"))
-+		return 0;
-+
-+	return 1;
++	mtree_unlock(mt);
 +}
 +
- int libbpf_probe_bpf_helper(enum bpf_prog_type prog_type, enum bpf_func_id helper_id,
- 			    const void *opts)
+ /* callback function used for check_nomem_writer_race() */
+ static void writer2(void *maple_tree)
  {
+@@ -36500,6 +36524,10 @@ void farmer_tests(void)
+ 	check_spanning_write(&tree);
+ 	mtree_destroy(&tree);
+ 
++	mt_init_flags(&tree, MT_FLAGS_ALLOC_RANGE);
++	check_collapsing_rebalance(&tree);
++	mtree_destroy(&tree);
++
+ 	mt_init_flags(&tree, MT_FLAGS_ALLOC_RANGE);
+ 	check_null_expand(&tree);
+ 	mtree_destroy(&tree);
 -- 
 2.43.0
 
