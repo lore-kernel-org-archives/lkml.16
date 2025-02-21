@@ -1,252 +1,118 @@
-Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011002.outbound.protection.outlook.com [52.101.125.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288462116EA;
-	Fri, 21 Feb 2025 15:58:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.2
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740153494; cv=fail; b=YjWaKySdAMagh5St0cBreftKr7Tn0dTm5iAO6HK4preE/cp53Ws8x/Itt27khT1MLqASC1aR4SBcrquP2pv0T6+HwpM4nVQ9JgycMbfvera3lehbBKk2/gX00xeGaFN5/Hv8YjXgcIoPpc2qm2sw7kjlWcNj24rAqyNNWMPHK9s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740153494; c=relaxed/simple;
-	bh=1sDYQDoOEeuGEoe6yAxt+VMolFFSdq9kJOAIfCqZ2qU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=k87z8fJjB4gp3g/XcvQ8pHmYEsvZpQ6ac2kqle3/4PoFko3byoGVKF6LUdMprwT25iIYSaomlYRiya2onKEGwQ8FhL5rOrPxo76Mo0d8EBwmgOB8b7hrkUH3mJSbcrdUtKIkQKz3F8g/r4xr2SdDmP/GWkaWj3qPH4p7/S6J0MY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=f/IpJ+l1; arc=fail smtp.client-ip=52.101.125.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0CD821170E
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 15:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740153497; cv=none; b=cVtzBYQ9jgch3NZuhCMYlZTFLR720zIg1QTwO+1CVz49lrBCWQYaF16Q4sWVH0oiv6pUh9BX6Dc3/hSGoY+jNOpztgMwFLOgipou3Ywr0Fm58pgdnG8EHOuWo3Ic3OfQoffBb+fa6lVHGsmH2mIOQ7Fasb6ZlAzW3mTQxkfoy90=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740153497; c=relaxed/simple;
+	bh=//L1C5Ks/H10EmkSZyQhaj8jYD4OCALEp8yeUn5ekD0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kRGXU61in9vlnnnsiFRId2Bp7oPCr7LmdFQf1/CiXLCB5CLxpzrQ0xzSpDOGbke23vTnbuS9OQ+XhjSDaFgZ/yP40lSt/AnYRm+u+mBZReCM+yM6uf5t1aJaNIDsMquE1o8SvYocLlCieoeGcHZgfv2NdOOPcH7b/T1JaKJ29vM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Fyi8vVw9; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="f/IpJ+l1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=m7qmOJ1sgUAswN0nuN8TiKVtFjhXTpxWqW+mSaN4CVgIcENgg4T88oCSr2vjKPNq+2lnlhMqXdnVdkbHDt27Fdle4VgiKMo7ErHRErYoMiDln8arlyzf/BL1UwLl/Ii3wOPbCyv1O6qxaBEXu+crV7bFCTk4jS9bveAL49byFI37FL6dZZirEowtqJWGL5zXO0BCfJjCCHvIybhlksHf8hn/WnzXMUkyyXcb0w677urShkM75Q8AGXMCbCUUh1CnmCSvZj//O6nIxDwWGtU93Rp0KA7l3UzWhVpKpNPJ/Pdr2GtoaT8pK0fYiziCGJeSBq4/J6ftXh3Sy9sJ8VK0fQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=F31cvkbVIVlo9iA0laqNSZSnZbbOcWMUrKRl6EsMnrA=;
- b=V+3eJkdseugdOLkKEPDlDvEGkDO8o9KvB/ABbinwudkJXzYIbNdK9CWWRBhnvK9urMbWEKQYPLJvtQeL5lSXhlsxg3gULKUOnMNZRZ0PMRR8WU6XMB/kWEb3JroneSR7S3IHhMh9AF4mcJEX+uTIGxIT5QS/YstEM5svs3ZZm9OiDj4q5LxKViNZaYdJjdd2AjelIGpWc6UjTK3cud4BSIwU2EsiKNPIDeo7v/M/2blG84Yjv/6K0KJmbkEKKBZgsYovrMps2hDFuZ9ecgsWIqniiTpey/7vnZGCZR/NhR1cbltQHx/sNrKuqM1CKhaD5f52RHxFKV8yTytgOy+8wg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F31cvkbVIVlo9iA0laqNSZSnZbbOcWMUrKRl6EsMnrA=;
- b=f/IpJ+l1hGNjxZ3sLVgSnezKogCGyRIxy07XL7oN7k8RloyxKv1346H48HHruWD9wqz+W1H/M5zl6w8e12UwbB+XRLYw6DI/yBAyQ0emhjvYB+gYzfuwIxTZNOJ7Ze0BFR1yoJscz1g9EBbtyVjvEvbCSGLTSaqET5W1+5+X+bw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-Received: from OS9PR01MB13950.jpnprd01.prod.outlook.com (2603:1096:604:35e::5)
- by TYCPR01MB6238.jpnprd01.prod.outlook.com (2603:1096:400:7d::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.17; Fri, 21 Feb
- 2025 15:58:10 +0000
-Received: from OS9PR01MB13950.jpnprd01.prod.outlook.com
- ([fe80::244d:8815:7064:a9f3]) by OS9PR01MB13950.jpnprd01.prod.outlook.com
- ([fe80::244d:8815:7064:a9f3%5]) with mapi id 15.20.8466.016; Fri, 21 Feb 2025
- 15:58:10 +0000
-From: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
-To: tomm.merciai@gmail.com
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	biju.das.jz@bp.renesas.com,
-	prabhakar.mahadev-lad.rj@bp.renesas.com,
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 16/18] media: rzg2l-cru: Add function pointer to check if FIFO is empty
-Date: Fri, 21 Feb 2025 16:55:30 +0100
-Message-Id: <20250221155532.576759-17-tommaso.merciai.xr@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250221155532.576759-1-tommaso.merciai.xr@bp.renesas.com>
-References: <20250221155532.576759-1-tommaso.merciai.xr@bp.renesas.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: FR0P281CA0260.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:b5::17) To OS9PR01MB13950.jpnprd01.prod.outlook.com
- (2603:1096:604:35e::5)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Fyi8vVw9"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2fbfe16cbf5so560466a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 07:58:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1740153495; x=1740758295; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FzH4mBzUZG/VM1IvpFl7X2mx5yrtA4S1cGmaADqasjo=;
+        b=Fyi8vVw9swoJpiu4Zma5R+YDlNO4I4KLH6MmW/DqDiF5sYLzDEJmVW8AEdTvPuKCJ4
+         VG1k2XyNx4aFsBQT9skwWQNUzZI5o28Pb7+Qvk5tH03PytehIC2Oi6kUFF6x+hsNMRyE
+         VMFZTDNthlhAA3td+fnx0q16L2InAgLZ4248fdqKEAm7cxWVAyC6WTSf6qJ0FUepRJmx
+         0Orrl9nSG3A+20ZBzMfI24D8Ex/NXA90WozmubEvaBQL+QROEkeh45N2Y4IUY9KWEr6M
+         lUsa1dwjoC8/vR507p03Rsklnn51S4wiJLKz/K2TWxZRHPXaajxFgBwiKQXZTw9a33hQ
+         DS3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740153495; x=1740758295;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FzH4mBzUZG/VM1IvpFl7X2mx5yrtA4S1cGmaADqasjo=;
+        b=oWgo6lg7pA7ivaPEO3SN8Fj42NidIXljAPAEpY0F1eG19e6CJz/8WP7Ztpy1I4Z6R7
+         Vb0ri+fIMTsNuJt20O+rRX579SDcvYKUBoz89YIYnkFMm2mbOqEcQXzpxcpLs+QiNgjN
+         LQM7/ZITRV5De/l4vdJAI4wOq7XME6OivxXJNtjNTtohORT7+dMb6UM6sQ5HJ9Imh6QI
+         wBJTCzdYq5kLPWt7Ee9u/rHw49G6qbbdW9IKvJAkt/RuY5ZIk76JiJTTsUFf48VZ4Wmw
+         6b1ErToqDREhnhjhBiUhqimCPhLbiFPybuysGKihhKxs6O3bQjDo6I8/w2a4sdJ2+S2X
+         0e+g==
+X-Forwarded-Encrypted: i=1; AJvYcCX3ffIyYRydLyvqvpJ0nFiMHuYAAWLwjjiRcUAwrAvZo2nx4srZt3x8c8qm05XK1Mx6mP3S/D5Sw7Nmv/s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDybdG5oT5tdTXkJNZhsTgo0RBixbzJKp+P2rg6UZ7UOg0MW7C
+	DXRfFbyEnThHPAlpI9AMH3XpvHimXLQSB5AhjikRiJ7rA1a34+h9omMuEObHQ8k=
+X-Gm-Gg: ASbGncuq2sNIyAszC9IvpJ03a66v4LKaOD+jkQNYo+VrkCtQSZt6Og+Ftxe07pZuAz/
+	mgxSbEKQZ4Ev01FQl0tr4n1FjQAPcbT+G5DZQgEil9e+LO+RKqN6f5X2TzQ+hvyw/95CoLLlkma
+	W+R9THoztcOBo//CkHpnQuZru+3YQbm3eS+XhCZkYK87jrMIfKRK0IOdVPad4zlCepxqFeN7lxH
+	PM1xZwanlJW14dLgV3Mkd3qjTbeOhjDp2DIdIUsaapGYfNtgo6QR1UUQ9ejTeAlUn8vJOoPH/0l
+	juPX9KXUZRc/ZIxP7K0NsFVNVzrrlXOjJ2bMZJ2CXPf/3y9RgWQGfagK+oOWdS8cMdyfDkvf+U+
+	JHpl3KqYhP+OQkw==
+X-Google-Smtp-Source: AGHT+IELh9Wt1O7g5djzWOWAdKQK5tMIZlIxTyNgDd9ySXUlQZQSkyuX2oRq7bK6YU6j9mWrP2bhmg==
+X-Received: by 2002:a17:90b:3e81:b0:2fa:6055:17e7 with SMTP id 98e67ed59e1d1-2fce7b1a435mr2353156a91.8.1740153495062;
+        Fri, 21 Feb 2025 07:58:15 -0800 (PST)
+Received: from [10.200.58.71] (151.240.142.34.bc.googleusercontent.com. [34.142.240.151])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fceb02d985sm1553554a91.6.2025.02.21.07.58.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2025 07:58:14 -0800 (PST)
+Message-ID: <6097164a-aa99-4869-b666-9dc7018c1f96@bytedance.com>
+Date: Fri, 21 Feb 2025 23:57:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: OS9PR01MB13950:EE_|TYCPR01MB6238:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8b4a3238-0d23-45a9-fb95-08dd529089f9
-X-LD-Processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|52116014|366016|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?KNeKTX3tBnJbertVfXal0TZ58dGQ0iGIowTONi3jWHcNld6PgVrsL6fa7F7W?=
- =?us-ascii?Q?xUYez8Rk3435kVexr7PUml+5xdHRaBCnnIhQ2xbii+IT72PTsJZp+kbHo98H?=
- =?us-ascii?Q?+WQz342eliMcujIDgt5lsIIlT7mnR8KCHgQKxO7EqCcTa6QBCi2IQZOwDG3Z?=
- =?us-ascii?Q?p4mfgTlLuqkHcr7stxDH34h/U/E4jOfRpk1+XR+chT4fdXLh8v0U5UVEpANy?=
- =?us-ascii?Q?saTw/EvZLMXCfA11BcxTtfHoEEleqorQUe79hFLVZ+jnXvBYTOt6YSRmdxv7?=
- =?us-ascii?Q?oNchIOu8Oc79lst5IgBpK2Z+IzpLJu/iDNadNH6pBpIUWa1WcZnd6PVd+lWY?=
- =?us-ascii?Q?aIPIXyReTuGsVuPfkbOeQ82a+MXO52hjHP/0ee4lR70958OO5oRCmj2bg11m?=
- =?us-ascii?Q?iLb+Z7SyNwjZjW5UadJA0u2MJCW8oVzGzMVEguNd8e/HRswnt07smAauZqt9?=
- =?us-ascii?Q?+iCXyCdS/369Bjnm6gRMywjxGuaoaC4vbyA1+kCj422asZv1S6l/xPW3I2R+?=
- =?us-ascii?Q?UzUFHcewvJ503NxpJ8GuPBJrvhud6vgwepT6LLzJIQ63jAQMVhRAwD2fCgXD?=
- =?us-ascii?Q?EFCO89ihgVZGwE/4NSDHEzsoZzmE9qfX2EIWYXk7Z+a19ZmhrQK0bxbPbABX?=
- =?us-ascii?Q?iS4zn4tLmBb7noS1qzwysxvYviNPLvUFwu7jLPH7nZBC86IapZ+MjDPNUVAU?=
- =?us-ascii?Q?MUra+KNHb7+Oa+RqtxDRZfuGefaGzM7j6pg5W35lhlA2bnheOP94WtZ9yTjE?=
- =?us-ascii?Q?vPhQ0oy6MVNGlP497FOEPwOFuAiF9zTfAlGpjB8x68klXy9BGxsSfGbopGBP?=
- =?us-ascii?Q?uif790M5W7MZ/gDaNMQZolJBjkXBLqmrdf/D6QFf1yMF1Vul3Nq1Dofygr5O?=
- =?us-ascii?Q?d0kAI+eG/VMY/tRYIR7D2cXmnHsrvMmCOinSNjDx5xn8CqkgXAk35jX39/ow?=
- =?us-ascii?Q?yX9D67VR8t72ktlGDi0e/dWCn0AXbRocXiPopX0QdijucuR+UnZvIjEvv6vc?=
- =?us-ascii?Q?Jz3CeyrSp0YwOsBQm2gCz/z3pLq37zErSPfShUSljNtYOQBMYPG6Wrl7zGpa?=
- =?us-ascii?Q?6eqROeFrljzhNFIq1Xc9z8Rcpp8YcjvZ/lM5BAahIRmoDfXEmxsRUhSQAjcx?=
- =?us-ascii?Q?ZYtM2knDYwppSwhWvssSNTL73gIoQw0bU95MEvEQQR6wi8EruRFlVD6thmBR?=
- =?us-ascii?Q?Y56MZ0guuTwxmVdmkILMecNZYl3EEFSWEJ5a6I8YpVXfCpOCunh79X37poog?=
- =?us-ascii?Q?5a6qrL1a3LqcB71ttc5IXT4+aQ7N40eyVcoss0XEfxKtlQZJU2ERC29aexvX?=
- =?us-ascii?Q?SvlP4oyMvGcUp2/dlt0UVVQ/83EgT7Fyg/YraC6nZZTZsjAmF76N4MqhdkKO?=
- =?us-ascii?Q?kjSZ/0wl0AgIjWlEbCsVTdXF1vG6TSaIMYd2SXxuO3zVONWNW7IdetNFr5m5?=
- =?us-ascii?Q?6O+i0OZ2evIk6eh3itmeqJZ20L8/gvoi?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OS9PR01MB13950.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(52116014)(366016)(1800799024)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Y1ekdy3/pQ2lgBmKza5/7hzhDYNshFQzFnia+kIvbBFoUm3f21s0ut9vNkrf?=
- =?us-ascii?Q?8Hg2nU+eobzm92SEs+QblBrjhql4dT/oivf7FGPxKhg5IvL04Wo01yfRbT16?=
- =?us-ascii?Q?LMSrmKKnx9OpMrEDMtDW+xc7A2QlJ8NpOnMC0hW3KEddAbFpIRvVmM7eQko9?=
- =?us-ascii?Q?BLvwTuVdVIP4L32bjNP5OxK/e4NuCVqnoNC6D2LcGPEQcOY9H9YFSZfYgJvv?=
- =?us-ascii?Q?9TiaYlV8TZvjG8xwXrS8ewXcrm9e30Cg4awAOd+YOqY770YROCNQZ+IS9PnQ?=
- =?us-ascii?Q?jq1ai+rXjHL6mvBh1GnfZBE+qByMqsg6R+EVAWD08aBsSqctNL4wiyYOwXZC?=
- =?us-ascii?Q?CoTdUnXvYzIDTiWEWOWIMPitfBUHAFk0H4Vd2l8PoqR/FEZdfNs7+P2tQjIR?=
- =?us-ascii?Q?+eLQKPrj9g5vByGVensyfPotcgocfie5WRXzjb2lO2dPRun9MPe0/Bc3DD7+?=
- =?us-ascii?Q?VyDwxJzDUsmsLAUi849Imvrxt3fzw4dy3uLunHRsWsvHNVskG/W/9/rsNnk1?=
- =?us-ascii?Q?DK7eEck+GWI4HKmDW2P4znvL9FG/S6rDqf5oxe3LHOD82QaWn0v47K3EHolW?=
- =?us-ascii?Q?thawHUVy5LZky1MG1Mcb2cqk53mazTwG9lnMNDqHoVbVH4rxgGkqOj69qjg8?=
- =?us-ascii?Q?lg8itd1YLNGz5FxRonVs4OfCR0P9Z/XefkFTC1KcObGdpCV2ufTrIENyX8LU?=
- =?us-ascii?Q?EI0Xn9+0vS3XOsm/qyJ6aJlpIz1c9oWtcojhHf9lJGeTaHdQrOJ2Grkeconj?=
- =?us-ascii?Q?hOgio8ywNrdKPJ+SZiUyHjH4zFfHDoAYHN25ngVD//k3c8d1ChnvO5K+nrHg?=
- =?us-ascii?Q?Rw9nd73jMZ4uKmBZxPbd0C0yx6BjvRmZflXudyapZM7EsHPn15uMGlQTO3s+?=
- =?us-ascii?Q?Sq2M4uvaCM45RZo3HBOw9hwR8cAo0slExUt8/4Owc/IjNSOUfXZQFRtgZS8w?=
- =?us-ascii?Q?TbDV83AmMH6+Mv1oKzBmnIf94GYDo/syiaU/qz/qbsfSf2MzULgvJ6c7zu3r?=
- =?us-ascii?Q?8GZFY6Sl05FdK+6qBYHPS21wVQejwGP8w6CMEngMEd70/q+DOE3/bfA4xOnt?=
- =?us-ascii?Q?tyKSvR8NArzKAz1w+aJwYV4EjFGzSE//NaW3V582K6cdZnDkejkEovYlAPNz?=
- =?us-ascii?Q?JzkrY7I6XJiCTtd1mbql7G/JLkIqyCmbGUyWS3coFpn/8EBUXzE75q4J9EIN?=
- =?us-ascii?Q?w10qmaXQmZrDNRNJy+z9+/0G5Q3frluWX5QUNb1WB1yOdfuxoWj7vHVesG8f?=
- =?us-ascii?Q?CYP1gZviVnYfZM/CXkLCQTWiDkLqRxHc8IMJ2XS32KNyJzVv0++o5lM7zb/a?=
- =?us-ascii?Q?iMouJEemXEJHxcJ5Q9cn9dQXLjvSBiZfW/je6K84FWt7lPfBXqLqwBx4kmoX?=
- =?us-ascii?Q?4o7mZDFCueyUw4phvhqDYwJTHDvKAtSzyrLnoufAwYwoKEnkxdidkFHI3A6e?=
- =?us-ascii?Q?ODD2k+kDfmpVOxOF3I2/sU1ic1Lhg5GKyi2uJLwNJ1WmyVLF8iMsGVH22isU?=
- =?us-ascii?Q?lFSnC8+Xx4REM8/End+MVme8B1rOnsZPjc4fvr9Dzp6CDfxIJwt5YWdVyMQb?=
- =?us-ascii?Q?LbJS/1NmFxRmf3usH0tGHsKyLYta2TsBbE/foFuSr9tiL1+rjvAtFQ2oEJ4y?=
- =?us-ascii?Q?aEd+vTBiuNke73+FDXrpe9k=3D?=
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b4a3238-0d23-45a9-fb95-08dd529089f9
-X-MS-Exchange-CrossTenant-AuthSource: OS9PR01MB13950.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2025 15:58:10.0976
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: d1Y6cmQAIYUovHszjcG7fwfF9VeqAuJbZDL7A4XdihMVkKXzmRnrAxH8KcfIV2cEUImtGcdYsoEtlQxPtF6DYcenKFxkysvckntIuQYxy0uAqOI6OPThUdr0KKtMp8lE
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB6238
+User-Agent: Mozilla Thunderbird
+Subject: Re: Re: [PATCH 2/2] sched/fair: Fix premature check of
+ WAKEUP_PREEMPTION
+Content-Language: en-US
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ Josh Don <joshdon@google.com>, Tianchen Ding <dtcccc@linux.alibaba.com>,
+ "open list:SCHEDULER" <linux-kernel@vger.kernel.org>
+References: <20250221111226.64455-1-wuyun.abel@bytedance.com>
+ <20250221111226.64455-3-wuyun.abel@bytedance.com>
+ <CAKfTPtBzsX6GKZP_NGTONrkp96qx9uOHr0+XG7tC6ELy4tbHBg@mail.gmail.com>
+From: Abel Wu <wuyun.abel@bytedance.com>
+In-Reply-To: <CAKfTPtBzsX6GKZP_NGTONrkp96qx9uOHr0+XG7tC6ELy4tbHBg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 2/21/25 7:49 PM, Vincent Guittot Wrote:
+> On Fri, 21 Feb 2025 at 12:12, Abel Wu <wuyun.abel@bytedance.com> wrote:
+>>
+>> Idle tasks are by definition preempted by non-idle tasks whether feat
+>> WAKEUP_PREEMPTION is enabled or not. This isn't true any longer since
+> 
+> I don't think it's true, only "sched_idle never preempts others" is
+> always true but sched_feat(WAKEUP_PREEMPTION) is mainly there for
+> debug purpose so if WAKEUP_PREEMPTION is false then nobody preempts
+> others at wakeup, idle, batch or normal
 
-Add a `fifo_empty` function pointer to the `rzg2l_cru_info` structure and
-pass it as part of the OF data. On RZ/G3E and RZ/V2H(P) SoCs, checking if
-the FIFO is empty requires a different register configuration.
+Hi Vincent, thanks for your comment!
 
-Implement `rzg2l_fifo_empty()` and update the code to use it from the
-function pointer.
+The SCHED_IDLE "definition" of being preempted by non-idle tasks comes
+from commit 6bc912b71b6f ("sched: SCHED_OTHER vs SCHED_IDLE isolation")
+which said:
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
----
- .../platform/renesas/rzg2l-cru/rzg2l-core.c   |  1 +
- .../platform/renesas/rzg2l-cru/rzg2l-cru.h    |  3 +++
- .../platform/renesas/rzg2l-cru/rzg2l-video.c  | 23 +++++++++++++------
- 3 files changed, 20 insertions(+), 7 deletions(-)
+	- no SCHED_IDLE buddies
+	- never let SCHED_IDLE preempt on wakeup
+	- always preempt SCHED_IDLE on wakeup
+	- limit SLEEPER fairness for SCHED_IDLE
 
-diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
-index 302f792cb415..e4fb3e12d6bf 100644
---- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
-+++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
-@@ -362,6 +362,7 @@ static const struct rzg2l_cru_info rzgl2_cru_info = {
- 	.irq_handler = rzg2l_cru_irq,
- 	.enable_interrupts = rzg2l_cru_enable_interrupts,
- 	.disable_interrupts = rzg2l_cru_disable_interrupts,
-+	.fifo_empty = rzg2l_fifo_empty,
- };
- 
- static const struct of_device_id rzg2l_cru_of_id_table[] = {
-diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
-index 3f694044d8cd..2e17bfef43ce 100644
---- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
-+++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
-@@ -88,6 +88,7 @@ struct rzg2l_cru_info {
- 	irqreturn_t (*irq_handler)(int irq, void *data);
- 	void (*enable_interrupts)(struct rzg2l_cru_dev *cru);
- 	void (*disable_interrupts)(struct rzg2l_cru_dev *cru);
-+	bool (*fifo_empty)(struct rzg2l_cru_dev *cru);
- };
- 
- /**
-@@ -185,4 +186,6 @@ const struct rzg2l_cru_ip_format *rzg2l_cru_ip_index_to_fmt(u32 index);
- void rzg2l_cru_enable_interrupts(struct rzg2l_cru_dev *cru);
- void rzg2l_cru_disable_interrupts(struct rzg2l_cru_dev *cru);
- 
-+bool rzg2l_fifo_empty(struct rzg2l_cru_dev *cru);
-+
- #endif
-diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-index 5ffa3173af62..7cc83486ce03 100644
---- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-+++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-@@ -244,9 +244,23 @@ static int rzg2l_cru_initialize_image_conv(struct rzg2l_cru_dev *cru,
- 	return 0;
- }
- 
--void rzg2l_cru_stop_image_processing(struct rzg2l_cru_dev *cru)
-+bool rzg2l_fifo_empty(struct rzg2l_cru_dev *cru)
- {
- 	u32 amnfifopntr, amnfifopntr_w, amnfifopntr_r_y;
-+
-+	amnfifopntr = rzg2l_cru_read(cru, AMnFIFOPNTR);
-+
-+	amnfifopntr_w = amnfifopntr & AMnFIFOPNTR_FIFOWPNTR;
-+	amnfifopntr_r_y =
-+		(amnfifopntr & AMnFIFOPNTR_FIFORPNTR_Y) >> 16;
-+	if (amnfifopntr_w == amnfifopntr_r_y)
-+		return true;
-+
-+	return false;
-+}
-+
-+void rzg2l_cru_stop_image_processing(struct rzg2l_cru_dev *cru)
-+{
- 	unsigned int retries = 0;
- 	unsigned long flags;
- 	u32 icnms;
-@@ -274,12 +288,7 @@ void rzg2l_cru_stop_image_processing(struct rzg2l_cru_dev *cru)
- 
- 	/* Wait until the FIFO becomes empty */
- 	for (retries = 5; retries > 0; retries--) {
--		amnfifopntr = rzg2l_cru_read(cru, AMnFIFOPNTR);
--
--		amnfifopntr_w = amnfifopntr & AMnFIFOPNTR_FIFOWPNTR;
--		amnfifopntr_r_y =
--			(amnfifopntr & AMnFIFOPNTR_FIFORPNTR_Y) >> 16;
--		if (amnfifopntr_w == amnfifopntr_r_y)
-+		if (cru->info->fifo_empty(cru))
- 			break;
- 
- 		usleep_range(10, 20);
--- 
-2.34.1
+and that commit let it be preempted before checking WAKEUP_PREEMPTION.
+The rules were introduced in 2009, and to the best of my knowledge there
+seemed no behavior change ever since. Please correct me if I missed
+anything.
+
+Best Regards,
+	Abel
 
