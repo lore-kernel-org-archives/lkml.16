@@ -1,16 +1,16 @@
 Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88792BB04
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D896F2C1A2
 	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 00:54:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740099254; cv=none; b=N7eZTYNqtTDpZmZMNMxniG48v1A2wfvspLuzmdS7LyENY6FpohwTaW+gT5e5FJ7oUynWB9/hpl3kfR8DvmhbBMKOcC8kvCaAQvhaQuyKkp0z6/LkIYshmCIkrO1+k2YfRNd8rWzyIHQEWHUNIHfaa2vONggaYuKXfo4AQ5AJTUw=
+	t=1740099254; cv=none; b=ID6NSPhKInneHnbvCoNiJknLKwSTgLfKGcRbyMmgoEFHoWUwkw3a/9Tdx2bGz5teWkgV1YJmySJT0fV395Ni5VZQHefTOKASgdQe48pka4fozl+j0YdVYc8/BmrEU5pnnmmmO0Hhmz1TCgV2sumadNmwXX1x421hEzEy6+A15AA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740099254; c=relaxed/simple;
-	bh=mE7rUQ+5LK/IsjTrC99jexKW4L6ce1g963rB8ogany8=;
+	bh=3TCftahpq0Wkzy5qD4BmaJb8oTplX3tUU1RLE/HlHh4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=icUmhHzH2rehgf4mJNicyZrv3F25JneKaLRpD1X7+GkLmq22RXpGAOV3B3/ocY0Rsv1I+M7BIIi6NNRwAiVG1xLBGhMBN3Y89SViTpYcz9d5uub3hbN0Az1DhNwvXaMUa2pIimPk1vi6t6XGKKlw6O++bp4NyyOMMPPElq4VltY=
+	 MIME-Version; b=Hn5ft6nfZ5mD5zUiLKXgTQGsKvDedHrzqgZvQkjijC+BPJ5k8gOmCtMhG6DMDm3hT7B4fnYnsZQptZ6tWnhvqUjjdzMFYBMZIG0kjUt+5cmRF7wm3h7jJCaHqliAxGUdHlezcSFNeiAiZXFLd6J4ohWPsreD8584Dg66gQUTax8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
@@ -18,7 +18,7 @@ Received: from fangorn.home.surriel.com ([10.0.13.7])
 	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.97.1)
 	(envelope-from <riel@shelob.surriel.com>)
-	id 1tlHIZ-000000003Qf-1ILt;
+	id 1tlHIZ-000000003Qf-15zW;
 	Thu, 20 Feb 2025 19:53:47 -0500
 From: Rik van Riel <riel@surriel.com>
 To: x86@kernel.org
@@ -38,9 +38,9 @@ Cc: linux-kernel@vger.kernel.org,
 	andrew.cooper3@citrix.com,
 	Manali.Shukla@amd.com,
 	Rik van Riel <riel@surriel.com>
-Subject: [PATCH v12 08/16] x86/mm: use broadcast TLB flushing for page reclaim TLB flushing
-Date: Thu, 20 Feb 2025 19:53:07 -0500
-Message-ID: <20250221005345.2156760-9-riel@surriel.com>
+Subject: [PATCH v12 06/16] x86/mm: use INVLPGB for kernel TLB flushes
+Date: Thu, 20 Feb 2025 19:53:05 -0500
+Message-ID: <20250221005345.2156760-7-riel@surriel.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250221005345.2156760-1-riel@surriel.com>
 References: <20250221005345.2156760-1-riel@surriel.com>
@@ -53,43 +53,79 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: riel@surriel.com
 
-In the page reclaim code, we only track the CPU(s) where the TLB needs
-to be flushed, rather than all the individual mappings that may be getting
-invalidated.
+Use broadcast TLB invalidation for kernel addresses when available.
 
-Use broadcast TLB flushing when that is available.
-
-This is a temporary hack to ensure that the PCID context for
-tasks in the next patch gets properly flushed from the page
-reclaim code, because the IPI based flushing in arch_tlbbatch_flush
-only flushes the currently loaded TLB context on each CPU.
-
-Patch 10 replaces this with the actual mechanism used to do
-broadcast TLB flushing from the page reclaim code.
+Remove the need to send IPIs for kernel TLB flushes.
 
 Signed-off-by: Rik van Riel <riel@surriel.com>
+Reviewed-by: Nadav Amit <nadav.amit@gmail.com>
 Tested-by: Manali Shukla <Manali.Shukla@amd.com>
 Tested-by: Brendan Jackman <jackmanb@google.com>
 Tested-by: Michael Kelley <mhklinux@outlook.com>
 ---
- arch/x86/mm/tlb.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/mm/tlb.c | 34 ++++++++++++++++++++++++++++++++--
+ 1 file changed, 32 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 2d7ed0fda61f..16839651f67f 100644
+index dbcb5c968ff9..59396a3c6e9c 100644
 --- a/arch/x86/mm/tlb.c
 +++ b/arch/x86/mm/tlb.c
-@@ -1326,7 +1326,9 @@ void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
- 	 * a local TLB flush is needed. Optimize this use-case by calling
- 	 * flush_tlb_func_local() directly in this case.
- 	 */
--	if (cpumask_any_but(&batch->cpumask, cpu) < nr_cpu_ids) {
-+	if (cpu_feature_enabled(X86_FEATURE_INVLPGB)) {
-+		invlpgb_flush_all_nonglobals();
-+	} else if (cpumask_any_but(&batch->cpumask, cpu) < nr_cpu_ids) {
- 		flush_tlb_multi(&batch->cpumask, info);
- 	} else if (cpumask_test_cpu(cpu, &batch->cpumask)) {
- 		lockdep_assert_irqs_enabled();
+@@ -1077,6 +1077,20 @@ void flush_tlb_all(void)
+ 	on_each_cpu(do_flush_tlb_all, NULL, 1);
+ }
+ 
++static bool invlpgb_kernel_range_flush(struct flush_tlb_info *info)
++{
++	unsigned long addr;
++	unsigned long nr;
++
++	for (addr = info->start; addr < info->end; addr += nr << PAGE_SHIFT) {
++		nr = (info->end - addr) >> PAGE_SHIFT;
++		nr = clamp_val(nr, 1, invlpgb_count_max);
++		invlpgb_flush_addr_nosync(addr, nr);
++	}
++	__tlbsync();
++	return true;
++}
++
+ static void do_kernel_range_flush(void *info)
+ {
+ 	struct flush_tlb_info *f = info;
+@@ -1087,6 +1101,22 @@ static void do_kernel_range_flush(void *info)
+ 		flush_tlb_one_kernel(addr);
+ }
+ 
++static void kernel_tlb_flush_all(struct flush_tlb_info *info)
++{
++	if (cpu_feature_enabled(X86_FEATURE_INVLPGB))
++		invlpgb_flush_all();
++	else
++		on_each_cpu(do_flush_tlb_all, NULL, 1);
++}
++
++static void kernel_tlb_flush_range(struct flush_tlb_info *info)
++{
++	if (cpu_feature_enabled(X86_FEATURE_INVLPGB))
++		invlpgb_kernel_range_flush(info);
++	else
++		on_each_cpu(do_kernel_range_flush, info, 1);
++}
++
+ void flush_tlb_kernel_range(unsigned long start, unsigned long end)
+ {
+ 	struct flush_tlb_info *info;
+@@ -1097,9 +1127,9 @@ void flush_tlb_kernel_range(unsigned long start, unsigned long end)
+ 				  TLB_GENERATION_INVALID);
+ 
+ 	if (info->end == TLB_FLUSH_ALL)
+-		on_each_cpu(do_flush_tlb_all, NULL, 1);
++		kernel_tlb_flush_all(info);
+ 	else
+-		on_each_cpu(do_kernel_range_flush, info, 1);
++		kernel_tlb_flush_range(info);
+ 
+ 	put_flush_tlb_info();
+ }
 -- 
 2.47.1
 
