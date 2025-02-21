@@ -1,48 +1,50 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0291F4299;
-	Fri, 21 Feb 2025 09:35:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE39A204098;
+	Fri, 21 Feb 2025 09:35:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740130522; cv=none; b=TxalHQ/HQwlVAhVPFgl7RZGskm+97VeOB/YEczlTusLwoubz1mC84fXarharhXqjPm6vdtqZbNc8glOV6Vt4+hidr7sF4FArQA+kIxZPikYN5y72cjt0ZV23bm+cGIh9w5xL3wCHdhaGcDxUNqQNqC7Xm8wNn+nPbMI++XBBQ+k=
+	t=1740130531; cv=none; b=XtbSjkiO2vbEXKeXjt2xlkxtrnzUXJQ4fEjGr++7oxXIyTF1CE4tJI77+IhkNuyQMCBapT3K/vqgRcPLbuRlklVGJBKYVw5NXyv+sfHx19iXkrB/wWWGwki/EZzd6IEE7IepnJrmycjLkkdr7o/DSYHA4USkgvP78XXrrU4iDDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740130522; c=relaxed/simple;
-	bh=Yvo8933EZoIcR8I7kToxMz4CyMyp2BlcbqWrO/HbTgs=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=PvDsvj6iNgV+90vEfYT7F1vcUHfNDMND8zFwsBTPdL5S6mQAjcUcLTCe+bLtpeB7ONTBpOL7DmvWc3onf9I3uPsQyfQiFcMSd7tNivkRsCry1CCkdFgq2ZV2JcUFJA8VyVXpFxuHGZ0Ez0AXMjnUI/rJdD86RS1PFoNwBBpQowc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AptHHLxg; arc=none smtp.client-ip=205.220.168.131
+	s=arc-20240116; t=1740130531; c=relaxed/simple;
+	bh=l7aZ1+MSWpP572OIQy0iFpXOMlHb+BNa5dBGsJtUgIA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=ByVT8HN2QhJo3/ZKMPQjiSzkqqBQhA29vjT0hqyfd06yzaOwtTwJlS7bSVsbAmFXTZR9SH/tP6mTB9/pLls48Qe9AYJoLazD6Vl1Wi8gFjOqesOS4ijDyZrDBmdAT5tsed5YJW+mGaKDAUX9BIpN9KDqa9VVBAE6uDgZQqHXxh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JjXcOPQD; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AptHHLxg"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51L6P0to020486;
-	Fri, 21 Feb 2025 09:35:17 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JjXcOPQD"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51L62Sg9012548;
+	Fri, 21 Feb 2025 09:35:26 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=d16QP9veh1dZ1LH8WnDDq8
-	TlFxirQr16FIo86HVzOUc=; b=AptHHLxg4ts26Hu1gzyJevNm0K53X9gTDtFAhB
-	HgQ4n2ilfId2mDLkPxPaiCjf8c22JgYyHqkd2788sVdwOWeRHd78wVvf8em0ghX1
-	FLVVoE7foQ3rFio4OKyCxkcQ/g/WVHle5aoImWyuqKww+Q7Q3j3fC+UsZrv6vfJV
-	kXKou0QAxV5wMllntw6K9cwbuRPILAqpDAb7Lbye91iztwqR0MmC1J2h5RMdhVWQ
-	feFcBQ6BxhxEOvoRWqtRDqKngL9zGVYpDxlR7p+dx7Tstn8Yuw91kCwLKUdb/19o
-	NXmzVXFbREp5IrFV+igt3mO6HpYzvfNtsZmS8ZBr22+PHCpg==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44x06t45nq-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+lTJi/hM8g88Eg34/6/L4YwApfqduPKfEJfBXRx17lw=; b=JjXcOPQDHBmUkLxT
+	GHVMDBYEYj81g/y6zHMwkiIs0n0EFQWq7DrrcF3YhUiFh00Nxt/z34uQlrRqOBD2
+	vYKIF0VEsh57953N9yMyfX1n/Qpe+Jvvy/LUVxbj7Jh9f5W9YEiUFNXeQMQiY228
+	F+QB0aijTtpnEOtVC1CI6ndGt7RPI3Ruxhimf5MdaFafSnENErPzVAmrd2JKXvip
+	qhsrXdEuquAx3UEDFEI0rdG7IBp0WzgBqyXRz+wfIQo54aLPJA6Jf5ssOW28Yb/8
+	DmUFzOSaVDw6PfySZcsg877BOfX2xsK4UOJGwTfmUcNRNe1ok5xSkxT5hrNnaH4C
+	qK3Wxw==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy1shb0-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Feb 2025 09:35:17 +0000 (GMT)
+	Fri, 21 Feb 2025 09:35:26 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51L9ZGsd028032
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51L9ZPjx025752
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Feb 2025 09:35:16 GMT
+	Fri, 21 Feb 2025 09:35:25 GMT
 Received: from hu-tdas-hyd.qualcomm.com (10.80.80.8) by
  nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 21 Feb 2025 01:35:12 -0800
+ 15.2.1544.9; Fri, 21 Feb 2025 01:35:21 -0800
 From: Taniya Das <quic_tdas@quicinc.com>
-Subject: [PATCH v5 0/4] Update LPASS Audio clock driver for QCM6490 board
-Date: Fri, 21 Feb 2025 15:04:53 +0530
-Message-ID: <20250221-lpass_qcm6490_resets-v5-0-6be0c0949a83@quicinc.com>
+Date: Fri, 21 Feb 2025 15:04:55 +0530
+Subject: [PATCH v5 2/4] clk: qcom: lpassaudiocc-sc7280: Add support for
+ LPASS resets for QCM6490
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,11 +53,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAL1IuGcC/3XNywrCMBCF4VcpWRtJcyO68j1ESpNO7YC9JTUop
- e9uWlwo6PI/MN/MJIBHCOSYzcRDxIB9l0LtMuKasrsCxSo14Ywrxpmmt6EMoRhdq+WBFR4CTIF
- yJmujNeelciSdDh5qfGzs+ZK6wTD1/rl9iWJd32DOf4NRUEaZzV1thbLCwGm8o8PO7V3fkpWM8
- oPh7A8jE6NNZaEyykmjvpllWV5NEyL+AQEAAA==
-X-Change-ID: 20250206-lpass_qcm6490_resets-204f86622a5c
+Message-ID: <20250221-lpass_qcm6490_resets-v5-2-6be0c0949a83@quicinc.com>
+References: <20250221-lpass_qcm6490_resets-v5-0-6be0c0949a83@quicinc.com>
+In-Reply-To: <20250221-lpass_qcm6490_resets-v5-0-6be0c0949a83@quicinc.com>
 To: Bjorn Andersson <andersson@kernel.org>,
         Michael Turquette
 	<mturquette@baylibre.com>,
@@ -79,87 +79,97 @@ X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 6HKIqpWYjgyIfzvrjhmcUUwgxrybwcT4
-X-Proofpoint-GUID: 6HKIqpWYjgyIfzvrjhmcUUwgxrybwcT4
+X-Proofpoint-GUID: FEVUrSPB0eT7MRz3gr2Dl_Bq8zFCtmSt
+X-Proofpoint-ORIG-GUID: FEVUrSPB0eT7MRz3gr2Dl_Bq8zFCtmSt
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-21_01,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- clxscore=1015 spamscore=0 malwarescore=0 priorityscore=1501 bulkscore=0
- impostorscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
+ adultscore=0 malwarescore=0 mlxscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=999 suspectscore=0 phishscore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2502100000 definitions=main-2502210073
 
-This series updates the low pass audio clock controller driver for reset
-functionality. The patches are split from the below series.
-https://lore.kernel.org/all/20240318053555.20405-1-quic_tdas@quicinc.com/
+On the QCM6490 boards, the LPASS firmware controls the complete clock
+controller functionalities and associated power domains. However, only
+the LPASS resets required to be controlled by the high level OS. Thus,
+add support for the resets in the clock driver to enable the Audio SW
+driver to assert/deassert the audio resets as needed.
 
-The QCM6490 board requires only the reset functionality from the LPASS
-subsystem. Thus separate out the driver probe to provide the same on the
-QCM6490 boards.
-
-[v5]:
-Changes in [v5] compared to [v4]:
- - Update the commit to describe the need for the new qcm6490
- compatible. [Krzysztof]
- - sort the compatibles. [Krzysztof]
- - Link to v4: https://lore.kernel.org/r/20250220-lpass_qcm6490_resets-v4-0-68dbed85c485@quicinc.com
-
-[v4]:
-Changes in [v4] compared to [v3]:
-- Update the documentation bindings to keep the clocks, powerdomain
-  constraints. [Krzysztof]
-- Update the driver to use 'of_device_is_compatible()' instead of
-  'desc->num_resets' check. [Dmitry]
-- Link to v3: https://lore.kernel.org/r/20250212-lpass_qcm6490_resets-v3-0-0b1cfb35b38e@quicinc.com
-
-[v3]:
-Changes in [v3] compared to [v2]:
-- update to Documentation bindings adding constraints. [Krzysztof]
-- split the DT patch for "Update protected clocks list" for QCM6490 IDP
-https://lore.kernel.org/linux-devicetree/20250206-protected_clock_qcm6490-v1-1-5923e8c47ab5@quicinc.com/
-
-[v2]:
-Changes in [v2] compared to [v1]:
- - Updated the lpass_audio_cc_sc7280 probe to get the match_data for both SC7280 and QCM6490.
- - Separate regmap for resets [Konrad]
- - Split the lpassaudiocc compatible and GCC protected clocks list changes. [Dmitry]
- - Link to V1: https://lore.kernel.org/all/20240531102252.26061-1-quic_tdas@quicinc.com/T/
-
-[v1]
-  - Add a separate platform driver for QCM6490 resets.
-  - Add device tree changes for protected clocks for GCC and LPASS AudioCC
-    compatible update.
-
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
 ---
-Changes in v5:
-- EDITME: describe what is new in this series revision.
-- EDITME: use bulletpoints and terse descriptions.
-- Link to v4: https://lore.kernel.org/r/20250220-lpass_qcm6490_resets-v4-0-68dbed85c485@quicinc.com
+ drivers/clk/qcom/lpassaudiocc-sc7280.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-Changes in v4:
-- EDITME: describe what is new in this series revision.
-- EDITME: use bulletpoints and terse descriptions.
-- Link to v3: https://lore.kernel.org/r/20250212-lpass_qcm6490_resets-v3-0-0b1cfb35b38e@quicinc.com
+diff --git a/drivers/clk/qcom/lpassaudiocc-sc7280.c b/drivers/clk/qcom/lpassaudiocc-sc7280.c
+index 45e7264770866f929a3f4663c477330f0bf7aa84..22169da08a51a01b8cd924c4844672c7cadc7d1a 100644
+--- a/drivers/clk/qcom/lpassaudiocc-sc7280.c
++++ b/drivers/clk/qcom/lpassaudiocc-sc7280.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+  * Copyright (c) 2021, The Linux Foundation. All rights reserved.
++ * Copyright (c) 2025, Qualcomm Innovation Center, Inc. All rights reserved.
+  */
+ 
+ #include <linux/clk-provider.h>
+@@ -713,14 +714,24 @@ static const struct qcom_reset_map lpass_audio_cc_sc7280_resets[] = {
+ 	[LPASS_AUDIO_SWR_WSA_CGCR] = { 0xb0, 1 },
+ };
+ 
++static const struct regmap_config lpass_audio_cc_sc7280_reset_regmap_config = {
++	.name = "lpassaudio_cc_reset",
++	.reg_bits = 32,
++	.reg_stride = 4,
++	.val_bits = 32,
++	.fast_io = true,
++	.max_register = 0xc8,
++};
++
+ static const struct qcom_cc_desc lpass_audio_cc_reset_sc7280_desc = {
+-	.config = &lpass_audio_cc_sc7280_regmap_config,
++	.config = &lpass_audio_cc_sc7280_reset_regmap_config,
+ 	.resets = lpass_audio_cc_sc7280_resets,
+ 	.num_resets = ARRAY_SIZE(lpass_audio_cc_sc7280_resets),
+ };
+ 
+ static const struct of_device_id lpass_audio_cc_sc7280_match_table[] = {
+-	{ .compatible = "qcom,sc7280-lpassaudiocc" },
++	{ .compatible = "qcom,qcm6490-lpassaudiocc", .data = &lpass_audio_cc_reset_sc7280_desc },
++	{ .compatible = "qcom,sc7280-lpassaudiocc", .data = &lpass_audio_cc_sc7280_desc },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, lpass_audio_cc_sc7280_match_table);
+@@ -752,13 +763,17 @@ static int lpass_audio_cc_sc7280_probe(struct platform_device *pdev)
+ 	struct regmap *regmap;
+ 	int ret;
+ 
++	desc = device_get_match_data(&pdev->dev);
++
++	if (of_device_is_compatible(pdev->dev.of_node, "qcom,qcm6490-lpassaudiocc"))
++		return qcom_cc_probe_by_index(pdev, 1, desc);
++
+ 	ret = lpass_audio_setup_runtime_pm(pdev);
+ 	if (ret)
+ 		return ret;
+ 
+ 	lpass_audio_cc_sc7280_regmap_config.name = "lpassaudio_cc";
+ 	lpass_audio_cc_sc7280_regmap_config.max_register = 0x2f000;
+-	desc = &lpass_audio_cc_sc7280_desc;
+ 
+ 	regmap = qcom_cc_map(pdev, desc);
+ 	if (IS_ERR(regmap)) {
+@@ -772,7 +787,7 @@ static int lpass_audio_cc_sc7280_probe(struct platform_device *pdev)
+ 	regmap_write(regmap, 0x4, 0x3b);
+ 	regmap_write(regmap, 0x8, 0xff05);
+ 
+-	ret = qcom_cc_really_probe(&pdev->dev, &lpass_audio_cc_sc7280_desc, regmap);
++	ret = qcom_cc_really_probe(&pdev->dev, desc, regmap);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to register LPASS AUDIO CC clocks\n");
+ 		goto exit;
 
----
-Taniya Das (4):
-      dt-bindings: clock: qcom: Add compatible for QCM6490 boards
-      clk: qcom: lpassaudiocc-sc7280: Add support for LPASS resets for QCM6490
-      arm64: dts: qcom: qcm6490-idp: Update the LPASS audio node
-      arm64: dts: qcom: qcs6490-rb3gen2: Update the LPASS audio node
-
- .../bindings/clock/qcom,sc7280-lpasscorecc.yaml    |  5 ++++-
- arch/arm64/boot/dts/qcom/qcm6490-idp.dts           |  5 +++++
- arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts       |  5 +++++
- drivers/clk/qcom/lpassaudiocc-sc7280.c             | 23 ++++++++++++++++++----
- 4 files changed, 33 insertions(+), 5 deletions(-)
----
-base-commit: 808eb958781e4ebb6e9c0962af2e856767e20f45
-change-id: 20250206-lpass_qcm6490_resets-204f86622a5c
-
-Best regards,
 -- 
-Taniya Das <quic_tdas@quicinc.com>
+2.48.1
 
