@@ -1,72 +1,64 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C0E20B80E
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 12:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6775B1EB1B9;
+	Fri, 21 Feb 2025 12:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740141845; cv=none; b=hZR6unUEhO8nECdslV8xwVZRD/O5G5kh73IKvy1Q+YVGintoXC7TAOX6ruZOO/La3prRDSvTotugW25C83fPtPdSN/14SaoTLDEgeAVkkfjI+VVgDcoKOwXph7PMkQtQjl3OcjdF6wl6N7oaZts2xarLvUQ9Tb9luO9plJldFk4=
+	t=1740141876; cv=none; b=nexYf6BdHTsJrZZ7N6hwUS8hmDUZRZVJuPeMVxKtfgCnGNDKatQGJev0iKmohJSHgTrQtFF0BXaaxZbTbQ5X2lZ5H40XCIGP+vfIktAlNwMaBwJubDmKkm08z/KU9jc/4/vcFFHjqmvRicM7GIqasDY5AEz0ir78F27gVXKC+AY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740141845; c=relaxed/simple;
-	bh=Suktrg40pKqU2iNgxTGtiCQuxs2LoCxGNWE/Ep9rtgA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=mZxbYjb34X1sJrzhqA/Lm3Zu5oyjtZLcLSh5IFiF850Tenv4+BBDX4m4My9xyrUTav19fGq+aTAZ0pItM3jX1E//XFzmL/BE5uLx+g4HpZSjRJX61iD71uq2OLjGJXQb3Vbh7vVOOvShZaQemIcJb/Rrxdu6kGjFGPXOTPEq++4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d2a1d6747aso18456845ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 04:44:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740141843; x=1740746643;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DzpUeHl1/GrH7+83IIw6xCrCgN7JWov/Yl9aFuy3UnU=;
-        b=eeliHmVEjbEFDACRB3EIcHGBXG8a1pv084rje7lVr1Zodq0+ohvcbzmt72Y6F5gDMW
-         tZmNjLP8fyur2DvIVwwrj4LfqqOfQM+os0dgESbO5PUA/mdxkEU40g0YKZ1E9esbiwfD
-         IgMgU07rzUe2VOaKN+pO0JHByG6y/iaIWf4qrqPxKw0Wzx1v7SwPHfX9nErjiabDR1rb
-         2ye+rBuFcHqDpOJL2F9tOv529HI7EbyScWdKQ30DCxZJggkR+YKInTxZ5X2zfBmiOfo2
-         u0Q1D7qd2Pjl0xc23Af/fG0Y0nmClq1P93oX9a6XJ5Q5fDfoQcCZEkgIoZo7fzMxgGZt
-         zNfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVlqxUJsI45iI9CG6jvjcMjUNvaXH0vNAkN3/pwrom0XsGQm9SCzfvWlxk/1ecNzyWANJOLBALXT1cRQCg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxtw/1kWmtcIOZg7HZzRxV408nPsvQOo3dbvQGrcInNSN1ZH1pK
-	c2KO/Q44qIXJmm+F9LzdTkfQcZtv8P5Il6r5BKjtw6FmWP0lf6GGyTgCNoLkMCNIaxEldnJIdwi
-	HUeG6F1XQl273TgJEuXKtoPQ3AVq5ky6hhMkuaFWY89+ZZclQoiCqfCM=
-X-Google-Smtp-Source: AGHT+IFd2mrfQDcMluz4HxWhLCI1oJuPSzVbSuqmS+2b46ypHDzRj52jiFx+baNy0DT7R8fjU+LRBiQcQXzVfZyi7pcJLV6u4xV6
+	s=arc-20240116; t=1740141876; c=relaxed/simple;
+	bh=a6sUn0scJ6tDPZKaf6Vw3R5XFCRTJ0WOPh+DEvqiTiY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cKGyYMfJnLbbxWP6ssCfR5o1GDNXTv03XFcuelTNWi+31s2AtBKv4Dzhx35ArLSPUbPj0rdhweFETSX0eIPGAKXE3zl+W+ZzalIHMmO12+EuQ7ZPG7oxJR0iUmPdpFGKBTlOeKhplhQ6U/V0XfmmtWUjJ4ScYX0upoGl/27IU2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p029j7ox; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p029j7ox"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A01E0C4CED6;
+	Fri, 21 Feb 2025 12:44:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740141874;
+	bh=a6sUn0scJ6tDPZKaf6Vw3R5XFCRTJ0WOPh+DEvqiTiY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=p029j7oxm/V0Ncx1LvJRn74Tyfm/mxcfrgVVhdFk44GqDvW5CzvHNpyE9AQYxQBSa
+	 faCe3tYupA61RKXQK/6j6yt3JaO8duXVlCII9k0oQcWzBZcYY9uCt2Rd3rr911exmT
+	 w7/1WcNE4GmuvX+jmbyka0Wne10DyG/mb0eR0QRi52ybEaWx3qBPs7IsKP3UAardUT
+	 FBAfiNCg/Hli2omm8MQ4dFqMp31GL+xEYchE6oSrAk6PcdugGndEAR2nzN18Cr/gwH
+	 /G/U8x7zgBnbppngmtVrU0hShc2Efbpu8kXZ9xXioWQV3ChOeO34xj4qrizUelvt8h
+	 t+SPBWTkFJGWQ==
+From: Alexey Gladkov <legion@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	linux-serial@vger.kernel.org
+Subject: [PATCH v2 0/2] tty/vt: Cleanups for keyboard driver
+Date: Fri, 21 Feb 2025 13:43:51 +0100
+Message-ID: <cover.1740141518.git.legion@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <cover.1739881707.git.legion@kernel.org>
+References: <cover.1739881707.git.legion@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1066:b0:3d1:54ce:a8f9 with SMTP id
- e9e14a558f8ab-3d2c027290emr67145905ab.10.1740141842953; Fri, 21 Feb 2025
- 04:44:02 -0800 (PST)
-Date: Fri, 21 Feb 2025 04:44:02 -0800
-In-Reply-To: <20250221121653.2463-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67b87512.050a0220.14d86d.047d.GAE@google.com>
-Subject: Re: [syzbot] [net?] WARNING in cleanup_net (4)
-From: syzbot <syzbot+30a19e01a97420719891@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+This is a few minor cleanups I found in keybord driver. There's nothing
+important here and these changes just slightly improve readability.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+---
+v2:
+* Removed the faulty use of KVAL for npadch_value.
 
-Reported-by: syzbot+30a19e01a97420719891@syzkaller.appspotmail.com
-Tested-by: syzbot+30a19e01a97420719891@syzkaller.appspotmail.com
+Alexey Gladkov (2):
+  tty/vt: Use KVAL instead of use bit operation
+  tty/vt: Gather the code that outputs char with utf8 in mind
 
-Tested on:
+ drivers/tty/vt/keyboard.c | 37 +++++++++++++++----------------------
+ 1 file changed, 15 insertions(+), 22 deletions(-)
 
-commit:         33442609 Merge tag 'for-v6.14-rc' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12801fdf980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=61cbf5ac8a063ad4
-dashboard link: https://syzkaller.appspot.com/bug?extid=30a19e01a97420719891
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=12d07ba4580000
+-- 
+2.48.1
 
-Note: testing is done by a robot and is best-effort only.
