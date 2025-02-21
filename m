@@ -1,126 +1,69 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5334438F80
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 01:23:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E56C38F9C
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 01:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740101020; cv=none; b=YHF3OeQwSFkvOQK6gWax/BsaJVkGXJHz6bCBqg/5onQmDgngfkyeKF8sgV6Rz6WsEkeftcYVXv2BY3nnADVtAHGF21t5AYnMm7tTJPdnkEHm+J5NnlB+rj/ehP/ISyYnSJs1iI3418rs8smMkXX8AEw4I6PkENcYDyi3vaDRTfk=
+	t=1740101044; cv=none; b=RfQzI1EBCjp953vh24Y5QcNQWQU+YDDr2qBrfCyLyjr/CW4qovDHcFlaKmXkRQk08IqMyo5ttpDKnytJXyi3ifbTTEFqWMXRvntOjg4AnLvfBpMACwuYPQ+7pjmfZekJ0g0VJem7shuSDK5B7brw4dwDkJVoShHcS9CrL8ls+dM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740101020; c=relaxed/simple;
-	bh=+/jL1sKjxeHLtWo39rgoJcwRWHPJLm9CyMRjFTSQPKQ=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=kqOOIqP3hLuwS3CH1UfIuA3D+H5n0Xnaz7yvXnLJBAHY2HUHntutAXQKsJSZQkJ6W4uOstnhEyeTfUPIgwm3HYT302n6+9Gd5H7qaHc0YgPAMNFF0Lj9+B77oairHsopdrz3YoRDJXwoFT1UXwjELxZtqeivo2GxD1ouSMKBuf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--joshdon.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LF105ZXb; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--joshdon.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LF105ZXb"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22126a488d7so35083605ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 17:23:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740101018; x=1740705818; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jsBMZEnf4s9t1bYeOLz4VcLKTvIZtrhOEcgEkKEyanQ=;
-        b=LF105ZXbo1vi5OmS9ixCQF59U/2ZwrxpUEJI0rBHrhxEC21gmQ8ejR8VJapvRRdo30
-         1ppjZDlxmMpVEM/+p0NZla4UUXuEmxR5TMuAHY05O/oOd9mEuw/iY41xi/+dPsrb0eKy
-         EUaw1cB16awz34AIIJC7LZWeuL+X8zVTO+/uJUiBnH0w4rSh3f2bpxpsntTaaxY0JL33
-         Vffcs54tWQenCVLawRnWjsn+F2t7MU81cM0uZ2XLRK8xVXFNV/m4zyiSK4Afu+J+d1QU
-         VcagKZTjychYq587Zj3t/EkQ3N7tLzzIpO4ZQb7wKdhpJAuiEknqgo26oeDGcCU118gP
-         A7Gg==
+	s=arc-20240116; t=1740101044; c=relaxed/simple;
+	bh=jrQ52m6JpwsbYtQI1WnLDlD3pHj4DazqYNJrkEIlhV8=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Wa2E5pCCkJk4NGE/HM5/vcjq5s9gKMQUWAHjH+05qZRxDG7JnI0ZBIyeucyDqx1J+fUNiHkSmtKNEBDZ0ynk98EqYV6sqZ/DQLrdaGqF14BuvDO2w5loqgWh8WlEQNxeA3S9RBOAWH1CV2PuL5Y1kLyEHc8vRBXivsR3GkqM3DU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d2b3a2f2d4so28813795ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 17:24:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740101018; x=1740705818;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jsBMZEnf4s9t1bYeOLz4VcLKTvIZtrhOEcgEkKEyanQ=;
-        b=MuOC86Kz4Cj1pulqk6G5mrsmnFifUW7uUOw85MWoOPScwGXe6zYMNGVrgHzeSboEZf
-         3TpQrQb+LZd0zwmz4So/XsQYOTjQUqEXKX+PvL1D3Ru2lzo2B8q/cTZ193+lNHgNOds1
-         4BcuczV7GTyuQDHvyaZFizgZW9EtrMDBuXMr39LCMRLAWTPJ+dNCW2J4hO9B5zHylXr1
-         HkqfiDHdNCqesV60Wov+nKAUKlfKGCVPkXbg4H+MRI60uB3MTLrfHBdMFXoREvc5+e71
-         vtTBB8MSSG7h7lPmidsI0SE4K3oqrjUiURQUz023HHW+Kqrevqw6w2sZt486VocxKLKF
-         PerA==
-X-Forwarded-Encrypted: i=1; AJvYcCXpjD0iQ1WUVesxmE8rxM3YDaJiVrA4x6oQ52acgwNSXt0AQUm2LB8lwIKri7QA10d+FI9oIzRAtCf+tYA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyk4RjdPZY28Qw6o6R4G6315esCSj8aiNCCwp4V47f/3RQJULt1
-	QfNphMggoUKJ7nrR0INKAKDHEKGPCSfsDaDUjCaAbOP/E45Mgk9XnHD8jqC6zY+fPEqr1gDv3gy
-	y993jBQ==
-X-Google-Smtp-Source: AGHT+IHs9vaSPHZpKo+lbHUKcwsd1xAf3YkXze635/rHioRLOiRBCQk6aYYiYZepHURJsKaE+oHiD0PMqKhZ
-X-Received: from pfgs4.prod.google.com ([2002:a05:6a00:1784:b0:728:e945:d2c2])
- (user=joshdon job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:a103:b0:1ee:e641:cac
- with SMTP id adf61e73a8af0-1eef3cb8fb3mr2702900637.20.1740101018567; Thu, 20
- Feb 2025 17:23:38 -0800 (PST)
-Date: Thu, 20 Feb 2025 17:23:35 -0800
+        d=1e100.net; s=20230601; t=1740101042; x=1740705842;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GHxH46aXVtdrh222WoOA4E4C774aWwB24NtlR/Rj10M=;
+        b=c6xrpI0zM0e40KvPi5DcFq6psQfh1wPIyKF4eRJMCQ9bmbhHr5THAFh3UedRTBvoC0
+         gry0YqiooOCx3ctNp1keXwLflJtxSm6rvoTTrFTObOafWcLeldOn+EjafWjJOTLb20jG
+         k20gAu8do7P8P0M0EnrXnmHPIP1t9hA/EB/bu8NLGzZeTo+XgEzvkeulzFTwNFc8Sw1U
+         nMPvH15yJyWyTUuO6keb2C5/XJQQ2PC9fGj88bxlB1uCT4OnfJMssZO0UJW/cADrG5JS
+         uOhIMUl20MebOAsUreY05Ld1lD2P5wJ7oVgH6UpePrz0D+bxAxq6elaHe9hdflPDNdsq
+         dPHg==
+X-Gm-Message-State: AOJu0Yz+vx4+ZA817u0QCYjCBfLNJjdbqII6u5EqRkgGsCUy03Q0Njpw
+	oqLMoGLC4MDglTlvZTy85xtmtmiPUcq2l4jjqFmZmNgMcV1+qC35/EpJj0e+IOricmHxokFQuRl
+	X7tyIPa11o0lR6uZU3WDkmGUa1ocZVgqjv7aSg1MM0dakMzzs64+YMWg=
+X-Google-Smtp-Source: AGHT+IFUMCn8xRYDePI0G2i+6SY7sQsK3CEzcx82Dxum47Bw6btWjbz4I1SY2F7Llr435rZ8w1akPJ7ikNJBPKa7kTaBqieM2fYG
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
-Message-ID: <20250221012335.233404-1-joshdon@google.com>
-Subject: [PATCH v2] sched: fix potential use-after-free with cfs bandwidth
-From: Josh Don <joshdon@google.com>
-To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, Chengming Zhou <chengming.zhou@linux.dev>, 
-	Markus Elfring <Markus.Elfring@web.de>, Valentin Schneider <vschneid@redhat.com>, 
-	linux-kernel@vger.kernel.org, Josh Don <joshdon@google.com>
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:13ac:b0:3cf:c773:6992 with SMTP id
+ e9e14a558f8ab-3d2cae87c65mr15728435ab.12.1740101042436; Thu, 20 Feb 2025
+ 17:24:02 -0800 (PST)
+Date: Thu, 20 Feb 2025 17:24:02 -0800
+In-Reply-To: <20250221010023.1766355-1-lizhi.xu@windriver.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67b7d5b2.050a0220.14d86d.0304.GAE@google.com>
+Subject: Re: [syzbot] [bluetooth?] general protection fault in bcsp_close
+From: syzbot <syzbot+9c957444e37d521b3b94@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-We remove the cfs_rq throttled_csd_list entry *before* doing the
-unthrottle. The problem with that is that destroy_cfs_bandwidth() does a
-lockless scan of the system for any non-empty CSD lists. As a result,
-it is possible that destroy_cfs_bandwidth() returns while we still have
-a cfs_rq from the task group about to be unthrottled.
+Hello,
 
-For full correctness, we should avoid removal from the list until after
-we're done unthrottling in __cfsb_csd_unthrottle().
+syzbot tried to test the proposed patch but the build/boot failed:
 
-For consistency, we make the same change to distribute_cfs_runtime(),
-even though this should already be safe due to destroy_cfs_bandwidth()
-cancelling the bandwidth hrtimers.
+<stdin>:4:15: error: use of undeclared identifier '__ref_stack_chk_guard'
 
-Fixes: 8ad075c2eb1f ("sched: Async unthrottling for cfs bandwidth")
-Signed-off-by: Josh Don <joshdon@google.com>
-Reviewed-and-tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
-Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
----
-v2: updated commit message with additional metadata
- kernel/sched/fair.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 34fe6e9490c2..78f542ab03cf 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5917,10 +5917,10 @@ static void __cfsb_csd_unthrottle(void *arg)
- 
- 	list_for_each_entry_safe(cursor, tmp, &rq->cfsb_csd_list,
- 				 throttled_csd_list) {
--		list_del_init(&cursor->throttled_csd_list);
--
- 		if (cfs_rq_throttled(cursor))
- 			unthrottle_cfs_rq(cursor);
-+
-+		list_del_init(&cursor->throttled_csd_list);
- 	}
- 
- 	rcu_read_unlock();
-@@ -6034,11 +6034,11 @@ static bool distribute_cfs_runtime(struct cfs_bandwidth *cfs_b)
- 
- 		rq_lock_irqsave(rq, &rf);
- 
--		list_del_init(&cfs_rq->throttled_csd_list);
--
- 		if (cfs_rq_throttled(cfs_rq))
- 			unthrottle_cfs_rq(cfs_rq);
- 
-+		list_del_init(&cfs_rq->throttled_csd_list);
-+
- 		rq_unlock_irqrestore(rq, &rf);
- 	}
- 	SCHED_WARN_ON(!list_empty(&local_unthrottle));
--- 
-2.48.1.658.g4767266eb4-goog
+Tested on:
+
+commit:         50a0c754 Add linux-next specific files for 20250220
+git tree:       linux-next
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4e945b2fe8e5992f
+dashboard link: https://syzkaller.appspot.com/bug?extid=9c957444e37d521b3b94
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=162567f8580000
 
