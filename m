@@ -1,191 +1,101 @@
-Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C50C024CEC2;
-	Fri, 21 Feb 2025 17:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F29F724FC0D;
+	Fri, 21 Feb 2025 17:20:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740158389; cv=none; b=eig1x6EIUbmM4GfsUO/2KhKr7UVj0B9hwYfopDZO2FbZMUUlPQts/zeeOCeE0exH0LwuujnB75UBaY3bRQW44kXG4hAIqDVgroYqd/35K1CxGzPWNcx/i6CSbFtomj7X0ehnVbZQULlCvT9vcIcj0KURrLQsvy5vEwMtWw9JPDc=
+	t=1740158430; cv=none; b=QRLTcy5yFvUOLkT0PAJnomHbUppmZwlTmalWe6ZcK118g5LjdmBO6SjPoXW95FDspKUFIXSbiWDDCsWbptUH+fGvNAJxH39oXO41sz+jd0VOy7mkZuYVONjNUsDFbHjMiDxneMWGF3pSYPDE/IePE+pLPenJHP5igFchQ6GxldI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740158389; c=relaxed/simple;
-	bh=/DHdgcTv11J19FjTFiLnbR5oX2dg/1u2Cc/F1VKW0yM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k/SuIVZv1pFbIViGBhkeLRSkSWakBJcn5pHJL6QtOFo1UsW6AYC/kV55Cqxgr0aqpJesbVEboWU56rgFyMtoTdUF6WLFLYdzPaSaMzIKi5LJyGQtxuz3dQh4ql+SXATtiBK+mqlBGq7qWK8CGHTD92u0DwUSlnSu55hT/ysFXlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
-Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1tlWgj-00028I-00; Fri, 21 Feb 2025 18:19:45 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-	id DC6B1C0135; Fri, 21 Feb 2025 18:18:32 +0100 (CET)
-Date: Fri, 21 Feb 2025 18:18:32 +0100
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc: linux-clk@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
-	p.zabel@pengutronix.de, linux-mips@vger.kernel.org,
-	devicetree@vger.kernel.org, yangshiji66@outlook.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 6/6] mips: dts: ralink: mt7628a: update system
- controller node and its consumers
-Message-ID: <Z7i1aDGiHLsOFYyz@alpha.franken.de>
-References: <20250120092146.471951-1-sergio.paracuellos@gmail.com>
- <20250120092146.471951-7-sergio.paracuellos@gmail.com>
+	s=arc-20240116; t=1740158430; c=relaxed/simple;
+	bh=kJdUYKR/ptSnTrVPpsg+chFzKmKJQnRwk0j4IPeq6OM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uH6rjESUaV5I+NagQ8rxltDE8urJjmhutYMUoGPrp68xTJn+//kfnuV+fe5jIslT2IIVhhQbo8eVc6pG5YlDvGR2/EnoVEKWnNs0iTGYB1UnlwyalkPed/1Xc1BniddMMS/odQK/4RDtwUjgbkwFDBiueEvnWafY+mXxIgLhXw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7C61168F;
+	Fri, 21 Feb 2025 09:20:44 -0800 (PST)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 39BA13F5A1;
+	Fri, 21 Feb 2025 09:20:26 -0800 (PST)
+Message-ID: <b940bd7e-ed9b-4ade-9bd3-1de8cdae5d8f@arm.com>
+Date: Fri, 21 Feb 2025 17:20:24 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250120092146.471951-7-sergio.paracuellos@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] xlnx: dt-bindings: Convert to json-schema
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>,
+ Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>
+References: <20241213165240.3652961-1-vincenzo.frascino@arm.com>
+Content-Language: en-US
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+In-Reply-To: <20241213165240.3652961-1-vincenzo.frascino@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 20, 2025 at 10:21:46AM +0100, Sergio Paracuellos wrote:
-> Current MT7628A device tree file system controller node is wrong since it is
-> not matching bindings. Hence, update it to match current bindings updating
-> it also to use new introduced clock constants.
+Hi all,
+
+Since I did not hear from Srinivas for more then two months, I am going to post
+the following addition to the MAINTAINERS file as part of my next re-spin of
+this series later today:
+
++XILINX SOUND DRIVERS
++M:     Vincenzo Frascino <vincenzo.frascino@arm.com>
++S:     Maintained
++F:     Documentation/devicetree/bindings/sound/xlnx,i2s.txt
++F:     Documentation/devicetree/bindings/sound/xlnx,audio-formatter.txt
++F:     Documentation/devicetree/bindings/sound/xlnx,spdif.txt
++F:     sound/soc/xilinx/*
+
+Please let me know if there is any concern with it.
+
+Thanks and Regards,
+Vincenzo
+
+On 13/12/2024 16:52, Vincenzo Frascino wrote:
+> This series converts the folling Xilinx device tree binding documentation:
+>  - xlnx,i2s
+>  - xlnx,audio-formatter
+>  - xlnx,spdif
+> to json-schema.
 > 
-> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> ---
->  arch/mips/boot/dts/ralink/mt7628a.dtsi | 38 ++++++++++++++++----------
->  1 file changed, 24 insertions(+), 14 deletions(-)
+> To simplify the testing a linux tree rebased on 6.13-rc1 is accessible
+> at [1].
 > 
-> diff --git a/arch/mips/boot/dts/ralink/mt7628a.dtsi b/arch/mips/boot/dts/ralink/mt7628a.dtsi
-> index 45a15e005cc4..309966049c56 100644
-> --- a/arch/mips/boot/dts/ralink/mt7628a.dtsi
-> +++ b/arch/mips/boot/dts/ralink/mt7628a.dtsi
-> @@ -1,4 +1,5 @@
->  // SPDX-License-Identifier: GPL-2.0
-> +#include <dt-bindings/clock/mediatek,mtmips-sysc.h>
->  
->  / {
->  	#address-cells = <1>;
-> @@ -16,11 +17,6 @@ cpu@0 {
->  		};
->  	};
->  
-> -	resetc: reset-controller {
-> -		compatible = "ralink,rt2880-reset";
-> -		#reset-cells = <1>;
-> -	};
-> -
->  	cpuintc: interrupt-controller {
->  		#address-cells = <0>;
->  		#interrupt-cells = <1>;
-> @@ -36,9 +32,11 @@ palmbus@10000000 {
->  		#address-cells = <1>;
->  		#size-cells = <1>;
->  
-> -		sysc: system-controller@0 {
-> -			compatible = "ralink,mt7620a-sysc", "syscon";
-> +		sysc: syscon@0 {
-> +			compatible = "ralink,mt7628-sysc", "syscon";
->  			reg = <0x0 0x60>;
-> +			#clock-cells = <1>;
-> +			#reset-cells = <1>;
->  		};
->  
->  		pinmux: pinmux@60 {
-> @@ -138,7 +136,7 @@ watchdog: watchdog@100 {
->  			compatible = "mediatek,mt7621-wdt";
->  			reg = <0x100 0x30>;
->  
-> -			resets = <&resetc 8>;
-> +			resets = <&sysc 8>;
->  			reset-names = "wdt";
->  
->  			interrupt-parent = <&intc>;
-> @@ -154,7 +152,7 @@ intc: interrupt-controller@200 {
->  			interrupt-controller;
->  			#interrupt-cells = <1>;
->  
-> -			resets = <&resetc 9>;
-> +			resets = <&sysc 9>;
->  			reset-names = "intc";
->  
->  			interrupt-parent = <&cpuintc>;
-> @@ -190,7 +188,9 @@ spi: spi@b00 {
->  			pinctrl-names = "default";
->  			pinctrl-0 = <&pinmux_spi_spi>;
->  
-> -			resets = <&resetc 18>;
-> +			clocks = <&sysc MT76X8_CLK_SPI1>;
-> +
-> +			resets = <&sysc 18>;
->  			reset-names = "spi";
->  
->  			#address-cells = <1>;
-> @@ -206,7 +206,9 @@ i2c: i2c@900 {
->  			pinctrl-names = "default";
->  			pinctrl-0 = <&pinmux_i2c_i2c>;
->  
-> -			resets = <&resetc 16>;
-> +			clocks = <&sysc MT76X8_CLK_I2C>;
-> +
-> +			resets = <&sysc 16>;
->  			reset-names = "i2c";
->  
->  			#address-cells = <1>;
-> @@ -222,7 +224,9 @@ uart0: uartlite@c00 {
->  			pinctrl-names = "default";
->  			pinctrl-0 = <&pinmux_uart0_uart>;
->  
-> -			resets = <&resetc 12>;
-> +			clocks = <&sysc MT76X8_CLK_UART0>;
-> +
-> +			resets = <&sysc 12>;
->  			reset-names = "uart0";
->  
->  			interrupt-parent = <&intc>;
-> @@ -238,7 +242,9 @@ uart1: uart1@d00 {
->  			pinctrl-names = "default";
->  			pinctrl-0 = <&pinmux_uart1_uart>;
->  
-> -			resets = <&resetc 19>;
-> +			clocks = <&sysc MT76X8_CLK_UART1>;
-> +
-> +			resets = <&sysc 19>;
->  			reset-names = "uart1";
->  
->  			interrupt-parent = <&intc>;
-> @@ -254,7 +260,9 @@ uart2: uart2@e00 {
->  			pinctrl-names = "default";
->  			pinctrl-0 = <&pinmux_uart2_uart>;
->  
-> -			resets = <&resetc 20>;
-> +			clocks = <&sysc MT76X8_CLK_UART2>;
-> +
-> +			resets = <&sysc 20>;
->  			reset-names = "uart2";
->  
->  			interrupt-parent = <&intc>;
-> @@ -290,6 +298,8 @@ wmac: wmac@10300000 {
->  		compatible = "mediatek,mt7628-wmac";
->  		reg = <0x10300000 0x100000>;
->  
-> +		clocks = <&sysc MT76X8_CLK_WMAC>;
-> +
->  		interrupt-parent = <&cpuintc>;
->  		interrupts = <6>;
->  
-> -- 
-> 2.25.1
-
-I get
-
-  DTC     arch/mips/boot/dts/ralink/vocore2.dtb
-/local/tbogendoerfer/korg/linux/arch/mips/boot/dts/ralink/mt7628a.dtsi:275.28-284.4: ERROR (phandle_references): /usb-phy@10120000: Reference to non-existent node or label "resetc"
-
-/local/tbogendoerfer/korg/linux/arch/mips/boot/dts/ralink/mt7628a.dtsi:275.28-284.4: ERROR (phandle_references): /usb-phy@10120000: Reference to non-existent node or label "resetc"
-
-ERROR: Input tree has errors, aborting (use -f to force output)
-
-for CONFIG_DTB_VOCORE2=y and a similair failure for CONFIG_DTB_OMEGA2P=y
-
-I'll apply rest of the series, please send a fixed patch for mt7628a
-
-Thomas.
+> [1] https://codeberg.org/vincenzo/linux/src/branch/xlnx/dt-bindings/v1
+> 
+> Cc: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
+> Cc: Sudeep Holla <sudeep.holla@arm.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> 
+> Vincenzo Frascino (3):
+>   xlnx: dt-bindings: xlnx,i2s: Convert to json-schema
+>   xlnx: dt-bindings: xlnx,audio-formatter: Convert to json-schema
+>   xlnx: dt-bindings: xlnx,spdif: Convert to json-schema
+> 
+>  .../bindings/sound/xlnx,audio-formatter.txt   |  29 -----
+>  .../bindings/sound/xlnx,audio-formatter.yaml  |  84 +++++++++++++++
+>  .../devicetree/bindings/sound/xlnx,i2s.txt    |  28 -----
+>  .../devicetree/bindings/sound/xlnx,i2s.yaml   |  79 ++++++++++++++
+>  .../devicetree/bindings/sound/xlnx,spdif.txt  |  28 -----
+>  .../devicetree/bindings/sound/xlnx,spdif.yaml | 100 ++++++++++++++++++
+>  6 files changed, 263 insertions(+), 85 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/xlnx,audio-formatter.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/xlnx,audio-formatter.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/sound/xlnx,i2s.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/xlnx,i2s.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/sound/xlnx,spdif.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/xlnx,spdif.yaml
+> 
 
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Regards,
+Vincenzo
+
