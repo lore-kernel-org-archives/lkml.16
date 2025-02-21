@@ -1,53 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FD5F2054F5;
-	Fri, 21 Feb 2025 09:24:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50EAE200136;
+	Fri, 21 Feb 2025 09:26:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740129890; cv=none; b=KoWg6A1c0JOidkMZZX8W15FekN2gDtIbqcfw1NxAvp0vPWaiPWNvzJtAXkAKsQfoNrGcaTeYMppf/8BcyjIwAp6fCERJ3QNRmXGTWtazY3IJxIwKMMNZdEviPLBDv5aZuIRQAV0rBmZoI3qisLNBTZdF+N4jmtSJ5vpz7UN03IY=
+	t=1740129983; cv=none; b=BDmcDWw3XQU/KIRGXvhOkn9i62QzmSSJKZISn65Bt/5Fk+MgIw0Drf3RGiPZG3qK3cKzuPIzbGo8c/WwKs09to12SAq5KAG306uJbiMHHgVu6hoE7DDAtg0cSgRe/IlJgDEtmfdsspoHaCzYvdrppBk1NQ4cyz9sjTDmKySVRxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740129890; c=relaxed/simple;
-	bh=Mkbc3qelCH/W2kHudSUh2NgnIrAudBfPrsfPgdUq7N8=;
+	s=arc-20240116; t=1740129983; c=relaxed/simple;
+	bh=hOSsedCj3g38FhSSOd3SZ3fzOuo+HAK04UOzp4+ZXs4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=arD9bmPX9LWe4r8+zO4aV5H+NfbElUM191zTEY+Z7DiMvjIFj7MeztxFy+HgqI7gojalpH/PYZE7n+nP+sJiguWjQoafwJVUrsbvjoqddWa5X17AnOG1nQkhgU8GyafppTFl7eUw3x2IrGWv4+w0Clw7fhCh9h/V+7GcVPPfbqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NsN6g791; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XQh4o6xZF6sFmam62nf2PjBHCM4G5n0zdhOoG0r23oMK6fsMR7kqTIVAPdRNwCVFAuY58u0xesDNRhkegmQz9apPUgwp0Ikf/uG7jXVzCJLB8JGH1Z2tLPfbaCaAzrI2NPm5fmU5rPjJw8tvK8iGG2gSP6c5E+Iu3Saa4gzqcXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=kG7XmSet; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NsN6g791"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04732C4CED6;
-	Fri, 21 Feb 2025 09:24:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740129890;
-	bh=Mkbc3qelCH/W2kHudSUh2NgnIrAudBfPrsfPgdUq7N8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NsN6g791U2hyBrFr8h58NiXj8T6kXP9b1CLb8ZNmJPpwSUeZjXTFYJn7sZ0v7KMj7
-	 S4OZWtW5tUtKTMsybK1IwvFitRHI3uwZQnGGnxFPnEqPTZaC5JlYelP6qZKtpGX32e
-	 tYLHHbfeXn/MQjaKndQVEoa8lscfX2gwhHETtZTt2DTuacwF7pjKhD1t50jgAYoyB9
-	 /dMLG22LhJ0oGpYm1CbCsSoJc4Jx7GQ47uNdvZQgZeaFs5DEz5zZ5WM+4YCC/jNtUZ
-	 C7rLUR9jH05R4RgEoaLJh5GmZRSGcFQoYdxQ16kq4emHUPnADeqQ0lkVUnQSus9cy9
-	 QZcSnF4kCuM8A==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1tlPHI-000000003Zc-0nsl;
-	Fri, 21 Feb 2025 10:25:00 +0100
-Date: Fri, 21 Feb 2025 10:25:00 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Abel Vesa <abel.vesa@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Rajendra Nayak <quic_rjendra@quicinc.com>,
-	Sibi Sankar <quic_sibis@quicinc.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Trilok Soni <quic_tsoni@quicinc.com>, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v5 0/4] arm64: dts: qcom: x1e80100: crd/t14s:
- Enable Parade Type-C retimers
-Message-ID: <Z7hGbEUsQU_MUL5t@hovoldconsulting.com>
-References: <20250220-x1e80100-dts-crd-t14s-enable-typec-retimers-v5-0-380a3e0e7edc@linaro.org>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="kG7XmSet"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=XVUfXHkgpf0123n4/unRomqnVdNIJe5wzJMUHc/kqRE=; b=kG7XmSetoUZNQPGCyJL6PT6Gm0
+	N6tTiUhuzxjKG+Fmgqn42cXHYBopi+X4PM0AY9OfGgP4vxXrkLnMYYfn7/WNzLkGJgG0e1OXuct5v
+	c7gZHkjizflCnSjVkuwLcEmuvWHf7iluts+cY/OllGDpWhVmbbyWm8PGXmr3EPU3gWOLIbs7oPbJl
+	hbREmBl3R/iYaMktJ5SjctwVgp5BdfF7QhfAcVf4b7Cw9WkxeHDCtu/TvaqBW6lE3rD9o2pmM0922
+	ElicLgm5czPVDjG7Pc81dDOnR1NMTbE66eUZpvC5v3pQzKSirHXrUrxB5NTLcFZAR3xo3Z8RTUwC4
+	agpOZtag==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1tlPIR-000YQo-20;
+	Fri, 21 Feb 2025 17:26:12 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 21 Feb 2025 17:26:11 +0800
+Date: Fri, 21 Feb 2025 17:26:11 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Antoine Tenart <atenart@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Richard van Schagen <vschagen@icloud.com>,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: [PATCH] crypto: inside-secure: eip93: Correctly handle return of
+ for sg_nents_for_len
+Message-ID: <Z7hGs9rzgceurzWo@gondor.apana.org.au>
+References: <20250215233621.6277-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,38 +53,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250220-x1e80100-dts-crd-t14s-enable-typec-retimers-v5-0-380a3e0e7edc@linaro.org>
+In-Reply-To: <20250215233621.6277-1-ansuelsmth@gmail.com>
 
-On Thu, Feb 20, 2025 at 07:42:29PM +0200, Abel Vesa wrote:
-> Since the driver and dt-bindings have been alread merged, it has been
-> agreed offline that there is no point of holding on to these DT patches
-> even though there are some issues with plug/unplug during suspend in
-> both pmic-glink-altmode and ucsi-glink. These issues are being worked on
-> meanwhile. Merging these means that even though this will provide external DP
-> and USB orientation, plug/unplug during suspend will give some splats
-> and render both the USB orientation and DP broken. But then, other
-> X Elite boards already have these nodes described, so lets bring the crd
-> and t14s to the same level.
+On Sun, Feb 16, 2025 at 12:36:18AM +0100, Christian Marangi wrote:
+> Fix smatch warning for sg_nents_for_len return value in Inside Secure
+> EIP93 driver.
 > 
-> These patches are just a resend of the ones found in v5 and dropped in the v6
-> patchset of the driver and dt-bindings.
+> The return value of sg_nents_for_len was assigned to an u32 and the
+> error was ignored and converted to a positive integer.
 > 
-> Link to v5: https://lore.kernel.org/all/20241112-x1e80100-ps8830-v5-0-4ad83af4d162@linaro.org/
+> Rework the code to correctly handle the error from sg_nents_for_len to
+> mute smatch warning.
 > 
-> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> Fixes: 9739f5f93b78 ("crypto: eip93 - Add Inside Secure SafeXcel EIP-93 crypto engine support")
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 > ---
-> Abel Vesa (4):
->       arm64: dts: qcom: x1e80100-crd: Describe the Parade PS8830 retimers
->       arm64: dts: qcom: x1e80100-crd: Enable external DisplayPort support
->       arm64: dts: qcom: x1e80100-t14s: Describe the Parade PS8830 retimers
->       arm64: dts: qcom: x1e80100-t14s: Enable external DisplayPort support
+>  .../crypto/inside-secure/eip93/eip93-common.c | 25 ++++++++++++++-----
+>  1 file changed, 19 insertions(+), 6 deletions(-)
 
-It looks like you've addressed all the comments I had on v1 (except for
-a stray newline after a t14s port@2 node) and I've been running with
-these patches for a long time now without any issues (other than the
-glink hotplug issues mentioned above):
-
-Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
-Tested-by: Johan Hovold <johan+linaro@kernel.org>
-
-Johan
+Patch applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
