@@ -1,398 +1,156 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B7D25333B
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 20:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C2C2512D7;
+	Fri, 21 Feb 2025 20:11:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740168659; cv=none; b=B6ROrKg2D0Zs0H4hB8ryFeqJaGuffG+9/jKc/xIqG2sUBwR5f8CTY3+UiWMMR6Qd4WDlDPSgSDqbwQoKwGLzUwcE8YlQNck5t0dUJTfuO9ZRcrLoO+F+wR2gOy6e0VRJVEeQ6b+jXeVdwnrcYDjAkKnCP/unNV3P5m0n6OjvPZs=
+	t=1740168684; cv=none; b=RDmF4JsWxO7ZaeBA2mcQPT21Sc+SmxKL/SZAGfKSn2xw7tnOYPfuVBrjTVm62vxYT2M33sjMH4Ka6j/GR1FZlyURCuCOpbd9bqP/ixKSC4tz/aMD1EXZZeu0kys6h+7zk8MqQkSIAcf7BT6Q+SXKeRQA71QjwlNMdVzTr2f8EQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740168659; c=relaxed/simple;
-	bh=EDWww/LgXi4rD2gjhpGMFHSy1Axfqo7k3FPoX59UcOs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K1liSHkDORTorm42pT+IeIKDstZm117RUmnnomiRRMt7h2xJxx9YLg3M8hb6stn7W7SrbLssR4vRaGByK/fSGriHJiu/XjstszAHKDYqdEs1l0xKs5Fgy+vz5lkU9QAcpeCFmcqWr7+uj5Ys/broPD/kNYQzBy2aWeLYtcOuB5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kali.org; spf=pass smtp.mailfrom=kali.org; dkim=pass (2048-bit key) header.d=kali.org header.i=@kali.org header.b=dUBlFg1l; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kali.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kali.org
+	s=arc-20240116; t=1740168684; c=relaxed/simple;
+	bh=L9Ovkk/RRrfQrsD0lsLa4ubovPWTOd9u2jMfCHwM6us=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ILtYhU18eWZIb7+ppfLF5Wffr23bQpRhN2wMfXjD+rJHwRroW3rPSx5aDhWQQ2RMI+FpXkTXhwVNeni+Hc4KcBC/an8Uw/oZCm+YiC0aymn/6ghDevFzn7VFy6jRsL6xqu/sGh5Z/YeYChCp2ePWvWrzffgOSTZbWSUfb8cupKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LUr2Q7a6; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kali.org header.i=@kali.org header.b="dUBlFg1l"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e05780509dso3593160a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 12:10:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LUr2Q7a6"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5df07041c24so3660911a12.0;
+        Fri, 21 Feb 2025 12:11:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kali.org; s=google; t=1740168655; x=1740773455; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Bo9ISiBdYLAO7mwWcXDsfQJTeIVmf8ba5d1w8C/Q7H8=;
-        b=dUBlFg1li9W9ijZ5XW04sUbkKVadrbPTx1upHDq/F43vjBJ5vX5Hp+35eMOLJPEBFQ
-         nr6W1TQRD4S0NNCT6k0LyMT9GBERW+IPEzB58+zOO4hKHTnhsvs9S4zHfkw27iv6djjO
-         0Yj/qfiOjwrrotD6zi1zoKbHxjRdVQRq6CY90cTRnRyoe6iqXLW7l65EopKCX3DYOQfD
-         UYP2u7amYqOnxswm+C8AqtGBOujs6IDRnE6cIF7hi0ggswuasjXoAGNte17coEhHMjmo
-         KwPi4W5Vii09seTRXR7P2wCYc0baz3t31KOFzBctCDLoWsVKUmqhQ+TBlpwPFUa+Y/P2
-         +9RQ==
+        d=gmail.com; s=20230601; t=1740168680; x=1740773480; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=f6QfXUMWQv5rataWRZ+L/ZQO7XWSTCyFXZSgM/69Zyw=;
+        b=LUr2Q7a61imlfgueIlS/Lo88rJQZ18xCTCy7aN9IbdYtJfZ4P8utqSxU5lUnFn6L+B
+         2HFPYEIVY0GIIaVEAUHB9yZMOZOARPNURO8JixYcfi6N1lOntxMOFZ7a61hDAQLeyWAS
+         TviBWdFhs1+Uk72J+SCVjpP9qxpiriS0GlNX8DXUA1HGQNBcWdfR2FqIegmYsZtpYGLa
+         +dMZADPaZ8FmfUwXoTvR/oT4lwJFB3pbzgf6PvicyYTCs/XN2KmNmE+Oe8KIo3D1Bc5T
+         ADB2KZzmovpJOzTklp+F0+gK6qncvamcAfWb6s3YK86ZMcAVOqdiDUTdV1fudEQ8dxmT
+         euVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740168655; x=1740773455;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Bo9ISiBdYLAO7mwWcXDsfQJTeIVmf8ba5d1w8C/Q7H8=;
-        b=a13wUkTh6hyv2U7J381/uZ8De9TioFsveWkXoT8pqZ6EdSfyxcQmQ5lXn5BzK/OqnO
-         JtC9uUXi2ibGAqcnoRZcoQP8d/Dk8IJ6v5GoEiUzy4Dqhobu9WjssxALNsfB15kgD6dz
-         9O4/Zp9jQbFImjRXBllgdKqRpIKUFxBRIYhQfI1tQeFshfSjvAvsqki1nR4BGVigTGUo
-         lYqbvwhAX4vPGLtwHuYhPfgPAb27Myvd/CsBSNCfXPKhSw3+JPJhSK7vyjk0MTQphr7L
-         7LdqdsZ0E7whlGhRx9GPfQHApTjpbd5YT16pUXPabajUy9MRcCBcs3KdnZeNsmh06pp4
-         Z7Ww==
-X-Forwarded-Encrypted: i=1; AJvYcCXKGdVE9s3gGZKyHRJWRwcaUtX729Q119CkvmGU7+lGEz5cktMc0z0ZRW+t+dPFixMweJZ28H6kd58D6j8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyzds5Umc3RBfC9BOoEHYpBPpBcXDN/DTtZ77xmpaHlEJN+ligc
-	K8/7D0dGbCeA+MUpRbGbw5cCuXRDXGekG2Yh2LCgenTaD7KvXQXaEx9wUqnKVCgrXsZJ6LFY3t+
-	MPnCKdrvJk+oeFm0fJu4NxxzlJ0uwbEveUt0ukQ==
-X-Gm-Gg: ASbGncviVlTYHblqQzHhUuAVjJAGPznjkXNNaQIH1i3SKOuOc3wqi7UNvf6yThhpZcB
-	yKSr7uS2Bp15ckfZl70k1z/zdrusdIn5sRUjFl6PMYbmSP98x2pDnJ4Dnfm9flxkM8n1PWjb/2y
-	x3nhQd0H28
-X-Google-Smtp-Source: AGHT+IH2/qlbQgPbIh/nbYWi/sUpWIZX1a8MxJ070ntxeD0TZgcVfNJ3nmCoSR7bEK91zKOVWBiymAVyhtJ0SVa7Cyo=
-X-Received: by 2002:a05:6402:51cf:b0:5e0:8c35:a137 with SMTP id
- 4fb4d7f45d1cf-5e0b7247888mr3715021a12.23.1740168655462; Fri, 21 Feb 2025
- 12:10:55 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740168680; x=1740773480;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f6QfXUMWQv5rataWRZ+L/ZQO7XWSTCyFXZSgM/69Zyw=;
+        b=VcZ4ZrUHy9YA4hXwDsvbGy/NVjZlT+jLMIOX9TZp8ky3+dLrS5OWSmPAxZNTywWHgi
+         i9fv63SsOU9oZRcAqqnzPBDyxVebgUizhH/GTzHi+nlREb2fpS4RGFILIiJuy9jWWbN/
+         hLECs3IwEpSHvOJW2FIPB73SHdfMPOzhltkFNaeyCbFMkC0rOcjRC5byx3zcSWx0uIv9
+         R6rTFzR78OTF61GP3RT+xGbAxIrcSm6RaVKjP5qQBvqwIhaT2xHVdAeNYfS9UaUILcEM
+         HLF0Ec7n3sgQtynViXhjrv9DUNgs8nffuVfIQ+naFRzst+uizVI405TxGJS0bC3fZZN3
+         c1+g==
+X-Forwarded-Encrypted: i=1; AJvYcCVfjiwBbrxHzcKSdtNFKdZ1/HRur2XFirhZNUVf9R3by0N8QzYFvwTl7s0ihYO2XQawrrWTWN8K@vger.kernel.org, AJvYcCWFefAwiluOz7HetxfjLehb7hOYPtKSvNigDfC/2IricX/1YM5fHpNPThtcEo2niOG5yPHfq6lXU1r8vCM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyLKUpTKrfEpalcM2s2RbsK1qZxB8vlBVNOAc2UuZv3Tmxb5Mw
+	1A4WtRffm8ER/4rFyQn9eVnowqM++gnJv4RY330jr3tHxaySZR4P
+X-Gm-Gg: ASbGncvUV69m1q27gz141xnarfDcc6j1qjJFgU6t4k4Y+oUCReDY5FVLQLcg4I6+U+U
+	WnNGNJg8R+RzPc+z/FULSpCxeyr9BqYqdypf9IdBDqbsRmrlAebPnun1lx2kywTJODwTfzaPjrt
+	qKpNTSQbsUNTLqgnw+Y5LVTnXf95V/dP2mNdfss9rmmTAcO9MfrtKQ5pCjMejygN2UCuzYCazZo
+	Le7nIuD64oi8vXynYD9rvDPya8715mqyrLRzQg1Jsr0KKtOVdpEZJEISe1+We1VmmFlFZA2Nlk5
+	qjxQSLg5klFqQnLJj2nZE08KvZgIGGE4+Yec/clacGhCd2iDnzs1s/nFPWFT8zS06odnvdfloci
+	ylJ9olmbIJ9rO85vD2Michdnghnt10F/BKozgGANK15uu44VgPuLETPsn9+Tr2ScfRycW5mQyjU
+	WvKRp+2DT3CXK7
+X-Google-Smtp-Source: AGHT+IFNFb+yB0DGuaN58oRk5ysUosLAVKbBemzvkkTtGpLbRvy0yEKVeaIQMhJlEq8RkVd+mesLkA==
+X-Received: by 2002:a17:907:94c8:b0:aa6:6c46:7ca1 with SMTP id a640c23a62f3a-abc0d97e4eemr408476766b.10.1740168680088;
+        Fri, 21 Feb 2025 12:11:20 -0800 (PST)
+Received: from ?IPV6:2a02:3100:b29e:900:9dc2:647a:dfc:6311? (dynamic-2a02-3100-b29e-0900-9dc2-647a-0dfc-6311.310.pool.telefonica.de. [2a02:3100:b29e:900:9dc2:647a:dfc:6311])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-abbbe74100asm756317866b.95.2025.02.21.12.11.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2025 12:11:19 -0800 (PST)
+Message-ID: <eeba10a2-809a-4583-bd35-1f363c824e14@gmail.com>
+Date: Fri, 21 Feb 2025 21:12:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250221032141.1206902-1-alexey.klimov@linaro.org>
-In-Reply-To: <20250221032141.1206902-1-alexey.klimov@linaro.org>
-From: Steev Klimaszewski <steev@kali.org>
-Date: Fri, 21 Feb 2025 14:10:44 -0600
-X-Gm-Features: AWEUYZkAkKBDn-7D-WRkZwle1yjWvpLxfhceFL155lYDXn9_dqF05SAG85Mwlwo
-Message-ID: <CAKXuJqj4zKfA4HNNcooG5Ffqi+EKQ1RvuzWndZd=htoatwszOw@mail.gmail.com>
-Subject: Re: [PATCH v2] ASoC: codecs: wsa883x: Implement temperature reading
- and hwmon
-To: Alexey Klimov <alexey.klimov@linaro.org>
-Cc: srinivas.kandagatla@linaro.org, broonie@kernel.org, lgirdwood@gmail.com, 
-	krzysztof.kozlowski@linaro.org, perex@perex.cz, tiwai@suse.com, 
-	jdelvare@suse.com, linux@roeck-us.net, linux-sound@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hwmon@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next 3/3] r8169: disable RTL8126 ZRX-DC timeout
+To: Bjorn Helgaas <helgaas@kernel.org>, ChunHao Lin <hau@realtek.com>
+Cc: nic_swsd@realtek.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250221200132.GA357821@bhelgaas>
+Content-Language: en-US
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Autocrypt: addr=hkallweit1@gmail.com; keydata=
+ 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
+In-Reply-To: <20250221200132.GA357821@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Alexey,
+On 21.02.2025 21:01, Bjorn Helgaas wrote:
+> On Fri, Feb 21, 2025 at 03:18:28PM +0800, ChunHao Lin wrote:
+>> Disable it due to it dose not meet ZRX-DC specification. If it is enabled,
+>> device will exit L1 substate every 100ms. Disable it for saving more power
+>> in L1 substate.
+> 
+> s/dose/does/
+> 
+> Is ZRX-DC a PCIe spec?  A Google search suggests that it might not be
+> completely Realtek-specific?
+> 
+ZRX-DC is the receiver DC impedance as specified in the PCIe Base Specification.
+From what I've found after a quick search ASPM restrictions apply if this impedance
+isn't in the range 40-60 ohm.
 
-On Thu, Feb 20, 2025 at 9:21=E2=80=AFPM Alexey Klimov <alexey.klimov@linaro=
-.org> wrote:
->
-> Read temperature of the amplifier and expose it via hwmon interface, whic=
-h
-> will be later used during calibration of speaker protection algorithms.
-> The method is the same as for wsa884x and therefore this is based on
-> Krzysztof Kozlowski's approach implemented in commit 6b99dc62d940 ("ASoC:
-> codecs: wsa884x: Implement temperature reading and hwmon").
->
-> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Cc: Steev Klimaszewski <steev@kali.org>
-> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
-> ---
->
-> Changes in v2:
-> - add temperature conversion to millidegrees of Celcius
->   when amplifier is on to report correct data to hwmon;
-> - minor coding style fixes to make checkpatch --strict happy;
-> - correct typo (reference to wsa884x in the comment), small rewording.
->
->  sound/soc/codecs/wsa883x.c | 194 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 194 insertions(+)
->
-> diff --git a/sound/soc/codecs/wsa883x.c b/sound/soc/codecs/wsa883x.c
-> index 47da5674d7c9..a5a6cb90bb43 100644
-> --- a/sound/soc/codecs/wsa883x.c
-> +++ b/sound/soc/codecs/wsa883x.c
-> @@ -6,6 +6,7 @@
->  #include <linux/bitops.h>
->  #include <linux/device.h>
->  #include <linux/gpio/consumer.h>
-> +#include <linux/hwmon.h>
->  #include <linux/init.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
-> @@ -156,8 +157,28 @@
->  #define WSA883X_PA_FSM_ERR_COND         (WSA883X_DIG_CTRL_BASE + 0x0014)
->  #define WSA883X_PA_FSM_MSK              (WSA883X_DIG_CTRL_BASE + 0x0015)
->  #define WSA883X_PA_FSM_BYP              (WSA883X_DIG_CTRL_BASE + 0x0016)
-> +#define WSA883X_PA_FSM_BYP_DC_CAL_EN_MASK              0x01
-> +#define WSA883X_PA_FSM_BYP_DC_CAL_EN_SHIFT             0
-> +#define WSA883X_PA_FSM_BYP_CLK_WD_EN_MASK              0x02
-> +#define WSA883X_PA_FSM_BYP_CLK_WD_EN_SHIFT             1
-> +#define WSA883X_PA_FSM_BYP_BG_EN_MASK                  0x04
-> +#define WSA883X_PA_FSM_BYP_BG_EN_SHIFT                 2
-> +#define WSA883X_PA_FSM_BYP_BOOST_EN_MASK               0x08
-> +#define WSA883X_PA_FSM_BYP_BOOST_EN_SHIFT              3
-> +#define WSA883X_PA_FSM_BYP_PA_EN_MASK                  0x10
-> +#define WSA883X_PA_FSM_BYP_PA_EN_SHIFT                 4
-> +#define WSA883X_PA_FSM_BYP_D_UNMUTE_MASK               0x20
-> +#define WSA883X_PA_FSM_BYP_D_UNMUTE_SHIFT              5
-> +#define WSA883X_PA_FSM_BYP_SPKR_PROT_EN_MASK           0x40
-> +#define WSA883X_PA_FSM_BYP_SPKR_PROT_EN_SHIFT          6
-> +#define WSA883X_PA_FSM_BYP_TSADC_EN_MASK               0x80
-> +#define WSA883X_PA_FSM_BYP_TSADC_EN_SHIFT              7
->  #define WSA883X_PA_FSM_DBG              (WSA883X_DIG_CTRL_BASE + 0x0017)
->  #define WSA883X_TADC_VALUE_CTL          (WSA883X_DIG_CTRL_BASE + 0x0020)
-> +#define WSA883X_TADC_VALUE_CTL_TEMP_VALUE_RD_EN_MASK   0x01
-> +#define WSA883X_TADC_VALUE_CTL_TEMP_VALUE_RD_EN_SHIFT  0
-> +#define WSA883X_TADC_VALUE_CTL_VBAT_VALUE_RD_EN_MASK   0x02
-> +#define WSA883X_TADC_VALUE_CTL_VBAT_VALUE_RD_EN_SHIFT  1
->  #define WSA883X_TEMP_DETECT_CTL         (WSA883X_DIG_CTRL_BASE + 0x0021)
->  #define WSA883X_TEMP_MSB                (WSA883X_DIG_CTRL_BASE + 0x0022)
->  #define WSA883X_TEMP_LSB                (WSA883X_DIG_CTRL_BASE + 0x0023)
-> @@ -427,6 +448,17 @@
->                 SNDRV_PCM_FMTBIT_S24_LE |\
->                 SNDRV_PCM_FMTBIT_S24_3LE | SNDRV_PCM_FMTBIT_S32_LE)
->
-> +/* Two-point trimming for temperature calibration */
-> +#define WSA883X_T1_TEMP                        -10L
-> +#define WSA883X_T2_TEMP                        150L
-> +
-> +/*
-> + * Device will report senseless data in many cases, so discard any measu=
-rements
-> + * outside of valid range.
-> + */
-> +#define WSA883X_LOW_TEMP_THRESHOLD     5
-> +#define WSA883X_HIGH_TEMP_THRESHOLD    45
-> +
->  struct wsa883x_priv {
->         struct regmap *regmap;
->         struct device *dev;
-> @@ -441,6 +473,13 @@ struct wsa883x_priv {
->         int active_ports;
->         int dev_mode;
->         int comp_offset;
-> +       /*
-> +        * Protects temperature reading code (related to speaker protecti=
-on) and
-> +        * fields: temperature and pa_on.
-> +        */
-> +       struct mutex sp_lock;
-> +       unsigned int temperature;
-> +       bool pa_on;
->  };
->
->  enum {
-> @@ -1186,6 +1225,10 @@ static int wsa883x_spkr_event(struct snd_soc_dapm_=
-widget *w,
->
->         switch (event) {
->         case SND_SOC_DAPM_POST_PMU:
-> +               mutex_lock(&wsa883x->sp_lock);
-> +               wsa883x->pa_on =3D true;
-> +               mutex_unlock(&wsa883x->sp_lock);
-> +
->                 switch (wsa883x->dev_mode) {
->                 case RECEIVER:
->                         snd_soc_component_write_field(component, WSA883X_=
-CDC_PATH_MODE,
-> @@ -1235,6 +1278,9 @@ static int wsa883x_spkr_event(struct snd_soc_dapm_w=
-idget *w,
->                                               WSA883X_GLOBAL_PA_EN_MASK, =
-0);
->                 snd_soc_component_write_field(component, WSA883X_PDM_WD_C=
-TL,
->                                               WSA883X_PDM_EN_MASK, 0);
-> +               mutex_lock(&wsa883x->sp_lock);
-> +               wsa883x->pa_on =3D false;
-> +               mutex_unlock(&wsa883x->sp_lock);
->                 break;
->         }
->         return 0;
-> @@ -1367,6 +1413,140 @@ static struct snd_soc_dai_driver wsa883x_dais[] =
-=3D {
->         },
->  };
->
-> +static int wsa883x_get_temp(struct wsa883x_priv *wsa883x, long *temp)
-> +{
-> +       unsigned int d1_msb =3D 0, d1_lsb =3D 0, d2_msb =3D 0, d2_lsb =3D=
- 0;
-> +       unsigned int dmeas_msb =3D 0, dmeas_lsb =3D 0;
-> +       int d1, d2, dmeas;
-> +       unsigned int mask;
-> +       int ret, range;
-> +       long val;
-> +
-> +       guard(mutex)(&wsa883x->sp_lock);
-> +
-> +       if (wsa883x->pa_on) {
-> +               /*
-> +                * Reading temperature is possible only when Power Amplif=
-ier is
-> +                * off. Report last cached data.
-> +                */
-> +               *temp =3D wsa883x->temperature * 1000;
-> +               return 0;
-> +       }
-> +
-> +       ret =3D pm_runtime_resume_and_get(wsa883x->dev);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       mask =3D WSA883X_PA_FSM_BYP_DC_CAL_EN_MASK |
-> +              WSA883X_PA_FSM_BYP_CLK_WD_EN_MASK |
-> +              WSA883X_PA_FSM_BYP_BG_EN_MASK |
-> +              WSA883X_PA_FSM_BYP_D_UNMUTE_MASK |
-> +              WSA883X_PA_FSM_BYP_SPKR_PROT_EN_MASK |
-> +              WSA883X_PA_FSM_BYP_TSADC_EN_MASK;
-> +
-> +       /*
-> +        * Here and further do not care about read or update failures.
-> +        * For example, before turning the amplifier on for the first
-> +        * time, reading WSA883X_TEMP_DIN_MSB will always return 0.
-> +        * Instead, check if returned value is within reasonable
-> +        * thresholds.
-> +        */
-> +       regmap_update_bits(wsa883x->regmap, WSA883X_PA_FSM_BYP, mask, mas=
-k);
-> +
-> +       regmap_update_bits(wsa883x->regmap, WSA883X_TADC_VALUE_CTL,
-> +                          WSA883X_TADC_VALUE_CTL_TEMP_VALUE_RD_EN_MASK,
-> +                          FIELD_PREP(WSA883X_TADC_VALUE_CTL_TEMP_VALUE_R=
-D_EN_MASK, 0x0));
-> +
-> +       regmap_read(wsa883x->regmap, WSA883X_TEMP_MSB, &dmeas_msb);
-> +       regmap_read(wsa883x->regmap, WSA883X_TEMP_LSB, &dmeas_lsb);
-> +
-> +       regmap_update_bits(wsa883x->regmap, WSA883X_TADC_VALUE_CTL,
-> +                          WSA883X_TADC_VALUE_CTL_TEMP_VALUE_RD_EN_MASK,
-> +                          FIELD_PREP(WSA883X_TADC_VALUE_CTL_TEMP_VALUE_R=
-D_EN_MASK, 0x1));
-> +
-> +       regmap_read(wsa883x->regmap, WSA883X_OTP_REG_1, &d1_msb);
-> +       regmap_read(wsa883x->regmap, WSA883X_OTP_REG_2, &d1_lsb);
-> +       regmap_read(wsa883x->regmap, WSA883X_OTP_REG_3, &d2_msb);
-> +       regmap_read(wsa883x->regmap, WSA883X_OTP_REG_4, &d2_lsb);
-> +
-> +       regmap_update_bits(wsa883x->regmap, WSA883X_PA_FSM_BYP, mask, 0x0=
-);
-> +
-> +       dmeas =3D (((dmeas_msb & 0xff) << 0x8) | (dmeas_lsb & 0xff)) >> 0=
-x6;
-> +       d1 =3D (((d1_msb & 0xff) << 0x8) | (d1_lsb & 0xff)) >> 0x6;
-> +       d2 =3D (((d2_msb & 0xff) << 0x8) | (d2_lsb & 0xff)) >> 0x6;
-> +
-> +       if (d1 =3D=3D d2) {
-> +               /* Incorrect data in OTP? */
-> +               ret =3D -EINVAL;
-> +               goto out;
-> +       }
-> +
-> +       val =3D WSA883X_T1_TEMP + (((dmeas - d1) * (WSA883X_T2_TEMP - WSA=
-883X_T1_TEMP)) / (d2 - d1));
-> +       range =3D WSA883X_HIGH_TEMP_THRESHOLD - WSA883X_LOW_TEMP_THRESHOL=
-D;
-> +       if (in_range(val, WSA883X_LOW_TEMP_THRESHOLD, range)) {
-> +               wsa883x->temperature =3D val;
-> +               *temp =3D val * 1000;
-> +               ret =3D 0;
-> +       } else {
-> +               ret =3D -EAGAIN;
-> +       }
-> +out:
-> +       pm_runtime_mark_last_busy(wsa883x->dev);
-> +       pm_runtime_put_autosuspend(wsa883x->dev);
-> +
-> +       return ret;
-> +}
-> +
-> +static umode_t wsa883x_hwmon_is_visible(const void *data,
-> +                                       enum hwmon_sensor_types type, u32=
- attr,
-> +                                       int channel)
-> +{
-> +       if (type !=3D hwmon_temp)
-> +               return 0;
-> +
-> +       switch (attr) {
-> +       case hwmon_temp_input:
-> +               return 0444;
-> +       default:
-> +               break;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int wsa883x_hwmon_read(struct device *dev,
-> +                             enum hwmon_sensor_types type,
-> +                             u32 attr, int channel, long *temp)
-> +{
-> +       int ret;
-> +
-> +       switch (attr) {
-> +       case hwmon_temp_input:
-> +               ret =3D wsa883x_get_temp(dev_get_drvdata(dev), temp);
-> +               break;
-> +       default:
-> +               ret =3D -EOPNOTSUPP;
-> +               break;
-> +       }
-> +
-> +       return ret;
-> +}
-> +
-> +static const struct hwmon_channel_info *const wsa883x_hwmon_info[] =3D {
-> +       HWMON_CHANNEL_INFO(temp, HWMON_T_INPUT),
-> +       NULL
-> +};
-> +
-> +static const struct hwmon_ops wsa883x_hwmon_ops =3D {
-> +       .is_visible     =3D wsa883x_hwmon_is_visible,
-> +       .read           =3D wsa883x_hwmon_read,
-> +};
-> +
-> +static const struct hwmon_chip_info wsa883x_hwmon_chip_info =3D {
-> +       .ops    =3D &wsa883x_hwmon_ops,
-> +       .info   =3D wsa883x_hwmon_info,
-> +};
-> +
->  static int wsa883x_probe(struct sdw_slave *pdev,
->                          const struct sdw_device_id *id)
->  {
-> @@ -1402,6 +1582,7 @@ static int wsa883x_probe(struct sdw_slave *pdev,
->         wsa883x->sconfig.bps =3D 1;
->         wsa883x->sconfig.direction =3D SDW_DATA_DIR_RX;
->         wsa883x->sconfig.type =3D SDW_STREAM_PDM;
-> +       mutex_init(&wsa883x->sp_lock);
->
->         /**
->          * Port map index starts with 0, however the data port for this c=
-odec
-> @@ -1424,6 +1605,19 @@ static int wsa883x_probe(struct sdw_slave *pdev,
->                                     "regmap_init failed\n");
->                 goto err;
->         }
-> +
-> +       if (IS_REACHABLE(CONFIG_HWMON)) {
-> +               struct device *hwmon;
-> +
-> +               hwmon =3D devm_hwmon_device_register_with_info(dev, "wsa8=
-83x",
-> +                                                            wsa883x,
-> +                                                            &wsa883x_hwm=
-on_chip_info,
-> +                                                            NULL);
-> +               if (IS_ERR(hwmon))
-> +                       return dev_err_probe(dev, PTR_ERR(hwmon),
-> +                                            "Failed to register hwmon se=
-nsor\n");
-> +       }
-> +
->         pm_runtime_set_autosuspend_delay(dev, 3000);
->         pm_runtime_use_autosuspend(dev);
->         pm_runtime_mark_last_busy(dev);
-> --
-> 2.47.2
->
+>> +static void rtl_disable_zrxdc_timeout(struct rtl8169_private *tp)
+>> +{
+>> +	struct pci_dev *pdev = tp->pci_dev;
+>> +	u8 val;
+>> +
+>> +	if (pdev->cfg_size > 0x0890 &&
+>> +	    pci_read_config_byte(pdev, 0x0890, &val) == PCIBIOS_SUCCESSFUL &&
+>> +	    pci_write_config_byte(pdev, 0x0890, val & ~BIT(0)) == PCIBIOS_SUCCESSFUL)
+> 
+> Is this a standard PCIe extended capability?  If so, it would be nice
+> to search for it with pci_find_ext_capability() and use standard
+> #defines.
+> 
+> Bjorn
 
-With v2 applied, I do get the cached value showing up in monitoring
-and not 0C or 1C whenever audio playback occurs!
-
-Tested-by: Steev Klimaszewski <steev@kali.org> #Thinkpad X13s
