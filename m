@@ -1,77 +1,107 @@
-Received: from out28-195.mail.aliyun.com (out28-195.mail.aliyun.com [115.124.28.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09B71FECC2;
-	Fri, 21 Feb 2025 10:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.195
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 721DA205E18;
+	Fri, 21 Feb 2025 10:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740134550; cv=none; b=M9v69T2ry0gjo0eu7CT3nDf+19m06ozFxRw4dP29THDCqF3g5lrw3f+bchtepIaoaV+j2fpPCzOfZTJ+IR/CDxnibJvyyx+hJWUTfm2ehZhYXUs7eOBpZEqY8J1kZQADy4hHs1e4zooY+c/o8G3tWDVcSFkSgK31xV1Ss88X0o8=
+	t=1740134585; cv=none; b=QDN6chTiLkeqy1W2xGIW45zfSOpnBwxm7aZDL03em0E+xk7fhhQkirk012z0Xe1/KmXuNGuMW7H0nN3pgLqQ2HV1fiX+jEydGBqBzCu1WygpaLpCesocqJvnAzLsZrZV0BI6IqsAG/ZrMrzbFXaRWOqVE+TEk1iRwWEeNt4fC4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740134550; c=relaxed/simple;
-	bh=P/dnMhKBSL0cZoCTmCfRWmg71/OvQydkqUcu4vFPKJU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TpoUpI77qPEIUXlgXmh8qTDY2CwiUgQDetwGiePm8N2Ja+TckHOqkXbzsmYxLMLQixxIxAC/kx7RAUtmdG766MMXk/CPFkU7MdYeadpXAigcHk767AOcakfv7fS9bt/UW/CZfr8Fmrljc9oarADR1e8oVY+WotWBYeoJ6H/fATA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com; spf=pass smtp.mailfrom=awinic.com; arc=none smtp.client-ip=115.124.28.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awinic.com
-Received: from ubuntu-VirtualBox..(mailfrom:wangweidong.a@awinic.com fp:SMTPD_---.bYUQxP2_1740133591 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Fri, 21 Feb 2025 18:26:35 +0800
-From: wangweidong.a@awinic.com
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	wangweidong.a@awinic.com,
-	rf@opensource.cirrus.com,
-	jack.yu@realtek.com,
-	ivprusov@salutedevices.com,
-	zhoubinbin@loongson.cn,
-	quic_pkumpatl@quicinc.com,
-	paulha@opensource.cirrus.com,
-	nuno.sa@analog.com,
-	linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: yijiangtao@awinic.com
-Subject: [PATCH V1 1/2] ASoC: dt-bindings: Add schema for "awinic,aw88166"
-Date: Fri, 21 Feb 2025 18:26:22 +0800
-Message-ID: <20250221102623.369435-2-wangweidong.a@awinic.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250221102623.369435-1-wangweidong.a@awinic.com>
-References: <20250221102623.369435-1-wangweidong.a@awinic.com>
+	s=arc-20240116; t=1740134585; c=relaxed/simple;
+	bh=KWrFDt8ZyyvDNI14klHHLJn5BJSmuLX3HftfhtVunO0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g5qeDUBS5cInOx6HfLLr2vrNbKGlj3jPpO73O0Bj/eZzVUzSVzQT141kOXg2UnaXKtiLmrEP+jRPVUhhYiM7A5YyLUPBJlD+n5pQRu1ceS2LcPo/nsXUk9CQ7X858Plac5OF6Dt3XD/bdN++iKPTgwUqLd3BItVBW61y1roPtNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 97305169C;
+	Fri, 21 Feb 2025 02:43:20 -0800 (PST)
+Received: from [10.57.64.214] (unknown [10.57.64.214])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 465213F5A1;
+	Fri, 21 Feb 2025 02:43:01 -0800 (PST)
+Message-ID: <32fe0e71-e8d9-4404-8b48-a8b8e9ec71e7@arm.com>
+Date: Fri, 21 Feb 2025 10:43:00 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] thermal: gov_power_allocator: Update total_weight on bind
+ and cdev updates
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Yu-Che Cheng <giver@chromium.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Zhang Rui <rui.zhang@intel.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Chen-Yu Tsai <wenst@chromium.org>
+References: <20250219-fix-power-allocator-weight-v1-1-79b1a99e94eb@chromium.org>
+ <CAJZ5v0h8MyqEgC8Hf1_s4=kCj2W3Y0TWdVnbhwAiVLqED7WPow@mail.gmail.com>
+Content-Language: en-US
+From: Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <CAJZ5v0h8MyqEgC8Hf1_s4=kCj2W3Y0TWdVnbhwAiVLqED7WPow@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Weidong Wang <wangweidong.a@awinic.com>
 
-Add the awinic,aw88166 property to support the aw88166 chip.
 
-Signed-off-by: Weidong Wang <wangweidong.a@awinic.com>
----
- Documentation/devicetree/bindings/sound/awinic,aw88395.yaml | 1 +
- 1 file changed, 1 insertion(+)
+On 2/20/25 19:40, Rafael J. Wysocki wrote:
+> On Wed, Feb 19, 2025 at 8:07 AM Yu-Che Cheng <giver@chromium.org> wrote:
+>>
+>> params->total_weight is not initialized during bind and not updated when
+>> the bound cdev changes. The cooling device weight will not be used due
+>> to the uninitialized total_weight, until we trigger an update via sysfs.
+>>
+>> The bound cdev update will be triggered during thermal zone registration,
+>> where each cooling device will be bound to the thermal zone one by one.
+>>
+>> The power_allocator_bind can be called without additional cdev update
+>> when manually changing the policy of a thermal zone via sysfs.
 
-diff --git a/Documentation/devicetree/bindings/sound/awinic,aw88395.yaml b/Documentation/devicetree/bindings/sound/awinic,aw88395.yaml
-index 6676406bf2de..bb92d6ca3144 100644
---- a/Documentation/devicetree/bindings/sound/awinic,aw88395.yaml
-+++ b/Documentation/devicetree/bindings/sound/awinic,aw88395.yaml
-@@ -19,6 +19,7 @@ properties:
-     enum:
-       - awinic,aw88081
-       - awinic,aw88083
-+      - awinic,aw88166
-       - awinic,aw88261
-       - awinic,aw88395
-       - awinic,aw88399
--- 
-2.47.0
+Thanks Yu-Che for catching this.
 
+>>
+>> Update total_weight when bind and cdev updates to ensure total_weight is
+>> correct.
+>>
+>> Fixes: a3cd6db4cc2e ("thermal: gov_power_allocator: Support new update callback of weights")
+>> Signed-off-by: Yu-Che Cheng <giver@chromium.org>
+>> ---
+>>   drivers/thermal/gov_power_allocator.c | 9 +++++----
+>>   1 file changed, 5 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/thermal/gov_power_allocator.c b/drivers/thermal/gov_power_allocator.c
+>> index 3b644de3292e..600cb0e367c3 100644
+>> --- a/drivers/thermal/gov_power_allocator.c
+>> +++ b/drivers/thermal/gov_power_allocator.c
+>> @@ -656,11 +656,10 @@ static void power_allocator_update_tz(struct thermal_zone_device *tz,
+>>                          if (power_actor_is_valid(instance))
+>>                                  num_actors++;
+>>
+>> -               if (num_actors == params->num_actors)
+>> -                       return;
+>> +               if (num_actors != params->num_actors)
+>> +                       allocate_actors_buffer(params, num_actors);
+>>
+>> -               allocate_actors_buffer(params, num_actors);
+>> -               break;
+>> +               fallthrough;
+> 
+> This is basically fine, but I would add a new function, say
+> power_allocator_update_weight(), for updating the weight.
+> 
+>>          case THERMAL_INSTANCE_WEIGHT_CHANGED:
+> 
+> And I'd call it from here and from power_allocator_bind() below.
+> 
+>>                  params->total_weight = 0;
+>>                  list_for_each_entry(instance, &td->thermal_instances, trip_node)
+>> @@ -731,6 +730,8 @@ static int power_allocator_bind(struct thermal_zone_device *tz)
+>>
+>>          tz->governor_data = params;
+>>
+>> +       power_allocator_update_tz(tz, THERMAL_INSTANCE_WEIGHT_CHANGED);
+> 
+> Because this is kind of confusing (although it will work AFAICS).
+> 
+
+Thanks Rafael, I agree with suggestions. It would look cleaner.
