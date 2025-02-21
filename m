@@ -1,119 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C4251FECC2
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 07:33:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27651D89E4
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 07:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740123233; cv=none; b=ipgCNR1DYMJYeRZdC2Ae0FCRuQ9FAIdPOL53JpzarhLpOWZPlgqeMZtXXWnMmsdcbgPuyfMKwqR6Emp++vEGkN1YxWmpmSFfRJ8tgFC1I0IOmB+v1FBSwaeyBqTPKSYUDdC1nsGgvLK1Cy3V6aTD8FLPQ4qD/XoRLcfiFHlvkOM=
+	t=1740123306; cv=none; b=bXQX0e9ubVXztStYFHh/KVDaBsqnmS1ER1b76MY1JZQgQpptKYvaOttkLucYP9k96G4ykHbAdRfkGD8AhVvNM30GOxSJJsFmbtwS21WCZsEG93ygpFkNZ2tZfjJ0n07w8FmOwrHmBIybNr0TROCyiJom6rGwmrrHfyAW15E6TQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740123233; c=relaxed/simple;
-	bh=oRRxcUBsqPy8Q3B54F/KOcic1sLKeTYqF42oWYwzgdQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HuqhtyyuRXOKfwispeVd+bEeuSx11FVOZrX6K0hZSbAhfwOW1NtlFx2weN2WJtblqo4Oyjue2kQbjqLsF8/Y1l4GHbwrxsoOcKKIwJ/URY5QEa1KXNGZl1W8M448uqKkhRgqVhCJ+xp3C3ohfftYicdoEzVHMN+EFVhhSrkoFW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ShDaEQSg; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ShDaEQSg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47C44C4CED6;
-	Fri, 21 Feb 2025 07:33:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740123232;
-	bh=oRRxcUBsqPy8Q3B54F/KOcic1sLKeTYqF42oWYwzgdQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ShDaEQSgrJARrMHk9KJA6WGJ+FnJKhaV/gv715Wgzr6FNwNFHgVB+lBhZniYYIOby
-	 oY8A3Vi1YcGf/myF7Hzx08KUMu69H4wVnG/NJiy+Ly81SeSXh86ykoGqqetBgLakmW
-	 /vjcMiwYkuXmSyMra8oFqUJfQtsllrVKruWmuqzR1ThebcekVA0XlJpaeOqYbYNcQP
-	 UMTSeqF2z/ak4WXpoQqsy4pZxLh5J0pwFb4py0h6tGYe2mp4wbxgLE8k231JCO0+zX
-	 aOcKz4jJGoe9o2vECreEtpfiSv+yDKBOjqvKu9OrF7eftkFpiNT8bCnkkHDZDALdew
-	 y3jFpHTI99bDQ==
-Date: Tue, 18 Feb 2025 11:35:27 +0100
-From: Joel Granados <joel.granados@kernel.org>
-To: Petr Mladek <pmladek@suse.com>
-Cc: bot+bpf-ci@kernel.org, Douglas Anderson <dianders@chromium.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, kernel-ci@meta.com, andrii@kernel.org, daniel@iogearbox.net, 
-	martin.lau@linux.dev, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] treewide: const qualify ctl_tables where applicable
-Message-ID: <hrxhjywchs7kbovfvlpkqlazz4gakmntrwq74xhuno5ti6ye43@4rqev6uweu4p>
-References: <20250109-jag-ctl_table_const-v1-1-622aea7230cf@kernel.org>
- <501b718d1bd046bf3eb1932b11627e4cec6194f992124722840145bed109ac0a@mail.kernel.org>
- <fnrup4bdfgoeiy3nfsl56juhqjrnstntf4fg5jrcdxv226ehqp@alrqzkyfw6sl>
- <Z4TnZXCjgCIGEfsR@pathway.suse.cz>
- <42gh2e7ckwjcccorbrapeos42n4yr22koqotsu7qithb7cxl6x@ynn6yr5h7dtb>
+	s=arc-20240116; t=1740123306; c=relaxed/simple;
+	bh=peLrDcldK+g+S+9NNIER4V16mGRIhRlylovUJitm8tY=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=R7DaQPW818P9r0Ouh3Qr0YytWJIpoO5s5suyk2nGNZZCAGmgtc3+ymY/nj+hUim2mvW1ATTrthkDawCDTZSQvlzT9RM28ws7gdAWOqWqpsC13Xpy/Fhj7B9rhX1+zXrlsVirQsSYDr5KbWnIkFNYi3X8O+pkIeUsXmYifIjHmLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d289bf6c39so21717455ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Feb 2025 23:35:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740123304; x=1740728104;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2wO7Tys3wAQpSEY9OUnS2SGDXJLNVPcAyT82FAwUBps=;
+        b=iStx7IoTsfxJFLU86qNoKOFAhPUwR6NLGnWZG96UWRmHnPi7JPkeKfewdoCIoHB5gd
+         2Hbo2Yv2/8Bdy2ha2xYRaYj0f35vKlf6Sulsa/77VpAQJCx8svrxykN4wjmNSNwUuWPP
+         8I432g62D+n5nq7hwignfOCgZRTAqzwtKZMaVKXVeZY8xRzJ/jSIBpXuOsTf0SPa0a+F
+         2rtnBoZ6vdnTH2wBXqhmf/RwvCBIdfUQpvr1L2p/68C39+eaSQMuHG6/0vhpxIrShZsV
+         xTFAJKNoJF7aoxcdb4x8hRTZMuDclNXtsbhzv6A8ZxpO+Ikt9sJ/Muee85Getc2D/Crs
+         W6kA==
+X-Gm-Message-State: AOJu0Yx/fnSoUlnH5yhyqB6zEs/0HKbY/HiyfoK/10r4MSVMYJU9nMKy
+	7nm3tpAk0smlufqL2jZMbdELnJC/YzdSOa3XIN+q9moWCS5UGEVNYNrjCVCuUW5VgGEZOYPL4+k
+	sCGhTJ0msl3eSCsiuu+2qxcPdDP4vFsvzy4ULXLo8NcAGhZsBXJiErRI=
+X-Google-Smtp-Source: AGHT+IHAO1OUlanWs93544Puzl3lr6ASaQEN2ZXpvwYN1qlARprQpekoU9Qsra701uXQNXe0tx9QcTkXd+cE6Yt+Mcp0moMJFj7D
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <42gh2e7ckwjcccorbrapeos42n4yr22koqotsu7qithb7cxl6x@ynn6yr5h7dtb>
+X-Received: by 2002:a05:6e02:1066:b0:3d1:54ce:a8f9 with SMTP id
+ e9e14a558f8ab-3d2c027290emr60604425ab.10.1740123303790; Thu, 20 Feb 2025
+ 23:35:03 -0800 (PST)
+Date: Thu, 20 Feb 2025 23:35:03 -0800
+In-Reply-To: <20250221062718.2353693-1-lizhi.xu@windriver.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67b82ca7.050a0220.14d86d.030d.GAE@google.com>
+Subject: Re: [syzbot] [pm?] possible deadlock in lock_system_sleep
+From: syzbot <syzbot+ace60642828c074eb913@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, lizhi.xu@windriver.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Feb 18, 2025 at 11:29:53AM +0100, Joel Granados wrote:
-> On Mon, Jan 13, 2025 at 11:13:57AM +0100, Petr Mladek wrote:
-> > On Fri 2025-01-10 14:32:30, Joel Granados wrote:
-> > > On Thu, Jan 09, 2025 at 01:38:33PM +0000, bot+bpf-ci@kernel.org wrote:
-> > > > Dear patch submitter,
-> > > > 
-> > > > CI has tested the following submission:
-> > > > Status:     FAILURE
-> > > > Name:       treewide: const qualify ctl_tables where applicable
-> > > > Patchwork:  https://patchwork.kernel.org/project/netdevbpf/list/?series=923743&state=*
-> > > > Matrix:     https://github.com/kernel-patches/bpf/actions/runs/12690795270
-> > > > 
-> > > > Failed jobs:
-> > > > build-x86_64-gcc: https://github.com/kernel-patches/bpf/actions/runs/12690795270/job/35372434718
-> > > > build-x86_64-llvm-17: https://github.com/kernel-patches/bpf/actions/runs/12690795270/job/35372434997
-> > > > build-x86_64-llvm-17-O2: https://github.com/kernel-patches/bpf/actions/runs/12690795270/job/35372435294
-> > > > build-x86_64-llvm-18: https://github.com/kernel-patches/bpf/actions/runs/12690795270/job/35372435638
-> > > > build-x86_64-llvm-18-O2: https://github.com/kernel-patches/bpf/actions/runs/12690795270/job/35372435949
-> > > We can't make watchdog_hardlockup_sysctl const here because it is
-> > > changing the ctl_talbe.mode to 0644 if watchdog_hardlockup_available is
-> > > true. I'll remove this sysctl array from my patchset to move forward
-> > > with the general constification, but I still don't fully understand the
-> > > need for the modification of the permissions. 
-> > > 
-> > > My main question is: Cant we just leave the permissions as they where
-> > > originally (before the this commit [1])? The problem touched by [1] is
-> > > when the user writes to nmi_watchdog and watchdog_hardlockup_available
-> > > is false, they will receive a -ENOTSUPP error from proc_nmi_watchdog.
-> > > But wont they get an error anyway if they try to write to a read-only
-> > > file? Does this fix target some specific user-space application?
-> > > 
-> > > I have added the original to:/from: contacts from [1]. Please correct me
-> > > if I have miss-read the situation.
-> > > 
-> > > Best
-> > > 
-> > > [1] https://lore.kernel.org/lkml/20230526184139.1.I0d75971cc52a7283f495aac0bd5c3041aadc734e@changeid/
-> > 
-> > My understanding is that adding the const is going to help
-> > security. It will move the structure into .rodata section.
-> > Do I get it correctly, please?
-> > 
-> > On the other hand, the manipulation of the access rights just affects
-> > the error code which users might see: -ENOTSUPP vs. -EPERM.
-> > I agree that this is not important. Some people might even consider
-> > -ENOTSUPP as more informative.
-> > 
-> > From my POV, the commit 9ec272c586b07d1 ("watchdog/hardlockup: keep
-> > kernel.nmi_watchdog sysctl as 0444 if probe fails") can be reverted.
-> Perfect. I'll prepare a V1 with the revert and add some other
-> "straglers" that also need to be const qualified.
+Hello,
 
-Adding the list for visibility
-> 
-> Best
-> 
-> 
-> > 
-> > Best Regards,
-> > Petr
-> 
-> -- 
-> 
-> Joel Granados
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
--- 
+Reported-by: syzbot+ace60642828c074eb913@syzkaller.appspotmail.com
+Tested-by: syzbot+ace60642828c074eb913@syzkaller.appspotmail.com
 
-Joel Granados
+Tested on:
+
+commit:         33442609 Merge tag 'for-v6.14-rc' of git://git.kernel...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=126303b8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=61cbf5ac8a063ad4
+dashboard link: https://syzkaller.appspot.com/bug?extid=ace60642828c074eb913
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=16b0e7f8580000
+
+Note: testing is done by a robot and is best-effort only.
