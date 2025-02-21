@@ -1,156 +1,112 @@
-Received: from smtp-fw-52002.amazon.com (smtp-fw-52002.amazon.com [52.119.213.150])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B001F1535;
-	Fri, 21 Feb 2025 16:10:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34E421E282D
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 16:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740154246; cv=none; b=vDvve1Vt0+iB4DhpWCO93w6K79w3EB+cKrh6HUl67hbcYJO5CiPzeM/78rhua/EoeMRUTyEkoZr8ybexO9YgPTxxIjIfTw54FqlwyK7zC9QkgLF6KAIOIgq1ok3UfC9G2yBQYsdukbag49OYxurk0ie5b+6BcXBhqZEIu5+rhRc=
+	t=1740154262; cv=none; b=l5HU6lVeLG8VMn1z/hZg8ahb2lfpN2wdj3EZla8jhSC53t0Y+2eqhJ+gcQRmMwANkWAWV3H8pMDnPrf7kkpgwHIsSbFJS8ZqQdElEtR1TkKhuqiEJ3yB71tzOZZU7PGdBS+XfNdHHCJQpS7w4XkQX8JRScor+kKcoLqFXbl+Hq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740154246; c=relaxed/simple;
-	bh=haXYXj2KNnNM53EccSTxVj7puXHBh3hhQL/qUprzXn8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UH1159z2m5bm3jqoqO+me+rjLoGt7Cr8SNr9tVdnPAs6ge9NQXALwjLMdU2Jo3pbCMQRdeqfYCae900u4osMfN+FjO7AxKl/MIy1nPx2e8kWCbuqGIHTNlFESEIo2I6ogpkXafJYOu5PkVpucFZMJ0XHHLY3TkpCuWDJAuYMxf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk; spf=pass smtp.mailfrom=amazon.co.uk; dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b=qF6YWADD; arc=none smtp.client-ip=52.119.213.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.uk
+	s=arc-20240116; t=1740154262; c=relaxed/simple;
+	bh=KRjsAT5DUOpWHkO4tSIDUkdRch527sPbLWMDBLFtJyA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cf3HuoNSFVtHsbWSEDJ9nWcg1YRiLzTX/y6tTPVAkS6U5AsFGsebEqqxiC0glE7OoRq3by1Nxdim+FIIRNhL9PVNFrWa1npZkdJ5n2RmbFuUty5Ucr7SlzgKxvbdY6e6VjNBtZsbfOW0hgqMOJ1x7dtdRZqDPpjaKFf1Uks0qbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UW/3qSXe; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.co.uk header.i=@amazon.co.uk header.b="qF6YWADD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.co.uk; i=@amazon.co.uk; q=dns/txt;
-  s=amazon201209; t=1740154246; x=1771690246;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=GG+iBbH6CBZj8qfdCgUkXoIISA49vkr1DaWwQ2vmohw=;
-  b=qF6YWADDZdWUrPA7tPGh21okWh2I1shkMlVwVhFo4oUfsCeeZYK7TNHk
-   TbLyjzwV4iYvkfIMbef/9Z76add7g7V42zzlM1st5k8siUKnFV4CWCLQo
-   WD4pZkKi4QNdHWS2HqXFRQFlIsjOCx6eC4WGhh9XZp5ijAb/15PCTgjgj
-   M=;
-X-IronPort-AV: E=Sophos;i="6.13,305,1732579200"; 
-   d="scan'208";a="699167651"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 16:10:41 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.21.151:6686]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.48.97:2525] with esmtp (Farcaster)
- id 69e45197-d4c5-4ea5-a690-28fa854e89d7; Fri, 21 Feb 2025 16:10:40 +0000 (UTC)
-X-Farcaster-Flow-ID: 69e45197-d4c5-4ea5-a690-28fa854e89d7
-Received: from EX19D003UWB004.ant.amazon.com (10.13.138.24) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.39;
- Fri, 21 Feb 2025 16:10:40 +0000
-Received: from EX19MTAUWC002.ant.amazon.com (10.250.64.143) by
- EX19D003UWB004.ant.amazon.com (10.13.138.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 21 Feb 2025 16:10:39 +0000
-Received: from email-imr-corp-prod-pdx-all-2b-c1559d0e.us-west-2.amazon.com
- (10.25.36.210) by mail-relay.amazon.com (10.250.64.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id
- 15.2.1258.39 via Frontend Transport; Fri, 21 Feb 2025 16:10:39 +0000
-Received: from ua2d7e1a6107c5b.ant.amazon.com (dev-dsk-roypat-1c-dbe2a224.eu-west-1.amazon.com [172.19.88.180])
-	by email-imr-corp-prod-pdx-all-2b-c1559d0e.us-west-2.amazon.com (Postfix) with ESMTPS id B70BB404C9;
-	Fri, 21 Feb 2025 16:10:32 +0000 (UTC)
-From: Patrick Roy <roypat@amazon.co.uk>
-To: <rppt@kernel.org>, <david@redhat.com>, <seanjc@google.com>
-CC: Patrick Roy <roypat@amazon.co.uk>, <pbonzini@redhat.com>,
-	<corbet@lwn.net>, <willy@infradead.org>, <akpm@linux-foundation.org>,
-	<song@kernel.org>, <jolsa@kernel.org>, <ast@kernel.org>,
-	<daniel@iogearbox.net>, <andrii@kernel.org>, <martin.lau@linux.dev>,
-	<eddyz87@gmail.com>, <yonghong.song@linux.dev>, <john.fastabend@gmail.com>,
-	<kpsingh@kernel.org>, <sdf@fomichev.me>, <haoluo@google.com>,
-	<Liam.Howlett@oracle.com>, <lorenzo.stoakes@oracle.com>, <vbabka@suse.cz>,
-	<jannh@google.com>, <shuah@kernel.org>, <kvm@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>, <bpf@vger.kernel.org>,
-	<linux-kselftest@vger.kernel.org>, <tabba@google.com>, <jgowans@amazon.com>,
-	<graf@amazon.com>, <kalyazin@amazon.com>, <xmarcalx@amazon.com>,
-	<derekmn@amazon.com>, <jthoughton@google.com>
-Subject: [PATCH v4 12/12] KVM: selftests: Test guest execution from direct map removed gmem
-Date: Fri, 21 Feb 2025 16:07:25 +0000
-Message-ID: <20250221160728.1584559-13-roypat@amazon.co.uk>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250221160728.1584559-1-roypat@amazon.co.uk>
-References: <20250221160728.1584559-1-roypat@amazon.co.uk>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UW/3qSXe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740154261; x=1771690261;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KRjsAT5DUOpWHkO4tSIDUkdRch527sPbLWMDBLFtJyA=;
+  b=UW/3qSXecWXxHcbd71HU6keyyVOdSdRWyNjLx7SGtVHP75YgrP/lgmDH
+   A0UDJE0XTCaRHl+tW8CmALWLNx96n+OwNX49/bjKZ3+9XOgh0UuPTf6Ff
+   HbudjEY0Ba6LjdZRE4W5sCpP/kDvkKaHshRCKtdMWvopifGlmkhOPIhGa
+   DdGw5H814mecH1JaSsCdtVyhxTI6IBclb4ue4KmvpKyKfTazpETAHAjpC
+   YOJ8CW8Q8SWvHqrtorHdLYHxR2Iq03A7V/MCJaUB/76BJbs4MM1nJFps5
+   9w2OvA4B3fGRQolkOmaQx+ysqrzKRqSPShSivC4Wt4NK+Dp4Tn710+og4
+   w==;
+X-CSE-ConnectionGUID: 6WF1l1yITLqWMeAOscS31Q==
+X-CSE-MsgGUID: 0Vl0+A3NQmS98ZspCAxezg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11352"; a="58388059"
+X-IronPort-AV: E=Sophos;i="6.13,305,1732608000"; 
+   d="scan'208";a="58388059"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 08:11:01 -0800
+X-CSE-ConnectionGUID: S8BT3XOQRLKjH6e3xlYVOQ==
+X-CSE-MsgGUID: HjAahuYcQI+inxqd0Oaetg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="120644962"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 08:11:00 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tlVc8-0000000DgeM-2vfg;
+	Fri, 21 Feb 2025 18:10:56 +0200
+Date: Fri, 21 Feb 2025 18:10:56 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: kernel test robot <lkp@intel.com>
+Cc: Raag Jadav <raag.jadav@intel.com>, arnd@arndb.de,
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] io.h: drop unused headers
+Message-ID: <Z7ilkKt1waKJuZPi@smile.fi.intel.com>
+References: <20250220173305.2752125-1-raag.jadav@intel.com>
+ <202502211137.IRE8qrlR-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202502211137.IRE8qrlR-lkp@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Add a selftest that loads itself into guest_memfd (via
-KVM_GMEM_SHARED_MEM) and triggers an MMIO exit when executed. This
-exercises x86 MMIO emulation code inside KVM for guest_memfd-backed
-memslots where the guest_memfd folios are direct map removed.
-Particularly, it validates that x86 MMIO emulation code (guest page
-table walks + instruction fetch) correctly accesses gmem through the VMA
-that's been reflected into the memslot's userspace_addr field (instead
-of trying to do direct map accesses).
+On Fri, Feb 21, 2025 at 11:22:38AM +0800, kernel test robot wrote:
+> Hi Raag,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on b16e9f8547a328b19af59afc213ce323124d11e9]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Raag-Jadav/io-h-drop-unused-headers/20250221-013530
+> base:   b16e9f8547a328b19af59afc213ce323124d11e9
+> patch link:    https://lore.kernel.org/r/20250220173305.2752125-1-raag.jadav%40intel.com
+> patch subject: [PATCH v1] io.h: drop unused headers
+> config: nios2-randconfig-001-20250221 (https://download.01.org/0day-ci/archive/20250221/202502211137.IRE8qrlR-lkp@intel.com/config)
+> compiler: nios2-linux-gcc (GCC) 14.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250221/202502211137.IRE8qrlR-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202502211137.IRE8qrlR-lkp@intel.com/
 
-Signed-off-by: Patrick Roy <roypat@amazon.co.uk>
----
- .../selftests/kvm/set_memory_region_test.c    | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
+...
 
-diff --git a/tools/testing/selftests/kvm/set_memory_region_test.c b/tools/testing/selftests/kvm/set_memory_region_test.c
-index bc440d5aba57..16bbfe117a17 100644
---- a/tools/testing/selftests/kvm/set_memory_region_test.c
-+++ b/tools/testing/selftests/kvm/set_memory_region_test.c
-@@ -603,6 +603,42 @@ static void test_mmio_during_vectoring(void)
- 
- 	kvm_vm_free(vm);
- }
-+
-+static void guest_code_trigger_mmio(void)
-+{
-+	/*
-+	 * Read some GPA that is not backed by a memslot. KVM consider this
-+	 * as MMIO and tell userspace to emulate the read.
-+	 */
-+	READ_ONCE(*((uint64_t *)MEM_REGION_GPA));
-+
-+	GUEST_DONE();
-+}
-+
-+static void test_guest_memfd_mmio(void)
-+{
-+	struct kvm_vm *vm;
-+	struct kvm_vcpu *vcpu;
-+	struct vm_shape shape = {
-+		.mode = VM_MODE_DEFAULT,
-+		.type = KVM_X86_SW_PROTECTED_VM,
-+		.src_type = VM_MEM_SRC_GUEST_MEMFD_NO_DIRECT_MAP,
-+	};
-+	pthread_t vcpu_thread;
-+
-+	pr_info("Testing MMIO emulation for instructions in gmem\n");
-+
-+	vm = __vm_create_shape_with_one_vcpu(shape, &vcpu, 0, guest_code_trigger_mmio);
-+
-+	virt_map(vm, MEM_REGION_GPA, MEM_REGION_GPA, 1);
-+
-+	pthread_create(&vcpu_thread, NULL, vcpu_worker, vcpu);
-+
-+	/* If the MMIO read was successfully emulated, the vcpu thread will exit */
-+	pthread_join(vcpu_thread, NULL);
-+
-+	kvm_vm_free(vm);
-+}
- #endif
- 
- int main(int argc, char *argv[])
-@@ -630,6 +666,10 @@ int main(int argc, char *argv[])
- 	    (kvm_check_cap(KVM_CAP_VM_TYPES) & BIT(KVM_X86_SW_PROTECTED_VM))) {
- 		test_add_private_memory_region();
- 		test_add_overlapping_private_memory_regions();
-+		if (kvm_has_cap(KVM_CAP_GMEM_SHARED_MEM) && kvm_has_cap(KVM_CAP_GMEM_NO_DIRECT_MAP))
-+			test_guest_memfd_mmio();
-+		else
-+			pr_info("Skipping tests requiring KVM_CAP_GMEM_SHARED_MEM | KVM_CAP_GMEM_NO_DIRECT_MAP");
- 	} else {
- 		pr_info("Skipping tests for KVM_MEM_GUEST_MEMFD memory regions\n");
- 	}
+>    drivers/gpu/drm/drm_draw.c: At top level:
+> >> drivers/gpu/drm/drm_draw.c:134:1: warning: data definition has no type or storage class
+>      134 | EXPORT_SYMBOL(drm_draw_color_from_xrgb8888);
+>          | ^~~~~~~~~~~~~
+> >> drivers/gpu/drm/drm_draw.c:134:1: error: type defaults to 'int' in declaration of 'EXPORT_SYMBOL' [-Wimplicit-int]
+> >> drivers/gpu/drm/drm_draw.c:134:1: error: parameter names (without types) in function declaration [-Wdeclaration-missing-parameter-type]
+>    drivers/gpu/drm/drm_draw.c:151:1: warning: data definition has no type or storage class
+>      151 | EXPORT_SYMBOL(drm_draw_blit16);
+>          | ^~~~~~~~~~~~~
+
+I haven't looked deeply into this, but it might be the export.h is missing
+or it's just a followup of missing bug.h. In any case the io.h patch needs
+a prerequisite for dwm_draw.c to eliminate usage of "proxy" headers and follow
+IWYU principle. So, it will become a series of two. But as I said before,
+let's wait a bit longer.
+
 -- 
-2.48.1
+With Best Regards,
+Andy Shevchenko
+
 
