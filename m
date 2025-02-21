@@ -1,219 +1,112 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3D71DD9AB;
-	Fri, 21 Feb 2025 15:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077241D6DB9;
+	Fri, 21 Feb 2025 15:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740152571; cv=none; b=T/vXs4TDlBFIlD/GqrnulEwnxdczPEpKq7JU0stfnW13HjnXFX6jIujqaa7szWt8q9TXhlR3aTkp/0sJJvLX2Sb0fxlNYLPAjobFCoyxBuZOpGBgb2/Fx4tgnlvG6wwIkciL/WPxXPGb+qfSitvCeDyPQkhPOdCy51nzMXS9/dw=
+	t=1740152584; cv=none; b=c92k8a6UTdF5THsB2O1ynIu2rnl9bg6/t09tV4WJdKHrb3Afk6F/QFOzfmLLPdUAE401gt6ccFKJkldmQ1l+MnQlx+qYBZKN1u/9Qdsrv1CCA0Gkqc3XhyXBYFLdXJEdPqAFL5nqAOgfunFMfXVPJdpjP777R94o5UbobptZ8Iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740152571; c=relaxed/simple;
-	bh=3oGfUaAJqfdFFYmlKDmTZtZ50G7yUU86f5/6w5g2HrE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XR7OZfbKlXZmfw3PU0BimFoqBWnFDUcETryHw9YSrB990UiN3dxqZtLCzS7dgn7yMt9//sMNtaI6Mjw8o9mOMcJEbueLt6dnwwoIE2jUBvBMLUNr2s29ggFI3u0ibInch19xZQmBJKmJXZWj7P+iTgidY6Jj5q9EqTiRd0QOyrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZGoS3Cd0; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1740152584; c=relaxed/simple;
+	bh=7xi8uvF/5YUSk7sp6b7nIulrDXB9vRthhzIK/7gO8FU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mlWBBXTCz4iE5tBD0Bcy9kU6jwUq1QFTo4kM7XmdoTPmfksB2Ug+4aIeqSQ29pLtRS3msU5Aip1+AkimOEW+MGWHDn2w4k8aC5VO0ObGLYu2jHTWAU7HO14YFchaB0erA/h5Jhxoe5RaHTRuyChhTZdDh6Jr6Aij/+sCOBlhRQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jn/Dd6oF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZGoS3Cd0"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51LAu7O9029669;
-	Fri, 21 Feb 2025 15:42:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=KSlXcQ
-	u4bYwd9QVRA4LMcePl4d8VQOxalou03xKgF+4=; b=ZGoS3Cd0dXzWb/TjJkZBvG
-	RZvPkT10j6+s/4pk6XdYBzFUfLXE58cEjEgxUHHLx9LRf/1rPuNfVj9yj2FbPS9E
-	itruWfagpLsn4Jt5sQwvNRd1zK7O1MFg4E56lsWetS7TjF6NDgXRBP9JcH2YPkLD
-	FXcHSKFIPljDXwUeQtoRW4V6KqRgSKGfnjc6SKCmCKSGJK+7e6FygA0DyYfv7uX4
-	6IjI2S7eJeITRR9q9Od6194SXMuPbP3IAe3CDhW3KRLIylOo1GUTdtrhJZNjUVQO
-	7z736y/dcIZ+ZBb4+FZuVOBDeCpERdjwVX2bsmX2hVa1o6Kl0Zwmy0kzmo4/4PNw
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 44xfj9uv07-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Feb 2025 15:42:17 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51LFWmDq009721;
-	Fri, 21 Feb 2025 15:42:16 GMT
-Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 44w03ygs12-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Feb 2025 15:42:16 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51LFgGFU16843430
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 21 Feb 2025 15:42:16 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 60E9A58052;
-	Fri, 21 Feb 2025 15:42:16 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3B0E95805E;
-	Fri, 21 Feb 2025 15:42:15 +0000 (GMT)
-Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.157.102])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 21 Feb 2025 15:42:15 +0000 (GMT)
-Message-ID: <1883119129dbeeabad1f5239f042a7b920feef0f.camel@linux.ibm.com>
-Subject: Re: [PATCH v8 3/7] ima: kexec: skip IMA segment validation after
- kexec soft reboot
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
-        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
-        code@tyhicks.com, bauermann@kolabnow.com,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-        James.Bottomley@HansenPartnership.com, bhe@redhat.com,
-        vgoyal@redhat.com, dyoung@redhat.com
-Date: Fri, 21 Feb 2025 10:41:59 -0500
-In-Reply-To: <20250218225502.747963-4-chenste@linux.microsoft.com>
-References: <20250218225502.747963-1-chenste@linux.microsoft.com>
-	 <20250218225502.747963-4-chenste@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jn/Dd6oF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E479AC4CED6;
+	Fri, 21 Feb 2025 15:43:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740152583;
+	bh=7xi8uvF/5YUSk7sp6b7nIulrDXB9vRthhzIK/7gO8FU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Jn/Dd6oFEOaOJ5aGccbZTMfv5ZJZogO59bArTHkcRRKFIu2guukvJpxvYGlhtziVm
+	 PFVg4P+o9giv/21a9OFpoyYLmpyu2ku8NXIO1ZpVNSJcvPkGLLjwmT2dkSG2wjkufM
+	 8KXa7QpqTKEZXAh+OBXi3F6IaSqPnzQF77oh4ygWQvSd8KvAabEUt3L/7k/W/VTzs4
+	 HFfdZSSfadFpgpsag8Cww6I8n44QvzgTeM69E/aBU1ENhnyAwB+c32TFyEy4h5ueHl
+	 Nrk/fkFfsesf24LQ6KQx3Nla7zQL69wtbZYeHv2FJWSuc1mXm5T0YsLjXnxvSBXBqj
+	 0j/ADcH8JUm1Q==
+Date: Fri, 21 Feb 2025 16:42:51 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>, linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org, hdegoede@redhat.com
+Subject: Re: [PATCH v2 0/7] x86/efi/mixed: Decouple from legacy decompressor
+Message-ID: <Z7ie-zG0cJFX0MOz@gmail.com>
+References: <20250210174941.3251435-9-ardb+git@google.com>
+ <CAMj1kXHOqMM5uGxLTYuEf9KrxY5WzYvwo847JzoB-Qa2SN67Sg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: QCsQPTOODc6JC0-pUekND63em9iiktCZ
-X-Proofpoint-GUID: QCsQPTOODc6JC0-pUekND63em9iiktCZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-21_05,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- spamscore=0 lowpriorityscore=0 adultscore=0 phishscore=0 mlxscore=0
- impostorscore=0 priorityscore=1501 suspectscore=0 bulkscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502210111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXHOqMM5uGxLTYuEf9KrxY5WzYvwo847JzoB-Qa2SN67Sg@mail.gmail.com>
 
-On Tue, 2025-02-18 at 14:54 -0800, steven chen wrote:
-> kexec_calculate_store_digests() calculates and stores the digest of the
-> segment at kexec_file_load syscall where the IMA segment is also
-> allocated.=C2=A0 With this series, the IMA segment will be updated with t=
-he
-> measurement log at kexec execute stage when soft reboot is initiated.=20
-> Therefore, it may fail digest verification in verify_sha256_digest()=20
-> after kexec soft reboot into the new kernel. Therefore, the digest=20
-> calculation/verification of the IMA segment needs to be skipped.
->=20
-> Skip the calculating and storing digest of the IMA segment in
-> kexec_calculate_store_digests() so that it is not added to the
-> 'purgatory_sha_regions'.
->=20
-> Since verify_sha256_digest() only verifies 'purgatory_sha_regions',
-> no change is needed in verify_sha256_digest() in this context.
->=20
-> With this change, the IMA segment is not included in the digest
-> calculation, storage, and verification.
 
-Basically you're saying because the hash verification will fail, don't incl=
-ude
-the IMA buffer.  What's missing is the reason for not caring whether the IM=
-A
-hash is included or not.
+* Ard Biesheuvel <ardb@kernel.org> wrote:
 
-I understand this is the best we can do without making some major kexec cha=
-nges.
+> On Mon, 10 Feb 2025 at 18:50, Ard Biesheuvel <ardb+git@google.com> wrote:
+> >
+> > From: Ard Biesheuvel <ardb@kernel.org>
+> >
+> > Since commit
+> >
+> >   a1b87d54f4e4 ("x86/efistub: Avoid legacy decompressor when doing EFI boot")
+> >
+> > booting via the EFI stub no longer relies on the legacy decompressor,
+> > and instead, the kernel proper is decompressed by code executing in the
+> > context of the EFI boot services, and subsequently invoked directly.
+> >
+> > The only remaining dependency is the EFI mixed mode startup code, which
+> > makes a detour via the legacy decompressor's 32-bit entrypoint, in order
+> > to obtain a 1:1 mapping of memory, which is a prerequisite for 64-bit
+> > execution on x86.
+> >
+> > This detour requires some fiddly setup on the part of the mixed mode
+> > startup code, which has to stash the firmware stack pointer and boot
+> > arguments in memory, and create a fake struct boot_params to trick the
+> > code in startup_32 to behave as intended.
+> >
+> > This dependency also impedes reuse of the EFI stub code in other
+> > contexts, such as generic EFI zboot, which will reuse the EFI stub but
+> > not the legacy decompressor.
+> >
+> > So remove this dependency, by replacing this detour with a minimal
+> > reimplementation of the 1:1 mapping code. With some further cleanup
+> > applied on top, the line count drops substantially, but without loss of
+> > functionality. The resulting code can operate independently from the
+> > legacy decompressor, and is therefore moved out of arch/x86/boot/ and
+> > into the EFI libstub/ directory.
+> >
+> > Changes since v1 [0]:
+> > - Create new long mode GDT that extends the firmware's 32-bit only GDT
+> >   so that preserving/restoring data segment selectors or swapping out
+> >   GDTs and IDTs is no longer needed at all.
+> > - Rebase onto v6.14-rc1
+> >
+> > [0] https://lore.kernel.org/all/20250108182218.1453754-8-ardb+git@google.com/
+> >
+> > Ard Biesheuvel (7):
+> >   x86/efistub: Merge PE and handover entrypoints
+> >   x86/efi/mixed: Check CPU compatibility without relying on verify_cpu()
+> >   x86/efi/mixed: Factor out and clean up long mode entry
+> >   x86/efi/mixed: Set up 1:1 mapping of lower 4GiB in the stub
+> >   x86/efi/mixed: Remove dependency on legacy startup_32 code
+> >   x86/efi/mixed: Simplify and document thunking logic
+> >   x86/efi/mixed: Move mixed mode startup code into libstub
+> >
+> 
+> Unless anyone minds, I'd like to queue this up in the EFI tree.
+> 
+> Boris, Ingo?
 
->=20
-> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> Signed-off-by: steven chen <chenste@linux.microsoft.com>
-> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Sure!
 
-After updating the patch description,
+Acked-by: Ingo Molnar <mingo@kernel.org>
 
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+Thanks,
 
-> ---
-> =C2=A0include/linux/kexec.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 3 +++
-> =C2=A0kernel/kexec_file.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 22 ++++++++++++++++++++++
-> =C2=A0security/integrity/ima/ima_kexec.c |=C2=A0 3 +++
-> =C2=A03 files changed, 28 insertions(+)
->=20
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 4dbf806bccef..bd554ced9fb2 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -362,6 +362,9 @@ struct kimage {
-> =C2=A0
-> =C2=A0	phys_addr_t ima_buffer_addr;
-> =C2=A0	size_t ima_buffer_size;
-> +
-> +	unsigned long ima_segment_index;
-> +	bool is_ima_segment_index_set;
-> =C2=A0#endif
-> =C2=A0
-> =C2=A0	/* Core ELF header buffer */
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 3eedb8c226ad..606132253c79 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -38,6 +38,21 @@ void set_kexec_sig_enforced(void)
-> =C2=A0}
-> =C2=A0#endif
-> =C2=A0
-> +#ifdef CONFIG_IMA_KEXEC
-> +static bool check_ima_segment_index(struct kimage *image, int i)
-> +{
-> +	if (image->is_ima_segment_index_set && i =3D=3D image->ima_segment_inde=
-x)
-> +		return true;
-> +	else
-> +		return false;
-> +}
-> +#else
-> +static bool check_ima_segment_index(struct kimage *image, int i)
-> +{
-> +	return false;
-> +}
-> +#endif
-> +
-> =C2=A0static int kexec_calculate_store_digests(struct kimage *image);
-> =C2=A0
-> =C2=A0/* Maximum size in bytes for kernel/initrd files. */
-> @@ -764,6 +779,13 @@ static int kexec_calculate_store_digests(struct kima=
-ge
-> *image)
-> =C2=A0		if (ksegment->kbuf =3D=3D pi->purgatory_buf)
-> =C2=A0			continue;
-> =C2=A0
-> +		/*
-> +		 * Skip the segment if ima_segment_index is set and matches
-> +		 * the current index
-> +		 */
-> +		if (check_ima_segment_index(image, i))
-> +			continue;
-> +
-> =C2=A0		ret =3D crypto_shash_update(desc, ksegment->kbuf,
-> =C2=A0					=C2=A0 ksegment->bufsz);
-> =C2=A0		if (ret)
-> diff --git a/security/integrity/ima/ima_kexec.c
-> b/security/integrity/ima/ima_kexec.c
-> index 89088f1fa989..704676fa6615 100644
-> --- a/security/integrity/ima/ima_kexec.c
-> +++ b/security/integrity/ima/ima_kexec.c
-> @@ -160,6 +160,7 @@ void ima_add_kexec_buffer(struct kimage *image)
-> =C2=A0	kbuf.buffer =3D kexec_buffer;
-> =C2=A0	kbuf.bufsz =3D kexec_buffer_size;
-> =C2=A0	kbuf.memsz =3D kexec_segment_size;
-> +	image->is_ima_segment_index_set =3D false;
-> =C2=A0	ret =3D kexec_add_buffer(&kbuf);
-> =C2=A0	if (ret) {
-> =C2=A0		pr_err("Error passing over kexec measurement buffer.\n");
-> @@ -170,6 +171,8 @@ void ima_add_kexec_buffer(struct kimage *image)
-> =C2=A0	image->ima_buffer_addr =3D kbuf.mem;
-> =C2=A0	image->ima_buffer_size =3D kexec_segment_size;
-> =C2=A0	image->ima_buffer =3D kexec_buffer;
-> +	image->ima_segment_index =3D image->nr_segments - 1;
-> +	image->is_ima_segment_index_set =3D true;
-> =C2=A0
-> =C2=A0	/*
-> =C2=A0	 * kexec owns kexec_buffer after kexec_add_buffer() is called
-
+	Ingo
