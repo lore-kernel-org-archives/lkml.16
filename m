@@ -1,95 +1,93 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0783536AF5
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 21:24:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1150A1E9B29;
+	Fri, 21 Feb 2025 21:26:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740173075; cv=none; b=qURWRh1iR8Hdrif7CLpJn4Ll0YoZdoOrcd2nBUmgZR1maZ5Nfbd003lvuORh5/f2/HjnKJK5xuZITSDdRfhQmYd2K56QuhNTGkh3tKe61dDR5CXs5+m6lIobz3NGmnfeFjvmRkN7yES6bMhX+Vco6QGatgEFmH7x0pxVZYVg1Lk=
+	t=1740173169; cv=none; b=QHgLduRAbeZvqHM6AQmKHyO37gx9cAPJ08xK68EFCIfN/bMP1d189qDoDLY+pV2nHTYcyVtRe+qsqYdzG4SYQvlFi4bOvQDDT3BS2Pkrf0PNKOieHkLkGr7e0ALSdiaMSthrf2Erxdr53JaFQ/5KTAZEaDVV7pk0MUxb9DhNlf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740173075; c=relaxed/simple;
-	bh=1762NVQXdGje3dlNxOQSEQN5RBB3Nw2JuPPfR11IEIw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SOrLMZ6ixp6Qu6VLZcz5bONfsnhuQ7614yVfVwyY6ohVX5aat4vjPxIs2m0gOMp2uRRDi2p2Z08BFdFn7wTL8YRGbygRKYSM2g6qf7xomHr1oSd3E3iwx41JTg1afwchC8Xc5pGGED1zlWsdk1lQBcGPjYfdO5HJ67IH3clgSeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WKd3PWwv; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740173169; c=relaxed/simple;
+	bh=e6FP5rMsM9QldxBxgKUh/Xlk2sImzDtlxWc7RP2v5vs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MN8E3QLvZGr4cWEWiy5psHDrDvGO+p8X8KX5D+B6EeJJs3xJT+aDXvbtvdzGeqH/TOeZxbFSkKvuz5Y+9Xgjyvz2CYHx2JYyMxxQ1+uleqvy0ogK21fTVPQ0ZxWgDbudXaLKdyhL2fnY0lFNKpThlulldqp31JeT8wtLc3l92RA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ON91Etgl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WKd3PWwv"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5deb956aa5eso3182875a12.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 13:24:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740173072; x=1740777872; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1762NVQXdGje3dlNxOQSEQN5RBB3Nw2JuPPfR11IEIw=;
-        b=WKd3PWwvPVfjGUDESAF6DHLUQgG/7XN4oe7j2jT3hih6Jc6hCDLxJIqxxu5beMZYIC
-         hTzv7n0c876gTYp7XBiXhF0v1RI41A7l3yqsyfFabXrMJ4ZWaZcSa+rMpiTHF2Jzy5nZ
-         symdJseml2e8H0+5OTSIgVPF3S6dTytk2ZPjdN4Jwmt8XZjVHwXC3NiyZUSO5bCL9g9q
-         I509DsxTAc04a0WqMZT22lGT8j675DoEcfiHVUtFcWgVgpE1oaa8sM2CdDnZIPorqmY5
-         mbVpL9EPyWDgB8pJpyvkF8JOPpYRn+4Aj2xcufHMfCaZeJ+tKaBDW26nelyiESiWlp10
-         4OxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740173072; x=1740777872;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1762NVQXdGje3dlNxOQSEQN5RBB3Nw2JuPPfR11IEIw=;
-        b=BeIXzDl324x2JMlJwH8i6zyYQX0plFSeW6kXQYCCzShHJRH4yOZ50Pty+xbmMC/ZFE
-         vEspXlBMzmb8i1kAyeo6TgrV8DJFmIMbsGw+ouMXP0j+YylEf6065Wt6Ub41yT8ppBPI
-         MZ/hCTCPQ6lC+tNeqjQveU+XbqYqZdIRi1k4gSaITHXu4gobn/PRPG5OEqwr2QQdgUdv
-         jXidAusz71Y7abET0CB+kR+lNYPTTuQNutSFilkcLsZDWhIm2d+bEojU/G3BkFzSZfnb
-         nXZCWS/8/ESCRf3ZGpyGmF59L8OYuItHwqMiQ+A3BPL3VvVlFFK8MWBOeKwaW2OYO8SL
-         iKXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU1Uh/a1ByVqqnXAydboXiC2U/Y7okx6HDSiuV9xsHVPK1rFhaAZo0v/1IaNfVsaal4vGxgIOHLb6Btjw4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQxI4trzaUatVqWuV9Uo01bcoMm6HSf+I57CXDLBHVpDjM31kH
-	MMpPDOWjEo67qLh8z5yOuIpRtMrZZz+YPXJu1n6hRWdhrkzg5pUmGSpSGqgseAWGDuPyBrezFc3
-	n8StOo5YbnQOxL/xttxxQvWPppkDNgA==
-X-Gm-Gg: ASbGncs7Y/MFhKFarrGInxkGi9ryiTUuuywDIttkV132AlQ8fz1YmEDW3wF9UE3Inhx
-	jh5q3IZhq9Ou3xtt0SurxX5Lmrr4AQm6DI8W+hyLWPoHUTeeaGNb5xR+aJjkjfgZogKl/N5KlGM
-	ak6E0a7A==
-X-Google-Smtp-Source: AGHT+IGHZ3p0Yhcy1NooWckT7km21FHzEsXX7wdW6PJ+zdzWXhvCub+62TXotrdDn5kDSCkT35k7Jp72jwVmVlApND0=
-X-Received: by 2002:a05:6402:51d2:b0:5e0:9250:435a with SMTP id
- 4fb4d7f45d1cf-5e0b7252eb7mr10284527a12.20.1740173072026; Fri, 21 Feb 2025
- 13:24:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ON91Etgl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36BF8C4CED6;
+	Fri, 21 Feb 2025 21:26:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740173168;
+	bh=e6FP5rMsM9QldxBxgKUh/Xlk2sImzDtlxWc7RP2v5vs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ON91Etglnvbjw8rrlaZw4oBZTVdnKCEPRQQbOFv1KN8zemGOCitRgkWR6TC7MD/6T
+	 MMEBk0StzOyjqR+EdnEyos0o6DhTAcegQ1lEF1LoPnXMQMHK/SC9R4+CQQMMQiHEfJ
+	 X7jmBSnivKLlnjmQanQYxC1vYaFkl3So/4ueVLPTva54kGvpK9bNCcgABmtSwBE4xI
+	 Ix7vHK0Kfb3eRaabGFWSDUrwnITjQWuK9Srt158Q0PDmZuDtnlSZ4pFkPOxSD8L9Ge
+	 Rl8tiGrUiHoc6REySVeS2GIu4WlXQSkblmpLodnje78nwvkpO+ETXHqO/caB13jDNY
+	 xqHOy+1aMISbQ==
+Date: Fri, 21 Feb 2025 13:26:03 -0800
+From: Nathan Chancellor <nathan@kernel.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH] kbuild: hdrcheck: fix cross build with clang
+Message-ID: <20250221212603.GA3561672@ax162>
+References: <20250221212017.809382-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAPM=9tyHJiMrF8nxXe=mhn0i5N1v-7RHh2TZfoz8BoUBBnuxzw@mail.gmail.com>
- <CAHk-=wiJYQwSMoor__B-8D71S8=Dn5BeAY6tOzSL4u3MEZrtcw@mail.gmail.com>
-In-Reply-To: <CAHk-=wiJYQwSMoor__B-8D71S8=Dn5BeAY6tOzSL4u3MEZrtcw@mail.gmail.com>
-From: Dave Airlie <airlied@gmail.com>
-Date: Sat, 22 Feb 2025 07:24:20 +1000
-X-Gm-Features: AWEUYZmZnwC1hboMSOHw37C9Yg-dylJMTIImEuvQIZT68-vvD-BB6UCjp2DW_C8
-Message-ID: <CAPM=9txwcTE048cOGnSNfXqX+ykADgqDHRZmyfnLQGQ_9oRZTA@mail.gmail.com>
-Subject: Re: [git pull] drm fixes for 6.14-rc4
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Sima Vetter <sima@ffwll.ch>, dri-devel <dri-devel@lists.freedesktop.org>, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250221212017.809382-1-arnd@kernel.org>
 
-On Sat, 22 Feb 2025 at 07:15, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> Side note: I think you do something while editing or
-> cutting-and-pasting that loses indentation.
->
-> I sometimes have to guess at what the intended grouping is.
->
-> In this case, notice the "More catalog fixes" entry for the msm driver.
->
-> I *think* it refers to all the following bullet points up until the
-> "Core/GPU" grouping, but that is literally nothing but an edumacated
-> guess.
->
-> So when you write (or copy) the description, can I ask you to not drop
-> indentation like this?
+On Fri, Feb 21, 2025 at 10:20:07PM +0100, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The headercheck tries to call clang with a mix of compiler arguments
+> that don't include the target architecture. When building e.g. x86
+> headers on arm64, this produces a warning like
+> 
+>    clang: warning: unknown platform, assuming -mfloat-abi=soft
+> 
+> Add in the CLANG_FLAGS, which contain the target, in order to make it
+> build properly.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-I rewrite the MSM bits usually to align with others as they
-subcategorise and nobody else does, but I can keep the indentation if
-it doesn't look like noise on your end.
+This looks like a similar problem as the one fixed by
+commit 1b71c2fb04e7 ("kbuild: userprogs: fix bitsize and target
+detection on clang"), should it be addressed in the same manner
+(especially since I think the Fixes commit would be the same)? Given
+that the filter expression is the same, maybe it would be possible to
+unify them but that could happen as a follow up.
 
-Dave.
+> ---
+>  usr/include/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/usr/include/Makefile b/usr/include/Makefile
+> index 58a9cbe4eba4..99f9e904adcd 100644
+> --- a/usr/include/Makefile
+> +++ b/usr/include/Makefile
+> @@ -10,7 +10,7 @@ UAPI_CFLAGS := -std=c90 -Wall -Werror=implicit-function-declaration
+>  
+>  # In theory, we do not care -m32 or -m64 for header compile tests.
+>  # It is here just because CONFIG_CC_CAN_LINK is tested with -m32 or -m64.
+> -UAPI_CFLAGS += $(filter -m32 -m64 --target=%, $(KBUILD_CFLAGS))
+> +UAPI_CFLAGS += $(filter -m32 -m64 --target=%, $(KBUILD_CFLAGS) $(CLANG_FLAGS))
+>  
+>  # USERCFLAGS might contain sysroot location for CC.
+>  UAPI_CFLAGS += $(USERCFLAGS)
+> -- 
+> 2.39.5
+> 
