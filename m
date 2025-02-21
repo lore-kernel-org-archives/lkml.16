@@ -1,57 +1,56 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48FF82046B7;
-	Fri, 21 Feb 2025 09:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660DF204582;
+	Fri, 21 Feb 2025 09:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740130207; cv=none; b=WuE6TATnBmHZtB08VFQifCQGYHGrWWwT3Ogwd2Aw2r2fKMKZ3rSwPpM0s48oanuzJnLYj9C/tqqi2PgrfwneVLQSRAgbw5uinZENMx4xAV46ZBce/MrfLCL+bva3FbL8Egroj/smBXEosyQ6EV2sGzOqGCYxCzn0dbVooGoZwbU=
+	t=1740130207; cv=none; b=fzipwXiinSrknUREJt63bhh6Qv6t+OJ9RzFhQ5+nIkxkhd/BxaWkX3CxYPNIzAaP/HIyWvGmxIM32Gqw3ryhVmPrxCQERiSxSiXHpNqcyNG0BTMhskrU6C6uaTknY9gsdGDsfvTMMqlUQf5ZovomTwWsQ/8mAiI5RS5tEH73RJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740130207; c=relaxed/simple;
-	bh=RpcsefhhnfEYfdsMxYPb96qCBSHbkyV+wZHSLURNl3A=;
+	bh=/TRTM++2Nyi4h1NYSlRhaUan1RJwlkjtiN/tOj66uw4=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=UnPlsCk5ZNXwro+xo1Z86FMrXkpSGJ97GlSbKxC06A3QTEJn1X6I58ueOKiAn3r3Tr1LsvXH0Ukpv4DhZ98icxZyJ9DDRahcaGNA5lu/E7dvmkxkDorr6Nq1u1aSAJZ8SQf+awj44fl+DwN4c5/hnZEYympRgw5f+16QsmuD2jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=z0oFasjw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ocZ9Ror/; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 MIME-Version:Content-Type; b=MjgWYNoWPFGW73GxCNPLT6bYtNnEt1wJVHSAmDcRYZbcVu2e6wie37O5feiIN1YBIBPny6UpCuGUi365oEJtaFx0sctjqrwlmWu4TS4P8dBsZ+Xq+V0clZRfUiLUqlepXz+Sn1NvKvsNrpUKGXvIKW5scc/ATSVC59GEX28S1pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kTRURrWn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="z0oFasjw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ocZ9Ror/"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740130204;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Xn1YK5Rbwl21fIMQLMa2jkRsxua5z7AprrlyzmypaHk=;
-	b=z0oFasjwUX4OqPrCTmczsUAX4b9VPP+qb/2lqi56qbQKsREDNb7LRXybObX4Sri8xtEh40
-	pJ/0xgrS406ocbif7fccA9wR1Np72hrF44BBcnSI/EN+VIOD8hdnL9v4vA+8wUfeqQh1x1
-	vDg26BX0Y/Pd0GDfdmhbnJdaQ1WSqaU7N20QizOoRgSdEBk7ETU0pnHuA62oHYDh9oVl/t
-	kYbV1/ynbFj4z7RjHX6LGzL6iivPjH406BMza5ecuWaRFsG+1bDTV70jZTI7m02vDDIY89
-	aqc3yU3daGVh138wwksFkfXPsCeSQH9kAmKGNesuEv3SLNlxOrUF8P9+akghfA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740130204;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Xn1YK5Rbwl21fIMQLMa2jkRsxua5z7AprrlyzmypaHk=;
-	b=ocZ9Ror/AAB+Q4FTa3HD5O9awyQCTRyOoL8WdHe7hnu0bgWzMQd+Vig5zy5amULt0hWGjE
-	Mc0A5LU5PKJ2e6BQ==
-To: Nicolin Chen <nicolinc@nvidia.com>, jgg@nvidia.com,
- kevin.tian@intel.com, maz@kernel.org
-Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
- shuah@kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org,
- eric.auger@redhat.com, baolu.lu@linux.intel.com, yi.l.liu@intel.com,
- yury.norov@gmail.com, jacob.pan@linux.microsoft.com,
- patches@lists.linux.dev
-Subject: Re: [PATCH v2 4/7] irqchip: Have CONFIG_IRQ_MSI_IOMMU be selected
- by irqchips that need it
-In-Reply-To: <a2620f67002c5cdf974e89ca3bf905f5c0817be6.1740014950.git.nicolinc@nvidia.com>
-References: <cover.1740014950.git.nicolinc@nvidia.com>
- <a2620f67002c5cdf974e89ca3bf905f5c0817be6.1740014950.git.nicolinc@nvidia.com>
-Date: Fri, 21 Feb 2025 10:30:04 +0100
-Message-ID: <87frk7hcgz.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kTRURrWn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A323C4CED6;
+	Fri, 21 Feb 2025 09:30:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740130205;
+	bh=/TRTM++2Nyi4h1NYSlRhaUan1RJwlkjtiN/tOj66uw4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=kTRURrWnSjFYCD1pDgAIBiIEcy24OLXS31VbVpe2SkI4VbXUJpa6TT6Vq2ikkiVNp
+	 37/9GBN92d+5i+Kv1mLDqh7RTv+VvyCNxejbL/gxD923mZGCHEXSvYO3WxDJvXPBXG
+	 bfQJ3CCyYPNtWkO73zklXEeBGguzNIfYP8c9Q6drfEZydbaex/2XjOd/gA/s+nWKFJ
+	 WruVTnkiR7jmrwqJLAyA3/GtvJgz3JUpx0L7rSXmSmyhJOu0YUbAfUUQ+e2Cq2WpM3
+	 mOYiwMIy4sSryCPac8mnRhSy1+SUN0PqHKkTl6g3pDLZQsYDOc106NFDkx/iYyOWXC
+	 D+8mbTF57lEFQ==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <benno.lossin@proton.me>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Anna-Maria Behnsen"
+ <anna-maria@linutronix.de>,  "Frederic Weisbecker" <frederic@kernel.org>,
+  "Thomas Gleixner" <tglx@linutronix.de>,  "Danilo Krummrich"
+ <dakr@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
+ <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor
+ Gross" <tmgross@umich.edu>,  "Lyude Paul" <lyude@redhat.com>,  "Guangbo
+ Cui" <2407018371@qq.com>,  "Dirk Behme" <dirk.behme@gmail.com>,  "Daniel
+ Almeida" <daniel.almeida@collabora.com>,  "Tamir Duberstein"
+ <tamird@gmail.com>,  <rust-for-linux@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>, "Timothy G."
+ <c6qchwbke@relay.firefox.com>
+Subject: Re: [PATCH v8 12/14] rust: hrtimer: add `HrTimerMode`
+In-Reply-To: <a87ef54e-9a09-4cf6-bfe8-4bb98850cdda@proton.me> (Benno Lossin's
+	message of "Thu, 20 Feb 2025 23:23:55 +0000")
+References: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
+	<20250218-hrtimer-v3-v6-12-rc2-v8-12-48dedb015eb3@kernel.org>
+	<ysjzL6zVfMAm7OLlJMCtBkEnfdFAS2VeO4PYUFzUxcRZvKNxuRlLWPA29gJQOWa8QaH-S5K1WElhtuwWMBF4EA==@protonmail.internalid>
+	<a87ef54e-9a09-4cf6-bfe8-4bb98850cdda@proton.me>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Fri, 21 Feb 2025 10:17:40 +0100
+Message-ID: <87mseffyh7.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,30 +59,107 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-On Wed, Feb 19 2025 at 17:31, Nicolin Chen wrote:
+"Benno Lossin" <benno.lossin@proton.me> writes:
 
-> From: Jason Gunthorpe <jgg@nvidia.com>
+> On 18.02.25 14:27, Andreas Hindborg wrote:
+>> +/// Operational mode of [`HrTimer`].
+>> +#[derive(Clone, Copy)]
+>> +pub enum HrTimerMode {
+>> +    /// Timer expires at the given expiration time.
+>> +    Absolute,
+>> +    /// Timer expires after the given expiration time interpreted as a duration from now.
+>> +    Relative,
+>> +    /// Timer does not move between CPU cores.
+>> +    Pinned,
+>> +    /// Timer handler is executed in soft irq context.
+>> +    Soft,
+>> +    /// Timer handler is executed in hard irq context.
+>> +    Hard,
+>> +    /// Timer expires at the given expiration time.
+>> +    /// Timer does not move between CPU cores.
+>> +    AbsolutePinned,
+>> +    /// Timer expires after the given expiration time interpreted as a duration from now.
+>> +    /// Timer does not move between CPU cores.
+>> +    RelativePinned,
+>> +    /// Timer expires at the given expiration time.
+>> +    /// Timer handler is executed in soft irq context.
+>> +    AbsoluteSoft,
+>> +    /// Timer expires after the given expiration time interpreted as a duration from now.
+>> +    /// Timer handler is executed in soft irq context.
+>> +    RelativeSoft,
+>> +    /// Timer expires at the given expiration time.
+>> +    /// Timer does not move between CPU cores.
+>> +    /// Timer handler is executed in soft irq context.
+>> +    AbsolutePinnedSoft,
+>> +    /// Timer expires after the given expiration time interpreted as a duration from now.
+>> +    /// Timer does not move between CPU cores.
+>> +    /// Timer handler is executed in soft irq context.
+>> +    RelativePinnedSoft,
+>> +    /// Timer expires at the given expiration time.
+>> +    /// Timer handler is executed in hard irq context.
+>> +    AbsoluteHard,
+>> +    /// Timer expires after the given expiration time interpreted as a duration from now.
+>> +    /// Timer handler is executed in hard irq context.
+>> +    RelativeHard,
+>> +    /// Timer expires at the given expiration time.
+>> +    /// Timer does not move between CPU cores.
+>> +    /// Timer handler is executed in hard irq context.
+>> +    AbsolutePinnedHard,
+>> +    /// Timer expires after the given expiration time interpreted as a duration from now.
+>> +    /// Timer does not move between CPU cores.
+>> +    /// Timer handler is executed in hard irq context.
+>> +    RelativePinnedHard,
+>> +}
 >
-> Currently, IRQ_MSI_IOMMU is selected if DMA_IOMMU is available to provide
-> an implementation for iommu_dma_prepare/compose_msi_msg(). However, it'll
-> make more sense for irqchips that call prepare/compose to select it, and
-> that will trigger all the additional code and data to be compiled into
-> the kernel.
+> At some point we probably want to move this to bitfields, or do you
+> think it's better to keep it like this?
+
+Yes, eventually the would transition. The main difficulty is that not
+all flag combinations are legal, and the zero value is also a flag.
+There was some promising work being shared on Zulip for this [1], but I
+don't think it is completed yet. Added Timothy to CC.
+
+[1] https://rust-for-linux.zulipchat.com/#narrow/channel/291565-Help/topic/Best.20way.20to.20handle.20enum.2Fflags.20situation
+
+>> +
+>> +impl From<HrTimerMode> for bindings::hrtimer_mode {
+>> +    fn from(value: HrTimerMode) -> Self {
+>> +        use bindings::*;
+>> +        match value {
+>> +            HrTimerMode::Absolute => hrtimer_mode_HRTIMER_MODE_ABS,
+>> +            HrTimerMode::Relative => hrtimer_mode_HRTIMER_MODE_REL,
+>> +            HrTimerMode::Pinned => hrtimer_mode_HRTIMER_MODE_PINNED,
+>> +            HrTimerMode::Soft => hrtimer_mode_HRTIMER_MODE_SOFT,
+>> +            HrTimerMode::Hard => hrtimer_mode_HRTIMER_MODE_HARD,
+>> +            HrTimerMode::AbsolutePinned => hrtimer_mode_HRTIMER_MODE_ABS_PINNED,
+>> +            HrTimerMode::RelativePinned => hrtimer_mode_HRTIMER_MODE_REL_PINNED,
+>> +            HrTimerMode::AbsoluteSoft => hrtimer_mode_HRTIMER_MODE_ABS_SOFT,
+>> +            HrTimerMode::RelativeSoft => hrtimer_mode_HRTIMER_MODE_REL_SOFT,
+>> +            HrTimerMode::AbsolutePinnedSoft => hrtimer_mode_HRTIMER_MODE_ABS_PINNED_SOFT,
+>> +            HrTimerMode::RelativePinnedSoft => hrtimer_mode_HRTIMER_MODE_REL_PINNED_SOFT,
+>> +            HrTimerMode::AbsoluteHard => hrtimer_mode_HRTIMER_MODE_ABS_HARD,
+>> +            HrTimerMode::RelativeHard => hrtimer_mode_HRTIMER_MODE_REL_HARD,
+>> +            HrTimerMode::AbsolutePinnedHard => hrtimer_mode_HRTIMER_MODE_ABS_PINNED_HARD,
+>> +            HrTimerMode::RelativePinnedHard => hrtimer_mode_HRTIMER_MODE_REL_PINNED_HARD,
+>> +        }
+>> +    }
+>> +}
+>> +
+>> +impl From<HrTimerMode> for u64 {
+>> +    fn from(value: HrTimerMode) -> Self {
+>> +        Into::<bindings::hrtimer_mode>::into(value) as u64
+>> +    }
+>> +}
 >
-> If IRQ_MSI_IOMMU is selected with no IOMMU side implementation, then the
-> prepare/compose() will be NOP stubs.
->
-> If IRQ_MSI_IOMMU is not selected by an irqchip, then the related code on
-> the iommu side is compiled out.
->
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> Hmm do drivers really need these impls? If not, then you could also just
+> have a private function that does the conversion and use it only in the
+> abstraction layer.
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Similar to the other impls you commented on, I can move them private. I
+would prefer using `From` rather than some other function.
 
-I don't think I have conflicting changes here, so the MSI/IRQ related
-changes can be routed through the IOMMU tree along with the rest.
 
-Thanks,
+Best regards,
+Andreas Hindborg
 
-        tglx
+
