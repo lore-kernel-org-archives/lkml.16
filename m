@@ -1,106 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAC058632E
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 15:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382411CA9C
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 15:36:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740152112; cv=none; b=YrOko3DSVpII3wgRUGj2dIhh2Bfz7+dkj7y4lJ6WUVm7W7vNkep8KI53bLO7l6BUhuneQ2O3j0/trxRA8oK0Btn31fSMyAEuWXgureLeOEMQ2HgGh+FNPDzPsku7WOWc+Pwv3nYWyv+RVo7IMi+v9AFqbvibP/U46uRS9q+jwbk=
+	t=1740152168; cv=none; b=FRDS33yN/tSZusxUKgUveir91NbGzBG6oq7rVhvnvnIbmUkrTQ+xHkGGceSdZ4sRwi1VZdXJ+0rAOOTBeafsI25Zyf1jCtr+m1V+HsPqMEJw8y9dos7l4BUm9xLLd/SG0cHbYcBwMyyiJQrt3sKz1ZDOgKILAf6uM4ZD0W3IH0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740152112; c=relaxed/simple;
-	bh=HFbveIpxBrHCezKac0bPWSUzZSYqbqkw6nidRl1Irxw=;
+	s=arc-20240116; t=1740152168; c=relaxed/simple;
+	bh=DLSCqwpXg5JE6IlskrkJzVCf92FiqmwfRs7ztERMGUo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RvExM2GP5T3fU4qZ7GSSH+lQiOnM5SYTlxFOlQYkxBS52gQ6tSqZzhIm5NQZ7zWkjg9EPX2LVJPsaOeXA/8q3C+4XVPQDIcZNJPrhLul7vIDjyKTt3za9rBL93LrMPCesDZRFdK+xpsW+0lp7jc/YIF/KUZT8qhZmHybwh4KdWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OJgfNl3S; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=NLzvTBBZYhJFMk46W48ZS/d6grZbJ86tPkIF4D7giHgku6oEKPLq/GGLaL5qKJSMj4Fn7hCwaiVDD3iLKCGCeTtkAxvWPFmU6Z3fFgrpz1ParIQ2A5cpFZ8crKMVem/Eq/mYKoOQ/FUgCRDz/+bpEDc9V1I3AyFkujxQkxO6DtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=e+Igh1Dq; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OJgfNl3S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F23FBC4CEE2;
-	Fri, 21 Feb 2025 15:35:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740152112;
-	bh=HFbveIpxBrHCezKac0bPWSUzZSYqbqkw6nidRl1Irxw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OJgfNl3Sv/k0lydbFfAJYgv48UkwUsory7TtVR7CJC2KaUy1qnINNOVZQNyroUwIo
-	 4gCbF80U7wG3xjOoA3a1x0W/aaCPasW6C15q+rv2vkLFXGQH0Jzc7R80BrLAkfil4g
-	 bAlfxN3obgLbfIXOYbxTU31OZYYfTXK23XDduDlCRAlEDywHoSsO80l97q2axSx/5v
-	 Gk9K9uj/rYb/+c2amOJzh9MoOnkEWIyXezml8hqnqxtzH6JYiyraS0sY9KukmdnohL
-	 vq6LFXxcDtuPVqarCPx8m2IKzBaHcDfxVxJ1eloXdL/smXMkl4LII1kc0fSgYGSASY
-	 5WeNkluJ8/1xA==
-Date: Fri, 21 Feb 2025 15:35:02 +0000
-From: Will Deacon <will@kernel.org>
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Arnd Bergmann <arnd@arndb.de>, Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	David Hildenbrand <david@redhat.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Dev Jain <dev.jain@arm.com>, Kevin Brodsky <kevin.brodsky@arm.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] Fixes for hugetlb and vmalloc on arm64
-Message-ID: <20250221153501.GD20567@willie-the-truck>
-References: <20250217140419.1702389-1-ryan.roberts@arm.com>
- <Z7YsqO7ykGgcBFEI@arm.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="e+Igh1Dq"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-abbc38adeb1so392157566b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 07:36:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1740152164; x=1740756964; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=d5l4zz1sMG3mtHShUobc7HnHdYCuofJA4lkceeZVq4Q=;
+        b=e+Igh1DqcIbm68dfARHdNcNudZxqDaUKqDGxFMO0zyGqpyk/J4UESGPSEMbnN3hqA+
+         7QHCT/7WZ6kro64SZYZTLv5OjSK00DLComj7HkCFPuHLwCLelGZTF9cZfo1CueKtAaqP
+         OH/QXaiUl2j3mmTjJJtkwEP96dhDMrfHQon8e55Y0Fz7aaORZvOOfzaqd0yWsiRhohqm
+         MY4UaFN0kr0YBSFFwtkQcPTfnsoOjBs08FxgzhMX06NM47IZlaLQWz1jHgRt1j8fOus2
+         znrBmtuhdczwZOLbgw3/UmwSvYWSrYDthjYKlgKQiyPoDD5lrI+eZYHUFiOf2uqeowe9
+         B2/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740152164; x=1740756964;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=d5l4zz1sMG3mtHShUobc7HnHdYCuofJA4lkceeZVq4Q=;
+        b=GsGoP9SLet+DrRvdMKCrCB7W9ZxQCxbC3kCsI6uNnxQKLzxBRawdQ3e4b6uGPzBCpu
+         toXJvAaLFrJ3c4yjNS3cQO5aElMoIDB+2VBNMlaO3zUesuQFYQubE3t38gZDE8xCcWN5
+         OJdrYwWi5QWt+nkkat4dK3Tj9HznmsZerYN8FhK8/rt3Udk6h2iEMqB1exVVtLuYJgLE
+         YeckA5Swi9eVNDvD+9eFF1zOIOUlfu9EqSiUIGcWRV2i1+c8LmySjWZXdXLD7Tysv3MG
+         ySutw3xNfhxEfFjaBHw9REMrFgJPD/Gx8ndlYKTe63swADF6VnQlUfKMc+sd8ZVyiFM5
+         cFmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXfFB1iFaRvPn0+AUD6WgjyKIDWZtK0GKGTnOswIeO+QFK650Dc7pWuqz5Y70BecnEszKDlNhg7heqRplI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywv7UmewbJPS5KtgOh3JX7n9YDHzr51Cd+n27jxuFRJHCGhqnm9
+	8YhjXok7i2me5FHXtLVSr0p3t4MzZx8mtjT+OXCJ2ezA2GuuKCl6idDPuskgOJc=
+X-Gm-Gg: ASbGncs67FEk/QqZpZQH96tEVFV+ztIOzShkN8m9kub+PMOvCTNo0j+jNg3ndZuS/do
+	ZkjUoMT0k+I6REP5IN1deon2yO606nurfgqMgylUxx9XVwup5RFNcAsUPg719PseJ/7OiVJNm8a
+	64tta/WyjDkFUvB7zdgP6xF6TPYvatHntpNaOn1/tDsbLWOqEOTkBBapyXVFcwDHxvpkgeSCDTi
+	zRekrV8I9tMin1en+5kaUNzk8aGMTK4XVJv+sMTfSuTPWTP5nF5FEWa4GOfiydewnRAo1Kw8gFR
+	mBsCm3aS5YV3KJs8Q8Qb6HPYvOTt
+X-Google-Smtp-Source: AGHT+IE7R4MDw76EG5se1usjek3sk3eePWqQqCBEriY44mGinrtsqBn3iUcohkd9RyhQa0/COxWmNA==
+X-Received: by 2002:a17:906:c142:b0:ab7:5cc9:66fc with SMTP id a640c23a62f3a-abc09e46652mr372546066b.50.1740152164419;
+        Fri, 21 Feb 2025 07:36:04 -0800 (PST)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba5323225fsm1661890566b.24.2025.02.21.07.36.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 07:36:04 -0800 (PST)
+Date: Fri, 21 Feb 2025 16:36:02 +0100
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Tejun Heo <tj@kernel.org>, Abel Wu <wuyun.abel@bytedance.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Yury Norov <yury.norov@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Bitao Hu <yaoma@linux.alibaba.com>, Chen Ridong <chenridong@huawei.com>, 
+	"open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/3] cgroup/rstat: Add run_delay accounting for cgroups
+Message-ID: <m3og4sktkzf6j62terh4xcbfiw45ziymhmt7x7iuyzcogl67cy@ufqvgzttd2n7>
+References: <20250125052521.19487-1-wuyun.abel@bytedance.com>
+ <20250125052521.19487-4-wuyun.abel@bytedance.com>
+ <3wqaz6jb74i2cdtvkv4isvhapiiqukyicuol76s66xwixlaz3c@qr6bva3wbxkx>
+ <9515c474-366d-4692-91a7-a4c1a5fc18db@bytedance.com>
+ <qt3qdbvmrqtbceeogo32bw2b7v5otc3q6gfh7vgsk4vrydcgix@33hepjadeyjb>
+ <Z6onPMIxS0ixXxj9@slm.duckdns.org>
+ <20250210182545.GA2484@cmpxchg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z7YsqO7ykGgcBFEI@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250210182545.GA2484@cmpxchg.org>
 
-On Wed, Feb 19, 2025 at 07:10:32PM +0000, Catalin Marinas wrote:
-> Will, Ryan,
+On Mon, Feb 10, 2025 at 01:25:45PM -0500, Johannes Weiner <hannes@cmpxchg.org> wrote:
+> Yes, a more detailed description of the usecase would be helpful.
 > 
-> On Mon, Feb 17, 2025 at 02:04:13PM +0000, Ryan Roberts wrote:
-> > This series contains some fixes for hugetlb on arm64, and is split out from v1
-> > of a wider series at [1]. While the last patch is technically targetting core-mm
-> > and is not directly related to arm64, I'd like to to go via the arm64 tree so
-> > that the wider performance improvement series (v2 to be posted shortly) that
-> > depends on this series doesn't have to be robust to the fix not being present.
-> > 
-> > I've included maintainers/reviewers for all the arches that are (trivially)
-> > touched due to the API changes, hoping for some ACKs.
+> I'm not exactly sure how the sum of wait times in a cgroup would be
+> used to gauge load without taking available concurrency into account.
+> One second of aggregate wait time means something very different if
+> you have 200 cpus compared to if you have 2.
 > 
-> These fixes look fine to me and I think we should get them in for 6.14.
-> I think Andrew was ok with them going in via the arm64 tree:
-> 
-> https://lore.kernel.org/linux-arm-kernel/20250205235219.3c3a4b968087d1386d708b04@linux-foundation.org/
+> This is precisely what psi tries to capture. "Some" does provide group
+> loading information in a sense, but it's a
+>
+> ratio over available concurrency,
 
-I think the diffstat looks worse than it really is, as the arch changes
-are reasonably mechanical. I'd like to let it sit in next for a few days
-though, so I'll pick this up once we've resolved my comment on patch #2.
+This comes as a surprise to me (I originally assumed it's only
+time(some)/time(interval)).
+But I confirm that after actually looking at the avg* values it is over
+nr_tasks.
+If the value is already normalized by nr_tasks, I'm seeing less of a
+benefit of Σ run_delay.
 
-Ryan -- did you find all of these issues by inspection, or are you aware
-of anybody hitting them in practice?
+> and currently capped at 100%. I.e.  if you have N cpus, 100% some is
+> "at least N threads waiting at all times." There is a gradient below
+> that, but not above.
 
-Will
+Is this a typo? (s/some/full/ or s/at least N/at least 1/)
+
+(Actually, if I correct my thinking with the nr_tasks normalization,
+then your statement makes sense. OTOH, what is the difference betwen
+'full' and 'some' at 100%?)
+
+Also I played a bit.
+
+cat >/root/cpu_n.sh <<EOD
+#!/bin/bash
+
+worker() {
+	echo "$BASHPID: starting on $1"
+	taskset -c -p $i $BASHPID
+	while true ; do
+		true
+	done
+}
+
+for i in $(seq ${1:-1}) ; do
+	worker $i &
+	pids+=($!)
+done
+
+echo pids: ${pids[*]}
+wait
+EOD
+
+systemd-run -u test.service /root/cpu_n.sh 2
+# test.service/cpu.pressure:some is ~0
+
+systemd-run -u pressure.service /root/cpu_n.sh 1
+# test.service/cpu.pressure:some settles at ~25%, cpu1 is free, cpu2 half
+# test.service/cpu.pressure:full settles at ~25% too(?!), I'd expect 0
+                                            ^^^^^^^^^^^^
+
+(kernel v6.13)
+
+# pressure.service/cpu.pressure:some settles at ~50%, makes sense
+# pressure.service/cpu.pressure:full settles at ~50%, makes sense
+
+Thanks,
+Michal
