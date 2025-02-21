@@ -1,120 +1,112 @@
-Received: from sender4-pp-o94.zoho.com (sender4-pp-o94.zoho.com [136.143.188.94])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758E913DB9F;
-	Fri, 21 Feb 2025 01:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740101199; cv=pass; b=IpK9IeS2ahKv1xcsbQ3HLmBG3sCv84jemIQkZLdthrGCIqo6d3fa5x+nJtOVjNZgV0YkmaoN2SAoevX7c4dz1UnvJPPjAEjAwSj1+qceyaOalVkJk1wNn+zhEhIETUiZxoF5jkSXmhcsO/o862p7K2KUl9rv5fFp8UlAk13Jz/4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740101199; c=relaxed/simple;
-	bh=jJSVX2RrQtDAHNdHcfm0/wAcvFaJmQX1s57o1vOJo94=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=V/H1byrvO9CZ7k8r+hBMMsyaPr7aQhckLyqIP3RhfeOrddo5elTk8jQ884yubA/3FH4GlIthDM79N1Mfx98kOpV+H4I90MBv5ZIivUIOaX/gg6LTaxh6r1gcKNC0R0ek0eVDNbPxwNf6XC4YP0GEZoJcCN+nITI9yXeT5lJpB1Q=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com; spf=pass smtp.mailfrom=zohomail.com; dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b=DSZm1U73; arc=pass smtp.client-ip=136.143.188.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=zohomail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zohomail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5572A94A;
+	Fri, 21 Feb 2025 01:26:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740101217; cv=none; b=NTVwP8bQ3noiwhiYUd2f5u4Lqxa9Cc5m8kccU2WiQzzfM/GmvNH8Jz0f9l+qFB6uKaFQcGHwGxz6kSJgiFT7o1zhlid9IqTGaaCZ7DDrNt62+DuhRPaagAQFNnVB46WdvULMAAaNDM8z/0nuu8yG8EdTPecJrBB3Et5K7eTBu4s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740101217; c=relaxed/simple;
+	bh=z0ba38Mwb/77bp059pfXbDuObMcVMksMDAqKXmfGcuQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pTkEwYoBl42WS2C3Hsdy0N97EMY5ofkBFQGOCje9gfuXnIX3meuffdC0LU8USdfytNXlDPb8/QPYQ9YbHTu9eR8oGqUfU58oQ5jMPZOoXGPt7F7BI/QctVODzpqIpAbz33iofi6QqUkdClZH6Q93ZahpsWN0Bgt0oi7Dohj+XaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XzSceNiJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zohomail.com header.i=ming.li@zohomail.com header.b="DSZm1U73"
-ARC-Seal: i=1; a=rsa-sha256; t=1740101168; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=BROVFzOWPGvONJKu41VUsV3duKcEtwdRFXMUuKl6qlSQwiivHAv7STqs8S/OnDRVVadjlBY3SNASQlKGhNqnUEl4i9jAvvyTtVROeuYPBSiNsbiSxBA+UR/E5jQBwQDscuRp3VWiInB5lep+lfiYvEnhtooWRSSXuubMA4WVMzA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740101168; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=EC6hdBRAaNe+LM1jGuZXk5/BWpGrWVrmaRoztohpJHQ=; 
-	b=VjatBjoFAa7ZZ4sKYVsDCxrhjqgkPyVbEbsH9FRpJHSN/HhJfDWQIp5B1dyBaq2RhJD8ZpLU1TK9dmXvb5cRBtYgu2WEbXps9kGVV6AYulvdptMJajLX9wX5+F2ola7vktCHDPCln2IYPi1uf1v2fooAu12gZlvuBEpZQgxUuWY=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=zohomail.com;
-	spf=pass  smtp.mailfrom=ming.li@zohomail.com;
-	dmarc=pass header.from=<ming.li@zohomail.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740101168;
-	s=zm2022; d=zohomail.com; i=ming.li@zohomail.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Feedback-ID:Reply-To;
-	bh=EC6hdBRAaNe+LM1jGuZXk5/BWpGrWVrmaRoztohpJHQ=;
-	b=DSZm1U73dUgZqMWnZPtzeOQfXL5hz0n0KYcde40xq3FEPhk4R8nlw8GTIKpzc7HT
-	8pnBMGNRSh7UZo4JQq4MOxpMPDBPxynN36hRDkrD1Q48lP80jimQyC3SibI0Cm5073x
-	WDlwARvYWplv/ZU2x5Ee3jypcVB0DOOLdji3U8yU=
-Received: by mx.zohomail.com with SMTPS id 1740101166835944.9869850009496;
-	Thu, 20 Feb 2025 17:26:06 -0800 (PST)
-From: Li Ming <ming.li@zohomail.com>
-To: dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com
-Cc: linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Li Ming <ming.li@zohomail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v3 6/7] cxl/region: Drop goto pattern in cxl_dax_region_alloc()
-Date: Fri, 21 Feb 2025 09:24:52 +0800
-Message-Id: <20250221012453.126366-7-ming.li@zohomail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250221012453.126366-1-ming.li@zohomail.com>
-References: <20250221012453.126366-1-ming.li@zohomail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XzSceNiJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18B53C4CED1;
+	Fri, 21 Feb 2025 01:26:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740101217;
+	bh=z0ba38Mwb/77bp059pfXbDuObMcVMksMDAqKXmfGcuQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=XzSceNiJkcaKOCLQOOyMbKjfo8aHXTm2791fyHjotFCHhaqLZexqw1cgzC5oUxzAk
+	 n8NAPEGB3c99/sBBxy5L8js2OQ40jOVqadWS04zy4Qh7nZEFPUpM86PRwGVvXq1lji
+	 Oo8KHwWErPxmuEX63+1FTAIQyo4oc+VUSvjk4EHIpWP1ibtSggZ6eKfiCReM00gYvo
+	 MtjVei1j7h3S8loJ3mRY6ymkVujd1uhl9kDYOjt9+pItFUb8Sti1Db0S24emQv06js
+	 7+I21imZSShsxle0rXeih85mpde7I+E/5SSihDB+zaYo647NeEtFXCL/UlY59NF0vl
+	 tFDvhcJqzxJ5w==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id A122DCE04E4; Thu, 20 Feb 2025 17:26:56 -0800 (PST)
+Date: Thu, 20 Feb 2025 17:26:56 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Marco Elver <elver@google.com>
+Cc: Alexander Potapenko <glider@google.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Bill Wendling <morbo@google.com>, Boqun Feng <boqun.feng@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Ingo Molnar <mingo@kernel.org>, Jann Horn <jannh@google.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Justin Stitt <justinstitt@google.com>, Kees Cook <kees@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>,
+	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, rcu@vger.kernel.org,
+	linux-crypto@vger.kernel.org
+Subject: Re: [PATCH RFC 15/24] rcu: Support Clang's capability analysis
+Message-ID: <772d8ec7-e743-4ea8-8d62-6acd80bdbc20@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250206181711.1902989-1-elver@google.com>
+ <20250206181711.1902989-16-elver@google.com>
+ <a1483cb1-13a5-4d6e-87b0-fda5f66b0817@paulmck-laptop>
+ <CANpmjNOPiZ=h69V207AfcvWOB=Q+6QWzBKoKk1qTPVdfKsDQDw@mail.gmail.com>
+ <3f255ebb-80ca-4073-9d15-fa814d0d7528@paulmck-laptop>
+ <CANpmjNNHTg+uLOe-LaT-5OFP+bHaNxnKUskXqVricTbAppm-Dw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Feedback-ID: rr0801122763afccc3e0bf13c4fcf237c500000a2e18be141714b8afd49bfb979b618f1b45778593ff423b69:zu080112274e6e69bb57c99848a7e6e5a7000073d3cb19de40d2a2c7cdfabd16edc081006965258de78e4823:rf0801122d5b45866a6bde9f6136f84f6b00001e311490b10bf04dfa8de33b7ea8801703c06894ccfa501d8da61161339fb6:ZohoMail
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNNHTg+uLOe-LaT-5OFP+bHaNxnKUskXqVricTbAppm-Dw@mail.gmail.com>
 
-In cxl_dax_region_alloc(), there is a goto pattern to release the rwsem
-cxl_region_rwsem when the function returns, the down_read() and up_read
-can be replaced by a guard(rwsem_read) then the goto pattern can be
-removed.
+On Fri, Feb 21, 2025 at 01:16:00AM +0100, Marco Elver wrote:
+> On Thu, 20 Feb 2025 at 23:36, Paul E. McKenney <paulmck@kernel.org> wrote:
+> [...]
+> > Suppose that one function walks an RCU-protected list, calling some
+> > function from some other subsystem on each element.  Suppose that each
+> > element has another RCU protected list.
+> >
+> > It would be good if the two subsystems could just choose their desired
+> > flavor of RCU reader, without having to know about each other.
+> 
+> That's what I figured might be the case - thanks for clarifying.
+> 
+> > > Another problem was that if we want to indicate that "RCU" read lock
+> > > is held, then we should just be able to write
+> > > "__must_hold_shared(RCU)", and it shouldn't matter if rcu_read_lock()
+> > > or rcu_read_lock_bh() was used. Previously each of them acquired their
+> > > own capability "RCU" and "RCU_BH" respectively. But rather, we're
+> > > dealing with one acquiring a superset of the other, and expressing
+> > > that is also what I attempted to solve.
+> > > Let me rethink this...
+> >
+> > Would it work to have just one sort of RCU reader, relying on a separate
+> > BH-disable capability for the additional semantics of rcu_read_lock_bh()?
+> 
+> That's what I've tried with this patch (rcu_read_lock_bh() also
+> acquires "RCU", on top of "RCU_BH"). I need to add a re-entrancy test,
+> and make sure it doesn't complain about that. At a later stage we
+> might also want to add more general "BH" and "IRQ" capabilities to
+> denote they're disabled when held, but that'd overcomplicate the first
+> version of this series.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Alison Schofield <alison.schofield@intel.com>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Acked-by: Davidlohr Bueso <dave@stgolabs.net>
-Signed-off-by: Li Ming <ming.li@zohomail.com>
----
- drivers/cxl/core/region.c | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+Fair enough!  Then would it work to just do "RCU" now, and ad the "BH"
+and "IRQ" when those capabilities are added?
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index 8e68091e3f20..9f082bc0f4e3 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -3037,17 +3037,13 @@ static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
- 	struct cxl_dax_region *cxlr_dax;
- 	struct device *dev;
- 
--	down_read(&cxl_region_rwsem);
--	if (p->state != CXL_CONFIG_COMMIT) {
--		cxlr_dax = ERR_PTR(-ENXIO);
--		goto out;
--	}
-+	guard(rwsem_read)(&cxl_region_rwsem);
-+	if (p->state != CXL_CONFIG_COMMIT)
-+		return ERR_PTR(-ENXIO);
- 
- 	cxlr_dax = kzalloc(sizeof(*cxlr_dax), GFP_KERNEL);
--	if (!cxlr_dax) {
--		cxlr_dax = ERR_PTR(-ENOMEM);
--		goto out;
--	}
-+	if (!cxlr_dax)
-+		return ERR_PTR(-ENOMEM);
- 
- 	cxlr_dax->hpa_range.start = p->res->start;
- 	cxlr_dax->hpa_range.end = p->res->end;
-@@ -3060,8 +3056,6 @@ static struct cxl_dax_region *cxl_dax_region_alloc(struct cxl_region *cxlr)
- 	dev->parent = &cxlr->dev;
- 	dev->bus = &cxl_bus_type;
- 	dev->type = &cxl_dax_region_type;
--out:
--	up_read(&cxl_region_rwsem);
- 
- 	return cxlr_dax;
- }
--- 
-2.34.1
-
+							Thanx, Paul
