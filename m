@@ -1,73 +1,118 @@
-Received: from mail115-69.sinamail.sina.com.cn (mail115-69.sinamail.sina.com.cn [218.30.115.69])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA094209F58
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 12:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46087207A15;
+	Fri, 21 Feb 2025 12:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740140239; cv=none; b=BC1G8N9oFAl5DeZpdr91iMF7HzQVgRPSMZpAESlvDZ4GvVGmDDutkYgcXId+na1pQp+Y9qIxolMwNraUOiv+ONFrvjL4kRi4CR6fQ5zwVG4SgNtZGnTK+qum+7g3JfcCu8uKYi3T3du2rgeMJb5YLtfpUv7T0ARgn0q5iJvSnhQ=
+	t=1740140252; cv=none; b=IQYSDCN7yjZgzzi6Dhm5k1/S5a6xc71Nhtwh6iUHqslVom816sNHI4Xqt+EPcXbjYjQfX2MFSIL3csnuQ2Ih8BC24FPD9k7L9n3RMnT6TQDceDAIsMhAi4Y1twY8QD0AQ0QxOmdYd04tBcTwVHWCrGCtv3L5uy7N9VEKzpQvSYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740140239; c=relaxed/simple;
-	bh=f6eSK4Iy11NrnYfaOZ6BAPZJO7NSRjeD72OmFXcfok8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PGR40UE6C+Em0U+rdTVUDshjH+8DdiyFempRfy2KsvhO+faGU2WN3qrkQ5DWe+LmA9glHZp0lICtUXoSkdWqfcO1IGDzpyUEQbR4BclvpELxmvuq8sKqKR4A1z3yaM3BxC8V7b5l5gXLjC9QX0VGucuC3lIVBnKkaQlmeqNjNwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([116.24.8.75])
-	by sina.com (10.185.250.22) with ESMTP
-	id 67B86EBA000007A9; Fri, 21 Feb 2025 20:17:04 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 8578047602645
-X-SMAIL-UIID: 6EBDBD0BBCFB4722A342D445B8CCE9C9-20250221-201704-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+30a19e01a97420719891@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [net?] WARNING in cleanup_net (4)
-Date: Fri, 21 Feb 2025 20:16:51 +0800
-Message-ID: <20250221121653.2463-1-hdanton@sina.com>
-In-Reply-To: <67b72aeb.050a0220.14d86d.0283.GAE@google.com>
-References: 
+	s=arc-20240116; t=1740140252; c=relaxed/simple;
+	bh=+wzFFw1THANHueG/2oJHJC/Y9M9X02s9gVTYFzS0Vvo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=EPvpxU2bpFUXJvW0XRTRA65IliVhaXpq33kn5JSn0QumIsQCPFdbjZGRH8db5Y6QPPIDXU63P62KO4ZC/34CDCM/+oPyXjqxy+mwrJVkgj5gNuvWiVV9y0ypxWb8oHYttydzqJb5vSjW+mNlngzWDjX4xFYx/vVKMTZYJxZ9lxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sViiXE1c; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sViiXE1c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39CB4C4CED6;
+	Fri, 21 Feb 2025 12:17:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740140251;
+	bh=+wzFFw1THANHueG/2oJHJC/Y9M9X02s9gVTYFzS0Vvo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=sViiXE1cISXk6aPSsd0k3bxlJnN1pK10kqs3Kroe5XXSGPEF/ykyK9gNiX2+dZwbi
+	 nowjOXnlM6ES7qRaVGpTc+MOzDPZbt9pjYJJapEFNgQ4n76JnWqcNLd2ienOnsEQNG
+	 /gdH46oaRne8z71CFNVokSgfKRhWBzduE+K3VMDDWnBUB8IK1pDTHwUn5cYa1V4dlT
+	 h8k3XfWsncfhIEqk8+5+OQIXawdcYldFTnljkU6yT3sBfvoCx9BNAvy4e9uRW9x0hx
+	 LkKOgOlgYT9qNtKIywy1YJ9gTH95aJ3jA0yWinWOhHHnVI0yfId5HJO+7SkQz5t8GH
+	 Vpet5C47xCTCQ==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <benno.lossin@proton.me>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Anna-Maria Behnsen"
+ <anna-maria@linutronix.de>,  "Frederic Weisbecker" <frederic@kernel.org>,
+  "Thomas Gleixner" <tglx@linutronix.de>,  "Danilo Krummrich"
+ <dakr@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
+ <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor
+ Gross" <tmgross@umich.edu>,  "Lyude Paul" <lyude@redhat.com>,  "Guangbo
+ Cui" <2407018371@qq.com>,  "Dirk Behme" <dirk.behme@gmail.com>,  "Daniel
+ Almeida" <daniel.almeida@collabora.com>,  "Tamir Duberstein"
+ <tamird@gmail.com>,  <rust-for-linux@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 02/14] rust: hrtimer: introduce hrtimer support
+In-Reply-To: <841150db-2f92-4cfe-bb1f-29b34b4662c1@proton.me> (Benno Lossin's
+	message of "Fri, 21 Feb 2025 11:05:49 +0000")
+References: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
+	<20250218-hrtimer-v3-v6-12-rc2-v8-2-48dedb015eb3@kernel.org>
+	<1id7is_U22yzuGODgkUIoB5AFM6snF9CPu7F_sY7Mfkn3EwQRPfjB5JNkRFYu6DX1N8X_OQvdEB2BT-l3rFhwg==@protonmail.internalid>
+	<df748ac2-3551-460f-a16f-85d805671a3f@proton.me>
+ <87a5afhdq0.fsf@kernel.org>
+	<875xl3fvtm.fsf@kernel.org>
+	<uoEWs3I3Cf4H5QBXCk4i1-gCs_nR7fJAX7z9JyvaEIP_yrPckvsgcC8fWctvwPY91ZLOwk041dhytXFtSwDFOA==@protonmail.internalid>
+	<841150db-2f92-4cfe-bb1f-29b34b4662c1@proton.me>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Fri, 21 Feb 2025 13:17:17 +0100
+Message-ID: <87o6yveble.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Thu, 20 Feb 2025 05:15:23 -0800
-> syzbot found the following issue on:
-> 
-> HEAD commit:    6537cfb395f3 Merge tag 'sound-6.14-rc4' of git://git.kerne..
-> git tree:       upstream
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13d89498580000
+"Benno Lossin" <benno.lossin@proton.me> writes:
 
-#syz test
+> On 21.02.25 11:15, Andreas Hindborg wrote:
+>> Andreas Hindborg <a.hindborg@kernel.org> writes:
+>>
+>>> "Benno Lossin" <benno.lossin@proton.me> writes:
+>>>
+>>>> On 18.02.25 14:27, Andreas Hindborg wrote:
+>>>>> +pub trait HrTimerCallback {
+>>>>> +    /// The type whose [`RawHrTimerCallback::run`] method will be invoked when
+>>>>> +    /// the timer expires.
+>>>>> +    type CallbackTarget<'a>: RawHrTimerCallback;
+>>>>> +
+>>>>> +    /// This type is passed to the timer callback function. It may be a borrow
+>>>>> +    /// of [`Self::CallbackTarget`], or it may be `Self::CallbackTarget` if the
+>>>>> +    /// implementation can guarantee exclusive access to the target during timer
+>>>>
+>>>> Technically "exclusive" access is correct if the `CallbackTarget` is
+>>>> `Pin<&Self>`, since you will get exclusive access to a `Pin<&Self>`, but
+>>>> it might confuse people, because there can be multiple `Pin<&Self>`. So
+>>>> I would just drop the word "exclusive" here.
+>>>
+>>> Yes, maybe it should be "shared or exclusive access, depending on the type"?
+>>>
+>>>>
+>>>>> +    /// handler execution.
+>>>>> +    type CallbackTargetParameter<'a>;
+>>>>
+>>>> Also why can't this type be an associated type of `HrTimerPointer`?
+>>>> Since this seems to always be constrained in the impls of
+>>>> `RawHrTimerCallback`.
+>>>
+>>> That might be a nice improvement, I'll try that out.
+>>
+>> Looking closer at this, I don't see how to achieve this. We need access
+>> to the type here, because it is used in the signature of `run`.
+>> `HrTimerCallback` has no bounds on it, and that is nice. If we want to
+>> move these associated types, we have to introduce a bound here.
+>>
+>> We need to be generic over the type of the parameter to `run`, and by
+>> the time the user implements this trait, the type must be known and so
+>> the user has to specify somehow.
+>
+> I think if you put the associated type on the `RawHrTimerCallback`
+> trait, it should work.
 
---- x/include/net/net_namespace.h
-+++ y/include/net/net_namespace.h
-@@ -339,6 +339,7 @@ static inline void __netns_tracker_alloc
- 					 bool refcounted,
- 					 gfp_t gfp)
- {
-+	get_net(net);
- #ifdef CONFIG_NET_NS_REFCNT_TRACKER
- 	ref_tracker_alloc(refcounted ? &net->refcnt_tracker :
- 				       &net->notrefcnt_tracker,
-@@ -360,6 +361,7 @@ static inline void __netns_tracker_free(
-        ref_tracker_free(refcounted ? &net->refcnt_tracker :
- 				     &net->notrefcnt_tracker, tracker);
- #endif
-+	put_net(net);
- }
- 
- static inline struct net *get_net_track(struct net *net,
---
+What would be the signature of `HrTimerCallback::run` in that case?
+
+
+Best regards,
+Andreas Hindborg
+
+
+
