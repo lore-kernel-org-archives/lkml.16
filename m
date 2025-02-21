@@ -1,208 +1,89 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D63C1C5D76
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 17:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0E724E4CF
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 17:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740158717; cv=none; b=uQwJRVXYo/wpJe4y43j6wVrIT4MkYj1uJnndr4OgeHJy/oOe/uavBJ8OR1R7oOl0NCLYGVraTRopNPGme/FWGYTWE8mg3HcLyw7LzW9roKxOUZwypU7eORAb03tm+o5Ad/NvWNhwwXY1rPwIB3pWV3gkzVISJaE/1VjCOi7XYvc=
+	t=1740158730; cv=none; b=MVZ8owm5v/CXOZmw28tfgYrCW8Bk2ugf8/mYe49+T+Gg3snTC6l9np8kSn4kpBE0X+UWzBCWuyl/1dar2k2Nhd3eN2T826rofcl8iBAZh2cdIvhZxhl1mAPeK3U/Xcaf3FscZqLF+UQgmYdgrMwRWATlulKSHisolRhoY1/rk/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740158717; c=relaxed/simple;
-	bh=/ncBsIXZNHpHN0gN+Ld2krKX7WhegguiyI+QveCr+e8=;
+	s=arc-20240116; t=1740158730; c=relaxed/simple;
+	bh=ntUXBo2b3H0paCbSKwPknuJWM8aaKRhVFmcNUSVObYI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GiA/eVdkhiiq2kY0UnCI05EoOz0ocAJ+71hZifN+Lhm0LZPuQOD+cNZ8bFWMiUNrOOYVjzMrupGijPW5cTg7jgejvwMml38xR8rfA29OqyPVIyDckVtvwM10qiLwzcwsCEC6yO7nmBGLsv1j9MKVf1o9Yk/W/LJd9fnLea5a5k0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AZ5ZBNUp; arc=none smtp.client-ip=209.85.208.49
+	 To:Cc:Content-Type; b=qNm17tXHchyOh9j6wWgxgZHXMEcJC54m9nyuDfI7PG5dP8ANwSdpCPp45os5gJkzNa+0QiBNU7EZUc3kDC7ozHGL2geimWbSc8RKXjZcd/uNEyYzkUuEDWB4C5XBudvZb5/v9rea2SJiDX2GMdAiSDe2qx3sIb6w1wfJROZEvdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HEwIncFf; arc=none smtp.client-ip=209.85.160.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AZ5ZBNUp"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5dbfc122b82so12353a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 09:25:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HEwIncFf"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-472098e6e75so335891cf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 09:25:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740158714; x=1740763514; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/ncBsIXZNHpHN0gN+Ld2krKX7WhegguiyI+QveCr+e8=;
-        b=AZ5ZBNUpPt7nYAbrPdG8nNME1pgo12U3WjlX4QJm3m2sYmW9nGR8+55o3AgpmspCQ/
-         i/isPhehOl0erdqPWg8Qcb7FFXx65Jr92bM0YecAtxF3vWgZiFkNP5Yh93AOs7X3+qjM
-         iqwNITIhj8gD1gjqDTMj+gntgAb7J9HGgw6a/e1aYMmClKPorHHINamEU54kF76JG+o0
-         408hWo6JZFtk8XAKuERTZ+aIB3UQJyLkrvNW2FQHwgTbqSBkwNwTExGRJOn6ySdAvj8u
-         lDGxsXko9tXuNDhs2IuQVmqxt8suAO8bUn02s2v6L3+hSARhc1ThE9yMu/kINkV5xYkO
-         fJ3Q==
+        d=google.com; s=20230601; t=1740158728; x=1740763528; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=FsVp5f9QmMJgL4jmaqMNGzqbAZ3+5cticPKqK4ryEMQ=;
+        b=HEwIncFfvvViWx/CytN1LWJq+Bxjizi960b/I2oFLl5ohtR+h+o2YP7uAx56IcO4mP
+         7IS+rLxR5ccp6hd38JfCH7fkMT/YNRPsEWRx3InXlmtADgFsIB1RyVBvnWq3950UOOuc
+         fvNTDDb3dS8rzAFoAhuR9ZpZS2CcJVQROEJvjEs7HpQaWzLoj8f29HcooekzWxWouKmT
+         xncH4PPJnkZ8Mn7CHVuL8B0NFqq9riraHxoLG0TGhIxwag1hKOItPWYdlkeuKX1qJBCF
+         9rgyx1Jlprs4LeFys2jt1Bs5BJ1U926EWq7K/JTawzdxpNotcUSVJT8/LFBbNfeHYZCa
+         4KNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740158714; x=1740763514;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/ncBsIXZNHpHN0gN+Ld2krKX7WhegguiyI+QveCr+e8=;
-        b=rz7IqJFtkJOyTYb2o6u+EgkdNjPCLbwdu44tfsKYha9MJjh9SH+/ROTKu6w76teBfC
-         +CpCtilpdGO5bbpKkRH/KeBmw88z5TId7lw4+fHbtgX4BSr9p3hZ3ocEybaHm7M9IbeK
-         eXfi+xCln1RpOnK6uxTb0cO3rYvoKQLUgn5h2TAlHGuyYHiyignDM1FSvxZ8I9EbPyOa
-         K0nAumwck+SWBTWdF9lGz/z/cVqV4fAjYmV0TeRJQcqyRlglkDvVQSSZ5aS8AYm8Z5Jm
-         MVUA4cI9dOyzDVklwCuGTNt6+Qt8XisjUc4syjC69QYU1n6Geizv9ENNYhAy+qaL48aL
-         VX3g==
-X-Forwarded-Encrypted: i=1; AJvYcCXW3hY0ROpz4geAr4RgNKSDcNKiSm2j7VruQuPXFQz4bG6KAOSL95RJXD8Gy6STTk6t4Iwt30hyMCJy3R4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxr1LnuJsiGsnf76jHBEkz31w+6LwlpxOAkPzqgxrPWa3DRzBQP
-	F/mtPbssBZl0M93Ssj93Y1JmaL0ZeMZ3H6bEETrXv7clsmnl5RDaX1xLjlgBSlq6hoWZASq9Rq6
-	MIwHwKdLVM+t/meA4CE1xP83KNCD8JW4tVZ5H
-X-Gm-Gg: ASbGncscBpuXO4IeJZbZz2qAJbeMwKZ+Tpd3/8gEOQKhcMXZ9lnQds7TPluw8TIxlRJ
-	N5ORV7rqqMejXhucHwgO6CEjiY675WHt3GQCp1xyBw2s5SD89Dd3G8tl3zaxG7uzd1rYi59nMtq
-	pC7tQSwMCQFTygsbZGjPi0eyQZBXpQ+givjIP9LiHp
-X-Google-Smtp-Source: AGHT+IF/mE/upBZOdr7pG47eeKvsSM7BgM6wQXtyL0HhiPJHpy7IiE39CO8Vv/dnFrDxUC6lHMyPi9HwaDMwaO4ANKM=
-X-Received: by 2002:a50:d657:0:b0:5e0:788e:296c with SMTP id
- 4fb4d7f45d1cf-5e0b6dedcc7mr116523a12.4.1740158713841; Fri, 21 Feb 2025
- 09:25:13 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740158728; x=1740763528;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FsVp5f9QmMJgL4jmaqMNGzqbAZ3+5cticPKqK4ryEMQ=;
+        b=pWCzmChrkVcpFe+zRsrF2anOQA06LaaplUSCCMnwqgrxrJbZAM7aw/zHu9RSeqENUG
+         K4LFAxplP89iAj/RN5hnxeXLPeQOCyJW6YZab+Nvvq9gufoxdz/0kunMkxFdpTYEUKau
+         RxAKLFoZGJPMewga5fOI823U70sUUxtmrRRASibnV3Ynlyl+qR7lc3bgw5rdQ1bxvcKS
+         sND2Xf7ZzSP06v9mInv+aP4Jj2oWyG0vfThnKe/xEu+hzF5m8aR6FvtInyzzz7nODQ+6
+         a1kyYondP3gZZNilfmaTnTkZSaXH3jchkEmtUr4wx4NaAYDleKkYGkISeLoQI7LFBU3T
+         CmVg==
+X-Forwarded-Encrypted: i=1; AJvYcCXOuwudKu/uwgrcF1xFuncldcRZQlcyblJEQYqyh4BtgpBc3aJwaQuy661LnhiRamqon4KRtOKiLnI3syI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTl52TZcmgENKLqJPWN70QNPf0+3wJ0GYmLfh2c69cNl5pwWZA
+	qHvR2aInHBDi1xW4ka0PIuir9stb5PMjDNU/XtPlh0sknX7SyuTL7lQzyW+l+hvgQDgPiN+8AMa
+	WPw3DJd5kUVtCHKGZDB0xa74QkV1z+j+N2XNk
+X-Gm-Gg: ASbGncvi/9wjPwIYKc54eyswZ7XFQMprI2ErOyiEhDE1ZkI/h05o+FnMq6Ujl4aAtmw
+	htvpcaUx63LuFRJB3NZqjJqGibGKbmILenWLYKezUTM7ove52imB0D6qBUH8+K5nZ2kFlbfR/tW
+	Mqs2Z8fpIQIdiHB7Br83UbpFi9FaBXtL0Hoqfhsw==
+X-Google-Smtp-Source: AGHT+IE2qeflKK1byqANPdOKXQ1RSe6wIkCdfZGB0CJf4rEU5YiO5tu3Xv/YSA7beG14Zmm+g0o3Q5I9nTDuvPzCikw=
+X-Received: by 2002:a05:622a:1b05:b0:466:8c7c:3663 with SMTP id
+ d75a77b69052e-47225044a12mr3732951cf.5.1740158727844; Fri, 21 Feb 2025
+ 09:25:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <4aa97b5c-3ddc-442b-8ec9-cc43ebe9e599@redhat.com>
- <b0a95f2c-093c-45fd-b4a2-2ba5cbc37e2c@lucifer.local> <387f3516-99f2-41e9-967e-4b051a8d21b8@redhat.com>
- <72e044ba-64af-49c0-8b87-ead508654fb7@lucifer.local> <4f5a9c19-9bdd-47eb-bb14-205e3dcced90@redhat.com>
- <1e959451-2534-44b7-bf62-bc75305048fe@lucifer.local> <bd4597b5-2da2-484c-9410-384e04336a9d@redhat.com>
- <31a007c0-884f-495d-ba27-08e3e0dd767d@lucifer.local> <CAJuCfpHpchh0CzEgh5CKmRLwpscBLx32A-mGi4eudpir1wm=cQ@mail.gmail.com>
- <CAC_TJvd2Y-EnavZkt5_nQUXmRpjo8AYMu6rND7eMUwXn27ab0A@mail.gmail.com> <87bae232-b01d-4962-bbe1-3677b71ff752@lucifer.local>
-In-Reply-To: <87bae232-b01d-4962-bbe1-3677b71ff752@lucifer.local>
-From: Kalesh Singh <kaleshsingh@google.com>
-Date: Fri, 21 Feb 2025 09:24:59 -0800
-X-Gm-Features: AWEUYZnlx1AFsGScoTaTL8obzT8Lj2nGvmv_mtWZZvKaCSW5_GYIYY42YitT7zo
-Message-ID: <CAC_TJve7NVqT5atUgdRkFN+U65RY8HYcfXx_CD8rxjra342-Yg@mail.gmail.com>
-Subject: Re: [PATCH 0/4] mm: permit guard regions for file-backed/shmem mappings
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Suren Baghdasaryan <surenb@google.com>, David Hildenbrand <david@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>, 
-	"Paul E . McKenney" <paulmck@kernel.org>, Jann Horn <jannh@google.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>, 
-	linux-kselftest@vger.kernel.org, linux-api@vger.kernel.org, 
-	John Hubbard <jhubbard@nvidia.com>, Juan Yescas <jyescas@google.com>
+References: <20250214-clarify-steal-v1-1-79dc5adf1b79@google.com>
+ <20250214212647.GB233399@cmpxchg.org> <CA+i-1C3e_JUBBhMDYwrehvLZzLtb9pfgEy8=wQa=9uTBr1-b5g@mail.gmail.com>
+ <764394d9-592c-4d68-8910-67362dd8810a@suse.cz> <20250218203830.GA1264207@cmpxchg.org>
+In-Reply-To: <20250218203830.GA1264207@cmpxchg.org>
+From: Brendan Jackman <jackmanb@google.com>
+Date: Fri, 21 Feb 2025 18:24:45 +0100
+X-Gm-Features: AWEUYZmxRJng6dHgj-kLMXDQ1ghZUjfHWOkUm0eaqSXZt5jGmzay5c_NqxDW3NM
+Message-ID: <CA+i-1C1m-p0GkYE8QTd39qEG3Pb_QMsEs=dLH1_87giDVhVH2A@mail.gmail.com>
+Subject: Re: [PATCH] mm/page_alloc: Clarify some migratetype fallback code
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, 
+	Mel Gorman <mgorman@techsingularity.net>, Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Yosry Ahmed <yosry.ahmed@linux.dev>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 21, 2025 at 3:04=E2=80=AFAM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
+On Tue, 18 Feb 2025 at 21:38, Johannes Weiner <hannes@cmpxchg.org> wrote:
 >
-> On Thu, Feb 20, 2025 at 10:08:36AM -0800, Kalesh Singh wrote:
-> > On Thu, Feb 20, 2025 at 8:22=E2=80=AFAM Suren Baghdasaryan <surenb@goog=
-le.com> wrote:
-> > >
-> > > On Thu, Feb 20, 2025 at 5:18=E2=80=AFAM Lorenzo Stoakes
-> > > <lorenzo.stoakes@oracle.com> wrote:
-> > > >
-> > > > On Thu, Feb 20, 2025 at 01:44:20PM +0100, David Hildenbrand wrote:
-> > > > > On 20.02.25 11:15, Lorenzo Stoakes wrote:
-> > > > > > On Thu, Feb 20, 2025 at 11:03:02AM +0100, David Hildenbrand wro=
-te:
-> > > > > > > > > Your conclusion is 'did not participate with upstream'; I=
- don't agree with
-> > > > > > > > > that. But maybe you and Kalesh have a history on that tha=
-t let's you react
-> > > > > > > > > on his questions IMHO more emotionally than it should hav=
-e been.
-> > > > > > > >
-> > > > > > > > This is wholly unfair, I have been very reasonable in respo=
-nse to this
-> > > > > > > > thread. I have offered to find solutions, I have tried to u=
-nderstand the
-> > > > > > > > problem in spite of having gone to great lengths to try to =
-discuss the
-> > > > > > > > limitations of the proposed approach in every venue I possi=
-bly could.
-> > > > > > > >
-> > > > > > > > I go out of my way to deal professionally and objectively w=
-ith what is
-> > > > > > > > presented. Nothing here is emotional. So I'd ask that you p=
-lease abstain
-> > > > > > > > from making commentary like this which has no basis.
-> > > > > > >
-> > > > > > > I appreciate everything you write below. But this request is =
-just
-> > > > > > > impossible. I will keep raising my opinion and misunderstandi=
-ngs will
-> > > > > > > happen.
-> > > > > >
-> > > > > > Well I wouldn't ask you not to express your opinion David, you =
-know I respect
-> > > > > > and like you, and by all means push back hard or call out what =
-you think is bad
-> > > > > > behaviour :)
-> > > > > >
-> > > > > > I just meant to say, in my view, that there was no basis, but I=
- appreciate
-> > > > > > miscommunications happen.
-> > > > > > > So apologies if I came off as being difficult or rude, it act=
-ually
-> > > > > wasn't
-> > > > > > intended. And to re-emphasise - I have zero personal issue with=
- anybody in this
-> > > > > > thread whatsoever!
-> > > > >
-> > > > > It sounded to me like you were trying to defend your work (again,=
- IMHO too
-> > > > > emotionally, and I might have completely misinterpreted that) and=
- slowly
-> > > > > switching to "friendly fire" (towards me). Apologies from my side=
- if I
-> > > > > completely misunderstood/misinterpreted that.
-> > > >
-> > > > Right this was not at all my intent, sorry if it seemed that way. I=
- may well
-> > > > have communicated terribly, so apologies on my side too.
-> >
-> > Hi everyone,
-> >
-> > Thank you for all the discussion.
-> >
-> > I don't find any personal issues with the communication in this
-> > thread, but I appreciate David being the object voice of reason.
-> >
-> > I understand it can be frustrating since you have made many efforts to
-> > communicate these tradeoffs. Unfortunately these issues were not known
-> > for the file-backed ELF guard regions for my particular use case.
-> >
-> > >
-> > > Sorry for being late to the party. Was sick for a couple of days.
-> > > Lorenzo is right, there was a breakdown in communication at Google an=
-d
-> > > he has all the rights to be upset. The issue with obfuscators should
-> > > have been communicated once it was discovered. I was in regular
-> > > discussions with Lorenzo but wasn't directly involved with this
-> > > particular project and wasn't aware or did not realize that the
-> > > obfuscator issue renders guards unusable for this usecase. My
-> > > apologies, I should have asked more questions about it. I suspect
-> > > Lorenzo would have implemented this anyway...
-> > >
-> >
-> > Suren's use case is different from mine and this design fits perfectly
-> > for anon guard regions from the allocator. :)
-> >
-> > So I think in conclusion, these aren't VMAs and shouldn't be treated
-> > as such; we will advertise them from pagemap for those who need to
-> > know.
-> >
->
-> Thanks Kalesh, glad there were no issues here and we have found
-> constructive common ground! :)
->
-> It turns out implementing the pagemap side of things is _really_
-> straightforward, so I'll be sending a series for that shortly. Hopefully
-> this provides some basis for whichever use cases need this information, a=
-s
-> it is the best and least invasive place for this information at this stag=
-e.
+> @@ -1930,7 +1929,7 @@ steal_suitable_fallback(struct zone *zone, struct page *page,
+/*
+ * This can happen due to races and we want to prevent broken
+ * highatomic accounting.
+ */
+>         if (is_migrate_highatomic(block_type))
+> -               goto single_page;
+> +               return NULL;
 
-Hi Lorenzo,
-
-Reviewed your patches, agreed that is the cleanest way to advertise
-this information.
-
-Thanks,
-Kalesh
-
->
-> Cheers, Lorenzo
->
-> > -- Kalesh
+Side question: when does this happen? Might have a spooky gap in my
+understanding here as I thought the only reason the pageblock typed
+was changed without the zone lock held was during memory hotplug.
