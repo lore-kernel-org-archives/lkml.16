@@ -1,146 +1,83 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175C420127C
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 22:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F61253F06;
+	Fri, 21 Feb 2025 22:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740176042; cv=none; b=AHZtbIbkhFU1FFOzexRlTNrmSz5HRdoI+nwa+X1ZEGG3ENkJmREKoRsN3uhS72T2JV3VFQShIymJGoNfemMemSVnWpjYWOLUSrZbkJYM2IUbSRgE9LTc/CyTQn4EB2GO7AIb8xVQPBEuOLCPIzHG+OhzAByGzemVWlgiAjm2d7w=
+	t=1740176069; cv=none; b=Ulg6S/G2zTfI2uKyoNP7qO4g3CKL+7W9WVJUex3thr7ChSo3roosdpiM1ZBUs+jyb8OMLzmviLqgJq6Ku4bOqUXSKFMIDj7Qp0nQtVqfIpSvGV6MnDOmkDe3rmAH0gITrW7DFRbp7E9PLiB27yCzqILPFXuxubhQ6CjyGVFQgdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740176042; c=relaxed/simple;
-	bh=m+rPxBzkIa0z7AuS9o7gJYFRiFN57fnzjgdytkOLE28=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=oA0UCgvjWfQkw0OjV9+nM339o18VrngqdzoeskhD+Hr528V7IKzI2OKUlUphLmJPNLiAEjg29s3kGoXxQvgtWEivReCe5OAkUgyGgK4JbspxLNIOfbZKWYV0lHDVpjUHIt2xnkR4aiI2GEQI6SxP/ydwkL9o6b2h8yeg1EiYOMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.2] (ip5f5af2a2.dynamic.kabel-deutschland.de [95.90.242.162])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 4435E61E64783;
-	Fri, 21 Feb 2025 23:13:33 +0100 (CET)
-Message-ID: <51e0d018-f4c5-4a2d-93bd-265b4c13415f@molgen.mpg.de>
-Date: Fri, 21 Feb 2025 23:13:32 +0100
+	s=arc-20240116; t=1740176069; c=relaxed/simple;
+	bh=yAwMXOjaJN6z1tn8eId8KeQM2ziqySE7/svPkNvVY1Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tHZYwsFSvCmc/X3Phk+f79dgebTyGuk5HKgVP/wkws9qKUUCvr4xw7MMYFCFbDMTeMzdUmR71c0yNKbMFZ3Duq3bvzmAesX6RfOY3gcb5CCeVhprqgPn/qYG81A+2jbQaCeoaBv1VuFBGvR+mLDCtNIXaOX2hCETvk8yDL8JK4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BF3FC4CED6;
+	Fri, 21 Feb 2025 22:14:27 +0000 (UTC)
+Date: Fri, 21 Feb 2025 17:14:55 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Martin Uecker <uecker@tugraz.at>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, Greg KH
+ <gregkh@linuxfoundation.org>, Boqun Feng <boqun.feng@gmail.com>, "H. Peter
+ Anvin" <hpa@zytor.com>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+ Christoph Hellwig <hch@infradead.org>, rust-for-linux
+ <rust-for-linux@vger.kernel.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>, David Airlie <airlied@gmail.com>,
+ linux-kernel@vger.kernel.org, ksummit@lists.linux.dev
+Subject: Re: Rust kernel policy
+Message-ID: <20250221171455.19b5be06@gandalf.local.home>
+In-Reply-To: <59a4f3f7641c47494b53f788684aa703a02acca1.camel@tugraz.at>
+References: <326CC09B-8565-4443-ACC5-045092260677@zytor.com>
+	<CANiq72m+r1BZVdVHn2k8XeU37ZeY6VT2S9KswMuFA=ZO3e4uvQ@mail.gmail.com>
+	<a7c5973a-497c-4f31-a7be-b3123bddb6dd@zytor.com>
+	<Z7VKW3eul-kGaIT2@Mac.home>
+	<2025021954-flaccid-pucker-f7d9@gregkh>
+	<4e316b01634642cf4fbb087ec8809d93c4b7822c.camel@tugraz.at>
+	<2025022024-blooper-rippling-2667@gregkh>
+	<1d43700546b82cf035e24d192e1f301c930432a3.camel@tugraz.at>
+	<2025022042-jot-favored-e755@gregkh>
+	<b9a5de64fe1ded2ad3111763f35af9901bd81cc4.camel@tugraz.at>
+	<caea3e79-78e6-4d98-9f3b-f8e7f6f00196@stanley.mountain>
+	<61a7e7db786d9549cbe201b153647689cbe12d75.camel@tugraz.at>
+	<20250221124304.5dec31b2@gandalf.local.home>
+	<59a4f3f7641c47494b53f788684aa703a02acca1.camel@tugraz.at>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Linux warns `sched: DL replenish lagged too much`
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-To: Juri Lelli <juri.lelli@redhat.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <6ebe1130-0143-4388-9d69-ead0bf1fddf9@molgen.mpg.de>
- <Z7cvifR-y0CWK1e6@jlelli-thinkpadt14gen4.remote.csb>
- <47903c9d-3949-43b3-8f27-d59db20acb1e@molgen.mpg.de>
-Content-Language: en-US
-In-Reply-To: <47903c9d-3949-43b3-8f27-d59db20acb1e@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Dear Juri,
+On Fri, 21 Feb 2025 19:23:38 +0100
+Martin Uecker <uecker@tugraz.at> wrote:
 
-
-Am 20.02.25 um 21:18 schrieb Paul Menzel:
-
-> Am 20.02.25 um 14:35 schrieb Juri Lelli:
+> > where func is defined as:
+> > 
+> > 	void func(void) { return ; }  
 > 
->> On 20/02/25 11:47, Paul Menzel wrote:
+> Calling a function declared in this way with arguments
+> would be rejected by the compiler, so I am not sure how
+> this works now.
 > 
->>> On the Intel Kaby Lake laptop Dell XPS 13 with Linux
->>> 6.14.0-rc3-00060-g6537cfb395f3, waking it up from ACPI S3 with an LMP  USB-C
->>> mini dock connected, that had an Ethernet cable and a power adapter plugged
->>> in, everything was lagging, and also the video in the opened Firefox Nightly
->>> browser lagged quite a bit. This has happened in the past, but not  that bad
->>> and long. Today for the first time, Linux logged the warning below:
->>>
->>>      sched: DL replenish lagged too much
->>>
->>> (This is from `kernel/sched/deadline.c`.)
->>>
->>> I have no idea, if it’s related to the hardware itself, that causes it to
->>> lag, that a suspend/resume cycle fixes, or if it’s related to the USB-C
->>> controller that has bugs in that early generation, or if it’s related to
->>> GNOME/Mutter (*mutter-common* 48~beta-3) or Firefox or the Web video player
->>> used by the site.
->>>
->>> As often the case with this, I have no way to reliably reproduce it, and in
->>> this case to reproduce the warning. I can only say, that this warning has
->>> not been logged in the available log files since September 2024. Linux
->>> “6.11-rc0” was used then. Please find the log messages attached.
->>>
->>> In case this information is not useful, should this happen again, it’d be
->>> great if you could suggest what and how I should collect debugging
->>> information next time.
->>
->> Assuming no explicit usage of SCHED_DEADLINE, I would say the warning
->> message might be related to the recently introduced deadline servers:
->> 5f6bd380c7bd ("sched/rt: Remove default bandwidth control") and related
->> commits.
->>
->> They were merged in v6.12 (IIRC), though,
+> If you used 
 > 
-> Indeed, it first appeared in v6.12-rc1.
+> void func();
 > 
->> so I would expect you had noticed already before if they introduced
->> issues on your setup? That said, it might also be the case that
->> something else changed more recently that now triggers a corner
->> case.
-> 
-> On this device, I sometimes experience lags after resuming from ACPI S3, 
-> and, although I cannot prove it, using USB-C mini docks (LMP USB-C mini 
-> Dock [1] or Dell DA300) seems to increase the chances of hitting the 
-> problem. Re-plugging and doing ACPI S3 suspend/resume again often helps.
+> to declare the function, this is not possible anymore in C23.
 
-I guess, I didn’t see this yet, as I haven’t been using the USB-C 
-charger with the USB-C mini dock up until now as the laptop also has a 
-barel jack for charging.
+As the comment in the code states:
 
->> The warning message per-se it's not fatal, it just warns that the kernel
->> is recovering from an unexpected situation. Did you notice that things
->> went back to normal (no lag from a user perspective) right after that
->> message was printed?
-> 
-> As far as I remember, the lagging stayed even after the log was printed. 
-> In this case, I had to reboot the device, and until now – with no ACPI 
-> S3 suspend/resume – it works fine.
+include/linux/static_call.h:
 
-I was able to reproduce this today. The same behavior after resuming 
-from ACPI S3.
+ *   This feature is strictly UB per the C standard (since it casts a function
+ *   pointer to a different signature) and relies on the architecture ABI to
+ *   make things work. In particular it relies on Caller Stack-cleanup and the
+ *   whole return register being clobbered for short return values. All normal
+ *   CDECL style ABIs conform.
 
-     Feb 21 17:20:19 abreu gnome-shell[1775]: 
-meta_wayland_buffer_process_damage: assertion 'buffer->resource' failed
-     Feb 21 17:20:19 abreu gnome-shell[1775]: 
-(../src/wayland/meta-wayland-buffer.c:709):meta_wayland_buffer_inc_use_count: 
-runtime check failed: (buffer->resource)
-     Feb 21 17:20:21 abreu rtkit-daemon[1017]: Supervising 7 threads of 
-5 processes of 1 users.
-     Feb 21 17:20:21 abreu rtkit-daemon[1017]: Supervising 7 threads of 
-5 processes of 1 users.
-     Feb 21 17:20:59 abreu kernel: sched: DL replenish lagged too much
-     Feb 21 17:21:01 abreu systemd[1588]: Started 
-app-gnome-ptyxis-26577.scope - Application launched by gsd-media-keys.
-     […]
-     Feb 21 17:23:43 abreu gnome-shell[1775]: libinput error: event11 - 
-DLL075B:01 06CB:76AF Touchpad: client bug: event processing lagging 
-behind by 31ms, your system is too slow
+Basically it's assigned via casts.
 
-Move lags sometimes, and also switching GNOME virtual desktops, or just 
-opening a new window takes several seconds.
-
-Can I set an option so more stuff is logged, once the scheduler warning 
-is logged?
-
-
-Kind regards,
-
-Paul
-
-
-> [1]: https://lmp-adapter.com/product/lmp-usb-c-mini-dock/
+-- Steve
