@@ -1,42 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828F738F80;
-	Fri, 21 Feb 2025 00:48:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E07AD5A;
+	Fri, 21 Feb 2025 00:51:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740098901; cv=none; b=nR2Dqp3WSmeb4ntpIhmdrRcCYisk9vA2JvYFUkB9sIAwWX/EvhFnWtrkKt/IDqimslWbL+H+RkJog8cx6vjR56w7v3ebJbel5x9CXmPZ0uVL5aGlYGyyGFyXaVLL4Va9Rp+tUTqiwmwdEB7rIvYZwLCnGSgLzt+VKxd37Boml9o=
+	t=1740099092; cv=none; b=R6oQ/vIRn1FMgUs7CL1M/8eRWevDZaCMnjd2Cl5Pr3rEbEF1rjC79GKYIrn5mlgrO6uN7mY5p3IY5NQVxiLTu0HQdwWppLG7UlXISyZWt4tdEg4KaLYy3NUGcfnQHreakEb08GhDS0yj6mPJKcyjfC0Zhn7SLqiad/MqeLBIGL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740098901; c=relaxed/simple;
-	bh=MreBpDnwJEYvueT8OurrHHX91BzpSlbLwNcL1n91USg=;
+	s=arc-20240116; t=1740099092; c=relaxed/simple;
+	bh=hW4wGLaf2xdlM07uA+sCXCsxkAV2jQGuYqWF2fHUxHA=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FlsL3Wk4unnSRzRfooIjWUCKePzGbO1Mycxw8/0AdEX4Pf8DlGJU52joYDT8a7j5/yRH45R46bYTD0phCGaO4hKPMq/2CK6kXHHgSdG0MUVeMS1M689XrNKix7OHO1bVvBxVkJnlXALROAt5mJ1qUbwJ6RtCzCA/cyPtlV0Qq64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gH+2V8ns; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=a62813486PxWZueGDqzaEvtglTIzKy6hNkqtVjqIltM3Lesoei9i0k6h8QcysBin+vcc/RiStN9duZmovzN3l0oh/JIUHpaddj+UT5vDn2gisQsIMzlN0RzDXOC4iq5JO04cpNCzVQenyihGbj0cLLPEjI/G9aMxhN/5LiJabOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kQJZSY+k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gH+2V8ns"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B41E3C4CED1;
-	Fri, 21 Feb 2025 00:48:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kQJZSY+k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0353EC4CED1;
+	Fri, 21 Feb 2025 00:51:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740098901;
-	bh=MreBpDnwJEYvueT8OurrHHX91BzpSlbLwNcL1n91USg=;
+	s=k20201202; t=1740099091;
+	bh=hW4wGLaf2xdlM07uA+sCXCsxkAV2jQGuYqWF2fHUxHA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=gH+2V8ns63ITpDnfcFbwqy2MOBArSLeObTYTmU+2N4M2VDk5+INJlZ5AbRV7ofAsw
-	 RkgUlbQsOq0vVrADp0y6LP79+bKS3juNL5Cir/v9RBxaAA+nXyMoYmnBemFlzzs9/q
-	 rW4VtUFwSO87KyZoOUBkL+35wJdVI/NRc6choZIh7i5sIPkbA4l50XnsilwKOJhtu2
-	 MwlrtS3bKM/CAe2ECkzJ3o3wmyggXDFjAHwxX/CxZpZJxhPM6Whz/F747tv4v/dl/M
-	 4FYQfzFAFNFZv4jp9tXJqkxX+pbApnuP7Lp1v/meNqoIdIxIa7Q1XFAq0/2GWRJ0sR
-	 M8sudMEAV/mSQ==
-Date: Thu, 20 Feb 2025 16:48:19 -0800
+	b=kQJZSY+kVznhl6ctFk+4yIj2pX/pCM3pmHlvAfd6jRtxyCCWNs+5F/jdM2FBAnMuc
+	 RYhWgJLkrjNOIDF0/j3blLHbO2Zd1Q3xrRT2Wd+xzk4p/izw80LWiz/Cgsyd3mdlIG
+	 2UsiAKF5i/Q4KoIEr+8S4zan3jEuRpHsLYDWAYcGlQTn5RdLV5W6arVWmz4tmrqi9e
+	 fyp8XdSPSv3Ypc7HB2qkUvkuJkIr6eJZcg4NlQvlIT1I0AKArCIb3ZEKbd5vsbtQta
+	 OWVatMSq90QdoBE6RDt0C/wpfYf5I1AgKBlT5khxkrtYh6v9TOHpvJ3kVGYMzgo+2D
+	 +hDF0wQA4ocVA==
+Date: Thu, 20 Feb 2025 16:51:29 -0800
 From: Jakub Kicinski <kuba@kernel.org>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Jan Petrous <jan.petrous@oss.nxp.com>, NXP S32 Linux Team <s32@nxp.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: fix DWMAC S32 entry
-Message-ID: <20250220164819.044b509f@kernel.org>
-In-Reply-To: <Z7fHNEFo7Aa4jfUO@shell.armlinux.org.uk>
-References: <E1tkJow-004Nfn-Cs@rmk-PC.armlinux.org.uk>
-	<20250220152248.3c05878a@kernel.org>
-	<Z7fHNEFo7Aa4jfUO@shell.armlinux.org.uk>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
+ <corbet@lwn.net>, Donald Hunter <donald.hunter@gmail.com>, Rob Herring
+ <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman
+ <horms@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, Dent
+ Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, Maxime
+ Chevallier <maxime.chevallier@bootlin.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 06/12] net: pse-pd: Add support for budget
+ evaluation strategies
+Message-ID: <20250220165129.6f72f51a@kernel.org>
+In-Reply-To: <20250218-feature_poe_port_prio-v5-6-3da486e5fd64@bootlin.com>
+References: <20250218-feature_poe_port_prio-v5-0-3da486e5fd64@bootlin.com>
+	<20250218-feature_poe_port_prio-v5-6-3da486e5fd64@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,30 +57,20 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 21 Feb 2025 00:22:12 +0000 Russell King (Oracle) wrote:
-> Right now, the situation is:
+On Tue, 18 Feb 2025 17:19:10 +0100 Kory Maincent wrote:
+> This patch introduces the ability to configure the PSE PI budget evaluation
+> strategies. Budget evaluation strategies is utilized by PSE controllers to
+> determine which ports to turn off first in scenarios such as power budget
+> exceedance.
 > 
-> $ grep s32@nxp.com MAINTAINERS
-> R:      NXP S32 Linux Team <s32@nxp.com>
-> L:      NXP S32 Linux Team <s32@nxp.com>
-> R:      NXP S32 Linux Team <s32@nxp.com>
-> L:      s32@nxp.com
+> The pis_prio_max value is used to define the maximum priority level
+> supported by the controller. Both the current priority and the maximum
+> priority are exposed to the user through the pse_ethtool_get_status call.
 > 
-> and the approach that has been taken in the past is:
-> 
-> -L:     NXP S32 Linux Team <s32@nxp.com>
-> +R:     NXP S32 Linux Team <s32@nxp.com>
-> 
-> in commit bb2de9b04942 ("MAINTAINERS: fix list entries with display names")
-> 
-> However, commit 98dcb872779f ("ARM: s32c: update MAINTAINERS entry") did
-> the reverse for the "ARM/NXP S32G ARCHITECTURE" entry breaking that and
-> adding a new instance of this breakage elsewhere.
-> 
-> It seems these are just going to flip back and forth, so I don't think
-> I can be bothered to try to fix it, and will modify my own scripts to
-> eliminate the blank entry in get_maintainers output because of this.
-> (In other words, s32@nxp.com will *not* be Cc'd for any patches I send.)
+> This patch add support for two mode of budget evaluation strategies.
+> 1. Static Method:
 
-Literally would have taken you less time to fix it how I asked than
-type this email :/
+The "methods" can be mixed for ports in a single "domain" ?
+On a quick read I don't see this explained
+-- 
+pw-bot: cr
