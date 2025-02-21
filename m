@@ -1,134 +1,76 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C19253F05
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 20:26:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D53A253331;
+	Fri, 21 Feb 2025 20:27:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740169583; cv=none; b=U48vU/6v5NNtNahfqnjyKUEiI23pcukktL5NhdWnqZBGLBKPYV+bLHAV1uB5HeMlu4eoCuloizBc5jdWyxR+YbVKZCO2leGzuWwss84q53uqRL0JyVqXRNDSela8zkhl/adLeso6q5J2AY+qDePK9wYhNY9Kvdu8SAGjgoUn2E0=
+	t=1740169636; cv=none; b=UQrC9nctpcNVrCIIGhHXhZsP1mpJTO2CKTAX0j4lVX/z955OxE3dsWpyB5rs22hyedr52nP4U83GVnRfDkNDzTiA0uF9wL3PhewtfvfT2W3UckSR4Zkyo0woUQFDJvYHwF6HEuPrZCXC1kFXs4GMEMxBBIm6tpQZCcEyLKgQZRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740169583; c=relaxed/simple;
-	bh=giBBo4caqx8Tf9a93T9eGadcf7q3hJroPXPmYCW+yTk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cXjQ4YeOmN+A7Ya+/2/97zoxMvQZA4y8YZcStx+eWGnaqt0cZa5iYwQqsXWNF640/9W7As2S0maowW3UOyDM2IICN1hWlMStZiEZAa9ROWiMme0Enw+UjrIwG4PZg8tMVGb+9vlfQYG8A6YSMUNIfTKbOq6K3SjZlD9ULZocTy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=B/C7w7N1; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1740169636; c=relaxed/simple;
+	bh=G9sBsbihoRoug8ktuGmiPPuSMt1GV5sJ2n/cm5yV8w8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=T8QwvYBNPfnbnZ4dpwe8O9eLFVMm9bGH44sJUH8u3Ex6SrO33tXn20KE7S6DOhenZK6n8gAU6K22QwwF9EwcHcqsraKK2w8yPtt/z4C9ga7DM9UR9yEc+pPeOIbf2f65p4CBSG2Kj74/uMkn6zWMLTayOs658i+HHoKp3G7lw4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=NJvtB1xA; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="B/C7w7N1"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-abbd96bef64so403598366b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 12:26:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1740169579; x=1740774379; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5rQmbjlwBbLwDXvN5+jqJigL+IoD9eonvyj1f9icKNM=;
-        b=B/C7w7N19QGuXv8+1C180yMWS5+ix2u++/E3oXW5QgHnWHYQ/SfHU8QPhc8HfTtOgh
-         jdZIbv/phy/naK8Zj8udg5IDBaNFxn+Zm3D6D31STwWVgX4rb5uHmTcxhIH80q8cxZOL
-         wNmYwU6hxGUaYTsVQioeQcz/srWWMyUM1r8zE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740169579; x=1740774379;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5rQmbjlwBbLwDXvN5+jqJigL+IoD9eonvyj1f9icKNM=;
-        b=sZ9UDtKYcbUPtjV9mUug/wtjg+LjeT8GWppjgVVSwKfrtmlHpi4RW0R6fhSbQjkuzI
-         3Q0XFEzXP3va6C4cDCHRSmsnr5aPlxq+f2Xe6iM9UqqH3DXyMZLH2aQ0IF/kvihsdHoP
-         0PDB0ZUdf8hiUR3vMl5jbn3Q0Ch7Yog9dI9PJUjfqNG3oBQ4tFWJS5I8+HyqW58aibt/
-         RtaygB+bx+y0nKOknRjysp/SP7ASW1hBxRZ0C5U41ha2wO+8UGHQNoCQYatqNLAnkSlo
-         XBWZvM3MgpQUiVQMwE/73MrhOq+K2CM2TctKta380pvEo3vTobUQnEASteV/kQzuF6wN
-         uSAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUo6j2bRxQaPJnylxgn/ND/P39+uQvQcZVVaKo+JGELiE8Vhj4oFNR8WnWmSFagJbS86gP7Fjl0dNlRXSQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdeELnUAkaABJMcwd5sYTgMxCuGWR8w8LDrOYxh85PL3VNe+Et
-	jaodwu9aWM/H01rl7NqPgv3cH/WHIply3t5I2aXNcy8+jniPf0qUF4w+gcPyUZ1hoYpjGQx5K81
-	WOFs=
-X-Gm-Gg: ASbGnctAseVTeaomC5kdE5kxf3XeIDvvkKOnNYQhBY8sifjYglmcEh50MZdSKk7Bz5t
-	nYVj4588sRuMrhLNs+gBqN2k+Ybp2RhOMl69jIEMuC5GxesNx9qOHNOEa8/v6D4bx0wPu1GndyP
-	AijUD7/jKJOkBiCniLAsAOPjqz/o2yLJaON5emDe45oYiBnhbPFfUEFNaLBT4fwZQm5jYukStgu
-	CzjG0bxIi91S9xEQi91m5v0gBm/iFYMAuna1HZcuBfWvyvC7FSdqjqOg32RzMEOiTTmyc7o6kgT
-	NZNTmI4VKHDs+lmxlf5pbfoFzUP879lQVbx6wGWX9vBwrMHDKEAXRBApzjkbSWfdCA1BDeYCBm7
-	U
-X-Google-Smtp-Source: AGHT+IH+qRMD9lV77pe99RYoOYdrrgON/RU0mng1W1h3MQenEdAA9nEnOujrXdZC/s05YOXZKnD3hw==
-X-Received: by 2002:a17:907:7f9e:b0:ab7:caa9:330a with SMTP id a640c23a62f3a-abc09aab978mr441731766b.23.1740169579292;
-        Fri, 21 Feb 2025 12:26:19 -0800 (PST)
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb80ba68aesm1232089766b.23.2025.02.21.12.26.18
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2025 12:26:18 -0800 (PST)
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-abb9709b5b5so478119566b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 12:26:18 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWHlEKjBPDfCIIWUl+T8jcOVnwy/IH+jQel5WFrCSe3w4buRkytbDwwRtqPuU+0+JctDwH5TM+pVpuXX+U=@vger.kernel.org
-X-Received: by 2002:a17:907:72c1:b0:ab7:b356:62e0 with SMTP id
- a640c23a62f3a-abc09d3615bmr497772366b.53.1740169578296; Fri, 21 Feb 2025
- 12:26:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="NJvtB1xA"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 9A8F2404E4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1740169634; bh=7FZq7x2DsL0p96wxMf+OEK477FKs2JfWM383YceucfE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=NJvtB1xA9yQtQY+9YtMplhmskbAAnABIW9xmxngyr9xMOv52Y3YTIIxzHDnwybo0T
+	 Qf7gvauZ6AcDIjBpwz6aJHYpJmDZGb3hZ6ko8ZjdTJJKAYmptTB3lkGn1lgekacc8N
+	 fmKqV9JCjg0D9Bj0TdW4d2smxjQePWwr8mtiL8VS2Vvgo7uiMhh/PhRGP5W9EOIH9B
+	 PkN++/E1t0GQYX5mswFzvK7lkw7eHxC2BGudfiNer4cgOotU7Ddqa57rtvfYFUXurj
+	 H2qQ212/AoDOFntv4q2p2/+BmGBIUvywzNtIwSY7kQXQpXsNtm7QBGdJgxWH+zaSFI
+	 YdoxaOCwbF5Xw==
+Received: from localhost (unknown [IPv6:2601:280:4600:2d7f::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 9A8F2404E4;
+	Fri, 21 Feb 2025 20:27:14 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Suchit Karunakaran <suchitkarunakaran@gmail.com>, linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Suchit Karunakaran
+ <suchitkarunakaran@gmail.com>
+Subject: Re: [PATCH] docs: scheduler: fix spelling in sched-bwc documentation
+In-Reply-To: <20250219112254.28691-1-suchitkarunakaran@gmail.com>
+References: <20250219112254.28691-1-suchitkarunakaran@gmail.com>
+Date: Fri, 21 Feb 2025 13:27:13 -0700
+Message-ID: <87eczrgi1q.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
- <Z7SwcnUzjZYfuJ4-@infradead.org> <CANiq72myjaA3Yyw_yyJ+uvUrZQcSLY_jNp65iKH8Y5xGY5tXPQ@mail.gmail.com>
- <326CC09B-8565-4443-ACC5-045092260677@zytor.com> <CANiq72m+r1BZVdVHn2k8XeU37ZeY6VT2S9KswMuFA=ZO3e4uvQ@mail.gmail.com>
- <a7c5973a-497c-4f31-a7be-b3123bddb6dd@zytor.com> <Z7VKW3eul-kGaIT2@Mac.home>
- <2025021954-flaccid-pucker-f7d9@gregkh> <2nn05osp-9538-11n6-5650-p87s31pnnqn0@vanv.qr>
- <2025022052-ferment-vice-a30b@gregkh> <9B01858A-7EBD-4570-AC51-3F66B2B1E868@zytor.com>
- <n05p910s-r5o3-0n36-5s44-qr769prp69r5@vanv.qr> <20250221183437.1e2b5b94@pumpkin>
- <p7946077-rn30-n3p3-ppp0-80o9n9p07718@vanv.qr>
-In-Reply-To: <p7946077-rn30-n3p3-ppp0-80o9n9p07718@vanv.qr>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 21 Feb 2025 12:26:02 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whZwXK9shqeV5fpRF9CRqApVy5wz6myNeAkyuFm-ERTpQ@mail.gmail.com>
-X-Gm-Features: AWEUYZmxOG8LoPESIjY5QVAnSYfcZ5a_0i_NpT_k6tEamu_ExBz05y6DOubwg3k
-Message-ID: <CAHk-=whZwXK9shqeV5fpRF9CRqApVy5wz6myNeAkyuFm-ERTpQ@mail.gmail.com>
-Subject: Re: C aggregate passing (Rust kernel policy)
-To: Jan Engelhardt <ej@inai.de>
-Cc: David Laight <david.laight.linux@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Greg KH <gregkh@linuxfoundation.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	rust-for-linux <rust-for-linux@vger.kernel.org>, David Airlie <airlied@gmail.com>, 
-	linux-kernel@vger.kernel.org, ksummit@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-On Fri, 21 Feb 2025 at 12:06, Jan Engelhardt <ej@inai.de> wrote:
+Suchit Karunakaran <suchitkarunakaran@gmail.com> writes:
+
+> Fix spelling of "interference" in the CFS bandwidth control documentation. 
+> The word was misspelled as "interferenece".
 >
-> >(Apart from the fact that c++ makes it hard to ensure all the non-class
-> >members are initialised.)
+> Signed-off-by: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+> ---
+>  Documentation/scheduler/sched-bwc.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
->         struct stat x{};
->         struct stat x = {};
->
-> all of x's members (which are scalar and thus non-class) are
-> initialized. The second line even works in C.
+> diff --git a/Documentation/scheduler/sched-bwc.rst b/Documentation/scheduler/sched-bwc.rst
+> index 41ed2ceafc92..e881a945c188 100644
+> --- a/Documentation/scheduler/sched-bwc.rst
+> +++ b/Documentation/scheduler/sched-bwc.rst
+> @@ -59,7 +59,7 @@ At the same time, we can say that the worst case deadline miss, will be
+>  \Sum e_i; that is, there is a bounded tardiness (under the assumption
+>  that x+e is indeed WCET).
+>  
+> -The interferenece when using burst is valued by the possibilities for
+> +The interference when using burst is valued by the possibilities for
+>  missing the deadline and the average WCET. Test results showed that when
 
-Sadly, it doesn't work very reliably.
+Applied, thanks.
 
-Yes, if it's the empty initializer, the C standard afaik requires that
-it clear everything.
-
-But if you make the mistake of thinking that you want to initialize
-one field to anything but zero, and instead do the initializer like
-this:
-
-    struct stat x = { .field = 7 };
-
-suddenly padding and various union members can be left uninitialized.
-
-Gcc used to initialize it all, but as of gcc-15 it apparently says
-"Oh, the standard allows this crazy behavior, so we'll do it by
-default".
-
-Yeah. People love to talk about "safe C", but compiler people have
-actively tried to make C unsafer for decades. The C standards
-committee has been complicit. I've ranted about the crazy C alias
-rules before.
-
-We (now) avoid this particular pitfall in the kernel with
-
-    -fzero-init-padding-bits=all
-
-but outside of the kernel you may need to look out for this very
-subtle odd rule.
-
-             Linus
+jon
