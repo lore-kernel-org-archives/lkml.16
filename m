@@ -1,126 +1,155 @@
-Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19E882528E5;
-	Fri, 21 Feb 2025 22:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF882040A4;
+	Fri, 21 Feb 2025 22:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740176257; cv=none; b=u4zTz87JdUDPbi2xvKB0Uqqv/H7G49bzh3HKuad5kyfLl/ML9Sv+jlO7cdBNmStbx0rR9kTkl14yHyW2R6o9fJrobYOItgT26BJ7kSMGmkFiL+20f6wrqHDj/nTqg0GJ13MCsqyLEl04sC376kHdX+SfynnQW+6ZSejN1bLy5hE=
+	t=1740176301; cv=none; b=KaHcJCgsEd726GrjAqnXqB70e31GZNkw82oMnXJ6+OGag2E1OhtwtDKA8OQKOz/7qornYgnhKd+FCr8qFdNPJ5K5Z6uI4wz9I3aQ+wF9geR94ixxi+lu9/r9hOu1YVdx5Cs4cS9haG9VjtENWwpRblXlvOijvcqvmlMSokAx/U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740176257; c=relaxed/simple;
-	bh=Ci3gisbLXRxROB64O9pHO44MI+ObXvntWq5pIqDL81k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rEuafgCeYJGGz9weDfJ6f0z7YE3oHWy0Fluym1Hk7nGj/l4e0SDXVBSo/o66EZjaMHx1888o16eJZs/y19Kh4JPGAubGLiV7IqAbzYOZw6eu9PCAeexMbleMcjMT7aU9u+FplUpVZMJyk91VQYTCcAOdWpEUVT5VvHMOUq1h43o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=0U6dckmc; arc=none smtp.client-ip=199.89.3.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1740176301; c=relaxed/simple;
+	bh=p9H7eWFtI6uqcSrVYZwPwU1BZADxWA8u2LXEpyQb6Ik=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=glNX/KIswLhNMttuRI2u/wCwzM9uw4rosFwwbfoKMzaN8n5liKWpFOeq70USCGpjqQw2TRurgoU0nVnaOW1cYIatmw94HgZQC/hU07dj4DtdO3c8GHOiXOjN+MGCrW2zxMe4hF2Te9/dqrynm6aS+7cBg9kOhXe02mLKtG36GbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b2U+dnPK; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="0U6dckmc"
-Received: from localhost (localhost [127.0.0.1])
-	by 003.mia.mailroute.net (Postfix) with ESMTP id 4Z04Cd1HlWzlrwfX;
-	Fri, 21 Feb 2025 22:13:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1740176026; x=1742768027; bh=Rpv6qg5LJ6vh68awsAl0E+as
-	qhk7CuPogw8UREwVqAg=; b=0U6dckmcqX9LtnZXE5xmuCnA3ixG9loGUnrl/dvI
-	UEbXsokv+pv7MF+U1z9CNP2p5TJybCDDWW/PGOSBfBhxpRKuoQDnunWzgl7Kti+u
-	ybJODXttnYQM8JfLAqqqigh8dRLXWkAA73yASlRQKkAOK25k44DHhEa/X9P0G5fc
-	lc30W59Q2VhFKGHzXXoOlOa//iGn0QspjivRW4ciwH+jJAtXVTEab0/OUFQ8d6oc
-	8o1jcQHUHyfuyx+5hMZeG1C9I4EKBlSj8G60/NxnKKFzEy3Af7SKtihbP5+JkWTz
-	wiXmkEfXeIv5B7W11AWJ1mUbV4qaPzT1f9CSaZKPdozmYg==
-X-Virus-Scanned: by MailRoute
-Received: from 003.mia.mailroute.net ([127.0.0.1])
- by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id Wx3eBg_UPJEB; Fri, 21 Feb 2025 22:13:46 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4Z04CX48QtzlrnRt;
-	Fri, 21 Feb 2025 22:13:43 +0000 (UTC)
-Message-ID: <917f49a5-dae4-4810-8116-9bc93ddcd9f5@acm.org>
-Date: Fri, 21 Feb 2025 14:13:42 -0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b2U+dnPK"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43989226283so18165245e9.1;
+        Fri, 21 Feb 2025 14:18:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740176297; x=1740781097; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ipxGsEkSd2zt5hVzi7gIQRAM/kjjmR0+rET13GoS3gg=;
+        b=b2U+dnPKg3OjAlN1MyhiIBVQ+m1aKOIJbm9ByGTZKGM8tgl4425roPQKYXygLWkMZq
+         Gy8QtYdJXJcdbosBUKZ7Yj4fFZLhes5poJJh08Nkx4hgjJyE82lVlykl3lDh45oL+4tO
+         ul0fi2XWWebZsCeRRJFuJOABuHlMfSUk888dBaLihGTGJUssn/dhH1DMOJGFb/i+EYyn
+         l066WYG9ypwQDmPCKl5940gU7khSqPjgy7fEw51LnbnRgK7Rd4kWzMHrSx84VTpwKtRd
+         Fabuiu1GV1hho4wbi0vsRnJyAq3WQsqj6zEVgQBXo08k25VnwQroBuU2YytKeSXvEEvX
+         Ey2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740176297; x=1740781097;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ipxGsEkSd2zt5hVzi7gIQRAM/kjjmR0+rET13GoS3gg=;
+        b=IjlMF9JLduimKKGJP9SeMwk8ljpafXeQR+G/08PqxHIZ6oFVQikIFyvc5RcP/kK9U1
+         g4gfMznllLERkGGpDb4vne0ih8TzHOTcrLwGBHCgtgkcfC40JUwMT+znCV5FnUsBQyaj
+         mjA+6lhFlyZusZvN7Nbqiv8ji9xouyXKwmAcvAz6ghSmKmQwEGZT7ku6LKX8Kgq0UEyy
+         JnSSp3moeolYfL6SGqnw0LKxzUA79u2f+bfcsIdeVgKG3rN54FE69E79dbvkTcrVjKXP
+         XXx7PFBEnnwiG+WUIjb8/s/rKChKjSUeu4T1HtZr62bqcN3u/8lD2zcX7pvniRcSL6Qf
+         ahFA==
+X-Forwarded-Encrypted: i=1; AJvYcCVuardKGLMNxEba/g1OzKbfPVBIhoymm3ECiWQ5DOr1RkZVWSQQm7/Fcuga0sicY6jlGx6Ss+j3hAMq4G0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWfK9e9VmFMKNIXlfrkeM1/4BoD5eztiqtZBHkh5gx/AwrhD/E
+	8vaoXfZuiqZjaGAATBzdHjW6EG+9CcikxlvbXO3DzjYNWC39UBoi
+X-Gm-Gg: ASbGncslOhr/jAwUSxvTaihSDe2lPVjUvlv/A5kWht5G0exlRWFIH9rbBZXqf3sM/ni
+	6szwv61zvfkz467UFrhwXz8aNEtHnYkwvyoQAG+8zBhVqjLQk42XcU1hc1WXWlFMgtxwvOfXGm0
+	fDL1Q7tXHPcimC/AQuYDYSCTdIL39v517Ln1aOWc7wCyccbg4L7NoNcBRh+SYMsxobQBfIAFNC8
+	s0eyLKH1qrGF6jdTKc2DRnRuvYjK9tgaH9hYtsLzzEpw/8zKRoWNXUyCnOxX6W9Adf3mRktieh/
+	Ta2FCRXqDtgLhN1LwuskLzPQP0eCJvly4vkm3mg6tIjBleHiJc98DWQDmglET5LQ
+X-Google-Smtp-Source: AGHT+IHfSNAxS9poe8hCk4HjjTTlxpVzxb3L3wSfcoQW9kHs/5esAuFuB29zyHNCAXBmcj+Hc+dXZw==
+X-Received: by 2002:a05:600c:4e86:b0:439:9f19:72ab with SMTP id 5b1f17b1804b1-439b6afbbe3mr21474455e9.23.1740176297168;
+        Fri, 21 Feb 2025 14:18:17 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b02e6cf4sm29222245e9.19.2025.02.21.14.18.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 14:18:16 -0800 (PST)
+Date: Fri, 21 Feb 2025 22:18:15 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Nick Child <nnac123@linux.ibm.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, horms@kernel.org,
+ nick.child@ibm.com, pmladek@suse.com, rostedt@goodmis.org,
+ john.ogness@linutronix.de, senozhatsky@chromium.org
+Subject: Re: [PATCH net-next v3 1/3] hexdump: Implement macro for converting
+ large buffers
+Message-ID: <20250221221815.53455e22@pumpkin>
+In-Reply-To: <Z7jLE-GKWPPn-cBT@li-4c4c4544-0047-5210-804b-b8c04f323634.ibm.com>
+References: <20250219211102.225324-1-nnac123@linux.ibm.com>
+	<20250219211102.225324-2-nnac123@linux.ibm.com>
+	<20250220220050.61aa504d@pumpkin>
+	<Z7i56s7jwc_y0cIz@li-4c4c4544-0047-5210-804b-b8c04f323634.ibm.com>
+	<20250221180435.4bbf8c8f@pumpkin>
+	<Z7jLE-GKWPPn-cBT@li-4c4c4544-0047-5210-804b-b8c04f323634.ibm.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: C aggregate passing (Rust kernel policy)
-To: David Laight <david.laight.linux@gmail.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Jan Engelhardt <ej@inai.de>, "H. Peter Anvin" <hpa@zytor.com>,
- Greg KH <gregkh@linuxfoundation.org>, Boqun Feng <boqun.feng@gmail.com>,
- Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- Christoph Hellwig <hch@infradead.org>,
- rust-for-linux <rust-for-linux@vger.kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org,
- ksummit@lists.linux.dev
-References: <CANiq72m+r1BZVdVHn2k8XeU37ZeY6VT2S9KswMuFA=ZO3e4uvQ@mail.gmail.com>
- <a7c5973a-497c-4f31-a7be-b3123bddb6dd@zytor.com> <Z7VKW3eul-kGaIT2@Mac.home>
- <2025021954-flaccid-pucker-f7d9@gregkh>
- <2nn05osp-9538-11n6-5650-p87s31pnnqn0@vanv.qr>
- <2025022052-ferment-vice-a30b@gregkh>
- <9B01858A-7EBD-4570-AC51-3F66B2B1E868@zytor.com>
- <n05p910s-r5o3-0n36-5s44-qr769prp69r5@vanv.qr>
- <20250221183437.1e2b5b94@pumpkin>
- <p7946077-rn30-n3p3-ppp0-80o9n9p07718@vanv.qr>
- <20250221202332.GA6576@pendragon.ideasonboard.com>
- <20250221220201.7068dfa3@pumpkin>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250221220201.7068dfa3@pumpkin>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 2/21/25 2:02 PM, David Laight wrote:
-> And there is nothing to stop (I think even std::string) using ref-counted
-> buffers for large malloc()ed strings.
+On Fri, 21 Feb 2025 12:50:59 -0600
+Nick Child <nnac123@linux.ibm.com> wrote:
 
-This is what an LLM told me about this topic (this matches what I 
-remember about the std::string implementation):
+> On Fri, Feb 21, 2025 at 06:04:35PM +0000, David Laight wrote:
+> > On Fri, 21 Feb 2025 11:37:46 -0600
+> > Nick Child <nnac123@linux.ibm.com> wrote:  
+> > > On Thu, Feb 20, 2025 at 10:00:50PM +0000, David Laight wrote:  
+> > > > You could do:
+> > > > #define for_each_line_in_hex_dump(buf_offset, rowsize, linebuf, linebuflen, groupsize, buf, len, ascii) \
+> > > > for (unsigned int _offset = 0, _rowsize = (rowsize), _len = (len); \
+> > > > 	((offset) = _offset) < _len && (hex_dump_to_buffer((const char *)(buf) + _offset, _len - _offset, \  
+> >           ^ needs to be buf_offset.
+> >   
+> > > > 		_rowsize, (groupsize), (linebuf), (linebuflen), (ascii)), 1); \
+> > > > 	_offset += _rowsize )
+> > > > 
+> > > > (Assuming I've not mistyped it.)
+> > > >     
+> > >
+> > > Trying to understand the reasoning for declaring new tmp variables;
+> > > Is this to prevent the values from changing in the body of the loop?  
+> >
+> > No, it is to prevent side-effects happening more than once.
+> > Think about what would happen if someone passed 'foo -= 4' for len.
+> >  
+> 
+> If we are protecting against those cases then linebuf, linebuflen,
+> groupsize and ascii should also be stored into tmp variables since they
+> are referenced in the loop conditional every iteration.
+> At which point the loop becomes too messy IMO.
+> Are any other for_each implementations taking these precautions?
 
-<quote>
-Does the std::string implementation use a reference count?
+No, it only matters if they appear in the text expansion of the #define
+more than once.
+It may be unlikely here, but for things like min(a,b) where:
+#define min(a, b) ((a) < (b) ? (a) : (b))
+causes:
+	a = 3;
+	b = min(a += 3, 7);
+to set b to 9 it has to be avoided.
 
-No. [ ... ]
+> 
+> Not trying to come off dismissive, I genuinely appreciate all the
+> insight, trying to learn more for next time.
+> 
+> > > I tried to avoid declaring new vars in this design because I thought it
+> > > would recive pushback due to possible name collision and variable
+> > > declaration inside for loop initializer.  
+> >
+> > The c std level got upped recently to allow declarations inside loops.
+> > Usually for a 'loop iterator' - but I think you needed that to be
+> > exposed outsize the loop.
+> > (Otherwise you don't need _offset and buf_offset.
+> >  
+> 
+> As in decrementing _len and increasing a _buf var rather than tracking
+> offset?
+> I don't really care for exposing the offset, during design I figured
+> some caller may make use of it but I think it is worth removing to reduce
+> the number of arguments.
 
-Why does std::string not use a reference count? Has this always been the
-case?
+Except the loop body needs it - so it needs to be a caller-defined name,
+even if they don't declare the variable.
 
-[ ... ]
-Reference counting adds overhead. Every time a string is copied or 
-assigned, the reference count has to be incremented or decremented, and 
-when it reaches zero, memory has to be deallocated. This adds both time 
-complexity (due to the need to update the reference count) and space 
-complexity (to store the count alongside the string data).
+	David
 
-The goal with std::string is to minimize this overhead as much as 
-possible for the most common cases, particularly short strings, which 
-are frequent in real-world applications. The small string optimization 
-(SSO) allows short strings to be stored directly within the std::string 
-object itself, avoiding heap allocation and reference counting 
-altogether. For long strings, reference counting might not provide much 
-of an advantage anyway because memory management would still have to 
-involve the heap.
-[ ... ]
-Reference counting introduces unpredictable performance in terms of 
-memory management, especially in multithreaded applications. Each string 
-operation might require atomic operations on the reference count, 
-leading to potential contention in multithreaded environments.
-[ ... ]
-Initially, early implementations of std::string may have used CoW or 
-reference counting techniques. However, over time, as the language 
-evolved and as multithreading and performance became more of a priority, 
-the C++ standard moved away from these features. Notably, the C++11 
-standard explicitly banned CoW for std::string in order to avoid its 
-pitfalls.
-[ ... ]
-</quote>
+> 
+> Thanks again,
+> Nick
 
-Bart.
