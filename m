@@ -1,25 +1,35 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC4C7209F4C;
-	Fri, 21 Feb 2025 11:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtpcmd10101.aruba.it (smtpcmd10101.aruba.it [62.149.156.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2036209671
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 11:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740137982; cv=none; b=X59zClbo4whXaNFPr6GYPCGqN9k39G3Et+svWGIZIbOWJ8pVedZ4jjgVVuhjh9RbGV0wowhsMxhLg6YqonD7KiSTfWi8GFaIjvnobkibsc3niILLgO4Lh4uAEDq/Sh9QIiLKmc0R+szsVu01QZjEqT35ejrhn5mZ4p//nVrQ/k4=
+	t=1740137993; cv=none; b=P0pLeVa2i+XyaAue5TfCnbl/8crnvLVz4vhuJ5UYt7RErXnNHrDohEDOpbK62TYYYz4nRQG99qeiXqgDiKR/6KaIdgfhr7l1+8HYpISiLR/vinS01JHMLVXV+8TPVgEOlyyN4xJhrBnRAn2OdrbAYUguetBtJW79LQ6rzpAE0sU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740137982; c=relaxed/simple;
-	bh=WVW/Db9zIDxlm5OikfMD3GGlk7oxbY2o81BysOmR3PU=;
+	s=arc-20240116; t=1740137993; c=relaxed/simple;
+	bh=ecnRFDGZEbSlAbXsCT3MFiq7C2g4sJV6p0HMIMrtKTo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WfBlRT4Q4Tcrv6Ora4znkidT/l28D+m1zkMifOH5q6u0gTtVEE92YyHDxntUPrl3HmsXs7AhBY1B8GJ87TOfio/gDXLLEjKiAbLEZgxKP5/DIJr2Rq5TV9d4rPqbgSrynjGhA7jTSmy+di9sbOoYBTB516CnIzsabnyWkWbVPSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C597E1516;
-	Fri, 21 Feb 2025 03:39:56 -0800 (PST)
-Received: from [10.57.36.38] (unknown [10.57.36.38])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D3F393F59E;
-	Fri, 21 Feb 2025 03:39:35 -0800 (PST)
-Message-ID: <35d1a923-4e8e-4fe2-bf4a-0b78b1d511e3@arm.com>
-Date: Fri, 21 Feb 2025 11:39:34 +0000
+	 In-Reply-To:Content-Type; b=oglXaY6p/Yyv4H0DH2KA97qvvml4tInMe1CrtotvIpvAs1+YrNRJaFmV6rlDQ33/DWBniFXL4uXijrMBQFkpYdjSRKVQoYk4E98rX6tAIEixDx7i7NnjSjZRuDqGxxNzB51ln5y93+YoBaWpNq0JgYoMXHWw8HULOdx+aWx338U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b=PhUhWAUO; arc=none smtp.client-ip=62.149.156.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b="PhUhWAUO"
+Received: from [192.168.1.58] ([79.0.204.227])
+	by Aruba SMTP with ESMTPSA
+	id lRNitd9Ir1ugblRNit8C3b; Fri, 21 Feb 2025 12:39:46 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1740137986; bh=ecnRFDGZEbSlAbXsCT3MFiq7C2g4sJV6p0HMIMrtKTo=;
+	h=Date:MIME-Version:Subject:To:From:Content-Type;
+	b=PhUhWAUOw/j10LH3d35O2lKU9fIq337ifLlTwlPB4H50MB82TwyusbSIuN7LTmFaj
+	 oZVZxmAFqrwBucb92Y6klNEysDXJNEyDUZA+oYkPhhGvGsMaql+w4jWqj4a3EKi+kt
+	 htV2tN+sMJeC0A2uYvk89LIlG/wUUIz3SY//hDSkNaE52NodQHIlCJL2jzxvL/ToiO
+	 YlQopVFuSVp1P+9EBgSuEkLWFWkbuP9GrIcJVWVfsFnqwhd0HFRhGfQnwTIvZd0LYM
+	 ZULcXjZTGKydrMiUhQhWydSqd24yhsIPzC7zQSeJ+iKyrdd63oybd71P6vkcCmkqEy
+	 E43A8dNda3UQA==
+Message-ID: <9d9f2a9a-ab90-4fbf-bc0e-d4c8b83d7082@enneenne.com>
+Date: Fri, 21 Feb 2025 12:39:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,460 +37,177 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 6/7] Coresight: Add Coresight TMC Control Unit driver
-Content-Language: en-GB
-To: Jie Gan <quic_jiegan@quicinc.com>, Mike Leach <mike.leach@linaro.org>,
- James Clark <james.clark@linaro.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: Tingwei Zhang <quic_tingweiz@quicinc.com>,
- Jinlong Mao <quic_jinlmao@quicinc.com>, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com
-References: <20250217093024.1133096-1-quic_jiegan@quicinc.com>
- <20250217093024.1133096-7-quic_jiegan@quicinc.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20250217093024.1133096-7-quic_jiegan@quicinc.com>
+Subject: Re: [EXT] Re: [PATCH] pps: add epoll support
+Content-Language: en-US
+To: Denis OSTERLAND-HEIM <denis.osterland@diehl.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <40322dd7ce0243b6bc89b21d8884980b@diehl.com>
+From: Rodolfo Giometti <giometti@enneenne.com>
+In-Reply-To: <40322dd7ce0243b6bc89b21d8884980b@diehl.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfEF7QPtJwbKUz3Q1DHWVKwyjOi2leLg2zoQqB+7aUnDUS0X8iESs0A+o5PLebOAK+xPRf2pGLuWnb72A5Cm4bHCZaeR6w0It/+igEB1JBq0i+iMShjEa
+ JKKavXvWufVPIh1fPFzHgRyXqz750g7U3dMkcvN+lGvlQCsZNES/U7ymAfAgxO6gPLkios4xTQeB95jcPxYQMsMhOMtLNK8IEQZYf9RcYXVYiMCHFxWgcKfL
+ lE8JyxA265MZ8yl+jRcZrA==
 
-On 17/02/2025 09:30, Jie Gan wrote:
-> The Coresight TMC Control Unit hosts miscellaneous configuration registers
-> which control various features related to TMC ETR sink.
+On 21/02/25 11:49, Denis OSTERLAND-HEIM wrote:
+> Hi,
 > 
-> Based on the trace ID, which is programmed in the related CTCU ATID
-> register of a specific ETR, trace data with that trace ID gets into
-> the ETR buffer, while other trace data gets dropped.
+> Okay, if poll is expected to work, than we have a bug.
+> Actually a pretty old one.
 > 
-> Enabling source device sets one bit of the ATID register based on
-> source device's trace ID.
-> Disabling source device resets the bit according to the source
-> device's trace ID.
+> pps_cdev_poll() uncoditionally returns (EPOLLIN | EPOLLRDNORM), which results in poll() will return immediately with data available
+> (EPOLLIN | EPOLLRDNORM).
+> To avoid this, you need conditionally return 0.
+
+I think you are right!
+
+Looking at the code I think the correct patch should be:
+
+diff --git a/drivers/pps/pps.c b/drivers/pps/pps.c
+index 6a02245ea35f..7a52bb9f835b 100644
+--- a/drivers/pps/pps.c
++++ b/drivers/pps/pps.c
+@@ -41,7 +41,7 @@ static __poll_t pps_cdev_poll(struct file *file, poll_table *wait)
+
+         poll_wait(file, &pps->queue, wait);
+
+-       return EPOLLIN | EPOLLRDNORM;
++       return pps->info.mode & PPS_CANWAIT ? 0 : EPOLLIN | EPOLLRDNORM;
+  }
+
+  static int pps_cdev_fasync(int fd, struct file *file, int on)
+
+> My patch adds a context per open file to store the last_ev value when ioctl(PPS_FETCH) is invoked and uses this last_ev in poll as
+> condition.
 > 
-> Reviewed-by: James Clark <james.clark@linaro.org>
-> Signed-off-by: Jie Gan <quic_jiegan@quicinc.com>
-> ---
->   drivers/hwtracing/coresight/Kconfig          |  12 +
->   drivers/hwtracing/coresight/Makefile         |   1 +
->   drivers/hwtracing/coresight/coresight-ctcu.c | 268 +++++++++++++++++++
->   drivers/hwtracing/coresight/coresight-ctcu.h |  24 ++
->   include/linux/coresight.h                    |   3 +-
->   5 files changed, 307 insertions(+), 1 deletion(-)
->   create mode 100644 drivers/hwtracing/coresight/coresight-ctcu.c
->   create mode 100644 drivers/hwtracing/coresight/coresight-ctcu.h
+> Sorry, for the missing memset(&fdata, 0, sizeof(fdata)).
+> Intention was set to 0, yes.
+
+OK
+
+> ```c
+> #include <stdio.h>
+> #include <string.h>///home/giometti/Projects/ailux/imx9/linux/linux-imx
+> #include <poll.h>
+> #include <fcntl.h>
+> #include "timepps.h"
 > 
-> diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
-> index 06f0a7594169..ecd7086a5b83 100644
-> --- a/drivers/hwtracing/coresight/Kconfig
-> +++ b/drivers/hwtracing/coresight/Kconfig
-> @@ -133,6 +133,18 @@ config CORESIGHT_STM
->   	  To compile this driver as a module, choose M here: the
->   	  module will be called coresight-stm.
->   
-> +config CORESIGHT_CTCU
-> +	tristate "CoreSight TMC Control Unit driver"
-> +	depends on CORESIGHT_LINK_AND_SINK_TMC
-> +	help
-> +	  This driver provides support for CoreSight TMC Control Unit
-> +	  that hosts miscellaneous configuration registers. This is
-> +	  primarily used for controlling the behaviors of the TMC
-> +	  ETR device.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called coresight-ctcu.
-> +
->   config CORESIGHT_CPU_DEBUG
->   	tristate "CoreSight CPU Debug driver"
->   	depends on ARM || ARM64
-> diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
-> index 4ba478211b31..1b7869910a12 100644
-> --- a/drivers/hwtracing/coresight/Makefile
-> +++ b/drivers/hwtracing/coresight/Makefile
-> @@ -51,3 +51,4 @@ coresight-cti-y := coresight-cti-core.o	coresight-cti-platform.o \
->   		   coresight-cti-sysfs.o
->   obj-$(CONFIG_ULTRASOC_SMB) += ultrasoc-smb.o
->   obj-$(CONFIG_CORESIGHT_DUMMY) += coresight-dummy.o
-> +obj-$(CONFIG_CORESIGHT_CTCU) += coresight-ctcu.o
-> diff --git a/drivers/hwtracing/coresight/coresight-ctcu.c b/drivers/hwtracing/coresight/coresight-ctcu.c
-> new file mode 100644
-> index 000000000000..e1460a627c4d
-> --- /dev/null
-> +++ b/drivers/hwtracing/coresight/coresight-ctcu.c
-> @@ -0,0 +1,268 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2024-2025 Qualcomm Innovation Center, Inc. All rights reserved.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/coresight.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/kernel.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +
-> +#include "coresight-ctcu.h"
-> +#include "coresight-priv.h"
-> +
-> +DEFINE_CORESIGHT_DEVLIST(ctcu_devs, "ctcu");
-> +
-> +#define ctcu_writel(drvdata, val, offset)	__raw_writel((val), drvdata->base + offset)
-> +#define ctcu_readl(drvdata, offset)		__raw_readl(drvdata->base + offset)
-> +
-> +/*
-> + * The TMC Coresight Control Unit uses four ATID registers to control the data
-> + * filter function based on the trace ID for each TMC ETR sink. The length of
-> + * each ATID register is 32 bits. Therefore, the ETR has a related field in
-> + * CTCU that is 128 bits long. Each trace ID is represented by one bit in that
-> + * filed.
-> + * e.g. ETR0ATID0 layout, set bit 5 for traceid 5
-> + *                                           bit5
-> + * ------------------------------------------------------
-> + * |   |28|   |24|   |20|   |16|   |12|   |8|  1|4|   |0|
-> + * ------------------------------------------------------
-> + *
-> + * e.g. ETR0:
-> + * 127                     0 from ATID_offset for ETR0ATID0
-> + * -------------------------
-> + * |ATID3|ATID2|ATID1|ATID0|
-> + */
-> +#define CTCU_ATID_REG_OFFSET(traceid, atid_offset) \
-> +		((traceid / 32) * 4 + atid_offset)
-> +
-> +#define CTCU_ATID_REG_BIT(traceid)	(traceid % 32)
-> +#define CTCU_ATID_REG_SIZE		0x10
-> +
-> +struct ctcu_atid_config {
-> +	const u32 atid_offset;
-> +	const u32 port_num;
-> +};
-> +
-> +struct ctcu_config {
-> +	const struct ctcu_atid_config *atid_config;
-> +	int num_atid_config;
-> +};
-> +
-> +static const struct ctcu_atid_config sa8775p_atid_cfgs[] = {
-> +	{0xf8,  0},
-> +	{0x108, 1},
-> +};
-> +
-> +static const struct ctcu_config sa8775p_cfgs = {
-> +	.atid_config		= sa8775p_atid_cfgs,
-> +	.num_atid_config	= ARRAY_SIZE(sa8775p_atid_cfgs),
-> +};
-> +
-> +static void ctcu_program_atid_register(struct ctcu_drvdata *drvdata, u32 reg_offset,
-> +				       u8 bit, bool enable)
-> +{
-> +	u32 val;
-> +
-> +	CS_UNLOCK(drvdata->base);
-> +	val = ctcu_readl(drvdata, reg_offset);
-> +	val = enable? (val | BIT(bit)) : (val & ~BIT(bit));
+> int main(int argc, const char* argv[]) {
+>      struct pollfd instance = { .fd = open((argc > 1) ? argv[1] : "/dev/pps0", O_RDONLY), .events = POLLIN|POLLERR , .revents = 0 };
+>      pps_handle_t pps_handle;
+>      static const struct timespec timeout = { 0, 0 };
+>      if (time_pps_create(instance.fd, &pps_handle)) {
+>          perror("failed to create pps handle");
+>          return 1;
+>      }
+>      for (int loops = 4; --loops; ) {
+>          pps_info_t pps_info;
+>          memset(&pps_info, 0, sizeof(pps_info));
+>          if (!poll(&instance, 1, 2000/*ms*/)) {
+>              printf("timeout");
+>              continue;
+>          }
+>          if ((instance.revents & POLLIN) != POLLIN) {
+>              printf("nothing to read?");
+>              continue;
+>          }
+>          if (time_pps_fetch(pps_handle, PPS_TSFMT_TSPEC, &pps_info, &timeout)) {
+>              perror("failed to fetch");
+>              return 1;
+>          }
+> 
+>          printf(
+>              "assert: %lu\ntime: %ld.%09ld\n",
+>              pps_info.assert_sequence,
+>              pps_info.assert_tu.tspec.tv_sec,
+>              pps_info.assert_tu.tspec.tv_nsec
+>          );
+>      }
+>      return 0;
+> }
+> ```
+> 
+> Currently output looks like:
+> ```
+> $ cat /sys/class/pps/pps0/assert; ./test /dev/pps0
+> 1520598954.468882076#60
+> assert: 60
+> time: 1520598954.468882076
+> assert: 60
+> time: 1520598954.468882076
+> assert: 60
+> time: 1520598954.468882076
+> ```
+> 
+> You see no waits between the loops.
 
-minor nit: If possible do not use the ternary operator like this. It is 
-much better readable as:
+Please, try again with the above patch.
 
-	if (enable)
-		val |= BIT(bit);
-	else
-		val &= ~BIT(bit);
+However, before doing the test, you should consider to add this patch too:
 
-> +	ctcu_writel(drvdata, val, reg_offset);
-> +	CS_LOCK(drvdata->base);
-> +}
-> +
-> +/*
-> + * __ctcu_set_etr_traceid: Set bit in the ATID register based on trace ID when enable is true.
-> + * Reset the bit of the ATID register based on trace ID when enable is false.
-> + *
-> + * @csdev:	coresight_device struct related to the device
-> + * @traceid:	trace ID of the source tracer.
-> + * @port_num:	port number from TMC ETR sink.
-> + * @enable:	True for set bit and false for reset bit.
-> + *
-> + * Returns 0 indicates success. Non-zero result means failure.
-> + */
-> +static int __ctcu_set_etr_traceid(struct coresight_device *csdev, u8 traceid, int port_num,
-> +				  bool enable)
-> +{
-> +	struct ctcu_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
-> +	u32 atid_offset, reg_offset;
-> +	u8 refcnt, bit;
-> +
-> +	atid_offset = drvdata->atid_offset[port_num];
-> +	if (atid_offset == 0)
-> +		return -EINVAL;
-> +
-> +	bit = CTCU_ATID_REG_BIT(traceid);
-> +	reg_offset = CTCU_ATID_REG_OFFSET(traceid, atid_offset);
-> +	if (reg_offset - atid_offset > CTCU_ATID_REG_SIZE)
-> +		return -EINVAL;
-> +
-> +	guard(raw_spinlock_irqsave)(&drvdata->spin_lock);
-> +	refcnt = drvdata->traceid_refcnt[port_num][traceid];
-> +	/* Only program the atid register when the refcnt value is 0 or 1 */
+diff --git a/drivers/pps/pps.c b/drivers/pps/pps.c
+index 6a02245ea35f..7a52bb9f835b 100644
+--- a/drivers/pps/pps.c
++++ b/drivers/pps/pps.c
+@@ -56,10 +56,13 @@ static int pps_cdev_pps_fetch(struct pps_device *pps, struct 
+pps_fdata *fdata)
+         int err = 0;
 
-A normal trace source won't be enabled more than once (e.g., ETM). The 
-only odd one out is the STM, which may be driven by multiple agents.
-So this refcounting looks necessary.
+         /* Manage the timeout */
+-       if (fdata->timeout.flags & PPS_TIME_INVALID)
+-               err = wait_event_interruptible(pps->queue,
++       if (fdata->timeout.flags & PPS_TIME_INVALID) {
++               if (pps->info.mode & PPS_CANWAIT)
++                       err = wait_event_interruptible(pps->queue,
+                                 ev != pps->last_ev);
+-       else {
++               else
++                       return -EOPNOTSUPP;
++       } else {
+                 unsigned long ticks;
 
-> +	if (enable && (++refcnt == 1))
-> +		ctcu_program_atid_register(drvdata, reg_offset, bit, enable);
-> +	else if (!enable && (--refcnt == 0))
-> +		ctcu_program_atid_register(drvdata, reg_offset, bit, enable);
+                 dev_dbg(&pps->dev, "timeout %lld.%09d\n",
+@@ -69,12 +72,15 @@ static int pps_cdev_pps_fetch(struct pps_device *pps, struct 
+pps_fdata *fdata)
+                 ticks += fdata->timeout.nsec / (NSEC_PER_SEC / HZ);
 
-minor nit:
+                 if (ticks != 0) {
+-                       err = wait_event_interruptible_timeout(
++                       if (pps->info.mode & PPS_CANWAIT) {
++                               err = wait_event_interruptible_timeout(
+                                         pps->queue,
+                                         ev != pps->last_ev,
+                                         ticks);
+-                       if (err == 0)
+-                               return -ETIMEDOUT;
++                               if (err == 0)
++                                       return -ETIMEDOUT;
++                       } else
++                               return -EOPNOTSUPP;
+                 }
+         }
 
-	if ((enable && !refcount++) ||
-	    (!enable && --refcount))
-		ctcu_program_atid_register(drvdata, reg_offset, bit, enable);
+In fact RFC2783 states:
 
+3.4.3 New functions: access to PPS timestamps
 
-Also, see my comment the bottom for "refcount" being u8 .
+...
+    Support for blocking behavior is an implementation option.  If the
+    PPS_CANWAIT mode bit is clear, and the timeout parameter is either
+    NULL or points to a non-zero value, the function returns an
+    EOPNOTSUPP error.  An application can discover whether the feature is
+    implemented by using time_pps_getcap() to see if the PPS_CANWAIT mode
+    bit is set.
+...
 
+Ciao,
 
-> +
-> +	drvdata->traceid_refcnt[port_num][traceid] = refcnt;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ctcu_get_active_port(struct coresight_device *sink, struct coresight_device *helper)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < sink->pdata->nr_outconns; ++i) {
-> +		if (sink->pdata->out_conns[i]->dest_dev)
-> +			return sink->pdata->out_conns[i]->dest_port;
+Rodolfo
 
-Don't we need to make sure it matches the helper ? What if there are 
-multiple helpers ? e.g, a CATU connected to the ETR and CTCU ?
-Or even try the opposite ? i.e. search the helper and find the port
-matching the sink ?
-
-	struct coresight_platform_data *pdata = helper->pdata;
-
-	for (i = 0; i < pdata->nr_inconns; ++i)
-		if (pdata->in_conns[i]->dest_dev == sink)
-			return pdata->in_conns[i]->src_port;
-
-Not sure if that works with the helper device connection, James ?
-
-
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static int ctcu_set_etr_traceid(struct coresight_device *csdev, struct coresight_path *path,
-> +				bool enable)
-> +{
-> +	struct coresight_device *sink = coresight_get_sink(path);
-> +	u8 traceid = path->trace_id;
-> +	int port_num;
-> +
-> +	if ((sink == NULL) || !IS_VALID_CS_TRACE_ID(traceid)) {
-> +		dev_err(&csdev->dev, "Invalid parameters\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	port_num = ctcu_get_active_port(sink, csdev);
-> +	if (port_num < 0)
-> +		return -EINVAL;
-> +
-> +	dev_dbg(&csdev->dev, "traceid is %d\n", traceid);
-> +
-> +	return __ctcu_set_etr_traceid(csdev, traceid, port_num, enable);
-> +}
-> +
-> +static int ctcu_enable(struct coresight_device *csdev, enum cs_mode mode,
-> +		       void *data)
-> +{
-> +	struct coresight_path *path = (struct coresight_path *)data;
-> +
-> +	return ctcu_set_etr_traceid(csdev, path, true);
-> +}
-> +
-> +static int ctcu_disable(struct coresight_device *csdev, void *data)
-> +{
-> +	struct coresight_path *path = (struct coresight_path *)data;
-> +
-> +	return ctcu_set_etr_traceid(csdev, path, false);
-> +}
-> +
-> +static const struct coresight_ops_helper ctcu_helper_ops = {
-> +	.enable = ctcu_enable,
-> +	.disable = ctcu_disable,
-> +};
-> +
-> +static const struct coresight_ops ctcu_ops = {
-> +	.helper_ops = &ctcu_helper_ops,
-> +};
-> +
-> +static int ctcu_probe(struct platform_device *pdev)
-> +{
-> +	int i;
-> +	void __iomem *base;
-> +	struct device *dev = &pdev->dev;
-> +	struct coresight_platform_data *pdata;
-> +	struct ctcu_drvdata *drvdata;
-> +	struct coresight_desc desc = { 0 };
-> +	const struct ctcu_config *cfgs;
-> +	const struct ctcu_atid_config *atid_cfg;
-> +
-> +	desc.name = coresight_alloc_device_name(&ctcu_devs, dev);
-> +	if (!desc.name)
-> +		return -ENOMEM;
-> +
-> +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
-> +	if (!drvdata)
-> +		return -ENOMEM;
-> +
-> +	pdata = coresight_get_platform_data(dev);
-> +	if (IS_ERR(pdata))
-> +		return PTR_ERR(pdata);
-> +	dev->platform_data = pdata;
-> +
-> +	base = devm_platform_get_and_ioremap_resource(pdev, 0, NULL);
-> +	if (!base)
-> +		return -ENOMEM;
-> +
-> +	drvdata->apb_clk = coresight_get_enable_apb_pclk(dev);
-> +	if (IS_ERR(drvdata->apb_clk))
-> +		return -ENODEV;
-> +
-> +	cfgs = of_device_get_match_data(dev);
-> +	if (cfgs) {
-> +		if (cfgs->num_atid_config <= ATID_MAX_NUM) {
-> +			for (i = 0; i < cfgs->num_atid_config; i++) {
-> +				atid_cfg = &cfgs->atid_config[i];
-> +				drvdata->atid_offset[i] = atid_cfg->atid_offset;
-> +			}
-> +		}
-> +	}
-> +
-> +	drvdata->base = base;
-> +	drvdata->dev = dev;
-> +	platform_set_drvdata(pdev, drvdata);
-> +
-> +	desc.type = CORESIGHT_DEV_TYPE_HELPER;
-> +	desc.subtype.helper_subtype = CORESIGHT_DEV_SUBTYPE_HELPER_CTCU;
-> +	desc.pdata = pdata;
-> +	desc.dev = dev;
-> +	desc.ops = &ctcu_ops;
-
-Please set the desc.access
-
-	desc.access = CSDEV_ACCESS_IOMEM(drvdata->base);
-
-> +
-> +	drvdata->csdev = coresight_register(&desc);
-> +	if (IS_ERR(drvdata->csdev)) {
-> +		if (!IS_ERR_OR_NULL(drvdata->apb_clk))
-> +			clk_put(drvdata->apb_clk);
-> +
-> +		return PTR_ERR(drvdata->csdev);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void ctcu_remove(struct platform_device *pdev)
-> +{
-> +	struct ctcu_drvdata *drvdata = platform_get_drvdata(pdev);
-> +
-> +	coresight_unregister(drvdata->csdev);
-> +	if (!IS_ERR_OR_NULL(drvdata->apb_clk))
-> +		clk_put(drvdata->apb_clk);
-
-Why isn't the clock get/put at runtime via pm_runtime calls ?
-See coresight-replicator driver for e.g.
-
-
-> +}
-> +
-> +static const struct of_device_id ctcu_match[] = {
-> +	{.compatible = "qcom,sa8775p-ctcu", .data = &sa8775p_cfgs},
-> +	{}
-> +};
-> +
-> +static struct platform_driver ctcu_driver = {
-> +	.probe          = ctcu_probe,
-> +	.remove         = ctcu_remove,
-> +	.driver         = {
-> +		.name   = "coresight-ctcu",
-> +		.of_match_table = ctcu_match,
-> +		.suppress_bind_attrs = true,
-> +	},
-> +};
-> +module_platform_driver(ctcu_driver);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("CoreSight TMC Control Unit driver");
-> diff --git a/drivers/hwtracing/coresight/coresight-ctcu.h b/drivers/hwtracing/coresight/coresight-ctcu.h
-> new file mode 100644
-> index 000000000000..9890c3da5ec8
-> --- /dev/null
-> +++ b/drivers/hwtracing/coresight/coresight-ctcu.h
-> @@ -0,0 +1,24 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (c) 2024-2025 Qualcomm Innovation Center, Inc. All rights reserved.
-> + */
-> +
-> +#ifndef _CORESIGHT_CTCU_H
-> +#define _CORESIGHT_CTCU_H
-> +#include "coresight-trace-id.h"
-> +
-> +/* Maximum number of supported sink devices for a single CTCU in current projects. */
-> +#define ATID_MAX_NUM 	2
-> +
-> +struct ctcu_drvdata {
-> +	void __iomem		*base;
-> +	struct clk		*apb_clk;
-> +	phys_addr_t		pbase;
-
-Where is this used ?
-
-> +	struct device		*dev;
-> +	struct coresight_device	*csdev;
-> +	raw_spinlock_t		spin_lock;
-> +	u32			atid_offset[ATID_MAX_NUM];
-> +	/* refcnt for each traceid of each sink */
-> +	u8			traceid_refcnt[ATID_MAX_NUM][CORESIGHT_TRACE_ID_RES_TOP];
-
-Hopefully u8 is sufficient, but is it ? Why don't we check this in 
-"enable" path to see if we are going to overflow ?
-
-
-
-> +};
-> +#endif
-> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-> index 03d833a15726..55bb825d509e 100644
-> --- a/include/linux/coresight.h
-> +++ b/include/linux/coresight.h
-> @@ -71,7 +71,8 @@ enum coresight_dev_subtype_source {
->   
->   enum coresight_dev_subtype_helper {
->   	CORESIGHT_DEV_SUBTYPE_HELPER_CATU,
-> -	CORESIGHT_DEV_SUBTYPE_HELPER_ECT_CTI
-> +	CORESIGHT_DEV_SUBTYPE_HELPER_ECT_CTI,
-> +	CORESIGHT_DEV_SUBTYPE_HELPER_CTCU,
->   };
->   
->   /**
+-- 
+GNU/Linux Solutions                  e-mail: giometti@enneenne.com
+Linux Device Driver                          giometti@linux.it
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming
 
