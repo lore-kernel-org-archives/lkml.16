@@ -1,78 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26973214A85;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075FD24C67F;
 	Fri, 21 Feb 2025 17:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740157718; cv=none; b=N7kjrsf9wOk4BS3MF6HcGH1Hc/ZBfqXC4zj+k6V+IYvEeRiaIrsbrLJVr5xn/0pD6cmBm1VDF9R+79TEMN3dNPUXuGs93BH8QZ5jCQ8hS7UjhoCuIi/5ys20gaLq+YQIxJmS4ph9yLvD5DT/ZWZ7C3t1rqJun22TSAFahbaus48=
+	t=1740157720; cv=none; b=kox1uLokpRt8hqdrhX56GIkQHFDBMWR75TBeZFZhn9XzoRLj99esFykO7ALqPnAdEgW4/LRMuXod498EMTSp4mUteLblqOfCIWyL21pKN9t3Jh/Bh8RjdTGJeYUOsXx1vD0f/D5kSjZX6tmo1s3zpwN1TTAdgHFeMyPQoXiqOBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740157718; c=relaxed/simple;
-	bh=s5eo+jWFRpAipFm09lCIDLtuXzM+294r4TRujXXE5u0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=vEUv7asuDd37lKcVCDHj+sXxu4syvlMZ+Xxi4oP/d+cI4cPnWJ7OyAhU+MOJNF+7gchuhBkf120B2GBYcD8UOBMZmGt+jzO4RJ4LP9gyCWrBhxUld5J1KbgCkREhidiSph3HGMjRmDHA2oFdYvBo8fT1HwFGsgKdga/gItQt6SY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GzjWBLIb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740157720; c=relaxed/simple;
+	bh=2t0668eiteh3f3Iy0ruE97MLBoXovdk0kloMVMvC1YE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GoFlPsBGy5oqqiC3Bg8nAY3DHJ2/4Z75w6VQRFxP4bhFTzBeffSU6kfmFj6yAPzSLe11r6y5RIfJ/GgEURw27VlTfAkfnVwhyavVrWFu5Ij33mzjHaNWSv/FNfJ4VS0SUuXxA0a0zVbIEYoRx6B9kI6P4fjbANk/7Qkqw8XfhA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TCxvA25m; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GzjWBLIb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 060DDC4CEEB;
-	Fri, 21 Feb 2025 17:08:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740157718;
-	bh=s5eo+jWFRpAipFm09lCIDLtuXzM+294r4TRujXXE5u0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=GzjWBLIbRxpFtvcpYed3KJH5oTstoyhONMh/76infiaUq8+BKchsHfECQe7rxsIqF
-	 qFcpc8lIOphgU56JOdmPiHKujaATg0VW9uoRwxwBPQfyI3sPAXrly4pFA18F7KGWNL
-	 NwoG9XpzqWnq+f+a0L78ehWlYynKd4CiEsPHyaZrD4oAmPCR9IYJYgqMx1K2vds61F
-	 FEmTYM4LhyFNfXyTfRI0N1ACovuQO4ZA4AeXRs5g0uVERIQI+fDEDiDFZmPsvnKVm8
-	 pj9479jGjo1KY/PzySQYuxqdo61I+bvpRxMZCkBO3lFaJX9yUMRAOjxaBY5wzIgPsG
-	 yBAgKohor6mFA==
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e04f87584dso3551980a12.3;
-        Fri, 21 Feb 2025 09:08:37 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX1wazPxrwvqWoLP25eyGM8yj8jKq/K+wgXAtmpanZtQUiYDj5JQ5JnEbqE0THwp5TeMIeOL0YmbPPh2YeA@vger.kernel.org, AJvYcCXTHCTn5HG1IZSf/vM76Mn+S1bWy8jxV0ogBXb3HFQu1iZ+vMn1jkxIHasrXj3l9dhUF03BrvB/zSZL@vger.kernel.org
-X-Gm-Message-State: AOJu0YwswD8TG3+TIEx9W0yWXU/EWtGrxzfvjk8rxdKllb8rnpUB45UO
-	g05XkT63FcuNxzrsO5Yy51AxxUvzF+Mi97na/jmE198i9ALiKpGzHFskGWapml/2g+P5zWDQJCn
-	BZ61ZsRWb3OR8QTwd9ZYr1i/1Wg==
-X-Google-Smtp-Source: AGHT+IF3O3vdI8KmOvbFRUGPLCBofMuxQiMkHrsWb3wzJcHfb8wAPbp8iF9eEU1cB0o4czpk21gl9NW97USVLhVQ01s=
-X-Received: by 2002:a05:6402:e02:b0:5e0:9ec6:12d1 with SMTP id
- 4fb4d7f45d1cf-5e0b70f0800mr4060556a12.18.1740157716547; Fri, 21 Feb 2025
- 09:08:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TCxvA25m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740157719; x=1771693719;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2t0668eiteh3f3Iy0ruE97MLBoXovdk0kloMVMvC1YE=;
+  b=TCxvA25mw0cNOF90wfUX+Z3tnAWNH/UIYKrR1mhCrSw0vljjmKIyV4tD
+   NTvYbUGsKQtLSOW1Af9DBQu/2rnDdtb2XaD6i6/CTOU49GvJrFzJ1W6OB
+   RK9ykCr1aCpaeFy4Q/CBMiO6/p2qPO8DhhQmbsGFEJl9IolUkyiPFwb07
+   XYHRPKTsiJiCkWPkxDQZlAJ2KFaOQh0QznKo0hhfYj9dMxUz9AwCHQcI3
+   DSwKQwzh6HQ3yZXR27ydqXFLIZNYFkyTl9u64+9SL4GlrE2wkqxGenp+8
+   0MLge+H3mvmFouCG7dJJ9RPDslnRJRFdUix0K+TSBJgyKitW7/GlZus8Q
+   Q==;
+X-CSE-ConnectionGUID: rkC7VW5jQPy0h8XgeLbVNQ==
+X-CSE-MsgGUID: Bz3m75P4Qo2cusF18naNrg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11352"; a="66348133"
+X-IronPort-AV: E=Sophos;i="6.13,305,1732608000"; 
+   d="scan'208";a="66348133"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 09:08:38 -0800
+X-CSE-ConnectionGUID: Jc8ijnaVSgK6s3uQtQ4NXA==
+X-CSE-MsgGUID: bC3ASJHhTnWRImYJWSD2Jw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,305,1732608000"; 
+   d="scan'208";a="120046078"
+Received: from test2-linux-lab.an.altera.com ([10.244.157.115])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 09:08:37 -0800
+From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+To: lpieralisi@kernel.org,
+	kw@linux.com,
+	manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	bhelgaas@google.com,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	joyce.ooi@intel.com,
+	linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: matthew.gerlach@altera.com,
+	peter.colberg@altera.com,
+	Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Subject: [PATCH v8 0/2] Add PCIe Root Port support for Agilex family of chips
+Date: Fri, 21 Feb 2025 11:04:50 -0600
+Message-Id: <20250221170452.875419-1-matthew.gerlach@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250218090427.20318-1-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20250218090427.20318-1-angelogioacchino.delregno@collabora.com>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 21 Feb 2025 11:08:25 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+4+=3ccuwa1whv+UQ56H6ueia4Mqy2z73M-5D15zZw=Q@mail.gmail.com>
-X-Gm-Features: AWEUYZmwuM1JP26BKUCaWcwByGaIWjPB3I55aqksnOcD6mvIR49_PbC1vcSeCe8
-Message-ID: <CAL_Jsq+4+=3ccuwa1whv+UQ56H6ueia4Mqy2z73M-5D15zZw=Q@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: display: mediatek: dsc: Add MT8188 compatible
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: chunkuang.hu@kernel.org, p.zabel@pengutronix.de, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, 
-	airlied@gmail.com, simona@ffwll.ch, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	matthias.bgg@gmail.com, dri-devel@lists.freedesktop.org, 
-	linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kernel@collabora.com, pablo.sun@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 18, 2025 at 3:04=E2=80=AFAM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
->
-> Add compatible for Display Stream Compression (DSC) IP found in
-> the display controller of the MT8188 SoC.
->
-> This IP is fully compatible with the one found on MT8195.
->
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
-abora.com>
-> ---
->  .../devicetree/bindings/display/mediatek/mediatek,dsc.yaml     | 3 +++
->  1 file changed, 3 insertions(+)
+This patch set adds PCIe Root Port support for the Agilex family of FPGA chips.
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Patch 1:
+  Add new compatible strings for the three variants of the Agilex PCIe
+  controller IP.
+
+Patch 2:
+  Update Altera PCIe controller driver to support the Agilex family of chips.
+
+Previous versions of this patch set contained patches unrelated to PCIe 
+Root Port support for Agilex chips. These patches have been removed and
+will be resubmitted separately. Patches related to a particular FPGA
+design have also been removed.
+
+D M, Sharath Kumar (1):
+  PCI: altera: Add Agilex support
+
+Matthew Gerlach (1):
+  dt-bindings: PCI: altera: Add binding for Agilex
+
+ .../bindings/pci/altr,pcie-root-port.yaml     |  10 +
+ drivers/pci/controller/pcie-altera.c          | 253 +++++++++++++++++-
+ 2 files changed, 254 insertions(+), 9 deletions(-)
+
+-- 
+2.34.1
+
