@@ -1,174 +1,97 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F4C1EF0B4;
-	Fri, 21 Feb 2025 16:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AFAF286298;
+	Fri, 21 Feb 2025 16:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740155144; cv=none; b=tJL/JM1vJYo7tvkZ06aFJo2xWRRn40PrCpJfD5SfOrEMqpOGRhkyFwpWAvqq1AmsxkRAEZiUA3y2/7Ve3gnHYl8gYtijHZC3fExy9j1iFJNfwSRett6rRT8sL2cutxniHleVYsOadx+oIojM9K7WETM9QVssYi9jorVdxkuKdtc=
+	t=1740155174; cv=none; b=udzCEzVyVegajumeLqqOn6qNNo1YI9cLcrsnI24/EvJUaXMRZtYHyRs45VZABDPDKxBmhugfqKqx3tKjdRMFDXnovh+SVv1hOGbkOtsjX+xdh+/1WEc7eKcdJt1APx2JhyDwbPUBXgRkR15HuUFNGH47ChP1/Y378yamCpG2E9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740155144; c=relaxed/simple;
-	bh=a0ahG7GNpc2Bh1FMZWerWXsz4xsO5Rzcg+40RjlizxY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=CCGKWrHYLvpcJGgPyeWiLo9IhRlACyAlGjqev1gFecz4UyJDqoK8m303/f3v6WgXm009woXDbv6gMzBrdwd2r/HhSZcIjUcjUEDlXp8lDbkj6kgXmbqwxFOGO0o8Xr9BruZZrH5pPBhDApBGyRK7uQHPsOUvje4OdOsppi+vPD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=d0lk2H2a; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="d0lk2H2a"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51LD11uc015152;
-	Fri, 21 Feb 2025 16:25:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	yWWunlq9ptFdkWsR7BCovQgXo10nVfMQQtLgQu+W30I=; b=d0lk2H2aKd/Y0eSs
-	xUvZXzShHlFW/4B2WGV/4cSHSTIIF8RlLDWERYs5kfnjm6vVqLkN4WF28Och6IDm
-	arY8WISol9djwUjhtRe9NrgmMF9jyvProXpUW4yEFKZ6h2aTQ5H7Vk70XJm86GhR
-	TyEJwObm4amEBE/bAsbT28TtUiOJFWrlbwg9f5bCAqdNjPqwzrAPkx27l6VuPISu
-	8pR4H6C4cDESccLXP/7MXWhB8ULEgawnsandK18TUe8KVN4BqV9mhxOvtPocxfW9
-	NhGWIGU4CO/pWzk2uo14lV+8bbA0OpHHGG1d5U6eSUi/8L+YqO/Ik726fqBXgqq8
-	or/hig==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy4jmt4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Feb 2025 16:25:35 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51LGPY8w018373
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Feb 2025 16:25:34 GMT
-Received: from [10.216.10.103] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 21 Feb
- 2025 08:25:30 -0800
-Message-ID: <47eb0aff-a486-10a5-0bbf-c18db03c81e1@quicinc.com>
-Date: Fri, 21 Feb 2025 21:55:18 +0530
+	s=arc-20240116; t=1740155174; c=relaxed/simple;
+	bh=bwyfdE/FLFiMluP9iNmNaFqs+Q/d+RJXSoF40a55j+s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QwMitHGIar4y6iLL09lAkF/AXMeElU0p/Kq9hijlsqY39IKXlz5PZPBJLyG2FaGjLGjEVu+xdGvldjORDUf+Z94URMMAmL7vEEJuEfQOQgcgaZO9i/HKV6TTgR4Hb/9XSG0yC6I1yVjOhDQIMStiDfF3AHZzQmZEV8XWThX612U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2f44353649aso3581357a91.0;
+        Fri, 21 Feb 2025 08:26:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740155172; x=1740759972;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4z6O4IkxuL3soFsgl5HuaRJCPykEjaleOKC87F2y/io=;
+        b=bG1E2z1FNaXtkyfWPOOtXrTxmemFk/yMIElbCv9Xsy5e01K3qFoZcljyuAm5GU+fwr
+         k8nMF259Ulfu5/jvqKpwTCufutI2w1kKdmyGqw86K9KW0RAWiUuvOCB0c4iGS9VtkYd3
+         fy9CdyQkSTzvwh+jvpM3bY4GBlJCqndNOnmGlzk0BRlm6FQBqJIUVaSlNozUOqTKumYh
+         pPIsLdzwmrU6UGzNjx2e4xHBIMZI2SMcE+5ekwJj5EvOycDBQAZYm3koqSXb0TqdbgPt
+         URRAdlKI5LHhO8eHJEju2m1YfpmqGOWmdfN3jBk49vDMmGUwCFV0arJe3gDJTlsfXAKc
+         Mc2A==
+X-Forwarded-Encrypted: i=1; AJvYcCVCCRnzB3Sm4kvPYLB8LEBc7b+kqA9Ut6cj9tHiF5iPSPgl0x4Ssf8bmb+EGGldlcozW4S4EvXCsKgm@vger.kernel.org, AJvYcCVfnoOipcHyOz8FexjvvBu7OAPcMC/HQBXGjanAS+wwG88k5Ej0XbAKpVUmiSqW7yCQN5cvHn913PeZ@vger.kernel.org, AJvYcCXBTN69GD7XJtVN1cpmQeuRgToZ5PWdALIRbVeEzUEJiQYZ9U6nlBpxjxypEv2W7KU++Ap9eAJ/YjgdUnse@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzXcGpnp0pfMGr8lIOzPnSH/NW/9RX4DfKfvmwQMOzp8uOdlpz
+	cTNS8pByX7ZpNVguLMTjotXFIjsAwTvgdp1UdXL6ZcErIL63BNTE
+X-Gm-Gg: ASbGncvDKX79cucMlG2btMJ2XTTWxbZzCb/E2xC+O3ZJ9uqdVVsrmXDD2Xim51yEkkT
+	GocRq/4KKLQFDCKfJ9qE6bYT1MOAB8oxkITzvXEKFJ+neY7DQWdXvgGQ1aMIWdGCiCJ3LvZxLcF
+	lcmcfZCQvtNvB/jSCNiosZ/w3KrCwutoIF6Gb/IlXlU1/7eU+pLyeRCV02wKdjbn4y4+dOn4jlP
+	yztyYwScOzRCWbgAvfVNl14LXEMJ3FyUvagfVaj3t2dnvic6DCJ2fJwr8jHzYwYFTVCAOUH3OGT
+	oW+5SveJVTQPMuK96wQVQzyA61WxFacLzKARSP4gjo8rB0bvMl/10gbx9j8X
+X-Google-Smtp-Source: AGHT+IG50X4zqXhTHhqI02RRZLr0tYQJLiTV1L9LZNvdYSx6bY2d/dTV4UtvP0Y/8m772MSFX/Z4OA==
+X-Received: by 2002:a17:90b:2241:b0:2fa:228d:5af2 with SMTP id 98e67ed59e1d1-2fce78b778cmr6540511a91.15.1740155172321;
+        Fri, 21 Feb 2025 08:26:12 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2fceb02df46sm1603022a91.9.2025.02.21.08.26.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 08:26:11 -0800 (PST)
+Date: Sat, 22 Feb 2025 01:26:09 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Stanimir Varbanov <svarbanov@suse.de>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Phil Elwell <phil@raspberrypi.com>,
+	Jonathan Bell <jonathan@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>
+Subject: Re: [PATCH v5 -next 03/11] irqchip: Add Broadcom bcm2712 MSI-X
+ interrupt controller
+Message-ID: <20250221162609.GD3753638@rocinante>
+References: <20250120130119.671119-1-svarbanov@suse.de>
+ <20250120130119.671119-4-svarbanov@suse.de>
+ <87bjvs86w8.ffs@tglx>
+ <b1009877-6749-4bb1-95b9-ae976bef591c@broadcom.com>
+ <320db9bc-3610-4336-a691-a8926cdb7e24@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v4 4/4] media: venus: hfi: add a check to handle OOB in
- sfr region
-To: Tomasz Figa <tfiga@chromium.org>
-CC: Hans Verkuil <hverkuil@xs4all.nl>,
-        Stanimir Varbanov
-	<stanimir.k.varbanov@gmail.com>,
-        Bryan O'Donoghue
-	<bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Stanimir Varbanov
-	<stanimir.varbanov@linaro.org>,
-        Mauro Carvalho Chehab
-	<mchehab+samsung@kernel.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
-References: <20250207-venus_oob_2-v4-0-522da0b68b22@quicinc.com>
- <20250207-venus_oob_2-v4-4-522da0b68b22@quicinc.com>
- <e794c047-ab0e-4589-a1d2-0f73b813eacc@xs4all.nl>
- <b1721d46-ffbf-e21c-ce18-e96e3e8ee35f@quicinc.com>
- <CAAFQd5ABR8BwG_9JVPzzp+HZv6O=B9r-ipjKQHku7DdTGASetQ@mail.gmail.com>
-Content-Language: en-US
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <CAAFQd5ABR8BwG_9JVPzzp+HZv6O=B9r-ipjKQHku7DdTGASetQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: z6XY414_3z239VBn3rot62zVG9y2qoJL
-X-Proofpoint-ORIG-GUID: z6XY414_3z239VBn3rot62zVG9y2qoJL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-21_05,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 suspectscore=0 clxscore=1015
- lowpriorityscore=0 mlxlogscore=999 spamscore=0 adultscore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502210116
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <320db9bc-3610-4336-a691-a8926cdb7e24@suse.de>
 
+Hello,
 
-On 2/21/2025 9:25 AM, Tomasz Figa wrote:
-> On Fri, Feb 21, 2025 at 12:56 AM Vikash Garodia
-> <quic_vgarodia@quicinc.com> wrote:
->>
->>
->> On 2/20/2025 8:53 PM, Hans Verkuil wrote:
->>> On 2/7/25 09:24, Vikash Garodia wrote:
->>>> sfr->buf_size is in shared memory and can be modified by malicious user.
->>>> OOB write is possible when the size is made higher than actual sfr data
->>>> buffer. Cap the size to allocated size for such cases.
->>>>
->>>> Cc: stable@vger.kernel.org
->>>> Fixes: d96d3f30c0f2 ("[media] media: venus: hfi: add Venus HFI files")
->>>> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
->>>> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
->>>> ---
->>>>  drivers/media/platform/qcom/venus/hfi_venus.c | 9 +++++++--
->>>>  1 file changed, 7 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
->>>> index 6b615270c5dae470c6fad408c9b5bc037883e56e..c3113420d266e61fcab44688580288d7408b50f4 100644
->>>> --- a/drivers/media/platform/qcom/venus/hfi_venus.c
->>>> +++ b/drivers/media/platform/qcom/venus/hfi_venus.c
->>>> @@ -1041,18 +1041,23 @@ static void venus_sfr_print(struct venus_hfi_device *hdev)
->>>>  {
->>>>      struct device *dev = hdev->core->dev;
->>>>      struct hfi_sfr *sfr = hdev->sfr.kva;
->>>> +    u32 size;
->>>>      void *p;
->>>>
->>>>      if (!sfr)
->>>>              return;
->>>>
->>>> -    p = memchr(sfr->data, '\0', sfr->buf_size);
->>>> +    size = sfr->buf_size;
->>>
->>> If this is ever 0...
->>>
->>>> +    if (size > ALIGNED_SFR_SIZE)
->>>> +            size = ALIGNED_SFR_SIZE;
->>>> +
->>>> +    p = memchr(sfr->data, '\0', size);
->>>>      /*
->>>>       * SFR isn't guaranteed to be NULL terminated since SYS_ERROR indicates
->>>>       * that Venus is in the process of crashing.
->>>>       */
->>>>      if (!p)
->>>> -            sfr->data[sfr->buf_size - 1] = '\0';
->>>> +            sfr->data[size - 1] = '\0';
->>>
->>> ...then this will overwrite memory. It probably can't be 0, but a check or perhaps
->>> just a comment might be good. It looks a bit scary.
->> Thats correct, it would not be 0 as its a prefixed one [1]. I can put up a
->> comment here.
+[...]
+> >> As this is a new controller and required for the actual PCI muck, I
+> >> think the best way is to take it through the PCI tree, unless someone
+> >> wants me to pick the whole lot up.
+> > 
+> > Agreed, the PCI maintainers should take patches 1 through 9 inclusive,
 > 
-> Couldn't a bug (or vulnerability) in the firmware actually still cause
-> it to write 0 there?
-Possible. Though the size is initialized in driver with "ALIGNED_SFR_SIZE",
-there is a possibility that the same could get overwritten by a rogue firmware.
-Kept a check in v5, which cache the value locally and then does the check before
-using that value.
+> Just small correction, patch 09/11 [1] has a new v2 at [2]. And I think
+> PCI maintainer have to take v2.
 
-Regards
-Vikash
->>
->> [1]
->> https://elixir.bootlin.com/linux/v6.14-rc3/source/drivers/media/platform/qcom/venus/hfi_venus.c#L836
->>>
->>> Regards,
->>>
->>>       Hans
->>>
->>>>
->>>>      dev_err_ratelimited(dev, "SFR message from FW: %s\n", sfr->data);
->>>>  }
->>>>
->> Regards,
->> Vikash
+No problem.  I dropped #9 when applying.  Thank you!
+
+	Krzysztof
