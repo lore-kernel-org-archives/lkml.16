@@ -1,112 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCDA72500B1;
-	Fri, 21 Feb 2025 17:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A01BD1DE4E5;
+	Fri, 21 Feb 2025 17:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740160156; cv=none; b=fyMpQWJsjwm4QqVrsCcHWAEIQ/JTgJaRvnEGKs8Ckq+e8uDPCj+uNZLK72NdToU20xaxQqU0Jtgw9cdqKi5WOp4ZG3ZwBsD7DYm12WzwcUo697gxcgcvIk2j1t9gweuKasbLWF25D1S/SErhcG24s6DELCYuyUg4LoloxS2/e+4=
+	t=1740160239; cv=none; b=k92wWUkE8eEm3NUWxe9LURNUzqgFgsPEHuPblcKh67UpudJHlGRsklXJcAboAbt4m7X3ufGsjP1yQOr9HqUbJ9/XOvsYZrGMuCKxg/wDlNenQMdRyGb5Ao6Mrp/7K5g/fHnlSisbDJEfEU431LNKqnW7r47HGuaB2F0qUkfnj64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740160156; c=relaxed/simple;
-	bh=6JYtiUiZu542bx1Rnk2g88YxCd4cPBPV8npBQDG5FWQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FIqMhaJmiap/m7T/8GpjAs7YBnRdO809DHbooF2BGxSYSzzeTcO62RjzXAW2/hUgOjCEMPoYWl2OpFRmonJcSIUeLfSCG8Y0PWgNbMrS7Zyu+cMlvJokqO7r9PJReLjIW0v+txGhBbvjsWTWjZjtIl7GJVxn6pdM2jP8tComVJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QyiXXGMJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QyiXXGMJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B67FBC4CED6;
-	Fri, 21 Feb 2025 17:49:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740160154;
-	bh=6JYtiUiZu542bx1Rnk2g88YxCd4cPBPV8npBQDG5FWQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QyiXXGMJAk4IlxEg1+lXDA6N+1boZJBfYoKKhrB5SLxM2BZ5QnYcG1nxEr2T/V6L1
-	 K63VniUpyB8ozkCs50i5IpyUXMgpfoyx9KuvCWTcxvPnWjHdraV7huMS+8aXpxD/qf
-	 GSXcDUyid0mtzK8ZEJoqaaBqTNs/5G5o41RwwS6Utm3qm9L+qrTcKCHL51xVmiV1tR
-	 EMf82h/GpxT7F0tTS/ArGIhMQXN6YFhXZIGNquAbs8wIXVGlN2SLtclpSro0ZSbqLg
-	 PSO19TL8r0Ptqjqw3t8OPlYMsXXsjOq74hW44JxfxravOfnSvqB3+0KhWoHpzlWlFx
-	 poMlOw9BoWvtg==
-Date: Fri, 21 Feb 2025 17:49:10 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>
-Cc: jic23@kernel.org, robh@kernel.org, conor+dt@kernel.org,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	s=arc-20240116; t=1740160239; c=relaxed/simple;
+	bh=I+ZqIDgu5Yx4S/MxE/KudjpWYkO1PXs9gZFIVTp8S+Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jbp7yC/vH9HJP/poXuxnw0r0/MIgxJxohTEGGJtLmKBb7HJT3GJC1mCOJ6m5K4wit3cUxCbVUeQ9kZZ5bmOvzUYwiFCIjzAMUWi+PqCgia60RcoXTIpNpTUG4rQOvnNRcNEHTMYYYket72MWkJh1E+b8hIpZR3Nlw3xPbjI0ChU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9381F1516;
+	Fri, 21 Feb 2025 09:50:54 -0800 (PST)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 309493F59E;
+	Fri, 21 Feb 2025 09:50:35 -0800 (PST)
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+To: linux-sound@vger.kernel.org
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/14] dt-bindings: iio: adc: add ad408x axi variant
-Message-ID: <20250221-chop-amendment-063eabd73363@spud>
-References: <20250220135429.8615-1-antoniu.miclaus@analog.com>
- <20250220135429.8615-7-antoniu.miclaus@analog.com>
+Subject: [PATCH v2 0/4] xlnx: dt-bindings: Convert to json-schema
+Date: Fri, 21 Feb 2025 17:50:26 +0000
+Message-ID: <20250221175030.1395815-1-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mfDG9m7sIc7aZIbM"
-Content-Disposition: inline
-In-Reply-To: <20250220135429.8615-7-antoniu.miclaus@analog.com>
+Content-Transfer-Encoding: 8bit
 
+This series converts the folling Xilinx device tree binding documentation:
+ - xlnx,i2s
+ - xlnx,audio-formatter
+ - xlnx,spdif
+to json-schema.
 
---mfDG9m7sIc7aZIbM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+To simplify the testing a linux tree rebased on 6.13-rc4 is accessible
+at [1].
 
-On Thu, Feb 20, 2025 at 03:54:16PM +0200, Antoniu Miclaus wrote:
-> Add a new compatible and related bindings for the fpga-based
-> AD408x AXI IP core, a variant of the generic AXI ADC IP.
->=20
-> The AXI AD408x IP is a very similar HDL (fpga) variant of the
-> generic AXI ADC IP, intended to control ad408x familiy.
+[1] https://codeberg.org/vincenzo/linux/src/branch/xlnx/dt-bindings/v4
 
-Very similar isn't very specific. Is it functionally different and needs
-to be an enum member, or a fallback to the generic compatible is
-sufficient for a driver to function?
+Note: These bindings are required for future work on the ARM Morello
+Platforms device tree.
 
->=20
-> Wildcard naming is used to match the naming of the published
-> firmware.
->=20
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> ---
->  Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml b=
-/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
-> index cf74f84d6103..e91e421a3d6b 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
-> @@ -27,6 +27,7 @@ description: |
->        the ad7606 family.
-> =20
->    https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
-> +  https://analogdevicesinc.github.io/hdl/library/axi_ad408x/index.html
->    https://analogdevicesinc.github.io/hdl/library/axi_ad485x/index.html
->    http://analogdevicesinc.github.io/hdl/library/axi_ad7606x/index.html
-> =20
-> @@ -34,6 +35,7 @@ properties:
->    compatible:
->      enum:
->        - adi,axi-adc-10.0.a
-> +      - adi,axi-ad408x
->        - adi,axi-ad7606x
->        - adi,axi-ad485x
-> =20
-> --=20
-> 2.48.1
->=20
+Cc: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: Conor Dooley <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
---mfDG9m7sIc7aZIbM
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes
+=======
+v2:
+  - Address review comments.
+  - Rebase on 6.14-rc4.
 
------BEGIN PGP SIGNATURE-----
+Vincenzo Frascino (4):
+  ASoC: dt-bindings: xlnx,i2s: Convert to json-schema
+  ASoC: dt-bindings: xlnx,audio-formatter: Convert to json-schema
+  ASoC: dt-bindings: xlnx,spdif: Convert to json-schema
+  MAINTAINERS: Add Vincenzo Frascino as Xilinx Sound Driver Maintainer
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZ7i8lgAKCRB4tDGHoIJi
-0oi6APoCUXAfZ/IvXoc+7oEOHcXulkK97BSMlkGZvzdBZ+epQgEA7rBJHTBr2iZb
-K3ES/5nA1i9yQg8ZT6r2UKXCaYY5TAQ=
-=ciLL
------END PGP SIGNATURE-----
+ .../bindings/sound/xlnx,audio-formatter.txt   | 29 ------
+ .../bindings/sound/xlnx,audio-formatter.yaml  | 76 +++++++++++++++
+ .../devicetree/bindings/sound/xlnx,i2s.txt    | 28 ------
+ .../devicetree/bindings/sound/xlnx,i2s.yaml   | 68 ++++++++++++++
+ .../devicetree/bindings/sound/xlnx,spdif.txt  | 28 ------
+ .../devicetree/bindings/sound/xlnx,spdif.yaml | 92 +++++++++++++++++++
+ MAINTAINERS                                   |  8 ++
+ 7 files changed, 244 insertions(+), 85 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/xlnx,audio-formatter.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/xlnx,audio-formatter.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/xlnx,i2s.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/xlnx,i2s.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/xlnx,spdif.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/xlnx,spdif.yaml
 
---mfDG9m7sIc7aZIbM--
+-- 
+2.43.0
+
