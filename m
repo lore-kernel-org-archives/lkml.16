@@ -1,169 +1,90 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-bc0f.mail.infomaniak.ch (smtp-bc0f.mail.infomaniak.ch [45.157.188.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F8915530C
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 14:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98A91BCA07
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 14:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740146554; cv=none; b=TG8wIR60mMTW15UJpgmc14f73SydPbzb7hn8lTLYDwon+zpPQIl9UcstT326dk2A14YtTv0kii5DZqj/ycalsTna7fyInO01PVdnQZd/tMw51ZopKApNF8/aZE2ixOMsPPTfOTYqytFTqMZbT+ouYpzrJLjtZaHMzvFCiWZJOT8=
+	t=1740146711; cv=none; b=JpaNUoaXFP31iZXOs61QMT8WNIr/LljbRAHDj8apipypXuJDx6O9UMWZvud8afjGXjZpMB3u6fF52Gy+wPP+c1P+9kTX/uGdZYsCjDWw79oD7dQNNwcs4CWLkF+/xOBOoybX1ZBeCiyGGqbENnTfBMYZ+cw6eyOrPVaoiVfD8FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740146554; c=relaxed/simple;
-	bh=FWjn8X2FfaK8SSNwO/Xctdx2DZncST8IYUonlq7UEX8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FjuDqqxeYyO8Gjyriy4sWOsyYPfeYL7MvSX5u8mjgvaam5MWmPZD8yHwzyFlcPQQJkzDToWhGi6QpgObLpSqxC4aAtZIGDgjK278kor7YEprN0GryjK+eWTecRmG08m0szKrjCSYLxQRoV1nMQYfdFk4nzZjKzzXtyZcdXazZmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VqrLjbmQ; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VqrLjbmQ"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30797730cbdso21054391fa.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 06:02:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740146550; x=1740751350; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uJzAWSuxeWSihbhdsKRhtohvlqbTovub3PbCnjjBuIU=;
-        b=VqrLjbmQHe/7oEAuVDt9Zhk3V0YXES6/lqdP5KhhW5Dv9GyORZpW4hv3j9scEf2KVC
-         /nq2WMkx0c/+sqDdpA3/BzswEBqlugfAnDyjNRkpUVfoVuw79vXTfMKBDWTXqFje/ppJ
-         PlcyTjg/godeMnDH89CzkVv+op9rpuAPbaTa+d4AOt6/oMooTkNZ3yYcVy020GbMdaTw
-         dT+P/A1RpLm0WW1ayEPMI7DDMz7CqPK6sK5LOlmokEbJ0AX8y8rDDfzQUOQunwpGNUCC
-         9GSsuI/fsFFcIl8AetniGgkmPzRm3MCmGIwI+ZxqoDw0gBUk4E01ZkW1eGn6JQc2wjZ+
-         PqTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740146550; x=1740751350;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uJzAWSuxeWSihbhdsKRhtohvlqbTovub3PbCnjjBuIU=;
-        b=fCPPxfvl/95lbsoaSZPqkUN26SyEC6m5rKvZ8/oDXcB6NeMIqouK8rCvL54VFF0dsj
-         WIAp6xlceGnuKki4ZYW487zthCZbjojaWIrMjbwwdVoN0LXrBEEjcstOIpjDDNLnVbtA
-         u/RnWRK8K6Nag04vPassgc92aUY8XpydpGdWp2nl/JpYdEpmiWkdz8YggLP4Z+/gHVUa
-         vjv4zaa3eAswgxcjrqUX8HJkc3sVqfKvOqjvTBH41SqkbrZLzA7pLes9i1Wn3GbEhPUP
-         fkxamxlqKujqEnrfBuoVj7QGXYJfRWxFbH1wE9yfzslNVVHSP5i3wZ/8gwKpYPRd05Vk
-         iQYA==
-X-Forwarded-Encrypted: i=1; AJvYcCVUJGOgXHdFWOWPwLn8GmKWT2H3Sib9DFM6GFJeA54sH4xy25xgpNILH4BCMG4DOUlzDRjyNNEY3skb3eE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKKsXyYicSLWU9CqVWZRfNF2mm6QXHavBoHyaDxG06pGwjVL8a
-	rq+oRtJ77dFjhhE6d8tofj/qftORQ0FUIMTo0m2TA4/zSL9ny8OHXgr+lJs6pkFYAfhWjsNhHTq
-	++L0+UhyZpTi3YUxUt6dYoSC0NHwBbh0h
-X-Gm-Gg: ASbGnct+OObCei4wY1ZRBJpG67vba4VuMa5VEjzzspW9wEHyX8gEvmzRoNcaWtLbp0O
-	fknGj4SB2IRmgfSNMiZoX20LMCqh5EM3ZyIl/XwRkjlgb58+q9mjDz27aGlhjquIpg6zxghLsqN
-	LGsvpQVyY=
-X-Google-Smtp-Source: AGHT+IFwEPPGZor7NpDcd1tbv1ol/oavAwRIBy9sBDshbX9f1fAkSxGnrQcRs+pDoC6oyDzPcCWVefyV+BwS5Hy8xuo=
-X-Received: by 2002:a2e:bc0e:0:b0:300:34b2:f8a3 with SMTP id
- 38308e7fff4ca-30a59899cc8mr11285301fa.13.1740146549953; Fri, 21 Feb 2025
- 06:02:29 -0800 (PST)
+	s=arc-20240116; t=1740146711; c=relaxed/simple;
+	bh=ud9Ewppi6nbTHhEJv90ldubIDs0VF8/bmpXcameaIzg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=MyHx84qXAmQoQEepfV/bC9oDUr9WAWhb/WR+pMlfoFCpPVYrJCewswki1tHxr0/LLW37b1n69wQrvR1r5TcWvZltTs8CwrBo28vWPBhuTdmDWRzIoAQb1tIr97yyyl3h8+4dOAfdvMHJOW6sOGlWxIGaXYP/2JyBcRpUiab+j9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=45.157.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
+Received: from smtp-4-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:0])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4YzsMd2NfgzTCq;
+	Fri, 21 Feb 2025 15:05:01 +0100 (CET)
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4YzsMc4HR9zYHX;
+	Fri, 21 Feb 2025 15:05:00 +0100 (CET)
+From: Quentin Schulz <foss+kernel@0leil.net>
+Date: Fri, 21 Feb 2025 15:04:34 +0100
+Subject: [PATCH v2 2/5] arm64: dts: rockchip: fix pinmux of UART5 for PX30
+ Ringneck on Haikou
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250220200439.4458-1-ubizjak@gmail.com> <CAMzpN2i8uR7L9DmL1AX1R9p__x5KwAtdey_4iJ5ZP_frTqu9vQ@mail.gmail.com>
- <CAFULd4b8kgXfr1QcWud-n7PyuKKVUGTNd00GSZU=6va6Gr65EA@mail.gmail.com> <CAMzpN2hHb_T3gZfueeVRbOxUFt8+syWsm8iWQxF4PaUOQA-k=w@mail.gmail.com>
-In-Reply-To: <CAMzpN2hHb_T3gZfueeVRbOxUFt8+syWsm8iWQxF4PaUOQA-k=w@mail.gmail.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Fri, 21 Feb 2025 15:02:18 +0100
-X-Gm-Features: AWEUYZmCBwkvlgfmIlzbKgd6ByWamu5dt1_-sUrxo3DfYSgPpL5XSQCwY4cRwUk
-Message-ID: <CAFULd4ZGW-FYtEe-BJ53QVjHMLr1jyj_6vJhNEwqqwW6Z77+Tg@mail.gmail.com>
-Subject: Re: [PATCH -tip] x86/stackprotector: Move stack canary to struct pcpu_hot
-To: Brian Gerst <brgerst@gmail.com>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Ard Biesheuvel <ardb@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250221-ringneck-dtbos-v2-2-310c0b9a3909@cherry.de>
+References: <20250221-ringneck-dtbos-v2-0-310c0b9a3909@cherry.de>
+In-Reply-To: <20250221-ringneck-dtbos-v2-0-310c0b9a3909@cherry.de>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Quentin Schulz <quentin.schulz@theobroma-systems.com>, 
+ Farouk Bouabid <farouk.bouabid@theobroma-systems.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Quentin Schulz <quentin.schulz@cherry.de>, stable@vger.kernel.org
+X-Mailer: b4 0.14.2
+X-Infomaniak-Routing: alpha
 
-On Fri, Feb 21, 2025 at 2:37=E2=80=AFPM Brian Gerst <brgerst@gmail.com> wro=
-te:
->
-> On Fri, Feb 21, 2025 at 8:25=E2=80=AFAM Uros Bizjak <ubizjak@gmail.com> w=
-rote:
-> >
-> > On Fri, Feb 21, 2025 at 1:54=E2=80=AFPM Brian Gerst <brgerst@gmail.com>=
- wrote:
-> > >
-> > > On Thu, Feb 20, 2025 at 3:04=E2=80=AFPM Uros Bizjak <ubizjak@gmail.co=
-m> wrote:
-> > > >
-> > > > Move stack canary from __stack_chk_guard to struct pcpu_hot and
-> > > > alias __stack_chk_guard to point to the new location in the
-> > > > linker script.
-> > > >
-> > > > __stack_chk_guard is one of the hottest data structures on x86, so
-> > > > moving it there makes sense even if its benefit cannot be measured
-> > > > explicitly.
-> > > >
-> > > > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> > > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > > Cc: Ingo Molnar <mingo@kernel.org>
-> > > > Cc: Borislav Petkov <bp@alien8.de>
-> > > > Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> > > > Cc: "H. Peter Anvin" <hpa@zytor.com>
-> > > > Cc: Brian Gerst <brgerst@gmail.com>
-> > > > Cc: Ard Biesheuvel <ardb@kernel.org>
-> > > > ---
-> > > >  arch/x86/include/asm/current.h | 13 +++++++++++++
-> > > >  arch/x86/kernel/cpu/common.c   |  1 -
-> > > >  arch/x86/kernel/vmlinux.lds.S  |  2 ++
-> > > >  3 files changed, 15 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/arch/x86/include/asm/current.h b/arch/x86/include/asm/=
-current.h
-> > > > index bf5953883ec3..e4ff1d15b465 100644
-> > > > --- a/arch/x86/include/asm/current.h
-> > > > +++ b/arch/x86/include/asm/current.h
-> > > > @@ -15,6 +15,9 @@ struct task_struct;
-> > > >  struct pcpu_hot {
-> > > >         union {
-> > > >                 struct {
-> > > > +#ifdef CONFIG_STACKPROTECTOR
-> > > > +                       unsigned long           stack_canary;
-> > > > +#endif
-> > > >                         struct task_struct      *current_task;
-> > > >                         int                     preempt_count;
-> > > >                         int                     cpu_number;
-> > > > @@ -35,6 +38,16 @@ struct pcpu_hot {
-> > > >  };
-> > > >  static_assert(sizeof(struct pcpu_hot) =3D=3D 64);
-> > > >
-> > > > +/*
-> > > > + * stack_canary should be at the beginning of struct pcpu_hot to a=
-void:
-> > > > + *
-> > > > + * Invalid absolute R_X86_64_32S relocation: __stack_chk_guard
-> > >
-> > > This should be R_X86_64_PC32 relocations.
-> >
-> > This is what the build system reports if any offset (including 0) is ad=
-ded to
-> >
-> > PROVIDE(__stack_chk_guard =3D pcpu_hot);
-> >
-> > It is not a warning, but an error that fails the build.
-> >
-> > As was discussed in the previous thread, the above is required to
-> > handle !SMP case, where mstack-protector-guard=3Dglobal (used by !SMP
-> > builds) ignores the
-> > -mstack-protector-guard-symbol option and always uses __stack_chk_guard=
-.
->
-> I got a warning from the relocs tool, but not a hard error.  What
-> compiler/linker are you using?
->
-> Does the attached patch build in your configuration?
+From: Quentin Schulz <quentin.schulz@cherry.de>
 
-Ah, the attached patch is similar to my previous approach, where the
-build system *warned* on an offset (the patch was abandoned due to
-Ard's request to put stack_canary to the *beginning* of struct
-pcpu_hot, and this allowed for a simplified patch).
+UART5 uses GPIO0_B5 as UART RTS but muxed in its GPIO function,
+therefore UART5 must request this pin to be muxed in that function, so
+let's do that.
 
-The attached patch builds for me without warning/error for both, SMP
-and !SMP build.
+Fixes: 5963d97aa780 ("arm64: dts: rockchip: add rs485 support on uart5 of px30-ringneck-haikou")
+Cc: stable@vger.kernel.org
+Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+---
+ arch/arm64/boot/dts/rockchip/px30-ringneck-haikou.dts | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-You can put my Acked-by: on the patch, and if it is based on my
-previous patch, I'd be grateful for a Co-developed-by tag.
+diff --git a/arch/arm64/boot/dts/rockchip/px30-ringneck-haikou.dts b/arch/arm64/boot/dts/rockchip/px30-ringneck-haikou.dts
+index 2321536c553fed20bc02d91f40a5d5a6dc20892c..e9ebac0f4984a26ec288083f74c7e193cdbec326 100644
+--- a/arch/arm64/boot/dts/rockchip/px30-ringneck-haikou.dts
++++ b/arch/arm64/boot/dts/rockchip/px30-ringneck-haikou.dts
+@@ -194,6 +194,13 @@ sd_card_led_pin: sd-card-led-pin {
+ 			  <3 RK_PB3 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
++
++	uart {
++		uart5_rts_pin: uart5-rts-pin {
++			rockchip,pins =
++			  <0 RK_PB5 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
+ };
+ 
+ &pwm0 {
+@@ -227,7 +234,7 @@ &uart0 {
+ };
+ 
+ &uart5 {
+-	pinctrl-0 = <&uart5_xfer>;
++	pinctrl-0 = <&uart5_xfer &uart5_rts_pin>;
+ 	rts-gpios = <&gpio0 RK_PB5 GPIO_ACTIVE_HIGH>;
+ 	status = "okay";
+ };
 
-Thanks.
-Uros.
+-- 
+2.48.1
+
