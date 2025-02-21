@@ -1,155 +1,97 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17F0204691
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 09:41:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3992D2045BC
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 09:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740130874; cv=none; b=Mt6b3BnEbVtHRHF2upxIZ12j4FP3BKrA2zpCLpEVc6Aa6rGHTxdYoNCUP48Nmd/9wdMDslThK1F1WZ0uvnDRz56D6VC7Z2QMBHkikEZeFupDRO6H+93V0XTE1l+h/H5XHKATCXlLJZpEa9LEDCdKk7/2EDSSwei/+qioPo0OJUk=
+	t=1740130883; cv=none; b=P5Gk3FYAcGDj0agbkX5uoln5jLexryWEy1ZUMvBDi8TJ5wQBYPCyZHGmCX+/JMCPaKlwRPmlxxo0sb7gxHYrMb6spqF/Xgz8zcw51y3q+FKFwLYDpRl0ve9VGqqqDef2A/I05T3tNdvhEUr6atIKpQghZEhsFjBJEXDIZloHe4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740130874; c=relaxed/simple;
-	bh=Z4gSATjDv+lcwqTbelOzKBbrCrbG/Kse5oPqtpGwrxQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uNAy+CnvmDIKTTwLKCfYdP8E5wQa669rJpM2wRWHAWOyg14XvqNaSI7+48F8thFdLy5CtfS22noNN/v+RdDZMQJXdIB2zmF7d/n6s4rNeWABjyCkuXmFdHwu48FoCvUF00QvAQxkFiP7XFDhmBzHYNGUwoupTBfscBLpdHDkXfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=VHujdgUa; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="VHujdgUa"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1740130861; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=TfkidDMxPMlQA/XL/XYnY8kMut3kWfLopLNxuBD/amA=;
-	b=VHujdgUaDz08uGHPKssMR84kp/+rHnjWZKjT5aqtJ2Q4K9gXtbw6+ynLdfdXyHYr045u/ZNwpJcBQgYWvmx66FoaGZpwh+o0szE/0GBSTkjawyyhlQREbSDbrt7lNritlu2vvHnwRuZhpJRfEgTHMVpsG82JVxQMjidNcfqLbRY=
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WPvxQPd_1740130856 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Fri, 21 Feb 2025 17:41:01 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH] erofs: clean up header parsing for ztailpacking and fragments
-Date: Fri, 21 Feb 2025 17:40:55 +0800
-Message-ID: <20250221094055.4014984-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.5
+	s=arc-20240116; t=1740130883; c=relaxed/simple;
+	bh=l3zvIDZMI6ET881AtYmbI3nm5amUHwCGjYOGgh9Xyw4=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=KmNyaBPb1iPM/w3eGh3a5zyENnv0GhPDhSzlx10ac3PWrtjV1pnHuZmbEd1xMteFZgtbcA5bswJvLTilcwQykaVVW+p+x8PVPecO/+1OAzVF3GknlJ2M2Fgg+c7G5UflGeBj1BQqoQhONETVfXiCCidRGK/w7p6e5gy+iaRv4X0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d2b6d933a5so14732095ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 01:41:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740130881; x=1740735681;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5OsqRYgSCSxtMYToGhG+dYqJv9b218NUxAua9vJ1J8A=;
+        b=KhjtBye+ELn5Uayk0+yW331Wlfo4No7sali8W9AxAsiZMWhYS8JRuYk2CUI1isgDPi
+         PiSGrBx3KIG8UikKUgEuFIOgPfOavN+HP7FGS7s1HIr9MGjM4oUwbJbC5jJ+Dq9s2O9g
+         r4mQOF2y/SdJzzPJhXQ0SF4NUDJm+uH6mbCeppn0nNP65fvndJZ/JfUS0NkUtoZ7uKCJ
+         q/2oQ8rNixU68bs07Cm/YkWqTT2rgT//vljwfIbXJxOKfDNFzyLZacmAzA+WQfW2maLl
+         5Xgde2lc5YinxZtlNNs07fRt6Zi47deV+31a98khyAnTP34wAUoziFtFtEqJ8tbZEqcy
+         z82w==
+X-Forwarded-Encrypted: i=1; AJvYcCVchbFUfoJIZZ+0GGUXOs1MbYEzPJbaepTd/OjgBDO7g1JiFhaVMyEcidSnODg32xsnIzRKJAKVTaV1Zso=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMPXowLXZlnnVxGKCJ51POxodL2ZLff1CBFj/SeczbSjaMfWVo
+	LCsv8sqELNfNOiWUmIS8583FYbmfUhoTOxZX5US4vt/YtHZJOuhAXwXV5V5S2N8bjT0ReJAUWxF
+	/HX286KqApfjPrEAnF34OTphYzR/MRwBLRx0XzPGbAToRvQIbw9+sw5Q=
+X-Google-Smtp-Source: AGHT+IGvcQBb/y8ol5/5gosN1vMmptjmm1MJ4VhyhbDByxh8z9QBFuI6f47r9MMRmH/TQ3GoReKLOUElVmAst1ZlALa3m9/9/v9B
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1565:b0:3a7:8720:9de5 with SMTP id
+ e9e14a558f8ab-3d2cae4652cmr21360085ab.1.1740130881378; Fri, 21 Feb 2025
+ 01:41:21 -0800 (PST)
+Date: Fri, 21 Feb 2025 01:41:21 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67b84a41.050a0220.14d86d.0357.GAE@google.com>
+Subject: [syzbot] Monthly ext4 report (Feb 2025)
+From: syzbot <syzbot+listf4d7496357876fa24aa1@syzkaller.appspotmail.com>
+To: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Simplify the logic in z_erofs_fill_inode_lazy() by combining the
-handling of ztailpacking and fragments, as they are mutually exclusive.
+Hello ext4 maintainers/developers,
 
-Note that `h->h_clusterbits >> Z_EROFS_FRAGMENT_INODE_BIT` is handled
-above, so no need to duplicate the check.
+This is a 31-day syzbot report for the ext4 subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/ext4
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+During the period, 5 new issues were detected and 0 were fixed.
+In total, 55 issues are still open and 148 have already been fixed.
+
+Some of the still happening issues:
+
+Ref  Crashes Repro Title
+<1>  33227   Yes   possible deadlock in dqget
+                   https://syzkaller.appspot.com/bug?extid=6e493c165d26d6fcbf72
+<2>  2203    Yes   INFO: task hung in sync_inodes_sb (5)
+                   https://syzkaller.appspot.com/bug?extid=30476ec1b6dc84471133
+<3>  1943    Yes   kernel BUG in ext4_do_writepages
+                   https://syzkaller.appspot.com/bug?extid=d1da16f03614058fdc48
+<4>  1920    Yes   INFO: task hung in jbd2_journal_commit_transaction (5)
+                   https://syzkaller.appspot.com/bug?extid=3071bdd0a9953bc0d177
+<5>  1025    Yes   KASAN: out-of-bounds Read in ext4_xattr_set_entry
+                   https://syzkaller.appspot.com/bug?extid=f792df426ff0f5ceb8d1
+<6>  1019    Yes   WARNING in __ext4_iget
+                   https://syzkaller.appspot.com/bug?extid=2ff67872645e5b5ebdd5
+<7>  201     No    KCSAN: data-race in generic_buffers_fsync_noflush / writeback_single_inode (3)
+                   https://syzkaller.appspot.com/bug?extid=35257a2200785ea628f5
+<8>  173     Yes   kernel BUG in ext4_write_inline_data_end (2)
+                   https://syzkaller.appspot.com/bug?extid=0c89d865531d053abb2d
+<9>  172     Yes   KMSAN: uninit-value in aes_encrypt (5)
+                   https://syzkaller.appspot.com/bug?extid=aeb14e2539ffb6d21130
+<10> 96      Yes   WARNING: locking bug in find_lock_lowest_rq
+                   https://syzkaller.appspot.com/bug?extid=9a3a26ce3bf119f0190b
+
 ---
- fs/erofs/zmap.c | 47 +++++++++++++++++++----------------------------
- 1 file changed, 19 insertions(+), 28 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index a0c1c6450a55..bdac20800ded 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -394,7 +394,8 @@ static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
- static int z_erofs_do_map_blocks(struct inode *inode,
- 				 struct erofs_map_blocks *map, int flags)
- {
--	struct erofs_inode *const vi = EROFS_I(inode);
-+	struct erofs_inode *vi = EROFS_I(inode);
-+	struct super_block *sb = inode->i_sb;
- 	bool ztailpacking = vi->z_advise & Z_EROFS_ADVISE_INLINE_PCLUSTER;
- 	bool fragment = vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER;
- 	struct z_erofs_maprecorder m = {
-@@ -439,7 +440,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- 		}
- 		/* m.lcn should be >= 1 if endoff < m.clusterofs */
- 		if (!m.lcn) {
--			erofs_err(inode->i_sb, "invalid logical cluster 0 at nid %llu",
-+			erofs_err(sb, "invalid logical cluster 0 at nid %llu",
- 				  vi->nid);
- 			err = -EFSCORRUPTED;
- 			goto unmap_out;
-@@ -455,7 +456,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- 			goto unmap_out;
- 		break;
- 	default:
--		erofs_err(inode->i_sb, "unknown type %u @ offset %llu of nid %llu",
-+		erofs_err(sb, "unknown type %u @ offset %llu of nid %llu",
- 			  m.type, ofs, vi->nid);
- 		err = -EOPNOTSUPP;
- 		goto unmap_out;
-@@ -474,10 +475,17 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- 		map->m_flags |= EROFS_MAP_META;
- 		map->m_pa = vi->z_idataoff;
- 		map->m_plen = vi->z_idata_size;
-+		if (!map->m_plen ||
-+		    erofs_blkoff(sb, map->m_pa) + map->m_plen > sb->s_blocksize) {
-+			erofs_err(sb, "invalid tail-packing pclustersize %llu",
-+				  map->m_plen);
-+			err = -EFSCORRUPTED;
-+			goto unmap_out;
-+		}
- 	} else if (fragment && m.lcn == vi->z_tailextent_headlcn) {
- 		map->m_flags |= EROFS_MAP_FRAGMENT;
- 	} else {
--		map->m_pa = erofs_pos(inode->i_sb, m.pblk);
-+		map->m_pa = erofs_pos(sb, m.pblk);
- 		err = z_erofs_get_extent_compressedlen(&m, initial_lcn);
- 		if (err)
- 			goto unmap_out;
-@@ -496,7 +504,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
- 		afmt = m.headtype == Z_EROFS_LCLUSTER_TYPE_HEAD2 ?
- 			vi->z_algorithmtype[1] : vi->z_algorithmtype[0];
- 		if (!(EROFS_I_SB(inode)->available_compr_algs & (1 << afmt))) {
--			erofs_err(inode->i_sb, "inconsistent algorithmtype %u for nid %llu",
-+			erofs_err(sb, "inconsistent algorithmtype %u for nid %llu",
- 				  afmt, vi->nid);
- 			err = -EFSCORRUPTED;
- 			goto unmap_out;
-@@ -593,33 +601,16 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
- 		goto out_put_metabuf;
- 	}
- 
--	if (vi->z_advise & Z_EROFS_ADVISE_INLINE_PCLUSTER) {
--		struct erofs_map_blocks map = {
--			.buf = __EROFS_BUF_INITIALIZER
--		};
--
--		vi->z_idata_size = le16_to_cpu(h->h_idata_size);
--		err = z_erofs_do_map_blocks(inode, &map,
--					    EROFS_GET_BLOCKS_FINDTAIL);
--		erofs_put_metabuf(&map.buf);
--
--		if (!map.m_plen ||
--		    erofs_blkoff(sb, map.m_pa) + map.m_plen > sb->s_blocksize) {
--			erofs_err(sb, "invalid tail-packing pclustersize %llu",
--				  map.m_plen);
--			err = -EFSCORRUPTED;
--		}
--		if (err < 0)
--			goto out_put_metabuf;
--	}
--
--	if (vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER &&
--	    !(h->h_clusterbits >> Z_EROFS_FRAGMENT_INODE_BIT)) {
-+	if (vi->z_advise & (Z_EROFS_ADVISE_INLINE_PCLUSTER |
-+			    Z_EROFS_ADVISE_FRAGMENT_PCLUSTER)) {
- 		struct erofs_map_blocks map = {
- 			.buf = __EROFS_BUF_INITIALIZER
- 		};
- 
--		vi->z_fragmentoff = le32_to_cpu(h->h_fragmentoff);
-+		if (vi->z_advise & Z_EROFS_ADVISE_INLINE_PCLUSTER)
-+			vi->z_idata_size = le16_to_cpu(h->h_idata_size);
-+		else
-+			vi->z_fragmentoff = le32_to_cpu(h->h_fragmentoff);
- 		err = z_erofs_do_map_blocks(inode, &map,
- 					    EROFS_GET_BLOCKS_FINDTAIL);
- 		erofs_put_metabuf(&map.buf);
--- 
-2.43.5
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
