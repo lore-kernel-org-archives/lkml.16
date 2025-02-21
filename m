@@ -1,70 +1,49 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m19731120.qiye.163.com (mail-m19731120.qiye.163.com [220.197.31.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762EB204F64
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 11:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D202AE89;
+	Fri, 21 Feb 2025 11:19:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740136526; cv=none; b=UDONp+uLCNirPQTB+XoP4KqhyAduAFkM0P3Bu0g1LZ639KqlfAL2ljnDufa/9YoAxAWQnN+aB/Ae41rQuWLM2o8IAErIrgkXemszDFCpgXmTSdrzKRe7EMksDFpAH1pXOwD2qjIVIYGb0R7Ji5AXoXK4nBzjb6HoTR2uzpW7jfs=
+	t=1740136793; cv=none; b=nQ/HXWrcXT3aKV/v7jJq8ZQlxOn3x+PRPjjVubj6vI12Mwji4tM08VZbqbaWio4qMdl46/lwle0H2rjOPFp1eTeBHVN8uCMe2zMjuNoBJXcCVUuZTylOTcPDv+OIplApfq+VR4oH3WKWIoSU6wwzJDk76PEsz/7CxT8m8zpRHQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740136526; c=relaxed/simple;
-	bh=JC8s15lbIpk2LxEdMFhsWVRfCPianxn0zv+SiCNeII0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hHyxFOt8a3O64KswsI5zM7B4EqxjFLT1JK3B2yoFwT5v5MBiW7T1n6YzDsF31x3oOqjXVy0uFaenrKdvGHwYUGfkwkEnr5DGPQo4xpAbT8uHVcBDXume87F7ZmofeCg2yE+Mi3oTTquSDZdrL8D5A3qhS9CFNunHBfdH/KEy10M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=bU1EGT5d; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
+	s=arc-20240116; t=1740136793; c=relaxed/simple;
+	bh=f9WF6evS4MjxH2ZHrpW80u609CheGo8MZRRa7Tv+w28=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=H+rKtcS/N1EwpA1zCMoBqOKTuB9gQXi/1d1BP3DtxGEIxnq3LwxuRDq7yCgZj7KWE6zkMMZqUsP84yfYjUtsrNG2VXiDkrQWqD78Y5Bt7cNUq/jVvcsQkSlHg/6PbkdO6rqsU+cHTEGcQoZCaOSXl0MqnRpbX1cT27HbO9RJxxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=HT9z0/UE; arc=none smtp.client-ip=220.197.31.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="bU1EGT5d"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-abbb12bea54so379876666b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 03:15:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1740136523; x=1740741323; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TKJsIzieDT+LZAQoeBL2lnvHU2BlH382x+Tm2WYroiw=;
-        b=bU1EGT5dRXR7rAXDy0hbukoc7ZAH/H167WwNOvMfp6nbNzTbEC/Jhgnu+yPA1xqtHh
-         wHJVsG6eIJtfDQIJGNs4cMol7znIQ6JW5sZ7jMMB0KHO5psKAW16+4EF+eutZsRJ/ZnE
-         Td57+oZQCeLevAfY9GROgCqp3YJBz9SA3DmdlBplISLZkN1HO8dEBs1p2eMt9YpGkeG1
-         xEFG2dWcrDaQ5B6S0ZZMCP6lKDN/6fkZyWL1xsk9PKgjkI3+NNebnfiPq4NRYUKN2P/9
-         6jN3P70LrfF/uvui20SyHecJC8ROGr8O4Z97yMaz1KKS3aksE4RzWH2mNzJdwm4Unvzn
-         Igyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740136523; x=1740741323;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TKJsIzieDT+LZAQoeBL2lnvHU2BlH382x+Tm2WYroiw=;
-        b=bRbE3ikoOUQLq5v93n0Xb0lgKQQTTUReL5AV2XdmSiHT/5hScp/oen0Fy33CC89d86
-         X4tDQOkcT3rD0PfGMODV0ErNe1TTRETLwfEL55R9Fjqb7vkN39Md4PrF80Tj9dasE2zu
-         rb/F5oNPU1ZuOhBUdxBsdBLYGwf/Q2xPDmfonLOidI73g+uavec3Va+SudvJapLZdbgF
-         rixCO4YauUZvWQ3v5RvhFoCEAg4cgtR/xkb9dc8zYR3nur18yzrbOi5rsbCxa45Xw7au
-         8iqCMRKZ8YTDIEMMIuSL0n4nXxJElO76xVzM8GW/4BJPdvS4kCd5XxgkUN+A3MM/z6T6
-         18/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCULUKuBvxjiU1q2+u03hHMls1cP65aYF5cTsVo2tPi5O0EVHrc+ZmobhnmkS3otERI2WPLw3vtc2uUfLt0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1EuiVgjsaLP762VuhbHRXtAPs6dFb8cEagsszDSQYCr1YNLF5
-	RMlMr14F0v3F6fZVvJ4Sg+n805jA2/WFT5OI9ikJVbQnWk7wLFLLOCUpxTFEgi4=
-X-Gm-Gg: ASbGncti9Zp1HMXCPnLki/Ngd+oNjlch9cqqWPjuSxrP5yloviNrNdrPbMjdSVIpjLl
-	mZ7zWrZWhPzIOaw1lW8qgT9yNnYdPMmiO8cbQwkACMxCtx2miBFjxn2cOQXZNmZJGkYWwGxrvqZ
-	QQ1ltsYNbhQR9GIc1c8soHJsX5HpbymP4XBE/1Rhz0DogUCb3KqUtBP/vd5kojvZIQK6FB1+jo4
-	I5WD92PDm4SilaAwH5NrnXwLOBYXG8jMP8XrCZT542Ag3pE6ZmuBdCx9dF/LSix3WQwgZYmh1Rt
-	0XWBAG0rS3gHgBOaNUp8Sr1sXufJKMaaquXYcROOWyZkrOSputOaHXvp3iH8TcZPGrWrGfQlkwY
-	qyAvBLdbi16ScG4hrE4XiAeGV
-X-Google-Smtp-Source: AGHT+IHfwheDAfyvVJBq8JCrmMPG7NAd/4D9fIvfDegRQukqwTY8Il/imHtsusJZsDueYJwmDU3mJg==
-X-Received: by 2002:a17:907:7715:b0:abb:e7ed:d603 with SMTP id a640c23a62f3a-abc099b83d5mr286093766b.9.1740136521119;
-        Fri, 21 Feb 2025 03:15:21 -0800 (PST)
-Received: from fedora.sec.9e.network (ip-037-049-067-221.um09.pools.vodafone-ip.de. [37.49.67.221])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abbd5502c53sm499291166b.159.2025.02.21.03.15.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2025 03:15:20 -0800 (PST)
-From: Patrick Rudolph <patrick.rudolph@9elements.com>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Patrick Rudolph <patrick.rudolph@9elements.com>,
-	linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] efi/cper: Fix cper_arm_ctx_info alignment
-Date: Fri, 21 Feb 2025 12:15:16 +0100
-Message-ID: <20250221111516.1468261-1-patrick.rudolph@9elements.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="HT9z0/UE"
+Received: from localhost.localdomain (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id bca250ad;
+	Fri, 21 Feb 2025 18:44:11 +0800 (GMT+08:00)
+From: Kever Yang <kever.yang@rock-chips.com>
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Simon Xue <xxm@rock-chips.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Detlev Casanova <detlev.casanova@collabora.com>,
+	Finley Xiao <finley.xiao@rock-chips.com>,
+	Frank Wang <frank.wang@rock-chips.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
+	Liang Chen <cl@rock-chips.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	devicetree@vger.kernel.org,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Shawn Lin <shawn.lin@rock-chips.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Elaine Zhang <zhangqing@rock-chips.com>,
+	linux-arm-kernel@lists.infradead.org
+Subject: [RFC PATCH v6 0/2] Add rk3576 pcie dts nodes
+Date: Fri, 21 Feb 2025 18:43:55 +0800
+Message-Id: <20250221104357.1514128-1-kever.yang@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,32 +51,73 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUxNHVZPQhlLGB9LQx9PGktWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a95281b96a803afkunmbca250ad
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MxQ6Ggw5IzIIShkMCQw6GEIj
+	Lj9PCxVVSlVKTE9LSkhPTU5IT0NJVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFJTElNNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=HT9z0/UERvinc9PmYjW0D0SzSA9ITQBv0zkT2adlyUV4vd/bJhX6cixa3U9sVXs5MRg3fCc7xAf8HKOs/jr6ArUgtsv0CQyPTaZEYfUropfK407CPzngO5ZQyL8Gobf+L2L90ZFRi8p0JsOX5wlcJvWseEHSgLEzvaCo5wuJeOc=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=MT6Zk1Iwr6eslt5Pp/o6g6qSvge4hDtsWAuflUPzc98=;
+	h=date:mime-version:subject:message-id:from;
 
-According to the UEFI Common Platform Error Record appendix, the
-processor context information structure is a variable length structure,
-but "is padded with zeros if the size is not a multiple of 16 bytes".
 
-Currently this isn't honoured, causing all but the first structure to
-be garbage when printed. Thus align the size to be a multiple of 16.
+The make dt_binding_check test has pass.
+But I got error for make CHECK_DTBS=y as below
+  DTC [C] arch/arm64/boot/dts/rockchip/rk3568-evb1-v10.dtb
+  DTC [C] arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dtb
+/home/kever/src/kernel-mainline/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dtb: pcie@2a200000: interrupt-names: ['sys', 'pmc', 'msg', 'legacy', 'err', 'msi'] is too long
+	from schema $id: http://devicetree.org/schemas/pci/rockchip-dw-pcie.yaml#
+/home/kever/src/kernel-mainline/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dtb: pcie@2a210000: interrupt-names: ['sys', 'pmc', 'msg', 'legacy', 'err', 'msi'] is too long
+	from schema $id: http://devicetree.org/schemas/pci/rockchip-dw-pcie.yaml#
+  DTC [C] arch/arm64/boot/dts/rockchip/rk3576-evb1-v10.dtb
+/home/kever/src/kernel-mainline/arch/arm64/boot/dts/rockchip/rk3576-evb1-v10.dtb: pcie@2a200000: interrupt-names: ['sys', 'pmc', 'msg', 'legacy', 'err', 'msi'] is too long
+	from schema $id: http://devicetree.org/schemas/pci/rockchip-dw-pcie.yaml#
+/home/kever/src/kernel-mainline/arch/arm64/boot/dts/rockchip/rk3576-evb1-v10.dtb: pcie@2a210000: interrupt-names: ['sys', 'pmc', 'msg', 'legacy', 'err', 'msi'] is too long
+	from schema $id: http://devicetree.org/schemas/pci/rockchip-dw-pcie.yaml#
+  DTC [C] arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dtb
+/home/kever/src/kernel-mainline/arch/arm64/boot/dts/rockchip/rk3588-evb1-v10.dtb: pcie-ep@fe150000: interrupt-names: ['sys', 'pmc', 'msg', 'legacy', 'err', 'dma0', 'dma1', 'dma2', 'dma3'] is too long
+	from schema $id: http://devicetree.org/schemas/pci/rockchip-dw-pcie-ep.yaml#
 
-Signed-off-by: Patrick Rudolph <patrick.rudolph@9elements.com>
----
- drivers/firmware/efi/cper-arm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Could anyone told me why, the rk3568 has pass the test, but the rk3572
+and rk3588 failed.
+How can I debug the yaml check failure? Why the check rule does not go to
+the if branch I defined for rk3572 and rk3588?
 
-diff --git a/drivers/firmware/efi/cper-arm.c b/drivers/firmware/efi/cper-arm.c
-index fa9c1c3bf168..f0a63d09d3c4 100644
---- a/drivers/firmware/efi/cper-arm.c
-+++ b/drivers/firmware/efi/cper-arm.c
-@@ -311,7 +311,7 @@ void cper_print_proc_arm(const char *pfx,
- 	ctx_info = (struct cper_arm_ctx_info *)err_info;
- 	max_ctx_type = ARRAY_SIZE(arm_reg_ctx_strs) - 1;
- 	for (i = 0; i < proc->context_info_num; i++) {
--		int size = sizeof(*ctx_info) + ctx_info->size;
-+		int size = ALIGN(sizeof(*ctx_info) + ctx_info->size, 16);
- 
- 		printk("%sContext info structure %d:\n", pfx, i);
- 		if (len < size) {
+
+Changes in v6:
+- Fix make dt_binding_check and make CHECK_DTBS=y
+
+Changes in v5:
+- Add constraints per device for interrupt-names due to the interrupt is
+different from rk3588.
+
+Changes in v4:
+- Fix wrong indentation in dt_binding_check report by Rob
+
+Changes in v3:
+- Fix dtb check broken on rk3588
+- Update commit message
+- Update the subject
+
+Changes in v2:
+- remove required 'msi-map'
+- add interrupt name 'msi'
+- Update clock and reset names and sequence to pass DTB check
+
+Kever Yang (2):
+  dt-bindings: PCI: dw: rockchip: Add rk3576 support
+  arm64: dts: rockchip: Add rk3576 pcie nodes
+
+ .../bindings/pci/rockchip-dw-pcie-common.yaml |  59 ++++++++--
+ .../bindings/pci/rockchip-dw-pcie.yaml        |   4 +-
+ arch/arm64/boot/dts/rockchip/rk3576.dtsi      | 109 ++++++++++++++++++
+ 3 files changed, 159 insertions(+), 13 deletions(-)
+
 -- 
-2.48.1
+2.25.1
 
