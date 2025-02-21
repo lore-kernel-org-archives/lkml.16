@@ -1,134 +1,104 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF2A2225D6;
-	Fri, 21 Feb 2025 01:39:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198761876;
+	Fri, 21 Feb 2025 01:40:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740101972; cv=none; b=o20V15RnnQ3jiFRSWxdfdpbAejK9L1+jSsVLmUfMhI1r/Ha7q1pCSQnmo/U6FnEaqW8iMdTMhJelv2Er+BCFbUT8PupOvUK31wAQmaRbtdQFlsGU2wO2io8PKurE0HOZuZXs+v9WdqUrXt54tDuyJbUgJ1YLNDASJ+gOqVRm6IA=
+	t=1740102010; cv=none; b=sfEAn5Z0Bf6Lg5C30SxrHKeod7X2v9xl3py4VBkm2vLFPkyejQVkIURwqCegpjynZwznIZGmkVR24ieXgs33CzELtqG+4IGKQH2qegveq+NRly4ppqO3Lu9Hh+YRHOs3RpFgb5qGGynO01nXjHNhMmCwrcd0Pz/wDVZD4nqCR5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740101972; c=relaxed/simple;
-	bh=XidwWYprxvvp9LVHmJrQKB7BF7kwB4sqxfHp3Zc1fQM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FH7Eh99xXXEG/pVqq4h9vzTKO0J6DMd15n+d+CejceVypHOgWeY8v7408QqQceFrBqdHs1mMpQ07NCH1c15A7jf2TJ4yQz5TNXkN1vfIpzaxkVM4j20RICqS9JaXm8lJUehbH2J1fXZ8SGkVCFUcTMGQ1W4cAPWH16zkzvHuwHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E0241BA8;
-	Thu, 20 Feb 2025 17:39:47 -0800 (PST)
-Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4BEF83F59E;
-	Thu, 20 Feb 2025 17:39:27 -0800 (PST)
-Date: Fri, 21 Feb 2025 01:37:21 +0000
-From: Andre Przywara <andre.przywara@arm.com>
-To: Anastasia Belova <abelova@astralinux.ru>
-Cc: Emilio =?UTF-8?B?TMOzcGV6?= <emilio@elopez.com.ar>, David Laight
- <david.laight.linux@gmail.com>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Chen-Yu Tsai
- <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
- <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>, Hans de Goede
- <hdegoede@redhat.com>, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
-Subject: Re: [PATCH] clk: sunxi: clean up rate counting
-Message-ID: <20250221013721.32468f6c@minigeek.lan>
-In-Reply-To: <20250203112930.650813-1-abelova@astralinux.ru>
-References: <20250203112930.650813-1-abelova@astralinux.ru>
-Organization: Arm Ltd.
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
+	s=arc-20240116; t=1740102010; c=relaxed/simple;
+	bh=btDMxeNfHBPNti2EoCCt/T314QWXygFwMOmYrLNf9ro=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=djo5vOACBqzafSV1s+YdL2Mj3wYJFF+LnQ0SxzfuXuBGz2O0m0QvPAOYdXeyIu5vModFjzeU6uQZPmFJb732Jg74KUE957mhi2O6w+1YqREr3cWEN2nit5oY394768Lp0UYJfn3Uhg6qdtVwXOa+lHEODjZhKd21oRkTBUUJ248=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MXepqXaR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MXepqXaR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72347C4CED1;
+	Fri, 21 Feb 2025 01:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740102009;
+	bh=btDMxeNfHBPNti2EoCCt/T314QWXygFwMOmYrLNf9ro=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=MXepqXaRM4dVPsZFOEB7ouyCJSGm2Meq4q/xIOE+jd15D6NGJv5MlJ11lOtELov26
+	 vb6Qo/vCHwGaWuM6j+aECkThrTXqJuj9n4Co8AF/jGKjsrhioPuVmOveu2YTkIbu8Q
+	 wk8fBvXTzPE9xVv3mHz9ZKEHZsm4VYbRYMV3C/tftMDf4OyJPnoTk9+/nJmJOcmIN5
+	 qTPKkOO8pMG98R/rr+JkAKcE2wHkRz5SR+PgOMhg28NxWpGz07teN/RQ+DsvRHUrxj
+	 JHI03CieeTQBe9pXC9MrKEU1Ekw0EKKEd1dz/sbBXjosAXPCXyksjvP1fO+R97RMjj
+	 Gwyk8ilUJvQFA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 71AB6380CEE2;
+	Fri, 21 Feb 2025 01:40:41 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next v12 0/5] xsk: TX metadata Launch Time support
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174010204026.1539943.5735764109259382582.git-patchwork-notify@kernel.org>
+Date: Fri, 21 Feb 2025 01:40:40 +0000
+References: <20250216093430.957880-1-yoong.siang.song@intel.com>
+In-Reply-To: <20250216093430.957880-1-yoong.siang.song@intel.com>
+To: Song Yoong Siang <yoong.siang.song@intel.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, horms@kernel.org, willemb@google.com,
+ florian.bezdeka@siemens.com, donald.hunter@gmail.com, corbet@lwn.net,
+ bjorn@kernel.org, magnus.karlsson@intel.com, maciej.fijalkowski@intel.com,
+ jonathan.lemon@gmail.com, andrew+netdev@lunn.ch, ast@kernel.org,
+ daniel@iogearbox.net, hawk@kernel.org, john.fastabend@gmail.com,
+ jdamato@fastly.com, sdf@fomichev.me, xuanzhuo@linux.alibaba.com,
+ almasrymina@google.com, danielj@nvidia.com, andrii@kernel.org,
+ eddyz87@gmail.com, mykolal@fb.com, martin.lau@linux.dev, song@kernel.org,
+ yonghong.song@linux.dev, kpsingh@kernel.org, haoluo@google.com,
+ jolsa@kernel.org, shuah@kernel.org, alexandre.torgue@foss.st.com,
+ joabreu@synopsys.com, mcoquelin.stm32@gmail.com, anthony.l.nguyen@intel.com,
+ przemyslaw.kitszel@intel.com, faizal.abdul.rahim@linux.intel.com,
+ yong.liang.choong@linux.intel.com, zdenek.bouska@siemens.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, intel-wired-lan@lists.osuosl.org,
+ xdp-hints@xdp-project.net
 
-On Mon,  3 Feb 2025 14:29:28 +0300
-Anastasia Belova <abelova@astralinux.ru> wrote:
+Hello:
 
-Hi,
+This series was applied to bpf/bpf-next.git (net)
+by Martin KaFai Lau <martin.lau@kernel.org>:
 
-> If n = 255, the result of multiplication of n and 24000000
-> may not fit int type. Swap division and shift with multiplication.
+On Sun, 16 Feb 2025 17:34:25 +0800 you wrote:
+> This series expands the XDP TX metadata framework to allow user
+> applications to pass per packet 64-bit launch time directly to the kernel
+> driver, requesting launch time hardware offload support. The XDP TX
+> metadata framework will not perform any clock conversion or packet
+> reordering.
 > 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
-
-I guess this is effectively a v2 of this patch?
-https://lore.kernel.org/linux-sunxi/20250120084719.63116-1-abelova@astralinux.ru/T/#u
-
-In this case, and for the records, I'd like to repeat some comments of
-mine from this former patch, about this being mostly irrelevant:
-- PLL4 is PLL_PERIPH0, which is meant to be fixed to 960MHz. Linux
-  would not change this frequency.
-- the Allwinner A80 is both old and quite rare/obscure: the most
-  prominent board (Cubieboard4) was broken for a while and nobody
-  noticed
-- this "allwinner,sun9i-a80-pll4-clk" clock is not used by any DT
-  in the kernel, so it's effectively dead code
-
-So do we really need this change? Or asked another way: What does this
-patch fix, exactly?
-
-Some comments still, regardless:
-
-> Fixes: 6424e0aeebc4 ("clk: sunxi: rewrite sun9i_a80_get_pll4_factors()")
-> Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
-> ---
->  drivers/clk/sunxi/clk-sun9i-core.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
+> Please note that the role of Tx metadata is just to pass the launch time,
+> not to enable the offload feature. Users will need to enable the launch
+> time hardware offload feature of the device by using the respective
+> command, such as the tc-etf command.
 > 
-> diff --git a/drivers/clk/sunxi/clk-sun9i-core.c b/drivers/clk/sunxi/clk-sun9i-core.c
-> index d93c7a53c6c0..639c83ed63b8 100644
-> --- a/drivers/clk/sunxi/clk-sun9i-core.c
-> +++ b/drivers/clk/sunxi/clk-sun9i-core.c
-> @@ -25,12 +25,12 @@
->  
->  static void sun9i_a80_get_pll4_factors(struct factors_request *req)
->  {
-> -	int n;
-> -	int m = 1;
-> -	int p = 1;
-> +	unsigned int n;
-> +	unsigned int m = 1;
-> +	unsigned int p = 1;
->  
->  	/* Normalize value to a 6 MHz multiple (24 MHz / 4) */
-> -	n = DIV_ROUND_UP(req->rate, 6000000);
-> +	n = DIV_ROUND_UP(req->rate, 6000000ul);
+> [...]
 
-What would the "unsigned long" change here? This is 32-bit code, so int
-and long are the same size. And regardless, how does changing the
-divisor type help anyway?
+Here is the summary with links:
+  - [bpf-next,v12,1/5] xsk: Add launch time hardware offload support to XDP Tx metadata
+    https://git.kernel.org/bpf/bpf-next/c/ca4419f15abd
+  - [bpf-next,v12,2/5] selftests/bpf: Add launch time request to xdp_hw_metadata
+    https://git.kernel.org/bpf/bpf-next/c/6164847e5403
+  - [bpf-next,v12,3/5] net: stmmac: Add launch time support to XDP ZC
+    https://git.kernel.org/bpf/bpf-next/c/04f64dea1364
+  - [bpf-next,v12,4/5] igc: Refactor empty frame insertion for launch time support
+    https://git.kernel.org/bpf/bpf-next/c/f9b53bb13923
+  - [bpf-next,v12,5/5] igc: Add launch time support to XDP ZC
+    https://git.kernel.org/bpf/bpf-next/c/d7c3a7ff7502
 
->  
->  	/* If n is too large switch to steps of 12 MHz */
->  	if (n > 255) {
-> @@ -50,7 +50,11 @@ static void sun9i_a80_get_pll4_factors(struct factors_request *req)
->  	else if (n < 12)
->  		n = 12;
->  
-> -	req->rate = ((24000000 * n) >> p) / (m + 1);
-> +	/* Division and shift should be done before multiplication to
-> +	 * avoid overflow. The result will be correct because '>> p' and
-> +	 * '/ (m + 1)' are both just conditional 'divide by 2'
-> +	 */
-> +	req->rate = ((24000000ul >> p) / (m + 1)) * n;
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-This looks OKish, since indeed the divisors are just 1 or 2, so we
-don't lose any precision here. But again: what is "ul" supposed to fix?
-
-Also the comment reads slightly wrong to me: Normally division
-and shift _should_ be done *after* multiplication to avoid loss of
-precision. The comment here should state that we _can_ do it the other
-way around here, since the divisors are small and divide the dividend
-"cleanly".
-
-Cheers,
-Andre
-
-
->  	req->n = n;
->  	req->m = m;
->  	req->p = p;
 
