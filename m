@@ -1,135 +1,133 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CEFC1FF5EF;
-	Fri, 21 Feb 2025 09:50:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBDB61BC09A
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 09:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740131417; cv=none; b=bmLpGKK1lhENOFS59kfU1Aq+PnxfP8qRMayvUC9Bnn1bf7WtaOCle+6Z6E80dcVJw2Rp1mSAZxhlw4Y6YLgWWJA316pq4OSWlQh+YyS5ZgKuzKK7tgR8cJUA6kfXeYK+sybNhke2jzK/tL2Ws3bLUg0sLLV5j9R17f3bQYcID4s=
+	t=1740131466; cv=none; b=qaeqey0R3wGkOkN/hp/PRQ3GnFEHmsCezrKdrRSpm/z5YnGmL7PZtv6mfFh/aWzVbmVJ2EkrdJQb41r8xJL7hREckHU+ZXL1hLDD7asUTiEXoIjS6yvMg6duStgMWUM06Hj10TEoBjFW+VkskZYnJZrBnw+mh98jQMQ+7awpW4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740131417; c=relaxed/simple;
-	bh=14wihrgxDAMUcm++Tqe/xZOkIahAfsAi/hjuQ1z8YnA=;
+	s=arc-20240116; t=1740131466; c=relaxed/simple;
+	bh=XeVG31wQkHvsqylkZ1/LVx8l4eCL8KFwEM3KPcwZshA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gt2owH0Tu4MflNNEWEOtjuD39IA2s1/PrLvLnQ7TD2sS7x0xLHb/bKPE2D/5ivKOO7H9bO4blo5clmb8gqE0ImtJFKA+zKuHMcrj1S8/bZy80UNX0GWMIVSh6emvMbMvPflGPfKUnEdyzEI21X93gEJguaRdgd4eAYEEY2ZK1OM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QceuWUWz; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=IBEk+Kx3POmkBrDwD12SsyCuy+Aal4UwEpYBdfs341Rqfc4ogsooG0ifnIYyiemrJ8aC2/OnuOpzrFZsxZ94trRHC82wxWLlSRqlALS0pq1Svkpq543aTAgRj+1L0FTA1xmErW5nKrLHvYdICcJWSeBfR8krgt35wVKJvS1zLgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=hp6JzcFW; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QceuWUWz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740131416; x=1771667416;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=14wihrgxDAMUcm++Tqe/xZOkIahAfsAi/hjuQ1z8YnA=;
-  b=QceuWUWzQLwrKunv/LbSRjHVVlsXk7kPyiEjVYbcSkqNOJ/ZcPgexaMA
-   tgXqnxZDrsNr0yGRf0llo6m8729Sy+JR2TZvzpofogkOsKUf2FK7F+VnA
-   XTJPb7eErtpnhjk6qyzkQaxcsGUH/e73bRfAKOCFN07wcyytZWG4J90nV
-   bXHNx8ULu2ZDUfniRXaPmQSNhv4ht21w285YKMJoX+b/lbHAoGjxDssyc
-   ka4WG27Rv6HDXY61pAFcSOBPG3rsKPF7hCYpo6WfiYrhgpfM3P+p1Vsd8
-   LVO9W1ab7rrP7N41XQM6zW2tdtMxdBlqt7OzcmcHNyCM0ASj8Lrlcq//t
-   Q==;
-X-CSE-ConnectionGUID: 37Qf/9U3SJG1eieX/eHevA==
-X-CSE-MsgGUID: O/1pYI13SMWuSERRK04LHw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="44731167"
-X-IronPort-AV: E=Sophos;i="6.13,304,1732608000"; 
-   d="scan'208";a="44731167"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 01:50:15 -0800
-X-CSE-ConnectionGUID: nvscHLlGQeKJjK5VYLNqCg==
-X-CSE-MsgGUID: b029fyUDTOWE658I96WXXA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="146216348"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa001.fm.intel.com with ESMTP; 21 Feb 2025 01:50:12 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tlPfb-0005MV-1X;
-	Fri, 21 Feb 2025 09:50:08 +0000
-Date: Fri, 21 Feb 2025 17:49:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Wentao Liang <vulab@iscas.ac.cn>, alexander.deucher@amd.com,
-	christian.koenig@amd.com, Xinhui.Pan@amd.com, airlied@gmail.com,
-	simona@ffwll.ch
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] drm/radeon: Add error handlings for r420 cp errata
- initiation
-Message-ID: <202502211718.EFZaW3pW-lkp@intel.com>
-References: <20250220064050.686-1-vulab@iscas.ac.cn>
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="hp6JzcFW"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-38f2b7ce2f3so1390511f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 01:51:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1740131463; x=1740736263; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EkBqyj1NJ++IcFdvPYM6tSZ9F5kg9Qwf+D+lXPfSeHQ=;
+        b=hp6JzcFWNPGMHU2gOYwmOzrfaDxhhNCUJugpuat9jlzoGLMsZ08GEenTA4NDFIDGL0
+         mUIVv8bOiYG3WCj4m+zOy8vLpIv76UrVi3MiXxE4YJW+biGs0NOAsebI5IudIb6DPCzH
+         W4q9IRBd0QAAw2ornpJ4w42o1n7o9Gaw6X3NE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740131463; x=1740736263;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EkBqyj1NJ++IcFdvPYM6tSZ9F5kg9Qwf+D+lXPfSeHQ=;
+        b=LzVhSe13+BJcTVrpEiFJ+KdHQfuFA3x72fIOBUz5ByQjykB/8CdM75sbvRbwmD+53h
+         9FGQpHZAAouN2zS4Oj4ojDaeL5cb4n9SoZY0D5BI1RfrBfFgkn5VD0w/mjyAKc5hR4W5
+         U0S91+ARy6RDUWNypJs36qZT6zSjgo7Xv48bj9t274a39qw06wkh/hFYZXvB7XcR8pMY
+         tbMNITnfL2DQ+nC4e3iTuVvvLlCcJvHSFCjer21h1jMZZrMO+UKrz/QlhFXZT/+GY5dH
+         6Kq7ZnGZ9i4eI5wJCwvPyTACDr80ik9fqT8BiPqB4sc0fcHCHA4hkB39ppoy+LveXkGP
+         tRIA==
+X-Forwarded-Encrypted: i=1; AJvYcCXPvTVrR16Vma8JjUUyxXX/PEwV7C7CSynKbmOGLf4KAQL3NROYllU4X7Xt1vOdsbsHBElFhGECorV/yqg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuLfqxl+DYrG44rD08VzGHGufBxJPO2nS0JP9iZUZkyd7U2aWQ
+	58Mf1WRoKKiR3UgMDftfx0hGU87LXUFTFerW3nqz+OzZH7CFKg+4b0dqGHbAU2g=
+X-Gm-Gg: ASbGncv4E81CwCHXq0wwjyqAdi31z2H+fZ12uJtC8PIx6pCxQZN4YOkiPFh/HCfg8Q9
+	FCYs1nmgTeKfeIONAlXHfgvH0Dx4eNVk9zYkoQ3Egdy4tpem/GCClWbyGFMy58C3rZRuT0vSTVm
+	HR56M5tCP/Sf7kbENza8jgsVoxdyOERJIuFywQzEN6UN1DAaXFC1vyiZTjnIwGSaKOFLcsCEDtJ
+	K7OrBNUMhNy2cChpOzAzT7AHPUHFCJK9fNPEbwbpxdhLSo+DVRcVzj6uoP1ncwwxtlOxG7JsExJ
+	1dhVHF+NNUJL3HOh9tK1JJEEFVXeCukL1UBYwg==
+X-Google-Smtp-Source: AGHT+IHmq7b1qRekf8aTazizZx9u6TzOuIpZCimXH5wNq+e74czCrxUFI8LledckRXx1iP2HXeSuuw==
+X-Received: by 2002:a5d:6c6d:0:b0:38f:4cdc:5d2a with SMTP id ffacd0b85a97d-38f70783feamr1553394f8f.4.1740131463231;
+        Fri, 21 Feb 2025 01:51:03 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b01346d1sm12342375e9.0.2025.02.21.01.51.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 01:51:02 -0800 (PST)
+Date: Fri, 21 Feb 2025 10:51:00 +0100
+From: Simona Vetter <simona.vetter@ffwll.ch>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH] drm/atomic-helper: Add a note in
+ drm_atomic_helper_reset_crtc() kernel-doc
+Message-ID: <Z7hMhEz_hTymarO1@phenom.ffwll.local>
+Mail-Followup-To: Herve Codina <herve.codina@bootlin.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20250220140406.593314-1-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250220064050.686-1-vulab@iscas.ac.cn>
+In-Reply-To: <20250220140406.593314-1-herve.codina@bootlin.com>
+X-Operating-System: Linux phenom 6.12.11-amd64 
 
-Hi Wentao,
+On Thu, Feb 20, 2025 at 03:04:06PM +0100, Herve Codina wrote:
+> As suggested in [0], add a note indicating that
+> drm_atomic_helper_reset_crtc() can be a no-op in some cases.
+> 
+> [0]:https://lore.kernel.org/all/Z7XfnPGDYspwG42y@phenom.ffwll.local/
+> 
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 
-kernel test robot noticed the following build warnings:
+Reviewed-by: Simona Vetter <simona.vetter@ffwll.ch>
 
-[auto build test WARNING on drm-exynos/exynos-drm-next]
-[also build test WARNING on linus/master v6.14-rc3 next-20250220]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+I'm assuming you or someone else at bootling has commit rights? Otherwise
+I guess on Maxime to get that sorted.
+-Sima
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Wentao-Liang/drm-radeon-Add-error-handlings-for-r420-cp-errata-initiation/20250220-144327
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos.git exynos-drm-next
-patch link:    https://lore.kernel.org/r/20250220064050.686-1-vulab%40iscas.ac.cn
-patch subject: [PATCH] drm/radeon: Add error handlings for r420 cp errata initiation
-config: i386-buildonly-randconfig-005-20250221 (https://download.01.org/0day-ci/archive/20250221/202502211718.EFZaW3pW-lkp@intel.com/config)
-compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250221/202502211718.EFZaW3pW-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502211718.EFZaW3pW-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/gpu/drm/radeon/r420.c:229:1: warning: non-void function does not return a value in all control paths [-Wreturn-type]
-     229 | }
-         | ^
-   1 warning generated.
-
-
-vim +229 drivers/gpu/drm/radeon/r420.c
-
-9f022ddfb23793 Jerome Glisse   2009-09-11  206  
-fe881d3e554a1f Wentao Liang    2025-02-20  207  static int r420_cp_errata_init(struct radeon_device *rdev)
-62cdc0c20663ef Corbin Simpson  2010-01-06  208  {
-c346fb74fb6463 Pan Bian        2017-04-24  209  	int r;
-e32eb50dbe4386 Christian König 2011-10-23  210  	struct radeon_ring *ring = &rdev->ring[RADEON_RING_TYPE_GFX_INDEX];
-7b1f2485db253a Christian König 2011-09-23  211  
-62cdc0c20663ef Corbin Simpson  2010-01-06  212  	/* RV410 and R420 can lock up if CP DMA to host memory happens
-62cdc0c20663ef Corbin Simpson  2010-01-06  213  	 * while the 2D engine is busy.
-62cdc0c20663ef Corbin Simpson  2010-01-06  214  	 *
-62cdc0c20663ef Corbin Simpson  2010-01-06  215  	 * The proper workaround is to queue a RESYNC at the beginning
-62cdc0c20663ef Corbin Simpson  2010-01-06  216  	 * of the CP init, apparently.
-62cdc0c20663ef Corbin Simpson  2010-01-06  217  	 */
-fe881d3e554a1f Wentao Liang    2025-02-20  218  	r = radeon_scratch_get(rdev, &rdev->config.r300.resync_scratch);
-fe881d3e554a1f Wentao Liang    2025-02-20  219  	if (r) {
-fe881d3e554a1f Wentao Liang    2025-02-20  220  		DRM_ERROR("failed to get scratch reg (%d).\n", r);
-fe881d3e554a1f Wentao Liang    2025-02-20  221  		return r;
-fe881d3e554a1f Wentao Liang    2025-02-20  222  	}
-c346fb74fb6463 Pan Bian        2017-04-24  223  	r = radeon_ring_lock(rdev, ring, 8);
-c346fb74fb6463 Pan Bian        2017-04-24  224  	WARN_ON(r);
-e32eb50dbe4386 Christian König 2011-10-23  225  	radeon_ring_write(ring, PACKET0(R300_CP_RESYNC_ADDR, 1));
-e32eb50dbe4386 Christian König 2011-10-23  226  	radeon_ring_write(ring, rdev->config.r300.resync_scratch);
-e32eb50dbe4386 Christian König 2011-10-23  227  	radeon_ring_write(ring, 0xDEADBEEF);
-1538a9e0e04f6a Michel Dänzer   2014-08-18  228  	radeon_ring_unlock_commit(rdev, ring, false);
-62cdc0c20663ef Corbin Simpson  2010-01-06 @229  }
-62cdc0c20663ef Corbin Simpson  2010-01-06  230  
+> ---
+>  This patch applies on top of the following commit available in drm-misc
+>    ab83b7f6a0c1 ("drm/atomic-helper: Introduce drm_atomic_helper_reset_crtc()")
+> 
+>  drivers/gpu/drm/drm_atomic_helper.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+> index 0a636c398578..1f93b0a855de 100644
+> --- a/drivers/gpu/drm/drm_atomic_helper.c
+> +++ b/drivers/gpu/drm/drm_atomic_helper.c
+> @@ -3371,6 +3371,10 @@ EXPORT_SYMBOL(drm_atomic_helper_disable_all);
+>   * This implies a reset of all active components available between the CRTC and
+>   * connectors.
+>   *
+> + * NOTE: This relies on resetting &drm_crtc_state.connectors_changed.
+> + * For drivers which optimize out unnecessary modesets this will result in
+> + * a no-op commit, achieving nothing.
+> + *
+>   * Returns:
+>   * 0 on success or a negative error code on failure.
+>   */
+> -- 
+> 2.48.1
+> 
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Simona Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
