@@ -1,65 +1,66 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81C71DB551
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 15:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922E11F03C1
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 15:52:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740153130; cv=none; b=fvcK6YkEck6s28oIdGsavujyIW9dyUijkihY7lptFesx3ck55oJQ7s8sYfAig9+cdWlQw/Wjp1+nbR2HtZ9zCChtW1RiValPMvX9yjmZ9f3ho3+O0Cu+wir40e7FUsEIXf5jnl3Gmb01F7jwg813HZu2Bc3w/rAH9hQAC7DatOw=
+	t=1740153132; cv=none; b=oBBn9P/9GWIWf3pUy921f1AJBbxBAOyg82lY1kY2Rmi4V2cFMpM86o6gYL00R0AgFSpbwfdsV6EU3Sam9t9idsNEOLXhs1kFFHn9BjvZCGL6Thgh1HxytZIB7p+l0WZgMQkSSo3AammLi/v3GUfPCBIQOfEqFgcL6AMKMS+1o+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740153130; c=relaxed/simple;
-	bh=8nVGeN+HC+bXQ8NfYsOEnO3Wa1b/eYod1wwftfqnfSc=;
+	s=arc-20240116; t=1740153132; c=relaxed/simple;
+	bh=Pp5hOcnQELo/7BP6swQt7kdhd42O2Fh3+oi2amQIZUo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lf3yQrQYlanro0U4aWYd/Ap1RPv5sf2stcVjEdA8vjEV35ukxa9SLG02Bg8yE0OvJact1eCJpHLlJcTIE1repOcNeoFfdlYCeajMK/JaL+XrpZNU4MGbsSwFLNA3DYt8RYJJR5UjwdLMvQbknaufGzSHWBNnoQ/wuy0cc5koHMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vltd0TAg; arc=none smtp.client-ip=209.85.167.43
+	 In-Reply-To:To:Cc; b=hpoQHo2U5NBdsPMlstig0yqxowSuDSaZWlt1zgtL4j62J4QbNTLed9XJX+5/ffDUgFcDt9dWiMMk0GdfKLb0+PiWgBvfseQ965lWRd5CrecmyGpn8OXjpRN5UiZ+rB7MTNA+ArwPOslVNYJYqEIeK2a0uCxAZhPxNl9/o0IUa0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zkftIhmG; arc=none smtp.client-ip=209.85.208.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vltd0TAg"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54622e97753so2084746e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 07:52:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zkftIhmG"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-307325f2436so21553881fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 07:52:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740153126; x=1740757926; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1740153127; x=1740757927; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=59l7mbGaP2HmkD17BVYwmiA+/2aqKP82W4Rw21F/4bg=;
-        b=vltd0TAgcROXDZ/Ag1ed1+uib8j4JNic8g7OabKUxmJYC+g2w1LMVb+p5SjCCvp2vd
-         hg3p6zQe12oJCQn0J82ht+xkIbM3T9rT6rXLm4YHwQu79dsWU173vYJf4o3bEBth8MZU
-         jiiIEdRowMLzVoi+A1LDsHXcqhnpHOPf8ZuqIrHoqy5bQE7FnCA3g3uPYiL3ozS2gx7i
-         hTrtJIgcRFj7nvtfi/pq6yHMZof6XV14zhhyvHlTVDNgaewTLSccvj7+FVRvprPZOPAk
-         EMqKJE+YxCa0cERaFPPHb+D86Qrx97YWdFdtoHJGEgT/piEaV4cIyd2wHh0Ox0RL23+q
-         3H1A==
+        bh=BUsxu7XwVBkro4/jQjmeTcO/Tqby4cEEewDXSAP2zrw=;
+        b=zkftIhmGpMjr42Fyub9xB5wlPmqA3DOgChOzs2p9l8YAiZ4xJtnF1dovatqu4yIaso
+         bsDc0SwVkvakgPlkLs0+pw2iYcUxMeIKLwE0uWxZgnkL/yna7V8pPUkEB1zQ5nfQbLJ4
+         iUXMjH3ylWK2FsGwayA7NCnOrSugU9m9KdMg19HLKZiHPo8hV26meXGR6GDDIk7E7w/8
+         tHGS+tqHig7IvWsSdzs97eAhJ1+CS0U1o8xvTK7eMCP6uhBUU2DLkjqDdOyj73eOJut5
+         6S/z+6GKKtDGx9egHWs5DePkZaaDH5YR3CNVjan77Cfz+rQKty4fZ1SKPUimTZGmRQNw
+         bDrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740153126; x=1740757926;
+        d=1e100.net; s=20230601; t=1740153127; x=1740757927;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=59l7mbGaP2HmkD17BVYwmiA+/2aqKP82W4Rw21F/4bg=;
-        b=qSC9Rl8bhzdanteCiuC97z0WMvTc7Q2kQFuDM8JexAdWs44hx1SR5HPaA78Lfkv3DL
-         UYegnyYJU44KFmM5vucCUF9N8kqisCkwwxwKZ9inJLy0ELri0+ay3QoNa0Wgr72gIkVi
-         U4PKX7eFq9vHuj13C0zEV8M10WRKr9xbcVaRRLNUshoAxEba5L6igTFQH+r+XXIKpjL+
-         /+AbVdg8XSGR+TDcYFP+QDJ7ZAhNQUKPqpOw/L8kfKCbzplrN5aIfwFKWb7Tnm3b9IJy
-         Vu5Q3DRmYGoSyZH7vM3DNYi8WKa5wm7Yan6IYT808tvS8/wKYcwH9Xy3heTyR6A5WX07
-         X4kA==
-X-Forwarded-Encrypted: i=1; AJvYcCUu/aSEZEud62VKrJP/sBX4mw5Xsyqj/HS3RV5q5TrV5ewRKJNFVW0s3ZaeWhBMTzCZCv7nL/YS8IdTjk8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOhC5QSqSTiuxCLS5/2dCTRa7veYZKART42FqQwnVnCJaOl4Vf
-	1RvlPtNzNmAOdeAj7ih21G+E0XODUPufN9dIYkcdmTkvLV/NmbPo7YP3t0RrhN0=
-X-Gm-Gg: ASbGncvxdE6bRWCVElY1ePu/63u0npo9p00z+n/GKR/ui1LY4XtaHlL3TCoM+ye17jG
-	GAYl+dnoJEZG14MuMa04PETM4U1vjvA7P2I9fGpaulzlotercYoq52oeFUoKeFMNT/g70xGk5in
-	E7g7/U+knVgv2432WXt/jVzY162GzwzqHrCq8fd8Fjut8jf4FAe9zsC4ZaIN+HbYBusxu3X/BFU
-	qyXmEnQ7UBPjfXEYUOfGJopOCuoUTzYwhM6QE2bokcQ0VOzrnAolckh2ytNdtRdAyFeCgGSRZDy
-	u+hrUgp3bjHlDlfd7+nUxf+1JIlptmIUUOo+cdOVP01PBkJ2WcqxD1T74UlMJH0g0MXtEQ==
-X-Google-Smtp-Source: AGHT+IERYtiLjyfICQk2nAReG2xpvpvYnQJuCtw/sHHQ7gXTROiXL7nhNEZ8D10TdsGqPqtRZi7EcA==
-X-Received: by 2002:a05:6512:3b86:b0:545:4ca:d395 with SMTP id 2adb3069b0e04-54838c56efdmr1375885e87.2.1740153125906;
-        Fri, 21 Feb 2025 07:52:05 -0800 (PST)
+        bh=BUsxu7XwVBkro4/jQjmeTcO/Tqby4cEEewDXSAP2zrw=;
+        b=Xf3JAastL+OW6mIAtP8IPm+3w9VYTEd1BnODGBV8Ms05NfoKcUimb15bZVfK4cVZp9
+         Vq0eLtoM57/CnUA3jZUF88kaGiMORbuFGueyZNpkE5MHLY//IS3A/BJg5Ei96o+W8hem
+         +JgICiGxraF6jWSSfWFHzBUj94p3xOkcWeoCuhx0QMcTb+3h9kKaOALmonAtqHsJpmFz
+         CQukxk/BCpSXPf/UaB65oIXPHyZfnB9sn+5uSFQZAJB4dxPcjpcWzN2aIrRSdjJEIXHP
+         Z3gLqTAbsfNQCdT+odwSpsDDbcrCBdaodXFM/Eg2INrvvZpWxI2AP9OlZ3IQN2767fdX
+         jZsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+o4hJ6gOecX668nweOZlogdpijPmZ5n612JpcYOwV1dUp0eSFXu0g8QBxjkbtt0Kv1I9afPCfu+k4VHs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8fWJnHIb4+rz04Oi3VRa0X3QnJNL94Fg5GDKc4T4qcmHl3FAB
+	JtGSFudHYiWLNDN1yHx9p8Zi/bO6qspCoafe7un5Fb45aPqO+kp6a7Waei7y5yg=
+X-Gm-Gg: ASbGncvxV3NPM+uQfKu0CfEG4LIOLZQqmXl9Crm/VjJGSnrEDQ2vCMOFI7/O5Rz8BZh
+	wAD9SL6mqvE4DRZwe9hvkBht5JJpuR4KREbtAmWlh40UuJJEJEZ1Oa5IVK+pEPY/KGGUyZ12hPr
+	MDyGwu4meYOa0ladcVJ4HnmlkWJMLpX7Iogng8M7FK7aKoVi1qEgZ5AZGUDKd9Mk8YRttWwI4sO
+	Cu9rLtbcavcDTn6rmrYu+Ps+QwXBNFiS51/85qp7IKtnoiEkwluMHZrc3OwHwBnYPMg0EdmfjSe
+	2Xsda+tWZQCnSDiR3CyZsnPnY+foJ2Lr+E1LStFaaArzKtrM6aPTrACRJQIMx1oM5IzuwA==
+X-Google-Smtp-Source: AGHT+IGbVXhSP5UnKTNs1AzGAXkyab1y6vlkVP6QSlAbcFcneg9hH8WOKVea8rwd143pyPVe/yWLfw==
+X-Received: by 2002:a05:6512:3f11:b0:545:2df3:9a89 with SMTP id 2adb3069b0e04-54838ee8ec3mr1530858e87.17.1740153127565;
+        Fri, 21 Feb 2025 07:52:07 -0800 (PST)
 Received: from [127.0.1.1] (2001-14ba-a0c3-3a00--782.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::782])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54816a55851sm287643e87.27.2025.02.21.07.52.05
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54816a55851sm287643e87.27.2025.02.21.07.52.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Feb 2025 07:52:05 -0800 (PST)
+        Fri, 21 Feb 2025 07:52:07 -0800 (PST)
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Fri, 21 Feb 2025 17:52:00 +0200
-Subject: [PATCH v3 2/8] dt-bindings: PCI: qcom-ep: describe optional IOMMU
+Date: Fri, 21 Feb 2025 17:52:02 +0200
+Subject: [PATCH v3 4/8] dt-bindings: PCI: qcom-ep: consolidate DMA vs
+ non-DMA usecases
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250221-sar2130p-pci-v3-2-61a0fdfb75b4@linaro.org>
+Message-Id: <20250221-sar2130p-pci-v3-4-61a0fdfb75b4@linaro.org>
 References: <20250221-sar2130p-pci-v3-0-61a0fdfb75b4@linaro.org>
 In-Reply-To: <20250221-sar2130p-pci-v3-0-61a0fdfb75b4@linaro.org>
 To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
@@ -85,68 +86,155 @@ Cc: =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
  linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, 
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1585;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3536;
  i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=8nVGeN+HC+bXQ8NfYsOEnO3Wa1b/eYod1wwftfqnfSc=;
- b=owEBbQKS/ZANAwAKARTbcu2+gGW4AcsmYgBnuKEgtI/6KSbLukLpS9h+mZzvpXF9Pff7bFVH4
- v5sTu3LsLWJAjMEAAEKAB0WIQRdB85SOKWMgfgVe+4U23LtvoBluAUCZ7ihIAAKCRAU23LtvoBl
- uPaqD/4w+FLDEY4jeoA7AMqattg5NHR8xblcA04R7vCcEJeQRH+8bnGRcxI4hEDE/omf2smZuIe
- e+UapEZkBweqQli9YOi1VoDx5+DRVCcKFkRV+MatufpG7N0I8ZBbqGaRVHtUbiFytlM9ZZaz9uS
- N/T167GeprtM+EuVDsja79i1zGS2TnA7AuB37U2A0BU+woqHkx0VcO+wKXhD2hII9gZFC1x7tPf
- drF+nkuX3m3trFacyOX5bwbEZ6HGgoBwec0WkyVtd7zYd7hQpKLpFzNCcjJ01EakZzm/ElTaS10
- ALgKYpxW6qTt+KJQ3qQP+iuj5nbA7NJU/3BuME+IoHxWqt5KYL/kfZV4b+GqqsFgltJHHU3rx0+
- rfw+My+MIb/96Pv6yH0NbkSdfJ5qNvnyKl6RKNBHM+D9ForcQArWm347a7d0pEMEBjKKpUzQThw
- 1uCzhofZE4vOnwkuyltSyAmGSFWrnvwy3oofppvAtjaa/pGzRmHJbAb/vtEctMlpPvplOxi17SU
- XMM9lcNrvPAA/wkWT2dSN1ha/aiHlHetkzvyfZzZ38uA19PjXZzbcyL60pDn/xGL9730+HUaRba
- ODYoTzKjwsQT1aT3YRZ+lLKYe9lKcwiVy8D9eAZ3bxqGsb3SBuR9NbE+WaaKPh4BZ5aqNmSSga2
- IGhmaI0eAwnLAJg==
+ bh=Pp5hOcnQELo/7BP6swQt7kdhd42O2Fh3+oi2amQIZUo=;
+ b=owEBbQKS/ZANAwAKARTbcu2+gGW4AcsmYgBnuKEhHJ1TqFNOe7eulw139OCEgkWNIiKGlnInN
+ X9/GQ8LmL+JAjMEAAEKAB0WIQRdB85SOKWMgfgVe+4U23LtvoBluAUCZ7ihIQAKCRAU23LtvoBl
+ uCcUD/9H0IgRM+zSwNHmZCcQJigeaYI55ziJD07JMvZen0e96pYfnj98zfCD8euF/PgyB7VZPii
+ 59xIl3qovvlqXqrmk2OwuZUQ8ohM9WI80hNe3hEkR8bH0v3tVvQYxsuHS4G8vkvd03ZtWbUY5eq
+ 68XRmAtsIhpJ/dz37Fd8BLOoUkydn9WryuL1TtYboVY1yc45ZQCtCOu7tMfnN9vqJVxY63EiT09
+ Elt514HqtGwCHFoG+M7tpAUD4M0EnkWMK9ux1mzoRGYOhUZHIL9HcMe8K3tuVeWLG5gSMFUqYf0
+ 5fDI+M4yscUfzFue2cXhAf4uYxY547LUEtq+NvYz012Zi1BTW0vZunyVZnqF6zFqs640rHh6G4w
+ /+At0kS3edzhHaAwiSkxLToS3xg8dzUZHL1ZBbUvq1y327j0VhA3K2J8JGRBtmwlK3KnzvWLuNB
+ z7SmsQ2PxNI8CyAuwopscbnN/bWuFsRbDKcBlLwMAS+4WsaiVtHHor1cZvsTSIM7KVNWzIdAx8K
+ ckWEpeyO2dNDwd8g5b9Z3fITohtdHEzvEoAjhsKJV4lLabeAV93XmlmluluGH7DOSVT74XOuMLf
+ 13p/nojb1bACLrpwV0/OPP1Lj4exsPeI8figYZpfG+TJJrsl5DM010erunnEwy6S4qcVmPKdvXw
+ INDNsGIpZsw6tSw==
 X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Some of Qualcomm platforms have an IOMMU unit between the PCIe IP and
-DDR. For example, SA8775P specifies the iommu alththough it is not a
-part of bindings. Change the schema in order to require the IOMMU for
-SA8775P and forbid it from being used on SDX55 (SM8450 will be handled
-in a later patch).
+On Qualcomm platforms here are two major kinds of PCIe EP controllers:
+ones which use eDMA and IOMMU and the ones which do not (like SDX55 /
+SDX65). It doesn't make sense to c&p similar properties all over the
+place. Merge these two usecases into a single conditional clause.
 
-This fixes the following warning:
-
-pcie-ep@1c10000: Unevaluated properties are not allowed ('iommus' was unexpected)
-
-Fixes: 9d3d5e75f31c ("dt-bindings: PCI: qcom-ep: Add support for SA8775P SoC")
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../devicetree/bindings/pci/qcom,pcie-ep.yaml      | 68 +++++++++++-----------
+ 1 file changed, 35 insertions(+), 33 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-index 0c2ca4cfa3b190b3fb204f0d7142370734fb3534..6075361348352bb8d607acecc76189e28b03dc5b 100644
+index d22022ff2760c5aa84d31e3c719dd4b63adbb4cf..2c1918ca30dcfa8decea684ff6bfe11c602bbc7e 100644
 --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
 +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-@@ -75,6 +75,9 @@ properties:
-       - const: doorbell
-       - const: dma
+@@ -131,6 +131,7 @@ required:
  
-+  iommus:
-+    maxItems: 1
+ allOf:
+   - $ref: pci-ep.yaml#
 +
-   reset-gpios:
-     description: GPIO used as PERST# input signal
-     maxItems: 1
-@@ -162,6 +165,7 @@ allOf:
-           maxItems: 2
-         interrupt-names:
-           maxItems: 2
+   - if:
+       properties:
+         compatible:
+@@ -140,9 +141,43 @@ allOf:
+     then:
+       properties:
+         reg:
++          minItems: 6
+           maxItems: 6
+         reg-names:
++          minItems: 6
+           maxItems: 6
++        interrupts:
++          minItems: 2
++          maxItems: 2
++        interrupt-names:
++          minItems: 2
++          maxItems: 2
 +        iommus: false
++    else:
++      properties:
++        reg:
++          minItems: 7
++          maxItems: 7
++        reg-names:
++          minItems: 7
++          maxItems: 7
++        interrupts:
++          minItems: 3
++          maxItems: 3
++        interrupt-names:
++          minItems: 3
++          maxItems: 3
++      required:
++        - iommus
++
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,sdx55-pcie-ep
++    then:
++      properties:
+         clocks:
+           items:
+             - description: PCIe Auxiliary clock
+@@ -161,11 +196,6 @@ allOf:
+             - const: slave_q2a
+             - const: sleep
+             - const: ref
+-        interrupts:
+-          maxItems: 2
+-        interrupt-names:
+-          maxItems: 2
+-        iommus: false
  
    - if:
        properties:
-@@ -234,6 +238,8 @@ allOf:
-         interrupt-names:
-           minItems: 3
-           maxItems: 3
-+      required:
-+        - iommus
+@@ -175,12 +205,6 @@ allOf:
+               - qcom,sm8450-pcie-ep
+     then:
+       properties:
+-        reg:
+-          minItems: 7
+-          maxItems: 7
+-        reg-names:
+-          minItems: 7
+-          maxItems: 7
+         clocks:
+           items:
+             - description: PCIe Auxiliary clock
+@@ -201,14 +225,6 @@ allOf:
+             - const: ref
+             - const: ddrss_sf_tbu
+             - const: aggre_noc_axi
+-        interrupts:
+-          minItems: 3
+-          maxItems: 3
+-        interrupt-names:
+-          minItems: 3
+-          maxItems: 3
+-      required:
+-        - iommus
+ 
+   - if:
+       properties:
+@@ -218,12 +234,6 @@ allOf:
+               - qcom,sa8775p-pcie-ep
+     then:
+       properties:
+-        reg:
+-          minItems: 7
+-          maxItems: 7
+-        reg-names:
+-          minItems: 7
+-          maxItems: 7
+         clocks:
+           items:
+             - description: PCIe Auxiliary clock
+@@ -238,14 +248,6 @@ allOf:
+             - const: bus_master
+             - const: bus_slave
+             - const: slave_q2a
+-        interrupts:
+-          minItems: 3
+-          maxItems: 3
+-        interrupt-names:
+-          minItems: 3
+-          maxItems: 3
+-      required:
+-        - iommus
  
  unevaluatedProperties: false
  
