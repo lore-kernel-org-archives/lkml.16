@@ -1,186 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5A9F214210;
-	Fri, 21 Feb 2025 15:52:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740153143; cv=none; b=JrfgiHmsL5KvSdfI22I9Y3LESQAuXooUNLROM34Mt1jRnBEJYABK2gMuAQbGvQeUWW+UhtWtFtglcS3nUuKo37OaTaTsHboxdTokSEoCKFpaWTQcBUDUhVysLDoBT/8Na9Y2XCasZR883t7O4vWZhtsqupKAeckO3VSwPfeHQcc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740153143; c=relaxed/simple;
-	bh=AiY9PGwSpTvpL/xaZ7Dd84wfvgNcgWBdqdNMH/Ge6Ws=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=OPkI8YQF8OjBVuZahvj5aTPzRmrh+DmM1SBFH8QrlUDViNiSxRz8AIVk6ZtJJxXgn853k0wfGVpFslJxs64hA2LOPPsNmC6nkj1SLZdh6AaYfOAKdPu7rpE9Rgu7tsaw/FyGWfPzQ0TwVRe3X1r2Uvn47w2VzYsw5HowhRln43A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81ED9C4CEE7;
-	Fri, 21 Feb 2025 15:52:22 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1tlVKd-00000006KRc-3SCB;
-	Fri, 21 Feb 2025 10:52:51 -0500
-Message-ID: <20250221155251.673749961@goodmis.org>
-User-Agent: quilt/0.68
-Date: Fri, 21 Feb 2025 10:52:11 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- stable@vger.kernel.org,
- Heiko Carstens <hca@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>
-Subject: [for-linus][PATCH 1/7] ftrace: Fix accounting of adding subops to a manager ops
-References: <20250221155210.755295517@goodmis.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5102139DD;
+	Fri, 21 Feb 2025 15:52:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740153142; cv=pass; b=abiUVTPSS1b+v/lcmVAlt8wVD+21gkuKT6/xBLiv6iGVR1AdL3yEDOsscztm+yER8CGSH6pU6nsYUOWJ9ZMyJ7z7YbsTDjhO1AZK2DCsKIbgsucu9HPOqIeSnAMHoJMdfX88I79RZm56uJGASjhS/AY7kmJR7SIQYqMmiN3Dwxg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740153142; c=relaxed/simple;
+	bh=iaQ+8410xKoAcD7janib56GRmsqyMB9cJ17s5UofjeM=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=riU1lRuy2eBGjlP3YLlscfk2IeTRrQuex8Qv05SgUyDibFQt5FcQzCLJJl6WPvvcL0xkwAhnNptFiF3AImcgcKM8zNH/f4p6hQFSYHPslVdxVELBsVjA5JRUEdhsd30la8XLqVGbWv1JaWLFnAbWpdMdc2Jnl0PA1B9HE3xd09w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=hmxIeYl4; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="hmxIeYl4"
+ARC-Seal: i=1; a=rsa-sha256; t=1740153098; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Ur8DFaCXw/kfGxqm2t3KTY/RqUQ9/Hm7NPzbLZo907lsoPJtfhPofBmeoRETtZIzKy7XKnfr8jM3E04GcOp00g11fWii7pTAQepqxHLlntonTdcfv1if8m5QwME8VMmMI1rDrnrIASCZlNmizdQViJ9psupxliVrXjqGx8xzkVY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1740153098; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=HlQHYE1pagm2zjFO6/6LR3Vvs32N93jmTgtwHYFPo48=; 
+	b=CUb+cps4DvmJ92jWd4kjfM772bDK7IebZrfq41FAMwBGajdgF5Rd6gxT2k2+ZDuudFT97gaJdvSBhmbj15u4CGbkoSO2GZRL5okUbxbo3QyM7ey85aCy+KnO2H2Trgd0oLAAblmrDOAIxCwwf2UfkZfEfEgpzEUOMcQ2Z1hRzrc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740153098;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=HlQHYE1pagm2zjFO6/6LR3Vvs32N93jmTgtwHYFPo48=;
+	b=hmxIeYl48SOWkT35ShjoRjzHy48BbupoVwnc1RTMvjQ1bWk8RvIqEDg52ggG87fH
+	D4qJ/Ctk4ZlA5imdzpkQQfG6jW/3P2u2JTTMKbUymnMnArX/2xgBGEZwS9uaBUSSF+e
+	goUrc3U3SI2GT1d5tWzDiLFRFFksjDzXz1MUwRkA=
+Received: by mx.zohomail.com with SMTPS id 1740153097184404.12164099489894;
+	Fri, 21 Feb 2025 07:51:37 -0800 (PST)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-
-From: Steven Rostedt <rostedt@goodmis.org>
-
-Function graph uses a subops and manager ops mechanism to attach to
-ftrace.  The manager ops connects to ftrace and the functions it connects
-to is defined by a list of subops that it manages.
-
-The function hash that defines what the above ops attaches to limits the
-functions to attach if the hash has any content. If the hash is empty, it
-means to trace all functions.
-
-The creation of the manager ops hash is done by iterating over all the
-subops hashes. If any of the subops hashes is empty, it means that the
-manager ops hash must trace all functions as well.
-
-The issue is in the creation of the manager ops. When a second subops is
-attached, a new hash is created by starting it as NULL and adding the
-subops one at a time. But the NULL ops is mistaken as an empty hash, and
-once an empty hash is found, it stops the loop of subops and just enables
-all functions.
-
-  # echo "f:myevent1 kernel_clone" >> /sys/kernel/tracing/dynamic_events
-  # cat /sys/kernel/tracing/enabled_functions
-kernel_clone (1)           	tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-
-  # echo "f:myevent2 schedule_timeout" >> /sys/kernel/tracing/dynamic_events
-  # cat /sys/kernel/tracing/enabled_functions
-trace_initcall_start_cb (1)             tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-run_init_process (1)            tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-try_to_run_init_process (1)             tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-x86_pmu_show_pmu_cap (1)                tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-cleanup_rapl_pmus (1)                   tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-uncore_free_pcibus_map (1)              tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-uncore_types_exit (1)                   tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-uncore_pci_exit.part.0 (1)              tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-kvm_shutdown (1)                tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-vmx_dump_msrs (1)               tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-vmx_cleanup_l1d_flush (1)               tramp: 0xffffffffc0309000 (ftrace_graph_func+0x0/0x60) ->ftrace_graph_func+0x0/0x60
-[..]
-
-Fix this by initializing the new hash to NULL and if the hash is NULL do
-not treat it as an empty hash but instead allocate by copying the content
-of the first sub ops. Then on subsequent iterations, the new hash will not
-be NULL, but the content of the previous subops. If that first subops
-attached to all functions, then new hash may assume that the manager ops
-also needs to attach to all functions.
-
-Cc: stable@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Sven Schnelle <svens@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-Link: https://lore.kernel.org/20250220202055.060300046@goodmis.org
-Fixes: 5fccc7552ccbc ("ftrace: Add subops logic to allow one ops to manage many")
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/ftrace.c | 33 ++++++++++++++++++++++-----------
- 1 file changed, 22 insertions(+), 11 deletions(-)
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 728ecda6e8d4..bec54dc27204 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -3220,15 +3220,22 @@ static struct ftrace_hash *copy_hash(struct ftrace_hash *src)
-  *  The filter_hash updates uses just the append_hash() function
-  *  and the notrace_hash does not.
-  */
--static int append_hash(struct ftrace_hash **hash, struct ftrace_hash *new_hash)
-+static int append_hash(struct ftrace_hash **hash, struct ftrace_hash *new_hash,
-+		       int size_bits)
- {
- 	struct ftrace_func_entry *entry;
- 	int size;
- 	int i;
- 
--	/* An empty hash does everything */
--	if (ftrace_hash_empty(*hash))
--		return 0;
-+	if (*hash) {
-+		/* An empty hash does everything */
-+		if (ftrace_hash_empty(*hash))
-+			return 0;
-+	} else {
-+		*hash = alloc_ftrace_hash(size_bits);
-+		if (!*hash)
-+			return -ENOMEM;
-+	}
- 
- 	/* If new_hash has everything make hash have everything */
- 	if (ftrace_hash_empty(new_hash)) {
-@@ -3292,16 +3299,18 @@ static int intersect_hash(struct ftrace_hash **hash, struct ftrace_hash *new_has
- /* Return a new hash that has a union of all @ops->filter_hash entries */
- static struct ftrace_hash *append_hashes(struct ftrace_ops *ops)
- {
--	struct ftrace_hash *new_hash;
-+	struct ftrace_hash *new_hash = NULL;
- 	struct ftrace_ops *subops;
-+	int size_bits;
- 	int ret;
- 
--	new_hash = alloc_ftrace_hash(ops->func_hash->filter_hash->size_bits);
--	if (!new_hash)
--		return NULL;
-+	if (ops->func_hash->filter_hash)
-+		size_bits = ops->func_hash->filter_hash->size_bits;
-+	else
-+		size_bits = FTRACE_HASH_DEFAULT_BITS;
- 
- 	list_for_each_entry(subops, &ops->subop_list, list) {
--		ret = append_hash(&new_hash, subops->func_hash->filter_hash);
-+		ret = append_hash(&new_hash, subops->func_hash->filter_hash, size_bits);
- 		if (ret < 0) {
- 			free_ftrace_hash(new_hash);
- 			return NULL;
-@@ -3310,7 +3319,8 @@ static struct ftrace_hash *append_hashes(struct ftrace_ops *ops)
- 		if (ftrace_hash_empty(new_hash))
- 			break;
- 	}
--	return new_hash;
-+	/* Can't return NULL as that means this failed */
-+	return new_hash ? : EMPTY_HASH;
- }
- 
- /* Make @ops trace evenything except what all its subops do not trace */
-@@ -3505,7 +3515,8 @@ int ftrace_startup_subops(struct ftrace_ops *ops, struct ftrace_ops *subops, int
- 		filter_hash = alloc_and_copy_ftrace_hash(size_bits, ops->func_hash->filter_hash);
- 		if (!filter_hash)
- 			return -ENOMEM;
--		ret = append_hash(&filter_hash, subops->func_hash->filter_hash);
-+		ret = append_hash(&filter_hash, subops->func_hash->filter_hash,
-+				  size_bits);
- 		if (ret < 0) {
- 			free_ftrace_hash(filter_hash);
- 			return ret;
--- 
-2.47.2
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
+Subject: Re: [PATCH v7 1/6] rust: str: implement `PartialEq` for `BStr`
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <20250218-module-params-v3-v7-1-5e1afabcac1b@kernel.org>
+Date: Fri, 21 Feb 2025 12:51:20 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Masahiro Yamada <masahiroy@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nicolas@fjasle.eu>,
+ Luis Chamberlain <mcgrof@kernel.org>,
+ rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Adam Bratschi-Kaye <ark.email@gmail.com>,
+ linux-kbuild@vger.kernel.org,
+ Petr Pavlu <petr.pavlu@suse.com>,
+ Sami Tolvanen <samitolvanen@google.com>,
+ Daniel Gomez <da.gomez@samsung.com>,
+ Simona Vetter <simona.vetter@ffwll.ch>,
+ Greg KH <gregkh@linuxfoundation.org>,
+ linux-modules@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <FB41A276-5A3A-4878-8DA6-CE0EA751E768@collabora.com>
+References: <20250218-module-params-v3-v7-0-5e1afabcac1b@kernel.org>
+ <20250218-module-params-v3-v7-1-5e1afabcac1b@kernel.org>
+To: Andreas Hindborg <a.hindborg@kernel.org>
+X-Mailer: Apple Mail (2.3826.300.87.4.3)
+X-ZohoMailClient: External
 
 
+
+> On 18 Feb 2025, at 10:00, Andreas Hindborg <a.hindborg@kernel.org> =
+wrote:
+>=20
+> Implement `PartialEq` for `BStr` by comparing underlying byte slices.
+>=20
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> Reviewed-by: Gary Guo <gary@garyguo.net>
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+> ---
+> rust/kernel/str.rs | 6 ++++++
+> 1 file changed, 6 insertions(+)
+>=20
+> diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+> index 28e2201604d67..002dcddf7c768 100644
+> --- a/rust/kernel/str.rs
+> +++ b/rust/kernel/str.rs
+> @@ -108,6 +108,12 @@ fn deref(&self) -> &Self::Target {
+>     }
+> }
+>=20
+> +impl PartialEq for BStr {
+> +    fn eq(&self, other: &Self) -> bool {
+> +        self.deref().eq(other.deref())
+> +    }
+> +}
+> +
+> /// Creates a new [`BStr`] from a string literal.
+> ///
+> /// `b_str!` converts the supplied string literal to byte string, so =
+non-ASCII
+>=20
+> --=20
+> 2.47.0
+>=20
+>=20
+>=20
+
+Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>=
