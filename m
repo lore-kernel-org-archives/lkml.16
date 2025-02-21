@@ -1,189 +1,221 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B74B9211297
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2FF721129B
 	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 15:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740151493; cv=none; b=IBqOR/bcaX9ApaJjP28ZO0TQKGjRO74CsoUW4HCLOjL+dFn9PSXMtCIzVauYC2HQ4mJZTrHjpR1wXQ9+qZ58tYDcIdr00S+DhHEDPldYYjpEBAjdzV5+bxggp0+CVmWv9igLdjT3di/ri+516XaF8Vg8mNmMPVWr46NmxNK7kzk=
+	t=1740151493; cv=none; b=ajq8YCLGpt6E5EOavz4PZndsD2ePJT19CjuTc1A1nPmPk0EOAA+YAAETXLRMDsxwdfVZKD1DseCh9le82zw3AM7PecuBcMcFuiCM3TfA8jwM+bJwq7KN9hwA5rQanyLxNPCDeVTTrQOwptbjZIEzwyk5wr0Ny+rKlH04btk9nXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740151493; c=relaxed/simple;
-	bh=WK1lZZTa1x1pAgT3SVfcXVsjeamzVsyIDq5PHkT0TDo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j5zf7RxtKvWyfoupcVDyBUy/EXtbNWwUMvjuqJw5VnLYvfFl/1vzLQcV3E+Tq8U40VemAn6YAdB32fpWmcLM0C0Zaaf44P1zZVMlkZ06GbimdxcUxWzcpW8Za9zHDV6JO4kgkqXpzvQngC/R8HLLMYD5UBPORkKNLbS4KnJrvuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=aYZN3qJI; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	bh=i5ri9ekSIIkKVxsR8eLTipN73T78Eiw6G+aO7XJu3cM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EZPwiLg001ZWRtQJcwXN7KVqaDvuHJWKg8/l7yWMSQa1zfegvqs3XL3CqUc/Iqi/j9uZq8niubHR2ElP/LjYSKhcQJ0K7ygQoEZz5BUWzOQMfC4OmJ/obzE9foLo+jba8J3oyYoD2hOPdJjdN3WJ2SyFM5rdYQkpU9GXsL5apDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GzsC9dmn; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="aYZN3qJI"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43996e95114so14900285e9.3
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GzsC9dmn"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-abbb16a0565so32321266b.1
         for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 07:24:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1740151490; x=1740756290; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:mail-followup-to:message-id:subject:cc:to
-         :from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CT2C4f9jm5PWW5vBDYC1RD3DaXN0lCMpCnB9dLdCgXg=;
-        b=aYZN3qJI2qLv+njQmSse74KLKHfts3EznSBdbrexaXEJa2wo6SXQVhb1Yyu+hEFTNJ
-         6SWmwgjphq1RCMA8PBT+YfygV22hCtN7+3oQn7fToHPxkJOvpwMnHRpZ7HIIo/5xp5ee
-         xjm5z6DovxvdGpw42NrMUA1GlosmUK8jom99w=
+        d=linaro.org; s=google; t=1740151490; x=1740756290; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pjw3owe+g82tMuYky0eC0Z5b8YUq4oE+S7asTRjT1vQ=;
+        b=GzsC9dmnm+mXYNX37PXkk9izQc9IpekdUa/9ABeW2N9MB/ykkBqKJK/XN3hHjxhfoy
+         pia8wgt1PkeiChSmQo1VFDuKyEXthVP87hxVkEIQuF3pacwEHNVphiczQYnVkjs05nDb
+         v1UqFOan3kwxLTLqGXul2e8/rf13LZn2BYfTgwIgrIjt3Xv64pSRiZcf1Q7l5/kp7rqO
+         TBI8n/cFPex/yi24lpsO1VbWQml6DVFoA2QV1pMBIMf0QNGlAbsWff5F6xUYpuCnTF+N
+         uy0Zvr3GIFYOhkdKJp+pqlV1gupwfhYMX2InlfAr9ZBskR+5cPc1UUZe19JLKe0ySIiP
+         T8hQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1740151490; x=1740756290;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:mail-followup-to:message-id:subject:cc:to
-         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=CT2C4f9jm5PWW5vBDYC1RD3DaXN0lCMpCnB9dLdCgXg=;
-        b=SRKSpx23XCmzuXrFGqJbDlpYzD25vxQ/FogBHCjpQbZJOzn3/ITDflgbxtBzSGR3M+
-         sXL3dCLK72prTMgeE2zI+4b2tfFpnEzFIEW1XgjqGdo/E+lHKmL3jmSLptv2OdwrmN71
-         DpHAVhrqFdxiSsytMmPZykaNzcfaxbSyfU1PI/b67sitE3dGYLrL0tmL3+k++TOsV3qQ
-         YbzPwbM1S2cd2J5BXOpvLSTvcbtZbYAzoLHg5D12EqZrPVuIMZDbZITe3v2n5XfIHi5r
-         6+TnOhJt3VdZYTSX0DytzYUSR95/Et1ZZr2bM50/L/2tMjyMgbooxXnJ01HCpHvIvjL3
-         hQ1A==
-X-Forwarded-Encrypted: i=1; AJvYcCU+J2bOXBehsARYCF/kdCdRsOaH75EeXNC3dXId8mTFjhVCNOkkpPk4IW/zDTE/DKUo2YLglaFKdDIB3CU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuZXRIbUhbq8kcPIMQbprM0hgmpvhFU9P9q+GrcD81IcCgdp8L
-	19yrbTYhx/xIRTSkP3Udqg9QZlYgXsC2Wce8TaxGWP4rVPTFquuxivTGwE5VR7Q=
-X-Gm-Gg: ASbGncsIf7yaTixwlqVRHuEO83rLYdfNtL8kHFQrXoX/x8ethSzvmOc9xdwQ/JZPara
-	R1c6cT21iuFBpPWuK+Q0YxxW/U5Dj+gI+fmRoAzJSdDHsFpHyS4wcWjRVywDmpNn3RmP4XUwVLW
-	P0xGBgLr75+M2Krj44jgX+xTdpnuxb0n7VZ/fInRauy6d0m29NZAEKb8cCauWTcEU9rCJaQOl4O
-	306n4sp0CTtVkgg0CrONkEv9VuvEDiA09WaPPkuHmTWLqyj+LggtcZdfLAiEQKnIz0Kn7IbiNW4
-	du0yeewaYqFD4L8ZwH2jfJg0kWeXTzkviFEhPw==
-X-Google-Smtp-Source: AGHT+IEtmkzFkOqaG3XvlyBf1nNbqOpqNG9470mVBupdomsnEpdGJKAmORNNEt1KQvh271XfF3xsZA==
-X-Received: by 2002:a05:600c:5487:b0:439:9946:af72 with SMTP id 5b1f17b1804b1-439aeae026amr27674585e9.3.1740151489706;
-        Fri, 21 Feb 2025 07:24:49 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b02ce735sm20492365e9.3.2025.02.21.07.24.48
+        bh=pjw3owe+g82tMuYky0eC0Z5b8YUq4oE+S7asTRjT1vQ=;
+        b=hNQJAqg69sa0NxBzj3YgaHesrcNwGKighL+nDKNVnzxml8UdiAx3kgGaVIpUVtv5QY
+         5IWjs5Rw3JmL/CQKwH+Cn8NftX+wwKokzic/e3nc2Ep6Ha/enzMqXRzC50VT71u0rkEd
+         heR6MqeikNe/78qvvtW4c8CNYE6vhhEiqtAg3CloztrtT93HjKBH8xiXt9LGbcek1SKR
+         UUWd0GrEFrW5juy+ETCxLWetAfhaKeBaNeSXelxDden3MZVf48IX6lSgEi9+bmbwIA70
+         Hd2ud57nPMlT3uw44m9xpR2AaaKc6w8ocY44tqqocWE+PL8p21OEA0lTq2ihol43goyX
+         bhdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWq6fLUzlVWIZ8+Kd/0t3YSHSBIci2RDJWXV5BGF+bCEO6thuaOYAdH3awXR/xuHG77L/tIY50JEivqhjg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylPPoPAWplYObL552AjypIHEE6GNDt9ox/Af+PMZp8nJWjyuLB
+	jYAm798lCmDbEFj3cOxTxrbFKQkcnc9q1DsCRMHSdnA0ncdez62M6YWXJkJFQ1I=
+X-Gm-Gg: ASbGncvaBsWxNQA2A6qvWu5eNC+76VBLA8kl0MjqmHLYzU8jf9BgP2gqt1wFMJge7f7
+	QhcyD3atiin3QsXHunrfUyj/W+5tOiFPoDWH4VhuFb23D8CxPF4xOi6QnCcQPkrBmHxJ2QZF/s9
+	2Jpf0FMM9PoBqVxo6APw1pk2EhnD7a7MBwU78l8GxZ2eeUEpNUgVJ8Ar4bRvq+c0FBYXe9ALJZj
+	f541MNWL04jS0ajzA3Cp5J7+8VpJHfz0djUC0aRz+2CDjxtGTcyfun8t9HQldA1Lu4OCrUAT5jg
+	manUwC6y6U+iRgfZutVbP9HC+g5Yl4LiK5EN6A5VnTdST+u3XtcqdwnifGvSQNOfEyOdk6Pgcqt
+	V
+X-Google-Smtp-Source: AGHT+IGXCIe+EFHyzaoM7U0Y6loffB3qhAExuxR0V1/JrX/SWeHYnZhv9Xq5ZXQeBdS0Q4AwCEt9hQ==
+X-Received: by 2002:a17:907:9448:b0:ab7:d10b:e1f2 with SMTP id a640c23a62f3a-abc09c24983mr110312366b.12.1740151490054;
+        Fri, 21 Feb 2025 07:24:50 -0800 (PST)
+Received: from [127.0.1.1] (78-11-220-99.static.ip.netia.com.pl. [78.11.220.99])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abbaa56026fsm865456666b.113.2025.02.21.07.24.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 21 Feb 2025 07:24:49 -0800 (PST)
-Date: Fri, 21 Feb 2025 16:24:47 +0100
-From: Simona Vetter <simona.vetter@ffwll.ch>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	rust-for-linux <rust-for-linux@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org,
-	ksummit@lists.linux.dev
-Subject: Re: Rust kernel policy
-Message-ID: <Z7iav4U7k9AJDzay@phenom.ffwll.local>
-Mail-Followup-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	rust-for-linux <rust-for-linux@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org,
-	ksummit@lists.linux.dev
-References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
- <Z7SwcnUzjZYfuJ4-@infradead.org>
- <CANiq72myjaA3Yyw_yyJ+uvUrZQcSLY_jNp65iKH8Y5xGY5tXPQ@mail.gmail.com>
- <Z7bO1jT2onZFZwgH@infradead.org>
- <CANiq72mM3tVmT6MQZqpzGEW4hJABVHRiODL0SnP2u+0ES4=pjw@mail.gmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v3 00/21] drm/msm: Add support for SM8750
+Date: Fri, 21 Feb 2025 16:24:10 +0100
+Message-Id: <20250221-b4-sm8750-display-v3-0-3ea95b1630ea@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72mM3tVmT6MQZqpzGEW4hJABVHRiODL0SnP2u+0ES4=pjw@mail.gmail.com>
-X-Operating-System: Linux phenom 6.12.11-amd64
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJqauGcC/33N0QqDIBTG8VcJr+dQ01xd7T3GLk6pdaBl6JBF9
+ O6zbsZg7PL/wfmdlUQb0EbSFCsJNmFEP+UoTwXpBph6S9HkJoIJxTiraStpfFy0YtRgnEdYaGV
+ BlVorCY6TfDcH6/B1mLd77gHj04fleJH4vv7TEqeMtqXjyoGTXa2vI04Q/NmHnuxcEh9CcP2LE
+ JkwgnHTGQMVyC9i27Y3DlL7+fYAAAA=
+X-Change-ID: 20250109-b4-sm8750-display-6ea537754af1
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Krishna Manikandan <quic_mkrishn@quicinc.com>, 
+ Jonathan Marek <jonathan@marek.ca>, Kuogee Hsieh <quic_khsieh@quicinc.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Srini Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Rob Clark <robdclark@chromium.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4977;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=i5ri9ekSIIkKVxsR8eLTipN73T78Eiw6G+aO7XJu3cM=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBnuJqoWunlfAqOpvG4bmHGrkxmWzkH8NU2CUEkd
+ zn5511S4GCJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ7iaqAAKCRDBN2bmhouD
+ 11fFD/0YjOnqKODGT/NKcg+eRYSgezae33GlG8IyOWxVduqrTXeiAz888StStw5817hOkWA47o0
+ 4/ScVy1MjVWOElWkhrB+Yv2CvtpDw4VyRT2MaS18SNbr9d0X1ozn0imfSD16fXInlMKk7q7HOD6
+ 2x1cvUYPVnsYPCzvh+Q09Yl9YOSNXQamIz3krykTJHhopXa7/5UDCYCIzDiebkWhQodbFLYZ+e3
+ N34ZcIi2oWHiFotwTgnDI8CiFeUuiLBTIM0zx0moLGOSCmz3FtrKsYSB7ghtkrPRFhoPTXyPUr+
+ hsbroIy0+wwl/GBU88h/kic9cg+uFlb5xfiT3th2shl+vhMGyPKyI4Nox5/tMrv1JQk6aCbFsgH
+ FeO2KhzdM5DusNyS/o6iEvrkg2Wl/2/kZQnzpCwSiDEJzr8Mpg7wwVHIl5lvW88KfW9Bzl25bLH
+ 62v34hlrbN/PIcb6LDfd2gEyhherif9Ss/Zz5TSUzzAf7/cElZCAaIO0Zd/jq8/S11sFRRuhECL
+ 1T3KR0VgY0fZgMvMnPJ1pi4zNTf2BdRQGCcfDhQWlrpR7ztZTJ4rfkvFAxQ10cxOixahoVMZXmO
+ rvNG9Y31S8jNvBVU1iczliDISJa+Ty0NKnY1GIR8VELfUqCji6h7Nqq5qL34DdlBtopWwb8rN5K
+ Ak2AA3zQ6JjeVDw==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Hi Miguel
+Hi,
 
-Disregarding the specific discussion here, but this just felt like a good
-place to thank you for your work to bring rust to linux. Your calm and
-understanding approach to figure out what fits best in each case, from "go
-away, don't bother me with rust" through "I like this, but I have no clue"
-all the way to "uh so we have four drivers now in progress, this is
-getting messy" has and continues to enormously help in making this all a
-success.
+Dependency / Rabased on top of
+==============================
+https://lore.kernel.org/all/20241214-dpu-drop-features-v1-0-988f0662cb7e@linaro.org/
 
-Thank you!
+Merging
+=======
+DSI pieces here might not be ready - I got modetest writeback working,
+but DSI panel on MTP8750 still shows darkness.  Therefore we discussed
+that DPU/catalog things could be applied first.
 
-Obviously not diminishing everyone else's work here, just that Miguel's
-effort on the culture and people impact of r4l stands out to me.
+Changes in v3
+=============
+- Add ack/rb tags
+- #5: dt-bindings: display/msm: dp-controller: Add SM8750:
+  Extend commit msg
 
-Cheers, Sima
+- #7: dt-bindings: display/msm: qcom,sm8750-mdss: Add SM8750:
+  - Properly described interconnects
+  - Use only one compatible and contains for the sub-blocks (Rob)
 
-On Fri, Feb 21, 2025 at 12:44:31AM +0100, Miguel Ojeda wrote:
-> On Thu, Feb 20, 2025 at 7:42 AM Christoph Hellwig <hch@infradead.org> wrote:
-> >
-> > The document claims no subsystem is forced to take Rust.  That's proven
-> > to be wrong by Linus.  And while you might not have known that when
-> > writing the document, you absolutely did when posting it to the list.
-> >
-> > That is a very dishonest way of communication.
-> >
-> > And while you might not have known that when
-> > writing the document, you absolutely did when posting it to the list.
-> 
-> I did know -- Linus told both of us in the private thread. I am not
-> sure what that has to do with anything.
-> 
-> As I told you in the previous reply, please read the next paragraph of
-> the document:
-> 
->     Now, in the Kernel Maintainers Summit 2022, we asked for flexibility
->     when the time comes that a major user of Rust in the kernel requires
->     key APIs for which the maintainer may not be able to maintain Rust
->     abstractions for it. This is the needed counterpart to the ability
->     of maintainers to decide whether they want to allow Rust or not.
-> 
-> The point is that maintainers decide how to handle Rust (and some have
-> indeed rejected Rust), but that flexibility is needed if a maintainer
-> that owns a core API does not want Rust, because otherwise it blocks
-> everything, as is your case.
-> 
-> In summary: you were in that meeting, you own a core API, you do not
-> want Rust, you are blocking everything. So flexibility is needed. Thus
-> we asked you what can be done, how we can help, etc. You did not
-> accept other maintainers, did not want to have the code anywhere in
-> the tree, nor wanted to work on a compromise at all. You, in fact,
-> said "I will do everything I can do to stop this.". So that is not
-> providing flexibility, quite the opposite of it. So Linus eventually
-> had to make a decision to provide that flexibility.
-> 
-> I am not sure how that contradicts the document -- the document is
-> precisely talking about this situation.
-> 
-> By the way, I do not take lightly that you accuse me of dishonesty.
-> 
-> > Which given the binding creep means every single non-leaf subsystem
-> > eventually.
-> 
-> If Rust keeps growing in the kernel, then obviously more and more
-> non-leaf maintainers get affected.
-> 
-> But that just means more people is getting involved and more
-> subsystems are accepting Rust for their use cases. So that would just
-> mean it was, indeed, a good idea in the end.
-> 
-> > I'm not sure how that matters.  Of course your Rust testimonials are
-> > going to like it, otherwise you would not have quoted it.  They
-> 
-> Not at all. As I say in the talk, I included every single quote I got,
-> even up to the night before the keynote.
-> 
-> It is nevertheless very biased, because I asked people we interacted
-> with, which were mostly positive or neutral. I acknowledged this bias
-> in the talk too.
-> 
-> However, just so that others are aware, I did email others that are
-> negative about it too, such as you. And you did not reply.
-> 
-> > Well, obviously you do.  But as in many other things I would usually
-> > not count corporate pressure as a good thing.
-> 
-> Corporate pressure is not good. Corporate support is.
-> 
-> And we need that support to accomplish something like this.
-> 
-> Cheers,
-> Miguel
+- #12: drm/msm/dsi: Add support for SM8750:
+  Drop 'struct msm_dsi_config sm8750_dsi_cfg' and use sm8650 one.
+- drm/msm/dpu: Implement new v12.0 DPU differences
+  Split into several patches
+- Link to v2: https://lore.kernel.org/r/20250217-b4-sm8750-display-v2-0-d201dcdda6a4@linaro.org
 
+Changes in v2
+=============
+- Implement LM crossbar, 10-bit alpha and active layer changes:
+  New patch: drm/msm/dpu: Implement new v12.0 DPU differences
+- New patch: drm/msm/dpu: Add missing "fetch" name to set_active_pipes()
+- Add CDM
+- Split some DPU patch pieces into separate patches:
+  drm/msm/dpu: Drop useless comments
+  drm/msm/dpu: Add LM_7, DSC_[67], PP_[67] and MERGE_3D_5
+  drm/msm/dpu: Add handling of LM_6 and LM_7 bits in pending flush mask
+- Split DSI and DSI PHY patches
+- Mention CLK_OPS_PARENT_ENABLE in DSI commit
+- Mention DSI PHY PLL work:
+  https://patchwork.freedesktop.org/patch/542000/?series=119177&rev=1
+- DPU: Drop SSPP_VIG4 comments
+- DPU: Add CDM
+- Link to v1: https://lore.kernel.org/r/20250109-b4-sm8750-display-v1-0-b3f15faf4c97@linaro.org
+
+Best regards,
+Krzysztof
+
+---
+Krzysztof Kozlowski (21):
+      dt-bindings: display/msm: dsi-controller-main: Combine if:then: entries
+      dt-bindings: display/msm: dsi-controller-main: Add missing minItems
+      dt-bindings: display/msm: dsi-phy-7nm: Add SM8750
+      dt-bindings: display/msm: dsi-controller-main: Add SM8750
+      dt-bindings: display/msm: dp-controller: Add SM8750
+      dt-bindings: display/msm: qcom,sm8650-dpu: Add SM8750
+      dt-bindings: display/msm: qcom,sm8750-mdss: Add SM8750
+      drm/msm/dpu: Add missing "fetch" name to set_active_pipes()
+      drm/msm/dpu: Clear CTL_FETCH_PIPE_ACTIVE on mixer reset
+      drm/msm/dpu: Clear CTL_FETCH_PIPE_ACTIVE on ctl_path reset
+      drm/msm/dpu: Clear CTL_FETCH_PIPE_ACTIVE before blend setup
+      drm/msm/dpu: Drop useless comments
+      drm/msm/dpu: Add LM_7, DSC_[67], PP_[67] and MERGE_3D_5
+      drm/msm/dpu: Add handling of LM_6 and LM_7 bits in pending flush mask
+      drm/msm/dsi/phy: Add support for SM8750
+      drm/msm/dsi: Add support for SM8750
+      drm/msm/dpu: Add support for SM8750
+      drm/msm/dpu: Implement 10-bit color alpha for v12.0 DPU
+      drm/msm/dpu: Implement CTL_PIPE_ACTIVE for v12.0 DPU
+      drm/msm/dpu: Implement LM crossbar for v12.0 DPU
+      drm/msm/mdss: Add support for SM8750
+
+ .../bindings/display/msm/dp-controller.yaml        |   4 +
+ .../bindings/display/msm/dsi-controller-main.yaml  | 124 +++---
+ .../bindings/display/msm/dsi-phy-7nm.yaml          |   1 +
+ .../bindings/display/msm/qcom,sm8650-dpu.yaml      |   1 +
+ .../bindings/display/msm/qcom,sm8750-mdss.yaml     | 470 +++++++++++++++++++
+ .../drm/msm/disp/dpu1/catalog/dpu_12_0_sm8750.h    | 496 +++++++++++++++++++++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c           |  59 ++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c        |  12 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c     |  35 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h     |   1 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c         |  71 ++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h         |  19 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c          | 210 ++++++++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.h          |  18 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h        |   6 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c            |   1 +
+ drivers/gpu/drm/msm/dsi/dsi.h                      |   2 +
+ drivers/gpu/drm/msm/dsi/dsi_cfg.c                  |  14 +
+ drivers/gpu/drm/msm/dsi/dsi_cfg.h                  |   1 +
+ drivers/gpu/drm/msm/dsi/dsi_host.c                 |  80 ++++
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.c              |   2 +
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.h              |   1 +
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c          |  79 +++-
+ drivers/gpu/drm/msm/msm_mdss.c                     |  33 ++
+ drivers/gpu/drm/msm/msm_mdss.h                     |   1 +
+ .../gpu/drm/msm/registers/display/dsi_phy_7nm.xml  |  14 +
+ 26 files changed, 1654 insertions(+), 101 deletions(-)
+---
+base-commit: b29308070eeaeae75762724bb01d98b71216f97a
+change-id: 20250109-b4-sm8750-display-6ea537754af1
+
+Best regards,
 -- 
-Simona Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
