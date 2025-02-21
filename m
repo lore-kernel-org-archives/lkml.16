@@ -1,75 +1,51 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866F4204864
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 09:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78DCE205E1A
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 09:39:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740130764; cv=none; b=ANO0/g0ODqh2mclv/Il+H7LBN7WU9I4L23939vM0m65MnxSxAWDtoOc8K0Kcgqm0RQdu7N5+SYNOfqQn44h5nxlNL4UyIqKqz+29dMT1nbD6fEdefiuiOrREuzSboLnXYjT5ZXH99OMt7FNqYheziJ66nmihLZgjDcDlzWWJI9A=
+	t=1740130770; cv=none; b=JE/IQ8S568k0hJI1Om5NqwBltOby3nDBOCEugxXB6LqtFo5ctEuVA7ltVHtGXFRBXriceuMK7GKWzJv3x0nMhxbMaSVZKSX/vlkdP3MFAyOSRpStGZVn70ZfxuHus2xPWgebrhmkYMq4ufUduzndwmJYSLrGq9x/X3Hf54ttD4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740130764; c=relaxed/simple;
-	bh=yCknETG4UrQFty2aOKd7lsFQUmsaITxNXvRW1H8it88=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ks2BEvMMq+qXfgcGnvUBOWuh5eBuBq8l4+eKt7ipbYH2D/JQsead8A7pN9l9SnYJyIqeVSJzCe847f+n3pWWe+tFwTiVoM7xmDMtVCYttPMFymX2c0oXJZik6yHK5BWpR1dPzu4TFnfrxVSALbhjzKbgcxANLhKvblpU5gAxAU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=mohBH/a6; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mohBH/a6"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2fbfc9ff0b9so3039892a91.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 01:39:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740130762; x=1740735562; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YiO1FosDR2lrWYSluoJ0c1MfeSV2ozE15nkpwKYw8aM=;
-        b=mohBH/a6WIGFXPVoeEPML6pqJA6k8s/ysuWV/Nip77IXP+N9uUtp65Y818kjRyZlpJ
-         k3zdqaaX2IDzCywgej3Tq7GlOXPADR7DfeXVHCGsdX5vDorTevNIufkdB2EwXWB15V+h
-         mr4FZNsUlgRCi62DueLQiCjf5+g6ltTYK1YHQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740130762; x=1740735562;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YiO1FosDR2lrWYSluoJ0c1MfeSV2ozE15nkpwKYw8aM=;
-        b=pSzenP4EkmHgh6LY0fXlzZ/xb8XNpa2BJYamyxKLvWeCVB8tZSxJXWWaEBtr/cC/Zu
-         U3pgrVh+aHdwYkeiAD+ZbQqTCMEgiGp6pJW6OMnVaF4fCw8M6ffElzooRp+NH2lhhU7M
-         UBJ6M9X7eWciGyb9DkL+RYx2vrTfz2HFnoAm5GyC9Z3seb8P+TJeLAVCZRFKHMbUWTxf
-         4k4zmWh+FoECVkMCdp4oTXtI5tdT0bvYFuP5GnL0Gl6o1KzPFND6aZUvQG12l0OWlGQ3
-         oySBbJtTAzZmQLtzxtWZKMP/pdoADntDwDPML4Nx0bdPVux3bcKUjpJ+A4xy6Sd6oI4P
-         Mltg==
-X-Forwarded-Encrypted: i=1; AJvYcCUUIhKkj1QFD5aV6LdQA09rdY5mWGsgST183lPDWCRZDyRP1vDdowaQwHBSGVas1QR3ftcc/HBS5hCkG70=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAauglc5vBa4VjhzrqH1XS9HefzHO7zf+gQoZG+vC2dg+OVhah
-	rQHM2GENgNzvqUqf+M8Ek63imbRpkg1nt91Ip/jE/cjqxX5DPeSeG1ocGhL6LA==
-X-Gm-Gg: ASbGncsUpSqo0qjO6v7cOsy3B07MWujVFtiUMiI7mgjkwY6xfwRJaebOpKI3Xgjl2XB
-	3IgV4mWS0I9x8FD79aj427oa685ZUBP7xm9srDBt3TgXSgGwPxPxQKAzn/6YyfwiWuBfi9czY0S
-	CmMNr97YDqaNzDt2zPALIKeEQN5Jf7g2k5Bny20Op7h63D19RCK98J+vp2UQmLYJ2ojqDzeb02I
-	AJBGUo7AZDMwnqKsoXdVaV4qAR7rNnG0uOpWkwrhdlM7iSkWweHNRme+RDxd6LhV239RdH+1K3w
-	hjW6OEltBprURrxZ/uQGJT5Uvbw=
-X-Google-Smtp-Source: AGHT+IFFEglapRmDrpRV77iwnKxQ9APz+Jgfl7/ScCUUMY+lOfpVb4pqyKKGcqHkCqH1z6i+q1OeRw==
-X-Received: by 2002:a17:90b:3d0e:b0:2ea:37b4:5373 with SMTP id 98e67ed59e1d1-2fce78aec58mr4681268a91.10.1740130761841;
-        Fri, 21 Feb 2025 01:39:21 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:f987:e1e:3dbb:2191])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2fceb065299sm981337a91.29.2025.02.21.01.39.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2025 01:39:21 -0800 (PST)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Hillf Danton <hdanton@sina.com>,
-	Kairui Song <ryncsn@gmail.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Minchan Kim <minchan@kernel.org>,
-	linux-mm@kvack.org,
+	s=arc-20240116; t=1740130770; c=relaxed/simple;
+	bh=jBP3yn8EoczVygvEooEdxOeCaOGnWGEZlmynb+kkie8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=VsPMEo7iRQ1Y97P8VV8/V4qOkCPt+ftIMKCEXjszyCx1PlkiTTDL4uhAPTSfcm4s5RnWyVk/Veoai2udzA0hw79Jjxnut0SqfG7n+xBA2qBYnl+nnskK5UiMCOF89Hq5se5gq13PCrqQ14EzipiqlgiLmUmKFY1sFT+AWN+U41A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1tlPV9-0001zX-QE; Fri, 21 Feb 2025 10:39:19 +0100
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1tlPV9-0024uy-1S;
+	Fri, 21 Feb 2025 10:39:19 +0100
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1tlPV9-00GXc4-1F;
+	Fri, 21 Feb 2025 10:39:19 +0100
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
 	linux-kernel@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH v7 07/17] zram: limit max recompress prio to num_active_comps
-Date: Fri, 21 Feb 2025 18:38:00 +0900
-Message-ID: <20250221093832.1949691-8-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
-In-Reply-To: <20250221093832.1949691-1-senozhatsky@chromium.org>
-References: <20250221093832.1949691-1-senozhatsky@chromium.org>
+	linux-mmc@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Mark Brown <broonie@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>,
+	Christian Loehle <christian.loehle@arm.com>
+Subject: [PATCH v3 5/6] mmc: block: abort requests and suppress errors after undervoltage shutdown
+Date: Fri, 21 Feb 2025 10:39:17 +0100
+Message-Id: <20250221093918.3942378-6-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250221093918.3942378-1-o.rempel@pengutronix.de>
+References: <20250221093918.3942378-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,73 +53,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Use the actual number of algorithms zram was configure with
-instead of theoretical limit of ZRAM_MAX_COMPS.
+Extend the existing card removal checks in mmc_blk_mq_complete_rq() and
+mmc_mq_queue_rq() to also account for the undervoltage state. If the host
+has entered undervoltage shutdown, mark requests as quiet and abort them
+early to prevent unnecessary retries and error logging. This ensures no
+further operations are attempted on the card after an emergency stop.
 
-Also make sure that min prio is not above max prio.
-
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- drivers/block/zram/zram_drv.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/mmc/core/block.c | 2 +-
+ drivers/mmc/core/queue.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index f59fea0f04ec..a886827f0b3c 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -2031,16 +2031,19 @@ static ssize_t recompress_store(struct device *dev,
- 				struct device_attribute *attr,
- 				const char *buf, size_t len)
- {
--	u32 prio = ZRAM_SECONDARY_COMP, prio_max = ZRAM_MAX_COMPS;
- 	struct zram *zram = dev_to_zram(dev);
- 	char *args, *param, *val, *algo = NULL;
- 	u64 num_recomp_pages = ULLONG_MAX;
- 	struct zram_pp_ctl *ctl = NULL;
- 	struct zram_pp_slot *pps;
- 	u32 mode = 0, threshold = 0;
-+	u32 prio, prio_max;
- 	struct page *page;
- 	ssize_t ret;
- 
-+	prio = ZRAM_SECONDARY_COMP;
-+	prio_max = zram->num_active_comps;
-+
- 	args = skip_spaces(buf);
- 	while (*args) {
- 		args = next_arg(args, &param, &val);
-@@ -2093,7 +2096,7 @@ static ssize_t recompress_store(struct device *dev,
- 			if (prio == ZRAM_PRIMARY_COMP)
- 				prio = ZRAM_SECONDARY_COMP;
- 
--			prio_max = min(prio + 1, ZRAM_MAX_COMPS);
-+			prio_max = prio + 1;
- 			continue;
- 		}
+diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
+index 4830628510e6..ecb87da0e257 100644
+--- a/drivers/mmc/core/block.c
++++ b/drivers/mmc/core/block.c
+@@ -2129,7 +2129,7 @@ static void mmc_blk_mq_complete_rq(struct mmc_queue *mq, struct request *req)
+ 	} else if (mqrq->retries++ < MMC_MAX_RETRIES) {
+ 		blk_mq_requeue_request(req, true);
+ 	} else {
+-		if (mmc_card_removed(mq->card))
++		if (mmc_card_removed(mq->card) || mq->card->host->undervoltage)
+ 			req->rq_flags |= RQF_QUIET;
+ 		blk_mq_end_request(req, BLK_STS_IOERR);
  	}
-@@ -2121,7 +2124,7 @@ static ssize_t recompress_store(struct device *dev,
- 				continue;
+diff --git a/drivers/mmc/core/queue.c b/drivers/mmc/core/queue.c
+index ab662f502fe7..f46e01988fe8 100644
+--- a/drivers/mmc/core/queue.c
++++ b/drivers/mmc/core/queue.c
+@@ -239,7 +239,7 @@ static blk_status_t mmc_mq_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 	bool get_card, cqe_retune_ok;
+ 	blk_status_t ret;
  
- 			if (!strcmp(zram->comp_algs[prio], algo)) {
--				prio_max = min(prio + 1, ZRAM_MAX_COMPS);
-+				prio_max = prio + 1;
- 				found = true;
- 				break;
- 			}
-@@ -2133,6 +2136,12 @@ static ssize_t recompress_store(struct device *dev,
- 		}
+-	if (mmc_card_removed(mq->card)) {
++	if (mmc_card_removed(mq->card) || mq->card->host->undervoltage) {
+ 		req->rq_flags |= RQF_QUIET;
+ 		return BLK_STS_IOERR;
  	}
- 
-+	prio_max = min(prio_max, (u32)zram->num_active_comps);
-+	if (prio >= prio_max) {
-+		ret = -EINVAL;
-+		goto release_init_lock;
-+	}
-+
- 	page = alloc_page(GFP_KERNEL);
- 	if (!page) {
- 		ret = -ENOMEM;
 -- 
-2.48.1.601.g30ceb7b040-goog
+2.39.5
 
