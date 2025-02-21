@@ -1,247 +1,179 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailrelay.tugraz.at (mailrelay.tugraz.at [129.27.2.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B641D798E
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 16:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76DB1EE028;
+	Fri, 21 Feb 2025 16:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.27.2.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740155306; cv=none; b=HtteEB55pS+8BU/awj6Ce90HLAyoZ+h81fG8lwVXsCv7iRU/IjoT6oX/g9WjSFsvhD2Cr9YunMQmZ8BGmg0cmavxM11XniOD1IVhV4/RQRokM9LLylQhURcne/rfs9KJio1en2pdsqrLhNyoSrCbAK6fsclfBZXTzBiXvASQEcY=
+	t=1740155331; cv=none; b=Oxt+HubVihIiQ6YLZa98Qy62x5xxJjw2GVL2e2zb7mO2iBjM2zZ3+N21Re6t+CatgfEeaSrlUeB5d29+lrbJfpWelsc8AuawyMPiyl4+E2DyYO5qrFFJlz3O2TTyzZ6IDPmlRmV2k+AtGwHVXXN5ub8AfQ3E92DlS+yWwb4cvn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740155306; c=relaxed/simple;
-	bh=qia/fCiVLcWt+Z32zlYwdz6ktO5i18TyK4pCNNXyj9Q=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=HBHRjvLe7nwuOIFqzZVcAr+FkTpKSXNXsOIDBKJhQQ5DM4gNZEb7BihAJXMjNxnllVh+Cua9ALHI+w9l3HVxr6yXHjbWNpapzVV5WbTMuNuHqCIFJX60QVAVDSc0lJGKBAn/30ISfLgCOXABPvGhzZw4rr8tdaXGrHtf2AjC5wE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3cf64584097so19938855ab.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 08:28:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740155304; x=1740760104;
-        h=content-transfer-encoding:to:from:subject:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DuKxzuycpWm3A5WKBgS5xxc6Dq/6hI3I1jkFkc+KTlo=;
-        b=h37Rdmx2yNNi4LCk3BGd8Iq7Op+HvGDjFBRr/+lBCbrF/XucWzok2dS8+CYPVbqJzD
-         RPFWvLZMkkgQaTVp7hW5muD2IWNgzSlEmlLPqCEvOFu0+27alNz34Qky9W2njii8GQ/p
-         aknyR5fja1dLr0DA6PvM3Rq0Tas0GvaxTwgNzITFVxkUjmRFkGj+MKMwYZcpHRz5ot9p
-         MVIrpErSnpND55zna7ywag2+o+/zDRZJ0Rry65EZMLvv1odhNIhmXrkVgWEp6uaQsCs1
-         V+AFt71/YdiC61mKv3VpHGHFr6DpeOFXrNMBSTk+MXeTajJMsd6/5ggjLayOFnd3G2Jy
-         uPwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUkBr9wy2rpeQCGD5DIcllujJF3mDv8WzssRDwD9wvLohC62/Lk/FC+jfUGsBaxDEKuaqTlAfBqS2hhWy4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpqKDNa7HHamqCozOs6UP+Nl+PWjZ2kyXdqZBD0YmZyodaIHkP
-	jG2O+you2x602goMvgkEZB/3xoVWcdPvqr6MzixwoLlDZHGuwqJz9A4nMclyBvq5HybBmMo3CID
-	sKm+Z8Q2EB5hnUQhagJ+FU6/QLA8BaGdwhB7+hxv5JUL3xYvdEHFlb0o=
-X-Google-Smtp-Source: AGHT+IG1NnmGS24t5E/TeZO/+FqVFN/dkaCW2fzkM3aAuvIDRGA6V00ohH+ordMxRfb5iaRoOhfwzzH/gRoqUivY2744g2gYWRfd
+	s=arc-20240116; t=1740155331; c=relaxed/simple;
+	bh=itDtkLuv9PHUCMQ37TmiQonIka0iF299AgH2m8mj9vU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dvzSXt0p9Ah/CLLHlmEVevFQm1Nv1vgv8VLr5V0SbdWqJ6H2x4wmTws+c2s703FQfgmNUHT5l4uU3oYardL7qMydL0E6rbsvqgqnQZeyYm+UdqiPkT3D3B2hSicfg4PKEBL1vsDE86wyPL0Q6CRE/fb7pDy6dQEQs9PjcnWy3Kw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tugraz.at; spf=pass smtp.mailfrom=tugraz.at; dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b=Q+oy6TDV; arc=none smtp.client-ip=129.27.2.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tugraz.at
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tugraz.at
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b="Q+oy6TDV"
+Received: from vra-171-233.tugraz.at (vra-171-233.tugraz.at [129.27.171.233])
+	by mailrelay.tugraz.at (Postfix) with ESMTPSA id 4YzwYC00wkz3xGX;
+	Fri, 21 Feb 2025 17:28:30 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tugraz.at;
+	s=mailrelay; t=1740155313;
+	bh=A5/Vf9HW8Yy4Pzv/cgrk4LjgVOJx+yDRb5XqnCH19cE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=Q+oy6TDVd8IkqCcuadMv4XLA6bxeK3zaqbOiqeIQAFY9VTMYpH1ZH3ZxEESZSTfwx
+	 yfz6jMoqGbDsTMDzmnqYAS61rxBYftoAlgIk8CgNw/y49LIlPkWQlChtLPItqSa/7N
+	 +tqxUwRjicObCRyXPzym8v7FecEKkIRcOTuOOJ5I=
+Message-ID: <61a7e7db786d9549cbe201b153647689cbe12d75.camel@tugraz.at>
+Subject: Re: Rust kernel policy
+From: Martin Uecker <uecker@tugraz.at>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Boqun Feng <boqun.feng@gmail.com>,
+  "H. Peter Anvin" <hpa@zytor.com>, Miguel Ojeda
+ <miguel.ojeda.sandonis@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ rust-for-linux <rust-for-linux@vger.kernel.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>, David Airlie <airlied@gmail.com>, 
+ linux-kernel@vger.kernel.org, ksummit@lists.linux.dev
+Date: Fri, 21 Feb 2025 17:28:30 +0100
+In-Reply-To: <caea3e79-78e6-4d98-9f3b-f8e7f6f00196@stanley.mountain>
+References: <326CC09B-8565-4443-ACC5-045092260677@zytor.com>
+	 <CANiq72m+r1BZVdVHn2k8XeU37ZeY6VT2S9KswMuFA=ZO3e4uvQ@mail.gmail.com>
+	 <a7c5973a-497c-4f31-a7be-b3123bddb6dd@zytor.com>
+	 <Z7VKW3eul-kGaIT2@Mac.home> <2025021954-flaccid-pucker-f7d9@gregkh>
+	 <4e316b01634642cf4fbb087ec8809d93c4b7822c.camel@tugraz.at>
+	 <2025022024-blooper-rippling-2667@gregkh>
+	 <1d43700546b82cf035e24d192e1f301c930432a3.camel@tugraz.at>
+	 <2025022042-jot-favored-e755@gregkh>
+	 <b9a5de64fe1ded2ad3111763f35af9901bd81cc4.camel@tugraz.at>
+	 <caea3e79-78e6-4d98-9f3b-f8e7f6f00196@stanley.mountain>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1908:b0:3d0:21aa:a752 with SMTP id
- e9e14a558f8ab-3d2cae47e92mr43504955ab.2.1740155303877; Fri, 21 Feb 2025
- 08:28:23 -0800 (PST)
-Date: Fri, 21 Feb 2025 08:28:23 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67b8a9a7.050a0220.14d86d.0578.GAE@google.com>
-Subject: [syzbot] [bcachefs?] KASAN: use-after-free Read in check_dirent
-From: syzbot <syzbot+87078ad27cd8af3263cc@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-TUG-Backscatter-control: G/VXY7/6zeyuAY/PU2/0qw
+X-Spam-Scanner: SpamAssassin 3.003001 
+X-Spam-Score-relay: 0.0
+X-Scanned-By: MIMEDefang 2.74 on 129.27.10.117
 
-Hello,
+Am Freitag, dem 21.02.2025 um 12:48 +0300 schrieb Dan Carpenter:
+> On Thu, Feb 20, 2025 at 04:40:02PM +0100, Martin Uecker wrote:
+> > I mean "memory safe" in the sense that you can not have an OOB access
+> > or use-after-free or any other UB.  The idea would be to mark certain
+> > code regions as safe, e.g.
+> >=20
+> > #pragma MEMORY_SAFETY STATIC
+>=20
+> Could we tie this type of thing to a scope instead?  Maybe there
+> would be a compiler parameter to default on/off and then functions
+> and scopes could be on/off if we need more fine control.
 
-syzbot found the following issue on:
+At the moment my feeling is that tying it to a specific scope
+would not be flexible enough.=20
 
-HEAD commit:    27eddbf34490 Merge tag 'net-6.14-rc4' of git://git.kernel..=
-.
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D10e33ae4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3Db03346163189483=
-c
-dashboard link: https://syzkaller.appspot.com/bug?extid=3D87078ad27cd8af326=
-3cc
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Deb=
-ian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D14ce6ba458000=
-0
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D11300db0580000
+The model I have in my mind are the pragmas GCC has
+to turn on and off diagnostics for regions of code=20
+(i.e. #pragma GCC diagnostic warning, etc.). These memory
+safety modes would still be based on many different individual
+warnings that are can then be jointly toggled using these
+pragmas but which could also individually be toggled as usual.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/352b56907a7c/disk-=
-27eddbf3.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/b46eb02d0be1/vmlinux-=
-27eddbf3.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/db572e905b96/bzI=
-mage-27eddbf3.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/a13c47175ab5=
-/mount_0.gz
+>=20
+> This kind of #pragma is basically banned in the kernel.  It's used
+> in drivers/gpu/drm but it disables the Sparse static checker.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit=
-:
-Reported-by: syzbot+87078ad27cd8af3263cc@syzkaller.appspotmail.com
+Why is this?
 
-bcachefs (loop4): check_dirents...
-dirent points to missing inode:
-u64s 8 type dirent 4096:6728544935518790663:U32_MAX len 0 ver 0: lost+found=
-=07 -> 4097 type dir, fixing
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-BUG: KASAN: use-after-free in check_dirent+0x2455/0x2620 fs/bcachefs/fsck.c=
-:2443
-Read of size 1 at addr ffff888078964048 by task syz-executor115/5937
+>=20
+> > unsigned int foo(unsigned int a, unsigned int b)
+> > {
+> >   return a * b;
+> > }
+> >=20
+> > static int foo(const int a[static 2])
+> > {
+> >   int r =3D 0;
+> >   if (ckd_mul(&r, a[0], a[1]))
+> >     return -1;
+> >   return r;
+> > }
+> >=20
+> > static int bar(int x)
+> > {
+> >   int a[2] =3D { x, x };
+> >   return foo(a);
+> > }
+> >=20
+> >=20
+> > and the compiler would be required to emit a diagnostic when there
+> > is any operation that could potentially cause UB.
+>=20
+> I'm less convinced by the static analysis parts of this...  The kernel
+> disables checking for unsigned less than zero by default because there
+> are too many places which do:
+>=20
+> 	if (x < 0 || x >=3D 10) {
+>=20
+> That code is perfectly fine so why is the compiler complaining?  But at
+> the same time, being super strict is the whole point of Rust and people
+> love Rust so maybe I have misread the room.
 
-CPU: 1 UID: 0 PID: 5937 Comm: syz-executor115 Not tainted 6.14.0-rc3-syzkal=
-ler-00137-g27eddbf34490 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
-gle 12/27/2024
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0xc3/0x670 mm/kasan/report.c:521
- kasan_report+0xd9/0x110 mm/kasan/report.c:634
- check_dirent+0x2455/0x2620 fs/bcachefs/fsck.c:2443
- bch2_check_dirents+0x409/0x780 fs/bcachefs/fsck.c:2468
- bch2_run_recovery_pass+0x91/0x1a0 fs/bcachefs/recovery_passes.c:226
- bch2_run_recovery_passes+0x3f4/0x8f0 fs/bcachefs/recovery_passes.c:291
- bch2_fs_recovery+0x3c1b/0x43d0 fs/bcachefs/recovery.c:973
- bch2_fs_start+0x343/0x660 fs/bcachefs/super.c:1041
- bch2_fs_get_tree+0x1118/0x1760 fs/bcachefs/fs.c:2203
- vfs_get_tree+0x8e/0x340 fs/super.c:1814
- do_new_mount fs/namespace.c:3560 [inline]
- path_mount+0x14e6/0x1f10 fs/namespace.c:3887
- do_mount fs/namespace.c:3900 [inline]
- __do_sys_mount fs/namespace.c:4111 [inline]
- __se_sys_mount fs/namespace.c:4088 [inline]
- __x64_sys_mount+0x28f/0x310 fs/namespace.c:4088
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f8021a8861a
-Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 5e 04 00 00 66 2e 0f 1f 84 =
-00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff f=
-f 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffcadd266b8 EFLAGS: 00000282 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f8021a8861a
-RDX: 0000400000000000 RSI: 0000400000000040 RDI: 00007ffcadd26700
-RBP: 0000000000000004 R08: 00007ffcadd26740 R09: 0000000000005956
-R10: 0000000001000001 R11: 0000000000000282 R12: 0000000001000000
-R13: 00007ffcadd26740 R14: 0000400000000000 R15: 0000000000000003
- </TASK>
+What is a bit weird is that on the one side there are people
+who think we absolutely need=C2=A0 compiler-ensured memory safety
+and this might be even worth rewriting code from scratch and
+on the other side there are people who think that dealing with
+new false positives in existing code when adding new warnings
+is already too much of a burden.
 
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x78964
-flags: 0xfff00000000000(node=3D0|zone=3D1|lastcpupid=3D0x7ff)
-raw: 00fff00000000000 0000000000000000 dead000000000122 0000000000000000
-raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner tracks the page as freed
-page last allocated via order 5, migratetype Unmovable, gfp_mask 0x52800(GF=
-P_NOWAIT|__GFP_NORETRY|__GFP_COMP), pid 5937, tgid 5937 (syz-executor115), =
-ts 106777006193, free_ts 107291852583
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x181/0x1b0 mm/page_alloc.c:1551
- prep_new_page mm/page_alloc.c:1559 [inline]
- get_page_from_freelist+0xfce/0x2f80 mm/page_alloc.c:3477
- __alloc_frozen_pages_noprof+0x221/0x2470 mm/page_alloc.c:4739
- __alloc_pages_noprof+0xb/0x1b0 mm/page_alloc.c:4773
- __alloc_pages_node_noprof include/linux/gfp.h:265 [inline]
- alloc_pages_node_noprof include/linux/gfp.h:292 [inline]
- ___kmalloc_large_node+0x84/0x1b0 mm/slub.c:4239
- __kmalloc_large_node_noprof+0x1c/0x70 mm/slub.c:4266
- __do_kmalloc_node mm/slub.c:4282 [inline]
- __kmalloc_node_noprof.cold+0x5/0x5f mm/slub.c:4300
- __kvmalloc_node_noprof+0x6f/0x1a0 mm/util.c:662
- btree_bounce_alloc+0x11e/0x210 fs/bcachefs/btree_io.c:123
- btree_node_sort+0x1104/0x14f0 fs/bcachefs/btree_io.c:322
- bch2_btree_post_write_cleanup fs/bcachefs/btree_io.c:2293 [inline]
- bch2_btree_post_write_cleanup+0x145/0x600 fs/bcachefs/btree_io.c:2267
- bch2_btree_node_prep_for_write+0x35b/0x550 fs/bcachefs/btree_trans_commit.=
-c:93
- bch2_trans_lock_write+0x6c5/0x8e0 fs/bcachefs/btree_trans_commit.c:129
- do_bch2_trans_commit fs/bcachefs/btree_trans_commit.c:862 [inline]
- __bch2_trans_commit+0x2264/0x7d70 fs/bcachefs/btree_trans_commit.c:1070
- bch2_trans_commit fs/bcachefs/btree_update.h:183 [inline]
- __bch2_str_hash_check_key+0x2097/0x3800 fs/bcachefs/str_hash.c:292
- bch2_str_hash_check_key fs/bcachefs/str_hash.h:415 [inline]
- check_dirent+0x12d3/0x2620 fs/bcachefs/fsck.c:2373
-page last free pid 5937 tgid 5937 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1127 [inline]
- __free_pages_ok+0x62b/0xe50 mm/page_alloc.c:1271
- __folio_put+0x32a/0x450 mm/swap.c:112
- kvfree+0x47/0x50 mm/util.c:705
- btree_bounce_free fs/bcachefs/btree_io.c:111 [inline]
- btree_node_sort+0xf9f/0x14f0 fs/bcachefs/btree_io.c:379
- bch2_btree_post_write_cleanup fs/bcachefs/btree_io.c:2293 [inline]
- bch2_btree_post_write_cleanup+0x145/0x600 fs/bcachefs/btree_io.c:2267
- bch2_btree_node_prep_for_write+0x35b/0x550 fs/bcachefs/btree_trans_commit.=
-c:93
- bch2_trans_lock_write+0x6c5/0x8e0 fs/bcachefs/btree_trans_commit.c:129
- do_bch2_trans_commit fs/bcachefs/btree_trans_commit.c:862 [inline]
- __bch2_trans_commit+0x2264/0x7d70 fs/bcachefs/btree_trans_commit.c:1070
- bch2_trans_commit fs/bcachefs/btree_update.h:183 [inline]
- check_dirent+0xff1/0x2620 fs/bcachefs/fsck.c:2438
- bch2_check_dirents+0x409/0x780 fs/bcachefs/fsck.c:2468
- bch2_run_recovery_pass+0x91/0x1a0 fs/bcachefs/recovery_passes.c:226
- bch2_run_recovery_passes+0x3f4/0x8f0 fs/bcachefs/recovery_passes.c:291
- bch2_fs_recovery+0x3c1b/0x43d0 fs/bcachefs/recovery.c:973
- bch2_fs_start+0x343/0x660 fs/bcachefs/super.c:1041
- bch2_fs_get_tree+0x1118/0x1760 fs/bcachefs/fs.c:2203
- vfs_get_tree+0x8e/0x340 fs/super.c:1814
+> >=20
+> > I would also have a DYNAMIC mode that traps for UB detected at
+> > run-time (but I understand that this is not useful for the kernel).=20
+>=20
+> No, this absolutely is useful.  This is what UBSan does now.
+>=20
 
-Memory state around the buggy address:
- ffff888078963f00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ffff888078963f80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->ffff888078964000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-                                              ^
- ffff888078964080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ffff888078964100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-directory 4096:4294967295 with wrong i_size: got 288, should be 352, fixing
- done
-bcachefs (loop4): resume_logged_ops... done
-bcachefs (loop4): delete_dead_inodes... done
-bcachefs (loop4): Second fsck run was not clean
-bcachefs (loop4): going read-only
-bcachefs (loop4): finished waiting for writes to stop
-bcachefs (loop4): flushing journal and stopping allocators, journal seq 22
-bcachefs (loop4): flushing journal and stopping allocators complete, journa=
-l seq 23
-bcachefs (loop4): clean shutdown complete, journal seq 24
-bcachefs (loop4): marking filesystem clean
-bcachefs (loop4): done starting filesystem
+Yes, it is similar to UBSan. The ideas to make sure that in the
+mode there is *either* a compile-time warning *or* run-time
+trap for any UB.  So if you fix all warnings, then any remaining
+UB is trapped at run-time.
+
+>   You're
+> basically talking about exception handling.  How could that not be
+> the most useful thing ever?
+
+At the moment, I wasn't thinking about a mechanism to catch those
+exceptions, but just to abort the program directly (or just emit
+a diagnostic and continue. =20
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+BTW: Another option I am investigating it to have UBsan insert traps
+into the code and then have the compiler emit a warning only when
+it actually emits the trapping instruction after optimization. So
+you only get the warning if the optimizer does not remove the trap. =20
+Essentially, this means that one can use the optimizer to prove that
+the code does not have certain issues. For example, you could use the=20
+signed-overflow sanitizer to insert a conditional trap everywhere
+where there could be signed overflow, and if the optimizer happens
+to remove all such traps because they are unreachable, then it is
+has shown that the code can never have a signed overflow at run-time.
+This is super easy to implement (I have a patch for GCC) and
+seems promising.  One problem with this is that any change in the
+optimizer could change whether you get a warning or not.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Martin
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
 
-If you want to undo deduplication, reply with:
-#syz undup
+>=20
+> regards,
+> dan carpenter
+>=20
+
