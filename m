@@ -1,51 +1,75 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C00F204864
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 09:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA506204C28
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 09:39:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740130771; cv=none; b=PjgwIJCNMqCRUeNBnPDQR3dS/PaZnwrRuc0JSCKlJO98uhvAipyvyYGJ4XoMyKdbuu1xjF0I+tFrA/KsZ0Ql5maLvV3lyxZxiGjiW3w3/hmNG2GPJjHvK4t2TuLcBRiAfcfUyr/mc6Y3z621v9dEi7cwwsvt3dI3jC0DWZjh5vY=
+	t=1740130772; cv=none; b=I89CCXEK3SDwjZaXR2fwcwTyX75TfKk2FYiGB8IqYwP0xODRz8tdPsIOuMm4ZrVebinz9ZjOP0gxXlizL6eTUzhE1p7AHbk+ecb4aMZzEuJCkiOFUatzv/BbUumVbtPq0MXePJm2wdusSCTPBCKWTgZ05DcjJueJcB6Y0Yi91l0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740130771; c=relaxed/simple;
-	bh=1zTQWSGL+Vd20DghGEZXit+HSN/fKgkzETADVcskdyY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LitEQ+B1eGgKwqdHfQu0T+cFeRBjZBxgeg86YdSoOiriA0ZSCG2gdPyIXOLzZDVBWdu/oI0EKdYVJJS3iiFZS7ZWGL8sZChxgbYjxFI9fH5sbGHj4/7un4lWSLUNcz6V4lwCjDz14mmeqhloGmwIEaRCSRZB6PpuFNhmIPXqs8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tlPV9-0001zY-QE; Fri, 21 Feb 2025 10:39:19 +0100
-Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tlPV9-0024v1-1V;
-	Fri, 21 Feb 2025 10:39:19 +0100
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1tlPV9-00GXcE-1I;
-	Fri, 21 Feb 2025 10:39:19 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	kernel@pengutronix.de,
+	s=arc-20240116; t=1740130772; c=relaxed/simple;
+	bh=jnOJzYCzgxpKde1HZP0K8E1XsiPZuvUciCdLehqUngw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sr/UOYTONeOy9jHGz9pwQOS2r4KdgZmW5FOURinwQ0rJYiIC82/jgYOiys7LR2TiFNjvANudWVXHNUrw5CGW8XLepQJZLaZFK3tB5yc2OlDG949iaso1K5g9+7Yw2gZalXKsdOvYN+ZS7cAURYQbHqcWM0Y5WyD8r7AC7l5dOmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=OucQOtz7; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OucQOtz7"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2f42992f608so3075169a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 01:39:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1740130767; x=1740735567; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6Ti7CmEaorHMBg5DWvmUEjK7cf0LUhuuwHacW6S7Q+w=;
+        b=OucQOtz7VG9XLq3rWVThwLf7oJCX+ip5cQoPvu3dt77VRt1Wq1RWqPRuHsXTTlhcZs
+         ShVtoKMa5h1hq0h3Cf+/fhlphlw41digLyEFtis7U/H2sBcRzIBuwCBXYDkYw8QGP5DQ
+         M3kKKl0zuiVsnvpaXIlmOZq1gg5MVTvJYzN3E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740130767; x=1740735567;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6Ti7CmEaorHMBg5DWvmUEjK7cf0LUhuuwHacW6S7Q+w=;
+        b=ey9RaX59IgNQ6hd6ffx+4y1aKJS8b/vTEApIOvTMSIji3gXyfAyPxRVePU6xMaEgQ9
+         lLlcaX/DleoumCCNV/WVBJeA4/g3KpRO+01zO8H9jfrDThRoQynAP3taEUdU7YOmTUyh
+         vDYItoAti8J7BZMAvmJdQJ0OtPVMQE3SvQrdq6P/b0FrSQu1x2M4HxYkcmOTRgwanN3S
+         FsAKTDL4/1W6S3S7rUOZhkto8EnoRKKxnhgVBhW/N1k/1HsH0WirJvCXII+Rbyk/1v9z
+         kDK8Dvg8B4N88FTgc/NmaLeOjZi5srMM/O3f3Q9oJW87BUxsSsDF3zqSkeCy7dnyN0Bi
+         JYOg==
+X-Forwarded-Encrypted: i=1; AJvYcCWgHwiblfMCjV51EXiQzIwcHI3MCTzFbVFqlTyv6vXLLa7KC6M6GXRlYG8G29egKhUBiwDPzguz6n2I4LI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdqgVhZSsNLREykYzeSKEwxUSfcgrQ+vVFCX2k8I317p0tyRAT
+	1Hw+qkJzUf2SnOVSN79GA6DU7velkP+BmA6pDpinDNB7K8LGEiqQma2bSaqC4Q==
+X-Gm-Gg: ASbGnctqQlQfDPP8GpDOZy1P2oSGdVlvWGg1ifSayjwr48XvTMMzeKhcSIACZs3XbGw
+	IOoTAgo0/DGM4g7cilg46IZ49C2SdYQ3l9xF8BzApWDDPK8/87jSan47/AWhnH7KFHczxtlVuzH
+	kw4kSkMpLDtbQ98iyoHE7sW3aKGf19RRKau59bzQAA/kgw3gYB7ack0xR2AxFh1xKa4RKKOznqH
+	fCQGv45CU5qTol0BJOrXDoR0SFjBHeYtqYaWsMYTm65VbjRgSGn6AH4KUul1afAMoAkbM3Jam1n
+	r45PwrLEOsP4WB/6uwY5h57KzOw=
+X-Google-Smtp-Source: AGHT+IFkEw5rhjwVGmuiSJO9ZqK4LoqieklxjbVlzdvGmp36x+X05fC+JwKkd7RRpGwQHuo2CguWWw==
+X-Received: by 2002:a17:90b:5303:b0:2fa:1a8a:cfe8 with SMTP id 98e67ed59e1d1-2fce7b3ad90mr4368050a91.29.1740130767623;
+        Fri, 21 Feb 2025 01:39:27 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:f987:e1e:3dbb:2191])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2fceb05f715sm900785a91.24.2025.02.21.01.39.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2025 01:39:27 -0800 (PST)
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Yosry Ahmed <yosry.ahmed@linux.dev>,
+	Hillf Danton <hdanton@sina.com>,
+	Kairui Song <ryncsn@gmail.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Minchan Kim <minchan@kernel.org>,
+	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	linux-mmc@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Mark Brown <broonie@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>,
-	Christian Loehle <christian.loehle@arm.com>
-Subject: [PATCH v3 6/6] mmc: sdhci: prevent command execution after undervoltage shutdown
-Date: Fri, 21 Feb 2025 10:39:18 +0100
-Message-Id: <20250221093918.3942378-7-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250221093918.3942378-1-o.rempel@pengutronix.de>
-References: <20250221093918.3942378-1-o.rempel@pengutronix.de>
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [PATCH v7 08/17] zram: filter out recomp targets based on priority
+Date: Fri, 21 Feb 2025 18:38:01 +0900
+Message-ID: <20250221093832.1949691-9-senozhatsky@chromium.org>
+X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
+In-Reply-To: <20250221093832.1949691-1-senozhatsky@chromium.org>
+References: <20250221093832.1949691-1-senozhatsky@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,77 +77,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Introduce an emergency_stop flag in struct mmc_host to block further
-MMC/SD commands after an undervoltage shutdown. If emergency_stop is
-set, sdhci_send_command() will reject new requests with -EBUSY and log a
-warning. This helps diagnose and identify code paths that may still
-attempt writes after the undervoltage shutdown sequence has completed.
+Do no select for post processing slots that are already
+compressed with same or higher priority compression
+algorithm.
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+This should save some memory, as previously we would still
+put those entries into corresponding post-processing buckets
+and filter them out later in recompress_slot().
+
+Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 ---
-changes v3:
-- add comments
----
- drivers/mmc/core/mmc.c   | 7 +++++++
- drivers/mmc/host/sdhci.c | 9 +++++++++
- include/linux/mmc/host.h | 1 +
- 3 files changed, 17 insertions(+)
+ drivers/block/zram/zram_drv.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-index a50cdd550a22..0cd6b81d0678 100644
---- a/drivers/mmc/core/mmc.c
-+++ b/drivers/mmc/core/mmc.c
-@@ -2370,6 +2370,13 @@ static int _mmc_handle_undervoltage(struct mmc_host *host)
- 	 */
- 	mmc_card_set_removed(card);
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index a886827f0b3c..a1880e621895 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -1827,7 +1827,7 @@ static int zram_bvec_write(struct zram *zram, struct bio_vec *bvec,
+ #define RECOMPRESS_IDLE		(1 << 0)
+ #define RECOMPRESS_HUGE		(1 << 1)
  
+-static int scan_slots_for_recompress(struct zram *zram, u32 mode,
++static int scan_slots_for_recompress(struct zram *zram, u32 mode, u32 prio_max,
+ 				     struct zram_pp_ctl *ctl)
+ {
+ 	unsigned long nr_pages = zram->disksize >> PAGE_SHIFT;
+@@ -1859,6 +1859,10 @@ static int scan_slots_for_recompress(struct zram *zram, u32 mode,
+ 		    zram_test_flag(zram, index, ZRAM_INCOMPRESSIBLE))
+ 			goto next;
+ 
++		/* Already compressed with same of higher priority */
++		if (zram_get_priority(zram, index) + 1 >= prio_max)
++			goto next;
++
+ 		pps->index = index;
+ 		place_pp_slot(zram, ctl, pps);
+ 		pps = NULL;
+@@ -1915,6 +1919,16 @@ static int recompress_slot(struct zram *zram, u32 index, struct page *page,
+ 	zram_clear_flag(zram, index, ZRAM_IDLE);
+ 
+ 	class_index_old = zs_lookup_class_index(zram->mem_pool, comp_len_old);
++
++	prio = max(prio, zram_get_priority(zram, index) + 1);
 +	/*
-+	 * Signal the host controller driver that we are in emergency stop mode.
-+	 * This prevents any new storage requests from being issued, ensuring
-+	 * that no further operations take place while in this state.
++	 * Recompression slots scan should not select slots that are
++	 * already compressed with a higher priority algorithm, but
++	 * just in case
 +	 */
-+	host->emergency_stop = true;
++	if (prio >= prio_max)
++		return 0;
 +
- 	return err;
- }
+ 	/*
+ 	 * Iterate the secondary comp algorithms list (in order of priority)
+ 	 * and try to recompress the page.
+@@ -1923,13 +1937,6 @@ static int recompress_slot(struct zram *zram, u32 index, struct page *page,
+ 		if (!zram->comps[prio])
+ 			continue;
  
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index f4a7733a8ad2..8d67f27e7d9e 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -1658,6 +1658,15 @@ static bool sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
+-		/*
+-		 * Skip if the object is already re-compressed with a higher
+-		 * priority algorithm (or same algorithm).
+-		 */
+-		if (prio <= zram_get_priority(zram, index))
+-			continue;
+-
+ 		num_recomps++;
+ 		zstrm = zcomp_stream_get(zram->comps[prio]);
+ 		src = kmap_local_page(page);
+@@ -2154,7 +2161,7 @@ static ssize_t recompress_store(struct device *dev,
+ 		goto release_init_lock;
+ 	}
  
- 	WARN_ON(host->cmd);
+-	scan_slots_for_recompress(zram, mode, ctl);
++	scan_slots_for_recompress(zram, mode, prio_max, ctl);
  
-+	if (host->mmc->emergency_stop) {
-+		pr_warn("%s: Ignoring normal request, emergency stop is active\n",
-+			mmc_hostname(host->mmc));
-+		WARN_ON_ONCE(1);
-+
-+		cmd->error = -EBUSY;
-+		return true;
-+	}
-+
- 	/* Initially, a command has no error */
- 	cmd->error = 0;
- 
-diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-index 4e147ad82804..5dfe2cdde59f 100644
---- a/include/linux/mmc/host.h
-+++ b/include/linux/mmc/host.h
-@@ -501,6 +501,7 @@ struct mmc_host {
- 	unsigned int		can_dma_map_merge:1; /* merging can be used */
- 	unsigned int		vqmmc_enabled:1; /* vqmmc regulator is enabled */
- 	unsigned int		undervoltage:1;	 /* Undervoltage state */
-+	unsigned int		emergency_stop:1; /* Emergency stop. No transfers are allowed. */
- 
- 	int			rescan_disable;	/* disable card detection */
- 	int			rescan_entered;	/* used with nonremovable devices */
+ 	ret = len;
+ 	while ((pps = select_pp_slot(ctl))) {
 -- 
-2.39.5
+2.48.1.601.g30ceb7b040-goog
 
