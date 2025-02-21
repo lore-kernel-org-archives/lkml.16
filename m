@@ -1,130 +1,89 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20D633EA;
-	Fri, 21 Feb 2025 08:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486CE200B99;
+	Fri, 21 Feb 2025 08:54:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740127992; cv=none; b=GUKpvNrUHfnUhsvvPS1hSNjjn3UFyue+6mAphZSAmvYTHTDMav+rKP6zD2of3fk9UsJbOvUOUlCqwk+3+8LWW+8gPeEamS+gNbZIWERVNJ2oTALd3AyjecXJBsvyc4hNtBxJHAbqU9//U/RU837bHS0n/hukf7bSIW+zE/ffP+w=
+	t=1740128074; cv=none; b=hNS2Rl+58Vlj3wGBX/BH0cdqAIFIyFtSujhjqeM/zvuo3lPoIM8M4xrtz3fTcVAu/6ceEyAAaI/IfzAwWUKdjiW36kF5KGAIVeZrtcx151m4LVUVIiFbh0HBlgZMlQ0envsOmK4RoRuXLDPbGSlp4yzxpdbpbflcaDXIWQoDWW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740127992; c=relaxed/simple;
-	bh=AvdfNC/0fw6razFiLTY/gc9KZ7drgzB6pWKOjhOrLtc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D5WtD3qdRA22DNJoXD+ru+V9A+bepUJJG//is+yzlLlmi1VnUWS5kignSryzXr3tnPynqCi6lPrC5hbpm39lkPRnF9IiJ1y2mGnBBey1QuLb7QSrRvr5zdIqVAaobkKRc9YL1qf5H0TBOVA4eFv9HFC52tvSUvfqf6yAZQ+CTqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BcZy8D0z; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740128074; c=relaxed/simple;
+	bh=sOpoaaYi70tIuun+k4bCpzt72Cgn3AbfOmLUzsM8dlo=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=A2kD1/jw/0haU+aBjoFCRZvSjoF76UW62GKVwtIINX87X7nH+p888CcasQ7c4BdLNumnKHRPE49pLyX/Nph5qMKpAL7Sp6m+LeZ8LOkElcyk0Y0d3La6BERybknDUvebOsPy5lZMKn4H1bfJ/bc99/aE66cmXoeCcQCv4mV/Tso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=E8+H5pAu; arc=none smtp.client-ip=162.62.57.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BcZy8D0z"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-6f7031ea11cso16164097b3.2;
-        Fri, 21 Feb 2025 00:53:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740127989; x=1740732789; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+jR358HQpp23LJWIOUBf9DeNyqJuGtgcMhAeCjLmW/U=;
-        b=BcZy8D0zto9bjrGUALgdbZvc/nZroEIhS+3OzzreZRG1XCfkn0YF4qhIHHK+Q5e8ss
-         xpUUiFx5evDgFkzF7l/J9VCLs0ldWZW4VZgb+v85U51vsbBmSTDraa8A8bceAdyG+0op
-         9l6JhmrVQPTtN9eQmMD+V6nCj/Agt9uFezCu/lBqhT388n834In7S2Cjf0qmmdK1WxW+
-         KVnRTTGDIJfEZ4inqnv8Ndm3MsSGsArgo8q6opvKAWSllktM1+CHF9+wVZ99EcLZMIX1
-         qngGiMpvKREXrxJq+ravfW3qkU8y+yITohanqx14OhPZH9VQNFFKmkeUqjEX/ZqkpRjt
-         aoVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740127989; x=1740732789;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+jR358HQpp23LJWIOUBf9DeNyqJuGtgcMhAeCjLmW/U=;
-        b=pw1KJiewqGZO3Ul9nb8hHiNzAVD11V9i1+Jl/4RMcL6dHn8ZY2kK4fTIcun4buoTyR
-         1Wv+DDLwxf8PXSCyyY/aP4koG0i0Wcty4GbHFLxLjTxFesvrxugmdAWL1maUzSUofgaP
-         83GBfxdaNYffycF8jugevhy/DTeRLAYbOuQPo9ha2ieCBmAhTgI0wPw9w0lrRUcFpUf1
-         vmvKMZ5HF72yykvhgSKS83gYbbd6gaoE4X3GVpHFQoBKA4Vdhohvr/jpiNLFV22G//MB
-         zuQi3ELw0Or33aHOBb3Y/mjJhrTyGsM2zWYl+3HP9llZBvGjnWT4UnRARsfUanRxFhIw
-         BQ0w==
-X-Forwarded-Encrypted: i=1; AJvYcCU5mJSkHEHcZB9YiY89VxGl/C0YHD3jckCLQhsecmaZAHyWhzV5s4/JCRvTDehV//N9qobuO38c0E8d@vger.kernel.org, AJvYcCUQZywXUxSOFy8zYuyqYGUDww2mrqurpkBs3FFB+yVCwiVsSGyLqz4Q2Onk5PBxdazI9vZrc8XwO6YXIkE=@vger.kernel.org, AJvYcCV39mu1d6k0eholjyEd+3JQR9ynfMX15am0fqvQlReoZ2hWMBrZ5KHEkgK77naQ7GCHb8W3UCMBVUx3@vger.kernel.org, AJvYcCVyp2XVrou/0GVWi45WLX96f4CWtdRiSaeHnLWGMQbxQAFbYO4leZnu1/RcR42kklW8r7DZNaw+yVozjTQJ@vger.kernel.org, AJvYcCW0JhW8LWooe3xt+9zXjSuOt4532MYJGFruWC9LyDsa6LfVeG9BXQs9FwuJf3qS/bwfBBDCfrn4F0c=@vger.kernel.org, AJvYcCW9LyWJKwZ3EL8Vbca7I5pfs69dfv233WjskQqwBs+M/EbeR6R0iC8t0YS0nX3O38CwIF6HvlUpWJZDCh734OQ=@vger.kernel.org, AJvYcCWRVG0Mts+744JG/7ZKH2aCfXi0Fe3re02d5m82mnDp6ie66LFlbWlUwyOnTqpM+G+rEEoU8xBnn3mpQQ==@vger.kernel.org, AJvYcCWsLr7OIjJiAEAYKzCGeMsWLxYiC2LskkBF2tf0L+bQh69YcU6/6sknu0vz8Agd6aaN0012JGDyt7Lq@vger.kernel.org, AJvYcCXkA87qHcCLpd67LPxH5FwH9v5v7pP2y+6jU7YCV6e5q605S7mE97+YTrAxH8xGbaPxSqt2F0j8@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfD4zQQMt5vn+FYW7Dj3JFe+lmrTe6Fo6WCx2B/WMMmMNETNyC
-	VAByooZInZeknR7VEJUJiOoxLdlr4nn+8LOW778KnNny8xfbRLwUWPuYUhOA2fgkOdKltsWVZtH
-	44CfuiUJklvc05xyuMmw5Uno4OJ8=
-X-Gm-Gg: ASbGncuTtMSpJjKNNJKVNMmu3n09ys+BHDXvKGdFVYQ3Xwy7BH+3mxVOjrcD2fmMSKs
-	0amYW/mMMO13TE/Dxq2REksD088qPhGSfbAerx/7R4lyFvkJN5NX1w3wsvDTHkwfv5pUgeDwzbG
-	K+DEFOQcNdNOW0mbK7tDUz4+og6CXuqUnn55RTV36ntw==
-X-Google-Smtp-Source: AGHT+IFFTv7mQS14e9HKcqRG3/KsgEtYDi7b0s/xnrbTYOGNNlU/jBMS8OnkWwa2w46rPzinCnYjeg60XgLeZT96Nxo=
-X-Received: by 2002:a05:690c:6404:b0:6f9:a33a:4c09 with SMTP id
- 00721157ae682-6fbcc25ef84mr21019997b3.18.1740127989379; Fri, 21 Feb 2025
- 00:53:09 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="E8+H5pAu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1740128058;
+	bh=sOpoaaYi70tIuun+k4bCpzt72Cgn3AbfOmLUzsM8dlo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=E8+H5pAuiy2qfrB4e4BISZp/rtcEF7Q7lg2V5kHxwBuKek0x0J5+uCZopzUA82Pme
+	 bS26LK0wOly3w0JbeAYENaZSGsoIM/48y+BckS/lAbQ/CwfFzJpnkpjN83TK0j0uX4
+	 ykWudvPj72Zf/YBDQAQdbdfUqNb3EKIrz/bxDhuw=
+Received: from localhost.localdomain ([112.2.252.119])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id 7DB05E70; Fri, 21 Feb 2025 16:31:27 +0800
+X-QQ-mid: xmsmtpt1740126687tmzom3y51
+Message-ID: <tencent_9877F4C8240A0DDA7399A0F8E2EEE71E5D0A@qq.com>
+X-QQ-XMAILINFO: MqswyhUqVe0Clb7vetySGil+QBrDiZ9UDLfyhWTRdv38s6p/9DZL03cObi+ps0
+	 TDR4+jSOSddH6EeX/N6vw14iDreotcGMJncR7grnxz/hhvQOKO6DGoisUr99ENwKtkMq6bVEwO+9
+	 0uY/E7wKnrK32VyqrtrPxok7fYlBE/+BxKTGssd9dAi3uAIWJcctxirSauwGkB3rdbCGu0gNMQiv
+	 7Na68RqwSaq6hsa7jrt3KroV8gl5Q6CX904QZ6axfUOQ5YJ0Hg2UcB153paY0LLRkk75Cc4EEQJ/
+	 Qx5Ro0hM9z8Fj76T8v5mf1GSYBRxAfTDat5+PRjstW/fljah10yRD/Lb4phn1CfnnggFKlRs7lzg
+	 Nf471kOdeMeUgSTFc/6X4/+Hun9lWe76DaBX4XL1UMqT+z6MHQyCowz2WZSv6IZ63FITCVZtgqRG
+	 wsu7JtBfN4/PxcEwPk2xlSzMqZ90sHgEFbaWA6lJ2Hd8/CqB6rVv7MgpoCwG3uewLaRmkINK6Oj0
+	 4Ytr4N9ss3UKUB4kABWjtsvYGc0mdME+rbqJcOvOfKXsgaTI02zWImp5f6r/hy4XzyjBHYXgZtSi
+	 31HhRDDE+4rRDpYhEMO45eQ7tj/bkZPtOIhtWcOdrc7uV0kbJIgQLyJ21/+hME7fwEvG7YAOXa9V
+	 bxjyioJGGeum0EURXYldvF6t867LkxzMXU1LD6j620wJOpgsj14vQb6a7ysTWlNJukFSq+YJuOni
+	 nrLo8Hj46sBXMsQLzkkVF3eYE/T/Qbee1T44fsoe/zPdHp2w0LYBuQM+eAgKJmGimUdGoBEYlb07
+	 cDnmadBraNUxaS/wmmb2Kkd1Y2HUGn6VwJcMRqqZoRJzSaiwbL2hig0j4ooj4HALPbl5YyOxHCUv
+	 /RWgWJyU3JRbMdqc0Vg6q6LKRqs2VbNDgyTagdwCFfY1Gp68VqmJZaVcieaUQKHk7rwNWrll/tmN
+	 l/yKSDWoA16sbnGqiRglgBnS067o4gG6AT7YKM2DOmfff1sibmYw==
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+From: HUANG Zhaobin <huang_zhaobin@foxmail.com>
+To: ej@inai.de
+Cc: airlied@gmail.com,
+	boqun.feng@gmail.com,
+	gregkh@linuxfoundation.org,
+	hch@infradead.org,
+	hpa@zytor.com,
+	ksummit@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	miguel.ojeda.sandonis@gmail.com,
+	rust-for-linux@vger.kernel.org,
+	torvalds@linux-foundation.org
+Subject: Re: C aggregate passing (Rust kernel policy)
+Date: Fri, 21 Feb 2025 16:31:27 +0800
+X-OQ-MSGID: <20250221083127.54494-1-huang_zhaobin@foxmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <n05p910s-r5o3-0n36-5s44-qr769prp69r5@vanv.qr>
+References: <n05p910s-r5o3-0n36-5s44-qr769prp69r5@vanv.qr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250207074502.1055111-1-a0282524688@gmail.com>
- <20250207074502.1055111-5-a0282524688@gmail.com> <20250207-savvy-beaver-of-culture-45698d-mkl@pengutronix.de>
- <CAOoeyxX4guHzUap1ieQ_L3PrvpBAYbMiQKrb6ko=MGsF5RcXLg@mail.gmail.com> <20250221-light-neat-doberman-1166a5-mkl@pengutronix.de>
-In-Reply-To: <20250221-light-neat-doberman-1166a5-mkl@pengutronix.de>
-From: Ming Yu <a0282524688@gmail.com>
-Date: Fri, 21 Feb 2025 16:52:58 +0800
-X-Gm-Features: AWEUYZk6by-3vXQ6oDlfBy8kG3O6ZrNx-AUodUyxeYU9X_L9LPdI1eCwguWgvdM
-Message-ID: <CAOoeyxXaCdFS+BLh_2ESyHF3Sf50iVM2A7ys5R+sRFx4gK_U0Q@mail.gmail.com>
-Subject: Re: [PATCH v7 4/7] can: Add Nuvoton NCT6694 CANFD support
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	andi.shyti@kernel.org, mailhol.vincent@wanadoo.fr, andrew+netdev@lunn.ch, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-can@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Marc Kleine-Budde <mkl@pengutronix.de> =E6=96=BC 2025=E5=B9=B42=E6=9C=8821=
-=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=884:08=E5=AF=AB=E9=81=93=EF=BC=
-=9A
+On Thu, 20 Feb 2025 16:17:07 +0100 (CET), Jan Engelhardt <ej@inai.de> wrote:
 >
-> On 21.02.2025 16:01:07, Ming Yu wrote:
-> > Hi Marc,
-> >
-> > Marc Kleine-Budde <mkl@pengutronix.de> =E6=96=BC 2025=E5=B9=B42=E6=9C=
-=887=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=888:15=E5=AF=AB=E9=81=93=
-=EF=BC=9A
-> > >
-> > > > +static irqreturn_t nct6694_can_irq(int irq, void *data)
-> > > > +{
-> > > > +     struct net_device *ndev =3D data;
-> > > > +     struct nct6694_can_priv *priv =3D netdev_priv(ndev);
-> > > > +     struct nct6694_can_event *evt =3D priv->event;
-> > > > +     struct nct6694_cmd_header cmd_hd =3D {
-> > > > +             .mod =3D NCT6694_CAN_MOD,
-> > > > +             .cmd =3D NCT6694_CAN_EVENT,
-> > > > +             .sel =3D NCT6694_CAN_EVENT_SEL(priv->can_idx, NCT6694=
-_CAN_EVENT_MASK),
-> > > > +             .len =3D cpu_to_le16(sizeof(priv->event))
-> > > > +     };
-> > > > +     irqreturn_t handled =3D IRQ_NONE;
-> > > > +     int can_idx =3D priv->can_idx;
-> > > > +     int ret;
-> > >
-> > > it would make sense to have a event pointer here instead of the can_i=
-dx?
-> > >
-> > >         const struct nct6694_can_event *event =3D &priv->event[priv->=
-can_idx];
-> > >
-> > The CAN Event command always returns 16bytes: the first 8 bytes
-> > correspond to the CAN0 event, and the last 8 bytes correspond to the
-> > CAN1 event. Therefore, the event pointer here refers to both event
-> > buffers.
->
-> Yes, but in the following code uses "priv->event[can_idx]" several
-> times, this is why I proposed to have a dedicated "struct
-> nct6694_can_event *event" variable.
->
-Okay, I'll update the code.
+> Returning aggregates in C++ is often implemented with a secret extra
+> pointer argument passed to the function. The C backend does not
+> perform that kind of transformation automatically. I surmise ABI reasons.
 
+No, in both C and C++, fff accepts a secret extra pointer argument.
 
-Thanks,
-Ming
+https://godbolt.org/z/13K9aEffe
+
+For gcc, the difference is that `sb` is allocated then copied back in C,
+while in C++ NRVO is applied so there is no extra allocation and copy.
+
+Clang does NRVO for both C and C++ in this case, thus generating exactly
+the same codes for them.
+
+I have no idea why gcc doesn't do the same.
+
