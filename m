@@ -1,156 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5B01FE470;
-	Fri, 21 Feb 2025 08:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442BF1FE470
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 08:40:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740127121; cv=none; b=CBLY4qGr09r/+M0fM7O1zco071CM83GhedPDH9pqWl71F8ZgdIc3USLS1U0AAmUWNGBY0R8oY112e3ev9/uqh9lWECQCgGxbQK8tWr419dAJDreaJghmKkiHBD1TYYilsOHp16GEJbRmKzAFeF0rl9lcd+fJC+FNDkbKT38X6NQ=
+	t=1740127246; cv=none; b=CIZZ/qLEAI2X8qVw52Nj8vZzRDxW5PZIdJ+9CN8bA/nOXFIEABhOR7Kg3qVz5SjQPcUiy7knWVxcG+gqsfPukeBwpQ7tn6uDYwRNHa+HXsB9M+xOjvC92EDAIN0UaWilv0BB8UPXpv8q4xz5NZnjkuWqC7ZDHmxDK4TPH+6B9pM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740127121; c=relaxed/simple;
-	bh=nqodSYX9zfwa+wP+jRooDOmd19luEYIiS/x1QP3QuqQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dFwJl45jt6lv/TVcyOJVbp5OkdidR1TdUL7iWUd8Yj4aFD6v6lbe6RrvMHs/VQtfIXzEy8cu3OQJlgY6tYIj4LOx4ix+c4ee/jMwpKHmrlSdy7PMmIl818hixIjnNXpLpsb+gdZ2nHCPGob/dTZAGMmgzI21Vc7BIyhLbAVhUqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cRNDj7Dy; arc=none smtp.client-ip=198.175.65.16
+	s=arc-20240116; t=1740127246; c=relaxed/simple;
+	bh=6c1PzwN4NRYtcuftWBGGwWofWdbrcsG9TaB1kFxsjk8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=JxBmltS2jm8XV6H78y4DCjMwDolOdZ2Brv94gP5CnYs61vd56Aq1KFQA909J8Pq7STyxUf1nQ5k2/JwLe4S64V1HDEPD3lJ/j1VbjdkYjR4cLZXF8Buu0pT/zqxpOoqbHYkWEY2s8pMsILcyTGIhNdf8RBWPnUA+0XCOjmjGM+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PeFQlmVp; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cRNDj7Dy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PeFQlmVp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740127120; x=1771663120;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nqodSYX9zfwa+wP+jRooDOmd19luEYIiS/x1QP3QuqQ=;
-  b=cRNDj7Dyy5ybFnbejEr3tuNkbavsqAPRmB92vlO9nit68D0zi74awByQ
-   GPJKTTsVYw/AtnWNOlWBhIRo/lN43rNTELpuUAZSU5TVZ945Wjuk6ptZo
-   Sni8uCdGcI0NAoxw45dhYLt+Q6bMTVOfSYaRczJF1y2hgEEWZ98LZ7vnX
-   wViGeUxKA+nyQRJB8UFV93DQ+HMl88m9qSc7ru4jM+OwIf+4hy/DSUWDP
-   U+TX+xvF27wV1FLk5iqIslULaj+eOSSreuHT3i85ITAPBsuPNiu17Zf0c
-   DoQ9Jr6zzvt1ORrG8r8XCNxcNtWwXJzkwpAv3KQl9CwedjxDI+eziLSHA
-   Q==;
-X-CSE-ConnectionGUID: d58bBZWtRka+y0xDCXz5iA==
-X-CSE-MsgGUID: xdK3Yt0ZRD+pfiyAy4tdxg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="41058466"
+  t=1740127245; x=1771663245;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=6c1PzwN4NRYtcuftWBGGwWofWdbrcsG9TaB1kFxsjk8=;
+  b=PeFQlmVpt8603c17hjJBHQ6/PAidXxZmhQCXIE9UFOw4NfbMFwVqMVH/
+   CssyqozI9Slq67nvJ/rPXDzMiJTaSkAqjNLZ8JO+QjWyU+ndj21WiiPSd
+   23DG1luqq6XGOdVUCXFF03PQbma9Dm2JmC6Y9ROBgs3O8/VfKlE5Mkw5j
+   b9J2Ft3EbKsIzCD8rPYNpknmY18bYiBSEEGLe37wGGxrVqVGNddl4JJq7
+   OdY7wsnGYHgJXEp8UIYrDJ5c+Pfomsq6lmsT9LXnaIOQtbYPTPq1eK2O1
+   abPSNClGWpHaCPz3kLWnldzoKaDqRGKEobdUu36sYZye9v1LViCsswsil
+   g==;
+X-CSE-ConnectionGUID: RQxpr59FT5OwiZnUP7D5Tw==
+X-CSE-MsgGUID: y39Jvd/YTXGTIIsyDxUp/A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11351"; a="40166557"
 X-IronPort-AV: E=Sophos;i="6.13,304,1732608000"; 
-   d="scan'208";a="41058466"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 00:38:39 -0800
-X-CSE-ConnectionGUID: yBxMvSy1Rh+CXJ0lab4mqA==
-X-CSE-MsgGUID: 08+yRwERQR+OdaXElvcbxA==
+   d="scan'208";a="40166557"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 00:40:44 -0800
+X-CSE-ConnectionGUID: tatSNnKISYKsAhQoAB6QQw==
+X-CSE-MsgGUID: /hamaI1eRC2aNuKA/a7Fhw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,304,1732608000"; 
-   d="scan'208";a="115255765"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 00:38:35 -0800
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 81C82120289;
-	Fri, 21 Feb 2025 10:38:32 +0200 (EET)
-Date: Fri, 21 Feb 2025 08:38:32 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/6] dt-bindings: media: video-interfaces: add support
- for Virtual Channel IDs
-Message-ID: <Z7g7iCUlsUN2LBIW@kekkonen.localdomain>
-References: <20250220230818.275262-1-demonsingur@gmail.com>
- <20250220230818.275262-2-demonsingur@gmail.com>
+   d="scan'208";a="119930193"
+Received: from zhaohaif-mobl1.ccr.corp.intel.com (HELO [10.124.242.192]) ([10.124.242.192])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2025 00:40:42 -0800
+Message-ID: <ba2a6295-7983-4701-8c42-797efe22ecb7@linux.intel.com>
+Date: Fri, 21 Feb 2025 16:40:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250220230818.275262-2-demonsingur@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iommu/vt-d: fix system hang on reboot -f
+To: Yunhui Cui <cuiyunhui@bytedance.com>, dwmw2@infradead.org,
+ baolu.lu@linux.intel.com, joro@8bytes.org, will@kernel.org,
+ robin.murphy@arm.com, iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250220101511.37602-1-cuiyunhui@bytedance.com>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+Autocrypt: addr=haifeng.zhao@linux.intel.com; keydata=
+ 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
+ 8TCx1OJHpvWFmL4Deq8=
+In-Reply-To: <20250220101511.37602-1-cuiyunhui@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Cosmin,
 
-Thanks for the patches.
+在 2025/2/20 18:15, Yunhui Cui 写道:
+> When entering intel_iommu_shutdown, system interrupts are disabled,
 
-On Fri, Feb 21, 2025 at 01:08:09AM +0200, Cosmin Tanislav wrote:
-> Multi-camera systems often have issues with receiving video streams
-> from multiple cameras at the same time because the cameras use the same
-> Virtual Channel IDs.
-> 
-> CSI bridges might not support remapping the Virtual Channel IDs, making
-> it impossible to receive the separate video streams at the same
-> time, while the CSI receiver is able to de-mux streams based on VC IDs.
-> 
-> Cameras sometimes have support for changing the VC IDs they output
-> themselves.
-> 
-> For a practical example, GMSL2 deserializer chips do not support VC ID
-> remapping in tunnel mode, and neither do the serializers. Allowing the
-> cameras to have their VC IDs configured would allow multi-camera setups
-> to use tunnel mode.
+System interrupts were disabled ? you mean all interrupts were disabled
+when entering intel_iommu_shutdown(), perhaps it is not true, at least
+for upstream latest code.
 
-We've tried to avoid having virtual channels in firmware and in UAPI,
-I'm not yet entirely convinced we need to depart from the established
-practices. Let's see. Apart from that, please see my comments below.
+> and the reboot process might be scheduled out by down_write(). If the
+> scheduled process does not yield (e.g., while(1)), the system will hang.
 
-> 
-> Add support for specifying these Virtual Channel IDs in Video Interface
-> Endpoints. The supported values are 0 to 3, with a maximum of 4 values.
-> Although the CSI-2 specification allows for up to 32 virtual channels,
-> most hardware doesn't support more than 4. This can be extended later
-> if need be.
-> 
-> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+No NMI lockup watchdog jumping out here ?
+
+Thanks,
+Ethan
+
+>
+> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
 > ---
->  .../devicetree/bindings/media/video-interfaces.yaml   | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.yaml b/Documentation/devicetree/bindings/media/video-interfaces.yaml
-> index 038e85b45befa..414b5fa8f3472 100644
-> --- a/Documentation/devicetree/bindings/media/video-interfaces.yaml
-> +++ b/Documentation/devicetree/bindings/media/video-interfaces.yaml
-> @@ -231,6 +231,17 @@ properties:
->        shall be interpreted as 0 (ABC). This property is valid for CSI-2 C-PHY
->        busses only.
->  
-> +  vc-ids:
-
-Other properties aren't using abbreviations, at least most of them. How
-about "virtual-channels"?
-
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    minItems: 1
-> +    maxItems: 4
-
-Shouldn't this be 32?
-
-> +    items:
-> +      maximum: 3
-
-31 here, too.
-
-> +    description:
-> +      An array of Virtual Channel IDs. These are unsigned integers that specify
-
-I'd leave out the explanation on the data type. It's redundant.
-
-> +      the VC IDs used by the device for its data streams. This property is valid
-> +      for MIPI CSI-2 only.
-> +
->    strobe:
->      $ref: /schemas/types.yaml#/definitions/uint32
->      enum: [ 0, 1 ]
+>   drivers/iommu/intel/iommu.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index cc46098f875b..76a1d83b46bf 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -2871,7 +2871,8 @@ void intel_iommu_shutdown(void)
+>   	if (no_iommu || dmar_disabled)
+>   		return;
+>   
+> -	down_write(&dmar_global_lock);
+> +	if (!down_write_trylock(&dmar_global_lock))
+> +		return;
+>   
+>   	/* Disable PMRs explicitly here. */
+>   	for_each_iommu(iommu, drhd)
 
 -- 
-Kind regards,
+"firm, enduring, strong, and long-lived"
 
-Sakari Ailus
