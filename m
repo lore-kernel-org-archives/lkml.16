@@ -1,160 +1,203 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A4F7209F38;
-	Fri, 21 Feb 2025 11:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B207F209681;
+	Fri, 21 Feb 2025 11:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740138605; cv=none; b=VP9iPZJjcMRwiaXNsbJou1dFzZb/IbgwMYbn/6K+M0SkZJBFk3OXOpWdKaJ7i1/E8RKbQZOhT2r0vjyJKS3tUApAlEfUuhcaSs/vXozu9ZGUBF1Vzzugb3ck9SqOC0nEQFgsFcc9YHp8YXXLvmeCIGDPfjshFiCl9baqOzgTdeU=
+	t=1740138623; cv=none; b=Cmay3QM8yeaXRad378hWkK0LHqQC1MWcLcFXY1WarCqKJjL9lWHKlUQ1fB4BtTESZuXBPZ86PREQo+OpoFB+epE2miYgoP685MGCOwCYvv0oo0BAcVanLind6lDtiTOym7bKliGOaqgmPTht+IWDNaB6K8CsWPhbNvakCS55tH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740138605; c=relaxed/simple;
-	bh=QOHOUMoYx7AP3FUv13h2VGye5dFWxoDX2wdAsEH3cjA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IsVVo4ZqzaVqXk6TNPOdvHK0d/WdwJmOav6Jrs37y+S0p8rLst3twiUZccpyZAs74S1tLteERjDdnSeZUUApUz7Ql2tktH2VufYTwAlmRg37sAfdb1QfEvWhciPnVpzY5tUkbAFQVYdaDHyVGFVnfGrzEuo9vyMdVYWkhf0cFWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=OpZXhP+e; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1740138623; c=relaxed/simple;
+	bh=Ax1HLOrCM4FuTAt8HYk3+RIVVxX7+VlgLIn7Jnlyv68=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=m/MxzqzqKmSyamxvxoz45+1yi+WavmqwzUcRzX6kYgUjj3uqCigt/x7PK1HW5rtbBJ0qESjxZqxNlqQqGf3FrYoZ+ja5puc829l7SMI83IH9C3UUBUqI/iwJekLzbi3fDYzTGNYJngugPVvt7cQnMBWyUNS8B0gc0Ov/Id3+FLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=btR5qn/J; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="OpZXhP+e"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=YRbeIpTW2o5n4pIxMblvC9/4iZSat+Ow4QvCwIGQR6Y=; b=OpZXhP+eI/cOxTTuMaXQ9z6OVz
-	JMKExuezMP4gafNgpnHPFVzPcyqwJed97diGCdUBcXtsWEHgOxetVJCALAa/MC54RZcoFdU3FAQ0M
-	JxL6IZBDXrJc1YmoqiqrniqtamHB6Hplg/sAnFApgzQkaKdVTBxj9+oSbzk26GADU8j6V8RJw2OZV
-	xBdaeFggqZ7gsbrd3ESk+/EfPlGHKcU3xGwx/hVwQ3SmrkbGULa3jzpzq1fSTm9r6ptPTonMxLYcf
-	quhZVVFxk6WuYYhQUvBjOohO3cwj6c+W3f4BP3sUBiaqe894rC9RhS6c0cVWo2Zw5Z0B5shn+TT35
-	PZMi3Ebw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45184)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tlRXR-0004SP-2d;
-	Fri, 21 Feb 2025 11:49:49 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tlRXM-0001yQ-2s;
-	Fri, 21 Feb 2025 11:49:44 +0000
-Date: Fri, 21 Feb 2025 11:49:44 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Swathi K S <swathi.ks@samsung.com>
-Cc: krzk+dt@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	robh@kernel.org, conor+dt@kernel.org, richardcochran@gmail.com,
-	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	pankaj.dubey@samsung.com, ravi.patel@samsung.com,
-	gost.dev@samsung.com
-Subject: Re: [PATCH v7 2/2] net: stmmac: dwc-qos: Add FSD EQoS support
-Message-ID: <Z7hoWHfMCMEABJlp@shell.armlinux.org.uk>
-References: <20250220043712.31966-1-swathi.ks@samsung.com>
- <CGME20250220044132epcas5p305e4ed7ed1c84f9800299c2091ea0790@epcas5p3.samsung.com>
- <20250220043712.31966-3-swathi.ks@samsung.com>
- <Z7cimPBdZ3W9GKmI@shell.armlinux.org.uk>
- <02b701db844c$36b7aeb0$a4270c10$@samsung.com>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="btR5qn/J"
+Received: from [192.168.42.116] (pd9e59d4d.dip0.t-ipconnect.de [217.229.157.77])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id EF6BC2FC0182;
+	Fri, 21 Feb 2025 12:50:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1740138617;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ntN7Ken4o08cAX1i2z6UfMc3CME1b/XumOkdtvbq90M=;
+	b=btR5qn/JQZ2iM9Z6Qbqzm/UmO/OMIde4ej5pERpuC3eETwAT8pHKMz6AUIKnWCToZlZAU+
+	/X5twyqGS+nefMFbZx2YpTS3yzfB7Rtmjzup7pjS6YSnwLw+pZ6TEGzSM6OPzbRIVitOpm
+	R9lA9Lc+l3h/gWNXJ5X+Ac/+G521zdY=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <cde97a29-bfe6-4dba-a059-b6df91814e6c@tuxedocomputers.com>
+Date: Fri, 21 Feb 2025 12:50:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <02b701db844c$36b7aeb0$a4270c10$@samsung.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/1] platform/x86/tuxedo: Implement TUXEDO TUXI ACPI
+ TFAN via hwmon
+From: Werner Sembach <wse@tuxedocomputers.com>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, ukleinek@kernel.org,
+ jdelvare@suse.com, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-hwmon@vger.kernel.org
+References: <20250205162109.222619-1-wse@tuxedocomputers.com>
+ <20250205162109.222619-2-wse@tuxedocomputers.com>
+ <767538f2-d79e-44e4-a671-4be56a3cfe44@roeck-us.net>
+ <fce7929b-87e7-4c9a-8a54-ab678c5dc6b4@tuxedocomputers.com>
+ <8f0a9bd6-52dd-442f-b0fd-73cf7028d9f0@roeck-us.net>
+ <b32284b7-ddc8-4fb5-82f8-20199b0dec5a@tuxedocomputers.com>
+Content-Language: en-US
+In-Reply-To: <b32284b7-ddc8-4fb5-82f8-20199b0dec5a@tuxedocomputers.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 21, 2025 at 04:04:25PM +0530, Swathi K S wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Russell King (Oracle) <linux@armlinux.org.uk>
-> > Sent: 20 February 2025 18:10
-> > To: Swathi K S <swathi.ks@samsung.com>
-> > Cc: krzk+dt@kernel.org; andrew+netdev@lunn.ch; davem@davemloft.net;
-> > edumazet@google.com; kuba@kernel.org; pabeni@redhat.com;
-> > robh@kernel.org; conor+dt@kernel.org; richardcochran@gmail.com;
-> > mcoquelin.stm32@gmail.com; alexandre.torgue@foss.st.com;
-> > netdev@vger.kernel.org; devicetree@vger.kernel.org; linux-stm32@st-md-
-> > mailman.stormreply.com; linux-arm-kernel@lists.infradead.org; linux-
-> > kernel@vger.kernel.org; pankaj.dubey@samsung.com;
-> > ravi.patel@samsung.com; gost.dev@samsung.com
-> > Subject: Re: [PATCH v7 2/2] net: stmmac: dwc-qos: Add FSD EQoS support
-> > 
-> > On Thu, Feb 20, 2025 at 10:07:12AM +0530, Swathi K S wrote:
-> > > +static int fsd_eqos_probe(struct platform_device *pdev,
-> > > +			  struct plat_stmmacenet_data *data,
-> > > +			  struct stmmac_resources *res)
-> > > +{
-> > > +	struct clk *clk_rx1 = NULL;
-> > > +	struct clk *clk_rx2 = NULL;
-> > > +
-> > > +	for (int i = 0; i < data->num_clks; i++) {
-> > > +		if (strcmp(data->clks[i].id, "slave_bus") == 0)
-> > > +			data->stmmac_clk = data->clks[i].clk;
-> > > +		else if (strcmp(data->clks[i].id, "eqos_rxclk_mux") == 0)
-> > > +			clk_rx1 = data->clks[i].clk;
-> > > +		else if (strcmp(data->clks[i].id, "eqos_phyrxclk") == 0)
-> > > +			clk_rx2 = data->clks[i].clk;
-> > > +	}
-> > > +
-> > > +	/* Eth0 RX clock doesn't support MUX */
-> > > +	if (clk_rx1)
-> > > +		clk_set_parent(clk_rx1, clk_rx2);
-> > 
-> > Isn't there support in DT for automatically setting the clock tree?
-> > See
-> > https://protect2.fireeye.com/v1/url?k=f0089f78-90ea0225-f0091437-
-> > 000babd9f1ba-cf835b8b94ccd94a&q=1&e=4ae794ec-f443-4d77-aee4-
-> > 449f53a3a1a4&u=https%3A%2F%2Fgithub.com%2Fdevicetree-org%2Fdt-
-> > schema%2Fblob%2Fmain%2Fdtschema%2Fschemas%2Fclock%2Fclock.yaml
-> > %23L24
-> > 
-> > Also, I think a cleanup like the below (sorry, it's on top of other
-> patches I'm
-> > working on at the moment but could be rebased) would make sense.
-> > 
-> > With both of these, this should mean that your changes amount to:
-> > 
-> > 1. making data->probe optional
-> > 2. providing a dwc_eth_dwmac_data structure that has .stmmac_clk_name
-> >    filled in
-> > 3. adding your compatible to the match data with a pointer to the
-> >    above structure.
-> 
-> Hi Russell, 
-> Thanks for your input.
-> Will implement this in v8.
-> But I could not find your patch 'net: stmmac: clean up clock initialisation'
-> in mailing list
-> Could you point me to that?
-> Or do you want me to integrate the below changes into my patch series and
-> post?
-> 
-> Please let me know
+Hi,
 
-Please have patience - I'm a volunteer here, and I included the patch in
-the email for you. You're not the only one whom I'm addressing issues in
-the stmmac driver for. Since Sunday, I have a total of 16 new stmmac
-patches plus been debugging a regression someone has reported.
+Am 06.02.25 um 23:55 schrieb Werner Sembach:
+>
+> Am 06.02.25 um 19:57 schrieb Guenter Roeck:
+>> On Thu, Feb 06, 2025 at 10:28:01AM +0100, Werner Sembach wrote:
+>>
+>> [ ... ]
+>>
+>>>>> +        temp = retval * 100 - 272000;
+>>>>> +
+>>>>> +        for (j = 0; temp_levels[j].temp; ++j) {
+>>>>> +            temp_low = j == 0 ? -272000 : temp_levels[j-1].temp;
+>>>>> +            temp_high = temp_levels[j].temp;
+>>>>> +            if (driver_data->temp_level[i] > j)
+>>>>> +                temp_high -= 2000; // hysteresis
+>>>>> +
+>>>>> +            if (temp >= temp_low && temp < temp_high)
+>>>>> +                driver_data->temp_level[i] = j;
+>>>>> +        }
+>>>>> +        if (temp >= temp_high)
+>>>>> +            driver_data->temp_level[i] = j;
+>>>>> +
+>>>>> +        temp_level = driver_data->temp_level[i];
+>>>>> +        min_speed = temp_level == 0 ?
+>>>>> +            0 : temp_levels[temp_level-1].min_speed;
+>>>>> +        curr_speed = driver_data->curr_speed[i];
+>>>>> +        want_speed = driver_data->want_speed[i];
+>>>>> +
+>>>>> +        if (want_speed < min_speed) {
+>>>>> +            if (curr_speed < min_speed)
+>>>>> +                write_speed(dev, i, min_speed);
+>>>>> +        } else if (curr_speed != want_speed)
+>>>>> +            write_speed(dev, i, want_speed);
+>>>>> +    }
+>>>>> +
+>>>>> +    schedule_delayed_work(&driver_data->work, TUXI_SAFEGUARD_PERIOD);
+>>>>> +}
+>>>> This is not expected functionality of a hardware monitoring driver.
+>>>> Hardware monmitoring drivers should not replicate userspace or
+>>>> thermal subsystem functionality.
+>>>>
+>>>> This would be unacceptable in drivers/hwmon/.
+>>> Problem is: The thermal subsystem doesn't do this either as far as I can tell.
+>>>
+>>> See this: 
+>>> https://lore.kernel.org/all/453e0df5-416b-476e-9629-c40534ecfb72@tuxedocomputers.com/
+>>> and this: 
+>>> https://lore.kernel.org/all/41483e2b-361b-4b84-88a7-24fc1eaae745@tuxedocomputers.com/
+>>> thread.
+>>>
+>>> The short version is: The Thermal subsystem always allows userspace to
+>>> select the "userspace" governor which has no way for the kernel to enforce a
+>>> minimum speed.
+>>>
+>> You can specify thermal parameters / limits using devicetree. Also, drivers
+>> can always enforce value ranges.
+>
+> Sorry for my noob question: What do you mean with devicetree in x86 context?
+>
+> I only want to enforce a value range at a certain temperature, if the device 
+> is cool, the fan can be turned off for example.
+Gentle bump
+>
+>>
+>>> As far as I can tell the Thermal subsystem would require a new governor for
+>>> the behavior i want to archive and more importantly, a way to restrict which
+>>> governors userspace can select.
+>>>
+>>> As to why I don't want grant userspace full control: The firmware is
+>>> perfectly fine with accepting potentially mainboard frying settings (as
+>>> mentioned in the cover letter) and the lowest level I can write code for is
+>>> the kernel driver. So that's the location I need to prevent this.
+>>>
+>> It is ok for the kernel to accept and enforce _limits_ (such as lower and upper
+>> ranges for temperatures) when they are written. That is not what the code here
+>> does.
+>
+> It conditionally enforces a minimum fanspeed.
+>
+> So is the problem that hwmon drivers are only allowed to enforce unconditional 
+> limits?
+Here too.
+>
+>>
+>>> Also hwmon is not purely a hardware monitoring, it also allows writing
+>>> fanspeeds. Or did I miss something and this shouldn't actually be used?
+>>>
+>> If doesn't actively control fan speeds, though. It just tells the firmware what
+>> the limits or target values are.
+> What is the difference if it tells the firmware a target fanspeed, which can 
+> be ignored by it, or a driver a target fanspeed, which can be ignored by it?
 
-Coincidentally, I just sent out the patch as a stand-alone patch, it
-should be quicker to get it into net-next rather than trying to get all
-the other patches I'd *already* had queued up in first.
+Here too.
 
-https://lore.kernel.org/r/E1tlRMP-004Vt5-W1@rmk-PC.armlinux.org.uk
+Best regards,
 
-However, I'm expecting someone to say that dwc_eth_find_clk() should be
-moved into the stmmac platform code, and the other platforms need to be
-converted to use it... so it may be some time before we're at a stage
-where you can proceed.
+Werner Sembach
 
-Please be patient.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+>>
+>>>> Personally I think this is way too complicated. It would make much more sense
+>>>> to assume a reasonable maximum (say, 16) and use fixed size arrays to access
+>>>> the data. The is_visible function can then simply return 0 for larger channel
+>>>> values if the total number of fans is less than the ones configured in the
+>>>> channel information.
+>>> Didn't know it was possible to filter extra entries out completely with the
+>>> is_visible function, thanks for the tip.
+>>>> Also, as already mentioned, there is no range check of fan_count. This will
+>>>> cause some oddities if the system ever claims to have 256+ fans.
+>>> Will not happen, but i guess a singular additional if in the init doesn't
+>>> hurt, i can add it.
+>> You are making the assumption that the firmware always provides correct
+>> values.
+>>
+>> I fully agree that repeated range checks for in-kernel API functions are
+>> useless. However, values should still be checked when a value enters
+>> the kernel, either via userspace or via hardware, even more so if that value
+>> is used to determine, like here, the amount of memory allocated. Or, worse,
+>> if the value is reported as 32-bit value and written into an 8-byte variable.
+> ok
+>>
+>>>>> +    *hwmdev = devm_hwmon_device_register_with_info(&pdev->dev,
+>>>>> +                               "tuxedo_nbxx_acpi_tuxi",
+>>>>> +                               driver_data, &hwminfo,
+>>>>> +                               NULL);
+>>>>> +    if (PTR_ERR_OR_ZERO(*hwmdev))
+>>>>> +        return PTR_ERR_OR_ZERO(*hwmdev);
+>>>>> +
+>>>> Why not just return hwmdev ?
+>>> because if hwmon is NULL it is still an error, i have to look again at what
+>>> actually is returned by PTR_ERR_OR_ZERO on zero.
+>> That seems a bit philosophical. The caller would have to check for
+>> PTR_ERR_OR_ZERO() instead of checking for < 0.
+>>
+>> On a side note, the code now returns 0 if devm_hwmon_device_register_with_info()
+>> returned NULL.  devm_hwmon_device_register_with_info() never returns NULL,
+>> so that doesn't make a difference in practice, but, still, this should
+>> at least use PTR_ERR().
+> ok
+>>
+>> Guenter
