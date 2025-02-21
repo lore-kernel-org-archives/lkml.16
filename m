@@ -1,84 +1,106 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C61757EA;
-	Fri, 21 Feb 2025 13:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69DFF20E319;
+	Fri, 21 Feb 2025 13:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740145744; cv=none; b=j20SGzyn+iKOU6A3qHkca35h5wvrh5qQjsYvJ6MseqQic0k5sKi6E7vPasVr9h1aaEfIqepWL2mmEHH2wYh1lFxpux8mf1wSZRXSZShGTldxznoVzTqv+nOLRRB9WSFTS1xxhtZb0fl2BU6NsUrscvyQPY1ZV/bKUZTAqarR4LQ=
+	t=1740145747; cv=none; b=F0gzfJlCVYmp68ZASIC2EgZJydLbhYAFKiDvJObLlDlIilxQnI45qxk4ZWpSkTGkWNdSEvpLY08SDXLxl01pl8pTdZfGmFkg80seigggjAoEXAeY6eax//FyWtfrMWQODkSSEdQ3YyNdOTbW4h5fgNe4Usz90n6JWBp0Dxukkck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740145744; c=relaxed/simple;
-	bh=LpD8P8JjpqI/NjmfRrr1AhD28mE8fg5sTAYIzzPCseM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ULIiyJWIhzPxM20hJVfgHx6EUOYkO9zNLb2a3k5bpP0gtX0gdELKGMwrbogUGNTWc6WAo+skOEF5YsuKi1BRtnVRyWQHSsrOcJFqppDOIRT1Zv9Ai1eaMyGDFb+sr3gdZ0K+U6Se+3yZNMzk/Nf9sQOlysmqHL0RPfERNOIFfQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=EOlMpGf6; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1740145747; c=relaxed/simple;
+	bh=C0EAePF53lIXFleUHeMPzsteLlLG26sy4F3rDVZs/WI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=HuFQo09ZpD0bYTIoqPPcgDwh3LWdimM+Wzlngxjx4yXARig7DomsoWNRojOWdkr7MuByle1dScuDp9vHWqQjfp1hUvASK2OHRMnKBJZJRGxj6QWxpDnl5lDwQ0izi3yTqvlJAuouNhV5Nor+WdqykPuX3mSNKrUqF04hkCNGINk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=beyYBABR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="EOlMpGf6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=4PA6AoUOc58pLObnZDeDC9vxCiLpRKUfWVTweUqJLBc=; b=EOlMpGf6Z4x3XKn2jeJ+0MxWRx
-	o4RGyPM2SqMWVeWo83VUGe9BS8ebFNLcac3bio+6ZsUtXIigNT9XgaGxEChymTXGdSvPQS8tqCfQt
-	X0gsEgE4dGAXxl/u7TtRsNUJisMPbhpX5iQLoQNsFVNr31JwYJIK2YPw/g/MWChTPHGMQFNpOjayF
-	o6D/PVRpFCklSoWC+PYXbLM3sMq4rx9peHg1bArSQX0sUeU+7J+0iRH7LZ4EzFAViLTQFJVA7Fm3C
-	io3Tbp2qETu9gobdkTgfO8azcy8/TiUc4kNSSmhuiSUYvDPaFUdhZFwBYzCsF1IjCT7DHbCM+FpBH
-	iaieQ5wg==;
-Received: from i53875a87.versanet.de ([83.135.90.135] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tlTOh-0004r8-VJ; Fri, 21 Feb 2025 14:48:56 +0100
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
- Quentin Schulz <foss+kernel@0leil.net>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@cherry.de>
-Subject:
- Re: [PATCH v2 2/2] gpio: pcf857x: add support for reset-gpios on (most)
- PCA967x
-Date: Fri, 21 Feb 2025 14:48:55 +0100
-Message-ID: <1947442.eGJsNajkDb@diego>
-In-Reply-To: <20250221-pca976x-reset-driver-v2-2-a2bcb9fdc256@cherry.de>
-References:
- <20250221-pca976x-reset-driver-v2-0-a2bcb9fdc256@cherry.de>
- <20250221-pca976x-reset-driver-v2-2-a2bcb9fdc256@cherry.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="beyYBABR"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 456D3C4CEE8;
+	Fri, 21 Feb 2025 13:49:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740145747;
+	bh=C0EAePF53lIXFleUHeMPzsteLlLG26sy4F3rDVZs/WI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=beyYBABRNIJEUcIKdaE6ZUxIcbBE06xl56SR6bwRLYN12s/eGS5U1gZSVYnQsEDDN
+	 ZHPBzLi8KKjGDwfcXlfc/Dz5VFnVR2c7Z3p5awl4nXLv8aTc+7ViX4SLjsQnJEBM6g
+	 JTLYLDtIIZSG4JhI5tAtYma+AlAy2UDkUy3tBs1a77OHFm+KeEnoOte/dNblrSGj27
+	 d4PVZQT0BfiHYzwWUnDJkLjHUY3ukqbDdrtgI4rtvR0TbVE7DNAksTPb5By2xxDMVc
+	 b9AijH8Kg5o3GgWu6y6sEG3AmVQq/mBq1H6u+H1D5xHLRwPwy53ImwsM1okMXEWrfq
+	 5l4/SYly93MxQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36038C021B6;
+	Fri, 21 Feb 2025 13:49:07 +0000 (UTC)
+From: Thomas Prescher via B4 Relay <devnull+thomas.prescher.cyberus-technology.de@kernel.org>
+Date: Fri, 21 Feb 2025 14:49:04 +0100
+Subject: [PATCH 2/2] mm: hugetlb: log time needed to allocate hugepages
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250221-hugepage-parameter-v1-2-fa49a77c87c8@cyberus-technology.de>
+References: <20250221-hugepage-parameter-v1-0-fa49a77c87c8@cyberus-technology.de>
+In-Reply-To: <20250221-hugepage-parameter-v1-0-fa49a77c87c8@cyberus-technology.de>
+To: Jonathan Corbet <corbet@lwn.net>, Muchun Song <muchun.song@linux.dev>, 
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-mm@kvack.org, Thomas Prescher <thomas.prescher@cyberus-technology.de>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740145745; l=1236;
+ i=thomas.prescher@cyberus-technology.de; s=20250221;
+ h=from:subject:message-id;
+ bh=+RVZ6u1nzdp1931lwTDAnLSee61rdleZduyoY/lMDIA=;
+ b=4+fAS5E5X1tj0juCLlk8wApea1Mw0hFQMhgVoxUvNua6eliTe5IqQoAihZ6t8J1ZOqKoXwCkS
+ PyHzdDBHY34C9m3qRY5CD7zL8gr1jDVg1stVn8oZoDsw6CVRLFkgv8z
+X-Developer-Key: i=thomas.prescher@cyberus-technology.de; a=ed25519;
+ pk=T5MVdLVCc/0UUyv5IcSqGVvGcVkgWW/KtuEo2RRJwM8=
+X-Endpoint-Received: by B4 Relay for
+ thomas.prescher@cyberus-technology.de/20250221 with auth_id=345
+X-Original-From: Thomas Prescher <thomas.prescher@cyberus-technology.de>
+Reply-To: thomas.prescher@cyberus-technology.de
 
-Am Freitag, 21. Februar 2025, 11:14:27 MEZ schrieb Quentin Schulz:
-> From: Quentin Schulz <quentin.schulz@cherry.de>
-> 
-> The PCA9670, PCA9671, PCA9672 and PCA9673 all have a RESETN input pin
-> that is used to reset the I2C GPIO expander.
-> 
-> One needs to hold this pin low for at least 4us and the reset should be
-> finished after about 100us according to the datasheet[1]. Once the reset
-> is done, the "registers and I2C-bus state machine will be held in their
-> default state until the RESET input is once again HIGH.".
-> 
-> Because the logic is reset, the latch values eventually provided in the
-> Device Tree via lines-initial-states property are inapplicable so they
-> are simply ignored if a reset GPIO is provided.
-> 
-> [1] https://www.nxp.com/docs/en/data-sheet/PCA9670.pdf 8.5 and fig 22.
-> 
-> Tested-by: Heiko Stuebner <heiko@sntech.de> # RK3588 Tiger Haikou Video Demo
-> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+From: Thomas Prescher <thomas.prescher@cyberus-technology.de>
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Having this information allows users to easily tune
+the hugepages_node_threads parameter.
+
+Signed-off-by: Thomas Prescher <thomas.prescher@cyberus-technology.de>
+---
+ mm/hugetlb.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index b7d24c41e0f9d22f5b86c253e29a2eca28460026..2aa5724a385494f9d6f1d644a2bfe547591fc96c 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -3428,6 +3428,9 @@ static unsigned long __init hugetlb_pages_alloc_boot(struct hstate *h)
+ 		.numa_aware	= true
+ 	};
+ 
++	unsigned long jiffies_start;
++	unsigned long jiffies_end;
++
+ 	job.thread_fn	= hugetlb_pages_alloc_boot_node;
+ 	job.start	= 0;
+ 	job.size	= h->max_huge_pages;
+@@ -3450,7 +3453,13 @@ static unsigned long __init hugetlb_pages_alloc_boot(struct hstate *h)
+ 	 */
+ 	job.max_threads	= num_node_state(N_MEMORY) * allocation_threads_per_node;
+ 	job.min_chunk	= h->max_huge_pages / num_node_state(N_MEMORY) / allocation_threads_per_node;
++
++	jiffies_start = jiffies;
+ 	padata_do_multithreaded(&job);
++	jiffies_end = jiffies;
++
++	printk(KERN_DEBUG "HugeTLB: allocation took %dms\n",
++	    jiffies_to_msecs(jiffies_end - jiffies_start));
+ 
+ 	return h->nr_huge_pages;
+ }
+
+-- 
+2.48.1
 
 
