@@ -1,232 +1,203 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C20312FF69
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 15:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A51420E02D;
+	Fri, 21 Feb 2025 15:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740151088; cv=none; b=SpTJTbhp2SRpdotMeaak+mfBbUMRVRGQ7chAViOxqO1K7C6IqKE6ZiT4rquDRka7hJ1CgMJYk3fQYUbxvveE7mgkX3u+xjB71dKdS30SQ4bRIfgYRjjsgQT43WndWNn3dTvETJhHi829bavOqlIK478aD3lEVL3O+MVYmIuomXI=
+	t=1740151168; cv=none; b=bQlUyJwcuNZEtlo5x6Ag+0sgAjtuIwxxIKejNxAOvApd2gCR2nAkPkMsqFHZtg1WMEkBxReJPTJqHkSmUXJV8o6vx967Qmgs60ZRRBsJHf031hJJLbqfTnC2o5lR4qTjVQxZabOQ/1zeFW03HkG5qqo5CecdWurcqbOGr2L56kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740151088; c=relaxed/simple;
-	bh=/OFuwwT0+A2oZDBYu8cUikCBa2v/z/j2Xsbc9CQ62/M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vCaDQiVDinxGo2zMa8xJk2xaFRGI4kQE0RhtAuy7Kch13jow20taxtE56FnhT6oYcjUwObNWu9WbXGG5nEC2otZ31cpwqcpFEfAlzFvyXRI1tJ8JnWcUOjdUawKgxvBE6YrxFRcvPOlcbDJLDiXZv5Pp6Z0y35U5VGT8XvRJ0fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=bdhRqBJt; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=KioAYvBm; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=CTaJUtvH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=YX4k+lK/; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1740151168; c=relaxed/simple;
+	bh=BwWNh/IecNX9JFyVGN2psCZ+7JadvarkvSm40AfuIxs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C9jT9zPolHiwLhu64reRa9ohI/venR84vT+D7DlBLWBQFDaC8Si54WiW1qOIJxpHYtiirCNqsyhGpTZyJS/hYI/r5P7u008dXC0g90VpOQnwzlzqwGGvymRISDr7O3dFuEWsplSBNz3Va/XaOIfwIy97TzJLxgopNGMpXvwvvek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e77GwtQa; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="bdhRqBJt";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="KioAYvBm";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="CTaJUtvH";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="YX4k+lK/"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C63F020210;
-	Fri, 21 Feb 2025 15:18:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740151083; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=IwjT8h56hw0Bm+kP31nNSgRakQszvb0rx572QaJxzOM=;
-	b=bdhRqBJtAlScsezY+iqSMa2BRIg/cgjwgbt0WCwfMS2oNAvBKSCdEa25KLvfAUX4wGKOm4
-	bSvyxgn4ntwxAxyuZiFIy4HBY7AhWyC59tMOiwxdNl9DZa+L0x+GO3AGbUJN8Xq8c5zspV
-	F38/B9ZcNX7oYdgDOcLwCYBk/5GQIjA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740151083;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=IwjT8h56hw0Bm+kP31nNSgRakQszvb0rx572QaJxzOM=;
-	b=KioAYvBmoPSAH5+MisrlRC2qUNKzORcAZ2BbhBbAdjzK4L3xi2EtY/zTZ1W9BPjXCUO3p6
-	MpAMsnpTFt4NmXAg==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=CTaJUtvH;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b="YX4k+lK/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740151082; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=IwjT8h56hw0Bm+kP31nNSgRakQszvb0rx572QaJxzOM=;
-	b=CTaJUtvHz2+wFAe8QigWMbXKp30Scqxffh+xb1I7UfTdXOM03b+gY9wcKGoD+ezeMc7aWN
-	GRW08YZCJafl+waPeo2035M7oprdmERgAry2qTA5ihrlolmAbzAXGC7g8yvsEYUR4UGufQ
-	jkVRHc6EcJKrybPIU4UbRtjYal5v6tg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740151082;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=IwjT8h56hw0Bm+kP31nNSgRakQszvb0rx572QaJxzOM=;
-	b=YX4k+lK/njubv9fVD5C69U+zUTt+8skoCslv2zfS2DIhVyYzMEn5+/5pJdTwZ5lsFmk4VQ
-	6Zmkds2NwBtfz6DA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 84762136AD;
-	Fri, 21 Feb 2025 15:18:02 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 6Q0CICqZuGcgGQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Fri, 21 Feb 2025 15:18:02 +0000
-Message-ID: <855f7eec-58d2-4c83-870a-78404f8131a2@suse.cz>
-Date: Fri, 21 Feb 2025 16:18:02 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e77GwtQa"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-46fd4bf03cbso32778641cf.0;
+        Fri, 21 Feb 2025 07:19:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740151166; x=1740755966; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=AoKDxtX2qotsoWCNkR7SNDxUxZjLqJ7D2owgBuwny4c=;
+        b=e77GwtQaIZwHWgGEgLlLcDKWKR/ZGxZ+kqcE4WOf2Td2yUDhgWeUnpnE8NfT1Um2qg
+         67/5c7hvY2t+mB3xHS2JVf54A0Jqds0BimhMdo07YBllq77aHmuJQDFBFNZXLh9F0Cel
+         jvRVchPBbHHhDaklDAh7lrBCr/NWOPIuYzo1SMTq8R0iw19eVGix1EBxqjzhYCz9xODY
+         2rma2EiHEjNL0DIryyEHn/rO4gg+b+WlCTbPh4WV5Ai7uXkMkPO0MirTqZqoH7H/kcDb
+         bTOkqdYDnDPDt/H1nkB0/F7iA3ngOQfummROe5IBeqgVa/MtSmbBaJWwRYpkuftHkL4M
+         v5UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740151166; x=1740755966;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AoKDxtX2qotsoWCNkR7SNDxUxZjLqJ7D2owgBuwny4c=;
+        b=olwjtmBJHzC+JFLK32G8ga2nKWxQkPXl3rMne0KhmEVB4yl/7HomdLLHxloww18qOS
+         QkDGha9JcRl113925i+KRcNoyxc5TQovzR81wykAmVHPs4SdSfhZtLF/3/Y9N+3xN7rq
+         kQim1PZuzP2y+5+yq5xAdkA08ObNNweSfhOEWRXRpuOcTh7dALGjXfLdMzzPbkjoY9RH
+         il6qvokfcKSO5Orb+bxSIvKgzccPKqKyLzGbLHH0oSqHRehFpqYtSUkvAaIRfyiv8p8m
+         j19hISQeSJBJlvi/y+DpQA1SsJUUP/VaTPwC9D4NUlZAsFSKThf4+6dQmp8Q6acrIUVr
+         kC6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU2AJuk6XHc7AWpIoqnAr2ovsKq7IxF0Nt2uhZpPFNhJGxlke9+QkaIaH/vXw0JMDY9/+etn/DCzwcdssc=@vger.kernel.org, AJvYcCXARnmzR7ACPqjjBCNgbfkzAxrLciQ4wZn+oruHh3ulW9/qAYMcgVEwPv/8ekBcAMPBkLk2tf2EjBEOXy199cQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHFH47Wr9iCuvqrzh5eDtPxmKjA9e7wfTgNJOCYFjNOi2HaAUI
+	ZAUMU6xZ34vid0upa7wyhbwKahSg994v5I0PYkKX1qvqWRaDTHat
+X-Gm-Gg: ASbGncvcZyvfvtFTAByWOYN8+3Zx80Lhpg0LHAE/garPDf2prQ5A6Ni/vGsPb0KAfJK
+	r1ORzOvpYtYQhgcRlxyjvKU/e17KkpjMOubtFb172nIboxG07stSE22pzU40HzNxpYJEQUcnIUH
+	2mGOEYCisI24crWJEV5C1wBe2+54C6c6WdpMwhVs16+3oddfxBysUFnFfyTxRxE49YymWc+N8kN
+	aM1x3eBmg6uyuXE7qB4z3Id5hcRHmURwWRvZEI2TluWYijESkhNksAWbBsFIo1IUhwz4J2gQmgJ
+	zT97/69e19mON1bWvs+nZPwWZ38vNlNoIl0NJxuOT34oprYxTnO+wvVORLO4vX/o2iNl8rdZWj8
+	RVyR7JYGW358kPxgL
+X-Google-Smtp-Source: AGHT+IEZNN3PhT07b7NTUPOkcvFDy43Xfh1+Lp1XINHGo7qQ3IJVDBdNknaSE0Ul35nWb4wLcWlYaQ==
+X-Received: by 2002:a05:622a:13c7:b0:471:f3f2:62eb with SMTP id d75a77b69052e-472228ce17amr50474561cf.19.1740151165703;
+        Fri, 21 Feb 2025 07:19:25 -0800 (PST)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471f3df2698sm55149991cf.23.2025.02.21.07.19.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 07:19:25 -0800 (PST)
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfauth.phl.internal (Postfix) with ESMTP id CB06E1200043;
+	Fri, 21 Feb 2025 10:19:24 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Fri, 21 Feb 2025 10:19:24 -0500
+X-ME-Sender: <xms:fJm4Zw87Xppn9wag1Tz5ur3isqq1MfuLL5EKi16tDU_pg6gMY0Td8Q>
+    <xme:fJm4Z4u7-B6IvmwsX-V1VR_NYFc5fignltwob2B7k1-OybwJsSINI65NYJ-cVpoFv
+    ilKxpPZ2PWftuSuXg>
+X-ME-Received: <xmr:fJm4Z2AU6w3zE07LKMWNcrzS6eykAilQRVodbg414f4JLQkrbwTyYYEXPA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdejtdefhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddt
+    jeenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeeiheefkefgvdefteejjedukefhieevleef
+    feevheehfeffhfekhfetveffvefhgfenucffohhmrghinheprhhushhtqdhlrghnghdroh
+    hrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegs
+    ohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeige
+    dqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihig
+    mhgvrdhnrghmvgdpnhgspghrtghpthhtohepvddtpdhmohguvgepshhmthhpohhuthdprh
+    gtphhtthhopehtrghmihhrugesghhmrghilhdrtghomhdprhgtphhtthhopegrrdhhihhn
+    uggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurgeskhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtoheprghnnhgrqdhmrghrihgrsehlihhnuhhtrhhonhhigidr
+    uggvpdhrtghpthhtohepfhhrvgguvghrihgtsehkvghrnhgvlhdrohhrghdprhgtphhtth
+    hopehtghhlgieslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopegurghkrheskhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtg
+    homhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvth
+X-ME-Proxy: <xmx:fJm4ZwdZyW5HgRWYymn0Wgl_sAPIX-MyidrgrjHEXEq4IlQDdkKnVg>
+    <xmx:fJm4Z1P2bnKQRWY45F-_BFBPMQaqFog5WMYqngTxkT7rECqSoLqGfQ>
+    <xmx:fJm4Z6kP-PlFo5nUY6obF8RQSwXldRBC92GcwavSX1IH75mRx-NFrQ>
+    <xmx:fJm4Z3sSGr06gDwRqGcDD418tphivroJoxCAw6KoBkZSI-V9ozZY-A>
+    <xmx:fJm4ZzstyaxU6MpxiMfmRKmibR5XWA_9K38GjtqY1dUruXcUy0LTau5U>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 21 Feb 2025 10:19:23 -0500 (EST)
+Date: Fri, 21 Feb 2025 07:19:22 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Andreas Hindborg <a.hindborg@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Lyude Paul <lyude@redhat.com>, Guangbo Cui <2407018371@qq.com>,
+	Dirk Behme <dirk.behme@gmail.com>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 02/14] rust: hrtimer: introduce hrtimer support
+Message-ID: <Z7iZevQkYVGDoeTa@Mac.home>
+References: <20250218-hrtimer-v3-v6-12-rc2-v8-2-48dedb015eb3@kernel.org>
+ <KDmrJnQA2_Ojf67mD8WA_UafgVCACRRleB9t-D_1yl_bua8e1VWdGQAUvmMGHscqRHu1gzPJCKe_BfotutZm5Q==@protonmail.internalid>
+ <CAJ-ks9ncOyGyQsDFOBxg-7wmXkrQYiZr6H6eEFWsFstk=p1uAA@mail.gmail.com>
+ <87wmdkgvr0.fsf@kernel.org>
+ <djAeSx8DNZwss2-UqXGmhVPqYm2z4LhKWC70jPHPisd1w70qmpmOfVbHfhqJErhoFwVFM8IpbTv4MKkk_BIpQw==@protonmail.internalid>
+ <CAJ-ks9mNidHZvWkFJE1jExc2oVk_bbJpiO_DRMrWu5nYhTpKgg@mail.gmail.com>
+ <87ldtzhexi.fsf@kernel.org>
+ <87cyfbe89x.fsf@kernel.org>
+ <Z7iQcDa72XnJ5zGC@Mac.home>
+ <CAJ-ks9kQccoa7znFNzWAgi6_G0TKvLUARWPZ_Dbed1C-d4Lr+Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 12/18] mm: replace vm_lock and detached flag with a
- reference count
-Content-Language: en-US
-To: Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org
-Cc: peterz@infradead.org, willy@infradead.org, liam.howlett@oracle.com,
- lorenzo.stoakes@oracle.com, david.laight.linux@gmail.com, mhocko@suse.com,
- hannes@cmpxchg.org, mjguzik@gmail.com, oliver.sang@intel.com,
- mgorman@techsingularity.net, david@redhat.com, peterx@redhat.com,
- oleg@redhat.com, dave@stgolabs.net, paulmck@kernel.org, brauner@kernel.org,
- dhowells@redhat.com, hdanton@sina.com, hughd@google.com,
- lokeshgidra@google.com, minchan@google.com, jannh@google.com,
- shakeel.butt@linux.dev, souravpanda@google.com, pasha.tatashin@soleen.com,
- klarasmodin@gmail.com, richard.weiyang@gmail.com, corbet@lwn.net,
- linux-doc@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- kernel-team@android.com
-References: <20250213224655.1680278-1-surenb@google.com>
- <20250213224655.1680278-13-surenb@google.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- EP+ylKVEKb0Q2A==
-In-Reply-To: <20250213224655.1680278-13-surenb@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: C63F020210
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,sina.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[34];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_CC(0.00)[infradead.org,oracle.com,gmail.com,suse.com,cmpxchg.org,intel.com,techsingularity.net,redhat.com,stgolabs.net,kernel.org,sina.com,google.com,linux.dev,soleen.com,lwn.net,vger.kernel.org,kvack.org,android.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLk41rrgs15z4i1nmqiwtynpyh)];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:mid,suse.cz:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJ-ks9kQccoa7znFNzWAgi6_G0TKvLUARWPZ_Dbed1C-d4Lr+Q@mail.gmail.com>
 
-On 2/13/25 23:46, Suren Baghdasaryan wrote:
-> rw_semaphore is a sizable structure of 40 bytes and consumes
-> considerable space for each vm_area_struct. However vma_lock has
-> two important specifics which can be used to replace rw_semaphore
-> with a simpler structure:
-> 1. Readers never wait. They try to take the vma_lock and fall back to
-> mmap_lock if that fails.
-> 2. Only one writer at a time will ever try to write-lock a vma_lock
-> because writers first take mmap_lock in write mode.
-> Because of these requirements, full rw_semaphore functionality is not
-> needed and we can replace rw_semaphore and the vma->detached flag with
-> a refcount (vm_refcnt).
+On Fri, Feb 21, 2025 at 09:46:08AM -0500, Tamir Duberstein wrote:
+> On Fri, Feb 21, 2025 at 9:40 AM Boqun Feng <boqun.feng@gmail.com> wrote:
+> >
+> > Hmm... if you mean:
+> >
+> > trait HasHrTimer {
+> >     unsafe fn start(&self, expires: Ktime) {
+> >         ...
+> >     }
+> > }
+> >
+> > Then it'll be problematic because the pointer derived from `&self`
+> > doesn't have write provenance, therefore in a timer callback, the
+> > pointer cannot be used for write, which means for example you cannot
+> > convert the pointer back into a `Pin<Box<HasTimer>>`.
+> >
+> > To answer Tamir's question, pointers are heavily used here because we
+> > need to preserve the provenance.
 > 
-> When vma is in detached state, vm_refcnt is 0 and only a call to
-> vma_mark_attached() can take it out of this state. Note that unlike
-> before, now we enforce both vma_mark_attached() and vma_mark_detached()
-> to be done only after vma has been write-locked. vma_mark_attached()
-> changes vm_refcnt to 1 to indicate that it has been attached to the vma
-> tree. When a reader takes read lock, it increments vm_refcnt, unless the
-> top usable bit of vm_refcnt (0x40000000) is set, indicating presence of
-> a writer. When writer takes write lock, it sets the top usable bit to
-> indicate its presence. If there are readers, writer will wait using newly
-> introduced mm->vma_writer_wait. Since all writers take mmap_lock in write
-> mode first, there can be only one writer at a time. The last reader to
-> release the lock will signal the writer to wake up.
-> refcount might overflow if there are many competing readers, in which case
-> read-locking will fail. Readers are expected to handle such failures.
-> 
-> In summary:
-> 1. all readers increment the vm_refcnt;
-> 2. writer sets top usable (writer) bit of vm_refcnt;
-> 3. readers cannot increment the vm_refcnt if the writer bit is set;
-> 4. in the presence of readers, writer must wait for the vm_refcnt to drop
-> to 1 (plus the VMA_LOCK_OFFSET writer bit), indicating an attached vma
-> with no readers;
-> 5. vm_refcnt overflow is handled by the readers.
-> 
-> While this vm_lock replacement does not yet result in a smaller
-> vm_area_struct (it stays at 256 bytes due to cacheline alignment), it
-> allows for further size optimization by structure member regrouping
-> to bring the size of vm_area_struct below 192 bytes.
-> 
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Suggested-by: Matthew Wilcox <willy@infradead.org>
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> Wouldn't the natural implication be that &mut self is needed? Maybe
 
-with the fix,
+For an `Arc<HasTimer>`, you cannot get `&mut self`.
 
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+> you can help me understand why pointers can express a contract that
+> references can't?
 
+I assume you already know what a pointer provenance is?
+
+	http://doc.rust-lang.org/std/ptr/index.html#provenance
+
+Passing a pointer (including offset operation on it) preserves the
+provenance (determined as derive time), however, deriving a pointer from
+a reference gives the pointer a provenance based on the reference type.
+For example, let's say we have an `Arc<i32>` and a clone:
+
+	let arc = Arc::new(42);
+	let clone = arc.clone();
+
+you can obviously do a into_raw() + from_raw() pair:
+
+	let ptr = Arc::into_raw(arc);
+	let arc = unsafe { Arc::from_raw(arc) };
+
+however, if you create a reference based on `Arc::into_raw()`, and then
+derive a pointer from that, you change the provenance, therefore the
+below code would generate UB:
+
+	// cannot mutably borrow because of clone.
+	let ptr = unsafe { &*Arc::into_raw(arc) } as *const i32;
+    
+	let arc = unsafe { Arc::from_raw(ptr) };
+
+
+(playground code snippet for this example)
+
+	https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=15e051db46c3886b29ed02e579562278
+
+As you already know, the whole thing about pointers/references here is
+passing the value to the callback and the callback can "reconstruct" the
+data, in such a case, reborrowing in the middle of the chain into a
+reference is not necessary, and as the above shows, it can be
+problematic.
+
+Hope this could be helpful.
+
+Regards,
+Boqun
