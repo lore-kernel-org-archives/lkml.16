@@ -1,76 +1,117 @@
-Received: from out28-194.mail.aliyun.com (out28-194.mail.aliyun.com [115.124.28.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C6E19CC20;
-	Fri, 21 Feb 2025 10:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.194
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0941205504;
+	Fri, 21 Feb 2025 10:27:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740133606; cv=none; b=UhJVocsgzNf3tpFYjYz70FaGgs8abnoQnMk2pYvrV4Xqg/zOy4jZGpGKAPHXwwn+vUM9VAJGV0Af53FRJUTztelYxvzX2J9hfdfse0FhekODrqkjXkoAVFj4Ttrlr7hLoMdNNN0sU4ahrjlE66sqK84lqc4BqP7QicMT96KOj08=
+	t=1740133627; cv=none; b=d/CFHYQUh+V3nTK1fsSzcJPsU7Bv+/JtNOrlmEFF2jnzANlx34aPHv2WZpC+Q35UHx29sRtdsU0BFLKvX422vMVwyzkhO7VqgEWgARvxggePBR0z4qfi7Zx49MpX0d0iROnfqB9Oix7dlXHNv9HKoS3gXbWOCzpfHjJnkH977EM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740133606; c=relaxed/simple;
-	bh=hcojOVOlZteYvTqZoEhKcz1p/KBnRLCEoAM+7JodPXM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZfMc7+9rDZF1BT8MWheInR8kegH8GYa6S2WjtPEw/n+FILNUbRWi4c8gYUkW3Go9A2pWPb2p8+D0DLsMa16Iqqq1YEi1kFYXTZW371PD20vrvCsPwSe8weGl+f2T6JZOMBIoLhr896S/JvPhRcEa4g2j5/BQojtRV6WaltGDMNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com; spf=pass smtp.mailfrom=awinic.com; arc=none smtp.client-ip=115.124.28.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awinic.com
-Received: from ubuntu-VirtualBox..(mailfrom:wangweidong.a@awinic.com fp:SMTPD_---.bYUQxFL_1740133585 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Fri, 21 Feb 2025 18:26:30 +0800
-From: wangweidong.a@awinic.com
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	wangweidong.a@awinic.com,
-	rf@opensource.cirrus.com,
-	jack.yu@realtek.com,
-	ivprusov@salutedevices.com,
-	zhoubinbin@loongson.cn,
-	quic_pkumpatl@quicinc.com,
-	paulha@opensource.cirrus.com,
-	nuno.sa@analog.com,
-	linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: yijiangtao@awinic.com
-Subject: [PATCH V1 0/2] ASoC: codecs: Add aw88166 amplifier driver
-Date: Fri, 21 Feb 2025 18:26:21 +0800
-Message-ID: <20250221102623.369435-1-wangweidong.a@awinic.com>
-X-Mailer: git-send-email 2.47.0
+	s=arc-20240116; t=1740133627; c=relaxed/simple;
+	bh=DTOaY89TL5e87zq5u+s/rMIusW8ifyGJo0qjCcMeWsY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lhqK3c44IphUbok4HufeYdpILkalFBFQ+FgSMUIMU/9xYAMpWZv83uV+actkgo1sGlQRuWiFxziMCeGtUOxDillXFpYmTd7k51OFLdBe5b+viyFo3BJaUDyBwtl51mP/ylCcjBx8a4FXSZR7K5VX4kZ7H7R9BZua+bwTPvLbEck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D36C6169C;
+	Fri, 21 Feb 2025 02:27:21 -0800 (PST)
+Received: from [10.57.85.120] (unknown [10.57.85.120])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 320623F5A1;
+	Fri, 21 Feb 2025 02:26:59 -0800 (PST)
+Message-ID: <1ac64c39-419b-4fac-8820-bbfb4e6afec4@arm.com>
+Date: Fri, 21 Feb 2025 10:26:57 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/4] arm64: hugetlb: Fix huge_ptep_get_and_clear() for
+ non-present ptes
+Content-Language: en-GB
+To: Catalin Marinas <catalin.marinas@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Naveen N Rao <naveen@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Andreas Larsson <andreas@gaisler.com>, Arnd Bergmann <arnd@arndb.de>,
+ Muchun Song <muchun.song@linux.dev>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ David Hildenbrand <david@redhat.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Kevin Brodsky <kevin.brodsky@arm.com>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>,
+ linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20250217140419.1702389-1-ryan.roberts@arm.com>
+ <20250217140419.1702389-3-ryan.roberts@arm.com>
+ <e26a59a1-ff9a-49c7-b10a-c3f5c096a2c4@arm.com>
+ <5477d161-12e7-4475-a6e9-ff3921989673@arm.com>
+ <50f48574-241d-42d8-b811-3e422c41e21a@arm.com> <Z7hNgSBw6lfwwcch@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <Z7hNgSBw6lfwwcch@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Weidong Wang <wangweidong.a@awinic.com>
+On 21/02/2025 09:55, Catalin Marinas wrote:
+> On Thu, Feb 20, 2025 at 12:07:35PM +0530, Anshuman Khandual wrote:
+>> On 2/19/25 14:28, Ryan Roberts wrote:
+>>> On 19/02/2025 08:45, Anshuman Khandual wrote:
+>>>> On 2/17/25 19:34, Ryan Roberts wrote:
+>>>>> +	while (--ncontig) {
+>>>>
+>>>> Should this be converted into a for loop instead just to be in sync with other
+>>>> similar iterators in this file.
+>>>>
+>>>> for (i = 1; i < ncontig; i++, addr += pgsize, ptep++)
+>>>> {
+>>>> 	tmp_pte = __ptep_get_and_clear(mm, addr, ptep);
+>>>> 	if (present) {
+>>>> 		if (pte_dirty(tmp_pte))
+>>>> 			pte = pte_mkdirty(pte);
+>>>> 		if (pte_young(tmp_pte))
+>>>> 			pte = pte_mkyoung(pte);
+>>>> 	}
+>>>> }
+>>>
+>>> I think the way you have written this it's incorrect. Let's say we have 16 ptes
+>>> in the block. We want to iterate over the last 15 of them (we have already read
+>>> pte 0). But you're iterating over the first 15 because you don't increment addr
+>>> and ptep until after you've been around the loop the first time. So we would
+>>> need to explicitly increment those 2 before entering the loop. But that is only
+>>> neccessary if ncontig > 1. Personally I think my approach is neater...
+>>
+>> Thinking about this again. Just wondering should not a pte_present()
+>> check on each entries being cleared along with (ncontig > 1) in this
+>> existing loop before transferring over the dirty and accessed bits -
+>> also work as intended with less code churn ?
+> 
+> Shouldn't all the ptes in a contig block be either all present or all
+> not-present? Is there any point in checking each individually?
 
-Add the awinic,aw88166 property to support the aw88166 chip.
+I agree, that's why I was just testing it once outside the loop. I'm confident
+my code and Anshuman's alternative are both correct. So it's just a stylistic
+choice really. I'd prefer to leave it as is, but will change if there is
+consensus. I'm not sure I'm hearing that though.
 
-The driver is for amplifiers aw88166 of Awinic Technology
-Corporation. The AW88166 is a high efficiency digital
-Smart K audio amplifier
+Catalin, do you want me to respin the series to fix up the typos that Anshuman
+highlighted, or will you handle that?
 
-Weidong Wang (2):
-  ASoC: dt-bindings: Add schema for "awinic,aw88166"
-  ASoC: codecs: Add aw88166 amplifier driver
-
- .../bindings/sound/awinic,aw88395.yaml        |    1 +
- sound/soc/codecs/Kconfig                      |   13 +
- sound/soc/codecs/Makefile                     |    2 +
- sound/soc/codecs/aw88166.c                    | 1937 +++++++++++++++++
- sound/soc/codecs/aw88166.h                    |  534 +++++
- 5 files changed, 2487 insertions(+)
- create mode 100644 sound/soc/codecs/aw88166.c
- create mode 100644 sound/soc/codecs/aw88166.h
-
-
-base-commit: 334426094588f8179fe175a09ecc887ff0c75758
--- 
-2.47.0
+Thanks,
+Ryan
 
