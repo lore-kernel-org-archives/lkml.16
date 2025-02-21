@@ -1,84 +1,134 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0449202F68
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 09:07:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8558F201253
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 09:08:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740128874; cv=none; b=qbWDf5o5nrnMVOOy38+H4ttxaFz7NiNt5l58vUm8mgvloS1nWFAVpF76MAUXZvKIWg6WDgUUKOEHomznWLf7I4uINW85AVyjVh5d0CvlTYx7EyJhaG6NObdNQVU0HGJg6rcy37R+uP6F7294eXJ1U3jSjoe2D8+mpFH5+cwhsFg=
+	t=1740128901; cv=none; b=oJSZCQc4fQ4OcXg/xZJn8F9Zuns0H6itMxU0OTbHBvO7ySeM2h5nGGnsTY6tNVZop7WHKfg4RugtXgti7XzBfA5vwQgDTUX+upiiQqOPD8zO53QYBmz4+d2ku6z1iOAYHz2cqGSjNuzucX1ZNhBgWhnyJ2iccItXfCBhtbiX18k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740128874; c=relaxed/simple;
-	bh=ZoewP+I7MPJSYwRR1gmRB8PDPc9ZAqkchO++ck4YW7w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b0J5HC7cXAz4thDRZRDwl319UME03GkH27wolp7OhuW2SPi+DgNhV5J2JHLy7K43BMt0VwaDWsuo7+meGDDtTMUrqOgjwr78a2sKmyNYGwiZbeMN/g5SkXLqsHFCnhfPDuWXVunw6q3p+ZpW+BVgP5vwijK3sM3DAhQoEcOZFpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RWpNzL91; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RWpNzL91"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740128860;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=wprGiDaMDqnJuc56NWAkjn4Xo990TLMpiIEvRYQHvNA=;
-	b=RWpNzL91fOV76E4FT0Qg1C1hW03gGljtkq+1rcl4o1rRdp8vAwk2Q3E5EhojRW8NAMhROb
-	B4mqaqvylpwrNmXriJqprBcMf3Kg690gJS8tS8Dt/IwPPFWgibki9ZwbfcZjPFL5ccqWZe
-	cROndeaTRWEenWJIUJbVqOww26KKyLo=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Saeed Mahameed <saeedm@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Yevgeny Kliteynik <kliteyn@nvidia.com>,
-	Mark Bloch <mbloch@nvidia.com>,
-	Itamar Gozlan <igozlan@nvidia.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	Jacob Keller <jacob.e.keller@intel.com>,
-	Saeed Mahameed <saeed@kernel.org>,
-	netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH net-next] net/mlx5: Use secs_to_jiffies() instead of msecs_to_jiffies()
-Date: Fri, 21 Feb 2025 09:53:22 +0100
-Message-ID: <20250221085350.198024-3-thorsten.blum@linux.dev>
+	s=arc-20240116; t=1740128901; c=relaxed/simple;
+	bh=aLhpoR2Qz3WvtScp8s0/CscGnBuMdFhEXXNXBzl3Hq4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=TX9Z1FiNstHMf63GUV2qhg0TAAd90tgh7lw2PhTQFtGC3v6aFVYxXRONvY8Fy0/R8TGOcTSdCkgClRszHsBIUcJpGBQo4dWcFqj5gtb/duD2hFXi3h10+ZpSjdSPrQPY/r0bsAw5DaEFCqfhEK6lGk688/KAAuDWaZ4la35tdcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tlP0n-0006M5-JE; Fri, 21 Feb 2025 10:07:57 +0100
+Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tlP0k-0024nY-2Z;
+	Fri, 21 Feb 2025 10:07:54 +0100
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1tlP0k-0002L0-29;
+	Fri, 21 Feb 2025 10:07:54 +0100
+Message-ID: <d31a48ebfc0f91de615af75e313caa6afbdd597d.camel@pengutronix.de>
+Subject: Re: [PATCH 2/2] PCI: sophgo-dwc: Add Sophgo SG2044 PCIe driver
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Inochi Amaoto <inochiama@gmail.com>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?=
+ <kw@linux.com>,  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Niklas Cassel <cassel@kernel.org>,  Shashank Babu
+ Chinta Venkata <quic_schintav@quicinc.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, Yixun Lan <dlan@gentoo.org>, Longbin Li
+	 <looong.bin@gmail.com>
+Date: Fri, 21 Feb 2025 10:07:54 +0100
+In-Reply-To: <20250221013758.370936-3-inochiama@gmail.com>
+References: <20250221013758.370936-1-inochiama@gmail.com>
+	 <20250221013758.370936-3-inochiama@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Use secs_to_jiffies() and simplify the code.
+On Fr, 2025-02-21 at 09:37 +0800, Inochi Amaoto wrote:
+> Add support for DesignWare-based PCIe controller in SG2044 SoC.
+>=20
+> Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+> ---
+>  drivers/pci/controller/dwc/Kconfig          |  10 +
+>  drivers/pci/controller/dwc/Makefile         |   1 +
+>  drivers/pci/controller/dwc/pcie-dw-sophgo.c | 282 ++++++++++++++++++++
+>  3 files changed, 293 insertions(+)
+>  create mode 100644 drivers/pci/controller/dwc/pcie-dw-sophgo.c
+>=20
+[...]
+> diff --git a/drivers/pci/controller/dwc/pcie-dw-sophgo.c b/drivers/pci/co=
+ntroller/dwc/pcie-dw-sophgo.c
+> new file mode 100644
+> index 000000000000..a4ca4f1e26e0
+> --- /dev/null
+> +++ b/drivers/pci/controller/dwc/pcie-dw-sophgo.c
+> @@ -0,0 +1,282 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * PCIe host controller driver for Sophgo SoCs.
+> + *
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/property.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
 
-Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
-Reviewed-by: Saeed Mahameed <saeed@kernel.org>
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
-Resend with "net-next" in the title as suggested by Jacob and Saeed.
----
- drivers/net/ethernet/mellanox/mlx5/core/steering/hws/bwc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Drop this ...
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/bwc.c b/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/bwc.c
-index 3dbd4efa21a2..19dce1ba512d 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/bwc.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/bwc.c
-@@ -220,7 +220,7 @@ static int hws_bwc_queue_poll(struct mlx5hws_context *ctx,
- 			      bool drain)
- {
- 	unsigned long timeout = jiffies +
--				msecs_to_jiffies(MLX5HWS_BWC_POLLING_TIMEOUT * MSEC_PER_SEC);
-+				secs_to_jiffies(MLX5HWS_BWC_POLLING_TIMEOUT);
- 	struct mlx5hws_flow_op_result comp[MLX5HWS_BWC_MATCHER_REHASH_BURST_TH];
- 	u16 burst_th = hws_bwc_get_burst_th(ctx, queue_id);
- 	bool got_comp = *pending_rules >= burst_th;
--- 
-2.48.1
+> +
+> +#include "pcie-designware.h"
+> +
+> +#define to_sophgo_pcie(x)		dev_get_drvdata((x)->dev)
+> +
+> +#define PCIE_INT_SIGNAL			0xc48
+> +#define PCIE_INT_EN			0xca0
+> +
+> +#define PCIE_SIGNAL_INTX_SHIFT		5
+> +
+> +#define PCIE_INT_EN_INTX_SHIFT		1
+> +#define PCIE_INT_EN_INT_SII		BIT(0)
+> +#define PCIE_INT_EN_INT_INTA		BIT(1)
+> +#define PCIE_INT_EN_INT_INTB		BIT(2)
+> +#define PCIE_INT_EN_INT_INTC		BIT(3)
+> +#define PCIE_INT_EN_INT_INTD		BIT(4)
+> +#define PCIE_INT_EN_INT_MSI		BIT(5)
+> +
+> +struct sophgo_pcie {
+> +	struct dw_pcie pci;
+> +	void __iomem *app_base;
+> +	struct clk_bulk_data *clks;
+> +	unsigned int clk_cnt;
+> +	struct reset_control *rst;
 
+... and this. It is unused.
+
+
+regards
+Philipp
