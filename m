@@ -1,114 +1,101 @@
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from s2.avantea.pl (s2.avantea.pl [46.242.128.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 860491EBA14
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 16:39:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82BDD1EBA14;
+	Fri, 21 Feb 2025 16:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.242.128.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740156001; cv=none; b=EEwo6L1EEQn6HD/XiDT3z1AsIrPM7ECqVd7uAxDUFZsztxFiOSLgCJk+AR+1Xz7MB6NEClfTeGR5Jo2aTWh5Yd/XaU2s+fVB+gVDPaRBEUWhfPehWD63fJYrsYtYPyXyhxKgRbfFqd+g7dLEyhL+aYzrCbz8dMWFwuBkLBkH19s=
+	t=1740156009; cv=none; b=oYl0vjFDdPIgd51OsuzShMcXBLF/P9Yyzt337Xmf4Q7rjrvmTny8LSVu8HhaJiVD+78ihqehQpX3xYcPyg5bT5ovEgiyFaNzkrOLPxs9JmqAR74/wgYaLWUhm9ykI1OrFyjyLmTv2koJPEzTBRuJxJ1NZmweKi4eVSJKJupmq/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740156001; c=relaxed/simple;
-	bh=VE5mMyStHsDU17NQ22dtIc4GazCDgcLebbjhX7Gm4lQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IcgjAgUhgZFMehFPyf0eWyVHN+Z30vibG+amPpUbka0v1/UWpOQ899U4w1mO3FJKy6SRMlw/0p0PiTpMq41lsCjL7esn+q7Yw6Dad655cnJJ5bL5bz7yjMp69+fmveMVN6rISAzjm91uC9uxds8XCuH+KbhvI8CR2/f6Lga6eyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Y2GBrl1Y; arc=none smtp.client-ip=209.85.166.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1740156009; c=relaxed/simple;
+	bh=0ZMDRFPUNe4qk8G8SolkBVr1G4m1qg1ow0otgDRhPwA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fde2tVnxSz1bMmpmWnkh26E4FA9W5YcbTCKQCP6Aa/50E7k8qL1QFv2/YET4TtWHYuS3ZTtrt+WyCtJzubQQV9r2+HMCsmAT5IyuFIwJodiHCapxulao3FKUVAUVGI/PhatI4cQUt7CuXdZVHjS2Yq+8f4m37fCtgd4/1auMx94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=szczodrzynski.pl; spf=pass smtp.mailfrom=szczodrzynski.pl; dkim=pass (2048-bit key) header.d=szczodrzynski.pl header.i=@szczodrzynski.pl header.b=CMNzlDdk; arc=none smtp.client-ip=46.242.128.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=szczodrzynski.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szczodrzynski.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Y2GBrl1Y"
-Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-855a1f50a66so60500939f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 08:39:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1740155997; x=1740760797; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tpIVheEuZLG2iAHIpc9LKyrAoq5nqc9ptuNxDevkzBg=;
-        b=Y2GBrl1YCah/odD6SEeL6NNdNgHuuHA5oMu1xzQeXx7mdo5U5Jy0ZGKMKllFlLjzS1
-         dqzFJVDKfUEoORsrEAgTho30PKqum+rUlmoLUAofgt9SGG9ewqIo2aqYWW1LSa5KxR0r
-         Xcd03+Rrzfpg0sg/xMMztPEdaXMAdp4aUgs/XCNs7Dyaw/+p/kb+565lvc2Ul+Kgbh2R
-         7OKA5zIPvAKZIfuzeBOpJzqWGLmSP4XKCAIbPGSKHzBpUmOalOvp8um4HtXNSFtflxa8
-         lhKfqRPejPPkqO7qtky4gTM2RT3Znm3I6O39ea2PlAFqgL2yXx2thhwRTpdij9d1CduM
-         MJIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740155997; x=1740760797;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tpIVheEuZLG2iAHIpc9LKyrAoq5nqc9ptuNxDevkzBg=;
-        b=u4mFvwodM1h0hlIw3DVKoARw/mdREUDLi0NMGUKp6b0xlLznNcfNFwHKqM1iMWxYpE
-         Yt4gxHHmp+cp3vjxMl01bGuVV6qhWt57OJTDu2b7/NXwG/FjwODTaG86URxCbQ9z53FY
-         930A2sTmv4ljy8rxkSgulEyjnP7Foiev9WcJeKjjFzTzf+9wmzL1OB21kJc9QwTY4Wx8
-         iK4cL6uzjbYDBMX3P2sTpu2yx6TPN7etQpXPo9CdrKCYafJPZt2+nawHnX7yHSUnHdiz
-         Cp+HrsQVnBzMooweZnPo5fEKXPUqGF+VLfGkCNX402QRGVMvI9ltw7iWhoiLiypvPN1L
-         NGzA==
-X-Forwarded-Encrypted: i=1; AJvYcCXcg1V2BAZOde/2kMKFEhApAXLE+GOs9Xtl4bt1fZ6eUvRDEROxvejRzEifYjZOROI8iTBnKOohKEkhT/8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxh3qc4Kya83ogiI80WERmPD6RSKulCNp/2dzX1/LwMiQY6WUhL
-	j+IV3yjMlXri0ZR6+ZXJYnxTGRZJT64JGi8YsO8bgI4TCHOu5jBo9tfSvGc5ksg=
-X-Gm-Gg: ASbGnctgYEkIXA0eaouQ2CbZWOi7zqXCrQdggnMFHjuo9hQRnCehXYtuhbxbw0jBZ0s
-	FSyN8SSwVZPxmRmxkg5haOO7Z18OZEyf/dzs7ebSt0et8weZil5gp2Fx4kT7aPdsp/WXlJ/yVww
-	QXZnWLosE9OPzr01Z4Z9mP3QFAd8WVcTvTxw7AvV1JtjgXO9iY/dh0EuVDA1c3b3gwR98j7jLuo
-	yQRHPsmsib9lx2Sk/ryiW/svSWEA1O5lUfGOGeji5aOf1iMMZfTiw/JJISNcDAEOoXBCUTvYc1Z
-	982veq2CBeu3stQvxbG0MAU=
-X-Google-Smtp-Source: AGHT+IEQDPSURcGXmuozZVdFy3UCuIUjqREgH/Da4GyTWHQurE3pBhVbAP+8ISGsn67fSxl7Tt603A==
-X-Received: by 2002:a05:6e02:156e:b0:3d1:968a:6d46 with SMTP id e9e14a558f8ab-3d2cae6b841mr37216195ab.6.1740155997651;
-        Fri, 21 Feb 2025 08:39:57 -0800 (PST)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d18f9c5bc9sm39596575ab.28.2025.02.21.08.39.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2025 08:39:56 -0800 (PST)
-Message-ID: <0c1faa58-b658-4a64-9d42-eaf603fdc69d@kernel.dk>
-Date: Fri, 21 Feb 2025 09:39:55 -0700
+	dkim=pass (2048-bit key) header.d=szczodrzynski.pl header.i=@szczodrzynski.pl header.b="CMNzlDdk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=szczodrzynski.pl; s=x; h=Content-Transfer-Encoding:Content-Type:
+	MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=w2E197Qc+tMzoaRduX1xKII3x7kGR5ATZ73uNFSwZtQ=; b=CMNzlDdkHQ6mojLXa6tNiP/3VC
+	RkIZGgKGLCLwEE4kPiGTssFxkaN0xfA7iu5WpmszAXMImsPodll8V0+9AC8TDn4YfEsc7Wp+sVXyP
+	bw5eGzs6xhuk9T8yiqzR2bKgTIf9mcr2aydxbSSuy9e5FQlKv/eQgku1xjrcD+KHsyrXwB0RX8aOF
+	+yPQyPm+M+bXvN+Ih7QHFFDOLh1/NMvVhCBjuWb8/Mr9AHv7Icatpoe8wI8gVs18Vru9xNko2ePe8
+	ezPts3Z/Y0LIeJ7RWEUIpJ9F4dU8HijLXrwRyvvCShp5JHvXij14iwDn5G9u79LBlPQChA6Vp66ID
+	+GldAbUw==;
+Received: from [62.171.184.96] (helo=buildhost.contaboserver.net)
+	by s2.avantea.pl with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.96-58-g4e9ed49f8)
+	(envelope-from <kuba@szczodrzynski.pl>)
+	id 1tlVix-00AOLX-1V;
+	Fri, 21 Feb 2025 17:17:59 +0100
+From: =?UTF-8?q?Kuba=20Szczodrzy=C5=84ski?= <kuba@szczodrzynski.pl>
+To: Maxime Ripard <mripard@kernel.org>,
+	Samuel Holland <samuel@sholland.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH 5/5] riscv: dts: allwinner: d1s-t113: Add LVDS0 pins
+Date: Fri, 21 Feb 2025 17:17:51 +0100
+Message-Id: <20250221161751.1278049-6-kuba@szczodrzynski.pl>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250221161751.1278049-1-kuba@szczodrzynski.pl>
+References: <20250221161751.1278049-1-kuba@szczodrzynski.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] io_uring: add missing IORING_MAP_OFF_ZCRX_REGION in
- io_uring_mmap
-To: Pavel Begunkov <asml.silence@gmail.com>, lizetao <lizetao1@huawei.com>,
- Bui Quang Minh <minhquangbui99@gmail.com>
-Cc: David Wei <dw@davidwei.uk>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>
-References: <20250221085933.26034-1-minhquangbui99@gmail.com>
- <590cff7ccda34b028706b9288f8928d3@huawei.com>
- <79189960-b645-4b51-a3d7-609708dc3ee2@gmail.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <79189960-b645-4b51-a3d7-609708dc3ee2@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Id: kuba@szczodrzynski.pl
 
-On 2/21/25 5:20 AM, Pavel Begunkov wrote:
-> On 2/21/25 09:10, lizetao wrote:
->> Hi,
->>
->>> -----Original Message-----
->>> From: Bui Quang Minh <minhquangbui99@gmail.com>
->>> Sent: Friday, February 21, 2025 5:00 PM
->>> To: io-uring@vger.kernel.org
->>> Cc: Jens Axboe <axboe@kernel.dk>; Pavel Begunkov
->>> <asml.silence@gmail.com>; David Wei <dw@davidwei.uk>; linux-
->>> kernel@vger.kernel.org; Bui Quang Minh <minhquangbui99@gmail.com>
->>> Subject: [PATCH] io_uring: add missing IORING_MAP_OFF_ZCRX_REGION in
->>> io_uring_mmap
->>>
->>> Allow user to mmap the kernel allocated zerocopy-rx refill queue.
->>>
->>
->> Maybe fixed-tag should be added here.
-> 
-> No need, it's not strictly a fix, and whlist it's not yet sent to
-> linus, the tags only cause confusion when hashes change, e.g. on rebase.
+Add LVDS pins to the PIO since it's now supported on D1s/T113.
 
-I do like using fixes still, if only to provide a link to the original
-commit without needing to dig for it. And yeah there's the occasional
-rebase where I forget to update the sha, but those get discovered pretty
-quick.
+Signed-off-by: Kuba Szczodrzyński <kuba@szczodrzynski.pl>
+---
+ arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
+diff --git a/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi b/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
+index d241ba306..174b6d8f9 100644
+--- a/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
++++ b/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
+@@ -78,6 +78,15 @@ dsi_4lane_pins: dsi-4lane-pins {
+ 				function = "dsi";
+ 			};
+ 
++			/omit-if-no-ref/
++			lvds0_pins: lvds0-pins {
++				pins = "PD0", "PD1", "PD2", "PD3", "PD4", "PD5",
++				       "PD6", "PD7", "PD8", "PD9";
++				function = "lvds0";
++				drive-strength = <30>;
++				bias-disable;
++			};
++
+ 			/omit-if-no-ref/
+ 			lcd_rgb666_pins: lcd-rgb666-pins {
+ 				pins = "PD0", "PD1", "PD2", "PD3", "PD4", "PD5",
 -- 
-Jens Axboe
+2.25.1
 
