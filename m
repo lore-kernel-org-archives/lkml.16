@@ -1,28 +1,28 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC8D2040A6;
-	Fri, 21 Feb 2025 08:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2069C20551C;
+	Fri, 21 Feb 2025 08:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740125707; cv=none; b=ssp5xxyYldUnxjBdD6i/7UCxeqhNjnabdHTuJLwzzhsktyZfmKHveP1zJ3rvbiT72IIvFl987mR8CE0pImTyfWjQLT+beAUV8bS2wCLc1kA7celYpiHZrxD3IbBzYkFn6y4lQWAiitDFlM9VZluxzKYvKY+mHC64m5iFQl2RhXk=
+	t=1740125709; cv=none; b=tN6+zuMSirmDT9ZUpae21CPFAzezYuhOXHhANhFlo9dPUJKwVGla8BPAs/rBDKsLoglUuqA9K1DceUItxwlNF043qA8EgYvIxOFfeK7nkXVXyeLMrN6qxjkcNT84fjWKhvFkncyE2B2yDD02Dq+sdimdVJnQulp0TMztcrFVJRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740125707; c=relaxed/simple;
-	bh=A6gnyyT5/Tb4TC6XpGOVH0o0PRn0XU0L7ShiWJqdDPc=;
+	s=arc-20240116; t=1740125709; c=relaxed/simple;
+	bh=/3Nv2WH63vhmb0IIk1pnnQl9RFsEL+I20wtkbhg6JHc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cfzZQo3DsF3mEWu2vPh4a5RvJ+EGt6+CjNMiYnHTunOivwCr7b9D1vufiCD0Hix52U9iErQoGu3jlzrLFDvM9d4BBC1YGVQS7HsvLlK58lGBVs/SZNPooIfBU8jw+nqvE1u2n4h1kzIrNN6cVFpEBz/KtS6qpPmONiAq0zx9XQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=YpJ2A4tyBvre/CfRdZaSpzPCO8slPVkZzmblI/MG/mWIYPrjKnadtIWZvweQN2wwJNEgztpu308vAQRv2k4xSrlKReM3pIv5/96YYyFyO9T3PmHDNemBRAjFUg/jFpJxJASz7gRapK/AlQ5U5Bt1NIBdnUIcq1OsOvedQ2Ti5U4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4YzjbM3bZcz4f3lDF;
-	Fri, 21 Feb 2025 16:14:39 +0800 (CST)
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4YzjbQ4N64z4f3jYQ;
+	Fri, 21 Feb 2025 16:14:42 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 8D0091A06D7;
-	Fri, 21 Feb 2025 16:15:02 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 4269E1A058E;
+	Fri, 21 Feb 2025 16:15:04 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgC3Gl_8NbhnHF3eEQ--.3944S14;
-	Fri, 21 Feb 2025 16:15:02 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgC3Gl_8NbhnHF3eEQ--.3944S16;
+	Fri, 21 Feb 2025 16:15:03 +0800 (CST)
 From: Zheng Qixing <zhengqixing@huaweicloud.com>
 To: axboe@kernel.dk,
 	song@kernel.org,
@@ -47,9 +47,9 @@ Cc: linux-block@vger.kernel.org,
 	nvdimm@lists.linux.dev,
 	yi.zhang@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH 10/12] badblocks: return boolen from badblocks_set() and badblocks_clear()
-Date: Fri, 21 Feb 2025 16:11:07 +0800
-Message-Id: <20250221081109.734170-11-zhengqixing@huaweicloud.com>
+Subject: [PATCH 12/12] badblocks: use sector_t instead of int to avoid truncation of badblocks length
+Date: Fri, 21 Feb 2025 16:11:09 +0800
+Message-Id: <20250221081109.734170-13-zhengqixing@huaweicloud.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20250221081109.734170-1-zhengqixing@huaweicloud.com>
 References: <20250221081109.734170-1-zhengqixing@huaweicloud.com>
@@ -60,288 +60,325 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgC3Gl_8NbhnHF3eEQ--.3944S14
-X-Coremail-Antispam: 1UD129KBjvJXoW3WF47uFyxZw4DtF47Jr4DCFg_yoWfGr4kpa
-	9xJa4fJrWUWr18WF1UZ3Z5tr1Fg343tF4UK3y3J340kryqy3yxtF1kXryYqFyjgrW3CrnI
-	qa15urW5ua4DW37anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPvb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+X-CM-TRANSID:gCh0CgC3Gl_8NbhnHF3eEQ--.3944S16
+X-Coremail-Antispam: 1UD129KBjvJXoW3KrW3KrW7XF1DWF1Duw1kuFg_yoWkAr13pa
+	1DJa4fJryUWF18W3WUZayq9r1Fy34ftFWUK3yUW34jgFykK3s7tF1kXFyYqFyjgFW3Grn0
+	q3WY9rW3ua4kGrJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPqb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
 	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
 	rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267
-	AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E
-	14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7
-	xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Y
-	z7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2
-	AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
-	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6r
-	W5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF
-	7I0E14v26r4UJVWxJr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
-	v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuY
-	vjxUI1v3UUUUU
+	AKxVWxJr0_GcWl84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAF
+	wI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2
+	WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkE
+	bVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY1x0262kKe7
+	AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02
+	F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_Wr
+	ylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI
+	0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x
+	07jxwIDUUUUU=
 X-CM-SenderInfo: x2kh0wptl0x03j6k3tpzhluzxrxghudrp/
 
 From: Zheng Qixing <zhengqixing@huawei.com>
 
-Change the return type of badblocks_set() and badblocks_clear()
-from int to bool, indicating success or failure. Specifically:
+There is a truncation of badblocks length issue when set badblocks as
+follow:
 
-- _badblocks_set() and _badblocks_clear() functions now return
-true for success and false for failure.
-- All calls to these functions have been updated to handle the
-new boolean return type.
-- This change improves code clarity and ensures a more consistent
-handling of success and failure states.
+echo "2055 4294967299" > bad_blocks
+cat bad_blocks
+2055 3
 
+Change 'sectors' argument type from 'int' to 'sector_t'.
+
+This change avoids truncation of badblocks length for large sectors by
+replacing 'int' with 'sector_t' (u64), enabling proper handling of larger
+disk sizes and ensuring compatibility with 64-bit sector addressing.
+
+Fixes: 9e0e252a048b ("badblocks: Add core badblock management code")
 Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
 ---
- block/badblocks.c             | 37 +++++++++++++++++------------------
- drivers/block/null_blk/main.c | 17 ++++++++--------
- drivers/md/md.c               | 35 +++++++++++++++++----------------
- drivers/nvdimm/badrange.c     |  2 +-
- include/linux/badblocks.h     |  6 +++---
- 5 files changed, 49 insertions(+), 48 deletions(-)
+ block/badblocks.c             | 20 ++++++++------------
+ drivers/block/null_blk/main.c |  2 +-
+ drivers/md/md.h               |  6 +++---
+ drivers/md/raid1-10.c         |  2 +-
+ drivers/md/raid1.c            |  4 ++--
+ drivers/md/raid10.c           |  8 ++++----
+ drivers/nvdimm/nd.h           |  2 +-
+ drivers/nvdimm/pfn_devs.c     |  7 ++++---
+ drivers/nvdimm/pmem.c         |  2 +-
+ include/linux/badblocks.h     |  8 ++++----
+ 10 files changed, 29 insertions(+), 32 deletions(-)
 
 diff --git a/block/badblocks.c b/block/badblocks.c
-index 79d91be468c4..8f057563488a 100644
+index 8f057563488a..14e3be47d22d 100644
 --- a/block/badblocks.c
 +++ b/block/badblocks.c
-@@ -836,8 +836,8 @@ static bool try_adjacent_combine(struct badblocks *bb, int prev)
+@@ -836,7 +836,7 @@ static bool try_adjacent_combine(struct badblocks *bb, int prev)
  }
  
  /* Do exact work to set bad block range into the bad block table */
--static int _badblocks_set(struct badblocks *bb, sector_t s, int sectors,
--			  int acknowledged)
-+static bool _badblocks_set(struct badblocks *bb, sector_t s, int sectors,
-+			   int acknowledged)
+-static bool _badblocks_set(struct badblocks *bb, sector_t s, int sectors,
++static bool _badblocks_set(struct badblocks *bb, sector_t s, sector_t sectors,
+ 			   int acknowledged)
  {
  	int len = 0, added = 0;
- 	struct badblocks_context bad;
-@@ -847,11 +847,11 @@ static int _badblocks_set(struct badblocks *bb, sector_t s, int sectors,
+@@ -956,8 +956,6 @@ static bool _badblocks_set(struct badblocks *bb, sector_t s, int sectors,
+ 	if (sectors > 0)
+ 		goto re_insert;
  
- 	if (bb->shift < 0)
- 		/* badblocks are disabled */
--		return 1;
-+		return false;
- 
- 	if (sectors == 0)
- 		/* Invalid sectors number */
--		return 1;
-+		return false;
- 
- 	if (bb->shift) {
- 		/* round the start down, and the end up */
-@@ -977,7 +977,7 @@ static int _badblocks_set(struct badblocks *bb, sector_t s, int sectors,
- 
- 	write_sequnlock_irqrestore(&bb->lock, flags);
- 
--	return sectors;
-+	return sectors == 0;
- }
- 
- /*
-@@ -1048,21 +1048,20 @@ static int front_splitting_clear(struct badblocks *bb, int prev,
+-	WARN_ON(sectors < 0);
+-
+ 	/*
+ 	 * Check whether the following already set range can be
+ 	 * merged. (prev < 0) condition is not handled here,
+@@ -1048,7 +1046,7 @@ static int front_splitting_clear(struct badblocks *bb, int prev,
  }
  
  /* Do the exact work to clear bad block range from the bad block table */
--static int _badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
-+static bool _badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
+-static bool _badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
++static bool _badblocks_clear(struct badblocks *bb, sector_t s, sector_t sectors)
  {
  	struct badblocks_context bad;
  	int prev = -1, hint = -1;
- 	int len = 0, cleared = 0;
--	int rv = 0;
- 	u64 *p;
+@@ -1171,8 +1169,6 @@ static bool _badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
+ 	if (sectors > 0)
+ 		goto re_clear;
  
- 	if (bb->shift < 0)
- 		/* badblocks are disabled */
--		return 1;
-+		return false;
- 
- 	if (sectors == 0)
- 		/* Invalid sectors number */
--		return 1;
-+		return false;
- 
- 	if (bb->shift) {
- 		sector_t target;
-@@ -1182,9 +1181,9 @@ static int _badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
- 	write_sequnlock_irq(&bb->lock);
- 
- 	if (!cleared)
--		rv = 1;
-+		return false;
- 
--	return rv;
-+	return true;
+-	WARN_ON(sectors < 0);
+-
+ 	if (cleared) {
+ 		badblocks_update_acked(bb);
+ 		set_changed(bb);
+@@ -1187,8 +1183,8 @@ static bool _badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
  }
  
  /* Do the exact work to check bad blocks range from the bad block table */
-@@ -1338,11 +1337,11 @@ EXPORT_SYMBOL_GPL(badblocks_check);
-  * decide how best to handle it.
-  *
-  * Return:
-- *  0: success
-- *  other: failed to set badblocks (out of space)
-+ *  true: success
-+ *  false: failed to set badblocks (out of space)
+-static int _badblocks_check(struct badblocks *bb, sector_t s, int sectors,
+-			    sector_t *first_bad, int *bad_sectors)
++static int _badblocks_check(struct badblocks *bb, sector_t s, sector_t sectors,
++			    sector_t *first_bad, sector_t *bad_sectors)
+ {
+ 	int prev = -1, hint = -1, set = 0;
+ 	struct badblocks_context bad;
+@@ -1298,8 +1294,8 @@ static int _badblocks_check(struct badblocks *bb, sector_t s, int sectors,
+  * -1: there are bad blocks which have not yet been acknowledged in metadata.
+  * plus the start/length of the first bad section we overlap.
   */
--int badblocks_set(struct badblocks *bb, sector_t s, int sectors,
--			int acknowledged)
-+bool badblocks_set(struct badblocks *bb, sector_t s, int sectors,
-+		   int acknowledged)
+-int badblocks_check(struct badblocks *bb, sector_t s, int sectors,
+-			sector_t *first_bad, int *bad_sectors)
++int badblocks_check(struct badblocks *bb, sector_t s, sector_t sectors,
++			sector_t *first_bad, sector_t *bad_sectors)
+ {
+ 	unsigned int seq;
+ 	int rv;
+@@ -1340,7 +1336,7 @@ EXPORT_SYMBOL_GPL(badblocks_check);
+  *  true: success
+  *  false: failed to set badblocks (out of space)
+  */
+-bool badblocks_set(struct badblocks *bb, sector_t s, int sectors,
++bool badblocks_set(struct badblocks *bb, sector_t s, sector_t sectors,
+ 		   int acknowledged)
  {
  	return _badblocks_set(bb, s, sectors, acknowledged);
- }
-@@ -1359,10 +1358,10 @@ EXPORT_SYMBOL_GPL(badblocks_set);
-  * drop the remove request.
-  *
-  * Return:
-- *  0: success
-- *  1: failed to clear badblocks
-+ *  true: success
-+ *  false: failed to clear badblocks
+@@ -1361,7 +1357,7 @@ EXPORT_SYMBOL_GPL(badblocks_set);
+  *  true: success
+  *  false: failed to clear badblocks
   */
--int badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
-+bool badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
+-bool badblocks_clear(struct badblocks *bb, sector_t s, int sectors)
++bool badblocks_clear(struct badblocks *bb, sector_t s, sector_t sectors)
  {
  	return _badblocks_clear(bb, s, sectors);
  }
-@@ -1484,7 +1483,7 @@ ssize_t badblocks_store(struct badblocks *bb, const char *page, size_t len,
- 		return -EINVAL;
- 	}
- 
--	if (badblocks_set(bb, sector, length, !unack))
-+	if (!badblocks_set(bb, sector, length, !unack))
- 		return -ENOSPC;
- 	else
- 		return len;
 diff --git a/drivers/block/null_blk/main.c b/drivers/block/null_blk/main.c
-index d94ef37480bd..623db72ad66b 100644
+index 623db72ad66b..6e7d80b6e92b 100644
 --- a/drivers/block/null_blk/main.c
 +++ b/drivers/block/null_blk/main.c
-@@ -559,14 +559,15 @@ static ssize_t nullb_device_badblocks_store(struct config_item *item,
- 		goto out;
- 	/* enable badblocks */
- 	cmpxchg(&t_dev->badblocks.shift, -1, 0);
--	if (buf[0] == '+')
--		ret = badblocks_set(&t_dev->badblocks, start,
--			end - start + 1, 1);
--	else
--		ret = badblocks_clear(&t_dev->badblocks, start,
--			end - start + 1);
--	if (ret == 0)
--		ret = count;
-+	if (buf[0] == '+') {
-+		if (badblocks_set(&t_dev->badblocks, start,
-+				  end - start + 1, 1))
-+			ret = count;
-+	} else {
-+		if (badblocks_clear(&t_dev->badblocks, start,
-+				    end - start + 1))
-+			ret = count;
-+	}
- out:
- 	kfree(orig);
- 	return ret;
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 30b3dbbce2d2..49d826e475cb 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -1748,7 +1748,7 @@ static int super_1_load(struct md_rdev *rdev, struct md_rdev *refdev, int minor_
- 			count <<= sb->bblog_shift;
- 			if (bb + 1 == 0)
- 				break;
--			if (badblocks_set(&rdev->badblocks, sector, count, 1))
-+			if (!badblocks_set(&rdev->badblocks, sector, count, 1))
- 				return -EINVAL;
- 		}
- 	} else if (sb->bblog_offset != 0)
-@@ -9846,7 +9846,6 @@ int rdev_set_badblocks(struct md_rdev *rdev, sector_t s, int sectors,
- 		       int is_new)
+@@ -1302,7 +1302,7 @@ static inline blk_status_t null_handle_badblocks(struct nullb_cmd *cmd,
  {
- 	struct mddev *mddev = rdev->mddev;
--	int rv;
+ 	struct badblocks *bb = &cmd->nq->dev->badblocks;
+ 	sector_t first_bad;
+-	int bad_sectors;
++	sector_t bad_sectors;
  
- 	/*
- 	 * Recording new badblocks for faulty rdev will force unnecessary
-@@ -9862,33 +9861,35 @@ int rdev_set_badblocks(struct md_rdev *rdev, sector_t s, int sectors,
- 		s += rdev->new_data_offset;
- 	else
- 		s += rdev->data_offset;
--	rv = badblocks_set(&rdev->badblocks, s, sectors, 0);
--	if (rv == 0) {
--		/* Make sure they get written out promptly */
--		if (test_bit(ExternalBbl, &rdev->flags))
--			sysfs_notify_dirent_safe(rdev->sysfs_unack_badblocks);
--		sysfs_notify_dirent_safe(rdev->sysfs_state);
--		set_mask_bits(&mddev->sb_flags, 0,
--			      BIT(MD_SB_CHANGE_CLEAN) | BIT(MD_SB_CHANGE_PENDING));
--		md_wakeup_thread(rdev->mddev->thread);
--		return 1;
--	} else
-+
-+	if (!badblocks_set(&rdev->badblocks, s, sectors, 0))
+ 	if (badblocks_check(bb, sector, nr_sectors, &first_bad, &bad_sectors))
+ 		return BLK_STS_IOERR;
+diff --git a/drivers/md/md.h b/drivers/md/md.h
+index 923a0ef51efe..6edc0f71b7d4 100644
+--- a/drivers/md/md.h
++++ b/drivers/md/md.h
+@@ -266,8 +266,8 @@ enum flag_bits {
+ 	Nonrot,			/* non-rotational device (SSD) */
+ };
+ 
+-static inline int is_badblock(struct md_rdev *rdev, sector_t s, int sectors,
+-			      sector_t *first_bad, int *bad_sectors)
++static inline int is_badblock(struct md_rdev *rdev, sector_t s, sector_t sectors,
++			      sector_t *first_bad, sector_t *bad_sectors)
+ {
+ 	if (unlikely(rdev->badblocks.count)) {
+ 		int rv = badblocks_check(&rdev->badblocks, rdev->data_offset + s,
+@@ -284,7 +284,7 @@ static inline int rdev_has_badblock(struct md_rdev *rdev, sector_t s,
+ 				    int sectors)
+ {
+ 	sector_t first_bad;
+-	int bad_sectors;
++	sector_t bad_sectors;
+ 
+ 	return is_badblock(rdev, s, sectors, &first_bad, &bad_sectors);
+ }
+diff --git a/drivers/md/raid1-10.c b/drivers/md/raid1-10.c
+index 4378d3250bd7..62b980b12f93 100644
+--- a/drivers/md/raid1-10.c
++++ b/drivers/md/raid1-10.c
+@@ -247,7 +247,7 @@ static inline int raid1_check_read_range(struct md_rdev *rdev,
+ 					 sector_t this_sector, int *len)
+ {
+ 	sector_t first_bad;
+-	int bad_sectors;
++	sector_t bad_sectors;
+ 
+ 	/* no bad block overlap */
+ 	if (!is_badblock(rdev, this_sector, *len, &first_bad, &bad_sectors))
+diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+index 8beb8cccc6af..0b2839105857 100644
+--- a/drivers/md/raid1.c
++++ b/drivers/md/raid1.c
+@@ -1537,7 +1537,7 @@ static void raid1_write_request(struct mddev *mddev, struct bio *bio,
+ 		atomic_inc(&rdev->nr_pending);
+ 		if (test_bit(WriteErrorSeen, &rdev->flags)) {
+ 			sector_t first_bad;
+-			int bad_sectors;
++			sector_t bad_sectors;
+ 			int is_bad;
+ 
+ 			is_bad = is_badblock(rdev, r1_bio->sector, max_sectors,
+@@ -2886,7 +2886,7 @@ static sector_t raid1_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 		} else {
+ 			/* may need to read from here */
+ 			sector_t first_bad = MaxSector;
+-			int bad_sectors;
++			sector_t bad_sectors;
+ 
+ 			if (is_badblock(rdev, sector_nr, good_sectors,
+ 					&first_bad, &bad_sectors)) {
+diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+index 7ed933181712..a8664e29aada 100644
+--- a/drivers/md/raid10.c
++++ b/drivers/md/raid10.c
+@@ -747,7 +747,7 @@ static struct md_rdev *read_balance(struct r10conf *conf,
+ 
+ 	for (slot = 0; slot < conf->copies ; slot++) {
+ 		sector_t first_bad;
+-		int bad_sectors;
++		sector_t bad_sectors;
+ 		sector_t dev_sector;
+ 		unsigned int pending;
+ 		bool nonrot;
+@@ -1438,7 +1438,7 @@ static void raid10_write_request(struct mddev *mddev, struct bio *bio,
+ 		if (rdev && test_bit(WriteErrorSeen, &rdev->flags)) {
+ 			sector_t first_bad;
+ 			sector_t dev_sector = r10_bio->devs[i].addr;
+-			int bad_sectors;
++			sector_t bad_sectors;
+ 			int is_bad;
+ 
+ 			is_bad = is_badblock(rdev, dev_sector, max_sectors,
+@@ -3413,7 +3413,7 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 				sector_t from_addr, to_addr;
+ 				struct md_rdev *rdev = conf->mirrors[d].rdev;
+ 				sector_t sector, first_bad;
+-				int bad_sectors;
++				sector_t bad_sectors;
+ 				if (!rdev ||
+ 				    !test_bit(In_sync, &rdev->flags))
+ 					continue;
+@@ -3609,7 +3609,7 @@ static sector_t raid10_sync_request(struct mddev *mddev, sector_t sector_nr,
+ 		for (i = 0; i < conf->copies; i++) {
+ 			int d = r10_bio->devs[i].devnum;
+ 			sector_t first_bad, sector;
+-			int bad_sectors;
++			sector_t bad_sectors;
+ 			struct md_rdev *rdev;
+ 
+ 			if (r10_bio->devs[i].repl_bio)
+diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
+index 5ca06e9a2d29..cc5c8f3f81e8 100644
+--- a/drivers/nvdimm/nd.h
++++ b/drivers/nvdimm/nd.h
+@@ -673,7 +673,7 @@ static inline bool is_bad_pmem(struct badblocks *bb, sector_t sector,
+ {
+ 	if (bb->count) {
+ 		sector_t first_bad;
+-		int num_bad;
++		sector_t num_bad;
+ 
+ 		return !!badblocks_check(bb, sector, len / 512, &first_bad,
+ 				&num_bad);
+diff --git a/drivers/nvdimm/pfn_devs.c b/drivers/nvdimm/pfn_devs.c
+index cfdfe0eaa512..8f3e816e805d 100644
+--- a/drivers/nvdimm/pfn_devs.c
++++ b/drivers/nvdimm/pfn_devs.c
+@@ -367,9 +367,10 @@ static int nd_pfn_clear_memmap_errors(struct nd_pfn *nd_pfn)
+ 	struct nd_namespace_common *ndns = nd_pfn->ndns;
+ 	void *zero_page = page_address(ZERO_PAGE(0));
+ 	struct nd_pfn_sb *pfn_sb = nd_pfn->pfn_sb;
+-	int num_bad, meta_num, rc, bb_present;
++	int meta_num, rc, bb_present;
+ 	sector_t first_bad, meta_start;
+ 	struct nd_namespace_io *nsio;
++	sector_t num_bad;
+ 
+ 	if (nd_pfn->mode != PFN_MODE_PMEM)
  		return 0;
-+
-+	/* Make sure they get written out promptly */
-+	if (test_bit(ExternalBbl, &rdev->flags))
-+		sysfs_notify_dirent_safe(rdev->sysfs_unack_badblocks);
-+	sysfs_notify_dirent_safe(rdev->sysfs_state);
-+	set_mask_bits(&mddev->sb_flags, 0,
-+		      BIT(MD_SB_CHANGE_CLEAN) | BIT(MD_SB_CHANGE_PENDING));
-+	md_wakeup_thread(rdev->mddev->thread);
-+	return 1;
- }
- EXPORT_SYMBOL_GPL(rdev_set_badblocks);
+@@ -394,7 +395,7 @@ static int nd_pfn_clear_memmap_errors(struct nd_pfn *nd_pfn)
+ 		bb_present = badblocks_check(&nd_region->bb, meta_start,
+ 				meta_num, &first_bad, &num_bad);
+ 		if (bb_present) {
+-			dev_dbg(&nd_pfn->dev, "meta: %x badblocks at %llx\n",
++			dev_dbg(&nd_pfn->dev, "meta: %llx badblocks at %llx\n",
+ 					num_bad, first_bad);
+ 			nsoff = ALIGN_DOWN((nd_region->ndr_start
+ 					+ (first_bad << 9)) - nsio->res.start,
+@@ -413,7 +414,7 @@ static int nd_pfn_clear_memmap_errors(struct nd_pfn *nd_pfn)
+ 			}
+ 			if (rc) {
+ 				dev_err(&nd_pfn->dev,
+-					"error clearing %x badblocks at %llx\n",
++					"error clearing %llx badblocks at %llx\n",
+ 					num_bad, first_bad);
+ 				return rc;
+ 			}
+diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+index d81faa9d89c9..43156e1576c9 100644
+--- a/drivers/nvdimm/pmem.c
++++ b/drivers/nvdimm/pmem.c
+@@ -249,7 +249,7 @@ __weak long __pmem_direct_access(struct pmem_device *pmem, pgoff_t pgoff,
+ 	unsigned int num = PFN_PHYS(nr_pages) >> SECTOR_SHIFT;
+ 	struct badblocks *bb = &pmem->bb;
+ 	sector_t first_bad;
+-	int num_bad;
++	sector_t num_bad;
  
- int rdev_clear_badblocks(struct md_rdev *rdev, sector_t s, int sectors,
- 			 int is_new)
- {
--	int rv;
- 	if (is_new)
- 		s += rdev->new_data_offset;
- 	else
- 		s += rdev->data_offset;
--	rv = badblocks_clear(&rdev->badblocks, s, sectors);
--	if ((rv == 0) && test_bit(ExternalBbl, &rdev->flags))
-+
-+	if (!badblocks_clear(&rdev->badblocks, s, sectors))
-+		return 0;
-+
-+	if (test_bit(ExternalBbl, &rdev->flags))
- 		sysfs_notify_dirent_safe(rdev->sysfs_badblocks);
--	return rv;
-+	return 1;
- }
- EXPORT_SYMBOL_GPL(rdev_clear_badblocks);
- 
-diff --git a/drivers/nvdimm/badrange.c b/drivers/nvdimm/badrange.c
-index a002ea6fdd84..ee478ccde7c6 100644
---- a/drivers/nvdimm/badrange.c
-+++ b/drivers/nvdimm/badrange.c
-@@ -167,7 +167,7 @@ static void set_badblock(struct badblocks *bb, sector_t s, int num)
- 	dev_dbg(bb->dev, "Found a bad range (0x%llx, 0x%llx)\n",
- 			(u64) s * 512, (u64) num * 512);
- 	/* this isn't an error as the hardware will still throw an exception */
--	if (badblocks_set(bb, s, num, 1))
-+	if (!badblocks_set(bb, s, num, 1))
- 		dev_info_once(bb->dev, "%s: failed for sector %llx\n",
- 				__func__, (u64) s);
- }
+ 	if (kaddr)
+ 		*kaddr = pmem->virt_addr + offset;
 diff --git a/include/linux/badblocks.h b/include/linux/badblocks.h
-index 670f2dae692f..8764bed9ff16 100644
+index 8764bed9ff16..996493917f36 100644
 --- a/include/linux/badblocks.h
 +++ b/include/linux/badblocks.h
-@@ -50,9 +50,9 @@ struct badblocks_context {
+@@ -48,11 +48,11 @@ struct badblocks_context {
+ 	int		ack;
+ };
  
- int badblocks_check(struct badblocks *bb, sector_t s, int sectors,
- 		   sector_t *first_bad, int *bad_sectors);
--int badblocks_set(struct badblocks *bb, sector_t s, int sectors,
--			int acknowledged);
--int badblocks_clear(struct badblocks *bb, sector_t s, int sectors);
-+bool badblocks_set(struct badblocks *bb, sector_t s, int sectors,
-+		   int acknowledged);
-+bool badblocks_clear(struct badblocks *bb, sector_t s, int sectors);
+-int badblocks_check(struct badblocks *bb, sector_t s, int sectors,
+-		   sector_t *first_bad, int *bad_sectors);
+-bool badblocks_set(struct badblocks *bb, sector_t s, int sectors,
++int badblocks_check(struct badblocks *bb, sector_t s, sector_t sectors,
++		    sector_t *first_bad, sector_t *bad_sectors);
++bool badblocks_set(struct badblocks *bb, sector_t s, sector_t sectors,
+ 		   int acknowledged);
+-bool badblocks_clear(struct badblocks *bb, sector_t s, int sectors);
++bool badblocks_clear(struct badblocks *bb, sector_t s, sector_t sectors);
  void ack_all_badblocks(struct badblocks *bb);
  ssize_t badblocks_show(struct badblocks *bb, char *page, int unack);
  ssize_t badblocks_store(struct badblocks *bb, const char *page, size_t len,
