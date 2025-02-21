@@ -1,285 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF7F20FA99
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 14:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740148205; cv=none; b=n9ptxQGv5ykE8JtZ08c+8QoUdkfaiuRfIxVDtuD1vXFYy4YRkzaQ4NWOBpQZXDUMSD8dqQlCVwVz0TQUniqL6nENJEjfumgH1AeRSmOfz+c8N0xJA/eSaP0BxlXDM2KTs+xxWy4LQNcmKwVRCU5eySuET1U46rvft0wpacKCjjc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740148205; c=relaxed/simple;
-	bh=fYdqXlx+xtNh07wwI7HeC9dZi2obJjt0rHcBHY8Bbus=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MqWFsBZKI93oLIjahFX4nAJyjvUzd5hEGSuwH6L9hiOYOTZMBMg4ZXj4tOhn3jEnEJ42wFn/QNdaaZhwwFCBSJI6OQA2nXzJQRAIZXfHGk6cbYx+iR7qAfYfiiCSSUSXXSkAXZhSi+6dqclCWEPh1A2mhLN7AblS40QLSnJbtbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P3T8daPO; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 853F821018A;
+	Fri, 21 Feb 2025 14:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740148213; cv=pass; b=dSvnq2pcrN5mR2mGyBcsVH93bwtra6zAXqzgnGa2DVnqwMRnaUHlfW3fJmDu6tBUABn6XuVNTAi0R4MN/4L7h0DjWS0JUGKOgQVpWJAB4fgrCWPb2ea4WxFjDTIIozZi4imeXrwerM727MtnQhvvzIiaa6KdFVqRXtjxengmgNE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740148213; c=relaxed/simple;
+	bh=Chjhf8vJRRIgpjHc/tp8kE54BRHZN3NALF21aMcfaHA=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=c4p0Y4ed9S1j8FH9vfYFwT6hKtU9hkuFJHNLIXOZouR6/vJLhuv28ZW/S1XtohWdYzAV1gbzvCuufcI7MgSBXTmB93aWyPkCChGgWPTrhUO1wDkSJXjD1jNoqbRJNHq+0j55VetiqHh0AM/de/WX9hRaYErGFcG/FQgxK7h1KYQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=a2zt5gX9; arc=pass smtp.client-ip=136.143.184.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P3T8daPO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 206BEC4CED6;
-	Fri, 21 Feb 2025 14:30:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740148205;
-	bh=fYdqXlx+xtNh07wwI7HeC9dZi2obJjt0rHcBHY8Bbus=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=P3T8daPOHbnPO5rIlITBNNQNus7ylWRkKJCFQ8VnHPKgszE4yw3c5SwIj6BZi969Y
-	 77VRam7i2vZZK9mhc8qb4Lfs8wMLqz5JH3uyBM9K6+UYoBuPm+/Zm2UccUzH1biW48
-	 Uui6zxAYNn+w/awekrBZnOtHmameqdaeUOlr7slXpFGB5+7aXp95fOM+wTg4c1OWIO
-	 E1VeAFMXoYkEY7ucx3NWp9JBBSZgUjIluUFCKad1Ft3D6DPzWs6mZJ3yoS2iINuYK7
-	 UGh4i7fPLovnmLEhE5ETUn9qgN3nQqMNo4rrC6a/nahxuZ2xSXLYyxZ1QdF5BuIgAz
-	 7wtT03eMOIznw==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	Waiman Long <longman@redhat.com>,
-	Joel Granados <joel.granados@kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Anna Schumaker <anna.schumaker@oracle.com>,
-	Lance Yang <ioworker0@gmail.com>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Yongliang Gao <leonylgao@tencent.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Tomasz Figa <tfiga@chromium.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] hung_task: Show the blocker task if the task is hung on mutex
-Date: Fri, 21 Feb 2025 23:30:01 +0900
-Message-ID:  <174014820133.967666.5855819828684207404.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
-In-Reply-To:  <174014819072.967666.10146255401631551816.stgit@mhiramat.tok.corp.google.com>
-References:  <174014819072.967666.10146255401631551816.stgit@mhiramat.tok.corp.google.com>
-User-Agent: StGit/0.19
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="a2zt5gX9"
+ARC-Seal: i=1; a=rsa-sha256; t=1740148181; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=jH+Xy4+9AYhc8lqk6kHd5V7bLdJU+U8s+TJrmbRb9qfw7yURYlVcdNcoHkfV9lwFbbnB06p26NUv9sPfsn9KEv2QmFAU/3j0BbtXjQ0WXNBeE3OaLgoJdyR3fLlABIiiVEyBvty2vb5jcwIcVBgoiHW89JenhtDQ41nnBKqfkxQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1740148181; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=FyMjlHOrINYVn23syNq5kTMbUgMoK8l1mTchNcYyMuQ=; 
+	b=RxEgDRY3aL/zQKLx7X0Vg57MMpsEDKSUQXgNTN6+MctF1I3r3M3Ym6RTbQm+rOcvNFN1DFd6Dugl2idyebsJBbINmGlBT62s+6QV66n6cMfX8U7nrmWfmbMHR8Nmj+V5Rd/hHwv/Sk5I9uIc6Vro2llNyoceVgOpxRPBEZ+oF80=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740148181;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=FyMjlHOrINYVn23syNq5kTMbUgMoK8l1mTchNcYyMuQ=;
+	b=a2zt5gX90/33JfzmrEp1ofuABKSB8jnf397rM9Gi8np5LtI260wmC6uBKlYgSqsA
+	oiQwuvq7ikLeCyw6y1K+jonR8rxpUVIarB1Ci5B9gLbAASvzafrwqFKmerecRenpKR5
+	6RAvYqQX7nmGAnz3XQW41i13rMogCmj8KFna/d48=
+Received: by mx.zohomail.com with SMTPS id 1740148180118383.75730877084106;
+	Fri, 21 Feb 2025 06:29:40 -0800 (PST)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-The "hung_task" shows a long-time uninterruptible slept task, but most
-often, it's blocked on a mutex acquired by another task. Without
-dumping such a task, investigating the root cause of the hung task
-problem is very difficult.
-
-This introduce task_struct::blocker_mutex to point the mutex lock
-which this task is waiting for. Since the mutex has "owner"
-information, we can find the owner task and dump it with hung tasks.
-
-With this change, the hung task shows blocker task's info like below;
-
- INFO: task cat:113 blocked for more than 122 seconds.
-       Not tainted 6.14.0-rc3-00002-g6afe972e1b9b #152
- "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
- task:cat             state:D stack:13432 pid:113   tgid:113   ppid:103    task_flags:0x400100 flags:0x00000002
- Call Trace:
-  <TASK>
-  __schedule+0x731/0x960
-  ? schedule_preempt_disabled+0x54/0xa0
-  schedule+0xb7/0x140
-  ? __mutex_lock+0x51d/0xa50
-  ? __mutex_lock+0x51d/0xa50
-  schedule_preempt_disabled+0x54/0xa0
-  __mutex_lock+0x51d/0xa50
-  ? current_time+0x3a/0x120
-  read_dummy+0x23/0x70
-  full_proxy_read+0x6a/0xc0
-  vfs_read+0xc2/0x340
-  ? __pfx_direct_file_splice_eof+0x10/0x10
-  ? do_sendfile+0x1bd/0x2e0
-  ksys_read+0x76/0xe0
-  do_syscall_64+0xe3/0x1c0
-  ? exc_page_fault+0xa9/0x1d0
-  entry_SYSCALL_64_after_hwframe+0x77/0x7f
- RIP: 0033:0x4840cd
- RSP: 002b:00007ffe632b76c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
- RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004840cd
- RDX: 0000000000001000 RSI: 00007ffe632b7710 RDI: 0000000000000003
- RBP: 00007ffe632b7710 R08: 0000000000000000 R09: 0000000000000000
- R10: 0000000001000000 R11: 0000000000000246 R12: 0000000000001000
- R13: 000000003a8b63a0 R14: 0000000000000001 R15: ffffffffffffffff
-  </TASK>
- INFO: task cat:113 is blocked on a mutex owned by task cat:112.
- task:cat             state:S stack:13432 pid:112   tgid:112   ppid:103    task_flags:0x400100 flags:0x00000002
- Call Trace:
-  <TASK>
-  __schedule+0x731/0x960
-  ? schedule_timeout+0xa8/0x120
-  schedule+0xb7/0x140
-  schedule_timeout+0xa8/0x120
-  ? __pfx_process_timeout+0x10/0x10
-  msleep_interruptible+0x3e/0x60
-  read_dummy+0x2d/0x70
-  full_proxy_read+0x6a/0xc0
-  vfs_read+0xc2/0x340
-  ? __pfx_direct_file_splice_eof+0x10/0x10
-  ? do_sendfile+0x1bd/0x2e0
-  ksys_read+0x76/0xe0
-  do_syscall_64+0xe3/0x1c0
-  ? exc_page_fault+0xa9/0x1d0
-  entry_SYSCALL_64_after_hwframe+0x77/0x7f
- RIP: 0033:0x4840cd
- RSP: 002b:00007ffd69513748 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
- RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004840cd
- RDX: 0000000000001000 RSI: 00007ffd69513790 RDI: 0000000000000003
- RBP: 00007ffd69513790 R08: 0000000000000000 R09: 0000000000000000
- R10: 0000000001000000 R11: 0000000000000246 R12: 0000000000001000
- R13: 0000000029d8d3a0 R14: 0000000000000001 R15: ffffffffffffffff
-  </TASK>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
+Subject: Re: [PATCH V2 2/2] rust: Add basic bindings for clk APIs
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <Z7iGHiQcqa-_AXli@pollux>
+Date: Fri, 21 Feb 2025 11:29:21 -0300
+Cc: Viresh Kumar <viresh.kumar@linaro.org>,
+ Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>,
+ Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Russell King <linux@armlinux.org.uk>,
+ linux-clk@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <4AD8A8F3-EA7E-4FBE-9F0D-58CF7BB09ED5@collabora.com>
+References: <cover.1740118863.git.viresh.kumar@linaro.org>
+ <a0a1ba4e27c3a0d9e38c677611eb88027e463287.1740118863.git.viresh.kumar@linaro.org>
+ <Z7iGHiQcqa-_AXli@pollux>
+To: Danilo Krummrich <dakr@kernel.org>
+X-Mailer: Apple Mail (2.3826.300.87.4.3)
+X-ZohoMailClient: External
 
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v2:
-  - Introduce CONFIG_DETECT_HUNG_TASK_BLOCKER for this feature.
-  - Introduce task_struct::blocker_mutex to point the mutex.
-  - Rename debug_mutex_get_owner() to mutex_get_owner().
-  - Remove unneeded mutex_waiter::mutex.
----
- include/linux/mutex.h  |    2 ++
- include/linux/sched.h  |    4 ++++
- kernel/hung_task.c     |   31 +++++++++++++++++++++++++++++++
- kernel/locking/mutex.c |   14 ++++++++++++++
- lib/Kconfig.debug      |   10 ++++++++++
- 5 files changed, 61 insertions(+)
 
-diff --git a/include/linux/mutex.h b/include/linux/mutex.h
-index 2bf91b57591b..2143d05116be 100644
---- a/include/linux/mutex.h
-+++ b/include/linux/mutex.h
-@@ -202,4 +202,6 @@ DEFINE_GUARD(mutex, struct mutex *, mutex_lock(_T), mutex_unlock(_T))
- DEFINE_GUARD_COND(mutex, _try, mutex_trylock(_T))
- DEFINE_GUARD_COND(mutex, _intr, mutex_lock_interruptible(_T) == 0)
- 
-+extern unsigned long mutex_get_owner(struct mutex *lock);
-+
- #endif /* __LINUX_MUTEX_H */
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 9632e3318e0d..0cebdd736d44 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1217,6 +1217,10 @@ struct task_struct {
- 	struct mutex_waiter		*blocked_on;
- #endif
- 
-+#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-+	struct mutex			*blocker_mutex;
-+#endif
-+
- #ifdef CONFIG_DEBUG_ATOMIC_SLEEP
- 	int				non_block_count;
- #endif
-diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-index 04efa7a6e69b..aa5bc7fe09c2 100644
---- a/kernel/hung_task.c
-+++ b/kernel/hung_task.c
-@@ -93,6 +93,36 @@ static struct notifier_block panic_block = {
- 	.notifier_call = hung_task_panic,
- };
- 
-+
-+#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-+static void debug_show_blocker(struct task_struct *task)
-+{
-+	struct task_struct *g, *t;
-+	unsigned long owner;
-+	struct mutex *lock;
-+
-+	lock = READ_ONCE(task->blocker_mutex);
-+	if (!lock)
-+		return;
-+
-+	owner = mutex_get_owner(lock);
-+	if (likely(owner)) {
-+		/* Ensure the owner information is correct. */
-+		for_each_process_thread(g, t)
-+			if ((unsigned long)t == owner) {
-+				pr_err("INFO: task %s:%d is blocked on a mutex owned by task %s:%d.\n",
-+					task->comm, task->pid, t->comm, t->pid);
-+				sched_show_task(t);
-+				return;
-+			}
-+	}
-+	pr_err("INFO: task %s:%d is blocked on a mutex, but the owner is not found.\n",
-+		task->comm, task->pid);
-+}
-+#else
-+#define debug_show_blocker(t)	do {} while (0)
-+#endif
-+
- static void check_hung_task(struct task_struct *t, unsigned long timeout)
- {
- 	unsigned long switch_count = t->nvcsw + t->nivcsw;
-@@ -152,6 +182,7 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
- 		pr_err("\"echo 0 > /proc/sys/kernel/hung_task_timeout_secs\""
- 			" disables this message.\n");
- 		sched_show_task(t);
-+		debug_show_blocker(t);
- 		hung_task_show_lock = true;
- 
- 		if (sysctl_hung_task_all_cpu_backtrace)
-diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
-index b36f23de48f1..6a543c204a14 100644
---- a/kernel/locking/mutex.c
-+++ b/kernel/locking/mutex.c
-@@ -72,6 +72,14 @@ static inline unsigned long __owner_flags(unsigned long owner)
- 	return owner & MUTEX_FLAGS;
- }
- 
-+/* Do not use the return value as a pointer directly. */
-+unsigned long mutex_get_owner(struct mutex *lock)
-+{
-+	unsigned long owner = atomic_long_read(&lock->owner);
-+
-+	return (unsigned long)__owner_task(owner);
-+}
-+
- /*
-  * Returns: __mutex_owner(lock) on failure or NULL on success.
-  */
-@@ -180,6 +188,9 @@ static void
- __mutex_add_waiter(struct mutex *lock, struct mutex_waiter *waiter,
- 		   struct list_head *list)
- {
-+#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-+	WRITE_ONCE(current->blocker_mutex, lock);
-+#endif
- 	debug_mutex_add_waiter(lock, waiter, current);
- 
- 	list_add_tail(&waiter->list, list);
-@@ -195,6 +206,9 @@ __mutex_remove_waiter(struct mutex *lock, struct mutex_waiter *waiter)
- 		__mutex_clear_flag(lock, MUTEX_FLAGS);
- 
- 	debug_mutex_remove_waiter(lock, waiter, current);
-+#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-+	WRITE_ONCE(current->blocker_mutex, NULL);
-+#endif
- }
- 
- /*
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 1af972a92d06..91dfd8c10fbb 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1260,6 +1260,16 @@ config BOOTPARAM_HUNG_TASK_PANIC
- 
- 	  Say N if unsure.
- 
-+config DETECT_HUNG_TASK_BLOCKER
-+	bool "Dump Hung Tasks Blocker"
-+	depends on DETECT_HUNG_TASK
-+	default y
-+	help
-+	  Say Y here to show the blocker task's stacktrace who acquires
-+	  the mutex lock which "hung tasks" are waiting.
-+	  This will add overhead a bit but shows suspicious tasks and
-+	  call trace if it comes from waiting a mutex.
-+
- config WQ_WATCHDOG
- 	bool "Detect Workqueue Stalls"
- 	depends on DEBUG_KERNEL
+> On 21 Feb 2025, at 10:56, Danilo Krummrich <dakr@kernel.org> wrote:
+>=20
+> On Fri, Feb 21, 2025 at 12:03:39PM +0530, Viresh Kumar wrote:
+>> +/// A simple implementation of `struct clk` from the C code.
+>> +#[repr(transparent)]
+>> +pub struct Clk(*mut bindings::clk);
+>=20
+> I remember that Stephen explained that NULL is valid value for struct =
+clk. As a
+> consequence, all functions implemented for `Clk` have to consider =
+this.
+
+I am a bit confused here. If NULL is valid, then why should we have to =
+specifically
+consider that in the functions? No functions so far explicitly =
+dereferences that value,
+they only pass it to the clk framework.
+
+Or are you referring to the safety comments only? In which case I do =
+agree (sorry for
+the oversight by the way)
+
+>=20
+> I wonder if it could make sense to have a transparent wrapper type
+> `MaybeNull<T>` (analogous to `NonNull<T>`) to make this fact more =
+obvious for
+> cases like this?
+
+MaybeNull<T> sounds nice.
+
+>=20
+>> +
+>> +impl Clk {
+>> +    /// Creates `Clk` instance for a device and a connection id.
+>> +    pub fn new(dev: &Device, name: Option<&CStr>) -> Result<Self> {
+>> +        let con_id =3D if let Some(name) =3D name {
+>> +            name.as_ptr() as *const _
+>> +        } else {
+>> +            ptr::null()
+>> +        };
+>> +
+>> +        // SAFETY: It is safe to call `clk_get()`, on a device =
+pointer earlier received from the C
+>> +        // code.
+>> +        Ok(Self(from_err_ptr(unsafe {
+>> +            bindings::clk_get(dev.as_raw(), con_id)
+>> +        })?))
+>> +    }
+>> +
+>> +    /// Obtain the raw `struct clk *`.
+>> +    pub fn as_raw(&self) -> *mut bindings::clk {
+>> +        self.0
+>> +    }
+>> +
+>> +    /// Clock enable.
+>> +    pub fn enable(&self) -> Result<()> {
+>> +        // SAFETY: By the type invariants, we know that `self` owns =
+a reference, so it is safe to
+>> +        // use it now.
+>=20
+> This is not true.
+>=20
+> 1. There is no type invariant documented for `Clk`.
+> 2. The pointer contained in an instance of `Clk` may be NULL, hence =
+`self` does
+>   not necessarily own a reference.
+
+>=20
+> The same applies for all other functions in this implementation.
+>=20
 
