@@ -1,160 +1,281 @@
-Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2061.outbound.protection.outlook.com [40.107.21.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118AE78F20;
-	Fri, 21 Feb 2025 01:41:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F7E84D2B;
+	Fri, 21 Feb 2025 01:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.61
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740102121; cv=pass; b=XvsZN/UGUsFQ9Jk5btPnFfQiWDIRRiRb7MaM0KFBN0/RZiaoYq0R4Ufu+pNV/a6uikfVa4M8gZ5O9JaQJqnC0jkrTN7gnIaoGdlK3W/WYSxdBa7BOWg0Z8kQrqf9EKUXPa6H0T00tcC5HaUsi/+dp7nfUbQnmg4QKW8K+Ml0d/4=
+	t=1740102131; cv=fail; b=OVo+PSqD8NRIeM3jy+LY4J8pl7Q0SM1cwSqfDnTmudkaEUOdfxBNWiyKjP+r+wwI4EQ+WA+B1WoE7DRzsOW8r12aCV/GW5EZnZFzo1bSa+HDLcCTUO3qzBtpHo5MDtLs771KFEVlrISZa1sV/A+D5ORAMVMpab7nFQrE8L8Q0gE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740102121; c=relaxed/simple;
-	bh=u/drrcq0tRMW+dDu5EtV9HFVffzJAWHXL6OLPTF8o1s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F3ZqZRbTjzxd6CYe0Q5qpF/2E1IICpXaLNRAwge0pUukuBgCGhoXIhUFA3adlIzOsE+kErEaxtbdxyBUuDhColLENO4l6BcTpXJE/uaO49GxtmljAlzCTKkQt6JHSCZhpqEl1xi1BxA5rhoE1pGQ/LHC5lJoYAyh51V0f/USwTQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=b5e5smDe; arc=pass smtp.client-ip=136.143.184.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1740102131; c=relaxed/simple;
+	bh=Gd6VnTzJQETJsY4POptwaj3yXCLKwl8yHrjkZrObgoM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=gjGcDqRvPj3HIbZihulDX+Qf8M+wsBzcMyN/TyaKXJ93EDbRBcoRtdBPg/TMocio0WlSilGgUk+AC5GO3mLmbbxeWt2T0707E2I8hOSeIWCjBTykuHye03qf4msmn7DlREcXV5zIJSOKVN1C5soWtEQ/phRWwJMpyWW6N0c5fhA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=i/OiunM/; arc=fail smtp.client-ip=40.107.21.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="b5e5smDe"
-ARC-Seal: i=1; a=rsa-sha256; t=1740102106; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=H9BrAU7IWbxaMN4ydgJdpM6Seacug4G4FfwPIdl5NGiJxoE/bB1Fs5sggwZqTiEXM6EFONEobmcmytCdrD6Dt6nGB+qEFI33y2nSyov1OyLBHW+WnMKUL3xv7cYt2pxy3XSa1ZFmFaJEqJ2AcaIdeTKTXvR/h4pEGCJUcWb1G+8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740102106; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=kjI9jH3577PL+Qw8lBXddzvXfssk10bWk7N+gsrE/Yw=; 
-	b=ma3HnDiyVuwDTwbCRM1OIq56iWU8b6h3YqfO3BupHZwcrazdNIzyHkxfIp4Utoq05QMW2vvmaebwDFxU9RzUnkmVj++q60q2Fu50d/Ea/xor6cW9U2t5k9q9Yg3SQPcUZt78JWqDrfVui9Eyew7/YAKVwVlgKvf2TItY/0oR32A=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740102106;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=kjI9jH3577PL+Qw8lBXddzvXfssk10bWk7N+gsrE/Yw=;
-	b=b5e5smDeGD5pKB39CPlqy/lPuSs2aSRDjnktOk378gbrQAjDJA0fwdxrd4+LugAR
-	mntbJTWjj3FAv0JILWP7GAMdarSfk4KE2iauBAd6VmgTz2V/VunB7DilBQOBw0KOGN/
-	zJifTQxPIn4cuqWnw8fxvlabchf5+3ag/Uk6R+lk=
-Received: by mx.zohomail.com with SMTPS id 1740102103663427.97041222656264;
-	Thu, 20 Feb 2025 17:41:43 -0800 (PST)
-Received: by venus (Postfix, from userid 1000)
-	id 7F64F1835E9; Fri, 21 Feb 2025 02:41:40 +0100 (CET)
-Date: Fri, 21 Feb 2025 02:41:40 +0100
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, liujianfeng1994@gmail.com, cristian.ciocaltea@collabora.com
-Subject: Re: [PATCH] clk: check for disabled clock-provider in
- of_clk_get_hw_from_clkspec
-Message-ID: <yd2vhz2rivseulpbw34vhyei5sojz5w7ltnzwgtfn3ywwldgu6@nhktt6iztd4r>
-References: <20250220225448.2763166-1-heiko@sntech.de>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="i/OiunM/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NagRE/AMOyP7KOouhciZdsDy9fA0ezYo2Lk6EruN8uya4KUV//vb0cqtpd7JNsFASTqvNNh39yQNtEG2Qs4zJzAyHpUggB85LGu0vDIZ+D1YGckxebRTPzE5mmZWLMGAGLhOJdRaRiPjW15mUovSqQqPFcm3ysnpL2R4qYGUELEzD7zbMJfxrKW+8A/CiUwlymDse9JkAV/u9J0BauV5IdtoN+s8tVmDnRCJclk9l+k8mI8HNGvU7UL2R8SH8akjvlwcSb55uFXO4aCUcym5zGoyorZf/0X9JAuPF+1USo+BKKpOB6HFn3djEYiqLj6kawmjY2ZoyRdyaAaAxJUPQQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3A1yt8UIyJnW55/4H1TEUpUr5BF2rENadQbNNuT1r08=;
+ b=kHNJlmIzllbMEKcfHEZI7TtSPl6/RI+TOl8YytSs3Pd4XsqNhGtdAP+YjvxNEUElQCy7V4bPWa0gYHLRHtGOotGBPEDLSbpEs99Y4kFH+FSwgAL1kNSROYrAXm+MAfLQOx+ex2betitG42symgo1Ax0bBbYLBYGrK/oo+LO4Ljzy5m4TrAP33b1dGHSxxJOVGcyZ7astQYJhYnH/CmrRV4fl00YpZsqIlGmm7M7zRxhlq0avBC9QdNaBv5QtRUNx1shAqD2KxaguR7FCnJaMIj4t4THP660PWA/2Byynwybo4RGQ699t3yKx+xDctfftUpk33TauWUh6tl7r4Q0CbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3A1yt8UIyJnW55/4H1TEUpUr5BF2rENadQbNNuT1r08=;
+ b=i/OiunM/miIpG59UvJn3GwnCsNBiC+l6AAWtt66da18HbByezr1gf2Cx7pSXqjvOvcvUK9jcfFA8g9xcz/jKdv/5pPu73U0mH/hb41NEKlva+JiC4G0aRO8Qs+hn+ALpwmSWW098tXP2TGX5s4RzXV0Uk33HX1huqZ97RbKkyMePsJ7cF73TSNhk+L34JbHIw2SvJvlnMhPXednLc+U+qxzyZ5wGEfSKKkcgGNPqJV51tlt6DY2dl/HgckZx5A9SFWe5S2QqcmEi+Vv2WSj0WYsjwtE+v2CXgkBe8RDqNIQS2jU3HSkV++TwA2IHg1BBiKNIAWBhoTETUTi55BSBAQ==
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
+ by VI0PR04MB10371.eurprd04.prod.outlook.com (2603:10a6:800:23a::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.15; Fri, 21 Feb
+ 2025 01:42:05 +0000
+Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
+ ([fe80::a7c2:e2fa:8e04:40db%5]) with mapi id 15.20.8445.011; Fri, 21 Feb 2025
+ 01:42:05 +0000
+From: Wei Fang <wei.fang@nxp.com>
+To: Vladimir Oltean <vladimir.oltean@nxp.com>
+CC: Claudiu Manoil <claudiu.manoil@nxp.com>, Clark Wang
+	<xiaoning.wang@nxp.com>, "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+	"davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
+	<edumazet@google.com>, "kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>, Ioana Ciornei
+	<ioana.ciornei@nxp.com>, "Y.B. Lu" <yangbo.lu@nxp.com>,
+	"michal.swiatkowski@linux.intel.com" <michal.swiatkowski@linux.intel.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>
+Subject: RE: [PATCH v2 net 2/9] net: enetc: correct the tx_swbd statistics
+Thread-Topic: [PATCH v2 net 2/9] net: enetc: correct the tx_swbd statistics
+Thread-Index: AQHbgpN/Xw1oIgK130OBsitj8eB9+LNQXDmAgACfT2A=
+Date: Fri, 21 Feb 2025 01:42:05 +0000
+Message-ID:
+ <PAXPR04MB8510D3ACAB9DD6C86AC87E5488C72@PAXPR04MB8510.eurprd04.prod.outlook.com>
+References: <20250219054247.733243-1-wei.fang@nxp.com>
+ <20250219054247.733243-3-wei.fang@nxp.com>
+ <20250220160123.5evmuxlbuzo7djgr@skbuf>
+In-Reply-To: <20250220160123.5evmuxlbuzo7djgr@skbuf>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAXPR04MB8510:EE_|VI0PR04MB10371:EE_
+x-ms-office365-filtering-correlation-id: a93ff65e-4f13-42e7-f58b-08dd5218f216
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|366016|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?6ArIi51xwmJHZLVvo2gQuJIeiS6aLgqHxd/YAPDCp0y9QjIY66o4VgFpoxuY?=
+ =?us-ascii?Q?GnHweL8ooEyR7Uh0+beRFs56ot88bFNCHWo0/dlmwUdlQkhbvsN8rR+VykqR?=
+ =?us-ascii?Q?lkBw5MJc5IJETiSKjIoy/r+2lHxA6fp4BAdW6lpFzDpgl4steheyAto+yzL6?=
+ =?us-ascii?Q?t01lcYD+EnLpotctfcj2+a0VHDiY8rVkLNp6T2sw8ACeCnN9dnK0T9/Dfte5?=
+ =?us-ascii?Q?f5vjbkYQy7J68VJGkxk988GrDEY4lyCDyj1HWgUQWrG63PD7xyCh0jiX/z4u?=
+ =?us-ascii?Q?HUtDo1GAN58+RtIkG/JrWijsgs6p3j9Mm6s8cCQRCfqLo1a3AMrmu6OIikl/?=
+ =?us-ascii?Q?J4VJMAwOSUbPW50G6T5E4f0FdE+k0tL94MvsNech4U8pIPMOquj653wV+CIg?=
+ =?us-ascii?Q?s4PIDHsg5XPi5da3mo3vELRjpp6ejgJ+gjuhTPLhijIwQm5uOklsIo4Ep/hA?=
+ =?us-ascii?Q?wxJDg8f8arntiCnneF4e//6vfbvTznWBvPnkUj6AS58HMs4qrO5sEyQ0FkIY?=
+ =?us-ascii?Q?pjVA+AptUsrL/Dz1Xs+yElFwyo1iEjgAGXQ3vbL+ufDXzVbOntxhOMX6O6WQ?=
+ =?us-ascii?Q?5JkvozFXZ0mxUm7lKEvAxg5HVRjk9ZLOrlXufs4x5hOGPT0qa9Yvm43vT431?=
+ =?us-ascii?Q?PHBqNvKmcg1j1IQqlUERPKMSxUr+aF24+6hX6EtcQMGT9J+AY+GdYdI4fPN7?=
+ =?us-ascii?Q?X29dV5WnhChQq0G6zwUgC/J8yB8rhHpRPsXqjxDZmK4UJb0ibvjTM6qaxI6w?=
+ =?us-ascii?Q?PIL+CtmvDAOUaeABUukJ+OBEH5GrX6cKqW0PUtRUFAaAHIXR9rtmd3bQg8N6?=
+ =?us-ascii?Q?rkf7PVkW1pvhaGDk5r1Jpsu8QBCDqD0WvGmLw6c77P4dLZFv8/jMn4dQECbv?=
+ =?us-ascii?Q?R+Wq9frGRSlewMt7etCWbMeerD00fY6yb1Ol/acAAFtxXZvctmlvnGkq8iFm?=
+ =?us-ascii?Q?d9Cq2tgIB1jGyBzq/Kg+F0nHK5NEJHLBb2TflDTEHkE01cAB8agu5ghy7T9B?=
+ =?us-ascii?Q?Th8eHYA/bZbElfwvJnCQsblYV3oqyEVkvvIPrvJnNREt9qWFCfD7P9/ByIuM?=
+ =?us-ascii?Q?bcPinbHDN+g9Lpz7hUpPtLBk1rCwT8uIE+P85iOW8uFHp+l0sR7JQrvpY61J?=
+ =?us-ascii?Q?xLPmahNIihOmNHZ9QIexyaGIqByNLIgQ8yl681uFwRszDpTVUSU01K6hij6q?=
+ =?us-ascii?Q?Hedv9veZwR8TiOYKWZgjFlnnf5m06up1wvewbiSK2h72pX4AxlBK28IHFuQc?=
+ =?us-ascii?Q?rPWrk992Up6tvJhaCZD0dnkQtOmYbW3Empdn//KLDA7eQuaHr3KKpm9dq7vC?=
+ =?us-ascii?Q?cSPCQFei0PiOjAHQWJhthSHQDuWhC+w4faN4BkYfnnIwr5bHeLatDumwRJig?=
+ =?us-ascii?Q?zzq9EbzXHMvJsG2XAtARlCg3kzwDQAtXWhy/20dxFNhVOaXrodTjR0PPii+5?=
+ =?us-ascii?Q?/XqzjzG6VpjosVs0688HmkcRvu7oylfw?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?ViE6qLzWxsebbiPiK62R0gKDsbnvriDIP2Jc1GoO3TiNVuAH9dn1xHdRRKUD?=
+ =?us-ascii?Q?NdMvchAlLjji/C3nOTzlj4v5s/kXP6COhbxZpYS119Fu8eIh3Uu8n6TRsPtG?=
+ =?us-ascii?Q?GIwqfkW1rE6/mmETd2SyRB4YwOKAz/9G5F1PH+n/34LuZlQ9r5460hWmx605?=
+ =?us-ascii?Q?++INEf1jJwtaFyrb40Udi7e/KZ8KUC8Gl/7LW3yraGbPH3OG8oFP6/NOI2Fj?=
+ =?us-ascii?Q?q4t4HF7b5DAwZIR4so3EgSJCHh431la46o9J1JHBFfBYOIhYasxOYA+p2OET?=
+ =?us-ascii?Q?e0sO2f8aebY34ygr5kr0DwDuyKsmkp6iZxdTUaOicntKTs7KU4QmfXtsGKnm?=
+ =?us-ascii?Q?2BFmw11hKVoTLkHxiKETwyIre2FQM2Kz5MFkvj7saOl10CWxlnC6yDISfUsl?=
+ =?us-ascii?Q?NnTdT9A537uFVihxyS28b3Az//ZUHKdgT248V7UrdXIhlFcXLmyDIHqU8NNR?=
+ =?us-ascii?Q?3RBr5T4u7SmVZ5kl5he/kLrCINMlu+caB3u9gIorXM7yV6Wgnt5d2h9bVWx3?=
+ =?us-ascii?Q?fCZOOb/k7+ig5SLieTrhLPRZtODdqOcBFp4mJhi7LeIowGCl/BZuP8a7XouA?=
+ =?us-ascii?Q?cDPcUQZMW3V/2TdUzyIZF4m2e6BoBhdQXbBR5MSpPCU2LDfB+Ui43VvfGl4Z?=
+ =?us-ascii?Q?SnIrkjh0BTKr+idUSH06gVYXs6mKVOffQBxc+gz/V5PqJBi5lVHBt4W9/Zuf?=
+ =?us-ascii?Q?bEWjh1L3cfuLuspu+G1tQqRSfjB6k6m6sPHSGmP9YPRf2VZq4JvhwrTivTXw?=
+ =?us-ascii?Q?wXDMKuoGDkGzpOMMBU/+LkxcQgScdnF9EHyxqkU7Id2Co7yt7wRaH8vMP2cg?=
+ =?us-ascii?Q?XP+KdSH1W2XvoEWgrlJJkTyyVZ0zzVnbTBpKKi4SRjF/PyermbR7YkN5Y1XW?=
+ =?us-ascii?Q?0z+2tCEpId+G+NC+oIKPK/UYXjsjbAa/U8TBCKNK3uZrjeZyYUDLiaYKE69n?=
+ =?us-ascii?Q?pyJhjCP9Jeq02PhbvDod3d8Lrc0xcW2TOY490nSkUoBtG5YjTyFIvZO3Z2n/?=
+ =?us-ascii?Q?nbN3SCJu88Fb38SgpAFHg9yvJ98lzQxytOJIiWPIpZGaGSRHeVnzrBi0CsCc?=
+ =?us-ascii?Q?lCwd+jmHIyenl7TC8vSqJYaDHAa47VIBKpXDqxFzbQTeV72QGKE3eromVE61?=
+ =?us-ascii?Q?uWkYJ8QYeOyifw2nHUKtixCrYynx0H/Sy4jxs8tnlrgmLX5yu7l4ipjWXB2W?=
+ =?us-ascii?Q?SyPluBVHsrMZdFlDrZkSI1qpwFtiNzIhSRyr+vLflxEdUWZiCs2G6NHDT8hK?=
+ =?us-ascii?Q?+bZm3QmYW2tUpMVw4NTxtrnAwtBFDudLjKvBZttvEQh5l/0uQ0GIirwpP2A1?=
+ =?us-ascii?Q?nLr/Fd2MZRdVuxSv1UfFzrlUIitLEzxV4CkRh+Bky2TuaZoDnPIotIdKLhvQ?=
+ =?us-ascii?Q?8bNrAsYv9/fS6XxM1CWOcoMNK1mkao6n6oBcjoF2t8kqPdJeql9mHu1Ojez7?=
+ =?us-ascii?Q?TvZw/RviApgA0aaXTUicGKgRFA85aYfKQTZiYQSrtEWpZta6K+78ACeTJF/m?=
+ =?us-ascii?Q?FzFBSjYLiJbxOTWv5jSYg9AZrAZEfTiiXZ2r17M08T8tWeAqUTXnC0JfqfSl?=
+ =?us-ascii?Q?LXnktKjfIT8e8GgUItU=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="awhf732zrnbxpf5n"
-Content-Disposition: inline
-In-Reply-To: <20250220225448.2763166-1-heiko@sntech.de>
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.2/240.10.19
-X-ZohoMailClient: External
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a93ff65e-4f13-42e7-f58b-08dd5218f216
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Feb 2025 01:42:05.0711
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Offi4S4yhZUpg/lUAukhGNEVZ5c6Q5MyzY5cHTcHJZTeaLhJCQ+RG6eJl0exBqJkiRQdKZO0qVliAZqA40KZQA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10371
 
+> I'm not sure "correct the statistics" is the best way to describe this
+> change. Maybe "keep track of correct TXBD count in
+> enetc_map_tx_tso_buffs()"?
 
---awhf732zrnbxpf5n
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] clk: check for disabled clock-provider in
- of_clk_get_hw_from_clkspec
-MIME-Version: 1.0
+Hi Vladimir,
 
-Hi,
+Inspired by Michal, I think we don't need to keep the count variable, becau=
+se
+we already have index "i", we just need to record the value of the initial =
+i at the
+beginning. So I plan to do this optimization on the net-next tree in the fu=
+ture.
+So I don't think it is necessary to modify enetc_map_tx_tso_hdr().
 
-On Thu, Feb 20, 2025 at 11:54:48PM +0100, Heiko Stuebner wrote:
-> of_clk_get_hw_from_clkspec checks all available clock-providers by
-> compairing their of-nodes to the one from the clkspec. If no matching
-> clock-provider is found, the function returns EPROBE_DEFER to cause a
-> re-check at a later date.
+> The bug is that not all TX buffers are freed on error, not that some
+> statistics are wrong.
 >=20
-> If a matching clock-provider is found, a authoritative answer can be
-> retrieved from it whether the clock exists or not.
+> >  drivers/net/ethernet/freescale/enetc/enetc.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c
+> b/drivers/net/ethernet/freescale/enetc/enetc.c
+> > index 01c09fd26f9f..0658c06a23c1 100644
+> > --- a/drivers/net/ethernet/freescale/enetc/enetc.c
+> > +++ b/drivers/net/ethernet/freescale/enetc/enetc.c
+> > @@ -759,6 +759,7 @@ static int enetc_lso_hw_offload(struct enetc_bdr
+> *tx_ring, struct sk_buff *skb)
+> >  static int enetc_map_tx_tso_buffs(struct enetc_bdr *tx_ring, struct sk=
+_buff
+> *skb)
+> >  {
+> >  	struct enetc_ndev_priv *priv =3D netdev_priv(tx_ring->ndev);
+> > +	bool ext_bd =3D skb_vlan_tag_present(skb);
+> >  	int hdr_len, total_len, data_len;
+> >  	struct enetc_tx_swbd *tx_swbd;
+> >  	union enetc_tx_bd *txbd;
+> > @@ -792,7 +793,7 @@ static int enetc_map_tx_tso_buffs(struct enetc_bdr
+> *tx_ring, struct sk_buff *skb
+> >  		csum =3D enetc_tso_hdr_csum(&tso, skb, hdr, hdr_len, &pos);
+> >  		enetc_map_tx_tso_hdr(tx_ring, skb, tx_swbd, txbd, &i, hdr_len,
+> data_len);
+> >  		bd_data_num =3D 0;
+> > -		count++;
+> > +		count +=3D ext_bd ? 2 : 1;
+> >
+> >  		while (data_len > 0) {
+> >  			int size;
+> > --
+> > 2.34.1
+> >
 >=20
-> This does not take into account that the clock-provider may never appear,
-> because it's node is disabled. This can happen for example when a clock
-> is optional, provided by a separate block which just never gets enabled.
+> stylistic nitpick: I think this implementation choice obscures the fact,
+> to an unfamiliar reader, that the requirement for an extended TXBD comes
+> from enetc_map_tx_tso_hdr(). This is because you repeat the condition
+> for skb_vlan_tag_present(), but it's not obvious it's correlated to the
+> other one. Something like the change below is more expressive in this
+> regard, in my opinion:
 >=20
-> One example of this happening is the rk3588's VOP, which has optional
-> additional display-clock-supplies coming from PLLs inside the hdmiphy
-> blocks. These can be used for better rates, but the system will also
-> work without them.
+> diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c
+> b/drivers/net/ethernet/freescale/enetc/enetc.c
+> index fe3967268a19..6178157611db 100644
+> --- a/drivers/net/ethernet/freescale/enetc/enetc.c
+> +++ b/drivers/net/ethernet/freescale/enetc/enetc.c
+> @@ -410,14 +410,15 @@ static int enetc_map_tx_buffs(struct enetc_bdr
+> *tx_ring, struct sk_buff *skb)
+>  	return 0;
+>  }
 >=20
-> The problem around that is described in the followups to:
-> https://lore.kernel.org/dri-devel/20250215-vop2-hdmi1-disp-modes-v1-3-819=
-62a7151d6@collabora.com/
+> -static void enetc_map_tx_tso_hdr(struct enetc_bdr *tx_ring, struct sk_bu=
+ff
+> *skb,
+> -				 struct enetc_tx_swbd *tx_swbd,
+> -				 union enetc_tx_bd *txbd, int *i, int hdr_len,
+> -				 int data_len)
+> +static int enetc_map_tx_tso_hdr(struct enetc_bdr *tx_ring, struct sk_buf=
+f
+> *skb,
+> +				struct enetc_tx_swbd *tx_swbd,
+> +				union enetc_tx_bd *txbd, int *i, int hdr_len,
+> +				int data_len)
+>  {
+>  	union enetc_tx_bd txbd_tmp;
+>  	u8 flags =3D 0, e_flags =3D 0;
+>  	dma_addr_t addr;
+> +	int count =3D 1;
 >=20
-> As we already know the of-node of the presumed clock-provider, just add
-> a check via of_device_is_available whether this is a "valid" device node.
-> This prevents ethernal defer-loops.
-
-if there is a respin:
-
-s/ethernal/eternal
-
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> ---
-
-Also seems useful for having a quick final error if a referenced
-clock node has not been enabled by accident during board bringup.
-
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-
-Thanks,
-
--- Sebastian
-
->  drivers/clk/clk.c | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index cf7720b9172f..50faafbf5dda 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -5258,6 +5258,10 @@ of_clk_get_hw_from_clkspec(struct of_phandle_args =
-*clkspec)
->  	if (!clkspec)
->  		return ERR_PTR(-EINVAL);
-> =20
-> +	/* Check if node in clkspec is in disabled/fail state */
-> +	if (!of_device_is_available(clkspec->np))
-> +		return ERR_PTR(-ENOENT);
+>  	enetc_clear_tx_bd(&txbd_tmp);
+>  	addr =3D tx_ring->tso_headers_dma + *i * TSO_HEADER_SIZE;
+> @@ -460,7 +461,10 @@ static void enetc_map_tx_tso_hdr(struct enetc_bdr
+> *tx_ring, struct sk_buff *skb,
+>  		/* Write the BD */
+>  		txbd_tmp.ext.e_flags =3D e_flags;
+>  		*txbd =3D txbd_tmp;
+> +		count++;
+>  	}
 > +
->  	mutex_lock(&of_clk_mutex);
->  	list_for_each_entry(provider, &of_clk_providers, link) {
->  		if (provider->node =3D=3D clkspec->np) {
-> --=20
-> 2.47.2
+> +	return count;
+>  }
 >=20
-
---awhf732zrnbxpf5n
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAme32dQACgkQ2O7X88g7
-+podzRAAkNsuxysuCLodNUxcjL0c9vFQxV8jdiLweph03XdvKKwY41xKHnXNyFJG
-3gOsh0aYuPp6xbKrRj1FYfcvZKK8qA1I9r4xnamL3bBaMhzZSH2PSVqaBCzwrN5e
-vs4sRbDtyB8DAPxdiJbb4IiTzUOY96bjeUfSuC2wL+vCg5FKBAg5vKTprqjHGFws
-FrlcLdIb1I+/C7ETjC163wdWSsl82jIAeO54TvzJuPTXGEd2c4pP2JYuR8hxFQxC
-4vcN93kmIOwjbCn/z0PKZO7znBDZWC+Czn0c4s5lWpGcP715/CNquCtJyjCTQQBR
-5EYmWtMu17r2Df2oPqUsfvJH11fyT7Z0fmgt1hOnCxGtAws43/H10Q+rQL9k6VYd
-ZNErNZJF7nuWu2RheUD5rhHyU61rOVbU3J0iiXNzNGD4NHvaPg125OAbL4cHyiMC
-6tqzQxsdFakceBr5zK3c6vsqc6i1yGNhOPApd41MZmXelzg6rnAsuSsEDFMx8rb6
-V/2dAMl6JfByoxTw+Elr9nZLsjzHQGGIH8K9DDYkMrorprTlIMFDShZXvszu2frR
-yYJYIw5ECFcMSvlD76R/RxyTa1AIaVruuK5SZ1BH2mP1I2QEqr8jHsLegXfAKSMq
-k1PB1xUYp4iII0ka5D3ovg7Bvc1AihGkuzutBm3BP4qrSShfxGA=
-=5yO1
------END PGP SIGNATURE-----
-
---awhf732zrnbxpf5n--
+>  static int enetc_map_tx_tso_data(struct enetc_bdr *tx_ring, struct sk_bu=
+ff
+> *skb,
+> @@ -786,7 +790,6 @@ static int enetc_lso_hw_offload(struct enetc_bdr
+> *tx_ring, struct sk_buff *skb)
+>  static int enetc_map_tx_tso_buffs(struct enetc_bdr *tx_ring, struct sk_b=
+uff
+> *skb)
+>  {
+>  	struct enetc_ndev_priv *priv =3D netdev_priv(tx_ring->ndev);
+> -	bool ext_bd =3D skb_vlan_tag_present(skb);
+>  	int hdr_len, total_len, data_len;
+>  	struct enetc_tx_swbd *tx_swbd;
+>  	union enetc_tx_bd *txbd;
+> @@ -818,9 +821,9 @@ static int enetc_map_tx_tso_buffs(struct enetc_bdr
+> *tx_ring, struct sk_buff *skb
+>=20
+>  		/* compute the csum over the L4 header */
+>  		csum =3D enetc_tso_hdr_csum(&tso, skb, hdr, hdr_len, &pos);
+> -		enetc_map_tx_tso_hdr(tx_ring, skb, tx_swbd, txbd, &i, hdr_len,
+> data_len);
+> +		count +=3D enetc_map_tx_tso_hdr(tx_ring, skb, tx_swbd, txbd, &i,
+> +					      hdr_len, data_len);
+>  		bd_data_num =3D 0;
+> -		count +=3D ext_bd ? 2 : 1;
+>=20
+>  		while (data_len > 0) {
+>  			int size;
