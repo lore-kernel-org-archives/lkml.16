@@ -1,119 +1,131 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F89C1DFF7;
-	Fri, 21 Feb 2025 13:16:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3911320DD46;
+	Fri, 21 Feb 2025 13:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740143814; cv=none; b=oZnm3MuSNxBwmucDIfNP0JkADqdC6omKP60hSeknTRW4fqSf9Gh9uA0Pp+MelwFFC6lLTsiHJeQouC/Mv0OJlKxpQ4vXknwl6VqA0vGeJnUXRbxryp5ngvu86jOnF3EnmcYKw6qYEvZ5dngI0K+9VeCpCCB5DL8C5pDjAyuGeoU=
+	t=1740143822; cv=none; b=kt7kRusM5NSG/u6zbE5vYkLP2rJGAyPSZ9VebUmlKufFAlsX3tVQjBdMaDKUAnjkxrwlQEKdVVGj9r5qZEGiGL+joPIhFOwtDHXRPzxc39coBaJvaQOK47QB1Z7sTM+GJ60xnHz9ncWM2BM6V5SHAwvGC3ZrfqiUGEkWp2ihMrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740143814; c=relaxed/simple;
-	bh=s6izq4i+E02HhRjQkccsm0geW0vOCOEdFReFIdgUn0E=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=JF28vOjdEIB9IXlycWmAcuBUxnFF/GsNdUeG1m3lFfcbA8ieErBwVv4CtFIaG7fqkstVKgfAUGUnwM5tLV8e08tYIyrOezTOwilNtVmOCagfrrQ8xjYtQVgqhPWOJNpojuR8Ja9BWuLFIYjRWQukrCZRLf/EOs5nMZ04silOLNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=B0tz05hs; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C9sXG3fA; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1740143822; c=relaxed/simple;
+	bh=7Q/D8RghOyQ/KqhFnFzSNOl6lXSfSgLpiiU60rl6VL4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Gj3ElOhC4EFX1RWj8C3hZfCfu9jj7Z0DmWyig3myCVtSYYMmKv7Pl1tHE3sFnysIEJNv4ZPa0SeuP8WxHwT5wHw7qixcKRAwInIgG5b2JNp7qHyd+4yJqg8s154EejeSusyas2GDgNi8KYqlEh/wP7GSbl6A+PUDOZyrJDIdySM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GXpc4jkm; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="B0tz05hs";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C9sXG3fA"
-Date: Fri, 21 Feb 2025 13:16:46 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740143810;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BSNUpnZS9Opw3aYHbfY1rn2ZAFjK0egvr5v04TaCI6Y=;
-	b=B0tz05hsxA5sjQTaBdYjkJYMaWz2Jg6ehz6lZ70a65hfNmgqUQbP+8crNjpXo1HpwGYt9q
-	JBQzawUFPAlLKUqW2sZWP0A5VRwvLnbj4BKiqaIpzWze1ny/XluwJJTjaUiq8OFcKlOWmw
-	noM8PQYfnY+eS8t361VeTfxytCO9IURRVq2xBu5m+mRquKcOSmC6RplWFMhf7xMEMeuZfN
-	dwaYG385QQ95BL7+VCVxJCTiS5XLu9Z8Cyyo3hv2qutpXpQYP7FIg/4BciFEDJou5tfy8d
-	5VgN9J0ZWzxPE5DHtbbfRPlB3vv9KYR7TJvEEnImD1Ku1grNeu19vXPjmYFcDA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740143810;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BSNUpnZS9Opw3aYHbfY1rn2ZAFjK0egvr5v04TaCI6Y=;
-	b=C9sXG3fADXZpSt/OJYysI5eR3LG1LX9uhF9lLsmbShCbajWVOSNxdmeA0si7cz1TPt/c9Q
-	i98Uae1oAKfof5CA==
-From: "tip-bot2 for Nathan Chancellor" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/asm] x86/build: Raise the minimum LLVM version to 15.0.0
-Cc: Nathan Chancellor <nathan@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Ard Biesheuvel <ardb@kernel.org>, Brian Gerst <brgerst@gmail.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To:
- <20250220-x86-bump-min-llvm-for-stackp-v1-1-ecb3c906e790@kernel.org>
-References:
- <20250220-x86-bump-min-llvm-for-stackp-v1-1-ecb3c906e790@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GXpc4jkm"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51LCoZSC012227;
+	Fri, 21 Feb 2025 13:15:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	hXZATStOuQiUIAFb67THfjHdGBUb7YTvKE8kj2FT690=; b=GXpc4jkmdL/MQPOr
+	pZp6PmeL5Mi6h+yjuc7De9EjOcGwyLk5Pzt+DWsFuvR/4zMHpji7JNti0PzDAsuF
+	iuZbvlN3vWkCNT3dXV3XjsLyd/9+5x7WucaTYx/SwXM5Uzym3sMyZpu2PA0fcbZ/
+	ElH+Q7hSqBEDGfS94WFZxNChfTCTL7xbpz94nJjmDLZximaFc7Kdx+cS+jv4InpO
+	O3MC+FBUWRZZ3ovwFu7u/g+N2IJy4VU44DrfTPhwtfk8/cjY2U/UvWRPue8rGldQ
+	Upx+Cvchd4mqxlWfdssnCq94EEAFk8TQ1ubenUTdIjdE5cgzjvAL1GTrzmDcT1TW
+	Dlg9cw==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy1t4hf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Feb 2025 13:15:49 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51LDFmDi007900
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Feb 2025 13:15:48 GMT
+Received: from [10.133.33.29] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 21 Feb
+ 2025 05:15:40 -0800
+Message-ID: <7a151447-4961-4cba-b989-9a9e890d7ba3@quicinc.com>
+Date: Fri, 21 Feb 2025 21:15:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174014380628.10177.1455453395562694018.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH *-next 00/18] Remove weird and needless 'return' for void
+ APIs
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Will Deacon <will@kernel.org>, Aneesh Kumar K.V <aneesh.kumar@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>, Thomas
+ Gleixner <tglx@linutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Rafael J. Wysocki"
+	<rafael@kernel.org>,
+        Danilo Krummrich <dakr@kernel.org>,
+        Eric Dumazet
+	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni
+	<pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+        Johannes Berg
+	<johannes@sipsolutions.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang
+	<xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
+        Jason Gunthorpe
+	<jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones
+	<lee@kernel.org>,
+        Thomas Graf <tgraf@suug.ch>, Christoph Hellwig
+	<hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy
+	<robin.murphy@arm.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard
+ Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>, Zijun Hu
+	<zijun_hu@icloud.com>,
+        <linux-arch@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <iommu@lists.linux.dev>,
+        <linux-mtd@lists.infradead.org>
+References: <20250221-rmv_return-v1-0-cc8dff275827@quicinc.com>
+ <2025022145-ungodly-hanky-499e@gregkh>
+Content-Language: en-US
+From: Zijun Hu <quic_zijuhu@quicinc.com>
+In-Reply-To: <2025022145-ungodly-hanky-499e@gregkh>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: PjXLPSlfU4X8CAU-woeSzf1fJQlgHVdf
+X-Proofpoint-ORIG-GUID: PjXLPSlfU4X8CAU-woeSzf1fJQlgHVdf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-21_04,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
+ adultscore=0 malwarescore=0 mlxscore=0 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=775 suspectscore=0 phishscore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502210097
 
-The following commit has been merged into the x86/asm branch of tip:
+On 2/21/2025 9:12 PM, Greg Kroah-Hartman wrote:
+> These span loads of different subsystems, please just submit them all to
+> the different subsystems directly, not as one big patch series which
+> none of us could take individually.
+> 
 
-Commit-ID:     7861640aac52bbbb3dc2cd40fb93dfb3b3d0f43c
-Gitweb:        https://git.kernel.org/tip/7861640aac52bbbb3dc2cd40fb93dfb3b3d0f43c
-Author:        Nathan Chancellor <nathan@kernel.org>
-AuthorDate:    Thu, 20 Feb 2025 13:08:12 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 21 Feb 2025 14:08:16 +01:00
+sure. will do it as you suggest.
+thank you.
 
-x86/build: Raise the minimum LLVM version to 15.0.0
+> thanks,
+> 
+> greg k-h
 
-In a similar vein as to this pending commit in the x86/asm tree:
-
-  a3e8fe814ad1 ("x86/build: Raise the minimum GCC version to 8.1")
-
-... bump the minimum supported version of LLVM for building x86 kernels
-to 15.0.0, as that is the first version that has support for
-'-mstack-protector-guard-symbol', which is used unconditionally after:
-
-  80d47defddc0 ("x86/stackprotector/64: Convert to normal per-CPU variable"):
-
-Older Clang versions will fail the build with:
-
-  clang-14: error: unknown argument: '-mstack-protector-guard-symbol=__ref_stack_chk_guard'
-
-Fixes: 80d47defddc0 ("x86/stackprotector/64: Convert to normal per-CPU variable")
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-Reviewed-by: Brian Gerst <brgerst@gmail.com>
-Link: https://lore.kernel.org/r/20250220-x86-bump-min-llvm-for-stackp-v1-1-ecb3c906e790@kernel.org
----
- scripts/min-tool-version.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/scripts/min-tool-version.sh b/scripts/min-tool-version.sh
-index 06c4e41..7878681 100755
---- a/scripts/min-tool-version.sh
-+++ b/scripts/min-tool-version.sh
-@@ -26,7 +26,7 @@ gcc)
- 	fi
- 	;;
- llvm)
--	if [ "$SRCARCH" = s390 ]; then
-+	if [ "$SRCARCH" = s390 -o "$SRCARCH" = x86 ]; then
- 		echo 15.0.0
- 	elif [ "$SRCARCH" = loongarch ]; then
- 		echo 18.0.0
