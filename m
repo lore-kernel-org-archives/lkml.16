@@ -1,109 +1,117 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7256A20D51D;
-	Fri, 21 Feb 2025 14:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740149087; cv=pass; b=KW8EvX+cfrAsvSqKnYav1jWNpGpEFdqawV7Yo7Tx7ArdbA6toKXJVSgHIZpTRm6wCOLMyPD6eXT2FExDs+LwVDGay5091wlgrvZv+a2xkZqwPOxJBlZ79fMcTjyXRrM6EcCGEJ8c7JcEZ3QvAHJqssldlKkbTZSW7TLCFnPhr0c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740149087; c=relaxed/simple;
-	bh=OpXQbIwdry+KWlb0cihUCK41OtZVFuebRon28vjN7XA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SJg3+1TObytLssd05QtG34t5V8DIrRF4//KpX6vk5dLvK1NbQOp5q6tLnQ/vifIP3f+BelQ75tsfLzlLojrhMiGF0By1uitu42ITe/PH3O5xVLnjwWGNrLnep3t7ZwC7C31IwTOthjHuj8+v0vlxCWjscUufjRc9740YICfh6hU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b=Oqd6dpyx; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=detlev.casanova@collabora.com header.b="Oqd6dpyx"
-ARC-Seal: i=1; a=rsa-sha256; t=1740149018; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=LlJGyGMRQMGa7d1hiq5ol+5x17hrNEGOITinBxi2RfLVUmuqWFvWwvZraOoEpi4OYi1YoOLNyqvnuoBhJv5NjSBAknykKoIDBYOOujNCSffFzetkfrbLL99wcmnReve0li94vUEnRp/md2vSGDu2zRk6o3mUwB3ZXFwJScQUKxg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740149018; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=gA8mn4fOHoGECCHqYXtlx2zwyQnjDL6NNJx/mEGL37k=; 
-	b=SS5CeWfivsYuXpFsx/0MPvpuxMWFRxte1/ddDomWFSwswVstzSnzPNvljfY4htomab7qaxtT3qI+cXo+9mA4ytBNiy2AqaiXhG+Y0rBgX6bKYRLZeo5xmTxEYemz2Kg0vt+8tTa5BgxPqXvk6GWwPr1ADZQqOXGt1rrKGMkXUmQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=detlev.casanova@collabora.com;
-	dmarc=pass header.from=<detlev.casanova@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740149018;
-	s=zohomail; d=collabora.com; i=detlev.casanova@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=gA8mn4fOHoGECCHqYXtlx2zwyQnjDL6NNJx/mEGL37k=;
-	b=Oqd6dpyxZY9ouCf7T8Ku9XIIh2lKIO7kgmqL3aRYfciczdjFa77sxZ12CaQ/izzJ
-	3eUDdaUsKGpAhc87xv6+Ln8RjEH0POVBgunMSnnqLqqH0XNLvDk09FnQIz0S1CHOx2t
-	l0fX5qeyonfxOLsyVYaCaZsUIY5ALfsn9B5l3MNg=
-Received: by mx.zohomail.com with SMTPS id 1740149014815682.0553532876535;
-	Fri, 21 Feb 2025 06:43:34 -0800 (PST)
-From: Detlev Casanova <detlev.casanova@collabora.com>
-To: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>,
- Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: linux-kernel@vger.kernel.org, Algea Cao <algea.cao@rock-chips.com>,
- Heiko Stuebner <heiko@sntech.de>,
- Geert Uytterhoeven <geert+renesas@glider.be>,
- dri-devel@lists.freedesktop.org, Niklas Cassel <cassel@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Andrzej Hajda <andrzej.hajda@intel.com>, kernel@collabora.com,
- David Airlie <airlied@gmail.com>, Dragan Simic <dsimic@manjaro.org>,
- Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>,
- Robert Foss <rfoss@kernel.org>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Sugar Zhang <sugar.zhang@rock-chips.com>, linux-rockchip@lists.infradead.org,
- Chen-Yu Tsai <wens@csie.org>, FUKAUMI Naoki <naoki@radxa.com>,
- devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
- Jonas Karlman <jonas@kwiboo.se>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Johan Jonker <jbx6244@gmail.com>, linux-arm-kernel@lists.infradead.org,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Alexey Charkov <alchark@gmail.com>, Thomas Zimmermann <tzimmermann@suse.de>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>
-Subject: Re: [PATCH v7 0/3] Add HDMI audio on the rk3588 SoC
-Date: Fri, 21 Feb 2025 09:43:31 -0500
-Message-ID: <4988041.31r3eYUQgx@trenzalore>
-In-Reply-To: <5E535D58-AEFF-45A4-A1EA-1FA282F366AE@gmail.com>
-References:
- <20250217215641.372723-1-detlev.casanova@collabora.com>
- <BA73C4A1-C680-4748-9CE1-4B3B19A14261@gmail.com>
- <5E535D58-AEFF-45A4-A1EA-1FA282F366AE@gmail.com>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C05D513B787;
+	Fri, 21 Feb 2025 14:45:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740149114; cv=none; b=Jj94YvKAypqr+TLkgC36vCLb7ZNARTnzEtP4F+6sAgf0F90UG7/HAIA9eChl1OezO75+bqjjfGkO1erjz8cdUOwu5bfta8y6A2HYAujJMMLrYaAxmZEaaO5ONvamFbq0F4Bmn30OmZYQ7qRhv6KP+hCzBXBk41IMOGejQ03oXi0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740149114; c=relaxed/simple;
+	bh=R7JS7jIZcjDSPrwz8G0a0Y/N00Su0rg91ouIBSJPJcI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KLQ5/jmBwldG/MKPadHk1JVKpXQOCoZjm5LAVFecvMiYP4gpQIdyYe2wdYjB4BKll5Oo5EfJo3mncwSOlMSkw5cHZnAEIlZP7F9Xh2+IVUxdd9IGeGdlpl0ezb5mlYF2twT5y7v/SVxk4bEZmvlpXzV/1H0WXgRz8KuvOjcSZPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5183A106F;
+	Fri, 21 Feb 2025 06:45:27 -0800 (PST)
+Received: from [192.168.2.132] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E84843F5A1;
+	Fri, 21 Feb 2025 06:45:04 -0800 (PST)
+Message-ID: <d5162d16-e9fd-408f-9bc5-68748e4b1f87@arm.com>
+Date: Fri, 21 Feb 2025 15:45:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/2] sched/deadline: Check bandwidth overflow earlier
+ for hotplug
+To: Jon Hunter <jonathanh@nvidia.com>, Juri Lelli <juri.lelli@redhat.com>
+Cc: Christian Loehle <christian.loehle@arm.com>,
+ Thierry Reding <treding@nvidia.com>, Waiman Long <longman@redhat.com>,
+ Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ Michal Koutny <mkoutny@suse.com>, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
+ Phil Auld <pauld@redhat.com>, Qais Yousef <qyousef@layalina.io>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+ Suleiman Souhlal <suleiman@google.com>, Aashish Sharma <shraash@google.com>,
+ Shin Kawamura <kawasin@google.com>,
+ Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+ linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+ "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+References: <151884eb-ad6d-458e-a325-92cbe5b8b33f@nvidia.com>
+ <Z7Ne49MSXS2I06jW@jlelli-thinkpadt14gen4.remote.csb>
+ <Z7RZ4141H-FnoQPW@jlelli-thinkpadt14gen4.remote.csb>
+ <d7cc3a3c-155e-4872-a426-cbd239d79cac@arm.com>
+ <Z7SWvr86RXlBbJlw@jlelli-thinkpadt14gen4.remote.csb>
+ <a0f03e3e-bced-4be7-8589-1e65042b39aa@arm.com>
+ <Z7WsRvsVCWu_By1c@jlelli-thinkpadt14gen4.remote.csb>
+ <4c045707-6f5a-44fd-b2d1-3ad13c2b11ba@arm.com>
+ <537f2207-b46b-4a5e-884c-d6b42f56cb02@arm.com>
+ <Z7cGrlXp97y_OOfY@jlelli-thinkpadt14gen4.remote.csb>
+ <Z7dJe7XfG0e6ECwr@jlelli-thinkpadt14gen4.remote.csb>
+ <1c75682e-a720-4bd0-8bcc-5443b598457f@nvidia.com>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Content-Language: en-US
+In-Reply-To: <1c75682e-a720-4bd0-8bcc-5443b598457f@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Friday, 21 February 2025 06:42:31 EST Piotr Oniszczuk wrote:
-> Small data point: on rock5b switching in dts analog audio: from
-> audio-graph-card to simple-audio-card (so dts is:
-> https://gist.github.com/warpme/349b27e49bc6f617ef1041047e75adab ) makes
-> kernel oops go away with analog audio still working=E2=80=A6
->=20
-> so maybe issue is in audio-graph-card code (or its dts fragments)?
+On 21/02/2025 12:56, Jon Hunter wrote:
+> 
+> On 20/02/2025 15:25, Juri Lelli wrote:
+>> On 20/02/25 11:40, Juri Lelli wrote:
+>>> On 19/02/25 19:14, Dietmar Eggemann wrote:
 
-I can reproduce with your config (I guess that removing the driver for anal=
-og=20
-audio hides the issue)
+[...]
 
-I'm really feel like simple_util_clean_reference(card) in simple_probe()=20
-errors path should not be called anymore, since
-https://lore.kernel.org/all/87zfk4o5l2.wl-kuninori.morimoto.gx@renesas.com/
+> Latest branch is not building for me ...
+> 
+>   CC      kernel/time/hrtimer.o
+> In file included from kernel/sched/build_utility.c:88:
+> kernel/sched/topology.c: In function ‘partition_sched_domains’:
+> kernel/sched/topology.c:2817:9: error: implicit declaration of function
+> ‘dl_rebuild_rd_accounting’ [-Werror=implicit-function-declaration]
+>  2817 |         dl_rebuild_rd_accounting();
+>       |         ^~~~~~~~~~~~~~~~~~~~~~~~
 
-I'm adding Kuninori Morimoto in the to list of this thread for extra input=
-=20
-(See thread at https://lore.kernel.org/all/B8EF5196-55FB-44EC-B93C-E327C791=
-225B@gmail.com/) as they made that change.
-Especially those commits:
-      ASoC: audio-graph-card2: use __free(device_node) for device node
-      ASoC: audio-graph-card: use __free(device_node) for device node
-      ASoC: simple-card: use __free(device_node) for device node
+This should fix it for now:
 
-Detlev.
+-->8--
 
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 52243dcc61ab..3484dda93a94 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -954,7 +954,9 @@ static void dl_update_tasks_root_domain(struct cpuset *cs)
+        css_task_iter_end(&it);
+ }
+ 
+-static void dl_rebuild_rd_accounting(void)
++extern void dl_rebuild_rd_accounting(void);
++
++void dl_rebuild_rd_accounting(void)
+ {
+        struct cpuset *cs = NULL;
+        struct cgroup_subsys_state *pos_css;
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 9892e6fa3e57..60c9996ccf47 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -2806,6 +2806,8 @@ void partition_sched_domains_locked(int ndoms_new, cpumask_var_t doms_new[],
+        update_sched_domain_debugfs();
+ }
+ 
++extern void dl_rebuild_rd_accounting(void);
++
+ /*
+  * Call with hotplug lock held
+  */
 
