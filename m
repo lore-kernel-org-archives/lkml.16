@@ -1,174 +1,126 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EDC204087
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 09:48:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30AD113AF2
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 09:49:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740131318; cv=none; b=ea7hdsrFGjjYT+sMHImLc5FfkBiDK6pfoaUYWrIaEtaF4+fEmY/tyHysFSY4WkCxGsLGJ/JOgepCiMyG8e9bmwGYH4uDCjfovj+/yBk6F3MaPgyNBQt0HiqeeKaUY7x5UuBgY63o2FZ58L6nQUnHCWBEfQTrchesR8d7CexUInw=
+	t=1740131395; cv=none; b=c0loNzLSsmRJKjUWGtrpL/Ryh7PKYjmCl+1RNaJ6er5eIOGKS86iOEnSJxgde4O3TjV8IrRZW6NY+ELfHjrSIfCo3fHZPyPV0N7jFNhh1eDWwsBzg8z3EbloyM52ygswHl5DyTlW1FdI7MIVyK07gv+4c5HMGbGo6vIjhT5NsVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740131318; c=relaxed/simple;
-	bh=thg+KPgdeNl5ZEv8D01cSfBVXSh8ziTQ7XXzKSqmXOM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=idTVPtsrYYkfwPxlA12/qbCIgi05bwQeZRrsTEqjM5gemngFAu9LqQi+OFU7MnIq9zNnQXvCNYqAjPSPBb5djRp38bpuXglFPfZn0ZAW8F6H6yOmS4yKlfHu8vLsCukXjEZA7hLbRl8Q365Qg4blOEPfB8lQGL7u8eyw3L8qMDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=J8g6ynmI; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=SiIisenH; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Rndu6kxt; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=wwHv7E2s; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1740131395; c=relaxed/simple;
+	bh=QWzDwjYqf8F9AheoQ4G+bdhMrG1rMkB1FkY9QF50vog=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DiKQl+/hVG3oMWcDSStzocfkc0+j2L9QSBX3T3KqMEHwkIerDfnWtZAMU50i2DgnGx7KYOIQxvlbo0sTN4Gv4AuZlGmZty74JlqNzdKnfMLFPAiwJ4cp3HkVvgP2bAkIgrNHR6kndVtJhu61QURYEfShm4FExNn6GTkL/pgJ8vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=CCTjV4Pp; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="J8g6ynmI";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="SiIisenH";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Rndu6kxt";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="wwHv7E2s"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id F010F211D2;
-	Fri, 21 Feb 2025 09:48:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740131309; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MqyX7HGqPKp4niDYTusUzp5w/Yf2gRba6+xe39ad1cc=;
-	b=J8g6ynmIvSu4XXEpTtBbpskTxMPL4ZX1c/QyTPREln/InEUNChz+EgoaxXdJUh5o+YtZxH
-	L2R0pH69rbi8LETBbP5atwHYY38YvwxhVB8E2+84sDYlYvVOCn9dsRWB1H/h/wO5YQP/TY
-	pF5vzB+QJWd54vk/coDFIUdsPEwy4Gk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740131309;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MqyX7HGqPKp4niDYTusUzp5w/Yf2gRba6+xe39ad1cc=;
-	b=SiIisenHj+jkGc9PSBgzR6yE7xEpbmn7yQHBOsHoGNzqn/P84SpXfIn+R/QqSzCTH7Chq6
-	ZBfha9WpVOk202AA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=Rndu6kxt;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=wwHv7E2s
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740131308; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MqyX7HGqPKp4niDYTusUzp5w/Yf2gRba6+xe39ad1cc=;
-	b=Rndu6kxt4mMRvoIxJor9KNG2q7htS7KGO/4owQ86bVMsbg3eHK57Fs83MtNwJVvEYjHJRa
-	3RjHOBiukI2cTe7kOTMynvxTCBsl4gy5H0dqCdYg1K3OuAxclQPsjvnjpA4UUyc/lZ3hbF
-	f71Tsf7TlC71zG1XfA/91/e5uVKkWjU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740131308;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MqyX7HGqPKp4niDYTusUzp5w/Yf2gRba6+xe39ad1cc=;
-	b=wwHv7E2sD9jV31h0+MjtCCx/du9cFxjGcGyPW82y2xZp7o9VxiwSfyfaI0Bpnn0DTWZMi9
-	2ajRllDyEzAiDXBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D8A43136AD;
-	Fri, 21 Feb 2025 09:48:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id nnPHMuxLuGcZLQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Fri, 21 Feb 2025 09:48:28 +0000
-Message-ID: <cfc2d4f2-08d4-45c1-830f-d1786306454a@suse.cz>
-Date: Fri, 21 Feb 2025 10:48:28 +0100
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="CCTjV4Pp"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38f2b7ce2e5so1064563f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 01:49:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1740131392; x=1740736192; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a+bqdYT2vB++aLYRe6uuUn4Zzo34myKw/ce5O2MaFJ8=;
+        b=CCTjV4Ppj3B5YBp/2w6LiyV3Qe2BKPFnWKK4S/Hjb+Oi0jWA78q4ITMyBMcw7JBrBB
+         IUUKnGtkwQq5ZUnBe0oqN7GpSyI+Iu7ROi88Zzo64DwalXkZuex1oqnEpFT+BvMtvlby
+         fZRsKiSYARwZ9FDDSoKTXFMLuPJFNuSId6cSU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740131392; x=1740736192;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=a+bqdYT2vB++aLYRe6uuUn4Zzo34myKw/ce5O2MaFJ8=;
+        b=iF8uYV232G7M9JRjOO+15sRg9EQRG2tdNG8OaN2ib7lPNjlp2j+GejehwexOAxnKUn
+         CpqWuRyGHuhuVUXzj6Fe698nAt7cg5rsJ9EyeDB9Y4Nt3v++x0pGtI7bAmcA3w8cWMdI
+         AWqufJJT/sTWAyj6B83s3ya9EW63BN3K2gJYAImiLmdnLt6yuB0yKw8BuNEUMuoJ06j6
+         QRUkWsr9+gN9/8PMH4BhPOU2BrNVlZH1ZzvabrrKCeecbsAikmUOu54eCFP26/Y6wxiI
+         0NQnHlUQM+XoueIaAw9QZSn7HAfwQNN83v0Fdp+bvCnPTtQQw6DkYz6zT/tFRkn6DYA6
+         knQw==
+X-Forwarded-Encrypted: i=1; AJvYcCWv8NQujIYRG2npplCRO0+mc+V+q8p4QnI1yp7xuQfbVEI9u8Liq3ICOH1t1joqxD/wv/eHQtmdWFupd6U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOJXGWxr5zHiO+CcDFt7/BOcygVDqZZH7DcnNT9V9yZML8fSwA
+	cQD6EZFxQ/db/7cQQIbEi4Jvxuesww96/GzK5lx+WTfTiI/ZgBEjpv3/2OepWqU=
+X-Gm-Gg: ASbGnctCprXxvUqWjJjor/WjDlXK+N9ZAIOMZGFmaZyswyvfvPun+8bM7R10bFYh9N9
+	dNhq3qXtfVNQGtCkE+Xxk72k/xCwWeyGOFAqo45me7cLnjLkUTmUQNApG6uDyLcAPDsCNcnjToh
+	oKZSi4QX6EFoawK/5vTS+XqGAYkfxVAiVEWTbo0G6wR2/F5KVWi4iGdV7w0kIN8p2egCGcwFUSi
+	8Y0sAOmF6TrwdwKAVG+/FJQbe8D3SgrDid8N+2MLgm+HmVHQSUCR/S3gLR5mDpLEGntQHYHx72r
+	W9KTeR5efWUptBHLW/wkNlZTHx6I7knjb1xhLw==
+X-Google-Smtp-Source: AGHT+IEmJ5MipungHbiWmtpuUqPEucmYmkgvTIqBEX4X1VrM8Q8aJe0Kqf+wyOXqX27kcNvBWgGf0Q==
+X-Received: by 2002:a5d:598c:0:b0:38f:48ee:ddb1 with SMTP id ffacd0b85a97d-38f6e95d5e2mr2850300f8f.18.1740131391626;
+        Fri, 21 Feb 2025 01:49:51 -0800 (PST)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d5eeesm23289252f8f.63.2025.02.21.01.49.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 01:49:50 -0800 (PST)
+Date: Fri, 21 Feb 2025 10:49:48 +0100
+From: Simona Vetter <simona.vetter@ffwll.ch>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Raag Jadav <raag.jadav@intel.com>, arnd@arndb.de,
+	andriy.shevchenko@linux.intel.com, airlied@gmail.com,
+	simona@ffwll.ch, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] drm/draw: include bug.h
+Message-ID: <Z7hMPIxFyd6cqbC0@phenom.ffwll.local>
+Mail-Followup-To: Greg KH <gregkh@linuxfoundation.org>,
+	Raag Jadav <raag.jadav@intel.com>, arnd@arndb.de,
+	andriy.shevchenko@linux.intel.com, airlied@gmail.com,
+	simona@ffwll.ch, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+References: <20250221050804.2764553-1-raag.jadav@intel.com>
+ <20250221050804.2764553-3-raag.jadav@intel.com>
+ <2025022135-aviation-evident-2518@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm, percpu: do not consider sleepable allocations atomic
-Content-Language: en-US
-To: Dennis Zhou <dennis@kernel.org>, Michal Hocko <mhocko@suse.com>
-Cc: Tejun Heo <tj@kernel.org>, Filipe Manana <fdmanana@suse.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- LKML <linux-kernel@vger.kernel.org>
-References: <20250206122633.167896-1-mhocko@kernel.org>
- <Z6u5OJIQBw8QLGe_@slm.duckdns.org> <Z6zS4Dtyway78Gif@tiehlicka>
- <Z6zlC3juT46dLHr9@slm.duckdns.org> <Z60KQCuPCueqRwzc@tiehlicka>
- <Z60S4NMUzzKbW5HY@slm.duckdns.org> <Z60VE9SJHXEtfIbw@snowbird>
- <Z69mygllBATJ6dsm@tiehlicka> <Z7fmnsHTU49eYEaU@snowbird>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <Z7fmnsHTU49eYEaU@snowbird>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: F010F211D2
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025022135-aviation-evident-2518@gregkh>
+X-Operating-System: Linux phenom 6.12.11-amd64 
 
-On 2/21/25 03:36, Dennis Zhou wrote:
-> I've thought about this in the back of my head for the past few weeks. I
-> think I have 2 questions about this change.
+On Fri, Feb 21, 2025 at 07:05:12AM +0100, Greg KH wrote:
+> On Fri, Feb 21, 2025 at 10:38:04AM +0530, Raag Jadav wrote:
+> > Directly include bug.h for WARN() helpers instead of relying on
+> > intermediate headers.
+> > 
+> > Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+> > ---
+> >  drivers/gpu/drm/drm_draw.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/gpu/drm/drm_draw.c b/drivers/gpu/drm/drm_draw.c
+> > index cb2ad12bce57..0a0e1eebf481 100644
+> > --- a/drivers/gpu/drm/drm_draw.c
+> > +++ b/drivers/gpu/drm/drm_draw.c
+> > @@ -5,6 +5,7 @@
+> >   */
+> >  
+> >  #include <linux/bits.h>
+> > +#include <linux/bug.h>
+> >  #include <linux/iosys-map.h>
+> >  #include <linux/types.h>
+> >  
+> > -- 
+> > 2.34.1
+> > 
 > 
-> 1. Back to what TJ said earlier about probing. I feel like GFP_KERNEL
->    allocations should be okay because that more or less is control plane
->    time? I'm not sure dropping PR_SET_IO_FLUSHER is all that big of a
->    work around?
-
-This solves the iscsid case but not other cases, where GFP_KERNEL
-allocations are fundamentally impossible.
-
-> 2. This change breaks the feedback loop as we discussed above.
->    Historically we've targeted 2-4 free pages worth of percpu memory.
->    This is done by kicking the percpu work off. That does GFP_KERNEL
->    allocations and if that requires reclaim then it goes and does it.
->    However, now we're saying kswapd is going to work in parallel while
->    we try to get pages in the worker thread.
+> Does patch 1 break this file without this patch so this series is not in
+> order?
 > 
->    Given you're more versed in the reclaim side. I presume it must be
->    pretty bad if we're failing to get order-0 pages even if we have
->    NOFS/NOIO set?
+> I'll be glad to take patch 1 in my tree, but I don't want to break
+> anything else.
 
-IMHO yes, so I don't think we need to pre-emptively fear that situation that
-much. OTOH in the current state, depleting pcpu's atomic reserves and
-failing pcpu_alloc due to not being allowed to take the mutex can happen
-easily and even if there's plenty of free memory.
+Yeah looks inverted. In case this is all there is I'm happy to land this
+patch through your tree, that seems like the simplest approach.
 
->    My feeling is that we should add back some knowledge of the
->    dependency so if the worker fails to get pages, it doesn't reschedule
->    immediately. Maybe it's as simple as adding a sleep in the worker or
->    playing with delayed work...
+Acked-by: Simona Vetter <simona.vetter@ffwll.ch>
 
-I think if we wanted things to be more robust (and perhaps there's no need
-to, see above), the best way would be to make the worker preallocate with
-GFP_KERNEL outside of pcpu_alloc_mutex. I assume it's probably not easy to
-implement as page table allocations are involved in the process and we don't
-have a way to supply preallocated memory for those.
-
-> Thanks,
-> Dennis
-
+Cheers, Sima
+-- 
+Simona Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
