@@ -1,79 +1,184 @@
-Received: from mail115-76.sinamail.sina.com.cn (mail115-76.sinamail.sina.com.cn [218.30.115.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D69D530
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 23:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E74153598
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 23:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740266307; cv=none; b=R33RS2jMp8B9loX11rzAY5020MIZicLQL8gFKtkOWlXpdUkCS4FdPW1nLz8nUqAAYKmU+NCWkYTJM+L9tJl92XMJyNvH0Rs3i8z+lfVcYzPVe0Mj2T6v2rNyEuXWyq+ahMuuyv2qir5JCz3E1jhp/attBbFSUL1xC2HpsryXWok=
+	t=1740267211; cv=none; b=f/KlGZav7N1MY8x/o1rzLls6gCHmT6GrzbxdehV9cJ2u3PrIzo3/pHdTnowKmrYiKbF7OniGBw6xplkRvILdoWJiErXm/ge570roT+W9gUYIE368HKdEojebL0htHWFfCuXqP0jwDbtxTxTsdgqviEZV+Xdorm42SnQNSIfAs/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740266307; c=relaxed/simple;
-	bh=F0gSSjEDxuRkpYB61WXzPtzQIRDmkJ7jwFzDAbDleR4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KOxt36n2iHQAJTW4ZoBM8EcmpARna9H32LAwDSGkuk6FxqxElQb6U51G7SjVfpU6XTyLkMNpmP8xpeGvxKPFRxdP4Ur2dqGd5emllAVYxo3q7lgJ5rCEMBlA7OtSncZf7O7DtHN9FUqq+GgTLrZLtvJXdb+3CbdZJV6ciyOTxd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.118.68.60])
-	by sina.com (10.185.250.22) with ESMTP
-	id 67BA5B3700005222; Sat, 23 Feb 2025 07:18:20 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 1936177602351
-X-SMAIL-UIID: 322EFC80D7644D64B8FD251F7C1AD073-20250223-071820-1
-From: Hillf Danton <hdanton@sina.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Byungchul Park <byungchul@sk.com>,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	conduct@kernel.org
-Subject: Re: [RFC PATCH v12 00/26] LUF(Lazy Unmap Flush) reducing tlb numbers over 90%
-Date: Sun, 23 Feb 2025 07:18:03 +0800
-Message-ID: <20250222231805.2557-1-hdanton@sina.com>
-In-Reply-To: <2025022221-aviation-rectangle-c497@gregkh>
-References: <20250220052027.58847-1-byungchul@sk.com> <20250220103223.2360-1-hdanton@sina.com> <20250220114920.2383-1-hdanton@sina.com> <Z7c0BTteQoZKcSmJ@casper.infradead.org> <20250220232503.2416-1-hdanton@sina.com> <20250221230556.2479-1-hdanton@sina.com> <20250222101100.2531-1-hdanton@sina.com>
+	s=arc-20240116; t=1740267211; c=relaxed/simple;
+	bh=uas6clKwNldDoa2lEUpRUzZU13MKNtGqID8wRHlraZQ=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Kcrh3NDLVwOo5Nypr27lWinoQpeNF0PdhswExz8BXG96Dj/ZtAHh3IJd48RAtbLi5MEJa54eN0RMBs76JdkGQfUroQuPx52G00I/ASkixmnX9AdPtYot3YtztINUs8MnF65HAU0Mg7MXQ+JPcUMbIegZ/eCW0aXYNB8z/YPtnGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d2b3a2f2d4so62218295ab.0
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 15:33:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740267209; x=1740872009;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LDf0vlKLZOdygl2+qkCD9Fk61ry0RL011juTt7FNvFY=;
+        b=WGm1E5LD93tKs7AsPb8xjE7tlFEppSvAxpESAU4v3tK5kYEj/vONCrt3mK7/gSaQvA
+         97hkCuYmnpWP8Cxt3v3NbMnGNfpiLsQju9V7l12xsgI6J1I3bSQ/V+6ACRQwdBxiFx2V
+         D4JLXS28E+bwpwzeYqBD712dAR0IP8Mc+VGdE2ogtaTnD9V2SK1+HfTttJGNAgWyO8bp
+         dmP1HIE7hz43ZYiB+rHZCafCeubnNpMdpdhJT9DfQZgLMWR8AxTr8Z98QXo4CRJYPujP
+         JdbfXiaxSWuVt9B8PS3F8tbpXutfeaQdbCnu8ZrED8PFBixIdKRiS5arvHRwkTnI8FYL
+         FLrw==
+X-Forwarded-Encrypted: i=1; AJvYcCVayijOib/fI69r+CwIWzBNlFGo7XJnH4nfdZKdm/1ImvF5XlsMfrxizcl4Q6m2XeUuzZb2UUNUh6RKYPE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBA2oYwXVze8uvVyPCcUY7rPWLybHXtryORq8FJbk2mhoqkrsi
+	2jkhprDOPEEVVHZE8EE8qP1/l2q1y6IZUO/JepnOxqB6pLC7rcVHtd/uW+VeR/uKCGPiK+AV17s
+	McNf2Vi7OwBg11zwvqU26iknWWgfbKOWKGMDu7KH9xnuMisRI+3OnUhs=
+X-Google-Smtp-Source: AGHT+IFQzfXa6jjE12sQT4rN8bLnT8gsz9p92D+xg09k4a1cQjqmcyqBx4Y9ZMqWbpoWlXEYSjM+S33/ew37MDaYkwwhxveMFp5R
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:3092:b0:3d0:21aa:a756 with SMTP id
+ e9e14a558f8ab-3d2cae4c215mr92664735ab.5.1740267208902; Sat, 22 Feb 2025
+ 15:33:28 -0800 (PST)
+Date: Sat, 22 Feb 2025 15:33:28 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67ba5ec8.050a0220.bbfd1.0004.GAE@google.com>
+Subject: [syzbot] [bcachefs?] KASAN: global-out-of-bounds Read in rcu_pending_pcpu_dequeue
+From: syzbot <syzbot+636e4465e7193ea92a97@syzkaller.appspotmail.com>
+To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, 22 Feb 2025 14:57:43 +0100 Greg KH <gregkh@linuxfoundation.org>
-> On Sat, Feb 22, 2025 at 06:10:59PM +0800, Hillf Danton wrote:
-> > On Sat, 22 Feb 2025 08:16:09 +0100 Greg KH <gregkh@linuxfoundation.org>
-> > > On Sat, Feb 22, 2025 at 07:05:26AM +0800, Hillf Danton wrote:
-> > > > On Thu, 20 Feb 2025 18:44:12 -0500 Steven Rostedt <rostedt@goodmis.org>
-> > > > > On Fri, 21 Feb 2025 07:25:02 +0800 Hillf Danton <hdanton@sina.com> wrote:
-> > > > > > > I'll tell you what would happen in my home town. If someone said
-> > > > > > > that to a co-worker, they would likely be terminated.
-> > > > > > >   
-> > > > > > Interesting, I want to know if the three words, rape, pregnancy and WTK,
-> > > > > > could be used before judge in your hometown court by anyone like your lawyer.
-> > > > > 
-> > > > > This isn't a court. And there's no reason to use the word "rape" in a
-> > > > > technical conversation on the Linux kernel mailing list. Perhaps a person
-> > > > > reading this was a victim of rape. How do you think that would make them
-> > > > > feel? Welcomed to our community? Absolutely not. Which is why it's totally
-> > > > > unacceptable.
-> > > > > 
-> > > > There are NAK victims. Did you nak more than twice a week, Steve?
-> > > 
-> > > This is not the way to work with your fellow developers in the community
-> > > to express disagreements.
-> > >
-> > No comment because you are free to express disagreements.
-> 
-> Disagreements are fine, but not with words like what you used, sorry,
-> that was unacceptable and requires an apology.
-> 
-Feel free to show us how the three words, rape, pregnancy and WTK, are defined
-to be unacceptable, if you are correct.
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    2408a807bfc3 Merge tag 'vfs-6.14-rc4.fixes' of git://git.k..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17621898580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6cc40dfe827ffb85
+dashboard link: https://syzkaller.appspot.com/bug?extid=636e4465e7193ea92a97
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/3bbfce004a48/disk-2408a807.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/0151460c5539/vmlinux-2408a807.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/8dfe7f8b2862/bzImage-2408a807.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+636e4465e7193ea92a97@syzkaller.appspotmail.com
+
+bcachefs (loop3): starting version 1.7: mi_btree_bitmap opts=errors=continue,metadata_checksum=none,data_checksum=none,compression=lz4,nocow
+bcachefs (loop3): initializing new filesystem
+bcachefs (loop3): going read-write
+bcachefs (loop3): marking superblocks
+------------[ cut here ]------------
+==================================================================
+BUG: KASAN: global-out-of-bounds in string_nocheck lib/vsprintf.c:632 [inline]
+BUG: KASAN: global-out-of-bounds in string+0x229/0x2b0 lib/vsprintf.c:714
+Read of size 1 at addr ffffffff8c74adc9 by task syz.3.23/6077
+
+CPU: 0 UID: 0 PID: 6077 Comm: syz.3.23 Not tainted 6.14.0-rc3-syzkaller-00012-g2408a807bfc3 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 12/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:378 [inline]
+ print_report+0x169/0x550 mm/kasan/report.c:489
+ kasan_report+0x143/0x180 mm/kasan/report.c:602
+ string_nocheck lib/vsprintf.c:632 [inline]
+ string+0x229/0x2b0 lib/vsprintf.c:714
+ vsnprintf+0x8b4/0x1220 lib/vsprintf.c:2843
+ vprintk_store+0x482/0x1240 kernel/printk/printk.c:2279
+ vprintk_emit+0x271/0xa10 kernel/printk/printk.c:2408
+ __warn_printk+0x263/0x360 kernel/panic.c:797
+ look_up_lock_class+0xdb/0x170 kernel/locking/lockdep.c:938
+ register_lock_class+0x102/0x980 kernel/locking/lockdep.c:1292
+ __lock_acquire+0xf3/0x2100 kernel/locking/lockdep.c:5103
+ lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+ __raw_spin_lock_irq include/linux/spinlock_api_smp.h:119 [inline]
+ _raw_spin_lock_irq+0xd3/0x120 kernel/locking/spinlock.c:170
+ spin_lock_irq include/linux/spinlock.h:376 [inline]
+ rcu_pending_pcpu_dequeue+0x29/0x2b0 fs/bcachefs/rcu_pending.c:538
+ bkey_cached_alloc fs/bcachefs/btree_key_cache.c:143 [inline]
+ btree_key_cache_create fs/bcachefs/btree_key_cache.c:222 [inline]
+ btree_key_cache_fill+0x496/0x3840 fs/bcachefs/btree_key_cache.c:319
+ bch2_btree_path_traverse_cached+0x8b2/0xc60 fs/bcachefs/btree_key_cache.c:381
+ bch2_btree_path_traverse_one+0x46a/0x2930 fs/bcachefs/btree_iter.c:1179
+ bch2_btree_path_traverse fs/bcachefs/btree_iter.h:249 [inline]
+ bch2_btree_iter_peek_slot+0x8c0/0x27c0 fs/bcachefs/btree_iter.c:2784
+ __bch2_bkey_get_iter fs/bcachefs/btree_iter.h:585 [inline]
+ bch2_bkey_get_iter fs/bcachefs/btree_iter.h:599 [inline]
+ bch2_trans_start_alloc_update_noupdate+0x385/0x5e0 fs/bcachefs/alloc_background.c:458
+ __bch2_trans_mark_metadata_bucket fs/bcachefs/buckets.c:955 [inline]
+ bch2_trans_mark_metadata_bucket+0x2f8/0x17b0 fs/bcachefs/buckets.c:1043
+ bch2_trans_mark_metadata_sectors fs/bcachefs/buckets.c:1060 [inline]
+ __bch2_trans_mark_dev_sb fs/bcachefs/buckets.c:1100 [inline]
+ bch2_trans_mark_dev_sb+0x3f6/0x820 fs/bcachefs/buckets.c:1128
+ bch2_trans_mark_dev_sbs_flags+0x6be/0x720 fs/bcachefs/buckets.c:1138
+ bch2_fs_initialize+0xba0/0x1610 fs/bcachefs/recovery.c:1149
+ bch2_fs_start+0x36d/0x610 fs/bcachefs/super.c:1042
+ bch2_fs_get_tree+0xdb7/0x17a0 fs/bcachefs/fs.c:2203
+ vfs_get_tree+0x90/0x2b0 fs/super.c:1814
+ do_new_mount+0x2be/0xb40 fs/namespace.c:3560
+ do_mount fs/namespace.c:3900 [inline]
+ __do_sys_mount fs/namespace.c:4111 [inline]
+ __se_sys_mount+0x2d6/0x3c0 fs/namespace.c:4088
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f189278e58a
+Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 de 1a 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f1893561e68 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007f1893561ef0 RCX: 00007f189278e58a
+RDX: 0000400000000100 RSI: 0000400000000180 RDI: 00007f1893561eb0
+RBP: 0000400000000100 R08: 00007f1893561ef0 R09: 0000000000000010
+R10: 0000000000000010 R11: 0000000000000246 R12: 0000400000000180
+R13: 00007f1893561eb0 R14: 00000000000059fa R15: 0000400000000480
+ </TASK>
+
+The buggy address belongs to the variable:
+ .str+0x9/0x20
+
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0xc74a
+flags: 0xfff00000002000(reserved|node=0|zone=1|lastcpupid=0x7ff)
+raw: 00fff00000002000 ffffea000031d288 ffffea000031d288 0000000000000000
+raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner info is not present (never set?)
+
+Memory state around the buggy address:
+ ffffffff8c74ac80: 00 00 00 02 f9 f9 f9 f9 00 05 f9 f9 02 f9 f9 f9
+ ffffffff8c74ad00: 06 f9 f9 f9 00 00 00 00 f9 f9 f9 f9 00 00 00 00
+>ffffffff8c74ad80: 00 00 00 00 00 00 00 00 00 01 f9 f9 00 00 00 04
+                                              ^
+ ffffffff8c74ae00: f9 f9 f9 f9 00 00 00 00 00 00 00 00 00 00 00 00
+ ffffffff8c74ae80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
