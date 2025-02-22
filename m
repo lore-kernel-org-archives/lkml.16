@@ -1,97 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458EE2063E8
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 12:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 944B1208995;
+	Sat, 22 Feb 2025 12:26:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740227151; cv=none; b=W7wkTQXXbEbW7YatXE4pwvsFEcawP16U1iF5iQ5mjb631VoLPvNXun/8QwhprTNARwDqBkQTwV5qr+qK7fPtmwNfmHyoO2B1FzjSLdCf7Dz3QoM4mReehjqJCf1K+upA3iUeOGV/B7GKgGQWfESABEOaw7CuAZWZz6aRyojErj0=
+	t=1740227181; cv=none; b=H6oDJVJVTmFGOLl6dp/KQ81nDP5dy5xiWSwsNXTAGucZtZWh45/ewQmp8Glow4KID7oua3VDTuLeiURjS5j7yVo670ZZa3/WYJdRTDgcHqpmYXnJKaddSuigRig4LvcOte2+/N2BHm+ffyVhrowqHLbmxpt8xraoKNjFNhAplDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740227151; c=relaxed/simple;
-	bh=wFPOZGTzQtXqzaUsuG5YhWC9eGVsW6AClawQBeA9UEg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nln5X5JKk8NAjS4V7AJcqSuNi8Vqmtu21seqn3ZgBbnTCV9V4YCnzp2cBiLTCx3JS3GRsa62UCkJRO+smAgD8fuAR0SF1lyQ21m2Xojvd0ge9ckWCO53thUscE9S+O71YXoGHNddxJR5zJrPzZO/XMGUaWGCbEB6x8zDTC29P2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BErU0CRg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740227181; c=relaxed/simple;
+	bh=LO9/mRpHCVMrvxTJYlpL/eiXq+Ry7sMsOIA7JzYPwzE=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=LaJR3l9j0oebGBPH3hwp7JOwK3wmiqhnkRTcO+pUxo+X1f8/5+IuCHpjKBqFirhLSDz06t4X3dauN7E0w/I1q2O2nBbTr4Ap/VmqscCyDP6Yxy32jwLyXVxWQ7kWNu4HWcnzbDgQ5Jbxu4weWnl/YRBvrrmnGepDjTFxJtc900A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=szNoidhx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NLu6RFz/; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BErU0CRg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD1F9C4CED1;
-	Sat, 22 Feb 2025 12:25:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740227150;
-	bh=wFPOZGTzQtXqzaUsuG5YhWC9eGVsW6AClawQBeA9UEg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BErU0CRgEYCV5hl0SNKFbr9+gfHXGtHCdQqgiPZ1hHi+tTDTXjab8KKw9y8FMaodl
-	 ohtHcpGO1M8cFedTMKT7t0eXo/qXsD7zLnwjk2sJ+tVe5DONTmZY1PgARHNBnS5BdZ
-	 i9bQqNYXs1JRMBwof0UAjgEPaRcIhCoBojk+kGGINWcW3nFsruXjBVg49ZPGrJZH28
-	 IIP0zNT2ZaxA5cFPio/jdxNK8oWgkhcO7dJsjxQsx/zx1+KUDgIAyLS3PqBkXRrNmR
-	 RI5eunM1ACDAGz2FE17QO2qvF1Ywvy1GqKRSX7Zbm7Juccvk/Jye+TyAMq5kOxwmcU
-	 zpEfGoBGEXBrA==
-Date: Sat, 22 Feb 2025 13:25:40 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Brian Gerst <brgerst@gmail.com>
-Cc: Uros Bizjak <ubizjak@gmail.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>, Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH v6 00/15] x86-64: Stack protector and percpu improvements
-Message-ID: <Z7nCRFh5L9x40X5L@gmail.com>
-References: <20250123190747.745588-1-brgerst@gmail.com>
- <Z7RRZ0jdqsrADMm0@gmail.com>
- <CAFULd4Z_QoOLKCOawyeFtRe6V4+oaaGxfQxav9dS-Di-Ne7tfw@mail.gmail.com>
- <Z7XE0P6ZFHxtlYXw@gmail.com>
- <CAMzpN2gyhEnYsimxLhLNPc4HTpVdRGTiBfm9pXiFTL6_3-O=sg@mail.gmail.com>
- <Z7ctmL3HDGxzyX0g@gmail.com>
- <CAMzpN2iwtA2fuNgBU2rrQzuUUD57_=fVzngn7AaJo-UAnJvVoA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="szNoidhx";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NLu6RFz/"
+Date: Sat, 22 Feb 2025 12:26:17 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740227178;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wZphHXWJDZqk97gWlBD+VsdveHKIz6ukiqEFpQ2mk+g=;
+	b=szNoidhxINvtLJGvRReqYZaKIFKqfLJHIM0aHIeKNZLHjy5cUChL7NH6Jc1dWfKP+E1AnV
+	2bRzd00WeL+8slm3S94XkymO3SoT9P/R48vQXkm6NPtkxl3FDaZ3PrWkzUEP0AjvuDIbZD
+	98al38rHm2HXdgJjGcJP45ChLI6S0GLk07eCjrV6CRD7LSL0lq698vMCf1GOC6rR/yNkLh
+	9MGXGc9J5BzLpjqRb9/Lpiuc6R+/dFiV9pFjAYEhONuF1d6fnlobfz9A69kj/AKUPMQp/g
+	Hay05nQsO+ctQhhjotqO5o+QrMzr1OrBJ4pp9xUKxLFuHnr0TFcXoYWhGAn0LQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740227178;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wZphHXWJDZqk97gWlBD+VsdveHKIz6ukiqEFpQ2mk+g=;
+	b=NLu6RFz/+5fEeixDWF8+t2FyNpyNcBuLpxFd1uqNR9SwW7Xvxa/WJNfbqXupT33MxnOh5d
+	xRKNfVpN7tHqh+BA==
+From: "tip-bot2 for Maciej Wieczor-Retman" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/mm] selftests/lam: Skip test if LAM is disabled
+Cc: "Maciej Wieczor-Retman" <maciej.wieczor-retman@intel.com>,
+ Ingo Molnar <mingo@kernel.org>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Alexander Potapenko <glider@google.com>,
+ Peter Zijlstra <peterz@infradead.org>, Shuah Khan <skhan@linuxfoundation.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: =?utf-8?q?=3C251d0f45f6a768030115e8d04bc85458910cb0dc=2E17379?=
+ =?utf-8?q?90375=2Egit=2Emaciej=2Ewieczor-retman=40intel=2Ecom=3E?=
+References: =?utf-8?q?=3C251d0f45f6a768030115e8d04bc85458910cb0dc=2E173799?=
+ =?utf-8?q?0375=2Egit=2Emaciej=2Ewieczor-retman=40intel=2Ecom=3E?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMzpN2iwtA2fuNgBU2rrQzuUUD57_=fVzngn7AaJo-UAnJvVoA@mail.gmail.com>
+Message-ID: <174022717730.10177.4676833475098422793.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
+The following commit has been merged into the x86/mm branch of tip:
 
-* Brian Gerst <brgerst@gmail.com> wrote:
+Commit-ID:     51f909dcd178655b104d979a6870535268724498
+Gitweb:        https://git.kernel.org/tip/51f909dcd178655b104d979a6870535268724498
+Author:        Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+AuthorDate:    Mon, 27 Jan 2025 16:31:56 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sat, 22 Feb 2025 13:17:07 +01:00
 
-> On Thu, Feb 20, 2025 at 8:26 AM Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> >
-> > * Brian Gerst <brgerst@gmail.com> wrote:
-> >
-> > > On Wed, Feb 19, 2025 at 6:47 AM Ingo Molnar <mingo@kernel.org> wrote:
-> > > >
-> > > >
-> > > > * Uros Bizjak <ubizjak@gmail.com> wrote:
-> > > >
-> > > > > > Thank you for doing this series - it all looks pretty good from my
-> > > > > > side and I've applied it experimentally to tip:x86/asm. I fixed up
-> > > > > > the trivial details other reviewers and me noticed.
-> > > > > >
-> > > > > > Note that the merge is tentative, it might still need a rebase if
-> > > > > > some fundamental problem comes up - but let's see how testing goes
-> > > > > > in -next.
-> > > > >
-> > > > > I wonder if there would be any benefit if stack canary is put into
-> > > > > struct pcpu_hot?
-> > > >
-> > > > It should definitely be one of the hottest data structures on x86, so
-> > > > moving it there makes sense even if it cannot be measured explicitly.
-> > > >
-> > >
-> > > It would have to be done with linker tricks, since you can't make the
-> > > compiler use a struct member directly.
-> >
-> > Probably not worth it then?
-> 
-> Actually it wasn't so bad since we already had the hack for 
-> __ref_stack_chk_guard.  Do you want the patches now or when the dust 
-> settles on the original series?
+selftests/lam: Skip test if LAM is disabled
 
-We can add it now I suppose, while memories are fresh and all that.
+Until LASS is merged into the kernel:
 
-Thanks,
+  https://lore.kernel.org/all/20241028160917.1380714-1-alexander.shishkin@linux.intel.com/
 
-	Ingo
+LAM is left disabled in the config file. Running the LAM selftest with
+disabled LAM only results in unhelpful output.
+
+Use one of LAM syscalls() to determine whether the kernel was compiled
+with LAM support (CONFIG_ADDRESS_MASKING) or not. Skip running the tests
+in the latter case.
+
+Merge CPUID checking function with the one mentioned above to achieve a
+single function that shows LAM's availability from both CPU and the
+kernel.
+
+Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Link: https://lore.kernel.org/r/251d0f45f6a768030115e8d04bc85458910cb0dc.1737990375.git.maciej.wieczor-retman@intel.com
+---
+ tools/testing/selftests/x86/lam.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
+
+diff --git a/tools/testing/selftests/x86/lam.c b/tools/testing/selftests/x86/lam.c
+index 60170a3..df91a41 100644
+--- a/tools/testing/selftests/x86/lam.c
++++ b/tools/testing/selftests/x86/lam.c
+@@ -115,13 +115,28 @@ static void segv_handler(int sig)
+ 	siglongjmp(segv_env, 1);
+ }
+ 
+-static inline int cpu_has_lam(void)
++static inline int lam_is_available(void)
+ {
+ 	unsigned int cpuinfo[4];
++	unsigned long bits = 0;
++	int ret;
+ 
+ 	__cpuid_count(0x7, 1, cpuinfo[0], cpuinfo[1], cpuinfo[2], cpuinfo[3]);
+ 
+-	return (cpuinfo[0] & (1 << 26));
++	/* Check if cpu supports LAM */
++	if (!(cpuinfo[0] & (1 << 26))) {
++		ksft_print_msg("LAM is not supported!\n");
++		return 0;
++	}
++
++	/* Return 0 if CONFIG_ADDRESS_MASKING is not set */
++	ret = syscall(SYS_arch_prctl, ARCH_GET_MAX_TAG_BITS, &bits);
++	if (ret) {
++		ksft_print_msg("LAM is disabled in the kernel!\n");
++		return 0;
++	}
++
++	return 1;
+ }
+ 
+ static inline int la57_enabled(void)
+@@ -1185,10 +1200,8 @@ int main(int argc, char **argv)
+ 
+ 	tests_cnt = 0;
+ 
+-	if (!cpu_has_lam()) {
+-		ksft_print_msg("Unsupported LAM feature!\n");
++	if (!lam_is_available())
+ 		return KSFT_SKIP;
+-	}
+ 
+ 	while ((c = getopt(argc, argv, "ht:")) != -1) {
+ 		switch (c) {
