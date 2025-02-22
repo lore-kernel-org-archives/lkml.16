@@ -1,172 +1,162 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A108F189913;
-	Sat, 22 Feb 2025 15:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CD2816FF44;
+	Sat, 22 Feb 2025 15:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740236818; cv=none; b=MVePPcYBR/n1DlJY5ms5ZQKVmwzxZhyKMH6VsOTc0Q7plpCWOxAC0RnKK0GGv1DhBvDU4FFIuVBuCG/ePtZoCVSVq2pZzI37Mx8rknvBCvjX0R8MurBC01ZU7h0DlCZwl/AkbP+BvelX2vQFc6echkrWk5NSWPpbmoaIFY5ocks=
+	t=1740236856; cv=none; b=a3iz8txIk7ckEiAaU7zV7vLQVQvJf6vzfoBEqCsVYwJdFhNbUNStN7xQHnG+Heo5P33m7Bo1qNxdaomyOIoGMWq12cg6XDZvXxqHd75oD3u54uPFpV22YSawbQ/F2VTUv51QU3Q0uph/5xLGUedORtSPpkQ2hy8ib8Yfa2CSQqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740236818; c=relaxed/simple;
-	bh=/79H6Qp0S0WUb6pL/fFShpv6CowCBkJWqN/s12nzPgY=;
+	s=arc-20240116; t=1740236856; c=relaxed/simple;
+	bh=70pD9gnFNEV46q1yL+XWGZJhvCSgCKDZIGACepg3f1I=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YdGYYdRccY3wKWvfEepJ3SYeWOOBbq90r1kQnPKa2Rw1KTN1Dqk8X1Q4dVb9G36/HiGMYw00JXO8RpQtDsOukOlHAvAw4/ULGTujDIAWHjkCvGZ+nLggbMniJNWh2/SsJie+PXRkD+/muOL0jZ2VoTAzfacTOPcAX+PckDsPwz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IbuKo6T5; arc=none smtp.client-ip=209.85.166.175
+	 To:Cc:Content-Type; b=Eo0UeM5EX/ZOGuTW8SFyebj18v+OAROWrqVP7i3/B1RgOVplZSeNWvucG180+BkQdVpgbyW7JBMsjwtfDr0mIObbx7aAxbhl1voD9qYneuTY0TAywsxWHI7k1Ddfybug9N7a9iTJz1j2G5vyekY7uFuMJpXcnKavn3YaCECpkdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PQ8U2lbm; arc=none smtp.client-ip=209.85.219.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IbuKo6T5"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3ce886a2d5bso26042815ab.1;
-        Sat, 22 Feb 2025 07:06:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PQ8U2lbm"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6dd049b5428so30991376d6.2;
+        Sat, 22 Feb 2025 07:07:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740236814; x=1740841614; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1740236854; x=1740841654; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GzaLEgWYgQCmXuI1xyS57YzrmqSQoqnt6fkTxsBS96A=;
-        b=IbuKo6T5kFCaAx/cyqNPx/44Yqqf53wV6ntu91iEGt3Ni+Mala2tK7CqRkJNove1Sq
-         8zBNOW6wsyjhqcqcHXO5+DnC0uDxTSGrxOOktyiRFXKsb3wnzAi/4vWNHRPlxDd/PM0G
-         feAO66HrgjTOw/9wZCjmBH4NWWTUMym19qpdGB5ANUL7HL5zYHltJ9rrmfOvze5L/2Wq
-         1tRrROGOJYDF1M7t1JnkZ2yX7bj+5hz74HUCzDBc6OpS7tOr/cFLkHbD6hUh+sFW/XQ3
-         c/1EOoP0NTgQ3NU/A6SsBvyFHcflF86P7iQQUT79FBG93IljBaYwUZTbv9733VDHJsO0
-         Pi6A==
+        bh=70pD9gnFNEV46q1yL+XWGZJhvCSgCKDZIGACepg3f1I=;
+        b=PQ8U2lbm0lQl8BmhQa9UsO3qkCgnuu08p25k/i4VWm6Be9BWS89x3Ni4l0tdFth4k6
+         +WVYKq+DopmbV4F71lwZ224dmEtCh021+7H/Lj0/HiZq1em4gsTIQAkBpmskPcbhizYz
+         9yDJ/J3xmV21m/0t7AfB0wSgAY8PcQLAEmiWhsKlcJkIo1SxfqUuNR4KlqUMeT8uFkII
+         MoUJNiZKUXT3eECIkxNwEfUHMSRt4jiNTFTRwUfbqKvS5uWJ43bF0rlVmx0bNbmgPn+3
+         89KLenaI/LgaESG+OOGlxKzHs+KoSq2iUGY2zGAtCXp79QXPsaZ0XoiKJCUmbaV0oA9x
+         oc7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740236814; x=1740841614;
+        d=1e100.net; s=20230601; t=1740236854; x=1740841654;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GzaLEgWYgQCmXuI1xyS57YzrmqSQoqnt6fkTxsBS96A=;
-        b=QVDZrfculSAGP6Yh2TXxdtgdNuvzqttsvaeJH+xLoJd/LyA7oPp2dVoxShYqzG6dMX
-         UCcvqt7UDzqQ86ISilMNVntfSCdNDj2y4PQqyahluKP1ai9hPWR0hEttEBZS1LSQ2zwt
-         TeG93YjApo7nufBsAxQ17eyrflpslYhjZCK5FtxIVTdkpotIbjyFKpXyx3mE/Q3Jaw7t
-         nPB0SXcoE8MZbEOuYXX74s2kjKtM2SL0kZ0zR1TLSUCpkqO4tyLHekiV9BohzUA1z1eE
-         xKd8zfx0UyxoCWpKE1kFAkWP+OJa3kWrFkPdV1dCFkQR8fgRtbhm8fKVCCnt9KPaRe0q
-         6nvg==
-X-Forwarded-Encrypted: i=1; AJvYcCUCk05SQi5VpeHeVB9Hl6DZyNCedc0j6Ms1MH2AdJV5L7JmPBsTZGwa3u5gD6VIKybecYVIIzF4/MzGbPc=@vger.kernel.org, AJvYcCW6naekB/UciRAXTcZ+yR1Y3VcmyuOvDqbEc0WWnMglUPnzcrpof5QhUwMleqZmF49p45wMJyh9@vger.kernel.org
-X-Gm-Message-State: AOJu0YzS5B7ECAZqXsZVqzR1xzaOSTvMn7g9+lCv8tF+O1dDlnlGN1rZ
-	jyYj5gheDcODKLVFc61cJyx56d+GRx4zeecrUWbydjU7TxsutfVL56RUNGu9Zv90lcCoWFCliiL
-	1EptWPPta07sTMN0VXrUSP9dkQ5M=
-X-Gm-Gg: ASbGnctjOmGeP1rpRlTG6PE2Zr9FqQoielIYPD0re3tp7e6H/TYcRly/Mqllk3TeWNp
-	r59d75EdQs/7HqDwHPvjcXu8+1HMK1w6qx4BvpfdbWtvKUreavAFT0T8HPb2itxsPhIM2it30MR
-	2YjrmWFgQ=
-X-Google-Smtp-Source: AGHT+IFLnYoAxL5ZurXiyRihzGN0nKSqG5w+P7/jIk/1PSsNBVx4okJpV66xsMUP1ONBFEkl5CSYFyzI7u221Ie3dgU=
-X-Received: by 2002:a05:6e02:13a4:b0:3d0:123e:fbdd with SMTP id
- e9e14a558f8ab-3d2cae8a7b4mr69278925ab.11.1740236814615; Sat, 22 Feb 2025
- 07:06:54 -0800 (PST)
+        bh=70pD9gnFNEV46q1yL+XWGZJhvCSgCKDZIGACepg3f1I=;
+        b=QXSIiutdaxj/tKQ531Y4h9Dyt03+wKaYrvNczIamDexUjY+4FCNSUjjaSFpHn+E1KS
+         0y1MPzKodgIobYGPVk/RroxTEtPldOTTCwF03IoIb2K7Cm/d3X6QlhIexLxNXQQLUSGb
+         QX9IyPxejAMFwuInpxxHsXsmZHdoJGcu57IGQEFdQnwVFXQ7xN4SLDXgMGrNlc7330CY
+         7AMcFX0N9YOIjjfcUIQNgwd5W0lPmoV3i/9EG/Y/yKpSTFS/uRdfPwRFXGckV3IXLX7Q
+         Sv/KWi1FRFeR75HjqjDkkCRkN4dToYEItyHBmij4iVs7P19onOf+kSPuJJo7u5Pkd8d1
+         WUew==
+X-Forwarded-Encrypted: i=1; AJvYcCUpA7RQmT/Y+b+8OSjwOV4kTdHNcnDiXwbUCqx+qTeVotzy2Nz4V2w4sB7Aq3Bjt0+EEoK8qrt6lDs0QP6P@vger.kernel.org, AJvYcCWpmMGNDjtq/+2rC+VpOIj0B2U11hrtqsxO+FRtMfkuHQXRBoWa70hbiqwO27ZN9dX60B+pimsSYUA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDxDEk1Ck8SD7CAKiQnJUVHnroTuxhRY7z8ARN4B9ynkk3L6Ef
+	3s4IPbxiCbIeurYl0GrJ0LJrG2Mhxzuwd17Q2F2pY+kSY0gnd/9VE00RbLEjB1Apgt+EPZO7E5r
+	UOWSRlAOWplUeuvXiQrCVhH5/5wo=
+X-Gm-Gg: ASbGncsYmEel6s6Z3+043a3AMgXBoxhlmCJA9k6J6Y5NrZwUwv+e0xZydA8YuK9Vt1x
+	S/uWJE3nzML1bC9MJfuv1RwvbbQ5AO6mkFtcHuAGiyBwA/FXfdAOywqcXZz2FfESaWTtsjpt9oi
+	qPF+rJhYX2sg==
+X-Google-Smtp-Source: AGHT+IGzaUBBYsZPN6nwYD9SKzKfluRv9+knK4LuyyydKSabCwcaxgNi9q2iHeK7D9X3awEI3Ddvi+fItxaGI+EwcEo=
+X-Received: by 2002:a05:6214:daa:b0:6e6:5cad:5ce6 with SMTP id
+ 6a1803df08f44-6e6ae7c9f82mr95965996d6.9.1740236853223; Sat, 22 Feb 2025
+ 07:07:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250222103928.12104-1-wanghai38@huawei.com>
-In-Reply-To: <20250222103928.12104-1-wanghai38@huawei.com>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Sat, 22 Feb 2025 23:06:18 +0800
-X-Gm-Features: AWEUYZkLh9yfFXXGl3sGrD7z3YEPoiTi3Gp9SniMZjJucK5XDNNwlc7aoGx8Qzg
-Message-ID: <CAL+tcoDBHtRt-Ep3QORj3DnDa0Aeha5ZhQi30QP_zZkm-SrzUw@mail.gmail.com>
-Subject: Re: [PATCH net v2] tcp: Defer ts_recent changes until req is owned
-To: Wang Hai <wanghai38@huawei.com>
-Cc: edumazet@google.com, ncardwell@google.com, kuniyu@amazon.com, 
-	davem@davemloft.net, dsahern@kernel.org, kuba@kernel.org, pabeni@redhat.com, 
-	horms@kernel.org, zhangchangzhong@huawei.com, liujian56@huawei.com, 
-	yuehaibing@huawei.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1739866028.git.maciej.wieczor-retman@intel.com>
+ <2a2f08bc8118b369610d34e4d190a879d44f76b8.1739866028.git.maciej.wieczor-retman@intel.com>
+ <CA+fCnZdtJj7VcEJfsjkjr3UhmkcKS25SEPTs=dB9k3cEFvfX2g@mail.gmail.com> <lcbigfjrgkckybimqx6cjoogon7nwyztv2tbet62wxbkm7hsyr@nyssicid3kwb>
+In-Reply-To: <lcbigfjrgkckybimqx6cjoogon7nwyztv2tbet62wxbkm7hsyr@nyssicid3kwb>
+From: Andrey Konovalov <andreyknvl@gmail.com>
+Date: Sat, 22 Feb 2025 16:07:20 +0100
+X-Gm-Features: AWEUYZlkmxeF6xgXCl21B3APEThb1gNkBITR5DJujsdnWalnykrR9HY2cVqQu30
+Message-ID: <CA+fCnZcOjyFrT7HKeSEvAEW05h8dFPMJKMB=PC_11h2W6g5eMw@mail.gmail.com>
+Subject: Re: [PATCH v2 13/14] x86: runtime_const used for KASAN_SHADOW_END
+To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+Cc: kees@kernel.org, julian.stecklina@cyberus-technology.de, 
+	kevinloughlin@google.com, peterz@infradead.org, tglx@linutronix.de, 
+	justinstitt@google.com, catalin.marinas@arm.com, wangkefeng.wang@huawei.com, 
+	bhe@redhat.com, ryabinin.a.a@gmail.com, kirill.shutemov@linux.intel.com, 
+	will@kernel.org, ardb@kernel.org, jason.andryuk@amd.com, 
+	dave.hansen@linux.intel.com, pasha.tatashin@soleen.com, 
+	ndesaulniers@google.com, guoweikang.kernel@gmail.com, dwmw@amazon.co.uk, 
+	mark.rutland@arm.com, broonie@kernel.org, apopple@nvidia.com, bp@alien8.de, 
+	rppt@kernel.org, kaleshsingh@google.com, richard.weiyang@gmail.com, 
+	luto@kernel.org, glider@google.com, pankaj.gupta@amd.com, 
+	pawan.kumar.gupta@linux.intel.com, kuan-ying.lee@canonical.com, 
+	tony.luck@intel.com, tj@kernel.org, jgross@suse.com, dvyukov@google.com, 
+	baohua@kernel.org, samuel.holland@sifive.com, dennis@kernel.org, 
+	akpm@linux-foundation.org, thomas.weissschuh@linutronix.de, surenb@google.com, 
+	kbingham@kernel.org, ankita@nvidia.com, nathan@kernel.org, ziy@nvidia.com, 
+	xin@zytor.com, rafael.j.wysocki@intel.com, andriy.shevchenko@linux.intel.com, 
+	cl@linux.com, jhubbard@nvidia.com, hpa@zytor.com, 
+	scott@os.amperecomputing.com, david@redhat.com, jan.kiszka@siemens.com, 
+	vincenzo.frascino@arm.com, corbet@lwn.net, maz@kernel.org, mingo@redhat.com, 
+	arnd@arndb.de, ytcoode@gmail.com, xur@google.com, morbo@google.com, 
+	thiago.bauermann@linaro.org, linux-doc@vger.kernel.org, 
+	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, linux-mm@kvack.org, 
+	linux-arm-kernel@lists.infradead.org, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 22, 2025 at 6:41=E2=80=AFPM Wang Hai <wanghai38@huawei.com> wro=
-te:
+On Fri, Feb 21, 2025 at 4:11=E2=80=AFPM Maciej Wieczor-Retman
+<maciej.wieczor-retman@intel.com> wrote:
 >
-> The same 5-tuple packet may be processed by different CPUSs, so two
-> CPUs may receive different ack packets at the same time when the
-> state is TCP_NEW_SYN_RECV.
+> On 2025-02-20 at 00:31:08 +0100, Andrey Konovalov wrote:
+> >On Tue, Feb 18, 2025 at 9:20=E2=80=AFAM Maciej Wieczor-Retman
+> ><maciej.wieczor-retman@intel.com> wrote:
+> >>
+> >> On x86, generic KASAN is setup in a way that needs a single
+> >> KASAN_SHADOW_OFFSET value for both 4 and 5 level paging. It's required
+> >> to facilitate boot time switching and it's a compiler ABI so it can't =
+be
+> >> changed during runtime.
+> >>
+> >> Software tag-based mode doesn't tie shadow start and end to any linear
+> >> addresses as part of the compiler ABI so it can be changed during
+> >> runtime.
+> >
+> >KASAN_SHADOW_OFFSET is passed to the compiler via
+> >hwasan-mapping-offset, see scripts/Makefile.kasan (for the INLINE
+> >mode). So while we can change its value, it has to be known at compile
+> >time. So I don't think using a runtime constant would work.
 >
-> In that case, req->ts_recent in tcp_check_req may be changed concurrently=
-,
-> which will probably cause the newsk's ts_recent to be incorrectly large.
-> So that tcp_validate_incoming will fail.
->
-> cpu1                                    cpu2
-> tcp_check_req
->                                         tcp_check_req
->  req->ts_recent =3D rcv_tsval =3D t1
->                                          req->ts_recent =3D rcv_tsval =3D=
- t2
->
->  syn_recv_sock
->   newsk->ts_recent =3D req->ts_recent =3D t2 // t1 < t2
-> tcp_child_process
->  tcp_rcv_state_process
->   tcp_validate_incoming
->    tcp_paws_check
->     if ((s32)(rx_opt->ts_recent - rx_opt->rcv_tsval) <=3D paws_win)
->         // t2 - t1 > paws_win, failed
->
-> In tcp_check_req, Defer ts_recent changes to this skb's to fix this bug.
+> I don't know about arm64, but this doesn't seem to work right now on x86.
 
-Honestly, from my perspective, the commit message doesn't actually
-reflect what the real problem you've encountered is and what the
-potential bad result could be. Your previous reply is good and
-detailed, at least showing to the readers enough information to help
-them revisit or analyze in the future.
+You mean it _does_ seem to work? Or otherwise if runtime constant
+doesn't work on x86, then we shouldn't use it?
+
+> I
+> think I recall that hwasan-mapping-offset isn't implemented on the x86 LL=
+VM or
+> something like that? I'm sure I saw some note about it a while ago on the
+> internet but I couldn't find it today.
+
+In LLVM sources, ShadowBase gets calculated [1] based on
+Mapping.Offset [2], which is in turn taken [3] from
+hwasan-mapping-offset [4]. And then ShadowBase is used to calculate
+[5] the shadow memory address.
+
+All of this happens in the common code, so this should affect both x86
+and arm64.
+
+[1] https://github.com/llvm/llvm-project/blob/llvmorg-20-init/llvm/lib/Tran=
+sforms/Instrumentation/HWAddressSanitizer.cpp#L1305
+[2] https://github.com/llvm/llvm-project/blob/llvmorg-20-init/llvm/lib/Tran=
+sforms/Instrumentation/HWAddressSanitizer.cpp#L761
+[3] https://github.com/llvm/llvm-project/blob/llvmorg-20-init/llvm/lib/Tran=
+sforms/Instrumentation/HWAddressSanitizer.cpp#L1863
+[4] https://github.com/llvm/llvm-project/blob/llvmorg-20-init/llvm/lib/Tran=
+sforms/Instrumentation/HWAddressSanitizer.cpp#L171
+[5] https://github.com/llvm/llvm-project/blob/llvmorg-20-init/llvm/lib/Tran=
+sforms/Instrumentation/HWAddressSanitizer.cpp#L899
 
 >
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Signed-off-by: Wang Hai <wanghai38@huawei.com>
+> Anyway if KASAN_SHADOW_OFFSET is not set at compile time it defaults to n=
+othing
+> and just doesn't get passed into kasan-params a few lines below. I assume=
+ that
+> result seems a little too makeshift for runtime const to make sense here?
 
-Otherwise, it looks good to me. Thanks!
+Sorry, I don't understand this question.
 
-Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
-
-> ---
-> v1->v2: Modified the fix logic based on Eric's suggestion. Also modified =
-the msg
->  net/ipv4/tcp_minisocks.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
->
-> diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
-> index b089b08e9617..53700206f498 100644
-> --- a/net/ipv4/tcp_minisocks.c
-> +++ b/net/ipv4/tcp_minisocks.c
-> @@ -815,12 +815,6 @@ struct sock *tcp_check_req(struct sock *sk, struct s=
-k_buff *skb,
->
->         /* In sequence, PAWS is OK. */
->
-> -       /* TODO: We probably should defer ts_recent change once
-> -        * we take ownership of @req.
-> -        */
-> -       if (tmp_opt.saw_tstamp && !after(TCP_SKB_CB(skb)->seq, tcp_rsk(re=
-q)->rcv_nxt))
-> -               WRITE_ONCE(req->ts_recent, tmp_opt.rcv_tsval);
-> -
->         if (TCP_SKB_CB(skb)->seq =3D=3D tcp_rsk(req)->rcv_isn) {
->                 /* Truncate SYN, it is out of window starting
->                    at tcp_rsk(req)->rcv_isn + 1. */
-> @@ -869,6 +863,9 @@ struct sock *tcp_check_req(struct sock *sk, struct sk=
-_buff *skb,
->         if (!child)
->                 goto listen_overflow;
->
-> +       if (own_req && tmp_opt.saw_tstamp && !after(TCP_SKB_CB(skb)->seq,=
- tcp_rsk(req)->rcv_nxt))
-> +               tcp_sk(child)->rx_opt.ts_recent =3D tmp_opt.rcv_tsval;
-> +
-
-nit: I would suggest using the following format if a re-spin is necessary:
-+       if (own_req && tmp_opt.saw_tstamp &&
-+           !after(TCP_SKB_CB(skb)->seq, tcp_rsk(req)->rcv_nxt))
-+               tcp_sk(child)->rx_opt.ts_recent =3D tmp_opt.rcv_tsval;
-+
-
-Thanks,
-Jason
-
->         if (own_req && rsk_drop_req(req)) {
->                 reqsk_queue_removed(&inet_csk(req->rsk_listener)->icsk_ac=
-cept_queue, req);
->                 inet_csk_reqsk_queue_drop_and_put(req->rsk_listener, req)=
-;
-> --
-> 2.17.1
->
+If hwasan-mapping-offset is not set properly, then in the inline
+instrumentation mode, the compiler won't generate the right
+instructions to calculate the shadow memory address.
