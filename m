@@ -1,145 +1,94 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DAA7202C41;
-	Sat, 22 Feb 2025 12:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3088494;
+	Sat, 22 Feb 2025 13:01:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740229150; cv=none; b=pON59q8UAlbVrin103yp/kbz+Ob2BsFotiGfshT1guH8fHf28tVMbasrLkrSxAofInukxz+MNec2mY52ebMXFTevkji/GMKIW+qWZI4Cae6namBFDPLX2lYh/6BUuXLsoLAcjObHVD2Xe/Zn9WBy11taWov0AyDCXrGd2kSK6Gc=
+	t=1740229274; cv=none; b=BaybxInF7/8TaOAbKxD0WERRWAMpvH3WIHsHYkz64HEElsEshQW2RESOyb6a7/fVX2EsFL2E9zkH1LMGLsso219xYg7d+wvSWDAoyIpR9MT6+6XxiHT1MM7UyBqBDBQUu7x5Qz/KM3UMo7OHBYRKUFiqCFRX816I5zTOQwtCeGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740229150; c=relaxed/simple;
-	bh=dlUBZqmDd7idwnsDJJgcHQ+qlgLxt/ObEgAfhNEtsPI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jP4jKILZTUmulComBC/uSf36tQJp4Uc/Y5EJ1BLcDS2A88NXrAZocpdX8Rvq9WiJsTWVA/TwK2aTRbN7CO+kgTORRUDce8UIeklv8ULMqC7HbWg3ISX2miaBpkd+Mqfm/DWQvVSEuX+mEXp/oWg1TAT/mjYWezn0XggCvBPngT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=f/aFhwNa; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1740229274; c=relaxed/simple;
+	bh=gfKEKbA2BvR7Fy/3vqEuEwx1Y5+zZWqkQUSj9M2UP/0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=De7p9jgV0wPt77j5D92DVi5GfbndxW3CZQdtIPzO2hwMYXIEucAJswRSsmvjUIwZpQeHbWYGF0D0C2hzCOhUnVxnaETKHBh1jsWtML+ZKa9u2mmtgagjdgKpipwZ/5DuKfmyeVz4Pe0xiTz+QraGmrPHbJghcaNDjkuk76iD6us=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=vb8aQ2Md; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="f/aFhwNa"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0474310382D37;
-	Sat, 22 Feb 2025 13:58:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1740229144;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+QIov7jfoKTEV1cXpEf4aAHlzsFw8NzhysmN76wJEzc=;
-	b=f/aFhwNatcODmbj3mzTP7aLbtmPl1xsMMEmcpYH0DwHi9kGmA9xWj3tRujZXfXuzbd13eY
-	4Cn1Elo7kiGOsgHsW7cOUsAl3f9dzEnO/hXrszYj5eGcG/1f6kSzoB77IDjMKYc2Ay/eHh
-	RgxZO9pI9LF9+gvxe91O24bNgc22LUCb1W55+3vUUq4S7JR58WOJalWNuyz7SJy7m/5vc4
-	Isq2/til11S0m81CpgSMkyraffnktz3Cn4GLmtO5YHxkIn78yGWxr6XgYa3JZ9h8DUzl0n
-	pYk6ULMkTYV5kUjg3LMgE7C0flKH3+bYLP8fwbtlGXmqR9neCN0ozz1NKTUTNA==
-Date: Sat, 22 Feb 2025 13:58:57 +0100
-From: Lukasz Majewski <lukma@denx.de>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof@spud, Kozlowski@spud, Conor Dooley <conor+dt@kernel.org>, Neil
- Armstrong <neil.armstrong@linaro.org>, Heiko Stuebner <heiko@sntech.de>,
- Aradhya Bhatia <a-bhatia1@ti.com>, rafal@milecki.pl,
- devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Noah Wang
- <noahwang.wang@outlook.com>, linux-kernel@vger.kernel.org, Peter Yin
- <peteryin.openbmc@gmail.com>, Naresh Solanki
- <naresh.solanki@9elements.com>, Alex Vdovydchenko <xzeol@yahoo.com>, Grant
- Peltier <grantpeltier93@gmail.com>, Laurent Pinchart
- <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/2] dt-bindings: vendor-prefixes: Add prefix for
- Liebherr-Werk Ehingen GmbH
-Message-ID: <20250222135857.531dffd3@wsk>
-In-Reply-To: <ee9a05a6-f9fb-46d0-80b8-983a318ed7c9@kernel.org>
-References: <20250221155418.1167670-1-lukma@denx.de>
-	<20250221-seventh-improving-9d22a8dc5108@spud>
-	<20250221215410.06b0a8a6@wsk>
-	<ee9a05a6-f9fb-46d0-80b8-983a318ed7c9@kernel.org>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="vb8aQ2Md"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
+	t=1740229265; bh=gfKEKbA2BvR7Fy/3vqEuEwx1Y5+zZWqkQUSj9M2UP/0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=vb8aQ2MdbcIfiHcxFjO+xkus2jWjdnx8PmclchHRq8tDHbij3Her4QWbyehRLu+0P
+	 8wFL9Lscce+mCX1QAoWkrZFc/PWdnqfXdHtkCeIGjWvWYfaythyCMV4My57eQK5Ne9
+	 my07haI1E0c5LNyTKMRAP5OgOYRCtLKUEv3zmYLE=
+From: Luca Weiss <luca@lucaweiss.eu>
+Date: Sat, 22 Feb 2025 14:00:50 +0100
+Subject: [PATCH 4/4] arm64: dts: qcom: sdm632-fairphone-fp3: Enable modem
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/HSbPmo89l0CTy/A/G17AFEQ";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250222-fp3-remoteprocs-firmware-v1-4-237ed21c334a@lucaweiss.eu>
+References: <20250222-fp3-remoteprocs-firmware-v1-0-237ed21c334a@lucaweiss.eu>
+In-Reply-To: <20250222-fp3-remoteprocs-firmware-v1-0-237ed21c334a@lucaweiss.eu>
+To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Luca Weiss <luca@lucaweiss.eu>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=894; i=luca@lucaweiss.eu;
+ h=from:subject:message-id; bh=gfKEKbA2BvR7Fy/3vqEuEwx1Y5+zZWqkQUSj9M2UP/0=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBnucqPA8NpyRTHW/o/lw8bzYoB7F0bmgY0KCwnb
+ t4QGBFq3fGJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZ7nKjwAKCRBy2EO4nU3X
+ VlWkEADVyP77oPNbpMWKaX3zcGBi/5QxEq2dweodDQqAB2lDH8RcqVcStDrHFaxwq2bfYFrgyKa
+ EhAw33W8QO2LM66K+X+Q1W8rBNPRBJWlc20j9cbCSa/FMVKIUgQGIvAZJQ26hlcFTkGzkF0/FAp
+ YA1JOD1dqf0EVPo9QchvZx+2LaBl0/LaAJqNcVfdHiPBSjOpUwkteaY19rcKG92z0lJh+GJkicb
+ mpBIx1hMv6MeP5H4KV1rcRBJJ4JSFe5bisI0uKUnAi6lFYK57w86TDVw+2QBlTsQmvYmAx56C60
+ gBLLIJG/1g+P+xHGA4pLq0hEZsZ4q7iDfGk/d2f3PjW4a8+IXMSLjPwhbY+3zQ243IMNiAHh0DB
+ OjiNNccHLtIsnvvKudotgTSF8gCrdR4i5lP2HA7IJ380L2cGpyh6yFt8bxlfLn6FqeEMpiH+zgT
+ Dr/+VDUkIBavANqp7hf1OeiaDPbe4LxDRmc1atRetVqKhak0nAXWzhJ1cpY6d47p2VzbYmCr+MI
+ 4FTia9yFw61vIGTli+WX0Lf8Ixyj9pn2Lcvd5Ps2vhD5CMXfQWqO4ovCB3CyPo9OJ/3KZC5VSMA
+ 8ZRrpeikLeTl7CyTMklyA4Nm4pf0VBps4z7Snq59GwWjiwWnzheK28hDemQVoZumCzIGTPnqXpc
+ hdXOwnZpw0BLSRw==
+X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
+ fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
---Sig_/HSbPmo89l0CTy/A/G17AFEQ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Add the necessary supplies and set an appropriete firmware-name for the
+modem and enable it.
 
-Hi Krzysztof,
+Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+---
+ arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> On 21/02/2025 21:54, Lukasz Majewski wrote:
-> > Hi Conor,
-> >  =20
-> >> On Fri, Feb 21, 2025 at 04:54:17PM +0100, Lukasz Majewski wrote: =20
-> >>> This entry adds vendor prefix for Liebherr-Werk Ehingen GmbH.
-> >>>
-> >>> Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
-> >>>  1 file changed, 2 insertions(+)
-> >>>
-> >>> diff --git
-> >>> a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-> >>> b/Documentation/devicetree/bindings/vendor-prefixes.yaml index
-> >>> 5079ca6ce1d1..20ea550ac328 100644 ---
-> >>> a/Documentation/devicetree/bindings/vendor-prefixes.yaml +++
-> >>> b/Documentation/devicetree/bindings/vendor-prefixes.yaml @@
-> >>> -882,6 +882,8 @@ patternProperties: description: Shenzhen Lunzn
-> >>> Technology Co., Ltd. "^luxul,.*": description: Lagrand | AV
-> >>> +  "^lwe,.*":
-> >>> +    description: Liebherr-Werk Ehingen GmbH
-> >>>    "^lwn,.*":
-> >>>      description: Liebherr-Werk Nenzing GmbH   =20
-> >>
-> >> What's the difference between these two? =20
-> >=20
-> > They are in fact targetting different types of industrial markets.
-> > Hence, their devices and way of using SPI devs are totally
-> > different. =20
->=20
-> We don't take multiple samsung or lg vendor prefixes, even though they
-> have multiple separate companies, so we shouldn't take these either.
-> Both use the same domain (at least first search result pointed me
-> there)
-> - liebherr - so that's the same entry.
->=20
+diff --git a/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts b/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts
+index 5611209dbfa41d7834af7903535ed3e05604ba63..31ed26c31e6ea381a8942ccf569513df3300cdeb 100644
+--- a/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts
++++ b/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts
+@@ -87,6 +87,14 @@ &lpass {
+ 	status = "okay";
+ };
+ 
++&mpss {
++	firmware-name = "qcom/msm8953/fairphone/fp3/mba.mbn",
++			"qcom/msm8953/fairphone/fp3/modem.mbn";
++	pll-supply = <&pm8953_l7>;
++
++	status = "okay";
++};
++
+ &pm8953_resin {
+ 	linux,code = <KEY_VOLUMEDOWN>;
+ 	status = "okay";
 
-Ok, so then I will just add "lwn.btt" in the other patches and drop
-this particular one.
+-- 
+2.48.1
 
-Thanks for input.
-
-> Best regards,
-> Krzysztof
-
-
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/HSbPmo89l0CTy/A/G17AFEQ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAme5yhEACgkQAR8vZIA0
-zr0XfAf9HU9GGwndTQcHdEdADhUFOB6LSdBVAS0dtKD78L0oMXG2vqrvCiEuPOwm
-ErhZiKvCk39BGY3WEi73sX4FeqNu6SlxEfs09Qdz1AERNvbqPvtHOESAblzJCkQV
-U6ItAk4hPlHuwek31o/Vr+eK1ZkFQnGyaLQg+UbWiN/zMmIHnYIL+ob39H7/bN49
-ccy/er9F7E0jEgIsZNBM3qhhp7kpFkSdc+VuXuY+mH7VYPTI8aGlQDbnA21A3x1o
-KYPZCdkSbz7WJF2+KfEHRyXwWcQ3QJ3Ac59fQJCOZrV963Ly9uz3UXFGffoyTDXz
-7XPq4OmWcJMwwnhrogYTV6Stv2h0PQ==
-=Hy1n
------END PGP SIGNATURE-----
-
---Sig_/HSbPmo89l0CTy/A/G17AFEQ--
