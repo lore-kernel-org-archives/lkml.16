@@ -1,91 +1,101 @@
-Received: from 1wt.eu (ded1.1wt.eu [163.172.96.212])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9E382063E3;
-	Sat, 22 Feb 2025 09:11:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=163.172.96.212
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71A746434;
+	Sat, 22 Feb 2025 09:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740215509; cv=none; b=oJS9MDXIvUtNbfU5Z8okrxRs4kppo9qr9V7ExKNtbcnNA4f+7Ngl1lJEz8CbUjuiDgvwsp0vAaiy0S6IRdDulq4bVnlBA0RlRcl0sbQkPzkRX+dlz9OITW3mqVLS5ijflRMtCYNYlRzhrC0Y9zgUQokRVJjxKyAu8xLCYtvfD38=
+	t=1740215903; cv=none; b=A/sQ24DM+Rs4fW84zfv+Q+BrYyDvcXxP6tfIc9qbh/PWU2SSsivn7JQH796L8NLr2/Vu1H4NUZEuWRYY9VnVGURFTOBaamZVt8tVTO2DRruCJWs7W+QCqUQ3bolHIS4PAbPbq7D6szyQKOEpZWWFBHKXtnb9bpA7islZf4g8S50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740215509; c=relaxed/simple;
-	bh=BUjO5GOu/xxfnRUpdXkDqZ4gAiwB8QGdG4O8Sqatxl0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sJF4Suzvb97BgEOaC7F+EuzwaS3Ft4crxELtHrwkN9Fj7c/aa8WV+VYrYltCgd7lql61/9/nQ6jRfC9LQ4VTpk/Z4nuHSwR3XMAOfU56CCuF0mGQtOMKZ2GYJd4UhShfW9mv3XDbTRE2CB1BC3mKNrB/C/lKlToO4KLO8MElisE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu; spf=pass smtp.mailfrom=1wt.eu; arc=none smtp.client-ip=163.172.96.212
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=1wt.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=1wt.eu
-Received: (from willy@localhost)
-	by pcw.home.local (8.15.2/8.15.2/Submit) id 51M9Bawf013131;
-	Sat, 22 Feb 2025 10:11:36 +0100
-Date: Sat, 22 Feb 2025 10:11:36 +0100
-From: Willy Tarreau <w@1wt.eu>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-        Jan Engelhardt <ej@inai.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        rust-for-linux <rust-for-linux@vger.kernel.org>,
-        David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org,
-        ksummit@lists.linux.dev
-Subject: Re: C aggregate passing (Rust kernel policy)
-Message-ID: <20250222091136.GA12873@1wt.eu>
-References: <2nn05osp-9538-11n6-5650-p87s31pnnqn0@vanv.qr>
- <2025022052-ferment-vice-a30b@gregkh>
- <9B01858A-7EBD-4570-AC51-3F66B2B1E868@zytor.com>
- <n05p910s-r5o3-0n36-5s44-qr769prp69r5@vanv.qr>
- <20250221183437.1e2b5b94@pumpkin>
- <CAHk-=wjF0wjD4ko7MgrZ1wBZ9QOrQd_AnyhDDUJQ1L5+i-o22A@mail.gmail.com>
- <20250221214501.11b76aa8@pumpkin>
- <20250222063210.GA11482@1wt.eu>
- <20250222063730.GB11482@1wt.eu>
- <20250222084112.23eb2856@pumpkin>
+	s=arc-20240116; t=1740215903; c=relaxed/simple;
+	bh=Mk6WuBoS1O12+dATtOsdWAT4h5ydjVAjz1XhAIFEwiY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NsaTNq4+ZzezWp7jomDzH0i12zG4JFeb0aXkWrDj1P3cw4gbX4YDoXGG2tK7ISTts63zZ9xQmVll+s6MOnuooUxVIA3dohGjzhqlHZ9gXzYhTOM7AdUzNJ2WpVOIC0IhJAs8scamo1qu9SDz7ueA8d0z3DJzYNrY8rK4J49Onbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Z0Lrq1NGSz1GDfB;
+	Sat, 22 Feb 2025 17:13:31 +0800 (CST)
+Received: from kwepemg200005.china.huawei.com (unknown [7.202.181.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0A055140336;
+	Sat, 22 Feb 2025 17:18:11 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by kwepemg200005.china.huawei.com
+ (7.202.181.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 22 Feb
+ 2025 17:18:09 +0800
+From: Wang Liang <wangliang74@huawei.com>
+To: <bjorn@kernel.org>, <magnus.karlsson@intel.com>,
+	<maciej.fijalkowski@intel.com>, <jonathan.lemon@gmail.com>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <horms@kernel.org>, <ast@kernel.org>,
+	<daniel@iogearbox.net>, <hawk@kernel.org>, <john.fastabend@gmail.com>
+CC: <yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>,
+	<wangliang74@huawei.com>, <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH net] xsk: fix __xsk_generic_xmit() error code when cq is full
+Date: Sat, 22 Feb 2025 17:30:07 +0800
+Message-ID: <20250222093007.3607691-1-wangliang74@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250222084112.23eb2856@pumpkin>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemg200005.china.huawei.com (7.202.181.32)
 
-On Sat, Feb 22, 2025 at 08:41:12AM +0000, David Laight wrote:
-> On Sat, 22 Feb 2025 07:37:30 +0100
-> Willy Tarreau <w@1wt.eu> wrote:
-> 
-> ...
-> > Update: I found in my code a comment suggesting that it works when using
-> > -freg-struct (which is in fact -freg-struct-return) which works both on
-> > i386 and ARM.
-> 
-> The problem is that you need it to be an __attribute__(()) so it can
-> be per-function without breaking ABI.
+When the cq reservation is failed, the error code is not set which is
+initialized to zero in __xsk_generic_xmit(). That means the packet is not
+send successfully but sendto() return ok.
 
-Yes I agree that it would be better.
+Set the error code and make xskq_prod_reserve_addr()/xskq_prod_reserve()
+return values more meaningful when the queue is full.
 
-> > I just didn't remember about this and couldn't find it when
-> > looking at gcc docs.
-> 
-> I can never find anything in there either.
-> And then I wish they say when it was introduced.
+Signed-off-by: Wang Liang <wangliang74@huawei.com>
+---
+ net/xdp/xsk.c       | 3 ++-
+ net/xdp/xsk_queue.h | 4 ++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-Same here. At least on gcc-2.95 it was already recognized and worked fine:
+diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
+index 89d2bef96469..7d0d2f40ca57 100644
+--- a/net/xdp/xsk.c
++++ b/net/xdp/xsk.c
+@@ -802,7 +802,8 @@ static int __xsk_generic_xmit(struct sock *sk)
+ 		 * if there is space in it. This avoids having to implement
+ 		 * any buffering in the Tx path.
+ 		 */
+-		if (xsk_cq_reserve_addr_locked(xs->pool, desc.addr))
++		err = xsk_cq_reserve_addr_locked(xs->pool, desc.addr);
++		if (err)
+ 			goto out;
+ 
+ 		skb = xsk_build_skb(xs, &desc);
+diff --git a/net/xdp/xsk_queue.h b/net/xdp/xsk_queue.h
+index 46d87e961ad6..ac90b7fcc027 100644
+--- a/net/xdp/xsk_queue.h
++++ b/net/xdp/xsk_queue.h
+@@ -371,7 +371,7 @@ static inline void xskq_prod_cancel_n(struct xsk_queue *q, u32 cnt)
+ static inline int xskq_prod_reserve(struct xsk_queue *q)
+ {
+ 	if (xskq_prod_is_full(q))
+-		return -ENOSPC;
++		return -ENOBUFS;
+ 
+ 	/* A, matches D */
+ 	q->cached_prod++;
+@@ -383,7 +383,7 @@ static inline int xskq_prod_reserve_addr(struct xsk_queue *q, u64 addr)
+ 	struct xdp_umem_ring *ring = (struct xdp_umem_ring *)q->ring;
+ 
+ 	if (xskq_prod_is_full(q))
+-		return -ENOSPC;
++		return -ENOBUFS;
+ 
+ 	/* A, matches D */
+ 	ring->desc[q->cached_prod++ & q->ring_mask] = addr;
+-- 
+2.34.1
 
-- without:
-  fct:
-        movl 4(%esp),%ecx
-        movl $5,%eax
-        movl $100,%edx
-        movl %eax,(%ecx)
-        movl %edx,4(%ecx)
-        movl %ecx,%eax
-        ret $4
-
-- with:
-  fct:
-        movl $5,%eax
-        movl $100,%edx
-        ret
-
-Willy
