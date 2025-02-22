@@ -1,75 +1,112 @@
-Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D155B6EB7C
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 01:15:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F742A1CF
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 01:15:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740186905; cv=none; b=drqFC5URY+efHUoeHZbJnsqmaZXnbxVWAP1R4v5Tj89XlFi9UlD0llDkaRcATtFYI3tD5n0JCMcP5KkmNej9AFJAMojovN95TZvTfxuc3Hhvc9Ugx/vxUyamZX31YlFM8AE/yJX37mlwe5fIOcbD3jRgy6PPM8qnsPoNcZjmJjg=
+	t=1740186942; cv=none; b=o56x4xPz1ABSKj3i7yHZtxnEHbszlr4pPFtBOYAkvu0t6bGojI3FtL/1MM2SAmfEIG750EbLyTPjiqdj2qyyV1qLzlr56c2Bna9fdmr4e1vC8y6Ifr7I3po9NFBnEtYlTvuoCUqZZmYzzeG7/i8nOnEWA6TjwTkj5fEfZyJTkIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740186905; c=relaxed/simple;
-	bh=TPWuOImPRSC9MwImwntFIeHXk4Pf6QUB3oN2qov63yU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HyMZ48rJRc1hHjmDBLDVOSyndT0t3Uq2cDkLvwG/tOQUI2aVBq/J0M0mFEpf5BFw9yfARKMXFmYIReMRhLvwRoaJdLPVbAMtCuTz0adL125HlgAZ2UzueeE1am5UXxU2hibma7MeJbdUg5TfSE1aNOHq94iEzRh8DlUjHm9pd40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fRxmczDB; arc=none smtp.client-ip=95.215.58.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740186942; c=relaxed/simple;
+	bh=kcM168HKI5Jed1r4nVUAyCHhMXa/UH7cpDzt4jG6/0s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AiLgDua8A/nbbTC0v04w6vpFEgx2fvJhZd8RScxqjqIVi69GWneeeGMqiP9MV19Dp9XTkTupR3/wWQesgB958aFEQu3xPf6b/8XAslTX6AryNCi8qODFFN7gcFi521Y4xfTlbPduI9W+ZnVvcTPUqP3tFOgR04f1q5P1Ep6ueeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=BKr4YQz7; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fRxmczDB"
-Date: Fri, 21 Feb 2025 17:14:51 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740186898;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8bS+nAWlMORon3vhEwOEVhwRQZHO7ei+DFVxKeC/qhc=;
-	b=fRxmczDBXOnSwC+37m0BW4zglLQOOzgMDptqeMp+TOaguueh6Z6ps0I+K08h0axE8Gzfwl
-	I4tCoai+aN9c9Wf0iMXkRMw++AGl/CMlLaM0oC7sEtL0w7oFT3jAenZYm02f0DpJZkyOB/
-	EBJ4I2CWQm6CTSSj9hB/GII9F3SZY60=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Vlastimil Babka <vbabka@suse.cz>, sj@kernel.org
-Cc: Dave Hansen <dave.hansen@intel.com>, Byungchul Park <byungchul@sk.com>, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, kernel_team@skhynix.com, 
-	akpm@linux-foundation.org, ying.huang@intel.com, vernhao@tencent.com, 
-	mgorman@techsingularity.net, hughd@google.com, willy@infradead.org, david@redhat.com, 
-	peterz@infradead.org, luto@kernel.org, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, rjgolo@gmail.com
-Subject: Re: [RFC PATCH v12 00/26] LUF(Lazy Unmap Flush) reducing tlb numbers
- over 90%
-Message-ID: <6cdstauw4b64gpi6xxmuumuzvkgtjpczienh7neogqjlarqilv@eujvenmk2uyh>
-References: <20250220052027.58847-1-byungchul@sk.com>
- <8accbd91-ca59-43f8-b190-7e1ac3df5e11@intel.com>
- <fc94c383-5788-43c8-beb3-2fd76acae7bd@suse.cz>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="BKr4YQz7"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51LCkuZe031803
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 01:15:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	I+TCfbgcqE/1oBoYAt4RCN0sS63NXiTuGZp5HOUUOoE=; b=BKr4YQz7LliFUlku
+	LcCW9f9R09vIJd9kmTsrUvkKi6cFLFnKKVHHC4hhjS6FCuFDnTEOoYz/774Hmc5g
+	DNVBNE76qodVK50k1AE76/U83UcjLRFBlbu1aDpfew1RUDIKYTUdqF3EuYlh4J32
+	JYhOWL8pZAFoVep6ZLmMV8LjbCilaCTcX1V7eFeNaz1fL/8lWR4CcKIZnjjAWPZZ
+	rbi4Kun5YSUd1R/fbl+LyWDu1NmjffoUcy4qIkgH8C1vi15n1tcIp0UjhiFzWULM
+	UIB6M7vPD5wbxkoH6IMXns+aoKlUqMx4MtMracpoVCg7B5Ba93WRG6+iR7aK8mpm
+	++Ijzw==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44vyy5kj4u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 01:15:39 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c0c491f065so36107285a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 17:15:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740186939; x=1740791739;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=I+TCfbgcqE/1oBoYAt4RCN0sS63NXiTuGZp5HOUUOoE=;
+        b=IqzmWP6XvU3ZtkPkZ4MMd5tmFbT9cRjje/t4yqxH06uLaTqRjaRx0WfUjJ3qP7Dogl
+         qN1+Pzs/sLN6yMesOQUJHk5u7coC683BnzursmriQRnNfTJ0PzRytGXp93DX/HyP1gbG
+         aRgwVW9vqMoIpilKNNk5I3undx06E3Db9j55F+BhIB+lobGJnxisCzU+3tJf8nre9dNb
+         e+AZpJpMiCdwZfo6wTLQhBtPHaXTaQc4r18CVbOElFOujl8C8Usdn4LnHJ+IYtUK21qv
+         e2Emgjsrs3Y0guUpTEsGm9jnKzlzknQvukeCuiTgvH8QsUH/lexZaE6eFLgvMFYIh4Lk
+         ViIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUIifWP4VgGg4ysuvxFHr4Kt4wBZecyHZPN8kKy/YushjWBFLhXYHbKoAaiEqYNmJ9nQnzW2QEio/c4y6M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYmK491rPy1esr/dycC2kNBnRe9qEkxXjuubJ71LdR4l1iWvV5
+	hKYZ9I5reSdefVO42kdwcMN0vdZNl/mVVh+Mg1iMiWNJ3M94Yc9dm1pP1YieSWiec1J14vOD7qJ
+	nlQzSU0gHk0wjvydP/HDEKOGoB3Rw81eZp8Ax2yAh/17bShxmNsNKHZcx9u8/De0=
+X-Gm-Gg: ASbGnctQNAibJyvN3KuUWRQ4cUxsEFfZukkLqdLIqHjjZ694p2igOeW+U+6vVzzBcjj
+	j4zYS6ZQR2MSBT9VHl5jmerr35H3GzcGgBEWBQBnFkQqhK2MrHTbtvMAojQ/RujW4pZThCwhs1w
+	Kq5nMz6GgYxSTxIPNcu2uMqYVBgBfa1sB/TKo91Abudt60xNzuCGBnuyjUUzYa6+aI99XDuXeC4
+	/Z0VM1iRcw+5jLjU/QKKKqGoKPzI+7JxHMOiS29uYzSp3LgzJGCFNC02LC7hv0/iFAPe7QL2rFa
+	tKEsi1nJ3iNNj4+HNER6/y/fo3w33Tms22NoS+/UJwzurLuc3ZAwuqokyavWC2MHRPRlkw==
+X-Received: by 2002:a05:620a:2620:b0:7c0:c2ec:e560 with SMTP id af79cd13be357-7c0cef6c8bemr300407285a.15.1740186482354;
+        Fri, 21 Feb 2025 17:08:02 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFGSlx+o7PycgVPhhbvjZgQJlB+2/vJecp+ZwAE1CaGp8FDGTYUWBZmppwJ75uZfZwTQOsWXA==
+X-Received: by 2002:a05:620a:2620:b0:7c0:c2ec:e560 with SMTP id af79cd13be357-7c0cef6c8bemr300406085a.15.1740186481963;
+        Fri, 21 Feb 2025 17:08:01 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece1b4e8dsm14342801a12.14.2025.02.21.17.07.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Feb 2025 17:08:00 -0800 (PST)
+Message-ID: <60b4da8d-ac1b-4122-9dbb-2450b0f5b6de@oss.qualcomm.com>
+Date: Sat, 22 Feb 2025 02:07:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fc94c383-5788-43c8-beb3-2fd76acae7bd@suse.cz>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] arm64: dts: qcom: sdm845-db845c: enable sensors DSP
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250222-rb3-rb5-slpi-v1-0-6739be1684b6@linaro.org>
+ <20250222-rb3-rb5-slpi-v1-1-6739be1684b6@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250222-rb3-rb5-slpi-v1-1-6739be1684b6@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: 2YgXoYCcpSViHTUhXKAaMxCqU5fe0hlD
+X-Proofpoint-GUID: 2YgXoYCcpSViHTUhXKAaMxCqU5fe0hlD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-21_09,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=806 spamscore=0 bulkscore=0 clxscore=1015 suspectscore=0
+ adultscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0 impostorscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502220006
 
-On Thu, Feb 20, 2025 at 04:29:51PM +0100, Vlastimil Babka wrote:
-> On 2/20/25 16:15, Dave Hansen wrote:
-> > On 2/19/25 21:20, Byungchul Park wrote:
-> >> I'm posting the latest version so that anyone can try luf mechanism if
-> >> wanted by any chance.  However, I tagged RFC again because there are
-> >> still issues that should be resolved to merge to mainline:
-> > 
-> > I don't see anything fundamentally different here from the last 11
-> > versions. I think the entire approach is dangerous and basically makes
-> > things impossible to debug. It's not clear that some of the failure
-> > scenarios that I've brought up in the past have actually been fixed.
+On 22.02.2025 1:43 AM, Dmitry Baryshkov wrote:
+> Enable SLPI, sensors DSP, on the Qualcomm Robotics RB3 platform. The
+> firmware for the DSP is a part of linux-firmware repository.
 > 
-> Yes, and it's still an invasive change to the buddy allocator.
-> IIRC at Plumbers the opinion in the audience was that there might be ways to
-> improve the batching on unmap to reduce the flushes without such an invasive
-> and potentially dangerous change? Has that been investigated?
-> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
 
-I know SJ (CCed) is working on making TLB flush batching work for
-process_madvise().
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
+Konrad
