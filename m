@@ -1,35 +1,35 @@
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4369E18B494;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB34156C71;
 	Sat, 22 Feb 2025 14:27:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740234466; cv=none; b=oCNj1Fxs5EAa6d4r+aOLMJPMkPDY0lcF7xl+gjCue3a62860cHL3ScKpwNMSVZYT6aDC6U/vfpj7L1TywBHFF3O80Q0+c1df7xiS9CgmHa6CIRpegENjbH2jT1pjvuS+WJ8vPDHmzrPXy+XmcCx2nuZGNIMIAEf0j0hKo3dBctY=
+	t=1740234465; cv=none; b=bGuTVbx5UXRM+zTQQ3gJNIfWA1Va6pUW6Xu6QFmIyvj0d5Ylnl+qmijU3QPI+6fnNm3WtuyVywebE9j6MMJs1ak7pDMmK/rLViObY1604Rc0AkTb38kuG+mXnGoqBefYiOASmbFu7rl/+7EyXP+5njO5N8ui7PglH9m0FvYNnMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740234466; c=relaxed/simple;
-	bh=+fmBu3WZLh/hirh1oc4u0U+U6zFhtiu7IbP1Klg1N3Q=;
+	s=arc-20240116; t=1740234465; c=relaxed/simple;
+	bh=FlZaCEaddEMcKCleF5OSoJNRpd0P7YCLnv/oomXw5aU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p/pPDZUlQLP1E8wXdUqj0RMS9YasInoijN2iUfSYBXc4Xg5ogkN3Vun1HpbAjphdhZiTr8XFUL7oOVBRXd0kYmfRL1N033ZVGiFDscnrhhRpQLqvjfv8Vgk7d3kMA4JwleO8TN0pYyDjYgiQ+bKFTH9bRs5EFwQy3LPdCzuYg8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Jg1TU0e4; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version; b=JTaVnFiczH0oPAGyvvEj6LgHPSweiIE4gwFFugJlYk+dWec0pag71xMPUOZUmE3s7TsnMZyqErLJWV6YNbtNJSj9NLVPsE9R5KwhdSPXqhYQttmGTPpUk77JsB2bsGw/IXxE+P+kx3oRHlG4ANjPKcUyCWTPCc9E275/9HIpw7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=cgyYYM1H; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Jg1TU0e4"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 91BF944280;
-	Sat, 22 Feb 2025 14:27:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="cgyYYM1H"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 504D844260;
+	Sat, 22 Feb 2025 14:27:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1740234462;
+	t=1740234455;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Wmmg9navronSyQ4+/XYzTz61N+nbDrv+8Jc8cTam9yo=;
-	b=Jg1TU0e4so+pwVNRytnyljX3zaY5ECHg1frorqiYl8FRuJICIN3kLFoQQrMnAPc1aFNO1a
-	rkp7xqyU5sgNKqM7uERlKx8WaCPHCSCXAQLLGVtZeHnosJX8HYqecQV1NBp66wQnU+Kmcb
-	tmwLGZt/j4XB5PTzbCLm+1iBbMXDYa/74v0LH/Of/7HzohabScr8HgpjLgqrRe+w4vcF4o
-	rr/iAA2zEzTXrDG1cPf+OYIAKEEDp7c45Juo4e+fOYB/jT30GgdNLDbdY28S5gfGOGK1Cy
-	TFxpwOaTO896UIvu7MNuE7ejzVhhsNRWGjaHWPHXk4PEigON4S/RLbab+YffmA==
+	bh=1Q4LelKecI5PVTu2qoO9liBc6px5H3vBgQ0FauU6NrA=;
+	b=cgyYYM1H8CDwqQsga16TDthYGa8cwSFPJYpK1luyhY3UhUsfN71IDYjPnePXTsTVH5ErtA
+	2HhuUazidhqpMy/2hNVcTHr8UadjMS3p4szxPizm/NgGyCrU3v/khZarYnJ+R4xd/Bv/zp
+	h6+ah6kz3Xrs8qtdgn1xAPteFN4JpxmnL6Ay+UyAWX+87aNzVJGFpRvqQgzjOpVQeh6WQe
+	j7UZVC3SPgQ0LvKP09kp5zMQE7h3r5O3A1tzbpdietHG/Vza0uPCVGQPZ153Fo2QEjQsNG
+	4DbbCVrqVtMfdgn4w965SmsYz+sJyU0t5YhITLCy+W3nOC40QLW2eux0HQgHWg==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net,
 	Andrew Lunn <andrew@lunn.ch>,
@@ -51,9 +51,9 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	Oleksij Rempel <o.rempel@pengutronix.de>,
 	Simon Horman <horms@kernel.org>,
 	Romain Gantois <romain.gantois@bootlin.com>
-Subject: [PATCH net-next 08/13] net: phy: phy_caps: Introduce link_caps_valid
-Date: Sat, 22 Feb 2025 15:27:20 +0100
-Message-ID: <20250222142727.894124-9-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next 02/13] net: phy: phylink: Extract the logic to get caps from interface
+Date: Sat, 22 Feb 2025 15:27:14 +0100
+Message-ID: <20250222142727.894124-3-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250222142727.894124-1-maxime.chevallier@bootlin.com>
 References: <20250222142727.894124-1-maxime.chevallier@bootlin.com>
@@ -66,70 +66,226 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdejfeduiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgedtffelffelveeuleelgfejfeevvdejhfehgeefgfffvdefteegvedutefftdenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpeegnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgri
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdejfeduiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgedtffelffelveeuleelgfejfeevvdejhfehgeefgfffvdefteegvedutefftdenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgri
  igvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomh
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-With the link_capabilities array, it's trivial to validate a given mask
-againts a <speed, duplex> tuple. Create a helper for that purpose, and
-use it to replace a phy_settings lookup in phy_check_valid();
+Any given phy_interface_t may be able to convey data at various
+combinations of speed and duplex. Extract this logic out of phylink to
+make it accessible for other internal computations, as preparation for
+phy_port support and phy-side SFP handling.
+
+This commit has no expected changes in behaviour.
 
 Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 ---
- drivers/net/phy/phy-caps.h |  1 +
- drivers/net/phy/phy.c      |  2 +-
- drivers/net/phy/phy_caps.c | 13 +++++++++++++
- 3 files changed, 15 insertions(+), 1 deletion(-)
+ drivers/net/phy/phy-caps.h |  2 +
+ drivers/net/phy/phy_caps.c | 91 ++++++++++++++++++++++++++++++++++++++
+ drivers/net/phy/phylink.c  | 79 +--------------------------------
+ 3 files changed, 94 insertions(+), 78 deletions(-)
 
 diff --git a/drivers/net/phy/phy-caps.h b/drivers/net/phy/phy-caps.h
-index 55d83661fa18..8d84882343f8 100644
+index 99c648f76dea..ecb63b28c5fb 100644
 --- a/drivers/net/phy/phy-caps.h
 +++ b/drivers/net/phy/phy-caps.h
-@@ -24,6 +24,7 @@ int phy_interface_max_speed(phy_interface_t interface);
- size_t phy_caps_speeds(unsigned int *speeds, size_t size,
- 		       unsigned long *linkmodes);
- void phy_caps_linkmode_max_speed(u32 max_speed, unsigned long *linkmodes);
-+bool phy_caps_valid(int speed, int duplex, const unsigned long *linkmodes);
+@@ -9,4 +9,6 @@
  
+ void linkmode_from_caps(unsigned long *linkmode, unsigned long caps);
  
++unsigned long phy_interface_caps(phy_interface_t interface);
++
  #endif /* __PHY_CAPS_H */
-diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-index 2b9e326bad61..cb73293f7bce 100644
---- a/drivers/net/phy/phy.c
-+++ b/drivers/net/phy/phy.c
-@@ -259,7 +259,7 @@ unsigned int phy_supported_speeds(struct phy_device *phy,
-  */
- bool phy_check_valid(int speed, int duplex, unsigned long *features)
- {
--	return !!phy_lookup_setting(speed, duplex, features, true);
-+	return phy_caps_valid(speed, duplex, features);
- }
- EXPORT_SYMBOL(phy_check_valid);
- 
 diff --git a/drivers/net/phy/phy_caps.c b/drivers/net/phy/phy_caps.c
-index cb7a5fa177b1..fb7996ee3bee 100644
+index 807be1317263..59e4505b7336 100644
 --- a/drivers/net/phy/phy_caps.c
 +++ b/drivers/net/phy/phy_caps.c
-@@ -145,6 +145,19 @@ void phy_caps_linkmode_max_speed(u32 max_speed, unsigned long *linkmodes)
- 			break;
+@@ -160,3 +160,94 @@ void linkmode_from_caps(unsigned long *linkmodes, unsigned long caps)
+ 	}
  }
- 
+ EXPORT_SYMBOL_GPL(linkmode_from_caps);
++
 +/**
-+ * phy_caps_valid() - Validate a linkmodes set agains given speed and duplex
++ * phy_interface_caps() - Retrieve the speed/duplex capablities of an interface
++ * @interface: phy_interface_t to get the capabilities from
++ *
++ * Returns: A bitmask of MAC_* capablities for a given interface.
 + */
-+bool phy_caps_valid(int speed, int duplex, const unsigned long *linkmodes)
++unsigned long phy_interface_caps(phy_interface_t interface)
 +{
-+	int capa = speed_duplex_to_capa(speed, duplex);
++	unsigned long caps = MAC_SYM_PAUSE | MAC_ASYM_PAUSE;
 +
-+	if (capa < 0)
-+		return false;
++	switch (interface) {
++	case PHY_INTERFACE_MODE_USXGMII:
++		caps |= MAC_10000FD | MAC_5000FD;
++		fallthrough;
 +
-+	return linkmode_intersects(link_caps[capa].linkmodes, linkmodes);
++	case PHY_INTERFACE_MODE_10G_QXGMII:
++		caps |= MAC_2500FD;
++		fallthrough;
++
++	case PHY_INTERFACE_MODE_RGMII_TXID:
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_ID:
++	case PHY_INTERFACE_MODE_RGMII:
++	case PHY_INTERFACE_MODE_PSGMII:
++	case PHY_INTERFACE_MODE_QSGMII:
++	case PHY_INTERFACE_MODE_QUSGMII:
++	case PHY_INTERFACE_MODE_SGMII:
++	case PHY_INTERFACE_MODE_GMII:
++		caps |= MAC_1000HD | MAC_1000FD;
++		fallthrough;
++
++	case PHY_INTERFACE_MODE_REVRMII:
++	case PHY_INTERFACE_MODE_RMII:
++	case PHY_INTERFACE_MODE_SMII:
++	case PHY_INTERFACE_MODE_REVMII:
++	case PHY_INTERFACE_MODE_MII:
++		caps |= MAC_10HD | MAC_10FD;
++		fallthrough;
++
++	case PHY_INTERFACE_MODE_100BASEX:
++		caps |= MAC_100HD | MAC_100FD;
++		break;
++
++	case PHY_INTERFACE_MODE_TBI:
++	case PHY_INTERFACE_MODE_MOCA:
++	case PHY_INTERFACE_MODE_RTBI:
++	case PHY_INTERFACE_MODE_1000BASEX:
++		caps |= MAC_1000HD;
++		fallthrough;
++	case PHY_INTERFACE_MODE_1000BASEKX:
++	case PHY_INTERFACE_MODE_TRGMII:
++		caps |= MAC_1000FD;
++		break;
++
++	case PHY_INTERFACE_MODE_2500BASEX:
++		caps |= MAC_2500FD;
++		break;
++
++	case PHY_INTERFACE_MODE_5GBASER:
++		caps |= MAC_5000FD;
++		break;
++
++	case PHY_INTERFACE_MODE_XGMII:
++	case PHY_INTERFACE_MODE_RXAUI:
++	case PHY_INTERFACE_MODE_XAUI:
++	case PHY_INTERFACE_MODE_10GBASER:
++	case PHY_INTERFACE_MODE_10GKR:
++		caps |= MAC_10000FD;
++		break;
++
++	case PHY_INTERFACE_MODE_25GBASER:
++		caps |= MAC_25000FD;
++		break;
++
++	case PHY_INTERFACE_MODE_XLGMII:
++		caps |= MAC_40000FD;
++		break;
++
++	case PHY_INTERFACE_MODE_INTERNAL:
++		caps |= ~0;
++		break;
++
++	case PHY_INTERFACE_MODE_NA:
++	case PHY_INTERFACE_MODE_MAX:
++		break;
++	}
++
++	return caps;
 +}
-+
- /**
-  * linkmode_from_caps() - Convert capabilities to ethtool link modes
-  * @linkmodes: ethtool linkmode mask (must be already initialised)
++EXPORT_SYMBOL_GPL(phy_interface_caps);
+diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+index 3b32be40073e..c05c0921c5d0 100644
+--- a/drivers/net/phy/phylink.c
++++ b/drivers/net/phy/phylink.c
+@@ -372,86 +372,9 @@ static unsigned long phylink_get_capabilities(phy_interface_t interface,
+ 					      int rate_matching)
+ {
+ 	int max_speed = phylink_interface_max_speed(interface);
+-	unsigned long caps = MAC_SYM_PAUSE | MAC_ASYM_PAUSE;
++	unsigned long caps = phy_interface_caps(interface);
+ 	unsigned long matched_caps = 0;
+ 
+-	switch (interface) {
+-	case PHY_INTERFACE_MODE_USXGMII:
+-		caps |= MAC_10000FD | MAC_5000FD;
+-		fallthrough;
+-
+-	case PHY_INTERFACE_MODE_10G_QXGMII:
+-		caps |= MAC_2500FD;
+-		fallthrough;
+-
+-	case PHY_INTERFACE_MODE_RGMII_TXID:
+-	case PHY_INTERFACE_MODE_RGMII_RXID:
+-	case PHY_INTERFACE_MODE_RGMII_ID:
+-	case PHY_INTERFACE_MODE_RGMII:
+-	case PHY_INTERFACE_MODE_PSGMII:
+-	case PHY_INTERFACE_MODE_QSGMII:
+-	case PHY_INTERFACE_MODE_QUSGMII:
+-	case PHY_INTERFACE_MODE_SGMII:
+-	case PHY_INTERFACE_MODE_GMII:
+-		caps |= MAC_1000HD | MAC_1000FD;
+-		fallthrough;
+-
+-	case PHY_INTERFACE_MODE_REVRMII:
+-	case PHY_INTERFACE_MODE_RMII:
+-	case PHY_INTERFACE_MODE_SMII:
+-	case PHY_INTERFACE_MODE_REVMII:
+-	case PHY_INTERFACE_MODE_MII:
+-		caps |= MAC_10HD | MAC_10FD;
+-		fallthrough;
+-
+-	case PHY_INTERFACE_MODE_100BASEX:
+-		caps |= MAC_100HD | MAC_100FD;
+-		break;
+-
+-	case PHY_INTERFACE_MODE_TBI:
+-	case PHY_INTERFACE_MODE_MOCA:
+-	case PHY_INTERFACE_MODE_RTBI:
+-	case PHY_INTERFACE_MODE_1000BASEX:
+-		caps |= MAC_1000HD;
+-		fallthrough;
+-	case PHY_INTERFACE_MODE_1000BASEKX:
+-	case PHY_INTERFACE_MODE_TRGMII:
+-		caps |= MAC_1000FD;
+-		break;
+-
+-	case PHY_INTERFACE_MODE_2500BASEX:
+-		caps |= MAC_2500FD;
+-		break;
+-
+-	case PHY_INTERFACE_MODE_5GBASER:
+-		caps |= MAC_5000FD;
+-		break;
+-
+-	case PHY_INTERFACE_MODE_XGMII:
+-	case PHY_INTERFACE_MODE_RXAUI:
+-	case PHY_INTERFACE_MODE_XAUI:
+-	case PHY_INTERFACE_MODE_10GBASER:
+-	case PHY_INTERFACE_MODE_10GKR:
+-		caps |= MAC_10000FD;
+-		break;
+-
+-	case PHY_INTERFACE_MODE_25GBASER:
+-		caps |= MAC_25000FD;
+-		break;
+-
+-	case PHY_INTERFACE_MODE_XLGMII:
+-		caps |= MAC_40000FD;
+-		break;
+-
+-	case PHY_INTERFACE_MODE_INTERNAL:
+-		caps |= ~0;
+-		break;
+-
+-	case PHY_INTERFACE_MODE_NA:
+-	case PHY_INTERFACE_MODE_MAX:
+-		break;
+-	}
+-
+ 	switch (rate_matching) {
+ 	case RATE_MATCH_OPEN_LOOP:
+ 		/* TODO */
 -- 
 2.48.1
 
