@@ -1,33 +1,35 @@
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2107156237;
-	Sat, 22 Feb 2025 14:27:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D5E15697B;
+	Sat, 22 Feb 2025 14:27:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740234463; cv=none; b=rsNiHdvVVhkEmvUIiNKdcRJwN5loXrmkzE7KBTUYS6yv6U87LbYxyOJ1oGndX7/TkYbpkbgUbOuEk0Blbd6SApAmNI02/y76skabWHVzBi43ClN3rlgI6GVCJb6DKlcaIfwaCu8lipJm79hMUbV3wl+FDMb+FHq1dyRwT94NiRA=
+	t=1740234465; cv=none; b=mLXcAof8iuDA57EhulhZCjQZljv0319AgkcLGhqFB9xxHQ2zgPe96kFlwt8D+NsAHFkL+01nT9vub1bJYEuDFHJA0LlGMVDrzH+aYvqzxKVCdbujsUjqufk0h1oU2i5mt57P6fmyGVnDmIEhwxpfX4ptxfgU+LXRbeBdtzF9mY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740234463; c=relaxed/simple;
-	bh=QvRwvp+ydVb3r6U6a5oarDYj5qrVHjOQ6YWb1uXsGlU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qp815HF8sMJ5Pf6ubWu+HLcv7y0EAoHmtti+NfBEqunXKeqOiLIJeK1qHzr6ceeDnRBTU3dTypMwFGNHGtTQYmC9lo3Ctt/nHP+wN/eqIITMmmQN4TJKHQIOd8ER/+UxmnhH65hZF9026dOooFvuXYAu5RIzWNbUqnZXFmpa/n0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=AXQgwZ5t; arc=none smtp.client-ip=217.70.183.199
+	s=arc-20240116; t=1740234465; c=relaxed/simple;
+	bh=+YvIktCb/fVxFNwww8PxXVaxOoa3sY0Nr0wVO//AqfE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=OWDajw2VxcUeGn/0gd7Dz1o6k4/1Fl8zuRwEyA4RuWeysHw9ErlK8dgokfgXzt4CNZtrdil+ErVbwEAfwalFFBukDGmJS4rMUtafMXny6MeG1+aEVdOLmcCLoS67Zhity2JEAuUBYONboBxbOVSwxv5+A25hBtlS2Oafcz5mZIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CvH19zSB; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AXQgwZ5t"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1712343284;
-	Sat, 22 Feb 2025 14:27:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CvH19zSB"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6DAA344283;
+	Sat, 22 Feb 2025 14:27:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1740234453;
+	t=1740234461;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=pGwEt+QWoi5fS4m2LqhDwntpqVFxHq+vM5vBU2vIlNs=;
-	b=AXQgwZ5t1bBuMnyMxDGNT+ZM7Dp43ZpQJq0eLq3gZXaTLPL+diBZ3FYQ3UARDdhX32eCoG
-	SsGLrBtj5woB4ZbhBdkmm4DXW6IvsCMvmzZG3V0k4e9Z7tsvva1acB3ANp1kEAUqE7/yQ6
-	TX2NHJufl3iVByZQ7TB5085Hi8p3iRSve4Iin8s0eMWSk+cjzrgqjKZcDA9EkSEmxXcWyz
-	l8xSOzJ+tBbIC+9wC0gM3i260vJ3wF25ZUNkWI4+t9rl0XpVelgrrYw0sfAf4qcwog4If/
-	RvXZOaE8PzFJuCJort+drRegHX0GX2I+ZO7txFqYhVEdxUSVi77sDJA1w+ZFTw==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=X2UNvCkN0fpzej3UIf5ymdteSShbZX9J1yWWnwvU8K0=;
+	b=CvH19zSBYeFJTapfQEc9NnLd8JrQTqMhtcOH3XB9gIZUnjRH3LOwGNa+3axH+xOvqnULK4
+	gxAhKEJ3PGRJtnwlf+8QgcurMoq4BBGU2X+gTE1Cbc7z6hGneQVMNcrf4HXIOCO0bGaSy3
+	FcOGRWiBukPbUFMvCG05f8ygzegU3a8vHjsYlX6G+E3fO2bjuWom8oFE8tmPokLcf0Aqdd
+	ZKWBpwa7Ygdi0XI3DuqsoQrrrRHkmUJ2QC7CFpPrJ+s+G971LiWWNtE8T/QY1jFOPR2Y5K
+	+csuvGUZs7Ohwitl+aHHdEwDfMPLZtv2GeuBh3x6qGvWMnE9DsA1JAK2+BiqeQ==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net,
 	Andrew Lunn <andrew@lunn.ch>,
@@ -49,10 +51,12 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	Oleksij Rempel <o.rempel@pengutronix.de>,
 	Simon Horman <horms@kernel.org>,
 	Romain Gantois <romain.gantois@bootlin.com>
-Subject: [PATCH net-next 00/13] net: phy: Rework linkmodes handling in a dedicated file
-Date: Sat, 22 Feb 2025 15:27:12 +0100
-Message-ID: <20250222142727.894124-1-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next 07/13] net: phy: phy_caps: Move __set_linkmode_max_speed to phy_caps
+Date: Sat, 22 Feb 2025 15:27:19 +0100
+Message-ID: <20250222142727.894124-8-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250222142727.894124-1-maxime.chevallier@bootlin.com>
+References: <20250222142727.894124-1-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,186 +66,107 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdejfeduiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeejhfelieehgfffiefftdffiedvheefteehkedukefgteffteevffeuueejiedtveenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgdphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddtpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlr
- dhorhhgpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhm
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdejfeduiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgedtffelffelveeuleelgfejfeevvdejhfehgeefgfffvdefteegvedutefftdenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpeegnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgri
+ igvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomh
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Hello everyone,
+Convert the __set_linkmode_max_speed to use the link_capabilities array.
+This makes it easy to clamp the linkmodes to a given max speed.
+Introduce a new helper phy_caps_linkmode_max_speed to replace the
+previous one that used phy_settings.
 
-Following the V4 of the phy_port series [1] we've discussed about attempting
-to extract some of the linkmode <-> capabilities (speed/duplex) <-> interface
-logic into a dedicated file, so that we can re-use that logic out of
-phylink. That would be the first 3 patches of this series.
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+---
+ drivers/net/phy/phy-caps.h |  2 ++
+ drivers/net/phy/phy-core.c | 19 ++++---------------
+ drivers/net/phy/phy_caps.c | 16 ++++++++++++++++
+ 3 files changed, 22 insertions(+), 15 deletions(-)
 
-While trying to do that, I might have gotten a bit carried-away, and I'm
-therefore submitting this series to rework the way we are currently
-managing the linkmodes <-> capabilities handling.
-
-We are currently defining all the possible Ethernet linkmodes in an
-enum ethtool_link_mode_bit_indices value defined in uapi/linux/ethtool.h :
-
-	ETHTOOL_LINK_MODE_10baseT_Half_BIT	= 0,
-	ETHTOOL_LINK_MODE_10baseT_Full_BIT	= 1,
-	...
-
-Each of these modes represents a media-side link definition, and runs at
-a given speed and duplex.
-
-Specific attributes for each modes are stored in net/ethtool/common.c, as
-an array of struct link_mode_info :
-
-	struct link_mode_info {
-		int				speed;
-		u8				lanes;
-		u8				duplex;
-	}
-
-The link_mode_params[] array is the canonical definition for these modes,
-as (1) there are build-time checks to make sure any new linkmode
-definition is also defined in this array and (2) this array is always
-compiled-in, as it's part of the net stack (i.e. it is not phylib-specific).
-
-This array is however not optimized for lookups, as it is not ordered in
-any particular fashion (new modes go at the end, regardless of their speed
-and duplex).
-
-Phylib also includes a similar array, in the form of the phy_settings
-array in drivers/net/phy/phy-core.c :
-
-	struct phy_setting {
-		u32 speed;
-		u8 duplex;
-		u8 bit; // The enum index for the linkmode
-	};
-
-The phy_settings array however is ordered by descending speeds. A variety
-of helpers in phylib rely on that ordering to perform lookups, usually
-to get one or any linkmode corresponding to a requested speed and duplex.
-
-Finally, we have some helpers in phylink (phylink_caps_to_linkmodes) that
-allows getting the list of linkmodes that match a set of speed and duplex
-value, all at once.
-
-While the phylink and phylib helpers allows for efficient lookups, they
-have some drawbacks as well :
-
-	(1) : It's easy to forget updating of all of these helpers and structures
-		  when adding a new linkmode. New linkmodes are actually added fairly
-		  often, lately either for slow BaseT1 flavours, or for crazy-fast
-		  modes (800Gbps modes, but I guess people won't stop there)
-		  
-	(2) : Even though the phylink and phylib modes use carefull sorting
-		  to speed-up the lookup process, the phylib lookups are usually
-		  done in descending speed order and will therefore get slower
-		  as people add even faster link speeds.
-		  
-This series introduces a new "link_capabilities" structure that is used
-to build an array of link_caps :
-
-	struct link_capabilities {
-		int speed;                           
-		unsigned int duplex;
-		__ETHTOOL_DECLARE_LINK_MODE_MASK(linkmodes);
-	};
-
-We group these in an array, indexed with LINK_CAPA enums that are basically
-identical to the phylink MAC_CAPS :
-
-...
-LINK_CAPA_1000HD,             
-LINK_CAPA_1000FD,
-LINK_CAPA_2500FD,
-LINK_CAPA_5000FD,
-...
-
-We now have an associative array of <speed,duplex> <-> All compatible linkmodes
-
-This array is initialized at phylib-init time based on the content of
-the link_mode_params[] array from net/ethtool/common.c, that way it is
-always up-to-date with new modes, and always properly ordered.
-
-Patches 6 to 12 then convert all lookups from the phy_settings array into
-lookups from this link_caps array, hopefully speeding-up lookups in the
-meantime (we iterate over possible speeds instead of individual linkmodes)
-
-Patch 13 simply removes the phy_settings array altogether.
-
-This series is not meant to introduce changes in behaviour, however patches
-11 and 12 do introduce functionnal changes. When configuring the advert
-for speeds >= 1G in PHY devices, as well as when constructing the link
-parameters for fixed links in phylink, we used to rely on phy_settings
-lookups returning one, and only one, compatible linkmode. This series will
-make so that the lookups will result on all matching linkmodes being
-returned, and MAY cause advert/fixed-link configuring more linkmodes.
-
-There are cons as well for this, as this is a bit more init time for phylib,
-but maybe more importantly, we lose in the precision for the lookups in
-phy_settings. However, given all the uses for phy_settings (most are just
-to get speed/duplex), I think this is actually ok, but any comment would
-be very welcome.
-
-This series was tested with :
- - 10/100/1000M links
- - 2,5, 5, 10G BaseT links
- - 1G Fixed link
-
-I also made sure that this compiles with the following options :
-
-CONFIG_PHYLIB=n
-
-CNFIG_PHYLINK=m
-CONFIG_PHYLIB=m
-
-CNFIG_PHYLINK=m
-CONFIG_PHYLIB=y
-
-CNFIG_PHYLINK=y
-CONFIG_PHYLIB=y
-
-Heiner is currently working on cleaning-up the headers and internal
-helpers for phylib, this series may conflict with it.
-
-All the new helpers that were introduced (in drivers/net/phy/phy-caps.h)
-are for internal use only (only users should be core stuff, such as phylib and
-phylink, and in the future, phy_port).
-
-Thanks,
-
-Maxime
-
-[1]: https://lore.kernel.org/netdev/20250213101606.1154014-1-maxime.chevallier@bootlin.com/
-
-Maxime Chevallier (13):
-  net: phy: Extract the speed/duplex to linkmode conversion from phylink
-  net: phy: phylink: Extract the logic to get caps from interface
-  net: phy: phylink: Extract getting the max speed for a given interface
-  net: ethtool: Export the link_mode_params definitions
-  net: phy: Use an internal, searchable storage for the linkmodes
-  net: phy: phy_caps: Move phy_speeds to phy_caps
-  net: phy: phy_caps: Move __set_linkmode_max_speed to phy_caps
-  net: phy: phy_caps: Introduce link_caps_valid
-  net: phy: phy_caps: Implement link_capabilities lookup by linkmode
-  net: phy: phy_caps: Allow looking-up link caps based on speed and
-    duplex
-  net: phy: phy_device: Use link_capabilities lookup for PHY aneg config
-  net: phy: phylink: Use phy_caps_lookup for fixed-link configuration
-  net: phy: drop phy_settings and the associated lookup helpers
-
- drivers/net/phy/Makefile     |   2 +-
- drivers/net/phy/phy-caps.h   |  39 +++
- drivers/net/phy/phy-core.c   | 254 ++----------------
- drivers/net/phy/phy.c        |  38 +--
- drivers/net/phy/phy_caps.c   | 496 +++++++++++++++++++++++++++++++++++
- drivers/net/phy/phy_device.c |  14 +-
- drivers/net/phy/phylink.c    | 359 +++----------------------
- include/linux/ethtool.h      |   8 +
- include/linux/phy.h          |  14 -
- net/ethtool/common.c         |   1 +
- net/ethtool/common.h         |   7 -
- 11 files changed, 615 insertions(+), 617 deletions(-)
- create mode 100644 drivers/net/phy/phy-caps.h
- create mode 100644 drivers/net/phy/phy_caps.c
-
+diff --git a/drivers/net/phy/phy-caps.h b/drivers/net/phy/phy-caps.h
+index d4cd91fd0911..55d83661fa18 100644
+--- a/drivers/net/phy/phy-caps.h
++++ b/drivers/net/phy/phy-caps.h
+@@ -23,5 +23,7 @@ int phy_interface_max_speed(phy_interface_t interface);
+ 
+ size_t phy_caps_speeds(unsigned int *speeds, size_t size,
+ 		       unsigned long *linkmodes);
++void phy_caps_linkmode_max_speed(u32 max_speed, unsigned long *linkmodes);
++
+ 
+ #endif /* __PHY_CAPS_H */
+diff --git a/drivers/net/phy/phy-core.c b/drivers/net/phy/phy-core.c
+index e2850d6fe158..300d47d4fd3c 100644
+--- a/drivers/net/phy/phy-core.c
++++ b/drivers/net/phy/phy-core.c
+@@ -6,6 +6,8 @@
+ #include <linux/phy.h>
+ #include <linux/of.h>
+ 
++#include "phy-caps.h"
++
+ /**
+  * phy_speed_to_str - Return a string representing the PHY link speed
+  *
+@@ -337,22 +339,9 @@ phy_lookup_setting(int speed, int duplex, const unsigned long *mask, bool exact)
+ }
+ EXPORT_SYMBOL_GPL(phy_lookup_setting);
+ 
+-static void __set_linkmode_max_speed(u32 max_speed, unsigned long *addr)
+-{
+-	const struct phy_setting *p;
+-	int i;
+-
+-	for (i = 0, p = settings; i < ARRAY_SIZE(settings); i++, p++) {
+-		if (p->speed > max_speed)
+-			linkmode_clear_bit(p->bit, addr);
+-		else
+-			break;
+-	}
+-}
+-
+ static void __set_phy_supported(struct phy_device *phydev, u32 max_speed)
+ {
+-	__set_linkmode_max_speed(max_speed, phydev->supported);
++	phy_caps_linkmode_max_speed(max_speed, phydev->supported);
+ }
+ 
+ /**
+@@ -556,7 +545,7 @@ int phy_speed_down_core(struct phy_device *phydev)
+ 	if (min_common_speed == SPEED_UNKNOWN)
+ 		return -EINVAL;
+ 
+-	__set_linkmode_max_speed(min_common_speed, phydev->advertising);
++	phy_caps_linkmode_max_speed(min_common_speed, phydev->advertising);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/net/phy/phy_caps.c b/drivers/net/phy/phy_caps.c
+index ee8aa1217a6e..cb7a5fa177b1 100644
+--- a/drivers/net/phy/phy_caps.c
++++ b/drivers/net/phy/phy_caps.c
+@@ -129,6 +129,22 @@ size_t phy_caps_speeds(unsigned int *speeds, size_t size,
+ 	return count;
+ }
+ 
++/**
++ * phy_caps_linkmode_max_speed() - Clamp a linkmodes set to a max speed
++ * @max_speed: Speed limit for the linkmode set
++ * @linkmodes: Linkmodes to limit
++ */
++void phy_caps_linkmode_max_speed(u32 max_speed, unsigned long *linkmodes)
++{
++	int capa;
++
++	for (capa = __LINK_CAPA_LAST; capa >= 0; capa--)
++		if (link_caps[capa].speed > max_speed)
++			linkmode_andnot(linkmodes, linkmodes, link_caps[capa].linkmodes);
++		else
++			break;
++}
++
+ /**
+  * linkmode_from_caps() - Convert capabilities to ethtool link modes
+  * @linkmodes: ethtool linkmode mask (must be already initialised)
 -- 
 2.48.1
 
