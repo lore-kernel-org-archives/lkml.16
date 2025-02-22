@@ -1,130 +1,95 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3F72063F0;
-	Sat, 22 Feb 2025 09:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D857B663;
+	Sat, 22 Feb 2025 09:50:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740217623; cv=none; b=KIgI7Vmd2bNUwi5ssHt5oCHLK4pOFdQ/bnip7kawcqTvK825VmvvcQGeN/aaT8Mkmby6/Mb2beyOCzgsK3aL+m+l0xTQPC3D7bT2nCff8n4sKPsC2BtWPr+Krl/lg4SibtMAkDJLlbFcEY/BQDxAkFylUt49G13GXHo5rm1tg5k=
+	t=1740217802; cv=none; b=ArRR0CMmljt1Sx7AfTeg/OmibaLedr9Vn9DfzIOe3tbhO2uWmg4r5kHcrmiVodmtrNJQZG6IPtQDZr53tC+BKWzS1yLI6y8mFvAWPM0gitYzNzh2AwwXGqXSeGScC+F8TUKTG2XXYOKdY83sZADqEf3502G+e+iwECy3/6tKsw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740217623; c=relaxed/simple;
-	bh=VF6Ud8woaUw2hBuatgzb7156hJnHCd13pH4ajF1JnP4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=POxPMbKie1te8eIYMU4ruHWRmtgyUxI1qpO7lVtIGIIlj/NwXRyfS1oA6UkPxpMBjfKP2PsEUrr4ufa1WlXAwt9HROvPxIX9H3Cu8kFxx3SXEqQDCKwOUGwQLMoZ4QoaH6xP/53BYhkjb3FsUzdEHEGR24WaHkMJZiBJFt9Gw80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=d13HXYl9; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1740217802; c=relaxed/simple;
+	bh=YMuS4jq16SQY005HovXWqkuXwTsXCArwDObAf38rCgY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=UMUr45/OlCfVF/KK7CvCyZolhEYDGG61d84gOPG+vtnPisJemLbCIeItjX3w/nYgH/kuy5QCH//ovVIEZVEEQ7itAvw3YRE2yLXQmm0heY61DnqoT+FgIdFCKG571whmn75zqh3FFYHEOFGt78xVBbCKXTCPx+0JMQD00GvpR3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FEwhkXR9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="d13HXYl9"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id D15FA10382D37;
-	Sat, 22 Feb 2025 10:46:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1740217619;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=e6kkcauuE4Q+rb4U5UeJINPLqDBviQ0uDB7Xhy6jslY=;
-	b=d13HXYl95ypF+ZWw5RxVuIUMv18zN90/drgU45hZwlcp5i1fkzCdi7Jhporw/jY7PcDdF8
-	frdQcLuQFtCeRzXUX4U7F2gYHt809p98HVUW+5HAHIL8OM+7Jr67DLQva3NR2tBJ9Akn4c
-	wsfWCuXeOfEJYRi/M6cjgz1F6JBcsbkgFYpfj6RFrxsBfYRMO7LWSKq8+n9Dzz8a1MvFUH
-	gdNJmvHgE2tvkv1Mys9HAITHxZH+ewpMen9nsD0WICXlmVM/T+5gmVAONlxxVLqkw7JLPD
-	aHfNX5cc8qFBOuuPRJPrfCy9BV3xYPfggPD2go+/BWF12yl9tKFKHukih68szw==
-Date: Sat, 22 Feb 2025 10:46:52 +0100
-From: Pavel Machek <pavel@denx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Pavel Machek <pavel@denx.de>, Florian Fainelli <f.fainelli@gmail.com>,
-	stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org,
-	jonathanh@nvidia.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.1 000/569] 6.1.129-rc2 review
-Message-ID: <Z7mdDISNDz7Dq3A3@duo.ucw.cz>
-References: <20250220104545.805660879@linuxfoundation.org>
- <80ab673f-aa94-43e2-899a-0c5a22f3f1e0@gmail.com>
- <2025022221-revert-hubcap-f519@gregkh>
- <Z7mXDolRS+3nLAse@duo.ucw.cz>
- <2025022213-brewery-synergy-b4bf@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FEwhkXR9"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id EEFBBC4CEE2;
+	Sat, 22 Feb 2025 09:50:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740217802;
+	bh=YMuS4jq16SQY005HovXWqkuXwTsXCArwDObAf38rCgY=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=FEwhkXR9LUR/bop/0d4N29ntW4WlbEk0X5MkeUJC10zXs2RpZrdYb8IvUaYH3V5wZ
+	 DHCU9/Gi/yLRVmqsV7g62W21sNFGCXGGu8uuOSRlWymc1+orXz09vjUsSX0O75MIJN
+	 Sv0cp6FU+2NcqHkOfeM/Xa/h0VRC0gIhCKQq/zrAnF14fKHnN95MBDYFxjH7VRV+Zo
+	 MwhiYuRdmhXfU8PhBOUoN7OLfZvCioDspcXOAKfyf+SN+cA9vM/CAlvc73wRqc7Elh
+	 IbnJJ9J+qUFOgytLSPGdyy76g6QyEGI5fbYgl7v3IqPxWjPI6PCRA75eyj+cY+4i2G
+	 ww0OgcWkybb9w==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E06E2C021B7;
+	Sat, 22 Feb 2025 09:50:01 +0000 (UTC)
+From: Hans-Frieder Vogt via B4 Relay <devnull+hfdevel.gmx.net@kernel.org>
+Date: Sat, 22 Feb 2025 10:49:29 +0100
+Subject: [PATCH net-next v5 2/7] net: phy: aquantia: add probe function to
+ aqr105 for firmware loading
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="CCNlqIj4XocDQZrA"
-Content-Disposition: inline
-In-Reply-To: <2025022213-brewery-synergy-b4bf@gregkh>
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250222-tn9510-v3a-v5-2-99365047e309@gmx.net>
+References: <20250222-tn9510-v3a-v5-0-99365047e309@gmx.net>
+In-Reply-To: <20250222-tn9510-v3a-v5-0-99365047e309@gmx.net>
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ FUJITA Tomonori <fujita.tomonori@gmail.com>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Hans-Frieder Vogt <hfdevel@gmx.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740217800; l=900;
+ i=hfdevel@gmx.net; s=20240915; h=from:subject:message-id;
+ bh=vEeavGZyiKSDFemLfNRy5gMMBOs/2nb7oTqi4HS4XIQ=;
+ b=M76uCELxw2oNUw0404E9UpC5aH3+YSASttZAWCbjW2m4nm+jr5+babv/nwMqwhx8BNvvd9QsU
+ 5DHoScLr+kCCfr+r5wOPDkiBnpVzxdER3TXdEE6/VF8Mdx7MGWOJCMz
+X-Developer-Key: i=hfdevel@gmx.net; a=ed25519;
+ pk=s3DJ3DFe6BJDRAcnd7VGvvwPXcLgV8mrfbpt8B9coRc=
+X-Endpoint-Received: by B4 Relay for hfdevel@gmx.net/20240915 with
+ auth_id=209
+X-Original-From: Hans-Frieder Vogt <hfdevel@gmx.net>
+Reply-To: hfdevel@gmx.net
+
+From: Hans-Frieder Vogt <hfdevel@gmx.net>
+
+Re-use the AQR107 probe function to load the firmware on the AQR105 (and
+to probe the HWMON).
+
+Signed-off-by: Hans-Frieder Vogt <hfdevel@gmx.net>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+---
+ drivers/net/phy/aquantia/aquantia_main.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/phy/aquantia/aquantia_main.c b/drivers/net/phy/aquantia/aquantia_main.c
+index e42ace4e682aacf56199b7fdb9613d20f240fa27..86b0e63de5d88fa1050919a8826bdbec4bbcf8ba 100644
+--- a/drivers/net/phy/aquantia/aquantia_main.c
++++ b/drivers/net/phy/aquantia/aquantia_main.c
+@@ -912,6 +912,7 @@ static struct phy_driver aqr_driver[] = {
+ 	PHY_ID_MATCH_MODEL(PHY_ID_AQR105),
+ 	.name		= "Aquantia AQR105",
+ 	.config_aneg    = aqr_config_aneg,
++	.probe		= aqr107_probe,
+ 	.config_intr	= aqr_config_intr,
+ 	.handle_interrupt = aqr_handle_interrupt,
+ 	.read_status	= aqr_read_status,
+
+-- 
+2.47.2
 
 
---CCNlqIj4XocDQZrA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat 2025-02-22 10:39:23, Greg Kroah-Hartman wrote:
-> On Sat, Feb 22, 2025 at 10:21:18AM +0100, Pavel Machek wrote:
-> > On Sat 2025-02-22 07:28:10, Greg Kroah-Hartman wrote:
-> > > On Fri, Feb 21, 2025 at 09:45:15AM -0800, Florian Fainelli wrote:
-> > > >=20
-> > > >=20
-> > > > On 2/20/2025 2:57 AM, Greg Kroah-Hartman wrote:
-> > > > > This is the start of the stable review cycle for the 6.1.129 rele=
-ase.
-> > > > > There are 569 patches in this series, all will be posted as a res=
-ponse
-> > > > > to this one.  If anyone has any issues with these being applied, =
-please
-> > > > > let me know.
-> > > > >=20
-> > > > > Responses should be made by Sat, 22 Feb 2025 10:44:04 +0000.
-> > > > > Anything received after that time might be too late.
-> > > >=20
-> > > > And yet there was a v6.1.29 tag created already?
-> > >=20
-> > > Sometimes I'm faster, which is usually the case for -rc2 and later, I=
- go
-> > > off of the -rc1 date if the people that had problems with -rc1 have
-> > > reported that the newer -rc fixes their reported issues.
-> >=20
-> > Well, quoting time down to second then doing something completely
-> > different is quite confusing. Please fix your scripts.
->=20
-> Patches gladly welcome :)
-
-:-(
-								Pavel
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a5e49d57c589..526daaf5b87a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22471,7 +22471,7 @@ STABLE BRANCH
- M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
- M:	Sasha Levin <sashal@kernel.org>
- L:	stable@vger.kernel.org
--S:	Supported
-+S:	Odd Fixes
- F:	Documentation/process/stable-kernel-rules.rst
-=20
- STAGING - ATOMISP DRIVER
-
-
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---CCNlqIj4XocDQZrA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZ7mdDAAKCRAw5/Bqldv6
-8jNqAKCK5nxpHfcYWmjFYCol7TTqC1ElLgCglp3Jqu+bQqptNUIHG6WeV1ZHJ2E=
-=7oeb
------END PGP SIGNATURE-----
-
---CCNlqIj4XocDQZrA--
