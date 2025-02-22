@@ -1,167 +1,115 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail-m3281.qiye.163.com (mail-m3281.qiye.163.com [220.197.32.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C900520ADD5
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 12:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0202066CC;
+	Sat, 22 Feb 2025 12:41:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740228042; cv=none; b=Rm8bz+68pNXIVN/ZEYS9FDTlAQI0oKn7rvEAQwVC7bqzmB7P8Dex6EESNVdbrsMcbp7k2+awUUIZ9DcWCF66/1UzGvoze+oqOmLJFf4mFSF/HqH6fv0pcmKDMvoYZhEj/1/RGjq0QnMLy2mPhOXJpzskn+4dxmi41LiA9cD6xg8=
+	t=1740228095; cv=none; b=jcPyKd5YQOCc+NmVgTG7BtysjOttbqWBn2DkB7TQJrAqIOS2dodWN8QRYsLa2Q3DC8KGjkTSlUel1uHKw1vywkjZ8dR+9Jj6LXqYDxeg9GeEAwkHQasDcFvhOD70HpU6z1NyWAhLCPkUSaa0S2/1wGadz5jMTqJoKceLNU4Ot0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740228042; c=relaxed/simple;
-	bh=44WiBU3e87uUbt5Joj83rDplJVriJ4yNvs0txze1vTY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l6Op7ItrgIVHhbyU7eQZ28Z7PMGfU/kViZBQfdbQpY7EXXo6fmwGQSZ5QN0LGOKhMF3oR9LI5BPYQ2KRX9YTiEI7P+8twgEQVQpQnycDqjs5PbgDCUVBOQ5tj1BQHs488ECWyThoCt8BjkOlNxBfDiiZuS0txKk9SXl+uAl1YHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TWiVInF0; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740228095; c=relaxed/simple;
+	bh=6yispmSF8NEHuiD6p8lfFKKzPSmXUg+uCfdj0up52oo=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=bKHW0f7TJBwFFQAtHBHkz0Bs09tmWyxpHCYwtliZevuf/Saz4raps1WIgeEJA83QzicisHOjLYQ7x5/mKYKp7so2LMpN7Gyrwk/ZnTWLT9KcZ4pGu5aairsqm72p5BzpTCPz5td7IDBXbocIvEBJbiyr4+wQfhiyLV+bhDEhMuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=ENxxpIdc; arc=none smtp.client-ip=220.197.32.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TWiVInF0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740228039;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qAd8SANoOauq5uEymG+29fWeYf7y+gGWAJmdDdaiSKs=;
-	b=TWiVInF0NcltMZ4JLPeMSZ7FuqCb3ojP3yPDx3eDe1T4Z4z5XpTKzGYL1WMSSGkftQF0S7
-	lZjwfIOOnrz+pz4xN+UrpAL8Tvvo6SCIsokX8c8iHhPi4bjCBlzno76ufwV/yM2TIJGZlD
-	nHfWy6bph9pSeqcs/XiY+PnA5Mpes3o=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-122-u0F871nGP4-7jWvcSvDHtQ-1; Sat,
- 22 Feb 2025 07:40:35 -0500
-X-MC-Unique: u0F871nGP4-7jWvcSvDHtQ-1
-X-Mimecast-MFC-AGG-ID: u0F871nGP4-7jWvcSvDHtQ_1740228033
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6224619560B9;
-	Sat, 22 Feb 2025 12:40:32 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.2])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 8A6E8180094A;
-	Sat, 22 Feb 2025 12:40:23 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sat, 22 Feb 2025 13:40:03 +0100 (CET)
-Date: Sat, 22 Feb 2025 13:39:53 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Tong Tiangen <tongtiangen@huawei.com>
-Cc: David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Peter Xu <peterx@redhat.com>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, wangkefeng.wang@huawei.com,
-	Guohanjun <guohanjun@huawei.com>
-Subject: Re: [PATCH -next v2] uprobes: fix two zero old_folio bugs in
- __replace_page()
-Message-ID: <20250222123952.GA17836@redhat.com>
-References: <20250221015056.1269344-1-tongtiangen@huawei.com>
- <20250221152841.GA24705@redhat.com>
- <46a48eb4-5245-81ba-9779-ace8f162c31b@huawei.com>
- <ef999493-cac0-68bb-2684-97da0fb8b583@huawei.com>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="ENxxpIdc"
+Received: from [172.16.12.26] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id bdb51f7f;
+	Sat, 22 Feb 2025 19:25:41 +0800 (GMT+08:00)
+Message-ID: <799ccbd2-0c3b-4a55-b47e-1899975c4020@rock-chips.com>
+Date: Sat, 22 Feb 2025 19:25:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ef999493-cac0-68bb-2684-97da0fb8b583@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+User-Agent: Mozilla Thunderbird
+From: Damon Ding <damon.ding@rock-chips.com>
+Subject: Re: [PATCH v6 08/14] drm/rockchip: analogix_dp: Add support to get
+ panel from the DP AUX bus
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ rfoss@kernel.org, vkoul@kernel.org, sebastian.reichel@collabora.com,
+ cristian.ciocaltea@collabora.com, l.stach@pengutronix.de,
+ dmitry.baryshkov@linaro.org, andy.yan@rock-chips.com, hjc@rock-chips.com,
+ algea.cao@rock-chips.com, kever.yang@rock-chips.com,
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
+References: <20250123100747.1841357-1-damon.ding@rock-chips.com>
+ <20250123100747.1841357-9-damon.ding@rock-chips.com>
+ <3340006.44csPzL39Z@diego>
+Content-Language: en-US
+In-Reply-To: <3340006.44csPzL39Z@diego>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQktJTlZCTR8fSEgaTx5MHh5WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a952d67f14803a3kunmbdb51f7f
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NhQ6Agw6HDIKER8cNz4OTxY2
+	SFEaFA5VSlVKTE9LSUlITk9ISktIVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFKQ0pPNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=ENxxpIdc+fRY3imBB4Fvef5vOGZG6fA5wJ7ZQJ3/Q4CHHOsDZlC+5/w3k4E3rp5BOTyNBD/acHQvH9bxtM6Ew6mLSBkk31732mwP2INmd+pp5ON4Wv4pZ1/ZSYTKU/EsXsoRaBhyh7otaP6W3DmyJLjc4G1myUF7V4vX7iQqVTg=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=4IlcUWxsBK99tkFDt+EwbEGgFcki2T86lZTSUVVIHWQ=;
+	h=date:mime-version:subject:message-id:from;
 
-On 02/22, Tong Tiangen wrote:
->
->
-> I'm going to add a new patch to moving the "verify_opcode()" check down
-> , IIUC that "!PageAnon(old_page)" below also needs to be moved together,
+Hi Heiko,
 
-No, no.
+On 2025/1/31 4:33, Heiko Stübner wrote:
+> Hi Damon,
+> 
+> Am Donnerstag, 23. Januar 2025, 11:07:41 MEZ schrieb Damon Ding:
+>> Move drm_of_find_panel_or_bridge() a little later and combine it with
+>> component_add() into a new function rockchip_dp_link_panel(). The function
+>> will serve as done_probing() callback of devm_of_dp_aux_populate_bus(),
+>> aiding to support for obtaining the eDP panel via the DP AUX bus.
+>>
+>> If failed to get the panel from the DP AUX bus, it will then try the other
+>> way to get panel information through the platform bus.
+>>
+>> Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
+>>
+>> ---
+> 
+>> @@ -450,9 +461,17 @@ static int rockchip_dp_probe(struct platform_device *pdev)
+>>   	if (IS_ERR(dp->adp))
+>>   		return PTR_ERR(dp->adp);
+>>   
+>> -	ret = component_add(dev, &rockchip_dp_component_ops);
+>> -	if (ret)
+>> -		return ret;
+>> +	ret = devm_of_dp_aux_populate_bus(analogix_dp_get_aux(dp->adp), rockchip_dp_link_panel);
+> 
+> This causes an undefined-reference error, so you probably need something like:
+> 
+> diff --git a/drivers/gpu/drm/rockchip/Kconfig b/drivers/gpu/drm/rockchip/Kconfig
+> index f9cbbb40b36f..fa946a809858 100644
+> --- a/drivers/gpu/drm/rockchip/Kconfig
+> +++ b/drivers/gpu/drm/rockchip/Kconfig
+> @@ -8,6 +8,7 @@ config DRM_ROCKCHIP
+>          select DRM_PANEL
+>          select VIDEOMODE_HELPERS
+>          select DRM_ANALOGIX_DP if ROCKCHIP_ANALOGIX_DP
+> +       select DRM_DISPLAY_DP_AUX_BUS if ROCKCHIP_ANALOGIX_DP
+>          select DRM_DW_HDMI if ROCKCHIP_DW_HDMI
+>          select DRM_DW_HDMI_QP if ROCKCHIP_DW_HDMI_QP
+>          select DRM_DW_MIPI_DSI if ROCKCHIP_DW_MIPI_DSI
+> 
+> 
+> 
+> 
+> 
 
-I forgot everything, but please don't do this. IIUC This is optimization
-for the case when the probed file has int3 at this offset. We should not
-skip update_ref_ctr() in this case, just we can avoid __replace_page().
+Yeah, I will add a new separate commit to do it in the next version.
 
-> and as David said this can be triggered by user space, so delete the use
->  of "WARN", as follows:
-
-Hmm... I think that David meant the new WARN_ON() added by you in V1?
-
-Please don't remove the old WARN(PageCompound(old_page) check. If userspace
-can trigger this warning we need to to fix this code and add FOLL_SPLIT_PMD
-unconditionally (and likely do something else).
-
-I take my words back ;) Don't do the additional cleanups, just add the
-is_zero_page(old_page) check right after get_user_page_vma_remote() and
-update the subject/changelog as David suggests.
-
-This function needs more cleanups anyway. Say, the usage of orig_page_huge
-_looks_ obviously wrong even if (afaics) nothing bad can happen. It should
-be reinitialized after "goto retry" or it should be checked before the
-"orig_page = find_get_page()" code. The usage of gup_flags looks confusing
-too. Lets do this later.
-
-Oleg.
-
->
->
-> @@ -502,20 +502,16 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe,
-> struct mm_struct *mm,
->         if (IS_ERR(old_page))
->                 return PTR_ERR(old_page);
->
-> -       ret = verify_opcode(old_page, vaddr, &opcode);
-> -       if (ret <= 0)
-> +       ret = -EINVAL;
-> +       if (is_zero_page(old_page))
->                 goto put_old;
->
-> -       if (is_zero_page(old_page)) {
-> -               ret = -EINVAL;
-> +       if (!is_register && (PageCompound(old_page) || !PageAnon(old_page)))
->                 goto put_old;
-> -       }
->
-> -       if (WARN(!is_register && PageCompound(old_page),
-> -                "uprobe unregister should never work on compound page\n"))
-> {
-> -               ret = -EINVAL;
-> +       ret = verify_opcode(old_page, vaddr, &opcode);
-> +       if (ret <= 0)
->                 goto put_old;
-> -       }
->
->         /* We are going to replace instruction, update ref_ctr. */
->         if (!ref_ctr_updated && uprobe->ref_ctr_offset) {
-> @@ -526,10 +522,6 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe,
-> struct mm_struct *mm,
->                 ref_ctr_updated = 1;
->         }
->
-> -       ret = 0;
-> -       if (!is_register && !PageAnon(old_page))
-> -               goto put_old;
-> -
->         ret = anon_vma_prepare(vma);
->
-> Thanks.
-> >
-> >>
-> >>
-> >>.
-> >
-> >.
->
+Best regards
+Damon
 
