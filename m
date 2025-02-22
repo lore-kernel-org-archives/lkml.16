@@ -1,104 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A9F7207E1D;
-	Sat, 22 Feb 2025 11:53:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE67207E1D;
+	Sat, 22 Feb 2025 11:56:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740225218; cv=none; b=Pfvixpu5fS4g4KOAyuorPUpteWOLIzlBtu+7u9MHwhdi41aqCVHCST6ntav7D0VTytCdXuuyH4+wDQbE8QEVyGM0ih3HycO9LH3MQedmYEOYrcy+rCHpiJJD6zTguBLVeqq1cwfJtrF+s2AzrS54f3gErFOkOLwOH2YyoV6dUwg=
+	t=1740225384; cv=none; b=KpSNrwe1YjEykHnStgw9iwXftkhrLNGYdPw2WIgKrv8MFlzN7BaNBNbcMvSh8UazXufsdUPqudnw+BNdvQvKqPuE8vP3OtiCZ78J1bys5MHmj7pLcUWbt2ctgs0xPX9o33x/DrrwUbeyzzJ2IyYrMwxKu8uJEj5TZ6YWmr3BG/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740225218; c=relaxed/simple;
-	bh=n/LG/dKXU2OIZXGkhCaxoGXfyyXVnUjTtrluECT61AI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SoHEm7BLw7+GlSEw5FKHSw6P4gT5ogxnW+es1yNHi8soxwmlQJfojnmWenygRahtiY2YLZ8mvLNJY9FAx93Xr8uI4pXbgZc7jzgx8uLXRVIsi0haZHmOPX7AyPpJOejopOpqrrN5SYJUx0dtrKXJDPxvXPIIPImbiwzazHtMQtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qp3fRkHh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740225384; c=relaxed/simple;
+	bh=KYSfkje7X556VxeNSSAvYMvUQhEwUtbVDzQDenE6Y6Q=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=c/3w7eWoEC/6ZkHs11Yx406rTGlRXuc4EShZl1Jm91/2SQvG6Z//cptpIQe7dI+c5nzoAH8HlqB6q9gai85Bicb+39jPskB7QvfFkMoIv4/k/gyiUylYlt8k4tD6iA0PRX0btdokLWeob2iJrWQ6uf7jkWFfbvv0U+/VyUhHBOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fyiFI5Mk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UmxNczp7; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qp3fRkHh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2F10C4CED1;
-	Sat, 22 Feb 2025 11:53:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740225218;
-	bh=n/LG/dKXU2OIZXGkhCaxoGXfyyXVnUjTtrluECT61AI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Qp3fRkHhy3Y5GKMrBn84A8SvAW69doXDsfXZ7vmJ4ygmUyRPE4w6pQmNpF8JjBGle
-	 9oHBiiHiOjSw6F7U0CGTet+h0+7pdGNSEQR2In+t58dDLFZljGhSCm3nKN4xP+zPSD
-	 JgqyfekBRJ72sEN7spZOWnpyqgICgiAyg1wJfiqpHTbKMKIsXlieppAnEm0qfscTPb
-	 yvN0s688ZzXchiejUslubn3wyaR7fPXQaMbVMJ2FC8i3Qly0xOKG23iZfh3t2ovCR0
-	 Y9g8Lk+JR+6pGHCGqs0GOC73pTdszStgkj5U1c8ZU2LDiCzUsKiF2gtDv6DRsTG02j
-	 4rSe/JEK4DFsQ==
-Date: Sat, 22 Feb 2025 11:53:28 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: "Sperling, Tobias" <Tobias.Sperling@Softing.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
- <broonie@kernel.org>, "linux-iio@vger.kernel.org"
- <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org"
- <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v4 0/2] Support for TI ADS7128 and ADS7138 ADCs
-Message-ID: <20250222115328.3208a0ce@jic23-huawei>
-In-Reply-To: <BE1P281MB242028CC2123871D0FD167A1EFFB2@BE1P281MB2420.DEUP281.PROD.OUTLOOK.COM>
-References: <20250213-adc_ml-v4-0-66b68f8fdb8c@softing.com>
-	<20250216155436.239a4b35@jic23-huawei>
-	<BE1P281MB242028CC2123871D0FD167A1EFFB2@BE1P281MB2420.DEUP281.PROD.OUTLOOK.COM>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fyiFI5Mk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UmxNczp7"
+Date: Sat, 22 Feb 2025 11:56:20 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740225381;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Hr0Q9dJ0X8BWEnUAphfvBKZPgH4Rn+4SU2TZki1qkhc=;
+	b=fyiFI5MkSMDQH561RL+d5Ai4Pw9VXe0GzUjN26fSSy4xDR42D6JFn6miopLwCam0exwW32
+	/Lpx11neD/2VnjtvRI0qZ46MZ5GgQRhTg85+kMwlDxzCuebYgfOq19xXqnnjh+ixlJDTns
+	l2e6wL4asn3wkO9p3B83UQdW3Bjh1vOqwOzVs3ES2dhcGu991Iole8n7J7kUN1xq17XTU4
+	g53Q1Yg6f3oHN82AL0mphLdPvXMKA5uSXW8smyYqB0cJqyuOOl7yZDhaUxc93j/rTSTziw
+	Q90swzpYEcRc3PCutTu6/Y7Nd8zanRYzh/OvDxD4AXxwVgNORyhEaH2KnJNieA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740225381;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Hr0Q9dJ0X8BWEnUAphfvBKZPgH4Rn+4SU2TZki1qkhc=;
+	b=UmxNczp7672c0qDayqFZn11mG8JwhhVWq8pm5QuQfc7sDdvMTCcemJTCn/IHyvd0+RMyPF
+	YLT/85Hjt6oNU9Bw==
+From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/boot] x86/boot: Change some static bootflag functions to bool
+Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250129154920.6773-1-ubizjak@gmail.com>
+References: <20250129154920.6773-1-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Message-ID: <174022538091.10177.7409220416524684215.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On Mon, 17 Feb 2025 14:56:53 +0000
-"Sperling, Tobias" <Tobias.Sperling@Softing.com> wrote:
+The following commit has been merged into the x86/boot branch of tip:
 
-> > Von: Jonathan Cameron <jic23@kernel.org>
-> > Gesendet: Sonntag, 16. Februar 2025 16:55
-> >
-> > On Thu, 13 Feb 2025 16:58:56 +0100
-> > Tobias Sperling via B4 Relay <mailto:devnull+tobias.sperling.softing.com@kernel.org>
-> > wrote:
-> >   
-> > > This patch series adds support for Texas Instruments ADS7128 and
-> > > ADS7138, which are 12-bit, 8 channel analog-to-digital converters (ADCs)
-> > > with build-in digital window comparator (DWC), using the I2C interface.
-> > >
-> > > The driver exposes the interfaces to read the raw values, as well as the
-> > > minimum and maximum value for each channel. In addition several settings
-> > > can be configured, like the DWC, sampling frequency or an averaging
-> > > filter/oversampling. Interrupts triggered by the DWC, if configured, are
-> > > then exposed as IIO events.
-> > >
-> > > ADS7128 differs in the addition of further hardware features, like a
-> > > root-mean-square (RMS) and a zero-crossing-detect (ZCD) module, which
-> > > are not yet supported by the driver.
-> > >
-> > > Regarding the I2C interface the chips using opcodes to define the way
-> > > how the registeres are accessed, like single or multiple register(s)
-> > > read/write or setting/clearing only bits.  
-> > LGTM. Applied to the togreg branch of iio.git and pushed out initially
-> > as testing for 0-day to take a look at it.
-> > 
-> > I did notice whilst applying that the Kconfig ordering for these TI parts
-> > has gotten scrambled. So at some point we should clean that up and
-> > bring them back into alphanumeric order!
-> > 
-> > Jonathan  
-> 
-> Ok, thanks for the info. Then everything is going its way I guess. :)
-> 
-> I can prepare a patch for the ordering. Shall this be based on top
-> of this patch set or just the master branch?
+Commit-ID:     5bebe2e4fe27bf68b4993d62be2f8bae9e6229d6
+Gitweb:        https://git.kernel.org/tip/5bebe2e4fe27bf68b4993d62be2f8bae9e6229d6
+Author:        Uros Bizjak <ubizjak@gmail.com>
+AuthorDate:    Wed, 29 Jan 2025 16:47:50 +01:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sat, 22 Feb 2025 12:30:59 +01:00
 
-This is a rare case where basing on my testing branch is the
-best option.  Right now that matches togreg, but I'll probably be
-applying some stuff on top today and that might touch this file.
+x86/boot: Change some static bootflag functions to bool
 
-Jonathan
-> 
-> Tobias
+The return values of some functions are of boolean type. Change the
+type of these function to bool and adjust their return values.
 
+No functional change intended.
+
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20250129154920.6773-1-ubizjak@gmail.com
+---
+ arch/x86/kernel/bootflag.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/kernel/bootflag.c b/arch/x86/kernel/bootflag.c
+index 3fed7ae..4d89a2d 100644
+--- a/arch/x86/kernel/bootflag.c
++++ b/arch/x86/kernel/bootflag.c
+@@ -20,7 +20,7 @@
+ 
+ int sbf_port __initdata = -1;	/* set via acpi_boot_init() */
+ 
+-static int __init parity(u8 v)
++static bool __init parity(u8 v)
+ {
+ 	int x = 0;
+ 	int i;
+@@ -30,7 +30,7 @@ static int __init parity(u8 v)
+ 		v >>= 1;
+ 	}
+ 
+-	return x;
++	return !!x;
+ }
+ 
+ static void __init sbf_write(u8 v)
+@@ -66,14 +66,14 @@ static u8 __init sbf_read(void)
+ 	return v;
+ }
+ 
+-static int __init sbf_value_valid(u8 v)
++static bool __init sbf_value_valid(u8 v)
+ {
+ 	if (v & SBF_RESERVED)		/* Reserved bits */
+-		return 0;
++		return false;
+ 	if (!parity(v))
+-		return 0;
++		return false;
+ 
+-	return 1;
++	return true;
+ }
+ 
+ static int __init sbf_init(void)
