@@ -1,100 +1,187 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m3278.qiye.163.com (mail-m3278.qiye.163.com [220.197.32.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB9D1B2182;
-	Sat, 22 Feb 2025 13:10:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348CC1B2182;
+	Sat, 22 Feb 2025 13:13:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740229820; cv=none; b=tLYqks7ll5JrghhiYvrqclDck6+ENw/ckbV2LzmZYYiCrYQBih4+ojkSvaHUhZg/iZgTTS3qk4vyuhrp+2Prq9ZyinFq9O704ilyKIbDLoyZL9hQzYmibUogXAPZ2dIuBqcIhPvMPzl7FEYwJUI2HsDq7JTncwydFquCrnDC+L8=
+	t=1740229989; cv=none; b=V0ZEhMdoFOR24OcrAEBUq8PYBQeucXon7mVjQgIXGuVPcbbwIpdNoPcW/plztGBKyiQXFVyJrH5hSXi1FAcG06nFcZcHnUKliDnYMg8b55ZGjL3hwY5i0hIf4EgtZVHGAdfchKMOjHzBOZdRdagBeBl64g0LHOASE8zMLLYFdCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740229820; c=relaxed/simple;
-	bh=J6s/YMcNE3VO47h7esumhnCOP/O09dk+lTINlLDts0c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u0BgaVVnso+vWrnx6AZIxobmQzO+FvbriBA2AOK3VAX0AE1Vp0BbikGRhUfCjjk2pDqINTZeXyK1EGEVKLA69Mpr68EA79LCC3aeRCKuwG97SSG6UrOaDS3t056d0WHamKghV41U7U52wTs5ItS4t+Py86PE8by3bmgTM7nRzH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zz75jhss; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740229989; c=relaxed/simple;
+	bh=Rx/6+HUXxBmrnqVvIGBM2Tk5eSZ0r/3y2PGuz6akjn4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Iw9j5wV4n2Rx1WQ9dyTi83HneUbU6t9X4zVLsUmcLfgrG4fhqnj2UGxKyT/ucWHRH75ApQje4mmzD918u+XUZqEynszqa9mu4BCIRxn1Z6h5tJODZz03iU1Xr37/GLqDQm1LB/580PHURAgpt/0XBpVRX7SrLzhTTJuZ+JrEbtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=gTKOoqjo; arc=none smtp.client-ip=220.197.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zz75jhss"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-309302f629dso2022461fa.3;
-        Sat, 22 Feb 2025 05:10:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740229816; x=1740834616; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J6s/YMcNE3VO47h7esumhnCOP/O09dk+lTINlLDts0c=;
-        b=Zz75jhsshfLDZ6V6Vb2yNxpiTZUfvbOYVSE/YQGIU6Ku0E/CQyMUkX8nyZ1JGREPsl
-         4VH9SkTWr298exsg+AjJJAcsR5PqOdKkB7f3mXXIHNHd2ZLpwr7HDlwkmrPyyxdwUha/
-         1KTOKHYOixVPOh9fojnMM/iEpx/YKM9YAufBb9cPVpTPxR4QwE1xIdXjpYV1wWGaMXlA
-         Q/7HcQvys0O3RtWSOxjhPayUeIBOBltQ1ddG68af1mq3yoUY/HrA5EQDJzrTztK65+xZ
-         nNY7Yq6bg7V7yW/F92tELFPCvE4O9eRA/jHTrprlXGI4yBh+9uAqfsZ+6r5+CkllP7hc
-         eXfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740229816; x=1740834616;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=J6s/YMcNE3VO47h7esumhnCOP/O09dk+lTINlLDts0c=;
-        b=Mqyecu8hDzZn2aDmmYj6S6VBTtcEgK0w0W7kK1cPsIz6X8qyUjbbiDPf4XwPuLkqnC
-         jYH4i0chqeOosWhij+V6lYQUmt4eC8Y6a3acVait/8j7BoOVVdrmH8Hjp0wWhP/0q4Uc
-         mOPsMLf1npXb2Y6ZUCu4ET3ycfvrfvLn7tau3OMa6mkNrKQ5SxeGJy+RU9qWtv92pVAT
-         KHT+vK8WEu2M7npb/Ps9ed0a0vUAdfcdkVo/QDmfmJuwCs+ik8k5gKFeSGmUlZAshU8q
-         gdLM7o4Fue7Nunsjp2FKLgRUNSgnO59iBM3uhC3/AvrSKavm7d0m3kSHkM/Q4bzhMqNx
-         O44g==
-X-Forwarded-Encrypted: i=1; AJvYcCVNGpULPU/hraJSkC0MbIUwb0r1uvX1ONkVxG0skSgEQW1zCesBjTBDO+dAaR4GYMHdX/o7wlJT5Njaflc=@vger.kernel.org, AJvYcCXu1sGBN3+bNFtZmNnNk+teVo4SFnhWh7kQJISpK9PuyiXBVeL8Tj1JsvYXLZksjeviOaudmaKIVkCIfpJddCI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUpBZ/s+/8jCrSBrm9/oydPVsCn+g5BwT3igmjJfQAAMoW3sy3
-	1j8zlGBG/xdF0ljeQVT6s4V4T2nJYGnaunbsvVkeXT2qFfUheIMyNGpWPuNS4KuqmZLNQB3psvp
-	Dy8U4LUtF3qpIQdKYqi8ecnfz3As=
-X-Gm-Gg: ASbGnctWJq0LFqcgeGbCy08S3d/JSXzJuOzFWsBnmKIDBw3kEzoJIu4lA4uocbNelNE
-	NHkT4W6yf15lf0ndCxkvDCNr4+ojK5scVSRprnT/LcAiK9ymQ1Z2CvmMNDucmmG5Iq/zL9Wfusf
-	kbVOTLM6A=
-X-Google-Smtp-Source: AGHT+IHwNzln5yKY10f/SLa7TyzzKb8WlyM1GP5KT5C0jwJzPvt1rxHzqxCiqNKDtD/05q4YnBuIqT4NRA9agZ18kGU=
-X-Received: by 2002:a2e:ad0a:0:b0:308:ec50:e828 with SMTP id
- 38308e7fff4ca-30a597723b7mr9409781fa.0.1740229815812; Sat, 22 Feb 2025
- 05:10:15 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="gTKOoqjo"
+Received: from [172.16.12.26] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id bdb96d2d;
+	Sat, 22 Feb 2025 19:57:15 +0800 (GMT+08:00)
+Message-ID: <eb46b2d8-a170-4813-963d-8509089f72fa@rock-chips.com>
+Date: Sat, 22 Feb 2025 19:57:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aIJ0ymzdUceCN05hwJpth4erH5u2SHYzYl52wGeT3uiO9bdk92ZkEmEEq9a9NXsInJYSz9uziwq-1fvdsXoeDA==@protonmail.internalid>
- <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
- <877c5mci3p.fsf@kernel.org> <5kF-NYTBZbEqnnQud5LKnRXO0lfM0i6I2PoeFrpKDhCYwUuk_bG2Li1T1Nuv82r3VFD8adTcdx7yenXSIfTwmw==@protonmail.internalid>
- <Z7eYp_vZo5yDVOdI@pavilion.home> <87frk7hera.fsf@kernel.org>
- <Z7hheOSAuKdhq-1C@pavilion.home> <CANiq72mpYoig2Ro76K0E-sUtP31fW+0403zYWd6MumCgFKfTDQ@mail.gmail.com>
-In-Reply-To: <CANiq72mpYoig2Ro76K0E-sUtP31fW+0403zYWd6MumCgFKfTDQ@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 22 Feb 2025 14:10:00 +0100
-X-Gm-Features: AWEUYZnbevjDVVDRQckK-fGJKC6w9oGW8ziT0fjdgnV8upF63x6-u8HZ3SJGxx0
-Message-ID: <CANiq72mCF51WP6R00_y93mCXJftj7tVSo=ej9a6K2-xcGy0Mdg@mail.gmail.com>
-Subject: Re: [PATCH v8 00/14] hrtimer Rust API
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	Thomas Gleixner <tglx@linutronix.de>, Miguel Ojeda <ojeda@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, Guangbo Cui <2407018371@qq.com>, 
-	Dirk Behme <dirk.behme@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, 
-	Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 08/14] drm/rockchip: analogix_dp: Add support to get
+ panel from the DP AUX bus
+To: Lucas Stach <l.stach@pengutronix.de>, heiko@sntech.de
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ rfoss@kernel.org, vkoul@kernel.org, sebastian.reichel@collabora.com,
+ cristian.ciocaltea@collabora.com, dmitry.baryshkov@linaro.org,
+ andy.yan@rock-chips.com, hjc@rock-chips.com, algea.cao@rock-chips.com,
+ kever.yang@rock-chips.com, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-phy@lists.infradead.org
+References: <20250123100747.1841357-1-damon.ding@rock-chips.com>
+ <20250123100747.1841357-9-damon.ding@rock-chips.com>
+ <cfc5b39e21fb214c53fda3276847b8e235af818f.camel@pengutronix.de>
+Content-Language: en-US
+From: Damon Ding <damon.ding@rock-chips.com>
+In-Reply-To: <cfc5b39e21fb214c53fda3276847b8e235af818f.camel@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0odQ1ZCQ09CGEhCQ0tMTklWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a952d84d7db03a3kunmbdb96d2d
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Njo6HDo6IzISGR8CThJLNRoh
+	GU8aCwhVSlVKTE9LSUlOT0hMSUlKVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFPSk5JNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=gTKOoqjoAKeFhXf1a8vmXg379vWYpEnKYnWD8KI0jK15KYdeKWwgwvp3kY0GK0x79LyCoTpcw+VSZq059SK53WSlCuP5TJKbYlTRYmQRY19EDQdLxuTeMVNBb+bqPTib5svQpS9eeXAMEptvdCAFFK74gn2utyUTVoD/0KO+uqw=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=wGmhqrAjYzagqI94aWqLld2LAsNs8E1/VGtS52n0S4U=;
+	h=date:mime-version:subject:message-id:from;
 
-On Sat, Feb 22, 2025 at 2:04=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> send PRs to anyone yet, but I think it would be a good time for him to
-> start learning how to apply patches himself etc.
+Hi Lucas,
 
-By this, I meant taking care of the usual maintainer bits, not just
-the actual "applying" (which he of course knows how to do!).
+On 2025/2/8 3:42, Lucas Stach wrote:
+> Hi Damon,
+> 
+> Am Donnerstag, dem 23.01.2025 um 18:07 +0800 schrieb Damon Ding:
+>> Move drm_of_find_panel_or_bridge() a little later and combine it with
+>> component_add() into a new function rockchip_dp_link_panel(). The function
+>> will serve as done_probing() callback of devm_of_dp_aux_populate_bus(),
+>> aiding to support for obtaining the eDP panel via the DP AUX bus.
+>>
+>> If failed to get the panel from the DP AUX bus, it will then try the other
+>> way to get panel information through the platform bus.
+>>
+> The changes in this patch effectively revert 86caee745e45
+> ("drm/rockchip: analogix_dp: allow to work without panel"). Please
+> correct this in the next revision of this patchset.
+> 
+> Regards,
+> Lucas
+> 
 
-If you decide to go for PRs from him to you, I am happy to help
-getting him up to speed if needed, too.
+Oh, I see. I will fix it in the next version.
 
-Cheers,
-Miguel
+>> Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
+>>
+>> ---
+>>
+>> Changes in v4:
+>> - Use done_probing() to call drm_of_find_panel_or_bridge() and
+>>    component_add() when getting panel from the DP AUX bus
+>>
+>> Changes in v5:
+>> - Use the functions exported by the Analogix side to get the pointers of
+>>    struct analogix_dp_plat_data and struct drm_dp_aux.
+>> - Use dev_err() instead of drm_err() in rockchip_dp_poweron().
+>>
+>> Changes in v6:
+>> - Keep drm_err() in rockchip_dp_poweron()
+>> - Pass 'dp' in drm_...() rather than 'dp->drm_dev'
+>> ---
+>>   .../gpu/drm/rockchip/analogix_dp-rockchip.c   | 37 ++++++++++++++-----
+>>   1 file changed, 28 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+>> index 13f32aeea7ca..004b1b68d1cf 100644
+>> --- a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+>> +++ b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
+>> @@ -393,11 +393,27 @@ static const struct component_ops rockchip_dp_component_ops = {
+>>   	.unbind = rockchip_dp_unbind,
+>>   };
+>>   
+>> +static int rockchip_dp_link_panel(struct drm_dp_aux *aux)
+>> +{
+>> +	struct analogix_dp_plat_data *plat_data = analogix_dp_aux_to_plat_data(aux);
+>> +	struct rockchip_dp_device *dp = pdata_encoder_to_dp(plat_data);
+>> +	int ret;
+>> +
+>> +	ret = drm_of_find_panel_or_bridge(dp->dev->of_node, 1, 0, &plat_data->panel, NULL);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = component_add(dp->dev, &rockchip_dp_component_ops);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>   static int rockchip_dp_probe(struct platform_device *pdev)
+>>   {
+>>   	struct device *dev = &pdev->dev;
+>>   	const struct rockchip_dp_chip_data *dp_data;
+>> -	struct drm_panel *panel = NULL;
+>>   	struct rockchip_dp_device *dp;
+>>   	struct resource *res;
+>>   	int i;
+>> @@ -407,10 +423,6 @@ static int rockchip_dp_probe(struct platform_device *pdev)
+>>   	if (!dp_data)
+>>   		return -ENODEV;
+>>   
+>> -	ret = drm_of_find_panel_or_bridge(dev->of_node, 1, 0, &panel, NULL);
+>> -	if (ret < 0 && ret != -ENODEV)
+>> -		return ret;
+>> -
+>>   	dp = devm_kzalloc(dev, sizeof(*dp), GFP_KERNEL);
+>>   	if (!dp)
+>>   		return -ENOMEM;
+>> @@ -434,7 +446,6 @@ static int rockchip_dp_probe(struct platform_device *pdev)
+>>   
+>>   	dp->dev = dev;
+>>   	dp->adp = ERR_PTR(-ENODEV);
+>> -	dp->plat_data.panel = panel;
+>>   	dp->plat_data.dev_type = dp->data->chip_type;
+>>   	dp->plat_data.power_on = rockchip_dp_poweron;
+>>   	dp->plat_data.power_off = rockchip_dp_powerdown;
+>> @@ -450,9 +461,17 @@ static int rockchip_dp_probe(struct platform_device *pdev)
+>>   	if (IS_ERR(dp->adp))
+>>   		return PTR_ERR(dp->adp);
+>>   
+>> -	ret = component_add(dev, &rockchip_dp_component_ops);
+>> -	if (ret)
+>> -		return ret;
+>> +	ret = devm_of_dp_aux_populate_bus(analogix_dp_get_aux(dp->adp), rockchip_dp_link_panel);
+>> +	if (ret) {
+>> +		if (ret != -ENODEV) {
+>> +			drm_err(dp, "failed to populate aux bus : %d\n", ret);
+>> +			return ret;
+>> +		}
+>> +
+>> +		ret = rockchip_dp_link_panel(analogix_dp_get_aux(dp->adp));
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>>   
+>>   	return 0;
+>>   }
+> 
+> 
+> 
+
+Best regards
+Damon
+
