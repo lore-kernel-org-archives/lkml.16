@@ -1,114 +1,80 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCFE13C81B;
-	Sat, 22 Feb 2025 16:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27FA13C81B;
+	Sat, 22 Feb 2025 16:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740242565; cv=none; b=Hg2HGsPzSshJoR4tgiMlR6wouSlVJzBkRBsuShq29zvQVl6sT9ZQksaxLNLe9mNC0M4l4DpblF+iEEun8jdsHOf32G+OXVw9T0Mv0N+6TDZ3FsIFT4tEIu04SpFRf948KN7xS03vHwVZ1fvugI2EhY/vjw5su1RDIFtZuCwkD6U=
+	t=1740242610; cv=none; b=hDho9NodL5Z4kA1DORG6/q2qnpPYjejXavvEAlXic3fl6hn5IF34TspQVEwC/Oe7HT6m57oqZJ8kgRv/KL12IJ6gooj+dJIA2uBgByhKpIxz3aDgE7yh9lZr4BroZqMoCMBOHwav6dJsspqxFA4A3basJT3bnyZuLefcIxI1cgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740242565; c=relaxed/simple;
-	bh=SXO4k/H90p6ze4MArtk+DGjYJ3EkjF4JI1PHOcPhQQA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kQMFtLiSUjZqwwEgwPUY/X3RPNEpBjjs1iERJIlkWqGK732I1yqKnTBztOvFzBh0K5L5oYAP9cVQTW5Y2Qv2TxIYCgbmkXVGFywqWGP10FLKeVjFOR7wYqv5mhRkVNKYrtuV/eEV5F6cMagGVrEMNSvMjN6eOOfzXjdNqHNuO28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EHcJxDVi; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740242610; c=relaxed/simple;
+	bh=L1mZNeCIvfsn418CJpCBd3oaduHwwkogqa54kPF2PjA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i9WfaU8UVft94Z220bA28EtetTuytQzZGWo+TVS1IOhrcaIfGgVxqcPpEcvwOxRoWFJvFNwBJMo+iBnJYPT51zxYqlFyBYO5F6SiXmZSkIXI0HBx7v2pihzApzutstv8Lzn5Ex3F1mOsieO3wx8+MUkff1ErLS1mP+rXFDiAkgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=HguWFOoX; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHcJxDVi"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-220c665ef4cso53128955ad.3;
-        Sat, 22 Feb 2025 08:42:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740242563; x=1740847363; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hfsEwmSd+3dd9HbNE1KVoLma0THOs7a+DQjZyXGopPg=;
-        b=EHcJxDViTh9bgvYK3NeCAkK/nEMq+48wDQE3NoXvmJ3nDNfTHVXRwxFzMznOwCLPc9
-         Ql2iAthnsx/EVS5ScjHq3oS4OZRII6KVIiKB0QOoGjZlZ56vcS84QCRfEEkgAjhoat/E
-         w9inY7sHzEQ2T2HDRxNlEWQYEPUMKmfAf2jR22ffovJa8Cis5+gqal9RmpKWllze2ihF
-         abrVq/HtSEma0R2juEkQNEV2w0EfBaWKaHu7D9XPbzOqTT6hJU7XpbUJJLWy+Wsf6Z1W
-         wzJMuO9eJN5/xFSw4jLLPdRkE8uxVMuYYfE+z0g5F5dXTuYii1i8m7xCmLb65WMQZ2iZ
-         cbng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740242563; x=1740847363;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hfsEwmSd+3dd9HbNE1KVoLma0THOs7a+DQjZyXGopPg=;
-        b=LIibBdGi8H/C20XB9zw8vpghGDgEF9FuqTMH9+irfmpSArDb4BuqBY860G88h/0Uqq
-         poj57d5eesVHTSH/oNVnOHpq2G76orCtpSdLSZWUUUBGtYpDuP+HymwtwZwM9y/gydQO
-         GFGG/cpMiq+zgp3wEgD7bAkx0eqm4uHE51kEcyK/gMhnvORlnM91tLqwJcyRFx8P9w7u
-         DwHVlKgkR1R8gAb7lqVKVMRkOHL/lBEJZBSS+WiPq/c3Wf3viUmOe6RUymaaWPMI70Hc
-         SrDnNqsx0yzDkdeQPtLNToMptJ6dD5YkP03Nsy+/4bbe/G5cXISx+fxjaXg868SL0CYJ
-         kXhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUDV9uB0jX+YHS425sq3YQZfAaKuFtSlKqOew8ywd+nwNDmOU7wzelxlxzUuuu5qhuQkmYqKG9MROA=@vger.kernel.org, AJvYcCW6L36xnnx3tyjDnhQNi7ebiQG87c2WNIzHEsgA7QUl0/alhPD0PHQ68ijD17kgNiYd2d8xLPr3Ihbi@vger.kernel.org, AJvYcCWum27aIO2DgqMxWB34HN3S2vswHJBRvyzgL6cZVhF2tVDEvIDZY3DCdIvg8mR3GnuIQVIRc+wMkfMeZUpY@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvBHhXuXR5RqU3wIGHBx9k+rFCyIbwSKKPTZwlL0xErggpUp9I
-	nI3iLGZsQbe46N6J8eMpwDVWE2ByI+JoNJJVWoCGSG8wVuuh8NiT
-X-Gm-Gg: ASbGncsLDDD98AfUNa4P/v44WtRl+WFu70uaticYdoTvsRK83IqDHGDMvjzB47LQB1w
-	dXQ0ZXJougBBC95kEdp/KTWgBMrxaZ6UzQB/BILdnr/6HcsfnMOgogmI07lFWLpnFiQK0CGdBpi
-	rXgDv9FkFR8fRrrGAeBgYJ3Z9n/kcKnx2Tgh+7MbtL9RnLfSc2fzcxebgAJUF2NikXgCrk5RhOz
-	/FXIwqBkO6YTNa/GQu3kRhbzvziLvk5N1efaKyuLLVJssNX5zy8EIr2b2xtIhvXmzblMkLJ5stb
-	BhQNGP9AB+4kj7BotSG3MMqpvDQNT1JmBaxn
-X-Google-Smtp-Source: AGHT+IFZZkcKFKwt5ckW2ZZB2hTWc+lkl3S+KFyclA3Ykcaxpqupy0ev5uu6ECgwlxoEM7JpUk2YzA==
-X-Received: by 2002:a05:6a00:174c:b0:732:6231:f2a3 with SMTP id d2e1a72fcca58-73426c8d3a7mr12626436b3a.3.1740242562871;
-        Sat, 22 Feb 2025 08:42:42 -0800 (PST)
-Received: from localhost ([2804:30c:1f21:4300:1cf6:c485:6555:b1c5])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73242568acesm18158944b3a.56.2025.02.22.08.42.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2025 08:42:41 -0800 (PST)
-Date: Sat, 22 Feb 2025 13:43:31 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	jic23@kernel.org, lars@metafoo.de, corbet@lwn.net,
-	dlechner@baylibre.com
-Subject: Re: [PATCH v4 1/1] Documentation: iio: Add ADC documentation
-Message-ID: <Z7n-s5yOD7D9t1Oi@debian-BULLSEYE-live-builder-AMD64>
-References: <e6ac2a595f06ba2d5ff0eb86e5895479c9dd797f.1739998491.git.marcelo.schmitt@analog.com>
- <Z7bn3TEC4faXbzEj@archie.me>
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="HguWFOoX"
+Received: from localhost.localdomain (unknown [IPv6:2a05:f6c2:511b:0:cbc0:999f:73ad:33bd])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 36E962E08EC1;
+	Sat, 22 Feb 2025 18:43:24 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1740242606;
+	bh=R34snHbWvdFAPt2gGr+NDVYXXncXippn9g9TO+/e1Ok=; h=From:To:Subject;
+	b=HguWFOoXcVlboMy1+IpohjqhqnYAOIkUA02wy4BZ0LcQHkHUs1g5t5OoWdNSRRlQR
+	 64/qa5rmQlwS/hkNTfBySw0zznghp+yIXZdDEHdYehf2lvezRcc8jaSWL79bHqXuni
+	 Gq+3HmjzQys4+74dWxvei56E/GHQE+F2V4GbjLSI=
+Authentication-Results: linux1587.grserver.gr;
+	spf=pass (sender IP is 2a05:f6c2:511b:0:cbc0:999f:73ad:33bd) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: linux-kernel@vger.kernel.org,
+	linux-input@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [PATCH 0/5] drm: panel-orientation-quirks: Add 2024 OneXPlayer line &
+ ZOTAC Zone orientation quirks
+Date: Sat, 22 Feb 2025 17:43:16 +0100
+Message-ID: <20250222164321.181340-1-lkml@antheas.dev>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7bn3TEC4faXbzEj@archie.me>
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <174024260593.17001.10533932745276244185@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-On 02/20, Bagas Sanjaya wrote:
-> On Wed, Feb 19, 2025 at 06:00:56PM -0300, Marcelo Schmitt wrote:
-> > +For a **single-ended bipolar** channel, the analog voltage input can go from
-> > +-VREF to +VREF (where -VREF is the voltage reference that has the lower
-> > +electrical potential while +VREF is the reference with the higher one). Some ADC
-> > +chips derive the lower reference from +VREF, others get it from a separate
->                                                   "... obtain it ..."
-Ack. Maybe, if there are no additional suggestions to the docs, Jonathan can
-tweak this while applying the patch? Otherwise I'll change accordingly on v5.
+A number of OneXPlayer handhelds have come out with portrait panels.
+Specifically, those are the X1 AMD and Intel variants, X1 Mini, and F1 Pro.
+For X1 specifically, they also have spurious battery reporting within their
+digitizer. The Zotac Gaming Zone also has a portrait OLED panel, so add
+that as well.
 
-> > +input. Often, +VREF and -VREF are symmetric but they don't need to be so. When
-> > +-VREF is lower than system ground, these inputs are also called single-ended
-> > +true bipolar. Also, while there is a relevant difference between bipolar and
-> > +true bipolar from the electrical perspective, IIO makes no explicit distinction
-> > +between them.
-> > +
-> > <snipped>...
-> > +In the ADC driver, ``differential = 1`` is set into ``struct iio_chan_spec`` for
-> > +the channel. Even though, there are three general input types, ``differential``
-> > +is only used to distinguish between differential and not differential (either
->                                                    "... non-differential ..."
-Ack. Same as the other suggestion.
+Antheas Kapenekakis (5):
+  drm: panel-orientation-quirks: Add OneXPlayer X1 AMD and Intel quirk
+  drm: panel-orientation-quirks: Add OneXPlayer X1 Mini (AMD) quirk
+  drm: panel-orientation-quirks: Add OneXPlayer F1Pro quirk
+  HID: Add quirk to ignore the touchscreen battery on OneXPlayer X1
+  drm: panel-orientation-quirks: Add Zotac Gaming Zone quirk
 
-> > +single-ended or pseudo-differential) input types. See
-> > +``include/linux/iio/iio.h`` for more information.
-> 
-> Thanks.
-> 
-> -- 
-> An old man doll... just what I always wanted! - Clara
+ .../gpu/drm/drm_panel_orientation_quirks.c    | 42 +++++++++++++++++++
+ drivers/hid/hid-ids.h                         |  1 +
+ drivers/hid/hid-input.c                       |  2 +
+ 3 files changed, 45 insertions(+)
 
+-- 
+2.48.1
 
-Thanks,
-
-Marcelo
