@@ -1,85 +1,124 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from mail2.medvecky.net (mail2.medvecky.net [85.118.132.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FBAA1D63D3
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 20:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17AA1D63D3;
+	Sat, 22 Feb 2025 20:50:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.118.132.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740257393; cv=none; b=XLfvGu79Uhi8uVGX12+/pFeMlrV4O5w4lG5BEIzes0h1voamry1DzggKv76NANvODQ0uHaz7E1nfjdxVufbUZyeBFcMVVC87ox1YtFUjYWmWo9Dol+gTnll3KY3tjWkahYpgdSnD6DOGGpBDG1V0vwaII4Fyvoc6Ov14eR3zcbg=
+	t=1740257444; cv=none; b=DuMDz2QEcgVNdL4xVDE+YgDSG8CeE5aX65FZioQPc6GRoW3BG6kKMMUqdFrMFdREey3DTBRugqEh9m+zEilWWNeNGCNLQZve86bYOTmOGtouQqJwEDrEe6eo+udJ38o1rTl4X2Ph/KFReTZqYERXN8xBVK+F8BQPmyklPervDvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740257393; c=relaxed/simple;
-	bh=3w7H+jIo6otmlxFlbAf99skQW2XjsB2m65ucYf3JZIc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KK0It+tSBgV9IUUQHEA8NBoDI/7OeJetfi6cWfMqoQP55X3MOHIeOUKIVSqjVW958U0dSo7+PEl58lQTc/s0qNF/MXEvJfqCAbM4jPLjn0HNUXdzsuzysGm6rGN8THy++aQ45BuF3wqIkcU/Zja73lYXkDdN4JSLZLd8ikiyAuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SJdqWBsA; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SJdqWBsA"
-Date: Sat, 22 Feb 2025 15:49:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740257379;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=M7irQiW8qwpyGnceNIn1BMN3Gn6knqxNjwqf8h3sTCA=;
-	b=SJdqWBsAeInXO2zAEudB778i4wO1QtTa8o0ealGUml6aoGRRvC0I5jXiz70jL5XKuLl/qX
-	KZw6PAWt1HM1Le2aKZj7VhUEJyfqxPkDvaRc+qGEbc/SwJoXVgDEDp88cSz9nASWYtzluK
-	JqraK7DImGF/lRoJegdm399Lci3KVJY=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Ventura Jack <venturajack85@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	torvalds@linux-foundation.org, airlied@gmail.com, boqun.feng@gmail.com, 
-	david.laight.linux@gmail.com, ej@inai.de, gregkh@linuxfoundation.org, hch@infradead.org, 
-	hpa@zytor.com, ksummit@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, Ralf Jung <post@ralfj.de>
-Subject: Re: C aggregate passing (Rust kernel policy)
-Message-ID: <lz7hsnvexoywjgdor33mcjrcztxpf7lzvw3khwzd5rifetwrcf@g527ypfkbhp2>
-References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
- <20250222141521.1fe24871@eugeo>
- <CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
- <6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
- <CANiq72mdzUJocjXhPRQEEdgRXsr+TEMt99V5-9R7TjKB7Dtfaw@mail.gmail.com>
+	s=arc-20240116; t=1740257444; c=relaxed/simple;
+	bh=kcHyPYJb28bHH5abHA7/j70IiajgjFyIlnoc2KlKKqo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oTniV5vCKmoL7HK7/Vcdf41HSsQ/Juv8JgakIAH0Dys6bfbwNd6PnFHIVrcV8Eq0l5O3mXJulJgcbF9Fcy/1Bxzppxs16MWan5iURB2L0XDmkoEpt/8inyN+zrc48rGguvoSrxN8PFeJiKRWSppz32/6nO7s08NfH7aWvik1n6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=assembler.cz; spf=pass smtp.mailfrom=assembler.cz; arc=none smtp.client-ip=85.118.132.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=assembler.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=assembler.cz
+Message-ID: <e46ca730-8858-4f57-bdd0-2fd0db086500@assembler.cz>
+Date: Sat, 22 Feb 2025 21:43:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Subject: Re: [RFC] Circumventing FineIBT Via Entrypoints
+To: Andrew Cooper <andrew.cooper3@citrix.com>, Jann Horn <jannh@google.com>
+Cc: jmill@asu.edu, joao@overdrivepizza.com, luto@kernel.org,
+ samitolvanen@google.com, "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ linux-hardening@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+ x86 maintainers <x86@kernel.org>
+References: <CAG48ez09JuZPt112nnE6N=hS6cfCLkT-iHUAmidQ-QGNGMVoBw@mail.gmail.com>
+ <c46f5614-a82e-42fc-91eb-05e483a7df9c@citrix.com>
+ <CAG48ez0h0wUS6y+W1HTOwN14V95gKmmFZ_2TamAX+JKTmXT=DA@mail.gmail.com>
+ <1cf8d5a5-bf3e-4667-bc6a-d1b1d662d822@citrix.com>
+Content-Language: en-US
+From: Rudolf Marek <r.marek@assembler.cz>
+Autocrypt: addr=r.marek@assembler.cz; keydata=
+ xsBNBFN2VH4BCADpv+3Tkikr+X489Xso9UC719YdxgGiy0xBjDiWC22wAd3tHy6G3nEhWfh4
+ 1UNGcqscPAvJMn2GhgSJRfBzj0wALXLkoTYta78wEK+Ji+Gs7PX9VhqRKt9/OIn/2XJ1Yv9i
+ e8uo9MFBGFCB5roz+Ws8rdXq0Quu7VZylzRv7qqhxMAk9RvXCT2tyt6XY16R7ZEL9wbSLRAl
+ h8LRPMF0iiLH1YenfSCX2XkW7eA7CJSjh9pwIBFOF5cd5mcT69OPO+TuAbdvgCcZPEoQQBhk
+ QmOr2PlUOl3CSgqtTxjAjAxXhPTU7Q3xxgB2Oa7xbt3Eic2Z4lltP/dowULZqXvsC5DxABEB
+ AAHNI1J1ZG9sZiBNYXJlayA8ci5tYXJla0Bhc3NlbWJsZXIuY3o+wsCVBBMBCgA/AhsjBgsJ
+ CAcDAgYVCAIJCgsEFgIDAQIeAQIXgBYhBJmYg4ih63dUUwlgxcBvbatkz11wBQJnOaU1BQkV
+ pALyAAoJEMBvbatkz11wgYUH/2Cs+hmNUj5f8z1xI8O07OL8KfxiWAv1DVq+QEGsbhdub/pH
+ cNbCP52hioIjr48ylpE4PriuxPxC5zd6/s/z1fJQXPc2rd9xfKMsC7ZmpIjfzTzoX9JuINhW
+ cwY+SFXOFuVUT2UacaowLTVX1NVevLhqb1wxSgGe1KAyqWBllrUYI/tqDF20MuzYDkuL0TdJ
+ fSk3mfrF+GWG7DSzH27kwmY1ui4QUnW7PQ23c56xuRAtRDPhTgaglk52Pz7IsQHfy8rPZmTE
+ jFTaN6kdW324wZYGYJBCriffNaIekz+C+i7aRivABNpeAY2O5ae6qcZknalGrU71M8p2TULA
+ tSGNCc7OwE0EU3ZUfgEIAOyD3W4D+aaXoA875pbKqSI+MQ2t5PYNPaCahoSSnTuNmvM1xCsv
+ I2EaGwfr5S0IktX1g0dt8lvvCx9eZeEhGH5NBgsmWtTi0Gq9UHQXbj4wQAV23/X+MCZqKFFl
+ Yp0T86C23RhXsEQp8mTYpnGsbjAsHgaDnuQj5pWahVGXv9aYzjomk4mEGq8jr8/D9kgOEll+
+ s5cIJYzeliPHR+2SRQs+XoTp1e/dXs310xXhuo2Pg8N/Kym0WhWjTYBuUeoyaYFDYtwj6jkc
+ 2baI/JOSUoyarxnmRuVcNHoZd7as7lzmPS9Dqrm5LJVrfQk0lx+XaJRPZqQW/uf5FFaGXIIi
+ 2OkAEQEAAcLAhgQYAQoAJgIbDBYhBJmYg4ih63dUUwlgxcBvbatkz11wBQJnOaU1BQkVpALy
+ ABQJEMBvbatkz11wCRDAb22rZM9dcA/zCADBJl5FizQY1GWQ0hdaRLpFelc5TMnB58LQXLs+
+ b0cbCGHSCYdB8u4EwBcMF55qF2MT6Owd7ydjFoLY7WdQYcorbMPw91LFqLEuA/mQnaWtrSV5
+ XyBcFHIRNH1ZtHL+28ywyDZY0GE13R3IoNh8E25JFeEBdR5uWH/1+Y7v3VCFkDp8VX3Pa+66
+ AyicyWjrWKf0ADPWcAuyF8kVqJv+61FnOUE9M/23CNp5y+9cWJnViYK015c9l04xdrcwPra9
+ XVGi/hKZ6EIEiqFa55LHmoB4QLOYbYVC9xMoDnKYDuBfU4VlyTe6//eSRHc3wer7/avb1gKC
+ EDihgW9OFim1SsU6
+In-Reply-To: <1cf8d5a5-bf3e-4667-bc6a-d1b1d662d822@citrix.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72mdzUJocjXhPRQEEdgRXsr+TEMt99V5-9R7TjKB7Dtfaw@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Authentication-Results: mail2.medvecky.net;
+	auth=pass smtp.mailfrom=r.marek@assembler.cz
+X-Spamd-Bar: /
 
-On Sat, Feb 22, 2025 at 08:41:52PM +0100, Miguel Ojeda wrote:
-> On Sat, Feb 22, 2025 at 7:54 PM Kent Overstreet
-> <kent.overstreet@linux.dev> wrote:
-> >
-> > I believe (Miguel was talking about this at one of the conferences,
-> > maybe he'll chime in) that there was work in progress to solidify the
-> > aliasing and ownership rules at the unsafe level, but it sounded like it
-> > may have still been an area of research.
+Hi,
+
+Dne 13. 02. 25 v 3:42 Andrew Cooper napsal(a):
+> The SYSCALL behaviour TLDR is:
 > 
-> Not sure what I said, but Cc'ing Ralf in case he has time and wants to
-> share something on this (thanks in advance!).
-
-Yeah, this looks like just the thing. At the conference you were talking
-more about memory provenance in C, if memory serves there was cross
-pollination going on between the C and Rust folks - did anything come of
-the C side?
-
+>      %rcx = %rip
+>      %r11 = %eflags
+>      %cs = fixed attr
+>      %ss = fixed attr
+>      %rip = MSR_LSTAR
 > 
-> From a quick look, Tree Borrows was submitted for publication back in November:
-> 
->     https://jhostert.de/assets/pdf/papers/villani2024trees.pdf
->     https://perso.crans.org/vanille/treebor/
+> which means that %rcx (old rip) is the only piece of state which
+> userspace can't feasibly forge (and therefore could distinguish a
+> SYSCALL from user vs kernel mode), yet if we're talking about a JOP
+> chain to get here, then %rcx is under attacker control too.
 
-That's it.
+The SYSCALL instruction also provides means to create "incoherent" state of the processor selectors
+where the value of selector do not match pre-loaded values in the descriptor caches.
 
-This looks fantastic, much further along than the last time I looked.
-The only question I'm trying to answer is whether it's been pushed far
-enough into llvm for the optimization opportunities to be realized - I'd
-quite like to take a look at some generated code.
+Would it work to have KERNEL_CS as last entry in the GDT table? Therefore executing SYSCALL would set the CS as usual,
+but the numeric value of SS selector would be larger than GDT limit?
+
+That would mean that "impossible" selector is loaded into SS if we came from usermode,
+but operation with stack would still work as the descriptor caches will be sane.
+The "impossible" selector value can be fixed by loading SS with NULL which is cheap.
+
+The check in hotpath could maybe use VERR %SS which would fail because of GDT limit is reached. The VERR with mem operand
+does not use any GPR!
+
+Or simply check for "impossible" selector would work if we misuse zeros in high32 of R11 (usermode rflags) maybe like:
+
+entry:
+endbr64
+rol $32, %r11
+movw %ss, %r11w
+cmpw $IMPOSSIBLE_SEL, %r11w
+jnz panic
+; load null to SS, fix R11 and pretend above never happened
+
+If attacker would execute SYSCALL in the kernel, likely we could check the %RCX if it is OK or not?
+
+Bit variation to this "theme" would be to have SYSCALL SS GDT entry still in the GDT but set as "not present".
+Another brainstorm idea would be to misuse RFLAGS.ID and clear it in MSR FMASK but run kernel or most of it with RFLAGS.ID set.
+I don't know what is the threat model you are trying to fix.
+
+Lets fight x86 insanity with yet another x86 insanity - I think it is fair.
+
+I hope above helps or at least I will learn why not if I overseen something obvious!
+
+I tried to CC all the lists. I'm not subscribed.
+
+Thanks,
+Rudolf
+
+PS: I'm leaving as an exercise to a reader NMI and #MC handling!
+
