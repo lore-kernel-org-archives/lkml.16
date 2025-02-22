@@ -1,382 +1,117 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8993BA53;
-	Sat, 22 Feb 2025 07:01:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C7C1FCFE2
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 07:12:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740207693; cv=none; b=uly2GXVeSNL98rgfIuksq6mJnPZ8WGnOLeFqzFJavnX9u09iSOMBHnkYz62XmxxHbKeiF71lgpBSRi8yMuzvCurMicaYqy5IMx9dFFVuC6nr8m8NEgbYAZsDirX3NGia5ThrGmhexFLR+BJgm2/i+DRJ00s50WLJTwTTh4VHF/g=
+	t=1740208354; cv=none; b=h84HEHyoO1uYx8dMJiNzvG/F34LaiQRbHMwSImpwDU0BDUJE3aM1YGwixvtgmTS53iWy2GiC0ssS+iB/y/vVNR3eYgWZ4PCn98HT4ReQ21NewhDE+3wZu/O2BjH0fAPjaz+4suKqwPSv1MFuTwaDx9OFK4sDoc0zFsf7M176a7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740207693; c=relaxed/simple;
-	bh=H4jdMRxo1QjBWmBc/XIad1TOgfrF2BAX7T+Pj7rAqnQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HbX9cF6szgtYm3y6InJWmMVsFu6hxmjHKWVdAw+7sSsrTPeVKFq/CEcHxsdSeb8PfTDcKKDZ5qh7MHQ1/7I0VNNGL9YBQo26yb6jUQ6ZV93GoAVasCo7+BfSvGigOtf7F0iemhDn5/UWB3ATYT7Fpsp7sZGoznDSZQ6AiRR44mY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h2GipyJY; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h2GipyJY"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-38f22fe8762so1413629f8f.2;
-        Fri, 21 Feb 2025 23:01:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740207690; x=1740812490; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YZgaXAfibSbQ7l2mvjMR0J8qG7gm2e4rN1eNLdGzk9c=;
-        b=h2GipyJY/0vYL6L+8RSi+LCRisEdme7gfv7djpQYKgoouwTjmzrLF2a+/9+9PDp1SE
-         9htPhNZKnE/uyYF7JlyIRFWwU/9douozxN4+40uxZPU4JUf9bv+ZbV4mNQlKCcJxhD33
-         wT7xMJ1wmZ6bPOzwlgonVkfs024lGw5z6NSuH6htMuFqbDOlNhWIV41gfKIJ+twDm/KC
-         93XKUQIJ1PLgi2b/vZOhYk2557bdSgsro9a3oyGTVjmsmE85MpJwYB8fcySKYY/+fcNH
-         Gs3W1m85KmeXoXhJp/5EPx7IGqlm+i+Q3w6fpc0C6MA+G+ZcfVq0HbykdLXLQRoiX7wq
-         fYeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740207690; x=1740812490;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YZgaXAfibSbQ7l2mvjMR0J8qG7gm2e4rN1eNLdGzk9c=;
-        b=oe4OeZR1Mss42r/Btk9JLxtI/nv/dHgr7FNww8gYn4difcvARTffuE7c3nD+z+gVNf
-         c65JEQY+0xsCIovPpA7Ix/qi4eiKjMimLLL/0P9g28p/G/xVjD8pMiHIYeWDAdgqVKMT
-         tNUnqoDnb9RSQa5qtY1qFCN6OT6UA68bnXkdX6mN13MyqckI+dEaVMBZXfG/gKyKLTOa
-         j4NHf+EGiFIhGrjGoFlX0tzLcndm8HKwJRlT2E6hzUWQNwQmgJnyEtrVHKtl4QVXymqd
-         UISA4lDaJfFRzmwQgPq8JOwbT62G+0mzA4pon25FNHc4RSHMBd/L7h18Ipq8gakaFk0q
-         vS4g==
-X-Forwarded-Encrypted: i=1; AJvYcCUqFpZn9I9oxyMP/ALOg2hVe50LcthHgSLA5r8ZC1dFjmuweISc3Ly6kFjQ4Y0tQE7uq+tmdHuxnQn+@vger.kernel.org, AJvYcCVbzgWnM+BZF9eKc3TGxjaynJEx7E32qw088oH5m+fjkgtytUvv4ZrRtH5Vyy+R9Lb7udnfs6b6diMVbw==@vger.kernel.org, AJvYcCVeYrXRsc2jX8cgq/xjVeJS7ONcRExaFRtp9YkyqbCCaVwr2M+ewq1QN4rWf+++rnFuxZlJOVgm+Cl0@vger.kernel.org, AJvYcCW04x6sfH/G7GTjVzQwnVq9H43TV1jXpnmc8JKAYva2kzXgeHzJYaSgqQeDPgB+SNr4x8Dj25Meb+BQfTso@vger.kernel.org, AJvYcCXwAiTGoi5BoGDhr+PVYPQcv7quh5CsiAZsNqF27/EIQ6TsBMmmx5x+G5G7eokT8rfLwbmuYPQlZsUX02Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwF5QOBPrRcq2ugDYJDN9m9dSOaJ/Y+56gsws5AVNAk8OaBnr0
-	RmL/qRksbjS7nabtF/A0dr8qarzJ343UVAVCifYviY6pTe3eyy4KBP+YG20GwE/ixk3O4A1C6qc
-	ZCKK7MaY7WtjQarUIAYvNIp30sQ4=
-X-Gm-Gg: ASbGncvAwW1EifIIxvr3gxJTdfXK+JxGStqNjDgZx4YslYboW5RZPiklQrheACwRsTt
-	xkXLSY3gOz50zH2D2suowLRfDZO6RjVTVA8eA1zv25H/QhF3DuN+suDk1tbJsDnCnM2EB679xMD
-	ge/41VJ9da
-X-Google-Smtp-Source: AGHT+IEzStifYtOl7w0GKF2BwVUJFZAktJ1NZ9hcUTHRiwa9w046uG0bAkyJ5cymoxomlrlW6FbZ4Gbbv15AaJ4zE1Q=
-X-Received: by 2002:a05:6000:881:b0:38f:2b77:a9f3 with SMTP id
- ffacd0b85a97d-38f6f08b157mr3898361f8f.43.1740207689787; Fri, 21 Feb 2025
- 23:01:29 -0800 (PST)
+	s=arc-20240116; t=1740208354; c=relaxed/simple;
+	bh=Mn60az/QQlpq+cUO4+lmKvt2lCoarwt3UUdR5XG1++k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fwJOnyT/oCIJOI99D9e7xvIApoRetxmxPlYXe33xWLiuc256oBXHPYagXDco2ibYmPE+C2vkyO0HqLl04xXApEzSsWtnznbruY6A8fIw+h2cr8EliZgKQu3VQoV0VXUBs9NDIHCXFZIxoL3fexDn4yjTMlnuomftSfMh7WZwxBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Z0J8k0jxwz4f3lDc
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 15:12:06 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 365641A058E
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 15:12:29 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.101.6])
+	by APP2 (Coremail) with SMTP id Syh0CgBHBWjaeLlnrTsjEg--.26688S5;
+	Sat, 22 Feb 2025 15:12:29 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: akpm@linux-foundation.org,
+	kasong@tencent.com
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 3/6] mm, swap: avoid BUG_ON in relocate_cluster()
+Date: Sun, 23 Feb 2025 00:08:47 +0800
+Message-Id: <20250222160850.505274-4-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20250222160850.505274-1-shikemeng@huaweicloud.com>
+References: <20250222160850.505274-1-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250218132702.114669-1-clamor95@gmail.com> <20250218132702.114669-2-clamor95@gmail.com>
- <20250221203803.GA24813-robh@kernel.org>
-In-Reply-To: <20250221203803.GA24813-robh@kernel.org>
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-Date: Sat, 22 Feb 2025 09:01:18 +0200
-X-Gm-Features: AWEUYZki6IoNxhM-igHwUWvNu_ZXweCvGGjDZ5X_mIFKa8Wopm6RhDiQcCJNax8
-Message-ID: <CAPVz0n2wRu3X82nrnEac+XP+Q8uQMVwBLhGUaoqOLLf-V5dZfg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: mfd: Document TI LM3533 MFD
-To: Rob Herring <robh@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Pavel Machek <pavel@ucw.cz>, Daniel Thompson <danielt@kernel.org>, 
-	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-iio@vger.kernel.org, linux-leds@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgBHBWjaeLlnrTsjEg--.26688S5
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ar17GFW7JF45GrW5Cr1xZrb_yoW8XFW3pr
+	1fKF98tF4xtr4kGw45A3Z3JayrGw40gry5Gay3Xr1fCasxZr4xKFyvyr9avr98GF4kCa4D
+	ZF1DKa4xuFn8A3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
+	8IrcIa0xkI8VA2jI8067AKxVWUWwA2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK
+	0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4
+	x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l
+	84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU3G-eDUUUU
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-=D0=BF=D1=82, 21 =D0=BB=D1=8E=D1=82. 2025=E2=80=AF=D1=80. =D0=BE 22:38 Rob =
-Herring <robh@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5:
->
-> On Tue, Feb 18, 2025 at 03:26:59PM +0200, Svyatoslav Ryhel wrote:
-> > Add bindings for the LM3533 - a complete power source for
-> > backlight, keypad, and indicator LEDs in smartphone handsets.
-> > The high-voltage inductive boost converter provides the
-> > power for two series LED strings display backlight and keypad
-> > functions.
-> >
-> > Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-> > ---
-> >  .../devicetree/bindings/mfd/ti,lm3533.yaml    | 231 ++++++++++++++++++
-> >  1 file changed, 231 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/ti,lm3533.yam=
-l
-> >
-> > diff --git a/Documentation/devicetree/bindings/mfd/ti,lm3533.yaml b/Doc=
-umentation/devicetree/bindings/mfd/ti,lm3533.yaml
-> > new file mode 100644
-> > index 000000000000..83542f0c7bf7
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/ti,lm3533.yaml
-> > @@ -0,0 +1,231 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/mfd/ti,lm3533.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: TI LM3533 Complete Lighting Power Solution
-> > +
-> > +description: |
->
-> Use '>' rather than '|' if only formatting is paragraphs.
->
+If allocation is racy with swapoff, we may call free_cluster for cluster
+already in free list and trigger bug on as following:
+Allocation                        Swapoff
+cluster_alloc_swap_entry
+ ...
+ /* may get a free cluster with offset */
+ offset = xxx;
+ if (offset)
+  ci = lock_cluster(si, offset);
 
-yaml check did not complain, fine.
+                                  ...
+                                   del_from_avail_list(p, true);
+                                    si->flags &= ~SWP_WRITEOK;
 
-> > +  The LM3533 is a complete power source for backlight,
-> > +  keypad, and indicator LEDs in smartphone handsets. The
-> > +  high-voltage inductive boost converter provides the
-> > +  power for two series LED strings display backlight and
-> > +  keypad functions.
->
-> Wrap lines at 80
->
+  alloc_swap_scan_cluster(si, ci, ...)
+   ...
+   /* failed to alloc entry from free entry */
+   if (!cluster_alloc_range(...))
+    break;
+   ...
+   /* add back a free cluster */
+   relocate_cluster(si, ci);
+    if (!ci->count)
+     free_cluster(si, ci);
+      VM_BUG_ON(ci->flags == CLUSTER_FLAG_FREE);
 
-Checkpatch and yaml check do not complain, why? 80 char limit was removed, =
-no?
+Despite bug_on could be triggered, call free_cluster() for free cluster
+only move cluster to tail of list and should be fine.
 
-> blank line here
->
-> > +  https://www.ti.com/product/LM3533
-> > +
-> > +maintainers:
-> > +  - Svyatoslav Ryhel <clamor95@gmail.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: ti,lm3533
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  '#address-cells':
-> > +    const: 1
-> > +
-> > +  '#size-cells':
-> > +    const: 0
-> > +
-> > +  enable-gpios:
-> > +    description: GPIO to use to enable/disable the backlight (HWEN pin=
-).
-> > +    maxItems: 1
-> > +
-> > +  ti,boost-ovp-microvolt:
-> > +    description:
-> > +      Boost OVP select (16V, 24V, 32V, 40V)
-> > +    enum: [ 16000000, 24000000, 32000000, 40000000 ]
-> > +    default: 16000000
-> > +
-> > +  ti,boost-freq-hz:
-> > +    description:
-> > +      Boost frequency select (500KHz or 1MHz)
-> > +    enum: [ 500000, 1000000 ]
-> > +    default: 500000
-> > +
-> > +  light-sensor@0:
-> > +    type: object
-> > +    description:
-> > +      Properties for an illumination sensor.
-> > +
-> > +    properties:
-> > +      compatible:
-> > +        const: ti,lm3533-als
-> > +
-> > +      reg:
-> > +        const: 0
-> > +
-> > +      ti,resistor-value-ohm:
-> > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > +        description: |
->
-> Don't need '|'. Elsewhere too.
->
-> > +          Internal configuration resister value when ALS is in Analog =
-Sensor
-> > +          mode and PWM mode is disabled.
-> > +        minimum: 1575
-> > +        maximum: 200000
-> > +
-> > +      ti,pwm-mode:
-> > +        type: boolean
-> > +        description: |
-> > +          Switch for mode in which ALS is running. If this propertly i=
-s
-> > +          set then ALS is running in PWM mode, internal resistor value=
- is
-> > +          set to high-impedance (0) and resistor-value-ohm propertly i=
-s
-> > +          ignored.
-> > +
-> > +    required:
-> > +      - compatible
-> > +      - reg
-> > +
-> > +    additionalProperties: false
->
-> Move this above 'properties'.
->
+Check cluster is not free before calling free_cluster() in
+relocate_cluster() to avoid bug_on.
 
-yaml check did not complain. additionalProperties is always set after
-all properties description, no?
+Fixes: 3b644773eefda ("mm, swap: reduce contention on device lock")
+Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+---
+ mm/swapfile.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - '#address-cells'
-> > +  - '#size-cells'
-> > +  - enable-gpios
-> > +
-> > +patternProperties:
-> > +  "^backlight@[01]$":
-> > +    type: object
-> > +    description:
-> > +      Properties for a backlight device.
-> > +
-> > +    $ref: /schemas/leds/backlight/common.yaml#
-> > +
-> > +    properties:
-> > +      compatible:
-> > +        const: ti,lm3533-backlight
-> > +
-> > +      reg:
-> > +        description: |
-> > +          The control bank that is used to program the two current sin=
-ks. The
-> > +          LM3533 has two control banks (A and B) and are represented a=
-s 0 or 1
-> > +          in this property. The two current sinks can be controlled
-> > +          independently with both banks, or bank A can be configured t=
-o control
-> > +          both sinks with the led-sources property.
-> > +        minimum: 0
-> > +        maximum: 1
-> > +
-> > +      default-brightness: true
-> > +
-> > +      ti,max-current-microamp:
-> > +        description:
-> > +          Maximum current in =E6=B8=99 with a 800 =E6=B8=99 step.
-> > +        enum: [ 5000, 5800, 6600, 7400, 8200, 9000, 9800,
-> > +                10600, 11400, 12200, 13000, 13800, 14600,
-> > +                15400, 16200, 17000, 17800, 18600, 19400,
-> > +                20200, 21000, 21800, 22600, 23400, 24200,
-> > +                25000, 25800, 26600, 27400, 28200, 29000,
-> > +                29800 ]
-> > +        default: 5000
-> > +
-> > +      ti,pwm-config-mask:
-> > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > +        description: |
-> > +          Control Bank PWM Configuration Register mask that allows to =
-configure
-> > +          PWM input in Zones 0-4
-> > +          BIT(0) - PWM Input is enabled
-> > +          BIT(1) - PWM Input is enabled in Zone 0
-> > +          BIT(2) - PWM Input is enabled in Zone 1
-> > +          BIT(3) - PWM Input is enabled in Zone 2
-> > +          BIT(4) - PWM Input is enabled in Zone 3
-> > +          BIT(5) - PWM Input is enabled in Zone 4
-> > +
-> > +      ti,linear-mapping-mode:
-> > +        description: |
-> > +          Enable linear mapping mode. If disabled, then it will use ex=
-ponential
-> > +          mapping mode in which the ramp up/down appears to have a mor=
-e uniform
-> > +          transition to the human eye.
-> > +        type: boolean
-> > +
-> > +      ti,hardware-controlled:
-> > +        description: |
-> > +          Each backlight has its own voltage Control Bank (A and B) an=
-d there are
-> > +          two HVLED sinks which by default are linked to respective Ba=
-nk. Setting
-> > +          this property will link both sinks to a Control Bank of back=
-light where
-> > +          property is defined.
-> > +        type: boolean
-> > +
-> > +    required:
-> > +      - compatible
-> > +      - reg
-> > +
-> > +    additionalProperties: false
-> > +
-> > +  "^led@[0-3]$":
-> > +    type: object
-> > +    description:
-> > +      Properties for a led device.
-> > +
-> > +    $ref: /schemas/leds/common.yaml#
-> > +
-> > +    properties:
-> > +      compatible:
-> > +        const: ti,lm3533-leds
-> > +
-> > +      reg:
-> > +        description:
-> > +          4 led banks
-> > +        minimum: 0
-> > +        maximum: 3
-> > +
-> > +      linux,default-trigger: true
-> > +
-> > +      ti,max-current-microamp:
-> > +        description:
-> > +          Maximum current in =E6=B8=99 with a 800 =E6=B8=99 step.
-> > +        enum: [ 5000, 5800, 6600, 7400, 8200, 9000, 9800,
-> > +                10600, 11400, 12200, 13000, 13800, 14600,
-> > +                15400, 16200, 17000, 17800, 18600, 19400,
-> > +                20200, 21000, 21800, 22600, 23400, 24200,
-> > +                25000, 25800, 26600, 27400, 28200, 29000,
-> > +                29800 ]
-> > +        default: 5000
-> > +
-> > +      ti,pwm-config-mask:
-> > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > +        description:
-> > +          Same descryption and function as for backlight.
-> > +
-> > +    required:
-> > +      - compatible
-> > +      - reg
-> > +
-> > +    additionalProperties: false
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/gpio/gpio.h>
-> > +
-> > +    i2c {
-> > +        #address-cells =3D <1>;
-> > +        #size-cells =3D <0>;
-> > +
-> > +        led-controller@36 {
-> > +            compatible =3D "ti,lm3533";
-> > +            reg =3D <0x36>;
-> > +
-> > +            enable-gpios =3D <&gpio 110 GPIO_ACTIVE_HIGH>;
-> > +
-> > +            ti,boost-ovp-microvolt =3D <24000000>;
-> > +            ti,boost-freq-hz =3D <500000>;
-> > +
-> > +            #address-cells =3D <1>;
-> > +            #size-cells =3D <0>;
-> > +
-> > +            backlight@0 {
-> > +                compatible =3D "ti,lm3533-backlight";
-> > +                reg =3D <0>;
-> > +
-> > +                ti,max-current-microamp =3D <23400>;
-> > +                default-brightness =3D <113>;
-> > +                ti,hardware-controlled;
-> > +            };
->
-> Please make the example complete.
->
-> > +        };
-> > +    };
-> > +...
-> > --
-> > 2.43.0
-> >
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 425126c0a07d..fc45b9d56639 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -653,7 +653,8 @@ static void relocate_cluster(struct swap_info_struct *si,
+ 		return;
+ 
+ 	if (!ci->count) {
+-		free_cluster(si, ci);
++		if (ci->flags != CLUSTER_FLAG_FREE)
++			free_cluster(si, ci);
+ 	} else if (ci->count != SWAPFILE_CLUSTER) {
+ 		if (ci->flags != CLUSTER_FLAG_FRAG)
+ 			move_cluster(si, ci, &si->frag_clusters[ci->order],
+-- 
+2.30.0
+
