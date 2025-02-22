@@ -1,111 +1,112 @@
-Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 389F220C030
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 18:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22261AA782
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 18:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740249902; cv=none; b=Ealy5AepKcwu+lY37csxHYCJlbHxRk3ds0i5lXE4zc1Nb94srKIEgaexFU8sw2FTphgGhJy4wTcLkH0v8u3pPfajRyFC6cokcGhSCp133Nq/7xioUO+Gh5/+2TDvnr4MO/JW3qdbdFUviC1WIGla7L1u5sbRtAsot4/9ZuvXIhs=
+	t=1740249902; cv=none; b=b836fSnO3xvymXopcIXzFa+kOoVjg376nzIsBT768yxGIA8LXFpEZ+mkWs19uF78WYuZbjkPIixIJYb4qKKCTbsC82qEaEbUa5tu5nEb6MFktrcHLKvTMtEgy4HeigNr4beOhOr4wAYk4IgJ/QvC1ovx+K08+woE7fwTR55u6do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740249902; c=relaxed/simple;
-	bh=bJwz0Ulxy/4MRJjnoRaz8nlgEfTr5vN1BUc5gHeAHEs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=apnp1N98PeVicRoTo6bmjwe9yVZ80Tc8buueXXIAUuqxyFlVBaIx/rdfF/Zf2yRmePBaid+z69a01VYVdrEiCsFqP98r+A5/Rb+f+EPfdtIN4WL4vZ4/Vrq/zpJHwIwaqMorlVaiEjs8SJxz+6jOCNFq6siCP9hgCPZ7dRi3p7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=WctiwARz; arc=none smtp.client-ip=212.77.101.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
+	bh=OWQ/8rNUcjck7tkRuYyqikXWKplXwhxhtLF2xDKFeXM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DT85tlGxm8NBlota93IYzqMaQ8UDGJhoF9IfFFTl/QvfWlhEcCtHPf+K3hGDeyBEnnR7PsiGWMw6fwOtEAGUNDQPG2BRSKLMw2VLc8ajvXFBEi71983TZKf4ixguacTVoaQ0uV4ybgx632XlheoCggDuznh5zHmK3Mc58JGTbZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=BE89uNm2; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="WctiwARz"
-Received: (wp-smtpd smtp.wp.pl 47211 invoked from network); 22 Feb 2025 19:38:16 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
-          t=1740249496; bh=i2RkCP+0CD/CKqcMDclhiyW4ZjR3USyzMiy1CqfKjro=;
-          h=From:To:Cc:Subject;
-          b=WctiwARzWh/JjZB+vvs/IY/R7mPGGXSRQ5Z+1FiAbjueomObR7tmo7DuV/DxYuuyc
-           fRZsJEwu9qpbFJva2JD+9uY2WAFwiVrnBKZyTu9ewi7h5T7tiii6VNEuBo9rDq5WNo
-           Xu3d85Hx9FTasG1lCnqNtE18qFiqF0vMw6x0ZDflKuv0Ka3e1CjrDVe2IxFincQHQ9
-           7dYrnwoycjMLo+PSbCwAb8CRlCKJ6oTV+QSY34qaTtTpJlP2/rosq40PxVqQLhyE9v
-           Y8hnGDxJWtvvJMUKovZcfjuAytvIvMiMlrb8T/DIn5A5vLb+z/qeFl38h66BAfbRTT
-           IJTj51PbDuiRw==
-Received: from 83.6.114.178.ipv4.supernova.orange.pl (HELO laptop-olek.home) (olek2@wp.pl@[83.6.114.178])
-          (envelope-sender <olek2@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <lxu@maxlinear.com>; 22 Feb 2025 19:38:16 +0100
-From: Aleksander Jan Bajkowski <olek2@wp.pl>
-To: lxu@maxlinear.com,
-	andrew@lunn.ch,
-	hkallweit1@gmail.com,
-	linux@armlinux.org.uk,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Aleksander Jan Bajkowski <olek2@wp.pl>,
-	Daniel Golle <daniel@makrotopia.org>
-Subject: [PATCH net-next 1/2] net: phy: add LED dimming support
-Date: Sat, 22 Feb 2025 19:38:13 +0100
-Message-Id: <20250222183814.3315-1-olek2@wp.pl>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="BE89uNm2"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5deb1266031so5773915a12.2
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 10:45:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1740249899; x=1740854699; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=2GmfLwYqjSfqdj0NeOV5aIVpVPfwUhlh0DRZJ2UKXos=;
+        b=BE89uNm2KWCdU6+FpJCDgQi6DTG2sz8aEr+UxO/lOdL+9fLWlqBxM7W2oeTwZc7tkT
+         js3nK1DSTiqIOtzYfmDSv9NUMTHuat09yzRyi3YBmZWULsSN0CBoXi5iGnJxXCJgjaXI
+         3mGj/rnzb/+UaWx+hj+vggUhaq5FF3BRuf9hs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740249899; x=1740854699;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2GmfLwYqjSfqdj0NeOV5aIVpVPfwUhlh0DRZJ2UKXos=;
+        b=WaxGwOaM93vTg7dqeYjiDfofFMdlWW1GooG0Lb/6aN2FTsDErspccNzuOQWO5PnBoh
+         m0uQz/sHkOwJeJvqiIMGHux+Rq0V2eefs6o7+CpBkvXRHc5DIi3b5O/DBHnSVf15XNIs
+         4mPfNF3IGLMgoHtA4W1TPXKeJixdM3zb1aZ/MvA9BHdtjxmHGdDfSFIxV7dh22ZBia0m
+         rEAnREni4eQuaxqOlYMp9DIDYiFnQgPo2Ys5bgb5T5U+jqH3Izn7V/0jBEHlLynG3wbl
+         yIUS/x7ZZt2Gvxirifr+64QTEczStrx7RAiNZbjTWXAOVSkfhsuSfaWyw4Sw4jtVFHk9
+         SToQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXv/MrJSl6RVATUSWD7ctoaNB0/Te+zn3PR2dW7rkNtoM9YDDxWfNNT0grP1lFHmVnSZwC3YraDn7GKIKk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjPmk6nwLFdLQZ6aQIUxHdp9KWiYkhqyUKCgio3h5lVCA6d527
+	LPBcpnDAPzvoT9Tqyx6pf3ilrvh7hrtJ+rdmG0iHTkrx6HzstMv9E6sahDVO/ycZFq19MZM6aPV
+	DBrg=
+X-Gm-Gg: ASbGncuGO5JlIErSPD8c+AxCwthrca4UX5O+XsdDliWqsIGfJX4udluL9DhTdGCvNne
+	L8edAFEslDkPHR+KHpF7cIPvwZUOTnR0hWCQCV4c4wUI8ew8ZJt5p5c4V2g3Y/uw97egMqE8dld
+	G4d2O+efgSAfs6IHnU5PEYJ0lkVvI6FO/PzLiY6I2M1VZxECcrqKuea6h8bXZ+gE1kMc4cjDsEl
+	VU+aImxQ49/be/oGRrsLYUF3BoLLiB37myQfPznTsDTaLCW5KWWuHF+lyVB6oQCSya1yF5067FG
+	RM0OY44vN0azhyHz5dZXpDSKbWi0RvMpDvGPv4in/9pGNVGnJxWWE1b06NlNWfubSY+fjMXNbof
+	v
+X-Google-Smtp-Source: AGHT+IHGClVJzd3Ajuk5FnITT81p7p+kgFLcj10+m8TzvFOB6EThsmcZ63gyNtUdmweu3iT8J++b1g==
+X-Received: by 2002:a05:6402:360d:b0:5de:5025:2bd9 with SMTP id 4fb4d7f45d1cf-5e0b70e95demr7084768a12.11.1740249898874;
+        Sat, 22 Feb 2025 10:44:58 -0800 (PST)
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece2866e7sm15569206a12.65.2025.02.22.10.44.55
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 22 Feb 2025 10:44:57 -0800 (PST)
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ab7430e27b2so512499766b.3
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 10:44:55 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUaL11meecMi4Q68jui5UAV5GIVfCMHGpdZj1ISUwqj31yKnkEshAUUw+INDyMoHOSw+okdFz1Sy/f7Vdw=@vger.kernel.org
+X-Received: by 2002:a17:907:724f:b0:ab7:9a7a:d37a with SMTP id
+ a640c23a62f3a-abc0de1954emr621935366b.43.1740249895227; Sat, 22 Feb 2025
+ 10:44:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-WP-MailID: dc5426013d86a711e844cf2620b6b218
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 000000B [YUOk]                               
+References: <2025022042-jot-favored-e755@gregkh> <b9a5de64fe1ded2ad3111763f35af9901bd81cc4.camel@tugraz.at>
+ <caea3e79-78e6-4d98-9f3b-f8e7f6f00196@stanley.mountain> <61a7e7db786d9549cbe201b153647689cbe12d75.camel@tugraz.at>
+ <20250221124304.5dec31b2@gandalf.local.home> <CAHk-=wgg2A_iHNwf_JDjYJF=XHnKVGOjGp50FzVWniA2Z010bw@mail.gmail.com>
+ <6b3e4d3bdc9b6efd69068e5b22cfd05d370aed19.camel@tugraz.at>
+ <CAHk-=wg=pZvE9cHJUPKGCajRUCtDoW73xwY5UfJApCWms_FgYw@mail.gmail.com>
+ <20250221172415.5b632ae6@gandalf.local.home> <CAHk-=wjQ94GipftbNo0PbfuUxFMXFyp2bWGJJPNUngyf17Ai8A@mail.gmail.com>
+ <y75v63zqmgd3n42bprrbs2ppg32vhk2isppi6wxn7lfsdwd5sn@jm74cuwhadbj>
+In-Reply-To: <y75v63zqmgd3n42bprrbs2ppg32vhk2isppi6wxn7lfsdwd5sn@jm74cuwhadbj>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sat, 22 Feb 2025 10:44:38 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjEQ7wd=iRN1Du-_fAqXgqEfCZH27PisDNPCpusv3Swxg@mail.gmail.com>
+X-Gm-Features: AWEUYZkGmBfM4yXjsFNaaBKIjcw5m0UrJ9-jgNYDnIvr-gmrGabmAZy5fq4X8l8
+Message-ID: <CAHk-=wjEQ7wd=iRN1Du-_fAqXgqEfCZH27PisDNPCpusv3Swxg@mail.gmail.com>
+Subject: Re: Rust kernel policy
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Martin Uecker <uecker@tugraz.at>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, Greg KH <gregkh@linuxfoundation.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
+	rust-for-linux <rust-for-linux@vger.kernel.org>, David Airlie <airlied@gmail.com>, 
+	linux-kernel@vger.kernel.org, ksummit@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Some PHYs support LED dimming. The use case is a router that dims LEDs
-at night. PHYs from different manufacturers support a different number of
-brightness levels, so it was necessary to extend the API with the
-led_max_brightness() function. If this function is omitted, a default
-value is used, assuming that only two levels are supported.
+On Sat, 22 Feb 2025 at 09:53, Kent Overstreet <kent.overstreet@linux.dev> wrote:
+>
+> Because it sounds like coming up with a different way to write range
+> checks is going to be easier than coming up with pattern matching magic.
 
-Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
-Reviewed-by: Daniel Golle <daniel@makrotopia.org>
----
- drivers/net/phy/phy_device.c | 7 ++++++-
- include/linux/phy.h          | 7 +++++++
- 2 files changed, 13 insertions(+), 1 deletion(-)
+Sure. But honestly, forcing humans to write non-obvious code is almost
+always the exact wrong answer.
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 46713d27412b..f9631f093baa 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -3351,7 +3351,12 @@ static int of_phy_led(struct phy_device *phydev,
- 
- 	cdev->hw_control_get_device = phy_led_hw_control_get_device;
- #endif
--	cdev->max_brightness = 1;
-+	if (phydev->drv->led_max_brightness)
-+		cdev->max_brightness =
-+			phydev->drv->led_max_brightness(phydev, index);
-+	else
-+		cdev->max_brightness = 1;
-+
- 	init_data.devicename = dev_name(&phydev->mdio.dev);
- 	init_data.fwnode = of_fwnode_handle(led);
- 	init_data.devname_mandatory = true;
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 19f076a71f94..248a47c8817b 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -1216,6 +1216,13 @@ struct phy_driver {
- 	int (*led_brightness_set)(struct phy_device *dev,
- 				  u8 index, enum led_brightness value);
- 
-+	/**
-+	 * &led_max_brightness: Maximum number of brightness levels
-+	 * supported by hardware. When only two levels are supported
-+	 * i.e. LED_ON and LED_OFF the function can be omitted.
-+	 */
-+	int (*led_max_brightness)(struct phy_device *dev, u8 index);
-+
- 	/**
- 	 * @led_blink_set: Set a PHY LED blinking.  Index indicates
- 	 * which of the PHYs led should be configured to blink. Delays
--- 
-2.39.5
+When the basic pattern is an obvious and legible one:
 
+        if (a < X || a > Y)
+
+saying " use a different helper pattern for this" is the WRONG
+SOLUTION. You're making the source code worse.
+
+Make the tools better. Don't make humans jump through hoops because
+the tools are spouting garbage.
+
+               Linus
