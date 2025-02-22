@@ -1,273 +1,123 @@
-Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49AC6FC3
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 11:36:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45FBA206F3B
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 11:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740224210; cv=none; b=NMZ2KcTh01jY0WeAU2XCBRZ7T/QGXsUKVrbIqnLnQN7D/WgrrNUCMdOsP9Ahap96mNzyPCQSQsJDnP+YNvA1v5pieamHNBKGZer5Ez9+STUgIP/zvcoFvAGbSdEGoX3+kHYQ0dB6xzVn04GRcdOS19GspA30C1ZyzW8u3jRksXY=
+	t=1740224228; cv=none; b=OfcyWeCfqJ/FN4Bkb65xFsv08jIaGU4d8Felz+Q/FZ7dQz1lgBSOwbpS2RPjmnHHj3qz6kUTYVGKo+8NI6xP3rEv3qIQT/dhq3F2eWvzAekCSbKPyJXWh14JjunrM2FOGVrXaQgqM11jlxlfhv+tYLlJYZsjp3/XetY3MXWA6Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740224210; c=relaxed/simple;
-	bh=RQUwl6i6MCv7DWVhyufNd2qXBCIjWoJzvjgbz67kYyo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LpnrkF6IBUaudIMELXJpWywf5ze9CRqLJ3TskyaA+oV+febEjiNvpmN0rpnTGIhC/sHt+OJRiwTogtaH3O407GO5dpjO+PE/PMckD4jP2WpDVEqpdXrSUh4bYTmoz0IC89RXzMlBzC9YRj5jRVpstxjerd5YYUIvXmsUcYu1McE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=CgW4dc8x; arc=none smtp.client-ip=199.247.17.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
+	s=arc-20240116; t=1740224228; c=relaxed/simple;
+	bh=engwHYjDHUvj5xuN0uVA1wy0mwimzTOyn6troBr6yjE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Kjnspymg6mlF6jM5UJNQCEz88/rBDVbtIrT3gBct9i4uJYWcRagrqahTyHXQcUMvSfrnib9SlEVJaJ4WUd2pUPEr88obDOu/YlMebEUJwZ/6YUMWZj96UDFLEQS02d5LtS1XvRGwZVfHRji91VbU8Pw5beYcefThLTQnHDc0KJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j2HrigOm; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="CgW4dc8x"
-Received: from spock.localnet (unknown [212.20.115.26])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by prime.voidband.net (Postfix) with ESMTPSA id B590E6168430;
-	Sat, 22 Feb 2025 12:36:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-	s=dkim-20170712; t=1740224205;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yMowdD31+N5Yry4py2pgTOlFubTMO0/Sn3pXYQDcq1M=;
-	b=CgW4dc8x19IJOXZgTudrQ6td+3EWFR6m9DcjmPi97BBBbKGTjdLOv1zRpJEmkyQFcdsb6/
-	qmeLJG4h8sUgUe2DNMAllSRiEbAVpVFnrgAWse2A0uVuFyD3eNrRw7iNTlBBqgZesdrKj6
-	vNF4k/Qu1CkhKy40VAl75Q/8dMRl4Po=
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: x86@kernel.org, Rik van Riel <riel@surriel.com>
-Cc: linux-kernel@vger.kernel.org, bp@alien8.de, peterz@infradead.org,
- dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
- nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
- linux-mm@kvack.org, akpm@linux-foundation.org, jackmanb@google.com,
- jannh@google.com, mhklinux@outlook.com, andrew.cooper3@citrix.com,
- Manali.Shukla@amd.com
-Subject: Re: [PATCH v12 00/16] AMD broadcast TLB invalidation
-Date: Sat, 22 Feb 2025 12:36:32 +0100
-Message-ID: <4630159.LvFx2qVVIh@natalenko.name>
-In-Reply-To: <5861243.DvuYhMxLoT@natalenko.name>
-References:
- <20250221005345.2156760-1-riel@surriel.com>
- <5861243.DvuYhMxLoT@natalenko.name>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j2HrigOm"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5ded500589aso520963a12.0
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 03:37:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740224224; x=1740829024; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=B/Sh5oQxHFbDw+IPrUqtkewc2J8yrZ1ZQ0Og1f9xPRU=;
+        b=j2HrigOmj/KNTv2NX1UfXkwhHi9cl7wFECX0fqy6durlh7oZwnZRmcuHw4yUj7OdA2
+         mqpPZaOmYpg47NU/5yWjYm2FYMfKTIeQNzfvVXJw/R1NQOsv9Mo8IWR/x84fFUYV2VYS
+         45omuJaD0c5FUi0S2v5zJ6iZIpGjpUNq6NdqnOF7B70c3PO+v1jGiIw3dBBShkTVo2O+
+         ET3wQjDB/JNPiXkrqRjaNS/Lcr4XhH+BF1GWn34JC7dWUcYOnaQSJLy34CQpD4gGE1z2
+         9O1THgCFVT9kCOWKHa/ejly8qExdJxBQ2taq6l+Pbw9ZlZygwK+ISvByZ9i59tXw3WDO
+         U6Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740224224; x=1740829024;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B/Sh5oQxHFbDw+IPrUqtkewc2J8yrZ1ZQ0Og1f9xPRU=;
+        b=LKvW8dD6mhDFPJF/JV5EWlphEY5qhwbLjQ4Mc+v2go4Za1R00lXppTVA5CAz7q3CIX
+         ud8rl09joH82GMd/sM/rmKNlBBx02dS47y6amoiAjgavqSQtHX1wFvtstQwESwKX0fBv
+         U1Zq5EpAd5+IbmyefFqOvhAACPaq/YX+oPrK1XaLMPOGlbDJTBrkxlVGVEVRRaEFtT7x
+         cwtrD6wbqfnQ9xQ47Cq68i0Whpo3pU0cI0EGy7uYV3uxtkVOcE/D85sDEn6Ilttvw/K4
+         br3U1pREo9NV/gQjvVXwqRsf32GWU09zT+Wy4mGi3EFgUjVU1HIc9Ibh7nXAmSfDfpO/
+         ychw==
+X-Gm-Message-State: AOJu0YzP4i63fQ8mOVuJbWTmHc1vbOa8EiERymvp7VG3fxr8CZUMV0ih
+	w2ajWuS0UCZ0KeT0GzNdR65S3igXT+MCUC8i+g7wIjuvC1vGsOxXlc3vEj47sTs=
+X-Gm-Gg: ASbGncvjIjozqYRVJQrvtBHGG+dmMTB3hv6mw1agcIbh6X8Dmk2Xq8OUI7XMbpverWa
+	1wmgO93/wz/V5Ac0c0/A/MjoUmkEDklYuftSuRKcICNo8tKahL3EhtqQDxqq4RaSNbtmfPaDRkb
+	zLnMPs1ja3+xKWTnfoNwfraa3WgaS90tFEVgYsMSC6iI9YDDWy35WXQOMuJui3a0fppLLsLZ5uU
+	M+ywIx5oXHEKCCuJCqNhCLH12w0M15GEhrexLUAGTosO4W6Rm9FcLdj3TA2yKNyTyWzaFSvN5wJ
+	+uiSXUH0EeXW9o7glFfquuf+zc9G01rsi44P4L4SNTux0yGFJdDjazsxsxoJjoy7xZ7IzGcGNa0
+	5
+X-Google-Smtp-Source: AGHT+IEtxaVNbvHvTozfZ7ub06KTWPC+g4j6jyXuZK4fTJ+jxnn3KqwwZBisoJEqObnGkUswxOnUZA==
+X-Received: by 2002:a05:6402:34c6:b0:5e0:8275:e9dc with SMTP id 4fb4d7f45d1cf-5e0b70bc3c3mr2106285a12.1.1740224224515;
+        Sat, 22 Feb 2025 03:37:04 -0800 (PST)
+Received: from [127.0.1.1] (78-11-220-99.static.ip.netia.com.pl. [78.11.220.99])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece1d369esm15011493a12.37.2025.02.22.03.37.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Feb 2025 03:37:03 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 0/5] mailbox: Minor const fixes
+Date: Sat, 22 Feb 2025 12:36:16 +0100
+Message-Id: <20250222-mailbox-const-arm-id-v1-0-d60589215a24@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2356740.ElGaqSPkdT";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALC2uWcC/x2M0QpAQBAAf0X7bOssh/yKPJyz2OJOd5KSf3d5n
+ JqZByIH4Qhd9kDgS6J4l6DIM7CrcQujTImBFGlFRLgb2UZ/o/UunmjCngRsyrrUVWsVNxpSegS
+ e5f63/fC+H2ZSaEJmAAAA
+X-Change-ID: 20250222-mailbox-const-arm-id-7363548c0e75
+To: Jassi Brar <jassisinghbrar@gmail.com>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, 
+ Tushar Khandelwal <Tushar.Khandelwal@arm.com>
+Cc: linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=762;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=engwHYjDHUvj5xuN0uVA1wy0mwimzTOyn6troBr6yjE=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBnubaxJ15rCOHU00Kk3RjDpaoIZjoY3QbFDRMn7
+ jXWdgWaQdGJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZ7m2sQAKCRDBN2bmhouD
+ 19RuD/0avAOcnkXWQnKEHI53LRU6CRIzjH/67r6txmXxfeugRMjSbmgoyjjjTGV2Di36U/m/Ox7
+ KZ8567iNVnBUNpMX7R+c8+gEqEm4K/6xmf4lf/40+ahD18dbGd1B4zHSCQw6jrzZIIA8vXJDeNe
+ OQUQQpemmYhpiucjuZ0ZW74oBc3w/HDQUe32Kckf9Xa5c1bvh14dUnjhXGki3aS5VhVMTqUboaR
+ jbyHQslQjS5F1S8zRHfSUwEXDzCOS58sWG74Wix99mqgK0heNuRmTi4v3Ukr7zmbEmThYYGqPYM
+ yI4gG13aPL1OBSM0OycImyLjI4vwSlCLqyx+A2+dspDvEtgoweBAmixVnG3V8ykWtQ6MY5zr9Qj
+ rT24gwjrc7K0qqFq7i+g+P/4o5wAJ+vkPKT7rmGqVY4PBsoGp9LMmYt9bDHrSbdATAazSMY+Pf4
+ i1fSbDTR48PTodrLVoCXnbYHOmxZ3wEKOFol8igADUvj47hvCki8WBLFQR4CuyyQd1k59TfPN6S
+ wtO0ul1V6V8XnonqEzDkPulECk1bP3elAf03R6XME9Wog+BxB+1kRwWFp/CDe42ECjbUTunaQjA
+ QoJ3Qf17oT0PFzmgnO/fFuBp8XAfBUX13SXP0PpRLCkn8Y3ATnzLcUABq/8uJxMoBZ4RCndNwZf
+ 04+3ZCf4gKNNp4w==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
---nextPart2356740.ElGaqSPkdT
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: x86@kernel.org, Rik van Riel <riel@surriel.com>
-Subject: Re: [PATCH v12 00/16] AMD broadcast TLB invalidation
-Date: Sat, 22 Feb 2025 12:36:32 +0100
-Message-ID: <4630159.LvFx2qVVIh@natalenko.name>
-In-Reply-To: <5861243.DvuYhMxLoT@natalenko.name>
-MIME-Version: 1.0
+Just few improvements.
 
-On sobota 22. =C3=BAnora 2025 12:29:54, st=C5=99edoevropsk=C3=BD standardn=
-=C3=AD =C4=8Das Oleksandr Natalenko wrote:
-> Hello.
->=20
-> On p=C3=A1tek 21. =C3=BAnora 2025 1:52:59, st=C5=99edoevropsk=C3=BD stand=
-ardn=C3=AD =C4=8Das Rik van Riel wrote:
-> > Add support for broadcast TLB invalidation using AMD's INVLPGB instruct=
-ion.
-> >=20
-> > This allows the kernel to invalidate TLB entries on remote CPUs without
-> > needing to send IPIs, without having to wait for remote CPUs to handle
-> > those interrupts, and with less interruption to what was running on
-> > those CPUs.
-> >=20
-> > Because x86 PCID space is limited, and there are some very large
-> > systems out there, broadcast TLB invalidation is only used for
-> > processes that are active on 3 or more CPUs, with the threshold
-> > being gradually increased the more the PCID space gets exhausted.
-> >=20
-> > Combined with the removal of unnecessary lru_add_drain calls
-> > (see https://lkml.org/lkml/2024/12/19/1388) this results in a
-> > nice performance boost for the will-it-scale tlb_flush2_threads
-> > test on an AMD Milan system with 36 cores:
-> >=20
-> > - vanilla kernel:           527k loops/second
-> > - lru_add_drain removal:    731k loops/second
-> > - only INVLPGB:             527k loops/second
-> > - lru_add_drain + INVLPGB: 1157k loops/second
-> >=20
-> > Profiling with only the INVLPGB changes showed while
-> > TLB invalidation went down from 40% of the total CPU
-> > time to only around 4% of CPU time, the contention
-> > simply moved to the LRU lock.
-> >=20
-> > Fixing both at the same time about doubles the
-> > number of iterations per second from this case.
-> >=20
-> > Some numbers closer to real world performance
-> > can be found at Phoronix, thanks to Michael:
-> >=20
-> > https://www.phoronix.com/news/AMD-INVLPGB-Linux-Benefits
-> >=20
-> > My current plan is to implement support for Intel's RAR
-> > (Remote Action Request) TLB flushing in a follow-up series,
-> > after this thing has been merged into -tip. Making things
-> > any larger would just be unwieldy for reviewers.
-> >=20
-> > v12:
-> >  - make sure "nopcid" command line option turns off invlpgb (Brendan)
-> >  - add "noinvlpgb" kernel command line option
-> >  - split out kernel TLB flushing differently (Dave & Yosry)
-> >  - split up the patch that does invlpgb flushing for user processes (Da=
-ve)
-> >  - clean up get_flush_tlb_info (Boris)
-> >  - move invlpgb_count_max initialization to get_cpu_cap (Boris)
-> >  - bunch more comments as requested
->=20
-> Somehow, this iteration breaks resume from S3. I can see it even in a QEM=
-U VM:
+Best regards,
+Krzysztof
 
-Can also reproduce this by simply offlining/onlining a CPU via `/sys/device=
-s/system/cpu/cpuX/online`.
+---
+Krzysztof Kozlowski (5):
+      mailbox: pl320-ipc: Drop unused xxx_destination functions
+      mailbox: pl320-ipc: Constify amba_id table
+      mailbox: arm_mhu: Constify amba_id table
+      mailbox: arm_mhu_db: Constify amba_id table
+      mailbox: arm_mhuv2: Constify amba_id table
 
->=20
-> ```
-> [   24.373391] ACPI: PM: Low-level resume complete
-> [   24.373929] ACPI: PM: Restoring platform NVS memory
-> [   24.375024] Enabling non-boot CPUs ...
-> [   24.375777] smpboot: Booting Node 0 Processor 1 APIC 0x1
-> [   24.376463] BUG: unable to handle page fault for address: ffffffffa3ba=
-4d60
-> [   24.377383] #PF: supervisor write access in kernel mode
-> [   24.377912] #PF: error_code(0x0003) - permissions violation
-> [   24.378413] PGD 25427067 P4D 25427067 PUD 25428063 PMD 8000000024c001a1
-> [   24.379020] Oops: Oops: 0003 [#1] PREEMPT SMP NOPTI
-> [   24.379503] CPU: 1 UID: 0 PID: 0 Comm: swapper/1 Kdump: loaded Not tai=
-nted 6.14.0-pf0 #1 161e4891fb5044b2d7438cd1852eeaac0cdffab5
-> [   24.380650] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS u=
-nknown 02/02/2022
-> [   24.381400] RIP: 0010:get_cpu_cap+0x39b/0x4f0
-> [   24.381810] Code: 08 c7 44 24 08 00 00 00 00 48 8d 4c 24 0c e8 3c 00 0=
-4 00 90 8b 44 24 04 89 43 64 0f b7 44 24 0c 83 c0 01 81 7b 24 09 00 00 80 <=
-66> 89 05 0e ab 8b 01 0f 86 18 fd ff ff c7 44 24 14 00 00 00 00 4c
-> [   24.383629] RSP: 0000:ffffafbec00efe70 EFLAGS: 00010012
-> [   24.384155] RAX: 0000000000000001 RBX: ffff8b3fbcb19020 RCX: 000000000=
-0001001
-> [   24.384862] RDX: 0000000000000000 RSI: ffffafbec00efe74 RDI: ffffafbec=
-00efe78
-> [   24.385603] RBP: ffffafbec00efe88 R08: ffffafbec00efe70 R09: ffffafbec=
-00efe7c
-> [   24.386318] R10: 0000000000002430 R11: ffff8b3fa5428000 R12: ffffafbec=
-00efe8c
-> [   24.387014] R13: ffffafbec00efe84 R14: ffffafbec00efe80 R15: ffffafbec=
-00efe70
-> [   24.387713] FS:  0000000000000000(0000) GS:ffff8b3fbcb00000(0000) knlG=
-S:0000000000000000
-> [   24.388502] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   24.389074] CR2: ffffffffa3ba4d60 CR3: 0000000025422000 CR4: 000000000=
-0350ef0
-> [   24.389769] Call Trace:
-> [   24.390020]  <TASK>
-> [   24.392234]  identify_cpu+0xd4/0x890
-> [   24.392593]  identify_secondary_cpu+0x12/0x40
-> [   24.393032]  smp_store_cpu_info+0x49/0x60
-> [   24.393430]  start_secondary+0x7f/0x140
-> [   24.393810]  common_startup_64+0x13e/0x141
-> [   24.394218]  </TASK>
->=20
-> $ scripts/faddr2line arch/x86/kernel/cpu/common.o get_cpu_cap+0x39b
-> get_cpu_cap+0x39b/0x500:
-> get_cpu_cap at =E2=80=A6/arch/x86/kernel/cpu/common.c:1063
->=20
-> 1060         if (c->extended_cpuid_level >=3D 0x80000008) {
-> 1061                 cpuid(0x80000008, &eax, &ebx, &ecx, &edx);
-> 1062                 c->x86_capability[CPUID_8000_0008_EBX] =3D ebx;
-> 1063                 invlpgb_count_max =3D (edx & 0xffff) + 1;
-> 1064         }
-> ```
->=20
-> Any idea what I'm looking at?
->=20
-> Thank you.
->=20
-> > v11:
-> >  - resolve conflict with CONFIG_PT_RECLAIM code
-> >  - a few more cleanups (Peter, Brendan, Nadav)
-> > v10:
-> >  - simplify partial pages with min(nr, 1) in the invlpgb loop (Peter)
-> >  - document x86 paravirt, AMD invlpgb, and ARM64 flush without IPI (Bre=
-ndan)
-> >  - remove IS_ENABLED(CONFIG_X86_BROADCAST_TLB_FLUSH) (Brendan)
-> >  - various cleanups (Brendan)
-> > v9:
-> >  - print warning when start or end address was rounded (Peter)
-> >  - in the reclaim code, tlbsync at context switch time (Peter)
-> >  - fix !CONFIG_CPU_SUP_AMD compile error in arch_tlbbatch_add_pending (=
-Jan)
-> > v8:
-> >  - round start & end to handle non-page-aligned callers (Steven & Jan)
-> >  - fix up changelog & add tested-by tags (Manali)
-> > v7:
-> >  - a few small code cleanups (Nadav)
-> >  - fix spurious VM_WARN_ON_ONCE in mm_global_asid
-> >  - code simplifications & better barriers (Peter & Dave)
-> > v6:
-> >  - fix info->end check in flush_tlb_kernel_range (Michael)
-> >  - disable broadcast TLB flushing on 32 bit x86
-> > v5:
-> >  - use byte assembly for compatibility with older toolchains (Borislav,=
- Michael)
-> >  - ensure a panic on an invalid number of extra pages (Dave, Tom)
-> >  - add cant_migrate() assertion to tlbsync (Jann)
-> >  - a bunch more cleanups (Nadav)
-> >  - key TCE enabling off X86_FEATURE_TCE (Andrew)
-> >  - fix a race between reclaim and ASID transition (Jann)
-> > v4:
-> >  - Use only bitmaps to track free global ASIDs (Nadav)
-> >  - Improved AMD initialization (Borislav & Tom)
-> >  - Various naming and documentation improvements (Peter, Nadav, Tom, Da=
-ve)
-> >  - Fixes for subtle race conditions (Jann)
-> > v3:
-> >  - Remove paravirt tlb_remove_table call (thank you Qi Zheng)
-> >  - More suggested cleanups and changelog fixes by Peter and Nadav
-> > v2:
-> >  - Apply suggestions by Peter and Borislav (thank you!)
-> >  - Fix bug in arch_tlbbatch_flush, where we need to do both
-> >    the TLBSYNC, and flush the CPUs that are in the cpumask.
-> >  - Some updates to comments and changelogs based on questions.
-> >=20
-> >=20
-> >=20
->=20
->=20
->=20
+ drivers/mailbox/arm_mhu.c    |  2 +-
+ drivers/mailbox/arm_mhu_db.c |  2 +-
+ drivers/mailbox/arm_mhuv2.c  |  2 +-
+ drivers/mailbox/pl320-ipc.c  | 14 +-------------
+ 4 files changed, 4 insertions(+), 16 deletions(-)
+---
+base-commit: 8936cec5cb6e27649b86fabf383d7ce4113bba49
+change-id: 20250222-mailbox-const-arm-id-7363548c0e75
 
-
-=2D-=20
-Oleksandr Natalenko, MSE
---nextPart2356740.ElGaqSPkdT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAme5tsAACgkQil/iNcg8
-M0vckg//QzzLbzZgVuw+RAazI0uv0qTdmpxqdl6uOTZKJVyV3ePBCMEaD3nQyJMu
-MrL3NFnj6piuNlsMh0Melx0DACW7JoJtQNzXATOil6HbQ7e3iMPLr4nUVCdjqEKP
-wy3/HQpaXs/2NSdUZBEv/IqPeazqCvIBOZ3ENNg1cq9Lni8kojYJL2OVo/2XwgoP
-dYZEIzTvzRaj4Gje7NmSa1T93K8yLKTZS5jMV97NSCmKxiq2VxXEkqwIDvhoNmU0
-C4Gi8X81QRHhUyRQOiJWdLFre9nDMfkzhryj87LJ8XFcxxwhsFVVygBchkmnQzFr
-06PdyjoBVlUeZTEPgnuu8mRH/GJO6PCX/FyZD6UgofsyIsVaQsSxrjgmEm1lDUsQ
-3Elqxbpp/005gICK6mdglVPq2b5TOYKx0ySLAh/TQgYUShjBysm5ajrv7zBPRIvH
-rCU3fa+qpbkRkP2xOCs+r6/XOvEhVDZ1nAzGQR9TNeLjyen5Eyyrg5wJojbR4jbt
-5+8BeJTj68PPCHt6BR5TTxiOhhxD4qRPw6Tl5vVFdeJo6wRnvKbR5hoy9tpjKudS
-PMhdp/x1DlUEgCQI8WbNeh7KQHAI21zQq10QfsULWCkCm31BgvgWvMQ3cQs3R6jB
-r8uBzLDnyupYcGgGD+qg08vX69xJzEGcyxRyGwtQWuapquDM7EQ=
-=dmfm
------END PGP SIGNATURE-----
-
---nextPart2356740.ElGaqSPkdT--
-
-
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
