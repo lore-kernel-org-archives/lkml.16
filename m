@@ -1,143 +1,111 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1466413A258
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 18:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 389F220C030
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 18:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740249842; cv=none; b=Bysxk7Tmh1wnhjBX5rUKatvBN9J88d0NNRbrXdn1ghLtb2/jwmoY59gtYCeKqhbqvJm4KkxEgHqWneJeJQm6geumsdqY1W54cUqoojK4RapfHqHNciq5FDXvupFdGzbMwANv7lyZZUSdbXkT4i3pqCwh95vR8yKOSA8r2WpZofk=
+	t=1740249902; cv=none; b=Ealy5AepKcwu+lY37csxHYCJlbHxRk3ds0i5lXE4zc1Nb94srKIEgaexFU8sw2FTphgGhJy4wTcLkH0v8u3pPfajRyFC6cokcGhSCp133Nq/7xioUO+Gh5/+2TDvnr4MO/JW3qdbdFUviC1WIGla7L1u5sbRtAsot4/9ZuvXIhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740249842; c=relaxed/simple;
-	bh=u9CNX1lK65MuV1qJkFaCmogB64VpkcZJQhWje5kiI3k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kc5Qd5wJyf6i1yvJkszF+I2QgxHhBPdZEocF355+NNF/sHjZeJ665FRHd/+3rkWX5+NXLgEd8Z8i9iY3G0okkrBvs2/ojnPVU2cy3OoSHNZjZP37kGH6f5cOWoPI0ginLb7ueLaAibVWjfQ+Fgq3esep9y0cGQB4eEFHGwf9E90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gy1MOtdp; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740249902; c=relaxed/simple;
+	bh=bJwz0Ulxy/4MRJjnoRaz8nlgEfTr5vN1BUc5gHeAHEs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=apnp1N98PeVicRoTo6bmjwe9yVZ80Tc8buueXXIAUuqxyFlVBaIx/rdfF/Zf2yRmePBaid+z69a01VYVdrEiCsFqP98r+A5/Rb+f+EPfdtIN4WL4vZ4/Vrq/zpJHwIwaqMorlVaiEjs8SJxz+6jOCNFq6siCP9hgCPZ7dRi3p7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=WctiwARz; arc=none smtp.client-ip=212.77.101.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gy1MOtdp"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30615661f98so30400551fa.2
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 10:44:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740249839; x=1740854639; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E+jmeUiRFgrLTZopYI9v80YSYwCYyzfjXIRGcBiLAVw=;
-        b=Gy1MOtdp4QmhtpnUKfgAVQODgYe9ivTblw5OKq+KYSZaJzRVrwYr64LEu5PxlTAHHQ
-         GxC+cTsilpNq20H4UVI0nE9HPoXNDIXB5BO7HEIXZJcPuZHn7sS2FOzjYSXoQq53O2xx
-         meZXDAdXRRKcN4qTnAL6PVAyPvIG/NrgjjGru0kRoO+nPHq3T743F3Nx+R/FLs88yYJQ
-         SFba5j5+7ozL78PKW27IyRlSbgsSj+NpqVA0o9VURD7L8xpoMDWrK8yw8z/Ho56MMdC4
-         FIQWK0iIvF9Dot9AsogWRxfEynw6Z0LQYPI2AImURKvb0hebE0fO5JZDQOwkuYbdvjfA
-         39VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740249839; x=1740854639;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=E+jmeUiRFgrLTZopYI9v80YSYwCYyzfjXIRGcBiLAVw=;
-        b=GcPRXe0dmDrjvTqcD4BfWBNwI2WT7QWBFVxkuXd12+iSiMuezw7M8Ja1pE1EYRAxYs
-         Ko/fgUCpj03dS40IRv7RYKNOsL64H6T+9JPBeTHOZCgk6jmiCmRbZcKVB7LW7yqwQNBU
-         8FStDmpaaXUIkhwD4egCj63+7RKSEhhrTXOw4zX37Ay5wpn5YOgvBGwjE8BEZ/ZcN2sI
-         yQpmYCmnJVX0YAXoTUsLsLM7JUWvKFR6Qha2uCWL6GKut2tToU4AKG37cFrV+zst6uQm
-         4KlNU3QA/uY9zg/YBBGZPW+aULvQ6IV9RCMyMSs/rTsO+qiZWxuD6dmykD5NcJlX4pw5
-         IddQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVPDNqdXIXUvXTJKsMGNyPz4RuPZrtfxs42piIUafYro97KKO3F+mBy48w2iUQWOWTPdjnoS30S3U7Pa84=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7wEJPbOo6iCTLqZIC28UI4bQkPo26X+HgS/uuZYs+PvlIw8pv
-	qLZhDPfUzfc44cpxPEhELpEJwvV1ybkzaiM3zLqeeKmmvqLrx49JD2WT4Pfpv4m6I74sB+hQZCt
-	e4rNerBKy90DP9QKhjgSQ3N+TpoM=
-X-Gm-Gg: ASbGncu1/llIHD6ycuYcqGVOrgXpN8Cu3u38fxBPprmUcPi6lwPlnLghwhsZob9bx3+
-	OOuQANue/8FuJ+4L8hFp8ar6wE+xwJDJ+AhtIPNCEqN4CjhmDFhpOyCRfvqoRPbd3DwjaqUGrLK
-	VblxiEe0o=
-X-Google-Smtp-Source: AGHT+IHVnRQdOCRBMeRYt98eC4fNCl4k6Xa1RLOox2zKGp3H+ftnrThhe7xLnLL/s7EE5e/CTGvBlnh+EdQX7U/0Dk8=
-X-Received: by 2002:a2e:9416:0:b0:300:38ff:f8de with SMTP id
- 38308e7fff4ca-30a598909d5mr26356111fa.16.1740249838510; Sat, 22 Feb 2025
- 10:43:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="WctiwARz"
+Received: (wp-smtpd smtp.wp.pl 47211 invoked from network); 22 Feb 2025 19:38:16 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
+          t=1740249496; bh=i2RkCP+0CD/CKqcMDclhiyW4ZjR3USyzMiy1CqfKjro=;
+          h=From:To:Cc:Subject;
+          b=WctiwARzWh/JjZB+vvs/IY/R7mPGGXSRQ5Z+1FiAbjueomObR7tmo7DuV/DxYuuyc
+           fRZsJEwu9qpbFJva2JD+9uY2WAFwiVrnBKZyTu9ewi7h5T7tiii6VNEuBo9rDq5WNo
+           Xu3d85Hx9FTasG1lCnqNtE18qFiqF0vMw6x0ZDflKuv0Ka3e1CjrDVe2IxFincQHQ9
+           7dYrnwoycjMLo+PSbCwAb8CRlCKJ6oTV+QSY34qaTtTpJlP2/rosq40PxVqQLhyE9v
+           Y8hnGDxJWtvvJMUKovZcfjuAytvIvMiMlrb8T/DIn5A5vLb+z/qeFl38h66BAfbRTT
+           IJTj51PbDuiRw==
+Received: from 83.6.114.178.ipv4.supernova.orange.pl (HELO laptop-olek.home) (olek2@wp.pl@[83.6.114.178])
+          (envelope-sender <olek2@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <lxu@maxlinear.com>; 22 Feb 2025 19:38:16 +0100
+From: Aleksander Jan Bajkowski <olek2@wp.pl>
+To: lxu@maxlinear.com,
+	andrew@lunn.ch,
+	hkallweit1@gmail.com,
+	linux@armlinux.org.uk,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Aleksander Jan Bajkowski <olek2@wp.pl>,
+	Daniel Golle <daniel@makrotopia.org>
+Subject: [PATCH net-next 1/2] net: phy: add LED dimming support
+Date: Sat, 22 Feb 2025 19:38:13 +0100
+Message-Id: <20250222183814.3315-1-olek2@wp.pl>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250222160850.505274-1-shikemeng@huaweicloud.com> <20250222160850.505274-4-shikemeng@huaweicloud.com>
-In-Reply-To: <20250222160850.505274-4-shikemeng@huaweicloud.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Sun, 23 Feb 2025 02:43:42 +0800
-X-Gm-Features: AWEUYZlcPWRlcwjN0BHXG8TxtcCkPpE5iDcq2AJ1DErFnAQonwkp3WiXwC8-bmc
-Message-ID: <CAMgjq7DwUciLTcw-jsCzTz9bz+KMKqzbzCYSr58ZFhCNKPVpaw@mail.gmail.com>
-Subject: Re: [PATCH 3/6] mm, swap: avoid BUG_ON in relocate_cluster()
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-WP-MailID: dc5426013d86a711e844cf2620b6b218
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 000000B [YUOk]                               
 
-On Sat, Feb 22, 2025 at 3:12=E2=80=AFPM Kemeng Shi <shikemeng@huaweicloud.c=
-om> wrote:
->
-> If allocation is racy with swapoff, we may call free_cluster for cluster
-> already in free list and trigger bug on as following:
+Some PHYs support LED dimming. The use case is a router that dims LEDs
+at night. PHYs from different manufacturers support a different number of
+brightness levels, so it was necessary to extend the API with the
+led_max_brightness() function. If this function is omitted, a default
+value is used, assuming that only two levels are supported.
 
-Maybe capitalize this "bug on" to BUG_ON to be consistent with the title.
+Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
+Reviewed-by: Daniel Golle <daniel@makrotopia.org>
+---
+ drivers/net/phy/phy_device.c | 7 ++++++-
+ include/linux/phy.h          | 7 +++++++
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-> Allocation                        Swapoff
-> cluster_alloc_swap_entry
->  ...
->  /* may get a free cluster with offset */
->  offset =3D xxx;
->  if (offset)
->   ci =3D lock_cluster(si, offset);
->
->                                   ...
->                                    del_from_avail_list(p, true);
->                                     si->flags &=3D ~SWP_WRITEOK;
->
->   alloc_swap_scan_cluster(si, ci, ...)
->    ...
->    /* failed to alloc entry from free entry */
->    if (!cluster_alloc_range(...))
->     break;
->    ...
->    /* add back a free cluster */
->    relocate_cluster(si, ci);
->     if (!ci->count)
->      free_cluster(si, ci);
->       VM_BUG_ON(ci->flags =3D=3D CLUSTER_FLAG_FREE);
->
-> Despite bug_on could be triggered, call free_cluster() for free cluster
-> only move cluster to tail of list and should be fine.
->
-> Check cluster is not free before calling free_cluster() in
-> relocate_cluster() to avoid bug_on.
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 46713d27412b..f9631f093baa 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -3351,7 +3351,12 @@ static int of_phy_led(struct phy_device *phydev,
+ 
+ 	cdev->hw_control_get_device = phy_led_hw_control_get_device;
+ #endif
+-	cdev->max_brightness = 1;
++	if (phydev->drv->led_max_brightness)
++		cdev->max_brightness =
++			phydev->drv->led_max_brightness(phydev, index);
++	else
++		cdev->max_brightness = 1;
++
+ 	init_data.devicename = dev_name(&phydev->mdio.dev);
+ 	init_data.fwnode = of_fwnode_handle(led);
+ 	init_data.devname_mandatory = true;
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 19f076a71f94..248a47c8817b 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -1216,6 +1216,13 @@ struct phy_driver {
+ 	int (*led_brightness_set)(struct phy_device *dev,
+ 				  u8 index, enum led_brightness value);
+ 
++	/**
++	 * &led_max_brightness: Maximum number of brightness levels
++	 * supported by hardware. When only two levels are supported
++	 * i.e. LED_ON and LED_OFF the function can be omitted.
++	 */
++	int (*led_max_brightness)(struct phy_device *dev, u8 index);
++
+ 	/**
+ 	 * @led_blink_set: Set a PHY LED blinking.  Index indicates
+ 	 * which of the PHYs led should be configured to blink. Delays
+-- 
+2.39.5
 
-Same here.
-
->
-> Fixes: 3b644773eefda ("mm, swap: reduce contention on device lock")
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-> ---
->  mm/swapfile.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index 425126c0a07d..fc45b9d56639 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -653,7 +653,8 @@ static void relocate_cluster(struct swap_info_struct =
-*si,
->                 return;
->
->         if (!ci->count) {
-> -               free_cluster(si, ci);
-> +               if (ci->flags !=3D CLUSTER_FLAG_FREE)
-> +                       free_cluster(si, ci);
->         } else if (ci->count !=3D SWAPFILE_CLUSTER) {
->                 if (ci->flags !=3D CLUSTER_FLAG_FRAG)
->                         move_cluster(si, ci, &si->frag_clusters[ci->order=
-],
-> --
-> 2.30.0
-
-Thanks, other than minor commit message issue:
-
-Reviewed-by: Kairui Song <kasong@tencent.com>
