@@ -1,146 +1,234 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C32A5588F
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 17:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2090F1DDE9;
+	Sat, 22 Feb 2025 17:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740245694; cv=none; b=UQzmOvEFZtvKUBLLbVDiuHtPRI4DU6yj7FEHYjcYK0mRymxk2P/zqfIAAGesJInlx3HOD1dpy1e0Rd2qO0mV5l2yWv/KbcyZo3CihTa1mtDIqyXmOflu/pAtlhvq3zBZX0jr5AELE5F06p0GJVKzvF197NZIy4l3qwOvFqXgJtI=
+	t=1740246534; cv=none; b=P1GwrsSGEeYVofZCNHCBVE+L5IP072iOTNIvSUQriio0dn6VpU+Q7VcPMYlYETPqjbpsr1VrbbwwbILjqFNR0YpZ8nfEyGv+mosFtCW4ZAvD3pATVC37gZSVw6Va6DiSsAGbnczYiBjJhiDBArvcX+9WqVas8kWp0vt0NqMb8WM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740245694; c=relaxed/simple;
-	bh=4dCMro2jgSSytYneGs45DXGEgNz1AxxCmVMizvO/wNs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZFOAQXlljcYHe5ENd7II2VEprvUFsS58aW+a61bEsZb6CApYGaUCpXy6j6BhN9zpvup20gH5FxJa8DVX9ki0d88aRtnV9oy1M+Aj48/yteLxNm6C5U4hlYzW/S0/T0mliaR/3sbOlPg5kHnSZze0aObK6drqS41YE41BsZeHI08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZVnQuUZd; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740246534; c=relaxed/simple;
+	bh=5ybd0CwdvZUfkyyz0Lx7Y9BJ2t0H8wklafTIwBHYZX8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I3fO0zfIUx3VN8LiO+PO4BCr6V0fRSjnbsT5qRa7fhyPcZEHP19BF6n9vVsp6yfma1kkM2TkeM5dLN484vIrfV1ls+rFA3JeV7Uz66HXF+FjMaOH2q5ifSCfqzmWNnf2BQKzzmIR/79HfayHZCbprskDPhx4Xi3/yjzNe8Jx7F4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uufSI/Kj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZVnQuUZd"
-Date: Sat, 22 Feb 2025 12:34:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740245680;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=omd3G77CNX6tI/IE4jiGqYCbLrVtlrc+oM1TvZV2E+A=;
-	b=ZVnQuUZdr/yAvo7jdJuVCGxXfbGgnlpeC15ubKGRFgMlfrubAS5Ag/Zymkt5z/hqspJ0C8
-	1To7TVw0V+2XEfUxs91DuO40g1mAbaoIh9acxWsCgpdFOIg5KaiLG0b7gAMFk8/Z/ZYjH/
-	mGaDknu5oWOgxxSApjWBrN/FyI9NfJM=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Ventura Jack <venturajack85@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Christoph Hellwig <hch@infradead.org>, 
-	rust-for-linux <rust-for-linux@vger.kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org, ksummit@lists.linux.dev
-Subject: Re: Rust kernel policy
-Message-ID: <qh7r6vpnmegxf6ofro2axhewt5ojntesxrlqs7vguo7tjc6gy6@4cucfg233kf7>
-References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
- <Z7SwcnUzjZYfuJ4-@infradead.org>
- <CANiq72myjaA3Yyw_yyJ+uvUrZQcSLY_jNp65iKH8Y5xGY5tXPQ@mail.gmail.com>
- <326CC09B-8565-4443-ACC5-045092260677@zytor.com>
- <CANiq72m+r1BZVdVHn2k8XeU37ZeY6VT2S9KswMuFA=ZO3e4uvQ@mail.gmail.com>
- <a7c5973a-497c-4f31-a7be-b3123bddb6dd@zytor.com>
- <Z7VKW3eul-kGaIT2@Mac.home>
- <2025021954-flaccid-pucker-f7d9@gregkh>
- <sbcgis4vibueieejklfvv5zgz5omirryjyiynd5kloilxfygqb@zcqrjc6snxey>
- <CAFJgqgTFoqH8kDquHjhKXCvsXrF-uoHo=bq52Fgv+MKePy4zhA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uufSI/Kj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EA5EC4CED1;
+	Sat, 22 Feb 2025 17:48:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740246533;
+	bh=5ybd0CwdvZUfkyyz0Lx7Y9BJ2t0H8wklafTIwBHYZX8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=uufSI/KjoYZSCRhv+C4yr4nbjcz3n9qgwzMQoRwTRyL8B/8ttuiTO1sMXR8737KGU
+	 E3S7Fb6nbxerOzSpnbHY/a8LjQQu9xJJ1fUo+qryOIm0ePD8x+fWfaEAtniCtqqX4V
+	 8VpMGn28m0hSkTmyGttS8fz36s8MLl0w9F4+xe6+QGVv5xHgH+eyD8D8O+hTOtSceH
+	 2arfUBXfpA4pfsR4+bXXs7ThOjPXeiUiuZK347JJIYJM9mJancayUX2wexXgg3miHh
+	 8GD6pUNITa9PUFgmzcN8mG3XMYAfPaDS6PAv2LZpB33d8z1bxYNajoOvrYl5qqCuHM
+	 RnTHIUcGGd7/w==
+Date: Sat, 22 Feb 2025 17:48:42 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Matti Vaittinen <mazziesaccount@gmail.com>, Matti Vaittinen
+ <matti.vaittinen@fi.rohmeurope.com>, Lars-Peter Clausen <lars@metafoo.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lad Prabhakar
+ <prabhakar.mahadev-lad.rj@bp.renesas.com>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
+ <samuel@sholland.org>, Hugo Villeneuve <hvilleneuve@dimonoff.com>, Nuno Sa
+ <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>, Javier
+ Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH v3 2/9] iio: adc: add helpers for parsing ADC nodes
+Message-ID: <20250222174842.57c091c5@jic23-huawei>
+In-Reply-To: <Z7isoU9hKXlgsu33@smile.fi.intel.com>
+References: <cover.1739967040.git.mazziesaccount@gmail.com>
+	<6c5b678526e227488592d004c315a967b9809701.1739967040.git.mazziesaccount@gmail.com>
+	<Z7ZB7RQhyI5Dohrq@smile.fi.intel.com>
+	<b1c1ed68-2f4d-447c-9957-5a1bbc63ef6e@gmail.com>
+	<Z7ci7tUlRQqZEZSN@smile.fi.intel.com>
+	<ec76334b-bb13-4076-811d-9174170dd677@gmail.com>
+	<Z7c2cBQpjoc9-Vyu@smile.fi.intel.com>
+	<9018e23c-da28-41b0-b774-1598b946a2a1@gmail.com>
+	<Z7dCnRzuQTaJXzmb@smile.fi.intel.com>
+	<cb27d8b1-c978-4443-9ad2-96e930701976@gmail.com>
+	<Z7isoU9hKXlgsu33@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFJgqgTFoqH8kDquHjhKXCvsXrF-uoHo=bq52Fgv+MKePy4zhA@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, Feb 22, 2025 at 10:10:40AM -0700, Ventura Jack wrote:
-> On Sat, Feb 22, 2025 at 9:04 AM Kent Overstreet
-> <kent.overstreet@linux.dev> wrote:
-> >
-> > On Wed, Feb 19, 2025 at 06:39:10AM +0100, Greg KH wrote:
-> > > Rust isn't a "silver bullet" that will solve all of our problems, but it
-> > > sure will help in a huge number of places, so for new stuff going
-> > > forward, why wouldn't we want that?
-> >
-> > The big thing we run into when trying to bring this to a practical
-> > systems language, and the fundamental reason the borrow checker looks
-> > the way it does, is Rice's theorem. Rice's theorem is a direct corollary
-> > of the halting problem - "any nontrivial property of a program is either
-> > a direct consequence of the syntax or undecidable".
-> >
+On Fri, 21 Feb 2025 18:41:05 +0200
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+
+> On Fri, Feb 21, 2025 at 12:10:23PM +0200, Matti Vaittinen wrote:
+> > On 20/02/2025 16:56, Andy Shevchenko wrote:  
+> > > On Thu, Feb 20, 2025 at 04:21:37PM +0200, Matti Vaittinen wrote:  
+> > > > On 20/02/2025 16:04, Andy Shevchenko wrote:  
+> > > > > On Thu, Feb 20, 2025 at 03:40:30PM +0200, Matti Vaittinen wrote:  
+> > > > > > On 20/02/2025 14:41, Andy Shevchenko wrote:  
+> > > > > > > On Thu, Feb 20, 2025 at 09:13:00AM +0200, Matti Vaittinen wrote:  
+> > > > > > > > On 19/02/2025 22:41, Andy Shevchenko wrote:  
+> > > > > > > > > On Wed, Feb 19, 2025 at 02:30:27PM +0200, Matti Vaittinen wrote:  
 > 
-> How do runtime checks play into Rice's Theorem? As far as I know, Rust
-> has or can have a number of runtime checks, for instance in some of
-> the places where a panic can happen.
+> ...
+> 
+> > > > > > > > > > +EXPORT_SYMBOL_GPL(iio_adc_device_num_channels);  
+> > > > > > > > > 
+> > > > > > > > > No namespace?  
+> > > > > > > > 
+> > > > > > > > I was considering also this. The IIO core functions don't belong into a
+> > > > > > > > namespace - so I followed the convention to keep these similar to other IIO
+> > > > > > > > core stuff.  
+> > > > > > > 
+> > > > > > > But it's historically. We have already started using namespaces
+> > > > > > > in the parts of IIO, haven't we?  
+> > > > > > 
+> > > > > > Yes. But as I wrote, I don't think adding new namespaces for every helper
+> > > > > > file with a function or two exported will scale. We either need something
+> > > > > > common for IIO (or IIO "subsystems" like "adc", "accel", "light", ... ), or
+> > > > > > then we just keep these small helpers same as most of the IIO core.  
+> > > > > 
+> > > > > It can be still pushed to IIO_CORE namespace. Do you see an issue with that?  
+> > > > 
+> > > > No. I've missed the fact we have IIO_CORE O_o. Thanks for pointing it out!
+> > > >   
+> > > > > Or a new opaque namespace for the mentioned cases, something like IIO_HELPERS.  
+> > > > 
+> > > > I am unsure if it really benefits to split this out of the IIO_CORE. I've a
+> > > > feeling it falls into the category of making things harder for user with no
+> > > > apparent reason. But yes, the IIO_CORE makes sense.  
+> > > 
+> > > Probably I was not clear, I mean to put this under a given namespace. There is
+> > > no a such, we have currently:
+> > > 
+> > > IIO_BACKEND
+> > > IIO_DMA_BUFFER
+> > > IIO_DMAENGINE_BUFFER
+> > > IIO_GTS_HELPER
+> > > IIO_RESCALE  
+> > 
+> > Ah. So, the IIO core stuff is still not in a namespace. Those listed above
+> > are all too specific (I believe, in general, and definitely to carry ADC
+> > helpers).
 
-Rust can't do full theorem proving. You can do quite a bit with the
-borrow checker and other type system enhancements, but you definitely
-can't do everything.
+Not yet. On todo list... Trick is working out what the correct break up is.
 
-So if the compiler can't prove something at compile time, you may need a
-runtime check to avoid undefined behaviour.
+> > 
+> > Adding 'ADC_HELPERS' would just add yet another way too specific one. So,
+> > currently there is no suitable namespace for these helpers, and I still
+> > believe they fit best to where the rest of the IIO-core stuff is.
 
-And the fact that Rust eliminates undefined behaviour in safe code is
-huge. That's really a fundamental prerequisite for anything that would
-be meaningfully better than C, and Rust gets that right.
+Just add an IIO namespace.  That would be the one I'd expect a typical
+driver to use.  We can move things into it later. The ones above are
+more obscure functionality.  Avoid the IIO_CORE naming as I'd expect
+that to be stuff the core alone should call and we shouldn't see in drivers.
 
-(which required the borrow checker, because memory safety = UB...)
+> > 
+> > If we want really play the namespace game, then the existing IIO stuff
+> > should be put in a IIO_CORE-namespace instead of creating more new small
+> > ones. I am afraid that adding all existing IIO core to a IIO_CORE namespace
+> > and converting all existing users to use the IIO_CORE is not a reasonable
+> > request for a person trying to:
+> > 
+> > 1. Write a driver
+> > 2. Add a small helper to aid others (instead of just melding it all in the
+> > given new driver - which does not benefit anyone else and just leads to code
+> > duplication in the long run...)  
+> 
+> That's why more specific, but also a bit general might work, like IIO_HELPERS,
+> considering that they may be used by many drivers.
+> 
+> While it may be not your call, somebody should do the job. Jonathan? :-)
 
-That means that even if you don't know if your code is correct, it's at
-least going to fail in predictable ways. You're going to get meaningful
-backtraces, good error messages if you weren't horribly lazy (the Rust
-Display trait makes that a lot more ergonomic) - that means no more two
-week bisect + bughunts for a UAF that was silently corrupting data.
+It's on the list.  Not that near the top of it, but there to do at somepoint.
 
-We _just_ had one of those. Just the initial bisect (and it turned out
-to be in the fuse code) interrupted the work I and a user were doing to
-test bcachefs fsck scalability for a full week, when we'd just dedicated
-and setup a machine for that that we only had for a limited time.
+> 
+> > > > > > > > (Sometimes I have a feeling that the trend today is to try make things
+> > > > > > > > intentionally difficult in the name of the safety. Like, "more difficult I
+> > > > > > > > make this, more experience points I gain in the name of the safety".)
+> > > > > > > > 
+> > > > > > > > Well, I suppose I could add a namespace for these functions - if this
+> > > > > > > > approach stays - but I'd really prefer having all IIO core stuff in some
+> > > > > > > > global IIO namespace and not to have dozens of fine-grained namespaces for
+> > > > > > > > an IIO driver to use...  
+> 
+> ...
+> 
+> > > > > > foo &= (~bar);
+> > > > > > 
+> > > > > > is _much_ faster than seeing:  
+> > > > > 
+> > > > > Strongly disagree. One need to parse an additional pair of parentheses,
+> > > > > and especially when it's a big statement inside with nested ones along
+> > > > > with understanding what the heck is going on that you need them in the
+> > > > > first place.
+> > > > > 
+> > > > > On top of that, we have a common practices in the LK project and
+> > > > > with our history of communication it seems you are trying to do differently
+> > > > > from time to time. Sounds like a rebellion to me :-)  
+> > > > 
+> > > > I only rebel when I (in my opinion) have a solid reason :)
+> > > >   
+> > > > > > foo &= ~bar;
+> > > > > > 
+> > > > > > and having to google the priorities.  
+> > > > > 
+> > > > > Again, this is something a (regular) kernel developer keeps refreshed.
+> > > > > Or even wider, C-language developer.  
+> > > > 
+> > > > Ha. As I mentioned, I've been writing C on a daily bases for almost 25
+> > > > years. I wonder if you intent to say I am not a kernel/C-language developer?
+> > > > Bold claim.  
+> > > 
+> > > I'm just surprised by seeing that style from a 25y experienced C developer,
+> > > that's all.  
+> > 
+> > I am not. If something, these 25 years have taught me to understand that
+> > even if something is simple and obvious to me, it may not be simple and
+> > obvious to someone else. Similarly, something obvious to someone else, is
+> > not obvious to me. Hence, I am very careful when telling people that:
+> >   
+> > >>> Again, this is something a (regular) kernel developer keeps refreshed.
+> > >>> Or even wider, C-language developer.  
+> > 
+> > I may however say that "this is something _I_ keep refreshed (as a
+> > kernel/C-developer)".  
+> 
+> True.
+> 
+> > As an example,
+> >   
+> > >>>> foo &= (~bar);  
+> > 
+> > This is something _I_ find very clear and exact, with zero doubt if negation
+> > is applied before &=. For _me_ the parenthesis there _help_, and for _me_
+> > the parenthesis cause no confusion when reading the code.
+> > 
+> > I won't go and tell that I'd expect any C or kernel developer to be able to
+> > fluently parse "foo &= (~bar)". (Whether I think they should is another
+> > matter).  
+> 
+> > Oh well, let's wait and see what Jonathan thinks of these helpers in
+> > general. We can continue the parenthesis discussion when we know whether the
+> > code is going to stay.  
+> 
+> Sure, but it's not only about these helpers, it's about the style in general.
+> Spreading unneeded characters in the code seems to me as an attempt to put
+> _your_ rules over the subsytem's ones. Whatever, let's Jonathan to judge, we
+> will never agree on a keep growing list of things anyway...
+> 
+I need to find some time to consider it a bit more and look at other users.
+I'm not keen on this being 'general' if we only have one user in the short
+term.
 
-That sucked: there's a massive hidden cost to the sorts of heisenbugs
-that C allows.
+Jonathan
 
-Of course higher level logic errors could still result in a silent
-data corruption bug in Rust: intelligent thought is still required,
-until we climb the next mountain, and the next mountain, until we do get
-to full correctness proofs (and then we still have to write the code).
-
-> The type system holes in the Rust type system, and the bugs in rustc's
-> solver, grates me a bit. A lot of hard work is done in Rust language
-> land on fixing the type system holes and on a new solver for rustc
-> without the issues of the current solver, while maintaining as much
-> backwards compatibility as possible. Difficult work as I gather. The
-> alternative GCC Rust compiler, gccrs, is (as I gather) planned to also
-> use the new solver once it is ready. There were some versions of
-> rustc, also in 2020, where compile times for some production Rust
-> projects went from fine to exponential, and where it took some
-> compiler work to mitigate the issues, due to the issues being related
-> to holes in the type system.
-
-I don't expect such issues to affect us normal kernel developers much.
-Yes, the compiler folks have a lot to deal with, but "can it build the
-kernel" is an easy thing to add to their automated testing pipeline.
-
-And it's not like we never have to deal with compiler issues now.
-
-> The more complex a type system checker and solver, the more difficult
-> it can be to avoid holes in the type system and bugs in the solver.
-> Hindley-Milner is great, also because it is relatively simple, and has
-> proofs for it and its algorithms for type checking. Mainstream
-> programming languages inspired by ML/Hindley-Milner do generally
-> extend its type system, often to provide more flexibility.
-
-If you want a real mental trip, consider that a type system powerful
-enough for theorem proving must itself be turing complete (not
-inherently, but in practice), and thus the halting problem applies to
-"can the compiler even process its inputs without terminating?".
-
-But compiler folks have been dealing with such issues for years already,
-that's their ballgame.
 
