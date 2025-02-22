@@ -1,74 +1,78 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1DD478F2F
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 23:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5479E202C24
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 23:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740267399; cv=none; b=q68Flql+0yNMBZeCQKPNe8Dv+qmOfAeZuIkyp3ifM/45j7I/hMe0T/4SGFiLfbMLc78pedJJpQDHWVQgHxKNy77A3y+7/C5vaWa460VoRnKpJH8CtF8XfjCDA5hGeme8reiy3N5Jn611nqxbCCayLf3PxIZ+Sv75h1VYcVsD/8k=
+	t=1740268080; cv=none; b=QQBhzQOTEJ4oO3M3W4Cz0F5r62RZJlXg0/R+jH7lC+FXkefNU69ioZbIDSBBPWH8UxfIiU2Plyvo+w8GhIiw7zHSV0YqGIG24dyHLltdwRjw5bZM4sHvC78anE3ekluNXyD78jCZFKldU8/xvfKT9QuVsFEEm6MQGrI+GcCB7cE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740267399; c=relaxed/simple;
-	bh=W77SzvNr8H94Le/8syWHtp6x1tP/j8+S2D0g+SvSY34=;
+	s=arc-20240116; t=1740268080; c=relaxed/simple;
+	bh=h1O7BtV4AvvJbMc/RbhsPCxDAno9eXmHjqp84NP+Lrg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cLl0ttce1P1fIYoS/7LymbKtZm0gYiyVu+wyXQ+qYM0YIzNxJT0o0TNA8AwY2db+n8RjOA93juLvpmoFnYJXSAIT2v5fk93xXfLoKg0JtyeTnr40NxJJuePpYSbECEl58iIg898C8jaDB6nQKYIsjDSS/DxBpPv6RPTnh5vSPkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=WbiGCYE9; arc=none smtp.client-ip=209.85.218.44
+	 Content-Type:Content-Disposition:In-Reply-To; b=WgXjcB4lPrYY6gn/opWi8RkNOkPd/hWZIb/o0IbLiHW2BPFAPQmF3squ/t2qL8TaGx7c8Y/wm8utCWy6wQR+zD/4EHb92UzVTgzWd/HXVgBXd5NGzwe2+6SkcYNxX/Z3Srjwa22bcj/OqSAm0kVInDMSoUKpiVohxRrasCxueu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=EJumn34/; arc=none smtp.client-ip=209.85.128.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="WbiGCYE9"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-abbda4349e9so472267566b.0
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 15:36:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="EJumn34/"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4393dc02b78so22157595e9.3
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 15:47:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1740267395; x=1740872195; darn=vger.kernel.org;
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1740268076; x=1740872876; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nAoIPctK3fqHVAiWghtoRIf/lTgRwx6zOokplaufCs0=;
-        b=WbiGCYE9d+PS7J9ytGMU3nffnXz+nh+/DeMQEel3tYddZVCTunPzYewVxjneGAPxAs
-         rrsdbFect/Qy00OSb8F5uyTQgkGMV35PYSxbgc6bqyL25IpsfcFbN47Zp2KcYCnTZOTx
-         3vFbsgys2mXLxiy+daDH+suC6E+FK/L25P5m5zBg9+NQ4CcT9JWJNvRKz1zr37WBmo4d
-         YFUJ6vEhnraTGEHxpYew/q4ExE6S/ju+2vdsZhfL89COQtvAIPj1SDVYiAinmwp5WEeT
-         7a8HYzm5qCVrXrvlffjQMJLkdlYqtZLT5ynDfN7GzSAlWmxfiNh9Q1KsjeVA7VHczC1R
-         pS3w==
+        bh=IW+XFUQIismQw6gzhwnGYxNSoG/sgVyzbZ5an6zEu6Y=;
+        b=EJumn34/uWdz33Qe/nyg/1YBDqmIn+uJVS6upATpdy+s4ibQKU/PrNZmHGqm69UYDy
+         sutiSYzN/leXAwdaCrwCfSZp2OqeZRRTar/ue3Q+Nawx4chW0WP7dVLdcfjli5BPUmOK
+         hXgzVk0z4P5fJ+zkPy+YFiI5Q44MnqKMPx4GZ17IIG6I/VhmaO5C1eOThY+84gxNBgCO
+         TaUsgdHnTGk/WefsIntq+Hv4B29cShU8i+l4QNzY3SXZa208Nw0dC+HtGGqMfA+bKQmC
+         QIJMsf0F5JoKqZVOhGUvon1MJ8HwwnoBSDI1qyDVRqFk2k4YwoNokrH95r1hhHD4h/BR
+         fQUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740267395; x=1740872195;
+        d=1e100.net; s=20230601; t=1740268076; x=1740872876;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nAoIPctK3fqHVAiWghtoRIf/lTgRwx6zOokplaufCs0=;
-        b=pUW+W2XS7cug9DncBN2kSkNNG4QqShUzoR6OUoOhhxOCFnswYWTbcejoqdOm5r1oTt
-         LuUxFlAFwdzBL7951M6+fCwGds3nFkmw2IvIyoImZPoCdLt8X32wvDECOR+FK6kY1QJP
-         JyPZ1J86IStt47EV3UnZmetwdIIcuIjX2Sq30Nw3YDFTzEDRdC/54KnHXv5xNyn1oh7O
-         oKL32nxTyp2MzXHs96VX3nJCA/LQjsJpmk0kZ56xgPOU+lrw4GutIhJxjEoL/ctKF36g
-         s01ixtLjHRo5XI8LUE6apylfROx7lPadRSJNoEFey06/IScBWAG+iJWIv3s1IhlMdHlC
-         JOlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWKxu5TC3OA0yrppM9f6aJknsfwHyYJ94Ke9+ymzbU2nWB8add7NNUo5y6c2yvJNIpN1VdcMd7FAGNvbUs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwP40xJrAaZ5vqMyPG+hIWLwcUX/mb00b5i6QO5EghxzsiTekd1
-	JbydoKJFG0tOI8kDMsVcEflGhuwfdUl9dUvk1lqukpUY3hiERe4k6YFNYEWJWJ8=
-X-Gm-Gg: ASbGnct2eNr8YzzJDGnJAQSpKKWjTfREyFEkZdNHeIPFBGsPiesuI3iK4uhmCeKMkni
-	a1xvy+vLTrWmRGaXpOCbRRd5VlNATYkHJ6hx60BJNZvD7DP313ekzdovjWc5xKjClhQbnTdRIBM
-	p4wI8NzXRTf7Bj7TRngr3o/8asaPeGPoelNRUxNyuCHaxfvR1KfU/vXjhdiobxA/WoXzf11jiFP
-	TzzepZ90pILb3lhMfKA3Kpz2xzAdV0USHUxKT/sycyZID3UPRo2Y+TJAoyhrX17OkVYNaWV7PNy
-	4l0sC90NXbLAKrlCDNYU
-X-Google-Smtp-Source: AGHT+IHJTaLwjzt/tiwaKac4ucEvj/k85eCD9iv3ov8InRawXZEDewkDilxI++U5Ru1O3FUU+cAW9Q==
-X-Received: by 2002:a17:907:7754:b0:ab7:e811:de86 with SMTP id a640c23a62f3a-abc0d9ca365mr628075866b.13.1740267394918;
-        Sat, 22 Feb 2025 15:36:34 -0800 (PST)
+        bh=IW+XFUQIismQw6gzhwnGYxNSoG/sgVyzbZ5an6zEu6Y=;
+        b=XEJ5WDL28EyBPB43fhTKZIzHjQG42RMA1+c9soZOrwKTuiWFafndgDCKn/4I0gl9rI
+         x5wzWbdK/R503P8d/I1z5Rfu8/N0DylTOUOM8U/YdQMVDMJlRlkHAlMdtir04sTyfi9y
+         F4jQssqyx/sWhAkEGlNBwCztg3/+h4gLcrIW+OD+b050uivDwKokqc5URNxHAq9r6/LA
+         lb2aPewH4sn6lEmm2YYV7RSK5j3tdQktyg9bkvYwona/V32a72lTI5Lg23MGgUNl6EzY
+         jMMtkr4mkAhos8Lw/PjuHbTLq5Z2mQ3Y9VC5M7yE2+T48kJeX4F7UQHYhb6BEJANwcLz
+         o83g==
+X-Forwarded-Encrypted: i=1; AJvYcCWuFOv+AkZkqKxOU554TgcDD4qq8C+wbXqy4kK6m63nLwJELuFmHUvlxnjZlcLE/nifbjIWEXXpOOnGKzk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmVpvNmZ+uGOA8wRVkM8R+wSucfVCjGTegl6bjbINHaRA/p5zS
+	yq/mpEn4VSDxXQKnZOuCyULZiuahts6VDK/Pzv60Jn9AztnL2hsQDPXiLIQg+kI=
+X-Gm-Gg: ASbGncvsb68IcVBnwUQdJjNZLkyX5EbnASqcZcKXL5x6Gb2YhppriP1zJAhQGN3Znu+
+	r/qEdLdtswspl8ZF9MgmHOVOipwIw7ySFCmHw8idy0av396wj6hkUEIpnX6whHfbKgbyLk2wDrr
+	pZv0tU5E0xMktm0EPAX2dhBl94xNwYK2C+1Wdam1dIp6NDg1kofw0A9zzaAXzgmYvZqhkLRThrd
+	uUNoT3PemN4YwH+ixUXY9tJDjgcPiSCkv2y4JDWwrHkL7gbFn8RHdO3ycKQOXErEVskg5ORmVxH
+	UBBG3M0WyzCynDXSiCUh
+X-Google-Smtp-Source: AGHT+IGZTIQxYg71XgJqv1vvEyOJCEOBpP6FMuxnKZLw8Lb5u/WRZMO8spt71+/SxTJfqSOpojXnNA==
+X-Received: by 2002:a5d:698c:0:b0:38f:2a5e:f169 with SMTP id ffacd0b85a97d-38f6f08639bmr4663882f8f.37.1740268076546;
+        Sat, 22 Feb 2025 15:47:56 -0800 (PST)
 Received: from airbuntu ([46.186.201.36])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb9a65bea0sm1252192366b.46.2025.02.22.15.36.31
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b02d5147sm60243745e9.10.2025.02.22.15.47.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2025 15:36:34 -0800 (PST)
-Date: Sat, 22 Feb 2025 23:36:27 +0000
+        Sat, 22 Feb 2025 15:47:56 -0800 (PST)
+Date: Sat, 22 Feb 2025 23:47:49 +0000
 From: Qais Yousef <qyousef@layalina.io>
-To: Xuewen Yan <xuewen.yan@unisoc.com>
-Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com, ke.wang@unisoc.com, di.shen@unisoc.com,
-	xuewen.yan94@gmail.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] sched/uclamp: Add uclamp_is_used() check before
- enable it
-Message-ID: <20250222233627.3yx55ks5lnq3elby@airbuntu>
-References: <20250213091554.2593-1-xuewen.yan@unisoc.com>
- <20250213091554.2593-2-xuewen.yan@unisoc.com>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Stultz <jstultz@google.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Kconfig.hz: Change default HZ to 1000
+Message-ID: <20250222234749.swpcspu2x3htapck@airbuntu>
+References: <20250210001915.123424-1-qyousef@layalina.io>
+ <20250216190540.254512a5@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,83 +81,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250213091554.2593-2-xuewen.yan@unisoc.com>
+In-Reply-To: <20250216190540.254512a5@pumpkin>
 
-On 02/13/25 17:15, Xuewen Yan wrote:
-> Because the static_branch_enable() would get the cpus_read_lock(),
-> and sometimes users may frequently set the uclamp value of tasks,
-> and the uclamp_validate() would call the static_branch_enable()
-> frequently, so add the uclamp_is_used() check to prevent calling
-> the cpus_read_lock() frequently.
+On 02/16/25 19:05, David Laight wrote:
+> On Mon, 10 Feb 2025 00:19:15 +0000
+> Qais Yousef <qyousef@layalina.io> wrote:
+> 
+> > The frequency at which TICK happens is very important from scheduler
+> > perspective. There's a responsiveness trade-of that for interactive
+> > systems the current default is set too low.
+> 
+> The problem I see is that most people use a kernel from one of the distributions.
+> So you need to persuade them to change their default.
+> Change the default 'default' won't necessarily have any effect.
 
-FWIW original patch was doing such check but it was taken out after review
-comments.
-
-Is something like below completely broken instead? I think uclamp usage isn't
-unique but haven't really audited the code to see if there are similar users.
-
-I think it is a valid pattern to allow and the expectation was there shouldn't
-be side effect of calling this repeatedly.
-
-Good catch by the way.
-
---->8---
-
-diff --git a/kernel/jump_label.c b/kernel/jump_label.c
-index d9c822bbffb8..17583c98c447 100644
---- a/kernel/jump_label.c
-+++ b/kernel/jump_label.c
-@@ -214,6 +214,13 @@ EXPORT_SYMBOL_GPL(static_key_enable_cpuslocked);
-
- void static_key_enable(struct static_key *key)
- {
-+       STATIC_KEY_CHECK_USE(key);
-+
-+       if (atomic_read(&key->enabled) > 0) {
-+               WARN_ON_ONCE(atomic_read(&key->enabled) != 1);
-+               return;
-+       }
-+
-        cpus_read_lock();
-        static_key_enable_cpuslocked(key);
-        cpus_read_unlock();
-@@ -239,6 +246,13 @@ EXPORT_SYMBOL_GPL(static_key_disable_cpuslocked);
-
- void static_key_disable(struct static_key *key)
- {
-+       STATIC_KEY_CHECK_USE(key);
-+
-+       if (atomic_read(&key->enabled) > 0) {
-+               WARN_ON_ONCE(atomic_read(&key->enabled) != 1);
-+               return;
-+       }
-+
-        cpus_read_lock();
-        static_key_disable_cpuslocked(key);
-        cpus_read_unlock();
-
---->8---
+True to some extent. I think Debian [1] relies on kernel's default, which is
+a big distro. But the worry goes beyond that. I think 1K HZ is the modern
+sensible default for all users. It shouldn't cause power issue given NOHZ and
+other improvements. And the logic for context switch etc is no longer valid
+IMHO.  Based on sched_ext saga it shows that people care a lot more on spending
+more time to do the right decision given the complexity of today's systems. And
+the systems I work on (mobile phones) I don't see impact on throughput. So IMHO
+both sides of the arguments are no longer valid, but we continue to get common
+discussions about latencies. This won't solve all problems, but will hopefully
+send the right message to ensure most users switch to this too and address one
+of the root causes for this common 'complaint'.
 
 > 
-> Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
-> ---
->  kernel/sched/syscalls.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> OTOH if you decouple the timer interrupt rate from HZ (or jiffies)
+> then it becomes possible to boot time (or even run-time) change
+> the timer interrupt rate.
 > 
-> diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
-> index 456d339be98f..d718fddadb03 100644
-> --- a/kernel/sched/syscalls.c
-> +++ b/kernel/sched/syscalls.c
-> @@ -368,7 +368,8 @@ static int uclamp_validate(struct task_struct *p,
->  	 * blocking operation which obviously cannot be done while holding
->  	 * scheduler locks.
->  	 */
-> -	static_branch_enable(&sched_uclamp_used);
-> +	if (!uclamp_is_used())
-> +		static_branch_enable(&sched_uclamp_used);
->  
->  	return 0;
->  }
-> -- 
-> 2.25.1
+> So it makes much more sense to fix 'jiffies' as a 1ms counter and then
+> configure the timer interrupt to be a number of ms/jiffies.
 > 
+> This would be similar all the simplifications that came about by making
+> the high precision timestamps (etc) ns regardless of the actual
+> resolution on any specific hardware.
+
+Agreed. John is trying to do something similar but review comments show cased
+teething issues. I did spend a long time working on converting HZ to be
+a variable and switched a large number of users - but lost all this work sadly
+when my machine died and forgot to push..
+
+I think moving the default to follow what most folks should really be using is
+the right thing for now IMHO. It doesn't force anyone to make an alternate
+choice if they think they know really better.
+
+[1] https://salsa.debian.org/kernel-team/linux/-/blob/debian/latest/debian/config/config#L6389
