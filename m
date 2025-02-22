@@ -1,95 +1,86 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71945D530;
-	Sat, 22 Feb 2025 04:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D3EF4FA;
+	Sat, 22 Feb 2025 04:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740198842; cv=none; b=i45YeRB1RCrJdTxpmFpYTSlrpE4BD31nBTe1795L+HEBAlXf4s1jOChy/w/r8fOwyE75Thej97sNG0FJh9IGC/LU+inIlrpthmOIaUh3Qb9ar3iAXpxdFIx8T0TevFAXUFKCzRtxvMTW/04czvtb2VmYwAMXXWaa7nW2BM7oULA=
+	t=1740199032; cv=none; b=ZaewnMS8XN7PARLgk5AlNMeGecuu5YS9qF52nX8az1KNEnvW5nM8FoMVfkfG4hOPM7F3yAe5MAITDX0oFnKnhq1ZSG4SzeXf86wvHeAbQj1au3PFsFjTzNGBizf87sLUwFuIQOTvyBySctKxFXyn8aJeYFRU7EfP9JVqmaEFESU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740198842; c=relaxed/simple;
-	bh=OyXKfnVF6dBV2H9HG8zJDsj21GVyXwOaR2UpUHOnis8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g31ic2drg3kitRPscYMQxDPmt7pPaiQJ/1oaREeLBcoYY72wuZS6jiv2b2RT+6NpaubB+eBVx6YwYxFwnQTpKS8NseaUPC7YdQzwjEPLm7Mq8nOPD8ie57tCyh5nQOSVko2kTnAKBw2KCF4RZfM4aMy4+gvUzgY1zpXusRdXx8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.2] (ip5f5af50a.dynamic.kabel-deutschland.de [95.90.245.10])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 6E69D61E64783;
-	Sat, 22 Feb 2025 05:32:18 +0100 (CET)
-Message-ID: <208fde77-d1b9-440e-9a0f-568ef1250a28@molgen.mpg.de>
-Date: Sat, 22 Feb 2025 05:32:17 +0100
+	s=arc-20240116; t=1740199032; c=relaxed/simple;
+	bh=6eq/g2PeyxDykwM+pXNkLQVHqJBcSYgmgzkucXSwI/U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tcD4FfZMvC5XZCV1gpfJAuSspwXIL/bqYU3f7P/1FxyhTengD1idkqPh6PZ0kOkkjIpqx3TETIKP9t8Y5vZUOpwvmN+v1fGPZVa8CTP7hUD+28OTI0QVFq3i401OiVJbou1fUwnJjyrGJZEsw3atnTx6Jl1YpwYP3YMDvqFq+HE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U1JvcrCM; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U1JvcrCM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C5EAC4CED1;
+	Sat, 22 Feb 2025 04:37:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740199032;
+	bh=6eq/g2PeyxDykwM+pXNkLQVHqJBcSYgmgzkucXSwI/U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U1JvcrCMzhduMegcbMfStWlWM7YTbzUWKvqwstztcIHlIs6LLuXDgX/MB/AE9KF6m
+	 pn4oOLlkChQ3oBelN0pIyblgVVOSASQw4SYgV78fCheNowlYrUx12WbTxkerZ/azvI
+	 p+LNta7yOVGVAuf6rgQVa2Qvtp9ncBL1MBfFqOc/v1TM5mD7PsIECcEg0xuunDaYmQ
+	 tih+3IZoHGQ6EzyaUDeEwUnh8MdUdshSCwH28K6LdHXg3AZSrmn99OWNEYdYuLaIlV
+	 huAIHnzOvFrAWcdzeYvi/8lSlPl+QNjzU7ssiTHd4ek7GcMBn+xW2bGwTfc4H2Wm5I
+	 OLhulvtX4R8qg==
+Date: Sat, 22 Feb 2025 06:37:06 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>,
+	Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
+	rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Wedson Almeida Filho <walmeida@microsoft.com>,
+	Nell Shamrell-Harrington <nells@linux.microsoft.com>,
+	Dirk Behme <dirk.behme@gmail.com>,
+	Konstantin Andrikopoulos <kernel@mandragore.io>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Roland Xu <mu001999@outlook.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rust: workqueue: define built-in bh queues
+Message-ID: <Z7lUcq3PycSSHiXx@kernel.org>
+References: <20250221223533.158959-1-hamzamahfooz@linux.microsoft.com>
+ <CANiq72nsDgRJeKk=B7C9Zo7HL12az+ZLR27qxckqi5H=cmuV5w@mail.gmail.com>
+ <Z7lP5VA374-TuNZz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/12] badblocks: return boolen from badblocks_set() and
- badblocks_clear()
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: Zheng Qixing <zhengqixing@huaweicloud.com>, axboe@kernel.dk,
- song@kernel.org, colyli@kernel.org, dan.j.williams@intel.com,
- vishal.l.verma@intel.com, dave.jiang@intel.com, ira.weiny@intel.com,
- dlemoal@kernel.org, yanjun.zhu@linux.dev, kch@nvidia.com, hare@suse.de,
- zhengqixing@huawei.com, john.g.garry@oracle.com, geliang@kernel.org,
- xni@redhat.com, colyli@suse.de, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
- nvdimm@lists.linux.dev, yi.zhang@huawei.com, yangerkun@huawei.com,
- yukuai3@huawei.com
-References: <20250221081109.734170-1-zhengqixing@huaweicloud.com>
- <20250221081109.734170-11-zhengqixing@huaweicloud.com>
- <fe2dedca-0b71-3c80-6958-4bca61707fcc@huaweicloud.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <fe2dedca-0b71-3c80-6958-4bca61707fcc@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z7lP5VA374-TuNZz@kernel.org>
 
-Dear Zheng,
+On Sat, Feb 22, 2025 at 06:17:41AM +0200, Jarkko Sakkinen wrote:
+> On Fri, Feb 21, 2025 at 11:45:38PM +0100, Miguel Ojeda wrote:
+> > On Fri, Feb 21, 2025 at 11:36 PM Hamza Mahfooz
+> > <hamzamahfooz@linux.microsoft.com> wrote:
+> > >
+> > > We provide these methods because it lets us access these queues from
+> > > Rust without using unsafe code.
+> > >
+> > > Signed-off-by: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+> > 
+> > Cc'ing WORKQUEUE -- thanks!
+> 
+> Not meaning to complain but it by practical has no commit message.
 
+oops, sorry, "... but by practical means it ..."
 
-Thank you for your patch. *boolean* in the summary/title is missing an *a*.
+Anyway I hope my message was received ;-) Leaves me wonder tho why
+this was queued because it apparently is not even part of a patch
+set. "zero callers" should never be merged to mainline...
 
-Am 22.02.25 um 02:26 schrieb Yu Kuai:
+If however such patch is merged, the commit message should probably
+address this exceptional condition.
 
-> Just two simple coding styes below.
-
-I’d put these into a separate commit.
-
-> 在 2025/02/21 16:11, Zheng Qixing 写道:
->> From: Zheng Qixing <zhengqixing@huawei.com>
->>
->> Change the return type of badblocks_set() and badblocks_clear()
->> from int to bool, indicating success or failure. Specifically:
->>
->> - _badblocks_set() and _badblocks_clear() functions now return
->> true for success and false for failure.
->> - All calls to these functions have been updated to handle the
->> new boolean return type.
-
-I’d use present tense: are updated
-
->> - This change improves code clarity and ensures a more consistent
->> handling of success and failure states.
->>
->> Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
->> ---
->>   block/badblocks.c             | 37 +++++++++++++++++------------------
->>   drivers/block/null_blk/main.c | 17 ++++++++--------
->>   drivers/md/md.c               | 35 +++++++++++++++++----------------
->>   drivers/nvdimm/badrange.c     |  2 +-
->>   include/linux/badblocks.h     |  6 +++---
->>   5 files changed, 49 insertions(+), 48 deletions(-)
-
-[…]
-
-
-Kind regards,
-
-Paul
+R, Jarkko
