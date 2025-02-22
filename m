@@ -1,167 +1,116 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F01B200B89
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 11:15:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5D920ADD1
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 11:15:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740222925; cv=none; b=hpq2oDRK55FH1xAroHGKigZ4woxjR0x+0ewWyseOceScLx8M4Bwa+LUVmgWXWecwfY2ft/0PBY2yVWnjoFQrtkUwOb/HEITLBaHedWsXz23iHnmmJ3VumLJNhKICETKJm05mcnX4VTYMR/rkPYDYN8zRv+2yj7P73KdNImRv0OA=
+	t=1740222926; cv=none; b=JtLlUAX8sigsu50/FuVHZaHSGdnlSN4OLDpT1b4sbAM+waUXMfpT2XUhWMc6vRb48x72cKDAzKlVq7O1ZtE5/ZpuaYa9td5kA7/iISr3WP2YmTHHEQ3Mc7IdrKCV7a1BduB23HnXl2BgYof8aVMYDSmemguAQTgvKHXSyxgFQ2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740222925; c=relaxed/simple;
-	bh=fx1lNOH/9HvFUyGcUkYX/YojoqiUdfqXj3m5lzbHBAQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z92L3kB3hQPIy3zPQPxDpNho+SOBoqHM+3dfajYW4+MWOIiDf5cvLcJKDDuiqDn/PqdhSZUov5iPVfj6YCRglbmhp/vJkTjAI11b76BYZlOSGtwK5JUiGsiaANdO25ofblU+vYgtFY72FVne23YccJTLW3QowL9Tnce5PWvSweU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+	s=arc-20240116; t=1740222926; c=relaxed/simple;
+	bh=bsM8gF5vLY1aiatMpbafXqU2OA/hu8+UZhi+44pk95I=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XnIybCd+xlUzuBFPiB37l30ZcUbnmGT16RX7++jKDnRswDdeMkbA6uAs+syir7prekrNYGJEQjaX5qf9xEqrpBfdPh6SbQY7SMQ0+dpgUy1hcyt6WTTwOIF24tpT7X7OOkohs6uOmBtuiPX8Gdt36gabVnTga/WQUKGb5uudgMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Z0PWY23jBz1HKdZ;
-	Sat, 22 Feb 2025 19:13:45 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4Z0PYv06CNznl1v;
+	Sat, 22 Feb 2025 19:15:47 +0800 (CST)
 Received: from kwepemf100008.china.huawei.com (unknown [7.202.181.222])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7D8F3180216;
-	Sat, 22 Feb 2025 19:15:18 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 8CCB51402C4;
+	Sat, 22 Feb 2025 19:15:15 +0800 (CST)
 Received: from huawei.com (10.175.103.91) by kwepemf100008.china.huawei.com
  (7.202.181.222) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 22 Feb
- 2025 19:15:17 +0800
+ 2025 19:15:14 +0800
 From: Zeng Heng <zengheng4@huawei.com>
 To: <Dave.Martin@arm.com>, <james.morse@arm.com>
 CC: <bobo.shaobowang@huawei.com>, <linux-kernel@vger.kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>, <jonathan.cameron@huawei.com>
-Subject: [PATCH mpam mpam/snapshot/v6.14-rc1 v2 5/5] arm_mpam: Automatically synchronize the configuration of all sub-monitoring groups
-Date: Sat, 22 Feb 2025 19:24:48 +0800
-Message-ID: <20250222112448.2438586-6-zengheng4@huawei.com>
+Subject: [PATCH mpam mpam/snapshot/v6.14-rc1 v2 0/5] arm_mpam: Introduce the Narrow-PARTID feature for MPAM driver
+Date: Sat, 22 Feb 2025 19:24:43 +0800
+Message-ID: <20250222112448.2438586-1-zengheng4@huawei.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250222112448.2438586-1-zengheng4@huawei.com>
-References: <20250222112448.2438586-1-zengheng4@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
  kwepemf100008.china.huawei.com (7.202.181.222)
 
-After the system expands the narrow-partid feature and statically assigns
-all (req)PARTIDs to each control group, the following scenarios require
-configuration synchronization operations:
+The patch set is applied for mpam/snapshot/v6.14-rc1 branch of
+https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git
+repository.
 
-  1. MSCs that support narrow-partid need to establish a mapping between
-     reqPARTID and intPARTID after creating a new monitoring group.
-  2. MSCs that do not support narrow-partid need to synchronize the
-     configuration of sub-monitoring groups after users update the control
-     group configuration.
+The narrow-partid feature in MPAM allows for a more efficient use of
+PARTIDs by enabling a many-to-one mapping of reqpartids (requested PARTIDs)
+to intpartids (internal PARTIDs). This mapping reduces the number of unique
+PARTIDs needed, thus allowing more tasks or processes to be monitored and
+managed with the available resources.
 
-In __write_config(), we synchronize a control group's configuration to each
-sub-monitoring group.
+For a mixture of MSCs system, for MSCs that do not support narrow-partid,
+we use the PARTIDs exceeding the number of closids as reqPARTIDs for
+expanding the monitoring groups.
 
-Signed-off-by: Zeng Heng <zengheng4@huawei.com>
+Therefore, we will expand the information contained in the RMID, so that it
+includes not only PMG, but also reqPARTIDs information. The new RMID would
+be like:
+
+    RMID = (reqPARTID << shift | PMG).
+
+Each control group has m (req)PARTIDs, which are used to expand the
+number of monitoring groups under one control group. Therefore, the number
+of monitoring groups is no longer limited by the range of MPAM's PMG, which
+enhances the extensibility of the system's monitoring capabilities.
+
 ---
- drivers/platform/arm64/mpam/mpam_devices.c  | 26 ++++++++++++++++++---
- drivers/platform/arm64/mpam/mpam_internal.h |  3 +++
- drivers/platform/arm64/mpam/mpam_resctrl.c  |  7 +++++-
- 3 files changed, 32 insertions(+), 4 deletions(-)
+Compared with v1:
+  - Redefine the RMID information.
+  - Refactor the resctrl_arch_rmid_idx_decode() and
+    resctrl_arch_rmid_idx_encode().
+  - Simplify closid_rmid2reqpartid() to rmid2reqpartid() and replace it
+    accordingly.
 
-diff --git a/drivers/platform/arm64/mpam/mpam_devices.c b/drivers/platform/arm64/mpam/mpam_devices.c
-index a1efd08eb914..6bcab7223b38 100644
---- a/drivers/platform/arm64/mpam/mpam_devices.c
-+++ b/drivers/platform/arm64/mpam/mpam_devices.c
-@@ -1535,6 +1535,7 @@ static void mpam_reprogram_ris_partid(struct mpam_msc_ris *ris, u16 partid,
- 	u32 pri_val = 0;
- 	u16 cmax = MPAMCFG_CMAX_CMAX;
- 	u16 bwa_fract = MPAMCFG_MBW_MAX_MAX;
-+	u16 intpartid = req2intpartid(partid);
- 	struct mpam_msc *msc = ris->vmsc->msc;
- 	struct mpam_props *rprops = &ris->props;
- 	u16 dspri = GENMASK(rprops->dspri_wd, 0);
-@@ -1545,8 +1546,14 @@ static void mpam_reprogram_ris_partid(struct mpam_msc_ris *ris, u16 partid,
- 
- 	if (mpam_has_feature(mpam_feat_partid_nrw, rprops)) {
- 		mpam_write_partsel_reg(msc, INTPARTID,
--				       MPAMCFG_INTPARTID_INTERNAL | partid);
--		__mpam_intpart_sel(ris->ris_idx, partid, msc);
-+				       MPAMCFG_INTPARTID_INTERNAL |
-+				       intpartid);
-+
-+		/* Already finish mapping reqPARTID to intPARTID */
-+		if (partid != intpartid)
-+			goto out;
-+
-+		__mpam_intpart_sel(ris->ris_idx, intpartid, msc);
- 	}
- 
- 	if (mpam_has_feature(mpam_feat_cpor_part, rprops)) {
-@@ -1606,6 +1613,7 @@ static void mpam_reprogram_ris_partid(struct mpam_msc_ris *ris, u16 partid,
- 
- 	mpam_quirk_post_config_change(ris, partid, cfg);
- 
-+out:
- 	mutex_unlock(&msc->part_sel_lock);
- }
- 
-@@ -3066,9 +3074,21 @@ struct mpam_write_config_arg {
- 
- static int __write_config(void *arg)
- {
-+	int closid_num = resctrl_arch_get_num_closid(NULL);
- 	struct mpam_write_config_arg *c = arg;
-+	u32 reqpartid, req_idx;
-+
-+	/* This partid should be in the range of intPARTIDs */
-+	WARN_ON_ONCE(c->partid >= closid_num);
- 
--	mpam_reprogram_ris_partid(c->ris, c->partid, &c->comp->cfg[c->partid]);
-+	/* Synchronize the configuration to each sub-monitoring group. */
-+	for (req_idx = 0; req_idx < get_num_reqpartid_per_closid();
-+	     req_idx++) {
-+		reqpartid = req_idx * closid_num + c->partid;
-+
-+		mpam_reprogram_ris_partid(c->ris, reqpartid,
-+					 &c->comp->cfg[c->partid]);
-+	}
- 
- 	return 0;
- }
-diff --git a/drivers/platform/arm64/mpam/mpam_internal.h b/drivers/platform/arm64/mpam/mpam_internal.h
-index 7bc4694df23a..9c9c5587cfb2 100644
---- a/drivers/platform/arm64/mpam/mpam_internal.h
-+++ b/drivers/platform/arm64/mpam/mpam_internal.h
-@@ -768,4 +768,7 @@ static inline void mpam_resctrl_teardown_class(struct mpam_class *class) { }
-  */
- #define MSMON_CAPT_EVNT_NOW    BIT(0)
- 
-+u32 req2intpartid(u32 reqpartid);
-+u32 get_num_reqpartid_per_closid(void);
-+
- #endif /* MPAM_INTERNAL_H */
-diff --git a/drivers/platform/arm64/mpam/mpam_resctrl.c b/drivers/platform/arm64/mpam/mpam_resctrl.c
-index af314f6df13e..d55ed48d1939 100644
---- a/drivers/platform/arm64/mpam/mpam_resctrl.c
-+++ b/drivers/platform/arm64/mpam/mpam_resctrl.c
-@@ -186,6 +186,11 @@ static u32 get_num_reqpartid(void)
- 	return mpam_partid_max + 1;
- }
- 
-+u32 get_num_reqpartid_per_closid(void)
-+{
-+	return get_num_reqpartid() / resctrl_arch_get_num_closid(NULL);
-+}
-+
- u32 resctrl_arch_system_num_rmid_idx(void)
- {
- 	u8 closid_shift = fls(mpam_pmg_max);
-@@ -211,7 +216,7 @@ static u32 rmid2pmg(u32 rmid)
- 	return rmid & pmg_mask;
- }
- 
--static u32 req2intpartid(u32 reqpartid)
-+u32 req2intpartid(u32 reqpartid)
- {
- 	u8 intpartid_shift = fls(mpam_intpartid_max);
- 	u32 intpartid_mask = ~(~0 << intpartid_shift);
--- 
+Compared with RFC-v4:
+  - Rebase the patch set on the v6.14-rc1 branch.
+
+Compared with RFC-v3:
+  - Add limitation of the Narrow-PARTID feature (See Patch 2).
+  - Remove redundant reqpartid2closid() and reqpartid_pmg2rmid().
+  - Refactor closid_rmid2reqpartid() partially.
+  - Merge the PARTID conversion-related patches into a single patch for
+    bisectability.
+  - Skip adaptation of resctrl_arch_set_rmid() which is going to be
+    removed.
+
+Compared with RFC-v2:
+  - Refactor closid/rmid pair translation.
+  - Simplify the logic of synchronize configuration.
+  - Remove reqPARTID source bitmap.
+
+Compared with RFC-v1:
+  - Rebase this patch set on latest MPAM driver of the v6.12-rc1 branch.
+---
+
+Dave Martin (1):
+  arm_mpam: Set INTERNAL as needed when setting MSC controls
+
+Zeng Heng (4):
+  arm_mpam: Introduce the definitions of intPARTID and reqPARTID
+  arm_mpam: Add limitation for the Narrow-PARTID feature
+  arm_mpam: Expand the composition of RMID
+  arm_mpam: Automatically synchronize the configuration of all
+    sub-monitoring groups
+
+ drivers/platform/arm64/mpam/mpam_devices.c  |  62 ++++++--
+ drivers/platform/arm64/mpam/mpam_internal.h |   5 +
+ drivers/platform/arm64/mpam/mpam_resctrl.c  | 155 ++++++++++++++------
+ 3 files changed, 168 insertions(+), 54 deletions(-)
+
+--
 2.25.1
 
