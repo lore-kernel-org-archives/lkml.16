@@ -1,287 +1,89 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BCDB1FCF53
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 10:31:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBE3B206F1A;
+	Sat, 22 Feb 2025 10:31:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740220300; cv=none; b=brHI62vAUH2qNB+uxPbKCAV78BJWj1ifqHnVCts5Q2rnwLdRsPutlmcp45F1yrUh8+xSO4P+TeqybL8vxFQAyjeDiHIjel7bHmc57GxAqW/PTOh0djvODaxMoKBUr5Sh2nSuppzchZukcGKcbM5sZmCRgvl5C4czu7JzZy9K69Y=
+	t=1740220321; cv=none; b=cb179/tblFQmL5CRIU7ER8OIkA6O2pDcKQ6mLoBCgCwxOXdQ+e7Pt3k6RiQ4yondr8YCzmFutFOxKZXP01RXDpoRuijUkfMmg6nIhDx4nxBKHDVgOXHxo8mQ4oawFsF9ENrNrXITScSfTe39Ah8Vv6P+OL5u85pzm3MDEx/O6YA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740220300; c=relaxed/simple;
-	bh=8iG1ZLCx2gYOTtWxfT2AsKyOKhj7K5INUc6DLhzjCJw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=n08eRi/6lF9auRsqCH5EnIuHQ+ATI36/l4k0nUZb8xr0xoLKO+pCqLQE0psDaATxRfFG2BESIsIJKKyCXCRVhovDhaM3YVv4g40P1JjZ4eTSpWocAHtorjlqnGBPRAjL4pR3MkyeS538Z79RyzraiB39UBAu6aykLh1lloIFW4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Z0NWM41lJz9w77;
-	Sat, 22 Feb 2025 18:28:31 +0800 (CST)
-Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
-	by mail.maildlp.com (Postfix) with ESMTPS id A0B771800D9;
-	Sat, 22 Feb 2025 18:31:34 +0800 (CST)
-Received: from [10.159.166.136] (10.159.166.136) by
- kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Sat, 22 Feb 2025 18:31:33 +0800
-Message-ID: <2925aaeb-693b-4ef0-b702-96f63190705c@huawei.com>
-Date: Sat, 22 Feb 2025 18:31:32 +0800
+	s=arc-20240116; t=1740220321; c=relaxed/simple;
+	bh=EeDJju08iU1yyZYbMpu1u5CV0TLEVOfnS03nJGV+Qi4=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References; b=qzf/0sW+02rJnHe0wcizBmRgif9bW+uIHpxqmgAfQuZ3CJsG/jOEEnvqkh7rUoQoDByd8pVlB52bZmWX/IDqFCYE94IwpVl1WpdMinTVGLj2Qtc9ePLxBffEb59vI2KBk0xJmW1cp2qvpnwQ6icQLU6VrFqj2HETxIoG7viABoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B0H/2caV; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B0H/2caV"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-220e989edb6so81773505ad.1;
+        Sat, 22 Feb 2025 02:31:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740220318; x=1740825118; darn=vger.kernel.org;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=G1O0dlsatzka8Rjn2bFVMo/J2mA85sw+K5Yl9fpzwSQ=;
+        b=B0H/2caVTocLnAtbpGjjRE+hREgvBIZzcZ0aMCKwFJJnGc6pUMxgY56PxMavyvtwIQ
+         ITdsEAJwnSnnrm5bMO2TLHP5oXlKxmMo8EyV5yhSAs3soAZ5apUn6D24h+4PBNT/PfCR
+         5jSUVdxRaHtNMpvLujqnMKofw5BJBclb8xMP2LujAtVZFZJOqyfwm+cGyMXzdpiXOymM
+         gXUN6TQLbMd07VCDnLe8YqlUfhrUScWH15vvbgrDP+1XDB7Dq4ZGtmAImRC4nEuOdDiS
+         qjkteRla/lpQuHlSc2JDOD2BU2f4MQRXx70nHamznq6mCKSb9/xHP+a5b46dgN0qKtWe
+         9IvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740220318; x=1740825118;
+        h=references:message-id:date:in-reply-to:subject:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G1O0dlsatzka8Rjn2bFVMo/J2mA85sw+K5Yl9fpzwSQ=;
+        b=jQipNDak9j6OjnmxYh5WOTLi3dOpUdWh6nPoMM6ShUmIq6w/CG5tsTdywS5Qc1n3/n
+         SIhySRCbZ29KglD0QRnsYX4MB+bgpke8bjFEmSJILhz8de7gkXDAg6f2Ol38zFq4ACX2
+         bwcZ278UbE4nqwC0qCPEiwhSObYxThb46jQnMFekQAYmxUttNvFuuY/O73FFeY2Kpf9m
+         MPjysl7d68wUwUymttwLk+7nnblJDMpyg1mxscFbg7U3xeMiNarZsLDpDro1Lv7LZXjz
+         9etgqZ5yutZqlQbjYCxaeohknw/7YidzpYkXx+H/t3oiXmhoV2T0YaiQPSiq3nKQDppz
+         7MJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJz1NoY+cbx2zNp9E8MJx6uec2U+a95XpaDgTRLZFHzXgTIWDXeBhNqXUuDbummgEwX5RFKhWI/Gdd3pmK@vger.kernel.org, AJvYcCWLPjdiLwiV7Jjz0JURY5OqYOwyKfykvCH8yQ/T2OD6aihVW3zfd9Z1S0MGNY/AuWT0zvlrE83GoIOG@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgTkwJqabnOwgtrEd6+KCB3CbAIixU6Grtqz4E9sLFpmI7xh2f
+	Qo4k7tn9duPpaHDlDwFJv+Mu+b2KWKkTBHSOHZvfUshjWUFhPgOjrohC96dg
+X-Gm-Gg: ASbGncs4qcI37aCZM9smVobU2LhwR9wA3o5djh18pwsuvtyYHKWi/dYtRPOjReENMU6
+	8MwEU0gYQ4j4S/DHZzFWVuRrd/YpKeOcDWiNC0p9u/JNDh1T1Dxd9t4gpM2eRjPMPdPzA7Jrk3O
+	H8nTmTX4BB5PTUXRupWhygp/lHLTY802sQJCze/GcGfDPWVuY3hNNpBaWHvFuEyl3Ku7TMq4W1e
+	dDPPK/qxIt40egEbOXVzom/1GRJ9RzoaYirw6Q+w+y2E4rmHAsQTenT2FGq96Q9V9+kovhkQ9m9
+	lGkEJjg58MbrmiIiGw==
+X-Google-Smtp-Source: AGHT+IGEwfJ0QjG7Cr3aFOSZd1YhkxzAeQkeX3PxMyzf9G0qhNgHb1G84ruTloNxlyWBwSq6lOJpDw==
+X-Received: by 2002:a17:902:ce85:b0:21f:f3d:d533 with SMTP id d9443c01a7336-2219ff3354fmr86247825ad.2.1740220318152;
+        Sat, 22 Feb 2025 02:31:58 -0800 (PST)
+Received: from dw-tp ([171.76.82.51])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-add21f2149fsm13478068a12.1.2025.02.22.02.31.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Feb 2025 02:31:57 -0800 (PST)
+From: "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>
+To: Ojaswin Mujoo <ojaswin@linux.ibm.com>, linux-ext4@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>
+Cc: Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] ext4: Make sb update interval tunable
+In-Reply-To: <86b177b0b0a863362f11afa3fd835c5734e14ef7.1740212945.git.ojaswin@linux.ibm.com>
+Date: Sat, 22 Feb 2025 15:02:39 +0530
+Message-ID: <87y0xygw94.fsf@gmail.com>
+References: <cover.1740212945.git.ojaswin@linux.ibm.com> <86b177b0b0a863362f11afa3fd835c5734e14ef7.1740212945.git.ojaswin@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 drm-dp 2/8] drm/hisilicon/hibmc: Add dp serdes cfg to
- adjust serdes rate, voltage and pre-emphasis
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-	<kong.kongxinwei@hisilicon.com>, <liangjian010@huawei.com>,
-	<chenjianmin@huawei.com>, <lidongming5@huawei.com>, <libaihan@huawei.com>,
-	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-	<shiyongbang@huawei.com>
-References: <20250222025102.1519798-1-shiyongbang@huawei.com>
- <20250222025102.1519798-3-shiyongbang@huawei.com>
- <dmq3iyxffg4jo7eup37zk4uqkqjtbn7wj2jmyl6ww5clksmgvq@jdslhlsbxrdr>
-From: Yongbang Shi <shiyongbang@huawei.com>
-In-Reply-To: <dmq3iyxffg4jo7eup37zk4uqkqjtbn7wj2jmyl6ww5clksmgvq@jdslhlsbxrdr>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemd500013.china.huawei.com (7.221.188.12)
 
-> On Sat, Feb 22, 2025 at 10:50:55AM +0800, Yongbang Shi wrote:
->> From: Baihan Li <libaihan@huawei.com>
->>
->> This dp controller need features of digital-to-analog conversion and
->> high-speed transmission in chip by its extern serdes controller. Our
->> serdes cfg is relatively simple, just need two register configurations.
->> Don't need too much functions, like: power on/off, initialize, and some
->> complex configurations, so I'm not going to use the phy framework.
->> This serdes is inited and configured in dp initialization, and also
->> integrating them into link training process.
->>
->> For rate changing, we can change from 1.62-8.2Gpbs by cfg reg.
->> For voltage and pre-emphasis levels changing, we can cfg different
->> serdes ffe value.
->>
->> Signed-off-by: Baihan Li <libaihan@huawei.com>
->> Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
->> ---
->> ChangeLog:
->> v2 - > v3:
->>    - add commit log about dp serdes, suggested by Dmitry Baryshkov.
->>    - return value in hibmc_dp_serdes_init(), suggested by Dmitry Baryshkov.
->>    - add static const in the array of serdes_tx_cfg[], suggested by Dmitry Baryshkov.
->>    - change drm_warn to drm_dbg_dp, suggested by Dmitry Baryshkov.
->>    - add explanations about dp serdes macros, suggested by Dmitry Baryshkov.
->> v1 -> v2:
->>    - splittting the patch and add more detailed the changes in the commit message, suggested by Dmitry Baryshkov.
->>    - changing all names of dp phy to dp serdes.
->> ---
->>   drivers/gpu/drm/hisilicon/hibmc/Makefile      |  2 +-
->>   drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h  |  1 +
->>   drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c    |  6 ++
->>   .../gpu/drm/hisilicon/hibmc/dp/dp_serdes.c    | 72 +++++++++++++++++++
->>   .../gpu/drm/hisilicon/hibmc/dp/dp_serdes.h    | 34 +++++++++
->>   5 files changed, 114 insertions(+), 1 deletion(-)
->>   create mode 100644 drivers/gpu/drm/hisilicon/hibmc/dp/dp_serdes.c
->>   create mode 100644 drivers/gpu/drm/hisilicon/hibmc/dp/dp_serdes.h
->>
->> diff --git a/drivers/gpu/drm/hisilicon/hibmc/Makefile b/drivers/gpu/drm/hisilicon/hibmc/Makefile
->> index 95a4ed599d98..43de077d6769 100644
->> --- a/drivers/gpu/drm/hisilicon/hibmc/Makefile
->> +++ b/drivers/gpu/drm/hisilicon/hibmc/Makefile
->> @@ -1,5 +1,5 @@
->>   # SPDX-License-Identifier: GPL-2.0-only
->>   hibmc-drm-y := hibmc_drm_drv.o hibmc_drm_de.o hibmc_drm_vdac.o hibmc_drm_i2c.o \
->> -	       dp/dp_aux.o dp/dp_link.o dp/dp_hw.o hibmc_drm_dp.o
->> +	       dp/dp_aux.o dp/dp_link.o dp/dp_hw.o dp/dp_serdes.o hibmc_drm_dp.o
->>   
->>   obj-$(CONFIG_DRM_HISI_HIBMC) += hibmc-drm.o
->> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h
->> index 2c52a4476c4d..e7746bc4b592 100644
->> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h
->> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h
->> @@ -38,6 +38,7 @@ struct hibmc_dp_dev {
->>   	struct mutex lock; /* protects concurrent RW in hibmc_dp_reg_write_field() */
->>   	struct hibmc_dp_link link;
->>   	u8 dpcd[DP_RECEIVER_CAP_SIZE];
->> +	void __iomem *serdes_base;
->>   };
->>   
->>   #define dp_field_modify(reg_value, mask, val)				\
->> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
->> index a8d543881c09..59078483ec55 100644
->> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
->> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c
->> @@ -7,6 +7,7 @@
->>   #include "dp_comm.h"
->>   #include "dp_reg.h"
->>   #include "dp_hw.h"
->> +#include "dp_serdes.h"
->>   
->>   static void hibmc_dp_set_tu(struct hibmc_dp_dev *dp, struct drm_display_mode *mode)
->>   {
->> @@ -151,6 +152,7 @@ int hibmc_dp_hw_init(struct hibmc_dp *dp)
->>   {
->>   	struct drm_device *drm_dev = dp->drm_dev;
->>   	struct hibmc_dp_dev *dp_dev;
->> +	int ret;
->>   
->>   	dp_dev = devm_kzalloc(drm_dev->dev, sizeof(struct hibmc_dp_dev), GFP_KERNEL);
->>   	if (!dp_dev)
->> @@ -165,6 +167,10 @@ int hibmc_dp_hw_init(struct hibmc_dp *dp)
->>   
->>   	hibmc_dp_aux_init(dp_dev);
->>   
->> +	ret = hibmc_dp_serdes_init(dp_dev);
->> +	if (ret)
->> +		return ret;
->> +
->>   	dp_dev->link.cap.lanes = 0x2;
->>   	dp_dev->link.cap.link_rate = DP_LINK_BW_2_7;
->>   
->> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_serdes.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_serdes.c
->> new file mode 100644
->> index 000000000000..241b9ef782b0
->> --- /dev/null
->> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_serdes.c
->> @@ -0,0 +1,72 @@
->> +// SPDX-License-Identifier: GPL-2.0-or-later
->> +// Copyright (c) 2025 Hisilicon Limited.
->> +
->> +#include <linux/delay.h>
->> +#include <drm/drm_device.h>
->> +#include <drm/drm_print.h>
->> +#include "dp_comm.h"
->> +#include "dp_config.h"
->> +#include "dp_reg.h"
->> +#include "dp_serdes.h"
->> +
->> +int hibmc_dp_serdes_set_tx_cfg(struct hibmc_dp_dev *dp, u8 train_set[HIBMC_DP_LANE_NUM_MAX])
->> +{
->> +	static const u32 serdes_tx_cfg[4][4] = { {DP_SERDES_VOL0_PRE0, DP_SERDES_VOL0_PRE1,
->> +						  DP_SERDES_VOL0_PRE2, DP_SERDES_VOL0_PRE3},
->> +						 {DP_SERDES_VOL1_PRE0, DP_SERDES_VOL1_PRE1,
->> +						  DP_SERDES_VOL1_PRE2}, {DP_SERDES_VOL2_PRE0,
->> +						  DP_SERDES_VOL2_PRE1}, {DP_SERDES_VOL3_PRE0}};
->> +	int cfg[2];
->> +	int i;
->> +
->> +	for (i = 0; i < HIBMC_DP_LANE_NUM_MAX; i++) {
->> +		cfg[i] = serdes_tx_cfg[(train_set[i] & 0x3)]
->> +			 [(train_set[i] << DP_TRAIN_PRE_EMPHASIS_SHIFT & 0x3)];
-> I think this will not work as expected. There should be no need to shift
-> train_set[i], otherwise first '&' is executed, reducing array index to
-> (train_set[i]) << 3), which then is out-of-boundaries for the array.
+Ojaswin Mujoo <ojaswin@linux.ibm.com> writes:
+
+> Currently, outside error paths, we auto commit the super block after 1
+> hour has passed and 16MB worth of updates have been written since last
+> commit. This is a policy decision so make this tunable while keeping the
+> defaults same. This is useful if user wants to tweak the superblock
+> update behavior or for debugging the codepath by allowing to trigger it
+> more frequently.
 >
-> Most likely you meant:
->
-> cfg[i] = serdes_tx_cfg[FIELD_GET(DP_TRAIN_VOLTAGE_SWING_MASK, train_set[i]]
-> 		      [FIELD_GET(DP_TRAIN_PRE_EMPHASIS_MASK, train_set[i]];
-
-Yeah, that's right, I'll change it. Thanks for your correcting！
+> We can now tweak the super block update using sb_update_sec and
+> sb_update_kb files in /sys/fs/ext4/<dev>/
 
 
->
->> +		if (!cfg[i])
->> +			return -EINVAL;
->> +
->> +		/* lane1 offset is 4 */
->> +		writel(FIELD_PREP(HIBMC_DP_PMA_TXDEEMPH, cfg[i]),
->> +		       dp->serdes_base + HIBMC_DP_PMA_LANE0_OFFSET + i * 4);
->> +	}
->> +
->> +	usleep_range(300, 500);
->> +
->> +	if (readl(dp->serdes_base + HIBMC_DP_LANE_STATUS_OFFSET) != DP_SERDES_DONE) {
->> +		drm_dbg_dp(dp->dev, "dp serdes cfg failed\n");
->> +		return -EAGAIN;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +int hibmc_dp_serdes_rate_switch(u8 rate, struct hibmc_dp_dev *dp)
->> +{
->> +	writel(rate, dp->serdes_base + HIBMC_DP_LANE0_RATE_OFFSET);
->> +	writel(rate, dp->serdes_base + HIBMC_DP_LANE1_RATE_OFFSET);
->> +
->> +	usleep_range(300, 500);
->> +
->> +	if (readl(dp->serdes_base + HIBMC_DP_LANE_STATUS_OFFSET) != DP_SERDES_DONE) {
->> +		drm_dbg_dp(dp->dev, "dp serdes rate switching failed\n");
->> +		return -EAGAIN;
->> +	}
->> +
->> +	if (rate < DP_SERDES_BW_8_1)
->> +		drm_dbg_dp(dp->dev, "reducing serdes rate to :%d\n",
->> +			   rate ? rate * HIBMC_DP_LINK_RATE_CAL * 10 : 162);
->> +
->> +	return 0;
->> +}
->> +
->> +int hibmc_dp_serdes_init(struct hibmc_dp_dev *dp)
->> +{
->> +	dp->serdes_base = dp->base + HIBMC_DP_HOST_OFFSET;
->> +
->> +	writel(FIELD_PREP(HIBMC_DP_PMA_TXDEEMPH, DP_SERDES_VOL0_PRE0),
->> +	       dp->serdes_base + HIBMC_DP_PMA_LANE0_OFFSET);
->> +	writel(FIELD_PREP(HIBMC_DP_PMA_TXDEEMPH, DP_SERDES_VOL0_PRE0),
->> +	       dp->serdes_base + HIBMC_DP_PMA_LANE1_OFFSET);
->> +
->> +	return hibmc_dp_serdes_rate_switch(DP_SERDES_BW_8_1, dp);
->> +}
->> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_serdes.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_serdes.h
->> new file mode 100644
->> index 000000000000..812d0794543c
->> --- /dev/null
->> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_serdes.h
->> @@ -0,0 +1,34 @@
->> +/* SPDX-License-Identifier: GPL-2.0-or-later */
->> +/* Copyright (c) 2025 Hisilicon Limited. */
->> +
->> +#ifndef DP_SERDES_H
->> +#define DP_SERDES_H
->> +
-> Why all these values are not a part of the dp_reg.h?
+Agree that this could be useful as a tunable knob for various reasons
+rather than being a hardcoded value within kernel. 
 
-Okay, I'll merged together.
+The patch also looks good to me. Please feel free to add -
 
-
->> +#define HIBMC_DP_HOST_OFFSET		0x10000
->> +#define HIBMC_DP_LANE0_RATE_OFFSET	0x4
->> +#define HIBMC_DP_LANE1_RATE_OFFSET	0xc
->> +#define HIBMC_DP_LANE_STATUS_OFFSET	0x10
->> +#define HIBMC_DP_PMA_LANE0_OFFSET	0x18
->> +#define HIBMC_DP_PMA_LANE1_OFFSET	0x1c
->> +#define HIBMC_DP_PMA_TXDEEMPH		GENMASK(18, 1)
->> +
->> +/* dp serdes TX-Deempth Configuration */
->> +#define DP_SERDES_VOL0_PRE0		0x280
->> +#define DP_SERDES_VOL0_PRE1		0x2300
->> +#define DP_SERDES_VOL0_PRE2		0x53c0
->> +#define DP_SERDES_VOL0_PRE3		0x8400
->> +#define DP_SERDES_VOL1_PRE0		0x380
->> +#define DP_SERDES_VOL1_PRE1		0x3440
->> +#define DP_SERDES_VOL1_PRE2		0x6480
->> +#define DP_SERDES_VOL2_PRE0		0x500
->> +#define DP_SERDES_VOL2_PRE1		0x4500
->> +#define DP_SERDES_VOL3_PRE0		0x600
->> +#define DP_SERDES_BW_8_1		0x3
->> +
->> +#define DP_SERDES_DONE			0x3
->> +
->> +int hibmc_dp_serdes_init(struct hibmc_dp_dev *dp);
->> +int hibmc_dp_serdes_rate_switch(u8 rate, struct hibmc_dp_dev *dp);
->> +int hibmc_dp_serdes_set_tx_cfg(struct hibmc_dp_dev *dp, u8 train_set[HIBMC_DP_LANE_NUM_MAX]);
->> +
->> +#endif
->> -- 
->> 2.33.0
->>
+Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
