@@ -1,139 +1,177 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18144207A1D
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 09:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA72207657
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 09:58:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740218280; cv=none; b=LiXNYEIMH2ubkVRn8tp+uC0PMusiF7mFObwWgrDz2BKL32H0ljuEkw5kKg8mcJcFA2iTTzWiIamcnoggb3iUWvxEwr+pLJyCTIR7nY96KqgGvz038WcKKYmXfbGRdmjXhMRp7fp4GVvb2u0ncu/+2R6abJ3+wAFVc2OfDGSjrO0=
+	t=1740218305; cv=none; b=QX0KYGviK1d7q9TqYCwB/0T1ultOEhSf5gRnv9ajw18xzq5ECj36Lxi4laOMVdx+d1jf58GHSAl19oU71tq71dDRF+HvzENI6+Qp5RvsI1lvjZrIsu1PNluvi63PuuvwOtms+2UWZWEptiedNsVnX6DV5ZNIERImbV/hYSNwQIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740218280; c=relaxed/simple;
-	bh=NGVtBbKg9JLsQmxh7+zW3Knm/bad1Q2ESjaHJQpXMB8=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=lvf4SeO3HGeomGOYt3ByZH2Pv/MUykJsvzKUyhsmtGi6SWQ8QSix5hRHs5fSJAwGsfvFmfsEbDtMAH8x/Xc7+YhD+Qf6iByR1chE4v+75kv9rakG15RsmylQax77IzJfPxbHVkhpFAkfgD7beohPBJzF/Ol0oukm15PnCy1wi4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MXvWdSYF; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MXvWdSYF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740218278; x=1771754278;
-  h=date:from:to:cc:subject:message-id;
-  bh=NGVtBbKg9JLsQmxh7+zW3Knm/bad1Q2ESjaHJQpXMB8=;
-  b=MXvWdSYFqO7tqQNrI0RKMlsgTD0c2tL+fkAL/njN9QchPGp0Gt7qdf/x
-   AEttMgHpUKC8AShCx+bLz4CHvaADS21ahPZflUMEmQ97rNpOunvZ9GFVG
-   YeWkcQfaQ68O6Fb8HvgJYxijPhzlLzAbEl1y66m6y4IxqZhvZOq5Yv4u/
-   c7ATukOBEiMGY7kM6pM85usgJflNrPnDOknydmueNZ1xNeg8ePj2VDnDM
-   LzlnwoVn3pCCzlbcONMVxzOAWgLe/K6Lrdi3GGFXpsURzCtTJOGRCzdfw
-   cw3n00foRV7mYeMpCG91HoiQ+KUEwhPYbHq71XohqcNTGH64ryJrwKhrq
-   w==;
-X-CSE-ConnectionGUID: xkLuprjyQY2y9ZCG9TNecg==
-X-CSE-MsgGUID: eyu2D1lmSzCrwXKsGT7EPA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="52462197"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="52462197"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2025 01:57:57 -0800
-X-CSE-ConnectionGUID: 8PGckbJsQCKFL4Bfz+HQMA==
-X-CSE-MsgGUID: wpg/UG9zSKW0XPD7w0ulgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,307,1732608000"; 
-   d="scan'208";a="115553762"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa006.jf.intel.com with ESMTP; 22 Feb 2025 01:57:56 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tlmGf-0006St-11;
-	Sat, 22 Feb 2025 09:57:53 +0000
-Date: Sat, 22 Feb 2025 17:57:28 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:irq/drivers] BUILD SUCCESS
- b956c9de91757c9478e24fc9f6a57fd46f0a49f0
-Message-ID: <202502221714.4p3Ekqzd-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1740218305; c=relaxed/simple;
+	bh=5jjxoi+NyBSTA5CyOpM5cn5oDUoNtYuVeSGvy6lO+Sg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MBUM7H63GIPHFMt6YCF2gPRl+07iEr5ZSae35pUTmoXia0Ms6L14HVGCwhi9e9ZQri1G+wKDOo/1HyNpjhhtvZZxyJs/QBxwwbyxrgHdyB1IqxhJtMv17Fvglzm/Vvey5RG+p8sUSWRk17CFkCDZPUZJCMtcdIhBkI+B7NX9HnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f45.google.com with SMTP id ada2fe7eead31-4b68cb2abacso871231137.3
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 01:58:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740218302; x=1740823102;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=miMTL+Ibz2ZHlrxtRz9K3mZRlvBnkZQuM5tmX7QkF0c=;
+        b=MkCahlBK5O5gybWKVQkGdTfeCo4PM3kOsy/cKtL4UUGtKlGvXVo9uGyKRaEeZswwrc
+         1tO2/1YFgCX1ww9ohXD5bwsVlG2jOWACKXNMYBZ8cR05QjYDiHlRyYyv+BUydCKMc15s
+         OTX8GgnfBB8P7+clQpc2iBe7yFve7unmQoathsFat2XMFd5YuKBMhAxYF2JeSAbNF4oj
+         B2gn0kL62LkGjQRguvXEdCEsEy7ozazQlCtZ9dJD239JNpLV6W0QEyLPMYIBz4yumEpN
+         PoZtCrwsgqoOT0AAOc5jicW9qvXjy78AgahxKdW7SQeWuMiWDwcAcMJ3Vwb3eAnEPIFo
+         ME8g==
+X-Forwarded-Encrypted: i=1; AJvYcCUZGOyKGNP42/14zhWBVLAtWrFf560FoMLZqIRREjMpBzlnbzoD7Ds10BesPnPYRTCkpfHOiComFHrvd/E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy12fcZsPCvCumgUoxrBVp2dr4W7Jqb+N+fMnY8JfeMMKngOf5Q
+	+Is2Znn+uTWzPoUcbnpE4htnhl3ssDOE2lHyXOQU5ha1SxSRUGoZ2ZGwFezQKCzHYwKXH7CbGX3
+	uP7Yde2Er8lErgkxD+yUJuF+trxM=
+X-Gm-Gg: ASbGncvBzEJdq8PuRlTQYYb3bj+atb98zFDdydNJkzgmZQ9sFVIsIYznylbhlsUehvb
+	3KTxNZ9Y8gw390OBAKBkvuUvu+XYoeje5FvOZqe86qvMA2vTgh8hmgElz4299HrLwozALfu3DNa
+	zt8DGQowE=
+X-Google-Smtp-Source: AGHT+IH862+3snHiTNiHtpiNOaVebF10wLzPZDhja6mB2OdnLByqTrRDd9lQn502Dky8M/LD1mFJ7ahBqOc3/0wE0U0=
+X-Received: by 2002:a05:6102:dc6:b0:4bb:b868:9d2d with SMTP id
+ ada2fe7eead31-4bfc028c564mr3923572137.24.1740218302311; Sat, 22 Feb 2025
+ 01:58:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250222024617.2790609-1-mawupeng1@huawei.com>
+ <CAMgjq7AfZnwGAHoyCEhO5p2km-gPLk65WLL+2vO1i8hQDaTy+A@mail.gmail.com>
+ <a868e635-a86e-4dd7-8bae-c6ca94a2dc09@huawei.com> <CAMgjq7C7hguzq3DmR3s7=3LNGeaCC8qdmiQvLCZrdkB86=BFFw@mail.gmail.com>
+In-Reply-To: <CAMgjq7C7hguzq3DmR3s7=3LNGeaCC8qdmiQvLCZrdkB86=BFFw@mail.gmail.com>
+From: Barry Song <baohua@kernel.org>
+Date: Sat, 22 Feb 2025 22:58:11 +1300
+X-Gm-Features: AWEUYZkREUP02MnSFVZ9f4vjkeZNf-q9qUt0ApDtdRrJ74AE5UIIkwURMldW7Ns
+Message-ID: <CAGsJ_4zW6EtXrzk05caQhOcZuC+5ovQWrzYxP6PFKkMY1H2R3g@mail.gmail.com>
+Subject: Re: [PATCH] mm: swap: Avoid infinite loop if no valid swap entry
+ found during do_swap_page
+To: Kairui Song <ryncsn@gmail.com>
+Cc: mawupeng <mawupeng1@huawei.com>, akpm@linux-foundation.org, david@redhat.com, 
+	ryan.roberts@arm.com, chrisl@kernel.org, huang.ying.caritas@gmail.com, 
+	schatzberg.dan@gmail.com, hanchuanhua@oppo.com, willy@infradead.org, 
+	gaoxu2@honor.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	nphamcs@gmail.com, yosryahmed@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/drivers
-branch HEAD: b956c9de91757c9478e24fc9f6a57fd46f0a49f0  arm64: dts: rockchip: rk356x: Move PCIe MSI to use GIC ITS instead of MBI
+On Sat, Feb 22, 2025 at 9:03=E2=80=AFPM Kairui Song <ryncsn@gmail.com> wrot=
+e:
+>
+> On Sat, Feb 22, 2025 at 3:41=E2=80=AFPM mawupeng <mawupeng1@huawei.com> w=
+rote:
+> > On 2025/2/22 15:33, Kairui Song wrote:
+> > > On Sat, Feb 22, 2025 at 10:56=E2=80=AFAM Wupeng Ma <mawupeng1@huawei.=
+com> wrote:
+> > >>
+> > >> From: Ma Wupeng <mawupeng1@huawei.com>
+> > >>
+> > >> During our test, infinite loop is produced during #PF will lead to i=
+nfinite
+> > >> error log as follow:
+> > >>
+> > >>    get_swap_device: Bad swap file entry 114000000
+> > >>
+> > >> Digging into the source, we found that the swap entry is invalid due=
+ to
+> > >> unknown reason, and this lead to invalid swap_info_struct. Excessive=
+ log
+> > >
+> > > Hi Wupeng,
+> > >
+> > > What is the kernel version you are using? If it's another bug causing
+> > > this invalid swap entry, we should fix that bug instead, not
+> > > workaround it.
+> > >
+> > > This looks kind of similar to another PATCH & Bug report, corrupted
+> > > page table or swap entry:
+> > > https://lore.kernel.org/linux-mm/e223b0e6ba2f4924984b1917cc717bd5@hon=
+or.com/
+> > >
+> > > Might be the same kernel bug? Gaoxu mentioned the bug was observed on
+> > > Kernel 6.6.30 (android version), and neither of these two workarounds
+> > > will fix it completely, the invalid value could cause many other
+> > > issues too. We definitely need to find out the root cause.
+> >
+> > We are having this problem in linux-v5.10, since the log is lost and sw=
+ap
+> > is not enabled in this machines, maybe memory corrupted in the pt.
+>
+> Thanks for the info, that's very strange. Since you didn't even enable
+> SWAP, it must be something else corrupted the page table I think
+>
+> > >
+> > >> printing can fill up the prioritized log space, leading to the purgi=
+ng of
+> > >> originally valid logs and hindering problem troubleshooting. To make=
+ this
+> > >> more robust, kill this task.
+> > >>
+> > >> Signed-off-by: Ma Wupeng <mawupeng1@huawei.com>
+> > >> ---
+> > >>  include/linux/swap.h | 1 +
+> > >>  mm/memory.c          | 9 ++++++++-
+> > >>  mm/swapfile.c        | 2 +-
+> > >>  3 files changed, 10 insertions(+), 2 deletions(-)
+> > >>
+> > >> diff --git a/include/linux/swap.h b/include/linux/swap.h
+> > >> index b13b72645db3..0fa39cf66bc4 100644
+> > >> --- a/include/linux/swap.h
+> > >> +++ b/include/linux/swap.h
+> > >> @@ -508,6 +508,7 @@ struct backing_dev_info;
+> > >>  extern int init_swap_address_space(unsigned int type, unsigned long=
+ nr_pages);
+> > >>  extern void exit_swap_address_space(unsigned int type);
+> > >>  extern struct swap_info_struct *get_swap_device(swp_entry_t entry);
+> > >> +struct swap_info_struct *_swap_info_get(swp_entry_t entry);
+> > >>  sector_t swap_folio_sector(struct folio *folio);
+> > >>
+> > >>  static inline void put_swap_device(struct swap_info_struct *si)
+> > >> diff --git a/mm/memory.c b/mm/memory.c
+> > >> index b4d3d4893267..2d36e5a644d1 100644
+> > >> --- a/mm/memory.c
+> > >> +++ b/mm/memory.c
+> > >> @@ -4365,8 +4365,15 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+> > >>
+> > >>         /* Prevent swapoff from happening to us. */
+> > >>         si =3D get_swap_device(entry);
+> > >> -       if (unlikely(!si))
+> > >> +       if (unlikely(!si)) {
+> > >> +               if (unlikely(!_swap_info_get(entry)))
+> > >> +                       /*
+> > >> +                        * return VM_FAULT_SIGBUS for invalid swap e=
+ntry to
+> > >> +                        * avoid infinite #PF.
+> > >> +                        */
+> > >> +                       ret =3D VM_FAULT_SIGBUS;
+> > >
+> > > This could lead to VM_FAULT_SIGBUS on swapoff. After swapoff
+> > > get_swap_device will return NULL.
+> >
+> > If swap is off, All swap pages should be swap in as expected, so
+> > such entry can not trigger do_swap_page?
+>
+> do_swap_page may get blocked due to some random reason, and then a
+> concurrent swapoff could swap in the entry and disable the device.
+> Very unlikely to trigger but in theory possible.
 
-elapsed time: 1453m
+The "goto out" in do_swap_page() should have handled this case. If swapoff
+occurred before the actual swap-in began, we should have aborted the
+swap-in, and userspace would retry.
 
-configs tested: 62
-configs skipped: 1
+        /* Prevent swapoff from happening to us. */
+        si =3D get_swap_device(entry);
+        if (unlikely(!si))
+                goto out;
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                           allyesconfig    gcc-14.2.0
-arc                  randconfig-001-20250221    gcc-13.2.0
-arc                  randconfig-002-20250221    gcc-13.2.0
-arm                  randconfig-001-20250221    gcc-14.2.0
-arm                  randconfig-002-20250221    clang-19
-arm                  randconfig-003-20250221    gcc-14.2.0
-arm                  randconfig-004-20250221    clang-21
-arm64                randconfig-001-20250221    clang-15
-arm64                randconfig-002-20250221    clang-21
-arm64                randconfig-003-20250221    clang-21
-arm64                randconfig-004-20250221    gcc-14.2.0
-csky                 randconfig-001-20250221    gcc-14.2.0
-csky                 randconfig-002-20250221    gcc-14.2.0
-hexagon                         allmodconfig    clang-21
-hexagon                         allyesconfig    clang-18
-hexagon              randconfig-001-20250221    clang-21
-hexagon              randconfig-002-20250221    clang-21
-i386       buildonly-randconfig-001-20250221    gcc-12
-i386       buildonly-randconfig-002-20250221    gcc-12
-i386       buildonly-randconfig-003-20250221    gcc-12
-i386       buildonly-randconfig-004-20250221    gcc-12
-i386       buildonly-randconfig-005-20250221    clang-19
-i386       buildonly-randconfig-006-20250221    clang-19
-loongarch            randconfig-001-20250221    gcc-14.2.0
-loongarch            randconfig-002-20250221    gcc-14.2.0
-nios2                randconfig-001-20250221    gcc-14.2.0
-nios2                randconfig-002-20250221    gcc-14.2.0
-parisc               randconfig-001-20250221    gcc-14.2.0
-parisc               randconfig-002-20250221    gcc-14.2.0
-powerpc              randconfig-001-20250221    clang-21
-powerpc              randconfig-002-20250221    clang-21
-powerpc              randconfig-003-20250221    clang-17
-powerpc64            randconfig-001-20250221    clang-21
-powerpc64            randconfig-002-20250221    clang-21
-powerpc64            randconfig-003-20250221    clang-19
-riscv                randconfig-001-20250221    clang-21
-riscv                randconfig-002-20250221    clang-21
-s390                            allmodconfig    clang-19
-s390                            allyesconfig    gcc-14.2.0
-s390                 randconfig-001-20250221    gcc-14.2.0
-s390                 randconfig-002-20250221    gcc-14.2.0
-sh                              allmodconfig    gcc-14.2.0
-sh                              allyesconfig    gcc-14.2.0
-sh                   randconfig-001-20250221    gcc-14.2.0
-sh                   randconfig-002-20250221    gcc-14.2.0
-sparc                           allmodconfig    gcc-14.2.0
-sparc                randconfig-001-20250221    gcc-14.2.0
-sparc                randconfig-002-20250221    gcc-14.2.0
-sparc64              randconfig-001-20250221    gcc-14.2.0
-sparc64              randconfig-002-20250221    gcc-14.2.0
-um                              allmodconfig    clang-21
-um                              allyesconfig    gcc-12
-um                   randconfig-001-20250221    gcc-12
-um                   randconfig-002-20250221    gcc-12
-x86_64     buildonly-randconfig-001-20250221    gcc-12
-x86_64     buildonly-randconfig-002-20250221    clang-19
-x86_64     buildonly-randconfig-003-20250221    clang-19
-x86_64     buildonly-randconfig-004-20250221    clang-19
-x86_64     buildonly-randconfig-005-20250221    clang-19
-x86_64     buildonly-randconfig-006-20250221    clang-19
-xtensa               randconfig-001-20250221    gcc-14.2.0
-xtensa               randconfig-002-20250221    gcc-14.2.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks
+Barry
