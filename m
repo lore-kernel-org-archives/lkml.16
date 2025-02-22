@@ -1,131 +1,127 @@
-Received: from mail-40131.protonmail.ch (mail-40131.protonmail.ch [185.70.40.131])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3CA220458A
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 09:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D865D2EB10;
+	Sat, 22 Feb 2025 09:38:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740217082; cv=none; b=Pn6+P5RlaxFvQ1dDHbNwTfL8TX42OuPti+HNAakyi+eAHHUrZfr4BcBtjrqZBHaEhh35jrQJbWjjH3rr0z+GTKCifsqJxIVmMp31zPZZKVGeRsuwJUjYGYdcDOmNkCubOoen54CkmKOOBPX4tCnocXGNGDh1Bo9kvuvnYI0Lu9s=
+	t=1740217124; cv=none; b=V8q858M4SWLQhbSKH06D0HDFGaa8dIztncVYou+yDSdrv9GBx/4k5PTWgF00sZk7IywgNf4O/CtQUdGIoq/UgN//kATTUwA01YmFV9311T4NmfZINOgou+r6NBaJA08ZK0Di0XgHSwfAHLqSlVDaJiY0JH9yjvhAvAOT6l2Zi/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740217082; c=relaxed/simple;
-	bh=vsTXzOsg3hrfJ371flK8NpGydgevELjGtHSeAJ0mSuU=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mNnSVvm5WkwmNi6JJuf07xjwI8enAYioD2p0A7UxC52YiBy1InFNKhtfVDRaazbExEHeYuySsA2eQNME9Z9iWen8/+EL/sGs9f9DhKbg7iDvMs0toQi8RQZ1ueYSsIiGgXqPVYDdNlQj35zYEkS0cRuXCmtxNx47ZPLy+QqcSBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=FyPcCk+F; arc=none smtp.client-ip=185.70.40.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="FyPcCk+F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1740217078; x=1740476278;
-	bh=55lTNHa0JObaGbVq2nFp/5SG1J6H0QyA17uQmtPumlg=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=FyPcCk+F1uJs0V3hbGTBIRCVa6KoJJSVs3xuXkVvWCHNe9pRRlaF6UT+WonTtBlVU
-	 nwm+OorhFXagvGGvx9vcfARSmqwEScYfm+e8vMfKf2mwhNDbLvS7Ek7mXSHe0/7CqU
-	 /Asj8vYkH8IK9Gi13lgtD1BLOaHgmxUMTROYka6rNCojNo2kSmEHg6FKXEw8earDNV
-	 y6mYB1QaxGjLjNUcUbfjHLjkYfztFFJvE55gbTSIb9D8DPmBIc7sgwYuf4FtqHiPdY
-	 tsH1BKVuHygQvY5PyP6OMf5PiPwGZ11eYCmDeTEt92GAAdVwuA7tLSJmL2fvCNgfm0
-	 ArkXuX09Hnx1A==
-Date: Sat, 22 Feb 2025 09:37:53 +0000
-To: Andreas Hindborg <a.hindborg@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, Guangbo Cui <2407018371@qq.com>, Dirk Behme <dirk.behme@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 02/14] rust: hrtimer: introduce hrtimer support
-Message-ID: <a2579353-9249-44d1-8f43-9064beaa109c@proton.me>
-In-Reply-To: <87o6yveble.fsf@kernel.org>
-References: <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org> <20250218-hrtimer-v3-v6-12-rc2-v8-2-48dedb015eb3@kernel.org> <1id7is_U22yzuGODgkUIoB5AFM6snF9CPu7F_sY7Mfkn3EwQRPfjB5JNkRFYu6DX1N8X_OQvdEB2BT-l3rFhwg==@protonmail.internalid> <df748ac2-3551-460f-a16f-85d805671a3f@proton.me> <87a5afhdq0.fsf@kernel.org> <875xl3fvtm.fsf@kernel.org> <uoEWs3I3Cf4H5QBXCk4i1-gCs_nR7fJAX7z9JyvaEIP_yrPckvsgcC8fWctvwPY91ZLOwk041dhytXFtSwDFOA==@protonmail.internalid> <841150db-2f92-4cfe-bb1f-29b34b4662c1@proton.me> <87o6yveble.fsf@kernel.org>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 328bfb3974f6c934d2a59aa92a9dea9196371e29
+	s=arc-20240116; t=1740217124; c=relaxed/simple;
+	bh=81CwVnRJvu2Y6GtE2WQ0m4RNHkh/EveDRR9Sbo9ev/o=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pz7H09KwmjOjotYsM8DBO/LH3ZGv6LHKMmUiVYW7GEoDrAIYfhrqufuVF6bC0PvLu0eywFCfEjXXqOnTJoHwVzXrwtOB3q9p/vCiUX7MijVhR/fulDZrs5JJ4hbJqdsrE+mq8yB/UpeT8/l6LMx9O7y/c+EyDgR36r5v6/YAuaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 7D103A182F;
+	Sat, 22 Feb 2025 09:22:33 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf16.hostedemail.com (Postfix) with ESMTPA id C58862001E;
+	Sat, 22 Feb 2025 09:22:26 +0000 (UTC)
+Message-ID: <b150157b266b0aa78e26b1feb5a6b3d7735a2293.camel@perches.com>
+Subject: Re: [PATCH V4 2/2] checkpatch: throw error for malformed arrays
+From: Joe Perches <joe@perches.com>
+To: Guilherme Giacomo Simoes <trintaeoitogc@gmail.com>,
+ a.hindborg@kernel.org, 	alex.gaynor@gmail.com, aliceryhl@google.com,
+ apw@canonical.com, arnd@arndb.de, 	aswinunni01@gmail.com, axboe@kernel.dk,
+ benno.lossin@proton.me, 	bhelgaas@google.com, bjorn3_gh@protonmail.com,
+ boqun.feng@gmail.com, 	dakr@kernel.org, dwaipayanray1@gmail.com,
+ ethan.twardy@gmail.com, 	fujita.tomonori@gmail.com, gary@garyguo.net,
+ gregkh@linuxfoundation.org, 	lukas.bulwahn@gmail.com, ojeda@kernel.org,
+ pbonzini@redhat.com, tmgross@umich.edu, 	walmeida@microsoft.com
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Sat, 22 Feb 2025 01:22:25 -0800
+In-Reply-To: <20250221182142.42134-3-trintaeoitogc@gmail.com>
+References: <20250221182142.42134-1-trintaeoitogc@gmail.com>
+	 <20250221182142.42134-3-trintaeoitogc@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: C58862001E
+X-Rspamd-Server: rspamout04
+X-Stat-Signature: ceodgnphax6zihedizaiuejbxzgktzqm
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1/JuRLbGDBosttEi24RL7kERqCF7/JjNck=
+X-HE-Tag: 1740216146-8395
+X-HE-Meta: U2FsdGVkX18VQpffAksbecyNjxDW4K/EgWafRPAJEoDjBNi0WOoqTMEVATPqrujp8ACtOUEaXuVfh7A1XcKv62947xPMUVGhZJ4m/Z+Nyo7MDn8rg8Oc+jpZWyCnLf6bkWOkOEyk2/VFxFku9qQSF5ISpYOagXsdvvrlenz4REbPMYmQS9XJxm1O6bQqkGI863gvgclJq0yY8p7uyMHjJ7kNgtJHM50nT26SUtJtjf5/SITwYOKtUMVPsvWrWDCDg330tPY9ugvRBiI+8fd25T3dDbcjCx+YtCtAy1CQxuYqiQpknJkFtONog75EZJbJ
 
-On 21.02.25 13:17, Andreas Hindborg wrote:
-> "Benno Lossin" <benno.lossin@proton.me> writes:
->=20
->> On 21.02.25 11:15, Andreas Hindborg wrote:
->>> Andreas Hindborg <a.hindborg@kernel.org> writes:
->>>
->>>> "Benno Lossin" <benno.lossin@proton.me> writes:
->>>>
->>>>> On 18.02.25 14:27, Andreas Hindborg wrote:
->>>>>> +pub trait HrTimerCallback {
->>>>>> +    /// The type whose [`RawHrTimerCallback::run`] method will be i=
-nvoked when
->>>>>> +    /// the timer expires.
->>>>>> +    type CallbackTarget<'a>: RawHrTimerCallback;
->>>>>> +
->>>>>> +    /// This type is passed to the timer callback function. It may =
-be a borrow
->>>>>> +    /// of [`Self::CallbackTarget`], or it may be `Self::CallbackTa=
-rget` if the
->>>>>> +    /// implementation can guarantee exclusive access to the target=
- during timer
->>>>>
->>>>> Technically "exclusive" access is correct if the `CallbackTarget` is
->>>>> `Pin<&Self>`, since you will get exclusive access to a `Pin<&Self>`, =
-but
->>>>> it might confuse people, because there can be multiple `Pin<&Self>`. =
-So
->>>>> I would just drop the word "exclusive" here.
->>>>
->>>> Yes, maybe it should be "shared or exclusive access, depending on the =
-type"?
->>>>
->>>>>
->>>>>> +    /// handler execution.
->>>>>> +    type CallbackTargetParameter<'a>;
->>>>>
->>>>> Also why can't this type be an associated type of `HrTimerPointer`?
->>>>> Since this seems to always be constrained in the impls of
->>>>> `RawHrTimerCallback`.
->>>>
->>>> That might be a nice improvement, I'll try that out.
->>>
->>> Looking closer at this, I don't see how to achieve this. We need access
->>> to the type here, because it is used in the signature of `run`.
->>> `HrTimerCallback` has no bounds on it, and that is nice. If we want to
->>> move these associated types, we have to introduce a bound here.
->>>
->>> We need to be generic over the type of the parameter to `run`, and by
->>> the time the user implements this trait, the type must be known and so
->>> the user has to specify somehow.
->>
->> I think if you put the associated type on the `RawHrTimerCallback`
->> trait, it should work.
->=20
-> What would be the signature of `HrTimerCallback::run` in that case?
+On Fri, 2025-02-21 at 15:21 -0300, Guilherme Giacomo Simoes wrote:
+> Implement a check to ensure these fields are correctly formatted. If a
+> line contains one of these keys that should be of type Vec<String>, use
+> a regex to verify whether the array holds multiple values.
+> * If the array contains more than one value, enforce vertical formatting
+> * If the array has only one value, it can remain on the same line
 
-    /// Implemented by structs that can be the target of a timer callback.
-    pub trait HrTimerCallback {
-        /// The type whose [`RawHrTimerCallback::run`] method will be invok=
-ed when
-        /// the timer expires.
-        type CallbackTarget: RawHrTimerCallback;
-   =20
-        /// Called by the timer logic when the timer fires.
-        fn run(this: <Self::CallbackTarget as RawHrTimerCallback>::Callback=
-TargetParameter<'_>)
-        where
-            Self: Sized;
-        // also, why does this Sized bound exist here?
-    }
+Malformed arrays of what type?
 
-That should work, but now the names seem a bit long... How about:
-- CallbackTarget -> Pointer
-  - and then you can also call this the "smart pointer whose `run`
-    method will be invoked when..." in the docs
-- CallbackTargetParameter -> CallbackParameter
+[]
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+[]
+> @@ -2775,6 +2775,9 @@ sub process {
+>  	$realcnt =3D 0;
+>  	$linenr =3D 0;
+>  	$fixlinenr =3D -1;
+> +
+> +	my %array_parse_module;
+> +
+>  	foreach my $line (@lines) {
+>  		$linenr++;
+>  		$fixlinenr++;
+> @@ -3567,6 +3570,46 @@ sub process {
+>  # ignore non-hunk lines and lines being removed
+>  		next if (!$hunk_line || $line =3D~ /^-/);
+> =20
+> +# check if arrays has more than one value in the same line
 
----
-Cheers,
-Benno
+check if what kind of array otherwise this comment is very poor.
+Arrays commonly have more than one value assigned on a single line like
 
+	int foo[] =3D { 1, 2, 3 };
+
+> +		my $inline =3D 0;
+> +		my $key =3D "";
+> +		my $add_line =3D $line =3D~ /^\+/;
+> +
+> +		if ($line =3D~ /\s*.*\b(authors|alias|firmware)\s*:\s*\[/) {
+
+The initial "\s*.*" portion of this regex isn't necessary
+and can be removed
+=3D
+> +			$inline =3D 1;
+> +			$array_parse_module{$1} =3D 1;
+> +		}
+> +
+> +		my @keys =3D keys %array_parse_module;
+> +		if (@keys) {
+> +			$key =3D $keys[0];
+> +		}
+> +
+> +		if ($add_line && $key) {
+> +			my $herevet =3D "$here\n" . cat_vet($rawline) . "\n";
+> +
+> +			my $counter =3D () =3D $line =3D~ /"/g;
+> +			my $more_than_one =3D $counter > 2;
+> +			if ($more_than_one) {
+> +				WARN("ARRAY_MODULE_MACRO",
+> +				"Prefer each array element on a separate line\n$herevet");
+
+As I wrote in an earlier submission, please align to open parenthesis
+and use the common form for the message with $herevet
+
+				WARN("ARRAY_MODULE_MACRO",
+				     "Prefer each array element on a separate line\n" . $herevet);
+
+> +			} elsif ($inline && $line !~ /\]/ && $line !~ /,/ && $line =3D~ /"/) =
+{
+> +				WARN("ARRAY_MODULE_MACRO",
+> +				"Prefer declare ] on the same line\n$herevet");
+
+etc...
 
