@@ -1,124 +1,223 @@
-Received: from mail2.medvecky.net (mail2.medvecky.net [85.118.132.153])
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17AA1D63D3;
-	Sat, 22 Feb 2025 20:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.118.132.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC121D63D3
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 20:50:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740257444; cv=none; b=DuMDz2QEcgVNdL4xVDE+YgDSG8CeE5aX65FZioQPc6GRoW3BG6kKMMUqdFrMFdREey3DTBRugqEh9m+zEilWWNeNGCNLQZve86bYOTmOGtouQqJwEDrEe6eo+udJ38o1rTl4X2Ph/KFReTZqYERXN8xBVK+F8BQPmyklPervDvk=
+	t=1740257457; cv=none; b=HmCaGJgR+85FXIChbMSJbE9NZIp5F934gGNYAozsxSJ7gB1arci3e4jcWrqsiV1/b8HTKRGpvELpgXSMr8XVzCc4sJydGM/4rB6JRlaGKEanXo06dgp/LT9OipnCNBd4HWzgrZk6IihToqDoY8g7mHnCspPHV8MB7ylcKzlzJTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740257444; c=relaxed/simple;
-	bh=kcHyPYJb28bHH5abHA7/j70IiajgjFyIlnoc2KlKKqo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oTniV5vCKmoL7HK7/Vcdf41HSsQ/Juv8JgakIAH0Dys6bfbwNd6PnFHIVrcV8Eq0l5O3mXJulJgcbF9Fcy/1Bxzppxs16MWan5iURB2L0XDmkoEpt/8inyN+zrc48rGguvoSrxN8PFeJiKRWSppz32/6nO7s08NfH7aWvik1n6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=assembler.cz; spf=pass smtp.mailfrom=assembler.cz; arc=none smtp.client-ip=85.118.132.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=assembler.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=assembler.cz
-Message-ID: <e46ca730-8858-4f57-bdd0-2fd0db086500@assembler.cz>
-Date: Sat, 22 Feb 2025 21:43:42 +0100
+	s=arc-20240116; t=1740257457; c=relaxed/simple;
+	bh=dtlTCU44P7vL0Y4EJxOORC0Bq2K1kuHwGKufH530DZE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OXO5E+xzl+okH0HfUuINDExxrWqF0S2ZastFKhYW3/n6Jtd32F1mCaEnmdNXWjPIMhkVCpiJ8VSIekmKrsaqPAiVpJanoeX+fVfNxdoejiv+UhsrudMmmkpxxhKPd9c9JvmCPI8k3atsQhLDfZ/L9RluyBmyPiL56M/cd9uLmCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PdOKQzon; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PdOKQzon"
+Date: Sat, 22 Feb 2025 20:50:41 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740257452;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hxr90hVqPs+v3paDE+X67taGS7gRPBKzkTMGj794hsM=;
+	b=PdOKQzon6jaK391OKe9pL6bi8y4QTvP0T4IjYJ0fgu0RuKSs/heiUWDd2Rm9/TJZasjS9M
+	FEhR63nCiNBIjXCLBORIPpT6Gdoh74NkM2y+aoe0MxOCFaiGDiGknd6WxN7jMDmP6PNMpY
+	8YgU6TOtIAN6Sdv605vvN9iJSMgybvY=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Parav Pandit <parav@mellanox.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	Maher Sanalla <msanalla@nvidia.com>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] RDMA/core: fix a NULL-pointer dereference in
+ hw_stat_device_show()
+Message-ID: <Z7o4ofdXZ-6w-jO0@google.com>
+References: <20250221020555.4090014-1-roman.gushchin@linux.dev>
+ <CY8PR12MB71958C150D7604EAD4463F4ADCC72@CY8PR12MB7195.namprd12.prod.outlook.com>
+ <Z7gARTF0mpbOj7gN@google.com>
+ <CY8PR12MB7195F3ACB8CFA05C4B8D26D3DCC72@CY8PR12MB7195.namprd12.prod.outlook.com>
+ <Z7gF3UC7PvVxeRcq@google.com>
+ <CY8PR12MB7195D93F387845E0A7314C34DCC72@CY8PR12MB7195.namprd12.prod.outlook.com>
+ <Z7jb1z8WSllnFFyX@google.com>
+ <CY8PR12MB7195D4AD9844C91313955AFCDCC62@CY8PR12MB7195.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [RFC] Circumventing FineIBT Via Entrypoints
-To: Andrew Cooper <andrew.cooper3@citrix.com>, Jann Horn <jannh@google.com>
-Cc: jmill@asu.edu, joao@overdrivepizza.com, luto@kernel.org,
- samitolvanen@google.com, "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- linux-hardening@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
- x86 maintainers <x86@kernel.org>
-References: <CAG48ez09JuZPt112nnE6N=hS6cfCLkT-iHUAmidQ-QGNGMVoBw@mail.gmail.com>
- <c46f5614-a82e-42fc-91eb-05e483a7df9c@citrix.com>
- <CAG48ez0h0wUS6y+W1HTOwN14V95gKmmFZ_2TamAX+JKTmXT=DA@mail.gmail.com>
- <1cf8d5a5-bf3e-4667-bc6a-d1b1d662d822@citrix.com>
-Content-Language: en-US
-From: Rudolf Marek <r.marek@assembler.cz>
-Autocrypt: addr=r.marek@assembler.cz; keydata=
- xsBNBFN2VH4BCADpv+3Tkikr+X489Xso9UC719YdxgGiy0xBjDiWC22wAd3tHy6G3nEhWfh4
- 1UNGcqscPAvJMn2GhgSJRfBzj0wALXLkoTYta78wEK+Ji+Gs7PX9VhqRKt9/OIn/2XJ1Yv9i
- e8uo9MFBGFCB5roz+Ws8rdXq0Quu7VZylzRv7qqhxMAk9RvXCT2tyt6XY16R7ZEL9wbSLRAl
- h8LRPMF0iiLH1YenfSCX2XkW7eA7CJSjh9pwIBFOF5cd5mcT69OPO+TuAbdvgCcZPEoQQBhk
- QmOr2PlUOl3CSgqtTxjAjAxXhPTU7Q3xxgB2Oa7xbt3Eic2Z4lltP/dowULZqXvsC5DxABEB
- AAHNI1J1ZG9sZiBNYXJlayA8ci5tYXJla0Bhc3NlbWJsZXIuY3o+wsCVBBMBCgA/AhsjBgsJ
- CAcDAgYVCAIJCgsEFgIDAQIeAQIXgBYhBJmYg4ih63dUUwlgxcBvbatkz11wBQJnOaU1BQkV
- pALyAAoJEMBvbatkz11wgYUH/2Cs+hmNUj5f8z1xI8O07OL8KfxiWAv1DVq+QEGsbhdub/pH
- cNbCP52hioIjr48ylpE4PriuxPxC5zd6/s/z1fJQXPc2rd9xfKMsC7ZmpIjfzTzoX9JuINhW
- cwY+SFXOFuVUT2UacaowLTVX1NVevLhqb1wxSgGe1KAyqWBllrUYI/tqDF20MuzYDkuL0TdJ
- fSk3mfrF+GWG7DSzH27kwmY1ui4QUnW7PQ23c56xuRAtRDPhTgaglk52Pz7IsQHfy8rPZmTE
- jFTaN6kdW324wZYGYJBCriffNaIekz+C+i7aRivABNpeAY2O5ae6qcZknalGrU71M8p2TULA
- tSGNCc7OwE0EU3ZUfgEIAOyD3W4D+aaXoA875pbKqSI+MQ2t5PYNPaCahoSSnTuNmvM1xCsv
- I2EaGwfr5S0IktX1g0dt8lvvCx9eZeEhGH5NBgsmWtTi0Gq9UHQXbj4wQAV23/X+MCZqKFFl
- Yp0T86C23RhXsEQp8mTYpnGsbjAsHgaDnuQj5pWahVGXv9aYzjomk4mEGq8jr8/D9kgOEll+
- s5cIJYzeliPHR+2SRQs+XoTp1e/dXs310xXhuo2Pg8N/Kym0WhWjTYBuUeoyaYFDYtwj6jkc
- 2baI/JOSUoyarxnmRuVcNHoZd7as7lzmPS9Dqrm5LJVrfQk0lx+XaJRPZqQW/uf5FFaGXIIi
- 2OkAEQEAAcLAhgQYAQoAJgIbDBYhBJmYg4ih63dUUwlgxcBvbatkz11wBQJnOaU1BQkVpALy
- ABQJEMBvbatkz11wCRDAb22rZM9dcA/zCADBJl5FizQY1GWQ0hdaRLpFelc5TMnB58LQXLs+
- b0cbCGHSCYdB8u4EwBcMF55qF2MT6Owd7ydjFoLY7WdQYcorbMPw91LFqLEuA/mQnaWtrSV5
- XyBcFHIRNH1ZtHL+28ywyDZY0GE13R3IoNh8E25JFeEBdR5uWH/1+Y7v3VCFkDp8VX3Pa+66
- AyicyWjrWKf0ADPWcAuyF8kVqJv+61FnOUE9M/23CNp5y+9cWJnViYK015c9l04xdrcwPra9
- XVGi/hKZ6EIEiqFa55LHmoB4QLOYbYVC9xMoDnKYDuBfU4VlyTe6//eSRHc3wer7/avb1gKC
- EDihgW9OFim1SsU6
-In-Reply-To: <1cf8d5a5-bf3e-4667-bc6a-d1b1d662d822@citrix.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Authentication-Results: mail2.medvecky.net;
-	auth=pass smtp.mailfrom=r.marek@assembler.cz
-X-Spamd-Bar: /
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CY8PR12MB7195D4AD9844C91313955AFCDCC62@CY8PR12MB7195.namprd12.prod.outlook.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi,
-
-Dne 13. 02. 25 v 3:42 Andrew Cooper napsal(a):
-> The SYSCALL behaviour TLDR is:
+On Sat, Feb 22, 2025 at 06:36:46PM +0000, Parav Pandit wrote:
+> Hi Roman,
 > 
->      %rcx = %rip
->      %r11 = %eflags
->      %cs = fixed attr
->      %ss = fixed attr
->      %rip = MSR_LSTAR
-> 
-> which means that %rcx (old rip) is the only piece of state which
-> userspace can't feasibly forge (and therefore could distinguish a
-> SYSCALL from user vs kernel mode), yet if we're talking about a JOP
-> chain to get here, then %rcx is under attacker control too.
+> > From: Roman Gushchin <roman.gushchin@linux.dev>
+> > Sent: Saturday, February 22, 2025 1:33 AM
+> > 
+> > On Fri, Feb 21, 2025 at 08:03:33AM +0000, Parav Pandit wrote:
+> > > > From: Roman Gushchin <roman.gushchin@linux.dev>
+> > > > Sent: Friday, February 21, 2025 10:20 AM
+> > > >
+> > > > On Fri, Feb 21, 2025 at 04:34:25AM +0000, Parav Pandit wrote:
+> > > > >
+> > > > > > From: Roman Gushchin <roman.gushchin@linux.dev>
+> > > > > > Sent: Friday, February 21, 2025 9:56 AM
+> > > > > >
+> > > > > > On Fri, Feb 21, 2025 at 03:14:16AM +0000, Parav Pandit wrote:
+> > > > > > >
+> > > > > > > > From: Roman Gushchin <roman.gushchin@linux.dev>
+> > > > > > > > Sent: Friday, February 21, 2025 7:36 AM
+> > > > > > > >
+> > > > > > > > Commit 54747231150f ("RDMA: Introduce and use
+> > > > > > > > rdma_device_to_ibdev()") introduced rdma_device_to_ibdev()
+> > > > > > > > helper which has to be used to obtain an ib_device pointer
+> > > > > > > > from a
+> > > > device pointer.
+> > > > > > > >
+> > > > > > >
+> > > > > > > > hw_stat_device_show() and hw_stat_device_store() were missed.
+> > > > > > > >
+> > > > > > > > It causes a NULL pointer dereference panic on an attempt to
+> > > > > > > > read hw counters from a namespace, when the device structure
+> > > > > > > > is not embedded into the ib_device structure.
+> > > > > > > Do you mean net namespace other than default init_net?
+> > > > > > > Assuming the answer is yes, some question below.
+> > > > > > >
+> > > > > > > > In this case casting the device pointer into the ib_device
+> > > > > > > > pointer using container_of() is wrong.
+> > > > > > > > Instead, rdma_device_to_ibdev() should be used, which uses
+> > > > > > > > the
+> > > > > > > > back- reference (container_of(device, struct ib_core_device,
+> > > > > > > > dev))-
+> > > > >owner.
+> > > > > > > >
+> > > > > > > > [42021.807566] BUG: kernel NULL pointer dereference, address:
+> > > > > > > > 0000000000000028 [42021.814463] #PF: supervisor read access
+> > > > > > > > in kernel mode [42021.819549] #PF: error_code(0x0000) -
+> > > > > > > > not-present page [42021.824636] PGD 0 P4D 0 [42021.827145]
+> > > > > > > > Oops: 0000 [#1] SMP PTI [42021.830598] CPU: 82 PID: 2843922
+> > > > > > > > Comm: switchto-
+> > > > defaul Kdump:
+> > > > > > loaded
+> > > > > > > > Tainted: G S      W I        XXX
+> > > > > > > > [42021.841697] Hardware name: XXX [42021.849619] RIP:
+> > > > > > > > 0010:hw_stat_device_show+0x1e/0x40 [ib_core] [42021.855362]
+> > > > > > > > Code: 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f
+> > > > > > > > 44 00 00 49 89 d0 4c 8b 5e 20 48 8b 8f b8 04 00 00 48 81 c7
+> > > > > > > > f0 fa ff ff <48> 8b
+> > > > > > > > 41 28 48 29 ce 48 83 c6 d0 48 c1 ee 04 69 d6 ab aa aa aa 48
+> > > > > > > > [42021.873931]
+> > > > > > > > RSP: 0018:ffff97fe90f03da0 EFLAGS: 00010287 [42021.879108]
+> > RAX:
+> > > > > > > > ffff9406988a8c60 RBX: ffff940e1072d438 RCX: 0000000000000000
+> > > > > > > > [42021.886169] RDX: ffff94085f1aa000 RSI: ffff93c6cbbdbcb0 RDI:
+> > > > > > > > ffff940c7517aef0 [42021.893230] RBP: ffff97fe90f03e70 R08:
+> > > > > > > > ffff94085f1aa000 R09: 0000000000000000 [42021.900294] R10:
+> > > > > > > > ffff94085f1aa000 R11: ffffffffc0775680 R12: ffffffff87ca2530
+> > > > > > > > [42021.907355]
+> > > > > > > > R13: ffff940651602840 R14: ffff93c6cbbdbcb0 R15:
+> > > > > > > > ffff94085f1aa000 [42021.914418] FS:  00007fda1a3b9700(0000)
+> > > > > > GS:ffff94453fb80000(0000)
+> > > > > > > > knlGS:0000000000000000 [42021.922423] CS:  0010 DS: 0000 ES:
+> > > > > > > > 0000
+> > > > > > CR0:
+> > > > > > > > 0000000080050033 [42021.928130] CR2: 0000000000000028
+> > CR3:
+> > > > > > > > 00000042dcfb8003 CR4: 00000000003726f0 [42021.935194] DR0:
+> > > > > > > > 0000000000000000 DR1: 0000000000000000 DR2:
+> > > > 0000000000000000
+> > > > > > > > [42021.942257] DR3: 0000000000000000 DR6: 00000000fffe0ff0
+> > DR7:
+> > > > > > > > 0000000000000400 [42021.949324] Call Trace:
+> > > > > > > > [42021.951756]  <TASK>
+> > > > > > > > [42021.953842]  [<ffffffff86c58674>] ? show_regs+0x64/0x70
+> > > > > > > > [42021.959030] [<ffffffff86c58468>] ? __die+0x78/0xc0
+> > > > > > > > [42021.963874]
+> > > > > > [<ffffffff86c9ef75>] ?
+> > > > > > > > page_fault_oops+0x2b5/0x3b0 [42021.969749]
+> > [<ffffffff87674b92>] ?
+> > > > > > > > exc_page_fault+0x1a2/0x3c0 [42021.975549]  [<ffffffff87801326>]
+> > ?
+> > > > > > > > asm_exc_page_fault+0x26/0x30 [42021.981517]
+> > > > > > > > [<ffffffffc0775680>]
+> > > > ?
+> > > > > > > > __pfx_show_hw_stats+0x10/0x10 [ib_core] [42021.988482]
+> > > > > > > > [<ffffffffc077564e>] ? hw_stat_device_show+0x1e/0x40
+> > > > > > > > [ib_core] [42021.995438]  [<ffffffff86ac7f8e>]
+> > > > > > > > dev_attr_show+0x1e/0x50 [42022.000803]  [<ffffffff86a3eeb1>]
+> > > > > > > > sysfs_kf_seq_show+0x81/0xe0 [42022.006508]
+> > > > > > > > [<ffffffff86a11134>] seq_read_iter+0xf4/0x410 [42022.011954]
+> > > > > > > > [<ffffffff869f4b2e>] vfs_read+0x16e/0x2f0 [42022.017058]
+> > > > > > > > [<ffffffff869f50ee>] ksys_read+0x6e/0xe0 [42022.022073]
+> > > > > > > > [<ffffffff8766f1ca>]
+> > > > > > > > do_syscall_64+0x6a/0xa0 [42022.027441]  [<ffffffff8780013b>]
+> > > > > > > > entry_SYSCALL_64_after_hwframe+0x78/0xe2
+> > > > > > > >
+> > > > > > > > Fixes: 54747231150f ("RDMA: Introduce and use
+> > > > > > > > rdma_device_to_ibdev()")
+> > > > > > > Commit eb15c78b05bd9 eliminated hw_counters sysfs directory
+> > > > > > > into the
+> > > > > > net namespace.
+> > > > > > > I don't see it created in any other net ns other than init_net
+> > > > > > > with kernel
+> > > > > > 6.12+.
+> > > > > > >
+> > > > > > > I am puzzled. Can you please explain/share the reproduction
+> > > > > > > steps for
+> > > > > > generating above call trace?
+> > > > > >
+> > > > > > Hi Parav!
+> > > > > >
+> > > > > > This bug was spotted in the production on a small number of
+> > > > > > machines. They were running a 6.6-based kernel (with no changes
+> > > > > > around this code). I don't have a reproducer (and there is no
+> > > > > > simple way for me to reproduce the problem), but I've several
+> > > > > > core dumps and from inspecting them it was clear that a
+> > > > > > ib_device pointer obtained in hw_stat_device_show() was wrong.
+> > > > > > At the same time the ib_pointer obtained in the way
+> > > > > > rdma_device_to_ibdev() works was
+> > > > correct.
+> > > > > >
+> > > > > I just tried reproducing now on 6.12+ kernel manually.
+> > > >
+> > > > Can you, please, share your steps? Or try the 6.6 kernel?
+> > > >
+> > > $ rdma system show to display 'netns shared'.
+> > > $ ip netns add foo
+> > > $ ip netns exec foo bash
+> > > $ attempt to access the hw counters from the foo net namespace.
+> > 
+> > Ok, it worked well. The following commands
+> > 
+> >   $ ip netns add foo
+> >   $ ip netns exec foo bash
+> >   $ cat /sys/class/infiniband/mlx4_0/hw_counters/*
+> > 
+> > cause a panic on a vanilla v6.12.9 without my changes and work perfectly fine
+> > with my patch.
+> > 
+> I dig further and I see the issue. Its not the per port counter.
+> It's the per device counter which got broken by commit 467f432a521a2.
+> It introduced the device counter unintentionally in non init net.
+> And we need to fix that (instead of allowing it and opening more holes).
+> I replied with more details to Jason G in previous reply.
+> Please take a look.
 
-The SYSCALL instruction also provides means to create "incoherent" state of the processor selectors
-where the value of selector do not match pre-loaded values in the descriptor caches.
+I can prepare a patch like this, but I'm slightly worried about hiding
+previously exposed counters. I don't think it's a problem for us (even though
+I'm not 100% sure), but technically it can be seen as breaking the API.
 
-Would it work to have KERNEL_CS as last entry in the GDT table? Therefore executing SYSCALL would set the CS as usual,
-but the numeric value of SS selector would be larger than GDT limit?
+How about merging 2 patches: my original patch which fixes the memory corruption
+and a separate patch which hides those counters from non-init namespace?
+The first can be safely propagated towards stable trees.
 
-That would mean that "impossible" selector is loaded into SS if we came from usermode,
-but operation with stack would still work as the descriptor caches will be sane.
-The "impossible" selector value can be fixed by loading SS with NULL which is cheap.
+I'll prepate the second patch soon.
 
-The check in hotpath could maybe use VERR %SS which would fail because of GDT limit is reached. The VERR with mem operand
-does not use any GPR!
-
-Or simply check for "impossible" selector would work if we misuse zeros in high32 of R11 (usermode rflags) maybe like:
-
-entry:
-endbr64
-rol $32, %r11
-movw %ss, %r11w
-cmpw $IMPOSSIBLE_SEL, %r11w
-jnz panic
-; load null to SS, fix R11 and pretend above never happened
-
-If attacker would execute SYSCALL in the kernel, likely we could check the %RCX if it is OK or not?
-
-Bit variation to this "theme" would be to have SYSCALL SS GDT entry still in the GDT but set as "not present".
-Another brainstorm idea would be to misuse RFLAGS.ID and clear it in MSR FMASK but run kernel or most of it with RFLAGS.ID set.
-I don't know what is the threat model you are trying to fix.
-
-Lets fight x86 insanity with yet another x86 insanity - I think it is fair.
-
-I hope above helps or at least I will learn why not if I overseen something obvious!
-
-I tried to CC all the lists. I'm not subscribed.
-
-Thanks,
-Rudolf
-
-PS: I'm leaving as an exercise to a reader NMI and #MC handling!
-
+Thanks!
