@@ -1,176 +1,133 @@
-Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F556A009;
-	Sat, 22 Feb 2025 13:01:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877428494;
+	Sat, 22 Feb 2025 13:04:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740229275; cv=none; b=fZiMiB3pZ35dToZ70VUzCFpGuzjR24eWh8SnnvnedtZsOYi0eZqRIzBAzpZlqhElZxcX1ZBRfJ/fwLBQmcS8qFB2TnGp3MFXTGQnizpB1hodWN4KeRmtjzu3+1P5+NUvhOJ8cjTJ7VMRWwonza90KrZhjr0bduDqbIbRA6LdpfI=
+	t=1740229470; cv=none; b=qc5hLDfHneOIbw4I1ByH4SW5Z3yiRCoMnMdvygLTNLVnE3JAqyPsDHj2MeeAA/hPerQu8TLk3yLSbDid+bT0RCuZpyC152jq58VpL/Srd9+LIbU2cwOZScjxYalqRtcbYvMBkNXaJF/uf8HOVYsDgk+j2Bf5vbwz6xdibxlbSHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740229275; c=relaxed/simple;
-	bh=2LdIXCUaJBQlMB8zwsYYzvORxnVXkneFg7SImqCZ/vs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WDU/EaCWJP8tR99SN6Tg4O38Ov15oXLmX/lOHkr/qo/VrSOPWxzbsi2e7iNGumFDIgB8/VeOFyhbGF0TqaoDEao09H7NFPM9CZxqkZUiu5TEO9JtW67FW8Z/ZTCZ3kejz4QwGREuQREX3/6RqDbA+xx2fkkbYHyISfofJTVVR1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=QKkJKmIM; arc=none smtp.client-ip=128.199.32.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
+	s=arc-20240116; t=1740229470; c=relaxed/simple;
+	bh=CBfymnCcB17kUdICHcQ/09wwscvMW2UVOaYcXpoZ4ks=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RSQH/kL08DI+urAo8JLbloadAgTJUn2JS+5So1XZ6wFfSR3k70fLEoohzIirzBMYUlAyYc/QUcMBW0viCOCUlrbFumXcl/om09a3T2SR9rZOWAVbKHkhYp70BBbp4VAu+wtP7Ah50ME6NojST/VjFzGJq8GlGhavqRYLwVe4UcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jfl9Jmf/; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="QKkJKmIM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
-	t=1740229265; bh=2LdIXCUaJBQlMB8zwsYYzvORxnVXkneFg7SImqCZ/vs=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=QKkJKmIMsV0vuxCqOMqwutWugX3/6UKn0WCTGmn1hUMZ+mbCcGhilXWCFW52dquGH
-	 znQyNE9RX3g23Fjgx+OH6A+rTHfbrYh3QUzcPzmEBgtDDn68DF/8ab69HTq1m7s5EP
-	 xb4jb9nDc4qwyfkYVyoMp3LbXibegyWVjat4a8a4=
-From: Luca Weiss <luca@lucaweiss.eu>
-Date: Sat, 22 Feb 2025 14:00:48 +0100
-Subject: [PATCH 2/4] arm64: dts: qcom: sdm632-fairphone-fp3: Add newlines
- between regulator nodes
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jfl9Jmf/"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22134a64d8cso7436485ad.3;
+        Sat, 22 Feb 2025 05:04:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740229469; x=1740834269; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CBfymnCcB17kUdICHcQ/09wwscvMW2UVOaYcXpoZ4ks=;
+        b=Jfl9Jmf/0sb+Kl/vuwglR2iINIDSSUPVhXHeL2Tughix5m1LrzybmVoteyMWgS9v2p
+         4h6yMIpRdjiwrQ5v94J2vOMC9ULb1XtzrWDVk7LHCRQh1UL310EVMfcbBRcPZil5J6Ur
+         MZa6EZMpg/X7pvnKXUXj7p9xrGbwVoj9t1pb5n9gy/X65ZBNYuksZJunozDR49Jlyjjp
+         Wsaege/DVO9qorls7QAu7xyTIVnuQulRNNBzP+8r64er1Kknm4E+PKEgU8IC8+OsQ+m/
+         oCP7TP9mmB8nw4UvZO4EHBrlibfqy4N2Bkk2w0v9yS27A048vusqm/+UgCU45402deLg
+         RM4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740229469; x=1740834269;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CBfymnCcB17kUdICHcQ/09wwscvMW2UVOaYcXpoZ4ks=;
+        b=KASJnLXiSg9AoFNDlIX6oVt7qZxzUoK5xtirXE67ykV46stRO8vmX67ldF5Oj5ivt4
+         hT+mlpcOGEZkWDWIeqPmh0hhIT14g7C0CV2hLsA+ay6dypw260LN7AvtBWyi8z3m9Gax
+         nPVmH/ieRcoLQLCcbybAz2o5+g8Y9No1mRlVGaomNRWo46jKQhCq0F+IXEprPIK5yp5t
+         LsFM6hWAKr+Zym0mFvkP+yHWtO5fLHNeDgQS7JP5GCNMIWGSsv10MTXZfakGkAAhidwc
+         KLaOKNqsS3DDNmHG5JxbKHp4e2hjuNQVaot6M1uDk5PgusXSXIRehc77P48A4fiWVIdY
+         8AFA==
+X-Forwarded-Encrypted: i=1; AJvYcCUO1XyOP645e+5Vk2cOFqACtDTn89bXbblukJ8AaNFQJJzZm3QZvcjWmLMdkouD4nVisBFpIAhrz5kj6BCnyRg=@vger.kernel.org, AJvYcCXfRxn5hiVo8/UngQL6/fWiWcyd88NSGL9gpNkwgOJ7EsoeMNBy77H+17sA9F4UgTtCoJje2QSEXzTmroU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwG0MdRe0lxCxdlFNO7HQuvUzlFAd0h+sqwD5PNA9/62A8DxqQy
+	figHhxIp/vK2ZCeyuhCDcDs6SkD9+wPVnqGRrnQLfqgt1wQVqRXBYF3z2ogfzumEP2WTSP3wT2n
+	szbgGU1nhrZjPc/gL+TaiKI2vWMs=
+X-Gm-Gg: ASbGncvIkB59C+ZdluAUjSQLRG2fSFif49pbIuZA2mm0nhD+DHfHtkye9/vB1i15+KS
+	DJEXgY+99aN2ZNGHyeocRPKcrec8eiGDWvfRMw0Tk3pJenWN+tnn4fA3fSzVD6uDAfFFX5rKeOA
+	31ysPVpNg=
+X-Google-Smtp-Source: AGHT+IHMRA+PnHU3dE1lHiEiPxP2f7T5v6bGxqdbiEPyBDOSpaNkhfTf5Z1uGA6jrhap6zkUtujoedsO8rPxOHN/mAU=
+X-Received: by 2002:a17:902:d58c:b0:215:a57e:88d6 with SMTP id
+ d9443c01a7336-2219fec4ee6mr41354585ad.0.1740229468697; Sat, 22 Feb 2025
+ 05:04:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250222-fp3-remoteprocs-firmware-v1-2-237ed21c334a@lucaweiss.eu>
-References: <20250222-fp3-remoteprocs-firmware-v1-0-237ed21c334a@lucaweiss.eu>
-In-Reply-To: <20250222-fp3-remoteprocs-firmware-v1-0-237ed21c334a@lucaweiss.eu>
-To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Luca Weiss <luca@lucaweiss.eu>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2910; i=luca@lucaweiss.eu;
- h=from:subject:message-id; bh=2LdIXCUaJBQlMB8zwsYYzvORxnVXkneFg7SImqCZ/vs=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBnucqNLNrx3SAeieR3y7rKm8cd1eHlZTOWdiyNL
- GjnYD8xUDeJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZ7nKjQAKCRBy2EO4nU3X
- VjmNEADUXoqzW2PUKM99AGp7Ter+Ciyr9kOH6Qlj1cF3kt6F2cV3TZHrtfWm575TiVa9MbrnlZl
- qAhOacwHCnB7PLTe91pPww8/00Y6uSNsOfVwRO4roFiZZJw1l0lCTHlX68aBs5so4r+1atkQHtd
- e+fLvgjO4p2FhP6GxSgkwlrn7NlVu0iflxCuF72MhRQCIbh9IpWD/xXnLVpcHRTPNIpQhPtUlod
- 9TYqIl29YUlpgoVA158ROfI0iBjdCHU91ed+BVqiN/x/frM8FM6FQLGCWWhFfiectOsC678EDFV
- Ri6w798vVIhfWy468mIPzRLtM3MavhhQ+I4JwViJ1hiLQ1aaK/R0FKBFx0Ot628x6QyPcAiw2pc
- Gw+YF31XX7ZjwVPADOCEwe8IYJVm3QiIarAeA/WFgCBBMeWyHqJ0Y6Nhz5+M+1015IVhBE0Sckj
- X5YrfCdLg7UWfVWLCGCJQgz7Tl45Uvdk6zmW0Y/o8O6Qfxl9miRYjdw+LCzCoH1GwvUhOkhDAUj
- ajxToiVTTGeTZko3e8CK7uCGR4A1KLpICZhS9QoBfSVhTeWORlLSnATIlP4AxM/hyYwzsjYmr96
- AoX4iDXwdGme0m+UI+WoS6keimwAx3SaVed/7XQTW5MEIViEzxfcfip4DP5gdddG9uv/GtJKeZ6
- jkVlB39nVUWmSKw==
-X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
- fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
+References: <aIJ0ymzdUceCN05hwJpth4erH5u2SHYzYl52wGeT3uiO9bdk92ZkEmEEq9a9NXsInJYSz9uziwq-1fvdsXoeDA==@protonmail.internalid>
+ <20250218-hrtimer-v3-v6-12-rc2-v8-0-48dedb015eb3@kernel.org>
+ <877c5mci3p.fsf@kernel.org> <5kF-NYTBZbEqnnQud5LKnRXO0lfM0i6I2PoeFrpKDhCYwUuk_bG2Li1T1Nuv82r3VFD8adTcdx7yenXSIfTwmw==@protonmail.internalid>
+ <Z7eYp_vZo5yDVOdI@pavilion.home> <87frk7hera.fsf@kernel.org> <Z7hheOSAuKdhq-1C@pavilion.home>
+In-Reply-To: <Z7hheOSAuKdhq-1C@pavilion.home>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sat, 22 Feb 2025 14:04:16 +0100
+X-Gm-Features: AWEUYZmi0olrnUbV-pHkmUPEUfk9IaPB-HHAp78OseSSS51sgFBiFuULXVitU2c
+Message-ID: <CANiq72mpYoig2Ro76K0E-sUtP31fW+0403zYWd6MumCgFKfTDQ@mail.gmail.com>
+Subject: Re: [PATCH v8 00/14] hrtimer Rust API
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Andreas Hindborg <a.hindborg@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Thomas Gleixner <tglx@linutronix.de>, Miguel Ojeda <ojeda@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, Guangbo Cui <2407018371@qq.com>, 
+	Dirk Behme <dirk.behme@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, 
+	Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-As is common style nowadays, make sure there's an empty line between
-regulator subnodes.
+On Fri, Feb 21, 2025 at 12:20=E2=80=AFPM Frederic Weisbecker
+<frederic@kernel.org> wrote:
+>
+> I was thinking the patchset would be better routed towards the Rust tree?
+>
+> How do you guys proceed usually with bindings tree maintainance?
 
-Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
----
- arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+So far, what we have been doing is ask maintainers, first, if they
+would be willing take the patches themselves -- they are the experts
+of the subsystem, know what changes are incoming, etc. Some subsystems
+have done this (e.g. KUnit). That is ideal, because the goal is to
+scale and allows maintainers to be in full control.
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts b/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts
-index 957288853da2b857af77d9f5fd4de94900ee9b5f..08ffe77d762c3a97f470efbfb5064282fe2090da 100644
---- a/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts
-@@ -178,10 +178,12 @@ pm8953_s3: s3 {
- 			regulator-min-microvolt = <984000>;
- 			regulator-max-microvolt = <1240000>;
- 		};
-+
- 		pm8953_s4: s4 {
- 			regulator-min-microvolt = <1036000>;
- 			regulator-max-microvolt = <2040000>;
- 		};
-+
- 		pm8953_s5: s5 {
- 			regulator-min-microvolt = <1036000>;
- 			regulator-max-microvolt = <2040000>;
-@@ -191,66 +193,82 @@ pm8953_l1: l1 {
- 			regulator-min-microvolt = <975000>;
- 			regulator-max-microvolt = <1050000>;
- 		};
-+
- 		pm8953_l2: l2 {
- 			regulator-min-microvolt = <975000>;
- 			regulator-max-microvolt = <1175000>;
- 		};
-+
- 		pm8953_l3: l3 {
- 			regulator-min-microvolt = <925000>;
- 			regulator-max-microvolt = <925000>;
- 		};
-+
- 		pm8953_l5: l5 {
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <1800000>;
- 		};
-+
- 		pm8953_l6: l6 {
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <1800000>;
- 		};
-+
- 		pm8953_l7: l7 {
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <1900000>;
- 		};
-+
- 		pm8953_l8: l8 {
- 			regulator-min-microvolt = <2900000>;
- 			regulator-max-microvolt = <2900000>;
- 		};
-+
- 		pm8953_l9: l9 {
- 			regulator-min-microvolt = <3000000>;
- 			regulator-max-microvolt = <3300000>;
- 		};
-+
- 		pm8953_l10: l10 {
- 			regulator-min-microvolt = <2800000>;
- 			regulator-max-microvolt = <3000000>;
- 		};
-+
- 		pm8953_l11: l11 {
- 			regulator-min-microvolt = <2950000>;
- 			regulator-max-microvolt = <2950000>;
- 		};
-+
- 		pm8953_l12: l12 {
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <2950000>;
- 		};
-+
- 		pm8953_l13: l13 {
- 			regulator-min-microvolt = <3125000>;
- 			regulator-max-microvolt = <3125000>;
- 		};
-+
- 		pm8953_l16: l16 {
- 			regulator-min-microvolt = <1800000>;
- 			regulator-max-microvolt = <1800000>;
- 		};
-+
- 		pm8953_l17: l17 {
- 			regulator-min-microvolt = <2850000>;
- 			regulator-max-microvolt = <2850000>;
- 		};
-+
- 		pm8953_l19: l19 {
- 			regulator-min-microvolt = <1200000>;
- 			regulator-max-microvolt = <1350000>;
- 		};
-+
- 		pm8953_l22: l22 {
- 			regulator-min-microvolt = <2800000>;
- 			regulator-max-microvolt = <2800000>;
- 		};
-+
- 		pm8953_l23: l23 {
- 			regulator-min-microvolt = <975000>;
- 			regulator-max-microvolt = <1225000>;
+Of course, sometimes maintainers are not fully comfortable doing that,
+since they may not have the bandwidth, or the setup, or the Rust
+knowledge. In those cases, we typically ask if they would be willing
+to have a co-maintainer (i.e. in their entry, e.g. like locking did),
+or a sub-maintainer (i.e. in a new entry, e.g. like block did), that
+would take care of the bulk of the work from them.
 
--- 
-2.48.1
+I think that is a nice middle-ground -- the advantage of doing it like
+that is that you get the benefits of knowing best what is going on
+without too much work (hopefully), and it may allow you to get more
+and more involved over time and confident on what is going on with the
+Rust callers, typical issues that appear, etc. Plus the sub-maintainer
+gets to learn more about the subsystem, its timelines, procedures,
+etc., which you may welcome (if you are looking for new people to get
+involved).
 
+I think that would be a nice middle-ground. As far as I understand,
+Andreas would be happy to commit to maintain the Rust side as a
+sub-maintainer (for instance). He would also need to make sure the
+tree builds properly with Rust enabled and so on. He already does
+something similar for Jens. Would that work for you?
+
+You could take the patches directly with his RoBs or Acked-bys, for
+instance. Or perhaps it makes more sense to take PRs from him (on the
+Rust code only, of course), to save you more work. Andreas does not
+send PRs to anyone yet, but I think it would be a good time for him to
+start learning how to apply patches himself etc.
+
+If not, then the last fallback would be putting it in the Rust tree as
+a sub-entry or similar.
+
+I hope that clarifies (and thanks whatever you decide!).
+
+Cheers,
+Miguel
