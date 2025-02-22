@@ -1,144 +1,156 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E47E13A3F7;
-	Sat, 22 Feb 2025 19:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913751CBEAA
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 19:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740250830; cv=none; b=LU7So4fjcTR0qAZU0Z+MfvEg0wQyRojJc6JNs4XH25pbejlfJNSUPLoIdHwYPa0N2+lVfkRDYLamh3+y9Q4GyWNMXJTS2njYqqBzs0avw6uAtMKFh/lCsrfyO84QGMXmqhamF9KjOoJDBNObpmot12w/77UiRt/+Tqska+H/nSA=
+	t=1740251198; cv=none; b=Ug7t2XjF29TMAWI6EE35EdTOuZQpfHzf27sHftwn3kjUOfVXLbxX9FZCVqraowBn8ay8jmzeh0gW3j8LYr4o+hOk95gHcRKK0DVnM9oUZjLlUW9LrtPTS6ptA9ii2flszzqIyZuNH6Fk3zocBWCNDSxl6ioP7If9aXgZMTaHkDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740250830; c=relaxed/simple;
-	bh=zWRtAtqNqzxiBe46ewrMrlO3cYmG11wRcuinLSkGivQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DgRBcfEZHZBrbNd0+xDkihm5IwaSzW8ZbBrAzwbJmH/Yd+R6a17NVpP2e+Xk4KUMLlOSm6t3Asz9pxEleXpr6o3BeoQHoeHNQqgNbZoWcxz6GVsFQSfulRDaH/6JzlF+sSsT6n1GlOb38b5WYMKptpRFiF4ZiuaVRh2lp0srFvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ql4uXnIe; arc=none smtp.client-ip=209.85.160.172
+	s=arc-20240116; t=1740251198; c=relaxed/simple;
+	bh=wNNGL42KaRimbUYjIPol1fhsRgsVdv8kh4Fp/2KhCw8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EIcVq2GX+NhtJJ7XFUiSsHYrVK5J26ehSgA0Rt0I6d6bsZOW5EXiBxDNTsbMljWBt/TCrLseqUg2OqSyH0eB3EwMLtoF/RyGnlmI77LgSgwpoBBLxAAQ7krSUX+qjW+DtKx/tz2Pht98UyjVTRLMVtWARX4tHtWABeSI4cn84ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Su8c9AvE; arc=none smtp.client-ip=209.85.222.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ql4uXnIe"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-47200236004so31084291cf.3;
-        Sat, 22 Feb 2025 11:00:28 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Su8c9AvE"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7c0a1677aebso309337585a.0
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 11:06:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740250828; x=1740855628; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5mf3WLnT/uqvc4jU09LwEl+Y0jld6Kz+6VRNuRCDxgs=;
-        b=Ql4uXnIe+qlLq1NqMFVjbIbxWSO+NE1vYf/05a2MyZgWd9ljAoeAvdbHILN3D1y0Sm
-         YHCn/NYLdVIRjYdAAABu1m8otrELMKapu78WtDiVIfrCoXiJxr4W/atnJ6DUltNKU3cU
-         s2awLoiWpYr9hbAZwvy5IqJl+c0aI2KkKDtK5JgnxCGGG+HqG646pXJ67BBz6a+WvXSZ
-         cuACNWiJCLjvwMf/XTKie1DmxnbM88OfHAZM48pqgYm0fHgvR9AQJVSzx1Lugf31h4oj
-         taPdBXwH7TxShcYJt9qx+MbG6tFK42hEObpNlI99G6h6k5u+FH7U9lY4NLdxvB4wb8hd
-         KCMg==
+        d=gmail.com; s=20230601; t=1740251194; x=1740855994; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DiabidSOAyQsf+B3XgHW1kyRRESYAYqsI/IhtP+orBs=;
+        b=Su8c9AvEsHtdMrF/GaMONzS4rk3eU3ZOQVd+97HVYm9LJHzfTkRL8KakRhRr4vg+u+
+         w8yj5j6RvWDM/zMlB4YdAXKk/crMZdLp42YIeGCj10I+UWuE/8BfGax+pDm0MFYETLEW
+         4olTfmjfEQZfQn0h9Gg7H0JDgVgrIQXOn/9NGsM0qpgiWHxaN1vY4iPHOwyduv+ywetY
+         QAW36qZxZnU/IhdqDPq9eE8xMTi5z5Bm52JMamEDg6Zfev5nRoN2rI49lS+HLYZhvPwy
+         QS8gs5O0dgnuTeh/nXSEZniTLxIwKF0xTg5gEnrZ7eQzr6bAYG9KOoaaYEfOSItvqegU
+         Niuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740250828; x=1740855628;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5mf3WLnT/uqvc4jU09LwEl+Y0jld6Kz+6VRNuRCDxgs=;
-        b=GyCrpDngsrIH6eJVfhTzvJcZHfOC6sYkMjvbDbksr/z2OhBngUTPjWPgyO0d05Vv7Z
-         rTi6LdMPmCmW2/kGeQ7XYgmMrR48tAjpAJxNR1AaWFYWaK8kQjU/SAIsdBZvOj3MSre1
-         mlJzhU9wi/9pxexszo0+Q0TZwQlGBUbP3YV/mLPJI/wbt1C6gykwrm92Pbphe9S7wpoX
-         kwMo8t5PO3Wyu81J1mIZapt41FaJSSBcqiQVvxDYsHO6hg7iK79R3pGmTB+sTXSijVMw
-         u5dat/wyfiJqpDw8g4m9aReWG7nDG+FyGOq3S727wFcAD5wInrrjX+tPG1vGxwkjkCGh
-         0qAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+wRPba2aTllGZx8PDlw0zzH9iPchxnyCl6J19SZ7Ki18HoG/J7GtuDdExDT4sp+5cXimpgnuVglZqYdA=@vger.kernel.org, AJvYcCXQfVMKfQfA0whY9LftNYtdFhOOF8fyQ4qwBr0NwSfxxJwaymt8ZvCH7k6607mi2zessMpxYI1CxJKWTVcu+cgO@vger.kernel.org
-X-Gm-Message-State: AOJu0YxadGxSxHzrluHtxiYW8LkzjW+dDpWjw+e+kRWycNH22fP9HpjE
-	u93mpQ1ASJXF7rrfoLjKPbN2ZV9mLQHzpij0z+HyKy35Ce6cDHTb
-X-Gm-Gg: ASbGncuYIQC455Lh8dFtjK787hKzKnTp5GvDlgc3QlidyrSYoruzyXlEOE7GnuyVRNZ
-	vS3137BMjpEOjksHWtB/voS0YACV7f1tFR2VeS9JcQ+aBoFgm7LgTV0yPgomOc0VAvtVXlwCjtL
-	n9mATkaRHWGJ1AzITSyDZB4eb/Zaz9o7Qt3Lf3iwVRCYt8jLXAAHj4FWwgrcfrnrKMyg7x3/oH9
-	qy8hFHEfwLW0T9Iv9u+SWmSV620TZwbABnY8sD2Ju0D2i8S5dAuP5xaMfktEGexXt0sPo1oZYtP
-	OQk7YUQ3pSRlZtT5dDyV2OE=
-X-Google-Smtp-Source: AGHT+IH3EYjDKPoQ/e0zJiaGtwJhz0k1Ov8NHAPdHjRC/le5ACQyzWR3UwrkNbfa/a8/mVoIaYX0Wg==
-X-Received: by 2002:ac8:7d4b:0:b0:472:636:f60e with SMTP id d75a77b69052e-47222945029mr114554481cf.34.1740250827709;
-        Sat, 22 Feb 2025 11:00:27 -0800 (PST)
-Received: from localhost ([142.198.73.227])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-471fdf8ac21sm60434901cf.19.2025.02.22.11.00.26
+        d=1e100.net; s=20230601; t=1740251194; x=1740855994;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DiabidSOAyQsf+B3XgHW1kyRRESYAYqsI/IhtP+orBs=;
+        b=dAvlRs8Rgb6AXrfv7peNsElCL9o/djyqohevi/LZbmt+D5sqlC0qnBAdL/10Ae+LPm
+         N+dQluk3Zjo/wdt87zkIvmKrymrVP5KZDmi5m6FXxkhc9i29fc0X1DhTrKajmdVKlJtr
+         kBFARzGEuPO0hqBwCKn1g9wXCZ/77EJIMZQ8k/f8JWxOse3w14TkFBNDb+lGzMwkMqfC
+         i2dfhg0oPlpOAV0zc8lqkcUc5HkjJECtqmPOHTa3TO9jH+T0l7LU+8SDARcpcpsQmveb
+         CciJDWfBpHT04ThklujoAxoyht5W3i3QKMHOPHZDDPJznnmHWx3jYHEdVJ+CWTQbSrbi
+         /91A==
+X-Gm-Message-State: AOJu0Yxe0gjTIOkfU/8/dScruC+alL37y+Z7G6rVFefy3rf3g7UGRORB
+	1hKRhLI9NMn626AaOP6eJKrEI3wNLVgzktvJW7cSFjsaDXEE9b+Gv8K5
+X-Gm-Gg: ASbGncuqCBSTzIZsAnKFf15wLbh/OQzXjffBhRcmLMhjDrPJmkBDIeX+XGdXMiDqTfI
+	UuDJ3BBbwc8SygBcjOUHVxCAZLpBw9qy7oJjfppCvsvUGbGn9O0gKyi1IqO09GwsbAU4MXi/Ll9
+	pk7gbYhovIkG8V6MUwXVFGwWzTiJAFlSVIlw5XrugiXCHNLGVbFON6u5G46T6/V7PeVVD46ZuCQ
+	WsKZO7vrbDzXNjrlucAKYVOuQDXoAA7Pf4bEfrAIe5qX7oVVj+A3bby8Uq0pOVPUjEcWvb6Yl0E
+	gxVS4h4=
+X-Google-Smtp-Source: AGHT+IGZZVN1cBwmGXraB8fdsm1Rz3PDOoeLjcCnTk9CoLTDIbyFoXsI9zHTAyRT5vjdDJAkXqJDPQ==
+X-Received: by 2002:a05:620a:19a4:b0:7c0:b9f3:bd1e with SMTP id af79cd13be357-7c0cf96f1a3mr996524185a.49.1740251194397;
+        Sat, 22 Feb 2025 11:06:34 -0800 (PST)
+Received: from citadel.lan ([2600:6c4a:4d3f:6d5c::1019])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c0b1ef73b8sm550185285a.65.2025.02.22.11.06.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2025 11:00:27 -0800 (PST)
-From: Seyediman Seyedarab <imandevel@gmail.com>
-X-Google-Original-From: Seyediman Seyedarab <ImanDevel@gmail.com>
-Date: Sat, 22 Feb 2025 14:01:13 -0500
-To: ritvikfoss@gmail.com
-Cc: shuah@kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org, 
-	linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH v2] selftests/mount: Close 'fd' when write fails
-Message-ID: <zshes4xtyir7zrrybeqj2amrxyctwqnuvx2tqyktv4vsfstxqi@pvdq2rb5m47j>
-References: <20250222114709.50011-1-ritvikfoss@gmail.com>
- <20250222121249.50588-1-ritvikfoss@gmail.com>
+        Sat, 22 Feb 2025 11:06:32 -0800 (PST)
+From: Brian Gerst <brgerst@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Cc: Ingo Molnar <mingo@kernel.org>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Uros Bizjak <ubizjak@gmail.com>,
+	Brian Gerst <brgerst@gmail.com>
+Subject: [RFC PATCH 00/11] Add a percpu subsection for hot data
+Date: Sat, 22 Feb 2025 14:06:12 -0500
+Message-ID: <20250222190623.262689-1-brgerst@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250222121249.50588-1-ritvikfoss@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On 25/02/22 05:42PM, ritvikfoss@gmail.com wrote:
-> From: Ritvik Gupta <ritvikfoss@gmail.com>
-> 
-> 1. Close the file descriptor when write fails.
-> 2. Introduce 'close_or_die' helper function to
-> reduce repetition.
-> 
-> Signed-off-by: Ritvik Gupta <ritvikfoss@gmail.com>
-> ---
-> Changes in v2:
->     - Fixed formatting
-> 
->  .../selftests/mount/unprivileged-remount-test.c    | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/mount/unprivileged-remount-test.c b/tools/testing/selftests/mount/unprivileged-remount-test.c
-> index d2917054fe3a..41d7547c781d 100644
-> --- a/tools/testing/selftests/mount/unprivileged-remount-test.c
-> +++ b/tools/testing/selftests/mount/unprivileged-remount-test.c
-> @@ -54,6 +54,14 @@ static void die(char *fmt, ...)
->  	exit(EXIT_FAILURE);
->  }
->  
-> +static void close_or_die(char *filename, int fd)
-> +{
-> +	if (close(fd) != 0) {
-> +		die("close of %s failed: %s\n",
-> +		filename, strerror(errno));
-> +	}
-> +}
-> +
->  static void vmaybe_write_file(bool enoent_ok, char *filename, char *fmt, va_list ap)
->  {
->  	char buf[4096];
-> @@ -79,6 +87,7 @@ static void vmaybe_write_file(bool enoent_ok, char *filename, char *fmt, va_list
->  	}
->  	written = write(fd, buf, buf_len);
->  	if (written != buf_len) {
-> +		close_or_die(filename, fd);
->  		if (written >= 0) {
->  			die("short write to %s\n", filename);
->  		} else {
-> @@ -86,10 +95,7 @@ static void vmaybe_write_file(bool enoent_ok, char *filename, char *fmt, va_list
->  				filename, strerror(errno));
->  		}
->  	}
-> -	if (close(fd) != 0) {
-> -		die("close of %s failed: %s\n",
-> -			filename, strerror(errno));
-> -	}
-> +	close_or_die(filename, fd);
->  }
->  
->  static void maybe_write_file(char *filename, char *fmt, ...)
-> -- 
-> 2.48.1
-> 
-> 
+Add a new percpu subsection for data that is frequently accessed and
+exclusive to each processor.  This is intended to replace the pcpu_hot
+struct on X86, and is available to all architectures.
 
-Closing a file right before a process exits is redundant,
-since the kernel will clean it up automatically anyway.
-That said, whether doing this as a best practice is arguable.
+The one caveat with this approach is that it depends on the linker to
+effeciently pack data that is smaller than machine word size.  The
+binutils linker does this properly:
 
-Cheers,
-Seyediman
+ffffffff842f6000 D __per_cpu_hot_start
+ffffffff842f6000 D softirq_pending
+ffffffff842f6002 D hardirq_stack_inuse
+ffffffff842f6008 D hardirq_stack_ptr
+ffffffff842f6010 D __ref_stack_chk_guard
+ffffffff842f6010 D __stack_chk_guard
+ffffffff842f6018 D const_cpu_current_top_of_stack
+ffffffff842f6018 D cpu_current_top_of_stack
+ffffffff842f6020 D const_current_task
+ffffffff842f6020 D current_task
+ffffffff842f6028 D __preempt_count
+ffffffff842f602c D cpu_number
+ffffffff842f6030 D this_cpu_off
+ffffffff842f6038 D __x86_call_depth
+ffffffff842f6040 D __per_cpu_hot_end
+
+The LLVM linker doesn't do as well with packing smaller data objects,
+causing it to spill over into a second cacheline.
+
+Brian Gerst (11):
+  percpu: Introduce percpu hot section
+  x86/preempt: Move preempt count to percpu hot section
+  x86/smp: Move cpu number to percpu hot section
+  x86/retbleed: Move call depth to percpu hot section
+  x86/percpu: Move top_of_stack to percpu hot section
+  x86/percpu: Move current_task to percpu hot section
+  x86/softirq: Move softirq_pending to percpu hot section
+  x86/irq: Move irq stacks to percpu hot section
+  x86/percpu: Remove pcpu_hot
+  x86/stackprotector: Move __stack_chk_guard to percpu hot section
+  x86/smp: Move this_cpu_off to percpu hot section
+
+ arch/x86/entry/entry_32.S             |  4 +--
+ arch/x86/entry/entry_64.S             |  6 ++---
+ arch/x86/entry/entry_64_compat.S      |  4 +--
+ arch/x86/include/asm/current.h        | 35 ++++-----------------------
+ arch/x86/include/asm/hardirq.h        |  3 ++-
+ arch/x86/include/asm/irq_stack.h      | 12 ++++-----
+ arch/x86/include/asm/nospec-branch.h  | 10 +++++---
+ arch/x86/include/asm/percpu.h         |  4 +--
+ arch/x86/include/asm/preempt.h        | 25 ++++++++++---------
+ arch/x86/include/asm/processor.h      | 15 ++++++++++--
+ arch/x86/include/asm/smp.h            |  7 +++---
+ arch/x86/include/asm/stackprotector.h |  2 +-
+ arch/x86/kernel/asm-offsets.c         |  5 ----
+ arch/x86/kernel/callthunks.c          |  3 +++
+ arch/x86/kernel/cpu/common.c          | 17 +++++++------
+ arch/x86/kernel/dumpstack_32.c        |  4 +--
+ arch/x86/kernel/dumpstack_64.c        |  2 +-
+ arch/x86/kernel/head_64.S             |  4 +--
+ arch/x86/kernel/irq.c                 |  8 ++++++
+ arch/x86/kernel/irq_32.c              | 12 +++++----
+ arch/x86/kernel/irq_64.c              |  6 ++---
+ arch/x86/kernel/process_32.c          |  6 ++---
+ arch/x86/kernel/process_64.c          |  6 ++---
+ arch/x86/kernel/setup_percpu.c        |  7 ++++--
+ arch/x86/kernel/smpboot.c             |  4 +--
+ arch/x86/kernel/vmlinux.lds.S         |  5 +++-
+ arch/x86/lib/retpoline.S              |  2 +-
+ include/asm-generic/vmlinux.lds.h     | 10 ++++++++
+ include/linux/percpu-defs.h           | 10 ++++++++
+ kernel/bpf/verifier.c                 |  4 +--
+ scripts/gdb/linux/cpus.py             |  2 +-
+ 31 files changed, 135 insertions(+), 109 deletions(-)
+
+
+base-commit: 01157ddc58dc2fe428ec17dd5a18cc13f134639f
+-- 
+2.48.1
+
