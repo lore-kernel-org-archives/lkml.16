@@ -1,261 +1,192 @@
-Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
+Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazolkn19011038.outbound.protection.outlook.com [52.103.66.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B25208977
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 11:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740224293; cv=none; b=JW1l8wwVYP0MmBFbz1XMnjv2VCYq8XQrvKVWWnZ76hDdgQgR1UDMTGIc2Dy0B3Tk1hXwx0P63xUeFLlqJ2U9FV83xI8qq1rTXoIFJtb9HRBr0AgZlzzmAqvzLqb1uGpp8bXBH9e88w+SdIdoPbKlxxfb6UEeUTBRBIuN+ruLB1s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740224293; c=relaxed/simple;
-	bh=qyth9Oc4Wpb02qU3Te4lB8Rkf4rISc158oIM6uUGQuk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gHwD7FPzIQuMuYLfsl+eCXkQXx1ELYRcsye2UfQj8KvrD2Qv6Nfljk46GwXtj0Uw1z3NwMTR8oaEbBQbnbUO992GMPm8snLQvniuJpXpAnlp/c0n+ZPw6/tQjk1sHZXWQRjM1kqSIWFWneKHRyHrehSSb7WPAmI2BWIuAncT3IA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=fC8I3ywp; arc=none smtp.client-ip=199.247.17.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02BD207E18;
+	Sat, 22 Feb 2025 11:38:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.66.38
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740224317; cv=fail; b=ItQbHlN5DwqAp5JTviPO4ULExekAQ5Xe9y1P8mXTbLUX9wdDM5iAaZ3IPBqBXISxnTKNl87zBPyoxfVhbCud58KizgrfUszFdc5/bogdpp4YpxT+Mbtm3t08bkE9iQcBGpEIAfKosD+9eOheXsN6b3KVcBr0wpfKxdWrNxKE5nQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740224317; c=relaxed/simple;
+	bh=M7RJQRynjQyqzPnchgGJdJSMd6JIKLnppQGHywOc4QM=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=MxAVZikIVfer/PQKc5rvpkltwceqh8K9wVaoO2IBI3Y1t3TPRUFZ79kUhbqkkGqyOe2zuF+T0LtCmKCeA+jdybeo0gJnMahRXj0Alma912q9lzxQduHustC5OJqZ8m2Lr1WHByYAEHViVSdtCpvEqxnSJAFMG0oOLc3UjgBeYBc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=gsqDCwTC; arc=fail smtp.client-ip=52.103.66.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="fC8I3ywp"
-Received: from spock.localnet (unknown [212.20.115.26])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by prime.voidband.net (Postfix) with ESMTPSA id E3D016312FC1;
-	Sat, 22 Feb 2025 12:30:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-	s=dkim-20170712; t=1740223808;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ktOZKhfEfHmMYs+Ns1mcOIQBk4+2if98X80BLbm79UM=;
-	b=fC8I3ywpAJWVJZiR674i1N17F0Z5r7XPwO+G60UlmKVCnnEHxwqxSEEQUPufgIzDfYji4l
-	PohctQf/IaCVz4Ccf3rDw5TC35EJSBRYioO+9QFwy9m79Wkym5yMs627R/l/nSEFFs+5JJ
-	A1iF8SG5aLnykbx1GoWN5EvfcOsZzug=
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: x86@kernel.org, Rik van Riel <riel@surriel.com>
-Cc: linux-kernel@vger.kernel.org, bp@alien8.de, peterz@infradead.org,
- dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
- nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
- linux-mm@kvack.org, akpm@linux-foundation.org, jackmanb@google.com,
- jannh@google.com, mhklinux@outlook.com, andrew.cooper3@citrix.com,
- Manali.Shukla@amd.com
-Subject: Re: [PATCH v12 00/16] AMD broadcast TLB invalidation
-Date: Sat, 22 Feb 2025 12:29:54 +0100
-Message-ID: <5861243.DvuYhMxLoT@natalenko.name>
-In-Reply-To: <20250221005345.2156760-1-riel@surriel.com>
-References: <20250221005345.2156760-1-riel@surriel.com>
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="gsqDCwTC"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=u0OBmW8EN9maWqv7Se+W+kgEZQVNWxwlrRXx+/hcStkzfyAGq/sgxYD+Z2eyCEXpGtt7UozbZfvc3tcOj5w/SYPJOEwSUwR+Dx+xJpfPUtCbns0gilaEHuTWsHR8lWst0wsEIVqhDn4gLEzf/LwbTbn/HwPC9OrPM5Kt/dP/yvhPSzSDnwdRmHWqh2sPHXtsOqfY3q3LL4d9MT8VESfS9HnV0YpxptkusNL4k1IEMs++CBx0LO1XyR+Vft0dcSIf0JABJQFrvHyDXOoOOqOcjx+oWTXeZkFDtyOXYJ91r3PQKSdbxBsJtMgBs7s6iZjU1mPsZbLrLAe52za4/8LSzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ad21MWO3PVvCVn9RQHDRoECV32T9c2wTWkFN8j79BuY=;
+ b=vuk2fX6dbXGDh6ByajDapt+UVj+Sgiqb1bzLDW4EQ9PJ5Uf6erdJioNfuB5eRnm9IOZs1cMUk41S82nL/6VcVm75Pfepg5KBOIlLRbZbek6Hqbh8I7iekx4PfO4sKoXhh+mXDT/cbA4Ei/HirxoLVZKxPVdYrW7Loek9NvNKfEnKtm4WnpHMOJvWi/s0J7z46x7lFkjs9Wdx34etlU0O/aYmObI1AglxM6vM0QJL4sny5/17KyM29hdlPf2lTlrXoO+nR5laeoJqe0HE72GeyLIv5MQLy2hzqmnVeUoL65hO4/h259lyggyiE0LaawVSVxNNSqqkhZkKMvimKwTtsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ad21MWO3PVvCVn9RQHDRoECV32T9c2wTWkFN8j79BuY=;
+ b=gsqDCwTCLkxxpRk+SKvAR0MoSwhzaE54ugRFKL54c0f5Uvkfvfcz4UTUx03AR79BuZNRLMHsHGKfULpyKmjIVBQ/N9OuoVvb2dLEkGDcsT96beYRsLKtn7nZ3ho4LMuxIs1UgEaMjazMb1oxzhs2Z4cKEb3PRdBi5jCvbmHx5IVXJgC814O8h0iLwUcEk5vfjAk9B9SthYJq8VSV+v9WIPfDWCeUBezq86w4DljCSFS98OXW7PJw4V7FnodxSG8wqJp61aXjUNU8qrynCpUzJl5nN+ayyZ5P2Q7fUSjWQI2VWMprt21n4g/HQ0TlmnkIGHJonhjZwk4wpeRXkhV1Pw==
+Received: from TYCPR01MB8437.jpnprd01.prod.outlook.com (2603:1096:400:156::5)
+ by TYYPR01MB14294.jpnprd01.prod.outlook.com (2603:1096:405:210::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.16; Sat, 22 Feb
+ 2025 11:38:17 +0000
+Received: from TYCPR01MB8437.jpnprd01.prod.outlook.com
+ ([fe80::83e7:751f:f3af:768f]) by TYCPR01MB8437.jpnprd01.prod.outlook.com
+ ([fe80::83e7:751f:f3af:768f%5]) with mapi id 15.20.8466.016; Sat, 22 Feb 2025
+ 11:38:17 +0000
+From: Shengyu Qu <wiagn233@outlook.com>
+To: nbd@nbd.name,
+	lorenzo@kernel.org,
+	ryder.lee@mediatek.com,
+	shayne.chen@mediatek.com,
+	sean.wang@mediatek.com,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Cc: johannes@sipsolutions.net,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	Shengyu Qu <wiagn233@outlook.com>,
+	Peter Chiu <chui-hao.chiu@mediatek.com>
+Subject: [PATCH v1] mt76: mt7915: wed: find rx token by physical address
+Date: Sat, 22 Feb 2025 19:38:13 +0800
+Message-ID:
+ <TYCPR01MB8437EE1595CD4AB581C006E898C62@TYCPR01MB8437.jpnprd01.prod.outlook.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TYCP286CA0153.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:383::15) To TYCPR01MB8437.jpnprd01.prod.outlook.com
+ (2603:1096:400:156::5)
+X-Microsoft-Original-Message-ID: <20250222113813.8265-1-wiagn233@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart6129452.lOV4Wx5bFT";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYCPR01MB8437:EE_|TYYPR01MB14294:EE_
+X-MS-Office365-Filtering-Correlation-Id: ca774258-fc09-4483-eeca-08dd53356657
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|7092599003|5062599005|5072599009|8060799006|15080799006|461199028|19110799003|1602099012|10035399004|13041999003|3412199025|4302099013|440099028|19111999003|41001999003|14041999003|1710799026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?DqnKHhX9R60T8BxhYuHcCi/1pXfm3Lfr+lWspo059xjcrQ3+mUtgwgj9wMiG?=
+ =?us-ascii?Q?q7pjE0Iie4SGrxq0ACCf5kwsqnOVbWM/yRFS9XlvOQFWJKMj4fFXtSwFNP1d?=
+ =?us-ascii?Q?Q4izGvcl1a/liNIkwbe5W+R8iDY85YfOWeyteo701r7r6O14e/eQM6jGeR0N?=
+ =?us-ascii?Q?eKGbMxGD2EXj1lHMwFCKm8nqo0zv46nliOTBxi4XvJaYim8iW03GkDUUZLNu?=
+ =?us-ascii?Q?fjN0/np3g5AMfTcSwprmuwNoeAaY9ZER6ZivLfnsqYLlF/O0dYrpOwxH5L6a?=
+ =?us-ascii?Q?GVVxybQdf/5pmDEmWCoSRHfNTCxvdVWlAxaW8bRDAgj1B7aBUlv2LdEA0cCL?=
+ =?us-ascii?Q?8gifCo/Cw1ZgytTShpwfRN4PNbbBU8oY0eWySeojR60F8K6cB5xzCG5JHmo9?=
+ =?us-ascii?Q?03aT+7lMT+ifz3T9EeYhPHQrqW5HvxgPNlkMyq6vu5InWWVjHAL1typ/r5TQ?=
+ =?us-ascii?Q?6AVwtuKmdJUgJIaW+GZrh+WSo1DGKb9KrbdQn3y6krRSZE1ceZlVYJnqLaDd?=
+ =?us-ascii?Q?UVVoeosZnPcNKrVeDYGjGSIUoAo0qptZDuQJZWkQy79y3kpBJQAn1Lcuq2t6?=
+ =?us-ascii?Q?VPkyFIzXpBeOm54cLr1XD3dPJTDz4P1fvLxMJ22jdO67bYLzDEsOD8w8bhXX?=
+ =?us-ascii?Q?F+rhhFmFz8noxHpFErSB6c4AewdTZdRHxh0nv+mimeCIZCdb3G2jfndeGcrx?=
+ =?us-ascii?Q?nYIPUW7DqnUPAIzn6KQaEsGqGEReJdFBq1NyAJlCHZRUMHSD0Lqj3QPl9eK5?=
+ =?us-ascii?Q?MU/8PrFfidYuCewBLQ7vV/WwiLTHlosJb7xpcyC6if2tH9Fxvp53sAFB0oI/?=
+ =?us-ascii?Q?N9kaT7KKxoFLNt12SnNbDykYRsk4w55sjdObUNOEFehAAWiUEy5pC3g9BymS?=
+ =?us-ascii?Q?xJS3y6NW9N5odh1kyPL8ae4j2CyPBrmN5Evp7ADwQos2V74Ztj9IR3L225q/?=
+ =?us-ascii?Q?+yLHHeTtjzZDZQY7tcNrUw+WUyN4NoMkX9x1dQLAb5b4QDwdDY9KkexpRkyb?=
+ =?us-ascii?Q?xYdNONRlpeQozVlK8NC85wlFjeCclu5jGOIPy/4IjqDVboWXHT0NbyBZ/bBv?=
+ =?us-ascii?Q?5EdSc3x90kNDtXzLghtScSMacwK2LyQuQjYtSfkSFbiFq2rbfcwLzWVkwTU3?=
+ =?us-ascii?Q?SN82fX7qVmFkXkHbccdF5h3bKsOi5wSdFiJ9CNZQniKC/is3tEG826h8UipO?=
+ =?us-ascii?Q?HKEHUbs9U12SUiXDIMme0Ty74Qq72iHlQ3V+qQRoh3Tk2kSHvU4zQhVDiH+m?=
+ =?us-ascii?Q?CfpAti4Qt/XWx/JRqWV3xymLaW/pBmsbpAfHuija4zBRAzZr634YWbEMDoC1?=
+ =?us-ascii?Q?DDVJ6QnwGPiyJ6Zd6OyL6VK8rFTaGlG3ae843zQWRmPCjmiRS6/O+UiCii3K?=
+ =?us-ascii?Q?9K9uCIDJuQNgfQbu7KuInmzn8vxZ?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?42icxF7SlW9PU8Ir63h9hWV0xs/0aYOR/Xk4OmbKDSE5906ALGfpRkQ9OM/U?=
+ =?us-ascii?Q?rN0anVxBxXnEN5eBE1Rq3pKfnW/Fntd4QTYYtDRlbijWjMHyp0wQPn6eR0Rr?=
+ =?us-ascii?Q?RZ1oZw9VGqGqIP0Rdy/XfBvFRL9YzLJW0eqqYckP55N4oeYbeqj23FKq9Y2E?=
+ =?us-ascii?Q?pW1ZcdeMNBnBZekX3OFBELHAoOUbeoSDZpSGVzy6tTlubbsqrN9KAJ6kenjP?=
+ =?us-ascii?Q?MMIv9+eR0i841gYXE7pBVf+7HVZc08gCN/Cwt+nUYQTBBNHWzToDKsmFjEgW?=
+ =?us-ascii?Q?/gwIbftzT4jyyZSirMcCOOPlAkQM4qO51rU9nU4HKxDsDwNAZuj+JXMXYDBi?=
+ =?us-ascii?Q?SeXaPTe76cXFoQDuYPFxYR9sI0wo9ZKhsfKdxh/+ReGbiNeP2SRfcqLzMnwe?=
+ =?us-ascii?Q?+fTR2HEnIEAEk+CEpZZab8WC51qrbG/itlo5p92HIVOduqLNEgV4Cs+8bcRK?=
+ =?us-ascii?Q?Jmcc34rHFTkmjT94CMr4WqoaLm9h6W+Lx7oE2g/EBfQVhspCZSK0jdhR+1y/?=
+ =?us-ascii?Q?XRW1rN37fUjHoEorDZcvGdFP7dx8tA5IiekSxGdb+5lnLyUmwwpVbEaSFCc7?=
+ =?us-ascii?Q?UkEvq+yCUHygBbPs/A/bqJFX7Yy++C5z67PKkxwuq1dDqPFR+i4vkWqM4H19?=
+ =?us-ascii?Q?3dv2hAOTs1wlXO+mHjLZOIsvzBvjzwAazWoCwgkZzK9aRZXQC5k1EPbEcYae?=
+ =?us-ascii?Q?KZvRXEh0ugALe7t86yNo5yu526xbHOIq8DuqhQD+Gdlftwk7r+Ch2ud+a9xQ?=
+ =?us-ascii?Q?lxzL1jxz9JuOIYcTWV5kvfNNj3q3mYLP0AXpg88F9cAKJrYc/9hBaer+W/4V?=
+ =?us-ascii?Q?ZEaCf177HZMaTfrWgzST+2bJHnbkwjXoslhqmmTmOLXA0xw9Q5Crh4/FFbmP?=
+ =?us-ascii?Q?hMLnBZhn5BKcJP9Uk5szqrEUngL5PWFwesLFOT24Eb7tuZdElecWchtamJct?=
+ =?us-ascii?Q?cKNvYY9ngQ9LbsEOCQsw108uV7LfoRVokvBGzxWxXkH1S2VlbvI0TmCr70Xa?=
+ =?us-ascii?Q?1c6RlhGR1fPKyRc9iOyeiIbBPNMWM3/zPvrbtkuhR8soLCag5W2CFmg+XrA+?=
+ =?us-ascii?Q?lPImPpOcYxi/tOL/31OSJ679Xhzxhz4i7ARq/6oRC1RUAm9UND/aDh57bPyl?=
+ =?us-ascii?Q?FO0LlCRrdxX7I4UIp7G5BewI1GilYB0JwTm1SWHHrA0C42frGhJn9TeMnia6?=
+ =?us-ascii?Q?LhWOPa0LTi6CAnq7vMpvvFhrN3u6K4StrfvEezJ5G0EE9G3YQogRxNG1Chf3?=
+ =?us-ascii?Q?UwMvoSaNIpWnzz/R86ITkU7FwxhoJd/AHXc3TirRd87ZNlh8LMihjvXqXTKq?=
+ =?us-ascii?Q?wmc=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca774258-fc09-4483-eeca-08dd53356657
+X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB8437.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2025 11:38:17.5156
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYYPR01MB14294
 
---nextPart6129452.lOV4Wx5bFT
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: x86@kernel.org, Rik van Riel <riel@surriel.com>
-Subject: Re: [PATCH v12 00/16] AMD broadcast TLB invalidation
-Date: Sat, 22 Feb 2025 12:29:54 +0100
-Message-ID: <5861243.DvuYhMxLoT@natalenko.name>
-In-Reply-To: <20250221005345.2156760-1-riel@surriel.com>
-References: <20250221005345.2156760-1-riel@surriel.com>
-MIME-Version: 1.0
+The token id in RxDMAD may be incorrect when it is not the last frame
+due to WED HW bug. Lookup correct token id by physical address in sdp0.
 
-Hello.
+Downstream patch link: https://git01.mediatek.com/plugins/gitiles/openwrt/feeds/mtk-openwrt-feeds/+/737340322ab22b138fd200e020d61ffdbe3e36a9/autobuild/autobuild_5.4_mac80211_release/mt7988_wifi7_mac80211_mlo/package/kernel/mt76/patches/0062-mtk-wifi-mt76-mt7915-wed-find-rx-token-by-physical-a.patch
 
-On p=C3=A1tek 21. =C3=BAnora 2025 1:52:59, st=C5=99edoevropsk=C3=BD standar=
-dn=C3=AD =C4=8Das Rik van Riel wrote:
-> Add support for broadcast TLB invalidation using AMD's INVLPGB instructio=
-n.
->=20
-> This allows the kernel to invalidate TLB entries on remote CPUs without
-> needing to send IPIs, without having to wait for remote CPUs to handle
-> those interrupts, and with less interruption to what was running on
-> those CPUs.
->=20
-> Because x86 PCID space is limited, and there are some very large
-> systems out there, broadcast TLB invalidation is only used for
-> processes that are active on 3 or more CPUs, with the threshold
-> being gradually increased the more the PCID space gets exhausted.
->=20
-> Combined with the removal of unnecessary lru_add_drain calls
-> (see https://lkml.org/lkml/2024/12/19/1388) this results in a
-> nice performance boost for the will-it-scale tlb_flush2_threads
-> test on an AMD Milan system with 36 cores:
->=20
-> - vanilla kernel:           527k loops/second
-> - lru_add_drain removal:    731k loops/second
-> - only INVLPGB:             527k loops/second
-> - lru_add_drain + INVLPGB: 1157k loops/second
->=20
-> Profiling with only the INVLPGB changes showed while
-> TLB invalidation went down from 40% of the total CPU
-> time to only around 4% of CPU time, the contention
-> simply moved to the LRU lock.
->=20
-> Fixing both at the same time about doubles the
-> number of iterations per second from this case.
->=20
-> Some numbers closer to real world performance
-> can be found at Phoronix, thanks to Michael:
->=20
-> https://www.phoronix.com/news/AMD-INVLPGB-Linux-Benefits
->=20
-> My current plan is to implement support for Intel's RAR
-> (Remote Action Request) TLB flushing in a follow-up series,
-> after this thing has been merged into -tip. Making things
-> any larger would just be unwieldy for reviewers.
->=20
-> v12:
->  - make sure "nopcid" command line option turns off invlpgb (Brendan)
->  - add "noinvlpgb" kernel command line option
->  - split out kernel TLB flushing differently (Dave & Yosry)
->  - split up the patch that does invlpgb flushing for user processes (Dave)
->  - clean up get_flush_tlb_info (Boris)
->  - move invlpgb_count_max initialization to get_cpu_cap (Boris)
->  - bunch more comments as requested
+Signed-off-by: Peter Chiu <chui-hao.chiu@mediatek.com>
+Signed-off-by: Shengyu Qu <wiagn233@outlook.com>
+---
+ drivers/net/wireless/mediatek/mt76/dma.c | 25 +++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
-Somehow, this iteration breaks resume from S3. I can see it even in a QEMU =
-VM:
-
-```
-[   24.373391] ACPI: PM: Low-level resume complete
-[   24.373929] ACPI: PM: Restoring platform NVS memory
-[   24.375024] Enabling non-boot CPUs ...
-[   24.375777] smpboot: Booting Node 0 Processor 1 APIC 0x1
-[   24.376463] BUG: unable to handle page fault for address: ffffffffa3ba4d=
-60
-[   24.377383] #PF: supervisor write access in kernel mode
-[   24.377912] #PF: error_code(0x0003) - permissions violation
-[   24.378413] PGD 25427067 P4D 25427067 PUD 25428063 PMD 8000000024c001a1
-[   24.379020] Oops: Oops: 0003 [#1] PREEMPT SMP NOPTI
-[   24.379503] CPU: 1 UID: 0 PID: 0 Comm: swapper/1 Kdump: loaded Not taint=
-ed 6.14.0-pf0 #1 161e4891fb5044b2d7438cd1852eeaac0cdffab5
-[   24.380650] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS unk=
-nown 02/02/2022
-[   24.381400] RIP: 0010:get_cpu_cap+0x39b/0x4f0
-[   24.381810] Code: 08 c7 44 24 08 00 00 00 00 48 8d 4c 24 0c e8 3c 00 04 =
-00 90 8b 44 24 04 89 43 64 0f b7 44 24 0c 83 c0 01 81 7b 24 09 00 00 80 <66=
-> 89 05 0e ab 8b 01 0f 86 18 fd ff ff c7 44 24 14 00 00 00 00 4c
-[   24.383629] RSP: 0000:ffffafbec00efe70 EFLAGS: 00010012
-[   24.384155] RAX: 0000000000000001 RBX: ffff8b3fbcb19020 RCX: 00000000000=
-01001
-[   24.384862] RDX: 0000000000000000 RSI: ffffafbec00efe74 RDI: ffffafbec00=
-efe78
-[   24.385603] RBP: ffffafbec00efe88 R08: ffffafbec00efe70 R09: ffffafbec00=
-efe7c
-[   24.386318] R10: 0000000000002430 R11: ffff8b3fa5428000 R12: ffffafbec00=
-efe8c
-[   24.387014] R13: ffffafbec00efe84 R14: ffffafbec00efe80 R15: ffffafbec00=
-efe70
-[   24.387713] FS:  0000000000000000(0000) GS:ffff8b3fbcb00000(0000) knlGS:=
-0000000000000000
-[   24.388502] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   24.389074] CR2: ffffffffa3ba4d60 CR3: 0000000025422000 CR4: 00000000003=
-50ef0
-[   24.389769] Call Trace:
-[   24.390020]  <TASK>
-[   24.392234]  identify_cpu+0xd4/0x890
-[   24.392593]  identify_secondary_cpu+0x12/0x40
-[   24.393032]  smp_store_cpu_info+0x49/0x60
-[   24.393430]  start_secondary+0x7f/0x140
-[   24.393810]  common_startup_64+0x13e/0x141
-[   24.394218]  </TASK>
-
-$ scripts/faddr2line arch/x86/kernel/cpu/common.o get_cpu_cap+0x39b
-get_cpu_cap+0x39b/0x500:
-get_cpu_cap at =E2=80=A6/arch/x86/kernel/cpu/common.c:1063
-
-1060         if (c->extended_cpuid_level >=3D 0x80000008) {
-1061                 cpuid(0x80000008, &eax, &ebx, &ecx, &edx);
-1062                 c->x86_capability[CPUID_8000_0008_EBX] =3D ebx;
-1063                 invlpgb_count_max =3D (edx & 0xffff) + 1;
-1064         }
-```
-
-Any idea what I'm looking at?
-
-Thank you.
-
-> v11:
->  - resolve conflict with CONFIG_PT_RECLAIM code
->  - a few more cleanups (Peter, Brendan, Nadav)
-> v10:
->  - simplify partial pages with min(nr, 1) in the invlpgb loop (Peter)
->  - document x86 paravirt, AMD invlpgb, and ARM64 flush without IPI (Brend=
-an)
->  - remove IS_ENABLED(CONFIG_X86_BROADCAST_TLB_FLUSH) (Brendan)
->  - various cleanups (Brendan)
-> v9:
->  - print warning when start or end address was rounded (Peter)
->  - in the reclaim code, tlbsync at context switch time (Peter)
->  - fix !CONFIG_CPU_SUP_AMD compile error in arch_tlbbatch_add_pending (Ja=
-n)
-> v8:
->  - round start & end to handle non-page-aligned callers (Steven & Jan)
->  - fix up changelog & add tested-by tags (Manali)
-> v7:
->  - a few small code cleanups (Nadav)
->  - fix spurious VM_WARN_ON_ONCE in mm_global_asid
->  - code simplifications & better barriers (Peter & Dave)
-> v6:
->  - fix info->end check in flush_tlb_kernel_range (Michael)
->  - disable broadcast TLB flushing on 32 bit x86
-> v5:
->  - use byte assembly for compatibility with older toolchains (Borislav, M=
-ichael)
->  - ensure a panic on an invalid number of extra pages (Dave, Tom)
->  - add cant_migrate() assertion to tlbsync (Jann)
->  - a bunch more cleanups (Nadav)
->  - key TCE enabling off X86_FEATURE_TCE (Andrew)
->  - fix a race between reclaim and ASID transition (Jann)
-> v4:
->  - Use only bitmaps to track free global ASIDs (Nadav)
->  - Improved AMD initialization (Borislav & Tom)
->  - Various naming and documentation improvements (Peter, Nadav, Tom, Dave)
->  - Fixes for subtle race conditions (Jann)
-> v3:
->  - Remove paravirt tlb_remove_table call (thank you Qi Zheng)
->  - More suggested cleanups and changelog fixes by Peter and Nadav
-> v2:
->  - Apply suggestions by Peter and Borislav (thank you!)
->  - Fix bug in arch_tlbbatch_flush, where we need to do both
->    the TLBSYNC, and flush the CPUs that are in the cpumask.
->  - Some updates to comments and changelogs based on questions.
->=20
->=20
->=20
-
-
-=2D-=20
-Oleksandr Natalenko, MSE
---nextPart6129452.lOV4Wx5bFT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAme5tTIACgkQil/iNcg8
-M0uvXxAA7+ZgxXx4L/yEf4PhQTzMx6y91fs6wXJtsjppRKBWKhZsTwJoF2LEXgNw
-8JYFOb+VLQsAWIYz3rwrQQyFFj4sAtKj0Td7qCDyjevTtzJlVNgW5CE4UFN2hfCi
-jQ75pbV0j98lxETJBtvcWIAWWaq9+IX2kdWwcWQFb7iRk2BaGTxO6pTb+DLxqvmM
-slIkNeLMs8FeV0pd2cXtDBfMWIU2bKbL2S6DbuLVgE0sa0jask03HDtpZF5ES5yU
-qAfIThM5PtEirdSoOCKfu26UwAU7Jxvv0XivPTsLiRu+uoKQ6jWQ6x/Nvw+Yw4p2
-36rM1a0WsdLY4bVg54LEs8qWCJnL/wWKiVy35IxfF+OSFpL+uZtOJjyH808IA+CV
-J2ozvKIqaLXN4+Fw+LgjdzH5xIeL9eP/klF3hV5m/OVjO7vd1bxFz5HzbRq918if
-v80jxLHjXQpY32Qfl0W0YLZVdm6G5oWhGU1N8rrhs6xv4HW96HjZwpKJxYTIQR+i
-pyGXJxWPmqgr+UdnzsDw0IkNt0ElFDxpG1aMqIjD0ltD1SyYlL+o/JIV5p6Lnami
-4antcNB7BqmoCFLm/ninoidG5Aio3zyAbIG08X5En/pYnTxQON9c1ZgW3vnDL2IG
-zOZ4pYQt9KoaJRKSmN0PYqEHK3MJV4EECJshxl1u7dzfpJ+AcSc=
-=f2BY
------END PGP SIGNATURE-----
-
---nextPart6129452.lOV4Wx5bFT--
-
-
+diff --git a/drivers/net/wireless/mediatek/mt76/dma.c b/drivers/net/wireless/mediatek/mt76/dma.c
+index 844af16ee551..5bf63014263c 100644
+--- a/drivers/net/wireless/mediatek/mt76/dma.c
++++ b/drivers/net/wireless/mediatek/mt76/dma.c
+@@ -444,9 +444,32 @@ mt76_dma_get_buf(struct mt76_dev *dev, struct mt76_queue *q, int idx,
+ 	mt76_dma_should_drop_buf(drop, ctrl, buf1, desc_info);
+ 
+ 	if (mt76_queue_is_wed_rx(q)) {
++		u32 id, find = 0;
+ 		u32 token = FIELD_GET(MT_DMA_CTL_TOKEN, buf1);
+-		struct mt76_txwi_cache *t = mt76_rx_token_release(dev, token);
++		struct mt76_txwi_cache *t;
++
++		if (*more) {
++			spin_lock_bh(&dev->rx_token_lock);
++
++			idr_for_each_entry(&dev->rx_token, t, id) {
++				if (t->dma_addr == le32_to_cpu(desc->buf0)) {
++					find = 1;
++					token = id;
++
++					/* Write correct id back to DMA*/
++					u32p_replace_bits(&buf1, id,
++							  MT_DMA_CTL_TOKEN);
++					WRITE_ONCE(desc->buf1, cpu_to_le32(buf1));
++					break;
++				}
++			}
++
++			spin_unlock_bh(&dev->rx_token_lock);
++			if (!find)
++				return NULL;
++		}
+ 
++		t = mt76_rx_token_release(dev, token);
+ 		if (!t)
+ 			return NULL;
+ 
+-- 
+2.43.0
 
