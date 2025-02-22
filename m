@@ -1,99 +1,95 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-173.mail.qq.com (out203-205-221-173.mail.qq.com [203.205.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A98820101A;
-	Sat, 22 Feb 2025 19:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4EE20101A
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 19:42:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740253326; cv=none; b=nn8EwwlUwGae2IlVJkgMKkW5bXzNOzNCbgYkXqFr5O46q5Dhfic4lwOgFWuybHpSX21baD17Wq/Tp6gXsgDJJ9RLp4ftsEo4Eaw3fvVawKsy+hHlzD69HUJ0/c3Q8TGEtpdu0ATgKTDmcmAjIoyeEqIEbUSnA4qyhSFJX+og9bI=
+	t=1740253337; cv=none; b=RritSyRkiU7RHLhJTlB8EyEmrtApyFF+FOtdML9BzGB7yL1lLSMfyYDs9z8UXl/eTGF/pgjqo2liciR4drQbXlHALAc1GzdIogd9QrHprEx6e7YtlUhTOv5QEcTyKGoPtBlHfGg0op63lDd/czqhUKCQkEopvQ5WzUMoy0IEu3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740253326; c=relaxed/simple;
-	bh=kITtiZ18+LO+sCHEc5eH+N7HF/ZLQrNdJwvZ+WL3fX8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Glw+r71ATdKj+hHg1olWVKlrYo8EVD57+SvgJmRkWEZjMvGmpR4NSBawk40zB4E77eSvhnboEKjE5PtE6vo6wlOMcCzr1oQOGcxeuD76EfGvRwpvtRW47wnnpeFVXfGXhw3s+2c9lCkFstsXNFd7UEXIbc9XJmtJ9ZDbs08TNhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BXDLaZTt; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740253337; c=relaxed/simple;
+	bh=j1q5n/HUVw/zxMoNDqNZmL4I4OG1BZVMxCj88fnlUTM=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=QffrJLZblTsiYiqhMayhgdA0MwLbT+dECLCil+qe1bHf7xsK92bVSek9D2Nba3KT9ebtJpYyDlM1oZVJ0883ivItwznK0XoISwBuoUn6IApeyqz9pnOLs5bqJj+R/EGZi2uI6Axb3BlzapXJY0aO9Tl+ihF10QKnK053Z9trAws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com; spf=pass smtp.mailfrom=red54.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=i/+2dm/c; arc=none smtp.client-ip=203.205.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=red54.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXDLaZTt"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2fc92215d15so839082a91.1;
-        Sat, 22 Feb 2025 11:42:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740253324; x=1740858124; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4CRvgQmR5ivMD1h4F3gokRfm2MjjJsLjsc4JEynmsAM=;
-        b=BXDLaZTtHvHRDxmFZhi9jc6pdzgKdjDudEfPmnlB0E/O/c/IAGockZIlRQ3lzeGMzn
-         i2EjRHQWo3N4+5V0p0sreIPIuSJwWbuA6ZVZ2bUbCR+Cd6qcCYySP3B7JHq5hgawO9Gs
-         YWwiXOWvpY2EYBbBiYzF9C2YdSkpQNQ/C0GyYT84hjhiJeJwgA8nL7I948gxUVEESKAc
-         xqlTevwNV9EdotmNwmz4MM6vekZ0+CKVvGoaSlCPlMfGVO3Ro9Khqimnf7t3ro3J8f1a
-         layDQ4Q9fqZTZjbk/tFSuX1cXUD4x6ZSY86Vnj0cmHZsKFVDVrzvU7+zdbvvPeOGjLFw
-         80lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740253324; x=1740858124;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4CRvgQmR5ivMD1h4F3gokRfm2MjjJsLjsc4JEynmsAM=;
-        b=Apn2Qq39yinnElYwSmbxw9f+3GfgV9TfsgE83q5Qkvy/sSgARkFMXzn++TZQZDel+/
-         phXjWIkVZNP3xFKI52pZ5x5ZuaOHcG0A0coCwGskSgsoozaxAnOmbhKw8Nfz/LBX96go
-         IIYd91XIADTDWggnWHEYZgwimfT/y0MkP9wDl8DkTTR5Hro3x85373ZIXd1LVKOb7s1t
-         lkwMKadZ6ClEp1ne7TIgeGNE6nYBKfu/qFxLfsCTMrL+jU3/hCol8xh95shzFkTdhGXk
-         4JqqTZFOMCMVc1K3Fp7Z7TGFA9boRHec88Qu/HWQi4frCaihJKVDi3Q6lTIpfhl+PIoK
-         E05w==
-X-Forwarded-Encrypted: i=1; AJvYcCUI/wR23H58G3m1wHe2mkNmPkWNtX14bA0GSAaZdFQJ+itUvsROou5F2eH9mnAvPIaj0Aqh/jwIf2bPeTs=@vger.kernel.org, AJvYcCWSsg1cdSLpA8lC6P1ADtUXDv/YoLxtIcT5wfU+5Zuj1kTV9AYciABx926bRvLTbx5xji2BHoH+guPXkJvMy48=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwATmFDQ7g5/K9jQf7c9WC3UkgiUTe0MTcZwFYZowH3G8q7a60P
-	uqwGwLM1PV1LdQAx9oQlViDMXoHJjhknleslf7xG80PpFsn7AmEEdcbChyPBRw6vpaFY16j3130
-	DouY0l5LUngBRaFYQbdWAAg8INs4=
-X-Gm-Gg: ASbGncuJY3ti5c58ZQ4srWhCYeyJEXUghBuZuZWC6twhxtZdhSeYuADyG99Il1LrJDQ
-	DFYymxCikdyYSyxK/dJWfsBNKc0ozcfOcQbzFGfZfo2c/aDHDKnWPDpuCIYODoNPRpu76sryLMT
-	o8SiPMAwU=
-X-Google-Smtp-Source: AGHT+IFgZq6EtapkL/u2tRyEnlmt3/Ly4MJg608kxKvNn8pDExIg8vwxtxcox28h6NSfSKflN7BU/IAH6EaBRdtBdDc=
-X-Received: by 2002:a17:90b:3907:b0:2fc:f63:4b6a with SMTP id
- 98e67ed59e1d1-2fce75f086bmr4985795a91.0.1740253324455; Sat, 22 Feb 2025
- 11:42:04 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="i/+2dm/c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1740253025; bh=aynS2a/kPanX+LjKJ5jXaswTqt6h+e7tIoipmNInIxw=;
+	h=From:To:Cc:Subject:Date;
+	b=i/+2dm/cUXgPoDXaW6Ox/g8AqFZVWAjqsIrSDseGf7H5kg3IAat5lt0JxhhcZmB8w
+	 eOdoBYE6XNG2vckTMRWtb3dG615Fcbftf5VOYoQukAcDsHWLhJF95n88zMwj7gYQYd
+	 kckonNx/ABdDUqAqTtioo/H8FNHpk/MFJi+6fQGQ=
+Received: from mail.red54.com ([139.99.8.57])
+	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
+	id 93031CFF; Sun, 23 Feb 2025 03:36:48 +0800
+X-QQ-mid: xmsmtpt1740253008t1qpfuhzk
+Message-ID: <tencent_0BDDF3A721708D16A2E7C3DAFF0FEC79A105@qq.com>
+X-QQ-XMAILINFO: NDgMZBR9sMma2vJX+AgOZyC9uQnYIokU47mtTtkAAMa2B6aY7d1ha3Ux33Mz/9
+	 cKVaJuZUw64Zqu57ZKMFL3rLA7hn/4nzCXclFHGy3Tddi+AF+oUwIcTeBGkPqbcuo7bpvFOPO4op
+	 70ZIL3ymqbifxqsOLlsAujJO8p4PQBWwMubpY+QnSNtpFGXlOb8zGPR1YhMyry2nOHJa+rBlbNZ/
+	 EU7CfRlQL+k1C5yOWxwPm8rbEnP39+iuLO9qosVTI17XjZfkN3BBvkUBCyTGSP3+jM5Gx3nVWzxZ
+	 pOOc2gHuHzSru8YRmhMVAMynroEzo3Y1yno6I8PssjkZf3xp/RolyaNPNeLS3A9c/UNJzQ9aDhyy
+	 iI+I0/kAzhEd1DnAH+fF+LjqvPNBmrik7C5F+Gj4Fh/vZwGJqVgeYjzAsuMDEErs8eREOpoXgWbZ
+	 PMYgl4W40DdyzIYS+FxgSh5ZSOcU2jA24Mw+KqMLFr7BLs+amEc1ZWCQDqH5p0V5bc8Xjxr1HS97
+	 5+yoiFb1cdMJOzPGCINzi1kxbNuhFbbEwf9mIAapL5FrANAc3FJZl/b0lcj7bXoh0TaGVfpkjtxX
+	 gI6OC9dUkZOlahvB1kVl8Pv9YY/zlo3edyLeONcmALwyRahIaW9HdTVh5nXDo/Km/+exx7RZ+AS+
+	 tLyc/nnOM5DfW+K6qz19inRMMaGCxGJMMNuB0AH3NGmSVazk6OQEyZhk1aL4KJdEDxtjTm2T04r8
+	 NSHUffdB6ffEB17m6cOXBapjLad6c0+z/POa4cqfL+F81wDWL542T1cvjCdoD2paFkLnUkiK2uUU
+	 ER0YWz6enPSiJE9sekVjWZlzxjjAsNbNSqsW/JujU2tgBT8FJFOAwkfOdYUU/V9hpEn16ot6thJ6
+	 JJf/nAqzq09vMbLqXLQ3r3L5PN8WA0vXdGPSGubDnlLIziH8UhVDRAoJ3JiJvSbYZRzFnqRXlDSS
+	 C1Ac1K1ur6K7FyFc14qsuQ/5ArzCln
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+Sender: yeking@red54.com
+From: Yeking@Red54.com
+To: linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?=E8=B0=A2=E8=87=B4=E9=82=A6=20=28XIE=20Zhibang=29?= <Yeking@Red54.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Peter Robinson <pbrobinson@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Fabio Aiuto <fabioaiuto83@gmail.com>,
+	linux-staging@lists.linux.dev
+Subject: [PATCH] staging: rtl8723bs: select CONFIG_CRYPTO_LIB_AES
+Date: Sat, 22 Feb 2025 19:36:17 +0000
+X-OQ-MSGID: <20250222193617.396927-1-Yeking@Red54.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
- <20250222141521.1fe24871@eugeo> <CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
- <6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
-In-Reply-To: <6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 22 Feb 2025 20:41:52 +0100
-X-Gm-Features: AWEUYZlCk95OYeQYgvv-2CpvGrLCm3JCYmLm7qyKFLs0_jdzIIGhbSshJZkxX-8
-Message-ID: <CANiq72mdzUJocjXhPRQEEdgRXsr+TEMt99V5-9R7TjKB7Dtfaw@mail.gmail.com>
-Subject: Re: C aggregate passing (Rust kernel policy)
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Ventura Jack <venturajack85@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	torvalds@linux-foundation.org, airlied@gmail.com, boqun.feng@gmail.com, 
-	david.laight.linux@gmail.com, ej@inai.de, gregkh@linuxfoundation.org, 
-	hch@infradead.org, hpa@zytor.com, ksummit@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Ralf Jung <post@ralfj.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sat, Feb 22, 2025 at 7:54=E2=80=AFPM Kent Overstreet
-<kent.overstreet@linux.dev> wrote:
->
-> I believe (Miguel was talking about this at one of the conferences,
-> maybe he'll chime in) that there was work in progress to solidify the
-> aliasing and ownership rules at the unsafe level, but it sounded like it
-> may have still been an area of research.
+From: 谢致邦 (XIE Zhibang) <Yeking@Red54.com>
 
-Not sure what I said, but Cc'ing Ralf in case he has time and wants to
-share something on this (thanks in advance!).
+This fixes the following issue:
+ERROR: modpost: "aes_expandkey" [drivers/staging/rtl8723bs/r8723bs.ko]
+undefined!
+ERROR: modpost: "aes_encrypt" [drivers/staging/rtl8723bs/r8723bs.ko]
+undefined!
 
-From a quick look, Tree Borrows was submitted for publication back in Novem=
-ber:
+Fixes: 7d40753d8820 ("staging: rtl8723bs: use in-kernel aes encryption in OMAC1 routines")
+Fixes: 3d3a170f6d80 ("staging: rtl8723bs: use in-kernel aes encryption")
+Signed-off-by: 谢致邦 (XIE Zhibang) <Yeking@Red54.com>
+---
+ drivers/staging/rtl8723bs/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-    https://jhostert.de/assets/pdf/papers/villani2024trees.pdf
-    https://perso.crans.org/vanille/treebor/
+diff --git a/drivers/staging/rtl8723bs/Kconfig b/drivers/staging/rtl8723bs/Kconfig
+index 8d48c61961a6..353e6ee2c145 100644
+--- a/drivers/staging/rtl8723bs/Kconfig
++++ b/drivers/staging/rtl8723bs/Kconfig
+@@ -4,6 +4,7 @@ config RTL8723BS
+ 	depends on WLAN && MMC && CFG80211
+ 	depends on m
+ 	select CRYPTO
++	select CRYPTO_LIB_AES
+ 	select CRYPTO_LIB_ARC4
+ 	help
+ 	This option enables support for RTL8723BS SDIO drivers, such as
+-- 
+2.43.0
 
-Cheers,
-Miguel
