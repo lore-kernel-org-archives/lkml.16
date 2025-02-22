@@ -1,106 +1,180 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A342207A26
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 09:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF1B2EB10;
+	Sat, 22 Feb 2025 09:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740218339; cv=none; b=ba/8+ah46B61h2QsT5Sun+GS3W6pe9FRLTAO+dHow/irbLLJwsfVF4vjIJfHeFnWe9JGWcb42c83IpjOkVKuYekmft5dbC4wrqDI7dDGNQfGNue6Na1mGb32CdbIJP7xIXwgr22532fC32+e1o4prH6TxtMnVaplLW0WOyqL5MQ=
+	t=1740218357; cv=none; b=HJHrMMfVTd0i2xlNNonpqvO6eAVxPHiSaBFUDQObZXqUEpYv1HF1onh1p4VARJ0ff9cPAZlWzL+VxTLj0q5sYH9M7C95ERNrPaZffzWaJLx3B1XGu9+XurJ3AuHhhvFcPTyPrrPfBOEhA3ztL8euAdRbJVXTLTyNjZLgP+3oMOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740218339; c=relaxed/simple;
-	bh=se9w2vU0xYQrK1GndXLdvM2DXLeY6zcipcqfUFKQ6/M=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=p3lyYV3qGy4mXv4x4HoLMxcd+vDTGks2X1RRnj71ReyS1x6rpa5/IocGBaz1riTV7sSeIx0bctVR/XVvZALyonx3WhTc8uwaLh5CnIhNMbmTAzFEfrO+lL5bp++lx3a/q0PyFY7m+8nEvyZqy0M0fEdKXH+n5I4zI35LqTn9z0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BdL/3ctV; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740218357; c=relaxed/simple;
+	bh=i/2WsCyRG4dxpn1+NTTIXKQ2K2x0SJWwCMNSlTX1Ams=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I8PRP4PWSXN4JoMZAcgd5zt+TQrpeqHZB0apig5nbDyyekapZeUzC1I0VlU3PkfKbS2fZu1Epoiaw2TVlfk3TnV2CJ7u+SfXjlefbs2+KvOg//ymAcf9HucUtjDcAV1LK10uY4Cd3qyz0tPU6UZy5oEaf7axremDVfYl/VUe9zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fZcMj+FE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BdL/3ctV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740218338; x=1771754338;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=se9w2vU0xYQrK1GndXLdvM2DXLeY6zcipcqfUFKQ6/M=;
-  b=BdL/3ctVRtiUkAulsQSUbNTpOanraWJDDr4LBvTuKVutk5iTp+ryE2/3
-   FkIGE1CRe6lL6j+GCwpDb0zT8rqfg1OFNozCINJKqaCVnJxnyeK24+kOn
-   Pe1wSnSApyYZxqCgM2EXruLlvh86InO8vtlen8pEMu5ilf9vIRaPx2Seh
-   L19n5+i4sLdA/k+3Kghr0AdVF+ckRbvwROG07eHT0Gma5STHYksct402m
-   NBKC61Iqtty/Whot8uJ2awrZOFWSy2N5DI8J+Z0p8y3RkoEWUx70VLICu
-   jO6TfaD/rkYo+5TMYnTO9CthkY9wna097rvzfz2NypKy5gb/cjbl59v0x
-   w==;
-X-CSE-ConnectionGUID: N8dyA2qzQXORt0uLcSYIyQ==
-X-CSE-MsgGUID: nw5E/i5OTcurOUWcEFdsoA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11352"; a="51250396"
-X-IronPort-AV: E=Sophos;i="6.13,307,1732608000"; 
-   d="scan'208";a="51250396"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2025 01:58:57 -0800
-X-CSE-ConnectionGUID: QEYd5HZoTf6n0wxLu3jI4w==
-X-CSE-MsgGUID: ZnomUuAATQK/0Ec6TkszPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,307,1732608000"; 
-   d="scan'208";a="115305983"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 22 Feb 2025 01:58:56 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tlmHd-0006Sx-1H;
-	Sat, 22 Feb 2025 09:58:53 +0000
-Date: Sat, 22 Feb 2025 17:58:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Stafford Horne <shorne@gmail.com>, Rong Xu <xur@google.com>
-Subject: (.head.text+0x900): relocation truncated to fit: R_OR1K_INSN_REL_26
- against `no symbol'
-Message-ID: <202502221728.6WLWBLJO-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fZcMj+FE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0122AC4CED1;
+	Sat, 22 Feb 2025 09:59:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740218355;
+	bh=i/2WsCyRG4dxpn1+NTTIXKQ2K2x0SJWwCMNSlTX1Ams=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fZcMj+FE/6JrZxveDqc3ogrm1LKoaEYmyrJAhYRJlqRWFqJ5qe64qU65bnbpaWKKL
+	 wLUEap1fz/xCLJ+jHNWLa21Zs0LcxUjJQdyuPplNuz53J3mlc9MnuevBWhfp7avcQR
+	 SyfM/RFZghzhHgAIkMvodNGcc/Azwxl0JuYj3tBzhx2JPmyFt84TFnHb/hrYYEJK0x
+	 gLCrI1j8CVDvvtvQWU70GUf/Foa3sV4LRVgLhhqvjUvlYs0AruxSzQ8Q/N3GyJVQzY
+	 ANIBjsIQ7IOhasMQ4JqtCBsan84NX8tHu+yfLbEiypwHndt5F9UGneuNaOLkNdhZpy
+	 jQAnXeQYJ2Jhw==
+Message-ID: <4f7bf109-bf18-42be-971c-5d5edd9595b5@kernel.org>
+Date: Sat, 22 Feb 2025 10:59:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/4] dt-bindings: soc: spacemit: Add spacemit,k1-syscon
+To: Alex Elder <elder@riscstar.com>, Haylen Chu <heylenay@4d2.org>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Haylen Chu <heylenay@outlook.com>,
+ Yixun Lan <dlan@gentoo.org>, linux-riscv@lists.infradead.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Inochi Amaoto <inochiama@outlook.com>,
+ Chen Wang <unicornxdotw@foxmail.com>, Jisheng Zhang <jszhang@kernel.org>,
+ Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
+ Guodong Xu <guodong@riscstar.com>
+References: <20250103215636.19967-2-heylenay@4d2.org>
+ <20250103215636.19967-4-heylenay@4d2.org>
+ <aw2vqnz5vcccqqvrrhz5tgawj7fnzzg3tds7nnepuorit37a7r@jcj3wrs7d73h>
+ <Z6rdBhQ7s2ReOgBL@ketchup> <19e5129b-8423-4660-8e4f-8b898214d275@kernel.org>
+ <Z63T_EDvXiuRQbvb@ketchup> <2ab715bd-e26c-41bb-ac64-baa864d90414@kernel.org>
+ <Z7BTVu10EKHMqOnJ@ketchup>
+ <7c697e9a-d6d9-4672-9738-93ce3a71beb6@riscstar.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <7c697e9a-d6d9-4672-9738-93ce3a71beb6@riscstar.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Masahiro,
+On 22/02/2025 00:40, Alex Elder wrote:
+> I have a general proposal on how to represent this, but I'd
+> like to know whether it makes sense.  It might be what Krzysztof
+> is suggesting, but in any case, I hope this representation would
+> work, because it could simplify the code, and compartmentalizes
+> things.
+> 
+> Part of what motivates this is that I've been looking at the
+> downstream reset code this week.  It contains a large number of
+> register offset definitions identical to what's used for the
+> clock driver.  The reset driver uses exactly the same registers
+> as the clock driver does.  Downstream they are separate drivers,
+> but the clock driver exports a shared spinlock for both drivers
+> to use.
+> 
+> These really need to be incorporated into the same driver for
+> upstream.
 
-FYI, the error/warning still remains.
+Why? First, it is not related to the topic here at all. You can design
+drivers as you wish and still nothing to do with discussion about binding.
+Second, different subsystems justify different drivers and Linux handles
+this well already. No need for custom spinlock - regmap already does it.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   ff202c5028a195c07b16e1a2fbb8ca6b7ba11a1c
-commit: a412f04070e52e6d6b5f6f964b9d9644de16bb81 openrisc: place exception table at the head of vmlinux
-date:   2 months ago
-config: openrisc-allyesconfig (https://download.01.org/0day-ci/archive/20250222/202502221728.6WLWBLJO-lkp@intel.com/config)
-compiler: or1k-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250222/202502221728.6WLWBLJO-lkp@intel.com/reproduce)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502221728.6WLWBLJO-lkp@intel.com/
+> 
+> The clock code defines four distinct "units" (a term I'll use
+> from here on; there might be a better name):
+>    MPMU  Main Power Management Unit
+>    APMU  Application Power Management Unit
+>    APBC  APB Clock
+>    APBS  APB Spare
+> 
+> The reset code defines some of those, but doesn't use APBS.
+> It also defines three more:
+>    APBC2 Another APB Clock
+>    RCPU  Real-time CPU?
+>    RCPU2 Another Real-time CPU
+> 
+> Each of these "units" has a distinct I/O memory region that
+> contains registers that manage the clocks and reset signals.
 
-All errors (new ones prefixed by >>):
+So there are children - mpmu, apmu, apbclock, apbspare, apbclock2, rcpu
+1+2? But previous statements were saying these are intermixed?
 
-   arch/openrisc/kernel/head.o: in function `_dispatch_do_ipage_fault':
->> (.head.text+0x900): relocation truncated to fit: R_OR1K_INSN_REL_26 against `no symbol'
-   (.head.text+0xa00): relocation truncated to fit: R_OR1K_INSN_REL_26 against `no symbol'
-   arch/openrisc/kernel/head.o: in function `exit_with_no_dtranslation':
->> (.init.text+0x21bc): relocation truncated to fit: R_OR1K_INSN_REL_26 against `no symbol'
-   arch/openrisc/kernel/head.o: in function `exit_with_no_itranslation':
-   (.init.text+0x2264): relocation truncated to fit: R_OR1K_INSN_REL_26 against `no symbol'
-   init/main.o: in function `trace_event_raw_event_initcall_level':
-   main.c:(.text+0x28c): relocation truncated to fit: R_OR1K_INSN_REL_26 against symbol `strlen' defined in .text section in lib/string.o
-   init/main.o: in function `initcall_blacklisted':
-   main.c:(.text+0x6f4): relocation truncated to fit: R_OR1K_INSN_REL_26 against symbol `strcmp' defined in .text section in lib/string.o
-   init/main.o: in function `trace_initcall_finish_cb':
-   main.c:(.text+0x818): relocation truncated to fit: R_OR1K_INSN_REL_26 against symbol `__muldi3' defined in .text section in ../lib/gcc/or1k-linux/14.2.0/libgcc.a(_muldi3.o)
-   main.c:(.text+0x83c): relocation truncated to fit: R_OR1K_INSN_REL_26 against symbol `__muldi3' defined in .text section in ../lib/gcc/or1k-linux/14.2.0/libgcc.a(_muldi3.o)
-   main.c:(.text+0x87c): relocation truncated to fit: R_OR1K_INSN_REL_26 against symbol `__muldi3' defined in .text section in ../lib/gcc/or1k-linux/14.2.0/libgcc.a(_muldi3.o)
-   main.c:(.text+0x8a8): relocation truncated to fit: R_OR1K_INSN_REL_26 against symbol `__muldi3' defined in .text section in ../lib/gcc/or1k-linux/14.2.0/libgcc.a(_muldi3.o)
-   init/main.o: in function `do_one_initcall':
-   main.c:(.text+0xec0): additional relocation overflows omitted from the output
+" I'll make APMU/MPMU act as a whole device"
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> I suggest a single "k1-clocks" device be created, which has
+
+For four devices? Or for one device?
+
+No, it's again going to wrong direction. I already said:
+
+"You need to define what is the device here. Don't create fake nodes ust
+for your drivers. If registers are interleaved and manual says "this is
+block APMU/MPMU" then you have one device, so one node with 'reg'."
+
+So what is the device here? Can you people actually answer?
+
+
+
+> access to all of the I/O address ranges.  And then within
+> the DT node for that device there is a sub-node for the
+
+Uh, confusing. You said there is one device for all the clocks, so if
+there is one device so also one device node. No children.
+
+Maybe you have more devices but none of you is explaining the hardware
+that way. Mixing talk about drivers is really not helping.
+
+> 
+
+
+Best regards,
+Krzysztof
