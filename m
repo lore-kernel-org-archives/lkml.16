@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E85792063FF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9421FF7AD;
 	Sat, 22 Feb 2025 16:57:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740243448; cv=none; b=JHqHaM32336y1qgCMUjbDvMkXsVMMexV5OT3+fhcIBFOBnr/kMELXnwbm2cQ216qroISEpwPKKaHISEjBOgy4BLNMwRwu/K8Wpv+xMx2IVGZrbECjtHz6J0ta3RNIjFfL5glYnStKlX63xeq18gRVx3fIosuV/RmS/Z23JLfsJQ=
+	t=1740243448; cv=none; b=HNduOKv9nAIJaaPe7zSZIcbkInEJroQdYzii2vDdwAvQugfXpfuI60W9G6YwWd3pdNYy38ff5oq8tDa6P/fKBtO0mHgAlyZBlZSp18mFa9TZ95OmxhVoGrEHc8D1XQqPS/BbDHI8GvCOxbwCOTwoMTg6ybendG5j3aHoCgr6nf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740243448; c=relaxed/simple;
-	bh=4E8KhD8x9nt6C1IAI/uulttC6xS9rKz68kPnusPtVyw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TqjWg7IRKnod05fmuyzUxwK3PmO3IUuv3i/SI6gQfvj7MITr9Omk4OeLPySS9I0SgnUy6REapzpuoTMZepB0/Gl6Ks2VA++HIq5JzA5k08UMBdvsTAA6y+2khAONaRPYSTV3gjcilt7sJMQ8yhvKr93s7BkmgnOJXo8Pd6+UyDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IR0MwCzv; arc=none smtp.client-ip=10.30.226.201
+	bh=Y+9vtj0/GJijf+70Pc6ic4DpWvcYid81kYksrctrbME=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=BobvbfD/ym2fhyYRbL0zQaNqD89viwVWB0pM/oOsOGrHi6MWl0i0tg3w9QLgwZoKPEVjipkrArQJKHx6OixJULC7I55IewnvfwdzLQLRtqoioSzVR5Jdu6PYmTWA7PxKM4ruAQxTniYsXskWu4EI9tBhpWf7hPZg7ob9gv4sKDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D6AyIFJk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IR0MwCzv"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8AD36C4CEE7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D6AyIFJk"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 611F8C4CED1;
 	Sat, 22 Feb 2025 16:57:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740243447;
-	bh=4E8KhD8x9nt6C1IAI/uulttC6xS9rKz68kPnusPtVyw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=IR0MwCzvfmIZL8eUiDV1QqMiWvmrCmjjJHl+6/xJmYkMIi6nq9Nf8o1RUQUUPn63/
-	 sgncXMDTM7FbL7g3m6vD+2p+VZJH0Mm6iNft1QWpQTW8go3AAkJbCftw7rnMBh9JQM
-	 2PiJZsoaRsGDN7mPGPn55oNUOrQ0TxTFVOfpFMJ8zdf8BVWTmnQnTRIwmSqHKMULHm
-	 RF5xfP0GCkhyOhAj/Sro6R3Mo6U56obAsb4CdbG6EEqiXdV37driDiRvOYGg7w44Ew
-	 df25mBlOuFwA4TWTr7RSXpVVWhvtOrEVvW4CE4EpPM1irwILkKR0knFQIb3ZCg9sC1
-	 3OflukA2MQUvA==
+	bh=Y+9vtj0/GJijf+70Pc6ic4DpWvcYid81kYksrctrbME=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=D6AyIFJk+/XdJcNCqGWHKcIc8Jq3H9WXy/57bP/dJZybtFjBo2jXv7iDD1ujTXYf6
+	 2hHtnhgG03E2YsQFy6mSe/DOw6NmSvwjN9xt2jbyeWDcc+9aiu9opcUlGYMYR2To0e
+	 /vxJ3s2fJ6mHlnYc77u3j3mvU4+BxG0MW429atEqlWkd0Uyf401o9HU1BRAgtEdOr+
+	 XzB/+M3cgJ84aZ39w+B0QDvAONrAxb+mISTQE2lk4xM2PVocxODpACzEhqATU6/bGA
+	 /91TAoBb8TGPEO+gKHMO9QNZGACA2djY7hh313afhfy0tWL8HwBUTHC5IiZTk7ewQJ
+	 CZUoap/SGdVyg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78667C021B9;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BCEC021B2;
 	Sat, 22 Feb 2025 16:57:27 +0000 (UTC)
 From: Sven Peter via B4 Relay <devnull+sven.svenpeter.dev@kernel.org>
-Date: Sat, 22 Feb 2025 16:56:48 +0000
-Subject: [PATCH 3/4] soc: apple: rtkit: Use high prio work queue
+Subject: [PATCH 0/4] Miscellaneous Apple RTKit fixes
+Date: Sat, 22 Feb 2025 16:56:45 +0000
+Message-Id: <20250222-apple-soc-misc-v1-0-1a3af494a48a@svenpeter.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,21 +40,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250222-apple-soc-misc-v1-3-1a3af494a48a@svenpeter.dev>
-References: <20250222-apple-soc-misc-v1-0-1a3af494a48a@svenpeter.dev>
-In-Reply-To: <20250222-apple-soc-misc-v1-0-1a3af494a48a@svenpeter.dev>
+X-B4-Tracking: v=1; b=H4sIAM0BumcC/x3MQQqAIBBA0avErBvQISG6SrQInWqgVByIILx70
+ vIt/n9BuQgrTN0LhW9RSbHB9h34Y407o4RmIEPOEBlccz4ZNXm8RD06x97SYMdhC9CiXHiT5x/
+ OS60f+7ccWmAAAAA=
 To: Alyssa Rosenzweig <alyssa@rosenzweig.io>, Janne Grunau <j@jannau.net>, 
  Sven Peter <sven@svenpeter.dev>
 Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org
+ linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1148; i=sven@svenpeter.dev;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=899; i=sven@svenpeter.dev;
  h=from:subject:message-id;
- bh=OWy6VUyG9jq3qBr8MjUz+I6ziXX4V7f2D7Wm55EGjV0=;
- b=owGbwMvMwCHmIlirolUq95LxtFoSQ/ouxs93H4hIZT5ne2ZQsWnBzGt3WbYyLkm8nxZQvHJJi
- 4DX/Au3O0pZGMQ4GGTFFFm277c3ffLwjeDSTZfew8xhZQIZwsDFKQAT4U1k+O/RLcbryXjg/Orw
- veyqdwO/i2vNv+2wa53plXtfVQ0ObVdg+J+Zu85u58aTu2T9ZL9N+uusLjtTvX2O1EY591X+ItO
- 5W1gA
+ bh=Y+9vtj0/GJijf+70Pc6ic4DpWvcYid81kYksrctrbME=;
+ b=owGbwMvMwCHmIlirolUq95LxtFoSQ/ouxpcfyrJiu7Wnyave+7iM7/iEZ3IVNsnmrcdmbraIm
+ Kh3t2p5RykLgxgHg6yYIsv2/famTx6+EVy66dJ7mDmsTCBDGLg4BWAiWxYw/Hf+VXIqZPJS+9te
+ Dvc8YoX2Vf2/ksZcw2yqn/OtJSpRTIyR4Z5v25H5Ul1H13ZYzfKcnHMpW/7otnOtcaJTlGos0+4
+ mcgEA
 X-Developer-Key: i=sven@svenpeter.dev; a=openpgp;
  fpr=A1E3E34A2B3C820DBC4955E5993B08092F131F93
 X-Endpoint-Received: by B4 Relay for sven@svenpeter.dev/default with
@@ -62,37 +62,35 @@ X-Endpoint-Received: by B4 Relay for sven@svenpeter.dev/default with
 X-Original-From: Sven Peter <sven@svenpeter.dev>
 Reply-To: sven@svenpeter.dev
 
-From: Janne Grunau <j@jannau.net>
+Hi,
 
-rtkit messages as communication with the DCP firmware for framebuffer
-swaps or input events are time critical so use WQ_HIGHPRI to prevent
-user space CPU load to increase latency.
-With kwin_wayland 6's explicit sync mode user space load was able to
-delay the IOMFB rtkit communication enough to miss vsync for surface
-swaps. Minimal test scenario is constantly resizing a glxgears
-Xwayland window.
+This series contains four unrelated minor fixes to our RTKit driver.
+These are mainly required for drivers which aren't upstream yet but
+have been part of our downstream tree for quite a while now.
 
-Signed-off-by: Janne Grunau <j@jannau.net>
+Best,
+
+Sven
+
 Signed-off-by: Sven Peter <sven@svenpeter.dev>
 ---
- drivers/soc/apple/rtkit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hector Martin (1):
+      soc: apple: rtkit: Implement OSLog buffers properly
 
-diff --git a/drivers/soc/apple/rtkit.c b/drivers/soc/apple/rtkit.c
-index 35734ae8c9ce..b7f4654c3341 100644
---- a/drivers/soc/apple/rtkit.c
-+++ b/drivers/soc/apple/rtkit.c
-@@ -695,7 +695,7 @@ struct apple_rtkit *apple_rtkit_init(struct device *dev, void *cookie,
- 	rtk->mbox->rx = apple_rtkit_rx;
- 	rtk->mbox->cookie = rtk;
- 
--	rtk->wq = alloc_ordered_workqueue("rtkit-%s", WQ_MEM_RECLAIM,
-+	rtk->wq = alloc_ordered_workqueue("rtkit-%s", WQ_HIGHPRI | WQ_MEM_RECLAIM,
- 					  dev_name(rtk->dev));
- 	if (!rtk->wq) {
- 		ret = -ENOMEM;
+Janne Grunau (3):
+      soc: apple: rtkit: Add APPLE_RTKIT_PWR_STATE_INIT
+      soc: apple: rtkit: Use high prio work queue
+      soc: apple: rtkit: Cut syslog messages after the first '\0'
 
+ drivers/soc/apple/rtkit-internal.h |  1 +
+ drivers/soc/apple/rtkit.c          | 62 +++++++++++++++++++++++---------------
+ 2 files changed, 38 insertions(+), 25 deletions(-)
+---
+base-commit: 00834971f0d9e38beae37e92055b1432782827d0
+change-id: 20250220-apple-soc-misc-55ec124184fd
+
+Best regards,
 -- 
-2.34.1
+Sven Peter <sven@svenpeter.dev>
 
 
