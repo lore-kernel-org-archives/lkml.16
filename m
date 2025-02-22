@@ -1,130 +1,85 @@
-Received: from mail.maslowski.xyz (mail.maslowski.xyz [45.77.158.94])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB913202C24;
-	Sat, 22 Feb 2025 23:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.77.158.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE575201266;
+	Sat, 22 Feb 2025 23:51:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740268202; cv=none; b=mP1sD4w6teDAh7wPYMe215TIV7ZAMli28KZ1JQJoPfAZ9AJEQmjN5R+jtsEvkAyTH8YAo6eN7XeM3SkbbQmssqh+o4Wr459LMnH3vuvyrdDK5f+2evvTVQiOOIMtfzNERThq8X6iG5tYWjKsfuD+TWGUsHFBzIJ2/uEy3aOYxjE=
+	t=1740268285; cv=none; b=SjJqJ/1hEL7Rtx1dGNAMeXPQOsx3f7hVQi8njOz1kKlogd+g2024GZE0Zl/uGPH9OhbsBC/sQohPr6adsdAIex3LugFF4bwMWZCvc02ooxpZB+vfLZ3Zkyq/pmfjg6FspMdHLt2fb+Mt+uFEiMoJLRyd580iJ7CH0Gniv6Pz7mQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740268202; c=relaxed/simple;
-	bh=3z9CKU4X7u0WJNsFUPjx/98hXkKogbxuvLD2pclMvvY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=DPPsA51oohAsjotZx6L4TnkB+PTx2xnhtsjax+CsJg1IUAwSqGg43NuToZ6tKAf0PNZZVoJ7fOjWzKHc4fHuhTePoXCPPJVeWtNCofpMbgjnELM1vjiIDkpp3pP49HDK41jATlDvSiiS9IGh27cmlkCt+RP+uciX28wwu9Wendo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=maslowski.xyz; spf=pass smtp.mailfrom=maslowski.xyz; dkim=pass (2048-bit key) header.d=maslowski.xyz header.i=@maslowski.xyz header.b=MnexX9od; arc=none smtp.client-ip=45.77.158.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=maslowski.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maslowski.xyz
+	s=arc-20240116; t=1740268285; c=relaxed/simple;
+	bh=BUzYO5WNI0AvIV65QgeIcllxZT6M0OQeWB3k+6nghto=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=fX8WTkWbjj6RkCczkM7HVnK0S3XTZKRiZY6YbNB7Psa4g4V0PZJbPMo32PX9JF3F5g4a2Cynrv8UhDEBFnX1tAvf21y5Nf2awi+SGN0Q6Oc83wIPgcCuktohcSJlnRA4UDwYAULZarkirsEwfYQEKAF8pqBAKhjZf/sOeu0xNgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=wy2Qk700; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=maslowski.xyz header.i=@maslowski.xyz header.b="MnexX9od"
-Received: from localhost (ett230.neoplus.adsl.tpnet.pl [83.20.165.230])
-	by mail.maslowski.xyz (Postfix) with ESMTPSA id 233587E9E1;
-	Sat, 22 Feb 2025 23:42:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=maslowski.xyz;
-	s=mail; t=1740267732;
-	bh=3z9CKU4X7u0WJNsFUPjx/98hXkKogbxuvLD2pclMvvY=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=MnexX9odlJgn6rN1fPtImras+40ieMFdF1zlf4PS+QF9+07VJXZ1wRy2x4ctxZRF5
-	 tuxpJb57YClLmKhGpKVT8otj5vZLLoZci/ZpBzLeVw7ByZ3ZKGETBNfsiGtNY+wcjM
-	 G4NmOH2atBpov153fnREFEKV8SqPm3ZsTB2Jc2uiMgSYAuqfZC+Mj8pCN1Ylbow2Z9
-	 bQuZZgS4zj4VAqoA4cuSeQnoDnJYpPJuoujb2ZaIrp2EyJPaqBjKrwpzOKR0NXnKpZ
-	 pIv7UTrIOxWS/n+EjqlNuFH37DiWAgCBXUDzNkJRYlTUZ0LsX3iGgMfcSu5Z2BDuY1
-	 mZHNvva08EoVA==
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="wy2Qk700"
+Received: from [IPv6:::1] ([172.59.160.4])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 51MNp5Sj3857546
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Sat, 22 Feb 2025 15:51:06 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 51MNp5Sj3857546
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025021701; t=1740268267;
+	bh=/+nn2rQ/7gqR+dEBO1aJufprBuwk9A8ZUqZnTRwjCes=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=wy2Qk700Kt5HER5PMi4N6WC6wigTrEclUj6Nbe/+p2kEBxRpdA9PzEfuoO2XBf2/a
+	 iWg71U7XW921i92gYXs5Q2Yye/96v9I5si/RIblHu8XZGlFCxNmxA4tfj5YJBY0IPy
+	 yihby4SfJVBzKKQMXw7q9QaA/2+8M+CtEW3gnsLL4sNWuBRb+Bau3vDuxStnRv0UOS
+	 QLCxOj1gOmxfo29UmbYTjS3EzFYIFxzPI3RPlo/bq+G5bFVNC9YHZRWRcdEyYalDvE
+	 4fdNxGawsFNiWAW4pJKv4UIBoZIJUctcq3Pl6ZwndPS98KAj+AHyPbrVCpP9e95vH3
+	 9G4PDYBYiCYXw==
+Date: Sat, 22 Feb 2025 15:50:59 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+CC: Linus Torvalds <torvalds@linux-foundation.org>,
+        Ventura Jack <venturajack85@gmail.com>, Gary Guo <gary@garyguo.net>,
+        airlied@gmail.com, boqun.feng@gmail.com, david.laight.linux@gmail.com,
+        ej@inai.de, gregkh@linuxfoundation.org, hch@infradead.org,
+        ksummit@lists.linux.dev, linux-kernel@vger.kernel.org,
+        miguel.ojeda.sandonis@gmail.com, rust-for-linux@vger.kernel.org
+Subject: Re: C aggregate passing (Rust kernel policy)
+User-Agent: K-9 Mail for Android
+In-Reply-To: <c3spwcoq7j4fx5yg4l7njeiofhkaasbknze3byh4dl45yeacvr@rb6u6j5kz7oe>
+References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com> <20250222141521.1fe24871@eugeo> <CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com> <6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c> <CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com> <yuwkqfbunlymofpd4kpqmzpiwbxxxupyj57tl5hblf7vsvebhm@ljz6u26eg5ft> <6EFFB41B-9145-496E-8217-07AF404BE695@zytor.com> <c3spwcoq7j4fx5yg4l7njeiofhkaasbknze3byh4dl45yeacvr@rb6u6j5kz7oe>
+Message-ID: <B8A09E5A-D3A6-4A1F-94F6-9E301EE9BBE4@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 23 Feb 2025 00:42:06 +0100
-Message-Id: <D7ZDF8NZGPS3.3QBMAVC1NTUDM@maslowski.xyz>
-Cc: "Greg KH" <gregkh@linuxfoundation.org>, "Boqun Feng"
- <boqun.feng@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>, "Miguel Ojeda"
- <miguel.ojeda.sandonis@gmail.com>, "Christoph Hellwig" <hch@infradead.org>,
- "rust-for-linux" <rust-for-linux@vger.kernel.org>, "Linus Torvalds"
- <torvalds@linux-foundation.org>, "David Airlie" <airlied@gmail.com>,
- <linux-kernel@vger.kernel.org>, <ksummit@lists.linux.dev>
-Subject: Re: Rust kernel policy
-From: =?utf-8?q?Piotr_Mas=C5=82owski?= <piotr@maslowski.xyz>
-To: "Martin Uecker" <uecker@tugraz.at>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com> <Z7SwcnUzjZYfuJ4-@infradead.org> <CANiq72myjaA3Yyw_yyJ+uvUrZQcSLY_jNp65iKH8Y5xGY5tXPQ@mail.gmail.com> <326CC09B-8565-4443-ACC5-045092260677@zytor.com> <CANiq72m+r1BZVdVHn2k8XeU37ZeY6VT2S9KswMuFA=ZO3e4uvQ@mail.gmail.com> <a7c5973a-497c-4f31-a7be-b3123bddb6dd@zytor.com> <Z7VKW3eul-kGaIT2@Mac.home> <2025021954-flaccid-pucker-f7d9@gregkh> <4e316b01634642cf4fbb087ec8809d93c4b7822c.camel@tugraz.at> <2025022024-blooper-rippling-2667@gregkh> <1d43700546b82cf035e24d192e1f301c930432a3.camel@tugraz.at>
-In-Reply-To: <1d43700546b82cf035e24d192e1f301c930432a3.camel@tugraz.at>
 
-On Thu Feb 20, 2025 at 9:57 AM CET, Martin Uecker wrote:
+On February 22, 2025 1:22:08 PM PST, Kent Overstreet <kent=2Eoverstreet@lin=
+ux=2Edev> wrote:
+>On Sat, Feb 22, 2025 at 12:54:31PM -0800, H=2E Peter Anvin wrote:
+>> VLIW and OoO might seem orthogonal, but they aren't =E2=80=93 because t=
+hey are
+>> trying to solve the same problem, combining them either means the OoO
+>> engine can't do a very good job because of false dependencies (if you
+>> are scheduling molecules) or you have to break them instructions down
+>> into atoms, at which point it is just a (often quite inefficient) RISC
+>> encoding=2E In short, VLIW *might* make sense when you are statically
+>> scheduling a known pipeline, but it is basically a dead end for
+>> evolution =E2=80=93 so unless you can JIT your code for each new chip
+>> generation=2E=2E=2E
 >
-> For example, there is an effort to remove cases of UB.  There are about
-> 87 cases of UB in the core language (exlcuding preprocessor and library)
-> as of C23, and we have removed 17 already for C2Y (accepted by WG14 into
-> the working draft) and we have concrete propsoals for 12 more. =C2=A0This
-> currently focusses on low-hanging fruits, and I hope we get most of the
-> simple cases removed this year to be able to focus on the harder issues.
+>JITing for each chip generation would be a part of any serious new VLIW
+>effort=2E It's plenty doable in the open source world and the gains are
+>too big to ignore=2E
 >
-> In particulary, I have a relatively concrete plan to have a memory safe
-> mode for C that can be toggled for some region of code and would make
-> sure there is no UB or memory safety issues left (I am experimenting with
-> this in the GCC FE).=C2=A0 So the idea is that one could start to activat=
-e this
-> for certain critical=C2=A0regions of code to make sure there is no signed
-> integer overflow or OOB access in it.   This is still in early stages, bu=
-t
-> seems promising. Temporal memory safety is harder and it is less clear
-> how to do this ergonomically, but Rust shows that this can be done.
+>> But OoO still is more powerful, because it can do *dynamic*
+>> scheduling=2E A cache miss doesn't necessarily mean that you have to
+>> stop the entire machine, for example=2E
+>
+>Power hungry and prone to information leaks, though=2E
 >
 
-I'm sure you already know this, but the idea of safety in Rust isn't
-just about making elementary language constructs safe. Rather, it is
-primarily about designing types and code in such a way one can't "use
-them wrong". As far as I understand it, anything that can blow up from
-misuse (i.e. violate invariants or otherwise cause some internal state
-corruption) should be marked `unsafe`, even if it does not relate to
-memory safety and even if the consequences are fully defined.
-
-
-In programming language theory there's this concept of total vs partial
-functions. While the strict mathematical definition is simply concerned
-with all possible inputs being assigned some output value, in practice
-it's pretty useless unless you also make the said output meaningful.
-This is quite abstract, so here's an (extremely clich=C3=A9) example:
-
-Let's say we're working with key-value maps `Dict : Type=C3=97Type -> Type`=
-.
-A naive way to look up a value behind some key would be
-`get : Dict<k,v> =C3=97 k -> v`. But what should the result be when a given
-key isn't there? Well, you can change the return type to clearly reflect
-that this is a possibility: `get : Dict<k,v> =C3=97 k -> Optional<v>`. On t=
-he
-other hand, if you have some special value `null : a` (for any `a`), you
-can technically make the first way total as well. But this is precisely
-why it's not really useful =E2=80=93 it's some special case you need to kee=
-p in
-mind and be careful to always handle. As someone here has said already,
-besides undefined behavior we also need to avoid "unexpected behavior".
-
-(Another way to make such function total is to show a given key will
-always be there. You can achieve it by requiring a proof of this in
-order to call the function:
-`get : (dict : Dict<k,v>) =C3=97 (key : k) =C3=97 IsElem<dict,key> -> v`.)
-
-
-Overall, making a codebase safe in this sense requires an entirely
-different approach to writing code and not just some annotations
-(like some other people here seem to suggest).
-
-
-And while I'm at it, let me also point out that the concept of ownership
-is really not about memory safety. Memory allocations are just the most
-obvious use case for it. One could say that it is rather about something
-like "resource safety". But instead of trying (and miserably failing) to
-explain it, I'll link to this excellent blog post which talks about how
-it works under the hood and what awesome things one can achieve with it:
-<https://borretti.me/article/introducing-austral#linear>
-
-Oh, and once again: I am sure you knew all of this. It's just that a lot
-of people reading these threads think adding a few annotations here and
-there will be enough to achieve a similar level of safety | robustness
-as what newly-designed languages can offer.
-
-Best regards,
-Piotr Mas=C5=82owski
+I think I know a thing or two about JITting for VLIW=2E=2E  and so does so=
+meone else in this thread ;)
