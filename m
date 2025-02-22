@@ -1,30 +1,30 @@
 Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA24A27453;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B76C201034;
 	Sat, 22 Feb 2025 17:58:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740247097; cv=none; b=Vm6AEtDmtqASo4uSHLV0yZUHtTrMwtbaAU6PQkv7/3HPjdpniG5udf7y5RF9pi5tzyM2f07z/6gjreWfREPbL2UpQkpDlMBztmVVs+lGZJcy2r9YfjGFp/3SMMDMniOpnS5GJqs9B6GG7QaXX6u4YxL2f8lOyFnKD4AGxTJNBZU=
+	t=1740247097; cv=none; b=R/BhRtujKj8CxNxLMZIdb+aF3/M4OSY4ZdNp5mgFS7/8jKuQlRTyCxYF9yAsKEvp5cx+HyI6hx35bBqyyFjeeMgHd/y///MjaTDSvHuqe0T3ZKlxfn/HSAUAIUVVQ5pryHTA9jkhd8QqrJNkqisqaB4b0pHvOUJBcUclhVPlTLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740247097; c=relaxed/simple;
-	bh=zBJm8w0eoEzjJRQwRdP3zJ15CnTfGY4H/uK7c9QWlZ0=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Z6Ek9Z9KE3LIIIdH1Mo88jnyVCHxGeLJ4guh7/x49VXlyQ6MoMVnStDpySGlCo4WBONXQpsDBzwTQenb+q9YRE07G0MeLHVwvUAms6dkNGviULDPUkVd0kfMpdIgwHDNvmOYR3OcX7jH7ufuqLG2DMgnMgdLXzk/eQ41m/zDuK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=w9BPuyrm; arc=none smtp.client-ip=128.199.32.197
+	bh=uOTZ6w5F/QVUfzYDDHW1oSDwuDIcbKSfDmjsbQ08n8M=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=E9YD0D/y8d0Z2e2/WnYIK3VWJozorZPkjYZD2MtM3rZ1UPBvKz1foDPodNBI1uHUtceDfSSKj4z0eEgswMbUsi+DD5KLHfHcefx/aedqNA+NO4tYWq8UoBAB3AZhCmQploO+Q4dGlAILDFCl2dXfTNz9mX5JCJhrYUIweVJYUDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=Aqa+ragB; arc=none smtp.client-ip=128.199.32.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="w9BPuyrm"
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="Aqa+ragB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
-	t=1740247093; bh=zBJm8w0eoEzjJRQwRdP3zJ15CnTfGY4H/uK7c9QWlZ0=;
-	h=From:Subject:Date:To:Cc;
-	b=w9BPuyrmUaGnbfJlWkGyWpo/IbSNmcqqd51ubJKse5SWIEVv6viyfqAxKjhvKZXrp
-	 +LAXWHzyIRfjxFUzOBjwHYxVOtNtiojtfCoCCNJoo2Tj7yh9nPxZCsNx3AbCdCFkZU
-	 tJi9NKkQAg9LRWKc3PxzeSmRePxcS9aZrj5P+QCg=
+	t=1740247094; bh=uOTZ6w5F/QVUfzYDDHW1oSDwuDIcbKSfDmjsbQ08n8M=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=Aqa+ragBgDTY6nh25HY4HOXyRN/U9dnvsIBfc5tbSsFw96cjRzbnZki/Gi58y8bVu
+	 lL3wvitX2CgAVr9bOWw4l+XCDb5b++Be5gWJ2ZonJNi88K/ZiPecvGrrNz/8GlHIGk
+	 rHxulfQhbDXf0By0e1TsGEDtc/ae/RPNIFSbRxCI=
 From: Luca Weiss <luca@lucaweiss.eu>
-Subject: [PATCH 0/4] Add display support for Fairphone 3 smartphone
-Date: Sat, 22 Feb 2025 18:58:03 +0100
-Message-Id: <20250222-fp3-display-v1-0-ccd812e16952@lucaweiss.eu>
+Date: Sat, 22 Feb 2025 18:58:05 +0100
+Subject: [PATCH 2/4] dt-bindings: display: panel: Add Himax HX83112B
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,10 +33,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIACsQumcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDIyMj3bQCY92UzOKCnMRK3SRzy+QkY2PLVDPTJCWgjoKi1LTMCrBp0bG
- 1tQDkCxt6XQAAAA==
-X-Change-ID: 20250222-fp3-display-b79cb339e65b
+Message-Id: <20250222-fp3-display-v1-2-ccd812e16952@lucaweiss.eu>
+References: <20250222-fp3-display-v1-0-ccd812e16952@lucaweiss.eu>
+In-Reply-To: <20250222-fp3-display-v1-0-ccd812e16952@lucaweiss.eu>
 To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
  Neil Armstrong <neil.armstrong@linaro.org>, 
  Jessica Zhang <quic_jesszhan@quicinc.com>, 
@@ -50,52 +49,113 @@ Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
  Luca Weiss <luca@lucaweiss.eu>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1410; i=luca@lucaweiss.eu;
- h=from:subject:message-id; bh=zBJm8w0eoEzjJRQwRdP3zJ15CnTfGY4H/uK7c9QWlZ0=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBnuhAtOMgMIIULVqOl2TfliSKPzCtAe8HUnHgGm
- ZVVHmyUYjeJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZ7oQLQAKCRBy2EO4nU3X
- VpFeD/96+G3P3rXbbcjnbQmEG/uTd4hWh4s+cFUlOLKY8NVoYgct7oRsdw0fK3se4ue2X7FFLSj
- 1AxwNkuoiubDChk6zgSxwV2iQTnHpKSM6U3THaM/fmGDZA506i/UzB8lY1NU4iu+t/13BfSUHoJ
- 3s3GXwltMwmZz5vG/S0bFwnGJ1ETLcH7nWro5nbKXgTTnUv/pi475rfTP+f23+CUACXgRcqLWwA
- Uc0suIdFts42ZTzFxakDTOT83xcrY4jV60nH+rFHN0XbosQ9+EWt2Ykz8vcmmufQItBPE5bhmvK
- VpjrajLLa/Lss8sAMesn6DgxiCsHBqt6DmXp3cwmuPEis8g+whap3prH/2J0f3ow8itF2XQ3TUW
- z8/WfXsAhs0tLo4+dQnbV5/zaitAPOVw55AxTijDtqXwI+hYIP50stJ46H3BpCbn8EWhHpKTLPM
- 2tnp893Mmgz29wWdOhcFQ/KprcgtkFj6qRdyClPNgYG5GJRB537NYvzCBAX4D/RJw+wycIUAliI
- 0Z9+YIfdujir8ssEhtH9WBPHo1YNt9vKjX1f0+U021GbGU73yYL7Fr3QIYtZkzRzOE0OMk/QZ/n
- NM+GxdeKIZ2nEIS8mtTwKo3nN56qD3fl2OgqiK2GxTmAtY3n559CCNC/N28r7MiL6DV4Un3r+qR
- JxSoXm6HU6sOwOw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2253; i=luca@lucaweiss.eu;
+ h=from:subject:message-id; bh=uOTZ6w5F/QVUfzYDDHW1oSDwuDIcbKSfDmjsbQ08n8M=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBnuhAy2zK2gofuVwCEFjaW4Dk7ucYCGIT+QxvYi
+ VwdQ87xbJOJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZ7oQMgAKCRBy2EO4nU3X
+ VjspD/0ZDU4ZmU2PbTqUxEx4jwWkjKRaUTjbndEjvWc2jRg2rIzDMFiKRlhpF2P1NpsW1VeTnRm
+ TwRq9gGnXotpqI7HC5HM+UltpxGIVyPCJp/SAt0NpDrmmiZp8z5Oqak/kAFDOijxT42gi+s98nN
+ rk/ObWlZRtUBHOJNlBvN8VOTqC5UV+qXvOZNh0XtAiQg7cHhxPkaNSv/Xfhfqdo1oxRq0WUpx/J
+ rJ+JTJBgwBQQRpEMFwgjQQT+teggx3DbxUzFatL9KZq/QSXc2mZ/ZGufHhl3u/ysvOplFJQtxeZ
+ /BbAWPCXSK1yGixEX9WLfM1W6IuIM2pTn6EWK1rcbkiLDUY4kiRLY2HSFqOlhB48JWHfLI+Gqo6
+ UGm1SN+W2rgKrcOBNA76ZRbspwU53/ggGKSXu436XM3go+qg3UdcZmR6qVJji16OvtRnG5pySs5
+ zxcOhaP4XqjSA89A1OI9YmT/zkt8X54ppk9hKl4GmFf2W/RGv9DCicbo4oZ5w/9cv9Q+qNISWff
+ MJGvV5jZx2BQVzADYJphc2XhSXaf0uj+5rYKIhVnHUXftT8S7un4L+OeYU0ueXTgcx4PsBmz7gn
+ IyjDNE4xCIijXJJZ+GHAZpc9e38gKeLXvxYV4TieZsuGtkDqTvlNCCTXYT/0V9LKACQCG4tJcgY
+ fb0TU7eXXM7UXdg==
 X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
  fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-Add a driver for the HX83112B-based panel, and enable it on Fairphone 3
-to enable display output, and enable GPU as well.
-
-Please let me know if you have a better compatible string for me to use,
-unfortunately unlike Fairphone 4 panel, this panel doesn't seem to have
-a nice unique model number from DJN, it's just referenced as "FP3" - the
-device it's made for so I've chosen "djn,fairphone-fp3-panel".
+Himax HX83112B is a display driver IC used to drive LCD DSI panels.
+Describe it and the Fairphone 3 panel from DJN using it.
 
 Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
 ---
-Luca Weiss (4):
-      dt-bindings: vendor-prefixes: document Shenzhen DJN Optronics Technology
-      dt-bindings: display: panel: Add Himax HX83112B
-      drm/panel: Add driver for DJN HX83112B LCD panel
-      arm64: dts: qcom: sdm632-fairphone-fp3: Enable display and GPU
+ .../bindings/display/panel/himax,hx83112b.yaml     | 75 ++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
- .../bindings/display/panel/himax,hx83112b.yaml     |  75 ++++
- .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
- arch/arm64/boot/dts/qcom/msm8953.dtsi              |   2 +-
- arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts  |  62 +++
- drivers/gpu/drm/panel/Kconfig                      |  10 +
- drivers/gpu/drm/panel/Makefile                     |   1 +
- drivers/gpu/drm/panel/panel-himax-hx83112b.c       | 430 +++++++++++++++++++++
- 7 files changed, 581 insertions(+), 1 deletion(-)
----
-base-commit: 197aed880d4de2127c80c389ec62601b7d837351
-change-id: 20250222-fp3-display-b79cb339e65b
+diff --git a/Documentation/devicetree/bindings/display/panel/himax,hx83112b.yaml b/Documentation/devicetree/bindings/display/panel/himax,hx83112b.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..e6bd4b33d40be98e479d84617aea6d2af0df70e4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/himax,hx83112b.yaml
+@@ -0,0 +1,75 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/himax,hx83112b.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Himax HX83112B-based DSI display panels
++
++maintainers:
++  - Luca Weiss <luca@lucaweiss.eu>
++
++description:
++  The Himax HX83112B is a generic DSI Panel IC used to control
++  LCD panels.
++
++allOf:
++  - $ref: panel-common.yaml#
++
++properties:
++  compatible:
++    contains:
++      const: djn,fairphone-fp3-panel
++
++  reg:
++    maxItems: 1
++
++  iovcc-supply:
++    description: I/O voltage rail
++
++  vsn-supply:
++    description: Positive source voltage rail
++
++  vsp-supply:
++    description: Negative source voltage rail
++
++  port: true
++
++required:
++  - compatible
++  - reg
++  - reset-gpios
++  - iovcc-supply
++  - vsn-supply
++  - vsp-supply
++  - port
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    dsi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        panel@0 {
++            compatible = "djn,fairphone-fp3-panel";
++            reg = <0>;
++
++            reset-gpios = <&tlmm 61 GPIO_ACTIVE_LOW>;
++
++            iovcc-supply = <&pm8953_l6>;
++            vsn-supply = <&pmi632_lcdb_ncp>;
++            vsp-supply = <&pmi632_lcdb_ldo>;
++
++            port {
++                panel_in_0: endpoint {
++                    remote-endpoint = <&dsi0_out>;
++                };
++            };
++        };
++    };
++
++...
 
-Best regards,
 -- 
-Luca Weiss <luca@lucaweiss.eu>
+2.48.1
 
