@@ -1,58 +1,65 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3226202C24;
-	Sat, 22 Feb 2025 23:48:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE07204594;
+	Sat, 22 Feb 2025 23:48:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740268112; cv=none; b=HfeJZnj3Uf9i/ESOgtmfsxMTj1CZeoOPzAT8AYcqTrhYZQFFTMtTqqtMv20jphiR/atDM/vK6M8+uL622KcVv+dgiT8IecaXADlg9cUw0IIM+OX8haWi3R3lae5fQS8nlILnuvUrRqZ41GwZluJK2itSBp2ynwVkWwVfPq29dI8=
+	t=1740268127; cv=none; b=CW47QN2lhdZqd90b81xOjv9cnX3h1Pkr9YMGUKidwfAYa8PsCBI7Hp4dw587V8cUwPxS5KyPp/sYhKNGcOmUraAfSlZlbP20ylujASJYU1J8Fak0fchDsGDNIxSuXxwZZM9bDwSB8s6O0HdiiQD8arAf/E0Kj5C2p4o3Jr48sE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740268112; c=relaxed/simple;
-	bh=UqYdF5iwKVG31GpgfQOmFZ8Iy7Futv9BjukkWDjyFc8=;
+	s=arc-20240116; t=1740268127; c=relaxed/simple;
+	bh=xF0ox/74UjRXraUThum9vQmu1wwYLfV5VLUVBmCwffw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SyBWOPzEFndYN01HDzkw3zZbNk7g0CGX5hoLKc++R1fhc9ra7lQBih6eUXuzYxb6/kI64Un6rb+RLQUEwfbLbZmWnMsuahaFFhRL5qAP61k0sOUiCaCUw0d9fC7KqWHVk0GKRndZ/omBgBy2cPzuLXwIe1GFeMm2LKq2Kj83Tj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=1M2KCIl0; arc=none smtp.client-ip=185.11.138.130
+	 MIME-Version:Content-Type; b=BFwlPW8Q+89AQQ5i7Bnux21y8XbXWKGqyRKxkjREbAM+vta4pq7CTSzp+GHZ7sYKXSbYQUp1MccTrjc1S6L/LAuFMtJoQuIa+5UgAQL6f7VL2yJ874jvAb7SQ6q7cxgwBMN56iNmqhCHfYCjaseus0uf6Qmf57U71dSIghG6UyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=s5Hgk1Za; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="1M2KCIl0"
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="s5Hgk1Za"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
 	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
 	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
 	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
 	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=5tD/n9p77JLIQnsXhSkhebyHF5kKTn39LJUodlTkHgk=; b=1M2KCIl0fzgWFlfeseAap/GMIX
-	UBEUlJlSaRdsFDrhiemPWzgPVbx3B+LnJp0y7LMlYUPIXN7biIF5TKPpCZLGidhJG8ucDkPv1ZOmk
-	/a3CK2K7NwJ9PFOIWlcOzM+XabT2gzOqXrQ2JQmjw/pd4dSSUR0lWKNcxq7HOGIUoKHxqUrLe0RgK
-	adKjocvTDFbO7Ib20w9J5J3Wl3CBijPs2WesLDymFn9sYj06Lcmir+jW0GY1q0lTu7lkWr4i1ruem
-	PpVfcSJ3KK11Az330+SuBgBVKtrR3PWsfM/KcZe/tuVH6wYLepY33t5bq4vOKqjzvw5yOtyUvXUY0
-	6/A3lznw==;
+	bh=tzYj2SBwZYdiAHJqAPsKe/dFQvpKAGWUcio6ju4eMVk=; b=s5Hgk1ZaHT8uyo1V0KFNKBG13Q
+	zjV6RXP84BOVzBXJEm+GgJgVWSEmzBLzu9mogqDdbrgilm0MVthYje9q9/mJnYBATkiHYTiX3w8wQ
+	fuAE7X0bFIvpqsz5uZfs7TSHF6fulhi5E94SMS26d6w3HSfO8M4vKtVTE6kAEBRY/CMblw8OyJ1u1
+	ACKVx9wTemKktI+imsrHU0umpqVfWHZl3c6jo72DeDdsln+qZgZPO0B0ya3QOihMhNFK18sLfcVR+
+	Fg6Q62ms02VS5GXU4Gquz2fj8JzZGD5axR3ZFMvWIPEwL9JZH6m152GRYj+ygcchPIPID8xgbJgs8
+	LT1kRlQg==;
 Received: from i53875a10.versanet.de ([83.135.90.16] helo=phil.fritz.box)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1tlzEO-0004TL-QF; Sun, 23 Feb 2025 00:48:24 +0100
+	id 1tlzEN-0004TL-OW; Sun, 23 Feb 2025 00:48:23 +0100
 From: Heiko Stuebner <heiko@sntech.de>
-To: Rob Herring <robh@kernel.org>,
+To: linux-kernel@vger.kernel.org,
+	Detlev Casanova <detlev.casanova@collabora.com>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Quentin Schulz <quentin.schulz@theobroma-systems.com>,
-	Farouk Bouabid <farouk.bouabid@theobroma-systems.com>,
-	Quentin Schulz <foss+kernel@0leil.net>
-Cc: Heiko Stuebner <heiko@sntech.de>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Chris Morgan <macromorgan@hotmail.com>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Tim Lunn <tim@feathertop.org>,
+	Michael Riesch <michael.riesch@wolfvision.net>,
+	FUKAUMI Naoki <naoki@radxa.com>,
+	Alexey Charkov <alchark@gmail.com>,
+	Stephen Chen <stephen@radxa.com>,
+	Elon Zhang <zhangzj@rock-chips.com>,
 	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Quentin Schulz <quentin.schulz@cherry.de>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] (subset) arm64: dts: rockchip: pinmux fixes and support for 2 adapters for Theobroma boards
-Date: Sun, 23 Feb 2025 00:48:18 +0100
-Message-ID: <174026756671.3008209.2772154778070237628.b4-ty@sntech.de>
+	kernel@collabora.com
+Subject: Re: [PATCH v5 0/2] Add Radxa Rock 4D support
+Date: Sun, 23 Feb 2025 00:48:16 +0100
+Message-ID: <174026756680.3008209.2974583864870803696.b4-ty@sntech.de>
 X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250221-ringneck-dtbos-v2-0-310c0b9a3909@cherry.de>
-References: <20250221-ringneck-dtbos-v2-0-310c0b9a3909@cherry.de>
+In-Reply-To: <20250218160714.140709-1-detlev.casanova@collabora.com>
+References: <20250218160714.140709-1-detlev.casanova@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,30 +70,22 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Fri, 21 Feb 2025 15:04:32 +0100, Quentin Schulz wrote:
-> This is based on top of
-> https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git/log/?h=v6.15-armsoc/dts64
-> 6ee0b9ad3995 ("arm64: dts: rockchip: Add rng node to RK3588") as it
-> depends on the (merged) series from
-> https://lore.kernel.org/all/20250211-pre-ict-jaguar-v6-0-4484b0f88cfc@cherry.de/
-> 
-> Patches for Haikou Video Demo adapter for PX30 Ringneck and RK3399 Puma
-> (patches 4 and 5) also depend on the following patch series:
-> https://lore.kernel.org/linux-devicetree/20250220-pca976x-reset-driver-v1-0-6abbf043050e@cherry.de/
+On Tue, 18 Feb 2025 11:04:17 -0500, Detlev Casanova wrote:
+> Add the basic support for the board. (Not officially released yet)
+> It is based on the Rockchip rk3576 SoC, so I haven't added the
+> following devices yet:
+>  - VOP/HDMI
+>  - UFS
+> as the support for those has not been merged yet, but are close to be
+> and I already validated that they work.
+> It will come with another patch set.
 > 
 > [...]
 
 Applied, thanks!
 
-[3/5] arm64: dts: rockchip: add support for HAIKOU-LVDS-9904379 adapter for PX30 Ringneck
-[4/5] arm64: dts: rockchip: add overlay for PX30 Ringneck Haikou Video Demo adapter
-[5/5] arm64: dts: rockchip: add overlay for RK3399 Puma Haikou Video Demo adapter
-
-I've not taken the uart pinctrl patches, as they seem to conflict with
-Lucasz' Ringneck pinctrl patches that moved into 6.14-rc now.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4eee627ea59304cdd66c5d4194ef13486a6c44fc
-
+[1/2] dt-bindings: arm: rockchip: Add Radxa ROCK 4D board
+[2/2] arm64: dts: rockchip: Add Radxa ROCK 4D device tree
 
 Best regards,
 -- 
