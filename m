@@ -1,209 +1,118 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05olkn2033.outbound.protection.outlook.com [40.92.91.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119031474A0;
-	Sat, 22 Feb 2025 14:31:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.91.33
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740234719; cv=fail; b=Z79A5qH+z6QRvSof6iU4mtX+Lv5mkUlIqHjSu3XdcwvREpTbRCHfEnuFXpl8Y0WG22MGe8ut4gYwTXnj8YsisjMCk773hWLHCxYt/wvNNmHd2VcORxbIkcHhamMZtcDVc4a6Nub56fbPyU2DhWaoECenX3OG/qI+FdITF4090Ew=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740234719; c=relaxed/simple;
-	bh=fnh/9a74AP0poamv2z7Esi+W6A1+bIPu83EjyIRHTqU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Mwi+Jw0EvkExH+Ouo94J9IfLz8NssM1qu+npo9U1WT/awkP/bsexPEYe7rnsCmukD/1i4tb0Lbs/sLbk1Ruti+Zbt5MCEuyOptOejExBvbj+AkwKIIEKN14ZKqrAGy4UKH9/YE6BVgjaXd+iqTY576xDo4BfSOw00+ltZFHaf30=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=FD6d/5IN; arc=fail smtp.client-ip=40.92.91.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5FD9153801;
+	Sat, 22 Feb 2025 14:34:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740234854; cv=none; b=Kb/bKGj9cK9mHGEXn1Ad0t13CbTJtyvAenAlbD6nDQArgBjf/9UM1MGfIqQGxH86keXcF+iErGgliCePQEaMJBg7rVbQe4O7ZPpnSEZHLIGDx81P0zHWh0nzWJ2f6qgXwDplDsGfKA5eYmVeVYdkPw2EYIctP6egMvOjglpCcwU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740234854; c=relaxed/simple;
+	bh=kWckQQyPJwAsGQ6UHNDjhJ+mCgwsxq0GmGXdSQG4qQM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qPS/kOXmBCCVvT4hMPSkgOyF5Kz7lADiqFzdUvrPGlF9uvnu4pfZTXQ+slEDWaq18vzSV5WO2w8nfOlHeocCbWySxP5KeBxJwryL/Gtlxdcr8O4YSgSMHvTQF0O6wmXsBMnhJkHP7IfOCmshgNNt+rWGtGhuC5+0Z9PwZAELasQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KwSFXUa/; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="FD6d/5IN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OvvnA07zOsQV/ciJGQjL02XtgHk/2DyE55BbsX8LfURm+HmxxKiVevSonipupnlaD7GTNoTvP0lO4CEtaUJJpTu6OTP5LgrzC8FgxxFdn3lp4BKD/atydCJnEDZp9HSpXIpIVyCb3eYsFFtODraeEfP8w17xN0nMo10HwvJ3mqGD3qVFmdnJr0EUppjrFsoCUngi2TuxD0ABNF7zc/cU/nOdX8gUwqE9tYYvGPurqtC6mt6CVqTkQQ9YK7jknp2X7tdDTX9QC4A6YM6jLktLSoQw1wYWyNc1SeGGafNEmZBOFi6bHa4KwATkcQpM1JN04KFQkH3aQphhcCCzm8q3oQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Wb0dHhOEMCMoSTnCCmT1HISpX8WATd83gVJf5yHGMtw=;
- b=oVdwiluf+jmHMPSFvRe2ovU51G1ndmMM/rnlXiqKnRMHzaAab8gFrmDqAf98lJNGrh9GOPLovSth/Lm1VfKVmmXDo64cZ9HfkkW7UOZZpjene693r3y+Sa+oUzGrQIdtC4zjdmbY7xxzDbtUWQV9YZMnfcTvKym+3YH5ZjwGEdruYSgb8oZ/KmOX91x1qBw7z01vCytXR8hX0xWmfEq/U6NSUa7Ifn23rFUA3iqs8bofUCGsfIZM0khnOpd/S24QtsE/Zj+2V4ghXeZP4Xy5HmQPHwEFhx8wHXiIQnuFoZtPL1ElWKCQunum3/eHdJ2Q90cp2pPoOJDwDO0qFOcWlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Wb0dHhOEMCMoSTnCCmT1HISpX8WATd83gVJf5yHGMtw=;
- b=FD6d/5INgEyYh0Yv2tf8v3Jv1vazvVcZMBiPrE6KGI4/Vmzfl8MB6a3TVVgQa2WwgP8tUAqHelE6C4BlYczdretxaBSA4mR0eINC11cYpInTHUM6zNjnTDLh3BE1rMG/JSXX5sCNkboRiC8k+6blhnBQvfHsyc1A99SYnREqqfnuO4nyKQLj07h5CHFAPef65/NVGa+yT6X7qyB6Dmhs0rCLJ5TToCedhWL9HbAf/bnal8jsI9Mr70tDhm2SMuvKWcb7Dw+oBvnYp6j1M2/g/Vk/rM06RECSVsCK6Vcstz1MssGYb+REPtGedkhK+PvnD5NLMiTetsBky9M5lmXP9w==
-Received: from AM7P189MB1009.EURP189.PROD.OUTLOOK.COM (2603:10a6:20b:175::17)
- by AS4P189MB2136.EURP189.PROD.OUTLOOK.COM (2603:10a6:20b:51b::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.18; Sat, 22 Feb
- 2025 14:31:55 +0000
-Received: from AM7P189MB1009.EURP189.PROD.OUTLOOK.COM
- ([fe80::e9f1:a878:e797:ee1a]) by AM7P189MB1009.EURP189.PROD.OUTLOOK.COM
- ([fe80::e9f1:a878:e797:ee1a%2]) with mapi id 15.20.8466.016; Sat, 22 Feb 2025
- 14:31:55 +0000
-Message-ID:
- <AM7P189MB100934B6F2EF4339243CB81AE3C62@AM7P189MB1009.EURP189.PROD.OUTLOOK.COM>
-Date: Sat, 22 Feb 2025 15:31:49 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] riscv: dts: starfive: jh7110-common: increase mmc0
- max-frequency
-To: Shengyu Qu <wiagn233@outlook.com>, Conor Dooley <conor@kernel.org>,
- Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, william.qiu@starfivetech.com
-References: <20250222-fml13v01_emmc_speed-v2-0-3ffc5b1f5663@hotmail.com>
- <20250222-fml13v01_emmc_speed-v2-1-3ffc5b1f5663@hotmail.com>
- <TYCPR01MB84379D3E0552FD990424173C98C62@TYCPR01MB8437.jpnprd01.prod.outlook.com>
- <TYCPR01MB8437AA5D22665A38D56B895698C62@TYCPR01MB8437.jpnprd01.prod.outlook.com>
-Content-Language: en-US
-From: Maud Spierings <maud_spierings@hotmail.com>
-In-Reply-To: <TYCPR01MB8437AA5D22665A38D56B895698C62@TYCPR01MB8437.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM0PR10CA0107.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:e6::24) To AM7P189MB1009.EURP189.PROD.OUTLOOK.COM
- (2603:10a6:20b:175::17)
-X-Microsoft-Original-Message-ID:
- <cddfe571-c861-459d-83cb-4efa2addbcb9@hotmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KwSFXUa/"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-3092643f4aaso26755671fa.1;
+        Sat, 22 Feb 2025 06:34:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740234851; x=1740839651; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/vrdSXW1mmp3zS/IFgwJNUwNIOlU9xB5BhTKmjF/3N0=;
+        b=KwSFXUa/2ly+KKxMQqZcRyaKYgOctfxOmdDR6CF8ym1N7C1lNA5HJNY0yKnyRjeMoP
+         193ETvAi/TXf6heVwtYoxDbLvJ8S9vkRneugwLho//feIsa7FiHZZWGzAKOLg3Zyum0h
+         HYL/tdUDhFanQttKxpVkNZdi+xPTvTDCZrml8oVEMfqb1vMpVTKP+98j8CLzvjkmsL5S
+         uFUB/QXiE558j5+ZYanAQCrnvBPQwgTVZ4Ar3bUskBaS/zc6bCnlU8pKd4rO/QXZLUMJ
+         KLgUgF3yZcVdmcK4QibS8JXzIeY4u07i/ByF1LiwHgw28B54qkNnO6kfx+nE7jgB+xb2
+         b1tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740234851; x=1740839651;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/vrdSXW1mmp3zS/IFgwJNUwNIOlU9xB5BhTKmjF/3N0=;
+        b=KA0J42a5Dpo4b09E7Im8k81RLg/hxD7/tGd4Ja54wP308hyKm/W/A0QErvSnn5uZgX
+         bPI08a7BoyeOFJSWiyzTDgf/NGVThaGkFfTaIKeaPlKePAWNtBt9mzqXUOrE9WX8aFBu
+         5t5qzXtjFBYEGU7hPld+1qF1cfLvIfCL5C40VSP7JeDu/nQxf9pm9UlPlB9j6IdTx4sA
+         cWDRgkkpFe2wfjMLsY2THPbiAcWIU204TCE8SnlfKvaaODDJk+f2zNNyE2qJt08p5qpA
+         h1T0s4t2TsQby0UeNq5O+F8jGE9F5HAEU7eDzcXTx+7JNsvUcfujumN0tbirdXkUEPRy
+         P5Yw==
+X-Forwarded-Encrypted: i=1; AJvYcCUSZd2tBhbbc7WTPuqVlxn+4Z2dT4/gI0eWZQPdT+9lCVYc7iaGziaWB0lm8ZIGSRoKXSPVqmPdsjB8@vger.kernel.org, AJvYcCV21lT1MxgOFw4V2qrA2YiPx4qoqGHVofs1+NIjTieIfLLTPVRQGLSETamRb0VIyOyFLADzAsxQ2g6YwuOxf8nDj80=@vger.kernel.org, AJvYcCVKQkjRn3E/PpagXQMAzl1DbLcgYQK8cqk2z+Pe+Oha+knqOetFWPS5qcd0JGyhZZHvpHJAM6UJCEMc@vger.kernel.org, AJvYcCWlvkUqSODt8iX+6GKLsseN/2VSQ6VSufGU3KUjWwOtw1XMXn27d2i1p/UcBBq2ZkopvNUI85SJfGB2vd5d@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIInlYvceH4FfjxHYiljHo8mtSLFcBD9DURMvfspuveI1fEpJP
+	6x50kLSuwQXMOUPA8sUTHClI5JGXTIvjYWsEuapUYQLFVJqC+5/3
+X-Gm-Gg: ASbGncvmkLPWsrEcXd5JuB2BDG1R3sF57BydEuodZtbzqAGyaPX8zwu67OhoimN7x8X
+	w0aHLMIuyapJKm1JvyfOKSBRNYThQwixXKmypM0viijV11WYWq8PCrnld0GH9Mf2O8SsAzZc/wc
+	3GBZxTEJRnprZmGN7SLtNlwX7xavVlAEnz7+qfZ6eZLIIYFYLdZmPQ4ikBX/ofgO9j9XHRNJ6KL
+	D1+jbeLcnm7Mu/oeX4hIDJfcarlmMm9eJ/VAWHjW10vK1FjAWC0ZL9/Ys3ftwFz1Tdp8XcIJKbJ
+	q+ixFxtXI8RTtF200eZNEy2gilv8IVDc0KWAS6uOuWrdAd8GTo49QWUP+SgZM33HxaVx88Ztz8B
+	7QvZwih4=
+X-Google-Smtp-Source: AGHT+IF11dH2rQC2NJCETGFCFh/ZYMG0LizvaxBdfngaTtH1JMigzvLXrgg3UsQOEuocptmLKqGKmQ==
+X-Received: by 2002:a2e:994c:0:b0:308:f53a:ed31 with SMTP id 38308e7fff4ca-30a5985a1b0mr25889691fa.3.1740234850519;
+        Sat, 22 Feb 2025 06:34:10 -0800 (PST)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-309231bb973sm27149761fa.82.2025.02.22.06.34.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 22 Feb 2025 06:34:08 -0800 (PST)
+Message-ID: <ecfa1b0b-8224-4ae9-ba72-141dfbc12431@gmail.com>
+Date: Sat, 22 Feb 2025 16:34:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM7P189MB1009:EE_|AS4P189MB2136:EE_
-X-MS-Office365-Filtering-Correlation-Id: f63f037d-6fb9-4734-39a4-08dd534da7ed
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|8060799006|19110799003|15080799006|5072599009|461199028|6090799003|440099028|3412199025|10035399004;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OHNEVk4yNTVKOTczaEhUaVprMUFRekNhM2xWeHdvVkR0bzZGcHJFdlNrLzJr?=
- =?utf-8?B?bHAweFVINTFSTE1CV2FNQnZwSmdRblI2OHN2dEY0NmZOUHVtbm9iUHBEZ2Fx?=
- =?utf-8?B?OVpmeXQyMTY1VVNZUUpEemE3dFN0aDBDcUVTUVBJc1Y2aE4yUW9FZ0hIWG5C?=
- =?utf-8?B?em00bHg0SCtOMkwrOWFyWXd2L056Wlg1UXBaWDJyRXVSTmNzbzlTbW9SQlB3?=
- =?utf-8?B?Q2ZEMDVTTVNCenpEWTZJOU1oQTdTaFRWeFA4U3hkWGJmTmVtRGpHcnhKSXZy?=
- =?utf-8?B?cllOODFvTjVpS1F4NU02REMya2tiamlxaGtVRlpJV0dpc083Q1JMUE1sU2Zv?=
- =?utf-8?B?NU1VbnNBSzk4c2Z6dHBsdEdrRXVlb0s5Wk5iTi85VzhXL3BvYm1DSERMYzU1?=
- =?utf-8?B?eUhRS1QxRE1tUjRKQUloYmpnZXBiUzVnQU1mNHQ3c0ovMkpkeUFaVEMyMDZS?=
- =?utf-8?B?WmNRZGkvV0RTSTcycnBRdjZiRS80T3hFamFDMU05ZXZjUVFlWFFJeWtZZlVW?=
- =?utf-8?B?UjU0TEpJenE3ZE8vdGxiajI1UUZXTndOY0E3UW13TGMvUmd5ZVdaeDFyQWlk?=
- =?utf-8?B?RURjam5aT3RwNTArMEFJT3d5L1FOWHFhMUxUcXgwajhxOTFjZGk0UVNJOWdi?=
- =?utf-8?B?WlI3c054cnhtckNYWVAvN2svYm8zeWlRN3JrcUtkUjd3NFZkNkNyZlQ0MW9Q?=
- =?utf-8?B?eHJQOHJsR2FZUHp0aHlWVHpITzBIZkVzOHN6WEE1YUZrNEdNbGRmVDFMYWov?=
- =?utf-8?B?bFVRQWhLZ0pHNE9RR0s0aUNPbWtpbTJZZ1RPTmo0VGM2eWIzSjU0QldrUEhP?=
- =?utf-8?B?QStFRTF5N3dZMG1iTkdVOWtwc0xVbFlPZ3lLSWpRWDRVeGs3dFQxTFBQVzhs?=
- =?utf-8?B?UDZocG1zaFFFbXJnN09BbTJQODVFaHYzYldhWlg0Z1NNR1lwUjFTdWp0SkRF?=
- =?utf-8?B?eWJ6MjQ3bXQ1ZEUvRjdLM1VtTGx5UUE4Y2xtLzlDSWY5SXVjbU1LMEtsVHRL?=
- =?utf-8?B?VFIrWkR1Q3hSQjE3eENuU290MkJjbDFiSTYyNlRSYXQ2bmlPSHVTeE5sWEVZ?=
- =?utf-8?B?TS9vWGdBaElKQ2NxWTFvM0RLQThKWG5YQmdYK28rdmkrV3dVRG5kWGtmekZD?=
- =?utf-8?B?bU5XWmZySE5sY21RWGRQTDAzZFoxZlRLZTlNVlBMNERvdjBpc25JMEg0dkt5?=
- =?utf-8?B?N1JGMWJoSVVBTGRlWG9PM3hMOHlDY2s5RnBmenlRR29VS2J3ZmJrY0hZUXpQ?=
- =?utf-8?B?UldoeDAvMEw2S0pRWU9JRzJvZmp2MXg0UUJ0dXBJUEFwdFVIZ1dJRkE1TTg4?=
- =?utf-8?B?MW9TRGkrS3NqMm5YUk5sM0JHQmRicTI1aE54aEtVR3J2VC9iRFZUN1QreUpt?=
- =?utf-8?B?cytOdURhOFBIVnZlUC9JcEJUS29Mb1ErWUVwYVZ6blNSemtqOTMrQXNDZzV0?=
- =?utf-8?B?NlcvalYrRU9tM1VPWFo5WHg4ZERvZ0RkQjlwNGNPUWhwZS83ZjFKMTBTWkVr?=
- =?utf-8?Q?xfgXVc+UBdRC+bGPsGSCkZX+QYH?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Wkx6aDdWbkJkYWJEMGlHZkJ1NW9FUUtPb21PRXhTMzMvUG5COGpRM0x1eXlY?=
- =?utf-8?B?ZGMyOVpBRHNleUk1cmh0NUM0RnJmTU03cFhRYXFQOUs4azRVTUIzd01zSHU1?=
- =?utf-8?B?aXVIREI5WkZKa1lZTEdWdmVPOUhrTi9rbHhNZlJtbHR5NmFIbGtveWtrYk1t?=
- =?utf-8?B?cC9QY3ZuZnM5VStKUERROW1GaDR3SGN6UDBXMk1BUXBPRXJYYnFVa1U0ZDBG?=
- =?utf-8?B?RlJtUVRpSHpzRGR1Z09YNEVVdzZwTU01TkdGZXo5NllaRUpzU3JqZzJnUXVj?=
- =?utf-8?B?MHFadDJiM2dWcGN1Umg3akI0bGcwY0psTm4rdjlxdlVSaGhrV1BWSXRGMWg1?=
- =?utf-8?B?MlBhNy9lMXMvSllsa3BOV1dSUlN3bkhQMUNtQ2pJS09sSlBBNU1BRmE1cG5U?=
- =?utf-8?B?YXFBU1drUVo2bHBZanpoNXIxbFhtRWNwSjQvTmxaOU9ha3hGcnlqOWJZak9s?=
- =?utf-8?B?V2s2VEZqc3dCeDYxQjNYbmtRZmZkb0Y1MlcwMmxlWUROTVJ0VlB0ODNpdmRJ?=
- =?utf-8?B?V2NSUTJCdnlrSklFVW5pVUlIaHh1NVFmNmtORWlITHdOSlFpSSt2eEFHM3FT?=
- =?utf-8?B?am0vSVIrWmRkOGl0TS9sUExzLzdtRlN4Y3NCMW9DNVREZGNiRi9Qa2l1QmFo?=
- =?utf-8?B?MU1xOEs0U0JyM3dya0QrVHpYbGU3WVJZUUE4QWhKbGFiN3pqc3NRMm1Gdyta?=
- =?utf-8?B?WnNYUWRUVU0rVnhUeW5kUzhhSjY0dmxBRjhlZ29OelIrTDh1ZEgyRFlVQXNV?=
- =?utf-8?B?dGdXVm01bndRWGFCZkE4SUNiL3EydFB3Q2VjUnlGdkFoWDlzN1l5RzN2VWZX?=
- =?utf-8?B?czEvODl3dWxGQmFaQlNnMzZ1STZmUVhVTHlxUCt4ZVFLYkZwQ0dOU2JGMEV1?=
- =?utf-8?B?SlJmaGxXekNmaW9MMzFZdEIxQkQ4YzE1MS8yQVlQNFhFcTRTVHc2SGRjMUk1?=
- =?utf-8?B?UnVLa09xMXRIVitJdWh3QUR2Tlh1ZG14SUNwWGRXTVVvc3pSSnVSV0JMYVVI?=
- =?utf-8?B?dFFtN1hpK0NJYWVsMUlWMWsxaVkybmpaRmxUQ0hqN01WSzBEVlQvNjRyUFMw?=
- =?utf-8?B?VGw4WVgzQ3NGbHFpUm9HVStIQjlpYTRSSkJnQmdxUHlIMThRZ1FVV3NtOHpi?=
- =?utf-8?B?RFdaSm5vczR3TEc1dmlBNEN5UkVtS3RvTkhkalZhcXdJSVVRYUhhcS9qR3Fn?=
- =?utf-8?B?Y2ZJOGE3SVRpVDVYTkE4UU50eklCR3BrR01NWFo1RUN6MmcwdVZWQjA5d3li?=
- =?utf-8?B?R3lWUlZtR01zMTFpRDQxR0RWaFNuVk56cC91WXR1VytFVk9CRzg4TnRRVVF0?=
- =?utf-8?B?THgzUVgxSDJ2V0c2YmhBMlZHRjlHdkJ6NjJUY2N4U2duL3VmczdQL212anVY?=
- =?utf-8?B?QlVuU3VkTEhxeEcwejJ3T2s0YStmNGJ4MElVUEZXQXd4azdPK0tpY0grZEJH?=
- =?utf-8?B?NzJiblRPTlNuZGtSSzRZd0pIeFhjR2J5SEg2TWtpOG1COXF4Wk1OTFlzWlA0?=
- =?utf-8?B?NVBrL090Z3J2bkQyT1JCWDdYSzV6ZGpiRnlqSUwwSHdEUktZLzBDTTZWalRs?=
- =?utf-8?B?RGRWRityQVlpV0dPeUUwdUJraTVXNGZQRllGeU1PTUVlZ2wrZm93VklwZnlm?=
- =?utf-8?B?ZXY1VWw3NHVqVWl2ZGNBc2x4VXJiTGllYXBKU25SOTFLbGY1VjQyaXVzNjBS?=
- =?utf-8?B?Ri9vMjdKbWZNbmxub3hSdnk4aWwrdDh6a3F1ZlVTSUhQNVJMTG9LT3BsZkpW?=
- =?utf-8?Q?4OTOy33JvLxiNw/+3aLHH6TwEjAkB+7PZ5ItkpG?=
-X-OriginatorOrg: sct-15-20-7719-19-msonline-outlook-3b3e0.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: f63f037d-6fb9-4734-39a4-08dd534da7ed
-X-MS-Exchange-CrossTenant-AuthSource: AM7P189MB1009.EURP189.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2025 14:31:55.3943
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4P189MB2136
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/9] iio: adc: add helpers for parsing ADC nodes
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>,
+ Hugo Villeneuve <hvilleneuve@dimonoff.com>, Nuno Sa <nuno.sa@analog.com>,
+ David Lechner <dlechner@baylibre.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev
+References: <cover.1739967040.git.mazziesaccount@gmail.com>
+ <6c5b678526e227488592d004c315a967b9809701.1739967040.git.mazziesaccount@gmail.com>
+ <Z7ZB7RQhyI5Dohrq@smile.fi.intel.com>
+ <b1c1ed68-2f4d-447c-9957-5a1bbc63ef6e@gmail.com>
+ <Z7ci7tUlRQqZEZSN@smile.fi.intel.com>
+ <ec76334b-bb13-4076-811d-9174170dd677@gmail.com>
+ <Z7c2cBQpjoc9-Vyu@smile.fi.intel.com>
+ <9018e23c-da28-41b0-b774-1598b946a2a1@gmail.com>
+ <Z7dCnRzuQTaJXzmb@smile.fi.intel.com>
+ <cb27d8b1-c978-4443-9ad2-96e930701976@gmail.com>
+ <Z7isoU9hKXlgsu33@smile.fi.intel.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <Z7isoU9hKXlgsu33@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 21/02/2025 18:41, Andy Shevchenko wrote:
+> 
+> Sure, but it's not only about these helpers, it's about the style in general.
+> Spreading unneeded characters in the code seems to me as an attempt to put
+> _your_ rules over the subsytem's ones. Whatever, let's Jonathan to judge, we
+> will never agree on a keep growing list of things anyway...
+> 
 
-On 2/22/25 3:19 PM, Shengyu Qu wrote:
-> Sry I forgot to cc actually.
->
-> 在 2025/2/22 22:17, Shengyu Qu 写道:
->> Hi,
->>
->> Let's continue our discussion here.
->>
->> Will EMMC speed increase if we only apply patch 1?
-no the speed is further limited by the assigned-clock-rates.
->>
->> Also, about your clock-rates modification in patch 2, I CCed William Qiu
->> so that we might get some more information about this.
-thanks!
->>
->> Besides I've done a speed test with unlimitied clock-rates and an early
->> state of SOC clock driver on visionfive 2 when I was working on AXP15060
->> driver before: http://forum.rvspace.org/t/question-about-sd-card- 
->> speed/1741/21
-I believe that looks close to the speeds I was getting when testing, 
-been while
->>
->> Best regards,
->> Shengyu
->>
->> 在 2025/2/22 21:34, Maud Spierings via B4 Relay 写道:
->>> From: Maud Spierings <maud_spierings@hotmail.com>
->>>
->>> This sdio interface is capable of more than 100 MHz as already 
->>> indicated
->>> by the cap_hs200-1_8v attribute. Increase the max-frequency to 200 MHz
->>> so users of this dtsi can increase their SDIO bus speed.
->>>
->>> Signed-off-by: Maud Spierings <maud_spierings@hotmail.com>
->>> ---
->>>   arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/ 
->>> riscv/boot/dts/starfive/jh7110-common.dtsi
->>> index 
->>> dd2eefc295e5c8b568a02104ec2189e66b378904..19ca8dc24617c2ad565a4a9b2d9af9bd9491f22e 
->>> 100644
->>> --- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->>> +++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->>> @@ -258,7 +258,7 @@ &i2c6 {
->>>   };
->>>   &mmc0 {
->>> -    max-frequency = <100000000>;
->>> +    max-frequency = <200000000>;
->>>       assigned-clocks = <&syscrg JH7110_SYSCLK_SDIO0_SDCARD>;
->>>       assigned-clock-rates = <50000000>;
->>>       bus-width = <8>;
->>>
->>
->
+Hey, let's look at the bright side - there has been also a number of 
+things we have agreed :) Besides, even if I don't agree with every thing 
+you bring-up, I do still appreciate your reviews! I do think many of 
+your comments have indeed improved the code. We may never agree on every 
+point, but I am positive we can _understand_ each others stance. I do 
+appreciate hearing your view on things.
+
+Yours,
+	-- Matti.
