@@ -1,189 +1,86 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28C8715689A;
-	Sat, 22 Feb 2025 01:08:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A138D158868;
+	Sat, 22 Feb 2025 01:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740186529; cv=none; b=lmC4JdPxxn0XQSZwQH5dzLL3iotgsIswJRxMr1DIcZ0+x+EB7TNDIJPS1VOpDVdNGAGy+1J7HX9mtlbke3gYhzbpVa9s3MrBwEQfoV+uIRjrboJBNSd18T3d5KKy29d3/pEZXpNjIwTJmz7+lg2WYjML6mG6DskZTWJrN2h2DJo=
+	t=1740186780; cv=none; b=XsFeaHHahmCgBJ/ztBkI1kD2MnFcmOR8bS9H5TETesgDxd9hY167BnQebZ8I1CZ0D/weQTZjm4sKo1BdbciXuNf+D1woYkxgtE8CL6bjtXA7zz+HDjTVUpCBj8uVmtM6ueBjep0yxlbl9OPBuw3CKGpzw3BGltSTxJKJGnAf18E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740186529; c=relaxed/simple;
-	bh=eiHBFZB1AnxJ5TW8PWamnA9CJNOTzYW1KKiijjiBiyM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JJT6UfYd0EU8qc7LBEVGJh+8o3JDgCIXUFlBE6Ri3ruVhnVS1Jbnb5sFVZSk2oK0DddQphTPi9j9bc6pcdayo2Av2rgzoCwnGYrqXNpOh2SGSX4iZ3bXqMnn5TSRxGGSzLYEUuSc+L1vow0x3gm0Z3timRbC1Zn0mW08TrHxUYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KjXXWjHH; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KjXXWjHH"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30a2cdb2b98so26926241fa.0;
-        Fri, 21 Feb 2025 17:08:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740186526; x=1740791326; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=twRF1Yb6ks2c0NMt8l+unYYtXyEB7vp++pfmVfAVAp8=;
-        b=KjXXWjHHlfmBGCpHtnWgKIxRSvC/wHBCmv9c+/y7RIWzTiBvTzFcameUVDgkrbJfts
-         d+fioEtQpliz6SZLTjG8d26LBOiAuzctMCmxNdq3fdOCMOB+Dril2/MxYMqMcgXQBR7y
-         vGgHXmHNHv0pBuMbckjh/araaVA7qT80QjImqT8sqKSUkX3Ee9fbNO49CEaQIBg7sM3n
-         bCrEfL4whmaSgo+B0swmCa8ENXc3c+F3cDzAcHYIsCx1q4WgBwRojjC13Ock+dcQlOSH
-         zk+xOKv+vNXpgkGQf0DUsWVIVfAd+W1BoLwmoVel3ZrqxzDAwJJ1bngc1MLp/iH87rBh
-         Cy3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740186526; x=1740791326;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=twRF1Yb6ks2c0NMt8l+unYYtXyEB7vp++pfmVfAVAp8=;
-        b=wPRpIdU5PC2oK9dCZ53ant/KT8HLG5VSHxZNHB651jXeE2lNwbcLs5GGdEubfNxz6d
-         01/Oq0o5nmk79Rr+CjkDSc9q2EbFPx08Z70mGDyfnCnFIy3urb5kyW5AcyZYP6jEpvwi
-         kJsACALERi2mSz5mjsW/udxbWMt7D6BGkAvCBeylYozVGp/m65qaVAa0RP6drXHlUiKY
-         XTBeTyU9CLT0ZKmc2sxWjFfEpCganxc8FmsofzlRWLRj9roPSwxEivh37C6pqHfoYwDR
-         4bqg3W5vW1nB7SihaEIBk9a99v34P+1GsF7dg0ypW8U8m5NcCOJKw/ClqX4NoYUtD/VI
-         bmKA==
-X-Forwarded-Encrypted: i=1; AJvYcCX6pndUUHfWJr80hCQmvYj0bIkIu35so/a8Mxwb4GELiMvQxtzFsJAVmCGdY6YIdN22kjz4DFQtCRM3lweDRCI=@vger.kernel.org, AJvYcCXLTGyby24JZLhdLmBdhzTUpod2EaSoEn6Mh+9vUP9Neu1jvexTfpwiXFS07IVS9ayOXUyoO8r9IaUAekE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjrdDMe0rLtMs0ZrbS+p8N0BD7OA1/T7pa31+PCOe59fdusLrN
-	JiWrOnyXoF7c31t2XnfZcx2pa6+6VLRMa2r4Db2uxjDht59GrfuXDU2CujfJkWwK5aR8uXxd0MX
-	PaWfo9X7jBgtp3QTCPcy3SGNpsIM=
-X-Gm-Gg: ASbGnctYCghuXhE3o4VRUiKCZLW4TAbyFulSkVpBcNO9i0sNGgAUBEGShhxjVhzLvNn
-	zWbuCRp/tmJ6szNoVaXkcnWWhbLwte6cGeljh1ccyCvGl6e/eVINUtUpBsAvaA9i7dIPzTvQoAf
-	Tz06qvCZBGyPN/6rzfyyznJwQgysUwK7ze1QYGF+M/
-X-Google-Smtp-Source: AGHT+IHO1sZPKCJvottV4Oy0wP642BVTLV/j/atejjvfTSUHbXM2AUyqEmPuO8umXoX9wKXNQHt8aLWsAnIpzRZi/eY=
-X-Received: by 2002:a2e:9b95:0:b0:308:fa1d:d833 with SMTP id
- 38308e7fff4ca-30a5b21dc43mr18394241fa.37.1740186525867; Fri, 21 Feb 2025
- 17:08:45 -0800 (PST)
+	s=arc-20240116; t=1740186780; c=relaxed/simple;
+	bh=O6DZi57Va/gDUy3dLLvOK2ckmPoBCLLeuimpP9n8whU=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=D8cQ4h+/ei59gNDYJBCQseBtB54on3dSV3B+yq7JlnaiSadQolClS6HWa9qjgool+p4u+VMnTVzBjR8aFmp6k/+z+CC1fcBk3TfAfTMWf3oNdOhyPkosnppeXJKb3OQVz9F5VpHr68iHRahK8cyPDqQWP8/2s1YCrkPjy5e2U/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Z089r0NLgz4f3kvh;
+	Sat, 22 Feb 2025 09:12:32 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 273A71A0F08;
+	Sat, 22 Feb 2025 09:12:55 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgB321+VJLlnFggiEg--.19789S3;
+	Sat, 22 Feb 2025 09:12:54 +0800 (CST)
+Subject: Re: [PATCH 05/12] badblocks: return error if any badblock set fails
+To: Coly Li <i@coly.li>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: Zheng Qixing <zhengqixing@huaweicloud.com>, axboe@kernel.dk,
+ song@kernel.org, colyli@kernel.org, dan.j.williams@intel.com,
+ vishal.l.verma@intel.com, dave.jiang@intel.com, ira.weiny@intel.com,
+ dlemoal@kernel.org, yanjun.zhu@linux.dev, kch@nvidia.com,
+ Hannes Reinecke <hare@suse.de>, zhengqixing@huawei.com,
+ john.g.garry@oracle.com, geliang@kernel.org, xni@redhat.com, colyli@suse.de,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-raid@vger.kernel.org, nvdimm@lists.linux.dev, yi.zhang@huawei.com,
+ yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+References: <20250221081109.734170-1-zhengqixing@huaweicloud.com>
+ <20250221081109.734170-6-zhengqixing@huaweicloud.com>
+ <4qo5qliidycbjmauq22tqgv6nbw2dus2xlhg2qvfss7nawdr27@arztxmrwdhzb>
+ <272e37ea-886c-8a44-fd6b-96940a268906@huaweicloud.com>
+ <70D2392E-4F75-43C6-8C34-498AACC78E0C@coly.li>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <a3c74c7c-44b6-c4c0-872d-0de7e29214c0@huaweicloud.com>
+Date: Sat, 22 Feb 2025 09:12:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJ-ks9ncOyGyQsDFOBxg-7wmXkrQYiZr6H6eEFWsFstk=p1uAA@mail.gmail.com>
- <87wmdkgvr0.fsf@kernel.org> <djAeSx8DNZwss2-UqXGmhVPqYm2z4LhKWC70jPHPisd1w70qmpmOfVbHfhqJErhoFwVFM8IpbTv4MKkk_BIpQw==@protonmail.internalid>
- <CAJ-ks9mNidHZvWkFJE1jExc2oVk_bbJpiO_DRMrWu5nYhTpKgg@mail.gmail.com>
- <87ldtzhexi.fsf@kernel.org> <87cyfbe89x.fsf@kernel.org> <Z7iQcDa72XnJ5zGC@Mac.home>
- <CAJ-ks9kQccoa7znFNzWAgi6_G0TKvLUARWPZ_Dbed1C-d4Lr+Q@mail.gmail.com>
- <Z7iZevQkYVGDoeTa@Mac.home> <CAJ-ks9=f45WJKFwB4J0_a4j_Urf=yR_wukmfhRwRqtczDXfSPg@mail.gmail.com>
- <Z7kAD_8OQdVLSO4l@Mac.home>
-In-Reply-To: <Z7kAD_8OQdVLSO4l@Mac.home>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 21 Feb 2025 20:08:09 -0500
-X-Gm-Features: AWEUYZn5XFGNVQ2jVLz76ezUbnTDK6U0yAEQAOa-09EYxSSxCjDrSrw3bf3u4Go
-Message-ID: <CAJ-ks9=B34qy7HSXg1V9hY_=KpF24A0gr-u+pwk1_mYrUydN5w@mail.gmail.com>
-Subject: Re: [PATCH v8 02/14] rust: hrtimer: introduce hrtimer support
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, Guangbo Cui <2407018371@qq.com>, 
-	Dirk Behme <dirk.behme@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <70D2392E-4F75-43C6-8C34-498AACC78E0C@coly.li>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgB321+VJLlnFggiEg--.19789S3
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYK7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
+	Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
+	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72
+	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4II
+	rI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr4
+	1l4c8EcI0Ec7CjxVAaw2AFwI0_GFv_Wryl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
+	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6r
+	W5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
+	7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
+	WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU
+	FfHUDUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Fri, Feb 21, 2025 at 5:37=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
-rote:
->
-> On Fri, Feb 21, 2025 at 02:46:07PM -0500, Tamir Duberstein wrote:
-> > On Fri, Feb 21, 2025 at 10:19=E2=80=AFAM Boqun Feng <boqun.feng@gmail.c=
-om> wrote:
-> > >
-> > > On Fri, Feb 21, 2025 at 09:46:08AM -0500, Tamir Duberstein wrote:
-> > > > On Fri, Feb 21, 2025 at 9:40=E2=80=AFAM Boqun Feng <boqun.feng@gmai=
-l.com> wrote:
-> > > > >
-> > > > > Hmm... if you mean:
-> > > > >
-> > > > > trait HasHrTimer {
-> > > > >     unsafe fn start(&self, expires: Ktime) {
-> > > > >         ...
-> > > > >     }
-> > > > > }
-> > > > >
-> > > > > Then it'll be problematic because the pointer derived from `&self=
-`
-> > > > > doesn't have write provenance, therefore in a timer callback, the
-> > > > > pointer cannot be used for write, which means for example you can=
-not
-> > > > > convert the pointer back into a `Pin<Box<HasTimer>>`.
-> > > > >
-> > > > > To answer Tamir's question, pointers are heavily used here becaus=
-e we
-> > > > > need to preserve the provenance.
-> > > >
-> > > > Wouldn't the natural implication be that &mut self is needed? Maybe
-> > >
-> > > For an `Arc<HasTimer>`, you cannot get `&mut self`.
-> > >
-> > > > you can help me understand why pointers can express a contract that
-> > > > references can't?
-> > >
-> > > I assume you already know what a pointer provenance is?
-> > >
-> > >         http://doc.rust-lang.org/std/ptr/index.html#provenance
-> > >
-> > > Passing a pointer (including offset operation on it) preserves the
-> > > provenance (determined as derive time), however, deriving a pointer f=
-rom
-> > > a reference gives the pointer a provenance based on the reference typ=
-e.
-> > > For example, let's say we have an `Arc<i32>` and a clone:
-> > >
-> > >         let arc =3D Arc::new(42);
-> > >         let clone =3D arc.clone();
-> > >
-> > > you can obviously do a into_raw() + from_raw() pair:
-> > >
-> > >         let ptr =3D Arc::into_raw(arc);
-> > >         let arc =3D unsafe { Arc::from_raw(arc) };
-> > >
-> > > however, if you create a reference based on `Arc::into_raw()`, and th=
-en
-> > > derive a pointer from that, you change the provenance, therefore the
-> > > below code would generate UB:
-> > >
-> > >         // cannot mutably borrow because of clone.
-> > >         let ptr =3D unsafe { &*Arc::into_raw(arc) } as *const i32;
-> > >
-> > >         let arc =3D unsafe { Arc::from_raw(ptr) };
-> > >
-> > >
-> > > (playground code snippet for this example)
-> > >
-> > >         https://play.rust-lang.org/?version=3Dstable&mode=3Ddebug&edi=
-tion=3D2021&gist=3D15e051db46c3886b29ed02e579562278
-> > >
-> > > As you already know, the whole thing about pointers/references here i=
-s
-> > > passing the value to the callback and the callback can "reconstruct" =
-the
-> > > data, in such a case, reborrowing in the middle of the chain into a
-> > > reference is not necessary, and as the above shows, it can be
-> > > problematic.
-> > >
-> > > Hope this could be helpful.
-> > >
-> > > Regards,
-> > > Boqun
-> >
-> > Thanks for the explanation. I think where I'm still confused is that
-> > provenance is to pointers as the type system is to references. In
-> > other words, it's not clear to me how using pointers solves the
-> > problem of wanting to write through an Arc. Is the idea that the
-> > pointer inside the Arc has write provenance, and that by doing pointer
-> > offsets instead of going through references we get to break rules
-> > about mutability?
->
-> Sort of, but we don't actually break any rule here, because pointer are
-> supposed to be unsafe to dereference ;-)
->
-> Regards,
-> Boqun
+Hi,
 
-Doesn't this mean that any holder of Arc<HasHrTimer> can obtain a
-pointer to the timer, and interact with it concurrently with other
-holders? Isn't this a problem?
+在 2025/02/21 18:12, Coly Li 写道:
+> So we don’t need to add a negative return value for partial success/failure?
+> 
+> Coly Li.
+
+Yes, I think so. No one really use this value, and patch 10 clean this
+up by changing return type to bool.
+
+Thanks,
+Kuai
+
