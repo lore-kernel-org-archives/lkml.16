@@ -1,107 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443812066C6;
-	Sat, 22 Feb 2025 09:25:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC671FE46B
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 09:26:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740216333; cv=none; b=QjVYOgAGYW24eGu8+R+gfhCN2Cq7+yMilrMBd3dBc1v3czolDX710a461rBWj4toO5AjWiGx+onZ1hNaEkPEepyHgV1plSiwPelKb7R6MEVvM/6YUsNXln1FLlsmUKchOWDuIclCSnibtpmjNJzKwvpOBK6c6+lFRyNYR8f7bpU=
+	t=1740216384; cv=none; b=iIwRwbkGTkLCND88fAbhOa92YiLRMskybOqtCJd99aaPMOikaoq1LwPpB90r3LkV794MOV5J3MswkYHT3aZmZm3wMTS9uxtz+HE3mgfkdHxQc5Z7EeJKM47dZonxGo+c/ZOuWQbiPKhHKlsBCUDkVcxORgEDNto/yLurBLILnlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740216333; c=relaxed/simple;
-	bh=56hDo32Azb2ahbyNFuHrL/IGY3jiwnJ7XKs0zeaPLXA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ItHqEPXSFfJgsWXWWEw4tO55FT92r5aqVNMC7/qRKGQBgBjuNRpx9RRtX2Bm5YlGhldYupWGTCIRndbgPIhOPN2xtdJ8e1FNeeU3IVKoIwBX8PfS5EOB7n+Ixbb/uDc0S1LbhSRSrWSfiuku3ML0ERePDz/Kn9XAkq3CmyaUtxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MG81fplp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740216384; c=relaxed/simple;
+	bh=8BKLAvfUEeiNwQLGr02luoIsZmn9btFVCQQ73Q+s9hU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OcNbhYm0JH2JaOq8nu7ChardL3/bsLrwHhDhrDzbOX4/WNgNcWMFGJL6x6U10FuyL4lALgxA45U7u5zTvQ1SgiElc2ELmBFUTpd/v/0skky9+Q/cI48Wy1KgnTstl0qWYxSgjwfAuFsVHGAJMQPjgUUmOQ8xS8vKKQl0SAiRcpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=b5mqtsqW; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MG81fplp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1056C4CED1;
-	Sat, 22 Feb 2025 09:25:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740216332;
-	bh=56hDo32Azb2ahbyNFuHrL/IGY3jiwnJ7XKs0zeaPLXA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=MG81fplpFrsuDjg3WTz0jxHwueyoxNfjF4uKD6V0q2v05PQLkIXqjRgb/YMy+oQlw
-	 iATZasoPsLb2y+5xa6e5cugeRiUzD2D5oyUtRJCxaD5Fjw51+nhhyzvhaKQpJK4eBs
-	 5EKtZo25IiwPPER++nRnpdBWSIqxueH4w5OhbZkSO4hJweK6acRZ7jVRY/4l1bZtOK
-	 eFHtRhgiBYl75vX9kbMiMod8EuWCt2rMie51f6Edp0+XvbvMFGshi9x/QUOnPSYTBP
-	 ByjbOI1RRLBo4VFw5uaXFVwkf6b5qc5ie4rC2hyBgy7MeEnjAfNd++zaTJHux9I7T3
-	 VPnMp+2oYN5Pw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Daniel Almeida" <daniel.almeida@collabora.com>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno
- Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
-  "Trevor Gross" <tmgross@umich.edu>,  "Masahiro Yamada"
- <masahiroy@kernel.org>,  "Nathan Chancellor" <nathan@kernel.org>,
-  "Nicolas Schier" <nicolas@fjasle.eu>,  "Luis Chamberlain"
- <mcgrof@kernel.org>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  "Adam Bratschi-Kaye"
- <ark.email@gmail.com>,  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu"
- <petr.pavlu@suse.com>,  "Sami Tolvanen" <samitolvanen@google.com>,
-  "Daniel Gomez" <da.gomez@samsung.com>,  "Simona Vetter"
- <simona.vetter@ffwll.ch>,  "Greg KH" <gregkh@linuxfoundation.org>,
-  <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v7 0/6] rust: extend `module!` macro with integer
- parameter support
-In-Reply-To: <F882BB02-A795-4F79-A2AF-CBA9608470A5@collabora.com> (Daniel
-	Almeida's message of "Fri, 21 Feb 2025 12:45:48 -0300")
-References: <20250218-module-params-v3-v7-0-5e1afabcac1b@kernel.org>
-	<UymzM42tyVZD_DUcMoDIfNqTrk-B7QbvdKTEvMOjrOtwnqYN7v1fK2dLnKnGAyND_6LOE4bhRxwzd1GH9SqrLQ==@protonmail.internalid>
-	<F882BB02-A795-4F79-A2AF-CBA9608470A5@collabora.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Sat, 22 Feb 2025 09:49:13 +0100
-Message-ID: <874j0me54m.fsf@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="b5mqtsqW"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740216378;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=EYBm0Ekxvt3l/iDJUii0Y8cGNo2O2CjlIZcmsVgVA+4=;
+	b=b5mqtsqWAY54Q+Hi0GLOq7C3uco1qFRUdbpmE1rFuEA+rV1n83LdifoSM2VmtfmnFr+/H2
+	QMWuZp8FJAf0erWK0MTCMQO/E6JDD5wsmr98I0b6dhQkqb7KmDPKRntCuti3XE8Ult2riN
+	9QuGH8OJ/4KIdOnt8cwkSZzlsvZBiMw=
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: bpf@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	ricardo@marliere.net,
+	jiayuan.chen@linux.dev,
+	viro@zeniv.linux.org.uk,
+	dmantipov@yandex.ru,
+	aleksander.lobakin@intel.com,
+	linux-ppp@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	mrpre@163.com,
+	Paul Mackerras <paulus@samba.org>
+Subject: [PATCH net-next v3 0/1] ppp: Fix KMSAN uninit-value warning with bpf
+Date: Sat, 22 Feb 2025 17:25:55 +0800
+Message-ID: <20250222092556.274267-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-"Daniel Almeida" <daniel.almeida@collabora.com> writes:
+Syzbot caught an "KMSAN: uninit-value" warning [1], which is caused by the
+ppp driver not initializing a 2-byte header when using socket filters.
 
-> Hi Andreas,
->
->> On 18 Feb 2025, at 10:00, Andreas Hindborg <a.hindborg@kernel.org> wrote:
->>
->> This series extends the `module!` macro with support module parameters. =
-It
->> also adds some string to integer parsing functions and updates `BStr` wi=
-th
->> a method to strip a string prefix.
->>
->> This series stated out as code by Adam Bratschi-Kaye lifted from the ori=
-ginal
->> `rust` branch [1].
->>
->> After a bit of discussion on v3 about whether or not module parameters
->> is a good idea, it seems that module parameters in Rust has a place
->> in the kernel for now. This series is a dependency for `rnull`, the Rust
->> null block driver [2].
->>
->
-> ```
-> $ sudo modprobe rust_minimal test_parameter=3D2
-> [  251.384125] rust_minimal: Rust minimal sample (init)
-> [  251.384600] rust_minimal: Am I built-in? false
-> [  251.385010] rust_minimal: My parameter: 2
-> ```
->
-> Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
->
-> IMHO, this is slightly confusing, since the parameter is named
-> =E2=80=9Ctest_parameter=E2=80=9D, but you=E2=80=99re printing =E2=80=9CMy=
- parameter=E2=80=9D.
+Here's a detailed explanation:
 
-You are right, let's change that to "test_parameter: ".
+The following code can generate a PPP filter BPF program:
+'''
+struct bpf_program fp;
+pcap_t *handle;
+handle = pcap_open_dead(DLT_PPP_PPPD, 65535);
+pcap_compile(handle, &fp, "ip and outbound", 0, 0);
+bpf_dump(&fp, 1);
+'''
+Its output is:
+'''
+(000) ldh [2]
+(001) jeq #0x21 jt 2 jf 5
+(002) ldb [0]
+(003) jeq #0x1 jt 4 jf 5
+(004) ret #65535
+(005) ret #0
+'''
+
+You can find similar code at the following link:
+https://github.com/ppp-project/ppp/blob/master/pppd/options.c#L1680
+The maintainer of this code repository is also the original maintainer
+of the ppp driver.
 
 
-Best regards,
-Andreas Hindborg
+3. Current problem
+The problem is that the skb->data generated by ppp_write() starts from the
+'Protocol' field.
 
+But the BPF program skips 2 bytes of data and then reads the 'Protocol'
+field to determine if it's an IP packet just like the comment in
+'drivers/net/ppp/ppp_generic.c':
+/* the filter instructions are constructed assuming
+   a four-byte PPP header on each packet */
 
+In the current PPP driver implementation, to correctly use the BPF filter
+program, a 2-byte header is added, after running the socket filter, it's
+restored:
+'''
+1768 *(u8 *)skb_push(skb, 2) = 1;
+1770 bpf_prog_run()
+1782 skb_pull(skb, 2);
+'''
+
+The issue is that only the first byte indicating direction is initialized,
+while the second byte is not initialized. For normal BPF programs
+generated by libpcap, uninitialized data won't be used, so it's not a
+problem.
+
+However, for carefully crafted BPF programs, such as those generated by
+syzkaller [2], which start reading from offset 0, the uninitialized data
+will be used and caught by KMSAN.
+
+4. Fix
+The fix is simple: initialize the entire 2-byte header.
+
+Cc: Paul Mackerras <paulus@samba.org>
+
+[1] https://syzkaller.appspot.com/bug?extid=853242d9c9917165d791
+[2] https://syzkaller.appspot.com/text?tag=ReproC&x=11994913980000
+
+Jiayuan Chen (1):
+  ppp: Fix KMSAN warning by initializing 2-byte header
+
+ drivers/net/ppp/ppp_generic.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
+
+-- 
+2.47.1
 
