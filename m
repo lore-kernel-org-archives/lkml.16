@@ -1,98 +1,77 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91AD11EF0BC
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 09:30:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6BE07E765;
+	Sat, 22 Feb 2025 09:32:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740216655; cv=none; b=TUTawUu5PUOXxeGLESOYR3yHE19cx0MeJnyBrT6T/LiIHSRuXdjscTYsPJpEfHaJp4rMQuxgaWozY07Mtky0aB4CwbKOEGhBH8L8itB9+2kvW6oetHjECLujnoS4ezHGjimmPLt6PFNOojhWnKpUfjjKAC7NCOFNMGdCGSVjUMs=
+	t=1740216738; cv=none; b=ifPuhZonGNT9mIXQKmUSlkuR2CnsaUw20iYo/YVzhdN/ro7m08MuipzIFSGJ6OOsJFBoYIWVGQuda+KiLHflvlHsxfzyDK19iHZ9/aNqy7BdcYLmvX46ZXvuFNOLidbFEA1T3Z9DWstEKH44olV/rZyi5b2s6OkYm+RUSDQ6iLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740216655; c=relaxed/simple;
-	bh=YEOVvgmg7FxOvmZafWS72ZewGgi0VB1w/eqX5SfWyn8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iKCF9WK5GNwnyyCpoqKVcOmpckgJxaFCyCaKaPQz7JMeLDh9rKiKv3AIWwkTGn4GjtgIJd/A7MKnMZHwmjq8bT5ymBJbwt/u/Dpd6RlfZoqWPYZCfRcbYs/j63DPwGGxKeixQ4s2wOAijR59ehB1y/aytjxgOTYPLFSElTTLmr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=eoR+hgdD; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="eoR+hgdD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=gwvH
-	R2pWT+FEQ338AH8GO4XbPqa1gdPGQfyRRNgfKy8=; b=eoR+hgdDrmxsFOnAZasD
-	YbaD8lYfrfItqfoeQfuyVjnQRwMt8HfvkD7q7TAI2W83FKcC/GdSXIGULUw+D9X0
-	mQUxR+fZBB6Tqwyj58VEIqmDN6Fp5OU1lp3oNzAJl7a9v81ccou4ZsUqsgIgARO/
-	Om+cNnutkEXcRfh7uwQQjlcVorwuiXdCakUq6ZAJ6lpl9uGnLsagciFfsLhQilYP
-	FbF/+ei9Co4T4mCxSY1B8Ucn0oRA89p9hIbl7uD1gCKkXgj6roEB1KaDahm+awHH
-	TiaX5cRUZx5M386kg65W7e0wzGFDSUtc3Tf6DfVnhtUXs6JFmP2MGrf5jgND8k0l
-	Lg==
-Received: (qmail 1532662 invoked from network); 22 Feb 2025 10:30:41 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Feb 2025 10:30:41 +0100
-X-UD-Smtp-Session: l3s3148p1@AeG9wrcualltKPLt
-Date: Sat, 22 Feb 2025 10:30:41 +0100
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Su Hui <suhui@nfschina.com>, linux-i2c@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: core: Allocate temporary client dynamically
-Message-ID: <Z7mZQRQhis-DHRFP@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Su Hui <suhui@nfschina.com>, linux-i2c@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <f9aa39362e918b62aec0567f899b37d8d3c44710.1740064176.git.geert+renesas@glider.be>
+	s=arc-20240116; t=1740216738; c=relaxed/simple;
+	bh=CnAdsCS715AxMhPpcwR/bUqZE+IhEf1OSNjCFp0bSBs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dGgXLoS/VT8xrIXQqxPlg0ZwWTaz19SjFjzErJwZHuSUv2ySMrwiJauwFpjF/dJl761Jl3r7+C48V4GUAzNdV3Ujg9vK4knIBTFZzXYgJ5hVN0eOtojW8Fc0+XeOTR16p0BU8cJG+0HLv8AkFcHjvZ5CQUXHXsh/hsc0Th8kHEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Z0MFx1Wrsz4f3lDK;
+	Sat, 22 Feb 2025 17:31:49 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 50EC01A092F;
+	Sat, 22 Feb 2025 17:32:12 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP4 (Coremail) with SMTP id gCh0CgCnC2CamblnnzpDEg--.20805S4;
+	Sat, 22 Feb 2025 17:32:12 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: ming.lei@redhat.com,
+	tj@kernel.org,
+	josef@toxicpanda.com,
+	axboe@kernel.dk
+Cc: cgroups@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH 0/2] blk-throttle: fix off-by-one jiffies wait_time
+Date: Sat, 22 Feb 2025 17:28:21 +0800
+Message-Id: <20250222092823.210318-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ZHZrXgIteYPz54AL"
-Content-Disposition: inline
-In-Reply-To: <f9aa39362e918b62aec0567f899b37d8d3c44710.1740064176.git.geert+renesas@glider.be>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCnC2CamblnnzpDEg--.20805S4
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYm7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
+	Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
+	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72
+	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7
+	M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxAqzxv26xkF7I0En4kS14
+	v26r1q6r43MxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2Iq
+	xVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42
+	IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY
+	6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aV
+	CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
+From: Yu Kuai <yukuai3@huawei.com>
 
---ZHZrXgIteYPz54AL
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yu Kuai (2):
+  blk-throttle: cleanup throtl_extend_slice()
+  blk-throttle: fix off-by-one jiffies wait_time
 
-On Thu, Feb 20, 2025 at 04:12:12PM +0100, Geert Uytterhoeven wrote:
-> drivers/i2c/i2c-core-base.c: In function =E2=80=98i2c_detect.isra=E2=80=
-=99:
-> drivers/i2c/i2c-core-base.c:2544:1: warning: the frame size of 1312 bytes=
- is larger than 1024 bytes [-Wframe-larger-than=3D]
->  2544 | }
->       | ^
->=20
-> Fix this by allocating the temporary client structure dynamically, as it
-> is a rather large structure (1216 bytes, depending on kernel config).
->=20
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+ block/blk-throttle.c | 38 ++++++++++++++++++++++----------------
+ block/blk-throttle.h | 12 ++++++++----
+ 2 files changed, 30 insertions(+), 20 deletions(-)
 
-As Arnd mentioned, this is basically a revert of 735668f8e5c9.
-Applied to for-current, thanks!
+-- 
+2.39.2
 
-
---ZHZrXgIteYPz54AL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAme5mT0ACgkQFA3kzBSg
-KbaGeA/9EzW9yZgoVWRbjzsIqng4h3fukQzyBUnluiM+YzmOy0i0OJAjZaoE//zp
-NESGZlGIrG7UjTT+FV0GKfCQIOdxx5Tn/fsBIvBeCf0C1JDS2F3EDwdG1/OMGZP8
-U0bSIfcE7RPagY/PXQgOCTAhhn2Jq5rZ1EjAgv47jCz0kzhctBu0QhclV0MvULVV
-New4PLP/CcgslnZXHSbdL8vQNvb6QaDD2RkUrET5FVk1iSCbOiPGzKMTG7+pFxPQ
-n+l1mAHwKqxi5eqBnmZp8873FINQE57jHl+pmBp/Kldf1XGNb5fleCyvB+W7Fea7
-CvdtbaCTsJ9unJRTdTS5MS+3DFYLToO+SahMEhnml55PGTrS5GFT804S/abeieei
-TOMa4eI8iC2Uqso0x9eZaWohKVqpdKQK26lK1bDFRbbB4URz2KWrDBA4pN3q0U5g
-s7KPQftTsU4F8+zUz8LMOhvD7biJZplSTyWXt52BULJJYLNt2KBxtx1IGje309jX
-PQtVvdljbqraqGvuUBPvhBUsMCaM3Uzb1+KoSaAK8V/0xpkrx1eBQ7SRDSxu0bHd
-7wi75h6HXeFnaJUnjh5SFNt7AJPnvw1y7LBg7FuqbBrZQ/umdOlEi+SfxnsXvovc
-ggn8i6yFwtz+HZEnh8IalNWnNX2BG3Apjb8lEMEuUZuM48hgTTQ=
-=96CV
------END PGP SIGNATURE-----
-
---ZHZrXgIteYPz54AL--
