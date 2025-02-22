@@ -1,35 +1,35 @@
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2C51A5B85;
-	Sat, 22 Feb 2025 14:27:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D99198E76;
+	Sat, 22 Feb 2025 14:27:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740234467; cv=none; b=U9sVybZvx9jX8jLtkMB4c2dNEqKMdodsxIsCqQiSKiCA/uky7j07Q0PnZG4w/boE5xW/dKHoyJbh+a7+QuCTQzIpa2DzMx1AeqdLkYge3j3glWLtb//tsaqP5qc3RIE4pdED6dKWiQMp2ukaoGJ8wGnhSfP5JwIqAcBmKutYZk4=
+	t=1740234467; cv=none; b=XPs4p3iE7WEGvn3ibKCYYV/DIXzuDvSY61KWmeJN2oJsXPQSuhsud2pz0MG/tUq7i0ATDWU+zrASbZhKSDi0VoeZtWv8wq0CXQoVhM4MBv54IQIOi3rrT6nkKo9JQiLLvitWBbuVnWeOfR1gcT94O4iKrPAiTYktCMs1ALr//KI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740234467; c=relaxed/simple;
-	bh=EckEzjWKaK5ztRZuQU6gMUt7veEtywxzS9nf4/XbOtg=;
+	bh=17W5DpwWLDJnjZP+zIQ9TCJhoF/q9wgqNkB2qi1qqE8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=j+Md2cc6SzvF7H4SZIbCozwva5nhgmOp4iXhizt0cmWJ3VQ1eFtBZ7ons0iHs9fgv+sUkdO+38eKpPtRjyZoagquIHx6Syx7fPevE+frTGUsqKP0WI4sYlNlI90qxyl1q5AcU/nGCJJIhUI/g4ReCsNk2A3L/TSUo05SKxFxE88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PgMaVvno; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version; b=WPPPVha2VP2Xh+6eaeKjjwNOjb4JsCbHiAkR8pVu64SYIMbPS0neaFG3aLCKado18/ySbD9dxaUUy6IScVnYJ+Gps/O28Piy7tJ4KDR7LDapaxdfIo6f2lbuhlGna0ZO26/BLgK/x/xHIDQuDDy5aOAbo0tyMc5FC8pbcuzT0S4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kg+yXU3f; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PgMaVvno"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id BE18444284;
-	Sat, 22 Feb 2025 14:27:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kg+yXU3f"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8A4D54427C;
+	Sat, 22 Feb 2025 14:27:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1740234463;
+	t=1740234456;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WFgdIYzt0hw3fW0310KSzDRc8JOzKSHsluBisjOrL5I=;
-	b=PgMaVvnooYFzDqF6nh+snTceluFGeBPc55SDophVOxVmAjksUO/Fl9u/baoLAejHdzsAkO
-	43m4OzWLeNGJtCHQcj/3Qt+qB41pDALF0AOjnGfGwZzpjm/USXrrHpEcIprEPszcElpvDQ
-	3jv/VHOHtcmNHK1885iGxHrZxb/hcztifzKjD9tlSQ3XOdF4hM+uIJRtX2fYNKsLRsrm3D
-	QOxqxfopb9xZsnY0sBNllcaPeeANWArdxCUcobBYPg1w9DRYRvpSjS3EZFzeS9JGEYZmnR
-	m882QlKCiF/5hup6c2BNhoVU/7yiA0DpgwgGoTpyK3uX3RVC26i58ZJlxNO0lg==
+	bh=mE0nVjhMYce8SyWUFO7qJ6cOt2Ec4eykh043tqwW/j0=;
+	b=kg+yXU3fy/ljhnW2SfxHbOcJ67Ex9VH0ep52fRRup+5/aYbcewrM0MbzER5B8P2SO4HToU
+	zKsnv2OVEh5ts8pYGj8S6ri/Px+fBQ4M084e38zviC53p5sZrZ1c0A7e5UxY4vw/jySoqk
+	JdUvrWFWp79xxQmwcr/4jcvHK50mcOwyqWHx90rTfVPLaYctkLGeSWwYFi9g/vIuKQmD6S
+	3UQWh5ZLdd99QW16w8LE6E5tfQOBxTBfREpSr2MzLJcxkpWRMcMl242pKbScO70o9n3bXr
+	y1sctQzljJXJ4jx/bZOh2BW4IZTdlOOsZZRplZpmlh/DfZGHMMI4y063TlsmrQ==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net,
 	Andrew Lunn <andrew@lunn.ch>,
@@ -51,9 +51,9 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	Oleksij Rempel <o.rempel@pengutronix.de>,
 	Simon Horman <horms@kernel.org>,
 	Romain Gantois <romain.gantois@bootlin.com>
-Subject: [PATCH net-next 09/13] net: phy: phy_caps: Implement link_capabilities lookup by linkmode
-Date: Sat, 22 Feb 2025 15:27:21 +0100
-Message-ID: <20250222142727.894124-10-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next 03/13] net: phy: phylink: Extract getting the max speed for a given interface
+Date: Sat, 22 Feb 2025 15:27:15 +0100
+Message-ID: <20250222142727.894124-4-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250222142727.894124-1-maxime.chevallier@bootlin.com>
 References: <20250222142727.894124-1-maxime.chevallier@bootlin.com>
@@ -66,169 +66,221 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdejfeduiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgedtffelffelveeuleelgfejfeevvdejhfehgeefgfffvdefteegvedutefftdenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpeegnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgri
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdejfeduiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeevgedtffelffelveeuleelgfejfeevvdejhfehgeefgfffvdefteegvedutefftdenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvtddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgri
  igvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomh
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-In several occasions, phylib needs to lookup a set of matching speed and
-duplex against a given linkmode set. Instead of relying on the
-phy_settings array and thus iterate over the whole linkmodes list, use
-the link_capabilities array to lookup these matches, as we aren't
-interested in the actual link setting that matches but rather the speed
-and duplex for that setting.
+Make the phylink helper 'phylink_interface_max_speed' part of the
+phy_caps helper set, making phy_interface_t parameter handling
+accessible for other uses.
 
 Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 ---
- drivers/net/phy/phy-caps.h |  5 +++++
- drivers/net/phy/phy-core.c | 36 +++++++++++++-----------------
- drivers/net/phy/phy_caps.c | 45 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 65 insertions(+), 21 deletions(-)
+ drivers/net/phy/phy-caps.h |  1 +
+ drivers/net/phy/phy_caps.c | 72 +++++++++++++++++++++++++++++++++++
+ drivers/net/phy/phylink.c  | 77 ++------------------------------------
+ 3 files changed, 76 insertions(+), 74 deletions(-)
 
 diff --git a/drivers/net/phy/phy-caps.h b/drivers/net/phy/phy-caps.h
-index 8d84882343f8..b4b476495f6c 100644
+index ecb63b28c5fb..9580754fff1f 100644
 --- a/drivers/net/phy/phy-caps.h
 +++ b/drivers/net/phy/phy-caps.h
-@@ -26,5 +26,10 @@ size_t phy_caps_speeds(unsigned int *speeds, size_t size,
- void phy_caps_linkmode_max_speed(u32 max_speed, unsigned long *linkmodes);
- bool phy_caps_valid(int speed, int duplex, const unsigned long *linkmodes);
+@@ -10,5 +10,6 @@
+ void linkmode_from_caps(unsigned long *linkmode, unsigned long caps);
  
-+const struct link_capabilities *
-+phy_caps_lookup_by_linkmode(const unsigned long *linkmodes);
-+
-+const struct link_capabilities *
-+phy_caps_lookup_by_linkmode_rev(const unsigned long *linkmodes, bool fdx_only);
+ unsigned long phy_interface_caps(phy_interface_t interface);
++int phy_interface_max_speed(phy_interface_t interface);
  
  #endif /* __PHY_CAPS_H */
-diff --git a/drivers/net/phy/phy-core.c b/drivers/net/phy/phy-core.c
-index 300d47d4fd3c..98c58689fbf0 100644
---- a/drivers/net/phy/phy-core.c
-+++ b/drivers/net/phy/phy-core.c
-@@ -467,16 +467,15 @@ EXPORT_SYMBOL_GPL(phy_resolve_aneg_pause);
- void phy_resolve_aneg_linkmode(struct phy_device *phydev)
- {
- 	__ETHTOOL_DECLARE_LINK_MODE_MASK(common);
--	int i;
-+	const struct link_capabilities *c;
- 
- 	linkmode_and(common, phydev->lp_advertising, phydev->advertising);
- 
--	for (i = 0; i < ARRAY_SIZE(settings); i++)
--		if (test_bit(settings[i].bit, common)) {
--			phydev->speed = settings[i].speed;
--			phydev->duplex = settings[i].duplex;
--			break;
--		}
-+	c = phy_caps_lookup_by_linkmode(common);
-+	if (c) {
-+		phydev->speed = c->speed;
-+		phydev->duplex = c->duplex;
-+	}
- 
- 	phy_resolve_aneg_pause(phydev);
- }
-@@ -494,7 +493,8 @@ EXPORT_SYMBOL_GPL(phy_resolve_aneg_linkmode);
- void phy_check_downshift(struct phy_device *phydev)
- {
- 	__ETHTOOL_DECLARE_LINK_MODE_MASK(common);
--	int i, speed = SPEED_UNKNOWN;
-+	const struct link_capabilities *c;
-+	int speed = SPEED_UNKNOWN;
- 
- 	phydev->downshifted_rate = 0;
- 
-@@ -504,11 +504,9 @@ void phy_check_downshift(struct phy_device *phydev)
- 
- 	linkmode_and(common, phydev->lp_advertising, phydev->advertising);
- 
--	for (i = 0; i < ARRAY_SIZE(settings); i++)
--		if (test_bit(settings[i].bit, common)) {
--			speed = settings[i].speed;
--			break;
--		}
-+	c = phy_caps_lookup_by_linkmode(common);
-+	if (c)
-+		speed = c->speed;
- 
- 	if (speed == SPEED_UNKNOWN || phydev->speed >= speed)
- 		return;
-@@ -523,17 +521,13 @@ EXPORT_SYMBOL_GPL(phy_check_downshift);
- static int phy_resolve_min_speed(struct phy_device *phydev, bool fdx_only)
- {
- 	__ETHTOOL_DECLARE_LINK_MODE_MASK(common);
--	int i = ARRAY_SIZE(settings);
-+	const struct link_capabilities *c;
- 
- 	linkmode_and(common, phydev->lp_advertising, phydev->advertising);
- 
--	while (--i >= 0) {
--		if (test_bit(settings[i].bit, common)) {
--			if (fdx_only && settings[i].duplex != DUPLEX_FULL)
--				continue;
--			return settings[i].speed;
--		}
--	}
-+	c = phy_caps_lookup_by_linkmode_rev(common, fdx_only);
-+	if (c)
-+		return c->speed;
- 
- 	return SPEED_UNKNOWN;
- }
 diff --git a/drivers/net/phy/phy_caps.c b/drivers/net/phy/phy_caps.c
-index fb7996ee3bee..9faa7113a22f 100644
+index 59e4505b7336..cf68a2829bde 100644
 --- a/drivers/net/phy/phy_caps.c
 +++ b/drivers/net/phy/phy_caps.c
-@@ -129,6 +129,51 @@ size_t phy_caps_speeds(unsigned int *speeds, size_t size,
- 	return count;
+@@ -251,3 +251,75 @@ unsigned long phy_interface_caps(phy_interface_t interface)
+ 	return caps;
  }
- 
-+/**
-+ * phy_caps_lookup_by_linkmode() - Lookup the fastest matching link_capabilities
-+ * @linkmodes: Linkmodes to match against
-+ *
-+ * Returns: The highest-speed link_capabilities that intersects the given
-+ *	    linkmodes. In case several DUPLEX_ options exist at that speed,
-+ *	    DUPLEX_FULL is matched first. NULL is returned if no match.
-+ */
-+const struct link_capabilities *
-+phy_caps_lookup_by_linkmode(const unsigned long *linkmodes)
-+{
-+	int capa;
-+
-+	for (capa = __LINK_CAPA_LAST; capa >= 0; capa--)
-+		if (linkmode_intersects(link_caps[capa].linkmodes, linkmodes))
-+			return &link_caps[capa];
-+
-+	return NULL;
-+}
+ EXPORT_SYMBOL_GPL(phy_interface_caps);
 +
 +/**
-+ * phy_caps_lookup_by_linkmode_rev() - Lookup the slowest matching link_capabilities
-+ * @linkmodes: Linkmodes to match against
-+ * @fdx_only: Full duplex match only when set
++ * phy_interface_max_speed() - get the maximum speed of a phy interface
++ * @interface: phy interface mode defined by &typedef phy_interface_t
 + *
-+ * Returns: The lowest-speed link_capabilities that intersects the given
-+ *	    linkmodes. When set, fdx_only will ignore half-duplex matches.
-+ *	    NULL is returned if no match.
++ * Determine the maximum speed of a phy interface. This is intended to help
++ * determine the correct speed to pass to the MAC when the phy is performing
++ * rate matching.
++ *
++ * Return: The maximum speed of @interface
 + */
-+const struct link_capabilities *
-+phy_caps_lookup_by_linkmode_rev(const unsigned long *linkmodes, bool fdx_only)
++int phy_interface_max_speed(phy_interface_t interface)
 +{
-+	int capa;
++	switch (interface) {
++	case PHY_INTERFACE_MODE_100BASEX:
++	case PHY_INTERFACE_MODE_REVRMII:
++	case PHY_INTERFACE_MODE_RMII:
++	case PHY_INTERFACE_MODE_SMII:
++	case PHY_INTERFACE_MODE_REVMII:
++	case PHY_INTERFACE_MODE_MII:
++		return SPEED_100;
 +
-+	for (capa = 0; capa < __LINK_CAPA_MAX; capa++) {
-+		if (fdx_only && link_caps[capa].duplex != DUPLEX_FULL)
-+			continue;
++	case PHY_INTERFACE_MODE_TBI:
++	case PHY_INTERFACE_MODE_MOCA:
++	case PHY_INTERFACE_MODE_RTBI:
++	case PHY_INTERFACE_MODE_1000BASEX:
++	case PHY_INTERFACE_MODE_1000BASEKX:
++	case PHY_INTERFACE_MODE_TRGMII:
++	case PHY_INTERFACE_MODE_RGMII_TXID:
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_ID:
++	case PHY_INTERFACE_MODE_RGMII:
++	case PHY_INTERFACE_MODE_PSGMII:
++	case PHY_INTERFACE_MODE_QSGMII:
++	case PHY_INTERFACE_MODE_QUSGMII:
++	case PHY_INTERFACE_MODE_SGMII:
++	case PHY_INTERFACE_MODE_GMII:
++		return SPEED_1000;
 +
-+		if (linkmode_intersects(link_caps[capa].linkmodes, linkmodes))
-+			return &link_caps[capa];
++	case PHY_INTERFACE_MODE_2500BASEX:
++	case PHY_INTERFACE_MODE_10G_QXGMII:
++		return SPEED_2500;
++
++	case PHY_INTERFACE_MODE_5GBASER:
++		return SPEED_5000;
++
++	case PHY_INTERFACE_MODE_XGMII:
++	case PHY_INTERFACE_MODE_RXAUI:
++	case PHY_INTERFACE_MODE_XAUI:
++	case PHY_INTERFACE_MODE_10GBASER:
++	case PHY_INTERFACE_MODE_10GKR:
++	case PHY_INTERFACE_MODE_USXGMII:
++		return SPEED_10000;
++
++	case PHY_INTERFACE_MODE_25GBASER:
++		return SPEED_25000;
++
++	case PHY_INTERFACE_MODE_XLGMII:
++		return SPEED_40000;
++
++	case PHY_INTERFACE_MODE_INTERNAL:
++	case PHY_INTERFACE_MODE_NA:
++	case PHY_INTERFACE_MODE_MAX:
++		/* No idea! Garbage in, unknown out */
++		return SPEED_UNKNOWN;
 +	}
 +
-+	return NULL;
++	/* If we get here, someone forgot to add an interface mode above */
++	WARN_ON_ONCE(1);
++	return SPEED_UNKNOWN;
 +}
-+
- /**
-  * phy_caps_linkmode_max_speed() - Clamp a linkmodes set to a max speed
-  * @max_speed: Speed limit for the linkmode set
++EXPORT_SYMBOL_GPL(phy_interface_max_speed);
+diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+index c05c0921c5d0..af04be1d23c5 100644
+--- a/drivers/net/phy/phylink.c
++++ b/drivers/net/phy/phylink.c
+@@ -221,77 +221,6 @@ static unsigned int phylink_interface_signal_rate(phy_interface_t interface)
+ 	}
+ }
+ 
+-/**
+- * phylink_interface_max_speed() - get the maximum speed of a phy interface
+- * @interface: phy interface mode defined by &typedef phy_interface_t
+- *
+- * Determine the maximum speed of a phy interface. This is intended to help
+- * determine the correct speed to pass to the MAC when the phy is performing
+- * rate matching.
+- *
+- * Return: The maximum speed of @interface
+- */
+-static int phylink_interface_max_speed(phy_interface_t interface)
+-{
+-	switch (interface) {
+-	case PHY_INTERFACE_MODE_100BASEX:
+-	case PHY_INTERFACE_MODE_REVRMII:
+-	case PHY_INTERFACE_MODE_RMII:
+-	case PHY_INTERFACE_MODE_SMII:
+-	case PHY_INTERFACE_MODE_REVMII:
+-	case PHY_INTERFACE_MODE_MII:
+-		return SPEED_100;
+-
+-	case PHY_INTERFACE_MODE_TBI:
+-	case PHY_INTERFACE_MODE_MOCA:
+-	case PHY_INTERFACE_MODE_RTBI:
+-	case PHY_INTERFACE_MODE_1000BASEX:
+-	case PHY_INTERFACE_MODE_1000BASEKX:
+-	case PHY_INTERFACE_MODE_TRGMII:
+-	case PHY_INTERFACE_MODE_RGMII_TXID:
+-	case PHY_INTERFACE_MODE_RGMII_RXID:
+-	case PHY_INTERFACE_MODE_RGMII_ID:
+-	case PHY_INTERFACE_MODE_RGMII:
+-	case PHY_INTERFACE_MODE_PSGMII:
+-	case PHY_INTERFACE_MODE_QSGMII:
+-	case PHY_INTERFACE_MODE_QUSGMII:
+-	case PHY_INTERFACE_MODE_SGMII:
+-	case PHY_INTERFACE_MODE_GMII:
+-		return SPEED_1000;
+-
+-	case PHY_INTERFACE_MODE_2500BASEX:
+-	case PHY_INTERFACE_MODE_10G_QXGMII:
+-		return SPEED_2500;
+-
+-	case PHY_INTERFACE_MODE_5GBASER:
+-		return SPEED_5000;
+-
+-	case PHY_INTERFACE_MODE_XGMII:
+-	case PHY_INTERFACE_MODE_RXAUI:
+-	case PHY_INTERFACE_MODE_XAUI:
+-	case PHY_INTERFACE_MODE_10GBASER:
+-	case PHY_INTERFACE_MODE_10GKR:
+-	case PHY_INTERFACE_MODE_USXGMII:
+-		return SPEED_10000;
+-
+-	case PHY_INTERFACE_MODE_25GBASER:
+-		return SPEED_25000;
+-
+-	case PHY_INTERFACE_MODE_XLGMII:
+-		return SPEED_40000;
+-
+-	case PHY_INTERFACE_MODE_INTERNAL:
+-	case PHY_INTERFACE_MODE_NA:
+-	case PHY_INTERFACE_MODE_MAX:
+-		/* No idea! Garbage in, unknown out */
+-		return SPEED_UNKNOWN;
+-	}
+-
+-	/* If we get here, someone forgot to add an interface mode above */
+-	WARN_ON_ONCE(1);
+-	return SPEED_UNKNOWN;
+-}
+-
+ static struct {
+ 	unsigned long mask;
+ 	int speed;
+@@ -371,7 +300,7 @@ static unsigned long phylink_get_capabilities(phy_interface_t interface,
+ 					      unsigned long mac_capabilities,
+ 					      int rate_matching)
+ {
+-	int max_speed = phylink_interface_max_speed(interface);
++	int max_speed = phy_interface_max_speed(interface);
+ 	unsigned long caps = phy_interface_caps(interface);
+ 	unsigned long matched_caps = 0;
+ 
+@@ -1418,7 +1347,7 @@ static void phylink_link_up(struct phylink *pl,
+ 		 * the link_state) to the interface speed, and will send
+ 		 * pause frames to the MAC to limit its transmission speed.
+ 		 */
+-		speed = phylink_interface_max_speed(link_state.interface);
++		speed = phy_interface_max_speed(link_state.interface);
+ 		duplex = DUPLEX_FULL;
+ 		rx_pause = true;
+ 		break;
+@@ -1428,7 +1357,7 @@ static void phylink_link_up(struct phylink *pl,
+ 		 * the link_state) to the interface speed, and will cause
+ 		 * collisions to the MAC to limit its transmission speed.
+ 		 */
+-		speed = phylink_interface_max_speed(link_state.interface);
++		speed = phy_interface_max_speed(link_state.interface);
+ 		duplex = DUPLEX_HALF;
+ 		break;
+ 	}
 -- 
 2.48.1
 
