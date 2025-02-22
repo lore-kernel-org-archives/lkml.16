@@ -1,186 +1,121 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64054207650;
-	Sat, 22 Feb 2025 09:32:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA94A207650
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 09:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740216740; cv=none; b=dxRgLrf41AowuwM3B0r848IU8fAphf2r/geNfXcN+JchWrq6uI1LnNroccKLNafU91e647h5KctBONbEFE7N7ejuz2nbKAv4/xiCXiSehhR79Ieb14P1luCloid8No0SDy07bY1Gk2xBSyv03zd5aF7e+HJTP8NDkii24vjIPSc=
+	t=1740216745; cv=none; b=LvMVzWzjrI7ejMrB4jIeWnDSu+M4xy5hWlzRfgfWQBbJZi4OSHARdquakuO24zIBchzy/TNYtrD+DfUMTxm13UW6IjbGRTanYDozzu91cJcblDEuJRZ79SdocwiqAYYy4zZc6PNWri6sT1PCOvAA+Vj9DXBr7DFD30qwLWk+z7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740216740; c=relaxed/simple;
-	bh=gwQE5wEdPcBjj+HrMVOJn+F/5JlzlrpsqdOEB+uyPXQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SAIEMtcF44HqqSCDXaKVDaEiQaQY7QAJ69ujayRwDZHMdxG2497P9bKzvL9fss7/IWCve2i0aF/YAgklDXHcFlJaPLLdv8Zl/sWv/jUCem7ooC4nbSjjlPuH0zDTp7qj6GEHBWL2cc76CxCeyv/DhKNQd5JnOdY/F6N9lt1Z/0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Z0MFz5lQkz4f3jXT;
-	Sat, 22 Feb 2025 17:31:51 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 7C3A51A058E;
-	Sat, 22 Feb 2025 17:32:13 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP4 (Coremail) with SMTP id gCh0CgCnC2CamblnnzpDEg--.20805S6;
-	Sat, 22 Feb 2025 17:32:13 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: ming.lei@redhat.com,
-	tj@kernel.org,
-	josef@toxicpanda.com,
-	axboe@kernel.dk
-Cc: cgroups@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH 2/2] blk-throttle: fix off-by-one jiffies wait_time
-Date: Sat, 22 Feb 2025 17:28:23 +0800
-Message-Id: <20250222092823.210318-3-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250222092823.210318-1-yukuai1@huaweicloud.com>
-References: <20250222092823.210318-1-yukuai1@huaweicloud.com>
+	s=arc-20240116; t=1740216745; c=relaxed/simple;
+	bh=59P/xNLgeqH/Fa7+BuJx7qMLGVZbgC6bcP+O5TK4OgQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A3YNkJGwY34u3iw8A4tzGRvsmmP8aeQebOnXTC3Yt8Ln98OMuKDr7Wk0qM+IYK4J+m2jYZy9MO0uXQUurWk0Lk9xcG64380tVuu6q68bqPwErSWsbZRjHCE77Q05JAxvtU6tZ9WhisRYHt/AYSqyLAZbUbM1D2qeeaM1k0GBHqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=afiDs5l+; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="afiDs5l+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=uLt9
+	Z91YNx6dOCP+Pak2OdUGCinRlgoCNVTF+11hRL4=; b=afiDs5l+L4btrSWZIruA
+	kIMIjjXD+JHuaLzQ0NqbX/aOMIDsMTfuS+W9ll/dXsrM78tucX82SSRs3QW4FizD
+	H2xy6sknjyQB4kwQe9uyr+DzU5nu3l/8n8HvG7Mud4aBA3YAfYMkf/3qrv+0Xy1S
+	XKW8pv0pEg+YImYe1ZakqeXoXI9ICQojEGV3fwfAQetLKKeSY+49PIhSyRiCMLnt
+	lL4ToFbiE4JJ5/NxEomjRCvGQpCPbWZ4tAUep2XPI7+fXjdbeV4Yp7uZLT3wPWju
+	AQGEJ5Y7ZCEUuqeHL6WpxVgghw1fRPWvg7fma5Lyanj8yvHDJEIqXuaAg9cEsg4Q
+	aA==
+Received: (qmail 1533020 invoked from network); 22 Feb 2025 10:32:20 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Feb 2025 10:32:20 +0100
+X-UD-Smtp-Session: l3s3148p1@aoCcyLcufG1tKPLt
+Date: Sat, 22 Feb 2025 10:32:19 +0100
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Hans de Goede <hdegoede@redhat.com>, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Revert "i2c: core: Allocate temp client on the stack in
+ i2c_detect"
+Message-ID: <Z7mZo7k3p1Po3hD5@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Arnd Bergmann <arnd@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>, Andi Shyti <andi.shyti@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Joe Hattori <joe@pf.is.s.u-tokyo.ac.jp>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Hans de Goede <hdegoede@redhat.com>, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+References: <20250221205449.3838714-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCnC2CamblnnzpDEg--.20805S6
-X-Coremail-Antispam: 1UD129KBjvJXoWxAryrWw4kXF17XF13tr4fXwb_yoWrAw47pr
-	W3Kw4YgF4DXFnxKF13A3W3XFW5JrWkAFy7G3y3G3y7AFn0kryqvFn5ZrWYyay8ZF93uF42
-	vrnFqr9rCF1qkFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQm14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCF54CYxVCY1x0262kKe7AK
-	xVWUtVW8ZwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I
-	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
-	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcV
-	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjfUOdgAUUUUU
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="79IIhFRijrqxi5Of"
+Content-Disposition: inline
+In-Reply-To: <20250221205449.3838714-1-arnd@kernel.org>
 
-From: Yu Kuai <yukuai3@huawei.com>
 
-wait_time is based on jiffies, and the calculation is:
+--79IIhFRijrqxi5Of
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-wait_time = extra_bytes * HZ / bps_limit;
+On Fri, Feb 21, 2025 at 09:54:40PM +0100, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+>=20
+> struct i2c_client is way too large to be put on the kernel stack, and dep=
+ending
+> on the kernel configuration, this can exceed the compile-time warning lim=
+it:
+>=20
+> drivers/i2c/i2c-core-base.c:1420:12: error: stack frame size (1040) excee=
+ds limit (1024) in 'i2c_do_add_adapter' [-Werror,-Wframe-larger-than]
+>  1420 | static int i2c_do_add_adapter(struct i2c_driver *driver,
+>       |            ^
+>=20
+> The current version is the result of a cleanup patch that does not appear
+> to be a requirement for anything else, so address the problem through a
+> simple revert.
+>=20
+> Fixes: 735668f8e5c9 ("i2c: core: Allocate temp client on the stack in i2c=
+_detect")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-If wait time is not zero, the remainder is ignored, means wait time is
-short by at most 1 jiffes; On the other hand, if wait time is zero, it
-will be used as 1 jiffies, means it's excessive by at most 1 jiffes.
+Thank you, yet Geert was faster and fixed a checkpatch check:
 
-This way causes blktests throtl/001 failure in case of CONFIG_HZ_100=y,
-fix the problem by recording remainder as debt, and repay the debt
-later.
+https://lore.kernel.org/r/f9aa39362e918b62aec0567f899b37d8d3c44710.17400641=
+76.git.geert+renesas@glider.be
 
-Reported-and-tested-by: Ming Lei <ming.lei@redhat.com>
-Closes: https://lore.kernel.org/all/20250220111735.1187999-1-ming.lei@redhat.com/
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- block/blk-throttle.c | 24 +++++++++++++++++-------
- block/blk-throttle.h | 12 ++++++++----
- 2 files changed, 25 insertions(+), 11 deletions(-)
 
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index 0096e486b1e3..3828c6535605 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -703,9 +703,10 @@ static unsigned long tg_within_iops_limit(struct throtl_grp *tg, struct bio *bio
- }
- 
- static unsigned long tg_within_bps_limit(struct throtl_grp *tg, struct bio *bio,
--				u64 bps_limit)
-+				u64 bps_limit, bool *has_debt)
- {
- 	bool rw = bio_data_dir(bio);
-+	long long carryover_bytes;
- 	long long bytes_allowed;
- 	u64 extra_bytes;
- 	unsigned long jiffy_elapsed, jiffy_wait, jiffy_elapsed_rnd;
-@@ -730,10 +731,16 @@ static unsigned long tg_within_bps_limit(struct throtl_grp *tg, struct bio *bio,
- 
- 	/* Calc approx time to dispatch */
- 	extra_bytes = tg->bytes_disp[rw] + bio_size - bytes_allowed;
--	jiffy_wait = div64_u64(extra_bytes * HZ, bps_limit);
--
--	if (!jiffy_wait)
--		jiffy_wait = 1;
-+	jiffy_wait = div64_u64_rem(extra_bytes * HZ, bps_limit, &carryover_bytes);
-+	if (carryover_bytes) {
-+		/*
-+		 * If extra_bytes is not divisible, the remainder is recorded as
-+		 * debt. Caller must ensure the current slice has at least 1
-+		 * more jiffies to repay the debt.
-+		 */
-+		*has_debt = true;
-+		tg->carryover_bytes[rw] -= div64_u64(carryover_bytes, HZ);
-+	}
- 
- 	/*
- 	 * This wait time is without taking into consideration the rounding
-@@ -754,6 +761,7 @@ static bool tg_may_dispatch(struct throtl_grp *tg, struct bio *bio,
- 	unsigned long bps_wait = 0, iops_wait = 0, max_wait = 0;
- 	u64 bps_limit = tg_bps_limit(tg, rw);
- 	u32 iops_limit = tg_iops_limit(tg, rw);
-+	bool has_debt = false;
- 
- 	/*
-  	 * Currently whole state machine of group depends on first bio
-@@ -784,18 +792,20 @@ static bool tg_may_dispatch(struct throtl_grp *tg, struct bio *bio,
- 	else
- 		throtl_extend_slice(tg, rw, jiffies + tg->td->throtl_slice);
- 
--	bps_wait = tg_within_bps_limit(tg, bio, bps_limit);
-+	bps_wait = tg_within_bps_limit(tg, bio, bps_limit, &has_debt);
- 	iops_wait = tg_within_iops_limit(tg, bio, iops_limit);
- 	if (bps_wait + iops_wait == 0) {
- 		if (wait)
- 			*wait = 0;
-+		if (has_debt)
-+			throtl_extend_slice(tg, rw, jiffies + 1);
- 		return true;
- 	}
- 
- 	max_wait = max(bps_wait, iops_wait);
- 	if (wait)
- 		*wait = max_wait;
--	throtl_extend_slice(tg, rw, jiffies + max_wait);
-+	throtl_extend_slice(tg, rw, jiffies + max_wait + has_debt);
- 
- 	return false;
- }
-diff --git a/block/blk-throttle.h b/block/blk-throttle.h
-index 1a36d1278eea..56dcb5ce412f 100644
---- a/block/blk-throttle.h
-+++ b/block/blk-throttle.h
-@@ -110,10 +110,14 @@ struct throtl_grp {
- 	unsigned int last_io_disp[2];
- 
- 	/*
--	 * The following two fields are updated when new configuration is
--	 * submitted while some bios are still throttled, they record how many
--	 * bytes/ios are waited already in previous configuration, and they will
--	 * be used to calculate wait time under new configuration.
-+	 * The following two fields are updated when:
-+	 * 1) new configuration is submitted while some bios are still
-+	 * throttled, they record how many bytes/ios are waited already in
-+	 * previous configuration;
-+	 * 2) IOs which may cause priority inversions are dispatched while tg is
-+	 * over limit, these IOs will be dispatched directly;
-+	 * 3) While calculating wait_time for IO, extra_bytes * HZ is not
-+	 * divisible by bps_limit, the remainder will be recorded;
- 	 */
- 	long long carryover_bytes[2];
- 	int carryover_ios[2];
--- 
-2.39.2
+--79IIhFRijrqxi5Of
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAme5maMACgkQFA3kzBSg
+KbZIXQ/+LcL/GhbuIVhLeiabnbpfkwD8FHDAB/oSQMGGXbdICyx5t1Qsv9Twjiec
+4R96QaESqFWK+4c7k1+rSMHOG/k29S0Ebl5RxeZ5c96IkErhuMCQdeMrLfa/CkAQ
+RerC+EH0n6ZBIB2QESWLW3FCx3HHOggXQu3jMPLRKovQ7dN3alJ5EXXxMzl4vBGi
+04cAf2VYXyahI+z+5/HnVZDZdtiMHs24TY5EhbMfdZSxbT7yMuVDTUA2l+qI1wCk
+rIJnqsbgMh92kc8C7E1RVNyvCDjmRJYtyVaMrD/rwOHAFd48DsfDiXwDUikMNhGF
+I+swk++KPk0riBghSaoYoi15VPAWUIeUEL+XENmQP/+mmty3T990nNN1i+jCQpAo
+4nwSX266GGHEBrMnPLRX2/gZ4gh2bIQvQuyswc53lxD4JXCyL1Iux1EatO4vcrc/
+XTcT5n5i4CXIXwRCTYS6elexMD/cX7THulOSO3c4HoufRxTaY9Lv1KifKJkLbZXg
+x5YofsEbvNyi9ZdzoY2iUjzxDYdQCT4Knn+bfh01c8KCrZjq5I6z+qa2FOPOzL12
+rDra7y5Oy1j1cYnzL4OAajbmcsQxUw7eQnm0s7QQcauIuF41kjLHbcTd5aEBoLrE
+fLUbYnp28UTguXQKNO/mVU73gR3UeMLqvn0zFr64WUwAkX9XTSA=
+=bd07
+-----END PGP SIGNATURE-----
+
+--79IIhFRijrqxi5Of--
