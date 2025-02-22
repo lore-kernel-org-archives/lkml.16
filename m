@@ -1,123 +1,83 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D25206F05;
-	Sat, 22 Feb 2025 09:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D613E1D7E42;
+	Sat, 22 Feb 2025 09:30:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740216543; cv=none; b=q8vy+8whm1E/eAD+yzmYbwzp8aKfPtGe7dfEEsDeyCMxxUu9gv1yEv/QG4BZr4/3S6Zt0wPL9PSU1k1j6OJTY8Izffc+d/eCDv612J3akERu7REHBdvdK7kNLbNEoDmZYwKsigrkyjG/e8e5wUfUSTAGrzwGHTYwjJxaktCeMG4=
+	t=1740216651; cv=none; b=ji9uw2lNvUEZ+1odszT/gdzxL2Ga8/93AnBZ0irdHSup0edxCAAOwj7GDx3r6uVvH3mBBvJ1U6OeO+bPnEQP6Iv1f4cmQrCyfrREv2mHETkc8rbjiiKHsJ30vEbze+aXem82KHw/rQYYbHMNlUz7F/TVsgHxASnrt7gjgzQ6TEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740216543; c=relaxed/simple;
-	bh=ms5pSSFmIOmQvVu82XxWFNYfE4nlmDqgurq5VgbvlcE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SXu9uwSqTcUwRKWUbKDqXgCGDiTiCopfZs/XC5gxIkCctha+kU87kgR9RXUgAe5Z66MWMxNS58t8R1bP+S0e/r/0Z0C6vcyNLl+dTqmjn0pKwOyeiEUh9GPsT9wXLTWj6BC6/9+PTwLqyXspaaPiMsNTCboJBbLW5nzpFlkp3Vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Z0MB95cbzz4f3lDc;
-	Sat, 22 Feb 2025 17:28:33 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id DEC701A06DC;
-	Sat, 22 Feb 2025 17:28:56 +0800 (CST)
-Received: from [10.67.111.192] (unknown [10.67.111.192])
-	by APP1 (Coremail) with SMTP id cCh0CgCHN3jYmLlnfioGEg--.56407S2;
-	Sat, 22 Feb 2025 17:28:56 +0800 (CST)
-Message-ID: <02ef4695-c9d6-4867-a25a-7d9e617f9c48@huaweicloud.com>
-Date: Sat, 22 Feb 2025 17:28:56 +0800
+	s=arc-20240116; t=1740216651; c=relaxed/simple;
+	bh=hXAr6oIEi+/PIbCR5b0ihPtXixUgLNht0f3STJblDVk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZnPWFx29SiXXsYf/qprXLuB0Qq3UduzdndG1Zm2tH0avuLZYPS5NEw2mzzJE8uKtVnRvHsLG1Gw9jWBJINkjB2lDbp+szCV1dkhQl6U9k4kegXvb7Wn3o8Dc4dRulEtyuz80qICUHOAd4WX4CgiusJpw14HyelJTyCmaeF6ocEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WGXNIDYW; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WGXNIDYW"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-220f4dd756eso58735985ad.3;
+        Sat, 22 Feb 2025 01:30:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740216649; x=1740821449; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hXAr6oIEi+/PIbCR5b0ihPtXixUgLNht0f3STJblDVk=;
+        b=WGXNIDYWSpRntp9kA1YnO+pZu25Mdpx8/yKZwg1/HPakvl0RIz/4VAJQZmpc+nh+cC
+         SHMpof9ZIFbk0QbMqCwZ+qLbACwwvERfeCtemmeNM5UjnldtzrIsrANVZ0EmpKssV/Lk
+         0VRqbb6cIwaUJsW3TyDU+eJR9Ym+tJruJicb00oi9Muq3OoJYBSEUDlaJ/NtBjDjjwlr
+         KFQ9kOIGUxAfYCU3dx+szaYKfe7tB2NVdnITeUaY5v2oW7ue0dOhhTvxwlbzf0yM0C+L
+         rtR96DFXDYLtqpUcMrhlJ5D+kICGgI6LiknkCUXEOs6yrdH/vEGKAu885xqOrzVAlV1k
+         7kSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740216649; x=1740821449;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hXAr6oIEi+/PIbCR5b0ihPtXixUgLNht0f3STJblDVk=;
+        b=Xcx73cclWYbAN9xpMXJwAc9/8PHuykPTU7U1UrxF2/3zIEOmZ4cACk9cE/xZqOihxO
+         UQZy02w+o+0zxod/wPtczL0QOfQjqmevzmt1kpqaCl0XVx+pOH9cV2KQobt9jDwz8vY6
+         +IKypOYNddMwHxcnSTUevwy4U7dMNQsdfHE+rSXjVmwnT8OzbCITYCZ3M9yHh4r1Hh4e
+         bKv9w/3Xk16q5DPbmwaMfR/raM08s1oXenPj8bwCAWF7e5ksjWKY9vLoGhwFB6G219MG
+         sowdhc3wZBzfeho94r2vwNTAhbahk45pwEHP1XeKGmffddef3H2chlwIFladHgTGYmJy
+         gKqw==
+X-Forwarded-Encrypted: i=1; AJvYcCX6/FMn9AVCVZyAbzpiOpjGaOngVmkejlII3DlyCVQKOaW2kQYhtIv/rs3pWrRWSwKPl3rzBgATuNcxuuY=@vger.kernel.org, AJvYcCXF/+pdgE9CyNlwED2X1HYPO3Lhs3UAgkVyVeu+lO1Qb4aXMtDjaOm8KseUmE2177V9nej/6PTXv9IOddr/QTpa@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZFgducslNIR1VfL5ryn8FF+5CIpzjAIRy0N+OrhJMHFp4RsK3
+	8mkYIBSF5m8domjBmNXRMXfclmtzbevZqCHtrcJByyJybzRYc5m0
+X-Gm-Gg: ASbGncvv+dDCs60BvB25RPvwf/zGvvBCI2qf8Fa8AW2Ae2+15LCvfPqGTno26154rHp
+	eeNxXbsdG4FNP3rgKdD88IQb7WWaWIUgjOHBsl72yTaIsHoxHPENjlNjK6QVScBgmVyQivv0iGG
+	URsboUxGfoNiOkrlZnea/odN+wzW5XUTBEsjdznJkQh1p+WRyVrrVcvb5oPZm83QgiSr/Xhttqv
+	/rKaCQzkSC0oDf1IsqF16opND/yXdKIkMhZ7JTH/etiwbyaUNBCJhuCorVpzwW57JA1TJOFg8tm
+	aMj7RbpJJzFTYkYgM89TRzZnFHorRY8ooXaYZN1UBraxo1OT
+X-Google-Smtp-Source: AGHT+IHdUVu20s80g9zpUNttiyeCSlx4ll29y5Rr7CdK3ZqQIPl/f/zJ6Puh0U3kaJqAewMl+0S1jQ==
+X-Received: by 2002:a17:903:178b:b0:21f:140e:2929 with SMTP id d9443c01a7336-2219ff4e2f6mr101409025ad.15.1740216649065;
+        Sat, 22 Feb 2025 01:30:49 -0800 (PST)
+Received: from ritvikos.localdomain ([49.36.192.173])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fcb8351600sm4025373a91.0.2025.02.22.01.30.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Feb 2025 01:30:48 -0800 (PST)
+Received: by ritvikos.localdomain (Postfix, from userid 1000)
+	id 55655ED9143; Sat, 22 Feb 2025 15:00:44 +0530 (IST)
+Date: Sat, 22 Feb 2025 15:00:44 +0530
+From: Ritvik Gupta <ritvikfoss@gmail.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: shuah@kernel.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH] selftests/mount: Explicitly define buffer size
+Message-ID: <Z7mZRO0eCwRU2JhG@ritvikos>
+References: <20250222081711.48208-1-ritvikfoss@gmail.com>
+ <2025022257-easter-shower-61df@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH bpf-next v3 5/9] arm64: insn: Add BIT(23) to
- {load,store}_ex's mask
-Content-Language: en-US
-To: Peilin Ye <yepeilin@google.com>, bpf@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Cc: bpf@ietf.org, Eduard Zingerman <eddyz87@gmail.com>,
- David Vernet <void@manifault.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- "Paul E. McKenney" <paulmck@kernel.org>, Puranjay Mohan
- <puranjay@kernel.org>, Ilya Leoshkevich <iii@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Quentin Monnet <qmo@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
- Shuah Khan <shuah@kernel.org>, Ihor Solodrai <ihor.solodrai@linux.dev>,
- Yingchi Long <longyingchi24s@ict.ac.cn>, Josh Don <joshdon@google.com>,
- Barret Rhoden <brho@google.com>, Neel Natu <neelnatu@google.com>,
- Benjamin Segall <bsegall@google.com>, linux-kernel@vger.kernel.org
-References: <cover.1740009184.git.yepeilin@google.com>
- <6888a87af6ea47ea29d429b91a57cb146d1f69c8.1740009184.git.yepeilin@google.com>
-From: Xu Kuohai <xukuohai@huaweicloud.com>
-In-Reply-To: <6888a87af6ea47ea29d429b91a57cb146d1f69c8.1740009184.git.yepeilin@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:cCh0CgCHN3jYmLlnfioGEg--.56407S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7AF1kKF4kuryrWryxXr1kZrb_yoW8Ww15p3
-	93Zr4rCF48Cr15G3W3JF17W3yFqF4FyF45G34UCryFka45tF1jqr1jgr12vF4kGr4jgF4F
-	va429F10vrWUC3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26rWY6Fy7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8
-	Jr1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-	CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
-	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
-	xUsPfHUUUUU
-X-CM-SenderInfo: 50xn30hkdlqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025022257-easter-shower-61df@gregkh>
 
-On 2/20/2025 9:21 AM, Peilin Ye wrote:
-> We are planning to add load-acquire (LDAR{,B,H}) and store-release
-> (STLR{,B,H}) instructions to insn.{c,h}; add BIT(23) to mask of load_ex
-> and store_ex to prevent aarch64_insn_is_{load,store}_ex() from returning
-> false-positives for load-acquire and store-release instructions.
-> 
-> Reference: Arm Architecture Reference Manual (ARM DDI 0487K.a,
->             ID032224),
-> 
->    * C6.2.228 LDXR
->    * C6.2.165 LDAXR
->    * C6.2.161 LDAR
->    * C6.2.393 STXR
->    * C6.2.360 STLXR
->    * C6.2.353 STLR
-> 
-> Signed-off-by: Peilin Ye <yepeilin@google.com>
-> ---
->   arch/arm64/include/asm/insn.h | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/insn.h b/arch/arm64/include/asm/insn.h
-> index e390c432f546..2d8316b3abaf 100644
-> --- a/arch/arm64/include/asm/insn.h
-> +++ b/arch/arm64/include/asm/insn.h
-> @@ -351,8 +351,8 @@ __AARCH64_INSN_FUNCS(ldr_imm,	0x3FC00000, 0x39400000)
->   __AARCH64_INSN_FUNCS(ldr_lit,	0xBF000000, 0x18000000)
->   __AARCH64_INSN_FUNCS(ldrsw_lit,	0xFF000000, 0x98000000)
->   __AARCH64_INSN_FUNCS(exclusive,	0x3F800000, 0x08000000)
-> -__AARCH64_INSN_FUNCS(load_ex,	0x3F400000, 0x08400000)
-> -__AARCH64_INSN_FUNCS(store_ex,	0x3F400000, 0x08000000)
-> +__AARCH64_INSN_FUNCS(load_ex,	0x3FC00000, 0x08400000)
-> +__AARCH64_INSN_FUNCS(store_ex,	0x3FC00000, 0x08000000)
->   __AARCH64_INSN_FUNCS(mops,	0x3B200C00, 0x19000400)
->   __AARCH64_INSN_FUNCS(stp,	0x7FC00000, 0x29000000)
->   __AARCH64_INSN_FUNCS(ldp,	0x7FC00000, 0x29400000)
-
-
-Looks good to me
-
-Acked-by: Xu Kuohai <xukuohai@huawei.com>
-
+Got it :)
+Thanks for reviewing!
+Regards Ritvik
