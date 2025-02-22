@@ -1,108 +1,114 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B26200105
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 16:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCFE13C81B;
+	Sat, 22 Feb 2025 16:42:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740242454; cv=none; b=XtajAwtYxatM1n9nZC1eT/BafGGlobQlJQ/xRxz/VRxRe0x3FlaRZFyeDA/EN3KtcXQTWWP0uRiXHUiGA7UuSLEi9QTH0Y1iLuTyXs77Mn0lxk73uC0zfD3hwG3puRxhprUrenSamE0e5+JY+1Ya8kQyB37DJ9kkDXHXg6SwTBg=
+	t=1740242565; cv=none; b=Hg2HGsPzSshJoR4tgiMlR6wouSlVJzBkRBsuShq29zvQVl6sT9ZQksaxLNLe9mNC0M4l4DpblF+iEEun8jdsHOf32G+OXVw9T0Mv0N+6TDZ3FsIFT4tEIu04SpFRf948KN7xS03vHwVZ1fvugI2EhY/vjw5su1RDIFtZuCwkD6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740242454; c=relaxed/simple;
-	bh=RlG6dofeQhSMbUCrjzCISW4dWW3PiiUkCHVSzb3s/xo=;
+	s=arc-20240116; t=1740242565; c=relaxed/simple;
+	bh=SXO4k/H90p6ze4MArtk+DGjYJ3EkjF4JI1PHOcPhQQA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EQUFrGbvJTx7mEo6rqjDN7X7RScAwG+/Txm09nev7YUsoZ6fPtzdHp0c5QIHsUO1PQCKVjTsIPxAZagoJUZ0uXjJN+IcJ4IZh8NBCZg2ywLj5Oy9j8SsZLEIOY6EeMZt63ETNoe1OjcFCIy7OskiZBvrP7Ucz5zwksq8SVtfcHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bIRYPTfz; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=kQMFtLiSUjZqwwEgwPUY/X3RPNEpBjjs1iERJIlkWqGK732I1yqKnTBztOvFzBh0K5L5oYAP9cVQTW5Y2Qv2TxIYCgbmkXVGFywqWGP10FLKeVjFOR7wYqv5mhRkVNKYrtuV/eEV5F6cMagGVrEMNSvMjN6eOOfzXjdNqHNuO28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EHcJxDVi; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bIRYPTfz"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-221057b6ac4so59001305ad.2
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 08:40:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHcJxDVi"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-220c665ef4cso53128955ad.3;
+        Sat, 22 Feb 2025 08:42:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740242452; x=1740847252; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=q7SmUkU0wkGg93tuHuPQ8+F/dJahpuQFSIUY8F9FZz8=;
-        b=bIRYPTfziicSN4R6DPcO+t1f1rSmIKZIrj0dVlbd8dmQBumHFtiUdY9Ip3MojqxjvG
-         clpWg12Vk1H19eqMVJP6CjHRxHLiw6OyFjtofxU+wxg2GRHrh3gE+y3oPB+TrYQthH/p
-         NVESAxtyGxbBIv03MTNPsQb+7kp2kXeILzl+n2c/mEg2DPx/GNaCAUpAPxZqKJ+ANvqP
-         Qc8W5K5M6V4ZwbTaT0XmPmUMB59ROFv9n/HuZgJabjFTh1bG0ni/44A+mRK7ACY6vHud
-         B7kTjJT7xoeU1I4SD25MqMbrIPNMdVTdMqu0RFTI7sqRlj560MsfBXNbo2VIZtB1aSSB
-         Jr5g==
+        d=gmail.com; s=20230601; t=1740242563; x=1740847363; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hfsEwmSd+3dd9HbNE1KVoLma0THOs7a+DQjZyXGopPg=;
+        b=EHcJxDViTh9bgvYK3NeCAkK/nEMq+48wDQE3NoXvmJ3nDNfTHVXRwxFzMznOwCLPc9
+         Ql2iAthnsx/EVS5ScjHq3oS4OZRII6KVIiKB0QOoGjZlZ56vcS84QCRfEEkgAjhoat/E
+         w9inY7sHzEQ2T2HDRxNlEWQYEPUMKmfAf2jR22ffovJa8Cis5+gqal9RmpKWllze2ihF
+         abrVq/HtSEma0R2juEkQNEV2w0EfBaWKaHu7D9XPbzOqTT6hJU7XpbUJJLWy+Wsf6Z1W
+         wzJMuO9eJN5/xFSw4jLLPdRkE8uxVMuYYfE+z0g5F5dXTuYii1i8m7xCmLb65WMQZ2iZ
+         cbng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740242452; x=1740847252;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q7SmUkU0wkGg93tuHuPQ8+F/dJahpuQFSIUY8F9FZz8=;
-        b=T/zCUKhk8B8kYQcMQBLHT23oySdbcF8Lm5gLpF5tMQYXiHc2kCizG87uwn47B+zvUZ
-         eKleqbjIF9NsrzW5LLwkfI43oeRyaMl3yWoe5xpIoSyXXdYsA7kgpXQxMzR0L+HN38gd
-         3BxtWvSOT54YlxhOpUCphvSdc9r6D5GrEbC2kIGnI+2gavke2/7Fulvmpprj7FUE/xK8
-         W2sGs7xZcx3DHDVNvfy9Y7q0HMjVfmntyoF+44oTvr+Sdha5tiuDhK0ie19upQ69AuI+
-         9bYkVUQDepZApd4uBWkzUcMIm6ew+4DCfVqTs3mo6xpIJqnLF2+N6wPVHZ1qFdbQ1Ffb
-         /xtA==
-X-Forwarded-Encrypted: i=1; AJvYcCVSaz+Qs3jdOqJMH0gEegFm9p4wwKUVATWFn+wT6zZDdJp9Z4ZlKXBws++0hEBuBOWU/sGhsWhN8K1pM6s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSSj9NwtBqjRYvuPywQ3ZS9nMNPEw9/xc2w8D3zOC+eDg3fAC8
-	kO2/6RZ+Jw8i4lBUx1KXGssv2sfpRa5Vczbrc1gonHMu+b5YreBULQUAlP7ZHA==
-X-Gm-Gg: ASbGncusnlBmkgRUVq/bnUvC+47SPlfc0WFszYmSs5ZWiXXrTf65NfTWXxnMwFSgUUy
-	BX68R0kJ9u8FP8juVmyQYGpX3sj8XLuEsVGs105BVlq4OjaMWKCXFvCUd0R7PYOJ+1ZQ6mH6Y5h
-	oCAERGvw6KvvOQLhklNLrV+8om6vSAZ6in2A/QDFlL3/XHU19l8ODX3q6YgW42yvWYGkgBdTTLX
-	2Ms2ZShIrTMcW0YaIZu0eKlR7F9f9cCY50NP5XLORq7jQqj4Vo2PJbCZ0s0PPpCwWLvOwevaCys
-	8ZNFf8ExyW9ZVOwhicAn0HQ3cVDku/zVtZqspg==
-X-Google-Smtp-Source: AGHT+IFEDHZtuniMfOeDjLrVBa5hGySK9NWCQAT8oNjTSS7bMd12a1VSSCxQNJaxtxTV8J/i8HbMHw==
-X-Received: by 2002:a05:6a00:4615:b0:732:5651:e892 with SMTP id d2e1a72fcca58-73426ce7667mr11977154b3a.14.1740242452204;
-        Sat, 22 Feb 2025 08:40:52 -0800 (PST)
-Received: from thinkpad ([120.60.135.149])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7324276171fsm18225136b3a.144.2025.02.22.08.40.48
+        d=1e100.net; s=20230601; t=1740242563; x=1740847363;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hfsEwmSd+3dd9HbNE1KVoLma0THOs7a+DQjZyXGopPg=;
+        b=LIibBdGi8H/C20XB9zw8vpghGDgEF9FuqTMH9+irfmpSArDb4BuqBY860G88h/0Uqq
+         poj57d5eesVHTSH/oNVnOHpq2G76orCtpSdLSZWUUUBGtYpDuP+HymwtwZwM9y/gydQO
+         GFGG/cpMiq+zgp3wEgD7bAkx0eqm4uHE51kEcyK/gMhnvORlnM91tLqwJcyRFx8P9w7u
+         DwHVlKgkR1R8gAb7lqVKVMRkOHL/lBEJZBSS+WiPq/c3Wf3viUmOe6RUymaaWPMI70Hc
+         SrDnNqsx0yzDkdeQPtLNToMptJ6dD5YkP03Nsy+/4bbe/G5cXISx+fxjaXg868SL0CYJ
+         kXhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUDV9uB0jX+YHS425sq3YQZfAaKuFtSlKqOew8ywd+nwNDmOU7wzelxlxzUuuu5qhuQkmYqKG9MROA=@vger.kernel.org, AJvYcCW6L36xnnx3tyjDnhQNi7ebiQG87c2WNIzHEsgA7QUl0/alhPD0PHQ68ijD17kgNiYd2d8xLPr3Ihbi@vger.kernel.org, AJvYcCWum27aIO2DgqMxWB34HN3S2vswHJBRvyzgL6cZVhF2tVDEvIDZY3DCdIvg8mR3GnuIQVIRc+wMkfMeZUpY@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvBHhXuXR5RqU3wIGHBx9k+rFCyIbwSKKPTZwlL0xErggpUp9I
+	nI3iLGZsQbe46N6J8eMpwDVWE2ByI+JoNJJVWoCGSG8wVuuh8NiT
+X-Gm-Gg: ASbGncsLDDD98AfUNa4P/v44WtRl+WFu70uaticYdoTvsRK83IqDHGDMvjzB47LQB1w
+	dXQ0ZXJougBBC95kEdp/KTWgBMrxaZ6UzQB/BILdnr/6HcsfnMOgogmI07lFWLpnFiQK0CGdBpi
+	rXgDv9FkFR8fRrrGAeBgYJ3Z9n/kcKnx2Tgh+7MbtL9RnLfSc2fzcxebgAJUF2NikXgCrk5RhOz
+	/FXIwqBkO6YTNa/GQu3kRhbzvziLvk5N1efaKyuLLVJssNX5zy8EIr2b2xtIhvXmzblMkLJ5stb
+	BhQNGP9AB+4kj7BotSG3MMqpvDQNT1JmBaxn
+X-Google-Smtp-Source: AGHT+IFZZkcKFKwt5ckW2ZZB2hTWc+lkl3S+KFyclA3Ykcaxpqupy0ev5uu6ECgwlxoEM7JpUk2YzA==
+X-Received: by 2002:a05:6a00:174c:b0:732:6231:f2a3 with SMTP id d2e1a72fcca58-73426c8d3a7mr12626436b3a.3.1740242562871;
+        Sat, 22 Feb 2025 08:42:42 -0800 (PST)
+Received: from localhost ([2804:30c:1f21:4300:1cf6:c485:6555:b1c5])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73242568acesm18158944b3a.56.2025.02.22.08.42.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2025 08:40:51 -0800 (PST)
-Date: Sat, 22 Feb 2025 22:10:46 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Cc: Hans Zhang <18255117159@163.com>, jingoohan1@gmail.com,
-	shradha.t@samsung.com, lpieralisi@kernel.org, robh@kernel.org,
-	bhelgaas@google.com, Frank.Li@nxp.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rockswang7@gmail.com,
-	Niklas Cassel <cassel@kernel.org>
-Subject: Re: [v4] PCI: dwc: Add the debugfs property to provide the LTSSM
- status of the PCIe link
-Message-ID: <20250222164046.b7itpksdlmchrnby@thinkpad>
-References: <20250222143335.221168-1-18255117159@163.com>
- <20250222145432.GB3735810@rocinante>
+        Sat, 22 Feb 2025 08:42:41 -0800 (PST)
+Date: Sat, 22 Feb 2025 13:43:31 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	jic23@kernel.org, lars@metafoo.de, corbet@lwn.net,
+	dlechner@baylibre.com
+Subject: Re: [PATCH v4 1/1] Documentation: iio: Add ADC documentation
+Message-ID: <Z7n-s5yOD7D9t1Oi@debian-BULLSEYE-live-builder-AMD64>
+References: <e6ac2a595f06ba2d5ff0eb86e5895479c9dd797f.1739998491.git.marcelo.schmitt@analog.com>
+ <Z7bn3TEC4faXbzEj@archie.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250222145432.GB3735810@rocinante>
+In-Reply-To: <Z7bn3TEC4faXbzEj@archie.me>
 
-On Sat, Feb 22, 2025 at 11:54:32PM +0900, Krzysztof Wilczyński wrote:
-> Hello,
-> 
-> [...]
-> > +What:		/sys/kernel/debug/dwc_pcie_<dev>/ltssm_status
-> > +Date:		February 2025
-> > +Contact:	Hans Zhang <18255117159@163.com>
-> > +Description:	(RO) Read will return the current value of the PCIe link status raw value and
-> > +		string status.
-> 
-> The description could be refined a bit to make it easier to read.  But this
-> is not a blocked and the changes otherwise look good.
-> 
-> Thank you Niklas for testing!
-> 
-> I will pick this up if there are no objections.
-> 
+On 02/20, Bagas Sanjaya wrote:
+> On Wed, Feb 19, 2025 at 06:00:56PM -0300, Marcelo Schmitt wrote:
+> > +For a **single-ended bipolar** channel, the analog voltage input can go from
+> > +-VREF to +VREF (where -VREF is the voltage reference that has the lower
+> > +electrical potential while +VREF is the reference with the higher one). Some ADC
+> > +chips derive the lower reference from +VREF, others get it from a separate
+>                                                   "... obtain it ..."
+Ack. Maybe, if there are no additional suggestions to the docs, Jonathan can
+tweak this while applying the patch? Otherwise I'll change accordingly on v5.
 
-Not yet. This patch has the dependency with Shradha's debugfs series:
-https://lore.kernel.org/linux-pci/20250221131548.59616-1-shradha.t@samsung.com/
+> > +input. Often, +VREF and -VREF are symmetric but they don't need to be so. When
+> > +-VREF is lower than system ground, these inputs are also called single-ended
+> > +true bipolar. Also, while there is a relevant difference between bipolar and
+> > +true bipolar from the electrical perspective, IIO makes no explicit distinction
+> > +between them.
+> > +
+> > <snipped>...
+> > +In the ADC driver, ``differential = 1`` is set into ``struct iio_chan_spec`` for
+> > +the channel. Even though, there are three general input types, ``differential``
+> > +is only used to distinguish between differential and not differential (either
+>                                                    "... non-differential ..."
+Ack. Same as the other suggestion.
 
-- Mani
+> > +single-ended or pseudo-differential) input types. See
+> > +``include/linux/iio/iio.h`` for more information.
+> 
+> Thanks.
+> 
+> -- 
+> An old man doll... just what I always wanted! - Clara
 
--- 
-மணிவண்ணன் சதாசிவம்
+
+Thanks,
+
+Marcelo
