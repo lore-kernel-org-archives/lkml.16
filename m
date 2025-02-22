@@ -1,31 +1,31 @@
 Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F1E53365;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E33835948;
 	Sat, 22 Feb 2025 13:01:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740229275; cv=none; b=uyMEyHJsdXX9MLlAh2lrJg5qE8s6Edl4ZtjChP1EA364l+EGDYDCyaLSi/TQ4aTJMkllE33VErxObh5PFtW4z0s6D8p/99K+aA1QOSW+0lqVy/+wEnq4Kpu3QllC4lP4iyY/+SFa2TLF9BhcpIxQQmG77wXEFZfCxUjqoLR9Rsc=
+	t=1740229275; cv=none; b=rvQ7axfIN8BgzfhGgOJcHbXvBsiVyPigE3lHUeCLXdY5uXbk5ZCWe/4QbQSujdcDkGUFOQj1SPejsM2NPyczyBJ/sW2rKOhJhiGhqRlbS/M/p+Xf5i5Wt5rl+6Fo7mTcia8yg8APs3cME3pSEGCYSDo/j8AWqOpkxLc08oPzRLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740229275; c=relaxed/simple;
-	bh=+SHI4/xYTay3osIZoggq3aQNWY2pBZiUAPIcUURKDqU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=d4eFhn81ISui7HHfXjRqfazizFXN3hC4993N2i8bdm/F5lSmQAb5t+ZiJi9fk0n5OumhT0B+t2tA9SfQ5FAw6gRdnKGw8ecjStE+uYGy/mQkBuh00pIsUZIoFtgraSeWPY8HAk6XHuyjYt8mz4vvfLzzyY8A2AfHw6TAM5YU6RQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=tC1U3K+L; arc=none smtp.client-ip=128.199.32.197
+	bh=E81IZVnYsg2qBLebXsL2Wo9IJ6W5FxrP4pSvP+wPjMo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=CJToU+0Crmut29NRWjWfb00Ed2eCk9KI6AeJD85sfnM4ozUGDnZjXIKZpSjLVO5lxLV3U7XxmKSv8fqqQHbp5lyJPi0Eix/Zfa+jC4uO5E0N7mAGmXK7foYn/hCfI03tvFptJFU8U56I2+AtH0UOPFBtF79iy9vlT+osJSqyydk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=3+7I1SYb; arc=none smtp.client-ip=128.199.32.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="tC1U3K+L"
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="3+7I1SYb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
-	t=1740229264; bh=+SHI4/xYTay3osIZoggq3aQNWY2pBZiUAPIcUURKDqU=;
-	h=From:Subject:Date:To:Cc;
-	b=tC1U3K+Li8BYXErIug63yBkmJ7kM8vgSbH2qSgIE6IbPYJImsfzybY6srhFS3hN3V
-	 I/JKV5r+JdGkmzxVegIhvZRpk9BBwGnbKjrICxGzh9iLME5rpdV7usS9a/yT1HvIYL
-	 CkiMsAZz5KmaWqlVuuoSbsocpeYpa4TbQUcBCnZw=
+	t=1740229265; bh=E81IZVnYsg2qBLebXsL2Wo9IJ6W5FxrP4pSvP+wPjMo=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=3+7I1SYb2CpfV68mq631iZp7THizfQH3QqjZ6hQbspHIe7rE1UFayQ3R3CiBKcuPS
+	 ngwrRjf+j2nr92Bs4+3KY0F+d+/PEglzDB4WSO420hZx7pZkybmMN5ZGZFegcnCViT
+	 /eBRrO4/591n0ghaeKmuU+hcxn1j3R2BeK4a+7ps=
 From: Luca Weiss <luca@lucaweiss.eu>
-Subject: [PATCH 0/4] Some cleanups for Fairphone 3, set firmware-name,
- enable modem
-Date: Sat, 22 Feb 2025 14:00:46 +0100
-Message-Id: <20250222-fp3-remoteprocs-firmware-v1-0-237ed21c334a@lucaweiss.eu>
+Date: Sat, 22 Feb 2025 14:00:49 +0100
+Subject: [PATCH 3/4] arm64: dts: qcom: sdm632-fairphone-fp3: Add
+ firmware-name for adsp & wcnss
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,10 +34,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAH7KuWcC/x3MMQqAMAxA0atIZgMaLYhXEYdWU82gLamoIN7d4
- viG/x9IrMIJ+uIB5VOShD2jLguYVrsvjDJnA1VkKiJCHxtU3sLBUcOU0Itul1VGZxvTmXbuyHn
- IeVT2cv/rYXzfD+lF1NJqAAAA
-X-Change-ID: 20250222-fp3-remoteprocs-firmware-ba35854d82bf
+Message-Id: <20250222-fp3-remoteprocs-firmware-v1-3-237ed21c334a@lucaweiss.eu>
+References: <20250222-fp3-remoteprocs-firmware-v1-0-237ed21c334a@lucaweiss.eu>
+In-Reply-To: <20250222-fp3-remoteprocs-firmware-v1-0-237ed21c334a@lucaweiss.eu>
 To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
  Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -46,44 +45,65 @@ To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
 Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Luca Weiss <luca@lucaweiss.eu>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=866; i=luca@lucaweiss.eu;
- h=from:subject:message-id; bh=+SHI4/xYTay3osIZoggq3aQNWY2pBZiUAPIcUURKDqU=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBnucqIeAM2FXX4AVuW2XPPLZA1g2n903RUgZoc5
- HxAn+rOFDaJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZ7nKiAAKCRBy2EO4nU3X
- VlaMEACjkyh3miHOvr7h6Zf6iWGd6P9EXL3bvvxGL+dAaKz9Cj+vCmu/f1GzmWf/yr++xXMYKiV
- d1Wms122LbAxv+TamoDBkZhIttUADazB11bRZkjvimN5iD6dE3r/6UxcBV3YAH9D5hmzfv/10kl
- yvx09sSKghfaPZ67QSKAdCPvzBO1hko5xsiG8aRVFiOSsLNyWamAucg/sO2E88py7WlkdennVjW
- VlgY5zTWIxqwHrBtmV1BArMA0bVj2lUzX5o5YjNuZoRoQrutdii5GyYD4OdlfQUyG/P0CBgjjLf
- PIqrSKpMf+M/U+ZDm29/ANzV59Bf+HDQUJH2L8JWOY667PlWFL6PLD/9YwDatLn6v1oRT5r39ok
- JAQefC09106C+q+RCXy80Kh2waAL6SAL9dH39QvnrTdnwx0KSWNf9EQusO6dHZlOVPgMbWrVTjZ
- /3ykLPAOTVHZxsuQoxsyCpL7/+uqeE0hO1EPax1k/mHbBgQbsl5tEt0EzUUMViqH0hMrOG1ymYL
- 3vGzD8rq+vUvBkcppkwE4uhwq//60ic7QL1hrLfdAAxusrYqrzbjOygTzrP+2drntqQBt5mtQXd
- MhRoZc4/j163GyjJ3bukjZ9shDbWcCJZyBehIY+T9h3KIa8v0Q5VfbSKwh2hV97NXPqztIVdWEG
- PQ5+25DD4FgzHpQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1132; i=luca@lucaweiss.eu;
+ h=from:subject:message-id; bh=E81IZVnYsg2qBLebXsL2Wo9IJ6W5FxrP4pSvP+wPjMo=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBnucqOROIXxdFNC4QlmeNCKjgY0zP9vp+s/04zn
+ KcH5qJP3kiJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZ7nKjgAKCRBy2EO4nU3X
+ VqmLD/9yjqrNAx94JyFiuMsbOVI2pYk4Ka2CPTRLPTYeeXl9rwCH/XYXgN0Q3MRXLPiw/uV2DtT
+ Snh+God9qu2aYe2UGtIxZrqym2jwLqY670CoISGyc7H/hNkj1npor74E57G1TwDEEdR+Qcei/fP
+ 416BXeiTAH1aGTmuIKUJV2ihWnrtd5Zmetss4g34N3FKw7vJJooenbtNHfpaUKpKJQD38gWjvPk
+ YXNmo3+KorrlaayzPe6TcXzVDat64Xs+TGAkcfSNCDzkuX23m7fy/WBJFRlMurEWZM7uAPNe6yB
+ ahTog2FoxFbBR0a/TsgEVOXrRwljbMOtYMm+Gnw+TAYdCQ5UlKVrW1VB+L1SKZa7ZzlDChsDHqW
+ USeerEqSEbTTVWh+YGPxpFe8zAZiobvdH9iJ8JDujj2JcvhJi+V91vtIE0dRFTDZlru3ZAMFuT1
+ d/hn3MouyG6Pky1Tly7gsxadhQz9/fpLH2dSO9Q7CPuQVm4x9JKLVwY3yPNFQbt83H+DcbGn39m
+ YqQKFSWyKpVpfOaEk3us7QIiN726KP0WCplccuChcUFd8YGzFLwLSoXNLSPBA5aR2hCzOeYgITq
+ JZqUSS7akC3cmzCWxT1QHuUciV/vy8h8k7+ObQfepkXD3K3/ZZmGQnxRJ/t27uOyJTFy5e/cZUD
+ Kv1ohWniH3BBaKw==
 X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
  fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-The main objective is setting firmware-name for the remoteprocs and
-enabling the modem.
+Set the paths where the device-specific firmware can be found for this
+device.
 
-The first two patches are just some cleanups to align the dts style with
-contemporary style.
+Fairphone 3 was shipped with secure-boot off so any testkey-signed
+firmware is accepted.
 
 Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
 ---
-Luca Weiss (4):
-      arm64: dts: qcom: sdm632-fairphone-fp3: Move status properties last
-      arm64: dts: qcom: sdm632-fairphone-fp3: Add newlines between regulator nodes
-      arm64: dts: qcom: sdm632-fairphone-fp3: Add firmware-name for adsp & wcnss
-      arm64: dts: qcom: sdm632-fairphone-fp3: Enable modem
+ arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
- arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts | 48 ++++++++++++++++++++---
- 1 file changed, 42 insertions(+), 6 deletions(-)
----
-base-commit: 245879bbd9af3559c3b0351ca0d93f324214c9d6
-change-id: 20250222-fp3-remoteprocs-firmware-ba35854d82bf
+diff --git a/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts b/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts
+index 08ffe77d762c3a97f470efbfb5064282fe2090da..5611209dbfa41d7834af7903535ed3e05604ba63 100644
+--- a/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts
++++ b/arch/arm64/boot/dts/qcom/sdm632-fairphone-fp3.dts
+@@ -82,6 +82,8 @@ nfc@28 {
+ };
+ 
+ &lpass {
++	firmware-name = "qcom/msm8953/fairphone/fp3/adsp.mbn";
++
+ 	status = "okay";
+ };
+ 
+@@ -297,11 +299,16 @@ &usb_dwc3_hs {
+ };
+ 
+ &wcnss {
++	firmware-name = "qcom/msm8953/fairphone/fp3/wcnss.mbn";
+ 	vddpx-supply = <&pm8953_l5>;
+ 
+ 	status = "okay";
+ };
+ 
++&wcnss_ctrl {
++	firmware-name = "qcom/msm8953/fairphone/fp3/WCNSS_qcom_wlan_nv.bin";
++};
++
+ &wcnss_iris {
+ 	compatible = "qcom,wcn3680";
+ 
 
-Best regards,
 -- 
-Luca Weiss <luca@lucaweiss.eu>
+2.48.1
 
