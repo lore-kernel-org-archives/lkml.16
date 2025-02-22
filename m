@@ -1,171 +1,273 @@
-Received: from bayard.4d2.org (bayard.4d2.org [5.78.89.93])
+Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 554C36FC3;
-	Sat, 22 Feb 2025 11:36:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.78.89.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49AC6FC3
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 11:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740224181; cv=none; b=exn47O3uYRyGiG16ZW3SHRXR6p/6/RYW3qMKIcJvYxtijmL8H7CMDoKeklbakgdJX9oZn+3GohIRc1rKua+mSBrQw9rc8DPEI+bd3LlWdUBKh2XKQ9bbbsxlp1uljPR4/2yJrtXoOgMWQn9pdgCXlLxqGtqmPG7NlkroXs6pQ/A=
+	t=1740224210; cv=none; b=NMZ2KcTh01jY0WeAU2XCBRZ7T/QGXsUKVrbIqnLnQN7D/WgrrNUCMdOsP9Ahap96mNzyPCQSQsJDnP+YNvA1v5pieamHNBKGZer5Ez9+STUgIP/zvcoFvAGbSdEGoX3+kHYQ0dB6xzVn04GRcdOS19GspA30C1ZyzW8u3jRksXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740224181; c=relaxed/simple;
-	bh=SOwH0X3o/HhmS2t6HTuMd4f+rDYK0rxVnzjVPLbUQq4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KOnCQixG19Lf3WZlQmm9f6ozYVICcTXt3i8EJRL0uLP236aTqGMcgfbXHG3xSInEXqA+RUYefQ3B3i5sYBRiIJcdfc+5ZMh+kb2u8aulLKmCfsO2xkQceCGKAjNZojr5Al4i6PRylwOmChgrkh2nX9Gs8K9AJJQCaSpTwdSFUPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org; spf=pass smtp.mailfrom=4d2.org; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=ABVOlES/; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=ujfBiNk5; arc=none smtp.client-ip=5.78.89.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4d2.org
+	s=arc-20240116; t=1740224210; c=relaxed/simple;
+	bh=RQUwl6i6MCv7DWVhyufNd2qXBCIjWoJzvjgbz67kYyo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LpnrkF6IBUaudIMELXJpWywf5ze9CRqLJ3TskyaA+oV+febEjiNvpmN0rpnTGIhC/sHt+OJRiwTogtaH3O407GO5dpjO+PE/PMckD4jP2WpDVEqpdXrSUh4bYTmoz0IC89RXzMlBzC9YRj5jRVpstxjerd5YYUIvXmsUcYu1McE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=CgW4dc8x; arc=none smtp.client-ip=199.247.17.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="ABVOlES/";
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="ujfBiNk5"
-Received: from bayard.4d2.org (bayard.4d2.org [127.0.0.1])
-	by bayard.4d2.org (Postfix) with ESMTP id 5ED23122FE26;
-	Sat, 22 Feb 2025 03:36:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1740224177; bh=SOwH0X3o/HhmS2t6HTuMd4f+rDYK0rxVnzjVPLbUQq4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ABVOlES/GvScXjONNVDQvu/S0Hs0wPhbGU2RDAYy2cEeih5WIoQHqUmafU13fxDFu
-	 YsWFXJluYDlaEhjHUYJtm2u/bMA+KvTfONDIopxwdKbEsNXl97hmYRAj+c2EU+Hw3p
-	 aedeLCEuNoaB0KPVlAkQ7MYLSueCdk9AD24hVdyeB8ILjIz+UYi6NcQ+cBwz+nZ3B5
-	 rufn8cDIc5M/ZRIN1c1aQh0Bo731er7upOX6k9iMX7l3fRbu1OlRImXED2Fh7wYcTZ
-	 m6Bv/z5YeJlkg0VNvaVFDSz/rgmlcKN7K5jzF/dAIfusm/7qdgudQVhZFY23ha9iDJ
-	 eIMiVIe5K6luw==
-X-Virus-Scanned: amavisd-new at 4d2.org
-Received: from bayard.4d2.org ([127.0.0.1])
- by bayard.4d2.org (bayard.4d2.org [127.0.0.1]) (amavisd-new, port 10024)
- with ESMTP id g1TN3FBn8qRe; Sat, 22 Feb 2025 03:36:13 -0800 (PST)
-Received: from ketchup (unknown [183.217.80.34])
+	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="CgW4dc8x"
+Received: from spock.localnet (unknown [212.20.115.26])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: heylenay@4d2.org)
-	by bayard.4d2.org (Postfix) with ESMTPSA id A95BC122FE25;
-	Sat, 22 Feb 2025 03:36:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1740224173; bh=SOwH0X3o/HhmS2t6HTuMd4f+rDYK0rxVnzjVPLbUQq4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ujfBiNk57CUKu+M7ljRJ0+19wzyuQi2TwhupqBRWE2X11DD7xojiJc8aH0nGqrQoO
-	 TRAGFEfGaWX/oiqAjv1Es0p6ALLAmtUospfJZV4CkJPT5E82aSN/F9LTdzFPP8ZDhf
-	 3qJlfAh1xm2cinokwTI4NuRutnBj7HD1c0v+GB69Enj4+A6qJ/3bbmh5Z0MUnbRyfA
-	 oLSLnZU+Gfebcy1tEnnKWUyi2SoCuZzL3zf0snIAMOy+Af/Vh+P462eOicyqiuPPZ/
-	 gsNYyP+yc0R/g2KdgmZ6Utb9q+qkFadB29zPBxIPZdkKhBlsWhX1k82nPc8YyvHejt
-	 Wo/go59RUiKOA==
-Date: Sat, 22 Feb 2025 11:36:00 +0000
-From: Haylen Chu <heylenay@4d2.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Haylen Chu <heylenay@outlook.com>, Yixun Lan <dlan@gentoo.org>,
-	linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Inochi Amaoto <inochiama@outlook.com>,
-	Chen Wang <unicornxdotw@foxmail.com>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>
-Subject: Re: [PATCH v4 2/4] dt-bindings: soc: spacemit: Add spacemit,k1-syscon
-Message-ID: <Z7m2oNXbwJ06KtLQ@ketchup>
-References: <20250103215636.19967-2-heylenay@4d2.org>
- <20250103215636.19967-4-heylenay@4d2.org>
- <aw2vqnz5vcccqqvrrhz5tgawj7fnzzg3tds7nnepuorit37a7r@jcj3wrs7d73h>
- <Z6rdBhQ7s2ReOgBL@ketchup>
- <19e5129b-8423-4660-8e4f-8b898214d275@kernel.org>
- <Z63T_EDvXiuRQbvb@ketchup>
- <2ab715bd-e26c-41bb-ac64-baa864d90414@kernel.org>
- <Z7BTVu10EKHMqOnJ@ketchup>
- <3e196e9c-c942-4026-8d6c-69c9930bebd5@kernel.org>
+	by prime.voidband.net (Postfix) with ESMTPSA id B590E6168430;
+	Sat, 22 Feb 2025 12:36:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+	s=dkim-20170712; t=1740224205;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yMowdD31+N5Yry4py2pgTOlFubTMO0/Sn3pXYQDcq1M=;
+	b=CgW4dc8x19IJOXZgTudrQ6td+3EWFR6m9DcjmPi97BBBbKGTjdLOv1zRpJEmkyQFcdsb6/
+	qmeLJG4h8sUgUe2DNMAllSRiEbAVpVFnrgAWse2A0uVuFyD3eNrRw7iNTlBBqgZesdrKj6
+	vNF4k/Qu1CkhKy40VAl75Q/8dMRl4Po=
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+To: x86@kernel.org, Rik van Riel <riel@surriel.com>
+Cc: linux-kernel@vger.kernel.org, bp@alien8.de, peterz@infradead.org,
+ dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
+ nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
+ linux-mm@kvack.org, akpm@linux-foundation.org, jackmanb@google.com,
+ jannh@google.com, mhklinux@outlook.com, andrew.cooper3@citrix.com,
+ Manali.Shukla@amd.com
+Subject: Re: [PATCH v12 00/16] AMD broadcast TLB invalidation
+Date: Sat, 22 Feb 2025 12:36:32 +0100
+Message-ID: <4630159.LvFx2qVVIh@natalenko.name>
+In-Reply-To: <5861243.DvuYhMxLoT@natalenko.name>
+References:
+ <20250221005345.2156760-1-riel@surriel.com>
+ <5861243.DvuYhMxLoT@natalenko.name>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3e196e9c-c942-4026-8d6c-69c9930bebd5@kernel.org>
+Content-Type: multipart/signed; boundary="nextPart2356740.ElGaqSPkdT";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
 
-On Sat, Feb 22, 2025 at 10:52:02AM +0100, Krzysztof Kozlowski wrote:
-> On 15/02/2025 09:41, Haylen Chu wrote:
-> > 
-> >>> 	};
-> >>>
-> >>> For the other two clock controllers (APBS and APBC), syscons are really
-> >>> unnecessary and it's simple to fold them.
-> >>
-> >>
-> >> I don't follow. Do we talk about children or syscon compatible?
-> > 
-> > APBS region contains only clock (PLL) bits and APBC region contains only
-> > reset and clock bits, so I was thinking about dropping the syscon nodes
-> > and changing their compatible to spacemit,k1-plls and
-> > spacemit,k1-cru-apbc.
-> > 
-> > In summary, my plan is,
-> > 
-> > - For MPMU, APMU and APBC region, keep the binding in soc/spacemit.
-> >   They'll be reset, clock and power controllers, with compatible
-> >   "spacemit,k1-syscon-*".
-> > - For APBS region, write a new binding clock/spacemit,k1-plls, as it
-> >   contains only PLL-related bits. It acts as clock controller.
-> > - All split children will be eliminated, there'll be only four device
-> >   nodes, one for each region, matching the datasheet.
-> > - Put all clock-related binding definition of SpacemiT K1 in
-> >   dt-bindings/clock/spacemit,k1-ccu.h
-> > 
-> > Is it fine for you?
-> > 
-> 
-> That did not explain hardware to me.
+--nextPart2356740.ElGaqSPkdT
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+To: x86@kernel.org, Rik van Riel <riel@surriel.com>
+Subject: Re: [PATCH v12 00/16] AMD broadcast TLB invalidation
+Date: Sat, 22 Feb 2025 12:36:32 +0100
+Message-ID: <4630159.LvFx2qVVIh@natalenko.name>
+In-Reply-To: <5861243.DvuYhMxLoT@natalenko.name>
+MIME-Version: 1.0
 
-Sorry if my replies haven't made things clear. I'm goint to make a
-(hopefully) more clear conclusion,
+On sobota 22. =C3=BAnora 2025 12:29:54, st=C5=99edoevropsk=C3=BD standardn=
+=C3=AD =C4=8Das Oleksandr Natalenko wrote:
+> Hello.
+>=20
+> On p=C3=A1tek 21. =C3=BAnora 2025 1:52:59, st=C5=99edoevropsk=C3=BD stand=
+ardn=C3=AD =C4=8Das Rik van Riel wrote:
+> > Add support for broadcast TLB invalidation using AMD's INVLPGB instruct=
+ion.
+> >=20
+> > This allows the kernel to invalidate TLB entries on remote CPUs without
+> > needing to send IPIs, without having to wait for remote CPUs to handle
+> > those interrupts, and with less interruption to what was running on
+> > those CPUs.
+> >=20
+> > Because x86 PCID space is limited, and there are some very large
+> > systems out there, broadcast TLB invalidation is only used for
+> > processes that are active on 3 or more CPUs, with the threshold
+> > being gradually increased the more the PCID space gets exhausted.
+> >=20
+> > Combined with the removal of unnecessary lru_add_drain calls
+> > (see https://lkml.org/lkml/2024/12/19/1388) this results in a
+> > nice performance boost for the will-it-scale tlb_flush2_threads
+> > test on an AMD Milan system with 36 cores:
+> >=20
+> > - vanilla kernel:           527k loops/second
+> > - lru_add_drain removal:    731k loops/second
+> > - only INVLPGB:             527k loops/second
+> > - lru_add_drain + INVLPGB: 1157k loops/second
+> >=20
+> > Profiling with only the INVLPGB changes showed while
+> > TLB invalidation went down from 40% of the total CPU
+> > time to only around 4% of CPU time, the contention
+> > simply moved to the LRU lock.
+> >=20
+> > Fixing both at the same time about doubles the
+> > number of iterations per second from this case.
+> >=20
+> > Some numbers closer to real world performance
+> > can be found at Phoronix, thanks to Michael:
+> >=20
+> > https://www.phoronix.com/news/AMD-INVLPGB-Linux-Benefits
+> >=20
+> > My current plan is to implement support for Intel's RAR
+> > (Remote Action Request) TLB flushing in a follow-up series,
+> > after this thing has been merged into -tip. Making things
+> > any larger would just be unwieldy for reviewers.
+> >=20
+> > v12:
+> >  - make sure "nopcid" command line option turns off invlpgb (Brendan)
+> >  - add "noinvlpgb" kernel command line option
+> >  - split out kernel TLB flushing differently (Dave & Yosry)
+> >  - split up the patch that does invlpgb flushing for user processes (Da=
+ve)
+> >  - clean up get_flush_tlb_info (Boris)
+> >  - move invlpgb_count_max initialization to get_cpu_cap (Boris)
+> >  - bunch more comments as requested
+>=20
+> Somehow, this iteration breaks resume from S3. I can see it even in a QEM=
+U VM:
 
-> You assume that some way, maybe
-> through magical crystal ball, I know your hardware and will tell you
-> what to do.
->
-> No.
-> 
-> I have dozens of other patches in my inbox. It's you who should explain
-> the hardware in simple, concise way so we can judge whether DT
-> description is correct.
-> 
-> Again: define what is the actual device, what is its address space, what
-> are its possible *separate* and *distinctive* children.
+Can also reproduce this by simply offlining/onlining a CPU via `/sys/device=
+s/system/cpu/cpuX/online`.
 
-The series covers four seperate blocks,
+>=20
+> ```
+> [   24.373391] ACPI: PM: Low-level resume complete
+> [   24.373929] ACPI: PM: Restoring platform NVS memory
+> [   24.375024] Enabling non-boot CPUs ...
+> [   24.375777] smpboot: Booting Node 0 Processor 1 APIC 0x1
+> [   24.376463] BUG: unable to handle page fault for address: ffffffffa3ba=
+4d60
+> [   24.377383] #PF: supervisor write access in kernel mode
+> [   24.377912] #PF: error_code(0x0003) - permissions violation
+> [   24.378413] PGD 25427067 P4D 25427067 PUD 25428063 PMD 8000000024c001a1
+> [   24.379020] Oops: Oops: 0003 [#1] PREEMPT SMP NOPTI
+> [   24.379503] CPU: 1 UID: 0 PID: 0 Comm: swapper/1 Kdump: loaded Not tai=
+nted 6.14.0-pf0 #1 161e4891fb5044b2d7438cd1852eeaac0cdffab5
+> [   24.380650] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS u=
+nknown 02/02/2022
+> [   24.381400] RIP: 0010:get_cpu_cap+0x39b/0x4f0
+> [   24.381810] Code: 08 c7 44 24 08 00 00 00 00 48 8d 4c 24 0c e8 3c 00 0=
+4 00 90 8b 44 24 04 89 43 64 0f b7 44 24 0c 83 c0 01 81 7b 24 09 00 00 80 <=
+66> 89 05 0e ab 8b 01 0f 86 18 fd ff ff c7 44 24 14 00 00 00 00 4c
+> [   24.383629] RSP: 0000:ffffafbec00efe70 EFLAGS: 00010012
+> [   24.384155] RAX: 0000000000000001 RBX: ffff8b3fbcb19020 RCX: 000000000=
+0001001
+> [   24.384862] RDX: 0000000000000000 RSI: ffffafbec00efe74 RDI: ffffafbec=
+00efe78
+> [   24.385603] RBP: ffffafbec00efe88 R08: ffffafbec00efe70 R09: ffffafbec=
+00efe7c
+> [   24.386318] R10: 0000000000002430 R11: ffff8b3fa5428000 R12: ffffafbec=
+00efe8c
+> [   24.387014] R13: ffffafbec00efe84 R14: ffffafbec00efe80 R15: ffffafbec=
+00efe70
+> [   24.387713] FS:  0000000000000000(0000) GS:ffff8b3fbcb00000(0000) knlG=
+S:0000000000000000
+> [   24.388502] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   24.389074] CR2: ffffffffa3ba4d60 CR3: 0000000025422000 CR4: 000000000=
+0350ef0
+> [   24.389769] Call Trace:
+> [   24.390020]  <TASK>
+> [   24.392234]  identify_cpu+0xd4/0x890
+> [   24.392593]  identify_secondary_cpu+0x12/0x40
+> [   24.393032]  smp_store_cpu_info+0x49/0x60
+> [   24.393430]  start_secondary+0x7f/0x140
+> [   24.393810]  common_startup_64+0x13e/0x141
+> [   24.394218]  </TASK>
+>=20
+> $ scripts/faddr2line arch/x86/kernel/cpu/common.o get_cpu_cap+0x39b
+> get_cpu_cap+0x39b/0x500:
+> get_cpu_cap at =E2=80=A6/arch/x86/kernel/cpu/common.c:1063
+>=20
+> 1060         if (c->extended_cpuid_level >=3D 0x80000008) {
+> 1061                 cpuid(0x80000008, &eax, &ebx, &ecx, &edx);
+> 1062                 c->x86_capability[CPUID_8000_0008_EBX] =3D ebx;
+> 1063                 invlpgb_count_max =3D (edx & 0xffff) + 1;
+> 1064         }
+> ```
+>=20
+> Any idea what I'm looking at?
+>=20
+> Thank you.
+>=20
+> > v11:
+> >  - resolve conflict with CONFIG_PT_RECLAIM code
+> >  - a few more cleanups (Peter, Brendan, Nadav)
+> > v10:
+> >  - simplify partial pages with min(nr, 1) in the invlpgb loop (Peter)
+> >  - document x86 paravirt, AMD invlpgb, and ARM64 flush without IPI (Bre=
+ndan)
+> >  - remove IS_ENABLED(CONFIG_X86_BROADCAST_TLB_FLUSH) (Brendan)
+> >  - various cleanups (Brendan)
+> > v9:
+> >  - print warning when start or end address was rounded (Peter)
+> >  - in the reclaim code, tlbsync at context switch time (Peter)
+> >  - fix !CONFIG_CPU_SUP_AMD compile error in arch_tlbbatch_add_pending (=
+Jan)
+> > v8:
+> >  - round start & end to handle non-page-aligned callers (Steven & Jan)
+> >  - fix up changelog & add tested-by tags (Manali)
+> > v7:
+> >  - a few small code cleanups (Nadav)
+> >  - fix spurious VM_WARN_ON_ONCE in mm_global_asid
+> >  - code simplifications & better barriers (Peter & Dave)
+> > v6:
+> >  - fix info->end check in flush_tlb_kernel_range (Michael)
+> >  - disable broadcast TLB flushing on 32 bit x86
+> > v5:
+> >  - use byte assembly for compatibility with older toolchains (Borislav,=
+ Michael)
+> >  - ensure a panic on an invalid number of extra pages (Dave, Tom)
+> >  - add cant_migrate() assertion to tlbsync (Jann)
+> >  - a bunch more cleanups (Nadav)
+> >  - key TCE enabling off X86_FEATURE_TCE (Andrew)
+> >  - fix a race between reclaim and ASID transition (Jann)
+> > v4:
+> >  - Use only bitmaps to track free global ASIDs (Nadav)
+> >  - Improved AMD initialization (Borislav & Tom)
+> >  - Various naming and documentation improvements (Peter, Nadav, Tom, Da=
+ve)
+> >  - Fixes for subtle race conditions (Jann)
+> > v3:
+> >  - Remove paravirt tlb_remove_table call (thank you Qi Zheng)
+> >  - More suggested cleanups and changelog fixes by Peter and Nadav
+> > v2:
+> >  - Apply suggestions by Peter and Borislav (thank you!)
+> >  - Fix bug in arch_tlbbatch_flush, where we need to do both
+> >    the TLBSYNC, and flush the CPUs that are in the cpumask.
+> >  - Some updates to comments and changelogs based on questions.
+> >=20
+> >=20
+> >=20
+>=20
+>=20
+>=20
 
-- Application Power Manage Unit, APMU
-- Main Power Manage Unit, MPMU
-- APB Bus Clock Unit, APBC
-- APB Spare, APBS
 
-they're clearly separate blocks and have their own distinct, separate
-address spaces, confirmed by the Address Mapping section in the TRM[1].
+=2D-=20
+Oleksandr Natalenko, MSE
+--nextPart2356740.ElGaqSPkdT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-These four blocks provide hardware bits for three purposes: power
-management, reset signals and clocks. Not every block is capable of all
-the three functionalities,
+-----BEGIN PGP SIGNATURE-----
 
-- APMU, MPMU: power, reset, clock
-- APBC: clock, reset
-- APBS: clock
+iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAme5tsAACgkQil/iNcg8
+M0vckg//QzzLbzZgVuw+RAazI0uv0qTdmpxqdl6uOTZKJVyV3ePBCMEaD3nQyJMu
+MrL3NFnj6piuNlsMh0Melx0DACW7JoJtQNzXATOil6HbQ7e3iMPLr4nUVCdjqEKP
+wy3/HQpaXs/2NSdUZBEv/IqPeazqCvIBOZ3ENNg1cq9Lni8kojYJL2OVo/2XwgoP
+dYZEIzTvzRaj4Gje7NmSa1T93K8yLKTZS5jMV97NSCmKxiq2VxXEkqwIDvhoNmU0
+C4Gi8X81QRHhUyRQOiJWdLFre9nDMfkzhryj87LJ8XFcxxwhsFVVygBchkmnQzFr
+06PdyjoBVlUeZTEPgnuu8mRH/GJO6PCX/FyZD6UgofsyIsVaQsSxrjgmEm1lDUsQ
+3Elqxbpp/005gICK6mdglVPq2b5TOYKx0ySLAh/TQgYUShjBysm5ajrv7zBPRIvH
+rCU3fa+qpbkRkP2xOCs+r6/XOvEhVDZ1nAzGQR9TNeLjyen5Eyyrg5wJojbR4jbt
+5+8BeJTj68PPCHt6BR5TTxiOhhxD4qRPw6Tl5vVFdeJo6wRnvKbR5hoy9tpjKudS
+PMhdp/x1DlUEgCQI8WbNeh7KQHAI21zQq10QfsULWCkCm31BgvgWvMQ3cQs3R6jB
+r8uBzLDnyupYcGgGD+qg08vX69xJzEGcyxRyGwtQWuapquDM7EQ=
+=dmfm
+-----END PGP SIGNATURE-----
 
-Reset and clock bits, if present, always stay in the same register.
-Power management bits stay in others. These two types of registers
-interleave if present in the same block (APMU and MPMU case).
+--nextPart2356740.ElGaqSPkdT--
 
-These blocks have no child: power, clock and reset definitions differ
-from block to block, no reusable nodes could be split from them.
 
-Hope this conclusion will help the reviewing. Please tell if something
-is unclear.
 
-> 
-> Best regards,
-> Krzysztof
-
-Thanks,
-Haylen Chu
-
-[1]: https://developer.spacemit.com/documentation?token=LzJyw97BCipK1dkUygrcbT0NnMg
