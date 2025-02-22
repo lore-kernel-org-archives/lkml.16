@@ -1,77 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCCD206F16;
-	Sat, 22 Feb 2025 11:07:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7097713BC0E
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 11:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740222443; cv=none; b=sVMe4GrvQsRpenI1ZTZXgIhssgel11PDK3+4NJgCVmLlsiiGs+f50zFbfBvqFP2g3E0nljDLjPBwNHmm7s8+T/4iYRW/AhzXoRuaN6aeiPtMPuVcfnFD8UU4j+FRty3uSNg8UP//tTVLm1VQSVXwceIXC00fvm4XHk8kYmQlhA4=
+	t=1740222922; cv=none; b=IzNVrfSJjLi5UAP8a6UEhmRDnkHAMfkdp5c37dW3V4ILmOsdcDVF5kW0WSmkhVZE1lqb0Z3lGPNIWKHzAM+xZqsor4+qz0Vcpde31OXHifr+CCWC+rO7w0D4yD1sTYl4YDFRoRKYtvTSkUoLKIaa2MqFOrQeFyjA4R9TH0gG7eM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740222443; c=relaxed/simple;
-	bh=dDrYYapdceqAhTHU8P5P38hl7k4fIgWxKDFEdkvwgLc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cgz70SVlzhz8VjeuWQVsT1Xcq40p0+UiAMGJ18UDobc91VXuaCNsOqEDVshgHfpB3nj9Pef+J3yvBYW+K92x+rLXAnCfo+QBSylK5YulJUJWCdjWXikBY5nR8iqiAdYwQ+2N02jlh7pk0x4OWkghnBNb3lKthww1ncTNDm2MVjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=mWzZVi6F; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="mWzZVi6F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D596C4CED1;
-	Sat, 22 Feb 2025 11:07:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1740222442;
-	bh=dDrYYapdceqAhTHU8P5P38hl7k4fIgWxKDFEdkvwgLc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mWzZVi6FoyU/sNWV0+xHzN9oiKD0omT3CulYjCCaUEp2rkwHz3ogTUI8zEiPotplM
-	 0jH+ywI2iwIo5CkpuyVJzBz5vSzKFbOCOfWvX+CNk5KDZ6oDgucKgu9Uv+2fgonkqJ
-	 e1Wiv0W1hsibAFNS8w0HcL1lEyhodiRyJb0DwWtE=
-Date: Sat, 22 Feb 2025 12:07:14 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Martin Uecker <uecker@tugraz.at>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Boqun Feng <boqun.feng@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	rust-for-linux <rust-for-linux@vger.kernel.org>,
-	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org,
-	ksummit@lists.linux.dev
-Subject: Re: Rust kernel policy
-Message-ID: <2025022230-urgency-imminent-6032@gregkh>
-References: <1d43700546b82cf035e24d192e1f301c930432a3.camel@tugraz.at>
- <2025022042-jot-favored-e755@gregkh>
- <b9a5de64fe1ded2ad3111763f35af9901bd81cc4.camel@tugraz.at>
- <caea3e79-78e6-4d98-9f3b-f8e7f6f00196@stanley.mountain>
- <61a7e7db786d9549cbe201b153647689cbe12d75.camel@tugraz.at>
- <20250221124304.5dec31b2@gandalf.local.home>
- <CAHk-=wgg2A_iHNwf_JDjYJF=XHnKVGOjGp50FzVWniA2Z010bw@mail.gmail.com>
- <6b3e4d3bdc9b6efd69068e5b22cfd05d370aed19.camel@tugraz.at>
- <1cf1d64b-128d-4dbe-8427-98405652944b@stanley.mountain>
- <5eb6554f5f600f09d5072bc524757912a36c5057.camel@tugraz.at>
+	s=arc-20240116; t=1740222922; c=relaxed/simple;
+	bh=kqiJAhMLa9R2vxhmokjZSt78eF1fFQFqNttKXTgYYd0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OwkZB4FPPdeTKdS/0tSTTn/vFM+ofyfd2boTtX2Jw6x+M17cvEw7Y6FSy1bk7UvGpDZqZJDu6TBg/d2RFfIOHbsBfuAfNZM9ednfUq9D7J4PzRMtfnZwxPZzFuRFDfVJv4RS2V+0sNaxtix7Kdc1dRqIuyW/bPQuCWTZAZJVG80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Z0PRw5SYnz1GCL0;
+	Sat, 22 Feb 2025 19:10:36 +0800 (CST)
+Received: from kwepemf100008.china.huawei.com (unknown [7.202.181.222])
+	by mail.maildlp.com (Postfix) with ESMTPS id B1327180103;
+	Sat, 22 Feb 2025 19:15:16 +0800 (CST)
+Received: from huawei.com (10.175.103.91) by kwepemf100008.china.huawei.com
+ (7.202.181.222) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Sat, 22 Feb
+ 2025 19:15:16 +0800
+From: Zeng Heng <zengheng4@huawei.com>
+To: <Dave.Martin@arm.com>, <james.morse@arm.com>
+CC: <bobo.shaobowang@huawei.com>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <jonathan.cameron@huawei.com>
+Subject: [PATCH mpam mpam/snapshot/v6.14-rc1 v2 2/5] arm_mpam: Add limitation for the Narrow-PARTID feature
+Date: Sat, 22 Feb 2025 19:24:45 +0800
+Message-ID: <20250222112448.2438586-3-zengheng4@huawei.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250222112448.2438586-1-zengheng4@huawei.com>
+References: <20250222112448.2438586-1-zengheng4@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5eb6554f5f600f09d5072bc524757912a36c5057.camel@tugraz.at>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemf100008.china.huawei.com (7.202.181.222)
 
-On Sat, Feb 22, 2025 at 11:25:26AM +0100, Martin Uecker wrote:
-> Thanks, this is useful.  I was asking because it would be relatively
-> easy to tweak the warnings in GCC too. GCC has similar heuristics for
-> other warnings to turn them off in macros and one can certainly also
-> make it smarter.  (Again, the two problems here seem lack of communication
-> and lack of resources.  One needs to understand what needs to be done
-> and someone has to do it. But even a limited amount of time/money could
-> make a difference.)
+Because it needs to support mixed systems that include MSCs with and
+without Narrow-PARTID support, there are the following incompatible
+control issues.
 
-For the time/money issue, there are a number of different groups
-offering funding up for open source work like this.  If you are in the
-EU there are a bunch of different ones, and also openSSF from the Linux
-Foundations funds work like this.  So those might all be worth looking
-into writing up a proposal if you want to do this.
+If an MSC does not support Narrow-PARTID and its control method is not of
+the "partition bitmap" type, then delivering the resctrl control group
+configuration across multiple PARTIDs will change the user's expected
+behavior.
 
-hope this helps,
+Currently, there is no way to solve this problem by programming different
+control values simply, so here decide to restrict the usage scenarios of
+this feature. When we find that the MATA MSC does not support the
+Narrow-PARTID feature, the driver will disable the feature, which means
+get_num_reqpartid() directly returns the number of intPARTIDs.
 
-greg k-h
+Signed-off-by: Zeng Heng <zengheng4@huawei.com>
+---
+ drivers/platform/arm64/mpam/mpam_resctrl.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/drivers/platform/arm64/mpam/mpam_resctrl.c b/drivers/platform/arm64/mpam/mpam_resctrl.c
+index eedd308d9c88..f3f8fb0ff421 100644
+--- a/drivers/platform/arm64/mpam/mpam_resctrl.c
++++ b/drivers/platform/arm64/mpam/mpam_resctrl.c
+@@ -168,6 +168,21 @@ u32 resctrl_arch_get_num_closid(struct rdt_resource *ignored)
+ 
+ static u32 get_num_reqpartid(void)
+ {
++	struct mpam_resctrl_res *res;
++	struct rdt_resource *r_mba;
++	struct mpam_props *cprops;
++
++	r_mba = resctrl_arch_get_resource(RDT_RESOURCE_MBA);
++	res = container_of(r_mba, struct mpam_resctrl_res, resctrl_res);
++	cprops = &res->class->props;
++
++	/*
++	 * If the MBA does not support Narrow-PARTID,
++	 * then the feature should be disabled at the system level.
++	 */
++	if (!mpam_has_feature(mpam_feat_partid_nrw, cprops))
++		return resctrl_arch_get_num_closid(NULL);
++
+ 	return mpam_partid_max + 1;
+ }
+ 
+-- 
+2.25.1
+
