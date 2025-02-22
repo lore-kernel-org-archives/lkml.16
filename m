@@ -1,100 +1,91 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C38020AF86;
-	Sat, 22 Feb 2025 16:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323AA20B7F9;
+	Sat, 22 Feb 2025 16:43:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740242623; cv=none; b=PkEyBhIYU8jFLh8sHhSemSiedfpJPi2i4CkZooGdFfm1KwlNR1mjiwT2CWzsfKfiNrYfokhAzvj6xpAxGkSry9i7xxo2I34VmIIqCYGq4xWYlgs4TxFz0rGSqlPQBGRiXqDR7UFrTppTeNxS4FXuSh64QMLF1JYuH0hWl1xNcAY=
+	t=1740242625; cv=none; b=aQ50cOolM349btMzOoldQHAqUiohNrlI0eWVajfFwUOxXCRevAvjTHIyqSMGeoJbvF64fEEM6l3xOCTa1AX35mCQN/zaCUaL1YFBesid1rStELVWH/QZJxd4XQEleUlYh3yAmzBJaPj5X69XAL0N/cf8Grv1bHWavkbbcgkH1NE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740242623; c=relaxed/simple;
-	bh=WfYHAN1uELqEBs662nDTIN9zG57e36XSWeaUhibUWRI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bKqt/7Ts/QHSATrKBgyPJf6Hf9pBBUGa6GeljbJykDFp5lGsAWBWWs9E4+RARqrWkMAKlxPMX4WCbqccOTGQBx/ez3BWHD0l3/UdtHo0ibR8Clmf2xWRyih/IS4bVEBVM6suK/11VYe2f+m+aEI7nc+ZwUZ5i8oIVunFiirAPg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=0ArJwH5b; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1740242625; c=relaxed/simple;
+	bh=GMd6Z/VOUwSptv1nfxzSMtHR/r8XyJvXtoxSAStk3rY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mx7ADzZz5jg1j94WWJ2CPT3KaaUWDYuKH0G1rv1XfVLqdQzZeN4FwOf/kMLwd0hAGQcVYhOFXtbRKZ9tpx9XujCpzaeYUUVLbLceQlC9bNKm+sLDg6xNG5j/Qm6ZihGHGqgGHA8c8e4iE8uMq/ykQ2rGnguITmGN4MG8GsgwSzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jve7SOdm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="0ArJwH5b"
-Received: from localhost.localdomain (unknown [IPv6:2a05:f6c2:511b:0:cbc0:999f:73ad:33bd])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 1D0342E08EC3;
-	Sat, 22 Feb 2025 18:43:39 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1740242620;
-	bh=z3zPpL3Ulc1+itLVafzibaVNCa9hzClSE4LTuvk9Wc0=; h=From:To:Subject;
-	b=0ArJwH5bA5fWzW4qIg+rEuOge/8tQjZdBkNp0dSxD2kz0dU/pQi4S03HNN4P/Iraz
-	 VL77G6AHN6zdfOODtNVxM4U16ioxmpmi8ayunoBG2HTHnTyvU8L2Q3Ao7Tb1OaV+EL
-	 Shx5CVUHLU+CyeZemehetjC8jg21nx6JsdtFEkvs=
-Authentication-Results: linux1587.grserver.gr;
-	spf=pass (sender IP is 2a05:f6c2:511b:0:cbc0:999f:73ad:33bd) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-From: Antheas Kapenekakis <lkml@antheas.dev>
-To: linux-kernel@vger.kernel.org,
-	linux-input@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH 4/5] HID: Add quirk to ignore the touchscreen battery on
- OneXPlayer X1
-Date: Sat, 22 Feb 2025 17:43:20 +0100
-Message-ID: <20250222164321.181340-5-lkml@antheas.dev>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250222164321.181340-1-lkml@antheas.dev>
-References: <20250222164321.181340-1-lkml@antheas.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jve7SOdm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A787C4CEE8;
+	Sat, 22 Feb 2025 16:43:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740242625;
+	bh=GMd6Z/VOUwSptv1nfxzSMtHR/r8XyJvXtoxSAStk3rY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Jve7SOdmYQDbiu9LbIYA2ITKCyFb9pMNIc0YuDr5AwdkK+t/mKSmgDUGDz9fZ4TiQ
+	 UssUXBKZ4GaSnDLS+E/QjULboz801+1Tt5Ypip/PSDa1lY2kYY0MLU5wgfLXS4S3J5
+	 NrxxlAKtm0fV/hA69G7tR/DAvSMTL3UQWn5jfHEkz7yvvGaG6Bs4d1rc6yqJMCyBKl
+	 ixsvTA4kF8mwU6aeegc6t1vWhIl9DVzXLoBxfZbdrHYPE+H/uNiA6qlztqUsVtjM+Y
+	 k2LBvZAAYQsvKhKS2IvQzzFORWE7UVaCemCw+NkZaugMFau+zlJOsQvIH61gFfMgC5
+	 8vyFMqz+VH/Bg==
+Date: Sat, 22 Feb 2025 16:43:37 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Karan Sanghavi <karansanghvi98@gmail.com>
+Cc: Javier Carrasco <javier.carrasco.cruz@gmail.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH v3] iio: light: Add check for array bounds in
+ veml6075_read_int_time_ms
+Message-ID: <20250222164337.0372fb58@jic23-huawei>
+In-Reply-To: <Z7dnrEpKQdRZ2qFU@Emma>
+References: <Z7dnrEpKQdRZ2qFU@Emma>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.48; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <174024262025.17437.4067662601537192451@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-The X1 devices come with a pen-capable touchscreen, in which the HID
-descriptor reports there is always a battery at 100% charge. Quirk it
-to not report the battery status.
+On Thu, 20 Feb 2025 17:34:36 +0000
+Karan Sanghavi <karansanghvi98@gmail.com> wrote:
 
-Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
----
- drivers/hid/hid-ids.h   | 1 +
- drivers/hid/hid-input.c | 2 ++
- 2 files changed, 3 insertions(+)
+> The array contains only 5 elements, but the index calculated by
+> veml6075_read_int_time_index can range from 0 to 7,
+> which could lead to out-of-bounds access. The check prevents this issue.
+> 
+> Coverity Issue
+> CID 1574309: (#1 of 1): Out-of-bounds read (OVERRUN)
+> overrun-local: Overrunning array veml6075_it_ms of 5 4-byte
+> elements at element index 7 (byte offset 31) using
+> index int_index (which evaluates to 7)
+> 
+> Fixes: 3b82f43238ae ("iio: light: add VEML6075 UVA and UVB light sensor driver")
+> Signed-off-by: Karan Sanghavi <karansanghvi98@gmail.com>
+> ---
+Superficially this looks hardening against malicious or broken hardware.
+That is fine to add, but not worth backporting or (in my opinion) adding a fixes
+tag.
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 7e400624908e..8e2fc152b089 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -1001,6 +1001,7 @@
- #define USB_VENDOR_ID_NOVATEK		0x0603
- #define USB_DEVICE_ID_NOVATEK_PCT	0x0600
- #define USB_DEVICE_ID_NOVATEK_MOUSE	0x1602
-+#define I2C_DEVICE_ID_ONEXPLAYER_X1    0xF001
- 
- #define USB_VENDOR_ID_NTI               0x0757
- #define USB_DEVICE_ID_USB_SUN           0x0a00
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index 9d80635a91eb..08e87577feef 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -390,6 +390,8 @@ static const struct hid_device_id hid_battery_quirks[] = {
- 	 * set HID_BATTERY_QUIRK_IGNORE for all Elan I2C-HID devices.
- 	 */
- 	{ HID_I2C_DEVICE(USB_VENDOR_ID_ELAN, HID_ANY_ID), HID_BATTERY_QUIRK_IGNORE },
-+	{ HID_I2C_DEVICE(USB_VENDOR_ID_NOVATEK, I2C_DEVICE_ID_ONEXPLAYER_X1),
-+	  HID_BATTERY_QUIRK_IGNORE },
- 	{}
- };
- 
--- 
-2.48.1
+>  drivers/iio/light/veml6075.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/light/veml6075.c b/drivers/iio/light/veml6075.c
+> index 05d4c0e9015d..5dd951f6e989 100644
+> --- a/drivers/iio/light/veml6075.c
+> +++ b/drivers/iio/light/veml6075.c
+> @@ -201,7 +201,12 @@ static int veml6075_read_int_time_index(struct veml6075_data *data)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	return FIELD_GET(VEML6075_CONF_IT, conf);
+> +	int int_index = FIELD_GET(VEML6075_CONF_IT, conf);
+> +
+> +	if (int_index >= ARRAY_SIZE(veml6075_it_ms))
+> +		return -EINVAL;
+> +
+> +	return int_index;
+>  }
+>  
+>  static int veml6075_read_int_time_ms(struct veml6075_data *data, int *val)
 
