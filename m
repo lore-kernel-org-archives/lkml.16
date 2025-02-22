@@ -1,112 +1,99 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA3915853B
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 01:08:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B3115853B;
+	Sat, 22 Feb 2025 01:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740186493; cv=none; b=a57fiJaTi49emcGeOlRdy+2PtY+OIeqVsEnI6R/6fqj6CQcM0zyE1tq7Klu06pijFZn+tiJvHzBQ1jlOJnWXJ/NlVKORoS5A4mbW0Tcz6ATv7yWkPg8odqLOSlZMnkPL8nPyWGIFrwu6VcHGnlfb8XVaVq3RqSjUSF1iDSP0X9U=
+	t=1740186504; cv=none; b=bbTuTjCktS+o4cROuLZFUyrOXh3g2ObPXnFI7YpJrqYj79q88AM5A9m22BcIEMovWnYgzHfreNZRIVQaqdflXungYkhVsL14rSZ3SHqqcWYd/egvOYoHJ9QFCGlY0UTP9/R25QVvZFxQtOagEdp+mkzdiPP3NQZPowK69G2DVCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740186493; c=relaxed/simple;
-	bh=eDoZofir2hrwtDXk4TstUXKmfWtDhK2Qg53ThG5kWVU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D7T0P+XV4juRNI7KT/FRv2yWcjACr14k0vr9AuvzEaUlogyD7HUZZoEkyc3NpbNc6W9lQnMP3Hg3Rm8D4Q1htbUE16oRT6B4+0RjsPMbvcl8J0jn8EvJ1wp1jj6wtnGc9Ej+OO9V1uVIu0wz2Oa0comKUuDlIkqjnrHCZDRxgXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=DyNUL0nT; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="DyNUL0nT"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51LDvsWl018792
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 01:08:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	A+7uD3mDnAjZ85phjsnwE9FBImVmeY69xngWW0qTBWI=; b=DyNUL0nTJYBVhFf0
-	og4j6GIdZLb3sj4Bmbl4A7R+FXV7dUCrKMKOP2gxwnLGhMMA7czoVadbohPvozsp
-	2T5x9qGg6kyzPs0K+0Y/PYY/F5FfHthrn+Z17Hhc/YOWMGddgfFsGgyDlWkTxGHq
-	pcvHfzgCuSd7fWDPiZJ/itDPOjuCxxcHKmMHoPAM+ysZ0tIunmqW8lJWdD/7/CB1
-	t1NtmbLQnUcv4WbTw9LMQzSP9kzwQVFpgklJR/81JOAaK0ALdUB5rpirbuvueHEp
-	g4Hsbj8udKfJ29u8OZoMczWmkYHytkSahWAr1IAdgmJ/M4LdC5audl6MpvItfY2y
-	QpPCWw==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44xm3rjw86-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 01:08:10 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c09e78ac63so61472385a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Feb 2025 17:08:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740186490; x=1740791290;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A+7uD3mDnAjZ85phjsnwE9FBImVmeY69xngWW0qTBWI=;
-        b=UCPud8Lh57jBVm+F3zWSfid6btu8rwy2Ea4SEcBTDlujOChIX8tkGOSTcEb6BVGvMg
-         PJxofv4L5l0RjbWI+64CTDPrTiejH+kLy9SObiuoGnwSmTdayHMfUMwpMyRqNZhsqDhB
-         RKS3k0sF612iZccV6HW6HfJ09tKvYH9AMV1N84sjf90VUQsS+E53/RBlCr2yFYjoIPM4
-         szSPzHKhgwMguc6EmI7031YEGM8ARc47JHO96SKUZXtOz+7ke/WnPEt9JIG+YAy3yqvD
-         9hpF1/jiEeraV9vI2prwMY/fTdrwFaZHuZ2cVEh9VqjvLLJvWOE4bv047yh4EWlUhoeu
-         0j7g==
-X-Forwarded-Encrypted: i=1; AJvYcCVlq9n08oWgZo+tMClqEydqgZBRA5/ORXH/ZVDimYQ6lZYHtrjUjjeqj/TW8rNzYW+0gfr7NYkk61LNicU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqJJHTgc4NGw1FljXQFotDXXlYYjYEQKqG/okZXzpYCxs4Jt91
-	EgbQTCsEnzmK61rSjLnsSS6xxlCVBoxvJl9X+LtKM14GBQ72mIJcj/tp7RBa3pK7V8hzjQSD+oN
-	3ljsOKV5LLGubNtaW1fy7q+fTqz85rCjgDwUPBB83zCLnWGY4CLkdkMI8vVlqYbw=
-X-Gm-Gg: ASbGncueO51u8LAK5dBLUYG+S9D9zvJzM1E8vN8sUlZhYG2070V0cXUMP5v5sK3Jy5t
-	9Zg+unaaLwq4NVNyzMsvzz6F1MrBUkaC05J/WcABkXwosE4ba+cMP79WUQwvKB14stqVZN4FtXx
-	CDFzuejBKIt79Nm05lON2eTd1s5pBkqRwFRVVajpjZL+zBfab8hzMJurQBeRfQrtVEq6MEEzXOy
-	cUGbcda5p1KZGlTGf9vi1ecLvRZLkKpEPaVxk88BvY2pFlC4N8BuUKlVcMNwMXs4XIykJUOEBF7
-	9FVhsXu505oSCNAjcyYNm1RhcPAwOnNNFJzhPITlAM0v/+Gih2JAQgcZ1yVTV54kBHmFdg==
-X-Received: by 2002:a05:620a:4726:b0:7c0:9dc9:754b with SMTP id af79cd13be357-7c0cede771dmr299453185a.0.1740186489629;
-        Fri, 21 Feb 2025 17:08:09 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFYYxDYScxOyOYt19LdLCGEcGFQfxafa8JYctydRNjUWNq0I7T1fbGD53XYaGYpG7lGZnjSKQ==
-X-Received: by 2002:a05:620a:4726:b0:7c0:9dc9:754b with SMTP id af79cd13be357-7c0cede771dmr299450885a.0.1740186488939;
-        Fri, 21 Feb 2025 17:08:08 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece1b4e8dsm14342801a12.14.2025.02.21.17.08.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Feb 2025 17:08:08 -0800 (PST)
-Message-ID: <20c6b5fd-321e-4165-9c83-3b53a481818d@oss.qualcomm.com>
-Date: Sat, 22 Feb 2025 02:08:06 +0100
+	s=arc-20240116; t=1740186504; c=relaxed/simple;
+	bh=bIskem6ovqlX9E6bDZg1T7wY12lCPzsr2+fVJvYNtUw=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=nrW8elCYUiN7ATjy7aHZmalzrmpbyhwDS17xQ0zd2vkibJyB/2fXVzUsM2WA4aKDLCbPL6Vbi/O5Vol91nAjY5TpBtM4y+wiE1g6eHHMXaw6TwlrqDvKmvrvN+x6Nd3R8MwDb0vwZ8lk5Io5s5gficB8opMe6+4n1u86CiRh4ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Z084W48tCz4f3jt4;
+	Sat, 22 Feb 2025 09:07:55 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id EBDF61A06D7;
+	Sat, 22 Feb 2025 09:08:11 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgCnC2B6I7lnyLYhEg--.16062S3;
+	Sat, 22 Feb 2025 09:08:11 +0800 (CST)
+Subject: Re: [BUG] possible race between md_free_disk and md_notify_reboot
+To: Guillaume Morin <guillaume@morinfr.org>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+ song@kernel.org, "yukuai (C)" <yukuai3@huawei.com>
+References: <ad286d5c-fd60-682f-bd89-710a79a710a0@huaweicloud.com>
+ <82BF5B2B-7508-47DB-9845-8A5F19E0D0E5@morinfr.org>
+ <53e93d6e-7b73-968b-c5f2-92d1b124ecd5@huawei.com>
+ <Z7alWBZfQLlP-EO7@bender.morinfr.org>
+ <1e288eb5-c67b-c9ca-c57e-2855b18785b1@huaweicloud.com>
+ <6748f138-ad52-b7c5-ac53-1c7fa6fab9b7@huaweicloud.com>
+ <Z7cwexr7tLRIOlNx@bender.morinfr.org>
+ <40203778-f217-6789-9c83-ebed3720627b@huaweicloud.com>
+ <Z7iZh56mykLW82SN@bender.morinfr.org>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <fd4dc27c-501b-404d-6f96-8a4628883ccd@huaweicloud.com>
+Date: Sat, 22 Feb 2025 09:08:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: qrb5165-rb5: enable sensors DSP
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250222-rb3-rb5-slpi-v1-0-6739be1684b6@linaro.org>
- <20250222-rb3-rb5-slpi-v1-2-6739be1684b6@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250222-rb3-rb5-slpi-v1-2-6739be1684b6@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: _DxI5pdSplaKcCHj3R2CVtd3BILt2Lhs
-X-Proofpoint-GUID: _DxI5pdSplaKcCHj3R2CVtd3BILt2Lhs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-21_09,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- suspectscore=0 mlxlogscore=740 phishscore=0 bulkscore=0 lowpriorityscore=0
- impostorscore=0 malwarescore=0 priorityscore=1501 adultscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502220006
+In-Reply-To: <Z7iZh56mykLW82SN@bender.morinfr.org>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCnC2B6I7lnyLYhEg--.16062S3
+X-Coremail-Antispam: 1UD129KBjvdXoWruF45WF45Zry7JrWkXr48Crg_yoWDJrX_C3
+	yDCFWDXw45XrW29a4Yyan5Zr47GF4jkwnxGF18CrWxJFZ8XF45GFySgrZ5Arn09FWrtry5
+	t34rXF4SqrW8GjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbVxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
+	Y487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
+	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+	b7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
+	cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa
+	73UjIFyTuYvjfUYCJmUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On 22.02.2025 1:43 AM, Dmitry Baryshkov wrote:
-> Enable SLPI, sensors DSP, on the Qualcomm Robotics RB5 platform. The
-> firmware for the DSP is a part of linux-firmware repository.
+Hi,
+
+ÔÚ 2025/02/21 23:19, Guillaume Morin Ð´µÀ:
+> 2) Instead of mddev_free() being called for mddev N+1 like in 1, I wonder
+> what's preventing mddev_free() being called for mddev N (the one we're
+> iterating about). Something like
 > 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
+> CPU1							CPU2
+> list_for_each_entry(mddev, &all_mddevs, all_mddevs) {
+> if (!mddev_get(mddev))
+>      continue;
+> spin_unlock(&all_mddevs_lock);
+> 						        mddev_free(mddev) (same mddev as CPU1)
+> 
+> mddev_free() does not check the active atomic, or acquire the
+> reconfig_mutex/md_lock and will kfree() mddev. So the loop execution
+> on CPU1 after spin_unlock() could be a UAF.
+> 
+> So I was wondering if you could clarify what is preventing race 2?
+> i.e what is preventing mddev_free(mddev) from being calling kfree(mddev)
+> while the md_notify_reboot() loop is handling mddev.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+I said already, please take a look how mddev_put() works, mddev_free()
+can't be called untill the reference is released after mddev_get().
 
-Konrad
+Thanks,
+Kuai
+
