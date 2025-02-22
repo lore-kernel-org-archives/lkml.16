@@ -1,99 +1,166 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF470F4FA;
-	Sat, 22 Feb 2025 04:37:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C387CF4FA;
+	Sat, 22 Feb 2025 04:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740199063; cv=none; b=QV/xsVJv04oqxiE5LSf5PEckom8wxCL0JIqRoSKffPrc0Qmizuo5Vzez0H38cyt461VsjEye+qY2f1Ubna0VnEY2lsxm9zZ2EzQ9hE1JT4lnzIgzKH6ccdhahe4t+0r4zcilCc4t8vca329CQJWj82BmWu3sdUarFU321bxRgOg=
+	t=1740199295; cv=none; b=F6dD4XQVjLHOrLusAMa1z5ir5LV/8PKMaaqL+3sH0YgOwHVZSts7sg+OSZK67s2bFhAkrdzNtwvhRcGEZN6bAujyUVoLd/v5INiv4Ce8YZM1rLgUi5LraR8V2mfTyJ7cB1PpExlHYZNFYYsjZvRlaHwsx2He87/4P8/nroiau9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740199063; c=relaxed/simple;
-	bh=fwi7rX3NtwsMZaaEKy+0MY5q3o3AJgxXU/T3Qi6xQ3g=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=JPfS3Md4qP3+CqQpjXyhhdnWc7LusOP5OzHRwc6uS4upfXNiLXSjOpF5oezIwiyLCgO7K9ij/DKoetF+PGMWfa4gmYBhcuZ4Eqi2RUAJ9Vvyk0VE7IPGXsSiyGcgWVMnmQ/iX8S3IRJi9TbAX8gv+Ugo+jUjXwpxrq/U3XX/Ltc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.2] (ip5f5af50a.dynamic.kabel-deutschland.de [95.90.245.10])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id CD10161E6478F;
-	Sat, 22 Feb 2025 05:36:28 +0100 (CET)
-Message-ID: <4008b6a3-bab2-4f47-a3c5-65206352e882@molgen.mpg.de>
-Date: Sat, 22 Feb 2025 05:36:28 +0100
+	s=arc-20240116; t=1740199295; c=relaxed/simple;
+	bh=NqBooKhfP2Hs6LC1WJ9lErKGhiE75wgYJ8L+C3G6hE4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IS/NEamPqwLK0HT8DPnrWCKoyup2v1xlp60B7kccCiuWCKZrjXTPmJ9eD4S+wYRnN98/0p1C4PZpqZ9ddtKTFOEvQ1b8qE3t/0h7YQ6VfxoVpj+zUSbrWe9ZL9gIzS3q4cSJs/Dv+fkOimPs63O1TTPAl8WFbAkGE4h5szGGsvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EzICuXMK; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EzICuXMK"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-471f16f4b73so24577851cf.1;
+        Fri, 21 Feb 2025 20:41:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740199292; x=1740804092; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=yn/9M5nLVSZrAybtybZFW9IIx9yHxqUlEFE/V/8EIhU=;
+        b=EzICuXMKtQHJ4tQJ3owEJbF3ogQnMFfR6Akunl8SuOa2QXVfp93XSSf7x96m3DWHB4
+         E4S9s6NAjQbiGaVT8WeI8YGXKKUV17FBAfpXtKKjsX3npdXB0GFizLoDr+u2MjvpufFH
+         XLMwXIvG/W9Hf7kPpycfMHbfnLX+7L0Y1922tNQJoS3KnJXie3OfXhe8aFLtPh3pe2ut
+         P7RKGNwio/Tglergmi9aAdFVLDFB6bXG7tlby6SrdxPR73BD2tn0kEJXNJdx9Ng6atlg
+         89+rq170gP+QQZILrnzJmOQaN8dAnYKK85EUtltaETKwlDQnPMUB3ekvbQ7P9tYylIYt
+         wUdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740199292; x=1740804092;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yn/9M5nLVSZrAybtybZFW9IIx9yHxqUlEFE/V/8EIhU=;
+        b=fJPuLvFYP9FVCq8eEPXiIcBQBM5ZuW7d3zxO/o1IiXmScboktiGbX/lrv/Lk0gP0D7
+         bi3lodl1u4PJ4FQPoMQwuZNW35xY5LQNrO8qHC7Vj6hlE4peDd8/spf2Az5wJSU4q+NU
+         5sdJRZa7xq637AKyPbZ/JT0yCVFsF9EWrCIuaLviEJ4UbagWDvU6VKnBxV9XSWlP4KX8
+         wCctpAhdtUAAwW7zgIPxj0fUn37+49tvmuZSJEuNMjknIgOJVDK53+PRDvyExYgQlPUR
+         0iuK4fcMgckBhKf7tGRH9/kWP5bDBqg0itLW7vz9gsRk5MvUWrsbFDbyWMT96dV4HlX+
+         7cMw==
+X-Forwarded-Encrypted: i=1; AJvYcCVZmJMVRJL3Q6XNmVGrrEvfiQzRx4geMaX63IHcx0wUf7DKC13tBPgYzGhijp65Q+cag00UP0xYnJy+RTk=@vger.kernel.org, AJvYcCVx3nbxi5gvgVqaMqQ3uzXNKf0IxvnIqth3/kyJuhp2p0ZDujphsexxAVQrRmzZ5xG5r/FSbTJfPLQGpvn4/6I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9KHm5ycrfpr78IyoNCnCVPm8bNxYtFXXzjtMi3IQv09XV3PQI
+	+a66cmTjU8XceLS+u7T91kE+0ZgZyM3gA44/G6KvyUbSbsXMzHVU
+X-Gm-Gg: ASbGnctMr2GLs4rcnLbtenvqd+7xeq02DByhEci3i4SAGoHM8oxx4cI6lqoV39MDRk/
+	qhJ+3YGkWKcqjq2LzV20kvZkEJB52CwZ0HD4C5tRyG1tjg37cxUZ7FfOjsC1/Ogoxtjehm+zNUv
+	Df4pe74UOxRq0/QeidoTLhk+yJFm48NwbaX+OpUzP19SPSAoYMW0GcwVDbyY/hqLlZgSXa2usGt
+	z+bHkj6KvoQeRIqlzhUEdc4IMx2DcY2WQArewCNowAdqN3MlUTY3dy5fOiiQEPtAMiGrEgtShUJ
+	bqm0mqys8PgpCTCo7o3foT5gZHBIXYRQ4G4jHO7Lfeureuu3PXwS5/O7VsLAWYtn9VtkEZBxgEr
+	XQkRLtWlBNFsAUYX5
+X-Google-Smtp-Source: AGHT+IFsCjt1ZL3nmaOyl/ZTBUCtWP4t2JQN39H1dl6/L2+NmxzzU5P5QGuTsPRg8Ckk0AzyR6nqog==
+X-Received: by 2002:ac8:7d92:0:b0:471:cd16:8c73 with SMTP id d75a77b69052e-472228d3d68mr70775081cf.22.1740199292583;
+        Fri, 21 Feb 2025 20:41:32 -0800 (PST)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471f0eba93dsm66327411cf.80.2025.02.21.20.41.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 20:41:32 -0800 (PST)
+Received: from phl-compute-13.internal (phl-compute-13.phl.internal [10.202.2.53])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 6795F1200043;
+	Fri, 21 Feb 2025 23:41:31 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-13.internal (MEProxy); Fri, 21 Feb 2025 23:41:31 -0500
+X-ME-Sender: <xms:e1W5Z9JoGqUmP348ONgtjlMY239EEFdUkqsPr6ZXLJcWrUJ1LaM4ug>
+    <xme:e1W5Z5Jp-Qu3FeSWZcsYLXwzm4Da31LtBMUiCibGNdz1UNgl-qZX2XgjoiTLSIROP
+    UjZWiStTQlTZm5nnw>
+X-ME-Received: <xmr:e1W5Z1t3AxRZrVR29Vcm564gu0WvcpL8NpgZ1rHHm-11rKuOQU3kUqOqBw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdejudeliecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddt
+    jeenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeevgffhueevkedutefgveduuedujeefledt
+    hffgheegkeekiefgudekhffggeelfeenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
+    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
+    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepvddvpdhm
+    ohguvgepshhmthhpohhuthdprhgtphhtthhopehjrghrkhhkoheskhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtohepmhhighhuvghlrdhojhgvuggrrdhsrghnughonhhishesghhmrghi
+    lhdrtghomhdprhgtphhtthhopehhrghmiigrmhgrhhhfohhoiieslhhinhhugidrmhhitg
+    hrohhsohhfthdrtghomhdprhgtphhtthhopehtjheskhgvrhhnvghlrdhorhhgpdhrtghp
+    thhtohepjhhirghnghhshhgrnhhlrghisehgmhgrihhlrdgtohhmpdhrtghpthhtoheprh
+    hushhtqdhfohhrqdhlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthht
+    ohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnh
+    horhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgv
+    th
+X-ME-Proxy: <xmx:e1W5Z-b_fNnq7UKjfMfoWCJrLFQknChYvh54JTY4mhlHIFyVIYvFCg>
+    <xmx:e1W5Z0ZdbYCEYNFR0Yk_JYE6R4wvnzpUAn7nU-3hZnZBY9Xd64gwQw>
+    <xmx:e1W5ZyA3zCFOy4qvgADW8xMv48Z0et1FEUSX7Yah9jITfycnizYZeA>
+    <xmx:e1W5ZybKl-EbiQ5squ4Szs0MOMdSnggcqVHydddFkvXzMzv6pO1Gsw>
+    <xmx:e1W5ZwoD-MT8SOrGGYLZSNL9LcLcK1UQNziklNiEZbxTF8u6zuW35OCy>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 21 Feb 2025 23:41:30 -0500 (EST)
+Date: Fri, 21 Feb 2025 20:41:29 -0800
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>,
+	Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
+	rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Wedson Almeida Filho <walmeida@microsoft.com>,
+	Nell Shamrell-Harrington <nells@linux.microsoft.com>,
+	Dirk Behme <dirk.behme@gmail.com>,
+	Konstantin Andrikopoulos <kernel@mandragore.io>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Roland Xu <mu001999@outlook.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rust: workqueue: define built-in bh queues
+Message-ID: <Z7lVeWFX-8uQJaJC@Mac.home>
+References: <20250221223533.158959-1-hamzamahfooz@linux.microsoft.com>
+ <CANiq72nsDgRJeKk=B7C9Zo7HL12az+ZLR27qxckqi5H=cmuV5w@mail.gmail.com>
+ <Z7lP5VA374-TuNZz@kernel.org>
+ <Z7lUcq3PycSSHiXx@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/12] badblocks: return boolen from badblocks_set() and
- badblocks_clear()
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-To: Yu Kuai <yukuai1@huaweicloud.com>,
- Zheng Qixing <zhengqixing@huaweicloud.com>
-Cc: axboe@kernel.dk, song@kernel.org, colyli@kernel.org,
- dan.j.williams@intel.com, vishal.l.verma@intel.com, dave.jiang@intel.com,
- ira.weiny@intel.com, dlemoal@kernel.org, yanjun.zhu@linux.dev,
- kch@nvidia.com, hare@suse.de, zhengqixing@huawei.com,
- john.g.garry@oracle.com, geliang@kernel.org, xni@redhat.com,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org, nvdimm@lists.linux.dev, yi.zhang@huawei.com,
- yangerkun@huawei.com, yukuai3@huawei.com
-References: <20250221081109.734170-1-zhengqixing@huaweicloud.com>
- <20250221081109.734170-11-zhengqixing@huaweicloud.com>
- <fe2dedca-0b71-3c80-6958-4bca61707fcc@huaweicloud.com>
- <208fde77-d1b9-440e-9a0f-568ef1250a28@molgen.mpg.de>
-Content-Language: en-US
-In-Reply-To: <208fde77-d1b9-440e-9a0f-568ef1250a28@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z7lUcq3PycSSHiXx@kernel.org>
 
-[Remove non-working colyli@suse.de]
+On Sat, Feb 22, 2025 at 06:37:06AM +0200, Jarkko Sakkinen wrote:
+> On Sat, Feb 22, 2025 at 06:17:41AM +0200, Jarkko Sakkinen wrote:
+> > On Fri, Feb 21, 2025 at 11:45:38PM +0100, Miguel Ojeda wrote:
+> > > On Fri, Feb 21, 2025 at 11:36 PM Hamza Mahfooz
+> > > <hamzamahfooz@linux.microsoft.com> wrote:
+> > > >
+> > > > We provide these methods because it lets us access these queues from
+> > > > Rust without using unsafe code.
+> > > >
+> > > > Signed-off-by: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+> > > 
+> > > Cc'ing WORKQUEUE -- thanks!
+> > 
+> > Not meaning to complain but it by practical has no commit message.
+> 
+> oops, sorry, "... but by practical means it ..."
+> 
+> Anyway I hope my message was received ;-) Leaves me wonder tho why
+> this was queued because it apparently is not even part of a patch
 
-Am 22.02.25 um 05:32 schrieb Paul Menzel:
-> Dear Zheng,
+What do you mean by "queued"? IIUC, Miguel was just copying workqueue
+maintainers, since they should be in the review process.
+
+Thanks for your review in another email anyway!
+
+Regards,
+Boqun
+
+> set. "zero callers" should never be merged to mainline...
 > 
+> If however such patch is merged, the commit message should probably
+> address this exceptional condition.
 > 
-> Thank you for your patch. *boolean* in the summary/title is missing an *a*.
-> 
-> Am 22.02.25 um 02:26 schrieb Yu Kuai:
-> 
->> Just two simple coding styes below.
-> 
-> I’d put these into a separate commit.
-> 
->> 在 2025/02/21 16:11, Zheng Qixing 写道:
->>> From: Zheng Qixing <zhengqixing@huawei.com>
->>>
->>> Change the return type of badblocks_set() and badblocks_clear()
->>> from int to bool, indicating success or failure. Specifically:
->>>
->>> - _badblocks_set() and _badblocks_clear() functions now return
->>> true for success and false for failure.
->>> - All calls to these functions have been updated to handle the
->>> new boolean return type.
-> 
-> I’d use present tense: are updated
-> 
->>> - This change improves code clarity and ensures a more consistent
->>> handling of success and failure states.
->>>
->>> Signed-off-by: Zheng Qixing <zhengqixing@huawei.com>
->>> ---
->>>   block/badblocks.c             | 37 +++++++++++++++++------------------
->>>   drivers/block/null_blk/main.c | 17 ++++++++--------
->>>   drivers/md/md.c               | 35 +++++++++++++++++----------------
->>>   drivers/nvdimm/badrange.c     |  2 +-
->>>   include/linux/badblocks.h     |  6 +++---
->>>   5 files changed, 49 insertions(+), 48 deletions(-)
-> 
-> […]
-> 
-> 
-> Kind regards,
-> 
-> Paul
+> R, Jarkko
