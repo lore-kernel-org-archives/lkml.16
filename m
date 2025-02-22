@@ -1,104 +1,70 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09561FECCF;
-	Sat, 22 Feb 2025 09:21:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EEDD46434;
+	Sat, 22 Feb 2025 09:23:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740216091; cv=none; b=HA2REsvRa9+HoDI7zR3sVCPOXv872AjU8TNzJm2RYUP3wolC8iCUiWq6d0xyIEqnSQH9gOhI/7bbrRy1q2P/5ZDKapesOIj2Me4E6AiYt132BkmMYBtjBDaszyxCSE+N2bgCDYVuCvsI1hg0sbMAMDUysSg9irn8k+gz6s5a4IE=
+	t=1740216189; cv=none; b=SHlsY8v2o0e3v28QTBFr6ROsM+xTIx9td/vZ7bi44NuAkHuaO0Vta6v61ROPYGGWNicxBx2WER18A1L7/9IezEd1r+/Tmojpzl81u+NVicOQIFGOa8RM7sES3eC663STostk/9m1FkqJ4zm5GebSKgzVIQhM/STORIjmQSisVZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740216091; c=relaxed/simple;
-	bh=qlH9IIzw3P8bG0Y+0Ym3bfM7heifGiP46tWEKwRCeDQ=;
+	s=arc-20240116; t=1740216189; c=relaxed/simple;
+	bh=d9Ddo/CZA7p51c09ka8t36EE346MIjUHq2P1nR4cCe4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JAEp+seQ0Z0Lo4ws3n3B8ol3x05RONPW3A3q6MmCS02B+OlQdMP2HxJCV9hkU6O0+rk8xdXIvJvJmpgpN6l6/gVLtHzTB3qfnSWf7vCOdYWpzu/OgMefhws+SRg9wmFVJ/+Hv3NFlVZNNHdXqf9Bw9aX2wDpnEX3w22Pkeo6vj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=QC12IWSl; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=q9C1Blfsd09CLFQJerNJ9INF3reWVHTp6Ly6jSiZRwfi+v/6/JXvoTQLde4qw639Gh3M0f/dNPKFsoNMuhg/ATcoXuLnzU3OeiTGd1Z9BNLOntEiYxbCA0IXTFfcAKfjEgkZMfdfvs9Udg+h/TwWmJBoQ8y5m9OZ6JN7qxdBjrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BnZNWhD1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="QC12IWSl"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5553510382D37;
-	Sat, 22 Feb 2025 10:21:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1740216086;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UoUQ6xgBvQ4zPUsBkMw3Rw1y1WZnoFmf4uRXsdLpC7E=;
-	b=QC12IWSl8i4pbwqD59DEIsZDB0V9HjZHCk0b5/XMoZw7JGGwYBCtriZD6NPQhyCp9rta6f
-	i2m8dd9dbY/46Pz/fheaQcDBDaS0EUO2SmYsDXhaDqFrJpk8ZA+GqwoOCPSg5Yge42/8Up
-	uyNJGdWxzo1xzuWpuhgxQ7nAXdKmuNziDFGxB+/ENd+h25bx5x/nP0d0KESaCGUXRV0pj+
-	xYrbEe2V4NZ8rg4s1d2qcPTEPOoaDD9nrkAVVUOWQvM5X5dOdnTmSr/s/a6y57Ic5+R/ow
-	QIEg6AWAVW6bkicuxEurwlQ3PojwqEwuZw+fsDjYfMxw6um6QYZ6cPIO3wpOaw==
-Date: Sat, 22 Feb 2025 10:21:18 +0100
-From: Pavel Machek <pavel@denx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, stable@vger.kernel.org,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.1 000/569] 6.1.129-rc2 review
-Message-ID: <Z7mXDolRS+3nLAse@duo.ucw.cz>
-References: <20250220104545.805660879@linuxfoundation.org>
- <80ab673f-aa94-43e2-899a-0c5a22f3f1e0@gmail.com>
- <2025022221-revert-hubcap-f519@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BnZNWhD1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD940C4CED1;
+	Sat, 22 Feb 2025 09:23:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740216188;
+	bh=d9Ddo/CZA7p51c09ka8t36EE346MIjUHq2P1nR4cCe4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BnZNWhD1OLkX3kdLgYZECk3rtCtrSZde4PwxrRZlOFio5WCcOKo3aiHuOao/2Y1YW
+	 8lPhlLc/uMFCm2fU1zmt9aKJin/S8T36he2t5TEktmlKdm0wTE2a1RpomGGioU1/M/
+	 G+q3RqiR3ybe4UhJMsg2HfAAZxzX+O1cLlhNPdUuSTGdsG94EaH1ElNWwkZ5pxiluD
+	 RpSk7BetVjSf26CGNh9td5Q3+0H5jKPm8siVsdiLiS4zTE8ZnKNfDzh6Ecc92F4t4i
+	 rgHbusQ6378EmXeJqanZ13wT907BKls3wQpBxzXwVTKWxNWPsKdvWd8UxTdQw2X5CU
+	 z+why2119B+ew==
+Date: Sat, 22 Feb 2025 10:23:05 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Taniya Das <quic_tdas@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Ajit Pandey <quic_ajipan@quicinc.com>, 
+	Imran Shaik <quic_imrashai@quicinc.com>, Jagadeesh Kona <quic_jkona@quicinc.com>, 
+	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/4] dt-bindings: clock: qcom: Add compatible for
+ QCM6490 boards
+Message-ID: <20250222-discerning-skinny-toad-4cc396@krzk-bin>
+References: <20250221-lpass_qcm6490_resets-v5-0-6be0c0949a83@quicinc.com>
+ <20250221-lpass_qcm6490_resets-v5-1-6be0c0949a83@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WnBP1FLzBJ0x5Zfu"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <2025022221-revert-hubcap-f519@gregkh>
-X-Last-TLS-Session-Version: TLSv1.3
+In-Reply-To: <20250221-lpass_qcm6490_resets-v5-1-6be0c0949a83@quicinc.com>
 
+On Fri, Feb 21, 2025 at 03:04:54PM +0530, Taniya Das wrote:
+> On the QCM6490 boards, the LPASS firmware controls the complete clock
+> controller functionalities and associated power domains. However, only
+> the LPASS resets required to be controlled by the high level OS. Thus,
+> add the new QCM6490 compatible to support the reset functionality for
+> Low Power Audio subsystem.
+> 
+> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
+> ---
+>  Documentation/devicetree/bindings/clock/qcom,sc7280-lpasscorecc.yaml | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 
---WnBP1FLzBJ0x5Zfu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat 2025-02-22 07:28:10, Greg Kroah-Hartman wrote:
-> On Fri, Feb 21, 2025 at 09:45:15AM -0800, Florian Fainelli wrote:
-> >=20
-> >=20
-> > On 2/20/2025 2:57 AM, Greg Kroah-Hartman wrote:
-> > > This is the start of the stable review cycle for the 6.1.129 release.
-> > > There are 569 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, plea=
-se
-> > > let me know.
-> > >=20
-> > > Responses should be made by Sat, 22 Feb 2025 10:44:04 +0000.
-> > > Anything received after that time might be too late.
-> >=20
-> > And yet there was a v6.1.29 tag created already?
->=20
-> Sometimes I'm faster, which is usually the case for -rc2 and later, I go
-> off of the -rc1 date if the people that had problems with -rc1 have
-> reported that the newer -rc fixes their reported issues.
-
-Well, quoting time down to second then doing something completely
-different is quite confusing. Please fix your scripts.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Krzysztof
 
---WnBP1FLzBJ0x5Zfu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZ7mXDgAKCRAw5/Bqldv6
-8llnAJ9sSrPxmuiGUCG4udfEAn54Ow/FPQCfdSghReCJWRAH2GRnAj+6HrgvEuk=
-=98kv
------END PGP SIGNATURE-----
-
---WnBP1FLzBJ0x5Zfu--
