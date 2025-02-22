@@ -1,95 +1,116 @@
-Received: from out203-205-221-173.mail.qq.com (out203-205-221-173.mail.qq.com [203.205.221.173])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4EE20101A
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 19:42:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9FDA101E6;
+	Sat, 22 Feb 2025 19:46:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740253337; cv=none; b=RritSyRkiU7RHLhJTlB8EyEmrtApyFF+FOtdML9BzGB7yL1lLSMfyYDs9z8UXl/eTGF/pgjqo2liciR4drQbXlHALAc1GzdIogd9QrHprEx6e7YtlUhTOv5QEcTyKGoPtBlHfGg0op63lDd/czqhUKCQkEopvQ5WzUMoy0IEu3Y=
+	t=1740253601; cv=none; b=SEwgivRl0vNCTFMMg7dcq4T3PWk23noonfs7CwkhtD6InLnqUeq6UIj8/Ik+V8jXnU8Ktq442Z25xriqjSg8JSd+TBUyd34Or3yIU8w8+AJh1+2T37Gd2UUnG+kJIA8v1DuEJZI5ntkScVdDgQuCxSAF//zb+ZLlyVw4acez9io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740253337; c=relaxed/simple;
-	bh=j1q5n/HUVw/zxMoNDqNZmL4I4OG1BZVMxCj88fnlUTM=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=QffrJLZblTsiYiqhMayhgdA0MwLbT+dECLCil+qe1bHf7xsK92bVSek9D2Nba3KT9ebtJpYyDlM1oZVJ0883ivItwznK0XoISwBuoUn6IApeyqz9pnOLs5bqJj+R/EGZi2uI6Axb3BlzapXJY0aO9Tl+ihF10QKnK053Z9trAws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com; spf=pass smtp.mailfrom=red54.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=i/+2dm/c; arc=none smtp.client-ip=203.205.221.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Red54.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=red54.com
+	s=arc-20240116; t=1740253601; c=relaxed/simple;
+	bh=WJXh6otmXryLoI09QxuBOmx096ot4bpbrMJcxXLcU78=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=UEPiM2BHY6nMjOtc5MRnzpQl4OMZjKQw4b5lk11lAVlSLP4jOYRPVAOM2J1Zg6M4PlTBd5tmAWzG6VuU5EOOVJr8HrWrJjjwvEzBjUOAZ7PaTJcxOEnNRC+g+SZ3Xd8XL3V1WLd0AXREt/9SYLpznrBgKAj1774nfTGLantKm3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=S0qkwSA/; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="i/+2dm/c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1740253025; bh=aynS2a/kPanX+LjKJ5jXaswTqt6h+e7tIoipmNInIxw=;
-	h=From:To:Cc:Subject:Date;
-	b=i/+2dm/cUXgPoDXaW6Ox/g8AqFZVWAjqsIrSDseGf7H5kg3IAat5lt0JxhhcZmB8w
-	 eOdoBYE6XNG2vckTMRWtb3dG615Fcbftf5VOYoQukAcDsHWLhJF95n88zMwj7gYQYd
-	 kckonNx/ABdDUqAqTtioo/H8FNHpk/MFJi+6fQGQ=
-Received: from mail.red54.com ([139.99.8.57])
-	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
-	id 93031CFF; Sun, 23 Feb 2025 03:36:48 +0800
-X-QQ-mid: xmsmtpt1740253008t1qpfuhzk
-Message-ID: <tencent_0BDDF3A721708D16A2E7C3DAFF0FEC79A105@qq.com>
-X-QQ-XMAILINFO: NDgMZBR9sMma2vJX+AgOZyC9uQnYIokU47mtTtkAAMa2B6aY7d1ha3Ux33Mz/9
-	 cKVaJuZUw64Zqu57ZKMFL3rLA7hn/4nzCXclFHGy3Tddi+AF+oUwIcTeBGkPqbcuo7bpvFOPO4op
-	 70ZIL3ymqbifxqsOLlsAujJO8p4PQBWwMubpY+QnSNtpFGXlOb8zGPR1YhMyry2nOHJa+rBlbNZ/
-	 EU7CfRlQL+k1C5yOWxwPm8rbEnP39+iuLO9qosVTI17XjZfkN3BBvkUBCyTGSP3+jM5Gx3nVWzxZ
-	 pOOc2gHuHzSru8YRmhMVAMynroEzo3Y1yno6I8PssjkZf3xp/RolyaNPNeLS3A9c/UNJzQ9aDhyy
-	 iI+I0/kAzhEd1DnAH+fF+LjqvPNBmrik7C5F+Gj4Fh/vZwGJqVgeYjzAsuMDEErs8eREOpoXgWbZ
-	 PMYgl4W40DdyzIYS+FxgSh5ZSOcU2jA24Mw+KqMLFr7BLs+amEc1ZWCQDqH5p0V5bc8Xjxr1HS97
-	 5+yoiFb1cdMJOzPGCINzi1kxbNuhFbbEwf9mIAapL5FrANAc3FJZl/b0lcj7bXoh0TaGVfpkjtxX
-	 gI6OC9dUkZOlahvB1kVl8Pv9YY/zlo3edyLeONcmALwyRahIaW9HdTVh5nXDo/Km/+exx7RZ+AS+
-	 tLyc/nnOM5DfW+K6qz19inRMMaGCxGJMMNuB0AH3NGmSVazk6OQEyZhk1aL4KJdEDxtjTm2T04r8
-	 NSHUffdB6ffEB17m6cOXBapjLad6c0+z/POa4cqfL+F81wDWL542T1cvjCdoD2paFkLnUkiK2uUU
-	 ER0YWz6enPSiJE9sekVjWZlzxjjAsNbNSqsW/JujU2tgBT8FJFOAwkfOdYUU/V9hpEn16ot6thJ6
-	 JJf/nAqzq09vMbLqXLQ3r3L5PN8WA0vXdGPSGubDnlLIziH8UhVDRAoJ3JiJvSbYZRzFnqRXlDSS
-	 C1Ac1K1ur6K7FyFc14qsuQ/5ArzCln
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-Sender: yeking@red54.com
-From: Yeking@Red54.com
-To: linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?=E8=B0=A2=E8=87=B4=E9=82=A6=20=28XIE=20Zhibang=29?= <Yeking@Red54.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Peter Robinson <pbrobinson@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Fabio Aiuto <fabioaiuto83@gmail.com>,
-	linux-staging@lists.linux.dev
-Subject: [PATCH] staging: rtl8723bs: select CONFIG_CRYPTO_LIB_AES
-Date: Sat, 22 Feb 2025 19:36:17 +0000
-X-OQ-MSGID: <20250222193617.396927-1-Yeking@Red54.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="S0qkwSA/"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4Z0cv83bk6z9sck;
+	Sat, 22 Feb 2025 20:46:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
+	s=MBO0001; t=1740253588;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=9+CXkYaMZwIZzzOXM/b51T1ZwM7ATw1x8gihAxLB1DM=;
+	b=S0qkwSA/zL/H8R6HLpWJsyK4onCp6SvUPlMMeegRRCv4CnTeqZRhykzWwZbQ+Hd24x5LZl
+	BqGCBdXY7LR/MWLzgsft7EXu5R6NVQ+yIos4cOdF0DWQtXcvUbSXfqpoM3CFUJ1C3Dlh4U
+	ppTXK3VWGnatYeZymsGCocChLEWmvsGITUPqHrX85e/FGQhsb0ufeWTjLjwCTrhOMHDFC6
+	vyycysV4yINR87vh4XDpojTpVAXWc8u4buAcOjqEsOEFCKFPQQKot0bVBIh/DDFHbAd1b9
+	DqjxfgG8NyemX9x1vDl5d2TvxUJZfQW05SrVBAUbT+7mqMwCWbvK6sl8YHjnVg==
+From: Ethan Carter Edwards <ethan@ethancedwards.com>
+Date: Sat, 22 Feb 2025 14:46:23 -0500
+Subject: [PATCH] sched/topology: replace kzalloc() with kcalloc() in
+ sched_init_numa()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250222-sched-kcalloc-v1-1-4dee15fd8241@ethancedwards.com>
+X-B4-Tracking: v=1; b=H4sIAI4pumcC/x3MQQqAIBBA0avIrBN0KKKuEi1snHIoNBQiiO6et
+ HyL/x8onIULjOqBzJcUSbHCNgoouLixFl8NaLAziKgLBfZ6J3ccibT1nSN2PbbDArU5M69y/79
+ pft8PuaOK+18AAAA=
+X-Change-ID: 20250222-sched-kcalloc-1d5acea7249b
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+ Juri Lelli <juri.lelli@redhat.com>, 
+ Vincent Guittot <vincent.guittot@linaro.org>, 
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, 
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ Ethan Carter Edwards <ethan@ethancedwards.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1578;
+ i=ethan@ethancedwards.com; h=from:subject:message-id;
+ bh=WJXh6otmXryLoI09QxuBOmx096ot4bpbrMJcxXLcU78=;
+ b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
+ GhQcXlVeHBPL1M3RGUvOC9ieTM2VkZLWTgrN3E5ZEZscCtJOEhPClYyenh2SjNMR0x5V0JmVnUx
+ Rm5SVWNyQ0lNYkZJQ3VteVBJL1J6bnRvZVlNaFoxL1hacGc1ckF5Z1F4aDRPSVUKZ0lrMGJXRDR
+ uM1BYYnNvQ1JyOFpaUTNHaHF3WDF6QWNTV2dKYXZqT3ZPSjdxVzZQL0huZDF3ei9DeGIyLzFoNg
+ pOTFF2WnA3Wng4MUtuMWtpTTVXK0xsK29za2hoOHNUd0QrOE1lQUdMZUUvbAo9WmhxNgotLS0tL
+ UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
+X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
+ fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
 
-From: 谢致邦 (XIE Zhibang) <Yeking@Red54.com>
+We are trying to get rid of all multiplications from allocation
+functions to prevent integer overflows[1]. Here the multiplication is
+obviously safe, but using kcalloc() is more appropriate and improves
+readability. This patch has no effect on runtime behavior.
 
-This fixes the following issue:
-ERROR: modpost: "aes_expandkey" [drivers/staging/rtl8723bs/r8723bs.ko]
-undefined!
-ERROR: modpost: "aes_encrypt" [drivers/staging/rtl8723bs/r8723bs.ko]
-undefined!
+Link: https://github.com/KSPP/linux/issues/162 [1]
+Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments
 
-Fixes: 7d40753d8820 ("staging: rtl8723bs: use in-kernel aes encryption in OMAC1 routines")
-Fixes: 3d3a170f6d80 ("staging: rtl8723bs: use in-kernel aes encryption")
-Signed-off-by: 谢致邦 (XIE Zhibang) <Yeking@Red54.com>
+Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
 ---
- drivers/staging/rtl8723bs/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/sched/topology.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/Kconfig b/drivers/staging/rtl8723bs/Kconfig
-index 8d48c61961a6..353e6ee2c145 100644
---- a/drivers/staging/rtl8723bs/Kconfig
-+++ b/drivers/staging/rtl8723bs/Kconfig
-@@ -4,6 +4,7 @@ config RTL8723BS
- 	depends on WLAN && MMC && CFG80211
- 	depends on m
- 	select CRYPTO
-+	select CRYPTO_LIB_AES
- 	select CRYPTO_LIB_ARC4
- 	help
- 	This option enables support for RTL8723BS SDIO drivers, such as
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index c49aea8c10254dec985bba47b18f61be954d23f6..b4539b29fb36f6b2f0c5ca310620ebda29755e5c 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1918,7 +1918,7 @@ void sched_init_numa(int offline_node)
+ 	 */
+ 	sched_domains_numa_levels = 0;
+ 
+-	masks = kzalloc(sizeof(void *) * nr_levels, GFP_KERNEL);
++	masks = kcalloc(nr_levels, sizeof(void *), GFP_KERNEL);
+ 	if (!masks)
+ 		return;
+ 
+@@ -1927,7 +1927,7 @@ void sched_init_numa(int offline_node)
+ 	 * CPUs of nodes that are that many hops away from us.
+ 	 */
+ 	for (i = 0; i < nr_levels; i++) {
+-		masks[i] = kzalloc(nr_node_ids * sizeof(void *), GFP_KERNEL);
++		masks[i] = kcalloc(nr_node_ids, sizeof(void *), GFP_KERNEL);
+ 		if (!masks[i])
+ 			return;
+ 
+
+---
+base-commit: 5cf80612d3f72c46ad53ef5042b4c609c393122f
+change-id: 20250222-sched-kcalloc-1d5acea7249b
+
+Best regards,
 -- 
-2.43.0
+Ethan Carter Edwards <ethan@ethancedwards.com>
 
