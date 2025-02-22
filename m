@@ -1,182 +1,137 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F3820AF98;
-	Sat, 22 Feb 2025 12:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7392220ADC0;
+	Sat, 22 Feb 2025 12:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740226284; cv=none; b=PA8S4v4xsTZTCY2jHIJZmmSQAsbvtM4fbCwVNo78xC/TtcDzi4/JMfKLctWmsK9/U5YyWa+zFfQihRkoQwcaBx3cmRxWCOgACXmwBvagj8B3PzVatnDoPo+DSRx807LH+pX2T1OOtwChMDnCPHSYd4UXWERyZDU67kXkZP6WE8g=
+	t=1740226375; cv=none; b=hiQXZTiQ2qEKWsBuXjX3ZAYZGLs+YJObIMDBFH4iuSr8gnpPfS5vOzrgrw3gwhAza6WUwFAQ5AQQz7a1kYNsqsxhiNFcEQn+jy/nGQJwxCNvoasGHmS+/EoIs442P6mLy6LDhgUyE0M8/ZCF9XpfqOUy4UGLx87SK+ZnnGjBZG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740226284; c=relaxed/simple;
-	bh=mLxhZTOj27R+dTNlE0OdxaRjvavfPa9bJxD6ENetFX4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fg9yvW5hz8O3gpuyRxSK52Bp4ugvJ5DNWVu2ah/J83PU8hiW3fRSBfaI99qGdl2SCv4X3ZhAdB63ObsO4Xd1mXuEnlPLQfmlzLR9RPnuSqUKRN7XzjJMhyn550mTDLBkNO+E3PQo1flh5Z24w8oA46OC1wMpbqZE8owyMW7OKOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R0m8KywF; arc=none smtp.client-ip=209.85.128.46
+	s=arc-20240116; t=1740226375; c=relaxed/simple;
+	bh=1uN/d/y3gqDT7fTikLmdFAyvO+IXNPMmqKhMVXHCH04=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Zem+2D5YOS7whEoesgh8x+BkKxmlD7+/y/Ao9D1g/DNSzSCNDU9Hii9k1iy446vsew6tukIVJ/vulv0DPpQzMvr372kx/pSwru8JqLMPVKDz5nff0Igyu5pBnUe7AotiK9yUqqSTzpYj60mKCi3g6yc8/dNZwuBAdk3vmpEAtFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=COYBlGkI; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R0m8KywF"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-439a4dec9d5so27712755e9.0;
-        Sat, 22 Feb 2025 04:11:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="COYBlGkI"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-220d39a5627so46029765ad.1;
+        Sat, 22 Feb 2025 04:12:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740226281; x=1740831081; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1740226373; x=1740831173; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aNCCiP7RRRUyS4WfOdLncoGS7gW6wazUd+UuIMRSe4A=;
-        b=R0m8KywF5tpMkwJKnPQk6zL4WL9PH2q7torvJKXvOfZo7/pNmkgULGaaw9zlzkhgUs
-         TUuRjRdJ2Imp4Lg9i5W4xuxzJsIvYdp2TuinbBjNZMmYjBFzKloC8dFdCj9JTkQgVb0V
-         HdzRwRGdXttZfuXFS9V4He1lkFXd2A1J7HECfQscIpo3uM0Sxi3bF2kPzPVXqemhEsKq
-         wF6D5p3jLx+GvtVTrJQeqjY6x8ycGpoo+VL7tPJ8S3RxCGkf2bkKcq9nbMI5FOr+FkcV
-         2D/HOjOW+j5ppTyUI+p5DJK57X4dMXDXhKoQW4nt6nbcob8LtMWXYONaTfAehA+la4zk
-         R+yg==
+        bh=s6704fXeFmc3Lz8DxDkdN/EEHAv7wENXK6c5pFFXfho=;
+        b=COYBlGkIZg/XplL017evcxqinxdauLHGQ3OluHIFTT9U2/phbhql3akQvIwwy/Y3zu
+         cNygfoaO4UuwzlenC46q0HBFIJRr5aazo5xKJqCvkNF8L3Lezlob3+qNYZy5uPrahfEH
+         KQO+2eEg3Rxc6MQeV7jOzuOSQS4oMZFw41NhebyeMFe2kEp0RQ+lRARDsxaCGVXuZlQp
+         PZV3TDF20Xy24Ugff5DXH45DrRsmknWAruVFXh6bJQuQeIl+W57XLu7qJOuVq+sJ98m2
+         lu47dvZU+fMRN4ukZmFXW2Nx5sltgm2Y01DH149iKua19e6E+/Ck8CRr7QFbJFvUNHDj
+         3Lrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740226281; x=1740831081;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1740226373; x=1740831173;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aNCCiP7RRRUyS4WfOdLncoGS7gW6wazUd+UuIMRSe4A=;
-        b=r+biJhGf9iC1y70N7xR9eCWsTRfwHbFl5sit4EK/9yn3g3fQDcVtpGJ63OYDapMewh
-         N04+f2iiNgGXWDJd7no7sB2eNkMiLjEPDm2I/mvcgFUVH5WTfSUe3EDtEHUSb/+zGCjO
-         noU3IRrQFNWIU7rxHXq/VDxYltZwSXR72zUGVBaYf1gHt7Q+oG1KaXUmN5NlqZClKGpP
-         0z9ZNk7cRwQJ4BgQYeZC/Ikdxvxtwm2Y06bPveDkNdlp2ny4ycbhyFYswKBlQRXqOvXy
-         oe/o1Q5vzs2UOsHv6rkkMTcorxeTyWe6QmtatSXhmGTS9U2cv2D0TOI4tHxAcCLnK/W6
-         wq7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXJ2+S5PpivZvw2Ry2Uld9DnMeUbiJQOLqLsYeodzGerZsutF4o29trlEQVBYkqOUxe1pLYeBPosNqH@vger.kernel.org, AJvYcCXR5pZgDi+TXgTiGkwA/f0TLcVQ0V11BZidbLvDYPD2mFcciRRjySKGUwYOXsw5LrzUa/wHyh2RaMAiXTnm@vger.kernel.org, AJvYcCXVwKGxrNJKIqcxIQmBPh7kHISqx6jvaQ0ISytsOY0dfNWDCSGQ5cF61zYZMc0YHnlvimseGzWKxOzFors=@vger.kernel.org, AJvYcCXmm0bn3E3+sB24TnC3OP4OzQUTtYkIzVYrE0i09/H5zDcFS8YY9pJu/+AuFUAUsre1yg3FQzah1Eip@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywx7G+2X+YGNo6tmh2miNVpGUw2QBPgClJHLQaZWX0W3nKVczqk
-	6d5DgRVSgOzVTI5BzNuSpyR6gU3uQvxTIua4ICjV2AT8PapTLH9M9AQUoz8tPdL41oZoMdcYtUF
-	vYPPSRibPlKVdT4f1FuPl9iGEiLQ=
-X-Gm-Gg: ASbGnctBrSMij1HlUYlNkQHfKmSeVAEnQnJJfLeUYJPnrHQDwcZOjQ0OG0JY3LlcVue
-	TC9lArsF8h4DNvNxY6Iy0q4VD30ZM8CHvA8ZQURfeLBlZZx9kve9Pgvi8nYH8oQDnU5oeUu32rB
-	1lEHdVinlL
-X-Google-Smtp-Source: AGHT+IFH+v891imgr4v4woH90dELrHFhYpZLGiD6se33nDibAnm06EzmlPNU+a6OdoEHBxYADPJA99dPusBeaFT3bq0=
-X-Received: by 2002:a05:600c:1d88:b0:439:8bc3:a6a3 with SMTP id
- 5b1f17b1804b1-439af7fa4dbmr55192325e9.3.1740226280795; Sat, 22 Feb 2025
- 04:11:20 -0800 (PST)
+        bh=s6704fXeFmc3Lz8DxDkdN/EEHAv7wENXK6c5pFFXfho=;
+        b=a6Y207FG2BUHtLusXhBJh0eEiesa1+FDyfJlwbAECE1Jaaz00uepCHF94m3TnRTihF
+         jX9hZ/z6X61/k+Pc6+uzD6GlD3uLYNWSlKtWyJGuk1NoVkeb+gkYnmtp2rrPkaPwDEhL
+         NFb3ZiC43NxGa/wGEoSzkOVYQZoPlTdxUOWlnm3ECDfgGjSO1KgDRfDjPjl4SPhLq/gg
+         cycyKgkQ/XizphbhumnQsTJBX4kidjNP+wW3bvNieb9xDYGUblxipN18OmadjYSc3PzD
+         4LFtCuYceLjpPIvYmc2Tm/rIlbKqIQ/PsKe/ZXpoLtzukxWWW1X3zjRMviqueBnEPGGb
+         HHeg==
+X-Forwarded-Encrypted: i=1; AJvYcCXcPtgV5h+FZbNMVZ7/LtQRLi+ZauqyBBH8QqvAj7i1GTR+OwEorYJCKAY8/v5buMppQF4PppIx79GSk3o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoD8Yte2HJaRfIczNZidZrJigwQo7vn9yFmLSDi5YiIPihmE8G
+	Lg3aKI41xIjf765GcuFbVoT8cOsjRycbzvXh7duBkx2YKU+ujFMQ5TIFDAqz
+X-Gm-Gg: ASbGncsX1mPAPkhoDCpfbjcaqqc4EtZT9V4TNVYcf4BhUFLkSbQzoAPyuLN0/3XiDae
+	l/2Rys5AaLAjNxSRjnuXY7pKmZXYYZxuy8HXIsG0bZ77YNgJ3XTBQGe5dqvAAUM32Yd0KHkphal
+	BOw+UjjRR+OaW5OkfUtEejXD87ZCu9TekbztsO76865b5bFq98K5gHsFvGJ+0mJFOyH+tbYUaG0
+	YYw5niioc2JBw9HFeqxhLH5Pf+hFcddH7HcmhUtzMtJuO9IUvSJjyURVv+6JdVvLH+ik4jMepec
+	jS2TQbTHJLMMXk3ulE7aknCID5hUbtsGQV9dQI2TkCA0CLXUvb0=
+X-Google-Smtp-Source: AGHT+IFEbKzqQq0X0O1eqrz0p9aWIIuBnWCFh0bISK4XGm04eaS/Wt1olern6kLx3K6KhkLGNp6/mQ==
+X-Received: by 2002:a17:902:f546:b0:215:8847:435c with SMTP id d9443c01a7336-2219ff9d73cmr113606235ad.12.1740226373521;
+        Sat, 22 Feb 2025 04:12:53 -0800 (PST)
+Received: from ritvikos.localdomain ([2405:201:5501:4115:11c1:1995:3e9a:6ac2])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d5364676sm151875145ad.82.2025.02.22.04.12.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Feb 2025 04:12:52 -0800 (PST)
+Received: by ritvikos.localdomain (Postfix, from userid 1000)
+	id 92EEDED9143; Sat, 22 Feb 2025 17:42:49 +0530 (IST)
+From: ritvikfoss@gmail.com
+To: shuah@kernel.org
+Cc: linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [PATCH v2] selftests/mount: Close 'fd' when write fails
+Date: Sat, 22 Feb 2025 17:42:49 +0530
+Message-ID: <20250222121249.50588-1-ritvikfoss@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250222114709.50011-1-ritvikfoss@gmail.com>
+References: <20250222114709.50011-1-ritvikfoss@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250215103159.106343-1-clamor95@gmail.com> <20250215103159.106343-3-clamor95@gmail.com>
- <20250216145445.1278b6ae@jic23-huawei> <CAPVz0n1529ydFRHn9N3jEsS8Rhdf-c4xECkMd9TDczzBTNuJzA@mail.gmail.com>
- <20250217142433.12183a17@jic23-huawei> <CAPVz0n23XYG4R6JhMd9qOoKW-PbJk53j-A3iRgb-znLHt5hm8w@mail.gmail.com>
- <20250222120537.13d2998e@jic23-huawei>
-In-Reply-To: <20250222120537.13d2998e@jic23-huawei>
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-Date: Sat, 22 Feb 2025 14:11:09 +0200
-X-Gm-Features: AWEUYZmt-0lFojV2uIbd5MnBI_kZ9O9BNsVpC_4D6Kv_RxzPIftV4C4KQaaXLuw
-Message-ID: <CAPVz0n04RCb9DWVScBR00Zk+PQBwpnjKSbig2D6yr0-hoej1kQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] iio: light: Add support for AL3000a illuminance sensor
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>, Matti Vaittinen <mazziesaccount@gmail.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Emil Gedenryd <emil.gedenryd@axis.com>, 
-	Arthur Becker <arthur.becker@sentec.com>, Mudit Sharma <muditsharma.info@gmail.com>, 
-	Per-Daniel Olsson <perdaniel.olsson@axis.com>, Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>, 
-	Ivan Orlov <ivan.orlov0322@gmail.com>, David Heidelberg <david@ixit.cz>, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-=D1=81=D0=B1, 22 =D0=BB=D1=8E=D1=82. 2025=E2=80=AF=D1=80. =D0=BE 14:05 Jona=
-than Cameron <jic23@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5:
->
-> On Mon, 17 Feb 2025 16:32:33 +0200
-> Svyatoslav Ryhel <clamor95@gmail.com> wrote:
->
-> > =D0=BF=D0=BD, 17 =D0=BB=D1=8E=D1=82. 2025=E2=80=AF=D1=80. =D0=BE 16:24 =
-Jonathan Cameron <jic23@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5:
-> > >
-> > >
-> > > Hi,
-> > >
-> > > > > > +static int al3000a_read_raw(struct iio_dev *indio_dev,
-> > > > > > +                         struct iio_chan_spec const *chan, int=
- *val,
-> > > > > > +                         int *val2, long mask)
-> > > > > > +{
-> > > > > > +     struct al3000a_data *data =3D iio_priv(indio_dev);
-> > > > > > +     int ret, gain;
-> > > > > > +
-> > > > > > +     switch (mask) {
-> > > > > > +     case IIO_CHAN_INFO_RAW:
-> > > > > > +             ret =3D regmap_read(data->regmap, AL3000A_REG_DAT=
-A, &gain);
-> > > > > > +             if (ret < 0)
-> > > > > > +                     return ret;
-> > > > > > +
-> > > > > > +             *val =3D lux_table[gain & AL3000A_GAIN_MASK];
-> > > > >
-> > > > > I may have misinterpreted the other thread.  IS this value in lux=
-?
-> > > > > If it is make this channel IIO_CHAN_INFO_PROCESSED instead.
-> > > > >
-> > > >
-> > > > This is actually a really good hint, I will check if this works out
-> > > > and if yes, then definitely will use it. Thank you.
-> > >
-> > > From your other reply it seems we have no idea of the correct scaling=
-.
-> > > If that is the case, then channel type should be IIO_INTENSITY as
-> > > I assume we also have no idea if the light sensitivity curve is
-> > > matched to that required for illuminance (which approximates the
-> > > sensitivity of the human eye). Various datasheets provide completely
-> > > garbage conversion formulas btw so even if we have data this can
-> > > be problematic. One recent sensor was using a green filter and
-> > > saying illuminance in lux was 1.2 * green which was assuming their
-> > > own definition of white light.
-> > >
-> > > Jonathan
-> > >
-> >
-> > Then why IIO_LIGHT exists at all? If you state that datasheets provide
-> > garbage formulas and sensors cannot be trusted and all is around human
-> > eye, then why IIO_LIGHT is still the case? I did not recall any
-> > drivers for human eyes (thank god). Please be more consistent. Thank
->
-> It exists because some sensors do this correctly, or at least a good
-> approximation to the standard sensitivity curves.  This is done two
-> ways.
->
-> 1. Good light frequency filtering in front of the sensor to compensate
->    for the difference in sensitivity between the measuring element
->    and that the standard curves.  CIE1931 (there are a few other standard=
-s
->    but they are close enough that we don't care).
->    https://en.wikipedia.org/wiki/Illuminance
-> 2. Multiple sensing elements. A common reason for this is to remove
->    bit of infrared that we don't want. Often the calculation is a
->    non linear combination of the various sensor outputs. Such a driver
->    usually presents several IIO_INTENSITY channels and a calculated
->    IIO_LIGHT channel.
->
-> In both cases the datasheet tends to include a comparison the the
-> CIE1931 etc standards. There will be small differences but that is
-> very different from taking a sensor that is only sensitive to green
-> and weighting it which is the example I gave above.
->
-> These sensors will compensate for the different sensivity
-> of the human eye to different wavelengths.  E.g. if you
-> think blue and green light LEDs have the same brightness then
-> the sensor will give close to the same output.
->
-> Anyhow, light sensors are a hole I have gone far too deep in over
-> the years. Key is some manufacturers provide insufficient information
-> or take the view it is a problem for the integrator of the sensor
-> to deal with. For those we do not pretend to know the answer and
-> use intensity channels instead.
->
+From: Ritvik Gupta <ritvikfoss@gmail.com>
 
-This is quite an explicit explanation. Thank you.
+1. Close the file descriptor when write fails.
+2. Introduce 'close_or_die' helper function to
+reduce repetition.
 
-> Jonathan
->
->
-> > you
-> >
->
+Signed-off-by: Ritvik Gupta <ritvikfoss@gmail.com>
+---
+Changes in v2:
+    - Fixed formatting
+
+ .../selftests/mount/unprivileged-remount-test.c    | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/tools/testing/selftests/mount/unprivileged-remount-test.c b/tools/testing/selftests/mount/unprivileged-remount-test.c
+index d2917054fe3a..41d7547c781d 100644
+--- a/tools/testing/selftests/mount/unprivileged-remount-test.c
++++ b/tools/testing/selftests/mount/unprivileged-remount-test.c
+@@ -54,6 +54,14 @@ static void die(char *fmt, ...)
+ 	exit(EXIT_FAILURE);
+ }
+ 
++static void close_or_die(char *filename, int fd)
++{
++	if (close(fd) != 0) {
++		die("close of %s failed: %s\n",
++		filename, strerror(errno));
++	}
++}
++
+ static void vmaybe_write_file(bool enoent_ok, char *filename, char *fmt, va_list ap)
+ {
+ 	char buf[4096];
+@@ -79,6 +87,7 @@ static void vmaybe_write_file(bool enoent_ok, char *filename, char *fmt, va_list
+ 	}
+ 	written = write(fd, buf, buf_len);
+ 	if (written != buf_len) {
++		close_or_die(filename, fd);
+ 		if (written >= 0) {
+ 			die("short write to %s\n", filename);
+ 		} else {
+@@ -86,10 +95,7 @@ static void vmaybe_write_file(bool enoent_ok, char *filename, char *fmt, va_list
+ 				filename, strerror(errno));
+ 		}
+ 	}
+-	if (close(fd) != 0) {
+-		die("close of %s failed: %s\n",
+-			filename, strerror(errno));
+-	}
++	close_or_die(filename, fd);
+ }
+ 
+ static void maybe_write_file(char *filename, char *fmt, ...)
+-- 
+2.48.1
+
