@@ -1,145 +1,159 @@
-Received: from smtp.smtpout.orange.fr (smtp-13.smtpout.orange.fr [80.12.242.13])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C971779AE;
-	Sun, 23 Feb 2025 21:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0EDD1779AE;
+	Sun, 23 Feb 2025 21:13:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740345177; cv=none; b=b36ENgG5gv5igZouo9PVtV064QJl8P/BLiJyqKsGymkkHuhdSN7PdBdfuA1bHbPUQZF0QGg52gBs/q7MKsbAqAv+l2ahwL4ickcdZGbeY+vfB9RnDLOhvNVtTSbIVymWz9KRlH2lqzSLDhrqXycEpHe8wwPU7xifOATmVRtWfpw=
+	t=1740345220; cv=none; b=tXiQmJeJLu2yQeBL1Ab863AOvtQvpvpJlCCbX2xlO6moswZQQhJnhsDF1BlGF8wkgNOdSBQTouoTfS+ni3zoouJig8mH5s5MwwC5CzcR0TX0yh5yUCWt+U6GE/uS66w4EUEOHoILpgGAusi4vhYptaOgkGiF5ctr8yqjSk4rW1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740345177; c=relaxed/simple;
-	bh=4cT9/rnA+ov3lSMlqJGW4xGAX12gh3yHhfV3xJLloB4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=asxzg1fQ40SDn+ehdHnSTJnkMv2AvYQrKUxkC3vekwyqSvbL1k36+uQTm7MU0MNysup7q/lUIh/HoEgT7Vw1FHLLQi/tsRVTDwzXn7n1QbNz9NReWAVtgt+6D7iFFf5hbl5Mp3YugRW+tCpknaNSvX1sSjTOvsUEj1GUzlqT31Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=iFCz7x/l; arc=none smtp.client-ip=80.12.242.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1740345220; c=relaxed/simple;
+	bh=t2ax8UCJSHBbBrK6Bhi1jvtf9DO+eaUf94fq1tvpzwg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VDqFpYHZvNmIY+dO/SB6N+JhlhLPjQuYyuKotwjLCIsZPp7TfpPJQkGovg5OcCdbk9p8ulNzoX0QlIOvMelP6e2kRc67sVugE0Te7LPnJe5Hu2zjMPXc6OBGus/5VViIiFX9+HGTB0pl+0IROuMENDCzxNvMRr9gYNP1WTQcEI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bE5F2f0w; arc=none smtp.client-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="iFCz7x/l"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id mJGAtHQOaZS23mJGDtmdYt; Sun, 23 Feb 2025 22:11:41 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1740345101;
-	bh=HuJJOq1A9e3DRjNXPiYM07a9GOunl4wRKobsFRzCRpA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=iFCz7x/l/vAWKzpr/kGp4iTumBqm4ke1nj5jNeEirgSnW0ryCDpNkBRG+IRL9lG2P
-	 4PBMJzLCWnjgiEX6TRKMbsGAiYvm/jMuXL0BGzcLrq+vusJkbUY6823CBc7aeLjwOQ
-	 Mv2p+CbfANUmfUkbf933++GJ/UCB40Di9za32dKE+Xt59903co7J1U5VcLmSTDmln+
-	 GKitQatXs0ENsI1WMhD1Rs4yVuL9u/yGkkJLlcbtT3xg7aSIHDEZvl/RQe3W2MaAAX
-	 mCV+KmDhnzBcO7ahZy1JcKlD1LGL1OhhEfQYyMQTMGzAEMApyodcudar56WBF0LTtT
-	 s85ibwzfXIUPQ==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Sun, 23 Feb 2025 22:11:41 +0100
-X-ME-IP: 90.11.132.44
-Message-ID: <bc1f5334-b0fb-4e81-979d-feb17886ac40@wanadoo.fr>
-Date: Sun, 23 Feb 2025 22:11:34 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bE5F2f0w"
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-520a48f37b4so2122969e0c.2;
+        Sun, 23 Feb 2025 13:13:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740345217; x=1740950017; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+iedaQHLBD4XXfzSGe7haPi2kZ1YTY82HI9Qk9Wdqtg=;
+        b=bE5F2f0wyxCTrtDfjv5IWKljCOv6bcLdsNJqxMGCUv27yjioZthMGMpRYoT4jTN6au
+         ZzIC79tz6fdhYvjquksprYmjahKtES1Bzb2IE36jCN3lSs6qVtjLBSf3CzWIVwFLhKvY
+         e0Zl2/iPIf7UYesKArr6G7t6ezdDA8oerUyykECu8Yep3QpzYs7dsitye0YGgSPkhup1
+         M0OELuiOEKzeycJMaOd+IBTuJDZB2GG+KSx68Acx5SYHRcGYdPBNS3Tlwg3U/V7tF4/3
+         3+DjO3olLJ5WjhlSRPy8DoqLtnDGYy3u2Si+mRkouBHK8pMQEipLKfo/jEKb8PgfdBsG
+         RYZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740345217; x=1740950017;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+iedaQHLBD4XXfzSGe7haPi2kZ1YTY82HI9Qk9Wdqtg=;
+        b=D4RQcb/HXvsZauReNTB7Se9iUbCHIFgSxB+2cahrqob4jRs4acCWMmLfeurV5ZCQuz
+         TVuy083LujPlT0DjnxMfuRlO1J8x9N5r9iFZLM1QGAmdb0yqh7561UzfHf7NgB+OuEtt
+         9pb8Qf2LzBoECNuzGjm82/Jb+vYubrQFYX6o+PD7gJgSf1MMr2JTvca5jQqZZLZwtSG0
+         VAV+abfJnuj0+5Ryn9naSUdcXvkWCmZhgzTDAL+tKJrKgRXOhqtNNc7tNr0rirq6r2Ff
+         ioqZNhEsZGpUB6PImBXkPFHovs6bI9kvNXrcWyfJWDAR3tGgAmDUXS5uKIwVhfhDp4lN
+         yckA==
+X-Forwarded-Encrypted: i=1; AJvYcCUcxdTPBKLsU7rPM436vdi1nGsAL81c8xJH7QaVtgLROxsIqhlbNWxwE7vq4NfUy9uM7kYahx5d6WXHTBdM@vger.kernel.org, AJvYcCVPaDAaPfYwIH0tFDVvjI+Rkpd4k385/PbOlQyUEG70BS+tU1ZN5ERlWSTJlWVInMDJLYnVRzMmgUkTL18Ut1JhQBI=@vger.kernel.org, AJvYcCW3V/QKUnrqjDTFpc7V3ItmRwScszYJF6vjvjAMPsFZN3HT090Gv3nZBJuDIwCsS9CAgSiMBH2RdqGR184=@vger.kernel.org, AJvYcCXU0PX3QhxJL5i8PV33EABJRD8wkFBVaPrE77SWNcyGoqjnl+MURkMmh52Wd1Cf8bJxKmTFl5Sy9atc@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwDAVQvd1CJn/hYbcf9YEkrry95QVs+PHgn5KYvZcytVXo+GKA
+	nI7nDxiFDYNSsjDAhRbQsH7kpnnes9cwIq7ZlbaoyncgSWXokEiZwDqiMWPPHDp4bLMP/7/fxrh
+	hFksWQejYbI45Wd73IUh8fY/FR+RfEX2eUf4=
+X-Gm-Gg: ASbGncu19XWCNsOr3VhKop1eoTCoX5MjHapItJp5q+1pLJc5iXLkTDnlzJfohnOWT35
+	TMhBoUs57dl2i6Tam56s8soadXczb8gHUoIyesoinalvcTOSPzpj4oc/aP4Lgefp5T7zJ/wAa4r
+	gsKET7lGun8Gnt5hi/cvaxuTGjRsiEohRRfEE5Ow+f
+X-Google-Smtp-Source: AGHT+IHB3Ce8MjRqHhtiwx5o5M0oXoOYpkGLBpVBucfsJhVjAe0Qw6N6cQ4oWtTgk9FhGO3nyP2c6oRdpNb7yoY8j1w=
+X-Received: by 2002:a05:6122:6589:b0:520:64ea:c474 with SMTP id
+ 71dfb90a1353d-521efbb5975mr5320566e0c.5.1740345217540; Sun, 23 Feb 2025
+ 13:13:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 4/6] media: platform: synopsys: Add support for HDMI
- input driver
-To: Dmitry Osipenko <dmitry.osipenko@collabora.com>,
- Shreeya Patel <shreeya.patel@collabora.com>, Heiko Stuebner
- <heiko@sntech.de>, Mauro Carvalho Chehab <mchehab@kernel.org>,
- Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, jose.abreu@synopsys.com, nelson.costa@synopsys.com,
- shawn.wen@rock-chips.com, nicolas.dufresne@collabora.com,
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: kernel@collabora.com, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org, Tim Surber <me@timsurber.de>
-References: <20250223173019.303518-1-dmitry.osipenko@collabora.com>
- <20250223173019.303518-5-dmitry.osipenko@collabora.com>
- <88b02c37-6741-459b-b966-d6d58d1f9b6f@wanadoo.fr>
- <c30a291b-c81b-4da1-a0ae-270d323b28e3@collabora.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <c30a291b-c81b-4da1-a0ae-270d323b28e3@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250221155532.576759-1-tommaso.merciai.xr@bp.renesas.com> <20250221155532.576759-6-tommaso.merciai.xr@bp.renesas.com>
+In-Reply-To: <20250221155532.576759-6-tommaso.merciai.xr@bp.renesas.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Sun, 23 Feb 2025 21:13:11 +0000
+X-Gm-Features: AWEUYZmei4BJm6FCm1F9SVWWh34_vuw78FqYfU_WkHTsESS75iMW3IL44Ar9S5A
+Message-ID: <CA+V-a8uxOuf-9_3TLhFkz0TxNk50fmieJcGOCyxOFY3Mzedy2g@mail.gmail.com>
+Subject: Re: [PATCH v2 05/18] media: rzg2l-cru: csi2: Use devm_pm_runtime_enable()
+To: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+Cc: tomm.merciai@gmail.com, linux-renesas-soc@vger.kernel.org, 
+	linux-media@vger.kernel.org, biju.das.jz@bp.renesas.com, 
+	prabhakar.mahadev-lad.rj@bp.renesas.com, 
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Hans Verkuil <hverkuil@xs4all.nl>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Le 23/02/2025 à 19:08, Dmitry Osipenko a écrit :
-> On 2/23/25 20:54, Christophe JAILLET wrote:
->> Le 23/02/2025 à 18:30, Dmitry Osipenko a écrit :
->>> From: Shreeya Patel <shreeya.patel@collabora.com>
->>>
->>> Add initial support for the Synopsys DesignWare HDMI RX
->>> Controller Driver used by Rockchip RK3588. The driver
->>> supports:
->>>    - HDMI 1.4b and 2.0 modes (HDMI 4k@60Hz)
->>>    - RGB888, YUV422, YUV444 and YCC420 pixel formats
->>>    - CEC
->>>    - EDID configuration
->>>
->>> The hardware also has Audio and HDCP capabilities, but these are
->>> not yet supported by the driver.
->>>
->>> Co-developed-by: Dingxian Wen <shawn.wen@rock-chips.com>
->>> Signed-off-by: Dingxian Wen <shawn.wen@rock-chips.com>
->>> Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
->>> Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
->>
->> Hi,
->>
->>> +    hdmirx_dev->dev = dev;
->>> +    dev_set_drvdata(dev, hdmirx_dev);
->>> +
->>> +    ret = hdmirx_parse_dt(hdmirx_dev);
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    ret = hdmirx_setup_irq(hdmirx_dev, pdev);
->>> +    if (ret)
->>> +        return ret;
->>
->>  From here, should of_reserved_mem_device_release() be called in the
->> error handling path, as done in the remove function?
-> 
-> Indeed, I'll make it to use devm.
-> 
->>> +    hdmirx_dev->regs = devm_platform_ioremap_resource(pdev, 0);
->>> +    if (IS_ERR(hdmirx_dev->regs))
->>> +        return dev_err_probe(dev, PTR_ERR(hdmirx_dev->regs),
->>> +                     "failed to remap regs resource\n");
->>
->> ...
->>
->>> +static const struct of_device_id hdmirx_id[] = {
->>> +    { .compatible = "rockchip,rk3588-hdmirx-ctrler" },
->>> +    { },
->>
->> Unneeded trailing comma after a terminator.
->>
->>> +};
->>> +MODULE_DEVICE_TABLE(of, hdmirx_id);
->>
->> ...
->>
->>> +    ret = cec_register_adapter(cec->adap, cec->dev);
->>> +    if (ret < 0) {
->>> +        dev_err(cec->dev, "cec register adapter failed\n");
->>> +        cec_unregister_adapter(cec->adap);
->>
->> Is it needed to call cec_unregister_adapter() when
->> cec_register_adapter() fails?
-> 
-> Yes, it's confusing, but unregister is needed to free the adapter
-> properly, it's prepared to do it. Thanks for the review.
-> 
+On Fri, Feb 21, 2025 at 4:05=E2=80=AFPM Tommaso Merciai
+<tommaso.merciai.xr@bp.renesas.com> wrote:
+>
+> Use newly added devm_pm_runtime_enable() into rzg2l_csi2_probe() and
+> drop error path accordingly. Drop also unnecessary pm_runtime_disable()
+> from rzg2l_csi2_remove().
+>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+> ---
+> Changes since v1:
+>  - Collected tags
+>
+>  drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
+>
+Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-I don't know this API, so you'll get the last word, but 
-cec_unregister_adapter() does not seem to do that many things in such a 
-case, unless I miss something. See [1].
+Cheers,
+Prabhakar
 
-CJ
-
-[1]: 
-https://elixir.bootlin.com/linux/v6.14-rc3/source/drivers/media/cec/core/cec-core.c#L370
-
+> diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c b/driv=
+ers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c
+> index 948f1917b830..4ccf7c5ea58b 100644
+> --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c
+> +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c
+> @@ -805,11 +805,13 @@ static int rzg2l_csi2_probe(struct platform_device =
+*pdev)
+>         if (ret)
+>                 return ret;
+>
+> -       pm_runtime_enable(dev);
+> +       ret =3D devm_pm_runtime_enable(dev);
+> +       if (ret)
+> +               return ret;
+>
+>         ret =3D rzg2l_validate_csi2_lanes(csi2);
+>         if (ret)
+> -               goto error_pm;
+> +               return ret;
+>
+>         csi2->subdev.dev =3D dev;
+>         v4l2_subdev_init(&csi2->subdev, &rzg2l_csi2_subdev_ops);
+> @@ -834,7 +836,7 @@ static int rzg2l_csi2_probe(struct platform_device *p=
+dev)
+>         ret =3D media_entity_pads_init(&csi2->subdev.entity, ARRAY_SIZE(c=
+si2->pads),
+>                                      csi2->pads);
+>         if (ret)
+> -               goto error_pm;
+> +               return ret;
+>
+>         ret =3D v4l2_subdev_init_finalize(&csi2->subdev);
+>         if (ret < 0)
+> @@ -852,8 +854,6 @@ static int rzg2l_csi2_probe(struct platform_device *p=
+dev)
+>         v4l2_async_nf_unregister(&csi2->notifier);
+>         v4l2_async_nf_cleanup(&csi2->notifier);
+>         media_entity_cleanup(&csi2->subdev.entity);
+> -error_pm:
+> -       pm_runtime_disable(dev);
+>
+>         return ret;
+>  }
+> @@ -867,7 +867,6 @@ static void rzg2l_csi2_remove(struct platform_device =
+*pdev)
+>         v4l2_async_unregister_subdev(&csi2->subdev);
+>         v4l2_subdev_cleanup(&csi2->subdev);
+>         media_entity_cleanup(&csi2->subdev.entity);
+> -       pm_runtime_disable(&pdev->dev);
+>  }
+>
+>  static int rzg2l_csi2_pm_runtime_suspend(struct device *dev)
+> --
+> 2.34.1
+>
+>
