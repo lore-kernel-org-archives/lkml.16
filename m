@@ -1,105 +1,122 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356C41FDA7A
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 15:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDB4BE5E
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 15:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740323993; cv=none; b=OTJJsvKZ0oabItTnkz5rVJaZxW9wtSVdDwMJI9KrUJJoTyk8OAcuO1FiEHkdbfG4XP1eJJ/MB6/smMTQM9iy6zo305KAeksFgoEszvyyjFBZnzFhF7B6c73VMDF7XvLMhlhj/Fewdk5WntjaiPO4i1fpSyTWbBKkR8SGpz8rcVk=
+	t=1740324253; cv=none; b=BepNm1Pkk6Yw1M+9e39L3IKtSmneL/aduAdlFcU3ZiIKIw2iNfN3LLEG0sTv3fK2Ejx3xgvBDuO+XZMPFUuA3nGMU8qCpz0LgBvMHA8JXw+iQB8XqExuNTowWLx1F3re6slGDb8HOX0ZZlIJ26PAy+IYJYkzsml2n2FmDVb7BaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740323993; c=relaxed/simple;
-	bh=T/2xb7muvL55Dk7o59poGR1yUA8xbheTCRauo126IEQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=nuvuvhCJqu584OzVp0OkGXsQr3yVMRjJSmIma6rsluGLhfQiHg4FzkdwXKQ9fxwSp1k+N2fKUY/O7K7pHGMNdFrnoVi5SStR8stCxv2nuMSEaiK03V/2+dLSe9rTo4ZjDNFGw8OEorggTn7Owq96xSukjoZqTrekzfMqjZHoqPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--krakauer.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OOAgIvY6; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--krakauer.bounces.google.com
+	s=arc-20240116; t=1740324253; c=relaxed/simple;
+	bh=QTCnTo7jATyvi6ibfSdkLeYMevxjmJzb6on/eLLP7Qk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SM4yj/nusVSAbNaGUtr/9Jnvf8g/dzipfK8yFnp8P9Hf8gKI5s+RcIqvxnMyy+xRiiJJNixsWZpAWbrPMbF8TxpzlrcK2Mt4+q3Qc+uAOadlk6dWHQWOROtgVB2D6HI5i0c23JRvNiVb9LgF+VQ3hplbxHoE7GKrR39LlDnW+Gg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J2MdGi9E; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OOAgIvY6"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2210305535bso120144045ad.1
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 07:19:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J2MdGi9E"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aaf3c3c104fso617462866b.1
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 07:24:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740323991; x=1740928791; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ovxXS/6Fh7CBfimDBUGP6a/bz+MG/2ipqKfqnHfFW1U=;
-        b=OOAgIvY6Oubh3wbdSnoLehXz6d+U2U0gcgSZEszxDCn6GkGIUnDHbxGLxCYOsSJImu
-         0ejljuAR4L3L/+snnvxlCvA9zjQksk1QRrsYo2tgMImy2ryZulVvhNJIgOWrG30PHFnH
-         sb60wmXPPfWrjGhQchBGl1Pmu4juPOnYNRPAAW2Y3wwcwdoYi5uwWwSj++MzR09+y01v
-         ITw+NEQ9pQKZW/+hBiG0GBufU2ljAz6MO1tRpi05xw1DgcCqUT8SqNOAoaRzRUDVj71W
-         G9KOVrhOs+eAaXqUn6TQZ4ziDD44pqqgoSoJP8UIDEL3ubvE9wuq3OyTaW75H/CrKX5U
-         H0jA==
+        d=gmail.com; s=20230601; t=1740324250; x=1740929050; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xyt3PPaYlNgcA/j7n+n0sHAguVTAN2baVeJuxMTgLrE=;
+        b=J2MdGi9E5Ku5wb4F5wYA8EhEpk6Z/kZM4kaFcIgOB1p3rAgICSga11SNw20mFEfsS6
+         1vxlNhUGBU8KoL5hZEEUvK9CoME4kDj2RLom7hIcCHkfLc1mSCZlf6Ne1xUrT+5U4/AL
+         BLaF1gB0DAQu1PST7vDKKmRes0x0aVvt6yWyJY55r3tzViLWhqeHGK97FeZ/zxSTWWa3
+         PdjvI/PwQuMnPGXjTmAJf/K5PXv59LeT5VOr0EDMrZkDWp/LRdPR51yBqlhqhAbpufy4
+         qc1fj2i80jzfomzV8DFwPcm6Gob8biExGSzbM+zzfW9IcG1nrs7jcIXWQGzhJM+T7BVK
+         s1lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740323991; x=1740928791;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ovxXS/6Fh7CBfimDBUGP6a/bz+MG/2ipqKfqnHfFW1U=;
-        b=YRDSOn/lxSZRe52ysiNzcHlLx+vq6111LoN1WAT7GT7l9n+Iw7j014WwOY8nABCfVm
-         hHkvzx1eMEWGwYacgN2ss4Y+oNPiowdcjeANH+693nkUYttiwZkaDtwgyRCtz6EBJtJH
-         q9PiFSiLHMb3d7SCpM06no3YDCM2A2oLg1p95kOoBD2AkIO2q599F0XR9OLjtiudTxLn
-         sR6wVRmAopnO7KGtuSj9H5iagNpapOTgOnsKdkg1NiRYgswun5nz9lDa7YffBcQlB0KH
-         kmB+oMzDdtMr1/QeDOg3g8Zqiatn7MkmTx85deY2flZIYM1MPxojblpVr1fzdh2moE8p
-         fjfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUGT6dVexmK78wfkzf39AJIHuO5Xm48K6ypcPrpQBO9NrpcVcxFS74LQsumZOTpNrsmaPcCVmm/0iBmQ+g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywr2zMWhBxmVGrJWu8yddze+xONzX+crlVklHeAinxxzOdohhNu
-	s+HvW8Bg804zOSm8afqS0e4mzy/nYrn305UvDaTENqsFEBx/K63BkACVaDFXfDHEVi84bFDYZvG
-	PauqfRzQi
-X-Google-Smtp-Source: AGHT+IHKSrqSq31ICSQXXKKaZjDLG3cawrFG5g1v+7iLBFT2U5yOgUgrXrTyro+FOIcaeKsHyqZNWPF5+0Q6TA==
-X-Received: from pjbee16.prod.google.com ([2002:a17:90a:fc50:b0:2fa:15aa:4d1e])
- (user=krakauer job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:c94d:b0:216:3d72:1712 with SMTP id d9443c01a7336-221a118cc5emr167376045ad.48.1740323991538;
- Sun, 23 Feb 2025 07:19:51 -0800 (PST)
-Date: Sun, 23 Feb 2025 07:19:49 -0800
-In-Reply-To: <20250220170409.42cce424@kernel.org>
+        d=1e100.net; s=20230601; t=1740324250; x=1740929050;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xyt3PPaYlNgcA/j7n+n0sHAguVTAN2baVeJuxMTgLrE=;
+        b=XASNf9/UP6Vj6opESh8Plz+jtVjMWzOgm6wqZ8z0153HNwAHJfBW377SrhZ/qwYZrZ
+         wbtrhsJan6HuopFYQdqYr9nzBdffwsxY4ei0+Rd9AQw0GQfmbUZ1ikmt4cFYnhbYathy
+         DsZMrgMWJbb2UcsHYWQY2FVq4GcsvLB3J0r3rLnV77twt7+ImA+tjpAanPGaZY/7eljF
+         5nxWJ78fP/vhV7Wy4LRdIJ/rn/U40GGgTVPKQWZ5g1MxegrqZwItNw42fy9SPRWQwSNm
+         K+bVEax7QQ4+q67nDA7xVo0fHXj2GjYsHqQXExBryZT328/5m8qwDLEqwQXaQPJqHgWG
+         VAFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWvF7Wy5WkZq5AjSbQlNkRfyr6W0ZCkBwVeba01gyjlrtNYi3NuVgEyStaxT+h2BY6QWcZDm4O/tiwRr/0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxldcEgZ012e84nsPGpaHq9Xr68lv9dBR18VU+lJ2f076KYqjnd
+	5BIs7zgMuWF2QG6jcD82h/6dF3QGIPKWJEH9mO+yCRDheYUzHerSKsuatdGZ
+X-Gm-Gg: ASbGncuvF9xg8kpV54HV3Ycq+ha7cLT6RQS62LrqAYKQ8ONXcwPUQX08BAxjjTG/Py1
+	kV4duo8tzWiRnaiAFNWYOqOJkbq2/Qx7dMnFbiQag1Ny6la1XtvkiZSRshwmHxS5hpH3YDx+eeT
+	pyi4x4zFCPqW3PvLXVz8qrxDrHWnwgYevMHTrjvUzdY62Gg82QHE6nO6+zss49Wx7qFcCqbHSKK
+	sasTg9cW4bFZB22t1xKrThLK9/jsKU47JBa4PzPXfXB4Ak+DG6Bb9J2VJSdaib79fxdRAFNYCaB
+	TRQBVFoVD0PTSo91pSguwZZoQfkopExDu3Ty+zw=
+X-Google-Smtp-Source: AGHT+IFIRu2Fr+hl9WNpDQE0EmyLzkg8g5O+I7r/hC7hqDYW4YUCySAui9U2daVsbRmLB7U7g+OQpg==
+X-Received: by 2002:a17:907:d2a:b0:ab7:fc9a:28e1 with SMTP id a640c23a62f3a-abc0de5a487mr1018666366b.52.1740324249605;
+        Sun, 23 Feb 2025 07:24:09 -0800 (PST)
+Received: from localhost.localdomain ([165.51.10.62])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abbde327701sm872767766b.164.2025.02.23.07.24.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Feb 2025 07:24:08 -0800 (PST)
+From: Salah Triki <salah.triki@gmail.com>
+To: Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Cc: Salah Triki <salah.triki@gmail.com>
+Subject: [PATCH] arm64: kvm: ptdump: Initialize .owner fields of kvm_*_operations
+Date: Sun, 23 Feb 2025 16:08:44 +0100
+Message-Id: <20250223150844.628175-1-salah.triki@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250220170409.42cce424@kernel.org>
-X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
-Message-ID: <20250223151949.1886080-1-krakauer@google.com>
-Subject: [PATCH] selftests/net: deflake GRO tests and fix return value and output
-From: Kevin Krakauer <krakauer@google.com>
-To: kuba@kernel.org
-Cc: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	krakauer@google.com, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	shuah@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thanks for the review! I'll split this up. Do you think it's better as two
-patchsets -- one for stability/deflaking, one for return value and output
-cleanup -- or as a single patchset with several commits?
+Initialize .owner fields of kvm_ptdump_guest_fops,
+kvm_pgtable_range_fops and kvm_pgtable_levels_fops to THIS_MODULE in
+order to prevent unloading the module while these operations are still
+in use.
 
-> To be clear - are you running this over veth or a real device?
+Signed-off-by: Salah Triki <salah.triki@gmail.com>
+---
+ arch/arm64/kvm/ptdump.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Over a veth.
+diff --git a/arch/arm64/kvm/ptdump.c b/arch/arm64/kvm/ptdump.c
+index e4a342e903e2..50f7d39333d6 100644
+--- a/arch/arm64/kvm/ptdump.c
++++ b/arch/arm64/kvm/ptdump.c
+@@ -185,6 +185,7 @@ static int kvm_ptdump_guest_close(struct inode *m, struct file *file)
+ }
+ 
+ static const struct file_operations kvm_ptdump_guest_fops = {
++	.owner		= THIS_MODULE,
+ 	.open		= kvm_ptdump_guest_open,
+ 	.read		= seq_read,
+ 	.llseek		= seq_lseek,
+@@ -244,6 +245,7 @@ static int kvm_pgtable_debugfs_close(struct inode *m, struct file *file)
+ }
+ 
+ static const struct file_operations kvm_pgtable_range_fops = {
++	.owner		= THIS_MODULE,
+ 	.open		= kvm_pgtable_range_open,
+ 	.read		= seq_read,
+ 	.llseek		= seq_lseek,
+@@ -251,6 +253,7 @@ static const struct file_operations kvm_pgtable_range_fops = {
+ };
+ 
+ static const struct file_operations kvm_pgtable_levels_fops = {
++	.owner		= THIS_MODULE,
+ 	.open		= kvm_pgtable_levels_open,
+ 	.read		= seq_read,
+ 	.llseek		= seq_lseek,
+-- 
+2.34.1
 
->> Set the device's napi_defer_hard_irqs to 50 so that GRO is less likely
->> to immediately flush. This already happened in setup_loopback.sh, but
->> wasn't added to setup_veth.sh. This accounts for most of the reduction
->> in flakiness.
->
->That doesn't make intuitive sense to me. If we already defer flushes
->why do we need to also defer IRQs?
-
-Yep, the behavior here is weird. I ran `gro.sh -t large` 1000 times with each of
-the following setups (all inside strace to increase flakiness):
-
-- gro_flush_timeout=1ms, napi_defer_hard_irqs=0  --> failed to GRO 29 times
-- gro_flush_timeout=5ms, napi_defer_hard_irqs=0  --> failed to GRO 45 times
-- gro_flush_timeout=50ms, napi_defer_hard_irqs=0 --> failed to GRO 35 times
-- gro_flush_timeout=1ms, napi_defer_hard_irqs=1  --> failed to GRO 0 times
-- gro_flush_timeout=1ms, napi_defer_hard_irqs=50 --> failed to GRO 0 times
-
-napi_defer_hard_irqs is clearly having an effect. And deferring once is enough.
-I believe that deferring IRQs prevents anything else from causing a GRO flush
-before gro_flush_timeout expires. While waiting for the timeout to expire, an
-incoming packet can cause napi_complete_done and thus napi_gro_flush to run.
-Outgoing packets from the veth can also cause this: veth_xmit calls
-__veth_xdp_flush, which only actually does anything when IRQs are enabled.
-
-So napi_defer_hard_irqs=1 seems sufficient to allow the full gro_flush_timeout
-to expire before flushing GRO.
