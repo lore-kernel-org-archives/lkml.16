@@ -1,106 +1,63 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E3A76C61;
-	Sun, 23 Feb 2025 20:31:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67367B64A;
+	Sun, 23 Feb 2025 20:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740342680; cv=none; b=o5aBPUQquZU94bWM0LuquipoO7e8OgTpzdAfGE9iGrsyv2XA0MD9q+dVhYpHfQziwezIyZBJEIoV6XqplFZnisfH96ucj3AqsUJn3m78i9TNUErGd9maCbtqPIfoWY6bP0WLPAacFR9BF8YJHb/29RndnTwER1JMLPBFd4OkvaI=
+	t=1740342763; cv=none; b=TOgOz5GvLqvjy4LEHnKgnnzdwr/lmLKZEasrmRC4SMsfpGBynpEPfw3/u5ab8XifmihbgSR2OBYF1Q/HlT/gmLn77HrIGaF3DHgnJFg9By6QS1pzCG4BNdqhZJOTS+4Gt4YuS4MoS49Uaz6x+ckRNAhnnaO9MopK1p9B5iNSwCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740342680; c=relaxed/simple;
-	bh=2SRBcMj9JIMeyK5vmbaEgk30kVYy8n/NU4yA3uMiuEA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UpY5rgRDQx7MSp8TD1uJY2YfTn81FhsKP8FsDLBoMGHV1tI2FWF8fJzIP49SeFJc0vzY1kotIOHZboD86jzLIUDPTubcOH9tuU8dBLlG5ivGgskSN32D11d8DEowzuTZJMZM/osSuHtZxaXCfiHVVtAbV7Bn7/QSqq2IJsHD5kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=z3zJpBih; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1740342763; c=relaxed/simple;
+	bh=i6Jm4qE64VOM1DaJjXn3iv835TtFEqshmpOvz7YEcB4=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=eAuf6zGFsNGTYGUMKe/DchfKPEWZ5bz6kTaBSGnTh1ko2s1tP7tjoZgavSsK/jtwniCxSZroKntXaB4eyr5VO1oRI6dW+5ISxKuvDxXNO/SMHG0NdrBTGeeOFQCkLSaqbltNQ5cdGMqJaN6pZ/7L0AhkSgAd5OiiMWHip97i6KU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=paXMvqph; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="z3zJpBih"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=/fYo2p8XtniofyUH/iizmuKJSZUYgRd5Be3P1t8VfvM=; b=z3zJpBihYZCDmS2PL9GNWwHwkl
-	0FCmVbABqzaF/MQufl+Idg5yK0s5EdfRr7zgP5JJZyy94cOMZwGJl4ma08xBWetgIueBMDCnoNw/M
-	MlQl2CGF7ohnOG7N0KGwYIoia+G1vm5KtSJo99xy/NXx0vRVHdqP7niuSGpeR8+dBh4KXLOj5f0Yc
-	ik441t8DBYFJO3eN9cSG1kIvlrbRY+BC+nf54uO6cAeEFuKIPPHFeywe6U4A/FF+Vtv4PLbO6pSCu
-	wcWxgiwsvLLkQfjTh7xSvLW4DKZH2XbKJBx6utQzJxGUHaCDzwUMA7GIBzYRcriummORbTX60XETx
-	f89fspZQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59580)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tmId0-0003xe-0u;
-	Sun, 23 Feb 2025 20:31:06 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tmIcv-0004HQ-27;
-	Sun, 23 Feb 2025 20:31:01 +0000
-Date: Sun, 23 Feb 2025 20:31:01 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: =?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>, davem@davemloft.net,
-	Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
-	Simon Horman <horms@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Antoine Tenart <atenart@kernel.org>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Subject: Re: [PATCH net-next 0/2] net: phy: sfp: Add single-byte SMBus SFP
- access
-Message-ID: <Z7uFhc1EiPpWHGfa@shell.armlinux.org.uk>
-References: <20250223172848.1098621-1-maxime.chevallier@bootlin.com>
- <87r03otsmm.fsf@miraculix.mork.no>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="paXMvqph"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6B2EC4CEDD;
+	Sun, 23 Feb 2025 20:32:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740342762;
+	bh=i6Jm4qE64VOM1DaJjXn3iv835TtFEqshmpOvz7YEcB4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=paXMvqphsopbAjzmVYOwmKECYRURQtcK+wyJqVQ1wQGrBhOTHS2goR9IMufHD8AS4
+	 lPOlR7mTxuPeNGBAhaDHLOmABpuF9s9vTs8+86jYq4dv98EdxsJZohNAkzBixaIGlf
+	 KOBuf2SnDcQXhZwDyvFIJr0pjAqropKJctsZ6/f1sjOshpRPJIROLFzPdgQ/EXa7l4
+	 9uVxbafVbWEmp6QUcSed4Ui5ru7lhiW4tR7OPkJUwQ5Abnreo6U0AmDAltKkluWLol
+	 M20csdb//yjWTybJbwgl+WUEf6MxD/MXxgQnU2ukiHwzdnkj5aqTxLfh/+v+1nZBrR
+	 4UfCDqKnnbUMg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70EBE380AAF9;
+	Sun, 23 Feb 2025 20:33:15 +0000 (UTC)
+Subject: Re: [GIT PULL] EDAC/urgent for v6.14-rc4
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250223100633.GAZ7rzKTBKLL0-bqMn@fat_crate.local>
+References: <20250223100633.GAZ7rzKTBKLL0-bqMn@fat_crate.local>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250223100633.GAZ7rzKTBKLL0-bqMn@fat_crate.local>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent_for_v6.14_rc4
+X-PR-Tracked-Commit-Id: c158647c107358bf1be579f98e4bb705c1953292
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ad328a3785a24a7e7a8053b06139a6bfb42d0280
+Message-Id: <174034279397.2614901.4162057167037693433.pr-tracker-bot@kernel.org>
+Date: Sun, 23 Feb 2025 20:33:13 +0000
+To: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-edac <linux-edac@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87r03otsmm.fsf@miraculix.mork.no>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Sun, Feb 23, 2025 at 07:37:05PM +0100, Bjørn Mork wrote:
-> As for Russel's comments regarding atomic reads, I'm hoping for the
-> pragmatic approach and allow all possible features over SMBus. It's not
-> like we have the option of using i2c on a host which only supports
-> SMBus.  My experience is that both hwmon and phy access works pretty
-> well with SMBus byte accesses.
+The pull request you sent on Sun, 23 Feb 2025 11:06:33 +0100:
 
-The pragmatic approach is to avoid using things that are unsafe (and
-thus unreliable.) As I said, disabling hwmon makes sense because you
-don't want to read the 16-bit values non-atomically and end up with
-scrambled readings that then trigger alarms because they've exceeded
-the thresholds.
+> git://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git tags/edac_urgent_for_v6.14_rc4
 
-Merely proving that "oh look it works because I can read stuff"
-doesn't address my point.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ad328a3785a24a7e7a8053b06139a6bfb42d0280
 
-SMBus being used is as bad as all those crappy SFP modules out there
-that don't conform to the SFP MSA but claim they do. It's just yet
-another hardware designer cocking the design up in a way that makes
-SFPs unreliable. Unfortunately, there's not much that we can do to
-influence that, but not publishing stuff that's ultimately unreliable
-helps to make the issue known.
-
-So, not only do I think that hwmon should be disabled if using SMBus,
-but I also think that the kernel should print a warning that SMBus is
-being used and therefore e.g. copper modules will be unreliable. We
-don't know how the various firmwares in various microprocessors that
-convert I2C to MDIO will behave when faced with SMBus transfers.
-
-All in all, I'm not happy with this, and I do wish hardware designers
-would get a clue.
+Thank you!
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
