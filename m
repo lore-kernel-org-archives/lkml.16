@@ -1,51 +1,74 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0804414;
-	Sun, 23 Feb 2025 06:55:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A153FB3B;
+	Sun, 23 Feb 2025 07:00:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740293739; cv=none; b=Bzvvqo3HM+rfVQayJtBI+PlvPm8+ckzEYKtMo0OPrUVxyQhENmsFcDnP0M56g6gvcgzvh+K8ZoY/0DHKQGmQSEo4aneQQD7MlCq6Ty/1CUA0+4uIEDrSzfTQy7VJ2+qsVMpcXWyIj9/SCZd/RfzJshBcjgMxl99XaJdEu3akERI=
+	t=1740294020; cv=none; b=FbR/4w3lqH+Yv/fcb4Os7NHI79pjH0zTgh3dFP5aKyIg1VfZENuGUjwHCQ5E6WV3zYWWqXzqC2tbMRSWERkPRnIjQ23zuXz7Qq3iCbmiwF/hWt6pPndLkRICXzynwlLBG/8UOWK0N6ErJp2Se/6ZCqQGSIbTF6etnOWW1tRYJKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740293739; c=relaxed/simple;
-	bh=QmOR/YrUzzwsYy7T54Gep40GJD5nY3nQaIVBiQTDYps=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=jBdcAkegM1u2k3jY2QJFf5uiUWNyGvEMUinF+5L7LFlL0E51uYIW6HEAKBF+Qe+2RANYhOszvJALh4ZuaKgL4Mn3JbLtZbHF4/f5XKRccvEOFNd3tP9c2efdQpzENXHvtnh3Lq7Jiv+dLpqPKWj6nfHjg9lcXSACW8HwcnvEA+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=JxEDmKei; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1740294020; c=relaxed/simple;
+	bh=ib5TwWcaRw9LUXjvbripaiMLqsuKJwTrOTJaR27F0So=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JoURGiZjqnI9JE1P2pwy5az9xmOA9Ex8E73hLWupao0ac4jjwQCurZ/Jb3I+jq/UtAA7NFMQsYYSdeKOPA6H78vffhd5qTscLyv+DTSYYIWSSBrYAVbEuk00bbpq0EmD8C3/nbrXdnn5GG5FxqkPHuNju5Xgy5UODdiOjwGpRZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ClrkNPvV; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="JxEDmKei"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=Content-Type:MIME-Version:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=TrabOqtRhfI4L6MXAwrxdsN96HvSybcOUIqp0rTlZoc=; b=JxEDmKeiwKhrw9Z+o5YxLxPgBR
-	HoAWaqs0VwTbUwWImyM85VEknbl3XBCiRR+CuNJC3et+XS4tr+jnqXLqK3yuAKrxLGqGckJdxuDfw
-	4IRxi8oaKf4lJlevnGmYIZfG8cn2dwTOWyaYWrNaRiTpcsY8MmQkfKvya6UjwAB6uQKfXo92f/goA
-	sLaTQNN+AdfMQ+PyA8rVzBdTFF2tJZIztCcnQcU8XMga3T13zHS5Q0TEBLhCWkGazq6oR/IT3qESg
-	t4HYM/FrZ2RWok66dvs2Vc+2n9iEaLKHn6YCf6GHE2tW1t1oY4qumB6/VDa7uQti4PaKmSw2vlTtF
-	iL2+dx+w==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1tm5tc-000ycI-0E;
-	Sun, 23 Feb 2025 14:55:25 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sun, 23 Feb 2025 14:55:24 +0800
-Date: Sun, 23 Feb 2025 14:55:24 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Nitin Gupta <nitingupta910@gmail.com>,
-	Richard Purdie <rpurdie@openedhand.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	"Markus F.X.J. Oberhumer" <markus@oberhumer.com>,
-	Dave Rodgman <dave.rodgman@arm.com>
-Subject: [PATCH] lib/lzo: Avoid output overruns when compressing
-Message-ID: <Z7rGXJSX57gEfXPw@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ClrkNPvV"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c0ba9825e9so218413085a.0;
+        Sat, 22 Feb 2025 23:00:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740294016; x=1740898816; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0AsXxvvW3BkHd5vCQu8R0wvKfYc8SOGl6m/u1V38cEI=;
+        b=ClrkNPvV0lLKTo28cvSRMLF35s0L3WuJAveGNhAz5VWTzPOLHatl6IWMAXeeMsyicq
+         pk9KgeLg6RsMib53Ox05N8rDDt3yuoJHWs3wWGUS0rhKGT17gs3alTNaPcm39/gnKxZR
+         zXZXqo8kycj8wuNyVEFyOp5t5LKqjQDGPak42TuWtvFP2341W3heoQZSqJtCf4Lxn14J
+         Ter9Wfukoz8bqyA8/r7Shi82tLnB+vv9FbON1eVLkvTR/dGkjIvK6uhCfjd4MtIAmuSt
+         SlvxGhOPwe1BZ0jpGd9rc0H2k0K5LXwVY2ORNSM2GSnAb2nrI2wYBx4SDQ6ePe+LlN7H
+         pPnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740294016; x=1740898816;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0AsXxvvW3BkHd5vCQu8R0wvKfYc8SOGl6m/u1V38cEI=;
+        b=gbeC/0+DaKPiMK55gU4SBhwnwsnyUu95L1LrSsl0Ct3NQnKT0WgwC7kKW02fpFiZH8
+         AtPuXxf7/Qxtuc1xX+XbsSOjDZdYcYq3dfxEalmFslCjs98YUCK6CLIc2SdDHui9vsuH
+         2/jlToAS9J//SbNMqfQqDF+cN11yVDt83JpVHDgIbwRmbVbHM/kWP56Ypw+a3sEtyLuk
+         J/u8l3/NE24IuEH/JDWCIQbvrmpSRrTOvdK8oOkk9w/PloTjUF8NdfoklyMJRnULCeB6
+         CI7/GQlkYN13OO3+sDvt18y+4tN4GV2Lis8fuTzMkpuqpzAjC2oRh+DPLukKPkHJsv9d
+         Xqiw==
+X-Forwarded-Encrypted: i=1; AJvYcCVK7y5GIq+Zcoo1V8+qt0jBmblJ4PEORIyp6rOCg47pDpCWxW9INVCWjTCSUktLhkJp3g8SwmlzIYgrRL3Kl3zh@vger.kernel.org, AJvYcCVnZqjXmejpYzbtroEJUhmiIfjQn5u/kjCUQzX9wFQ50RucAHrlECbTtbTi8LasQPMg5DkdHx291m733kk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw03lUV5C0bbV4ECdwVx6xmUOp+xq9SH+fIlq6NglwzAin22LdS
+	Et7XPKxuQjJJbWdeaQ7BHYhRMaMBly07o09wZiZ5slU1OJ58Xt5HqBMFf3rj
+X-Gm-Gg: ASbGncty8XA1bSMO5ne4AhPvtus+J4kiYXOMdAXHdQQII19GLWdhr/uWGVohDJF4l3B
+	/SZcOLr9jfYNine8AGnWFqU7nHejmuOGOwnKJAB8uWM1ss7ohSzAkSrKx0Pa0vausmlFqfZj2zm
+	J3n9IYaDPUwqjRTN63WFXPVSdnbYEizAORhEZYnFgJVFqrE6Faatfd12i9KtVwvHfByp+m6zPAT
+	3F40hWuOpNGl/2yo+M47b2dGhyULVzuf3wI0s0Pgppkoig9FsukvCVvgt61cm0bf9wngEMIU8XM
+	iefC2X7FJiLs3GfD5lozPPY3RHuUidJ+WxeRYrDmI2RaL1z54HmxO7Ujkj6zYQQGiJ3Sb4e/c7Q
+	cwdWE4+p8hTB3
+X-Google-Smtp-Source: AGHT+IGI0f0oWVpNg7tVGkpoHA4BuZEzcJvgGOpydcBOqIapcgvSQZaqqHx7a34SYNJMw+t7zyS87w==
+X-Received: by 2002:a05:620a:4083:b0:7b6:d5b2:e6d with SMTP id af79cd13be357-7c0cef539efmr1335787185a.35.1740294016626;
+        Sat, 22 Feb 2025 23:00:16 -0800 (PST)
+Received: from localhost (bras-base-toroon0648w-grc-10-142-198-73-227.dsl.bell.ca. [142.198.73.227])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c0b46649d3sm581990085a.32.2025.02.22.23.00.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Feb 2025 23:00:16 -0800 (PST)
+Date: Sun, 23 Feb 2025 02:01:10 -0500
+From: Seyediman Seyedarab <imandevel@gmail.com>
+To: Ritvik Gupta <ritvikfoss@gmail.com>
+Cc: shuah@kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org, 
+	linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v2] selftests/mount: Close 'fd' when write fails
+Message-ID: <5lkv3sotpv6pvs63gds5crwkrvs5xjtdkjmjcnzrc3c6d5s2wg@gzzfvghkp2qm>
+References: <20250222114709.50011-1-ritvikfoss@gmail.com>
+ <20250222121249.50588-1-ritvikfoss@gmail.com>
+ <zshes4xtyir7zrrybeqj2amrxyctwqnuvx2tqyktv4vsfstxqi@pvdq2rb5m47j>
+ <Z7qiOE3EXo8BtdY8@ritvikos>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,256 +77,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <Z7qiOE3EXo8BtdY8@ritvikos>
 
-The compression code in LZO never checked for output overruns.
-Fix this by checking for end of buffer before each write.
+On 25/02/23 09:51AM, Ritvik Gupta wrote:
+> Yes, the kernel will handle the 'fd' cleanup automatically, but
+> the existing implementation already closes it before exiting.
+> However, in case where write fails, its unhandled.
+> This patch addresses that gap :)
+> 
+> Nevertheless it's subjective indeed.
+> Thanks for reviewing!
+> 
+> Regards
+> Ritvik
 
-Fixes: 64c70b1cf43d ("Add LZO1X algorithm to the kernel")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+The current implementation doesn't close the fd before calling
+the die() function. It only closes fd before returning because
+vmaybe_write_file() doesn't necessarily exit the process. It
+only exits in failure cases, including failures when closing
+the file itself. I think the close() failure path might have
+caused some confusion.
 
-diff --git a/lib/lzo/lzo1x_compress.c b/lib/lzo/lzo1x_compress.c
-index 47d6d43ea957..5d2f2f851694 100644
---- a/lib/lzo/lzo1x_compress.c
-+++ b/lib/lzo/lzo1x_compress.c
-@@ -18,10 +18,10 @@
- #include <linux/lzo.h>
- #include "lzodefs.h"
- 
--static noinline size_t
-+static noinline int
- lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
--		    unsigned char *out, size_t *out_len,
--		    size_t ti, void *wrkmem, signed char *state_offset,
-+		    unsigned char **out, unsigned char *op_end,
-+		    size_t *tp, void *wrkmem, signed char *state_offset,
- 		    const unsigned char bitstream_version)
- {
- 	const unsigned char *ip;
-@@ -30,8 +30,9 @@ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
- 	const unsigned char * const ip_end = in + in_len - 20;
- 	const unsigned char *ii;
- 	lzo_dict_t * const dict = (lzo_dict_t *) wrkmem;
-+	size_t ti = *tp;
- 
--	op = out;
-+	op = *out;
- 	ip = in;
- 	ii = ip;
- 	ip += ti < 4 ? 4 - ti : 0;
-@@ -116,25 +117,41 @@ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
- 		if (t != 0) {
- 			if (t <= 3) {
- 				op[*state_offset] |= t;
-+				if (!HAVE_OP(4))
-+					return LZO_E_OUTPUT_OVERRUN;
- 				COPY4(op, ii);
- 				op += t;
- 			} else if (t <= 16) {
-+				if (!HAVE_OP(1))
-+					return LZO_E_OUTPUT_OVERRUN;
- 				*op++ = (t - 3);
-+				if (!HAVE_OP(16))
-+					return LZO_E_OUTPUT_OVERRUN;
- 				COPY8(op, ii);
- 				COPY8(op + 8, ii + 8);
- 				op += t;
- 			} else {
- 				if (t <= 18) {
-+					if (!HAVE_OP(1))
-+						return LZO_E_OUTPUT_OVERRUN;
- 					*op++ = (t - 3);
- 				} else {
- 					size_t tt = t - 18;
-+					if (!HAVE_OP(1))
-+						return LZO_E_OUTPUT_OVERRUN;
- 					*op++ = 0;
- 					while (unlikely(tt > 255)) {
- 						tt -= 255;
-+						if (!HAVE_OP(1))
-+							return LZO_E_OUTPUT_OVERRUN;
- 						*op++ = 0;
- 					}
-+					if (!HAVE_OP(1))
-+						return LZO_E_OUTPUT_OVERRUN;
- 					*op++ = tt;
- 				}
-+				if (!HAVE_OP(t))
-+					return LZO_E_OUTPUT_OVERRUN;
- 				do {
- 					COPY8(op, ii);
- 					COPY8(op + 8, ii + 8);
-@@ -151,6 +168,8 @@ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
- 		if (unlikely(run_length)) {
- 			ip += run_length;
- 			run_length -= MIN_ZERO_RUN_LENGTH;
-+			if (!HAVE_OP(4))
-+				return LZO_E_OUTPUT_OVERRUN;
- 			put_unaligned_le32((run_length << 21) | 0xfffc18
- 					   | (run_length & 0x7), op);
- 			op += 4;
-@@ -243,10 +262,14 @@ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
- 		ip += m_len;
- 		if (m_len <= M2_MAX_LEN && m_off <= M2_MAX_OFFSET) {
- 			m_off -= 1;
-+			if (!HAVE_OP(2))
-+				return LZO_E_OUTPUT_OVERRUN;
- 			*op++ = (((m_len - 1) << 5) | ((m_off & 7) << 2));
- 			*op++ = (m_off >> 3);
- 		} else if (m_off <= M3_MAX_OFFSET) {
- 			m_off -= 1;
-+			if (!HAVE_OP(1))
-+				return LZO_E_OUTPUT_OVERRUN;
- 			if (m_len <= M3_MAX_LEN)
- 				*op++ = (M3_MARKER | (m_len - 2));
- 			else {
-@@ -254,14 +277,22 @@ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
- 				*op++ = M3_MARKER | 0;
- 				while (unlikely(m_len > 255)) {
- 					m_len -= 255;
-+					if (!HAVE_OP(1))
-+						return LZO_E_OUTPUT_OVERRUN;
- 					*op++ = 0;
- 				}
-+				if (!HAVE_OP(1))
-+					return LZO_E_OUTPUT_OVERRUN;
- 				*op++ = (m_len);
- 			}
-+			if (!HAVE_OP(2))
-+				return LZO_E_OUTPUT_OVERRUN;
- 			*op++ = (m_off << 2);
- 			*op++ = (m_off >> 6);
- 		} else {
- 			m_off -= 0x4000;
-+			if (!HAVE_OP(1))
-+				return LZO_E_OUTPUT_OVERRUN;
- 			if (m_len <= M4_MAX_LEN)
- 				*op++ = (M4_MARKER | ((m_off >> 11) & 8)
- 						| (m_len - 2));
-@@ -282,11 +313,17 @@ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
- 				m_len -= M4_MAX_LEN;
- 				*op++ = (M4_MARKER | ((m_off >> 11) & 8));
- 				while (unlikely(m_len > 255)) {
-+					if (!HAVE_OP(1))
-+						return LZO_E_OUTPUT_OVERRUN;
- 					m_len -= 255;
- 					*op++ = 0;
- 				}
-+				if (!HAVE_OP(1))
-+					return LZO_E_OUTPUT_OVERRUN;
- 				*op++ = (m_len);
- 			}
-+			if (!HAVE_OP(2))
-+				return LZO_E_OUTPUT_OVERRUN;
- 			*op++ = (m_off << 2);
- 			*op++ = (m_off >> 6);
- 		}
-@@ -295,14 +332,16 @@ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
- 		ii = ip;
- 		goto next;
- 	}
--	*out_len = op - out;
--	return in_end - (ii - ti);
-+	*out = op;
-+	*tp = in_end - (ii - ti);
-+	return LZO_E_OK;
- }
- 
- static int lzogeneric1x_1_compress(const unsigned char *in, size_t in_len,
- 		     unsigned char *out, size_t *out_len,
- 		     void *wrkmem, const unsigned char bitstream_version)
- {
-+	unsigned char * const op_end = out + *out_len;
- 	const unsigned char *ip = in;
- 	unsigned char *op = out;
- 	unsigned char *data_start;
-@@ -326,14 +365,17 @@ static int lzogeneric1x_1_compress(const unsigned char *in, size_t in_len,
- 	while (l > 20) {
- 		size_t ll = min_t(size_t, l, m4_max_offset + 1);
- 		uintptr_t ll_end = (uintptr_t) ip + ll;
-+		int err;
-+
- 		if ((ll_end + ((t + ll) >> 5)) <= ll_end)
- 			break;
- 		BUILD_BUG_ON(D_SIZE * sizeof(lzo_dict_t) > LZO1X_1_MEM_COMPRESS);
- 		memset(wrkmem, 0, D_SIZE * sizeof(lzo_dict_t));
--		t = lzo1x_1_do_compress(ip, ll, op, out_len, t, wrkmem,
--					&state_offset, bitstream_version);
-+		err = lzo1x_1_do_compress(ip, ll, &op, op_end, &t, wrkmem,
-+					  &state_offset, bitstream_version);
-+		if (err != LZO_E_OK)
-+			return err;
- 		ip += ll;
--		op += *out_len;
- 		l  -= ll;
- 	}
- 	t += l;
-@@ -342,20 +384,32 @@ static int lzogeneric1x_1_compress(const unsigned char *in, size_t in_len,
- 		const unsigned char *ii = in + in_len - t;
- 
- 		if (op == data_start && t <= 238) {
-+			if (!HAVE_OP(1))
-+				return LZO_E_OUTPUT_OVERRUN;
- 			*op++ = (17 + t);
- 		} else if (t <= 3) {
- 			op[state_offset] |= t;
- 		} else if (t <= 18) {
-+			if (!HAVE_OP(1))
-+				return LZO_E_OUTPUT_OVERRUN;
- 			*op++ = (t - 3);
- 		} else {
- 			size_t tt = t - 18;
-+			if (!HAVE_OP(1))
-+				return LZO_E_OUTPUT_OVERRUN;
- 			*op++ = 0;
- 			while (tt > 255) {
- 				tt -= 255;
-+				if (!HAVE_OP(1))
-+					return LZO_E_OUTPUT_OVERRUN;
- 				*op++ = 0;
- 			}
-+			if (!HAVE_OP(1))
-+				return LZO_E_OUTPUT_OVERRUN;
- 			*op++ = tt;
- 		}
-+		if (!HAVE_OP(t))
-+			return LZO_E_OUTPUT_OVERRUN;
- 		if (t >= 16) do {
- 			COPY8(op, ii);
- 			COPY8(op + 8, ii + 8);
-@@ -368,6 +422,8 @@ static int lzogeneric1x_1_compress(const unsigned char *in, size_t in_len,
- 		} while (--t > 0);
- 	}
- 
-+	if (!HAVE_OP(3))
-+		return LZO_E_OUTPUT_OVERRUN;
- 	*op++ = M4_MARKER | 1;
- 	*op++ = 0;
- 	*op++ = 0;
-diff --git a/lib/lzo/lzo1x_decompress_safe.c b/lib/lzo/lzo1x_decompress_safe.c
-index c94f4928e188..4d5a1b58a4a0 100644
---- a/lib/lzo/lzo1x_decompress_safe.c
-+++ b/lib/lzo/lzo1x_decompress_safe.c
-@@ -21,7 +21,6 @@
- #include "lzodefs.h"
- 
- #define HAVE_IP(x)      ((size_t)(ip_end - ip) >= (size_t)(x))
--#define HAVE_OP(x)      ((size_t)(op_end - op) >= (size_t)(x))
- #define NEED_IP(x)      if (!HAVE_IP(x)) goto input_overrun
- #define NEED_OP(x)      if (!HAVE_OP(x)) goto output_overrun
- #define TEST_LB(m_pos)  if ((m_pos) < out) goto lookbehind_overrun
-diff --git a/lib/lzo/lzodefs.h b/lib/lzo/lzodefs.h
-index b60851fcf6ce..8b1a46993acf 100644
---- a/lib/lzo/lzodefs.h
-+++ b/lib/lzo/lzodefs.h
-@@ -19,6 +19,7 @@
-  */
- #define LZO_VERSION 1
- 
-+#define HAVE_OP(x)      ((size_t)(op_end - op) >= (size_t)(x))
- #define COPY4(dst, src)	\
- 		put_unaligned(get_unaligned((const u32 *)(src)), (u32 *)(dst))
- #if defined(CONFIG_X86_64) || defined(CONFIG_ARM64)
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Cheers,
+Seyediman
