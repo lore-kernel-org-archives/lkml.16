@@ -1,28 +1,28 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DD8A202F97;
-	Sun, 23 Feb 2025 11:31:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83F5D204C2A;
+	Sun, 23 Feb 2025 11:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740310284; cv=none; b=gMWA8pEtCb4xs/EtZY/TBTqloykOPPjPag/CcwixLpTnCDYkfwHSwkDfQe+V4ev0oDoNxkOJ3VIhPakkr+C09I5yUsYc4i+CTk7vgIqz3SPVHyic6fdNyNMulrlzgAdS+9DuR6CDyIVdP899hXuSOGClTnwr2yAVZofOxD4LS48=
+	t=1740310284; cv=none; b=Sif1XywHCn+NbeGZhDozvulaO6+CpQwqWC6xvnHaZ35mm+6kgrDSQlJNxJLA6mfZbuuzEWExahmdDqabGZfjAnotoRDd5C9Prc92jbU287/S+irY63wLQxc/uUuyyid79N6/0o13V49Ocv63IU87bSfFAuIGeTye8ebR5VUX3PU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740310284; c=relaxed/simple;
-	bh=hVMu8VtGeKrTwSBZVq1KuB7zMqYJFmxDJUTXP0RlTpA=;
+	bh=28V2fffS9bFBXBhBjk9uctuX0OAj8daq42zXpEqlN2w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eHTBnc8dApaqGaxwOFflYF2uei7btzIKLiohdmZdxyKplFoAtQk4U5l7kIshXOb9IFFjjrQAW/9cuFyoWMqVQddumc+pOs/Y4fiARnes3p5iztESdCl1nrhDY6Fra5ca/RVOyLnWgJzfKbBwUT7fLUn9bOqXmWTVUnKIzCfT/Sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=JQeth/Oj; arc=none smtp.client-ip=117.135.210.3
+	 MIME-Version; b=GA+4D3FWFfcuKrYpdqeVyGgEYrcqGKO74GyYXv3FpnGiheMj3PPmmoSKBT24o9gnSU4oFYXtAF9QEYtGeJvpN56bALwS0mO5X+9wlndmJuWy1CAmJhbwzd6CPrUIrL5wLeI747RIza9YD4wWtRf6yoJK2b55fPs5zYguNSIFelc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=XjfdQZnQ; arc=none smtp.client-ip=220.197.31.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="JQeth/Oj"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="XjfdQZnQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=EHczv
-	SSk5h351i00BwsKZf8PI4LoDDRa7hJpbsRqGqM=; b=JQeth/Oj8PqnJ/7Xc69V8
-	0q18sNMHKMpvnUHYpbvxUtKPRNab5OxjRFaduMGS25RZDFYBUkPemhCsT5rY5oPJ
-	Jl1yfxCIdEm2/jiLsUeVLytyJV5pVsvDPf6ZRRxTzQfNHVbZo7w6fosQoE2MYI3Z
-	Ny/WRhY1UlO9DuTaUv4oZQ=
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=8O6s/
+	Or5PgZ3nOkE6KkXcdydvMMnOex78q09+RFYlpQ=; b=XjfdQZnQ+ARx0XvTY3oli
+	5aGXA+hog0p6hWeG4bfsPlcyFn49VZxWe3IiW8GDDRdnloGrGkYpxFyYHIH80w/7
+	UEGOBNaoMiT/Wu0d0uXeaWnbvtI5LuiTmFGA6KlBctVwFotPrvIYo6Nlwq10sCDO
+	VRuKHEdSYNHtDVECjewi48=
 Received: from ProDesk.. (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PygvCgBHWqbdBrtnleHpAg--.47651S8;
-	Sun, 23 Feb 2025 19:30:49 +0800 (CST)
+	by gzsmtp4 (Coremail) with SMTP id PygvCgBHWqbdBrtnleHpAg--.47651S6;
+	Sun, 23 Feb 2025 19:30:47 +0800 (CST)
 From: Andy Yan <andyshrk@163.com>
 To: heiko@sntech.de
 Cc: hjc@rock-chips.com,
@@ -39,9 +39,9 @@ Cc: hjc@rock-chips.com,
 	robh@kernel.org,
 	sebastian.reichel@collabora.com,
 	Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH 6/6] arm64: dts: rockchip: Enable DisplayPort for rk3588s Cool Pi 4B
-Date: Sun, 23 Feb 2025 19:30:29 +0800
-Message-ID: <20250223113036.74252-7-andyshrk@163.com>
+Subject: [PATCH 4/6] arm64: dts: rockchip: Add DP0 for rk3588
+Date: Sun, 23 Feb 2025 19:30:27 +0800
+Message-ID: <20250223113036.74252-5-andyshrk@163.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250223113036.74252-1-andyshrk@163.com>
 References: <20250223113036.74252-1-andyshrk@163.com>
@@ -52,86 +52,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PygvCgBHWqbdBrtnleHpAg--.47651S8
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ur48WF43Jw4ktFWxJw4fZrb_yoW8WFykp3
-	ZxArsYgFs7urW7t3s5tF4xJFs8Ars5ua97Jr13Za43KFW7W3s5t34fGw1vyrWYvF4fX3yr
-	tr1kXasF93WDXaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UXjjkUUUUU=
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0hv8Xme6-oyBhQAAsA
+X-CM-TRANSID:PygvCgBHWqbdBrtnleHpAg--.47651S6
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Cry8Kr1kXFW8tFyUGry3urg_yoW8XFW7p3
+	ZrCrZ3XrW8uF42q39xKr1ktrZYy3Z5CFZYkrn7Gryjkr1Sqr9FkrySgrn3A34DXr47ZwsF
+	vFs3try0kF4qyaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UXYFZUUUUU=
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbBkBD8Xme7AH88NgAFsO
 
 From: Andy Yan <andy.yan@rock-chips.com>
 
-Enable the Mini DisplayPort on this board.
-Note that ROCKCHIP_VOP2_EP_DP0 is defined as 10 in dt-binding header,
-but it will trigger a dtc warning like "graph node unit address error,
-expected "a"" if we use it directly after endpoint, so we use "a"
-instead here.
+The DP0 is compliant with the DisplayPort Specification
+Version 1.4, and share the USBDP combo PHY0 with USB 3.1
+HOST0 controller.
 
 Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 ---
 
- .../boot/dts/rockchip/rk3588s-coolpi-4b.dts   | 37 +++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3588-base.dtsi | 30 +++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-coolpi-4b.dts b/arch/arm64/boot/dts/rockchip/rk3588s-coolpi-4b.dts
-index e892dd7c91aa..0f58eb56557f 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588s-coolpi-4b.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3588s-coolpi-4b.dts
-@@ -39,6 +39,18 @@ chosen {
- 		stdout-path = "serial2:1500000n8";
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
+index 4989fcd5e592..0aa8026fce95 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
+@@ -1371,6 +1371,36 @@ i2s9_8ch: i2s@fddfc000 {
+ 		status = "disabled";
  	};
  
-+	dp-con {
-+		compatible = "dp-connector";
-+		label = "DP OUT";
-+		type = "mini";
++	dp0: dp@fde50000 {
++		compatible = "rockchip,rk3588-dp";
++		reg = <0x0 0xfde50000 0x0 0x4000>;
++		interrupts = <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru PCLK_DP0>, <&cru CLK_AUX16M_0>,
++			 <&cru CLK_DP0>, <&cru MCLK_I2S4_8CH_TX>,
++			 <&cru MCLK_SPDIF2_DP0>;
++		clock-names = "apb", "aux", "hdcp", "i2s", "spdif";
++		assigned-clocks = <&cru CLK_AUX16M_0>;
++		assigned-clock-rates = <16000000>;
++		resets = <&cru SRST_DP0>;
++		phys = <&usbdp_phy0 PHY_TYPE_DP>;
++		power-domains = <&power RK3588_PD_VO0>;
++		#sound-dai-cells = <0>;
++		status = "disabled";
 +
-+		port {
-+			dp_con_in: endpoint {
-+				remote-endpoint = <&dp0_out_con>;
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			dp0_in: port@0 {
++				reg = <0>;
++			};
++
++			dp0_out: port@1 {
++				reg = <1>;
 +			};
 +		};
 +	};
 +
- 	hdmi-con {
- 		compatible = "hdmi-connector";
- 		type = "d";
-@@ -220,6 +232,24 @@ &gpu {
- 	status = "okay";
- };
- 
-+&dp0 {
-+	status = "okay";
-+	pinctrl-0 = <&dp0m0_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&dp0_in {
-+	dp0_in_vp2: endpoint {
-+		remote-endpoint = <&vp2_out_dp0>;
-+	};
-+};
-+
-+&dp0_out {
-+	dp0_out_con: endpoint {
-+		remote-endpoint = <&dp_con_in>;
-+	};
-+};
-+
- &hdmi0 {
- 	status = "okay";
- };
-@@ -889,3 +919,10 @@ vp0_out_hdmi0: endpoint@ROCKCHIP_VOP2_EP_HDMI0 {
- 		remote-endpoint = <&hdmi0_in_vp0>;
- 	};
- };
-+
-+&vp2 {
-+	vp2_out_dp0: endpoint@a {
-+		reg = <ROCKCHIP_VOP2_EP_DP0>;
-+		remote-endpoint = <&dp0_in_vp2>;
-+	};
-+};
+ 	hdmi0: hdmi@fde80000 {
+ 		compatible = "rockchip,rk3588-dw-hdmi-qp";
+ 		reg = <0x0 0xfde80000 0x0 0x20000>;
 -- 
 2.34.1
 
