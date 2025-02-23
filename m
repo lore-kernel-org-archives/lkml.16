@@ -1,83 +1,84 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837DC768FD
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 23:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30892155A2F
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 23:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740352688; cv=none; b=kdaxBqNy8e3smiEf8SUAVth+t99VHp0WaqzC0k0pttw9YAXd0jS3vrtGCSfbBDkT4mor0eZQLRVikB9MrMmxALGrEOI9i0F3OVft3PuZr3uN3s7500myPPYvp+fuPiuX5UxauMCdN/25ZF3wSFZgoykVNRMp8P1bkFWlsDRTLnw=
+	t=1740352920; cv=none; b=ktlNt8qbfNJ/uFpw1x9Zi8tPnBdhUeIzidEZbOIPpfEP33Hs4oN7k4RC1GaCvPDsRaPC0g0VRkBWnL9JgSFCzfvMD3kyEQjzZPbll7h7sBuSJNUa2RjWB+D2UWzoznPISSbJCrRNZ4EPv97vTxJcCVTU2wJX//bvkQda+UM4x5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740352688; c=relaxed/simple;
-	bh=cFFX7jUM8J/4t6YEHhaoM/k7+sAm18ObHvklbBEGeZc=;
+	s=arc-20240116; t=1740352920; c=relaxed/simple;
+	bh=YUpIX3p5KAT012WNBeDY80poqUUYGkSnPO+1asqVCz0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i4wF7Wm5B/fOG74KkmSbZyLNERxCqzJyGE6+tve/T4eksukEWLe6XXrhmyZHMePj/NljWK4Zi6iOUYPJazBQ6hVCTxqiZexN+RQQ+R0xnRf75YoD9r6WI47kXqwATtxzgDDR/ZJq6kbMWZSuM45cZB9g4L++OIjMFooAfq+rLlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=IXW6EXud; arc=none smtp.client-ip=209.85.218.54
+	 Content-Type:Content-Disposition:In-Reply-To; b=lEteIJZexyGSOIPo4lrnoW9eP6Db9PWnyodLc5chK/4R3yTsgz14/NMadHDW/X0KyX4D++CxPxNd1ZH3ed2jVbH5eB8uyjkHAit2l8tg/9ZxVtWKi9VW9Et4jEaDFdPbgH4JaD0+kQDmsC/iIxan0bsANE+z+Ekv3p8bnPKkfpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=ovT+WVlw; arc=none smtp.client-ip=209.85.221.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="IXW6EXud"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-abb8d63b447so487283666b.0
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 15:18:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="ovT+WVlw"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-38f24fc466aso2916089f8f.2
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 15:21:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1740352681; x=1740957481; darn=vger.kernel.org;
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1740352916; x=1740957716; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hSimLknfgUjKmaAI/UHJQXeFa3D9r38TQ7MMLTUXGQM=;
-        b=IXW6EXudtoOfFmlfIeIWf0EreQ8BRnH3mFvICZI4/LF5zWhX4yf2xiix1clJq/cp2u
-         VqUIut3Zaptpny14I6asF4GdqHjhdroL6ZQh3Mk1N/u1+DhqqenPUFRt76u9Zt8/cB/S
-         /NnBd611G3CbmhkRjFQW7vzPaY3+WU05M8FGTzISfB+dW30i0WrSKRwFhO2wnqXhMldh
-         K6uvXwRhq/VMcAssfAmxMElx1OQU6Krc4ZX9hVmutaoo2b3pKJFP/90NlHGW5hj2aM+8
-         7NZSoQcSNbqpzb14gSETyYvAFQCtHfVvkSS2vvzWgu/0+/a24wJo+oAMhPfNhWMgwIGg
-         YIsw==
+        bh=3948LJQT8mXQGK1uSw5EWn56hLyOoSGn19GgIOUKWtg=;
+        b=ovT+WVlwupMs/zwlyvVd4n751muoE/CiGnSraD5WTJYsRbUMOIOGtNw5sSN4ctAEGK
+         eWynzqR/OkWhlYVlyz0Gu53fp0IziU9KiqOMGKNVlePTgdWlCNCv0xtwqtKZuC8DOYql
+         DUvjVC6X/F8+xmgWcrD8OwtVKzP9FifrzJW3B7PZQWjoqeBfhL9lUtqziaRt+5feYW1D
+         Ngztk/rJU94OAo61da+dSUr/gQHXEKQRNCfFCzRmlr0i+MAUmxebUDgyKS+tHSx7hK8W
+         65b1XPsz61QhO9fvwEByW5ZgiR2Sf/dvGN4Xg3wScUyvsa+RBngFolP1Wg21MEjcRtAE
+         8mYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740352681; x=1740957481;
+        d=1e100.net; s=20230601; t=1740352916; x=1740957716;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hSimLknfgUjKmaAI/UHJQXeFa3D9r38TQ7MMLTUXGQM=;
-        b=ArGp691whTufLucZuj9Zu50AUWRSSVW0sLrRdW0Z9jxo16MupBHUelhoS9N3Mg+ybk
-         X5c/SupIFHIdWV749Xkom9evS5UGV2svX6T/ftHM1iF+G1c0vmaNXTQEOi7mWgrcuTtR
-         EhEgGFpuCDB2DBHULt0OBR1IThRu6ZjYu+2BMGluyzhuFn0GVQyKiyYrG92v31ajCXkA
-         xLpquHnXZdNA0E6u/AL6pP+CDvS7lreojDBgjEp7SnyLLAZlF8qP1ohWK3jQ+6X+g8pr
-         nRSomW1Tm9m68W9AjYfi4FWywiwQ6d23K4wBAiyEuMglCciHrey8oF0p7Y4r1AH9pgkO
-         vKvw==
-X-Forwarded-Encrypted: i=1; AJvYcCVyqSoPmDEeo458Wcg/uBNE86OZFz4+LMzLvX3MC829QEVleeGaDrRs9HUrk+/Mr9VX59Iz/kA/38yYB2g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySbtnfrMJM58kEmf5bZTU88Pp+UYvUqlKN/jVKZPaWDm0PcIvi
-	50HEPUtNtra9HZz8IZ+qkOO43hC5e974O2rknfb03Cz40DfMqEaTMC1HRtktOqw=
-X-Gm-Gg: ASbGncsX2lDxX81i7EjtLw4Ct1vEvOfBgXf3z8goAu2oEMPlFxs28mIE5MMpVm0erSS
-	nUeJ0wzSo7IdGwUSvJx+qyD2zQTQPOym8bas2PmOwbLfldykxneFbE2pB4hSDQ+qL5TQSEXiQ9s
-	Pql104I+FvC2b+auQCZbEa7IB3gKulk+YDblyvnFob+usog0yZUjjK9Yy9p27lldnunvSiZsmaf
-	DPMxaVZvyN1Crt4u5FskZ0l0IVy395ZMyceizti8zD5RDFIGayf+Y4vJv6rjgkHeYbdt1fJ+gy/
-	Vy7ey89BK9PneOSq1Vb4
-X-Google-Smtp-Source: AGHT+IFQbcUcUm8qND6Ggzt1mXEc20aMsEosikmGs9AgHTZiF94Y9wYEh3X6GFkaEOaNTWzptnsJXA==
-X-Received: by 2002:a17:906:c243:b0:abc:269c:56d5 with SMTP id a640c23a62f3a-abc269c571emr698187166b.40.1740352681226;
-        Sun, 23 Feb 2025 15:18:01 -0800 (PST)
+        bh=3948LJQT8mXQGK1uSw5EWn56hLyOoSGn19GgIOUKWtg=;
+        b=MKq3XRdyB8wPrnXkmNKEHOl1+MRJJz43gBNux/vZq71dEUlzioN/rWe0N5df0zul/2
+         3H11KHFsZn2B/XZwWqDc38U2pSQO+1uVPOOj7yzziV5OLjOFQOQPyGZcE/ptYu+aAAN5
+         LqfB0SzVgsOo+TxTKJxR/oFAnc8L3HqbLDOkHsWNtL1m2x3Yd4dXnEhsX84FJ6lRQWMQ
+         0bF5byix5nqzLJklF2iUCNtwv5foa1yCkqnBWaANrMSrOYFTWNlv1FHRg/32FSsDk7OY
+         CdtdJQVVCvsXgZcx7tEXZM1frwmicu7uhRZfy1Cq9ovMCseiLHFL8psF6xBy4ja1z0+6
+         5VNg==
+X-Forwarded-Encrypted: i=1; AJvYcCXB9uvzC67lxarBX2FVq+vgbyBlQqANktGBR14E1JdEbVOcmpueGGEg+SQFUc20V3MbRgAE8vThX823AFY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWD1yR6Wj8dQ7ZJHZuwfRgPlt2w6dsen5pswY1swWR28eq+xre
+	FcM5DITPYITNv0II5UgwhiOUV44JZ1rG1r53jJ0CVxw3PqOBb/NgxRWeVCPbslM=
+X-Gm-Gg: ASbGncs6pwkj0K02qh6w9ah6rhOQvhBYXcWLkYtGlcZSjb/oB4gvYMvTh4+PAwiVwpi
+	DRaUpixYdcM4H8oI16LX/5BNfs5K+IqdL/AsB+RqhF1UdxSxvsq6gq9GergdjyA6PWauzn8gl9Z
+	x3dg7Kx31zkrBtzpiUgP/Slg8NeG3IX8qgBYqmeHRe3dLabIXSLHYgJFqeMMytTF+d+j40aRz5v
+	SZU2epmTlcYl3iIvY+psyKhEDcVI7eQywzDnHZuK49opPRb0EzaCgXHO3QYFIMcpd43jAf+aZvM
+	Tg4QSGksTCAQt4Q32wO7
+X-Google-Smtp-Source: AGHT+IF/4LqtEeT+DONh96owC4K16mDeErj+C54WXDJj+XOfUMwszVF3GcC+Ead7Ayo982nBvK1xcA==
+X-Received: by 2002:a5d:452f:0:b0:38d:d274:4533 with SMTP id ffacd0b85a97d-38f7087d88cmr6419397f8f.55.1740352916373;
+        Sun, 23 Feb 2025 15:21:56 -0800 (PST)
 Received: from airbuntu ([46.186.201.36])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abbd5502c53sm975083966b.159.2025.02.23.15.17.57
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259f8121sm29536254f8f.88.2025.02.23.15.21.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2025 15:18:00 -0800 (PST)
-Date: Sun, 23 Feb 2025 23:17:55 +0000
+        Sun, 23 Feb 2025 15:21:56 -0800 (PST)
+Date: Sun, 23 Feb 2025 23:21:51 +0000
 From: Qais Yousef <qyousef@layalina.io>
 To: Ingo Molnar <mingo@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
+Cc: Andrea Righi <arighi@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Vincent Guittot <vincent.guittot@linaro.org>,
 	Juri Lelli <juri.lelli@redhat.com>,
 	Steven Rostedt <rostedt@goodmis.org>,
+	John Stultz <jstultz@google.com>,
+	Saravana Kannan <saravanak@google.com>,
 	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Christian Loehle <christian.loehle@arm.com>,
-	Hongyan Xia <hongyan.xia2@arm.com>,
-	John Stultz <jstultz@google.com>, Anjali K <anjalik@linux.ibm.com>,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8] sched: Consolidate cpufreq updates
-Message-ID: <20250223231755.cvjcsl3jedkgpohc@airbuntu>
-References: <20250209235204.110989-1-qyousef@layalina.io>
- <Z7igK4w4PW1T_PCw@gmail.com>
- <20250223000351.xg53osxswsxxohye@airbuntu>
- <Z7rm2XRqhCM8m9IU@gmail.com>
+	Frederic Weisbecker <frederic@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] Kconfig.hz: Change default HZ to 1000
+Message-ID: <20250223232151.xtsobtuoaofotrxx@airbuntu>
+References: <20250210001915.123424-1-qyousef@layalina.io>
+ <20250212145054.GA1965539@joelnvbox>
+ <Z7rTNxHcXWizV3lq@gpd3>
+ <Z7rxuqIB38Wv557A@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,133 +87,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z7rm2XRqhCM8m9IU@gmail.com>
+In-Reply-To: <Z7rxuqIB38Wv557A@gmail.com>
 
-On 02/23/25 10:14, Ingo Molnar wrote:
+On 02/23/25 11:00, Ingo Molnar wrote:
 > 
-> * Qais Yousef <qyousef@layalina.io> wrote:
+> * Andrea Righi <arighi@nvidia.com> wrote:
 > 
-> > On 02/21/25 16:47, Ingo Molnar wrote:
+> > On Wed, Feb 12, 2025 at 09:50:54AM -0500, Joel Fernandes wrote:
+> > > On Mon, Feb 10, 2025 at 12:19:15AM +0000, Qais Yousef wrote:
+> > ...
+> > > > I believe HZ_250 was the default as a trade-off for battery power
+> > > > devices that might not be happy with frequent TICKS potentially draining
+> > > > the battery unnecessarily. But to my understanding the current state of
 > > > 
-> > > * Qais Yousef <qyousef@layalina.io> wrote:
-> > > 
-> > > > ---
-> > > >  include/linux/sched/cpufreq.h    |   4 +-
-> > > >  kernel/sched/core.c              | 116 +++++++++++++++++++++++++++--
-> > > >  kernel/sched/cpufreq_schedutil.c | 122 +++++++++++++++++++------------
-> > > >  kernel/sched/deadline.c          |  10 ++-
-> > > >  kernel/sched/fair.c              |  84 +++++++++------------
-> > > >  kernel/sched/rt.c                |   8 +-
-> > > >  kernel/sched/sched.h             |   9 ++-
-> > > >  kernel/sched/syscalls.c          |  30 ++++++--
-> > > >  8 files changed, 266 insertions(+), 117 deletions(-)
-> > > 
-> > > The changelog is rather long, and the diffstat is non-trivial.
-> > > 
-> > > Could you please split this up into multiple patches?
+> > > Actually, on x86, me and Steve did some debug on Chromebooks and we found
+> > > that HZ_250 actually increased power versus higher HZ. This was because
+> > > cpuidle governor changes C states on the tick, and by making it less
+> > > frequent, the CPU could be in a shallow C state for longer.
 > > 
-> > Sure. I did consider that but what stopped me is that I couldn't see 
-> > how I could break them into independent patches. A lot of corner 
-> > cases needed to be addressed and if I moved them to their own patches 
-> > I'd potentially break bisectability of this code. If this is not a 
-> > problem then I can see how I can do a better split. If it is a 
-> > problem, I'll still try to think it over but it might require a bit 
-> > of stretching. But I admit I didn't try to think it over that hard.
-> 
-> Yeah, so bisectability should definitely be preserved.
-> 
-> I had a quick look, and these changes look fairly easy to split up to 
-> reduce size/complexity of individual patches. The following split looks 
-> pretty natural:
-> 
->  # ============{ Preparatory changes with no change in functionality: }=========>
-> 
->  [PATCH 1/9] Extend check_class_changed() with the 'class_changed' return bool
->              # But don't use it at call sites yet
-> 
->  [PATCH 2/9] Introduce and maintain the sugov_cpu::last_iowait_update metric
->              # But don't use it yet
-> 
->  [PATCH 3/9] Extend sugov_iowait_apply() with a 'flags' parameter
->              # But don't use it yet internally
-> 
->  [PATCH 4/9] Extend sugov_next_freq_shared() with the 'flags' parameter
->              # But don't use it yet internally
-> 
->  [PATCH 5/9] Clean up the enqueue_task_fair() control flow to make it easier to extend
->              # This adds the goto restructuring but doesn't change functionality
-> 
->  [PATCH 6/9] Introduce and maintain the cfs_rq::decayed flag
->              # But don't use it yet
-> 
->  [PATCH 7/8] Extend __setscheduler_uclamp() with the 'update_cpufreq' return bool
->              # But don't use it yet
-> 
->  # ============{ Behavioral changes: }==========>
-> 
->  [PATCH 8/9] Change sugov_iowait_apply() behavior
->  [PATCH 9/9] Change sugov_next_freq_shared() bahavior
-> 
->  ... etc.
-> 
-> This is only a quick stab at the most trivial split-ups, it's not a 
-> complete list, and I saw other opportunities for split-up too. Please 
-> make these changes as finegrained as possible, as it changes behavior 
-> and there is a fair chance of behavioral regressions down the road - 
-> especially as the patch itself notes that even the new logic isn't 
-> perfect yet.
-> 
-> If the behavioral changes can be split into further steps, that would 
-> be preferable too.
+> > FWIW, I found the same about power consumption when we decided to switch to
+> > CONFIG_HZ=1000 in the Ubuntu kernel:
+> > https://discourse.ubuntu.com/t/enable-low-latency-features-in-the-generic-ubuntu-kernel-for-24-04/42255
 
-Okay. I was focused on the functionality changes. Let me re-order and do more
-preparatory work without introducing problems that I know will affect
-performance bisectability. Thanks for helping to shift focus, I admit I had
-a mental block on breaking this down to smaller pieces.
+Thanks for sharing the data Andrea!
 
 > 
-> Also:
+> The "HZ=1000 reduces power consumption or keeps it the same" is 
+> actually a pretty good argument to change the default to HZ=1000.
 > 
->  - Please make the rq->cfs.decayed logic unconditional on UP too, even 
->    if it's not used. This reduces some of the ugly #ifdeffery AFAICS.
-> 
->  - Please don't add prototypes for internal static functions like 
->    __update_cpufreq_ctx_switch(), define the functions in the right 
->    order instead.
-> 
->  - Also, please read your comments and fix typos:
-> 
-> +                * This logic relied on PELT signal decays happening once every
-> +                * 1ms. But due to changes to how updates are done now, we can
-> +                * end up with more request coming up leading to iowait boost
-> +                * to be prematurely reduced. Make the assumption explicit
-> +                * until we improve the iowait boost logic to be better in
-> +                * general as it is due for an overhaul.
-> 
->   s/request
->    /requests
-> 
-> +        * We want to update cpufreq at context switch, but on systems with
-> +        * long TICK values, this can happen after a long time while more tasks
-> +        * would have been added meanwhile leaving us potentially running at
-> +        * inadequate frequency for extended period of time.
-> 
->   Either 'an inadequate frequency' or 'inadequate frequencies'.
-> 
-> +        * This logic should only apply when new fair task was added to the
-> +        * CPU, we'd want to defer to context switch as much as possible, but
-> +        * to avoid the potential delays mentioned above, let's check if this
-> +        * additional tasks warrants sending an update sooner.
-> 
->   s/when new fair task
->    /when a new fair task
-> 
->   s/this additional tasks
->    /this additional task
-> 
-> (I haven't checked the spelling exhaustively, there might be more.)
+> These experiments and numbers (if any) should be incorporated in the 
+> changelog prominently - as actual data and the Kconfig decisions made 
+> by major distros will, most of the time, be superior to meta analysis 
+> that seems to be the changelog right now.
 
-Will do.
+I will update the commit message to incorporate data and the feedback received.
 
 Thanks!
 
