@@ -1,64 +1,64 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C03F4414
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 06:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FFD14414
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 06:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740293366; cv=none; b=h6U0NAeFGqRYzi9FQz+0kXuKk6w4kSCAmeAXKxciX3PlL1TsBG0ubDiYpjlzP7o06S/XumdBKck8E6bQO3TDsRXSzCOt4JQCODrSBQ1k3ji9uir4JdDLxF8pDEKEJcC6BM0P+VQv86a2Dcw7QmGEQ5Vw6kkKOYs1uLYgDTo+7b4=
+	t=1740293476; cv=none; b=cya/jhJQrMESedxA3e1iqnKCo/ekFK5zvDBk7fWQgotePwIixAue8DdlT+Hf1u2ZpwACR/yQT/ac/jEaS+HfV0tHZRQ8NR84KsY7nRGSywSkIG3VgwrupFa7nGuNl56ZWK1+AsI38p1LKcL0wyShj03yc4XwQklaZjfVs2fy8mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740293366; c=relaxed/simple;
-	bh=IrXufjhrtURNRtePzuFrUi3VXTx9hYR1zzTLpU4TGdQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=nLJyIGygDKSIEBrzMhT7Wd3TT8ZP+Maa5HK5iTLjlxtGo6VlyPlTgsK5uqQw1B+stVzN2yDW3hJB1urV3Do1KHq7F9ySPZ6N3cSgcttlJ8k0wvZwpOHbIZvFU/6aMMzoCiQd2O+tOXGFdx2DknDBd+51EIeyAq8G2oDPsr3WE68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uzymO+eJ; arc=none smtp.client-ip=209.85.128.42
+	s=arc-20240116; t=1740293476; c=relaxed/simple;
+	bh=TiTiQy9fLGmd0hKyx7X3r4Y22u/yWIg9kNt45XGhIDE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=pgRLkc6sXkRUAcFrRg3tH7bpl+6mHcTFmFzb2p1g1Etde71bnQ812Pb8YSKwMZXnWeaNLJZkD/IvQ04e2EERuqRgsAyF5FHUIKhEqoCF2aGMHCwUWTDPxh/rKE6QSRWsH4YfcJzdnBfM7J68B8cui9WXklPC8ImSuYe6v2sx6TM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mys2WTGj; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uzymO+eJ"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-439950a45daso20551205e9.2
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 22:49:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mys2WTGj"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-438a39e659cso21663675e9.2
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 22:51:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740293363; x=1740898163; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1740293472; x=1740898272; darn=vger.kernel.org;
         h=cc:to:message-id:content-transfer-encoding:mime-version:subject
          :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HHaUx5KktsdgA0Sl0DqP/e15F+R/KAQTbOxMnc+xT7Q=;
-        b=uzymO+eJHvCq+g91XzlN3Z7qwVg7jrG2oF7uVZcLlUoOA+igLqSg7pVYhSiyfUkHMe
-         SbFqW6rr3CQhLWfv9bFyQVc76GelRkrQh1E5uJkrET8t7x582KUgsDd1zlue/rMqwHYG
-         VNdFztttk8biCcfDWQOzq2/p3nLr44IrEvqywd5qiFQsxrnlsUHlOYOOktlSK7/BlcbX
-         rIWXl7PCQAW+coSV5RvWd647R+u+V3BFCpYM34u6jcGu+3TOY43Nz7cypHi4JjkpKNLI
-         mNwVP1uFyHiyL7R/0pqVxnvl7ipGvw1yhpcZuHgWSu67pkEfrJE0iPhMj77+C615WLi3
-         aLlA==
+        bh=wf9IOjBQ3147jp76ze9JeJiEVzCwi5QU/DzJ1ulfNfM=;
+        b=mys2WTGjkxKOrEjE4CfxHyRXqoBMKQHQ57+ZVcCnEfqOTL+Il4mLp4k6XXVY2ahMfO
+         jJpfAkqBHqJYv2l/uY6A1w93G2uG/GJDvL/Ksg0TC2jSo7NAzdpiKlZsXxIMatmUYJrE
+         M7hWGOJJ8hJrevo8N80E6Na+stdgmJgKw7x1uN9+DuWmWvZBdWZ5zhqyhCFjPdADRkcy
+         CBmQq4FIyus/KEnAOEOzlJbB0iPYXM/NM4+6RSpPBWyw1DCvnK3epvS8J7rxwV0o69bw
+         gYx33vmlLIxxnhE2BI3rbyEYDIS9SDHyJLdPPm3qQUcbuzyHMPQ/oEwYfbZnNmAHUmke
+         5N9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740293363; x=1740898163;
+        d=1e100.net; s=20230601; t=1740293472; x=1740898272;
         h=cc:to:message-id:content-transfer-encoding:mime-version:subject
          :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HHaUx5KktsdgA0Sl0DqP/e15F+R/KAQTbOxMnc+xT7Q=;
-        b=AsyiRXsQVYqnrfBC1dmDjY5kSy6NbiZ9C9HQTzmxUAv/S3/bPluuNowxLfpsN4Rlua
-         7bj95oeVK1cM3wQP9G8Yo0xj2MO6u+LqSIpz6MW9x3PdE+GtiCIrrANMRifXrpFZ8hc3
-         C2KCdemf7WXkKtBAouK+Z8fUi5UTAdbNQicPaoklZ1kUikwTSLIJ+8p4aQkkJ6Rza3Xc
-         mqkgzk7rO5swIp1YZeISTEY8FI37KIAEa53c7i5tYBK7HpPddrWfjIRHrwG63yM7y6cX
-         KW+g15VcOSsMIkRKYLHa0kYNvGF0sOnRELT2kjAiPw50zPsXK7GejlAYausZBXdtr75a
-         8vTA==
-X-Forwarded-Encrypted: i=1; AJvYcCVzu938cn1gC0S9lMyaUPiDLfKMDzPCqD9mIZ3KisD2iVeLuFgdFnjvIsXnB/ySHuDyYzzlWhi4Z25t+W4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzfx2WxO+mZIu2j2bbtooO1nObRqpfn3htkOvZZVfPyq6ohEIo5
-	TJ3WBV4Wbo63JX+eBll/ur0AB8mN6zQ24Y3meqg/t3Lw/Wzi95KXtye+zRc4UZg=
-X-Gm-Gg: ASbGncuW2pXVNDEg5KaPhe3sUNxGOrFExAVfvEU9i/EGWJgRiuUh5UBD1cr3Y/jlibO
-	hvMvbaEx9oiM29+tIckCGwNRjLxidXHDryYmOA++QQzRp2/05qMPncWzVfiwqlCUNTE14CrxsIp
-	wehgCLABK+TuZfqLpdcfFWhtbqgEoPDfZRwKE7loDhY3xij7gagxv6KV6HJ0kEBJNfAeEtIBnkS
-	AHrPIyvchr3IAVJalqkalORoX1P6mngkbH093k5NBtK+4SxbcFfmOULMmBx5dYIKvt1C4a35Xaf
-	961qytPLPYaaBwuEhzUVF2FV4XL/8lE3rbiiTH0nK8PdLrUVBw5VCIqTlrZ1AVBTCms7VNeLvlp
-	niNvxdA==
-X-Google-Smtp-Source: AGHT+IGXGcm4VljijD4pXFk056tlsVgzjM+6og539uN649E+iow88gvaZwo/9ZveWnY2W90sEPVm2g==
-X-Received: by 2002:a5d:598c:0:b0:38f:48ee:ddb1 with SMTP id ffacd0b85a97d-38f6e95d5e2mr10084368f8f.18.1740293362786;
-        Sat, 22 Feb 2025 22:49:22 -0800 (PST)
+        bh=wf9IOjBQ3147jp76ze9JeJiEVzCwi5QU/DzJ1ulfNfM=;
+        b=aN5H/hm/aXKlHMMV4/TkisL62CLlKbdE9KpdXbMSuSf8o4WN6n6UrZkIeRXLYOFA7s
+         fqwwoNJWM0OoACxDZ2rSuJvv3avREU2w5XItFUqJNLpLegMh/IxyoEoKWVQa771w3mlT
+         u5okEr48ksfQYKDORe0s5FxoK0tTX9XX0VoNz0tre8VKifupRzNyfn4iJdbusCpm8jTH
+         xAzaXIi/VRpmvm3EHYZ5Ip3kuS+5wk1lykRLsHimi9CR5R0fVJvAP+JAtj+idlix6mXz
+         HasUfthj+SOcWxW26TKkrzvMPWY7sbaC7vFZJGZZRiObWpPUfieAiIcZZ6HoLQ/gNfAJ
+         4TIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1pHKxE/N6cQI5l6YUgqhWSe59Sw3so/H0mVtXFA8m+fYWCmt3lO3QLX7lFwTEW3lVNrYeBBwOeiTSONo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeNZLjJLp74aQQsBeYmh1uNeFfYKPI9tv7d4nqcbF2qXW39C4L
+	rUIHxhOe2+LkDXrcbJtdBDBQ73qHoByL5gAufxLC3EfW16klI7C2cw0qjfhvZHU=
+X-Gm-Gg: ASbGncsSLhAqp3t9aqeY7VvrXQZitlpO0GqddIU4YEftJCQ2RcVWeAGXQyULrxV0TD9
+	Ijs6EeCTc1Mqc5AODLMhgV6lpu0nYXYlO6etVzT+ObqnQ0YMmTTaYy4GFNQXyHW/WuBwX5hb6fC
+	x/olwUBe32zvUq/x58jPqhiGa/is7z5I7osKlpHgnjZaHiEQRR7CX31r70rtytm1iKRPWjoHaXM
+	s9BBJkgj0uWrNU+j2I298/u63ige54hbEjKwLOFC8rRqwB69w4ogyWxBeLWN4mfz2bkLdvVOxA9
+	78ZwjDiDHnN9/Fe5GkP9S7hLsEcwhC0ewpOKMZbqpH4K57y+scJC3Asvc8Pq88Xe/pXlPVftYWG
+	EdkNelw==
+X-Google-Smtp-Source: AGHT+IE0OLuFGVI5dKmS0jsudLxiGBBLypYvwDHB/8sXl1IwFDl/fYKFthNKHHKb91Nism9Vcl2cbA==
+X-Received: by 2002:a05:6000:1541:b0:38d:d767:364 with SMTP id ffacd0b85a97d-38f70789915mr6307201f8f.13.1740293472502;
+        Sat, 22 Feb 2025 22:51:12 -0800 (PST)
 Received: from ta2.c.googlers.com (169.178.77.34.bc.googleusercontent.com. [34.77.178.169])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f64b0f565sm9517570f8f.51.2025.02.22.22.49.21
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f258b4491sm27673755f8f.7.2025.02.22.22.51.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Feb 2025 22:49:22 -0800 (PST)
+        Sat, 22 Feb 2025 22:51:12 -0800 (PST)
 From: Tudor Ambarus <tudor.ambarus@linaro.org>
-Date: Sun, 23 Feb 2025 06:49:17 +0000
-Subject: [PATCH] mtd: spi-nor: explicitly include <linux/math64.h>
+Date: Sun, 23 Feb 2025 06:51:10 +0000
+Subject: [PATCH v2] mtd: spi-nor: explicitly include <linux/math64.h>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,26 +67,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250223-snor-math64-v1-1-8c7653111356@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAOzEumcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDIyNj3eK8/CLd3MSSDDMTXYsUixSzlCQj80QTIyWgjoKi1LTMCrBp0bG
- 1tQB6XFgNXQAAAA==
+Message-Id: <20250223-snor-math64-v2-1-6f0313eea331@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAF7FumcC/23MQQ6CMBCF4auQWVvDTKEQV97DsKi0wiTakilpN
+ IS7W1m7/F/yvg2SF/YJLtUG4jMnjqEEnSoYZxsmr9iVBqqprYm0SiGKetl1No3qXe+Mu1NnG4L
+ yWMQ/+H1ot6H0zGmN8jnwjL/1v5NRoerHzrQaEXVrrk8OVuI5ygTDvu9fjVi/6acAAAA=
 To: Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>, 
  Miquel Raynal <miquel.raynal@bootlin.com>, 
  Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
 Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, 
  Tudor Ambarus <tudor.ambarus@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740293361; l=1375;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740293471; l=1527;
  i=tudor.ambarus@linaro.org; s=20241212; h=from:subject:message-id;
- bh=IrXufjhrtURNRtePzuFrUi3VXTx9hYR1zzTLpU4TGdQ=;
- b=crKQ/XDwuTSl008vBr29zYajmXhqcWOZjEjHLb7QU0d8jFL6mrUsGKME6beiK8SuBxYsPd9RI
- U6zsF201b9UCH1O3HoG93JVWpC27CZ3Yrhf4dptkHXvGBsJXJGp1TBP
+ bh=TiTiQy9fLGmd0hKyx7X3r4Y22u/yWIg9kNt45XGhIDE=;
+ b=GxCTwY5144l5jdjB8PIutHJngVtP8t9EQD7nJx+bWJHmycy0DqOZGDxZz+oDmfaV9Sj16C3RN
+ XIfg3gXJFhOAXSUF7RmsdyyTKrdyVT9ySxayHZGhCMbD0pxxSkuZrsd
 X-Developer-Key: i=tudor.ambarus@linaro.org; a=ed25519;
  pk=uQzE0NXo3dIjeowMTOPCpIiPHEz12IA/MbyzrZVh9WI=
 
 swp and otp drivers use div_u64 and div64_u64 and rely on implicit
-inclusion if <linux/math64.h>.
+inclusion of <linux/math64.h>.
 
 It is good practice to directly include all headers used, it avoids
 implicit dependencies and spurious breakage if someone rearranges
@@ -95,6 +95,10 @@ headers and causes the implicit include to vanish.
 Include the missing header.
 
 Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+---
+Changes in v2:
+- fix typo in commit message s/if/of/.
+- Link to v1: https://lore.kernel.org/r/20250223-snor-math64-v1-1-8c7653111356@linaro.org
 ---
  drivers/mtd/spi-nor/otp.c | 1 +
  drivers/mtd/spi-nor/swp.c | 1 +
