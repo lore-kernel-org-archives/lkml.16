@@ -1,103 +1,132 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694592066C7;
-	Sun, 23 Feb 2025 11:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED335205AA4;
+	Sun, 23 Feb 2025 11:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740311441; cv=none; b=CpkJ1YvurP833qn9GWc56ueRcPBrHQwpeDGjYJIp52VQYKOdfNPAYhZR8GW0FnCkQXZFEAwoUXhLPymqkr1BLw8q+7kBLea/U7VNGBoTbHFRsQsW0R1vE0xigFiCIeShrtgBwy/WPfI2hxnbtfbHoHAftRAf6m7cqmu2alZs0fQ=
+	t=1740311493; cv=none; b=htiFEA8TlHgc0t4WSgcObfHEqQ5ePVr1TLuvejDs1+UVFKxBhPdnuALRq+6W6FwmrkV/q4fij73UHcZdJOkxqjUqeOiXHSdgnJL+oEK2W1ucJHRtPOayCuDhgZdAHCODOu9/kRPUKsy7Gid2U10oGLJ+Rbd2nsw+I9LSlOWLc/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740311441; c=relaxed/simple;
-	bh=Npl1hf2K8C0HFRJz0IJdWyuqL8ZWAqWbXOrkZ95CiDc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pNuAPqqDOWpM9FEgXkdsRpykew0VfolCfmqXkoyJ+L/GedcEQO6+++5A7nOk+ErU0bqW8uZWsIgTaTc3De+WkG4IvS99QAQak86ODiItOJnnrshz2f66bgE583XFX1QI+o7GltHY1AZlCIglyXeN1AlTdRLeMDvRaZSbFdTT3/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from [127.0.0.1] (unknown [180.172.118.52])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 6C23534317F;
-	Sun, 23 Feb 2025 11:50:34 +0000 (UTC)
-From: Yixun Lan <dlan@gentoo.org>
-Date: Sun, 23 Feb 2025 19:49:35 +0800
-Subject: [PATCH v6 4/4] riscv: dts: spacemit: add gpio LED for system
- heartbeat
+	s=arc-20240116; t=1740311493; c=relaxed/simple;
+	bh=W3H3mJ4BSMRwPFaLMf5WUH4oDymvh3z0vUbhqVHwJxE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Xl4Grg+duZEEEoFsvkLqBW/rx2b4I16dacRnQzrQElPKHc9VT46Pu6WqgUcSLbVsZt/VQdFdGviIBcrdkmfbIbBqP0hcdlFTR1MucV82HegxSNnvK7ow9nDqrdN6+PPVOdaDTAieVzXK2gdWA6iQh7sz2sRWe1LzLbyImAB2qik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mTNFSGyv; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mTNFSGyv"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-38f2b7ce2e5so1996822f8f.2;
+        Sun, 23 Feb 2025 03:51:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740311490; x=1740916290; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=26e9/1bCo2KzEw0XilO4IzJVWnnZzMcuU3z5EhtOBCM=;
+        b=mTNFSGyvY0rQty8UQLXvvSsfLAsa1qZxfwqSR5AezPSbvZorM5KgZ3FpCTx36cGjhl
+         eX/wsadZY6rLSvQZXPQ/75LipFcjdyoCe8f4tQEUzEwRw9ZWhe6NYNSfVLyVOufJngDS
+         ympde8/3HyTMfdHfNPfIdka4FaET5cYiPER76SgUSPZylngMld18kk5w2ZBWsQvwgWeB
+         RxnsMO1z/DIsfVlAgE1hI2SkcGWmaYVf1DYILfMjmHrgb8Byrf+qH8n/8+PL0kCiXX7a
+         lbe4ikAVKM12QgegCAGkiHtZ+UoJo6FOJ9jaFKA7Lv6Mx0R+whm/zEdfMWLoGJe8I2kf
+         Uybw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740311490; x=1740916290;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=26e9/1bCo2KzEw0XilO4IzJVWnnZzMcuU3z5EhtOBCM=;
+        b=mOgs6VxlGDNcnWxPwGu7UdskKCvVcSNBORLBr/Au/mlwUE1ZLOgBVoT6LEiPLmB7G6
+         q4V96bYUCDBnDFmwBBuVpNpDRQyRwU80PmoQXm5EpC6orkqqbahxxM0dwH5z89N2/O3n
+         meK+w5fLJq7Vr8BgieN2uclgAfj/ZhIbtMbgvHJzOSlcproR3MJURlt0vBkF1F9FAWAi
+         ICFcU4eQ+Pm86u1dkZc2a6bi36RqIyw015MB7jqNukqBKv1URKyVYGCZBGuE6Xf2XSGK
+         iy/zRFTkv6FdTtf2hkFFKXB+8HhrrvIPeopuRn3lezQbOC4l40qJKSWJUz6+aRCz6q5s
+         AlUg==
+X-Forwarded-Encrypted: i=1; AJvYcCUL5+sV0bVgqvKAhWRhSFiI9DtK+ZytQIUHmm6CayizU2PImXkytg8CZLuCcrsPvYgmEhzRJb6aQid/osHf@vger.kernel.org, AJvYcCXQDU1wjKSKeZ422bcYuZcM3u09o6RNv8CEvUgNZ2/2f/ME+IOZqYbt6kWT71wdiNs40WHffbSkeuAN@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdO7xQWu7mkapTFwcUgKCJEOttdLq8NvzzhbGlVDuZJz/L0Edy
+	BK9y5O4L+PK42lLge+9NPkHtmjfamIKBHmkWwo+AgbQdrvp4vzCxN5EkBw/DNJ55NL4zTDhtari
+	jNlyDmm/y4/IKVmB8d33q6FroiSc=
+X-Gm-Gg: ASbGncst1IOFzTVFkLlP2t4hSF8nfn7UXUqahayJ+oeFkaHIS3yTar5BPe7d99ERQMv
+	HVye0bXS6diMGxZ+KyoM/O+WBXF7pbOdUlF1kowOHtYuaTi3zxz92SsmuiA5BcZD8zdG8+hyzc9
+	LD8r99DW/e
+X-Google-Smtp-Source: AGHT+IFUY8WavUzMhVpce6VQO70NmZ5EwPPf00nrwZCquqsKG092y34G7GQYZ02Dtt3F/91ntC+z8Rrrq7/DZS9rVmY=
+X-Received: by 2002:a5d:6d85:0:b0:38f:2726:bc0e with SMTP id
+ ffacd0b85a97d-38f6f09750dmr8749537f8f.44.1740311490119; Sun, 23 Feb 2025
+ 03:51:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250223-03-k1-gpio-v6-4-db2e4adeef1c@gentoo.org>
-References: <20250223-03-k1-gpio-v6-0-db2e4adeef1c@gentoo.org>
-In-Reply-To: <20250223-03-k1-gpio-v6-0-db2e4adeef1c@gentoo.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Conor Dooley <conor@kernel.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Yangyu Chen <cyy@cyyself.name>, Jisheng Zhang <jszhang@kernel.org>, 
- Jesse Taube <mr.bossman075@gmail.com>, 
- Inochi Amaoto <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>, 
- Meng Zhang <zhangmeng.kevin@linux.spacemit.com>, linux-gpio@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-riscv@lists.infradead.org, spacemit@lists.linux.dev, 
- Yixun Lan <dlan@gentoo.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=866; i=dlan@gentoo.org;
- h=from:subject:message-id; bh=Npl1hf2K8C0HFRJz0IJdWyuqL8ZWAqWbXOrkZ95CiDc=;
- b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBnuwtstaTnHcyIlwwJ1iQoDw5MUSJCELE0FaGxn
- vbar+q+U+KJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCZ7sLbF8UgAAAAAAuAChp
- c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
- CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277Tv7D/9QYZOiFPN/p0YDxm
- YMTwB+gLp77a+Pk/aTBd3Q1BBFDUSeh/QqIgL7JVqcXppSrsbCd8AgOxI38PhMy7/P3smmDwXeh
- rvM9uD6zCgNaGLxtZb0Q1N49aBbKSW0o7SAkn4rBOuq3sy/v1G4yJ3jn+fPhKEyuhk++Qr1MqhI
- c2qqWBMieiX+y9ImTan1SUG/PFwEC4QAujuxihknhm80+p1Yazk5Kv9+JC8R8bG3eEDCK2By5Gy
- o05qVWDOAkSYjRzU5mLL1UCbStLV/eqv92zRI2cf4UY8ny61mAZrxnv1cLiGCNB7O+3L2fk2hvR
- txkoYbKmS0omARR3IPUi8EbsTKmJv9aNcoT2ZEUvt95za/myl+el38ZhvdBqCDVfk2HsvBF02f8
- xqeZ/UVjvIrJxRmhINQ9sQDZOGX4wylCH/aEEYSD25uMF48buXyFyn7zRzAKzF8Od/nJIGPpTHG
- GWbw110Bx7pXyFkDAUzE8z6+JWGzHXxafVTzZOK0UiuRsGvMXAWkd8a2Ol4ts1fIw4ldyWHBVwN
- tyOv9K77nMGDcYdsM6b0WD/m9tMVQoQ/BmLxsnuSmhIxAdZTA+68tBipCHjszxZrNGQWZLYVHHm
- xTesnw9RD00Dk8VVrxcu4PUQvfBLLwH0nOX2fToDArsBz8mP0Uvdu4OFVVws0dOWBXNw==
-X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
- fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
+References: <20250219083724.56945-1-clamor95@gmail.com> <20250219083724.56945-2-clamor95@gmail.com>
+ <20250223-giga-moose-of-abundance-8e5b9f@krzk-bin>
+In-Reply-To: <20250223-giga-moose-of-abundance-8e5b9f@krzk-bin>
+From: Svyatoslav Ryhel <clamor95@gmail.com>
+Date: Sun, 23 Feb 2025 13:51:19 +0200
+X-Gm-Features: AWEUYZlBAVCQaqvLnRxWL6z86BtUQZGRjcPJQb2PVO12KuPqEZGDN-EI4locEUc
+Message-ID: <CAPVz0n1v1BissCuD0DCmQHbr7O_Uymt-ZebXE=37jgjzj7wM0A@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] dt-bindings: extcon: Document Maxim MAX14526 MUIC
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Leverage GPIO to support system LED to indicate activity of CPUs.
+=D0=BD=D0=B4, 23 =D0=BB=D1=8E=D1=82. 2025=E2=80=AF=D1=80. =D0=BE 13:38 Krzy=
+sztof Kozlowski <krzk@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5:
+>
+> On Wed, Feb 19, 2025 at 10:37:23AM +0200, Svyatoslav Ryhel wrote:
+> > Add bindings for Maxim MAX14526 MicroUSB Integrated Circuit.
+> >
+> > Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+> > ---
+> >  .../bindings/extcon/maxim,max14526.yaml       | 46 +++++++++++++++++++
+> >  1 file changed, 46 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/extcon/maxim,max1=
+4526.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/extcon/maxim,max14526.ya=
+ml b/Documentation/devicetree/bindings/extcon/maxim,max14526.yaml
+> > new file mode 100644
+> > index 000000000000..87cf7fd19ee9
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/extcon/maxim,max14526.yaml
+> > @@ -0,0 +1,46 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/extcon/maxim,max14526.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Maxim MAX14526 MicroUSB Integrated Circuit (MUIC)
+> > +
+> > +maintainers:
+> > +  - Svyatoslav Ryhel <clamor95@gmail.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: maxim,max14526-muic
+>
+> Is it something more than muic? Why different filename than compatible?
+>
 
-Signed-off-by: Yixun Lan <dlan@gentoo.org>
----
- arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+No it is only MUIC, nothing more. How to adjust it then?
 
-diff --git a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-index 1d617b40a2d51ee464b57234d248798aeb218643..816ef1bc358ec490aff184d5915d680dbd9f00cb 100644
---- a/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-+++ b/arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts
-@@ -17,6 +17,17 @@ aliases {
- 	chosen {
- 		stdout-path = "serial0";
- 	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		led1 {
-+			label = "sys-led";
-+			gpios = <&gpio K1_GPIO(96) GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+			default-state = "on";
-+		};
-+	};
- };
- 
- &uart0 {
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+>
+> This looks incomplete. Missing ports/connector.
+>
 
--- 
-2.48.1
+It does not support OF graph model. I might look into adding this
+though it is just a single port.
 
+> Best regards,
+> Krzysztof
+>
