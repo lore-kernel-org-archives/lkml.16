@@ -1,42 +1,42 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DCA205E0F
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 11:02:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C112063EB
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 11:02:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740308553; cv=none; b=aYNV1ZD70d9E1yDQwR4eU6khFs5Y/YeQVyT/hfzcfPgtvUifFfQIawquEb547xYpCtN13PQiH8+dLClrU7nth+Zyxs8WL4fY56IBEpbnbVJxDN51DeIB0QIGJsdvZzLVK+zq8PhfiBAc9TxGTR+rgcbBUpJhI3uwDRTDQMUbo/4=
+	t=1740308554; cv=none; b=fQkFC2GZ0+8TiCIiJ59cDuw1aKKvb+PGMZwedZBXkGYMvXb1A4Jz8Zpq4WIGUho/K6FlpfG57U6JHyxxtY/HHFou+tsfODfMYhoLe4txYXtfOyAcz8Sg6ZZAR88UzR5r9WDvLmOHH+9TvD6uGVSRzCu9lCSpQ/yira/P5ovRVtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740308553; c=relaxed/simple;
-	bh=XP3rwzkTa1mXnGdnUHFUWqLPHJxazgMc4cL1Dqwrxk8=;
+	s=arc-20240116; t=1740308554; c=relaxed/simple;
+	bh=wi5gL1MuujVnvpKHlNtHCdmjCVgPVDm9mY+mNnIouZw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iuLUbsKpVlzAhS+tVbgROSUgQwRTCgynhFy8CvfU0XHeHETUHZxKbZIwz1NiQFOD7Zy6tQU1yAQsGnjZMdFkIoJsD07LBZzCTW5bvb8LzjNXeZ0SnNF+ntMOd+SfDHGvB6zwmwfZ7NUS9OdcBVDeJOvbhHtpNBQhUeOC+ApnpsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=dSfwBE8g; arc=none smtp.client-ip=148.251.105.195
+	 In-Reply-To:To:Cc; b=bnhuahLnuVGPzZTgArC2fA6Mmk8bfN918/goTibWhMTPgy4jYRrmnM7yUhcFebZVSgkz7kGlppf5knmL+u5jvZChOx3zhJyRdp8ysNp1HeE5r6SuWQrGAs4ubKBiLXZOURNkLgttHCI/2XDjt4AWxeYSamtCRMSkxvVweYL+h7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=cbNDR1Z2; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="dSfwBE8g"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="cbNDR1Z2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1740308549;
-	bh=XP3rwzkTa1mXnGdnUHFUWqLPHJxazgMc4cL1Dqwrxk8=;
+	s=mail; t=1740308550;
+	bh=wi5gL1MuujVnvpKHlNtHCdmjCVgPVDm9mY+mNnIouZw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=dSfwBE8gRMyKyiTvnE+U9pT26OuqKF6ct5ERrWfIZIXSEHtZXLFWB8C+J4NYrApdI
-	 5vEcMIrxGyVkIE6Pf1aGJ5svcLAqHwkndamru3xOQooolXdADaMmZIKc+jw6pd47n9
-	 eXOh4qU4Uy5HfrNp5hwJJpy4YFLz2yhkUzLRaBvZBXgeQIpTEXK+YqKGGpn8JXY3t2
-	 Vu3YUwScqES/tnD6MOggcFCmPtDw0ziV0+gjEmOTHkSBrK3JSqHTswmAsDCL5Jgz2W
-	 JuVq7yVA4/5ik7Djn5+ZYkeJ5UcwjpdnzT+Jy2UVWiD2ktkhv5AHijHIEAXhFE2Xix
-	 aiq3GLNCEJMlg==
+	b=cbNDR1Z2WcSH6Bp+0ozgwgcnL8D4NvzT6LrFA8JAx5sLFHuVYGq6sFHB+ZxASsIoy
+	 xrVvaYMKdqFJmH8sYsfMuOsn2MHpz+hePXlZgC4qC4g3HMhl3e0N72jHGKEGn+Zf2l
+	 a5gMRniXYoJGPtQOddrGaxpK2MYMkaqbp4zUNHo0qhMG2qcd2bpf+8zhJYB0Egb4F5
+	 uPWlhu4fKoeOzHr4xDWv13kltlBFJbBuAXKkWHyQEt9rcY8lBzhuw6sWi1hhOMeQOr
+	 0nmZrO+Y57IKnWeXwYCh6iud3ynwe3+IWI41O1j3nGy6+Vi3mK5H+/g2sInw39n1ll
+	 eNyMzbIDZ9V7w==
 Received: from localhost (unknown [188.27.58.83])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id F3DDF17E0DD5;
-	Sun, 23 Feb 2025 12:02:28 +0100 (CET)
+	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id BF71F17E0199;
+	Sun, 23 Feb 2025 12:02:30 +0100 (CET)
 From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Date: Sun, 23 Feb 2025 13:02:11 +0200
-Subject: [PATCH v3 4/8] phy: rockchip: samsung-hdptx: Drop unused
- lcpll_config
+Date: Sun, 23 Feb 2025 13:02:13 +0200
+Subject: [PATCH v3 6/8] phy: rockchip: samsung-hdptx: Add high color depth
+ management
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,7 +45,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250223-phy-sam-hdptx-bpc-v3-4-66a5c8e68327@collabora.com>
+Message-Id: <20250223-phy-sam-hdptx-bpc-v3-6-66a5c8e68327@collabora.com>
 References: <20250223-phy-sam-hdptx-bpc-v3-0-66a5c8e68327@collabora.com>
 In-Reply-To: <20250223-phy-sam-hdptx-bpc-v3-0-66a5c8e68327@collabora.com>
 To: Vinod Koul <vkoul@kernel.org>, 
@@ -58,56 +58,72 @@ Cc: Algea Cao <algea.cao@rock-chips.com>, Sandor Yu <Sandor.yu@nxp.com>,
  linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 X-Mailer: b4 0.14.2
 
-This is just a leftover from downstream support for HDMI 2.1.
-Remove the unused struct for now.
+Add support for 8-bit, 10-bit, 12-bit and 16-bit color depth setup.
 
 Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
 ---
- drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c | 31 -----------------------
- 1 file changed, 31 deletions(-)
+ drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-index cf2c3a46604cb9d8c26fe5ec8346904e0b62848f..f9b5c96d6c789e435657e224032d35b5a6950945 100644
+index dd91a7272e246b2133112effdb080a847fd15abe..792ed3d1459f84e735041f55cac15941f6f785ef 100644
 --- a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
 +++ b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-@@ -329,37 +329,6 @@ enum dp_link_rate {
- 	DP_BW_HBR2,
- };
+@@ -404,6 +404,7 @@ struct rk_hdptx_phy {
  
--struct lcpll_config {
--	u32 bit_rate;
--	u8 lcvco_mode_en;
--	u8 pi_en;
--	u8 clk_en_100m;
--	u8 pms_mdiv;
--	u8 pms_mdiv_afc;
--	u8 pms_pdiv;
--	u8 pms_refdiv;
--	u8 pms_sdiv;
--	u8 pi_cdiv_rstn;
--	u8 pi_cdiv_sel;
--	u8 sdm_en;
--	u8 sdm_rstn;
--	u8 sdc_frac_en;
--	u8 sdc_rstn;
--	u8 sdm_deno;
--	u8 sdm_num_sign;
--	u8 sdm_num;
--	u8 sdc_n;
--	u8 sdc_n2;
--	u8 sdc_num;
--	u8 sdc_deno;
--	u8 sdc_ndiv_rstn;
--	u8 ssc_en;
--	u8 ssc_fm_dev;
--	u8 ssc_fm_freq;
--	u8 ssc_clk_div_sel;
--	u8 cd_tx_ser_rate_sel;
--};
--
- struct ropll_config {
- 	u32 bit_rate;
- 	u8 pms_mdiv;
+ 	/* PHY config opts */
+ 	unsigned long tmds_char_rate;
++	unsigned int bpc;
+ 
+ 	/* clk provider */
+ 	struct clk_hw hw;
+@@ -1032,6 +1033,9 @@ static int rk_hdptx_ropll_tmds_cmn_config(struct rk_hdptx_phy *hdptx,
+ 	regmap_update_bits(hdptx->regmap, CMN_REG(0086), PLL_PCG_POSTDIV_SEL_MASK,
+ 			   FIELD_PREP(PLL_PCG_POSTDIV_SEL_MASK, cfg->pms_sdiv));
+ 
++	regmap_update_bits(hdptx->regmap, CMN_REG(0086), PLL_PCG_CLK_SEL_MASK,
++			   FIELD_PREP(PLL_PCG_CLK_SEL_MASK, (hdptx->bpc - 8) >> 1));
++
+ 	regmap_update_bits(hdptx->regmap, CMN_REG(0086), PLL_PCG_CLK_EN_MASK,
+ 			   FIELD_PREP(PLL_PCG_CLK_EN_MASK, 0x1));
+ 
+@@ -1430,7 +1434,7 @@ static int rk_hdptx_phy_power_on(struct phy *phy)
+ 		rate = phy_get_bus_width(hdptx->phy) & 0xfffffff;
+ 	}
+ 
+-	dev_dbg(hdptx->dev, "%s rate=%u\n", __func__, rate);
++	dev_dbg(hdptx->dev, "%s rate=%u bpc=%u\n", __func__, rate, hdptx->bpc);
+ 
+ 	ret = rk_hdptx_phy_consumer_get(hdptx, rate);
+ 	if (ret)
+@@ -1741,6 +1745,19 @@ static int rk_hdptx_phy_configure(struct phy *phy, union phy_configure_opts *opt
+ 
+ 	if (mode != PHY_MODE_DP) {
+ 		hdptx->tmds_char_rate = opts->hdmi.tmds_char_rate;
++
++		switch (opts->hdmi.bpc) {
++		case 8:
++		case 10:
++		case 12:
++		case 16:
++			hdptx->bpc = opts->hdmi.bpc;
++			break;
++		default:
++			dev_warn(hdptx->dev, "Discarded unsupported bpc: %u\n",
++				 opts->hdmi.bpc);
++		};
++
+ 		return 0;
+ 	}
+ 
+@@ -1922,6 +1939,7 @@ static int rk_hdptx_phy_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	hdptx->dev = dev;
++	hdptx->bpc = 8;
+ 
+ 	regs = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
+ 	if (IS_ERR(regs))
 
 -- 
 2.48.1
