@@ -1,91 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504FAA95C;
-	Sun, 23 Feb 2025 16:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665D439FD9;
+	Sun, 23 Feb 2025 16:42:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740328397; cv=none; b=rfpJjxuF2gaZFJTzwa5Q7L/EM+GflCaVWsXmiMyiQA24AUaM/Vh4QFZWamZfg2OxartCMtu0dktDuVHZBe9I3AqpGD+7rfIsNgwak89qzF6ONkmrqe8G8aPMacBiZkI5V7FGxBp0ZMdY982pFK51WR7zFu7X3mM/XR63aRVd+1M=
+	t=1740328928; cv=none; b=qWytpZSo9sAZxCn5Wm96AFDFi9Pf6dNjPae4b9E55OOVNuyfg2gOzXFHUfDwPxihZu84O2sbWQ0hRz7KIdV7XsdvKl1LM4u173HIvsspoCfO8I+13jpQggfdd2q4xnPVZ6yb2jPnW+gQlbjV835QKxTtzbQWsbFq4JnOEtAbaak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740328397; c=relaxed/simple;
-	bh=zvz4EMOXlmrWyWitNGnXAQSR2eq+1wAo7RwOrMzxhM8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hcJ49MPu30RnOuA/BSd2H76qFN8HKZcy1mCh6xi3bzK5L+jATyVtKqW8431QGZyBEwOS0fO7dZ55ic3rXUT4TrPZ7+98p1Jay/N/Dhut6QXYWlqfx4hO9HnDPoHvsTQ4igYVoBsf6XseUpr9bHmZjL4zMqx7wO8ht7uQ4bMrrbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BQx642xS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740328928; c=relaxed/simple;
+	bh=iH0RTEfYSIc65pUhd2cqJOtJ4XewpQvlxlkaoIEIQWM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=N5qlIvCHBTqYKA9yG2xiOxJqoGIdPeK5DPr939V0IHIk3slJdV7qRxyxCBDy+23ub5RsAXLtsJTzocQEdmy+oJBOSvn3mxDHwjIC9EwkXpsC3H3BOOb33Ckri05rOlLD7vq9TRtCQSWvspuMfEYl152c/NMfUn2o8RjhX8GHxBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U04tkOHC; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BQx642xS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1871C4CEE4;
-	Sun, 23 Feb 2025 16:33:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740328396;
-	bh=zvz4EMOXlmrWyWitNGnXAQSR2eq+1wAo7RwOrMzxhM8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BQx642xSrYSFMkDtxUusFO9/V6dQ1ON/O8M/s0cjUx7njZBgLxImV87rB09mSCGgY
-	 qezb82iTL8eoW/wpqmMpxBFG0m8+oZRfiDR34fgJpsDWm5NRTWg7djZDnuQXeS49nI
-	 2Shy5/0yP77Y80mZxBS6pMEykcpE5lPSxn2LsuO04hdeHS75Epjh8W0OjdW4h6n4mO
-	 JF66tUz8/DI7tymcUSKpZ/VH2+3/TfqcrQjb9zXIxPrcNCnAgf13+uuBNIsCDfnq4j
-	 CiBnUnAgerP+JkoSZaYofE6Hwq558c+hgNXl1JM5J1MqJen7r1VY4/sIX4KnvDx0f1
-	 gJgBDizdfHHWg==
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-30613802a59so37232441fa.0;
-        Sun, 23 Feb 2025 08:33:16 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUtA0Q906DVRbJBQTAJmMok1W3HNKAckH5BrESbyNJBQ0wgJ5M243mfbbkgjiv5wxMS8XjQb3WiBZA02Rs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEBex0lfkfu8+8YuDx8cvbs6icWbrAOnOZYP8Lh/3mIl6MHzrG
-	qLRpujV7LzfXp3UP1TEtKXLPUrmC6gsUnDLLhrHCfLqRjFtfWB7ClVeL9lqrhHPCjJkrkzc+uuo
-	ae1xmaBjq2K7czrn0i9DFA8tAz68=
-X-Google-Smtp-Source: AGHT+IHxSfX/n4BVlQUqjsVJAWfnzLoyj+d6hjxzUouO1QEH1K9ZjF6+xy/nfHvk0Tye+ZxZaBnMva9sPzAwLHEKBzg=
-X-Received: by 2002:a2e:9f4a:0:b0:309:1d7b:f027 with SMTP id
- 38308e7fff4ca-30a59892a72mr34357641fa.9.1740328395018; Sun, 23 Feb 2025
- 08:33:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U04tkOHC"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43937cf2131so24359875e9.2;
+        Sun, 23 Feb 2025 08:42:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740328925; x=1740933725; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SxNewYB9W7yZGVWnL7Rq8e0t5q3ZmDQjfdFwbmexFXk=;
+        b=U04tkOHCbAZWkc/jNVkDnRSWVx3Y/6wcbo3kPiVAizBZLQtX2sWvXj6cIupM6MKyp1
+         piWNv224De/jyOUTNICBvqN3XGoRm+2ZfNERGe8EF366grWlN7kyjVRXiTCeBxKRS1G0
+         fedIuPhDSOw7nKIIEGArpzqN8Z2j/NtqlKngHF5ZFdYbJnvWQk13ujHb6SpXxHsaWnAf
+         O0Soqe0Rh3Q5b1NUo9JQDeKzcoaq4ztobyBGDSjmZ+XFh+wxL1/I8te9tUa1NhJiWARk
+         SwslaPt2oZgxvuLPq/hH1GJqNzW1dEvFJMKPWN9iIucvOpp2nWdF37q/TKE2/n5MMrYc
+         HI4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740328925; x=1740933725;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SxNewYB9W7yZGVWnL7Rq8e0t5q3ZmDQjfdFwbmexFXk=;
+        b=NZ0QUJBF5B1TZvCume0iFPc11UPxsryKF0v7gsJ3kBSMs9njiDvVtq8s7UpycO+eUR
+         lbYLbj1P5fZppqtNztCuPv37H31/g0iS/vX5E9V5RstAdVbfnJe7LbHeqHhREwZOBAaw
+         1pJI2iDPeFiuzu//WsHNeqshgvSmeFwZrYa1ujDe1HstgEkqDaJ0k0/R3zHJr44HSQjP
+         ltFTFkJff3DQ6pSS7TIBvaMPfoM968UthnBOV2QVspnrBgXeHhXyIW/33tMKOj7sOmsZ
+         9VuEEDZeZWFBZJ89U3GOMruZp/DQVTY9tKSfL25eUrP7QHbZsfD8iZrHx3lUnzQ+ALHX
+         4ISA==
+X-Forwarded-Encrypted: i=1; AJvYcCVhk/CTm9AxSvrFiNByjf1UpP3XtxAkpFcT6R7Njq1f4qeiTNp/aiPR//5ErjcSdwg20VoIlAnPxiE1I+vQAm8=@vger.kernel.org, AJvYcCViG1gy61SrwmTk1p3fLG3o6iVs+Jb0Ww9lURkbRozGiX0X7qnEYADHeZjOIy+QKQt8nqLgxBUDgPpixWc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yybkb0bW3gmoD8zgMEYXL0BqblfWzbS6BauSuzwXB+8VI38VjNo
+	U/l6bMSZDhrpHAKSQOU/ml7S39/HukmlXp7uBIh96EMRfQo7phZ2
+X-Gm-Gg: ASbGncsLtC17HN/BJYLHAJD5AJp6Bs2rA69kQXuR3KTkeGUZOWKtqmz+0fdjyX1p3yO
+	d3c9mekNDpEDXjLa66TGy0ecz2mYf59sTAbcq4DE2JheDoCNboF5QkkFat7gwls8EgtespiERKu
+	dgcaq62yiLemF2znPsTDtzrmlKVK61/jw4NHryfMEw3LfeeIibFC2T3twuuQHTDj9ZPXu9FR3g6
+	0HmeJhu/BrHynkF8iAwHtCSRrcK/PPrIb29KF5AFtk55vmi7LwVXIgeQh5sMkwrGcqafG3K+3ur
+	1OPJa977I7Yd0mZn4fabW6uNnen1iRfB+LKd6JddCns5GajVNKATM8jdy9m4Rzt5
+X-Google-Smtp-Source: AGHT+IHlXssYkIn+lrJDIexDFsyeWa8LiuwhIroMlUkUAi1TMAGlcv900iJiIwa30ux44Scu/nsQuQ==
+X-Received: by 2002:a05:600c:1c13:b0:439:98b0:f911 with SMTP id 5b1f17b1804b1-439ae1e9aa8mr95801595e9.10.1740328924524;
+        Sun, 23 Feb 2025 08:42:04 -0800 (PST)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b0367507sm82737345e9.28.2025.02.23.08.42.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Feb 2025 08:42:03 -0800 (PST)
+Date: Sun, 23 Feb 2025 16:42:02 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Martin Uecker <uecker@tugraz.at>,
+ Dan Carpenter <dan.carpenter@linaro.org>, Greg KH
+ <gregkh@linuxfoundation.org>, Boqun Feng <boqun.feng@gmail.com>, "H. Peter
+ Anvin" <hpa@zytor.com>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+ Christoph Hellwig <hch@infradead.org>, rust-for-linux
+ <rust-for-linux@vger.kernel.org>, David Airlie <airlied@gmail.com>,
+ linux-kernel@vger.kernel.org, ksummit@lists.linux.dev
+Subject: Re: Rust kernel policy
+Message-ID: <20250223164202.550f14b8@pumpkin>
+In-Reply-To: <CAHk-=wjQ94GipftbNo0PbfuUxFMXFyp2bWGJJPNUngyf17Ai8A@mail.gmail.com>
+References: <326CC09B-8565-4443-ACC5-045092260677@zytor.com>
+	<CANiq72m+r1BZVdVHn2k8XeU37ZeY6VT2S9KswMuFA=ZO3e4uvQ@mail.gmail.com>
+	<a7c5973a-497c-4f31-a7be-b3123bddb6dd@zytor.com>
+	<Z7VKW3eul-kGaIT2@Mac.home>
+	<2025021954-flaccid-pucker-f7d9@gregkh>
+	<4e316b01634642cf4fbb087ec8809d93c4b7822c.camel@tugraz.at>
+	<2025022024-blooper-rippling-2667@gregkh>
+	<1d43700546b82cf035e24d192e1f301c930432a3.camel@tugraz.at>
+	<2025022042-jot-favored-e755@gregkh>
+	<b9a5de64fe1ded2ad3111763f35af9901bd81cc4.camel@tugraz.at>
+	<caea3e79-78e6-4d98-9f3b-f8e7f6f00196@stanley.mountain>
+	<61a7e7db786d9549cbe201b153647689cbe12d75.camel@tugraz.at>
+	<20250221124304.5dec31b2@gandalf.local.home>
+	<CAHk-=wgg2A_iHNwf_JDjYJF=XHnKVGOjGp50FzVWniA2Z010bw@mail.gmail.com>
+	<6b3e4d3bdc9b6efd69068e5b22cfd05d370aed19.camel@tugraz.at>
+	<CAHk-=wg=pZvE9cHJUPKGCajRUCtDoW73xwY5UfJApCWms_FgYw@mail.gmail.com>
+	<20250221172415.5b632ae6@gandalf.local.home>
+	<CAHk-=wjQ94GipftbNo0PbfuUxFMXFyp2bWGJJPNUngyf17Ai8A@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250221111516.1468261-1-patrick.rudolph@9elements.com>
-In-Reply-To: <20250221111516.1468261-1-patrick.rudolph@9elements.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Sun, 23 Feb 2025 17:33:03 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXGCUZi-7Vu097BorRHGv1XmRyky1RVRR8jFehneVDD8bg@mail.gmail.com>
-X-Gm-Features: AWEUYZnhXHQfcl0XFYETRkkokiLSUFI3se8ntOYsRC5VHJ03qUkpOEpZYx2NWhI
-Message-ID: <CAMj1kXGCUZi-7Vu097BorRHGv1XmRyky1RVRR8jFehneVDD8bg@mail.gmail.com>
-Subject: Re: [PATCH] efi/cper: Fix cper_arm_ctx_info alignment
-To: Patrick Rudolph <patrick.rudolph@9elements.com>
-Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, 21 Feb 2025 at 12:15, Patrick Rudolph
-<patrick.rudolph@9elements.com> wrote:
->
-> According to the UEFI Common Platform Error Record appendix, the
-> processor context information structure is a variable length structure,
-> but "is padded with zeros if the size is not a multiple of 16 bytes".
->
-> Currently this isn't honoured, causing all but the first structure to
-> be garbage when printed. Thus align the size to be a multiple of 16.
->
-> Signed-off-by: Patrick Rudolph <patrick.rudolph@9elements.com>
+On Fri, 21 Feb 2025 15:04:04 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Thanks. Both patched queued up now in efi/urgent
+> On Fri, 21 Feb 2025 at 14:23, Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > If I could just get a warning for this stupid mistake:
+> >
+> >         size_t ret;
+> >
+> >         ret = func();
+> >         if (ret < 0)
+> >                 error();  
+> 
+> Note that my main beef with the crazy compiler warning is that it
+> literally triggers for *RANGE CHECKS*.
+> 
+> IOW, it's literally the "if (a < 0 || a > XYZ)" thing that absolutely
+> MUST NOT WARN. EVER.  If it does, the compiler is broken.
 
+The other one is where it already knows the code is being discarded.
+I suspect it even warns for:
+	unsigned int x;
+	if (1 || x < 0) ...
+You can't even escape with Generic (a switch statement based on the type
+of a variable). All the options have to compile with all the types.
 
-> ---
->  drivers/firmware/efi/cper-arm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/firmware/efi/cper-arm.c b/drivers/firmware/efi/cper-arm.c
-> index fa9c1c3bf168..f0a63d09d3c4 100644
-> --- a/drivers/firmware/efi/cper-arm.c
-> +++ b/drivers/firmware/efi/cper-arm.c
-> @@ -311,7 +311,7 @@ void cper_print_proc_arm(const char *pfx,
->         ctx_info = (struct cper_arm_ctx_info *)err_info;
->         max_ctx_type = ARRAY_SIZE(arm_reg_ctx_strs) - 1;
->         for (i = 0; i < proc->context_info_num; i++) {
-> -               int size = sizeof(*ctx_info) + ctx_info->size;
-> +               int size = ALIGN(sizeof(*ctx_info) + ctx_info->size, 16);
->
->                 printk("%sContext info structure %d:\n", pfx, i);
->                 if (len < size) {
-> --
-> 2.48.1
->
+	David
