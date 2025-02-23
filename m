@@ -1,106 +1,119 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 672FE206F22;
-	Sun, 23 Feb 2025 15:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8AB206F22
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 15:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740325201; cv=none; b=XHtbcNb3CE3Xw8G1JfgDah1BqKa0mlc3CjBB6tjTd5KHc2E1cZihOqNjexccevgMfTRAZBjXwhKcEtya9KtsN1zlbsokZuPhh2Z9uw8cgadNkE1sIiuULYC9jLH8rgabwLxXxxhdQcLJNt4izEMf5oXpHnCHj63u2v+j+nOEgQs=
+	t=1740325259; cv=none; b=RWvuY4Dlp0QfG/RD3GlK4Bdwn3z4qVYy8yHmTIycJvTQ0mff2n6m1dVRfibyI7pFWOLf6kLuP4cabC78CasuXXjJ4Fbg4rHYURf1Ket6nqaRDWFcovRDqRoX7K7OU+r0fNAznB39evSgR9joAFsxSBAnN6H19/GBQmZ0Zvhycs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740325201; c=relaxed/simple;
-	bh=o1KAnzyr/r8zygz0CfuqfjBWWpnHmJ+6FyBZSYP5l8k=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=qQrb3roiuAu86JZF/ipOQWhGc2J81d1O77qFSBOYQGlADKp55rCteKuRzDD3zrEdyvOvmAlZROTzCrHjqsZk1E0eQ6a2nVrk1DiM5haC95xHv+jfM78bNbXMrAILblZqTSVSkORG26qaOhoSmjkReFBndnl1+jIOYwi93q2eKfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=O1bisBn+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fw1OHCpV; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1740325259; c=relaxed/simple;
+	bh=X/aFGH9RNj7a4Xf79GRWoIawpV/GLtHte90w95RS2zM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=nwLJceOMJiXiPQoP7l3mhKGT1/4fa6Xw/C4DkSIDuz50kQzFwUPOv+QQiWs63G3V+u+HUvTDi5wAmrf5IPp6Y8itQdJyiKQjnNh6An+aJY3hXYfaZJvSifhDyfdALbMtt0yXIxB77np8rDond2O4ncma53+RKKc/LQCUDSxlRUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BFE9t44h; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="O1bisBn+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fw1OHCpV"
-Date: Sun, 23 Feb 2025 15:39:46 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740325190;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=95z+XIIsekQNPOf30IF1xYSNUZIumS/XKig5mUGkkak=;
-	b=O1bisBn+3u821WYHGp5O5Xuh2ItDL14qtav2GgabY7pnJrwLsQ6bMLDWO2X42dq21vlFI0
-	i5/bq7WWwpeL03cF5LmlA5EMCkZtbwQKcE+NTxgreTP4ucNSzrKaeXshmtchma4wG+YnHv
-	9ZmP6djyLmrngHuzdHN3z3j9XN3BavAbAH4nujYmEBo491PvXKYNrpo73YMzwdRjmwktze
-	kO4LV/8i92UZ2LklY0upU+Xqkxd5bAcjcl0z74mZAcAeCedTzpwtd/7+4Qatvrb2B/S/jv
-	y2ICio63zPUE/Eexhva/+7xFvb3PUacajnFpTHHZGu5CGXeVPH0ZNyzoOLU+Og==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740325190;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=95z+XIIsekQNPOf30IF1xYSNUZIumS/XKig5mUGkkak=;
-	b=fw1OHCpVz332UiCuD55Qucmj16JJEGD9/mhB3w/4seRagrgTjnj1CDsfnpkzyDzOZZg/H8
-	LD4kc/w0OSsC01BA==
-From: "tip-bot2 for Randy Dunlap" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cleanups] x86/usercopy: Fix kernel-doc func param name in
- clean_cache_range()'s description
-Cc: Randy Dunlap <rdunlap@infradead.org>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250111063333.911084-1-rdunlap@infradead.org>
-References: <20250111063333.911084-1-rdunlap@infradead.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BFE9t44h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740325256;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=3daOfx/UUkuCI2mXipJDEp+cn8WpyrHXA0jn2fBJVSA=;
+	b=BFE9t44hNcBVw3WlfdXPBpcqXwtipIbDY/6uev42Y2+wcnY4dy9zq4h6Rt5Tq+f7MaRJgA
+	Iav+65nQizCH7XvQRZ+nEcZvI+e5tEED5b6eo3f8nfGe1zjrj7Btt0F6LxUcnNdH0RNgsE
+	FXl+OA07jJ8faVDxYxFfW5C+N3i3sBk=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-662-sSW-6prXOQa4dHd0PI2KkA-1; Sun,
+ 23 Feb 2025 10:40:52 -0500
+X-MC-Unique: sSW-6prXOQa4dHd0PI2KkA-1
+X-Mimecast-MFC-AGG-ID: sSW-6prXOQa4dHd0PI2KkA_1740325251
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EB6C81800374;
+	Sun, 23 Feb 2025 15:40:50 +0000 (UTC)
+Received: from server.redhat.com (unknown [10.72.112.28])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3C81419412A3;
+	Sun, 23 Feb 2025 15:40:45 +0000 (UTC)
+From: Cindy Lu <lulu@redhat.com>
+To: lulu@redhat.com,
+	jasowang@redhat.com,
+	mst@redhat.com,
+	michael.christie@oracle.com,
+	sgarzare@redhat.com,
+	linux-kernel@vger.kernel.org,
+	virtualization@lists.linux-foundation.org,
+	netdev@vger.kernel.org
+Subject: [PATCH v6 0/6] vhost: Add support of kthread API
+Date: Sun, 23 Feb 2025 23:36:15 +0800
+Message-ID: <20250223154042.556001-1-lulu@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174032518667.10177.8688571407789662677.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-The following commit has been merged into the x86/cleanups branch of tip:
+In commit 6e890c5d5021 ("vhost: use vhost_tasks for worker threads"),   
+the vhost now uses vhost_task and operates as a child of the   
+owner thread. This aligns with containerization principles.   
+However, this change has caused confusion for some legacy   
+userspace applications. Therefore, we are reintroducing   
+support for the kthread API.  
 
-Commit-ID:     51184c3c96a19b5143710ef91426e311f4364bac
-Gitweb:        https://git.kernel.org/tip/51184c3c96a19b5143710ef91426e311f4364bac
-Author:        Randy Dunlap <rdunlap@infradead.org>
-AuthorDate:    Fri, 10 Jan 2025 22:33:33 -08:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Sun, 23 Feb 2025 11:52:48 +01:00
+In this series, a new UAPI is implemented to allow   
+userspace applications to configure their thread mode. 
 
-x86/usercopy: Fix kernel-doc func param name in clean_cache_range()'s description
+Changelog v2:
+ 1. Change the module_param's name to enforce_inherit_owner, and the default value is true.
+ 2. Change the UAPI's name to VHOST_SET_INHERIT_FROM_OWNER.
+ 
+Changelog v3:
+ 1. Change the module_param's name to inherit_owner_default, and the default value is true.
+ 2. Add a structure for task function; the worker will select a different mode based on the value inherit_owner.
+ 3. device will have their own inherit_owner in struct vhost_dev
+ 4. Address other comments
 
-Use @addr instead of @vaddr in the kernel-doc comment for
-clean_cache_range() to eliminate warnings:
+Changelog v4: 
+ 1. remove the module_param, only keep the UAPI
+ 2. remove the structure for task function; change to use the function pointer in vhost_worker
+ 3. fix the issue in vhost_worker_create and vhost_dev_ioctl
+ 4. Address other comments
 
-  arch/x86/lib/usercopy_64.c:29: warning: Function parameter or struct member 'addr' not described in 'clean_cache_range'
-  arch/x86/lib/usercopy_64.c:29: warning: Excess function parameter 'vaddr' description in 'clean_cache_range'
+Changelog v5: 
+ 1. Change wakeup and stop function pointers in struct vhost_worker to void.
+ 2. merging patches 4, 5, 6 in a single patch
+ 3. Fix spelling issues and address other comments.
+ 
+Changelog v6: 
+ 1. move the check of VHOST_NEW_WORKER from vhost_scsi to vhost
+ 2. Change the ioctl name VHOST_SET_INHERIT_FROM_OWNER to VHOST_FORK_FROM_OWNER
+ 3. reuse the function __vhost_worker_flush
+ 4. use a ops sturct to support worker relates function
+ 5. reset the value of inherit_owner in vhost_dev_reset_owner  
+ 
+Tested with QEMU with kthread mode/task mode/kthread+task mode
 
-Fixes: 0aed55af8834 ("x86, uaccess: introduce copy_from_iter_flushcache for pmem / cache-bypass operations")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/r/20250111063333.911084-1-rdunlap@infradead.org
----
- arch/x86/lib/usercopy_64.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Cindy Lu (6):
+  vhost: Add a new parameter in vhost_dev to allow user select kthread
+  vhost: Reintroduce vhost_worker to support kthread
+  vhost: Add the cgroup related function
+  vhost: introduce worker ops to support multiple thread models
+  vhost: Add new UAPI to support change to task mode
+  vhost: Add check for inherit_owner status
 
-diff --git a/arch/x86/lib/usercopy_64.c b/arch/x86/lib/usercopy_64.c
-index e9251b8..654280a 100644
---- a/arch/x86/lib/usercopy_64.c
-+++ b/arch/x86/lib/usercopy_64.c
-@@ -18,7 +18,7 @@
- #ifdef CONFIG_ARCH_HAS_UACCESS_FLUSHCACHE
- /**
-  * clean_cache_range - write back a cache range with CLWB
-- * @vaddr:	virtual start address
-+ * @addr:	virtual start address
-  * @size:	number of bytes to write back
-  *
-  * Write back a cache range using the CLWB (cache line write back)
+ drivers/vhost/vhost.c      | 227 +++++++++++++++++++++++++++++++++----
+ drivers/vhost/vhost.h      |  13 +++
+ include/uapi/linux/vhost.h |  18 +++
+ 3 files changed, 234 insertions(+), 24 deletions(-)
+
+-- 
+2.45.0
+
