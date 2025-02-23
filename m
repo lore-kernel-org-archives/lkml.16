@@ -1,67 +1,98 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.17])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DA871FC7C8;
-	Sun, 23 Feb 2025 07:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.17
+Received: from mailrelay.tugraz.at (mailrelay.tugraz.at [129.27.2.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D813161FFE;
+	Sun, 23 Feb 2025 08:11:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.27.2.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740297542; cv=none; b=po2YPVSzR6mZy739adjxkcCUC3HkhZGXjds3q7Z+feWwUM0+LZNp6CI3EM7ocDl9XPQShcThrc/GK23Yw4AgoCJXN5TE/kEZRR9pRqhD5WVVM8T+/tIU+m7bRH7Ef7krdvls3mA68M9s3IB676PR+5/quI4MIRX6uXZBSqpFlOo=
+	t=1740298266; cv=none; b=KyfRU40w9wpluTbFPt3jA8DSdhfh/kuKbUXrRsv7+ef+osZI6WjZZJhgHx+XGmnK4ZnDZetZ+GQE/ulzQ6j9tM5HUbRNNY1MaJG3lFnKKrwCAsRW5GxUfRfgvlAsr26Gj0fLLAGZoIKu/RJD+A88LtC0KGEri3Qwg/ERAE1Qb4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740297542; c=relaxed/simple;
-	bh=Oz3P9N3xl5usKcUKWWwm/yarUuwrPLqlOqj5lKlurM0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RRA9duUGDo9k2Z/YVjCupnmMMVAlKs4EraeCI29nzygQaazkB+cYo/Ch0dn6RTSgQBd3/Wy52SbmX2SXLbjNC2Nsj1iYy+4BAInseId8F5bQqUMkdXqCUDUn3Ybz69BPY6pucEN4HsrBCTlgFoNNgSfbiMaBmulBuUEUfH96K0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=VeBopwtz; arc=none smtp.client-ip=1.95.21.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1740298266; c=relaxed/simple;
+	bh=FO+ewNzs077bRy2Y7BPoaLABNBn813HrzRSMC+/zC0k=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jH+zAWGSNMzTWzui5KXLtx0k5Y0UoNHEgd8aoWj4/kBu+p/93lkd50lapaAlUIUZ+1WVNqN8mlxb44WiCAU3sejTINfaNhPsXxYiWgFrugzcfVaoaisQITaZuoIeWj1WJwYLkClMm4b6xKBpDrUThTlOFEM1u6X3qEfOteRfvic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tugraz.at; spf=pass smtp.mailfrom=tugraz.at; dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b=WWaxrVTl; arc=none smtp.client-ip=129.27.2.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tugraz.at
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tugraz.at
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="VeBopwtz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=zf7C3JIfy4ywsPNZ0w+h08cIa2jemMKNKRi45EogFjg=;
-	b=VeBopwtzBAgZy9FqVI+FAMxjeG5ieI31VYLCgb2v/zrFjuYWIIvqlauDw9+YCF
-	yZEp9wPhsQtTJPHloc2sWQGyxf7AnGbYJiDwMk/v9z45cU5QyDQNM8oRE/sgj5pb
-	FEA7LhpSk+mWbYxEbpiEOpzynHr7sJEepifNpCHXX9/Xo=
-Received: from dragon (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id Mc8vCgBXXvcK1bpnD5KfCQ--.23112S3;
-	Sun, 23 Feb 2025 15:58:04 +0800 (CST)
-Date: Sun, 23 Feb 2025 15:58:02 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Frank Li <Frank.li@nxp.com>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] arm64: dts: freescale: imx8mm-verdin: Remove LVDS
- panel and backlight
-Message-ID: <Z7rVCnypQW1wpyAW@dragon>
-References: <20250214092634.12414-1-francesco@dolcini.it>
+	dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b="WWaxrVTl"
+Received: from vra-172-163.tugraz.at (vra-172-163.tugraz.at [129.27.172.163])
+	by mailrelay.tugraz.at (Postfix) with ESMTPSA id 4Z0xPt52wlz3wPk;
+	Sun, 23 Feb 2025 09:10:42 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tugraz.at;
+	s=mailrelay; t=1740298243;
+	bh=LMpP0PNtOPYY2TeGglWfTOfZrmn0PHBp00YQa8N0dVk=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=WWaxrVTlShi5aCaXfkcSEkDelV6036VV/oNtbKakqH03VZVZYTc3GFTPaFa99E4el
+	 ZUAraMwFNo4xw9OMfOsfxb1kb3gugsitbKKxS84yJVUcBerX5HOFCJHl4mIdozvyv/
+	 +K9dPq1pzYQ04yJ4MfUZBxhYyD5/PFVg2BotrTHQ=
+Message-ID: <06a07d325f7555c3dc72e4aac90580541ca61697.camel@tugraz.at>
+Subject: Re: Rust kernel policy
+From: Martin Uecker <uecker@tugraz.at>
+To: Piotr =?UTF-8?Q?Mas=C5=82owski?= <piotr@maslowski.xyz>
+Cc: Greg KH <gregkh@linuxfoundation.org>, Boqun Feng <boqun.feng@gmail.com>,
+  "H. Peter Anvin" <hpa@zytor.com>, Miguel Ojeda
+ <miguel.ojeda.sandonis@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ rust-for-linux <rust-for-linux@vger.kernel.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>, David Airlie <airlied@gmail.com>, 
+ linux-kernel@vger.kernel.org, ksummit@lists.linux.dev
+Date: Sun, 23 Feb 2025 09:10:41 +0100
+In-Reply-To: <D7ZDF8NZGPS3.3QBMAVC1NTUDM@maslowski.xyz>
+References: 
+	<CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
+	 <Z7SwcnUzjZYfuJ4-@infradead.org>
+	 <CANiq72myjaA3Yyw_yyJ+uvUrZQcSLY_jNp65iKH8Y5xGY5tXPQ@mail.gmail.com>
+	 <326CC09B-8565-4443-ACC5-045092260677@zytor.com>
+	 <CANiq72m+r1BZVdVHn2k8XeU37ZeY6VT2S9KswMuFA=ZO3e4uvQ@mail.gmail.com>
+	 <a7c5973a-497c-4f31-a7be-b3123bddb6dd@zytor.com>
+	 <Z7VKW3eul-kGaIT2@Mac.home> <2025021954-flaccid-pucker-f7d9@gregkh>
+	 <4e316b01634642cf4fbb087ec8809d93c4b7822c.camel@tugraz.at>
+	 <2025022024-blooper-rippling-2667@gregkh>
+	 <1d43700546b82cf035e24d192e1f301c930432a3.camel@tugraz.at>
+	 <D7ZDF8NZGPS3.3QBMAVC1NTUDM@maslowski.xyz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250214092634.12414-1-francesco@dolcini.it>
-X-CM-TRANSID:Mc8vCgBXXvcK1bpnD5KfCQ--.23112S3
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUsku4UUUUU
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiEhD8ZWe6kuHc6AAAsB
+X-TUG-Backscatter-control: G/VXY7/6zeyuAY/PU2/0qw
+X-Spam-Scanner: SpamAssassin 3.003001 
+X-Spam-Score-relay: 0.0
+X-Scanned-By: MIMEDefang 2.74 on 129.27.10.116
 
-On Fri, Feb 14, 2025 at 10:26:34AM +0100, Francesco Dolcini wrote:
-> From: Francesco Dolcini <francesco.dolcini@toradex.com>
-> 
-> Remove LVDS panel and backlight nodes from the Verdin iMX8M Mini SoM
-> dtsi file, those two hardware components are not part of the SoM,
-> therefore they should not be present in this file.
-> 
-> This is solving a dtb checker warning about panel-lvds compatible.
-> 
-> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+Am Sonntag, dem 23.02.2025 um 00:42 +0100 schrieb Piotr Mas=C5=82owski:
+> On Thu Feb 20, 2025 at 9:57 AM CET, Martin Uecker wrote:
+...
+>=20
+> Oh, and once again: I am sure you knew all of this. It's just that a lot
+> of people reading these threads think adding a few annotations here and
+> there will be enough to achieve a similar level of safety | robustness
+> as what newly-designed languages can offer.
 
-Applied, thanks!
+I have been looking at programming languages, safety,=C2=A0
+and type theory for a long time, even before Rust existed.
+I heard all these arguments and I do not believe that we=C2=A0
+need (or should use) a newly-designed language.
+
+(Of course, adding annotations would not usually be enough,
+one often would have to refactor the code a bit, but if
+it is already well designed, not too much)
+
+But while I would love discussing this more, I do not=C2=A0
+think this is the right place for these discussion nor
+would it be insightful in the current situation.
+
+In any case, there is so much existing C code that
+it should be clear that we also have to do something
+about it.  So I do not think the question is even that
+relevant.=20
+
+
+Martin
+
+
 
