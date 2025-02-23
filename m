@@ -1,49 +1,49 @@
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB70D7081A;
-	Sun, 23 Feb 2025 18:03:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B603A8F7;
+	Sun, 23 Feb 2025 18:09:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740333830; cv=none; b=gq6OLWdahS1qpS8ZSGbe+0AZIexM5G4MywIOB66+KK0SyNmxk1PHYn4DhtYcA6D0TsNR5zjr3KngMTjkX7DQDqoQn/23SZ14APlB7GpAw8WLyzMvkgiMwZPAbz81BgrdM22wIH7YVoqHvtAK11TsQoaNiMICOsdHeQkwBpDy0RA=
+	t=1740334155; cv=none; b=UHv84ffB2INpFx8fsjAdK0PxiKnQs8feM3+tUC6r4oRTQ2gOfnYAI93jMqt8eR2pVkb7afifEU032v1g8tw4T1P5IQ5Go3DoOwsPvKxYfZqF3yySaZapQmpf6ILPt9NTT162HZoFCR5c4d9mtOfolZ/vAAjZJ9eTizbDkeY0tRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740333830; c=relaxed/simple;
-	bh=vHoTYqH5kYLdCvoAFtXVHET6Lr3U8dENcUD3HaYCcZA=;
+	s=arc-20240116; t=1740334155; c=relaxed/simple;
+	bh=8If/he3/Ufb6GzxJlC5qz9jCuFjwtlLMYqI6GW25NbY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=flQ8VSf2KEBAkuDXTNU36XkrkVviaOxD764pT9lmP0XxEi8eRbA0sEG8m3sOYaLMjABU6dUPCSX3acR9Vwy1PeLoTFeVzIFlLcfH7RJbd6mQcLYLJQ1bGE1gUjyJ7UhmE60oAJ373Qfl33RUWOVC09viDKHeLP2T0x2AEXjbW88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=eHGwCXnx; arc=none smtp.client-ip=213.167.242.64
+	 Content-Type:Content-Disposition:In-Reply-To; b=ci5ij13q1LlTO65W3kxKpJHKoPArPjdxSH5v07djSbWXcxvGWet9x22x0GdPG1KmjM0oZnhkakTVR2hr/FPCPO38+1B8THuM49F4ePrluWjUSNcaPRdi8/D0YmUo7aPWO90EeOZbEgi2ZSEi0c1qgRfP9EntZWwME+sht4jjQpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=bjgz+UQ3; arc=none smtp.client-ip=213.167.242.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="eHGwCXnx"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bjgz+UQ3"
 Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 56592496;
-	Sun, 23 Feb 2025 19:02:21 +0100 (CET)
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9692A496;
+	Sun, 23 Feb 2025 19:07:46 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1740333741;
-	bh=vHoTYqH5kYLdCvoAFtXVHET6Lr3U8dENcUD3HaYCcZA=;
+	s=mail; t=1740334066;
+	bh=8If/he3/Ufb6GzxJlC5qz9jCuFjwtlLMYqI6GW25NbY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eHGwCXnxIBw6QRhY2zd1Ly9pL5XvMggWiB/ic03NPfxDJk0V4Lb/Md/lW6Arekk6p
-	 mlDk9Msq7eM41N7Px1H5K0NcWrYHD4RIpvHaXg1aixW2v3uE7kf91/ESk16VfaF39Y
-	 yHilU8aQvTSzkpIq46v2pa/EnC1kDRXfvjRWm+Y0=
-Date: Sun, 23 Feb 2025 20:03:30 +0200
+	b=bjgz+UQ3nJWuDXXgPd1/MRjVDFRw/W8WNEIcvAZXX5Flkac5RP/C/KqIn/keWllIA
+	 RnS0trk+8BJp623yWJQWB+HRjZ7sYbHD/1DHajRmQo1iSlSDcSvTKCmVMtCt45XjOM
+	 N/T5bq9N32lNSuXpDa03FhKUhYRC+32x7+oHF9Co=
+Date: Sun, 23 Feb 2025 20:08:55 +0200
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Christoph Hellwig <hch@infradead.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	rust-for-linux <rust-for-linux@vger.kernel.org>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org,
-	ksummit@lists.linux.dev
-Subject: Re: Rust kernel policy
-Message-ID: <20250223180330.GC15078@pendragon.ideasonboard.com>
-References: <CANiq72m-R0tOakf=j7BZ78jDHdy=9-fvZbAT8j91Je2Bxy0sFg@mail.gmail.com>
- <Z7SwcnUzjZYfuJ4-@infradead.org>
- <CANiq72myjaA3Yyw_yyJ+uvUrZQcSLY_jNp65iKH8Y5xGY5tXPQ@mail.gmail.com>
- <Z7bO1jT2onZFZwgH@infradead.org>
- <CAHk-=wgLbz1Bm8QhmJ4dJGSmTuV5w_R0Gwvg5kHrYr4Ko9dUHQ@mail.gmail.com>
- <Z7hulnJ4fwslRILy@pollux>
+To: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+Cc: tomm.merciai@gmail.com, linux-renesas-soc@vger.kernel.org,
+	linux-media@vger.kernel.org, biju.das.jz@bp.renesas.com,
+	prabhakar.mahadev-lad.rj@bp.renesas.com,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 01/18] media: dt-bindings: renesas,rzg2l-csi2:
+ Document Renesas RZ/V2H(P) SoC
+Message-ID: <20250223180855.GD15078@pendragon.ideasonboard.com>
+References: <20250221155532.576759-1-tommaso.merciai.xr@bp.renesas.com>
+ <20250221155532.576759-2-tommaso.merciai.xr@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,115 +52,135 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z7hulnJ4fwslRILy@pollux>
+In-Reply-To: <20250221155532.576759-2-tommaso.merciai.xr@bp.renesas.com>
 
-On Fri, Feb 21, 2025 at 01:16:22PM +0100, Danilo Krummrich wrote:
-> On Thu, Feb 20, 2025 at 04:39:58PM -0800, Linus Torvalds wrote:
-> > Honestly, what you have been doing is basically saying "as a DMA
-> > maintainer I control what the DMA code is used for".
-> > 
-> > And that is not how *any* of this works.
-> > 
-> > What's next? Saying that particular drivers can't do DMA, because you
-> > don't like that device, and as a DMA maintainer you control who can
-> > use the DMA code?
+Hi Tommaso,
+
+Thank you for the patch.
+
+On Fri, Feb 21, 2025 at 04:55:15PM +0100, Tommaso Merciai wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > 
-> [...]
+> The MIPI CSI-2 block on the Renesas RZ/V2H(P) SoC is similar to the one
+> found on the Renesas RZ/G2L SoC, with the following differences:
+> - A different D-PHY
+> - Additional registers for the MIPI CSI-2 link
+> - Only two clocks
 > 
-> > So let me be very clear: if you as a maintainer feel that you control
-> > who or what can use your code, YOU ARE WRONG.
+> Add a new compatible string, `renesas,r9a09g057-csi2`, for the RZ/V2H(P)
+> SoC.
 > 
-> When I added you to the original thread [1], it was exactly to get some
-> clarification on this specific point.
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+> ---
+> Changes since v1:
+>  - Dropped empty line as suggested by LPinchart
+>  - Fixed minItems into else conditional block as suggested by RHerring
 > 
-> In my perception, a lot (if not all) of the subsequent discussions evolved
-> around different aspects, while this specific one is not even limited to Rust in
-> the kernel.
+>  .../bindings/media/renesas,rzg2l-csi2.yaml    | 59 ++++++++++++++-----
+>  1 file changed, 44 insertions(+), 15 deletions(-)
 > 
-> Hence, I'm happy to see this clarified from your side; it was still a remaining
-> concern from my side, regardless of whether the PR in question will make it or
-> not.
-> 
-> However, I also want to clarify that I think that maintainers *do* have a veto
-> when it comes to how the API they maintain is used in the kernel. For instance,
-> when an API is abused for things it has not been designed for, which may hurt
-> the kernel as a whole.
+> diff --git a/Documentation/devicetree/bindings/media/renesas,rzg2l-csi2.yaml b/Documentation/devicetree/bindings/media/renesas,rzg2l-csi2.yaml
+> index 7faa12fecd5b..1d7784e8af16 100644
+> --- a/Documentation/devicetree/bindings/media/renesas,rzg2l-csi2.yaml
+> +++ b/Documentation/devicetree/bindings/media/renesas,rzg2l-csi2.yaml
+> @@ -17,12 +17,14 @@ description:
+>  
+>  properties:
+>    compatible:
+> -    items:
+> -      - enum:
+> -          - renesas,r9a07g043-csi2       # RZ/G2UL
+> -          - renesas,r9a07g044-csi2       # RZ/G2{L,LC}
+> -          - renesas,r9a07g054-csi2       # RZ/V2L
+> -      - const: renesas,rzg2l-csi2
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - renesas,r9a07g043-csi2 # RZ/G2UL
+> +              - renesas,r9a07g044-csi2 # RZ/G2{L,LC}
+> +              - renesas,r9a07g054-csi2 # RZ/V2L
+> +          - const: renesas,rzg2l-csi2
+> +      - const: renesas,r9a09g057-csi2 # RZ/V2H(P)
+>  
+>    reg:
+>      maxItems: 1
+> @@ -31,16 +33,24 @@ properties:
+>      maxItems: 1
+>  
+>    clocks:
+> -    items:
+> -      - description: Internal clock for connecting CRU and MIPI
+> -      - description: CRU Main clock
+> -      - description: CRU Register access clock
+> +    oneOf:
+> +      - items:
+> +          - description: Internal clock for connecting CRU and MIPI
+> +          - description: CRU Main clock
+> +          - description: CRU Register access clock
+> +      - items:
+> +          - description: CRU Main clock
+> +          - description: CRU Register access clock
+>  
+>    clock-names:
+> -    items:
+> -      - const: system
+> -      - const: video
+> -      - const: apb
+> +    oneOf:
+> +      - items:
+> +          - const: system
+> +          - const: video
+> +          - const: apb
+> +      - items:
+> +          - const: video
+> +          - const: apb
+>  
+>    power-domains:
+>      maxItems: 1
+> @@ -48,7 +58,7 @@ properties:
+>    resets:
+>      items:
+>        - description: CRU_PRESETN reset terminal
+> -      - description: CRU_CMN_RSTB reset terminal
+> +      - description: CRU_CMN_RSTB reset terminal or D-PHY reset
 
-I've been thinking this through over the weekend, and I see an elephant
-in the room that makes me feel uncomfortable.
+I'd mention which SoCs these apply to:
 
-Three important statements have been made on the topic of rust for
-Linux. I'm going to include some quotes below, alongside with how I
-understand them. My understanding may be wrong, please let me know when
-that's the case.
+      - description:
+          CRU_CMN_RSTB reset terminal (all but RZ/V2H) or D-PHY reset (RZ/V2H)
 
-- No maintainer is forced to deal with rust code at the time being.
+Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 
-  This was mentioned multiple times in different forms, for instance by
-  Miguel in [1] as
-
-  "Some subsystems may decide they do not want to have Rust code for the
-  time being, typically for bandwidth reasons. This is fine and
-  expected."
-
-  or by Linus in [2] as
-
-  > You don't have to like Rust. You don't have to care about it. That's
-  > been made clear pretty much from the very beginning, that nobody is
-  > forced to suddenly have to learn a new language, and that people who
-  > want to work purely on the C side can very much continue to do so.
-
-- No maintainer can (ab)use their power by nacking rust abstractions for
-  the API their maintains.
-
-  This was made clear by Linus in [2]:
-
-  > So let me be very clear: if you as a maintainer feel that you
-  > control who or what can use your code, YOU ARE WRONG.
-
-- Breaking compilation of rust code in a released kernel is not allowed.
-
-  This statement is less clear in my opinion. It's made by Miguel in [1]:
-
-  "The usual kernel policy applies. So, by default, changes should not
-  be introduced if they are known to break the build, including Rust.
-
-  However, exceptionally, for Rust, a subsystem may allow to temporarily
-  break Rust code. The intention is to facilitate friendly adoption of
-  Rust in a subsystem without introducing a burden to existing
-  maintainers who may be working on urgent fixes for the C side. The
-  breakage should nevertheless be fixed as soon as possible, ideally
-  before the breakage reaches Linus."
-
-  The "ideally" in the last sentence is a subtle but important detail.
-
-  Then we had some patches that broke the -next rust build and were
-  dropped from v6.14, as mentionned in [3]. Greg
-
-  > > Regardless of holidays, you seem to be saying that Linus should
-  > > have accepted Andrew's PR and left rust with build failures?
-  >
-  > I can't answer for Linus, sorry.  But a generic "hey, this broke our
-  > working toolchain builds" is something that is much much much
-  > different than "an api changed so I now have to turn off this driver
-  > in my build" issue.
-
-  I haven't found a clear statement from Linus on this topic.
-
-Those three statements can't all be true together, we can at best have
-two. I would like to understand which one we will drop first, and I
-believe many other developers and maintainers are wondering the same.
-
-[1] https://rust-for-linux.com/rust-kernel-policy
-[2] https://lore.kernel.org/all/CAHk-=wgLbz1Bm8QhmJ4dJGSmTuV5w_R0Gwvg5kHrYr4Ko9dUHQ@mail.gmail.com/
-[3] https://lore.kernel.org/all/2025013148-reversal-pessimism-1515@gregkh/
-
-> But as mentioned previously, I do not think that this veto can be justified with
-> personal preference, etc.
-> 
-> - Danilo
-> 
-> [1] https://lore.kernel.org/lkml/Z5qeoqRZKjiR1YAD@pollux/
+>  
+>    reset-names:
+>      items:
+> @@ -101,6 +111,25 @@ required:
+>    - reset-names
+>    - ports
+>  
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: renesas,r9a09g057-csi2
+> +    then:
+> +      properties:
+> +        clocks:
+> +          maxItems: 2
+> +        clock-names:
+> +          maxItems: 2
+> +    else:
+> +      properties:
+> +        clocks:
+> +          minItems: 3
+> +        clock-names:
+> +          minItems: 3
+> +
+>  additionalProperties: false
+>  
+>  examples:
 
 -- 
 Regards,
