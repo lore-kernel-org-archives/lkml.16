@@ -1,165 +1,181 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2064.outbound.protection.outlook.com [40.107.92.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F0817588;
-	Sun, 23 Feb 2025 05:07:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740287244; cv=fail; b=H422mhzevTzu+YM/F1bSuxkDVVU5eOrm85ICrs9Amc8bTSyDj15SLPa4Kia7UmJPr+VFh00a5DKv0bqGbCd5VOTp0QDhIdiIGl5y6U70G/43INe3LJjz4gPZDcx/SjKkAwq/AdJFcOKcD0lv+T1GOXd0JYbQee6ntreWAZ/Nv94=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740287244; c=relaxed/simple;
-	bh=cLYU7Opx+syvUIaMku/z7nW/2PBkhk8xPSx6s3laUyU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Is8He/qxQoyseqEWvDZsfDjyP7MHEyI2JLAsdmTSKyaam2xGalqnEE1+WEyMzFTJJfakUZBJ5/mFU62PY1kdZLzPs2/D/UaJPwQHzN1ssyxjnCeYGsoNtgoYEZLBg1E3gu4TEeE/va6tzYOwqpEYu6df0JNwoFOkvy7A5RuM/IQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=0t1HU3dc; arc=fail smtp.client-ip=40.107.92.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C871728F4;
+	Sun, 23 Feb 2025 05:08:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740287334; cv=none; b=q8cBWWXns5QkG5FTIxSiujv6iPZE4SbdRkpDue5JOyuNphTq45irjtsteZBgOjKv1LDQMJt3O68B8tdXXi9nlq8t/v8Zm0tue8wwTHJSY2JuAL0ZHOMznkGQffjKYbPz2YeD+tstWJXVi2oHoiE/bSrrkp4farcVMVLm5bBYseQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740287334; c=relaxed/simple;
+	bh=zdbGVk0R4XP2am+HV/vSLFiwL4kfVsz30joW2BNMsVU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Q+ngDYbOhte3HYUPgAuabUC2Qj5ZD/+JM4I+5gmjNpYWF0iSwBMxBTc9YG3DOzVHlS62ata1tDncmcyh8Lhf4S9Cl74DACz5IFE6E99O4r2LHOkKEyYFYB+L16BT49Lnm5vwBX3SYlhPUIxDUqGVS3giFx1QiU7L4qx/sAQXMuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AAI47qC/; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="0t1HU3dc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FCqX75ODNOZ3b35XqxRKYvC+z+qgmT6DnkR352TnAmAtjkrY19PwxzJ6loQfJIJHsRzvHcmO6Onu0qz4XQwuFezQ/VWgdLrBcj/JfPAfO1zexPNz70uKHUEHLca2AOtLYGsQ9liLMFG24s4u3ns/TUZ3Vag6T+WT/aOZD47CPy1eRLfBzO7RU/MZaLfA9wkQg/14JlB2w82vNly1tJyMCti582niPPqk3L6FkaLoedVVB1Jg1+u2e0iUAAQHiwrPwov0hUgTkNj/Qt4fAsFhtDQc+MAsSTB0aWJUvIEvaMapELz+gY1lALThq5FsH0ew+gfK9Hg5F6bp/3+C823l1A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=inQ+5QPTfvstZ78gK5507J/61Ig09sGIxO8Ibpb8+vY=;
- b=ljXzmP0HllQD+/X0ksaNudMMZVx2UFbunLxwYSycSAr9lL2svUyMGZy6+1OFAOZa01S6Pm/5+pcGiwUKQzAOvH9bC+btkTspwJFYuCgRtVrR8WWoU5bTdjs3JfnPAoeMxBcRz5y7DtBsyaEb6FZQn7uLI/SLzBLMMEUChy/+ry4ckefbnGBbqQ3T4BFIEo7/K+pZnkKRtvS98P7ZkuhMLru2H9HkN4S5jMrBHtpEAJNU9HRlHcLmwxOYC3+HZdBT9rBs4KY9f3NA6dloElCJxxPZvjBV9Pmpt5G4LTk2Lo+n71u0ouft6KLKczRNAwMR//zsSUofZFJeAmajdQELmw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=inQ+5QPTfvstZ78gK5507J/61Ig09sGIxO8Ibpb8+vY=;
- b=0t1HU3dceNkHXnWKANN63yPilxbcgwqCP7J/WsYplJ1vqxxvzr+jgYLy2cv2xgOHmPwWrH4ruxrwZCr8M2s6I/zzeD/PJCgeoAvd9NoUlgUtIQIBLWDTJnSihYIxy5R/IjBBuGYS8z1fx2Qx61/xX3ZKLOHx1Hf7d3BCHlBubX0=
-Received: from MW2PR16CA0015.namprd16.prod.outlook.com (2603:10b6:907::28) by
- SJ1PR12MB6172.namprd12.prod.outlook.com (2603:10b6:a03:459::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.15; Sun, 23 Feb
- 2025 05:07:13 +0000
-Received: from MWH0EPF000989EB.namprd02.prod.outlook.com
- (2603:10b6:907:0:cafe::30) by MW2PR16CA0015.outlook.office365.com
- (2603:10b6:907::28) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.19 via Frontend Transport; Sun,
- 23 Feb 2025 05:07:12 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MWH0EPF000989EB.mail.protection.outlook.com (10.167.241.138) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8466.11 via Frontend Transport; Sun, 23 Feb 2025 05:07:12 +0000
-Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Sat, 22 Feb
- 2025 23:07:11 -0600
-From: Ashish Kalra <Ashish.Kalra@amd.com>
-To: <bhelgaas@google.com>, <ilpo.jarvinen@linux.intel.com>,
-	<alex.williamson@redhat.com>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] PCI: fix bug introduced in pci_save_pcix_state()
-Date: Sun, 23 Feb 2025 05:07:00 +0000
-Message-ID: <20250223050700.4635-1-Ashish.Kalra@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AAI47qC/"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-46fd4bf03cbso55500481cf.0;
+        Sat, 22 Feb 2025 21:08:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740287331; x=1740892131; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bBH0TwUlKOyjmVBKqs8V0ejTvT1+7RXd2Ev7u2AJBD4=;
+        b=AAI47qC/duhVVoMlyv/GviE/UsLUE5K3oW1Fv+YOLMRz5Tkg6P9YBqLsvSfME7AOqP
+         TYeZkkllUmoGRZU+tb+hC3fdpv5PPGWcyWh+xq+lEjcVN2EIyepRPShvMPVFaYhWWpml
+         XJoa9ncGpdOyZoZGFnSa8Ul68YIkphSpuAw2jQiso87Y2yYzN1Xzks1UkSzVhuCheVuo
+         pAtkFioDUkb4BTfBtk+KfppJaPIez8TZWG1mhx3ypX6/0g9wepViYkSXdvHX9NcwrU1+
+         e5WFHqmKDRBUPasjyRZLEslU/hWSixCc3NwgN6uf8yYk6TMW4M8syfSiV/qnyznCFdo8
+         En4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740287331; x=1740892131;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bBH0TwUlKOyjmVBKqs8V0ejTvT1+7RXd2Ev7u2AJBD4=;
+        b=jv4f4SnYwnr64rR1hF8Cu/CJdesI7Ck0noMLr/7E1jlv78aJqjaHMFOOLWQOEjoO8q
+         sxGQBsTZUE8JzJV0yKVn191qCs6me57PZLqbrcQuhPPkezytCWBVK87FtKsN3iM82oFq
+         6IJgH4x5DNELU1XbCyN+Ho4neXaT0RwVLE1Xr6SXsjLWPVFHXE/NBpnWM8pW46i3AstN
+         4dJ/lTp7fkXXia78uLJdUTLq4qeKdh+rzIBMeLFer0J7ukvsQhszOYrZIGhhhH2NFwml
+         kMazVgFdYC6k1bxFNwAEQlrm+ra2O9A6ZqgjHCNHG51qflyXjWAQtIBy8M2Mol5Fk6VW
+         hr9A==
+X-Forwarded-Encrypted: i=1; AJvYcCXrTXWz8fJREFIR/OELz5jALKdfBDuLMCjlhdaegGks+/ZANr+k+Lp3y9KBV/v7e4hGfWI53knCbA0o0Hs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOsmDHnhgh391CEc+2knAro1GEBLPcVlX5U0RDFfUYWgXzOZzY
+	UrFc6Ue71b33Xh00QZtTVoTvHS5JexxM8VAnCnSYXuQyuhZQAj0d
+X-Gm-Gg: ASbGncuS3+YNQsPHCSGY47Bnk75KGesn/2UzNdVPosF3ub7J1SVEGcFPBSvHbERmbh+
+	wXwEcPqMDwM7Ws/klFZ0J0dgswFDMXfW2YI9Tc3s5JyiPW43NTrQcdhuVyiWiR5ZSsCXCZAoA6B
+	NWHckT+a+ZVCsPUL0HWdy51M9FjzeS/BA0tTVxXJFFNDXXVusnSr1b9tFosPOdDbIoM2RVkxAPK
+	JEC4E7coLvgW38qVNo7iH5FbnZeekzfGKjOyL32O8vZ61yAUegyuo4Mp3WbyPBpQkhX37w90zRJ
+	iAFPAD6YCQTVe3EKhZww6sl1GtWXQiKWl48iCIgUCeYqL8c=
+X-Google-Smtp-Source: AGHT+IFyUwylJsYT2gX4dxbJLOwg/LHqmtz1YQPSMcqi+w4DIwzS+SUSfRN9sXGT2i1e09QdqdNsKA==
+X-Received: by 2002:a05:622a:18a1:b0:472:fa0:2b83 with SMTP id d75a77b69052e-472227591c6mr129311731cf.0.1740287331636;
+        Sat, 22 Feb 2025 21:08:51 -0800 (PST)
+Received: from nerdopolis2.localnet ([2600:4040:5e66:a800:104d:377c:5733:f5b0])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471f2b0476dsm75728701cf.28.2025.02.22.21.08.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Feb 2025 21:08:50 -0800 (PST)
+From: Adam Simonelli <adamsimonelli@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Jiri Slaby <jirislaby@kernel.org>
+Subject:
+ Re: [PATCH v2 1/2] ttynull: Add an option to allow ttynull to be used as a
+ console device
+Date: Sun, 23 Feb 2025 00:08:49 -0500
+Message-ID: <4305907.CQOukoFCf9@nerdopolis2>
+In-Reply-To: <2025021920-uproot-antsy-e2c7@gregkh>
+References:
+ <20250217040748.2017975-1-adamsimonelli@gmail.com>
+ <20250217040748.2017975-2-adamsimonelli@gmail.com>
+ <2025021920-uproot-antsy-e2c7@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000989EB:EE_|SJ1PR12MB6172:EE_
-X-MS-Office365-Filtering-Correlation-Id: 31ae347e-726f-49a4-d694-08dd53c7eeff
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?/SenL+zAXANmng8eEc9gkqn1qLblO7B3RAF3moQtgMF/YPuAnL1R3IuwAvjO?=
- =?us-ascii?Q?ZrbVHKjstLYmq5AoR5dzlMXrEZkEhCnzO9NBcNiMGyhKNFqIq4Bh8hF/gAzT?=
- =?us-ascii?Q?6UMKHpmmocCbyue3llvnyG+YMpSWLBbwXRCEIsfNew26HJuGWMazsg4UcdtW?=
- =?us-ascii?Q?5pBtzH3/TLs+bN5ugWRsJL+hjXS4A2RyMjd80qr20R7bFoG5qDapJ1k88YMk?=
- =?us-ascii?Q?u8TNoATOmpBpduzan62Nii9DClbSreUtHRqrLPr6cxKyUxTuoCurDCqk8vm+?=
- =?us-ascii?Q?75A6fP5EoQ0csNoEZ0S06meeETRYirV1c9XhOCyM2g4S383lvQlmcY6FttWi?=
- =?us-ascii?Q?mUuIZlcU2i5uM8O0lFM7KFdJH1QLFMa3tvXlT8d5kTp4xCbTz02T0xOca3uU?=
- =?us-ascii?Q?xyDkw/I5AAKdWyvlvjkknYaqHDxLZPxGcU3OZc4KaZX7l4MtkXPt6RWjH4HF?=
- =?us-ascii?Q?MKBkWSPTr6ImC2HSByOEHaE7pnb+vMfM4NLnifFYKD1RO75uYipBFanB1KGh?=
- =?us-ascii?Q?+QWx4mPSPTOvn75sHMwmgkqJyZRzBaVzohZOgluBw3htwGlAi42e4BReLgIK?=
- =?us-ascii?Q?jlxsBNg8QPZAWzOmaVKgUla+pZQqDe/ybSjYy8ic/oMu5+DvtxI5wJDTTzKh?=
- =?us-ascii?Q?c6KlgbBtDfser3oPiW0po1iNL0d3MSw6oUHJq43bsDVIvk6I3ZP2VIvzCZl3?=
- =?us-ascii?Q?60L/lwGJoNMNUVRlkUQon0r/hZhtD0h4CT2gd0qIpG2bnuzZqCZF2YusEIJZ?=
- =?us-ascii?Q?Q+yl9zxsGEZwmDeDijAtW1CJITRRd7eqEMiiul9gDW8mz5UvscfRQVNH3ccs?=
- =?us-ascii?Q?JCy7jTq1UOry2scLt3D/1ncdc9q69EvjmhvJKwW79vIS6QxQW1DJK4EGMLdI?=
- =?us-ascii?Q?VCR2F4Pf1+dNv0CnBrP0GFUQP+xRMqx6yvZ2mlEqUnvP1WAhZRRE2PUfnSfI?=
- =?us-ascii?Q?4SiDsSH1qDxKx2mD0CRLz/vYgxIYL2UzlqIPOGdD1c2DdBKrMG4XdIPaiM8o?=
- =?us-ascii?Q?Um6+7g6mJ11pntt5+rNwKxeC1nDrnUdpXPoydZ8JIe/ntNIo1RDQVIFhI6hn?=
- =?us-ascii?Q?iH7pD8I9wvXp99U1PqgUSSgr/idilhynt88PEVxHmlyDoj59E+jao7kIUc/V?=
- =?us-ascii?Q?dOqvNovSy9lN7DHoVyd1Gkt6B5/4nHCA25NtDphT+TrLPegqY76ws9uBhWhL?=
- =?us-ascii?Q?oSuxmcbpWp21m+h617Oox2HKKlx3JLE8uFuYk7DJvw/g1uqMGWd/YG5IRJGg?=
- =?us-ascii?Q?+nC2Itf4TjLRvVpg59Dl+7icSchPzqXMy8DS5FWq70eANj0o6yt5NG9appmA?=
- =?us-ascii?Q?d6vutntTaodsCyXs58weZEdjQyIXvF4qNTv7Ebot3Db0MXv4gloYarTKv3aN?=
- =?us-ascii?Q?NHD58PQq80sI+apJjixyn1tGIBiJtqtGIPul8Dl4g1b2aNcEHeMWm2Vy4NIL?=
- =?us-ascii?Q?5Uyw6CPV8PPRPclN4nBWCAQIqJTWXumExgcrZQQvg7HFhfE7XCwtbSYPF2aq?=
- =?us-ascii?Q?QGvCqVGopwxQVIo=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2025 05:07:12.8257
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31ae347e-726f-49a4-d694-08dd53c7eeff
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000989EB.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6172
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+On Wednesday, February 19, 2025 9:00:07 AM EST Greg Kroah-Hartman wrote:
+> On Sun, Feb 16, 2025 at 11:07:47PM -0500, adamsimonelli@gmail.com wrote:
+> > From: Adam Simonelli <adamsimonelli@gmail.com>
+> > 
+> > Add a config option CONFIG_NULL_TTY_CONSOLE that will have ttynull be
+> > initialized by console_initcall() and selected as a possible console
+> > device.
+> > 
+> > Signed-off-by: Adam Simonelli <adamsimonelli@gmail.com>
+> > ---
+> >  drivers/tty/Kconfig   | 18 +++++++++++++++++-
+> >  drivers/tty/ttynull.c | 16 +++++++++++++++-
+> >  2 files changed, 32 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
+> > index 63a494d36a1f..afe4e7722d4c 100644
+> > --- a/drivers/tty/Kconfig
+> > +++ b/drivers/tty/Kconfig
+> > @@ -383,7 +383,23 @@ config NULL_TTY
+> >  	  available or desired.
+> >  
+> >  	  In order to use this driver, you should redirect the console to this
+> > -	  TTY, or boot the kernel with console=ttynull.
+> > +	  TTY, boot the kernel with console=ttynull, or enable
+> > +	  CONFIG_NULL_TTY_CONSOLE.
+> > +
+> > +	  If unsure, say N.
+> > +
+> > +config NULL_TTY_CONSOLE
+> > +        bool "Supports /dev/ttynull as a console automatically"
+> > +        depends on NULL_TTY=y && !VT_CONSOLE
+> > +	help
+> > +	  Say Y here if you want the NULL TTY to be used as a /dev/console
+> > +	  device.
+> > +
+> > +	  This is useful for userspace applications that expect a working
+> > +	  console device, without changing the kernel boot options, such as a
+> > +	  distribuition or environment that historically had CONFIG_VT_CONSOLE
+> > +	  enabled, and have now disabled it, but still need /dev/console to be
+> > +	  working for userspace applications.
+> >  
+> >  	  If unsure, say N.
+> >  
+> > diff --git a/drivers/tty/ttynull.c b/drivers/tty/ttynull.c
+> > index 6b2f7208b564..8ba629ae426b 100644
+> > --- a/drivers/tty/ttynull.c
+> > +++ b/drivers/tty/ttynull.c
+> > @@ -57,6 +57,10 @@ static struct tty_driver *ttynull_device(struct console *c, int *index)
+> >  static struct console ttynull_console = {
+> >  	.name = "ttynull",
+> >  	.device = ttynull_device,
+> > +#ifdef CONFIG_NULL_TTY_CONSOLE
+> > +	.index = -1,
+> > +	.flags = CON_PRINTBUFFER,
+> > +#endif
+> 
+> There's no way to do this without #ifdef in the .c files?
+> 
+> >  };
+> >  
+Maybe IS_ENABLED() is better?  
+> >  static int __init ttynull_init(void)
+> > @@ -90,10 +94,20 @@ static int __init ttynull_init(void)
+> >  	}
+> >  
+> >  	ttynull_driver = driver;
+> > -	register_console(&ttynull_console);
+> > +	if (!console_is_registered(&ttynull_console))
+> > +		register_console(&ttynull_console);
+> > +
+> 
+> Why do you register this twice?
+I thought I had to add that in the console_initcall function because other
+drivers seem to have that.
+I want it to still work when it is just CONFIG_NULL_TTY without
+CONFIG_NULL_TTY_CONSOLE, so I will guard both with console_is_registered
+> 
+> > +	return 0;
+> > +}
+> >  
+> > +#ifdef CONFIG_NULL_TTY_CONSOLE
+> > +static int __init ttynull_register(void)
+> > +{
+> > +	register_console(&ttynull_console);
+> 
+> Here, why is this registered again?
+> 
+> You should only have to do this once, and not need to check before
+> trying again, right?
+> 
+> thanks,
+> 
+OK, I will guard both. 
+> greg k-h
+> 
 
-For PCIe devices which don't have PCI_CAP_ID_PCIX, this change in
-pci_save_pcix_state() causes pci_save_state() to return -ENOMEM error
-and causes e1000e driver probe to fail as follows:
-..
-[   15.891676] e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
-[   15.921816] e1000e 0000:21:00.0: probe with driver e1000e failed with error -12
-...
 
-Fixes: 7d90d8d2bb1b ("PCI: Avoid pointless capability searches")
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- drivers/pci/pci.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index ccd029339079..685463ea392b 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1743,14 +1743,14 @@ static int pci_save_pcix_state(struct pci_dev *dev)
- 	struct pci_cap_saved_state *save_state;
- 	u8 pos;
- 
--	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_PCIX);
--	if (!save_state)
--		return -ENOMEM;
--
- 	pos = pci_find_capability(dev, PCI_CAP_ID_PCIX);
- 	if (!pos)
- 		return 0;
- 
-+	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_PCIX);
-+	if (!save_state)
-+		return -ENOMEM;
-+
- 	pci_read_config_word(dev, pos + PCI_X_CMD,
- 			     (u16 *)save_state->cap.data);
- 
--- 
-2.34.1
 
