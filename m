@@ -1,194 +1,309 @@
-Received: from esa4.hgst.iphmx.com (esa4.hgst.iphmx.com [216.71.154.42])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C528B2D05E;
-	Sun, 23 Feb 2025 06:51:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=216.71.154.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740293477; cv=fail; b=IqBUXhKK1Ykkw5lVHXd9ckHzhuJbMnc6pWC2nNsgCS5qI/1j5c+3Wxdwte85pw+jvoUZgWyB/fQLvI0p7p4/mb9Xf9/2oLLVSHZfYi0jD4w20jtuF0sIje99MLsGQT24jyiBbjYcBxew7jbArSwgaWpol24uubcFsgdSapvfqEM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740293477; c=relaxed/simple;
-	bh=fe2SuKvptiuiRfIf1m9/u6JwpI0HC6DtvDv/iKNzn3Q=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=GTbJiIxQh8Y8vRXZfgXp1hqHBy8g5GobtIwMAF+M3hrZr4PPuqmZdqMTpmdRrWqWpLE4m9cDXElyoiITL3gr9gH8E8HfTI3FCcsHZmq/bSLjHp6I6HlTyIqT/RZLgit2tuWhrLGJZ8Ja4M1CSt1LDL9YLNeuzVfwcCSZTuYU53Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sandisk.com; spf=pass smtp.mailfrom=sandisk.com; dkim=pass (2048-bit key) header.d=sandisk.com header.i=@sandisk.com header.b=tKmqRGjP; arc=fail smtp.client-ip=216.71.154.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=sandisk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sandisk.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0804414;
+	Sun, 23 Feb 2025 06:55:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740293739; cv=none; b=Bzvvqo3HM+rfVQayJtBI+PlvPm8+ckzEYKtMo0OPrUVxyQhENmsFcDnP0M56g6gvcgzvh+K8ZoY/0DHKQGmQSEo4aneQQD7MlCq6Ty/1CUA0+4uIEDrSzfTQy7VJ2+qsVMpcXWyIj9/SCZd/RfzJshBcjgMxl99XaJdEu3akERI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740293739; c=relaxed/simple;
+	bh=QmOR/YrUzzwsYy7T54Gep40GJD5nY3nQaIVBiQTDYps=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=jBdcAkegM1u2k3jY2QJFf5uiUWNyGvEMUinF+5L7LFlL0E51uYIW6HEAKBF+Qe+2RANYhOszvJALh4ZuaKgL4Mn3JbLtZbHF4/f5XKRccvEOFNd3tP9c2efdQpzENXHvtnh3Lq7Jiv+dLpqPKWj6nfHjg9lcXSACW8HwcnvEA+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=JxEDmKei; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sandisk.com header.i=@sandisk.com header.b="tKmqRGjP"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=sandisk.com; i=@sandisk.com; q=dns/txt;
-  s=dkim.sandisk.com; t=1740293475; x=1771829475;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=fe2SuKvptiuiRfIf1m9/u6JwpI0HC6DtvDv/iKNzn3Q=;
-  b=tKmqRGjPwo/q9BvDjbZPbmPXOWPk+xEOCBEcE4cMZREWnEjpor1uMjIM
-   B3CGbJdt1Oi18BTDeZr9PYZTYCbSaXymWqwOvKhGHse/yEPIGplICBJr/
-   Gi1kns3OKoYIT9Pon9GDLrli8gk/6Kc8HlDWi4iQ+yTvHMiSfjB21VagW
-   Gm4ZOJ3EBxZrYXf8IENTz4ee/mrhA1ilLHrY+rqwwSrkzuF9pHrSJuk30
-   CZpwpUIBY82afxo7lvQvBz+Bxh+LAty414yzfMjTSVpDL///yNsEQCoZe
-   ZDYXJ0JVXZCF9KZEFspNSWf1Qt3j3fXM7mj9Zosd25oxhBAsUFCAQtVXf
-   Q==;
-X-CSE-ConnectionGUID: Ldn4IlpjRa6HMZBMsxsRmg==
-X-CSE-MsgGUID: efUiEi6PSBOBI7p8Nb+DMw==
-X-IronPort-AV: E=Sophos;i="6.13,309,1732550400"; 
-   d="scan'208";a="38679602"
-Received: from mail-dm3nam02lp2046.outbound.protection.outlook.com (HELO NAM02-DM3-obe.outbound.protection.outlook.com) ([104.47.56.46])
-  by ob1.hgst.iphmx.com with ESMTP; 23 Feb 2025 14:50:52 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uZrricZT4bI73OIYXpgGZGZmg6EI8zT45cTPVREw6Aqqsv2hZ5BcwZXyqSGcencijj1DWN+tL3ploIHzB9gjBP+tSSS+Q3vNkf4nr5Yl/+eKwAENMnyvj8Sx2eesmBEOc27LkV2rF+NUtaYJXwJPQYHG4RKF4/ZrdG46yTor2PJj0Mkita/G+/CM5QaF07eppQ559D1KIFNRo0ytMiCyqccE8R5J2Nu7hVD/4nL7HzqXCdAJwflvd1JKOAx8THaGC+YHRwgDTavQoQbgoRiSh3nVALzwB0iRT0X5org6Xh4lBWAyp9A09G6kdR1aSTsoPlQbQx6qHHBs08VYYdK3dg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8/en9PL5J+z4NM++iSxLwv+MhBMZZqdFD0ZsRsLYhkU=;
- b=d5UF+iD+Cgd/uY71NACDj8YkIQNbs2S7WRvv3VL/lQAl+lnIGnp2dCaTDGfItSmrovJC/n4x6GKxv5CevPe6tvShXFoHLav7jvUwc2hn8eGo5gPCC16Spn70WS4QI+m2NayYcGvQyFA/h6GAwBQ8X1D1hlB9FwbNypWm2D12FAZVMDyZIwDga8YWiZmz+18khA69RIW0ULgMkaQf3gATqKMbiTNeOKALqIBv+kn67ps2BspLqhUN0kX8G6g9yI1B6NJQnbnvA5Pvmc41UiwEesxPeKLUFCkN1AlzzR+/n7wLtaarT6DK1O3EkHNpsCQxzYPyC9RXlYd+UxGRxXjQ7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=sandisk.com; dmarc=pass action=none header.from=sandisk.com;
- dkim=pass header.d=sandisk.com; arc=none
-Received: from PH7PR16MB6196.namprd16.prod.outlook.com (2603:10b6:510:312::5)
- by CH3PR16MB6448.namprd16.prod.outlook.com (2603:10b6:610:1e1::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.18; Sun, 23 Feb
- 2025 06:50:44 +0000
-Received: from PH7PR16MB6196.namprd16.prod.outlook.com
- ([fe80::e087:8329:baea:5808]) by PH7PR16MB6196.namprd16.prod.outlook.com
- ([fe80::e087:8329:baea:5808%7]) with mapi id 15.20.8445.013; Sun, 23 Feb 2025
- 06:50:44 +0000
-From: Avri Altman <Avri.Altman@sandisk.com>
-To: "Bao D. Nguyen" <quic_nguyenb@quicinc.com>, "quic_cang@quicinc.com"
-	<quic_cang@quicinc.com>, "quic_nitirawa@quicinc.com"
-	<quic_nitirawa@quicinc.com>, "bvanassche@acm.org" <bvanassche@acm.org>,
-	"avri.altman@wdc.com" <avri.altman@wdc.com>, "peter.wang@mediatek.com"
-	<peter.wang@mediatek.com>, "manivannan.sadhasivam@linaro.org"
-	<manivannan.sadhasivam@linaro.org>, "minwoo.im@samsung.com"
-	<minwoo.im@samsung.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-	"martin.petersen@oracle.com" <martin.petersen@oracle.com>
-CC: "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, Alim Akhtar
-	<alim.akhtar@samsung.com>, "James E.J. Bottomley"
-	<James.Bottomley@HansenPartnership.com>, Keoseong Park
-	<keosung.park@samsung.com>, Bean Huo <beanhuo@micron.com>, Al Viro
-	<viro@zeniv.linux.org.uk>, Gwendal Grignou <gwendal@chromium.org>, Andrew
- Halaney <ahalaney@redhat.com>, Eric Biggers <ebiggers@google.com>, open list
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [RFC v1 1/1] scsi: ufs: core: Add device level exeption support
-Thread-Topic: [RFC v1 1/1] scsi: ufs: core: Add device level exeption support
-Thread-Index: AQHbgzoqkjnv1bsx10+FyWCC/0dgxrNUdOjA
-Date: Sun, 23 Feb 2025 06:50:44 +0000
-Message-ID:
- <PH7PR16MB6196948621D2B89F13B4A12BE5C12@PH7PR16MB6196.namprd16.prod.outlook.com>
-References:
- <fdebf652abb4734d37f957062a2b4568754db374.1740016268.git.quic_nguyenb@quicinc.com>
-In-Reply-To:
- <fdebf652abb4734d37f957062a2b4568754db374.1740016268.git.quic_nguyenb@quicinc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=sandisk.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR16MB6196:EE_|CH3PR16MB6448:EE_
-x-ms-office365-filtering-correlation-id: 5c6044c9-dbec-4457-cf33-08dd53d66511
-wdcipoutbound: EOP-TRUE
-wdcip_bypass_spam_filter_specific_domain_inbound: TRUE
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|7416014|10070799003|366016|1800799024|921020|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?CgojtAcUkfUfGwrAJVvPUaOR6OjqyZcieyNXVvGF95PHinc/hDXQJpYnIqQy?=
- =?us-ascii?Q?w+og8MOTf1LNFPvsfT3YxmEXkDeIG4BxHNNE0CupnOzdAA7DXc+PG7sNDJgz?=
- =?us-ascii?Q?vWTCDdBE4Ct39MDqnz2UVAzfuo/AvyHtMP1pVn7Ibk4RwaK2oE1s2HjXUCGB?=
- =?us-ascii?Q?6f1cfaJekOR22fADFoCT1480nR1i0/ZwlrG2shXdkuFGxsCVKIqCt+Ca2Wvl?=
- =?us-ascii?Q?RDs/yNjCAdtH3yRLbNRvSTSJXqpLrFW18ufD4KhQPYpWetknHwVxqp6HeH+t?=
- =?us-ascii?Q?xuXWiC0AiDPYJDy22iXmC4AlgtH3b8AySwlpOL2/4m5VVEJhhoBln9ra/dxg?=
- =?us-ascii?Q?Fw0eGgqm0VlUjrZ9lqSb59GSBirQo/nnqqcarVIbQQ1tRAOIO2LwMR35tX3j?=
- =?us-ascii?Q?xlk8QrmLF/5TcWWBlV4Z2tB6Bwm+DeS2Cb2TvCpT52Ha1Mtl1b3otNTdusIu?=
- =?us-ascii?Q?KdxVVRVA9g9blZYXa7rWTlipQBYF6/3V814S4sz+L2hX5wXFsbvunB4aYPVE?=
- =?us-ascii?Q?xrtaH01Sy2IjK7x2cHYPEenY6irvUHLGaPBuGfp6DVPQmh52wjCNNyN3JHRb?=
- =?us-ascii?Q?zB4TpnA14tZdOZodUHOoZrXl4QYPf5LiSdPkQdG6INxeG/ndyArYIy4nbrEq?=
- =?us-ascii?Q?G7mpLfw4YKoIQgFPUQWbw342ickxHeXiFmMv8g+VJURW7eKLWjMkq98gx3XC?=
- =?us-ascii?Q?o8nUb/mOkoLgDtUTfg5rSY7m/88wc9njj6ZNgtlwnNiGP748i2ITLOYvP5Kz?=
- =?us-ascii?Q?fp5jlS/FGBBN3Sm6b3pLMbqhSAuuqYhyDDzd1TP97y7Uu06in6XlZhVyDF3x?=
- =?us-ascii?Q?aadU9w02etijI6XWcuyiDUcMf+1FIx3sycJ0V0zFrZ66BqX4CCPur6RPBWLP?=
- =?us-ascii?Q?9aBu8pQ2Hf6sL4y6CJMOrZRZL6VWqfbWy1/7DYnyStx7FQDWyaR1b4jxcma6?=
- =?us-ascii?Q?Dyks1+ApfzckMEbadBMxF3Gdk0VyLOHWTnnTX1l9PKmjmDdMnGPkvGAKSxrj?=
- =?us-ascii?Q?+jvGoc8b/JC9X+t2FKytMdT3ZFAOHDeYhGyk6fD3JT7ZkxyDRn+P5ckEdA0M?=
- =?us-ascii?Q?pvSV96Cp2ijCcsspTnBIIUi+vPEb1cMSxDfR6uo87KGIEnpHF5CO7Tc4Hz1G?=
- =?us-ascii?Q?7A2LZ3CFKNM+4jYS+62GAasxmXsf2zvdP4Zgtbd/+MbHQsxy+vAzk8oy9FRF?=
- =?us-ascii?Q?PKL2BmrPsLEHaRNGNc1KZ/yCKMun6Ddt+ukKcpbLC3VDtDR8uoafFNyl8jgw?=
- =?us-ascii?Q?ZwAhzfv+2jZ5eqdC6DzPhxhYt+PooQCTawVH1U5hnL615fzSiVbquggPVpfS?=
- =?us-ascii?Q?fnEPIPHbtMMZbPRlQ19hz1pKpr7g2wRD4i5GVlnpDaDiUmwgwkyGLKWGBQjl?=
- =?us-ascii?Q?156goTktbBpYySVplas/U3NGypLw9+tHLNW07s/iC6JbMq9q+qKEldA30f4/?=
- =?us-ascii?Q?Qy9i0c02C/KeQVUVNp3vyQ0f+Dg1pdVe7LTuxHxYhhZm8mdVvehN9A=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR16MB6196.namprd16.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(10070799003)(366016)(1800799024)(921020)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?FzefJNARbZUOPenZq3PvRTUP4ZA9Y/Yxz7yAN0gqfmzn5tyRd2uE4XYlCQYy?=
- =?us-ascii?Q?7e45HqYZYx9eoVUbMutTYlqrQl7eEiYvGD5tm9ObdVK3ciCIGIRKtU8UUrmj?=
- =?us-ascii?Q?x8i/7fjbScy22+28rzoKcyQ86UHhxg09GihZpcwZuKuHqibPEUF05+hAK4yN?=
- =?us-ascii?Q?XfDS4T186btqD/W+VuO1pDwnNIY0Y9NHNFSBnogIfGHZ29FR/87DqSrs06sM?=
- =?us-ascii?Q?B90UgWGdcPfkiD32W+HkfGR9S90ZNv3hZakVfM1wIxb8PKM/6sW9RKwBkrsz?=
- =?us-ascii?Q?GSU2SgudXuHye4W04nJqnYAZOrVjvaf6TDOIiqHZ5KiHLxO9S3vP4Qm8132C?=
- =?us-ascii?Q?uZH9XaUtd/WbGdiFdEhorcGQRIn7825UA0MIivsXWzxmxytL22Ydr08NHTi8?=
- =?us-ascii?Q?cewCvV6b23zxT01bqTHpbfRrMTOLgxBmP3lAHj9YLMmThzf6FvxvIvnuL1yZ?=
- =?us-ascii?Q?igi8CcLSKAAQlf3F7Q+t9TgnUf9o5KJKkvv9oUv+tbsd5Lv5TdzNcqPsU0jG?=
- =?us-ascii?Q?MHL8baLeqoon4g+382+rvC6Z9+6O71BU7SVbqem3EbnPnd8zPkTGjiWcu7fd?=
- =?us-ascii?Q?szPSX8gOLZXl8zvn+jZk+4WVrHDVYtQYkpr4/26GSxm3R79ixB9WbQXo6oRS?=
- =?us-ascii?Q?g0+J1plRkkfeIuvAZPFn+M54PlaQXb2w9vyTlasJUc3Pnpo+npJc9fDc1yU0?=
- =?us-ascii?Q?Z/nEIhXDqMefvfrez1MxuY1xOu9fVXau/72uapWBqFOysXQWxxYB5rq7DBxQ?=
- =?us-ascii?Q?WctzD/OjCRqGxufwJiuqNLi1gKG8JQfkghj9Hf92gYmgTIJBi84WtCi16et6?=
- =?us-ascii?Q?oW2iOsASrJNK2fR/dgJgpzQbH1jnnEAUbr8e7bYrAGhQmLzmyVbcq9xuGNGw?=
- =?us-ascii?Q?eTPFl9iKCcMctp7a4Ilbw4DtrhK69rmv6Qr6rNTe5s7+Dei9HcNROx6xwbDy?=
- =?us-ascii?Q?OhjluNKa06Y7c/vYBmN7hCaQ5yuV9XtFqP6zlIz4wQHK/ODe5SA4Sh1zLBUV?=
- =?us-ascii?Q?w9lzrRxtJjrcSfHSLblgIy7eV45hvT5BjypengnONknURqRaaG437eUczrOh?=
- =?us-ascii?Q?FDHs4KY4dwiBQTX0aakgXUJwn5KFx4TOf5WTf4BWYnZXd5Yc9frwsVySAG3B?=
- =?us-ascii?Q?SYYpr35hU9FDveb2u4M5gThBqBrFvWdU4S6bEE+h48WYnoL+hRbnABeODosJ?=
- =?us-ascii?Q?3XrcIIL7Rf7C9CPh/RbBgCKhNkk0JHczpP/3uBVs531F/kpkyeRBDDrCwqmH?=
- =?us-ascii?Q?HbmHaTrNPfPNBLlMUp9CoYD8U+RpbrDCpr9fmpAzCIzVoOK+yQSu/rAyrwNB?=
- =?us-ascii?Q?B0TQ/1wj/g0pLS+bxtvirj6fGgsZR9g2EmFGnlqEFAkAKHOrREaJkeSmiqOv?=
- =?us-ascii?Q?xpsQtzGZK/XxQodCrIiOXiHdNEWJKvjpXd5q4mrFqVt3josBp6NNmwmqSR/r?=
- =?us-ascii?Q?CMCpqogcsLLlVvYirVlwkKapDJzRKnWq1smcSvsk8rKvLB2tZ27/WGH1E4Uu?=
- =?us-ascii?Q?tBadDdwf8BOkoZlfQaPstoQfIazaxWGI2vn9/VJt4r38qschOE8SWZUMVxmN?=
- =?us-ascii?Q?+qi7LxftQWtluGM9A+ugKslgMeZyvyJBscU/rjm+l7VyFCkAkPeif/PA6zPI?=
- =?us-ascii?Q?ato+FEMsFLdxj92/htpNRYNfk/QMXt11GX+OmDAgO4jp?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="JxEDmKei"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=Content-Type:MIME-Version:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=TrabOqtRhfI4L6MXAwrxdsN96HvSybcOUIqp0rTlZoc=; b=JxEDmKeiwKhrw9Z+o5YxLxPgBR
+	HoAWaqs0VwTbUwWImyM85VEknbl3XBCiRR+CuNJC3et+XS4tr+jnqXLqK3yuAKrxLGqGckJdxuDfw
+	4IRxi8oaKf4lJlevnGmYIZfG8cn2dwTOWyaYWrNaRiTpcsY8MmQkfKvya6UjwAB6uQKfXo92f/goA
+	sLaTQNN+AdfMQ+PyA8rVzBdTFF2tJZIztCcnQcU8XMga3T13zHS5Q0TEBLhCWkGazq6oR/IT3qESg
+	t4HYM/FrZ2RWok66dvs2Vc+2n9iEaLKHn6YCf6GHE2tW1t1oY4qumB6/VDa7uQti4PaKmSw2vlTtF
+	iL2+dx+w==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1tm5tc-000ycI-0E;
+	Sun, 23 Feb 2025 14:55:25 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Sun, 23 Feb 2025 14:55:24 +0800
+Date: Sun, 23 Feb 2025 14:55:24 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Nitin Gupta <nitingupta910@gmail.com>,
+	Richard Purdie <rpurdie@openedhand.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	"Markus F.X.J. Oberhumer" <markus@oberhumer.com>,
+	Dave Rodgman <dave.rodgman@arm.com>
+Subject: [PATCH] lib/lzo: Avoid output overruns when compressing
+Message-ID: <Z7rGXJSX57gEfXPw@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	sJcbUtgV6laNMp3qyXentQrJuxtkXY6p2BUKKquZebD+fJG0sZXXq0oGi4OP0UmcilL95hibOa2UK9pA249w7pN/wOp+uEFtcyrnYnVc0ZXB1OvO+svymv8BLY7xyFozfZJGLxf4OM56vRL8nAIkSO+fRRnVsi5H3qfB+fayXrPIRmq06hjNTWaTU1STgET5K9vxKxKdM/6r1GJ0pw0RaFEXE/mFJzJJ0/r5A4gaEvo83Ifi+exwwyqDbu7IU5dOG+hg2oHCNZvlPSISynsRCp1sxzMKGcw+VWNR9rDWRpkQVttNvxJc/SGZInHMxw+qPt30Ovbpi0q81nuQf6ypr0tZ6xbFo/uBojdLZlZcFdoIfR6KhSPlutWDZkEX6HHvalEbD1rqN/u7raBoIHFslUK3nuBzzSLQaK2XJu7YYyo9Tncu4cJOCvCh7JlzscugZWZq8c66Ef8keCrxuT/RSZQ90/ANj3saPoE7BBbbcWhtxqXeNnAHSRWXxglaEJDSlm2dTI4tag8I+RMc4n1GrA9gTI/bzOEBacPnWT4T8MGWXQXTzG3ftKS5G+6GYybYK0O4uBTkaV2Z7GbkVHiZ3SA1K25GylJnGrPJsmhUc8TTVcggv9xkjC29OG8mGD5AtMpQGdBEcaWncB318aDeMA==
-X-OriginatorOrg: sandisk.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR16MB6196.namprd16.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5c6044c9-dbec-4457-cf33-08dd53d66511
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Feb 2025 06:50:44.0157
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 7ffe0ff2-35d0-407e-a107-79fc32e84ec4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: s8VHLQEPdNHQb7tC3GTxexfhoRd6i2HuExmRjh0CcSXfknsvU9RKhtxu6lN1H9raY9OjmJwT36Cq9iuRqvrAlg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR16MB6448
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +static void ufshcd_device_lvl_exception_event_handler(struct ufs_hba
-> +*hba) {
-> +	u64 *exception_id;
-> +	int err;
-> +
-> +	hba->dev_lvl_exception_count++;
-> +	exception_id =3D &hba->dev_lvl_exception_id;
-> +	err =3D ufshcd_read_device_lvl_exception_id(hba, exception_id);
-Why is it important to read qDeviceLevelExceptionID immediately?
-Why can't it be added as part of the standard attributes sysfs ABI,
-To be available for read once the exception occurred.
+The compression code in LZO never checked for output overruns.
+Fix this by checking for end of buffer before each write.
 
-Thanks,
-Avri
+Fixes: 64c70b1cf43d ("Add LZO1X algorithm to the kernel")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-
+diff --git a/lib/lzo/lzo1x_compress.c b/lib/lzo/lzo1x_compress.c
+index 47d6d43ea957..5d2f2f851694 100644
+--- a/lib/lzo/lzo1x_compress.c
++++ b/lib/lzo/lzo1x_compress.c
+@@ -18,10 +18,10 @@
+ #include <linux/lzo.h>
+ #include "lzodefs.h"
+ 
+-static noinline size_t
++static noinline int
+ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
+-		    unsigned char *out, size_t *out_len,
+-		    size_t ti, void *wrkmem, signed char *state_offset,
++		    unsigned char **out, unsigned char *op_end,
++		    size_t *tp, void *wrkmem, signed char *state_offset,
+ 		    const unsigned char bitstream_version)
+ {
+ 	const unsigned char *ip;
+@@ -30,8 +30,9 @@ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
+ 	const unsigned char * const ip_end = in + in_len - 20;
+ 	const unsigned char *ii;
+ 	lzo_dict_t * const dict = (lzo_dict_t *) wrkmem;
++	size_t ti = *tp;
+ 
+-	op = out;
++	op = *out;
+ 	ip = in;
+ 	ii = ip;
+ 	ip += ti < 4 ? 4 - ti : 0;
+@@ -116,25 +117,41 @@ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
+ 		if (t != 0) {
+ 			if (t <= 3) {
+ 				op[*state_offset] |= t;
++				if (!HAVE_OP(4))
++					return LZO_E_OUTPUT_OVERRUN;
+ 				COPY4(op, ii);
+ 				op += t;
+ 			} else if (t <= 16) {
++				if (!HAVE_OP(1))
++					return LZO_E_OUTPUT_OVERRUN;
+ 				*op++ = (t - 3);
++				if (!HAVE_OP(16))
++					return LZO_E_OUTPUT_OVERRUN;
+ 				COPY8(op, ii);
+ 				COPY8(op + 8, ii + 8);
+ 				op += t;
+ 			} else {
+ 				if (t <= 18) {
++					if (!HAVE_OP(1))
++						return LZO_E_OUTPUT_OVERRUN;
+ 					*op++ = (t - 3);
+ 				} else {
+ 					size_t tt = t - 18;
++					if (!HAVE_OP(1))
++						return LZO_E_OUTPUT_OVERRUN;
+ 					*op++ = 0;
+ 					while (unlikely(tt > 255)) {
+ 						tt -= 255;
++						if (!HAVE_OP(1))
++							return LZO_E_OUTPUT_OVERRUN;
+ 						*op++ = 0;
+ 					}
++					if (!HAVE_OP(1))
++						return LZO_E_OUTPUT_OVERRUN;
+ 					*op++ = tt;
+ 				}
++				if (!HAVE_OP(t))
++					return LZO_E_OUTPUT_OVERRUN;
+ 				do {
+ 					COPY8(op, ii);
+ 					COPY8(op + 8, ii + 8);
+@@ -151,6 +168,8 @@ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
+ 		if (unlikely(run_length)) {
+ 			ip += run_length;
+ 			run_length -= MIN_ZERO_RUN_LENGTH;
++			if (!HAVE_OP(4))
++				return LZO_E_OUTPUT_OVERRUN;
+ 			put_unaligned_le32((run_length << 21) | 0xfffc18
+ 					   | (run_length & 0x7), op);
+ 			op += 4;
+@@ -243,10 +262,14 @@ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
+ 		ip += m_len;
+ 		if (m_len <= M2_MAX_LEN && m_off <= M2_MAX_OFFSET) {
+ 			m_off -= 1;
++			if (!HAVE_OP(2))
++				return LZO_E_OUTPUT_OVERRUN;
+ 			*op++ = (((m_len - 1) << 5) | ((m_off & 7) << 2));
+ 			*op++ = (m_off >> 3);
+ 		} else if (m_off <= M3_MAX_OFFSET) {
+ 			m_off -= 1;
++			if (!HAVE_OP(1))
++				return LZO_E_OUTPUT_OVERRUN;
+ 			if (m_len <= M3_MAX_LEN)
+ 				*op++ = (M3_MARKER | (m_len - 2));
+ 			else {
+@@ -254,14 +277,22 @@ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
+ 				*op++ = M3_MARKER | 0;
+ 				while (unlikely(m_len > 255)) {
+ 					m_len -= 255;
++					if (!HAVE_OP(1))
++						return LZO_E_OUTPUT_OVERRUN;
+ 					*op++ = 0;
+ 				}
++				if (!HAVE_OP(1))
++					return LZO_E_OUTPUT_OVERRUN;
+ 				*op++ = (m_len);
+ 			}
++			if (!HAVE_OP(2))
++				return LZO_E_OUTPUT_OVERRUN;
+ 			*op++ = (m_off << 2);
+ 			*op++ = (m_off >> 6);
+ 		} else {
+ 			m_off -= 0x4000;
++			if (!HAVE_OP(1))
++				return LZO_E_OUTPUT_OVERRUN;
+ 			if (m_len <= M4_MAX_LEN)
+ 				*op++ = (M4_MARKER | ((m_off >> 11) & 8)
+ 						| (m_len - 2));
+@@ -282,11 +313,17 @@ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
+ 				m_len -= M4_MAX_LEN;
+ 				*op++ = (M4_MARKER | ((m_off >> 11) & 8));
+ 				while (unlikely(m_len > 255)) {
++					if (!HAVE_OP(1))
++						return LZO_E_OUTPUT_OVERRUN;
+ 					m_len -= 255;
+ 					*op++ = 0;
+ 				}
++				if (!HAVE_OP(1))
++					return LZO_E_OUTPUT_OVERRUN;
+ 				*op++ = (m_len);
+ 			}
++			if (!HAVE_OP(2))
++				return LZO_E_OUTPUT_OVERRUN;
+ 			*op++ = (m_off << 2);
+ 			*op++ = (m_off >> 6);
+ 		}
+@@ -295,14 +332,16 @@ lzo1x_1_do_compress(const unsigned char *in, size_t in_len,
+ 		ii = ip;
+ 		goto next;
+ 	}
+-	*out_len = op - out;
+-	return in_end - (ii - ti);
++	*out = op;
++	*tp = in_end - (ii - ti);
++	return LZO_E_OK;
+ }
+ 
+ static int lzogeneric1x_1_compress(const unsigned char *in, size_t in_len,
+ 		     unsigned char *out, size_t *out_len,
+ 		     void *wrkmem, const unsigned char bitstream_version)
+ {
++	unsigned char * const op_end = out + *out_len;
+ 	const unsigned char *ip = in;
+ 	unsigned char *op = out;
+ 	unsigned char *data_start;
+@@ -326,14 +365,17 @@ static int lzogeneric1x_1_compress(const unsigned char *in, size_t in_len,
+ 	while (l > 20) {
+ 		size_t ll = min_t(size_t, l, m4_max_offset + 1);
+ 		uintptr_t ll_end = (uintptr_t) ip + ll;
++		int err;
++
+ 		if ((ll_end + ((t + ll) >> 5)) <= ll_end)
+ 			break;
+ 		BUILD_BUG_ON(D_SIZE * sizeof(lzo_dict_t) > LZO1X_1_MEM_COMPRESS);
+ 		memset(wrkmem, 0, D_SIZE * sizeof(lzo_dict_t));
+-		t = lzo1x_1_do_compress(ip, ll, op, out_len, t, wrkmem,
+-					&state_offset, bitstream_version);
++		err = lzo1x_1_do_compress(ip, ll, &op, op_end, &t, wrkmem,
++					  &state_offset, bitstream_version);
++		if (err != LZO_E_OK)
++			return err;
+ 		ip += ll;
+-		op += *out_len;
+ 		l  -= ll;
+ 	}
+ 	t += l;
+@@ -342,20 +384,32 @@ static int lzogeneric1x_1_compress(const unsigned char *in, size_t in_len,
+ 		const unsigned char *ii = in + in_len - t;
+ 
+ 		if (op == data_start && t <= 238) {
++			if (!HAVE_OP(1))
++				return LZO_E_OUTPUT_OVERRUN;
+ 			*op++ = (17 + t);
+ 		} else if (t <= 3) {
+ 			op[state_offset] |= t;
+ 		} else if (t <= 18) {
++			if (!HAVE_OP(1))
++				return LZO_E_OUTPUT_OVERRUN;
+ 			*op++ = (t - 3);
+ 		} else {
+ 			size_t tt = t - 18;
++			if (!HAVE_OP(1))
++				return LZO_E_OUTPUT_OVERRUN;
+ 			*op++ = 0;
+ 			while (tt > 255) {
+ 				tt -= 255;
++				if (!HAVE_OP(1))
++					return LZO_E_OUTPUT_OVERRUN;
+ 				*op++ = 0;
+ 			}
++			if (!HAVE_OP(1))
++				return LZO_E_OUTPUT_OVERRUN;
+ 			*op++ = tt;
+ 		}
++		if (!HAVE_OP(t))
++			return LZO_E_OUTPUT_OVERRUN;
+ 		if (t >= 16) do {
+ 			COPY8(op, ii);
+ 			COPY8(op + 8, ii + 8);
+@@ -368,6 +422,8 @@ static int lzogeneric1x_1_compress(const unsigned char *in, size_t in_len,
+ 		} while (--t > 0);
+ 	}
+ 
++	if (!HAVE_OP(3))
++		return LZO_E_OUTPUT_OVERRUN;
+ 	*op++ = M4_MARKER | 1;
+ 	*op++ = 0;
+ 	*op++ = 0;
+diff --git a/lib/lzo/lzo1x_decompress_safe.c b/lib/lzo/lzo1x_decompress_safe.c
+index c94f4928e188..4d5a1b58a4a0 100644
+--- a/lib/lzo/lzo1x_decompress_safe.c
++++ b/lib/lzo/lzo1x_decompress_safe.c
+@@ -21,7 +21,6 @@
+ #include "lzodefs.h"
+ 
+ #define HAVE_IP(x)      ((size_t)(ip_end - ip) >= (size_t)(x))
+-#define HAVE_OP(x)      ((size_t)(op_end - op) >= (size_t)(x))
+ #define NEED_IP(x)      if (!HAVE_IP(x)) goto input_overrun
+ #define NEED_OP(x)      if (!HAVE_OP(x)) goto output_overrun
+ #define TEST_LB(m_pos)  if ((m_pos) < out) goto lookbehind_overrun
+diff --git a/lib/lzo/lzodefs.h b/lib/lzo/lzodefs.h
+index b60851fcf6ce..8b1a46993acf 100644
+--- a/lib/lzo/lzodefs.h
++++ b/lib/lzo/lzodefs.h
+@@ -19,6 +19,7 @@
+  */
+ #define LZO_VERSION 1
+ 
++#define HAVE_OP(x)      ((size_t)(op_end - op) >= (size_t)(x))
+ #define COPY4(dst, src)	\
+ 		put_unaligned(get_unaligned((const u32 *)(src)), (u32 *)(dst))
+ #if defined(CONFIG_X86_64) || defined(CONFIG_ARM64)
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
