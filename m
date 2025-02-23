@@ -1,127 +1,119 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mail-4316.protonmail.ch (mail-4316.protonmail.ch [185.70.43.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7F72036FE
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 10:53:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F1F2046B1;
+	Sun, 23 Feb 2025 10:55:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740308032; cv=none; b=jRX2MZ81E+Y0giu1Py8uBrpnn2gLwULYEfRSNdjV534TJXpxw+gIq1MB85ViA9YuqnNWlYc6on+2TGnlbK8rzQfTPJF9wxvCl0N3HR9p2GzME2+6NRm0WBI21TWqK0QuiSMvSJd985V2F0qzK4UUr61hIKujoKQ9R+W5Xk081oc=
+	t=1740308114; cv=none; b=OnlZbQyz3QT9i5RIshmUqSZ6fVQrCAWfjH7gaAgIwlUycXKEkMSaMMj5BoVpXYyNwMKcEgdl0xId0qVrQx2wxxdkctQETCCJXHlZR53HTIBshb5x3Z3z4wRyx0lhIppT80ep1AGg87jPtMWWsm+lIuRLYa78eLHjMgNoPLRqPj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740308032; c=relaxed/simple;
-	bh=WP3mKiwjOkLg3LvrHM5nXZSGmd6NRXCoOMhqD1L5h+I=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=bQ4Rp+wOhhtWB1BeUt34eU+Pb/ygPOsr4x2hx3qaQQSmfcGkKhH9uG9gvdgd5vmEPkEwnRswpXM/QzeDLOBmkIVJTnZp2PilpJ15O7mhMhsAaHJUZsnBcAJjKAZZs7Ae8XqB9Ua0sjznqOuZ0ix3GPznhGKHWYVkrGfOTCl56kw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=desiato.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DV9mKRv5; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=desiato.srs.infradead.org
+	s=arc-20240116; t=1740308114; c=relaxed/simple;
+	bh=q+XKvnoPYXVMw3lt5027W6PxhHtQyOx1spmmaf15AQM=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oD38SUKcikReLCCBJssblz7xkrI/x8Jf7iEj4HMqU6Cb8LDYKaXWPAcF/KYh3NcNGXDGS6fQt7am+QaUkOcYLtCQcJIBUwMlk5rN0Bq9hvZqQ4iw9cPQHYgEt96lUn2JhH+CuSifhtOYxuhJXAZ9UX9AO5R/Ay6JcJb04KAZhWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=TIc8+i4n; arc=none smtp.client-ip=185.70.43.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DV9mKRv5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:MIME-Version:Message-ID:References:In-Reply-To:Subject:CC:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=WgMF9vswv8p5CFXANTrRWBxbIQfBtJPu0XjamfklNUs=; b=DV9mKRv5Se2cXBOZNCGq+ewZ98
-	evVs7kGrm30iMBt3dRDimYsnU0/QHuTXjgtmXbwX1hTwT6A6YpAeGDceCrPL1UNH+5MGH580eJTIR
-	dvGDcjoaZ6rxsZnTAJSYAr8QL07LfpWu3IosdKct2caF0moW6JeRt50y5YLAmthKNffqOhhPxKOq5
-	OhU8ZbIOw7njmmQ4/yBiEmTZXhSDOFtJ98v6BafRnLFIh5m0ZQiSCVT4hYoRYsi2hZeSzas6NDgZs
-	OjpD4NHitKSSMMWD/gG6Q2zIyf9kWL/KasL1Fp7UHfP5+VhWz5ELB2Us5CID/Ni6RP9daSBW1/lnF
-	X6cWFGvg==;
-Received: from [2a00:23ee:10f8:4733:9bf1:8420:b19d:105e] (helo=[IPv6:::1])
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tm9bo-000000030Fj-0oJm;
-	Sun, 23 Feb 2025 10:53:17 +0000
-Date: Sun, 23 Feb 2025 10:53:14 +0000
-From: David Woodhouse <dwmw2@infradead.org>
-To: Ingo Molnar <mingo@kernel.org>
-CC: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- "H . Peter Anvin" <hpa@zytor.com>, David Woodhouse <dwmw@amazon.co.uk>,
- "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
- Kai Huang <kai.huang@intel.com>, Nikolay Borisov <nik.borisov@suse.com>,
- linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>,
- Dave Young <dyoung@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- jpoimboe@kernel.org, bsz@amazon.de
-Subject: Re: [PATCH v6 2/7] x86/kexec: Debugging support: load a GDT
-User-Agent: K-9 Mail for Android
-In-Reply-To: <Z7rwA-qVauX7lY8G@gmail.com>
-References: <20250115191423.587774-1-dwmw2@infradead.org> <20250115191423.587774-3-dwmw2@infradead.org> <Z7rwA-qVauX7lY8G@gmail.com>
-Message-ID: <738CB14B-6494-4049-86C9-9A7EBBD08A74@infradead.org>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="TIc8+i4n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1740308105; x=1740567305;
+	bh=ftzWwZe5dgJ/2krdr+BnmHjM/Of8UIn31pqhWbkUW0w=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=TIc8+i4nJO4GaclByTGBjPsuhaA1wqdCDfdcFs6d22nhJbCAIDlyvsoA6yvtiS14L
+	 +LQu+NNL6H76fvUJL0IT58ZiOiCPmeY94l55YR8q7ZSY+NcrG+Uo3CJzctLQhfzIoc
+	 MBZZKpWH2KJj+ZihjO9zuJQDjucCgkAF6cVjSm86hs9lonDN9P/Y0rhwbWFfeNk03J
+	 2Ld9HW8CY0UDhElS44ZP1LFiWPEfKFy4AkZWhR5r22xHfDSH2GAGtvPCAudURLcWh6
+	 AYBLsEGfLJND3rneszZDnUDcAQSivOuHR6mMOZBrhlN5mATrsjFtCV4MYNq9flmbq8
+	 sFWx//4ZhNSAQ==
+Date: Sun, 23 Feb 2025 10:54:59 +0000
+To: Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>
+Subject: Re: [PATCH] rust: sync: lock: Add an example for Guard::lock_ref()
+Message-ID: <f834d8bf-3860-4087-937d-d9937c1be3f2@proton.me>
+In-Reply-To: <20250223072114.3715-1-boqun.feng@gmail.com>
+References: <20250223072114.3715-1-boqun.feng@gmail.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: 41ca317b5d80adbd5557b5012302b0a3c5eb8c34
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by desiato.infradead.org. See http://www.infradead.org/rpr.html
 
-On 23 February 2025 09:53:07 GMT, Ingo Molnar <mingo@kernel=2Eorg> wrote:
->
->* David Woodhouse <dwmw2@infradead=2Eorg> wrote:
->
->> From: David Woodhouse <dwmw@amazon=2Eco=2Euk>
->>=20
->> There are some failure modes which lead to triple-faults in the
->> relocate_kernel function, which is fairly much undebuggable for normal
->> mortals=2E
->>=20
->> Adding a GDT in the relocate_kernel environment is step 1 towards being
->> able to catch faults and do something more useful=2E
->>=20
->> Signed-off-by: David Woodhouse <dwmw@amazon=2Eco=2Euk>
->> ---
->>  arch/x86/kernel/relocate_kernel_64=2ES | 27 ++++++++++++++++++++++++++=
-+
->>  1 file changed, 27 insertions(+)
->>=20
->> diff --git a/arch/x86/kernel/relocate_kernel_64=2ES b/arch/x86/kernel/r=
-elocate_kernel_64=2ES
->> index af2cd06ff318=2E=2Ec62f03808f18 100644
->> --- a/arch/x86/kernel/relocate_kernel_64=2ES
->> +++ b/arch/x86/kernel/relocate_kernel_64=2ES
->> @@ -39,6 +39,18 @@ SYM_DATA(kexec_pa_table_page, =2Equad 0)
->>  SYM_DATA(kexec_pa_swap_page, =2Equad 0)
->>  SYM_DATA_LOCAL(pa_backup_pages_map, =2Equad 0)
->> =20
->> +#ifdef CONFIG_KEXEC_DEBUG
->> +	=2Ebalign 16
->> +SYM_DATA_START_LOCAL(kexec_debug_gdt)
->> +	=2Eword   kexec_debug_gdt_end - kexec_debug_gdt - 1
->> +	=2Elong   0
->> +	=2Eword   0
->> +	=2Equad   0x00cf9a000000ffff      /* __KERNEL32_CS */
->> +	=2Equad   0x00af9a000000ffff      /* __KERNEL_CS */
->> +	=2Equad   0x00cf92000000ffff      /* __KERNEL_DS */
->> +SYM_DATA_END_LABEL(kexec_debug_gdt, SYM_L_LOCAL, kexec_debug_gdt_end)
->> +#endif /* CONFIG_KEXEC_DEBUG */
->
->Yeah, so is there any reason (other than paranoia) why the early-early=20
->GDT and IDT shouldn't be unconditional? There's many ways for such an=20
->approach to bitrot, it's much better to not hide it behind a=20
->default-disabled debug option=2E=2E=2E
->
->Some of the other bits, like the hard-coded serial debugging=20
->assumptions, probably need to be behind the debug option - but much of=20
->the new debug mechanism looks safe and generic and can be always-on,=20
->IMHO=2E
->
->This would also throw regressions back into the face of whoever manages=
-=20
->to introduce them, ideally=2E ;-)
->
->Thanks,
->
->	Ingo
+On 23.02.25 08:21, Boqun Feng wrote:
+> To provide examples on usage of `Guard::lock_ref()` along with the unit
+> test, an "assert a lock is held by a guard" example is added.
+>=20
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 
-Makes sense to me=2E I was just trying to be as unobtrusive as possible=2E=
- In a test branch where I was trying to fix up the objtool vs=2E CFI pain, =
-I did move the IDT/GDT setup entirely into the ASM code and remove the C co=
-de which clears them (before the call into relocate_kernel() which might no=
-w trap if we remove the __nocfi hack)=2E I never did get objtool to tolerat=
-e both clang and GCC builds though=2E
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
 
-I think even the serial output (tied as it is to earlyprintk setup) could =
-reasonably be enabled by default too=2E
+> ---
+> This depends on Alice's patch:
+>=20
+> =09https://lore.kernel.org/all/20250130-guard-get-lock-v1-1-8ed87899920a@=
+google.com/
+>=20
+> I'm also OK to fold this in if Alice thinks it's fine.
+>=20
+>  rust/kernel/sync/lock.rs | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>=20
+> diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
+> index 3701fac6ebf6..6d868e35b0a3 100644
+> --- a/rust/kernel/sync/lock.rs
+> +++ b/rust/kernel/sync/lock.rs
+> @@ -201,6 +201,30 @@ unsafe impl<T: Sync + ?Sized, B: Backend> Sync for G=
+uard<'_, T, B> {}
+>=20
+>  impl<'a, T: ?Sized, B: Backend> Guard<'a, T, B> {
+>      /// Returns the lock that this guard originates from.
+> +    ///
+> +    /// # Examples
+> +    ///
+> +    /// The following example shows how to use [`Guard::lock_ref()`] to =
+assert the corresponding
+> +    /// lock is held.
+> +    ///
+> +    /// ```
+> +    /// # use kernel::{new_spinlock, stack_pin_init, sync::lock::{Backen=
+d, Guard, Lock}};
+> +    ///
+> +    /// fn assert_held<T, B: Backend>(guard: &Guard<'_, T, B>, lock: &Lo=
+ck<T, B>) {
+> +    ///     // Address-equal means the same lock.
+> +    ///     assert!(core::ptr::eq(guard.lock_ref(), lock));
+> +    /// }
+> +    ///
+> +    /// // Creates a new lock on stack.
+
+I would be inclined to write "new lock on the stack.", but maybe that is
+incorrect.
+
+---
+Cheers,
+Benno
+
+> +    /// stack_pin_init!{
+> +    ///     let l =3D new_spinlock!(42)
+> +    /// }
+> +    ///
+> +    /// let g =3D l.lock();
+> +    ///
+> +    /// // `g` originates from `l`.
+> +    /// assert_held(&g, &l);
+> +    /// ```
+>      pub fn lock_ref(&self) -> &'a Lock<T, B> {
+>          self.lock
+>      }
+> --
+> 2.39.5 (Apple Git-154)
+>=20
+
