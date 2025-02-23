@@ -1,128 +1,108 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0723204C27;
-	Sun, 23 Feb 2025 10:30:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC2D61EB36;
+	Sun, 23 Feb 2025 10:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740306638; cv=none; b=bzp7z/yxsTQB1oq4H0WgQ3i8qJRbKvao2X19UybEetpDwF3Cj3hAYV5xWgYqhbRSZZq3sljzxNa1paqYc6R/vTkRLNQwRlZDxLkTF7DT1+8ifWjvxxfi2Fp8DmSWOB+tpY46kTzVcdU1qFqI/u0Z5FmpQFmcY/RdwdAHPFRC0Ho=
+	t=1740306765; cv=none; b=O34EGB0NF5CsGfVwgByvmF9OOLBL6WGiObtS/Y9UnZ2VP73XdlPaE0ZBnWCF0ohCyDLAi9VUR8doBE2xn3HnqD22vOJg0hId8zk4vfibbjAji6vt9wvkw0LEm0VxhPqY2Ol8AWXfIfTo7zEJPP9TnomM98Xu7HUqvgMysBjwffY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740306638; c=relaxed/simple;
-	bh=r9wwqaJRtk9sOisVJ2iyPiOMx6Bdq8PHJKb1LjosIZM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jxbfVZQOs6YRosKTCpo7x56sdJnSTt1UjEsIQNKok2DV7JejQ5lNR+3pkKCEROYLVaGG0DvWqhZGwouUwdjcNQNx6RYS55Wyz0yfoVFhxjiTk7zYKd9IYZbuAusPbbsKstRyKRRc75s4mQA3aAEOreGH7zYyJCuCssVUMXnYqsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=iwhUJxZF; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1740306765; c=relaxed/simple;
+	bh=UeSf7qZC3uC+4elUHoxZwfMIm5R2qsKyGGBBhDQVbTw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jbdOCgMBUIeaBp6ImMjBPYThf1hSkDHjpb7hRUw2Gth+Q5vO+Ef4BULiJMT+bvHiOonUS8x0BE4VZcIPHmwsMmYEQ93jE+Ib4gGtCqXTK4YspOWGIYOlwG4rZnaXuL2SGwDVBd20/e7bBRJxkkgYSFaF17V8UG+dyzA7VNltCTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=PJu2gik0; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="iwhUJxZF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1740306611; x=1740911411; i=markus.elfring@web.de;
-	bh=PbEif29t4SAIHbCmdiQGiPpEasdSjQ1egXOJVydscBQ=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=iwhUJxZFB6ap5DO7t+PvJt8NIVWkFJ8ass5I7Z0Rd6NsprE+ecudFC94v4MTNUbG
-	 5qoHOPQ/MHei7dJVWrGJ6HMeG5Tm+AQs9RavyUZ3CRJ+nnhCF58iuVewaQM95yr0I
-	 V/FgzfmfW6+wzLCcTkQiN5P5nVBymiQzGsVOMFqrVJsPvhV4eSezYpqzE06jCnJGc
-	 IY+hAUldl4TBd5lmB0QeuikEVJfW0UDx2Y4AWF90+PRqaAHIqFynyHaV8ykU78MUC
-	 g70emJ/UdHlQbNFlUKo0Ap4jtsgMkmMILdecKqm9ZIRbARtqFuh9NkojLfypBG3ct
-	 cGa9a/IpaeCB0Sr+Tw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.18]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MSIEs-1tsdVT2iz2-00QT7H; Sun, 23
- Feb 2025 11:30:11 +0100
-Message-ID: <31853d6d-a0bd-45b9-beaa-5d67c34ae09c@web.de>
-Date: Sun, 23 Feb 2025 11:30:08 +0100
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="PJu2gik0"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3C30043317;
+	Sun, 23 Feb 2025 10:32:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740306755;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=3q8V+cm8pIkEgY8WNYRuv1HhLOCUVuFOZ7NL4x+JRvA=;
+	b=PJu2gik02LsnUsoTvziJ0WU+C7YYrfTfpv4qiGLeG4lV/hz3f1REW+aKTVJKdNgZ4qyaqa
+	FPYvCWviN3Vq0QEyp3Wk5OwGyDrNaZXKBdtYdj73/VWi0RWk6jeSIi0Y9OuplS+G4BwmaY
+	kgL/7pzrLp+gEuaBi0/mLCS428JAQaYXnT3wVlAV8J0K6BNEmQsIec6uZKwHBq2ClJUStX
+	LlcYSIZF96a7YLBswGAg5PJRgAi4kILQ7GR+g5y+/t43ECpdnEmRFJbBO18zhf8q22f8Fb
+	sl3vWCF2CaG2+O3jiINfvWnLgNADVXy8EZx9Had0oUgdKREYQcxMyCC26oYavQ==
+Date: Sun, 23 Feb 2025 11:32:32 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Hans-Frieder Vogt via B4 Relay <devnull+hfdevel.gmx.net@kernel.org>
+Cc: hfdevel@gmx.net, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, FUJITA
+ Tomonori <fujita.tomonori@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 4/7] net: phy: aquantia: add essential
+ functions to aqr105 driver
+Message-ID: <20250223113232.3092a990@fedora.home>
+In-Reply-To: <20250222-tn9510-v3a-v5-4-99365047e309@gmx.net>
+References: <20250222-tn9510-v3a-v5-0-99365047e309@gmx.net>
+	<20250222-tn9510-v3a-v5-4-99365047e309@gmx.net>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3?] sched/topology: replace kzalloc() with kcalloc() in
- sched_init_numa()
-To: Ethan Carter Edwards <ethan@ethancedwards.com>,
- linux-hardening@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
- Ben Segall <bsegall@google.com>, Dietmar Eggemann
- <dietmar.eggemann@arm.com>, Ingo Molnar <mingo@redhat.com>,
- Juri Lelli <juri.lelli@redhat.com>,
- Madadi Vineeth Reddy <vineethr@linux.ibm.com>, Mel Gorman <mgorman@suse.de>,
- Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>,
- Valentin Schneider <vschneid@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>
-References: <20250222-sched-kcalloc-v1-1-4dee15fd8241@ethancedwards.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250222-sched-kcalloc-v1-1-4dee15fd8241@ethancedwards.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:HDGssSRZxKiT8gDiaJYDr9WtSjjbq3k37tt9irOMvIDgtkfSqhO
- DMUb5lB7Pn5CKR6tI1aUuLEzugj7+s50uJhZoy/0hu3Xx9jYqdsm3TVR2CsipPqsuHfIRx2
- 6jV4ZrQfgaNEQITeTbuIq9ZIss1tx42yCT1ge+7EdeVo1bUboPATDJj+WkhD2PTr/b2Xi/a
- 8dOGEkCXguXkQzmVXxz1Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:vxsDjfL+reg=;MknuHBV43lDa80L2CAw30rdXaHw
- akCapvI1poewCtA2hK9DU2M+oTr62mnRa4T7Jl842Z9uKIwzHTkmnAa6NJ24IeFVys/yWtt2+
- wbDYrulvyVlgmLIYXG4DVRWC4lN00P7YzZ8pVymDmDdBVLAqVK3RCTdXucAxsa6zSIZUAdtVm
- wJir+1SPVPQHF9t+hKPUTmaxE/8DMaBjWD4H9A35BT7E+hPw+RpjjIZWfZl3qkgsFWxLWaCZp
- EN4IFmlZfG9rs+a9ohrQDvTNob6UULX0cttmo3Y1HGv5dHZKQ3QqtTepR0opBa9BVdefP0R/n
- 7M6gDeAOKFJ4uRn4/H/gsbKBTGzPWfv6nF2fB9qMjIGajg566t9CHYG0kq/4v9rXGmuezoyU4
- bQRX4GrTAQZEhT+4z2sX7Jr4h+AG9BZrWzOtHSP+jpIR6KSKy55HyxJM9/Fl3BvQ/7lVXP17Z
- qwe6wWmwp9dtTlUKAP0HWHDzvQxv10M70nHxoLLbP+e/fqsEQMUGs516otiXqJzPox7NoOy4d
- RBr0+q2b7ArLIz5kDEHOaGo/Hhm1a8tHwpMU23JsWHpw0VIUh0tiNxSbOk4PqJ3IYfgePEwea
- hjDvFcohuSnjJIJ2nZO0XtTE/sGx1Lig1M9fdWpbTNUZ4k5oEwZG0Mtn6k2c50tZkv1+RIS3P
- DhUTaBlEm8R8IN7EbD2XuHL7O0OQoQjQrzfn6+8NgOLq//U+26/3j9oGFTb9OBG2edrHJ95jM
- C0UcsmWowve1zS0LDi5mxd6jJTWYu3GMl2mGguXSN6AL+Va9IYzorbcpzSaMDG2nQZdVIabC1
- rNVCDALyJJFBsx+ldniqYCftl0mARHZDqayf7IkRutKZqce27WQ7/1s4GPGfaVSgOU0o6KXD8
- Yydkki1lvb7OZU0xhpzDzK5vEkZ5h1ElxNVTx3SjGpYt87z0nPY4qa183UKrwi+50s/0i46pP
- oX+bvyHXO2tUazsuOWGQKdziBTOvablY3JTDo26ySyJ+2lnj7drTc++0ssX+WpLJReXDKhL16
- HMlPiW9KWgfOA1s9cM7tDhGZG6cjqNeE/C4eIbKDQWf7ORXOfxUToyR0vNZZK1LfSVozWEYFL
- moe/T568iK7p2rAhfZe9qTzoBFSgEsst472O02VpyNLcQH/KYksYldpUjZDYuA5ZRh+k6QPT7
- EiF+TTUvUv63CfmZWrQe0bARt6oRwLYRSUM7AZSaFNEVnwUhFem2EDctRlnCLPx0SPlPIHolg
- YyBKjxP5M5z83cgChu/0vnZla3xBsSMAjVHGFSEBc07kMMGRXyWE0JS4I4FKYH5lfU1wo5qZ7
- 8Tmn5saG9K7/iD/qQZwC+j8Lyi8/hsRNMH0MeTOHqAyIY7pl0RkRkEprr7gvp5d9EFDLN/4Go
- TOvokZLve/U8AwNH0Ah0hf+3asCZJ+01+xowsv8U59pdyf/M/wlu9zz7hjIYxYJ1UhTiDeHcn
- zixYXa9CJQ6seCPtAqhdLlOR5YRQ=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdejheehlecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegveeltddvveeuhefhvefhlefhkeevfedtgfeiudefffeiledttdfgfeeuhfeukeenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopeguvghvnhhulhhlodhhfhguvghvvghlrdhgmhigrdhnvghtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhfhguvghvvghlsehgmhigrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnn
+ hdrtghhpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-=E2=80=A6
-> We are trying to get rid of all multiplications from allocation
-> functions to prevent integer overflows[1]. =E2=80=A6
+Hi,
 
-Is an imperative wording more desirable for such a change description?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.14-rc3#n94
+On Sat, 22 Feb 2025 10:49:31 +0100
+Hans-Frieder Vogt via B4 Relay <devnull+hfdevel.gmx.net@kernel.org>
+wrote:
 
-
-=E2=80=A6
+> From: Hans-Frieder Vogt <hfdevel@gmx.net>
+> 
+> This patch makes functions that were provided for aqr107 applicable to
+> aqr105, or replaces generic functions with specific ones. Since the aqr105
+> was introduced before NBASE-T was defined (or 802.3bz), there are a number
+> of vendor specific registers involved in the definition of the
+> advertisement, in auto-negotiation and in the setting of the speed. The
+> functions have been written following the downstream driver for TN4010
+> cards with aqr105 PHY, and use code from aqr107 functions wherever it
+> seemed to make sense.
+> 
+> Signed-off-by: Hans-Frieder Vogt <hfdevel@gmx.net>
 > ---
->  kernel/sched/topology.c | 4 ++--
-=E2=80=A6
+>  drivers/net/phy/aquantia/aquantia_main.c | 242 ++++++++++++++++++++++++++++++-
+>  1 file changed, 240 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/phy/aquantia/aquantia_main.c b/drivers/net/phy/aquantia/aquantia_main.c
+> index 86b0e63de5d88fa1050919a8826bdbec4bbcf8ba..38c6cf7814da1fb9a4e715f242249eee15a3cc85 100644
+> --- a/drivers/net/phy/aquantia/aquantia_main.c
+> +++ b/drivers/net/phy/aquantia/aquantia_main.c
+> @@ -33,6 +33,9 @@
+>  #define PHY_ID_AQR115C	0x31c31c33
+>  #define PHY_ID_AQR813	0x31c31cb2
+>  
+> +#define MDIO_AN_10GBT_CTRL_ADV_LTIM		BIT(0)
 
-How do you think about to improve your version management?
-https://lore.kernel.org/all/?q=3D%22This+looks+like+a+new+version+of+a+pre=
-viously+submitted+patch%22
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.14-rc3#n780
+This is a standard C45 definition, from :
+45.2.7.10.15 10GBASE-T LD loop timing ability (7.32.0)
 
+So if you need this advertising capability, you should add that in the
+generic definitions for C45 registers in include/uapi/linux/mdio.h
 
-=E2=80=A6
-> +++ b/kernel/sched/topology.c
-> @@ -1918,7 +1918,7 @@ void sched_init_numa(int offline_node)
->  	 */
->  	sched_domains_numa_levels =3D 0;
->
-> -	masks =3D kzalloc(sizeof(void *) * nr_levels, GFP_KERNEL);
-> +	masks =3D kcalloc(nr_levels, sizeof(void *), GFP_KERNEL);
-=E2=80=A6
+That being said, as it looks this is the first driver using this
+feature, do you actually need to advertise Loop Timing ability here ?
+I guess it comes from the vendor driver ?
 
-See also:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/coding-style.rst?h=3Dv6.14-rc3#n941
+Thanks,
 
-Regards,
-Markus
+Maxime
