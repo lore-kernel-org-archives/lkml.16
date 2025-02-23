@@ -1,118 +1,100 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8592410E4;
-	Sun, 23 Feb 2025 23:45:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 170F310E4
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 23:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740354351; cv=none; b=FeleJf1IJ2o8wOpuD3k5YJWX4Y3Xn6zgpeBF3JX2/OnEBLGGmlSujVjFYSaJ2Nv4XXnap49xH/t9wJbUnccYQn+CnfG3vEjDQL/zeA1yZL0MDSGw52AxLsIs2oHyYttzSX2hF8KdtL77ogeGkaO/DyY01HJ+IykbLcw5NNxw/O8=
+	t=1740354494; cv=none; b=uVC56gyP1QK2304WuLygX1otXXIsWLPdUJWsagijcMZJ5Wke7jSBW+4s4SO7sQusguoBoMgiLkoDTMx5RcM1v65tA4tXOOunI91+G0hMRJ4W0E3mmXWv8IVPV6lovi5SF1ekiHw7SnHS3y/YWK1PhQXtK8MLhIu7Qw7hUl1Co4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740354351; c=relaxed/simple;
-	bh=wY1xWMM/k5JTNZ/FzkmzKc7FAYv1gWfhj4nswE3dxFM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g4T4lh1BqQejX8NAAU0CR8mlzw1De3W7sF+HoQQnoZkvLkOCiOpn0dwTpSc0ZZc3R2qlpyUe/VgJG8clH9+9EntugSbGCGrcF5NqSKbAZaOUgC1yVDs725vM8pd5rddO8Mza6J/o7GMfRdf2+cSrpPKSKPRRUSa47dxlFmUgCcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K/AP4ldu; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740354494; c=relaxed/simple;
+	bh=yBWzsyr/XNm6UaYOSTJcDGaRT2g3B3VBzdxrx9oo+LY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TrVPv6wHvx+EboEvCXFlRBc2ftHOM2h4UAB62sOWVDsUpQtsXD+9dBFF+PDjGz6lI4mxwQugApG+/Krzbsqf/fw6v7zJNJmVTsM8XjxjMD9NdVntTDKIl7MMWE8KoHVma0OdN7uZyEK5MrFRoHeSzbC39ZXA20cubmTocbmsT3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bkLVvf2k; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K/AP4ldu"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e05717755bso5841568a12.0;
-        Sun, 23 Feb 2025 15:45:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bkLVvf2k"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5439a6179a7so4285079e87.1
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 15:48:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740354348; x=1740959148; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sCP1rbXh4MlA1hNlKO2PRwztVgKcVUG68KyRAFF7PGU=;
-        b=K/AP4lduUdvGm7okk/tuuB0fRszGs3vOmXFEaAkQaN+Isczo4TZHW5BCzlxCzo3/AE
-         4KBOYZfxoafW9H3Gdn8vO6ExuwRfeCBpFRZLeZ3G8IZg52EFXk+1ZmGyKGJVIwtr1SQS
-         98SEgfA2aWOfs2dq4KmFORVYwQQYnB2oa3GZZrJaTNnQHr07RcJrWQBdQWbieB5PvIHb
-         6pqfWz7qyK3RjEjWIZNvK4d69+iRYrimvsjifWOvLbcspi74bmt49AiAPnNoel4Nkqjt
-         lkroIMesrymypH2LgK7VJhscxQ07sPCrvwwN97ix9ZU6ftNrgpa/D5C30AaMw2V9F4iv
-         k37w==
+        d=linaro.org; s=google; t=1740354491; x=1740959291; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9wcnMV7bCjw+onbQP13XkDfLLYTKBRINzQvJtc5RrEM=;
+        b=bkLVvf2kXf166mx8Xgj93WnecWs9Hqun8jP73qvFhH62NFs2nCEvYFMudYBCk3fhAQ
+         lfnGM1Z8vW4rjqnaQpkbBLMk50ZT0E7KK3ZB0/OTCbw3WGWR7LE6f81SJIIME3xaKQC2
+         UUVVegjIZrIho8atw04XG59r+5PdyF+8eCCIWopzy6Xw2UeaEqDFx5aIOmNS4r8+2TF5
+         W2DzuT1T5sW/iwOIME9n2quQbcsc50ncz42C7ALc+2s/K4AGmjWEoc/Ifs2p1g7+W5+E
+         WO7/ZlknJe53kSF5gfDb4yowV2LoANsyQPJOkvqc761V+yBCYILz6IvAC9cnbhPT5QQE
+         9AxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740354348; x=1740959148;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sCP1rbXh4MlA1hNlKO2PRwztVgKcVUG68KyRAFF7PGU=;
-        b=b74ww3qYhWh6cqz9VBAusH+ZD5lt/bxIuWP2IQe0qvrvn8rJJM81ODpK7e2XLwi4wb
-         yzQ1obVZqzOXybwN/907HNd5JLMorEDAedQlH8pRPiv5ZIC/phdnJniRW9mFHSakLTVW
-         8TmU12pFm21R0uiqUHkiitFZjts1S+6SVIjv2+L62tYTStzfDGtFOmG0wr5gUW5eTV3f
-         +b539GEVYXmebuuLq9aUSn3tHTQQkoS9bCmikPkKjnEvJ+yW67k2zCpLaxBmAnzlpMS7
-         Y5tzdmnZaRBawxCGi5NhvS1IjiFfsl6cfyz459CoDXbdYAabWq9diWOpBU0CeFTdW1Sj
-         Ve9w==
-X-Forwarded-Encrypted: i=1; AJvYcCWwrk4qRXJB5db+y8O5j+ctgSS3G8SiKJsbVhkNlXQkiXTKy5p8mjpuJDHeJkRi3ulHSxMi7KTKElX9ss0=@vger.kernel.org, AJvYcCXW4caBOuXIXjgoznAZnzCDX03kA0dclzDy2Uu7fCrsLWlsZyw+H6cgEdllKIiZyZMs2lItJuSnwDui@vger.kernel.org
-X-Gm-Message-State: AOJu0YzR2cCDZ+qLH+uKPv02DQHz7/6aQZul/qozt/apD/jtHbWBKOrN
-	2PpwOekCYFyn5LC6XMHmmkZtjvrGviTLC7FSiqJA/JUfClvzZIlp
-X-Gm-Gg: ASbGnctnd0TMUstY+2rGE7DAkF4SNetK1C+tdCebSm8xoBn2XCzCeJ9baYLcOSgn3BQ
-	+uvcH9ButKuwFldcdvvpU6yNhoilG/RBZPDUbcKOn35Ybi3hy2CwxadKCduoVsUgsorCivqTU+o
-	X9m3OWZmRHbxgyynMUGibRFKTnTk8jYkCacGb4RqZu59boa2m/S56/tCeoyyelMwxwx9q/ASJzU
-	xavozqHYKAsziixoKyLqeW4CG467uHeln+QBsRFW4xyZ3e3viJetMe9lZ3aEoFz0VKqxs0F1zZL
-	pivcvGVTuOSbaFjaVwqO51h2JSmGgTruAGe97N6qLos=
-X-Google-Smtp-Source: AGHT+IH5JTIGwwSbS6Io23GNPvRRsNaxcEO37VuXDdJwJd+0n+ZiS9fQzLm+6Ov5yiWBfEV2hyojwA==
-X-Received: by 2002:a17:907:6d07:b0:abb:c394:63ee with SMTP id a640c23a62f3a-abc09e2c50amr1043158766b.55.1740354347437;
-        Sun, 23 Feb 2025 15:45:47 -0800 (PST)
-Received: from foxbook (adqm166.neoplus.adsl.tpnet.pl. [79.185.146.166])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb72b519c5sm1736839066b.173.2025.02.23.15.45.46
-        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
-        Sun, 23 Feb 2025 15:45:47 -0800 (PST)
-Date: Mon, 24 Feb 2025 00:45:42 +0100
-From: =?UTF-8?B?TWljaGHFgg==?= Pecio <michal.pecio@gmail.com>
-To: Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] usb: xhci: Unify duplicate inc_enq() code
-Message-ID: <20250224004542.5861d4dc@foxbook>
-In-Reply-To: <d59a6694-e0e7-46b7-874e-0c6acd8c9126@linux.intel.com>
-References: <20250220234355.2386cb6d@foxbook>
-	<20250220234719.5dc47877@foxbook>
-	<d59a6694-e0e7-46b7-874e-0c6acd8c9126@linux.intel.com>
+        d=1e100.net; s=20230601; t=1740354491; x=1740959291;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9wcnMV7bCjw+onbQP13XkDfLLYTKBRINzQvJtc5RrEM=;
+        b=NaAxEy22AwUMfgmGHekEL0z+Telv4nOu8q+7g6g05lRwX29/k/i0n3rQ/PyQPmcL8m
+         /anFc7JELcCcPHPF4PxfPFvpbPnqoIvBxDcRUz1gXY4nuH/YqjNXS4HZKwczuXGeLM33
+         ACTsYx85BJx+JTfP+Yequ94DFdDXVLxXHv+xcErWuesynAEWjiFGCqLFNuJO0VLu2nNk
+         97bzwI9P1KBMMjA1Gj3kAnG507We7FRYp0hRMuzK55/2FVOKxUjG1/NC5s1MHmtPMZ47
+         ib3ZJiYAXzD62itY9Cq7Qk1LEYin0mI65dqDQKvcQKf0T4J6/o/PqMwaIla1PRVEJakI
+         3Usw==
+X-Forwarded-Encrypted: i=1; AJvYcCVTmhdbNQJUzinNCJuLJhZHFGwxAwKGek17MuvWLCLv24aiHqmqgmbuGpJGP4DFXYGZBuGiRo6DhZByCc8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/hK8NODKvunG/AX0cT75umoc7mXr7Ii7lKVfu6eWW5lds2Qbd
+	dBPnswkHjG8mNXh9FE++JKBygGWkH1I70cXk8GM/ihOO6/dfIxdCVXEhaDdWteY=
+X-Gm-Gg: ASbGncundb8lIQRyweCyWhpjbTV2A+plQJkpzWk1RTnKarsYCXFOTv0dxsAXYoK9hAx
+	1H0AAuptwhCbRcEQy0JPLvYp2amkZKu+Hzv2f2UhsFuvh5T+/PPOH+/Xfa9jtByzRX8nM5DpSqb
+	vd8KrIEVb1ffJMkCvhfHAXzT6kJnUUqgTPUjY28hW5nibxQJPmeKj76I9x/nypO+/LDWpnCVSr9
+	mdGWX7UfZugVzjpFCnQinYoGZB4k6e92aX03mODAoSY7erTLM4TXbyPVG6k5A1C57dKD+VXYElJ
+	IMcDH1zMD0IZp2hmgUnLgmIKllTmDWXSGk3VbCvXvjFa5Bn/B7ANu6TchHMl4TEZ6WwErvpXi9x
+	SNUaSSg==
+X-Google-Smtp-Source: AGHT+IGXmEWcaphU72erBHimrC5JqF3fr1E4pBz3cUxisqWzEmoQZicuyftwCeCY3akeN/V+TAZxhg==
+X-Received: by 2002:a05:6512:3f29:b0:545:1049:eb4f with SMTP id 2adb3069b0e04-54838a00232mr4288474e87.0.1740354491225;
+        Sun, 23 Feb 2025 15:48:11 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5452a67e6c3sm2955721e87.1.2025.02.23.15.48.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Feb 2025 15:48:09 -0800 (PST)
+Date: Mon, 24 Feb 2025 01:48:07 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+Cc: Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Abel Vesa <abel.vesa@linaro.org>, linux-arm-msm@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-phy@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 6/8] phy: phy-snps-eusb2: make reset control optional
+Message-ID: <rcny5iaxs6gr6vcxmjep6hwtkt2fvtgzhbxlpu3ax6vj7maure@n5bg5y74vwc7>
+References: <20250223122227.725233-1-ivo.ivanov.ivanov1@gmail.com>
+ <20250223122227.725233-7-ivo.ivanov.ivanov1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250223122227.725233-7-ivo.ivanov.ivanov1@gmail.com>
 
-On Fri, 21 Feb 2025 16:54:11 +0200, Mathias Nyman wrote:
-> On 21.2.2025 0.47, Michal Pecio wrote:
-> > Remove a block of code copied from inc_enq(). As often happens, the
-> > two copies have diverged somewhat - in this case, inc_enq() has a
-> > bug where it may leave the chain bit of a link TRB unset on a
-> > quirky HC. Fix this. Remove the pointless 'next' variable which
-> > only aliases ring->enqueue.  
+On Sun, Feb 23, 2025 at 02:22:25PM +0200, Ivaylo Ivanov wrote:
+> Some SoCs don't provide explicit reset lines, so make them optional.
+
+Is there an external reset or some other signal?
+
 > 
-> The linnk TRB chain bit should be set when the ring is created, and
-> never cleared on those quirky hosts.
-
-OK, I see, there is stuff in xhci-mem.c. I'll remove the above text
-and any code which touches the bit on quirky HCs.
-
-Speaking of which, I have some evidence that NEC uPD720200 has the
-exact same bug as AMD, namely after a Missed Service Error near the
-end of a segment it fetches TRBs out of bounds and trips the IOMMU
-or stops with Ring Underrun. Link chain quirk seems to fix it.
-
-> maybe
+> Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+> ---
+>  drivers/phy/phy-snps-eusb2.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> if (trb_is_link(ring->enqueue) && (chain || more_trbs_coming))
-> 	inc_eng_past_link(xhci, ring, chain);
-> 
-> Avoids calling inc_enq_past_link() every time we increase enqueue,
-> and explains why we call it.
 
-I can do that too. By the way, do we actually want this while loop in
-inc_enq_past_link() at all? Currently links only exist at the end of a
-segment and always point to the beginning of the next segment.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-I noticed that per xHCI 4.11.7, "Software shall not define consecutive
-Link TRBs within a TD". I suppose "consecutive" means "one pointing to
-another". And if it's prohibited inside a TD, it will likely always be
-easier to avoid doing it at all than try to manage special cases.
-
-Regards,
-Michal
+-- 
+With best wishes
+Dmitry
