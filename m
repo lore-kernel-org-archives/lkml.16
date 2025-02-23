@@ -1,122 +1,109 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDB4BE5E
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 15:24:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FF326AF3;
+	Sun, 23 Feb 2025 15:29:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740324253; cv=none; b=BepNm1Pkk6Yw1M+9e39L3IKtSmneL/aduAdlFcU3ZiIKIw2iNfN3LLEG0sTv3fK2Ejx3xgvBDuO+XZMPFUuA3nGMU8qCpz0LgBvMHA8JXw+iQB8XqExuNTowWLx1F3re6slGDb8HOX0ZZlIJ26PAy+IYJYkzsml2n2FmDVb7BaA=
+	t=1740324568; cv=none; b=hyQueAA2eTP3tyzXVZcmyiumfPabBpImpjU5sxWnXaBMH2DbwFc95s4AxChL1zQWAc8hCdtQBw7JLzfeAt1dxZwqWfx1FdxkdDGwfnJZe0wj6/4//hS2YnQIGVCfLwTzF4T6OxUTuWRR/Bhz0+dRo6t6bUn+uF3uY1KVq3fmYfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740324253; c=relaxed/simple;
-	bh=QTCnTo7jATyvi6ibfSdkLeYMevxjmJzb6on/eLLP7Qk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SM4yj/nusVSAbNaGUtr/9Jnvf8g/dzipfK8yFnp8P9Hf8gKI5s+RcIqvxnMyy+xRiiJJNixsWZpAWbrPMbF8TxpzlrcK2Mt4+q3Qc+uAOadlk6dWHQWOROtgVB2D6HI5i0c23JRvNiVb9LgF+VQ3hplbxHoE7GKrR39LlDnW+Gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J2MdGi9E; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740324568; c=relaxed/simple;
+	bh=hN7DZ9oLfkraNLNI5u4MTj4WoyJjFliLGCQi+3yJ2kc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Fp/YXzXW4BZ16A3E6aa9rFf0LTVLeM0eocsrG3Bv+R5/KeIQMWqiFdSULL04MD3lPha959nPPzXZVd+DwNqaPP1M5CF7DgsgqqKDpmXMQl7ibutT/3+rHyEdSZMnXuXW7eLfz20ObbUF4/nmAgAkFELo0KKC/jyQWzTc7RIMPyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=dla8E8dk; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J2MdGi9E"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aaf3c3c104fso617462866b.1
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 07:24:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740324250; x=1740929050; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xyt3PPaYlNgcA/j7n+n0sHAguVTAN2baVeJuxMTgLrE=;
-        b=J2MdGi9E5Ku5wb4F5wYA8EhEpk6Z/kZM4kaFcIgOB1p3rAgICSga11SNw20mFEfsS6
-         1vxlNhUGBU8KoL5hZEEUvK9CoME4kDj2RLom7hIcCHkfLc1mSCZlf6Ne1xUrT+5U4/AL
-         BLaF1gB0DAQu1PST7vDKKmRes0x0aVvt6yWyJY55r3tzViLWhqeHGK97FeZ/zxSTWWa3
-         PdjvI/PwQuMnPGXjTmAJf/K5PXv59LeT5VOr0EDMrZkDWp/LRdPR51yBqlhqhAbpufy4
-         qc1fj2i80jzfomzV8DFwPcm6Gob8biExGSzbM+zzfW9IcG1nrs7jcIXWQGzhJM+T7BVK
-         s1lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740324250; x=1740929050;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xyt3PPaYlNgcA/j7n+n0sHAguVTAN2baVeJuxMTgLrE=;
-        b=XASNf9/UP6Vj6opESh8Plz+jtVjMWzOgm6wqZ8z0153HNwAHJfBW377SrhZ/qwYZrZ
-         wbtrhsJan6HuopFYQdqYr9nzBdffwsxY4ei0+Rd9AQw0GQfmbUZ1ikmt4cFYnhbYathy
-         DsZMrgMWJbb2UcsHYWQY2FVq4GcsvLB3J0r3rLnV77twt7+ImA+tjpAanPGaZY/7eljF
-         5nxWJ78fP/vhV7Wy4LRdIJ/rn/U40GGgTVPKQWZ5g1MxegrqZwItNw42fy9SPRWQwSNm
-         K+bVEax7QQ4+q67nDA7xVo0fHXj2GjYsHqQXExBryZT328/5m8qwDLEqwQXaQPJqHgWG
-         VAFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWvF7Wy5WkZq5AjSbQlNkRfyr6W0ZCkBwVeba01gyjlrtNYi3NuVgEyStaxT+h2BY6QWcZDm4O/tiwRr/0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxldcEgZ012e84nsPGpaHq9Xr68lv9dBR18VU+lJ2f076KYqjnd
-	5BIs7zgMuWF2QG6jcD82h/6dF3QGIPKWJEH9mO+yCRDheYUzHerSKsuatdGZ
-X-Gm-Gg: ASbGncuvF9xg8kpV54HV3Ycq+ha7cLT6RQS62LrqAYKQ8ONXcwPUQX08BAxjjTG/Py1
-	kV4duo8tzWiRnaiAFNWYOqOJkbq2/Qx7dMnFbiQag1Ny6la1XtvkiZSRshwmHxS5hpH3YDx+eeT
-	pyi4x4zFCPqW3PvLXVz8qrxDrHWnwgYevMHTrjvUzdY62Gg82QHE6nO6+zss49Wx7qFcCqbHSKK
-	sasTg9cW4bFZB22t1xKrThLK9/jsKU47JBa4PzPXfXB4Ak+DG6Bb9J2VJSdaib79fxdRAFNYCaB
-	TRQBVFoVD0PTSo91pSguwZZoQfkopExDu3Ty+zw=
-X-Google-Smtp-Source: AGHT+IFIRu2Fr+hl9WNpDQE0EmyLzkg8g5O+I7r/hC7hqDYW4YUCySAui9U2daVsbRmLB7U7g+OQpg==
-X-Received: by 2002:a17:907:d2a:b0:ab7:fc9a:28e1 with SMTP id a640c23a62f3a-abc0de5a487mr1018666366b.52.1740324249605;
-        Sun, 23 Feb 2025 07:24:09 -0800 (PST)
-Received: from localhost.localdomain ([165.51.10.62])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abbde327701sm872767766b.164.2025.02.23.07.24.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2025 07:24:08 -0800 (PST)
-From: Salah Triki <salah.triki@gmail.com>
-To: Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Salah Triki <salah.triki@gmail.com>
-Subject: [PATCH] arm64: kvm: ptdump: Initialize .owner fields of kvm_*_operations
-Date: Sun, 23 Feb 2025 16:08:44 +0100
-Message-Id: <20250223150844.628175-1-salah.triki@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="dla8E8dk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
+	t=1740324557; bh=hN7DZ9oLfkraNLNI5u4MTj4WoyJjFliLGCQi+3yJ2kc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=dla8E8dkJPoZDFQlxhvpcCJvubg+X44jV2yRz9wQ267cH9CqTMsMT/UTyKLQGm25t
+	 eW8zwFE7QkVVpZ0d06dMd4Ty6sg+CvHQbINoQJ5ELCFD4ftaaLMx08WWqYwVlyi6RD
+	 YRPMxtazghT9NvVxiViyHjE6dlCppgtE4ErlsMU4=
+Message-ID: <89cbb27e-414a-472f-8664-db5b4d37ddc1@lucaweiss.eu>
+Date: Sun, 23 Feb 2025 16:29:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 2/4] dt-bindings: display: panel: Add Himax HX83112B
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org
+References: <20250222-fp3-display-v1-0-ccd812e16952@lucaweiss.eu>
+ <20250222-fp3-display-v1-2-ccd812e16952@lucaweiss.eu>
+ <20250223-tricky-saffron-rattlesnake-aaad63@krzk-bin>
+Content-Language: en-US
+From: Luca Weiss <luca@lucaweiss.eu>
+In-Reply-To: <20250223-tricky-saffron-rattlesnake-aaad63@krzk-bin>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Initialize .owner fields of kvm_ptdump_guest_fops,
-kvm_pgtable_range_fops and kvm_pgtable_levels_fops to THIS_MODULE in
-order to prevent unloading the module while these operations are still
-in use.
+Hi Krzysztof,
 
-Signed-off-by: Salah Triki <salah.triki@gmail.com>
----
- arch/arm64/kvm/ptdump.c | 3 +++
- 1 file changed, 3 insertions(+)
+On 23-02-2025 12:54 p.m., Krzysztof Kozlowski wrote:
+> On Sat, Feb 22, 2025 at 06:58:05PM +0100, Luca Weiss wrote:
+>> Himax HX83112B is a display driver IC used to drive LCD DSI panels.
+>> Describe it and the Fairphone 3 panel from DJN using it.
+>>
+>> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+>> ---
+>>   .../bindings/display/panel/himax,hx83112b.yaml     | 75 ++++++++++++++++++++++
+>>   1 file changed, 75 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/panel/himax,hx83112b.yaml b/Documentation/devicetree/bindings/display/panel/himax,hx83112b.yaml
+>> new file mode 100644
+>> index 0000000000000000000000000000000000000000..e6bd4b33d40be98e479d84617aea6d2af0df70e4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/display/panel/himax,hx83112b.yaml
+>> @@ -0,0 +1,75 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/display/panel/himax,hx83112b.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Himax HX83112B-based DSI display panels
+>> +
+>> +maintainers:
+>> +  - Luca Weiss <luca@lucaweiss.eu>
+>> +
+>> +description:
+>> +  The Himax HX83112B is a generic DSI Panel IC used to control
+>> +  LCD panels.
+>> +
+>> +allOf:
+>> +  - $ref: panel-common.yaml#
+>> +
+>> +properties:
+>> +  compatible:
+>> +    contains:
+>> +      const: djn,fairphone-fp3-panel
+> 
+> Why no himax,hx83112b fallback?
 
-diff --git a/arch/arm64/kvm/ptdump.c b/arch/arm64/kvm/ptdump.c
-index e4a342e903e2..50f7d39333d6 100644
---- a/arch/arm64/kvm/ptdump.c
-+++ b/arch/arm64/kvm/ptdump.c
-@@ -185,6 +185,7 @@ static int kvm_ptdump_guest_close(struct inode *m, struct file *file)
- }
- 
- static const struct file_operations kvm_ptdump_guest_fops = {
-+	.owner		= THIS_MODULE,
- 	.open		= kvm_ptdump_guest_open,
- 	.read		= seq_read,
- 	.llseek		= seq_lseek,
-@@ -244,6 +245,7 @@ static int kvm_pgtable_debugfs_close(struct inode *m, struct file *file)
- }
- 
- static const struct file_operations kvm_pgtable_range_fops = {
-+	.owner		= THIS_MODULE,
- 	.open		= kvm_pgtable_range_open,
- 	.read		= seq_read,
- 	.llseek		= seq_lseek,
-@@ -251,6 +253,7 @@ static const struct file_operations kvm_pgtable_range_fops = {
- };
- 
- static const struct file_operations kvm_pgtable_levels_fops = {
-+	.owner		= THIS_MODULE,
- 	.open		= kvm_pgtable_levels_open,
- 	.read		= seq_read,
- 	.llseek		= seq_lseek,
--- 
-2.34.1
+While this is the driver IC for this panel, I don't think there's any 
+"generic" init sequence that can successfully configure this panel, so 
+generic hx83112b driver could work I'd say.
+
+Regards
+Luca
+
+> 
+> Best regards,
+> Krzysztof
+> 
 
