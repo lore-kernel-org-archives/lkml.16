@@ -1,126 +1,192 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6D5E1482E8
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 20:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577CB22A7F1;
+	Sun, 23 Feb 2025 20:12:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740341213; cv=none; b=PfQSAm88+4XiutNlL9Z1QDJjGsXHIPT8wPSiYHPF9k8IbkgIrdPLaxpYXo/yxepxXcrLhwSf1N3tcTKxDnPW8bGIFCFWKtXWpa/rtulli7eZAblcz73A0gR24OVA/ELfLCi9F8G9N8QCHLRrzGAzQtI2dJIMgdRu4KRR6DUwyf4=
+	t=1740341540; cv=none; b=avLvjxzY4yuwrTKci2408Ilv7/ULMUDQydPpR8HCYsQp35UwRI5uwwCmrQo5XYJ1KoeXN80mmywdwcHzP4CgF0gqqDGCTGF4z2YmzuJK+rvjCGzCUsN2U2y1IoMp/oKDJkMUzKkLmOh80uTvWatU/c0NKW525wBNIgRPI3k2SE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740341213; c=relaxed/simple;
-	bh=eKDSnNjq9uTYBXDkqwtMTf3jm9i9p6UEGlqS/o3Vd54=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SG4y41D1ZYwRmMwzYDczCi404bvOMFx58polg6qKCXHM5MLrHHdranPcc+CWiZ2QNLnBWTGBi6WZvzngjiOvt1j/qil+AggASlChxvJ44Rj2GOVb5RF0cRHOMBamek0A+VNJMF3Xq6Fp+OToM4JmAoKb86k6C+XYjG0uTSh6Igs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LyAXacY8; arc=none smtp.client-ip=209.85.216.50
+	s=arc-20240116; t=1740341540; c=relaxed/simple;
+	bh=vX8Ya+KRy6BBDgOwYiAz6EXekliAEVM1yoFsb90n0SU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hSm3MH2jbihT1O8Qh8KEkMwHLG9NkRQZif89jxYPjRfn5PYiPHqD5eLh2lzI75iRbmSy7oAsOUZ277wBYHxiXPH6tuHxH6BGm/+V4SaAoxRpffmdc2Ot1DijM8hjk1eqpLStOUZWmOAH1q2C+BaNHlaCLldC6jrkSb3qyhtTrBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KWEAHpmE; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LyAXacY8"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2f9d3d0f55dso5642059a91.1
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 12:06:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KWEAHpmE"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-38f3ee8a119so1779100f8f.0;
+        Sun, 23 Feb 2025 12:12:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740341211; x=1740946011; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kjhFIINeK8RqUNIN9kMsXE1mL/G5qdLA9ymV1Kj4r+E=;
-        b=LyAXacY8VeL0BQNIr516OYqcd99ar0xmD/MRiGJBR3d9URkAJD52VpCtJMToFXPDFF
-         OHMMG8VAbhEo5VhzcoShzgStErYShGfHH7DlDyUef5JFFejrI45wVA/aVqevPP3k6vsq
-         uKQxPwWbsOgzOVRLTBDADkjAnXOdXnJTgNCUOCIf6/RieEXNFWFKNbkXnnbIAHThzLw5
-         o7H7Jb0VMeuQFnA+0mdIvub7w101jS0lzfMwIkVkhLoZ/h1R/PtWgyoKNINhoEisjoHK
-         zqrsCHXEiTrM5kdDAMWiwozNK4ByW7qmgRBdAQb4k55POM7UdIg6NBnvk5cV4Aq76Q4X
-         IgQA==
+        d=gmail.com; s=20230601; t=1740341534; x=1740946334; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oW3EGNHGBVwdzGVDV9AF13cHQzdwAkoEvEWI4Vq3eqM=;
+        b=KWEAHpmE06a7u34LJvuLxpgRojz0WJPYsM7uyO32Ls2mJFlLAsHb0NnrudczakgIhv
+         lAuSjv+dTu5a54FzVDhRlEcJjU39FQbkAms4yvRDPhSuTrfhu3TcC+OX9qxh9OvXC6Ig
+         7zZoNWnGT3S+JOJYGt5TwXt/nxzYn5a60TAOtncnuVIi70eFeInJg9CBzhawR53nInsA
+         fFlAAlmeEWTJ6/jJZ4WVWNUv6d77r8WFMCDQ+TeWJRoXoxHXI4cGC1vC6QKl5bkzn5iV
+         cAZPApV1lONyIxYum6BgXWOnu9o22y6w8N0QvILEnyOGksWp2QOg+d6X+w8QxQyPgyCp
+         cZmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740341211; x=1740946011;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kjhFIINeK8RqUNIN9kMsXE1mL/G5qdLA9ymV1Kj4r+E=;
-        b=jW9mMDY+RqUlUQTmpl88H33CRLaK0yzYz5T39ehc8V7t7vZXeoTAt9Ss5M1ucE7BfT
-         jfhXaJ64/4ElsfqZZ75JpsAUWwQDca49iukvJsx/NXQDuwbCmSRAhuWQkOPjq2P5xHQa
-         hDaAHeQCDucK7qVBuS18Hj1rVF7DpLM79pMjJJe8y8T4Uo00CLstWzd5vYyHK7yW1Was
-         UG/v4Ab9YI9sUVp3LwfFqLy21/YCYg5ex0khBdhIbvTQ4RSPdjfcUx89GvwPXmOpUBZQ
-         qK9s81urQdzS3U++faBfnPX0q5iEdly6nP53KE0/IX5OmxXhgZUQEXeIlmixmeo8Ns0A
-         7X+Q==
-X-Gm-Message-State: AOJu0Yy9JLeSyTH3eRtGvFqgrmssvvNOFUtmyB+KOZ75sOvR5uAK0hJN
-	3J6zguFJMMH7YvhuDnApw6579+xVIxtuRAhD1b/IgpgY8lmEWdIPeR9gMP+UqnU=
-X-Gm-Gg: ASbGncvozArqcs5V6MOhTuhJm625vSU5ITMWDDbbcutqwJPf2SGM1sYCh00SJbcN7C3
-	Z6d5EIm/i/abVDU9CPvqPNzdKGuzWe2y3jxTFetazr7Ix2csMDjQsG9SxcNFy0NTVVPBiVzOkz6
-	2KJ3sA3OTc7cSNdMRBWj/LvsmEW2qHOeywgpB0kf9rqg5443I9q+ljOM8S5IwkQdq/sbGN9RI9t
-	iDNkFhyYf1WfbADqxR51lLSXNZ//tAiIM5OViukWI6aoVjseuzuypnFYFgNB2rbBuQr4plgwQJn
-	egC9rIJm789LSyalF3HBUWr6wjI1DneRjF4rLl5j0huBW9aMwWF0
-X-Google-Smtp-Source: AGHT+IGl+NstTMjgybGB9EYD0JQzbEyUpBX9if8jrfjZ3Iu1/Mb/HSyvxMxcHsmcI2VRTWEE65ru+A==
-X-Received: by 2002:a17:90b:3904:b0:2ee:c918:cd60 with SMTP id 98e67ed59e1d1-2fce78cda3fmr17653440a91.20.1740341210769;
-        Sun, 23 Feb 2025 12:06:50 -0800 (PST)
-Received: from ideapad.tail50fddd.ts.net ([139.5.199.130])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fceb110411sm4959806a91.36.2025.02.23.12.06.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2025 12:06:49 -0800 (PST)
-From: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: akpm@linux-foundation.org,
-	ayaanmirzabaig85@gmail.com,
-	syzbot+80e5d6f453f14a53383a@syzkaller.appspotmail.com
-Subject: [PATCH 1/1] radix-tree: Prevent NULL pointer dereference in radix_tree_node_rcu_free
-Date: Mon, 24 Feb 2025 01:31:08 +0530
-Message-ID: <20250223200603.38895-1-ayaanmirzabaig85@gmail.com>
-X-Mailer: git-send-email 2.47.1
+        d=1e100.net; s=20230601; t=1740341534; x=1740946334;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oW3EGNHGBVwdzGVDV9AF13cHQzdwAkoEvEWI4Vq3eqM=;
+        b=WZvlm1YIvdfQGM10KLnA+0ACe/bA92XVY8FvDqVsDTwtM9uj6zKa6wA+JEqhqMp5i/
+         7ltD4Y2DIhNokahrUZIoANmmWdovAsYAn4ujcECpeNrOoKsVjDKmDtX89zGFp3cYOYoK
+         Sc+ze9XCzbO5SBgq1hnGBZq5AMKjhRATOOb3lB0TX9NEgi0zHeJxTJUSzyrIdJeJQbUX
+         zbeuLiCg5jmNwe+nczC5mWTUJTsY28Q9jzXMOBYK+oFeraB7FT1zUIiyz4fxtiwbsGU7
+         Czd2Bq/BzzkmR4aj71q+lmtVGByV9/iSJgQ0olrO1cqm4u3d7nmp0vPqypHWr++fEoML
+         JTmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUD9PnjRr9TwqrI/nIIJESb5VKnLjEK/ADj+ab+dxgu7XcEbw/qNhS/7gpn7ma1vQ48a6Q=@vger.kernel.org, AJvYcCX3Kt7WwOeHLrbCN0v3WaEM7TWyWfCu63RLerRFYvbGybX/kHV7wFsCqxlxGyrP2I33j4ecK868LolRd8t/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLJadWheFh45JTUxiC+CZHJyY/qR4Ba7DOy5h5Jqcqr/Ro37ge
+	8eulLxnQ/gi4Cuv7BY3f6dKdhRwPaeJwqiH/rDAm83A4ggzZKmI9M0ixnFJSTWPcYtpCvPXBjNo
+	Q0b6QXy8bxrklg9ZkGy0/eYRkxfQ=
+X-Gm-Gg: ASbGncuDwFPJ5bNR1XoTquuulwWnt3ThSaRuxyE15BZufK4jj++T+u3AqakllMrMyY0
+	4gcNJM1rfta6wf1rcumwcfHyrfjwblv/xkYXucz6TX4RHSeTqGB2P05RST1wWjckaGJQdJrGtBg
+	3FmspaHPMCx7kV6jrT2vRGqiQ=
+X-Google-Smtp-Source: AGHT+IG+/XlXb7rqQe5vquYK74kvCvNc9daUw83jU+xH2SpRzKCEdrK1yZh43fi3UhmjSuCRxf12bINTKaE790ojOIk=
+X-Received: by 2002:a5d:5f51:0:b0:38d:dffc:c133 with SMTP id
+ ffacd0b85a97d-38f70827ad7mr9506619f8f.44.1740341533944; Sun, 23 Feb 2025
+ 12:12:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250223062735.3341-1-laoar.shao@gmail.com> <20250223062735.3341-2-laoar.shao@gmail.com>
+In-Reply-To: <20250223062735.3341-2-laoar.shao@gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Sun, 23 Feb 2025 12:12:02 -0800
+X-Gm-Features: AWEUYZmJzuHhC8v0_Ept6EdxtrA7qcjW3mM6hjpy14Sxfxpc4U9ytSUHV3NGJfw
+Message-ID: <CAADnVQ+zLZKyrNGnGQDThasdS6cvM-FheN5Ttz23pF5ttbGasw@mail.gmail.com>
+Subject: Re: [PATCH v2 bpf-next 1/3] objtool: Copy noreturns.h to include/linux
+To: Yafang Shao <laoar.shao@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eddy Z <eddyz87@gmail.com>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-syzkaller reported a kernel NULL pointer dereference:
+On Sat, Feb 22, 2025 at 10:28=E2=80=AFPM Yafang Shao <laoar.shao@gmail.com>=
+ wrote:
+>
+> It will used by bpf to reject attaching fexit prog to functions
+> annotated with __noreturn.
+>
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> ---
+>  include/linux/noreturns.h               | 52 +++++++++++++++++++++++++
+>  tools/objtool/Documentation/objtool.txt |  3 +-
+>  tools/objtool/sync-check.sh             |  2 +
+>  3 files changed, 56 insertions(+), 1 deletion(-)
+>  create mode 100644 include/linux/noreturns.h
+>
+> diff --git a/include/linux/noreturns.h b/include/linux/noreturns.h
+> new file mode 100644
+> index 000000000000..b2174894f9f7
+> --- /dev/null
+> +++ b/include/linux/noreturns.h
+> @@ -0,0 +1,52 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +/*
+> + * This is a (sorted!) list of all known __noreturn functions in the ker=
+nel.
+> + * It's needed for objtool to properly reverse-engineer the control flow=
+ graph.
+> + *
+> + * Yes, this is unfortunate.  A better solution is in the works.
+> + */
+> +NORETURN(__fortify_panic)
+> +NORETURN(__ia32_sys_exit)
+> +NORETURN(__ia32_sys_exit_group)
+> +NORETURN(__kunit_abort)
+> +NORETURN(__module_put_and_kthread_exit)
+> +NORETURN(__stack_chk_fail)
+> +NORETURN(__tdx_hypercall_failed)
+> +NORETURN(__ubsan_handle_builtin_unreachable)
+> +NORETURN(__x64_sys_exit)
+> +NORETURN(__x64_sys_exit_group)
+> +NORETURN(arch_cpu_idle_dead)
+> +NORETURN(bch2_trans_in_restart_error)
+> +NORETURN(bch2_trans_restart_error)
+> +NORETURN(bch2_trans_unlocked_error)
+> +NORETURN(cpu_bringup_and_idle)
+> +NORETURN(cpu_startup_entry)
+> +NORETURN(do_exit)
+> +NORETURN(do_group_exit)
+> +NORETURN(do_task_dead)
+> +NORETURN(ex_handler_msr_mce)
+> +NORETURN(hlt_play_dead)
+> +NORETURN(hv_ghcb_terminate)
+> +NORETURN(kthread_complete_and_exit)
+> +NORETURN(kthread_exit)
+> +NORETURN(kunit_try_catch_throw)
+> +NORETURN(machine_real_restart)
+> +NORETURN(make_task_dead)
+> +NORETURN(mpt_halt_firmware)
+> +NORETURN(nmi_panic_self_stop)
+> +NORETURN(panic)
+> +NORETURN(panic_smp_self_stop)
+> +NORETURN(rest_init)
+> +NORETURN(rewind_stack_and_make_dead)
+> +NORETURN(rust_begin_unwind)
+> +NORETURN(rust_helper_BUG)
+> +NORETURN(sev_es_terminate)
+> +NORETURN(snp_abort)
+> +NORETURN(start_kernel)
+> +NORETURN(stop_this_cpu)
+> +NORETURN(usercopy_abort)
+> +NORETURN(x86_64_start_kernel)
+> +NORETURN(x86_64_start_reservations)
+> +NORETURN(xen_cpu_bringup_again)
+> +NORETURN(xen_start_kernel)
+> diff --git a/tools/objtool/Documentation/objtool.txt b/tools/objtool/Docu=
+mentation/objtool.txt
+> index 7c3ee959b63c..70a878e4dc36 100644
+> --- a/tools/objtool/Documentation/objtool.txt
+> +++ b/tools/objtool/Documentation/objtool.txt
+> @@ -326,7 +326,8 @@ the objtool maintainers.
+>
+>     The call from foo() to bar() doesn't return, but bar() is missing the
+>     __noreturn annotation.  NOTE: In addition to annotating the function
+> -   with __noreturn, please also add it to tools/objtool/noreturns.h.
+> +   with __noreturn, please also add it to tools/objtool/noreturns.h and
+> +   include/linux/noreturns.h.
+>
+>  4. file.o: warning: objtool: func(): can't find starting instruction
+>     or
+> diff --git a/tools/objtool/sync-check.sh b/tools/objtool/sync-check.sh
+> index 81d120d05442..23b9813cd5e9 100755
+> --- a/tools/objtool/sync-check.sh
+> +++ b/tools/objtool/sync-check.sh
+> @@ -17,6 +17,7 @@ arch/x86/include/asm/emulate_prefix.h
+>  arch/x86/lib/x86-opcode-map.txt
+>  arch/x86/tools/gen-insn-attr-x86.awk
+>  include/linux/static_call_types.h
+> +tools/objtool/noreturns.h
+>  "
+>
+>  SYNC_CHECK_FILES=3D'
+> @@ -24,6 +25,7 @@ arch/x86/include/asm/inat.h
+>  arch/x86/include/asm/insn.h
+>  arch/x86/lib/inat.c
+>  arch/x86/lib/insn.c
+> +include/linux/noreturns.h
 
-BUG: kernel NULL pointer dereference, address: 0000000000000000
-PGD 0 P4D 0
-Oops: Oops: 0010 [#1] PREEMPT SMP KASAN NOPTI
+The copy looks pointless.
+Since we cannot rely on objtool let's just list all noreturn funcs
+directly in BTF_SET_START(fexit_deny) in a single patch.
+So all changes will be under kernel/bpf directory.
 
-Call Trace:
- <IRQ>
- rcu_do_batch kernel/rcu/tree.c:2546 [inline]
- rcu_core+0xaaa/0x17a0 kernel/rcu/tree.c:2802
- handle_softirqs+0x2d4/0x9b0 kernel/softirq.c:561
- __do_softirq kernel/softirq.c:595 [inline]
- invoke_softirq kernel/softirq.c:435 [inline]
- __irq_exit_rcu+0xf7/0x220 kernel/softirq.c:662
- irq_exit_rcu+0x9/0x30 kernel/softirq.c:678
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1049 [inline]
- sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1049
- </IRQ>
- <TASK>
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
-RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152 [inline]
-RIP: 0010:_raw_spin_unlock_irqrestore+0xd8/0x140 kernel/locking/spinlock.c:194
-
-Reported-by: syzbot+80e5d6f453f14a53383a@syzkaller.appspotmail.com
-
-Link: https://syzkaller.appspot.com/bug?extid=80e5d6f453f14a53383a
-Signed-off-by: Ayaan Mirza Baig <ayaanmirzabaig85@gmail.com>
----
- lib/radix-tree.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/lib/radix-tree.c b/lib/radix-tree.c
-index 976b9bd02a1b..5cefbfd7677e 100644
---- a/lib/radix-tree.c
-+++ b/lib/radix-tree.c
-@@ -292,6 +292,9 @@ void radix_tree_node_rcu_free(struct rcu_head *head)
- 	struct radix_tree_node *node =
- 			container_of(head, struct radix_tree_node, rcu_head);
- 
-+	if (unlikely(!node))
-+		return; //Prevent NULL deref
-+
- 	/*
- 	 * Must only free zeroed nodes into the slab.  We can be left with
- 	 * non-NULL entries by radix_tree_free_nodes, so clear the entries
--- 
-2.47.1
-
-
-Note to reviewers:
-I'm new to kernel development and would appreciate feedback on patch
-formatting or workflow if I missed any conventions. Thank you for
-your patience and guidance.
+pw-bot: cr
