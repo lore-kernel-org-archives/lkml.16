@@ -1,16 +1,16 @@
 Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A2D193435
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A7F1946B8
 	for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 19:50:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740340215; cv=none; b=X3pIeTeyfsxDnrASD70PjOvDKLj7nm+ukAIw1g30HDsnCSRpqbYoKDtwYB08rE99vkjBbq75szlr5MnwHbks4caNeQIobjw9PKzR7J37q8VgluHszDJTkITuHBSREXixklDybsv8cknQ52ir9Hg1yuUVErBRTzUQoWNqhUld30k=
+	t=1740340215; cv=none; b=KIHuYN6BxYi7EAZk/HXnYlyE8APjnaWycKbjz7ZkuoSN6GIFmnTJToRLyVja3pCiGxRAHzYdI/IG32+2ehOKIRUFet/KQyQHC37X1xbiYvNwa2Q7RAXD2Yfv9W9frt39CN0pHi4XgXFp7WEXHMxR89qrbdWNsEDbzuXuqcSjROo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740340215; c=relaxed/simple;
-	bh=mE7rUQ+5LK/IsjTrC99jexKW4L6ce1g963rB8ogany8=;
+	bh=oo+XJGK73tGx9Ra+iWfScOyEiw70vYTcO6aavaOrdRE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L8fqvmYhSNfYLzpCcaaMEUKRlvpYV38/B+PFmSizurGHo9TFhhXvYmkz82JuH0WyAQICO/EiOJEHIn+uMkiG4ESRGwRqZQ3tz8zTGfsAUYTSlqvc6QWM40RT1gaGyE0M3g3wqoOcS4lZ+6wijHQCX1+GvRt/TfmtldSEND2ks6s=
+	 MIME-Version; b=ALI0//TaEWt3+BqW7uunrHhCTEJ8eK3MXZx+EZ+MAH3Bp1HxgeCnIB1+MlRoOhMRgRBTHAcauvBz4GW4ZACMRNFYblKiBEaTTma8Hx8huwhGpi41qhBrA22neOFyE9+39zrMC+/tyZ4Bu2y7liGxYbE+YNwYrDOogO2cdEv94Xg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
@@ -18,8 +18,8 @@ Received: from fangorn.home.surriel.com ([10.0.13.7])
 	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.97.1)
 	(envelope-from <riel@shelob.surriel.com>)
-	id 1tmHyy-000000001hX-3yln;
-	Sun, 23 Feb 2025 14:49:44 -0500
+	id 1tmHyz-000000001hX-0Zts;
+	Sun, 23 Feb 2025 14:49:45 -0500
 From: Rik van Riel <riel@surriel.com>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -39,9 +39,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Manali.Shukla@amd.com,
 	mingo@kernel.org,
 	Rik van Riel <riel@surriel.com>
-Subject: [PATCH v13 06/14] x86/mm: use broadcast TLB flushing for page reclaim TLB flushing
-Date: Sun, 23 Feb 2025 14:48:56 -0500
-Message-ID: <20250223194943.3518952-7-riel@surriel.com>
+Subject: [PATCH v13 14/14] x86/mm: add noinvlpgb commandline option
+Date: Sun, 23 Feb 2025 14:49:04 -0500
+Message-ID: <20250223194943.3518952-15-riel@surriel.com>
 X-Mailer: git-send-email 2.47.1
 In-Reply-To: <20250223194943.3518952-1-riel@surriel.com>
 References: <20250223194943.3518952-1-riel@surriel.com>
@@ -54,43 +54,87 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: riel@surriel.com
 
-In the page reclaim code, we only track the CPU(s) where the TLB needs
-to be flushed, rather than all the individual mappings that may be getting
-invalidated.
+Add a "noinvlpgb" commandline option to disable AMD
+broadcast TLB flushing at boot time.
 
-Use broadcast TLB flushing when that is available.
-
-This is a temporary hack to ensure that the PCID context for
-tasks in the next patch gets properly flushed from the page
-reclaim code, because the IPI based flushing in arch_tlbbatch_flush
-only flushes the currently loaded TLB context on each CPU.
-
-Patch 10 replaces this with the actual mechanism used to do
-broadcast TLB flushing from the page reclaim code.
+Also fix up the "nopcid" boot option to automatically
+disable INVLPGB functionality, which relies on processes
+to run on globally allocated PCIDs.
 
 Signed-off-by: Rik van Riel <riel@surriel.com>
-Tested-by: Manali Shukla <Manali.Shukla@amd.com>
-Tested-by: Brendan Jackman <jackmanb@google.com>
-Tested-by: Michael Kelley <mhklinux@outlook.com>
+Suggested-by: Brendan Jackman <jackmanb@google.com>
 ---
- arch/x86/mm/tlb.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ .../admin-guide/kernel-parameters.txt         |  3 ++
+ arch/x86/kernel/cpu/common.c                  | 28 +++++++++++++++++++
+ 2 files changed, 31 insertions(+)
 
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 2d7ed0fda61f..16839651f67f 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -1326,7 +1326,9 @@ void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
- 	 * a local TLB flush is needed. Optimize this use-case by calling
- 	 * flush_tlb_func_local() directly in this case.
- 	 */
--	if (cpumask_any_but(&batch->cpumask, cpu) < nr_cpu_ids) {
-+	if (cpu_feature_enabled(X86_FEATURE_INVLPGB)) {
-+		invlpgb_flush_all_nonglobals();
-+	} else if (cpumask_any_but(&batch->cpumask, cpu) < nr_cpu_ids) {
- 		flush_tlb_multi(&batch->cpumask, info);
- 	} else if (cpumask_test_cpu(cpu, &batch->cpumask)) {
- 		lockdep_assert_irqs_enabled();
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index fb8752b42ec8..91260e1949fb 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4182,6 +4182,8 @@
+ 
+ 	nomodule	Disable module load
+ 
++	noinvlpgb	[X86-64,EARLY] Disable the INVLPGB cpu feature.
++
+ 	nonmi_ipi	[X86] Disable using NMI IPIs during panic/reboot to
+ 			shutdown the other cpus.  Instead use the REBOOT_VECTOR
+ 			irq.
+@@ -4190,6 +4192,7 @@
+ 			pagetables) support.
+ 
+ 	nopcid		[X86-64,EARLY] Disable the PCID cpu feature.
++			This also disables INVLPGB, which relies on PCID.
+ 
+ 	nopku		[X86] Disable Memory Protection Keys CPU feature found
+ 			in some Intel CPUs.
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 7cce91b19fb2..b038c9b50b32 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -243,6 +243,33 @@ DEFINE_PER_CPU_PAGE_ALIGNED(struct gdt_page, gdt_page) = { .gdt = {
+ } };
+ EXPORT_PER_CPU_SYMBOL_GPL(gdt_page);
+ 
++#ifdef CONFIG_X86_BROADCAST_TLB_FLUSH
++static void disable_invlpgb(void)
++{
++	/* do not emit a message if the feature is not present */
++	if (!boot_cpu_has(X86_FEATURE_INVLPGB))
++		return;
++
++	setup_clear_cpu_cap(X86_FEATURE_INVLPGB);
++	pr_info("INVLPGB feature disabled\n");
++}
++
++static int __init x86_noinvlpgb_setup(char *s)
++{
++	/* noinvlpgb doesn't accept parameters */
++	if (s)
++		return -EINVAL;
++
++	disable_invlpgb();
++	return 0;
++}
++early_param("noinvlpgb", x86_noinvlpgb_setup);
++#else
++static void disable_invlpgb(void)
++{
++}
++#endif
++
+ #ifdef CONFIG_X86_64
+ static int __init x86_nopcid_setup(char *s)
+ {
+@@ -256,6 +283,7 @@ static int __init x86_nopcid_setup(char *s)
+ 
+ 	setup_clear_cpu_cap(X86_FEATURE_PCID);
+ 	pr_info("nopcid: PCID feature disabled\n");
++	disable_invlpgb();
+ 	return 0;
+ }
+ early_param("nopcid", x86_nopcid_setup);
 -- 
 2.47.1
 
