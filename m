@@ -1,187 +1,96 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0802D1632DD;
-	Sun, 23 Feb 2025 11:03:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40332AF04
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 11:04:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740308634; cv=none; b=lKrof09iYHaGBqVaAqRnHTOfhkM4kTGbmXlq3lwR50cFJ8xzjBcr8I9INo73WaSk1pzmnyQHx3ZxWaCyncH8xVPv0qc3wih4lnmkLTCaVC/zgBJwKzaxWc8g1wkdUeAOh/sRaOH1SgvrWDysnY1A2glfHKj+A+bkHuaFVmjVZMo=
+	t=1740308659; cv=none; b=dsBvzmNHvnoKP/V6ks5QR+qMsNRv/Kf/CVpJBQ+VKzN/lrgKwJv9Rom0RCB+JMwLCE9YGsRlwc5igBZ/+OHBQYUgq53ZFmZffJXWSWtwpHU4QlRspqJ/la9d0iNxQNSoJBXD5j0SF5q0zoL1/LXR/HSCIAat+wC4lElPNqyeNDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740308634; c=relaxed/simple;
-	bh=bAQ5hGSGVZ89re8ji1HvlmJKiFzkDdDEirHv7CVdNPk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vb+HJqhlKPzkWE6rYPxyjaNAWg7cf87dfOsOqxOGR4x58DCn270zUWuVO3qHGvBqLcBcr1Gd6fNr+bAQWDp0e8DIUhXbF6R7OKEjKc1pQOG0dymQIfsrj1t+yoYAxZCjIzFMwLg/VV+8KnLf4gJzSghYXKCPVF2KK2CXFKP6CqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AiZFE3S0; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740308659; c=relaxed/simple;
+	bh=ZWw3/0fW6948IUXvYI199/4dSrzTfv19+qbKidcVqrg=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=FUL2TT8cHPdZq9IPehu4O/AWCtqH7/dyQmy6cbXykOSjrENsDqLmhdkYa/lSn3wjv7npkJbTixWbps9uwPv5KL10Ip0mn/s9xc4SDDkKOHj6e60ZIifIqjEhYX5WKj+9uW6Ld4SZcs0gsbvEEJXSe6eKK1c+WCyqdKI2BaCBOKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cleppnlp; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AiZFE3S0"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-220f048c038so66143955ad.2;
-        Sun, 23 Feb 2025 03:03:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740308632; x=1740913432; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OLEuWjtyWikPu3nVb2TAxeXog5UNG8nNjnvu0n/sL0A=;
-        b=AiZFE3S0magWmaEQ3bwjNY9RIliq6z+R8eh+gjuJbMpPpXpBfXrEzHvnleayfdMG4y
-         GJTxRbo6O0d8fMwnsxHX9E4zXmMaddePBlwm4Il5KGZnmjqzINgJQeZemJjn65hMMEUs
-         5xwsQJm9cYfkHq3unTWbgvicPnavai5IYxFvZNVpRloKGp4Dct5t9HGYJLgzxRl+JAQj
-         1oBw1vpTHC5XlcwD3m69eOoFMA36Wceqzt/U3mr30bH2ZOdrCMN3orwVP23OQfh3YFhW
-         JyR4iDEq1iYfoqa89qi3m0ItYQrDFv79JQ3z0LWui3w5H8032lI+CMhOepsvlN2P7bTm
-         qx8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740308632; x=1740913432;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OLEuWjtyWikPu3nVb2TAxeXog5UNG8nNjnvu0n/sL0A=;
-        b=Sui5hOb130AxS50VW/ZWuvkkbPpmFkwD23jv8tLjYdGwYg4QatN272Vjn4zBLMxjfy
-         BJD5aEcchN6l9BCKk1PCK8aqF+bTTfYbGl5FwkdmRpC+U9C/E2ZyO9J16m2bTrrzEEoP
-         L8/4Xx+gClSK/ElWJIn0+vBDsMEJtw6VtF8Ep7YQ7nZ7HfRG828XOvX/p0WFYMFCOqw9
-         ujvmUX2xbW1LULRGFp9Fzn4sJpLpke9jX4ZYTsFobbbBME0ry8GnvXXLkto1qvoHCxUs
-         ymYqV54f4tX8KhIbTOlDzHsmgg82flROChmTVchmRfhsoiUO13QXeMweae7JH7lvUxry
-         F/eg==
-X-Forwarded-Encrypted: i=1; AJvYcCUeFHzZcbvR52XuVMgsyEC5mRH3a5H+LyaDgnbh5GHqWeaxfly6VaqMKA1WPv3Z10YT2qr8oc8ZtboM@vger.kernel.org, AJvYcCWjyo0k6j5hjI/gUN6+DC9Xhu+bEo7ag59tNz+5dZn68Q54y5EuWjLjd38OFt2R4PvdijDc2LYOVgN6OUbobg==@vger.kernel.org, AJvYcCXqvhiFmPdWIjpbgJH5LPU7UcylsA5N6/TInuUW5Gx5F8R2fXPEZlECgg2dXcBK0ikGE4469He7B3FMSHgU@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkJLRY7JMw79oFXdxv0QVX3zI2TnaWVfW8pnwz3lw9QAbrVip7
-	B1dphDuLuNuWZoj0eHojbgThkxMllhbDjf3nhcVwOS2UOsQoRB+l
-X-Gm-Gg: ASbGncuRq8IgYhKtzRFXvTXQkvz5vFzlOYWmEBFmCqAemHsln98scTu3Om+kkacMawv
-	lH/TlErO//qJMreJaVK7ax7SveXMVQNoQbRq9ah/hHTX/UaG+NZoIsCo76Lhdk1ZClg1oC5ox4T
-	D0dL9e2e+VjqKIpiEuoG8Co3tsWiGiT8hFimc+3mxRcQTCzB/Efw1uLbJYULU+hzFKc18tzdmNd
-	JwHjXekUNsnYWXm3K2xtFOth4FCqXwbpMSjAb2GYUhL3lEZWtLgwF25SPYQQ9SdD9/tt+U6G4cj
-	wnKifWwJo6qeKC6vcUJytM30
-X-Google-Smtp-Source: AGHT+IF/S9i2gZR0+7cEDMzQQLWBfZXv/3CjHSKq5MWnCtcsprzNBcrfoWf3kZ0bhlkDcYXumvgx/w==
-X-Received: by 2002:a17:903:2290:b0:21f:3e2d:7d41 with SMTP id d9443c01a7336-2219ff33565mr162373505ad.11.1740308632124;
-        Sun, 23 Feb 2025 03:03:52 -0800 (PST)
-Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d5591e97sm161685045ad.244.2025.02.23.03.03.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2025 03:03:51 -0800 (PST)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Pengyu Luo <mitltlatltl@gmail.com>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: qcom: sc8280xp: Fix clock for spi0 to spi7
-Date: Sun, 23 Feb 2025 19:01:51 +0800
-Message-ID: <20250223110152.47192-1-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cleppnlp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740308656; x=1771844656;
+  h=date:from:to:cc:subject:message-id;
+  bh=ZWw3/0fW6948IUXvYI199/4dSrzTfv19+qbKidcVqrg=;
+  b=Cleppnlpwbvpts8TZUp+hu07GUz8BLoh8oimLyTot+k82BtAmXlnSCds
+   2cZ7XUBdMuuYKO4INnyt5hlm5Cvqb0yAD/dN9NBaCAULBAEhLh8iGf4nL
+   kWXzwtJt2zsO1sI4IxVhfqhnc8epizD7j0JET8VLKb1vloPdhpCoSz7dT
+   J8u+kByWf+QvJVfqCGcE4hqzfriiNz/vYadB8Z3o6QTIgY+7FGfl322Cj
+   Q4RJwipu4/cBhxHJtogqVZ7aNMNZ73AN/uiBXUybVxVw7mGDd4d2TxVwc
+   SmyBk9aRso3gJ20IkC2wB7c2U3nwrqOZLWnT2Dy12A9M3od7BZkO8p8OI
+   g==;
+X-CSE-ConnectionGUID: 3zb2g0vYR7O5ORhuXO5kqw==
+X-CSE-MsgGUID: 2D6D+dFuQq26y0QQq/UuSw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11354"; a="40923791"
+X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
+   d="scan'208";a="40923791"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2025 03:04:16 -0800
+X-CSE-ConnectionGUID: YOVOB03VSF6dDyiz8QpU1w==
+X-CSE-MsgGUID: k9WbzoA6Sl2TFMpJf3eaHA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
+   d="scan'208";a="115832745"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa007.fm.intel.com with ESMTP; 23 Feb 2025 03:04:14 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tm9mO-0007HT-1N;
+	Sun, 23 Feb 2025 11:04:12 +0000
+Date: Sun, 23 Feb 2025 19:03:36 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/cpu] BUILD SUCCESS
+ 43bb700cff6bc2f0d337006b864192227fb05dc1
+Message-ID: <202502231930.pLDqxUzX-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Enabling spi6 caused boot loop on my device(Huawei Matebook E Go),
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/cpu
+branch HEAD: 43bb700cff6bc2f0d337006b864192227fb05dc1  x86/cpu: Update Intel Family comments
 
-	&spi6 {
-		pinctrl-0 = <&spi6_default>;
-		pinctrl-names = "default";
+elapsed time: 1320m
 
-		status = "okay";
-	};
+configs tested: 19
+configs skipped: 125
 
-After looking into this, I found the clocks for spi0 to spi7 are
-wrong, we can derive the correct clocks from the regular pattern
-between spi8 to spi15, spi16 to spi23. Or we can verify it according
-to the hex file of BSRC_QSPI.bin(From windows driver qcspi8280.cab)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-000035d0: 0700 4445 5649 4345 0001 000a 005c 5f53  ..DEVICE.....\_S
-000035e0: 422e 5350 4937 0003 0076 0001 000a 0043  B.SPI7...v.....C
-000035f0: 4f4d 504f 4e45 4e54 0000 0008 0000 0000  OMPONENT........
-00003600: 0000 0000 0003 0017 0001 0007 0046 5354  .............FST
-00003610: 4154 4500 0000 0800 0000 0000 0000 0000  ATE.............
-00003620: 0300 3d00 0100 1400 4449 5343 4f56 4552  ..=.....DISCOVER
-00003630: 4142 4c45 5f50 5354 4154 4500 0100 0600  ABLE_PSTATE.....
-00003640: 434c 4f43 4b00 0100 1700 6763 635f 7175  CLOCK.....gcc_qu
-00003650: 7076 335f 7772 6170 305f 7336 5f63 6c6b  pv3_wrap0_s6_clk
+tested configs:
+i386                         allmodconfig    gcc-12
+i386                          allnoconfig    gcc-12
+i386                         allyesconfig    gcc-12
+i386    buildonly-randconfig-001-20250222    clang-19
+i386    buildonly-randconfig-002-20250222    gcc-12
+i386    buildonly-randconfig-003-20250222    gcc-12
+i386    buildonly-randconfig-004-20250222    clang-19
+i386    buildonly-randconfig-005-20250222    gcc-12
+i386    buildonly-randconfig-006-20250222    clang-19
+i386                            defconfig    clang-19
+x86_64                        allnoconfig    clang-19
+x86_64                       allyesconfig    clang-19
+x86_64  buildonly-randconfig-001-20250222    clang-19
+x86_64  buildonly-randconfig-002-20250222    gcc-12
+x86_64  buildonly-randconfig-003-20250222    gcc-12
+x86_64  buildonly-randconfig-004-20250222    clang-19
+x86_64  buildonly-randconfig-005-20250222    clang-19
+x86_64  buildonly-randconfig-006-20250222    gcc-12
+x86_64                          defconfig    gcc-11
 
-Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
----
- arch/arm64/boot/dts/qcom/sc8280xp.dtsi | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-index a0ef8778b..3c0ce6855 100644
---- a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-@@ -1260,7 +1260,7 @@ spi0: spi@980000 {
- 				reg = <0 0x00980000 0 0x4000>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
--				clocks = <&gcc GCC_QUPV3_WRAP2_S0_CLK>;
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
- 				clock-names = "se";
- 				interrupts = <GIC_SPI 601 IRQ_TYPE_LEVEL_HIGH>;
- 				power-domains = <&rpmhpd SC8280XP_CX>;
-@@ -1292,7 +1292,7 @@ spi1: spi@984000 {
- 				reg = <0 0x00984000 0 0x4000>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
--				clocks = <&gcc GCC_QUPV3_WRAP2_S1_CLK>;
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S1_CLK>;
- 				clock-names = "se";
- 				interrupts = <GIC_SPI 602 IRQ_TYPE_LEVEL_HIGH>;
- 				power-domains = <&rpmhpd SC8280XP_CX>;
-@@ -1324,7 +1324,7 @@ spi2: spi@988000 {
- 				reg = <0 0x00988000 0 0x4000>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
--				clocks = <&gcc GCC_QUPV3_WRAP2_S2_CLK>;
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S2_CLK>;
- 				clock-names = "se";
- 				interrupts = <GIC_SPI 603 IRQ_TYPE_LEVEL_HIGH>;
- 				power-domains = <&rpmhpd SC8280XP_CX>;
-@@ -1370,7 +1370,7 @@ spi3: spi@98c000 {
- 				reg = <0 0x0098c000 0 0x4000>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
--				clocks = <&gcc GCC_QUPV3_WRAP2_S3_CLK>;
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S3_CLK>;
- 				clock-names = "se";
- 				interrupts = <GIC_SPI 604 IRQ_TYPE_LEVEL_HIGH>;
- 				power-domains = <&rpmhpd SC8280XP_CX>;
-@@ -1402,7 +1402,7 @@ spi4: spi@990000 {
- 				reg = <0 0x00990000 0 0x4000>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
--				clocks = <&gcc GCC_QUPV3_WRAP2_S4_CLK>;
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S4_CLK>;
- 				clock-names = "se";
- 				interrupts = <GIC_SPI 605 IRQ_TYPE_LEVEL_HIGH>;
- 				power-domains = <&rpmhpd SC8280XP_CX>;
-@@ -1434,7 +1434,7 @@ spi5: spi@994000 {
- 				reg = <0 0x00994000 0 0x4000>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
--				clocks = <&gcc GCC_QUPV3_WRAP2_S5_CLK>;
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S5_CLK>;
- 				clock-names = "se";
- 				interrupts = <GIC_SPI 606 IRQ_TYPE_LEVEL_HIGH>;
- 				power-domains = <&rpmhpd SC8280XP_CX>;
-@@ -1466,7 +1466,7 @@ spi6: spi@998000 {
- 				reg = <0 0x00998000 0 0x4000>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
--				clocks = <&gcc GCC_QUPV3_WRAP2_S6_CLK>;
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S6_CLK>;
- 				clock-names = "se";
- 				interrupts = <GIC_SPI 607 IRQ_TYPE_LEVEL_HIGH>;
- 				power-domains = <&rpmhpd SC8280XP_CX>;
-@@ -1498,7 +1498,7 @@ spi7: spi@99c000 {
- 				reg = <0 0x0099c000 0 0x4000>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
--				clocks = <&gcc GCC_QUPV3_WRAP2_S7_CLK>;
-+				clocks = <&gcc GCC_QUPV3_WRAP0_S7_CLK>;
- 				clock-names = "se";
- 				interrupts = <GIC_SPI 608 IRQ_TYPE_LEVEL_HIGH>;
- 				power-domains = <&rpmhpd SC8280XP_CX>;
--- 
-2.48.1
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
