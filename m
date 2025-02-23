@@ -1,71 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 860FE1FC0F2;
-	Sun, 23 Feb 2025 11:28:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D9261FFC6D;
+	Sun, 23 Feb 2025 11:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740310122; cv=none; b=h7mL2HERH7BkVvDnhc4gDuAQGO6FIRnyc9Tw2NfjYjjkKRnZ8UpfrRbdc42jT0dVHL0LIwQsFbwiU7egwA6lPBSSo6K1P5dmBOsjA+vkTQeez/Pj9WSY9LYMHKuIOYOfHQdeER4ifQKWRdVS6ezoJnhrSTInjc+7wj58HhrVh2E=
+	t=1740310284; cv=none; b=Q7/zRVZ2nSBzeK1Qkb54yAyrMg3xH2zCunjFVDe34AdHZZ8n5tbyW4DtkrbtScEM4yrKbNSmA/aj+5ozuVDZsF6kv9DT7PD/pkbu+u8EAvy2+f/7DYpSDojgKV7JB4Zq7LdcLqv3OU6CgtrJYZ22pgbgqWqyqeYUsH8OHz8hq3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740310122; c=relaxed/simple;
-	bh=NlJVydL9C+hEsWptR74iKVv9eBDBElH8eho8n1pJeh8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rmOgpiHJjjtJmLmocb7HaieIAibCK9jx2ESJVNFUukC6aptKlQoS2TFe1L3TDijNZ4SMZYrBE7SCH42k8iu6PTTaJ39qQSUlIeS+VuKjXP62aCTNUDpko6SDZH4LxbnsnzN/04nipnsarpiMpos60a7LxekRCqbkPOWsuBTHVjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=syl/keVi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740310284; c=relaxed/simple;
+	bh=snprIamXvsTMrdnSU3SXP4U8J12bV9/w6EC0/NXObe0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uZWxtfnFVy43lZi8n+knnOM5qHTdhd3uedDwAEPcszAp+mdQ4V5zrmbEoROXZi3PN6YHAxbZNjGjUE8NEqZXbd2LRk/SLOJnF1ngTNBRNbghLsLQ/HYParuRJCXRfwYuVZxwLEJ6Or/+TXiI3oFl08UaI4LHxMvtHL5RsvXvGgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=VVmqJyzQ; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="syl/keVi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CD15C4CEE8;
-	Sun, 23 Feb 2025 11:28:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740310121;
-	bh=NlJVydL9C+hEsWptR74iKVv9eBDBElH8eho8n1pJeh8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=syl/keViV1NJaBjWAYL9EX9JMR1GB7kQbUTbaPtuRJAzfbTpIZej5WEewDE+SsE8U
-	 hhkPpq+SiYaP/Q9k1F2t9bwFIL6s5Jv0wDLnbNe00N3vWyE8ylusy2v8k3ZrbiGXMs
-	 xeO6gMi1JiZKrGz4pFSvA7WhaeZy7LRRKYqP5Zy1Gf0YHBSRgL9GL7p1vl2i7Ed+CG
-	 onJIBC66sM6FX4CSy67VtVmTyZJlMqFNiHV583MbJg/I5qqA8VNCUKc5CPDxredv1X
-	 Hp60WIUIiVFT1EvUPiDEZpqBgj5QJSuh576Rr2iael29FZjRqhsCEeSv7pbaI/0v0P
-	 8l5XLWwhUtuJg==
-Date: Sun, 23 Feb 2025 12:28:37 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: phy: mediatek,xsphy: add property to
- set disconnect threshold
-Message-ID: <20250223-benevolent-tacky-emu-f5f1c1@krzk-bin>
-References: <20250222090710.10909-1-chunfeng.yun@mediatek.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="VVmqJyzQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=vmnv2
+	MhbHUJhpP+7UCIFUQTwEEWv5QErRDdciQ4T95E=; b=VVmqJyzQ+OBTXAwtKh6dy
+	SAB5iOxlJf3AWx1AQCgxIGqVukVC+ytt1gR7heJ6BLZO23TWPB1sUx82TU9Jd8u/
+	tmvpMDNYBCpp1oyLxXUWL1UajWdBB4CP27iGMS0P7MyDj5lyxyCn9490+IQyGTs5
+	e8nFt643mou9w/XzZoHW3c=
+Received: from ProDesk.. (unknown [])
+	by gzsmtp4 (Coremail) with SMTP id PygvCgBHWqbdBrtnleHpAg--.47651S7;
+	Sun, 23 Feb 2025 19:30:48 +0800 (CST)
+From: Andy Yan <andyshrk@163.com>
+To: heiko@sntech.de
+Cc: hjc@rock-chips.com,
+	mripard@kernel.org,
+	cristian.ciocaltea@collabora.com,
+	neil.armstrong@linaro.org,
+	yubing.zhang@rock-chips.com,
+	krzk+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	robh@kernel.org,
+	sebastian.reichel@collabora.com,
+	Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH 5/6] arm64: dts: rockchip: Add DP1 for rk3588
+Date: Sun, 23 Feb 2025 19:30:28 +0800
+Message-ID: <20250223113036.74252-6-andyshrk@163.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250223113036.74252-1-andyshrk@163.com>
+References: <20250223113036.74252-1-andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250222090710.10909-1-chunfeng.yun@mediatek.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PygvCgBHWqbdBrtnleHpAg--.47651S7
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ZrWDCry7tFWfJw17JFWxCrg_yoW8Xw1xpw
+	nrurZ3Wry8WFy2q39xt3s5Xr95A3Z5Aa9rKr1xGa4UKr1Sqryqkr1a9rn3Ca4UXr4UXwsF
+	kF43Jry8KFsFvaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UXjjkUUUUU=
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqBT8Xme7BHQlkgAAsF
 
-On Sat, Feb 22, 2025 at 05:07:09PM +0800, Chunfeng Yun wrote:
-> +      mediatek,disconnect-threshold:
-> +        description:
-> +          The selection of disconnect threshold (U2 phy)
+From: Andy Yan <andy.yan@rock-chips.com>
 
-Say something more than just copying property name.
+The DP1 is compliant with the DisplayPort Specification
+Version 1.4, and share the USBDP combo PHY1 with USB 3.1
+HOST1 controller.
 
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        minimum: 1
-> +        maximum: 15
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+---
 
-default: ?
+ .../arm64/boot/dts/rockchip/rk3588-extra.dtsi | 30 +++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-> +
->        mediatek,efuse-intr:
->          description:
->            The selection of Internal Resistor (U2/U3 phy)
-> -- 
-> 2.46.0
-> 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi
+index 4a950907ea6f..427d2a39f79a 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi
+@@ -135,6 +135,36 @@ i2s10_8ch: i2s@fde00000 {
+ 		status = "disabled";
+ 	};
+ 
++	dp1: dp@fde60000 {
++		compatible = "rockchip,rk3588-dp";
++		reg = <0x0 0xfde60000 0x0 0x4000>;
++		interrupts = <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru PCLK_DP1>, <&cru CLK_AUX16M_1>,
++			 <&cru CLK_DP1>, <&cru MCLK_I2S8_8CH_TX>,
++			 <&cru MCLK_SPDIF5_DP1>;
++		clock-names = "apb", "aux", "hdcp", "i2s", "spdif";
++		assigned-clocks = <&cru CLK_AUX16M_1>;
++		assigned-clock-rates = <16000000>;
++		resets = <&cru SRST_DP1>;
++		phys = <&usbdp_phy1 PHY_TYPE_DP>;
++		power-domains = <&power RK3588_PD_VO0>;
++		#sound-dai-cells = <0>;
++		status = "disabled";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			dp1_in: port@0 {
++				reg = <0>;
++			};
++
++			dp1_out: port@1 {
++				reg = <1>;
++			};
++		};
++	};
++
+ 	pcie3x4: pcie@fe150000 {
+ 		compatible = "rockchip,rk3588-pcie", "rockchip,rk3568-pcie";
+ 		#address-cells = <3>;
+-- 
+2.34.1
+
