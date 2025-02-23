@@ -1,82 +1,81 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB63513635E
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 22:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677B286330;
+	Sun, 23 Feb 2025 22:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740349230; cv=none; b=dVUwuE/9ZR5mOke80X5haBGZDJ1SF0voXJYMgsuDg4ibGVWsRYXg0mX0Qpgy8QhplI+MngS9h/Vs2mb9Q+kwBk0hzJKOFXnZSopViqhIpCiCGP83u7xddktd9xH6IeLRFqad75tx+1Mb5OODfzBM1jj7iUTv2nsnGsFS8m65PBQ=
+	t=1740349400; cv=none; b=TPXBxtdGmMLBTkJyzmpJr/pVLISXiegzhlrmx64SOVKAhwSA6ShHfYK548coxX3fuAvMwiBUfZka7imDO658ixE4QANjJwAHwR176KkexKcz5xe/vNivWpcSXRcrq3wG7law1pA9qT6PGMZtda5zl+xJpzi53gm6NqnxjEcqCtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740349230; c=relaxed/simple;
-	bh=4q+jpYig8+lGmn0wOK0GfqUH3CgPPbw/JiQVIVEvhEE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=NSDTMQG7RloOeJzCXnI6QwU5mgG3lHDIQGiO2z7YfH0hM6oEyzE4UcrpcRka4UfaS3ByPWDGi3sC4ji1QqEztn2T6vHefiKfQe7j4rqS8QkLUDl2qoWHoNhL3MZZb5D2dot5Uv410/cqaINovnPagM1xWR8JuwLlINRHHgwznRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3d2a40e470fso29977195ab.3
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 14:20:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740349228; x=1740954028;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mS1ypvNRaPahBWxFrx6PlbD10RNfGLusDYKckKCNbJQ=;
-        b=paUhOQBMa/iBDrRYixwg9C2DQgFGwgjprk40IcB7ZH0DWH7lsrMcj4yOrlwzTzFiCu
-         QB4eCa4eBLxc3+qru+4jEcKS4Npm5Ahl0CovRa1AlO1ILQT35tcO9sevAl2ZS1qVcD/Z
-         j8OOE8uvmjeHVyBILBwOudqeA+PPE/BrQ/v1ALa34sMquGnupfcaSJSSObng59LPL12w
-         0iWwyS6vi3vlE3FGkyQCElz4BrMDK6SPRUWfuhPuVkk+af8rBklSnGZ1Decm4gqimTn/
-         vgt0QxDw7b5/wJv4kCpOn3TdhD0VbqCuXYFC8LxTcBUcbCbcS60gteNIHIvnHUrM4cx4
-         TqaQ==
-X-Gm-Message-State: AOJu0YyyGCvhQ79ygM35vBEganCUJz6JU1SJKlK4vsn/4BpaTHzLi9+T
-	a+6C176rf2+Rdcm+ia9g0ZYR9UOHppTfNDDvW63BzhuFnQ2cOH9zoU6MhoqHcAceNlH0nghyYFC
-	Z2SEVYzELFhc9jfUphvfjEjeX9dhrMLEjY0s8EpvywLnFuJHMJbmmiWE=
-X-Google-Smtp-Source: AGHT+IGQqcaW4Hu1YQC7Fp50SrwGoWLTurWsEPiiey8K4lpKcyZU6Y9+fHhmn5Tx372K/FSdOrLJ2IIN5VP0GgJ7mHenujBZqrTq
+	s=arc-20240116; t=1740349400; c=relaxed/simple;
+	bh=cO+03W7LKSpfkqlQl1tWjap1YNAiUiYyUXY+/lqyh54=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dn1oK3yJMd09tDjP+YfRvh3UZ+Z1+6islAUGC6BV10rDJtdVQeRx0bFtssencT/qIpbBBhjkaztqhEX74ro6vlXMDWcSqPCOv1n5bnwSyKqVli8T3X070qSpJ9QkFp7a3OlaYcCUH9jmxD1z42HavPznRoYukFFZamchWZKYKsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AzO88M6M; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AzO88M6M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86C50C4CEDD;
+	Sun, 23 Feb 2025 22:23:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740349399;
+	bh=cO+03W7LKSpfkqlQl1tWjap1YNAiUiYyUXY+/lqyh54=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AzO88M6M022VYoqB6BqZvXJjMDiRGeeOrLcuJ1xpc/b1ZWQQP0xSI/yDtRKRa/Fgt
+	 91oOVlucUr0q1w24Yj03wY9ilI3cHi1W21qNSBD+1GEI2nfrDwfgHy4irMRV1Y1LWU
+	 If8mXGYyKZagiDh9a/hFSwHepz5fsW0istb/haIuuv9IclSLUWHTW5Hm5JUXH7e87O
+	 Q/+jm1ga9oQoka4w/8AQPuYgKTIk/BoPQo1AhZVIfNYrlzBROplu+NKv0l8+seiDrT
+	 4isNZoVySHlWVa8U0aUoMu9dk0iXqxedty0L7tkiohWxvSLdAD2AV3r9+WhrjikWw0
+	 Am5IRZoTaepsA==
+Received: by pali.im (Postfix)
+	id 75C53A00; Sun, 23 Feb 2025 23:23:06 +0100 (CET)
+Date: Sun, 23 Feb 2025 23:23:06 +0100
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>,
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>
+Cc: linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] cifs: Handle all name surrogate reparse points
+Message-ID: <20250223222306.plgy3bpy5mjojfve@pali>
+References: <20241222145845.23801-1-pali@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1448:b0:3d0:10a6:99b9 with SMTP id
- e9e14a558f8ab-3d2cae474a7mr93378615ab.3.1740349228258; Sun, 23 Feb 2025
- 14:20:28 -0800 (PST)
-Date: Sun, 23 Feb 2025 14:20:28 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67bb9f2c.050a0220.bbfd1.003e.GAE@google.com>
-Subject: [syzbot] Monthly netfs report (Feb 2025)
-From: syzbot <syzbot+list734458d14554b90e6367@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, netfs@lists.linux.dev, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20241222145845.23801-1-pali@kernel.org>
+User-Agent: NeoMutt/20180716
 
-Hello netfs maintainers/developers,
+Hello Steve, I see that you have merged first two changes (1/4 and 2/4)
+from this patch series, but the remaining (3/4 and 4/4). Is there any
+reason why 3/4 and 4/4 was not taken?
 
-This is a 31-day syzbot report for the netfs subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/netfs
-
-During the period, 4 new issues were detected and 0 were fixed.
-In total, 8 issues are still open and 3 have already been fixed.
-
-Some of the still happening issues:
-
-Ref Crashes Repro Title
-<1> 49      Yes   INFO: task hung in netfs_retry_writes
-                  https://syzkaller.appspot.com/bug?extid=666a9cb4c41986207cdf
-<2> 10      Yes   WARNING in netfs_writepages
-                  https://syzkaller.appspot.com/bug?extid=06023121b0153752a3d3
-<3> 4       Yes   INFO: task hung in pipe_write (6)
-                  https://syzkaller.appspot.com/bug?extid=5984e31a805252b3b40a
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
-
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
+On Sunday 22 December 2024 15:58:41 Pali Rohár wrote:
+> Name surrogate reparse point represents another named entity in the system.
+> 
+> If the name surrogate reparse point is not handled by Linux SMB client
+> and it is of directory type then treat it as a new mount point.
+> 
+> Cleanup code for all explicit surrogate reparse points (like reparse
+> points with tag IO_REPARSE_TAG_MOUNT_POINT) as they are handled by
+> generic name surrogate reparse point code.
+> 
+> Pali Rohár (4):
+>   cifs: Throw -EOPNOTSUPP error on unsupported reparse point type from
+>     parse_reparse_point()
+>   cifs: Treat unhandled directory name surrogate reparse points as mount
+>     directory nodes
+>   cifs: Remove explicit handling of IO_REPARSE_TAG_MOUNT_POINT in
+>     inode.c
+>   cifs: Improve handling of name surrogate reparse points in reparse.c
+> 
+>  fs/smb/client/inode.c    | 17 +++++++++++++----
+>  fs/smb/client/reparse.c  | 24 ++++++++++--------------
+>  fs/smb/common/smbfsctl.h |  3 +++
+>  3 files changed, 26 insertions(+), 18 deletions(-)
+> 
+> -- 
+> 2.20.1
+> 
