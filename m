@@ -1,100 +1,101 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5305D8F0;
-	Sun, 23 Feb 2025 18:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBE35D8F0;
+	Sun, 23 Feb 2025 18:21:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740334815; cv=none; b=VuvxfwP5VnaetUw+byW3Vv1Hviwa7ZB8sE/pdI2teipz6dqNODDO8CD3VpavihJqTG4tNXRKm4kU2tY/rrLk9dfsugXfhCAe722avJWA5EmHBJiE4AZKKvLie2zbBxH6gBkudmkhSMhoPbobd7yDHzdcH12y94oKUhZCSKg8bek=
+	t=1740334878; cv=none; b=mLXGdYs81B8TcmCm1mM/EJ8r3bGtuZwfhJaEqvYpXPb4Q01WqXYFOjCw4K/+wBPj0ZGcgz5AlnX2EK8wmdJeBHMsCA0WtsDm9Cst78ul+VE0KoXAOha2Zz2Qvd5K1LPTZ+ZQuebcLKbx4ce7VupoqABF5L+J3qMtCYKDYGOakWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740334815; c=relaxed/simple;
-	bh=HBp4QA1jlzDHb6KvcKL52rItPm2mUXcyrVknpGq1yIs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bUXU8Uh9Obf5ODVO/5pI1yjntJWTo5ok6avIZfGemU47aHw0mwAIJ6C+Kb+Se3E27F+Sng8z+8kxl+MSM8TJLycX1ctOJ5qLWfOfy+aPVaafL2XHLgsoES7e923Anmdhtb1Chc5f683HHVoLDcLKK4eE430n9O5G3DH0FrkAYgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=oc3P/TjG; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="oc3P/TjG"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 14AAA496;
-	Sun, 23 Feb 2025 19:18:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1740334726;
-	bh=HBp4QA1jlzDHb6KvcKL52rItPm2mUXcyrVknpGq1yIs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oc3P/TjGjXw9OuGLRhGu7f0SHOSAVSpSb1DNpwpw2AQSXpGBQ2ZSqHvaRrrxy3rTA
-	 jnQaYPjku9uFO2axV7zDgvUTAXU75LxodJtyUwn68dpF0LWilEM9ToHXVEP7HaymgD
-	 vnQpmR/NOvA6xrGqN7ScaxivGwVBSkIjFZ3SWhHk=
-Date: Sun, 23 Feb 2025 20:19:55 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
-Cc: tomm.merciai@gmail.com, linux-renesas-soc@vger.kernel.org,
-	linux-media@vger.kernel.org, biju.das.jz@bp.renesas.com,
-	prabhakar.mahadev-lad.rj@bp.renesas.com,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 09/18] media: rzg2l-cru: csi2: Make system clock
- optional for RZ/V2H(P) SoC
-Message-ID: <20250223181955.GD8330@pendragon.ideasonboard.com>
-References: <20250221155532.576759-1-tommaso.merciai.xr@bp.renesas.com>
- <20250221155532.576759-10-tommaso.merciai.xr@bp.renesas.com>
+	s=arc-20240116; t=1740334878; c=relaxed/simple;
+	bh=naByVkUiz/GQlhP55+XLPPUFw52CHqfSQjnK+2OSx2Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=HF0boOTZlfCuvC+mTWu+Kz7uTTsaBG9AN2RFZo+AFXHUBVOO0LJmut243ZgWDgpnctqmfAiVOiOZXpZ9vlz6HjWvewQXBF1e5FInsFvLFACmDppySQMMP18GWAfJpMjAaHhru5kONL7Iv4jokzHZHoax3sQ195PMZfBy6lwoi/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.2.102] (213.87.151.162) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Sun, 23 Feb
+ 2025 21:05:49 +0300
+Message-ID: <3315dad1-52a8-4ae7-be65-6b9ccf3dfbfe@omp.ru>
+Date: Sun, 23 Feb 2025 21:05:47 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250221155532.576759-10-tommaso.merciai.xr@bp.renesas.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] usb: olpi: Remove unused otg_ulpi_create
+To: <linux@treblig.org>, <gregkh@linuxfoundation.org>,
+	<linux-usb@vger.kernel.org>
+CC: <linux-kernel@vger.kernel.org>
+References: <20250223160602.91916-1-linux@treblig.org>
+Content-Language: en-US
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+In-Reply-To: <20250223160602.91916-1-linux@treblig.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 02/23/2025 17:49:06
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 19
+X-KSE-AntiSpam-Info: Lua profiles 191206 [Feb 23 2025]
+X-KSE-AntiSpam-Info: Version: 6.1.1.11
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 51 0.3.51
+ 68896fb0083a027476849bf400a331a2d5d94398
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.151.162 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info:
+	127.0.0.199:7.1.2;omp.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
+X-KSE-AntiSpam-Info: {Tracking_ip_hunter}
+X-KSE-AntiSpam-Info: FromAlignment: s
+X-KSE-AntiSpam-Info: ApMailHostAddress: 213.87.151.162
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 19
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 02/23/2025 17:52:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 2/23/2025 2:52:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-Hi Tommaso,
+On 2/23/25 7:06 PM, linux@treblig.org wrote:
 
-Thank you for the patch.
-
-On Fri, Feb 21, 2025 at 04:55:23PM +0100, Tommaso Merciai wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
 > 
-> The RZ/V2H(P) SoC does not provide a `system` clock for the CSI-2
-> interface. To accommodate this, use `devm_clk_get_optional()` instead
-> of `devm_clk_get()` when retrieving the clock.
-
-The clock shouldn't be optional. On all SoCs but V2H it should remain
-mandatory, and on V2H you shouldn't call clk_get() at all.
-
-I'd recommend adding a flag to the rzg2l_csi2_info structure.
-
-> This patch is in preparation for adding support for RZ/V2H(P) SoC.
+> otg_ulpi_create() has been unused since 2022's
+> commit 8ca79aaad8be ("ARM: pxa: remove unused pxa3xx-ulpi")
 > 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+> Remove it.
+> 
+> The devm_ variant is still used.
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 > ---
->  drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c
-> index 3a4e720ba732..771fa35558be 100644
-> --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c
-> +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-csi2.c
-> @@ -796,7 +796,7 @@ static int rzg2l_csi2_probe(struct platform_device *pdev)
->  		return dev_err_probe(dev, PTR_ERR(csi2->presetn),
->  				     "Failed to get cpg presetn\n");
->  
-> -	csi2->sysclk = devm_clk_get(dev, "system");
-> +	csi2->sysclk = devm_clk_get_optional(dev, "system");
->  	if (IS_ERR(csi2->sysclk))
->  		return dev_err_probe(dev, PTR_ERR(csi2->sysclk),
->  				     "Failed to get system clk\n");
+>  drivers/usb/phy/phy-ulpi.c | 23 -----------------------
 
--- 
-Regards,
+   Probably s/olpi/ulpi/ in the subject then?
 
-Laurent Pinchart
+>  include/linux/usb/ulpi.h   |  9 ---------
+>  2 files changed, 32 deletions(-)
+> [...]
+MBR, Sergey
+
