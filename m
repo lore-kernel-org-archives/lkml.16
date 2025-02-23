@@ -1,41 +1,41 @@
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45DD1547E3;
-	Sun, 23 Feb 2025 17:33:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0621547E3;
+	Sun, 23 Feb 2025 17:33:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740332017; cv=pass; b=Co6JssykhAaLMiXCOZ4YEwTevx/hwjw11ORdLuDXRvcEl8/yJJYy5ev54ORgnVUUEJzLQKhgSNJubcSd5WkXRsl4J+o91r651GQdHFxb2WftQL1w/PeZsNS/YPhci8OiJJEjFdoximCNVO56sOTbAqADSL6u7l57gtx0gAlGplU=
+	t=1740332026; cv=pass; b=JCbkoMVfyJ1+SH1xcHGvqs+i2/EQ0Izcc42x8eQNQVcmEUyDZqSeWmHZWiA9ObhRByEZHfNjXoiQ0TOfHzZNLoSQnvXLK7Uj5pya2wxEqgUuqax/TLN3Eo62GJvTQaj4hvh+Af27L6/tLF46ZFUCGa/gV1YkIamAIuD0AyILQro=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740332017; c=relaxed/simple;
-	bh=45EZu9kkzl5OwUmwDGaw6JS8EitUKF1mOe5bkbmhpS0=;
+	s=arc-20240116; t=1740332026; c=relaxed/simple;
+	bh=8F66nSttOlsQP03vnEfihLm5ICcMwT66a6odkCxM1MQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QSA+6ZOQxJnzXhc6OmpaSAFPY8Rfq+sFzwHCqZj91t9ujTQCwtT6pKUsfXzZ8g2iLJFd+zTPec+mP49tJ/vvckj/DDIiXX0WENPaO90e+Fvdu+ZuvHTYzVYDI7zwo5ce9ssHCQBPmcrkYjvbJxH+H9z2Hy68PspCIW7LLtATaFg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=SEptZjfH; arc=pass smtp.client-ip=136.143.188.112
+	 MIME-Version; b=YLoDfjwZ745W1pDimnctSDpZ7zMPYZys/Bazb4ycQSRn932gYENxJX1680TISBDTtICESGQlsj2puQwYNMsnzpbShkkELNbyVNCNpwO2qANEcthWGH/zOhUZuQkMShZ/reisd+j0If3bnW6pdleWbjVkwnerb6zS72wYb3/yWcs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=WMH3k6Md; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="SEptZjfH"
-ARC-Seal: i=1; a=rsa-sha256; t=1740331981; cv=none; 
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="WMH3k6Md"
+ARC-Seal: i=1; a=rsa-sha256; t=1740331991; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=hBMjXpPBV+o2Sqzl5ObNQEqtHFKG094DKsT8skMFGMXsFO+LTFAr1bxcxXwLITn/249/nWxOOQrJoEdEVNY4CUMqdpiM9gsqxTvJmYUXJoqDHwlgqPW0pXAZYVPS9GSj5AXdkfArh6tY7NT7tXabTENWY24UJcPUHZ85VzfbANc=
+	b=GpDUpFYUa9gxPOiUlU6z1KVWLybSFnCFr+6FitWMUYbMHQXODDN/dTmhU9SjrZEKKg/BAa3Os+ITVmYoqSB9d1jrfVfzEEBQx5JPRB+842/P+fTArk17Jcb9X6RYh4LgQmdAW18skW0CcX8736XyPpS8Bj8QgFG3FbVSwVhfSro=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740331981; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=wx0i2BTQEV+R7NoKsDdzMKdh9jqK1pOVfRv5zU5IOEA=; 
-	b=iwGAEBoZTRc2njhbrPfbzHBHLhL0UIt3DSyAv2MI0o/ATX6i/K3Ku9yBA6nV9GNzmw0PlgZNthJlSIMoeyKNWcKP/Jdfl/yMQNhOKGTOOsPcicvxN+CdM7T0N2XSNZjB6GuvqzSXW7eA5HElok5Vu6ZKH+GyekRT5AmvJ2fr4ho=
+	t=1740331991; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=v6XdBeWdF3ROCU+Lkd505Ci9024pYHmhBHgplZExxHU=; 
+	b=IRAVXWQUEQpqkDPLTi0vIIS8+q80qud4pbkxyeayBffs0c2tQloBcg2wgbfLw/IXDI8k7p8YMuQAw58X53IkUFhg2pnkDIWDsJFAFlwB5b8w+2qT+SsK4c7wmZM/zBWFeqgmrWX0cHF5IIJdLoK1ksDHS61zmDV0omqxtm/RzYc=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
 	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740331981;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740331991;
 	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
 	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=wx0i2BTQEV+R7NoKsDdzMKdh9jqK1pOVfRv5zU5IOEA=;
-	b=SEptZjfHxhZpU4yRJBFSjGuScXGOLooynTX+lDh8HEQnB528DNIbzPse6Vy0Wn8H
-	h3/CVyutDn3ik5APW8PyDRr78igLtnxE1QBqbpeNLrSuLIPxpqIlENuwAaBS6UlsrKh
-	NXJTlzTPP/RSpla5IJwa2mfEDC0D2C9mzVj7AgKg=
-Received: by mx.zohomail.com with SMTPS id 1740331977182149.58493188372495;
-	Sun, 23 Feb 2025 09:32:57 -0800 (PST)
+	bh=v6XdBeWdF3ROCU+Lkd505Ci9024pYHmhBHgplZExxHU=;
+	b=WMH3k6MdoOJbifHHTh1XhQPdg2vcQKGPo11Wuf89A/7ygFlADg7FnGfLde8DIQos
+	f5Tg2HqyvXKZcvDSuVpeLGGJu6wh+2Io4p/VX58+Y8PM27zvkY1+f6UyKlPwT91OBH9
+	sn74+x9sApLmvYMqZAL1pLEPyzARPqrglDpTVKRY=
+Received: by mx.zohomail.com with SMTPS id 1740331990357465.19994245620387;
+	Sun, 23 Feb 2025 09:33:10 -0800 (PST)
 From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
 To: Shreeya Patel <shreeya.patel@collabora.com>,
 	Heiko Stuebner <heiko@sntech.de>,
@@ -55,9 +55,9 @@ Cc: kernel@collabora.com,
 	linux-kernel@vger.kernel.org,
 	linux-rockchip@lists.infradead.org,
 	Tim Surber <me@timsurber.de>
-Subject: [PATCH v8 3/6] arm64: dts: rockchip: Add device tree support for HDMI RX Controller
-Date: Sun, 23 Feb 2025 20:30:16 +0300
-Message-ID: <20250223173019.303518-4-dmitry.osipenko@collabora.com>
+Subject: [PATCH v8 5/6] arm64: defconfig: Enable Synopsys HDMI receiver
+Date: Sun, 23 Feb 2025 20:30:18 +0300
+Message-ID: <20250223173019.303518-6-dmitry.osipenko@collabora.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250223173019.303518-1-dmitry.osipenko@collabora.com>
 References: <20250223173019.303518-1-dmitry.osipenko@collabora.com>
@@ -70,122 +70,29 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-From: Shreeya Patel <shreeya.patel@collabora.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-Add device tree support for Synopsys DesignWare HDMI RX
-Controller.
+The Rockchip RK3588 has a built-in HDMI receiver block from
+Synopsys. Let's enable the driver for it.
 
-Reviewed-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Tested-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Co-developed-by: Dingxian Wen <shawn.wen@rock-chips.com>
-Signed-off-by: Dingxian Wen <shawn.wen@rock-chips.com>
-Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
 ---
- .../dts/rockchip/rk3588-base-pinctrl.dtsi     | 14 +++++
- .../arm64/boot/dts/rockchip/rk3588-extra.dtsi | 57 +++++++++++++++++++
- 2 files changed, 71 insertions(+)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-base-pinctrl.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-base-pinctrl.dtsi
-index 7f874c77410c..2d4b9986a177 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-base-pinctrl.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-base-pinctrl.dtsi
-@@ -594,6 +594,20 @@ hdmim0_tx1_hpd: hdmim0-tx1-hpd {
- 				/* hdmim0_tx1_hpd */
- 				<1 RK_PA6 5 &pcfg_pull_none>;
- 		};
-+
-+		/omit-if-no-ref/
-+		hdmim1_rx: hdmim1-rx {
-+			rockchip,pins =
-+				/* hdmim1_rx_cec */
-+				<3 RK_PD1 5 &pcfg_pull_none>,
-+				/* hdmim1_rx_scl */
-+				<3 RK_PD2 5 &pcfg_pull_none_smt>,
-+				/* hdmim1_rx_sda */
-+				<3 RK_PD3 5 &pcfg_pull_none_smt>,
-+				/* hdmim1_rx_hpdin */
-+				<3 RK_PD4 5 &pcfg_pull_none>;
-+		};
-+
- 		/omit-if-no-ref/
- 		hdmim1_rx_cec: hdmim1-rx-cec {
- 			rockchip,pins =
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi
-index 4a950907ea6f..b7d06f93c8ce 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-extra.dtsi
-@@ -7,6 +7,30 @@
- #include "rk3588-extra-pinctrl.dtsi"
- 
- / {
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		/*
-+		 * The 4k HDMI capture controller works only with 32bit
-+		 * phys addresses and doesn't support IOMMU. HDMI RX CMA
-+		 * must be reserved below 4GB.
-+		 * The size of 160MB was determined as follows:
-+		 * (3840 * 2160 pixels) * (4 bytes/pixel) * (2 frames/buffer) / 10^6 = 66MB
-+		 * To ensure sufficient support for practical use-cases,
-+		 * we doubled the 66MB value.
-+		 */
-+		hdmi_receiver_cma: hdmi-receiver-cma {
-+			compatible = "shared-dma-pool";
-+			alloc-ranges = <0x0 0x0 0x0 0xffffffff>;
-+			size = <0x0 (160 * 0x100000)>; /* 160MiB */
-+			alignment = <0x0 0x40000>; /* 64K */
-+			no-map;
-+			status = "disabled";
-+		};
-+	};
-+
- 	usb_host1_xhci: usb@fc400000 {
- 		compatible = "rockchip,rk3588-dwc3", "snps,dwc3";
- 		reg = <0x0 0xfc400000 0x0 0x400000>;
-@@ -135,6 +159,39 @@ i2s10_8ch: i2s@fde00000 {
- 		status = "disabled";
- 	};
- 
-+	hdmi_receiver: hdmi_receiver@fdee0000 {
-+		compatible = "rockchip,rk3588-hdmirx-ctrler", "snps,dw-hdmi-rx";
-+		reg = <0x0 0xfdee0000 0x0 0x6000>;
-+		power-domains = <&power RK3588_PD_VO1>;
-+		rockchip,grf = <&sys_grf>;
-+		rockchip,vo1-grf = <&vo1_grf>;
-+		interrupts = <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH 0>;
-+		interrupt-names = "cec", "hdmi", "dma";
-+		clocks = <&cru ACLK_HDMIRX>,
-+			 <&cru CLK_HDMIRX_AUD>,
-+			 <&cru CLK_CR_PARA>,
-+			 <&cru PCLK_HDMIRX>,
-+			 <&cru CLK_HDMIRX_REF>,
-+			 <&cru PCLK_S_HDMIRX>,
-+			 <&cru HCLK_VO1>;
-+		clock-names = "aclk",
-+			      "audio",
-+			      "cr_para",
-+			      "pclk",
-+			      "ref",
-+			      "hclk_s_hdmirx",
-+			      "hclk_vo1";
-+		resets = <&cru SRST_A_HDMIRX>, <&cru SRST_P_HDMIRX>,
-+			 <&cru SRST_HDMIRX_REF>, <&cru SRST_A_HDMIRX_BIU>;
-+		reset-names = "axi", "apb", "ref", "biu";
-+		memory-region = <&hdmi_receiver_cma>;
-+		pinctrl-0 = <&hdmim1_rx>;
-+		pinctrl-names = "default";
-+		status = "disabled";
-+	};
-+
- 	pcie3x4: pcie@fe150000 {
- 		compatible = "rockchip,rk3588-pcie", "rockchip,rk3568-pcie";
- 		#address-cells = <3>;
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index cb7da4415599..6ed1ad3c0055 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -859,6 +859,7 @@ CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC=m
+ CONFIG_VIDEO_SAMSUNG_S5P_JPEG=m
+ CONFIG_VIDEO_SAMSUNG_S5P_MFC=m
+ CONFIG_VIDEO_SUN6I_CSI=m
++CONFIG_VIDEO_SYNOPSYS_HDMIRX=m
+ CONFIG_VIDEO_TI_J721E_CSI2RX=m
+ CONFIG_VIDEO_HANTRO=m
+ CONFIG_VIDEO_IMX219=m
 -- 
 2.48.1
 
