@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 189491DB125;
-	Sun, 23 Feb 2025 08:46:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F0452F3B;
+	Sun, 23 Feb 2025 08:48:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740300389; cv=none; b=QrrDuZHnlC9rYmZ3slbkwqRG6t2zDe/cTIS54p2yKHwQNEUOOyS26fbKByVCvOHz4F8oxCDKFC0T+rZJb8+dJcwalQVfvnvtg1w7FgORDfXDI1dmkbcc6mpTK0ofioQ9OwpHU/MTewHcR2LucgGOe5WCiKhEvhTsP+f9ZrHyteg=
+	t=1740300517; cv=none; b=nDepkFm64C5CDUYtQN72Cr2+QpJ+WPsItKNFVZ02dj5B1qbJW1DB1s5UMaQq3r6nK4CCwLc/6/g5q+NpojeETxf37DNz5fVG4C+L5Wk9jCKT6oa6L+zOQHAp73SuA9uL1f/ME5w1XgPuXxqqp1o2pbhqI584Lk76hHBqEVo+E5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740300389; c=relaxed/simple;
-	bh=0RaAMpQoMMIAtos2wWNjuemUUO6cn0qCxmF+EkB+HFM=;
+	s=arc-20240116; t=1740300517; c=relaxed/simple;
+	bh=rpycrvI3qn3Uju8hG/7fBkNu9SyGAvQZz4fJVKKo618=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sJClfVVJbAXKR5+dXmm+dVVWCfwFhhdCRNxxfjyTZFLBiNAoRelrf/vJgak6msMTIBLPDS0JWdJj0ii6zoUBAKOgE7l+Bv8skL98/KlSc4q6RfYApov40ZIvhHqU8oKFUDpMAzLaHBCXs49ExQKj6ABhNz1yAEocmvllSpSrMXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tFbaoZJN; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=bfwcnU+AzpgflQTu1OczWAhSaQJEr0nsF9y/cTC9o9TwtMHZYbG67ukMPFV4Kfad8g0o9HguSmI44TEsNfJM1ncpUUqmZTxbyCi3ZSDpf1vFecPJuU7pNbbtjMksbxRhp1oi5HTHctm3fQZzzfdLuGwRUCrfkjtFfLPH+nRaDIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ocFPuMo5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tFbaoZJN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5E3CC4CEDD;
-	Sun, 23 Feb 2025 08:46:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ocFPuMo5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44BB1C4CEDD;
+	Sun, 23 Feb 2025 08:48:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740300388;
-	bh=0RaAMpQoMMIAtos2wWNjuemUUO6cn0qCxmF+EkB+HFM=;
+	s=k20201202; t=1740300516;
+	bh=rpycrvI3qn3Uju8hG/7fBkNu9SyGAvQZz4fJVKKo618=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tFbaoZJNL4cgXw4FX2l82CP89M+V4sPB0gBJoIHY/f3dFqQ16XRiXwE4pqggDFhZi
-	 0OeTKLCR/1UoOIWMnLJxXrh7Ao71EVc+sG3bVcFCrXarDap0VEEdEAN+Ssyp9pudWP
-	 yp2g7NiXgBxSTi4GzMkPofCxAbYNlp21l/5qvrgyjI724FyoK+K5y7MVEnjhNL0tdM
-	 OGnnxbdcZEMB83a/bxp51EQMJAKh3jzCWH7NWOieRsblAFSCdcb9lvCIQMBQiX5T7v
-	 DhqRZ9iSnO+IiJFOhKKNJ/aTD2+hzTMG4DVRoKWH2r6y7tvPkXmFwsuhaOmkUWugLL
-	 o/NUfZSnFQAgw==
-Message-ID: <50acb698-c32c-4276-90d2-46ee9de7bfe9@kernel.org>
-Date: Sun, 23 Feb 2025 09:46:22 +0100
+	b=ocFPuMo57XeN+YARf2FrCJOl+ICeBvFFMdK+9vaccbcNaaTvgc81Gad/7ZJyajjgi
+	 wrmj4zmNCTPN2DzIpRw5IVJpD3PYmhFEUZ4BJZKjHfXrVpuE9fo3ozATZE9uP8c+sz
+	 6tW11VKmmq3tijy3YL2TQsE0WPD25xI5uMWh6hk3QCxE6Xgf7EQHgrtPcrXAMBmkVg
+	 n3U2n1GZ+6Iod5UZ60GJIDwhviGaTyUaQPiY6u0kKFqnXDDlesR0egJGXZPI7R0UQE
+	 8TEQH47Be59z30TuolBOHSTMMORfSq5tjXJd2FRWMOcdZsyWjF/DxeS6l2Pz1z5ut4
+	 vxz3zoVC2Zp8g==
+Message-ID: <a8ad3469-f170-4af0-abaf-d34c60e4df52@kernel.org>
+Date: Sun, 23 Feb 2025 09:48:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,23 +35,23 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [EXTERNAL] Re: [PATCH v2 2/4] dt-bindings: cp110: Document the
- reset controller
-To: Wilson Ding <dingwei@marvell.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: reset: Add Armada8K reset controller
+To: Wilson Ding <dingwei@marvell.com>, Rob Herring <robh@kernel.org>
 Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
  "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
  "linux-arm-kernel@lists.infradead.org"
  <linux-arm-kernel@lists.infradead.org>, "andrew@lunn.ch" <andrew@lunn.ch>,
  "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
  "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
- "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
- <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
  "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
  Sanghoon Lee <salee@marvell.com>, Geethasowjanya Akula <gakula@marvell.com>
 References: <20250220232527.882888-1-dingwei@marvell.com>
- <20250220232527.882888-3-dingwei@marvell.com>
- <20250221-huge-able-ostrich-5c70cd@krzk-bin>
- <BY3PR18MB4673E3FA63FA85F1C11E68F0A7C62@BY3PR18MB4673.namprd18.prod.outlook.com>
+ <20250220232527.882888-2-dingwei@marvell.com>
+ <20250221-icy-flounder-of-potency-ee1a05@krzk-bin>
+ <20250221234041.GA387671-robh@kernel.org>
+ <BY3PR18MB4673F55565B70458E1F3F9A6A7C62@BY3PR18MB4673.namprd18.prod.outlook.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -97,53 +97,47 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <BY3PR18MB4673E3FA63FA85F1C11E68F0A7C62@BY3PR18MB4673.namprd18.prod.outlook.com>
+In-Reply-To: <BY3PR18MB4673F55565B70458E1F3F9A6A7C62@BY3PR18MB4673.namprd18.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 22/02/2025 22:02, Wilson Ding wrote:
-> 
-> 
->> -----Original Message-----
->> From: Krzysztof Kozlowski <krzk@kernel.org>
->> Sent: Friday, February 21, 2025 12:47 AM
->> To: Wilson Ding <dingwei@marvell.com>
->> Cc: linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-
->> kernel@lists.infradead.org; andrew@lunn.ch; gregory.clement@bootlin.com;
->> sebastian.hesselbarth@gmail.com; robh@kernel.org; krzk+dt@kernel.org;
->> conor+dt@kernel.org; p.zabel@pengutronix.de; Sanghoon Lee
->> <salee@marvell.com>; Geethasowjanya Akula <gakula@marvell.com>
->> Subject: [EXTERNAL] Re: [PATCH v2 2/4] dt-bindings: cp110: Document the
->> reset controller
->>
->> On Thu, Feb 20, 2025 at 03: 25: 25PM -0800, Wilson Ding wrote: > Add reset-
->> controller sub-node into the system controller node, and > document the
->> supported reset lines. > > Signed-off-by: Wilson Ding
->> <dingwei@ marvell. com> > 
->> On Thu, Feb 20, 2025 at 03:25:25PM -0800, Wilson Ding wrote:
->>> Add reset-controller sub-node into the system controller node, and
->>> document the supported reset lines.
+On 22/02/2025 21:57, Wilson Ding wrote:
+
+>>>> +  offset:
+>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>>> +    description: Offset in the register map for the gpio registers
+>>>> + (in bytes)
 >>>
->>> Signed-off-by: Wilson Ding <dingwei@marvell.com>
->>> ---
->>>  .../arm/marvell/cp110-system-controller.txt   | 43 +++++++++++++++++++
+>>> That's neither correct nor needed. Your device knows ofsset based on
+>>> the compatible.
 >>
->> NAK.
+>> Or use 'reg'.
 >>
->> You already got feedback that TXT bindings are not accepted.
+>> But really, just add #reset-cells to the parent node. There's no need for a child
+>> node here. The parent needs a specific compatible though.
 >>
 > 
-> I am not trying to use this TXT for dt-binding. But as you can see this file
-> describes all the sub-nodes details, such as mpps, clocks information. So
-> that I add the reset line info here. If this is not the right place, where shall
-> I put this information. I wonder if you are asking to convert this txt into
-> yaml.
-You just duplicated the YAML binding in TXT. If you wanted to reference
-the child, you would say something that there is a reset device in
-binding foo.yaml.
+> I am not inventing the 'offset' property. I just tried to follow the other existing
+> sub-nodes under the same parent node (system-controller). The mvebu-gpio
+> driver also uses 'offset' instead of 'reg' for the syscon device (see below). But it
 
-But yeah, ideally this entire binding should be also converted to DT
-Schema / YAML.
+
+You never answered why do you need offset and why it cannot work without.
+
+> seems also not correct from your point of view. Now, I am a bit confused what
+> should be the right scheme for the Armada's system-controller, including GPIO
+> and Reset controller. And dt_binding_check complains "system-controller@
+> 440000:  compatible: ['syscon', 'simple-mfd'] is too short". Can you point me
+> any  reference for me to fix these issues.
+
+See all other syscon devices. 'git grep simple-mfd' or for syscon
+
+
+> 
+> CP110_LABEL(syscon0): system-controller@440000 {
+> 	compatible = "syscon", "simple-mfd";
+> 	reg = <0x440000 0x1000>;
+
 
 Best regards,
 Krzysztof
