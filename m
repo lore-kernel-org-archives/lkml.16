@@ -1,126 +1,119 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from baldur.buserror.net (baldur.buserror.net [165.227.176.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17DC6125;
-	Mon, 24 Feb 2025 00:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5908410F2;
+	Mon, 24 Feb 2025 00:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=165.227.176.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740356607; cv=none; b=soZSjC03rgWCdoiNmapoI6WHUrs7Nu2BKIqZZKDnNAEW6jmCfexGfvqTFvc8Oehy1isrt164vS75/oCXkN2/Knz5sSt+2coCFPRLUsWsOrzBm5J5RBYsNIgIxYmyP6fAH3gLHtaozHCFZiZ+6jkXQZB+XQfMu8Mn9yllchPftNQ=
+	t=1740356859; cv=none; b=uymgHnBJHXgpsiIOlqEA0P+rUfsq+R+sVf3WEi+je3Kmw0SvY5ul85WVegA47Bq2HxTxB5fwtYUUKk7HcK3N6VhNoJ6mKc4aGp0NSUsMg2hnzfIK/sF7mmN8sGOJY6PRu/hgB2tqDU/A3Yt0uOLIaXu4ELK7vDhD72VQa75NzHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740356607; c=relaxed/simple;
-	bh=9PfFQv5rpvfO87F+TZBj1QMCFUL8jKYvXjKgV9ecBv0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Mq8U/DBEMREPUBbhZ6f8xBXTLgbygH2+ZsOAhuBl7qC3KUxhgqfC7p1ffmdrFyQhxjsyzUr/SyIG+qWPPNC5laIn8+GBKm1v6dEfXGRHSJIbE6G5m+Fc/1YtPb7vDIIr2JF36454MtwOApQpDi2ZmHz3/I6Vw07CcOV+WRg0YMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FDFJ7SmH; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740356859; c=relaxed/simple;
+	bh=0I41af2cJ7npBQ2S28LqxW7YvzWA+DEHxxUd9YrgFBM=;
+	h=Date:From:To:Cc:Message-ID:References:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:Subject; b=djVL+SNZzn9QmYIFpAjt0JLWLDKExawg8yyex9nWgt6ssDR1usHF7303q5SWKhWb4jHKO8GHGsUJ3YlRr0qnhJ7RPpTzwVYV21fmPcHFfQ1fq5vGcaORSEiIGqZnln93Y0LudmBzJyCPYvcFGKBEBb0t63f7s1oXpMrgEAfGWGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=buserror.net; spf=pass smtp.mailfrom=buserror.net; dkim=pass (2048-bit key) header.d=buserror.net header.i=@buserror.net header.b=1+v+ww0e; arc=none smtp.client-ip=165.227.176.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=buserror.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buserror.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FDFJ7SmH"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c08b14baa9so365553685a.3;
-        Sun, 23 Feb 2025 16:23:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740356605; x=1740961405; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Bp8Q3VOPQDS+11tGhMzOHaekmo8JCJ4+f6K7eG8FK5s=;
-        b=FDFJ7SmHZYMDTlNQ1V8fgB1KRgE4yPEViBHohF58IU2N8O1zRCNGWxZg/vP7spAeIB
-         lQZtBTMi1p1wi9copkXaWeut+seR9Tpcabp+7NNMee063TgidcCTfwKIViT8suCJIrQB
-         MaZOaVBuSL5aLTb8YBtbTnSldh+cVvR5aLUJ5tt0xix7o2Vnbz7H/a2yLswuxo+ZcLuo
-         BB4fro3xOxWV0CdYDv74ar0u+N8GXdLJl5wHHKi4mF6lzwMvBmjSbzNU0S+i0W0/MxeC
-         qxqkhonb2WFBGcQvw4FGpmPYGYYThp50Z5EElpBhoQeZUJW6Z2bWJL6eNQaU8El1GipM
-         q87g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740356605; x=1740961405;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Bp8Q3VOPQDS+11tGhMzOHaekmo8JCJ4+f6K7eG8FK5s=;
-        b=OAXLaLXiFHbh4nAoGGMTc6QnxGBPxXj3Pos2JYXx7btCDMDaWb2KExf9++A5YnZTyG
-         Q290i49snzHECkw9DjOxPQzJpPiSS6THZRZqO4XOi4dBSWMXwEAPSqbuftjqhZooyD/m
-         noJ55PwPLe6Jw8GGKG2/X9X2uiNbLYTfTbxk9ntsX6KanBHEj+uR1d0h/zV34iLemu8H
-         ZsoAS9WhPsB6bYEoRxyj+W5WFskxfvF5/YtZ7Y6WBP9tqxW4Zu/N5DAy0N+2ynWtXW3Q
-         JS0XUC7UDyusE0xREOFiVaGPx4bzw9rtcTeHh3ljrO4Erg6zDFy/JktvZ96TMelPAAxt
-         N+TA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMduRDTMz0ruyDL4xJOr9w+53ZvbIZ5XhJwVjZt4sWfEc9F6sk13PtqR40ClJxodpYH4ffFCeNug2C2BA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziyALGRI3dhTOxwdPHO9oKrvze8iBbstVlSN454Uu0FiWrtUm4
-	m8JmSdG7x0j4zO8oACvBnGheO9aVq4IfYl585q/OFQuE6sgREaDz
-X-Gm-Gg: ASbGnctONgQvHUCh7bdNBMpxd+mMD82wZ/cI7MAIbI5U3muSQF8sWPGKwos7m+z29Q8
-	VdqPPMAN/8fbxjb1p55JX6Tcse9iF7JLf9A1WtrQW+Vt4kIY3mKCDYKQea/l34kyGkD/HAwgdab
-	K6qZVajzqmSRe7OGnQEzW0gpKnV6DnJ7aYwof1yzf3A27tnqfjKQOsfVZkYZPJQ+R+9YD1kcnDW
-	lfasCYBOrpcCOpLoBxkzvJUsEm/AomGvIlXf0gHTcOvT3hl6eP/OKMLIDNAiJ0D++2NTTltbXPl
-	a7Yvdl3MJ389DDONWSIg5qa8Zo7CyM9FCVpzbwmivnZS5w==
-X-Google-Smtp-Source: AGHT+IEIE/Ap+XXQ3t7fuy1XUUriR9MDNfKKWNFqQ2eYbmzLNsuSK4UzJMzsPP3xMEPPYDJ2dx+c1w==
-X-Received: by 2002:a05:620a:1918:b0:7c0:b103:f252 with SMTP id af79cd13be357-7c0ceee99e0mr2002097985a.8.1740356604811;
-        Sun, 23 Feb 2025 16:23:24 -0800 (PST)
-Received: from nerdopolis2.localnet ([2600:4040:5e66:a800:7a4:75e2:6847:49c9])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c0ade609easm761851585a.69.2025.02.23.16.23.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2025 16:23:23 -0800 (PST)
-From: Adam Simonelli <adamsimonelli@gmail.com>
-To: Petr Mladek <pmladek@suse.com>, John Ogness <john.ogness@linutronix.de>,
- Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
- Steven Rostedt <rostedt@goodmis.org>,
- Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
- Jiri Slaby <jirislaby@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject:
- Re: [PATCH v4 0/2] Optionally allow ttynull to be selected as a default
- console
-Date: Sun, 23 Feb 2025 19:23:21 -0500
-Message-ID: <7410687.31r3eYUQgx@nerdopolis2>
-In-Reply-To: <Z7uOsqky4Tw9J6QR@surfacebook.localdomain>
-References:
- <20250223204456.1913392-1-adamsimonelli@gmail.com>
- <Z7uOsqky4Tw9J6QR@surfacebook.localdomain>
+	dkim=pass (2048-bit key) header.d=buserror.net header.i=@buserror.net header.b="1+v+ww0e"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=buserror.net; s=rsa_sel; h=Subject:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description;
+	bh=ESEjuP0qNKG7M31LDxN5dSH9PUQiZX8A161LNfHK2gs=; b=1+v+ww0eli53gNR6dEhBDOqi2B
+	mrW7UtVHR4Yzh81YhZxcdbGJtdQbX0Wu/Ew7/1BUBebZUQQ8ArhhfBhL/GJ0C1qpVgStWr8RVCCMk
+	5GjYDXmpB2WORXvs59CtqCoEoNWh+fxUYKMgEsuxU7LV9qRHumXtRtcbpHRb61IuAQ/ildErwsOAH
+	FJyH0AnNYosXBzEa8H9KKSFQM3sQ0+8qXyzLk8KIPl1Zb7H+jvVMtD6XvhIgW+7dEPA8EtsmFO/jE
+	/4gfAdWIyG1k5Utcfe66gKke/O3HjMVSXUFscRPdrWWMViDr399GxelCcOF1PMttz5jRwigl2yYHE
+	PoRjdYtQ==;
+Received: from oss by baldur.buserror.net with local (Exim 4.96)
+	(envelope-from <oss@buserror.net>)
+	id 1tmLfR-00ELyd-2y;
+	Sun, 23 Feb 2025 17:45:50 -0600
+Date: Sun, 23 Feb 2025 17:45:49 -0600
+From: Crystal Wood <oss@buserror.net>
+To: Rob Herring <robh@kernel.org>
+Cc: j.ne@posteo.net, devicetree@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Message-ID: <Z7uzLeXiXIdVYNM5@buserror.net>
+References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
+ <20250207-ppcyaml-v2-9-8137b0c42526@posteo.net>
+ <Z6kQpuQf5m-bXTyt@buserror.net>
+ <20250210215324.GA1040564-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250210215324.GA1040564-robh@kernel.org>
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: robh@kernel.org, j.ne@posteo.net, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu, naveen@kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+X-SA-Exim-Mail-From: oss@buserror.net
+X-Spam-Level: 
+X-Spam-Report: 
+	*  -15 BAYES_00 BODY: Bayes spam probability is 0 to 1%
+	*      [score: 0.0000]
+	* -0.0 NO_RELAYS Informational: message was not relayed via SMTP
+Subject: Re: [PATCH v2 09/12] dt-bindings: memory-controllers: Convert
+ fsl,elbc to YAML
+X-SA-Exim-Version: 4.2.1 (built Wed, 06 Jul 2022 17:57:39 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 
-On Sunday, February 23, 2025 4:10:10 PM EST Andy Shevchenko wrote:
-> Sun, Feb 23, 2025 at 03:44:54PM -0500, adamsimonelli@gmail.com kirjoitti:
-> > From: Adam Simonelli <adamsimonelli@gmail.com>
-> > 
-> > When switching to a CONFIG_VT=n world, at least on x86 systems,
-> > /dev/console becomes /dev/ttyS0. This can cause some undesired effects.
-> > /dev/console's behavior is now tied to the physical /dev/ttyS0, which when
-> > disconnected can cause isatty() to fail when /dev/ttyS0 is disconnected,
-> > and users who upgrade to a theoretical vt-less kernel from their
-> > distribution who have a device such as a science instrument connected to
-> > their /dev/ttyS0 port will suddenly see it receive kernel log messages.
-> > 
-> > When the new CONFIG_NULL_TTY_CONSOLE option is turned on, this will allow
-> > the ttynull device to be leveraged as the default console. Distributions
-> > that had CONFIG_VT turned on before will be able to leverage this option
-> > to where /dev/console is still backed by a psuedo device, avoiding these
-> > issues, without needing to enable the entire VT subsystem.
-> 
-> This rings a bell of the following
-> 
-> https://lore.kernel.org/all/20201111135450.11214-1-pmladek@suse.com/
-> https://lore.kernel.org/all/20210107164400.17904-1-pmladek@suse.com/
-> https://lore.kernel.org/all/20210108114847.23469-1-pmladek@suse.com/
-> 
-> I don't see any mention in the commit message about these, have you studied the
-> cases? Will your change anyhow affect the described there?
-> 
-> 
-I did see that sifting through commits, it looks kind of different though, as
-that was to make ttynull more always on, and if I am understanding it correctly
-it looks more of a last resort? I could be wrong, but I see it was attempted
-and reverted because of conflicts on some hardware platforms?
+On Mon, Feb 10, 2025 at 03:53:24PM -0600, Rob Herring wrote:
+> Generally, if a bus has control registers or resources like clocks, then 
+> we tend not to call them 'simple-bus'. And '"specific-bus", 
+> "simple-bus"' gives some problems around what driver if any do you 
+> bind to. 
 
-The scope with this new patch set is much different, as it has to be manually
-enabled on top of CONFIG_NULL_TTY, rather than assuming CONFIG_NULL_TTY is
-enabled, and adding it to the list of preferred consoles. It is more for
-Desktop configs that are looking to disable CONFIG_VT, but still want
-/dev/console to not be a physical device by default.
+Isn't the general idea that you bind to the first one in the list that
+you have a driver for, since it goes from most to least specific?
 
+> If you have chip selects, then you have config registers for those. 
+> Not really "simple" if you ask me. That being said, you could keep 
+> 'simple-bus' here. I would tend to err on making the schema match the 
+> actual .dts rather than updating the .dts files on older platforms like 
+> these.
 
+By that definition I wonder how much truly qualifies.  Even with
+IMMR/CCSR, firmware needs to at least set the base register (which is
+itself inside CCSR, so there's no way to avoid relying on knowledge of
+what the firmware did, except on 8xx).  Though I acknowledge that eLBC is
+a stretch, with FCM and UPM being exceptions.  FCM didn't exist in the
+original LBC, and UPM was... kind of considered a fringe use case
+until someone hooked NAND up to it.  :-P
 
+The point back then wasn't that such registers don't exist, but that the
+OS can use the devices without having to care.  But of course, there's
+subjectivity there about what the OS might care about (e.g. UPM).
+
+FWIW, on these chips (especially the later ones) there were all sorts of
+things (in general, not specifically LBC-related) that firmware had to
+set up to present a coherent system to the OS.  Not all the choices made
+there were great, but if we tried to describe all the gory details from
+the start I'm sure we would have made an even bigger mess of it.
+
+> > For non-NAND devices this bus generally meets the definition of "an
+> > internal I/O bus that cannot be probed for devices" where "devices on the
+> > bus can be accessed directly without additional configuration
+> > required".  NAND flash is an exception, but those devices have
+> > compatibles that are specific to the bus controller.
+> 
+> NAND bindings have evolved quite a bit if you haven't been paying 
+> attention.
+
+I haven't, as I acknowledged... but I was describing how eLBC does it,
+and just meant that we're not binding to drivers that don't know about
+the bus in that case.  The NAND control registers are part of eLBC/IFC,
+not a separate block (the reg in the NAND node itself is just the SRAM
+used as a buffer).  I'm not sure what that would be expected to look like
+these days.
+
+-Crystal
