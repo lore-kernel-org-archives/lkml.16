@@ -1,174 +1,140 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DBE11FC3;
-	Sun, 23 Feb 2025 10:27:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07CD3BBC9
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 10:30:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740306476; cv=none; b=LrsVbajKcSlQIqNecIVDCPmx34YrGjpHcNIfEtYEf4MsrI7S5WKXtajyixiHqsy1zL+OAkfgGZtt3XWPF0pZo3/SmXv2OGfraR8OzR9sHTQr1zwxHSCDW2c/DSMqt9Uzq9sfKOViw/DFYrvJsxFEGgkEsjlVAzO6TNm/EwWbntA=
+	t=1740306633; cv=none; b=ZAjrq0qbCX61WtSnx1ZoTva7bW4ZiuDgMUNLQvER1PQJLvep+cjWMfV65aJ26NreLc0gdt5qp+npPyK/Esa2HJk07kJYZMsttOJauuojO7drUd7YjpEq5kZnjE1KP8rRXDlVJhpISLNgCKweYJP6Nn+KwBLtAKc/bhz1Kp1Hn0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740306476; c=relaxed/simple;
-	bh=YCr+PXOAVC+4yizPVskUfSZeUBP52WZFQiOwVxjfWqk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ICOS/rrr+Lj1rSTue5HaLr81DmsUGTrU/keOMCREXh6qPfErXBeSr2TKvVBYZquOEbAJnPYuzs04FCZ/JRHROAo0ieuFkOmekjbzIXXdOG6N4xDiNb0yQDslSoNGATv805DJQH5M9aEX33+bDpteMrbqHmJg45s3vhtCu7pmzUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=jCzBDk1A; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1740306633; c=relaxed/simple;
+	bh=Dl3+yp1j0uUvvHMrDFjfGrvoQEGFpkBAjD03AHpfzR4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RTnl3c6prcJdBUZXlTHzHBcoVvjXHt+N0I5zPTnwh30LEr7p3GoxI7ImU74YTQfH3xuLekJ/42LSvaYLXMjhhMpzTmx/n58vH9q7Mcq0YFFQ9CEK862p27+ztzwe+opaAwgOLSRWNm3scbU7IQteDd0VN+qkxgRXIKZYPDkgFRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FfiY1u4/; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="jCzBDk1A"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7550F40E0176;
-	Sun, 23 Feb 2025 10:27:50 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 64ugc_ezh1-Y; Sun, 23 Feb 2025 10:27:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1740306466; bh=Th8uIhRsScOvJKzwoZ4/oH5GbGZwgAt9CDdJXdgol48=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jCzBDk1ARhr1DOyUebXYGa3AtG6jnVI7Cv1z9tc5iVAMnrJpd/I6WiY84HV6zvDYm
-	 Yav0Bw5c4sEdgjsFGJAGUP12ts9vBeUE25C/naHF18TxW59U7BSW3yNEuvAcFvHT2h
-	 6fQN/qje5Iej+qxbwMXW4Yrbd7HgN1aAXHtYn6oMp4przYxXmQxnhUbn/7+mrxSA8t
-	 aZ4RGyM+C8wjk6LPaSEuPRWf0Z5gPaEGX5sNHHf8Z4wa+SnTNyx1/uktZNNAkERIxn
-	 AWhTR/f1P2zXDRTUi5TMfeqnuOZ/8uQGY7V49i/LsPketySS/Ea+p9YTghfVBHl0ah
-	 AhlemiRr1DFl7D10V8EMBISuEeqcvF1PHkO0ah3TzWN3NWvYBCt/xZqMyo/fkEOC8p
-	 spVjlEkvnh+S1g6hhQMDsgUHzPqM8C0sBVMUpHFNw2Vrq2Y+NIptjlDPDQ9SYGa+mS
-	 6EWrOZNoGZR32aKek229v4ks4SrRGX2BP4+MqqZWVFIT2ZTvnxLdZ5vbs6gNdoyGi5
-	 2siTBWo5dWHrCo7LJ7Isw4/4JSozvZ71COAxhQCyJR+bgdoOdiUMXN638r9R+o42Ka
-	 /KxO0odpA+uIqH/lvmrvLh/3KnbCVMKcBj4wg9MVO5Tmed7e37wOAqrbE8yx+Dhcir
-	 qhR+rjXmQK9VqiLjuqFpS1rA=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 23E5840E015D;
-	Sun, 23 Feb 2025 10:27:29 +0000 (UTC)
-Date: Sun, 23 Feb 2025 11:27:23 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: "Xin Li (Intel)" <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, will@kernel.org,
-	peterz@infradead.org, yury.norov@gmail.com,
-	akpm@linux-foundation.org, acme@kernel.org, namhyung@kernel.org,
-	brgerst@gmail.com, andrew.cooper3@citrix.com, nik.borisov@suse.com
-Subject: Re: [PATCH v5 0/5] x86/cpufeatures: Automatically generate required
- and disabled feature masks
-Message-ID: <20250223102723.GAZ7r4C7C6sTUnbe4I@fat_crate.local>
-References: <20250106070727.3211006-1-xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FfiY1u4/"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30a2f240156so34709121fa.3
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 02:30:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740306630; x=1740911430; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ODMDkk1m488I/kgMYHn95DzHCtQtRSd4ouwlxgKanNI=;
+        b=FfiY1u4/GwdZ06mEpMJcixmF50VidEBvTAdoG5kZAX4lfAlAntJ8SiytA3FsZAn0sP
+         cWGMxcpWS+XdajVqfIXGiresz83dCwMauK/lIT68v6jQjJOkEPTBZTdTSepkhRXCDIMQ
+         C/boxUQF4R0HZWnk4fIEo16pXhIW8G4QnBxBzGLcGX9kMYdC4fHZsAKwcOtjmyHtqR4a
+         ASu+JN4agISrBUcQrJaPOO0AMywzXeZgmMWB02C6Qu7aRbrAv2btCEOyvExTuRoTmjNT
+         VtHhLSBDakUq2Encnu/HzuuE0SVNKVah15YLJNDhs/wYA4lwdc14okYlvve4UwgwqNvK
+         e8qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740306630; x=1740911430;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ODMDkk1m488I/kgMYHn95DzHCtQtRSd4ouwlxgKanNI=;
+        b=YBmcrWyNUyfkDBsBp58PIoftxxsvzL2dQUGah3aczjYbDrdl7fpafGQXZdM6oh7DM+
+         AkBmWi7n6Fd+47Cip2VXHIEL7C8FlK9bbXZh44Og37hM4lbIdmjOhpO3mKS/CkatVJ4U
+         +lbLfHR6XoWVjPZaFfjOE1rRM7OgTR4wTQxFDOnX/HHvYYsZgPVpgt63TLh9ERj4Mg7O
+         F7EiN6S2rS8iZu4kwhdQ9mPf22sjKhbJDZDv10mCvyRv3EyzNZlftnkxb91L1+0rWTjn
+         AVVkMaDKu7n9Fbts028zXOiP0L/Kb7vqmO2NMI2XHbgLzxi8zy/P9noMKKRsKoEm61pl
+         fJzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWtE/Csh+m9q0ttc5XLVOoELGnA6cR5KxQcmrEhxEsjJMju0RXmKktQbcTADrdwwr/UzpnnC3oa2x0Ns3I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz77Lc/itg1nl5hWmAjccgsRkrTdJDX5nZdIbopEzbkOlStbxSA
+	G/H4XcASlwu0wsC6th7QUVvq03isszfvrtEq7wz2uLb/rvHJCO2B34fULzmnAsESWxfzeRkcqXl
+	lv3HL2T53mAEOGvUFz1dkDw3H9WQhv6QM
+X-Gm-Gg: ASbGncvs+j9gMhJ9i/S01xoojaCnV5d9LWcFKCKCR1mqzLRRNzyndG1y3S/LZpnIQSS
+	TZO+HlDclUuIMjY6Knd0RE3OMuJS+qK01wcczR4ePtmxuF1COzeTPeKsDGpE0CUme7v5qZKqjz8
+	pbh7ZMjjE=
+X-Google-Smtp-Source: AGHT+IEn3yXpJN3oWq6fjW/Z7CfWG/d7IDCNCinIwV0tQKFT0G7j8rAfBkFndEMu7Jy55BUncmFzYHPLP1jQt0gPQzE=
+X-Received: by 2002:a2e:8649:0:b0:309:1c07:4a69 with SMTP id
+ 38308e7fff4ca-30a598ebd72mr29398591fa.22.1740306629392; Sun, 23 Feb 2025
+ 02:30:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250106070727.3211006-1-xin@zytor.com>
+References: <20250222190623.262689-1-brgerst@gmail.com> <Z7rsOVaxhfCJdn2P@gmail.com>
+ <CAMj1kXE51FSYQ6prL7M5vfy1KjJGiBAre3CH3G-L3CQj9YSq9A@mail.gmail.com>
+In-Reply-To: <CAMj1kXE51FSYQ6prL7M5vfy1KjJGiBAre3CH3G-L3CQj9YSq9A@mail.gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Sun, 23 Feb 2025 11:30:24 +0100
+X-Gm-Features: AWEUYZnbvIXbr9WMQ5_iOuutv4mVYXIK-z-udLZmvYW3hGIfk9jasWTMXN-dREY
+Message-ID: <CAFULd4YHj_Y7B4B8Mz5rwm3uB5GS=BhQny_eFhSSkdi=qg+qcA@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/11] Add a percpu subsection for hot data
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Brian Gerst <brgerst@gmail.com>, linux-kernel@vger.kernel.org, 
+	x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	Borislav Petkov <bp@alien8.de>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jan 05, 2025 at 11:07:22PM -0800, Xin Li (Intel) wrote:
->  arch/x86/Kconfig                              |   4 +-
->  arch/x86/Kconfig.cpu                          |  12 +-
->  arch/x86/Kconfig.cpufeatures                  | 197 ++++++++++++++++++
->  arch/x86/Makefile                             |  17 +-
->  arch/x86/boot/cpucheck.c                      |   3 +-
->  arch/x86/boot/cpuflags.c                      |   1 -
->  arch/x86/boot/mkcpustr.c                      |   3 +-
->  arch/x86/include/asm/Kbuild                   |   1 +
->  arch/x86/include/asm/asm-prototypes.h         |   2 +-
->  arch/x86/include/asm/atomic64_32.h            |   2 +-
->  arch/x86/include/asm/bitops.h                 |   4 +-
->  arch/x86/include/asm/cmpxchg_32.h             |   2 +-
->  arch/x86/include/asm/cpufeature.h             |  71 +------
->  arch/x86/include/asm/cpufeatures.h            |  13 +-
->  arch/x86/include/asm/disabled-features.h      | 161 --------------
->  arch/x86/include/asm/required-features.h      | 105 ----------
->  arch/x86/kernel/cpu/common.c                  |   1 +
->  arch/x86/kernel/verify_cpu.S                  |   4 +
->  arch/x86/lib/Makefile                         |   2 +-
->  arch/x86/lib/cmpxchg8b_emu.S                  |   2 +-
->  arch/x86/tools/featuremasks.awk               |  88 ++++++++
->  lib/atomic64_test.c                           |   2 +-
->  tools/arch/x86/include/asm/cpufeatures.h      |   8 -
->  .../arch/x86/include/asm/disabled-features.h  | 161 --------------
->  .../arch/x86/include/asm/required-features.h  | 105 ----------
->  tools/perf/check-headers.sh                   |   2 -
->  26 files changed, 327 insertions(+), 646 deletions(-)
->  create mode 100644 arch/x86/Kconfig.cpufeatures
->  delete mode 100644 arch/x86/include/asm/disabled-features.h
->  delete mode 100644 arch/x86/include/asm/required-features.h
->  create mode 100755 arch/x86/tools/featuremasks.awk
->  delete mode 100644 tools/arch/x86/include/asm/disabled-features.h
->  delete mode 100644 tools/arch/x86/include/asm/required-features.h
+On Sun, Feb 23, 2025 at 11:20=E2=80=AFAM Ard Biesheuvel <ardb@kernel.org> w=
+rote:
+>
+> On Sun, 23 Feb 2025 at 10:37, Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> >
+> > * Brian Gerst <brgerst@gmail.com> wrote:
+> >
+> > > Add a new percpu subsection for data that is frequently accessed and
+> > > exclusive to each processor.  This is intended to replace the pcpu_ho=
+t
+> > > struct on X86, and is available to all architectures.
+> > >
+> > > The one caveat with this approach is that it depends on the linker to
+> > > effeciently pack data that is smaller than machine word size.  The
+> > > binutils linker does this properly:
+> > >
+> > > ffffffff842f6000 D __per_cpu_hot_start
+> > > ffffffff842f6000 D softirq_pending
+> > > ffffffff842f6002 D hardirq_stack_inuse
+> > > ffffffff842f6008 D hardirq_stack_ptr
+> > > ffffffff842f6010 D __ref_stack_chk_guard
+> > > ffffffff842f6010 D __stack_chk_guard
+> > > ffffffff842f6018 D const_cpu_current_top_of_stack
+> > > ffffffff842f6018 D cpu_current_top_of_stack
+> > > ffffffff842f6020 D const_current_task
+> > > ffffffff842f6020 D current_task
+> > > ffffffff842f6028 D __preempt_count
+> > > ffffffff842f602c D cpu_number
+> > > ffffffff842f6030 D this_cpu_off
+> > > ffffffff842f6038 D __x86_call_depth
+> > > ffffffff842f6040 D __per_cpu_hot_end
+> > >
+> > > The LLVM linker doesn't do as well with packing smaller data objects,
+> > > causing it to spill over into a second cacheline.
+> >
+> > ... now it's linker-ordered. But on the other hand that can be an
+> > advantage too: the linker will try to (or at least has a chance to)
+> > order the fields optimally for cache density, while the hand-packing
+> > always has the potential to bitrot without much of an outside,
+> > actionable indicator for the bitrot.
+> >
+>
+> The linker will need some help here - by default, it just emits these
+> variables in the order they appear in the input.
+>
+> If we emit each such variable 'foo' into .data..hot.foo, and define
+> the contents of the section as
+>
+> *(SORT_BY_ALIGNMENT(.data..hot.*))
+>
+> we should get optimal packing as long as the alignment of these
+> variables does not exceed their size.
 
-make --no-print-directory -C /home/kernel/linux \
--f /home/kernel/linux/Makefile 
-# GEN     arch/x86/include/generated/asm/orc_hash.h
-  mkdir -p arch/x86/include/generated/asm/; sh ./scripts/orc_hash.sh < arch/x86/include/asm/orc_types.h > arch/x86/include/generated/asm/orc_hash.h
-make -f ./scripts/Makefile.build obj=scripts/basic
-set -e; mkdir -p include/config/; trap "rm -f include/config/.tmp_kernel.release" EXIT; { ./scripts/setlocalversion .; } > include/config/.tmp_kernel.release; if [ ! -r include/config/kernel.release ] || ! cmp -s include/config/kernel.release include/config/.tmp_kernel.release; then : '  UPD     include/config/kernel.release'; mv -f include/config/.tmp_kernel.release include/config/kernel.release; fi
-# GEN     arch/x86/include/generated/asm/featuremasks.h
-  awk -f ./arch/x86/tools/featuremasks.awk ./arch/x86/include/asm/cpufeatures.h .config > arch/x86/include/generated/asm/featuremasks.h
-make -f ./scripts/Makefile.asm-headers obj=arch/x86/include/generated/uapi/asm \
-generic=include/uapi/asm-generic
-awk: ./arch/x86/tools/featuremasks.awk: line 16: syntax error at or near {
-awk: ./arch/x86/tools/featuremasks.awk: line 20: syntax error at or near :
-awk: ./arch/x86/tools/featuremasks.awk: line 24: syntax error at or near }
-make[1]: *** [arch/x86/Makefile:285: arch/x86/include/generated/asm/featuremasks.h] Error 2
-make[1]: *** Deleting file 'arch/x86/include/generated/asm/featuremasks.h'
-make[1]: *** Waiting for unfinished jobs....
-# WRAP    arch/x86/include/generated/uapi/asm/bpf_perf_event.h
-  echo "#include <asm-generic/bpf_perf_event.h>" > arch/x86/include/generated/uapi/asm/bpf_perf_event.h
-# WRAP    arch/x86/include/generated/uapi/asm/fcntl.h
-  echo "#include <asm-generic/fcntl.h>" > arch/x86/include/generated/uapi/asm/fcntl.h
-# WRAP    arch/x86/include/generated/uapi/asm/errno.h
-  echo "#include <asm-generic/errno.h>" > arch/x86/include/generated/uapi/asm/errno.h
-# WRAP    arch/x86/include/generated/uapi/asm/ioctl.h
-  echo "#include <asm-generic/ioctl.h>" > arch/x86/include/generated/uapi/asm/ioctl.h
-# WRAP    arch/x86/include/generated/uapi/asm/ioctls.h
-  echo "#include <asm-generic/ioctls.h>" > arch/x86/include/generated/uapi/asm/ioctls.h
-# WRAP    arch/x86/include/generated/uapi/asm/ipcbuf.h
-  echo "#include <asm-generic/ipcbuf.h>" > arch/x86/include/generated/uapi/asm/ipcbuf.h
-# WRAP    arch/x86/include/generated/uapi/asm/param.h
-  echo "#include <asm-generic/param.h>" > arch/x86/include/generated/uapi/asm/param.h
-# WRAP    arch/x86/include/generated/uapi/asm/poll.h
-  echo "#include <asm-generic/poll.h>" > arch/x86/include/generated/uapi/asm/poll.h
-# WRAP    arch/x86/include/generated/uapi/asm/resource.h
-  echo "#include <asm-generic/resource.h>" > arch/x86/include/generated/uapi/asm/resource.h
-# WRAP    arch/x86/include/generated/uapi/asm/socket.h
-  echo "#include <asm-generic/socket.h>" > arch/x86/include/generated/uapi/asm/socket.h
-# WRAP    arch/x86/include/generated/uapi/asm/sockios.h
-  echo "#include <asm-generic/sockios.h>" > arch/x86/include/generated/uapi/asm/sockios.h
-# WRAP    arch/x86/include/generated/uapi/asm/termbits.h
-  echo "#include <asm-generic/termbits.h>" > arch/x86/include/generated/uapi/asm/termbits.h
-# WRAP    arch/x86/include/generated/uapi/asm/termios.h
-  echo "#include <asm-generic/termios.h>" > arch/x86/include/generated/uapi/asm/termios.h
-# WRAP    arch/x86/include/generated/uapi/asm/types.h
-  echo "#include <asm-generic/types.h>" > arch/x86/include/generated/uapi/asm/types.h
-make: *** [Makefile:251: __sub-make] Error 2
+Is it possible to warn/error when data is spilled over the cache line?
+Previously, there was:
 
-Probably due to:
+-static_assert(sizeof(struct pcpu_hot) =3D=3D 64);
 
-$ awk --version
-mawk 1.3.4 20250131
-Copyright 2008-2024,2025, Thomas E. Dickey
-Copyright 1991-1996,2014, Michael D. Brennan
+that failed the build in this case.
 
-random-funcs:       srandom/random
-regex-funcs:        internal
-
-compiled limits:
-sprintf buffer      8192
-maximum-integer     9223372036854775808
-
-while the other box has GNU awk where it obviously works.
-
-HTH.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Uros.
