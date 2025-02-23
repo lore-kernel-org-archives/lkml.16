@@ -1,77 +1,131 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B0B73FB3B;
-	Sun, 23 Feb 2025 07:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA802111
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 07:12:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740294096; cv=none; b=Ro0IZwnz58NXmUwSdJFih0Z5sXZ5Qsjsf7pSezCQa80k01PozS+Ve+n5MXQ55ml2yrBS/b/30Kj47OTIuS9gMg58r/zUnXByCuPe+3U122GtTfrFNNLshR82bw1/Gk05aigtmwDOjxMLb5i9I4nKhgqjr1F1LX4f3aCEphZljVY=
+	t=1740294771; cv=none; b=DgUlHf+2n8Vv9p7X3LIdJFsHhzFiOEAj3cjBbb4Z/3C5aetEJueOJXDJ4OjvwPb98oaWQr2zFhrQSfEN6PS0QSqF8N9oyz35HkNVHCjggtkCYdcqIRV4j8NP7Rea72GpfzIXrv6nwEicAXYxs56rsZxARJFIg/50dDUXscUpCEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740294096; c=relaxed/simple;
-	bh=iHcM+418cwGbIFvJAKJ3q5m+qdZ1GMm7O/kw8C9W984=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=rUI7fK6wD2vwVLZzfXpw5kSoEy27j7YBM6b0aokm1sxmKqS/m/0nOwuIn8jjQRAEJkQqhtW9Huk1NLCvyUfSQcBARWlgtBmurVe6p7yq1zX0o2yT18kpeGOCgVligVtHkHcs5oa8g74n7SzECj/Arx0heLHEVJEUdEI7Al1twao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=d8JGqOXV; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1740294771; c=relaxed/simple;
+	bh=cpcCvhPWrr9JwQoBY8+5sHgrVGVMUj1p6Vb2eP3M79A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RI/K1NUzodHzc+GrA8tN1sLpsYZGsJFoXrsXfH6s/NaE94zsxDBzCcZqDKrLBJNzN1WqsY1iVKkaIEFqdycciq2qMWBSNagmfptU1xlObhLwISiLHeoXPSJ028DLTRYTU9CyJCQjF64kgXo1U9LtR2LDbs8s8BOt4yJz7zW6pWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=MMKZcMPv; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tenstorrent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="d8JGqOXV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id; bh=xnxr8ajCrGei2+iYa1
-	7nwH0TcnlFuD6GY0BMpH5KR8k=; b=d8JGqOXVwB0k4Pba4rmLnvNpLuUUhd+fEQ
-	mrlf9vpxzz+ZUkBBz1OBirwF2t4xtRYwoi73LO2O57wgx8X1WkCSxvVxFoEc4FlG
-	SjqW4NnnfgRGegvIgzC9q4js1so+MOz/bwzzgz18hfMmNKLKBV0vV2SW5x5/m+R3
-	uXupU4FM8=
-Received: from yang-Virtual-Machine.mshome.net (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wD3H0G0x7pn3PW6OA--.65050S2;
-	Sun, 23 Feb 2025 15:01:08 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	Feng Yang <yangfeng@kylinos.cn>
-Subject: [PATCH] ring-buffer: Fix bytes_dropped calculation issue
-Date: Sun, 23 Feb 2025 15:01:06 +0800
-Message-Id: <20250223070106.6781-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:_____wD3H0G0x7pn3PW6OA--.65050S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7GF4UAr13Zr1xKF1xWr4xtFb_yoWfKFX_ur
-	95Wa4kKFyUCF1DWr4xAFWavFs0k3yIqa48u3W7tFWUJ34Yvr15tr4kAFn3KFWDWFZYgr4a
-	qr45Wr97KF13KjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUbvtCDUUUUU==
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiTRz8eGe6wyZBMQAAsd
+	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="MMKZcMPv"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6fb8de54da9so20770417b3.3
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Feb 2025 23:12:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tenstorrent.com; s=google; t=1740294768; x=1740899568; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ldzcQVZLNCUbBkmkSbK9JX+buCbspNWQzfPcTiRZxPU=;
+        b=MMKZcMPvO0GQ+Wxye0F1P53ihXO9+jce13xxv+lMtFwTqld/KfL+9zMjO2m7BEHPLO
+         a3Tu0sMSoS0V8wglHDf3UmM4mcAm5bh/+IOpLopVaKPTLYqjZ3eqGwv/gmb1YQ/3w+RC
+         VLIQt+afgz2P6ULiPIpDiJkOKLvALIB31k4dlionRJESd2RIzkxucGLUX48zzV9G4YTy
+         5zBe7R5JlHhILG19OEXSkPYCJ2aNLA+Tgz7017zvGqwv249W20KFrB9An5CBpAjztLJP
+         Uf4w7jcc5k+CDGD9p2aeWmVEiD2Vtjv5+Ai/fJD/RJAeRtx26lD9gAc1eQeLz4iUh0lH
+         Li1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740294768; x=1740899568;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ldzcQVZLNCUbBkmkSbK9JX+buCbspNWQzfPcTiRZxPU=;
+        b=dwCYoR9u9Rjdm+3FEMlyJ+cgDBRqCgL1irZ/cs5oWnrn+1FNNTK9fPfRQyKsnIws+G
+         guAjST2guG0VHsa22FjYTW/YbrP0LgaLdh+KTp0B26LJJL7crkkeo2MrDGCTcVGvxfVP
+         M2Xl6frVH3QchK+JOD1uZOxBeNU1CjER11RGkx3P8u/ThrPSV8ENNA06lWpwUe45VUBc
+         0j8a1YvMtUNTCv+KPgrdQ8RWZl/l3IW/CLFbnyt2QqOAE3JhP+eABpmPoApFQGZdToav
+         vIUGNZe1w5npgchEWf749evUc/LcFBghQRWIWeaUI4GWmr0dN7xLj1IFt5j7rjgHKSoD
+         tV2w==
+X-Forwarded-Encrypted: i=1; AJvYcCV3NzULyeEhserqwjXp/7EhtvoCmKAkZ5OJz3CroKSgP+H3STb1KtLq9zHzEW+nMPMZWkMiWfBratRnZUA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUbBoqUqGbXDYJ502Cxclwj/dw0uWxp2yTROUyAz/ZZe0tV7k4
+	7q2h2Ay8TK6dDZ36P2NxMWcELBLuBmkMPgY2eHWH8EF1EUkv4jNybHbS2qytg3rcpSdTpc12Ide
+	HRS8kYcbXySqofAt6VTzYMqCIN+3cG8VVHdvNaQ==
+X-Gm-Gg: ASbGnctRpdwPSjWEYGq0lMjCRqJbLKhg+/VibnoM9e59t/7SvzO92Tg4S0XR7dPpLAT
+	pVUddiXmJm7ijlmFqYltu5Rgqaywu3o8bJxRKEOMgfrrbwuYBjJaaVhnxbT7tKEzcfMLEP1XjIy
+	hWia+b5DOfFF/aDJVgTe6ONJmTfve+C3PtlQ==
+X-Google-Smtp-Source: AGHT+IErv7QjZvqwZj7xwVFEty3DyOMgQT39nCw3foX+DTo4lf4iob2nS49dT5fKuofFWcZyAoIBII3K1uxoegJ4n5M=
+X-Received: by 2002:a05:690c:7401:b0:6ee:8363:96d3 with SMTP id
+ 00721157ae682-6fbcc372266mr78832957b3.27.1740294767658; Sat, 22 Feb 2025
+ 23:12:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250221000924.734006-1-cyrilbur@tenstorrent.com>
+In-Reply-To: <20250221000924.734006-1-cyrilbur@tenstorrent.com>
+From: Anton Blanchard <antonb@tenstorrent.com>
+Date: Sun, 23 Feb 2025 18:12:36 +1100
+X-Gm-Features: AWEUYZl2UnE5I4LEXGNcBcYyg7ug4nKfYel88Patux_dppHJ-4gcND83DtzAV8E
+Message-ID: <CAN7m+mC18ch=+iqJxarc-Xi_W9hZZkHD-p7ZthXqH9CwDtsqKA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] riscv: uaccess: optimizations
+To: Cyril Bur <cyrilbur@tenstorrent.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, charlie@rivosinc.com, jrtc27@jrtc27.com, 
+	ben.dooks@codethink.co.uk, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, jszhang@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Feng Yang <yangfeng@kylinos.cn>
+Hi Cyril,
 
-The calculation of bytes-dropped and bytes_dropped_nested is reversed.
-Although it does not affect the final calculation of total_dropped,
-it should still be modified.
+On Fri, Feb 21, 2025 at 11:09=E2=80=AFAM Cyril Bur <cyrilbur@tenstorrent.co=
+m> wrote:
+> This series tries to optimize riscv uaccess by allowing the use of
+> user_access_begin() and user_access_end() which permits grouping user acc=
+esses
+> and avoiding the CSR write penalty for each access.
 
-Fixes: 6c43e554a2a5 ("ring-buffer: Add ring buffer startup selftest")
-Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
----
- kernel/trace/ring_buffer.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I tested this on the upcoming Tenstorrent Ascalon CPU using a simple
+microbenchmark (getdents64() on a directory with 10 files in it) and it was
+significantly faster (over 40%). This came from both a reduction in
+instruction count as well as a reduction in sstatus CSR writes.
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index bb6089c2951e..510409f97992 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -7411,9 +7411,9 @@ static __init int rb_write_something(struct rb_test_data *data, bool nested)
- 		/* Ignore dropped events before test starts. */
- 		if (started) {
- 			if (nested)
--				data->bytes_dropped += len;
--			else
- 				data->bytes_dropped_nested += len;
-+			else
-+				data->bytes_dropped += len;
- 		}
- 		return len;
- 	}
--- 
-2.39.0.windows.2
+It would be great if we could get this merged considering x86, arm64 and
+POWER are exploiting this optimisation already.
 
+Thanks,
+Anton
+
+> The error path can also be optimised using asm goto which patches 3 and 4
+> achieve. This will speed up jumping to labels by avoiding the need of an
+> intermediary error type variable within the uaccess macros
+>
+> I did read the discussion this series generated. It isn't clear to me
+> which direction to take the patches, if any.
+>
+> V2:
+> I've taken on this series as there isn't any response from Jisheng. No
+> significant changes other than build fixes.
+> - Fixes build breakage in patch 3 to do with not having used 'goto' keywo=
+rd.
+> - Fixes build breakage in patch 4 on 32bit not having delcared __ptr in t=
+he
+>   macro.
+>
+> V3:
+> Significant commit message rewrites.
+>  - Corrected the justification for patch 2
+>  - Better explained/justified patches 3 and 4
+> Minor code changes for legibility and more comments.
+>
+> Jisheng Zhang (4):
+>   riscv: implement user_access_begin() and families
+>   riscv: uaccess: use input constraints for ptr of __put_user()
+>   riscv: uaccess: use 'asm goto' for put_user()
+>   riscv: uaccess: use 'asm_goto_output' for get_user()
+>
+>  arch/riscv/include/asm/uaccess.h | 205 +++++++++++++++++++++++--------
+>  1 file changed, 152 insertions(+), 53 deletions(-)
+>
+> --
+> 2.34.1
+>
+>
