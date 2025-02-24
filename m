@@ -1,208 +1,159 @@
-Received: from mail-m49196.qiye.163.com (mail-m49196.qiye.163.com [45.254.49.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33BE824166A;
-	Mon, 24 Feb 2025 08:14:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9762245003
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 08:14:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740384879; cv=none; b=bDABiVS+vuCaU3/aiXNzCN5g/1NXxoWTH5cprVqYGQIMnMSVQtNu82ZW784GARmFBuB4y7WPKWizlrlirOVnM2+mbh1dRrok+gQ1bKGsW0xJ/2zbKPXgkabi+/g5LXNQ9EViW9PHeBQaeUpWEkrGwHVWuwSp5OwZmMT4pHu7grs=
+	t=1740384883; cv=none; b=m5tS5rOYkwNc/cO5qYd3aUrSK0cL9BCDw8fA2tx32B2hwuMng1qkN71ZjHP0y8AnHpub0kXl+VCE0tQPPxe6Onzh97dn28ODQn888I87Lu0vNuv1bl7lDoloFeLBivpWlhxoa4Fd+1HBQsyt5LIjo30Dw6wpkxGSWHV29z4nYc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740384879; c=relaxed/simple;
-	bh=/4vnuHch4JzhMaxSGJUEzUawNjsPjjvp9NN2340b29o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GF0o36PEEpGFshUqectoG3JjdTD63NbUwLvt0Oo1rPDnYDt0Cmq7L/NsCXxp8QlaaPDTS8ZjjgmSfHhSQoduiBQ5WPRWdw3CZ6VUf/MRyuPecZwQnRSgsFwlvqSE6D9C9vyUZXCyMDVyrr0l8WMOUhr0yHf264eL+MN4Yyzrz58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=B8AqRAw6; arc=none smtp.client-ip=45.254.49.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1740384883; c=relaxed/simple;
+	bh=oe2FyQpDi+XexZe/0gZrbR4F62iNxsAIMF/U5rlF8BM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WdheEBJVg4xPmy8dZ+m7sAaoQukyG8//IjKwb7Ef6IAwPQt4KggQ7NcM0XtAdUMZ5gYq/q802dshBlLbCgnxGPE7TEZ8RBt9NyVfhK6BDMMZPO5CLIeygOFRQ4RDiyF6/q1XTlXuYF/eTT3r2OmMi066VFmhKZluu8g3R5adryY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=scylladb.com; spf=pass smtp.mailfrom=scylladb.com; dkim=pass (2048-bit key) header.d=scylladb.com header.i=@scylladb.com header.b=lByyWHai; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=scylladb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=scylladb.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="B8AqRAw6"
-Received: from zyb-HP-ProDesk-680-G2-MT.. (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id bfd28862;
-	Mon, 24 Feb 2025 16:14:26 +0800 (GMT+08:00)
-From: Damon Ding <damon.ding@rock-chips.com>
-To: heiko@sntech.de
-Cc: andy.yan@rock-chips.com,
-	hjc@rock-chips.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org,
-	Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se,
-	jernej.skrabec@gmail.com,
-	dmitry.baryshkov@linaro.org,
-	dianders@chromium.org,
-	sebastian.reichel@collabora.com,
-	cristian.ciocaltea@collabora.com,
-	boris.brezillon@collabora.com,
-	l.stach@pengutronix.de,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Damon Ding <damon.ding@rock-chips.com>
-Subject: [PATCH v7 15/15] arm64: dts: rockchip: Enable eDP0 display on RK3588S EVB1 board
-Date: Mon, 24 Feb 2025 16:13:25 +0800
-Message-Id: <20250224081325.96724-16-damon.ding@rock-chips.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250224081325.96724-1-damon.ding@rock-chips.com>
-References: <20250224081325.96724-1-damon.ding@rock-chips.com>
+	dkim=pass (2048-bit key) header.d=scylladb.com header.i=@scylladb.com header.b="lByyWHai"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-220d601886fso59147205ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 00:14:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=scylladb.com; s=google; t=1740384880; x=1740989680; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=n59C1mxnlqsVZDv+OXEoyoWE/LCHOE1N8E2Z0O569dM=;
+        b=lByyWHaiC+WiEErxkPqA0M74SH9tASd9NyfWsYUjzIW3LkBcvIvQ9YNU4DI9Y/D9nU
+         uZMKgmGPDKmdkFhr/eQ2lwWZAcc3QnXEi+LGVrlEBIQG22pK7/EljwlDAp7b11FyA7FO
+         S3uQCVxRCJ9Khpesug7glVI5morIO/PFaw2XFX46LUbhOR7LwfuEmAp3WbH1XmDdeQP1
+         kK0BBWKO7QFWc88Kvc7e1J7GHww50mU5ISjiGz2vlzu6rgfNp610OC9xwHUxQGPX2Q9k
+         mrf3Sgb9W1Ij1VCpOJAq6T9uEXk/XCHMd1MlHXgH8kfhDtkUTGQmbLoSZNmEc2Wu5ufE
+         j22w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740384880; x=1740989680;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=n59C1mxnlqsVZDv+OXEoyoWE/LCHOE1N8E2Z0O569dM=;
+        b=t1WIdSXAvtqu6jFkupykJO9Okwj/+ZT2blLfSsZiLVfYrrG+1dy5YpaOAoa915R8bD
+         SULasxkDHXHTZI02dXEPuW1+Op/1z9BMX0efnYAhCHNpBWUJvW3cLi+iduXGPVPmVsXH
+         JJaLaQrocx3pGz5TY4M6DbfSoUYm+pop/Ucz2B0ZlQyK1VszSVBTaXDY++PAVztxDTC/
+         Yo1TJOMOnhrmWSWsmD8gfVSpRLk9c3QgVBCEBaLWrPWyuEI21zsOuVf/4749W/+CA73A
+         5b3iOweGPv8k9XFwi1zVWxoxv05ASBwgidntmwbhd5qQ81hvJF31Jdymm41+JcKJYDxa
+         PkCA==
+X-Gm-Message-State: AOJu0YwsRr669hJGu5nvN219zfxKqADS74F7AJajrd22lRY7ScYnajFj
+	AU5NdDzw7kgqbtRP0QtN7qf57THAsyz6PUzmrkKfxDMZOiAOoF5PRUQwYGxI4WFD84J0wO0SAfa
+	rHVhlbJlPZpfL/Lazb5aEdo7IHEohEYpZY7yiecHO7oQSGD/rZ0iL8go9NAs6X1TUM8j4/esIb9
+	mF80ep8x1ChfbPHCISeKG/KX9aOipzWcrbe0gipIGySHlcJ/uxAB2+yhgytkfdzYoOFXmhZU9Pz
+	KSk7cZ07kxUdAVSahqv8yjfhdKxap2ac3oKkD7nSiHluotQnSav3o7t/cNtI2GIeFLOEGJOoxku
+	LMxnPNevJK7zYeOn2tngIYlIVRqa48mkR4rO40PB5RxKrFuzTq1NkCz2+2s=
+X-Gm-Gg: ASbGncuGG1FA2Qo+4KcWlqlDNV4Qfn9rVEWh8vvADe4swiLjLP2V8kIPn3q4AUn5bz7
+	qQqZ6krWDrWRoxyjI6fMZxCi1FbGA3etw4wIS8Cx+RaxY9IJiT4L7LhpoFnW7i45MGkBYHQRaYu
+	f4nHsd53s4nZMNjOemeR9JNu6ggV9lpjXKz+cxhUton1KLU30iO5AUNTj35o9GnLcBzup4EUXxl
+	6r0svVXQsG+oxBac8HBzEE00RxGY/cyj6PNlvt5NdN51JHPLK8wsKGl00pNAG6ge45hPGd2giu5
+	fWJ40dmarLqlzBTaGz0z8oE94WdM0g==
+X-Google-Smtp-Source: AGHT+IGZML+QeMBAJSjHG5iq0A0nDtnil2LVDOPQzKcK170nIopsu8yPUqb4/J1ur3vn2QrKyGEe6w==
+X-Received: by 2002:a05:6a20:7f85:b0:1ee:d6ff:5acd with SMTP id adf61e73a8af0-1eef3c568e9mr25167734637.6.1740384880406;
+        Mon, 24 Feb 2025 00:14:40 -0800 (PST)
+Received: from localhost.localdomain ([2a09:bac5:7a2:24be::3a9:82])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-ae1ee4febb2sm10280324a12.51.2025.02.24.00.14.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2025 00:14:39 -0800 (PST)
+From: "Raphael S. Carvalho" <raphaelsc@scylladb.com>
+To: linux-kernel@vger.kernel.org,
+	linux-xfs@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org
+Cc: djwong@kernel.org,
+	Dave Chinner <david@fromorbit.com>,
+	hch@lst.de,
+	willy@infradead.org,
+	"Raphael S. Carvalho" <raphaelsc@scylladb.com>
+Subject: [PATCH v2] mm: Fix error handling in __filemap_get_folio() with FGP_NOWAIT
+Date: Mon, 24 Feb 2025 05:13:28 -0300
+Message-ID: <20250224081328.18090-1-raphaelsc@scylladb.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQkxPTlYYHxlNS0NKThpLSRhWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a953705924d03a3kunmbfd28862
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6M006Agw6KDIUMxMRTTMBEQ0X
-	CB9PCRBVSlVKTE9LSENPQ01DQ0tPVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFISE9MNwY+
-DKIM-Signature:a=rsa-sha256;
-	b=B8AqRAw6Tbymyr1sz474bXDJxxKsZIun4JYntG1Btss0YszgMlqF+06zz73RdUa0B7s4zI71p0b155OIJlcSShh88bdXD+gPKfm24AhrwfdflUnjOLB4tiu/jeEa0JwMRBtmOPpbi0R0Ee2J8Wl3qGYtFf5bZkqtmhLLrSe9KVY=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=5h/y9NEgz/o71+GHUNhAGQ4SKKQ0RE+55I5pH4r07Uk=;
-	h=date:mime-version:subject:message-id:from;
+X-CLOUD-SEC-AV-Sent: true
+X-CLOUD-SEC-AV-Info: scylladb,google_mail,monitor
+X-Gm-Spam: 0
+X-Gm-Phishy: 0
+X-CLOUD-SEC-AV-Sent: true
+X-CLOUD-SEC-AV-Info: scylla,google_mail,monitor
+X-Gm-Spam: 0
+X-Gm-Phishy: 0
 
-Add the necessary DT changes to enable eDP0 on RK3588S EVB1 board:
-- Set pinctrl of pwm12 for backlight
-- Enable edp0/hdptxphy0/vp2
-- Assign the parent of DCLK_VOP2_SRC to PLL_V0PLL
-- Add aux-bus/panel nodes
+original report:
+https://lore.kernel.org/all/CAKhLTr1UL3ePTpYjXOx2AJfNk8Ku2EdcEfu+CH1sf3Asr=B-Dw@mail.gmail.com/T/
 
-For RK3588, the PLL_V0PLL is specifically designed for the VOP2. This
-means the clock rate of PLL_V0PLL can be adjusted according to the dclk
-rate of relevant VP. It is typically assigned as the dclk source of a
-specific VP when the clock of relevant display mode is unusual, such as
-the eDP panel 'lg,lp079qx1-sp0v' paired with RK3588S EVB1, which has a
-clock rate of 202.02MHz.
+When doing buffered writes with FGP_NOWAIT, under memory pressure, the system
+returned ENOMEM despite there being plenty of available memory, to be reclaimed
+from page cache. The user space used io_uring interface, which in turn submits
+I/O with FGP_NOWAIT (the fast path).
 
-Additionally, the 'force-hpd' is set for edp0 because the HPD pin on the
-panel side is not connected to the eDP HPD pin on the SoC side according
-to the RK3588S EVB1 hardware design.
+retsnoop pointed to iomap_get_folio:
 
-Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
+00:34:16.180612 -> 00:34:16.180651 TID/PID 253786/253721
+(reactor-1/combined_tests):
 
+                    entry_SYSCALL_64_after_hwframe+0x76
+                    do_syscall_64+0x82
+                    __do_sys_io_uring_enter+0x265
+                    io_submit_sqes+0x209
+                    io_issue_sqe+0x5b
+                    io_write+0xdd
+                    xfs_file_buffered_write+0x84
+                    iomap_file_buffered_write+0x1a6
+    32us [-ENOMEM]  iomap_write_begin+0x408
+iter=&{.inode=0xffff8c67aa031138,.len=4096,.flags=33,.iomap={.addr=0xffffffffffffffff,.length=4096,.type=1,.flags=3,.bdev=0x…
+pos=0 len=4096 foliop=0xffffb32c296b7b80
+!    4us [-ENOMEM]  iomap_get_folio
+iter=&{.inode=0xffff8c67aa031138,.len=4096,.flags=33,.iomap={.addr=0xffffffffffffffff,.length=4096,.type=1,.flags=3,.bdev=0x…
+pos=0 len=4096
+
+This is likely a regression caused by 66dabbb65d67 ("mm: return an ERR_PTR
+from __filemap_get_folio"), which moved error handling from
+io_map_get_folio() to __filemap_get_folio(), but broke FGP_NOWAIT handling, so
+ENOMEM is being escaped to user space. Had it correctly returned -EAGAIN with
+NOWAIT, either io_uring or user space itself would be able to retry the
+request.
+It's not enough to patch io_uring since the iomap interface is the one
+responsible for it, and pwritev2(RWF_NOWAIT) and AIO interfaces must return
+the proper error too.
+
+The patch was tested with scylladb test suite (its original reproducer), and
+the tests all pass now when memory is pressured.
+
+Fixes: 66dabbb65d67 ("mm: return an ERR_PTR from __filemap_get_folio")
+Signed-off-by: Raphael S. Carvalho <raphaelsc@scylladb.com>
 ---
+ mm/filemap.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Changes in v2:
-- Remove brightness-levels and default-brightness-level properties in
-  backlight node.
-- Add the detail DT changes to commit message.
-
-Changes in v3:
-- Use aux-bus instead of platform bus for edp-panel.
-
-Changes in v4:
-- Add comments related to the use of panel compatible "lg,lp079qx1-sp0v"
-  in the commit message.
-
-Changes in v5:
-- Use "edp-panel" instead of "lg,lp079qx1-sp0v"
-- Remove unnecessary comments in commit message
-- Assign the parent of DCLK_VOP2_SRC to PLL_V0PLL
-
-Changes in v6:
-- Add PLL_V0PLL related descriptions in commit message
-
-Changes in v7:
-- Describe why to set the 'force-hpd' for edp0
-- Add no-hpd for the panel node
----
- .../boot/dts/rockchip/rk3588s-evb1-v10.dts    | 55 +++++++++++++++++++
- 1 file changed, 55 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-evb1-v10.dts b/arch/arm64/boot/dts/rockchip/rk3588s-evb1-v10.dts
-index bc4077575beb..de52a6600b7b 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588s-evb1-v10.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3588s-evb1-v10.dts
-@@ -9,6 +9,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/pinctrl/rockchip.h>
-+#include <dt-bindings/soc/rockchip,vop2.h>
- #include <dt-bindings/usb/pd.h>
- #include "rk3588s.dtsi"
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 804d7365680c..d7646e73f481 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -1986,8 +1986,12 @@ struct folio *__filemap_get_folio(struct address_space *mapping, pgoff_t index,
  
-@@ -238,6 +239,42 @@ &combphy2_psu {
- 	status = "okay";
- };
- 
-+&edp0 {
-+	force-hpd;
-+	status = "okay";
-+
-+	aux-bus {
-+		panel {
-+			compatible = "edp-panel";
-+			backlight = <&backlight>;
-+			power-supply = <&vcc3v3_lcd_edp>;
-+			no-hpd;
-+
-+			port {
-+				panel_in_edp: endpoint {
-+					remote-endpoint = <&edp_out_panel>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&edp0_in {
-+	edp0_in_vp2: endpoint {
-+		remote-endpoint = <&vp2_out_edp0>;
-+	};
-+};
-+
-+&edp0_out {
-+	edp_out_panel: endpoint {
-+		remote-endpoint = <&panel_in_edp>;
-+	};
-+};
-+
-+&hdptxphy0 {
-+	status = "okay";
-+};
-+
- &i2c3 {
- 	status = "okay";
- 
-@@ -399,6 +436,7 @@ usbc0_int: usbc0-int {
- };
- 
- &pwm12 {
-+	pinctrl-0 = <&pwm12m1_pins>;
- 	status = "okay";
- };
- 
-@@ -1168,3 +1206,20 @@ usbdp_phy0_dp_altmode_mux: endpoint@1 {
- 		};
- 	};
- };
-+
-+&vop_mmu {
-+	status = "okay";
-+};
-+
-+&vop {
-+	assigned-clocks = <&cru DCLK_VOP2_SRC>;
-+	assigned-clock-parents = <&cru PLL_V0PLL>;
-+	status = "okay";
-+};
-+
-+&vp2 {
-+	vp2_out_edp0: endpoint@ROCKCHIP_VOP2_EP_EDP0 {
-+		reg = <ROCKCHIP_VOP2_EP_EDP0>;
-+		remote-endpoint = <&edp0_in_vp2>;
-+	};
-+};
+ 		if (err == -EEXIST)
+ 			goto repeat;
+-		if (err)
++		if (err) {
++			/* Prevents -ENOMEM from escaping to user space with FGP_NOWAIT */
++			if ((fgp_flags & FGP_NOWAIT) && err == -ENOMEM)
++				err = -EAGAIN;
+ 			return ERR_PTR(err);
++		}
+ 		/*
+ 		 * filemap_add_folio locks the page, and for mmap
+ 		 * we expect an unlocked page.
 -- 
-2.34.1
+2.48.1
 
