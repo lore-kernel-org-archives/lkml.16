@@ -1,150 +1,91 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8236266184
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 18:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1474B26136D;
+	Mon, 24 Feb 2025 18:51:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740423069; cv=none; b=lDuhVjw5x9jE8fO/PNBf3jMftH9IJvZT11noAWDglCikv9+WiZ9XHQyBOw9PYAYoQLkNRsiU0esmZvHdo4PiUI1ojpSWdxwhOsYS8qRFyJwMzyISdaDBy5+IERnqLgsb8Wbr1CYEXYgiK9xyX0B9fVqWjLRNSQL4Tm7YKbULquo=
+	t=1740423104; cv=none; b=dnvXMtoJ7nQdzs5zH3aU74h8nd7svvMHBh44EKjTDVx+fVc26pQlFcNDdNoyZINEAE3FXR4UC4MHh4mrkxAIRD7jKswlZf+a7m9cdvR6K9qnQ3rbrwUCtZy/zfhtkBdVOtJABqUF685CqIYJqvg+YoyGf/6C5Lup7SLJuT/YzRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740423069; c=relaxed/simple;
-	bh=SLA+bDmdTB6ULu5zbTamkrhePwVhtRIJqJ5avVgZmLw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=enN/e2l1ov1I6axXryrR1WWXBQO645ls2bP/+TY2IbokKLNsSRjb8d4hCCczhO6kDQOxOoBUV86jB6CNiFiqBuiJib5gN/ORGR+Ybp0ZQYje0SXX87oSuwmy0v2IVVEFtcZb9iWXFEplA62DGw28BQMM5f2gptQgNh5JoeWmh4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WvcMtr3B; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
+	s=arc-20240116; t=1740423104; c=relaxed/simple;
+	bh=LdrQZqrp3xjhBQGUZB3gje9pLhxMsPsOYHdOiNeCf5I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZAHlv4VefUJIisgwkikS9O2WCf/u3Ln5iLLg1WyzzVrvmhQaqSh3o5Iqb1CHq64VPTLkMN3AHy6ddPCTVECVa3cAZc63kRiP04nadjStKgNvZoLYMRemR+vSo2NlXzgU0XB+TTkgRieCCRRNHAH2zhHikaKnkPXh8eUCT8xPGuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ogr4hGpV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WvcMtr3B"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fc404aaed5so15728782a91.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 10:51:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740423067; x=1741027867; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6PFYTBhXyGigxmAagzwCn1stPWOoCBAs7wU0xTcNHU0=;
-        b=WvcMtr3BKhpwlWndhLCmA9p/SXdw8LBk8rv920dZiUXptu+fxUPfgkuVEqMGsFtn62
-         lB3nvxKNrEbYYvP3yDNi4+AxkRi9hdz5FEeshlw5j1/ZPsYvgA9wyYxY/VHximaGl4jY
-         2NNFvg8CEeolnF8BKsH+czxzPtjg8Cke7hLSnWrqXL0kaEMi0a1Grs/GVmpZGo89jaEl
-         6MEKkDdQ7p8inbdzGU0SQkfKeoBCzvO1NSPPEauwMOJLQDly0jks3e7vQp0ua9vvLkxl
-         IKYaer807SgneOy413O1zo06G954bbUvsl3dZmUwj2MNTxql5F1axXwN8oQvfvCKYxrw
-         HO7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740423067; x=1741027867;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6PFYTBhXyGigxmAagzwCn1stPWOoCBAs7wU0xTcNHU0=;
-        b=IDq+gGaCjMcPtlI/YrVPr879j0w7kP6Gc56JIJuoMPP3csIznu3gtNeq0boooxQu/F
-         f8NnxXxfb5MTaNsIBeo/EV0vNvt04EUUmqtXE48aQVbFOsmO8dQT8CgAdOEJFR9m/nWc
-         4QGlhJH2Fapp+gikgSRhrkYGfRRC49xKl7pKLxAPsR2nB4Sj6TSmqoVSxD+3ahMG07hZ
-         xxyVwMzhlZZn0gAuywStGSLIfbe4lHuIrwcaumy4t3UaFvt+l1JhxmyhJDZXH3xX1ERZ
-         Jw6hf1ggAVrVVvbYX6SYrzPCA1/GAHM9FBkJ5JDLmo6r4SWlDZHUjFiY7MVu4PacVVs0
-         VF+Q==
-X-Gm-Message-State: AOJu0Yy2J69VBKPJOsn9tLKdl5LKQN/OlJ9XY/WHHrHXLrObEjqygaJN
-	/7J9Xjm29plXSKJqBGRwnmoIhWPiUvVtrzzCLlXLPlgyBAbnTEs+8GIcBG0I0feWdInwYaArZjI
-	CUVFPZRg1A3roWpVYNobq3BdjOzcjox8gMT7+hXvAaqsGSGIyz4RcUH7dM1sfyPR9KBCzWqsCV7
-	qrVDDVSjXxHf4swy+Kl0ai5BXaA2vVIfGBRmzN10aY
-X-Google-Smtp-Source: AGHT+IHBJ0S/vfoZwcwLL32RzZSgNFIQA2ntgsWLkZmiVrk9sGPlhL4/XXbPVBWMgrB6QkbBP2cKfAL4f2M=
-X-Received: from pjbph4.prod.google.com ([2002:a17:90b:3bc4:b0:2fc:3022:36b4])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:da87:b0:2fa:1e3e:9be0
- with SMTP id 98e67ed59e1d1-2fce78c9247mr22071548a91.19.1740423067265; Mon, 24
- Feb 2025 10:51:07 -0800 (PST)
-Date: Mon, 24 Feb 2025 10:42:50 -0800
-In-Reply-To: <20250224184742.4144931-1-ctshao@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ogr4hGpV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 625C0C4CED6;
+	Mon, 24 Feb 2025 18:51:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740423103;
+	bh=LdrQZqrp3xjhBQGUZB3gje9pLhxMsPsOYHdOiNeCf5I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ogr4hGpVVlzS+yqzsEQhi01hwxo/x0XFGs2lXu93KVPC7ln9waKrcxxXytrFJzEmA
+	 Bj29u3u4CvmQwFh3Iew2fDFRZ93g4WTyyHIgXck4JXhc5Y9SXsBh7YmhGzaEK09YmN
+	 5WCkYR5Gb9CAi/lRyqIBN2zu4Kl6JcP+a2SacjNBVZVz6z8Qzh3qwoKEDyyNynhpj1
+	 sAqTgm+iTHc8g6/nu63LHIbVMypo9UrBIqohkxtUD0/ICm4ghEa2uyfT/BmjLEfQEW
+	 qR1NT47MTGvdI7Wre2GXtBG/hdfrkaOVQCWmYSMclA2rjfNmMfIkUgoOpJ6lIOXkeM
+	 uqUy7HpUqfzHw==
+Date: Mon, 24 Feb 2025 19:51:35 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+	linux-kbuild@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC PATCH 0/4] x86/build: Get rid of vmlinux postlink step
+Message-ID: <Z7y_i-ySL68BfkgQ@gmail.com>
+References: <20250224132132.1765115-6-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250224184742.4144931-1-ctshao@google.com>
-X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
-Message-ID: <20250224184742.4144931-4-ctshao@google.com>
-Subject: [PATCH v7 3/4] perf lock: Make rb_tree helper functions generic
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, nick.forrington@arm.com, 
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250224132132.1765115-6-ardb+git@google.com>
 
-The rb_tree helper functions can be reused for parsing `owner_lock_stat`
-into rb tree for sorting.
 
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
----
- tools/perf/builtin-lock.c | 34 +++++++++++++++++++++++-----------
- 1 file changed, 23 insertions(+), 11 deletions(-)
+* Ard Biesheuvel <ardb+git@google.com> wrote:
 
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 5d405cd8e696..9bebc186286f 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -418,16 +418,13 @@ static void combine_lock_stats(struct lock_stat *st)
- 	rb_insert_color(&st->rb, &sorted);
- }
- 
--static void insert_to_result(struct lock_stat *st,
--			     int (*bigger)(struct lock_stat *, struct lock_stat *))
-+static void insert_to(struct rb_root *rr, struct lock_stat *st,
-+		      int (*bigger)(struct lock_stat *, struct lock_stat *))
- {
--	struct rb_node **rb = &result.rb_node;
-+	struct rb_node **rb = &rr->rb_node;
- 	struct rb_node *parent = NULL;
- 	struct lock_stat *p;
- 
--	if (combine_locks && st->combined)
--		return;
--
- 	while (*rb) {
- 		p = container_of(*rb, struct lock_stat, rb);
- 		parent = *rb;
-@@ -439,13 +436,21 @@ static void insert_to_result(struct lock_stat *st,
- 	}
- 
- 	rb_link_node(&st->rb, parent, rb);
--	rb_insert_color(&st->rb, &result);
-+	rb_insert_color(&st->rb, rr);
- }
- 
--/* returns left most element of result, and erase it */
--static struct lock_stat *pop_from_result(void)
-+static inline void insert_to_result(struct lock_stat *st,
-+				    int (*bigger)(struct lock_stat *,
-+						  struct lock_stat *))
-+{
-+	if (combine_locks && st->combined)
-+		return;
-+	insert_to(&result, st, bigger);
-+}
-+
-+static inline struct lock_stat *pop_from(struct rb_root *rr)
- {
--	struct rb_node *node = result.rb_node;
-+	struct rb_node *node = rr->rb_node;
- 
- 	if (!node)
- 		return NULL;
-@@ -453,8 +458,15 @@ static struct lock_stat *pop_from_result(void)
- 	while (node->rb_left)
- 		node = node->rb_left;
- 
--	rb_erase(node, &result);
-+	rb_erase(node, rr);
- 	return container_of(node, struct lock_stat, rb);
-+
-+}
-+
-+/* returns left most element of result, and erase it */
-+static struct lock_stat *pop_from_result(void)
-+{
-+	return pop_from(&result);
- }
- 
- struct trace_lock_handler {
--- 
-2.48.1.658.g4767266eb4-goog
+> From: Ard Biesheuvel <ardb@kernel.org>
+> 
+> Kbuild supports an architecture specific Makefile.postlink file that is
+> invoked for the vmlinux target after it has been built. This Makefile
+> takes 'vmlinux' (which has just been built) as the target, and mangles
+> the file and/or constructs other intermediate artifacts from it.
+> 
+> This violates the general philosophy of Make, which is based on rules
+> and dependencies, and artifacts that are rebuilt only when any of their
+> dependencies have been updated.
+> 
+> Instead, the different incarnations of vmlinux that are consumed by
+> different stages of the build should be emitted as distinct files, where
+> rules and dependencies are used to define one in terms of the other.
+> 
+> This also works around an error observed here [0], where vmlinux is
+> deleted by Make because a subsequent step that consumes it as input
+> throws an error.
+> 
+> So refactor the vmlinux shell scripts and build rules so that
+> architectures that rely on --emit-relocs to construct vmlinux with
+> static relocations preserved will get a separate vmlinux.unstripped file
+> carrying those relocations. This removes the need for an imperative
+> postlink step, given that any rules that depend on the unstripped
+> vmlinux can now simply depend on vmlinux.unstripped, rather than inject
+> a build step into Makefile.postlink
 
+Nice! Does this also result in any measurable speedup of the build, or 
+are the steps still similar?
+
+But in terms of justification for upstreaming, the reduction in 
+complexity alone makes it worth it IMO:
+
+  19 files changed, 52 insertions(+), 87 deletions(-)
+
+Thanks,
+
+	Ingo
