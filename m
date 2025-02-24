@@ -1,143 +1,263 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE951D90DF
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF57B19DF4B
 	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 08:01:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740384096; cv=none; b=UBNbkv9sJ+ixQWvtscqDwIphgmPFiNj8McsdVSCafWti+Hy7SmNfiq3Pncr9yHaWqexTSkzTa18KZRyWmc8uKuAIAUA9Nxb4pE2hSwRcswNxZU20gpmpvN8MPRDDMp+GqCBbamt+7uhK6HFjdKNqrGRG0uodIgelKK7tQzd/i+s=
+	t=1740384096; cv=none; b=MqWesSUCdy0KXL62qAj9elQGN/dUYhFToLIQeURqpnnDVgn1FE/gTn7HHF87b6PRyhTE16/w+GURbLT+UZchkeebLYRnNfBQNTktTGvPnbKV9gaiq+4hucuF6vBjjmpJPiGSlNaM0lW2ocglTwRlmnE50rAeo08Rcp3qWaY5y4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740384096; c=relaxed/simple;
-	bh=c7+qy8I4aVajDJ7q8pwae9rTcGIOOfIbB3vrS74dFQ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gWUsDOvKral65LTJkRQRF/eDxP6vfT4LmehlUpb115AcDoWEXeimlr013b5yEXheH9iZXfNNGojRPcqU+MUeN9YBycpeCJA4JJvTZVKgkdkH0ov1wahVoHjiYH+o+M6bwp2BVar8wtSEbXl1GAvzUYKQmksr2YMXWop2o9VRruE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CPBqIrxD; arc=none smtp.client-ip=209.85.216.43
+	bh=hCBzOfJSymMyHvVROjcOk8C8vSA3TYnFB5U/O/rnkDE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=uteDsqo89+H9hXa2FePt/J+/m0RXMOSqFoyklUuK8+NbqdnhkemAv6qoGsfoOAVBq+Z9SEnkhYkwoKVh7Xk7ndC4nNswfjUTuEK+JI/wxEjPn4Q7yFyRWgWy02EdOlp+yXPxOTEMQx4ioSJmSVTWEC8mmyrXCxd/JOOOGYShdw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZGU9s7nZ; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CPBqIrxD"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2f9b9c0088fso6834512a91.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZGU9s7nZ"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-38a25d4b9d4so2306802f8f.0
         for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 00:01:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740384094; x=1740988894; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=qbCbRKBT7nYUMZ7e71egOL9DxulLD66sFDSiePK/h4s=;
-        b=CPBqIrxDDRvxk/gnvGMM2UoxAvge/U4ZAbYL+4Wtnm9jPfjZfah1+C4adPJ8sz0LCy
-         cLBxz++t3S4pb5aVyL2hAuB4GpNfeRTXHb2JGNypCPaNr7w34sGBD9qrTxgnZuav2aTQ
-         dh5TGbl3iiiNo5jgw/dU6ucS97SK0h+/Y1TXolwTHmukYCx5sBLzDzp8lM3qG+UUCeMR
-         oINiLU/EDluP5CW1dGX0BYDLqA4EuvFPTYRWDRe39fcGTyagMr+zY1oO5EIJzWToTDQb
-         MZ9eXVW8WhnONuckSok59pXfl149VBTFXMAr/TIPS3+aXcFnDJLrEOMRIkDuSeoO7G72
-         g4Ug==
+        d=linaro.org; s=google; t=1740384093; x=1740988893; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eldJ3fyZ9RULfFnJAoQ78yq6LgsezdF6MepZXaC6j0I=;
+        b=ZGU9s7nZyGIXGCA7gkVySgfwKjFLShwI0dJ0LbJft9bo8V7LVRU8iESS3TrOeo0EfI
+         qCfr2mXHEGnyuH2YzUEb4e8ytEr9zSHV8XBbNiTMpQtVNUBEiMW3Yn/4NvWpWWeEqbHi
+         Y/dzIyqLXLAe+JeLHZDP1UVHREQszryPpCSELOJyLjUBnwU3fHeJHS+ESnU3eMnIg3yX
+         XhqtBLSjzeSxgy282vtRYEkZgyrmfydNiJq+eGZs/+vnGv+zC1G34NFVr+sc7pK3djl2
+         1lqNL9M0qB5XRhIoFEL0KW149A1Ann78LNhTmquv1qN6N7eEvtEWBPBd4mGuWKzk4FCF
+         by/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740384094; x=1740988894;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qbCbRKBT7nYUMZ7e71egOL9DxulLD66sFDSiePK/h4s=;
-        b=V6X/03mlm8kn58vyIWRN1Xyq7ijIYgRUW7J7ookRLb6GHIs1mFdH4PseVAABEJl5cg
-         NHvhadYPM5D1vuM+9ucphLf7e2OV/b8XLCbFNsCxuCVr1ARcD1mLzllyvVvgnpvqa6JE
-         mVj0IqAQz//6Gd0X3KOpAsvW7/ZsM1HDW+hPFYmGWAyVIlRQNsvs+5KFyn7KrTp9d81x
-         mjeb2dTbEkQn88X0S9aqckq6meyTYjeyYezz2Wo34dU8Rj20z4jg/PavzoEHlokvPbGr
-         D3CofJ9xFeXD4GEKAEivoid8R4jF0CICeXRA+fKUAIZUPlnWStuL9wnLTIH3yLs2FkhO
-         pKag==
-X-Forwarded-Encrypted: i=1; AJvYcCX6YbtzZiTSNtgweTkKyL8OdaBIx4Q2r1alrKslxo15u8E6eL872sw83m5rSEwg8GKRknouvQlps80efQ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZVkTHeNuUfw7Ea2HOOUo1NR/obWNPQF4ZlXZiJxysddgCNMly
-	3GO01Vm8QP5zKzxq/sZjP4RPaYzG9hkw5BofHKJ+W4JOkyNmlBK8FDHxKBq72g==
-X-Gm-Gg: ASbGncvmcgtBZdW4bx0Pv5CLpdZmkqmYEbE3ziWA6SmLsw+RjLQk2CCO/kn+lOI+Coz
-	gjnfHq86KT8FPpYoLRCrSupnUxL1Cax4xPJ4xqiq9tKPYLRgwC2VnyIhJzM/4vLAtcki74Ls67U
-	X1BA1Bs6hmYMmrkaZJ8Y1ZCh7J4CNQWPPuxkCWCL/jI1zCiLa9AFx7o6pn7DR0hWrAhSHvt8Nd5
-	yYan2h9Gn41Lz+HzWpeQ/bU4X2xYD1LlQv1HOCaFprn6JjtIJGAqNCaoUZWTVy22u5kQhHGrYEe
-	b7lOBRRIX5OHE7mS9l2+O2mtZ8hQIqCOE7/5
-X-Google-Smtp-Source: AGHT+IFSJRHQaoas4hBith0wVUqSgTYRtfPMiQmQRzahw7+ResAWhqCfmrXX0fr8xkSBMMUEpNn5Tg==
-X-Received: by 2002:a17:90b:350e:b0:2fa:2133:bc87 with SMTP id 98e67ed59e1d1-2fccc1172demr27937034a91.6.1740384094186;
-        Mon, 24 Feb 2025 00:01:34 -0800 (PST)
-Received: from thinkpad ([36.255.17.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fceb09f7fesm5736053a91.43.2025.02.24.00.01.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        d=1e100.net; s=20230601; t=1740384093; x=1740988893;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eldJ3fyZ9RULfFnJAoQ78yq6LgsezdF6MepZXaC6j0I=;
+        b=S1GQcDmR4Y9f6DLdb7lORJaWqf4w/CdzgYYaNSTFTSDGfvUnCIp1kWTgFJav7MVjIo
+         A2XUbQonWU9IOIpNNRP3/QiWVQi8ikOSAnOPkF4GMA3RD85wcI2pcXPXCNErVJpjK1aK
+         Dx+DjuGL3GRZJTN0l2zSoXnEPAZP1qFX08eOQ4IzLIAn01dqbIhvL9UjtcblK5aFyZsV
+         vLvZlp3vGg8MwZyVY7lR7zKnfX8Csrxbaq9vwQ419wlcEa52O4vCS/F/kRSUs8OtTBuh
+         3WlXFsSC+7JQOkfg1g1BoutX7PdkDzBuK+MosbDi8goW7kpqpyKpa8m9CkfikLZWxFGm
+         7T4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWjZR2fZbj0whwosY2zxCByJSHxsWSkGYDnGIT0u+4vdPd7eheny/A4Q3/Yn8xNVKduGXVM20irtAZ3BsM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4JESrBVBje0frPaGPksFQGejwgqb2fztcH9I+mauBhjdsJ5mi
+	tou7350NnaeWBY4eTDLwnSTR4HrFFRHp7uorjqS+Jkz2PqUo6fu6gShB9gdmb0A=
+X-Gm-Gg: ASbGnctj8S1JpPsRUmsPYxE9m/b5CBXcH7A4SY03XcnWMvWOxey/yXUoFrrxtP6Q5vq
+	HdQKmaPQo3qGS48KTnIs1LY52cWYj5/RAG2vLxfp4g3ZXUOGEM6CUCizMDK9/d0Qy04lZyuivCh
+	PhOa+fm7B3akexbEiJbFNFl77OSUUd7atY2bz91YE0lpYKYhoKmghI9qhSYaswazkyPk5r/87sr
+	uzxm1nzzOaGNPXR2hQ1mpmJu5/SSiCOowp11IzKrz4Ijp0l3kF8S5moXob5CjzShm8AYXy0G1QI
+	KMVSHtEIcundOqUMinamBTsVlvvC+x53MMXclZ/jmSZ/LoY7kOqEzJa45eTGx7CtFUICiZ974nr
+	9TFcitg==
+X-Google-Smtp-Source: AGHT+IHtf5uVeObOSZyCBZwbvEGvCzNRNum9va67etYAmQ/b61RunJpq5G91CksEuJbTMQeAIBjKag==
+X-Received: by 2002:a05:6000:144a:b0:38f:2766:7594 with SMTP id ffacd0b85a97d-38f6e95c60cmr8671320f8f.12.1740384093024;
         Mon, 24 Feb 2025 00:01:33 -0800 (PST)
-Date: Mon, 24 Feb 2025 13:31:29 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Kevin Xie <kevin.xie@starfivetech.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Minda Chen <minda.chen@starfivetech.com>,
-	"open list:PCIE DRIVER FOR STARFIVE JH71x0" <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] PCI: starfive: Fix kmemleak in StarFive PCIe driver's
- IRQ handling
-Message-ID: <20250224080129.zm7fvxermgeyycav@thinkpad>
-References: <20250208140110.2389-1-linux.amoon@gmail.com>
- <20250210174400.b63bhmtkuqhktb57@thinkpad>
- <CANAwSgQ20ANRh9wJ3E-T9yNi=g1g129mXq3cZYvPnK1bMx+w7g@mail.gmail.com>
- <20250214060935.cgnc436upawnfzn6@thinkpad>
- <CANAwSgTWa9gwpPhVCYzJM5BL5wUkpB4eyDtX+Vs3SX3a9541wA@mail.gmail.com>
- <CANAwSgRvT-Mqj3XPrME6oKhYmnCUZLnwHfFHmSL=PK+xVLHAqw@mail.gmail.com>
+Received: from ta2.c.googlers.com (169.178.77.34.bc.googleusercontent.com. [34.77.178.169])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b0367533sm97690395e9.27.2025.02.24.00.01.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2025 00:01:32 -0800 (PST)
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+Date: Mon, 24 Feb 2025 08:01:23 +0000
+Subject: [PATCH 2/3] firmware: exynos-acpm: move common structures to
+ exynos-acpm.h
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANAwSgRvT-Mqj3XPrME6oKhYmnCUZLnwHfFHmSL=PK+xVLHAqw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250224-acpm-debugfs-v1-2-2418a3ea1b17@linaro.org>
+References: <20250224-acpm-debugfs-v1-0-2418a3ea1b17@linaro.org>
+In-Reply-To: <20250224-acpm-debugfs-v1-0-2418a3ea1b17@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>
+Cc: andre.draszik@linaro.org, peter.griffin@linaro.org, 
+ willmcvicker@google.com, kernel-team@android.com, 
+ linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740384089; l=4949;
+ i=tudor.ambarus@linaro.org; s=20241212; h=from:subject:message-id;
+ bh=hCBzOfJSymMyHvVROjcOk8C8vSA3TYnFB5U/O/rnkDE=;
+ b=ATLynd3c1Y0yvN4/G4Wd0ln2S20qs67kvDyIgdhR9p4lEnrThWwETuUT7EpmvVxuE4ICAf2Hk
+ NacKRW6DfReDLvZ+0SKuVRyS5pZc2HH7MZxIvDXf0/JNF0VtXLnWvh9
+X-Developer-Key: i=tudor.ambarus@linaro.org; a=ed25519;
+ pk=uQzE0NXo3dIjeowMTOPCpIiPHEz12IA/MbyzrZVh9WI=
 
-On Thu, Feb 20, 2025 at 03:53:31PM +0530, Anand Moon wrote:
+Prepare for the ACPM logging feature addition. ACPM is capable of logging
+things to SRAM. The logging feature needs access to struct acpm_info
+in order to get the sram_base, to the configuration data from SRAM, and to
+the struct acpm_queue internal driver representation of a queue.
+Move these structs to a common exynos-acpm.h.
 
-[...]
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+---
+ drivers/firmware/samsung/exynos-acpm.c | 48 +-------------------------
+ drivers/firmware/samsung/exynos-acpm.h | 63 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 64 insertions(+), 47 deletions(-)
 
-> Following the change fix this warning in a kernel memory leak.
-> Would you happen to have any comments on these changes?
-> 
-> diff --git a/drivers/pci/controller/plda/pcie-plda-host.c
-> b/drivers/pci/controller/plda/pcie-plda-host.c
-> index 4153214ca410..5a72a5a33074 100644
-> --- a/drivers/pci/controller/plda/pcie-plda-host.c
-> +++ b/drivers/pci/controller/plda/pcie-plda-host.c
-> @@ -280,11 +280,6 @@ static u32 plda_get_events(struct plda_pcie_rp *port)
->         return events;
->  }
-> 
-> -static irqreturn_t plda_event_handler(int irq, void *dev_id)
-> -{
-> -       return IRQ_HANDLED;
-> -}
-> -
->  static void plda_handle_event(struct irq_desc *desc)
->  {
->         struct plda_pcie_rp *port = irq_desc_get_handler_data(desc);
-> @@ -454,13 +449,10 @@ int plda_init_interrupts(struct platform_device *pdev,
-> 
->                 if (event->request_event_irq)
->                         ret = event->request_event_irq(port, event_irq, i);
-> -               else
-> -                       ret = devm_request_irq(dev, event_irq,
-> -                                              plda_event_handler,
-> -                                              0, NULL, port);
-
-This change is not related to the memleak. But I'd like to have it in a separate
-patch since this code is absolutely not required, rather pointless.
-
-> 
->                 if (ret) {
->                         dev_err(dev, "failed to request IRQ %d\n", event_irq);
-> +                       irq_dispose_mapping(event_irq);
-
-So the issue overall is that the 'devm_request_irq' fails on your platform
-because the interrupts are not defined in DT and then the IRQ is not disposed in
-the error path?
-
-In that case, none of the error paths below for_each_set_bit() loop is disposing
-the IRQs. Also, calling 'irq_dispose_mapping()' only once is not going to
-dispose all mappings that were created before in the loop.
-
-- Mani
+diff --git a/drivers/firmware/samsung/exynos-acpm.c b/drivers/firmware/samsung/exynos-acpm.c
+index 3c14afc89fd7..8d83841f1d62 100644
+--- a/drivers/firmware/samsung/exynos-acpm.c
++++ b/drivers/firmware/samsung/exynos-acpm.c
+@@ -12,7 +12,6 @@
+ #include <linux/container_of.h>
+ #include <linux/delay.h>
+ #include <linux/device.h>
+-#include <linux/firmware/samsung/exynos-acpm-protocol.h>
+ #include <linux/io.h>
+ #include <linux/iopoll.h>
+ #include <linux/mailbox/exynos-message.h>
+@@ -27,7 +26,7 @@
+ #include <linux/slab.h>
+ #include <linux/types.h>
+ 
+-#include "exynos-acpm-xfer.h"
++#include "exynos-acpm.h"
+ #include "exynos-acpm-pmic.h"
+ 
+ #define ACPM_PROTOCOL_SEQNUM		GENMASK(21, 16)
+@@ -38,20 +37,6 @@
+ 
+ #define ACPM_GS101_INITDATA_BASE	0xa000
+ 
+-/**
+- * struct acpm_shmem - shared memory configuration information.
+- * @reserved:	unused fields.
+- * @chans:	offset to array of struct acpm_chan_shmem.
+- * @reserved1:	unused fields.
+- * @num_chans:	number of channels.
+- */
+-struct acpm_shmem {
+-	u32 reserved[2];
+-	u32 chans;
+-	u32 reserved1[3];
+-	u32 num_chans;
+-};
+-
+ /**
+  * struct acpm_chan_shmem - descriptor of a shared memory channel.
+  *
+@@ -85,19 +70,6 @@ struct acpm_chan_shmem {
+ 	u32 poll_completion;
+ };
+ 
+-/**
+- * struct acpm_queue - exynos acpm queue.
+- *
+- * @rear:	rear address of the queue.
+- * @front:	front address of the queue.
+- * @base:	base address of the queue.
+- */
+-struct acpm_queue {
+-	void __iomem *rear;
+-	void __iomem *front;
+-	void __iomem *base;
+-};
+-
+ /**
+  * struct acpm_rx_data - RX queue data.
+  *
+@@ -155,24 +127,6 @@ struct acpm_chan {
+ 	struct acpm_rx_data rx_data[ACPM_SEQNUM_MAX];
+ };
+ 
+-/**
+- * struct acpm_info - driver's private data.
+- * @shmem:	pointer to the SRAM configuration data.
+- * @sram_base:	base address of SRAM.
+- * @chans:	pointer to the ACPM channel parameters retrieved from SRAM.
+- * @dev:	pointer to the exynos-acpm device.
+- * @handle:	instance of acpm_handle to send to clients.
+- * @num_chans:	number of channels available for this controller.
+- */
+-struct acpm_info {
+-	struct acpm_shmem __iomem *shmem;
+-	void __iomem *sram_base;
+-	struct acpm_chan *chans;
+-	struct device *dev;
+-	struct acpm_handle handle;
+-	u32 num_chans;
+-};
+-
+ /**
+  * struct acpm_match_data - of_device_id data.
+  * @initdata_base:	offset in SRAM where the channels configuration resides.
+diff --git a/drivers/firmware/samsung/exynos-acpm.h b/drivers/firmware/samsung/exynos-acpm.h
+new file mode 100644
+index 000000000000..c212fe28758a
+--- /dev/null
++++ b/drivers/firmware/samsung/exynos-acpm.h
+@@ -0,0 +1,63 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright 2020 Samsung Electronics Co., Ltd.
++ * Copyright 2020 Google LLC.
++ * Copyright 2024 Linaro Ltd.
++ */
++#ifndef __EXYNOS_ACPM_H__
++#define __EXYNOS_ACPM_H__
++
++#include <linux/debugfs.h>
++#include <linux/firmware/samsung/exynos-acpm-protocol.h>
++#include <linux/types.h>
++
++#include "exynos-acpm-xfer.h"
++
++/**
++ * struct acpm_shmem - shared memory configuration information.
++ * @reserved:	unused fields.
++ * @chans:	offset to array of struct acpm_chan_shmem.
++ * @reserved1:	unused fields.
++ * @num_chans:	number of channels.
++ */
++struct acpm_shmem {
++	u32 reserved[2];
++	u32 chans;
++	u32 reserved1[3];
++	u32 num_chans;
++};
++
++/**
++ * struct acpm_queue - exynos acpm queue.
++ * @rear:	rear address of the queue.
++ * @front:	front address of the queue.
++ * @base:	base address of the queue.
++ */
++struct acpm_queue {
++	void __iomem *rear;
++	void __iomem *front;
++	void __iomem *base;
++};
++
++struct device;
++struct acpm_chan;
++
++/**
++ * struct acpm_info - driver's private data.
++ * @shmem:	pointer to the SRAM configuration data.
++ * @sram_base:	base address of SRAM.
++ * @chans:	pointer to the ACPM channel parameters retrieved from SRAM.
++ * @dev:	pointer to the exynos-acpm device.
++ * @handle:	instance of acpm_handle to send to clients.
++ * @num_chans:	number of channels available for this controller.
++ */
++struct acpm_info {
++	struct acpm_shmem __iomem *shmem;
++	void __iomem *sram_base;
++	struct acpm_chan *chans;
++	struct device *dev;
++	struct acpm_handle handle;
++	u32 num_chans;
++};
++
++#endif /* __EXYNOS_ACPM_H__ */
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.48.1.601.g30ceb7b040-goog
+
