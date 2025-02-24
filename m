@@ -1,55 +1,55 @@
 Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED06524EF7E
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 14:47:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E2E254866
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 14:47:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740408454; cv=none; b=LPEJBcfxrP0nIM15BcJDTvIp1ZD9ce1VHVLykYwheuTKhvy/B3cnOPAMNTttzgb3GaXv2ySrB2/viZIXLPWxlgBE1IAFSTn3EwnLIp956Qkm+RFKQMH5k/yZAGUVKXpLeI6g3or38CZwgHmZqQ3pJejz2xNKjhWNwOUiEu97OvA=
+	t=1740408458; cv=none; b=OV2+758AzbELVPVObvofa07pl82APqN0CurK8x6soUXUztppx3/1wRGOEkdqLBgm4K/CiGVSnj7wqCb3jYHEkwA6zj2gGjBOPSs4GkjFzc9W+L2H36usxNTtyk8oLcF1qOlrZkSHhVffZd9XfK5GY9MBaCra1iK7Li0/8iJwZPg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740408454; c=relaxed/simple;
-	bh=E+1O1rAL1bQoC3910IAA8+5w8gcxHtPnJaOqoJosgNg=;
+	s=arc-20240116; t=1740408458; c=relaxed/simple;
+	bh=/rC3zjRkXgsFNzgn2Bsk3EVpsKL8TMjcDS8os7nggNM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=tJXh3XnVAp7CZS2XkycleDFsa/GTonz9sU6yfMnk1l/YSRA8tLbb7EHD76pcUiugbagXLSZRBna5/f0aSw6DtjERkdfapbHZIZVLJMQcTQ9J2E5uiwfRjrQJn+atn9OjCcRyrJ/se5QKWbRjApgSOkrEcjF5rG5LT4+9jlMp8K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lYIlqsAV; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=J6cRH8kOhhtSJoSUfuWmucAGHtrZ6mQo2JfykGqFpCyT2fTDRNxzo/p3X+1Hgg4j7c4dDNbPqi/X+MO8At6oTCl/40fn8Pf8HRM6GM4v7YwE5PSe/arzSQRpKjMzXra3+dQV6Pm552qdWdysMMe8FOcemDDE26q0QvhcYIPVxlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gPgm+K37; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lYIlqsAV"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4399c5baac3so31800215e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 06:47:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gPgm+K37"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43aafafe6b7so2201605e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 06:47:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740408451; x=1741013251; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1740408455; x=1741013255; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GCHGbSH5u71x3rPQwLU8VHf0HNWJtt0XTaDImu1fyhU=;
-        b=lYIlqsAVBPlBXFDqoacq35h+XbpIhL1xPW/D5XXuNfi6etUPeSdzZXZxYXjHT+kFxb
-         QRDu2q97NhXuNYPtvJY2e6wi7WPdI/7QFLgcwrnSU5EcHJtG/izSzCrXZEMkrV5rBn7s
-         zeC9Zifm4K+7J1ovi4khGg0RQtB0zMoFc+pqX/aforQ8B3TAoMEXRicuk4+EIKpmX0kw
-         FCGKCyr8vSw8O9lurmvl8D+Mji9wdXDbfGp0rKdMuXWCD7bSWlx/bBwpbsMyVTIFahJn
-         G9Nlq/u3RHnUKaheKHCLIp4X2B6cQz2EVaLrBP5SI3BphcP/GnUQ43fEjsWhOdSL85wU
-         WRxw==
+        bh=2Fz5NU1PueoQjecq9oG9iR+vgvt/Z95TUw+fwY0nW88=;
+        b=gPgm+K37fqYvaDkfm7GVEUrYczTQ/Bsmn4SHyGO4f7z5BbjjYblXV9Wn/Moe0H9VC5
+         l2KhQK88qE0EC9LJn6F2XGZ+I7ocLEMWRa3WJmug/LQ+h+6lgj7RHW6lp+naY1gpOuGv
+         O7lCCWaKjW9k5a6EoMJnkJ5W/AuAye5aB8+L9+H+j/AobvSnVcG93QrutQY4y95eNzsy
+         pjsbc5mXfLQnpOtegU42G4CSDi136WoReehZRE8jmFZ7FZmQOgIz1h+y8NjJLeCwGNeU
+         r2bP/SpcMMxP4XNsbHOqa+zXSra8NzgcgU34mxCjS+Ojg6yb+o16Hlcfev7RzFtYNmtY
+         GcGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740408451; x=1741013251;
+        d=1e100.net; s=20230601; t=1740408455; x=1741013255;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GCHGbSH5u71x3rPQwLU8VHf0HNWJtt0XTaDImu1fyhU=;
-        b=iXZ9uSpJk+kcdUjn7f1FphkmrHIGdWT/9lmHHXdAvhWRkieNGHgccVoTXF4j0hAHxY
-         75CgJvP7zNTxjM/lotikX5Agc+xIr+azf86WCVW0kCBOkPf875AaqL6fMZivrIZGhAUa
-         35OtqYsnjJE9/0NMEfcGUVEa0xXifKCaD70eJlphCmnC/5lMZUglKHxGxzyrjQxqNkZz
-         z8Z7A0ws3kqP0PL4w2rESXZD+Y7RCSu6Zh3UiDmh9woXQSdNvJLx/J8lOwj8oK6a12uf
-         Lq5w2Y+/gUDWFsSBKw/VHgAtZfjklJinF6ZqiePfCcCBXSPk6aRfIRy+paBds/roMZWn
-         WtzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXBjX3f6CxWCdEoUgPk6VRnoFrBoU20TjPWRQlYqJQ5MG+8/hIOSOvbIj972cfUg6fWsxU8M0W53A87t54=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSUeNsVMbSK7h4c49LkhPT+TZM11bOTBUIz09Hq1Bu1fqudoCa
-	Aoz+HxOdteZUvHSICWf7T4f1s3fzcaghzLnTi+bx8wD+J03qCI6k4QoFhK9CX+T8rVkWRGKHdJM
-	FH5nBUVO5bA==
-X-Google-Smtp-Source: AGHT+IFwIHbdkreZNxpIcvirfoEEWXDLZ8e9Qs1I57U8z8tdFzGqrcazUy7/EH9Qq/dKoOv0alrn0GIwiDqq/Q==
-X-Received: from wmrn16.prod.google.com ([2002:a05:600c:5010:b0:439:846f:f9c8])
+        bh=2Fz5NU1PueoQjecq9oG9iR+vgvt/Z95TUw+fwY0nW88=;
+        b=dYYO0KxQ6lmB+FVjSRZ/JfMNU0m63ZgvwazBNWTB+qfiSWBfp0xxN3NiLhLYUY9fr7
+         iRkf30Ih7a0FYyeH1bbxzWjtowqqeJpS8rxrHzIk3DGTlNXJ2E2FQ5Qm+M3UYpIG/lAK
+         nfNSJ8DjbTbtcMnSvd4uqPNEAWGivGDOF+7HKWYFaTCN0bOj3FG+5YsZ4Ot3cgKQqX2f
+         eu2SJku1UIO0TlGJ4rCCnJXL7tcUdAkh3vqlP83jGPBahu37AMF1l2z6VJJ9YA8j4SrI
+         B/A1ZMzymWN15tmT4COxOKcACcXIvM3UhLSHUomLazpcEIrOVnPoP4GG80Q9hHfJy7Hh
+         y2aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV/Q1KYsppnzTZGHK3So+PasRSYOTC+Yc9qJJe4rtvitfKIWYHZSQI/a3qV9AuTjqHcgFdi9D0z6VlR25g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBcaswYNjbfbdI7EGZ7cvn2vpwY+WcExaqISDZ4ZmPf+YB1NvU
+	ZeIAtK3LQy++lLlSrwgGjnV6RJXJroOqWMD8W7gFain0vAbmZK6ogv8qRK9hrR4BorSaR1FVVve
+	O8r7Snf9N9g==
+X-Google-Smtp-Source: AGHT+IEAGhOq6ZLG1kWNmTBHOtlzeySJw4C81f6PzEKZO3mD1LQVv/+voZGC5+kCMIWufaPww+gOqaaEPDa8Ww==
+X-Received: from wmqe19.prod.google.com ([2002:a05:600c:4e53:b0:439:831e:ca7c])
  (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:4fd3:b0:439:9543:9488 with SMTP id 5b1f17b1804b1-439ae2196a6mr90807405e9.21.1740408451368;
- Mon, 24 Feb 2025 06:47:31 -0800 (PST)
-Date: Mon, 24 Feb 2025 14:47:12 +0000
+ 2002:a05:600c:468f:b0:439:5541:53cc with SMTP id 5b1f17b1804b1-439ae2206d5mr101272755e9.29.1740408455220;
+ Mon, 24 Feb 2025 06:47:35 -0800 (PST)
+Date: Mon, 24 Feb 2025 14:47:14 +0000
 In-Reply-To: <20250224-page-alloc-kunit-v1-0-d337bb440889@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250224-page-alloc-kunit-v1-0-d337bb440889@google.com>
 X-Mailer: b4 0.15-dev
-Message-ID: <20250224-page-alloc-kunit-v1-2-d337bb440889@google.com>
-Subject: [PATCH RFC 2/4] mm/page_alloc_test: Add empty KUnit boilerplate
+Message-ID: <20250224-page-alloc-kunit-v1-4-d337bb440889@google.com>
+Subject: [PATCH RFC 4/4] mm/page_alloc_test: Add smoke-test for page allocation
 From: Brendan Jackman <jackmanb@google.com>
 To: Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
 	Rae Moar <rmoar@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
@@ -71,85 +71,183 @@ Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Vlastimil Babka <vbabka@suse.c
 	Brendan Jackman <jackmanb@google.com>, Yosry Ahmed <yosry.ahmed@linux.dev>
 Content-Type: text/plain; charset="utf-8"
 
-Add the Kbuild plumbing to create a new KUnit suite. Create the suite,
-with no tests inside it.
+This is the bare minimum to illustrate what KUnit code would look like
+that covers the page allocator.
+
+Even this trivial test illustrates a couple of nice things that are
+possible when testing via KUnit
+
+1. We can directly assert that the correct zone was used.
+   (Although note due to the simplistic setup, you can have any zone you
+   like as long as it's ZONE_NORMAL).
+
+2. We can assert that a page got freed. It's probably pretty unlikely
+   that we'd have a bug that actually causes a page to get leaked by the
+   allocator, but it serves as a good example of the kind of assertions
+   we can make by judicously peeking at allocator internals.
 
 Signed-off-by: Brendan Jackman <jackmanb@google.com>
 ---
- mm/.kunitconfig      |  2 ++
- mm/Kconfig           |  8 ++++++++
- mm/Makefile          |  2 ++
- mm/page_alloc_test.c | 21 +++++++++++++++++++++
- 4 files changed, 33 insertions(+)
+ mm/page_alloc_test.c | 139 ++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 138 insertions(+), 1 deletion(-)
 
-diff --git a/mm/.kunitconfig b/mm/.kunitconfig
-new file mode 100644
-index 0000000000000000000000000000000000000000..fcc28557fa1c1412b21f9dbddbf6a63adca6f2b4
---- /dev/null
-+++ b/mm/.kunitconfig
-@@ -0,0 +1,2 @@
-+CONFIG_KUNIT=y
-+CONFIG_PAGE_ALLOC_KUNIT_TEST=y
-\ No newline at end of file
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 1b501db064172cf54f1b1259893dfba676473c56..1fac51c536c66243a1321195a78eb40668386158 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -1358,6 +1358,14 @@ config PT_RECLAIM
- 
- 	  Note: now only empty user PTE page table pages will be reclaimed.
- 
-+config PAGE_ALLOC_KUNIT_TEST
-+	tristate "KUnit test for page allocator" if !KUNIT_ALL_TESTS
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
-+	help
-+	  Builds unit tests for page allocator.
-+
-+	  If unsure, say N.
- 
- source "mm/damon/Kconfig"
- 
-diff --git a/mm/Makefile b/mm/Makefile
-index 850386a67b3e0e3b543b27691a6512c448815697..7b8018e0e6510881fac6e4295fdd1472e38d743d 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -61,6 +61,8 @@ obj-y			:= filemap.o mempool.o oom_kill.o fadvise.o \
- page-alloc-y := page_alloc.o
- page-alloc-$(CONFIG_SHUFFLE_PAGE_ALLOCATOR) += shuffle.o
- 
-+obj-$(CONFIG_PAGE_ALLOC_KUNIT_TEST) += page_alloc_test.o
-+
- # Give 'memory_hotplug' its own module-parameter namespace
- memory-hotplug-$(CONFIG_MEMORY_HOTPLUG) += memory_hotplug.o
- 
 diff --git a/mm/page_alloc_test.c b/mm/page_alloc_test.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..377dfdd50a3c6928e15210cc87d5399c1db80da7
---- /dev/null
+index c6bcfcaf61b57ca35ad1b5fc48fd07d0402843bc..0c4effb151f4cd31ec6a696615a9b6ae4964b332 100644
+--- a/mm/page_alloc_test.c
 +++ b/mm/page_alloc_test.c
-@@ -0,0 +1,21 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <linux/errname.h>
-+#include <linux/list.h>
-+#include <linux/gfp.h>
-+#include <linux/memory.h>
-+#include <linux/nodemask.h>
-+#include <linux/percpu.h>
-+#include <linux/smp.h>
+@@ -26,6 +26,139 @@
+ 	}									\
+ })
+ 
++#define EXPECT_WITHIN_ZONE(test, page, zone) ({					\
++	unsigned long pfn = page_to_pfn(page);					\
++	unsigned long start_pfn = zone->zone_start_pfn;				\
++	unsigned long end_pfn = start_pfn + zone->spanned_pages;		\
++										\
++	KUNIT_EXPECT_TRUE_MSG(test,						\
++		pfn >= start_pfn && pfn < end_pfn,				\
++		"Wanted PFN 0x%lx - 0x%lx, got 0x%lx",				\
++		start_pfn, end_pfn, pfn);					\
++	KUNIT_EXPECT_PTR_EQ_MSG(test, page_zone(page), zone,			\
++		"Wanted %px (%s), got %px (%s)",				\
++		zone, zone->name, page_zone(page), page_zone(page)->name);	\
++})
 +
-+#include <kunit/test.h>
++static void action_nodemask_free(void *ctx)
++{
++	NODEMASK_FREE(ctx);
++}
 +
-+static struct kunit_case test_cases[] = { {} };
++/*
++ * Call __alloc_pages_noprof with a nodemask containing only the nid.
++ *
++ * Never returns NULL.
++ */
++static inline struct page *alloc_pages_force_nid(struct kunit *test,
++						 gfp_t gfp, int order, int nid)
++{
++	NODEMASK_ALLOC(nodemask_t, nodemask, GFP_KERNEL);
++	struct page *page;
 +
-+static struct kunit_suite test_suite = {
-+	.name = "page_alloc",
-+	.test_cases = test_cases,
++	KUNIT_ASSERT_NOT_NULL(test, nodemask);
++	kunit_add_action(test, action_nodemask_free, &nodemask);
++	nodes_clear(*nodemask);
++	node_set(nid, *nodemask);
++
++	page = __alloc_pages_noprof(GFP_KERNEL, 0, nid, nodemask);
++	KUNIT_ASSERT_NOT_NULL(test, page);
++	return page;
++}
++
++static inline bool page_on_buddy_list(struct page *want_page, struct list_head *head)
++{
++	struct page *found_page;
++
++	list_for_each_entry(found_page, head, buddy_list) {
++		if (found_page == want_page)
++			return true;
++	}
++
++	return false;
++}
++
++/* Test case parameters that are independent of alloc order.  */
++static const struct {
++	gfp_t gfp_flags;
++	enum zone_type want_zone;
++} alloc_fresh_gfps[] = {
++	/*
++	 * The way we currently set up the isolated node, everything ends up in
++	 * ZONE_NORMAL.
++	 */
++	{ .gfp_flags = GFP_KERNEL,	.want_zone = ZONE_NORMAL },
++	{ .gfp_flags = GFP_ATOMIC,	.want_zone = ZONE_NORMAL },
++	{ .gfp_flags = GFP_USER,	.want_zone = ZONE_NORMAL },
++	{ .gfp_flags = GFP_DMA32,	.want_zone = ZONE_NORMAL },
 +};
-+kunit_test_suite(test_suite);
 +
-+MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS("EXPORTED_FOR_KUNIT_TESTING");
++struct alloc_fresh_test_case {
++	int order;
++	int gfp_idx;
++};
++
++/* Generate test cases as the cross product of orders and alloc_fresh_gfps.  */
++static const void *alloc_fresh_gen_params(const void *prev, char *desc)
++{
++	/* Buffer to avoid allocations. */
++	static struct alloc_fresh_test_case tc;
++
++	if (!prev) {
++		/* First call */
++		tc.order = 0;
++		tc.gfp_idx = 0;
++		return &tc;
++	}
++
++	tc.gfp_idx++;
++	if (tc.gfp_idx >= ARRAY_SIZE(alloc_fresh_gfps)) {
++		tc.gfp_idx = 0;
++		tc.order++;
++	}
++	if (tc.order > MAX_PAGE_ORDER)
++		/* Finished. */
++		return NULL;
++
++	snprintf(desc, KUNIT_PARAM_DESC_SIZE, "order %d %pGg\n",
++		tc.order, &alloc_fresh_gfps[tc.gfp_idx].gfp_flags);
++	return &tc;
++}
++
++/* Smoke test: allocate from a node where everything is in a pristine state. */
++static void test_alloc_fresh(struct kunit *test)
++{
++	const struct alloc_fresh_test_case *tc = test->param_value;
++	gfp_t gfp_flags = alloc_fresh_gfps[tc->gfp_idx].gfp_flags;
++	enum zone_type want_zone_type = alloc_fresh_gfps[tc->gfp_idx].want_zone;
++	struct zone *want_zone = &NODE_DATA(isolated_node)->node_zones[want_zone_type];
++	struct list_head *buddy_list;
++	struct per_cpu_pages *pcp;
++	struct page *page, *merged_page;
++	int cpu;
++
++	page = alloc_pages_force_nid(test, gfp_flags, tc->order, isolated_node);
++
++	EXPECT_WITHIN_ZONE(test, page, want_zone);
++
++	cpu = get_cpu();
++	__free_pages(page, 0);
++	pcp = per_cpu_ptr(want_zone->per_cpu_pageset, cpu);
++	put_cpu();
++
++	/*
++	 * Should end up back in the free area when drained. Because everything
++	 * is free, it should get buddy-merged up to the maximum order.
++	 */
++	drain_zone_pages(want_zone, pcp);
++	KUNIT_EXPECT_TRUE(test, PageBuddy(page));
++	KUNIT_EXPECT_EQ(test, buddy_order(page), MAX_PAGE_ORDER);
++	KUNIT_EXPECT_TRUE(test, list_empty(&pcp->lists[MIGRATE_UNMOVABLE]));
++	merged_page = pfn_to_page(round_down(page_to_pfn(page), 1 << MAX_PAGE_ORDER));
++	buddy_list = &want_zone->free_area[MAX_PAGE_ORDER].free_list[MIGRATE_UNMOVABLE];
++	KUNIT_EXPECT_TRUE(test, page_on_buddy_list(merged_page, buddy_list));
++}
++
+ static void action_drain_pages_all(void *unused)
+ {
+ 	int cpu;
+@@ -144,7 +277,11 @@ static void depopulate_isolated_node(struct kunit_suite *suite)
+ 	WARN_ON(add_memory(0, start, size, MMOP_ONLINE));
+ 	WARN_ON(walk_memory_blocks(start, size, NULL, memory_block_online_cb));
+ }
+-static struct kunit_case test_cases[] = { {} };
++
++static struct kunit_case test_cases[] = {
++	KUNIT_CASE_PARAM(test_alloc_fresh, alloc_fresh_gen_params),
++	{}
++};
+ 
+ struct kunit_suite page_alloc_test_suite = {
+ 	.name = "page_alloc",
 
 -- 
 2.48.1.601.g30ceb7b040-goog
