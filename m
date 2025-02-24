@@ -1,21 +1,39 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5761818A6D5;
-	Mon, 24 Feb 2025 08:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B63423E229
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 08:50:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740386992; cv=none; b=q81+iFn5KlV0jpB8Lx6pOoL+mi8Ltv2QYtlr/FJ7TRHwc/cg0RyFKEAqGPkoKln7PeB4Ta2Obug5mG9F61m5xuiq1xyXW3d0ayCSpLhSjHPziwol+rQs2hidu6e4wCjShXQ7tt6m25HOwoeIOO9ObS1JeDMPTOijZAKRNri+V/M=
+	t=1740387005; cv=none; b=GMF9JWvP+K/wHzwh4qQbap9JWxOeDpQZz2Th74y2e9SwUkJ6/fipjOT5KrtdLGpLMbfpRlrVZzVMhEjMNf9h+AucQ9ncxhVR8ORtE1wmVABSXVYOJPlF03CLyAQr7QjRiYDdb7tVCplN2iSKqja/7p2MGr8rmV7QWmYhrU3h0Zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740386992; c=relaxed/simple;
-	bh=4v04aWR/7PVHIVTNajs1BuaEeWwIotLZUNbAIwD4iFw=;
+	s=arc-20240116; t=1740387005; c=relaxed/simple;
+	bh=NTQBoA/Re9LOQf6S9eC4YE+8T4L/xXTbEfMQqi0vkuM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mz/NnP2DtE9blvZhzHBOJ+zbv2lo4vS6iTCarlc9Sn3faBgV3Dtpgei07DQenyisz+33QZVOavhEAZmZaOEizmvfsvd3JD+LgQh8PB4g5x4qN5rpeIBrKad/SCbHjP5Q2RGOH1EI5HTLijWSXtA3okClYDD3D5YmmF1yKld/zhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5201BC4CED6;
-	Mon, 24 Feb 2025 08:49:49 +0000 (UTC)
-Message-ID: <71d343e7-ff9f-44e6-abfc-64425640c4f6@xs4all.nl>
-Date: Mon, 24 Feb 2025 09:49:47 +0100
+	 In-Reply-To:Content-Type; b=ktZ6NYsSPf0Z/x8+pXDL3VX1niFjQd7NHqbH1jf4AWUMyOQdePr9bBotDLFjc2gAkdmL8M0G5QY+PI/tGgAzv0a1NYI/J1PLFScqD71zyxF9Aww/+h0bNwdTXxCI1I1KKnqSoBNzUuRrArR2AGOdLz2efSCARwwgeIWYVOoTYcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4Z1X7D3xsVz9sSY;
+	Mon, 24 Feb 2025 08:15:04 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id FlCaqB87YQCz; Mon, 24 Feb 2025 08:15:04 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4Z1X7D2md3z9sSX;
+	Mon, 24 Feb 2025 08:15:04 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 4A4978B765;
+	Mon, 24 Feb 2025 08:15:04 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id SnYPeEpOAy8h; Mon, 24 Feb 2025 08:15:04 +0100 (CET)
+Received: from [10.25.207.138] (unknown [10.25.207.138])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 23FFD8B763;
+	Mon, 24 Feb 2025 08:15:04 +0100 (CET)
+Message-ID: <3223ec0e-c445-4bbf-ae72-276688e40908@csgroup.eu>
+Date: Mon, 24 Feb 2025 08:15:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -23,121 +41,105 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH next] media: xilinx-tpg: fix double put in xtpg_parse_of()
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Michal Simek <michal.simek@amd.com>, "Rob Herring (Arm)" <robh@kernel.org>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
- linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <f41dfe97-6e6c-47b4-91bf-199c5938c6d0@stanley.mountain>
- <20241105165928.GJ14276@pendragon.ideasonboard.com>
-Content-Language: en-US, nl
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Autocrypt: addr=hverkuil@xs4all.nl; keydata=
- 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
-In-Reply-To: <20241105165928.GJ14276@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [RFC PATCH] objtool: Skip unannotated intra-function call warning
+ for bl+mflr pattern
+To: Sathvika Vasireddy <sv@linux.ibm.com>, jpoimboe@kernel.org,
+ peterz@infradead.org, npiggin@gmail.com, maddy@linux.ibm.com
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ llvm@lists.linux.dev
+References: <20250219162014.10334-1-sv@linux.ibm.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250219162014.10334-1-sv@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 05/11/2024 17:59, Laurent Pinchart wrote:
-> Hi Dan,
+
+
+Le 19/02/2025 à 17:20, Sathvika Vasireddy a écrit :
+> Architectures like PowerPC use a pattern where the compiler generates a
+> branch-and-link (bl) instruction that targets the very next instruction,
+> followed by loading the link register (mflr) later. This pattern appears
+> in the code like:
 > 
-> Thank you for the patch.
-> 
-> On Mon, Nov 04, 2024 at 08:16:19PM +0300, Dan Carpenter wrote:
->> This loop was recently converted to use for_each_of_graph_port() which
->> automatically does __cleanup__ on the "port" iterator variable.  Delete
->> the calls to of_node_put(port) to avoid a double put bug.
->>
->> Fixes: 393194cdf11e ("media: xilinx-tpg: use new of_graph functions")
->> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> 
-> The offending commit wasn't merged through the media tree, so we can't
-> easily merge the fix there either. I'm fine merging this fix through
-> Rob's tree.
+>   bl .+4
+>   li r5,0
+>   mflr r30
 
-I don't see this patch merged anywhere. Should I just pick it up? I think
-it got lost in the noise.
+What compiler do you use ? Is it a very old version of GCC ?
 
-The commit 393194cdf11e is now available in our media tree, so it should
-be fine, I think, if I pick it up. It needs a CC to stable as well, right?
-I can add that.
+That sequence is not correct and should never be used by modern 
+compilers. It should be bcl 20,31,+4 instead.
 
-Regards,
+All such hand writen sequences have been removed from kernel assembly, 
+see commit c974809a26a1 ("powerpc/vdso: Avoid link stack corruption in 
+__get_datapage()") for details
 
-	Hans
 
 > 
->> ---
->>  drivers/media/platform/xilinx/xilinx-tpg.c | 2 --
->>  1 file changed, 2 deletions(-)
->>
->> diff --git a/drivers/media/platform/xilinx/xilinx-tpg.c b/drivers/media/platform/xilinx/xilinx-tpg.c
->> index cb93711ea3e3..7deec6e37edc 100644
->> --- a/drivers/media/platform/xilinx/xilinx-tpg.c
->> +++ b/drivers/media/platform/xilinx/xilinx-tpg.c
->> @@ -722,7 +722,6 @@ static int xtpg_parse_of(struct xtpg_device *xtpg)
->>  		format = xvip_of_get_format(port);
->>  		if (IS_ERR(format)) {
->>  			dev_err(dev, "invalid format in DT");
->> -			of_node_put(port);
->>  			return PTR_ERR(format);
->>  		}
->>  
->> @@ -731,7 +730,6 @@ static int xtpg_parse_of(struct xtpg_device *xtpg)
->>  			xtpg->vip_format = format;
->>  		} else if (xtpg->vip_format != format) {
->>  			dev_err(dev, "in/out format mismatch in DT");
->> -			of_node_put(port);
->>  			return -EINVAL;
->>  		}
->>  
+> Objtool currently warns about this as an "unannotated intra-function
+> call" because find_call_destination() fails to find any symbol at the
+> target offset. Add a check to skip the warning when a branch targets
+> the immediate next instruction in the same function.
+
+I think this should be done in arch_decode_instruction(), just set 
+insn->type to INSN_OTHER when you see bl .+4
+
+Something like:
+
+diff --git a/tools/objtool/arch/powerpc/decode.c 
+b/tools/objtool/arch/powerpc/decode.c
+index 53b55690f320..ca264c97ee8d 100644
+--- a/tools/objtool/arch/powerpc/decode.c
++++ b/tools/objtool/arch/powerpc/decode.c
+@@ -55,7 +55,9 @@ int arch_decode_instruction(struct objtool_file *file, 
+const struct section *sec
+
+  	switch (opcode) {
+  	case 18: /* b[l][a] */
+-		if ((ins & 3) == 1) /* bl */
++		if (ins == 0x48000005)	/* bl .+4 */
++			typ = INSN_OTHER;
++		else if ((ins & 3) == 1) /* bl */
+  			typ = INSN_CALL;
+
+  		imm = ins & 0x3fffffc;
+
+
+
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202502180818.XnFdv8I8-lkp@intel.com/
+> Signed-off-by: Sathvika Vasireddy <sv@linux.ibm.com>
+> ---
+>   tools/objtool/check.c | 6 ++++++
+>   1 file changed, 6 insertions(+)
+> 
+> diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> index 753dbc4f8198..3f7cf2c917b5 100644
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -1613,6 +1613,7 @@ static struct symbol *find_call_destination(struct section *sec, unsigned long o
+>    */
+>   static int add_call_destinations(struct objtool_file *file)
+>   {
+> +       struct instruction *next_insn;
+>          struct instruction *insn;
+>          unsigned long dest_off;
+>          struct symbol *dest;
+> @@ -1625,6 +1626,11 @@ static int add_call_destinations(struct objtool_file *file)
+>                  reloc = insn_reloc(file, insn);
+>                  if (!reloc) {
+>                          dest_off = arch_jump_destination(insn);
+> +
+> +                       next_insn = next_insn_same_func(file, insn);
+> +                       if (next_insn && dest_off == next_insn->offset)
+> +                               continue;
+> +
+>                          dest = find_call_destination(insn->sec, dest_off);
+> 
+>                          add_call_dest(file, insn, dest, false);
+> --
+> 2.39.3
 > 
 
