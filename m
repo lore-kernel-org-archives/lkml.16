@@ -1,213 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83D6243374;
-	Mon, 24 Feb 2025 20:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F36B206F3E
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 20:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740428772; cv=none; b=Y7y947rIVvmbF9e/GoqbTJYiV3MPbQIT1YNmSZxO1D+ILfwwOJCe8hg71AZjkn26IUBHgSB+jXy/4/qmn9jE3FRE2r+5wW1NQ21LkbJ4MPE5EBKWMZtO6g+p+QK3qtN1BZ4sSfUKFKhyFRGbZLjdCH2TRK5s0N+fAZYdD6cXafI=
+	t=1740428812; cv=none; b=UwNGEaSIiB88yidOx3JZzReAgNeoQeLTRO/v9r2P+uA09cRdJo4qjCpEs7OwhjPblt74EPmpA9nFaxakgYL0k425s/cLtpCDS512MQs2hYYIcXfbclRoqAqPRJHqOIP7Ga2I+itAutRwJNPzBff9TtdCe3k/hru2jDUd+Q6pBj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740428772; c=relaxed/simple;
-	bh=6DkvP5Utu3fZcN+GtpoN9thgA+2c0lgdkBnrvG1XS/o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WAQjxF7zES8liDMJYKJMBYe2J0oLFqjdoo69sXSfudR9i4rCiB7YIr1WupevozWq06gQGBjngAxYT8SYqGuLtCToxPqYVfGb+vxYwJiiaDMONqiWc/wLCkyLcLOhlYtmkPVALBomJz8fFad2gAWmdDGDc2Q+o/h0tDGl+PJDOHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N5aE8D2I; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N5aE8D2I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48595C4CEE7;
-	Mon, 24 Feb 2025 20:26:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740428770;
-	bh=6DkvP5Utu3fZcN+GtpoN9thgA+2c0lgdkBnrvG1XS/o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N5aE8D2IQIIWf2OcyMAsmlJRWU5ap7dVpPfjyrb3hzcQzj+HKypWylNlX8I1Z4ttt
-	 Zi20Qsh0mg1YKpMLhB6s+7XjmKRDtRBdnMe00Y4GiS8W9CwsRV9tWfZ2OPeYROHnDC
-	 ZZUVTi75g9MsDWymVPkDMKCEE/BRxziODJAwoFwA/zW/1T1Bdgj1uuiGb85QOTc9PF
-	 V58WD35yyGueJo0YvJjXaL7VFLqOx5VaaPdDS5jAtCPd5RHmG3xTq6dSniTPgudtCO
-	 8eB8Rlnp7YyMCLBDnGU1SpcpqCo9OrpkO/jxCV57on9/1PKo/cuzcv0RChqMnu5DK1
-	 szv8TBvchL1Hw==
-Date: Mon, 24 Feb 2025 12:26:09 -0800
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: John Garry <john.g.garry@oracle.com>
-Cc: brauner@kernel.org, cem@kernel.org, dchinner@redhat.com, hch@lst.de,
-	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com,
-	ritesh.list@gmail.com, martin.petersen@oracle.com, tytso@mit.edu,
-	linux-ext4@vger.kernel.org
-Subject: Re: [PATCH v2 03/11] xfs: Refactor xfs_reflink_end_cow_extent()
-Message-ID: <20250224202609.GH21808@frogsfrogsfrogs>
-References: <20250213135619.1148432-1-john.g.garry@oracle.com>
- <20250213135619.1148432-4-john.g.garry@oracle.com>
+	s=arc-20240116; t=1740428812; c=relaxed/simple;
+	bh=lSOhfgM9aqjP7uFmcecoJ5HzRf8wsz0vaLN16X+Vsy8=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nxiTHYeaA2SzhsTsOiCQh06vi9AYPDQQFOftbNEfg/rP1bdaM/BIoh0DM8hS9E3PyevfrA+xXLNJncEonmGiit0Lr1F0M1aO6cik7vaM5C0UCCsxf6wxdb3xRmSb0O6ueu5wfWzIu9YLcC1QoQYcbkqvAsbGb4hh9eC6JcUjn6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
+	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+	id 80914f8f-f2ed-11ef-9d7a-005056bd6ce9;
+	Mon, 24 Feb 2025 22:25:35 +0200 (EET)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 24 Feb 2025 22:25:34 +0200
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 8/8] gpiolib: sanitize the return value of
+ gpio_chip::get_direction()
+Message-ID: <Z7zVvgcEeWnYr9vZ@surfacebook.localdomain>
+References: <20250210-gpio-sanitize-retvals-v1-0-12ea88506cb2@linaro.org>
+ <20250210-gpio-sanitize-retvals-v1-8-12ea88506cb2@linaro.org>
+ <Z7yfTggRrk3K6srs@black.fi.intel.com>
+ <CAMRc=Md-bMUEKgF7srLFqwdetDcTDB-0YzrisccQmReDs-Ndvg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250213135619.1148432-4-john.g.garry@oracle.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Md-bMUEKgF7srLFqwdetDcTDB-0YzrisccQmReDs-Ndvg@mail.gmail.com>
 
-On Thu, Feb 13, 2025 at 01:56:11PM +0000, John Garry wrote:
-> Refactor xfs_reflink_end_cow_extent() into separate parts which process
-> the CoW range and commit the transaction.
-> 
-> This refactoring will be used in future for when it is required to commit
-> a range of extents as a single transaction, similar to how it was done
-> pre-commit d6f215f359637.
-> 
-> Signed-off-by: John Garry <john.g.garry@oracle.com>
-> ---
->  fs/xfs/xfs_reflink.c | 73 ++++++++++++++++++++++++++------------------
->  1 file changed, 43 insertions(+), 30 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
-> index 59f7fc16eb80..8428f7b26ee6 100644
-> --- a/fs/xfs/xfs_reflink.c
-> +++ b/fs/xfs/xfs_reflink.c
-> @@ -786,35 +786,19 @@ xfs_reflink_update_quota(
->   * requirements as low as possible.
->   */
->  STATIC int
-> -xfs_reflink_end_cow_extent(
-> +xfs_reflink_end_cow_extent_locked(
-> +	struct xfs_trans	*tp,
->  	struct xfs_inode	*ip,
->  	xfs_fileoff_t		*offset_fsb,
->  	xfs_fileoff_t		end_fsb)
->  {
->  	struct xfs_iext_cursor	icur;
->  	struct xfs_bmbt_irec	got, del, data;
-> -	struct xfs_mount	*mp = ip->i_mount;
-> -	struct xfs_trans	*tp;
->  	struct xfs_ifork	*ifp = xfs_ifork_ptr(ip, XFS_COW_FORK);
-> -	unsigned int		resblks;
->  	int			nmaps;
->  	bool			isrt = XFS_IS_REALTIME_INODE(ip);
->  	int			error;
->  
-> -	resblks = XFS_EXTENTADD_SPACE_RES(mp, XFS_DATA_FORK);
-> -	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_write, resblks, 0,
-> -			XFS_TRANS_RESERVE, &tp);
-> -	if (error)
-> -		return error;
-> -
-> -	/*
-> -	 * Lock the inode.  We have to ijoin without automatic unlock because
-> -	 * the lead transaction is the refcountbt record deletion; the data
-> -	 * fork update follows as a deferred log item.
-> -	 */
-> -	xfs_ilock(ip, XFS_ILOCK_EXCL);
-> -	xfs_trans_ijoin(tp, ip, 0);
-> -
->  	/*
->  	 * In case of racing, overlapping AIO writes no COW extents might be
->  	 * left by the time I/O completes for the loser of the race.  In that
-> @@ -823,7 +807,7 @@ xfs_reflink_end_cow_extent(
->  	if (!xfs_iext_lookup_extent(ip, ifp, *offset_fsb, &icur, &got) ||
->  	    got.br_startoff >= end_fsb) {
->  		*offset_fsb = end_fsb;
-> -		goto out_cancel;
-> +		return 0;
->  	}
->  
->  	/*
-> @@ -837,7 +821,7 @@ xfs_reflink_end_cow_extent(
->  		if (!xfs_iext_next_extent(ifp, &icur, &got) ||
->  		    got.br_startoff >= end_fsb) {
->  			*offset_fsb = end_fsb;
-> -			goto out_cancel;
-> +			return 0;
->  		}
->  	}
->  	del = got;
-> @@ -846,14 +830,14 @@ xfs_reflink_end_cow_extent(
->  	error = xfs_iext_count_extend(tp, ip, XFS_DATA_FORK,
->  			XFS_IEXT_REFLINK_END_COW_CNT);
->  	if (error)
-> -		goto out_cancel;
-> +		return error;
->  
->  	/* Grab the corresponding mapping in the data fork. */
->  	nmaps = 1;
->  	error = xfs_bmapi_read(ip, del.br_startoff, del.br_blockcount, &data,
->  			&nmaps, 0);
->  	if (error)
-> -		goto out_cancel;
-> +		return error;
->  
->  	/* We can only remap the smaller of the two extent sizes. */
->  	data.br_blockcount = min(data.br_blockcount, del.br_blockcount);
-> @@ -882,7 +866,7 @@ xfs_reflink_end_cow_extent(
->  		error = xfs_bunmapi(NULL, ip, data.br_startoff,
->  				data.br_blockcount, 0, 1, &done);
->  		if (error)
-> -			goto out_cancel;
-> +			return error;
->  		ASSERT(done);
->  	}
->  
-> @@ -899,17 +883,46 @@ xfs_reflink_end_cow_extent(
->  	/* Remove the mapping from the CoW fork. */
->  	xfs_bmap_del_extent_cow(ip, &icur, &got, &del);
->  
-> -	error = xfs_trans_commit(tp);
-> -	xfs_iunlock(ip, XFS_ILOCK_EXCL);
-> -	if (error)
-> -		return error;
-> -
->  	/* Update the caller about how much progress we made. */
->  	*offset_fsb = del.br_startoff + del.br_blockcount;
->  	return 0;
-> +}
->  
-> -out_cancel:
-> -	xfs_trans_cancel(tp);
-> +
-> +/*
-> + * Remap part of the CoW fork into the data fork.
-> + *
-> + * We aim to remap the range starting at @offset_fsb and ending at @end_fsb
-> + * into the data fork; this function will remap what it can (at the end of the
-> + * range) and update @end_fsb appropriately.  Each remap gets its own
-> + * transaction because we can end up merging and splitting bmbt blocks for
-> + * every remap operation and we'd like to keep the block reservation
-> + * requirements as low as possible.
-> + */
-> +STATIC int
-> +xfs_reflink_end_cow_extent(
-> +	struct xfs_inode	*ip,
-> +	xfs_fileoff_t		*offset_fsb,
-> +	xfs_fileoff_t		end_fsb)
-> +{
-> +	struct xfs_mount	*mp = ip->i_mount;
-> +	struct xfs_trans	*tp;
-> +	unsigned int		resblks;
-> +	int			error;
-> +
-> +	resblks = XFS_EXTENTADD_SPACE_RES(mp, XFS_DATA_FORK);
-> +	error = xfs_trans_alloc(mp, &M_RES(mp)->tr_write, resblks, 0,
-> +			XFS_TRANS_RESERVE, &tp);
-> +	if (error)
-> +		return error;
-> +	xfs_ilock(ip, XFS_ILOCK_EXCL);
-> +	xfs_trans_ijoin(tp, ip, 0);
-> +
-> +	error = xfs_reflink_end_cow_extent_locked(tp, ip, offset_fsb, end_fsb);
+Mon, Feb 24, 2025 at 08:55:26PM +0100, Bartosz Golaszewski kirjoitti:
+> On Mon, Feb 24, 2025 at 5:33 PM Andy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
+> > On Mon, Feb 10, 2025 at 11:52:02AM +0100, Bartosz Golaszewski wrote:
 
-Overly long line, but otherwise looks fine.  With that fixed,
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+...
 
---D
+> > > +static int gpiochip_get_direction(struct gpio_chip *gc, unsigned int offset)
+> > > +{
+> > > +     int ret;
+> > > +
+> > > +     lockdep_assert_held(&gc->gpiodev->srcu);
+> > > +
+> > > +     if (WARN_ON(!gc->get_direction))
+> > > +             return -EOPNOTSUPP;
+> > > +
+> > > +     ret = gc->get_direction(gc, offset);
+> > > +     if (ret > 1)
+> >
+> > Would it be better to use the respective GPIO*... macro instead of 1?
+> >
+> 
+> I did consider it but I don't like comparing against enums, it doesn't
+> feel right as the value behind the name can change. I think I prefer
+> it like this even if it's not the best solution either. Maybe we could
+> be more explicit and say:
+> 
+>     if (!(ret == IN || ret == OUT || ret < 0)
+> 
+> ?
 
-> +	if (error)
-> +		xfs_trans_cancel(tp);
-> +	else
-> +		error = xfs_trans_commit(tp);
->  	xfs_iunlock(ip, XFS_ILOCK_EXCL);
->  	return error;
->  }
-> -- 
-> 2.31.1
-> 
-> 
+Yep, I like this.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
