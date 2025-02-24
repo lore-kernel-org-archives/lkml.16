@@ -1,100 +1,74 @@
-Received: from smtp.smtpout.orange.fr (smtp-22.smtpout.orange.fr [80.12.242.22])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB879126F0A;
-	Mon, 24 Feb 2025 19:17:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E4E1C7012
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 19:18:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740424666; cv=none; b=p11l7sG1p/O6Rmw6DjMi42MVLVaPbTWppvryEJV53vka7oX4OMqk20HCeWG7xsVGBKsIY8YN/eIdmjxDAeFvdUmaoaBmER7tIVpeuYIwOnb8kUv9IeJ6ZG/ZR96BJa6z6hpXFzKKFxLTGk1bLXMXISkmvaNDi9KKRKwlejCzDNA=
+	t=1740424692; cv=none; b=R3XksT8PIXrOTtOtg1d+L1a5+8hekcdU3XM6cSJLlw48zlTHRu2bFHSf5Ko7GCAep2LbPQ4bjdSD8Aeo5ykR1+nlB4P2kuLrfDXKd9hz8k2yTcTG+cS2CevMMLnQx8H36FmDvpwoa7qI//b2Ct+N/G1RHEeJIsO6lBDqZY9DuUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740424666; c=relaxed/simple;
-	bh=PUeRntGvwXImYDS+7i7O0aN6qpNF8PoicxIEo5iasdk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ma47mx7HsOY1jFqr7rCtSEu2MJY7UxELfzMSlPmeNlZWy7fM7sWgWiksHKRzDCUBE8eEQNMXcezgcxyl5mR6OJ0gncPCpLt6niDEo/u9GAEUMih/VKl8Wsm72zIYa/sMkXBRRcVUzhszuqCIsZdorGRc17EcSBrepfdIhV9HddM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=dTskuR9F; arc=none smtp.client-ip=80.12.242.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1740424692; c=relaxed/simple;
+	bh=+BZxL6di1N3tWTlbC/lnpBgfQsNEvuLPkbqkZugUgYA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PlfBP3k7UIKUbsXuQCyUzTsz6IZnUF5YYdImmMHhNrNw6/Ki8pcXAU4c1NrqUt1gpIhRKiVnpe+oqFalkxj1AEXhlBS0ifzJI0MQJPp7+eljwYoEH0AfWjdIyoYqnSdSJtmFDReFpTvwEhgi0UPjGem/mBAN2jtlwBwLwYsQXoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QpEpWS/L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="dTskuR9F"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id mdwGt5kjyKyVdmdwJtBcWJ; Mon, 24 Feb 2025 20:16:32 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1740424592;
-	bh=9VPOLtQg+zqSMxeSCbo0v5e5C1uKf8cqE57WkcwIzms=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=dTskuR9FK1/IIcaRaov8nY9R+bPoGTkJfSWtdVzr5DCQ8GSXiMe/Gv9j9AT7jhyh+
-	 eb9hTyQgiyd+gD6n71R/H4jdu4XUEgCIlAvIl9DJQacjP2ZKQkqDGjA/WaeqHI0cSm
-	 LYGu20syygD+cGHkgL1Rp1xzSxL0SoWRFTJyfj2Fpse7037OyX36ZSs4LjmvFLOHMZ
-	 va7D587KDqw4oLdn7xT+anZF5p2g309POA4ayVMIZhrBZVDkxZPHAicGKJ8M5kT1gO
-	 e4gesxROvoK73rdErzscHvUIhecucjaw4piH5UHPQTwNGQGtYT3IdYwcPjhB98Y5UP
-	 F+Q6bArp1jsMw==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Mon, 24 Feb 2025 20:16:32 +0100
-X-ME-IP: 90.11.132.44
-Message-ID: <29687c3c-d983-4d1f-8cde-fde82df84e0e@wanadoo.fr>
-Date: Mon, 24 Feb 2025 20:16:23 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QpEpWS/L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A8A0C4CEDD;
+	Mon, 24 Feb 2025 19:18:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740424691;
+	bh=+BZxL6di1N3tWTlbC/lnpBgfQsNEvuLPkbqkZugUgYA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=QpEpWS/L2Fjou57HuIaa/mK9QQdc2Kqmvo+Dz8hxwjuGYFutHC1/hvRmYA5pfZpO+
+	 Yu1BrqOkYrPdY813kA1J1v5gtS9iGlSxODJwdBYH96SPI1KqzuE2cjjS/kjvp+3qwc
+	 nbp85XllM1V+nWaMOqp2qhS7qN/wMOvbnbygMP7hZdpXcHtQ1LsmRtLy4KJoT+d//l
+	 qa1L2eMkGQPUPun8JW+LgSNlbtDAsI9o8HHiBDben8AwKQrJGKohW9wqKrFkMVDY6h
+	 53pi407yem1v/aW5PLu6Xt87q7BPvonHFsvk+5RfgJNSzWdQDwwu4oHsIhqT6B3PS4
+	 725AGNPTD6fxA==
+From: Kees Cook <kees@kernel.org>
+To: luto@amacapital.net,
+	wad@chromium.org,
+	Mateusz Guzik <mjguzik@gmail.com>
+Cc: Kees Cook <kees@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] seccomp: avoid the lock trip seccomp_filter_release in common case
+Date: Mon, 24 Feb 2025 11:18:04 -0800
+Message-Id: <174042468261.3899124.11197404704577449998.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250213170911.1140187-1-mjguzik@gmail.com>
+References: <20250213170911.1140187-1-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 4/6] media: platform: synopsys: Add support for HDMI
- input driver
-To: Dmitry Osipenko <dmitry.osipenko@collabora.com>,
- Shreeya Patel <shreeya.patel@collabora.com>, Heiko Stuebner
- <heiko@sntech.de>, Mauro Carvalho Chehab <mchehab@kernel.org>,
- Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, jose.abreu@synopsys.com, nelson.costa@synopsys.com,
- shawn.wen@rock-chips.com, nicolas.dufresne@collabora.com,
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: kernel@collabora.com, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rockchip@lists.infradead.org, Tim Surber <me@timsurber.de>
-References: <20250223173019.303518-1-dmitry.osipenko@collabora.com>
- <20250223173019.303518-5-dmitry.osipenko@collabora.com>
- <88b02c37-6741-459b-b966-d6d58d1f9b6f@wanadoo.fr>
- <c30a291b-c81b-4da1-a0ae-270d323b28e3@collabora.com>
- <bc1f5334-b0fb-4e81-979d-feb17886ac40@wanadoo.fr>
- <d13f13ac-1501-4427-b6d3-ee161eeb932a@collabora.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <d13f13ac-1501-4427-b6d3-ee161eeb932a@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Le 24/02/2025 à 05:19, Dmitry Osipenko a écrit :
-> On 2/24/25 00:11, Christophe JAILLET wrote:
->>>>
->>>>> +    ret = cec_register_adapter(cec->adap, cec->dev);
->>>>> +    if (ret < 0) {
->>>>> +        dev_err(cec->dev, "cec register adapter failed\n");
->>>>> +        cec_unregister_adapter(cec->adap);
->>>>
->>>> Is it needed to call cec_unregister_adapter() when
->>>> cec_register_adapter() fails?
->>>
->>> Yes, it's confusing, but unregister is needed to free the adapter
->>> properly, it's prepared to do it. Thanks for the review.
->>>
->>
->> I don't know this API, so you'll get the last word, but
->> cec_unregister_adapter() does not seem to do that many things in such a
->> case, unless I miss something. See [1].
->>
->> CJ
->>
->> [1]: https://elixir.bootlin.com/linux/v6.14-rc3/source/drivers/media/
->> cec/core/cec-core.c#L370
+On Thu, 13 Feb 2025 18:09:10 +0100, Mateusz Guzik wrote:
+> Vast majority of threads don't have any seccomp filters, all while the
+> lock taken here is shared between all threads in given process and
+> frequently used.
 > 
-> On a second look, apparently you're right and
-> cec_notifier_cec_adap_unregister() should be used there.
+> Safety of the check relies on the following:
+> - seccomp_filter_release is only legally called for PF_EXITING threads
+> - SIGNAL_GROUP_EXIT is only ever set with the sighand lock held
+> - PF_EXITING is only ever set with the sighand lock held *or* after
+>   SIGNAL_GROUP_EXIT is set *or* the process is single-threaded
+> - seccomp_sync_threads holds the sighand lock and skips all threads if
+>   SIGNAL_GROUP_EXIT is set, PF_EXITING threads if not
 > 
+> [...]
 
-So, maybe in the .remove() function as well?
+Applied to for-next/seccomp, thanks!
 
-CJ
+[1/1] seccomp: avoid the lock trip seccomp_filter_release in common case
+      https://git.kernel.org/kees/c/8f19331384e6
+
+Take care,
+
+-- 
+Kees Cook
+
