@@ -1,237 +1,71 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A488BEAF1
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 16:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411DD25A329;
+	Mon, 24 Feb 2025 16:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740415118; cv=none; b=Jgm0QApC0hLF/cgOTA88Z3TfDAlzJEAwajzfyvUomDHTIKzrebN/jQktSypboCas5IOZd8bFa/Ylp1fO27CBqrSw+Ib+beGbbyhUguXBHOGMHMMEWnUTCEst+J/RXqXevU+xCAmIxPNC1yKZQHXOdANWhFYjq3RoYb2U0hzu/Xo=
+	t=1740415143; cv=none; b=fwYt0XrNqeqmJLHwh35mxsJoLwbHMGLKMozVqEbd0np6fo8p+OdQMFfUkMZVgMnROM/ifYXuh/fmQT/XesMOeUJmj2GExl/RLloI6lOHp2THSBACQQwEtMNKo7RYvrRlpLsfBXQHvotH2UCqPaNQs3RyMq3lZCs+jAlII2y8/aY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740415118; c=relaxed/simple;
-	bh=MMSWJuJU5qsromQVdUd6ChbKWags0ip1ne8PGz+pULU=;
+	s=arc-20240116; t=1740415143; c=relaxed/simple;
+	bh=qBKzDyjWfLmWXprxvnJItC7T8gVRv1MLXFy5GtdsfPI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JddYFb1XbcgF0D00FHuYSz5SHnykT26to5g7AWCHSrFQre9pz06bWQVkiJg2zNFDJfPp0We/AXbnje9BlCNkawHZB0c6J0pypJDNys1Tn7U2KWqOT/pUULRgh0OmkA9lSolGs26JUYYCZkgtmlISLngnQ3g1Bs3W3mOCL+fKo9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R3qiJTAK; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=pkVm7oCSqD6Q3zfTB3FVD28KzLMZTtgWnZP/fAA4edU0+i8UUbdl4w3VNB5+afRzJztks/yOD3nYyQWRSVZN6Kh30iWtLuHdn5FoDG/sVuP1nWjFexf40a/HnvV7tfkgr0bvOcS+NoZNPH7hdD+lLlwVi3n5XtG7b5C7A1dVI/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=R8lPeSA6; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R3qiJTAK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740415115;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8HQ3dWVPqC2Dw8ff2CbnjKgP3N74oCRMEtHC7r2pq7E=;
-	b=R3qiJTAKaF+/O93hmXhiIRB0DmQrwbxuhbpBJv24AGKznQem6F0vd/ppx9ZJuTrmLUq79o
-	g/dJjqStRzVUZ4QU1k5l6CKToUAw0RFyS7KYBALIuEqYnmfHsKSq7/FnwD0M9CQFetAzFK
-	IO47crP9B8idfDXAFl16V4kenqxW0Gs=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-172-ax0Hlq2QNP6IaGtf4xkolA-1; Mon, 24 Feb 2025 11:38:34 -0500
-X-MC-Unique: ax0Hlq2QNP6IaGtf4xkolA-1
-X-Mimecast-MFC-AGG-ID: ax0Hlq2QNP6IaGtf4xkolA_1740415113
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5de5172cc5bso3608952a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 08:38:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740415113; x=1741019913;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8HQ3dWVPqC2Dw8ff2CbnjKgP3N74oCRMEtHC7r2pq7E=;
-        b=uZNDj8T37GKw17mx43bX7F46y0/xV1CdIvW9eWBCBqEyKY+YeogpRYHHvnEU4SvPnj
-         CaY/WnkjMPRK8KytOi5GspQGgZpez2eZzO1aQqfGcPUtyCKEq0UDUDQLjtmntWLCyzXy
-         ZUHTc96tqMlMhwlFPG0ruXEqz0JPp3fak9x747ZQJ4cj7vFif3tVCJcp7ooWKz/DBr4D
-         5o2CCf4YNIM/QKwiP12wT0sTUso4nJ+Pn9e4qfHkQ8D8tqIeLpx3uNZGtZyRXXTV0Xt6
-         fw1ypZoMgikehAe7DJyDXr4TqjV6/uh6x+Qh3FOQp3XqoANjIXQO56PiLidA791BYJDl
-         YxSA==
-X-Forwarded-Encrypted: i=1; AJvYcCUME+peZTcqex50E7BeMHlRRoI718OKTAcX98gHHXhJ2itZ6CKd8wdH/jYBI7aMYI+qjIKEthwFRcT4TsQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGs3GWEhNsm7PhGwpy+mwJ3Z53JXf3Jt/MJHeMUVjwxHv90gy8
-	+gMnsEcNqO7f1oh+st5HWIjPJ35ffkKY54mZSZqGq4aruo1rnIBDpGT88YKbALvZmQJldGgDb04
-	DjN+SWuirEVCspn/Qfu3DNMqB8gv+PMCwb+F4PXLG5HIiqTOnT5G+S1Sqsj7l
-X-Gm-Gg: ASbGnctWRzCec/h4GC49/yERhQBbiTnRcAZcxFeDvCMJZzxePCDGNAzudlRbGexy5PT
-	RN94pXg0uRn6eOk6h/gqfpLLJBPuf37ekX1TN57DvqX5ZLzShJZWXI/ONkCOU7VJBYTJDQjRtGk
-	33h6DrC79AK6njcwd/NQsuUUdyjloppa4s9EguGGNhE2FL8iTsgaEWXMMlpga8sHSoNiM/gPCWR
-	SLz1UwludL+mLtkwfh/95lTrPtfy9OBa6l/REiZLTHj1oj8gp47ns8wwdfn5wnYHVHRb1aiQGm3
-	4pKp3BkYtl2udxWohuJtZpF7TTolMv6T4Ow=
-X-Received: by 2002:a05:6402:2808:b0:5e0:2d53:b2a with SMTP id 4fb4d7f45d1cf-5e0b70c0d82mr36930990a12.3.1740415112418;
-        Mon, 24 Feb 2025 08:38:32 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFz+s0ONL8ejkTU1UmPgTYUJUij0Y+jBU/pmIRhrfprGz1EGlR/3qJKoYKtVNj3n95rvN+FPg==
-X-Received: by 2002:a05:6402:2808:b0:5e0:2d53:b2a with SMTP id 4fb4d7f45d1cf-5e0b70c0d82mr36930832a12.3.1740415111286;
-        Mon, 24 Feb 2025 08:38:31 -0800 (PST)
-Received: from thinky (ip-217-030-074-039.aim-net.cz. [217.30.74.39])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb4d3ef3c0sm1913191666b.41.2025.02.24.08.38.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 08:38:30 -0800 (PST)
-Date: Mon, 24 Feb 2025 17:38:29 +0100
-From: Andrey Albershteyn <aalbersh@redhat.com>
-To: Jan Kara <jack@suse.cz>
-Cc: Richard Henderson <richard.henderson@linaro.org>, 
-	Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
-	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v3] fs: introduce getfsxattrat and setfsxattrat syscalls
-Message-ID: <pze5ejdkh5hr6qz75xbn65vmjyaw2iauseqdi52sjt3tzc6sk4@wi7vy4af5vof>
-References: <20250211-xattrat-syscall-v3-1-a07d15f898b2@kernel.org>
- <fyp7gcbeo3xlrh7zi7k6m5aa6h5otbufxq3kh5zvgr3sjdbxl3@4nkuwx46yajk>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R8lPeSA6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=ZOAgTK9YJm2QBLwD2cDF+huwjTvookcaPAGHBGMqPGo=; b=R8lPeSA6+vDeWo/u/01PmcHNH/
+	U7mccx6QQI4/4O3P3i10HXQbQmlQLuSrSPzdM8zytB4x/dXj8T3pLb1uw0DUSxZ5uHGMjzx8m7kAS
+	T/WYHhxgmFlmjM6xwKKA02UyeYPEorVKgO8aRbb4vJVO2K0lt4XYP8zllJDQUkx5FcILPIYOKd9Ea
+	TNw6vjireiWCc0MQ6Kygl03dc7aMQY0itFEwm9YYjgZJhfsU+BJQnVeKdCxzFugA+12Ac21p4bI/B
+	uuzLSrVoZoN0pNWXyNuiCKAWxYTnXC4j9GbpXLlhp0Pgd6ET/vudISihJsta53LLc/4fmnvRnrnES
+	TVmUDw9Q==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tmbTx-0000000ETEn-2onk;
+	Mon, 24 Feb 2025 16:39:01 +0000
+Date: Mon, 24 Feb 2025 08:39:01 -0800
+From: Christoph Hellwig <hch@infradead.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/8][next] block: blk_types.h: Use struct_group_tagged()
+ in flex struct bio
+Message-ID: <Z7ygpff-kUHPtEQp@infradead.org>
+References: <cover.1739957534.git.gustavoars@kernel.org>
+ <ccf673b997e771430b7570fb8a6dfc11d07a2bde.1739957534.git.gustavoars@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fyp7gcbeo3xlrh7zi7k6m5aa6h5otbufxq3kh5zvgr3sjdbxl3@4nkuwx46yajk>
+In-Reply-To: <ccf673b997e771430b7570fb8a6dfc11d07a2bde.1739957534.git.gustavoars@kernel.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On 2025-02-24 11:54:34, Jan Kara wrote:
-> On Tue 11-02-25 18:22:47, Andrey Albershteyn wrote:
-> > From: Andrey Albershteyn <aalbersh@redhat.com>
-> > 
-> > Introduce getfsxattrat and setfsxattrat syscalls to manipulate inode
-> > extended attributes/flags. The syscalls take parent directory fd and
-> > path to the child together with struct fsxattr.
-> > 
-> > This is an alternative to FS_IOC_FSSETXATTR ioctl with a difference
-> > that file don't need to be open as we can reference it with a path
-> > instead of fd. By having this we can manipulated inode extended
-> > attributes not only on regular files but also on special ones. This
-> > is not possible with FS_IOC_FSSETXATTR ioctl as with special files
-> > we can not call ioctl() directly on the filesystem inode using fd.
-> > 
-> > This patch adds two new syscalls which allows userspace to get/set
-> > extended inode attributes on special files by using parent directory
-> > and a path - *at() like syscall.
-> > 
-> > Also, as vfs_fileattr_set() is now will be called on special files
-> > too, let's forbid any other attributes except projid and nextents
-> > (symlink can have an extent).
-> > 
-> > CC: linux-api@vger.kernel.org
-> > CC: linux-fsdevel@vger.kernel.org
-> > CC: linux-xfs@vger.kernel.org
-> > Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
+On Mon, Feb 24, 2025 at 08:25:08PM +1030, Gustavo A. R. Silva wrote:
+> Use the `struct_group_tagged()` helper to create a new tagged
+> `struct bio_hdr`. This structure groups together all the members of
+> the flexible `struct bio` except the flexible array `bi_inline_vecs`.
+> As a result, the array is effectively separated from the rest of the
+> members without modifying the memory layout of the flexible structure.
 > 
-> Some comments below:
-> 
-> > +SYSCALL_DEFINE4(getfsxattrat, int, dfd, const char __user *, filename,
-> > +		struct fsxattr __user *, fsx, unsigned int, at_flags)
-> > +{
-> > +	CLASS(fd, dir)(dfd);
-> > +	struct fileattr fa;
-> > +	struct path filepath;
-> > +	int error;
-> > +	unsigned int lookup_flags = 0;
-> > +
-> > +	if ((at_flags & ~(AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH)) != 0)
-> > +		return -EINVAL;
-> > +
-> > +	if (at_flags & AT_SYMLINK_FOLLOW)
-> 	    ^^ This should be !(at_flags & AT_SYMLINK_NOFOLLOW)?
-> 
-> In the check above you verify for AT_SYMLINK_NOFOLLOW and that also matches
-> what setxattrat() does...
+> This new tagged struct will be used to fix problematic declarations
+> of middle-flex-arrays in composite structs, like these[1][2][3], for
+> instance.
 
-Right, didn't notice that this is actually opposite to setxattrat(),
-will change that.
+Well, I guess this goes with the context-less nvme patch.  I think
+you're much better off just removing the bi_inline_vecs array entirely,
+and just add a new structure for bio + inline vecs for the few callers
+that dynamically allocate the bio and actually have inline vecs.
 
-> 
-> 
-> > +		lookup_flags |= LOOKUP_FOLLOW;
-> > +
-> > +	if (at_flags & AT_EMPTY_PATH)
-> > +		lookup_flags |= LOOKUP_EMPTY;
-> > +
-> > +	if (fd_empty(dir))
-> > +		return -EBADF;
-> 
-> This check is wrong and in fact the whole dfd handling looks buggy.
-> openat(2) manpage describes the expected behavior:
-> 
->        The dirfd argument is used in conjunction with the pathname argument as
->        follows:
-> 
->        •  If the pathname given in pathname is absolute,  then  dirfd  is  ig-
->           nored.
-> 	  ^^^^ This is what you break. If the pathname is absolute, you're
-> not expected to touch dirfd.
-> 
->        •  If  the pathname given in pathname is relative and dirfd is the spe-
->           cial value AT_FDCWD, then pathname is interpreted  relative  to  the
->           current working directory of the calling process (like open()).
->           ^^^ Also AT_FDCWD handling would be broken by the above check.
-> 
->        •  If  the  pathname  given  in pathname is relative, then it is inter-
->           preted relative to the directory referred to by the file  descriptor
->           dirfd  (rather than relative to the current working directory of the
->           calling process, as is done by open() for a relative pathname).   In
->           this  case,  dirfd  must  be a directory that was opened for reading
->           (O_RDONLY) or using the O_PATH flag.
-> 
->        If the pathname given in pathname is relative, and dirfd is not a valid
->        file descriptor, an error (EBADF) results.  (Specifying an invalid file
->        descriptor number in dirfd can be used as a means to ensure that  path-
->        name is absolute.)
-> 
-> > +
-> > +	error = user_path_at(dfd, filename, lookup_flags, &filepath);
-> 		^^^ And user_path_at() isn't quite what you need either
-> because with AT_EMPTY_PATH we also want to allow for filename to be NULL
-> (not just empty string) and user_path_at() does not support that. That's
-> why I in my previous replies suggested you should follow what setxattrat()
-> does and that sadly it is more painful than it should be. You need
-> something like:
-> 
-> 	name = getname_maybe_null(filename, at_flags);
-> 	if (!name) {
-> 		CLASS(fd, f)(dfd);
-> 
-> 		if (fd_empty(f))
-> 			return -EBADF;
-> 		error = vfs_fileattr_get(file_dentry(fd_file(f)), &fa);
-> 	} else {
-> 		error = filename_lookup(dfd, filename, lookup_flags, &filepath,
-> 					NULL);
-> 		if (error)
-> 			goto out;
-> 		error = vfs_fileattr_get(filepath.dentry, &fa);
-> 		path_put(&filepath);
-> 	}
-> 	if (!error)
-> 		error = copy_fsxattr_to_user(&fa, fsx);
-> out:
-> 	putname(name);
-> 	return error;
-> 
-> Longer term, we need to provide user_path_maybe_null_at() for this but I
-> don't want to drag you into this cleanup :)
+Similar to what I did here for the bio integrity payload:
 
-Oh, I missed that, thanks for pointing this out, I will change it as
-suggested.
-
--- 
-- Andrey
-
+https://lore.kernel.org/linux-block/20250131122436.1317268-4-hch@lst.de/
