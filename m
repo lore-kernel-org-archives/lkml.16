@@ -1,102 +1,134 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 938D5195;
-	Mon, 24 Feb 2025 13:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EA4204C19;
+	Mon, 24 Feb 2025 13:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740403043; cv=none; b=LETJ4Vu8ZGvAeENQC9qyzdUxUhbvjzKKYCOWccunNji74teKWJ8cKdFn/TdzJ0NeDoLb42OJfyaaCaAkdgXMHQ65t7YgP+GhoKYA4uk37YpnIvuk8RGrd6rTBmzmGZwy2rdqIZ9OOmjJUHWxVreA6akJPnLUh+PRiHcHe25mYKc=
+	t=1740403192; cv=none; b=Y4EmcimX8f/rdaiLSvfBH/Z4Uf3+89BTzixiP1w2srQzgCh+6YFzJH6buXCtBEjIDzZwzqzllCWspZ7BDd7tyZQHaxi9sASHVE+ltlXIKhFpBA8diILm0UuIeYGSXhdvIYQXdmMe6bO+r3Y49Z+MhNRrLm3pXhBKIuqDHzgdwTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740403043; c=relaxed/simple;
-	bh=iJujQgrFpeR89LdUfnOUutmKKbuFiKdlZWu5H+P8p/0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aiSaz5A7rqkLzoQBLlOwJdSTRHhv3rANzxryEhzQSFKy+P+V4Bsgf/rRBNSlkqJiKNKdl5z54SRa3tQTIL83q2fPWC8PQk2SFE4hhhiVzGR3Zpy2orVZ93Knu5WgtiRORNF62/6L45b1ilrytUAGzDJzKCNcoNx8p47KDvtrtzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fxmtDWxV; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1740403192; c=relaxed/simple;
+	bh=y9P+mQuhoslmJ1+Iv0GlyHBRSvmzQLGAjFv9AKXzQ+g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pyr13jTYi+geESebAqU+ev9W7XoXUtkUFa0I2jsAoDwS38Dlmqlwg69FeCZhiqKJMS0YA4HpXBsToa4wikIK9/6+zIaKus3Bu4WDcfgXWLAsZJS8sKz5bTv2Hi/nNDFu9XdrSubgCQFwzjwqZ2Sqi/e1BtzcyhopqWBXLplhYg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jq4jUOfP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fxmtDWxV"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4A6D941C15;
-	Mon, 24 Feb 2025 13:17:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1740403038;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ksTMumsP+uok8AykLK2ZoU0DRsvBnKMfzttvPsXkX04=;
-	b=fxmtDWxVENVonUC0M6cX011xhIvC7sD7bgnqfraUtHc94+VeM1D9puG3DYiF9td+Qom/bj
-	5svpFk+lUN6BTRzWiysDJn9zjQa4DCzQwMihqQXoaVj50V43KjoQ9W/Xw07BUctlWNg4Jc
-	F3E7O1unVUsoGW7/XUmeFK7zhHMsZoDKMV31hO+Dcr/m34eD9TLyb1us+61Zq7d7750IQQ
-	4wUi7kEht2uBnBeQkW7qSwBxgaR8OSz3owt1/b7uoXumL99XMKYsZtXee50rCacwx4EC5H
-	J42tqD4W+z/j1hzQtw5JrktRBkYxAirE/q1T+Ny1rOi8/WOCoLEpCfExNlBcNA==
-Date: Mon, 24 Feb 2025 14:17:16 +0100
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Kory Maincent <kory.maincent@bootlin.com>, Andrew Lunn <andrew@lunn.ch>,
- Oleksij Rempel <o.rempel@pengutronix.de>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet
- <corbet@lwn.net>, Donald Hunter <donald.hunter@gmail.com>, Rob Herring
- <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, Simon Horman
- <horms@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Thomas
- Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, Dent
- Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 09/12] net: pse-pd: pd692x0: Add support for
- controller and manager power supplies
-Message-ID: <20250224141716.01751dc4@fedora>
-In-Reply-To: <Z7xqz-Z5UhqBQXnc@shell.armlinux.org.uk>
-References: <20250218-feature_poe_port_prio-v5-0-3da486e5fd64@bootlin.com>
-	<20250218-feature_poe_port_prio-v5-9-3da486e5fd64@bootlin.com>
-	<20250224134222.358b28d8@fedora>
-	<Z7xqz-Z5UhqBQXnc@shell.armlinux.org.uk>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jq4jUOfP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A614EC4CED6;
+	Mon, 24 Feb 2025 13:19:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740403191;
+	bh=y9P+mQuhoslmJ1+Iv0GlyHBRSvmzQLGAjFv9AKXzQ+g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Jq4jUOfP50nQgpqG26YiGxmHkXpjvjG9gRdilnbbfMo454vyjSKJJLi/9u/cOlByQ
+	 X2f1YAunRdDYYCMhUw5scIn9ne4zkrd3r4Lf+y+t9cF0BEe6sh+xOrWU+jVmjG8ZtQ
+	 Hmr0z6iXvVW5T1ydf4IuNHNEGqzXQgKx34NbaMJbxDgYvOa4p3uAG77jbIBGR3ZB4t
+	 kwEOUR19Terhs6nIsSp66ly8sd0lrad/FDL3vDLuCLSnXObMPnYwzaEwJvQt5s+Hbv
+	 PtNqdz+UaQvEsJl1cK+LR1ePbr6N7pv2dBxtu+mrJZeRb0kzQVkO5EsOXcQXzqU3zF
+	 OP+zUJ8nJ/5Wg==
+Date: Mon, 24 Feb 2025 14:19:45 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Sai Krishna Musham <sai.krishna.musham@amd.com>, bhelgaas@google.com,
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	michal.simek@amd.com, bharat.kumar.gogada@amd.com,
+	thippeswamy.havalige@amd.com
+Subject: Re: [PATCH 2/2] PCI: xilinx-cpm: Add support for PCIe RP PERST#
+ signal
+Message-ID: <Z7xx8ZxpD011oCCj@ryzen>
+References: <20250224063046.1438006-1-sai.krishna.musham@amd.com>
+ <20250224063046.1438006-3-sai.krishna.musham@amd.com>
+ <20250224070236.nhowwz3uwk2rx4qi@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdejkeekkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegveeltddvveeuhefhvefhlefhkeevfedtgfeiudefffeiledttdfgfeeuhfeukeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghlohepfhgvughorhgrpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdegpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepohdrrhgvmhhpvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnv
- ghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomh
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250224070236.nhowwz3uwk2rx4qi@thinkpad>
 
-On Mon, 24 Feb 2025 12:49:19 +0000
-"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-
-> On Mon, Feb 24, 2025 at 01:42:22PM +0100, Maxime Chevallier wrote:
-> > On Tue, 18 Feb 2025 17:19:13 +0100
-> > Kory Maincent <kory.maincent@bootlin.com> wrote:  
-> > > diff --git a/drivers/net/pse-pd/pd692x0.c b/drivers/net/pse-pd/pd692x0.c
-> > > index 44ded2aa6fca..c9fa60b314ce 100644
-> > > --- a/drivers/net/pse-pd/pd692x0.c
-> > > +++ b/drivers/net/pse-pd/pd692x0.c
-> > > @@ -976,8 +976,10 @@ pd692x0_register_managers_regulator(struct pd692x0_priv *priv,
-> > >  	reg_name_len = strlen(dev_name(dev)) + 23;
-> > >  
-> > >  	for (i = 0; i < nmanagers; i++) {
-> > > +		static const char * const regulators[] = { "vaux5", "vaux3p3" };  
+On Mon, Feb 24, 2025 at 12:32:36PM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Feb 24, 2025 at 12:00:46PM +0530, Sai Krishna Musham wrote:
+> > Add GPIO-based control for the PCIe Root Port PERST# signal.
 > > 
-> > Looks like the 'static' is not needed here :)  
+> > According to section 2.2 of the PCIe Electromechanical Specification
+> > (Revision 6.0), PERST# signal has to be deasserted after a delay of
+> > 100 ms (TPVPERL) to ensure proper reset sequencing during PCIe
+> > initialization.
+> > 
+> > Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
+> > ---
+> > This patch depends on the following patch series.
+> > https://lore.kernel.org/all/20250217072713.635643-3-thippeswamy.havalige@amd.com/
+> > ---
+> >  drivers/pci/controller/pcie-xilinx-cpm.c | 23 +++++++++++++++++++++++
+> >  1 file changed, 23 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
+> > index 81e8bfae53d0..0e31b85658e6 100644
+> > --- a/drivers/pci/controller/pcie-xilinx-cpm.c
+> > +++ b/drivers/pci/controller/pcie-xilinx-cpm.c
+> > @@ -6,6 +6,8 @@
+> >   */
+> >  
+> >  #include <linux/bitfield.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/gpio/consumer.h>
+> >  #include <linux/interrupt.h>
+> >  #include <linux/irq.h>
+> >  #include <linux/irqchip.h>
+> > @@ -568,8 +570,29 @@ static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
+> >  	struct device *dev = &pdev->dev;
+> >  	struct pci_host_bridge *bridge;
+> >  	struct resource_entry *bus;
+> > +	struct gpio_desc *reset_gpio;
+> >  	int err;
+> >  
+> > +	/* Request the GPIO for PCIe reset signal */
+> > +	reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
 > 
-> Have you checked the compiler output before saying that?
+> You've defined the polarity as 0x1 in the binding. Which corresponds to
+> GPIO_ACTIVE_LOW. So if you request the GPIO as GPIOD_OUT_LOW, it means the host
+> is going to drive the PERST# line as 'high', which corresponds to PERST#
+> deassert. I don't think you'd want that and if that is what is really happening,
+> the endpoint state machine would be broken. So I suspect that the polarity of
+> your PERST# line is wrong.
+> 
+> - Mani
+> 
+> > +	if (IS_ERR(reset_gpio)) {
+> > +		dev_err(dev, "Failed to request reset GPIO\n");
+> > +		return PTR_ERR(reset_gpio);
+> > +	}
+> > +
+> > +	/* Assert the reset signal */
+> > +	gpiod_set_value(reset_gpio, 0);
+> > +
+> > +	/*
+> > +	 * As per section 2.2 of the PCI Express Card Electromechanical
+> > +	 * Specification (Revision 6.0), the deassertion of the PERST# signal
+> > +	 * should be delayed by 100 ms (TPVPERL).
+> > +	 */
+> > +	msleep(100);
+> > +
+> > +	/* Deassert the reset signal */
+> > +	gpiod_set_value(reset_gpio, 1);
+> > +
 
-No I have not
+Since you are adding PERST# to your DT binding, please make sure that you
+define it properly (as active low) in the DT binding.
 
-> I've seen plenty of instances where "static" should be there but isn't,
-> leading to the compiler generating inline code to create the
-> array/struct on the stack.
+Then in the driver things should look like this and nothing else:
+devm_gpiod_get(..., GPIOD_OUT_HIGH); // will assert PERST#
+gpiod_set_value(reset_gpio, 1); // assert PERST# (will be a no-op since PERST# is already asserted)
+msleep(100);
+gpiod_set_value(reset_gpio, 0); // deassert PERST#
 
-Makes sense then, so it should be good here.
 
-Thanks,
 
-Maxime
+Kind regards,
+Niklas
