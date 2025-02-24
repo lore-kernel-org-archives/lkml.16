@@ -1,108 +1,143 @@
-Received: from mail-m32110.qiye.163.com (mail-m32110.qiye.163.com [220.197.32.110])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6F823C393;
-	Mon, 24 Feb 2025 08:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5761818A6D5;
+	Mon, 24 Feb 2025 08:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740386987; cv=none; b=ko03nY4nh508qItAv1l8X/rWXIKA+ldewWblHKEmS3BDhF3zyc3JW9Tme8YDTYbJHONp29Lziap0R9wh+54qZyJs1cJjO0q5u+Xq/BaHH1HSWeVBH56n7MW6jBEUSc82w6E2Qh9qD7GX164YHxxP7bg6YjtwjIr06KH9i0D7avo=
+	t=1740386992; cv=none; b=q81+iFn5KlV0jpB8Lx6pOoL+mi8Ltv2QYtlr/FJ7TRHwc/cg0RyFKEAqGPkoKln7PeB4Ta2Obug5mG9F61m5xuiq1xyXW3d0ayCSpLhSjHPziwol+rQs2hidu6e4wCjShXQ7tt6m25HOwoeIOO9ObS1JeDMPTOijZAKRNri+V/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740386987; c=relaxed/simple;
-	bh=C56MrLlhWcU08ZYkafZUUuJbyZi0cMLonjZabttx9/Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=F99vd4xkH5gWLDSLuLTCPF7le8qccCwhKVL7ye6DTp3gnZRizSJD3xBMYAa4vgyY9yPM/AWkTIGSbEWEjnmOON92YYln2obD0ohlmx6AtcTyFAiXtFs/GJRcIgcxbU5gwGiHr1oL92c2P7epkEKm1MfkiMqFH3KtMQYZhC0H+CE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=WBWsdCS5; arc=none smtp.client-ip=220.197.32.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="WBWsdCS5"
-Received: from zyb-HP-ProDesk-680-G2-MT.. (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id bfd287eb;
-	Mon, 24 Feb 2025 16:14:09 +0800 (GMT+08:00)
-From: Damon Ding <damon.ding@rock-chips.com>
-To: heiko@sntech.de
-Cc: andy.yan@rock-chips.com,
-	hjc@rock-chips.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org,
-	rfoss@kernel.org,
-	Laurent.pinchart@ideasonboard.com,
-	jonas@kwiboo.se,
-	jernej.skrabec@gmail.com,
-	dmitry.baryshkov@linaro.org,
-	dianders@chromium.org,
-	sebastian.reichel@collabora.com,
-	cristian.ciocaltea@collabora.com,
-	boris.brezillon@collabora.com,
-	l.stach@pengutronix.de,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Damon Ding <damon.ding@rock-chips.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v7 07/15] dt-bindings: display: rockchip: analogix-dp: Add support to get panel from the DP AUX bus
-Date: Mon, 24 Feb 2025 16:13:17 +0800
-Message-Id: <20250224081325.96724-8-damon.ding@rock-chips.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250224081325.96724-1-damon.ding@rock-chips.com>
-References: <20250224081325.96724-1-damon.ding@rock-chips.com>
+	s=arc-20240116; t=1740386992; c=relaxed/simple;
+	bh=4v04aWR/7PVHIVTNajs1BuaEeWwIotLZUNbAIwD4iFw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Mz/NnP2DtE9blvZhzHBOJ+zbv2lo4vS6iTCarlc9Sn3faBgV3Dtpgei07DQenyisz+33QZVOavhEAZmZaOEizmvfsvd3JD+LgQh8PB4g5x4qN5rpeIBrKad/SCbHjP5Q2RGOH1EI5HTLijWSXtA3okClYDD3D5YmmF1yKld/zhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5201BC4CED6;
+	Mon, 24 Feb 2025 08:49:49 +0000 (UTC)
+Message-ID: <71d343e7-ff9f-44e6-abfc-64425640c4f6@xs4all.nl>
+Date: Mon, 24 Feb 2025 09:49:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0waHVZIH00YGhhJTUwYQ0pWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a9537054f9203a3kunmbfd287eb
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OAg6DDo4MzIUGRM#GD0QESgT
-	LwIaCUJVSlVKTE9LSENPQ05KQkNPVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFKSkpINwY+
-DKIM-Signature:a=rsa-sha256;
-	b=WBWsdCS51vKxRjMcUKogW6UEWLVBRTrEe0IthqKba8sh8dRbXFfo5AN1uSu9IATZVeo0RZFaWW7q2cNv+aOmLPoXggiKBaZ1Ebkc8LRJkHikFI9pAhHtzNOFa7PZcqSy9kIGM+/YWk6qBLbl5nZxFWrwUw+ieODyj45S34aKrNI=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=MCo0uAKS6QHvo55swHDZpLkV/TNxwwhILy3rryJVjxs=;
-	h=date:mime-version:subject:message-id:from;
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH next] media: xilinx-tpg: fix double put in xtpg_parse_of()
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Michal Simek <michal.simek@amd.com>, "Rob Herring (Arm)" <robh@kernel.org>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+ linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <f41dfe97-6e6c-47b4-91bf-199c5938c6d0@stanley.mountain>
+ <20241105165928.GJ14276@pendragon.ideasonboard.com>
+Content-Language: en-US, nl
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Autocrypt: addr=hverkuil@xs4all.nl; keydata=
+ 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
+In-Reply-To: <20241105165928.GJ14276@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-According to Documentation/devicetree/bindings/display/dp-aux-bus.yaml,
-it is a good way to get panel through the DP AUX bus.
+On 05/11/2024 17:59, Laurent Pinchart wrote:
+> Hi Dan,
+> 
+> Thank you for the patch.
+> 
+> On Mon, Nov 04, 2024 at 08:16:19PM +0300, Dan Carpenter wrote:
+>> This loop was recently converted to use for_each_of_graph_port() which
+>> automatically does __cleanup__ on the "port" iterator variable.  Delete
+>> the calls to of_node_put(port) to avoid a double put bug.
+>>
+>> Fixes: 393194cdf11e ("media: xilinx-tpg: use new of_graph functions")
+>> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> 
+> The offending commit wasn't merged through the media tree, so we can't
+> easily merge the fix there either. I'm fine merging this fix through
+> Rob's tree.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
+I don't see this patch merged anywhere. Should I just pick it up? I think
+it got lost in the noise.
 
----
+The commit 393194cdf11e is now available in our media tree, so it should
+be fine, I think, if I pick it up. It needs a CC to stable as well, right?
+I can add that.
 
-Changes in v4:
-- Move the dt-bindings commit before related driver commits
+Regards,
 
-Changes in v5:
-- Remove the unexpected change logs in commit message
----
- .../bindings/display/rockchip/rockchip,analogix-dp.yaml        | 3 +++
- 1 file changed, 3 insertions(+)
+	Hans
 
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,analogix-dp.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,analogix-dp.yaml
-index 60dedf9b2be7..eaf4e67e232e 100644
---- a/Documentation/devicetree/bindings/display/rockchip/rockchip,analogix-dp.yaml
-+++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,analogix-dp.yaml
-@@ -41,6 +41,9 @@ properties:
-     description:
-       This SoC makes use of GRF regs.
- 
-+  aux-bus:
-+    $ref: /schemas/display/dp-aux-bus.yaml#
-+
- required:
-   - compatible
-   - clocks
--- 
-2.34.1
+> 
+>> ---
+>>  drivers/media/platform/xilinx/xilinx-tpg.c | 2 --
+>>  1 file changed, 2 deletions(-)
+>>
+>> diff --git a/drivers/media/platform/xilinx/xilinx-tpg.c b/drivers/media/platform/xilinx/xilinx-tpg.c
+>> index cb93711ea3e3..7deec6e37edc 100644
+>> --- a/drivers/media/platform/xilinx/xilinx-tpg.c
+>> +++ b/drivers/media/platform/xilinx/xilinx-tpg.c
+>> @@ -722,7 +722,6 @@ static int xtpg_parse_of(struct xtpg_device *xtpg)
+>>  		format = xvip_of_get_format(port);
+>>  		if (IS_ERR(format)) {
+>>  			dev_err(dev, "invalid format in DT");
+>> -			of_node_put(port);
+>>  			return PTR_ERR(format);
+>>  		}
+>>  
+>> @@ -731,7 +730,6 @@ static int xtpg_parse_of(struct xtpg_device *xtpg)
+>>  			xtpg->vip_format = format;
+>>  		} else if (xtpg->vip_format != format) {
+>>  			dev_err(dev, "in/out format mismatch in DT");
+>> -			of_node_put(port);
+>>  			return -EINVAL;
+>>  		}
+>>  
+> 
 
