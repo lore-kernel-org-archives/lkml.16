@@ -1,163 +1,169 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D65EE24BC0A;
-	Mon, 24 Feb 2025 10:13:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75BB24A075
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 10:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740391992; cv=none; b=uY7oopoNL6/cAS2ZpquEeM+E2DzwNASk4zOk35EnkIN29ysGFmYyy7lpeGPubsC60ToEYyaeef1iwiWnkAVXk9YD2LJlmeZ7R6EjeREqCZLKrHdf2IyCvCyT/rfTJ/8cwto5fU1xcVtFGe8Vrcs6iIAmpAvmo37kI3VV0/Ydsv4=
+	t=1740392076; cv=none; b=aN0AquRvb6I27+FSgyupyn/0/o5+gfu9ROYSc7J1xr88B1x33SjF34juMVBwL0PfkG9xQyAwYTQUfB1qzLwMQkfznTrMkDmAfmSs/yDVqlH99rfQ5IKOw7T6gtgqiREaPpJDA10LRbUlosDtkGbjTxyQ8+5PpfnRecBMB5hr+Rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740391992; c=relaxed/simple;
-	bh=DI/yU4Ha2m1hI+3q6R4XXFjNeHmAswCQiwUL6XQGzvw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C6tJlMVf4oCABlT8aJvmvRzwI5kN5Uxot4A+r80KSG14WjXWvloD9XZE0MoycajPSJCoUaqD536z2uKeKJUboOeU2y444M+aZwIy4O7LYZ0jm8eHAt8XcN2xyFa7FG0o/uHYSNBpL2hMWGZDgcl/OuKqGDA3kyvSvOazD63KMHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ANhZ/cMv; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740392076; c=relaxed/simple;
+	bh=vbjKASiWXzboA2sZA1rLnu3UzF7hoa5908pNhKGfpXw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C3vV58zmOZpR5R5XOp4ZQnx2gRj6ukgxCX7c7lVbxz28FTcbusSY7kYkovr7DNiBXUgK+8/BG6NeFj/IX7QGsxqpq+Hel216lfDPV0bjw0jHd2iqfUbPNoDEhvsW1JuVW672KkLgU3ZL51zfD60feloBFvad0So8gtKBdVxzIiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fQJNwoaF; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ANhZ/cMv"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-220c92c857aso70403905ad.0;
-        Mon, 24 Feb 2025 02:13:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fQJNwoaF"
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6fb2a6360efso28357547b3.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 02:14:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740391990; x=1740996790; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1740392074; x=1740996874; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zHH1Bo2ngh238ZBojTHJqWRsImuzKw7MT/RetGGhdDs=;
-        b=ANhZ/cMvZ1icLHUAXCg5sBBZhh1Pz6FcKQtbDxhm5w8tyIftjY82UPQU3XSUUw8onI
-         bfsYCtubJPzXG3N7fNRqW9uWQg13wV3NWI6sFIr5fYti8FRhnMrC7ZyRMgFwIOMY3VNy
-         S7rLWQ8oNabPSLpHSzKzlnl8jX1cBxkjP5l/WEI1UbKY2J7uAUqkbupvwxddl+JwdY5U
-         IwtOG5UhVh6kqkX9nqXbzM0fyyy7aZ1N42L67GYNMUdR1t8I7nuXi+RCgFWeqGoV3GLL
-         WJ763RFfIAsNq8xeD1JBMK9AMzf+Xj7p90/nX5OBY34BXoaF1eMZiwKMFeGpPbMYdLOC
-         zJ5A==
+        bh=7BT21T9ZsOx2rQl7hC4pSS3NJ3nW+q3IUFkB1OpRZPQ=;
+        b=fQJNwoaF2n7ZkLJm4NiIAQcXapgeTSRhho3norCqkAUZSZekUqRfdWNVRiipkshIIm
+         Nsi6evZXtCm1wjx93kyjMdsN2CxxJmY41/4FndnzGP4Krn2MkxTsL5FM6UE/yuU8OSl7
+         Pv14k9nN2fsmnzjbQMhiCFwR4B2QTaJTBcISqrYov9WP0Pz2VjiuG4UZJLR54vB/KjTK
+         s8i5ob9A2+9MQSHLa9ghsrrW9JyzNkCyZs4LhsQMBOnRLLNU/SFfV3KVDImNmUyBpOzV
+         TnVs1ENLImOJaNNljMp4zbCcVmG48ZCE/xD+sI8+u2bIFyWS9r5/I234bdovIE0I2ILr
+         u04g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740391990; x=1740996790;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1740392074; x=1740996874;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zHH1Bo2ngh238ZBojTHJqWRsImuzKw7MT/RetGGhdDs=;
-        b=VGy45ci9GYa9yf9s9bWDfUXtYfLyk1gUAO+FwrzdvFWcn3AwTfTFnqMUS2C6vi+9DH
-         vbzAnby9ob4ZbiOtlz3xZQwN65IAXsdSGFKr/EhH+jjYcdxZF+KX4ISU3J95fSWiYB02
-         Y4vVQnpSc1uSuFIOP068weE+HWUKUbc+V4Ns8t0/k+EqG6G1Krd0Y8cwkLXeFe9Bo2lH
-         iehF5UQvrH0FJ2kKZp6ohb74rIYQYlf79rJWi4c2M0ZZxYTb+JWauO2noV1J/srRK5QS
-         i7/q0ee0ZGGGzMXsEAtkVgu2jx6tG337Gpsklif1ZGkmtbCZZ8I9L58/pMQe//MVKm0R
-         qgDA==
-X-Forwarded-Encrypted: i=1; AJvYcCWX97s2tya25EUAVGiGoONgungrEn/gho4stETH+kxCVRoyGM1BU7TfQwkVMrkYlAbBDHFuBu7zo5ha@vger.kernel.org, AJvYcCWw8eB/BhU8g+JiXhAcx12P2tB9+zpmpMmiDFTYHjreDwGe19jOLCCr9QeQRSmJW7PwjtnxV8YcqE0u@vger.kernel.org, AJvYcCXAr1HB9Zt9gcU0CYU2qw9mMSyatt9CBU8OctZWZikaTKkCsy6V7+j1x+6xSAW3N+CPn9TSO/FIKbqPHJlC@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDQ3bRYpiciAFAAN5HwC4Rwy0bAHUlA48td4ERV8kWZ1QUSBna
-	GVRxa79Bgbo0Gj/SUX+Jgiq30QlQM2WXMvfkCoYb4qF0sg28zPwp
-X-Gm-Gg: ASbGncvyzBbLByd8Z1TjPnisJq0E57L0AaStLlC3nvdCZGa2C8fqZJOPefGqcRkY/UG
-	nvYLVOBikb+NFuDx41j4v2zmQC+9fKtkoRyzc5hq9dEeTl5k3A1e96HAkXy2oXljezE5Dbcs+t2
-	MJQw6CgKGouCDQntpSTRqF5GyJi1FvNn0uZkttay2UB38aDCMIwbS/1Zs9lNZ3G5y90N1xuQREJ
-	Zj/1aVs7DSGwssjr2yVLcaqlruSUDyCpb2JFrWTsMaXceWiCjsodwwGFqupKaX5wz8SnWmBVsPE
-	ofgHciH99zgv/hCV+aeL
-X-Google-Smtp-Source: AGHT+IGtCyZFRUi+gbIX4aSNZJGXzCxJh7yxdOzB199I7UFF6fkdtprcsgYmp8oGaKiLKViiu8/0JA==
-X-Received: by 2002:a17:902:f547:b0:215:6c5f:d142 with SMTP id d9443c01a7336-2219fff87c0mr224305655ad.20.1740391990140;
-        Mon, 24 Feb 2025 02:13:10 -0800 (PST)
-Received: from cu.. ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d7a464f1sm173274365ad.206.2025.02.24.02.13.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 02:13:09 -0800 (PST)
-From: Longbin Li <looong.bin@gmail.com>
-To: Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: Longbin Li <looong.bin@gmail.com>,
-	linux-spi@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	sophgo@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: [PATCH 3/3] riscv: dts: sophgo: add Sophgo SPI NOR controller driver
-Date: Mon, 24 Feb 2025 18:12:02 +0800
-Message-ID: <20250224101213.26003-4-looong.bin@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250224101213.26003-1-looong.bin@gmail.com>
-References: <20250224101213.26003-1-looong.bin@gmail.com>
+        bh=7BT21T9ZsOx2rQl7hC4pSS3NJ3nW+q3IUFkB1OpRZPQ=;
+        b=qzPV9V2qD/b+gkG4f0UEtuKlZPdPbE5XWShL2jU7gkvd8DgC2CTr4pct/moNkCQzYM
+         +fL5g8BsaMiwPpUIU4GRmJF9Ip/1pdpZJPSgo6iv6C0E8/HycE4gOFrCMA3iTf3qwgcL
+         bgvz9kaJ5EAwKIfa43owMNHguIUqgV8d4DXHaV7p2eqQwWL5PPsz6vCdWIbYCj6hg9Ou
+         NizsKewuOu8aZtN/lzdLl0B8qzZi3c4pr1mZ+ANhPKmHL0Lrx4ftRAD9uWInDowDla/y
+         iwlpjZJL3NkHa/dVXF2av9R3qpo+aRqrKPwB1TiMnj9xk8n/WQzubfx0SjDrEdESdrHC
+         ax+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVKYVGXKOp4+XXqzXCjW8NH0Kq3o7Ry1pKlX/Q/GI3tJcO38Fq5ukqnlljaECFt4KTR2R/Num75emQVhGg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQ2iS2HRccCWMJZ7FTukb4+xqdwChBm50qu9I9hSmK/MbCjC2N
+	LamLciaFYFQjJUjkFdQUu2TRZ2C7sr9yX7Iy5OUjvmsXmzCjX2z5TTzygXGVmj82QTqX6bZiDYe
+	OstxvcPUwdHMNMDVb81YX2/fyCYL6ZIuSpI5iWg==
+X-Gm-Gg: ASbGncsr2bpSjDLqyImT4gGRWlQg3r97qRf+V1jTbS4nM5+BHBZTwB1IybECJeDx6Lr
+	uewETXnfxULdBiomZzBNc/zJ733g+B6y5RWE2bO7DDmHsePaCADJ7sHACIAZXAIlJB2T4toFGPA
+	KkiAX8W7DsdvPC
+X-Google-Smtp-Source: AGHT+IHHGiZHgy3s+8XmerKKacF1ioGYVr8/i83Pon+/HFCKY/mSb0SsQmhW+azRKtQiXlPjwnGd0WwE37FqCzJtHXw=
+X-Received: by 2002:a05:690c:9c05:b0:6f7:5605:c62b with SMTP id
+ 00721157ae682-6fbcc3673cfmr103922197b3.27.1740392073624; Mon, 24 Feb 2025
+ 02:14:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250217-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v6-0-c11402574367@linaro.org>
+ <20250217-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v6-13-c11402574367@linaro.org>
+ <khmeegjx5jmu4c32un3gqu7sumkbtdkg6cawwwmwtmkp5gkrag@sklf5tr7qbwv>
+In-Reply-To: <khmeegjx5jmu4c32un3gqu7sumkbtdkg6cawwwmwtmkp5gkrag@sklf5tr7qbwv>
+From: Jun Nie <jun.nie@linaro.org>
+Date: Mon, 24 Feb 2025 18:14:22 +0800
+X-Gm-Features: AWEUYZm42Zh3tL3vnQp2tEApXMrcBNfOORo391vJrlHk1uL8HJBN-be9zH45G4k
+Message-ID: <CABymUCOnnWQZpOhgDfENmWrTUuwb76zSN7nSeO+eyNp4k+PKRw@mail.gmail.com>
+Subject: Re: [PATCH v6 13/15] drm/msm/dpu: support SSPP assignment for
+ quad-pipe case
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, linux-arm-msm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add SPI NOR device node for Sophgo.
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org> =E4=BA=8E2025=E5=B9=B42=E6=
+=9C=8822=E6=97=A5=E5=91=A8=E5=85=AD 00:36=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Mon, Feb 17, 2025 at 10:16:02PM +0800, Jun Nie wrote:
+> > Currently, SSPPs are assigned to a maximum of two pipes. However,
+> > quad-pipe usage scenarios require four pipes and involve configuring
+> > two stages. In quad-pipe case, the first two pipes share a set of
+> > mixer configurations and enable multi-rect mode when certain
+> > conditions are met. The same applies to the subsequent two pipes.
+> >
+> > Assign SSPPs to the pipes in each stage using a unified method and
+> > to loop the stages accordingly.
+> >
+> > Signed-off-by: Jun Nie <jun.nie@linaro.org>
+> > ---
+> >  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 63 +++++++++++++++++++----=
+--------
+> >  1 file changed, 39 insertions(+), 24 deletions(-)
+> >
+> > +     for (stage_id =3D 0; stage_id < num_stages; stage_id++) {
+> > +             for (i =3D stage_id * PIPES_PER_STAGE; i < (stage_id + 1)=
+ * PIPES_PER_STAGE; i++) {
 
-Signed-off-by: Longbin Li <looong.bin@gmail.com>
----
- .../boot/dts/sophgo/sg2044-sophgo-sd3-10.dts  | 18 ++++++++++++++
- arch/riscv/boot/dts/sophgo/sg2044.dtsi        | 24 +++++++++++++++++++
- 2 files changed, 42 insertions(+)
+Do you mean define and assign r_pipe / r_pipe_cfg here?
 
-diff --git a/arch/riscv/boot/dts/sophgo/sg2044-sophgo-sd3-10.dts b/arch/riscv/boot/dts/sophgo/sg2044-sophgo-sd3-10.dts
-index c50e61a50013..9c634920f37e 100644
---- a/arch/riscv/boot/dts/sophgo/sg2044-sophgo-sd3-10.dts
-+++ b/arch/riscv/boot/dts/sophgo/sg2044-sophgo-sd3-10.dts
-@@ -80,6 +80,24 @@ &sd {
- 	status = "okay";
- };
+> > +                     pipe =3D &pstate->pipe[i];
+> > +                     pipe_cfg =3D &pstate->pipe_cfg[i];
+> > +
+> > +                     if (drm_rect_width(&pipe_cfg->src_rect) =3D=3D 0)
+> > +                             break;
+> > +
+> > +                     pipe->sspp =3D dpu_rm_reserve_sspp(&dpu_kms->rm, =
+global_state, crtc, &reqs);
+> > +                     if (!pipe->sspp)
+> > +                             return -ENODEV;
+> > +
+> > +                     r_pipe =3D &pstate->pipe[i + 1];
+> > +                     r_pipe_cfg =3D &pstate->pipe_cfg[i + 1];
+> > +
+> > +                     /*
+> > +                      * If current pipe is the first pipe in pipe pair=
+, check
+> > +                      * multi-rect opportunity for the 2nd pipe in the=
+ pair.
+> > +                      * SSPP multi-rect mode cross mixer pairs is not =
+supported.
+> > +                      */
+> > +                     if ((i % PIPES_PER_STAGE =3D=3D 0) &&
+>
+> Please move r_pipe / r_pipe_cfg definition and assignment here.
 
-+&spifmc0 {
-+	status = "okay";
-+
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+	};
-+};
-+
-+&spifmc1 {
-+	status = "okay";
-+
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+	};
-+};
-+
- &uart1 {
- 	status = "okay";
- };
-diff --git a/arch/riscv/boot/dts/sophgo/sg2044.dtsi b/arch/riscv/boot/dts/sophgo/sg2044.dtsi
-index 6eaf92dd0a90..e45f7218de04 100644
---- a/arch/riscv/boot/dts/sophgo/sg2044.dtsi
-+++ b/arch/riscv/boot/dts/sophgo/sg2044.dtsi
-@@ -33,6 +33,30 @@ soc {
- 		dma-noncoherent;
- 		ranges;
-
-+		spifmc0: spi@7001000000 {
-+			compatible = "sophgo,sg2044-spifmc-nor";
-+			reg = <0x70 0x01000000 0x0 0x4000000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&clk CLK_GATE_AHB_SPIFMC>;
-+			interrupt-parent = <&intc>;
-+			interrupts = <37 IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&rst RST_SPIFMC0>;
-+			status = "disabled";
-+		};
-+
-+		spifmc1: spi@7005000000 {
-+			compatible = "sophgo,sg2044-spifmc-nor";
-+			reg = <0x70 0x05000000 0x0 0x4000000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&clk CLK_GATE_AHB_SPIFMC>;
-+			interrupt-parent = <&intc>;
-+			interrupts = <38 IRQ_TYPE_LEVEL_HIGH>;
-+			resets = <&rst RST_SPIFMC1>;
-+			status = "disabled";
-+		};
-+
- 		dmac0: dma-controller@7020000000 {
- 			compatible = "snps,axi-dma-1.01a";
- 			reg = <0x70 0x20000000 0x0 0x10000>;
---
-2.48.1
+r_pipe / r_pipe_cfg is used in this if(). Please see above question.
+>
+>
+> > +                         drm_rect_width(&r_pipe_cfg->src_rect) !=3D 0 =
+&&
+> > +                         dpu_plane_try_multirect_parallel(pipe, pipe_c=
+fg, r_pipe, r_pipe_cfg,
+> > +                                                           pipe->sspp,
+> > +                                                           msm_framebu=
+ffer_format(plane_state->fb),
+> > +                                                           dpu_kms->ca=
+talog->caps->max_linewidth)) {
+> > +                             i++;
+> > +                     } else {
+> > +                             /* multirect is not possible, use two SSP=
+P blocks */
+> > +                             pipe->multirect_index =3D DPU_SSPP_RECT_S=
+OLO;
+> > +                             pipe->multirect_mode =3D DPU_SSPP_MULTIRE=
+CT_NONE;
+> > +                             DPU_DEBUG_PLANE(pdpu, "allocating sspp_%d=
+ for pipe %d.\n",
+> > +                                             pipe->sspp->idx - SSPP_NO=
+NE, i);
+> > +                     }
+> > +             }
+> >       }
+> >
+> >       return dpu_plane_atomic_check_sspp(plane, state, crtc_state);
+> >
+> > --
+> > 2.34.1
+> >
+>
+> --
+> With best wishes
+> Dmitry
