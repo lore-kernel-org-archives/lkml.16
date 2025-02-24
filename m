@@ -1,159 +1,197 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27DF2441B4
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 09:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDAEC24500C
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 09:27:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740389261; cv=none; b=gVC5f3xhfWyk24FNLjlZ4rWmePCq4J/p+dA14YVK48+MFO+O3gwmb8Ss5bReI8Nxk0nGjryPSdGsFv0R7JWS3Z/9lVYetYIi+5afbw1hvK2G0EDk7E2eb06QS3Ys5N21468fp6KSgJmyEfhmmHEUdWoQ8V7TvKKPGB6L2Lif0ZE=
+	t=1740389261; cv=none; b=Hr4YOnHTOtaRnx5UOrCep1sStyPEcOPBaKn2X2eoyqk4Jt3Ow4IQzeNdFQvw2OFiXE7Ex6Tfn2SLFEZHJ774UQpbo2VbBGaDnUmRNHIC6Xa6nSGJ1VHfoKwRbneoZV17elcBXAVkkIrp3wre80oN220O3xZk56rCtUjnFUbjdAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740389261; c=relaxed/simple;
-	bh=0Ohu78Zf/UEpjP9FyBlGg/0cZKd58JmhbgDBP0/Z8Ts=;
+	bh=pUC6Ed2z/zY6KZOsQgf29yYj/OuBkJWzoRQUf/rC154=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qOInlPaXLkhrp9fBKloe0dvch6ekttl1vSzbAGxruOGV97eAsUAiqkssE13HaNBTWkiEKYi66FyFRt3ZYyXSFjHsJiULkQntKFvnKqW1BOOuYfoX00joK9LamkQcOFtPC9UotDOrUSSGfyAbX0c+yQxR4hY/Nhe0aM65BTsqXpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=edIUWxhI; arc=none smtp.client-ip=212.227.126.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	 Content-Type:Content-Disposition:In-Reply-To; b=umVJBTvPKFPW3+hsfYBdQ1hvAonC6Zpnl8+72sAuM4uxLu0VKetbHAh2FNXV/3epPZmiab9h2R8UfxA3pGVCwUU70bKtBxh6SOcn7IvLR9Og+1f3pyMxtcWtt4UFXTEnexTnwTYKvpJy4gahf9xbX6YuIC7bs9CdAxzQfsWv8YU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iY0hEtjV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="edIUWxhI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1740389244; x=1740994044; i=christian@heusel.eu;
-	bh=NrZLRnQZ8ugzVrwD0om47oW/zeqiczYDfHAh63LwAmw=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=edIUWxhIy8hhEYa89TXOCXT0p7jparO7D4C/NRel+C07kXzKnCpij5qUmlb9yLII
-	 xM/l4Y4wEdtlnMjJez+aGcAcTZwKEekBFQOjWYila6gZux+4rznxGa3mKDIcl1J5s
-	 ijYsb0MG7MLRt+4VcGR6lWYDhxY7rpQcILy+VgwydWW6bJ1SLF2TbZ8byQi+Y5LMi
-	 IH0PUO9cxWMwejNx7ZlpsLy29W/rKrvjwFcR68A+aMZsMl2SEhJ9rSKbpxKpuIzKH
-	 D+FoMOLBMAQqhJLZ1EP/ZtPvmVVI52z97rkO7U7R1qfLiGNQYkVFHy0Cd5SMOI6LY
-	 I1y/xYP7GlxoZ9RkSA==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue011
- [212.227.15.167]) with ESMTPSA (Nemesis) id 1MPowd-1u0ZDT2CoN-00XcSE; Mon, 24
- Feb 2025 10:27:24 +0100
-Date: Mon, 24 Feb 2025 10:27:22 +0100
-From: Christian Heusel <christian@heusel.eu>
-To: Sean Rhodes <sean@starlabs.systems>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	quintafeira@tutanota.com, Arnd Bergmann <arnd@arndb.de>, Desnes Nunes <desnesn@redhat.com>, 
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [REGRESSION][BISECTED] SD Cards detection broken leading to boot
- failures
-Message-ID: <50e67317-62bb-46aa-a539-54bf6dbb245a@heusel.eu>
-References: <1de87dfa-1e81-45b7-8dcb-ad86c21d5352@heusel.eu>
- <2025022429-powdery-possibly-e4e5@gregkh>
- <CABtds-2TDWCHqOa+Di2Yh074RukUrjEhKGC82DWZ_7ysK-NCrA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iY0hEtjV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740389258;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0X0AQO/2ghVbNwC3CVRjTuq8PTR+HZJjGnXHV3qwXKY=;
+	b=iY0hEtjVQxjTdAKZvQ3xt88SnOWDnncSELXqJ2lh4kB9iMwDKFvbUbmP9LuqDeDOzrsXW3
+	6l8NtiF3MOM/wlutq7lvC4cJV+vU5NEvaBzrkkcmJMNE/OHXqE6MEmM30r/mCG/GqpCDmw
+	/NkrE0rDxvWfnBOb5LMrnyQRjrws+ZI=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-687-5q6UYAmbMSKczhZRG3-ayQ-1; Mon, 24 Feb 2025 04:27:37 -0500
+X-MC-Unique: 5q6UYAmbMSKczhZRG3-ayQ-1
+X-Mimecast-MFC-AGG-ID: 5q6UYAmbMSKczhZRG3-ayQ_1740389256
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38f455a8e43so1578808f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 01:27:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740389256; x=1740994056;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0X0AQO/2ghVbNwC3CVRjTuq8PTR+HZJjGnXHV3qwXKY=;
+        b=iWQmGE0A+Dj5SL0Q2u2ov6doCu2UvJ5PBw5WGxL4oiMrD6lmHImNCHCeRmWnutGNQe
+         j94kRuqvobo6vvZcMshMAOBerpKX56kGlQi7COVZu1OzOHDILCNToPiYECKXrjXsRrD2
+         6OEAePCG9KkoA/c4eorBfwOZhybdLuXrUkc+1wi6AXsiYwgzTQ9c6yhf7jaivy7T0ahe
+         0dpsfJm8wwP0kCR23i8v1HhZucJXIoe42IRu7FQtqnaGV9d0ItoX6S0rhViNiJuQ+fUE
+         3vxk1ziEZv0MsTOm8cK5RkqQjj1m1/Lxl8htRbHuNx5w9eufv2D00KuOHztJiZRE+pzv
+         5rJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX8SR38y8v1daHX0EqZgcPNz0NSwdRwjVxSBFxP+qOBjdlAQPFn0zZoRfgpZQ7FIZofFpL2l2Eh3O1xZ3s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1u6AFN2/ZN+2G4jc4A0ru3cg30TQsT7nbMZL/UCouQPbYr7W5
+	XcsuTrmMdG74i+oX1V2UmGuygvo5kaPwe1AK2L5jbzubRAdDFTnY/5KXMFKns6zJNirqkFAv0Te
+	I3MyWH4/gLnIOgU2C78TQCBhSkpoktTn5O2/SzBjieHD8Zlq/LcA9ljF/seIDUA==
+X-Gm-Gg: ASbGncsLZbSAzXxkhGDcu4fi5J3hLDhL44FSz3uqxpAPxYWSnaVy/wbveZf+1QPes+F
+	5HIQAk8TzSQw8a2QnepWbnSW2gs046y7GE26LG6JvtyYYmI8woQv0O5slj1DisEGf01AlC325lF
+	pqlPa2sw+wvH5vupaA/8jgeswzOep5HYVS6lNeLzxAnpfPzxeg2iKRkqv9nQsdoOxb75bpR1bTa
+	vDfxGt/op64exwRh0jM/JwzdZ3d9NN3lNiaAy6ABX4fFBhYqkhX4tX42GI8mtWVrN2/k4Z6ntxb
+	eQ6otJZ7fRUU/ejBZIorkKUlsFj5x9c36KlTeizdwrO1
+X-Received: by 2002:a05:6000:154b:b0:38f:4c30:7cdd with SMTP id ffacd0b85a97d-38f6f09789fmr8445609f8f.37.1740389255977;
+        Mon, 24 Feb 2025 01:27:35 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHaS0RFZ37ne1nVAbmV7xLchKHTtvTGvrdxafr5L2u+6HaGa2IC0AD7fHvr/akM++F67G10Dg==
+X-Received: by 2002:a05:6000:154b:b0:38f:4c30:7cdd with SMTP id ffacd0b85a97d-38f6f09789fmr8445575f8f.37.1740389255519;
+        Mon, 24 Feb 2025 01:27:35 -0800 (PST)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.34.42])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f25a0fe5esm31411004f8f.99.2025.02.24.01.27.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2025 01:27:34 -0800 (PST)
+Date: Mon, 24 Feb 2025 10:27:31 +0100
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Qais Yousef <qyousef@layalina.io>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Christian Loehle <christian.loehle@arm.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Thierry Reding <treding@nvidia.com>,
+	Waiman Long <longman@redhat.com>, Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Koutny <mkoutny@suse.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Phil Auld <pauld@redhat.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	"Joel Fernandes (Google)" <joel@joelfernandes.org>,
+	Suleiman Souhlal <suleiman@google.com>,
+	Aashish Sharma <shraash@google.com>,
+	Shin Kawamura <kawasin@google.com>,
+	Vineeth Remanan Pillai <vineeth@bitbyteword.org>,
+	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+	"linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v2 3/2] sched/deadline: Check bandwidth overflow earlier
+ for hotplug
+Message-ID: <Z7w7g1zb0nfu9-C7@jlelli-thinkpadt14gen4.remote.csb>
+References: <db800694-84f7-443c-979f-3097caaa1982@nvidia.com>
+ <8ff19556-a656-4f11-a10c-6f9b92ec9cea@arm.com>
+ <Z6oysfyRKM_eUHlj@jlelli-thinkpadt14gen4.remote.csb>
+ <dbd2af63-e9ac-44c8-8bbf-84358e30bf0b@arm.com>
+ <Z6spnwykg6YSXBX_@jlelli-thinkpadt14gen4.remote.csb>
+ <285a43db-c36d-400e-8041-0566f089a482@arm.com>
+ <Z62PPUOY5DClYo1A@jlelli-thinkpadt14gen4.remote.csb>
+ <20250216163340.ttwddti5pzuynsj5@airbuntu>
+ <Z7NNHmGgrEF666W_@jlelli-thinkpadt14gen4.remote.csb>
+ <20250222235936.jmyrfacutheqt5a2@airbuntu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="izfjcqek7qbgaff5"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CABtds-2TDWCHqOa+Di2Yh074RukUrjEhKGC82DWZ_7ysK-NCrA@mail.gmail.com>
-X-Provags-ID: V03:K1:85G+PFLrSgYtQaEM1qjDE6+iiLg97SEZKLHIA3wiNVoK8rD5lnY
- URPrcto/8beZY+wzYCkYJAKpMmxqjP1brzrp4ds0mTccAHK6br7zAyttqBDyk/KZimhzbrV
- Y/Ey4dJQVm0L3uhgUUbQlsM4qE986xnKlHEDU1VyU83ck8RgZHwjV+/mpf5jy+1fivrkvJZ
- SkvWABdTqNKFJ+Dch+XZQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:58xAS1X/5XM=;s9mO2nr1XnSQxgUM/tckVxb7JrR
- J0rXj5llItKJS/bSE9DOGJ2ehclI6b5cBBz9i9DQ1ihiPj2bcfJ1SQZw6CSPZ4cENjUTO5AmF
- myh17TdIadNPfzgTw/yCYOGO3EdgTxWaWAF8bPl5gXw/xHNbFxpciQEirKAKsBM3KCWa9jbwE
- 2k6C19LWzNsYvaFEv7V9tu1LA9q242TqFVs2OHTktZ372ySFmValY7tO0zLCBXQaGC0104KGY
- iZ3D5nibCCM5QoWGTJGemUK831951hYIZVU6+wbVXcoL52VOVgJzbBaL9Y0Q7qv6ggoTMqquI
- Yf9zSPTtr67z0me778XcI8B5hY8kt6P41t1ytYb01R5unPZ6xD2H6riehorneRRJKZcep4inE
- jT8a8v71XQz8g2oWHqxHNAWIOeKciT2K9koF/4NSCi6Wx6zPH9LXH7kaPe5re+Zmvi8o7YFyw
- sgbtjr3WN/NAefrdyBDOETrBYnjdNSw419nix8If/01O/s3brwiTBRMZSMbzDOuQ9+ft8KUQ1
- rF0zIiFYQ3dZOoronAd8FlbgDEmLY2zpSDY59CiXrbVdLm8BOzZZY+oaePPbkIOT7sfB3uNho
- q6pIJ/zAUPXR2Vf80uCuZK9bzwdxDfb5G0waXY1gYFdXRaG1E2IERoUDEEHUo7jhsHaABpA7N
- 8PeMNtpbU/NpK3EqVezTInNNVfpkD15DK4mtgHLh+2IUO5s4U0gzQYdGmnm4WwwDjL3jUIwlQ
- OkCT0ElniM/BObPxdygR/E0XNumO79KqskDNRWN/0jiAOIYQIQvJyxbtxGrpXrmMNw2MRcKvh
- Bb74fa3BV7uBt6NDNcsTAgLFsszndoPCmXSwEB1P/bVJ0Rl8C+TSxQMPaTUCD8fv07/k2fT0i
- BKxBhECqMkcWUDvYqiXyCAHB3CL3Xdm/J2+LNXjVYVu9cPWjVLM3/xDxcm2KLSMJDGAMxZwiG
- UOM5QrL8O0x1RaKdgyo5eSgtZC9NEhRAU9IAYVhXMjjko64u7S3SmDejtMFSzqxRkK5XIXCis
- +0vaFokHBOlskTxCZOvnRSqK/8FUIQJkasUIUZZ09eUw17hhYL3X1go1TvYaQAGrPicXGDTPN
- dq8m1+yG9lzucoeYkTpMVvhLqFlTCphLsoTmj9lk4n+MnohKYIgpBzX1pjn0WRnx3J6D2FTZo
- wfhy4K8/SkYBiAeKceY+xOniaM+iK3YHgchx7oXBvbPA/Rv8/km8hPJVy70WdwOtqv14M6S/x
- w1upm/LlAfjatYdDn0dfs4YCQEMuTLA4kP+Cj013UOb1cSiKvpqrRGl2Weo1+gLa6u0Kj6Qor
- SCdkwD4x/MLTTjO+TPC+csoP78uXCLA9u53MxS/awBhBiAsHE8vM2O64+gSvKKZOMEnkKveZj
- Ge1LMbuzRUmxPEEPqnBHjwNYpUv19iZZN/H1s=
+In-Reply-To: <20250222235936.jmyrfacutheqt5a2@airbuntu>
 
+On 22/02/25 23:59, Qais Yousef wrote:
+> On 02/17/25 15:52, Juri Lelli wrote:
+> > On 16/02/25 16:33, Qais Yousef wrote:
+> > > On 02/13/25 07:20, Juri Lelli wrote:
+> > > > On 12/02/25 19:22, Dietmar Eggemann wrote:
+> > > > > On 11/02/2025 11:42, Juri Lelli wrote:
+> > > > 
+> > > > ...
+> > > > 
+> > > > > > What about we actually ignore them consistently? We already do that for
+> > > > > > admission control, so maybe we can do that when rebuilding domains as
+> > > > > > well (until we find maybe a better way to deal with them).
+> > > > > > 
+> > > > > > Does the following make any difference?
+> > > > > 
+> > > > > It at least seems to solve the issue. And like you mentioned on irc, we
+> > > > > don't know the bw req of sugov anyway.
+> > > > > 
+> > > > > So with this change we start with 'dl_bw->total_bw = 0' even w/ sugov tasks.
+> > > > > 
+> > > > > dl_rq[0]:
+> > > > >   .dl_nr_running                 : 0
+> > > > >   .dl_bw->bw                     : 996147
+> > > > >   .dl_bw->total_bw               : 0       <-- !
+> > > > > 
+> > > > > IMHO, people who want to run serious DL can always check whether there
+> > > > > are already these infrastructural DL tasks or even avoid schedutil.
+> > > > 
+> > > > It definitely not ideal and admittedly gross, but not worse than what we
+> > > > are doing already considering we ignore sugovs at AC and the current
+> > > > bandwidth allocation its there only to help with PI. So, duck tape. :/
+> > > > 
+> > > > A more proper way to work with this would entail coming up with sensible
+> > > > bandwidth allocation for sugovs, but that's most probably hardware
+> > > > specific, so I am not sure how we can make that general enough.
+> > > 
+> > > I haven't been following the problem closely, but one thing I was considering
+> > > and I don't know if it makes sense to you and could help with this problem too.
+> > > Shall we lump sugov with stopper class or create a new sched_class (seems
+> > > unnecessary, I think stopper should do)? With the consolidate cpufreq update
+> > > patch I've been working on Vincent raised issues with potential new ctx switch
+> > > and to improve that I needed to look at improving sugov wakeup path. If we
+> > > decouple it from DL I think that might fix your problem here and could allow us
+> > > to special case it for other problems like the ones I faced more easily without
+> > > missing up with DL.
+> > > 
+> > > Has the time come to consider retire the simple solution of making sugov a fake
+> > > DL task?
+> > 
+> > Problem is that 'ideally' we would want to explicitly take sugovs into
+> > account when designing the system. We don't do that currently as a
+> > 'temporary solution' that seemed simpler than a proper approach (started
+> > wondering if it's indeed simpler). So, not sure if moving sugovs outside
+> > DL is something we want to do.
+> 
+> Okay I see. The issue though is that for a DL system with power management
+> features on that warrant to wake up a sugov thread to update the frequency is
+> sort of half broken by design. I don't see the benefit over using RT in this
+> case. But I appreciate I could be misguided. So take it easy on me if it is
+> obviously wrong understanding :) I know in Android usage of DL has been
+> difficult, but many systems ship with slow switch hardware.
+> 
+> How does DL handle the long softirqs from block and network layers by the way?
+> This has been in a practice a problem for RT tasks so they should be to DL.
+> sugov done in stopper should be handled similarly IMHO. I *think* it would be
+> simpler to masquerade sugov thread as irq pressure.
 
---izfjcqek7qbgaff5
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [REGRESSION][BISECTED] SD Cards detection broken leading to boot
- failures
-MIME-Version: 1.0
+Kind of a trick question :), as DL doesn't handle this kind of
+load/pressure explicitly. It is essentially agnostic about it. From a
+system design point of view though, I would say that one should take
+that into account and maybe convert sensible kthreads to DL, so that the
+overall bandwidth can be explicitly evaluated. If one doesn't do that
+probably a less sound approach is to treat anything not explicitly
+scheduled by DL, but still required from a system perspective, as
+overload and be more conservative when assigning bandwidth to DL tasks
+(i.e. reduce the maximum amount of available bandwidth, so that the
+system doesn't get saturated).
 
-On 25/02/24 09:09AM, Sean Rhodes wrote:
-> Give me a day, two tops please; ideally we can just push a patch to fix t=
-he
-> trivial issue and keep the major fix :)
+> You can use the rate_limit_us as a potential guide for how much bandwidth sugov
+> needs if moving it to another class really doesn't make sense instead?
 
-Sure this is fine by me, I guess you can just hold off applying the
-revert patch that I have sent after gregs comment.
+Or maybe try to estimate/measure how much utilization sugov threads are
+effectively using while running some kind of workload of interest and
+use that as an indication for DL runtime/period.
 
-If you need any testers for new patches or debug patches I'll happily
-build them and send them to the reporters on the Forum.
-
-Cheers,
-Chris
-
->=20
-> On Mon, 24 Feb 2025 at 07:07, Greg Kroah-Hartman <gregkh@linuxfoundation.=
-org>
-> wrote:
->=20
-> > On Sat, Feb 22, 2025 at 10:22:34PM +0100, Christian Heusel wrote:
-> > > Hello everyone,
-> > >
-> > > on the Arch Linux Forums[1] multiple users reported issues with their=
- SD
-> > > cards not being recognized during boot or that they needed to re-plug
-> > > them in order for them to be recognized.
-> > >
-> > > One user tracked this down to the following commit:
-> > >
-> > >     235b630eda07 ("drivers/card_reader/rtsx_usb: Restore interrupt ba=
-sed
-> > detection")
-> > >
-> > > They have also created a report on the kernel bugzilla[1], therefore I
-> > > cc'ed them to this thread. We found that reverting the above commit on
-> > > top of v6.14-rc3 fixes the issue.
-> >
-> > Thanks for the report.  Do you want to send a revert for this, or do you
-> > need us to create it?
-> >
-> > thanks,
-> >
-> > greg k-h
-> >
-
---izfjcqek7qbgaff5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAme8O3oACgkQwEfU8yi1
-JYWemg/8C/m1ZwOLVXB3Xh4+m6dPW9xDvTG5fINVTGtdtFapK05tLSBsQhsuP/xu
-eFL9xJ/9kzvhyUhaWqflWTl85YDtXIiLiGbWX6F7c3jo5VRjm2ucdjz8dez9KviS
-3jr0uUfOL3INXNgQrvrUXbMO3VP3hvEBJCgEagtn2F6CIbjNzkfTACBCwPAOPk6z
-SjwauibKwppxq93KyVvVxKCa1LdtLj2/FgEOAVvPEUkHPOFTas7PDDKRrAnFbfNt
-i+LiWv0HCxpTy51v/ozWTR5W97iWEycF3jDFgQgdJp7GgyDrky4k3HSTq/T9d54E
-VjzpwVgSxsvOsWWqCbVTWXwElnXr510v0NwEsd84JH2oY27z1/ci8jaGi+sdkS4v
-d0lkFQwowp3Oz/Oxy5pm26qtnEMNFuSWkLws8H1WgmHzHc3nSKHWDrx1Ce9IRrNT
-d0E3aCNnBgTH2XbPBC7JZK/KcsbY3UdUtq7eoyHKcJmMQtT9PPo60AcvzDaYkolx
-yKY3qE4aaTxeb3hWoYT8+PAN+uAAiGTvMdXwH+lYbvAZdsf4XFMKOyP61tO9RyLm
-cL91diKLZ6E6gCGpnW1JQAJs1T322lN5Gz8+jIq6jWxAUILc3Y7Nz6sH/vphw1uv
-Fzj2Nj+IpqZfectwSdZA7psIvxZL98DIPvvuuj5sH+2sw8gD96o=
-=wV/P
------END PGP SIGNATURE-----
-
---izfjcqek7qbgaff5--
