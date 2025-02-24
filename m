@@ -1,160 +1,109 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174D226280D
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 17:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB6C326280C;
+	Mon, 24 Feb 2025 17:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740418436; cv=none; b=o5jS71i9MxQQ+Omyu8qLrdAPYImLbqta5ZX7dU/4XtbTb7rwrfv33+lDZ40Y1bhZQhdXCNDwK9jLCz+pogVuyw53syLr+zXzKLQFCx0DhXs9ltU26m8qHnNcPDHE9LOqG8pU2xZk2mVii+zQfxyndpjAtM/BF3CKG/XjTMYdl/I=
+	t=1740418478; cv=none; b=BsWPMHtyAf8naAVr+d0seHFlRnDjXaaqF40BOgl9jERX7xdiooNMSBxapvrdsHwo8+12ZQvKjaj6Z68HCA7TLVhl9qd207MNnraGJYUjJM7wfbO2WqfTarVTb65gBT19Q5VQN/uMPzne7TVSopuLaT8KvtnW3urvR7uuhGRtldA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740418436; c=relaxed/simple;
-	bh=t+Z6EVqiQ5EVpV7MZa7bLNejvZB/MmW5APEZS/vyamA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lASuX4zb9h+j0zYdwRRYlzfdW7opb8kpIFhD0xmA/IANgl275sLhZnq8Sag2PiRCMjrR7mgnMMBumJz4e+u3cEltJTUGCGnerzjN85GuOQS1A3g+RPypAt0z6Y1vvbwnkEVKltUVm8SMyiYszWQMfF55HBoiSzgbxOJ43WqAwfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=w9s1lCrw; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1740418478; c=relaxed/simple;
+	bh=sCwX7+nI/q81kiD2Y4/3tqSc3VlI4gc1dBG+Icft1Fs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gw5M+DM/TiHYubm9BbhQZvVfdnmDYvau/BfokQy4FPmhoMz45hb7Ronjg8FMHGgno4xV2XisD11XMC9rvXpt0R8jcg+XZ24UD4qXiuC3+AXkcXLfPpGv8lzOi33EwLhQH0szqVWi/dgx9oRZ99NiQkza5l3JJ65iwGpbEqS18AU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hTQ87Y5E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="w9s1lCrw"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51OE6a8p019227;
-	Mon, 24 Feb 2025 18:33:39 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=aM49dtU5bK9q5PUsk/o5Ph
-	DwC7TRmbnftSFkh2mjTtw=; b=w9s1lCrwhPCUAMJgO3nO5qZZm0Yc5TstgWsUI+
-	9UH+dVEKjCQV+rYFE6B/aiyj1HqHldtVYdQAtNI9UFm5pwSmDbwMPa3b9uvurhaN
-	baU4pF0yCv9IC6dwug+RHYBl7eUbSlRxW4UbARHD9hgulHY0MmrANR/WZP23Um/p
-	S/HtGavs4JCyQ+PgV8w9nOiLN52EXRu4Eo9XO83AuSXLDZX6QHYShwu8hP3j/HcF
-	XIIlenVUTcWGwAY16ZjnSDyOsny8pgMW+nhst9zL3YLzAwAhEBbLLP+Krttpr2jI
-	YKRup0tVixvo+F2dX6WbGMIEsZsBIsUg8r0fOk26aMLKYXLw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44ytdn64g1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Feb 2025 18:33:39 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 52B4140059;
-	Mon, 24 Feb 2025 18:32:19 +0100 (CET)
-Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B7B204F3E81;
-	Mon, 24 Feb 2025 18:21:25 +0100 (CET)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
- (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Feb
- 2025 18:21:25 +0100
-Received: from localhost (10.252.23.75) by SAFDAG1NODE1.st.com (10.75.90.17)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Feb
- 2025 18:21:25 +0100
-From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-To: <daniel.lezcano@linaro.org>, <tglx@linutronix.de>
-CC: <alexandre.torgue@foss.st.com>, <olivier.moysan@foss.st.com>,
-        <fabrice.gasnier@foss.st.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH] clocksource: stm32-lptimer: add support for PM
-Date: Mon, 24 Feb 2025 18:21:01 +0100
-Message-ID: <20250224172101.3448398-1-fabrice.gasnier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hTQ87Y5E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3560DC4CED6;
+	Mon, 24 Feb 2025 17:34:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740418477;
+	bh=sCwX7+nI/q81kiD2Y4/3tqSc3VlI4gc1dBG+Icft1Fs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hTQ87Y5EJefkpgjqkOeu0y6B5lNoAOCly/eXwp3K8arYTGs7bcZbVzUX4x9a8zKrE
+	 fQMnAJNEPArkOi/b0YFY4zipLp+oj2+sz88wuvfD0yO3p41Pe2e4w5LNDdkuC1oJQy
+	 omNqK13szevPn7ITpFrP2LUzwKO/J8sRkcfbpy5Zaeha/9jYHIHOX2cVtpRYD7S21l
+	 TOT5v7/SM3B9U/Mxk+NSFxwq6QbA96irjalNyV1JWBXAnP6A6tF4kIsLiY74DmBH92
+	 eyLlIJyxOJV96k4y1RNOJQNyw17IoAyXKvuQO8vyOcHWgxlYN05Tcs9xKLHLNatvm6
+	 FGbpObWGrs0Lw==
+Date: Mon, 24 Feb 2025 11:34:35 -0600
+From: Rob Herring <robh@kernel.org>
+To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+Cc: Abel Vesa <abelvesa@kernel.org>, Peng Fan <peng.fan@nxp.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>, Marek Vasut <marex@denx.de>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Shengjiu Wang <shengjiu.wang@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	linux-clk@vger.kernel.org, imx@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: clock: imx8mp: add axi clock
+Message-ID: <20250224173435.GA3560337-robh@kernel.org>
+References: <20250221190929.31469-1-laurentiumihalcea111@gmail.com>
+ <20250221190929.31469-2-laurentiumihalcea111@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SAFDAG1NODE1.st.com
- (10.75.90.17)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-24_08,2025-02-24_02,2024-11-22_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250221190929.31469-2-laurentiumihalcea111@gmail.com>
 
-Add support for power management on STM32 LPTIMER clocksource driver:
-- Upon clockevents_suspend(), shutdown the LPTIMER, and balance the
-clk_prepare_enable() from the probe routine.
-- Upon clockevents_resume(), restore the prescaler that may have been lost
-during low power mode, and restore the clock.
+On Fri, Feb 21, 2025 at 02:09:26PM -0500, Laurentiu Mihalcea wrote:
+> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+> 
+> The AUDIOMIX clock provider takes an additional clock: AUDIO_AXI_CLK_ROOT.
+> 
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
----
- drivers/clocksource/timer-stm32-lp.c | 32 +++++++++++++++++++++++++---
- 1 file changed, 29 insertions(+), 3 deletions(-)
+Fixes tag? The commit message should be expanded a bit as this is an ABI 
+change.
 
-diff --git a/drivers/clocksource/timer-stm32-lp.c b/drivers/clocksource/timer-stm32-lp.c
-index a4c95161cb22..9cd487dd5a3a 100644
---- a/drivers/clocksource/timer-stm32-lp.c
-+++ b/drivers/clocksource/timer-stm32-lp.c
-@@ -24,7 +24,9 @@ struct stm32_lp_private {
- 	struct regmap *reg;
- 	struct clock_event_device clkevt;
- 	unsigned long period;
-+	u32 psc;
- 	struct device *dev;
-+	struct clk *clk;
- };
- 
- static struct stm32_lp_private*
-@@ -120,6 +122,27 @@ static void stm32_clkevent_lp_set_prescaler(struct stm32_lp_private *priv,
- 	/* Adjust rate and period given the prescaler value */
- 	*rate = DIV_ROUND_CLOSEST(*rate, (1 << i));
- 	priv->period = DIV_ROUND_UP(*rate, HZ);
-+	priv->psc = i;
-+}
-+
-+static void stm32_clkevent_lp_suspend(struct clock_event_device *clkevt)
-+{
-+	struct stm32_lp_private *priv = to_priv(clkevt);
-+
-+	stm32_clkevent_lp_shutdown(clkevt);
-+
-+	/* balance clk_prepare_enable() from the probe */
-+	clk_disable_unprepare(priv->clk);
-+}
-+
-+static void stm32_clkevent_lp_resume(struct clock_event_device *clkevt)
-+{
-+	struct stm32_lp_private *priv = to_priv(clkevt);
-+
-+	clk_prepare_enable(priv->clk);
-+
-+	/* restore prescaler */
-+	regmap_write(priv->reg, STM32_LPTIM_CFGR, priv->psc << CFGR_PSC_OFFSET);
- }
- 
- static void stm32_clkevent_lp_init(struct stm32_lp_private *priv,
-@@ -134,6 +157,8 @@ static void stm32_clkevent_lp_init(struct stm32_lp_private *priv,
- 	priv->clkevt.set_state_oneshot = stm32_clkevent_lp_set_oneshot;
- 	priv->clkevt.set_next_event = stm32_clkevent_lp_set_next_event;
- 	priv->clkevt.rating = STM32_LP_RATING;
-+	priv->clkevt.suspend = stm32_clkevent_lp_suspend;
-+	priv->clkevt.resume = stm32_clkevent_lp_resume;
- 
- 	clockevents_config_and_register(&priv->clkevt, rate, 0x1,
- 					STM32_LPTIM_MAX_ARR);
-@@ -151,11 +176,12 @@ static int stm32_clkevent_lp_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	priv->reg = ddata->regmap;
--	ret = clk_prepare_enable(ddata->clk);
-+	priv->clk = ddata->clk;
-+	ret = clk_prepare_enable(priv->clk);
- 	if (ret)
- 		return -EINVAL;
- 
--	rate = clk_get_rate(ddata->clk);
-+	rate = clk_get_rate(priv->clk);
- 	if (!rate) {
- 		ret = -EINVAL;
- 		goto out_clk_disable;
-@@ -191,7 +217,7 @@ static int stm32_clkevent_lp_probe(struct platform_device *pdev)
- 	return 0;
- 
- out_clk_disable:
--	clk_disable_unprepare(ddata->clk);
-+	clk_disable_unprepare(priv->clk);
- 	return ret;
- }
- 
--- 
-2.25.1
-
+> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+> Reviewed-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+> ---
+>  .../devicetree/bindings/clock/imx8mp-audiomix.yaml     | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/imx8mp-audiomix.yaml b/Documentation/devicetree/bindings/clock/imx8mp-audiomix.yaml
+> index 6588a17a7d9a..0272c9527037 100644
+> --- a/Documentation/devicetree/bindings/clock/imx8mp-audiomix.yaml
+> +++ b/Documentation/devicetree/bindings/clock/imx8mp-audiomix.yaml
+> @@ -24,8 +24,8 @@ properties:
+>      maxItems: 1
+>  
+>    clocks:
+> -    minItems: 7
+> -    maxItems: 7
+> +    minItems: 8
+> +    maxItems: 8
+>  
+>    clock-names:
+>      items:
+> @@ -36,6 +36,7 @@ properties:
+>        - const: sai5
+>        - const: sai6
+>        - const: sai7
+> +      - const: axi
+>  
+>    '#clock-cells':
+>      const: 1
+> @@ -72,10 +73,11 @@ examples:
+>                   <&clk IMX8MP_CLK_SAI3>,
+>                   <&clk IMX8MP_CLK_SAI5>,
+>                   <&clk IMX8MP_CLK_SAI6>,
+> -                 <&clk IMX8MP_CLK_SAI7>;
+> +                 <&clk IMX8MP_CLK_SAI7>,
+> +                 <&clk IMX8MP_CLK_AUDIO_AXI_ROOT>;
+>          clock-names = "ahb",
+>                        "sai1", "sai2", "sai3",
+> -                      "sai5", "sai6", "sai7";
+> +                      "sai5", "sai6", "sai7", "axi";
+>          power-domains = <&pgc_audio>;
+>      };
+>  
+> -- 
+> 2.34.1
+> 
