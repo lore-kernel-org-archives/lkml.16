@@ -1,287 +1,255 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09360266188;
-	Mon, 24 Feb 2025 18:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740421193; cv=none; b=Tb4HguFa9u0E0ycCm2+ojafCfddSYdh0IBvq6iX6kq89VYWgilOLZCybV7/tCDPcWxKBdYz1z1aXJ5EuJdo9qXgbxnXmoQk4bQ+uV4LVn7HVa4FZTP07pdrb4UII9xtYraAu/3qcpOSGcGH1c2UK7yCW0CUwU1csPDpRwtBlPIA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740421193; c=relaxed/simple;
-	bh=0oyyNG2V3s5JKdG5srCEuoOxoYgI+qmlA9nLepwoJXI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sRNyRALvFUsSdD1blTZ0flzFPeNxLR5x3Xjije3vRyqII7xiTZwhbpB8FrzMuzgRMPnSys5H8h2XZ8O2WjRacTF3AdsSXPlokTiT0aBL+3aHG7WaK+Ao1w/SmvnpnuQuOw5Hyu+2eo0i5SVPjo1Kd7ExBM9DTosLH3OI7F3U6jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=EXxExxdB; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4162661A1;
+	Mon, 24 Feb 2025 18:19:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.156.173
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740421199; cv=fail; b=hL8i4ANj3erknLQAGDsB5NjbLqfY9dihiELIOp/vqIGNuRttIMLqpzbOA+BvXgHWYB5+d2mP4p63BWecxmvcZlW2kKu/J/+w53SEIYQ9Ib1gcu3NpHDCO+VPwkNeffyhWl4+a3/y8RWmFHsgIy2G66wY5avCyPKlslRwsL2L7dM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740421199; c=relaxed/simple;
+	bh=0mM/3hoQ/S/hnbSUnJ4hr73O5QnnqKrzI0bYv29LT0A=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=Xd/x6YaN32KRNkTIj3TWtRljj8rqJbnY20UPFBwQQhegA4tmEwNd475wRyDDmMeSrmWQr/9xtVL/+A/wmXbVv5/JYCMpnatpEmzBTN/fr+cj7JouAHU/SYC7pwevPyQrKulgKAY3R2ik52HYmsIQ+7KB//FZ8PfBKevCrCZKUL4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=fail (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b=GJ4jdm9q reason="signature verification failed"; arc=fail smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="EXxExxdB"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51OEinRc013893;
-	Mon, 24 Feb 2025 19:14:28 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	yJ9Ddvb8/MSiJiYIU7CsHmpvg/muoQVGslcmJdqqGV8=; b=EXxExxdBl+SbI9lX
-	aVxjqj/F0BsEmDrBcY0USzXmDslBjQX0o92MefydgvGDc4Gn/S6z95YZbchArk2F
-	MM01LZ41PZp2dxiHyZT9xIdXt8JIM4kvKlRiy8nqJroVLK2hSFRIyZWxnSNKq5a7
-	/L242jyWnqoQrJRIHD+GdecNRu3ewdbzqfGF7S193JEmr78mt+cn2WkJ03+emhyu
-	lDchp4LbrCC03A95x5xDYpe/SOsZdlf04N5dCl0CsJJjM9DAcVC86WrzhjJcyMwX
-	HpdOyms8r+hfrnBv5I2qypUDI/9TXrp7xrYQL8NAfnkCZjXgwdNXsagK0msmY/Mo
-	X5zjDw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44y4vm10w6-1
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=marvell.com header.i=@marvell.com header.b="GJ4jdm9q"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51OCSjEE014690;
+	Mon, 24 Feb 2025 10:19:42 -0800
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2045.outbound.protection.outlook.com [104.47.70.45])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 450nash7y2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Feb 2025 19:14:11 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id DA1E34006B;
-	Mon, 24 Feb 2025 19:12:29 +0100 (CET)
-Received: from Webmail-eu.st.com (eqndag1node6.st.com [10.75.129.135])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 800FB546D7C;
-	Mon, 24 Feb 2025 19:02:36 +0100 (CET)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE6.st.com
- (10.75.129.135) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Feb
- 2025 19:02:36 +0100
-Received: from localhost (10.252.23.75) by SAFDAG1NODE1.st.com (10.75.90.17)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Feb
- 2025 19:02:36 +0100
-From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-To: <lee@kernel.org>, <ukleinek@kernel.org>, <alexandre.torgue@foss.st.com>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <wbg@kernel.org>, <jic23@kernel.org>, <daniel.lezcano@linaro.org>,
-        <tglx@linutronix.de>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <olivier.moysan@foss.st.com>, <fabrice.gasnier@foss.st.com>
-Subject: [PATCH 8/8] arm64: dts: st: add low-power timer nodes on stm32mp251
-Date: Mon, 24 Feb 2025 19:01:50 +0100
-Message-ID: <20250224180150.3689638-9-fabrice.gasnier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
-References: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
+	Mon, 24 Feb 2025 10:19:42 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JizQKOrOJ50d6NcbsG4+/xvqaJGBYCf2mDwOkwx1nyKOVHSwMC8UeIMPrfkF6CAD1fEshOx66iAx+KaI/COkifPOmTJyJtq8yUBLD1cbuC89gBn6HmTNd4j2ngR3xnb6S7BOyE5TWHN1fmnQngKh7QZ8P34Bm6SItrwwn4Y8f7DerSHVj8ZvSGawXQtlQ2xPin42PLREAtDdhHjN21Ashac34lJTD8pK7UzX0mkDKoNMbrAAeiYhKc91kLXq0kqbncNsQKKtLTQA2VIW7m+n7RWfS43HPZEOot7+lO4G0+f/HrKIttKgP1n7ujtRrXeKyxjebAXwUe5SZwBn9XWGpw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gn8prhmiNre6XPUkTePEPa6SFjugJ9IYSFUpDba2Yus=;
+ b=ZAP3j8UC39pN25A7jgYH8xgpc+q5lqQctyemF+NRh237H4cNlk3/bpN4H7pyVOGiC571mpMXvDeI6KVS4MNW0o24Cc9NtirLHqUGdJE/J5RJFW8sgznFt5vjcSbKthkX7oHMgdkE1KSpKl6gwg0SBkmpp8ADdVLcibmMsGJMAkFYZdNdEckAAiohV1fVxobF8IYCKWzSvlLen+TTEdGcbevmXQsY3zeRGXYmoYjOBlpWAGEiIZU4B+Lk3fZkMQ6/DhblmewSwwmF9VtHqKN4teLHVyJGjjhTRQZlnxShfR9HlQvTmLRK5zcOe31dv/V7h2almAky+gN7DB++629q0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gn8prhmiNre6XPUkTePEPa6SFjugJ9IYSFUpDba2Yus=;
+ b=GJ4jdm9qhI2/igj1PblB/PSZzwJlep/J9qaHpr4APlJDVGaiEKKTJ8o94o8Byjpaq62352qjGWDs5cd+I3A8xmad3t8i+Ic4diREkUxGJygRkVUqRsG+drQdxTdxHjmSAw/BY3dN3rqBg8WwVK52kxhcKC3jM6mwLV0BUkV820Y=
+Received: from BY3PR18MB4673.namprd18.prod.outlook.com (2603:10b6:a03:3c4::20)
+ by MN2PR18MB3653.namprd18.prod.outlook.com (2603:10b6:208:26b::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Mon, 24 Feb
+ 2025 18:19:32 +0000
+Received: from BY3PR18MB4673.namprd18.prod.outlook.com
+ ([fe80::fbd6:a3a:9635:98b5]) by BY3PR18MB4673.namprd18.prod.outlook.com
+ ([fe80::fbd6:a3a:9635:98b5%5]) with mapi id 15.20.8466.016; Mon, 24 Feb 2025
+ 18:19:32 +0000
+From: Wilson Ding <dingwei@marvell.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
+        "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+        "conor+dt@kernel.org"
+	<conor+dt@kernel.org>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        Sanghoon Lee <salee@marvell.com>,
+        Geethasowjanya Akula <gakula@marvell.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: reset: Add Armada8K reset controller
+Thread-Topic: [PATCH v2 1/4] dt-bindings: reset: Add Armada8K reset controller
+Thread-Index: AQHbhuimo4fJX8wsPU+mNUrf2ArHYg==
+Date: Mon, 24 Feb 2025 18:19:32 +0000
+Message-ID:
+ <BY3PR18MB467373E86423BA4615D6FF0FA7C02@BY3PR18MB4673.namprd18.prod.outlook.com>
+References: <20250220232527.882888-1-dingwei@marvell.com>
+ <20250220232527.882888-2-dingwei@marvell.com>
+ <20250221-icy-flounder-of-potency-ee1a05@krzk-bin>
+ <20250221234041.GA387671-robh@kernel.org>
+ <BY3PR18MB4673F55565B70458E1F3F9A6A7C62@BY3PR18MB4673.namprd18.prod.outlook.com>
+ <a8ad3469-f170-4af0-abaf-d34c60e4df52@kernel.org>
+In-Reply-To: <a8ad3469-f170-4af0-abaf-d34c60e4df52@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BY3PR18MB4673:EE_|MN2PR18MB3653:EE_
+x-ms-office365-filtering-correlation-id: f8760b0a-d599-43fc-e65e-08dd54ffc90d
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?QWUwSU03cFkxbG53Rzd4eVR0amU2V3FtWFZVcm40VDVhK2ZLSitqVHMyQVdh?=
+ =?utf-8?B?UlJoTTY1VDViMzk2VFBwc1hUM3hpUTNLN083UWpNTkg5UDYrUWsxc3d0aU1h?=
+ =?utf-8?B?cWNiOVdUQnFsdEhzQkVvUGdwV0ZYNlIwL3M4TUxRUXM0c3dPcU5YQnFqSlpi?=
+ =?utf-8?B?K2QyMGwwSVYxTDY3Qk9OM0RLWkNodEQ1TUw2bENnQ3JBckNtbjlUaUFOU0Zj?=
+ =?utf-8?B?amVEVTZiL0kzcFNjeGdkMmR1ZUJ3SUlzWE9NdXpqK0xNNTFQdTlpUlNlT1hS?=
+ =?utf-8?B?V2R5cWYzb3Y5UFBDcElVd2F4bHpZa3BhNEpldHZRRHpmdDhXS1V6VHkvSDBp?=
+ =?utf-8?B?QkRrMnJzR1NoRENxUDB5aDJHZ09ucVY2ZDlodnBCYzRFUmMvQTZ1ekQ2cXpO?=
+ =?utf-8?B?OFNNR3FuUjRLSFhXQ3Z2Q21wYTk0dmJ4S3pPQkRpai9PYUF5UUk3NjVYT1dr?=
+ =?utf-8?B?djFGSEFFbXpxbnc2M1NoVjhnT0NGMSt4ZmhxQTV4cUFNVzhTWmJ6c0luamtp?=
+ =?utf-8?B?d0JYaHFBenhvdjJFS3M4NDl2VTNBblFGQy9ER3V6U1F3K2lCeXZzRFhjeUh1?=
+ =?utf-8?B?a1JDNXFjNEh2QklEYVdZcnEvQ1dCdWl1amZML0l1Qk5Iam1qcW55bmFydTBW?=
+ =?utf-8?B?VHpwTCtwWHFvY0hPclg3UWhleTY4elRwVUZwRzF5a2IvTkp3dnhIS3p0dWkz?=
+ =?utf-8?B?UHJ1L2Z4SkFLc2huTkpvMUpZT2lNc2djOXkrbmV6UkZncTB2bnlBWSt3YTU3?=
+ =?utf-8?B?bnZvY05yVTA0K2M3dndST0lrUjhWMzNhYlVBUitjSGRNbUxsYVNyVDVWUUZr?=
+ =?utf-8?B?YUxEeDNMK1JOdkx5cjM2ZHdhZTBpTWdBUVBaWGxRdzRGcStDOHAzUVpFcHhY?=
+ =?utf-8?B?bWNtQWNoV1UzK0JKMy9mUXRWOWo5MFh1d3hySkN3dDZCOVNzUGptSnplRmNV?=
+ =?utf-8?B?TVdDZWtiSjBVbnFRY2l0ejJ2eEpSbitrWG1DZDdtVW9PNXFvNG4yTFpIRExI?=
+ =?utf-8?B?c2pNakgxRHpEVHlaS0JPZ1hnZ0JVaUFTTkZ5SHN3K01TM2MwOTV2M2dUVWsx?=
+ =?utf-8?B?eExjbGgvQzk0dGNCZGkxcXVGc3pmZjBSNENBZWZjc0tlOEt2M0M0R0VSU1Jm?=
+ =?utf-8?B?Zk4vV1VpU0VESDZiaVhraS95SmtjWVl1L2xTV0Z5WW1aNzlCU0RmRGhTSnFl?=
+ =?utf-8?B?ajU5dzVqK2RyVGlaM3g4YjJoUDBHcEd5SFphcUFlQVpyazMrTFZCTVI5QmJQ?=
+ =?utf-8?B?dHRrdktWcVVBL2xpai9LTkFzNzFaUDArU2RTeHFmdTgveFVQTjF6LzJuMGNj?=
+ =?utf-8?B?MXpSbGJxTiswc1FobEJ2U2s5KzBhYmM4TVRMaGNuT0g5UXFvVWdhSHNhbmlK?=
+ =?utf-8?B?aEdCd0c4QTVwNDFmcFdkMk9taCtKWmFDSU5mL0w3NjFvSkVZVlcwcFN3VzVu?=
+ =?utf-8?B?UiswK2tPNHhLdTQ2TGVkQWhiTHcwZHdUWDgyQWFaRWVnTmUzVVVnMGN4QnVL?=
+ =?utf-8?B?eTdEVzZwbGgxbnNnYWlDUGdncDVYRkZQa3hLY0RFRm5EaW5KWGp4MEhHTzc2?=
+ =?utf-8?B?LzBCVXg5U09ESC94TWNYMkV2TStzRHZpMkZqd1F2LzZ1UEswNmhTODUyYmJi?=
+ =?utf-8?B?SVYyYktpbm9Xb1c2R1UycEFDNUdyOEp1OGwwaWJKb09JTVBGMFJuTVB1dlg0?=
+ =?utf-8?B?OFFiNXUvR2NyM2VhQUFza2NVSzNMM1ZjNGRvRVdrTk9LVHk0ckdvc1loREpw?=
+ =?utf-8?B?RGFjWHdrOXlmd2V1dFVDa3h4d3lVRUgvVklVWGxyTWR2WndqUUdBK0pneUl4?=
+ =?utf-8?B?Rk1RRWhETHJjNUFSRjdyQU0wc2pHZE01MDNvbjM3UjQ1TkIrS2gzZ3BscERm?=
+ =?utf-8?B?REU2ajlyZW1vV05EckxWZnhUNFI3UitYYVdhWVdwbXVsZVE9PQ==?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY3PR18MB4673.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?d3FqN2Z3Y2FsR2NZME12RDdCaWNGTTQvcnhLa3VRWStIWG02MFMvckRSVjBk?=
+ =?utf-8?B?c0F1QmQvcXlFeFJjcHJHeGtOUzdZNTFJRHdCdW5mNUVmdE5yUU9YUzNVa3dR?=
+ =?utf-8?B?RmovQ1pudHYxcnpwTHk0N0V0NGEvR2RJMndIUWZRVHZna2k4Y1VvSWFhajA3?=
+ =?utf-8?B?RWdtQ3FpbjZqblkzVlEvNkRSMzQzK1IzMlFWZmoyZ3YrakdmUzI0V0hXTElu?=
+ =?utf-8?B?cDc4VW5uTGE2Mm1GRUVKd0EzSVlVTkNaTHo2Q28rOTkwL3BwNkxBdEE2VG1x?=
+ =?utf-8?B?R2N5R01WSFZwdG9kQW1tVkozTUtwNno1NWxZZk5iZnZZNW1nYVBsRU1ZZnBB?=
+ =?utf-8?B?R0V5N3J4SDdpVlF6TGhFM3RyUVA2S2N2YjJmZDRZVmdHaVI5bGVnditRVjl2?=
+ =?utf-8?B?TWptcERlWjlRR2czWngzdk5FMHdzU0svay9Vbi9nMngrR2VQWTR1WG82TzRV?=
+ =?utf-8?B?bGhqbGdib2dTckpmRmpTT2liRUx6NFEyNldTeWMyNlJRc3BuM29sWEJDRWsx?=
+ =?utf-8?B?ay9obk04MkFlYS96MVVBdU5Gc01XeWgvSktEQzRTOXVPYk8rcC9PTGZZdHZP?=
+ =?utf-8?B?RnFJMVVteDlWN0xraU5YUEVFY2dhRDdoRVc2ZUlwMjhhS1dqdGhkcWR3dHY3?=
+ =?utf-8?B?VjRSalZaOVlHUlFNdUN2bVdHbTh3Z1c1RERXdFB0eTZjbkhMRHFFUXY0M2tx?=
+ =?utf-8?B?U1NtVFNMYmRwUUpjYXNzTlFpd2E2cG5VR2hqZUE3Vmg3aWYzNGxUU0hpbFpN?=
+ =?utf-8?B?SWgwNGpFZ01xME9JVlhtTEMxK3BJR29uTXF1dWFWSitUekpBK29jNDNBVWFk?=
+ =?utf-8?B?WUJkMGtGSjJza3N5MGdKQmxnSjBweFRwOEJET05LdzZTZU5WVk42UHZzUytB?=
+ =?utf-8?B?RkRmVFhmZGpQbGR2QVJKZVVMM2czbVZ4a3NKN2FTSi9qUmpmaHNEVGJNM2NG?=
+ =?utf-8?B?UzQ3a0JaeUdwRzZQWng4YWZvQXQ0aW1uTWVHWDNWSGxvNWFIblF1RVlySnhZ?=
+ =?utf-8?B?RWwyaFJ6dkJOUWlsejRnRE1SS0tORWZVLzhBN3d1SE9xY3A0NDBOdW5mY2lC?=
+ =?utf-8?B?Tjh2cGVxTU9Hc1JqM2xoRGI1S2NnTTBINVkwZUJGMEJCZ2gxQThOTjhpRUVU?=
+ =?utf-8?B?WnJlaFMvNmZBLzM2aEZwN0VaYVRmLy9oTnZicld1T0ZXc1hoalFJeHQweUNs?=
+ =?utf-8?B?OGw2d0lkb3BONXQ1cmdmRUhzY0x2NTVlT2R6NTRRZm5STU1wc2dBT1NFakJX?=
+ =?utf-8?B?b2s3OGQvbHFiOUhvVUlzUnZ3SzJYYmFKemtjK3FvampxRDNjcUZadnJYbkV2?=
+ =?utf-8?B?NHl0S2RMd2E3ZE9md0luMlVvSGpaRDRLN2p1SGc3RmxDbm1rdjNXUTJaR0R3?=
+ =?utf-8?B?anlYYjA0RWt1UUtxQnlZU2hPakQ5TkZFNllDTzhaaHgwL001TjIvVTcxTkhu?=
+ =?utf-8?B?VGc1MkZSa0N0Nzd5dElBOEhZNjR5K2dIZFgvZ0h5VHM2dzdNK2Zua25IeFlG?=
+ =?utf-8?B?VmtUemh1NHJiTStqaFF2UFBDUlpLVXAyeGJkKzYwNjI1V3QrNFdZNnJMallV?=
+ =?utf-8?B?SXpja2Rzb2dhdDZ2LzBiQVo5d09GTWg0MjFkbzR2RU9CZWM4dUZZK0hsVkxx?=
+ =?utf-8?B?Vjg5aExiS25PR2hRbkEvS05SVm5wODg3OGxENWpJZnZJeVc1YzF3bENMbDVh?=
+ =?utf-8?B?K1MrYlJHRjcrT3NJQzlIREY2bTJ3cER4VkZtSEgvUDVDUHpVVWZjT2V1QnJk?=
+ =?utf-8?B?OEJvS2RPQjRJdDBKNjRoVDV2ZUtYZGRieHI3T1hHQkNnTVRXdHRxMXBqUzZQ?=
+ =?utf-8?B?d282YWEwczF6OENNK3M1czFITmtrbHlEd3F5SytrWW9rOXY4cW00TU9GaDVW?=
+ =?utf-8?B?Z1p2bkk1REViYmpjeXVoYzgzUmFFNWk3ZEozZFhWcGQ3eXpzK2ozM3cwK3hp?=
+ =?utf-8?B?eDM2czNaZnlZeUlwSDNEUlFmejBlQUhIanFLZlVYenoxemNxYmswNzNZZitt?=
+ =?utf-8?B?TTdTNlAvOVAvOHZoTTFHTm9XVFRtZ0NWQzh1cHF0TWowVitnSVlUbVFjQkoz?=
+ =?utf-8?B?QkNrdjZxdVpsVEhReFZoTlJMeGVXYVA1eXN4M3c1aEM1YU42dm84bVBOTm9Y?=
+ =?utf-8?Q?O67TyzKwjXn9YIdw2+kpmeu3R?=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SAFDAG1NODE1.st.com
- (10.75.90.17)
+X-OriginatorOrg: marvell.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BY3PR18MB4673.namprd18.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f8760b0a-d599-43fc-e65e-08dd54ffc90d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Feb 2025 18:19:32.2665
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YrqO4oYM3ZJIc+5udCfKlNjGhESMRnNPan+k6YoRJACRDuL3Kw5Uit+YsPbbgupUWvEsIq7xwM9ccKj2ofWHIg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3653
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-ORIG-GUID: 1upSbIrHoLuDAxdd2nJnRUSTBeUVt8q5
+X-Proofpoint-GUID: 1upSbIrHoLuDAxdd2nJnRUSTBeUVt8q5
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-24_09,2025-02-24_02,2024-11-22_01
 
-Add low-power timer (LPTimer) support on STM32MP25 SoC.
-The full feature set is implemented in LPTIM1/2/3/4. LPTIM5 supports a
-smaller set of features (no capture/compare) channel. Still, LPTIM5 can
-be used as single PWM, counter, trigger or timer.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
----
- arch/arm64/boot/dts/st/stm32mp251.dtsi | 177 +++++++++++++++++++++++++
- 1 file changed, 177 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-index f3c6cdfd7008..742367e4f16d 100644
---- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
-+++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-@@ -238,6 +238,78 @@ rifsc: bus@42080000 {
- 			#access-controller-cells = <1>;
- 			ranges;
- 
-+			lptimer1: timer@40090000 {
-+				compatible = "st,stm32mp25-lptimer";
-+				reg = <0x40090000 0x400>;
-+				interrupts-extended = <&exti1 47 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&rcc CK_KER_LPTIM1>;
-+				clock-names = "mux";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				access-controllers = <&rifsc 17>;
-+				power-domains = <&RET_PD>;
-+				wakeup-source;
-+				status = "disabled";
-+
-+				counter {
-+					compatible = "st,stm32mp25-lptimer-counter";
-+					status = "disabled";
-+				};
-+
-+				pwm {
-+					compatible = "st,stm32mp25-pwm-lp";
-+					#pwm-cells = <3>;
-+					status = "disabled";
-+				};
-+
-+				timer {
-+					compatible = "st,stm32mp25-lptimer-timer";
-+					status = "disabled";
-+				};
-+
-+				trigger@0 {
-+					compatible = "st,stm32mp25-lptimer-trigger";
-+					reg = <0>;
-+					status = "disabled";
-+				};
-+			};
-+
-+			lptimer2: timer@400a0000 {
-+				compatible = "st,stm32mp25-lptimer";
-+				reg = <0x400a0000 0x400>;
-+				interrupts-extended = <&exti1 48 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&rcc CK_KER_LPTIM2>;
-+				clock-names = "mux";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				access-controllers = <&rifsc 18>;
-+				power-domains = <&RET_PD>;
-+				wakeup-source;
-+				status = "disabled";
-+
-+				counter {
-+					compatible = "st,stm32mp25-lptimer-counter";
-+					status = "disabled";
-+				};
-+
-+				pwm {
-+					compatible = "st,stm32mp25-pwm-lp";
-+					#pwm-cells = <3>;
-+					status = "disabled";
-+				};
-+
-+				timer {
-+					compatible = "st,stm32mp25-lptimer-timer";
-+					status = "disabled";
-+				};
-+
-+				trigger@1 {
-+					compatible = "st,stm32mp25-lptimer-trigger";
-+					reg = <1>;
-+					status = "disabled";
-+				};
-+			};
-+
- 			i2s2: audio-controller@400b0000 {
- 				compatible = "st,stm32mp25-i2s";
- 				reg = <0x400b0000 0x400>;
-@@ -799,6 +871,111 @@ i2c8: i2c@46040000 {
- 				status = "disabled";
- 			};
- 
-+			lptimer3: timer@46050000 {
-+				compatible = "st,stm32mp25-lptimer";
-+				reg = <0x46050000 0x400>;
-+				interrupts-extended = <&exti2 29 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&rcc CK_KER_LPTIM3>;
-+				clock-names = "mux";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				access-controllers = <&rifsc 19>;
-+				wakeup-source;
-+				status = "disabled";
-+
-+				counter {
-+					compatible = "st,stm32mp25-lptimer-counter";
-+					status = "disabled";
-+				};
-+
-+				pwm {
-+					compatible = "st,stm32mp25-pwm-lp";
-+					#pwm-cells = <3>;
-+					status = "disabled";
-+				};
-+
-+				timer {
-+					compatible = "st,stm32mp25-lptimer-timer";
-+					status = "disabled";
-+				};
-+
-+				trigger@2 {
-+					compatible = "st,stm32mp25-lptimer-trigger";
-+					reg = <2>;
-+					status = "disabled";
-+				};
-+			};
-+
-+			lptimer4: timer@46060000 {
-+				compatible = "st,stm32mp25-lptimer";
-+				reg = <0x46060000 0x400>;
-+				interrupts-extended = <&exti2 30 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&rcc CK_KER_LPTIM4>;
-+				clock-names = "mux";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				access-controllers = <&rifsc 20>;
-+				wakeup-source;
-+				status = "disabled";
-+
-+				counter {
-+					compatible = "st,stm32mp25-lptimer-counter";
-+					status = "disabled";
-+				};
-+
-+				pwm {
-+					compatible = "st,stm32mp25-pwm-lp";
-+					#pwm-cells = <3>;
-+					status = "disabled";
-+				};
-+
-+				timer {
-+					compatible = "st,stm32mp25-lptimer-timer";
-+					status = "disabled";
-+				};
-+
-+				trigger@3 {
-+					compatible = "st,stm32mp25-lptimer-trigger";
-+					reg = <3>;
-+					status = "disabled";
-+				};
-+			};
-+
-+			lptimer5: timer@46070000 {
-+				compatible = "st,stm32mp25-lptimer";
-+				reg = <0x46070000 0x400>;
-+				interrupts-extended = <&exti2 31 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&rcc CK_KER_LPTIM5>;
-+				clock-names = "mux";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				access-controllers = <&rifsc 21>;
-+				wakeup-source;
-+				status = "disabled";
-+
-+				counter {
-+					compatible = "st,stm32mp25-lptimer-counter";
-+					status = "disabled";
-+				};
-+
-+				pwm {
-+					compatible = "st,stm32mp25-pwm-lp";
-+					#pwm-cells = <3>;
-+					status = "disabled";
-+				};
-+
-+				timer {
-+					compatible = "st,stm32mp25-lptimer-timer";
-+					status = "disabled";
-+				};
-+
-+				trigger@4 {
-+					compatible = "st,stm32mp25-lptimer-trigger";
-+					reg = <4>;
-+					status = "disabled";
-+				};
-+			};
-+
- 			csi: csi@48020000 {
- 				compatible = "st,stm32mp25-csi";
- 				reg = <0x48020000 0x2000>;
--- 
-2.25.1
+> -----Original Message-----
+> From: Krzysztof Kozlowski <krzk@kernel.org>
+> Sent: Sunday, February 23, 2025 12:49 AM
+> To: Wilson Ding <dingwei@marvell.com>; Rob Herring <robh@kernel.org>
+> Cc: linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; andrew@lunn.ch; gregory.clement@bootlin.com;
+> sebastian.hesselbarth@gmail.com; krzk+dt@kernel.org; conor+dt@kernel.org;
+> p.zabel@pengutronix.de; Sanghoon Lee <salee@marvell.com>;
+> Geethasowjanya Akula <gakula@marvell.com>
+> Subject: [EXTERNAL] Re: [PATCH v2 1/4] dt-bindings: reset: Add Armada8K
+> reset controller
+>=20
+> On 22/02/2025 21:=E2=80=8A57, Wilson Ding wrote: >>>> + offset: >>>> + $r=
+ef:
+> /schemas/types.=E2=80=8Ayaml#/definitions/uint32 >>>> + description: Offs=
+et in the
+> register map for the gpio registers >>>> + (in bytes)
+>=20
+> On 22/02/2025 21:57, Wilson Ding wrote:
+>=20
+> >>>> +  offset:
+> >>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+> >>>> +    description: Offset in the register map for the gpio registers
+> >>>> + (in bytes)
+> >>>
+> >>> That's neither correct nor needed. Your device knows ofsset based on
+> >>> the compatible.
+> >>
+> >> Or use 'reg'.
+> >>
+> >> But really, just add #reset-cells to the parent node. There's no need
+> >> for a child node here. The parent needs a specific compatible though.
+> >>
+> >
+> > I am not inventing the 'offset' property. I just tried to follow the
+> > other existing sub-nodes under the same parent node
+> > (system-controller). The mvebu-gpio driver also uses 'offset' instead
+> > of 'reg' for the syscon device (see below). But it
+>=20
+>=20
+> You never answered why do you need offset and why it cannot work without.
+>=20
 
+I see. You're right. I don't have to use 'offset'. The reason I choose 'off=
+set' over
+'reg' is that the Armada's GPIO driver use it. And I thought what was accep=
+ted
+would be easier to be accepted again. I will change it in next version.
+
+> > seems also not correct from your point of view. Now, I am a bit
+> > confused what should be the right scheme for the Armada's
+> > system-controller, including GPIO and Reset controller. And
+> > dt_binding_check complains "system-controller@
+> > 440000:  compatible: ['syscon', 'simple-mfd'] is too short". Can you
+> > point me any  reference for me to fix these issues.
+>=20
+> See all other syscon devices. 'git grep simple-mfd' or for syscon
+>=20
+>=20
+> >
+> > CP110_LABEL(syscon0): system-controller@440000 {
+> > 	compatible =3D "syscon", "simple-mfd";
+> > 	reg =3D <0x440000 0x1000>;
+>=20
+>=20
+> Best regards,
+> Krzysztof
