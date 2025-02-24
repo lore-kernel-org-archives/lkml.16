@@ -1,143 +1,137 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7AFC24292F
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 09:57:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344C02505B7;
+	Mon, 24 Feb 2025 09:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740391055; cv=none; b=bau74A7vvnTiCem+QbGauITGdPvrWDHj6O8Rruoed6LBmfzjMdK+Q79HCUQousm0rEIFL3lxhKFNKUntOLGTqE8pofzWsrzuPqTFZfmkt10vazcFKCyi7QCvnoNfHJP3ME6OMOPQ7/yYeupg60CbqvHSbUgrtXAFpwnT3aZCTVs=
+	t=1740391069; cv=none; b=CDCDTddcGNurCPJPVW39XktWLeKCncBY/F5a2pciUXu0ivNvYLdSS63GnV9klJtp8WE6zs2fCY0TMCUMmAafNDE8SzH3yrsaAbHXaRdNDU6C8WFvANd2lMxdwQxY+9FuZ/xfHgi0sT55l1e9urNszhoWW084Zzy5sdoXmwEJw7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740391055; c=relaxed/simple;
-	bh=zZ4LSD0pf5gem00PnlfjoiKkJZOWfQSUlOEEwXRRwAo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=J/6ZpSUKxKM1lYleXtxfN8xcW0h7vK/Ca9mm5XpGX2Ek8EiRoMLN5REjgx4t7YWhHiaTRafzULkSy3WPQfAbxXlDcI0BBHlpV70f9vNYXlRvLG+M1R81KJqLJYVGRvH5Cg70/FjeSa0RLVZ443ZVojYoKE6kcnizZYWfYOYYvLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=bPP8dfzG; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1740391069; c=relaxed/simple;
+	bh=iE537x/MELrUY0Qtk8aCd5YLeWWHG15hTl09B9wGRWM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SQF99Ogla2XncNWI19M3IJU952sY2Oey+5XltVQ7vkN7+I0Do/BBp+tqJ9JQjaMRn+JicHHiANkrohn5T4rmeG7Er1/IShdy6lCoBzoc8Gqu52HuXiqZTtljeIf6hgMFBWb3gNVpGcf3atH/z7GLLBQh3RDsEUd+R6IEMYZtGr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TfIFXDJe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="bPP8dfzG"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4Z1bkf0DrSz9spX;
-	Mon, 24 Feb 2025 10:57:30 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1740391050; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZVke/a1muIuPPw9tqzQVhkbMsCi2gU1HQNx6O8LlpO0=;
-	b=bPP8dfzG1KdKoo4XbbnX0Egqkj/tZSMiFQtHy0HvtRoDc1AE3cT7JliMii9B6hAOhVOblf
-	dM7uLyZnW/0Q/zmfi3RhUY5+XHeCFuCfNRpTwnnk+rCzBHW4JTB5CcAv74yZkt9ZVWI6dJ
-	BMCH5t719k17DKhmW5PQJl7ec77gcQdbfka5T4+QJDdY2gIqODr1uWlXA5I2ZQ2zeze2GI
-	S2GTSWjkvKDG8RQAGVqsvyyIr+evhi7laaLgrGdDr1FhaxKfJnnkEcVVZhw9PI6DgHPE46
-	95+Kpar4PR98oI4e9W9SlPpTO+IwujfdjeSmSzWZkadPJyIc8PTjD3UtKOLgwA==
-Message-ID: <21a944a054790c0a5b542183b7d5fa54483232be.camel@mailbox.org>
-Subject: Re: [PATCH] drm/scheduler: Fix mem leak when last_scheduled signaled
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: phasta@kernel.org, qianyi liu <liuqianyi125@gmail.com>, Danilo Krummrich
- <dakr@kernel.org>, Matthew Brost <matthew.brost@intel.com>, Christian
- =?ISO-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Date: Mon, 24 Feb 2025 10:57:26 +0100
-In-Reply-To: <3b369e1a49b354852f361b103999673e4f7906a9.camel@mailbox.org>
-References: <20250221062702.1293754-1-liuqianyi125@gmail.com>
-	 <3b369e1a49b354852f361b103999673e4f7906a9.camel@mailbox.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TfIFXDJe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 098C3C4CEE8;
+	Mon, 24 Feb 2025 09:57:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740391068;
+	bh=iE537x/MELrUY0Qtk8aCd5YLeWWHG15hTl09B9wGRWM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TfIFXDJen3mMesTjG7OhjLyO68Lu9krViqA7VC3vhkwnLojy4G3CBiTdUmL3na5zf
+	 ey2d8msVYSk18M5THfX+RJdtV/35HTBjjiieiPT1B9lKgRxUblNdrLhnR090a4dUDp
+	 FkP/7/PnwOILK+QWx4uFaUo67l3z3VqYe5pzZuknUTsNQ5E5UX2KyDSU5kOlq4JXSs
+	 Z1Bwr4k9KLgdBR37JAv6X9l6o/j1iGueZhQVbXva5c1h8hjI9PZAm1jeoz8P9C78du
+	 Upp41f6hNuhj6KQ/6UrooNmrkqTQr4K66zIME/NA1If65Ly8AwVuuEYnio7f84sn8m
+	 j8jH/pA1AvlLQ==
+Date: Mon, 24 Feb 2025 20:27:44 +1030
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Carlos Maiolino <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>
+Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 3/8][next] xfs: Avoid -Wflex-array-member-not-at-end warnings
+Message-ID: <e1b8405de7073547ed6252a314fb467680b4c7e8.1739957534.git.gustavoars@kernel.org>
+References: <cover.1739957534.git.gustavoars@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-META: o6us1zn17yc464ke5wp6ap13n3xd8wwq
-X-MBO-RS-ID: 181b0d227478099764b
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1739957534.git.gustavoars@kernel.org>
 
-On Mon, 2025-02-24 at 10:52 +0100, Philipp Stanner wrote:
-> Hello,
->=20
-> subject line: please write "drm/sched" instead of "drm/scheduler". It
-> has become the norm
->=20
-> On Fri, 2025-02-21 at 14:27 +0800, qianyi liu wrote:
-> > Problem: If prev(last_scheduled) was already signaled I encountred
-> > a
->=20
-> prev(last_scheduled) almost reads like a function call. Maybe write
-> "prev / last_scheduled"?
->=20
-> > memory leak in drm_sched_entity_fini. This is because the
-> > prev(last_scheduled) fence is not free properly.
->=20
-> s/free/freed
->=20
-> >=20
-> > Fix: Balance the prev(last_scheduled) fence refcnt when
-> > dma_fence_add_callback failed.
-> >=20
-> > Signed-off-by: qianyi liu <liuqianyi125@gmail.com>
-> > ---
-> > =C2=A0drivers/gpu/drm/scheduler/sched_entity.c | 7 +++++--
-> > =C2=A01 file changed, 5 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/drivers/gpu/drm/scheduler/sched_entity.c
-> > b/drivers/gpu/drm/scheduler/sched_entity.c
-> > index 69bcf0e99d57..1c0c14bcf726 100644
-> > --- a/drivers/gpu/drm/scheduler/sched_entity.c
-> > +++ b/drivers/gpu/drm/scheduler/sched_entity.c
-> > @@ -259,9 +259,12 @@ static void drm_sched_entity_kill(struct
-> > drm_sched_entity *entity)
-> > =C2=A0		struct drm_sched_fence *s_fence =3D job->s_fence;
-> > =C2=A0
-> > =C2=A0		dma_fence_get(&s_fence->finished);
-> > -		if (!prev || dma_fence_add_callback(prev, &job-
-> > > finish_cb,
-> > -					=C2=A0=C2=A0
-> > drm_sched_entity_kill_jobs_cb))
-> > +		if (!prev ||
-> > +		=C2=A0=C2=A0=C2=A0 dma_fence_add_callback(prev, &job->finish_cb,
-> > +					=C2=A0=C2=A0
-> > drm_sched_entity_kill_jobs_cb)) {
-> > +			dma_fence_put(prev);
->=20
-> But now the fence will also be put when prev =3D=3D NULL. Is that
-> intentional? It doesn't seem correct to me from looking at the commit
-> message, which states "Balance [=E2=80=A6] refcnt when dma_fence_add_call=
-back
-> failed"
->=20
-> It didn't get clear to me immediately which dma_fence_get() your new
-> dma_fence_put() balances. Can you ellaborate on that or maybe write a
-> comment?
->=20
-> But also be handy of could share the kmemleak trace.
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-Argh.
+Change the type of the middle struct members currently causing trouble
+from `struct bio` to `struct bio_hdr`.
 
--> "It would also be handy if you could share the kmemleak trace"
+We also use `container_of()` whenever we need to retrieve a pointer to
+the flexible structure `struct bio`, through which we can access the
+flexible-array member in it, if necessary.
 
-I should drink less=E2=80=A6
+With these changes fix 27 of the following warnings:
 
-P.
+fs/xfs/xfs_log_priv.h:208:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ fs/xfs/xfs_log.c      | 15 +++++++++------
+ fs/xfs/xfs_log_priv.h |  2 +-
+ 2 files changed, 10 insertions(+), 7 deletions(-)
 
->=20
->=20
-> Thanks
-> P.
->=20
-> > =C2=A0			drm_sched_entity_kill_jobs_cb(NULL, &job-
-> > > finish_cb);
-> > +		}
-> > =C2=A0
-> > =C2=A0		prev =3D &s_fence->finished;
-> > =C2=A0	}
->=20
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index f8851ff835de..7e8b71f64a46 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -1245,7 +1245,7 @@ xlog_ioend_work(
+ 	}
+ 
+ 	xlog_state_done_syncing(iclog);
+-	bio_uninit(&iclog->ic_bio);
++	bio_uninit(container_of(&iclog->ic_bio, struct bio, __hdr));
+ 
+ 	/*
+ 	 * Drop the lock to signal that we are done. Nothing references the
+@@ -1663,7 +1663,8 @@ xlog_write_iclog(
+ 	 * writeback throttle from throttling log writes behind background
+ 	 * metadata writeback and causing priority inversions.
+ 	 */
+-	bio_init(&iclog->ic_bio, log->l_targ->bt_bdev, iclog->ic_bvec,
++	bio_init(container_of(&iclog->ic_bio, struct bio, __hdr),
++		 log->l_targ->bt_bdev, iclog->ic_bvec,
+ 		 howmany(count, PAGE_SIZE),
+ 		 REQ_OP_WRITE | REQ_META | REQ_SYNC | REQ_IDLE);
+ 	iclog->ic_bio.bi_iter.bi_sector = log->l_logBBstart + bno;
+@@ -1692,7 +1693,8 @@ xlog_write_iclog(
+ 
+ 	iclog->ic_flags &= ~(XLOG_ICL_NEED_FLUSH | XLOG_ICL_NEED_FUA);
+ 
+-	if (xlog_map_iclog_data(&iclog->ic_bio, iclog->ic_data, count))
++	if (xlog_map_iclog_data(container_of(&iclog->ic_bio, struct bio, __hdr),
++				iclog->ic_data, count))
+ 		goto shutdown;
+ 
+ 	if (is_vmalloc_addr(iclog->ic_data))
+@@ -1705,16 +1707,17 @@ xlog_write_iclog(
+ 	if (bno + BTOBB(count) > log->l_logBBsize) {
+ 		struct bio *split;
+ 
+-		split = bio_split(&iclog->ic_bio, log->l_logBBsize - bno,
++		split = bio_split(container_of(&iclog->ic_bio, struct bio, __hdr),
++				  log->l_logBBsize - bno,
+ 				  GFP_NOIO, &fs_bio_set);
+-		bio_chain(split, &iclog->ic_bio);
++		bio_chain(split, container_of(&iclog->ic_bio, struct bio, __hdr));
+ 		submit_bio(split);
+ 
+ 		/* restart at logical offset zero for the remainder */
+ 		iclog->ic_bio.bi_iter.bi_sector = log->l_logBBstart;
+ 	}
+ 
+-	submit_bio(&iclog->ic_bio);
++	submit_bio(container_of(&iclog->ic_bio, struct bio, __hdr));
+ 	return;
+ shutdown:
+ 	xlog_force_shutdown(log, SHUTDOWN_LOG_IO_ERROR);
+diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
+index f3d78869e5e5..32abc48aef24 100644
+--- a/fs/xfs/xfs_log_priv.h
++++ b/fs/xfs/xfs_log_priv.h
+@@ -205,7 +205,7 @@ typedef struct xlog_in_core {
+ #endif
+ 	struct semaphore	ic_sema;
+ 	struct work_struct	ic_end_io_work;
+-	struct bio		ic_bio;
++	struct bio_hdr		ic_bio;
+ 	struct bio_vec		ic_bvec[];
+ } xlog_in_core_t;
+ 
+-- 
+2.43.0
 
