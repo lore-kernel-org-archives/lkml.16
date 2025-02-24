@@ -1,128 +1,142 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA7CF22A80E
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 08:13:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD4020AF7D;
+	Mon, 24 Feb 2025 08:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740384783; cv=none; b=BLtjXPheiMY/Yh+/SB9A21DKMyLxzJ8S1UISBoqnVX9t1axLyEbYZ4ZWaBMwHWE5EE7yv1TNqAoFf/vknxLyfsqOBR5cxoqya/3bH01aFNV9Q3Zfvi1c2SeuoYhoWPkZYmSGb8X9yIYqK5CW6w8lbSELb8LmtzOHmDU5DwR57Zo=
+	t=1740384813; cv=none; b=e9AtqlRJLLmMF5plXWyGq2i+ny4hL9h1/5QCWX0pO7NydlYqCP2CzB0VZ3aW1CPUV/r9WqhbFXpi5dSEHshTo2BwpANjh1P3zXdINGrBbaOTZmFRpnXIa2E+VlAUXFT4Q9OokJzhkDy8HpWmGsZKUzqQrnlytwUG1F9JNKmCN3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740384783; c=relaxed/simple;
-	bh=zm1XGdW8b7MAbdzYL+ivC3Vm7Q33WGsikbRPl+MehKg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=czTwy8XJEesUdI3NslJe6yWOlLNxItyQLAuT8b3RoOtRXBhQFjubui0J8+RIQFicG6cpj5RvzF3GkBmc77J7c9FuL4EqbkeAcSWNCx2M2vxIUp1UO40Vj3sz6dJjN0sD9zNBRxGWRi3xmQbTGiyBh+XPCPWLyNMiyz958f+Tj5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=njvpp7yR; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740384813; c=relaxed/simple;
+	bh=DD2l+TmiryMvzQvMg8kHMPCRkLCW4HsgtVYbDqkbxjg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=HBgN2MFpucnX+Op9Gp2gFtgrg4L1pLJJZl5qZmbAHFch05qjBywBu3YgkEg0R4vN6BuUlsJ3vNZxWMxaK4chplCYhyvNiCPHvAyj5Ii1CaZGLnrkusBSyuKinoAxk9+/mGjKT1I04EenaXUKQWAxNifFt6R9YuPbNZOPVoHqzOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qdqBAv1J; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UA7WOsMm; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="njvpp7yR"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e04f2b1685so6137204a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 00:13:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740384780; x=1740989580; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Oy/VDejTz9+C/5BlUy0JQ2ySPwy1T3j7TGBJKfwzWTE=;
-        b=njvpp7yRglPfwx7t9O0F4oxTFetAtdRcb0rWJ7oujTljI3JCYHR6CzO7xNCyemNtoI
-         Ce1nUPAJ4I5mv5fT3djW/1vKERx6Ac44G/UaNuGlSHhjT4CPEyrSlILnAxibnS5Hw+ka
-         ssNYC1l9bcCC+ZPhpNorstAeL5ZLusJaBRNy7Hvr49w9HnXN2jrRiuIt4FO5TA1koGe/
-         kLYDvbgT020gckVM/Ni2uhZQw79xZYhzzwCw6/Y74SxLdYOTciPGPmjQp7AhZS3TWfq2
-         G0kOrJncmIY2fp4hTS584ISyKNf052Mi0F5NPpSKwFjFobjS+hewtwhNLaI/sDHfk/+S
-         mWqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740384780; x=1740989580;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Oy/VDejTz9+C/5BlUy0JQ2ySPwy1T3j7TGBJKfwzWTE=;
-        b=FFN4kcOdfcHduG7NN0vOzpZaPy22P7PK0n8FZWIYZx2Vd+VpqF2xf1bnkbHeP2MUh8
-         3tCVqII7bYml+fSgba7DQIsdOfkB9gH9t1TYi/Nxy7H3K7mI0n54+7/H56D1CwP3HaeY
-         W3CvOO1cr9EoNkM0g+s238Eo1L9aVM9ANnkWRWMn+0C7MPXXLGeu06A/aE7L+emBEcdP
-         R5GQ0mcNw6i2rZ5aHQi4amhsrbNWrS3AWv9bjSDpj7ukcySYlr1kGsJWJAWgKEN3FcbB
-         lwQOC+YiP/Czi70dbY1gXtyGsAiYGzkplEyrLQndpOddIw7sXQ6ALU5cQRRqSlpv+3KQ
-         PhIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUaunYMEuY/WhTR00mpm7wkuOFlShIP8AzfStghRmrQwdq9NEaAt2dRdgOn6fVqz2sRkkVKBF9pNtv6/64=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhkAqYqNY+IKugGYM6dCj2XO73r/GhQmU667q1Rt/KL7CxNTZX
-	0XHtccaYj9Kw0Sf0ayITlcm3MOTWprswP+OeQT38HeXH/LyPjZHjrp7XP0w2Rwk=
-X-Gm-Gg: ASbGncuqc1OPTRxKwklWfMrf52DpsF2t7O2uU03MEgwtBKzuCn3uY8XRc2nyQfhssAe
-	oNC5dgFTDhvnWsk5hOLTATI/i+NmO/wAhiZpohbavZetuDx0ALsadHBfSxdjsu3Yg9bWIRLzoxX
-	seCwV+2ZOttd1yyeBdD05uRWlS171PAhPGu+t+t1BdIoYHCZaiPw38dfXn9XMcjhltwRrlTw80k
-	8GC6pAv1grN3SUPe0YF5355KlIYVoxH2+CMPQ+JanwVd3aJn0boV4riabL7F+natL3CQBOLZrVF
-	HKIbcG8eXEywjm/SzoUyaf5HOYdE6b0=
-X-Google-Smtp-Source: AGHT+IHsJX9ApcHkuTvjiz8vGIYCMMUHA/6LWXZOxZXsrIXHc5WgXLFFAoSh0lWFQE/xDMuQC0Y3EQ==
-X-Received: by 2002:a05:6402:3815:b0:5de:b438:1fdb with SMTP id 4fb4d7f45d1cf-5e0b7266b9amr27595493a12.30.1740384780220;
-        Mon, 24 Feb 2025 00:13:00 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-abb7200144fsm1792040966b.184.2025.02.24.00.12.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 00:12:43 -0800 (PST)
-Date: Mon, 24 Feb 2025 11:12:39 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: Martin Uecker <uecker@tugraz.at>, Greg KH <gregkh@linuxfoundation.org>,
-	Boqun Feng <boqun.feng@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	rust-for-linux <rust-for-linux@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	David Airlie <airlied@gmail.com>, linux-kernel@vger.kernel.org,
-	ksummit@lists.linux.dev
-Subject: Re: Rust kernel policy
-Message-ID: <9a134f1b-a661-4372-9336-289d5734bcab@stanley.mountain>
-References: <a7c5973a-497c-4f31-a7be-b3123bddb6dd@zytor.com>
- <Z7VKW3eul-kGaIT2@Mac.home>
- <2025021954-flaccid-pucker-f7d9@gregkh>
- <4e316b01634642cf4fbb087ec8809d93c4b7822c.camel@tugraz.at>
- <2025022024-blooper-rippling-2667@gregkh>
- <1d43700546b82cf035e24d192e1f301c930432a3.camel@tugraz.at>
- <2025022042-jot-favored-e755@gregkh>
- <b9a5de64fe1ded2ad3111763f35af9901bd81cc4.camel@tugraz.at>
- <caea3e79-78e6-4d98-9f3b-f8e7f6f00196@stanley.mountain>
- <20250221181154.GB2128534@mit.edu>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qdqBAv1J";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UA7WOsMm"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740384809;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iOGFGue45DKblkveu4ONTX0L3iMOg1AAtjoILGRLvds=;
+	b=qdqBAv1J4vMsAVqR3SbZdQIjFkHb25NlbyK9g+QBP/jO9Y2/4IjBRYrh6IXfO6yJIyjYn8
+	zkGB7fze7PM0YfPS1y945VSTFLXnRrj0VSpLcaGKa5JIT5PUWN2n1XO2LYoZIywUmdEuN+
+	bVId/P5ZCGk6q9IFmlOxdGbt4ayWAKmeP3+/RdFnAUAdQATZfkE44D3kcMNrRDED9v9leT
+	fk3aSPGkkOXm91JdX6lBynMqN7Pqe1JAR5gjYliwbUeKHTDq/e9B2JpSg+STLYE2RKAlnL
+	EE5JeM0ikqaZrurFX1ItuhT9Avb2g9oUP7HzG1oCiS0lNnI6AyQYJg/dFY1rPw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740384809;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iOGFGue45DKblkveu4ONTX0L3iMOg1AAtjoILGRLvds=;
+	b=UA7WOsMmQzXmuzL9tNYILYDM7rt7JMKLh/G+0zX52Ps2K5r1zBagpsI8xY595CGXGi3Lcj
+	B3MAi+KO41JGpnCA==
+To: Fab Stz <fabstz-it@yahoo.fr>, John Stultz <jstultz@google.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Anna-Maria Behnsen
+ <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Jacob Pan
+ <jacob.jun.pan@linux.intel.com>, Len Brown <lenb@kernel.org>, "Rafael J.
+ Wysocki" <rafael@kernel.org>
+Subject: Re: [REGRESSION] ? system is stuck in clocksource, >60s delay at
+ boot time without tsc=unstable
+In-Reply-To: <15f4f44d-6f73-4031-a7dc-d2105672bc81@yahoo.fr>
+References: <10cf96aa-1276-4bd4-8966-c890377030c3.ref@yahoo.fr>
+ <10cf96aa-1276-4bd4-8966-c890377030c3@yahoo.fr>
+ <22539099.EfDdHjke4D@debian>
+ <CANDhNCqdpbi=r81NyXVWBbB5POj5nmrc7qo3r2bi1yYqYBgiAg@mail.gmail.com>
+ <CANDhNCqFi1adk_MdejQC1bod5STHPDjaSB9imSGpRtJt3TbW1Q@mail.gmail.com>
+ <c1d1b79c-bb2e-4a69-888d-a3301bcbfeb2@yahoo.fr>
+ <CANDhNCreiCQUKccmW1wBtvVzQrfB=xC0GFRO65SHG-+Wfu1wtA@mail.gmail.com>
+ <b9b58a9e-eb56-4acd-b854-0b5ccb8e6759@yahoo.fr> <87plkoau8w.ffs@tglx>
+ <15f4f44d-6f73-4031-a7dc-d2105672bc81@yahoo.fr>
+Date: Mon, 24 Feb 2025 09:13:27 +0100
+Message-ID: <874j0jhiag.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250221181154.GB2128534@mit.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 21, 2025 at 01:11:54PM -0500, Theodore Ts'o wrote:
-> On Fri, Feb 21, 2025 at 12:48:11PM +0300, Dan Carpenter wrote:
-> > On Thu, Feb 20, 2025 at 04:40:02PM +0100, Martin Uecker wrote:
-> > > I mean "memory safe" in the sense that you can not have an OOB access
-> > > or use-after-free or any other UB.  The idea would be to mark certain
-> > > code regions as safe, e.g.
-> > > 
-> > > #pragma MEMORY_SAFETY STATIC
-> > 
-> > Could we tie this type of thing to a scope instead?  Maybe there
-> > would be a compiler parameter to default on/off and then functions
-> > and scopes could be on/off if we need more fine control.
-> > 
-> > This kind of #pragma is basically banned in the kernel.  It's used
-> > in drivers/gpu/drm but it disables the Sparse static checker.
-> 
-> I'm not sure what you mean by "This kind of #pragma"?  There are quite
-> a lot of pragma's in the kernel sources today; surely it's only a
-> specific #pragma directive that disables sparse?
-> 
-> Not a global, general rule: if sparse sees a #pragma, it exits, stage left?
-> 
-> 					- Ted
+Fab!
 
-Oh, yeah, you're right.  My bad.  Sparse ignores pragmas.
+On Sun, Feb 23 2025 at 18:01, Fab Stz wrote:
+> Le 15/01/2025 =C3=A0 17:59, Thomas Gleixner a =C3=A9crit=C2=A0:
+>> AFAICT, that iMac 9.1 is Core 2 Duo based and that generation of
+>> processors definitely had issues with the TSC in deeper idle states.
+>
+> Indeed, cpuinfo reports:
+>
+> model name      : Intel(R) Core(TM)2 Duo CPU     E8135  @ 2.66GHz
 
-I was thinking of something else.  In the amdgpu driver, it uses
-#pragma pack(), which Sparse ignores, then since structs aren't
-packed the build time assert fails and that's actually what disables
-Sparse.
+Ok.
 
-  CHECK   drivers/gpu/drm/amd/amdgpu/amdgpu_virt.c
-drivers/gpu/drm/amd/amdgpu/amdgpu_virt.c: note: in included file (through drivers/gpu/drm/amd/amdgpu/amdgpu_virt.h, drivers/gpu/drm/amd/amdgpu/amdgpu.h):
-drivers/gpu/drm/amd/amdgpu/amdgv_sriovmsg.h:414:49: error: static assertion failed: "amd_sriov_msg_vf2pf_info must be 1 KB"
+>>> BTW, I tried the "processor.max_cstate=3D1" you mentioned but it didn't
+>>> change anything on the delay and/or warning.
+>>=20
+>> That's weird, but we have no idea what kind of magic the BIOS implements
+>> there for power management behind the kernels back. I assume that it
+>> does because this generation of CPUs uses the ACPI processor idle driver
+>> and that disables TSC when it detects that the system supports
+>> C-states > 1.
+>
+> Output of these commands can be found in attached file cpuidle.txt
 
-regards,
-dan carpenter
+> + cat /sys/devices/system/cpu/cpuidle/current_driver
+> intel_idle
+
+So according to that the intel_idle driver is in use, which does not
+have the magic TSC workarounds like the acpi processor driver has, but
+it seems to be loaded preferred.
+
+Sigh. Why is the intel_idle driver so agressive in taking over despite
+the fact that it does not handle the old CPUs, which are known to
+require the TSC workaround? It handles the APIC stops in C2, but not the
+TSC oddity while the original ACPI processor_idle driver does the right
+thing for more than two decades....
+
+> Can the kernel be patched so that the proper config is used=20
+> automatically (ie. without the user having to set any parameter)? I'm=20
+> not sure my question actually makes sense.
+
+Yes, we can. Untested patch below. It just brings the intel idle driver
+on par with the original ACPI processor idle driver to deal with that
+problem.
+
+Thanks,
+
+        tglx
+---
+diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
+index 118fe1d37c22..0fdb1d1316c4 100644
+--- a/drivers/idle/intel_idle.c
++++ b/drivers/idle/intel_idle.c
+@@ -56,6 +56,7 @@
+ #include <asm/intel-family.h>
+ #include <asm/mwait.h>
+ #include <asm/spec-ctrl.h>
++#include <asm/tsc.h>
+ #include <asm/fpu/api.h>
+=20
+ #define INTEL_IDLE_VERSION "0.5.1"
+@@ -1799,6 +1800,9 @@ static void __init intel_idle_init_cstates_acpi(struc=
+t cpuidle_driver *drv)
+ 		if (intel_idle_state_needs_timer_stop(state))
+ 			state->flags |=3D CPUIDLE_FLAG_TIMER_STOP;
+=20
++		if (cx->type > ACPI_STATE_C1 && !boot_cpu_has(X86_FEATURE_NONSTOP_TSC))
++			mark_tsc_unstable("TSC halts in idle");
++
+ 		state->enter =3D intel_idle;
+ 		state->enter_s2idle =3D intel_idle_s2idle;
+ 	}
