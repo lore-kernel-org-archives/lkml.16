@@ -1,204 +1,223 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2071.outbound.protection.outlook.com [40.107.105.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB27A19ABA3
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 01:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740362065; cv=none; b=S2yv9zhiHx3eqLxZPdflO5n+haswvGXKWuLIXQVEKnoFninjLBX8E4tGAOtViyKEA4cubl32aELEyVSroS8q7uUWsSmFDjUtYuCTJHcqFpXl+63RaP8UqM1AzzuJVu5tcgsTbTwpzgl/Gbq6qHfy0cf72bQaSxQR5Y6R4jr1hFg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740362065; c=relaxed/simple;
-	bh=nD32JzlTG7byCRBkwQ3uZCofLUfybht+9/Qptp6H5VA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HLwuJLmwU3Td2XCFT2OZiy28FPjOgtO4z7TjaWT0oLysouGo3FJc2/lOOcqDsx7TJc/D9Mg0w2VQcaoZx/22ajXLsnvBIq7vQKIFvG7wJNIa+6D6sXUKyC6ClN8/JCQ/8LwCIRHe/ZjJmFO/xBAlzu63pa6GeZaDWjiHAqeUD2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZhXCxxb7; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA67BE40;
+	Mon, 24 Feb 2025 01:54:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740362091; cv=fail; b=Bb5+EuPFbZjMtw6J6tlvetnpqSDluqM/83IFO/lD49qZSFCTIZiWdV+391CGP2b/Mrf7ciqDtkf1CS9EzXx57IN9ZBDfKBW4nVtNQjwa4wjxutbPnl4XtAQ5W4+WtK5JGt2dn0sQsWbySLti5cm/wdUuLn+iR9ezJU+TiSQTZjY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740362091; c=relaxed/simple;
+	bh=ZyNUxM0W3iChzM4xuqUhfA3zxF1pOzdNKOc5h3WeD9E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Eyf4o45C6ba+HlrTy3cPH5SwZBvqTw1k5WUn27aPmVXi48xgiF30ROXi5t1OQ30U8eZuUqjfRsLE9kzJkm/MDqeWNFQCeZZeoBiIoXt0zxdSujFx4e2WRYPvMW4noGLFP40noiwOlTxFLNdc8euHuUhumYbYhyWmTmgWembeOe4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=R8A9bBUp; arc=fail smtp.client-ip=40.107.105.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZhXCxxb7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740362062;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZFIZpi/rBPDIT2lHx7g+LDcaJiO1Zdw8ZZRV1t7ECmM=;
-	b=ZhXCxxb7Faf4KkO+d+jFB7kWc/ZcbrLzwYEyNT/TPO4b3y4KfjUl4iBPchWEtD3u3qOQN+
-	QI8vJRdprGKWTTrawqqbJjRU9aR4zN4N8sVYlh9AS/vQK0F9FB7+78AhMUWCrbnzCyvKKp
-	sM1bdDRD5jum1m7PdVkNtbZXoaeV3hw=
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com
- [209.85.216.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-255-pFTbjQtdMKyoQQdg5LXPsQ-1; Sun, 23 Feb 2025 20:54:21 -0500
-X-MC-Unique: pFTbjQtdMKyoQQdg5LXPsQ-1
-X-Mimecast-MFC-AGG-ID: pFTbjQtdMKyoQQdg5LXPsQ_1740362060
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2fbfa786aa4so7889642a91.0
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 17:54:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740362060; x=1740966860;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZFIZpi/rBPDIT2lHx7g+LDcaJiO1Zdw8ZZRV1t7ECmM=;
-        b=OaEB9+9LVHu8jKLAvEfbAMd3q/v3g++RGEKLvy6iRQMKqNgJWh3HNwfHvOkQFw1UfW
-         dYoTtKx30UR3m1M6ZO4Cg+jTplT4TLLTrRcOKcFlgEMGBCLuUszeGEjb0c+Xu57pHOvt
-         bNyiy1jzUj6o+bqkygkaX4HQ6QAqMZcxsVkZC0O6YVLL5VLSDEgCEYh0C95Vr8kDjTAw
-         N126XOr4pH0X6dqJeHPKWN4//NNLmEIxKgfAMjQbDmImOCp30GjqRNTUx9zc2LRAJSQ2
-         7Yt60dCqU4j8psID18dcIQn0fJq18HC0lL0Tp73UkjyLxL1u/2Jgpcg/VOEOmNvjHQhj
-         OQjg==
-X-Forwarded-Encrypted: i=1; AJvYcCXK/KV8yaGM718mW8GNLjTkYd45iaXIUp/EaBfXDbPaeN3hgJ9GrXgu/v/wcG1ITEVQiX9t6Kk3WGzIyWw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5f9CAWNccEtgbHl8HkXuZsEFH5ytFJ1a6Y3dYI96VgR1hhZDV
-	niTxSSVfcWNDS+XwMGL37lk1S7mgtoTWEBHfp7b8CyHRRkqfS/85L8sasPpTF571pj7pC6YzMcB
-	JoSaknSIjyyVz6QSPimaa/g66ekBG5hpAIWR/Krz+rEErFDMQPIwR3M6rum7KoXRKgUudehBd7/
-	ZBVk2ZMPOsjXRjQjSYpj3bBRbDvWbJu1NX8+T6
-X-Gm-Gg: ASbGncvGBpivHzO2soLowm8rjCnO0n0kwtBZGS4K3ZZpZifmpR44+MdFSOuS8kWI1Wt
-	BxoQkpFRWhiY07EYSyj3va4Y3GWq/VXJ64EUAKkZuYmG3xHyxaJtOh/GgQjRCcHMYUevLzNwzLw
-	==
-X-Received: by 2002:a17:90b:1dc3:b0:2ea:8aac:6ac1 with SMTP id 98e67ed59e1d1-2fce7b747ffmr19787120a91.15.1740362059932;
-        Sun, 23 Feb 2025 17:54:19 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFQz2cyjfoUI+8wed4h5euyDATeuNA1Cp7VYDQFAtg3WkovlFwcGthW17REqwEC0lBIE42LsNki3cYepbjKMGo=
-X-Received: by 2002:a17:90b:1dc3:b0:2ea:8aac:6ac1 with SMTP id
- 98e67ed59e1d1-2fce7b747ffmr19787096a91.15.1740362059520; Sun, 23 Feb 2025
- 17:54:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="R8A9bBUp"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xYUbUbuVbAqaWe9mDQLXfl2yw26VZaNH5n7SAVT9GfwwJyVYKREDP6xlF/IwqEK39AafAu55h9YgT4xgXbktDosCsjQflLzDtblNLaFiYTl0tA7WWst34dJlhXTd1HZ44wWN9t1xjq99x7fD4de9JwxcRTWRgVrbKCCPTkVO5XJfp/XKuTvJ/IAYSnaLS2xGE8ZOkaOZdcXaSyrZxpHOA5mRFavu+aev1FqpLbjUSAogoxd/Oq3cJ89Qso9cCBfBa9VoANhcI7FRHc4UmIt4tLLc6tvLt9bxqP9dNdJLWTmPpsJz5UKKPAapRCEnRkwSL9t+UzEasxvJhR98fvfgBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RlauggdtkMzrET7/0LlZ2ex9yBi6l1NKSKah8NYr/MI=;
+ b=hcBNF4Hfsxe7KyV1MEG4hrEjV0tv1nkC4VoaO0d5hYh8dj/YwZFcF9iDE7HWUMlatMCWrZ4kN8hZhs+4vVdvpy1Qs3TDYRqnyxpcAMp4acDwBinVK9+mRj31cIzgSs/jhzem1PkJls7cGxwT0VIsjG/R5Z1aFAQUEWBs2hIgpb/9AxS9kWrmBG/2LbhPAf1MuE6yuLJXUMSd5gH9MjYk+fXnpDNfKiL+svvjeJnBvrwjS94qwQpnAtY8PeX2aWctnelhnRGSiEtbn2ErnxpcNaEmAQVB9F1q7lHTMV1qfzR6kgmt1UjpKc+QzG1N+6RNbpWVsp2cESPhuNq3xIPLhA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RlauggdtkMzrET7/0LlZ2ex9yBi6l1NKSKah8NYr/MI=;
+ b=R8A9bBUpZN4fl+bht8tgIkllsRxI9bwuP/8Q/7y7qshz6Ka8F4j7m28FpNaC9KdqbJoszmRt4/u0qXlgcAmD2VRQj3KEWTe1tEuubRGNgmwkxI8ru85k6vHQP9OPGM+1lSNs5Bf8RUzO8sFrKW3poMeiF+zMKERvCbvJqH9VLUj4jUDQz61FTzzcjk74wvN0UvqlYQJYcKo9r/zHlvdBwbyYh/8fvm9sX7fvYLPjYcb0BJw3PX/4/FNvLT6winSAAAxLNm2/KT7ObO9d3lGS5wJcB42H1u7oEWe/kG4ztwMPQwq/JVnkXyySb1zlYyoNEJ3I60iuE+Lx48w3DAKE0w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by AS8PR04MB7622.eurprd04.prod.outlook.com (2603:10a6:20b:23f::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Mon, 24 Feb
+ 2025 01:54:46 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%4]) with mapi id 15.20.8466.013; Mon, 24 Feb 2025
+ 01:54:46 +0000
+Date: Mon, 24 Feb 2025 11:01:57 +0800
+From: Peng Fan <peng.fan@oss.nxp.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	linux-kernel@vger.kernel.org, arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	devicetree@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v2 2/7] dt-bindings: firmware: Add i.MX95 SCMI LMM and
+ CPU protocol
+Message-ID: <20250224030157.GB9876@nxa18884-linux>
+References: <20250212-imx-lmm-cpu-v2-0-3aee005968c1@nxp.com>
+ <20250212-imx-lmm-cpu-v2-2-3aee005968c1@nxp.com>
+ <20250219214608.GA3003788-robh@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250219214608.GA3003788-robh@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: SI1PR02CA0010.apcprd02.prod.outlook.com
+ (2603:1096:4:1f7::17) To PAXPR04MB8459.eurprd04.prod.outlook.com
+ (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250223154042.556001-1-lulu@redhat.com> <20250223154042.556001-6-lulu@redhat.com>
-In-Reply-To: <20250223154042.556001-6-lulu@redhat.com>
-From: Jason Wang <jasowang@redhat.com>
-Date: Mon, 24 Feb 2025 09:54:08 +0800
-X-Gm-Features: AWEUYZkU_xjE1Be_7zMS3YfmfEN33QEv5naO52XNn_cqkUkwbYxBzK_psj0_Usc
-Message-ID: <CACGkMEuocDajb0uANEOCLpXsi47Ga+d5K=oF12gDgLRfC2rJSA@mail.gmail.com>
-Subject: Re: [PATCH v6 5/6] vhost: Add new UAPI to support change to task mode
-To: Cindy Lu <lulu@redhat.com>
-Cc: mst@redhat.com, michael.christie@oracle.com, sgarzare@redhat.com, 
-	linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, 
-	netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|AS8PR04MB7622:EE_
+X-MS-Office365-Filtering-Correlation-Id: d23df37d-5e0f-4369-1b0e-08dd547636d6
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|52116014|1800799024|7416014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?gG/RDgAOvXF7oOjyduvu3oZYKCE++R2NHXNmdqaFlpKKzKtAA5Oa1Odepxl6?=
+ =?us-ascii?Q?INxRPVdT/14grNM7p3x2DUNNxxLm6PMOuZCjfXCGt2xmhsp0Sp6LzZm9MzUf?=
+ =?us-ascii?Q?4XL8jluPLmH+J6Q338Rqe6rE88hnGq8VVG4hjtmILL0SViVN2Crrq+UtukV1?=
+ =?us-ascii?Q?L3yTHBpiztwUBZRm+Y9ub7a9RP2VPE2rEQiuaD1gsUH8J6rqxTJNihwcgjtR?=
+ =?us-ascii?Q?BTq5AcnX7BfFTGr8f+w126o8OWy/j0X4T1gihzNwyjznj9iquWWqV+2TgloW?=
+ =?us-ascii?Q?TEGbaEzQqTG4ztztSK/PnFlM42ZFUKrTt7oJpfBKQeP3VK++u41R1ncW2VIS?=
+ =?us-ascii?Q?vMmArVFPWMWwxtRe7XUEmmjNmWeo4Ncwxibgn94H6TrJOf2jwNmlOgrWjuHW?=
+ =?us-ascii?Q?RfvoJbQckik9cC4ykpPOIQmT+0f65GthOpJ465He3jmUmb+BB1ip3mfeIjYw?=
+ =?us-ascii?Q?toEnwQK+A0QVed/fGBJZrLB9Fe03771EB6hUK7lgT5J/lGwtgluecf6x6IPI?=
+ =?us-ascii?Q?JTNgbvoYzVsUV/nfy0vjdjODNG5nMK6uPMhN6LTGGZX1Z4CrQysPJ2TExFJU?=
+ =?us-ascii?Q?juuXPRNQw5ljmxYo6VCrvDv9wYLu7vMN6+pKD5QDtLXR7DP+N7R6AA57prwI?=
+ =?us-ascii?Q?MfG8hGfCjdQ2yc8fYnEmN6YOL197HIKnl1jDdOoMlPan21gDOcgKt+mBmDlU?=
+ =?us-ascii?Q?e3Php5Fsn0IzEW6ttCw2mMvr9AXCG3Xs8zgK14j/MHuY6yHJ9CHdsdzvqHqr?=
+ =?us-ascii?Q?sOpQxN6Rxeo5FheTQ7+p0isAvObEK4x86i/XrafogMxpd3n7uSK4F5t9f5lS?=
+ =?us-ascii?Q?PgbYCAZALmK9fD+FzI2SfZumbTVahX51M9gqnXru3IZ0vPMxr8zjThnWLD3T?=
+ =?us-ascii?Q?3JpG2AKMwDcaCKTc8c0dgIBMtlDhA/Q5X/hZ+FZ9RVTyHKCn/IpxH/OYRoaK?=
+ =?us-ascii?Q?thRtMS1dBZ0LKDv1EuOsHdD2cc1UA3u5Tyst1wSQSx0bbyvEU+8/D2M+G6+n?=
+ =?us-ascii?Q?YwsAx2SVw1PHEmYdNg1n9AlMOstnUTK9GYFEc5FVwW+BNYxQ6ZC2e9iLY/py?=
+ =?us-ascii?Q?rSC9d2zuS8dOMLB9uw3Hr+5li3ZXyT/9bQg0cCIz9lpb+vTuB0CSYpuw6pLx?=
+ =?us-ascii?Q?txxBPgQC2PNW2JEaZY3rz/0OdANDGKMlZLvjPKCzdTbvaesJXB96wz89AGm4?=
+ =?us-ascii?Q?g8Z2FufiBXZDCGbgu0W3ucfY8xtRYBGqcOT3wsR4E3GvrvOhdIPP/wqJLFqP?=
+ =?us-ascii?Q?GDGwPZkOKIxzVpsz6RKOok3QEHQXdC8TWercId8T16ab/NwOmnuOh5CQSxqX?=
+ =?us-ascii?Q?HATHGihT1WrRmfhI1dFDTIpQsEHUsMS53l4ehZAwxdxSmNMSjgR27DT2RRP8?=
+ =?us-ascii?Q?+VuxJUwiSFDhYNQSu7/eapc/U/Et4Tpzwauv+nCY/qO5WaORWssq1JpSDPsX?=
+ =?us-ascii?Q?KyL+Dyes1o/sR3vZ9n9VKKximvCpC2UV?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(52116014)(1800799024)(7416014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?HHCjMihLgIFBY8UpE6bMCN3gbpwtGlt37bbVUjqJbUlXDM82m4Y2iyShULKU?=
+ =?us-ascii?Q?U0pUJyUsReizrxuSnBscAvvNDcToUG8PTAchkqZ7LEhLXtL/brl193VumJhq?=
+ =?us-ascii?Q?rbybC+ux6U0E/Zpl5UMiUrAC7zkfVqMnTkaelms9fcrg/0DEg+zhinpl7vBN?=
+ =?us-ascii?Q?Q2vi8QyszEb2O/g9jxyIwU84YLQwtHl81wmZDrtji/QiQOMOLAHo4DCuO6qs?=
+ =?us-ascii?Q?hsC12N0jW/ecCs44vvFkmxsX6skNrYUACR+pvAb70ZkBAsGgLgvFN4h93Kf2?=
+ =?us-ascii?Q?MIY0BYJhv86C47xHW857T1cmju3YHEWKbzc0hydyeLvc7o1hoPXpinHafZJY?=
+ =?us-ascii?Q?mS5/ImYZmwAZhIYMQZ1SA3YI9rFomjyDWGbmqqiiWWXyziasQMAwuJzZ3+6o?=
+ =?us-ascii?Q?2DnCfdSMI3KpiiPcL5U62XWhafhsQrNEUSf3iLF9eVNsmzKYJW6D+dCtsVv4?=
+ =?us-ascii?Q?1pJSAelDcsj3u9EfRAZprhhaSf75t8wKvGFkwwqXJnLReMwKtGx9XJtASmvA?=
+ =?us-ascii?Q?YZH7SP3+RVTKSlCqo/DWEQLrqteyVtdqNAJluT1sxTXHqXDFe8GIxcY9kas0?=
+ =?us-ascii?Q?KC7fDTkRv69xhko0FxF9Vag5MfTd4RTy8kS0QEawF7iaLxjOOs13Fxf0CYAM?=
+ =?us-ascii?Q?8Z7c1IOTAWzUwAS9KNqwqOyygc3PyoxRC9t5qXjij6md86zcQSJvASG3MAi4?=
+ =?us-ascii?Q?158WC373w3uQwO8so+MMe3UJSMRY+7AlDRT9vcT8CSnoRj/K6XrxWk3wXaPj?=
+ =?us-ascii?Q?z3GX30z0eQLgnESyeWJzfROD/nZVAIrqTRT1rBh/aJnSlYHnmIX0uIIGqzlF?=
+ =?us-ascii?Q?SrdvhrfFMJLzyXU7SIAcqb3i2a2A9zex/PHSLjrdSriHrDkqhcPwHJ+vPBtd?=
+ =?us-ascii?Q?4ryq/R0zsLaP6Yx4pLXVZIJwVMvlkZnraMNyUZ1vVuR74lBwYCd5tOK3Jvi0?=
+ =?us-ascii?Q?0wEyYe4CaUZhmn24XLPk7Ty5ZEjYBihBaUBRszHh3sI2s1d9M98/DljkF2oS?=
+ =?us-ascii?Q?mmeXq61p5r9MuxgyWxZeP/XJ+C6uQNuCAAe1Qp1EJ74eBLQhnLf1vD3CaIyP?=
+ =?us-ascii?Q?1G+7M5hTdijUXFSXG2lVp6zX+K7tvFEVQTaSM1UzmvQL5VtR8n093br6/Cty?=
+ =?us-ascii?Q?NzjoO2ZLrDYA7jhhELOUeHSOfbiwigeE0GpgnRZJHIbPOqn7GRptjl5PPits?=
+ =?us-ascii?Q?kONMO+mz6J7A+IhjElOc0ls5eXFsqF/0oK5qQEfHdsdv1YLXDFrywuUGfsqY?=
+ =?us-ascii?Q?O8LMOxhE7H1/c53ao58RBwuvXqQq0caDyR6pHmXPDSKL1oJaskX09NtPtouM?=
+ =?us-ascii?Q?VSafgCMpDm48MyxMFfrv4WNpmAfMjfSFlOWY60D5piRRuu2cMKTKrhVY9QCp?=
+ =?us-ascii?Q?ZgFOVmlVMsTWQEo8sj3Uiv8GyQNJ+OYKaKoQSNcNtQeQ3cfXAYQ+/80WMWS1?=
+ =?us-ascii?Q?CU7OGGOb6qzG/YTdXC2uG4Ac4M0r2Ovleu8DzV14ViXm1T3Wmj83DRwiX+CC?=
+ =?us-ascii?Q?hzf97zlJVvAOrGbK802mAmYQt7/eNnq959Y/XCtj8k1+SguTFzUkuM8FgoIQ?=
+ =?us-ascii?Q?mJNBD+ydITnDsRqQY4JEmrFBkuEk7rwEApm7MFBP?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d23df37d-5e0f-4369-1b0e-08dd547636d6
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2025 01:54:46.2172
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mmZ1wQ5zlSWIwpWwaznu0nAeS9Qh689Vt0LKpuquhv0lQX55F97SdYjNq9RzhOHR7HTEKCN1L4jjrl8x26Xl/A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7622
 
-On Sun, Feb 23, 2025 at 11:41=E2=80=AFPM Cindy Lu <lulu@redhat.com> wrote:
+Hi Rob,
+On Wed, Feb 19, 2025 at 03:46:08PM -0600, Rob Herring wrote:
+>On Wed, Feb 12, 2025 at 03:40:24PM +0800, Peng Fan (OSS) wrote:
+>> From: Peng Fan <peng.fan@nxp.com>
+>> 
+>> Add i.MX SCMI Extension protocols bindings for:
+>> - Logic Machine Management(LMM) Protocol
+>>   intended for boot, shutdown, and reset of other logical machines (LM).
+>>   It is usually used to allow one LM to manager another used as an offload
+>>   or accelerator engine..
+>> - CPU Protocol.
+>>   allows an agent to start or stop a CPU. It is used to manage auxiliary
+>>   CPUs in an LM (e.g. additional cores in an AP cluster).
+>> 
+>> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+>> ---
+>>  .../devicetree/bindings/firmware/nxp,imx95-scmi.yaml     | 16 ++++++++++++++++
+>>  1 file changed, 16 insertions(+)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/firmware/nxp,imx95-scmi.yaml b/Documentation/devicetree/bindings/firmware/nxp,imx95-scmi.yaml
+>> index 1a95010a546b14b1d3d97aa990c0305a551f2620..75f63819285b191a815dc4287e34d299983b1c40 100644
+>> --- a/Documentation/devicetree/bindings/firmware/nxp,imx95-scmi.yaml
+>> +++ b/Documentation/devicetree/bindings/firmware/nxp,imx95-scmi.yaml
+>> @@ -11,6 +11,14 @@ maintainers:
+>>    - Peng Fan <peng.fan@nxp.com>
+>>  
+>>  properties:
+>> +  protocol@80:
+>> +    $ref: '/schemas/firmware/arm,scmi.yaml#/$defs/protocol-node'
+>> +    unevaluatedProperties: false
 >
-> Add a new UAPI to enable setting the vhost device to task mode.
-> The userspace application can use VHOST_SET_INHERIT_FROM_OWNER
-> to configure the mode if necessary.
-> This setting must be applied before VHOST_SET_OWNER, as the worker
-> will be created in the VHOST_SET_OWNER function
+>Please add 'description' to these to say what the protocol is.
+
+Waiting for comments on driver changes, then I will fix together in next
+version for protocol 80,82 both.
+
+Thanks,
+Peng
+
 >
-> Signed-off-by: Cindy Lu <lulu@redhat.com>
-> ---
->  drivers/vhost/vhost.c      | 24 ++++++++++++++++++++++--
->  include/uapi/linux/vhost.h | 18 ++++++++++++++++++
->  2 files changed, 40 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-> index d8c0ea118bb1..45d8f5c5bca9 100644
-> --- a/drivers/vhost/vhost.c
-> +++ b/drivers/vhost/vhost.c
-> @@ -1133,7 +1133,7 @@ void vhost_dev_reset_owner(struct vhost_dev *dev, s=
-truct vhost_iotlb *umem)
->         int i;
->
->         vhost_dev_cleanup(dev);
-> -
-> +       dev->inherit_owner =3D true;
-
-Any reason this needs to be changed under reset_owner?
-
->         dev->umem =3D umem;
->         /* We don't need VQ locks below since vhost_dev_cleanup makes sur=
-e
->          * VQs aren't running.
-> @@ -2278,15 +2278,35 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsigne=
-d int ioctl, void __user *argp)
->  {
->         struct eventfd_ctx *ctx;
->         u64 p;
-> -       long r;
-> +       long r =3D 0;
->         int i, fd;
-> +       u8 inherit_owner;
->
->         /* If you are not the owner, you can become one */
->         if (ioctl =3D=3D VHOST_SET_OWNER) {
->                 r =3D vhost_dev_set_owner(d);
->                 goto done;
->         }
-> +       if (ioctl =3D=3D VHOST_FORK_FROM_OWNER) {
-> +               /*inherit_owner can only be modified before owner is set*=
-/
-> +               if (vhost_dev_has_owner(d)) {
-> +                       r =3D -EBUSY;
-> +                       goto done;
-> +               }
-> +               if (copy_from_user(&inherit_owner, argp, sizeof(u8))) {
-> +                       r =3D -EFAULT;
-> +                       goto done;
-> +               }
-> +               /* Validate the inherit_owner value, ensuring it is eithe=
-r 0 or 1 */
-
-Code explains itself, let's just drop this comment.
-
-> +               if (inherit_owner > 1) {
-> +                       r =3D -EINVAL;
-> +                       goto done;
-> +               }
-> +
-> +               d->inherit_owner =3D (bool)inherit_owner;
->
-> +               goto done;
-> +       }
->         /* You must be the owner to do anything else */
->         r =3D vhost_dev_check_owner(d);
->         if (r)
-> diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
-> index b95dd84eef2d..8f558b433536 100644
-> --- a/include/uapi/linux/vhost.h
-> +++ b/include/uapi/linux/vhost.h
-> @@ -235,4 +235,22 @@
->   */
->  #define VHOST_VDPA_GET_VRING_SIZE      _IOWR(VHOST_VIRTIO, 0x82,       \
->                                               struct vhost_vring_state)
-> +
-> +/**
-> + * VHOST_FORK_FROM_OWNER - Set the inherit_owner flag for the vhost devi=
-ce
-> + *
-> + * @param inherit_owner: An 8-bit value that determines the vhost thread=
- mode
-> + *
-> + * When inherit_owner is set to 1:
-> + *   - The VHOST worker threads inherit its values/checks from
-> + *     the thread that owns the VHOST device, The vhost threads will
-> + *     be counted in the nproc rlimits.
-
-Since this is uAPI, it's better to avoid mentioning too many
-implementation details. So I would tweak this as.
-
-"Vhost will create tasks similar to processes forked from the owner,
-inheriting all of the owner's attributes."
-
-> + *
-> + * When inherit_owner is set to 0:
-> + *   - The VHOST worker threads will use the traditional kernel thread (=
-kthread)
-> + *     implementation, which may be preferred by older userspace applica=
-tions that
-> + *     do not utilize the newer vhost_task concept.
-
-"Vhost will create tasks as kernel thread."
-
-> + */
-> +#define VHOST_FORK_FROM_OWNER _IOW(VHOST_VIRTIO, 0x83, __u8)
-> +
->  #endif
-> --
-> 2.45.0
->
-
-Thanks
-
+>> +
+>> +    properties:
+>> +      reg:
+>> +        const: 0x80
+>> +
+>>    protocol@81:
+>>      $ref: '/schemas/firmware/arm,scmi.yaml#/$defs/protocol-node'
+>>      unevaluatedProperties: false
+>> @@ -19,6 +27,14 @@ properties:
+>>        reg:
+>>          const: 0x81
+>>  
+>> +  protocol@82:
+>> +    $ref: '/schemas/firmware/arm,scmi.yaml#/$defs/protocol-node'
+>> +    unevaluatedProperties: false
+>> +
+>> +    properties:
+>> +      reg:
+>> +        const: 0x82
+>> +
+>>    protocol@84:
+>>      $ref: '/schemas/firmware/arm,scmi.yaml#/$defs/protocol-node'
+>>      unevaluatedProperties: false
+>> 
+>> -- 
+>> 2.37.1
+>> 
