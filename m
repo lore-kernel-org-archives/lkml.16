@@ -1,151 +1,72 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B5C263F54;
-	Mon, 24 Feb 2025 17:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA20263F41;
+	Mon, 24 Feb 2025 17:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740417573; cv=none; b=taQ6AGA7jpizzbmr3cyL5OYBTQ4ma3DGza7NDnMj0OpnwQOnfJIztD5KBZmZdSgjT7ifwYCcO5AmETBv6r0GmqNowNlRbCRPkABNjh04v+J/6lpnwJuutL3Qx1GoezAXFYkBx0hzHeS95N7uOFIdeieOi0jX8pJ2hp7rfv0pb5w=
+	t=1740417587; cv=none; b=Pte2mj/VoMc2dcvIJLeKTcEqLOMSJuc5L57kKAqbO7ucT02QxMuUsioBnt2EYNQHIut+tDYr2sWHJw+rO/3WNT0uTJW7tuR1B/JVtvkIlfWiclYcLEfGyuXtIm6dxM1BMQ5Exj7/uKAWljpDLK5fM3911rVcPzkSiQ+gova0nJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740417573; c=relaxed/simple;
-	bh=YVrfmmpuiZl97lPSQ+Q4oYh5oqB3+D2NaV+FRnSnx34=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iHomqysS4Z8ZzpNtanNZqM3uHpk4bdcV+e9UlpuvZ5FPcTi2/SowQP79Rid4BMeTn5vs4f7Xi7C8lnqAaNK4K539ernIsSjlSY9iqFx/A/psSbGotvj2ob7Pi/vry99V7hPa5rhT+Pxqk6D/TkNCrcL+Ljddq4rXX+y3rdJWWxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=FUDrhTvW; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1740417587; c=relaxed/simple;
+	bh=2JkK49D5kslLlDTcfz9RF/ZSparlD8LgrmourQdVShA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aX5TxT1YL3vzC+DLWzvhzt/f6QU0Y+aBwqzcTLHg4Snb16tEOW4s52NmIDsjb+O7yfD7kfm6FT2iCB+u15AxAT66aaTLwSCGoCrUf/NmZRYMfRfdoTNnU+6aZxYoa/2mqbQkUJl/l1utybyeWzhtrpx5boTapHK6C7YUa2HcTPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sOJUVlp3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="FUDrhTvW"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51OCixFa013141;
-	Mon, 24 Feb 2025 18:18:53 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=GTr3MiF+X8E++5/d1k9zNi
-	whyWX8NQucbTgDgyPXgzM=; b=FUDrhTvWnYasctYRtyGBXE9jaB4Bb2fd9efqkz
-	U0icqpJMn4T+2PKvta5rvS3Ovu1JM0cXFy/eTYjh9gqTWmAyR6fyvovwYnJgbFWM
-	bg2RG0PdeEvQs4Cn/iABWV+uMzcoJLfYZ6ovLb9eJcVs8nKsW0ksVFFeYn0Qz1x6
-	pHGP5gRfJLlC4sVthXChcXruHPGgvIT5xI/q4+xDG8jTA5vYzPYDTJf2si1s2Yug
-	GoQuKbknH2VNCz5CJwmkqQPyAJzlR2KFA34H0LMECIX9l5XGM8KE/dHZO4NiJF9a
-	GGtSSqKkrJazdZsg9JOgyjN8h7BhRHZtORuRJIxQ985ml4Tg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44y6t20jjm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Feb 2025 18:18:53 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 3B60640044;
-	Mon, 24 Feb 2025 18:17:49 +0100 (CET)
-Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BC8145387F7;
-	Mon, 24 Feb 2025 18:07:40 +0100 (CET)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
- (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Feb
- 2025 18:07:40 +0100
-Received: from localhost (10.252.23.75) by SAFDAG1NODE1.st.com (10.75.90.17)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Feb
- 2025 18:07:40 +0100
-From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-To: <wbg@kernel.org>
-CC: <alexandre.torgue@foss.st.com>, <olivier.moysan@foss.st.com>,
-        <fabrice.gasnier@foss.st.com>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH] counter: stm32-lptimer-cnt: fix error handling when enabling
-Date: Mon, 24 Feb 2025 18:06:57 +0100
-Message-ID: <20250224170657.3368236-1-fabrice.gasnier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sOJUVlp3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC333C4CEDD;
+	Mon, 24 Feb 2025 17:19:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740417586;
+	bh=2JkK49D5kslLlDTcfz9RF/ZSparlD8LgrmourQdVShA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sOJUVlp3PCeLeXKfAgaxYqH3gEnUCpfY404RUTwpVGha2NTheRr9Ag3dIDNx2Mr7r
+	 6qY91wkz0nPwviqnND1BrIGwiU9/8vvr2OAofkAxq5XNuRg8pG/vQyncjJuSF5P+jW
+	 L8gyhnZQ7grIVEv1g3QYlIeZp3C48DLb78pI5H7KjJCf6Pb/eu5xo6U1nMLatQiMlQ
+	 C4+L4DqHsCwIjKC4Z2gGDoZXhcSPhGV3Y70W7sCS1rzoDYxSEg3w2B0b1kTr9CCL9y
+	 7u8Amqd/ZxwzNX+N3OrjNtbmha9qBNLe0VltK4pJXXXJOCS92CJtAJrIXa/xBdVvFI
+	 hhWXopQfJJDlw==
+Date: Mon, 24 Feb 2025 07:19:45 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+Cc: rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Wedson Almeida Filho <walmeida@microsoft.com>,
+	Nell Shamrell-Harrington <nells@linux.microsoft.com>,
+	Dirk Behme <dirk.behme@gmail.com>,
+	Konstantin Andrikopoulos <kernel@mandragore.io>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Roland Xu <mu001999@outlook.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rust: workqueue: define built-in bh queues
+Message-ID: <Z7yqMdOGeOUzZ7um@slm.duckdns.org>
+References: <20250221223533.158959-1-hamzamahfooz@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SAFDAG1NODE1.st.com
- (10.75.90.17)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-24_08,2025-02-24_02,2024-11-22_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250221223533.158959-1-hamzamahfooz@linux.microsoft.com>
 
-In case the stm32_lptim_set_enable_state() fails to update CMP and ARR,
-a timeout error is raised, by regmap_read_poll_timeout. It may happen,
-when the lptimer runs on a slow clock, and the clock is gated only
-few times during the polling.
+On Fri, Feb 21, 2025 at 05:35:31PM -0500, Hamza Mahfooz wrote:
+> We provide these methods because it lets us access these queues from
+> Rust without using unsafe code.
+> 
+> Signed-off-by: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
 
-Badly, when this happen, STM32_LPTIM_ENABLE in CR register has been set.
-So the 'enable' state in sysfs wrongly lies on the counter being
-correctly enabled, due to CR is read as one in stm32_lptim_is_enabled().
+Acked-by: Tejun Heo <tj@kernel.org>
 
-To fix both issues:
-- enable the clock before writing CMP, ARR and polling ISR bits. It will
-avoid the possible timeout error.
-- clear the ENABLE bit in CR and disable the clock in the error path.
+Please feel free to route it through rust tree. If you'd prefer it to be
+routed to workqueue tree, please let me know.
 
-Fixes: d8958824cf07 ("iio: counter: Add support for STM32 LPTimer")
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
----
- drivers/counter/stm32-lptimer-cnt.c | 24 +++++++++++++++---------
- 1 file changed, 15 insertions(+), 9 deletions(-)
+Thanks.
 
-diff --git a/drivers/counter/stm32-lptimer-cnt.c b/drivers/counter/stm32-lptimer-cnt.c
-index cf73f65baf60..b249c8647639 100644
---- a/drivers/counter/stm32-lptimer-cnt.c
-+++ b/drivers/counter/stm32-lptimer-cnt.c
-@@ -58,37 +58,43 @@ static int stm32_lptim_set_enable_state(struct stm32_lptim_cnt *priv,
- 		return 0;
- 	}
- 
-+	ret = clk_enable(priv->clk);
-+	if (ret)
-+		goto disable_cnt;
-+
- 	/* LP timer must be enabled before writing CMP & ARR */
- 	ret = regmap_write(priv->regmap, STM32_LPTIM_ARR, priv->ceiling);
- 	if (ret)
--		return ret;
-+		goto disable_clk;
- 
- 	ret = regmap_write(priv->regmap, STM32_LPTIM_CMP, 0);
- 	if (ret)
--		return ret;
-+		goto disable_clk;
- 
- 	/* ensure CMP & ARR registers are properly written */
- 	ret = regmap_read_poll_timeout(priv->regmap, STM32_LPTIM_ISR, val,
- 				       (val & STM32_LPTIM_CMPOK_ARROK) == STM32_LPTIM_CMPOK_ARROK,
- 				       100, 1000);
- 	if (ret)
--		return ret;
-+		goto disable_clk;
- 
- 	ret = regmap_write(priv->regmap, STM32_LPTIM_ICR,
- 			   STM32_LPTIM_CMPOKCF_ARROKCF);
- 	if (ret)
--		return ret;
-+		goto disable_clk;
- 
--	ret = clk_enable(priv->clk);
--	if (ret) {
--		regmap_write(priv->regmap, STM32_LPTIM_CR, 0);
--		return ret;
--	}
- 	priv->enabled = true;
- 
- 	/* Start LP timer in continuous mode */
- 	return regmap_update_bits(priv->regmap, STM32_LPTIM_CR,
- 				  STM32_LPTIM_CNTSTRT, STM32_LPTIM_CNTSTRT);
-+
-+disable_clk:
-+	clk_disable(priv->clk);
-+disable_cnt:
-+	regmap_write(priv->regmap, STM32_LPTIM_CR, 0);
-+
-+	return ret;
- }
- 
- static int stm32_lptim_setup(struct stm32_lptim_cnt *priv, int enable)
 -- 
-2.25.1
-
+tejun
