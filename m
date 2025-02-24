@@ -1,172 +1,142 @@
-Received: from ksmg02.maxima.ru (ksmg02.maxima.ru [81.200.124.39])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12B3248867;
-	Mon, 24 Feb 2025 11:46:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.200.124.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7729724887C
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 11:46:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740397589; cv=none; b=OfcBK71Im0rK0MMkg7CI/6XWUf4qTf/u0d1jeQNBqzX4NDgXS/MSX+azFOLFDn3BHhyJ0ypz+zwJlpJZMGcBP+ai4AS7g0R5cvV+WN5eSwzMFSiiM0qWhB8RhKn8FBueuijts0NKB2My+OEMQS5PW/9AV/67Lzb3q8kW2Uf4FFI=
+	t=1740397612; cv=none; b=iTI+1T4HcAwHcNdA+sVmyoRLBg9gAxB6iS2UfKF3vYH4LIAeCZ3TvbkVI1SmXShhRIi+H4ThHD/HVEymLuATVJQjnwpkOC+9l6qNzcsJdutisP2stHodBd3ZDHyNG2r74Jt5XRgZAy7vVp44cvNTs0vKR5OZwvVOY/zisEF7n7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740397589; c=relaxed/simple;
-	bh=NlnoUZSFwuABwD0daHXZJr7GkVokqSLQ+bN2yG+cOGk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hSr1PklYOBUyy0HcsfZbBHIx894m1p+7UOl5IycRgv7673yYaGQLjCubp8CyFy6SmKpWCExc9N0z+f/oq8srG/d+85Ne+5WvAJ5hoa5rNYOX9GfpSTDQl21WDmYH+Ga/Imbob99Lf4LzvzVSMPotI3IdUlRhILuDrKk8zR9xqJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru; spf=pass smtp.mailfrom=mt-integration.ru; dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b=VH1JLX91; arc=none smtp.client-ip=81.200.124.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mt-integration.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mt-integration.ru
+	s=arc-20240116; t=1740397612; c=relaxed/simple;
+	bh=XBF0vElKHwv9izTK+ZHX3O5WdWZ3wV+1ORfUCZnBmCs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bzVpTVnKEwrxjx3MWifQXsxviVQQJDbuK6qbkIAwZb2R+FLrAcm3yEwq8hIpJqwUAChqLFwSLuYPzN5q44lw7pkWzBekLqf3pQyteJ7TRGAmNdca0USFzAHE5zPix1eHUR4sCgVywH6ZI0foG5GXRNCFDscQ9rN5IRRtJt+uvq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=DDTg2Vxl; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mt-integration.ru header.i=@mt-integration.ru header.b="VH1JLX91"
-Received: from ksmg02.maxima.ru (localhost [127.0.0.1])
-	by ksmg02.maxima.ru (Postfix) with ESMTP id 51BAD1E000D;
-	Mon, 24 Feb 2025 14:36:56 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ksmg02.maxima.ru 51BAD1E000D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt-integration.ru;
-	s=sl; t=1740397016; bh=DTItJCPFhbVedZdbaxnqWm55x4dSNHRqn77CJj9NmTU=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=VH1JLX91L4V8hbBR8Ys8idEMJR4jPCxo+5YOsHQzRKlUEdHnBZsbL1tltsvQmg9eQ
-	 /k6SebhOXLdZmqKYQCR0BBvdznolAgBtl97Ep6KbJWL4MKyTT+o/oAkiEQ0DyhRSUC
-	 QR6KmdVgQsDt9Y0gZYWgieqa9WfhQ70r392ZI3h9pHZBR8B9o2SGh+U8I3mtwUsWwi
-	 1x0Cq3Nb1Fg5Rvm/BJzyApfrorucWsNK4OgGcLddGHW46X/6g6Yh36LJvZnI9xD1D5
-	 TGRLRwIjOYZZCjYmmG25yUAobhbgjIilun7Tva4iN6sUrngU8SIHc/tC31Y2+lq50E
-	 3eNKO1Jg189Bg==
-Received: from ksmg02.maxima.ru (mail.maxima.ru [81.200.124.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(Client CN "*.maxima.ru", Issuer "GlobalSign GCC R3 DV TLS CA 2020" (verified OK))
-	by ksmg02.maxima.ru (Postfix) with ESMTPS;
-	Mon, 24 Feb 2025 14:36:56 +0300 (MSK)
-Received: from GS-NOTE-190.mt.ru (10.0.246.182) by mmail-p-exch02.mt.ru
- (81.200.124.62) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1544.4; Mon, 24 Feb
- 2025 14:36:53 +0300
-From: Murad Masimov <m.masimov@mt-integration.ru>
-To: Dan Williams <dan.j.williams@intel.com>
-CC: Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang
-	<dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>, "Rafael J. Wysocki"
-	<rafael@kernel.org>, Len Brown <lenb@kernel.org>, <nvdimm@lists.linux.dev>,
-	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>, Murad Masimov <m.masimov@mt-integration.ru>,
-	<stable@vger.kernel.org>,
-	<syzbot+c80d8dc0d9fa81a3cd8c@syzkaller.appspotmail.com>
-Subject: [PATCH v2] acpi: nfit: fix narrowing conversion in acpi_nfit_ctl
-Date: Mon, 24 Feb 2025 14:35:46 +0300
-Message-ID: <20250224113546.1441-1-m.masimov@mt-integration.ru>
-X-Mailer: git-send-email 2.46.0.windows.1
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="DDTg2Vxl"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51O76se3024811
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 11:46:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Xa3GHQtmXXvUkIsS5ubfpH9d30YWI2ILON8s0tgJN8A=; b=DDTg2VxlH5n0g0p4
+	EtdCiksujrsoUdTC21uB1k6cHMu0rB5cGagKQn9dknbgSWfaGpX6xBKTKfw2+D8Y
+	Ichq3PMP8c+YiJvJOVdVmmuQtuisV0djPd3Bph7Qhel+oejA6qPBQQDtZLPsBlwy
+	5CHISj7r5Wdmlue8a0itnCXCIVucqzJTekbYgq4ddu0E9hgMUAK3McwGSESqPyjC
+	t1pRtesBp+EBQ7jEbsKYt/B54vwcj3XP05gPWJ2VfKYTKgyGNQrVsC1SjO8fHvj8
+	EaMzxOM3J1hkPcrG6u3W/596tXyxa5CwRMu/aCy5m9Wa0P5tR0NJ/BGMPx2S9anp
+	W3teAQ==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 450m3d91dc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 11:46:49 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-471f691c847so13069041cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 03:46:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740397608; x=1741002408;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xa3GHQtmXXvUkIsS5ubfpH9d30YWI2ILON8s0tgJN8A=;
+        b=PpPxO7/2/MJ4QloveGYJT9wYanqdtK0oSuLRf07qGsRIjrtmnr32g++iD2G6c+olTg
+         FUl0fy5Ub9htDtZgHIkwdcd2zYSvyTp9wtDne9NU6oxINeGBOjiDKSJhDsPvPmyFLKl4
+         kZW6mAd1qJId2NdAeUoBbFTqJMn+5h2joDvjT21gLRg3HM9GKePLcr4Gzs2jOnPSjLGc
+         /hc4mLZxlVpRScdANjK3LYt5k594kJPVm/mo7fMnnzR6zafTNdps+nHD+NjoxxgjoVx1
+         uSjz3AxwV2t7DkfcKZTNZzFx0cZLD+1EGZLEbjOaAng21U10GHEm77MgFvLpdzLdNkWD
+         uJWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUM/BOfaMG+z1shWZgoEwbGis/ddZM1XHgCj/mfUTyrn0hcb6dtc2bX5ezrVawAvQ0uji3edGeo5XmO+40=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWx7fHZCoCbjMaCi80w1i+EHBr/ebaDoSmuF2e06xAg3/WvTRz
+	9ulzpswbcypTCRYp4n9TqVfPN/dmxpdWPkH6b4qxVFAmAYU377eJb2NLqls+NzUz4OP8ZjdKr9N
+	Px0QMoAoFOsDW/jicJFiCxQOZLA2fWFdJSzrcaZ1bRQiaLX2E/TzZ0GhTgCpZeZE=
+X-Gm-Gg: ASbGncvV9aKMbqtk4vqSime8h/l0q3DIoQTg+lViUMbxEQk1e6j5ETxfMO5ea89YQf2
+	cIYWn+eVZWfI94gmOOdwSccOLO8wzVQ7vk3k3oW+yGzj+a/laQB9tiB/wpiUZa5mXUtWpFpSzIu
+	wnUCjZFBRS1YYjiJcMBH7L3sL5c8h3lp5++JbLOTaIxQz1GMmYOxyxGDAkAo1SVU610eHlsynC7
+	/78gNXDevmFQPiiVbLbnEGXRFyfI2dZZBgT20887TTdUa4JqsnQsph4R/t9VUONhcIgqPXkvGMF
+	Ala/20vi4I/1x6Pb0XaYY9FOqfBVE0pmJ3kojApRGaq9AnxVfEl9p+gMn1aZorI5gm9G7w==
+X-Received: by 2002:a05:6214:5190:b0:6d8:967a:1a60 with SMTP id 6a1803df08f44-6e6ae7d9a09mr65659866d6.2.1740397608193;
+        Mon, 24 Feb 2025 03:46:48 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG+5WWCtb4qyPi6Hdk7FQSLpQ7/kRF6GbZ4urrGS273dUwCcdOpWH2AW2Megucz8XI5EO8lng==
+X-Received: by 2002:a05:6214:5190:b0:6d8:967a:1a60 with SMTP id 6a1803df08f44-6e6ae7d9a09mr65659726d6.2.1740397607829;
+        Mon, 24 Feb 2025 03:46:47 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abba9bd6e22sm1409071066b.121.2025.02.24.03.46.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2025 03:46:47 -0800 (PST)
+Message-ID: <ea5de507-1252-4ff3-9b18-40981624afea@oss.qualcomm.com>
+Date: Mon, 24 Feb 2025 12:46:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] phy: qcom: qmp-pcie: Add PHY register retention
+ support
+To: "Wenbin Yao (Consultant)" <quic_wenbyao@quicinc.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: vkoul@kernel.org, kishon@kernel.org, p.zabel@pengutronix.de,
+        dmitry.baryshkov@linaro.org, abel.vesa@linaro.org,
+        quic_qianyu@quicinc.com, neil.armstrong@linaro.org,
+        quic_devipriy@quicinc.com, linux-arm-msm@vger.kernel.org,
+        linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250220102253.755116-1-quic_wenbyao@quicinc.com>
+ <20250220102253.755116-3-quic_wenbyao@quicinc.com>
+ <20250224073301.aqbw3gxjnupbejfy@thinkpad>
+ <7ffb09cd-9c77-4407-9087-3e789cd8bf44@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <7ffb09cd-9c77-4407-9087-3e789cd8bf44@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: mt-exch-01.mt.ru (91.220.120.210) To mmail-p-exch02.mt.ru
- (81.200.124.62)
-X-KSMG-AntiPhishing: NotDetected, bases: 2025/02/24 10:30:00
-X-KSMG-AntiSpam-Auth: dmarc=none header.from=mt-integration.ru;spf=none smtp.mailfrom=mt-integration.ru;dkim=none
-X-KSMG-AntiSpam-Envelope-From: m.masimov@mt-integration.ru
-X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {rep_avail}, {Tracking_one_url}, {Tracking_uf_ne_domains}, {Tracking_from_domain_doesnt_match_to}, ksmg02.maxima.ru:7.1.1;81.200.124.62:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;mt-integration.ru:7.1.1;syzkaller.appspot.com:7.1.1,5.0.1, FromAlignment: s, ApMailHostAddress: 81.200.124.62
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiSpam-Lua-Profiles: 191224 [Feb 24 2025]
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Version: 6.1.1.11
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/02/24 06:47:00 #27427681
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected, bases: 2025/02/24 10:29:00
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 7
+X-Proofpoint-GUID: Av8E--Hb1DuKbim8vTgm9deyhZSRFB9D
+X-Proofpoint-ORIG-GUID: Av8E--Hb1DuKbim8vTgm9deyhZSRFB9D
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-24_05,2025-02-24_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
+ bulkscore=0 impostorscore=0 phishscore=0 mlxscore=0 mlxlogscore=999
+ clxscore=1015 malwarescore=0 lowpriorityscore=0 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502240086
 
-Syzkaller has reported a warning in to_nfit_bus_uuid():
+On 24.02.2025 9:46 AM, Wenbin Yao (Consultant) wrote:
+> On 2/24/2025 3:33 PM, Manivannan Sadhasivam wrote:
+>> On Thu, Feb 20, 2025 at 06:22:53PM +0800, Wenbin Yao wrote:
+>>> From: Qiang Yu <quic_qianyu@quicinc.com>
+>>>
+>>> Some QCOM PCIe PHYs support no_csr reset. Unlike BCR reset which resets the
+>>> whole PHY (hardware and register), no_csr reset only resets PHY hardware
+>>> but retains register values, which means PHY setting can be skipped during
+>>> PHY init if PCIe link is enabled in booltloader and only no_csr is toggled
+>>> after that.
+>>>
+>>> Hence, determine whether the PHY has been enabled in bootloader by
+>>> verifying QPHY_START_CTRL register. If it's programmed and no_csr reset is
+>>> available, skip BCR reset and PHY register setting to establish the PCIe
+>>> link with bootloader - programmed PHY settings.
+>>>
+>>> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
+>>> Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
+>> Some nitpicks below.
+>>
+>>> ---
 
-==================================================================
-only secondary bus families can be translated
-WARNING: CPU: 0 PID: 15821 at drivers/acpi/nfit/core.c:80 to_nfit_bus_uuid+0x6f/0x90 drivers/acpi/nfit/core.c:79
-Modules linked in:
-CPU: 0 UID: 0 PID: 15821 Comm: syz-executor579 Not tainted 6.11.0-rc7-syzkaller-00020-g8d8d276ba2fb #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:to_nfit_bus_uuid+0x6f/0x90 drivers/acpi/nfit/core.c:79
-Call Trace:
- <TASK>
- acpi_nfit_ctl+0x8a9/0x24a0 drivers/acpi/nfit/core.c:489
- __nd_ioctl drivers/nvdimm/bus.c:1186 [inline]
- nd_ioctl+0x184d/0x1fe0 drivers/nvdimm/bus.c:1264
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0xfc/0x170 fs/ioctl.c:893
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-==================================================================
+[...]
 
-This warning is triggered if the argument passed in to_nfit_bus_uuid() is
-equal to 0. It is important that this function expects that the argument
-is between 1 and NVDIMM_BUS_FAMILY_MAX. Therefore, it must be checked
-beforehand. However, in acpi_nfit_ctl() validity checks made before
-calling to_nfit_bus_uuid() are erroneous.
+>>
+>>> +     * In this way, no matter whether the PHY settings were initially
+>>> +     * programmed by bootloader or PHY driver itself, we can reuse them
+>> It is really possible to have bootloader not programming the init sequence for
+>> no_csr reset platforms? The comment sounds like it is possible. But I heard the
+>> opposite.
+> 
+> PCIe3 on X1E80100 QCP is disabled by default in UEFI. We need to enable it
+> manually in UEFI shell if we want.
 
-Function acpi_nfit_ctl() first verifies that a user-provided value
-call_pkg->nd_family of type u64 is not equal to 0. Then the value is
-converted to int (narrowing conversion), and only after that is compared
-to NVDIMM_BUS_FAMILY_MAX. This can lead to passing an invalid argument to
-acpi_nfit_ctl(), if call_pkg->nd_family is non-zero, while the lower 32
-bits are zero.
+IIUC this will not be a concern going forward, and this is a special case
 
-Moreover, the same way zero can be passed in to_nfit_bus_uuid(),
-negative value also may occur. That wouldn't trigger the warning, but
-could lead to a wild-memory-access in test_bit(). This is achieved with
-a slightly modified version of the reproducer generated by Syzkaller.
-The crash report is as follows:
-
-==================================================================
- BUG: KASAN: wild-memory-access in acpi_nfit_ctl (./arch/x86/include/asm/bitops.h:227 (discriminator 6) ./arch/x86/include/asm/bitops.h:239 (discriminator 6) ./include/asm-generic/bitops/instrumented-non-atomic.h:142 (discriminator 6) drivers/acpi/nfit/core.c:489 (discriminator 6))
- Read of size 8 at addr 1fff888141379358 by task repro/681503
-
- CPU: 0 UID: 0 PID: 681503 Comm: repro Not tainted 6.13.0-04858-g21266b8df522 #30
- Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
- Call Trace:
- <TASK>
- dump_stack_lvl (lib/dump_stack.c:123)
- kasan_report (mm/kasan/report.c:604)
- kasan_check_range (mm/kasan/generic.c:183 mm/kasan/generic.c:189)
- acpi_nfit_ctl (./arch/x86/include/asm/bitops.h:227 (discriminator 6) ./arch/x86/include/asm/bitops.h:239 (discriminator 6) ./include/asm-generic/bitops/instrumented-non-atomic.h:142 (discriminator 6) drivers/acpi/nfit/core.c:489 (discriminator 6))
- nd_ioctl (drivers/nvdimm/bus.c:1187 drivers/nvdimm/bus.c:1264)
- __x64_sys_ioctl (fs/ioctl.c:52 fs/ioctl.c:906 fs/ioctl.c:892 fs/ioctl.c:892)
- do_syscall_64 (arch/x86/entry/common.c:52 arch/x86/entry/common.c:83)
- entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
-==================================================================
-
-All checks of the input value should be applied to the original variable
-call_pkg->nd_family. This approach is better suited for the stable
-branches and is much safer than replacing the type of the variable from
-int to u32 or u64 throughout the code, as this could potentially
-introduce new bugs.
-
-Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
-
-Fixes: 6450ddbd5d8e ("ACPI: NFIT: Define runtime firmware activation commands")
-Cc: stable@vger.kernel.org
-Reported-by: syzbot+c80d8dc0d9fa81a3cd8c@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=c80d8dc0d9fa81a3cd8c
-Signed-off-by: Murad Masimov <m.masimov@mt-integration.ru>
----
-v2: Add more details to the commit message.
-
- drivers/acpi/nfit/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
-index a5d47819b3a4..ae035b93da08 100644
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -485,7 +485,7 @@ int acpi_nfit_ctl(struct nvdimm_bus_descriptor *nd_desc, struct nvdimm *nvdimm,
- 		cmd_mask = nd_desc->cmd_mask;
- 		if (cmd == ND_CMD_CALL && call_pkg->nd_family) {
- 			family = call_pkg->nd_family;
--			if (family > NVDIMM_BUS_FAMILY_MAX ||
-+			if (call_pkg->nd_family > NVDIMM_BUS_FAMILY_MAX ||
- 			    !test_bit(family, &nd_desc->bus_family_mask))
- 				return -EINVAL;
- 			family = array_index_nospec(family,
---
-2.39.2
-
+Konrad
