@@ -1,135 +1,97 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0638E2571AD
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 23:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFE0101F2;
+	Mon, 24 Feb 2025 23:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740439262; cv=none; b=QHc0arNPoiGONM+JcAp2bmTtlMWKTnq9hgcVUHwh6oRLPaKfT89Y4AsViakk2TAAseVnVm38Yw4ko9aV6nl68k8gfT0b+E7x1HAmqeyqF9uVrTkAriFtr3i1wtvltda+uhT1yuHqelQMYeqXZLpGDOXKN3bdfhrTqI5GKn7gy70=
+	t=1740439320; cv=none; b=YiMB/h1QF1zlmUf2sVIgLeWgS0aX9HCl7t5ZpA6DbpPguRAGWKqs5Zg3jwkq1vZdv0+Z486eyA2hdcghSqEnSCboWhNa50MNpwZrCYLSgud2/vWH7KwSV0IJ6IUTL3daY09Q1wVpSIpVHX6TtHT05XWGcVa+8m/gy0cac8LXLXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740439262; c=relaxed/simple;
-	bh=AE/BPPesqujpVG7Skm0q6iIAoiy53Pv6lPSfsMRVZc4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Hl0bBcNc0vBZKqEVMsNEbf7+wgdfJNPk3h9hK9s05+1viBSJdf9nLNVpVsCGkMYkji9+7JhzgtvfVHQNXya/fTdzLar+wboO6uESq3khQBHe9cJtnZh0t3sLtrPAII0wIzMBa+umc83Q77l5W5uUfoMOuKcjlfPydObUCxX0a0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JX+AkCZD; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JX+AkCZD"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740439259;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=w9VyCqQ5W4f+Wpe3SrLp284SEcfzz6nkkWLxQdGLo2g=;
-	b=JX+AkCZDCJVLVqVVXmZnp+4dkUZQ3iZQKvPrFcykHfPmUu4wNQ0lK+fkpvqy5Hy1My6Bcl
-	8WhEJ4E2xkzVLJesnfWI6YS11VQ4i1Mia9SkRU5LWXBBdY3CcvfXZ3UMeB7NNesIo6VWIO
-	Ddf2BB/bllU5jDQyXvPSVAr1PG1CnNs=
-From: Roman Gushchin <roman.gushchin@linux.dev>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>,
-	Leon Romanovsky <leon@kernel.org>,
-	Maher Sanalla <msanalla@nvidia.com>,
-	Parav Pandit <parav@mellanox.com>,
-	linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] RDMA/core: fix a NULL-pointer dereference in hw_stat_device_show()
-Date: Mon, 24 Feb 2025 23:20:48 +0000
-Message-ID: <20250224232048.1423635-1-roman.gushchin@linux.dev>
+	s=arc-20240116; t=1740439320; c=relaxed/simple;
+	bh=z6RCFb2/vB/uPI6y66W4S0l3zN9napepWbci1XWwVNA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=a3z1nQHBA+OaOTPCu1iu4uCfg2EkXA9QaZVWlG5pfCBD4coBSOUln+Xicr0K2eqrMfalrAlynodHExUyqB4viFW6N6rC61vDLt4sHWEzxbuP2S2P1yRSK8zlkDVcofuWoVp/n5InIaN0JH4oWgpHgnC1EtMWYaxQf5kDmOFTIvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CE11C4CED6;
+	Mon, 24 Feb 2025 23:22:00 +0000 (UTC)
+Received: by venus (Postfix, from userid 1000)
+	id 470D218066F; Tue, 25 Feb 2025 00:21:58 +0100 (CET)
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+Date: Tue, 25 Feb 2025 00:21:35 +0100
+Subject: [PATCH 2/7] regulator: act8865-regulator: switch psy_cfg from
+ of_node to fwnode
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250225-psy-core-convert-to-fwnode-v1-2-d5e4369936bb@collabora.com>
+References: <20250225-psy-core-convert-to-fwnode-v1-0-d5e4369936bb@collabora.com>
+In-Reply-To: <20250225-psy-core-convert-to-fwnode-v1-0-d5e4369936bb@collabora.com>
+To: Sebastian Reichel <sre@kernel.org>, Mark Brown <broonie@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Hans de Goede <hdegoede@redhat.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Chen-Yu Tsai <wens@csie.org>, 
+ Matti Vaittinen <mazziesaccount@gmail.com>, 
+ =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>, 
+ Paul Cercueil <paul@crapouillou.net>, Samuel Holland <samuel@sholland.org>, 
+ David Lechner <david@lechnology.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
+ Marek Szyprowski <m.szyprowski@samsung.com>, 
+ Sebastian Krzyszkowiak <sebastian.krzyszkowiak@puri.sm>, 
+ Purism Kernel Team <kernel@puri.sm>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Orson Zhai <orsonzhai@gmail.com>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, 
+ Chunyan Zhang <zhang.lyra@gmail.com>, linux-pm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=890;
+ i=sebastian.reichel@collabora.com; h=from:subject:message-id;
+ bh=z6RCFb2/vB/uPI6y66W4S0l3zN9napepWbci1XWwVNA=;
+ b=kA0DAAoB2O7X88g7+poByyZiAGe8/xSimcaazLXGcNG/1mTR16VIq9X7i+gMf3F5pKIfBdrFE
+ 4kCMwQAAQoAHRYhBO9mDQdGP4tyanlUE9ju1/PIO/qaBQJnvP8UAAoJENju1/PIO/qafVQP/11l
+ j3+tzVXJQejIIWqovbTDKhcu5evCd64HmFmMcW/lxU7NGcV9hWKXIcrO7Vc/VWSFALTqK0vUA4L
+ X/BPijrawRPWY5a5KZLd39MjVcApUCSZpDLcL9Qyb7maxy0Yu0KkR9znpYQtDl/BGcNcTowxPmt
+ wxW75zdKnSbEnG06VR8OHwIBb/QcpYS8aiLV2WL36yQRGZfdpXOmeTLOII82zVI+CFYZX8pNhb7
+ z7pHK74GC6Ec6RJ3hJJfCNLUbpFlwNdL+yMb2361EazgpKHXpmzv6mRA2EcB1qtKCgglogQ85HI
+ ywvbZ2Fac/wmgvz9Bmn9hyQLMEhpL7gInMMluFZERAQQ0qYH4TugA09hHhAK9XsTFnVrLsD/lsC
+ JRbIKqLR6uRRrsqEdqlTM+4YZBG0/7WlrSIgi94WiRDsbn+dKWp3u9En1YHhGJJI9B3kkhdubRg
+ +aNOHqVbc3o7BX4m2T/X0svguaoFbaTF3/KCfdisxSvR1Y4eWzQ+ek4yql2FVBjgnLQAra0pW3B
+ 4FptwcIRqre30P4uAErYuqZGI8pliU/cn2OWfZ0f+m8SiUIamfFNkRiK0Fa+PZhLuMq8wiN04cJ
+ HuuDNxsCoqByr0DotSzNt9i8FdjyLHtDGLuN0gADzgu7h2hqnKGg2A6ZfvilZeJbPSkA4UcJhMM
+ 9naKi
+X-Developer-Key: i=sebastian.reichel@collabora.com; a=openpgp;
+ fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
 
-The following panic has been noticed in production on multiple hosts:
+In order to remove .of_node from the power_supply_config struct,
+use .fwnode instead.
 
-[42021.807566] BUG: kernel NULL pointer dereference, address: 0000000000000028
-[42021.814463] #PF: supervisor read access in kernel mode
-[42021.819549] #PF: error_code(0x0000) - not-present page
-[42021.824636] PGD 0 P4D 0
-[42021.827145] Oops: 0000 [#1] SMP PTI
-[42021.830598] CPU: 82 PID: 2843922 Comm: switchto-defaul Kdump: loaded Tainted: G S      W I        XXX
-[42021.841697] Hardware name: XXX
-[42021.849619] RIP: 0010:hw_stat_device_show+0x1e/0x40 [ib_core]
-[42021.855362] Code: 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 49 89 d0 4c 8b 5e 20 48 8b 8f b8 04 00 00 48 81 c7 f0 fa ff ff <48> 8b 41 28 48 29 ce 48 83 c6 d0 48 c1 ee 04 69 d6 ab aa aa aa 48
-[42021.873931] RSP: 0018:ffff97fe90f03da0 EFLAGS: 00010287
-[42021.879108] RAX: ffff9406988a8c60 RBX: ffff940e1072d438 RCX: 0000000000000000
-[42021.886169] RDX: ffff94085f1aa000 RSI: ffff93c6cbbdbcb0 RDI: ffff940c7517aef0
-[42021.893230] RBP: ffff97fe90f03e70 R08: ffff94085f1aa000 R09: 0000000000000000
-[42021.900294] R10: ffff94085f1aa000 R11: ffffffffc0775680 R12: ffffffff87ca2530
-[42021.907355] R13: ffff940651602840 R14: ffff93c6cbbdbcb0 R15: ffff94085f1aa000
-[42021.914418] FS:  00007fda1a3b9700(0000) GS:ffff94453fb80000(0000) knlGS:0000000000000000
-[42021.922423] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[42021.928130] CR2: 0000000000000028 CR3: 00000042dcfb8003 CR4: 00000000003726f0
-[42021.935194] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[42021.942257] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[42021.949324] Call Trace:
-[42021.951756]  <TASK>
-[42021.953842]  [<ffffffff86c58674>] ? show_regs+0x64/0x70
-[42021.959030]  [<ffffffff86c58468>] ? __die+0x78/0xc0
-[42021.963874]  [<ffffffff86c9ef75>] ? page_fault_oops+0x2b5/0x3b0
-[42021.969749]  [<ffffffff87674b92>] ? exc_page_fault+0x1a2/0x3c0
-[42021.975549]  [<ffffffff87801326>] ? asm_exc_page_fault+0x26/0x30
-[42021.981517]  [<ffffffffc0775680>] ? __pfx_show_hw_stats+0x10/0x10 [ib_core]
-[42021.988482]  [<ffffffffc077564e>] ? hw_stat_device_show+0x1e/0x40 [ib_core]
-[42021.995438]  [<ffffffff86ac7f8e>] dev_attr_show+0x1e/0x50
-[42022.000803]  [<ffffffff86a3eeb1>] sysfs_kf_seq_show+0x81/0xe0
-[42022.006508]  [<ffffffff86a11134>] seq_read_iter+0xf4/0x410
-[42022.011954]  [<ffffffff869f4b2e>] vfs_read+0x16e/0x2f0
-[42022.017058]  [<ffffffff869f50ee>] ksys_read+0x6e/0xe0
-[42022.022073]  [<ffffffff8766f1ca>] do_syscall_64+0x6a/0xa0
-[42022.027441]  [<ffffffff8780013b>] entry_SYSCALL_64_after_hwframe+0x78/0xe2
-
-The problem can be reproduced using the following steps:
-  ip netns add foo
-  ip netns exec foo bash
-  cat /sys/class/infiniband/mlx4_0/hw_counters/*
-
-The problem is caused by reading hw counters from a non-initial
-net namespace. In this case casting the device pointer into
-an ib_device pointer using container_of() in hw_stat_device_show() is
-wrong and leads to a memory corruption. Instead, rdma_device_to_ibdev()
-should be used, which uses a back-reference
-(container_of(device, struct ib_core_device, dev))->owner.
-
-Fixes: 467f432a521a ("RDMA/core: Split port and device counter sysfs attributes")
-Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Leon Romanovsky <leon@kernel.org>
-Cc: Maher Sanalla <msanalla@nvidia.com>
-Cc: Parav Pandit <parav@mellanox.com>
-Cc: linux-rdma@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- drivers/infiniband/core/sysfs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/regulator/act8865-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/core/sysfs.c b/drivers/infiniband/core/sysfs.c
-index 7491328ca5e6..0be77b8abeae 100644
---- a/drivers/infiniband/core/sysfs.c
-+++ b/drivers/infiniband/core/sysfs.c
-@@ -148,7 +148,7 @@ static ssize_t hw_stat_device_show(struct device *dev,
- {
- 	struct hw_stats_device_attribute *stat_attr =
- 		container_of(attr, struct hw_stats_device_attribute, attr);
--	struct ib_device *ibdev = container_of(dev, struct ib_device, dev);
-+	struct ib_device *ibdev = rdma_device_to_ibdev(dev);
+diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
+index 0457af23c55acdd97b2cdc6fd6bfd07ae0f9d11f..b2a6ddc6f56d32e8758977e25858b972e294bc84 100644
+--- a/drivers/regulator/act8865-regulator.c
++++ b/drivers/regulator/act8865-regulator.c
+@@ -643,7 +643,7 @@ static int act8600_charger_probe(struct device *dev, struct regmap *regmap)
+ 	struct power_supply *charger;
+ 	struct power_supply_config cfg = {
+ 		.drv_data = regmap,
+-		.of_node = dev->of_node,
++		.fwnode = dev_fwnode(dev),
+ 	};
  
- 	return stat_attr->show(ibdev, ibdev->hw_stats_data->stats,
- 			       stat_attr - ibdev->hw_stats_data->attrs, 0, buf);
-@@ -160,7 +160,7 @@ static ssize_t hw_stat_device_store(struct device *dev,
- {
- 	struct hw_stats_device_attribute *stat_attr =
- 		container_of(attr, struct hw_stats_device_attribute, attr);
--	struct ib_device *ibdev = container_of(dev, struct ib_device, dev);
-+	struct ib_device *ibdev = rdma_device_to_ibdev(dev);
- 
- 	return stat_attr->store(ibdev, ibdev->hw_stats_data->stats,
- 				stat_attr - ibdev->hw_stats_data->attrs, 0, buf,
+ 	charger = devm_power_supply_register(dev, &act8600_charger_desc, &cfg);
+
 -- 
-2.48.1.658.g4767266eb4-goog
+2.47.2
 
