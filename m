@@ -1,282 +1,345 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEDC21D3C2;
-	Mon, 24 Feb 2025 08:41:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740386483; cv=fail; b=RnGBHfmR6m1mrmZ5k/6rnzY4kAbp3OOlAIUrFLcw0hR2ie1LyjkcgThwOmO4DREDM1yERqtexl+yg2SRH9IQVRmOi2NFSMiOf/yI+ZbOltnV8G1xi6YDIf/23S5zYNV36cO2y4PAg6H3bMjA9IR+16kgHr/YWorsLuEE3Ssox2k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740386483; c=relaxed/simple;
-	bh=2RQQIdnSvxiqAva74Ww4HrbUKweRKB86woVYUZEyicQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=eutxiJemkG7ChVwtTlxyG5O5leeebu3foO89AQnKRez7iatYnowXEd2gGB2lG/ZR/3FZ8Yd34n3AbW1YEkl8BQPGMq4gebobI1432Knfik/ml8U9dF51HDJh0AcSpG1j3NRBs8oQNwD33nSXZPuyc6SBavtLbO+It3AdOLBj+Rc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=AOFLhD80; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=y5dFhMYC; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63B021CFED
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 08:41:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740386509; cv=none; b=Z6oTxBPxSi8UUYGGLzgEoOzd5FnxEf5Z947Y9euUxeSXpxx6XBXJT6ShJfe2Urd18JbWwrCpcpGZU3HusmM4J7k+N80wcx/gkM3ZhHbkNXmlg5wkwPXtaE5a6qJZftRFsPj53ilhlF0eLmlKLxypCQQZDCkCuSPRpFeIr+R3gX4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740386509; c=relaxed/simple;
+	bh=2cs9plzoE2x7ePym9KVH7tcquElTyc2JfDsGYLSQZfs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lq3YhRIanPGWKFsDUnKtyFJF19NmKotPrIESTcEvuI5rbidna+D+eCUZ2NyeMvNNs7hbqs3Gfm+7VEDCGhp0sjY6HxXlEHjc7DbEKWnjosFZkpI4zWZYTLdqDYXwZxKYGrmylyCzqZd15kRFIaobGCUa1iHTB+3Zaa911BCiIug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=2Vg3z+uB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5/HWi+iG; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=2Vg3z+uB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5/HWi+iG; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AOFLhD80";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="y5dFhMYC"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51O7fPDB026985;
-	Mon, 24 Feb 2025 08:41:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=OkIv85mA61If/mHtoi
-	lrSz8fH60L/GdpByl78Z4GeaQ=; b=AOFLhD80rwJGKSgDfZ21IrtRfnlbNxa4Jq
-	c6JLCUCMNBhuW5fxlm5RHDAAtNTeXoXMa9VacsxtKMH+yPO8yza0amqPFwDKKRjM
-	uCMI6RuJ1BAkdPBZlaezZ+groQG3uWaDzPH3wvn+84MeZJMQgfVYS2v+/85jxZvD
-	G0OzqYKVZOh2GQppoiTfkCzJnZNYaQLYiGFQxpv/jkTT1kNZawN9YtZxgECPwOGE
-	tEi2vZdFZsg02fXTZx+Ojh92cJC0rfFpcIuJ0mme0U7AsUcCZ6jHNIW5IFWyPWD1
-	2vEMVHUF8rqzUhOgmQrbVuznuqVJXm020yC8la/RHiThfe9gLTtA==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44y5602331-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Feb 2025 08:41:07 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51O7eHe1010209;
-	Mon, 24 Feb 2025 08:41:06 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2168.outbound.protection.outlook.com [104.47.59.168])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44y517468k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Feb 2025 08:41:06 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bO3RLRdibpvBEIeyo1gyE1UwtoiiiZ0AeQg/SxtHTne9Vk32rirh25dhTr15umogD+Pl62T7bOgAIyeJVvyjuNo67EC8IleNn0KgSKPbcjaAyptcRgaO+VtVApQyBhPIHsxzeCA8Q38oZlTgwTRJ7gpu7jf32m5LxAVn7VuXdn092xNeoj1/h/nP9/6iq+BI95EU0zVE4fhStvP6dTHFmV0aR0AQwRN+Bb8/LpMU9MnTC0lQkKt+Dd2MsDDnqrcQ/6gwT3BX8QNRog1bEFpGd6IDIIymEA94pqSEoZEzHIJ1M+s/gZx3dCkaXMkPAeTtfxgZ/1WNxT5BZuLa7sExYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OkIv85mA61If/mHtoilrSz8fH60L/GdpByl78Z4GeaQ=;
- b=OsY3QEDAZtKzXlXVGujulBL188s8ur1Y53fn2JL09SeUOXBnCoafoZmrPnybLXDurAIUcMlMdu6D3tldvAmiz8k2a6ul1chgM8Ix8yoDIWx+Wx+teeK99Ifwjyr86eOMJ6+LE6nrsngtNo9HPvNsw/XC0zlIDlTjGKq9jrdOk3XwV+OkMyDefpkXHFWTHHR7nor+xcye1rj+rLZiZRMeYrzq3ra4oq9nNACix/EJaADJ7QPJObNk1Nn2jF1H6W1DBeyoY/JFN9o6Iv7MR78hlWusPScceUu+GwLaYcSbGTjUtE2nlhgwD0y4M1TWV1zr8tjpV10cJklCKebBWYC+Wg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OkIv85mA61If/mHtoilrSz8fH60L/GdpByl78Z4GeaQ=;
- b=y5dFhMYCMvphWCHmwK0qO3EPTFoe2/uQzqav0DX76lJoKtFPuNGq6H0Zg8c4RRF83oeQJJVt6ZWgSeLQCGl2UmA/I47WtHwV9MYqAZuG+SuViAudxEAzFTLfzoi0Icvzng5mjLVk5fh9vG38tCgzZF10q5Ob1a+PuD6qy8IqtRE=
-Received: from CH3PR10MB7329.namprd10.prod.outlook.com (2603:10b6:610:12c::16)
- by CY8PR10MB6441.namprd10.prod.outlook.com (2603:10b6:930:63::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Mon, 24 Feb
- 2025 08:41:00 +0000
-Received: from CH3PR10MB7329.namprd10.prod.outlook.com
- ([fe80::f238:6143:104c:da23]) by CH3PR10MB7329.namprd10.prod.outlook.com
- ([fe80::f238:6143:104c:da23%6]) with mapi id 15.20.8466.016; Mon, 24 Feb 2025
- 08:41:00 +0000
-Date: Mon, 24 Feb 2025 17:40:52 +0900
-From: Harry Yoo <harry.yoo@oracle.com>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Suren Baghdasaryan <surenb@google.com>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        maple-tree@lists.infradead.org
-Subject: Re: [PATCH RFC v2 02/10] slab: add sheaf support for batching
- kfree_rcu() operations
-Message-ID: <Z7wwlLQFBDlcmsDT@harry>
-References: <20250214-slub-percpu-caches-v2-0-88592ee0966a@suse.cz>
- <20250214-slub-percpu-caches-v2-2-88592ee0966a@suse.cz>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250214-slub-percpu-caches-v2-2-88592ee0966a@suse.cz>
-X-ClientProxiedBy: SL2P216CA0099.KORP216.PROD.OUTLOOK.COM
- (2603:1096:101:3::14) To CH3PR10MB7329.namprd10.prod.outlook.com
- (2603:10b6:610:12c::16)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="2Vg3z+uB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5/HWi+iG";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="2Vg3z+uB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5/HWi+iG"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 03CAF21170;
+	Mon, 24 Feb 2025 08:41:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740386505; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Q0q0OFhnReu4nyG1O8BohYY6LE6BcFtozBowaB0rVrI=;
+	b=2Vg3z+uBOa9ZlLVULS4UP8fCjNyWJybxsK37iUOSJwx/roH8dg8KWMN7TO49M+zreqiHtE
+	in9LcfQ/1065C+7LvX+Lptz8mSaLOG7dRTzJS/En7s1xdVxdVYI0cTBc0YQbltiMtCKomm
+	7oxyXDEbKVWmfxmcqs7h6XChfx34vTQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740386505;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Q0q0OFhnReu4nyG1O8BohYY6LE6BcFtozBowaB0rVrI=;
+	b=5/HWi+iGK2xtm2UCHvyvFDbwkJlzHbTrwG05DZgDeNpYdTCtr/ETRJVsOrAxgaqEa5VEBC
+	cL39gNQcOsMpgqCw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740386505; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Q0q0OFhnReu4nyG1O8BohYY6LE6BcFtozBowaB0rVrI=;
+	b=2Vg3z+uBOa9ZlLVULS4UP8fCjNyWJybxsK37iUOSJwx/roH8dg8KWMN7TO49M+zreqiHtE
+	in9LcfQ/1065C+7LvX+Lptz8mSaLOG7dRTzJS/En7s1xdVxdVYI0cTBc0YQbltiMtCKomm
+	7oxyXDEbKVWmfxmcqs7h6XChfx34vTQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740386505;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Q0q0OFhnReu4nyG1O8BohYY6LE6BcFtozBowaB0rVrI=;
+	b=5/HWi+iGK2xtm2UCHvyvFDbwkJlzHbTrwG05DZgDeNpYdTCtr/ETRJVsOrAxgaqEa5VEBC
+	cL39gNQcOsMpgqCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3173C13332;
+	Mon, 24 Feb 2025 08:41:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id OXG/CsgwvGcoVgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Mon, 24 Feb 2025 08:41:44 +0000
+Message-ID: <6f7b0886-5f31-4ba9-b82e-e9d3614b504f@suse.de>
+Date: Mon, 24 Feb 2025 09:41:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR10MB7329:EE_|CY8PR10MB6441:EE_
-X-MS-Office365-Filtering-Correlation-Id: 127f966e-5ff5-44fb-2fa8-08dd54aef6b9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?9Qnxp/cTFE4uEHLXTUYmAmM3ID2HZ7JWivcPV0+NYKkGDaPtaJV2Fb0QiiWz?=
- =?us-ascii?Q?gjrMUZdYMUPBOI36etYKkLgFJaUX0/Y42Was6D7p/ebfdkFUPnvQwH89PabV?=
- =?us-ascii?Q?8J3JrNivCO09AWh2QONdLeUTC+MmncKdfFOl89xlEEKpQopM6ona+GZJRCIl?=
- =?us-ascii?Q?WVYON28y0tyGt9l4o9M7lHNlYk2iIZqSbWjRnsgNRAQzd8pyw3P+WDtnCRps?=
- =?us-ascii?Q?scei8UT2MgmXlOZaKROdZqNjFzI08CxgNmU66CQmX/hmY4n9muwUGkpbnm12?=
- =?us-ascii?Q?5CfuuR47DDHMdHL8QSfw7pU3G+M00+GAUYhHGFNgTkhvrHdjxmlu6/WSxJTu?=
- =?us-ascii?Q?mSHFIOOVVFzV9ElVRsVUigFZPNVpmkwxnJzdMnNAm5U+7k7/OYoqGIwE4595?=
- =?us-ascii?Q?Im9dKrmL9lg+itwfZiKOacJhbrfsuRUHUq6LDvgDXS10oLwi2azoF55GAiCk?=
- =?us-ascii?Q?TmQB2wGWVEjyUX05BoYzJbx+ICkoLzX4qLA+e2/DqFHKiiUnw9kD/NvH0HGr?=
- =?us-ascii?Q?mypPD19hCMrIQXrF/5M+wzsgF/OmL+A/l4s/oBDMxp76ZGN6gI9URR/DHyjP?=
- =?us-ascii?Q?LXOB16/98KMdTJ/Ee5F3+1jRD3gCGFFIOHQqbL9JuVmqJI5DJxN1c+fHbw/q?=
- =?us-ascii?Q?gWF9+WrzkVJTlj54kxWwe49b9Se5Ak/UanOm4ue+Yd4clpeSgxoB0DHbSC/p?=
- =?us-ascii?Q?gJvIrCjYj9mxnlSc5grMDgzj9A2uGNANynr4XlFOd7ZB1wmG2y2jsS1d6TDv?=
- =?us-ascii?Q?Va/xK1bXW59hXaLOiFhxACdSXeWNQFITD3reH4YfGhjeVsO2ZE6VZhnczWYu?=
- =?us-ascii?Q?Fv7JGRb4NKJqb8eXFm3gTsG59jCk+CkjrmTKz2dkuF2BcpeCsx3xXF6S8qJL?=
- =?us-ascii?Q?BK0yFMJQewMEvf5hALIBXPFryA9BoVMi2eTMy9adUSiYl1btU4qEnVxE3fah?=
- =?us-ascii?Q?CC7X87H6yB1NqhZynqf161DJocM2lue59YEQZgvqYSIqxajmGCCWWRwmRrmY?=
- =?us-ascii?Q?P7kd65j9DLJ+hFXSUz2vuT9ZdllopJ6BRIup8U4vTeuiCqqIjdqcP7t+LEK1?=
- =?us-ascii?Q?d6fSZTbLYGVoxpaDxR4bdEwrBJKwrQGl7RJxvyB28w05HgT/28pstoppubg5?=
- =?us-ascii?Q?KrzT7Bq1qIv+K95KyAH8LQ7hE2sjPHw5MxH6N8jO/Uv7dY7iG0YV6W1gwkNU?=
- =?us-ascii?Q?rPNCx2aUdaJt7HM6mhqXEDNn16wCwwpypeM0SBhzCBadu+UMyktIwXuJHS5y?=
- =?us-ascii?Q?aJ+Ldf63IocR8Bnh0fh3OaXbr/UvrOln4HeoE7l0FHQjh41NCJ23UNkCAT8D?=
- =?us-ascii?Q?LscFbWEzF3zGx8H6vW3F5E1OkOK0WVldbRy+8gV0ZdYorxRaS6mssBKAT2Ww?=
- =?us-ascii?Q?KsiI3CBOm3wQuzKJuFu0bFbk4I0A?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR10MB7329.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?8xbtr2SwXcZAH9Ir2JPZkQhVd9hOrsHhH1yvmdJAnPHUGQhWdKXtWtAjh9Gz?=
- =?us-ascii?Q?CS/Uq7Ssv4vOd/IUuUv+0SECylbRYvUpVo+PnWcrtzuxyOIeBN5tBP78uGrt?=
- =?us-ascii?Q?bQjOHCkm+ev9yAe0TMzuF54nOnVWLGkmV6ku6wlHXQqZ8qH2S02sc4FciNuB?=
- =?us-ascii?Q?g50N3VFKxb1DjozJ78uBse1ltQkz0lxN3OcPQWPJeQWswbXJ6VEg6XAP6Qm4?=
- =?us-ascii?Q?FB5/tpWOPplN6jN5jOnkz2isW5SHQidTsRVAfakqbqkHZKFeKr1JYih9mHhi?=
- =?us-ascii?Q?6xEi0l0TOhU6IoY4PqtGTU8k8qAQVxzT24koWjIfooC2FbvaMqULwdW6eyKL?=
- =?us-ascii?Q?It5D4SNRxA9Q0DPPlDtz0wl2RPraHK1soINDzMRVQfYpWLRny+Ogn9OW1wGA?=
- =?us-ascii?Q?gbUG+5iqDE/oU43XutK4ejUhaEpNlBI93eXH4s5JJs5LaQ4APSE1ZDnoFRD5?=
- =?us-ascii?Q?1G4p0p6HUzt6DwYxtB7P/U0qFYh1QJy1/FJ13r2HTpRDHTXY1HSxaaLhzK1p?=
- =?us-ascii?Q?FQ1ynpLfZXUNNNkwO8j4IYLK5gXPiHsGJWkoxLARNMbPjEH+Oioda4TmB/Fb?=
- =?us-ascii?Q?nRB1bYl4uMZ7xlAs1+OOTKWjU53d0uTjq6cWKuwsN3shou5OuDSv1prgeNrR?=
- =?us-ascii?Q?LUMJVstAUD+d/u+wL3Tkozyd7qK7gKv8eAJ93cY0Q4M70sb+ikjJfja8nkcm?=
- =?us-ascii?Q?bjsrMpcCeghHcyF5rQzsaOBTizAmsmovm25FqbQvFg+xCAQA4SpiE66SQNQ2?=
- =?us-ascii?Q?NXdc/LhiVF0EHa51zMiZxT3C/0QJX+nxZzt80XAfrwU0a3QPdH/KWMbmx7DA?=
- =?us-ascii?Q?CHPNlhg7MdLEDb1M1AGZ610Gz4vv2jpVX4VwOyVWnukc5zRbo0gSldrl0Pwr?=
- =?us-ascii?Q?GwyomrFAWgYyoSN9R2qFMkwE18E84Owl4X8EOuon4q9CszsIPKZC5rAk7ou+?=
- =?us-ascii?Q?0C351/POj75amVOAIo7juehIziJzYVbC3xGBE3/jM6kVBMFCCGKP5BQvvt/4?=
- =?us-ascii?Q?vMZgpDt1la3Oh87CuyOolvdGlAv5eLLyEBCPj6x9Walpg49sHoJYLdL1Etg/?=
- =?us-ascii?Q?Am80G9F0T+5cAN0xLg4OJ2pkXSJ06tI/5tsadI5YXgTHq1cXZr4KOPTB5wAh?=
- =?us-ascii?Q?Cx+OticgtZDaY0GaWclc07U+E9Dg1hDBqlMMwSP8UPo4HDgSOOIaZEHAvaIN?=
- =?us-ascii?Q?SD6D20BhX1H8l+CfGu9HzaMnZ7nLxTSgw2zMiTs3pHpnhpMCpZRuKGubp5yO?=
- =?us-ascii?Q?jlo68rBdRKaM9TlvcEj6YsXGb+1zPHctSSehpbMeIFVkJs/Tgt+WeAMCI2Dt?=
- =?us-ascii?Q?zUsSSMBtuSHEjzdYiHGPVkKM3iCww+lI7GlEE5HVEdvRaqACZSiVjIcVzNKb?=
- =?us-ascii?Q?r79FxWrDm459UvcQzMmk4IT8hj7HRrprflGX13Q9r5Y1PxPoglunACrMszDg?=
- =?us-ascii?Q?SPQOsXiQipO4Jm/0D8fX6qxNPleIRFctUmp2KIdhPY0ofUIPh68N4pk36l95?=
- =?us-ascii?Q?fOr1FSuGktMSOlOpG4I5gJUCp6j8CdAeICXPxWoE31/NGzlQ2//1y8BU9DlH?=
- =?us-ascii?Q?CX6Dt32Li8s2dlJyuSsSlU1xT/mK1gxA1MqyR3O5?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	JUU/Vo+TeqF1uWC6sG7DZ6pWo35ohHj+TUIVfonLuLpNa38HHKu8rGxJApMMO4HLi6JBjDnl41HUntTQ3ovlsO2hBOUbH240xbbryeGu1TCD6gNPZulXZR9iyC3WJrjo0p9pjJC6SjyAd3UxjMO6RBw9NcDr9BcqpdmGtXk2gimuFSn0mSQ4BNWRNLaRueb//5W0aMwjNdp/SzuCcnLYl7VFfw6yKILSQAgIp0bhMl0VHFazf2+vBHUUQZw/s2krsqJLXGfOTctrbZ7txQJ0CMLLQUb/fVEebCPkMVHJvqvfTn02uBRKSJcmzzM+DxwHc+QP+a/CcLEe0B1JLJY/Ngw/zNP96FrLyXDUnTTuZXCJYTuqncPPwpwkl2JXu0F9qJ6WToA4FMD355S6mVdKg6+6/emwuJ5x72U8foTmPiEkLdzYPBwXOgN2oWvXA1yyX1Q7Yb6UcavaQZCCtVIReRSfuOizUvkgtpzRMYnoOtjLSZfMH+z3lfgg4b9gUJSOpzbiN2IYRX+8OqWoD0qaDttfaFanzsH4szsyFfucNA8glgLJMjQ3wxNgIz4FKmq+ZNWAd8jrC9nyE0L6u4LCJnUnNC2VjmG0B5+rhXZeW+U=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 127f966e-5ff5-44fb-2fa8-08dd54aef6b9
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR10MB7329.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2025 08:40:59.9971
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KaS80Zzt4aCLSytKQ9xqFDtXYWMVp/Jba0Rnm6KhTqv0v37AnNz9RvSJQHZyBYRSzdMOMWy/mK3UjFmocQzE8A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR10MB6441
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-24_03,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 adultscore=0
- mlxlogscore=999 bulkscore=0 suspectscore=0 malwarescore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2502100000 definitions=main-2502240062
-X-Proofpoint-GUID: IhkFQaFB0tvD3B6FcdCqeyghrQZrQ9f1
-X-Proofpoint-ORIG-GUID: IhkFQaFB0tvD3B6FcdCqeyghrQZrQ9f1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] drm/tiny: add driver for Apple Touch Bars in x86
+ Macs
+To: Aditya Garg <gargaditya08@live.com>,
+ "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
+Cc: "pmladek@suse.com" <pmladek@suse.com>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ "linux@rasmusvillemoes.dk" <linux@rasmusvillemoes.dk>,
+ "senozhatsky@chromium.org" <senozhatsky@chromium.org>,
+ Jonathan Corbet <corbet@lwn.net>,
+ "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "mripard@kernel.org" <mripard@kernel.org>,
+ "airlied@gmail.com" <airlied@gmail.com>, "simona@ffwll.ch"
+ <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
+ "apw@canonical.com" <apw@canonical.com>, "joe@perches.com"
+ <joe@perches.com>, "dwaipayanray1@gmail.com" <dwaipayanray1@gmail.com>,
+ "lukas.bulwahn@gmail.com" <lukas.bulwahn@gmail.com>,
+ "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
+ "christian.koenig@amd.com" <christian.koenig@amd.com>,
+ Kerem Karabay <kekrby@gmail.com>, Aun-Ali Zaidi <admin@kodeit.net>,
+ Orlando Chamberlain <orlandoch.dev@gmail.com>,
+ Atharva Tiwari <evepolonium@gmail.com>,
+ "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+ "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+ Hector Martin <marcan@marcan.st>,
+ "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+ Asahi Linux Mailing List <asahi@lists.linux.dev>,
+ Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>
+References: <DC5079B2-9D3D-4917-A50D-20D633071808@live.com>
+ <8F522D41-5417-467E-B9D3-7D9FC24AE536@live.com>
+ <Z7igVXqvRYTVFpXU@smile.fi.intel.com>
+ <A373EDB5-528D-4ECF-8CF3-4F96DE6E3797@live.com>
+ <Z7jlORk0MiMFTmp6@smile.fi.intel.com>
+ <E8256A03-5D13-4B8B-932D-70E734E580FE@live.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <E8256A03-5D13-4B8B-932D-70E734E580FE@live.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,live.com];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[32];
+	TAGGED_RCPT(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[suse.com,goodmis.org,rasmusvillemoes.dk,chromium.org,lwn.net,linux.intel.com,kernel.org,gmail.com,ffwll.ch,linux-foundation.org,canonical.com,perches.com,linaro.org,amd.com,kodeit.net,vger.kernel.org,lists.freedesktop.org,lists.linaro.org,marcan.st,armlinux.org.uk,lists.linux.dev,svenpeter.dev,jannau.net];
+	FREEMAIL_TO(0.00)[live.com,linux.intel.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	R_RATELIMIT(0.00)[to_ip_from(RLk1j8fm6pferx3phn9ndszqb3)]
+X-Spam-Score: -2.80
+X-Spam-Flag: NO
 
-On Fri, Feb 14, 2025 at 05:27:38PM +0100, Vlastimil Babka wrote:
-> Extend the sheaf infrastructure for more efficient kfree_rcu() handling.
-> For caches with sheaves, on each cpu maintain a rcu_free sheaf in
-> addition to main and spare sheaves.
-> 
-> kfree_rcu() operations will try to put objects on this sheaf. Once full,
-> the sheaf is detached and submitted to call_rcu() with a handler that
-> will try to put in in the barn, or flush to slab pages using bulk free,
-> when the barn is full. Then a new empty sheaf must be obtained to put
-> more objects there.
-> 
-> It's possible that no free sheaves are available to use for a new
-> rcu_free sheaf, and the allocation in kfree_rcu() context can only use
-> GFP_NOWAIT and thus may fail. In that case, fall back to the existing
-> kfree_rcu() machinery.
-> 
-> Expected advantages:
-> - batching the kfree_rcu() operations, that could eventually replace the
->   existing batching
-> - sheaves can be reused for allocations via barn instead of being
->   flushed to slabs, which is more efficient
->   - this includes cases where only some cpus are allowed to process rcu
->     callbacks (Android)
-> 
-> Possible disadvantage:
-> - objects might be waiting for more than their grace period (it is
->   determined by the last object freed into the sheaf), increasing memory
->   usage - but the existing batching does that too?
-> 
-> Only implement this for CONFIG_KVFREE_RCU_BATCHED as the tiny
-> implementation favors smaller memory footprint over performance.
-> 
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> ---
->  mm/slab.h        |   2 +
->  mm/slab_common.c |  21 ++++++++
->  mm/slub.c        | 151 +++++++++++++++++++++++++++++++++++++++++++++++++++++--
->  3 files changed, 170 insertions(+), 4 deletions(-)
-> 
-> diff --git a/mm/slab.h b/mm/slab.h
-> index 8daaec53b6ecfc44171191d421adb12e5cba2c58..94e9959e1aefa350d3d74e3f5309fde7a5cf2ec8 100644
-> --- a/mm/slab.h
-> +++ b/mm/slab.h
-> @@ -459,6 +459,8 @@ static inline bool is_kmalloc_normal(struct kmem_cache *s)
->  	return !(s->flags & (SLAB_CACHE_DMA|SLAB_ACCOUNT|SLAB_RECLAIM_ACCOUNT));
->  }
->  
-> +bool __kfree_rcu_sheaf(struct kmem_cache *s, void *obj);
-> +
->  /* Legal flag mask for kmem_cache_create(), for various configurations */
->  #define SLAB_CORE_FLAGS (SLAB_HWCACHE_ALIGN | SLAB_CACHE_DMA | \
->  			 SLAB_CACHE_DMA32 | SLAB_PANIC | \
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index ceeefb287899a82f30ad79b403556001c1860311..c6853450ed74160cfcb497c09f92c1f9f7b12629 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -1613,6 +1613,24 @@ static void kfree_rcu_work(struct work_struct *work)
->  		kvfree_rcu_list(head);
->  }
->  
-> +static bool kfree_rcu_sheaf(void *obj)
-> +{
-> +	struct kmem_cache *s;
-> +	struct folio *folio;
-> +	struct slab *slab;
-> +
-> +	folio = virt_to_folio(obj);
-> +	if (unlikely(!folio_test_slab(folio)))
-> +		return false;
+Hi
 
-Does virt_to_folio() work for vmalloc addresses?
-Probably it should check is_vmalloc_addr() first?
+Am 22.02.25 um 10:07 schrieb Aditya Garg:
+>> What padding, please? Why TCP UAPI headers do not have these attributes?
+>> Think about it, and think about what actually __packed does and how it affects
+>> (badly) the code generation. Otherwise it looks like a cargo cult.
+>>
+>>> I tried removing __packed btw and driver no longer works.
+>> So, you need to find a justification why. But definitely not due to padding in
+>> many of them. They can go without __packed as they are naturally aligned.
+> Alright, I did some debugging, basically printk sizeof(struct). Did it for both packed and unpacked with the following results:
+>
+> Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_msg_request_header is 16
+> Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_msg_request_header_unpacked is 16
+>
+> Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_msg_response_header is 20
+> Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_msg_response_header_unpacked is 20
+>
+> Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_msg_simple_request is 32
+> Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_msg_simple_request_unpacked is 32
+>
+> Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_msg_information is 65
+> Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_msg_information_unpacked is 68
 
-Otherwise look good to me.
+In the unpacked version, there is a 3-byte gap after the 
+'bits_per_pixel' to align the next field. Using __packed removes those 
+gaps at the expense of runtime overhead.
+>
+> Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_frame is 12
+> Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_frame_unpacked is 12
+>
+> Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_fb_request_footer is 80
+> Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_fb_request_footer_unpacked is 80
+>
+> Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_fb_request is 48
+> Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_fb_request_unpacked is 48
+>
+> Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_fb_request_response is 40
+> Feb 22 13:02:04 MacBook kernel: size of struct appletbdrm_fb_request_response_unpacked is 40
+>
+> So, the difference in sizeof in unpacked and packed is only in appletbdrm_msg_information. So, I kept this packed, and removed it from others. The Touch Bar still works.
+>
+> So maybe keep just this packed?
 
-> +
-> +	slab = folio_slab(folio);
-> +	s = slab->slab_cache;
-> +	if (s->cpu_sheaves)
-> +		return __kfree_rcu_sheaf(s, obj);
-> +
-> +	return false;
-> +}
-> +
->  static bool
->  need_offload_krc(struct kfree_rcu_cpu *krcp)
->  {
-> @@ -1957,6 +1975,9 @@ void kvfree_call_rcu(struct rcu_head *head, void *ptr)
->  	if (!head)
->  		might_sleep();
->  
-> +	if (kfree_rcu_sheaf(ptr))
-> +		return;
-> +
->  	// Queue the object but don't yet schedule the batch.
->  	if (debug_rcu_head_queue(ptr)) {
->  		// Probable double kfree_rcu(), just leak.
+The fields in the TCP header are aligned by design. Unfortunately, this 
+hardware's protocol is not. And there's no way of fixing this now. Just 
+keep all of them packed if you want. At least it's clear then what 
+happens. And if your hardware requires this, you can't do much anyway.
+
+Best regards
+Thomas
+
+
+>>
+>>
+>> ...
+>>
+>>>>> + if (response->msg == APPLETBDRM_MSG_SIGNAL_READINESS) {
+>>>>> + if (!readiness_signal_received) {
+>>>>> + readiness_signal_received = true;
+>>>>> + goto retry;
+>>>>> + }
+>>>>> +
+>>>>> + drm_err(drm, "Encountered unexpected readiness signal\n");
+>>>>> + return -EIO;
+>>>>> + }
+>>>>> +
+>>>>> + if (actual_size != size) {
+>>>>> + drm_err(drm, "Actual size (%d) doesn't match expected size (%lu)\n",
+>>>>> + actual_size, size);
+>>>>> + return -EIO;
+>>>>> + }
+>>>>> +
+>>>>> + if (response->msg != expected_response) {
+>>>>> + drm_err(drm, "Unexpected response from device (expected %p4ch found %p4ch)\n",
+>>>>> + &expected_response, &response->msg);
+>>>>> + return -EIO;
+>>>> For three different cases the same error code, can it be adjusted more to the
+>>>> situation?
+>>> All these are I/O errors, you got any suggestion?
+>> Your email client mangled the code so badly that it's hard to read. But I would
+>> suggest to use -EINTR in the first case, and -EBADMSG. But also you may consider
+>> -EPROTO.
+> Thanks
+>>>>> + }
+>> ...
+>>
+>>>>> + if (ret)
+>>>>> + return ret;
+>>>>> + else if (!new_plane_state->visible)
+>>>> Why 'else'? It's redundant.
+>>> I’ve just followed what other drm drivers are doing here:
+>>>
+>>> https://elixir.bootlin.com/linux/v6.13.3/source/drivers/gpu/drm/tiny/bochs.c#L436
+>>> https://elixir.bootlin.com/linux/v6.13.3/source/drivers/gpu/drm/tiny/cirrus.c#L363
+>>>
+>>> And plenty more
+>> A bad example is still a bad example. 'else' is simply redundant in this
+>> case and add a noisy to the code.
+>>
+>>> I won’t mind removing else. You want that?
+>> Sure.
+>>
+>> ...
+>>
+>>>>> + request_size = ALIGN(sizeof(struct appletbdrm_fb_request) +
+>>>>> +        frames_size +
+>>>>> +        sizeof(struct appletbdrm_fb_request_footer), 16);
+>>>> Missing header for ALIGN().
+>>>>
+>>>> But have you checked overflow.h for the possibility of using some helper macros
+>>>> from there? This is what should be usually done for k*alloc() in the kernel.
+>>> I don’t really think we need a macro here.
+>> Hmm... is frames_size known to be in a guaranteed range to make sure no
+>> potential overflow happens?
+> I don’t really find any cause of potential overflow.
+>
+>
+>>>>> + appletbdrm_state->request = kzalloc(request_size, GFP_KERNEL);
+>>>>> +
+>>>>> + if (!appletbdrm_state->request)
+>>>>> + return -ENOMEM;
+>> ...
+>>
+>>>>> + request->msg_id = timestamp & 0xff;
+>>>> Why ' & 0xff'?
+>>> https://github.com/imbushuo/DFRDisplayKm/blob/master/src/DFRDisplayKm/DfrDisplay.c#L147
+>> This is not an answer.
+>> Why do you need this here? Isn't the type of msg_id enough?
+> Hmm, I double checked this. msg_id is u8 in the Linux port so would anyways never exceed 0xff. I’ll remove this.
+> Its different in the Windows driver.
+>> ...
+>>
+>>>>> + adev->mode = (struct drm_display_mode) {
+>>>> Why do you need a compound literal here? Perhaps you want to have that to be
+>>>> done directly in DRM_MODE_INIT()?
+>>> I really don’t find this as an issue. You want me to declare another structure, basically this?:
+>> Nope, I'm asking if the DRM_MODE_INIT() is done in a way that it only can be
+>> used for the static data. Seems like the case. Have you tried to convert
+>> DRM_MODE_INIT() to be always a compound literal? Does it break things?
+> Seems to be breaking things.
+>>> struct drm_display_mode mode = {
+>>> DRM_MODE_INIT(60, adev->height, adev->width,
+>>> DRM_MODE_RES_MM(adev->height, 218),
+>>> DRM_MODE_RES_MM(adev->width, 218))
+>>> };
+>>> adev->mode = mode;
+>>>
+>>>>> + DRM_MODE_INIT(60, adev->height, adev->width,
+>>>>> +       DRM_MODE_RES_MM(adev->height, 218),
+>>>>> +       DRM_MODE_RES_MM(adev->width, 218))
+>>>>> + };
+>> -- 
+>> With Best Regards,
+>> Andy Shevchenko
+>>
+>>
 
 -- 
-Cheers,
-Harry
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
