@@ -1,152 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FCD5265637;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CEE26659E;
 	Mon, 24 Feb 2025 18:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740421178; cv=none; b=ZWWgYI+dSFt8DCcLslzzREfojLw244TocEBXFAr/MFe3FXz8NVUKLAN9TSb10RJhy8KD3404PHJExj1jv8CZVypdQj36sxFbgM2qw/kZCaMvNx20FSC/NduyBaUdUaBeGj2fDsh7PWMkN0j5E9tgqxcCRUhIo1/rqLmkxSCFQLI=
+	t=1740421181; cv=none; b=lwHY+2+JnwYqvtwKZyEmlGMI5oMZF+SH22lgp724f79bQ5Z08HqE9cGpoo+WaCcs0wNxZIKXYXsYWOeJQbK/c8nWZulZCg7fAHtD+XZyI1QSvmuhTjszOR0+t7/EgycIdk0ybbipYprWStTPIh2mnqUGXhie3kPjNEGAAmjtfjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740421178; c=relaxed/simple;
-	bh=1piqEsg8TREgMWofEyn4jJ96CEYOxAF1p1P8q05XkLs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fRdkB+411vf7xuD9WduqOfLvLV5jityj5XC4/jeKwD9w/8jBsKzIw4cPszrVmjrItC+pS5vqj33u9Aov2MsSr+OIWVbNlom/6wgu7cRnjJfd7aTrkdLn0gVhfv2yaUNmYJ07sNBU2hLkV38l+DHhZ6MzCSSeZYoHGUa3EP1f4uA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KCnUeAAp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740421181; c=relaxed/simple;
+	bh=gzgQdm+JmvR7MKlx7feYwCW2Y9SAYJHpvwy/wetQL4k=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=N87H6zqF9cvP4Ub8Z/Far51cVmyLipj5Mn5qkkYtMMrn+L5xyOmqz/OHHHwzwMZYCUkKpBBsdZhYzwfg/XGqVId8LpT+BS5ErOaVftOCG+e03yMdHkzR+qszjbBYVSZW8tRbWUhQTAIkZkge2+vKjprh8fr7sf4ZbjBHQzqu9uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=HmSwivo2; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KCnUeAAp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 963A0C4CED6;
-	Mon, 24 Feb 2025 18:19:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740421178;
-	bh=1piqEsg8TREgMWofEyn4jJ96CEYOxAF1p1P8q05XkLs=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=KCnUeAApLkkGko6SP7l7F15fOSW6KYftikbjynwWHDzhpGaS1C5dm+hphcTuhgcvD
-	 6JjpO3g140z/Wflx4pTah+ylqAgeWOm0s99TJW9Cehz+NTcr7MwfHVaeHKae4rm2j+
-	 enwWzEbTGM4hX7PmiPS0r4+cpkbHgtAvo2OXd5b43Q0kQa6IM+pxJMCIPOHoYhYaze
-	 yEko/7XeLOjW1E4YTp6mEuE7w12Ny2Ll3h0zQh6hMk8fRSaPDXfQa4VNX1l5/1WWQ8
-	 kTQtV3BKBLCAhsDpMRSw0e+uiRNp3Jifj8JHmnk8tA1rgLvt6FjJHsjJ3UnWzEByu9
-	 mNf8tTFH8L+dQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 24 Feb 2025 19:11:51 +0100
-Subject: [PATCH net 2/3] mptcp: reset when MPTCP opts are dropped after
- join
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="HmSwivo2"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51ODQlVP012696;
+	Mon, 24 Feb 2025 19:14:57 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	osiU9ANcAUpNcWXhI2xaSMZVYF5nDauriCTMslBkOmI=; b=HmSwivo2j8yGU+OD
+	8CvXkxMFfO5N+oopQOWZ+3OvOWV2lwkMs9P+TV0dGKbS1xutovlmhIgUMC4MIVl6
+	pXLTcG0x+LBBFE/SDLqOBmCsEMhvDbAZ6Yvvq7cY/UMTnUk2T70zH7VrWZRjjvRE
+	tMANRs2l89fVQoihhQIZO5mcuEbHSaccQ/0QNU1lD2ZAZw6p3chl4g7RbDHgkxTL
+	s789FLzbSAjlrlyzkloUwbBUiVo3XvjExkCruTRqqLI9TMMoVTWULgaVLyfTAuSD
+	xOZAWjUvJ8YASwQkrtlZ+IvcCcNc1RUM2Otz7rTSmuvkhiARwoOqCmTyXVEhLpic
+	w2oTPg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44y4vm10xa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Feb 2025 19:14:57 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id DA2FD4006D;
+	Mon, 24 Feb 2025 19:12:29 +0100 (CET)
+Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 22CBE5461C3;
+	Mon, 24 Feb 2025 19:02:33 +0100 (CET)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
+ (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Feb
+ 2025 19:02:32 +0100
+Received: from localhost (10.252.23.75) by SAFDAG1NODE1.st.com (10.75.90.17)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Feb
+ 2025 19:02:32 +0100
+From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+To: <lee@kernel.org>, <ukleinek@kernel.org>, <alexandre.torgue@foss.st.com>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <wbg@kernel.org>, <jic23@kernel.org>, <daniel.lezcano@linaro.org>,
+        <tglx@linutronix.de>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <olivier.moysan@foss.st.com>, <fabrice.gasnier@foss.st.com>
+Subject: [PATCH 4/8] clocksource: stm32-lptimer: add stm32mp25 support
+Date: Mon, 24 Feb 2025 19:01:46 +0100
+Message-ID: <20250224180150.3689638-5-fabrice.gasnier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
+References: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250224-net-mptcp-misc-fixes-v1-2-f550f636b435@kernel.org>
-References: <20250224-net-mptcp-misc-fixes-v1-0-f550f636b435@kernel.org>
-In-Reply-To: <20250224-net-mptcp-misc-fixes-v1-0-f550f636b435@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org, 
- "Chester A. Unal" <chester.a.unal@xpedite-tech.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3536; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=1piqEsg8TREgMWofEyn4jJ96CEYOxAF1p1P8q05XkLs=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnvLbEVe5ugfNB/pEH8gsCo37OFpAAyoQsRPom1
- VoDnLcRVI2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ7y2xAAKCRD2t4JPQmmg
- c0VrD/4wezF7LMq2B3x0qP48+OYaeX4LE+vQFlL2AyJudtuOv21VQynOTxViGWTiwukpGqKFe/r
- mVsYWPgDK3mSqKvQWZ+S3IirU+Hx6iY0K7D2FEu2hs6KEe6Qc6GYpRxKehY7ga2zfpElSOopwwu
- 35Mt9GPcac0d0w/9WGZo0nyqee2YC4XQvtSdloya4SnSXwKW9X2A5Gp6FtLRHDGEjxRP8rYyHAr
- Naf7zHvZ/+rN3LSPggCmdNRI2xQe+MGaAIoiqBl5h8NiBcBkUD+/M1bDXg+JtSNxt2cexhAXqk2
- WvEMZ/tDuJuuQ2CTvJlFo9dk7dTBa6gqzEqpOgHZuFHQffVo9pMSLxoZBhRey96MjY6kz0YwqYx
- dud3EOMSLgegP6dMkdWu5ewGqN3pMd2wm8q70MCP31gsJc7JdriABPJDLGz0/NbTq/hsMIao/YN
- hMFJcLrDb1Oql8FbjW+LNVkPqzEB6h8XaHBg3AzsvMuXczStGG3oKeDTUap0Al+uP9C3Rq1ibOz
- 9GPsdqk5H8CSZ0qUSLn5PRLbqLQ4c4HQLKLUZj+WtqHEx7HWat57mmqs/xyj37KxjS/sBtd6pWz
- it4xY8KhZeLGnDjOKCv38cjf6VflrtLucU6e+lNl4GGodzwa0N0SHLg6p1KiaLOO0lwtu6PfgAQ
- PmbczMT7fJqDjuQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-24_09,2025-02-24_02,2024-11-22_01
 
-Before this patch, if the checksum was not used, the subflow was only
-reset if map_data_len was != 0. If there were no MPTCP options or an
-invalid mapping, map_data_len was not set to the data len, and then the
-subflow was not reset as it should have been, leaving the MPTCP
-connection in a wrong fallback mode.
+From: Patrick Delaunay <patrick.delaunay@foss.st.com>
 
-This map_data_len condition has been introduced to handle the reception
-of the infinite mapping. Instead, a new dedicated mapping error could
-have been returned and treated as a special case. However, the commit
-31bf11de146c ("mptcp: introduce MAPPING_BAD_CSUM") has been introduced
-by Paolo Abeni soon after, and backported later on to stable. It better
-handle the csum case, and it means the exception for valid_csum_seen in
-subflow_can_fallback(), plus this one for the infinite mapping in
-subflow_check_data_avail(), are no longer needed.
+Add the support of the new compatible for STM32MP25 SoC in driver, as
+described in Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
+and used in arch/arm64/boot/dts/st/stm32mp251.dtsi.
 
-In other words, the code can be simplified there: a fallback should only
-be done if msk->allow_infinite_fallback is set. This boolean is set to
-false once MPTCP-specific operations acting on the whole MPTCP
-connection vs the initial path have been done, e.g. a second path has
-been created, or an MPTCP re-injection -- yes, possible even with a
-single subflow. The subflow_can_fallback() helper can then be dropped,
-and replaced by this single condition.
-
-This also makes the code clearer: a fallback should only be done if it
-is possible to do so.
-
-While at it, no need to set map_data_len to 0 in get_mapping_status()
-for the infinite mapping case: it will be set to skb->len just after, at
-the end of subflow_check_data_avail(), and not read in between.
-
-Fixes: f8d4bcacff3b ("mptcp: infinite mapping receiving")
-Cc: stable@vger.kernel.org
-Reported-by: Chester A. Unal <chester.a.unal@xpedite-tech.com>
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/544
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Signed-off-by: Patrick Delaunay <patrick.delaunay@foss.st.com>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
 ---
- net/mptcp/subflow.c | 15 +--------------
- 1 file changed, 1 insertion(+), 14 deletions(-)
+ drivers/clocksource/timer-stm32-lp.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index dfcbef9c46246983d21c827d9551d4eb2c95430e..9f18217dddc865bc467a2c5c34aa4bf23bf3ac75 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1142,7 +1142,6 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
- 	if (data_len == 0) {
- 		pr_debug("infinite mapping received\n");
- 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPRX);
--		subflow->map_data_len = 0;
- 		return MAPPING_INVALID;
- 	}
+diff --git a/drivers/clocksource/timer-stm32-lp.c b/drivers/clocksource/timer-stm32-lp.c
+index a4c95161cb22..db055348e2cc 100644
+--- a/drivers/clocksource/timer-stm32-lp.c
++++ b/drivers/clocksource/timer-stm32-lp.c
+@@ -197,6 +197,7 @@ static int stm32_clkevent_lp_probe(struct platform_device *pdev)
  
-@@ -1286,18 +1285,6 @@ static void subflow_sched_work_if_closed(struct mptcp_sock *msk, struct sock *ss
- 		mptcp_schedule_work(sk);
- }
- 
--static bool subflow_can_fallback(struct mptcp_subflow_context *subflow)
--{
--	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
--
--	if (subflow->mp_join)
--		return false;
--	else if (READ_ONCE(msk->csum_enabled))
--		return !subflow->valid_csum_seen;
--	else
--		return READ_ONCE(msk->allow_infinite_fallback);
--}
--
- static void mptcp_subflow_fail(struct mptcp_sock *msk, struct sock *ssk)
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
-@@ -1393,7 +1380,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 			return true;
- 		}
- 
--		if (!subflow_can_fallback(subflow) && subflow->map_data_len) {
-+		if (!READ_ONCE(msk->allow_infinite_fallback)) {
- 			/* fatal protocol error, close the socket.
- 			 * subflow_error_report() will introduce the appropriate barriers
- 			 */
-
+ static const struct of_device_id stm32_clkevent_lp_of_match[] = {
+ 	{ .compatible = "st,stm32-lptimer-timer", },
++	{ .compatible = "st,stm32mp25-lptimer-timer", },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, stm32_clkevent_lp_of_match);
 -- 
-2.47.1
+2.25.1
 
