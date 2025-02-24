@@ -1,50 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA20263F41;
-	Mon, 24 Feb 2025 17:19:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B362627E6;
+	Mon, 24 Feb 2025 17:22:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740417587; cv=none; b=Pte2mj/VoMc2dcvIJLeKTcEqLOMSJuc5L57kKAqbO7ucT02QxMuUsioBnt2EYNQHIut+tDYr2sWHJw+rO/3WNT0uTJW7tuR1B/JVtvkIlfWiclYcLEfGyuXtIm6dxM1BMQ5Exj7/uKAWljpDLK5fM3911rVcPzkSiQ+gova0nJs=
+	t=1740417776; cv=none; b=nAlX2vqKaeQPfMqav3VC6zR9xiUdwFEOIYD7CC4KKQVGNuFn+vuLPlBn0amaWXjARMhI/czIfd4MDGEwGjPL8TaxVafQSsi0C4B62gXoUozWcdxloOd8beFeVZSLo4zLZpjgZJQu9za2inIwIWJfUxPKJCuIwGIJoj81fHmc+O0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740417587; c=relaxed/simple;
-	bh=2JkK49D5kslLlDTcfz9RF/ZSparlD8LgrmourQdVShA=;
+	s=arc-20240116; t=1740417776; c=relaxed/simple;
+	bh=/P+Rucaw2uTNNTVGKF3Z7fCCwDc+94TYvL/AhjRy5LY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aX5TxT1YL3vzC+DLWzvhzt/f6QU0Y+aBwqzcTLHg4Snb16tEOW4s52NmIDsjb+O7yfD7kfm6FT2iCB+u15AxAT66aaTLwSCGoCrUf/NmZRYMfRfdoTNnU+6aZxYoa/2mqbQkUJl/l1utybyeWzhtrpx5boTapHK6C7YUa2HcTPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sOJUVlp3; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=FngAlpDLtPRfVBx5iDuuKKYHT95eWT9SQPPPi7vXb16CbQwpIQ7/PhKfmzMrG48SeaN9fFbqirkqj+Du+Ug88jBoI0sEUSG25riMJeoLttcD/hR115pshG0W4D6NRwkj4mc4o0PjhUh5f2EzlxazpZujH9XxRcu7cvn+0D4jo6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gOG5xWd1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sOJUVlp3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC333C4CEDD;
-	Mon, 24 Feb 2025 17:19:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gOG5xWd1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E00CDC4CED6;
+	Mon, 24 Feb 2025 17:22:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740417586;
-	bh=2JkK49D5kslLlDTcfz9RF/ZSparlD8LgrmourQdVShA=;
+	s=k20201202; t=1740417775;
+	bh=/P+Rucaw2uTNNTVGKF3Z7fCCwDc+94TYvL/AhjRy5LY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sOJUVlp3PCeLeXKfAgaxYqH3gEnUCpfY404RUTwpVGha2NTheRr9Ag3dIDNx2Mr7r
-	 6qY91wkz0nPwviqnND1BrIGwiU9/8vvr2OAofkAxq5XNuRg8pG/vQyncjJuSF5P+jW
-	 L8gyhnZQ7grIVEv1g3QYlIeZp3C48DLb78pI5H7KjJCf6Pb/eu5xo6U1nMLatQiMlQ
-	 C4+L4DqHsCwIjKC4Z2gGDoZXhcSPhGV3Y70W7sCS1rzoDYxSEg3w2B0b1kTr9CCL9y
-	 7u8Amqd/ZxwzNX+N3OrjNtbmha9qBNLe0VltK4pJXXXJOCS92CJtAJrIXa/xBdVvFI
-	 hhWXopQfJJDlw==
-Date: Mon, 24 Feb 2025 07:19:45 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
-Cc: rust-for-linux@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Wedson Almeida Filho <walmeida@microsoft.com>,
-	Nell Shamrell-Harrington <nells@linux.microsoft.com>,
-	Dirk Behme <dirk.behme@gmail.com>,
-	Konstantin Andrikopoulos <kernel@mandragore.io>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Roland Xu <mu001999@outlook.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rust: workqueue: define built-in bh queues
-Message-ID: <Z7yqMdOGeOUzZ7um@slm.duckdns.org>
-References: <20250221223533.158959-1-hamzamahfooz@linux.microsoft.com>
+	b=gOG5xWd1Mcpi7R5MKHAdv5vWzW8N8j3MfWVNZsKg9HQGaYDjUmU2pdXKCagfYuOCl
+	 xEgdH+wtezarxqhyoTzWbdPpZXTWRIZNuMZRJstphdwTEergItmkye/l3ZkevwMWvl
+	 +JjVL9YOqlXv+Gm38DSRTGusBUP5jfCqTgYpBEmPSRkevooPQGTCh4PPKfvdz2Yzvu
+	 gAPQ/Hm4sR6qNd1ZbFdwihboh5dInnJbIJqIN+XDd3SlIDsSXjvVURcbFwPj4h/RTm
+	 vL0iThNH5kfVqRpIRjUH2eTqjLJZken1G4P9oDwRw2nkbwScKpUvu6UTAxkAyo5KpX
+	 AJvs0dJxjPwjA==
+Date: Mon, 24 Feb 2025 11:22:53 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Sean Paul <sean@poorly.run>, linux-arm-msm@vger.kernel.org,
+	freedreno@lists.freedesktop.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Kuogee Hsieh <quic_khsieh@quicinc.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Rob Clark <robdclark@gmail.com>,
+	Krishna Manikandan <quic_mkrishn@quicinc.com>,
+	Simona Vetter <simona@ffwll.ch>, David Airlie <airlied@gmail.com>,
+	Jonathan Marek <jonathan@marek.ca>, dri-devel@lists.freedesktop.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Clark <robdclark@chromium.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 05/21] dt-bindings: display/msm: dp-controller: Add
+ SM8750
+Message-ID: <174041777290.3552153.6543201724370698286.robh@kernel.org>
+References: <20250221-b4-sm8750-display-v3-0-3ea95b1630ea@linaro.org>
+ <20250221-b4-sm8750-display-v3-5-3ea95b1630ea@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,20 +60,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250221223533.158959-1-hamzamahfooz@linux.microsoft.com>
+In-Reply-To: <20250221-b4-sm8750-display-v3-5-3ea95b1630ea@linaro.org>
 
-On Fri, Feb 21, 2025 at 05:35:31PM -0500, Hamza Mahfooz wrote:
-> We provide these methods because it lets us access these queues from
-> Rust without using unsafe code.
+
+On Fri, 21 Feb 2025 16:24:15 +0100, Krzysztof Kozlowski wrote:
+> Add DisplayPort controller for Qualcomm SM8750 SoC which so far looks
+> fully compatible with earlier SM8650 variant - both are of version
+> v1.5.1 of the IP block.  Datasheet also mentions that both support 4x
+> MST for DPTX0 and 2x MST for DPTX1.
 > 
-> Signed-off-by: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> ---
+> 
+> Changes in v3:
+> 1. Extend commit msg
+> ---
+>  Documentation/devicetree/bindings/display/msm/dp-controller.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
 
-Acked-by: Tejun Heo <tj@kernel.org>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-Please feel free to route it through rust tree. If you'd prefer it to be
-routed to workqueue tree, please let me know.
-
-Thanks.
-
--- 
-tejun
