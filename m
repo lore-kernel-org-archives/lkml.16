@@ -1,53 +1,44 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A59D221F36
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 13:46:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267CF157A48;
+	Mon, 24 Feb 2025 13:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740404778; cv=none; b=TjjwqML8d7vec2H54c5WGkhWdyAWWXfNoLRHvKB4LIRfLbRf/j4OjP6zwYVCNzaOcnpfCTUvNsGen9pDtA0JrMs/a0AqbhE6UzHl/lH5YdCWFYtg/T2Xpf5OyClZdZjm8AJXmLc5KCkz/gA6dpgRSz90Sugh1MvFYnT7gTsoZXE=
+	t=1740404796; cv=none; b=YGPrXffdydsHOiCZ/Fta9EDzA+ZZc5pqhoz39GLysr0/TrsubmXvyYF6jklCoukROWziKIH3UYpaCX1wyeYy19M1i4L5qWJAmWirzhsAlojuTsZRytrFW1Ph6PtsqCsDPgC6yUJ/P9bn8yisr09cQPg8gWBQ1l+cr2TNj8BfuwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740404778; c=relaxed/simple;
-	bh=U54E3SdESm7dfYIQnckgPcM86HtTj/Q4chdE6jyHTM8=;
+	s=arc-20240116; t=1740404796; c=relaxed/simple;
+	bh=GhSf3n9clDXFTWmYTdpg1IkSzgVc80lXwe20AXbLTcQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mQ2I155TI8O6vJVOq0QcY0a0pNRbbiss+am2/EjDf2EV6B3sm/rtAjF6wENoV3+75B92WlFyQ+Vrm5ySOCYxBfoRSjY/j4hM3vV+RK379FIjuNm9naQM/3OKzg6csVIeQ3DDs9I6BgBWN1HQww91n/aETAV1TXiqJ6CeIAjg9sI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tmYmO-0007oj-Pq; Mon, 24 Feb 2025 14:45:52 +0100
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tmYmO-002bVW-12;
-	Mon, 24 Feb 2025 14:45:52 +0100
-Received: from pengutronix.de (p5b164285.dip0.t-ipconnect.de [91.22.66.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id E8E753CA816;
-	Mon, 24 Feb 2025 13:45:51 +0000 (UTC)
-Date: Mon, 24 Feb 2025 14:45:50 +0100
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Ciprian Costea <ciprianmarian.costea@oss.nxp.com>
-Cc: Chester Lin <chester62515@gmail.com>, 
-	Matthias Brugger <mbrugger@suse.com>, Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
-	NXP S32 Linux <s32@nxp.com>, Enric Balletbo <eballetb@redhat.com>, imx@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Alberto Ruiz <aruizrui@redhat.com>, Christophe Lizzi <clizzi@redhat.com>, 
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: dts: s32g: add FlexCAN[0..3] support for s32g2
- and s32g3
-Message-ID: <20250224-quizzical-tasteful-chupacabra-acf14d-mkl@pengutronix.de>
-References: <20250224134016.3921196-1-ciprianmarian.costea@oss.nxp.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=KUpQgbRQfyga8HeSSN36TfTZB0iAIK9XansTxxdE4e8I+9yIhkJiVnU9fYBAPffyjDeLgf51bA5cTtgocf0L3eqTphfX1ECsojAMymdrlKrssK7eB6YqbdKNVp468cePWbCXH9c4lwl8mimNTp658ShfjBybbAcoUI4/isp6ems=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TxSzvoWC; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TxSzvoWC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 146F4C4CED6;
+	Mon, 24 Feb 2025 13:46:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740404795;
+	bh=GhSf3n9clDXFTWmYTdpg1IkSzgVc80lXwe20AXbLTcQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TxSzvoWCrxdpqOdBn2NA1QWKabhD124xoFC1Yl0TIz2RbPgligt/ZxNjw6E1FkuSR
+	 wMH2iqforUVtdO/Ot6cE8hQsMstuyGoN6RpcTphA20ppw1zxFHGV4LLuCLSsrGIuyC
+	 smwT9aEOR1+tRpRhvrAwkQa3w5rOJSpUS/6a/Ffz0kZjXOOuZa4MZ+rwWYGvT8+QiD
+	 Cg1wHJAW0gwIpcmcqBXNw27cTPAOywyQzSzgAp7U4/0cMSlYxRan87WRPxTIDE6FE7
+	 3McHVaLEC+6Y1V1aQ7/QHa884TJuMJHKQfAZQUa+y7sm6NOgzSkSiKELz/afBuTb4K
+	 874hbazc2erhA==
+Date: Mon, 24 Feb 2025 13:46:29 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: perex@perex.cz, tiwai@suse.com, lgirdwood@gmail.com, deller@gmx.de,
+	andriy.shevchenko@linux.intel.com, sre@kernel.org,
+	sakari.ailus@linux.intel.com, mchehab@kernel.org,
+	hverkuil-cisco@xs4all.nl, jdmason@kudzu.us, fancer.lancer@gmail.com,
+	linux-sound@vger.kernel.org, linux-fbdev@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-media@vger.kernel.org,
+	ntb@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 00/13] Convert to use devm_kmemdup_array()
+Message-ID: <31f8302b-96be-41f1-9e58-c9f8cb2a9524@sirena.org.uk>
+References: <20250221165333.2780888-1-raag.jadav@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,54 +46,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vdjp2jj2cgfxv3yv"
+	protocol="application/pgp-signature"; boundary="55NteQvh/2EFKMVB"
 Content-Disposition: inline
-In-Reply-To: <20250224134016.3921196-1-ciprianmarian.costea@oss.nxp.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20250221165333.2780888-1-raag.jadav@intel.com>
+X-Cookie: Phone call for chucky-pooh.
 
 
---vdjp2jj2cgfxv3yv
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
+--55NteQvh/2EFKMVB
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] arm64: dts: s32g: add FlexCAN[0..3] support for s32g2
- and s32g3
-MIME-Version: 1.0
 
-On 24.02.2025 15:40:16, Ciprian Costea wrote:
-> From: Ciprian Marian Costea <ciprianmarian.costea@oss.nxp.com>
+On Fri, Feb 21, 2025 at 10:23:20PM +0530, Raag Jadav wrote:
+> This series is the second wave of patches to add users of newly introduced
+> devm_kmemdup_array() helper. Original series on [1].
 >=20
-> Add FlexCAN[0..3] for S32G2 and S32G3 SoCs.
+> This depends on changes available on immutable tag[2]. Feel free to pick
+> your subsystem patches with it, or share your preferred way to route them.
 
-The dt-bindings patch that documents support for the S32G2/S32G3 is in
-net-next/main: 51723790b718 ("dt-bindings: can: fsl,flexcan: add
-S32G2/S32G3 SoC support")
+Please don't combine patches for multiple subsystems into a single patch
+series, it just makes everything more complex to deal with - it creates
+cross tree issues that wouldn't otherwise exist.
 
-regards,
-Marc
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---vdjp2jj2cgfxv3yv
+--55NteQvh/2EFKMVB
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAme8eAsACgkQDHRl3/mQ
-kZzAFwgAkC2NY97unwSJJHjQK4vv1/t6fMnSIY0SgTnQ8Ch+OBenrj0ykSdhSdB4
-spt7Ly83UumxmXfGM/1IWobj4tyx63ryqWEztyV5WojY8I+VpN4BoVLY9q1U58oH
-ia1Ns6+5XSh3cUacaMn4pCOf3gJbjlGZxy0Yomp9QiaSDondf/osnjCVVTA59Zjj
-q7yGEuUT83Q877UM39YCc/h7z1qFnmJV8av6IyrQoZLn8oX3bx8HIILM1PIJ6D5M
-eLhwB7Mr2Oh5G20vDoq+VYNVxn7Uuwzd9lzOcm3g7DoQ5l+iLsaxQG7+aXOAV4o+
-5YZzZNaiLlbyD3ZjL59b3PFtRefIwQ==
-=98NH
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAme8eDQACgkQJNaLcl1U
+h9DFYQf+POnj8ermDn0Tw9XG/X8r7XNhLSk5wb0yK1OyIN1hYGZUP2qcnBFxH+ms
+dGEvY44PF4R2Imam49wf7QGqhfidWrrVDp7+U9HxGI70TLYVtCRNV06ZmWvUiKkZ
+KGiGaiY1hmADDRc4Xz78QPBDRpOp12Admq5fFAxMrtRaeW64E4QzWX8AoHUWW8LQ
+53Q+JH0Y4zO4JW8wXAGQnFgvF2HJ1z0at63H+XJK56p/pE+qO+Dy9Cg51nimGKA8
+Wa+MXvcB7/lsdwMx/bDk/SU+bM287BI4q//RWXwK6Tlzs4DUoe2cmZuzuZC+u4aj
+E1alazYzvMrO1nm1Tl8FT6F9s7+wQQ==
+=XiDk
 -----END PGP SIGNATURE-----
 
---vdjp2jj2cgfxv3yv--
+--55NteQvh/2EFKMVB--
