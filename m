@@ -1,115 +1,135 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F1324C673;
-	Mon, 24 Feb 2025 09:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1C3C24C67F;
+	Mon, 24 Feb 2025 09:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740391138; cv=none; b=jJYjrlIVWi2RQSA+3yA5touQyuE4Rv+MbEcB7uzx7TwUydoPJhHL7CGy6xtIJdyRG9LopAprfV3hHNIPqB86Q4icV0wMIOy7DhSSjznm/s1rv3V/UgEYXEONdcJ4o7AO+YbLOlCX7SmrDfsOQmtZ3CxrtYxd6LMYtZE62fXXZYg=
+	t=1740391141; cv=none; b=moPBIpSTHcBbHOUdYen3UA6/AipmgfmUHWZaBYiel7WKPWUp0cdodOTDJIidh42XJCa4JnsGo5WFxjmEqUd5YygIK8R7af3nZDCoOODxj6soWULkE5aXy/KZz+tCrrMaXBuqoLhW0SXD5Un9sm27rnc5TNIRdrH3nf6fd35jh1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740391138; c=relaxed/simple;
-	bh=fX2FejRKLHmTf189qkb5nrdkHYro4O5UcpVBV7OFrbk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L1crYOGguiLgsoRXoXtqthcJ/fh9EMc/Z41JxkahDP0vuoVVDX9AxzGZPZRcrXVvbIx4JRPC8dARhH6ATcOZo9H7ocrJwujoGrGL1Vy3zzpri7B2eZFJVDcIYkXAvfvvqijAGHvRu5eNjL6hgOA7K4bnJbxEvnzSwd3jH0c4Qd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GrxCeiNS; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740391141; c=relaxed/simple;
+	bh=St/Eg/Hi0vB7O+toXHNs7Kfoy1TZReJPLQjUNk6OFTM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nKPGVTrremwfxyoOyzsDVD/zmrv0uMSZhMXmBjhSMWKLxNlkO6o5o7L0ZpT/GPmv7aUXmHqklCO9yHHAbPS78TUq/TRr+yTzRRtlNqXTj9AcP78UKcsDYbwm5fwFblOlHvJX7gwaqGM7pGCk0QDIX1GvCVGNXZw9FEyKqil7Q4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=clip-os.org; spf=pass smtp.mailfrom=clip-os.org; dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b=nAeA2GRW; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=clip-os.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=clip-os.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GrxCeiNS"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aaf3c3c104fso712954266b.1;
-        Mon, 24 Feb 2025 01:58:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740391134; x=1740995934; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YlyuCvvFDo2128e2teHgyAWHlRy7aBFZ5OZbDHsqsLE=;
-        b=GrxCeiNSO0J9qkGWsJpUVqc+uAbLjlW18gfdl7LWunVLyDw0h+Ts9S9vl4mH7bw7nH
-         Do050fgNuXC4RixwQBcnYy9NsiMgdMexPL/K1qKAk+9E8JFt8wrqQalVxT6f+2BmbV6h
-         Q99Z2lRstYHf10AggugiMmTXs+Rg2RpMMWsXrb++zJPvto7oALVf1OYv6QY5AWFtdcAz
-         ncI5bXRaJEZfANUYT9en3HQ0azrLJgTmx4oeIEbj/wwGWfrs2zZYPJnvN0aOi2suqjm5
-         wLRyeO1Lq6dmd570kSGeklhIGyM0zL9gJlifzX3OzsONUMxfbIcJxlV7IkuFWYRfaP2s
-         J+GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740391134; x=1740995934;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YlyuCvvFDo2128e2teHgyAWHlRy7aBFZ5OZbDHsqsLE=;
-        b=Lhh8t8HNzfMtC5vt5y4ehKvxkI/6ERuuKFPiUJG4pXVyIPuPodkbv2ec1CPuya91qO
-         DN8ggoqIh8M1OrrGzF3CF+CLboXvreBTOexn4NQGsSc7uDY3E/pNNzfZm8vacWMA0zYD
-         sKJJJsfG47AJRaTsuo/wV7DxMLKp6+U/IknVogbDxqqnA/uYBm8eYaq8WNuszNqLjW3m
-         G/l4XF8d78zkeU4i2DbAzYGPPv3+E0epOnDVvoP3BKVoBIond6hobCfztvEtKxSKkH7s
-         Sc3gK3cOQR27dKISlhvxcDnY+5enDfBPegn+wmHw9ZtycFVC2PFhMpqeoZYS/OvHBMaF
-         bBwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUvFnH8cxezn8LTrJq0e4HhnUUHFk4ATsmN07Y2bpA8IGBVcXpOQkZCZPZk9rCJANd1lw7zOzWLBt1n82hw@vger.kernel.org, AJvYcCXwFiu6xWUYGdVBG75qb8hAwZPHJFjSiR7BfsplDMDXDl2AtGIrP57bO8MkWQZaUR9IuMaSbuLX3uSF@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4XcUlAvMPsya8zplEb/cITuTVgm4vWaEFmiVP5VWsWXVPtjDh
-	dP5birX7otB2xEcKEngAGkpGbzpFA6Gfv9UTo+vXFaK4OLXxKau/
-X-Gm-Gg: ASbGncsZ30PcIB7eT4X6gHIial8R42E3rtOqcHDvXKCyBPOTUWHmDBDBjJ8s29KOJd1
-	cc++FvKuwPCDEf3oIuMRGA+f8gQqzSpuZvNxYm5INko+gce/UNq0EicZzY0eJ1HkbodLhjtN5ak
-	TV6EqDHvSyvjN7xcj+0MLZjDMV2KyIXWBo+gpGOlIN90oWO9AydvieLR0DMIBaSVFEhIosXhdbt
-	b2IMml/OK4YqOyxiqBPx+TUG+krdShJ6tkzYTg9GvzBASBhpM2k+v8HnbQepM1+xYIID5XYyv4R
-	a/e+a2yxKgB3RS8GbB8cmxbnKl28wZPawpU8ImR0UcrSGgRhX4s=
-X-Google-Smtp-Source: AGHT+IE4DISpsiKgYOL3EFZd4l0OSdPpTIlMEud2TUQe2sSiVQY+CihGdqfWOxw12evc/bJo4FFOAA==
-X-Received: by 2002:a17:906:31cf:b0:ab6:ef33:402 with SMTP id a640c23a62f3a-abc0d9e4ef5mr1108032166b.18.1740391133934;
-        Mon, 24 Feb 2025 01:58:53 -0800 (PST)
-Received: from [192.168.5.199] ([92.120.5.6])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abbbbc95288sm1255333966b.158.2025.02.24.01.58.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2025 01:58:53 -0800 (PST)
-Message-ID: <a62ab860-5e0e-4ebc-af1f-6fb7ac621e2b@gmail.com>
-Date: Mon, 24 Feb 2025 12:07:40 +0200
+	dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b="nAeA2GRW"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2131543412;
+	Mon, 24 Feb 2025 09:58:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=clip-os.org; s=gm1;
+	t=1740391135;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=OysVBN1ZNK5dif5sP6Y9T/fqYZ6/xViWz15nOzq5Uko=;
+	b=nAeA2GRWpLlfhwWV3sPCzWRZ10S3t0aB8aN+tZCCdp8uZEjfQtAbF+oPi3Pvcp8Q27Bo0R
+	MSDkHxKa1Kc3f+HhtoIDc1U40J7KhkWxpDwWfdFVvqPYGOohTAOGEM0oMKjnS/seoVTdLb
+	U8miYmOnI28l6XAzD2nABtiEwBsUQQUexfRtz3zK67qnVmJG2ISHjbhM6KHGXPAqOc81EH
+	bbdOifVMdSwD7c45NhL20tZ6F8shZTHWESUC2NFLxpTzKgLlwv7GibEYq6yefpBIc30Cbx
+	/24whkYWMLedNtncMCOLtAVWqKQOSJfB1oMtW7YnYcnTwxqOLyBCdH1TjMxPxg==
+From: nicolas.bouchinet@clip-os.org
+To: linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	codalist@coda.cs.cmu.edu,
+	linux-nfs@vger.kernel.org
+Cc: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>,
+	Joel Granados <j.granados@samsung.com>,
+	Clemens Ladisch <clemens@ladisch.de>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Jan Harkes <jaharkes@cs.cmu.edu>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <okorniev@redhat.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Trond Myklebust <trondmy@kernel.org>,
+	Anna Schumaker <anna@kernel.org>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Zhu Yanjun <yanjun.zhu@linux.dev>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>
+Subject: [PATCH v2 0/6] Fixes multiple sysctl bound checks
+Date: Mon, 24 Feb 2025 10:58:15 +0100
+Message-ID: <20250224095826.16458-1-nicolas.bouchinet@clip-os.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] bus: add driver for IMX AIPSTZ bridge
-Content-Language: en-GB
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- Daniel Baluta <daniel.baluta@nxp.com>, Shengjiu Wang
- <shengjiu.wang@nxp.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Pengutronix Kernel Team <kernel@pengutronix.de>, imx@lists.linux.dev
-References: <20250221191909.31874-1-laurentiumihalcea111@gmail.com>
- <20250221191909.31874-4-laurentiumihalcea111@gmail.com>
- <20250224075538.7oetjzllqqr2mlnt@pengutronix.de>
-From: Mihalcea Laurentiu <laurentiumihalcea111@gmail.com>
-In-Reply-To: <20250224075538.7oetjzllqqr2mlnt@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -60
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdejkeegkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnegoufhorhhtvggutfgvtghiphdvucdlgedtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpehnihgtohhlrghsrdgsohhutghhihhnvghtsegtlhhiphdqohhsrdhorhhgnecuggftrfgrthhtvghrnhepieeigeehteehfeetuddtieefuefgfeevheevvdeiudetvdelleejveekkedvleeknecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepledtrdeifedrvdegiedrudekjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrieefrddvgeeirddukeejpdhhvghloheprghrtghhlhhinhhugidrrddpmhgrihhlfhhrohhmpehnihgtohhlrghsrdgsohhutghhihhnvghtsegtlhhiphdqohhsrdhorhhgpdhnsggprhgtphhtthhopedvjedprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhrughmrgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhstghsihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohgurghlihhsthest
+ ghouggrrdgtshdrtghmuhdrvgguuhdprhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhhitgholhgrshdrsghouhgthhhinhgvthesshhsihdrghhouhhvrdhfrhdprhgtphhtthhopehjrdhgrhgrnhgrughoshesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopegtlhgvmhgvnhhssehlrgguihhstghhrdguvg
+X-GND-Sasl: nicolas.bouchinet@clip-os.org
 
+From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
 
-On 24.02.2025 09:55, Marco Felsch wrote:
-> Hi Laurentiu,
->
-> thanks for your patch.
->
-> On 25-02-21, Laurentiu Mihalcea wrote:
->> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
->>
->> The secure AHB to IP Slave (AIPSTZ) bus bridge provides access control
->> configurations meant to restrict access to certain peripherals.
->> Some of the configurations include:
->>
->> 	1) Marking masters as trusted for R/W. Based on this
->> 	(and the configuration of the accessed peripheral), the bridge
->> 	may choose to abort the R/W transactions issued by certain
->> 	masters.
-> Setting these bits requires very often that the core is running at EL3
-> (e.g. secure-monitor) which is not the case for Linux. Can you please
-> provide more information how Linux can set these bits?
->
-> Regards,
->   Marco
+Hi,
 
+This patchset adds some bound checks to sysctls to avoid negative
+value writes.
 
-In this particular case, as far as I was able to understand, NS EL1 has enough
+The patched sysctls were storing the result of the proc_dointvec
+proc_handler into an unsigned int data. proc_dointvec being able to
+parse negative value, and it return value being a signed int, this could
+lead to undefined behaviors.
+This has led to kernel crash in the past as described in commit
+3b3376f222e3 ("sysctl.c: fix underflow value setting risk in vm_table")
 
-privilege to program this IP. This is why Linux can do it.
+They are now bounded between SYSCTL_ZERO and SYSCTL_INT_MAX.
+The proc_handlers have thus been updated to proc_dointvec_minmax.
+
+This patchset has been written over sysctl-testing branch [1].
+See [2] for similar sysctl fixes currently in review.
+
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/sysctl/sysctl.git/log/?h=sysctl-testing
+[2]: https://lore.kernel.org/all/20250115132211.25400-1-nicolas.bouchinet@clip-os.org/
+
+Best regards,
+
+Nicolas
+
+---
+
+Changes since v1:
+https://lore.kernel.org/all/20250127142014.37834-1-nicolas.bouchinet@clip-os.org/
+
+* Detached patches 1/9, 2/9 [3] and 3/9 [4]
+* Adapted the cover-letter message to match the reduced patchset
+
+[3]: https://lore.kernel.org/all/20250129170633.88574-1-nicolas.bouchinet@clip-os.org/
+[4]: https://lore.kernel.org/all/20250128103821.29745-1-nicolas.bouchinet@clip-os.org/
+
+---
+
+Nicolas Bouchinet (6):
+  sysctl: Fixes idmap_cache_timeout bounds
+  sysctl: Fixes nsm_local_state bounds
+  sysctl/coda: Fixes timeout bounds
+  sysctl: Fixes scsi_logging_level bounds
+  sysctl/infiniband: Fixes infiniband sysctl bounds
+  sysctl: Fixes max-user-freq bounds
+
+ drivers/char/hpet.c            | 4 +++-
+ drivers/infiniband/core/iwcm.c | 4 +++-
+ drivers/infiniband/core/ucma.c | 4 +++-
+ drivers/scsi/scsi_sysctl.c     | 4 +++-
+ fs/coda/sysctl.c               | 4 +++-
+ fs/lockd/svc.c                 | 4 +++-
+ fs/nfs/nfs4sysctl.c            | 4 +++-
+ 7 files changed, 21 insertions(+), 7 deletions(-)
+
+-- 
+2.48.1
 
