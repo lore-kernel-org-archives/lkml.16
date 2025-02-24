@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140F820C033
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 23:42:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D791220D4EE
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 23:42:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740440532; cv=none; b=BRNinubknk7N3ra3PpuS2RkCnpa08q58J6s7bMHJ91BBfJsW0mxlTe0Og40RbvyKHJiijxYgAft2M0PVSaixtd9QEHQQtweQBvnqUeAxQ8ev/+JoqIMTfSjPiw48cvCC57GX4338vRcPK2HLm1mQUaqLjN/nBdKhD46ABObQfUE=
+	t=1740440537; cv=none; b=IqezV4Nbygb6C2KIZMPNdMpe7K944xOXGW9fsjoh0KgXi2Mjatrt9wFxr7GPCTpGU26bMMkWDIZrWR1IIUk08UPXPqww8WRVdUFGjrb7iCdev2myVEJHZKLmbrq6vGPCdjr7uMPrVFPuB6ZM/dN60GiIhfL/6tiWlTSAjVoCXB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740440532; c=relaxed/simple;
-	bh=LdM6YWJorqkUh0RrJpizFWheSHgWKS3j4SIexQeKkT8=;
+	s=arc-20240116; t=1740440537; c=relaxed/simple;
+	bh=GAF4rTI1DsGws7r7GRla1/im4tYifATcIPq/nactC60=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ad6WSy7TGcz9iRLo7zoTAXUe8qI2BCbqZ5IqwXvk0fAHUc5tv1JfOTeodBtSxJm8I2FYVtWUhHYEKYW4DMeDiCdzy1NpTjo6a0tDCJ9WwpGwhR4Kg4mgJ4fbf7pFx448sD52II+6x9k0Pex1FrFhbAKBOa8JfEOZrpBAGhBKJQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xw25v1sL; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=Rt35uK51VY1uQNhJbTXPgm5wr7634c52H4fP2euiitqzrQQ/YmdfhEbTet/8k/v2glXUhn+MjWrOTfo0oBMSEIB3oQwuSBMJ3gV5IsDIv7KuYcokvt9i09eTNFbo5zG8AUk+Y7I1vqSXL1urijcWBfenu8cE4/iJG71julUeZoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GfRGXSq2; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xw25v1sL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GfRGXSq2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740440530;
+	s=mimecast20190719; t=1740440532;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TPX5X0FLbu8i/pSR/GZDg1fvDLeMt1ooWaCQcD/mFIo=;
-	b=Xw25v1sL0KgEVjF8AdM5sJwt3INc7RZgAF8mhryYP88k/con3EzoCAoz/PvXMb2nEynoOk
-	vX9n5d98D/Ro5tIGp8oUsiKaYWTsz3oE7D5mLsxTkc1d2BkO1MPk6KFMVT2Do1wCmKM3fc
-	d5rA2kMTNwnBnZMk8urm25KEXpGYF5E=
+	bh=rJysTY3l6efKg+rxbSyGDPWajwbgdCVI4+yZliqv/jI=;
+	b=GfRGXSq2QBB6eSAhIkOpo0JpknP8nzwHNq6G36oDvjaTcw9IVTl7hlJbjbkNgFFMX4ZbCT
+	phNjESbkKYs4Mpl++1rHFrQ8Ej7oakkk31+igWQT+3ATdd+Kht3pb3NYQnHSTMQaLSpi9+
+	iLlWapC4vO3/HpDt3LK5mx81GD8ylEI=
 Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-670-t6NQHXqbPRK9KrwrBhFdPw-1; Mon,
- 24 Feb 2025 18:42:06 -0500
-X-MC-Unique: t6NQHXqbPRK9KrwrBhFdPw-1
-X-Mimecast-MFC-AGG-ID: t6NQHXqbPRK9KrwrBhFdPw_1740440525
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-197-lKJIW5ZiOr-4stc6ovGtfA-1; Mon,
+ 24 Feb 2025 18:42:10 -0500
+X-MC-Unique: lKJIW5ZiOr-4stc6ovGtfA-1
+X-Mimecast-MFC-AGG-ID: lKJIW5ZiOr-4stc6ovGtfA_1740440529
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id F02DE180036F;
-	Mon, 24 Feb 2025 23:42:04 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7ED791800872;
+	Mon, 24 Feb 2025 23:42:09 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.42.28.9])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id DFA91180035E;
-	Mon, 24 Feb 2025 23:42:01 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 756B8180035F;
+	Mon, 24 Feb 2025 23:42:06 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: netdev@vger.kernel.org
 Cc: David Howells <dhowells@redhat.com>,
@@ -54,9 +54,9 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-afs@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Simon Horman <horms@kernel.org>
-Subject: [PATCH net-next 01/15] rxrpc: rxperf: Fix missing decoding of terminal magic cookie
-Date: Mon, 24 Feb 2025 23:41:38 +0000
-Message-ID: <20250224234154.2014840-2-dhowells@redhat.com>
+Subject: [PATCH net-next 02/15] rxrpc: peer->mtu_lock is redundant
+Date: Mon, 24 Feb 2025 23:41:39 +0000
+Message-ID: <20250224234154.2014840-3-dhowells@redhat.com>
 In-Reply-To: <20250224234154.2014840-1-dhowells@redhat.com>
 References: <20250224234154.2014840-1-dhowells@redhat.com>
 Precedence: bulk
@@ -66,13 +66,23 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-The rxperf RPCs seem to have a magic cookie at the end of the request that
-was failing to be taken account of by the unmarshalling of the request.
-Fix the rxperf code to expect this.
+The peer->mtu_lock is only used to lock around writes to peer->max_data -
+and nothing else; further, all such writes take place in the I/O thread and
+the lock is only ever write-locked and never read-locked.
 
-Fixes: 75bfdbf2fca3 ("rxrpc: Implement an in-kernel rxperf server for testing purposes")
+In a couple of places, the write_seqcount_begin() is wrapped in
+preempt_disable/enable(), but not in all places.  This can cause lockdep to
+throw a complaint:
+
+WARNING: CPU: 0 PID: 1549 at include/linux/seqlock.h:221 rxrpc_input_ack_trailer+0x305/0x430
+...
+RIP: 0010:rxrpc_input_ack_trailer+0x305/0x430
+
+Fix this by just getting rid of the lock.
+
+Fixes: eeaedc5449d9 ("rxrpc: Implement path-MTU probing using padded PING ACKs (RFC8899)")
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Marc Dionne <marc.dionne@auristor.com>
 cc: Jakub Kicinski <kuba@kernel.org>
@@ -83,30 +93,77 @@ cc: Simon Horman <horms@kernel.org>
 cc: linux-afs@lists.infradead.org
 cc: netdev@vger.kernel.org
 ---
- net/rxrpc/rxperf.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ net/rxrpc/ar-internal.h | 1 -
+ net/rxrpc/input.c       | 2 --
+ net/rxrpc/peer_event.c  | 9 +--------
+ net/rxrpc/peer_object.c | 1 -
+ 4 files changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/net/rxrpc/rxperf.c b/net/rxrpc/rxperf.c
-index 7ef93407be83..e848a4777b8c 100644
---- a/net/rxrpc/rxperf.c
-+++ b/net/rxrpc/rxperf.c
-@@ -478,6 +478,18 @@ static int rxperf_deliver_request(struct rxperf_call *call)
- 		call->unmarshal++;
- 		fallthrough;
- 	case 2:
-+		ret = rxperf_extract_data(call, true);
-+		if (ret < 0)
-+			return ret;
-+
-+		/* Deal with the terminal magic cookie. */
-+		call->iov_len = 4;
-+		call->kvec[0].iov_len	= call->iov_len;
-+		call->kvec[0].iov_base	= call->tmp;
-+		iov_iter_kvec(&call->iter, READ, call->kvec, 1, call->iov_len);
-+		call->unmarshal++;
-+		fallthrough;
-+	case 3:
- 		ret = rxperf_extract_data(call, false);
- 		if (ret < 0)
- 			return ret;
+diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
+index 5e740c486203..a64a0cab1bf7 100644
+--- a/net/rxrpc/ar-internal.h
++++ b/net/rxrpc/ar-internal.h
+@@ -360,7 +360,6 @@ struct rxrpc_peer {
+ 	u8			pmtud_jumbo;	/* Max jumbo packets for the MTU */
+ 	bool			ackr_adv_pmtud;	/* T if the peer advertises path-MTU */
+ 	unsigned int		ackr_max_data;	/* Maximum data advertised by peer */
+-	seqcount_t		mtu_lock;	/* Lockless MTU access management */
+ 	unsigned int		if_mtu;		/* Local interface MTU (- hdrsize) for this peer */
+ 	unsigned int		max_data;	/* Maximum packet data capacity for this peer */
+ 	unsigned short		hdrsize;	/* header size (IP + UDP + RxRPC) */
+diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
+index 9047ba13bd31..24aceb183c2c 100644
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -810,9 +810,7 @@ static void rxrpc_input_ack_trailer(struct rxrpc_call *call, struct sk_buff *skb
+ 	if (max_mtu < peer->max_data) {
+ 		trace_rxrpc_pmtud_reduce(peer, sp->hdr.serial, max_mtu,
+ 					 rxrpc_pmtud_reduce_ack);
+-		write_seqcount_begin(&peer->mtu_lock);
+ 		peer->max_data = max_mtu;
+-		write_seqcount_end(&peer->mtu_lock);
+ 	}
+ 
+ 	max_data = umin(max_mtu, peer->max_data);
+diff --git a/net/rxrpc/peer_event.c b/net/rxrpc/peer_event.c
+index bc283da9ee40..7f4729234957 100644
+--- a/net/rxrpc/peer_event.c
++++ b/net/rxrpc/peer_event.c
+@@ -130,9 +130,7 @@ static void rxrpc_adjust_mtu(struct rxrpc_peer *peer, unsigned int mtu)
+ 			peer->pmtud_bad = max_data + 1;
+ 
+ 		trace_rxrpc_pmtud_reduce(peer, 0, max_data, rxrpc_pmtud_reduce_icmp);
+-		write_seqcount_begin(&peer->mtu_lock);
+ 		peer->max_data = max_data;
+-		write_seqcount_end(&peer->mtu_lock);
+ 	}
+ }
+ 
+@@ -408,13 +406,8 @@ void rxrpc_input_probe_for_pmtud(struct rxrpc_connection *conn, rxrpc_serial_t a
+ 	}
+ 
+ 	max_data = umin(max_data, peer->ackr_max_data);
+-	if (max_data != peer->max_data) {
+-		preempt_disable();
+-		write_seqcount_begin(&peer->mtu_lock);
++	if (max_data != peer->max_data)
+ 		peer->max_data = max_data;
+-		write_seqcount_end(&peer->mtu_lock);
+-		preempt_enable();
+-	}
+ 
+ 	jumbo = max_data + sizeof(struct rxrpc_jumbo_header);
+ 	jumbo /= RXRPC_JUMBO_SUBPKTLEN;
+diff --git a/net/rxrpc/peer_object.c b/net/rxrpc/peer_object.c
+index 0fcc87f0409f..2ddc8ed68742 100644
+--- a/net/rxrpc/peer_object.c
++++ b/net/rxrpc/peer_object.c
+@@ -235,7 +235,6 @@ struct rxrpc_peer *rxrpc_alloc_peer(struct rxrpc_local *local, gfp_t gfp,
+ 		peer->service_conns = RB_ROOT;
+ 		seqlock_init(&peer->service_conn_lock);
+ 		spin_lock_init(&peer->lock);
+-		seqcount_init(&peer->mtu_lock);
+ 		peer->debug_id = atomic_inc_return(&rxrpc_debug_id);
+ 		peer->recent_srtt_us = UINT_MAX;
+ 		peer->cong_ssthresh = RXRPC_TX_MAX_WINDOW;
 
