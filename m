@@ -1,22 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14BE624EF69;
-	Mon, 24 Feb 2025 11:47:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACDE824EF81;
+	Mon, 24 Feb 2025 11:47:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740397626; cv=none; b=QyNMXIJIVa/dMrZRgcaJ92ebxioSddsD8cZ1SXK1IF9zlnKrEDJ3QWXHtUClUPtl1geijZNJy9/8Fqckb5p+9DHPdeahTu6NW7mi+GmvyYPgYKR9NMk3g43rl0AjUqvmlxofDWSP1gTeHA6JBOFiU0NMm3z5BUlfQR8tYkcdVMQ=
+	t=1740397627; cv=none; b=Yq2pjG+A2AYzILSu8b9mcDjedI2X46EU5+PEoQH3GLuOc9Ppa7cjScXgisvOthvAuHPAx2VkR1/wsfWgjXLqcymluMmof7mVPdzFFxDqThacUbUVUotKysyDNefhlXHr8Oa2twQqyQNHRliodyvRJVgoX6QVOl8b9bILjXVktLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740397626; c=relaxed/simple;
-	bh=ZFclqke8ZUlQE4gwyCnHc4Wc6HXOb7AO198d6seDxnQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XihxOEGM9Kkw1NvPa25gBJQRlkc06x13N9Lrk8F06Ev0I3sOSt37iEPQ7zQ4VCN9W9jmZdKunotKpler5mHHrVqUIlbLgTulpIpH2P4o8hlVSExwzblXB/nzAH1p46L1V9a+aqLuk2s8wj+qNIFZkgwwFx1mTCIFoJxSICDHu+o=
+	s=arc-20240116; t=1740397627; c=relaxed/simple;
+	bh=9hZ/D1FEiotDeHCnsk7IUOqenDt+Ku5Gi9rxKMs6MXs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FTg+2RKsLx5Jk1FaPiwX3arakCM8vWQ9Fjw5QcFIPMF020DfKqmd8aamOEa9SL9hCirpESmfslEi/aBndczMlRdeK47VKN9cQo6Uuwvp2rp5HKQEzWGbXJzCWj7J90OVZOw3Rb9GdqSg1hSK4KoWHW7pn4I8Sjgp9G18Q0+5hR8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C87211756;
-	Mon, 24 Feb 2025 03:47:19 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B15401CE0;
+	Mon, 24 Feb 2025 03:47:21 -0800 (PST)
 Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 74C5F3F6A8;
-	Mon, 24 Feb 2025 03:47:01 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5FFA13F6A8;
+	Mon, 24 Feb 2025 03:47:03 -0800 (PST)
 From: Vincenzo Frascino <vincenzo.frascino@arm.com>
 To: linux-sound@vger.kernel.org
 Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>,
@@ -29,10 +30,12 @@ Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>,
 	Conor Dooley <conor+dt@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/4] xlnx: dt-bindings: Convert to json-schema
-Date: Mon, 24 Feb 2025 11:46:44 +0000
-Message-ID: <20250224114648.1606184-1-vincenzo.frascino@arm.com>
+Subject: [PATCH v3 1/4] ASoC: dt-bindings: xlnx,i2s: Convert to json-schema
+Date: Mon, 24 Feb 2025 11:46:45 +0000
+Message-ID: <20250224114648.1606184-2-vincenzo.frascino@arm.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250224114648.1606184-1-vincenzo.frascino@arm.com>
+References: <20250224114648.1606184-1-vincenzo.frascino@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,61 +44,124 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series converts the folling Xilinx device tree binding documentation:
- - xlnx,i2s
- - xlnx,audio-formatter
- - xlnx,spdif
-to json-schema.
+Convert the Xilinx I2S device tree binding documentation to json-schema.
 
-To simplify the testing a linux tree rebased on 6.13-rc4 is accessible
-at [1].
-
-[1] https://codeberg.org/vincenzo/linux/src/branch/xlnx/dt-bindings/v4
-
-Note: These bindings are required for future work on the ARM Morello
-Platforms device tree.
-
-Cc: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc: Conor Dooley <conor+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-
-Changes
-=======
-v3:
-  - Address an issue with the MAINTAINERS file reported by the kernel
-    test robot. 
-v2:
-  - Address review comments.
-  - Rebase on 6.14-rc4.
-
-Vincenzo Frascino (4):
-  ASoC: dt-bindings: xlnx,i2s: Convert to json-schema
-  ASoC: dt-bindings: xlnx,audio-formatter: Convert to json-schema
-  ASoC: dt-bindings: xlnx,spdif: Convert to json-schema
-  MAINTAINERS: Add Vincenzo Frascino as Xilinx Sound Driver Maintainer
-
- .../bindings/sound/xlnx,audio-formatter.txt   | 29 ------
- .../bindings/sound/xlnx,audio-formatter.yaml  | 76 +++++++++++++++
- .../devicetree/bindings/sound/xlnx,i2s.txt    | 28 ------
- .../devicetree/bindings/sound/xlnx,i2s.yaml   | 68 ++++++++++++++
- .../devicetree/bindings/sound/xlnx,spdif.txt  | 28 ------
- .../devicetree/bindings/sound/xlnx,spdif.yaml | 92 +++++++++++++++++++
- MAINTAINERS                                   |  8 ++
- 7 files changed, 244 insertions(+), 85 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/xlnx,audio-formatter.txt
- create mode 100644 Documentation/devicetree/bindings/sound/xlnx,audio-formatter.yaml
+---
+ .../devicetree/bindings/sound/xlnx,i2s.txt    | 28 --------
+ .../devicetree/bindings/sound/xlnx,i2s.yaml   | 68 +++++++++++++++++++
+ 2 files changed, 68 insertions(+), 28 deletions(-)
  delete mode 100644 Documentation/devicetree/bindings/sound/xlnx,i2s.txt
  create mode 100644 Documentation/devicetree/bindings/sound/xlnx,i2s.yaml
- delete mode 100644 Documentation/devicetree/bindings/sound/xlnx,spdif.txt
- create mode 100644 Documentation/devicetree/bindings/sound/xlnx,spdif.yaml
 
+diff --git a/Documentation/devicetree/bindings/sound/xlnx,i2s.txt b/Documentation/devicetree/bindings/sound/xlnx,i2s.txt
+deleted file mode 100644
+index 5e7c7d5bb60a..000000000000
+--- a/Documentation/devicetree/bindings/sound/xlnx,i2s.txt
++++ /dev/null
+@@ -1,28 +0,0 @@
+-Device-Tree bindings for Xilinx I2S PL block
+-
+-The IP supports I2S based playback/capture audio
+-
+-Required property:
+- - compatible: "xlnx,i2s-transmitter-1.0" for playback and
+-	       "xlnx,i2s-receiver-1.0" for capture
+-
+-Required property common to both I2S playback and capture:
+- - reg: Base address and size of the IP core instance.
+- - xlnx,dwidth: sample data width. Can be any of 16, 24.
+- - xlnx,num-channels: Number of I2S streams. Can be any of 1, 2, 3, 4.
+-		      supported channels = 2 * xlnx,num-channels
+-
+-Example:
+-
+-	i2s_receiver@a0080000 {
+-		compatible = "xlnx,i2s-receiver-1.0";
+-		reg = <0x0 0xa0080000 0x0 0x10000>;
+-		xlnx,dwidth = <0x18>;
+-		xlnx,num-channels = <1>;
+-	};
+-	i2s_transmitter@a0090000 {
+-		compatible = "xlnx,i2s-transmitter-1.0";
+-		reg = <0x0 0xa0090000 0x0 0x10000>;
+-		xlnx,dwidth = <0x18>;
+-		xlnx,num-channels = <1>;
+-	};
+diff --git a/Documentation/devicetree/bindings/sound/xlnx,i2s.yaml b/Documentation/devicetree/bindings/sound/xlnx,i2s.yaml
+new file mode 100644
+index 000000000000..5d7f0c651944
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/xlnx,i2s.yaml
+@@ -0,0 +1,68 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/xlnx,i2s.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Xilinx I2S PL block
++
++description: |
++  The IP supports I2S based playback/capture audio.
++
++maintainers:
++  - Vincenzo Frascino <vincenzo.frascino@arm.com>
++
++allOf:
++  - $ref: dai-common.yaml#
++
++properties:
++  compatible:
++    enum:
++      - xlnx,i2s-receiver-1.0
++      - xlnx,i2s-transmitter-1.0
++
++  reg:
++    minItems: 1
++    maxItems: 4
++    description: |
++      Base address and size of the IP core instance.
++
++  xlnx,dwidth:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum:
++      - 16
++      - 24
++    description: |
++      Sample data width. Can be any of 16, 24.
++
++  xlnx,num-channels:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    minimum: 1
++    maximum: 4
++    description: |
++      Number of I2S streams.
++
++required:
++  - compatible
++  - reg
++  - xlnx,dwidth
++  - xlnx,num-channels
++
++additionalProperties: true
++
++examples:
++  - |
++    i2s_receiver@a0080000 {
++      compatible = "xlnx,i2s-receiver-1.0";
++      reg = <0x0 0xa0080000 0x0 0x10000>;
++      xlnx,dwidth = <0x18>;
++      xlnx,num-channels = <1>;
++    };
++    i2s_transmitter@a0090000 {
++      compatible = "xlnx,i2s-transmitter-1.0";
++      reg = <0x0 0xa0090000 0x0 0x10000>;
++      xlnx,dwidth = <0x18>;
++      xlnx,num-channels = <1>;
++    };
++
++...
 -- 
 2.43.0
 
