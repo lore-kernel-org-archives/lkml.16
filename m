@@ -1,86 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from nbd.name (nbd.name [46.4.11.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF1324DD39;
-	Mon, 24 Feb 2025 11:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740396072; cv=none; b=Z8V0D9cZVy/CgXWs3oqLslMOsXaHNB76gJ0X9CvGD++KSeyu3e8vuyC3Kqlgu0RNYvoodPF1Vs/t6DVNxCQ/85QvvaGLppJxERNjJkKcVx6nLmxRDE2rdfqjhTSI3lIBJFtBxacWCwaxkU0tm4FLm6vk4/PydM+SU7PmNSM4hWU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740396072; c=relaxed/simple;
-	bh=UPus0+ZeUvqXhZx/PdDail0k2XtlufLXZJTSFurCQD4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tvvzh1dXcUP9z8eO5iAz+z2V+T31fyYZAe0YLBbC0bEkqkV+1lTyYlxQ69RdNoTns9fBmkz8oEZAlp02TDs9TdTEn+f43EHh/ESqQePoZRvD3lD9YLOIfY+/ljLtSc0krzspss8lAV7BljANVuRFOrDl/uIXMWknrjH6XeAIbIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P/ro2FgA; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P/ro2FgA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1182EC4CEE6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F36248892;
 	Mon, 24 Feb 2025 11:21:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740396071;
-	bh=UPus0+ZeUvqXhZx/PdDail0k2XtlufLXZJTSFurCQD4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=P/ro2FgAPF4T2r+0MKudRtmMjzJ/0z9E3/0To1KEhBMBqpq0E2MJhb26811NGEvIP
-	 MZBHwH709ovoUzxVnjyZpzF/56TTOdusmBWBOCSOt5FLFH4dB8hGoPonhJFKUrwFNd
-	 c4QLN9Jh/2YEJg25/KjP1eHrqxOTEKCfhPE2GVp4VhubV7XBCfmSVn8Uqzm8TO1Oys
-	 bE4IqTp0Sdj7pDzUjheuqGVEfYt9UKpqFj54t9Xso1DIXUINUXymMjYFfUoBiOVDly
-	 OyVpnqbHXaEpwCQWxTZp7K5L8zH/mE8hPgql8LBRKp9ME2XueJ4fLxmW3oI4S/972F
-	 kMPS6TOG47otA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Daniel Wagner <wagi@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Keith Busch <kbusch@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.10 7/7] nvme: only allow entering LIVE from CONNECTING state
-Date: Mon, 24 Feb 2025 06:20:50 -0500
-Message-Id: <20250224112051.2215017-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250224112051.2215017-1-sashal@kernel.org>
-References: <20250224112051.2215017-1-sashal@kernel.org>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.11.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740396073; cv=none; b=gjyGV6aZjRldGC4HUA1H14H3zR+zzLcYWP16BAmbC3ixJGheA4Zq3P4Svnjm0ueQRl+l0dMjNybPBGWjIiECbtx3pbylhRqRYyfD2H3iT7TbfdZDyWZo1tegZi47lJ0pPsBQ8JUJ0u5ONsADbg8BnjrC0TNDWRge3Lj3ZGepIyI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740396073; c=relaxed/simple;
+	bh=GQsmgS6wI8+vhA5Ld4i1QcY89vYEHOJlDqEZT3H9dYg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nyHAYdbS2MDETgeI8GnswF4IJgK1pqA29ljmjvW0Pq3tQKbxtXGu1BdQpR+BJKJf+X/5FlxuOr//E5e/KYsLrAdnwFS/H02hXgbGAcEuZl0E8SWbZZ+La5vjTpaN1lzVDMak/vk5d7m3t22wQ6ojd3svw9pdLlu2Vj/0A6FbwtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name; spf=none smtp.mailfrom=nbd.name; dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b=SNDUq7au; arc=none smtp.client-ip=46.4.11.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nbd.name
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="SNDUq7au"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+	s=20160729; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=eKuLqhP8V5boAL2DNzEE0Tml8upt+wPZ4tmCowYlIos=; b=SNDUq7auBvI4w2q4RwJsWBf3rT
+	eZ3ZpqeJZibdwG7OOwC3ELXQLW9uRhWn8La68qLSbJQcyx5Ssif2A+YWSLfV68VvEgJj9xEG7Yhxa
+	yynI9hvGWNTKj44FN3FHVUqpRJIB+bAXC1l6ugY9mfHGos4NtRvRBvNZWUvDwhZkjFOA=;
+Received: from p5b206ef1.dip0.t-ipconnect.de ([91.32.110.241] helo=Maecks.lan)
+	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+	(Exim 4.96)
+	(envelope-from <nbd@nbd.name>)
+	id 1tmWW3-009cZt-2M;
+	Mon, 24 Feb 2025 12:20:51 +0100
+From: Felix Fietkau <nbd@nbd.name>
+To: netdev@vger.kernel.org,
+	Eric Dumazet <edumazet@google.com>,
+	Neal Cardwell <ncardwell@google.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Willem de Bruijn <willemb@google.com>
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH net] net: ipv6: fix TCP GSO segmentation with NAT
+Date: Mon, 24 Feb 2025 12:20:46 +0100
+Message-ID: <20250224112046.52304-1-nbd@nbd.name>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.234
 Content-Transfer-Encoding: 8bit
 
-From: Daniel Wagner <wagi@kernel.org>
+When updating the source/destination address, the TCP/UDP checksum needs to
+be updated as well.
 
-[ Upstream commit d2fe192348f93fe3a0cb1e33e4aba58e646397f4 ]
-
-The fabric transports and also the PCI transport are not entering the
-LIVE state from NEW or RESETTING. This makes the state machine more
-restrictive and allows to catch not supported state transitions, e.g.
-directly switching from RESETTING to LIVE.
-
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Daniel Wagner <wagi@kernel.org>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: bee88cd5bd83 ("net: add support for segmenting TCP fraglist GSO packets")
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 ---
- drivers/nvme/host/core.c | 2 --
- 1 file changed, 2 deletions(-)
+ net/ipv6/tcpv6_offload.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index c739ac1761ba6..975d8ef514e80 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -384,8 +384,6 @@ bool nvme_change_ctrl_state(struct nvme_ctrl *ctrl,
- 	switch (new_state) {
- 	case NVME_CTRL_LIVE:
- 		switch (old_state) {
--		case NVME_CTRL_NEW:
--		case NVME_CTRL_RESETTING:
- 		case NVME_CTRL_CONNECTING:
- 			changed = true;
- 			fallthrough;
+diff --git a/net/ipv6/tcpv6_offload.c b/net/ipv6/tcpv6_offload.c
+index a45bf17cb2a1..5d0fcdbf57a1 100644
+--- a/net/ipv6/tcpv6_offload.c
++++ b/net/ipv6/tcpv6_offload.c
+@@ -113,24 +113,36 @@ static struct sk_buff *__tcpv6_gso_segment_list_csum(struct sk_buff *segs)
+ 	struct sk_buff *seg;
+ 	struct tcphdr *th2;
+ 	struct ipv6hdr *iph2;
++	bool addr_equal;
+ 
+ 	seg = segs;
+ 	th = tcp_hdr(seg);
+ 	iph = ipv6_hdr(seg);
+ 	th2 = tcp_hdr(seg->next);
+ 	iph2 = ipv6_hdr(seg->next);
++	addr_equal = ipv6_addr_equal(&iph->saddr, &iph2->saddr) &&
++		     ipv6_addr_equal(&iph->daddr, &iph2->daddr);
+ 
+ 	if (!(*(const u32 *)&th->source ^ *(const u32 *)&th2->source) &&
+-	    ipv6_addr_equal(&iph->saddr, &iph2->saddr) &&
+-	    ipv6_addr_equal(&iph->daddr, &iph2->daddr))
++	    addr_equal)
+ 		return segs;
+ 
+ 	while ((seg = seg->next)) {
+ 		th2 = tcp_hdr(seg);
+ 		iph2 = ipv6_hdr(seg);
+ 
+-		iph2->saddr = iph->saddr;
+-		iph2->daddr = iph->daddr;
++		if (!addr_equal) {
++			inet_proto_csum_replace16(&th2->check, seg,
++						  iph2->saddr.s6_addr32,
++						  iph->saddr.s6_addr32,
++						  true);
++			inet_proto_csum_replace16(&th2->check, seg,
++						  iph2->daddr.s6_addr32,
++						  iph->daddr.s6_addr32,
++						  true);
++			iph2->saddr = iph->saddr;
++			iph2->daddr = iph->daddr;
++		}
+ 		__tcpv6_gso_segment_csum(seg, &th2->source, th->source);
+ 		__tcpv6_gso_segment_csum(seg, &th2->dest, th->dest);
+ 	}
 -- 
-2.39.5
+2.47.1
 
