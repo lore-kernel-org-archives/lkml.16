@@ -1,62 +1,62 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E55F25D539;
-	Mon, 24 Feb 2025 11:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2BBD26137A;
+	Mon, 24 Feb 2025 11:50:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740397838; cv=none; b=nRhSKAHWotjRuhDAb01kSvxhUasoP38cMLIxRRcijoINfLm4ogJj+imov+mJABV56dsORBm3nol+JXQig4OXaMQ0Qyme8VXO+KIlk0nEHJHVWhBhEZ5RdMMmkomxInbe+y5DbNjTiToqbxdKNAIGkWqL0T5Y5mUFIw8HMABFk/U=
+	t=1740397843; cv=none; b=kHdB5eVOyQcJDdUfHcxo397dOI2hJiK+TODTzPCNbXOnijQZfvBHUQp3S1qOums7DjU3ObNITXopKcgliuP/kfBnCtXKTYAQIAb9Hd7FvdVOO1qZybFdTMM2xhVJzu/ATlJP4X6FtrRIoDCqd+VZ+6omb0IA6qHCqPmw+rFYMKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740397838; c=relaxed/simple;
-	bh=Udykfwl1MXc4gc2RuJvVXlL7EQdbeTE8wi/JhuNvidI=;
+	s=arc-20240116; t=1740397843; c=relaxed/simple;
+	bh=exnmk4QoMfx9qtW7vQx3ctX13oqT61LfRTvCDXadsEg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hFkt9kjmxL42Cpbj/XuyPP7biAGpp6nOoiK/CweEyvCM2B2DHICH7tyey80OlB8h4eTXBFrF0fA7Z1En7cLRtbP7DagazIgakuCnhHEygPmW2e89JRVfzwOvRvRwFHpsqdp7kVOGjpsGeoGqIAJWXgVP1m/nrJkoG4jtRGsMo/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O7OrqsXu; arc=none smtp.client-ip=209.85.208.173
+	 MIME-Version; b=Iz6rzPjxcW7n78JLcTszCnQ9lDPMrXQTaTzaCpnQPzyCkQWN/kQBNx0Ny7I231tkS8PnwqKhTT/x/V/jlVDF2V8oxikXr04B5Ofa8n86BCMkP1LG6t1unGA3IDGpaoG+ChMeqNIEOuf6UQMpAcp8fa6rFm81goIIcHOVbB34NX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fF17Noq1; arc=none smtp.client-ip=209.85.208.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O7OrqsXu"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30761be8fa7so39899901fa.2;
-        Mon, 24 Feb 2025 03:50:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fF17Noq1"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30a303a656aso44017691fa.0;
+        Mon, 24 Feb 2025 03:50:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740397834; x=1741002634; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1740397840; x=1741002640; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/5JPny/8xmUL6JVDTY7izFghOi6X6ho5qifwBno3Gtg=;
-        b=O7OrqsXu/+yf5muJrCa+p4Ah4bdCuv6Yc3980+/+ITeoindgNhQpn4xBmWXAm0pvOp
-         49TczuYVVfKoXigwSgi9SRUgtkoNXGyAFLKfdfOstpaUyCbU2Et3G8BPrdekCB76bfgU
-         SpE//Yfj0uusltqG+BACjcqzp0UFTTCxxq1cygsOqr/Xm7AkdY3NPqmbokqpYNbJTl1s
-         W3lTz6K4/Z+u0aQ3MGPeHdBVRy3UsIp+r9sboYk+TE1SWY73t/POSsNbdZHEmI+DYw2L
-         D9QVJ47C1uay/klLl++PDsxJL9i8KTIEqusBxBQbGilYaUIwNaaoPKCYcttgsCoRYFcl
-         PvEg==
+        bh=lSEFC3Z4MM80reKv528I94a4MnIklfvmUttoKk+o084=;
+        b=fF17Noq1Z4OuG7BxaVxmr0mV2yRyFyOI1k7YA135vQ9R9RCjQMLNddhVZyOAoYkAhc
+         Cx+PRPWwKCh1YktImpyOluBW6m57O0D6xKljp9ub8vfhYOrAZtxFPclEL2psutZhZPup
+         b7lpCQk5lQ3VM85tmqkEjwxAaooOws7tazzebXsNkhj7FAY0zG80dZDf9D9RHshqZcf8
+         3xf7mIjN6TZfK3iIatfkWCBP34m1m0VSiXMrpn9RZfmTyzPfl9HzSLPLgVuioasAiMBe
+         128LJHr1WXxv/gacwZ005DsuOMb1WEzCSg4VK1lkq1X1JOPtkDej88tTtDFcZqGmR0jJ
+         oiAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740397834; x=1741002634;
+        d=1e100.net; s=20230601; t=1740397840; x=1741002640;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/5JPny/8xmUL6JVDTY7izFghOi6X6ho5qifwBno3Gtg=;
-        b=kS/BtxrQaMvP3rqfUTNJfPKDs24IngLUMK9YtO1OIq773x4HmUNA0ne1HFRdW4/req
-         h45hshuOTqpmA65lySKLTSTnLHF1KRQvUfMVnyKJXgUz8uLQNDSPC05GFwehnACEM9/7
-         ftDkhZT16jxwe7rS9FKntv7zEIfpAfmEceAwanw/bf0WbjsPv+VCVMPYLga4T9LI2ITI
-         vY4D/6ZPM8JZRic+KwntI6hw0/WyZSj4B5ySl+gObRBNWPP9NsmrbtbkH8QvLUT7S4JT
-         xIt6Wm2zmC7y0a371EqlhLcSX8RrhRAykdkVMW1noqrzEeHit64PKd7OpX/2jawtQA0+
-         f4Lw==
-X-Forwarded-Encrypted: i=1; AJvYcCUd3tQlnnVcFtxw7FhT1PlaasE5czmenBk0NIq3b04Y2Q32RMM3nJTd+OeYgmS1r8Faz3NaH/cZhGyz5HPlb8U=@vger.kernel.org, AJvYcCW080PxEtRpH53vOwVdi+Jqu36R3/QT+2m04kmgOoVRFehICjviGCv6ojN5MgLQKk8ll5rrzZ3uuz52auI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGxHTEiUQUaKCAH8a8ZIhqTjvHhV/SyXh++Pi0wEzIkmeRRDo3
-	cH5Esn1/rPFo6V1CAd8a1yRtW1+ekwI9KgViZaYWLdkwBQSFGJDG
-X-Gm-Gg: ASbGncvXJjAuyPMIsqVN2l7R9JjpSwGV4+VzKLK/nTmmjjFux1iNH9oFAqBNYQ2ru0c
-	maT97WAIO77JiOK4dGBKrEJ8u3MfqmFSjbNoL3eBjfHvnbUnvadPiSwW/90QpYANxC4dgKXpUHi
-	aKUZlAcA8kcVSp7HV5Yy1QWXUg6bFC8sxuzigNCHhxTQPA/hpA3ruR0VmluawNab0XrazjBmePY
-	QIgmHWOXzZJmkaotZaWO6Oe/KCx5IIG7OAgx2rpp8JmyBj310wSRxrH60S28atu2p7IW/KdQ6FB
-	eM2ePG4K1H9JPEtqPIHTrT9MAzaFq0r4UT93nE1XwP+ZPwgJpogl4pOugKbrN/oMmEkWL/zr
-X-Google-Smtp-Source: AGHT+IFrKGi4N2or557v/brTgU0jkI7F6CLygpynjgZaBX85qdtVnhp8hzxjA4KruxbreK67zbDtcw==
-X-Received: by 2002:a2e:9b09:0:b0:306:10d6:28ad with SMTP id 38308e7fff4ca-30a5985cb24mr38650751fa.8.1740397834139;
-        Mon, 24 Feb 2025 03:50:34 -0800 (PST)
+        bh=lSEFC3Z4MM80reKv528I94a4MnIklfvmUttoKk+o084=;
+        b=LOEk+/IYk8JlZx7tbYLl9P6iXYoZYIau5T2TwudEWxLhiFwY5ugF/nbLdFl1uEsoBn
+         DEefr2hEA2zLLBW8gq5X2qxv8cHVW3g0EErLnHUZH+ueCuQIofA1yxqz4Nhu0pSXfJCY
+         BSUn9oRjlgBM4cg392ufEMTJrwd/T9MbSUYsIPqCHjaOa9VNMxs3gKaAXrdxC064PAXM
+         +FyNA1UgWN/hpK9NMGVjPSOiogEaPBHTCxxGIqfxZU8vLU1BacGPvEGHS7A1tfQrXDeU
+         s1gFsPfajJsaqL1qtwuUNTbZ2PDn/lL0B3zwWwGK15/qy1VDn/rsGUrE2xW+dKdXmld3
+         69hg==
+X-Forwarded-Encrypted: i=1; AJvYcCVkKuSTfjmdhCASMhzJ0F1AY5NsEXRMDbc+jJppphkSXfc+fRNZYlKkx9/eXW7BEqf1pexSSKIjkCpqH0s=@vger.kernel.org, AJvYcCWwNarjGsfkIbzRfV5W9/Oq8+70uCBzaiMCByUIAATVCFaBtYGwsyTHKX+YjFgaAHEnHC5YC1SItNh/etqlwgw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+l67QqAcrD5nOLrwo5PD+Gic8OUPCqVgQ8cKkW/gx4tY8XGoo
+	4DMYnPUQLkqkPzzRz3QBxrVCwsGadSqI6OplcO+RFf6lVkXeimqZZB+LRg==
+X-Gm-Gg: ASbGncsLh4rL2xQNSuw6ZWlX44umUSgYZrTslWK/LO1NAGl354j52DB+CYwCFKdXDGP
+	A2uOsyqtVlhqTXxO1cs6ryfpJT5kuV22EtvXQPmJq3iXHofHWqRZeD99pHcHOsF6xW3AcknQHGp
+	nN+KumkUT3sYawQc7nNpTIlt+V4VZFD2PTABJKYpQu3pLDKRQxxFHYdgx0JFPA0p9KVWc9Ouvfl
+	Xxi4CRIIHdn4Ht4TR+ILjst7LGSZ9dK0kuSCtCruEtrYvVoQgj/PCFNRXKkmD52IgM4Pn5H/kbW
+	v8116vsbpLOzDqtSbkIDn/aAUQMaTpZnX2oLw/Cxlf85gO2wb+zFGiaTg2L+QRG2vOH99NBI
+X-Google-Smtp-Source: AGHT+IHbT/y6SIytgLwKF4WORSZ4NAzvYcWlOt4XTeSB+apsoFfrwhgoAxg4dkzURyJKOfKYhDQVIw==
+X-Received: by 2002:a2e:9c06:0:b0:2ff:8e69:77d7 with SMTP id 38308e7fff4ca-30a5b1a09d0mr40853261fa.20.1740397839852;
+        Mon, 24 Feb 2025 03:50:39 -0800 (PST)
 Received: from abj-NUC9VXQNX.. (87-94-132-183.rev.dnainternet.fi. [87.94.132.183])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3091f26cd5bsm33174541fa.18.2025.02.24.03.50.32
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3091f26cd5bsm33174541fa.18.2025.02.24.03.50.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 03:50:33 -0800 (PST)
+        Mon, 24 Feb 2025 03:50:38 -0800 (PST)
 From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
 To: aliceryhl@google.com,
 	dakr@kernel.org,
@@ -78,9 +78,9 @@ Cc: Miguel Ojeda <ojeda@kernel.org>,
 	airlied@redhat.com,
 	iommu@lists.linux.dev (open list:DMA MAPPING HELPERS),
 	Abdiel Janulgue <abdiel.janulgue@gmail.com>
-Subject: [PATCH v12 1/3] rust: error: Add EOVERFLOW
-Date: Mon, 24 Feb 2025 13:49:05 +0200
-Message-ID: <20250224115007.2072043-2-abdiel.janulgue@gmail.com>
+Subject: [PATCH v12 3/3] MAINTAINERS: add entry for Rust dma mapping helpers device driver API
+Date: Mon, 24 Feb 2025 13:49:07 +0200
+Message-ID: <20250224115007.2072043-4-abdiel.janulgue@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250224115007.2072043-1-abdiel.janulgue@gmail.com>
 References: <20250224115007.2072043-1-abdiel.janulgue@gmail.com>
@@ -92,30 +92,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Trivial addition for missing EOVERFLOW error. This is used by a
-subsequent patch that might require returning EOVERFLOW as a result
-of `checked_mul`.
+Add an entry for the Rust dma mapping helpers abstractions.
 
 Signed-off-by: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 ---
- rust/kernel/error.rs | 1 +
- 1 file changed, 1 insertion(+)
+ MAINTAINERS | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/rust/kernel/error.rs b/rust/kernel/error.rs
-index f6ecf09cb65f..1e510181432c 100644
---- a/rust/kernel/error.rs
-+++ b/rust/kernel/error.rs
-@@ -64,6 +64,7 @@ macro_rules! declare_err {
-     declare_err!(EPIPE, "Broken pipe.");
-     declare_err!(EDOM, "Math argument out of domain of func.");
-     declare_err!(ERANGE, "Math result not representable.");
-+    declare_err!(EOVERFLOW, "Value too large for defined data type.");
-     declare_err!(ERESTARTSYS, "Restart the system call.");
-     declare_err!(ERESTARTNOINTR, "System call was interrupted by a signal and will be restarted.");
-     declare_err!(ERESTARTNOHAND, "Restart if no handler.");
-
-base-commit: beeb78d46249cab8b2b8359a2ce8fa5376b5ad2d
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c8d9e8187eb0..3bf130c0502c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6900,6 +6900,18 @@ F:	include/linux/dma-mapping.h
+ F:	include/linux/swiotlb.h
+ F:	kernel/dma/
+ 
++DMA MAPPING HELPERS DEVICE DRIVER API [RUST]
++M:	Abdiel Janulgue <abdiel.janulgue@gmail.com>
++M:	Danilo Krummrich <dakr@kernel.org>
++R:	Daniel Almeida <daniel.almeida@collabora.com>
++R:	Robin Murphy <robin.murphy@arm.com>
++R:	Andreas Hindborg <a.hindborg@kernel.org>
++L:	rust-for-linux@vger.kernel.org
++S:	Supported
++W:	https://rust-for-linux.com
++T:	git https://github.com/Rust-for-Linux/linux.git rust-next
++F:	rust/kernel/dma.rs
++
+ DMA-BUF HEAPS FRAMEWORK
+ M:	Sumit Semwal <sumit.semwal@linaro.org>
+ R:	Benjamin Gaignard <benjamin.gaignard@collabora.com>
 -- 
 2.43.0
 
