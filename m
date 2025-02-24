@@ -1,68 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-78.smtpout.orange.fr [80.12.242.78])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67AE136327;
-	Mon, 24 Feb 2025 19:58:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6487136327;
+	Mon, 24 Feb 2025 19:58:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740427130; cv=none; b=kO1AFkpsZHaRlOH28YPlBfX6sKru2V+X+3XUBzh7aKdwP0+SyDeNx4sw16pOYbYfgzml+kn88+cHyLyXt55kGrTupVT7tQkID+fnF4TEjE9OhDvU8cM8mTCfMSz6EepkyLY1R7xw/4H1gLFK10qDZLa5wELR09CawSIuymgLVqY=
+	t=1740427140; cv=none; b=MMTzTDzkMNkmkpruwhb4L5OZyLFr5KVc4AbfCUbqrVvrF/Vj4lSsXnh+NR2/ZM7IUTsIgERd7CoU1x45vU4Md+qDcLRyMJ77TeVC2IuhKQRIojQBnqhj+4Kx7ZM5zhIVL95OjtRiukw4JnPY6jD2/SKDSr39OvAO4Hdy29p4U8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740427130; c=relaxed/simple;
-	bh=8X/gNirLOboLavp4kF2SCReSSJxA99Vn4gihqi5QWuo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BefCbSZ14FxWApcf+sRVuhLTTJh33iBomPPGbguIepJjTLb0f0ALrD9LopSAOiplW1GyjeeM7leZ7yP4m/EGCpKtvFH+NJd9zLTnThPul4G7HY2K3n0d5XYxTcGL11J+mUNEFKM7QvFQ/Ss8G9NAABrnYNFijBXWWG5I5W/iidk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fCR59lQV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740427140; c=relaxed/simple;
+	bh=fWCZLO7EKR4DOPrWOUXgbX4igVnp3NTdUsv32c2M+X0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eK4jc0f++aiL4258pJ88mM7W2MnZTfsYIT005Blcww9IN8CR74OeGkjVNQQJGBvyoLRYDO05nwoEyHIlqHPziouu9B22sifE/i5JPjCQFhWqLug+dN1DbPVCf0+OUrQ1PdjnbGnGctTFZi3nHDukkUtPxQVFNgXiuuA3hYPFrwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=lSBGMgSM; arc=none smtp.client-ip=80.12.242.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fCR59lQV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C62FC4CED6;
-	Mon, 24 Feb 2025 19:58:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740427129;
-	bh=8X/gNirLOboLavp4kF2SCReSSJxA99Vn4gihqi5QWuo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fCR59lQVIUTC6wG9kvFT2+frCR09SzZspLMsYwxUnWdUC3Rtz4DsDAC3GbC6UMBu3
-	 N1DLFtq9xmGRzl6VbR2hRuQjZ+QSemdYP3KRK3p1KjicMn7IMKpzAiSeW0+aLMji28
-	 c7vz3UuLd+5UshxkK2k2Hoa+KaOOpxuGEt8IYq50OvxxBMMsiJzPfoLDN2G8X/Ht8X
-	 97hmn5CdFs8X+ipYpSo4q+t+McuFrWairX2HY10UXGBrABfEp61jSqgphC0OEBa2nr
-	 bkyMdVQi9g8XalIbSDaAL94jxEeGWPnAfkR4jn7y/aJ8Dp+U/648Ok6cmNMMKdG41N
-	 ivHmJqfb/NRSw==
-Date: Mon, 24 Feb 2025 13:58:47 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: imx@lists.linux.dev, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>, Conor Dooley <conor+dt@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/1] dt-bindings: dma: fsl,edma: Add i.MX94 support
-Message-ID: <174042712695.4008810.10732802711661241566.robh@kernel.org>
-References: <20250221222153.405285-1-Frank.Li@nxp.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="lSBGMgSM"
+Received: from fedora.home ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id meSLt3GDwJyOhmeSPtGswC; Mon, 24 Feb 2025 20:49:38 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1740426579;
+	bh=TYkhntDhg6zE2Z9rvZA/FjSywjAnJEg0AG/RXj5Cj1k=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=lSBGMgSMfFY2R+JdkvLMGe2zWfxig9natjAOM4rxrWscn60b5LMO+ZS3u1Xe5Ekev
+	 1CvRH93p4Yd9EpqVtYBGU6Jp4WhutYyiDeJbim0UAq+bamEeDLoIfeGXleFZ9i5eWR
+	 argVhLUHy4C8W7QR24QpctGtYri85t4yoAid5HMWGJ9It5oKL4eOzDXSE7iSEKKEVo
+	 3RU2KCqZBjh1vjdyMbnDyWX3eCo3PM2XQh4RYmdISJilAvW8xQWhRiFrkum9b+anhN
+	 FBOTbRiEt09JWr3T4W3ryk9fr0iGMynSOU3aGeYt3SHKzxLdc7+mjbdpHDvMps5eai
+	 Vw9liiq/fSqGw==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 24 Feb 2025 20:49:39 +0100
+X-ME-IP: 90.11.132.44
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-pm@vger.kernel.org
+Subject: [PATCH] thermal: intel: Remove a useless operation in int340x_thermal_zone_add()
+Date: Mon, 24 Feb 2025 20:49:28 +0100
+Message-ID: <cceb7f8864c43f046cf1c19c3bbcc38a7a57adc5.1740426540.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250221222153.405285-1-Frank.Li@nxp.com>
+Content-Transfer-Encoding: 8bit
 
+'zone_trips' has just been allocated with kzalloc(), so .flags is known to
+be 0. Remove the useless | when assigning THERMAL_TRIP_FLAG_RW_TEMP.
 
-On Fri, 21 Feb 2025 17:21:53 -0500, Frank Li wrote:
-> Add support for the i.MX94 DMA controllers. The SoC includes two DMA
-> controllers: one compatible with i.MX93 eDMA3 and another compatible with
-> i.MX95 eDMA5.
-> 
-> Add compatible string "fsl,imx94-edma3" with fallback to "fsl,imx93-edma3".
-> Add compatible string "fsl,imx94-edma5" with fallback to "fsl,imx95-edma5".
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> dts patch first try at
-> https://lore.kernel.org/imx/AS8PR04MB8642049B19BC7A5C8833FEB487042@AS8PR04MB8642.eurprd04.prod.outlook.com/
-> ---
->  Documentation/devicetree/bindings/dma/fsl,edma.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+This was added in commit cca52f696952 ("thermal: intel: Set
+THERMAL_TRIP_FLAG_RW_TEMP directly")
+---
+ drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+diff --git a/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c b/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c
+index 8dca6a6aceca..b43d848e66b8 100644
+--- a/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c
++++ b/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c
+@@ -143,7 +143,7 @@ struct int34x_thermal_zone *int340x_thermal_zone_add(struct acpi_device *adev,
+ 	for (i = 0; i < trip_cnt; i++) {
+ 		zone_trips[i].type = THERMAL_TRIP_PASSIVE;
+ 		zone_trips[i].temperature = THERMAL_TEMP_INVALID;
+-		zone_trips[i].flags |= THERMAL_TRIP_FLAG_RW_TEMP;
++		zone_trips[i].flags = THERMAL_TRIP_FLAG_RW_TEMP;
+ 		zone_trips[i].priv = THERMAL_INT_TO_TRIP_PRIV(i);
+ 	}
+ 
+-- 
+2.48.1
 
