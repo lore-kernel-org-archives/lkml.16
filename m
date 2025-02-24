@@ -1,118 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0C871A5B8B;
-	Mon, 24 Feb 2025 19:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458841FDA61
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 19:55:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740426866; cv=none; b=UJyIdS7tTFCQ4PmlCcgaBo6bB1qI/23kC50frpNpLJ0C01byyzIf/tQSSeAyDiTw5LLB8u21sQGOWba6p38TQ4bKqm6DQoG/brop3Z1BhS9uyTP/Ebwb3h+S11llS8kqS6unYfaahUsRBgEoU89767i62zhRmBBmOf3dqVT8gZ4=
+	t=1740426941; cv=none; b=EViOsiPET+jos4z/1h+AZgaaimedCJ/Ot7tQ/7jDPE0KHnqba1fVnsscykAFbFea0OO9kSg9/LF0vnOk/ySrflitA+jygy4GBpUyWPZEYU7vNgvbWibt0rvlE3k6qIvKRaHrlMiBTGIFXhZ5McXmX0q4QLNvJrNUqYCvCbvAkyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740426866; c=relaxed/simple;
-	bh=eqo9h/PAZIFf5dMdH1i9KPDuTNmee9ed3YQZ/4tZnaY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=lUS5jhql8AwYzz8RNnK8HQ+6kuWx8EkDMmcSUR6koke6x9xsdcVNKStzxBkgeIOyAGoe3lvxwZMAvIO5sD2XMxfMmNVCp53cG8rRwL7DxVtC0B6ZKGSZs/xy7ShDsPuvACPChKFZzlpoNWxgmwP3UA7OqmJeSI/uwbgkJE6vQ6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cpglDdjU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740426941; c=relaxed/simple;
+	bh=a3tYcvyfjcjX2bkAZi2UN8xxGzuMy345oEEohUHtRmA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DASBHZb94wJm8Ewfu/60c8V0ZHTIjwK7DP4cSfbc/G0bQ9qpQSnEfDkgsOQgQ4hdnjMuAplrq8oVzUrRQPsUWOzBMfK4w262k1oStq8n2q+dWODfAv/+wuBcHbILEl7EsQxIqN81U2phKEXtCpOhkMvsjd+7vkIvZMYfa7lxwkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=PEzFkShE; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cpglDdjU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AA40C4CED6;
-	Mon, 24 Feb 2025 19:54:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740426865;
-	bh=eqo9h/PAZIFf5dMdH1i9KPDuTNmee9ed3YQZ/4tZnaY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=cpglDdjU1KMY82rxuH8gT0zRoyKc2n6kTkm4p5aWOIjwBB9C+4g0BTTXUfU6lTvX9
-	 sJy+i/PsStFGOxxqxdmxOyOTdtxE8jd0INf4I6XWYP6hs21zmKRR1lL9z08MiNVza7
-	 wipiYzFN9H1yQLjdXFqSG3oLbcu5PtdNqccPC69oAlC0kkjK5vZSj4QtVuHTjzWc5Z
-	 CX3RBOaSXlmCcuLNhj4xcuNpZiSABVcq2A/elCjGyYu+puvSFDJ1X3f0x5HVKVVzTt
-	 718WO/Me3Xn2STtbtb3mcg6V3E2VpiQkLIfKEpN2tpb7AaqMzOMYXpli8YjNm0OkvJ
-	 4CzmON7cRxb3w==
-Date: Mon, 24 Feb 2025 13:54:23 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Naveen Kumar P <naveenkumar.parna@gmail.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernelnewbies <kernelnewbies@kernelnewbies.org>,
-	linux-acpi@vger.kernel.org
-Subject: Re: PCI: hotplug_event: PCIe PLDA Device BAR Reset
-Message-ID: <20250224195423.GA473540@bhelgaas>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="PEzFkShE"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-545284eac3bso4741526e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 11:55:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740426937; x=1741031737; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=noL6pe1CTXApYXoqvddRN+rJwafGoHXHcCwbvEcDCmg=;
+        b=PEzFkShEkecG3Xn0P6YC2XgYS7US5pJJjKvo6GFfeBOp038UpA4ntlqPoA3j7iFHyR
+         zzLt9ZLcKJLtQonFepF7NIFesxeoNSpLgMztBa+VOTXamtV/QJlxrMlGw2lZobxjC7Tg
+         kmCRgIV5jdorNOMX2YLAPa/fxLBRVDXbreIvtAcv463yRKQ4wCeXXZo9sQMgwvRAHtEs
+         FDeRWx9fMGj3TR0XCUQ+E/pcuyaMpQ0lECwbwb4ocAo1aCAvfUPFCGYC9H1heVSlv1kg
+         azhEQQW2QFm6qQ0fWejvr3gX8ag4EbMJtSYLO5ksZ2RTjaa9klwMgPKS500vj349lU4a
+         GS8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740426937; x=1741031737;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=noL6pe1CTXApYXoqvddRN+rJwafGoHXHcCwbvEcDCmg=;
+        b=odyJRfk6ZulZCtEw3LlLjDGfTsYw3EtChysmdZWofdpyklky5RcC8VrfrBBMSBdq97
+         /M0wHvVZD/66DEzSB3O3rpZG1vM4OvD7Qp85wKWYMuMTVnfExpNV1ORWIYeYW4y1IDGe
+         rP2iH0tiFcb85kx7GMkK/NCErySun0sdTamEPIaUXSMrXcEVL+MyXUYLuZtcP11wXB/a
+         7IWAFpAA14p3orwRwCkTCB4vhqN7eiTGp9CMtTq9j2/GdKAti2vyMtEdp0Idi1SS//Uy
+         pkidQ3uO7JoRd3eQjhhjS7o2imm2MjvfrgYvqAOVUNNc9srAFtcBDnl9RkLiyY/F7AK1
+         nGZg==
+X-Forwarded-Encrypted: i=1; AJvYcCUidHzq7l6PLjGNTTyUgGXgNtpGIGEOVBQP7bomQJQLE4qpmZJ29D6ETy8fd1rzFNmY6+eUjd/YVBtbEeI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRTVngf0hEWwdPX+19g5MXQVu+KkKdL2SE3fZ6eIpYabfOBbNE
+	6RENVVO8WEAe2C2JI/u95//Fj5NrgCBhBp21Iu2d3WYvfQqnVcoy8fEfRHCWrFO7b8DnqntN8l9
+	0TJcCuQSjWPu8Vi6xsBNWV/Y9nOV5ozkBRqUqtw==
+X-Gm-Gg: ASbGncvoMLuYJK00MbQ8kJ4asAvK/WOixgbfCAeQO2SNhUAT7XWwYFt59Pk2T4NaZ7U
+	iVitjOjr8zIqWC0JKbjA/VUOXrlxzWK27iEjx4vStEb1ZpwbBKSCJ0fGvXRSTRNGfhFljtjv9Mx
+	uVIuX9aCoUCOzPppkjs4zjJ3+KQReMivn5FJpZwg==
+X-Google-Smtp-Source: AGHT+IEdoth87C9pXjS6cljcsGr8chgpHWMEQoQgMWVHFA/xI9zBtbKzgIyfz3TeqYR49asb5m14SZMtTvAMeCCql3A=
+X-Received: by 2002:a05:6512:3f17:b0:545:a1a:556b with SMTP id
+ 2adb3069b0e04-54838d3e458mr5466845e87.0.1740426937204; Mon, 24 Feb 2025
+ 11:55:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMciSVVV9tHH1M2bOnwqCJCQ8OjNFGjuQB7R-fY7JHHD5tQHoA@mail.gmail.com>
+References: <20250210-gpio-sanitize-retvals-v1-0-12ea88506cb2@linaro.org>
+ <20250210-gpio-sanitize-retvals-v1-8-12ea88506cb2@linaro.org> <Z7yfTggRrk3K6srs@black.fi.intel.com>
+In-Reply-To: <Z7yfTggRrk3K6srs@black.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 24 Feb 2025 20:55:26 +0100
+X-Gm-Features: AWEUYZlJt7OmCFrq9OUSasQvObhDFFCwRBTSz2T8Jx8X8FsGB71Wdcw12FbMEVg
+Message-ID: <CAMRc=Md-bMUEKgF7srLFqwdetDcTDB-0YzrisccQmReDs-Ndvg@mail.gmail.com>
+Subject: Re: [PATCH 8/8] gpiolib: sanitize the return value of gpio_chip::get_direction()
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 25, 2025 at 12:29:00AM +0530, Naveen Kumar P wrote:
-> On Mon, Feb 24, 2025 at 11:03 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Mon, Feb 24, 2025 at 05:45:35PM +0530, Naveen Kumar P wrote:
-> > > On Wed, Feb 19, 2025 at 10:36 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Wed, Feb 19, 2025 at 05:52:47PM +0530, Naveen Kumar P wrote:
-> > > > > Hi all,
-> > > > >
-> > > > > I am writing to seek assistance with an issue we are experiencing with
-> > > > > a PCIe device (PLDA Device 5555) connected through PCI Express Root
-> > > > > Port 1 to the host bridge.
-> > > > >
-> > > > > We have observed that after booting the system, the Base Address
-> > > > > Register (BAR0) memory of this device gets reset to 0x0 after
-> > > > > approximately one hour or more (the timing is inconsistent). This was
-> > > > > verified using the lspci output and the setpci -s 01:00.0
-> > > > > BASE_ADDRESS_0 command.
-
-> ...
-> I booted with the pcie_aspm=off kernel parameter, which means that
-> PCIe Active State Power Management (ASPM) is disabled. Given this
-> context, should I consider removing this setting to see if it affects
-> the occurrence of the Bus Check notifications and the BAR0 reset
-> issue?
-
-Doesn't seem likely to be related.  Once configured, ASPM operates
-without any software intervention.  But note that "pcie_aspm=off"
-means the kernel doesn't touch ASPM configuration at all, and any
-configuration done by firmware remains in effect.
-
-You can tell whether ASPM has been enabled by firmware with "sudo
-lspci -vv" before the problem occurs.
-
-> > > During the ACPI_NOTIFY_BUS_CHECK event, the lspci output initially
-> > > showed all FF's, and then the next run of the same command showed
-> > > BASE_ADDRESS_0 reset to zero:
-> > > $ sudo lspci -xxx -s 01:00.0 | grep "10:"
-> > > 10: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+On Mon, Feb 24, 2025 at 5:33=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@intel.com> wrote:
+>
+> On Mon, Feb 10, 2025 at 11:52:02AM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > >
-> > Looks like the device isn't responding at all here.  Could happen if
-> > the device is reset or powered down.
+> > As per the API contract, the get_direction() callback can only
+> > return 0, 1 or a negative error number. Add a wrapper around the callba=
+ck
+> > calls that filters out anything else.
 >
-> From the kernel driver or user space tools, is it possible to
-> determine whether the device has been reset or powered down?  Are
-> there any power management settings or configurations that could be
-> causing the device to reset or power down unexpectedly?
-
-Not really.  By "powered down", I meant D3cold, where the main power
-is removed.  Config space is readable in all other power states.
-
-> > What is this device?  What driver is bound to it?  I don't see
-> > anything in dmesg that identifies a driver.
+> ...
 >
-> The PCIe device in question is a Xilinx FPGA endpoint, which is
-> flashed with RTL code to expose several host interfaces to the system
-> via the PCIe link.
-> 
-> We have an out-of-tree driver for this device, but to eliminate the
-> driver's role in this issue, I renamed the driver to prevent it from
-> loading automatically after rebooting the machine. Despite not using
-> the driver, the issue still occurred.
+> > +static int gpiochip_get_direction(struct gpio_chip *gc, unsigned int o=
+ffset)
+> > +{
+> > +     int ret;
+> > +
+> > +     lockdep_assert_held(&gc->gpiodev->srcu);
+> > +
+> > +     if (WARN_ON(!gc->get_direction))
+> > +             return -EOPNOTSUPP;
+> > +
+> > +     ret =3D gc->get_direction(gc, offset);
+> > +     if (ret > 1)
+>
+> Would it be better to use the respective GPIO*... macro instead of 1?
+>
 
-Oh, right, I forgot that you mentioned this before.
+I did consider it but I don't like comparing against enums, it doesn't
+feel right as the value behind the name can change. I think I prefer
+it like this even if it's not the best solution either. Maybe we could
+be more explicit and say:
 
-> > You're seeing the problem on v5.4 (Nov 2019), which is much newer than
-> > v4.4 (Jan 2016).  But v5.4 is still really too old to spend a lot of
-> > time on unless the problem still happens on a current kernel.
+    if (!(ret =3D=3D IN || ret =3D=3D OUT || ret < 0)
 
-This part is important.  We don't want to spend a lot of time
-debugging an issue that may have already been fixed upstream.
+?
 
-Bjorn
+Bart
