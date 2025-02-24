@@ -1,24 +1,24 @@
-Received: from mail-m19731120.qiye.163.com (mail-m19731120.qiye.163.com [220.197.31.120])
+Received: from mail-m49233.qiye.163.com (mail-m49233.qiye.163.com [45.254.49.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A461819259A;
-	Mon, 24 Feb 2025 08:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067E318A922;
+	Mon, 24 Feb 2025 08:29:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740385768; cv=none; b=BUguUwcGVAVspAPNtqi7G7iurXOcWyU9Qb+n237HLro2hQRm0Ryfw3AsXfqnEnM0J7KmSHNAED5kU8vhdbaMGTUBaISjosyiGFEDgARi37IMS7Xkkr1o8bjET9nwyDyBpXIVui+pMTxTnPRnj20ly3OXUbi021AKQnR+pHF1LQI=
+	t=1740385777; cv=none; b=Co0nTZYf30rDz18FPO7kt1LE2b0aB3UsEab4uoavT8FXV4o7FGBtgbru6/MWCkIujM1IcPygbJgubWjXRAji07pjgI4ZGrF2oCnw7ciIdOIzLyWrEXPj+Ua8BCaq89VVnROCwkcZwjotahtvjXVrz//IjmHPqKCzIvBsnkbcEJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740385768; c=relaxed/simple;
-	bh=I3YiS7pg9E0UOR2N8R+I9po9/wZsxI7mFrdKExA/MVY=;
+	s=arc-20240116; t=1740385777; c=relaxed/simple;
+	bh=wBUrPOjidgygntyU4kXiYBaRM5iEojN6EYVHsX0Mo8A=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sr9qd0bLcylv/LBDcVxbsQAHuaOXNm/0Vpad0HiKyVLqJuO/ca6NUQioNkm24h8+VjVNQlRDqfDOhwXGu6W4laKiOs7fefmqedF43cYEJ3cszoWlu7czX2a1jot8woR4MLrwjeYf2qjFdPgSvX5HVJTS8s0NBKeGGwdNcX/TEOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=g3HtaH9Y; arc=none smtp.client-ip=220.197.31.120
+	 MIME-Version; b=paFguLFersckvIfH1FAubIVjZgS/1beUnO76KvSISDMQByU/fzRjei1JTWvswhR++KdmK7bjPXbnlrxCTUsVt53w7tom1E15O1ZYUG+atCAiHYAF6D/DpC7Az/IawhQmbq4bEgoY081wP1b1KQCj9G/LzIDj+4HROotpe2P8+EY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=XtaC5efG; arc=none smtp.client-ip=45.254.49.233
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="g3HtaH9Y"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="XtaC5efG"
 Received: from zyb-HP-ProDesk-680-G2-MT.. (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id bfd2879f;
-	Mon, 24 Feb 2025 16:13:59 +0800 (GMT+08:00)
+	by smtp.qiye.163.com (Hmail) with ESMTP id bfd287db;
+	Mon, 24 Feb 2025 16:14:07 +0800 (GMT+08:00)
 From: Damon Ding <damon.ding@rock-chips.com>
 To: heiko@sntech.de
 Cc: andy.yan@rock-chips.com,
@@ -44,9 +44,9 @@ Cc: andy.yan@rock-chips.com,
 	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Damon Ding <damon.ding@rock-chips.com>
-Subject: [PATCH v7 02/15] drm/rockchip: analogix_dp: Expand device data to support multiple edp display
-Date: Mon, 24 Feb 2025 16:13:12 +0800
-Message-Id: <20250224081325.96724-3-damon.ding@rock-chips.com>
+Subject: [PATCH v7 06/15] drm/bridge: analogix_dp: Add support for phy configuration.
+Date: Mon, 24 Feb 2025 16:13:16 +0800
+Message-Id: <20250224081325.96724-7-damon.ding@rock-chips.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250224081325.96724-1-damon.ding@rock-chips.com>
 References: <20250224081325.96724-1-damon.ding@rock-chips.com>
@@ -58,118 +58,160 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGk5NHlZDTEoeTBkaTBhMGhlWFRQJFh
-	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
-	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a95370525bc03a3kunmbfd2879f
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQh4dHlYdTB4eHR8fTB1OTx5WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSEpPSE
+	xVSktLVUpCS0tZBg++
+X-HM-Tid: 0a953705470503a3kunmbfd287db
 X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MQw6CRw6AzIIIxMfTT5KETJD
-	SC8wC09VSlVKTE9LSENPQ09KS0JCVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFISktONwY+
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mhg6Sww*FjIcMxMzNj0OES0Y
+	Ej4wFDhVSlVKTE9LSENPQ09CTUJKVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFPQ0lJNwY+
 DKIM-Signature:a=rsa-sha256;
-	b=g3HtaH9YDtf9RQV/XLA+RPk22LW/TKr/xVe6jAp/bzrSg0eE5Hw/Blr0wkHIZqXt6XswF7xyGph4UmQnR9qIOXa6BkND1S/mlJAsPrGaqGU3dcDY0wzWJ0JKbvRaFU7743h6rr9el5pUGSqcphMlKvyNm9AiMQQvPCwfGD8z6AY=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=lHxIGASN99m5dXd91pj3fT+U9t8J1461WyjTg1w5KfA=;
+	b=XtaC5efGs1rZ+8bQ8zfqofxx4Kc/SjV8UtvJeOpH8oWYwAy8ytqBwSnvrsyaYQks/YS1du3zJ2dtSt+SzBL+VEiLFjM4IxEaK+rwal2MyJtV9XZ7c3hqfalhNB2VuKLkhfQFOY98hQpj+vqhFKhVTqkecpsW4EAiLfmRvg6vd6o=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=kcC5s+lcqHFJtOjydPsWaNOe3ZEm67cMW9OGCW6oq2k=;
 	h=date:mime-version:subject:message-id:from;
 
-There are two main modifications: one is expanding struct
-rockchip_dp_chip_data to an array, and the other is adding
-&rockchip_dp_chip_data.reg to separate different edp devices.
+Add support to configurate link rate, lane count, voltage swing and
+pre-emphasis with phy_configure(). It is helpful in application scenarios
+where analogix controller is mixed with the phy of other vendors.
 
 Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
 ---
+
+Changes in v2:
+- remove needless assignments for phy_configure()
+- remove unnecessary changes for phy_power_on()/phy_power_off()
+
+Changes in v4:
+- remove unnecessary &phy_configure_opts_dp.lanes assignments in
+  analogix_dp_set_link_bandwidth()
+- remove needless &phy_configure_opts_dp.lanes and
+  &phy_configure_opts_dp.link_rate assignments in
+  analogix_dp_set_lane_link_training()
+
+Changes in v5:
+- include <drm/drm_print.h> for dev_err()
+- use drm_err() instead of dev_err()
 
 Changes in v6:
-- Add the description of &rockchip_dp_chip_data.reg
-- Use drm_...() uniformly rather than mixing drm_...() and dev_..()
+- Pass 'dp' in drm_...() rather than 'dp->drm_dev'
 
 Changes in v7:
-- Call dev_err_probe() if failed to find the chip-data
+- For the new error logs, use dev_err() as with the other error logs
 ---
- .../gpu/drm/rockchip/analogix_dp-rockchip.c   | 41 +++++++++++++++----
- 1 file changed, 34 insertions(+), 7 deletions(-)
+ .../drm/bridge/analogix/analogix_dp_core.c    |  1 +
+ .../gpu/drm/bridge/analogix/analogix_dp_reg.c | 52 +++++++++++++++++++
+ 2 files changed, 53 insertions(+)
 
-diff --git a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-index 0d93df6b5144..a8265a1bf9ff 100644
---- a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-@@ -52,10 +52,12 @@ struct rockchip_grf_reg_field {
-  * struct rockchip_dp_chip_data - splite the grf setting of kind of chips
-  * @lcdc_sel: grf register field of lcdc_sel
-  * @chip_type: specific chip type
-+ * @reg: register base address
-  */
- struct rockchip_dp_chip_data {
- 	const struct rockchip_grf_reg_field lcdc_sel;
- 	u32	chip_type;
-+	u32	reg;
- };
+diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+index 174e7011bba9..2c94f77c1d4c 100644
+--- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
++++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+@@ -1683,6 +1683,7 @@ int analogix_dp_resume(struct analogix_dp_device *dp)
+ 	if (dp->plat_data->power_on)
+ 		dp->plat_data->power_on(dp->plat_data);
  
- struct rockchip_dp_device {
-@@ -396,6 +398,8 @@ static int rockchip_dp_probe(struct platform_device *pdev)
- 	const struct rockchip_dp_chip_data *dp_data;
- 	struct drm_panel *panel = NULL;
- 	struct rockchip_dp_device *dp;
-+	struct resource *res;
-+	int i;
- 	int ret;
++	phy_set_mode(dp->phy, PHY_MODE_DP);
+ 	phy_power_on(dp->phy);
  
- 	dp_data = of_device_get_match_data(dev);
-@@ -410,9 +414,24 @@ static int rockchip_dp_probe(struct platform_device *pdev)
- 	if (!dp)
- 		return -ENOMEM;
+ 	analogix_dp_init_dp(dp);
+diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_reg.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_reg.c
+index 3afc73c858c4..38fd8d5014d2 100644
+--- a/drivers/gpu/drm/bridge/analogix/analogix_dp_reg.c
++++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_reg.c
+@@ -11,6 +11,7 @@
+ #include <linux/gpio/consumer.h>
+ #include <linux/io.h>
+ #include <linux/iopoll.h>
++#include <linux/phy/phy.h>
  
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ #include <drm/bridge/analogix_dp.h>
+ 
+@@ -513,10 +514,24 @@ void analogix_dp_enable_sw_function(struct analogix_dp_device *dp)
+ void analogix_dp_set_link_bandwidth(struct analogix_dp_device *dp, u32 bwtype)
+ {
+ 	u32 reg;
++	int ret;
+ 
+ 	reg = bwtype;
+ 	if ((bwtype == DP_LINK_BW_2_7) || (bwtype == DP_LINK_BW_1_62))
+ 		writel(reg, dp->reg_base + ANALOGIX_DP_LINK_BW_SET);
 +
-+	i = 0;
-+	while (dp_data[i].reg) {
-+		if (dp_data[i].reg == res->start) {
-+			dp->data = &dp_data[i];
-+			break;
++	if (dp->phy) {
++		union phy_configure_opts phy_cfg = {0};
++
++		phy_cfg.dp.link_rate =
++			drm_dp_bw_code_to_link_rate(dp->link_train.link_rate) / 100;
++		phy_cfg.dp.set_rate = true;
++		ret = phy_configure(dp->phy, &phy_cfg);
++		if (ret && ret != -EOPNOTSUPP) {
++			dev_err(dp->dev, "%s: phy_configure() failed: %d\n", __func__, ret);
++			return;
++		}
++	}
+ }
+ 
+ void analogix_dp_get_link_bandwidth(struct analogix_dp_device *dp, u32 *bwtype)
+@@ -530,9 +545,22 @@ void analogix_dp_get_link_bandwidth(struct analogix_dp_device *dp, u32 *bwtype)
+ void analogix_dp_set_lane_count(struct analogix_dp_device *dp, u32 count)
+ {
+ 	u32 reg;
++	int ret;
+ 
+ 	reg = count;
+ 	writel(reg, dp->reg_base + ANALOGIX_DP_LANE_COUNT_SET);
++
++	if (dp->phy) {
++		union phy_configure_opts phy_cfg = {0};
++
++		phy_cfg.dp.lanes = dp->link_train.lane_count;
++		phy_cfg.dp.set_lanes = true;
++		ret = phy_configure(dp->phy, &phy_cfg);
++		if (ret && ret != -EOPNOTSUPP) {
++			dev_err(dp->dev, "%s: phy_configure() failed: %d\n", __func__, ret);
++			return;
++		}
++	}
+ }
+ 
+ void analogix_dp_get_lane_count(struct analogix_dp_device *dp, u32 *count)
+@@ -546,10 +574,34 @@ void analogix_dp_get_lane_count(struct analogix_dp_device *dp, u32 *count)
+ void analogix_dp_set_lane_link_training(struct analogix_dp_device *dp)
+ {
+ 	u8 lane;
++	int ret;
+ 
+ 	for (lane = 0; lane < dp->link_train.lane_count; lane++)
+ 		writel(dp->link_train.training_lane[lane],
+ 		       dp->reg_base + ANALOGIX_DP_LN0_LINK_TRAINING_CTL + 4 * lane);
++
++	if (dp->phy) {
++		union phy_configure_opts phy_cfg = {0};
++
++		for (lane = 0; lane < dp->link_train.lane_count; lane++) {
++			u8 training_lane = dp->link_train.training_lane[lane];
++			u8 vs, pe;
++
++			vs = (training_lane & DP_TRAIN_VOLTAGE_SWING_MASK) >>
++			     DP_TRAIN_VOLTAGE_SWING_SHIFT;
++			pe = (training_lane & DP_TRAIN_PRE_EMPHASIS_MASK) >>
++			     DP_TRAIN_PRE_EMPHASIS_SHIFT;
++			phy_cfg.dp.voltage[lane] = vs;
++			phy_cfg.dp.pre[lane] = pe;
 +		}
 +
-+		i++;
++		phy_cfg.dp.set_voltages = true;
++		ret = phy_configure(dp->phy, &phy_cfg);
++		if (ret && ret != -EOPNOTSUPP) {
++			dev_err(dp->dev, "%s: phy_configure() failed: %d\n", __func__, ret);
++			return;
++		}
 +	}
-+
-+	if (!dp->data)
-+		return dev_err_probe(dev, -EINVAL, "no chip-data for %s node\n",
-+				     dev->of_node->name);
-+
- 	dp->dev = dev;
- 	dp->adp = ERR_PTR(-ENODEV);
--	dp->data = dp_data;
- 	dp->plat_data.panel = panel;
- 	dp->plat_data.dev_type = dp->data->chip_type;
- 	dp->plat_data.power_on = rockchip_dp_poweron;
-@@ -464,14 +483,22 @@ static int rockchip_dp_resume(struct device *dev)
- static DEFINE_RUNTIME_DEV_PM_OPS(rockchip_dp_pm_ops, rockchip_dp_suspend,
- 		rockchip_dp_resume, NULL);
+ }
  
--static const struct rockchip_dp_chip_data rk3399_edp = {
--	.lcdc_sel = GRF_REG_FIELD(0x6250, 5, 5),
--	.chip_type = RK3399_EDP,
-+static const struct rockchip_dp_chip_data rk3399_edp[] = {
-+	{
-+		.lcdc_sel = GRF_REG_FIELD(0x6250, 5, 5),
-+		.chip_type = RK3399_EDP,
-+		.reg = 0xff970000,
-+	},
-+	{ /* sentinel */ }
- };
- 
--static const struct rockchip_dp_chip_data rk3288_dp = {
--	.lcdc_sel = GRF_REG_FIELD(0x025c, 5, 5),
--	.chip_type = RK3288_DP,
-+static const struct rockchip_dp_chip_data rk3288_dp[] = {
-+	{
-+		.lcdc_sel = GRF_REG_FIELD(0x025c, 5, 5),
-+		.chip_type = RK3288_DP,
-+		.reg = 0xff970000,
-+	},
-+	{ /* sentinel */ }
- };
- 
- static const struct of_device_id rockchip_dp_dt_ids[] = {
+ u32 analogix_dp_get_lane_link_training(struct analogix_dp_device *dp, u8 lane)
 -- 
 2.34.1
 
