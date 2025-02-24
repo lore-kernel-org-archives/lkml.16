@@ -1,83 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2001537C8;
-	Mon, 24 Feb 2025 17:27:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B170C264606;
+	Mon, 24 Feb 2025 17:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740418055; cv=none; b=rCfrPkT8Ru/+/j8CHMjrzUe+eyJJ7zPZfYcUNLzNiSBwNUEAfpYBFqiPbYqg2PlRJL0rgRoSKBWHfgAKGg/DD8TfZbOJUBwX9eaWBQCNSo+lgtOkWfXVhlB7cvGdzJi8x5g2ltBH8zIY7i36WvlMCIhuw3LplgFqNMcrmQ5FDWI=
+	t=1740418074; cv=none; b=c828D8thjj+PyUs0wd5yrZsNA2uIZ1jEdDU6whOao64yF7/52G0PMnnSQlPX18joVO1i/6w3VaiMlWYVT4ZoMr8YuxX4qyoO423h/o8znwjPrKtVNJ0DdIX+YB/Dr/C9xUQrH9A3qDqbfIhxLmEW+q2RfHlM0YdTc0zXBWU+fFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740418055; c=relaxed/simple;
-	bh=G0hV6F5emoBjP6Cj6DWH8LiN2FaXariNip3s524lSAc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o/prmxc393PL8Bae8HPiaQ/VK/wwpIlwkgyeZuiQzofKlZP/MY0PQVF2Mhf6FT0VGDh75ZuEoh64O7Q+3AmvzJPChvMCW9zhoxq1HypIVafqRBAyi76Hizf4wVdenwRlDpCp6MZX+IqHamNXbsJdeXNpVFezVM428dTVjTXmVcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EBTc5lYQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740418074; c=relaxed/simple;
+	bh=/WTgdLJ7Cr+Q0c3p5v9SDBHCHd2RmbcFR1TyVPCZpRQ=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=fHP4HWxfb/ySNO+/xB0T9A6BXht4fZk8sL/CYZZTMyzGRmw1cKiE7CWjnkJHjh6Ufasqw5ASInqLAQC7/s+0uimPOWBWngO1zdHmZnGtQCVwOVs0zaSy4167TXGqA0DgVn1g7PlpbPAHWTIrHPr7bSfSBYH1JRqCf7KqpN6xMlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=un9lnUoZ; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EBTc5lYQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 638B9C4CED6;
-	Mon, 24 Feb 2025 17:27:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740418054;
-	bh=G0hV6F5emoBjP6Cj6DWH8LiN2FaXariNip3s524lSAc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EBTc5lYQbTzRWGQ5P3GfXxR+yM0X3GlUVwxWdvnnQlQl3aKDDy6fz428q3jSwjxK8
-	 dsHkT3/b2G7FP27CuVqAr6l/L8Sp4fIW05ZYp7JlABPWeR8Y6ojzCC8SK2L8AeXBW0
-	 qDrOCh5ks/m9DztuRrVl8OyaBnZeMAc2xUrJxbSPxWJ+VCY+aeKVRGBuaz5UtOx8D8
-	 c1mMBgRejvA1uij7mJJWU2idox2M/hpjxcsDAXbKg6qvjVvlppGmjPhdIda3fvDGkm
-	 F7NN96Tnqe8isXyZMGefrD2Pu4lmWvcKBO/g/ZnwG602Jg4WYuO1JvYtLbf/7scSzX
-	 to+0Zyqm2yxKQ==
-Date: Mon, 24 Feb 2025 11:27:32 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
-Cc: devicetree@vger.kernel.org, biju.das.jz@bp.renesas.com,
-	prabhakar.mahadev-lad.rj@bp.renesas.com,
-	linux-kernel@vger.kernel.org, tomm.merciai@gmail.com,
-	linux-renesas-soc@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org
-Subject: Re: [PATCH v2 03/18] media: dt-bindings: renesas,rzg2l-cru: Document
- Renesas RZ/G3E SoC
-Message-ID: <174041805249.3557955.16934017711809968171.robh@kernel.org>
-References: <20250221155532.576759-1-tommaso.merciai.xr@bp.renesas.com>
- <20250221155532.576759-4-tommaso.merciai.xr@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="un9lnUoZ"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 51OHRBSm808450
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 24 Feb 2025 09:27:11 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 51OHRBSm808450
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025021701; t=1740418032;
+	bh=y+1kq2YEKF7R69yKWojIPrUsOYg3qwUYhBs10WXq4gU=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=un9lnUoZC/dhT580RAcggjP9vJkSTZUx9/wSbHI+NNp1dzP02U18wyT8ws5sh2tFQ
+	 pvDmmBsSSvkhBh6GcIjzuWkuS6Vavgy2u43ssul0cRaTQ6H1HpfVVsufvNQRbf6orC
+	 /yMOFi130bMKTold3B75eI7gpTp/BGewlkwZx+RwATA7onvvJf9Np9zu3HocRD711S
+	 P69pLyhVpF4bvdDCDlqWssB9C6VugJcHhydn4n6iqLYhVCLem+rIR39FtXYkeM9KaN
+	 Yn12PJgbslD2fKQXhzvjPYh4tWR5grP7Cd+4z6fo5nYMkhmzGz04zyJ+1GyX1Lv0/G
+	 xr4uLVDVd9Sbg==
+Date: Mon, 24 Feb 2025 09:27:09 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Xin Li <xin@zytor.com>, Borislav Petkov <bp@alien8.de>
+CC: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+        x86@kernel.org, will@kernel.org, peterz@infradead.org,
+        yury.norov@gmail.com, akpm@linux-foundation.org, acme@kernel.org,
+        namhyung@kernel.org, brgerst@gmail.com, andrew.cooper3@citrix.com,
+        nik.borisov@suse.com
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v5_5/5=5D_x86/cpufeatures=3A_Add_the_CPU?=
+ =?US-ASCII?Q?_feature_bit_for_MSR_immediate_form_instructions?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <52bf4850-b66c-4692-8827-8995793607c3@zytor.com>
+References: <20250106070727.3211006-1-xin@zytor.com> <20250106070727.3211006-6-xin@zytor.com> <20250222163001.GUZ7n7iRc88PTMQi9_@fat_crate.local> <52bf4850-b66c-4692-8827-8995793607c3@zytor.com>
+Message-ID: <9A1B8A9F-64DF-4059-A064-E2AAC66204BF@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250221155532.576759-4-tommaso.merciai.xr@bp.renesas.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+On February 23, 2025 11:30:21 PM PST, Xin Li <xin@zytor=2Ecom> wrote:
+>On 2/22/2025 8:30 AM, Borislav Petkov wrote:
+>> On Sun, Jan 05, 2025 at 11:07:27PM -0800, Xin Li (Intel) wrote:
+>>> The immediate form of MSR access instructions are primarily motivated =
+by
+>>> performance, not code size: by having the MSR number in an immediate, =
+it
+>>> is available *much* earlier in the pipeline, which allows the hardware
+>>> much more leeway about how a particular MSR is handled=2E
+>>>=20
+>>> Add a new CPU feature word for CPUID=2E7=2E1=2EECX and then the CPU fe=
+ature bit
+>>> for MSR immediate form=2E
+>>=20
+>> Nope, scattered=2Ec=2E
+>
+>Oh, neat=2E
+>
+>>> @@ -476,6 +476,9 @@
+>>>   #define X86_FEATURE_AMD_HETEROGENEOUS_CORES (21*32 + 6) /* Heterogen=
+eous Core Topology */
+>>>   #define X86_FEATURE_AMD_WORKLOAD_CLASS	(21*32 + 7) /* Workload Class=
+ification */
+>>>   +/* Intel-defined CPU features, CPUID level 0x00000007:1 (ECX), word=
+ 22 */
+>>> +#define X86_FEATURE_MSR_IMM		(22*32+ 5) /* "msr_imm" MSR immediate fo=
+rm instructions */
+>>=20
+>> Also no "msr_imm": Documentation/arch/x86/cpuinfo=2Erst
+>
+>My bad=2E
+>
+>>=20
+>> In any case, this patch doesn't belong in this set=2E
+>>=20
+>
+>Right=2E
+>
+>I tried to show that we don't need to make the following changes due to
+>NCAPINTS increased to 23 if this patch is based on this patch set=2E
+>
+>But if this feature is added through scattered=2Ec, NCAPINTS is not even
+>changed=2E=2E=2E
+>
+>Thanks!
+>    Xin
+>
+>---
+>diff --git a/arch/x86/include/asm/cpufeature=2Eh b/arch/x86/include/asm/c=
+pufeature=2Eh
+>index de1ad09fe8d7=2E=2E051d006cc0c6 100644
+>--- a/arch/x86/include/asm/cpufeature=2Eh
+>+++ b/arch/x86/include/asm/cpufeature=2Eh
+>@@ -95,7 +96,7 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
+>           CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 20, feature_bit) ||    \
+>           CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 21, feature_bit) ||    \
+>           REQUIRED_MASK_CHECK                                    ||    \
+>-          BUILD_BUG_ON_ZERO(NCAPINTS !=3D 22))
+>+          BUILD_BUG_ON_ZERO(NCAPINTS !=3D 23))
+>
+> #define DISABLED_MASK_BIT_SET(feature_bit)                             \
+>         ( CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  0, feature_bit) ||    \
+>@@ -121,7 +122,7 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
+>           CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 20, feature_bit) ||    \
+>           CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 21, feature_bit) ||    \
+>           DISABLED_MASK_CHECK                                    ||    \
+>-          BUILD_BUG_ON_ZERO(NCAPINTS !=3D 22))
+>+          BUILD_BUG_ON_ZERO(NCAPINTS !=3D 23))
+>
+> #define cpu_has(c, bit)         \
+>        (__builtin_constant_p(bit) && REQUIRED_MASK_BIT_SET(bit) ? 1 :  \
+>diff --git a/arch/x86/include/asm/disabled-features=2Eh b/arch/x86/includ=
+e/asm/disabled-features=2Eh
+>index c492bdc97b05=2E=2Ec6a1f962185c 100644
+>--- a/arch/x86/include/asm/disabled-features=2Eh
+>+++ b/arch/x86/include/asm/disabled-features=2Eh
+>@@ -156,6 +156,6 @@
+> #define DISABLED_MASK19        (DISABLE_SEV_SNP)
+> #define DISABLED_MASK20        0
+> #define DISABLED_MASK21        0
+>-#define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS !=3D 22)
+>+#define DISABLED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS !=3D 23)
+>
+> #endif /* _ASM_X86_DISABLED_FEATURES_H */
+>diff --git a/arch/x86/include/asm/required-features=2Eh b/arch/x86/includ=
+e/asm/required-features=2Eh
+>index e9187ddd3d1f=2E=2Ea346db1d078c 100644
+>--- a/arch/x86/include/asm/required-features=2Eh
+>+++ b/arch/x86/include/asm/required-features=2Eh
+>@@ -100,6 +100,6 @@
+> #define REQUIRED_MASK19        0
+> #define REQUIRED_MASK20        0
+> #define REQUIRED_MASK21        0
+>-#define REQUIRED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS !=3D 22)
+>+#define REQUIRED_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS !=3D 23)
+>
+> #endif /* _ASM_X86_REQUIRED_FEATURES_H */
+>
+>
 
-On Fri, 21 Feb 2025 16:55:17 +0100, Tommaso Merciai wrote:
-> The CRU block found on the Renesas RZ/G3E ("R9A09G047") SoC has five
-> interrupts:
-> 
->  - image_conv:    image_conv irq
->  - axi_mst_err:   AXI master error level irq
->  - vd_addr_wend:  Video data AXI master addr 0 write end irq
->  - sd_addr_wend:  Statistics data AXI master addr 0 write end irq
->  - vsd_addr_wend: Video statistics data AXI master addr 0 write end irq
-> 
-> This IP has only one input port 'port@1' similar to the RZ/G2UL CRU.
-> 
-> Document the CRU block found on the Renesas RZ/G3E ("R9A09G047") SoC.
-> 
-> Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
-> ---
-> Changes since v1:
->  - Use oneOf for interrupts and interrupt-names
->  - Handle interrupts and interrupt names base on soc variants.
-> 
->  .../bindings/media/renesas,rzg2l-cru.yaml     | 65 +++++++++++++++----
->  1 file changed, 54 insertions(+), 11 deletions(-)
-> 
+That being said, this is the next word that will end up being populated so=
+=2E=2E=2E
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-
+(On the other hand, only four bits were ever assigned to the Transmeta CPU=
+ID word; the rest of the bits in that word could be reclaimed, if not the w=
+hole word=2E)
