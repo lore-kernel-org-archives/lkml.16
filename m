@@ -1,152 +1,108 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m32110.qiye.163.com (mail-m32110.qiye.163.com [220.197.32.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01CD520A5EF
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 08:48:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6F823C393;
+	Mon, 24 Feb 2025 08:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740386915; cv=none; b=HY7L2EOdvj5oAum4TGdygcHmfJTOx8FRo4/zNw3LaEnAm+2yo/IlLXLsQslwPnDm1mOmH6cN00N4p6XktB4gDB1XuzSjiFXUTMc1K0Ymc66K5tWoCmnh3yDPpX9EwF0Udj2RDnsPGyQYFnJB+1bFUNeMs28fFdHHaPOPy9TSvpM=
+	t=1740386987; cv=none; b=ko03nY4nh508qItAv1l8X/rWXIKA+ldewWblHKEmS3BDhF3zyc3JW9Tme8YDTYbJHONp29Lziap0R9wh+54qZyJs1cJjO0q5u+Xq/BaHH1HSWeVBH56n7MW6jBEUSc82w6E2Qh9qD7GX164YHxxP7bg6YjtwjIr06KH9i0D7avo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740386915; c=relaxed/simple;
-	bh=7RbjGvmVrtFqA0ZQvxGPPCHbndaFIwxjUK767xQvYow=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VuQE1ancriBtHm0Xdcf1+MgNATkgr8pko1YkJRYCj8ApigYDCeGAYbr1ACqmrbZEqsl77qwo2zd1I6sAk89g2t2u/m/Ssj62mX2tuYNfZ3NtxxsH1+ngxPlmVFs1rhHlGAEPfjN3ilYiyZETXQaVqxp+9g2U9EHWTHP+V5rhAmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=35bQaqVJ; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1740386987; c=relaxed/simple;
+	bh=C56MrLlhWcU08ZYkafZUUuJbyZi0cMLonjZabttx9/Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=F99vd4xkH5gWLDSLuLTCPF7le8qccCwhKVL7ye6DTp3gnZRizSJD3xBMYAa4vgyY9yPM/AWkTIGSbEWEjnmOON92YYln2obD0ohlmx6AtcTyFAiXtFs/GJRcIgcxbU5gwGiHr1oL92c2P7epkEKm1MfkiMqFH3KtMQYZhC0H+CE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=WBWsdCS5; arc=none smtp.client-ip=220.197.32.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="35bQaqVJ"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30761be8fa7so38335941fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 00:48:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740386912; x=1740991712; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=M4OIur9r2TccLLhBHIsDK1vsWiP0yZKdzQkTaFNLmec=;
-        b=35bQaqVJY4WOdYhQNnSz67aw741QEiREBPYN7xL2yCV+BPd4pm7fAL0YXNGkTP/RpG
-         CRiklOdT07oICU75BVNXX90xKxOL9wwkkpLRkWWBMSg2OlNzBdPt3eJRaMsUiv6/4p5e
-         ny72vDWJlzOrWEgkd1jJRMgavP4zujNZTHSWkHWbbXj//xv4rOeSGAPIjZd/TE9QkRBH
-         3uAh7xgUTVex4HnvqY6Y72+JM0RsxTQRo1xNTpBh1b/yHKi9lyrVI3mog57lOlGhe7aR
-         eOnjgaP8sxrNeqxlisuX+IxlBkz+yCwSZoluobIIUHCYJR6hK9aOdt5kaInk0iaJe7td
-         EzJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740386912; x=1740991712;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=M4OIur9r2TccLLhBHIsDK1vsWiP0yZKdzQkTaFNLmec=;
-        b=cqV6ZvkKR1kyKHBEG7w4oJXtTR4f6RvrZ/ZVmILh8bx2ruVDYzcb9lIU4saHdQyDGa
-         qrXCeigWAvGw53Q4dnQSoyEwlBYYJ7vDII91akxQbX5dIQNG+36ntTS/E1U5Ifyb79hr
-         gfrXBOp8xhWvV9rp1OS4xndoodnQYS3dsNBC9IGZOoP9Zh+MHfjhuXCrb5vzNQwmwOHr
-         8Rb0qfVjugUE1CzdkvXK7YlCczOg6sbfWpfH/QqpoC//IKHaeCkOT0cGJBH8lbIN1uki
-         uGisU72rGy4TpXdunSjAxbgX2U+FioAX5KVBTN6nSgOKxy8eFNQBGY2qCbivVVxvdXOQ
-         NJ1A==
-X-Forwarded-Encrypted: i=1; AJvYcCVbvHspggGZ4s5XFO0NE/IykWcU5T1/PJCj7Udn5uFpQlpaFZH/Oo/VsowvVs2DEh0a5SAoQP/61rDcjdg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8oZKxldERt0gqVj7wulIBhc/qN1Cavt3JvRdZQy9ugt0YeLk4
-	xcPsWYHhlC07pMvSaP5A14jdGAj2D0S0lm4QEqC//vhr/FjkUpw7W9L6mzV0YoKaROFAg/PRPih
-	JCixOObYnLkTYKeLCnwmicjxoZO2l8rVBzJAv
-X-Gm-Gg: ASbGncuywFX4q6Yyj9ETft0Nt+khn+J9NahAIseibvVWnN+qxDE4YsSfrvlZ1P1uSvf
-	CAM068IQI8oarDHn2uaIc3QVUsT8Kud0U4a+ZedocTkmaeGaUjhy3T+I8GX+Ft6hstB/wE3d+X2
-	3CxJeETGdc7js4H5LY3+sOoAoYUmg2RmcXiR/GX8nV
-X-Google-Smtp-Source: AGHT+IHoulG8yAuPTtFY5mi/Qv8Hzh39cGA58YppozdQkacVGZqNqCguNZ60Yz072X1oNPnaQgYje/Vw05VduO2Mkq0=
-X-Received: by 2002:a05:6512:238a:b0:545:d7d:ac4a with SMTP id
- 2adb3069b0e04-54838f5a594mr4606853e87.36.1740386911883; Mon, 24 Feb 2025
- 00:48:31 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="WBWsdCS5"
+Received: from zyb-HP-ProDesk-680-G2-MT.. (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id bfd287eb;
+	Mon, 24 Feb 2025 16:14:09 +0800 (GMT+08:00)
+From: Damon Ding <damon.ding@rock-chips.com>
+To: heiko@sntech.de
+Cc: andy.yan@rock-chips.com,
+	hjc@rock-chips.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org,
+	rfoss@kernel.org,
+	Laurent.pinchart@ideasonboard.com,
+	jonas@kwiboo.se,
+	jernej.skrabec@gmail.com,
+	dmitry.baryshkov@linaro.org,
+	dianders@chromium.org,
+	sebastian.reichel@collabora.com,
+	cristian.ciocaltea@collabora.com,
+	boris.brezillon@collabora.com,
+	l.stach@pengutronix.de,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Damon Ding <damon.ding@rock-chips.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v7 07/15] dt-bindings: display: rockchip: analogix-dp: Add support to get panel from the DP AUX bus
+Date: Mon, 24 Feb 2025 16:13:17 +0800
+Message-Id: <20250224081325.96724-8-damon.ding@rock-chips.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250224081325.96724-1-damon.ding@rock-chips.com>
+References: <20250224081325.96724-1-damon.ding@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1739894594.git.dvyukov@google.com> <5e105b1382cd43d05f1d3a80958e4f50f32144c8.1739894594.git.dvyukov@google.com>
- <Z7dHid-IL7OAPmUa@gourry-fedora-PF4VCD3F>
-In-Reply-To: <Z7dHid-IL7OAPmUa@gourry-fedora-PF4VCD3F>
-From: Dmitry Vyukov <dvyukov@google.com>
-Date: Mon, 24 Feb 2025 09:48:19 +0100
-X-Gm-Features: AWEUYZlAU3W0s0mngiGlITQm0EeoHzeog8X8ALg0WE5m7tuuOWEewj68nHv7K4s
-Message-ID: <CACT4Y+btS62MDJLRToydRfK-QAMBiihv9d7Du=zEf5U_GbiOMg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] selftests: Extend syscall_user_dispatch test to check
- allowed range
-To: Gregory Price <gourry@gourry.net>
-Cc: krisman@collabora.com, tglx@linutronix.de, luto@kernel.org, 
-	peterz@infradead.org, keescook@chromium.org, gregory.price@memverge.com, 
-	Marco Elver <elver@google.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ0waHVZIH00YGhhJTUwYQ0pWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a9537054f9203a3kunmbfd287eb
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OAg6DDo4MzIUGRM#GD0QESgT
+	LwIaCUJVSlVKTE9LSENPQ05KQkNPVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFKSkpINwY+
+DKIM-Signature:a=rsa-sha256;
+	b=WBWsdCS51vKxRjMcUKogW6UEWLVBRTrEe0IthqKba8sh8dRbXFfo5AN1uSu9IATZVeo0RZFaWW7q2cNv+aOmLPoXggiKBaZ1Ebkc8LRJkHikFI9pAhHtzNOFa7PZcqSy9kIGM+/YWk6qBLbl5nZxFWrwUw+ieODyj45S34aKrNI=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=MCo0uAKS6QHvo55swHDZpLkV/TNxwwhILy3rryJVjxs=;
+	h=date:mime-version:subject:message-id:from;
 
-On Thu, 20 Feb 2025 at 16:17, Gregory Price <gourry@gourry.net> wrote:
->
-> On Tue, Feb 18, 2025 at 05:04:36PM +0100, Dmitry Vyukov wrote:
-> > diff --git a/tools/testing/selftests/syscall_user_dispatch/sud_test.c b/tools/testing/selftests/syscall_user_dispatch/sud_test.c
-> > index b0969925ec64c..fa40e46e6d3e9 100644
-> > --- a/tools/testing/selftests/syscall_user_dispatch/sud_test.c
-> > +++ b/tools/testing/selftests/syscall_user_dispatch/sud_test.c
-> ... snip ...
-> > @@ -110,31 +111,15 @@ TEST(bad_prctl_param)
-> >       /* PR_SYS_DISPATCH_ON */
-> >       op = PR_SYS_DISPATCH_ON;
-> >
-> > -     /* Dispatcher region is bad (offset > 0 && len == 0) */
-> > -     EXPECT_EQ(-1, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0x1, 0x0, &sel));
-> > -     EXPECT_EQ(EINVAL, errno);
-> > -     EXPECT_EQ(-1, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, -1L, 0x0, &sel));
-> > -     EXPECT_EQ(EINVAL, errno);
-> > +     /* All ranges are allowed */
-> > +     EXPECT_EQ(0, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0x1, 0x0, &sel));
-> > +     EXPECT_EQ(0, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, -1L, 0x0, &sel));
->
-> A 0 length is ambiguous and nonsensical in every other context, not sure
-> why you'd allow it here.
+According to Documentation/devicetree/bindings/display/dp-aux-bus.yaml,
+it is a good way to get panel through the DP AUX bus.
 
-Yes, but it's also not special in any way. One asks for a range of N
-bytes, one gets a range of N bytes. Works for 0 as well. We can move 0
-to an own special category, and add production code to support that.
-But I don't see strong reasons to do that. It's like it's possible to
-do read/write with 0 bytes to get, well, exactly that.
-How strong do you feel about special casing 0?
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
 
-> > +bool test_range(unsigned long offset, unsigned long length)
-> > +{
-> > +     nr_syscalls_emulated = 0;
-> > +     if (prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, offset, length, &glob_sel))
-> > +             return false;
->
-> This creates an ambiguous failure state for your test. Is it failing
-> because the range is bad or because you didn't intercept a syscall?
->
-> Better to be more explicit here. It makes it difficult to understand
-> what each individual test is doing at a glance.
+---
 
-Good point. Done in v2.
+Changes in v4:
+- Move the dt-bindings commit before related driver commits
 
-> > +     SYSCALL_DISPATCH_ON(glob_sel);
-> > +     return syscall(MAGIC_SYSCALL_1) == MAGIC_SYSCALL_1 && nr_syscalls_emulated == 1;
-> > +}
-> > +
-> > +TEST(dispatch_range)
-> > +{
-> > +     ASSERT_EQ(0, setup_sigsys_handler());
-> > +     ASSERT_EQ(0, prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, 0, &glob_sel));
-> > +     SYSCALL_DISPATCH_ON(glob_sel);
-> > +     ASSERT_EQ(MAGIC_SYSCALL_1, syscall(MAGIC_SYSCALL_1));
-> > +     TH_LOG("syscall_addr=0x%lx", syscall_addr);
-> > +     EXPECT_FALSE(test_range(syscall_addr, 1));
-> > +     EXPECT_FALSE(test_range(syscall_addr-100, 200));
-> > +     EXPECT_TRUE(test_range(syscall_addr+1, 100));
-> > +     EXPECT_TRUE(test_range(syscall_addr-100, 100));
-> > +     /* Wrap-around tests for everything except for a single PC. */
-> > +     EXPECT_TRUE(test_range(syscall_addr+1, -1));
-> > +     EXPECT_FALSE(test_range(syscall_addr, -1));
-> > +     EXPECT_FALSE(test_range(syscall_addr+2, -1));
->
-> If you are planning to include 0 as an allowed length, you need to
-> demonstrate what it does.
+Changes in v5:
+- Remove the unexpected change logs in commit message
+---
+ .../bindings/display/rockchip/rockchip,analogix-dp.yaml        | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Done in v2.
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,analogix-dp.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,analogix-dp.yaml
+index 60dedf9b2be7..eaf4e67e232e 100644
+--- a/Documentation/devicetree/bindings/display/rockchip/rockchip,analogix-dp.yaml
++++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,analogix-dp.yaml
+@@ -41,6 +41,9 @@ properties:
+     description:
+       This SoC makes use of GRF regs.
+ 
++  aux-bus:
++    $ref: /schemas/display/dp-aux-bus.yaml#
++
+ required:
+   - compatible
+   - clocks
+-- 
+2.34.1
 
-> > +     SYSCALL_DISPATCH_OFF(glob_sel);
-> > +}
-> > +
-> >  TEST_HARNESS_MAIN
-> > --
-> > 2.48.1.601.g30ceb7b040-goog
-> >
