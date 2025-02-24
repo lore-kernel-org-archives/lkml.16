@@ -1,119 +1,215 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C1C62571A0;
-	Mon, 24 Feb 2025 12:03:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B503D1863E;
+	Mon, 24 Feb 2025 12:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740398608; cv=none; b=hewNhkotvEol4+i38H7Qv9mU5izbBVp6ISHMldi3p2ewryXzxCJHMHChw68i7VPWk2Abl0jltB9uPe4HLiOZ58OC2eYWyT3OsPhM+bR9fhbE5HloikXC2dmEBc3zklGIqB++0SewliimR1t/OJ2hRxNvaPNAMnPNav5KmjUyUMg=
+	t=1740398622; cv=none; b=lmenU6zdvTZFDSxyVsdbdA7GS4xaH1/Pak5Z8gw0/EtjiGfcsQbWArhMYiT7L6GAxN3aI1Eh+t9IBfv1+mFV0kf86LPT1uj98miz0g+wc73rgO+hvGL7QzhUAE76i1F/syxSn3nQYWXniQ1TfjntVG0r1aIwBZ2DKlsEFZQuMFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740398608; c=relaxed/simple;
-	bh=7h5ryNxk757OKWlLFcNWOYukboylFtUCaUa59b6WtpM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=bK7V41rqxKChzKP5F/rfaoycvpZSw8XY9R+GaKA3OsQKX67wNSdw7ZvHHLXhJqv8k9n7svVk4EOZ5Kk9mGTZ6DYxVR8ja4DR8VRve0n3Yp9yRZogBbmHZZnNQzGPdvLe8WAR9x72c3iHWcZguf/mj0LMkDei1nDKxief9GBff68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=s8B48YN6; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="s8B48YN6"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51OC3HQw884652
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Feb 2025 06:03:17 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1740398597;
-	bh=5raQfcZhDMhumdfr8jxuCUsBCb/cAX6lrocettlzYYo=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=s8B48YN6RXbPyYcRP3wjIDrfdeyLzL/aICw32+tMLtDI7d+3xRXAMeeM0d0NcdXRl
-	 YhaRDfeDpYzbsne2U1IOxxWSW3qxm0IEu7HeayWBnEcNA0cPkQ6T41QKBbO2Dp8LOC
-	 U5+BDYi+wNCITyJankazxTQ5wpe0W9Yyqv85X46w=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51OC3HNE006194
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 24 Feb 2025 06:03:17 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 24
- Feb 2025 06:03:16 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 24 Feb 2025 06:03:16 -0600
-Received: from [172.24.227.245] (uda0132425.dhcp.ti.com [172.24.227.245])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51OC3BEA070806;
-	Mon, 24 Feb 2025 06:03:12 -0600
-Message-ID: <0d871153-e4dd-42d1-aafa-b6ed1e4e5a10@ti.com>
-Date: Mon, 24 Feb 2025 17:33:11 +0530
+	s=arc-20240116; t=1740398622; c=relaxed/simple;
+	bh=qj/7+h+YO4IWXDlyyrsl42hIMMDMHH7S0CosJ3X5eZQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=LKA+QYZszfBfRVuvjilGbmgMzpL5Uj8KpB1WDC0Y40o8NgLJ54d0AYe/v8bUPc8WJ8BqpTxwhsGbN4mXVjgA6/rExvBb6IFZ+Z1UZcmyo2+ystaIqrPGqOrs2lPjBZQRnMn8gEXOFvkDYZ7dB54M2EJlSQQ7jRvlEOYz8uGo5nI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Z1fWg4qBcz4f3lDF;
+	Mon, 24 Feb 2025 20:03:11 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id D6F481A0D90;
+	Mon, 24 Feb 2025 20:03:34 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgBXu18UYLxnqgEOEw--.53849S3;
+	Mon, 24 Feb 2025 20:03:34 +0800 (CST)
+Subject: Re: [PATCH 2/2] blk-throttle: fix off-by-one jiffies wait_time
+To: Ming Lei <ming.lei@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: tj@kernel.org, josef@toxicpanda.com, axboe@kernel.dk,
+ cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20250222092823.210318-1-yukuai1@huaweicloud.com>
+ <20250222092823.210318-3-yukuai1@huaweicloud.com> <Z7nAJSKGANoC0Glb@fedora>
+ <f2f54206-b5c0-7486-d607-337d29e9c145@huaweicloud.com>
+ <Z7vnTyk6Y6X4JWQB@fedora>
+ <e6a29a6a-f5ec-7953-14e9-2550a549f955@huaweicloud.com>
+ <Z7w0P8ImJiZhRsPD@fedora>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <611f02a8-8430-16cf-46e5-e9417982b077@huaweicloud.com>
+Date: Mon, 24 Feb 2025 20:03:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: ti: Add k3-am62-pocketbeagle2
-To: Robert Nelson <robertcnelson@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Andrew Davis
-	<afd@ti.com>, Roger Quadros <rogerq@kernel.org>,
-        Siddharth Vadapalli
-	<s-vadapalli@ti.com>, Judith Mendez <jm@ti.com>,
-        Andrei Aldea
-	<a-aldea@ti.com>,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Deepak Khatri
-	<lorforlinux@beagleboard.org>,
-        Ayush Singh <ayush@beagleboard.org>
-References: <20250211181839.1575497-1-robertcnelson@gmail.com>
- <20250211181839.1575497-2-robertcnelson@gmail.com>
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Content-Language: en-US
-In-Reply-To: <20250211181839.1575497-2-robertcnelson@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <Z7w0P8ImJiZhRsPD@fedora>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgBXu18UYLxnqgEOEw--.53849S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxAw17Jr15Cw1DJF4rJr1kKrg_yoW7Jr1UpF
+	WayF4aga1DJFyxKFWFvw1Fvay0k3yfJryDJw1rJryUC34qgas7KF4Iyrs0kFy2vwn7uw4I
+	vw1jqry3AF4jvaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7V
+	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
+	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6x
+	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAI
+	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
+	0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbGQ6JUUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Hi
+Hi,
 
-On 11/02/25 23:48, Robert Nelson wrote:
-> BeagleBoard.org PocketBeagle 2 is an upgraded version of the popular
-> PocketBeagle.  It is based on Texas Instruments AM6232 SoC. Its dual
-> A53 cores can provide higher performance than classic PocketBeagle.
-> The new design comes with pre-soldered headers, a 3-pin JST-SH 1.00mm
-> UART debug port, a USB-C port, Texas Instruments MSPM0L1105 Cortex-M0+
-> MCU for ADC, 512MB RAM, and a LiPo Battery charger.
+在 2025/02/24 16:56, Ming Lei 写道:
+> On Mon, Feb 24, 2025 at 03:03:18PM +0800, Yu Kuai wrote:
+>> Hi, Ming!
+>>
+>> 在 2025/02/24 11:28, Ming Lei 写道:
+>>> throtl_trim_slice() returns immediately if throtl_slice_used()
+>>> is true.
+>>>
+>>> And throtl_slice_used() checks jiffies in [start, end] via time_in_range(),
+>>> so if `start <= jiffies <= end', it still returns false.
+>>
+>> Yes, I misread the code, by thinking throtl_slice_used() will return
+>> true if the slice is still used. :(
+>>
+>>
+>>>> BTW, throtl_trim_slice() looks like problematic:
+>>>>
+>>>> -       if (bytes_trim <= 0 && io_trim <= 0)
+>>>> +       if (bytes_trim <= 0 || io_trim <= 0 ||
+>>>> +           tg->bytes_disp[rw] < bytes_trim || tg->io_disp[rw] < io_trim)
+>>>>                   return;
+>>> That is exactly what my patch is doing, just taking deviation and
+>>> timeout into account, also U64_MAX limit has to be excluded.
+>> Yes, perhaps you can add some comments in the last two conditions of
+>> your patch.
 > 
-> https://www.beagleboard.org/boards/pocketbeagle-2
-> https://openbeagle.org/pocketbeagle/pocketbeagle-
+> Yes, we need to add comment on the check, how about the following words?
 > 
-> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
-> CC: Rob Herring <robh@kernel.org>
-> CC: Krzysztof Kozlowski <krzk+dt@kernel.org>
-> CC: Conor Dooley <conor+dt@kernel.org>
-> CC: Vignesh Raghavendra <vigneshr@ti.com>
-> CC: Nishanth Menon <nm@ti.com>
-> CC: Andrew Davis <afd@ti.com>
-> CC: Roger Quadros <rogerq@kernel.org>
-> CC: Siddharth Vadapalli <s-vadapalli@ti.com>
-> CC: Judith Mendez <jm@ti.com>
-> CC: Andrei Aldea <a-aldea@ti.com>
-> CC: Jason Kridner <jkridner@beagleboard.org>
-> CC: Deepak Khatri <lorforlinux@beagleboard.org>
-> CC: Ayush Singh <ayush@beagleboard.org>
+> ```
+> 
+> If actually rate doesn't match with expected rate, do not trim slice
+> otherwise the present rate control info is lost, we don't have chance
+> to compensate it in the following period of this slice any more.
 
+So, I just give your patch a test, and result is 1.3s while 1s is
+expected. While debuging, a new idea come up in mind. :)
 
-Please run make dtbs_check and fix the reported issues. Eg.:
+How about keep at least one slice out of consideration from
+throtl_trim_slice()? With following patch, the result is between
+1.01-1.03s in my VM.
 
+diff --git a/block/blk-throttle.c b/block/blk-throttle.c
+index 8d149aff9fd0..5207c85098a5 100644
+--- a/block/blk-throttle.c
++++ b/block/blk-throttle.c
+@@ -604,9 +604,12 @@ static inline void throtl_trim_slice(struct 
+throtl_grp *tg, bool rw)
 
-+arch/arm64/boot/dts/ti/k3-am62-pocketbeagle2.dts: /bus@f0000/pinctrl@f4000/main_i2c2-default-pins: Character '_' not recommended in node name
+         time_elapsed = rounddown(jiffies - tg->slice_start[rw],
+                                  tg->td->throtl_slice);
+-       if (!time_elapsed)
++       /* don't trim slice until at least 2 slice is used */
++       if (time_elapsed < tg->td->throtl_slice * 2)
+                 return;
 
-[...]
++       /* dispite the last slice, trim previous slice */
++       time_elapsed -= tg->td->throtl_slice;
+         bytes_trim = calculate_bytes_allowed(tg_bps_limit(tg, rw),
+                                              time_elapsed) +
+                      tg->carryover_bytes[rw];
 
-> ----- 
-Regards
-Vignesh
-https://ti.com/opensource
+> 
+> Add one deviation threshold since bio size is usually not divisible by
+> present rate, and bio dispatch should be done or nothing
+> 
+> Also limit max slice size for avoiding to extend the window too big.
+> 
+> ```
+> 
+> 
+>> I think maybe you're concerned about the case IO is
+>> throttled by IOs and bytes_disp should really erase extra bytes that
+>> does not reach bps_limit.
+>>
+>>>
+>>> If you test the patch, it works just fine. My patch controls bytes_exp
+>>> <= 1.5 * disp, then throtl/001 can be completed in 1.5sec, and if it is
+>>> changed to 1.25 * disp, the test can be completed in 1.25sec.
+>>>
+>>> With this fix, why do we have to play the complicated carryover
+>>> trick?
+>>>
+>>
+>> I understand your code now. carryover_bytes in this case is wrong, as
+>> long as new slice is not started, and trim slice doesn't erase extra
+>> bytes by mistake, throttle time should be accurate over time because
+>> bytes_disp is accurate.
+> 
+> Yes.
+> 
+> More or less wait for handling single bio can just affect instantaneous rate,
+> but the algorithm is adaptive so it can adjust the following wait if the
+> slice isn't over.
+> 
+>>
+>> And root cause really is throtl_trim_slice().
+>>
+>> However, by code review, I think throtl_start_new_slice() should be
+>> handled as well, the same as throtl_trim_slice(), if the old bio is
+>> dispatched with one more jiffies wait time, issue a new bio in the same
+>> jiffies will have the same problem. For example:
+> 
+> throtl_start_new_slice() is called when nothing is queued and the current
+> slice is used, so probably it is fine.
+> 
+> throtl_start_new_slice_with_credit() is called when dispatching one
+> bio, and it is still called when the current slice is used.
+> 
+>>
+>> Caller do sync IO, with io size: (bps_limit / (HZ / throtl_slice) + 1),
+> 
+> This will cause wait for every single IO.
+> 
+> But once the IO is throttled because of the wait, throtl_start_new_slice()
+> won't succeed any more, meantime throtl_trim_slice() will try to fix the
+> rate control for the extra 1 jiffies.
+> 
+> So in-tree code with trim fix works just fine if consecutive IOs are
+> coming.
+> 
+>> and caller will issue new IO when old IO is done. Then in this case,
+>> each IO will start a new slice and wait for throtl_slice + 1 jiffies. I
+>> believe this can be fixed as well so that BIOs after the first one will
+>> only wait for throtl_silce jiffies.
+> 
+> I guess the above case only exists in theory when you submit new IO
+> after the old IO is dispatched immediately. Not sure this case is really
+> meaningful because submission period/latency is added/faked by user.
+
+Yes, this case is just a theory, we don't need to care for now. :)
+
+Thanks,
+Kuai
+
+> 
+> 
+> Thanks,
+> Ming
+> 
+> 
+> .
+> 
 
