@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EEE224634F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8D62451F1;
 	Mon, 24 Feb 2025 09:09:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740388143; cv=none; b=dbdN20jMoJkAXPGheObRtlCiJiqGp+2kUoU3rpga0nBdgSc8FtUNBtfjKoMUZ+nR3nTixzXzeO4GJoH7heWQFG2ym/yEHw7e62al9dgRE0ab9e4ICMBeQ5FfV+MPp4sFMmK14ueLWuSt7PKwDJ63VP5KzTpftnLfo3HjIeNTKJg=
+	t=1740388143; cv=none; b=FPQWM5aqZsukR3P/UUvrsWKCHCBvP1/JPI3XzzNMzKLmHZrbKAPvxYibBIDUm7CuA00ynFfLVoVlpTENrjFXDqcxGxblibfkbRoQvNUw+3kdoPhm//OcRUg2R3+hw+ohHEomGtfyQaF3FtRhmyZg/lqEfOtU5NXH4Ggpc3VPj8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740388143; c=relaxed/simple;
-	bh=AdyCuuoiDzM5JN3vT/qTkSEQUe1tw1eDWso5VHl1JSo=;
+	bh=Q2bW4rHBvXUepqtRYw3jrHwqyqtoRshTMOAzsCvXTFo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LVP45RuKQHaeQlEj+IW25s5nw1NGwW46iMu0nBQlc0AFpts3yc2rl+rpkbEBH/23VjWmlqtQnekmP2hMpucnTC72v4Xu4NgRaVXHZGW5cYbfrGGmY3YIVHX2PoSO2nLhr68xpa+bHfeTXB16nrHJnas8A1SAqzGnfRf/X1Bq0oI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IwV4W9Ur; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZM0XZv6TtIJEX2tbDr0tfqld2zEYddrU8c0qlsGVp3p3TLYTmhBUzeklaGveWVdhAm++nu1UuPpIoqCRrh7mWeVA3omkHZO/YnXqEEqZI4pNpbyvWCB1wj44rbHJjxFWP0/8wuP2+ika3RqcJ8bsWtDPZYVl1hxr94P9TDd93RU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U+ukiRqk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IwV4W9Ur"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 279E2C4CEDD;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U+ukiRqk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07319C116B1;
 	Mon, 24 Feb 2025 09:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740388143;
-	bh=AdyCuuoiDzM5JN3vT/qTkSEQUe1tw1eDWso5VHl1JSo=;
+	bh=Q2bW4rHBvXUepqtRYw3jrHwqyqtoRshTMOAzsCvXTFo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IwV4W9Ura7fETii+nwWIxwDXMTqsO74p7XU7Wi+FmVB7ECIIAsxb/bP7sMcrqWYvv
-	 PFDih0KYAAYumhyg269+dHQwPQfOL+7REELMpoeXvuf/E9jOGDMhKgXiFM3imnrd2x
-	 v3ND+/w2A4g3JDPUrtacGwuElUMUyf1Uzb/hPYLJiwTEwCJU2Af8tdimf7H2BPFCHh
-	 mD2suKdUd8GJjLqvSK3slvcs/sriixjkJiNUzImpHgt0G+NnVibOc2Cu0Zv9BKlpLr
-	 M7KfD1LqPz7dCDU1wG1IQ4l3xEwRB9SPEZYO78dI0sE5xyaUVcmlnP/g7L/n0TA35a
-	 iyl+p7bLqLsUQ==
+	b=U+ukiRqkDheAfPTbdOd1Rp1TLQIOKK6x+IkXEjtY6cC5zP0J3nBeysHhgUTsHCdEE
+	 1K22KwOwwCVap320NOiLJjrdzeV4M0F8OWHKX4LodbzwjLwLjeqPOSOF5uxXB37ztC
+	 EiO18FDTxRWOHN4kbaa56AoB55PP3pp9QwZMYj0cmMiwDiG1t+xGN7Q/WHbLcAFeUa
+	 XBVLAW0Hk0ncwc8vK05jIyHCZrQ+i7cz3pte9eGUo1nN9lnLIryr7WZOYaCKwSxhIm
+	 pdnGuc3XIHHAEI3UdlzBqtVQTf08Oqud6R6AUEW87ru9Mx3FsRA7kY9Z+Y5w6k5HwM
+	 09oje9xOIPWdA==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tmUST-00000003p4m-1Wtb;
+	id 1tmUST-00000003p4a-1CAZ;
 	Mon, 24 Feb 2025 10:09:01 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -36,9 +36,9 @@ To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 21/39] scripts/kernel-doc.py: fix handling of doc output check
-Date: Mon, 24 Feb 2025 10:08:27 +0100
-Message-ID: <0bc4f5860a633f177dbbafb0f42da601ad4935c3.1740387599.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v2 18/39] scripts/kernel-doc.py: move file lists to the parser function
+Date: Mon, 24 Feb 2025 10:08:24 +0100
+Message-ID: <2080b6bb99a30146a7fe4eb8527aa78121b988eb.1740387599.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1740387599.git.mchehab+huawei@kernel.org>
 References: <cover.1740387599.git.mchehab+huawei@kernel.org>
@@ -51,129 +51,126 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-The filtering logic was seeking for the DOC name to check for
-symbols, but such data is stored only inside a section. Add it
-to the output_declaration, as it is quicker/easier to check
-the declaration name than to check inside each section.
+Instead of setting file lists at __init__ time, move it to
+the actual parsing function. This allows adding more files
+to be parsed in real time, by calling parse function multiple
+times.
 
-While here, make sure that the output for both ReST and man
-after filtering will be similar to what kernel-doc Perl
-version does.
+With the new way, the export_files logic was rewritten to
+avoid parsing twice EXPORT_SYMBOL for partial matches.
+
+Please notice that, with this logic, it can still read the
+same file twice when export_file is used.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/lib/kdoc/kdoc_output.py | 29 ++++++++++++-----------------
- scripts/lib/kdoc/kdoc_parser.py |  3 ++-
- 2 files changed, 14 insertions(+), 18 deletions(-)
+ scripts/kernel-doc.py          |  7 +++----
+ scripts/lib/kdoc/kdoc_files.py | 37 ++++++++++++++++------------------
+ 2 files changed, 20 insertions(+), 24 deletions(-)
 
-diff --git a/scripts/lib/kdoc/kdoc_output.py b/scripts/lib/kdoc/kdoc_output.py
-index b9b39bc29463..6a392dad2e9d 100755
---- a/scripts/lib/kdoc/kdoc_output.py
-+++ b/scripts/lib/kdoc/kdoc_output.py
-@@ -121,13 +121,13 @@ class OutputFormat:
-         if self.no_doc_sections:
-             return False
+diff --git a/scripts/kernel-doc.py b/scripts/kernel-doc.py
+index 6c3179a2da65..a687a7abb3b9 100755
+--- a/scripts/kernel-doc.py
++++ b/scripts/kernel-doc.py
+@@ -199,14 +199,13 @@ def main():
+     else:
+         out_style = RestFormat()
  
-+        if name in self.nosymbol:
-+            return False
-+
-         if self.out_mode == self.OUTPUT_ALL:
-             return True
+-    kfiles = KernelFiles(files=args.files, verbose=args.verbose,
++    kfiles = KernelFiles(verbose=args.verbose,
+                          out_style=out_style, werror=args.werror,
+                          wreturn=args.wreturn, wshort_desc=args.wshort_desc,
+                          wcontents_before_sections=args.wcontents_before_sections,
+-                         modulename=args.modulename,
+-                         export_file=args.export_file)
++                         modulename=args.modulename)
  
-         if self.out_mode == self.OUTPUT_INCLUDE:
--            if name in self.nosymbol:
--                return False
--
-             if name in self.function_table:
-                 return True
+-    kfiles.parse()
++    kfiles.parse(args.files, export_file=args.export_file)
  
-@@ -153,15 +153,6 @@ class OutputFormat:
+     for t in kfiles.msg(enable_lineno=args.enable_lineno, export=args.export,
+                           internal=args.internal, symbol=args.symbol,
+diff --git a/scripts/lib/kdoc/kdoc_files.py b/scripts/lib/kdoc/kdoc_files.py
+index 434fc66a9dad..4a6e75dbdbdd 100755
+--- a/scripts/lib/kdoc/kdoc_files.py
++++ b/scripts/lib/kdoc/kdoc_files.py
+@@ -123,7 +123,7 @@ class KernelFiles():
+         self.config.log.error("Cannot find file %s", fname)
+         self.config.errors += 1
  
-         return False
+-    def __init__(self, files=None, verbose=False, out_style=None,
++    def __init__(self, verbose=False, out_style=None,
+                  werror=False, wreturn=False, wshort_desc=False,
+                  wcontents_before_sections=False,
+                  logger=None, modulename=None, export_file=None):
+@@ -180,51 +180,48 @@ class KernelFiles():
+         self.config.src_tree = os.environ.get("SRCTREE", None)
  
--    def check_function(self, fname, name, args):
--        return True
--
--    def check_enum(self, fname, name, args):
--        return True
--
--    def check_typedef(self, fname, name, args):
--        return True
--
-     def msg(self, fname, name, args):
-         self.data = ""
+         self.out_style = out_style
+-        self.export_file = export_file
  
-@@ -305,7 +296,7 @@ class RestFormat(OutputFormat):
-         for line in output.strip("\n").split("\n"):
-             self.data += self.lineprefix + line + "\n"
+         # Initialize internal variables
  
--    def out_section(self, args, out_reference=False):
-+    def out_section(self, args, out_docblock=False):
+         self.config.errors = 0
+         self.results = []
+ 
+-        self.file_list = files
+         self.files = set()
++        self.export_files = set()
+ 
+-    def parse(self):
++    def parse(self, file_list, export_file=None):
          """
-         Outputs a block section.
+         Parse all files
+         """
  
-@@ -324,7 +315,7 @@ class RestFormat(OutputFormat):
+         glob = GlobSourceFiles(srctree=self.config.src_tree)
+ 
+-        # Let's use a set here to avoid duplicating files
++        # Prevent parsing the same file twice to speedup parsing and
++        # avoid reporting errors multiple times
+ 
+-        for fname in glob.parse_files(self.file_list, self.file_not_found_cb):
++        for fname in glob.parse_files(file_list, self.file_not_found_cb):
+             if fname in self.files:
                  continue
  
-             if not self.out_mode == self.OUTPUT_INCLUDE:
--                if out_reference:
-+                if out_docblock:
-                     self.data += f".. _{section}:\n\n"
- 
-                 if not self.symbol:
-@@ -338,8 +329,7 @@ class RestFormat(OutputFormat):
-     def out_doc(self, fname, name, args):
-         if not self.check_doc(name):
-             return
+-            self.files.add(fname)
 -
--        self.out_section(args, out_reference=True)
-+        self.out_section(args, out_docblock=True)
- 
-     def out_function(self, fname, name, args):
- 
-@@ -582,8 +572,10 @@ class ManFormat(OutputFormat):
- 
-         for line in contents.strip("\n").split("\n"):
-             line = Re(r"^\s*").sub("", line)
-+            if not line:
-+                continue
- 
--            if line and line[0] == ".":
-+            if line[0] == ".":
-                 self.data += "\\&" + line + "\n"
-             else:
-                 self.data += line + "\n"
-@@ -593,6 +585,9 @@ class ManFormat(OutputFormat):
-         sectionlist = args.get('sectionlist', [])
-         sections = args.get('sections', {})
- 
-+        if not self.check_doc(name):
-+                return
+             res = self.parse_file(fname)
 +
-         self.data += f'.TH "{module}" 9 "{module}" "{self.man_date}" "API Manual" LINUX' + "\n"
+             self.results.append((res.fname, res.entries))
+-
+-        if not self.files:
+-            sys.exit(1)
++            self.files.add(fname)
  
-         for section in sectionlist:
-diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
-index 633c95164b0c..116289622f2c 100755
---- a/scripts/lib/kdoc/kdoc_parser.py
-+++ b/scripts/lib/kdoc/kdoc_parser.py
-@@ -1197,6 +1197,7 @@ class KernelDoc:
-             else:
-                 self.entry.section = doc_block.group(1)
+         # If a list of export files was provided, parse EXPORT_SYMBOL*
+-        # from the ones not already parsed
++        # from files that weren't fully parsed
  
-+            self.entry.identifier = self.entry.section
-             self.state = self.STATE_DOCBLOCK
-             return
+-        if self.export_file:
+-            files = self.files
++        if not export_file:
++            return
  
-@@ -1627,7 +1628,7 @@ class KernelDoc:
+-            glob = GlobSourceFiles(srctree=self.config.src_tree)
++        self.export_files |= self.files
  
-         if doc_end.search(line):
-             self.dump_section()
--            self.output_declaration("doc", None,
-+            self.output_declaration("doc", self.entry.identifier,
-                                     sectionlist=self.entry.sectionlist,
-                                     sections=self.entry.sections,
-                                     section_start_lines=self.entry.section_start_lines,
+-            for fname in glob.parse_files(self.export_file,
+-                                          self.file_not_found_cb):
+-                if fname not in files:
+-                    files.add(fname)
++        glob = GlobSourceFiles(srctree=self.config.src_tree)
+ 
+-                    self.process_export_file(fname)
++        for fname in glob.parse_files(export_file, self.file_not_found_cb):
++            if fname not in self.export_files:
++                self.process_export_file(fname)
++                self.export_files.add(fname)
+ 
+     def out_msg(self, fname, name, arg):
+         """
 -- 
 2.48.1
 
