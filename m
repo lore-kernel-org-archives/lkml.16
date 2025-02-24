@@ -1,71 +1,152 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mail-m49234.qiye.163.com (mail-m49234.qiye.163.com [45.254.49.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538DCF510;
-	Mon, 24 Feb 2025 03:32:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4589F510;
+	Mon, 24 Feb 2025 03:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740367968; cv=none; b=F3KiQzANQG0MC2vTMPfpd+LsyMUfMyGlsUBd2qDLMYKiE6uE/vNDfqJAZaT/dJIbf9D8WTT9QwykeQyzzZCjrCDWIJX8l5ttPFvkFcV0ei12F6ArTIX+LaGUN3/F3YArBy4OY/DA042bqUNEohWN2mCQqX8kOq2HHU4oX+5WST0=
+	t=1740368195; cv=none; b=M6ZR5vnXGjL45IEUmDslOhGeKWAoywJTO7pSLXNBIr+GzFoq7r790a05y6bIZ4MMjunfYJVA01N+5SgFPFHBzjirJNf84NWWSxx7mfYaTy5swrHOecx8AjKd3LmGDuDhXjByyBcpKdrk8lzQ1Y01ZKPDmop8vLsi33VjnO3VLEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740367968; c=relaxed/simple;
-	bh=I0LUpuGqWrFRQZA2gvT1xXgplSQj+jWqnvTfsiQjC44=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AiH+VpYLc4apRocHmJ/m5J1VQtqwb0ZEXzCigzYJxMd8LKux/yXykLDGp25nfuSjDn6yAoX2NFUNP9t8+QMsF/sx7xogQnthE35zg9A/m4iCbBX9e7kmivnybaMXVyREWLhMbKx2cySIxvJ6qk+uYI6Bve/PYZ5gP7vTCWn0NUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=NFMZ5l7Q; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1740368195; c=relaxed/simple;
+	bh=LOuJmP3uQScRvJ5ZPD10rClOLn9+/7bBpKXhwP0o8sA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eoQxhnKtcWbGKvQQ5Ddi0cPujyrPvyzGOd5w1Sb0xEPJOeY2wH1FVCp3EZTK8iGzKwVsuEVfXaRbqa+KrCeWInrgjCWDQ4kgK7mAByz1OG7rYOo0VmWqYEDC5dbvyJipcOchVRmjooJFS7f/70KcB4cmNvmY1qax0hJMfEzqIaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=TtkboSsl; arc=none smtp.client-ip=45.254.49.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="NFMZ5l7Q"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=mt5iAw9fIPP/4TCXO3fsICmQc2owlHYI9R2MBfTvz1U=; b=NFMZ5l7QPtmTdbsAFUkiWRsUU8
-	RrbaJp2uqe5nikf8LyMe6336Hse3MPec33uHitd7hA0/1oeKYLo6Hh2CUivzi6yHpUIknZepUfO6d
-	0HWkjqpwJ38j616ngNwxGc7WWYfNpqsNQkR0aHlxGyfCgRVAPPJcBBUwtznt2Qn1m9wI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tmPCn-00H1iV-PO; Mon, 24 Feb 2025 04:32:29 +0100
-Date: Mon, 24 Feb 2025 04:32:29 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: =?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	davem@davemloft.net, Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
-	Simon Horman <horms@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Antoine Tenart <atenart@kernel.org>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Subject: Re: [PATCH net-next 0/2] net: phy: sfp: Add single-byte SMBus SFP
- access
-Message-ID: <3c6b7b3f-04a2-48ce-b3a9-2ea71041c6d2@lunn.ch>
-References: <20250223172848.1098621-1-maxime.chevallier@bootlin.com>
- <87r03otsmm.fsf@miraculix.mork.no>
- <Z7uFhc1EiPpWHGfa@shell.armlinux.org.uk>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="TtkboSsl"
+Received: from [172.16.12.26] (unknown [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id bf356a8d;
+	Mon, 24 Feb 2025 11:21:02 +0800 (GMT+08:00)
+Message-ID: <731abf8f-b157-47d4-a9e1-9aed6f5b4e37@rock-chips.com>
+Date: Mon, 24 Feb 2025 11:21:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7uFhc1EiPpWHGfa@shell.armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 00/14] Add eDP support for RK3588
+To: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: heiko@sntech.de, robh@kernel.org, conor+dt@kernel.org,
+ algea.cao@rock-chips.com, rfoss@kernel.org, devicetree@vger.kernel.org,
+ linux-phy@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ hjc@rock-chips.com, kever.yang@rock-chips.com, dmitry.baryshkov@linaro.org,
+ vkoul@kernel.org, andy.yan@rock-chips.com, krzk+dt@kernel.org,
+ linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de
+References: <20250123100747.1841357-1-damon.ding@rock-chips.com>
+ <5044FFCB-B325-40D0-BA82-03AF64EAF029@gmail.com>
+ <tg6eyew4qahuxqakmmejne7xx2rkouj6htp55acun4ajz2irz2@vlmvqv3zc5vc>
+ <C81810F2-6E9B-4DCC-85D1-CCB63CBFBFEA@gmail.com>
+Content-Language: en-US
+From: Damon Ding <damon.ding@rock-chips.com>
+In-Reply-To: <C81810F2-6E9B-4DCC-85D1-CCB63CBFBFEA@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUtLHlYYHkhNH0oeTh5DHkNWFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a9535f8f24203a3kunmbf356a8d
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pi46Djo5AjIXNxwdLSo9TD1L
+	FQMwClZVSlVKTE9LSE1MSU1PS09IVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFITExLNwY+
+DKIM-Signature:a=rsa-sha256;
+	b=TtkboSslEuG3O6Q33PmEvHv28Jvg5WyhYR2LFUqcKFp4BOeB/mohA8ndDgbxGn5eNvpe7Fkf8HB8qjnmn2aLu9BlykbGs6RCVL395hZUmPJW9eyvlAmbaEAF23buy2DkdSvordvN2UaJJ3yxiUObEM3aHwA/1rf/oZ7kgAjYhgE=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=SUWTCb0GbfrLEePUqui3jDgm691jrzdjRDy4hq8S9z0=;
+	h=date:mime-version:subject:message-id:from;
 
-> So, not only do I think that hwmon should be disabled if using SMBus,
-> but I also think that the kernel should print a warning that SMBus is
-> being used and therefore e.g. copper modules will be unreliable. We
-> don't know how the various firmwares in various microprocessors that
-> convert I2C to MDIO will behave when faced with SMBus transfers.
+Hi Piotr,
 
-I agree, hwmon should be disabled, and that the kernel should printing
-a warning that the hardware is broken and that networking is not
-guaranteed to be reliable.
+On 2025/2/14 20:00, Piotr Oniszczuk wrote:
+> 
+> 
+>> Wiadomość napisana przez Sebastian Reichel <sebastian.reichel@collabora.com> w dniu 13 lut 2025, o godz. 18:26:
+>>
+>> Hello Piotr,
+>>
+>>
+>> The RK3588 has two different DP controllers. The one handled in this
+>> series should get the eDP port running, which is routed to the
+>> "eDP Panel" in the block diagram on page 3 of the Rock 5 ITX schematics.
+>> So this series adds support for using "HDMI/eDP TX0" and "HDMI/eDP TX1"
+>> in DP mode.
+>>
+>> The port routed to HDMI0 via RA620 is the other DP controller, which
+>> also exists twice: "TYPEC0/DP0" and "TYPEC1/DP1". This DP controller
+>> is not yet supported upstream and there is no pending patchset. As far
+>> as I know Rockchip plans to work on preparing upstream support for that
+>> soon.
 
-	Andrew
+Yes, Andy has recently updated the DP controller related patchset:
+https://patchwork.kernel.org/project/linux-rockchip/list/?series=936784
+
+>>
+> 
+> Oh - this is very valuable info and explains a lot.
+> Thx.
+> 
+>> Note, that the two DisplayPort controllers are completely different.
+>> The HDMI/eDP controller is a design from Analogix and the TypeC/DP
+>> controller is a design from Synopsys.
+>>
+>> P.S.: Heiko merged support for HDMI1 (RK3588 SoC level) recently. So you
+>> should be able to get that running by some DT additions to the Rock 5
+>> ITX board DT with the latest linux-next code :)
+>>
+> 
+> And it works perfectly on all my 3588 bards (including audio and my cec addition)
+> But only on boards using both hdmi tx0 and tx1 to hdmi0/hdmi1 ports.
+> 
+> on rock5 itx:
+
+According to the schematic of ROCK 5 ITX, I find the display routes are:
+- DP0 -> TYPEC0 Connector
+- DP1 -> RA620 -> HDMI Connector (Andy's patch series will help it work)
+- HDMI/eDP TX0 -> eDP Panel (This patch series will help it work)
+- HDMI/eDP TX1 -> HDMI Connector
+
+So the HDMI/eDP TX0 should be enabled as eDP in DTS. Maybe it's just a 
+test to enable both HDMI0 and HDMI1 in the ROCK 5 ITX board?
+
+> With both hdmi tx0 and tx1 enabled in dts it looks like kernel detects hdmi tx0 as connected and tries read edid.
+> As nothing is connected to J11 (eDP con) - i’m getting i2c ddc timeouts
+> [   54.188880] dwhdmiqp-rockchip fde80000.hdmi: i2c read timed out
+> [   54.292207] dwhdmiqp-rockchip fde80000.hdmi: i2c read timed out
+> [   54.395554] dwhdmiqp-rockchip fde80000.hdmi: i2c read timed out
+> 
+
+I think the reason may be that HDMI0 is enabled, and HPD pin of HDMI0 is 
+also configured, but the HPD pin is in an unstable state in the 
+hardware, which is mistakenly detected as connected.
+
+> 
+> disabling hdmi0 makes kernel talking to hdmi1 but with issues:
+> [    0.540446] dwhdmiqp-rockchip fdea0000.hdmi: registered DesignWare HDMI QP I2C bus driver
+> [    0.541230] rockchip-drm display-subsystem: bound fdea0000.hdmi (ops dw_hdmi_qp_rockchip_ops)
+> [    0.542285] [drm] Initialized rockchip 1.0.0 for display-subsystem on minor 0
+> [    0.542933] rockchip-drm display-subsystem: [drm] Cannot find any crtc or sizes
+> [    0.543605] rockchip-drm display-subsystem: [drm] Cannot find any crtc or sizes
+> 
+> and here i’m a bit puzzled as on other 3588 boards (i.e. rock5b) - when i connected monitor to hdmi1 - all works perfectly
+> (kernel, OS and app nicely skipping hdmi0 and talking to actually connected hdmi1 port. all works)
+> 
+> on rock5 itx this not works.
+> 
+> my observations so far are:
+> -on rock5 itx hdmi0 is falsely detected as connected - even when eDP connector (J11) has nothing connected
+> -on rock5 itx disabling hdmi0 in dts breaks hdmi1
+> -on other 3588 (e.g. rock 5b) disabling hdmi0 in dts NOT breaks hdmi1
+> 
+> strange….
+> 
+> 
+
+Best regards
+Damon
+
