@@ -1,92 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DAE17548
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 08:11:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA83E241682
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 08:11:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740384666; cv=none; b=jDp/K/nwiAqC6Dcl9XljsNYq1UtaDmmCVGx98TkgqMTs6uOyWzRjEztCrPyg5EmEtN9HqUTwplEqdRMu/Pw2l7SYB8XtWmI9OvtVXrN4iPWvlc3UR7kkEiB+xtFHOrRAKdtpFT7Z/ckaKeJSRXORgwvOSFotSN8z4wzpDjQAmVI=
+	t=1740384669; cv=none; b=OIydVIb3Y8rvEDe68DfRibLovMnUGg5vqINAXB2ddhPPNWgsuK2PwwcTk7JyA/N4O2oMClP47f+d4wzuhv7QPz6pVAUwPW/UFfugTfFDoleOQ6ciNmF0e82JLxHqFLdXLcHNVWXXGxrYwBxg3UGBAbCBEfqGs0RVh0glGS8EfJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740384666; c=relaxed/simple;
-	bh=wpaTUIwidiE3GZ8YUXT7uXhOSdSbxhbvnoqkGr7J4/M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=amyHeZQXezKF1lxbF96R7Ev/X/AVpIRSVLWSJ+ez7dJsi4jGUYaJUS9wB0rSlvoKTsPFAuMGojo9/h8lHFrQkt9C+UnyS+sRHdquOOu64YWNLDwMjEXIOqTwFVDG/eCiO6rlV4YBvtMi90iPzXh+/T659oazPdijcsg3up4QLK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MgFqjvSn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740384669; c=relaxed/simple;
+	bh=7kUXP1Ju/JmsDQNjU8+Zr14Xc2I2BXR/JTfJV9cfVrc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uhroBaWSrt45rQpIfVLdFyhZezmhZW7RVjWsDgYrOGiUsXvELn2BTgt4629dAWUZOJmgRHoaBgxHxL/chgHAR1y/9tG170IUKeKkZluMCyODkSaA/BuRDsr7irn3hiOaOjDWU9C37sJn0T/k6C7MRT4zJiMd8b6npNnlqXqx35U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ttzm29QV; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MgFqjvSn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73853C4CEE6
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 08:11:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740384665;
-	bh=wpaTUIwidiE3GZ8YUXT7uXhOSdSbxhbvnoqkGr7J4/M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=MgFqjvSnEXfT2dN4JbrW/VYqYgG0nWOsQqlUPQ9awS2RrhQZZkwg2OtAbIQLfcY7P
-	 tmsnful6TtvtS4w6HHnFxFlDrugVAC3GoSEtUbRJonDvXS2eElxEb5eqcI6VYxVsCj
-	 3sSUMT+fkiS1zfZhpJIrexfUdY7cl6RnZ0p3HD3ZgaDgklHkiUtE1fM4kpOxe6cPv3
-	 yyCBCIvdRTFbTEbCeJXshwAP6fr2U177a81O0o6wUp76E+U0eybAZ3PAjr0JuX6UGo
-	 03moZsKieEmNVnbMZ/Q+aH69KZK4RC9v1/OH3RdWLpiqERS7ufPP9WkuKKnEaGWrZS
-	 QbcQLVyKeM8xw==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5452ed5b5b2so4154310e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 00:11:05 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX2UxPoI1ob+6b4vdpokm/+4uR2HtJ1aE0xhehEoYT//jzr9ACa+KgyYb4dm6ngzc0IIodZEhKaxo2xH1M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycNDnxK466Q09XkoaYxmvHairs2DvXfWy++iMBpfw+hqU054Ho
-	Hpb4BS6umv+iYo+ZG/ROVuFhbmGZM/gZetF7NcFd2QNKAMILjx+6EYULl/k0C63xt807dcnB4hh
-	+27+ePAFkeROyvHMv+sGvHiL3pFs=
-X-Google-Smtp-Source: AGHT+IGWAdvh8Uk5kDUolWyUpntZPHToLER0sCEfBzrsbMTUct8qTsWzLwAR4xPwH4meMXT3mHvjOWDudLYqwdHehTo=
-X-Received: by 2002:a05:6512:2211:b0:545:58e:e543 with SMTP id
- 2adb3069b0e04-54838ee9334mr4265598e87.21.1740384663815; Mon, 24 Feb 2025
- 00:11:03 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ttzm29QV"
+Date: Mon, 24 Feb 2025 13:40:01 +0530
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740384655;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=faKgzJwVoyrlHudraf/LToNW6X6aLoeWuNwk1IR8b78=;
+	b=Ttzm29QVzxaIFJiGywNt69jQH3E7waI2w0CeXVVY2FnI5QJoHGR7SR5giC+/OLfxdHmMYo
+	7SlwFMoWFsiUHUbIm9uBqy/dP8XBDZMP7ilqPaUwOOZ8owojCnzuuiICU95b6IFH+8GukI
+	IlI7kQNGxPbdqqbwRspmB50DTlu9s+E=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Jai Luthra <jai.luthra@linux.dev>
+To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, mripard@kernel.org, mchehab@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, devarsht@ti.com, vaishnav.a@ti.com, 
+	r-donadkar@ti.com, u-kumar1@ti.com
+Subject: Re: [PATCH v3 0/2] Enable support for error detection in CSI2RX
+Message-ID: <3vci66duq6uowpavyo7ovjqrdgde2zswmbs6xwo6xv4lxcpy7m@myrohugxcgxb>
+X-PGP-Key: http://jailuthra.in/files/public-key.asc
+References: <20250221120337.3920874-1-y-abhilashchandra@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224062111.66528-1-kpark3469@gmail.com>
-In-Reply-To: <20250224062111.66528-1-kpark3469@gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 24 Feb 2025 09:10:52 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXG5uTUH3--A3OtPQcMqj4hiNrONL6tUKkmwqmjkOYMuyQ@mail.gmail.com>
-X-Gm-Features: AWEUYZml3zcWsZttkBGhQ352lKORrZnbm7B76-btGrHm4knlWfWj1Hj1AfPuHtk
-Message-ID: <CAMj1kXG5uTUH3--A3OtPQcMqj4hiNrONL6tUKkmwqmjkOYMuyQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64: kaslr: consider parange is bigger than linear_region_size
-To: keun-o.park@katim.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	catalin.marinas@arm.com, will@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="qnr2ibn2hmcurdlp"
+Content-Disposition: inline
+In-Reply-To: <20250221120337.3920874-1-y-abhilashchandra@ti.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 24 Feb 2025 at 07:21, Keun-O Park <kpark3469@gmail.com> wrote:
->
-> From: Keuno Park <keun-o.park@katim.com>
->
-> On systems using 4KB pages and having 39 VA_BITS, linear_region_size
-> gets 256GiB space. It was observed that some SoCs such as Qualcomm
-> QCM8550 returns 40bits of PA range from MMFR0_EL1. This leads range
-> value to have minus as the variable range is s64, so that all the
-> calculations for randomizing linear address space are skpped.
-> As a result of this, the kernel's linear region is not randomized.
-> For this case, this patch sets the range by calculating memblock
-> DRAM range to randomize the linear region of kernel.
->
-> Change-Id: Ib29e45f44928937881d514fb87b4cac828b5a3f5
-> Fixes: 97d6786e0669 ("arm64: mm: account for hotplug memory when randomizing the linear region")
-> Signed-off-by: Keuno Park <keun-o.park@katim.com>
-> ---
->  arch/arm64/mm/init.c | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index 9c0b8d9558fc..2ee657e2d60f 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -290,6 +290,11 @@ void __init arm64_memblock_init(void)
->                 s64 range = linear_region_size -
->                             BIT(id_aa64mmfr0_parange_to_phys_shift(parange));
->
-> +               if (range < 0) {
-> +                       range = linear_region_size -
-> +                               (memblock_end_of_DRAM() - memblock_start_of_DRAM());
-> +               }
-> +
 
-Please explain how this ensures that hotplug memory still works as expected.
+--qnr2ibn2hmcurdlp
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 0/2] Enable support for error detection in CSI2RX
+MIME-Version: 1.0
+
+On Fri, Feb 21, 2025 at 05:33:35PM +0530, Yemike Abhilash Chandra wrote:
+> This patch series enables the csi2rx_err_irq interrupt to record any erro=
+rs
+> that occur during streaming. It also adds support for the VIDIOC_LOG_STAT=
+US
+> ioctl, which outputs the current device status to the kernel log.
+>=20
+> The IRQ handler records any errors encountered during streaming.
+> Additionally, VIDIOC_LOG_STATUS can be invoked from user space to retrieve
+> the latest status.
+>=20
+> Changelog:
+> Changes in v3:
+> - Address Krzysztof's review comment to drop minItems from the bindings.
+> - Collect Acked-by from Krzysztof.
+> - Address Jai's review comment to enable FIFO overflow bits in the mask=
+=20
+>   only for the source pads that have an active remote.
+> - Drop TI-specific interrupt and have support for only two interrupts=20
+>   that are common across all vendors.
+> - Address Changhuang's review to use pdev directly to get the interrupt.
+> - Set the interrupt mask register only if the interrupt is defined in the=
+ DT.
+>=20
+> V1: https://lore.kernel.org/all/20250217130013.2802293-1-y-abhilashchandr=
+a@ti.com/
+>=20
+> Logs with interrupt in DT: https://gist.github.com/Yemike-Abhilash-Chandr=
+a/5bd2dfb4219686ddf389e94d563a2ab1
+> Logs without interrupt in DT: https://gist.github.com/Yemike-Abhilash-Cha=
+ndra/31d8c840b5a4f677fde88373defed2cb=20
+>=20
+
+Tested-by: Jai Luthra <jai.luthra@linux.dev> [on SK-AM62A]
+
+>=20
+> Yemike Abhilash Chandra (2):
+>   dt-bindings: media: cdns,csi2rx.yaml: Add optional interrupts for
+>     cdns-csi2rx
+>   media: cadence: csi2rx: Enable csi2rx_err_irq interrupt and add
+>     support for VIDIOC_LOG_STATUS
+>=20
+>  .../bindings/media/cdns,csi2rx.yaml           |   8 ++
+>  drivers/media/platform/cadence/cdns-csi2rx.c  | 125 ++++++++++++++++++
+>  2 files changed, 133 insertions(+)
+>=20
+> --=20
+> 2.34.1
+>=20
+
+--qnr2ibn2hmcurdlp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEETeDYGOXVdejUWq/FQ96R+SSacUUFAme8KVkACgkQQ96R+SSa
+cUUQ1RAAnmm1Y8GkB7fM9JgUvr1P8npWlgxNiPGB+9lZ8HKbBvJ4JAbgstQ4iga+
+W5CktOvW7Ic4zoj9u0b4/8TUjpdVRgEq3FopFHx7DaexuH4rUPUrWwjYRfmKAoCn
+OiJaYBwSKgEYbuh1IinaYovoOjouaHjwloguKIWLDASlMxyR4xqQGx+qEQXeVggn
+BU9s4vHz/YddLVmLpqoOs2BH152vDL7O2XbFCrYh0Z0wYQo8FzNT0pFiiSC6k2k4
+Nq0mhphwXRAQJuu659ES3N+B3udxtlGv3V9AJlL7hOW0pg82UVEOXEb6aS2RVrmR
+thXW9D08oVx8rqAb3mLGKd4YmolOLJr2Z4RicbXRB9mXnJUd2rpz/UbsnmQ7y+g7
+fxDlM8knjMH8tYzD2uDkP0jn/Bz7TVSa4paWccJ0oeNe7G9FLyOnNruwWmbCxF7+
+zLvmv29JedeiGy2aA4oYoHiCmYDOlX+HmmaLqda+vsoDW/39bYAKxK3F0Y6VrFxj
+X+994d6BcCdW5ujqTQAkntLTCWAkaVrruD4hZ9h4p5KZPVvFHo0y0/54OeB8RoEs
+8rThUlMgOpx7ghzI822a+ghq+1AXTeqpoJsJ6WX7wf61lps5EuQ/G8VZnrtSN5sj
+pzs6IVByyxS0ofr6R7U0rYhlwACopTz0Mj4xfGMoR9U5CZ+CxgI=
+=LM7i
+-----END PGP SIGNATURE-----
+
+--qnr2ibn2hmcurdlp--
