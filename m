@@ -1,128 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6836724886E;
-	Mon, 24 Feb 2025 11:21:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81C5248865;
+	Mon, 24 Feb 2025 11:21:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740396069; cv=none; b=BL7D88R5e0ALVLbDVWXH46w6HhAYlL5A2Sndqv9B2p0PbWPKE2QIZkagvTM6QlzBJijNZ1oAbRJoObRIVa0ZD782QTlK3hLD3VYSb9IwOYThHU0bEPXN49bJEWtuMjCG3pmwHr5aa5uOvjTw3pdMBPwYetTzUnpU/Y6dHjzrjpA=
+	t=1740396070; cv=none; b=ofRBz1EqG7ZgBwNG/eVQYzjIeU6JNaWBionce1vOslW+tQb7IH1Vy00ig21dq6DGxWs0ejrKVtXxP64tH6B2vZPIYjKjqocgZqml6Wtq4PZfdwzK3EjLqx1MBYH4+0OXh7DufVVRbjp2ZyCeNz2yxn7x9HypS5ETqS9Xs0RaWGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740396069; c=relaxed/simple;
-	bh=/E2QqV7A3vjV6X81vD4GzrcUSl4Kz6h5Z2XtJ3vL/GQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rv9kf3D8StZACX4PP2VNo70Or66XxMoy60MSR/xQ2hDGqlH3hpoVDlLO2PSd/E9Ja7l3DCSkKWct5t/soWmWINOFF+qo6psUqM+kzsxQ8lXSqPWUkxf5UqNjWzogVuojVJE01m7aGm+R52NgmHLGDYllNLxj165BxMOdDZUX69M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gwJgc76K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740396070; c=relaxed/simple;
+	bh=dL/5zoNdo+kDSHCjoHpsZarNox6ujoBo+G/m5ncxaWg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pQVR/lsCBzOMshuNobs1mquzDzreRkh3g38rSvOTIobNVGCQIwWIxWGr4kesxBbQa44DOUYjNTZtNGPv7zw28zbC+UVIfOS4wjg+VEr4eY+qtAj6d0LPH1wQe2OEOndWVMp8AO4Fm4jnBj4Z0CWjXCo0FWFIH/ZE7Vxgh5fasrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=Gd4ZDedF; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gwJgc76K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB76BC4CEE9;
-	Mon, 24 Feb 2025 11:21:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740396068;
-	bh=/E2QqV7A3vjV6X81vD4GzrcUSl4Kz6h5Z2XtJ3vL/GQ=;
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="Gd4ZDedF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
+	s=default; t=1740396068;
+	bh=uK0G5z1dgyQ1LGyKW373cRDB/WnmXJQCfB7OmH+z2fk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gwJgc76KKjFBLpAICJkRBeGRyChCQOSvE2iw0og6FZy4FkABzuiKHNriR82E11Nv0
-	 jxa2JAoykSDK3WhYXkJvzSdzGv1zWHupIZ27G8yn2IlONqU5o3d7AXqeIqWbGTRanl
-	 JKD6+dKbLfO0ck3alCj3Uiw0FkR6iaQa/SaFbaeVY0UqBQLoXeu3UJJxSA9PBwh4Km
-	 JFXo16TkXc1t5T01TYwUVDJr8U69Pz6nmzeSKqfcpI9MhG5k/LmoQaVqAjxEHxVYKy
-	 NntrI2FRKZCzYcIJHth3l2QqhfNkDP15ZJ5NLG/nPqpBg3ja59za4FcfBFbPFtCxpF
-	 G8TFbJzbPpk8A==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Ruozhu Li <david.li@jaguarmicro.com>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Keith Busch <kbusch@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	kch@nvidia.com,
-	linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.10 5/7] nvmet-rdma: recheck queue state is LIVE in state lock in recv done
-Date: Mon, 24 Feb 2025 06:20:48 -0500
-Message-Id: <20250224112051.2215017-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250224112051.2215017-1-sashal@kernel.org>
-References: <20250224112051.2215017-1-sashal@kernel.org>
+	b=Gd4ZDedFN9+OzY9eGivWQTBRtB7LyVCXYFYIj2XuMmq5EdMAULRbgKhFeJFaBID9b
+	 oBanxXh8CBUeMzpAT+AlLNpFn99zk9GzOtaO1H3bLQzGhHyjeIp6fO1lnxKukVme2s
+	 b2beNCO8IiKLuLat0jC72Osz8qutKDtvGYaT6eWA=
+Received: from stargazer.. (unknown [IPv6:240e:358:1110:6100:dc73:854d:832e:7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 131341A40F1;
+	Mon, 24 Feb 2025 06:21:02 -0500 (EST)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Guo Ren <guoren@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Fangrui Song <i@maskray.me>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>,
+	linux-csky@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Xi Ruoyao <xry111@xry111.site>
+Subject: [PATCH 2/3] csky: vDSO: Remove --hash-style=both
+Date: Mon, 24 Feb 2025 19:20:41 +0800
+Message-ID: <20250224112042.60282-3-xry111@xry111.site>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250224112042.60282-1-xry111@xry111.site>
+References: <20250224112042.60282-1-xry111@xry111.site>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.234
 Content-Transfer-Encoding: 8bit
 
-From: Ruozhu Li <david.li@jaguarmicro.com>
+When CSKY borned, DT_GNU_HASH had already became the de-facto
+standard so DT_HASH is just wasting storage space.  Remove the explicit
+--hash-style=both setting and rely on the distro toolchain default,
+which is most likely "gnu" (i.e. generating only DT_GNU_HASH, no
+DT_HASH).
 
-[ Upstream commit 3988ac1c67e6e84d2feb987d7b36d5791174b3da ]
+Following the logic of commit 48f6430505c0
+("arm64/vdso: Remove --hash-style=sysv").
 
-The queue state checking in nvmet_rdma_recv_done is not in queue state
-lock.Queue state can transfer to LIVE in cm establish handler between
-state checking and state lock here, cause a silent drop of nvme connect
-cmd.
-Recheck queue state whether in LIVE state in state lock to prevent this
-issue.
-
-Signed-off-by: Ruozhu Li <david.li@jaguarmicro.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
 ---
- drivers/nvme/target/rdma.c | 33 +++++++++++++++++++++++----------
- 1 file changed, 23 insertions(+), 10 deletions(-)
+ arch/csky/kernel/vdso/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/target/rdma.c b/drivers/nvme/target/rdma.c
-index 944e8a2766630..503e1f59013c9 100644
---- a/drivers/nvme/target/rdma.c
-+++ b/drivers/nvme/target/rdma.c
-@@ -996,6 +996,27 @@ static void nvmet_rdma_handle_command(struct nvmet_rdma_queue *queue,
- 	nvmet_req_complete(&cmd->req, status);
- }
+diff --git a/arch/csky/kernel/vdso/Makefile b/arch/csky/kernel/vdso/Makefile
+index 069ef0b17fe5..3e100e6cf72f 100644
+--- a/arch/csky/kernel/vdso/Makefile
++++ b/arch/csky/kernel/vdso/Makefile
+@@ -29,7 +29,7 @@ SYSCFLAGS_vdso.so.dbg = $(c_flags)
+ $(obj)/vdso.so.dbg: $(obj)/vdso.lds $(obj-vdso) FORCE
+ 	$(call if_changed,vdsold)
+ SYSCFLAGS_vdso.so.dbg = -shared -s -Wl,-soname=linux-vdso.so.1 \
+-	-Wl,--build-id=sha1 -Wl,--hash-style=both
++	-Wl,--build-id=sha1
  
-+static bool nvmet_rdma_recv_not_live(struct nvmet_rdma_queue *queue,
-+		struct nvmet_rdma_rsp *rsp)
-+{
-+	unsigned long flags;
-+	bool ret = true;
-+
-+	spin_lock_irqsave(&queue->state_lock, flags);
-+	/*
-+	 * recheck queue state is not live to prevent a race condition
-+	 * with RDMA_CM_EVENT_ESTABLISHED handler.
-+	 */
-+	if (queue->state == NVMET_RDMA_Q_LIVE)
-+		ret = false;
-+	else if (queue->state == NVMET_RDMA_Q_CONNECTING)
-+		list_add_tail(&rsp->wait_list, &queue->rsp_wait_list);
-+	else
-+		nvmet_rdma_put_rsp(rsp);
-+	spin_unlock_irqrestore(&queue->state_lock, flags);
-+	return ret;
-+}
-+
- static void nvmet_rdma_recv_done(struct ib_cq *cq, struct ib_wc *wc)
- {
- 	struct nvmet_rdma_cmd *cmd =
-@@ -1037,17 +1058,9 @@ static void nvmet_rdma_recv_done(struct ib_cq *cq, struct ib_wc *wc)
- 	rsp->req.port = queue->port;
- 	rsp->n_rdma = 0;
- 
--	if (unlikely(queue->state != NVMET_RDMA_Q_LIVE)) {
--		unsigned long flags;
--
--		spin_lock_irqsave(&queue->state_lock, flags);
--		if (queue->state == NVMET_RDMA_Q_CONNECTING)
--			list_add_tail(&rsp->wait_list, &queue->rsp_wait_list);
--		else
--			nvmet_rdma_put_rsp(rsp);
--		spin_unlock_irqrestore(&queue->state_lock, flags);
-+	if (unlikely(queue->state != NVMET_RDMA_Q_LIVE) &&
-+	    nvmet_rdma_recv_not_live(queue, rsp))
- 		return;
--	}
- 
- 	nvmet_rdma_handle_command(queue, rsp);
- }
+ $(obj)/vdso-syms.S: $(obj)/vdso.so FORCE
+ 	$(call if_changed,so2s)
 -- 
-2.39.5
+2.48.1
 
