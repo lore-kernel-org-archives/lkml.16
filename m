@@ -1,96 +1,222 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12D661A0BCD;
-	Mon, 24 Feb 2025 10:16:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from bayard.4d2.org (bayard.4d2.org [5.78.89.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC5D24A07C;
+	Mon, 24 Feb 2025 10:18:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.78.89.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740392202; cv=none; b=l2ny6jLHLIlVam2gw2I31afypjxLqL3/tDybE8OANnHau5gCyleNuApVwYvtmE0GXu5BoJvLGH+qvJ7PsaPidhwmBqtgldYUXIiIY4Stmn6YFsQYnd1KiMckNfJ9TFR78MUGEEe8MDP/kHRL7m160rCaUnzrrLWYd34TCIanlNA=
+	t=1740392285; cv=none; b=ugtgZX16ZOjmaOFtDZD/7Sp8981KZBDzZs9mv2uasIu1cdcJ27A6asHYQZiASZLCq7ZD0j+fd/VMeJ7/Po397OffWmmlmdk+aMrL2JHXsLnZ2J+riUqleHYhKTHh/6qfpXGsie7V/vpnKk53BvMtiop28wF1vtTp7n6vsjIvEHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740392202; c=relaxed/simple;
-	bh=bmzP7DZYL5PU6Z8gYL3j8sFt9WnzcGSW4w4BWbHWCNc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tqUebHw80yo9Cb7EDWRXjoelum0YDGJx/3jH6n1Qv8ntw6YRwwhDVFaxvL6HaREyuL3TbXSE+Uf4cURNgg1+TOCXDMZqiJwd8RUYdLuNvaVW8NfmOduC0VLq+s2QLfPH2xrqejmqVRYrbBcvPsnpmx5LmPT03yYaZFlZm90ITbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=TIj9PGJi; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1740392285; c=relaxed/simple;
+	bh=Lwv+SdLlgCCVTrLfdebdm1ZrgIaYP0UgzwvumboP/Ow=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W6iGFTLhWyOp4ZJ8P2hvNGbG/aPHnn5OO4etjxbb1MXCRkyhYy6TU94q2Wk4pg4WSTBon77ua4ha9z+TVJmPLjipSub6Abtg4+QUr575zQiQE/OaACx3oQXmnL8/M1WjGVvZb0mesGu3tfvoAH0F1R+YjdvwPed5dTVydpYklKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org; spf=pass smtp.mailfrom=4d2.org; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=niCjXbTi; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=UkjrEQil; arc=none smtp.client-ip=5.78.89.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4d2.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TIj9PGJi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=2oNUH
-	JB8g4nEbc2gNF1Ap4/gs+R1vgOD/JaR77WeBAY=; b=TIj9PGJifE7aVbz93cRvx
-	Ts90s4p4h6HSqsagsDQqZprmZ4Eu39a70Jw2Y7M+NjImctrmzZ29Gmup8PIzgk94
-	pkUWl6ZzDXj+mBZQ6wf83xzfO5bmsrgxTfFTOJojIyHkqRwJ9OdTidMIvJnZ4gUk
-	zkEYYw6CnMGS1jdx+QyQ7c=
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wCHzCnBRrxnlq0pOQ--.38564S4;
-	Mon, 24 Feb 2025 18:15:30 +0800 (CST)
-From: Haoxiang Li <haoxiang_li2024@163.com>
-To: andy@kernel.org,
-	geert@linux-m68k.org,
-	haoxiang_li2024@163.com,
-	u.kleine-koenig@pengutronix.de,
-	erick.archer@outlook.com,
-	ojeda@kernel.org,
-	w@1wt.eu,
-	poeschel@lemonage.de
-Cc: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH v2] auxdisplay: hd44780: Fix an API misuse in hd44780.c
-Date: Mon, 24 Feb 2025 18:15:27 +0800
-Message-Id: <20250224101527.2971012-1-haoxiang_li2024@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="niCjXbTi";
+	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="UkjrEQil"
+Received: from bayard.4d2.org (bayard.4d2.org [127.0.0.1])
+	by bayard.4d2.org (Postfix) with ESMTP id 52D4D122FE23;
+	Mon, 24 Feb 2025 02:17:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
+	t=1740392276; bh=Lwv+SdLlgCCVTrLfdebdm1ZrgIaYP0UgzwvumboP/Ow=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=niCjXbTievjPfp2HmOums4MrUOg/tOro7gx/TCt7XJ2cPvwaMrZykwcckHHr0zJuG
+	 p9xSjwlq7D713ed9/6aXE4x6EDZ/ym1Z+pP7cVdK/zk1dRqMZjPbxnHAnRGtk3iotm
+	 XAEkIJ0aQ/Qkfref1IT+bVBZZT0QbM7QCjp47jQXdoOvFjhUmqSYNbNEroo9E4MFV1
+	 srPvEaBJ4dmpjRr5NJaaJazeMJREqJSZZILgGxjo/XY6fce5oAfHPdVVjLd08rSADt
+	 cIog1Xr8aUwP6vVrE2pFBkQH1CM0xlFwVbmEDzo2T4PUeDFm3lafA1b9icW3CZr25S
+	 BQ848tOhqzc+Q==
+X-Virus-Scanned: amavisd-new at 4d2.org
+Received: from bayard.4d2.org ([127.0.0.1])
+ by bayard.4d2.org (bayard.4d2.org [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id zq8oGhaoyk3h; Mon, 24 Feb 2025 02:17:54 -0800 (PST)
+Received: from ketchup (unknown [183.217.80.34])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: heylenay@4d2.org)
+	by bayard.4d2.org (Postfix) with ESMTPSA id D9D65122FE21;
+	Mon, 24 Feb 2025 02:17:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
+	t=1740392274; bh=Lwv+SdLlgCCVTrLfdebdm1ZrgIaYP0UgzwvumboP/Ow=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UkjrEQilES+wAWOqAgIE+CWAGiRh2WE8Z77le9pWr5tgNy1pWWbTyvFrFuLig7CnF
+	 dyklHRklhPKiGkBC4LE6uYN+Rl0kydApuUOx4z+Z7LJpzk2udQKSZbeIGhkNZwg0jy
+	 9aDvewbfZHh8T4ZBHNmauBCB//kbGb41vZo9tvBDP8ob6o8J4J7cS/Q/o6GqPIP7Tk
+	 DT5ea06zULyMSIjah2/ojuRxiDYZP9KzU6IgCNnGOpNy5JImavBQtP+Rl042DCMURl
+	 qZyAc5btfGtkVngR4Qcf1rNwimx5rW5utOUyUm+S8G0DjcrYcxmmkpMkFs8No+GFT9
+	 sBeXApdL2iOjQ==
+Date: Mon, 24 Feb 2025 10:17:40 +0000
+From: Haylen Chu <heylenay@4d2.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Alex Elder <elder@riscstar.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Haylen Chu <heylenay@outlook.com>, Yixun Lan <dlan@gentoo.org>,
+	linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Chen Wang <unicornxdotw@foxmail.com>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
+	Guodong Xu <guodong@riscstar.com>
+Subject: Re: [PATCH v4 2/4] dt-bindings: soc: spacemit: Add spacemit,k1-syscon
+Message-ID: <Z7xHRAFE4-QEA6PO@ketchup>
+References: <aw2vqnz5vcccqqvrrhz5tgawj7fnzzg3tds7nnepuorit37a7r@jcj3wrs7d73h>
+ <Z6rdBhQ7s2ReOgBL@ketchup>
+ <19e5129b-8423-4660-8e4f-8b898214d275@kernel.org>
+ <Z63T_EDvXiuRQbvb@ketchup>
+ <2ab715bd-e26c-41bb-ac64-baa864d90414@kernel.org>
+ <Z7BTVu10EKHMqOnJ@ketchup>
+ <7c697e9a-d6d9-4672-9738-93ce3a71beb6@riscstar.com>
+ <4f7bf109-bf18-42be-971c-5d5edd9595b5@kernel.org>
+ <Z7mrdrACFp3m-7sy@ketchup>
+ <6ea8ac17-42c8-46fa-b970-77ba89de66c4@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCHzCnBRrxnlq0pOQ--.38564S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Cr4xWFW3Jr4fKF1fXw4ktFb_yoW8JFy8pF
-	srWayFka18JF1UWa4DKw1xXFy5G398Aa4q9ry2k3s3ury5JF97tw15AryjgrsIgFyfW3W2
-	qFnFqrWIyFs7AFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pREoGPUUUUU=
-X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/xtbB0gn9bme8PuRYhAADsW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6ea8ac17-42c8-46fa-b970-77ba89de66c4@kernel.org>
 
-Variable allocated by charlcd_alloc() should be released
-by charlcd_free(). The following patch changed kfree() to
-charlcd_free() to fix an API misuse.
+On Sat, Feb 22, 2025 at 12:50:13PM +0100, Krzysztof Kozlowski wrote:
+> On 22/02/2025 11:48, Haylen Chu wrote:
+> > On Sat, Feb 22, 2025 at 10:59:09AM +0100, Krzysztof Kozlowski wrote:
+> >> On 22/02/2025 00:40, Alex Elder wrote:
+> >>> I have a general proposal on how to represent this, but I'd
+> >>> like to know whether it makes sense.  It might be what Krzysztof
+> >>> is suggesting, but in any case, I hope this representation would
+> >>> work, because it could simplify the code, and compartmentalizes
+> >>> things.
+> >>>
+> >>> Part of what motivates this is that I've been looking at the
+> >>> downstream reset code this week.  It contains a large number of
+> >>> register offset definitions identical to what's used for the
+> >>> clock driver.  The reset driver uses exactly the same registers
+> >>> as the clock driver does.  Downstream they are separate drivers,
+> >>> but the clock driver exports a shared spinlock for both drivers
+> >>> to use.
+> >>>
+> >>> These really need to be incorporated into the same driver for
+> >>> upstream.
+> >>
+> >> Why? First, it is not related to the topic here at all. You can design
+> >> drivers as you wish and still nothing to do with discussion about binding.
+> >> Second, different subsystems justify different drivers and Linux handles
+> >> this well already. No need for custom spinlock - regmap already does it.
+> >>
+> >>
+> >>>
+> >>> The clock code defines four distinct "units" (a term I'll use
+> >>> from here on; there might be a better name):
+> >>>    MPMU  Main Power Management Unit
+> >>>    APMU  Application Power Management Unit
+> >>>    APBC  APB Clock
+> >>>    APBS  APB Spare
+> >>>
+> >>> The reset code defines some of those, but doesn't use APBS.
+> >>> It also defines three more:
+> >>>    APBC2 Another APB Clock
+> >>>    RCPU  Real-time CPU?
+> >>>    RCPU2 Another Real-time CPU
+> >>>
+> >>> Each of these "units" has a distinct I/O memory region that
+> >>> contains registers that manage the clocks and reset signals.
+> >>
+> >> So there are children - mpmu, apmu, apbclock, apbspare, apbclock2, rcpu
+> >> 1+2? But previous statements were saying these are intermixed?
+> >>
+> >> " I'll make APMU/MPMU act as a whole device"
+> > 
+> > My reply seems somehow misleading. The statement means I will merge the
+> > children with the syscon into one devicetree node, which applies for
+> > both APMU and MPMU. I wasn't going to say that APMU and MPMU are
+> > intermixed.
+> > 
+> > As Alex said, all these units have their own distinct and separate MMIO
+> > regions.
+> > 
+> >>>
+> >>> I suggest a single "k1-clocks" device be created, which has
+> >>
+> >> For four devices? Or for one device?
+> > 
+> > By Alex's example, I think he means a device node taking all these
+> > distinct MMIO regions as resource.
+> 
+> 
+> You still do not answer about the hardware: how many devices is there?
 
-Fixes: 718e05ed92ec ("auxdisplay: Introduce hd44780_common.[ch]")
-Cc: stable@vger.kernel.org
-Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
----
-Changes in v2:
-- Merge the two patches into one.
-- Modify the patch description.
-Sorry Geert, I didn't see your reply until after I sent the
-second patch. I've merged the two patches into one, hoping
-to make your work a bit easier! Thanks a lot!
----
- drivers/auxdisplay/hd44780.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+In my understanding, the series covers four devices, APBC, APMU, MPMU
+and APBS, each comes with its separate MMIO region and is clearly
+described in the datasheet. I stated this in the later part of the
+reply,
 
-diff --git a/drivers/auxdisplay/hd44780.c b/drivers/auxdisplay/hd44780.c
-index 0526f0d90a79..9d0ae9c02e9b 100644
---- a/drivers/auxdisplay/hd44780.c
-+++ b/drivers/auxdisplay/hd44780.c
-@@ -313,7 +313,7 @@ static int hd44780_probe(struct platform_device *pdev)
- fail3:
- 	kfree(hd);
- fail2:
--	kfree(lcd);
-+	charlcd_free(lcd);
- fail1:
- 	kfree(hdc);
- 	return ret;
-@@ -328,7 +328,7 @@ static void hd44780_remove(struct platform_device *pdev)
- 	kfree(hdc->hd44780);
- 	kfree(lcd->drvdata);
- 
--	kfree(lcd);
-+	charlcd_free(lcd);
- }
- 
- static const struct of_device_id hd44780_of_match[] = {
--- 
-2.25.1
+> > For APBC, MPMU, APBS and APMU, I'm pretty
+> > sure they're standalone blocks with distinct and separate MMIO regions,
+> > this could be confirmed by the address mapping[1].
 
+Thus I don't agree on Alex's solution, since it creates fake devices not
+mentioned by the datasheet (spacemit,k1-clocks and all its children in
+the example devicetree).
+
+> > 
+> > 	clock {
+> > 		compatible = "spacemit,k1-clocks";
+> > 
+> > 		reg = <0x0 0xc0880000 0x0 0x2050>,
+> > 		      <0x0 0xc0888000 0x0 0x30>,
+> > 		      <0x0 0xd4015000 0x0 0x1000>,
+> > 		      <0x0 0xd4050000 0x0 0x209c>,
+> > 		      <0x0 0xd4090000 0x0 0x1000>,
+> > 		      <0x0 0xd4282800 0x0 0x400>,
+> > 		      <0x0 0xf0610000 0x0 0x20>;
+> > 		reg-names = "rcpu",
+> > 			    "rcpu2",
+> > 			    "apbc",
+> > 			    "mpmu",
+> > 			    "apbs",
+> > 			    "apmu",
+> > 			    "apbc2";
+> > 
+> > 		/* ... */
+> > 	};
+> > 
+> >> No, it's again going to wrong direction. I already said:
+> >>
+> >> "You need to define what is the device here. Don't create fake nodes ust
+> >> for your drivers. If registers are interleaved and manual says "this is
+> >> block APMU/MPMU" then you have one device, so one node with 'reg'."
+> >>
+> >> So what is the device here? Can you people actually answer?
+> >>
+> > 
+> > I'm not sure about the apbc2, rcpu and rcpu2 regions; they aren't
+> > related to the thread, either. For APBC, MPMU, APBS and APMU, I'm pretty
+> > sure they're standalone blocks with distinct and separate MMIO regions,
+> > this could be confirmed by the address mapping[1].
+> 
+> They were brought here to discuss for some reason. Long discussions,
+> long emails, unrelated topics like hardware or different devices - all
+> this is not making it easier for me to understand.
+>
+> Best regards,
+> Krzysztof
+
+By the way, I made a summary on the hardware covered by this series in
+one of my earlier reply[1]. Could you please comment further on my
+proposal[2] according it, or pointing out anything that's unclear or
+missing? It will be helpful for things to improve.
+
+Thanks,
+Haylen Chu
+
+[1]: https://lore.kernel.org/all/Z7m2oNXbwJ06KtLQ@ketchup/
+[2]: https://lore.kernel.org/all/Z7BTVu10EKHMqOnJ@ketchup/
