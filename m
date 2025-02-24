@@ -1,348 +1,906 @@
-Received: from dediextern.your-server.de (dediextern.your-server.de [85.10.215.232])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B157D253341;
-	Mon, 24 Feb 2025 15:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.215.232
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740410986; cv=none; b=p9RXsxkIaHgg0shs/HSbWzGhVxNqvWl0rJwNvx+BRQRR5leaGfGbRnr7a7F79arsq4kP1N/0m8SyS+IhYr8WX0EIepHsQKSeAp0oz1RmGqDPgwENm5KExdE8KCF+5pLgGoqYcGnPRigPJKPa/bI9J1avSVtgWy6ZqTysQf/Wfsg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740410986; c=relaxed/simple;
-	bh=vzSH2TPJq8EPlxOKy/5ZmbqBLaFXFH+FaB3ryTLquzI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Llo8YsXvT/t4FHjQCDf5E4IWuf1Qt7iVeZ4zCONdmIP2PSjdMqjJ++FJfe5Tdkaiy09oqAshOiWd+ZMez1nfDIHK9dvc/M+ndFKSBGVukPTUW+RNrS114Z+QYq89QwLd1UE85Is28EeGaq2Ee5ew8Sl2DRJ+paqRDWiCgxLqdb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de; spf=pass smtp.mailfrom=hetzner-cloud.de; arc=none smtp.client-ip=85.10.215.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hetzner-cloud.de
-Received: from sslproxy01.your-server.de ([78.46.139.224])
-	by dediextern.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
-	id 1tmaOR-000A2G-0a; Mon, 24 Feb 2025 16:29:15 +0100
-Received: from [78.47.5.107] (helo=sdn-nic-test01..)
-	by sslproxy01.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
-	id 1tmaOQ-0005Hj-2N;
-	Mon, 24 Feb 2025 16:29:14 +0100
-From: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>
-To: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Cc: willemdebruijn.kernel@gmail.com,
-	jasowang@redhat.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	andrii@kernel.org,
-	eddyz87@gmail.com,
-	mykolal@fb.com,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	martin.lau@linux.dev,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	shuah@kernel.org,
-	hawk@kernel.org,
-	marcus.wichelmann@hetzner-cloud.de
-Subject: [PATCH bpf-next v3 4/6] selftests/bpf: refactor xdp_context_functional test and bpf program
-Date: Mon, 24 Feb 2025 15:29:07 +0000
-Message-ID: <20250224152909.3911544-5-marcus.wichelmann@hetzner-cloud.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250224152909.3911544-1-marcus.wichelmann@hetzner-cloud.de>
-References: <20250224152909.3911544-1-marcus.wichelmann@hetzner-cloud.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A813213BC26;
+	Mon, 24 Feb 2025 15:29:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740410998; cv=pass; b=fDTS0q4v4gLthCBmHajdZrIliBLRzFAbpm/IUDexVHPo2yRu86a5VsCrOd/6tU74vcrv/FV12THMKNnyihK1yagPCRPE8iMhkokgNzmvjVvWzTpp7UrDWVUh4zkpTK88VTCdp/VF2wwV97YSEXhuzxIuAgeFlOMmkYHzjbERepg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740410998; c=relaxed/simple;
+	bh=FkWUIt+35xSjlXOxZo9/bK2FIakJ34YEyAzubuiCs5U=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=V0UeQRbFEDjgGz3S+Zh5TNN/oJaaZOzuJ+RLxpp3dxhr/kzB1Jq+kyMGjktPd5v+DX2xaSMLM38saFTAQ6qBZQKBmOd3gFG2NY8vapHLNOoCMDuBTVd0rJJKE+MnkT1dTepd7YmKsgEQHNlqyIYT9GUTRnPH0Za27PgMEMkHcIA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=AQ3ZW2LD; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="AQ3ZW2LD"
+ARC-Seal: i=1; a=rsa-sha256; t=1740410960; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Pf9XCbphTiM+rEuEzy39oTvCeqGZu8jXaShnC/fxqIQVKSiB3p9YyMYokkfRWYl5VXaDe7uOo8puNnMcP/WxpsS0MOV2sgU0BhnGr/FlGUtfFjlUPk14pYivI6Ai8iHSgwSYRoN1LGJ5v2yqjr/G492AsFC7gH8ZZ0mipVs52CA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1740410960; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=dEfgjLenwrka3ImjA5eliWOtAuABZDRYEUSQbkPE5RQ=; 
+	b=ZGza1ojHRER7i8NUKZVG+RbQVe7DzW9BdvDtw6YvIKWJh74GHinVDMVvRHdRMT1ilYwoH8Gyf2m26BGz45CdUQY0IsfqPW7jH0teFnXmaM8VEoB65svLd0lkMsmN8zGaikcbEddpe4ryKm2WI8iorTahZ8kfZyeRC+DEknwJGr0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740410960;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=dEfgjLenwrka3ImjA5eliWOtAuABZDRYEUSQbkPE5RQ=;
+	b=AQ3ZW2LDbHx9LfD8YzeFLnovO7IXmRJS0dfGYJt+iHrJxLjgjSF2ADXGTTZfydcU
+	gNPZ4FhkwmDWiBGlo7hIE1cf+w6xppwhifs/PmOM6HampSAfDk1QYyp3SznWmuBtT3Q
+	CpwGIK4m46ilqBz8/OseIFwnHFI+IGUot9WbGP+Q=
+Received: by mx.zohomail.com with SMTPS id 1740410957728502.61084319948463;
+	Mon, 24 Feb 2025 07:29:17 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: marcus.wichelmann@hetzner-cloud.de
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27559/Mon Feb 24 10:44:14 2025)
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
+Subject: Re: [PATCH v7 6/6] rust: add parameter support to the `module!` macro
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <20250218-module-params-v3-v7-6-5e1afabcac1b@kernel.org>
+Date: Mon, 24 Feb 2025 12:28:56 -0300
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Masahiro Yamada <masahiroy@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nicolas@fjasle.eu>,
+ Luis Chamberlain <mcgrof@kernel.org>,
+ rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Adam Bratschi-Kaye <ark.email@gmail.com>,
+ linux-kbuild@vger.kernel.org,
+ Petr Pavlu <petr.pavlu@suse.com>,
+ Sami Tolvanen <samitolvanen@google.com>,
+ Daniel Gomez <da.gomez@samsung.com>,
+ Simona Vetter <simona.vetter@ffwll.ch>,
+ Greg KH <gregkh@linuxfoundation.org>,
+ linux-modules@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <8AF85A37-76AC-4937-BD59-115BB432B738@collabora.com>
+References: <20250218-module-params-v3-v7-0-5e1afabcac1b@kernel.org>
+ <20250218-module-params-v3-v7-6-5e1afabcac1b@kernel.org>
+To: Andreas Hindborg <a.hindborg@kernel.org>
+X-Mailer: Apple Mail (2.3826.300.87.4.3)
+X-ZohoMailClient: External
 
-The existing XDP metadata test works by creating a veth pair and
-attaching XDP & TC programs that drop the packet when the condition of
-the test isn't fulfilled. The test then pings through the veth pair and
-succeeds when the ping comes through.
+Hi Andreas, thanks for working on this, I can see that this patch took a =
+lot
+of effort.
 
-While this test works great for a veth pair, it is hard to replicate for
-tap devices to test the XDP metadata support of them. A similar test for
-the tun driver would either involve logic to reply to the ping request,
-or would have to capture the packet to check if it was dropped or not.
+> On 18 Feb 2025, at 10:00, Andreas Hindborg <a.hindborg@kernel.org> =
+wrote:
+>=20
+> This patch includes changes required for Rust kernel modules to =
+utilize
+> module parameters. This code implements read only support for integer
+> types without `sysfs` support.
+>=20
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+> Acked-by: Petr Pavlu <petr.pavlu@suse.com> # from modules perspective
+> ---
+> rust/kernel/lib.rs           |   1 +
+> rust/kernel/module_param.rs  | 226 =
++++++++++++++++++++++++++++++++++++++++++++
+> rust/macros/helpers.rs       |  25 +++++
+> rust/macros/lib.rs           |  31 ++++++
+> rust/macros/module.rs        | 191 =
+++++++++++++++++++++++++++++++++----
+> samples/rust/rust_minimal.rs |  10 ++
+> 6 files changed, 466 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index 496ed32b0911a..aec04df2bac9f 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -57,6 +57,7 @@
+> pub mod kunit;
+> pub mod list;
+> pub mod miscdevice;
+> +pub mod module_param;
+> #[cfg(CONFIG_NET)]
+> pub mod net;
+> pub mod of;
+> diff --git a/rust/kernel/module_param.rs b/rust/kernel/module_param.rs
+> new file mode 100644
+> index 0000000000000..0047126c917f4
+> --- /dev/null
+> +++ b/rust/kernel/module_param.rs
+> @@ -0,0 +1,226 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Types for module parameters.
 
-To make the testing of other drivers easier while still maximizing code
-reuse, this commit refactors the existing xdp_context_functional test to
-use a test_result map. Instead of conditionally passing or dropping the
-packet, the TC program is changed to copy the received metadata into the
-value of that single-entry array map. Tests can then verify that the map
-value matches the expectation.
+nit: maybe =E2=80=9CSupport for module parameters=E2=80=9D?
 
-This testing logic is easy to adapt to other network drivers as the only
-remaining requirement is that there is some way to send a custom
-Ethernet packet through it that triggers the XDP & TC programs.
+Or anything else other than =E2=80=9Ctypes=E2=80=9D, really :)
 
-The payload of the Ethernet packet is used as the test data that is
-expected to be passed as metadata from the XDP to the TC program and
-written to the map. It has a fixed size of 32 bytes which is a
-reasonalbe size that should be supported by both drivers. Additional
-packet headers are not necessary for the test and were therefore skipped
-to keep the testing code short.
+> +//!
+> +//! C header: =
+[`include/linux/moduleparam.h`](srctree/include/linux/moduleparam.h)
+> +
+> +use crate::prelude::*;
+> +use crate::str::BStr;
+> +
+> +/// Newtype to make `bindings::kernel_param` [`Sync`].
+> +#[repr(transparent)]
+> +#[doc(hidden)]
+> +pub struct RacyKernelParam(pub ::kernel::bindings::kernel_param);
+> +
+> +// SAFETY: C kernel handles serializing access to this type. We never =
+access
 
-Signed-off-by: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>
----
- .../bpf/prog_tests/xdp_context_test_run.c     | 99 +++++++++++++++----
- .../selftests/bpf/progs/test_xdp_meta.c       | 56 ++++++-----
- 2 files changed, 112 insertions(+), 43 deletions(-)
+nit: perhaps: =E2=80=9Cwe never access *it* from *a* Rust module=E2=80=9D =
+?
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/xdp_context_test_run.c b/tools/testing/selftests/bpf/prog_tests/xdp_context_test_run.c
-index 937da9b7532a..4043f220d7c0 100644
---- a/tools/testing/selftests/bpf/prog_tests/xdp_context_test_run.c
-+++ b/tools/testing/selftests/bpf/prog_tests/xdp_context_test_run.c
-@@ -4,13 +4,19 @@
- #include "test_xdp_context_test_run.skel.h"
- #include "test_xdp_meta.skel.h"
- 
--#define TX_ADDR "10.0.0.1"
--#define RX_ADDR "10.0.0.2"
- #define RX_NAME "veth0"
- #define TX_NAME "veth1"
- #define TX_NETNS "xdp_context_tx"
- #define RX_NETNS "xdp_context_rx"
- 
-+#define TEST_PAYLOAD_LEN 32
-+static const __u8 test_payload[TEST_PAYLOAD_LEN] = {
-+	0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
-+	0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18,
-+	0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28,
-+	0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38,
-+};
-+
- void test_xdp_context_error(int prog_fd, struct bpf_test_run_opts opts,
- 			    __u32 data_meta, __u32 data, __u32 data_end,
- 			    __u32 ingress_ifindex, __u32 rx_queue_index,
-@@ -112,15 +118,66 @@ void test_xdp_context_test_run(void)
- 	test_xdp_context_test_run__destroy(skel);
- }
- 
--void test_xdp_context_functional(void)
-+int send_test_packet(int ifindex)
-+{
-+	int n, sock = -1;
-+	__u8 packet[sizeof(struct ethhdr) + TEST_PAYLOAD_LEN];
-+
-+	/* The ethernet header is not relevant for this test and doesn't need to
-+	 * be meaningful.
-+	 */
-+	struct ethhdr eth = { 0 };
-+
-+	memcpy(packet, &eth, sizeof(eth));
-+	memcpy(packet + sizeof(eth), test_payload, TEST_PAYLOAD_LEN);
-+
-+	sock = socket(AF_PACKET, SOCK_RAW, IPPROTO_RAW);
-+	if (!ASSERT_GE(sock, 0, "socket"))
-+		goto err;
-+
-+	struct sockaddr_ll saddr = {
-+		.sll_family = PF_PACKET,
-+		.sll_ifindex = ifindex,
-+		.sll_halen = ETH_ALEN
-+	};
-+	n = sendto(sock, packet, sizeof(packet), 0, (struct sockaddr *)&saddr,
-+		   sizeof(saddr));
-+	if (!ASSERT_EQ(n, sizeof(packet), "sendto"))
-+		goto err;
-+
-+	close(sock);
-+	return 0;
-+
-+err:
-+	if (sock >= 0)
-+		close(sock);
-+	return -1;
-+}
-+
-+void assert_test_result(struct test_xdp_meta *skel)
-+{
-+	int err;
-+	__u32 map_key = 0;
-+	__u8 map_value[TEST_PAYLOAD_LEN];
-+
-+	err = bpf_map__lookup_elem(skel->maps.test_result, &map_key,
-+				   sizeof(map_key), &map_value,
-+				   TEST_PAYLOAD_LEN, BPF_ANY);
-+	if (!ASSERT_OK(err, "lookup test_result"))
-+		return;
-+
-+	ASSERT_MEMEQ(&map_value, &test_payload, TEST_PAYLOAD_LEN,
-+		     "test_result map contains test payload");
-+}
-+
-+void test_xdp_context_veth(void)
- {
- 	LIBBPF_OPTS(bpf_tc_hook, tc_hook, .attach_point = BPF_TC_INGRESS);
- 	LIBBPF_OPTS(bpf_tc_opts, tc_opts, .handle = 1, .priority = 1);
- 	struct netns_obj *rx_ns = NULL, *tx_ns = NULL;
--	struct bpf_program *tc_prog, *xdp_prog;
- 	struct test_xdp_meta *skel = NULL;
- 	struct nstoken *nstoken = NULL;
--	int rx_ifindex;
-+	int rx_ifindex, tx_ifindex;
- 	int ret;
- 
- 	tx_ns = netns_new(TX_NETNS, false);
-@@ -138,7 +195,11 @@ void test_xdp_context_functional(void)
- 	if (!ASSERT_OK_PTR(nstoken, "setns rx_ns"))
- 		goto close;
- 
--	SYS(close, "ip addr add " RX_ADDR "/24 dev " RX_NAME);
-+	/* By default, Linux sends IPv6 multicast listener reports which
-+	 * interfere with this test. Set the IFF_NOARP flag to ensure
-+	 * silence on the interface.
-+	 */
-+	SYS(close, "ip link set dev " RX_NAME " arp off");
- 	SYS(close, "ip link set dev " RX_NAME " up");
- 
- 	skel = test_xdp_meta__open_and_load();
-@@ -154,21 +215,12 @@ void test_xdp_context_functional(void)
- 	if (!ASSERT_OK(ret, "bpf_tc_hook_create"))
- 		goto close;
- 
--	tc_prog = bpf_object__find_program_by_name(skel->obj, "ing_cls");
--	if (!ASSERT_OK_PTR(tc_prog, "open ing_cls prog"))
--		goto close;
--
--	tc_opts.prog_fd = bpf_program__fd(tc_prog);
-+	tc_opts.prog_fd = bpf_program__fd(skel->progs.ing_cls);
- 	ret = bpf_tc_attach(&tc_hook, &tc_opts);
- 	if (!ASSERT_OK(ret, "bpf_tc_attach"))
- 		goto close;
- 
--	xdp_prog = bpf_object__find_program_by_name(skel->obj, "ing_xdp");
--	if (!ASSERT_OK_PTR(xdp_prog, "open ing_xdp prog"))
--		goto close;
--
--	ret = bpf_xdp_attach(rx_ifindex,
--			     bpf_program__fd(xdp_prog),
-+	ret = bpf_xdp_attach(rx_ifindex, bpf_program__fd(skel->progs.ing_xdp),
- 			     0, NULL);
- 	if (!ASSERT_GE(ret, 0, "bpf_xdp_attach"))
- 		goto close;
-@@ -179,9 +231,18 @@ void test_xdp_context_functional(void)
- 	if (!ASSERT_OK_PTR(nstoken, "setns tx_ns"))
- 		goto close;
- 
--	SYS(close, "ip addr add " TX_ADDR "/24 dev " TX_NAME);
-+	SYS(close, "ip link set dev " TX_NAME " arp off");
- 	SYS(close, "ip link set dev " TX_NAME " up");
--	ASSERT_OK(SYS_NOFAIL("ping -c 1 " RX_ADDR), "ping");
-+
-+	tx_ifindex = if_nametoindex(TX_NAME);
-+	if (!ASSERT_GE(tx_ifindex, 0, "if_nametoindex tx"))
-+		goto close;
-+
-+	ret = send_test_packet(tx_ifindex);
-+	if (!ASSERT_OK(ret, "send_test_packet"))
-+		goto close;
-+
-+	assert_test_result(skel);
- 
- close:
- 	close_netns(nstoken);
-diff --git a/tools/testing/selftests/bpf/progs/test_xdp_meta.c b/tools/testing/selftests/bpf/progs/test_xdp_meta.c
-index fe2d71ae0e71..56a83307b483 100644
---- a/tools/testing/selftests/bpf/progs/test_xdp_meta.c
-+++ b/tools/testing/selftests/bpf/progs/test_xdp_meta.c
-@@ -4,49 +4,57 @@
- 
- #include <bpf/bpf_helpers.h>
- 
--#define __round_mask(x, y) ((__typeof__(x))((y) - 1))
--#define round_up(x, y) ((((x) - 1) | __round_mask(x, y)) + 1)
--#define ctx_ptr(ctx, mem) (void *)(unsigned long)ctx->mem
-+#define META_SIZE 32
-+
-+/* Demonstrates how metadata can be passed from an XDP program to a TC program
-+ * using bpf_xdp_adjust_meta.
-+ * For the sake of testing the metadata support in drivers, the XDP program uses
-+ * a fixed-size payload after the Ethernet header as metadata. The TC program
-+ * copies the metadata it receives into a map so it can be checked from
-+ * userspace.
-+ */
-+
-+struct {
-+	__uint(type, BPF_MAP_TYPE_ARRAY);
-+	__uint(max_entries, 1);
-+	__type(key, __u32);
-+	__uint(value_size, META_SIZE);
-+} test_result SEC(".maps");
- 
- SEC("tc")
- int ing_cls(struct __sk_buff *ctx)
- {
--	__u8 *data, *data_meta, *data_end;
--	__u32 diff = 0;
-+	void *data_meta = (void *)(unsigned long)ctx->data_meta;
-+	void *data = (void *)(unsigned long)ctx->data;
- 
--	data_meta = ctx_ptr(ctx, data_meta);
--	data_end  = ctx_ptr(ctx, data_end);
--	data      = ctx_ptr(ctx, data);
--
--	if (data + ETH_ALEN > data_end ||
--	    data_meta + round_up(ETH_ALEN, 4) > data)
-+	if (data_meta + META_SIZE > data)
- 		return TC_ACT_SHOT;
- 
--	diff |= ((__u32 *)data_meta)[0] ^ ((__u32 *)data)[0];
--	diff |= ((__u16 *)data_meta)[2] ^ ((__u16 *)data)[2];
-+	int key = 0;
-+
-+	bpf_map_update_elem(&test_result, &key, data_meta, BPF_ANY);
- 
--	return diff ? TC_ACT_SHOT : TC_ACT_OK;
-+	return TC_ACT_SHOT;
- }
- 
- SEC("xdp")
- int ing_xdp(struct xdp_md *ctx)
- {
--	__u8 *data, *data_meta, *data_end;
--	int ret;
--
--	ret = bpf_xdp_adjust_meta(ctx, -round_up(ETH_ALEN, 4));
-+	int ret = bpf_xdp_adjust_meta(ctx, -META_SIZE);
- 	if (ret < 0)
- 		return XDP_DROP;
- 
--	data_meta = ctx_ptr(ctx, data_meta);
--	data_end  = ctx_ptr(ctx, data_end);
--	data      = ctx_ptr(ctx, data);
-+	void *data_meta = (void *)(unsigned long)ctx->data_meta;
-+	void *data = (void *)(unsigned long)ctx->data;
-+	void *data_end = (void *)(unsigned long)ctx->data_end;
- 
--	if (data + ETH_ALEN > data_end ||
--	    data_meta + round_up(ETH_ALEN, 4) > data)
-+	void *payload = data + sizeof(struct ethhdr);
-+
-+	if (data_meta + META_SIZE > data || payload + META_SIZE > data_end)
- 		return XDP_DROP;
- 
--	__builtin_memcpy(data_meta, data, ETH_ALEN);
-+	__builtin_memcpy(data_meta, payload, META_SIZE);
-+
- 	return XDP_PASS;
- }
- 
--- 
-2.43.0
+> +// from Rust module.
+> +unsafe impl Sync for RacyKernelParam {}
+> +
+> +/// Types that can be used for module parameters.
+> +///
+> +/// Note that displaying the type in `sysfs` will fail if
+> +/// [`Display`](core::fmt::Display) implementation would write more =
+than
 
+nit: perhaps `implementation writes more than`? Although it=E2=80=99d be =
+great if a
+native speaker could chime in on this one.
+
+> +/// [`PAGE_SIZE`] - 1 bytes.
+> +///
+> +/// [`PAGE_SIZE`]: `bindings::PAGE_SIZE`
+> +pub trait ModuleParam: Sized {
+> +    /// The [`ModuleParam`] will be used by the kernel module through =
+this type.
+> +    ///
+> +    /// This may differ from `Self` if, for example, `Self` needs to =
+track
+> +    /// ownership without exposing it or allocate extra space for =
+other possible
+> +    /// parameter values.
+
+I don=E2=80=99t understand what=E2=80=99s being said here. e.g.: what =
+does =E2=80=9CSelf needs to track
+ownership without exposing it=E2=80=9D mean? Can you expand on this?
+
+Also this is pub. It should perhaps also be sealed?
+
+
+> +    // This is required to support string parameters in the future.
+> +    type Value: ?Sized;
+
+Why? Can you also expand on this a tad further?
+
+> +
+> +    /// Parse a parameter argument into the parameter value.
+> +    ///
+> +    /// `Err(_)` should be returned when parsing of the argument =
+fails.
+> +    ///
+> +    /// Parameters passed at boot time will be set before [`kmalloc`] =
+is
+> +    /// available (even if the module is loaded at a later time). =
+However, in
+> +    /// this case, the argument buffer will be valid for the entire =
+lifetime of
+> +    /// the kernel. So implementations of this method which need to =
+allocate
+> +    /// should first check that the allocator is available (with
+> +    /// [`crate::bindings::slab_is_available`]) and when it is not =
+available
+> +    /// provide an alternative implementation which doesn't allocate. =
+In cases
+> +    /// where the allocator is not available it is safe to save =
+references to
+> +    /// `arg` in `Self`, but in other cases a copy should be made.
+> +    ///
+> +    /// [`kmalloc`]: srctree/include/linux/slab.h
+> +    fn try_from_param_arg(arg: &'static [u8]) -> Result<Self>;
+> +}
+> +
+> +/// Set the module parameter from a string.
+> +///
+> +/// Used to set the parameter value at kernel initialization, when =
+loading
+> +/// the module or when set through `sysfs`.
+> +///
+> +/// `param.arg` is a pointer to `*mut T` as set up by the [`module!`]
+> +/// macro.
+
+Perhaps the above should also be an invariant?
+
+> +///
+> +/// See `struct kernel_param_ops.set`.
+> +///
+> +/// # Safety
+> +///
+> +/// If `val` is non-null then it must point to a valid =
+null-terminated
+> +/// string. The `arg` field of `param` must be an instance of `T`.
+> +///
+> +/// # Invariants
+> +///
+> +/// Currently, we only support read-only parameters that are not =
+readable
+> +/// from `sysfs`. Thus, this function is only called at kernel
+> +/// initialization time, or at module load time, and we have =
+exclusive
+> +/// access to the parameter for the duration of the function.
+> +///
+> +/// [`module!`]: macros::module
+> +unsafe extern "C" fn set_param<T>(
+> +    val: *const kernel::ffi::c_char,
+> +    param: *const crate::bindings::kernel_param,
+> +) -> core::ffi::c_int
+> +where
+> +    T: ModuleParam,
+> +{
+> +    // NOTE: If we start supporting arguments without values, val =
+_is_ allowed
+> +    // to be null here.
+> +    if val.is_null() {
+> +        // TODO: Use pr_warn_once available.
+> +        crate::pr_warn!("Null pointer passed to =
+`module_param::set_param`");
+> +        return crate::error::code::EINVAL.to_errno();
+> +    }
+> +
+> +    // SAFETY: By function safety requirement, val is non-null and
+> +    // null-terminated. By C API contract, `val` is live and valid =
+for reads
+> +    // for the duration of this function.
+> +    let arg =3D unsafe { CStr::from_char_ptr(val).as_bytes() };
+> +
+> +    crate::error::from_result(|| {
+> +        let new_value =3D T::try_from_param_arg(arg)?;
+> +
+> +        // SAFETY: `param` is guaranteed to be valid by C API =
+contract
+> +        // and `arg` is guaranteed to point to an instance of `T`.
+> +        let old_value =3D unsafe { (*param).__bindgen_anon_1.arg as =
+*mut T };
+> +
+> +        // SAFETY: `old_value` is valid for writes, as we have =
+exclusive
+> +        // access. `old_value` is pointing to an initialized static, =
+and
+> +        // so it is properly initialized.
+> +        unsafe { core::ptr::replace(old_value, new_value) };
+> +        Ok(0)
+> +    })
+> +}
+> +
+> +/// Drop the parameter.
+> +///
+> +/// Called when unloading a module.
+> +///
+> +/// # Safety
+> +///
+> +/// The `arg` field of `param` must be an initialized instance of =
+`T`.
+> +unsafe extern "C" fn free<T>(arg: *mut core::ffi::c_void)
+> +where
+> +    T: ModuleParam,
+> +{
+> +    // SAFETY: By function safety requirement, `arg` is an =
+initialized
+> +    // instance of `T`. By C API contract, `arg` will not be used =
+after
+> +    // this function returns.
+> +    unsafe { core::ptr::drop_in_place(arg as *mut T) };
+> +}
+> +
+> +macro_rules! impl_int_module_param {
+> +    ($ty:ident) =3D> {
+> +        impl ModuleParam for $ty {
+> +            type Value =3D $ty;
+> +
+> +            fn try_from_param_arg(arg: &'static [u8]) -> Result<Self> =
+{
+> +                let bstr =3D BStr::from_bytes(arg);
+> +                <$ty as =
+crate::str::parse_int::ParseInt>::from_str(bstr)
+> +            }
+> +        }
+> +    };
+> +}
+> +
+> +impl_int_module_param!(i8);
+> +impl_int_module_param!(u8);
+> +impl_int_module_param!(i16);
+> +impl_int_module_param!(u16);
+> +impl_int_module_param!(i32);
+> +impl_int_module_param!(u32);
+> +impl_int_module_param!(i64);
+> +impl_int_module_param!(u64);
+> +impl_int_module_param!(isize);
+> +impl_int_module_param!(usize);
+> +
+> +/// A wrapper for kernel parameters.
+> +///
+> +/// This type is instantiated by the [`module!`] macro when module =
+parameters are
+> +/// defined. You should never need to instantiate this type directly.
+> +#[repr(transparent)]
+> +pub struct ModuleParamAccess<T> {
+> +    data: core::cell::UnsafeCell<T>,
+> +}
+> +
+> +// SAFETY: We only create shared references to the contents of this =
+container,
+> +// so if `T` is `Sync`, so is `ModuleParamAccess`.
+> +unsafe impl<T: Sync> Sync for ModuleParamAccess<T> {}
+> +
+> +impl<T> ModuleParamAccess<T> {
+> +    #[doc(hidden)]
+> +    pub const fn new(value: T) -> Self {
+
+I assume that this is pub so that the macro can find it? If so, can you =
+leave a note
+outlining this?
+
+> +        Self {
+> +            data: core::cell::UnsafeCell::new(value),
+> +        }
+> +    }
+> +
+> +    /// Get a shared reference to the parameter value.
+> +    // Note: When sysfs access to parameters are enabled, we have to =
+pass in a
+> +    // held lock guard here.
+
+What lock guard, guarding what exactly?
+
+> +    pub fn get(&self) -> &T {
+> +        // SAFETY: As we only support read only parameters with no =
+sysfs
+> +        // exposure, the kernel will not touch the parameter data =
+after module
+> +        // initialization.
+> +        unsafe { &*self.data.get() }
+> +    }
+> +
+> +    /// Get a mutable pointer to the parameter value.
+> +    pub const fn as_mut_ptr(&self) -> *mut T {
+> +        self.data.get()
+> +    }
+> +}
+> +
+> +#[doc(hidden)]
+> +#[macro_export]
+> +/// Generate a static =
+[`kernel_param_ops`](srctree/include/linux/moduleparam.h) struct.
+> +///
+> +/// # Examples
+> +///
+> +/// ```ignore
+> +/// make_param_ops!(
+> +///     /// Documentation for new param ops.
+> +///     PARAM_OPS_MYTYPE, // Name for the static.
+> +///     MyType // A type which implements [`ModuleParam`].
+> +/// );
+> +/// ```
+> +macro_rules! make_param_ops {
+> +    ($ops:ident, $ty:ty) =3D> {
+> +        ///
+> +        /// Static =
+[`kernel_param_ops`](srctree/include/linux/moduleparam.h)
+> +        /// struct generated by `make_param_ops`
+> +        #[doc =3D concat!("for [`", stringify!($ty), "`].")]
+> +        pub static $ops: $crate::bindings::kernel_param_ops =3D =
+$crate::bindings::kernel_param_ops {
+> +            flags: 0,
+> +            set: Some(set_param::<$ty>),
+> +            get: None,
+> +            free: Some(free::<$ty>),
+> +        };
+> +    };
+> +}
+> +
+> +make_param_ops!(PARAM_OPS_I8, i8);
+> +make_param_ops!(PARAM_OPS_U8, u8);
+> +make_param_ops!(PARAM_OPS_I16, i16);
+> +make_param_ops!(PARAM_OPS_U16, u16);
+> +make_param_ops!(PARAM_OPS_I32, i32);
+> +make_param_ops!(PARAM_OPS_U32, u32);
+> +make_param_ops!(PARAM_OPS_I64, i64);
+> +make_param_ops!(PARAM_OPS_U64, u64);
+> +make_param_ops!(PARAM_OPS_ISIZE, isize);
+> +make_param_ops!(PARAM_OPS_USIZE, usize);
+> diff --git a/rust/macros/helpers.rs b/rust/macros/helpers.rs
+> index 563dcd2b7ace5..ffc9f0cccddc8 100644
+> --- a/rust/macros/helpers.rs
+> +++ b/rust/macros/helpers.rs
+> @@ -10,6 +10,17 @@ pub(crate) fn try_ident(it: &mut =
+token_stream::IntoIter) -> Option<String> {
+>     }
+> }
+>=20
+> +pub(crate) fn try_sign(it: &mut token_stream::IntoIter) -> =
+Option<char> {
+> +    let peek =3D it.clone().next();
+> +    match peek {
+> +        Some(TokenTree::Punct(punct)) if punct.as_char() =3D=3D '-' =
+=3D> {
+> +            let _ =3D it.next();
+> +            Some(punct.as_char())
+> +        }
+> +        _ =3D> None,
+> +    }
+> +}
+> +
+> pub(crate) fn try_literal(it: &mut token_stream::IntoIter) -> =
+Option<String> {
+>     if let Some(TokenTree::Literal(literal)) =3D it.next() {
+>         Some(literal.to_string())
+> @@ -107,6 +118,20 @@ pub(crate) struct Generics {
+>     pub(crate) ty_generics: Vec<TokenTree>,
+> }
+>=20
+> +/// Parse a token stream of the form `expected_name: "value",` and =
+return the
+> +/// string in the position of "value".
+> +///
+> +/// # Panics
+> +///
+> +/// - On parse error.
+> +pub(crate) fn expect_string_field(it: &mut token_stream::IntoIter, =
+expected_name: &str) -> String {
+> +    assert_eq!(expect_ident(it), expected_name);
+> +    assert_eq!(expect_punct(it), ':');
+> +    let string =3D expect_string(it);
+> +    assert_eq!(expect_punct(it), ',');
+> +    string
+> +}
+> +
+> /// Parses the given `TokenStream` into `Generics` and the rest.
+> ///
+> /// The generics are not present in the rest, but a where clause might =
+remain.
+> diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
+> index d61bc6a56425e..2778292f8cee1 100644
+> --- a/rust/macros/lib.rs
+> +++ b/rust/macros/lib.rs
+> @@ -24,6 +24,30 @@
+> /// The `type` argument should be a type which implements the =
+[`Module`]
+> /// trait. Also accepts various forms of kernel metadata.
+> ///
+> +/// The `params` field describe module parameters. Each entry has the =
+form
+> +///
+> +/// ```ignore
+> +/// parameter_name: type {
+> +///     default: default_value,
+> +///     description: "Description",
+> +/// }
+> +/// ```
+> +///
+> +/// `type` may be one of
+> +///
+> +/// - [`i8`]
+> +/// - [`u8`]
+> +/// - [`i8`]
+> +/// - [`u8`]
+> +/// - [`i16`]
+> +/// - [`u16`]
+> +/// - [`i32`]
+> +/// - [`u32`]
+> +/// - [`i64`]
+> +/// - [`u64`]
+> +/// - [`isize`]
+> +/// - [`usize`]
+> +///
+> /// C header: =
+[`include/linux/moduleparam.h`](srctree/include/linux/moduleparam.h)
+> ///
+> /// [`Module`]: ../kernel/trait.Module.html
+> @@ -40,6 +64,12 @@
+> ///     description: "My very own kernel module!",
+> ///     license: "GPL",
+> ///     alias: ["alternate_module_name"],
+> +///     params: {
+> +///         my_parameter: i64 {
+> +///             default: 1,
+> +///             description: "This parameter has a default of 1",
+> +///         },
+> +///     },
+> /// }
+> ///
+> /// struct MyModule(i32);
+> @@ -48,6 +78,7 @@
+> ///     fn init(_module: &'static ThisModule) -> Result<Self> {
+> ///         let foo: i32 =3D 42;
+> ///         pr_info!("I contain:  {}\n", foo);
+> +///         pr_info!("i32 param is:  {}\n", =
+module_parameters::my_parameter.read());
+> ///         Ok(Self(foo))
+> ///     }
+> /// }
+> diff --git a/rust/macros/module.rs b/rust/macros/module.rs
+> index cdf94f4982dfc..e6af3ae5fe80e 100644
+> --- a/rust/macros/module.rs
+> +++ b/rust/macros/module.rs
+> @@ -26,6 +26,7 @@ struct ModInfoBuilder<'a> {
+>     module: &'a str,
+>     counter: usize,
+>     buffer: String,
+> +    param_buffer: String,
+> }
+>=20
+> impl<'a> ModInfoBuilder<'a> {
+> @@ -34,10 +35,11 @@ fn new(module: &'a str) -> Self {
+>             module,
+>             counter: 0,
+>             buffer: String::new(),
+> +            param_buffer: String::new(),
+>         }
+>     }
+>=20
+> -    fn emit_base(&mut self, field: &str, content: &str, builtin: =
+bool) {
+> +    fn emit_base(&mut self, field: &str, content: &str, builtin: =
+bool, param: bool) {
+>         let string =3D if builtin {
+>             // Built-in modules prefix their modinfo strings by =
+`module.`.
+>             format!(
+> @@ -51,8 +53,14 @@ fn emit_base(&mut self, field: &str, content: &str, =
+builtin: bool) {
+>             format!("{field}=3D{content}\0", field =3D field, content =
+=3D content)
+>         };
+>=20
+> +        let buffer =3D if param {
+> +            &mut self.param_buffer
+> +        } else {
+> +            &mut self.buffer
+> +        };
+> +
+>         write!(
+> -            &mut self.buffer,
+> +            buffer,
+>             "
+>                 {cfg}
+>                 #[doc(hidden)]
+> @@ -75,20 +83,116 @@ fn emit_base(&mut self, field: &str, content: =
+&str, builtin: bool) {
+>         self.counter +=3D 1;
+>     }
+>=20
+> -    fn emit_only_builtin(&mut self, field: &str, content: &str) {
+> -        self.emit_base(field, content, true)
+> +    fn emit_only_builtin(&mut self, field: &str, content: &str, =
+param: bool) {
+> +        self.emit_base(field, content, true, param)
+>     }
+>=20
+> -    fn emit_only_loadable(&mut self, field: &str, content: &str) {
+> -        self.emit_base(field, content, false)
+> +    fn emit_only_loadable(&mut self, field: &str, content: &str, =
+param: bool) {
+> +        self.emit_base(field, content, false, param)
+>     }
+>=20
+>     fn emit(&mut self, field: &str, content: &str) {
+> -        self.emit_only_builtin(field, content);
+> -        self.emit_only_loadable(field, content);
+> +        self.emit_internal(field, content, false);
+> +    }
+> +
+> +    fn emit_internal(&mut self, field: &str, content: &str, param: =
+bool) {
+> +        self.emit_only_builtin(field, content, param);
+> +        self.emit_only_loadable(field, content, param);
+> +    }
+> +
+> +    fn emit_param(&mut self, field: &str, param: &str, content: &str) =
+{
+> +        let content =3D format!("{param}:{content}", param =3D param, =
+content =3D content);
+> +        self.emit_internal(field, &content, true);
+> +    }
+> +
+> +    fn emit_params(&mut self, info: &ModuleInfo) {
+> +        let Some(params) =3D &info.params else {
+> +            return;
+> +        };
+
+Shouldn=E2=80=99t this panic? A call to emit_params() where there=E2=80=99=
+s nothing to emit doesn=E2=80=99t
+look right at a first glance.
+
+> +
+> +        for param in params {
+> +            let ops =3D param_ops_path(&param.ptype);
+> +
+> +            // Note: The spelling of these fields is dictated by the =
+user space
+> +            // tool `modinfo`.
+> +            self.emit_param("parmtype", &param.name, &param.ptype);
+> +            self.emit_param("parm", &param.name, &param.description);
+> +
+> +            write!(
+> +                self.param_buffer,
+> +                "
+> +                    pub(crate) static {param_name}:
+> +                        =
+::kernel::module_param::ModuleParamAccess<{param_type}> =3D
+> +                            =
+::kernel::module_param::ModuleParamAccess::new({param_default});
+> +
+> +                    #[link_section =3D \"__param\"]
+> +                    #[used]
+> +                    static __{module_name}_{param_name}_struct:
+> +                        ::kernel::module_param::RacyKernelParam =3D
+> +                        =
+::kernel::module_param::RacyKernelParam(::kernel::bindings::kernel_param =
+{{
+> +                            name: if cfg!(MODULE) {{
+> +                                =
+::kernel::c_str!(\"{param_name}\").as_bytes_with_nul()
+> +                            }} else {{
+> +                                =
+::kernel::c_str!(\"{module_name}.{param_name}\").as_bytes_with_nul()
+> +                            }}.as_ptr(),
+> +                            // SAFETY: `__this_module` is constructed =
+by the kernel at load time
+> +                            // and will not be freed until the module =
+is unloaded.
+> +                            #[cfg(MODULE)]
+> +                            mod_: unsafe {{
+> +                                (&::kernel::bindings::__this_module
+> +                                    as *const =
+::kernel::bindings::module)
+> +                                    .cast_mut()
+> +                            }},
+> +                            #[cfg(not(MODULE))]
+> +                            mod_: ::core::ptr::null_mut(),
+> +                            ops: &{ops} as *const =
+::kernel::bindings::kernel_param_ops,
+> +                            perm: 0, // Will not appear in sysfs
+> +                            level: -1,
+> +                            flags: 0,
+> +                            __bindgen_anon_1:
+> +                                =
+::kernel::bindings::kernel_param__bindgen_ty_1 {{
+> +                                    arg: =
+{param_name}.as_mut_ptr().cast()
+> +                                }},
+> +                        }});
+> +                ",
+> +                module_name =3D info.name,
+> +                param_type =3D param.ptype,
+> +                param_default =3D param.default,
+> +                param_name =3D param.name,
+> +                ops =3D ops,
+> +            )
+> +            .unwrap();
+> +        }
+> +    }
+> +}
+> +
+> +fn param_ops_path(param_type: &str) -> &'static str {
+> +    match param_type {
+> +        "i8" =3D> "::kernel::module_param::PARAM_OPS_I8",
+> +        "u8" =3D> "::kernel::module_param::PARAM_OPS_U8",
+> +        "i16" =3D> "::kernel::module_param::PARAM_OPS_I16",
+> +        "u16" =3D> "::kernel::module_param::PARAM_OPS_U16",
+> +        "i32" =3D> "::kernel::module_param::PARAM_OPS_I32",
+> +        "u32" =3D> "::kernel::module_param::PARAM_OPS_U32",
+> +        "i64" =3D> "::kernel::module_param::PARAM_OPS_I64",
+> +        "u64" =3D> "::kernel::module_param::PARAM_OPS_U64",
+> +        "isize" =3D> "::kernel::module_param::PARAM_OPS_ISIZE",
+> +        "usize" =3D> "::kernel::module_param::PARAM_OPS_USIZE",
+> +        t =3D> panic!("Unsupported parameter type {}", t),
+>     }
+> }
+>=20
+> +fn expect_param_default(param_it: &mut token_stream::IntoIter) -> =
+String {
+> +    assert_eq!(expect_ident(param_it), "default");
+> +    assert_eq!(expect_punct(param_it), ':');
+> +    let sign =3D try_sign(param_it);
+> +    let default =3D try_literal(param_it).expect("Expected default =
+param value");
+> +    assert_eq!(expect_punct(param_it), ',');
+> +    let mut value =3D sign.map(String::from).unwrap_or_default();
+> +    value.push_str(&default);
+> +    value
+> +}
+> +
+> #[derive(Debug, Default)]
+> struct ModuleInfo {
+>     type_: String,
+> @@ -98,6 +202,50 @@ struct ModuleInfo {
+>     description: Option<String>,
+>     alias: Option<Vec<String>>,
+>     firmware: Option<Vec<String>>,
+> +    params: Option<Vec<Parameter>>,
+> +}
+> +
+> +#[derive(Debug)]
+> +struct Parameter {
+> +    name: String,
+> +    ptype: String,
+> +    default: String,
+> +    description: String,
+> +}
+> +
+> +fn expect_params(it: &mut token_stream::IntoIter) -> Vec<Parameter> {
+> +    let params =3D expect_group(it);
+> +    assert_eq!(params.delimiter(), Delimiter::Brace);
+> +    let mut it =3D params.stream().into_iter();
+> +    let mut parsed =3D Vec::new();
+> +
+> +    loop {
+> +        let param_name =3D match it.next() {
+> +            Some(TokenTree::Ident(ident)) =3D> ident.to_string(),
+> +            Some(_) =3D> panic!("Expected Ident or end"),
+> +            None =3D> break,
+> +        };
+> +
+> +        assert_eq!(expect_punct(&mut it), ':');
+> +        let param_type =3D expect_ident(&mut it);
+> +        let group =3D expect_group(&mut it);
+> +        assert_eq!(group.delimiter(), Delimiter::Brace);
+> +        assert_eq!(expect_punct(&mut it), ',');
+> +
+> +        let mut param_it =3D group.stream().into_iter();
+> +        let param_default =3D expect_param_default(&mut param_it);
+> +        let param_description =3D expect_string_field(&mut param_it, =
+"description");
+> +        expect_end(&mut param_it);
+> +
+> +        parsed.push(Parameter {
+> +            name: param_name,
+> +            ptype: param_type,
+> +            default: param_default,
+> +            description: param_description,
+> +        })
+> +    }
+> +
+> +    parsed
+> }
+>=20
+> impl ModuleInfo {
+> @@ -112,6 +260,7 @@ fn parse(it: &mut token_stream::IntoIter) -> Self =
+{
+>             "license",
+>             "alias",
+>             "firmware",
+> +            "params",
+>         ];
+>         const REQUIRED_KEYS: &[&str] =3D &["type", "name", "license"];
+>         let mut seen_keys =3D Vec::new();
+> @@ -140,6 +289,7 @@ fn parse(it: &mut token_stream::IntoIter) -> Self =
+{
+>                 "license" =3D> info.license =3D =
+expect_string_ascii(it),
+>                 "alias" =3D> info.alias =3D =
+Some(expect_string_array(it)),
+>                 "firmware" =3D> info.firmware =3D =
+Some(expect_string_array(it)),
+> +                "params" =3D> info.params =3D =
+Some(expect_params(it)),
+>                 _ =3D> panic!(
+>                     "Unknown key \"{}\". Valid keys are: {:?}.",
+>                     key, EXPECTED_KEYS
+> @@ -183,28 +333,30 @@ pub(crate) fn module(ts: TokenStream) -> =
+TokenStream {
+>     let info =3D ModuleInfo::parse(&mut it);
+>=20
+>     let mut modinfo =3D ModInfoBuilder::new(info.name.as_ref());
+> -    if let Some(author) =3D info.author {
+> -        modinfo.emit("author", &author);
+> +    if let Some(author) =3D &info.author {
+> +        modinfo.emit("author", author);
+>     }
+> -    if let Some(description) =3D info.description {
+> -        modinfo.emit("description", &description);
+> +    if let Some(description) =3D &info.description {
+> +        modinfo.emit("description", description);
+>     }
+>     modinfo.emit("license", &info.license);
+> -    if let Some(aliases) =3D info.alias {
+> +    if let Some(aliases) =3D &info.alias {
+>         for alias in aliases {
+> -            modinfo.emit("alias", &alias);
+> +            modinfo.emit("alias", alias);
+>         }
+>     }
+> -    if let Some(firmware) =3D info.firmware {
+> +    if let Some(firmware) =3D &info.firmware {
+>         for fw in firmware {
+> -            modinfo.emit("firmware", &fw);
+> +            modinfo.emit("firmware", fw);
+>         }
+>     }
+
+These seem a bit unrelated?
+
+>=20
+>     // Built-in modules also export the `file` modinfo string.
+>     let file =3D
+>         std::env::var("RUST_MODFILE").expect("Unable to fetch =
+RUST_MODFILE environmental variable");
+> -    modinfo.emit_only_builtin("file", &file);
+> +    modinfo.emit_only_builtin("file", &file, false);
+> +
+> +    modinfo.emit_params(&info);
+>=20
+>     format!(
+>         "
+> @@ -362,14 +514,17 @@ unsafe fn __exit() {{
+>                             __MOD.assume_init_drop();
+>                         }}
+>                     }}
+> -
+>                     {modinfo}
+>                 }}
+>             }}
+> +            mod module_parameters {{
+> +                {params}
+> +            }}
+>         ",
+>         type_ =3D info.type_,
+>         name =3D info.name,
+>         modinfo =3D modinfo.buffer,
+> +        params =3D modinfo.param_buffer,
+>         initcall_section =3D ".initcall6.init"
+>     )
+>     .parse()
+> diff --git a/samples/rust/rust_minimal.rs =
+b/samples/rust/rust_minimal.rs
+> index 4aaf117bf8e3c..d999a77c6eb9a 100644
+
+I wonder if the changes to rust_minimal.rs should be a separate patch.
+
+> --- a/samples/rust/rust_minimal.rs
+> +++ b/samples/rust/rust_minimal.rs
+> @@ -10,6 +10,12 @@
+>     author: "Rust for Linux Contributors",
+>     description: "Rust minimal sample",
+>     license: "GPL",
+> +    params: {
+> +        test_parameter: i64 {
+> +            default: 1,
+> +            description: "This parameter has a default of 1",
+> +        },
+> +    },
+> }
+>=20
+> struct RustMinimal {
+> @@ -20,6 +26,10 @@ impl kernel::Module for RustMinimal {
+>     fn init(_module: &'static ThisModule) -> Result<Self> {
+>         pr_info!("Rust minimal sample (init)\n");
+>         pr_info!("Am I built-in? {}\n", !cfg!(MODULE));
+> +        pr_info!(
+> +            "My parameter: {}\n",
+> +            *module_parameters::test_parameter.get()
+> +        );
+>=20
+>         let mut numbers =3D KVec::new();
+>         numbers.push(72, GFP_KERNEL)?;
+>=20
+> --=20
+> 2.47.0
+>=20
+>=20
+>=20
+
+=E2=80=94 Daniel=
