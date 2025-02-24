@@ -1,91 +1,272 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1474B26136D;
-	Mon, 24 Feb 2025 18:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2CF26659D
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 18:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740423104; cv=none; b=dnvXMtoJ7nQdzs5zH3aU74h8nd7svvMHBh44EKjTDVx+fVc26pQlFcNDdNoyZINEAE3FXR4UC4MHh4mrkxAIRD7jKswlZf+a7m9cdvR6K9qnQ3rbrwUCtZy/zfhtkBdVOtJABqUF685CqIYJqvg+YoyGf/6C5Lup7SLJuT/YzRI=
+	t=1740423110; cv=none; b=sVWeUCZrV6s98ZKrywHZVV57SiOUO0NwwpvSg3r7cPKwLdCl4E2lH34yNQV043E19YFB7ZZ2+Xl0DeaLVaEyWxgylrbr1aJuFmu45n8SlcmgvNpXyG5H8wxRuZS+oEIqesKjAhrGUVrCqJcllyMNdrtEKBrpoccnjGff8ATXoWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740423104; c=relaxed/simple;
-	bh=LdrQZqrp3xjhBQGUZB3gje9pLhxMsPsOYHdOiNeCf5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZAHlv4VefUJIisgwkikS9O2WCf/u3Ln5iLLg1WyzzVrvmhQaqSh3o5Iqb1CHq64VPTLkMN3AHy6ddPCTVECVa3cAZc63kRiP04nadjStKgNvZoLYMRemR+vSo2NlXzgU0XB+TTkgRieCCRRNHAH2zhHikaKnkPXh8eUCT8xPGuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ogr4hGpV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740423110; c=relaxed/simple;
+	bh=TEMGIR10WYHrpkHHdWlP0Obhht+RBjq4ihNlCJ0KvdE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=i6t1PRdkB7lpMEvcaVlJguhfaoOEWjOPFlwOXAL2DWLUAIQ3y8dhS6oli2gMWglambm2AGraUoEW5CX1xJNrCXogDo5wTqYMtB+uNV0OKF1+KCvRtQ+9r37smaNhVct5NiYmvccCgTNY0Iry8T+q83lXmg20D1DuxPfV/+h+Mj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QqF81R99; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ogr4hGpV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 625C0C4CED6;
-	Mon, 24 Feb 2025 18:51:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740423103;
-	bh=LdrQZqrp3xjhBQGUZB3gje9pLhxMsPsOYHdOiNeCf5I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ogr4hGpVVlzS+yqzsEQhi01hwxo/x0XFGs2lXu93KVPC7ln9waKrcxxXytrFJzEmA
-	 Bj29u3u4CvmQwFh3Iew2fDFRZ93g4WTyyHIgXck4JXhc5Y9SXsBh7YmhGzaEK09YmN
-	 5WCkYR5Gb9CAi/lRyqIBN2zu4Kl6JcP+a2SacjNBVZVz6z8Qzh3qwoKEDyyNynhpj1
-	 sAqTgm+iTHc8g6/nu63LHIbVMypo9UrBIqohkxtUD0/ICm4ghEa2uyfT/BmjLEfQEW
-	 qR1NT47MTGvdI7Wre2GXtBG/hdfrkaOVQCWmYSMclA2rjfNmMfIkUgoOpJ6lIOXkeM
-	 uqUy7HpUqfzHw==
-Date: Mon, 24 Feb 2025 19:51:35 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-kbuild@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC PATCH 0/4] x86/build: Get rid of vmlinux postlink step
-Message-ID: <Z7y_i-ySL68BfkgQ@gmail.com>
-References: <20250224132132.1765115-6-ardb+git@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QqF81R99"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22119b07d52so60871275ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 10:51:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740423108; x=1741027908; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qPrj4Gf1FvfcCgUu+hXAsKriyUrmM5yjH6bbIIdueC8=;
+        b=QqF81R99yb5GYdf+dfzGgXhGd/87ifx22IqTPxoLvCmpKDz+JHfDqoW+a3kEhoKZYL
+         9/bhrbT2gVvNoL4+Y1LsIEDjbI7ZWhrMFSYpw+s4sRapri1L4Hb2CScYSzITe6GmiJB3
+         tTHlqgN/92hNXDo66AdRr3qymAjPDWzYDFSqAxLrmALuwD18yZ5P0xCVHen1SPn4imhJ
+         kZpBUWWWWvDsrMA05xqM2o0+3WoT3zJT3Z6MDbjKfb94GJkjVLzK9+VOmKAc/UY3vezc
+         PhB3tmbd8zdc06q8HPticyFYupLb58kMu3wsxAT1CKrp2DOLfeNQfyMZGBnIjlHvnxq/
+         dYQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740423108; x=1741027908;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qPrj4Gf1FvfcCgUu+hXAsKriyUrmM5yjH6bbIIdueC8=;
+        b=CNqCwy4dIBs/P4N6QhOGcghrLWGJYva7qbpCWF829jlDu3Fgf4IupShB4WBAi1WVgV
+         +C63x3KUPx7PaY2Rxw1JU8SgSXA9dJLc0kSWgmMlUkzY9tD1CGgkEPsluxiI0Ln4Y8l8
+         RhcZNfQ5wwQWYhKWLK8WosubSl0s9yueT6n84HKNFmRjiuExy3O7SaOpJc/wi/GLh8uK
+         UP2FnO7aHttCYwBAGpstdUkMoJZem7dcmVolXM8JlHEpabqgqb1HcEoKzHPjLIrc4PkX
+         l2JRjKYC9ka/9lk6qwM4U9Y3QB6Es8HVGBl8l8ZqDvZe5aQ2G5Vf7zwH2ThBNX0DzIMg
+         c9cQ==
+X-Gm-Message-State: AOJu0YxCYuEXKUndO/DDzQ8s5YrHizZcgY1zDVpJ2L1cM0CwMAptFd7u
+	RJDaJQrlonpCDa4KIT6L6c/uNuudCoqU2y0DUW2ZN70fj2ZoKINDzMMPAq2SmcM7+dnllLQouHS
+	fZhOW9Z0Wsb5IdP9vj0zBULf2gjTLEgMQWMz3AXP6ERPWEArujsajLXKTW+i7JfKNHt5jeFwe7d
+	KpBBwcpCLJdbAQY/UzcrX135OvsWQnLpKcBxGBB995
+X-Google-Smtp-Source: AGHT+IEWIfVKVjzx5FeuvwVoXI6nrOx+HwUn9LBeZdP29jlOE6Qy5XtsULV48UA+xF/qJf1msm5mIFwAcYc=
+X-Received: from pfgu32.prod.google.com ([2002:a05:6a00:9a0:b0:730:50c0:136d])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:a8f:b0:730:794e:7aca
+ with SMTP id d2e1a72fcca58-7347918d073mr467287b3a.16.1740423108186; Mon, 24
+ Feb 2025 10:51:48 -0800 (PST)
+Date: Mon, 24 Feb 2025 10:42:51 -0800
+In-Reply-To: <20250224184742.4144931-1-ctshao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250224132132.1765115-6-ardb+git@google.com>
+Mime-Version: 1.0
+References: <20250224184742.4144931-1-ctshao@google.com>
+X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
+Message-ID: <20250224184742.4144931-5-ctshao@google.com>
+Subject: [PATCH v7 4/4] perf lock: Report owner stack in usermode
+From: Chun-Tse Shao <ctshao@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, nick.forrington@arm.com, 
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+This patch parses `owner_lock_stat` into a RB tree, enabling ordered
+reporting of owner lock statistics with stack traces. It also updates
+the documentation for the `-o` option in contention mode, decouples `-o`
+from `-t`, and issues a warning to inform users about the new behavior
+of `-ov`.
 
-* Ard Biesheuvel <ardb+git@google.com> wrote:
+Example output:
+  $ sudo ~/linux/tools/perf/perf lock con -abvo -Y mutex-spin -E3 perf bench sched pipe
+  ...
+   contended   total wait     max wait     avg wait         type   caller
 
-> From: Ard Biesheuvel <ardb@kernel.org>
-> 
-> Kbuild supports an architecture specific Makefile.postlink file that is
-> invoked for the vmlinux target after it has been built. This Makefile
-> takes 'vmlinux' (which has just been built) as the target, and mangles
-> the file and/or constructs other intermediate artifacts from it.
-> 
-> This violates the general philosophy of Make, which is based on rules
-> and dependencies, and artifacts that are rebuilt only when any of their
-> dependencies have been updated.
-> 
-> Instead, the different incarnations of vmlinux that are consumed by
-> different stages of the build should be emitted as distinct files, where
-> rules and dependencies are used to define one in terms of the other.
-> 
-> This also works around an error observed here [0], where vmlinux is
-> deleted by Make because a subsequent step that consumes it as input
-> throws an error.
-> 
-> So refactor the vmlinux shell scripts and build rules so that
-> architectures that rely on --emit-relocs to construct vmlinux with
-> static relocations preserved will get a separate vmlinux.unstripped file
-> carrying those relocations. This removes the need for an imperative
-> postlink step, given that any rules that depend on the unstripped
-> vmlinux can now simply depend on vmlinux.unstripped, rather than inject
-> a build step into Makefile.postlink
+         171      1.55 ms     20.26 us      9.06 us        mutex   pipe_read+0x57
+                          0xffffffffac6318e7  pipe_read+0x57
+                          0xffffffffac623862  vfs_read+0x332
+                          0xffffffffac62434b  ksys_read+0xbb
+                          0xfffffffface604b2  do_syscall_64+0x82
+                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
+          36    193.71 us     15.27 us      5.38 us        mutex   pipe_write+0x50
+                          0xffffffffac631ee0  pipe_write+0x50
+                          0xffffffffac6241db  vfs_write+0x3bb
+                          0xffffffffac6244ab  ksys_write+0xbb
+                          0xfffffffface604b2  do_syscall_64+0x82
+                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
+           4     51.22 us     16.47 us     12.80 us        mutex   do_epoll_wait+0x24d
+                          0xffffffffac691f0d  do_epoll_wait+0x24d
+                          0xffffffffac69249b  do_epoll_pwait.part.0+0xb
+                          0xffffffffac693ba5  __x64_sys_epoll_pwait+0x95
+                          0xfffffffface604b2  do_syscall_64+0x82
+                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
 
-Nice! Does this also result in any measurable speedup of the build, or 
-are the steps still similar?
+  === owner stack trace ===
 
-But in terms of justification for upstreaming, the reduction in 
-complexity alone makes it worth it IMO:
+           3     31.24 us     15.27 us     10.41 us        mutex   pipe_read+0x348
+                          0xffffffffac631bd8  pipe_read+0x348
+                          0xffffffffac623862  vfs_read+0x332
+                          0xffffffffac62434b  ksys_read+0xbb
+                          0xfffffffface604b2  do_syscall_64+0x82
+                          0xffffffffad00012f  entry_SYSCALL_64_after_hwframe+0x76
+  ...
 
-  19 files changed, 52 insertions(+), 87 deletions(-)
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+---
+ tools/perf/Documentation/perf-lock.txt |  5 ++-
+ tools/perf/builtin-lock.c              | 22 +++++++++-
+ tools/perf/util/bpf_lock_contention.c  | 57 ++++++++++++++++++++++++++
+ tools/perf/util/lock-contention.h      |  7 ++++
+ 4 files changed, 87 insertions(+), 4 deletions(-)
 
-Thanks,
+diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Documentation/perf-lock.txt
+index d3793054f7d3..859dc11a7372 100644
+--- a/tools/perf/Documentation/perf-lock.txt
++++ b/tools/perf/Documentation/perf-lock.txt
+@@ -179,8 +179,9 @@ CONTENTION OPTIONS
+ 
+ -o::
+ --lock-owner::
+-	Show lock contention stat by owners.  Implies --threads and
+-	requires --use-bpf.
++	Show lock contention stat by owners. This option can be combined with -t,
++	which shows owner's per thread lock stats, or -v, which shows owner's
++	stacktrace. Requires --use-bpf.
+ 
+ -Y::
+ --type-filter=<value>::
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 9bebc186286f..05e7bc30488a 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -1817,6 +1817,22 @@ static void print_contention_result(struct lock_contention *con)
+ 			break;
+ 	}
+ 
++	if (con->owner && con->save_callstack && verbose > 0) {
++		struct rb_root root = RB_ROOT;
++
++		if (symbol_conf.field_sep)
++			fprintf(lock_output, "# owner stack trace:\n");
++		else
++			fprintf(lock_output, "\n=== owner stack trace ===\n\n");
++		while ((st = pop_owner_stack_trace(con)))
++			insert_to(&root, st, compare);
++
++		while ((st = pop_from(&root))) {
++			print_lock_stat(con, st);
++			free(st);
++		}
++	}
++
+ 	if (print_nr_entries) {
+ 		/* update the total/bad stats */
+ 		while ((st = pop_from_result())) {
+@@ -1962,8 +1978,10 @@ static int check_lock_contention_options(const struct option *options,
+ 		}
+ 	}
+ 
+-	if (show_lock_owner)
+-		show_thread_stats = true;
++	if (show_lock_owner && !show_thread_stats) {
++		pr_warning("Now -o try to show owner's callstack instead of pid and comm.\n");
++		pr_warning("Please use -t option too to keep the old behavior.\n");
++	}
+ 
+ 	return 0;
+ }
+diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
+index 76542b86e83f..16f4deba69ec 100644
+--- a/tools/perf/util/bpf_lock_contention.c
++++ b/tools/perf/util/bpf_lock_contention.c
+@@ -549,6 +549,63 @@ static const char *lock_contention_get_name(struct lock_contention *con,
+ 	return name_buf;
+ }
+ 
++struct lock_stat *pop_owner_stack_trace(struct lock_contention *con)
++{
++	int stacks_fd, stat_fd;
++	u64 *stack_trace = NULL;
++	s32 stack_id;
++	struct contention_key ckey = {};
++	struct contention_data cdata = {};
++	size_t stack_size = con->max_stack * sizeof(*stack_trace);
++	struct lock_stat *st = NULL;
++
++	stacks_fd = bpf_map__fd(skel->maps.owner_stacks);
++	stat_fd = bpf_map__fd(skel->maps.owner_stat);
++	if (!stacks_fd || !stat_fd)
++		goto out_err;
++
++	stack_trace = zalloc(stack_size);
++	if (stack_trace == NULL)
++		goto out_err;
++
++	if (bpf_map_get_next_key(stacks_fd, NULL, stack_trace))
++		goto out_err;
++
++	bpf_map_lookup_elem(stacks_fd, stack_trace, &stack_id);
++	ckey.stack_id = stack_id;
++	bpf_map_lookup_elem(stat_fd, &ckey, &cdata);
++
++	st = zalloc(sizeof(struct lock_stat));
++	if (!st)
++		goto out_err;
++
++	st->name = strdup(stack_trace[0] ? lock_contention_get_name(con, NULL, stack_trace, 0) :
++					   "unknown");
++	if (!st->name)
++		goto out_err;
++
++	st->flags = cdata.flags;
++	st->nr_contended = cdata.count;
++	st->wait_time_total = cdata.total_time;
++	st->wait_time_max = cdata.max_time;
++	st->wait_time_min = cdata.min_time;
++	st->callstack = stack_trace;
++
++	if (cdata.count)
++		st->avg_wait_time = cdata.total_time / cdata.count;
++
++	bpf_map_delete_elem(stacks_fd, stack_trace);
++	bpf_map_delete_elem(stat_fd, &ckey);
++
++	return st;
++
++out_err:
++	free(stack_trace);
++	free(st);
++
++	return NULL;
++}
++
+ int lock_contention_read(struct lock_contention *con)
+ {
+ 	int fd, stack, err = 0;
+diff --git a/tools/perf/util/lock-contention.h b/tools/perf/util/lock-contention.h
+index a09f7fe877df..97fd33c57f17 100644
+--- a/tools/perf/util/lock-contention.h
++++ b/tools/perf/util/lock-contention.h
+@@ -168,6 +168,8 @@ int lock_contention_stop(void);
+ int lock_contention_read(struct lock_contention *con);
+ int lock_contention_finish(struct lock_contention *con);
+ 
++struct lock_stat *pop_owner_stack_trace(struct lock_contention *con);
++
+ #else  /* !HAVE_BPF_SKEL */
+ 
+ static inline int lock_contention_prepare(struct lock_contention *con __maybe_unused)
+@@ -187,6 +189,11 @@ static inline int lock_contention_read(struct lock_contention *con __maybe_unuse
+ 	return 0;
+ }
+ 
++struct lock_stat *pop_owner_stack_trace(struct lock_contention *con)
++{
++	return NULL;
++}
++
+ #endif  /* HAVE_BPF_SKEL */
+ 
+ #endif  /* PERF_LOCK_CONTENTION_H */
+-- 
+2.48.1.658.g4767266eb4-goog
 
-	Ingo
