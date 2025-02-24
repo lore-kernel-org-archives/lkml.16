@@ -1,25 +1,64 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59004221F12
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 12:26:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C397B21930E;
+	Mon, 24 Feb 2025 12:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740399988; cv=none; b=b6oyyMwWE1NT5m1hjgErN++uN1rv7hiH442COLiUTtu0yK0LGpT1P0igOkMHbahy29se4nHH7WTK3r2hFnL/qGrTBQMH26OB3Touk2iQZQMkCx6bZcIY01SF9ePvH4kA943vdLUy2VmILlxf7lYVI2MMH+syMEMyk1stjs9hUkY=
+	t=1740400008; cv=none; b=M/dTZPk8BaLT4b5Xq9jTPfG77mcHXzVAV0Raoy/3MwmYJR/SJQM+BJY/yztXv9D/zDrrWIMumLrSwWiAfxoPW2awDKGj8Y2jQ/qFlb1gB0YGVbQN2/kd2xSDeWjPBwMKm08qlhvHuRq+k+7TT3qtY/WcayZ9nT5/93q9NZGxwlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740399988; c=relaxed/simple;
-	bh=osmVdniy/pTYiMun664m7lGsp96Vjyyk//3CAEGRoBw=;
+	s=arc-20240116; t=1740400008; c=relaxed/simple;
+	bh=vGlGepndYgWT2DQBTH8vv9ZPy9qn+806foZdcXyS1Xo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HP80e8l72eBAO/PYhPNl+4OWHBE6L8QE7lRf+npTK7TxIf4vNiH5mJ7z9gaYiaIYy586BZwCCC7xwQwOtb7kZPln+kbGsvZ3R0Eb9cUF/O7yr5sDC4nqzrWnA7PnPB6Q2516ajoyCJ8E+2ataEQrSc6KCIvFVnxeNx0ejvSixWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 61DC01756;
-	Mon, 24 Feb 2025 04:26:43 -0800 (PST)
-Received: from [10.1.27.150] (XHFQ2J9959.cambridge.arm.com [10.1.27.150])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 842BD3F6A8;
-	Mon, 24 Feb 2025 04:26:24 -0800 (PST)
-Message-ID: <90195b91-e9b3-41aa-bb39-45f6a49b171b@arm.com>
-Date: Mon, 24 Feb 2025 12:26:23 +0000
+	 In-Reply-To:Content-Type; b=IKVFW0toGzTP/9xNXNtTt2rUlHv1eyKm9sF15/59sgJGO4WQ1AbSO7dH4WbTsB7C89KzZXUsCR88+7AmJHy82nFKK/5rR0dSG9WieNGcQTkAoyU6TjwvUJLyrClQ9PNJDFitfDh6OLzAcB+kJa8JThQSwV2D1f0PpbfImDerElk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LCqOKxS1; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LCqOKxS1"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-abbac134a19so669972166b.0;
+        Mon, 24 Feb 2025 04:26:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740400005; x=1741004805; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Z3DINdR7U7YAAVkvMzjWHburtjPwkiuTtmGkvHpks3E=;
+        b=LCqOKxS1Zp7+Kww/K+t/nUbuZG4n8YyzMm6cdoO7PgeHtaBI1gxi1JsFUU9A+Km4X2
+         KfT4NPNz4fNIPwbkAqOgfRyZKtV8RUd1loV3VWJG5G2g44tkA/uPi9tKScnCV37LjZLb
+         p/TuSYHhoDlSMJTxpVNEp/TTxtLHxFyBp0gszCkv0wKBwINj1JfDSOXuU/lSumi+m1FG
+         jEDXhHEwRgiYoqdx+ksDd4mDjrtvKlnlL5X/HST9NsLZJxnMWbVhcP+Nyq2qPlkzjmWp
+         Bb8LSlIDGxLWHr8JjQ4vwIRQGTz2ZRWXYk7y/k06phnZ6sJWSxH8lD6xTTRVAfhxMZsk
+         rW8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740400005; x=1741004805;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z3DINdR7U7YAAVkvMzjWHburtjPwkiuTtmGkvHpks3E=;
+        b=jP0a/LxR/xp4M5PuQonGCyqtDhWt73KuOzj8cGodxFH37s5ksWvcIX99f3MGmmVBkz
+         3JU2PAjqemH8dicI1CaymbrgZDfF2LSUzPRct3qbKcMuvV76iq4PD7aJ+9R1obbLQ9iE
+         r/0kwzwAS/GTpi2Z6YvZUVtQ4aZBitNbfT7HZoNjCHZuzo8+jmqgeSyev0WR+TTbYfqo
+         sy7Rf7dGcQLEWIMZTCozd9+fbDor4Yv1DD3wYud/D9jG90trBLXe3GDIq3oo3XQyJIHq
+         W6RpnVCLWffOMNtvOTzZrRU0f5DgUDIvuJpzykvnqfdBS550Q42unu2+JGSK85dKoZ6+
+         GbMg==
+X-Forwarded-Encrypted: i=1; AJvYcCV3Bzx3KWd6K86azWfoysx7Ww/VsfXYozzkTDQBtYFMXEhvsHWz0VX/E51H4UTjt+W5hme9IKomdjkIEuj4@vger.kernel.org, AJvYcCVG+1DTS7qdgN3/aOyVzW3jXam3QSNdKtZ4A2hz5tqLO0NCtuARvS/eEj/ELPOSrp7+sSyvbOrIbQ==@vger.kernel.org, AJvYcCVTtZpXXENNi7GLPkLcpZPFvYVmSgsq5bwSekpA2+LdNDRHJwBuaPn9aKV9/urV57tSbKfGmxgdzJC//HVsXw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQ2IS+IDV25iq2CkMc3ErgQ2/sYZ2HZJvuwrxri4cXru/iCbZh
+	QZNBxgm087UpzDHaa8Rrnkj3MVAuw+x4yP+s6nKrLQ5rv7vGMgzK
+X-Gm-Gg: ASbGncs5jYmd8ELZ46dE+lqM+uJ7RhuJwKMsCYyXfmqUPlWP+dQ7ZVYAIi35i90dfT1
+	S9KZHwdI3Iy8hA8Cg4c5Kq1A2TFm4Z0tMQh8OkvuKMF+q1uJcM+YZmKvUHJqFK3Is2mYW/mGCsD
+	UpZ4OfhgIl9UyUesBuiKplO8KjsyFy6lELUWKt90fFRneEG2Dq6W0id64nxB4AiPH+RkGl34Hlo
+	haSImqueDc+N8+AH0Tzfkm0oxWhxe9HA66Oe/QZDFCmTh7kxsSFZCrA0mg++YzmjFMTEDaJLjnZ
+	Z1YE1yLqX+jhvqBndxXbxG+e9g6NAhpoGTAb6SFWzz63iGHUhMY9IfMPICY=
+X-Google-Smtp-Source: AGHT+IH8L/KI4RvCadlDZyccK4lBIzA7goaTDNlGRXtE+85csj2TkvksvFPrY0HaLmx4pWJ/nbSNDw==
+X-Received: by 2002:a17:907:1c0d:b0:ab7:f0fa:1341 with SMTP id a640c23a62f3a-abc09d379b4mr1093453566b.56.1740400004729;
+        Mon, 24 Feb 2025 04:26:44 -0800 (PST)
+Received: from ?IPV6:2620:10d:c096:325:77fd:1068:74c8:af87? ([2620:10d:c092:600::1:bd30])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba532322f1sm2258286766b.19.2025.02.24.04.26.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2025 04:26:44 -0800 (PST)
+Message-ID: <99a7a0ce-eb2f-4421-9f8e-e7f9d749b674@gmail.com>
+Date: Mon, 24 Feb 2025 12:27:45 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,91 +66,55 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/14] arm64/mm: Avoid barriers for invalid or
- userspace mappings
-Content-Language: en-GB
-To: Kevin Brodsky <kevin.brodsky@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- David Hildenbrand <david@redhat.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250217140809.1702789-1-ryan.roberts@arm.com>
- <20250217140809.1702789-8-ryan.roberts@arm.com>
- <fc199d7c-ab09-4278-b641-962184bff14d@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <fc199d7c-ab09-4278-b641-962184bff14d@arm.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH] Fuse: Add backing file support for uring_cmd
+To: Bernd Schubert <bernd@bsbernd.com>, Amir Goldstein <amir73il@gmail.com>,
+ Moinak Bhattacharyya <moinakb001@gmail.com>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
+References: <CAKXrOwbkMUo9KJd7wHjcFzJieTFj6NPWPp0vD_SgdS3h33Wdsg@mail.gmail.com>
+ <db432e5b-fc90-487e-b261-7771766c56cb@bsbernd.com>
+ <e0019be0-1167-4024-8268-e320fee4bc50@gmail.com>
+ <CAOQ4uxiVvc6i+5bV1PDMcvS8bALFdp86i==+ZQAAfxKY6AjGiQ@mail.gmail.com>
+ <a8af0bfc-d739-49aa-ac3f-4f928741fb7a@bsbernd.com>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <a8af0bfc-d739-49aa-ac3f-4f928741fb7a@bsbernd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 20/02/2025 16:54, Kevin Brodsky wrote:
-> On 17/02/2025 15:07, Ryan Roberts wrote:
->> __set_pte_complete(), set_pmd(), set_pud(), set_p4d() and set_pgd() are
+On 2/21/25 17:13, Bernd Schubert wrote:
+> On 2/21/25 17:24, Amir Goldstein wrote:
+...
+>>> +/*
+>>> + * Register new backing file for passthrough, getting backing map from
+>>> URING_CMD data
+>>> + */
+>>> +static int fuse_uring_backing_open(struct io_uring_cmd *cmd,
+>>> +    unsigned int issue_flags, struct fuse_conn *fc)
+>>> +{
+>>> +    const struct fuse_backing_map *map = io_uring_sqe_cmd(cmd->sqe);
+>>> +    int ret = fuse_backing_open(fc, map);
+>>> +
+>>
+>> I am not that familiar with io_uring, so I need to ask -
+>> fuse_backing_open() does
+>> fb->cred = prepare_creds();
+>> to record server credentials
+>> what are the credentials that will be recorded in the context of this
+>> io_uring command?
 > 
-> Nit: it would be more accurate to say __set_pte() instead of
-> __set_pte_complete(), as it is the former that actually writes the PTE
-> (and then issues barriers).
+> This is run from the io_uring_enter() syscall - it should not make
 
-Yeah, fair enough. Will fix in the next version.
+That's not necessarily true ...
 
-> 
->> used to write entries into pgtables. And they issue barriers (currently
->> dsb and isb) to ensure that the written values are observed by the table
->> walker prior to any program-order-future memory access to the mapped
->> location.
->>
->> Over the years some of these functions have received optimizations: In
->> particular, commit 7f0b1bf04511 ("arm64: Fix barriers used for page
->> table modifications") made it so that the barriers were only emitted for
->> valid-kernel mappings for set_pte() (now __set_pte_complete()). And
->> commit 0795edaf3f1f ("arm64: pgtable: Implement p[mu]d_valid() and check
->> in set_p[mu]d()") made it so that set_pmd()/set_pud() only emitted the
->> barriers for valid mappings. set_p4d()/set_pgd() continue to emit the
->> barriers unconditionally.
->>
->> This is all very confusing to the casual observer; surely the rules
->> should be invariant to the level? Let's change this so that every level
->> consistently emits the barriers only when setting valid, non-user
->> entries (both table and leaf).
->>
->> It seems obvious that if it is ok to elide barriers all but valid kernel
->> mappings at pte level, it must also be ok to do this for leaf entries at
->> other levels: If setting an entry to invalid, a tlb maintenance
->> operation must surely follow to synchronise the TLB and this contains
->> the required barriers. If setting a valid user mapping, the previous
->> mapping must have been invalid and there must have been a TLB
->> maintenance operation (complete with barriers) to honour
->> break-before-make. So the worst that can happen is we take an extra
->> fault (which will imply the DSB + ISB) and conclude that there is
->> nothing to do. These are the arguments for doing this optimization at
->> pte level and they also apply to leaf mappings at other levels.
->>
->> For table entries, the same arguments hold: If unsetting a table entry,
->> a TLB is required and this will emit the required barriers. If setting a
-> 
-> s/TLB/TLB maintenance/
-> 
->> table entry, the previous value must have been invalid and the table
->> walker must already be able to observe that. Additionally the contents
->> of the pgtable being pointed to in the newly set entry must be visible
->> before the entry is written and this is enforced via smp_wmb() (dmb) in
->> the pgtable allocation functions and in __split_huge_pmd_locked(). But
->> this last part could never have been enforced by the barriers in
->> set_pXd() because they occur after updating the entry. So ultimately,
->> the wost that can happen by eliding these barriers for user table
-> 
-> s/wost/worst/
-> 
-> - Kevin
-> 
->> entries is an extra fault.
->>
->> [...]
-> 
+> a difference to an ioctl, AFAIK. Someone from @io-uring please
+> correct me if I'm wrong.
+
+... but it's executed in a context that inherits creds from the
+task that submitted the request. It might be trickier if the app
+changes creds at runtime, but IIRC the request tries to grab
+creds at submission time.
+
+-- 
+Pavel Begunkov
 
