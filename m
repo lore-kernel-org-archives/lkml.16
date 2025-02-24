@@ -1,79 +1,232 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C5D26137C;
-	Mon, 24 Feb 2025 11:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC10B23BCEA;
+	Mon, 24 Feb 2025 11:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740396065; cv=none; b=H47X4353CiHyNF72tEEXXoiRyRZoFxZy6E6ZT5RYuoYU1q4di68zIClgbPmgxP2WGjlTPO8AlYihzy7jretSwJ1lqvDXBR+k0stw6jQTQtPwaagQRTWgyqmbSt7XToZ6orUqfen8+bco34NzlXVNilu82VJa11m3OYl0yYSgTb0=
+	t=1740396064; cv=none; b=m00iUdhUeKMRg19AQ00fiwLds8YYjakMqJeB9fGBinTWrujq08qdoApi1jPs1FHwsuvtAwuMVuKlNG7aajcMUrF3pBGGNYlv8YWJ5trvx6JNV98Q1McVQj4E1BRq4SnUX5zpsGZU1pvtxo8Z/f8Sd3HZzNddIFgQqPIBuwTUIt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740396065; c=relaxed/simple;
-	bh=Jl/aGD6H8zlfW46eQ8hKfWnP+g4vlfzN/TfC502RuSs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QucdffBVE82JVFVg/Hax9Rxe7AmtnqzIV8aiSL0FmcwM4UVIMpG9p4ZCW4JG8mqomk6xguQWaVrWe8m8/2o0iQy33cypJMgT/gKD6MZXR4cXg6XoMqpd9xmz96oB2kGHOsPvX61tDq/xvu6LGRSXGVUTcs9QkBPlOBObqKkDpZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=enHf0tfA; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1740396064; c=relaxed/simple;
+	bh=Xvl8bHujTrc459L+xWXpwEh97olZMRkHv7vZxbcYkBU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=qyG/5/K0S9HFlU2KrVVjYQJlDDN/qGYs+uWEJ/BAOeHeY/lu97+D6V3YsSP9V/iu42nQ9Hzhh3a9nEKR0QzyeSRPIEIFSPH3xXP+GhRmcYCcmRbvvZ0b10xBvzYL1+CYS5gu0z5Ql5UISWRU1WoGKed9lStE7w9Co627RTF+5Rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r8ET4qSj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="enHf0tfA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1740396055;
-	bh=PEZ+XmHReJkvOO8ckw/Sp6e/Ys54sWdkMmIRDD4VEB0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=enHf0tfAHWymo5wtzHP9lT0kTKne9eaEveqFQg9viuU+wCQ8SziFN2JNJhmVneul8
-	 FGBw9M2ivI2HVxkGGdEjIyaGQnNNAWtIiqIFZ/waj4m5LSMo4Y77cwsuDCeS1jPWWr
-	 J09MQ0ACFxs5EAXS2XHkAtj6nGgiv4v3dyMIEai4=
-Received: from stargazer.. (unknown [IPv6:240e:358:1110:6100:dc73:854d:832e:7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id EFCB21A40EF;
-	Mon, 24 Feb 2025 06:20:49 -0500 (EST)
-From: Xi Ruoyao <xry111@xry111.site>
-To: Guo Ren <guoren@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Fangrui Song <i@maskray.me>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>,
-	linux-csky@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH 0/3] Drop explicit --hash-style= setting for new
-Date: Mon, 24 Feb 2025 19:20:39 +0800
-Message-ID: <20250224112042.60282-1-xry111@xry111.site>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r8ET4qSj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8868DC4CEE9;
+	Mon, 24 Feb 2025 11:21:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740396064;
+	bh=Xvl8bHujTrc459L+xWXpwEh97olZMRkHv7vZxbcYkBU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=r8ET4qSj5v8dMWxpXnVC0hmWWmxS7ePbHblVQUPYi3V6s9qFVAqWxWvJbptdHYgvI
+	 H6bXt4peTwDr98FGUu9E2rlq2svAJYDjadAO4Wu3S92Abs8gHOj3an2SqdsTLScEBf
+	 OBZuSmD1xqBrVj63NNuP2yA+Ru8UenK4jZ3LVzC6p3J9ZXLd5BOuBBCA/jAGOjXboI
+	 ZmzpL6ZpnLtHlfthUzU8i7e5fcJ21imcvThuL+ERKBHYwMELmQbEy4/G6FDJxEdcCx
+	 ieUYBqjOkJR8hS4HQTjRUFyxSz1E3yI3MAZXY0qgS4sDSQcNa0BxOikQmWd+YLQX/v
+	 T18JCgIUtL56w==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Vitaly Rodionov <vitalyr@opensource.cirrus.com>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>,
+	Mark Brown <broonie@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	lgirdwood@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	rf@opensource.cirrus.com,
+	lee@kernel.org,
+	luca.ceresoli@bootlin.com,
+	Jonathan.Cameron@huawei.com,
+	richard.leitner@linux.dev,
+	u.kleine-koenig@baylibre.com,
+	patches@opensource.cirrus.com,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 3/7] ASoC: arizona/madera: use fsleep() in up/down DAPM event delays.
+Date: Mon, 24 Feb 2025 06:20:46 -0500
+Message-Id: <20250224112051.2215017-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250224112051.2215017-1-sashal@kernel.org>
+References: <20250224112051.2215017-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.10.234
 Content-Transfer-Encoding: 8bit
 
-For riscv, csky, and LoongArch, GNU hash had already become the de-facto
-standard when they borned, so there's no Glibc/Musl releases for them
-without GNU hash support, and the traditional SysV hash is just wasting
-space for them.
+From: Vitaly Rodionov <vitalyr@opensource.cirrus.com>
 
-Remove those settings and follow the distro toolchain default, which is
-likely --hash-style=gnu.  In the past it could break vDSO self tests,
-but now the issue has been addressed by commit
-e0746bde6f82 ("selftests/vDSO: support DT_GNU_HASH").
+[ Upstream commit 679074942c2502a95842a80471d8fb718165ac77 ]
 
-Xi Ruoyao (3):
-  riscv: vDSO: Remove --hash-style=both
-  csky: vDSO: Remove --hash-style=both
-  LoongArch: vDSO: Remove --hash-style=sysv
+Using `fsleep` instead of `msleep` resolves some customer complaints
+regarding the precision of up/down DAPM event timing. `fsleep()`
+automatically selects the appropriate sleep function, making the delay
+time more predictable.
 
- arch/csky/kernel/vdso/Makefile  | 2 +-
- arch/loongarch/vdso/Makefile    | 2 +-
- arch/riscv/kernel/vdso/Makefile | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+Signed-off-by: Vitaly Rodionov <vitalyr@opensource.cirrus.com>
+Link: https://patch.msgid.link/20250205160849.500306-1-vitalyr@opensource.cirrus.com
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/codecs/arizona.c | 14 +++++++-------
+ sound/soc/codecs/madera.c  | 10 +++++-----
+ sound/soc/codecs/wm5110.c  |  8 ++++----
+ 3 files changed, 16 insertions(+), 16 deletions(-)
 
+diff --git a/sound/soc/codecs/arizona.c b/sound/soc/codecs/arizona.c
+index 1228f2de02975..f796b8e5865de 100644
+--- a/sound/soc/codecs/arizona.c
++++ b/sound/soc/codecs/arizona.c
+@@ -967,7 +967,7 @@ int arizona_out_ev(struct snd_soc_dapm_widget *w,
+ 		case ARIZONA_OUT3L_ENA_SHIFT:
+ 		case ARIZONA_OUT3R_ENA_SHIFT:
+ 			priv->out_up_pending++;
+-			priv->out_up_delay += 17;
++			priv->out_up_delay += 17000;
+ 			break;
+ 		case ARIZONA_OUT4L_ENA_SHIFT:
+ 		case ARIZONA_OUT4R_ENA_SHIFT:
+@@ -977,7 +977,7 @@ int arizona_out_ev(struct snd_soc_dapm_widget *w,
+ 			case WM8997:
+ 				break;
+ 			default:
+-				priv->out_up_delay += 10;
++				priv->out_up_delay += 10000;
+ 				break;
+ 			}
+ 			break;
+@@ -999,7 +999,7 @@ int arizona_out_ev(struct snd_soc_dapm_widget *w,
+ 			if (!priv->out_up_pending && priv->out_up_delay) {
+ 				dev_dbg(component->dev, "Power up delay: %d\n",
+ 					priv->out_up_delay);
+-				msleep(priv->out_up_delay);
++				fsleep(priv->out_up_delay);
+ 				priv->out_up_delay = 0;
+ 			}
+ 			break;
+@@ -1017,7 +1017,7 @@ int arizona_out_ev(struct snd_soc_dapm_widget *w,
+ 		case ARIZONA_OUT3L_ENA_SHIFT:
+ 		case ARIZONA_OUT3R_ENA_SHIFT:
+ 			priv->out_down_pending++;
+-			priv->out_down_delay++;
++			priv->out_down_delay += 1000;
+ 			break;
+ 		case ARIZONA_OUT4L_ENA_SHIFT:
+ 		case ARIZONA_OUT4R_ENA_SHIFT:
+@@ -1028,10 +1028,10 @@ int arizona_out_ev(struct snd_soc_dapm_widget *w,
+ 				break;
+ 			case WM8998:
+ 			case WM1814:
+-				priv->out_down_delay += 5;
++				priv->out_down_delay += 5000;
+ 				break;
+ 			default:
+-				priv->out_down_delay++;
++				priv->out_down_delay += 1000;
+ 				break;
+ 			}
+ 		default:
+@@ -1052,7 +1052,7 @@ int arizona_out_ev(struct snd_soc_dapm_widget *w,
+ 			if (!priv->out_down_pending && priv->out_down_delay) {
+ 				dev_dbg(component->dev, "Power down delay: %d\n",
+ 					priv->out_down_delay);
+-				msleep(priv->out_down_delay);
++				fsleep(priv->out_down_delay);
+ 				priv->out_down_delay = 0;
+ 			}
+ 			break;
+diff --git a/sound/soc/codecs/madera.c b/sound/soc/codecs/madera.c
+index bbab4bc1f6b50..aa7543a15d8c7 100644
+--- a/sound/soc/codecs/madera.c
++++ b/sound/soc/codecs/madera.c
+@@ -2322,10 +2322,10 @@ int madera_out_ev(struct snd_soc_dapm_widget *w,
+ 	case CS42L92:
+ 	case CS47L92:
+ 	case CS47L93:
+-		out_up_delay = 6;
++		out_up_delay = 6000;
+ 		break;
+ 	default:
+-		out_up_delay = 17;
++		out_up_delay = 17000;
+ 		break;
+ 	}
+ 
+@@ -2356,7 +2356,7 @@ int madera_out_ev(struct snd_soc_dapm_widget *w,
+ 		case MADERA_OUT3R_ENA_SHIFT:
+ 			priv->out_up_pending--;
+ 			if (!priv->out_up_pending) {
+-				msleep(priv->out_up_delay);
++				fsleep(priv->out_up_delay);
+ 				priv->out_up_delay = 0;
+ 			}
+ 			break;
+@@ -2375,7 +2375,7 @@ int madera_out_ev(struct snd_soc_dapm_widget *w,
+ 		case MADERA_OUT3L_ENA_SHIFT:
+ 		case MADERA_OUT3R_ENA_SHIFT:
+ 			priv->out_down_pending++;
+-			priv->out_down_delay++;
++			priv->out_down_delay += 1000;
+ 			break;
+ 		default:
+ 			break;
+@@ -2392,7 +2392,7 @@ int madera_out_ev(struct snd_soc_dapm_widget *w,
+ 		case MADERA_OUT3R_ENA_SHIFT:
+ 			priv->out_down_pending--;
+ 			if (!priv->out_down_pending) {
+-				msleep(priv->out_down_delay);
++				fsleep(priv->out_down_delay);
+ 				priv->out_down_delay = 0;
+ 			}
+ 			break;
+diff --git a/sound/soc/codecs/wm5110.c b/sound/soc/codecs/wm5110.c
+index d0cef982215dc..aed067bf346f5 100644
+--- a/sound/soc/codecs/wm5110.c
++++ b/sound/soc/codecs/wm5110.c
+@@ -302,7 +302,7 @@ static int wm5110_hp_pre_enable(struct snd_soc_dapm_widget *w)
+ 		} else {
+ 			wseq = wm5110_no_dre_left_enable;
+ 			nregs = ARRAY_SIZE(wm5110_no_dre_left_enable);
+-			priv->out_up_delay += 10;
++			priv->out_up_delay += 10000;
+ 		}
+ 		break;
+ 	case ARIZONA_OUT1R_ENA_SHIFT:
+@@ -312,7 +312,7 @@ static int wm5110_hp_pre_enable(struct snd_soc_dapm_widget *w)
+ 		} else {
+ 			wseq = wm5110_no_dre_right_enable;
+ 			nregs = ARRAY_SIZE(wm5110_no_dre_right_enable);
+-			priv->out_up_delay += 10;
++			priv->out_up_delay += 10000;
+ 		}
+ 		break;
+ 	default:
+@@ -338,7 +338,7 @@ static int wm5110_hp_pre_disable(struct snd_soc_dapm_widget *w)
+ 			snd_soc_component_update_bits(component,
+ 						      ARIZONA_SPARE_TRIGGERS,
+ 						      ARIZONA_WS_TRG1, 0);
+-			priv->out_down_delay += 27;
++			priv->out_down_delay += 27000;
+ 		}
+ 		break;
+ 	case ARIZONA_OUT1R_ENA_SHIFT:
+@@ -350,7 +350,7 @@ static int wm5110_hp_pre_disable(struct snd_soc_dapm_widget *w)
+ 			snd_soc_component_update_bits(component,
+ 						      ARIZONA_SPARE_TRIGGERS,
+ 						      ARIZONA_WS_TRG2, 0);
+-			priv->out_down_delay += 27;
++			priv->out_down_delay += 27000;
+ 		}
+ 		break;
+ 	default:
 -- 
-2.48.1
+2.39.5
 
