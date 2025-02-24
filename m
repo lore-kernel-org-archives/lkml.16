@@ -1,82 +1,165 @@
-Received: from smtp.smtpout.orange.fr (smtp-78.smtpout.orange.fr [80.12.242.78])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6487136327;
-	Mon, 24 Feb 2025 19:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6030E136327;
+	Mon, 24 Feb 2025 19:59:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740427140; cv=none; b=MMTzTDzkMNkmkpruwhb4L5OZyLFr5KVc4AbfCUbqrVvrF/Vj4lSsXnh+NR2/ZM7IUTsIgERd7CoU1x45vU4Md+qDcLRyMJ77TeVC2IuhKQRIojQBnqhj+4Kx7ZM5zhIVL95OjtRiukw4JnPY6jD2/SKDSr39OvAO4Hdy29p4U8A=
+	t=1740427153; cv=none; b=P2u/ygedKdWh+YjD+Q/tewG/VLJT2dOk5wYu+m9coAIRQzxegXNsf1JxkBMOSAB3OOONol+E2n6h1K5X8nLJAZGVG1U3zgp6F8Pm4KPB5i/Hxx4JQY+ecv3D3KTe5ZtJNPEJ/uZbp0pC594Hj505zd2n0U4nsXBywHGC137XREc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740427140; c=relaxed/simple;
-	bh=fWCZLO7EKR4DOPrWOUXgbX4igVnp3NTdUsv32c2M+X0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eK4jc0f++aiL4258pJ88mM7W2MnZTfsYIT005Blcww9IN8CR74OeGkjVNQQJGBvyoLRYDO05nwoEyHIlqHPziouu9B22sifE/i5JPjCQFhWqLug+dN1DbPVCf0+OUrQ1PdjnbGnGctTFZi3nHDukkUtPxQVFNgXiuuA3hYPFrwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=lSBGMgSM; arc=none smtp.client-ip=80.12.242.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1740427153; c=relaxed/simple;
+	bh=W6g23xuIssALMbH2xgrfWTmhUTBR2YOv3qZN/bNUQ44=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=biH86SJrimCvjEwlOlq4/sEsYLFRNFr5qDGBDK54UQ64/X8HdKKpmj2WePV4Pg2CDX8CmslWDoaZx5MLqaLTjg8GpMMPztFPXGe47na+RCD8ZmFQwKS3hnIlGCPfRlVqcXiOadkmgv5PzsoFGZ4yMsccEjM5Gfd7Fmr86cTCbR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/pUZjY/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="lSBGMgSM"
-Received: from fedora.home ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id meSLt3GDwJyOhmeSPtGswC; Mon, 24 Feb 2025 20:49:38 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1740426579;
-	bh=TYkhntDhg6zE2Z9rvZA/FjSywjAnJEg0AG/RXj5Cj1k=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=lSBGMgSMfFY2R+JdkvLMGe2zWfxig9natjAOM4rxrWscn60b5LMO+ZS3u1Xe5Ekev
-	 1CvRH93p4Yd9EpqVtYBGU6Jp4WhutYyiDeJbim0UAq+bamEeDLoIfeGXleFZ9i5eWR
-	 argVhLUHy4C8W7QR24QpctGtYri85t4yoAid5HMWGJ9It5oKL4eOzDXSE7iSEKKEVo
-	 3RU2KCqZBjh1vjdyMbnDyWX3eCo3PM2XQh4RYmdISJilAvW8xQWhRiFrkum9b+anhN
-	 FBOTbRiEt09JWr3T4W3ryk9fr0iGMynSOU3aGeYt3SHKzxLdc7+mjbdpHDvMps5eai
-	 Vw9liiq/fSqGw==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 24 Feb 2025 20:49:39 +0100
-X-ME-IP: 90.11.132.44
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-pm@vger.kernel.org
-Subject: [PATCH] thermal: intel: Remove a useless operation in int340x_thermal_zone_add()
-Date: Mon, 24 Feb 2025 20:49:28 +0100
-Message-ID: <cceb7f8864c43f046cf1c19c3bbcc38a7a57adc5.1740426540.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/pUZjY/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF325C4CED6;
+	Mon, 24 Feb 2025 19:59:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740427152;
+	bh=W6g23xuIssALMbH2xgrfWTmhUTBR2YOv3qZN/bNUQ44=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J/pUZjY/fzMZiEQTtv7utDJgkg28SOgJfShAk1J4ilhBAoA7I1UIR5FdXUHIco9yJ
+	 9UL46T9QaTxKTMpdug43NR1GqXyEiim3snnXMCgqobTH6O6BvBa1MGxfBlHfs7yUnC
+	 FZf7Eg6o0/eAcKX3H/xosl41oIfM4y9qdVpD5m3ZwoZKHKWMOmWBBniZqPonAPGWuY
+	 yZKnzZ3juTC90xzqW59LITd31omUCzhfU8AlA1y1U9Ab+F1U3qp2HShcLKhsVYkztV
+	 /ENS/AXQOnDaILwsCfHK0R+arIkWu4IEJ7x0A2bKkr7UDNUcEcFQaQjpSWQxXhANeJ
+	 UgwX/WfqxqpIA==
+Date: Mon, 24 Feb 2025 11:59:12 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, cem@kernel.org, dchinner@redhat.com, hch@lst.de,
+	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com,
+	ritesh.list@gmail.com, martin.petersen@oracle.com, tytso@mit.edu,
+	linux-ext4@vger.kernel.org
+Subject: Re: [PATCH v2 04/11] iomap: Support CoW-based atomic writes
+Message-ID: <20250224195912.GC21808@frogsfrogsfrogs>
+References: <20250213135619.1148432-1-john.g.garry@oracle.com>
+ <20250213135619.1148432-5-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250213135619.1148432-5-john.g.garry@oracle.com>
 
-'zone_trips' has just been allocated with kzalloc(), so .flags is known to
-be 0. Remove the useless | when assigning THERMAL_TRIP_FLAG_RW_TEMP.
+On Thu, Feb 13, 2025 at 01:56:12PM +0000, John Garry wrote:
+> Currently atomic write support requires dedicated HW support. This imposes
+> a restriction on the filesystem that disk blocks need to be aligned and
+> contiguously mapped to FS blocks to issue atomic writes.
+> 
+> XFS has no method to guarantee FS block alignment for regular non-RT files.
+> As such, atomic writes are currently limited to 1x FS block there.
+> 
+> To allow deal with the scenario that we are issuing an atomic write over
+> misaligned or discontiguous data blocks larger atomic writes - and raise
+> the atomic write limit - support a CoW-based software emulated atomic
+> write mode.
+> 
+> For this special mode, the FS will reserve blocks for that data to be
+> written and then atomically map that data in once the data has been
+> committed to disk.
+> 
+> It is the responsibility of the FS to detect discontiguous atomic writes
+> and switch to IOMAP_DIO_ATOMIC_COW mode and retry the write.
+> 
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
+> ---
+>  Documentation/filesystems/iomap/operations.rst | 15 +++++++++++++--
+>  fs/iomap/direct-io.c                           |  4 +++-
+>  include/linux/iomap.h                          |  6 ++++++
+>  3 files changed, 22 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/filesystems/iomap/operations.rst b/Documentation/filesystems/iomap/operations.rst
+> index 82bfe0e8c08e..d30dddc94ef7 100644
+> --- a/Documentation/filesystems/iomap/operations.rst
+> +++ b/Documentation/filesystems/iomap/operations.rst
+> @@ -525,8 +525,19 @@ IOMAP_WRITE`` with any combination of the following enhancements:
+>     conversion or copy on write), all updates for the entire file range
+>     must be committed atomically as well.
+>     Only one space mapping is allowed per untorn write.
+> -   Untorn writes must be aligned to, and must not be longer than, a
+> -   single file block.
+> +   Untorn writes may be longer than a single file block. In all cases,
+> +   the mapping start disk block must have at least the same alignment as
+> +   the write offset.
+> +
+> + * ``IOMAP_ATOMIC_COW``: This write is being issued with torn-write
+> +   protection based on CoW support.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-This was added in commit cca52f696952 ("thermal: intel: Set
-THERMAL_TRIP_FLAG_RW_TEMP directly")
----
- drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I think using "COW" here results in a misnamed flag.  Consider:
 
-diff --git a/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c b/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c
-index 8dca6a6aceca..b43d848e66b8 100644
---- a/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c
-+++ b/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c
-@@ -143,7 +143,7 @@ struct int34x_thermal_zone *int340x_thermal_zone_add(struct acpi_device *adev,
- 	for (i = 0; i < trip_cnt; i++) {
- 		zone_trips[i].type = THERMAL_TRIP_PASSIVE;
- 		zone_trips[i].temperature = THERMAL_TEMP_INVALID;
--		zone_trips[i].flags |= THERMAL_TRIP_FLAG_RW_TEMP;
-+		zone_trips[i].flags = THERMAL_TRIP_FLAG_RW_TEMP;
- 		zone_trips[i].priv = THERMAL_INT_TO_TRIP_PRIV(i);
- 	}
- 
--- 
-2.48.1
+"IOMAP_ATOMIC_SW: This write is being issued with torn-write protection
+via a software fallback provided by the filesystem."
 
+iomap itself doesn't care *how* the filesystem guarantees that the
+direct write isn't torn, right?  The fs' io completion handler has to
+ensure that the mapping update(s) are either applied fully or discarded
+fully.
+
+In theory if you had a bunch of physical space mapped to the same
+file but with different unwritten states, you could gang together all
+the unwritten extent conversions in a single transaction, which would
+provide the necessary tearing prevention without the out of place write.
+Nobody does that right now, but I think that's the only option for ext4.
+
+--D
+
+> +   All the length, alignment, and single bio restrictions which apply
+> +   to IOMAP_ATOMIC_HW do not apply here.
+> +   CoW-based atomic writes are intended as a fallback for when
+> +   HW-based atomic writes may not be issued, e.g. the range covered in
+> +   the atomic write covers multiple extents.
+> +   All filesystem metadata updates for the entire file range must be
+> +   committed atomically as well.
+>  
+>  Callers commonly hold ``i_rwsem`` in shared or exclusive mode before
+>  calling this function.
+> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+> index f87c4277e738..076338397daa 100644
+> --- a/fs/iomap/direct-io.c
+> +++ b/fs/iomap/direct-io.c
+> @@ -644,7 +644,9 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
+>  			iomi.flags |= IOMAP_OVERWRITE_ONLY;
+>  		}
+>  
+> -		if (iocb->ki_flags & IOCB_ATOMIC)
+> +		if (dio_flags & IOMAP_DIO_ATOMIC_COW)
+> +			iomi.flags |= IOMAP_ATOMIC_COW;
+> +		else if (iocb->ki_flags & IOCB_ATOMIC)
+>  			iomi.flags |= IOMAP_ATOMIC_HW;
+>  
+>  		/* for data sync or sync, we need sync completion processing */
+> diff --git a/include/linux/iomap.h b/include/linux/iomap.h
+> index e7aa05503763..1b961895678a 100644
+> --- a/include/linux/iomap.h
+> +++ b/include/linux/iomap.h
+> @@ -183,6 +183,7 @@ struct iomap_folio_ops {
+>  #define IOMAP_DAX		0
+>  #endif /* CONFIG_FS_DAX */
+>  #define IOMAP_ATOMIC_HW		(1 << 9) /* HW-based torn-write protection */
+> +#define IOMAP_ATOMIC_COW	(1 << 10)/* CoW-based torn-write protection */
+>  
+>  struct iomap_ops {
+>  	/*
+> @@ -434,6 +435,11 @@ struct iomap_dio_ops {
+>   */
+>  #define IOMAP_DIO_PARTIAL		(1 << 2)
+>  
+> +/*
+> + * Use CoW-based software emulated torn-write protection.
+> + */
+> +#define IOMAP_DIO_ATOMIC_COW		(1 << 3)
+> +
+>  ssize_t iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
+>  		const struct iomap_ops *ops, const struct iomap_dio_ops *dops,
+>  		unsigned int dio_flags, void *private, size_t done_before);
+> -- 
+> 2.31.1
+> 
+> 
