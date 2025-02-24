@@ -1,349 +1,95 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7951624D2
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 07:15:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9DE1891AA;
+	Mon, 24 Feb 2025 07:16:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740381360; cv=none; b=DWIWBwcTj5CS6NbvXyXMp4Vwq3jV6ZLXqedclRSMt3qfX32ZNb4zzIVsKlgOfOppmbkfeWLgPUy2PWk++Ev9x8Zymc8sv7qnqKGFrFx4B2bbuj4I7J5KEEKuI6gOXmT7lxz2v0QLU8lRZW4t6JaEtRnvUErX9J/IkTg+o8AzUHg=
+	t=1740381395; cv=none; b=pvDu/mUkw17TIz8oUQX0grzC85CNuPR8dtfJUAadDvdlru3sXOsaOYZ3teAlv4FcN48HA9xPUWeM3K6WG2sxnXjX7nb324UR50DietNFgnt27fRjgCJH9vjWOCvdnftV8diKWaxDVSq3DKjv7JVWETB95qdqewgDu0RQiWBmJI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740381360; c=relaxed/simple;
-	bh=CcIlasMlwGyRUnGlK2ln480ok4GS2N+woVsRBl1G40o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mQpG1F876qCKPIFwOl9UKqn7nqqJCarw/PeT6UQLFxBBompC4FWCAZWB+ePk7OdlPA1MgUIiVBKLB1evTniN5Mxts9Cxm4osd4/c9aQZQf66uTuts3QC4o3z+NMI05Gm3taAdnU+kuxaqzHf/2O3MlmlXhj52MlJNooS062V0zw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RCIbHxqB; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740381395; c=relaxed/simple;
+	bh=2pBGmTogQCkZU/xIxkV1ntJSYG2JD2YqKohqWLQmXu4=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=mFHuHCWFpcTmW4ezKfb85IqSTBz6cU9G3qRfylnYnFPHPWhczAOaM9ZZpO4ivJVr4Z/wuriybmWc2BakX8erdGgCWVKE/QL9OUVTRHOC8nAueYSaip6UQrLMo9iqZaAnd6exVINk/l0mD8sjs6Rp8fNG+4DOV3qjM/1rcETCbTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dCsrvMjQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RCIbHxqB"
-Date: Mon, 24 Feb 2025 12:44:52 +0530
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740381345;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yMCBsuCxywFQdUGguzwFOiAlKOVDXhCL8WkyMF7aUdc=;
-	b=RCIbHxqBBl+y9TRQSb1MoRxJCT1aBon2X4cxiEot8bbWUD0QNpZwhlarz5+K+JfQ6Y/W29
-	YK5DB/dPs2QXA+RqXShfDqfBAd8GHEHUqbB1Rnvt2YzKzvPWc7Wo/4Z2oe4yBSuZUMGZQn
-	G84CJLV86vAx4YN+yyPxI6YocRYexjw=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Jai Luthra <jai.luthra@linux.dev>
-To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, mripard@kernel.org, mchehab@kernel.org, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, devarsht@ti.com, vaishnav.a@ti.com, 
-	r-donadkar@ti.com, u-kumar1@ti.com
-Subject: Re: [PATCH v3 2/2] media: cadence: csi2rx: Enable csi2rx_err_irq
- interrupt and add support for VIDIOC_LOG_STATUS
-Message-ID: <4ukas366gvkl7fljddneulgxwnzdvblkknantgv4iu427sfhor@d3rpvym4ynhn>
-X-PGP-Key: http://jailuthra.in/files/public-key.asc
-References: <20250221120337.3920874-1-y-abhilashchandra@ti.com>
- <20250221120337.3920874-3-y-abhilashchandra@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dCsrvMjQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48827C4CED6;
+	Mon, 24 Feb 2025 07:16:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740381394;
+	bh=2pBGmTogQCkZU/xIxkV1ntJSYG2JD2YqKohqWLQmXu4=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=dCsrvMjQLCzpbeyKIBH+s0BVDBGeHCz9RrZkebic83ktfM4vw0gqL8fje2cJ5ce7e
+	 BaDVvtxsrgzSHK+16pwIQsUc5y3vkghLu8MY96zCwSEVhw6Pb2HYEDKE2jfCqmE8TC
+	 Vtdc5FOmfpVaPd4TNIxN73EtlG0TwoJae/v9IRjHuOfHYL/Evaz+dIDXafrvMlZZ/J
+	 x+Y92P5h6+h+F+IN6f9lZ1QOhhC7uTYvI4FhKjz+E3qEX8Gp8GA69GF2iSD31NXE/o
+	 NspuiHPWB2/ZlbdGfFFJssj9Nrdvt5VtS5f0Ym8k/mHGz0Ssto5wY6vU7rc6qO1fmw
+	 YE8PdOQ2jmDNQ==
+Date: Mon, 24 Feb 2025 01:16:32 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4aroo4gfbhv2sbc4"
-Content-Disposition: inline
-In-Reply-To: <20250221120337.3920874-3-y-abhilashchandra@ti.com>
-X-Migadu-Flow: FLOW_OUT
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: benh@kernel.crashing.org, linux-i2c@vger.kernel.org, 
+ andrew@codeconstruct.com.au, openbmc@lists.ozlabs.org, 
+ p.zabel@pengutronix.de, linux-kernel@vger.kernel.org, andi.shyti@kernel.org, 
+ krzk+dt@kernel.org, devicetree@vger.kernel.org, joel@jms.id.au, 
+ andriy.shevchenko@linux.intel.com, conor+dt@kernel.org, 
+ linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: Ryan Chen <ryan_chen@aspeedtech.com>
+In-Reply-To: <20250224055936.1804279-2-ryan_chen@aspeedtech.com>
+References: <20250224055936.1804279-1-ryan_chen@aspeedtech.com>
+ <20250224055936.1804279-2-ryan_chen@aspeedtech.com>
+Message-Id: <174038139252.1126908.7016492425946254564.robh@kernel.org>
+Subject: Re: [PATCH v16 1/3] dt-bindings: i2c: aspeed: support for
+ AST2600-i2cv2
 
 
---4aroo4gfbhv2sbc4
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 2/2] media: cadence: csi2rx: Enable csi2rx_err_irq
- interrupt and add support for VIDIOC_LOG_STATUS
-MIME-Version: 1.0
-
-Hi Abhilash,
-
-Thanks for the patch.
-
-On Fri, Feb 21, 2025 at 05:33:37PM +0530, Yemike Abhilash Chandra wrote:
-> Enable the csi2rx_err_irq interrupt to record any errors during streaming
-> and also add support for VIDIOC_LOG_STATUS ioctl. The VIDIOC_LOG_STATUS
-> ioctl can be invoked from user space to retrieve the device status,
-> including details about any errors.
->=20
-> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+On Mon, 24 Feb 2025 13:59:34 +0800, Ryan Chen wrote:
+> Add ast2600-i2cv2 compatible and aspeed,global-regs, aspeed,enable-dma
+> and description for ast2600-i2cv2.
+> 
+> Signed-off-by: Ryan Chen <ryan_chen@aspeedtech.com>
 > ---
->=20
-> Changes in v3:
-> - Address Jai's review comment to enable FIFO overflow bits in the mask
->   only for the source pads that have an active remote.
-> - Drop TI-specific interrupt and have support for only two interrupts
->   that are common across all vendors.
-> - Address Changhuang's review to use pdev directly to get the interrupt.
-> - Set the interrupt mask register only if the interrupt is defined in the=
- DT.
->=20
->=20
->  drivers/media/platform/cadence/cdns-csi2rx.c | 125 +++++++++++++++++++
->  1 file changed, 125 insertions(+)
->=20
-> diff --git a/drivers/media/platform/cadence/cdns-csi2rx.c b/drivers/media=
-/platform/cadence/cdns-csi2rx.c
-> index cebcae196eec..81375f11a32f 100644
-> --- a/drivers/media/platform/cadence/cdns-csi2rx.c
-> +++ b/drivers/media/platform/cadence/cdns-csi2rx.c
-> @@ -57,6 +57,25 @@
->  #define CSI2RX_LANES_MAX	4
->  #define CSI2RX_STREAMS_MAX	4
-> =20
-> +#define CSI2RX_ERROR_IRQS_REG			0x28
-> +#define CSI2RX_ERROR_IRQS_MASK_REG		0x2C
-> +
-> +#define CSI2RX_STREAM3_FIFO_OVERFLOW_IRQ	BIT(19)
-> +#define CSI2RX_STREAM2_FIFO_OVERFLOW_IRQ	BIT(18)
-> +#define CSI2RX_STREAM1_FIFO_OVERFLOW_IRQ	BIT(17)
-> +#define CSI2RX_STREAM0_FIFO_OVERFLOW_IRQ	BIT(16)
-> +#define CSI2RX_FRONT_TRUNC_HDR_IRQ		BIT(12)
-> +#define CSI2RX_PROT_TRUNCATED_PACKET_IRQ	BIT(11)
-> +#define CSI2RX_FRONT_LP_NO_PAYLOAD_IRQ		BIT(10)
-> +#define CSI2RX_SP_INVALID_RCVD_IRQ		BIT(9)
-> +#define CSI2RX_DATA_ID_IRQ			BIT(7)
-> +#define CSI2RX_HEADER_CORRECTED_ECC_IRQ	BIT(6)
-> +#define CSI2RX_HEADER_ECC_IRQ			BIT(5)
-> +#define CSI2RX_PAYLOAD_CRC_IRQ			BIT(4)
-> +
-> +#define CSI2RX_ECC_ERRORS		GENMASK(7, 4)
-> +#define CSI2RX_PACKET_ERRORS		GENMASK(12, 9)
-> +
->  enum csi2rx_pads {
->  	CSI2RX_PAD_SINK,
->  	CSI2RX_PAD_SOURCE_STREAM0,
-> @@ -71,9 +90,32 @@ struct csi2rx_fmt {
->  	u8				bpp;
->  };
-> =20
-> +struct csi2rx_event {
-> +	u32 mask;
-> +	const char *name;
-> +};
-> +
-> +static const struct csi2rx_event csi2rx_events[] =3D {
-> +	{ CSI2RX_STREAM3_FIFO_OVERFLOW_IRQ, "Overflow of the Stream 3 FIFO dete=
-cted" },
-> +	{ CSI2RX_STREAM2_FIFO_OVERFLOW_IRQ, "Overflow of the Stream 2 FIFO dete=
-cted" },
-> +	{ CSI2RX_STREAM1_FIFO_OVERFLOW_IRQ, "Overflow of the Stream 1 FIFO dete=
-cted" },
-> +	{ CSI2RX_STREAM0_FIFO_OVERFLOW_IRQ, "Overflow of the Stream 0 FIFO dete=
-cted" },
-> +	{ CSI2RX_FRONT_TRUNC_HDR_IRQ, "A truncated header [short or long] has b=
-een received" },
-> +	{ CSI2RX_PROT_TRUNCATED_PACKET_IRQ, "A truncated long packet has been r=
-eceived" },
-> +	{ CSI2RX_FRONT_LP_NO_PAYLOAD_IRQ, "A truncated long packet has been rec=
-eived. No payload" },
-> +	{ CSI2RX_SP_INVALID_RCVD_IRQ, "A reserved or invalid short packet has b=
-een received" },
-> +	{ CSI2RX_DATA_ID_IRQ, "Data ID error in the header packet" },
-> +	{ CSI2RX_HEADER_CORRECTED_ECC_IRQ, "ECC error detected and corrected" },
-> +	{ CSI2RX_HEADER_ECC_IRQ, "Unrecoverable ECC error" },
-> +	{ CSI2RX_PAYLOAD_CRC_IRQ, "CRC error" },
-> +};
-> +
-> +#define CSI2RX_NUM_EVENTS		ARRAY_SIZE(csi2rx_events)
-> +
->  struct csi2rx_priv {
->  	struct device			*dev;
->  	unsigned int			count;
-> +	int				error_irq;
-> =20
->  	/*
->  	 * Used to prevent race conditions between multiple,
-> @@ -95,6 +137,7 @@ struct csi2rx_priv {
->  	u8				max_lanes;
->  	u8				max_streams;
->  	bool				has_internal_dphy;
-> +	u32				events[CSI2RX_NUM_EVENTS];
-> =20
->  	struct v4l2_subdev		subdev;
->  	struct v4l2_async_notifier	notifier;
-> @@ -124,6 +167,50 @@ static const struct csi2rx_fmt formats[] =3D {
->  	{ .code	=3D MEDIA_BUS_FMT_BGR888_1X24,  .bpp =3D 24, },
->  };
-> =20
-> +static void csi2rx_configure_error_irq_mask(void __iomem *base, struct c=
-si2rx_priv *csi2rx)
-> +{
-> +	u32 error_irq_mask =3D 0;
-> +
-> +	error_irq_mask |=3D CSI2RX_ECC_ERRORS;
-> +	error_irq_mask |=3D CSI2RX_PACKET_ERRORS;
-> +
-> +	/*
-> +	 * iterate through all source pads and check if they are linked
+>  .../devicetree/bindings/i2c/aspeed,i2c.yaml   | 58 +++++++++++++++++++
+>  1 file changed, 58 insertions(+)
+> 
 
-nit: s/iterate/Iterate
+My bot found errors running 'make dt_binding_check' on your patch:
 
-> +	 * to an active remote pad. If an active remote pad is found,
-> +	 * calculate the corresponding bit position and set it in
-> +	 * mask, enabling the stream overflow error in the mask.
-> +	 */
-> +
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/i2c/aspeed,i2c.yaml:82:1: [error] duplication of key "allOf" in mapping (key-duplicates)
 
-nit: drop this extra whitespace
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/i2c/aspeed,i2c.yaml: ignoring, error parsing file
+./Documentation/devicetree/bindings/i2c/aspeed,i2c.yaml:82:1: found duplicate key "allOf" with value "[]" (original value: "[]")
+make[2]: *** Deleting file 'Documentation/devicetree/bindings/i2c/aspeed,i2c.example.dts'
+Documentation/devicetree/bindings/i2c/aspeed,i2c.yaml:82:1: found duplicate key "allOf" with value "[]" (original value: "[]")
+make[2]: *** [Documentation/devicetree/bindings/Makefile:26: Documentation/devicetree/bindings/i2c/aspeed,i2c.example.dts] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1511: dt_binding_check] Error 2
+make: *** [Makefile:251: __sub-make] Error 2
 
-> +	for (int i =3D CSI2RX_PAD_SOURCE_STREAM0; i < CSI2RX_PAD_MAX; i++) {
-> +		struct media_pad *remote_pad =3D media_pad_remote_pad_first(&csi2rx->p=
-ads[i]);
-> +
-> +		if (remote_pad) {
-> +			int bit_position =3D 16 + (i - CSI2RX_PAD_SOURCE_STREAM0);
+doc reference errors (make refcheckdocs):
 
-It would be cleaner to not use the magic number of 16 here, instead using t=
-he=20
-already defined macro:
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250224055936.1804279-2-ryan_chen@aspeedtech.com
 
-            error_irq_mask |=3D (CSI2RX_STREAM0_FIFO_OVERFLOW_IRQ
-					   << (i - CSI2RX_PAD_SOURCE_STREAM0));
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-> +
-> +			error_irq_mask |=3D (1 << bit_position);
-> +		}
-> +	}
-> +
-> +	writel(error_irq_mask, base + CSI2RX_ERROR_IRQS_MASK_REG);
-> +}
-> +
-> +static irqreturn_t csi2rx_irq_handler(int irq, void *dev_id)
-> +{
-> +	struct csi2rx_priv *csi2rx =3D dev_id;
-> +	int i;
-> +	u32 error_status;
-> +
-> +	error_status =3D readl(csi2rx->base + CSI2RX_ERROR_IRQS_REG);
-> +
-> +	for (i =3D 0; i < CSI2RX_NUM_EVENTS; i++)
-> +		if (error_status & csi2rx_events[i].mask)
-> +			csi2rx->events[i]++;
-> +
-> +	writel(error_status, csi2rx->base + CSI2RX_ERROR_IRQS_REG);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
->  static const struct csi2rx_fmt *csi2rx_get_fmt_by_code(u32 code)
->  {
->  	unsigned int i;
-> @@ -220,6 +307,9 @@ static int csi2rx_start(struct csi2rx_priv *csi2rx)
->  	reset_control_deassert(csi2rx->p_rst);
->  	csi2rx_reset(csi2rx);
-> =20
-> +	if (csi2rx->error_irq >=3D 0)
-> +		csi2rx_configure_error_irq_mask(csi2rx->base, csi2rx);
-> +
->  	reg =3D csi2rx->num_lanes << 8;
->  	for (i =3D 0; i < csi2rx->num_lanes; i++) {
->  		reg |=3D CSI2RX_STATIC_CFG_DLANE_MAP(i, csi2rx->lanes[i]);
-> @@ -332,6 +422,8 @@ static void csi2rx_stop(struct csi2rx_priv *csi2rx)
->  	reset_control_assert(csi2rx->sys_rst);
->  	clk_disable_unprepare(csi2rx->sys_clk);
-> =20
-> +	writel(0, csi2rx->base + CSI2RX_ERROR_IRQS_MASK_REG);
-> +
->  	for (i =3D 0; i < csi2rx->max_streams; i++) {
->  		writel(CSI2RX_STREAM_CTRL_STOP,
->  		       csi2rx->base + CSI2RX_STREAM_CTRL_REG(i));
-> @@ -363,6 +455,21 @@ static void csi2rx_stop(struct csi2rx_priv *csi2rx)
->  	}
->  }
-> =20
-> +static int csi2rx_log_status(struct v4l2_subdev *sd)
-> +{
-> +	struct csi2rx_priv *csi2rx =3D v4l2_subdev_to_csi2rx(sd);
-> +	unsigned int i;
-> +
-> +	for (i =3D 0; i < CSI2RX_NUM_EVENTS; i++) {
-> +		if (csi2rx->events[i])
-> +			dev_info(csi2rx->dev, "%s events: %d\n",
-> +				 csi2rx_events[i].name,
-> +				 csi2rx->events[i]);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int csi2rx_s_stream(struct v4l2_subdev *subdev, int enable)
->  {
->  	struct csi2rx_priv *csi2rx =3D v4l2_subdev_to_csi2rx(subdev);
-> @@ -468,7 +575,12 @@ static const struct v4l2_subdev_video_ops csi2rx_vid=
-eo_ops =3D {
->  	.s_stream	=3D csi2rx_s_stream,
->  };
-> =20
-> +static const struct v4l2_subdev_core_ops csi2rx_core_ops =3D {
-> +	.log_status	=3D csi2rx_log_status,
-> +};
-> +
->  static const struct v4l2_subdev_ops csi2rx_subdev_ops =3D {
-> +	.core		=3D &csi2rx_core_ops,
->  	.video		=3D &csi2rx_video_ops,
->  	.pad		=3D &csi2rx_pad_ops,
->  };
-> @@ -705,6 +817,19 @@ static int csi2rx_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto err_cleanup;
-> =20
-> +	csi2rx->error_irq =3D platform_get_irq_byname_optional(pdev, "error_irq=
-");
-> +
-> +	if (csi2rx->error_irq < 0) {
-> +		dev_dbg(csi2rx->dev, "Optional interrupt not defined, proceeding witho=
-ut it\n");
-> +	} else {
-> +		ret =3D devm_request_irq(csi2rx->dev, csi2rx->error_irq, csi2rx_irq_ha=
-ndler, 0,
-> +					"csi2rx-error-irq", csi2rx);
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-Why "csi2rx-error-irq" is passed in the devname argument instead of the dev=
-ice=20
-name `dev_name(&pdev->dev)`? Also there is an alignment issue:
+pip3 install dtschema --upgrade
 
-CHECK: Alignment should match open parenthesis
-#204: FILE: drivers/media/platform/cadence/cdns-csi2rx.c:824:
-+               ret =3D devm_request_irq(csi2rx->dev, csi2rx->error_irq, cs=
-i2rx_irq_handler, 0,
-+                                       "csi2rx-error-irq", csi2rx);
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
-> +		if (ret) {
-> +			dev_err(csi2rx->dev, "Unable to request interrupt: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
->  	ret =3D v4l2_subdev_init_finalize(&csi2rx->subdev);
->  	if (ret)
->  		goto err_cleanup;
-> --=20
-> 2.34.1
->=20
-
---4aroo4gfbhv2sbc4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEETeDYGOXVdejUWq/FQ96R+SSacUUFAme8HGsACgkQQ96R+SSa
-cUVZMw/+P+NfrNgRv9I3HrrgDUBcAquipWOLhPSiGrVVKB5NIHk6AHkSFQ8XAvqS
-jR1jRQsoCY97EXU3AXszc5UMAfNrAAnd7mXyRyrmOto6OobH36TFBXb5YCngP9rr
-Or+E+tQC9DY/urYiYmh/7N+xbQZ2kdgu6ZKnjaroWN7ePOw3ncBcfnIvD/4m3v52
-ofZj+nh/KT7CnEaxAx8avI4bavsJDTD8fKVyMUHA/3QjnGFVJZKv3wCx7GFof0Ac
-KwKG6A07IuM+fxLhltMhT7Ykrdhr6kyJIPXf6Rb6J9mHYpfBhuEeRezbwbutOgp9
-Ycn9hzM4DsfjFEo+r7l5rxcSYfiMBvUYkUfAvmTXHrxIf8fc+sfSSNt/I63hG926
-pAD22sJkct/fQVtvSR+Ijuy/dP/Gxh66tmFkkuxEqZ9g+Bexgx3kko5kUkyM8AqQ
-iwub+kXan5TD+LIWc7N5U7wW13HVn+qMnYKuiqlU7lE9bhLBiDUea6iO5pMJGhmu
-77Te3QIgL6t7eNukfL8Blv5G+6+y/1OKaQelkGjB+NnxvFxZpUHyD6Eve9fLMDBT
-VelQwKUJqwtrmlcvfoSzUgEUdjlS7ab6pT3X1uOnVfL1VTZjzlPGIGhcli4HJUDE
-VinnJJ7ZRaF5Bh9jfSNyecP/VUJW7bVUUaKjmsjGpR4u1kqAJ7s=
-=IBdl
------END PGP SIGNATURE-----
-
---4aroo4gfbhv2sbc4--
