@@ -1,106 +1,96 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CEE26659E;
-	Mon, 24 Feb 2025 18:19:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88BB2265CCB;
+	Mon, 24 Feb 2025 18:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740421181; cv=none; b=lwHY+2+JnwYqvtwKZyEmlGMI5oMZF+SH22lgp724f79bQ5Z08HqE9cGpoo+WaCcs0wNxZIKXYXsYWOeJQbK/c8nWZulZCg7fAHtD+XZyI1QSvmuhTjszOR0+t7/EgycIdk0ybbipYprWStTPIh2mnqUGXhie3kPjNEGAAmjtfjA=
+	t=1740421185; cv=none; b=qMIK+X8mEXr+sd1QnIZNfzmaYaOWAz5PAsFo3wgle3vnTfK5HCcjymOTe+EgqfpciTwj/tjHcDZiJSULPGy4yPEHUtUi5azKAbyac2FLqNpEFJxGzykfDnOLB7yVeRdgDxbeN9FzDo5KoWPAOm1EG7n2dTFr2dxm8pzhiJdGZ3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740421181; c=relaxed/simple;
-	bh=gzgQdm+JmvR7MKlx7feYwCW2Y9SAYJHpvwy/wetQL4k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N87H6zqF9cvP4Ub8Z/Far51cVmyLipj5Mn5qkkYtMMrn+L5xyOmqz/OHHHwzwMZYCUkKpBBsdZhYzwfg/XGqVId8LpT+BS5ErOaVftOCG+e03yMdHkzR+qszjbBYVSZW8tRbWUhQTAIkZkge2+vKjprh8fr7sf4ZbjBHQzqu9uI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=HmSwivo2; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1740421185; c=relaxed/simple;
+	bh=aOpTiNZ4UTpq4GD/D/yo0qqX81+gFPuHmfJiBAbK3MQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=srAcSIYf0FpYzLXlfYZWxcs/clAd/+jW37xUwJEotl4PObFR9FLSQm6DSIuxxZoQ2xLbN+68epYlFlZTq4ljtkV3cl97hfT2ezrdffagiSYPIPZFsj7TIqck0VFcEjy+dHzxJCoZ6m+7O6qnQfH08PxEhWK6cEtE9AOeENzXOFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rl95B2IT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="HmSwivo2"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51ODQlVP012696;
-	Mon, 24 Feb 2025 19:14:57 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	osiU9ANcAUpNcWXhI2xaSMZVYF5nDauriCTMslBkOmI=; b=HmSwivo2j8yGU+OD
-	8CvXkxMFfO5N+oopQOWZ+3OvOWV2lwkMs9P+TV0dGKbS1xutovlmhIgUMC4MIVl6
-	pXLTcG0x+LBBFE/SDLqOBmCsEMhvDbAZ6Yvvq7cY/UMTnUk2T70zH7VrWZRjjvRE
-	tMANRs2l89fVQoihhQIZO5mcuEbHSaccQ/0QNU1lD2ZAZw6p3chl4g7RbDHgkxTL
-	s789FLzbSAjlrlyzkloUwbBUiVo3XvjExkCruTRqqLI9TMMoVTWULgaVLyfTAuSD
-	xOZAWjUvJ8YASwQkrtlZ+IvcCcNc1RUM2Otz7rTSmuvkhiARwoOqCmTyXVEhLpic
-	w2oTPg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44y4vm10xa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Feb 2025 19:14:57 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id DA2FD4006D;
-	Mon, 24 Feb 2025 19:12:29 +0100 (CET)
-Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 22CBE5461C3;
-	Mon, 24 Feb 2025 19:02:33 +0100 (CET)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
- (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Feb
- 2025 19:02:32 +0100
-Received: from localhost (10.252.23.75) by SAFDAG1NODE1.st.com (10.75.90.17)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Feb
- 2025 19:02:32 +0100
-From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-To: <lee@kernel.org>, <ukleinek@kernel.org>, <alexandre.torgue@foss.st.com>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <wbg@kernel.org>, <jic23@kernel.org>, <daniel.lezcano@linaro.org>,
-        <tglx@linutronix.de>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <olivier.moysan@foss.st.com>, <fabrice.gasnier@foss.st.com>
-Subject: [PATCH 4/8] clocksource: stm32-lptimer: add stm32mp25 support
-Date: Mon, 24 Feb 2025 19:01:46 +0100
-Message-ID: <20250224180150.3689638-5-fabrice.gasnier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
-References: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rl95B2IT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 012EEC4CEED;
+	Mon, 24 Feb 2025 18:19:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740421185;
+	bh=aOpTiNZ4UTpq4GD/D/yo0qqX81+gFPuHmfJiBAbK3MQ=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=rl95B2ITOHzPPIZEYbmMq41/UD94NPfW+6HKhV8S6qH+goXyzLp9dOGu2tHZj3FIC
+	 izZF6fi3TP8430/x/Rm5Lc7cZJth30EJMGbucf7kxM27mGbXVxTz1ZP7tg+H92//OA
+	 jJuEjT6afOMHY/5Yxh7F3Hckc+MPm6Sn7vtJFHvs6JCSx8UHzP70RzPkNcc3cxJ8Po
+	 qTQ+loH3rAy5CbRToQWS1DRSNhgpbjUHgR+K5tWOTm85uB+c2tYMgri3oHXZGTOOQ6
+	 x6W3fAWZKFnXGZM35Wye89ws3p0XxjwP9xfrSX9Z8hzNsGLTcqVTZrsZv8DbLTW1Kg
+	 j0fjSK3tlQFsw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Mon, 24 Feb 2025 19:11:52 +0100
+Subject: [PATCH net 3/3] mptcp: safety check before fallback
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SAFDAG1NODE1.st.com
- (10.75.90.17)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-24_09,2025-02-24_02,2024-11-22_01
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250224-net-mptcp-misc-fixes-v1-3-f550f636b435@kernel.org>
+References: <20250224-net-mptcp-misc-fixes-v1-0-f550f636b435@kernel.org>
+In-Reply-To: <20250224-net-mptcp-misc-fixes-v1-0-f550f636b435@kernel.org>
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=942; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=aOpTiNZ4UTpq4GD/D/yo0qqX81+gFPuHmfJiBAbK3MQ=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnvLbEGKhlFTAlo0xrvPENFUa8ZD2kU1QWhHNua
+ ZIEQaX3b6KJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ7y2xAAKCRD2t4JPQmmg
+ c1voD/9cqEQ+1y1c6VouIeNTM7UDiOdfkaJWyXPQTRrmJpYqraTb0kL/QR1sQJ1MpHazbkgsE75
+ H2NfvDaAP0v+hnSR+5IjZoYRM96/D2aMLuo7BQk3jRmtSWxlZjD6k8OjX8v+AejB4zrpN7tC2TG
+ vVmxaX1xs+bKLGgPz6ybC5uVfvKIL2wubnUNWMkEVBVdOX76tvPZ4jPEqcN0BHQuts0LzkQ88W7
+ G26Pbh6ZK3v8/vYBUDARKQ9xA/mnQISWdh336gF3NvTDZOOJyERDdDMSyaVl8wdT9aEepyQp0sa
+ WkL9ssuTqapCmCMzkzgWyvX5fyGfIj/69taRBrATqgDZM/reZk849ZKXhMB+38SagUdsQYtv0Kv
+ 00cgOXd2ZfReAzWIFHK+aylLY39XJN/UJGeM9vRrBZJr8zOyfgx7tlL0NpVzELkCBEP0licKKv3
+ GBBcJe3ewG9aDCLWWq6uYmq/EBeyTejWgIdJ08tAAywbc/spUzyXHFOLhBUA9sV/o7w11DwRMUs
+ UllDm5MYwcc7nSmxj48DwERKeazNryjR4yutkSqUtuP08iB+QXSR12lmFOKDLhoBTcid2Pi+Kp6
+ 6cH5cIEdZiSrMIarf9oQ8bv0HF+Le6bojQEjEFYJ5+VKmZ9jgfNuyucZeqScgBRqV0tkEJLDrF3
+ MmiGY2zzjTPb8/g==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Patrick Delaunay <patrick.delaunay@foss.st.com>
+Recently, some fallback have been initiated, while the connection was
+not supposed to fallback.
 
-Add the support of the new compatible for STM32MP25 SoC in driver, as
-described in Documentation/devicetree/bindings/mfd/st,stm32-lptimer.yaml
-and used in arch/arm64/boot/dts/st/stm32mp251.dtsi.
+Add a safety check with a warning to detect when an wrong attempt to
+fallback is being done. This should help detecting any future issues
+quicker.
 
-Signed-off-by: Patrick Delaunay <patrick.delaunay@foss.st.com>
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+Acked-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- drivers/clocksource/timer-stm32-lp.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/mptcp/protocol.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/clocksource/timer-stm32-lp.c b/drivers/clocksource/timer-stm32-lp.c
-index a4c95161cb22..db055348e2cc 100644
---- a/drivers/clocksource/timer-stm32-lp.c
-+++ b/drivers/clocksource/timer-stm32-lp.c
-@@ -197,6 +197,7 @@ static int stm32_clkevent_lp_probe(struct platform_device *pdev)
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index f6a207958459db5bd39f91ed7431b5a766669f92..ad21925af061263d908bd9faddffaef979f46c93 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -1199,6 +1199,8 @@ static inline void __mptcp_do_fallback(struct mptcp_sock *msk)
+ 		pr_debug("TCP fallback already done (msk=%p)\n", msk);
+ 		return;
+ 	}
++	if (WARN_ON_ONCE(!READ_ONCE(msk->allow_infinite_fallback)))
++		return;
+ 	set_bit(MPTCP_FALLBACK_DONE, &msk->flags);
+ }
  
- static const struct of_device_id stm32_clkevent_lp_of_match[] = {
- 	{ .compatible = "st,stm32-lptimer-timer", },
-+	{ .compatible = "st,stm32mp25-lptimer-timer", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, stm32_clkevent_lp_of_match);
+
 -- 
-2.25.1
+2.47.1
 
