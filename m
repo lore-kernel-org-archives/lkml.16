@@ -1,87 +1,120 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28D6FF510;
-	Mon, 24 Feb 2025 03:38:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50205F510;
+	Mon, 24 Feb 2025 03:42:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740368334; cv=none; b=r4dd6v92RD8PVJOkYTvrwDMQXn1JxjsGJlEtCDG6A8CQzGBXlZ71e3k4/IwN94EiRtH5jm0d5u80jn4nxmxWaXy0QfmY4QVjWV7jqrinb8sKBmDGU/BXAiEANF81qbk23D3G8GNGqMchL2dqq1v7Z5rwCnV3p7NudlobLX7DhcA=
+	t=1740368571; cv=none; b=SCnbqGqbPwo802mrsQtUI+qR1/J2E5R9kIZneexdNbFH/UF2IhxZR/crbm+jMzLf0sTW8dugW86L0cU3SbStXwe2RCnB+qHS6+J4r9+NLIV46/1D7SjeiBcg2+21/htxdLTp2QH+Qf9lajt0nu1pbW+rcK3oWE9em3XfjI7wVeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740368334; c=relaxed/simple;
-	bh=khPyexFgRrzKD4aS8Pr7cyj242wf3EyCfCMQCvtoNiQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oTX/5Re2T/rSEoN/98oNCO1cXvdiBkyj+3swhJspLkz/eFBDmnyHAhuqJ6hDCzW1WvUcAaJy1hPmnx4DSimhFCTT5lmwwq5Mf2dUSH0VBj+iDERRF//XfDo75UrotadMljC3sf0PAnrlIfoaTYsnODEmFzrwriqsF+HiEWby47I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=j8TUACTx; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1740368571; c=relaxed/simple;
+	bh=EUEdVg/GLoqBaPwmorcSy8aHuFxU8q15n39wCOvzdJo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=QUsGQ5zttdnPNVq7qfV2688voUsXn/8yxhI1dwuN5uFTR6j33cSufc547Tz2bvoIclpCE/SL+hKj8ZrSEb9YdChk1xzvN3kO7i+0jW5CE16BxWsEiEn1lTwWdJp1LlAmLRAB4l2zX5o1j+AsxyRWiPG71+Zyvpl6soIV/hRmRtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=TyYcjRDz; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="j8TUACTx"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1740368321; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=zDYrXQDA4qm9LJorA4fiBczFbRiFUQ1RGHOU5r99wBQ=;
-	b=j8TUACTxtSTK/lxfzbqGXTay5cMBroXpK5kHDpL6xiUdM2+D7FsIw7sIYt2K6M5lJKl50KfyPkT/XAm4n+5oO20yBiMxR6IkSafHa7cBl25kLaz8pkk39KwKtrE8YKbwEcm/h4wPZ5//Brfa2cOJP9h7G7E3yZTlzfSyceT6IEk=
-Received: from 30.246.161.128(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WQ1w.6n_1740368318 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 24 Feb 2025 11:38:39 +0800
-Message-ID: <fc8788ca-ffef-4166-a8d0-4c5748003de2@linux.alibaba.com>
-Date: Mon, 24 Feb 2025 11:38:37 +0800
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TyYcjRDz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1740368564;
+	bh=QAw19x3pYgc8aUdHyGEwzMcoYS+ClBS9xWT+KeIEZNE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=TyYcjRDzlWTkQ5duOsnU/Irvgs98Iaut5tQBgluaGgxKf7L3D/1WCsUVjM4oGrPMD
+	 jdGhaBjaTQdWBzin7B6n64jVURHRn+8wbaSdM5pgCCy6snPfp5YhDTTA+Tpeq3HoSk
+	 lkiMQafP8tNo3EhxbSDNlB58W9ajnYZtQffyxsdTkop4glvc8X57RAiZs4zsoTYxuv
+	 vMPAKh73qPptuvkj2dO4Lth2DdaCOHEyzpDbaOT8BUBXHPd4Leq44Cf0fXxagWKfXu
+	 NCGZpxPQ/cND4SPaKYcCAiinGEh7FH6zmBaGx3zWLnxh/OWw02gkoiOlEF8KlBkZ5i
+	 DVw3JV8tmcrMQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Z1RQB1vn9z4wbR;
+	Mon, 24 Feb 2025 14:42:42 +1100 (AEDT)
+Date: Mon, 24 Feb 2025 14:42:40 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>, Ingo Molnar
+ <mingo@kernel.org>, "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>, Ryan Roberts
+ <ryan.roberts@arm.com>
+Subject: linux-next: manual merge of the tip tree with the mm tree
+Message-ID: <20250224144240.7b5bca3f@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6] PCI: hotplug: Add a generic RAS tracepoint for hotplug
- event
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
- naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
- mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com,
- rostedt@goodmis.org, lukas@wunner.de, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-References: <20250115013753.49126-1-xueshuai@linux.alibaba.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20250115013753.49126-1-xueshuai@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_//o3eI9X5yHzr=7alZc8QveG";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_//o3eI9X5yHzr=7alZc8QveG
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-在 2025/1/15 09:37, Shuai Xue 写道:
-> Hotplug events are critical indicators for analyzing hardware health,
-> particularly in AI supercomputers where surprise link downs can
-> significantly impact system performance and reliability.
-> 
-> To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
-> tracepoint for hotplug event to help healthy check, and generate
-> tracepoints for pcie hotplug event. Add enum pci_hotplug_event in
-> include/uapi/linux/pci.h so applications like rasdaemon can register
-> tracepoint event handlers for it.
-> 
-> The output like below:
-> 
-> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
-> $ cat /sys/kernel/debug/tracing/trace_pipe
->      <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
-> 
->      <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
-> 
-> Suggested-by: Lukas Wunner <lukas@wunner.de>
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-> Reviewed-by: Lukas Wunner <lukas@wunner.de>
-> ---
-> changes since v5:
-> - move define of enum to include/uapi/linux/pci.h
+Today's linux-next merge of the tip tree got a conflict in:
 
-Hi, Bjorn,
+  arch/riscv/include/asm/io.h
 
-As this patch missed v6.13, should I rebase on pci/main (v6.14-rc1)?
+between commit:
 
-Thanks.
-Shuai
+  85731f537aaf ("mm/ioremap: pass pgprot_t to ioremap_prot() instead of uns=
+igned long")
 
+from th mm-unstable breanch of the mm tree and commit:
+
+  a9ebcb88136c ("mm/memremap: Pass down MEMREMAP_* flags to arch_memremap_w=
+b()")
+
+from the tip tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/riscv/include/asm/io.h
+index 0536846db9b6,0257f4aa7ff4..000000000000
+--- a/arch/riscv/include/asm/io.h
++++ b/arch/riscv/include/asm/io.h
+@@@ -136,8 -136,8 +136,8 @@@ __io_writes_outs(outs, u64, q, __io_pbr
+  #include <asm-generic/io.h>
+ =20
+  #ifdef CONFIG_MMU
+- #define arch_memremap_wb(addr, size)	\
++ #define arch_memremap_wb(addr, size, flags)	\
+ -	((__force void *)ioremap_prot((addr), (size), _PAGE_KERNEL))
+ +	((__force void *)ioremap_prot((addr), (size), __pgprot(_PAGE_KERNEL)))
+  #endif
+ =20
+  #endif /* _ASM_RISCV_IO_H */
+
+--Sig_//o3eI9X5yHzr=7alZc8QveG
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAme76rAACgkQAVBC80lX
+0GwJlQf+PAwgnAQ54ihzuS8tKXxB9IUx6ojp51wPc7zQijCiKvhSiOJcIwuzVMs2
+mPYMhC2b2k2XAfq1FQQUDjiisqHaltP6HRM5gYXTnDjplQ7XQCStVDINBz13elqs
+GLAZXVnKM/QK0RgS++IvRqatHGtYvq9leSTHP1KfkZFxP7yoWAQvK7QiVKRHK2Tg
+dWuPrgRlOBlDRKE2hsU/CWNKg9NneGpzxMzmN1heNltf1o7m/W6t9jFjPZz/KRRY
+uSzcKaUrMO3AQyTd4bUxTBUJZ+pgSwVR4r4pxoRNK/6Ce3Jo7ATM5FtvODabdAwB
+9QBtODLyy9d/5KfvpN9CpuZhYc9iQQ==
+=7Wi9
+-----END PGP SIGNATURE-----
+
+--Sig_//o3eI9X5yHzr=7alZc8QveG--
