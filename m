@@ -1,83 +1,144 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5A32571AD
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 14:02:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08081482E1;
+	Mon, 24 Feb 2025 14:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740405760; cv=none; b=V+oKM9SI/9VE6jAcQUOz2ckYThcwmHTt/NUP0t7wyp542vtM73Q97fmVA/PYBVGOrRPbD5Ak4UTIXmIabcftVa+LqizEbrmynTwUQqZYgrxCc98ILupKfbwvR8Q9z9JenBp0BQPpqilKygDS9ytmXuzSgvXpvj7lbifJjtbV9iE=
+	t=1740405762; cv=none; b=GFCJv4W/F7BFaUYfrrclWjvnI9cqLFdumDh3DDS2rZE3FEcX01xMuC4UKd2RYSyvnWPsor9uTiFd/wW1rAKPApz8LAUXPPY9t+Zqn3dlTVfoSX+UkVZ9KN61PZdbPz7/o+LaA2TbHVIbX4Y55SSp3G6RZSMhWksaU0VwfzCVVIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740405760; c=relaxed/simple;
-	bh=NtQ8UJ5HySKPPmQnEnNNQwk1UmdTw09FLFYUk5geJ0s=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=U8+e17VCZkxKPwdcflBb39Ecm0b5zVIaSkPQX0odKGJep46qk3CuhlnsBK9wVoreAovuoQ2+Sy91rY3Gb8S73+ylrNZF/3bQLcFw+KnJdELZTBv3Utbah709Ue2Q1y9FHnz5L/BB/0Dhb0ivfjPDUydS/jhM/smZJO2yd1v16sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=lmYWGnuV; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1740405762; c=relaxed/simple;
+	bh=1vjjZ48Ox6Uip99qBsyCo6U9XbffBGAbeDhJoXIFzG0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YdnaWpf8+YBjD5+3FiZJTPFfAMK4Su6PQwRjWYWq6gvu9NjzjdYyW7kSkWy0j+OM90/HlJjziNiigICjKpSCal3UC/MzlG4ZQDI7utLjHpjJgPVsiiPq15JspUR1AydhO9T4xNB0tMECiMAvhN+9zoqvnaBetxpEc+UI2TsNOJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cOPsBFVZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="lmYWGnuV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1740405757;
-	bh=NtQ8UJ5HySKPPmQnEnNNQwk1UmdTw09FLFYUk5geJ0s=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=lmYWGnuVgm+KmTD5YIxehDk+tVlRC1vDVfK3HtWmF4+Xq4+qBxIDwOjpAaJvHPift
-	 Iui0tPLrBtCwaPZFe1Y0gbWZIrnAXC10sAKWIMuEnQs3olEYWEDjRCysz/YtqhkcYH
-	 lWyzHOV4kXH761x7If9uEk2Ps2sjc7XQNhouXivC3kLAogKB4Fj1QFoIWUjp28UJIW
-	 VwWMp6/+QipGW+jONwhGszvac4z5tVDFcVG86uo2VvwY+0EjwCVhO4/kTG+8wgKlRP
-	 QNzimmhM4cg2etTnbrfvkeV0PvBbGwLAEkIuJjOqVK/BRTREvZESd7DV3lvUAh0NU8
-	 CAzRrDrDeB5rA==
-Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id B74F517E00F6;
-	Mon, 24 Feb 2025 15:02:36 +0100 (CET)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
- Jason-JH Lin <jason-jh.lin@mediatek.com>
-Cc: Nancy Lin <nancy.lin@mediatek.com>, 
- Singo Chang <singo.chang@mediatek.com>, 
- Yongqiang Niu <yongqiang.niu@mediatek.com>, 
- Sirius Wang <sirius.wang@mediatek.com>, 
- Xavier Chang <xavier.chang@mediatek.com>, Fei Shao <fshao@chromium.org>, 
- Chen-yu Tsai <wenst@chromium.org>, Pin-yen Lin <treapking@chromium.org>, 
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
- Project_Global_Chrome_Upstream_Group@mediatek.com
-In-Reply-To: <20250224105414.3576243-1-jason-jh.lin@mediatek.com>
-References: <20250224105414.3576243-1-jason-jh.lin@mediatek.com>
-Subject: Re: [PATCH v2] mailbox: mtk-cmdq: Refine GCE_GCTL_VALUE setting
-Message-Id: <174040575668.71176.5895162308675381424.b4-ty@collabora.com>
-Date: Mon, 24 Feb 2025 15:02:36 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cOPsBFVZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 193ECC4CEE6;
+	Mon, 24 Feb 2025 14:02:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740405762;
+	bh=1vjjZ48Ox6Uip99qBsyCo6U9XbffBGAbeDhJoXIFzG0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=cOPsBFVZQ0uLM24drCI4fSk9vxsOnDA0hnhVi5mD1RYN5XJFqNL3ERKb6AYlNghty
+	 zPcSa5HwsLNSzKe1vspqIJGsok5kFgZ9D05tZWNkLEMkxY6QI1/rNQVQeD+LafpabJ
+	 tIG59FPoNCCofIRmqzlcYHQLyQOFOYkN68IqPrjTmSoaF4r/LdqTXu+KrvA9RpcugE
+	 /VkLFmzSayoYM3RUidK/s91ItfibP1xQarDBn0uYiI5p+KEaSYRdeWAFRb6tgvQg4w
+	 pREAye8doZXNVnosqDLdYrFMlsy6jntQxnDa8COSjH9AXhwKV/vi8vcuNZMjlTB0XT
+	 EEsePDHyGbbvw==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@ACULAB.COM>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Subject: [PATCH RFCv2 04/18] uprobes: Add uprobe_write function
+Date: Mon, 24 Feb 2025 15:01:36 +0100
+Message-ID: <20250224140151.667679-5-jolsa@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250224140151.667679-1-jolsa@kernel.org>
+References: <20250224140151.667679-1-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-On Mon, 24 Feb 2025 18:50:13 +0800, Jason-JH Lin wrote:
-> Add cmdq_gctl_value_toggle() to configure GCE_CTRL_BY_SW and GCE_DDR_EN
-> together in the same GCE_GCTL_VALUE register.
-> 
-> For the SoCs whose GCE is located in MMINFRA and uses MMINFRA_AO power,
-> this allows it to be written without enabling the clocks. Otherwise, all
-> GCE registers should be written after the GCE clocks are enabled.
-> Move this function into cmdq_runtime_resume() and cmdq_runtime_suspend()
-> to ensure it is called when the GCE clock is enabled.
-> 
-> [...]
+Adding uprobe_write function that does what uprobe_write_opcode did
+so far, but allows to pass verify callback function that checks the
+memory location before writing the opcode.
 
-Applied to v6.14-next/soc, thanks!
+It will be used in following changes to simplify the checking logic.
 
-[1/1] mailbox: mtk-cmdq: Refine GCE_GCTL_VALUE setting
-      commit: 6b9a5fc65a7880f7ac6a981a0a30b5ecba7bd5ae
+The uprobe_write_opcode now calls uprobe_write with verify_opcode as
+the verify callback.
 
-Cheers,
-Angelo
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ include/linux/uprobes.h |  4 ++++
+ kernel/events/uprobes.c | 13 ++++++++++---
+ 2 files changed, 14 insertions(+), 3 deletions(-)
 
+diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+index 8b295c1f28bf..732de4b796ce 100644
+--- a/include/linux/uprobes.h
++++ b/include/linux/uprobes.h
+@@ -185,6 +185,8 @@ struct uprobes_state {
+ 	struct xol_area		*xol_area;
+ };
+ 
++typedef int (*uprobe_write_verify_t)(struct page *page, unsigned long vaddr, uprobe_opcode_t *opcode);
++
+ extern void __init uprobes_init(void);
+ extern int set_swbp(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long vaddr);
+ extern int set_orig_insn(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long vaddr);
+@@ -193,6 +195,8 @@ extern bool is_trap_insn(uprobe_opcode_t *insn);
+ extern unsigned long uprobe_get_swbp_addr(struct pt_regs *regs);
+ extern unsigned long uprobe_get_trap_addr(struct pt_regs *regs);
+ extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm, unsigned long vaddr, uprobe_opcode_t);
++extern int uprobe_write(struct arch_uprobe *auprobe, struct mm_struct *mm, unsigned long vaddr,
++			uprobe_opcode_t *opcode, uprobe_write_verify_t verify);
+ extern struct uprobe *uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
+ extern int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool);
+ extern void uprobe_unregister_nosync(struct uprobe *uprobe, struct uprobe_consumer *uc);
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 86c4eeda0ed9..50560b307522 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -472,6 +472,13 @@ static int update_ref_ctr(struct uprobe *uprobe, struct mm_struct *mm,
+  */
+ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 			unsigned long vaddr, uprobe_opcode_t opcode)
++{
++	return uprobe_write(auprobe, mm, vaddr, &opcode, verify_opcode);
++}
++
++int uprobe_write(struct arch_uprobe *auprobe, struct mm_struct *mm,
++		 unsigned long vaddr, uprobe_opcode_t *opcode,
++		 uprobe_write_verify_t verify)
+ {
+ 	struct page *old_page, *new_page;
+ 	struct vm_area_struct *vma;
+@@ -479,7 +486,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 	bool orig_page_huge = false;
+ 	unsigned int gup_flags = FOLL_FORCE;
+ 
+-	is_register = is_swbp_insn(&opcode);
++	is_register = is_swbp_insn(opcode);
+ 
+ retry:
+ 	if (is_register)
+@@ -489,7 +496,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 	if (IS_ERR(old_page))
+ 		return PTR_ERR(old_page);
+ 
+-	ret = verify_opcode(old_page, vaddr, &opcode);
++	ret = verify(old_page, vaddr, opcode);
+ 	if (ret <= 0)
+ 		goto put_old;
+ 
+@@ -514,7 +521,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 
+ 	__SetPageUptodate(new_page);
+ 	copy_highpage(new_page, old_page);
+-	uprobe_copy_to_page(new_page, vaddr, &opcode, UPROBE_SWBP_INSN_SIZE);
++	uprobe_copy_to_page(new_page, vaddr, opcode, UPROBE_SWBP_INSN_SIZE);
+ 
+ 	if (!is_register) {
+ 		struct page *orig_page;
+-- 
+2.48.1
 
