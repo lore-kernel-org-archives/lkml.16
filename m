@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E3624EF63;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E692D24CEFD;
 	Mon, 24 Feb 2025 13:51:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740405065; cv=none; b=HlmsZyuqn8FwQnxItI9Jk0lkFGkuhz2cAy40aEtoLxs+cjB3NcDgrRNuEo8ZrhZRzrkx4/XniuawTMxKuSdecX2w3Qbh3Jv0UIG5A33Hzrekmli4YwyULQyZ7T6ue/iacvumCPyOGd3ECYLhmSnkpKolprwBCoMJpbNzSqu78tg=
+	t=1740405065; cv=none; b=m5/Daa65us6kHLWxEqdCBtAejuXdYByyE61MAB8U9gc9/5WLRs29H7Vz3+cY1LwV0ep4O77VDnFNDp5tP2Kg2zxeXYLTP8FveSCLBh6stkFvxHlr8taoYzdo8lLhB3emrdMRbVq5VyQ6cVgTVmbH1Cheu8pfoHspEwhB9S/vzys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740405065; c=relaxed/simple;
-	bh=9rsK2DyiLn0rGQVW5aqBw0QCdbVsaOqhBOHIuUKMsyw=;
+	bh=NkLn/3MG2E3CnR6jee3A29hXE2uuTTgpO4AUb4j8UnI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SvYp8PbWEaG2bO00vPdKf0q74CbdYLe7Mz1025lKJg8+piY0qCPqkavKUALD/2t7+Sqqpdamj9nv8xOS0iwOoNJ2eFg3ONU55YLm1VZFRwlodcs9jzCQi33zQpl22fmDE1wdhCDZGgf3jco17xE0NL6x0MfhR12dlAMEkzWO2Ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cwGk/4lF; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=IePHTtTnsYu5ewZBJtrAQcXyNgeX2x31zZhLOcA1Ur9AJxo03SB7PMK1nrZWm2p/IjiIoI5bOd5quFwOssSL+f4hG75zVgBvzGzMhPyMcUFO64ekam/9L9j2DU4gb99KOnM4Qjcp/g3LkztC4M1/E+FH7f5LR6ttLDKK32vkgeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKlaDFL/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cwGk/4lF"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A68A9C4CEF9;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKlaDFL/"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 81D21C4CEF6;
 	Mon, 24 Feb 2025 13:51:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740405064;
-	bh=9rsK2DyiLn0rGQVW5aqBw0QCdbVsaOqhBOHIuUKMsyw=;
+	bh=NkLn/3MG2E3CnR6jee3A29hXE2uuTTgpO4AUb4j8UnI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=cwGk/4lFw/RV2zrHR2vk91lDkKP5hvOnqTQdpmGo2xFPdw3nxcVg9FD0E3a5RHR5Y
-	 JamEKWh9/tTYr8GO9eETAoDXd5uJQk1xuRB1/nHviJMWUq6ogD5QbqAIIwcR/oSu1h
-	 Gy+a4iFYyE5iIPNDLc8iy1bDbd8Wil95t9NKUB7wJxita3AiR9pOUd9rq2bTBlCDVH
-	 kyHn+4o3EW3J5L8281qM4nE4m/c66qnhus0e0fAopXmp2RPjpbK4/bLH1j1AiHdgaF
-	 8Z4XqC6BPMleA+iSBu7Bf8LQ8nX5fqJw0qCF16OWfrlk3XCAcq4c976SPGAM0LEYHR
-	 2zamrqgVtKikQ==
+	b=iKlaDFL/agKTCm6ClZDzrHSOC0TdHAlP7wd/4D/uF1fTA6lFkPgtSZ5mLis5TPKi5
+	 UbLHBYSwvNtajid2yN495VdKhYMSRYhHtEnIKkwD5zbUOf6T6V5z/Gvv6WFTcUpSHc
+	 hwPm1ijOOoo5pGPhJ243XQfx9vE3XNEqRANFhpYnkBP1od35/QMe4TC30/24ClSXWO
+	 KtgTehtsuLPkIgudGJVqKZWL2Tre+at1SWCUthkRwBCwYa62w8bqdk8wGASFBcH8J9
+	 HAKglRMj+kxc4cTv4cVlCAuxh9J8ZUxSmQ5diIh1vSpfjoG4v27anu5jNcBCQXoJvk
+	 n8aSreapHWF+g==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B318C021BB;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7558DC021A6;
 	Mon, 24 Feb 2025 13:51:04 +0000 (UTC)
 From: Maud Spierings via B4 Relay <devnull+maudspierings.gocontroll.com@kernel.org>
-Date: Mon, 24 Feb 2025 14:50:58 +0100
-Subject: [PATCH 08/14] drm/panel: simple: Add BOE AV123Z7M-N17 panel
+Date: Mon, 24 Feb 2025 14:50:56 +0100
+Subject: [PATCH 06/14] arm64: dts: imx8mp: Add pinctrl config definitions
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250224-initial_display-v1-8-5ccbbf613543@gocontroll.com>
+Message-Id: <20250224-initial_display-v1-6-5ccbbf613543@gocontroll.com>
 References: <20250224-initial_display-v1-0-5ccbbf613543@gocontroll.com>
 In-Reply-To: <20250224-initial_display-v1-0-5ccbbf613543@gocontroll.com>
 To: Neil Armstrong <neil.armstrong@linaro.org>, 
@@ -60,11 +60,11 @@ Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, 
  Maud Spierings <maudspierings@gocontroll.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740405062; l=1908;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740405062; l=1790;
  i=maudspierings@gocontroll.com; s=20250214; h=from:subject:message-id;
- bh=vOVkRssMq+0b54M++/GbRnRh45tiCsN1h3cNEf5At7g=;
- b=mIAf7wLfiBaXHgCEU4/8qvWOFXgtpexk2cgZKBPGdS9xQHEzRlSLaQGkNSxpz1dAA+cZucueh
- uDLvxXs5uZfBwENboFcPxubRl6D9NJ9o9TOrax33cAGbmns59TckZj6
+ bh=onT8TBy0kWLgdCkmFuDnMoqyo8nMJja7Mwkr4JyDwjU=;
+ b=hOJ3oQnibx8w4MPc+FcEJfZIDsCSGRpQL1vC/emd6CgR3e5dwXRVhMk7flegtw0k6nyRwuwAk
+ xOTrdG71BgQCHrBcrklzfNBE9+K3HvREL4IjzR84Gi/x0CxIzzYsUFe
 X-Developer-Key: i=maudspierings@gocontroll.com; a=ed25519;
  pk=7chUb8XpaTQDvWhzTdHC0YPMkTDloELEC7q94tOUyPg=
 X-Endpoint-Received: by B4 Relay for maudspierings@gocontroll.com/20250214
@@ -74,63 +74,61 @@ Reply-To: maudspierings@gocontroll.com
 
 From: Maud Spierings <maudspierings@gocontroll.com>
 
-Add support for the BOE AV123Z7M-N17 12.3" LVDS panel.
+Currently to configure each IOMUXC_SW_PAD_CTL_PAD the raw value of this
+register is written in the dts, these values are not obvious. Add defines
+which describe the fields of this register which can be or-ed together to
+produce readable settings.
 
 Signed-off-by: Maud Spierings <maudspierings@gocontroll.com>
----
- drivers/gpu/drm/panel/panel-simple.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index a52977ab73dc2edab0d1954c702fd797d6a5b969..232b03c1a259eb15e423b9d452d28e2ff95c70f8 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1403,6 +1403,35 @@ static const struct panel_desc boe_av101hdt_a10 = {
- 	.connector_type = DRM_MODE_CONNECTOR_LVDS,
- };
+---
+This patch has already been sent in a different group of patches: [1]
+It was requested there to submit it along with a user, this series also
+includes some users for it.
+
+[1]: https://lore.kernel.org/all/20250218-pinctrl_defines-v2-2-c554cad0e1d2@gocontroll.com/
+---
+ arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h | 27 ++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h b/arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h
+index 0fef066471ba607be02d0ab15da5a048a8a213a7..0927ed11ec687d5b273c4a4a6455e8d81468f676 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h
++++ b/arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h
+@@ -6,6 +6,33 @@
+ #ifndef __DTS_IMX8MP_PINFUNC_H
+ #define __DTS_IMX8MP_PINFUNC_H
  
-+static const struct display_timing boe_av123z7m_n17_timing = {
-+	.pixelclock = { 86600000, 88000000, 90800000, },
-+	.hactive = { 1920, 1920, 1920, },
-+	.hfront_porch = { 10, 10, 10, },
-+	.hback_porch = { 10, 10, 10, },
-+	.hsync_len = { 9, 12, 25, },
-+	.vactive = { 720, 720, 720, },
-+	.vfront_porch = { 7, 10, 13, },
-+	.vback_porch = { 7, 10, 13, },
-+	.vsync_len = { 7, 11, 14, },
-+	.flags = DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW,
-+};
++//Drive Strength
++#define MX8MP_DSE_X1 0x0
++#define MX8MP_DSE_X2 0x4
++#define MX8MP_DSE_X4 0x2
++#define MX8MP_DSE_X6 0x6
 +
-+static const struct panel_desc boe_av123z7m_n17 = {
-+	.timings = &boe_av123z7m_n17_timing,
-+	.bpc = 8,
-+	.num_timings = 1,
-+	.size = {
-+		.width = 292,
-+		.height = 110,
-+	},
-+	.delay = {
-+		.prepare = 50,
-+		.disable = 50,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-+	.connector_type = DRM_MODE_CONNECTOR_LVDS,
-+};
++//Slew Rate
++#define MX8MP_FSEL_FAST 0x10
++#define MX8MP_FSEL_SLOW 0x0
 +
- static const struct drm_display_mode boe_bp101wx1_100_mode = {
- 	.clock = 78945,
- 	.hdisplay = 1280,
-@@ -4845,6 +4874,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "boe,av101hdt-a10",
- 		.data = &boe_av101hdt_a10,
-+	}, {
-+		.compatible = "boe,av123z7m-n17",
-+		.data = &boe_av123z7m_n17,
- 	}, {
- 		.compatible = "boe,bp082wx1-100",
- 		.data = &boe_bp082wx1_100,
++//Open Drain
++#define MX8MP_ODE_ENABLE 0x20
++#define MX8MP_ODE_DISABLE 0x0
++
++#define MX8MP_PULL_DOWN 0x0
++#define MX8MP_PULL_UP 0x40
++
++//Hysteresis
++#define MX8MP_HYS_CMOS 0x0
++#define MX8MP_HYS_SCHMITT 0x80
++
++#define MX8MP_PULL_ENABLE 0x100
++#define MX8MP_PULL_DISABLE 0x0
++
++//SION force input mode
++#define MX8MP_SION 0x40000000
++
+ /*
+  * The pin function ID is a tuple of
+  * <mux_reg conf_reg input_reg mux_mode input_val>
 
 -- 
 2.48.1
