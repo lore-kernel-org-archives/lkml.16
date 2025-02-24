@@ -1,146 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C753264A85;
-	Mon, 24 Feb 2025 17:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9CE264A96
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 17:56:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740419734; cv=none; b=HfzC8UflPhqaENplJ6hxy8rxfJV/MlhabJtFVluD03VkOHomeWb3t+H8TBpiqNUVNcFgPSJcJlg0mRkOymwkduELLCG1SyKsP6jUtpmbkMfnzPb7cYZ9iFusLmwadpidK3+SwM0s325DtBGUrMSIyrgFRbax7b3TpIi46TrWhq8=
+	t=1740419772; cv=none; b=CI2Pl1pH7C0+gU6Lw8En12pRuBaNDhiAlPNtQhATyhRRfQy0QL83oWrkbClTcI9UJzx/+v9ndK/omgsla4npqINdL5+904Lj2fn3Ijaa6jJ/G8ITwnDWL95+gl70kUQ/jMfVwNcylTu+DrU1/ssWk0GgNoRRCkyjIMz7pEnv8aA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740419734; c=relaxed/simple;
-	bh=iqkWrOywlTXP+TDM/+KsWRJIvB4XNPt90mmD/JLzT0E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EbVEqQ/3HFOnlrcxCd6jDNYagL+5FW5zWW71hGIzttw1CRBdVip2XOdos16+dXcYmtQnKtLXIIFp8ZRKXo7uDM5D8Luk3lMpz0Q6QqMWdSoWAgIxWWvjP5blBiQFcV/ACftJJRKIvYRF7VKXUHr34UiIuQmDlxhUZynxjiEktkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rTtrGwCL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740419772; c=relaxed/simple;
+	bh=JoNWtL4pjWX/dnrAeAErjeRxJjHFptmwjkCXxEap17U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Da7W25QjYDVw5TyNI+62RriZfZPcqkrNojKHLssC4IPTl23qH/B4UEAt08PB24syf/z/Kdn+prVLFmUsQYD8UyeoYFnb8tVVqpi7RBl4q4t2jwg5kcQ1z0pN8P0D2CrXxwI1EnLvYWUcdE5TC9nbIf8BZ2Zu70WjHW1pO91M80c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=URDcLzvS; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rTtrGwCL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB5E5C4CEE7;
-	Mon, 24 Feb 2025 17:55:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740419734;
-	bh=iqkWrOywlTXP+TDM/+KsWRJIvB4XNPt90mmD/JLzT0E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rTtrGwCLwqFKqlUaB703w6gzeptcDSmBfUQLrLJrmoZ4p7QDtQ3+4YD7WP1fznH8J
-	 PrTlr+LEJBvILLPf2aTbY/nmh+A80nq3D3UzdUGGf/Tx+fHmIIlSWb8+f6eJIFfdwp
-	 Ft93uF7IzZR1KMdDMftaaZs5RDZsO90n8DiyIa4AH48VxLDxs/ztBUjoqRScQn5DRt
-	 iVsdR8uXu/3Vw9+Y/MWE08aEVn/eXEv8biYF9QCxnx8yGTNRRIXIwvg58N/OXFbsyh
-	 /xQbZYZYEt+23lN3EJJPy/feOvM8KfTv9TVSMnFEpeubQOta48VEYJyb+DBrUjlpAe
-	 PYaMHrFDm6BWg==
-Date: Mon, 24 Feb 2025 17:55:27 +0000
-From: Simon Horman <horms@kernel.org>
-To: Peter Hilber <quic_philber@quicinc.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
-	Trilok Soni <quic_tsoni@quicinc.com>,
-	Srivatsa Vaddagiri <quic_svaddagi@quicinc.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	netdev@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>,
-	"Ridoux, Julien" <ridouxj@amazon.com>,
-	Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Parav Pandit <parav@nvidia.com>,
-	Matias Ezequiel Vara Larsen <mvaralar@redhat.com>,
-	Cornelia Huck <cohuck@redhat.com>, virtio-dev@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH v5 1/4] virtio_rtc: Add module and driver core
-Message-ID: <20250224175527.GF1615191@kernel.org>
-References: <20250219193306.1045-1-quic_philber@quicinc.com>
- <20250219193306.1045-2-quic_philber@quicinc.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="URDcLzvS"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5dee1626093so10376526a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 09:56:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740419769; x=1741024569; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JoNWtL4pjWX/dnrAeAErjeRxJjHFptmwjkCXxEap17U=;
+        b=URDcLzvSoRMVdK/HfdIwbtHIkag4hGbbtiagn8hbiOvzRWSpfwF8deBBR8Eknl6uUt
+         DYbU6J+eKRAmt7CQIzBPHwEIAFzyaHCBmBFyDvQYfxYI5OoskYTmR996aAkttkbbToKj
+         PhVMWrE8WWIFNoTnBoWE3sYlpgsli1xoNmHm3M0kEdmrR0p3LIz8xehqE+9inBTvF+F8
+         e5t7Z8PzzFmyyXgd9dn7N6mQWXCeeVgEXEV7eJjiSp6QdBGyOHloNfV/h97NzWywQh2t
+         d0SgG7oLaucVeWQKdgVnFLroCC8dzDkgE52o3S3WLra9N+Lmx4/GIejnJ1irC6wLKHU5
+         pqUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740419769; x=1741024569;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JoNWtL4pjWX/dnrAeAErjeRxJjHFptmwjkCXxEap17U=;
+        b=ewmc8Ml2etG7mQh26DIBVPM2agr0aNHsOnynRU5ETx9QGzfC6qZYF9ftk8aB2eFjNo
+         vFkejiqOK9mjsaFyCV0LojvojwbKxNjzNNZ+4O9+ijd5AsPudhRvNIPPYyubzZlnL1yY
+         5q0gZFxyyKq5XRLJRS+PFf4Qz05oTRQz+DC8Op9xQnFx7Bc/Jdx4HH0StgK+zMtKx+j0
+         7fjcazJTBh5BJcokrcJ/4WkwBPKufpPDbhr/vwC8M0UkmbIAnkj3nADDKgnT4STe4pOd
+         4zO/IeZlRIguUjGwIiXVymEbjfZHFnBAvfnK8QzO7Srq35kuybkqZNe/SwAaMA+XlG4h
+         dIMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWJoUf/nU5ZL7MtSto2OUHVMDOfWTc5bkI56SLzC8GKLnzg0nf+hDbW0qN3eAQGnefl6OQn3sqmwu2h3Ag=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0qPmLQG3bictGyLrCyi/397RiWwwWaETtvkARHKxzaQsjyQZm
+	/UxyeOW61l3Vy7cKc7Tt62tfAg3Ftb7rGKnPOQIli8xP3E+UxU4ddmfUtspupE8o/71kMNpxfpD
+	Ucv0MSofDQX6yT/lrvv4Pz8Fu8/U1hcdBH2s6
+X-Gm-Gg: ASbGncssIvQa5u79kPazQV/FIaO3IQelg1eP/5u+v2XEOpCcxL+7i/fTUbthftKjkln
+	6h1AIf02i+Z7hNpQO5R7clGOFW/zo+dW/C9wdhgX4XxJ1aFSIF6wtLKPYmZyqghP+Xz6RiaA+2M
+	5aKhmsBQ==
+X-Google-Smtp-Source: AGHT+IGaLhJSnUk6JJPYNcD4K1LIcwSr5VkKBquNVpILC1vv7Bk4pjUDo4vsxTybF/r0/sUSF7fvfnRl+Fr2upaH6Dw=
+X-Received: by 2002:a05:6402:90b:b0:5e0:6e6c:e2b5 with SMTP id
+ 4fb4d7f45d1cf-5e0a1261230mr17804954a12.9.1740419768613; Mon, 24 Feb 2025
+ 09:56:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250219193306.1045-2-quic_philber@quicinc.com>
+References: <20250224174401.3582695-1-sdf@fomichev.me>
+In-Reply-To: <20250224174401.3582695-1-sdf@fomichev.me>
+From: Eric Dumazet <edumazet@google.com>
+Date: Mon, 24 Feb 2025 18:55:57 +0100
+X-Gm-Features: AWEUYZlUvE4b-BBWZ-vm5zRw92OkDPpOO9uIKEAgcKkVITAUNhFPql7JlFP6UIs
+Message-ID: <CANn89iKSxQrEPs6nzuQ-4psxHnJODg0TLCHqbj2P0F9VfLtSUg@mail.gmail.com>
+Subject: Re: [PATCH net v4] tcp: devmem: don't write truncated dmabuf CMSGs to userspace
+To: Stanislav Fomichev <sdf@fomichev.me>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, kuba@kernel.org, 
+	pabeni@redhat.com, linux-kernel@vger.kernel.org, kuniyu@amazon.com, 
+	willemb@google.com, horms@kernel.org, ncardwell@google.com, 
+	dsahern@kernel.org, kaiyuanz@google.com, asml.silence@gmail.com, 
+	Mina Almasry <almasrymina@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 19, 2025 at 08:32:56PM +0100, Peter Hilber wrote:
+On Mon, Feb 24, 2025 at 6:44=E2=80=AFPM Stanislav Fomichev <sdf@fomichev.me=
+> wrote:
+>
+> Currently, we report -ETOOSMALL (err) only on the first iteration
+> (!sent). When we get put_cmsg error after a bunch of successful
+> put_cmsg calls, we don't signal the error at all. This might be
+> confusing on the userspace side which will see truncated CMSGs
+> but no MSG_CTRUNC signal.
+>
+> Consider the following case:
+> - sizeof(struct cmsghdr) =3D 16
+> - sizeof(struct dmabuf_cmsg) =3D 24
+> - total cmsg size (CMSG_LEN) =3D 40 (16+24)
+>
+> When calling recvmsg with msg_controllen=3D60, the userspace
+> will receive two(!) dmabuf_cmsg(s), the first one will
+> be a valid one and the second one will be silently truncated. There is no
+> easy way to discover the truncation besides doing something like
+> "cm->cmsg_len !=3D CMSG_LEN(sizeof(dmabuf_cmsg))".
+>
+> Introduce new put_devmem_cmsg wrapper that reports an error instead
+> of doing the truncation. Mina suggests that it's the intended way
+> this API should work.
+>
+> Note that we might now report MSG_CTRUNC when the users (incorrectly)
+> call us with msg_control =3D=3D NULL.
+>
+> Fixes: 8f0b3cc9a4c1 ("tcp: RX path for devmem TCP")
+> Reviewed-by: Mina Almasry <almasrymina@google.com>
+> Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
 
-...
-
-> +/**
-> + * VIORTC_MSG() - extract message from message handle
-> + * @hdl: message handle
-> + *
-> + * Return: struct viortc_msg
-> + */
-> +#define VIORTC_MSG(hdl) ((hdl).msg)
-> +
-> +/**
-> + * VIORTC_MSG_INIT() - initialize message handle
-> + * @hdl: message handle
-> + * @viortc: device data (struct viortc_dev *)
-> + *
-> + * Context: Process context.
-> + * Return: 0 on success, -ENOMEM otherwise.
-> + */
-> +#define VIORTC_MSG_INIT(hdl, viortc)                                         \
-> +	({                                                                   \
-> +		typeof(hdl) *_hdl = &(hdl);                                  \
-> +									     \
-> +		_hdl->msg = viortc_msg_init((viortc), _hdl->msg_type,        \
-> +					    _hdl->req_size, _hdl->resp_cap); \
-> +		if (_hdl->msg) {                                             \
-> +			_hdl->req = _hdl->msg->req;                          \
-> +			_hdl->resp = _hdl->msg->resp;                        \
-> +		}                                                            \
-> +		_hdl->msg ? 0 : -ENOMEM;                                     \
-> +	})
-> +
-> +/**
-> + * VIORTC_MSG_WRITE() - write a request message field
-> + * @hdl: message handle
-> + * @dest_member: request message field name
-> + * @src_ptr: pointer to data of compatible type
-> + *
-> + * Writes the field in little-endian format.
-> + */
-> +#define VIORTC_MSG_WRITE(hdl, dest_member, src_ptr)                         \
-> +	do {                                                                \
-> +		typeof(hdl) _hdl = (hdl);                                   \
-> +		typeof(src_ptr) _src_ptr = (src_ptr);                       \
-> +									    \
-> +		/* Sanity check: must match the member's type */            \
-> +		typecheck(typeof(_hdl.req->dest_member), *_src_ptr);        \
-
-Hi Peter,
-
-FWIIW, this trips up sparse because from it's perspective
-there is an endianness mismatch between the two types.
-
-> +									    \
-> +		_hdl.req->dest_member =                                     \
-> +			virtio_cpu_to_le(*_src_ptr, _hdl.req->dest_member); \
-> +	} while (0)
-> +
-> +/**
-> + * VIORTC_MSG_READ() - read from a response message field
-> + * @hdl: message handle
-> + * @src_member: response message field name
-> + * @dest_ptr: pointer to data of compatible type
-> + *
-> + * Converts from little-endian format and writes to dest_ptr.
-> + */
-> +#define VIORTC_MSG_READ(hdl, src_member, dest_ptr)                     \
-> +	do {                                                           \
-> +		typeof(dest_ptr) _dest_ptr = (dest_ptr);               \
-> +								       \
-> +		/* Sanity check: must match the member's type */       \
-> +		typecheck(typeof((hdl).resp->src_member), *_dest_ptr); \
-
-Ditto.
-
-> +								       \
-> +		*_dest_ptr = virtio_le_to_cpu((hdl).resp->src_member); \
-> +	} while (0)
-> +
-> +/*
-> + * read requests
-> + */
-
-...
+Reviewed-by: Eric Dumazet <edumazet@google.com>
