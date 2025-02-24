@@ -1,120 +1,208 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C397B21930E;
-	Mon, 24 Feb 2025 12:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2837221F1B;
+	Mon, 24 Feb 2025 12:27:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740400008; cv=none; b=M/dTZPk8BaLT4b5Xq9jTPfG77mcHXzVAV0Raoy/3MwmYJR/SJQM+BJY/yztXv9D/zDrrWIMumLrSwWiAfxoPW2awDKGj8Y2jQ/qFlb1gB0YGVbQN2/kd2xSDeWjPBwMKm08qlhvHuRq+k+7TT3qtY/WcayZ9nT5/93q9NZGxwlE=
+	t=1740400020; cv=none; b=olCf4ObUO9C8zcLYwM4/Frzn4uKuMQjaidRtzkTwKZwO0M4rgmCZczzKc425z0rF0ZFmMRdi9YvZY9bAmYklvNDHHhbR/J12Od2FzdfGeOjwqMa/1EiklI6/nDJWNsk8Yaw5e7R9G8xzorReW+2m2aw6cUsQ9MW2r1DQSbqgGi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740400008; c=relaxed/simple;
-	bh=vGlGepndYgWT2DQBTH8vv9ZPy9qn+806foZdcXyS1Xo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IKVFW0toGzTP/9xNXNtTt2rUlHv1eyKm9sF15/59sgJGO4WQ1AbSO7dH4WbTsB7C89KzZXUsCR88+7AmJHy82nFKK/5rR0dSG9WieNGcQTkAoyU6TjwvUJLyrClQ9PNJDFitfDh6OLzAcB+kJa8JThQSwV2D1f0PpbfImDerElk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LCqOKxS1; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740400020; c=relaxed/simple;
+	bh=lMaZnIo/c51auDH+6WQwJ9/tpgxxJvj9CF15z4hlGWQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Uyfc4DT3dV9K2+QNZexpMGZ0XrBo2Lwkfw/dAIk6zSxpyXeYDC0fSP0zN0KUbfBlwSluD3b9WDrazHjuCkRZtvBUDO/r/LILU0LD0XoxXawVL0FfngeHrJsJbKFnOkRVKff6ihp3BLuti4iDrfWXporG+S0aiJ3XqwUCDfvYc4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RU33N3fL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LCqOKxS1"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-abbac134a19so669972166b.0;
-        Mon, 24 Feb 2025 04:26:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740400005; x=1741004805; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Z3DINdR7U7YAAVkvMzjWHburtjPwkiuTtmGkvHpks3E=;
-        b=LCqOKxS1Zp7+Kww/K+t/nUbuZG4n8YyzMm6cdoO7PgeHtaBI1gxi1JsFUU9A+Km4X2
-         KfT4NPNz4fNIPwbkAqOgfRyZKtV8RUd1loV3VWJG5G2g44tkA/uPi9tKScnCV37LjZLb
-         p/TuSYHhoDlSMJTxpVNEp/TTxtLHxFyBp0gszCkv0wKBwINj1JfDSOXuU/lSumi+m1FG
-         jEDXhHEwRgiYoqdx+ksDd4mDjrtvKlnlL5X/HST9NsLZJxnMWbVhcP+Nyq2qPlkzjmWp
-         Bb8LSlIDGxLWHr8JjQ4vwIRQGTz2ZRWXYk7y/k06phnZ6sJWSxH8lD6xTTRVAfhxMZsk
-         rW8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740400005; x=1741004805;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z3DINdR7U7YAAVkvMzjWHburtjPwkiuTtmGkvHpks3E=;
-        b=jP0a/LxR/xp4M5PuQonGCyqtDhWt73KuOzj8cGodxFH37s5ksWvcIX99f3MGmmVBkz
-         3JU2PAjqemH8dicI1CaymbrgZDfF2LSUzPRct3qbKcMuvV76iq4PD7aJ+9R1obbLQ9iE
-         r/0kwzwAS/GTpi2Z6YvZUVtQ4aZBitNbfT7HZoNjCHZuzo8+jmqgeSyev0WR+TTbYfqo
-         sy7Rf7dGcQLEWIMZTCozd9+fbDor4Yv1DD3wYud/D9jG90trBLXe3GDIq3oo3XQyJIHq
-         W6RpnVCLWffOMNtvOTzZrRU0f5DgUDIvuJpzykvnqfdBS550Q42unu2+JGSK85dKoZ6+
-         GbMg==
-X-Forwarded-Encrypted: i=1; AJvYcCV3Bzx3KWd6K86azWfoysx7Ww/VsfXYozzkTDQBtYFMXEhvsHWz0VX/E51H4UTjt+W5hme9IKomdjkIEuj4@vger.kernel.org, AJvYcCVG+1DTS7qdgN3/aOyVzW3jXam3QSNdKtZ4A2hz5tqLO0NCtuARvS/eEj/ELPOSrp7+sSyvbOrIbQ==@vger.kernel.org, AJvYcCVTtZpXXENNi7GLPkLcpZPFvYVmSgsq5bwSekpA2+LdNDRHJwBuaPn9aKV9/urV57tSbKfGmxgdzJC//HVsXw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQ2IS+IDV25iq2CkMc3ErgQ2/sYZ2HZJvuwrxri4cXru/iCbZh
-	QZNBxgm087UpzDHaa8Rrnkj3MVAuw+x4yP+s6nKrLQ5rv7vGMgzK
-X-Gm-Gg: ASbGncs5jYmd8ELZ46dE+lqM+uJ7RhuJwKMsCYyXfmqUPlWP+dQ7ZVYAIi35i90dfT1
-	S9KZHwdI3Iy8hA8Cg4c5Kq1A2TFm4Z0tMQh8OkvuKMF+q1uJcM+YZmKvUHJqFK3Is2mYW/mGCsD
-	UpZ4OfhgIl9UyUesBuiKplO8KjsyFy6lELUWKt90fFRneEG2Dq6W0id64nxB4AiPH+RkGl34Hlo
-	haSImqueDc+N8+AH0Tzfkm0oxWhxe9HA66Oe/QZDFCmTh7kxsSFZCrA0mg++YzmjFMTEDaJLjnZ
-	Z1YE1yLqX+jhvqBndxXbxG+e9g6NAhpoGTAb6SFWzz63iGHUhMY9IfMPICY=
-X-Google-Smtp-Source: AGHT+IH8L/KI4RvCadlDZyccK4lBIzA7goaTDNlGRXtE+85csj2TkvksvFPrY0HaLmx4pWJ/nbSNDw==
-X-Received: by 2002:a17:907:1c0d:b0:ab7:f0fa:1341 with SMTP id a640c23a62f3a-abc09d379b4mr1093453566b.56.1740400004729;
-        Mon, 24 Feb 2025 04:26:44 -0800 (PST)
-Received: from ?IPV6:2620:10d:c096:325:77fd:1068:74c8:af87? ([2620:10d:c092:600::1:bd30])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba532322f1sm2258286766b.19.2025.02.24.04.26.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2025 04:26:44 -0800 (PST)
-Message-ID: <99a7a0ce-eb2f-4421-9f8e-e7f9d749b674@gmail.com>
-Date: Mon, 24 Feb 2025 12:27:45 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RU33N3fL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30E6DC4AF09;
+	Mon, 24 Feb 2025 12:27:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740400020;
+	bh=lMaZnIo/c51auDH+6WQwJ9/tpgxxJvj9CF15z4hlGWQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=RU33N3fLUHbl4fLDk+4+4/KChfNrl/ODuy1CGNeQxxo8Ju3ZjG/upPsFp75dbUrma
+	 ONfNyRQJLq4ex8Jt9xfBuEcTi6tnarW0vBkLn6OI36iOwHLwtDZI6GLqawGYnU6Vyq
+	 EnTbnTfROMyE1TErimAq2KJgT8EGuN6BKZPJKbpDDCId4VAD568hqkT8Prn3Ia6X7m
+	 BC8GtkJx//yNrr20ou4x9jelVEDmu6WcRrMs3T1nnOIJnAdXNd+rV4eBkIqpvIHr5J
+	 MmgpZT9DpU4JcHSsxG5bcyM0O1vLpcgP9AY2o6XqPD5+/UH7eOAhWPfUi/c3qEm+7k
+	 UZeXwafboJPMA==
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-aaeec07b705so695003466b.2;
+        Mon, 24 Feb 2025 04:27:00 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUeSbwjLOGg3Jze6kcGSr7rhXZBGgW86FWJXnP7OgPlKeX3/Q0SNPqDdj5A3eCL3q052X/L5vfhc3hyHc9F@vger.kernel.org, AJvYcCVt3E+/cJUHHEZ2HrLHPZy+24TezOE0G7A6tb9EkuSm0+XqSd33KZxol3U8LFDUPIonLiZ8L2+YJ3Ei@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQDTXWmd54PX4+cMLoKzSb9ACPbXh420gqSw8G7a7YvA/w7wxY
+	wqeoovcxazfJfAkRltiBaE3zmzToiEqZXIhcPpZFtigekRcio6Jp0Pqib/JpltCeRRn4HQzvFtE
+	YQ+KyisqsAu5hF8F6UjkE6ZlC+w==
+X-Google-Smtp-Source: AGHT+IE0bdnAF+czJ4RoK5ksBXS0GISmkLkK0AOBEJHD5YhJY25EFFnVa4LvHrvx4VDNZsHs7ulbsTvrislbrRlsIW4=
+X-Received: by 2002:a17:906:3199:b0:ab6:32d2:16d4 with SMTP id
+ a640c23a62f3a-abc0de519c6mr975592166b.56.1740400018723; Mon, 24 Feb 2025
+ 04:26:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Fuse: Add backing file support for uring_cmd
-To: Bernd Schubert <bernd@bsbernd.com>, Amir Goldstein <amir73il@gmail.com>,
- Moinak Bhattacharyya <moinakb001@gmail.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-References: <CAKXrOwbkMUo9KJd7wHjcFzJieTFj6NPWPp0vD_SgdS3h33Wdsg@mail.gmail.com>
- <db432e5b-fc90-487e-b261-7771766c56cb@bsbernd.com>
- <e0019be0-1167-4024-8268-e320fee4bc50@gmail.com>
- <CAOQ4uxiVvc6i+5bV1PDMcvS8bALFdp86i==+ZQAAfxKY6AjGiQ@mail.gmail.com>
- <a8af0bfc-d739-49aa-ac3f-4f928741fb7a@bsbernd.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <a8af0bfc-d739-49aa-ac3f-4f928741fb7a@bsbernd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250224114648.1606184-1-vincenzo.frascino@arm.com> <20250224114648.1606184-2-vincenzo.frascino@arm.com>
+In-Reply-To: <20250224114648.1606184-2-vincenzo.frascino@arm.com>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 24 Feb 2025 06:26:45 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJTsk6uudqNJ7dpkH_GeKnAuqTWHSw=WmeN=-PBXDS1Pg@mail.gmail.com>
+X-Gm-Features: AWEUYZmi7hUhVER6mycTzw9mt2QdU5RhHSNKbnPAfDOl3xceqac7UV8a1ZEPzTQ
+Message-ID: <CAL_JsqJTsk6uudqNJ7dpkH_GeKnAuqTWHSw=WmeN=-PBXDS1Pg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] ASoC: dt-bindings: xlnx,i2s: Convert to json-schema
+To: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: linux-sound@vger.kernel.org, 
+	Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/21/25 17:13, Bernd Schubert wrote:
-> On 2/21/25 17:24, Amir Goldstein wrote:
-...
->>> +/*
->>> + * Register new backing file for passthrough, getting backing map from
->>> URING_CMD data
->>> + */
->>> +static int fuse_uring_backing_open(struct io_uring_cmd *cmd,
->>> +    unsigned int issue_flags, struct fuse_conn *fc)
->>> +{
->>> +    const struct fuse_backing_map *map = io_uring_sqe_cmd(cmd->sqe);
->>> +    int ret = fuse_backing_open(fc, map);
->>> +
->>
->> I am not that familiar with io_uring, so I need to ask -
->> fuse_backing_open() does
->> fb->cred = prepare_creds();
->> to record server credentials
->> what are the credentials that will be recorded in the context of this
->> io_uring command?
-> 
-> This is run from the io_uring_enter() syscall - it should not make
+On Mon, Feb 24, 2025 at 5:47=E2=80=AFAM Vincenzo Frascino
+<vincenzo.frascino@arm.com> wrote:
+>
+> Convert the Xilinx I2S device tree binding documentation to json-schema.
+>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> ---
+>  .../devicetree/bindings/sound/xlnx,i2s.txt    | 28 --------
+>  .../devicetree/bindings/sound/xlnx,i2s.yaml   | 68 +++++++++++++++++++
+>  2 files changed, 68 insertions(+), 28 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/sound/xlnx,i2s.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/xlnx,i2s.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/sound/xlnx,i2s.txt b/Docum=
+entation/devicetree/bindings/sound/xlnx,i2s.txt
+> deleted file mode 100644
+> index 5e7c7d5bb60a..000000000000
+> --- a/Documentation/devicetree/bindings/sound/xlnx,i2s.txt
+> +++ /dev/null
+> @@ -1,28 +0,0 @@
+> -Device-Tree bindings for Xilinx I2S PL block
+> -
+> -The IP supports I2S based playback/capture audio
+> -
+> -Required property:
+> - - compatible: "xlnx,i2s-transmitter-1.0" for playback and
+> -              "xlnx,i2s-receiver-1.0" for capture
+> -
+> -Required property common to both I2S playback and capture:
+> - - reg: Base address and size of the IP core instance.
+> - - xlnx,dwidth: sample data width. Can be any of 16, 24.
+> - - xlnx,num-channels: Number of I2S streams. Can be any of 1, 2, 3, 4.
+> -                     supported channels =3D 2 * xlnx,num-channels
+> -
+> -Example:
+> -
+> -       i2s_receiver@a0080000 {
+> -               compatible =3D "xlnx,i2s-receiver-1.0";
+> -               reg =3D <0x0 0xa0080000 0x0 0x10000>;
+> -               xlnx,dwidth =3D <0x18>;
+> -               xlnx,num-channels =3D <1>;
+> -       };
+> -       i2s_transmitter@a0090000 {
+> -               compatible =3D "xlnx,i2s-transmitter-1.0";
+> -               reg =3D <0x0 0xa0090000 0x0 0x10000>;
+> -               xlnx,dwidth =3D <0x18>;
+> -               xlnx,num-channels =3D <1>;
+> -       };
+> diff --git a/Documentation/devicetree/bindings/sound/xlnx,i2s.yaml b/Docu=
+mentation/devicetree/bindings/sound/xlnx,i2s.yaml
+> new file mode 100644
+> index 000000000000..5d7f0c651944
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/xlnx,i2s.yaml
+> @@ -0,0 +1,68 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/xlnx,i2s.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Xilinx I2S PL block
+> +
+> +description: |
 
-That's not necessarily true ...
+Don't need '|' if no formatting to preserve.
 
-> a difference to an ioctl, AFAIK. Someone from @io-uring please
-> correct me if I'm wrong.
+> +  The IP supports I2S based playback/capture audio.
+> +
+> +maintainers:
+> +  - Vincenzo Frascino <vincenzo.frascino@arm.com>
+> +
+> +allOf:
+> +  - $ref: dai-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - xlnx,i2s-receiver-1.0
+> +      - xlnx,i2s-transmitter-1.0
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 4
 
-... but it's executed in a context that inherits creds from the
-task that submitted the request. It might be trickier if the app
-changes creds at runtime, but IIRC the request tries to grab
-creds at submission time.
+If there is more than 1 entry, then you need to describe what each one
+is. Looks like 1 entry per channel? But I can only guess.
 
--- 
-Pavel Begunkov
+> +    description: |
+> +      Base address and size of the IP core instance.
 
+That's every 'reg' property if there's only 1 entry. Description
+should be specific to this binding or dropped.
+
+> +
+> +  xlnx,dwidth:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum:
+> +      - 16
+> +      - 24
+> +    description: |
+> +      Sample data width. Can be any of 16, 24.
+
+Don't repeat constraints in prose.
+
+> +
+> +  xlnx,num-channels:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 1
+> +    maximum: 4
+> +    description: |
+> +      Number of I2S streams.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - xlnx,dwidth
+> +  - xlnx,num-channels
+> +
+> +additionalProperties: true
+> +
+> +examples:
+> +  - |
+> +    i2s_receiver@a0080000 {
+
+i2s@...
+
+> +      compatible =3D "xlnx,i2s-receiver-1.0";
+> +      reg =3D <0x0 0xa0080000 0x0 0x10000>;
+> +      xlnx,dwidth =3D <0x18>;
+> +      xlnx,num-channels =3D <1>;
+> +    };
+> +    i2s_transmitter@a0090000 {
+
+i2s@...
+
+> +      compatible =3D "xlnx,i2s-transmitter-1.0";
+> +      reg =3D <0x0 0xa0090000 0x0 0x10000>;
+> +      xlnx,dwidth =3D <0x18>;
+> +      xlnx,num-channels =3D <1>;
+> +    };
+> +
+> +...
+> --
+> 2.43.0
+>
