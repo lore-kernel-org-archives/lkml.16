@@ -1,187 +1,326 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25171AD3E0
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 10:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D30255E5E
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 10:54:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740394462; cv=none; b=pRc9WEW6kUCQ8HHBEadXLc/1s/k1XmwDDoyhde4jYb6dN2cfKsZ1Cbwrnpxh51cnCm3iZv5TZ3CU2XAUBip6auPhoIQX3LFZjkvoGy7ip3fOMlUDFtwQc7sMtsQGfSHYEyfjVxNfqqWA2RwM+oupsWeiTGmrEN7TlLj8lGHdLwM=
+	t=1740394479; cv=none; b=FHkwsArGRH2UPg6d+sGoAgjRVgz2lsXL6mW5wjyCC7y28JSLWvgmE3rPmLep0yze0AF81ZCtQ5FiTo/L2ZuzsaWFkK5zjU9d2lh02HVdwP1If1mObhYUazT2ulPFAaqdwwJJxha6UnbvTwwuZLnDziJKUu1wAvIJp5lp7q9l/0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740394462; c=relaxed/simple;
-	bh=+O97fdk0SkQVXJTm/eHWD998Z/84BZyKj2eVUkFhoGk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dOSkNHgRbhGeAQLfLo2oUaIUeCiW2KrKWaa2Xcede4+MI54s8glNEvLMmvVKTG+tB5rSMFlpDyqb6E8/Ma0rbIeOacDMZ8zOe9bYsK4ixbPNtOXyTooYv+KiCjsvAgNN7pZZ9riEsUlX8K6jFXwWFUJTBbTwRZxPQDxPvunTD9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=Z+mGIdnx; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1740394479; c=relaxed/simple;
+	bh=167yThDNvGov9fjYCXY74PYz0T9DVf+w6k4ikUM5BsI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n9XJQK8CzVuZSISyJHMNqwT6NfLb6raOC+cfvmQF0gXGwthMTDCEsqrZi8kiDRF+Cy+RR+R0hZQAsjQbieH+TRn3i8hxovYaEDye6PkNfT1iz5y8OFrOzPFVvklWRRuRZRr/V1xnuyGD/zc1L80W5yddpRsz4/zRtX72Cf+Il2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=pLCojCI6; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=mI6wHxTt; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=pLCojCI6; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=mI6wHxTt; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Z+mGIdnx"
-X-UUID: b0a917b2f29d11efaae1fd9735fae912-20250224
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=Z15wXjwmbvS8pqfSjgPL6Cg4YPAigbSKI6xhgGV4nu4=;
-	b=Z+mGIdnxAueXSk1PXVm3TTT1zGNH/9vgwJclbjF3ohOCo3UpwHQzknimhcgX4WzgXoOFYt3iH/3u9zxY/CLClCx9/wRJmcR8Qs7nKQXYMT96keGmT+FbV1KyZzPdULH/0nEgKsi0ckVWaFwrYLUGuEGhFS4uxhAHpZ8h9cKg6X8=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.46,REQID:65b5b387-bbec-42e7-9f0f-f0159e1f78cf,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:60aa074,CLOUDID:ccf37ca4-5c06-4e72-8298-91cabc9efadf,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
-	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: b0a917b2f29d11efaae1fd9735fae912-20250224
-Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
-	(envelope-from <jason-jh.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1866478650; Mon, 24 Feb 2025 18:54:15 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Mon, 24 Feb 2025 18:54:14 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Mon, 24 Feb 2025 18:54:14 +0800
-From: Jason-JH Lin <jason-jh.lin@mediatek.com>
-To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>
-CC: "Jason-JH . Lin" <jason-jh.lin@mediatek.com>, Nancy Lin
-	<nancy.lin@mediatek.com>, Singo Chang <singo.chang@mediatek.com>, Yongqiang
- Niu <yongqiang.niu@mediatek.com>, Sirius Wang <sirius.wang@mediatek.com>,
-	Xavier Chang <xavier.chang@mediatek.com>, Fei Shao <fshao@chromium.org>,
-	Chen-yu Tsai <wenst@chromium.org>, Pin-yen Lin <treapking@chromium.org>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mediatek@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH v2] mailbox: mtk-cmdq: Refine GCE_GCTL_VALUE setting
-Date: Mon, 24 Feb 2025 18:50:13 +0800
-Message-ID: <20250224105414.3576243-1-jason-jh.lin@mediatek.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="pLCojCI6";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="mI6wHxTt";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="pLCojCI6";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="mI6wHxTt"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 8BA3E21181;
+	Mon, 24 Feb 2025 10:54:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1740394474; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gIYv0/Q/Zeq48EvvOMQm6hO5YrgVHHe1Ef648QzRuwU=;
+	b=pLCojCI6Ndh8FwupTNlbbixAqjYHuxtVBB/wAhSI2CLqc5jJkopVnCJxSWHzaCKQwe2dH4
+	3x617lQVv51ilS4EsCYxVNEOhnsZqBjQfoVAZgBN29x/s5kbOz/dlsanhZegKzfgyXT5VC
+	cRDnBMZ9oK3wXeYa4tXtE7DdF72F96o=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1740394474;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gIYv0/Q/Zeq48EvvOMQm6hO5YrgVHHe1Ef648QzRuwU=;
+	b=mI6wHxTt5f/7/t2PAluzL2HfiTQQw6hI/kg92M+8rMU6W15iP4rnG9oxLReHFFId8HEKpr
+	LHlaPGLupEhmG0Aw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1740394474; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gIYv0/Q/Zeq48EvvOMQm6hO5YrgVHHe1Ef648QzRuwU=;
+	b=pLCojCI6Ndh8FwupTNlbbixAqjYHuxtVBB/wAhSI2CLqc5jJkopVnCJxSWHzaCKQwe2dH4
+	3x617lQVv51ilS4EsCYxVNEOhnsZqBjQfoVAZgBN29x/s5kbOz/dlsanhZegKzfgyXT5VC
+	cRDnBMZ9oK3wXeYa4tXtE7DdF72F96o=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1740394474;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gIYv0/Q/Zeq48EvvOMQm6hO5YrgVHHe1Ef648QzRuwU=;
+	b=mI6wHxTt5f/7/t2PAluzL2HfiTQQw6hI/kg92M+8rMU6W15iP4rnG9oxLReHFFId8HEKpr
+	LHlaPGLupEhmG0Aw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7247113929;
+	Mon, 24 Feb 2025 10:54:34 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id cgroG+pPvGddfwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 24 Feb 2025 10:54:34 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 202B0A090D; Mon, 24 Feb 2025 11:54:34 +0100 (CET)
+Date: Mon, 24 Feb 2025 11:54:34 +0100
+From: Jan Kara <jack@suse.cz>
+To: Andrey Albershteyn <aalbersh@redhat.com>
+Cc: Richard Henderson <richard.henderson@linaro.org>, 
+	Matt Turner <mattst88@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <monstr@monstr.eu>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
+	Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, 
+	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+	"David S. Miller" <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, 
+	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
+	Arnd Bergmann <arnd@arndb.de>, linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, linux-arch@vger.kernel.org, 
+	linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v3] fs: introduce getfsxattrat and setfsxattrat syscalls
+Message-ID: <fyp7gcbeo3xlrh7zi7k6m5aa6h5otbufxq3kh5zvgr3sjdbxl3@4nkuwx46yajk>
+References: <20250211-xattrat-syscall-v3-1-a07d15f898b2@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+In-Reply-To: <20250211-xattrat-syscall-v3-1-a07d15f898b2@kernel.org>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linaro.org,gmail.com,armlinux.org.uk,arm.com,kernel.org,linux-m68k.org,monstr.eu,alpha.franken.de,hansenpartnership.com,gmx.de,linux.ibm.com,ellerman.id.au,csgroup.eu,users.sourceforge.jp,libc.org,physik.fu-berlin.de,davemloft.net,gaisler.com,linutronix.de,redhat.com,alien8.de,linux.intel.com,zytor.com,zankel.net,zeniv.linux.org.uk,suse.cz,digikod.net,google.com,arndb.de,vger.kernel.org,lists.infradead.org,lists.linux-m68k.org,lists.ozlabs.org];
+	R_RATELIMIT(0.00)[to_ip_from(RLyerg7kx5bdf6cnfzf33td54o)];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[56];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -3.80
+X-Spam-Flag: NO
 
-Add cmdq_gctl_value_toggle() to configure GCE_CTRL_BY_SW and GCE_DDR_EN
-together in the same GCE_GCTL_VALUE register.
+On Tue 11-02-25 18:22:47, Andrey Albershteyn wrote:
+> From: Andrey Albershteyn <aalbersh@redhat.com>
+> 
+> Introduce getfsxattrat and setfsxattrat syscalls to manipulate inode
+> extended attributes/flags. The syscalls take parent directory fd and
+> path to the child together with struct fsxattr.
+> 
+> This is an alternative to FS_IOC_FSSETXATTR ioctl with a difference
+> that file don't need to be open as we can reference it with a path
+> instead of fd. By having this we can manipulated inode extended
+> attributes not only on regular files but also on special ones. This
+> is not possible with FS_IOC_FSSETXATTR ioctl as with special files
+> we can not call ioctl() directly on the filesystem inode using fd.
+> 
+> This patch adds two new syscalls which allows userspace to get/set
+> extended inode attributes on special files by using parent directory
+> and a path - *at() like syscall.
+> 
+> Also, as vfs_fileattr_set() is now will be called on special files
+> too, let's forbid any other attributes except projid and nextents
+> (symlink can have an extent).
+> 
+> CC: linux-api@vger.kernel.org
+> CC: linux-fsdevel@vger.kernel.org
+> CC: linux-xfs@vger.kernel.org
+> Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
 
-For the SoCs whose GCE is located in MMINFRA and uses MMINFRA_AO power,
-this allows it to be written without enabling the clocks. Otherwise, all
-GCE registers should be written after the GCE clocks are enabled.
-Move this function into cmdq_runtime_resume() and cmdq_runtime_suspend()
-to ensure it is called when the GCE clock is enabled.
+Some comments below:
 
-Fixes: 7abd037aa581 ("mailbox: mtk-cmdq: add gce ddr enable support flow")
-Signed-off-by: Jason-JH Lin <jason-jh.lin@mediatek.com>
----
- drivers/mailbox/mtk-cmdq-mailbox.c | 41 +++++++++++++-----------------
- 1 file changed, 17 insertions(+), 24 deletions(-)
+> +SYSCALL_DEFINE4(getfsxattrat, int, dfd, const char __user *, filename,
+> +		struct fsxattr __user *, fsx, unsigned int, at_flags)
+> +{
+> +	CLASS(fd, dir)(dfd);
+> +	struct fileattr fa;
+> +	struct path filepath;
+> +	int error;
+> +	unsigned int lookup_flags = 0;
+> +
+> +	if ((at_flags & ~(AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH)) != 0)
+> +		return -EINVAL;
+> +
+> +	if (at_flags & AT_SYMLINK_FOLLOW)
+	    ^^ This should be !(at_flags & AT_SYMLINK_NOFOLLOW)?
 
-diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index d186865b8dce..a1841e4dc414 100644
---- a/drivers/mailbox/mtk-cmdq-mailbox.c
-+++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -92,16 +92,17 @@ struct gce_plat {
- 	u32 gce_num;
- };
- 
--static void cmdq_sw_ddr_enable(struct cmdq *cmdq, bool enable)
-+static void cmdq_gctl_value_toggle(struct cmdq *cmdq, bool ddr_enable)
- {
--	WARN_ON(clk_bulk_enable(cmdq->pdata->gce_num, cmdq->clocks));
-+	u32 val = cmdq->pdata->control_by_sw ? GCE_CTRL_BY_SW : 0;
- 
--	if (enable)
--		writel(GCE_DDR_EN | GCE_CTRL_BY_SW, cmdq->base + GCE_GCTL_VALUE);
--	else
--		writel(GCE_CTRL_BY_SW, cmdq->base + GCE_GCTL_VALUE);
-+	if (!cmdq->pdata->control_by_sw && !cmdq->pdata->sw_ddr_en)
-+		return;
- 
--	clk_bulk_disable(cmdq->pdata->gce_num, cmdq->clocks);
-+	if (cmdq->pdata->sw_ddr_en && ddr_enable)
-+		val |= GCE_DDR_EN;
-+
-+	writel(val, cmdq->base + GCE_GCTL_VALUE);
- }
- 
- u8 cmdq_get_shift_pa(struct mbox_chan *chan)
-@@ -140,16 +141,10 @@ static void cmdq_thread_resume(struct cmdq_thread *thread)
- static void cmdq_init(struct cmdq *cmdq)
- {
- 	int i;
--	u32 gctl_regval = 0;
- 
- 	WARN_ON(clk_bulk_enable(cmdq->pdata->gce_num, cmdq->clocks));
--	if (cmdq->pdata->control_by_sw)
--		gctl_regval = GCE_CTRL_BY_SW;
--	if (cmdq->pdata->sw_ddr_en)
--		gctl_regval |= GCE_DDR_EN;
- 
--	if (gctl_regval)
--		writel(gctl_regval, cmdq->base + GCE_GCTL_VALUE);
-+	cmdq_gctl_value_toggle(cmdq, true);
- 
- 	writel(CMDQ_THR_ACTIVE_SLOT_CYCLES, cmdq->base + CMDQ_THR_SLOT_CYCLES);
- 	for (i = 0; i <= CMDQ_MAX_EVENT; i++)
-@@ -315,14 +310,21 @@ static irqreturn_t cmdq_irq_handler(int irq, void *dev)
- static int cmdq_runtime_resume(struct device *dev)
- {
- 	struct cmdq *cmdq = dev_get_drvdata(dev);
-+	int ret;
- 
--	return clk_bulk_enable(cmdq->pdata->gce_num, cmdq->clocks);
-+	ret = clk_bulk_enable(cmdq->pdata->gce_num, cmdq->clocks);
-+	if (ret)
-+		return ret;
-+
-+	cmdq_gctl_value_toggle(cmdq, true);
-+	return 0;
- }
- 
- static int cmdq_runtime_suspend(struct device *dev)
- {
- 	struct cmdq *cmdq = dev_get_drvdata(dev);
- 
-+	cmdq_gctl_value_toggle(cmdq, false);
- 	clk_bulk_disable(cmdq->pdata->gce_num, cmdq->clocks);
- 	return 0;
- }
-@@ -347,9 +349,6 @@ static int cmdq_suspend(struct device *dev)
- 	if (task_running)
- 		dev_warn(dev, "exist running task(s) in suspend\n");
- 
--	if (cmdq->pdata->sw_ddr_en)
--		cmdq_sw_ddr_enable(cmdq, false);
--
- 	return pm_runtime_force_suspend(dev);
- }
- 
-@@ -360,9 +359,6 @@ static int cmdq_resume(struct device *dev)
- 	WARN_ON(pm_runtime_force_resume(dev));
- 	cmdq->suspended = false;
- 
--	if (cmdq->pdata->sw_ddr_en)
--		cmdq_sw_ddr_enable(cmdq, true);
--
- 	return 0;
- }
- 
-@@ -370,9 +366,6 @@ static void cmdq_remove(struct platform_device *pdev)
- {
- 	struct cmdq *cmdq = platform_get_drvdata(pdev);
- 
--	if (cmdq->pdata->sw_ddr_en)
--		cmdq_sw_ddr_enable(cmdq, false);
--
- 	if (!IS_ENABLED(CONFIG_PM))
- 		cmdq_runtime_suspend(&pdev->dev);
- 
+In the check above you verify for AT_SYMLINK_NOFOLLOW and that also matches
+what setxattrat() does...
+
+
+> +		lookup_flags |= LOOKUP_FOLLOW;
+> +
+> +	if (at_flags & AT_EMPTY_PATH)
+> +		lookup_flags |= LOOKUP_EMPTY;
+> +
+> +	if (fd_empty(dir))
+> +		return -EBADF;
+
+This check is wrong and in fact the whole dfd handling looks buggy.
+openat(2) manpage describes the expected behavior:
+
+       The dirfd argument is used in conjunction with the pathname argument as
+       follows:
+
+       •  If the pathname given in pathname is absolute,  then  dirfd  is  ig-
+          nored.
+	  ^^^^ This is what you break. If the pathname is absolute, you're
+not expected to touch dirfd.
+
+       •  If  the pathname given in pathname is relative and dirfd is the spe-
+          cial value AT_FDCWD, then pathname is interpreted  relative  to  the
+          current working directory of the calling process (like open()).
+          ^^^ Also AT_FDCWD handling would be broken by the above check.
+
+       •  If  the  pathname  given  in pathname is relative, then it is inter-
+          preted relative to the directory referred to by the file  descriptor
+          dirfd  (rather than relative to the current working directory of the
+          calling process, as is done by open() for a relative pathname).   In
+          this  case,  dirfd  must  be a directory that was opened for reading
+          (O_RDONLY) or using the O_PATH flag.
+
+       If the pathname given in pathname is relative, and dirfd is not a valid
+       file descriptor, an error (EBADF) results.  (Specifying an invalid file
+       descriptor number in dirfd can be used as a means to ensure that  path-
+       name is absolute.)
+
+> +
+> +	error = user_path_at(dfd, filename, lookup_flags, &filepath);
+		^^^ And user_path_at() isn't quite what you need either
+because with AT_EMPTY_PATH we also want to allow for filename to be NULL
+(not just empty string) and user_path_at() does not support that. That's
+why I in my previous replies suggested you should follow what setxattrat()
+does and that sadly it is more painful than it should be. You need
+something like:
+
+	name = getname_maybe_null(filename, at_flags);
+	if (!name) {
+		CLASS(fd, f)(dfd);
+
+		if (fd_empty(f))
+			return -EBADF;
+		error = vfs_fileattr_get(file_dentry(fd_file(f)), &fa);
+	} else {
+		error = filename_lookup(dfd, filename, lookup_flags, &filepath,
+					NULL);
+		if (error)
+			goto out;
+		error = vfs_fileattr_get(filepath.dentry, &fa);
+		path_put(&filepath);
+	}
+	if (!error)
+		error = copy_fsxattr_to_user(&fa, fsx);
+out:
+	putname(name);
+	return error;
+
+Longer term, we need to provide user_path_maybe_null_at() for this but I
+don't want to drag you into this cleanup :)
+
+> +	if (error)
+> +		return error;
+> +
+> +	error = vfs_fileattr_get(filepath.dentry, &fa);
+> +	if (!error)
+> +		error = copy_fsxattr_to_user(&fa, fsx);
+> +
+> +	path_put(&filepath);
+> +	return error;
+> +}
+> +
+> +SYSCALL_DEFINE4(setfsxattrat, int, dfd, const char __user *, filename,
+> +		struct fsxattr __user *, fsx, unsigned int, at_flags)
+> +{
+> +	CLASS(fd, dir)(dfd);
+> +	struct fileattr fa;
+> +	struct path filepath;
+> +	int error;
+> +	unsigned int lookup_flags = 0;
+> +
+> +	if ((at_flags & ~(AT_SYMLINK_FOLLOW | AT_EMPTY_PATH)) != 0)
+> +		return -EINVAL;
+> +
+> +	if (at_flags & AT_SYMLINK_FOLLOW)
+> +		lookup_flags |= LOOKUP_FOLLOW;
+
+I think using AT_SYMLINK_NOFOLLOW is actually more traditional and thus
+less surprising to users so I'd prefer that. Definitely this needs to be
+consistent with getfsxattrat().
+
+> +
+> +	if (at_flags & AT_EMPTY_PATH)
+> +		lookup_flags |= LOOKUP_EMPTY;
+> +
+> +	if (fd_empty(dir))
+> +		return -EBADF;
+
+Same comment regarding dfd handling as above.
+
+> +
+> +	if (copy_fsxattr_from_user(&fa, fsx))
+> +		return -EFAULT;
+> +
+> +	error = user_path_at(dfd, filename, lookup_flags, &filepath);
+> +	if (error)
+> +		return error;
+> +
+> +	error = mnt_want_write(filepath.mnt);
+> +	if (!error) {
+> +		error = vfs_fileattr_set(file_mnt_idmap(fd_file(dir)),
+> +					 filepath.dentry, &fa);
+> +		mnt_drop_write(filepath.mnt);
+> +	}
+> +
+> +	path_put(&filepath);
+> +	return error;
+> +}
+
+Otherwise the patch looks good to me.
+
+								Honza
 -- 
-2.43.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
