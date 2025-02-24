@@ -1,206 +1,317 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D93248879;
-	Mon, 24 Feb 2025 12:06:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E86624886F
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 12:06:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740398782; cv=none; b=EhykUhQvkAKzuXArPRJlM+WhWDBYN4ZrOUU6k90dCvmML+r9cNtJdyGibOhyCJnCPac6zu9tnH9FFMQKOaG+Pwcesaqp7eAh7GA/x70OoxzF3oC4RvjlIUc1uf/MhkMVpfDRHukUMXSYY/sl5fImyZ1uaZV0+sl2WTaQ2wxUsRQ=
+	t=1740398782; cv=none; b=P9r79aIOigdZjvSRfdVvLELfdy2cbFQucLpW5zwX/52R434a92juwKQ0YvaTF3kWMCPz58RcglAivY7A9DXPks0034cWvqEY/5NxCJNIkJzl+fg2WDqdv+iiXPwz58yH7n34mJYWeVqixqewZTh1Q4HL7Lr4qlIuN4Bep0NO9/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740398782; c=relaxed/simple;
-	bh=l/WE/Iyt5IAfurnrT002wpnh8ahQZE+ejk/Q/RlMt6I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IxZ01htkZ3+EcUr4bfGIGbT10968/KX1QM3NfGIo3tXlTvlpqNo4jnXdBjuN1d8z5biMQM3ij7wbU9F0b1Xm6YbqlKfAo1RkDGR4pOQ+5KzMFteuhLG5+K0Dx4Y2eL81U0mm/OIcnr3bwWvcpLuFIrWh1GWaJ68dRsnAb+pyXlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B0y/+s5S; arc=none smtp.client-ip=10.30.226.201
+	bh=URMg2LDs6fo+NEkASxaRt+0YbEVl/TZQfNLU8BSd+FM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KXObFtdJDeByRHzGYb4RLRi8f6E42LXVxPOu9DIh4bDSli8Lhi3MitqCi1VOMi6fX3scj6pgXvsvpE3UisFcbLqqch/PgFdVJ0KxGyELjs7OxU133LZSLYnEfKfV3U4Q+dN76eVXFUlIkiiJHK63ZOXtLnU+XFyqx5tCFXTf0x4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=Crgs2+3e; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B0y/+s5S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8055C4CEEC;
-	Mon, 24 Feb 2025 12:06:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740398782;
-	bh=l/WE/Iyt5IAfurnrT002wpnh8ahQZE+ejk/Q/RlMt6I=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=B0y/+s5SPe5pWrYPKdhk/v+Ph52JXnqurNOEx1JJtsKRBt/2kDSSojN1Rg+wRoMwT
-	 t4Bsq9054Nf3l96xuwwp91oDn6APRQ9m1eo/f53RIeNvBzM85zTp+zQln479RK0IG0
-	 Okn9c7CueCCfS/cE+rAGTBtpJdIc1e95Gedeg01LaOJCB9fVnKs/lKlyt8BifywnhF
-	 756VLOjNuIugYul2aG3BNmhaaeZLPXtVHUWbgNqaVx9n+hJ0a9YOp3q3AoqUMO/3xE
-	 kiWO/o1wVF7jnBE8VxRbD8u3WXUJTYJAf3Z0MhdtqBfaPpusHMJgTBExXO2cwfQXAa
-	 AwMDA9Y2d6NYQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Mon, 24 Feb 2025 13:03:42 +0100
-Subject: [PATCH v9 08/13] rust: hrtimer: implement `UnsafeHrTimerPointer`
- for `Pin<&mut T>`
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="Crgs2+3e"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-abec925a135so19465266b.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 04:06:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1740398779; x=1741003579; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=crkHZb+VMWxE+9KvxQ4OcC5nXG+5ovO5aPbgk0e5AiI=;
+        b=Crgs2+3e8Hh2o34DK4ZxGobFDGnqH+Sj7tnNMVhd+Lsa/qkD4RmvNhUhk/48SyXmn5
+         Fzh+dhN255ctX5IH+udlokeywhfb1144hFlI1ad61EeKdCHyV2H6JZiEyuwzmv8PpR95
+         hakjKNWr0a5aYKGGjUH/VctMU6We3KZnuLXLxxc4vyEdQcNkE7q8n92pSip7oIZyR6do
+         sIlAcb6gyb14wOViAO5Cd48AUQ/0UgAEjlT/Mi41Z3uRiF1PEI1l9kjALAEaceS10Qz6
+         rwF3V8H1gBicopFGlXKSbMIhdcJEs6cCVp0hkhI+pOYXyTV1d1hCnrD5hc3cIQKlvyf0
+         yIww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740398779; x=1741003579;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=crkHZb+VMWxE+9KvxQ4OcC5nXG+5ovO5aPbgk0e5AiI=;
+        b=V/tnJb1uwivYIbHw6xtLr1qXbDkj+IQCo/cc7+ULTN6x3WSMWD8utS/2FZSn40uJP2
+         +VVDUq7ZiTmbHO5NQH5zI394TGLP5jKFCfVg7/j+UXEn/vQ4BXgMrIBKa+A1RC+vGdX6
+         ucd8RV1KBQuVnv/MPweB1kFhINBuQ1yJ8pKa3lnhYLeVrk1tclrAaGwwwxVWurfGSmby
+         igBPn9pt7+i9raeFA3Xb4jM8X1+hiI6aIH2bSPflCjoOqpHX890vM654ZdjcuqUqNHDp
+         oyIpHNs499wIbL0U2GDCteSkkGWJKVkObW1GPkFqx/eDKvNnxpdjT7+7hDh8sRVmzGnR
+         Hhng==
+X-Forwarded-Encrypted: i=1; AJvYcCXol9uV+fqPXwukvYrrwaDy0D7Ps7AX/2BtFSQDtRptKAcZyXSxRDeZd8Hqx1wD94sTDT3mkceG99UoqMk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztBK20cJznqm7a6kUcgzRQAgKDiTQ7/HcHSljVaSZyP6thlDSJ
+	yW71QLJtkyReCBeDLUDVcNBK7hTglXLsvSnS/xDWR4oi2Rf+L327j1zNZ/uO0JI=
+X-Gm-Gg: ASbGncu/gPIVIEtz9OkH2cUbgpAiezwFIxyuKdPkAzR7uxCSRCxEtoGrA/mIaMD9m4G
+	gfpi4wURbWZtHF8qB9Svvv23YaY8ig75YK5V4TxOwFIslYIxYtSoC75oIqESet+g1U4A7qMIzRE
+	0zUeaNevp9Xg71TDqSJ13XmGyLFwT2TYdEfIXZqsmpDcYQxwJl3aZ5tcy1tFkIm/iGR2JVf7KpC
+	x65+OfPY1I13MXouTLOBTPuQf4VjoERAfFBNQ0CU9GyUpxaMJQMm3voquz9lbfhaDQ634Ohef34
+	6YijFr3epLD3D42QdQlNCYtlj9ZdwN7++MD/a+0tKUXYCpxMSfzPWd8=
+X-Google-Smtp-Source: AGHT+IEqNkgqZI4tao7V/PlNrHFkxf3OGZTtMDEK4fVis6RnPkXJUXKKWXIof0yAAG3QH6I5E2M+WA==
+X-Received: by 2002:a17:907:c920:b0:abc:c40:b385 with SMTP id a640c23a62f3a-abc0c40bb25mr983495766b.37.1740398778748;
+        Mon, 24 Feb 2025 04:06:18 -0800 (PST)
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.25])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb978e2c9dsm1598901966b.65.2025.02.24.04.06.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2025 04:06:18 -0800 (PST)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: prabhakar.mahadev-lad.rj@bp.renesas.com,
+	jic23@kernel.org,
+	lars@metafoo.de
+Cc: claudiu.beznea@tuxon.dev,
+	linux-iio@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v3 1/2] iio: adc: rzg2l_adc: Open a devres group
+Date: Mon, 24 Feb 2025 14:06:06 +0200
+Message-ID: <20250224120608.1769039-2-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250224120608.1769039-1-claudiu.beznea.uj@bp.renesas.com>
+References: <20250224120608.1769039-1-claudiu.beznea.uj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250224-hrtimer-v3-v6-12-rc2-v9-8-5bd3bf0ce6cc@kernel.org>
-References: <20250224-hrtimer-v3-v6-12-rc2-v9-0-5bd3bf0ce6cc@kernel.org>
-In-Reply-To: <20250224-hrtimer-v3-v6-12-rc2-v9-0-5bd3bf0ce6cc@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>, 
- Anna-Maria Behnsen <anna-maria@linutronix.de>, 
- Frederic Weisbecker <frederic@kernel.org>, 
- Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, 
- Guangbo Cui <2407018371@qq.com>, Dirk Behme <dirk.behme@gmail.com>, 
- Daniel Almeida <daniel.almeida@collabora.com>, 
- Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4462; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=l/WE/Iyt5IAfurnrT002wpnh8ahQZE+ejk/Q/RlMt6I=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBnvGAjmeNKjyJa36N7rTzlZdrLwwpDVBGIaBQch
- xCGBItaPaCJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7xgIwAKCRDhuBo+eShj
- d5f0D/4zOL9VmopzOXR5gnUKJoAo8ZBhlCNY2HXwpt/ay47V6RaSq4RM4A9LBogTpj9hWWTAJJU
- bYa3tQZpOpI/oZLVuLNtRHeguAb2/TyCsbYgB0SpCuF48j3tdgwx8OmL/Ff/0jCBXRHsCRVuKkF
- hrWd3ovIh72D9V8F8uwLWENgzBWj/bxJ+eaGw3tBqCqyoB/qf5tMMQE9zBEuhm7STA3cUjLST1Y
- Fem0rCvUv74xb/YlQ14iO0+aCcBYPpqHt3aFCaqcZggFMQEZVS84pzemRp/BPNggZoOFt+Afy8J
- A9+Ux0GjXCy/ej7VlUdRGLUJ+p1KcP+nNFUy7OfadOXBEQfTjsby27831n4vPMQcJOmNFlfIwTH
- aVMu3iBgs8GyrgM8/zQ22FbMMi+m63oWo0GD6jnt8wYSbrbb1crk6NIP7YpNWwdh5kxQluDk1Ru
- iKBTOIla+YVWnuB2molUI2oW7AaUJo1EjsTi1b6p++FBke7jjTM+OxbagZhivnr0eGykin7tsXA
- qrnzsawLveGpByZjCxD1wwHJsD9HZazlPu8xgW2G7Zxgin/BDvqa5UUfxvJnqRY6lyO126CICDs
- QIp3+5dpNL+9nyaYwNl5mSYgID9gad5DEE7Bb1Jwad38tdtlpAITyRjpc1VqHa7+uSFcpesuvbm
- NfO1W9xuXdaVm5Q==
-X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
- fpr=3108C10F46872E248D1FB221376EB100563EF7A7
+Content-Transfer-Encoding: 8bit
 
-Allow pinned mutable references to structs that contain a `HrTimer` node to
-be scheduled with the `hrtimer` subsystem.
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Acked-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+On all systems where the rzg2l_adc driver is used, the ADC clocks are part
+of a PM domain. The code that implements the PM domains support is in
+drivers/clk/renesas/rzg2l-cpg.c, the functions of interest for this commit
+being rzg2l_cpg_attach_dev() and rzg2l_cpg_deattach_dev(). The PM
+domains support is registered with GENPD_FLAG_PM_CLK which, according to
+the documentation, instructs genpd to use the PM clk framework while
+powering on/off attached devices.
+
+During probe, the ADC device is attached to the PM domain
+controlling the ADC clocks. Similarly, during removal, the ADC device is
+detached from the PM domain.
+
+The detachment call stack is as follows:
+
+device_driver_detach() ->
+  device_release_driver_internal() ->
+    __device_release_driver() ->
+      device_remove() ->
+        platform_remove() ->
+          dev_pm_domain_detach()
+
+During driver unbind, after the ADC device is detached from its PM domain,
+the device_unbind_cleanup() function is called, which subsequently invokes
+devres_release_all(). This function handles devres resource cleanup.
+
+If runtime PM is enabled via devm_pm_runtime_enable(), the cleanup process
+triggers the action or reset function for disabling runtime PM. This
+function is pm_runtime_disable_action(), which leads to the following call
+stack of interest when called:
+
+pm_runtime_disable_action() ->
+  pm_runtime_dont_use_autosuspend() ->
+    __pm_runtime_use_autosuspend() ->
+      update_autosuspend() ->
+        rpm_idle()
+
+The rpm_idle() function attempts to runtime resume the ADC device. However,
+at the point it is called, the ADC device is no longer part of the PM
+domain (which manages the ADC clocks). Since the rzg2l_adc runtime PM
+APIs directly modifies hardware registers, the
+rzg2l_adc_pm_runtime_resume() function is invoked without the ADC clocks
+being enabled. This is because the PM domain no longer resumes along with
+the ADC device. As a result, this leads to system aborts.
+
+Open a devres group in the driver probe and release it in the driver
+remove. This ensures the runtime PM is disabled (though the devres group)
+after the rzg2l_adc_remove() finishes its execution avoiding the described
+scenario.
+
+Fixes: 89ee8174e8c8 ("iio: adc: rzg2l_adc: Simplify the runtime PM code")
+Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
- rust/kernel/time/hrtimer.rs         |   2 +
- rust/kernel/time/hrtimer/pin_mut.rs | 101 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 103 insertions(+)
 
-diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
-index 52a3dd1c3984..07b19699d4e8 100644
---- a/rust/kernel/time/hrtimer.rs
-+++ b/rust/kernel/time/hrtimer.rs
-@@ -430,3 +430,5 @@ unsafe fn raw_get_timer(ptr: *const Self) ->
- pub use arc::ArcHrTimerHandle;
- mod pin;
- pub use pin::PinHrTimerHandle;
-+mod pin_mut;
-+pub use pin_mut::PinMutHrTimerHandle;
-diff --git a/rust/kernel/time/hrtimer/pin_mut.rs b/rust/kernel/time/hrtimer/pin_mut.rs
-new file mode 100644
-index 000000000000..4f4a9e9602d8
---- /dev/null
-+++ b/rust/kernel/time/hrtimer/pin_mut.rs
-@@ -0,0 +1,101 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+use super::HasHrTimer;
-+use super::HrTimer;
-+use super::HrTimerCallback;
-+use super::HrTimerHandle;
-+use super::RawHrTimerCallback;
-+use super::UnsafeHrTimerPointer;
-+use crate::time::Ktime;
-+use core::pin::Pin;
-+
-+/// A handle for a `Pin<&mut HasHrTimer>`. When the handle exists, the timer might
-+/// be running.
-+pub struct PinMutHrTimerHandle<'a, T>
-+where
-+    T: HasHrTimer<T>,
-+{
-+    pub(crate) inner: Pin<&'a mut T>,
-+}
-+
-+// SAFETY: We cancel the timer when the handle is dropped. The implementation of
-+// the `cancel` method will block if the timer handler is running.
-+unsafe impl<'a, T> HrTimerHandle for PinMutHrTimerHandle<'a, T>
-+where
-+    T: HasHrTimer<T>,
-+{
-+    fn cancel(&mut self) -> bool {
-+        // SAFETY: We are not moving out of `self` or handing out mutable
-+        // references to `self`.
-+        let self_ptr = unsafe { self.inner.as_mut().get_unchecked_mut() as *mut T };
-+
-+        // SAFETY: As we got `self_ptr` from a reference above, it must point to
-+        // a valid `T`.
-+        let timer_ptr = unsafe { <T as HasHrTimer<T>>::raw_get_timer(self_ptr) };
-+
-+        // SAFETY: As `timer_ptr` is derived from a reference, it must point to
-+        // a valid and initialized `HrTimer`.
-+        unsafe { HrTimer::<T>::raw_cancel(timer_ptr) }
-+    }
-+}
-+
-+impl<'a, T> Drop for PinMutHrTimerHandle<'a, T>
-+where
-+    T: HasHrTimer<T>,
-+{
-+    fn drop(&mut self) {
-+        self.cancel();
-+    }
-+}
-+
-+// SAFETY: We capture the lifetime of `Self` when we create a
-+// `PinMutHrTimerHandle`, so `Self` will outlive the handle.
-+unsafe impl<'a, T> UnsafeHrTimerPointer for Pin<&'a mut T>
-+where
-+    T: Send + Sync,
-+    T: HasHrTimer<T>,
-+    T: HrTimerCallback<Pointer<'a> = Self>,
-+    Pin<&'a mut T>: RawHrTimerCallback<CallbackTarget<'a> = Self>,
-+{
-+    type TimerHandle = PinMutHrTimerHandle<'a, T>;
-+
-+    unsafe fn start(self, expires: Ktime) -> Self::TimerHandle {
-+        // Cast to pointer
-+        let self_ptr: *const T = <Self as core::ops::Deref>::deref(&self);
-+
-+        // SAFETY:
-+        //  - As we derive `self_ptr` from a reference above, it must point to a
-+        //    valid `T`.
-+        //  - We keep `self` alive by wrapping it in a handle below.
-+        unsafe { T::start(self_ptr, expires) };
-+
-+        PinMutHrTimerHandle { inner: self }
-+    }
-+}
-+
-+impl<'a, T> RawHrTimerCallback for Pin<&'a mut T>
-+where
-+    T: HasHrTimer<T>,
-+    T: HrTimerCallback<Pointer<'a> = Self>,
-+{
-+    type CallbackTarget<'b> = Self;
-+
-+    unsafe extern "C" fn run(ptr: *mut bindings::hrtimer) -> bindings::hrtimer_restart {
-+        // `HrTimer` is `repr(C)`
-+        let timer_ptr = ptr as *mut HrTimer<T>;
-+
-+        // SAFETY: By the safety requirement of this function, `timer_ptr`
-+        // points to a `HrTimer<T>` contained in an `T`.
-+        let receiver_ptr = unsafe { T::timer_container_of(timer_ptr) };
-+
-+        // SAFETY: By the safety requirement of this function, `timer_ptr`
-+        // points to a `HrTimer<T>` contained in an `T`.
-+        let receiver_ref = unsafe { &mut *receiver_ptr };
-+
-+        // SAFETY: `receiver_ref` only exists as pinned, so it is safe to pin it
-+        // here.
-+        let receiver_pin = unsafe { Pin::new_unchecked(receiver_ref) };
-+
-+        T::run(receiver_pin).into_c()
-+    }
-+}
+Changes in v3:
+- open a devres group in probe and release it in remove; the failure
+  path of probe() was also updated to close the devres group
+- dropped Ulf's Rb tag as the patch is different now
+- updated the patch description to match the new approach
 
+Note: a generic approach was proposed in [1] to have this in the platform
+bus itself but wasn't seen acceptable.
+
+[1] https://lore.kernel.org/all/20250215130849.227812-1-claudiu.beznea.uj@bp.renesas.com/
+
+Changes in v2:
+- collected Ulf's tag
+- add a comment above pm_runtime_enable() explaining the reason
+  it shouldn't be converted to devres
+- drop devres calls that request IRQ and register IIO device
+  as proposed in the review process: Ulf, I still kept you Rb
+  tag; please let me know otherwise
+
+ drivers/iio/adc/rzg2l_adc.c | 88 ++++++++++++++++++++++++++++---------
+ 1 file changed, 67 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/iio/adc/rzg2l_adc.c b/drivers/iio/adc/rzg2l_adc.c
+index 883c167c0670..7db04416e1cf 100644
+--- a/drivers/iio/adc/rzg2l_adc.c
++++ b/drivers/iio/adc/rzg2l_adc.c
+@@ -85,6 +85,7 @@ struct rzg2l_adc {
+ 	struct reset_control *adrstn;
+ 	const struct rzg2l_adc_data *data;
+ 	const struct rzg2l_adc_hw_params *hw_params;
++	void *devres_group_id;
+ 	struct completion completion;
+ 	struct mutex lock;
+ 	u16 last_val[RZG2L_ADC_MAX_CHANNELS];
+@@ -429,60 +430,88 @@ static int rzg2l_adc_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct iio_dev *indio_dev;
+ 	struct rzg2l_adc *adc;
++	void *devres_group_id;
+ 	int ret;
+ 	int irq;
+ 
+-	indio_dev = devm_iio_device_alloc(dev, sizeof(*adc));
+-	if (!indio_dev)
++	/*
++	 * Open a devres group to allow using devm_pm_runtime_enable()
++	 * w/o interfeering with dev_pm_genpd_detach() in the platform bus
++	 * remove. Otherwise, durring repeated unbind/bind operations,
++	 * the ADC may be runtime resumed when it is not part of its power
++	 * domain, leading to accessing ADC registers without its clocks
++	 * being enabled and its PM domain being turned on.
++	 */
++	devres_group_id = devres_open_group(dev, NULL, GFP_KERNEL);
++	if (!devres_group_id)
+ 		return -ENOMEM;
+ 
++	indio_dev = devm_iio_device_alloc(dev, sizeof(*adc));
++	if (!indio_dev) {
++		ret = -ENOMEM;
++		goto release_group;
++	}
++
+ 	adc = iio_priv(indio_dev);
+ 
++	adc->devres_group_id = devres_group_id;
+ 	adc->hw_params = device_get_match_data(dev);
+-	if (!adc->hw_params || adc->hw_params->num_channels > RZG2L_ADC_MAX_CHANNELS)
+-		return -EINVAL;
++	if (!adc->hw_params || adc->hw_params->num_channels > RZG2L_ADC_MAX_CHANNELS) {
++		ret = -EINVAL;
++		goto release_group;
++	}
+ 
+ 	ret = rzg2l_adc_parse_properties(pdev, adc);
+ 	if (ret)
+-		return ret;
++		goto release_group;
+ 
+ 	mutex_init(&adc->lock);
+ 
+ 	adc->base = devm_platform_ioremap_resource(pdev, 0);
+-	if (IS_ERR(adc->base))
+-		return PTR_ERR(adc->base);
++	if (IS_ERR(adc->base)) {
++		ret = PTR_ERR(adc->base);
++		goto release_group;
++	}
+ 
+ 	adc->adrstn = devm_reset_control_get_exclusive_deasserted(dev, "adrst-n");
+-	if (IS_ERR(adc->adrstn))
+-		return dev_err_probe(dev, PTR_ERR(adc->adrstn),
+-				     "failed to get/deassert adrst-n\n");
++	if (IS_ERR(adc->adrstn)) {
++		ret = dev_err_probe(dev, PTR_ERR(adc->adrstn),
++				    "failed to get/deassert adrst-n\n");
++		goto release_group;
++	}
+ 
+ 	adc->presetn = devm_reset_control_get_exclusive_deasserted(dev, "presetn");
+-	if (IS_ERR(adc->presetn))
+-		return dev_err_probe(dev, PTR_ERR(adc->presetn),
+-				     "failed to get/deassert presetn\n");
++	if (IS_ERR(adc->presetn)) {
++		ret = dev_err_probe(dev, PTR_ERR(adc->presetn),
++				    "failed to get/deassert presetn\n");
++		goto release_group;
++	}
+ 
+ 	pm_runtime_set_autosuspend_delay(dev, 300);
+ 	pm_runtime_use_autosuspend(dev);
+ 	ret = devm_pm_runtime_enable(dev);
+ 	if (ret)
+-		return ret;
++		goto release_group;
+ 
+ 	platform_set_drvdata(pdev, indio_dev);
+ 
+ 	ret = rzg2l_adc_hw_init(dev, adc);
+-	if (ret)
+-		return dev_err_probe(&pdev->dev, ret,
+-				     "failed to initialize ADC HW\n");
++	if (ret) {
++		ret = dev_err_probe(&pdev->dev, ret,
++				    "failed to initialize ADC HW\n");
++		goto release_group;
++	}
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (irq < 0)
+-		return irq;
++	if (irq < 0) {
++		ret = irq;
++		goto release_group;
++	}
+ 
+ 	ret = devm_request_irq(dev, irq, rzg2l_adc_isr,
+ 			       0, dev_name(dev), adc);
+ 	if (ret < 0)
+-		return ret;
++		goto release_group;
+ 
+ 	init_completion(&adc->completion);
+ 
+@@ -492,7 +521,23 @@ static int rzg2l_adc_probe(struct platform_device *pdev)
+ 	indio_dev->channels = adc->data->channels;
+ 	indio_dev->num_channels = adc->data->num_channels;
+ 
+-	return devm_iio_device_register(dev, indio_dev);
++	ret = devm_iio_device_register(dev, indio_dev);
++	if (ret)
++		goto release_group;
++
++	return 0;
++
++release_group:
++	devres_release_group(dev, devres_group_id);
++	return ret;
++}
++
++static void rzg2l_adc_remove(struct platform_device *pdev)
++{
++	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
++	struct rzg2l_adc *adc = iio_priv(indio_dev);
++
++	devres_release_group(&pdev->dev, adc->devres_group_id);
+ }
+ 
+ static const struct rzg2l_adc_hw_params rzg2l_hw_params = {
+@@ -614,6 +659,7 @@ static const struct dev_pm_ops rzg2l_adc_pm_ops = {
+ 
+ static struct platform_driver rzg2l_adc_driver = {
+ 	.probe		= rzg2l_adc_probe,
++	.remove		= rzg2l_adc_remove,
+ 	.driver		= {
+ 		.name		= DRIVER_NAME,
+ 		.of_match_table = rzg2l_adc_match,
 -- 
-2.47.0
-
+2.43.0
 
