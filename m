@@ -1,72 +1,40 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-23.smtpout.orange.fr [80.12.242.23])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68A01FCCEE
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 20:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E0926AFB;
+	Mon, 24 Feb 2025 20:29:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740428941; cv=none; b=ZqRjJxBa2GJM16Q8O6Jt6DjnELbqZD9qD8KxZ5SlPhWjL4s/2Jq/vsv+QHW72GfbM7ODK9/qyP7itDAVPGhxXE6GJUbQPk8DkmlhISnehuzJzb09GAe1BdKQf+OMaT5IMprGGtZ44eNa8ipx9O3eFojzb5OoF9AWgxm4dfjCwyQ=
+	t=1740428976; cv=none; b=GSDZxMYFUcZIVUSAGkNXW+jeFPSAIaJgdRgCgCJeqrtmaG+utyqXIvrh9k/efNtQDNEOcSaDqu/ZQUb1POJeP+YiOAqA9hPJW6anD+2ypNmYoF5evGtoKkTYiC6E4lv1UrLNbIhMB47UTLosBMLeyPx1tJlp8MCAN06jMxUhm78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740428941; c=relaxed/simple;
-	bh=C4PUezSCHuw6FaHV1HKbKJ7N//pAYv4ESJN+50v/nSQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E6thUjwjjs9Oa+uHUpqjLBbdJ5PYGv6HlnQoeTZMZ3mJFxSXpFtfI9rLjhm2Puj7yoNkXDrNf8/BAoZMgjLnchdJpU/oW1BKYuSDw7wVWDK10SgNAO2fZkKNJ0SYpDt1QJG4rTwjjTTmP3X2sAt8iMEzo8bDhSkcyzlxGStprxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=AFC21oGz; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1740428976; c=relaxed/simple;
+	bh=0+5ylH1RpEMxad2fU57+zr3KWtLmylDPnzNe+ClA5vo=;
+	h=Message-ID:Date:MIME-Version:Subject:References:From:To:Cc:
+	 In-Reply-To:Content-Type; b=nm7TNtxBmO8mX18YfDNEJMJNEPjNRPmt0q/FxtMvQ29z6wpFL+kh4UhDb5k+6uNHdPalIPGrVmYr+VR4Jc2NgKY3nSbJ639jnaIh0f4UmwYOmSzD/2qTf+SmQFhLD4JHLkv3Snj4JUTCaTvkaMwsRi6po3nL8uy5qQaYRZhWHOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=r1LWAxau; arc=none smtp.client-ip=80.12.242.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="AFC21oGz"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51OKOd92015181
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 20:28:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	E6fDmmAAyuKlBL6ws+051ou2T/3ji4zavCGP8WljcNw=; b=AFC21oGzGdGlgf25
-	CV0XFFZLFTK73Kf2RI1MidF1w979Vry2HV7PhlQA7ExlL+T/gC4UL/fik2KTy8UO
-	leC/U3N4c+uz0wSQTu/RbplDCnPRWrV+/AHCpP+mBS4THCM2xxI531Mr5uoVpls2
-	GF4FZMfl36OW4lRY0ASv+GDRAryMAVMmao8hV29MWoVEKMzhyWHnaXOmwCJPhKlu
-	quJjleXkqtj9a4aG6QfuYBYAYmq6CgN9+zNeGJYYD8vk4FO7/OcvbSFqL6n6qyWg
-	jpe5pjbUCIUHDjSh84+lvS1X5CH4ygQBxL7NbEunNe0sLpotOx6Kgm88QVS+YGPS
-	zqdkkQ==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 450kqg2na5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 20:28:59 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6e422f1ceadso7724626d6.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 12:28:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740428938; x=1741033738;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E6fDmmAAyuKlBL6ws+051ou2T/3ji4zavCGP8WljcNw=;
-        b=Mhehy7AaOyKH/3Xhjz5PDH9ZwvDl6qzk0hToyR+lTK7GVYz/MPyeoC8WNBesKF3ki4
-         eFJgyj2E62vw3BfeT+uSm4VxTnzfLi/ExZZ+omvSsLlLcr9Bv9M3KThYaBekg8i0uDHK
-         TaMdaY/AVlSou7Z3YySTEQLN5Tly6eb/01w3YA8ya76ctprlmny3micq/WFCMZByrzyj
-         IFTwDGv7eEhk/9/FjWSuoQ50b4DIh1yCNaRA90Ul1YzTUIUH2XEdpzHx1HcIu6yGSCrs
-         1zfGWt8A0j5HsJ4X118LNVfYWTCJQ+m7OjOIFT6hd1gGFlDL3PiBBfC023LgL8FvV/yC
-         OX9w==
-X-Forwarded-Encrypted: i=1; AJvYcCWxvzMwsk7C/Y94lnf+cWO7KT3cAEcIRhuczAUXUEs7qWgkSlH1OpPExo5W50rgfWawWO+hixYJyb1/4Rc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7Vtp2Y+00xWNut+LZUjcvTSfJSNiRPrcfq5TxT6mgXN3ag6vo
-	XBkAqVitWr6JpOHqdwWfOWM5ESRZggIHTKKazpeCugm/BCc4r+AxPrfQXsfdlkOFqeM/OJV3Wa8
-	h6xPa6k8rOEeDlDcpPghGCfvOu0HFRzB/1c2YzIYWT+9mtFyQhKLYGl+/iqMCpvQ=
-X-Gm-Gg: ASbGnctjP5CQ1iDhP7lvFKIE4NUo5LCcd5aOzFyoDgRzMXmkA9xsb7rUARsDEAB3DP9
-	E0wVtrpJfG6xWEFxUY6GwylhBf1yISVKnqBeKg83IFCPEhHmbUkMr6NtZJdXmvgG4F1ZF3I+loJ
-	JiI22o2wx3/GgdI50J/2QdXK/xkUNut/FHMFqdFmtGInF/yNvRjslRS2XrvTgxuzehGXFjv+vp4
-	DMyVO5xi1HQMGb+f4RYupM2ZdB5kmzV7XqFciDssvIj0RCPohDcznTc/Frb0WjcaL4R/3DzAdI5
-	r5bu2D8k1NvluhkwasXmVey1gisCokKu8xO1+eTLt+bpRWGUVVPSl3/9u/bN9ivUXm53jQ==
-X-Received: by 2002:ad4:5c68:0:b0:6d9:2fac:c208 with SMTP id 6a1803df08f44-6e6ae9affebmr73396166d6.6.1740428937797;
-        Mon, 24 Feb 2025 12:28:57 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHtOqp3xaG/Jg9zjC3Kz344Y0fun2IzA868MgedRQnJqWcAxYiaghqDYomRV1co7tz3Naoivg==
-X-Received: by 2002:ad4:5c68:0:b0:6d9:2fac:c208 with SMTP id 6a1803df08f44-6e6ae9affebmr73396006d6.6.1740428937454;
-        Mon, 24 Feb 2025 12:28:57 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed1d696d3sm18439266b.59.2025.02.24.12.28.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2025 12:28:57 -0800 (PST)
-Message-ID: <61f8e08c-4f29-4e3e-bfbf-8a561e4b92f8@oss.qualcomm.com>
-Date: Mon, 24 Feb 2025 21:28:55 +0100
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="r1LWAxau"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id mevztE6C3KGvrmew2tsEVG; Mon, 24 Feb 2025 21:20:16 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1740428416;
+	bh=zXvGjak3HqVlV81qtbZ7PYjHL81uIlDbJz0ggojYpY8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To;
+	b=r1LWAxauFhYfUxEL9mkYC5X/vQmAnYURZZy2xWKN49VQZxmw42GDRGUkn5aD8Khot
+	 BF/3RfdCIurvlhZGfoX4qZhMQiUyyGAB3zDWXaK3bFQR3WYQeQgnMyo2PwYk+Hw5zf
+	 sAdUm8CcFVNDPGPetowSfkypjllAD3/BZco9yblhm7j82m3yrDj4iMDtbfePj0ezy1
+	 EoCGzg2geQKtcBZuyXXXqzO6c2LtWjzdj5twfKbo5GGLWP7xJArGEpjywtyWwDlGTF
+	 GVGTd9QTJDdvgMHegqpgrbXw07rhegTDNJ2AQLmXPgq8RGIB2ILVlYLAyzXg+HjxO8
+	 ferPrBGilLmMw==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Mon, 24 Feb 2025 21:20:16 +0100
+X-ME-IP: 90.11.132.44
+Message-ID: <614644f9-71f7-41af-af90-7ae892581646@wanadoo.fr>
+Date: Mon, 24 Feb 2025 21:20:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,61 +42,224 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: sc8280xp: Fix clock for spi0 to spi7
-To: Pengyu Luo <mitltlatltl@gmail.com>,
-        Bjorn Andersson
- <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250223110152.47192-1-mitltlatltl@gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250223110152.47192-1-mitltlatltl@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: GfZTrJJJuQwbO10WK3SjODu2nj37G9lN
-X-Proofpoint-ORIG-GUID: GfZTrJJJuQwbO10WK3SjODu2nj37G9lN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-24_10,2025-02-24_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 lowpriorityscore=0 malwarescore=0 priorityscore=1501
- bulkscore=0 mlxscore=0 spamscore=0 clxscore=1015 mlxlogscore=780
- adultscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502240129
+Subject: Re: [PATCH 4/6] mfd: max77759: add Maxim MAX77759 core mfd driver
+References: <20250224-max77759-mfd-v1-0-2bff36f9d055@linaro.org>
+ <20250224-max77759-mfd-v1-4-2bff36f9d055@linaro.org>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: brgl@bgdev.pl, conor+dt@kernel.org, devicetree@vger.kernel.org,
+ gustavoars@kernel.org, kees@kernel.org, kernel-team@android.com,
+ krzk+dt@kernel.org, lee@kernel.org, linus.walleij@linaro.org,
+ linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kernel@vger.kernel.org, peter.griffin@linaro.org, robh@kernel.org,
+ srinivas.kandagatla@linaro.org, tudor.ambarus@linaro.org,
+ willmcvicker@google.com
+In-Reply-To: <20250224-max77759-mfd-v1-4-2bff36f9d055@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 23.02.2025 12:01 PM, Pengyu Luo wrote:
-> Enabling spi6 caused boot loop on my device(Huawei Matebook E Go),
+Le 24/02/2025 à 11:28, André Draszik a écrit :
+> The Maxim MAX77759 is a companion Power Management IC for USB Type-C
+> applications with Battery Charger, Fuel Gauge, temperature sensors, USB
+> Type-C Port Controller (TCPC), NVMEM, and additional GPIO interfaces.
 > 
-> 	&spi6 {
-> 		pinctrl-0 = <&spi6_default>;
-> 		pinctrl-names = "default";
+> Fuel Gauge and TCPC have separate and independent I2C addresses,
+> register maps, and interrupt lines and are therefore excluded from the
+> MFD core device driver here.
 > 
-> 		status = "okay";
-> 	};
-> 
-> After looking into this, I found the clocks for spi0 to spi7 are
-> wrong, we can derive the correct clocks from the regular pattern
-> between spi8 to spi15, spi16 to spi23. Or we can verify it according
-> to the hex file of BSRC_QSPI.bin(From windows driver qcspi8280.cab)
-> 
-> 000035d0: 0700 4445 5649 4345 0001 000a 005c 5f53  ..DEVICE.....\_S
-> 000035e0: 422e 5350 4937 0003 0076 0001 000a 0043  B.SPI7...v.....C
-> 000035f0: 4f4d 504f 4e45 4e54 0000 0008 0000 0000  OMPONENT........
-> 00003600: 0000 0000 0003 0017 0001 0007 0046 5354  .............FST
-> 00003610: 4154 4500 0000 0800 0000 0000 0000 0000  ATE.............
-> 00003620: 0300 3d00 0100 1400 4449 5343 4f56 4552  ..=.....DISCOVER
-> 00003630: 4142 4c45 5f50 5354 4154 4500 0100 0600  ABLE_PSTATE.....
-> 00003640: 434c 4f43 4b00 0100 1700 6763 635f 7175  CLOCK.....gcc_qu
-> 00003650: 7076 335f 7772 6170 305f 7336 5f63 6c6b  pv3_wrap0_s6_clk
-> 
-> Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
-> ---
+> The GPIO and NVMEM interfaces are accessed via specific commands to the
+> built-in microprocessor. This driver implements an API that client
+> drivers can use for accessing those.
 
-Fixes: 3d256a90b3bf ("arm64: dts: qcom: sc8280xp: add missing spi nodes")
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Hi,
 
-Konrad
+...
+
+> +int max77759_maxq_command(struct max77759_mfd *max77759_mfd,
+> +			  const struct max77759_maxq_command *cmd,
+> +			  struct max77759_maxq_response *rsp)
+> +{
+> +	DEFINE_FLEX(struct max77759_maxq_response, _rsp, rsp, length, 1);
+> +	int ret;
+> +	static const unsigned int timeout_ms = 200;
+> +
+> +	if (cmd->length > MAX77759_MAXQ_REG_AP_MESSAGESZ_MAX)
+> +		return -EINVAL;
+> +
+> +	/* rsp is allowed to be NULL. In that case we do need a temporary. */
+> +	if (!rsp)
+> +		rsp = _rsp;
+> +
+> +	BUILD_BUG_ON(MAX77759_MAXQ_OPCODE_MAXLENGTH
+> +		     != MAX77759_MAXQ_REG_AP_MESSAGESZ_MAX);
+> +	if (!rsp->length || rsp->length > MAX77759_MAXQ_REG_AP_MESSAGESZ_MAX)
+> +		return -EINVAL;
+> +
+> +	guard(mutex)(&max77759_mfd->maxq_lock);
+> +
+> +	reinit_completion(&max77759_mfd->cmd_done);
+> +
+> +	/* write the opcode and data */
+> +	ret = regmap_bulk_write(max77759_mfd->regmap_maxq,
+> +				MAX77759_MAXQ_REG_AP_DATAOUT0, cmd->cmd,
+> +				cmd->length);
+> +	if (!ret && cmd->length < MAX77759_MAXQ_REG_AP_MESSAGESZ_MAX) {
+> +		/* writing the last byte triggers MaxQ */
+> +		ret = regmap_write(max77759_mfd->regmap_maxq,
+> +				   MAX77759_MAXQ_REG_AP_DATAOUT32, 0);
+> +	}
+> +	if (ret)
+> +		dev_warn(regmap_get_device(max77759_mfd->regmap_maxq),
+
+Maybe regmap_get_device(max77759_mfd->regmap_maxq) could be assigned to 
+a variable to simplify its usage?
+
+> +			 "write data failed: %d\n", ret);
+> +	if (ret)
+> +		return ret;
+
+Merge with the if (ret) just above? (as done a few lines below)
+
+> +
+> +	/* wait for response from MaxQ */
+> +	if (!wait_for_completion_timeout(&max77759_mfd->cmd_done,
+> +					 usecs_to_jiffies(timeout_ms))) {
+> +		dev_err(regmap_get_device(max77759_mfd->regmap_maxq),
+> +			"timed out waiting for data\n");
+> +		return -ETIMEDOUT;
+> +	}
+> +
+> +	ret = regmap_bulk_read(max77759_mfd->regmap_maxq,
+> +			       MAX77759_MAXQ_REG_AP_DATAIN0,
+> +			       rsp->rsp, rsp->length);
+> +	if (ret) {
+> +		dev_warn(regmap_get_device(max77759_mfd->regmap_maxq),
+> +			 "read data failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * As per the protocol, the first byte of the reply will match the
+> +	 * request.
+> +	 */
+> +	if (rsp->rsp[0] != cmd->cmd[0]) {
+> +		dev_warn(regmap_get_device(max77759_mfd->regmap_maxq),
+> +			 "unexpected opcode response for %#.2x: %*ph\n",
+> +			 cmd->cmd[0], (int)rsp->length, rsp->rsp);
+> +		return -EIO;
+> +	}
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static int max77759_probe(struct i2c_client *client)
+> +{
+> +	struct regmap *regmap_top;
+> +	unsigned int pmic_id;
+> +	int ret;
+> +	struct irq_data *irq_data;
+> +	struct max77759_mfd *max77759_mfd;
+> +	unsigned long irq_flags;
+> +	struct regmap_irq_chip_data *irq_chip_data_pmic;
+> +
+> +	regmap_top = devm_regmap_init_i2c(client, &max77759_regmap_config_top);
+> +	if (IS_ERR(regmap_top))
+> +		return dev_err_probe(&client->dev, PTR_ERR(regmap_top),
+> +				     "regmap init failed\n");
+> +
+> +	ret = regmap_read(regmap_top, MAX77759_PMIC_REG_PMIC_ID, &pmic_id);
+> +	if (ret)
+> +		return dev_err_probe(&client->dev, ret,
+> +				     "Unable to read Device ID\n");
+> +
+> +	if (pmic_id != MAX77759_PMIC_REG_PMIC_ID_MAX77759)
+> +		return dev_err_probe(&client->dev, -ENODEV,
+> +				     "Unsupported Device ID %#.2x (%d)\n",
+> +				     pmic_id, pmic_id);
+> +
+> +	irq_data = irq_get_irq_data(client->irq);
+> +	if (!irq_data)
+> +		return dev_err_probe(&client->dev, -EINVAL,
+> +				     "Invalid IRQ: %d\n", client->irq);
+> +
+> +	max77759_mfd = devm_kzalloc(&client->dev, sizeof(*max77759_mfd),
+> +				    GFP_KERNEL);
+> +	if (!max77759_mfd)
+> +		return -ENOMEM;
+> +
+> +	max77759_mfd->regmap_top = regmap_top;
+> +	devm_mutex_init(&client->dev, &max77759_mfd->maxq_lock);
+
+Error handling?
+
+> +
+> +	i2c_set_clientdata(client, max77759_mfd);
+
+Harmless, but is it needed? (there is no i2c_get_clientdata() in the flile)
+
+> +
+> +	for (int i = 0; i < ARRAY_SIZE(max77759_i2c_subdevs); ++i) {
+
+Unusual. Maybe declare 'i' at the beginning of the function?
+
+> +		ret = max77759_create_i2c_subdev(client,
+> +						 max77759_mfd,
+> +						 &max77759_i2c_subdevs[i]);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	irq_flags = IRQF_ONESHOT | IRQF_SHARED;
+> +	irq_flags |= irqd_get_trigger_type(irq_data);
+> +
+> +	ret = devm_regmap_add_irq_chip(&client->dev, max77759_mfd->regmap_top,
+> +				       client->irq, irq_flags, 0,
+> +				       &max77759_pmic_irq_chip,
+> +				       &irq_chip_data_pmic);
+> +	if (ret)
+> +		return dev_err_probe(&client->dev, ret,
+> +				     "Failed to add IRQ chip\n");
+> +
+> +	/* INTSRC - MaxQ & children */
+> +	ret = max77759_add_chained_maxq(client, max77759_mfd,
+> +					irq_chip_data_pmic);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* INTSRC - topsys & children */
+> +	ret = max77759_add_chained_topsys(client, max77759_mfd,
+> +					  irq_chip_data_pmic);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* INTSRC - charger & children */
+> +	ret = max77759_add_chained_charger(client, max77759_mfd,
+> +					   irq_chip_data_pmic);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return devm_mfd_add_devices(&client->dev, PLATFORM_DEVID_AUTO,
+> +				    max77759_cells, ARRAY_SIZE(max77759_cells),
+> +				    NULL, 0,
+> +				    regmap_irq_get_domain(irq_chip_data_pmic));
+> +}
+> +
+> +static const struct i2c_device_id max77759_i2c_id[] = {
+> +	{ "max77759", 0 },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, max77759_i2c_id);
+> +
+> +static const struct of_device_id max77759_of_id[] = {
+> +	{ .compatible = "maxim,max77759", },
+> +	{},
+
+Unneeded trailing comma after a terminator.
+Maybe { }  to match the style used in max77759_i2c_id?
+
+> +};
+> +MODULE_DEVICE_TABLE(of, max77759_of_id);
+
