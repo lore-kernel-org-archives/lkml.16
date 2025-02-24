@@ -1,141 +1,96 @@
-Received: from mail-lf1-f66.google.com (mail-lf1-f66.google.com [209.85.167.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0C6197558;
-	Mon, 24 Feb 2025 23:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.66
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF4AC1A9B23;
+	Mon, 24 Feb 2025 23:05:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740438268; cv=none; b=rM/f2lEqBMoIm/yFT65QpAhx0+xj70oWKHhMHZlq9fxf8YPAVsI+NGPYmiUM3VVfVGJqU2nbATH+3OVZOsufNThlnfyU5vVBiYEwLcRs3hyMkPHJ+d1M9orurZj1Rc20LU2PXd568O55LxVVDpDlPk3zquKDwVfSHBV25dDIynY=
+	t=1740438340; cv=none; b=byjwKjjzqgABXQXg3vEQYFtKYxHjMf/rETy7wK2kFZfug11l8OuH5TyNw46Z+xMLLXJhAATNLhW/ikJclBEz+JKzZ1b7i2LVTvInf4wU+8puvMOIB5xrcHmZ29KaA4dwr/vBoFCuysUTei+HKlRvzSz+jBzwNYyaltMNUTLN/kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740438268; c=relaxed/simple;
-	bh=9dolYcrAbvw6zVWOc0wIyblpS+7dFxmtgKlmfHND2C0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SQbru5TNreA9MApaHFMPA9h1LtiOIv3vE/NT0mKIz268lxB1XNlP8IN9zTR3bbX7DzqFo5HQtN4OXyu+b7iOJVJ0VksJqPFUjxYDDcZRFHYU/YPUD7IyfBG794ucbDhJdOYPLl68dv82JKd7n2CkwPZcM5CPRKKOeP0VQ2qMcc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ks4zqbtL; arc=none smtp.client-ip=209.85.167.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740438340; c=relaxed/simple;
+	bh=aFQQ3iUfB4dAwZ+pfOVo4hd1+yzZJrpmP2cav/P/IO8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BMNrC50kb6eZ9DPrA/1+49zoXAf7ojzg/zEridfIfHC0s+1h0X2bug+GaCOIYPWNWF3ll3nZjzP7z3SHuNaTpU4ThEDpmscjtkskKjMXt94wuDJ2e7HqzdFh1pe+HWd3GE24n+TxOt7Km6lVriMzQRdo1DsiNxn3EDvsdP+PDkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BewR2QQb; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ks4zqbtL"
-Received: by mail-lf1-f66.google.com with SMTP id 2adb3069b0e04-5461dab4bfdso5997786e87.3;
-        Mon, 24 Feb 2025 15:04:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740438264; x=1741043064; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bX2vJHkSIfnPYXDLQCf3MUVX+uxwLZX1jGt0RGQn/JM=;
-        b=ks4zqbtLBYZxHpNs6Da0MddYiPsLXa90wZ4Di/coV4WKlaDuEyTr9+12D+g+8lVia+
-         UgHWb4gNwf4N7RmUiM5JJXa/Y5Wl5BPSB5aO8Qe6L3xLLdZh4ebkDuQJoVNOqhbBb7YI
-         tjuDypSpIoKw4yYxYEbW6bV3AkKXpVUStLjVc3vqoL8odKQ7VMm9SfAx+BWdwyaP0Gd1
-         2B5FEU4C6F0wXusn6M/hegzikatQcQtCjklnbL8gvyIIIhWkZvuAs50k7cOKfan1Kwe6
-         CObZG5lEDlf/Z5B6kFMmZ1b8NnKt5GESptfJevzi3LHjZPBVAEmhCVjBlIey5q7Qz1nQ
-         MKPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740438264; x=1741043064;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bX2vJHkSIfnPYXDLQCf3MUVX+uxwLZX1jGt0RGQn/JM=;
-        b=LguMaakpM5WiMZl9rw1y6vGmlCqmQWAT5hW3aRg2tM47NhkLA35Gyyxpi13YR2Yzae
-         rCe7SBipyT6F7kqR5fk9pDs6JpzakwuxAgmrPJEOOS5jaGgokPLdbb3OH9GGMesf2p2v
-         A2ydevCT5Xms/0jqI4IJ4sVcmNTZfsAS8DvnQ91QPwMj6AtByOaNgckYtptVeLkCz0ag
-         zyp7L6iKap+bgOOAaVgD7QdaWi2shByMF4+ny1UUqOxBHu2axze391TWVxO93gMpNq/Z
-         EG7AUZQr//K8cdJuivJfipWETI3uEAU8GCW8KGJX4HzYtafdUWWz9iPHzrkV8p9bB+xh
-         j75A==
-X-Forwarded-Encrypted: i=1; AJvYcCWU1j0wXOckZdAEx7Pq8qdPdo8ag4TimDZh8aDJ3tVDMVczE7lu3lGdiiHmnuo1aYWzyby0zcRl1izT8+U=@vger.kernel.org, AJvYcCXrmmXiwndGggsr9XBPASp0+OLuBtsJe5FkqNdAMp59hwUGB/+ZW8bwXkqxI1JGwYXVn40H5uSr1XMUzXUfTSw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3s6ACWKEIFDb+r2ztMMWbe9/InM2H4brsFwIBf+eU1N2IuY/e
-	JiQhvNOqXq5nAFefV33wyT5lTTXFFzE2FNlnf5GTn6JZhsQPEOf8Cddr3I/5UgpZf12y9tR8Hax
-	dcvDhp2s4pxSiWi3DrvYEHaMhJtY=
-X-Gm-Gg: ASbGncumopqTdkpKGJxDwfi1pLK82tBz9S4kdI2CjtroZkU9eOwef2Rz0rp72InBuSC
-	pYkaDGFAkUcOLXOMW1cwVoNLwH68/oTcgDv8BW1P3WwoLN6pxlNqxHTNuMI4O0QYFwBR8FgZf2g
-	NQU35xt95u
-X-Google-Smtp-Source: AGHT+IFFJhRE3Al38mb61oLdXyI6FGFfcEO4jXtiTTGVk6/pwT9T82qqzausAEPp4MaJUT8MU6L1pcwLsqha9GhCWTM=
-X-Received: by 2002:a05:6512:108b:b0:545:bf4:4bc7 with SMTP id
- 2adb3069b0e04-54838ee9139mr5750419e87.19.1740438263970; Mon, 24 Feb 2025
- 15:04:23 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BewR2QQb"
+Received: from [10.17.64.108] (unknown [131.107.147.236])
+	by linux.microsoft.com (Postfix) with ESMTPSA id BFBC0203CDE5;
+	Mon, 24 Feb 2025 15:05:37 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BFBC0203CDE5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1740438338;
+	bh=9MyoYHOlezsCiyRipc+Ai3jbgANrCAW1Nz/SR6iLSG0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BewR2QQbanLDaGC2OZXUdPzQXUx3togJgoyfFUuDpnJwJqJJ2repwj7aieQhfPKSG
+	 J1bvIr72exvJ1CEo3AAcEbFCl8ZtZPlrF1tzM1ZoTby97pRhA5epMNkg4Fkco6kYG+
+	 xBKe8llQLbWED05MRZi3Bt/Zs2JAeaU0RiKFNZT0=
+Message-ID: <658b52e4-a4bb-40fc-a00b-bfdb3bf15b52@linux.microsoft.com>
+Date: Mon, 24 Feb 2025 15:05:37 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
- <CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com>
- <CAFJgqgSqMO724SQxinNqVGCGc7=ibUvVq-f7Qk1=S3A47Mr-ZQ@mail.gmail.com>
- <20250224002745.7d7460a7.gary@garyguo.net> <CAFJgqgSNjF=LfrCNTH3GdYssXz9YG-AeCtpibejJ7Ywtx0m3HQ@mail.gmail.com>
- <4cb1d98b-f94b-410a-be90-4394c48bdbf2@proton.me> <CAFJgqgQ3P81-iskGu9R+T=c=wyB2K0JqUhx+Gj+6mkYeY8-ORg@mail.gmail.com>
- <a4b79751-f1c8-4476-98a5-c59fb2e545ad@proton.me> <CAFJgqgRdiQ29bWvwsu11yokZb4OFF7pYYUU=ES6CYv9847KgVg@mail.gmail.com>
- <c05cb400-969d-44a1-bd40-9b799ed894d7@proton.me>
-In-Reply-To: <c05cb400-969d-44a1-bd40-9b799ed894d7@proton.me>
-From: Ventura Jack <venturajack85@gmail.com>
-Date: Mon, 24 Feb 2025 16:04:11 -0700
-X-Gm-Features: AWEUYZm3FQUc7v5ynrtRFpLc3fAluhwUO3IC2tdoYT596U8GBpUsWxMZSKRfhHM
-Message-ID: <CAFJgqgTs3h5YagY1RU2AZf3wKWKfXiPTE2mx7CuWyzN=ee-k3g@mail.gmail.com>
-Subject: Re: C aggregate passing (Rust kernel policy)
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Gary Guo <gary@garyguo.net>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, airlied@gmail.com, boqun.feng@gmail.com, 
-	david.laight.linux@gmail.com, ej@inai.de, gregkh@linuxfoundation.org, 
-	hch@infradead.org, hpa@zytor.com, ksummit@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, miguel.ojeda.sandonis@gmail.com, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 2/7] kexec: define functions to map and unmap segments
+To: Baoquan He <bhe@redhat.com>
+Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+ roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+ eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+ code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+ kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
+ nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
+ vgoyal@redhat.com, dyoung@redhat.com
+References: <20250218225502.747963-1-chenste@linux.microsoft.com>
+ <20250218225502.747963-3-chenste@linux.microsoft.com>
+ <Z7wOPiDfy/vtrkCS@MiWiFi-R3L-srv>
+Content-Language: en-US
+From: steven chen <chenste@linux.microsoft.com>
+In-Reply-To: <Z7wOPiDfy/vtrkCS@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 24, 2025 at 3:03=E2=80=AFPM Benno Lossin <benno.lossin@proton.m=
-e> wrote:
+On 2/23/2025 10:14 PM, Baoquan He wrote:
+> Hi Steve, Mimi,
 >
-> On 24.02.25 17:57, Ventura Jack wrote:
-> > One example I tested against MIRI:
-> >
-> >     use std::cell::UnsafeCell;
-> >
-> >     fn main() {
-> >
-> >         let val: UnsafeCell<i32> =3D UnsafeCell::new(42);
-> >         let x: & UnsafeCell<i32> =3D &val;
-> >         let y: & UnsafeCell<i32> =3D &val;
-> >
-> >         unsafe {
-> >
-> >             // UB.
-> >             //let pz: & i32 =3D & *val.get();
-> >
-> >             // UB.
-> >             //let pz: &mut i32 =3D &mut *val.get();
-> >
-> >             // Okay.
-> >             //let pz: *const i32 =3D &raw const *val.get();
-> >
-> >             // Okay.
-> >             let pz: *mut i32 =3D &raw mut *val.get();
-> >
-> >             let px: *mut i32 =3D x.get();
-> >             let py: *mut i32 =3D y.get();
-> >
-> >             *px =3D 0;
-> >             *py +=3D 42;
-> >             *px +=3D 24;
-> >
-> >             println!("x, y, z: {}, {}, {}", *px, *py, *pz);
-> >         }
-> >     }
-> >
-> > It makes sense that the Rust "raw pointers" `*const i32` and `*mut
-> > i32` are fine here, and that taking Rust "references" `& i32` and
-> > `&mut i32` causes UB, since Rust "references" have aliasing rules that
-> > must be followed.
+> On 02/18/25 at 02:54pm, steven chen wrote:
+>> Currently, the mechanism to map and unmap segments to the kimage
+>> structure is not available to the subsystems outside of kexec.  This
+>> functionality is needed when IMA is allocating the memory segments
+>> during kexec 'load' operation.  Implement functions to map and unmap
+>> segments to kimage.
+> I am done with the whole patchset understanding. My concern is if this
+> TPM PCRs content can be carried over through newly introduced KHO. I can
+> see that these patchset doesn't introduce too much new code changes,
+> while if many conponents need do this, kexec reboot will be patched all
+> over its body and become ugly and hard to maintain.
 >
-> So it depends on what exactly you do, since if you just uncomment one of
-> the "UB" lines, the variable never gets used and thus no actual UB
-> happens. But if you were to do this:
+> Please check Mike Rapoport's v4 patchset to see if IMA can register
+> itself to KHO and do somthing during 2nd kernel init to restore those
+> TPM PCRs content to make sure all measurement logs are read correctly.
+> [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
+>
+> Thanks
+> Baoquan
 
-I did actually test it against MIRI with only one line commented in at
-a time, and the UB lines did give UB according to MIRI, I did not
-explain that. It feels a lot like juggling with very sharp knives, but
-I already knew that, because the Rust community generally does a great
-job of warning people against unsafe. MIRI is very good, but it cannot
-catch everything, so it cannot be relied upon in general. And MIRI
-shares some of the advantages and disadvantages of sanitizers for C.
+Hi Baoquan,
 
-Best, VJ.
+For IMA, it appears that there are no current issues with TPM PCRs after 
+a kernel soft reboot.
+
+This patches is used to get currently missed IMA measurements during the 
+kexec process copied to new kernel after the kernel soft reboot. I think 
+it's ok to leave it at current location: it will be easy to maintain for 
+IMA.
+
+Overall, for these patches, do you see any major blockers for kexec?
+
+If you have any specific concerns or need further details, please let me 
+know.
+
+Thanks,
+
+Steven
