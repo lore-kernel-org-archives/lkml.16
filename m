@@ -1,141 +1,89 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A2217BEBF;
-	Mon, 24 Feb 2025 22:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954F22571D0
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 22:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740435704; cv=none; b=ApmMSTs03OD8WXnZ07mP6W/3NdLCf02oTZddxQJFYlzuOOXYsKv15Nv7tZfMhugydw7YUE/szIvtbDH9OmIkhu/JkePrWxw+gqlu+ErAXfiWZ8Pj6WXtVgyRAa6vdgpAHL3j5tIzWneA2Kk+MvZRwDveG/1Uw4gT1U3jHYhFWuI=
+	t=1740435808; cv=none; b=b7am/Ei0ikC2b5M7t/gWHle+jZrSX8RdRhUS9EdbQIblF2BO8mRdlsITYt1kMfChbVtcN8/tBzpkAeJlcF3bL0frx6T2IPwVbQkauGvUF+7ns2ocUoPqRH6jHwnFR/bwxNdkwKvKxMzh1jF3EFECuJke1vKghwi5KLQc+nuC850=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740435704; c=relaxed/simple;
-	bh=e+uzfqSHYhHZcuzfPhk6HcqcLJmcDZSMxuGGONwFE44=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=cwAtEdS8Qn+RUTbkEK9lccKZtwLakJBvxZ8ri7Hx8HhBbQg0a8CGkqHeYcBS8gyAvwsumbggYOXzpoKqcaMMA6Aqpo+fa2HmDqJD+Qk1HtTBJrkLxCNVlG99wNFcvOYFOxNPt3CvO5naNHyZoSMRKhBNqyRCqIA24smFa3LBBDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=LBCMVcF1; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1740435808; c=relaxed/simple;
+	bh=qmooO3AxZOs0ohQpJ4yo5y4Yi0jidhmcv0CFom4ARm0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CpRtqy3O8V0ztxmAqZ6gG8yKFsMRtUcpamWWdvRzypYh2sIPg/nzED7NILNzaOVpm0uedUFr/Y4pe+TDQo925Go5klpRXDpHjpNPALCCTWYQJKmNpPwtGenDKHk+b7Fuvf4+Qc6lqNKJHR+W7OZKxv2Xzj57PEy4jMTb8ho1q7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=maOIQzSv; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="LBCMVcF1"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 51OMIJ9V935362
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 24 Feb 2025 14:18:19 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 51OMIJ9V935362
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1740435502;
-	bh=QVRdF3EAXIHa/WOpzueNrjkWna1IYk5vm0KLQKRBt1g=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=LBCMVcF1JBUzSpFQa0NclgZSN1lbJ6R8l4P7gV/GP3OfWksuvJSk8UFAnCLrz2stD
-	 zfBgNKQ/2LRfu2C7llD7zbNpCRWed6pOnPU5J/rmByu17lskqRa2z1Rn4bMzv0Gtrp
-	 RsTWuEFZFH9XaV0gR9XSqUCDQaZHojh1ozgY06ibIOO0Yqru+WPUEv+njgn02D+BSb
-	 AxrPR7FbBtmmBrmKcGPInLjOvNUJ+QE9Q87mz2O2DxJyDTSANU+Lg2qd0d24d46W8Q
-	 acNifs2uoGssEaapuK60oCfTN5FpL6SRf+yCzsC/DVfUihJLjByLPlr8GNKX3Z4pU9
-	 0NfLcLSzqxqfw==
-Date: Mon, 24 Feb 2025 14:18:17 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Uros Bizjak <ubizjak@gmail.com>
-CC: Kuan-Wei Chiu <visitorckw@gmail.com>, tglx@linutronix.de,
-        Ingo Molnar <mingo@redhat.com>, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, jk@ozlabs.org,
-        joel@jms.id.au, eajames@linux.ibm.com, andrzej.hajda@intel.com,
-        neil.armstrong@linaro.org, rfoss@kernel.org,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-        dmitry.torokhov@gmail.com, mchehab@kernel.org, awalls@md.metrocast.net,
-        hverkuil@xs4all.nl, miquel.raynal@bootlin.com, richard@nod.at,
-        vigneshr@ti.com, louis.peens@corigine.com, andrew+netdev@lunn.ch,
-        davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
-        parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
-        johannes@sipsolutions.net, gregkh@linuxfoundation.org,
-        jirislaby@kernel.org, yury.norov@gmail.com, akpm@linux-foundation.org,
-        mingo@kernel.org, alistair@popple.id.au, linux@rasmusvillemoes.dk,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@gmail.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
-        dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
-        oss-drivers@corigine.com, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
-        brcm80211-dev-list.pdl@broadcom.com, linux-serial@vger.kernel.org,
-        bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw,
-        Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_03/17=5D_x86=3A_Replace_open-c?=
- =?US-ASCII?Q?oded_parity_calculation_with_parity8=28=29?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAFULd4a_AnP4iqgQs7a6xAsnUFL8oZXxFcAWLmZFMm6MPF_zDQ@mail.gmail.com>
-References: <20250223164217.2139331-1-visitorckw@gmail.com> <20250223164217.2139331-4-visitorckw@gmail.com> <d080a2d6-9ec7-1c86-4cf4-536400221f68@gmail.com> <e0b1c299-7f19-4453-a1ce-676068601213@zytor.com> <CAFULd4a_AnP4iqgQs7a6xAsnUFL8oZXxFcAWLmZFMm6MPF_zDQ@mail.gmail.com>
-Message-ID: <B5E017BC-8BE4-482A-B1A2-3F3074968B56@zytor.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="maOIQzSv"
+Date: Mon, 24 Feb 2025 14:23:05 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740435794;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MytlJ2KGkzQ+RhdKVpvDJ1qR08yPF+KOv8QGFyqerQs=;
+	b=maOIQzSvuUUmYk2SXkgSfup4ufEe8vHbBJ1FJO81wU3bAJfRUFrahN1yRRh9znIPT/o5TV
+	WoB9p4K7A8zLUuGiNJ6GriZ8DtNyq3pPrqY+zl2aOneRbzq2EQxRQ9awhbiIE8t+IhjSRU
+	HIruwKqVpJtTTT00ZjwDqRmDWWixvoY=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Sebastian Ott <sebott@redhat.com>
+Cc: Marc Zyngier <maz@kernel.org>, Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Cornelia Huck <cohuck@redhat.com>,
+	Eric Auger <eric.auger@redhat.com>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] KVM: arm64: writable MIDR/REVIDR
+Message-ID: <Z7zxSdW5b6rqe2bt@linux.dev>
+References: <20250218163443.32836-1-sebott@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250218163443.32836-1-sebott@redhat.com>
+X-Migadu-Flow: FLOW_OUT
 
-On February 24, 2025 2:08:05 PM PST, Uros Bizjak <ubizjak@gmail=2Ecom> wrot=
-e:
->On Mon, Feb 24, 2025 at 10:56=E2=80=AFPM H=2E Peter Anvin <hpa@zytor=2Eco=
-m> wrote:
->>
->> On 2/24/25 07:24, Uros Bizjak wrote:
->> >
->> >
->> > On 23=2E 02=2E 25 17:42, Kuan-Wei Chiu wrote:
->> >> Refactor parity calculations to use the standard parity8() helper=2E=
- This
->> >> change eliminates redundant implementations and improves code
->> >> efficiency=2E
->> >
->> > The patch improves parity assembly code in bootflag=2Eo from:
->> >
->> >    58:    89 de                    mov    %ebx,%esi
->> >    5a:    b9 08 00 00 00           mov    $0x8,%ecx
->> >    5f:    31 d2                    xor    %edx,%edx
->> >    61:    89 f0                    mov    %esi,%eax
->> >    63:    89 d7                    mov    %edx,%edi
->> >    65:    40 d0 ee                 shr    %sil
->> >    68:    83 e0 01                 and    $0x1,%eax
->> >    6b:    31 c2                    xor    %eax,%edx
->> >    6d:    83 e9 01                 sub    $0x1,%ecx
->> >    70:    75 ef                    jne    61 <sbf_init+0x51>
->> >    72:    39 c7                    cmp    %eax,%edi
->> >    74:    74 7f                    je     f5 <sbf_init+0xe5>
->> >    76:
->> >
->> > to:
->> >
->> >    54:    89 d8                    mov    %ebx,%eax
->> >    56:    ba 96 69 00 00           mov    $0x6996,%edx
->> >    5b:    c0 e8 04                 shr    $0x4,%al
->> >    5e:    31 d8                    xor    %ebx,%eax
->> >    60:    83 e0 0f                 and    $0xf,%eax
->> >    63:    0f a3 c2                 bt     %eax,%edx
->> >    66:    73 64                    jae    cc <sbf_init+0xbc>
->> >    68:
->> >
->> > which is faster and smaller (-10 bytes) code=2E
->> >
->>
->> Of course, on x86, parity8() and parity16() can be implemented very sim=
-ply:
->>
->> (Also, the parity functions really ought to return bool, and be flagged
->> __attribute_const__=2E)
->>
->> static inline __attribute_const__ bool _arch_parity8(u8 val)
->> {
->>         bool parity;
->>         asm("and %0,%0" : "=3D@ccnp" (parity) : "q" (val));
->
->asm("test %0,%0" : "=3D@ccnp" (parity) : "q" (val));
->
->because we are interested only in flags=2E
->
->Uros=2E
->
+Hi Sebastian,
 
-Same thing, really, but yes, using test is cleaner=2E
+On Tue, Feb 18, 2025 at 05:34:39PM +0100, Sebastian Ott wrote:
+> Based on prior discussion [1] this series allows VMMs to change
+> MIDR/REVIDR to enable migration between machines that differ in
+> these registers. Since these are used for errata handling the
+> errata management series [2] is a prerequisite for this one.
+> 
+> changes for V3:
+> * handle VPIDR_EL2 as part of vcpu ctxt - thanks Oliver!
+
+Thanks for respinning. While your changes are looking good, as I got
+ready to apply this series I wound up peeling the onion a bit further
+and have a few more concerns:
+
+ - Current KVM allows guests to read SMIDR_EL1 despite the fact that we
+   do not support SME (this is part of TID1 traps)
+
+ - The "invariant" values that KVM presents to userspace originate from
+   the boot CPU, not the CPU that resets the ID registers for a VM
+
+ - A VMM that wants to present big-little can do so on current KVM by
+   affining vCPUs, but cannot with this series
+
+All of this is to say, I think your series is going to collide with
+the pre-existing pile of crap we have. I'm going to pick up these
+changes and rework them so we can send a fix for #1 to stable trees and
+(hopefully) avoid breaking the old "invariant" behavior.
+
+I'll post what I have as soon as I test it, hopefully we can get this
+shaped up for 6.15.
+
+Thanks,
+Oliver
