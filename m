@@ -1,195 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07599241CA6;
-	Mon, 24 Feb 2025 09:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4F1324C673;
+	Mon, 24 Feb 2025 09:58:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740391129; cv=none; b=qIG7AI5gDE7jtAZN9+Tm/VMkhR5UYCIsZG0njnajUGMRAQvUrmyVr7GEjZeshKDFFBTgXbkHhMS9tUaLyxz46K6FpieRdDG9mrBaasSXadbK5YDwfZCD8Dp1KEXtLrvNRScUwmHgr5XcM9k38hhZ4OQIDogfvGRcB9fOluSFWuw=
+	t=1740391138; cv=none; b=jJYjrlIVWi2RQSA+3yA5touQyuE4Rv+MbEcB7uzx7TwUydoPJhHL7CGy6xtIJdyRG9LopAprfV3hHNIPqB86Q4icV0wMIOy7DhSSjznm/s1rv3V/UgEYXEONdcJ4o7AO+YbLOlCX7SmrDfsOQmtZ3CxrtYxd6LMYtZE62fXXZYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740391129; c=relaxed/simple;
-	bh=ZjDnXrksprqcdBpDIG/amfeXKgB6c4lJruai5qe5AhA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kRezzpmoXdHAjcx5ptw32YSazg4kDJ0ZZ8GzFMwNqKjkYeaAw7BNnepEuGjxr+a+7KqNYdIor2KycJDuqcWke6ICuNTWk7c/aaVPLx5LUapAbf5ZfXeGN0R9qcH/Rb6P2/MLT7uPudfLhaRlDzOJ5dbTGa0Nw6g+O55MPLQvZXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PO1llj0k; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740391138; c=relaxed/simple;
+	bh=fX2FejRKLHmTf189qkb5nrdkHYro4O5UcpVBV7OFrbk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L1crYOGguiLgsoRXoXtqthcJ/fh9EMc/Z41JxkahDP0vuoVVDX9AxzGZPZRcrXVvbIx4JRPC8dARhH6ATcOZo9H7ocrJwujoGrGL1Vy3zzpri7B2eZFJVDcIYkXAvfvvqijAGHvRu5eNjL6hgOA7K4bnJbxEvnzSwd3jH0c4Qd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GrxCeiNS; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PO1llj0k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30C03C4CED6;
-	Mon, 24 Feb 2025 09:58:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740391128;
-	bh=ZjDnXrksprqcdBpDIG/amfeXKgB6c4lJruai5qe5AhA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PO1llj0k12h5/Jb8CQuV57BkdgYfH/eqbVrzvtMdBv4G6bGDgxunu7xzsOu2NcAHI
-	 PlCedtu+UkUKI2UZXTaIRl0ltFlFDeBPxRC83CzYSEPFqd9bp3ovwjLYLSljJxTagn
-	 oQMHZa4qstKk4u3mvru+7XQSTjUiTQk13D5PzzBJChsWn2qBBphPqTK7QToFd0sa+8
-	 1ke1OxIH4CQChKZDNFzuPV765Og8okFL3psFARQzGAGcWXX7OWRgBsLkFUxf0X+hBS
-	 nkPPO3ctYZmqfgdFMDw2V+50D0ky4xivMPA1a1rP4V7OeKV3G3ikmsJPkHkS3frsB8
-	 HeGzCJ72wsshw==
-Date: Mon, 24 Feb 2025 20:28:43 +1030
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
-	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
-	Sandeep Dhavale <dhavale@google.com>
-Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 4/8][next] erofs: Avoid -Wflex-array-member-not-at-end
- warnings
-Message-ID: <334f60e884cc0314ef98731e60a1b419e462e2d2.1739957534.git.gustavoars@kernel.org>
-References: <cover.1739957534.git.gustavoars@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GrxCeiNS"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-aaf3c3c104fso712954266b.1;
+        Mon, 24 Feb 2025 01:58:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740391134; x=1740995934; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YlyuCvvFDo2128e2teHgyAWHlRy7aBFZ5OZbDHsqsLE=;
+        b=GrxCeiNSO0J9qkGWsJpUVqc+uAbLjlW18gfdl7LWunVLyDw0h+Ts9S9vl4mH7bw7nH
+         Do050fgNuXC4RixwQBcnYy9NsiMgdMexPL/K1qKAk+9E8JFt8wrqQalVxT6f+2BmbV6h
+         Q99Z2lRstYHf10AggugiMmTXs+Rg2RpMMWsXrb++zJPvto7oALVf1OYv6QY5AWFtdcAz
+         ncI5bXRaJEZfANUYT9en3HQ0azrLJgTmx4oeIEbj/wwGWfrs2zZYPJnvN0aOi2suqjm5
+         wLRyeO1Lq6dmd570kSGeklhIGyM0zL9gJlifzX3OzsONUMxfbIcJxlV7IkuFWYRfaP2s
+         J+GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740391134; x=1740995934;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YlyuCvvFDo2128e2teHgyAWHlRy7aBFZ5OZbDHsqsLE=;
+        b=Lhh8t8HNzfMtC5vt5y4ehKvxkI/6ERuuKFPiUJG4pXVyIPuPodkbv2ec1CPuya91qO
+         DN8ggoqIh8M1OrrGzF3CF+CLboXvreBTOexn4NQGsSc7uDY3E/pNNzfZm8vacWMA0zYD
+         sKJJJsfG47AJRaTsuo/wV7DxMLKp6+U/IknVogbDxqqnA/uYBm8eYaq8WNuszNqLjW3m
+         G/l4XF8d78zkeU4i2DbAzYGPPv3+E0epOnDVvoP3BKVoBIond6hobCfztvEtKxSKkH7s
+         Sc3gK3cOQR27dKISlhvxcDnY+5enDfBPegn+wmHw9ZtycFVC2PFhMpqeoZYS/OvHBMaF
+         bBwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUvFnH8cxezn8LTrJq0e4HhnUUHFk4ATsmN07Y2bpA8IGBVcXpOQkZCZPZk9rCJANd1lw7zOzWLBt1n82hw@vger.kernel.org, AJvYcCXwFiu6xWUYGdVBG75qb8hAwZPHJFjSiR7BfsplDMDXDl2AtGIrP57bO8MkWQZaUR9IuMaSbuLX3uSF@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4XcUlAvMPsya8zplEb/cITuTVgm4vWaEFmiVP5VWsWXVPtjDh
+	dP5birX7otB2xEcKEngAGkpGbzpFA6Gfv9UTo+vXFaK4OLXxKau/
+X-Gm-Gg: ASbGncsZ30PcIB7eT4X6gHIial8R42E3rtOqcHDvXKCyBPOTUWHmDBDBjJ8s29KOJd1
+	cc++FvKuwPCDEf3oIuMRGA+f8gQqzSpuZvNxYm5INko+gce/UNq0EicZzY0eJ1HkbodLhjtN5ak
+	TV6EqDHvSyvjN7xcj+0MLZjDMV2KyIXWBo+gpGOlIN90oWO9AydvieLR0DMIBaSVFEhIosXhdbt
+	b2IMml/OK4YqOyxiqBPx+TUG+krdShJ6tkzYTg9GvzBASBhpM2k+v8HnbQepM1+xYIID5XYyv4R
+	a/e+a2yxKgB3RS8GbB8cmxbnKl28wZPawpU8ImR0UcrSGgRhX4s=
+X-Google-Smtp-Source: AGHT+IE4DISpsiKgYOL3EFZd4l0OSdPpTIlMEud2TUQe2sSiVQY+CihGdqfWOxw12evc/bJo4FFOAA==
+X-Received: by 2002:a17:906:31cf:b0:ab6:ef33:402 with SMTP id a640c23a62f3a-abc0d9e4ef5mr1108032166b.18.1740391133934;
+        Mon, 24 Feb 2025 01:58:53 -0800 (PST)
+Received: from [192.168.5.199] ([92.120.5.6])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abbbbc95288sm1255333966b.158.2025.02.24.01.58.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2025 01:58:53 -0800 (PST)
+Message-ID: <a62ab860-5e0e-4ebc-af1f-6fb7ac621e2b@gmail.com>
+Date: Mon, 24 Feb 2025 12:07:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1739957534.git.gustavoars@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/5] bus: add driver for IMX AIPSTZ bridge
+Content-Language: en-GB
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>, Shengjiu Wang
+ <shengjiu.wang@nxp.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Pengutronix Kernel Team <kernel@pengutronix.de>, imx@lists.linux.dev
+References: <20250221191909.31874-1-laurentiumihalcea111@gmail.com>
+ <20250221191909.31874-4-laurentiumihalcea111@gmail.com>
+ <20250224075538.7oetjzllqqr2mlnt@pengutronix.de>
+From: Mihalcea Laurentiu <laurentiumihalcea111@gmail.com>
+In-Reply-To: <20250224075538.7oetjzllqqr2mlnt@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
 
-Change the type of the middle struct member currently causing trouble from
-`struct bio` to `struct bio_hdr`.
+On 24.02.2025 09:55, Marco Felsch wrote:
+> Hi Laurentiu,
+>
+> thanks for your patch.
+>
+> On 25-02-21, Laurentiu Mihalcea wrote:
+>> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+>>
+>> The secure AHB to IP Slave (AIPSTZ) bus bridge provides access control
+>> configurations meant to restrict access to certain peripherals.
+>> Some of the configurations include:
+>>
+>> 	1) Marking masters as trusted for R/W. Based on this
+>> 	(and the configuration of the accessed peripheral), the bridge
+>> 	may choose to abort the R/W transactions issued by certain
+>> 	masters.
+> Setting these bits requires very often that the core is running at EL3
+> (e.g. secure-monitor) which is not the case for Linux. Can you please
+> provide more information how Linux can set these bits?
+>
+> Regards,
+>   Marco
 
-We also use `container_of()` whenever we need to retrieve a pointer to
-the flexible structure `struct bio`, through which we can access the
-flexible-array member in it, if necessary.
 
-With these changes fix the following warnings:
-fs/erofs/fileio.c:10:20: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-fs/erofs/fscache.c:179:20: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+In this particular case, as far as I was able to understand, NS EL1 has enough
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- fs/erofs/fileio.c  | 25 +++++++++++++++----------
- fs/erofs/fscache.c | 13 +++++++------
- 2 files changed, 22 insertions(+), 16 deletions(-)
-
-diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
-index 0ffd1c63beeb..3080963caf78 100644
---- a/fs/erofs/fileio.c
-+++ b/fs/erofs/fileio.c
-@@ -7,7 +7,7 @@
- 
- struct erofs_fileio_rq {
- 	struct bio_vec bvecs[16];
--	struct bio bio;
-+	struct bio_hdr bio;
- 	struct kiocb iocb;
- 	struct super_block *sb;
- };
-@@ -26,20 +26,21 @@ static void erofs_fileio_ki_complete(struct kiocb *iocb, long ret)
- 
- 	if (ret > 0) {
- 		if (ret != rq->bio.bi_iter.bi_size) {
--			bio_advance(&rq->bio, ret);
--			zero_fill_bio(&rq->bio);
-+			bio_advance(container_of(&rq->bio, struct bio, __hdr),
-+				    ret);
-+			zero_fill_bio(container_of(&rq->bio, struct bio, __hdr));
- 		}
- 		ret = 0;
- 	}
- 	if (rq->bio.bi_end_io) {
--		rq->bio.bi_end_io(&rq->bio);
-+		rq->bio.bi_end_io(container_of(&rq->bio, struct bio, __hdr));
- 	} else {
--		bio_for_each_folio_all(fi, &rq->bio) {
-+		bio_for_each_folio_all(fi, container_of(&rq->bio, struct bio, __hdr)) {
- 			DBG_BUGON(folio_test_uptodate(fi.folio));
- 			erofs_onlinefolio_end(fi.folio, ret);
- 		}
- 	}
--	bio_uninit(&rq->bio);
-+	bio_uninit(container_of(&rq->bio, struct bio, __hdr));
- 	kfree(rq);
- }
- 
-@@ -68,7 +69,8 @@ static struct erofs_fileio_rq *erofs_fileio_rq_alloc(struct erofs_map_dev *mdev)
- 	struct erofs_fileio_rq *rq = kzalloc(sizeof(*rq),
- 					     GFP_KERNEL | __GFP_NOFAIL);
- 
--	bio_init(&rq->bio, NULL, rq->bvecs, ARRAY_SIZE(rq->bvecs), REQ_OP_READ);
-+	bio_init(container_of(&rq->bio, struct bio, __hdr), NULL, rq->bvecs,
-+		 ARRAY_SIZE(rq->bvecs), REQ_OP_READ);
- 	rq->iocb.ki_filp = mdev->m_dif->file;
- 	rq->sb = mdev->m_sb;
- 	return rq;
-@@ -76,12 +78,13 @@ static struct erofs_fileio_rq *erofs_fileio_rq_alloc(struct erofs_map_dev *mdev)
- 
- struct bio *erofs_fileio_bio_alloc(struct erofs_map_dev *mdev)
- {
--	return &erofs_fileio_rq_alloc(mdev)->bio;
-+	return container_of(&erofs_fileio_rq_alloc(mdev)->bio, struct bio, __hdr);
- }
- 
- void erofs_fileio_submit_bio(struct bio *bio)
- {
--	return erofs_fileio_rq_submit(container_of(bio, struct erofs_fileio_rq,
-+	return erofs_fileio_rq_submit(container_of(&bio->__hdr,
-+						   struct erofs_fileio_rq,
- 						   bio));
- }
- 
-@@ -150,7 +153,9 @@ static int erofs_fileio_scan_folio(struct erofs_fileio *io, struct folio *folio)
- 			}
- 			if (!attached++)
- 				erofs_onlinefolio_split(folio);
--			if (!bio_add_folio(&io->rq->bio, folio, len, cur))
-+			if (!bio_add_folio(container_of(&io->rq->bio,
-+							struct bio, __hdr),
-+					   folio, len, cur))
- 				goto io_retry;
- 			io->dev.m_pa += len;
- 		}
-diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
-index ce3d8737df85..719ec96c8f22 100644
---- a/fs/erofs/fscache.c
-+++ b/fs/erofs/fscache.c
-@@ -176,7 +176,7 @@ static int erofs_fscache_read_io_async(struct fscache_cookie *cookie,
- 
- struct erofs_fscache_bio {
- 	struct erofs_fscache_io io;
--	struct bio bio;		/* w/o bdev to share bio_add_page/endio() */
-+	struct bio_hdr bio;	/* w/o bdev to share bio_add_page/endio() */
- 	struct bio_vec bvecs[BIO_MAX_VECS];
- };
- 
-@@ -187,7 +187,7 @@ static void erofs_fscache_bio_endio(void *priv,
- 
- 	if (IS_ERR_VALUE(transferred_or_error))
- 		io->bio.bi_status = errno_to_blk_status(transferred_or_error);
--	io->bio.bi_end_io(&io->bio);
-+	io->bio.bi_end_io(container_of(&io->bio, struct bio, __hdr));
- 	BUILD_BUG_ON(offsetof(struct erofs_fscache_bio, io) != 0);
- 	erofs_fscache_io_put(&io->io);
- }
-@@ -197,17 +197,18 @@ struct bio *erofs_fscache_bio_alloc(struct erofs_map_dev *mdev)
- 	struct erofs_fscache_bio *io;
- 
- 	io = kmalloc(sizeof(*io), GFP_KERNEL | __GFP_NOFAIL);
--	bio_init(&io->bio, NULL, io->bvecs, BIO_MAX_VECS, REQ_OP_READ);
-+	bio_init(container_of(&io->bio, struct bio, __hdr), NULL, io->bvecs,
-+		 BIO_MAX_VECS, REQ_OP_READ);
- 	io->io.private = mdev->m_dif->fscache->cookie;
- 	io->io.end_io = erofs_fscache_bio_endio;
- 	refcount_set(&io->io.ref, 1);
--	return &io->bio;
-+	return container_of(&io->bio, struct bio, __hdr);
- }
- 
- void erofs_fscache_submit_bio(struct bio *bio)
- {
--	struct erofs_fscache_bio *io = container_of(bio,
--			struct erofs_fscache_bio, bio);
-+	struct erofs_fscache_bio *io =
-+		container_of(&bio->__hdr, struct erofs_fscache_bio, bio);
- 	int ret;
- 
- 	iov_iter_bvec(&io->io.iter, ITER_DEST, io->bvecs, bio->bi_vcnt,
--- 
-2.43.0
+privilege to program this IP. This is why Linux can do it.
 
