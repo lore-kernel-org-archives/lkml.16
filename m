@@ -1,70 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E60204687;
-	Mon, 24 Feb 2025 22:26:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41C5207DF7;
+	Mon, 24 Feb 2025 22:30:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740436006; cv=none; b=rVChCcV9xq7NvYnFcn7USHS+b4N7SAoNtq8R3DQm/tz213y7IBudTUM6PHcN/2vAmbvrJ8Pv6g137uSzvCoZLnLfLddCLfujN7eE7qst7jjzFGDDzDaqC7e4OtyVciyPj6RUMV41JQvjgUobtTxuu7FWA/YNe4JVGXnUmlGyxSY=
+	t=1740436203; cv=none; b=n6qabvpmNX2qC3Q/L25sVBu1MOIcDvPC14LIWEZhUrmHlhetWDVCEiHIlqt3XDl0xPtcDU264uAz3X1xjftN2lZZZZ4MYNkMPu9XLrohJkxupeWkrKnxYXQluGKXt/8tZTBDXRW8sHZwp8eKQNU4NK2jgP5+OI0eznpyRp7/spU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740436006; c=relaxed/simple;
-	bh=QcYkjBOdJxVH7cTUR2mujk8yFO9GgvzVk3JPMLEdJYY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JNiHsMfTi80muNX6i8CYai+jbDLymlRXgB0DI/d/+ZHqt7hmm/QBRk8Za4YW5HR+z45C7wcVW/lopP7RQ72Bg51z2VKcfLEu5LtRpFFf8SFRmox56ctfxFCuWZ6vEqut7aQ5Pq9fknMQR4dIa1ZUYJ9UKf9BQ6DknitjkXKsoGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oDkB0OAs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740436203; c=relaxed/simple;
+	bh=o3/XUGQL0m+SzquU2ZDcO4lPV6KEAziuUL08AurUYbE=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=VnKCSCdyb6CB1ayQ39ah2O/JejO7lOIrchRaeQly2RP50NRjkbH62RLOznKNbNZsNSY1xyYFLkdTafJENLyJIirYJ53w6U8VEiUCri82jIxCBKDVdFB7OB5lIyCmn39xej106uskzsf6Ti4VX0BH1WpKv6ov2nAAr4qdp/3pcdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qGn/0Rpa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oDkB0OAs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E195AC4CED6;
-	Mon, 24 Feb 2025 22:26:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qGn/0Rpa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AC08C4AF09;
+	Mon, 24 Feb 2025 22:30:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740436005;
-	bh=QcYkjBOdJxVH7cTUR2mujk8yFO9GgvzVk3JPMLEdJYY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=oDkB0OAs0nKzmO2rtq1kGyfMOb3Qqw6+x5fFKJhmM5XXmzHb3U09awJj5hIIJ6/6L
-	 dWzeZ4yx3oQJmfv3VN4VxX6tPZFJGyvCgoHFnLx6EQeuhAAw13S8qCivfOf6LkQ+F0
-	 u9isopyZEYfXbejwBRpkLmB4V19EIQxhyndApNOCUtgrrLnk8Tc9LWasW+Q88a9rZC
-	 C6fiBbsvoj3NPOZo7FWodAk/Z2hC1Hiqz1VyGMi4r4f+ZIEwbVSkGYgAv2R/Wg9Qqf
-	 1PJlMpX+MBuXmyThuyOJoSCLezYc16xLq8ibWm/4t1ELDcj1e7iOp4q3ki5CQyzwxx
-	 qB7B3m8sUFOfQ==
-Date: Mon, 24 Feb 2025 14:26:44 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: bpf@vger.kernel.org, netdev@vger.kernel.org, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
- horms@kernel.org, ricardo@marliere.net, viro@zeniv.linux.org.uk,
- dmantipov@yandex.ru, aleksander.lobakin@intel.com,
- linux-ppp@vger.kernel.org, linux-kernel@vger.kernel.org, mrpre@163.com,
- syzbot+853242d9c9917165d791@syzkaller.appspotmail.com
-Subject: Re: [PATCH net-next v2 1/1] ppp: Fix KMSAN warning by initializing
- 2-byte header
-Message-ID: <20250224142644.7c084e9e@kernel.org>
-In-Reply-To: <20250221061219.295590-2-jiayuan.chen@linux.dev>
-References: <20250221061219.295590-1-jiayuan.chen@linux.dev>
-	<20250221061219.295590-2-jiayuan.chen@linux.dev>
+	s=k20201202; t=1740436202;
+	bh=o3/XUGQL0m+SzquU2ZDcO4lPV6KEAziuUL08AurUYbE=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=qGn/0RpawzHOsnFvI+rH6yVY8sEZBQ4Ru9LrvwomnSMOBM7gbURtsNY9Tltn1QPmO
+	 7b4pV2JXHvEvlBzcG0GyAS17NEYI9ssMVLZdBocr77Hkrm5k7gQbEEVLaAu7SvxW1/
+	 yTiGqcWzIszCb+0rVsvn4BrBdeONccFpI69Yk+rDPB05jmJNtAk0D43Z/pLcbaUdl4
+	 Af6dWoKh9cva+nTOa6RA4ORrWVuwIJvsBa6ziNpmn9hL8tHtMdkI03cCT36xZ2lF9Y
+	 4kfbRDe+YPyR1bd7yqQ7gbnk2MCWvLagTJkx0DATywvCPBs/muZq/qqLtMeaOBHncE
+	 //vufIbOmc8fA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D6F380CEDD;
+	Mon, 24 Feb 2025 22:30:35 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v2] net: stmmac: Correct usage of maximum queue
+ number macros
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174043623374.3631570.5317337904130972259.git-patchwork-notify@kernel.org>
+Date: Mon, 24 Feb 2025 22:30:33 +0000
+References: <20250221051818.4163678-1-hayashi.kunihiko@socionext.com>
+In-Reply-To: <20250221051818.4163678-1-hayashi.kunihiko@socionext.com>
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: alexandre.torgue@foss.st.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ rmk+kernel@armlinux.org.uk, chenhuacai@kernel.org, netdev@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Fri, 21 Feb 2025 14:12:19 +0800 Jiayuan Chen wrote:
-> +		/* Check if we should pass this packet.
-> +		 * BPF filter instructions assume each PPP packet has a 4-byte
-> +		 * header (e.g., those generated by libpcap), and then default
-> +		 * to skipping the first 2 bytes at the beginning of the
-> +		 * instruction. However, we still need to initialize these
-> +		 * 2-byte new headers to prevent crafted BPF programs from
-> +		 * reading them which would cause reading of uninitialized
-> +		 * data. Here, we set the headers according to the RFC 1662.
-> +		 */
-> +		*(u16 *)skb_push(skb, 2) = htons(0xff03);
+Hello:
 
-The constant from the RFC deserves a #define or enum.
-Looks like we may already need it in one other place:
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-drivers/net/wan/fsl_ucc_hdlc.h:#define DEFAULT_PPP_HEAD    0xff03
+On Fri, 21 Feb 2025 14:18:18 +0900 you wrote:
+> The maximum numbers of each Rx and Tx queues are defined by
+> MTL_MAX_RX_QUEUES and MTL_MAX_TX_QUEUES respectively.
+> 
+> There are some places where Rx and Tx are used in reverse. There is no
+> issue when the Tx and Rx macros have the same value, but should correct
+> usage of macros for maximum queue number to keep consistency and prevent
+> unexpected mistakes.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,v2] net: stmmac: Correct usage of maximum queue number macros
+    https://git.kernel.org/netdev/net-next/c/352bc4513ec3
+
+You are awesome, thank you!
 -- 
-pw-bot: cr
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
