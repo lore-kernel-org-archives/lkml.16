@@ -1,170 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78DF9265CCB;
-	Mon, 24 Feb 2025 18:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD5B265CCB;
+	Mon, 24 Feb 2025 18:21:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740421304; cv=none; b=iEBD222kvl8fSH8Iyjan5hMVx7eoOfVj6JElwlndEkFTumdzI/NjP/3n/Uc7g0envknjle1je32ZkqIfxke1FUfR1HCPxwMvqr0wEHnxAKS2NW3zN8pVz5AJ3MJcVhQiIJeSbWXztTrD8jti/+OXpz2OvTtzSkKDbw1cMQDZvyA=
+	t=1740421312; cv=none; b=HDktQKSvRpq2MH82QefCNr53Hz1wl/wcteb0+kwNEjuXwDUl1ZsHy63tb8P0gcrsk/PI7gYHHaSel8BKkd0+LwHy/ZTqu88kYZrVkYzoVgkSdiWZ9sUBvHnc87HfqnbkJi8BrDvrP7dNkq/QN6ViaF/M+7k1lLdHJxWdWN9vxSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740421304; c=relaxed/simple;
-	bh=10a3pM1AYmlxD+Z+pBe8Hm9/Sao0/x+QwYFONyDg3o4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aUS63VvB4azvWvP+ScVjWaitL92RkY39Fn5z873ID+zsHZAzzm+r+FMkCyNRD3lv+qXB5wjLTaX01GZy8GAHTyeRepgcV61ZGVFBwEaskAzM6fzPh3Pci0gBYZBtsKwKa7WzxYao77RFGGftYzakAgT21e19UYxwsNjRbcv4Hss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OpHmjjXU; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740421312; c=relaxed/simple;
+	bh=q7Lmek9HUIwkWj2qiofEolInzTq2lrU6YLwM9WjDNRY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NAiWN3MyLwRvjhX+36ub/4VKBvYZ5HLpXioAiVCMt9Skx3VLLGiliufQ0F19kVY2MtR2dFNTWB5+/thaHaFdyGHjiDZwV1umDTYkomJqydpkMJxAzHC6cIKDfDb0iV88RSDZWtEOZGedAqdTN4IzhOhXmSd6tATas7kr0tZgnZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=kmQx0XJW; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OpHmjjXU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740421302; x=1771957302;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=10a3pM1AYmlxD+Z+pBe8Hm9/Sao0/x+QwYFONyDg3o4=;
-  b=OpHmjjXUS6GiOCpVWgy68XjSPNJ5n8A3c3PNRd1vFTrDeNrOjiBUHE/C
-   vvX5RmHh4Tw4MiIyjniYQR4VI9dbwcHJV03SZsNznLzQxfmV9gREuwWK2
-   OVBjAigohAmRozaBgenFUI8fhYhE/ZTLtcVaTVfAkkW9FMZ+Qw9ODGWx+
-   u1PiIsZoOF5g1J0a/I8h4U5uW3FO/eTbhtup5A9uiX2oWI4f8TVbOQQEj
-   5Ik7u+3+qeekMO4hxWrwJWwZMk56RTfdDls3Nf4IB+WHJ9imp7Q7xHirk
-   R2QdlGW3o5Y2wtsXWJV5Fn3tpi0VTYGZ2kPRmTzvx9LbsPrzhJ15vEjxH
-   Q==;
-X-CSE-ConnectionGUID: 97WfLrygRU+qOOMmgy5lwA==
-X-CSE-MsgGUID: p5yeb2PFTmCnBbVEuYcO+A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="58738352"
-X-IronPort-AV: E=Sophos;i="6.13,312,1732608000"; 
-   d="scan'208";a="58738352"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 10:21:41 -0800
-X-CSE-ConnectionGUID: nH/dmqPkRqeMY5P4pZu3sA==
-X-CSE-MsgGUID: 5RHlkFn7S5mj32IzNhfDdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="117050107"
-Received: from cmdeoliv-mobl4.amr.corp.intel.com (HELO [10.125.111.40]) ([10.125.111.40])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 10:21:40 -0800
-Message-ID: <443992d7-f694-4e46-b120-545350a5d598@intel.com>
-Date: Mon, 24 Feb 2025 10:21:47 -0800
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="kmQx0XJW"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51OE5Cxi010861;
+	Mon, 24 Feb 2025 19:16:32 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	gsOzA2NrVZUJ3dT5idaHgkMXMJrvsF/zo/qXjaQqpvk=; b=kmQx0XJW3xk0u4AS
+	6s7c/W+f6AoiBYe3pKOg+XAFOPZ4EJCX7lkwDIT1STljXG5EewuUwAJX/S3H6h0h
+	ReGvXJDFhMOHoriooJl2F+ZtVrCFfPwJYPXlVfmzkbhm/0MIWMCDrR9Entafmk8h
+	5xdFYOYSWJj8BvY6wkHnALk8i28C92ho7LfVD9svFD3u7S4cm5js4fD63jcvSyEV
+	wBk7A+Cnct/UAVRMe3fiSkt/FA3kkImW88224D7QuOCeg+o9UtSVa4TmjHI3DQeB
+	/W/dghmcW5bW2vsG90vlT+gG21tetiu7gn76d7Vysgl768iUkMwuyhQjAcmvTTb2
+	jV/Qzw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44y6t20r40-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Feb 2025 19:16:32 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id EA81340078;
+	Mon, 24 Feb 2025 19:12:29 +0100 (CET)
+Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AF5DB546D7A;
+	Mon, 24 Feb 2025 19:02:35 +0100 (CET)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
+ (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Feb
+ 2025 19:02:35 +0100
+Received: from localhost (10.252.23.75) by SAFDAG1NODE1.st.com (10.75.90.17)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Feb
+ 2025 19:02:35 +0100
+From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+To: <lee@kernel.org>, <ukleinek@kernel.org>, <alexandre.torgue@foss.st.com>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <wbg@kernel.org>, <jic23@kernel.org>, <daniel.lezcano@linaro.org>,
+        <tglx@linutronix.de>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <olivier.moysan@foss.st.com>, <fabrice.gasnier@foss.st.com>
+Subject: [PATCH 7/8] arm64: defconfig: enable STM32 LP timers drivers
+Date: Mon, 24 Feb 2025 19:01:49 +0100
+Message-ID: <20250224180150.3689638-8-fabrice.gasnier@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
+References: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/7] mseal, system mappings: kernel config and header
- change
-To: jeffxu@chromium.org, akpm@linux-foundation.org, keescook@chromium.org,
- jannh@google.com, torvalds@linux-foundation.org, vbabka@suse.cz,
- lorenzo.stoakes@oracle.com, Liam.Howlett@Oracle.com,
- adhemerval.zanella@linaro.org, oleg@redhat.com, avagin@gmail.com,
- benjamin@sipsolutions.net
-Cc: linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com, hch@lst.de,
- ojeda@kernel.org, thomas.weissschuh@linutronix.de, adobriyan@gmail.com,
- johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com,
- willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com,
- linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de,
- rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com,
- f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com,
- mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com,
- peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com,
- groeck@chromium.org, mpe@ellerman.id.au,
- aleksandr.mikhalitsyn@canonical.com, mike.rapoport@gmail.com
-References: <20250224174513.3600914-1-jeffxu@google.com>
- <20250224174513.3600914-2-jeffxu@google.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250224174513.3600914-2-jeffxu@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-24_09,2025-02-24_02,2024-11-22_01
 
-On 2/24/25 09:45, jeffxu@chromium.org wrote:
-> +/*
-> + * mseal of userspace process's system mappings.
-> + */
-> +#ifdef CONFIG_MSEAL_SYSTEM_MAPPINGS
-> +#define MSEAL_SYSTEM_MAPPINGS_VM_FLAG	VM_SEALED
-> +#else
-> +#define MSEAL_SYSTEM_MAPPINGS_VM_FLAG	VM_NONE
-> +#endif
+Enable the STM32 timer drivers: MFD, counter, PWM and trigger as modules.
+Clocksource is a bool, hence set to y. These drivers can be used on
+STM32MP25.
 
-This ends up looking pretty wonky in practice:
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+---
+ arch/arm64/configs/defconfig | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> +	vm_flags = VM_READ|VM_MAYREAD|VM_IO|VM_DONTDUMP|VM_PFNMAP;
-> +	vm_flags |= MSEAL_SYSTEM_MAPPINGS_VM_FLAG;
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 1f25423de383..952eee30f21c 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -775,6 +775,7 @@ CONFIG_MFD_TI_LP873X=m
+ CONFIG_MFD_TPS65219=y
+ CONFIG_MFD_TPS6594_I2C=m
+ CONFIG_MFD_ROHM_BD718XX=y
++CONFIG_MFD_STM32_LPTIMER=m
+ CONFIG_MFD_WCD934X=m
+ CONFIG_MFD_KHADAS_MCU=m
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+@@ -1401,6 +1402,7 @@ CONFIG_CLK_RENESAS_VBATTB=m
+ CONFIG_HWSPINLOCK=y
+ CONFIG_HWSPINLOCK_QCOM=y
+ CONFIG_TEGRA186_TIMER=y
++CONFIG_CLKSRC_STM32_LP=y
+ CONFIG_RENESAS_OSTM=y
+ CONFIG_ARM_MHU=y
+ CONFIG_IMX_MBOX=y
+@@ -1526,6 +1528,7 @@ CONFIG_IIO_CROS_EC_LIGHT_PROX=m
+ CONFIG_SENSORS_ISL29018=m
+ CONFIG_VCNL4000=m
+ CONFIG_IIO_ST_MAGN_3AXIS=m
++CONFIG_IIO_STM32_LPTIMER_TRIGGER=m
+ CONFIG_IIO_CROS_EC_BARO=m
+ CONFIG_MPL3115=m
+ CONFIG_PWM=y
+@@ -1543,6 +1546,7 @@ CONFIG_PWM_ROCKCHIP=y
+ CONFIG_PWM_RZ_MTU3=m
+ CONFIG_PWM_SAMSUNG=y
+ CONFIG_PWM_SL28CPLD=m
++CONFIG_PWM_STM32_LP=m
+ CONFIG_PWM_SUN4I=m
+ CONFIG_PWM_TEGRA=m
+ CONFIG_PWM_TIECAP=m
+@@ -1682,6 +1686,7 @@ CONFIG_INTERCONNECT_QCOM_SM8750=y
+ CONFIG_INTERCONNECT_QCOM_X1E80100=y
+ CONFIG_COUNTER=m
+ CONFIG_RZ_MTU3_CNT=m
++CONFIG_STM32_LPTIMER_CNT=m
+ CONFIG_HTE=y
+ CONFIG_HTE_TEGRA194=y
+ CONFIG_HTE_TEGRA194_TEST=m
+-- 
+2.25.1
 
-because MSEAL_SYSTEM_MAPPINGS_VM_FLAG is so much different from the
-other ones.
-
-Would it really hurt to have
-
- #ifdef CONFIG_64BIT
- /* VM is sealed, in vm_flags */
- #define VM_SEALED       _BITUL(63)
-+#else
-+#define VM_SEALED       VM_NONE
- #endif
-
-?
-
-Then all the users could just do:
-
-	vm_flags = VM_READ|VM_MAYREAD|VM_IO|VM_DONTDUMP|VM_PFNMAP|
-		   VM_SEALED
-
-That seems to be a the common way of doing things. Take a look at:
-
-# define VM_GROWSUP     VM_NONE
-...
-# define VM_MTE         VM_NONE
-# define VM_MTE_ALLOWED VM_NONE
-...
-# define VM_UFFD_MINOR          VM_NONE
-...
-#define VM_DROPPABLE            VM_NONE
-
-... and more
