@@ -1,204 +1,114 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dilbert.mork.no (dilbert.mork.no [65.108.154.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E189F19ABB6;
-	Mon, 24 Feb 2025 07:14:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3032C155747;
+	Mon, 24 Feb 2025 07:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.108.154.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740381258; cv=none; b=GoeO7T0KdhWQiUiYKR3sLzjHNGedRuRjLu9OLUOEgR/MgPvD4UaUZdLckZPxVy2jXChArYPX49j5OBlV3ggon57YcJh4rbgO82NwF/NjLdGgm9GSEE5qI//EiJxBz1jM9S8fBxR6SDiW44hZZ36s0XQHtAITEdwOfQkdy85OAtQ=
+	t=1740381358; cv=none; b=Q40UC5GDcPAExt9zCJxA9XqXJjW7sQiuIRbURkF0nNNbSjbBfFsihrgQ8lOCp/yLrhxKz9yEG99MUG/PnQfQHly11wImUh++IHFW3FDdWxzKvf8y+LHMNB/DQeBpZpAO8qhxXzMla2rGNJByzEdWLA+bJdWqUbcG6qvmuP1pFGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740381258; c=relaxed/simple;
-	bh=3Rp0ZJHnJLGhisTv0hRmULsmiBB0mQ8CzYV+Cnn1s6Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B76RtwO9HdqP4gNqN1/jwmijLf1xt50kadTVlE+6S7ByztmNVH+HQhUjVYn520YhzyvJWu7cW472Q3YQ0dPxIZwh8YdS01lpWGxttSHoABgx0vn/BRLDIXIFtWpkRjqDOa4P8SRk1+OnYLpvjuZ9YPe0FtecU+1FlLE+venpxgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g2qWAakO; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740381358; c=relaxed/simple;
+	bh=LA91jSsheMxR4yC/e7jbT3VZ1jyx/nEH3cVwjan9ivs=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
+	 MIME-Version:Content-Type; b=q666mwewvLixZAJ7KQAMhzfuxNOWyWFJezyDFg96Hh0kKxVHiopG211wJbudKM0C+U9zamUbkG/qWs0/OfJk5dy9hrzmRgBXnbbLQ6pyqvxFyFAHEp79tA8HwM+x9ktnys0t8mwdKAex8ZJLjMDjg6+IXt6S6Y6IQV3+XSw/7Yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mork.no; spf=pass smtp.mailfrom=miraculix.mork.no; dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b=APteWDir; arc=none smtp.client-ip=65.108.154.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mork.no
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=miraculix.mork.no
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g2qWAakO"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-38f504f087eso3274562f8f.1;
-        Sun, 23 Feb 2025 23:14:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740381255; x=1740986055; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YGDYyJHeIvbN67HiPEdMBYxe4lOwRgtICljAixydSZg=;
-        b=g2qWAakOzAc0FXRbDedFR2IaQMSDAkVoObF/uPWhHu3ikwah0+H8pL5Da8GZYPZYk5
-         Mt8pXhDL0JFOM17QYOHS9s/BzGC3fc4DDuw1kvctad54EQtwB0wwmSyhuQ+YjZYnD8pN
-         0IucSQ0+QNE3ArhI57a+D1hZ4Cc2HrdQANFptbv6GE8BaRv5e14vVFgNkbPxgTELzm9N
-         DQFbnTHv2Qg7c0aEZNTsrKZ6BnHoir1E5kWb/BjIJI6hHtuZiCDGYjGI7jKAZDobPAQe
-         bG5m+o2Q23fXvciXwCn2aHBmt6sP4OGG1qWQuG8oVHp3hXcfj2bTNtlTrrvJbjNnaV75
-         c5EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740381255; x=1740986055;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YGDYyJHeIvbN67HiPEdMBYxe4lOwRgtICljAixydSZg=;
-        b=gmKW1yeerQl4BUtkmn1uwpJEJhZXRxAug6K8qwvv3GFbfXkLQMcn74dm+Ylg29Fm3l
-         jRvCLgGU5zxC4l6GqfJb8YpL0q0Y1sLskvZITuKgmuQmnLvyGmK3LDPcayTW5cIt2eDu
-         6Je5myK+QooYWQwHfTo0kPe03yUteNKbuI4SSy2Z43+8L8WSAuquKPUzZJtwem61Fwqo
-         45gUUKveWGmUpa26+b6vDeaLp9m/321mETf3aVSX+qe0I+nPzRUPB5n8/eMejMUcJE7D
-         NaNEsBWCqu9+hjtqIoJdKbtt48B2jThwI15UqHs7ni3bL923jGQFQABTO/c6XHzWe8P2
-         5csw==
-X-Forwarded-Encrypted: i=1; AJvYcCUVZvThb7fIVtmaPud1j3x6cXnhZJ5y82pa2qJq+4/4fHJV40EbhnQ54Dt5foUSuxAy4xJw+FIVNGE4v/gCXQ6CJ7g=@vger.kernel.org, AJvYcCVULu76Uc6gtY0iZLOjYt9ktzMa/Rm6fmEoPxI36ew7xxJMwN9dxpirS0QyDMVosDiY21OE9vc06DTI@vger.kernel.org, AJvYcCWpa5IskDSo0NL7yh5PeiPffTE7SrSYIwiyIi+vZdX+tpx3bkPnIjMX0jIaeFBWclSa5y1XJ0oReXm09QQu@vger.kernel.org, AJvYcCX2dF6gjj3YIiOS49yRvJNkJ488iZdkVqwrCqGigaYjUdIdDhkZBgT8SS+D18pewzL2849SCi9ZVGngkJ0YTA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwwuvRWgDniP8YBRt20WoveO7I6oUZx4z0FoQH3BUt1zqv+UY+
-	VAJLYBFmkCdOIcpguThXbPDcqWqIp+U1zfs8WQDt7gn4CVm6iJMJ
-X-Gm-Gg: ASbGncvIn2f8Zkjj+RlATHuP8W1T5ZYndBWB9BZeVWba45FzOKFvX3nAyOlEW17zEWJ
-	nYbB5KE0bEnJBno8IffLtHEy3Y4Yh18UEWpuxhnPi4WJIMy0p6wizKsm0/wuMmEUtSDuM5cVuC0
-	ko3xQcM2gdSb15X0oDqA+0eQ9T9USjKd10TZwuBRQAge5PAo6b7TRXGSWIMBgyTH+PBLlVexSgC
-	t4gLL0Br4TTrMJP3uyFKEJxc8f1nDFLOn/wOPd35kaiKaopJzvtxaPldLtot0Jf9NqV59M6Dgwu
-	r1/CjLPRMUvZfmyAOvyHVxVrPKmSxGXWje1y+pjh
-X-Google-Smtp-Source: AGHT+IGwNUNxA01WRc9bPdVz1GSmsf5EHfuq7knr43OKBQrWqaclxDJN2pEyp9jAXY6JIC3+Wo1lJg==
-X-Received: by 2002:a5d:5885:0:b0:38f:2a32:abbb with SMTP id ffacd0b85a97d-38f7d1ffc25mr4536838f8f.4.1740381254826;
-        Sun, 23 Feb 2025 23:14:14 -0800 (PST)
-Received: from [192.168.43.21] ([77.85.230.22])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4399be79d92sm111533745e9.0.2025.02.23.23.14.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 23 Feb 2025 23:14:13 -0800 (PST)
-Message-ID: <3d23ec54-6e55-4ee4-bc1a-179ca97878ef@gmail.com>
-Date: Mon, 24 Feb 2025 09:14:12 +0200
+	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="APteWDir"
+Authentication-Results: dilbert.mork.no;
+	dkim=pass (1024-bit key; secure) header.d=mork.no header.i=@mork.no header.a=rsa-sha256 header.s=b header.b=APteWDir;
+	dkim-atps=neutral
+Received: from canardo.dyn.mork.no ([IPv6:2a01:799:10de:2e00:0:0:0:1])
+	(authenticated bits=0)
+	by dilbert.mork.no (8.18.1/8.18.1) with ESMTPSA id 51O7DMHp962698
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
+	Mon, 24 Feb 2025 07:13:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
+	t=1740381202; bh=Qo7e4pHJOv6pCynpF4eYP+eH0PAvvJnROAiF5yvl18E=;
+	h=From:To:Cc:Subject:References:Date:Message-ID:From;
+	b=APteWDira/AXiyCs1XJGdVNQe0uORaD7fKVMZsPgRho24EY8j0hRfDA9xKEhWdcCd
+	 Pt13IlQACmkp6BeE++HlBME+psh/mEZ/TX/uyw6UWFwEik6KyHkdCAqq+8jz6jVHhL
+	 j9IWqvAACBD658BiBsuIlePq50N5Z27/l2raZw5I=
+Received: from miraculix.mork.no ([IPv6:2a01:799:10de:2e0a:149a:2079:3a3a:3457])
+	(authenticated bits=0)
+	by canardo.dyn.mork.no (8.18.1/8.18.1) with ESMTPSA id 51O7DMxE2373751
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
+	Mon, 24 Feb 2025 08:13:22 +0100
+Received: (nullmailer pid 997267 invoked by uid 1000);
+	Mon, 24 Feb 2025 07:13:22 -0000
+From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>, davem@davemloft.net,
+        Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        =?utf-8?Q?K=C3=B6ry?= Maincent <kory.maincent@bootlin.com>,
+        Simon Horman <horms@kernel.org>,
+        Romain Gantois <romain.gantois@bootlin.com>,
+        Antoine Tenart <atenart@kernel.org>,
+        Marek =?utf-8?Q?Beh=C3=BAn?= <kabel@kernel.org>
+Subject: Re: [PATCH net-next 0/2] net: phy: sfp: Add single-byte SMBus SFP
+ access
+Organization: m
+References: <20250223172848.1098621-1-maxime.chevallier@bootlin.com>
+	<87r03otsmm.fsf@miraculix.mork.no>
+	<Z7uFhc1EiPpWHGfa@shell.armlinux.org.uk>
+	<3c6b7b3f-04a2-48ce-b3a9-2ea71041c6d2@lunn.ch>
+Date: Mon, 24 Feb 2025 08:13:22 +0100
+In-Reply-To: <3c6b7b3f-04a2-48ce-b3a9-2ea71041c6d2@lunn.ch> (Andrew Lunn's
+	message of "Mon, 24 Feb 2025 04:32:29 +0100")
+Message-ID: <87ikozu86l.fsf@miraculix.mork.no>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/8] dt-bindings: phy: snps-eusb2: add exynos2200
- support
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
- <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Philipp Zabel <p.zabel@pengutronix.de>, Abel Vesa <abel.vesa@linaro.org>,
- linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linux-phy@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250223122227.725233-1-ivo.ivanov.ivanov1@gmail.com>
- <20250223122227.725233-3-ivo.ivanov.ivanov1@gmail.com>
- <4tvpl3pujnuw2qjwu7f7ryrr5dndxow7srkkp2223wmexr23bi@7nmgrpq6znpg>
-Content-Language: en-US
-From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-In-Reply-To: <4tvpl3pujnuw2qjwu7f7ryrr5dndxow7srkkp2223wmexr23bi@7nmgrpq6znpg>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 1.0.7 at canardo.mork.no
+X-Virus-Status: Clean
 
-On 2/24/25 01:43, Dmitry Baryshkov wrote:
-> On Sun, Feb 23, 2025 at 02:22:21PM +0200, Ivaylo Ivanov wrote:
->> Exynos 2200 makes use of the Synposys eUSB2 IP, so document it in the
->> binding. Unlike the currently documented Qualcomm SoCs, it doesn't provide
->> reset lines for reset control and uses more clocks.
->>
->> Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov@gmail.com>
->> ---
->>  .../bindings/phy/snps,eusb2-phy.yaml          | 64 +++++++++++++++++--
->>  1 file changed, 57 insertions(+), 7 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/phy/snps,eusb2-phy.yaml b/Documentation/devicetree/bindings/phy/snps,eusb2-phy.yaml
->> index 22c77968f..f4164db71 100644
->> --- a/Documentation/devicetree/bindings/phy/snps,eusb2-phy.yaml
->> +++ b/Documentation/devicetree/bindings/phy/snps,eusb2-phy.yaml
->> @@ -23,6 +23,7 @@ properties:
->>                - qcom,x1e80100-snps-eusb2-phy
->>            - const: qcom,sm8550-snps-eusb2-phy
->>        - const: qcom,sm8550-snps-eusb2-phy
->> +      - const: samsung,exynos2200-snps-eusb2-phy
->>  
->>    reg:
->>      maxItems: 1
->> @@ -31,12 +32,12 @@ properties:
->>      const: 0
->>  
->>    clocks:
->> -    items:
->> -      - description: ref
->> +    minItems: 1
->> +    maxItems: 3
->>  
->>    clock-names:
->> -    items:
->> -      - const: ref
->> +    minItems: 1
->> +    maxItems: 3
->>  
->>    resets:
->>      maxItems: 1
->> @@ -58,11 +59,60 @@ required:
->>    - compatible
->>    - reg
->>    - "#phy-cells"
->> -  - clocks
->> -  - clock-names
-> Why? Clocks are required in both if clauses.
+Andrew Lunn <andrew@lunn.ch> writes:
 
-Right. And "ref" is a requirement. I'll fix that in the next revision.
-
-Best regards,
-Ivaylo
-
+>> So, not only do I think that hwmon should be disabled if using SMBus,
+>> but I also think that the kernel should print a warning that SMBus is
+>> being used and therefore e.g. copper modules will be unreliable. We
+>> don't know how the various firmwares in various microprocessors that
+>> convert I2C to MDIO will behave when faced with SMBus transfers.
 >
->>    - vdd-supply
->>    - vdda12-supply
->> -  - resets
->> +
->> +allOf:
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            enum:
->> +              - qcom,sm8550-snps-eusb2-phy
->> +
->> +    then:
->> +      properties:
->> +        reg:
->> +          maxItems: 1
->> +
->> +        clocks:
->> +          items:
->> +            - description: ref
->> +
->> +        clock-names:
->> +          items:
->> +            - const: ref
->> +
->> +      required:
->> +        - clocks
->> +        - clock-names
->> +        - resets
->> +
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            enum:
->> +              - samsung,exynos2200-snps-eusb2-phy
->> +
->> +    then:
->> +      properties:
->> +
->> +        clocks:
->> +          items:
->> +            - description: Reference clock
->> +            - description: Bus (APB) clock
->> +            - description: Control clock
->> +
->> +        clock-names:
->> +          items:
->> +            - const: ref
->> +            - const: bus
->> +            - const: ctrl
->> +
->> +      required:
->> +        - clocks
->> +        - clock-names
->>  
->>  additionalProperties: false
->>  
->> -- 
->> 2.43.0
->>
+> I agree, hwmon should be disabled, and that the kernel should printing
+> a warning that the hardware is broken and that networking is not
+> guaranteed to be reliable.
 
+What do you think will be the effect of such a warning?  Who is the
+target audience?
+
+You can obviously add it, and I don't really care.  But I believe the
+result will be an endless stream of end users worrying about this scary
+warning and wanting to know what they can do about it.  What will be
+your answer?
+
+No SoC/phy designer will ever see the warning.  They finished designing
+these chips decades ago.  The switch designers might see it. But
+probably not. They're not worried about running mainline Linux at all.
+They have they're vendor SDK.  Linux based of course, but it's never
+going to have that warning no matter what you do.  Firmware developers?
+Same as switch designers really.
+
+The hardware exists. It's not perfect. We agree so far.  But I do not
+understand your way of dealing with that.
+
+If your intention is detecting this hardware problem in bug reports etc,
+then it makes more sense to me.  But I believe a more subtle method will
+be more effeicient than a standalone and scary warning. Like embedding
+"smbus" or similar in existing debug/warning/error messages, e.g by
+making it part of the mdio bus name.
+
+
+Bj=C3=B8rn
