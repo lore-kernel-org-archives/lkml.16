@@ -1,173 +1,160 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDD31E5B95
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 19:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D6D1DB34E;
+	Mon, 24 Feb 2025 19:08:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740424051; cv=none; b=K4KK2Dgp7SZHC7pxtzhb0+i+IWxsVDpoGWUSdxviWJ+zfgVS32itHhMaHFWUE/1ISlbuxGCNx/z7kganX8i+BZQNOLF2kGS4aFjxDgffPRyi4JbHM4bnZgE2V+PkJWYAx1g/Jx8R7HjgQfCxCKTANKvngTEP9mwZ00XRKdKG7Xc=
+	t=1740424099; cv=none; b=d61mXzRwplYJhvpG3fzcpIVoGAVf+ANvEuciAsSRbCy5TVb4pTTsldlPXvwsgR656aDRyvIGrlwMT+eL1mWArebfoSp/fE8SL0iZLNaMh4SvbrY/xIGzMdJ76frRNRJO0b/lzb+d0rgwRhjuB0cczyac2oRs66MoANojZyr2Hbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740424051; c=relaxed/simple;
-	bh=GbuUXHqUtP/Zw8eNMCTnJLOtMqQEM+OFbTLgxZqprGc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=WR5SKUxIiRDfVTAdmur2MDkovOncfDOi1Rvgyd2DnWnJj4oDQaEGkqAfxzhL0CX3FOSRzfxFfzpSTesZww9cvVaEKlmQNKrl6vsLidg/NH4vGFkU9rui3L5SLIXnu8ZDRTK/UoRNtj3RBO9s5jMjvVWX7yHxIfF+tB5qBs3hl2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dIHNiEnW; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1740424099; c=relaxed/simple;
+	bh=YgKHn0SXS01Q9qbQJ2WsiYEUqdwLjv45aY/6JKyfLuI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cVrCI9ky71s7NjqXml44q5aupfyodLm5O10GPWoP+oJso+V7ok889dYuMxbe8yMdPc0eTJDNvzBu5nvUQ+MnnYnUrK96cVqlB3dAODnQozT93XTfX45qS8PabQLmhVIuwUmX6GR+hqTuTrgWN0PdVzppPzM2nP3AV4B8CXfegJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hJWhvfWx; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dIHNiEnW"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-2bc69a33810so177582fac.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 11:07:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hJWhvfWx"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso48502625e9.1;
+        Mon, 24 Feb 2025 11:08:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740424048; x=1741028848; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wQCHGb/1mEcTjB0ohJkHDUAZUcOj91T5VUbYgnfzfKs=;
-        b=dIHNiEnWIVWmOw1r432MBjAWluocUeWXz11TtpsWGtyet7Wp2BlgSMexd2JdgAPeTS
-         xxCqIPEsuKf7TbMV75RQerE6gmFmPGwetKBilHB7rqvvTfu4IEcJpqQvgf3U5L7UqU5t
-         CWcb/1l09DoRfW+8MlXyOsND5znqTdgZyi/sw=
+        d=gmail.com; s=20230601; t=1740424095; x=1741028895; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pU5W+dP5hQjBmGloMvFYYbU1gFy16R79+oo7OXi+20M=;
+        b=hJWhvfWxlnxznJtcr4uuPT40zY/Q7fOsHkbksevKBV2PfMKgBWYQPo/5uy/Xghw4B6
+         IpoxN9vTb/K5MJgaGvMUSJk6ugl72lQeJwn/iCtqbR3lga7G8lfRciNhsoTVmxIoZveO
+         sQGKFoMk9l0qdHZgXX7/ukhx1bjlzs3LC6sgRiqbtDuVkJNp5JubZRVCAxYYKrHN0XrU
+         Z2PJWB+SP++WV6G0CBYW3gGsvb2qSDo5A2sSUaZaohz3tw9XmLGTLtaWmhoG/SUCgw6U
+         0LDinuTVoJZYR4UtsEhRW1qCesGbYCaOrXNu/EJINrM2k+Re3SNNIOmNJv5N1EDNCji0
+         vLYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740424048; x=1741028848;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wQCHGb/1mEcTjB0ohJkHDUAZUcOj91T5VUbYgnfzfKs=;
-        b=UnWQ1DZjcnyyUAau1+U/97A1muArq5DNgPNUMZ7LF3Xvf340Vp1+RRdQMjL5GFqJVg
-         4jHYxI2C5ZV1zvqNFOdxP9EmAMZGr6Gd9tOa/uCV95RLW93nt0Fw4remvc1MWuxgIFfb
-         7wVUjVlj5Sq/WUz7SMJhxbztOYwxEN0815KfPw8vlgoZo9dOkQDgLkP1iEwDQSOD9auc
-         9aO6XvkigbaBKBCBt/cwq0+UNTV3VJ9AkQqYesABHBWmcjzsn8CZ31kr5VfwhQJ659QH
-         xozcRLYO+dIuJp4yGg0AxE0YAutN0VVvG9qCz7kImxeMxGQNC0MJCTx8VXtd1XsSzziN
-         JYnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVtxLl/VqGJl0uO9ZBYNbXitCqKhISnjgoXUyJqzVEpTr5FMlc87qdhDp4ERNZ3uqCALkJUwcADirs4Rns=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7ZwLl3Xi6tNAaH3GzPqAcABpByl0C8ut2U1DKEDuXoeGdDCdJ
-	kgVoa77jSeABj+4JgKMf7WH1N2U5DTHi0viKgXqluuX/ihZ1U/9mPLbkjT7A7+O+7Hy5V++Ihlw
-	lhwJsFMca8+M7j1Pu2K0bqJz56C3/LKjqx7a8
-X-Gm-Gg: ASbGncsVG7MxIXHavhtAO9JMoSHJOnRTYhTadexkbTUv4lCNpRtWyJuYbnzJCeRNbZ1
-	mRAjQzbQmeD87IJ+ZiGxg+ncl1bQWv2soOWhOx4dh5MH9i9FXpV4Si61Mzko0gyUXvPABnSH4fP
-	QUD4ys9jB/0hXOpjQkDakAhbbIoYAJhDBJV4v9
-X-Google-Smtp-Source: AGHT+IFrbrwEmuYOunYtHNdMni7okQkt3QFjQtD8vHn5l5zTdcXfnyAMvDD/7Ae+veDhcxsJz6JhhrxQ5jvSrdRN1DM=
-X-Received: by 2002:a05:6808:201f:b0:3f4:11a1:615a with SMTP id
- 5614622812f47-3f4247a9cd8mr4184198b6e.6.1740424048367; Mon, 24 Feb 2025
- 11:07:28 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740424095; x=1741028895;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pU5W+dP5hQjBmGloMvFYYbU1gFy16R79+oo7OXi+20M=;
+        b=oD9p5Px+QZx7wzgzm19n7Zfadgsa2VeXGSnfUpSvDqagX4yMDV0hf+NaRCTegmUiUn
+         JxckfWNXSYIHFTCWUcGM2dGj4Y+bQMW0e2efnAZrJBKtNJAb0hMUwJSGq96tmYGzGqaq
+         ++hQGLJo1k/1FN8BLtSHs8MQ5Sz7NnUTmK7DcBaEOOvavVcRhBg3LoZry0KiUadYr2KW
+         S182qQ3jOqrnfTU9QkyGmcvpaAN965TifsyaLyjLeVzd3hLsUVBPE9JDJs/WhBJimaB/
+         /qY6ZjqcDK7hOi9Gep+LgOsGbOZ2Mqt6OgW9t8DMZoADJi6ABl7se4r7yg3vv/fimOLg
+         HiDA==
+X-Forwarded-Encrypted: i=1; AJvYcCVFb7sKtjlM03Xzw0ousqBBCKy+gwLv626AzadM8jqJUABwuFAPfVxo9zuBUBIzpbDrsmDQJsTbnaP1hKNs@vger.kernel.org, AJvYcCVK4Lcv+OdUFyBUezP6HGnQbVjkUJFHIfovqOYXYwx/UfVHTmvPYpO2Yc1L+geA53AtoI4LPnMcvl4+8LY=@vger.kernel.org, AJvYcCWSOscIDPOTwJI1U1eIGOAeUFY+2T039hw1+lIVSxU+ItANpvmD2Umn4fUZfX9hvgB3Tag2Pc6DPIhq@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZEDbEB8Tum1nZvBbP6S/yJEMZ2v3nGbiPpZ8v+T5isH4dUBN+
+	uJUtCRnv9lYAp/M/tLWNIFOgSeamQh/hdZZI3zLrgs9fl8MfXiL2
+X-Gm-Gg: ASbGnctwJ3Xzi5G2YF09lJyaPs3BIjdWd/fe5siiNMsjciCiVjRGmdCE1ZSg1DHVuvi
+	Eqj46OmfcMvy3VBfpPYrjm6RNT0GyylQkk9xunKGQPz+PRuZQbbK7T+wSd3BNQFYVYOYKO3++4C
+	tf+wZ/qATkDxdeheptDcf57D37sYWWWfPviTFiqWc/Tv63GIeGU4e6AxTj1gnQdeP4WOY0S+0wR
+	ECsFlNGqCUbP8ZI2BZTSNgW0oQ3Zb61lfVDeMjEGthOF8MhR2S6FSLeKxaTYoCvwZs1ofE3v2f1
+	wAIidgM/FWQwiOmbmePNwyp/kNqiIglxeAYbrUoeKy7u1Un5Ugl93lI=
+X-Google-Smtp-Source: AGHT+IFMZpSkj8mOeTbZpxScUGNxroU6s1DGkIhvD1LVcsUzWU2LZzSOcO2UmaPQci+OsYqbI2Wf4Q==
+X-Received: by 2002:a05:6000:154b:b0:38d:d666:5457 with SMTP id ffacd0b85a97d-390cc631b04mr259493f8f.42.1740424094433;
+        Mon, 24 Feb 2025 11:08:14 -0800 (PST)
+Received: from [192.168.1.143] ([82.79.237.175])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed1d552e7sm8482966b.48.2025.02.24.11.08.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2025 11:08:13 -0800 (PST)
+Message-ID: <36ca7549-aee7-4f14-9311-77978a42362a@gmail.com>
+Date: Mon, 24 Feb 2025 21:17:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224174513.3600914-1-jeffxu@google.com> <20250224174513.3600914-2-jeffxu@google.com>
- <443992d7-f694-4e46-b120-545350a5d598@intel.com> <CABi2SkVKhjShryG0K-NSjjBvGs0UOVsY-6MQVOuQCkfuph5K8Q@mail.gmail.com>
- <3nxcy7zshqxmjia7y6cyajeoclcxizkrhhsitji5ujbafbvhlu@7hqs6uodor56>
-In-Reply-To: <3nxcy7zshqxmjia7y6cyajeoclcxizkrhhsitji5ujbafbvhlu@7hqs6uodor56>
-From: Jeff Xu <jeffxu@chromium.org>
-Date: Mon, 24 Feb 2025 11:07:17 -0800
-X-Gm-Features: AWEUYZnFbU7bWMO5mDGdFqrYIJo2aJVDJw1Nuop8sup_tSwiXkOaJwtHACFOP_4
-Message-ID: <CABi2SkUfABFR+SpjBzHT9dEcsJ0OOHiyttKkQVhqrHLrtZzopA@mail.gmail.com>
-Subject: Re: [PATCH v6 1/7] mseal, system mappings: kernel config and header change
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Jeff Xu <jeffxu@chromium.org>, 
-	Dave Hansen <dave.hansen@intel.com>, akpm@linux-foundation.org, keescook@chromium.org, 
-	jannh@google.com, torvalds@linux-foundation.org, vbabka@suse.cz, 
-	lorenzo.stoakes@oracle.com, adhemerval.zanella@linaro.org, oleg@redhat.com, 
-	avagin@gmail.com, benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
-	sroettger@google.com, hch@lst.de, ojeda@kernel.org, 
-	thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
-	johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com, 
-	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com, 
-	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
-	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, 
-	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com, 
-	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, 
-	peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com, 
-	groeck@chromium.org, mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com, 
-	mike.rapoport@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/3] arm64: dts: imx: add imx95 dts for sof
+Content-Language: en-GB
+To: Frank Li <Frank.li@nxp.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20250211225808.3050-1-laurentiumihalcea111@gmail.com>
+ <20250211225808.3050-4-laurentiumihalcea111@gmail.com>
+ <Z6vcBvs4xGQ+pGCJ@lizhi-Precision-Tower-5810>
+From: Mihalcea Laurentiu <laurentiumihalcea111@gmail.com>
+In-Reply-To: <Z6vcBvs4xGQ+pGCJ@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 24, 2025 at 11:03=E2=80=AFAM Liam R. Howlett
-<Liam.Howlett@oracle.com> wrote:
->
-> * Jeff Xu <jeffxu@chromium.org> [250224 13:44]:
-> > On Mon, Feb 24, 2025 at 10:21=E2=80=AFAM Dave Hansen <dave.hansen@intel=
-.com> wrote:
-> > >
-> > > On 2/24/25 09:45, jeffxu@chromium.org wrote:
-> > > > +/*
-> > > > + * mseal of userspace process's system mappings.
-> > > > + */
-> > > > +#ifdef CONFIG_MSEAL_SYSTEM_MAPPINGS
-> > > > +#define MSEAL_SYSTEM_MAPPINGS_VM_FLAG        VM_SEALED
-> > > > +#else
-> > > > +#define MSEAL_SYSTEM_MAPPINGS_VM_FLAG        VM_NONE
-> > > > +#endif
-> > >
-> > > This ends up looking pretty wonky in practice:
-> > >
-> > > > +     vm_flags =3D VM_READ|VM_MAYREAD|VM_IO|VM_DONTDUMP|VM_PFNMAP;
-> > > > +     vm_flags |=3D MSEAL_SYSTEM_MAPPINGS_VM_FLAG;
-> > >
-> > > because MSEAL_SYSTEM_MAPPINGS_VM_FLAG is so much different from the
-> > > other ones.
-> > >
-> > > Would it really hurt to have
-> > >
-> > >  #ifdef CONFIG_64BIT
-> > >  /* VM is sealed, in vm_flags */
-> > >  #define VM_SEALED       _BITUL(63)
-> > > +#else
-> > > +#define VM_SEALED       VM_NONE
-> > >  #endif
-> > >
-> > > ?
-> > >
-> > VM_SEALED isn't defined in 32-bit systems, and mseal.c isn't part of
-> > the build. This is intentional. Any 32-bit code trying to use the
-> > sealing function or the VM_SEALED flag will immediately fail
-> > compilation. This makes it easier to identify incorrect usage.
-> >
->
-> The reason that two #defines are needed is because you can have mseal
-> enabled while not sealing system mappings, so for this to be clean we
-> need two defines.
->
-> However MSEAL_SYSTEM_MAPPINGS_VM_FLAG, is _way_ too long, in my opinion.
-> Keeping with "VM_SEALED" I'd suggest "VM_SYSTEM_SEALED".
->
-> > For example:
-> > Consider the case below in src/third_party/kernel/v6.6/fs/proc/task_mmu=
-.c,
->
-> third_party?
->
-Sorry, I pasted the code path from ChromeOS code base, it is actually
-in the kernel itself.
 
-fs/proc/task_mmu.c
+On 12.02.2025 01:23, Frank Li wrote:
+> On Tue, Feb 11, 2025 at 05:58:08PM -0500, Laurentiu Mihalcea wrote:
+>> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+>>
+>> Add imx95 DTS for SOF usage.
+>>
+>> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+>> ---
+>>  arch/arm64/boot/dts/freescale/Makefile        |  1 +
+>>  .../dts/freescale/imx95-19x19-evk-sof.dts     | 85 +++++++++++++++++++
+>>  2 files changed, 86 insertions(+)
+>>  create mode 100644 arch/arm64/boot/dts/freescale/imx95-19x19-evk-sof.dts
+>>
+>> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+>> index 839432153cc7..27f64e333e4b 100644
+>> --- a/arch/arm64/boot/dts/freescale/Makefile
+>> +++ b/arch/arm64/boot/dts/freescale/Makefile
+>> @@ -282,6 +282,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxca.dtb
+>>  dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxla.dtb
+>>  dtb-$(CONFIG_ARCH_MXC) += imx93-var-som-symphony.dtb
+>>  dtb-$(CONFIG_ARCH_MXC) += imx95-19x19-evk.dtb
+>> +dtb-$(CONFIG_ARCH_MXC) += imx95-19x19-evk-sof.dtb
+> look like should use dt overlay ?
 
-> >
-> > #ifdef CONFIG_64BIT
-> > [ilog2(VM_SEALED)] =3D "sl",
-> > #endif
-> >
-> > Redefining VM_SEALED  to VM_NONE for 32 bit won't detect the problem
-> > in case that  "#ifdef CONFIG_64BIT" line is missing.
->
-> I don't think it is reasonable to insist on doing things differently in
-> the kernel because you have external tests that would need updating.
-> These things can change independently, so I don't think this is a valid
-> argument.
->
-> If these are upstream tests, and we need these tests to work then they
-> can be fixed.
->
-As above, this is actually kernel code, not test.
 
--Jeff
+can you pls explain why you'd see this as an overlay?
 
-> >
-> > Please note, this has been like this since the first version of
-> > mseal() RFC patch, and I prefer to keep it this way.
+(snip)
+
+>> +
+>> +	sof-sound-wm8962 {
+>> +		compatible = "audio-graph-card2";
+>> +		links = <&cpu>;
+>> +		label = "wm8962-audio";
+>> +		hp-det-gpios = <&gpio2 11 GPIO_ACTIVE_HIGH>;
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&pinctrl_hp>;
+>> +		widgets =
+>> +			"Headphone", "Headphones",
+>> +			"Microphone", "Headset Mic";
+> Generally, align to  =
+> 	widgets = "Headphone", "Headphones",
+> 		  "Microphone", "Headset Mic";
+
+
+sure
+
+
+>> +		routing =
+>> +			"Headphones", "HPOUTL",
+>> +			"Headphones", "HPOUTR",
+>> +			"Headset Mic", "MICBIAS",
+>> +			"IN3R", "Headset Mic",
+>> +			"IN1R", "Headset Mic";
+>> +	};
+>> +
+>> +	sound-wm8962 {
+>> +		status = "disabled";
+>> +	};
+>> +
+>> +};
+>> +
+>> +&edma2 {
+>> +	dma-channel-mask = <0xc0000000>, <0x0>;
+>> +};
+> Not sure why need mask edma2's some channel, can you add comments for it
 >
-> Thanks,
-> Liam
+> Frank
+
+
+sure, can add comment in commit msg
+
