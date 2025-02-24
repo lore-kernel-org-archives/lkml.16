@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69B024E4B7;
-	Mon, 24 Feb 2025 13:51:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2099D24EF7C;
+	Mon, 24 Feb 2025 13:51:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740405065; cv=none; b=L/ZBaqPJq0GicTZoNSaw2SwKM6UL+N9YiYTICcnWJT1vhb15/B8KYJ97sLIOC3TgsT2BgYEoxEmJYUZz5+KuoDEEArrd5Qj7wXabem5ZgSzXqfLiEIgQaKoe6JsnhSBPvaIbM3Fj7d5Wq9cb2FTjtDzkPxhdS48EWC5VNDeVN10=
+	t=1740405065; cv=none; b=pAdPraOZmrJWEblNGjnDhPXqezjke7KONgyl4P6tLz0Nlzd6DDVrH33AYWeAaohdh1f1fTyHm4Xpgt4qQ4079O3vssfnI2L1A8VvnVr3UUisHKN0Iti8jNedyz2Dl+WmESOqhs1gg+1m879pKsTMdmNP585qS0cFSM2OINQ3d1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740405065; c=relaxed/simple;
-	bh=2fFVeE5CFvJX83ipfaRcNiSD6AFsyycdrk50gKKutJI=;
+	bh=hTPrO7u9vikyA+T0pYfEy9szULQyXPV8+3Ucv3Dz7Aw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cChHkqu0q3t6IBeWey3uyKFOPVuIm876eoeTonN0h+YoR8IOGSxjfYixnL31yrAR0+br+0pDIhVL5/k90p2NaoLy5/N3kMWjekfGvMIfE8TF7t1J/NRPPautqPZTd5tdkjkK8UUAndOOpJ3T4scZ/lu+EWRoNpKLUUYJWXCfKEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IbfjZmGE; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=TaV6j1Eh3CYUpmn7nvF/ohKdZ4xPQ6QIE7qk8ZLePcmrte+szT2HjxXs7JOqXwLZ7BQOdl5qoxkAEjT73H/PYxF8pdgqmRpRJi/0nR6/F6uAcVT18aljcNniOYg8+zXciYnjMez/5q1Y0rIjjjCiSQuXS+Juou31YcYoPUHNXWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dvkeoqHl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IbfjZmGE"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6831EC4CEF3;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dvkeoqHl"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DD7DFC116C6;
 	Mon, 24 Feb 2025 13:51:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740405064;
-	bh=2fFVeE5CFvJX83ipfaRcNiSD6AFsyycdrk50gKKutJI=;
+	s=k20201202; t=1740405065;
+	bh=hTPrO7u9vikyA+T0pYfEy9szULQyXPV8+3Ucv3Dz7Aw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=IbfjZmGE6TulPMcMu5ucaAQTgTvn++o4J0YwgJGPXGx+p+Qv+8EGybZQDo6O4sHjm
-	 Du9YIbWupOhCl95tfy7ypFkPD09Zx8eUJQeEHJKYENSBBKCl6QMUmCPvfhIJyFQMtB
-	 TKclEtjkYWKSTkTXWelYCtljK3qLifZk2gyz3nVvfWx2TH51lZ39QOeczOOUeBIbed
-	 1ti52p6XEpvT6Fegf2JH4ly+BTLRrJ9Dh7fLa+Gvp3SHz3V+CjZ2FE2kg+mQN1Atf4
-	 Hbpjx5DzsiQvX4nRfDkkygZ4s/p8VCx07Q5ATLz3zJ1A5szm81bsHebyo/42fIJ5Ny
-	 x7ZNgz83QLFEw==
+	b=dvkeoqHlB9lYgUKZdTOejRPwtzq6S0NQ+Ii05pTy5Jx7bS+T1vGymNsHjJLkfqC+4
+	 CZmN8YsLNPi9AqqWFS6Yfn0USHXnC83zlcgoXpLAghuRTb0KPKLqtypsBNHZFMdZ+X
+	 63oFsUZycayI9rfSvIfNCYr8WLJ70kcL1arJJrFAuQny9EZHeykU08hTmFoFYuiwCx
+	 REUMgouU+W510AavoXNs32o/rKvmXkN6Kw7jcH0BAZ+10Gn8jo/WlHDgb41jWNjozz
+	 uHFIIaKNXQhjWFJ79XPJATkIWOvmEM7qUvhc4bTM6U40clOdLrHH8VuCBR7Qe275pg
+	 eLEH0vQ0No3Ag==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E27BC021A4;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D17F0C021A4;
 	Mon, 24 Feb 2025 13:51:04 +0000 (UTC)
 From: Maud Spierings via B4 Relay <devnull+maudspierings.gocontroll.com@kernel.org>
-Date: Mon, 24 Feb 2025 14:50:55 +0100
-Subject: [PATCH 05/14] dt-bindings: trivial-devices: add GOcontroll
- Moduline IO modules
+Date: Mon, 24 Feb 2025 14:51:00 +0100
+Subject: [PATCH 10/14] MAINTAINERS: add maintainer for the GOcontroll
+ Moduline controllers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250224-initial_display-v1-5-5ccbbf613543@gocontroll.com>
+Message-Id: <20250224-initial_display-v1-10-5ccbbf613543@gocontroll.com>
 References: <20250224-initial_display-v1-0-5ccbbf613543@gocontroll.com>
 In-Reply-To: <20250224-initial_display-v1-0-5ccbbf613543@gocontroll.com>
 To: Neil Armstrong <neil.armstrong@linaro.org>, 
@@ -61,11 +61,11 @@ Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, 
  Maud Spierings <maudspierings@gocontroll.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740405062; l=1292;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740405062; l=783;
  i=maudspierings@gocontroll.com; s=20250214; h=from:subject:message-id;
- bh=MzfkGV7s1Bx+ubm3O33iLbvUjEe7KE6YD28WzxYypQI=;
- b=XPAaKQUyngLl8QTmZ2xkR4XmJbDTaVMt0nfkm38EyJAR9Hbkjfs8fA5TFPpN3fjtjLE6mPMh0
- IcCzcWXiVmbCoxk1qiFME3yluxZfxnzsoxkLi+xdTK8Air4RmwpRu2T
+ bh=z0gueLFcKY7qkz1B8onsTw44Uj3rSydQ9QleSWa8oZk=;
+ b=lAU9+MTJ3smyQz3gcyDoGEboLTWpbgUoebuITkTiRp8H/PJvmRbJR/btf5ukRY8Wu3Lu5UwTg
+ LPE6zgrlw3EDBUSFGvF/oFRYliLy1A0rdygD1WXk695M6Udt9lsXsZy
 X-Developer-Key: i=maudspierings@gocontroll.com; a=ed25519;
  pk=7chUb8XpaTQDvWhzTdHC0YPMkTDloELEC7q94tOUyPg=
 X-Endpoint-Received: by B4 Relay for maudspierings@gocontroll.com/20250214
@@ -75,31 +75,30 @@ Reply-To: maudspierings@gocontroll.com
 
 From: Maud Spierings <maudspierings@gocontroll.com>
 
-The main point of the Moduline series of embedded controllers is its
-ecosystem of IO modules, these currently are operated through the spidev
-interface. Ideally there will be a full dedicated driver in the future.
-
-Add the gocontroll moduline-module-slot device to enable the required
-spidev interface.
+Add a maintainer for the GOcontroll Moduline series of controllers.
 
 Signed-off-by: Maud Spierings <maudspierings@gocontroll.com>
 ---
- Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-index 8255bb590c0cc619d15b27dcbfd3aa85389c0a54..24ba810f91b73efdc615c7fb46f771a300926f05 100644
---- a/Documentation/devicetree/bindings/trivial-devices.yaml
-+++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-@@ -107,6 +107,8 @@ properties:
-           - fsl,mpl3115
-             # MPR121: Proximity Capacitive Touch Sensor Controller
-           - fsl,mpr121
-+            # GOcontroll Moduline module slot for spi based IO modules
-+          - gocontroll,moduline-module-slot
-             # Honeywell Humidicon HIH-6130 humidity/temperature sensor
-           - honeywell,hi6130
-             # IBM Common Form Factor Power Supply Versions (all versions)
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b4c76d7ad890be0f618109918ad89328bc72e8cd..d80688d833322d4dbece34226180875c6b10ae40 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9843,6 +9843,12 @@ L:	linux-media@vger.kernel.org
+ S:	Maintained
+ F:	drivers/media/usb/go7007/
+ 
++GOCONTROLL MODULINE CONTROLLERS
++M:	Maud Spierings <maudspierings@gocontroll.com>
++L:	devicetree@vger.kernel.org
++S:	Maintained
++F:	arch/arm64/boot/dts/freescale/*moduline*.dts*
++
+ GOODIX TOUCHSCREEN
+ M:	Bastien Nocera <hadess@hadess.net>
+ M:	Hans de Goede <hdegoede@redhat.com>
 
 -- 
 2.48.1
