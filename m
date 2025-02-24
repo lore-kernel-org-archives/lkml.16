@@ -1,128 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16762263F26;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C6CEEA9;
 	Mon, 24 Feb 2025 17:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740417563; cv=none; b=nORxHtFTlkDMAWtl4D7iNNJIA5yqfcPaF+aCTsiP5Fh7eOBUZd0mQC2ukYCxuQLwwqX7ewtYoLSINI+acT2tkUb+KTS2dgtxHza9M0LuR3YgFYerCoXUm43JD3vZfrMd7jtv4xVFPXWU6rLb6iLZM3KlD46+X9PfCVXFUYcPtaI=
+	t=1740417563; cv=none; b=Od2v+aX/bQSl3QaRsEdEQa7tUqUm7wj/mblKa/kwlmEs9GZ3EWu3uHqy3JNHtbYGqdpKmlkq8XlY0Xw34w//kqoXG9s496m5KyO3htIZQY6VJvJ8Qkz+7iyQYn2/1q/7NBJUIQhqj3DqGdhyMWHCXjKd6YBDSEZq0mXYVbZhbYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740417563; c=relaxed/simple;
-	bh=DqLA3R9+ncfGcr/YJS6lhTf2TaveCWhzLJel4MYNo6I=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=K/QVkVf7vaOBt93/nMmZuvE9H5OnyGgJl6loaUkpw3A1PHw7syCDxFea95JKSuaNPh8vslGQEjd3Uuy2mW3+EFeK18+/DTjC22svL8Yr73VnShMdhOzEaIMWYPeLhfEw3mm9oO8q8wjoaN+DjB92s1gEscOM6IuuFPqPywjE8eU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oj/5A4d6; arc=none smtp.client-ip=10.30.226.201
+	bh=fJ/7Re6VBFfqNrTTS9K/pZ1p4608NdWXTxvvNMZjgGU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DDs7h+Vs+aiFRW3HF9ll7l6t72dcSvku6iahuvxl5YogvVwAcIXuL/xa12gkPKKve8FgaVAIlDU4QEPhDWt5On1dV9yInRKzhOfw6ZcerT9nY0DrG13+CpRklPuSnIyzKA5oQs3/CSOM86keLSJGeg98chTv46Dph6kwe43or3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Phx9zaQQ; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oj/5A4d6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F9ADC4CEEB;
-	Mon, 24 Feb 2025 17:19:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740417561;
-	bh=DqLA3R9+ncfGcr/YJS6lhTf2TaveCWhzLJel4MYNo6I=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=oj/5A4d6B52s9netUSHzaXDHUKauk4ZcSJNpUdrGaxvCn3ezRAPD/QQgUpzHjFm8X
-	 f7h1I9h9c3piFl0NU62S/i0PL1ErNr0MKeaC8ADaF9VbT15kotJwl2t1to39SP/jNY
-	 bn6N5EXWAA6d4cigSjRIPgSOPtnVRmnW0FQW+ll+UHHHNeTMG+4MqDGCwTtMi2DBse
-	 rDBqxn9i1tPyVu5UKn3YYJZ8rfMJh43d0JGdXGi2CQgxm9yBtkmwVImJhhLQkNyTrs
-	 OK26oVeHXewjJaBw/jQElWNnnMCC2kMkmRT+p6ckzKEzWk0MfYEWWZUnXrPVb1YDxM
-	 UC96q7730INBA==
-Date: Mon, 24 Feb 2025 11:19:19 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Phx9zaQQ"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51O9vPX2014963;
+	Mon, 24 Feb 2025 17:18:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=xqAsvqjN62Ln2LiWNfDrXD
+	GSUuHK4ZtQvRZjTqMuIn4=; b=Phx9zaQQkHwNiJaymDFIWn+ieZB+7v1vaSxoga
+	bt2nk0h94legByo1YmEHr4+ucGPmxkpeoFdSHVRpG/J/yOfrObzZRUZRHUuOoACe
+	BOAxrAZFz9cdMidTnYgMqaI9x+S8yYiVWcuaytSXD9tT2qJvrvxrqKxRX9cxUy1k
+	0P6gj/wbd1brXw0023SgjDt3NF4+KO/3MGfHjxmIIS3HUn6Ltdm8unLKQAqQK+Yl
+	61Ow0Wk+WDkoqbTgDypYuJpYgmhQmFKuXxBrIKXp22yv99/itwI3XCXj1ZjCVc5w
+	5Lll/z1huWeB7bXXURegKWKS7CSMu0z7adF35cvvcznscsIQ==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44y6t2nvkb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Feb 2025 17:18:42 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51OHIfU7026508
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Feb 2025 17:18:41 GMT
+Received: from hu-janathot-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 24 Feb 2025 09:18:37 -0800
+From: Janaki Ramaiah Thota <quic_janathot@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <quic_mohamull@quicinc.com>, <quic_janathot@quicinc.com>,
+        <quic_hbandi@quicinc.com>, <quic_anubhavg@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v11 0/1] Enable Bluetooth on qcs6490-rb3gen2 board
+Date: Mon, 24 Feb 2025 22:47:36 +0530
+Message-ID: <20250224171737.2522834-1-quic_janathot@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, 
- Takashi Iwai <tiwai@suse.com>, 
- Francesco Dolcini <francesco.dolcini@toradex.com>, 
- Ernest Van Hoecke <ernest.vanhoecke@toradex.com>, 
- patches@opensource.cirrus.com, Saravana Kannan <saravanak@google.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-sound@vger.kernel.org, 
- Jaroslav Kysela <perex@perex.cz>, 
- Charles Keepax <ckeepax@opensource.cirrus.com>, devicetree@vger.kernel.org, 
- Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
-To: Francesco Dolcini <francesco@dolcini.it>
-In-Reply-To: <20250224155500.52462-4-francesco@dolcini.it>
-References: <20250224155500.52462-1-francesco@dolcini.it>
- <20250224155500.52462-4-francesco@dolcini.it>
-Message-Id: <174041755964.3547413.4477664481191696884.robh@kernel.org>
-Subject: Re: [PATCH v2 3/5] ASoC: dt-bindings: wm8904: Add DMIC, GPIO, MIC
- and EQ support
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 49oMY0G3FlDIX35a4aw9slr3j23fHNma
+X-Proofpoint-GUID: 49oMY0G3FlDIX35a4aw9slr3j23fHNma
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-24_08,2025-02-24_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ spamscore=0 priorityscore=1501 mlxscore=0 phishscore=0 malwarescore=0
+ adultscore=0 bulkscore=0 lowpriorityscore=0 impostorscore=0
+ mlxlogscore=636 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502240116
 
+Patch 1/1
+  Corrected the typo in patch 1 commit message.
 
-On Mon, 24 Feb 2025 16:54:58 +0100, Francesco Dolcini wrote:
-> From: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
-> 
-> Add two properties to select the IN1L/DMICDAT1 and IN2R/DMICDAT2
-> functionality:
-> - wlf,in1l-as-dmicdat1
-> - wlf,in1r-as-dmicdat2
-> 
-> Add a property to describe the GPIO configuration registers, that can be
-> used to set the four multifunction pins:
-> - wlf,gpio-cfg
-> 
-> Add a property to describe the mic bias control registers:
-> - wlf,mic-cfg
-> 
-> Add two properties to describe the Dynamic Range Controller (DRC),
-> allowing multiple named configurations where each config sets the 4 DRC
-> registers (R40-R43):
-> - wlf,drc-cfg-regs
-> - wlf,drc-cfg-names
-> 
-> Add three properties to describe the equalizer (ReTune Mobile), allowing
-> multiple named configurations (associated with a samplerate) that set
-> the 24 (R134-R157) EQ registers:
-> - wlf,retune-mobile-cfg-regs
-> - wlf,retune-mobile-cfg-names
-> - wlf,retune-mobile-cfg-rates
-> 
-> Datasheet: https://statics.cirrus.com/pubs/proDatasheet/WM8904_Rev4.1.pdf
-> Signed-off-by: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
-> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-> Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
-> v2: Added an example of how to use the ReTune Mobile config properties
-> v1: https://lore.kernel.org/lkml/20250206163152.423199-4-francesco@dolcini.it/
-> ---
->  .../devicetree/bindings/sound/wlf,wm8904.yaml | 106 ++++++++++++++++++
->  1 file changed, 106 insertions(+)
-> 
+----
+Changes from v10:
+* Corrected the typo in commit message 
+* Added reviewed tag by Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> 
+* Link to v10: https://lore.kernel.org/linux-arm-msm/20250221171014.120946-1-quic_janathot@quicinc.com/#t
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Changes from v9:
+* Addressed review comments provided Dmitry 
+* Link to v9: https://lore.kernel.org/linux-arm-msm/20250220112945.3106086-1-quic_janathot@quicinc.com/
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/sound/wlf,wm8904.yaml:167:111: [warning] line too long (154 > 110 characters) (line-length)
-./Documentation/devicetree/bindings/sound/wlf,wm8904.yaml:172:111: [warning] line too long (154 > 110 characters) (line-length)
-./Documentation/devicetree/bindings/sound/wlf,wm8904.yaml:177:111: [warning] line too long (154 > 110 characters) (line-length)
+Changes from v8:
+* Fixed the dtb-check warning  in P1 and removed tag: Reviewed-by
+* Link to v8: https://lore.kernel.org/linux-arm-msm/20250127064940.1360404-1-quic_janathot@quicinc.com/
 
-dtschema/dtc warnings/errors:
-Error: Documentation/devicetree/bindings/sound/wlf,wm8904.example.dts:52.17-18 syntax error
-FATAL ERROR: Unable to parse input tree
-make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/bindings/sound/wlf,wm8904.example.dtb] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1511: dt_binding_check] Error 2
-make: *** [Makefile:251: __sub-make] Error 2
+Changes from v7:
+* updated P1 & P2 with tag: Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org> 
+* Link to v7: https://lore.kernel.org/lkml/20250107134157.211702-1-quic_janathot@quicinc.com/#t
 
-doc reference errors (make refcheckdocs):
+Changes from v6:
+* Elaborated the commit message with more information.
+* Link to v6: https://lore.kernel.org/lkml/20241223135700.22660-1-quic_janathot@quicinc.com/
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250224155500.52462-4-francesco@dolcini.it
+Changes from v5:
+* Update the wcn6750 required properties in bindings.
+* Link to v5: https://lore.kernel.org/linux-arm-msm/20241209103455.9675-1-quic_janathot@quicinc.com/
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+Changes from v4:
+* Added reviewed tag by Krzysztof in p1
+* Updated the p2 commit message with sw_ctrl and wifi-enable are
+  handled in wifi FW.
+* Added blank line between the nodes in p2
+* Placed the structures in proper order in p4
+* Link to v4: https://lore.kernel.org/all/20241204131706.20791-1-quic_janathot@quicinc.com/
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+Changes from v3:
+* Defined the PMU node and used the its output to power up BT
+* Used power sequencer for wcn wcn6750 module
+* Split the patch to multiple as per subtree
+* Add description of the PMU of the WCN6750 module
+* Include separate UART state node for sleep pin configuarion
+* Link to v3: https://lore.kernel.org/linux-arm-msm/20241022104600.3228-1-quic_janathot@quicinc.com/
 
-pip3 install dtschema --upgrade
+Changes from v2:
+* Sorted nodes alphabetically
+* Link to v2: https://lore.kernel.org/linux-arm-msm/20241010105107.30118-1-quic_janathot@quicinc.com/
 
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+Changes from v1:
+* Corrected the board name in subject
+* Link to v1: https://lore.kernel.org/linux-arm-msm/20241009111436.23473-1-quic_janathot@quicinc.com/
+Janaki Ramaiah Thota (1):
+  arm64: dts: qcom: qcs6490-rb3gen2: add and enable BT node
+
+ arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 171 ++++++++++++++++++-
+ 1 file changed, 170 insertions(+), 1 deletion(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
