@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11EC324BBEF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2045D24BBF7;
 	Mon, 24 Feb 2025 09:09:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740388144; cv=none; b=QYdE2N08Fum2N4kqqaWSqH+S2BNLAndxe2G0M4fSMxT8wFgPTqz0nm3evbxEu6yikUv/MFfS02viBxSrdoYkuO7nRK+MVjYoDzLBkkTZwFohTHiXbw7SutwCs8VQO4Z24Qw+UMR1joO85XJv8UOZnoXnkELnGiL08JrdRtlzWgE=
+	t=1740388144; cv=none; b=C4kuJiO3UDkCmSIkEQ21xQRR2wcMykTmHWP7MuKuPwqjm0SGaUYk1uqQe+9XSLEcbUfMVyErEWyzXHy199KCIPIfI7SDbKNPjD8AcR+nQJUTTGFLsFP+pdpRngsTdxGEEcMPKpLqVBbPDYumFU0DPZasjK1wDk7ORsU1e+GYWyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740388144; c=relaxed/simple;
-	bh=kkF62LinWQ1IkT47CUMzLT2NmYxiRtevRju9Af+8QaQ=;
+	bh=eT42PMb7NLIYUy+TPfhbrtIZmR9In4PQ32hCJ1qwQcU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YhE6OcmE3CSAtUCGPQT+WUVvJe0ja601Hqtlm29k1C0tIDeE0bgXF3wyjV8OdE3wIziASVk1VAr3s5A380Ein1KnfaHx4aGwS4WpezcQ6V3GuP+X+VEef1aw++5Rb2eYsVOW/XApZ4czXcTVAXFl/eSN+HRtva57lA08/4CVvX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FphbtCHM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=p9FfP7Qyyhf8H1hZZ8pt1WEV/4FLQ32/mCFdHHjQs3WhAFlAGtI1nwCo0XKXEdKeUI7nYrX01Uyfz8CBmzOQA7sKw/OTecatCWVcUd4utSDqT0aPA0hpKLT7pk7pDkHEs1oLhmIcOhUZtLuNH/AkgWcIfx70Ddpe9GWTNC3fy1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EN+i1Vkq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FphbtCHM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9320EC4CEFC;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EN+i1Vkq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A197DC4CEEC;
 	Mon, 24 Feb 2025 09:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740388143;
-	bh=kkF62LinWQ1IkT47CUMzLT2NmYxiRtevRju9Af+8QaQ=;
+	bh=eT42PMb7NLIYUy+TPfhbrtIZmR9In4PQ32hCJ1qwQcU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FphbtCHMhvRpx5D3dDodEX/9NpLXJwgF2caoxEwWxh10p5F5E3hQTrYk1xdlw9565
-	 HFZZOEA0SGuFY88tf7lgueWzRuWS4Kx15rsFcV88WaNg1Zv2Mmq3vBFKdV/4XC9Upu
-	 Ko2SREcTrrcMV8hlEe9yu4qZ7xX1FEX3QKjIMANgTSVPChmf6jB5R/SwqlbwIdpSoI
-	 q74TMzWeCmglOGf1/CLOt59pXotDDaDMBsbzVS2VUbowBm9ZnXhyFcL1KpJwY+XRy9
-	 kkqo79aKdJSRUOHMA/XxTnGY/dHO71kmjRgaH5I81U/XaF7NM+Y7MRn8t15vKKjVbY
-	 8ZlWn2eZjmM1g==
+	b=EN+i1Vkqf8dNxWk55wQuKMixRCxBwXjO1eYvgWzToAqoFqaWa9a/MhWCnRgpgl+JR
+	 rNYTQwyDhJgQvI4Z1I8yRw234yiw8unXvy/Y4peeOheNBXsVedjT4inn4mk0HrHsRM
+	 uFUclJK8LQLbfUS8XNCoqmcfKDTGY5wrovx6rB2QZl1++VVJArzei2EA3PQ+2uNVyd
+	 yVOVDTpOFa4B0wzF+8vsKagc/XRCb/yznKmt/NnhRcL0AsQSFfCaLKlRTnZ/o4lRwX
+	 FpGiqHDXmUjYYCFzXpvqy6kQomh4OcycYhFtraZp8nPfdHV63kkSt/lPLZ2GyygKXs
+	 8AxsLi9/QN5zQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tmUST-00000003p5f-2ySh;
+	id 1tmUST-00000003p5r-3J3e;
 	Mon, 24 Feb 2025 10:09:01 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -36,9 +36,9 @@ To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 34/39] scripts/kernel-doc.py: Properly handle Werror and exit codes
-Date: Mon, 24 Feb 2025 10:08:40 +0100
-Message-ID: <4d1cb32e557b82a53d91219494e2f019d5c26000.1740387599.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v2 37/39] scripts/lib/kdoc/kdoc_files.py: allow filtering output per fname
+Date: Mon, 24 Feb 2025 10:08:43 +0100
+Message-ID: <89c8d2f9f3afc56cde2132bc073cbc71b5ad64c1.1740387599.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1740387599.git.mchehab+huawei@kernel.org>
 References: <cover.1740387599.git.mchehab+huawei@kernel.org>
@@ -51,158 +51,79 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-The original kernel-doc script has a logic to return warnings
-as errors, and to report the number of warnings found, if in
-verbose mode.
-
-Implement it to be fully compatible with the original script.
+For kerneldoc Sphinx extension, it is useful to display
+parsed results only from a single file. Change the logic at
+KernelFiles.msg() to allow such usage.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/kernel-doc.py           | 18 ++++++++++++++++--
- scripts/lib/kdoc/kdoc_files.py  | 11 ++++++++++-
- scripts/lib/kdoc/kdoc_output.py |  8 +++-----
- scripts/lib/kdoc/kdoc_parser.py | 15 ++++++---------
- 4 files changed, 35 insertions(+), 17 deletions(-)
+ scripts/lib/kdoc/kdoc_files.py | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/scripts/kernel-doc.py b/scripts/kernel-doc.py
-index 064106c18d8b..7683fb4ffc59 100755
---- a/scripts/kernel-doc.py
-+++ b/scripts/kernel-doc.py
-@@ -3,8 +3,6 @@
- # Copyright(c) 2025: Mauro Carvalho Chehab <mchehab@kernel.org>.
- # SPDX-License-Identifier: GPL-2.0
- 
--# TODO: implement warning filtering
--
- """
- kernel_doc
- ==========
-@@ -220,6 +218,22 @@ def main():
-         if msg:
-             print(msg)
- 
-+    error_count = kfiles.errors
-+    if not error_count:
-+        sys.exit(0)
-+
-+    if args.werror:
-+        print(f"{error_count} warnings as errors")
-+        sys.exit(error_count)
-+
-+    if args.verbose:
-+        print(f"{error_count} errors")
-+
-+    if args.none:
-+        sys.exit(0)
-+
-+    sys.exit(error_count)
-+
- 
- # Call main method
- if __name__ == "__main__":
 diff --git a/scripts/lib/kdoc/kdoc_files.py b/scripts/lib/kdoc/kdoc_files.py
-index 19fe9c6f5352..e130e5e32806 100755
+index fc14bd6f9863..8935a8603b44 100755
 --- a/scripts/lib/kdoc/kdoc_files.py
 +++ b/scripts/lib/kdoc/kdoc_files.py
-@@ -108,7 +108,7 @@ class KernelFiles():
-                     KernelDoc.process_export(self.config.function_table, line)
+@@ -94,7 +94,7 @@ class KernelFiles():
+         doc = KernelDoc(self.config, fname)
+         doc.run()
  
-         except IOError:
--            print(f"Error: Cannot open fname {fname}", fname=sys.stderr)
-+            self.config.log.error("Error: Cannot open fname %s", fname)
-             self.config.errors += 1
+-        return doc
++        return doc.entries
  
-     def file_not_found_cb(self, fname):
-@@ -261,3 +261,12 @@ class KernelFiles():
-                                             fname, ln, dtype)
-             if msg:
-                 yield fname, msg
-+
-+    @property
-+    def errors(self):
-+        """
-+        Return a count of the number of warnings found, including
-+        the ones displayed while interacting over self.msg.
-+        """
-+
-+        return self.config.errors
-diff --git a/scripts/lib/kdoc/kdoc_output.py b/scripts/lib/kdoc/kdoc_output.py
-index 166fcabbb4cf..d0cb7f511f87 100755
---- a/scripts/lib/kdoc/kdoc_output.py
-+++ b/scripts/lib/kdoc/kdoc_output.py
-@@ -127,11 +127,9 @@ class OutputFormat:
- 
-         warnings = args.get('warnings', [])
- 
--        for warning, log_msg in warnings:
--            if warning:
--                self.config.log.warning(log_msg)
--            else:
--                self.config.log.info(log_msg)
-+        for log_msg in warnings:
-+            self.config.log.warning(log_msg)
-+            self.config.errors += 1
- 
-     def check_doc(self, name, args):
-         """Check if DOC should be output"""
-diff --git a/scripts/lib/kdoc/kdoc_parser.py b/scripts/lib/kdoc/kdoc_parser.py
-index feac699a3893..6cebc32e18f2 100755
---- a/scripts/lib/kdoc/kdoc_parser.py
-+++ b/scripts/lib/kdoc/kdoc_parser.py
-@@ -136,17 +136,18 @@ class KernelDoc:
- 
-         log_msg = f"{self.fname}:{ln} {msg}"
- 
-+        if not warning:
-+            self.config.log.info(log_msg)
-+            return
-+
-         if self.entry:
-             # Delegate warning output to output logic, as this way it
-             # will report warnings/info only for symbols that are output
- 
--            self.entry.warnings.append((warning, log_msg))
-+            self.entry.warnings.append(log_msg)
-             return
- 
--        if warning:
--            self.config.log.warning(log_msg)
--        else:
--            self.config.log.info(log_msg)
-+        self.config.log.warning(log_msg)
- 
-     def dump_section(self, start_new=True):
+     def process_export_file(self, fname):
          """
-@@ -568,7 +569,6 @@ class KernelDoc:
+@@ -172,7 +172,7 @@ class KernelFiles():
+         # Initialize internal variables
  
-         if not members:
-             self.emit_warning(ln, f"{proto} error: Cannot parse struct or union!")
--            self.config.errors += 1
-             return
+         self.config.errors = 0
+-        self.results = []
++        self.results = {}
  
-         if self.entry.identifier != declaration_name:
-@@ -841,7 +841,6 @@ class KernelDoc:
+         self.files = set()
+         self.export_files = set()
+@@ -188,13 +188,9 @@ class KernelFiles():
+         # avoid reporting errors multiple times
  
-         if not members:
-             self.emit_warning(ln, f"{proto}: error: Cannot parse enum!")
--            self.config.errors += 1
-             return
+         for fname in glob.parse_files(file_list, self.file_not_found_cb):
+-            if fname in self.files:
+-                continue
+-
+-            res = self.parse_file(fname)
+-
+-            self.results.append((res.fname, res.entries))
+-            self.files.add(fname)
++            if fname not in self.files:
++                self.results[fname] = self.parse_file(fname)
++                self.files.add(fname)
  
-         if self.entry.identifier != declaration_name:
-@@ -1143,7 +1142,6 @@ class KernelDoc:
-             return
+         # If a list of export files was provided, parse EXPORT_SYMBOL*
+         # from files that weren't fully parsed
+@@ -225,7 +221,8 @@ class KernelFiles():
+         return self.out_style.msg(fname, name, arg)
  
-         self.emit_warning(ln, "error: Cannot parse typedef!")
--        self.config.errors += 1
+     def msg(self, enable_lineno=False, export=False, internal=False,
+-            symbol=None, nosymbol=None, no_doc_sections=False):
++            symbol=None, nosymbol=None, no_doc_sections=False,
++            filenames=None):
+         """
+         Interacts over the kernel-doc results and output messages,
+         returning kernel-doc markups on each interaction
+@@ -247,9 +244,12 @@ class KernelFiles():
+                                   function_table, enable_lineno,
+                                   no_doc_sections)
  
-     @staticmethod
-     def process_export(function_table, line):
-@@ -1692,4 +1690,3 @@ class KernelDoc:
-                         self.process_docblock(ln, line)
-         except OSError:
-             self.config.log.error(f"Error: Cannot open file {self.fname}")
--            self.config.errors += 1
+-        for fname, arg_tuple in self.results:
++        if not filenames:
++            filenames = sorted(self.results.keys())
++
++        for fname in filenames:
+             msg = ""
+-            for name, arg in arg_tuple:
++            for name, arg in self.results[fname]:
+                 msg += self.out_msg(fname, name, arg)
+ 
+                 if msg is None:
 -- 
 2.48.1
 
