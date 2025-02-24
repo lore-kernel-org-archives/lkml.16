@@ -1,51 +1,51 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4716A1A3176
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 03:21:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4A31A5BAF
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 03:22:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740367321; cv=none; b=gxhAkKPiGYnQkJ2DOV/NY+w5GcPWx9Mw860515NOUUMO54RUVX36gL7luUQ7vH2ui1D7oTZ3qtanNQMKz7/Vptf0yE6TwbmP+igI3oh3bmYuHGw0k/dbF/3YICo/FYZrQQZQYO5fzWs6Tke5k+yxyW5K13j4jnVfefOwliayBFQ=
+	t=1740367323; cv=none; b=EAglm8ho9WyFYld96MTD4LGkthMeh857HjBKAsWZjizdqsfQR5GWpqziWuWMtJ4yUbVh2R+5SV4JzZoOesryjn80uVaG6uUjohYlzzSf8hgyPzphz7uXfrOfAuI9Dss+uaeCY0Q6HsEPZDjFtJQdrsP4jlVTRqi0End2RF+WVH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740367321; c=relaxed/simple;
-	bh=taadowUR5/58ys41IAsM9k+P+FmsnUdHVJhEU6NXOls=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cncd0EsEqCk5KkJ+RNTVOptiRX/xFYYpGCJ3FHo0PjhOkH4jlKDe6XLCFXz/xktTgwg1qG3PhWM0XJ3gL791kB9KZJqxMyJdBpcPM3V5OslvdeYYseXT5KRwS7pu1jGx5VfWR++DsPgOPz3YH9lbVzsq2sqSTNFa2aajyk/jzXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VuyPAp2I; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1740367323; c=relaxed/simple;
+	bh=d0Uj/eW5auCeTrt67O6QsIjiCKxsA548qeiiLvbRFeY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jCFXx1ZCWkxJeyVHErz5po8Yfcz+/17+NgtFcmibhSVRFtnsfxB0mAyDPa4EuNdrXnxrXZ3L2w3JYtFjjPKnzQ9sFbDtkKhfrvnw5Tjcz8a43jt2mvoMzdAOVuLGkVs5PIz8xvqS99o/Ms1Bt4BCuStvVoycF9aS7WJt+10JdoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EGGy5orr; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VuyPAp2I"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EGGy5orr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740367320; x=1771903320;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=taadowUR5/58ys41IAsM9k+P+FmsnUdHVJhEU6NXOls=;
-  b=VuyPAp2IzNF7GYY13qCV4I3JRmy+FlE/21kozeQKq4vG/bwaEahNPV+o
-   IdvRScHqwCYRSkFJxmlQuGEedbfHl5iiRKwntd0d9AomRJWu2GUeUKTaF
-   3wouNWIrKUWQnwAp3Yhru+VevYVZdVztNqOQ0qyc/sWP1RgrE91ymdPuR
-   eVb+QRmmsT8MI4EdvJ3lDPd0BGMF4yxFQkOqee58b75LGz1pGdNsB7F6W
-   WD6wkTVUZnghk73536qGHDFYd9nv2zMH89ghXDJA8aaf/UcQj5WJwHX1l
-   qO8cLLix+8opmnKsnjZwO/pP5wHuXRBUW6hTWBJkVTcpEZ5A/Znii8fvz
-   w==;
-X-CSE-ConnectionGUID: 91UgikEZSomvbyzWP1Z+sw==
-X-CSE-MsgGUID: plqFTYT3TACzm5PylDoWCg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11354"; a="28706884"
+  t=1740367322; x=1771903322;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=d0Uj/eW5auCeTrt67O6QsIjiCKxsA548qeiiLvbRFeY=;
+  b=EGGy5orr48UZ5HY7P8HLO5UNaxBPSlQ+wWkafxxMzhS6VYeHYmbT5Z2L
+   cF4Q/INYBbuY3T0F1MboucACytRw2NISEvmRtucDbeperYnadI63TzxLs
+   nataIOjXWSXz2Ke7xxmSD+AbNSi3tTVbyX/stcr1ZokIheG1MyTZgXwVJ
+   p40ST1bppS/4vWUw9Bq/INI/qbP12x5h83BxX98iKYtVjhzWJZxH3+a53
+   EqlGLJH+Y7kkIS8oclFhNLONkXHCFZF/j7bzF3ErnK8JqRKbVfw06FGGY
+   vSUWO3LvvQ2m52fuqP/LNSEKWKjypeI0ZEzTJba7tYQxunrZOUxJtmnEG
+   A==;
+X-CSE-ConnectionGUID: VfOGXTMkTHWgITdimSAd8A==
+X-CSE-MsgGUID: JXq57hGORHKKwV0o4oO0bQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11354"; a="28706902"
 X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
-   d="scan'208";a="28706884"
+   d="scan'208";a="28706902"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
   by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2025 19:21:56 -0800
-X-CSE-ConnectionGUID: dtwl4QAgROmEkAs/LCc1xQ==
-X-CSE-MsgGUID: DM3mpKcgSsygBmtDyZkTgQ==
+X-CSE-ConnectionGUID: ORB4cfTHRMiHsybMA70dhA==
+X-CSE-MsgGUID: C3G79V4qTKWklxNS/o3dMA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
-   d="scan'208";a="116441904"
+   d="scan'208";a="116441899"
 Received: from shanagud-mobl.amr.corp.intel.com (HELO bxing-mobl1.clients.intel.com) ([10.246.117.251])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2025 19:21:16 -0800
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2025 19:21:13 -0800
 From: Cedric Xing <cedric.xing@intel.com>
-Date: Sun, 23 Feb 2025 21:20:14 -0600
-Subject: [PATCH v2 3/4] x86/tdx: Add tdx_mcall_extend_rtmr() interface
+Subject: [PATCH v2 0/4] tsm: Unified Measurement Register ABI for TVMs
+Date: Sun, 23 Feb 2025 21:20:11 -0600
+Message-Id: <20250223-tdx-rtmr-v2-0-f2d85b0a5f94@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,9 +54,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250223-tdx-rtmr-v2-3-f2d85b0a5f94@intel.com>
-References: <20250223-tdx-rtmr-v2-0-f2d85b0a5f94@intel.com>
-In-Reply-To: <20250223-tdx-rtmr-v2-0-f2d85b0a5f94@intel.com>
+X-B4-Tracking: v=1; b=H4sIAGvlu2cC/0XMQQrCMBCF4auUWRtJxiQlrryHdCHtaAdsK5MQK
+ iV3NxbB5f94fBtEEqYI52YDocyRl7kGHhrox9v8IMVDbUCNTqMOKg2rkjSJQudsG7xvjfVQ7y+
+ hO687de1qjxzTIu9dzua7/hCDfyQbpVVogxt6G8ic8MJzouexXyboSikfgXKOdKAAAAA=
 To: Dan Williams <dan.j.williams@intel.com>, 
  "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
  Dave Hansen <dave.hansen@linux.intel.com>, 
@@ -71,108 +71,69 @@ Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
  Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: b4 0.13.0
 
-The TDX guest exposes one MRTD (Build-time Measurement Register) and four
-RTMR (Run-time Measurement Register) registers to record the build and boot
-measurements of a virtual machine (VM). These registers are similar to PCR
-(Platform Configuration Register) registers in the TPM (Trusted Platform
-Module) space. This measurement data is used to implement security features
-like attestation and trusted boot.
+NOTE: This patch series introduces the Measurement Register (MR) ABI, and
+is a continuation of the RFC series on the same topic [1].
 
-To facilitate updating the RTMR registers, the TDX module provides support
-for the `TDG.MR.RTMR.EXTEND` TDCALL which can be used to securely extend
-the RTMR registers.
+This patch series adds a unified interface to the TSM core, allowing TVM
+(TEE VM) guest drivers to expose measurement registers (MRs) as attributes
+(files) in sysfs. With this interface, applications can read and write
+(extend) MRs like regular files, enabling usages like configuration
+verification (e.g., verifying a TVM's configuration against digests stored
+in static/immutable MRs like MRCONFIGID on TDX or HOSTDATA on SEV) and
+runtime measurements (e.g., extending the measurement of a container image
+to an RTMR before running it).
 
-Add helper function to update RTMR registers. It will be used by the TDX
-guest driver in enabling RTMR extension support.
+Patches included in this series:
 
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+- Patch 1 adds TSM APIs for TVM guest drivers to register/expose MRs
+  through sysfs.
+- Patch 2 provides a sample module demonstrating the usage of the new TSM
+  APIs.
+- The remaining patches update the TDX guest driver to expose TDX MRs
+  through the new TSM APIs.
+
+[1]: https://lore.kernel.org/linux-coco/20241210-tsm-rtmr-v3-0-5997d4dbda73@intel.com/
+
 Signed-off-by: Cedric Xing <cedric.xing@intel.com>
 ---
- arch/x86/coco/tdx/tdx.c           | 36 ++++++++++++++++++++++++++++++++++++
- arch/x86/include/asm/shared/tdx.h |  1 +
- arch/x86/include/asm/tdx.h        |  2 ++
- 3 files changed, 39 insertions(+)
+Changes in v2:
+- Added TSM_MR_MAXBANKS Kconfig option
+- Updated Kconfig dependency for TSM_REPORTS
+- Updated comments in include/linux/tsm.h
+- Updated drivers/virt/coco/tsm-mr.c to use `IS_BUILTIN()` for determining
+  if static buffer addresses can be converted to GPAs by `virt_to_phys()`
+- Renamed function `tdx_mcall_rtmr_extend()` -> `tdx_mcall_extend_rtmr()`
+- Link to v1: https://lore.kernel.org/r/20250212-tdx-rtmr-v1-0-9795dc49e132@intel.com
 
-diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-index 32809a06dab4..f88e249e339a 100644
---- a/arch/x86/coco/tdx/tdx.c
-+++ b/arch/x86/coco/tdx/tdx.c
-@@ -35,6 +35,7 @@
- /* TDX Module call error codes */
- #define TDCALL_RETURN_CODE(a)	((a) >> 32)
- #define TDCALL_INVALID_OPERAND	0xc0000100
-+#define TDCALL_OPERAND_BUSY	0x80000200
- 
- #define TDREPORT_SUBTYPE_0	0
- 
-@@ -135,6 +136,41 @@ int tdx_mcall_get_report0(u8 *reportdata, u8 *tdreport)
- }
- EXPORT_SYMBOL_GPL(tdx_mcall_get_report0);
- 
-+/**
-+ * tdx_mcall_extend_rtmr() - Wrapper to extend RTMR registers using
-+ *			     TDG.MR.RTMR.EXTEND TDCALL.
-+ * @index: Index of RTMR register to be extended.
-+ * @data: Address of the input buffer with RTMR register extend data.
-+ *
-+ * Refer to section titled "TDG.MR.RTMR.EXTEND leaf" in the TDX Module
-+ * v1.0 specification for more information on TDG.MR.RTMR.EXTEND TDCALL.
-+ * It is used in the TDX guest driver module to allow user extend the
-+ * RTMR registers (index > 1).
-+ *
-+ * Return 0 on success, -EINVAL for invalid operands, -EBUSY for busy
-+ * operation or -EIO on other TDCALL failures.
-+ */
-+int tdx_mcall_extend_rtmr(u8 index, u8 *data)
-+{
-+	struct tdx_module_args args = {
-+		.rcx = virt_to_phys(data),
-+		.rdx = index,
-+	};
-+	u64 ret;
-+
-+	ret = __tdcall(TDG_MR_RTMR_EXTEND, &args);
-+	if (ret) {
-+		if (TDCALL_RETURN_CODE(ret) == TDCALL_INVALID_OPERAND)
-+			return -EINVAL;
-+		if (TDCALL_RETURN_CODE(ret) == TDCALL_OPERAND_BUSY)
-+			return -EBUSY;
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(tdx_mcall_extend_rtmr);
-+
- /**
-  * tdx_hcall_get_quote() - Wrapper to request TD Quote using GetQuote
-  *                         hypercall.
-diff --git a/arch/x86/include/asm/shared/tdx.h b/arch/x86/include/asm/shared/tdx.h
-index fcbbef484a78..d0760c6160cc 100644
---- a/arch/x86/include/asm/shared/tdx.h
-+++ b/arch/x86/include/asm/shared/tdx.h
-@@ -13,6 +13,7 @@
- /* TDX module Call Leaf IDs */
- #define TDG_VP_VMCALL			0
- #define TDG_VP_INFO			1
-+#define TDG_MR_RTMR_EXTEND		2
- #define TDG_VP_VEINFO_GET		3
- #define TDG_MR_REPORT			4
- #define TDG_MEM_PAGE_ACCEPT		6
-diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
-index b4b16dafd55e..6b98d7dc5207 100644
---- a/arch/x86/include/asm/tdx.h
-+++ b/arch/x86/include/asm/tdx.h
-@@ -64,6 +64,8 @@ bool tdx_early_handle_ve(struct pt_regs *regs);
- 
- int tdx_mcall_get_report0(u8 *reportdata, u8 *tdreport);
- 
-+int tdx_mcall_extend_rtmr(u8 index, u8 *data);
-+
- u64 tdx_hcall_get_quote(u8 *buf, size_t size);
- 
- void __init tdx_dump_attributes(u64 td_attr);
+---
+Cedric Xing (4):
+      tsm: Add TVM Measurement Register support
+      tsm: Add TSM measurement sample code
+      x86/tdx: Add tdx_mcall_extend_rtmr() interface
+      x86/tdx: Expose TDX MRs through TSM sysfs interface
 
+ Documentation/ABI/testing/sysfs-kernel-tsm |  20 ++
+ MAINTAINERS                                |   3 +-
+ arch/x86/coco/tdx/tdx.c                    |  36 +++
+ arch/x86/include/asm/shared/tdx.h          |   1 +
+ arch/x86/include/asm/tdx.h                 |   2 +
+ drivers/virt/coco/Kconfig                  |  17 +-
+ drivers/virt/coco/Makefile                 |   2 +
+ drivers/virt/coco/tdx-guest/Kconfig        |  24 +-
+ drivers/virt/coco/tdx-guest/tdx-guest.c    | 115 +++++++++
+ drivers/virt/coco/{tsm.c => tsm-core.c}    |   6 +-
+ drivers/virt/coco/tsm-mr.c                 | 383 +++++++++++++++++++++++++++++
+ include/linux/tsm.h                        |  65 +++++
+ samples/Kconfig                            |  13 +
+ samples/Makefile                           |   1 +
+ samples/tsm/Makefile                       |   2 +
+ samples/tsm/tsm_mr_sample.c                | 107 ++++++++
+ 16 files changed, 789 insertions(+), 8 deletions(-)
+---
+base-commit: d082ecbc71e9e0bf49883ee4afd435a77a5101b6
+change-id: 20250209-tdx-rtmr-255479667146
+
+Best regards,
 -- 
-2.43.0
+Cedric Xing <cedric.xing@intel.com>
 
