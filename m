@@ -1,119 +1,92 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCD725B69E;
-	Mon, 24 Feb 2025 15:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9C5F2561C2;
+	Mon, 24 Feb 2025 15:42:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740411695; cv=none; b=DWk4IBxRVz/Ead67LpFAobADtxzuMe34qnqgzVjlvAmboJZ0+vijdSEFbDiWnFrsgaokKf/6AkDCAM5soZF1knw62t7RQYGrNu63WFLSsSwiZZpk1XAlutLzaWj+JQQEisxz7SVxb5Pg//m0MOU+GlWT3QidFccQsuGWFBpXu20=
+	t=1740411734; cv=none; b=HQq/zTxl9HZjAmMOO6BMT+XHMryldZxTyYeWM+WHIAw0XfsrgdbV5e6As9/vDu8im+nPhRKPAaE2wZwxSFfbd82DLLb0J+bga6/fxfumyKhIBW/NQ6+HakjuPJyubbsMJBWCZMQAJ7iagJAeGiyx99iDl4WkMQc+zW3PbwKLwpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740411695; c=relaxed/simple;
-	bh=SAogXjErmnUKWUV3LPeC/KcgOjnw/QZRkCVS8VQvp7g=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eWhrgndJMZd9kE0U7TsW5SGW73ot7wcqLXzRZdvClkjeKThRSl3L/62oQuRL1cZgEIUZIiEXN9QTAqSUhyua9EWWk+OAb2MWe5TUrKQLO65aPl6E214QOlK53RIGwtNXLOY9t4EI5WYFoythNH1juzGhjyr0b1whWrR4iNL9UOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=pWkW3x3J; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1740411734; c=relaxed/simple;
+	bh=bNIcr4Fz4MgFSDcxSksqWLxES7aDz2dSI+VqqsfI3g8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eq8ZQtJqexHs3zcu3SgJpF68FVBrlwI1GdBscsEWL1eZ3WUAp5lio91NoxBRLNY5lwvMhNdGc5j/7BOvlwgZXHyBfQFKlTBu4NBNxNnTykC3DS+goBbMpSbQFlhCWrNfslB03n9JfGDdlpaD24hwVMWjj3g1EZTcc+w9ao+oQRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=caGtuwmh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="pWkW3x3J"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51OFKc72007314;
-	Mon, 24 Feb 2025 16:41:13 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	D1vrqcKSTo7wXwCZBje6dgQBk+XJl1AKFrrz1y87N6A=; b=pWkW3x3J8T9hhUPo
-	91kN3pFh15rWq3XxQMrIdM5XajrsGrllHjx9S0GVpfJ/jWqYo+H8iKQDHJaaWl2P
-	GzbdqHVrKm9MrFyBk6zXudb0wD1T9UREEKWmUIHmiSWj/0t7pSPhm/nYh9Fnm7ty
-	k7W49m8G21LgFEQzjSzo/UiE5iE1I2aN8T73ZbqdwdgH2MzyuvILnntXZAIeg0zB
-	vNQ6jqsjDQmLMDQ2NWxvF+/ckh2zk+btIcn2vaOh1rO1iCcNlHHAxR5oNK5XWhQx
-	dNvE6uP/v2PxpeofC86RkLFO9iQi3E3qNsUrKHfUek+wGwCk8NYwjsPDytHRzPYL
-	vTTYrA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44ytdn5q71-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Feb 2025 16:41:13 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id D071B4004B;
-	Mon, 24 Feb 2025 16:39:52 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D8F90541700;
-	Mon, 24 Feb 2025 16:35:26 +0100 (CET)
-Received: from localhost (10.129.178.212) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Feb
- 2025 16:35:26 +0100
-From: Christian Bruel <christian.bruel@foss.st.com>
-To: <christian.bruel@foss.st.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
-        <p.zabel@pengutronix.de>, <johan+linaro@kernel.org>,
-        <cassel@kernel.org>, <quic_schintav@quicinc.com>
-CC: <fabrice.gasnier@foss.st.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v5 9/9] arm64: dts: st: Enable PCIe on the stm32mp257f-ev1 board
-Date: Mon, 24 Feb 2025 16:33:13 +0100
-Message-ID: <20250224153313.3416318-10-christian.bruel@foss.st.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250224153313.3416318-1-christian.bruel@foss.st.com>
-References: <20250224153313.3416318-1-christian.bruel@foss.st.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="caGtuwmh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAD1DC4CED6;
+	Mon, 24 Feb 2025 15:42:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740411734;
+	bh=bNIcr4Fz4MgFSDcxSksqWLxES7aDz2dSI+VqqsfI3g8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=caGtuwmhiH5TEjWTo4MeM6H6LSDoh30IAwE77NZXJTXKNDOv3XaCRHTzcsTcbkqKE
+	 xuCMeVUjGEBeNSlEBHNupLGj8l8QycXnc0+rPcHeWhErVhgHG+ABiupHYNuV6WLATo
+	 bQ2YkI8Jm9zQ9EyNI4IcOFOe2rPQY/NEh3uOZCdH1/O/XfXyFOzB+XPhBhqZhbJSP+
+	 Eb9Z6b73rS+o2FCu19FScc3WLmhvWqRpLdfbH3Gclmu2Imm6h6kthUdoRBPKRasDA3
+	 imbnucL9qPZWMdXkFV5J/CdqUmgFmzmMvK8Yn5h4AYnj5II39nqJLvRmYfygPSy+oi
+	 tLceB0o9wdXKw==
+Date: Mon, 24 Feb 2025 15:42:08 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+	kernel@collabora.com, linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: dapm-graph: set fill colour of turned on nodes
+Message-ID: <3d15fd23-3756-4a17-a447-b5ccb2c564df@sirena.org.uk>
+References: <20250221-dapm-graph-node-colour-v1-1-514ed0aa7069@collabora.com>
+ <20250224163311.0611da3f@booty>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-24_06,2025-02-24_02,2024-11-22_01
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="doMF8Qx3qZEMyGkm"
+Content-Disposition: inline
+In-Reply-To: <20250224163311.0611da3f@booty>
+X-Cookie: Phone call for chucky-pooh.
 
-Add PCIe RC and EP support on stm32mp257f-ev1 board.
-Default to RC mode.
 
-Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
----
- arch/arm64/boot/dts/st/stm32mp257f-ev1.dts | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+--doMF8Qx3qZEMyGkm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-index 1b88485a62a1..a7646503d6b2 100644
---- a/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-+++ b/arch/arm64/boot/dts/st/stm32mp257f-ev1.dts
-@@ -225,6 +225,27 @@ scmi_vdd_sdcard: regulator@23 {
- 	};
- };
- 
-+&pcie_ep {
-+	pinctrl-names = "default", "init";
-+	pinctrl-0 = <&pcie_pins_a>;
-+	pinctrl-1 = <&pcie_init_pins_a>;
-+	reset-gpios = <&gpioj 8 GPIO_ACTIVE_LOW>;
-+	status = "disabled";
-+};
-+
-+&pcie_rc {
-+	pinctrl-names = "default", "init", "sleep";
-+	pinctrl-0 = <&pcie_pins_a>;
-+	pinctrl-1 = <&pcie_init_pins_a>;
-+	pinctrl-2 = <&pcie_sleep_pins_a>;
-+	status = "okay";
-+
-+	pcie@0,0 {
-+		 reset-gpios = <&gpioj 8 GPIO_ACTIVE_LOW>;
-+		 wake-gpios = <&gpioh 5 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-+	};
-+};
-+
- &sdmmc1 {
- 	pinctrl-names = "default", "opendrain", "sleep";
- 	pinctrl-0 = <&sdmmc1_b4_pins_a>;
--- 
-2.34.1
+On Mon, Feb 24, 2025 at 04:33:11PM +0100, Luca Ceresoli wrote:
+> Hello Nicolas,
+>=20
+> +Cc: Mark Brown
+>=20
+> On Fri, 21 Feb 2025 21:39:32 +0100
+> Nicolas Frattaroli <nicolas.frattaroli@collabora.com> wrote:
+>=20
+> > Some tools like KGraphViewer interpret the "ON" nodes not having an
+> > explicitly set fill colour as them being entirely black, which obscures
+> > the text on them and looks funny. In fact, I thought they were off for
+> > the longest time. Comparing to the output of the `dot` tool, I assume
+> > they are supposed to be white.
 
+As documented in submitting-patches.rst please send patches to the=20
+maintainers for the code you would like to change.  The normal kernel
+workflow is that people apply patches from their inboxes, if they aren't
+copied they are likely to not see the patch at all and it is much more
+difficult to apply patches.
+
+--doMF8Qx3qZEMyGkm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAme8k1AACgkQJNaLcl1U
+h9BwlAgAhHv+PFXM5e0zQ9dTmKEVwx63AYqZQO/rfIr4Kz3gzekJI5dDY+AT+inb
+pPp1JwXFhEKlunLXD5VNMPJGs2c4gH8YI6wvyKazNNw7kMewPxSRvYq6Y62FuPxd
+F6h89riZfV7IIO5vcLz5nrO7tY/MftZilRFnKmSFvTLbpjMAG3vFNCgaDwU8igkw
+6UsCT55+7xLCZXSnjIHJPm9a98ALujJ7iU0WbqA0FekIRqkgRM6HdGFGxiKthe62
+jBTkmmn1QRb2qsVTUWY517ATl49KQOpWaZ9Hj2m08qVjIhnUhpVH8CDzJkEZ9THv
+8bRvaEP8LNA1DIQrXt4Z16dZKP3jxg==
+=eUne
+-----END PGP SIGNATURE-----
+
+--doMF8Qx3qZEMyGkm--
