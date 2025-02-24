@@ -1,32 +1,32 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEDCD264A93
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 17:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56911264F85
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 17:02:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740416565; cv=none; b=rqnTddzt/qXZXRnqKTAOc0wF+5boPrFWE9mVBQu3VmPj2exFnipnX0rYXxCQqXioHSHgY7sHGsFS6eCrF490QTu0s8Lbrnwhc+2GNbzqqdbl85+GVgYH6PB0wMX4W33WLT4et6jnfAo4LByebgZAS3kt6GVKeYSsECmvtxYqPPE=
+	t=1740416570; cv=none; b=FdsjMjWEcACNDzituT4p+nu1JlsKDL+wclm3lzUk9p+iFLoaD+4ZavbIytnHi0qCU+RU0I0nqvfxjpEHwLOgUK2/F5oLntd85dBbovLFWkx17dQvrtiwLN4Y2ojpntcZUwEpmozNt8D28TGbMZIL6ZXnF9Tby7dPcvKqsBLhVwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740416565; c=relaxed/simple;
-	bh=aG8o/kahVF1tm5V+3pDDlV1oJXm/dksJNGytP15/dhA=;
+	s=arc-20240116; t=1740416570; c=relaxed/simple;
+	bh=2/tNsQbKiTkaxCoHs1UKZQvUCGIwo1zazwTLngtVyq0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nx3dtgHxk0jEdf7GGlUUcvCQljJ1SXWyrtP4YvIyQabhobv9jsPYzgPkJIcInnGRugu3PMvEJrIgK1aoTBNIvrjvG6xF5BG4Jhrqa0fTMhQNxyg213zgVpxE3oH12u7xaRh+u+9SaRaAh1IjxVp1QvOyHUynn4i75Prfxs754q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lKSG3ALO; arc=none smtp.client-ip=95.215.58.182
+	 MIME-Version; b=QfvXPMqMeBsxlOCfps6+evwYg4l8nN0aE57nJS5AMTm4xZSLStXmCopDHxGU5AwZZo1OQOQNcgAqGtEx8Ao6y/CVhIJYW4pIce7y4r5tAm03mU3hwQFmpRJGjmwxcNeDjRIHJiGtoCLbJwQC1pK/gztvAeHCi2Pj6S2j1EFPYC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=V5ChfgId; arc=none smtp.client-ip=91.218.175.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lKSG3ALO"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="V5ChfgId"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740416552;
+	t=1740416565;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=7PGzrKBqkUWVbwyFTBIov9XC7SmgDrzD5PuL2n2Yx4M=;
-	b=lKSG3ALOVcqBH1KgzjTr1euc/9OJwGCjz5RM3AN/1TuYVq8tQBSbRo91P3booy2s4BDbiU
-	HtOhUDXeT3cwhignhs5lYMWWfo5Q480JdYieUP+7uIT13jyqEVFRJ6eoTBjA8PuAixSfnZ
-	Ikp/S5ya+lttt1/bBwv6sOpVkVxg1mc=
+	bh=z6dFsrJK1KUGJWoZLEUFQHIqOltFLVPZ4LRzfSz7zsM=;
+	b=V5ChfgIdY+YuXDWOmrz5dDv7LDtZpqj3plpZq5HR6FE8Mp/6gXq9WETqpPal5m9wiPBSe5
+	PfCihKDs9jgUVJt/b72G+O6c35N2j+VDY2NIdDEWFWDCNVNYj/8H+lVxP7Hy2QIJBMcEKa
+	chKZ/qBrAnhr2K68D+2eTJ4W2g3p7xk=
 From: Tao Chen <chen.dylane@linux.dev>
 To: ast@kernel.org,
 	daniel@iogearbox.net,
@@ -38,11 +38,10 @@ To: ast@kernel.org,
 Cc: bpf@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	chen.dylane@gmail.com,
-	Tao Chen <chen.dylane@linux.dev>,
-	Tao Chen <dylane.chen@didiglobal.com>
-Subject: [PATCH bpf-next v8 2/5] libbpf: Init fd_array when prog probe load
-Date: Tue, 25 Feb 2025 00:59:09 +0800
-Message-Id: <20250224165912.599068-3-chen.dylane@linux.dev>
+	Tao Chen <chen.dylane@linux.dev>
+Subject: [PATCH bpf-next v8 4/5] libbpf: Init kprobe prog expected_attach_type for kfunc probe
+Date: Tue, 25 Feb 2025 00:59:11 +0800
+Message-Id: <20250224165912.599068-5-chen.dylane@linux.dev>
 In-Reply-To: <20250224165912.599068-1-chen.dylane@linux.dev>
 References: <20250224165912.599068-1-chen.dylane@linux.dev>
 Precedence: bulk
@@ -54,54 +53,27 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-fd_array used to store module btf fd, which will
-be used for kfunc probe in module btf.
+Kprobe prog type kfuncs like bpf_session_is_return and
+bpf_session_cookie will check the expected_attach_type,
+so init the expected_attach_type here.
 
-Cc: Tao Chen <dylane.chen@didiglobal.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Reviewed-by: Eduard Zingerman <eddyz87@gmail.com>
 Signed-off-by: Tao Chen <chen.dylane@linux.dev>
 ---
- tools/lib/bpf/libbpf_probes.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ tools/lib/bpf/libbpf_probes.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
-index a48a557314f6..de2b1205b436 100644
+index 8efebc18a215..bb5b457ddc80 100644
 --- a/tools/lib/bpf/libbpf_probes.c
 +++ b/tools/lib/bpf/libbpf_probes.c
-@@ -102,12 +102,13 @@ __u32 get_kernel_version(void)
- 
- static int probe_prog_load(enum bpf_prog_type prog_type,
- 			   const struct bpf_insn *insns, size_t insns_cnt,
--			   char *log_buf, size_t log_buf_sz)
-+			   int *fd_array, char *log_buf, size_t log_buf_sz)
- {
- 	LIBBPF_OPTS(bpf_prog_load_opts, opts,
- 		.log_buf = log_buf,
- 		.log_size = log_buf_sz,
- 		.log_level = log_buf ? 1 : 0,
-+		.fd_array = fd_array,
- 	);
- 	int fd, err, exp_err = 0;
- 	const char *exp_msg = NULL;
-@@ -214,7 +215,7 @@ int libbpf_probe_bpf_prog_type(enum bpf_prog_type prog_type, const void *opts)
- 	if (opts)
- 		return libbpf_err(-EINVAL);
- 
--	ret = probe_prog_load(prog_type, insns, insn_cnt, NULL, 0);
-+	ret = probe_prog_load(prog_type, insns, insn_cnt, NULL, NULL, 0);
- 	return libbpf_err(ret);
- }
- 
-@@ -448,7 +449,7 @@ int libbpf_probe_bpf_helper(enum bpf_prog_type prog_type, enum bpf_func_id helpe
- 		return libbpf_err(-EOPNOTSUPP);
- 
- 	buf[0] = '\0';
--	ret = probe_prog_load(prog_type, insns, insn_cnt, buf, sizeof(buf));
-+	ret = probe_prog_load(prog_type, insns, insn_cnt, NULL, buf, sizeof(buf));
- 	if (ret < 0)
- 		return libbpf_err(ret);
- 
+@@ -126,6 +126,7 @@ static int probe_prog_load(enum bpf_prog_type prog_type,
+ 		break;
+ 	case BPF_PROG_TYPE_KPROBE:
+ 		opts.kern_version = get_kernel_version();
++		opts.expected_attach_type = BPF_TRACE_KPROBE_SESSION;
+ 		break;
+ 	case BPF_PROG_TYPE_LIRC_MODE2:
+ 		opts.expected_attach_type = BPF_LIRC_MODE2;
 -- 
 2.43.0
 
