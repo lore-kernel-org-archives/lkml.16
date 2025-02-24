@@ -1,103 +1,172 @@
-Received: from mail-40131.protonmail.ch (mail-40131.protonmail.ch [185.70.40.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B777F18C924;
-	Mon, 24 Feb 2025 10:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCAFD288DA;
+	Mon, 24 Feb 2025 10:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740391608; cv=none; b=BWMcsKCYB8Buzb/x9SKBWfh7qPCHUnfpfmPoAY7FLtCgsgFLoI7Jpt542rVqhRFAjk9sjxAPUNN6kjHRZSzMstbSRp1ezEF1PmLHEk8h8XMtN/gmzGgO3bfjYIOumE9doiUwCEWq/TPGkRm6e3ufuUpBgrthlB0gphKFQ0hE/CQ=
+	t=1740391704; cv=none; b=n2I6XQCD1YGjV5TBiSCYygd4gRRn7dAkOhkjJeYpdCZB1LXaPyQflcePoEn9eg/H95N/A4oDkDzeH71fC3jtGePh2G9ZeKEl+DGUO9ENbhxzm7Yhe9WscFfkN3HMMjz6hFxoOYrkP8QO2ll5d8V+XLvRkd93+h+X14AoGL0WbGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740391608; c=relaxed/simple;
-	bh=iG0pOq7skTua110Kfdnnzrm6EfHdFkinT2pLrXudrJg=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kz3pdejsTdF2jTMRKGA3AO6xxfjXOGHGEjpG1XYuzWml21SyHCeyGCw2QKeQgh/FFyWJbYzHp0GIRQNGPWCVxktzHgo757TBjt4g8kcBqXWiAnssKTEbrWxMQ16LDgbt4Tki/nYmUnekDL22aQhJ8DtGvWmZ59Hcblce08xtuE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=nsh21lt8; arc=none smtp.client-ip=185.70.40.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="nsh21lt8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=2eggbcunrrgmnef7zk3fuhzcjm.protonmail; t=1740391598; x=1740650798;
-	bh=yBthN9NjWnE1WZ5jO+aZCi8NljUP2Ml09wtArQ+KDzo=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=nsh21lt8d3j7AJIXOZnv+HKf4AQPP/Vc7IlakTcJqfMcvosWTSHoPpTbRCNXEs2A4
-	 WjEuUJVyrU5JuWPhINhN5X2aGFiJPHVVRThVHuY8z4C2y5wo8ET4wtjOybHhBH6cK2
-	 3iGFm0UeBVnwIxo0cSGZD34k+gTBXJADsqo0+8B+C/+wBp+/A7AmYYeEH6FaHrSK75
-	 C4ImrW4UIrngBwlV446UQPh1WeBaXJZNMrA2Kjec0MKjDxVARAP3IQcKyrCGiuDkXK
-	 VLWou/x84rtjBZakA95Gs/hQEcpCDbq3KSeDxzuU1srKMLzCMe7AVe0a1xQmWDLXBS
-	 sa8+OfgWA829Q==
-Date: Mon, 24 Feb 2025 10:06:35 +0000
-To: Andreas Hindborg <a.hindborg@kernel.org>, Boqun Feng <boqun.feng@gmail.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>
-Subject: Re: [PATCH] rust: sync: lock: Add an example for Guard::lock_ref()
-Message-ID: <304505cb-9f68-4d34-b4f1-7d703baba012@proton.me>
-In-Reply-To: <87wmdf22ae.fsf@kernel.org>
-References: <20250223072114.3715-1-boqun.feng@gmail.com> <87wmdf22ae.fsf@kernel.org>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 44a2cd62d22bf5bd2b7781e011132f4265e83c73
+	s=arc-20240116; t=1740391704; c=relaxed/simple;
+	bh=fespLaFMTMql39LCqWfuCJOVabzoi1y/N9PMgXCapXE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FIlrxOuB/muEpjjCbWsp//4NkIlrjAZgRNu3rnQw6ayYS6+fEf6/GyKX9XcTfoUP/DaaqTTd/YYHo0BzZx7e6fnoe+N8/o373Dl0ZZvlPha4v1W/DJINEI7KFOdca0GSMFEyQC4puwx+aBO0oebzIWSCTpUx7hCHlUDc/oQldto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 883F51E7D;
+	Mon, 24 Feb 2025 02:08:38 -0800 (PST)
+Received: from [192.168.7.252] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 20F143F673;
+	Mon, 24 Feb 2025 02:08:20 -0800 (PST)
+Message-ID: <58ee2a8d-d3c1-4bc2-92dd-6568f645b01f@arm.com>
+Date: Mon, 24 Feb 2025 10:08:18 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 00/10] arm64: dts: Add Arm Morello support
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>,
+ Sudeep Holla <sudeep.holla@arm.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Russell King <linux@armlinux.org.uk>, Will Deacon <will@kernel.org>,
+ Jessica Clarke <jrtc27@jrtc27.com>
+References: <20250221180349.1413089-1-vincenzo.frascino@arm.com>
+ <Z7jL5wBUJNjOlg4r@J2N7QTR9R3.cambridge.arm.com>
+Content-Language: en-GB
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+In-Reply-To: <Z7jL5wBUJNjOlg4r@J2N7QTR9R3.cambridge.arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 24.02.25 09:08, Andreas Hindborg wrote:
-> Boqun Feng <boqun.feng@gmail.com> writes:
->=20
->> To provide examples on usage of `Guard::lock_ref()` along with the unit
->> test, an "assert a lock is held by a guard" example is added.
->>
->> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
->> ---
->> This depends on Alice's patch:
->>
->> =09https://lore.kernel.org/all/20250130-guard-get-lock-v1-1-8ed87899920a=
-@google.com/
->>
->> I'm also OK to fold this in if Alice thinks it's fine.
->>
->>  rust/kernel/sync/lock.rs | 24 ++++++++++++++++++++++++
->>  1 file changed, 24 insertions(+)
->>
->> diff --git a/rust/kernel/sync/lock.rs b/rust/kernel/sync/lock.rs
->> index 3701fac6ebf6..6d868e35b0a3 100644
->> --- a/rust/kernel/sync/lock.rs
->> +++ b/rust/kernel/sync/lock.rs
->> @@ -201,6 +201,30 @@ unsafe impl<T: Sync + ?Sized, B: Backend> Sync for =
-Guard<'_, T, B> {}
->>
->>  impl<'a, T: ?Sized, B: Backend> Guard<'a, T, B> {
->>      /// Returns the lock that this guard originates from.
->> +    ///
->> +    /// # Examples
->> +    ///
->> +    /// The following example shows how to use [`Guard::lock_ref()`] to=
- assert the corresponding
->> +    /// lock is held.
->> +    ///
->> +    /// ```
->> +    /// # use kernel::{new_spinlock, stack_pin_init, sync::lock::{Backe=
-nd, Guard, Lock}};
->> +    ///
->> +    /// fn assert_held<T, B: Backend>(guard: &Guard<'_, T, B>, lock: &L=
-ock<T, B>) {
->> +    ///     // Address-equal means the same lock.
->> +    ///     assert!(core::ptr::eq(guard.lock_ref(), lock));
->> +    /// }
->=20
-> This seems super useful. Perhaps add this method as part of the lock api
-> instead of just having it in the example?
+Hello Mark,
 
-I don't think it should be an assert. Instead make it return a
-`Result<(), ()>`. (or create better named unit error types)
+On 21/02/2025 18:54, Mark Rutland wrote:
+> Hi Vincenzo,
+> 
+> On Fri, Feb 21, 2025 at 06:03:39PM +0000, Vincenzo Frascino wrote:
+>> The Morello architecture is an experimental extension to Armv8.2-A,
+>> which extends the AArch64 state with the principles proposed in
+>> version 7 of the Capability Hardware Enhanced RISC Instructions
+>> (CHERI) ISA [1].
+> 
+> None of the CHERI stuff is supported upstream, so from upstream's PoV
+> this is a low-volume dev-board/SoC with an experimental ARMv8.2-A CPU.
+>
 
----
-Cheers,
-Benno
+Agreed, I have no plans to upstream Morello support beyond the device tree.
+
+>> This series adds dts support for the Arm Morello System Development
+>> Platform.
+> 
+> Do we actually need the dts for this board?
+> 
+> I have one on my desk; it boots vanilla Debian 12 via UEFI + ACPI just
+> fine, with the Debian 6.1.0-13-arm64 kernel.
+> 
+> Is there something that we can only do with the DT? i.e. some
+> functionality that isn't exposed via ACPI?
+> 
+> How do you expect this DT to be used?
+> 
+
+There are functionalities that are not exposed via ACPI, e.g. gpu, dpu, i2c for
+the phy, etc. My aim to have upstream support for all the hardware exposed by
+the platform.
+
+Note: This series contains only the basic infrastructure, the plan is add
+progressively more features in the future.
+
+Vincenzo
+
+> Mark.
+> 
+>>
+>> [1] https://www.morello-project.org/
+>>
+>> To simplify the testing a linux tree rebased on 6.14-rc4 is accessible
+>> at [2].
+>>
+>> [2] https://codeberg.org/vincenzo/linux/src/branch/morello/dts/v6
+>>
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> Cc: Rob Herring <robh@kernel.org>
+>> Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+>> Cc: Conor Dooley <conor+dt@kernel.org>
+>> Cc: Liviu Dudau <liviu.dudau@arm.com>
+>> Cc: Sudeep Holla <sudeep.holla@arm.com>
+>> Cc: Lorenzo Pieralisi <lpieralisi@kernel.org> 
+>> Cc: Russell King <linux@armlinux.org.uk>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Jessica Clarke <jrtc27@jrtc27.com>
+>> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+>>
+>> Changes
+>> =======
+>> v7:
+>>   - Rebased on 6.14-rc4.
+>>   - Added review info.
+>> v6:
+>>   - Introduce arm,morello.yml.
+>>   - Split pmu patch.
+>>   - Address review comments.
+>> v5:
+>>   - Add support for fvp.
+>>   - Add support for pmu.
+>>   - Address review comments.
+>>   - Rebase on 6.14-rc1.
+>> v4:
+>>   - Add cache information.
+>>   - Address review comments.
+>> v3:
+>>   - Address review comments.
+>>   - Rebase on 6.13-rc5.
+>> v2:
+>>   - Addressed review comments.
+>>   - Rebased on 6.13-rc4.
+>>   - Renamed arm,morello to arm,morello-sdp for clarity.
+>>
+>> Vincenzo Frascino (10):
+>>   arm64: Kconfig: Update description for CONFIG_ARCH_VEXPRESS
+>>   dt-bindings: arm: Add Morello compatibility
+>>   dt-bindings: arm: Add Morello fvp compatibility
+>>   dt-bindings: arm: Add Rainier compatibility
+>>   dt-bindings: arm-pmu: Add support for ARM Rainier PMU
+>>   perf: arm_pmuv3: Add support for ARM Rainier PMU
+>>   arm64: dts: morello: Add support for common functionalities
+>>   arm64: dts: morello: Add support for soc dts
+>>   arm64: dts: morello: Add support for fvp dts
+>>   MAINTAINERS: Add Vincenzo Frascino as Arm Morello Maintainer
+>>
+>>  .../devicetree/bindings/arm/arm,morello.yaml  |  35 ++
+>>  .../devicetree/bindings/arm/cpus.yaml         |   1 +
+>>  .../devicetree/bindings/arm/pmu.yaml          |   1 +
+>>  MAINTAINERS                                   |   7 +
+>>  arch/arm64/Kconfig.platforms                  |   5 +-
+>>  arch/arm64/boot/dts/arm/Makefile              |   1 +
+>>  arch/arm64/boot/dts/arm/morello-fvp.dts       |  77 +++++
+>>  arch/arm64/boot/dts/arm/morello-sdp.dts       | 157 +++++++++
+>>  arch/arm64/boot/dts/arm/morello.dtsi          | 323 ++++++++++++++++++
+>>  drivers/perf/arm_pmuv3.c                      |   2 +
+>>  10 files changed, 606 insertions(+), 3 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/arm,morello.yaml
+>>  create mode 100644 arch/arm64/boot/dts/arm/morello-fvp.dts
+>>  create mode 100644 arch/arm64/boot/dts/arm/morello-sdp.dts
+>>  create mode 100644 arch/arm64/boot/dts/arm/morello.dtsi
+>>
+>> -- 
+>> 2.43.0
+>>
+
+-- 
+Regards,
+Vincenzo
 
