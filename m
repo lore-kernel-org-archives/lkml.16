@@ -1,114 +1,98 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pv50p00im-zteg10011501.me.com (pv50p00im-zteg10011501.me.com [17.58.6.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8FC818892D
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 14:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACCCA23BCE6
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 14:28:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740407322; cv=none; b=Z1mezvb9ZWTP4ET3NjijJcL/p2aBD2vp25cCzORXXBvNThmzJnn/AlJy6pc9dxOdqHCHKtgUS1yyAwPMib7gMKFMZ2xt+JioUvHSjqWXsQvvfGJrOFvqsgb1eVdG7kkOAuACFvwn46qHX+obuHAEbkb/tM3WUT49uDcAATwKSZs=
+	t=1740407322; cv=none; b=MDjFinQA5rMGSPCGMoInQq0QWeN/+ESUq4ee/hvMf5+hXtku0YwqDbVOSx16QLAZI327FtHo5MaiY2livddBgwsSOhIbV0VtxJU6GmYnuC5nTixPEUN1I/BSZHNPr5k7oSB4qlDp4sFRcGSbw1DbDtGPxYBtredSLsliidE899c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740407322; c=relaxed/simple;
-	bh=fi/ou784DQNSO56UkdVWMsq5LgKy3w3Myno9NribxME=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PI3baF9gi2sm0Yk8haGqMAQqYgaJeH4pfis0vyl2ojEIdpnFi5X9wpLPb5Wf5taH7VxZtgMiIQPez2+tMwIqkNlaYUCw2YxW5+VAaqmf69cwvUA3mypUqGPV1HqSEXgD/CQZzOQKmERsAF4oHNoARwlApRESK4YCMBsuEPa5hAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=NIDdInz1; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	bh=ybdGidDMMARstNJjmL2Y9lZwUtBE5WDst4P9wmI55WQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=OrtP2h82SboU8lLt6j47STy/CjxPxqGCTUWYkJmI2jIT+XJnGotHgmqzMlsbR3Ds5hp+/RMqHwC7Aa+PEQA53zDKf4YK1KaZwXd3hh05OUgyCtKKVpJO5lCzLtDhmJ0ziCa5TL19zftp0TUaSv7KM72R0yKt0e3Bramj7QuK+II=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=tTiwJnBW; arc=none smtp.client-ip=17.58.6.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="NIDdInz1"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-38f286b5281so2200598f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 06:28:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1740407318; x=1741012118; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+7myiS5YDjg48/Ag8fwVJzAPYwjPP2oihtGPggfyt3U=;
-        b=NIDdInz1gySZ1Peryoh6lvdI8W996Kezrv9/7HCTbwKmSstoUQr68X4wrRHBJJpJcs
-         plB36mCAiTPd1Alt3WP0piTZ3J8JX10Fx7o6t13HyAfWrBBpZdTyMzy6C5ruHljTI/1U
-         vo69mLrkkPbfexYJQ1BQd0CwkdpFZbj0Ds30e5AeBQwoZLjRg7uf5YWPi+TutGPjTR6D
-         dt3PKthzCl4CLiC5UovTZjmJ8SYmFD7z/rIwu3dEf0f8heMmCC2H0uoONOMvzvECD6yk
-         J2aJWTUXbK7Ysa9sCh0HyagbBuIjIcuQ+GBGKfaSdxmwEyZFMt1pw/3quFS7lvX+jXTM
-         rPhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740407318; x=1741012118;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+7myiS5YDjg48/Ag8fwVJzAPYwjPP2oihtGPggfyt3U=;
-        b=f761YWKgF4rFgbIhRs/i0a/Ko+wkeZoCu2f3yDPGfM9guAm3YnRq2CNG6g4vdcEBpE
-         c6ioKuu617rB1tHL3+kkw0htYgiwhBNrG6p+k1fy4N3Y/MCliTy//BvL7SoknsrEzjq/
-         Ne4REO9Ikn+W+AxkcdJKYSVUfU+MW/1gbsAT6nen1ss6sKOaqjkzRiQ9me0s3EObaSb7
-         TJshM81uqA2gFsIGYlgKlv227hxjthAInCEsg3vTxPqkn/4dzg/R160jEbNHkiKHdqBh
-         hhY6qzHulDLmfHjuOA+InF6hU5CWiNDB8cQjaceDyRzHaRzJpRP+j2xgHShMOfCGXlps
-         iXig==
-X-Forwarded-Encrypted: i=1; AJvYcCXdEQLcVwlqGytwbnt3e5e/0NWs9ZRCsYPktCpowltUCyJbBphPSglkj1w8/HJHBX/NVUs4tGZxwQUZJQw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzr7rnxNA/FthgR5vM7Bvy1iRXMJpmnN7Y+qF4ZAgyhKtw54m2j
-	66UyYF+IYQTajwIyifA+zX63uOPL8EWS0tlUiqaBQfLpNcIVoB+P4lNLrla4GCsUnaaS2EE/3F4
-	mVzg=
-X-Gm-Gg: ASbGncvv2HHjzbCv6TLLOXqEudte9BoEkSh1ZFsLpqZpsYN8cwE1cxHNU8NjjSNxJf1
-	Ev1vwHq66DzwU4hLAbB4J4zPnuhTz5ecNXvPhBEBzTHsN7YhC2Pa5RyEIhiIHB6Ax/FtGzRVPHW
-	b8e0yhukhJkmwBWsRpUXSiTNurQxj+0W4HnHOn+mMPMcWciICn195riCxwAeZUoE80tebniqIQX
-	4gfRo959vCVqrdg7vtqy4HcuuYr0SrlTyVxhC5S+t7Ywv8MloYXS9zb8mOmRdrylqbUTFGCjOVK
-	oC+NL0ZFqZVtYYCLg/2WVfesTsIZ128mraRevpeXYXFhsZKxX7gcsJTmjHJidl9lgu2K67aPxA=
-	=
-X-Google-Smtp-Source: AGHT+IFgTjY0B9Q+EBdWo53fKYf0MGWnVrcQoJfE4mJdhQbgBfmM6+4xRs286ajDlhlvB8MLPAk/3g==
-X-Received: by 2002:a05:6000:4014:b0:38f:28a1:501e with SMTP id ffacd0b85a97d-38f70772b46mr10667747f8f.8.1740407317886;
-        Mon, 24 Feb 2025 06:28:37 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:5ee:79d0:ce53:5813:dc8a:b123? ([2a01:e0a:5ee:79d0:ce53:5813:dc8a:b123])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f259d9be9sm32217076f8f.79.2025.02.24.06.28.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2025 06:28:37 -0800 (PST)
-Message-ID: <43d23c40-09bd-46ca-840f-4724a42946a6@baylibre.com>
-Date: Mon, 24 Feb 2025 15:28:35 +0100
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="tTiwJnBW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=/83hjhNrUe8nENtR9sKze0gL5j9ZTF3LM/sVQ4s0mdA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
+	b=tTiwJnBWTJCI3NXr9V1a/oPqoiY5KZX2rZ7dmgq9ljTihpPw5rXZfsSidOV6h6rSU
+	 fuVJKbvzTMN9PFJFYBJx/AJppwzBDeuvHKSQK4WqbTL3L3WW1bDEHUAsMjGAnnrs8x
+	 RzI2unsCwz5iT73g1CnIMSvdluqMEdf7AqJ1Zz087GD458kyUNZfICcQD0MuGLJC9P
+	 gA38TMyM3amYUPof45wlcelvGZImJf4usJ+viuXDTu7bMuvDguKJnjFzfOAWZWQbqK
+	 F/0Z4R2v1jHPIak6onAlpgbiHw3xQt5W23eZLvL6h3/4pA4LvPPXZyKChszU74c9XT
+	 qWc/6ZU92c/aw==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-zteg10011501.me.com (Postfix) with ESMTPSA id C2A2B4A0429;
+	Mon, 24 Feb 2025 14:28:37 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Date: Mon, 24 Feb 2025 22:28:00 +0800
+Subject: [PATCH 4/5] of: Do not change property state under
+ __of_add_property() failure
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6] arm64: dts: mediatek: mt8395-genio-1200-evk: add
- support for TCPC port
-To: Macpaul Lin <macpaul.lin@mediatek.com>,
- ChiYuan Huang <cy_huang@richtek.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-Cc: Bear Wang <bear.wang@mediatek.com>, Pablo Sun <pablo.sun@mediatek.com>,
- Macpaul Lin <macpaul@gmail.com>,
- Project_Global_Chrome_Upstream_Group@mediatek.com,
- linux-usb@vger.kernel.org, Chris-qj chen <chris-qj.chen@mediatek.com>,
- Fabien Parent <fparent@baylibre.com>,
- Yow-Shin Liou <yow-shin.liou@mediatek.com>,
- Simon Sun <simon.sun@yunjingtech.com>
-References: <20250224114934.3583191-1-macpaul.lin@mediatek.com>
-Content-Language: en-US
-From: Alexandre Mergnat <amergnat@baylibre.com>
-In-Reply-To: <20250224114934.3583191-1-macpaul.lin@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250224-of_bugfix-v1-4-03640ae8c3a6@quicinc.com>
+References: <20250224-of_bugfix-v1-0-03640ae8c3a6@quicinc.com>
+In-Reply-To: <20250224-of_bugfix-v1-0-03640ae8c3a6@quicinc.com>
+To: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>
+Cc: Zijun Hu <zijun_hu@icloud.com>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-GUID: pIZTEKEm3iay74eJglrzwHvFHeHPxKFp
+X-Proofpoint-ORIG-GUID: pIZTEKEm3iay74eJglrzwHvFHeHPxKFp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-24_06,2025-02-24_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 mlxscore=0
+ phishscore=0 clxscore=1015 malwarescore=0 adultscore=0 mlxlogscore=653
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2502240104
+X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
 
-Reviewed-by: Alexandre Mergnat <amergnat@baylibre.com>
+From: Zijun Hu <quic_zijuhu@quicinc.com>
 
-On 24/02/2025 12:49, Macpaul Lin wrote:
-> From: Fabien Parent<fparent@baylibre.com>
-> 
-> Enable USB Type-C support on MediaTek MT8395 Genio 1200 EVK by adding
-> configuration for TCPC Port, USB-C connector, MUX IT5205 and related
-> settings.
-> 
-> Configure dual role switch capability, set up PD (Power Delivery) profiles,
-> and establish endpoints for SS (SuperSpeed) and HS (HighSpeed) USB.
-> 
-> Update pinctrl configurations for U3 P0 VBus default pins and set dr_mode
-> to "otg" for OTG (On-The-Go) mode operation.
-> 
-> Add ITE IT5205 (TYPEC MUX) under I2C2 bus and configure its properties;
-> also add references and configurations to 'typec-mux' node.
+Do not remove the property from list @np->deadprops if
+__of_add_property() encounters -EEXIST failure.
+
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+---
+ drivers/of/base.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index c810014957e81171675b63f25eaabe391cc903e4..47cae6e48a48a7e1312c25fc5267bcf39102bbe9 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1646,9 +1646,6 @@ int __of_add_property(struct device_node *np, struct property *prop)
+ 
+ 	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 
+-	__of_remove_property_from_list(&np->deadprops, prop);
+-
+-	prop->next = NULL;
+ 	next = &np->properties;
+ 	while (*next) {
+ 		if (of_prop_cmp(prop->name, (*next)->name) == 0) {
+@@ -1660,6 +1657,9 @@ int __of_add_property(struct device_node *np, struct property *prop)
+ 	}
+ 	*next = prop;
+ 
++	__of_remove_property_from_list(&np->deadprops, prop);
++	prop->next = NULL;
++
+ out_unlock:
+ 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 	if (rc)
 
 -- 
-Regards,
-Alexandre
+2.34.1
+
