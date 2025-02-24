@@ -1,111 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from 004.mia.mailroute.net (004.mia.mailroute.net [199.89.3.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99FF433F3
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 18:11:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16292263F2C;
+	Mon, 24 Feb 2025 18:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740420707; cv=none; b=pMkOF0hI0kJ+1lF600lzbZL0qrnSeGAKJHe64mcaQhRsHJ59UGxNWeogi7I4XmNR3QHp/q96oyH2nrxKo9AksABl4VrnFBjZDyjlBBM+jWIphmwFIvv4F5q5+bm1JUpLysGvHncE+DNuhdoHGrj0qGEwHa5HWQ4Ko4ab3Yg6wKM=
+	t=1740420733; cv=none; b=Sfh47/ozA7bj2rxNVnrda98GzfhrubsElMES5hdYSxDQob/wE1WjfjUz5549L3XO0HtDTNsSLRY7df8+wUiWbJotI9w68YqixdryLZ/cL5I8mH59VzHHLtHBRg98/wvqF7pch/JE8S+FZk8vEoqqsaj0B3Ge/p8JeikDY3GLWTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740420707; c=relaxed/simple;
-	bh=6vwIJq36TFsrmFzwCOIaxGEWsTnkWmsv7+48wxqvu7o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kS34Jf1MmKNi8HsF76683kCBfuw31cbvGk5sX64GMIRN6U0Bohemrw0fgs0vkGASeBmyo6PpdwGSspPNhQNWUbgKhNV42P0zKp/AM5FfH9TDdeAn1GeiFDz0zr+ig9+HJdoZJvPKd/cdwa07lu5hGjrhp2Gt734sUg6vqYcAzo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RlUwYmd5; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740420733; c=relaxed/simple;
+	bh=g8/KDpgvxe1c7z2kKKWcFmyVaQCFiSYt5VoEmADrJJM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MZTBWyV16ZunJRC76QN84+cpwqUUaqBNzZtiWlcRsYY8Cy190QeU3SB5jkmPrwKnFeN1OqJnwpdB5k6XlmLhYJ/iOhNqnZbPnFiC0Ygwo/ofbEKeuzea4H9YtAovgXghvf7x3VEWbixdAhFXg+aYuHrxblnWBnEXKxmP8AntYVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=0WpoIo37; arc=none smtp.client-ip=199.89.3.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RlUwYmd5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740420706; x=1771956706;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6vwIJq36TFsrmFzwCOIaxGEWsTnkWmsv7+48wxqvu7o=;
-  b=RlUwYmd5R/5y3aOXTkGiD60r5EKcj+Gkf/xHad/72/asxvminP66u6kD
-   z6Rsl59h43X6I4/HW4qHFA+JOWQI52SZv/FSiIHd57y1JC2x71GerkYwq
-   62JYaHRzQxorKUuFVNBUIQAIG7788P7Krm+1Q1fkDZKGdMhEW/7CHqVe4
-   L1Lbv9OOXt81Gap+wKIBv1PnUFGlCI5F2F1+LX3gUzqNTv+t56Le+wSfL
-   xTo+gfVgGGeVFSM/PvtavNqNyfmlFJ5vA3mCnOePye74ZQ5I+fIltqCO7
-   gad4Y6brFUhsCGx/kf7qzMehquUaIeo3IFzENK+pH2NlOAEh4HYKsFnJO
-   g==;
-X-CSE-ConnectionGUID: BmaPwE6zTlSnFAInq43cTA==
-X-CSE-MsgGUID: 2UICPywoTPeeQili3eVzWg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="28784332"
-X-IronPort-AV: E=Sophos;i="6.13,312,1732608000"; 
-   d="scan'208";a="28784332"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 10:11:45 -0800
-X-CSE-ConnectionGUID: Pa2ixOGuSm2Otk6dgMUccg==
-X-CSE-MsgGUID: IW03Ccg7StaIxvSF69ZYxw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,312,1732608000"; 
-   d="scan'208";a="120755065"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 10:11:43 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tmcvb-0000000ElxV-3c5G;
-	Mon, 24 Feb 2025 20:11:39 +0200
-Date: Mon, 24 Feb 2025 20:11:39 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v1 1/1] x86/mm: Check if PTRS_PER_PMD is defined before
- use
-Message-ID: <Z7y2W8tsAOPhqNfn@smile.fi.intel.com>
-References: <20250224173940.219820-1-andriy.shevchenko@linux.intel.com>
- <76b8174e-3c4c-4db4-83d0-aa8d241c7afe@intel.com>
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="0WpoIo37"
+Received: from localhost (localhost [127.0.0.1])
+	by 004.mia.mailroute.net (Postfix) with ESMTP id 4Z1pjK1LVvzm0yQH;
+	Mon, 24 Feb 2025 18:12:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1740420722; x=1743012723; bh=02iQ2St+XAcnKASiGHZa/LWP
+	G7gPbiyGfTrSwpW4hCY=; b=0WpoIo37rLvZE4R0nHmTmhSA1NaoKDLuVf1GcV7o
+	xm3tMdd+/Q9Us2R+HgYP/5NSBYL0QZ3jzspvwFN0kZszUDhXVgcBNtxhn/XDjDOb
+	H+qVeS7mfi2gAe7GN687iElF6PfOM3eIn6pPjWsBoz9tiiykVyOmgRA+NQvBPb8i
+	GNTVWmoy7Rz0JPmUY9S7sTWuB08SEcX6gTv/gvdjTVUSVBC8hvWypxB07Kzs9Y+W
+	3qE0ii8/SDmlE8i1E+eyrq/Qi/eEj8OuImtpWZDb5pfyXRnR/20FrdQ0ghwDGo5B
+	Pw+YY1qdEYTHmMWclEXRpjZytc7+Z1n5O6HdG+1kz7XR+Q==
+X-Virus-Scanned: by MailRoute
+Received: from 004.mia.mailroute.net ([127.0.0.1])
+ by localhost (004.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id LkPBP-YrE8zg; Mon, 24 Feb 2025 18:12:02 +0000 (UTC)
+Received: from [100.66.154.22] (unknown [104.135.204.82])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 004.mia.mailroute.net (Postfix) with ESMTPSA id 4Z1pjD4JM3zm0djZ;
+	Mon, 24 Feb 2025 18:11:59 +0000 (UTC)
+Message-ID: <ad1ba59a-3a67-4b3c-a05d-c4e56405cc19@acm.org>
+Date: Mon, 24 Feb 2025 10:11:58 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <76b8174e-3c4c-4db4-83d0-aa8d241c7afe@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH v3] scsi: Bypass certain SCSI commands on disks
+ with "use_192_bytes_for_3f" attribute
+To: WangYuli <wangyuli@uniontech.com>, James.Bottomley@HansenPartnership.com,
+ martin.petersen@oracle.com
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stern@rowland.harvard.edu, zhanjun@uniontech.com, niecheng1@uniontech.com,
+ guanwentao@uniontech.com, chenlinxuan@uniontech.com,
+ Xinwei Zhou <zhouxinwei@uniontech.com>, Xu Rao <raoxu@uniontech.com>,
+ Yujing Ming <mingyujing@uniontech.com>
+References: <ADB8844D07D40320+20250224034832.40529-1-wangyuli@uniontech.com>
+Content-Language: en-US
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <ADB8844D07D40320+20250224034832.40529-1-wangyuli@uniontech.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 24, 2025 at 09:59:23AM -0800, Dave Hansen wrote:
-> On 2/24/25 09:39, Andy Shevchenko wrote:
-> > Compiler is not happy about PTRS_PER_PMD being undefined
-> > 
-> > In file included from arch/x86/kernel/head_32.S:29:
-> > arch/x86/include/asm/pgtable_32.h:59:5: error: "PTRS_PER_PMD" is not defined, evaluates to 0 [-Werror=undef]
-> >    59 | #if PTRS_PER_PMD > 1
-> > 
-> > Add a check to make sure PTRS_PER_PMD is defined before use.
-> 
-> Hi Andy,
-> 
-> From reading the "Closes:" link, it appears this is a new issue that
-> originates from a new compile flag. So it doesn't seem like it's worth
-> backporting.
+On 2/23/25 7:48 PM, WangYuli wrote:
+> However, "lshw" disregards the "use_192_bytes_for_3f" attribute and
+> transmits data with a length of 0xff bytes via ioctl, which can cause
+> some hard drives to hang and become unusable.
 
-FWIW, I haven't put any Fixes tag nor Cc: stable@ :-)
-Also note this looks like both compilers complain about the same.
+lshw is a user space utility. use_192_bytes_for_3f is not exposed to
+user space as far as I know. So how can the above statement be correct?
 
-> Also, the _behavior_ of "#if PTRS_PER_PMD > 1" was fine, right? It
-> didn't cause the logic to go backwards from what was intended, does it?
-> 
-> This:
-> 
-> 	https://gcc.gnu.org/onlinedocs/gcc-3.0.2/cpp_4.html
-> 
-> says: "Identifiers that are not macros, which are all considered to be
-> the number zero."
-> 
-> Which would yield the correct behavior.
-> 
-> So I think this is purely a fix for new warning in new kernels. We
-> shouldn't need to backport this anywhere at all.
+> @@ -1613,6 +1614,17 @@ static int scsi_dispatch_cmd(struct scsi_cmnd *cmd)
+> +	/*
+> +	 * Before we queue this command, check attribute use_192_bytes_for_3f.
+> +	 * Because transmits data with a length of 0xff bytes via ioctl may
+> +	 * cause some hard drives to hang and become unusable.
+> +	 */
+> +	if (cmd->cmnd[0] == MODE_SENSE && sdev->use_192_bytes_for_3f &&
+> +		cmd->cmnd[2] == 0x3f && cmd->cmnd[4] != 192) {
+> +		cmd->result = DID_ABORT << 16;
+> +		goto done;
+> +	}
 
--- 
-With Best Regards,
-Andy Shevchenko
+ From include/scsi/scsi_device.h:
 
+unsigned use_192_bytes_for_3f:1; /* ask for 192 bytes from page 0x3f */
+
+The above code uses use_192_bytes_for_3f for another purpose. Please 
+respect the purpose of the use_192_bytes_for_3f bitfield.
+
+Thanks,
+
+Bart.
 
