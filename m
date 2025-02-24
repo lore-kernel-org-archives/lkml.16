@@ -1,646 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FF1254856;
-	Mon, 24 Feb 2025 13:51:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F722233735;
+	Mon, 24 Feb 2025 13:53:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740405065; cv=none; b=X5393AJfA7DxHI3uLwOa2ksMyKZSM3x8QRy8Ya3a/d5gf30akRRBslDc9BalTjWwv7lHfyBxC50ELLy7tCJJO8TvEuYtKjVlGfVJBuE0ipVCajPN2ZE0ac9jAZiXKJl88dpoN9TbVoh3IOXGB/hzF0vGgNDqQ3+pg7F0UQ4xS3I=
+	t=1740405199; cv=none; b=Z5ZbnvrBKOL/BdkqpdFbpv0nzpGRza9vWpubp2rDFZcx4Mt/b0tVmGaD1kuBO7tB5HqEdEEI5x3DqafxzPxQfp/Ut6g5Qv1fVSh9fxzv1VvpSLgdm28tY8CpXTLhrctASxFE2aIlz+wWdclEJaCE7lsklVfLtQRE2NeT8moJFeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740405065; c=relaxed/simple;
-	bh=ilU+8IehGC1dq3HGIORF/GhcDggDPU949QR4uwZr67U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bz3tAhznGOkQmAV5WyvyXhCSZRAuRROCoD4VcVduacybjOTApIhE9DHkqShxD3n7HwEwzlHAlIwhx2P6bIGY7zdZpO8qaNnCvK/zQuNHrXQD+8Wxmo90GZbAeuoOrOuJNIXIZX5ZcyxFnO37Ise8YIHyOBYy/xLKKppd9UESQcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nGcK80AE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740405199; c=relaxed/simple;
+	bh=XzVKp8DOYSAwQIIVGcLtS5J68UGhDZBREKxOESHXpK8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UIYhl3O3dUcK2fuEEXqRiLlHoquwLjIr11e1tDCxGWd5jaslXznmn0qMAJaQMswAoul/PvgYGd0bKOEwGeiehY5QgBjHwUYTPCwQHkHBwIBQG/xPfLWiBDIe24h+wp8e6yryOkmfEqYOXDRcyJElaulMzL0djPaXo7kAr1VHLME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TMv1bGV3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nGcK80AE"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0B75BC4CEEB;
-	Mon, 24 Feb 2025 13:51:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TMv1bGV3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60593C4CEE6;
+	Mon, 24 Feb 2025 13:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740405065;
-	bh=ilU+8IehGC1dq3HGIORF/GhcDggDPU949QR4uwZr67U=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=nGcK80AER+P5kv3W48gDFcQEfMDlQ/NFCrpwux15WqUqlbKZVHM2/EFcQETKd3ItF
-	 UtTy+NcKpe+cDggEiOhQv9cXM4lT1gIKVTvRekUq2NyMu/6Kdj5n+JhyEfiotWQzxG
-	 SHe90UYilcseNSH1AK4KJl+5zj4tL2k3nAFA0TshNcuG0fr/OOCVnBXsZhUjbh+jF/
-	 Y5q34Zq5t9eyMDWbrIesXAhABGQ+KwOBC1jwRuX52S+yEn1Vxj/35P57/04UAgp42m
-	 i/r14g/JLysLiSX6LFUIJXKWRkilTxjVbWRXyDa/07m9VKPdjuwoI39TVt03Hxtujt
-	 wrBAte3cPVbkA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 007C7C021BE;
-	Mon, 24 Feb 2025 13:51:05 +0000 (UTC)
-From: Maud Spierings via B4 Relay <devnull+maudspierings.gocontroll.com@kernel.org>
-Date: Mon, 24 Feb 2025 14:51:02 +0100
-Subject: [PATCH 12/14] arm64: dts: freescale: Add the GOcontroll Moduline
- Display baseboard
+	s=k20201202; t=1740405198;
+	bh=XzVKp8DOYSAwQIIVGcLtS5J68UGhDZBREKxOESHXpK8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TMv1bGV3Sq/3ZBwDazBVnnzRM/h34i2qUVQLeaRWcV98aJw9MQnsS4CZ1kDe7mFua
+	 3YrNV2Dqt3IaLap7hUHbxY8OV+JwSxTm4xJLAHSgYLqkZXfPeb0Cky7HaQyeZDA/I7
+	 7AdUXcY6Sa+Veg4bB/euN0pW7Jz6KLJgbKKWPdtqdrQsK90+4auSpUdIvLgVUo9+LU
+	 Vvwu+kgzuX8MsufwZDLidn9wsWpe/q/C9H5ZE2la8/euz3YyoivJcJZJsZd6PThfOw
+	 A42aYUD5XnC6gpZjaeNutl8RzO3zQfhSX/+54kpDX1/ozKOsGdfVnO0L/tiFONWFpS
+	 ry0IjueP/iKsw==
+Message-ID: <b7bbe504-d6f3-4262-af19-1edad4129fa9@kernel.org>
+Date: Mon, 24 Feb 2025 14:53:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net-next] selftests/net: ensure mptcp is enabled in netns
+Content-Language: en-GB
+To: Hangbin Liu <liuhangbin@gmail.com>, Davide Caratti <dcaratti@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20250224094013.13159-1-liuhangbin@gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20250224094013.13159-1-liuhangbin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250224-initial_display-v1-12-5ccbbf613543@gocontroll.com>
-References: <20250224-initial_display-v1-0-5ccbbf613543@gocontroll.com>
-In-Reply-To: <20250224-initial_display-v1-0-5ccbbf613543@gocontroll.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, 
- Liu Ying <victor.liu@nxp.com>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, 
- Maud Spierings <maudspierings@gocontroll.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740405062; l=16170;
- i=maudspierings@gocontroll.com; s=20250214; h=from:subject:message-id;
- bh=C6ukR3uPtclclXnXYDlm9449A/g4rVSEmdupTasu4I0=;
- b=ceKfbpz071vEKynqCJFKMgUKE2IeJkej5KOW9yePfvIPp2Dt6gaI4BI0OQcy0GpRwTEJNN6KH
- TrM9QlBpEZGD64LdQsJUvl2IJ5YAlXFsntUAieDq08nrQ4GQR4fu/T7
-X-Developer-Key: i=maudspierings@gocontroll.com; a=ed25519;
- pk=7chUb8XpaTQDvWhzTdHC0YPMkTDloELEC7q94tOUyPg=
-X-Endpoint-Received: by B4 Relay for maudspierings@gocontroll.com/20250214
- with auth_id=341
-X-Original-From: Maud Spierings <maudspierings@gocontroll.com>
-Reply-To: maudspierings@gocontroll.com
 
-From: Maud Spierings <maudspierings@gocontroll.com>
+Hi Hangbin, Davide,
 
-The Moduline Display platform is a part of the wider GOcontroll Moduline
-ecosystem. These are embedded controllers that focus on modularity with
-their swappable IO modules.
+On 24/02/2025 10:40, Hangbin Liu wrote:
+> Some distributions may not enable MPTCP by default. All other MPTCP tests
+> source mptcp_lib.sh to ensure MPTCP is enabled before testing. However,
+> the ip_local_port_range test is the only one that does not include this
+> step.
 
-The base Moduline Display board includes a board-to-board connector with
-various busses to enable adding new display types required by the
-application. It includes 2 Moduline IO module slots, a simple mono
-codec/amplifier, a four channel adc, 2 CAN busses, an RTC and optional
-wifi/bluetooth.
+This modification is OK for me, but would it not be time to stop
+patching the kernel of these distributions to disable MPTCP by default?
 
-busses to the display adapter include:
-- 4 lane LVDS
-- 4 lane MIPI-DSI
-- 4 lane MIPI-CSI
-- HDMI 2.0a
-- USB 2.0
-- I2S
-- I2C
-- SPI
+As far as I know, only one Linux distribution is doing that, and that's
+the one supporting MPTCP the best :)
+It was making sense when MPTCP was backported to older kernels, but now
+that v6.12 is used as a new base, it probably no longer makes sense, no?
 
-Also a couple of GPIO and PWM pins for controlling various ICs on the
-display adapter board.
+> Let's also ensure MPTCP is enabled in netns for ip_local_port_range so
+> that it passes on all distributions.
 
-Signed-off-by: Maud Spierings <maudspierings@gocontroll.com>
----
- .../imx8mp-tx8p-ml81-moduline-display-106.dtsi     | 530 +++++++++++++++++++++
- 1 file changed, 530 insertions(+)
+Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-tx8p-ml81-moduline-display-106.dtsi b/arch/arm64/boot/dts/freescale/imx8mp-tx8p-ml81-moduline-display-106.dtsi
-new file mode 100644
-index 0000000000000000000000000000000000000000..fa8918e0754be3f3c7fc264d44aa2fc927a36afb
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-tx8p-ml81-moduline-display-106.dtsi
-@@ -0,0 +1,530 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright 2025 GOcontroll B.V.
-+ * Author: Maud Spierings <maudspierings@gocontroll.com>
-+ */
-+
-+#include "imx8mp-tx8p-ml81.dtsi"
-+
-+/ {
-+	chassis-type = "embedded";
-+	compatible = "gocontroll,moduline-display", "fsl,imx8mp";
-+	hardware =  "Moduline Display V1.06";
-+
-+	aliases {
-+		ethernet0 = &eqos;
-+		mmc0 = &usdhc3;
-+		mmc1 = &usdhc2;
-+		spi0 = &ecspi2; /* spidev number compatibility */
-+		spi1 = &ecspi1; /* spidev number compatibility */
-+		can0 = &flexcan1;
-+		can1 = &flexcan2;
-+		rtc0 = &rtc_pcf; /* i2c rtc is the main rtc */
-+		rtc1 = &snvs_rtc;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	external-sensor-supply {
-+		compatible = "regulator-output";
-+		vout-supply = <&reg_5v0_sensor>;
-+	};
-+
-+	reg_can1_stby: regulator-can1-stby {
-+		compatible = "regulator-fixed";
-+		regulator-name = "can1-stby";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_flexcan1_reg>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio4 3 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	reg_can2_stby: regulator-can2-stby {
-+		compatible = "regulator-fixed";
-+		regulator-name = "can2-stby";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_flexcan2_reg>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio5 9 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	reg_1v8_per: regulator-1v8-per {
-+		compatible = "regulator-fixed";
-+		regulator-name = "1v8-per";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_reg_1v8>;
-+		gpio = <&gpio3 25 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		power-supply = <&reg_3v3_per>;
-+	};
-+
-+	reg_3v3_per: regulator-3v3-per {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3v3-per";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		power-supply = <&reg_6v4>;
-+	};
-+
-+	reg_5v0_sensor: regulator-5v0-sensor {
-+		compatible = "regulator-fixed";
-+		regulator-name = "5v0-supply-external-sensor";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_reg_5v0_sensor>;
-+		gpio = <&gpio4 9 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_5v0: regulator-5v0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "5v0";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		power-supply = <&reg_6v4>;
-+	};
-+
-+	reg_6v4: regulator-6v4 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "6v4";
-+		regulator-min-microvolt = <6400000>;
-+		regulator-max-microvolt = <6400000>;
-+		regulator-always-on;
-+	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "tas2505-audio";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,frame-master = <&cpudai>;
-+		simple-audio-card,bitclock-master = <&cpudai>;
-+		simple-audio-card,widgets =
-+		"Speaker", "Speaker External";
-+		simple-audio-card,routing =
-+		"Speaker", "DAC";
-+
-+		cpudai: simple-audio-card,cpu {
-+			sound-dai = <&sai6>;
-+		};
-+
-+		simple-audio-card,codec {
-+			sound-dai = <&tas2505>;
-+		};
-+	};
-+
-+	wifi_powerseq: wifi-powerseq {
-+		compatible = "mmc-pwrseq-simple";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_wl_reg>;
-+		post-power-on-delay-ms = <100>;
-+		power-off-delay-us = <500000>;
-+		reset-gpios = <&gpio2 19 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+&ecspi1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi1>;
-+	cs-gpios = <
-+	&gpio2 12 GPIO_ACTIVE_LOW
-+	&gpio1 11 GPIO_ACTIVE_LOW
-+	&gpio1 10 GPIO_ACTIVE_LOW
-+	>;
-+	status = "okay";
-+
-+	/* Module slot 1 */
-+	spi@0 {
-+		compatible = "gocontroll,moduline-module-slot";
-+		reg = <0>;
-+		spi-max-frequency = <54000000>;
-+	};
-+
-+	/* Module slot 2 */
-+	spi@1 {
-+		compatible = "gocontroll,moduline-module-slot";
-+		reg = <1>;
-+		spi-max-frequency = <54000000>;
-+	};
-+
-+	adc@2 {
-+		compatible = "microchip,mcp3004";
-+		reg = <2>;
-+		spi-max-frequency = <2300000>;
-+		vref-supply = <&reg_vdd_3v3>;
-+	};
-+};
-+
-+&flexcan1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan1>;
-+	xceiver-supply = <&reg_can1_stby>;
-+	status = "okay";
-+};
-+
-+&flexcan2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan2>;
-+	xceiver-supply = <&reg_can2_stby>;
-+	status = "okay";
-+};
-+
-+/* I2C2 bus to modules */
-+&i2c2 {
-+	clock-frequency = <400000>;
-+	pinctrl-names = "default", "gpio";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	pinctrl-1 = <&pinctrl_i2c2_gpio>;
-+	sda-gpios = <&gpio5 17 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+	scl-gpios = <&gpio5 16 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+	status = "okay";
-+};
-+
-+&i2c4 {
-+	clock-frequency = <400000>;
-+	pinctrl-names = "default", "gpio";
-+	pinctrl-0 = <&pinctrl_i2c4>;
-+	pinctrl-1 = <&pinctrl_i2c4_gpio>;
-+	sda-gpios = <&gpio5 13 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+	scl-gpios = <&gpio5 12 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-+	status = "okay";
-+
-+	tas2505: tas2505@18 {
-+		compatible = "ti,tas2505";
-+		reg = <0x18>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_tas_reset>;
-+		reset-gpios = <&gpio3 24 GPIO_ACTIVE_LOW>;
-+		#sound-dai-cells = <0>;
-+
-+		dv-supply = <&reg_1v8_per>;
-+		iov-supply = <&reg_vdd_3v3>;
-+		av-supply = <&reg_1v8_per>;
-+
-+		clocks = <&clk IMX8MP_CLK_AUDIOMIX_SAI6_MCLK1>;
-+		clock-names = "mclk";
-+		aic32x4-gpio-func= <
-+			0xff
-+			0xff
-+			0xff
-+			0xff
-+			0xff
-+		>;
-+	};
-+
-+	rtc_pcf: rtc@51 {
-+		compatible = "nxp,pcf85063a";
-+		reg = <0x51>;
-+		quartz-load-femtofarads = <7000>;
-+
-+		clock {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <32768>;
-+		};
-+	};
-+};
-+
-+/* tas2505 */
-+&sai6 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_sai6>;
-+	status = "okay";
-+	assigned-clocks = <&clk IMX8MP_CLK_SAI6>;
-+	assigned-clock-parents = <&clk IMX8MP_AUDIO_PLL1_OUT>;
-+	assigned-clock-rates = <12288000>;
-+	fsl,sai-mclk-direction-output;
-+};
-+
-+/* debug/external */
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	uart-has-rtscts;
-+	status = "okay";
-+
-+	/* muRata 1YN/1DX */
-+	bluetooth {
-+		compatible = "infineon,cyw43439-bt", "brcm,bcm4329-bt";
-+		max-speed = <921600>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_bt>;
-+		device-wakeup-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
-+		shutdown-gpios = <&gpio1 14 GPIO_ACTIVE_HIGH>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <12 IRQ_TYPE_EDGE_FALLING>;
-+		interrupt-names = "host-wakeup";
-+		vddio-supply = <&reg_3v3_per>;
-+		vbat-supply = <&reg_3v3_per>;
-+	};
-+};
-+
-+&usb3_0 {
-+	status = "okay";
-+};
-+
-+&usb3_1 {
-+	status = "okay";
-+};
-+
-+&usb3_phy0 {
-+	status = "okay";
-+};
-+
-+&usb3_phy1 {
-+	status = "okay";
-+};
-+
-+&usb_dwc3_0 {
-+	dr_mode = "peripheral";
-+};
-+
-+&usb_dwc3_1 {
-+	dr_mode = "host";
-+};
-+
-+&usdhc2 {
-+	max-frequency = <50000000>;
-+	assigned-clocks = <&clk IMX8MP_CLK_USDHC2>;
-+	assigned-clock-rates = <50000000>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	mmc-pwrseq = <&wifi_powerseq>;
-+	vmmc-supply = <&reg_3v3_per>;
-+
-+	cap-power-off-card;
-+	keep-power-in-suspend;
-+	non-removable;
-+	sd-uhs-sdr25;
-+
-+	status = "okay";
-+
-+	/* muRata 1YN/1DX */
-+	wifi@1 {
-+		compatible = "infineon,cyw43439-fmac", "brcm,bcm4329-fmac";
-+		reg = <1>;
-+		brcm,board-type = "GOcontroll,moduline";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_wl_int>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <13 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-names = "host-wake";
-+	};
-+};
-+
-+&wdog1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_reg_1v8: reg-1v8-grp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_SAI5_MCLK__GPIO3_IO25 /* COM pin 144 */
-+			MX8MP_DSE_X1
-+		>;
-+	};
-+
-+	pinctrl_reg_5v0_sensor: reg-5v0-sensorgrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_SAI1_RXD7__GPIO4_IO09 /* COM pin 108 */
-+			MX8MP_DSE_X1
-+		>;
-+	};
-+
-+	pinctrl_tas_reset: tasresetgrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_SAI5_RXD3__GPIO3_IO24 /* COM pin 143 */
-+			MX8MP_DSE_X1
-+		>;
-+	};
-+
-+	pinctrl_bt: btgrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_GPIO1_IO14__GPIO1_IO14 /* COM pin 27 */
-+			MX8MP_DSE_X1
-+			MX8MP_IOMUXC_GPIO1_IO12__GPIO1_IO12 /* COM pin 34 */
-+			(MX8MP_PULL_UP | MX8MP_PULL_ENABLE | MX8MP_HYS_SCHMITT)
-+			MX8MP_IOMUXC_GPIO1_IO15__GPIO1_IO15 /* COM pin 28 */
-+			MX8MP_DSE_X1
-+		>;
-+	};
-+
-+	pinctrl_ecspi1: ecspi1grp {
-+		fsl,pins = <
-+		MX8MP_IOMUXC_ECSPI1_MOSI__ECSPI1_MOSI /* COM pin 46 */
-+		MX8MP_DSE_X4
-+		MX8MP_IOMUXC_ECSPI1_MISO__ECSPI1_MISO /* COM pin 47 */
-+		(MX8MP_DSE_X4 | MX8MP_HYS_SCHMITT)
-+		MX8MP_IOMUXC_ECSPI1_SCLK__ECSPI1_SCLK /* COM pin 48 */
-+		MX8MP_DSE_X4
-+		MX8MP_IOMUXC_SD2_CD_B__GPIO2_IO12 /* COM pin 51 */
-+		MX8MP_DSE_X1
-+		MX8MP_IOMUXC_GPIO1_IO11__GPIO1_IO11 /* COM pin 162 */
-+		MX8MP_DSE_X1
-+		MX8MP_IOMUXC_GPIO1_IO10__GPIO1_IO10 /* COM pin 161 */
-+		MX8MP_DSE_X1
-+		>;
-+	};
-+
-+	pinctrl_flexcan1: flexcan1grp {
-+		fsl,pins = <
-+			 MX8MP_IOMUXC_SPDIF_RX__CAN1_RX /* COM pin 81 */
-+			 (MX8MP_DSE_X2 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+			 MX8MP_IOMUXC_SPDIF_TX__CAN1_TX /* COM pin 76 */
-+			 (MX8MP_DSE_X2 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+		>;
-+	};
-+
-+	pinctrl_flexcan1_reg: flexcan1reggrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_SAI1_RXD1__GPIO4_IO03 /* COM pin 101 */
-+			(MX8MP_DSE_X2 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+		>;
-+	};
-+
-+	pinctrl_flexcan2: flexcan2grp {
-+		fsl,pins = <
-+			 MX8MP_IOMUXC_UART3_TXD__CAN2_RX /* COM pin 61 */
-+			 (MX8MP_DSE_X2 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+			 MX8MP_IOMUXC_UART3_RXD__CAN2_TX /* COM pin 62 */
-+			 (MX8MP_DSE_X2 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+		>;
-+	};
-+
-+	pinctrl_flexcan2_reg: flexcan2reggrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_ECSPI1_SS0__GPIO5_IO09 /* COM pin 44 */
-+			(MX8MP_DSE_X2 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_I2C2_SCL__I2C2_SCL /* COM pin 41 */
-+			(MX8MP_DSE_X6 | MX8MP_PULL_UP | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENABLE | MX8MP_SION)
-+			MX8MP_IOMUXC_I2C2_SDA__I2C2_SDA /* COM pin 40 */
-+			(MX8MP_DSE_X6 | MX8MP_PULL_UP | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENABLE | MX8MP_SION)
-+		>;
-+	};
-+
-+	pinctrl_i2c2_gpio: i2c2-gpiogrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_I2C2_SCL__GPIO5_IO16 /* COM pin 41 */
-+			(MX8MP_DSE_X6 | MX8MP_PULL_UP | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENABLE | MX8MP_SION)
-+			MX8MP_IOMUXC_I2C2_SDA__GPIO5_IO17 /* COM pin 40 */
-+			(MX8MP_DSE_X6 | MX8MP_PULL_UP | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENABLE | MX8MP_SION)
-+		>;
-+	};
-+
-+	pinctrl_i2c4: i2c4grp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_ECSPI2_MISO__I2C4_SCL /* COM pin 70 */
-+			(MX8MP_DSE_X6 | MX8MP_PULL_UP | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENABLE | MX8MP_SION)
-+			MX8MP_IOMUXC_ECSPI2_SS0__I2C4_SDA /* COM pin 69 */
-+			(MX8MP_DSE_X6 | MX8MP_PULL_UP | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENABLE | MX8MP_SION)
-+		>;
-+	};
-+
-+	pinctrl_i2c4_gpio: i2c4-gpiogrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_ECSPI2_MISO__GPIO5_IO12 /* COM pin 70 */
-+			(MX8MP_DSE_X4 | MX8MP_PULL_UP | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENABLE | MX8MP_SION)
-+			MX8MP_IOMUXC_ECSPI2_SS0__GPIO5_IO13 /* COM pin 69 */
-+			(MX8MP_DSE_X4 | MX8MP_PULL_UP | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENABLE | MX8MP_SION)
-+		>;
-+	};
-+
-+	pinctrl_sai6: sai6grp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_SAI1_TXD6__AUDIOMIX_SAI6_TX_SYNC /* COM pin 95 */
-+			(MX8MP_DSE_X6 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_HYS_SCHMITT)
-+			MX8MP_IOMUXC_SAI1_RXD4__AUDIOMIX_SAI6_TX_BCLK /* COM pin 105 */
-+			(MX8MP_DSE_X6 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_HYS_SCHMITT)
-+			MX8MP_IOMUXC_SAI1_TXD5__AUDIOMIX_SAI6_TX_DATA00 /* COM pin 110 */
-+			(MX8MP_DSE_X6 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_HYS_SCHMITT)
-+			MX8MP_IOMUXC_SAI1_TXD7__AUDIOMIX_SAI6_MCLK /* COM pin 96 */
-+			(MX8MP_DSE_X6 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_HYS_SCHMITT)
-+			MX8MP_IOMUXC_SAI1_RXD5__AUDIOMIX_SAI6_RX_DATA00 /* COM pin 106 */
-+			(MX8MP_DSE_X6 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_HYS_SCHMITT)
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_UART1_RXD__UART1_DCE_RX /* COM pin 60 */
-+			(MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+			MX8MP_IOMUXC_UART1_TXD__UART1_DCE_TX /* COM pin 59 */
-+			(MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+		>;
-+	};
-+
-+	pinctrl_uart2: uart2grp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_UART2_RXD__UART2_DCE_RX /* COM pin 64 */
-+			(MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+			MX8MP_IOMUXC_UART2_TXD__UART2_DCE_TX /* COM pin 63 */
-+			(MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+			MX8MP_IOMUXC_SAI3_RXD__UART2_DCE_RTS /* COM pin 65 */
-+			(MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+			MX8MP_IOMUXC_SAI3_RXC__UART2_DCE_CTS /* COM pin 66 */
-+			(MX8MP_PULL_UP | MX8MP_PULL_ENABLE)
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: pinctrlusdhc2grp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_SD2_CLK__USDHC2_CLK /* COM pin 57 */
-+			(MX8MP_DSE_X2 | MX8MP_FSEL_FAST | MX8MP_PULL_ENABLE)
-+			MX8MP_IOMUXC_SD2_CMD__USDHC2_CMD /* COM pin 56 */
-+			(MX8MP_DSE_X2 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENABLE)
-+			MX8MP_IOMUXC_SD2_DATA0__USDHC2_DATA0 /* COM pin 52 */
-+			(MX8MP_DSE_X2 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENABLE)
-+			MX8MP_IOMUXC_SD2_DATA1__USDHC2_DATA1 /* COM pin 53 */
-+			(MX8MP_DSE_X2 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENABLE)
-+			MX8MP_IOMUXC_SD2_DATA2__USDHC2_DATA2 /* COM pin 54 */
-+			(MX8MP_DSE_X2 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENABLE)
-+			MX8MP_IOMUXC_SD2_DATA3__USDHC2_DATA3 /* COM pin 55 */
-+			(MX8MP_DSE_X2 | MX8MP_FSEL_FAST | MX8MP_PULL_UP | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENABLE)
-+		>;
-+	};
-+
-+	pinctrl_wdog: wdoggrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_GPIO1_IO02__WDOG1_WDOG_B /* COM pin 153 */
-+			(MX8MP_DSE_X6 | MX8MP_PULL_UP | MX8MP_HYS_SCHMITT)
-+		>;
-+	};
-+
-+	pinctrl_wl_int: wlintgrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_GPIO1_IO13__GPIO1_IO13 /* COM pin 36 */
-+			(MX8MP_PULL_UP | MX8MP_HYS_SCHMITT | MX8MP_PULL_ENABLE)
-+		>;
-+	};
-+
-+	pinctrl_wl_reg: wlreggrp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_SD2_RESET_B__GPIO2_IO19 /* COM pin 15 */
-+			MX8MP_DSE_X1
-+		>;
-+	};
-+};
-
+Cheers,
+Matt
 -- 
-2.48.1
-
+Sponsored by the NGI0 Core fund.
 
