@@ -1,85 +1,108 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 130731B21BF;
-	Mon, 24 Feb 2025 03:45:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C66038DE3;
+	Mon, 24 Feb 2025 03:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740368716; cv=none; b=n6jQQQs7Xw2m3TN27z9ErT64COc8Qqqq6lEhpg7SL6lff+2p4k7L5VqCd53nGRHsuvCPv2v91F4XoEd58bOuzdH10lUQZGVAHaEBt/Ek7ZKdXeFoj3P4tKhVDuwfzLcDevUPDWlHie0kOpypC+WqamHrijhsgKxJdpT5yxG+DkQ=
+	t=1740368744; cv=none; b=TB9+Zdku2kiQ92NQGuvvsQ1Cr/xJ0K05h6yQVuVbt5QfiyglOFOpswdSbZIMnEGYkSBubaVvNL/OR/vu0T9SRXf+HYXYyhdozHUi55ZvrYUHZWpfO/MS8hwafIVeopR07uAYTom9ohddUXvYAcvV9SpTVmjcm/B6R4TTBETI9kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740368716; c=relaxed/simple;
-	bh=PjVIVURsiTWXN7S/uHQMS2YiaBnO/xXEB3uw33ifyKo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iekrsflH80Eil6N+/sYm2jJ0MLN+b9mUnnDddwzPQIKBpOoahmszdhOqFOQeryujIwAikuxeyIYZRtYytqopXKeXj5Kd5AuZrqeiLia/WEYX7MHdI6IDqodfgOMYNulAd8e5vt5yS2wIDI5GicJiLDNiJNjccxW2GTu0C0B/O/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=nBl6tJVf; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1740368744; c=relaxed/simple;
+	bh=x36eM8I9mvfh06MWtqJiRZWuU4kR0fM4aRJdD6U8/3A=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=AxaFl9s2iz6Nr0XDZRpNkHKXJmkm90WJuHth6awGfLL3K/alVqG3lpYrKg0JtKfThLVu9fk1NZI7tKlfEPP1Fij8kUTBTryONJG/CcqiJ6ATC8LbKJZW5g7OmUyT96sPnuBUkkJEFaWov+VOdpCeejYfVUZBI19xi1YlF5ImsdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dZ66Gnkx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="nBl6tJVf"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1740368706; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=MtQeeh/3PwVb5Y4qvoWpaZCTj/9V1FHfpbzFSWYE6SE=;
-	b=nBl6tJVfK+Qm/zcxnYKXmbzcYjU8Wtu3rYj85gPTMkUbUo2b/umDf4Y/cHBHHq2NcOB0y8ax/kYKy6h+gq6nKXHwjFYUPele31V5oucM9E+w1wcl11iRmDHr5IqIy0pbsVs3SKD6s1z8bPBCDBOg9argdpd93y4Yfg5YzoH3v/g=
-Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WQ1rZgH_1740368704 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 24 Feb 2025 11:45:04 +0800
-From: Feng Tang <feng.tang@linux.alibaba.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Liguang Zhang <zhangliguang@linux.alibaba.com>,
-	Guanghui Feng <guanghuifeng@linux.alibaba.com>,
-	rafael@kernel.org
-Cc: Markus Elfring <Markus.Elfring@web.de>,
-	lkp@intel.com,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	ilpo.jarvinen@linux.intel.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Feng Tang <feng.tang@linux.alibaba.com>
-Subject: [PATCH v3 3/4] PCI/portdrv: Loose the condition check for disabling hotplug interrupts
-Date: Mon, 24 Feb 2025 11:44:59 +0800
-Message-Id: <20250224034500.23024-4-feng.tang@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250224034500.23024-1-feng.tang@linux.alibaba.com>
-References: <20250224034500.23024-1-feng.tang@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dZ66Gnkx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98399C4CEDD;
+	Mon, 24 Feb 2025 03:45:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740368743;
+	bh=x36eM8I9mvfh06MWtqJiRZWuU4kR0fM4aRJdD6U8/3A=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=dZ66Gnkx4ceRLCODpuOct/FlYIgHKqs09y3VyEDNYAeha11wFWePwaaELtFepl9+4
+	 jHgmYb1wgobZRs68fx2xUSo42mlGXp5LeZdbA7pATs9awNxbbS/uxz1ztkFYUTN4oj
+	 PnprRGqYhqO2eefvXY+Z0u0lZ78dy2w14Iw0W2KSSgNO816Gi2Tum51Ve1u1uQP7BO
+	 nujq0yaUYUivZXPjg0DV+Gh7ujILbkVD3/6JFA27qQnmbnoxooiI3JN4esbPZ4X9y+
+	 wlKpoWNBvVA8QtFog4fqlNwBGOSMDhftxLpAs+Zbz7K+VdV9iHxLyOGM2MKd9L6SBE
+	 7aPO9gLogFY+Q==
+Date: Sun, 23 Feb 2025 21:45:42 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Conor Dooley <conor+dt@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, Maxime Ripard <mripard@kernel.org>, 
+ linux-clk@vger.kernel.org, Will Deacon <will@kernel.org>, 
+ Stephen Boyd <sboyd@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ iommu@lists.linux.dev, Robin Murphy <robin.murphy@arm.com>, 
+ Joerg Roedel <joro@8bytes.org>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Simona Vetter <simona@ffwll.ch>, Stephan Gerhold <stephan@gerhold.net>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ =?utf-8?q?Otto_Pfl=C3=BCger?= <otto.pflueger@abscue.de>, 
+ linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Sean Paul <sean@poorly.run>, 
+ David Airlie <airlied@gmail.com>, Lee Jones <lee@kernel.org>, 
+ Rob Clark <robdclark@gmail.com>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Bjorn Andersson <andersson@kernel.org>
+To: =?utf-8?q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>
+In-Reply-To: <20250224-msm8937-v3-1-dad7c182cccb@mainlining.org>
+References: <20250224-msm8937-v3-0-dad7c182cccb@mainlining.org>
+ <20250224-msm8937-v3-1-dad7c182cccb@mainlining.org>
+Message-Id: <174036873937.769195.3244673416189974329.robh@kernel.org>
+Subject: Re: [PATCH v3 1/8] dt-bindings: clock: qcom: Add MSM8937 Global
+ Clock Controller
 
-Currently when 'pcie_ports_native' and host's 'native_pcie_hotplug' are
-both false, kernel will not disable PCIe hotplug interrupts. But as
-those could be affected by software setup like kernel cmdline parameter,
-remove the depency over them.
 
-Suggested-by: Lukas Wunner <lukas@wunner.de>
-Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
----
- drivers/pci/pcie/portdrv.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On Mon, 24 Feb 2025 02:56:16 +0100, Barnabás Czémán wrote:
+> Add device tree bindings for the global clock controller on Qualcomm
+> MSM8937 platform.
+> 
+> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+> ---
+>  .../bindings/clock/qcom,gcc-msm8937.yaml           | 73 ++++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,gcc-msm8917.h       | 17 +++++
+>  2 files changed, 90 insertions(+)
+> 
 
-diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-index ca4f21dff486..619d06b1b3e8 100644
---- a/drivers/pci/pcie/portdrv.c
-+++ b/drivers/pci/pcie/portdrv.c
-@@ -263,9 +263,9 @@ static int get_port_device_capability(struct pci_dev *dev)
- 
- 	if (dev->is_hotplug_bridge &&
- 	    (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
--	     pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM) &&
--	    (pcie_ports_native || host->native_pcie_hotplug)) {
--		services |= PCIE_PORT_SERVICE_HP;
-+	     pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM)) {
-+		if  (pcie_ports_native || host->native_pcie_hotplug)
-+			services |= PCIE_PORT_SERVICE_HP;
- 
- 		/*
- 		 * Disable hot-plug interrupts in case they have been enabled
--- 
-2.43.5
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Error: Documentation/devicetree/bindings/clock/qcom,gcc-msm8937.example.dts:24.28-29 syntax error
+FATAL ERROR: Unable to parse input tree
+make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/bindings/clock/qcom,gcc-msm8937.example.dtb] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1511: dt_binding_check] Error 2
+make: *** [Makefile:251: __sub-make] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250224-msm8937-v3-1-dad7c182cccb@mainlining.org
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
