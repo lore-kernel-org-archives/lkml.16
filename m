@@ -1,93 +1,67 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404AF163
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 12:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE7C23370F;
+	Mon, 24 Feb 2025 12:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740400533; cv=none; b=JrK7/LA5r1U9jKcH0hPNoG8lpcmLinETwBDmM+8kQvODgdDF6NnBY8UbPqZpU3jchfTX2ssFG4A3DJgIKiasvQRxC3gpSAtO+9USCsvJQT9WEcul1Dk+78FXzICogzxD05P+eFWiU3V98Xu0P0UVua5rMzLQMwOtVwaDxdI4xWA=
+	t=1740400542; cv=none; b=gTkeNogojv0Qqpm2pKkfV6s2CSwIK1vUAqblLEKJrC9O+U0LNFgBCzaIzgK6Lz9gih1lYjNW3bRqspnKhrhEhxhvif52+0lHzICkHLejA9a5svxh3G/JstY0jwG229I76atoY8VHeJXvq+1RT743vv5tC5Y7YFfyr6U0O3iMTiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740400533; c=relaxed/simple;
-	bh=KwGppkIqqXz0kYgGn0M1BZMOQImlHLrnIXG0Z+KbG2M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lMDmMa6mUlJCDKpuaTU5T+HOzFvcQRj6EiW6qatQsPvnnQ66kSCIMbhPvvpDqCKedLct0Vc7krr4BBshVfXzKfziDxKK4RJ3WBZNdPzxbWu1k5qTQW0uW9digkfeNu2g9BbbBoOBzTwENHdF48tlgHIM48APd79ON4kxOoeLueI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kqbO8JF8; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1740400542; c=relaxed/simple;
+	bh=s/KOZT8FuLlCPeUB5JVASVwIWTkII3PCu9vNrjIh9SI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YpIrCi2quXmoyl7Vua4Ndn5PkzLEsqxiceBeg54qn3AGprD9AxV398Gpne/F2RdIsxMhCgxk/u9D1W0lb3xCXXtSeK6v6Ig4FPPrY6F7HN9pd8qrmB7KDC03OjC/G1R4gIhXQewNzsuSNqtlWu9V00sE1hattEHGmQgGwHnNN7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CiPkSzWk; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kqbO8JF8"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-471f1dd5b80so356791cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 04:35:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740400531; x=1741005331; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KwGppkIqqXz0kYgGn0M1BZMOQImlHLrnIXG0Z+KbG2M=;
-        b=kqbO8JF8OhqUknikNpCjoHMnOqp71z20rcW5SX8ja4YmhtaY6PmLGsb4DBpoeUossa
-         7Lpos7Vmr8D0VsjaraGOzL98kso5L1OBNxWLzod1iheySvNf3zUJHFNG7l+b7AriSegx
-         k8r0lORXs7wc5TMQM57va2Wj4aCseLI6JzaV+yVH5Bi20cmt8hk0+ykBAgDzqf0ixh9h
-         D2qEAincAaa9flrg0Z7NeM0+lZjPy7UJOM0LL49W2zEIiKhnV+OnsFkOqLbbki8HOM2o
-         eZvMbW3LK2oM0PkQ74e+8rxvpDzQF14sS5oqOLCandDACfsO/WVfDf/x/wqd9GYKp8EJ
-         fjFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740400531; x=1741005331;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KwGppkIqqXz0kYgGn0M1BZMOQImlHLrnIXG0Z+KbG2M=;
-        b=aGXLincQ8gAXmaRxuCYvMH7Y+JWKYE/LG5N0+VQ3Y4YYXo7JPT619V8PvxRkHxRYup
-         T+xGlRn38SR/7x1EJNVIbxAIXdYYd396qeY4IUTij2g5l/kWyhmpWQIRFkv1Jch7pA72
-         h2jL7ZlO3BxMcvJNEuvhUh6gOPts4A9C3PjQ5kBWAqxmi1HRvOEnoM/32QSdL3byc02n
-         YGET+NyGf8Lb+L05t9j0KrX5YepW2DstgLCE3UeHsMH3T87gwbJmcGhJByvufu7lQyde
-         31OFG6YNxdSkhjJ1sMQAzFAIYZwPrTUoGTtV/oC9pIj0MeO4hrEg0MtJ82XxoTcZItHg
-         lovQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVyfGiFt1XnXgzZR71LsIMdN/MCcjrmDn+nRCmcGQqaRYM3O8cQuF0oNLYf8bmnuPLznifJVVKN3FeAlrw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyj+dQ0YC9Gqx5KtEu4chxy6bJcB2VQXQjf4PVhsGw4D2IXC4CA
-	Gs7FKXImntGTpY4CXWgCAr5xToeiplssH9PyOXoOiXZKXjqchG4PRR7QmSzccHHBvbrDKb3D5D/
-	T1Udb2JBf06MCf+dAjFQhjSKku75nBuZNfG0z
-X-Gm-Gg: ASbGnctvF7djqh3msiqt/9T1IDxvWl+GsNzOSwd7aKrKsKp/VTEf11WmplJkMnTnT5s
-	2k6MPnP74h++OPn8kwKnsG0Nctt4ZUTqTbSWL1xVDAEpZas/OT4UQnmqs+e7tzIwBClo3V/V+uJ
-	33kNC68XjWdOAuDBhzUp6YO5eWwYcuF0UuKTNqSg==
-X-Google-Smtp-Source: AGHT+IEBq+/2+cGisSl+LUqC0WCB2F575B4VRnIur1yE5rC/jkLryxhsyIY0MWbIIqCpavGQ2dpiQ63RFqJZuzk8vjs=
-X-Received: by 2002:a05:622a:5cf:b0:472:7e8:a788 with SMTP id
- d75a77b69052e-472334cf3f3mr6561771cf.12.1740400530926; Mon, 24 Feb 2025
- 04:35:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CiPkSzWk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=KjNIYWV63wd2ETJVPJjYoHVaRj09KcDEXGN6j/BKYZs=; b=CiPkSzWklbhO7mPKl1Jriapzi/
+	h9ZxgOOaJCqDCX7rY6o0B7nUEflSjApS0qhasUcWF4BOkhJEwhaYfuv99XToeUmJQw2+kR6W5WrhW
+	OwHnhVNyz53GmSNgcjiXOMIlxaXMZ0jwdb4zAwnzMZ4zeug+JEniisIxMNgEmiqKuCkxUOCf72gjQ
+	oTHbKpc43qi+xEsISsUdjmrcR0JdWeEOh3E9X9GVJYKXcwRew5f16ANwoYvi3KnMMjz5NxnyR5eZs
+	Kaqfcp2voEqtm9ZcyMIA26TvS5hyeuZL36CiNSnC/JxZQm22QlYAxSDZQwcmduj7p2AXViJBxosAl
+	/Ur+1niw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tmXgO-00000003Bsx-0elI;
+	Mon, 24 Feb 2025 12:35:36 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id B45A4300164; Mon, 24 Feb 2025 13:35:34 +0100 (CET)
+Date: Mon, 24 Feb 2025 13:35:34 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sathvika Vasireddy <sv@linux.ibm.com>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, christophe.leroy@csgroup.eu,
+	npiggin@gmail.com, maddy@linux.ibm.com,
+	linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	llvm@lists.linux.dev
+Subject: Re: [RFC PATCH] objtool: Skip unannotated intra-function call
+ warning for bl+mflr pattern
+Message-ID: <20250224123534.GB17456@noisy.programming.kicks-ass.net>
+References: <20250219162014.10334-1-sv@linux.ibm.com>
+ <20250220195940.ely2l2fpsozd2tuv@jpoimboe>
+ <4bea75bc-d3f6-4972-b644-f9b5a4e8bb77@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250214-clarify-steal-v1-1-79dc5adf1b79@google.com>
- <20250214212647.GB233399@cmpxchg.org> <CA+i-1C3e_JUBBhMDYwrehvLZzLtb9pfgEy8=wQa=9uTBr1-b5g@mail.gmail.com>
- <764394d9-592c-4d68-8910-67362dd8810a@suse.cz>
-In-Reply-To: <764394d9-592c-4d68-8910-67362dd8810a@suse.cz>
-From: Brendan Jackman <jackmanb@google.com>
-Date: Mon, 24 Feb 2025 13:35:17 +0100
-X-Gm-Features: AWEUYZky2EJOd2B_fvbdC3A3HytUwtYJGPvQnMfxZFosmU0qGiqwHe1gWibELZg
-Message-ID: <CA+i-1C3vX=79jCdJOWnR4KJB0zbanjU1p34RxJy8D62g0HZMAw@mail.gmail.com>
-Subject: Re: [PATCH] mm/page_alloc: Clarify some migratetype fallback code
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Mel Gorman <mgorman@techsingularity.net>, Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Yosry Ahmed <yosry.ahmed@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4bea75bc-d3f6-4972-b644-f9b5a4e8bb77@linux.ibm.com>
 
-On Tue, 18 Feb 2025 at 11:20, Vlastimil Babka <vbabka@suse.cz> wrote:
-> Would it make sense to have only "bool *whole_block" parameter of
-> find_suitable_fallback? The value the caller initializes it, it means the
-> current need_whole_block, the value it has upon return it instructs the
-> caller what to do. It would mean __compact_finished() would no longer pass
-> an unused parameter.
+On Fri, Feb 21, 2025 at 02:20:41PM +0530, Sathvika Vasireddy wrote:
 
-I thought I liked this idea but once I tried it out I changed my mind
-- the unused parameter is a bit of noise, but doing the above makes
-the function interface and implementation harder to understand.
+> Also, just out of curiosity, how does x86 do it? Does it not use a branch to
+> next instruction approach?
 
-I also thought of allowing the caller to specify NULL which would have
-the current meaning of only_steal=true, but again I don't think it's
-worth it.
+x86_64 can use LEA like:
 
-So I'll skip this for v2 but we can always extend it later. I think
-it's likely that I'll end up proposing some other change to this
-interface for ASI anyway, let's see.
+  #define _THIS_IP_ ({ unsigned long __here; asm ("lea 0(%%rip), %0" : "=r" (__here)); __here; })
+
+32bit needs to call a function, read the stack value and return.
