@@ -1,100 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFBE26989E;
-	Mon, 24 Feb 2025 11:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09BEF269896
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 11:19:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740395982; cv=none; b=ZQUF/G+9UCIzCBdjt5P7JT14ugRJ2TIWOqTMbcEe6M9Hm8bjAHv53BvpAvNWQmVD6N2WvoZMT0MFcKLkWQn3ZOLcZ9J3dWWbwy5YQqYb4+ptT8tu5P4+qMVm5lJ2LKzzVpgT1z3myKXURvkrOQA/udbJEi5JISYoGp/qTKpF89I=
+	t=1740395982; cv=none; b=JeTk9k+gBYCMXCqI5RXsPztsZfm1xO7A6G7NsLnoq80RZZ6YnvaQHNPDlgiJ1zui3a0rhlminVu1+Rpg9i33Ryp0bNuO5QKS/wNGAFxvys+FaErvRpvTS5vCI5eht7HUZ7Yd+k4E6qUaEeSejZiP5osrmqDk1nZe+S2g/wq8KSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740395982; c=relaxed/simple;
-	bh=drolFrUnzELjeRvHZA7nTEgm8il59EaSZsilGXvRh5Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rIQWWsW6TMm+9MrPFe941OuuUR0yYZdUKI4Pfe272WBjylLcAQC1/pp9nh6kQgRo3AKN4ef/8Q+P5Z+uo0/cuGAC+y3vem2elh6TNQgrgZnL5Uh1tDK6z3nXtmDNBdzx8/rqN+dJkcYFSX8SeKpzuD/tg3NJRsQi/6/5oF2/Mho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oxJ54hKp; arc=none smtp.client-ip=10.30.226.201
+	bh=nbthR7RhGoVVTUAl39Aagc6UcJUc0m+dmOqj/KUfZkI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Pz2fi/Btr+pl16pCk13eIF7P7vq9PbKl8nRhyRprh7yt8jv3g5if6IbwhZIc0qPEKJ66zKRz5NtrhEoqwI3h7k0o5aQW34ZuLIQtEDxzt5K02gSRV3FAtM/HnuxJ2Edolj+0hr4iCegKe4IDf2FnXuweFX06T+a1CCAmytlnewg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0VZ4GezC; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oxJ54hKp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1793AC4CED6;
-	Mon, 24 Feb 2025 11:19:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740395981;
-	bh=drolFrUnzELjeRvHZA7nTEgm8il59EaSZsilGXvRh5Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oxJ54hKpj4advWGz2FH/1grdIBVgLcCeCdGMzOnDtH3RQ4MVUZRrFHcTxwBA5Qr/r
-	 krotwHAhoJhTjxQByJf7NvbiqrKOQTL+stDnUdnb3q0BytLu61kh3a3oz5jTq1HrU3
-	 d6EYovVH3y1qcbZtsdMJYC2jqcllLUqyXbV53a0TPZHd+YNQPfuw0KIoPZ1LaczRR6
-	 31k42su+l/2ODJDPZvhxM/C87kj2tLfT1G11Emxoe7I8/9n5wdHV/zDu8dpFcEyRCr
-	 JAKjJKvwEzz2462uy3ZujohEYFRv1fb5kJVit1AWfwpGRrBqYtwyIWeKzHlB1RI2NZ
-	 8qXkhD8N7kR6Q==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Terry Cheong <htcheong@chromium.org>,
-	Bard Liao <yung-chuan.liao@linux.intel.com>,
-	Johny Lin <lpg76627@gmail.com>,
-	=?UTF-8?q?P=C3=A9ter=20Ujfalusi?= <peter.ujfalusi@linux.intel.com>,
-	Mark Brown <broonie@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	lgirdwood@gmail.com,
-	ranjani.sridharan@linux.intel.com,
-	daniel.baluta@nxp.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	pierre-louis.bossart@linux.dev,
-	peterz@infradead.org,
-	sound-open-firmware@alsa-project.org,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 09/20] ASoC: SOF: Intel: hda: add softdep pre to snd-hda-codec-hdmi module
-Date: Mon, 24 Feb 2025 06:19:02 -0500
-Message-Id: <20250224111914.2214326-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250224111914.2214326-1-sashal@kernel.org>
-References: <20250224111914.2214326-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0VZ4GezC"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-439a1e8ba83so40395435e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 03:19:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740395979; x=1741000779; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rKNwKhh4dEnTxVcOajigIGSRE5tzPUoKtH97+XkBOAY=;
+        b=0VZ4GezCHOwKdwLfQ5VDyjZVSCXbOP0WjrkfEAJDlxXvGmbi4j89u6ULlqzWekFGQD
+         /RpJSkB/zWldxW2cGeVLX6xjkT96koI3DmOo9BmTmsVlkFJ0EXxVr+LseevM519Ooz7d
+         gH3eFRNhS4+E+0j01rFtHiGcyDxOG5k7LcsFA9Wty53FHACDYX5xku8QbM7lJTmdbG/N
+         wJmsoTTXzu64C2KOLCp8JvWh0q75bK1YNz3AzGkqNKyI/SCuAGwo8n0d9uePwxhNm+zJ
+         wmDWnqR1JHaI99ygIE1AlHk0hSFmdix2n+FhQvnXcGy88RVByyDcoO4sRVSzTJBV3kVS
+         +vgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740395979; x=1741000779;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rKNwKhh4dEnTxVcOajigIGSRE5tzPUoKtH97+XkBOAY=;
+        b=QVE2qB0bEeEvONrAwXAbek6DcL6YXA6E+tlf+eNHMPxKIR01RlShMhYqQYga8pwDwa
+         4dKhS7JvZZGLTZpLtNh6LCEwmY8AHuaE2oAXvKk8w3rvDz1GVxTSWqvFvuS7BM8/zkQa
+         886s1G9Pum8S5SPEHNFKUQ3dAxoMkzV2OPhr63bsonVoMDNg5Dch70oSZllHHxRwYyKP
+         thE05mTfkzhfRqSZsUVd5yveu/EMGoWFqKyP48C9Nb/WsqQ3wDrrTQYm9feube2SILA8
+         mb6e26IlPrm7Wh025RdL0IW0qSKrQHVXe/i1sDVyc5DHG0Osf2wNXVXR14makXcAnl8K
+         Rg1A==
+X-Gm-Message-State: AOJu0YyrpCHC5oVn04wMazfya/e3KFbwlHNCnNlpAVnOZKZpBRzpoSbG
+	JlbWAQWt7qF2dkTwPNKQrNU0Vg0h5fzbyUxmAyXBK8s4Qyl1uPR3A5IYrGIbHdkei1F8dtzaPQC
+	EVMnlf+WNJPgaiLwA+Pu2r3EfFIq5KmhYKROh
+X-Gm-Gg: ASbGncvtH7XIzYniVOIDdyrDw4y0cMrI4+HZjckJNcEz/Ogp5Uk4qcG1P1917H7SG0h
+	YAQNRqj/p+cAQOAS1FsgU+lBYsUOJsBDc59lrvbtYUQaUC/K65vgPW+Np/WRaw4e89hm2NusDfS
+	K+URs/RcctUPoIcb9tJzs1JEL39xTxnbCfcl6r
+X-Google-Smtp-Source: AGHT+IHfngivAfolpBCcXGBcAYbBekzzGYNr0zyvzMbAGXe+oiu7MNfqwRvlRvu1E0aoJ70PuTQ8YmFBD7fGj1cJG6E=
+X-Received: by 2002:a05:6000:154e:b0:38f:4d20:4a17 with SMTP id
+ ffacd0b85a97d-38f70799935mr9568176f8f.13.1740395979256; Mon, 24 Feb 2025
+ 03:19:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.79
-Content-Transfer-Encoding: 8bit
+References: <20250223072114.3715-1-boqun.feng@gmail.com>
+In-Reply-To: <20250223072114.3715-1-boqun.feng@gmail.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 24 Feb 2025 12:19:27 +0100
+X-Gm-Features: AWEUYZlG3dBja0S9lUuTrhyjnlqfO-rrsKw667VUMX7yjVkDuivZCQ1hf-oSPHg
+Message-ID: <CAH5fLgi2iXKg+Mwze41KHk1rLa1=f7=ofhbq_wz6mxmC4GNe6w@mail.gmail.com>
+Subject: Re: [PATCH] rust: sync: lock: Add an example for Guard::lock_ref()
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
+	Waiman Long <longman@redhat.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Terry Cheong <htcheong@chromium.org>
+On Sun, Feb 23, 2025 at 8:21=E2=80=AFAM Boqun Feng <boqun.feng@gmail.com> w=
+rote:
+>
+> To provide examples on usage of `Guard::lock_ref()` along with the unit
+> test, an "assert a lock is held by a guard" example is added.
+>
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 
-[ Upstream commit 33b7dc7843dbdc9b90c91d11ba30b107f9138ffd ]
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 
-In enviornment without KMOD requesting module may fail to load
-snd-hda-codec-hdmi, resulting in HDMI audio not usable.
-Add softdep to loading HDMI codec module first to ensure we can load it
-correctly.
+> This depends on Alice's patch:
+>
+>         https://lore.kernel.org/all/20250130-guard-get-lock-v1-1-8ed87899=
+920a@google.com/
+>
+> I'm also OK to fold this in if Alice thinks it's fine.
 
-Signed-off-by: Terry Cheong <htcheong@chromium.org>
-Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Reviewed-by: Johny Lin <lpg76627@gmail.com>
-Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
-Link: https://patch.msgid.link/20250206094723.18013-1-peter.ujfalusi@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/sof/intel/hda-codec.c | 1 +
- 1 file changed, 1 insertion(+)
+I think we can just keep two patches :)
 
-diff --git a/sound/soc/sof/intel/hda-codec.c b/sound/soc/sof/intel/hda-codec.c
-index 328d7c227b218..82a6707fb4b80 100644
---- a/sound/soc/sof/intel/hda-codec.c
-+++ b/sound/soc/sof/intel/hda-codec.c
-@@ -444,6 +444,7 @@ int hda_codec_i915_exit(struct snd_sof_dev *sdev)
- }
- EXPORT_SYMBOL_NS_GPL(hda_codec_i915_exit, SND_SOC_SOF_HDA_AUDIO_CODEC_I915);
- 
-+MODULE_SOFTDEP("pre: snd-hda-codec-hdmi");
- #endif
- 
- MODULE_LICENSE("Dual BSD/GPL");
--- 
-2.39.5
-
+Alice
