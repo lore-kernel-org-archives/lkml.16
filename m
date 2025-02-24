@@ -1,308 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE6E19D8BE;
-	Mon, 24 Feb 2025 13:23:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F82E24886D;
+	Mon, 24 Feb 2025 13:24:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740403409; cv=none; b=s2s28uQYzrF1kCctGbG6cEaF1RMJ/6Jl4xDehrXuT/yOzU376xA6KorfOOxT0bzEn2ToylJrNchTqSe7JOSt7qMf+R8o6rklPHKzIhjBig3it0AMbhmUl6Hr90PaxkOpIGsV3Jjr0qg+dGDs7fCf3dPLDoQ8iWWEWbGMqB/C4lo=
+	t=1740403456; cv=none; b=YOCQspX/5qtQcTBaOdKgwGKyZWnkdinTQy5JbcbWoA1S09d2UgM3lD3u/Cc9kNSsO71eHk6ej7hxBw08DWNSR/b+fxVuQX+Ml+ZSKvaE8SBpPfI6gk9hi2HSfVn8dwrw1a0eVetaM7YXQeiGrue8Y3XU+vMV2tV69I5w6WhQ1R4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740403409; c=relaxed/simple;
-	bh=otL8qnjlip9+uUZetH2yJjYrOd8m4ifjYcTxxT7VZwY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=K1zXFEHkpq+q5gRLATL+0MoIRGYqZHPbi7LzpIOptMgTMdzhgOOVGBiFM/lLGqM8Z0MFQXMtKd2h90h9YbZe/L5cfRVi4y172olq5OsoUKgTkrQxu4LCQn7UDxqfYYJSLz+DLahc4bZLY9UT8cfHi+DDeObx3nbfL2/faP8DkZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eF7FF3Bt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740403456; c=relaxed/simple;
+	bh=1k6wjU0I1KWrs2CqF0lxTRBsEKFiGTnFa6NfOjTfvFg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ix+LZILOXgXIdW3Q9i/vi8bDakVUz7MhKHmxT0FAGiq6hP3s7WSSx1JE4CTQBfZe49kkzm23B1eqg8j3g6gBqoaTxMiOtnygpm09sbPGxEKUgUpOdPnVzu/JB6qRJHqXkcKhgTR1JHG+pawH8brR1Fe3o6/icglL3E2CShwE+pM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iS/A260A; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eF7FF3Bt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67A3BC4CED6;
-	Mon, 24 Feb 2025 13:23:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740403409;
-	bh=otL8qnjlip9+uUZetH2yJjYrOd8m4ifjYcTxxT7VZwY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=eF7FF3Bt712Qhq5XiFG7I4j0TBw0p2hkYgLkK3BRylDwVMGedCi2+qA+crGvHbsc4
-	 QFJfjjgC5BE5wCOkci4IjqddPAJBSt28AMnnvJ6yK1rywfVyq/sbt6VEkO0xtWPDiP
-	 nilEbIEgMfud4iX84YumCvFzYVSWBNlAp2Z7DkEyO2FalfFN5ziJiflukDObVlTJmO
-	 U20NM5sLkaNFPRbw4kBt2P7N9pd/2soY1vzfuV8mLJ0oTDD3QkuXpphTOPyK++hMAw
-	 CpUmyixyZ8XukCFWCGvsEMlP33YPjibh0PrVVO6pIcuSEFcnG53+GQhtixwn3gbYro
-	 StuEJMK/ahnIg==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Mon, 24 Feb 2025 14:21:53 +0100
-Subject: [PATCH v4 3/4] rust: configfs: add a sample demonstrating configfs
- usage
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iS/A260A"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=OwmwOu+Cjzvd/Dyh2oCLg1P9uzBvkTbz8Qibak6RkKs=; b=iS/A260A40VI6SQ9dsr0Pe2Ec0
+	+4I/Bpalp0CX65hp2mHNsbxfdLQ3ZQMp/MO3XTCmulOZ1LdYifv6XmmjBsEkUzc7/Ofye9OegILGU
+	jhMbWZFAabjv9F1E7Tdsq+St//fzgpJbTghlaQ08rLhkZfj4YHNl3RsAgWE0X2VcL1qmU/ZGIqy9s
+	q3djqUzHMEgyRNxqJ4zMlGJrlo+rBDv3+zWiBCnZolwsUOv1flDL0UYKwJjrhfaGLVZBSL82vN7Ui
+	z/ItUQgAbHGrhpvvZGv/LP7zX+kb01JmoNnF7MGJbWqiG9NuEPEKF3SG3il1lVkgYfzh0ukPwqkvp
+	tlhJKBVg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tmYR9-00000007Gtp-2twK;
+	Mon, 24 Feb 2025 13:23:55 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id B2A18300164; Mon, 24 Feb 2025 14:23:54 +0100 (CET)
+Date: Mon, 24 Feb 2025 14:23:54 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: Zijun Hu <quic_zijuhu@quicinc.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Will Deacon <will@kernel.org>,
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Nick Piggin <npiggin@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Jamal Hadi Salim <jhs@mojatatu.com>,
+	Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>,
+	Thomas Graf <tgraf@suug.ch>, Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-arch@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org, netdev@vger.kernel.org,
+	linux-wireless@vger.kernel.org, linux-rdma@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+	iommu@lists.linux.dev, linux-mtd@lists.infradead.org
+Subject: Re: [PATCH *-next 01/18] mm/mmu_gather: Remove needless return in
+ void API tlb_remove_page()
+Message-ID: <20250224132354.GC11590@noisy.programming.kicks-ass.net>
+References: <20250221-rmv_return-v1-0-cc8dff275827@quicinc.com>
+ <20250221-rmv_return-v1-1-cc8dff275827@quicinc.com>
+ <20250221200137.GH7373@noisy.programming.kicks-ass.net>
+ <8f36be7c-6052-4c5d-85ff-0eed27cf1456@icloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250224-configfs-v4-3-9af9b5e611f6@kernel.org>
-References: <20250224-configfs-v4-0-9af9b5e611f6@kernel.org>
-In-Reply-To: <20250224-configfs-v4-0-9af9b5e611f6@kernel.org>
-To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Joel Becker <jlbec@evilplan.org>, 
- Christoph Hellwig <hch@lst.de>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
- Waiman Long <longman@redhat.com>, Fiona Behrens <me@kloenk.dev>, 
- Charalampos Mitrodimas <charmitro@posteo.net>, 
- Daniel Almeida <daniel.almeida@collabora.com>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6447; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=otL8qnjlip9+uUZetH2yJjYrOd8m4ifjYcTxxT7VZwY=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBnvHJ4zCRWFkBVtZJzM5npHVoAndyA7slVLRbEQ
- I5RYlkbRI+JAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7xyeAAKCRDhuBo+eShj
- d5LqD/9nZ97+EJf4Z8oycCR3vaz7rWJXOpmijX9jy5x9EDZKi3OhVou2WPZQMkNSoMQFBWVXF8Z
- qIWRWBAN6vcTJ6VUk1uAuqo4zAF13h2sywuMdfL2dFMI7P+o/6i8NcPDNR4Jh4ZUQdTd4fRmeDn
- m32u2EzgaG7YFQ2zsF6UTmkpGlJ/CGok5NkT7s81bZTu2lFYRxTfguE7pgEhLzFSjyHkMlQhZeA
- e90PsqSfYWELDK5RySqmknH/pEgr+8zmNcP9nge2X1dWZsNgGqBi6DR7Dk4n8fGLGtV/S+QJatZ
- qrXTVyNqDGOya0ukfPMvt4svVsX0FUeEXEfvNTPk0xSDQCnYbs922u+tOV8Aj6WD6+htIR6i2zF
- zRhHwbErNXfoS4mvCvVocAZGrlLGDpaJEokwLZtjP3hMQfwPlkpG4Me6CaeBKZIQ8p+u8Wep6wX
- RiN0wnChLi9A9+pYEjmY/Nh/plGvAaI67oJF93e3uupZKfTQ6gegB4CnBS++55WNMFegY/ZJ2aR
- Vm2hwqD08u8X7n1E5gMj9JqGk5ZFnrjCSLx6svUqKbfk1yc0LGRuldSnqHMAgSqaeP5/cxGagmI
- 8v8Ack54H9CcuCBht36sbBI9siJ2JJloPRrnYL58BxjcN48CnUMBX32PWwmCA+TusPJH8sUt6iY
- REhswEwez7qA52A==
-X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
- fpr=3108C10F46872E248D1FB221376EB100563EF7A7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8f36be7c-6052-4c5d-85ff-0eed27cf1456@icloud.com>
 
-Add a sample to the samples folder, demonstrating the intended use of the
-rust configfs API.
+On Sat, Feb 22, 2025 at 07:00:28PM +0800, Zijun Hu wrote:
+> On 2025/2/22 04:01, Peter Zijlstra wrote:
+> >>   */
+> >>  static inline void tlb_remove_page(struct mmu_gather *tlb, struct page *page)
+> >>  {
+> >> -	return tlb_remove_page_size(tlb, page, PAGE_SIZE);
+> >> +	tlb_remove_page_size(tlb, page, PAGE_SIZE);
+> >>  }
+> > So I don't mind removing it, but note that that return enforces
+> > tlb_remove_page_size() has void return type.
+> >
+> 
+> tlb_remove_page_size() is void function already. (^^)
 
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
----
- samples/rust/Kconfig          |  11 +++
- samples/rust/Makefile         |   1 +
- samples/rust/rust_configfs.rs | 179 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 191 insertions(+)
+Yes, but if you were to change that, the above return would complain.
 
-diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
-index 918dbead2c0b..2f97bf9a7b4c 100644
---- a/samples/rust/Kconfig
-+++ b/samples/rust/Kconfig
-@@ -10,6 +10,17 @@ menuconfig SAMPLES_RUST
- 
- if SAMPLES_RUST
- 
-+config SAMPLE_RUST_CONFIGFS
-+	tristate "Configfs sample"
-+	depends on CONFIGFS_FS
-+	help
-+	  This option builds the Rust configfs sample.
-+
-+	  To compile this as a module, choose M here:
-+	  the module will be called rust_configfs.
-+
-+	  If unsure, say N.
-+
- config SAMPLE_RUST_MINIMAL
- 	tristate "Minimal"
- 	help
-diff --git a/samples/rust/Makefile b/samples/rust/Makefile
-index 5a8ab0df0567..72122f010caf 100644
---- a/samples/rust/Makefile
-+++ b/samples/rust/Makefile
-@@ -6,6 +6,7 @@ obj-$(CONFIG_SAMPLE_RUST_MISC_DEVICE)		+= rust_misc_device.o
- obj-$(CONFIG_SAMPLE_RUST_PRINT)			+= rust_print.o
- obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI)		+= rust_driver_pci.o
- obj-$(CONFIG_SAMPLE_RUST_DRIVER_PLATFORM)	+= rust_driver_platform.o
-+obj-$(CONFIG_SAMPLE_RUST_CONFIGFS)		+= rust_configfs.o
- 
- rust_print-y := rust_print_main.o rust_print_events.o
- 
-diff --git a/samples/rust/rust_configfs.rs b/samples/rust/rust_configfs.rs
-new file mode 100644
-index 000000000000..36a2c848a979
---- /dev/null
-+++ b/samples/rust/rust_configfs.rs
-@@ -0,0 +1,179 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Rust configfs sample.
-+
-+use kernel::alloc::flags;
-+use kernel::c_str;
-+use kernel::configfs;
-+use kernel::configfs_attrs;
-+use kernel::new_mutex;
-+use kernel::page::PAGE_SIZE;
-+use kernel::prelude::*;
-+use kernel::sync::Mutex;
-+
-+module! {
-+    type: RustConfigfs,
-+    name: "rust_configfs",
-+    author: "Rust for Linux Contributors",
-+    description: "Rust configfs sample",
-+    license: "GPL",
-+}
-+
-+#[pin_data]
-+struct RustConfigfs {
-+    #[pin]
-+    config: configfs::Subsystem<Configuration>,
-+}
-+
-+#[pin_data]
-+struct Configuration {
-+    message: &'static CStr,
-+    #[pin]
-+    bar: Mutex<(KBox<[u8; PAGE_SIZE]>, usize)>,
-+}
-+
-+impl Configuration {
-+    fn new() -> impl PinInit<Self, Error> {
-+        try_pin_init!(Self {
-+            message: c_str!("Hello World\n"),
-+            bar <- new_mutex!((KBox::new([0; PAGE_SIZE], flags::GFP_KERNEL)?, 0)),
-+        })
-+    }
-+}
-+
-+impl kernel::InPlaceModule for RustConfigfs {
-+    fn init(_module: &'static ThisModule) -> impl PinInit<Self, Error> {
-+        pr_info!("Rust configfs sample (init)\n");
-+
-+        let item_type = configfs_attrs! {
-+            container: configfs::Subsystem<Configuration>,
-+            data: Configuration,
-+            child: Child,
-+            attributes: [
-+                message: 0,
-+                bar: 1,
-+            ],
-+        };
-+
-+        try_pin_init!(Self {
-+            config <- configfs::Subsystem::new(
-+                c_str!("rust_configfs"), item_type, Configuration::new()
-+            ),
-+        })
-+    }
-+}
-+
-+#[vtable]
-+impl configfs::GroupOperations for Configuration {
-+    type Child = Child;
-+
-+    fn make_group(&self, name: &CStr) -> Result<impl PinInit<configfs::Group<Child>, Error>> {
-+        let tpe = configfs_attrs! {
-+            container: configfs::Group<Child>,
-+            data: Child,
-+            child: GrandChild,
-+            attributes: [
-+                baz: 0,
-+            ],
-+        };
-+
-+        Ok(configfs::Group::new(name.try_into()?, tpe, Child::new()))
-+    }
-+}
-+
-+#[vtable]
-+impl configfs::AttributeOperations<0> for Configuration {
-+    type Data = Configuration;
-+
-+    fn show(container: &Configuration, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
-+        pr_info!("Show message\n");
-+        let data = container.message;
-+        page[0..data.len()].copy_from_slice(data);
-+        Ok(data.len())
-+    }
-+}
-+
-+#[vtable]
-+impl configfs::AttributeOperations<1> for Configuration {
-+    type Data = Configuration;
-+
-+    fn show(container: &Configuration, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
-+        pr_info!("Show bar\n");
-+        let guard = container.bar.lock();
-+        let data = guard.0.as_slice();
-+        let len = guard.1;
-+        page[0..len].copy_from_slice(&data[0..len]);
-+        Ok(len)
-+    }
-+
-+    fn store(container: &Configuration, page: &[u8]) -> Result {
-+        pr_info!("Store bar\n");
-+        let mut guard = container.bar.lock();
-+        guard.0[0..page.len()].copy_from_slice(page);
-+        guard.1 = page.len();
-+        Ok(())
-+    }
-+}
-+
-+#[pin_data]
-+struct Child {}
-+
-+impl Child {
-+    fn new() -> impl PinInit<Self, Error> {
-+        try_pin_init!(Self {})
-+    }
-+}
-+
-+#[vtable]
-+impl configfs::GroupOperations for Child {
-+    type Child = GrandChild;
-+
-+    fn make_group(&self, name: &CStr) -> Result<impl PinInit<configfs::Group<GrandChild>, Error>> {
-+        let tpe = configfs_attrs! {
-+            container: configfs::Group<GrandChild>,
-+            data: GrandChild,
-+            attributes: [
-+                gc: 0,
-+            ],
-+        };
-+
-+        Ok(configfs::Group::new(
-+            name.try_into()?,
-+            tpe,
-+            GrandChild::new(),
-+        ))
-+    }
-+}
-+
-+#[vtable]
-+impl configfs::AttributeOperations<0> for Child {
-+    type Data = Child;
-+
-+    fn show(_container: &Child, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
-+        pr_info!("Show baz\n");
-+        let data = c"Hello Baz\n".to_bytes();
-+        page[0..data.len()].copy_from_slice(data);
-+        Ok(data.len())
-+    }
-+}
-+
-+#[pin_data]
-+struct GrandChild {}
-+
-+impl GrandChild {
-+    fn new() -> impl PinInit<Self, Error> {
-+        try_pin_init!(Self {})
-+    }
-+}
-+
-+#[vtable]
-+impl configfs::AttributeOperations<0> for GrandChild {
-+    type Data = GrandChild;
-+
-+    fn show(_container: &GrandChild, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
-+        pr_info!("Show baz\n");
-+        let data = c"Hello GC\n".to_bytes();
-+        page[0..data.len()].copy_from_slice(data);
-+        Ok(data.len())
-+    }
-+}
+> > It might not be your preferred coding style, but it is not completely
+> > pointless.
+> 
+> based on below C spec such as C17 description. i guess language C does
+> not like this usage "return void function in void function";
 
--- 
-2.47.0
-
-
+This is GNU extension IIRC. Note kernel uses GNU11, not C11
