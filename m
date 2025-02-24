@@ -1,435 +1,279 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36D5EACE
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 03:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 943D21F60A
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 03:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740367265; cv=none; b=KndGTg9wYr3CnqzB+y8ay/xKnUEDoZgminvwv3mBRk1mw8+W9VVp/yxcqBrJKkwF6+eDEhmytrzQQ2sLNpslQh7fcFTkeaf/JxZPqAVwhErdYOp6L7n76aO6N/UyTuyGtymu00au3u3snL/Fi7ja+wxrr7hKTTdWEOd+RH9RLjg=
+	t=1740367284; cv=none; b=TLmRG8UhdtY88Z49+gYH8udpr5xpmVMyJfpmAVI1NrSCFwkU0JT2cNp+f+a2/lz7g03CrMsHi4Lg6+1nU8a8e9muDX83fK9oSCOAJO4QbX5VrK9oz3o5ueHmsFuNw70eA0+nYeBTFOoZSn/gdnftS3l146tH8p8IeoFg0YP76gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740367265; c=relaxed/simple;
-	bh=12UbkbL3ozhmpAXcWhDiB6a+27sLxl6aSj4n9qWN8hc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=af5Gk5UEdxXEz6vC0rKyGr7CLeDhIANz4xx8lhGg/YbNwt7jxekZR+lqNmgw54dG/8vcErwICrjtVJfus0YX5a7W6Xtm7XdZr88j888vbsP3biBO2OZS/SW2UXXUps1OffXRMX0DT4CXBXFEfJz2ylgTMWheFoSO9/Kt3JFI49k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fS/B//x2; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1740367284; c=relaxed/simple;
+	bh=W4ca4oW65YYqQWy5xhSy+jnufiB8cod9j3uzuvjto/Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FQtqOZDGJ8tihldXBVBBge2xiv48fSzsDEb9zOMaS6lU1dS1/W9KzEFT901gxXmGSqgHicAQVEzCT1i75dy+Ro++6CEPnsVM3ZyX6fuiOZX+1jgbpxiGKAje//3/0u85IyeRgTYAyYPek0/0dneNDBnED7AIKmgoYRn7ApRi2nE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QlOJOU3o; arc=none smtp.client-ip=115.124.30.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fS/B//x2"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e589c258663so4247494276.1
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 19:21:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740367263; x=1740972063; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jj056RohTndyRUjZE+5/HofNr1PVX5M2m/PLSiWGtqU=;
-        b=fS/B//x2U0Khu1SXSzw/En7lGTsLOs2RynmWlZRSoEEW6Kc10xjF932sWCdAVQE1Gu
-         ogdLAeF+eJsLNXaOoEYqchP+FbVjFgYjvPJ7F1qVan6Umd1Qe0hkhVsGwg2594AoZNST
-         E8FIuL9iLZWB/+paqGqxFUUMkCggWmgZio5LyyVhLJSkgwGAW4VPkIHgHr9VfwdNdfbo
-         WsiNRABMe66qoVzDttF5vFqlTJCkAQdVz1mdSKMX7R95KqyZETmZNplYrlPTxtknZWQN
-         uPiqJrmeYlVAUgx1BBiSJWfSATznEa938KMvJZRv3AVTYbQizGBgqaUILEJqOCossIr5
-         UjCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740367263; x=1740972063;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jj056RohTndyRUjZE+5/HofNr1PVX5M2m/PLSiWGtqU=;
-        b=SVxeqpl092FQQPGL9zTRcS8nD3P1aXZdnQ5qkfcxX0Lp+WR/nkAoTVc1SpJvI7rY9d
-         zNcOSkR4F+7fedatdcbw8aGteIqVIbmueYNFkShomEsi6dEZ1/1EX4OfUJKf50yuxtJF
-         QLpOHl6nyejD2BQEBvnWZ5BCoJD3O3fuUaPsBKD69K7AkEZV5oUcwKnzo7a0mDO/yl2F
-         gyJ1hnXKOq4L7HTUU+Ku7FoEK6TNjsbBoFQcfdZ4nZH0nyg2mV/eXbi5KjTFqLEZW+i0
-         f9UEeKrB1ChOZbNbqcFQ8IpYnDoA/mYs7j9AShthMDWi+/Su1aRs1XCZmA3nDEhTd+dt
-         nSsw==
-X-Forwarded-Encrypted: i=1; AJvYcCV1z3251v/0Q9zcoLwBgyzNuXLNsZZAjtyUWgAcw1Z0b/hSnRRwtDaK7MBVJFMrWtASHfiwnqOv7LhDgzk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz23UKL/sSHbo1GgiW/R1LY7P8lGGex/71ASI06vaIjued1TMz9
-	Shov2+zPDAGfZ/Y2NrkFSQeCAFKLFaCjhlYsgNpk7VnSv0thkUtUsrOUcRZ/tns6zDDRaqtti1L
-	GtC4UIEnH1XPSoRbgDqnQ3ZQUWev5gw3pI7D3
-X-Gm-Gg: ASbGnctAR8arUMjmBjXlaZfoRS93h0jyhT2aVj/yMNQ/PS+CAuQ0P00itrWrUBrq8Uh
-	N9k8SDwSh6zWx/xyYF0OdFO4aeNnUGsGrxJmjSGQ0Xzuw1J61GnBT1HIcunmwhfTIhuqmxHDpw9
-	b56nRQKgl+
-X-Google-Smtp-Source: AGHT+IGnpdeKq2mo7hAEXDBjgVX9tl9uUGDpTCVsHdsl0G227e7Jqs4YHua8P9eDNAop3fdhmDQOHcglbkMATWuYg98=
-X-Received: by 2002:a05:6902:330e:b0:e5d:d78d:e973 with SMTP id
- 3f1490d57ef6-e5e24603d97mr7300604276.26.1740367262652; Sun, 23 Feb 2025
- 19:21:02 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QlOJOU3o"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1740367272; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=lFVUl0ChxVPHiYmaZIlNnh/aUnisCGgY8HqFbQrRlVs=;
+	b=QlOJOU3oWq7PLwWZn8mZhPCGOEtOXW1ipHGA5Guxrqwh+lg4nxlDElrfrT231OD2YRZuMz5FCbr/tQzMI0snBdTCOumBUpTT0HV2kGtkOfsOLk8XpYpIinJwLVZ9dU5kA50QSy9Qs8ie1MxA7b+mIlZg4g6TFxmOzGPf0uzfqzE=
+Received: from 30.74.144.138(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WQ1wH7x_1740367269 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 24 Feb 2025 11:21:10 +0800
+Message-ID: <731904cf-d862-4c0e-ae5b-26444faff253@linux.alibaba.com>
+Date: Mon, 24 Feb 2025 11:21:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224022447.1141413-1-chharry@google.com> <CABBYNZJUd1wU0wyPugz4E_WNQsg9qTJmWdu4k2GvvvgVFG8GPQ@mail.gmail.com>
-In-Reply-To: <CABBYNZJUd1wU0wyPugz4E_WNQsg9qTJmWdu4k2GvvvgVFG8GPQ@mail.gmail.com>
-From: Hsin-chen Chuang <chharry@google.com>
-Date: Mon, 24 Feb 2025 11:20:36 +0800
-X-Gm-Features: AWEUYZl51rPOFQXi2SPqEUmqy9Trb-3m1-BiRtYrOmoEmVRAKatwV-oaYNfl08M
-Message-ID: <CADg1FFfMRwrGjWkhqbiZsfwV5p3axz0bqvPu-vNSSFJyObaN5w@mail.gmail.com>
-Subject: Re: [PATCH] Bluetooth: btusb: Configure altsetting for USER_CHANNEL
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: linux-bluetooth@vger.kernel.org, gregkh@linuxfoundation.org, 
-	chromeos-bluetooth-upstreaming@chromium.org, 
-	Hsin-chen Chuang <chharry@chromium.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	Ying Hsu <yinghsu@chromium.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Hang when swapping huge=within_size tmpfs from zram
+To: Kairui Song <ryncsn@gmail.com>, "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
+Cc: Lance Yang <ioworker0@gmail.com>, linux-mm@kvack.org,
+ Daniel Gomez <da.gomez@samsung.com>, Barry Song <baohua@kernel.org>,
+ David Hildenbrand <david@redhat.com>, Hugh Dickins <hughd@google.com>,
+ Kefeng Wang <wangkefeng.wang@huawei.com>,
+ Matthew Wilcox <willy@infradead.org>, Ryan Roberts <ryan.roberts@arm.com>,
+ linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ "ziy@nvidia.com" <ziy@nvidia.com>
+References: <1738717785.im3r5g2vxc.none.ref@localhost>
+ <1738717785.im3r5g2vxc.none@localhost>
+ <25e2d5e4-8214-40de-99d3-2b657181a9fd@linux.alibaba.com>
+ <5dd39b03-c40e-4f34-bf89-b3e5a12753dc@linux.alibaba.com>
+ <CAK1f24ni707gcGpYKXqsb9XHxjx3froLs3DzVqkkNZdca_pw4Q@mail.gmail.com>
+ <e7b276eb-960a-4e05-9f84-6152de9ac2ea@linux.alibaba.com>
+ <CAMgjq7CNVrQFBozKfZyvXX9w6HqAEH6eSN+ZQFaerbueyyqArw@mail.gmail.com>
+ <CAMgjq7DY_C+-rfFiM7=jdRAdCX7Gv17cRMyDpuc3_36bePURww@mail.gmail.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <CAMgjq7DY_C+-rfFiM7=jdRAdCX7Gv17cRMyDpuc3_36bePURww@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Luiz,
+Hi Kairui,
 
-On Mon, Feb 24, 2025 at 10:53=E2=80=AFAM Luiz Augusto von Dentz
-<luiz.dentz@gmail.com> wrote:
->
-> Hi Hsin-chen,
->
-> On Sun, Feb 23, 2025 at 9:26=E2=80=AFPM Hsin-chen Chuang <chharry@google.=
-com> wrote:
-> >
-> > From: Hsin-chen Chuang <chharry@chromium.org>
-> >
-> > Automatically configure the altsetting for USER_CHANNEL when a SCO is
-> > connected or disconnected. This adds support for the USER_CHANNEL to
-> > transfer SCO data over USB transport.
->
-> I guess the tracking of handles is about handling disconnections,
-> right? I wonder if we can get away without doing that, I didn't intend
-> to add a whole bunch of changes in order to switch to the right mode,
-> I get that you may want to disable the isochronous endpoint in case
-> there is no connection, but I guess that only matters if we are
-> talking about power but the impact is probably small so I don't think
-> it is worth it. There is an alternative to match the SCO/eSCO handle
-> via mask, like we do with ISO handles, that is probably a lot cheaper
-> than attempting to add a whole list for tracking handles, but it has
-> the downside that it is vendor/model specific.
+On 2025/2/24 02:22, Kairui Song wrote:
+> On Mon, Feb 24, 2025 at 1:53 AM Kairui Song <ryncsn@gmail.com> wrote:
+>>
+>> On Fri, Feb 7, 2025 at 3:24 PM Baolin Wang
+>> <baolin.wang@linux.alibaba.com> wrote:
+>>>
+>>> On 2025/2/5 22:39, Lance Yang wrote:
+>>>> On Wed, Feb 5, 2025 at 2:38 PM Baolin Wang
+>>>> <baolin.wang@linux.alibaba.com> wrote:
+>>>>> On 2025/2/5 09:55, Baolin Wang wrote:
+>>>>>> Hi Alex,
+>>>>>>
+>>>>>> On 2025/2/5 09:23, Alex Xu (Hello71) wrote:
+>>>>>>> Hi all,
+>>>>>>>
+>>>>>>> On 6.14-rc1, I found that creating a lot of files in tmpfs then deleting
+>>>>>>> them reliably hangs when tmpfs is mounted with huge=within_size, and it
+>>>>>>> is swapped out to zram (zstd/zsmalloc/no backing dev). I bisected this
+>>>>>>> to acd7ccb284b "mm: shmem: add large folio support for tmpfs".
+>>>>>>>
+>>>>>>> When the issue occurs, rm uses 100% CPU, cannot be killed, and has no
+>>>>>>> output in /proc/pid/stack or wchan. Eventually, an RCU stall is
+>>>>>>> detected:
+>>>>>>
+>>>>>> Thanks for your report. Let me try to reproduce the issue locally and
+>>>>>> see what happens.
+>>>>>>
+>>>>>>> rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+>>>>>>> rcu:     Tasks blocked on level-0 rcu_node (CPUs 0-11): P25160
+>>>>>>> rcu:     (detected by 10, t=2102 jiffies, g=532677, q=4997 ncpus=12)
+>>>>>>> task:rm              state:R  running task     stack:0     pid:25160
+>>>>>>> tgid:25160 ppid:24309  task_flags:0x400000 flags:0x00004004
+>>>>>>> Call Trace:
+>>>>>>>     <TASK>
+>>>>>>>     ? __schedule+0x388/0x1000
+>>>>>>>     ? kmem_cache_free.part.0+0x23d/0x280
+>>>>>>>     ? sysvec_apic_timer_interrupt+0xa/0x80
+>>>>>>>     ? asm_sysvec_apic_timer_interrupt+0x16/0x20
+>>>>>>>     ? xas_load+0x12/0xc0
+>>>>>>>     ? xas_load+0x8/0xc0
+>>>>>>>     ? xas_find+0x144/0x190
+>>>>>>>     ? find_lock_entries+0x75/0x260
+>>>>>>>     ? shmem_undo_range+0xe6/0x5f0
+>>>>>>>     ? shmem_evict_inode+0xe4/0x230
+>>>>>>>     ? mtree_erase+0x7e/0xe0
+>>>>>>>     ? inode_set_ctime_current+0x2e/0x1f0
+>>>>>>>     ? evict+0xe9/0x260
+>>>>>>>     ? _atomic_dec_and_lock+0x31/0x50
+>>>>>>>     ? do_unlinkat+0x270/0x2b0
+>>>>>>>     ? __x64_sys_unlinkat+0x30/0x50
+>>>>>>>     ? do_syscall_64+0x37/0xe0
+>>>>>>>     ? entry_SYSCALL_64_after_hwframe+0x50/0x58
+>>>>>>>     </TASK>
+>>>>>>>
+>>>>>>> Let me know what information is needed to further troubleshoot this
+>>>>>>> issue.
+>>>>>
+>>>>> Sorry, I can't reproduce this issue, and my testing process is as follows:
+>>>>> 1. Mount tmpfs with huge=within_size
+>>>>> 2. Create and write a tmpfs file
+>>>>> 3. Swap out the large folios of the tmpfs file to zram
+>>>>> 4. Execute 'rm' command to remove the tmpfs file
+>>>>
+>>>> I’m unable to reproduce the issue as well, and am following steps similar
+>>>> to Baolin's process:
+>>>>
+>>>> 1) Mount tmpfs with the huge=within_size option and enable swap (using
+>>>> zstd/zsmalloc without a backing device).
+>>>> 2) Create and write over 10,000 files in the tmpfs.
+>>>> 3) Swap out the large folios of these tmpfs files to zram.
+>>>> 4) Use the rm command to delete all the files from the tmpfs.
+>>>>
+>>>> Testing with both 2MiB and 64KiB large folio sizes, and with
+>>>> shmem_enabled=within_size, but everything works as expected.
+>>>
+>>> Thanks Lance for confirming again.
+>>>
+>>> Alex, could you give more hints on how to reproduce this issue?
+>>>
+>>
+>> Hi Baolin,
+>>
+>> I can reproduce this issue very easily with the build linux kernel
+>> test, and the failure rate is very high. I'm not exactly sure this is
+>> the same bug but very likely, my test step:
+>>
+>> 1. Create a 10G ZRAM device and set up SWAP on it.
+>> 2. Create a 1G memcg, and spawn a shell in it.
+>> 3. Mount tmpfs with huge=within_size, and then untar linux kernel
+>> source code into it.
+>> 4. Build with make -j32 (higher or lower job number may also work),
+>> the build will always fall within 10s due to file corrupted.
 
-Yes, that's for handling disconnection. What do you think if we keep
-only one handle in the driver data? That is, assume there's at most
-one SCO connection. Then we don't need a list but just a u16.
+Very appreciated for your reproducer, and now I can reproduce the issue 
+locally.
 
->
-> > Fixes: b16b327edb4d ("Bluetooth: btusb: add sysfs attribute to control =
-USB alt setting")
-> > Signed-off-by: Hsin-chen Chuang <chharry@chromium.org>
-> > ---
-> >
-> >  drivers/bluetooth/btusb.c | 224 +++++++++++++++++++++++++++++++-------
-> >  1 file changed, 186 insertions(+), 38 deletions(-)
-> >
-> > diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-> > index de3fa725d210..dfb0918dfe98 100644
-> > --- a/drivers/bluetooth/btusb.c
-> > +++ b/drivers/bluetooth/btusb.c
-> > @@ -854,6 +854,11 @@ struct qca_dump_info {
-> >  #define BTUSB_ALT6_CONTINUOUS_TX       16
-> >  #define BTUSB_HW_SSR_ACTIVE    17
-> >
-> > +struct sco_handle_list {
-> > +       struct list_head list;
-> > +       u16 handle;
-> > +};
-> > +
-> >  struct btusb_data {
-> >         struct hci_dev       *hdev;
-> >         struct usb_device    *udev;
-> > @@ -920,6 +925,9 @@ struct btusb_data {
-> >         int oob_wake_irq;   /* irq for out-of-band wake-on-bt */
-> >
-> >         struct qca_dump_info qca_dump;
-> > +
-> > +       /* Records the exsiting SCO handles for HCI_USER_CHANNEL */
-> > +       struct list_head sco_handle_list;
-> >  };
-> >
-> >  static void btusb_reset(struct hci_dev *hdev)
-> > @@ -1113,6 +1121,131 @@ static inline void btusb_free_frags(struct btus=
-b_data *data)
-> >         spin_unlock_irqrestore(&data->rxlock, flags);
-> >  }
-> >
-> > +static void btusb_sco_handle_list_clear(struct list_head *list)
-> > +{
-> > +       struct sco_handle_list *entry, *n;
-> > +
-> > +       list_for_each_entry_safe(entry, n, list, list) {
-> > +               list_del(&entry->list);
-> > +               kfree(entry);
-> > +       }
-> > +}
-> > +
-> > +static struct sco_handle_list *btusb_sco_handle_list_find(
-> > +       struct list_head *list,
-> > +       u16 handle)
-> > +{
-> > +       struct sco_handle_list *entry;
-> > +
-> > +       list_for_each_entry(entry, list, list)
-> > +               if (entry->handle =3D=3D handle)
-> > +                       return entry;
-> > +
-> > +       return NULL;
-> > +}
-> > +
-> > +static int btusb_sco_handle_list_add(struct list_head *list, u16 handl=
-e)
-> > +{
-> > +       struct sco_handle_list *entry;
-> > +
-> > +       if (btusb_sco_handle_list_find(list, handle))
-> > +               return -EEXIST;
-> > +
-> > +       entry =3D kzalloc(sizeof(*entry), GFP_KERNEL);
-> > +       if (!entry)
-> > +               return -ENOMEM;
-> > +
-> > +       entry->handle =3D handle;
-> > +       list_add(&entry->list, list);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int btusb_sco_handle_list_del(struct list_head *list, u16 handl=
-e)
-> > +{
-> > +       struct sco_handle_list *entry;
-> > +
-> > +       entry =3D btusb_sco_handle_list_find(list, handle);
-> > +       if (!entry)
-> > +               return -ENOENT;
-> > +
-> > +       list_del(&entry->list);
-> > +       kfree(entry);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static void btusb_sco_conn_change(struct btusb_data *data, struct sk_b=
-uff *skb)
-> > +{
-> > +       struct hci_event_hdr *hdr =3D (void *) skb->data;
-> > +       struct hci_dev *hdev =3D data->hdev;
-> > +
-> > +       if (hci_skb_pkt_type(skb) !=3D HCI_EVENT_PKT || skb->len < size=
-of(*hdr))
-> > +               return;
-> > +
-> > +       switch (hdr->evt) {
-> > +       case HCI_EV_DISCONN_COMPLETE: {
-> > +               struct hci_ev_disconn_complete *ev =3D
-> > +                       (void *) skb->data + sizeof(*hdr);
-> > +               u16 handle;
-> > +
-> > +               if (skb->len !=3D sizeof(*hdr) + sizeof(*ev) || ev->sta=
-tus)
-> > +                       return;
-> > +
-> > +               handle =3D __le16_to_cpu(ev->handle);
-> > +               if (btusb_sco_handle_list_del(&data->sco_handle_list,
-> > +                                             handle) < 0)
-> > +                       return;
-> > +
-> > +               bt_dev_info(hdev, "disabling SCO");
-> > +               data->sco_num--;
-> > +               data->air_mode =3D HCI_NOTIFY_DISABLE_SCO;
-> > +               schedule_work(&data->work);
-> > +
-> > +               break;
-> > +       }
-> > +       case HCI_EV_SYNC_CONN_COMPLETE: {
-> > +               struct hci_ev_sync_conn_complete *ev =3D
-> > +                       (void *) skb->data + sizeof(*hdr);
-> > +               unsigned int notify_air_mode;
-> > +               u16 handle;
-> > +
-> > +               if (skb->len !=3D sizeof(*hdr) + sizeof(*ev) || ev->sta=
-tus)
-> > +                       return;
-> > +
-> > +               switch (ev->air_mode) {
-> > +               case BT_CODEC_CVSD:
-> > +                       notify_air_mode =3D HCI_NOTIFY_ENABLE_SCO_CVSD;
-> > +                       break;
-> > +
-> > +               case BT_CODEC_TRANSPARENT:
-> > +                       notify_air_mode =3D HCI_NOTIFY_ENABLE_SCO_TRANS=
-P;
-> > +                       break;
-> > +
-> > +               default:
-> > +                       return;
-> > +               }
-> > +
-> > +               handle =3D __le16_to_cpu(ev->handle);
-> > +               if (btusb_sco_handle_list_add(&data->sco_handle_list,
-> > +                                             handle) < 0) {
-> > +                       bt_dev_err(hdev, "failed to add the new SCO han=
-dle");
-> > +                       return;
-> > +               }
-> > +
-> > +               bt_dev_info(hdev, "enabling SCO with air mode %u",
-> > +                           ev->air_mode);
-> > +               data->sco_num++;
-> > +               data->air_mode =3D notify_air_mode;
-> > +               schedule_work(&data->work);
-> > +
-> > +               break;
-> > +       }
-> > +       default:
-> > +               break;
-> > +       }
-> > +}
-> > +
-> >  static int btusb_recv_event(struct btusb_data *data, struct sk_buff *s=
-kb)
-> >  {
-> >         if (data->intr_interval) {
-> > @@ -1120,6 +1253,10 @@ static int btusb_recv_event(struct btusb_data *d=
-ata, struct sk_buff *skb)
-> >                 schedule_delayed_work(&data->rx_work, 0);
-> >         }
-> >
-> > +       /* Configure altsetting for HCI_USER_CHANNEL on SCO dis/connect=
-ed */
-> > +       if (hci_dev_test_flag(data->hdev, HCI_USER_CHANNEL))
-> > +               btusb_sco_conn_change(data, skb);
->
-> I'd recommend adding a check for Kconfig/module parameter in the if
-> statement so btusb_sco_conn_change only runs on distros with it
-> enabled so we don't risk something not working as expected just
-> because someone decided to open the user channel.
+>> After some debugging, the reason is in shmem_swapin_folio, when swap
+>> cache is hit `folio = swap_cache_get_folio(swap, NULL, 0);` sets folio
+>> to a 0 order folio, then the following shmem_add_to_page_cache will
+>> insert a order 0 folio overriding a high order entry in shmem's
+>> xarray, so data are lost. Swap cache hit could be due to many reasons,
+>> in this case it's the readahead.
 
-Sure will add it in the next patch.
+Yes, thanks for your analysis. I missed that the swap readahead can swap 
+in order 0 folios asynchronously.
 
->
-> >         return data->recv_event(data->hdev, skb);
-> >  }
-> >
-> > @@ -1919,44 +2056,6 @@ static void btusb_stop_traffic(struct btusb_data=
- *data)
-> >         usb_kill_anchored_urbs(&data->ctrl_anchor);
-> >  }
-> >
-> > -static int btusb_close(struct hci_dev *hdev)
-> > -{
-> > -       struct btusb_data *data =3D hci_get_drvdata(hdev);
-> > -       int err;
-> > -
-> > -       BT_DBG("%s", hdev->name);
-> > -
-> > -       cancel_delayed_work(&data->rx_work);
-> > -       cancel_work_sync(&data->work);
-> > -       cancel_work_sync(&data->waker);
-> > -
-> > -       skb_queue_purge(&data->acl_q);
-> > -
-> > -       clear_bit(BTUSB_ISOC_RUNNING, &data->flags);
-> > -       clear_bit(BTUSB_BULK_RUNNING, &data->flags);
-> > -       clear_bit(BTUSB_INTR_RUNNING, &data->flags);
-> > -       clear_bit(BTUSB_DIAG_RUNNING, &data->flags);
-> > -
-> > -       btusb_stop_traffic(data);
-> > -       btusb_free_frags(data);
-> > -
-> > -       err =3D usb_autopm_get_interface(data->intf);
-> > -       if (err < 0)
-> > -               goto failed;
-> > -
-> > -       data->intf->needs_remote_wakeup =3D 0;
-> > -
-> > -       /* Enable remote wake up for auto-suspend */
-> > -       if (test_bit(BTUSB_WAKEUP_AUTOSUSPEND, &data->flags))
-> > -               data->intf->needs_remote_wakeup =3D 1;
-> > -
-> > -       usb_autopm_put_interface(data->intf);
-> > -
-> > -failed:
-> > -       usb_scuttle_anchored_urbs(&data->deferred);
-> > -       return 0;
-> > -}
-> > -
-> >  static int btusb_flush(struct hci_dev *hdev)
-> >  {
-> >         struct btusb_data *data =3D hci_get_drvdata(hdev);
-> > @@ -2327,6 +2426,51 @@ static void btusb_work(struct work_struct *work)
-> >         }
-> >  }
-> >
-> > +static int btusb_close(struct hci_dev *hdev)
-> > +{
-> > +       struct btusb_data *data =3D hci_get_drvdata(hdev);
-> > +       int err;
-> > +
-> > +       BT_DBG("%s", hdev->name);
-> > +
-> > +       if (hci_dev_test_flag(hdev, HCI_USER_CHANNEL)) {
-> > +               btusb_sco_handle_list_clear(&data->sco_handle_list);
-> > +               data->sco_num =3D 0;
-> > +               if (data->isoc_altsetting !=3D 0)
-> > +                       btusb_switch_alt_setting(hdev, 0);
-> > +       }
-> > +
-> > +       cancel_delayed_work(&data->rx_work);
-> > +       cancel_work_sync(&data->work);
-> > +       cancel_work_sync(&data->waker);
-> > +
-> > +       skb_queue_purge(&data->acl_q);
-> > +
-> > +       clear_bit(BTUSB_ISOC_RUNNING, &data->flags);
-> > +       clear_bit(BTUSB_BULK_RUNNING, &data->flags);
-> > +       clear_bit(BTUSB_INTR_RUNNING, &data->flags);
-> > +       clear_bit(BTUSB_DIAG_RUNNING, &data->flags);
-> > +
-> > +       btusb_stop_traffic(data);
-> > +       btusb_free_frags(data);
-> > +
-> > +       err =3D usb_autopm_get_interface(data->intf);
-> > +       if (err < 0)
-> > +               goto failed;
-> > +
-> > +       data->intf->needs_remote_wakeup =3D 0;
-> > +
-> > +       /* Enable remote wake up for auto-suspend */
-> > +       if (test_bit(BTUSB_WAKEUP_AUTOSUSPEND, &data->flags))
-> > +               data->intf->needs_remote_wakeup =3D 1;
-> > +
-> > +       usb_autopm_put_interface(data->intf);
-> > +
-> > +failed:
-> > +       usb_scuttle_anchored_urbs(&data->deferred);
-> > +       return 0;
-> > +}
-> > +
-> >  static void btusb_waker(struct work_struct *work)
-> >  {
-> >         struct btusb_data *data =3D container_of(work, struct btusb_dat=
-a, waker);
-> > @@ -3782,6 +3926,8 @@ static int btusb_probe(struct usb_interface *intf=
-,
-> >         data->udev =3D interface_to_usbdev(intf);
-> >         data->intf =3D intf;
-> >
-> > +       INIT_LIST_HEAD(&data->sco_handle_list);
-> > +
-> >         INIT_WORK(&data->work, btusb_work);
-> >         INIT_WORK(&data->waker, btusb_waker);
-> >         INIT_DELAYED_WORK(&data->rx_work, btusb_rx_work);
-> > @@ -4117,6 +4263,8 @@ static void btusb_disconnect(struct usb_interface=
- *intf)
-> >         hdev =3D data->hdev;
-> >         usb_set_intfdata(data->intf, NULL);
-> >
-> > +       btusb_sco_handle_list_clear(&data->sco_handle_list);
-> > +
-> >         if (data->isoc) {
-> >                 device_remove_file(&intf->dev, &dev_attr_isoc_alt);
-> >                 usb_set_intfdata(data->isoc, NULL);
-> > --
-> > 2.48.1.601.g30ceb7b040-goog
-> >
->
->
-> --
-> Luiz Augusto von Dentz
+>>
+>> One quick fix is just always split the entry upon shmem fault of 0
+>> order folio like this:
+>>
+>> diff --git a/mm/shmem.c b/mm/shmem.c
+>> index 4ea6109a8043..c8e5c419c675 100644
+>> --- a/mm/shmem.c
+>> +++ b/mm/shmem.c
+>> @@ -2341,6 +2341,10 @@ static int shmem_swapin_folio(struct inode
+>> *inode, pgoff_t index,
+>>                  }
+>>          }
+>>
+>> +       /* Swapin of 0 order folio must always ensure the entries are split */
+>> +       if (!folio_order(folio))
+>> +               shmem_split_large_entry(inode, index, swap, gfp);
+>> +
+>>   alloced:
+>>          /* We have to do this with folio locked to prevent races */
+>>          folio_lock(folio);
 
---=20
-Best Regards,
-Hsin-chen
+I don't think we should always split the large entry when getting folio 
+from the swap cache. Instead, splitting should only be done when the 
+order stored in the shmem mapping is inconsistent with the folio order, 
+as well as updating the swap value.
+
+Could you help to try below fix? I tested it and it can work well with 
+your reproducer. Thanks a lot.
+
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 671f63063fd4..7e70081a96d4 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2253,7 +2253,7 @@ static int shmem_swapin_folio(struct inode *inode, 
+pgoff_t index,
+         struct folio *folio = NULL;
+         bool skip_swapcache = false;
+         swp_entry_t swap;
+-       int error, nr_pages;
++       int error, nr_pages, order, split_order;
+
+         VM_BUG_ON(!*foliop || !xa_is_value(*foliop));
+         swap = radix_to_swp_entry(*foliop);
+@@ -2272,10 +2272,9 @@ static int shmem_swapin_folio(struct inode 
+*inode, pgoff_t index,
+
+         /* Look it up and read it in.. */
+         folio = swap_cache_get_folio(swap, NULL, 0);
++       order = xa_get_order(&mapping->i_pages, index);
+         if (!folio) {
+-               int order = xa_get_order(&mapping->i_pages, index);
+                 bool fallback_order0 = false;
+-               int split_order;
+
+                 /* Or update major stats only when swapin succeeds?? */
+                 if (fault_type) {
+@@ -2339,6 +2338,29 @@ static int shmem_swapin_folio(struct inode 
+*inode, pgoff_t index,
+                         error = -ENOMEM;
+                         goto failed;
+                 }
++       } else if (order != folio_order(folio)) {
++               /*
++                * Swap readahead may swap in order 0 folios into swapcache
++                * asynchronously, while the shmem mapping can still stores
++                * large swap entries. In such cases, we should split the
++                * large swap entry to prevent possible data loss.
++                */
++               split_order = shmem_split_large_entry(inode, index, 
+swap, gfp);
++               if (split_order < 0) {
++                       error = split_order;
++                       goto failed;
++               }
++
++               /*
++                * If the large swap entry has already been split, it is
++                * necessary to recalculate the new swap entry based on
++                * the old order alignment.
++                */
++               if (split_order > 0) {
++                       pgoff_t offset = index - round_down(index, 1 << 
+split_order);
++
++                       swap = swp_entry(swp_type(swap), 
+swp_offset(swap) + offset);
++               }
+         }
+
+  alloced:
+@@ -2346,7 +2368,8 @@ static int shmem_swapin_folio(struct inode *inode, 
+pgoff_t index,
+         folio_lock(folio);
+         if ((!skip_swapcache && !folio_test_swapcache(folio)) ||
+             folio->swap.val != swap.val ||
+-           !shmem_confirm_swap(mapping, index, swap)) {
++           !shmem_confirm_swap(mapping, index, swap) ||
++           xa_get_order(&mapping->i_pages, index) != folio_order(folio)) {
+                 error = -EEXIST;
+                 goto unlock;
+         }
+
+>> And Hi Alex, can you help confirm if the above patch fixes your reported bug?
+>>
+>> If we are OK with this, this should be merged into 6.14 I think, but
+>> for the long term, it might be a good idea to just share a similar
+>> logic of (or just reuse) __filemap_add_folio for shmem?
+>> __filemap_add_folio will split the entry on insert, and code will be
+>> much cleaner.
+> 
+> Some extra comments for above patch: If it raced with another split,
+> or the entry used for swap cache lookup is wrongly aligned due to
+> large entry, the shmem_add_to_page_cache below will fail with -EEXIST
+> and try again. So that seems to be working well in my test.
