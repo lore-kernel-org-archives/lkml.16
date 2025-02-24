@@ -1,176 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794381946DF
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 14:57:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D161282F0;
+	Mon, 24 Feb 2025 15:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740409067; cv=none; b=PsrGegppQa4gH397vd0Jpgeddn4U1uZ1gnUpxiFEovIvasMEi7wzBzaAy8+isaUoeTr5fZGsBPxxjYMAGRDgE12WJmTtCzEo9B8G3ceHuu1fsPaz0ixmlxFuHt5ERXa9ImKd1xwC3oigyX6+vt9GSoXOP0n/loMgj3deJkIpBGQ=
+	t=1740409213; cv=none; b=TydejOLRhrfW2swnZNLapkfBr1O3K1PAR6LNOR/sxVyJMQSX2bF5PEUs/5goXj4zSTamRr0b7GBE55/QWl8Y2NF35Fq+b91NB9FMvD7jsb0NOoVITqLKjsndXinpzPNUCFLXKyOjdIqq+iheZy/vAODXl+0xff4iRVYi1c+nUUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740409067; c=relaxed/simple;
-	bh=ApbmW1BVLLWh9Y/yw3zWhdEJQrg5lHizqsSsqNz41bs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Btmyxv5WUqO8TkOQl7Z0bw4F6yMZcD0TiTAeSsbjtzwY7u0yUyM+uxRXPZG1ojoJVgV4WykN53tK+2/f6/JepMd4tE7HI//IV4Zf9v8KT/DAvrkF7nl4mmkVvCsgLNyEQ0E9QKqFzxO6wkDp1N323uSY1IosxvTannVuTnsUG9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OAWrIqd2; arc=none smtp.client-ip=198.175.65.11
+	s=arc-20240116; t=1740409213; c=relaxed/simple;
+	bh=Q2sCY+UOVqT5oQg+ce4z7pL1L23zo2lBGkRIUVaef0M=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=V84FDgO9bjh1cQbOGWvc15alvMlJtZjtG9gYmAdGhGYLszq/zppV1RGPqbDHW+83YHa2T72ABZweT/1TziB3V4A4vPzZ+ph4gzRMma/vMrYb2Ur9To0uLGN5uqA7d9rW35tMo7CgVYl5j6/7CBnFTtYrQRti01frt30JilEb6gM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eImADhw7; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OAWrIqd2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eImADhw7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740409066; x=1771945066;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=ApbmW1BVLLWh9Y/yw3zWhdEJQrg5lHizqsSsqNz41bs=;
-  b=OAWrIqd2aP5pvzNgeG3UFR75H31oj4WgJxytE5/v+kkiz5QGHxao0a6I
-   zlT8Z9+XhxeGWhLXejF82Yw9thRbYmcr7ujUZg0mMvYuqZVHwyqtPEpB0
-   Pu5HvpusGxzXB0nYYbTEVz+yglla+5blmXn0h0j5fm41cT+Acgks1V4AB
-   on/pCFbzS/QdBegIvgJ8Gl/jWDk0ux2Ymcyk2EoXv93fXjoHMl+JXaSlS
-   UXC90nIGYPIfvSIuQx4YP1EJw17mdqsrf5Dhw0NkMC5IiJpo3YTwPb1jg
-   FB1oj2rdX5UDApPlxYQ6xzvMbJKk9o3KYR7Nu6n0TvzHOp/zMcZqjQuiQ
-   Q==;
-X-CSE-ConnectionGUID: ZWTicAVZQ+6KX28yk1WJUQ==
-X-CSE-MsgGUID: BGQUVtkQRIanW0p7Y6MSYg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="51380514"
+  t=1740409212; x=1771945212;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=Q2sCY+UOVqT5oQg+ce4z7pL1L23zo2lBGkRIUVaef0M=;
+  b=eImADhw7yYaA65hErspMQ8w2UxhJRDipvEK8++23uhYQKFnGsU0ZiRy0
+   l1cmDhu/HsCSfysEK8y15fmHGEG2XCuTCVvA8zaXIITbW5PiQXj2lqDOD
+   sppSVXBXLjehdKG/73prEyKcDLtkGP6dVCj7V9ZBq930QtFPkFu8B7OAU
+   1Qz9+VrFZLWa0vKUSVpUr+zSwn5Kx30BXUin38xb/JZ2+50S0c8Ijaj5R
+   bXJESYFxqILFvuj8d9uzOVjrSJywIibeeXN3w6Gm/+51ULSKrS/aPECse
+   7m5OA2cSNy+LeL3FfFP+xlzkrAKwttV55nHjBMZmFM4iHYX7DNaaROcNb
+   w==;
+X-CSE-ConnectionGUID: IaSlxWLISGe5s1cX+pjoSQ==
+X-CSE-MsgGUID: c/iyyiExTge8On/qb5fhHg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="41044333"
 X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
-   d="scan'208";a="51380514"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 06:57:45 -0800
-X-CSE-ConnectionGUID: fj4upMoLRuGZSzt6VUfMXA==
-X-CSE-MsgGUID: GM9+VcLkSF+/Kc2LOMAWLA==
+   d="scan'208";a="41044333"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 07:00:11 -0800
+X-CSE-ConnectionGUID: wiX6Aj1QQm+vGu/wnLyCMQ==
+X-CSE-MsgGUID: RMIyOFcUQkid03ws0vvPYA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
-   d="scan'208";a="115814785"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 06:57:42 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tmZtq-0000000Ej0X-2boH;
-	Mon, 24 Feb 2025 16:57:38 +0200
-Date: Mon, 24 Feb 2025 16:57:38 +0200
-From: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
-To: Aditya Garg <gargaditya08@live.com>
-Cc: "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-	"mripard@kernel.org" <mripard@kernel.org>,
-	"tzimmermann@suse.de" <tzimmermann@suse.de>,
-	"airlied@gmail.com" <airlied@gmail.com>,
-	"simona@ffwll.ch" <simona@ffwll.ch>,
-	Kerem Karabay <kekrby@gmail.com>,
-	Atharva Tiwari <evepolonium@gmail.com>,
-	Aun-Ali Zaidi <admin@kodeit.net>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v4 2/2] drm/tiny: add driver for Apple Touch Bars in x86
- Macs
-Message-ID: <Z7yI4roBKA-PI4EC@smile.fi.intel.com>
-References: <B08444CD-38A8-4B82-94B2-4162D6D2EABD@live.com>
- <844C1D39-4891-4DC2-8458-F46FA1B59FA0@live.com>
- <Z7x7kMjaDbCp_LB2@smile.fi.intel.com>
- <5BC3A795-99C2-4F00-ADD0-7ECD0285CDD0@live.com>
+   d="scan'208";a="116707650"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.233])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 07:00:06 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 24 Feb 2025 17:00:03 +0200 (EET)
+To: Feng Tang <feng.tang@linux.alibaba.com>
+cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>, 
+    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+    Liguang Zhang <zhangliguang@linux.alibaba.com>, 
+    Guanghui Feng <guanghuifeng@linux.alibaba.com>, 
+    "Rafael J. Wysocki" <rafael@kernel.org>, 
+    Markus Elfring <Markus.Elfring@web.de>, lkp@intel.com, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 2/4] PCI/portdrv: Add necessary wait for disabling
+ hotplug events
+In-Reply-To: <20250224034500.23024-3-feng.tang@linux.alibaba.com>
+Message-ID: <abb50795-df83-511a-8850-cdf30f187935@linux.intel.com>
+References: <20250224034500.23024-1-feng.tang@linux.alibaba.com> <20250224034500.23024-3-feng.tang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5BC3A795-99C2-4F00-ADD0-7ECD0285CDD0@live.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, Feb 24, 2025 at 02:32:37PM +0000, Aditya Garg wrote:
-> > On 24 Feb 2025, at 7:30 PM, andriy.shevchenko@linux.intel.com wrote:
-> > On Mon, Feb 24, 2025 at 01:40:20PM +0000, Aditya Garg wrote:
+On Mon, 24 Feb 2025, Feng Tang wrote:
 
-...
-
-> >> +#define __APPLETBDRM_MSG_STR4(str4) ((__le32 __force)((str4[0] << 24) | (str4[1] << 16) | (str4[2] << 8) | str4[3]))
-> > 
-> > As commented previously this is quite strange what's going on with endianess in
-> > this driver. Especially the above weirdness when get_unaligned_be32() is being
-> > open coded and force-cast to __le32.
+> There was problem reported by firmware developers that they received
+> two PCIe hotplug commands in very short intervals on an ARM server,
+> which doesn't comply with PCIe spec, and broke their state machine and
+> work flow. According to PCIe 6.1 spec, section 6.7.3.2, software needs
+> to wait at least 1 second for the command-complete event, before
+> resending the command or sending a new command.
 > 
-> I would assume it was also mimicked from the Windows driver, though I haven't
-> really tried exploring this there.
+> In the failure case, the first PCIe hotplug command firmware received
+> is from get_port_device_capability(), which sends command to disable
+> PCIe hotplug interrupts without waiting for its completion, and the
+> second command comes from pcie_enable_notification() of pciehp driver,
+> which enables hotplug interrupts again.
 > 
-> I’d rather be happy if you give me code change suggestions and let me review
-> and test them
-
-For the starter I would do the following for all related constants and
-drop that weird and ugly macros at the top (it also has an issue with
-the str4 length as it is 5 bytes long, not 4, btw):
-
-  #define APPLETBDRM_MSG_CLEAR_DISPLAY	cpu_to_le32(0x434c5244)	/* CLRD */
-  ...
-
-(assuming we stick with __leXX for now). This will be much less confusing.
-
-...
-
-> >> +struct appletbdrm_msg_information {
-> >> + struct appletbdrm_msg_response_header header;
-> >> + u8 unk_14[12];
-> >> + __le32 width;
-> >> + __le32 height;
-> >> + u8 bits_per_pixel;
-> >> + __le32 bytes_per_row;
-> >> + __le32 orientation;
-> >> + __le32 bitmap_info;
-> >> + __le32 pixel_format;
-> >> + __le32 width_inches; /* floating point */
-> >> + __le32 height_inches; /* floating point */
-> >> +} __packed;
-> > 
-> > Haven't looked deeply into the protocol, but still makes me think that
-> > the above (since it's the only __packed data type required) might be simply
-> > depicted wrongly w.r.t. endianess / data types in use. It might be that
-> > the data types have something combined and / or different types.
-> > 
-> > Do I understand correctly that the protocol was basically reverse-engineered?
+> Fix it by adding the necessary wait to comply with PCIe spec.
 > 
-> Yes. Although it was reverse engineered by the person who wrote the Windows
-> driver. The author has just made a Linux port.
-> So, as far as how is was reverse engineered, it not really possible for me to
-> explain. I don't even have any contact with the person who wrote the Windows
-> driver. The only point here would be to myself RE the hardware again, which
-> tbh isn't very motivating, considering that we have a working driver.
-
-Right. I agree that is better to have something working than something
-good looking, but wrong.
-
-Can you add a summary to the commit message that since the driver was
-reverse-engineered the actual data types of the protocol might be different
-(including, but not limited to, endianess)?
-
-...
-
-> >> + /*
-> >> +  * The coordinate system used by the device is different from the
-> >> +  * coordinate system of the framebuffer in that the x and y axes are
-> >> +  * swapped, and that the y axis is inverted; so what the device reports
-> >> +  * as the height is actually the width of the framebuffer and vice
-> >> +  * versa
-> > 
-> > Missing period.
+> Fixes: 2bd50dd800b5 ("PCI: PCIe: Disable PCIe port services during port initialization")
+> Originally-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+> Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
+> ---
+>  drivers/pci/pci.h          |  2 ++
+>  drivers/pci/pcie/portdrv.c | 19 +++++++++++++++++--
+>  2 files changed, 19 insertions(+), 2 deletions(-)
 > 
-> Alright. For some reason (a mistake on my part), some dev_err_probe were also
-> still left in this version.
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 4c94a589de4a..a1138ebc2689 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -760,6 +760,7 @@ static inline void pcie_ecrc_get_policy(char *str) { }
+>  void pcie_reset_lbms_count(struct pci_dev *port);
+>  int pcie_lbms_count(struct pci_dev *port, unsigned long *val);
+>  int pcie_poll_sltctl_cmd(struct pci_dev *dev, int timeout_ms);
+> +void pcie_disable_hp_interrupts_early(struct pci_dev *dev);
+>  #else
+>  static inline void pcie_reset_lbms_count(struct pci_dev *port) {}
+>  static inline int pcie_lbms_count(struct pci_dev *port, unsigned long *val)
+> @@ -770,6 +771,7 @@ static inline int pcie_poll_sltctl_cmd(struct pci_dev *dev, int timeout_ms)
+>  {
+>  	return 0;
+>  }
+> +static inline void pcie_disable_hp_interrupts_early(struct pci_dev *dev) {}
+>  #endif
+>  
+>  struct pci_dev_reset_methods {
+> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+> index bb00ba45ee51..ca4f21dff486 100644
+> --- a/drivers/pci/pcie/portdrv.c
+> +++ b/drivers/pci/pcie/portdrv.c
+> @@ -230,6 +230,22 @@ int pcie_poll_sltctl_cmd(struct pci_dev *dev, int timeout_ms)
+>  	return  ret;
+>  }
+>  
+> +void pcie_disable_hp_interrupts_early(struct pci_dev *dev)
+> +{
+> +	u16 slot_ctrl = 0;
 
-But those are seems to me in the correct locations, no? How do we even know
-the DRM device before its creation? So, dev_err_probe() calls in ->probe()
-seem logical to me. Somebody from DRM should clarify this.
+Unnecessary initialization
 
-> >> +  */
+> +
+> +	pcie_capability_read_word(dev, PCI_EXP_SLTCTL, &slot_ctrl);
+> +	/* Bail out early if it is already disabled */
+> +	if (!(slot_ctrl & (PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE)))
+> +		return;
+> +
+> +	pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
+> +		  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
 
-...
+Align to (. You might need to put the bits to own lines.
 
-> I’ll send a v5.
+> +
+> +	if (pcie_poll_sltctl_cmd(dev, 1000))
+> +		pci_info(dev, "Timeout on disabling PCIe hot-plug interrupt\n");
+> +}
+> +
+>  /**
+>   * get_port_device_capability - discover capabilities of a PCI Express port
+>   * @dev: PCI Express port to examine
+> @@ -255,8 +271,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+>  		 * Disable hot-plug interrupts in case they have been enabled
+>  		 * by the BIOS and the hot-plug service driver is not loaded.
+>  		 */
+> -		pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
+> -			  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
+> +		pcie_disable_hp_interrupts_early(dev);
 
-Please, wait a bit. it's too fast to send one version quicker than 24h...
+Doesn't calling this here delay setup for all portdrv services, not just 
+hotplug? And the delay can be relatively long.
+
+>  	}
+>  
+>  #ifdef CONFIG_PCIEAER
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+ i.
 
