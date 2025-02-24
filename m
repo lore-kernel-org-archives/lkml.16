@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8600724503A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7506724502E;
 	Mon, 24 Feb 2025 09:09:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740388143; cv=none; b=GaRdVbf5On3Uic7TNHf2xvjK0iZQHfcejZUh5h7Xt8vN1bztPDPJ9dsw7WbBBBtF/De0E0qk2BZPJ+YP/yRHrS7sM9axBv9yQ7nLimXQLHn+dusf/X1ZfOJT4XtE8HEOPPmXWJxZ0gt0VDmuY3trF7IcSf/BHbp1WM9XMRiY+20=
+	t=1740388143; cv=none; b=boj20LlHZvgHgSLhZRQCJ7uuwH+Nu+w36IEGSR745cvIPQMZpq7/BkV2jMvnRbERXUg6MF3DHFfAPaTOEsrOBM3E/O5pwYpAe+mqMdhJFg4Djc8JPQWjZvfN6k4oSne5/2rvAxqQOV1MgpWa61mCog9LOGuTekJlC2aS8bYfdVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740388143; c=relaxed/simple;
-	bh=lpGcciKaov3Y13LlsgFK4uZcLIWPLc8PIxEf/5bFm3o=;
+	bh=o+1xc6xKU/lADwcvw9syISNuAVlcBEcy5nbY0N3w4kc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WifcTYk7jy6R478p9Gtg8nf1Ef/zwY8ycV5IKBKN9sItAg01GC25qSYQHN0eTVH7KfVbxTAs9Rs89wy/tCcHIlrPkFGCSfQILvIISy4ldhQOlwQ4fHnbwQwRTP5jHy0HZyaX99Td3tKbFIk4MEw66arZQWjmaeUbbxiHUS9rNVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4XWhXqB; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=aDYWv8L8+fFp2sQc3vd1JabBrSpwKQYBJejEfIFFRQZCSUB7eO+ZWOgN8PR2jrMr/McWXGNeshJ4tB7HSPfQYhGyKFqvjWe0Fm5C5xq9QiK9V5tpfviX8MchiTirQ/cL8ZHZwybigaU/mE1odkbzfD9m+dwF9Ntr6QkqbXoIscw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d2r7O0oW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4XWhXqB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCDC0C4CEF2;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d2r7O0oW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2923C4CEED;
 	Mon, 24 Feb 2025 09:09:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740388142;
-	bh=lpGcciKaov3Y13LlsgFK4uZcLIWPLc8PIxEf/5bFm3o=;
+	bh=o+1xc6xKU/lADwcvw9syISNuAVlcBEcy5nbY0N3w4kc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=S4XWhXqBtMDQRmkQZKsQMsdrXlQ+NW2QUaT7k+r0EqZ5kEZ/JkHuEq1jCCKFbN6SU
-	 xe1Xy+Sgdl61JrdQBliaqCk2KphAexH8x674UWQvpXIT7mwwz6t+D1P4o4RgQXnNCG
-	 XjIXYxcnjBTr2kiycyR0Irq0HXiyzqqECF1mT+vMHrpru5+D+9IEsoM1SozccMP3SV
-	 UvGl9g9ddwxCLbn4hkdOmIci91zxu1nsEBtj1wVSPuq6EUQY0M6FDrwH1QgUxr9nZ5
-	 o53othZ0DRVaq55V9LPOk7q0ONClfaG1IUSfoWcZ5x7XMmCvTXpaA8o1/cMVXkUvGe
-	 FcOOLQWoWbF1Q==
+	b=d2r7O0oWeInb6b4ufMZt2RTSkkEqMALf9aH9Gp9F3HbTf5JWVMLj2QkMY79pAQ6wV
+	 kB47vnkGkxz7YnHbnhsH7XWEjqsC3+lDdGkUjHBYfiII21hbDJb2HroiiSjO3JXI6i
+	 xYtl3V1pRllhgwOAlFPMtbrkTxo4Hn2dWP6AP6v9IaK4Gr7o7H8ljE8WtdL1RYzwXZ
+	 aKAwXDZl+7VmkPBV0a1tsLqbQSpq9QWisaKcOf077diMwVFW/ypk416GKsN3g8+HS8
+	 F6y0yLOmm7YTbh3qO/hXLB6AG/TG0b7Ct5A3cgQxKNw3GW+Bs4LvB7ybgcaUSQCCfn
+	 BxPnG/6L3WbDQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tmUST-00000003p44-0GIa;
-	Mon, 24 Feb 2025 10:09:01 +0100
+	id 1tmUSS-00000003p3o-3zXF;
+	Mon, 24 Feb 2025 10:09:00 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 10/39] scripts/kernel-doc.py: output warnings the same way as kerneldoc
-Date: Mon, 24 Feb 2025 10:08:16 +0100
-Message-ID: <1ee48bdad5030aebe5c2442d805ac6ca922a86d1.1740387599.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v2 06/39] scripts/kernel-doc: drop dead code for Wcontents_before_sections
+Date: Mon, 24 Feb 2025 10:08:12 +0100
+Message-ID: <174a15607fd057c736dc9123c53d0835ce20e68b.1740387599.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1740387599.git.mchehab+huawei@kernel.org>
 References: <cover.1740387599.git.mchehab+huawei@kernel.org>
@@ -51,62 +51,81 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Add a formatter to logging to produce outputs in a similar way
-to kernel-doc. This should help making it more compatible with
-existing scripts.
+There is a warning about contents before sections, which doesn't
+work, since in_doc_sect variable is always true at the point
+it is checked.
+
+Drop the dead code.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/kernel-doc.py | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ scripts/kernel-doc | 11 -----------
+ 1 file changed, 11 deletions(-)
 
-diff --git a/scripts/kernel-doc.py b/scripts/kernel-doc.py
-index 5cf5ed63f215..8bc0470d3720 100755
---- a/scripts/kernel-doc.py
-+++ b/scripts/kernel-doc.py
-@@ -2640,6 +2640,11 @@ neither here nor at the original Perl script.
- """
+diff --git a/scripts/kernel-doc b/scripts/kernel-doc
+index d59552e1a31d..af6cf408b96d 100755
+--- a/scripts/kernel-doc
++++ b/scripts/kernel-doc
+@@ -137,7 +137,6 @@ my $verbose = 0;
+ my $Werror = 0;
+ my $Wreturn = 0;
+ my $Wshort_desc = 0;
+-my $Wcontents_before_sections = 0;
+ my $output_mode = "rst";
+ my $output_preformatted = 0;
+ my $no_doc_sections = 0;
+@@ -223,7 +222,6 @@ use constant {
+     STATE_INLINE        => 7,        # gathering doc outside main block
+ };
+ my $state;
+-my $in_doc_sect;
+ my $leading_space;
  
+ # Inline documentation state
+@@ -332,12 +330,9 @@ while ($ARGV[0] =~ m/^--?(.*)/) {
+         $Wreturn = 1;
+     } elsif ($cmd eq "Wshort-desc" or $cmd eq "Wshort-description") {
+         $Wshort_desc = 1;
+-    } elsif ($cmd eq "Wcontents-before-sections") {
+-        $Wcontents_before_sections = 1;
+     } elsif ($cmd eq "Wall") {
+         $Wreturn = 1;
+         $Wshort_desc = 1;
+-        $Wcontents_before_sections = 1;
+     } elsif (($cmd eq "h") || ($cmd eq "help")) {
+         pod2usage(-exitval => 0, -verbose => 2);
+     } elsif ($cmd eq 'no-doc-sections') {
+@@ -1963,7 +1958,6 @@ sub process_export_file($) {
+ sub process_normal() {
+     if (/$doc_start/o) {
+         $state = STATE_NAME;        # next line is always the function name
+-        $in_doc_sect = 0;
+         $declaration_start_line = $. + 1;
+     }
+ }
+@@ -2068,7 +2062,6 @@ sub process_body($$) {
+     }
  
-+class MsgFormatter(logging.Formatter):
-+    def format(self, record):
-+        record.levelname = record.levelname.capitalize()
-+        return logging.Formatter.format(self, record)
-+
- def main():
-     """Main program"""
+     if (/$doc_sect/i) { # case insensitive for supported section names
+-        $in_doc_sect = 1;
+         $newsection = $1;
+         $newcontents = $2;
  
-@@ -2724,10 +2729,19 @@ def main():
-         args.wshort_desc = True
-         args.wcontents_before_sections = True
+@@ -2085,14 +2078,10 @@ sub process_body($$) {
+         }
  
-+    logger = logging.getLogger()
-+
-     if not args.debug:
--        level = logging.INFO
-+        logger.setLevel(logging.INFO)
-     else:
--        level = logging.DEBUG
-+        logger.setLevel(logging.DEBUG)
-+
-+    formatter = MsgFormatter('%(levelname)s: %(message)s')
-+
-+    handler = logging.StreamHandler()
-+    handler.setFormatter(formatter)
-+
-+    logger.addHandler(handler)
+         if (($contents ne "") && ($contents ne "\n")) {
+-            if (!$in_doc_sect && $Wcontents_before_sections) {
+-                emit_warning("${file}:$.", "contents before sections\n");
+-            }
+             dump_section($file, $section, $contents);
+             $section = $section_default;
+         }
  
-     if args.man:
-         out_style = ManFormat()
-@@ -2736,8 +2750,6 @@ def main():
-     else:
-         out_style = RestFormat()
- 
--    logging.basicConfig(level=level, format="%(levelname)s: %(message)s")
--
-     kfiles = KernelFiles(files=args.files, verbose=args.verbose,
-                          out_style=out_style, werror=args.werror,
-                          wreturn=args.wreturn, wshort_desc=args.wshort_desc,
+-        $in_doc_sect = 1;
+         $state = STATE_BODY;
+         $contents = $newcontents;
+         $new_start_line = $.;
 -- 
 2.48.1
 
