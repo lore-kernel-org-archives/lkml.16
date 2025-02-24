@@ -1,119 +1,98 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B288F4E2
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 12:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03B3157A48
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 12:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740401094; cv=none; b=ZZNXCUkE2Nhja0jTlYz4g1nwD0Db2hDajs35LiGiKrOPRTUIpiQxpWZgBVb2zvCHl5bjC+YODRXWZpIPu8MEQ9rMW6e5BvMs+m+7KaKlIitqBv5Tpkac97OYRpB8r6ud1uMCGRYHy7z1FNUVEUrYK0ItsijgY+PI9aQBjo0Trvc=
+	t=1740401162; cv=none; b=q2Uy7ABgZHSo1vP8FQ67NzatFkRzRBsYNnBXsykyPZllwXIgA1vFEHi+Zpd5F+7/GR8/2kzD4wEv4017idyBoo6VX8xDF7BUhn06PJ/aycDB70hxVuyzIdHmVNjlBIE9px/xsZ6b9p0XO4K8u4uM9QlFr00IYWE0C7PhaSWb5HQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740401094; c=relaxed/simple;
-	bh=uUlJ/YqOHEUEcaQH1p9PSJzfXPsJSMUPR0Rqgv6f4Tw=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=o+61PY9qoOmZL313OxbFEUZagV4cqOwqaeOT574OYw2/U/wLSaxBp1zDTVCgL43dfZTtt3J3+nNqRX6ZE8h1oD6NOAXWytyNBEP4hi5J1fKo3E2XuWJlknh5fp9Hmq1IHoobuU2kr4yXTAo+H31r20u0temIQSq1yuym0M+5Tog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aoSca2HW; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740401162; c=relaxed/simple;
+	bh=LWgjnBIOINMhQJXWw3x8O3MsK1mQrgsIKVZtKVBGhlo=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=umWb7ngAHOCaA/pyucvQkdP3EzzXFrWDO7hspUqtAiWW4Oa3pKFL7QXmvQpWf7QBFNwXIbc5LsnyWTCPAlMFc+n83FnmyEivG2iKKI19SikjGKf2SgxpJH3mHaMN5EbwG1ECQ68FWYdUlxt7f616Gfv9VtTW0cyp/2LJyRhKATE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TMrMjsWy; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aoSca2HW"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-abbec6a0bfeso693616066b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 04:44:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740401091; x=1741005891; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uUlJ/YqOHEUEcaQH1p9PSJzfXPsJSMUPR0Rqgv6f4Tw=;
-        b=aoSca2HW+71BCBgDGBcsh7JyuWbq42fq8aKj6T0JTOHaCLdhW3duGz8n0/J2aXiRC0
-         hGbaA9/uzbaPAF+CBHf4KmdQ4dBw7mtn0WmisQXtiA9L1PES9VPsGz7stqUFPYvJ6Ulg
-         eklVnXUMyrKHVyeVLzWxWuHAcE+TsZBG7pQoJjAtnLUhj4S43h/QBaRWwp/m7YA7J6ks
-         JpEw3aK+JQ5/gx6v2aab3nG6S/FfkkB3+9GcfFyXpaCCGsKBc7cLe+Cp7BdmBp0XJlwz
-         21TZqNsFgm3nlvaad7ud9wOZp3wxemLnnwARYGf2AR98836hvXOOuFq60X+MQ+xHqmDb
-         IytA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740401091; x=1741005891;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uUlJ/YqOHEUEcaQH1p9PSJzfXPsJSMUPR0Rqgv6f4Tw=;
-        b=lRpor847jpx0+tBjlyenm9wYzcpjVpXiDm4UUBe23bh0bnIarCOvj2k6xi0G5tI0ar
-         EY5Y6hV9Os/sKl26AduedhxstMe1d1j2SvqjCWuzWSoTDHxW5sGq3Xe8T4RMlNrGERdv
-         CfGXfFctrs1R8Y0BW1yClO33wGi2S1M5VwtLqJn/Y3hhlvciTFjzt8JxEAktyz/BzpVC
-         sfAlXac3D65EUyy87J0d3nBiqBr2YHqcSbuT+kE66lb+qgO1On+7sEC4XEsTudC76uAP
-         JZI9348zpkZ5p6JCljRpUH7LdRZAFypuJKG7+K4Vb4LNc1esGA+mRf5BtmT+++12QKd7
-         v0cw==
-X-Forwarded-Encrypted: i=1; AJvYcCUk4jJBO6/PFbgO8tXfwAGpGJolvfC+35FrsajyWS46Pp8IJkwZsAvZ4g8ge85xrXbAqVPlxLDnmitHqnA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvJt2OxL+/C87U4/Hp5JELwhu3rubn0mHpx2QizBn5/p324hml
-	LAxDZHXaBVTcFVbGbPG2MDn1l3eGYmJwyJ8IXztGRVuStCwCV57X
-X-Gm-Gg: ASbGncvK1VEnjQ4+lGYZwKInmg9Jwdq91aRp6cWN05pnkLd/vFHF/lij/lt2s3q+vH1
-	kzzM2ufEKOxasOpREGzxK7YvXXZfq+p/epsrM1CykDn+WyvMBfsK8Pwi2gnD5XHN861IR5Q2GO3
-	k7v13BSb3SybHATpccncVdT7eXB92ga2tOn/DRrgIhjyFAD/LfelYoAmW3Q+ooxnvxGeYk+9vkm
-	zjM6Kk6XeIvi/Ej7ecrlqcM8bFxOPWwd1Waq7UK7OC19leZpspfULIHjM3CwomvpZn71ZcjQdbW
-	lCyFpdqHE890QK6X/dqowfCXuq5pXnTSrMBO5oXYdYe8mxE=
-X-Google-Smtp-Source: AGHT+IEJb/DYjRK1zQULnRrxfy1ILl8jlEBKOOE4wo/W0zWqZBA/YjJvnbL6+997MY2DmHfnXEtzSQ==
-X-Received: by 2002:a17:907:60c8:b0:abe:cbc3:a148 with SMTP id a640c23a62f3a-abecbc3b1c1mr12117666b.50.1740401090165;
-        Mon, 24 Feb 2025 04:44:50 -0800 (PST)
-Received: from smtpclient.apple ([212.59.70.42])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba53280ee4sm2222831766b.78.2025.02.24.04.44.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Feb 2025 04:44:49 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TMrMjsWy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=Subject:Cc:To:From:Date:Message-ID:
+	Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=dC2WaUYnTgoh/IYAcXyoaIxlJCuUEBZuHGzOW5oKu2E=; b=TMrMjsWyrg2omGwIPV27SroBS4
+	kVguUe+2Gq9eZKBLvaqNR3/fqN+Zp7xPAkEA+NnEk0fqL4VquFvP5RbNznPLKmPVq/v0jeuj4wvnA
+	zDn2vWMdXpLj5FbWA9Lu/0ErH9jOYOBYMZ8gn494S5DeEb5Ms8i0Ke4Sm+9wsPRL4t1lqOnuB1llZ
+	m9g0b33WZw8Af19JFkeoc8Cvx9n3kL8MhsgQjbw/vaa3vGB5BbcZhSdbxeXKvgSw3ZHe9+vf8Hj9Q
+	uGg6ROeeGd85IZQ5R0A8x4x+u1/lNWY1gsOga9u1wRDyRm9XHRoTKUXkVCP28vuab1uyG9c8BrkO3
+	NLcmLt2Q==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tmXqM-00000003C2O-2AMS;
+	Mon, 24 Feb 2025 12:45:54 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
+	id 1264730010A; Mon, 24 Feb 2025 13:45:54 +0100 (CET)
+Message-ID: <20250224123703.843199044@infradead.org>
+User-Agent: quilt/0.66
+Date: Mon, 24 Feb 2025 13:37:03 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+ peterz@infradead.org,
+ alyssa.milburn@intel.com,
+ scott.d.constable@intel.com,
+ joao@overdrivepizza.com,
+ andrew.cooper3@citrix.com,
+ jpoimboe@kernel.org,
+ jose.marchesi@oracle.com,
+ hjl.tools@gmail.com,
+ ndesaulniers@google.com,
+ samitolvanen@google.com,
+ nathan@kernel.org,
+ ojeda@kernel.org,
+ kees@kernel.org,
+ alexei.starovoitov@gmail.com,
+ mhiramat@kernel.org,
+ jmill@asu.edu
+Subject: [PATCH v4 00/10] x86/ibt: FineIBT-BHI
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH v13 04/14] x86/mm: use INVLPGB for kernel TLB flushes
-From: Nadav Amit <nadav.amit@gmail.com>
-In-Reply-To: <20250224123142.GFZ7xmruuyrc2Wy0r7@fat_crate.local>
-Date: Mon, 24 Feb 2025 14:44:37 +0200
-Cc: the arch/x86 maintainers <x86@kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- peterz@infradead.org,
- Dave Hansen <dave.hansen@linux.intel.com>,
- zhengqi.arch@bytedance.com,
- thomas.lendacky@amd.com,
- kernel-team@meta.com,
- "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- jackmanb@google.com,
- jannh@google.com,
- mhklinux@outlook.com,
- andrew.cooper3@citrix.com,
- Manali.Shukla@amd.com,
- Ingo Molnar <mingo@kernel.org>,
- Borislav Petkov <bp@alien8.de>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1FC042E2-7210-45F1-A094-40849100F483@gmail.com>
-References: <20250223194943.3518952-1-riel@surriel.com>
- <20250223194943.3518952-5-riel@surriel.com>
- <20250224123142.GFZ7xmruuyrc2Wy0r7@fat_crate.local>
-To: Rik van Riel <riel@surriel.com>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
+
+Hi all!
+
+Hopefully final version of these here patches.
+
+As reported, these patches include the cfi=paranoid flag for dealing with the
+FineIBT SYSCALL pivot and cfi=bhi for further hardering FineIBT.
+
+Biggest difference since last time is the reworking (vastly simplifying) of
+cfi=warn, and getting rid of the ud_type propagation in favour of using
+is_cfi_trap().
+
+As reported earlier, available at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git x86/fineibt-bhi2
+
+Previous version at:
+
+  https://lkml.kernel.org/r/20250219162107.880673196@infradead.org
 
 
-
-> On 24 Feb 2025, at 14:31, Borislav Petkov <bp@alien8.de> wrote:
->=20
-> On Sun, Feb 23, 2025 at 02:48:54PM -0500, Rik van Riel wrote:
->> Use broadcast TLB invalidation for kernel addresses when available.
->>=20
->> Remove the need to send IPIs for kernel TLB flushes.
->>=20
->> Signed-off-by: Rik van Riel <riel@surriel.com>
->> Reviewed-by: Nadav Amit <nadav.amit@gmail.com>
-
-Nothing concrete against this patch, but I do not remember reviewing it
-thoroughly, and I do not see that I sent any =E2=80=9CReviewed-by=E2=80=9D=
- tag for it
-before, so please remove it. I only reviewed thoroughly and gave
-=E2=80=9Creviewed-by=E2=80=9D for patch 9.
-
-[ I would note at this opportunity that while I managed to convince =
-myself
-patch 9 is safe, I personally would have considered taking a more =
-defensive
-approach there. I may reiterate it there. ]
+---
+ Makefile                      |   3 +
+ arch/x86/Kconfig              |   8 +
+ arch/x86/include/asm/bug.h    |   3 +
+ arch/x86/include/asm/cfi.h    |  10 ++
+ arch/x86/include/asm/ibt.h    |   4 +
+ arch/x86/kernel/alternative.c | 370 +++++++++++++++++++++++++++++++++++++-----
+ arch/x86/kernel/cfi.c         |   8 +-
+ arch/x86/kernel/traps.c       |  54 +++++-
+ arch/x86/lib/Makefile         |   3 +-
+ arch/x86/lib/bhi.S            | 146 +++++++++++++++++
+ arch/x86/net/bpf_jit_comp.c   |  30 ++--
+ include/linux/cfi.h           |   2 +
+ kernel/cfi.c                  |   4 +-
+ 13 files changed, 585 insertions(+), 60 deletions(-)
 
