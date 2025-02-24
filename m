@@ -1,165 +1,152 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD3682054E7;
-	Mon, 24 Feb 2025 22:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0568B3DBB6;
+	Mon, 24 Feb 2025 22:30:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740436213; cv=none; b=tw955Mt8NmwkRYe2+KqV0vOc3KxeIZeBU0gZkMYib6WVKQ07iXHVE0FoFAHojr9q1Z7wQoR1FzDuD9YjZ74C7soaPxO56QQQa7AlYS4UcGpVvtdKb+CC8MF5DFbPKvmBRP9/YXzUlsmugTDp+r5fF+oISgFSoSQ40xCOv2GZbMo=
+	t=1740436239; cv=none; b=F7qBaiA3UPWrQvyJzLtisNaGKI9H/m7Q2agQUi7eJViO/2dBAheD2JBYZ7CFS55YWfBe9TZ46frzUHjBwFTMUiEICrNlmfr0/bJmerxEpH/GJD8dpd8lOgsFuehImJFSv0Bj5QGL7s3L6NltIHD6swwUcEldgt7VSy8RVJEDH3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740436213; c=relaxed/simple;
-	bh=EBRZfjLcwg5g2rsoSMmRqbsYdSeJMfXkKTCLAauJNJE=;
+	s=arc-20240116; t=1740436239; c=relaxed/simple;
+	bh=O0pCRDGn4iQ7GiTUj7I+4iYeEiZ8K7m3WtPTYjknbVo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fXlYo+3VWnHp4HWfSDQhlhIgd7PfdsCKOqixHwW/J6BG6P4AHLeq70zzDV4vVUrO81I7knsdtokh5ZG3+PnvcoYiYq6T28k3pgMl0uquzYxbP8LD9oNVIcoH0GF+rRP8CsdKRnZhmQWGzr+J479MAHK/e83mSdbDY19a9eLu+dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ALDr1FWS; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=HJcX3RT8kvS2vUiKACz02t01Ygaho4m5FPLaKk2RpsiO/7xb20PBy/6iUZUElrutteIQ950uTgCDP+GmscMLq015o7+jTExOKdY4vC2G/sc0UnXQeIsU+sgYN9bPk8ItSDDlg8qNaTfAon6PA3CImn6oTfm7mq48MFhiisbxRfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=cey62cR4; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=bZIjnI8T; arc=none smtp.client-ip=103.168.172.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ALDr1FWS"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-220d398bea9so78500525ad.3;
-        Mon, 24 Feb 2025 14:30:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740436211; x=1741041011; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=8Me2tClMPt10g2IbqRw63NkEwXox0kTNxKyczDkCN+Y=;
-        b=ALDr1FWSwzNPx25YKPUPh6lWHjNEy//M98/2ftHtYDEPhJxUrYVlaHR3PoPbRubQmd
-         QhoLAliczh35GvXTAbpYRi6b877nH8bjawZPsuShz+OaaOep4VYnAJddufWHBntfx4Vm
-         KxJCdEQ8OJHF81Fp+Hebkorjkfk6wmradOnD/DcnSJbndE4US/hHbqAwntMhmRJh5J6l
-         9F4LXkg2rw3YBD76k2D/5cq0jXAIOeOX59xGDQNPCmZ3rRBS9QFiAhaSI9m9STU8o0SP
-         VkoiAkgOGRYxMZAswLz2wpFusSOm+rNodpt9n538JcK7NKSgdZBbEJRb3T7DiQRR7fVm
-         Yp0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740436211; x=1741041011;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8Me2tClMPt10g2IbqRw63NkEwXox0kTNxKyczDkCN+Y=;
-        b=lcQ+sHa1mqm2Zb8wcazwW3ADx2xwrmpfB5XOUfkkssJ45xpX57GBXjDU9klc2D0TvJ
-         J6bVdvrwhtBnlkEC0Gz71PnW9pBJj+WDvokKuWgjtCkZwtRwrmwwjRDoJYMOzKyMGj0U
-         +jHPQLcgOfYGHeMgCNr2QMjLSmmksz+XBgr1AspmkjVb8k4D1y/DggrhnCgVQy7OFQ6i
-         BEFfnE6fOudtNG6FnxykDH3XFuSuIuac8U//zfk8OWSaQHj+hqkjc91zNuR8ykzFcvLT
-         rZgdY8BlrVQ0qUSRyKfNduJ1Gc5z0gR4r97Ojxi7d96ECnYeLS1qSYCecnYWa2TAZOWr
-         672Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVKrgAjNK7cJjM3vyDR+o3XsEm+2gB/Osf6FRFp29yen7F6B3Yy5gjYPRLL7flutfpF/0PCsyMvaqBHlXc=@vger.kernel.org, AJvYcCW4EQQrzcImDgNXT0C/zmDLLKrgl4gxxxDUeuH/SGRfohhKFWr/tFK1S9RjJGzICHwHTcvI2X8Q@vger.kernel.org, AJvYcCWwUessm6H77O27EoOes5mH6IF/35urqtSy2GjJUz8e0ot8vj4K9vFycY7yUIDQVyTgbxw=@vger.kernel.org, AJvYcCXBaJIOCDHKV4p7KwXaoEiwa25JdGddbJuudriTImnzut5rQCy6Lx6MzVpGsH32yP4wkZ5FxervgYRwfEA=@vger.kernel.org, AJvYcCXdvd7ZpG//htgS2ZQiKodSSeVlZzBCuj1KCxNcWAE25Fxzb2iwVYWL5BtoxRtGSkkJBvc1besTDeGXc9Ic@vger.kernel.org, AJvYcCXeRb9tfKeqhtvMxMDgyazFkJY+onzJJUMeeQlVCSW7Z2NDAipRKuVe2R9LfDLyAA8t+EWlb74I0Aq4Xxk2sos=@vger.kernel.org, AJvYcCXowpaAjkzGdWdzbCAuR+5e2X6QxLC4MQnEatK5nvX0ebo2IZ6b0VIIuCJC5oxXa8nTwozPVPh9FFt7pWB0@vger.kernel.org
-X-Gm-Message-State: AOJu0Yykdhq1zMJVbAictdxsnkefoSJHCPcRnd28Scm/j132ggNzq8Lq
-	XO6mLvmUNHxu+iQF6JKi772ow9DrZN0VCzGJ6Oj1s528hTGezdP8
-X-Gm-Gg: ASbGnct8AgQmehe2sEf6a6gvJoQMLM5t5FvniL5qXGisPYvWEi/qeFoHQpbggulhepr
-	z/tUkSOLIh/wnwT3dua0EooAvmrzqalDO5aU/KEokyd+8quWZZnnOzchyUTSlWNKeOZxqpdeXpB
-	dluSKbFbM9Iz6LHLQ+dfTIEMXmGJgz0MUbKITxeQiOWQlGANcjhUDaaMFL1CJCZPJYRkzBMq9HD
-	r54QXs7jHCYiGdjfowGW9BHz8yEdKBGCziYVqOULRCygOkGLQYpoNdNtXaJlVnCc+fNp3lWmQ5O
-	AIjGxx1JMLoO4yeoIO/G3NpV9MPIJY9rMLejBVByvlI0xP3Bbg==
-X-Google-Smtp-Source: AGHT+IHSWZzc6ZuJ7NuejlOnvhXRMbFaz5+ejvmVe/JbcFGg9XTfI3FePFDJqFfvVera5WJ+OS97IQ==
-X-Received: by 2002:a17:902:e542:b0:220:ff3f:6cc0 with SMTP id d9443c01a7336-221a1191974mr248692865ad.38.1740436210908;
-        Mon, 24 Feb 2025 14:30:10 -0800 (PST)
-Received: from localhost (maglev-oncall.nvidia.com. [216.228.125.128])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a092fc9sm1130585ad.126.2025.02.24.14.30.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 14:30:10 -0800 (PST)
-Date: Mon, 24 Feb 2025 17:30:08 -0500
-From: Yury Norov <yury.norov@gmail.com>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Uros Bizjak <ubizjak@gmail.com>, Kuan-Wei Chiu <visitorckw@gmail.com>,
-	tglx@linutronix.de, Ingo Molnar <mingo@redhat.com>, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, jk@ozlabs.org,
-	joel@jms.id.au, eajames@linux.ibm.com, andrzej.hajda@intel.com,
-	neil.armstrong@linaro.org, rfoss@kernel.org,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-	dmitry.torokhov@gmail.com, mchehab@kernel.org,
-	awalls@md.metrocast.net, hverkuil@xs4all.nl,
-	miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-	louis.peens@corigine.com, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
-	parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
-	johannes@sipsolutions.net, gregkh@linuxfoundation.org,
-	jirislaby@kernel.org, akpm@linux-foundation.org, mingo@kernel.org,
-	alistair@popple.id.au, linux@rasmusvillemoes.dk,
-	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-	jernej.skrabec@gmail.com, kuba@kernel.org,
-	linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
-	dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
-	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
-	oss-drivers@corigine.com, netdev@vger.kernel.org,
-	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
-	brcm80211-dev-list.pdl@broadcom.com, linux-serial@vger.kernel.org,
-	bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw,
-	Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: Re: [PATCH 03/17] x86: Replace open-coded parity calculation with
- parity8()
-Message-ID: <Z7zy8AOpAo4JQu8W@thinkpad>
-References: <20250223164217.2139331-1-visitorckw@gmail.com>
- <20250223164217.2139331-4-visitorckw@gmail.com>
- <d080a2d6-9ec7-1c86-4cf4-536400221f68@gmail.com>
- <e0b1c299-7f19-4453-a1ce-676068601213@zytor.com>
- <Z7zv-c4A76jeMAKf@thinkpad>
- <68F1ED19-B0C2-4E78-B504-2F7C040ACC0A@zytor.com>
+	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="cey62cR4";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bZIjnI8T"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfout.phl.internal (Postfix) with ESMTP id E5D3B1381517;
+	Mon, 24 Feb 2025 17:30:35 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-06.internal (MEProxy); Mon, 24 Feb 2025 17:30:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1740436235; x=1740522635; bh=Bd+S1XulZr
+	LFDTKwyGmTN9YcBPY1oZeNyfDO3GE4v0M=; b=cey62cR4yvMe6gFIL7b49yA50v
+	hdHAchEY4j5XvJi4Dx+l+feOEQbjF4cKqaxJILugd/0mGrljXW0x2+fvv+IBeRRW
+	RVitOFWTxtjaFyWtTQyg+y+E1LFrWH/FM5Hf/+oeSXvc2vxx93XOW4xa0NQTJw8S
+	VVRUxFkpw20s7ZJtpRJM+q1LTTSWK+lCcTehhf2c0mTKgdz32sibHZpHqDa1v0uA
+	AssWhiou8jZboDoqQVEG+E/5QL6Ia5CeJQYAMl4taOMfvLIb+ovORo9OecDSvs23
+	FfTyqIZnBbIO4XlVpBNgF+SR/CjORFSC1Z6GaFQrvc4hhkZafTc0X4+svX/Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1740436235; x=1740522635; bh=Bd+S1XulZrLFDTKwyGmTN9YcBPY1oZeNyfD
+	O3GE4v0M=; b=bZIjnI8Tqfxpg0HgMAS8Y7ZF8ue5HK3TXuQDXoKcfof3oUoflHG
+	qfcWo35GxYRh+pe9mr6zxEBgFBTc7IJqGa98kv6wCQi8GhmNr6DIyoddY7rcsER+
+	yK0Ba01vtEwYMVfBpIG4k7dVUOOwtDc+SS2Hn1HoXMENPmSW6p+cn9IW7pwTAxky
+	WpImpPYiJZqO1THdFaAmtysuErGsnXVJ4nwhO+DDSNwUmIKoarkMLK57gXUsPp+Q
+	E7iSdbuTI53cKizClr+d807i7rd85pwk6sn5AREL2dz4pki5CsiuJdNqKTbCA/B4
+	yuyvB4pacoP7hqoJRke5akBayndf74L12zg==
+X-ME-Sender: <xms:CvO8ZyVUa-jUUHn41mOGFNM4wJeRzdmy-17LYBJln-KyN1XydVAPlQ>
+    <xme:CvO8Z-ktXlNcRZYOh94DA8wRMOYmJKK0O2ogHPDli3WDHWkj7USQvqFHCbH4S6QJQ
+    9N0Gn41d4jh4hQZOH8>
+X-ME-Received: <xmr:CvO8Z2Y6hXRjpIYLuMhM1itQuZ8FGCevQF5mz5wkK_-YiIu0U90t3UK9k2jcCctMfEHXFPbcZ21WjxEm6qLI007GAZccSw-7rJs>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdektddttdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttdej
+    necuhfhrohhmpeflrghnnhgvucfirhhunhgruhcuoehjsehjrghnnhgruhdrnhgvtheqne
+    cuggftrfgrthhtvghrnhepgfdvffevleegudejfeefheehkeehleehfefgjefffeetudeg
+    tefhuedufeehfeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepjhesjhgrnhhnrghurdhnvghtpdhnsggprhgtphhtthhopedvfedpmhhouggv
+    pehsmhhtphhouhhtpdhrtghpthhtoheprgdrhhhinhgusghorhhgsehkvghrnhgvlhdroh
+    hrghdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegr
+    lhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepsghoqhhunhdrfh
+    gvnhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhn
+    vghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhmpd
+    hrtghpthhtohepsggvnhhnohdrlhhoshhsihhnsehprhhothhonhdrmhgvpdhrtghpthht
+    oheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepthhmghhroh
+    hsshesuhhmihgthhdrvgguuh
+X-ME-Proxy: <xmx:CvO8Z5XtHN6c3TOorBh021UC9jVAJEZy0KZX4PmX3PUesXbM_fUQMQ>
+    <xmx:CvO8Z8nKZAf9jdCjU66MbE-FfH4hQ7I8aJwEqa_V2stzB8izBkRePQ>
+    <xmx:CvO8Z-eJTXTL8EaeEljxRwwappybtQhKDIxukBNqbAwgJHdG_MIsVQ>
+    <xmx:CvO8Z-HSehRjYb4hVhfAJ1Em3M_Ki4FVhA-wzAYo-636qHH3UuDAog>
+    <xmx:C_O8Z2FGhb1Y8N5yrGEo3iSngXenwBAX7mw9-ZKEVx5Ea4Cfy5ey3yFI>
+Feedback-ID: i47b949f6:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 24 Feb 2025 17:30:34 -0500 (EST)
+Date: Mon, 24 Feb 2025 23:30:32 +0100
+From: Janne Grunau <j@jannau.net>
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Adam Bratschi-Kaye <ark.email@gmail.com>,
+	linux-kbuild@vger.kernel.org, Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Greg KH <gregkh@linuxfoundation.org>, linux-modules@vger.kernel.org
+Subject: Re: [PATCH v7 5/6] rust: str: add radix prefixed integer parsing
+ functions
+Message-ID: <20250224223032.GA615664@robin.jannau.net>
+References: <20250218-module-params-v3-v7-0-5e1afabcac1b@kernel.org>
+ <20250218-module-params-v3-v7-5-5e1afabcac1b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <68F1ED19-B0C2-4E78-B504-2F7C040ACC0A@zytor.com>
+In-Reply-To: <20250218-module-params-v3-v7-5-5e1afabcac1b@kernel.org>
 
-On Mon, Feb 24, 2025 at 02:21:13PM -0800, H. Peter Anvin wrote:
-> On February 24, 2025 2:17:29 PM PST, Yury Norov <yury.norov@gmail.com> wrote:
-> >On Mon, Feb 24, 2025 at 01:55:28PM -0800, H. Peter Anvin wrote:
-> >> On 2/24/25 07:24, Uros Bizjak wrote:
-> >> > 
-> >> > 
-> >> > On 23. 02. 25 17:42, Kuan-Wei Chiu wrote:
-> >> > > Refactor parity calculations to use the standard parity8() helper. This
-> >> > > change eliminates redundant implementations and improves code
-> >> > > efficiency.
-> >> > 
-> >> > The patch improves parity assembly code in bootflag.o from:
-> >> > 
-> >> >    58:    89 de                    mov    %ebx,%esi
-> >> >    5a:    b9 08 00 00 00           mov    $0x8,%ecx
-> >> >    5f:    31 d2                    xor    %edx,%edx
-> >> >    61:    89 f0                    mov    %esi,%eax
-> >> >    63:    89 d7                    mov    %edx,%edi
-> >> >    65:    40 d0 ee                 shr    %sil
-> >> >    68:    83 e0 01                 and    $0x1,%eax
-> >> >    6b:    31 c2                    xor    %eax,%edx
-> >> >    6d:    83 e9 01                 sub    $0x1,%ecx
-> >> >    70:    75 ef                    jne    61 <sbf_init+0x51>
-> >> >    72:    39 c7                    cmp    %eax,%edi
-> >> >    74:    74 7f                    je     f5 <sbf_init+0xe5>
-> >> >    76:
-> >> > 
-> >> > to:
-> >> > 
-> >> >    54:    89 d8                    mov    %ebx,%eax
-> >> >    56:    ba 96 69 00 00           mov    $0x6996,%edx
-> >> >    5b:    c0 e8 04                 shr    $0x4,%al
-> >> >    5e:    31 d8                    xor    %ebx,%eax
-> >> >    60:    83 e0 0f                 and    $0xf,%eax
-> >> >    63:    0f a3 c2                 bt     %eax,%edx
-> >> >    66:    73 64                    jae    cc <sbf_init+0xbc>
-> >> >    68:
-> >> > 
-> >> > which is faster and smaller (-10 bytes) code.
-> >> > 
-> >> 
-> >> Of course, on x86, parity8() and parity16() can be implemented very simply:
-> >> 
-> >> (Also, the parity functions really ought to return bool, and be flagged
-> >> __attribute_const__.)
-> >
-> >There was a discussion regarding return type when parity8() was added.
-> >The integer type was taken over bool with a sort of consideration that
-> >bool should be returned as an answer to some question, like parity_odd().
-> >
-> >To me it's not a big deal. We can switch to boolean and describe in
-> >comment what the 'true' means for the parity() function.
+On Tue, Feb 18, 2025 at 02:00:47PM +0100, Andreas Hindborg wrote:
+> Add the trait `ParseInt` for parsing string representations of integers
+> where the string representations are optionally prefixed by a radix
+> specifier. Implement the trait for the primitive integer types.
 > 
-> Bool is really the single-bit type, and gives the compiler more information. You could argue that the function really should be called parity_odd*() in general, but that's kind of excessive IMO.
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+> ---
+>  rust/kernel/str.rs | 118 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 118 insertions(+)
+> 
+> diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+> index db272d2198fcc..8b0d814b47f52 100644
+> --- a/rust/kernel/str.rs
+> +++ b/rust/kernel/str.rs
+> @@ -945,3 +945,121 @@ fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 
-Yes, I could, but I will not. :) I also feel like bool looks more
-natural here.
+[...]
+
+> +    pub trait ParseInt: FromStrRadix + TryFrom<i128> {
+> +        /// Parse a string according to the description in [`Self`].
+> +        fn from_str(src: &BStr) -> Result<Self> {
+> +            match src.deref() {
+> +                [b'-', rest @ ..] => {
+> +                    let (radix, digits) = strip_radix(rest.as_ref());
+> +                    // 2's complement values range from -2^(b-1) to 2^(b-1)-1.
+> +                    // So if we want to parse negative numbers as positive and
+> +                    // later multiply by -1, we have to parse into a larger
+> +                    // integer. We choose i128 as sufficiently large.
+> +                    let val = i128::from_str_radix(
+
+The usage of i128 causes here following link errors on arm64 with
+"rustc 1.84.1 (e71f9a9a9 2025-01-27) (Fedora 1.84.1-1.fc41)"
+
+| ld: rust/kernel.o: in function `<i128>::from_str_radix':
+| /usr/lib/rustlib/src/rust/library/core/src/num/mod.rs:1563:(.text+0x3bc): undefined reference to `__muloti4'
+| ld: /usr/lib/rustlib/src/rust/library/core/src/num/mod.rs:1563:(.text+0x440): undefined reference to `__muloti4'
+| ld: rust/kernel.o: in function `<i128>::overflowing_mul':
+| /usr/lib/rustlib/src/rust/library/core/src/num/int_macros.rs:2517:(.text+0x4b4): undefined reference to `__muloti4'
+| ld: /usr/lib/rustlib/src/rust/library/core/src/num/int_macros.rs:2517:(.text+0x534): undefined reference to `__muloti4'
+
+The errors go away after exchanging i128 with i64 (while breaking the
+parsing for large values).
+
+ciao Janne
