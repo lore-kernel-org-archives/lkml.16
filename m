@@ -1,113 +1,208 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52A478F2E
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 09:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF83D12CDBE;
+	Mon, 24 Feb 2025 09:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740389781; cv=none; b=i0UnUGpBAUBPRzLq+DxG1NuJm9U0hLqJz0NJWsAnXwIHPqfJwx4mdrRKeB7huYhBrIwozOVok4KlCXV/nTT0GaC8a9OOS85j3z1qpIpwJNJ//0I6LCTZpjSeV6cgosbXmE6y/XivELxjHlDwA3LIlrewvAksQV4FRvyI/ClElo8=
+	t=1740389907; cv=none; b=FH6psJFm3s6VZwdS6z2UxBsI9KIcPQzzte85rCqjLSnlkzKAO0yGo2FTjVGy37CJxguByDHLrinSR8XEWrui5QMxGFUWRXx9owPH2VitV70qY0RRzyREjziz9XKfZ+TS0Ug5rxWhPbuWPwYS8VUEaMhAobX9osVfAAs4r/Pnzqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740389781; c=relaxed/simple;
-	bh=FWYWFNS+oT7mj2E21f3jXpR3gYQLoWEmXq14pHcLk7o=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lkc52+RqpArEpLHL/k1nT3AjO9FGlOlS8e1UMpsjP0NDKr74yNFYPHzxdCv6G9QyvUHpBwo2Kyq/bqnHWEjudnXhAR+Kl4yuuR2DoPQH1dwcphbUaOJpl/7wIWcgsTrrFQtPZBR7vD+MRkrzywidXrXHZIU8Ens9XnRHYbVsXdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=S7jX+c6c; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1740389907; c=relaxed/simple;
+	bh=Y45OZf5AEVqbMLHC2vetp5A95pNeIRg/N3EqYrtFEj0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qKs40XrH1wdLUZ4qstn2WIJwUlumXiTqUUd1q///a3Bv+oYHObo9nikZ7VPz1VdhrXV8xkJvL7i3B38eAGEJTfytwsTs3GkkrWupmFK0BXctr/2KXj3maV7fwWQUX2heBgu81Cks0RzE+AQzj1/2YUvy3ljb5nC4zccAgUz9DJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=SIFP+mS5; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="S7jX+c6c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1740389779; x=1771925779;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=FWYWFNS+oT7mj2E21f3jXpR3gYQLoWEmXq14pHcLk7o=;
-  b=S7jX+c6clB5J/Vn/lSQeXthCa+ZHahgjGovRI5jayuEXeCybJZxwv6Pu
-   irv9HMEIu+4CJ0QYu+5W1mlr8erJXUAsjNEkmZn7Mk2UWUqEDn5UdVdEN
-   YvzY0NHZsEvWHocltNAIHvx2CEVQbDtNyvEThoiNfIIcDuwwAtekF/wYb
-   IE8ugFKNUoDIkQGEp0R4sfqrjxMBRRE9TtAUCvxlGRlKxRzJnhUckGuee
-   hYpj6EsrL5HXEDxeSrSrJRq7kPqDodjVUpIKMwuX6powfz3VojHlpIAQt
-   xxkHBdwqmtf50FqMtw2ohQZzdADw7RMdbXGeUEfbUokhPla3wAW3ETgT0
-   w==;
-X-CSE-ConnectionGUID: UsE/WXwmTmibXe7m321U4A==
-X-CSE-MsgGUID: OrAZ7Jx8RAeeUXHDGrzUBg==
-X-IronPort-AV: E=Sophos;i="6.13,309,1732604400"; 
-   d="scan'208";a="42160288"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Feb 2025 02:36:18 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 24 Feb 2025 02:36:17 -0700
-Received: from DEN-DL-M31836.microchip.com (10.10.85.11) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Mon, 24 Feb 2025 02:36:15 -0700
-From: Horatiu Vultur <horatiu.vultur@microchip.com>
-To: <p.zabel@pengutronix.de>, <Steen.Hegelund@microchip.com>,
-	<daniel.machon@microchip.com>, <UNGLinuxDriver@microchip.com>,
-	<herve.codina@bootlin.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH] reset: mchp: sparx5: Fix for lan966x
-Date: Mon, 24 Feb 2025 10:29:23 +0100
-Message-ID: <20250224092923.2648680-1-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SIFP+mS5"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8DC571F764;
+	Mon, 24 Feb 2025 09:38:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740389897;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8U5EMMWlFDym6d2qg1LTT9H9US9Iiqf+zo1LbUZs+SQ=;
+	b=SIFP+mS5sChUesjRmTYG6lyyKcqt01GNDyNN6oB3oI+9J9I7EykFplii+zPokEJVKrb+Fv
+	ECI+OoafKYZhwK4dcpBpThrzdJyHTkUnsw7VKeLBb1ZUctViSrhI/eB5YvhDJuXEZl5VI4
+	+q0IyvzuqaLQrKn0TH8IMLM5ON66QyUKEohR6MFpgQgKStc7vIU5g5I4klVHW44JFxU4QF
+	QIoHHqI1aONLT4S/SLbEStHAAuiZHk+LI913EYDXT61Aq3zwgiDsXAcyyLhK/W/Dvg0OA6
+	Ucz2FC+jFWZzbNXuWqiQf4W8mDqPGtYuYFa9vB1D42RJW1QbcqcYn9XZ3VYT5w==
+Date: Mon, 24 Feb 2025 10:38:14 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: =?UTF-8?B?QmrDuHJu?= Mork <bjorn@mork.no>
+Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>, Heiner Kallweit
+ <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, Florian
+ Fainelli <f.fainelli@gmail.com>, =?UTF-8?B?S8O2cnk=?= Maincent
+ <kory.maincent@bootlin.com>, Simon Horman <horms@kernel.org>, Romain
+ Gantois <romain.gantois@bootlin.com>, Antoine Tenart <atenart@kernel.org>,
+ Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
+Subject: Re: [PATCH net-next 0/2] net: phy: sfp: Add single-byte SMBus SFP
+ access
+Message-ID: <20250224103814.7d60bfbd@fedora>
+In-Reply-To: <87r03otsmm.fsf@miraculix.mork.no>
+References: <20250223172848.1098621-1-maxime.chevallier@bootlin.com>
+	<87r03otsmm.fsf@miraculix.mork.no>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdejkeegfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeftddujeeliefhkeegkeehueekkeeivdejjeevtefhffduuddujeevueeihfehgeenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhkvghrnhgvlhdrohhrghenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghlohepfhgvughorhgrpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudejpdhrtghpthhtohepsghjohhrnhesmhhorhhkrdhnohdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesg
+ hhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhm
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-With the blamed commit it seems that lan966x doesn't seem to boot
-anymore when the internal CPU is used.
-The reason seems to be the usage of the devm_of_iomap, if we replace
-this with of_iomap, this seems to fix the issue as we use the same
-region also for other devices.
+Hi Bj=C3=B8rn,
 
-Fixes: 0426a920d6269c ("reset: mchp: sparx5: Map cpu-syscon locally in case of LAN966x")
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- drivers/reset/reset-microchip-sparx5.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+On Sun, 23 Feb 2025 19:37:05 +0100
+Bj=C3=B8rn Mork <bjorn@mork.no> wrote:
 
-diff --git a/drivers/reset/reset-microchip-sparx5.c b/drivers/reset/reset-microchip-sparx5.c
-index aa5464be7053b..5a75f9833a91a 100644
---- a/drivers/reset/reset-microchip-sparx5.c
-+++ b/drivers/reset/reset-microchip-sparx5.c
-@@ -8,6 +8,7 @@
-  */
- #include <linux/mfd/syscon.h>
- #include <linux/of.h>
-+#include <linux/of_address.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/property.h>
-@@ -72,14 +73,17 @@ static struct regmap *mchp_lan966x_syscon_to_regmap(struct device *dev,
- 						    struct device_node *syscon_np)
- {
- 	struct regmap_config regmap_config = mchp_lan966x_syscon_regmap_config;
--	resource_size_t size;
-+	struct resource res;
- 	void __iomem *base;
- 
--	base = devm_of_iomap(dev, syscon_np, 0, &size);
--	if (IS_ERR(base))
--		return ERR_CAST(base);
-+	if (of_address_to_resource(syscon_np, 0, &res))
-+		return ERR_PTR(-ENOMEM);
- 
--	regmap_config.max_register = size - 4;
-+	base = of_iomap(syscon_np, 0);
-+	if (!base)
-+		return ERR_PTR(-ENOMEM);
-+
-+	regmap_config.max_register =  resource_size(&res) - 4;
- 
- 	return devm_regmap_init_mmio(dev, base, &regmap_config);
- }
--- 
-2.34.1
+> Maxime Chevallier <maxime.chevallier@bootlin.com> writes:
+>=20
+> > Hi everyone,
+> >
+> > Some PHYs such as the VSC8552 have embedded "Two-wire Interfaces" desig=
+ned to
+> > access SFP modules downstream. These controllers are actually SMBus con=
+trollers
+> > that can only perform single-byte accesses for read and write.
+> >
+> > This series adds support for accessing SFP modules through single-byte =
+SMBus,
+> > which could be relevant for other setups.
+> >
+> > The first patch deals with the SFP module access by itself, for address=
+es 0x50
+> > and 0x51.
+> >
+> > The second patch allows accessing embedded PHYs within the module with =
+single-byte
+> > SMBus, adding this in the mdio-i2c driver.
+> >
+> > As raw i2c transfers are always more efficient, we make sure that the s=
+mbus accesses
+> > are only used if we really have no other choices.
+> >
+> > This has been tested with the following modules (as reported upon modul=
+e insertion)
+> >
+> > Fiber modules :
+> >
+> > 	UBNT             UF-MM-1G         rev      sn FT20051201212    dc 2005=
+12
+> > 	PROLABS          SFP-1GSXLC-T-C   rev A1   sn PR2109CA1080     dc 2206=
+07
+> > 	CISCOSOLIDOPTICS CWDM-SFP-1490    rev 1.0  sn SOSC49U0891      dc 1810=
+08
+> > 	CISCOSOLIDOPTICS CWDM-SFP-1470    rev 1.0  sn SOSC47U1175      dc 1906=
+20
+> > 	OEM              SFP-10G-SR       rev 02   sn CSSSRIC3174      dc 1812=
+01
+> > 	FINISAR CORP.    FTLF1217P2BTL-HA rev A    sn PA3A0L6          dc 2307=
+16
+> > 	OEM              ES8512-3LCD05    rev 10   sn ESC22SX296055    dc 2207=
+22
+> > 	SOURCEPHOTONICS  SPP10ESRCDFF     rev 10   sn E8G2017450       dc 1407=
+15
+> > 	CXR              SFP-STM1-MM-850  rev 0000 sn K719017031       dc 2007=
+20
+> >
+> >  Copper modules
+> >
+> > 	OEM              SFT-7000-RJ45-AL rev 11.0 sn EB1902240862     dc 1903=
+13
+> > 	FINISAR CORP.    FCLF8521P2BTL    rev A    sn P1KBAPD          dc 1905=
+08
+> > 	CHAMPION ONE     1000SFPT         rev -    sn     GBC59750     dc 1911=
+0401
+> >
+> > DAC :
+> >
+> > 	OEM              SFP-H10GB-CU1M   rev R    sn CSC200803140115  dc 2008=
+27
+> >
+> > In all cases, read/write operations happened without errors, and the in=
+ternal
+> > PHY (if any) was always properly detected and accessible
+> >
+> > I haven't tested with any RollBall SFPs though, as I don't have any, an=
+d I don't
+> > have Copper modules with anything else than a Marvell 88e1111 inside. T=
+he support
+> > for the VSC8552 SMBus may follow at some point.
+> >
+> > Thanks,
+> >
+> > Maxime
+> >
+> > Maxime Chevallier (2):
+> >   net: phy: sfp: Add support for SMBus module access
+> >   net: mdio: mdio-i2c: Add support for single-byte SMBus operations
+> >
+> >  drivers/net/mdio/mdio-i2c.c | 79 ++++++++++++++++++++++++++++++++++++-
+> >  drivers/net/phy/sfp.c       | 65 +++++++++++++++++++++++++++---
+> >  2 files changed, 138 insertions(+), 6 deletions(-) =20
+>=20
+> Nice!  Don't know if you're aware, but OpenWrt have had patches for
+> SMBus access to SFPs for some time:
+>=20
+> https://github.com/openwrt/openwrt/blob/main/target/linux/realtek/patches=
+-6.6/714-net-phy-sfp-add-support-for-SMBus.patch
+> https://github.com/openwrt/openwrt/blob/main/target/linux/realtek/patches=
+-6.6/712-net-phy-add-an-MDIO-SMBus-library.patch
+>=20
+> The reason they carry these is that they support Realtek rtl930x based
+> switches.  The rtl930x SoCs include an 8 channel SMBus host which is
+> typically connected to any SFP+ slots on the switch.
+>=20
+> There has been work going on for a while to bring the support for these
+> SoCs to mainline, and the SMBus host driver is already here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
+/drivers/i2c/busses/i2c-rtl9300.c?id=3Dc366be720235301fdadf67e6f1ea6ff32669=
+c074
+>=20
+> I assume DSA and ethernet eventually will follow, making SMBus SFP
+> support necessary for this platform too.
+>=20
+> So thanks for doing this!
 
+Good to know this is useful to you ! So there's at least 2 different
+classes of products out there with SMBus that advertise that it's
+"designed for SFP" ._.
+
+> FWIW, I don't think the OpenWrt mdio patch works at all.  I've recently
+> been playing with an 8 SFP+ port switch based on rtl9303, and have tried
+> to fixup both the clause 22 support and add RollBall and clause 45.
+> This is still a somewhat untested hack, and I was not planning on
+> presenting it here as such, but since this discussion is open:
+> https://github.com/openwrt/openwrt/pull/17950/commits/c40387104af62a06579=
+7bc3e23dfb9f36e03851b
+>=20
+> Sorry for the format.  This is a patch for the patch already present in
+> OpenWrt. Let me know if you want me to post the complete patched
+> mdio-smbus.c for easier reading.
+>=20
+> The main point I wanted to make is that we also need RollBall and clause
+> 45 over SMBus.  Maybe not today, but at some point.  Ideally, the code
+> should be shared with the i2c implementation, but I found that very hard
+> to do as it is.
+
+I don't have anything to test that, and yeah that can be considered as
+a second step, however I don't even know if this can work at all with
+single byte accesses :(
+
+Thanks,
+
+Maxime
