@@ -1,114 +1,134 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F8F026388F;
-	Mon, 24 Feb 2025 17:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67F7E1537C8;
+	Mon, 24 Feb 2025 17:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740417351; cv=none; b=EeFhMY0gEgBYO78u/7WkISuQCvcaP3aCtR4OHpjUbQQ/+euQ+KaT3JnM8a0JT0OikVhBdgoZDDEC5bNXiVOjELGjDG+yDZsTyZfaxIDtfdzWDkxsrb0B4Nprl70vV0QNpI+IUJab9zGz2Ore7kpOCoaNbM+niO/t8xIPZIYOql4=
+	t=1740417489; cv=none; b=niJs3INEYJe8k6Z7mk6WW9LEUPlKwIIlthGRj3ENq0eT7EeuJu6M/ItnMm5zpJ3ZrnEC97cu6D69o3R1vJ7AcCn4guwC4HfOOT7kj45HmsLYJGKsx4xfCf8Jef6G37XybBGfVLi/6jvyukLXyuDSf3MDzXUGfCvMe5aKy9yfWkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740417351; c=relaxed/simple;
-	bh=fH4RtBkSRZW2kBeXi3P/AudbFsIVNSe8yu+5vaExYfY=;
+	s=arc-20240116; t=1740417489; c=relaxed/simple;
+	bh=Udl67jI1Qm6fATwqGT1fr5PHHdw9h5FVAHOl8ACPIDE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hhV6IcHg1OrhgXhQ2142BPzYKDFhlpyWdq/zDdT/SzZmziOGGrlC4XZQmA2kx9d2fgFrOKWkWlXIOMFdd9Tl+VU5ZZd/JiQN0wZ3Sn6lYx9veZ5ylvfgytvR07waez+Wwy5vRV2XUw5LEmfuu/opFYzR/Tczuk3H9d81oGOuqTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ToM6MJuO; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ToM6MJuO"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-220ca204d04so75469655ad.0;
-        Mon, 24 Feb 2025 09:15:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740417349; x=1741022149; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UxLi0WJqLjDUsJq7l6SDZpuIuRBeCk6IdkUiuE+2Dwo=;
-        b=ToM6MJuO7wZFueHyooNxLk0pntRFLvGtkX7d/Mfvpqhjqy0f2HccSqHAuQHgFmqJqD
-         7YnWiE5PmlWaQZ5mKrabVUyrNB9zB3LhjpJsI5gYeAskmWShl6qhayyFiiW+h94YNIgR
-         0zynrg9eSKT3eeTcIQdGDDRLN3Sj24zEzXoj/CIJ80F0xBVxMR8B/zr6ltAkgzVTdsHf
-         dTpYAK7DyZRAvgM38XDE0XDK/w1CpnpnLbRZ3HSsTUOsF7vP66OMEf3LbXuYQhfM2odi
-         yT7t/WmhEk1xajHAUFccU8SCnvuD2EK7TR05TUrVyUJKFk+iZ3cFH4/oeEMGOVea9yYk
-         sf0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740417349; x=1741022149;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UxLi0WJqLjDUsJq7l6SDZpuIuRBeCk6IdkUiuE+2Dwo=;
-        b=cpV4DmtZlVqjI1kXrC9RZrMPjaEO+SEHYZU+Y1V8Ao3GzyBJ9Yyhc6hmpQy1QQF9nS
-         rNrE9y1PWfrpmN0oZe6bXCIbE6PBj1FHwwpomD8cBKncePZDqr9Y22pobBaqpRdNzenE
-         /QPXnmQnUKTDxex7GwF/ZGD7EN5V3loxFBWlzKK2hAXxKBx6Gwtf6eP2uw09TmbjWMty
-         6NeXZDhOHcDLyFDH4IC+ACv/oGwv9em/kxVHsJ6B1wTz3yJOzP5bslqYlB8tXHLJ9xPN
-         C2Ntw/J1wzmxpjBkP26uO9Lg/Ij1K5in/W9S5zHQiX0cKrG6jFbBdQmbNxdGgd/OLRcL
-         aWRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW+Si/ScgG4Y87NQVFsZDheI4iQc0espPIbtI0FwS739PRtA9HtEVhQDdoSpBtAzvgb6NA=@vger.kernel.org, AJvYcCWgwHuVNRWIQPssK7YmtnS2OUTsJ8AVeayg/JD+778KLTjsJ7cdnSaF/qpKDGAyxYALC1uiBibLG5vQ@vger.kernel.org, AJvYcCWvKUT4HNtLKTbcJnQnKkwhAUpLV+BP2XfyMyibQ3PjJznpjiB5lHZPQZvZvNrPBrUUTR9v+4PgR87zXH78T3qx@vger.kernel.org, AJvYcCXaY5eeGgpllUn9o+PaDnrC24BESD5BEZE/c449WAqfHZUJHlatfBQTSS+Jn8LeLblwkEmkpyrCmXZ4NIB0@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7TxsfoY7nIOLE8Ltg1tVJnhUZp/kT271/9r4Dxur7riAQOYGs
-	NY55z4iWyielLOW+KY4AAzPQbG2zfU7+QgfaCONS+t8Ifbh+yOY=
-X-Gm-Gg: ASbGncvxl8Dw0e2+i0mSDJEn4cG+k5UI2m8IR3O+1J+Cu4RDRyh6sw6/LbPei6vL/WK
-	Md4lvdVlv+U2qad5Uv/HgOvkeZB4yT5btQ/9hWypsluoubudl0FnULOZRsGsTmsqFzvH70Lt+ru
-	x7XoCFE3UXtJe+1rrTDUrmULt+ZyxATOBhpw7bE5EWlRV4lvAEkTclUlE0dqbanUZzW8DXCofH2
-	LOnD1DKBCie5vYpMXAaUMO304NAMeb9LPzm1SlORZ85M/LXXaoKBa/RetEsrPCsOv8wilVniym1
-	tXAvdnfuNTHdBupC1+Jq4bl4Pg==
-X-Google-Smtp-Source: AGHT+IHX3hMEBBORSG6Giv0hdr/rxJRv/ocP3i7v+0Nr0JPqfdQtTKmVEfvG1d9RA3UeZWNnTu/9iA==
-X-Received: by 2002:a05:6a00:1947:b0:732:623e:2bdc with SMTP id d2e1a72fcca58-73426c84885mr22523269b3a.2.1740417349558;
-        Mon, 24 Feb 2025 09:15:49 -0800 (PST)
-Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7346d9b1af1sm1497263b3a.71.2025.02.24.09.15.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 09:15:49 -0800 (PST)
-Date: Mon, 24 Feb 2025 09:15:48 -0800
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, virtualization@lists.linux.dev,
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Jeroen de Borst <jeroendb@google.com>,
-	Harshitha Ramamurthy <hramamurthy@google.com>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Willem de Bruijn <willemb@google.com>,
-	David Ahern <dsahern@kernel.org>,
-	Neal Cardwell <ncardwell@google.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
-	Shuah Khan <shuah@kernel.org>, sdf@fomichev.me,
-	asml.silence@gmail.com, dw@davidwei.uk,
-	Jamal Hadi Salim <jhs@mojatatu.com>,
-	Victor Nogueira <victor@mojatatu.com>,
-	Pedro Tammela <pctammela@mojatatu.com>,
-	Samiullah Khawaja <skhawaja@google.com>
-Subject: Re: [PATCH net-next v5 6/9] net: enable driver support for netmem TX
-Message-ID: <Z7ypRKrKN0SdBOM2@mini-arch>
-References: <20250222191517.743530-1-almasrymina@google.com>
- <20250222191517.743530-7-almasrymina@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=UeRrfWNAqexR63utZhiSeTMriJX7h5sPgoNuewQd+5KiyycsnPmrluoJOg8SaY51R0c6zhZ1edU0bAVoL0SIs2I0isu1Lcba4EvL9H5g9akrPDMeyA7tt9ZQMg/4f70WJg+PcT/5f6A5Rv0peQ/efte/CUbKR+KLq1ScvH/fuHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14AA3152B;
+	Mon, 24 Feb 2025 09:18:21 -0800 (PST)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.51])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBDBF3F5A1;
+	Mon, 24 Feb 2025 09:17:59 -0800 (PST)
+Date: Mon, 24 Feb 2025 17:17:54 +0000
+From: Dave Martin <Dave.Martin@arm.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: "Moger, Babu" <babu.moger@amd.com>, corbet@lwn.net, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	tony.luck@intel.com, peternewman@google.com, x86@kernel.org,
+	hpa@zytor.com, paulmck@kernel.org, akpm@linux-foundation.org,
+	thuth@redhat.com, rostedt@goodmis.org, xiongwei.song@windriver.com,
+	pawan.kumar.gupta@linux.intel.com, daniel.sneddon@linux.intel.com,
+	jpoimboe@kernel.org, perry.yuan@amd.com, sandipan.das@amd.com,
+	kai.huang@intel.com, xiaoyao.li@intel.com, seanjc@google.com,
+	xin3.li@intel.com, andrew.cooper3@citrix.com, ebiggers@google.com,
+	mario.limonciello@amd.com, james.morse@arm.com,
+	tan.shaopeng@fujitsu.com, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, maciej.wieczor-retman@intel.com,
+	eranian@google.com
+Subject: Re: [PATCH v11 22/23] x86/resctrl: Introduce interface to list
+ assignment states of all the groups
+Message-ID: <Z7ydx6vfuw8OdJzL@e133380.arm.com>
+References: <cover.1737577229.git.babu.moger@amd.com>
+ <52c66bf98480c0ab6bb0f0762497e328fcbdeaac.1737577229.git.babu.moger@amd.com>
+ <Z7XiQ+u3Pc+uvJCK@e133380.arm.com>
+ <45a0a88a-b31e-447e-9d62-bc0cdedf06f7@amd.com>
+ <Z7dN2KpsQjVUb3KR@e133380.arm.com>
+ <7802f9e9-9a63-463d-a51e-e9ad0e60f77f@amd.com>
+ <Z7ijCphcSM58AqA6@e133380.arm.com>
+ <09f2f512-0428-4649-b8ef-33e5a03d5dcb@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250222191517.743530-7-almasrymina@google.com>
+In-Reply-To: <09f2f512-0428-4649-b8ef-33e5a03d5dcb@intel.com>
 
-On 02/22, Mina Almasry wrote:
-> Drivers need to make sure not to pass netmem dma-addrs to the
-> dma-mapping API in order to support netmem TX.
+On Fri, Feb 21, 2025 at 12:10:44PM -0800, Reinette Chatre wrote:
+> Hi Dave,
 > 
-> Add helpers and netmem_dma_*() helpers that enables special handling of
-> netmem dma-addrs that drivers can use.
-> 
-> Document in netmem.rst what drivers need to do to support netmem TX.
-> 
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> On 2/21/25 8:00 AM, Dave Martin wrote:
+> > On Thu, Feb 20, 2025 at 03:29:12PM -0600, Moger, Babu wrote:
+> >> Hi Dave,
+> >>
+> >> On 2/20/25 09:44, Dave Martin wrote:
 
-Acked-by: Stanislav Fomichev <sdf@fomichev.me>
+[...]
+
+> >>> But mbm_assign_control data is dynamically generated and potentially
+> >>> much bigger than a typical sysfs file.
+> >>
+> >> I have no idea how to handle this case. We may have to live with this
+> >> problem. Let us know if there are any ideas.
+> > 
+> > I think the current implication is that this will work for now provided
+> > that the generated text fits in a page.
+> > 
+> > 
+> > Reinette, what's your view on accepting this limitation in the interest
+> > of stabilising this series, and tidying up this corner case later?
+> > 
+> > As for writes to this file, we're unlikely to hit the limit unless
+> > there are a lot of RMIDs available and many groups with excessively
+> > long names.
+> 
+> I am more concerned about reads to this file. If only 4K writes are
+> supported then user space can reconfigure the system in page sized
+> portions. It may not be efficient if the user wants to reconfigure the
+> entire system but it will work. The problem with reads is that if
+> larger than 4K reads are required but not supported then it will be
+> impossible for user space to learn state of the system.
+> 
+> We may already be at that limit. Peter described [1] how AMD systems
+> already have 32 L3 monitoring domains and 256 RMIDs. With conservative
+> resource group names of 10 characters I see one line per monitoring group
+> that could look like below and thus easily be above 200 characters:
+> 
+> resgroupAA/mongroupAA/0=tl;1=tl;2=tl;3=tl;4=tl;5=tl;6=tl;7=tl;8=tl;9=tl;10=tl;11=tl;12=tl;13=tl;14=tl;15=tl;16=tl;17=tl;18=tl;19=tl;20=tl;21=tl;22=tl;23=tl;24=tl;25=tl;26=tl;27=tl;28=tl;29=tl;30=tl;31=tl;32=tl
+> 
+> Multiplying that with the existing possible 256 monitor groups the limit
+> is exceeded today.
+
+That's useful to know.  I guess we probably shouldn't just kick this
+issue down the road, then -- at least on the read side (as you say).
+
+> I understand that all domains having "tl" flags are not possible today, but
+> even if that is changed to "_" the resulting display still looks to
+> easily exceed a page when many RMIDs are in use.
+> 
+> > 
+> > This looks perfectly fixable, but it might be better to settle the
+> > design of this series first before we worry too much about it.
+> 
+> I think it fair to delay support of writing more than a page of
+> data but it looks to me like we need a solution to support displaying
+> more than a page of data to user space.
+> 
+> Reinette
+> 
+> [1] https://lore.kernel.org/lkml/20241106154306.2721688-2-peternewman@google.com/
+
+Ack; if I can't find an off-the-shelf solution for this, I'll try to
+hack something as minimal as possible to provide the required
+behaviour, but I won't try to make it optimal or pretty for now.
+
+It has just occurred to be that ftrace has large, multi-line text files
+in sysfs, so I'll try to find out how they handle that there.  Maybe
+there is some infrastructure we can re-use.
+
+Either way, hopefully that will move the discussion forward (unless
+someone else comes up with a better idea first!)
+
+Cheers
+---Dave
