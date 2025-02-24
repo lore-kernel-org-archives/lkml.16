@@ -1,40 +1,40 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E701C163
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 12:46:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B6C21930E
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 12:46:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740401163; cv=none; b=bEZypZr0576R8fZkyxttWwJj5cwE2aC8rOW2UxNRGgShLBKSNtusqNebCpGrxnD6F5AnD3XS/xgnmKcOZ6NUoixXX0xYzbO/JRwaIwMjMVNreoAixGdWMVJz519wDU2Wl1Cp1ZQljhfZC/jZhnNRIF0sSLR74DODxq/fz+RyKMM=
+	t=1740401164; cv=none; b=tJ9qwlKo/P0rOmyfMK+tE5L6ZOq68TUp9BJXpPQIhG1tSb6YflL9RKvRz6epruHIRhYLqGEyJrOWLsEDxC0IIa+q+7pC6u9qgdvXEFcLokJozO5dWBRmcBf9Ab0mv+I0gmAsW9tgYQPbdZykSr9Eec+I3N5UOmMi0ugeeZGFRx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740401163; c=relaxed/simple;
-	bh=pDgaArRbB9J1a9tmEa0hR/h0yVxFlmcKaFGE2f+f6Pg=;
+	s=arc-20240116; t=1740401164; c=relaxed/simple;
+	bh=fWc+Fuw0k4sUEWKZxXxObCDs5KXrWXOOIuRvUtq9krw=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=b4uffJ6H8yGnakH+1pfRuMS4k5sUv45S2/7ZDc1BH/vrFK9sntRH3IsUaiX6Bn7BloTQ2cB9ZJLGaCeJf2nib8Tu5rPhbuhDPtRaz3KtlxdjzoIouyIindCeAMrKNmVtegV3nzLL4obFaRH+LAXeOkyfPonU/djPKyhFC2Fg8Ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=PRMkQEJ8; arc=none smtp.client-ip=90.155.50.34
+	 Content-Type; b=Y1J9nGTFsJZkyhhDtLlfZMfkpv019Gq6tDTlwiiHutzdygy1Wm6MNyzbV21/GP+fC6kCju6yVLd+Q/nD2zLiZukSfvWYj9lwh3A1Omsb5A761WBpPI4YGlkM+Ufqd1R225Ka0Tm6Y73HG9HATkheM047fAvDYTThNkMx78rE+jQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NlYyERSp; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PRMkQEJ8"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NlYyERSp"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=YqfLieYxAGFlflkWnT6nHogORevj322hTYMScSLzSlo=; b=PRMkQEJ8kid/DriIa1Z+F78wW2
-	3Vk/AznrgtdqTqStRzJZ6rM63JevBtnolHf8iNeg1fGctAN77qjKhWdcUjujgAM0/hv7jcF0zNXlB
-	cu4Y05Qe44dv5gwofHQSswvymW3uHoA0WJOCeVmLHJxcXIUelz+8FZ09zRND5QCf4sNwd96IP0uSa
-	95twV2UnDpbptKKhDah8inu7FI1fvtYnUy6QMD+C1cYGmamTT1OpKDrWQIXy3itKvslxd2xf3wH0X
-	HjO1YUq8DSBEW26xIV9aiAlNYtZL8g4FeaeYNhhMqG50r7OgPpOc2NT3xZo7C4e+2/hSG1ElP/EeY
-	moXNI//Q==;
+	bh=94t6o8AkyshOtxSEKb/7p5vb1+FDXIF2IGvFBSAPtx4=; b=NlYyERSpwa78hnW4eZ8alLeCqf
+	xNA0TMispOirO5dHtwA0gWVbX/Jjc5iSRDmGSNQeLTlltvna81qzIRWJRLu6eYCqm6Nx7xG5vy9zH
+	nxuawC/cbyL0uQBTKqWTRABlZlEIR4VrgAsk7WBHFDbLnWRR27uCeURgBE3+5WN+6r31MA9QpnPdP
+	3vmp/EFtJ+nPHwuJweerx286cOFWJLyHo1nGxnT3ABltYLSX9roDn+WgulFjl4drrtBXTjCbZovco
+	tUmGeDp9La3aIrGH6w1rv45OrJ5qXz9Ex9mveTpMVxeXy7MyEm4Ku85OTdKvUyYu5WG8NgIWR6h+f
+	PxrvOU+A==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
 	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tmXqN-000000079mm-1xXd;
+	id 1tmXqN-000000079ml-0jab;
 	Mon, 24 Feb 2025 12:45:55 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id 360E73080BA; Mon, 24 Feb 2025 13:45:54 +0100 (CET)
-Message-ID: <20250224124200.927885784@infradead.org>
+	id 2EF61307F02; Mon, 24 Feb 2025 13:45:54 +0100 (CET)
+Message-ID: <20250224124200.717378681@infradead.org>
 User-Agent: quilt/0.66
-Date: Mon, 24 Feb 2025 13:37:13 +0100
+Date: Mon, 24 Feb 2025 13:37:11 +0100
 From: Peter Zijlstra <peterz@infradead.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -54,7 +54,7 @@ Cc: linux-kernel@vger.kernel.org,
  alexei.starovoitov@gmail.com,
  mhiramat@kernel.org,
  jmill@asu.edu
-Subject: [PATCH v4 10/10] x86/ibt: Optimize fineibt-bhi arity 1 case
+Subject: [PATCH v4 08/10] x86: BHI stubs
 References: <20250224123703.843199044@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -64,111 +64,185 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-Saves a CALL to an out-of-line thunk for the common case of 1
-argument.
 
-Suggested-by: Scott Constable <scott.d.constable@intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Kees Cook <kees@kernel.org>
 ---
- arch/x86/include/asm/ibt.h    |    4 ++
- arch/x86/kernel/alternative.c |   59 +++++++++++++++++++++++++++++++++++-------
- 2 files changed, 54 insertions(+), 9 deletions(-)
+ arch/x86/include/asm/cfi.h |    4 +
+ arch/x86/lib/Makefile      |    3 
+ arch/x86/lib/bhi.S         |  146 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 152 insertions(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/ibt.h
-+++ b/arch/x86/include/asm/ibt.h
-@@ -70,6 +70,10 @@ static inline bool __is_endbr(u32 val)
- 	if (val == gen_endbr_poison())
- 		return true;
+--- a/arch/x86/include/asm/cfi.h
++++ b/arch/x86/include/asm/cfi.h
+@@ -101,6 +101,10 @@ enum cfi_mode {
  
-+	/* See cfi_fineibt_bhi_preamble() */
-+	if (IS_ENABLED(CONFIG_FINEIBT_BHI) && val == 0x001f0ff5)
-+		return true;
-+
- 	val &= ~0x01000000U; /* ENDBR32 -> ENDBR64 */
- 	return val == gen_endbr();
- }
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -1307,6 +1307,53 @@ static int cfi_rand_preamble(s32 *start,
- 	return 0;
- }
+ extern enum cfi_mode cfi_mode;
  
-+static void cfi_fineibt_bhi_preamble(void *addr, int arity)
-+{
-+	if (!arity)
-+		return;
++typedef u8 bhi_thunk[32];
++extern bhi_thunk __bhi_args[];
++extern bhi_thunk __bhi_args_end[];
 +
-+	if (!cfi_warn && arity == 1) {
-+		/*
-+		 * Crazy scheme to allow arity-1 inline:
-+		 *
-+		 * __cfi_foo:
-+		 *  0: f3 0f 1e fa             endbr64
-+		 *  4: 41 81 <ea> 78 56 34 12  sub     0x12345678, %r10d
-+		 *  b: 49 0f 45 fa             cmovne  %r10, %rdi
-+		 *  f: 75 f5                   jne     __cfi_foo+6
-+		 * 11: 0f 1f 00                nopl    (%rax)
-+		 *
-+		 * Code that direct calls to foo()+0, decodes the tail end as:
-+		 *
-+		 * foo:
-+		 *  0: f5                      cmc
-+		 *  1: 0f 1f 00                nopl    (%rax)
-+		 *
-+		 * which clobbers CF, but does not affect anything ABI
-+		 * wise.
-+		 *
-+		 * Notably, this scheme is incompatible with permissive CFI
-+		 * because the CMOVcc is unconditional and RDI will have been
-+		 * clobbered.
-+		 */
-+		const u8 magic[9] = {
-+			0x49, 0x0f, 0x45, 0xfa,
-+			0x75, 0xf5,
-+			BYTES_NOP3,
-+		};
-+
-+		text_poke_early(addr + fineibt_preamble_bhi, magic, 9);
-+
-+		return;
-+	}
-+
-+	text_poke_early(addr + fineibt_preamble_bhi,
-+			text_gen_insn(CALL_INSN_OPCODE,
-+				      addr + fineibt_preamble_bhi,
-+				      __bhi_args[arity]),
-+			CALL_INSN_SIZE);
-+}
-+
- static int cfi_rewrite_preamble(s32 *start, s32 *end)
- {
- 	s32 *s;
-@@ -1337,14 +1384,8 @@ static int cfi_rewrite_preamble(s32 *sta
- 			  "kCFI preamble has wrong register at: %pS %*ph\n",
- 			  addr, 5, addr);
+ struct pt_regs;
  
--		if (!cfi_bhi || !arity)
--			continue;
--
--		text_poke_early(addr + fineibt_preamble_bhi,
--				text_gen_insn(CALL_INSN_OPCODE,
--					      addr + fineibt_preamble_bhi,
--					      __bhi_args[arity]),
--				CALL_INSN_SIZE);
-+		if (cfi_bhi)
-+			cfi_fineibt_bhi_preamble(addr, arity);
- 	}
- 
- 	return 0;
-@@ -1357,7 +1398,7 @@ static void cfi_rewrite_endbr(s32 *start
- 	for (s = start; s < end; s++) {
- 		void *addr = (void *)s + *s;
- 
--		if (!is_endbr(addr + 16))
-+		if (!exact_endbr(addr + 16))
- 			continue;
- 
- 		poison_endbr(addr + 16);
+ #ifdef CONFIG_CFI_CLANG
+--- a/arch/x86/lib/Makefile
++++ b/arch/x86/lib/Makefile
+@@ -66,5 +66,6 @@ endif
+         lib-y += clear_page_64.o copy_page_64.o
+         lib-y += memmove_64.o memset_64.o
+         lib-y += copy_user_64.o copy_user_uncached_64.o
+-	lib-y += cmpxchg16b_emu.o
++        lib-y += cmpxchg16b_emu.o
++        lib-y += bhi.o
+ endif
+--- /dev/null
++++ b/arch/x86/lib/bhi.S
+@@ -0,0 +1,146 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#include <linux/linkage.h>
++#include <asm/unwind_hints.h>
++#include <asm/nospec-branch.h>
++
++/*
++ * Notably, the FineIBT preamble calling these will have ZF set and r10 zero.
++ *
++ * The very last element is in fact larger than 32 bytes, but since its the
++ * last element, this does not matter,
++ *
++ * There are 2 #UD sites, located between 0,1-2,3 and 4,5-6,7 such that they
++ * can be reached using Jcc.d8, these elements (1 and 5) have sufficiently
++ * big alignment holes for this to not stagger the array.
++ */
++
++.pushsection .noinstr.text, "ax"
++
++	.align 32
++SYM_CODE_START(__bhi_args)
++
++#ifdef CONFIG_FINEIBT_BHI
++
++	.align 32
++SYM_INNER_LABEL(__bhi_args_0, SYM_L_LOCAL)
++	ANNOTATE_NOENDBR
++	UNWIND_HINT_FUNC
++	jne .Lud_1
++	ANNOTATE_UNRET_SAFE
++	ret
++	int3
++
++	.align 32
++SYM_INNER_LABEL(__bhi_args_1, SYM_L_LOCAL)
++	ANNOTATE_NOENDBR
++	UNWIND_HINT_FUNC
++	jne .Lud_1
++	cmovne %r10, %rdi
++	ANNOTATE_UNRET_SAFE
++	ret
++	int3
++
++	.align 8
++	ANNOTATE_REACHABLE
++.Lud_1:	ud2
++	ANNOTATE_UNRET_SAFE
++	ret
++	int3
++
++	.align 32
++SYM_INNER_LABEL(__bhi_args_2, SYM_L_LOCAL)
++	ANNOTATE_NOENDBR
++	UNWIND_HINT_FUNC
++	jne .Lud_1
++	cmovne %r10, %rdi
++	cmovne %r10, %rsi
++	ANNOTATE_UNRET_SAFE
++	ret
++	int3
++
++	.align 32
++SYM_INNER_LABEL(__bhi_args_3, SYM_L_LOCAL)
++	ANNOTATE_NOENDBR
++	UNWIND_HINT_FUNC
++	jne .Lud_1
++	cmovne %r10, %rdi
++	cmovne %r10, %rsi
++	cmovne %r10, %rdx
++	ANNOTATE_UNRET_SAFE
++	ret
++	int3
++
++	.align 32
++SYM_INNER_LABEL(__bhi_args_4, SYM_L_LOCAL)
++	ANNOTATE_NOENDBR
++	UNWIND_HINT_FUNC
++	jne .Lud_2
++	cmovne %r10, %rdi
++	cmovne %r10, %rsi
++	cmovne %r10, %rdx
++	cmovne %r10, %rcx
++	ANNOTATE_UNRET_SAFE
++	ret
++	int3
++
++	.align 32
++SYM_INNER_LABEL(__bhi_args_5, SYM_L_LOCAL)
++	ANNOTATE_NOENDBR
++	UNWIND_HINT_FUNC
++	jne .Lud_2
++	cmovne %r10, %rdi
++	cmovne %r10, %rsi
++	cmovne %r10, %rdx
++	cmovne %r10, %rcx
++	cmovne %r10, %r8
++	ANNOTATE_UNRET_SAFE
++	ret
++	int3
++
++	.align 8
++	ANNOTATE_REACHABLE
++.Lud_2:	ud2
++	ANNOTATE_UNRET_SAFE
++	ret
++	int3
++
++	.align 32
++SYM_INNER_LABEL(__bhi_args_6, SYM_L_LOCAL)
++	ANNOTATE_NOENDBR
++	UNWIND_HINT_FUNC
++	jne .Lud_2
++	cmovne %r10, %rdi
++	cmovne %r10, %rsi
++	cmovne %r10, %rdx
++	cmovne %r10, %rcx
++	cmovne %r10, %r8
++	cmovne %r10, %r9
++	ANNOTATE_UNRET_SAFE
++	ret
++	int3
++
++	.align 32
++SYM_INNER_LABEL(__bhi_args_7, SYM_L_LOCAL)
++	ANNOTATE_NOENDBR
++	UNWIND_HINT_FUNC
++	jne .Lud_2
++	cmovne %r10, %rdi
++	cmovne %r10, %rsi
++	cmovne %r10, %rdx
++	cmovne %r10, %rcx
++	cmovne %r10, %r8
++	cmovne %r10, %r9
++	cmovne %r10, %rsp
++	ANNOTATE_UNRET_SAFE
++	ret
++	int3
++
++#endif /* CONFIG_FINEIBT_BHI */
++
++	.align 32
++SYM_INNER_LABEL(__bhi_args_end, SYM_L_GLOBAL)
++	ANNOTATE_NOENDBR
++SYM_CODE_END(__bhi_args)
++
++.popsection
 
 
