@@ -1,121 +1,138 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E95172571B2
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 22:32:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EC31F5FA;
+	Mon, 24 Feb 2025 22:36:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740436358; cv=none; b=fgVYhXI7FMAzUzfbzLymiEQh1RYOmM+QitfUA5Px/oQhIdHCW0hcqc4CWi0mVE9wAa3y1o3eWvg0QXoS33hOaLi10D+YqsJfadYt3uDD6B1uTpIXMP9EinO+Ks/PDYEgziBX8f6+eTqhkAywH1FClNSy1MI/YxF61j2Bv3SIrkU=
+	t=1740436563; cv=none; b=u0N/JO78+QcqDWS2lrezcYHfb89S4xKuAl5yTLz2Flbr4lxjqLj2v3sRMxHVdshDlqhv8WYccHAAnulbQb8hSdS8m5ORLy64fzQsfP09r9n3FjcEEuO+2QCpLpccQ3lG+ZaDhA60sA4VEOkqrOLV3H/xu4/4h2mXZ8DIHOYEg3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740436358; c=relaxed/simple;
-	bh=lR5+K2O0C7fa3hblXHm0+cUXI+NHjy4Oog7sgRxfZDA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=oyjyvJCr+pJSZ1os0g2yxiC0YARmX6k3Ou8P/5qQJEmBI37yPcWHIeEvjFXI7UjQrqOMiiOcIfq7F/2oD8+nRJuUsc5vcjItgs7WqbtvR/YZlUCnG52SMvFdFxvGoqeebdJEhBuolg0zUCp0CAGLlYZ9phkiAN9bq2FG84kOogQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tLCG/Uhd; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1740436563; c=relaxed/simple;
+	bh=uA12i/Y9y+ltc6V9FdPhiBKqqi6WpuVhtuvjX3HFukc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dscLARxSQiqO0NLHXZAbH2ChPj10Ao4bWW65BOfGt1yUMzTtn5d4Q3//WqH7l2nH5UmKJdg2saM6ZdCnKYgnRhjBjvsG4U0Gr83Ez8wQ6MqGQ7qkuZmPbVHG7e5QbeCsUIfMQvIV8+yz3hVq1EnOZS1eqv7VU2CRaEcf1sxbZfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=iZ+fg2Aj; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=joav2SEH; arc=none smtp.client-ip=202.12.124.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tLCG/Uhd"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2210305535bso163449785ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 14:32:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740436356; x=1741041156; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rJ602F89Qrv98s0dTpyvrapFlWCXZ4Q+ukdN0YogNYc=;
-        b=tLCG/UhdftbDpTzcxPLk+q3MhOnF0jbS5KzVBsWCsPtq6XpjxbDfEfSDeX081pBW0Y
-         tq8g/IIqVqpg3GZa3x41efGjPXppBXxEkonn1BjIffkSItuVqACahhemD17rQy3nJ65H
-         kNMZxTEmQpBtwn8fxxtpqxPHnJjTR4uaU+jjZ3svRXCCUsplGHJsovSIczOTJmUapjEW
-         Nyv6iUABFlQP+deJVqoZiT2+9wLXtQxG4DfcLXUVlft6bJuXD6sb/iopU+CqsQevDuPz
-         C3GSStgQdMcQ2PtYn7cFMXGB2/eIB0In/s1Ksd7LY8K2otZWrmu3mbxZHhzKqaDxOe3G
-         bgoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740436356; x=1741041156;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rJ602F89Qrv98s0dTpyvrapFlWCXZ4Q+ukdN0YogNYc=;
-        b=PPnpAOoEQJll2rFl89bHzCMTjyXFTHNwUcY+2BTDZKEtocXklTAxnbI24F3EW5Uvdc
-         i/vTdLVbyuQtkNUfAh1OuM/D7OvKuCJAUk+Hc6ExAZ4wt3/726+VPID6Px6niG8+ZGKW
-         nXO/FF5rq7un6Ua12psXFjuVXAKex/3fSyQmHRPnU1fEFU4Rd+xoasMhowHnxEZpmM4s
-         WPDmVdKs1AD8NYDXLw/bIdLN7UaI+nArZZMI7uGDt9PjpO7Zynn9KyQNo+qxaFDWN+r2
-         0zHNSff3je7ABXZJevxlqiXScduX5Nl+weO1geKGT01sWsfw3PuqTf1CccP5j4TKm6s4
-         n9JA==
-X-Forwarded-Encrypted: i=1; AJvYcCWiY130oJd/Y+zpLdm256ejzxjauqmQMffgJlLPSrqwAa3sV7/jrLaNbZFOU9QgH5TrqZMavXTZN03oxkw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyuu4zix8NttP93DsBVZuCWqqzzQm0zwz8oDE598JHQzf2ORdsv
-	2o/wIUoimhi/81lz5frZSXeuOOPICGdZWiuKiscVOVJQt1rA3WciFUa+lpoomd63bHZ1Mc4qpyv
-	uvA==
-X-Google-Smtp-Source: AGHT+IFqOEUKQsuWHVPpQJ0lKf4SviNWdzaOb6PyYguj4zrO83Ubft771/46kQy1zz7pRXushkp2tdi5FeE=
-X-Received: from pjyp12.prod.google.com ([2002:a17:90a:e70c:b0:2fb:fa85:1678])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:db0f:b0:21f:52e:939e
- with SMTP id d9443c01a7336-221a10deb2amr283318145ad.28.1740436356245; Mon, 24
- Feb 2025 14:32:36 -0800 (PST)
-Date: Mon, 24 Feb 2025 14:32:34 -0800
-In-Reply-To: <7794af2d-b3c2-e1f2-6a55-ecd58a1fcc77@amd.com>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="iZ+fg2Aj";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="joav2SEH"
+Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 5342A2540182;
+	Mon, 24 Feb 2025 17:35:59 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-03.internal (MEProxy); Mon, 24 Feb 2025 17:35:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm2; t=1740436559; x=1740522959; bh=ioYEDzHrpz0PAuDFVSS3W
+	+YD7T3n3gFKuDOGtGLUsQQ=; b=iZ+fg2AjQ3FOoPNkSvuUQCk/mP9yU4rDfH1hb
+	G3B5aSQyVewHeRur0H1tc1Us+wtZ+aa5MvAKZAS+wAl8eP7m4YdxNc7rE+WSG//S
+	Ns5Bs9Y5ELquyG2z3TAqSJU3FQtm8frHFqNqDG5AnFVkkOovDcGDUdpXWeEURiz2
+	hhb0cIHVfnIhBxBWmDq5EZNanK+LCFIx/i9+Z91fpb9M5uQp892UHtAvjh3ZzOip
+	Qm4htfPFnORjjLGJ5o67SQVlBtf3rpd0EvcfaNt3L57OPCQxOSXj0iu0rBNAf4m8
+	XklSdvNPVx5MK/sU3wBHqgRi1SHJ9PwtfCf/gse4P1IicoucA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1740436559; x=1740522959; bh=ioYEDzHrpz0PAuDFVSS3W+YD7T3n3gFKuDO
+	GtGLUsQQ=; b=joav2SEHePT0qIcvmqDPkn8ZHS6FunH9Pp5jkiM3re+hyJfEEgw
+	XQbtgBu8hGUzHiZJwvFaL62CUe2R3s7L4TneJu4yfqJDASdpg3hJaCNenVWuaDOB
+	tXLqlQGnu9QKtm4qBCqSOFTOfsAj2StCV+Ki8KgXSkeb1yU0MAFDo7LozWZAumjv
+	0PvZaJz+R/5bE7UIFoIlyM8CGLTLSBj6rUA6xFDqLIDBeaHTYQWS/udg6h+AaegT
+	wGxV+T3xvrti8VJSn0IDd4KSsX2aUeTgYYWCduOx5Eg3hHHUCVpa6vAgYefGRV1G
+	eWtZY5hJvJ0VFT5LphLvTLC1BJW6IznUmLQ==
+X-ME-Sender: <xms:TvS8Zw8KimUFpwdQkHzRiUQZqoYdeahDoph_q3PO14_Wzpgufr9dKw>
+    <xme:TvS8Z4vemdDX6rekZkhsVpaslhTXv-8I0KMukScX3jWdJmmoPwEjjgQH7ifd0uBQJ
+    cs2Zni1Eqt0RpToWy8>
+X-ME-Received: <xmr:TvS8Z2D7-LihsYbK-ahqhkwuYoK_KSy8OHZn6DXlBoYCAIezqKAQPtVSK9KIX4MQleXUlO69s3kUFdVrWA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdektddtudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecu
+    hfhrohhmpefnuhhkvgculfhonhgvshcuoehluhhkvgeslhhjohhnvghsrdguvghvqeenuc
+    ggtffrrghtthgvrhhnpedtkedtiedtteeuheeuteetffffgefgfefhiedtvdegieefjeeh
+    leehffejgffgheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
+    hrohhmpehluhhkvgeslhhjohhnvghsrdguvghvpdhnsggprhgtphhtthhopeeipdhmohgu
+    vgepshhmthhpohhuthdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdigke
+    eisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghorhgvnhhtihhnrdgt
+    hhgrrhihsehgmhgrihhlrdgtohhmpdhrtghpthhtohephhguvghgohgvuggvsehrvgguhh
+    grthdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrdhi
+    nhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:TvS8Zwe0PrWefyxNwOQHSPI0Xaaa0yuznjEQR-siSw8ubujlmlCO7w>
+    <xmx:TvS8Z1O1KMbZirPVZVhHhoJ4gO65wZv7CuAZ2CqDYRDtlXO2M7zfUw>
+    <xmx:TvS8Z6liqJWBATWNVLCMPFgXgyGJ_0nb4AF3O1VcmF9FoF3QABhvlQ>
+    <xmx:TvS8Z3tpv_X1ftLn5aGfFhRcHRR_DhNm-cGaLZ7SmPoAXxUZs5LtUQ>
+    <xmx:T_S8Z42WZYbifSfgvOtKYTm_hwyh7AD3GGnCvjQiO5w_gdTbpuLifFib>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 24 Feb 2025 17:35:56 -0500 (EST)
+From: Luke Jones <luke@ljones.dev>
+To: platform-driver-x86@vger.kernel.org
+Cc: corentin.chary@gmail.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	"Luke D. Jones" <luke@ljones.dev>
+Subject: [PATCH] platform/x86: asus-wmi: change quiet to low-power
+Date: Tue, 25 Feb 2025 11:35:51 +1300
+Message-ID: <20250224223551.16918-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250219012705.1495231-1-seanjc@google.com> <20250219012705.1495231-3-seanjc@google.com>
- <7794af2d-b3c2-e1f2-6a55-ecd58a1fcc77@amd.com>
-Message-ID: <Z7zzgtS-iu0YHwia@google.com>
-Subject: Re: [PATCH 02/10] KVM: SVM: Don't rely on DebugSwap to restore host DR0..DR3
-From: Sean Christopherson <seanjc@google.com>
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Naveen N Rao <naveen@kernel.org>, Kim Phillips <kim.phillips@amd.com>, 
-	Alexey Kardashevskiy <aik@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 24, 2025, Tom Lendacky wrote:
-> On 2/18/25 19:26, Sean Christopherson wrote:
-> > Never rely on the CPU to restore/load host DR0..DR3 values, even if the
-> > CPU supports DebugSwap, as there are no guarantees that SNP guests will
-> > actually enable DebugSwap on APs.  E.g. if KVM were to rely on the CPU to
-> > load DR0..DR3 and skipped them during hw_breakpoint_restore(), KVM would
-> > run with clobbered-to-zero DRs if an SNP guest created APs without
-> > DebugSwap enabled.
-> > 
-> > Update the comment to explain the dangers, and hopefully prevent breaking
-> > KVM in the future.
-> > 
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> 
-> See comment below about the Type-A vs Type-B thing, but functionally:
-> 
-> Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-> 
-> > ---
-> >  arch/x86/kvm/svm/sev.c | 21 ++++++++++++---------
-> >  1 file changed, 12 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> > index e3606d072735..6c6d45e13858 100644
-> > --- a/arch/x86/kvm/svm/sev.c
-> > +++ b/arch/x86/kvm/svm/sev.c
-> > @@ -4594,18 +4594,21 @@ void sev_es_prepare_switch_to_guest(struct vcpu_svm *svm, struct sev_es_save_are
-> >  	/*
-> >  	 * If DebugSwap is enabled, debug registers are loaded but NOT saved by
-> >  	 * the CPU (Type-B). If DebugSwap is disabled/unsupported, the CPU both
-> > -	 * saves and loads debug registers (Type-A).  Sadly, on CPUs without
-> > -	 * ALLOWED_SEV_FEATURES, KVM can't prevent SNP guests from enabling
-> > -	 * DebugSwap on secondary vCPUs without KVM's knowledge via "AP Create",
-> > -	 * and so KVM must save DRs if DebugSwap is supported to prevent DRs
-> > -	 * from being clobbered by a misbehaving guest.
-> > +	 * saves and loads debug registers (Type-A).  Sadly, KVM can't prevent
-> 
-> This mention of Type-A was bothering me, so I did some investigation on
-> this. If DebugSwap (DebugVirtualization in the latest APM) is
-> disabled/unsupported, DR0-3 and DR0-3 Mask registers are left alone and
-> the guest sees the host values, they are not fully restored and fully
-> saved. When DebugVirtualization is enabled, at that point the registers
-> become Type-B.
+From: "Luke D. Jones" <luke@ljones.dev>
 
-Good catch.  I completely glossed over that; I'm pretty sure my subconcious simply
-rejected that statement as wrong.
+Change the profile name "quiet" to "low-power" to match the AMD name. The
+primary reason for this is to match AMD naming for platform_profiles and
+allow both to match. It does not affect Intel machines.
 
-> I'm not sure whether it is best to update the comment here or in the
-> first patch.
+The quiet profile is essentially a low-power profile which tweaks
+both TDP and fans - this applies to 80+ ASUS laptops.
 
-Probably first patch.
+Signed-off-by: Luke D. Jones <luke@ljones.dev>
+---
+ drivers/platform/x86/asus-wmi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index d22748f1e154..de19c3b3d8fb 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -3945,7 +3945,7 @@ static int asus_wmi_platform_profile_get(struct device *dev,
+ 		*profile = PLATFORM_PROFILE_PERFORMANCE;
+ 		break;
+ 	case ASUS_THROTTLE_THERMAL_POLICY_SILENT:
+-		*profile = PLATFORM_PROFILE_QUIET;
++		*profile = PLATFORM_PROFILE_LOW_POWER;
+ 		break;
+ 	default:
+ 		return -EINVAL;
+@@ -3969,7 +3969,7 @@ static int asus_wmi_platform_profile_set(struct device *dev,
+ 	case PLATFORM_PROFILE_BALANCED:
+ 		tp = ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
+ 		break;
+-	case PLATFORM_PROFILE_QUIET:
++	case PLATFORM_PROFILE_LOW_POWER:
+ 		tp = ASUS_THROTTLE_THERMAL_POLICY_SILENT;
+ 		break;
+ 	default:
+@@ -3982,7 +3982,7 @@ static int asus_wmi_platform_profile_set(struct device *dev,
+ 
+ static int asus_wmi_platform_profile_probe(void *drvdata, unsigned long *choices)
+ {
+-	set_bit(PLATFORM_PROFILE_QUIET, choices);
++	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
+ 	set_bit(PLATFORM_PROFILE_BALANCED, choices);
+ 	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
+ 
+-- 
+2.48.1
+
