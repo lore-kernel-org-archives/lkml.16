@@ -1,89 +1,96 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3B8261392;
-	Mon, 24 Feb 2025 11:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F49724889A;
+	Mon, 24 Feb 2025 11:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740396071; cv=none; b=Xn8BDVNrFW6Ic7KrcdQdwiYzvZyqNbFHzoS8hrSzxPUl2l4ssWEATLnw3Lna9fu2RUtqd5RNJEGJzwfoHJB6mHcIGCuLgfsu6P55tDOs7g1MyY25vKnYT5TOLOQIs5n3nDDJmq6VCyqNFpmFbhjCD4kg9SzXtFQEUUBZKV4jWXg=
+	t=1740396071; cv=none; b=nMLghFq/HLE0Sw9wuM3tgvuXpbQ5gynbk+LlnNvQwcyXtqH8HmUz+uI4jQDVHg6QoF/47FyvWtrICVs7mIDMpGJzceCOa/bRTaRwtthkETTcsogefrYVZekFMBkJ55XzOlBvIYqs+ioLyhG/1t0cE3G62zB9IWLcG3l+iw8MQX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740396071; c=relaxed/simple;
-	bh=17AhFnNHpt0G9klcgmVrv/F5ASOOetBZnSvC/7J2698=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BcwzXYAMZ6m5mREj98GpiLCvNxwLytCMZG5lfBEleqswKDF9U5llRrOzWXO4rVyNadIuNT9LZ+eRUUrqAyyeni2Y97AMiJjMF5UWbKuJpUbn0/0WRXMcgLvYe6ZEx76YK4h7t9jLS/uNG4VFzpRYf8dp7oAikrBYAZ45YrarZgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=D1xeJqD1; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	bh=Aw1AhRCRe0h7xFMnZoKTzgHuSv27yUk9wz8rZ4NUg7Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=UrNA2a+i399ZxLr71/j46vOFeOqFDhk3IUQrWxVMjhmtJukgvX+DuRRTJa22CrKg6u5WbAg7rcuSKUdqzp0PfLqJOMeUFjSgK++Mclc+EOr2Nr8anuVQ9LPkqn4L3OxWCkJ1FWWzxpf3Vn5QTNmemqn0c+jsugXM7HGJEf+xNzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PMoM/Y3/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="D1xeJqD1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1740396062;
-	bh=9N5UbYwwS3cj4ISBSwf0j1nK6obW0UxDyUzHGsn7IM0=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PMoM/Y3/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 532CAC4CEEA;
+	Mon, 24 Feb 2025 11:21:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740396070;
+	bh=Aw1AhRCRe0h7xFMnZoKTzgHuSv27yUk9wz8rZ4NUg7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=D1xeJqD1EyhCPVOKwyq6EZS92UTpksyChGpHsp0/kMrNZ/qiBm9uYbSBNgFkV18W8
-	 I4Mn+BG1Nnbb0PDA+3SQryW3Q6ibwr1eEF4B4ZMDldpQleHkN7ADemC/803GF2n3e3
-	 yozfHj9ZvBFx81aO8ITspHS7YqkUn4w7PXg5zVe0=
-Received: from stargazer.. (unknown [IPv6:240e:358:1110:6100:dc73:854d:832e:7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id D8D9F1A40F0;
-	Mon, 24 Feb 2025 06:20:55 -0500 (EST)
-From: Xi Ruoyao <xry111@xry111.site>
-To: Guo Ren <guoren@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Fangrui Song <i@maskray.me>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>,
-	linux-csky@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH 1/3] riscv: vDSO: Remove --hash-style=both
-Date: Mon, 24 Feb 2025 19:20:40 +0800
-Message-ID: <20250224112042.60282-2-xry111@xry111.site>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250224112042.60282-1-xry111@xry111.site>
-References: <20250224112042.60282-1-xry111@xry111.site>
+	b=PMoM/Y3/woXVofZ6+D6PJJbsjjgZUOA7PCJkkNhYWfzoMHdphDgY9tQjpE2zgGsy+
+	 VYayWwNnhI1/+7YAEh4zvF6cqDVvXDgsCZEzs43b1pMsEWxS0CT3NxNPnvQ9pQKQ1X
+	 tvX+ITs5fVLHwSuLD8Fj9O75kl4RD+JBpXBwdav0hbHUf0J8o5yamIwC61fTTVtgac
+	 20/TjghnyrWEJnD/OAU16dWGw4GFu92g4QvVd0gucspA24r96o46mWC5iechF53OhT
+	 0aDX6PcYVM3kBIFfVSjgvtW3EIWRyQD8XrGb96qXQ2q1WiHQPKMAPMuEhC/zMVGGpc
+	 7wMnUMUcVTgIA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Yu-Chun Lin <eleanor15x@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	marcelo.leitner@gmail.com,
+	lucien.xin@gmail.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	linux-sctp@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 6/7] sctp: Fix undefined behavior in left shift operation
+Date: Mon, 24 Feb 2025 06:20:49 -0500
+Message-Id: <20250224112051.2215017-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250224112051.2215017-1-sashal@kernel.org>
+References: <20250224112051.2215017-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.10.234
 Content-Transfer-Encoding: 8bit
 
-When RISC-V borned, DT_GNU_HASH had already became the de-facto
-standard so DT_HASH is just wasting storage space.  Remove the explicit
---hash-style=both setting and rely on the distro toolchain default,
-which is most likely "gnu" (i.e. generating only DT_GNU_HASH, no
-DT_HASH).
+From: Yu-Chun Lin <eleanor15x@gmail.com>
 
-Following the logic of commit 48f6430505c0
-("arm64/vdso: Remove --hash-style=sysv").
+[ Upstream commit 606572eb22c1786a3957d24307f5760bb058ca19 ]
 
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+According to the C11 standard (ISO/IEC 9899:2011, 6.5.7):
+"If E1 has a signed type and E1 x 2^E2 is not representable in the result
+type, the behavior is undefined."
+
+Shifting 1 << 31 causes signed integer overflow, which leads to undefined
+behavior.
+
+Fix this by explicitly using '1U << 31' to ensure the shift operates on
+an unsigned type, avoiding undefined behavior.
+
+Signed-off-by: Yu-Chun Lin <eleanor15x@gmail.com>
+Link: https://patch.msgid.link/20250218081217.3468369-1-eleanor15x@gmail.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/kernel/vdso/Makefile | 2 +-
+ net/sctp/stream.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/kernel/vdso/Makefile b/arch/riscv/kernel/vdso/Makefile
-index 9a1b555e8733..ecee348af9ce 100644
---- a/arch/riscv/kernel/vdso/Makefile
-+++ b/arch/riscv/kernel/vdso/Makefile
-@@ -47,7 +47,7 @@ $(obj)/vdso.o: $(obj)/vdso.so
- $(obj)/vdso.so.dbg: $(obj)/vdso.lds $(obj-vdso) FORCE
- 	$(call if_changed,vdsold_and_check)
- LDFLAGS_vdso.so.dbg = -shared -soname=linux-vdso.so.1 \
--	--build-id=sha1 --hash-style=both --eh-frame-hdr
-+	--build-id=sha1 --eh-frame-hdr
+diff --git a/net/sctp/stream.c b/net/sctp/stream.c
+index ee6514af830f7..0527728aee986 100644
+--- a/net/sctp/stream.c
++++ b/net/sctp/stream.c
+@@ -735,7 +735,7 @@ struct sctp_chunk *sctp_process_strreset_tsnreq(
+ 	 *     value SHOULD be the smallest TSN not acknowledged by the
+ 	 *     receiver of the request plus 2^31.
+ 	 */
+-	init_tsn = sctp_tsnmap_get_ctsn(&asoc->peer.tsn_map) + (1 << 31);
++	init_tsn = sctp_tsnmap_get_ctsn(&asoc->peer.tsn_map) + (1U << 31);
+ 	sctp_tsnmap_init(&asoc->peer.tsn_map, SCTP_TSN_MAP_INITIAL,
+ 			 init_tsn, GFP_ATOMIC);
  
- # strip rule for the .so file
- $(obj)/%.so: OBJCOPYFLAGS := -S
 -- 
-2.48.1
+2.39.5
 
