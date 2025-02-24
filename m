@@ -1,267 +1,176 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246D2158870;
-	Mon, 24 Feb 2025 11:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5767B25D546;
+	Mon, 24 Feb 2025 11:50:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740397809; cv=none; b=GVm8cyaJ6cwqNKlcrRGBh/PqcyEvDyX5t8k1sEGaLhD9oksKTmAVLnJnx0X/KMVJgF94Y2PFgmO+g1g3whEWAibCYWw+7MVNA6cwsio1vZOPYK3krkXZ/n4ISTjy9YTrVgIAGISJn2ZCgj3wkZBAbPRLjYFd4vH6FuMI+Lf5huA=
+	t=1740397837; cv=none; b=cS1J2JVLG90BKRuBDFGETlZtX4QSbhQH9uUJExlypaCQeNXU+i1pmKqrXm5bOOx8+Secn6gM4jtVGMmgApzHv5e+UBUmfbb5OYe+qbDiKHox7MmYT0tY3tAlsGCuDVrY+rn4b4ZMOspy1pND423DpI3it/kqtKlFQk2+mDQQJIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740397809; c=relaxed/simple;
-	bh=PSWqmG5uRw23IQ/mMzq14qL5ztMdUMVj9Gatu+r66gE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=so67LLDZXTOYIVMwtcMm4SXQB1w5I/xG8UJ5X6YRkpL34WhDHG75dzmYtlLe9hmtUBqU2j1Fb3AczPpDFaverFC0/3x1IVAXXoCWhLg1VbBIAnxP6tU+h0wYU3KB/zXRuWD4qYdvBv5fQ2qci4zD30e0p/EvsLOfDrM2mwJKlSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=PxbeCiXP; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1740397837; c=relaxed/simple;
+	bh=YDNlTCQoGkJaNVtqgLpI0u33kBZS6sYuWLEQLNwBwM4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Vu1TmC8Lg44lJS6PzG5GJgphqF1chVyYDHcU52Codj936/udcTgPAh0Rwta67x3l7SdAqozJizTOAu9yWZxiNhUFrwko/NXrXmWHn3xeyDZfKKR8/aNFGVhWRFTDTq4rGybN3cCOIpf/34aF2bkBvMLTkNgz/ZIjelKwXKMMNwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZeRwyg45; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="PxbeCiXP"
-X-UUID: 7a6a3840f2a511efaae1fd9735fae912-20250224
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=1yXoVn4d41rL3z4hjc5R72fder7LjdF+dcCF5p2tEkw=;
-	b=PxbeCiXPMQuB0+w5zWALDbCctmV/PpoPrs9vqW2N/I3kulIjpnx+TehEwMhjJJeHcv8BAerOaNpMSLPbDMIo7KNd1i0y7Ag1goqoQnVrjdX4FLNvl+hrO3wv8/6258GTenJhtM0tZUcgHHFaEW+3QFKVUvXU0xwjR6yijk/kC5Q=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.46,REQID:b17fa284-d12b-4c4f-b479-d4fa89ac5dfe,IP:0,U
-	RL:0,TC:0,Content:0,EDM:-25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:60aa074,CLOUDID:637244dc-d480-4873-806f-0f365159227b,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:1|19,IP:
-	nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,L
-	ES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 7a6a3840f2a511efaae1fd9735fae912-20250224
-Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw01.mediatek.com
-	(envelope-from <macpaul.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1041160626; Mon, 24 Feb 2025 19:50:00 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Mon, 24 Feb 2025 19:49:59 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.28 via Frontend Transport; Mon, 24 Feb 2025 19:49:59 +0800
-From: Macpaul Lin <macpaul.lin@mediatek.com>
-To: ChiYuan Huang <cy_huang@richtek.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-mediatek@lists.infradead.org>, Alexandre Mergnat
-	<amergnat@baylibre.com>
-CC: Bear Wang <bear.wang@mediatek.com>, Pablo Sun <pablo.sun@mediatek.com>,
-	Macpaul Lin <macpaul.lin@mediatek.com>, Macpaul Lin <macpaul@gmail.com>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
-	<linux-usb@vger.kernel.org>, Chris-qj chen <chris-qj.chen@mediatek.com>,
-	Fabien Parent <fparent@baylibre.com>, Yow-Shin Liou
-	<yow-shin.liou@mediatek.com>, Simon Sun <simon.sun@yunjingtech.com>
-Subject: [PATCH v6] arm64: dts: mediatek: mt8395-genio-1200-evk: add support for TCPC port
-Date: Mon, 24 Feb 2025 19:49:34 +0800
-Message-ID: <20250224114934.3583191-1-macpaul.lin@mediatek.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZeRwyg45"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30613802a04so45806951fa.2;
+        Mon, 24 Feb 2025 03:50:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740397832; x=1741002632; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0nvYQvXkD0Ar4QdoxJqSHp8EpN6ZHUmaSp2XNQrJj5I=;
+        b=ZeRwyg451Z5schit36GmoBUtdITPztp+vOK65yGZj+pk23AfD/l1VD3aQKEpSObunA
+         AZ4OHqOAOQ0juDR0pmEp1zZ2DdS81b7AIRRBq7hWsDAOhctTbQInZ7YRtYmebVFlyUrg
+         FTxsGaQILueEdi9PCWgXE+ZdjvySLL4PLJXf54TEye8SDlOBq2IDWjCEChoQP7Auzd6K
+         PxJiEhBF1e/frXGwF9xSchhVrB4TMoRMAyolc6bE7EaKYgHScsg35cxei6594qm4W19n
+         U5BOjpO9QPEvNhW0q/uhKcH2DgeqFkMLvTWxQ3CnEr8cIO5js7O1ezKbjhBFeTYmcB1s
+         XLWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740397832; x=1741002632;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0nvYQvXkD0Ar4QdoxJqSHp8EpN6ZHUmaSp2XNQrJj5I=;
+        b=XXHVNt7FntVF5CIu+xzzONwds42oUDMZA69475+7HELZXNXvbnAVYVniR46IuF55oA
+         2dCBCRHvcnbm+45CD1WVnsMUn++Qk9+brblUZVAGBi/gBaL9X8DBXBUxkjptE65Tnt1f
+         8KqBUl4EyheAknUKNWDDcEkh8665/lC2a3vuBzZJ3oxPFxwvmzIIYgL5SzxWL70fuhNG
+         pM5jHHLFq1aoIZclFHX53jYhpesQfwTYynykKw2Bb5QyeaNTi/m36iWrkKDw51qMrL+s
+         48e9ms1yE7n5zDNYZh/lcb4NTTW75Xd0sDKiGdt1ikwRXSdD62YrxCKSFv6oZqeIda40
+         gvsA==
+X-Forwarded-Encrypted: i=1; AJvYcCVcDifvlyVAwHmGFVtSdJXPgTNBUXQlN+1qIVakNFWzO3joylt1eBpTIXBvpfYSEihe3CQ8i+AAZJfhMwk=@vger.kernel.org, AJvYcCWIx0SGXDzE/iflnP9jPlOdzcFgQQATO6KwZk76uDFsAoeW26zsh/dA9pwF9J1sK0yS9xWmdLktK3y3h7cxx3Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYzRh3hNJzw3xcvxg3S+TWuP+F5qxeoMR15cEWFWocTsTsXy7y
+	XXs9ILZtu7Vewefs2WdjrkeWshtW5CtXG3Q8WZJm+SwP9M61Dih2
+X-Gm-Gg: ASbGnctfNFZSh6pq0UTl7pDhUuyZQ7RSsIhkwTW3OHt09k0mJbZV0oMog7ahwDs9Z+s
+	Tw+zCtM/rA0XhoIQbL3K2RqWk4A881hVTtNXVa/nyzlGpXpp1tY+aGPIVZ4FVaCk0PwA6KeA8cp
+	s8rFMnoaL7E99fAY0Uyuh6OTHGIAr5/TuK404NovkRzVVzlnBXgK5cZZYyAZSY/YYMQSWT0KLHg
+	nEzULgxN+CHBr/CtdIePXVBr/dHoZ3cjmTeEHkb+IcHwoBHUvJL5nE0mHNzAe/2s8Ysa0xna5Dr
+	ho8lsku+o0CWkrBqOu5k8bIc4/91Bbc4bcZp2MNBVdd5fJK/UShCvbYCr31eq8fJIdJKCpwZ
+X-Google-Smtp-Source: AGHT+IFPu6tr3k4lr0i+UTEWtLUz2QUN9RBBkDDNDW6fc64OhExid58PNm2lBtTjf3FY6e5KF3KbtQ==
+X-Received: by 2002:a2e:9f42:0:b0:309:2653:5dc9 with SMTP id 38308e7fff4ca-30a5b217b39mr38422761fa.37.1740397832198;
+        Mon, 24 Feb 2025 03:50:32 -0800 (PST)
+Received: from abj-NUC9VXQNX.. (87-94-132-183.rev.dnainternet.fi. [87.94.132.183])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3091f26cd5bsm33174541fa.18.2025.02.24.03.50.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2025 03:50:30 -0800 (PST)
+From: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+To: aliceryhl@google.com,
+	dakr@kernel.org,
+	robin.murphy@arm.com,
+	daniel.almeida@collabora.com,
+	rust-for-linux@vger.kernel.org
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Valentin Obst <kernel@valentinobst.de>,
+	linux-kernel@vger.kernel.org (open list),
+	Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	airlied@redhat.com,
+	iommu@lists.linux.dev (open list:DMA MAPPING HELPERS),
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>
+Subject: [PATCH v12 0/3] rust: add dma coherent allocator abstraction
+Date: Mon, 24 Feb 2025 13:49:04 +0200
+Message-ID: <20250224115007.2072043-1-abdiel.janulgue@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
 
-From: Fabien Parent <fparent@baylibre.com>
+This series adds the rust bindings for the dma coherent allocator which
+is needed for nova-core[0]. This is tested on a Nvidia GA104 GPU device
+using PoC code which parses and loads the GSP firmware via DMA.
 
-Enable USB Type-C support on MediaTek MT8395 Genio 1200 EVK by adding
-configuration for TCPC Port, USB-C connector, MUX IT5205 and related
-settings.
+Changes since v11:
+- Ensure robust handling for potential pointer arithmetic overflows
+  in bounds checking (Petr Tesařík).
+- Add dma mask helpers (Daniel Almeida).
+- Clarification in the safety aspects of the as_slice/as_slice_mut API,
+  Use ManuallyDrop trait as a replacement for into_parts(),
+  Add dma_read!/dma_write! helper macros (Alice Ryhl).
+- Link to v11: https://lore.kernel.org/lkml/20250123104333.1340512-1-abdiel.janulgue@gmail.com/
 
-Configure dual role switch capability, set up PD (Power Delivery) profiles,
-and establish endpoints for SS (SuperSpeed) and HS (HighSpeed) USB.
+Changes since v10:
+- rename read() to as_slice() (Boqun Feng)
+- Do a bitwise copy of ARef<Device> in into_parts() when returning the
+  device reference (Alice Ryhl).
 
-Update pinctrl configurations for U3 P0 VBus default pins and set dr_mode
-to "otg" for OTG (On-The-Go) mode operation.
+Changes since v9:
+- Use ARef<Device> in the constructor arguments, docs clarification avoid
+  manually dropping the refcount for the device in into_parts(), use
+  add() instead of wrapping_add() in the pointer arithmetic for performance
+  (Alice Ryhl).
 
-Add ITE IT5205 (TYPEC MUX) under I2C2 bus and configure its properties;
-also add references and configurations to 'typec-mux' node.
+Changes since v8:
+- Add MAINTAINERS entry
+- Fix build issues due to switch from core::ffi to crate:ffi in bindgen.
+- Ensure the wrapped attribute is non-pub in struct Attrs, declare it 
+  #[repr(transparent)] as well (Daniel Sedlak)
 
-Signed-off-by: Fabien Parent <fparent@baylibre.com>
-Signed-off-by: Yow-Shin Liou <yow-shin.liou@mediatek.com>
-Signed-off-by: Simon Sun <simon.sun@yunjingtech.com>
-Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- .../dts/mediatek/mt8395-genio-1200-evk.dts    | 102 ++++++++++++++++++
- 1 file changed, 102 insertions(+)
+Changes since v7:
+- Remove cpu_buf() and cpu_buf_mut() as exporting a r/w interface via
+  a slice is undefined behaviour due to slice's requirement that the
+  underlying pointer should not be modified (Alice Ryhl, Robin Murphy).
+- Reintroduce r/w helpers instead which includes proper safety
+  invariants (Daniel Almeida).
 
-Changes for v2:
- - Drop the no need '1/2' DT Schema update patch in the 1st version.  
- - Fix indent for 'ports' node, it should under the 'connector' node.
- - Correct the index for 'port@0' and 'port@1' node.
+Changes since v6:
+- Include the dma_attrs in the constructor, use alloc::Flags as inpiration
 
-Changes for v3:
- - Correct the order between new added nodes.
+Changes since v5:
+- Remove unnecessary lifetime annotation when returning the CPU buffer.
 
-Changes for v4:
- - Reorder for property 'op-sink-microwatt'.
- - Fix indentation for 'source-pdos' and 'sink-pdos' nodes.
- - Correct node 'pin-cmd-dat' with 'pins-vbus'.
- - Add both Highspeed and Superspeed ports to ssusb0 port.
- - Set 'role-switch-default-mode' = "peripheral" for ssusb0 port.
- - Rename endpoint of USB data port to 'mtu3_hs0_role_sw' and
-   'mtu3_ss0_role_sw'.
- - Drop it5205fn phandle for node typec-mux@48.
- - Reorder properties of typec-mux@48
- - Add "Reviewed-by:" tag. Thanks!
+Changes since v4:
+- Documentation and example fixes, use Markdown formatting (Miguel Ojeda).
+- Discard read()/write() helpers to remove bound on Copy and fix overhead
+  (Daniel Almeida).
+- Improve error-handling in the constructor block (Andreas Hindborg).
 
-Changes for v5:
- - Squash two patches into one patch and refine commit messages:
-   suggested by reviewer.
- - Drop 'role-switch-default-mode'
- - Add altmodes settings
- - Drop 'Reviewed-by:' tag since the two sub patches has been combined
-   into a new patch.
+Changes since v3:
+- Reject ZST types by checking the type size in the constructor in
+  addition to requiring FromBytes/AsBytes traits for the type (Alice Ryhl).
 
-Changes for v6:
- - Add 'pd-revision' property to 'connector', thanks ChiYuan Huang's help!.
- - Add 'Reviewed-by' tag. Thanks!
+Changes since v2:
+- Fixed missing header for generating the bindings.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts b/arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts
-index 5950194c9ccb..f02c32def593 100644
---- a/arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts
-@@ -229,6 +229,21 @@ &i2c2 {
- 	pinctrl-0 = <&i2c2_pins>;
- 	pinctrl-names = "default";
- 	status = "okay";
-+
-+	typec-mux@48 {
-+		compatible = "ite,it5205";
-+		reg = <0x48>;
-+		vcc-supply = <&mt6359_vibr_ldo_reg>;
-+		mode-switch;
-+		orientation-switch;
-+		status = "okay";
-+
-+		port {
-+			it5205_sbu_ep: endpoint {
-+				remote-endpoint = <&mt6360_ssusb_sbu_ep>;
-+			};
-+		};
-+	};
- };
- 
- &i2c6 {
-@@ -335,6 +350,63 @@ mt6360_ldo7: ldo7 {
- 				regulator-always-on;
- 			};
- 		};
-+
-+		tcpc {
-+			compatible = "mediatek,mt6360-tcpc";
-+			interrupts-extended = <&pio 17 IRQ_TYPE_LEVEL_LOW>;
-+			interrupt-names = "PD_IRQB";
-+
-+			connector {
-+				compatible = "usb-c-connector";
-+				label = "USB-C";
-+				data-role = "dual";
-+				op-sink-microwatt = <10000000>;
-+				power-role = "dual";
-+				try-power-role = "sink";
-+
-+				source-pdos = <PDO_FIXED(5000, 1000,
-+							 PDO_FIXED_DUAL_ROLE |
-+							 PDO_FIXED_DATA_SWAP)>;
-+				sink-pdos = <PDO_FIXED(5000, 2000,
-+						       PDO_FIXED_DUAL_ROLE |
-+						       PDO_FIXED_DATA_SWAP)>;
-+
-+				pd-revision = /bits/ 8 <0x03 0x01 0x01 0x06>;
-+
-+				altmodes {
-+					displayport {
-+						svid = /bits/ 16 <0xff01>;
-+						vdo = <0x00001c46>;
-+					};
-+				};
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					port@0 {
-+						reg = <0>;
-+						typec_con_hs: endpoint {
-+							remote-endpoint = <&mtu3_hs0_role_sw>;
-+						};
-+					};
-+
-+					port@1 {
-+						reg = <1>;
-+						typec_con_ss: endpoint {
-+							remote-endpoint = <&mtu3_ss0_role_sw>;
-+						};
-+					};
-+
-+					port@2 {
-+						reg = <2>;
-+						mt6360_ssusb_sbu_ep: endpoint {
-+							remote-endpoint = <&it5205_sbu_ep>;
-+						};
-+					};
-+				};
-+			};
-+		};
- 	};
- };
- 
-@@ -770,6 +842,13 @@ pins-reset {
- 		};
- 	};
- 
-+	u3_p0_vbus: u3-p0-vbus-default-pins {
-+		pins-vbus {
-+			pinmux = <PINMUX_GPIO63__FUNC_VBUSVALID>;
-+			input-enable;
-+		};
-+	};
-+
- 	uart0_pins: uart0-pins {
- 		pins {
- 			pinmux = <PINMUX_GPIO98__FUNC_UTXD0>,
-@@ -898,8 +977,31 @@ &ufsphy {
- };
- 
- &ssusb0 {
-+	dr_mode = "otg";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&u3_p0_vbus>;
-+	usb-role-switch;
- 	vusb33-supply = <&mt6359_vusb_ldo_reg>;
- 	status = "okay";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			mtu3_hs0_role_sw: endpoint {
-+				remote-endpoint = <&typec_con_hs>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+			mtu3_ss0_role_sw: endpoint {
-+				remote-endpoint = <&typec_con_ss>;
-+			};
-+		};
-+	};
- };
- 
- &ssusb2 {
+Changes since v1:
+- Fix missing info in commit log where EOVERFLOW is used.
+- Restrict the dma coherent allocator to numeric types for now for valid
+  behaviour (Daniel Almeida).
+- Build slice dynamically.
+
+[0] https://lore.kernel.org/lkml/20250131220432.17717-1-dakr@kernel.org/
+
+Abdiel Janulgue (3):
+  rust: error: Add EOVERFLOW
+  rust: add dma coherent allocator abstraction.
+  MAINTAINERS: add entry for Rust dma mapping helpers device driver API
+
+ MAINTAINERS                     |  12 +
+ rust/bindings/bindings_helper.h |   1 +
+ rust/helpers/dma.c              |  14 ++
+ rust/helpers/helpers.c          |   1 +
+ rust/kernel/dma.rs              | 411 ++++++++++++++++++++++++++++++++
+ rust/kernel/error.rs            |   1 +
+ rust/kernel/lib.rs              |   1 +
+ 7 files changed, 441 insertions(+)
+ create mode 100644 rust/helpers/dma.c
+ create mode 100644 rust/kernel/dma.rs
+
+
+base-commit: beeb78d46249cab8b2b8359a2ce8fa5376b5ad2d
 -- 
-2.45.2
+2.43.0
 
