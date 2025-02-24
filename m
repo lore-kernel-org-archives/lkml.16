@@ -1,132 +1,144 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74A5023BD1B
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 12:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B9F233733
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 12:54:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740401406; cv=none; b=jFnzd6/bP9WhlYBMRPNX/btitlY5N4CqA6028KqJ5FFJm8R/bh7GwLVqF6njuLhPln//jd8UINgSqYt01Ok/1vYMeij1jz48rTyavYjTAA5wHuaaIOI4XF3A1GiK4w1bvw6eREESMSwfHmJcj4Jldl88frYRCu8rOoUA9pzQbOQ=
+	t=1740401643; cv=none; b=sgZvGhhZ2odEo5zdrhnqOJz31grqxMYhv/lyL9zqA1ccb721rN3aa74VyjSmKCRxAooaw0aJHfnQhRVEbQSazzsBaMjiakbFnkHIFO3m3KGWtKj/E/kMgrm167CrNb3wv5mNI4ufHS9FzOVR5Sk1qoD9Ptkn5q8oaOqRhsEJgCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740401406; c=relaxed/simple;
-	bh=kaz06ZhSsxx1ZWchTDKD82bnV/7Kdj0DtD6Wa1LG4d8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X3VKjJzTgpFLU9U/OzqUkdUKQ8ItKmaDipZe+VRYILcTfXVDQhS8JpbresifcZpzHX3fvfNnnML2L1I6UT0b0xesZNNwJ3xNrsrneTsTEeqk5Kckq6uiNFlIEWpcNDaqoJLMwSbjYgmDTUcetCWqaoWWASesCc4BDC4o9fmbU6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4Z1fnL0yhnz9sSR;
-	Mon, 24 Feb 2025 13:15:02 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id l-9wox-Pwuus; Mon, 24 Feb 2025 13:15:02 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4Z1fnK6nYJz9sSL;
-	Mon, 24 Feb 2025 13:15:01 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id D161B8B765;
-	Mon, 24 Feb 2025 13:15:01 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id tSydbj3FVjDx; Mon, 24 Feb 2025 13:15:01 +0100 (CET)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id CCE528B763;
-	Mon, 24 Feb 2025 13:15:00 +0100 (CET)
-Message-ID: <ffd5dd44-babc-480a-b1bc-61bd7ff1e920@csgroup.eu>
-Date: Mon, 24 Feb 2025 13:15:00 +0100
+	s=arc-20240116; t=1740401643; c=relaxed/simple;
+	bh=cPqFlN9hhPH5PUCieVKmof6OSDpqARoal3nq00GKLP0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=B/22OiNRfBUtaPA0hehwMErkswQacT9bT9DgCdWPCdzyFUkxCHsCKCIAK2rdulC7Vs9pRhAqun3oT6OgyuVMM75MpV0CFWYXS7T+uJN7m2r682GZkOjAXJfVHRu0y5omgEpVP8v/ZDQYD9C3Ad6Y3/62mxHTEm0cKWV4Bn7PnqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W/Air6NL; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W/Air6NL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740401640;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RyZKAT7kvX4bnRDx3j7DvsDLJEcrsNoetXZGX7kmB2s=;
+	b=W/Air6NLEPAuApYZjjaVIqfGZDnqZ0aCB3J+idrH47XqdkRLcjvcGOmR4Su3VQEszNUQo4
+	gd/CB7HWDCNIWRjZdeqzbmDab9Mf7sG5tKH9ZTXYQE6kxG+v4bOJBpyhyNNLS78reHemA2
+	9uoUvrWO6Mttfca79XpQx649t57l+aY=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-650-sr5YoVDqONGmoayMPwNkzw-1; Mon,
+ 24 Feb 2025 07:53:56 -0500
+X-MC-Unique: sr5YoVDqONGmoayMPwNkzw-1
+X-Mimecast-MFC-AGG-ID: sr5YoVDqONGmoayMPwNkzw_1740401634
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E23A51800874;
+	Mon, 24 Feb 2025 12:53:53 +0000 (UTC)
+Received: from [10.45.224.44] (unknown [10.45.224.44])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A1C9D300018D;
+	Mon, 24 Feb 2025 12:53:50 +0000 (UTC)
+Date: Mon, 24 Feb 2025 13:53:47 +0100 (CET)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: Jinliang Zheng <alexjlzheng@gmail.com>
+cc: agk@redhat.com, snitzer@kernel.org, dm-devel@lists.linux.dev, 
+    linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
+    flyingpeng@tencent.com, txpeng@tencent.com, dchinner@redhat.com, 
+    Jinliang Zheng <alexjlzheng@tencent.com>
+Subject: Re: [PATCH] dm: fix unconditional IO throttle caused by
+ REQ_PREFLUSH
+In-Reply-To: <20250220112014.3209940-1-alexjlzheng@tencent.com>
+Message-ID: <1931a9db-a81d-daf2-2e89-d1f183946618@redhat.com>
+References: <20250220112014.3209940-1-alexjlzheng@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] powerpc: Don't use %pK through printk
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Naveen N Rao <naveen@kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20250217-restricted-pointers-powerpc-v1-1-32c6bff63c9a@linutronix.de>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250217-restricted-pointers-powerpc-v1-1-32c6bff63c9a@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+
+Applied, thanks.
+
+Mikulas
 
 
 
-Le 17/02/2025 à 08:39, Thomas Weißschuh a écrit :
-> Restricted pointers ("%pK") are not meant to be used through printk().
-> It can unintentionally expose security sensitive, raw pointer values.
+On Thu, 20 Feb 2025, Jinliang Zheng wrote:
+
+> When a bio with REQ_PREFLUSH is submitted to dm, __send_empty_flush()
+> generates a flush_bio with REQ_OP_WRITE | REQ_PREFLUSH | REQ_SYNC,
+> which causes the flush_bio to be throttled by wbt_wait().
 > 
-> Use regular pointer formatting instead.
+> An example from v5.4, similar problem also exists in upstream:
 > 
-> Link: https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flkml%2F20250113171731-dc10e3c1-da64-4af0-b767-7c7070468023%40linutronix.de%2F&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C75a852a0fef54fa43a3608dd4f263f45%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638753747883689862%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=aUgq6pXb1ySaQ6e%2FdyM09jfc4MNLE71Njw0%2FnCg%2F6VU%3D&reserved=0
-> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-
-Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-
+>     crash> bt 2091206
+>     PID: 2091206  TASK: ffff2050df92a300  CPU: 109  COMMAND: "kworker/u260:0"
+>      #0 [ffff800084a2f7f0] __switch_to at ffff80004008aeb8
+>      #1 [ffff800084a2f820] __schedule at ffff800040bfa0c4
+>      #2 [ffff800084a2f880] schedule at ffff800040bfa4b4
+>      #3 [ffff800084a2f8a0] io_schedule at ffff800040bfa9c4
+>      #4 [ffff800084a2f8c0] rq_qos_wait at ffff8000405925bc
+>      #5 [ffff800084a2f940] wbt_wait at ffff8000405bb3a0
+>      #6 [ffff800084a2f9a0] __rq_qos_throttle at ffff800040592254
+>      #7 [ffff800084a2f9c0] blk_mq_make_request at ffff80004057cf38
+>      #8 [ffff800084a2fa60] generic_make_request at ffff800040570138
+>      #9 [ffff800084a2fae0] submit_bio at ffff8000405703b4
+>     #10 [ffff800084a2fb50] xlog_write_iclog at ffff800001280834 [xfs]
+>     #11 [ffff800084a2fbb0] xlog_sync at ffff800001280c3c [xfs]
+>     #12 [ffff800084a2fbf0] xlog_state_release_iclog at ffff800001280df4 [xfs]
+>     #13 [ffff800084a2fc10] xlog_write at ffff80000128203c [xfs]
+>     #14 [ffff800084a2fcd0] xlog_cil_push at ffff8000012846dc [xfs]
+>     #15 [ffff800084a2fda0] xlog_cil_push_work at ffff800001284a2c [xfs]
+>     #16 [ffff800084a2fdb0] process_one_work at ffff800040111d08
+>     #17 [ffff800084a2fe00] worker_thread at ffff8000401121cc
+>     #18 [ffff800084a2fe70] kthread at ffff800040118de4
+> 
+> After commit 2def2845cc33 ("xfs: don't allow log IO to be throttled"),
+> the metadata submitted by xlog_write_iclog() should not be throttled.
+> But due to the existence of the dm layer, throttling flush_bio indirectly
+> causes the metadata bio to be throttled.
+> 
+> Fix this by conditionally adding REQ_IDLE to flush_bio.bi_opf, which makes
+> wbt_should_throttle() return false to avoid wbt_wait().
+> 
+> Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
+> Reviewed-by: Tianxiang Peng <txpeng@tencent.com>
+> Reviewed-by: Hao Peng <flyingpeng@tencent.com>
 > ---
->   arch/powerpc/kernel/eeh_driver.c | 2 +-
->   arch/powerpc/perf/hv-24x7.c      | 8 ++++----
->   2 files changed, 5 insertions(+), 5 deletions(-)
+>  drivers/md/dm.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
-> index 7efe04c68f0fe3fb1c3c13d97d58e79e47cf103b..10ce6b3bd3b7c54f91544ae7f7fd3f32a51ee09a 100644
-> --- a/arch/powerpc/kernel/eeh_driver.c
-> +++ b/arch/powerpc/kernel/eeh_driver.c
-> @@ -907,7 +907,7 @@ void eeh_handle_normal_event(struct eeh_pe *pe)
->   		/* FIXME: Use the same format as dump_stack() */
->   		pr_err("EEH: Call Trace:\n");
->   		for (i = 0; i < pe->trace_entries; i++)
-> -			pr_err("EEH: [%pK] %pS\n", ptrs[i], ptrs[i]);
-> +			pr_err("EEH: [%p] %pS\n", ptrs[i], ptrs[i]);
->   
->   		pe->trace_entries = 0;
->   	}
-> diff --git a/arch/powerpc/perf/hv-24x7.c b/arch/powerpc/perf/hv-24x7.c
-> index d400fa391c2765cf201ee4dc754007e655cc74ca..f6d734431b1dcdfec3b9205c3b48577b4fc26b53 100644
-> --- a/arch/powerpc/perf/hv-24x7.c
-> +++ b/arch/powerpc/perf/hv-24x7.c
-> @@ -713,12 +713,12 @@ static ssize_t catalog_event_len_validate(struct hv_24x7_event_data *event,
->   	ev_len = be16_to_cpu(event->length);
->   
->   	if (ev_len % 16)
-> -		pr_info("event %zu has length %zu not divisible by 16: event=%pK\n",
-> +		pr_info("event %zu has length %zu not divisible by 16: event=%p\n",
->   				event_idx, ev_len, event);
->   
->   	ev_end = (__u8 *)event + ev_len;
->   	if (ev_end > end) {
-> -		pr_warn("event %zu has .length=%zu, ends after buffer end: ev_end=%pK > end=%pK, offset=%zu\n",
-> +		pr_warn("event %zu has .length=%zu, ends after buffer end: ev_end=%p > end=%p, offset=%zu\n",
->   				event_idx, ev_len, ev_end, end,
->   				offset);
->   		return -1;
-> @@ -726,14 +726,14 @@ static ssize_t catalog_event_len_validate(struct hv_24x7_event_data *event,
->   
->   	calc_ev_end = event_end(event, end);
->   	if (!calc_ev_end) {
-> -		pr_warn("event %zu has a calculated length which exceeds buffer length %zu: event=%pK end=%pK, offset=%zu\n",
-> +		pr_warn("event %zu has a calculated length which exceeds buffer length %zu: event=%p end=%p, offset=%zu\n",
->   			event_idx, event_data_bytes, event, end,
->   			offset);
->   		return -1;
->   	}
->   
->   	if (calc_ev_end > ev_end) {
-> -		pr_warn("event %zu exceeds its own length: event=%pK, end=%pK, offset=%zu, calc_ev_end=%pK\n",
-> +		pr_warn("event %zu exceeds its own length: event=%p, end=%p, offset=%zu, calc_ev_end=%p\n",
->   			event_idx, event, ev_end, offset, calc_ev_end);
->   		return -1;
->   	}
+> diff --git a/drivers/md/dm.c b/drivers/md/dm.c
+> index 4d1e42891d24..5ab7574c0c76 100644
+> --- a/drivers/md/dm.c
+> +++ b/drivers/md/dm.c
+> @@ -1540,14 +1540,18 @@ static void __send_empty_flush(struct clone_info *ci)
+>  {
+>  	struct dm_table *t = ci->map;
+>  	struct bio flush_bio;
+> +	blk_opf_t opf = REQ_OP_WRITE | REQ_PREFLUSH | REQ_SYNC;
+> +
+> +	if ((ci->io->orig_bio->bi_opf & (REQ_IDLE | REQ_SYNC)) ==
+> +	    (REQ_IDLE | REQ_SYNC))
+> +		opf |= REQ_IDLE;
+>  
+>  	/*
+>  	 * Use an on-stack bio for this, it's safe since we don't
+>  	 * need to reference it after submit. It's just used as
+>  	 * the basis for the clone(s).
+>  	 */
+> -	bio_init(&flush_bio, ci->io->md->disk->part0, NULL, 0,
+> -		 REQ_OP_WRITE | REQ_PREFLUSH | REQ_SYNC);
+> +	bio_init(&flush_bio, ci->io->md->disk->part0, NULL, 0, opf);
+>  
+>  	ci->bio = &flush_bio;
+>  	ci->sector_count = 0;
+> -- 
+> 2.41.1
 > 
-> ---
-> base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
-> change-id: 20250217-restricted-pointers-powerpc-f11876496464
-> 
-> Best regards,
 
