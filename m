@@ -1,71 +1,71 @@
 Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08642253341
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 14:31:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D6F2561A3
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 14:32:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740407521; cv=none; b=Z4W+VQM+68Gvi0PIhFSAFaGUT+124N383jYfC9O1NTchvJjQ6U20/Oj2fLkBpKJarHR0kLmrzCNZng+dqW7uwrWZzKrL3gVfdQEX02VeLJ5dd23g+zoBXxPje6vewtOYAY1HQ7vXLI9ib0JyA/FY38xndXXlE2Od1dGgy9VZ7YQ=
+	t=1740407528; cv=none; b=K8X8zmXJU0MN9nCW59BRkcPVfSjfvPNokZwsmmLjn6mSlpl26S2dfZZW9v1LMrnWa0uaRRUZMzbOEM0PidKg1qgYwpsn97uZIKTI0FnaDyNSVsmqzpt3Ro9ghQ8RlHtZEY5Rt2U8j7GriVfmnop31DzsMlRCMG3Caql01+6fVEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740407521; c=relaxed/simple;
-	bh=5wB8XUqEcTyTWfIQU1/p4iXtm7LsMkGMca+2elJFbY4=;
+	s=arc-20240116; t=1740407528; c=relaxed/simple;
+	bh=4s+EGUr1VD7j68xpApegchInpDypgfcVa8lQczlc0W8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uxrkPudzDIjprsS3T8iCAOF9BAgn+81rYC3qDmHEed7q/4djHTKhQc9SApx5G1CdyoYu+P2k7NDogMNs9KEIC5ufPX49/vv8mD4nYB2xc7bE252rtNmcuOL/baASWMwqqinZx8CH1A786Bo7I2qIFNJ6cnnEFj9ho9EvUMKgeH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=Js212Qg6; arc=none smtp.client-ip=185.125.188.123
+	 MIME-Version; b=mKq/yE6aH/Vr6zZbNKJCPC4fPh09tIsfNX1z7UXI4MfHDGCTsU7b9GA+G5ryPnvNapYI0BjJJX//T8t9lihmAg3mKRdvhkbDulnIzfQ724Kh4OEQaNVIs/GdKu1OXDgDbuePS7ug5t0fv7NrupdfFH1/Vx1B4WQOL+SxznH4edk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=LDLAWPrI; arc=none smtp.client-ip=185.125.188.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="Js212Qg6"
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="LDLAWPrI"
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 3BA653F869
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 14:31:56 +0000 (UTC)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 6FEF841962
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 14:32:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1740407516;
-	bh=tF5BS5LoKu6A/yNHnMH7StJiB3yxQnpEHCtgJkgpdKc=;
+	s=20210705; t=1740407523;
+	bh=dCqB03ZRHWaC4arbzPu/PsCG9rGmiexjce2IhlWSXfM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
 	 MIME-Version;
-	b=Js212Qg6hO29kNVimrVnPz3aFRuUUzcxjh4fvP+4fJEgdycapCMyjh1mqrErsMfto
-	 tYrdVxRaYvQKs5PLYGbtoLvD/PjJ/ty7CyWOlZbylxNurDJ0lZ0Np0+G5h10fY8GRI
-	 0Y7x+jzS1lK6JpEoCqBojYzAozs0fQZbWxczgM26nY89meg3FSb8eYF0GvfP6vYmAt
-	 Ohuxd/ukeKHmxmKmC2oEtom0yPGELi7hzCjLnQb+WtKtUrOPe1/C/R1dXltVF4ZN0x
-	 3vldviwGbMYIlAqwIdLJlA1dqIeQY6FlhUQAzOOfGzlRoVhSc7kbFfiQ2U2Gy/smTg
-	 ShCTxpk/6KcYA==
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-220e04e67e2so125832675ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 06:31:56 -0800 (PST)
+	b=LDLAWPrIc4boPraQEI+ZG0vmoC1twVE3cIs+06B5Agi1GFqfv4zVDs0/py8lg0lGA
+	 nZkbDyOUN/95uJCh+ZaZ5gRSLq0vVfdBor6FdGQV2SX+CCfblRyFc02QbS3SC9pMSE
+	 vszrW6lttjcuYokVApN3oSXN0Orj6PwKY+NqpCkwCJClIppj8AKJwZGJWLkIbcOekI
+	 4SvJMsJXemf364jpE16eVkzkEScAvT/qjeS58I9Ip+XbvlFfWIaECAvI7ADWdf8+nU
+	 bbK0k/K443C3UYQtF8dkybV4IBhpv5MTqYNuOgn5idYGbPD5LnnYNwtamCw6ZCjS5e
+	 GEQ4mbrURLlCQ==
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-220caea15ccso143079485ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 06:32:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740407513; x=1741012313;
+        d=1e100.net; s=20230601; t=1740407521; x=1741012321;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tF5BS5LoKu6A/yNHnMH7StJiB3yxQnpEHCtgJkgpdKc=;
-        b=oHRl0DVFRBAlORvMmVA1KR66n9MAM/f0kmNGy+h8pdQ4AKbaVvtIDsOK53DYXN7aQl
-         oUzSGMNi6sSAUIed0dANsDDMCueqr4m5AWx73rUox3E/vyWe1xI/x9ySOgeyfD9oipk7
-         8HRVp1xuvnpBdHJfWw5PRO36b8LT7eGF5sByBAJhsFb3WcKbjbcY3pCibiVxRX8Ki0rJ
-         bYnCu8cHlBgIXHTi6yx+LAutJnsUup5jY28rA0LiJUZc6g5Tzueb/vvUbbATh5YKgxhi
-         /TC2ykuczeIujDIAuT/Qghv+5HPNo+qydzz8dx4SmHLDVA2YdLiRsxzHRvJmeVfyxYCz
-         wjFw==
-X-Forwarded-Encrypted: i=1; AJvYcCUwJhxHqfAxSOJxiDjmjKoHz7n9S77zkOVBHF8LtGwjUFpmu0L5rk9IcwuSFF13UxmTQFNFH6W0XkQQy8M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyS1RMKeOreRJn4IMZyRFs30GU8DRF/0TCYCGZKqPGN6woMifG6
-	h3c8MjvkF8cNIfGXnnSsU2hlB20fLlwLwmRDVNopVpyqak0ilrYR/dPpvJu4GSEmUblEI+jEOwL
-	OycPNuVjdKBTdsbYItNomh87daJbP2jQD8S6iBK5VEe1DMFvWa0v5O2AbAuq9O0fNH8Bxac6IwX
-	jZdg==
-X-Gm-Gg: ASbGncuT4ToOe3oXqDOYpcGZW4IgY7S6SGKWl6vKo+WTiYz54d73137sUTmTeEMzcJ2
-	37xFtafkzIxdMCIWcDAlOK1G+5sHn/YVCRqnAGuhPGAJtfRjGHBvGQTGy2qs5x53seYurqXYpkp
-	pJ2fKFgbvRaiFoNb6GkACIugth3UZQ3Mixv0VFXiUUqrIUCrmDU59veVFG/iNj3cd55wzk62S1w
-	JhQIkxAfjIxSsxf5aN4p1kIk+giZJI5rM6D/1aLVNZGMfF1T4LdmPLQkZkDXH8OdNzxVPk7KdpX
-	YNRjGkyiq6uy0RpX
-X-Received: by 2002:a17:903:41d0:b0:221:337:4862 with SMTP id d9443c01a7336-2219ff50e97mr210739555ad.15.1740407513259;
-        Mon, 24 Feb 2025 06:31:53 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF8JlcI9L0RNXyy4s/cx3oV9itiUXXsPURPUbw+FLUKy+E/TkNe15mP2uW0vnBkFkht+HcodA==
-X-Received: by 2002:a17:903:41d0:b0:221:337:4862 with SMTP id d9443c01a7336-2219ff50e97mr210739065ad.15.1740407512827;
-        Mon, 24 Feb 2025 06:31:52 -0800 (PST)
+        bh=dCqB03ZRHWaC4arbzPu/PsCG9rGmiexjce2IhlWSXfM=;
+        b=Ri6um3BQaC8isZyj31ZqmMcCRQCbLzkCa7tAfriDiSGP2yUi4ChDJwGWGhhAkpGHNk
+         JNeZPU8PT/vZ0CUe/SFPPmh/vg+K/iSylTHV6DG1kf72Fy9+8AcpyOW1j+XiIxqfB++G
+         KISccX1ypqNxZXabi6JFVZ/d3CVWw87CPNWu/r8/z/fShIx2RK3elzUVE7k1CI3udlCn
+         /cyO7K/Yc6dTHxj31eAG1uUPFI+RUSLpj5/S9emdH+OYk4y1Yn3+2D+KstqJCL4iIhcu
+         nrp5lHiHP124V4n86JxbUeEBQ/RIIEvLXnNB+LtRelcHLV6hkzUvQbuthM7zNGwd3VL0
+         cVTg==
+X-Forwarded-Encrypted: i=1; AJvYcCX3505H/PN8wsMpbp77yq5dskIf/Yyc8jQmtOr3H4Pa+I/9jSoGXbDYVYQEa24jh+zNOuGZmvQNMSopYx8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSbvE+YUZv4lvwWDugHbXNho+7nZ3UyqM7lswClZkmgz5o5kLa
+	fgV+Rbt3yaTUbUL+HWUIPILXupsq5FE0WRkb9gJ/dMzsi8WBh/BWMA+BYMqGaZ9aBxwP0BenRA5
+	iUZkNW0pxU10y2/wYL9d985UqF98HEq26MvMMtNq0o4J2eI/BCivSqEaPOGYW+uUmwPnx7nqYB+
+	vkZw==
+X-Gm-Gg: ASbGnctXJ/Mc3JC6Ald4ngZNJX5FL4MM6KHKlbek8ZYciC1YUK3tFoX46gV2mAIJoT2
+	akG7E38XoBVEAM8Z0hReMiSQHYJPtN2Y+hHVakRCA4ow6lw3ADa9pSpLxUMAz8HA2GiCNZ/Hppj
+	U+/xZ9k4xoIBya17IIKMNBHcOjdFCdJGq/4ImtdpV5JfazDrU1SZl3sHep6zITmloJGPRYhx1cv
+	Ms5n3Xa/NRjeOq5Zi3D7g62LHQ48uBxN9zLNlcVd5XbFc44vDSL0SXLUG5nLVQ5lGLotM6udVHg
+	zHdaG0FUEJIXOXgQ
+X-Received: by 2002:a17:903:22cc:b0:21f:35fd:1b7b with SMTP id d9443c01a7336-221a1195022mr196437195ad.50.1740407521273;
+        Mon, 24 Feb 2025 06:32:01 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHzmmDIpDz01ZcZkwYhJ6KIm6ze5u/aIDvurrAZl++4KbI6uYsymKW0myqu6x9oVMuYI0yX5A==
+X-Received: by 2002:a17:903:22cc:b0:21f:35fd:1b7b with SMTP id d9443c01a7336-221a1195022mr196436875ad.50.1740407520844;
+        Mon, 24 Feb 2025 06:32:00 -0800 (PST)
 Received: from z790sl.. ([240f:74:7be:1:de7b:58db:ab85:24ee])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d545d067sm177613895ad.109.2025.02.24.06.31.50
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d545d067sm177613895ad.109.2025.02.24.06.31.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 06:31:52 -0800 (PST)
+        Mon, 24 Feb 2025 06:32:00 -0800 (PST)
 From: Koichiro Den <koichiro.den@canonical.com>
 To: linux-gpio@vger.kernel.org
 Cc: brgl@bgdev.pl,
@@ -73,9 +73,9 @@ Cc: brgl@bgdev.pl,
 	linus.walleij@linaro.org,
 	maciej.borzecki@canonical.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 4/9] gpio: aggregator: introduce basic configfs interface
-Date: Mon, 24 Feb 2025 23:31:29 +0900
-Message-ID: <20250224143134.3024598-5-koichiro.den@canonical.com>
+Subject: [PATCH v5 7/9] gpio: aggregator: expose aggregator created via legacy sysfs to configfs
+Date: Mon, 24 Feb 2025 23:31:32 +0900
+Message-ID: <20250224143134.3024598-8-koichiro.den@canonical.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250224143134.3024598-1-koichiro.den@canonical.com>
 References: <20250224143134.3024598-1-koichiro.den@canonical.com>
@@ -87,743 +87,307 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The existing sysfs 'new_device' interface has several limitations:
-* No way to determine when GPIO aggregator creation is complete.
-* No way to retrieve errors when creating a GPIO aggregator.
-* No way to trace a GPIO line of an aggregator back to its
-  corresponding physical device.
-* The 'new_device' echo does not indicate which virtual gpiochip<N>
-  was created.
-* No way to assign names to GPIO lines exported through an aggregator.
+Expose settings for aggregators created using the sysfs 'new_device'
+interface to configfs. Once written to 'new_device', an "_sysfs.<N>" path
+appears in the configfs regardless of whether the probe succeeds.
+Consequently, users can no longer use that prefix for custom GPIO
+aggregator names. The 'live' attribute changes to 1 when the probe
+succeeds and the GPIO forwarder is instantiated.
 
-Introduce the new configfs interface for gpio-aggregator to address
-these limitations. It provides a more streamlined, modern, and
-extensible configuration method. For backward compatibility, the
-'new_device' interface and its behavior is retained for now.
+Note that the aggregator device created via sysfs is asynchronous, i.e.
+writing into 'new_device' returns without waiting for probe completion,
+and the probe may succeed, fail, or eventually succeed via deferred
+probe. Thus, the 'live' attribute may change from 0 to 1 asynchronously
+without notice. So, editing key/offset/name while it's waiting for
+deferred probe is prohibited.
 
-This commit implements basic functionalities:
+The configfs auto-generation relies on create_default_group(), which
+inherently prohibits rmdir(2). To align with the limitation, this commit
+also prohibits mkdir(2) for them. When users want to change the number
+of lines for an aggregator initialized via 'new_device', they need to
+tear down the device using 'delete_device' and reconfigure it from
+scratch. This does not break previous behavior; users of legacy sysfs
+interface simply gain additional almost read-only configfs exposure.
 
-  /config/gpio-aggregator/<name-of-your-choice>/
-  /config/gpio-aggregator/<name-of-your-choice>/live
-  /config/gpio-aggregator/<name-of-your-choice>/dev_name
-  /config/gpio-aggregator/<name-of-your-choice>/<lineY>/
-  /config/gpio-aggregator/<name-of-your-choice>/<lineY>/key
-  /config/gpio-aggregator/<name-of-your-choice>/<lineY>/offset
-
-Basic setup flow is:
-1. Create a directory for a GPIO aggregator.
-2. Create subdirectories for each line you want to instantiate.
-3. In each line directory, configure the key and offset.
-   The key/offset semantics are as follows:
-   * If offset is >= 0:
-     - key specifies the name of the chip this GPIO belongs to
-     - offset specifies the line offset within that chip.
-   * If offset is <0:
-     - key needs to specify the GPIO line name.
-4. Return to the aggregator's root directory and write '1' to the live
-   attribute.
-
-For example, the command in the existing kernel doc:
-
-  echo 'e6052000.gpio 19 e6050000.gpio 20-21' > new_device
-
-is equivalent to:
-
-  mkdir /sys/kernel/config/gpio-aggregator/<custom-name>
-  # Change <custom-name> to name of your choice (e.g. "aggr0")
-  cd /sys/kernel/config/gpio-aggregator/<custom-name>
-  mkdir line0 line1 line2  # Only "line<Y>" naming allowed.
-  echo e6052000.gpio > line0/key
-  echo 19            > line0/offset
-  echo e6050000.gpio > line1/key
-  echo 20            > line1/offset
-  echo e6050000.gpio > line2/key
-  echo 21            > line2/offset
-  echo 1             > live
-
-The corresponding gpio_device id can be identified as follows:
-
-  cd /sys/kernel/config/gpio-aggregator/<custom-name>
-  ls -d /sys/devices/platform/`cat dev_name`/gpiochip*
+Still, users can write to the 'live' attribute to toggle the device
+unless it's waiting for deferred probe. So once probe succeeds, they can
+deactivate it in the same manner as the devices initialized via
+configfs.
 
 Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
 ---
- drivers/gpio/Kconfig           |   2 +
- drivers/gpio/gpio-aggregator.c | 546 ++++++++++++++++++++++++++++++++-
- 2 files changed, 538 insertions(+), 10 deletions(-)
+ drivers/gpio/gpio-aggregator.c | 117 +++++++++++++++++++++++++++++----
+ 1 file changed, 105 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 06cc9b826483..4c157266b428 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1868,6 +1868,8 @@ menu "Virtual GPIO drivers"
- 
- config GPIO_AGGREGATOR
- 	tristate "GPIO Aggregator"
-+	select CONFIGFS_FS
-+	select DEV_SYNC_PROBE
- 	help
- 	  Say yes here to enable the GPIO Aggregator, which provides a way to
- 	  aggregate existing GPIO lines into a new virtual GPIO chip.
 diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
-index a93b7d3de929..0edb177bd816 100644
+index 0c30153ce9ab..6b0e42774b86 100644
 --- a/drivers/gpio/gpio-aggregator.c
 +++ b/drivers/gpio/gpio-aggregator.c
-@@ -9,10 +9,13 @@
+@@ -33,6 +33,7 @@
+ #include "dev-sync-probe.h"
  
- #include <linux/bitmap.h>
- #include <linux/bitops.h>
-+#include <linux/configfs.h>
- #include <linux/ctype.h>
- #include <linux/delay.h>
- #include <linux/idr.h>
- #include <linux/kernel.h>
-+#include <linux/list.h>
-+#include <linux/lockdep.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-@@ -27,6 +30,8 @@
- #include <linux/gpio/driver.h>
- #include <linux/gpio/machine.h>
- 
-+#include "dev-sync-probe.h"
-+
  #define AGGREGATOR_MAX_GPIOS 512
++#define AGGREGATOR_LEGACY_PREFIX "_sysfs"
  
  /*
-@@ -34,12 +39,36 @@
-  */
- 
- struct gpio_aggregator {
-+	struct dev_sync_probe_data probe_data;
-+	struct config_group group;
- 	struct gpiod_lookup_table *lookups;
--	struct platform_device *pdev;
-+	struct mutex lock;
- 	int id;
-+
-+	/* List of gpio_aggregator_line. Always added in order */
-+	struct list_head list_head;
-+
-+	/* used by legacy sysfs interface only */
-+	bool init_via_sysfs;
- 	char args[];
- };
- 
-+struct gpio_aggregator_line {
-+	struct config_group group;
-+	struct gpio_aggregator *parent;
-+	struct list_head entry;
-+
-+	/* Line index within the aggregator device */
-+	unsigned int idx;
-+
-+	/* GPIO chip label or line name */
-+	const char *key;
-+	/* Can be negative to indicate lookup by line name */
-+	int offset;
-+
-+	enum gpio_lookup_flags flags;
-+};
-+
- static DEFINE_MUTEX(gpio_aggregator_lock);	/* protects idr */
- static DEFINE_IDR(gpio_aggregator_idr);
- 
-@@ -59,6 +88,8 @@ static int aggr_alloc(struct gpio_aggregator **aggr, size_t arg_size)
- 		return ret;
- 
- 	new->id = ret;
-+	INIT_LIST_HEAD(&new->list_head);
-+	mutex_init(&new->lock);
- 	*aggr = no_free_ptr(new);
- 	return 0;
- }
-@@ -68,6 +99,7 @@ static void aggr_free(struct gpio_aggregator *aggr)
- 	mutex_lock(&gpio_aggregator_lock);
- 	idr_remove(&gpio_aggregator_idr, aggr->id);
- 	mutex_unlock(&gpio_aggregator_lock);
-+	mutex_destroy(&aggr->lock);
- 	kfree(aggr);
+  * GPIO Aggregator sysfs interface
+@@ -131,6 +132,14 @@ static bool aggr_is_active(struct gpio_aggregator *aggr)
+ 	return aggr->probe_data.pdev && platform_get_drvdata(aggr->probe_data.pdev);
  }
  
-@@ -90,6 +122,70 @@ static int aggr_add_gpio(struct gpio_aggregator *aggr, const char *key,
- 	return 0;
- }
- 
-+static bool aggr_is_active(struct gpio_aggregator *aggr)
++/* Only aggregators created via legacy sysfs can be "activating". */
++static bool aggr_is_activating(struct gpio_aggregator *aggr)
 +{
 +	lockdep_assert_held(&aggr->lock);
 +
-+	return aggr->probe_data.pdev && platform_get_drvdata(aggr->probe_data.pdev);
++	return aggr->probe_data.pdev && !platform_get_drvdata(aggr->probe_data.pdev);
 +}
 +
-+static size_t aggr_count_lines(struct gpio_aggregator *aggr)
+ static size_t aggr_count_lines(struct gpio_aggregator *aggr)
+ {
+ 	lockdep_assert_held(&aggr->lock);
+@@ -188,6 +197,18 @@ static void aggr_line_del(struct gpio_aggregator *aggr,
+ 	list_del(&line->entry);
+ }
+ 
++static void aggr_free_lines(struct gpio_aggregator *aggr)
 +{
-+	lockdep_assert_held(&aggr->lock);
++	struct gpio_aggregator_line *line, *tmp;
 +
-+	return list_count_nodes(&aggr->list_head);
-+}
-+
-+static struct gpio_aggregator_line *aggr_line_alloc(
-+		struct gpio_aggregator *parent, unsigned int idx, char *key, int offset)
-+{
-+	struct gpio_aggregator_line *line;
-+
-+	line = kzalloc(sizeof(*line), GFP_KERNEL);
-+	if (!line)
-+		return ERR_PTR(-ENOMEM);
-+
-+	if (key) {
-+		line->key = kstrdup(key, GFP_KERNEL);
-+		if (!line->key) {
-+			kfree(line);
-+			return ERR_PTR(-ENOMEM);
-+		}
++	list_for_each_entry_safe(line, tmp, &aggr->list_head, entry) {
++		configfs_unregister_group(&line->group);
++		aggr_line_del(aggr, line);
++		kfree(line->key);
++		kfree(line);
 +	}
-+
-+	line->flags = GPIO_LOOKUP_FLAGS_DEFAULT;
-+	line->parent = parent;
-+	line->idx = idx;
-+	line->offset = offset;
-+	INIT_LIST_HEAD(&line->entry);
-+
-+	return line;
-+}
-+
-+static void aggr_line_add(struct gpio_aggregator *aggr,
-+			  struct gpio_aggregator_line *line)
-+{
-+	struct gpio_aggregator_line *tmp;
-+
-+	lockdep_assert_held(&aggr->lock);
-+
-+	list_for_each_entry(tmp, &aggr->list_head, entry) {
-+		if (tmp->idx > line->idx) {
-+			list_add_tail(&line->entry, &tmp->entry);
-+			return;
-+		}
-+	}
-+	list_add_tail(&line->entry, &aggr->list_head);
-+}
-+
-+static void aggr_line_del(struct gpio_aggregator *aggr,
-+			  struct gpio_aggregator_line *line)
-+{
-+	lockdep_assert_held(&aggr->lock);
-+
-+	list_del(&line->entry);
 +}
 +
  
  /*
   *  GPIO Forwarder
-@@ -414,6 +510,400 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
- }
+@@ -687,7 +708,7 @@ gpio_aggr_line_key_store(struct config_item *item, const char *page,
  
+ 	guard(mutex)(&aggr->lock);
  
-+/*
-+ * Configfs interface
-+ */
-+
-+static struct gpio_aggregator *
-+to_gpio_aggregator(struct config_item *item)
-+{
-+	struct config_group *group = to_config_group(item);
-+
-+	return container_of(group, struct gpio_aggregator, group);
-+}
-+
-+static struct gpio_aggregator_line *
-+to_gpio_aggregator_line(struct config_item *item)
-+{
-+	struct config_group *group = to_config_group(item);
-+
-+	return container_of(group, struct gpio_aggregator_line, group);
-+}
-+
-+static int aggr_activate(struct gpio_aggregator *aggr)
-+{
-+	struct platform_device_info pdevinfo;
-+	struct gpio_aggregator_line *line;
-+	unsigned int n = 0;
-+	int ret = 0;
-+
-+	if (aggr_count_lines(aggr) == 0)
-+		return -EINVAL;
-+
-+	aggr->lookups = kzalloc(struct_size(aggr->lookups, table, 1),
-+				GFP_KERNEL);
-+	if (!aggr->lookups)
-+		return -ENOMEM;
-+
-+	memset(&pdevinfo, 0, sizeof(pdevinfo));
-+	pdevinfo.name = DRV_NAME;
-+	pdevinfo.id = aggr->id;
-+
-+	/* The list is always sorted as new elements are inserted in order. */
-+	list_for_each_entry(line, &aggr->list_head, entry) {
+-	if (aggr_is_active(aggr))
++	if (aggr_is_activating(aggr) || aggr_is_active(aggr))
+ 		return -EBUSY;
+ 
+ 	kfree(line->key);
+@@ -724,7 +745,7 @@ gpio_aggr_line_name_store(struct config_item *item, const char *page,
+ 
+ 	guard(mutex)(&aggr->lock);
+ 
+-	if (aggr_is_active(aggr))
++	if (aggr_is_activating(aggr) || aggr_is_active(aggr))
+ 		return -EBUSY;
+ 
+ 	kfree(line->name);
+@@ -772,7 +793,7 @@ gpio_aggr_line_offset_store(struct config_item *item, const char *page,
+ 
+ 	guard(mutex)(&aggr->lock);
+ 
+-	if (aggr_is_active(aggr))
++	if (aggr_is_activating(aggr) || aggr_is_active(aggr))
+ 		return -EBUSY;
+ 
+ 	line->offset = offset;
+@@ -831,11 +852,12 @@ gpio_aggr_device_live_store(struct config_item *item, const char *page,
+ 	if (!try_module_get(THIS_MODULE))
+ 		return -ENOENT;
+ 
+-	if (live)
++	if (live && !aggr->init_via_sysfs)
+ 		aggr_lockup_configfs(aggr, true);
+ 
+ 	scoped_guard(mutex, &aggr->lock) {
+-		if (live == aggr_is_active(aggr))
++		if (aggr_is_activating(aggr) ||
++		    (live == aggr_is_active(aggr)))
+ 			ret = -EPERM;
+ 		else if (live)
+ 			ret = aggr_activate(aggr);
+@@ -847,7 +869,7 @@ gpio_aggr_device_live_store(struct config_item *item, const char *page,
+ 	 * Undepend is required only if device disablement (live == 0)
+ 	 * succeeds or if device enablement (live == 1) fails.
+ 	 */
+-	if (live == !!ret)
++	if (live == !!ret && !aggr->init_via_sysfs)
+ 		aggr_lockup_configfs(aggr, false);
+ 
+ 	module_put(THIS_MODULE);
+@@ -893,7 +915,7 @@ static void gpio_aggr_device_release(struct config_item *item)
+ 	guard(mutex)(&aggr->lock);
+ 
+ 	/*
+-	 * If the aggregator is active, this code wouldn't be reached,
++	 * At this point, aggr is neither active nor activating,
+ 	 * so calling aggr_deactivate() is always unnecessary.
+ 	 */
+ 	aggr_free(aggr);
+@@ -915,6 +937,15 @@ gpio_aggr_device_make_group(struct config_group *group, const char *name)
+ 	if (ret != 1 || nchar != strlen(name))
+ 		return ERR_PTR(-EINVAL);
+ 
++	if (aggr->init_via_sysfs)
 +		/*
-+		 * - Either GPIO chip label or line name must be configured
-+		 *   (i.e. line->key must be non-NULL)
-+		 * - Line directories must be named with sequential numeric
-+		 *   suffixes starting from 0. (i.e. ./line0, ./line1, ...)
++		 * Aggregators created via legacy sysfs interface are exposed as
++		 * default groups, which means rmdir(2) is prohibited for them.
++		 * For simplicity, and to avoid confusion, we also prohibit
++		 * mkdir(2).
 +		 */
-+		if (!line->key || line->idx != n) {
-+			ret = -EINVAL;
-+			goto err_remove_lookups;
-+		}
++		return ERR_PTR(-EPERM);
 +
-+		if (line->offset < 0)
-+			ret = aggr_add_gpio(aggr, line->key, U16_MAX, &n);
-+		else
-+			ret = aggr_add_gpio(aggr, line->key, line->offset, &n);
-+		if (ret)
-+			goto err_remove_lookups;
-+	}
-+
-+	aggr->lookups->dev_id = kasprintf(GFP_KERNEL, "%s.%d", DRV_NAME, aggr->id);
-+	if (!aggr->lookups->dev_id) {
-+		ret = -ENOMEM;
-+		goto err_remove_lookups;
-+	}
-+
-+	gpiod_add_lookup_table(aggr->lookups);
-+
-+	ret = dev_sync_probe_register(&aggr->probe_data, &pdevinfo);
-+	if (ret)
-+		goto err_remove_lookup_table;
-+
-+	return 0;
-+
-+err_remove_lookup_table:
-+	kfree(aggr->lookups->dev_id);
-+	gpiod_remove_lookup_table(aggr->lookups);
-+err_remove_lookups:
-+	kfree(aggr->lookups);
-+
-+	return ret;
-+}
-+
-+static void aggr_deactivate(struct gpio_aggregator *aggr)
-+{
-+	dev_sync_probe_unregister(&aggr->probe_data);
-+	gpiod_remove_lookup_table(aggr->lookups);
-+	kfree(aggr->lookups->dev_id);
-+	kfree(aggr->lookups);
-+}
-+
-+static void aggr_lockup_configfs(struct gpio_aggregator *aggr, bool lock)
-+{
-+	struct configfs_subsystem *subsys = aggr->group.cg_subsys;
-+	struct gpio_aggregator_line *line;
-+
+ 	guard(mutex)(&aggr->lock);
+ 
+ 	if (aggr_is_active(aggr))
+@@ -952,6 +983,14 @@ gpio_aggr_make_group(struct config_group *group, const char *name)
+ 	struct gpio_aggregator *aggr;
+ 	int ret;
+ 
 +	/*
-+	 * The device only needs to depend on leaf lines. This is
-+	 * sufficient to lock up all the configfs entries that the
-+	 * instantiated, alive device depends on.
++	 * "_sysfs" prefix is reserved for auto-generated config group
++	 * for devices create via legacy sysfs interface.
 +	 */
-+	list_for_each_entry(line, &aggr->list_head, entry) {
-+		if (lock)
-+			configfs_depend_item_unlocked(
-+					subsys, &line->group.cg_item);
-+		else
-+			configfs_undepend_item_unlocked(
-+					&line->group.cg_item);
-+	}
-+}
-+
-+static ssize_t
-+gpio_aggr_line_key_show(struct config_item *item, char *page)
-+{
-+	struct gpio_aggregator_line *line = to_gpio_aggregator_line(item);
-+	struct gpio_aggregator *aggr = line->parent;
-+
-+	guard(mutex)(&aggr->lock);
-+
-+	return sysfs_emit(page, "%s\n", line->key ?: "");
-+}
-+
-+static ssize_t
-+gpio_aggr_line_key_store(struct config_item *item, const char *page,
-+			 size_t count)
-+{
-+	struct gpio_aggregator_line *line = to_gpio_aggregator_line(item);
-+	struct gpio_aggregator *aggr = line->parent;
-+
-+	char *key __free(kfree) = kstrndup(skip_spaces(page), count,
-+					   GFP_KERNEL);
-+	if (!key)
-+		return -ENOMEM;
-+
-+	strim(key);
-+
-+	guard(mutex)(&aggr->lock);
-+
-+	if (aggr_is_active(aggr))
-+		return -EBUSY;
-+
-+	kfree(line->key);
-+	line->key = no_free_ptr(key);
-+
-+	return count;
-+}
-+CONFIGFS_ATTR(gpio_aggr_line_, key);
-+
-+static ssize_t
-+gpio_aggr_line_offset_show(struct config_item *item, char *page)
-+{
-+	struct gpio_aggregator_line *line = to_gpio_aggregator_line(item);
-+	struct gpio_aggregator *aggr = line->parent;
-+	unsigned int offset;
-+
-+	scoped_guard(mutex, &aggr->lock)
-+		offset = line->offset;
-+
-+	return sysfs_emit(page, "%d\n", offset);
-+}
-+
-+static ssize_t
-+gpio_aggr_line_offset_store(struct config_item *item, const char *page,
-+			    size_t count)
-+{
-+	struct gpio_aggregator_line *line = to_gpio_aggregator_line(item);
-+	struct gpio_aggregator *aggr = line->parent;
-+	int offset, ret;
-+
-+	ret = kstrtoint(page, 0, &offset);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * When offset == -1, 'key' represents a line name to lookup.
-+	 * When 0 <= offset < 65535, 'key' represents the label of the chip with
-+	 * the 'offset' value representing the line within that chip.
-+	 *
-+	 * GPIOLIB uses the U16_MAX value to indicate lookup by line name so
-+	 * the greatest offset we can accept is (U16_MAX - 1).
-+	 */
-+	if (offset > (U16_MAX - 1) || offset < -1)
-+		return -EINVAL;
-+
-+	guard(mutex)(&aggr->lock);
-+
-+	if (aggr_is_active(aggr))
-+		return -EBUSY;
-+
-+	line->offset = offset;
-+
-+	return count;
-+}
-+CONFIGFS_ATTR(gpio_aggr_line_, offset);
-+
-+static struct configfs_attribute *gpio_aggr_line_attrs[] = {
-+	&gpio_aggr_line_attr_key,
-+	&gpio_aggr_line_attr_offset,
-+	NULL
-+};
-+
-+static ssize_t
-+gpio_aggr_device_dev_name_show(struct config_item *item, char *page)
-+{
-+	struct gpio_aggregator *aggr = to_gpio_aggregator(item);
-+	struct platform_device *pdev;
-+
-+	guard(mutex)(&aggr->lock);
-+
-+	pdev = aggr->probe_data.pdev;
-+	if (pdev)
-+		return sysfs_emit(page, "%s\n", dev_name(&pdev->dev));
-+
-+	return sysfs_emit(page, "%s.%d\n", DRV_NAME, aggr->id);
-+}
-+CONFIGFS_ATTR_RO(gpio_aggr_device_, dev_name);
-+
-+static ssize_t
-+gpio_aggr_device_live_show(struct config_item *item, char *page)
-+{
-+	struct gpio_aggregator *aggr = to_gpio_aggregator(item);
-+	bool active;
-+
-+	scoped_guard(mutex, &aggr->lock)
-+		active = aggr_is_active(aggr);
-+
-+	return sysfs_emit(page, "%c\n", active ? '1' : '0');
-+}
-+
-+static ssize_t
-+gpio_aggr_device_live_store(struct config_item *item, const char *page,
-+			    size_t count)
-+{
-+	struct gpio_aggregator *aggr = to_gpio_aggregator(item);
-+	int ret = 0;
-+	bool live;
-+
-+	ret = kstrtobool(page, &live);
-+	if (ret)
-+		return ret;
-+
-+	if (!try_module_get(THIS_MODULE))
-+		return -ENOENT;
-+
-+	if (live)
-+		aggr_lockup_configfs(aggr, true);
-+
-+	scoped_guard(mutex, &aggr->lock) {
-+		if (live == aggr_is_active(aggr))
-+			ret = -EPERM;
-+		else if (live)
-+			ret = aggr_activate(aggr);
-+		else
-+			aggr_deactivate(aggr);
-+	}
-+
-+	/*
-+	 * Undepend is required only if device disablement (live == 0)
-+	 * succeeds or if device enablement (live == 1) fails.
-+	 */
-+	if (live == !!ret)
-+		aggr_lockup_configfs(aggr, false);
-+
-+	module_put(THIS_MODULE);
-+
-+	return ret ?: count;
-+}
-+CONFIGFS_ATTR(gpio_aggr_device_, live);
-+
-+static struct configfs_attribute *gpio_aggr_device_attrs[] = {
-+	&gpio_aggr_device_attr_dev_name,
-+	&gpio_aggr_device_attr_live,
-+	NULL
-+};
-+
-+static void
-+gpio_aggr_line_release(struct config_item *item)
-+{
-+	struct gpio_aggregator_line *line = to_gpio_aggregator_line(item);
-+	struct gpio_aggregator *aggr = line->parent;
-+
-+	guard(mutex)(&aggr->lock);
-+
-+	aggr_line_del(aggr, line);
-+	kfree(line->key);
-+	kfree(line);
-+}
-+
-+static struct configfs_item_operations gpio_aggr_line_item_ops = {
-+	.release	= gpio_aggr_line_release,
-+};
-+
-+static const struct config_item_type gpio_aggr_line_type = {
-+	.ct_item_ops	= &gpio_aggr_line_item_ops,
-+	.ct_attrs	= gpio_aggr_line_attrs,
-+	.ct_owner	= THIS_MODULE,
-+};
-+
-+static void gpio_aggr_device_release(struct config_item *item)
-+{
-+	struct gpio_aggregator *aggr = to_gpio_aggregator(item);
-+
-+	guard(mutex)(&aggr->lock);
-+
-+	/*
-+	 * If the aggregator is active, this code wouldn't be reached,
-+	 * so calling aggr_deactivate() is always unnecessary.
-+	 */
-+	aggr_free(aggr);
-+}
-+
-+static struct configfs_item_operations gpio_aggr_device_item_ops = {
-+	.release	= gpio_aggr_device_release,
-+};
-+
-+static struct config_group *
-+gpio_aggr_device_make_group(struct config_group *group, const char *name)
-+{
-+	struct gpio_aggregator *aggr = to_gpio_aggregator(&group->cg_item);
-+	struct gpio_aggregator_line *line;
-+	unsigned int idx;
-+	int ret, nchar;
-+
-+	ret = sscanf(name, "line%u%n", &idx, &nchar);
-+	if (ret != 1 || nchar != strlen(name))
++	if (strncmp(name, AGGREGATOR_LEGACY_PREFIX,
++		    sizeof(AGGREGATOR_LEGACY_PREFIX)) == 0)
 +		return ERR_PTR(-EINVAL);
 +
-+	guard(mutex)(&aggr->lock);
-+
-+	if (aggr_is_active(aggr))
-+		return ERR_PTR(-EBUSY);
-+
-+	list_for_each_entry(line, &aggr->list_head, entry)
-+		if (line->idx == idx)
-+			return ERR_PTR(-EINVAL);
-+
-+	line = aggr_line_alloc(aggr, idx, NULL, -1);
-+	if (!line)
-+		return ERR_PTR(-ENOMEM);
-+
-+	config_group_init_type_name(&line->group, name, &gpio_aggr_line_type);
-+
-+	aggr_line_add(aggr, line);
-+
-+	return &line->group;
-+}
-+
-+static struct configfs_group_operations gpio_aggr_device_group_ops = {
-+	.make_group	= gpio_aggr_device_make_group,
-+};
-+
-+static const struct config_item_type gpio_aggr_device_type = {
-+	.ct_group_ops	= &gpio_aggr_device_group_ops,
-+	.ct_item_ops	= &gpio_aggr_device_item_ops,
-+	.ct_attrs	= gpio_aggr_device_attrs,
-+	.ct_owner	= THIS_MODULE,
-+};
-+
-+static struct config_group *
-+gpio_aggr_make_group(struct config_group *group, const char *name)
-+{
-+	struct gpio_aggregator *aggr;
-+	int ret;
-+
-+	/* arg space is unneeded */
-+	ret = aggr_alloc(&aggr, 0);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	config_group_init_type_name(&aggr->group, name, &gpio_aggr_device_type);
-+	dev_sync_probe_init(&aggr->probe_data);
-+
-+	return &aggr->group;
-+}
-+
-+static struct configfs_group_operations gpio_aggr_group_ops = {
-+	.make_group	= gpio_aggr_make_group,
-+};
-+
-+static const struct config_item_type gpio_aggr_type = {
-+	.ct_group_ops	= &gpio_aggr_group_ops,
-+	.ct_owner	= THIS_MODULE,
-+};
-+
-+static struct configfs_subsystem gpio_aggr_subsys = {
-+	.su_group = {
-+		.cg_item = {
-+			.ci_namebuf	= DRV_NAME,
-+			.ci_type	= &gpio_aggr_type,
-+		},
-+	},
-+};
-+
-+
- /*
-  * Sysfs interface
-  */
-@@ -485,6 +975,7 @@ static ssize_t new_device_store(struct device_driver *driver, const char *buf,
+ 	/* arg space is unneeded */
+ 	ret = aggr_alloc(&aggr, 0);
+ 	if (ret)
+@@ -988,6 +1027,8 @@ static struct configfs_subsystem gpio_aggr_subsys = {
+ static int aggr_parse(struct gpio_aggregator *aggr)
+ {
+ 	char *args = skip_spaces(aggr->args);
++	struct gpio_aggregator_line *line;
++	char name[CONFIGFS_ITEM_NAME_LEN];
+ 	char *key, *offsets, *p;
+ 	unsigned int i, n = 0;
+ 	int error = 0;
+@@ -999,14 +1040,29 @@ static int aggr_parse(struct gpio_aggregator *aggr)
  
- 	memcpy(aggr->args, buf, count + 1);
+ 	args = next_arg(args, &key, &p);
+ 	while (*args) {
++		scnprintf(name, sizeof(name), "line%u", n);
++
+ 		args = next_arg(args, &offsets, &p);
  
-+	aggr->init_via_sysfs = true;
- 	aggr->lookups = kzalloc(struct_size(aggr->lookups, table, 1),
- 				GFP_KERNEL);
- 	if (!aggr->lookups) {
-@@ -510,7 +1001,7 @@ static ssize_t new_device_store(struct device_driver *driver, const char *buf,
- 		goto remove_table;
+ 		p = get_options(offsets, 0, &error);
+ 		if (error == 0 || *p) {
+ 			/* Named GPIO line */
++			line = aggr_line_alloc(aggr, n, key, -1);
++			if (!line) {
++				error = -ENOMEM;
++				goto err;
++			}
++			config_group_init_type_name(&line->group, name,
++						    &gpio_aggr_line_type);
++			error = configfs_register_group(&aggr->group,
++							&line->group);
++			if (error)
++				goto err;
++			aggr_line_add(aggr, line);
++
+ 			error = aggr_add_gpio(aggr, key, U16_MAX, &n);
+ 			if (error)
+-				return error;
++				goto err;
+ 
+ 			key = offsets;
+ 			continue;
+@@ -1020,9 +1076,22 @@ static int aggr_parse(struct gpio_aggregator *aggr)
+ 		}
+ 
+ 		for_each_set_bit(i, bitmap, AGGREGATOR_MAX_GPIOS) {
++			line = aggr_line_alloc(aggr, n, key, i);
++			if (!line) {
++				error = -ENOMEM;
++				goto err;
++			}
++			config_group_init_type_name(&line->group, name,
++						    &gpio_aggr_line_type);
++			error = configfs_register_group(&aggr->group,
++							&line->group);
++			if (error)
++				goto err;
++			aggr_line_add(aggr, line);
++
+ 			error = aggr_add_gpio(aggr, key, i, &n);
+ 			if (error)
+-				return error;
++				goto err;
+ 		}
+ 
+ 		args = next_arg(args, &key, &p);
+@@ -1030,15 +1099,20 @@ static int aggr_parse(struct gpio_aggregator *aggr)
+ 
+ 	if (!n) {
+ 		pr_err("No GPIOs specified\n");
+-		return -EINVAL;
++		goto err;
  	}
  
--	aggr->pdev = pdev;
-+	aggr->probe_data.pdev = pdev;
- 	module_put(THIS_MODULE);
- 	return count;
+ 	return 0;
++
++err:
++	aggr_free_lines(aggr);
++	return error;
+ }
  
-@@ -531,10 +1022,7 @@ static DRIVER_ATTR_WO(new_device);
+ static ssize_t new_device_store(struct device_driver *driver, const char *buf,
+ 				size_t count)
+ {
++	char name[CONFIGFS_ITEM_NAME_LEN];
+ 	struct gpio_aggregator *aggr;
+ 	struct platform_device *pdev;
+ 	int res;
+@@ -1067,10 +1141,24 @@ static ssize_t new_device_store(struct device_driver *driver, const char *buf,
+ 		goto free_table;
+ 	}
+ 
+-	res = aggr_parse(aggr);
++	scnprintf(name, sizeof(name), "%s.%d", AGGREGATOR_LEGACY_PREFIX, aggr->id);
++	config_group_init_type_name(&aggr->group, name, &gpio_aggr_device_type);
++
++	/*
++	 * Since the device created by sysfs might be toggled via configfs
++	 * 'live' attribute later, this initialization is needed.
++	 */
++	dev_sync_probe_init(&aggr->probe_data);
++
++	/* Expose to configfs */
++	res = configfs_register_group(&gpio_aggr_subsys.su_group, &aggr->group);
+ 	if (res)
+ 		goto free_dev_id;
+ 
++	res = aggr_parse(aggr);
++	if (res)
++		goto unregister_group;
++
+ 	gpiod_add_lookup_table(aggr->lookups);
+ 
+ 	pdev = platform_device_register_simple(DRV_NAME, aggr->id, NULL, 0);
+@@ -1085,6 +1173,8 @@ static ssize_t new_device_store(struct device_driver *driver, const char *buf,
+ 
+ remove_table:
+ 	gpiod_remove_lookup_table(aggr->lookups);
++unregister_group:
++	configfs_unregister_group(&aggr->group);
+ free_dev_id:
+ 	kfree(aggr->lookups->dev_id);
+ free_table:
+@@ -1100,7 +1190,10 @@ static DRIVER_ATTR_WO(new_device);
  
  static void gpio_aggregator_free(struct gpio_aggregator *aggr)
  {
--	platform_device_unregister(aggr->pdev);
--	gpiod_remove_lookup_table(aggr->lookups);
--	kfree(aggr->lookups->dev_id);
--	kfree(aggr->lookups);
-+	aggr_deactivate(aggr);
+-	aggr_deactivate(aggr);
++	if (aggr_is_activating(aggr) || aggr_is_active(aggr))
++		aggr_deactivate(aggr);
++	aggr_free_lines(aggr);
++	configfs_unregister_group(&aggr->group);
  	kfree(aggr);
  }
- 
-@@ -556,12 +1044,19 @@ static ssize_t delete_device_store(struct device_driver *driver,
- 		return -ENOENT;
- 
- 	mutex_lock(&gpio_aggregator_lock);
--	aggr = idr_remove(&gpio_aggregator_idr, id);
--	mutex_unlock(&gpio_aggregator_lock);
--	if (!aggr) {
-+	aggr = idr_find(&gpio_aggregator_idr, id);
-+	/*
-+	 * For simplicity, devices created via configfs cannot be deleted
-+	 * via sysfs.
-+	 */
-+	if (aggr && aggr->init_via_sysfs)
-+		idr_remove(&gpio_aggregator_idr, id);
-+	else {
-+		mutex_unlock(&gpio_aggregator_lock);
- 		module_put(THIS_MODULE);
- 		return -ENOENT;
- 	}
-+	mutex_unlock(&gpio_aggregator_lock);
- 
- 	gpio_aggregator_free(aggr);
- 	module_put(THIS_MODULE);
-@@ -636,6 +1131,10 @@ static struct platform_driver gpio_aggregator_driver = {
- 
- static int __exit gpio_aggregator_idr_remove(int id, void *p, void *data)
- {
-+	/*
-+	 * There should be no aggregator created via configfs, as their
-+	 * presence would prevent module unloading.
-+	 */
- 	gpio_aggregator_free(p);
- 	return 0;
- }
-@@ -650,7 +1149,33 @@ static void __exit gpio_aggregator_remove_all(void)
- 
- static int __init gpio_aggregator_init(void)
- {
--	return platform_driver_register(&gpio_aggregator_driver);
-+	int ret = 0;
-+
-+	config_group_init(&gpio_aggr_subsys.su_group);
-+	mutex_init(&gpio_aggr_subsys.su_mutex);
-+	ret = configfs_register_subsystem(&gpio_aggr_subsys);
-+	if (ret) {
-+		pr_err("Failed to register the '%s' configfs subsystem: %d\n",
-+		       gpio_aggr_subsys.su_group.cg_item.ci_namebuf, ret);
-+		mutex_destroy(&gpio_aggr_subsys.su_mutex);
-+		return ret;
-+	}
-+
-+	/*
-+	 * CAVEAT: This must occur after configfs registration. Otherwise,
-+	 * a race condition could arise: driver attribute groups might be
-+	 * exposed and accessed by users before configfs registration
-+	 * completes. new_device_store() does not expect a partially
-+	 * initialized configfs state.
-+	 */
-+	ret = platform_driver_register(&gpio_aggregator_driver);
-+	if (ret) {
-+		pr_err("Failed to register the platform driver: %d\n", ret);
-+		mutex_destroy(&gpio_aggr_subsys.su_mutex);
-+		configfs_unregister_subsystem(&gpio_aggr_subsys);
-+	}
-+
-+	return ret;
- }
- module_init(gpio_aggregator_init);
- 
-@@ -658,6 +1183,7 @@ static void __exit gpio_aggregator_exit(void)
- {
- 	gpio_aggregator_remove_all();
- 	platform_driver_unregister(&gpio_aggregator_driver);
-+	configfs_unregister_subsystem(&gpio_aggr_subsys);
- }
- module_exit(gpio_aggregator_exit);
  
 -- 
 2.45.2
