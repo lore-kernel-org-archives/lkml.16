@@ -1,126 +1,210 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06ECC2571BD
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 15:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ADAC1A0BD6;
+	Mon, 24 Feb 2025 15:37:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740411416; cv=none; b=N8Q5z9nVsL65wkVVLIf2vwdOxRopIeHBbX8TBjgaVsuQWY9lqzpxKOl6udQ/fPWARxz3tfNRErJA6nkh9x3SWU9F9SLph+HOUDJIRZqRqNQSiPO6ZY3PX7FeI132GpEzN0A3OToT0M6GIh0yiPzTgZFUAtnFlMKLVOkiPhFYUhk=
+	t=1740411438; cv=none; b=ieZrBmKOphAp1WjZN+13HMm3XRroKBTbqpYRXrSUnUo/zVze2qH9NfbNapFtSkbT4JukYZJW9XylvtBLIb8zmxEjEYCnogp89T899RottK06kgOJ5dq6wsKisyNZViexYbjDy4GZr51YJUUoHVjuSS5PzJEnVwuqF2s3c/OsnOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740411416; c=relaxed/simple;
-	bh=tlqeQlxXj7Z3p6b5lmb+YRd29W7Q03s6EkuRtxcr0LI=;
+	s=arc-20240116; t=1740411438; c=relaxed/simple;
+	bh=yhH5CefLifdIL3/VFY7y8OY6C4KGgUDfVENSrOJRD6w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VSH73JQOoF0AJotNnDbkH3T4E/xEnquwuhQBZFDdpnKmhg/i7nNxrDqSlZi/57fvNssaQdMW9hV/b41w2FUp1TQWq/2xA1UnF+7TVe+VMzBwIdoGVLUwOWQiMnh6KlScOzrrpYB6W0OIrh4vdb9Pjz8Psz/0IbxZyppR8Mpm2LA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SlzlIwEd; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jP0gU2CIBmkdyW/JU142/br9N4P4TYk43/rWT8N8gqrJ0c+Hd6ZNTboePl18Qbf8Mi/sPZ0dhav+WmN4iBRtSZlOwqVo2omQVi8fcs4q1p++XtsSN30Pg6yn1jInRKo8pPGA7dQqRp8NhNm8b7dVZUYWpZ0tcTJeTjVr7rs6SY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jniKeYp6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SlzlIwEd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740411415; x=1771947415;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=tlqeQlxXj7Z3p6b5lmb+YRd29W7Q03s6EkuRtxcr0LI=;
-  b=SlzlIwEdeWgl7LT+hfWkr5sl7wQ0bEaEsAEMDCFQpW3BF7oyd6wTURoM
-   mEOjDwO315rBnPilkllICQ81IVRHPsesvvFhdIv3ruY1l5bDTQ9dwZzqj
-   Up5PGQg0H7nq9cDUtqnUnnpzEbj0Go7W2hKc5vDqvTJwrKSSetpPvdbTy
-   1MSPVzCv2kAXURUn4HKfzEJPQBtKB0A13/TEsEYhDu2KrToCVUILczTSc
-   uNPfYcN7nlbRbqZCi1u7d7XmtwNBAtgE3Gx1QvpDKBUkBOAooaKP2db7Z
-   dsY+PTpublSVe9S+TGm97RKPL8ZNeG0bQ/cDgdcxQqvdd8Za+jhbeYKiY
-   A==;
-X-CSE-ConnectionGUID: Z5zHzrhPQb6YYeNOMdsI3A==
-X-CSE-MsgGUID: srNhmqOYRWuAHAnVQflSRA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="41379033"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="41379033"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 07:36:55 -0800
-X-CSE-ConnectionGUID: EppH+i3LS6CwiRoOJoJ8Hg==
-X-CSE-MsgGUID: b5zUQ9CmTLu3d9WEAJr0bQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="120211657"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 07:36:34 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tmaVT-0000000EjWv-0igG;
-	Mon, 24 Feb 2025 17:36:31 +0200
-Date: Mon, 24 Feb 2025 17:36:30 +0200
-From: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
-To: Aditya Garg <gargaditya08@live.com>
-Cc: "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-	"mripard@kernel.org" <mripard@kernel.org>,
-	"tzimmermann@suse.de" <tzimmermann@suse.de>,
-	"airlied@gmail.com" <airlied@gmail.com>,
-	"simona@ffwll.ch" <simona@ffwll.ch>,
-	Kerem Karabay <kekrby@gmail.com>,
-	Atharva Tiwari <evepolonium@gmail.com>,
-	Aun-Ali Zaidi <admin@kodeit.net>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v4 2/2] drm/tiny: add driver for Apple Touch Bars in x86
- Macs
-Message-ID: <Z7yR_u6ISEQFAwsI@smile.fi.intel.com>
-References: <Z7yMIC1wxm0AGBCt@smile.fi.intel.com>
- <PN3PR01MB9597D4FD9FD8B8A8FB0F2B3CB8C02@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jniKeYp6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE423C4CED6;
+	Mon, 24 Feb 2025 15:37:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740411437;
+	bh=yhH5CefLifdIL3/VFY7y8OY6C4KGgUDfVENSrOJRD6w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jniKeYp6f0hbItNPYyxoaqFxMZ9Aj53HJ9oTyPeiazwTL+ROU2sK8joQ/KV8C4Mp4
+	 tCm3xjIy4bvWgF0dOzK1e4un1nopNwXanjWh4or3x1pHyHqU6Pg0p9UCgS+6b6kWca
+	 g8rLJiytSiXNuReVDrW6/rNoP0VNqo3clpNmbfO1HQULGhJfKcDMp+HBOsRNov/nGF
+	 GRIKKvHpkGTyvEPw5ljzs3sew3WHgiM2NhZu9PyezjSDDN0rDNjU9cI6PCMjiQfgAl
+	 LYH9tuSIsHZPhZ7PKBlzkQXShHZfGN71G2a32ahB4vKefeJGfs1oC9eOrNpv2Lk5PD
+	 dPG4MAsMDaTPQ==
+Date: Mon, 24 Feb 2025 09:37:16 -0600
+From: Rob Herring <robh@kernel.org>
+To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+Cc: Lee Jones <lee@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/6] dt-bindings: mfd: add max77759 binding
+Message-ID: <20250224153716.GA3137990-robh@kernel.org>
+References: <20250224-max77759-mfd-v1-0-2bff36f9d055@linaro.org>
+ <20250224-max77759-mfd-v1-1-2bff36f9d055@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <PN3PR01MB9597D4FD9FD8B8A8FB0F2B3CB8C02@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250224-max77759-mfd-v1-1-2bff36f9d055@linaro.org>
 
-On Mon, Feb 24, 2025 at 03:20:13PM +0000, Aditya Garg wrote:
-> > On 24 Feb 2025, at 8:41â€¯PM, andriy.shevchenko@linux.intel.com wrote:
-> > On Mon, Feb 24, 2025 at 03:03:40PM +0000, Aditya Garg wrote:
-> >>>> On 24 Feb 2025, at 8:27â€¯PM, andriy.shevchenko@linux.intel.com wrote:
-> >>> On Mon, Feb 24, 2025 at 02:32:37PM +0000, Aditya Garg wrote:
-> >>>>> On 24 Feb 2025, at 7:30â€¯PM, andriy.shevchenko@linux.intel.com wrote:
-> >>>>> On Mon, Feb 24, 2025 at 01:40:20PM +0000, Aditya Garg wrote:
-
-...
-
-> >>>>>> +#define __APPLETBDRM_MSG_STR4(str4) ((__le32 __force)((str4[0] << 24) | (str4[1] << 16) | (str4[2] << 8) | str4[3]))
-> >>>>> 
-> >>>>> As commented previously this is quite strange what's going on with endianess in
-> >>>>> this driver. Especially the above weirdness when get_unaligned_be32() is being
-> >>>>> open coded and force-cast to __le32.
-> >>>> 
-> >>>> I would assume it was also mimicked from the Windows driver, though I haven't
-> >>>> really tried exploring this there.
-> >>>> 
-> >>>> Iâ€™d rather be happy if you give me code change suggestions and let me review
-> >>>> and test them
-> >>> 
-> >>> For the starter I would do the following for all related constants and
-> >>> drop that weird and ugly macros at the top (it also has an issue with
-> >>> the str4 length as it is 5 bytes long, not 4, btw):
-> >>> 
-> >>> #define APPLETBDRM_MSG_CLEAR_DISPLAY cpu_to_le32(0x434c5244) /* CLRD */
-> >> 
-> >> Lemme test this.
-> > 
-> > Just in case it won't work, reverse bytes in the integer. Because I was lost in
-> > this conversion.
+On Mon, Feb 24, 2025 at 10:28:49AM +0000, André Draszik wrote:
+> Add device tree binding for the Maxim MAX77759 companion PMIC for USB
+> Type-C applications.
 > 
-> It works. What I understand is that you used the macro to get the final hex
-> and converted it into little endian, which on the x86 macs would technically
-> remain the same.
+> The MAX77759 includes Battery Charger, Fuel Gauge, temperature sensors,
+> USB Type-C Port Controller (TCPC), NVMEM, and a GPIO expander.
+> 
+> This describes the core mfd device.
+> 
+> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+> ---
+>  .../devicetree/bindings/mfd/maxim,max77759.yaml    | 104 +++++++++++++++++++++
+>  MAINTAINERS                                        |   6 ++
+>  2 files changed, 110 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/maxim,max77759.yaml b/Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
+> new file mode 100644
+> index 000000000000..1efb841289fb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/maxim,max77759.yaml
+> @@ -0,0 +1,104 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/maxim,max77759.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Maxim Integrated MAX77759 PMIC for USB Type-C applications
+> +
+> +maintainers:
+> +  - André Draszik <andre.draszik@linaro.org>
+> +
+> +description: |
+> +  This is a part of device tree bindings for the MAX77759 companion Power
+> +  Management IC for USB Type-C applications.
+> +
+> +  The MAX77759 includes Battery Charger, Fuel Gauge, temperature sensors, USB
+> +  Type-C Port Controller (TCPC), NVMEM, and a GPIO expander.
+> +
+> +properties:
+> +  compatible:
+> +    const: maxim,max77759
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +
+> +  gpio:
+> +    $ref: /schemas/gpio/maxim,max77759-gpio.yaml
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  pmic-nvmem:
 
-Right, the problem is the macro itself which does really weird things altogether.
-Using integer + comment much clearer in my opinion.
+Just 'nvmem'
 
-> >>> (assuming we stick with __leXX for now). This will be much less confusing.
+> +    $ref: /schemas/nvmem/maxim,max77759-nvmem.yaml
+> +
+> +required:
+> +  - compatible
+> +  - interrupts
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        pmic@66 {
+> +            compatible = "maxim,max77759";
+> +            reg = <0x66>;
+> +            interrupts-extended = <&gpa8 3 IRQ_TYPE_LEVEL_LOW>;
+> +
+> +            interrupt-controller;
+> +            #interrupt-cells = <2>;
+> +
+> +            gpio {
+> +                compatible = "maxim,max77759-gpio";
+> +
+> +                gpio-controller;
+> +                #gpio-cells = <2>;
+> +
+> +                interrupt-controller;
+> +                #interrupt-cells = <2>;
+> +            };
+> +
+> +            pmic-nvmem {
 
--- 
-With Best Regards,
-Andy Shevchenko
+nvmem {
 
-
+> +                compatible = "maxim,max77759-nvmem";
+> +
+> +                nvmem-layout {
+> +                    compatible = "fixed-layout";
+> +                    #address-cells = <1>;
+> +                    #size-cells = <1>;
+> +
+> +                    reboot-mode@0 {
+> +                        reg = <0x0 0x4>;
+> +                    };
+> +
+> +                    boot-reason@4 {
+> +                        reg = <0x4 0x4>;
+> +                    };
+> +
+> +                    shutdown-user-flag@8 {
+> +                        reg = <0x8 0x1>;
+> +                    };
+> +
+> +                    rsoc@10 {
+> +                        reg = <0xa 0x2>;
+> +                    };
+> +                };
+> +            };
+> +        };
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f076360ce3c6..f2c19a1b4c05 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14322,6 +14322,12 @@ F:	Documentation/devicetree/bindings/mfd/maxim,max77714.yaml
+>  F:	drivers/mfd/max77714.c
+>  F:	include/linux/mfd/max77714.h
+>  
+> +MAXIM MAX77759 PMIC MFD DRIVER
+> +M:	André Draszik <andre.draszik@linaro.org>
+> +L:	linux-kernel@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/*/maxim,max77759*.yaml
+> +
+>  MAXIM MAX77802 PMIC REGULATOR DEVICE DRIVER
+>  M:	Javier Martinez Canillas <javier@dowhile0.org>
+>  L:	linux-kernel@vger.kernel.org
+> 
+> -- 
+> 2.48.1.658.g4767266eb4-goog
+> 
