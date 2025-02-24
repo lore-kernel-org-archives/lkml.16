@@ -1,104 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4502C248865;
-	Mon, 24 Feb 2025 13:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E3E24886A
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 13:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740403388; cv=none; b=bHNiqEqOtBxdNYCyCqWZ2pbEY/CVDCABuZhLwuCe66gLLqMNXTCAbQfCtBT5YT4j0sB4a4lzNJr2nhy5F/7KRDy4NE77vGpS/rgdyU+pvMitje6NBTutRY6FDZfoV7ngPQ9XCKZ8OmQhaKNnPtE3E+iUn6EUFZh7lxbzY+/CzKY=
+	t=1740403388; cv=none; b=BwKVZtZOo1xX17INDGn7bTC2IOAuTdOup4ZKc51n7b7rd05NouEVS1AEifitMjDvrzZ/CXS2sd0P5ELxCNPvaYtqH46TTMNRDtTfcgXBEuypf5LTLVCrdlebaKNZzHLM8M6JYLND7k4llGLs/9dguG+ymaavLndDxngMT49mKGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740403388; c=relaxed/simple;
-	bh=+z4Qntkcydw5p8gD+O/kjP+ApAlaMKoppAU6zXIFVBI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XkrfB1gQlZgMwAc8uUn0Rf/4abYxBAS/QD5i2u83yo3IYkBkh0LTVjrjfJ+Zkvj3hWVTtOmK/ZL8UAEC2ezt1ge0h6vwTvJpOIW+cJrwK5mbjZxl0jw3i+KR8xjYTx3f4kmUAlS9wfVaVnKWZjwccQ+acUyyRMIVErB5SO5/lQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oh8uZrz8; arc=none smtp.client-ip=10.30.226.201
+	bh=ErUgAARBewBWeoNkYTRCi8YwJ8tj34TiI76a1eD/xfM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uUZEOJoAPh+RJHdap0PksGKXT8SB5RVm3sKViAnUrv77AQHaZGxEYo7JWP3V4Z3f9FG70e6l2iyqCcMu92vEyAnW6pd6EDvUB8XVsoCsmEMvqa3ahHSgcBeEUcpRXsahEd4J5sC7s20Um1ntvh3CVlhytMkhhOgxIZ0xilfoNaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PgM0ZJ65; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oh8uZrz8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5E18C4CED6;
-	Mon, 24 Feb 2025 13:23:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740403387;
-	bh=+z4Qntkcydw5p8gD+O/kjP+ApAlaMKoppAU6zXIFVBI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=oh8uZrz8vTBOP80tEzohCsQvGzdSkN6JbWv7HUiAGzh3XWaET19DjC+95usJOdmDn
-	 jYa9CmCPHR/siSNRonMY2yuqTVqfUPrLCNwAtq/oV2aKLKtFx4wQA8hKJfuUL9Swzb
-	 d3LnTlk8fJ7zhbvIMBr4HWHOc/nr1rE4qoMkpFY2bd4tZ4KUpwzjE20FqA0r9E292x
-	 dQ0z6K6FF1RnqTZ71ynKeTrzA/U43gAVEZZllcJnqM+1HvOdPNkgP7+QBmN6fTuVWB
-	 sdj3df/ppHkdNtRGlSxhasS5Mjv4PF93MyF5FFfGn+/XbsB5bmMHSKzvdNKmq7p+w5
-	 yZXhYcezPQkrQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Mon, 24 Feb 2025 14:21:54 +0100
-Subject: [PATCH v4 4/4] MAINTAINERS: add entry for configfs Rust
- abstractions
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PgM0ZJ65"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-307325f2436so42366181fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 05:23:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740403385; x=1741008185; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ErUgAARBewBWeoNkYTRCi8YwJ8tj34TiI76a1eD/xfM=;
+        b=PgM0ZJ65DY8+yWJKyrJC1HqJYGRmYh/+Vl/BIU+6CXim97WskGLPyHk/wgFy/5fmWL
+         z2gg8US0ww5qmW3y6vnTlwTqdm/BEjVYUf3CYa+X4NSSomIl8qn9tJNV/b1sCzxmU5b+
+         WRxPPQ4gPhQ0HRCoBq7YDeLM76byKfWkaCDSadJY9IQB87fJ412FeMwvMQ/5SJTNwHlx
+         l7NinsUQQh1BHlPzGgriCniCgFAbaTKKtSm0Nk2yK+hBrd1tmZ3iOxlpTctzhTq/seYL
+         2bt5jWXcoFlhTjQi2j0sIcrFYsM3+dB8TvJRSVCmatvOLs00mvU7FDs5WYRD7jp9f0yo
+         R0aQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740403385; x=1741008185;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ErUgAARBewBWeoNkYTRCi8YwJ8tj34TiI76a1eD/xfM=;
+        b=se1cH6Ryc0ttBcA4q8ILcfZIVwDeeMEq3x1QSA4uKUcJZmjmdLdWPizr7TwdombOhg
+         KHtrrQfxywkrgrEFofWfGhocCKJKBcUEeEk8y0HX+8MbaeJKXYAaXYejvhBHv4mGRSMS
+         rcwqe902VxdLdRB3EoStWsAYqBmqLvXSxX9x4e1sl1UJUxaMTct3whBl94pdVdP8VEx9
+         g5fGJSVxt0IYIwDqTty2kic/+4d7RhidGjzpygs7EkGBtwk80wY1oqXV42flXzcvupJD
+         wx0ToyeyJ08G6oKkI9GNkyja4aXjU3PBXGjlWF9dNHEJgEZ2zzdcdU3myyr0lllTwurk
+         8KyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWPrBEBiQCzmZCxBhTcGDcolq7DNscXraD2eRfxIxwAlBNhEqK+s4itpq2GDaLaKH0AqzoWW3p4iZkE42E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvU1vxmYk7n71OT6FoNYOVC9S4euzNhTMz6VAv0PWEEobtpxLI
+	HFaGigN4C5kH14UQ3OkiEmU6ZNvX/5zqWoiYyfGeUWUjayK1BlkI+Iw5sdA5uFycmTlLk7OTfyU
+	NiBgxAJ1OK/gmeCj+UP/rAZGYbG7BrqGDGQSj
+X-Gm-Gg: ASbGnctCOj5+9936SqyD5zII7HyCSovYPTcTq2QdcH0AN7/mIM1k3xd+ihJdtCKqZoL
+	02eDIvXjQOvxTvPEdeLSGClKWUUmXjOw5gWnYq4BUy8wkKH5qka2TVEX341Ej7b6kkO0rr35L4p
+	+Rx6pDWVU3477GTNzsdm9vxPIYuJ4yrzSdP+IV
+X-Google-Smtp-Source: AGHT+IGQMsq5fi0y5O7l1P+3Gls4exy5iGv73U6ohJfPykTLkpFyKQAln9GpO9U2FD2RKDa6pnnist6aEYYakHyUuaY=
+X-Received: by 2002:a2e:3a12:0:b0:308:f4cc:951b with SMTP id
+ 38308e7fff4ca-30a599868e9mr42592141fa.23.1740403384552; Mon, 24 Feb 2025
+ 05:23:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250224-configfs-v4-4-9af9b5e611f6@kernel.org>
-References: <20250224-configfs-v4-0-9af9b5e611f6@kernel.org>
-In-Reply-To: <20250224-configfs-v4-0-9af9b5e611f6@kernel.org>
-To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Joel Becker <jlbec@evilplan.org>, 
- Christoph Hellwig <hch@lst.de>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
- Waiman Long <longman@redhat.com>, Fiona Behrens <me@kloenk.dev>, 
- Charalampos Mitrodimas <charmitro@posteo.net>, 
- Daniel Almeida <daniel.almeida@collabora.com>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=705; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=+z4Qntkcydw5p8gD+O/kjP+ApAlaMKoppAU6zXIFVBI=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBnvHJ4wlau95nGdwpOnToMKvuyFYPqy7rzfoJ+4
- n65timRYTyJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7xyeAAKCRDhuBo+eShj
- d4+zEACRptyLeLIfcnZAR8wJ808Y8vhaiezLsy2elgxRivoKbUEVoeg6aauggApT37nw8/32o8W
- 10J7D27KQVvK2Mvo6oUZV04amrkQFFWCFmWKF8TzyLnF9vbBl/vUBZrHwO+wpw6ycX7kanVW+1b
- 2nbuqgA283NxY/p8VcPq6feQKjcIW2RWvAUxhLFcyZhzbhe2LYg63u0k0oYzYMlimTLvDrvnFNI
- NSB8NDWGk5D4R3rQX6P6+bjwzuB8X20QJrVyEE50I1uW8B+txJCblyHIPokxVK/W9qQXdnkeihO
- wE01uaX1+2xYVP+RpkmhmUYmD0mQCAOztw/Aq1/sSwnJabWNr6qto1gJvJ5yhgGWUedJLBoOxWQ
- Povh0Tl1Iae/qfdNAtS7hzeB1ghxjsi/f/9lYbRjX6eaCDLsB/lkUVMR9dxs913y48ClyxYGfNf
- eeDSzXAdpTJQpEW9K8OFZ/D6nD3bkvt9DOcLig+tBRWO537GykojsdiXYTBI/qoHFN2ba4LY1ge
- dOtcb20WgQtjYw0TNQq+9VZQEroaMu0+5imPWauLKUIwylLlSpmw+gdnKfmSDKbfZRLto8yfiLk
- 4OUO4u11GfJAUwJ7PlNPIxPORrIkr5sLOgh2TFmx2SDcgWqTvrIJMUQ6CVoz9qm3ftgds7bz80m
- edHufPI+0de+sAA==
-X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
- fpr=3108C10F46872E248D1FB221376EB100563EF7A7
+References: <cover.1739790300.git.dvyukov@google.com> <1f0cd73072eb321fb5f6993cbcb9b2e67ba6355d.1739790300.git.dvyukov@google.com>
+ <61d5d657-7d70-4140-9c8e-981e6db8a6f6@intel.com>
+In-Reply-To: <61d5d657-7d70-4140-9c8e-981e6db8a6f6@intel.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Mon, 24 Feb 2025 14:22:53 +0100
+X-Gm-Features: AWEUYZme-vEEUn1Sy-5jnhKmmULBqwx0ajAhB8RzxW1Bjmrf1yoFtm_E6zf4_6E
+Message-ID: <CACT4Y+bDz4oSLdy1u9PhS43PGeYE9RbEX7NG-iM-VcvYEWBymw@mail.gmail.com>
+Subject: Re: [PATCH 4/4] selftests/rseq: Add test for rseq+pkeys
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: mathieu.desnoyers@efficios.com, peterz@infradead.org, boqun.feng@gmail.com, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, aruna.ramakrishna@oracle.com, 
+	elver@google.com, "Paul E. McKenney" <paulmck@kernel.org>, x86@kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Update MAINTAINERS with entry for Rust configfs abstractions.
+On Fri, 21 Feb 2025 at 18:24, Dave Hansen <dave.hansen@intel.com> wrote:
+>
+> On 2/17/25 03:07, Dmitry Vyukov wrote:
+> > +++ b/tools/testing/selftests/rseq/pkey_test.c
+>
+> There's also a:
+>
+> tools/testing/selftests/mm/protection_keys.c
+>
+> The main thing that will get you is testing with a bunch of different
+> pkey values and also a few different memory types including huge pages.
+> It also keeps an eye on PKRU consistency by keeping a shadow. So if, for
+> instance, the rseq code forgot to restore PKRU, that code would be
+> likely to catch it. It's caught a few bugs during development for me
+> when PKRU was getting wrongly-munged.
+>
+> But, I'm not picky about selftests. Any test is better than no test. So,
+> whatever you decide to do:
+>
+> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
 
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 896a307fa065..9b4d5c12eb43 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5870,6 +5870,13 @@ F:	fs/configfs/
- F:	include/linux/configfs.h
- F:	samples/configfs/
- 
-+CONFIGFS [RUST]
-+M:	Andreas Hindborg <a.hindborg@kernel.org>
-+L:	rust-for-linux@vger.kernel.org
-+S:	Supported
-+F:	rust/kernel/configfs.rs
-+F:	samples/rust/rust_configfs.rs
-+
- CONGATEC BOARD CONTROLLER MFD DRIVER
- M:	Thomas Richard <thomas.richard@bootlin.com>
- S:	Maintained
-
--- 
-2.47.0
-
-
+I dunno. It also depends on the rseq helper header and helper source
+file that is currently compiled into tests only by rseq Makefile.
+v2 of the test was already checking that the pkey register wasn't messed with.
+But I had to rework the test for v3/v4.
