@@ -1,109 +1,107 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A798725743C;
-	Mon, 24 Feb 2025 09:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33F724A055;
+	Mon, 24 Feb 2025 09:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740391153; cv=none; b=V9mDUyOiA8QxCmROVvbcWgJaeIsV4lWZEaHrTg5MpVV1pQYceQpzPLP7SZ/RS09jun8WjABgU2JDFRVHn3BCuJORbC6ft7yFY/FfWkTUvBApXy+YL/I5RGz7ON1TcFxhTNhTDRZJP9qFv+mz/hmgEhtVbSEDuxYyos+cKF5Ywwc=
+	t=1740391179; cv=none; b=cAprZK2UqoD+1BPejFidxX5I2FH5u/tiCjfOuP6pklcPhPzUDtlEzS3GZThGBXeBGefwmDFX3qrY2id/pIhAsQxm53mLZpi3PX+ntAV9Fy5mna852FDfe3xvA0H1bSdB/bdPieBPxo9pqaIN3Mt0br4SMVCV0PSfGkuev44or2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740391153; c=relaxed/simple;
-	bh=hEdnDwVJYm+8ExpU7Gb8sRVeW+r5/QBiFQu5n+BciFc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NlcVLsk12ePOnrYJT8QLyRV2uCRofrOSseoQhhDja59XdmzrWpY9pZgoiQf1QgqZzaeCRU3RVlAH0KYV1Js+ZL1Iyt80dVIn0bURoQHgS+/6pmluHTJ6z4/jBgBoJqsKAcbpo+/Wes+bV5CiYdviv94LZRdlMswAcFTUNn0jFeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=clip-os.org; spf=pass smtp.mailfrom=clip-os.org; dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b=TP9rHuyr; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=clip-os.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=clip-os.org
+	s=arc-20240116; t=1740391179; c=relaxed/simple;
+	bh=JD9u2n4cKf6e0QtZVKFcf81ujOiCIVUWgua9u8tSrsQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lQy6iA77gmatYXXSMYtpSuvNCd/rVzXhxhbUYVmsz2WIIwaqJ7M45F+/7TJZg20Zwc+DO9nOZTvLqbsDqWznxtWZvBeBXb1PyYwE48PAqgtg9DK9uO1YHgj49NkCJbdmG8k/sG3qKeT/ebyPnGa2V2gLio64CnX22/Fvtw1zaq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mt7VpsZ5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b="TP9rHuyr"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E1DA643422;
-	Mon, 24 Feb 2025 09:59:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=clip-os.org; s=gm1;
-	t=1740391150;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DZX6+XiM6OJ3HGkhOxfUk7v+ByCTdttaIt3fhOvtZ1o=;
-	b=TP9rHuyrbR7fvSIHkq97ef3s8kZDSMwp9BngLrQwI9Lhkwr1oZSbnLR1JSRawYlh1ZM04G
-	1nulSN+5KUFsXSuA25dxY8tJnXa3IGp42ztAQk9PErUgq7QhaMjA+fjcKCb4gtLM5OfoyQ
-	LUlDZ19AmySfKuHadcVNA3jmdzk1UAnL1DXpi7YvEhHJQT6SZDl3MG1KQc8w3oVQIT/IS4
-	NLDANyEz6tq7WKYKyi1LEYnQe7Ne6j+j5oc7TJ0brMrIB0Y9H2pXG90LH50KDqw4eLysGd
-	o+WdGjLOMB0W9puJbMxJU9G4xwW230xacieQcaZtaM9sBiVUpjhl0NCdlXNkMA==
-From: nicolas.bouchinet@clip-os.org
-To: linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	codalist@coda.cs.cmu.edu,
-	linux-nfs@vger.kernel.org
-Cc: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>,
-	Joel Granados <j.granados@samsung.com>,
-	Clemens Ladisch <clemens@ladisch.de>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Jan Harkes <jaharkes@cs.cmu.edu>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Zhu Yanjun <yanjun.zhu@linux.dev>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>
-Subject: [PATCH v2 6/6] sysctl: Fixes max-user-freq bounds
-Date: Mon, 24 Feb 2025 10:58:21 +0100
-Message-ID: <20250224095826.16458-7-nicolas.bouchinet@clip-os.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250224095826.16458-1-nicolas.bouchinet@clip-os.org>
-References: <20250224095826.16458-1-nicolas.bouchinet@clip-os.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mt7VpsZ5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A77ACC4CED6;
+	Mon, 24 Feb 2025 09:59:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740391178;
+	bh=JD9u2n4cKf6e0QtZVKFcf81ujOiCIVUWgua9u8tSrsQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mt7VpsZ5j8y+PBbwYsYxpNA4RJWvvA86wI3pBKKsFN2p1OtYFIX/WL9KHHGPTlQLY
+	 52pWQBBd//obrDtblygqoNbJ9zWGZh+bW2P1aL6wyviMk2W91vb2d6eRo42mzF0cqy
+	 c7UPaq+v+OFLs4wE1I+yiRco7x+9KcA6Ocg9imKZEa0eYR4Cl+tkp951nM4+DzRDOF
+	 E2JuLn1T5gLz6S4AIzUSn0o1kHXJfT0dh70kthXcYxSFs+D0duQg5bLOXzpyEnFfGu
+	 i7WsqbU00Q9+o5EErsXfrjKIHtnyx0+zb3WyCHthc7BRF02j6tnTaDmM35BDGzSPae
+	 cJ2eHlShHxx9Q==
+Date: Mon, 24 Feb 2025 20:29:34 +1030
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>
+Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 5/8][next] btrfs: Avoid -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <3c3310a23caf3d78ae62c85c9476d5dfe4a1f871.1739957534.git.gustavoars@kernel.org>
+References: <cover.1739957534.git.gustavoars@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -60
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdejkeegkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnegoufhorhhtvggutfgvtghiphdvucdlgedtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpehnihgtohhlrghsrdgsohhutghhihhnvghtsegtlhhiphdqohhsrdhorhhgnecuggftrfgrthhtvghrnhepteehfeetkeeujeethfehieelhfejfeduteejieelveegfeefieeuheeiteethfevnecukfhppeeltddrieefrddvgeeirddukeejnecuvehluhhsthgvrhfuihiivgepfeenucfrrghrrghmpehinhgvthepledtrdeifedrvdegiedrudekjedphhgvlhhopegrrhgthhhlihhnuhigrddrpdhmrghilhhfrhhomhepnhhitgholhgrshdrsghouhgthhhinhgvthestghlihhpqdhoshdrohhrghdpnhgspghrtghpthhtohepvdejpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrhgumhgrsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqshgtshhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghouggrlhhishhtsegtohgurgdrtghsrdgtmhhurdgvughupdhrt
- ghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehnihgtohhlrghsrdgsohhutghhihhnvghtsehsshhirdhgohhuvhdrfhhrpdhrtghpthhtohepjhdrghhrrghnrgguohhssehsrghmshhunhhgrdgtohhmpdhrtghpthhtoheptghlvghmvghnsheslhgrughishgthhdruggv
-X-GND-Sasl: nicolas.bouchinet@clip-os.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1739957534.git.gustavoars@kernel.org>
 
-From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-Bound max-user-freq sysctl writings between SYSCTL_ZERO
-and SYSCTL_INT_MAX.
+Change the type of the middle struct member currently causing trouble
+from `struct bio` to `struct bio_hdr`.
 
-The proc_handler has thus been updated to proc_dointvec_minmax.
+We also use `container_of()` whenever we need to retrieve a pointer to
+the flexible structure `struct bio`, through which we can access the
+flexible-array member in it, if necessary.
 
-Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+With these changes fix 32 of the following warnings:
+
+fs/btrfs/volumes.h:178:20: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/char/hpet.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/btrfs/disk-io.c | 4 ++--
+ fs/btrfs/volumes.h | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/char/hpet.c b/drivers/char/hpet.c
-index e110857824fcb..528b43e893d49 100644
---- a/drivers/char/hpet.c
-+++ b/drivers/char/hpet.c
-@@ -730,7 +730,9 @@ static const struct ctl_table hpet_table[] = {
- 	 .data = &hpet_max_freq,
- 	 .maxlen = sizeof(int),
- 	 .mode = 0644,
--	 .proc_handler = proc_dointvec,
-+	 .proc_handler = proc_dointvec_minmax,
-+	 .extra1 = SYSCTL_ZERO,
-+	 .extra2 = SYSCTL_INT_MAX,
- 	 },
- };
+diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+index f09db62e61a1..2fbaaa9ab3e3 100644
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -3963,7 +3963,7 @@ static void btrfs_end_empty_barrier(struct bio *bio)
+  */
+ static void write_dev_flush(struct btrfs_device *device)
+ {
+-	struct bio *bio = &device->flush_bio;
++	struct bio *bio = container_of(&device->flush_bio, struct bio, __hdr);
  
+ 	device->last_flush_error = BLK_STS_OK;
+ 
+@@ -3982,7 +3982,7 @@ static void write_dev_flush(struct btrfs_device *device)
+  */
+ static bool wait_dev_flush(struct btrfs_device *device)
+ {
+-	struct bio *bio = &device->flush_bio;
++	struct bio *bio = container_of(&device->flush_bio, struct bio, __hdr);
+ 
+ 	if (!test_and_clear_bit(BTRFS_DEV_STATE_FLUSH_SENT, &device->dev_state))
+ 		return false;
+diff --git a/fs/btrfs/volumes.h b/fs/btrfs/volumes.h
+index 120f65e21eeb..6eb55103b3d1 100644
+--- a/fs/btrfs/volumes.h
++++ b/fs/btrfs/volumes.h
+@@ -175,7 +175,7 @@ struct btrfs_device {
+ 	u64 commit_bytes_used;
+ 
+ 	/* Bio used for flushing device barriers */
+-	struct bio flush_bio;
++	struct bio_hdr flush_bio;
+ 	struct completion flush_wait;
+ 
+ 	/* per-device scrub information */
 -- 
-2.48.1
+2.43.0
 
