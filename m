@@ -1,120 +1,106 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3EFC1CAA62
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 07:24:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 334A24414;
+	Mon, 24 Feb 2025 07:25:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740381870; cv=none; b=hQGTzFeR2I6dsTWg2pSEtuhVQcagDgI1/Qthj8hzDYAIwmN7ivNdUBDAdB74S3IMpJ+UmK+n2W9hmn73dr/drECDsXTweJOiscbLFWbq5sBL70soc+6b7ruWh+OVRtkHhJFGyODS5EsBAUKzbaq0NMUZCGuSldvNYUMpPfD7Gc8=
+	t=1740381953; cv=none; b=LyYv+xkMr8WMN9U3ar8GhQptrK2K2QA2SVzQGtTKj6d1pC1U2K/jwz5VUYvn151M8bStUhB9kUAg0Z2QL0pAds+OmoJUjd/h5N/VTJNo/IwD2uhZXpxvVshFaTopjK0feaI663KdYlufNiFhi1yiTdCryW2kTFSOvuhR2tRB2zQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740381870; c=relaxed/simple;
-	bh=wKkhTzsDSb1efBGP8vXqImXH9nHH4mzn6DEm5tLiY2g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=umLGOFG6pCu7PDcGYRoHMy2Pb8hAGwZ7MXyUKF2rLhHU5HlC5CezNyhuv6c4iNof1US98IOr8X086BPZtaA8l+lZHsMjYpMMULi1/kxoixbuW87OdueiP8ntpsFe99eMjQQPCWKgn9S24elOE1Ui67K84V3v4Do7fNFRFgEp0Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TWlCtr56; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740381953; c=relaxed/simple;
+	bh=V5PrS03/1N+lOBDHmbvokVfJz8kHXIKEr5Xg2RwNgD8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z5EU/TM95UY/0fUL91OY6n2yCe9JprkXaA8rtzY9F3CT2TGrUvhUlS3cvYunYW48iylcM0/tXAcrs4lDD8vJHiFbUyidI5NuszZC0GOavspWn2ivi62B5LZMHwrMgcRO2UYJuPbquFIy/z0gB0XiCLjbkFeVcP2B3MFmzffrL0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LKiwQORs; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TWlCtr56"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30613802a04so43198401fa.2
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 23:24:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740381867; x=1740986667; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G22ILij8njBSzOjweCTKXJ1pvtGVjwFldH02tbpqc1s=;
-        b=TWlCtr56vWOS13GnuMfEvkh5U7av7o8knB7yQTAbj5+9vyDU8SzMRUgDBnf/B+oGVM
-         dsVVsvorwU0KY9inlcpKTVkqrFD+rVDyRp4sjRAgc5DdXkg25/o+tpEe3zCSBdoLZZCc
-         746ClGKT3u27t7F6lt8pcp1TcMMbHuJyN7XElY9YgE53FUWmjyWgyJdc3Qjpvsx6Zkm8
-         PoI996lvSB+JiqN7SfAJoewEuRIyLgjdy2FTKFDS3B78kHDJL3d5eImJGninJP31t1uv
-         7jd+f34qhI9WYzW7ywJmlOhsvzxrA3sv+OTix+IaJtSO+otGoYCKqSCIO7SHqcvB/t6d
-         H1Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740381867; x=1740986667;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G22ILij8njBSzOjweCTKXJ1pvtGVjwFldH02tbpqc1s=;
-        b=WStz3hJrcehO9NrHPXxgCQFLF//rbEsZWtXmmbW2QFcunanhEieYE9fXNAZ6yan/z1
-         P5yh/SRp8XtG6EGiixSwrxcfjEw3ffFjFr57pP4N1u3j8BYkEwXVDPJNVjSeSbcnA2Hd
-         GwYc+XwpKUy3BCnBKzs9Wn0+LXdXDSGEtH6+Rk/3giBAwp6lw397CBOfAdPnR0iZjjnt
-         NwwLbUA4jybcu3mtCMAOy/QFqa/MbOVR9XOG8g2YqnWafOmChNNtcSHHxQWsOaMkteHL
-         4ycUe1pBkgF9Ot+f3zHstTzMnWOw+JJvZQ/4JVOL3xLDeeGlksAApcfHCksvWxlvx4WM
-         4gdg==
-X-Forwarded-Encrypted: i=1; AJvYcCW4qTJ+9J59GbKQo+KSGfaV+8QUM0l5ou6kZaCkD8xyQph3AiQUjc37KhWO2/22fMkh+SaZdjWoX7j4Jaw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yym4uWjDHc37JZ68pkwHlCJFXFYg+dfFmwxXYMn43Q1kq3rN10Q
-	rjvsXVwIM5Fj5+vWqzHlbjh+VsIudNXWWhcB+F9IEVQ8sodcy4l0Ly615VGqMCsZPpfthYf+rnu
-	MyoVJcwKlIw0uHjSatR5LF7oTkXk=
-X-Gm-Gg: ASbGnctsGrgHzGMrx5n9FtVLjeVHuwHtmzbb8XZ4jllrUZ31LpWWvHlud93zmd4a6Fi
-	WOA5R7kjS+SopqJxQiZAkIn8DAQhCbHCiyDv5CYf7Hcr4RoH1acRMpk3b530m9ztlLrau3Jpajz
-	7g5POSOv6+
-X-Google-Smtp-Source: AGHT+IFZOn0rVAzGe6Q3yijVzxFT7K0H1QEjYK2Kl27VSIuvKSvr+a4IJ8kW0jyGmv4r3j4A6uXmDucwtjKMAZyNp1o=
-X-Received: by 2002:a05:6512:e88:b0:545:2f0d:8836 with SMTP id
- 2adb3069b0e04-548392598f5mr4086669e87.40.1740381866544; Sun, 23 Feb 2025
- 23:24:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LKiwQORs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740381952; x=1771917952;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=V5PrS03/1N+lOBDHmbvokVfJz8kHXIKEr5Xg2RwNgD8=;
+  b=LKiwQORss2MSk4AZEYnPTzI4OUCb4kvZ/DZpITUYmfj/7jmkMfZ0xeMk
+   ToqNnozDt6dU8XPxblJS3DdDVPXHifBMyHwHeUTZbuSGuvBOne5TYOmXg
+   Sv0pyNjR+Nz8ea+I67fHCTwSZtk80EyGTjypgvXpsZAFuLKNXPKnb7gwG
+   UsfFc4eTCUIxYi7a3h+tgubtZUo1GeMHvaK+3h/VVrj0JReQSqO5NET/3
+   9sHusVQfaA72rmn5EJWaEfC920Apvk8pyoMyQoIJAECYgza9Bmr6Ok9ZD
+   cwD7qGRuSZYIQCvAhFh9tgIIqz6ADphfrzmvaUk7cwtzT4ef0ltRZ1W53
+   Q==;
+X-CSE-ConnectionGUID: iwrXaTj4Qhasgqb99FEbgA==
+X-CSE-MsgGUID: zKSpuJSlQMyhshEhQNBuOQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11354"; a="43955173"
+X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
+   d="scan'208";a="43955173"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2025 23:25:51 -0800
+X-CSE-ConnectionGUID: 70pRwv/LTdC4zptT1ieOBg==
+X-CSE-MsgGUID: 4LiYCxXWQS+sdNNNNe8ixA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="115817879"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2025 23:25:49 -0800
+Date: Mon, 24 Feb 2025 08:22:05 +0100
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] net: ethernet: ti: am65-cpsw: select PAGE_POOL
+Message-ID: <Z7weHW5bJnYpiAEN@mev-dev.igk.intel.com>
+References: <20250224-net-am654-nuss-kconfig-v2-1-c124f4915c92@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250129154920.6773-1-ubizjak@gmail.com> <31e1c7e4-5b24-4e56-9f17-8be9553fb6f9@kernel.org>
-In-Reply-To: <31e1c7e4-5b24-4e56-9f17-8be9553fb6f9@kernel.org>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Mon, 24 Feb 2025 08:24:15 +0100
-X-Gm-Features: AWEUYZnWJQoJwMEoizVBFuAzKOt1HtE0zCgOvuCo18gSs0aAxY_ocJ6jNDMCOOs
-Message-ID: <CAFULd4a4qbMiP3dYXDp0_vPapkoi-i-ApOY5pHfKG1h7=vfbbA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86/bootflag: Change some static functions to bool
-To: Jiri Slaby <jirislaby@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250224-net-am654-nuss-kconfig-v2-1-c124f4915c92@pengutronix.de>
 
-On Mon, Feb 24, 2025 at 8:18=E2=80=AFAM Jiri Slaby <jirislaby@kernel.org> w=
-rote:
->
-> On 29. 01. 25, 16:47, Uros Bizjak wrote:
-> > The return values of some functions are of boolean type. Change the
-> > type of these function to bool and adjust their return values.
-> >
-> > No functional change intended.
-> >
-> > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Ingo Molnar <mingo@kernel.org>
-> > Cc: Borislav Petkov <bp@alien8.de>
-> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> > Cc: "H. Peter Anvin" <hpa@zytor.com>
-> > ---
-> >   arch/x86/kernel/bootflag.c | 12 ++++++------
-> >   1 file changed, 6 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/arch/x86/kernel/bootflag.c b/arch/x86/kernel/bootflag.c
-> > index 3fed7ae58b60..4d89a2d80d0f 100644
-> > --- a/arch/x86/kernel/bootflag.c
-> > +++ b/arch/x86/kernel/bootflag.c
-> > @@ -20,7 +20,7 @@
-> >
-> >   int sbf_port __initdata =3D -1;       /* set via acpi_boot_init() */
-> >
-> > -static int __init parity(u8 v)
-> > +static bool __init parity(u8 v)
-> >   {
-> >       int x =3D 0;
-> >       int i;
-> > @@ -30,7 +30,7 @@ static int __init parity(u8 v)
-> >               v >>=3D 1;
-> >       }
-> >
-> > -     return x;
-> > +     return !!x;
->
-> This "!!" is unnecessary and only obfuscates the code, right?
+On Mon, Feb 24, 2025 at 06:17:16AM +0100, Sascha Hauer wrote:
+> am65-cpsw uses page_pool_dev_alloc_pages(), thus needs PAGE_POOL
+> selected to avoid linker errors. This is missing since the driver
+> started to use page_pool helpers in 8acacc40f733 ("net: ethernet:
+> ti: am65-cpsw: Add minimal XDP support")
+> 
+> Fixes: 8acacc40f733 ("net: ethernet: ti: am65-cpsw: Add minimal XDP support")
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> ---
+> Changes in v2:
+> - Add missing Fixes: tag
+> - Link to v1: https://lore.kernel.org/r/20250220-net-am654-nuss-kconfig-v1-1-acc813b769de@pengutronix.de
+> ---
+>  drivers/net/ethernet/ti/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/net/ethernet/ti/Kconfig b/drivers/net/ethernet/ti/Kconfig
+> index 0d5a862cd78a6..3a13d60a947a8 100644
+> --- a/drivers/net/ethernet/ti/Kconfig
+> +++ b/drivers/net/ethernet/ti/Kconfig
+> @@ -99,6 +99,7 @@ config TI_K3_AM65_CPSW_NUSS
+>  	select NET_DEVLINK
+>  	select TI_DAVINCI_MDIO
+>  	select PHYLINK
+> +	select PAGE_POOL
+>  	select TI_K3_CPPI_DESC_POOL
+>  	imply PHY_TI_GMII_SEL
+>  	depends on TI_K3_AM65_CPTS || !TI_K3_AM65_CPTS
+> 
+> ---
+> base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
+> change-id: 20250220-net-am654-nuss-kconfig-ab8e4f4e318b
+> 
+> Best regards,
+> -- 
+> Sascha Hauer <s.hauer@pengutronix.de>
 
-Not really, this idiom is used in place of (x !=3D 0) to change the type
-to the return type of the function in a pedantic way.
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
 
-Uros.
+
