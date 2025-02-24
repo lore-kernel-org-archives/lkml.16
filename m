@@ -1,109 +1,206 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A622248864
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 12:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D93248879;
+	Mon, 24 Feb 2025 12:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740398782; cv=none; b=tX8qzxbDimWOLPyQfe3IEGpu/AZZtO0UQLEL+T06PBRftb6KHn+MIXg5zYi9ZtUJQKbcMnm5GhM+GIkWXp1XhFVRUC3+B2Irx03GRqTjkoFC7vERGYlj6zxn5+u9xrCAK3K9Ft2wRgeZtydT82NlVb0SvWdcgnQae5bvq1Svquo=
+	t=1740398782; cv=none; b=EhykUhQvkAKzuXArPRJlM+WhWDBYN4ZrOUU6k90dCvmML+r9cNtJdyGibOhyCJnCPac6zu9tnH9FFMQKOaG+Pwcesaqp7eAh7GA/x70OoxzF3oC4RvjlIUc1uf/MhkMVpfDRHukUMXSYY/sl5fImyZ1uaZV0+sl2WTaQ2wxUsRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740398782; c=relaxed/simple;
-	bh=+Agf8UKAqGkJL+3vH4U8xbAblWaOBO6N6JdSJ1Tt5UU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G0dwPRZ/CraT45XfjwflE4wmHVlJfCfwzpq3W5BY4zvnmji7xOxFxmNepqsmKUf6ffh4qt7Dd4+QLT4E6WEte9IA4MI26FT7DvcTlFnF21pvkmCZOVkT6D2TeGKy5ip/Knq1Xz64cFUloCPTNr+VWFA58KpBTrQzpRTDUlqmSkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=Jnc6gTSf; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	bh=l/WE/Iyt5IAfurnrT002wpnh8ahQZE+ejk/Q/RlMt6I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=IxZ01htkZ3+EcUr4bfGIGbT10968/KX1QM3NfGIo3tXlTvlpqNo4jnXdBjuN1d8z5biMQM3ij7wbU9F0b1Xm6YbqlKfAo1RkDGR4pOQ+5KzMFteuhLG5+K0Dx4Y2eL81U0mm/OIcnr3bwWvcpLuFIrWh1GWaJ68dRsnAb+pyXlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B0y/+s5S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="Jnc6gTSf"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aaec111762bso54531066b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 04:06:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1740398777; x=1741003577; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vo1Gcpi1KHfmTJdi6Pn8yyGXw/q62BzySSHgB6HQ+5Q=;
-        b=Jnc6gTSfcUR9TI16u3EpYvVJD3x7xViIIqLxSbDNkqMU2kZB1l3AZ8+7Vl4RgxWDNW
-         vSPo2PUQ6tlM7Yn4oB8VqqNE+uXDvF1yhkzQ2r+3RNDW1eM6qDyV1nT0Z57raOlauxBI
-         BVMlINeV+SVrhMiSlNEjOwnpCtFUdUuoPvi4JcmkkK9iJAhwTXGCTDmNfYeSfbyhol5m
-         XwUSVb4jaRlmzE4FXfW6PyhCunq24odyi32lCakez4OUAs5GNNA1CRpuI7F62PyrCD07
-         ScPBTzl57ageKhrBYiRVCMov5jKwpGIGJwFz/aenkbTTHAuzbKTb5h4gt54m3u8a/84C
-         j1ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740398777; x=1741003577;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Vo1Gcpi1KHfmTJdi6Pn8yyGXw/q62BzySSHgB6HQ+5Q=;
-        b=nJv6e4TjC3gsdBLRHz6NEwkNxMqpWXQFGGcQVNibdZF2sTTDXik8GOP1R4MVpxf10x
-         8OQG4QJCzvzfv2EUaTQPffdQk9u2a9vNOmwPzxZFyPWzM+TKmrgWclOShbtVFIOZDXQm
-         IiTc0ABNKE0VfoK7vYOeZ7xB2zbWwTWGIhsGEqBpVrhak4IYe4HxfviOOLYz3b7D225n
-         XsWGzFsLvrRUEAVc8DFQ42e7uzpTnrVHtuv0VtJCO9i9ES5lwSqLrRO7IQyyHbMFGP5n
-         XiKldX+204YYTeX2qKCazTTzyhfAjIfpa1xkLsrQ/pgce8EUomQGv8DoMwpTuS0oztxt
-         W2Fg==
-X-Forwarded-Encrypted: i=1; AJvYcCVN35TkxxZ8WviUVRFpspDHnTzysoL+WLMQpG+iiIGHQABuu/WRl+QCPDLAg+j2KXioxaRCnSCsGnuofHA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpZ2XliElaE7Uh8kUFinoihfKasZK8mQdOLu0wcsAVbJo79K3T
-	oVxJTvlFuKLl8YvQnB5g6nv/yRTU+zsAYh6AdqVdHjKxQj8+y5OLp/UMnIBx8gc=
-X-Gm-Gg: ASbGncvz5UIlC7iPmquWVr0rp1R5aDJaDg4hqqlqA4zzupQxrWLQZv+2bKg1p4fexQc
-	QrePiwtGUDVUwR5d65jFpRNk0Psn6Rr4wpQB9sc8SjridZjApeDw9Oebry8f1hRg0Llyn+IIXJ3
-	haYFEEsHMF2Dxs5JqsnQrAIFZPZR5ODFqpaqg/M7g0AsoC9mWh6YhCiDlbHESUZmgIrg8JxiYmX
-	QfDBA6dXC7HbFrM7H7fw/50s8ofXoUGjkUlV+DuRWHhBLIxWweXFoHF+6M/A7Z7iUP0WX0/KhBY
-	+2GwH5UWf0bcmg3kT/oeAYxhoONlFnyLfdAP7+DsUhdtmuVgwnDkFxk=
-X-Google-Smtp-Source: AGHT+IGDJzU5NaW2phimEssVYOYVx4z5a+NFOew8SQJlOCu85fp72+5lccWfbGDbcb/fSCXbV+iifg==
-X-Received: by 2002:a17:907:7f8a:b0:aae:b259:ef6c with SMTP id a640c23a62f3a-abc096d6e93mr1477881966b.0.1740398777012;
-        Mon, 24 Feb 2025 04:06:17 -0800 (PST)
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.25])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abb978e2c9dsm1598901966b.65.2025.02.24.04.06.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 04:06:16 -0800 (PST)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: prabhakar.mahadev-lad.rj@bp.renesas.com,
-	jic23@kernel.org,
-	lars@metafoo.de
-Cc: claudiu.beznea@tuxon.dev,
-	linux-iio@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v3 0/2] iio: rzg2l_adc: Cleanups for rzg2l_adc driver
-Date: Mon, 24 Feb 2025 14:06:05 +0200
-Message-ID: <20250224120608.1769039-1-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B0y/+s5S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8055C4CEEC;
+	Mon, 24 Feb 2025 12:06:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740398782;
+	bh=l/WE/Iyt5IAfurnrT002wpnh8ahQZE+ejk/Q/RlMt6I=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=B0y/+s5SPe5pWrYPKdhk/v+Ph52JXnqurNOEx1JJtsKRBt/2kDSSojN1Rg+wRoMwT
+	 t4Bsq9054Nf3l96xuwwp91oDn6APRQ9m1eo/f53RIeNvBzM85zTp+zQln479RK0IG0
+	 Okn9c7CueCCfS/cE+rAGTBtpJdIc1e95Gedeg01LaOJCB9fVnKs/lKlyt8BifywnhF
+	 756VLOjNuIugYul2aG3BNmhaaeZLPXtVHUWbgNqaVx9n+hJ0a9YOp3q3AoqUMO/3xE
+	 kiWO/o1wVF7jnBE8VxRbD8u3WXUJTYJAf3Z0MhdtqBfaPpusHMJgTBExXO2cwfQXAa
+	 AwMDA9Y2d6NYQ==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+Date: Mon, 24 Feb 2025 13:03:42 +0100
+Subject: [PATCH v9 08/13] rust: hrtimer: implement `UnsafeHrTimerPointer`
+ for `Pin<&mut T>`
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250224-hrtimer-v3-v6-12-rc2-v9-8-5bd3bf0ce6cc@kernel.org>
+References: <20250224-hrtimer-v3-v6-12-rc2-v9-0-5bd3bf0ce6cc@kernel.org>
+In-Reply-To: <20250224-hrtimer-v3-v6-12-rc2-v9-0-5bd3bf0ce6cc@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>, 
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+ Frederic Weisbecker <frederic@kernel.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, 
+ Guangbo Cui <2407018371@qq.com>, Dirk Behme <dirk.behme@gmail.com>, 
+ Daniel Almeida <daniel.almeida@collabora.com>, 
+ Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4462; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=l/WE/Iyt5IAfurnrT002wpnh8ahQZE+ejk/Q/RlMt6I=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBnvGAjmeNKjyJa36N7rTzlZdrLwwpDVBGIaBQch
+ xCGBItaPaCJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7xgIwAKCRDhuBo+eShj
+ d5f0D/4zOL9VmopzOXR5gnUKJoAo8ZBhlCNY2HXwpt/ay47V6RaSq4RM4A9LBogTpj9hWWTAJJU
+ bYa3tQZpOpI/oZLVuLNtRHeguAb2/TyCsbYgB0SpCuF48j3tdgwx8OmL/Ff/0jCBXRHsCRVuKkF
+ hrWd3ovIh72D9V8F8uwLWENgzBWj/bxJ+eaGw3tBqCqyoB/qf5tMMQE9zBEuhm7STA3cUjLST1Y
+ Fem0rCvUv74xb/YlQ14iO0+aCcBYPpqHt3aFCaqcZggFMQEZVS84pzemRp/BPNggZoOFt+Afy8J
+ A9+Ux0GjXCy/ej7VlUdRGLUJ+p1KcP+nNFUy7OfadOXBEQfTjsby27831n4vPMQcJOmNFlfIwTH
+ aVMu3iBgs8GyrgM8/zQ22FbMMi+m63oWo0GD6jnt8wYSbrbb1crk6NIP7YpNWwdh5kxQluDk1Ru
+ iKBTOIla+YVWnuB2molUI2oW7AaUJo1EjsTi1b6p++FBke7jjTM+OxbagZhivnr0eGykin7tsXA
+ qrnzsawLveGpByZjCxD1wwHJsD9HZazlPu8xgW2G7Zxgin/BDvqa5UUfxvJnqRY6lyO126CICDs
+ QIp3+5dpNL+9nyaYwNl5mSYgID9gad5DEE7Bb1Jwad38tdtlpAITyRjpc1VqHa7+uSFcpesuvbm
+ NfO1W9xuXdaVm5Q==
+X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
+ fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Allow pinned mutable references to structs that contain a `HrTimer` node to
+be scheduled with the `hrtimer` subsystem.
 
-Hi,
+Acked-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+---
+ rust/kernel/time/hrtimer.rs         |   2 +
+ rust/kernel/time/hrtimer/pin_mut.rs | 101 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 103 insertions(+)
 
-Series adds some cleanups for the RZ/G2L ADC driver after the support
-for the RZ/G3S SoC.
-
-Thank you,
-Claudiu Beznea
-
-Changes in v3:
-- in patch 2/2 use a devres group for all the devm resources
-  acquired in the driver's probe
-
-Changes in v2:
-- updated cover letter
-- collected tags
-- updated patch 1/2 to drop devres APIs from the point the
-  runtime PM is enabled
-
-Claudiu Beznea (2):
-  iio: adc: rzg2l_adc: Open a devres group
-  iio: adc: rzg2l: Cleanup suspend/resume path
-
- drivers/iio/adc/rzg2l_adc.c | 117 +++++++++++++++++++++++-------------
- 1 file changed, 75 insertions(+), 42 deletions(-)
+diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
+index 52a3dd1c3984..07b19699d4e8 100644
+--- a/rust/kernel/time/hrtimer.rs
++++ b/rust/kernel/time/hrtimer.rs
+@@ -430,3 +430,5 @@ unsafe fn raw_get_timer(ptr: *const Self) ->
+ pub use arc::ArcHrTimerHandle;
+ mod pin;
+ pub use pin::PinHrTimerHandle;
++mod pin_mut;
++pub use pin_mut::PinMutHrTimerHandle;
+diff --git a/rust/kernel/time/hrtimer/pin_mut.rs b/rust/kernel/time/hrtimer/pin_mut.rs
+new file mode 100644
+index 000000000000..4f4a9e9602d8
+--- /dev/null
++++ b/rust/kernel/time/hrtimer/pin_mut.rs
+@@ -0,0 +1,101 @@
++// SPDX-License-Identifier: GPL-2.0
++
++use super::HasHrTimer;
++use super::HrTimer;
++use super::HrTimerCallback;
++use super::HrTimerHandle;
++use super::RawHrTimerCallback;
++use super::UnsafeHrTimerPointer;
++use crate::time::Ktime;
++use core::pin::Pin;
++
++/// A handle for a `Pin<&mut HasHrTimer>`. When the handle exists, the timer might
++/// be running.
++pub struct PinMutHrTimerHandle<'a, T>
++where
++    T: HasHrTimer<T>,
++{
++    pub(crate) inner: Pin<&'a mut T>,
++}
++
++// SAFETY: We cancel the timer when the handle is dropped. The implementation of
++// the `cancel` method will block if the timer handler is running.
++unsafe impl<'a, T> HrTimerHandle for PinMutHrTimerHandle<'a, T>
++where
++    T: HasHrTimer<T>,
++{
++    fn cancel(&mut self) -> bool {
++        // SAFETY: We are not moving out of `self` or handing out mutable
++        // references to `self`.
++        let self_ptr = unsafe { self.inner.as_mut().get_unchecked_mut() as *mut T };
++
++        // SAFETY: As we got `self_ptr` from a reference above, it must point to
++        // a valid `T`.
++        let timer_ptr = unsafe { <T as HasHrTimer<T>>::raw_get_timer(self_ptr) };
++
++        // SAFETY: As `timer_ptr` is derived from a reference, it must point to
++        // a valid and initialized `HrTimer`.
++        unsafe { HrTimer::<T>::raw_cancel(timer_ptr) }
++    }
++}
++
++impl<'a, T> Drop for PinMutHrTimerHandle<'a, T>
++where
++    T: HasHrTimer<T>,
++{
++    fn drop(&mut self) {
++        self.cancel();
++    }
++}
++
++// SAFETY: We capture the lifetime of `Self` when we create a
++// `PinMutHrTimerHandle`, so `Self` will outlive the handle.
++unsafe impl<'a, T> UnsafeHrTimerPointer for Pin<&'a mut T>
++where
++    T: Send + Sync,
++    T: HasHrTimer<T>,
++    T: HrTimerCallback<Pointer<'a> = Self>,
++    Pin<&'a mut T>: RawHrTimerCallback<CallbackTarget<'a> = Self>,
++{
++    type TimerHandle = PinMutHrTimerHandle<'a, T>;
++
++    unsafe fn start(self, expires: Ktime) -> Self::TimerHandle {
++        // Cast to pointer
++        let self_ptr: *const T = <Self as core::ops::Deref>::deref(&self);
++
++        // SAFETY:
++        //  - As we derive `self_ptr` from a reference above, it must point to a
++        //    valid `T`.
++        //  - We keep `self` alive by wrapping it in a handle below.
++        unsafe { T::start(self_ptr, expires) };
++
++        PinMutHrTimerHandle { inner: self }
++    }
++}
++
++impl<'a, T> RawHrTimerCallback for Pin<&'a mut T>
++where
++    T: HasHrTimer<T>,
++    T: HrTimerCallback<Pointer<'a> = Self>,
++{
++    type CallbackTarget<'b> = Self;
++
++    unsafe extern "C" fn run(ptr: *mut bindings::hrtimer) -> bindings::hrtimer_restart {
++        // `HrTimer` is `repr(C)`
++        let timer_ptr = ptr as *mut HrTimer<T>;
++
++        // SAFETY: By the safety requirement of this function, `timer_ptr`
++        // points to a `HrTimer<T>` contained in an `T`.
++        let receiver_ptr = unsafe { T::timer_container_of(timer_ptr) };
++
++        // SAFETY: By the safety requirement of this function, `timer_ptr`
++        // points to a `HrTimer<T>` contained in an `T`.
++        let receiver_ref = unsafe { &mut *receiver_ptr };
++
++        // SAFETY: `receiver_ref` only exists as pinned, so it is safe to pin it
++        // here.
++        let receiver_pin = unsafe { Pin::new_unchecked(receiver_ref) };
++
++        T::run(receiver_pin).into_c()
++    }
++}
 
 -- 
-2.43.0
+2.47.0
+
 
