@@ -1,98 +1,92 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A8919068E;
-	Mon, 24 Feb 2025 09:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3551F189912;
+	Mon, 24 Feb 2025 09:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740390470; cv=none; b=GC7AM89iNNCSk23zUo+I31v9JikP1v3wxm7zm656uVYp3DyvZlC39dUuf1h7jzyJkwgQnIGz6+7pO617MKZLYbGDzApa9g0xG0akkST5Atrr6Zk7Qxexb5JFZ4gf4gD4oBEUrEp1PATjHY8rWyWqqB9zarAXXXqm26RMPDJWPIs=
+	t=1740390548; cv=none; b=k+MvQRnIbZL1JNipCHEcwOMB7RWCZKOPNy54Mezd2bY91XezOWELwEClzsgHz18ZWatIcGNYFXJ9tl0ntvOx+n6Jv3U/frIoVRM5AAM5bQ/UyTqK5YXIYN4BWrkZoeInUUv25bJJk7RqZcbzZd70SY/sIPfS2jYVIB5iNqWh5CI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740390470; c=relaxed/simple;
-	bh=9BaNaagw/ZNHIHZIGWJapW+0C1OmfI1aZs/907nTjNo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ab8caUYDeJ63Xer9RWTFppKnp9VRgo4taLgF0wdIcNXkFaGO6djd3WZSt9oOxDqreEo1QF0WkBPYWo7pRp/0LjsECXLhBP0Zu+gN3rcrxjOs3tYEM0ti84Kg3OFSTpQK8ne9Nm/W4+OIN9+2/OkBF/J8pxhz61aTMd823PZNFFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=pRolsdAZ; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1740390548; c=relaxed/simple;
+	bh=7Pd7khuI2KchDXVwapOXs6RAp/nDAGa5YPGGGTL0Vv4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=gJpxE82isvkC/mfFA9nqOMjUOAene+l6mRbDoXnYwbiGjfL0/GDRGWTs1bdLLo6b3iy44/Xjm4O0oT1HBpr4lHxbwus4tLsVXUurdcNYo86UT6kdCZt2XGey2rRHQGGkEhupmUHiz97KB8v1dtlCqpme1YUFFfCuJcuBpMtmSHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=AtGOWShz; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="pRolsdAZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1740390425; x=1740995225; i=markus.elfring@web.de;
-	bh=hRH62ND8UNosmEYDdA1QCyNtBT0pt/8MXaWtWO0/8yo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=pRolsdAZtwJZeVqEjidyxnkbVNPR0yCWUAof4/2eRrmAmHCgY9a3Kb/FAqH/0GhV
-	 29JbxmharSUhUVrGajDbebQvoLUYL08oED4DvqAF7UsJ2kfRwatBc6Le04/pyaIY6
-	 Ndk1fplkZCwARWb2rk49RY8S4rTe5wuA2hmJUxLk6z5/E6EMrcS39VIWDqIeD+7O9
-	 QRlv6dfpcSm5E6vkCyJg3DZoRgGsx67zIQ448HcwWVAknVmK+drj9eBRc+nlQHFSy
-	 ROFlXOu8Gsm/gQfktflMLESJiQFs1eVWHfj9mas6vSqT0FbTxoyaE5lv7hCDBQ2cd
-	 fUtCo9lexU2FSNTrew==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.37]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MjgSv-1t3JPW2Sol-00aAzV; Mon, 24
- Feb 2025 10:47:05 +0100
-Message-ID: <1f41fd8f-c811-4995-8e94-bf824a9c7f06@web.de>
-Date: Mon, 24 Feb 2025 10:47:02 +0100
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="AtGOWShz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1740390544;
+	bh=epl3x8xyIYnk5Z5jcoZE73g/RkDrJ2yEW/LPXAjedmo=;
+	h=Date:From:To:Cc:Subject:From;
+	b=AtGOWShznmM3GB2OKC076+wSzZEY2cmPIyRAE/BTcXUgwPRjWHFYLwsANGhkoWsCR
+	 0wVT4nHmqEnoKq3ZrlAzw+eSdu9jE0WTuQ5It7sUJ8pJQ/P5fLEHC3XYbKVZF4kbAE
+	 PV/k05a08rHkHhNaEzmgCTICoMz/loG4uT7ehD8/gQ43Lhqg7Ezb3lnzE0Jg/YOaDZ
+	 LHoNU0hcnGqfTw2PxV2oP/+EJxP8dnz4Vi0W9VO+5l/ajLcRUo8wXRYmO6nvV1c10G
+	 shmItjUnrhihuxF87xT3iR19be2kQHglWYyy9LmutrcRblaYveHOJAVtzvioe1MW4z
+	 DpXfP60uiTk9Q==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Z1bXw0DGxz4wcy;
+	Mon, 24 Feb 2025 20:49:04 +1100 (AEDT)
+Date: Mon, 24 Feb 2025 20:49:03 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: Fixes tag needs some work in the bcachefs tree
+Message-ID: <20250224204903.7ab806c7@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/4] PCI/portdrv: Loose the condition check for
- disabling hotplug interrupts
-To: Feng Tang <feng.tang@linux.alibaba.com>, linux-pci@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>,
- Guanghui Feng <guanghuifeng@linux.alibaba.com>,
- Liguang Zhang <zhangliguang@linux.alibaba.com>,
- Lukas Wunner <lukas@wunner.de>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: lkp@intel.com, LKML <linux-kernel@vger.kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>
-References: <20250224034500.23024-1-feng.tang@linux.alibaba.com>
- <20250224034500.23024-4-feng.tang@linux.alibaba.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250224034500.23024-4-feng.tang@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; boundary="Sig_/DC1sc+iJXBg1Rx+NBBfO/kr";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/DC1sc+iJXBg1Rx+NBBfO/kr
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:rAmKrLzRoKv0QW82kY5YP48J2FZ9xjMoF4dS8F8J6OCIHCFi9nQ
- iA/8IYAbw6665tiQzwvP7xvt+mlZXHnp7bq2iB5DXCApbAufzn8u1CIh2b4n8T9/p6wIJZ1
- 1qHWGt426tiYy3hE/8cMO1WpGoV0fDhW8LmM4/ZQTmP0QYEJ4Ad3vKZXPyJY5p4/qTwgKWy
- I8aF0uaGIfBWE3J7f1h2Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:RB8wIQCsvK4=;uAWktxSLvqGqVrzfdO0UNZ5eShN
- bJm2d9lneXflGtEeiBILtTnj6KteeA+5bLPC9x0ybfxHrA1fBqU1RUVNw/dEH//EhYXTYePVM
- fZ+jdt2e8LqOSZhdXXBJOSct78oxdq7OOqn33XLGTVhITAu/CpCJ4nICcMM5IbP1odguRei8z
- rBmuKjUkDOcB8BNLD3GWHuwDE29RYEo0ULac83G5+ZRPCNNc693Pw519S5oqcDmp0XFoZfSas
- JAzk02zeEtksJCwcIM+3i1oGxSIeTEnkLu8egdDTqfdn5XhSEyQ+iZvC0ZMD2JLRlu7Qcvc5T
- CiKTBNNvfY/Zivfr7sqOjLfDhZWpBIL/Xa4eaDX2b/T5ImWfhcLbZVydqC52jZORMD3R72c1U
- Vuh0t1oGv8sU3A+DOXZ35aLvgOKgnVUlooXoUizHqieY7wvqbURoS0mkbvZyFaOqH02qgaq69
- 9X8AHzirSKcuCWIrirOH1bwURLj52cTSLw8loMALjsacjbGyT9XttZSGPkST1XlVwqLdIIxbr
- vZRYP7pla0kVsin92MhnHu08bix19oUVDs7ms5bBUoBIaSNiCtP4mP56T5DPS8zVdP7+mDpMK
- /Pv/8bTt/dL+729wjJtJvMra2P3ltQsgsmFAKUQU9FwVKBpe3rU1qbtnje6ggGvlNduJVTgnr
- WACKXf/QP2kvg27lzjlYoRqNHKxWmbqLLttyu2FIYjHwIbQrREqTIS/6y4CEZCsUHH6r37Y8k
- 7DGlyJqpTwxf3b6drEFnztSFq9VOcfGGVLm/fk8ApLXdNJdyDsmvJ2F5GA9Mr/f34XpXm5SUx
- qEeKux1GLhfwhsrLh2uujWQxCc+vuZqsveCFq/4hoWZrYJBqvDqeVS9KVbo2rnclO0+UG28/O
- xlBTd7v5SRJgHg4PcyLjN91UV5Ruc3Un44sbqQe8GzR/uJtTeEGZLVWWEnRaqpROuuHcwf+hm
- NNiPYem2fGpN+qV0o8O4QgZD6xAWEJfQPcRTmagoahnGbCPdDFcMAARP7a8A7nlMatvVIGEDv
- vJhRYOtOBBVhCgrj3rbo9sOgAUQ+6psVMxEsaQxGfb/LCU59YTSWGkG1/XUEopLL2ujlHVHDp
- AuGMPyRHFHHCtyvP2dss1aG+UqXq9KSMl6wkgtB/J4Z9jIgtL8Mw6/rvLS2LSoVp3sMDB/AXE
- np+xNOeXq60V3TJ5cU/TXgkZtapc3XrM41Gl84azcvZTBLzrrIvjTZ3TCIsbUWnVfQJQjyKT7
- IGMXNhotm5VL821i7Z0mHh2nQrZHMa+mnoTI1Q88n1ne2h0IBFrCKK6WgEWl+th8cErpdvS5C
- q4ybFivUCYfKoiUTFTowt7lcMf31DipGmv8xEWscuhNbKgIuEH6+1ly8TQc9wDgeN46Egc2Rb
- KdQ4N2/b81M5pWqDIGrGQa4NV2VotDvfMZ2ZUtSZjo67wEG3gbchXH/9GlGY8LyXM//2DRZr3
- pncQXqbj9+CLfZFDt7qEE6lnHuy4=
 
-=E2=80=A6
-> remove the depency over them.
+Hi all,
 
-             dependency?
+In commit
 
-Regards,
-Markus
+  d139df3ad938 ("bcachefs: Use flexible arrays in dirent")
+
+Fixes tag
+
+  Fixes: "bcachefs: bcachefs_metadata_version_casefolding"
+
+has these problem(s):
+
+  - No SHA1 recognised
+
+Maybe
+
+Fixes: fce7ea1266a5 ("bcachefs: bcachefs_metadata_version_casefolding")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/DC1sc+iJXBg1Rx+NBBfO/kr
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAme8QI8ACgkQAVBC80lX
+0GzK1Af/SJhPV2DdrsqtYJ7B+hKnEv+ojuFxWyv4oMMwwDueASIXdksRYTfomPl+
+lWHvRzp93HStrmCxpdLi7i/ak76aNatU2ZKHfHqSKjawGFwBz5kxB+maaaLHAvWP
+2EITdMfus6dWKj6GBa5J04ClnUz5rkL+F6H/+wR4sr7dbQVbUuEvGx/8KDr/owcJ
+xH+EOkkkv+pFhkm3lRudryhGpTY8tyZBMf2IdOT3gCd/S4TfdrgCi4NpOhZHYu1K
+j8yiyY8qR+VioWGMMg8QHrQDSGXLDEv/zEH5WnsTQKZ3aqwz/YdiA/LzWLQbdQs6
+H7KCauCTr5ok7o7BKUobwIhcCbxOXw==
+=n9iM
+-----END PGP SIGNATURE-----
+
+--Sig_/DC1sc+iJXBg1Rx+NBBfO/kr--
