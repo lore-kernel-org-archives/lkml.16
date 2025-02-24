@@ -1,113 +1,142 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596142571B6
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 19:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D07D189F36
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 19:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740424208; cv=none; b=b4msPS832n0wBBhiIpZoedP6/nZLpsddLL9W2RBbrCtQllJ9lzsN6oxvSsHhOSMUD+WEQf7yxoThiTjKQ8VFmOFm67yQC3sYqSyiGugd8eb2/lnW6LaK/gYXuRLnRIg9WlpCWaZJwdjiy4ghwGH/Uoly4HuXQOe0B5d3NiLOKBE=
+	t=1740424236; cv=none; b=Yr712GK8FkffvmzhhaPVMTATMWj5LvFufkc2v4NxBfjXvziZqyOSG/9nX/p/YD3R+lKatuHGSJSNfWOLm/WlMk0VTTLMvN7gJA6aJ47y6uvL6fPOzVjCl9spLhFGgwDGXiWuLVjV5K2zO+FjOzD1FvgePOFbK2xtScXg5B7YjzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740424208; c=relaxed/simple;
-	bh=T7YErwBzM3Xp9awb651aOZgPiu2dAaV63y7n1aimj9I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DE2oX+BEcd5Xq+jdz3LN0KpYQBAmBlAnQJ7ZWxtj0XST2nbUxCqiJWZGvFiIbmIC/Lfb59YLd8MJgv4vEwdk+nxAoMLtHlvyZnNSsk8jxuEK7JRIucrHZUcB9YoL9n6qGBHGyJE/1aVpcQZiGXv0a7sMteHZRg7cOhbdqzkOFVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=C48qejSx; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1740424236; c=relaxed/simple;
+	bh=JJqwJdyWEpP4WKiHJPh2dMaurzmP+l2Jd9yHTkji/14=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=dOX8usSsNdXd6gK9UNePQs+FyluT07tn9xigQoc20eXHsnyVXaZkPZqeedA4GQWhiohZIWArnXL/guRbsSXboaX5ZaGFv35+wx6v89d6DowogwiCdV0TNt1AzHvizav8Aawx6J1u/PBW93KcjEvACFxEFPJ3TWPlr7ByY9GOFN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GYzoG0fr; arc=none smtp.client-ip=209.85.210.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="C48qejSx"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3d284b9734fso42539695ab.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 11:10:06 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GYzoG0fr"
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-724daedf8c3so1222333a34.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 11:10:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1740424205; x=1741029005; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PqbHB05B4SvIPHaJMOkpStsDUjppa28qG+czwoXrbKg=;
-        b=C48qejSxH6IF1Ow052MGWOqndOtse36ibHm7CKPnPRydPSBfLJqUd2e3PHYuK1NO2U
-         xtiPFryTzdZ8XvwuJ3y99oMhuhGExvVdNpmgJkSyI5RJ4Db2pAW8JSFy0xNGQcIPCdyv
-         sX5LXbJ+Q0VaNEGfkbxP5GYUk0ma08qoMoi2Jg3gQVkQ5CXPzWEVx3Uxq4qXRx3xQSIg
-         1hvk1BLvcF7FHR7rOfCi+MMtwa0l18GwDe8fZb3MIXCTjNHzya2mDj1cBxXHOmkDeld6
-         N4jlS/BHA9NmOYYjTHDcEqrfKVQHWOluzIiVSJMKPO9dbWnIca0BEW+5HYNlKmywn3tZ
-         ZYww==
+        d=chromium.org; s=google; t=1740424233; x=1741029033; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J9GUPPHtI/YKh17WuuJkLZZaFJrQQSx3CAYW3DjQ3WE=;
+        b=GYzoG0fru+lRDiHghSLjjSUyuXZjUWR4g92Y3KChJ7ewHbwE/DdkVUHgos/NR9/9Y5
+         sdPXwZVhrhNnzVLPjZohoGxgnskln2fz7D7wEjZNUEE2K2ux3/1t7hZc9EQhXGplaVIU
+         uy31plx6ocVNEhz7uqhQoZJ9I4a/lpL6+P/sg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740424205; x=1741029005;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PqbHB05B4SvIPHaJMOkpStsDUjppa28qG+czwoXrbKg=;
-        b=lN/h89vGenQQmzPO64blzk9ckEprMUwlU183X03cYguqza8P+nbxeYpCHtBmVQ8oKo
-         wk+5ndyHriEgfGtxKIR/Me5grMvh8mwwtNyH5qx3kS1Jt8qffWBHDajNZ0t2VS3KgKuC
-         uZv/nX/cxVZ73F0NA/DKIgP/VYAUB5RfPOKXn0LZpNq178s/crj5Jdk7Vc/NpngmtID/
-         CinI+H+gIZQJIQ2sBEXOFD2pRJMWouyoPQK+xMlcNAnt9qooeR3wnSPH2d47DNCLiXYu
-         hmcD4BjMKMN43nDy8FeT9CpAL6JhZWSIKPzIOq5GiLLI0jM0zEQUB3eWivuipSZSQu2k
-         OScg==
-X-Forwarded-Encrypted: i=1; AJvYcCWflwbT5OC3vAmDyU4Hp3sEXvam3hi05hgod0iy/wkThLp7u2Gmd1/FQmOUbShZwCYiIhphY2gRuzgJhvo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/x5k42GsGL9ClnjB3W0dKmHJup6+7Azjv1oiYMbcJV9JVqYBz
-	LDXYKmZKgopx6BkB0Es64/DmKP/MJpmEUvLExssZdPplKsHQCWMQNjuCoS5otJY=
-X-Gm-Gg: ASbGncvSaQkMnA0XRYbdfX3SNjLd7pDArOJCUPBJoDI3xHgdWNIApwzaYdjm6SO0Bol
-	ARzOXk5RG93IL3GpA7yDgL45vPyuLUU9zo4Tu7dQQRnZtqaI2Icd0wCRqxYGXrhtwBN6vvWkuVz
-	2u81F8kdCtd0x8YWNCjqienB5+IiW9e17pDGWk8TbxAre8EFTosiUIL4lnFLquJQCRpHG9koERD
-	LqT7a6JXCYQWXE/+n3/uDm7YNgrjW2d2XR/u/nVsZIKTT1R8jWZJCIy1vDiekQcDQ6PFG5ytA+m
-	ioNh+67VgHOpQvMbO+Rj+IA=
-X-Google-Smtp-Source: AGHT+IE9yRT47uLO/qnZ8m+KBTEjrY8OpDaMFUTbEWKNyPYD36u9FByoFodrZPa/f5LtblX40YcluQ==
-X-Received: by 2002:a05:6e02:20ca:b0:3d2:ae4f:fa12 with SMTP id e9e14a558f8ab-3d2caf01848mr117386215ab.15.1740424205319;
-        Mon, 24 Feb 2025 11:10:05 -0800 (PST)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f0475134c2sm25231173.91.2025.02.24.11.10.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2025 11:10:04 -0800 (PST)
-Message-ID: <2f7a0d65-afc2-4592-935a-30cc324104c6@kernel.dk>
-Date: Mon, 24 Feb 2025 12:10:03 -0700
+        d=1e100.net; s=20230601; t=1740424233; x=1741029033;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J9GUPPHtI/YKh17WuuJkLZZaFJrQQSx3CAYW3DjQ3WE=;
+        b=viL/hNcYNN4uOFTccsCD+rRGbFl9v9dkQmk/uusKg4ktyOuvT/ReW0HQcssNXHNY3a
+         cX6WqR8GsCkuCs6YORrQAtH8sGzMf2cW+qDNWqapKIkxu0rV0SESOUXGEk9z+gVqExD9
+         bxfSbOQH+AuUQfSEhHWDlcssUi/DKsij6+CkhSAJEULNtwGBTjxApNIC8hLug2vT4Amb
+         pcQ2bibiUl6cEi3Atq91lo0gsOp68GF4Ffd+Iq0t0zu9x3J1OdLkpanalOKJU7GTLUrT
+         M6XSJfq/r29yYnuG80MuHALrtzqsQD0bg5mHxnXyWCIwXX16YAbbhHuU+DNLqrCKWj2G
+         XrFg==
+X-Forwarded-Encrypted: i=1; AJvYcCUYg74OS34s4G1mkrcSteVtBsaOIte33cRZvYudBfm/vOpxGY2N9Y8qX8QjHprpwnyFcmSDautwMXpVRMc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4KBU/Re+oZsNIUgqyGhwBerN+i4UzD77imNwksKA9X8DTU8cK
+	UZie0vpwBmsocW5CVzng+nFkZ/Kh3/2R8mWBbeKKIrzTYthO/SGxwl5w8m0sM8XRzNu9ERZRTdT
+	67Yd1SFF28HoBA6LucfQgIKOt4CvRsHn7Iq/P
+X-Gm-Gg: ASbGncuL/RsKw3ZzJaTyMtWZAoBpQB52qspVuK9xDJlWJj5sXvv1Ha1CeNFkl4BGzdy
+	C8yVaY6rHzZs80quvIU5FwfL2IXPw+Cuo9CTS45UExE4Vyeds3pdtlv6eN3H0SX/DBZql7P2l62
+	wEOGcV+hTJRP9J7lOo7vSWnge1LLopKnhFIUJa
+X-Google-Smtp-Source: AGHT+IFlDVsxYo9mfEvAqcvS4ITFW3i/z/MP2mONGiYQhwahTiLBP8R5L4zcHu5ETCTa4Vq9saY30CuDm1u91AncVR0=
+X-Received: by 2002:a05:6808:2227:b0:3f4:ad6:519c with SMTP id
+ 5614622812f47-3f4246b3b10mr4256084b6e.2.1740424233263; Mon, 24 Feb 2025
+ 11:10:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] io_uring/waitid: remove #ifdef CONFIG_COMPAT
-To: Pavel Begunkov <asml.silence@gmail.com>,
- Caleb Sander Mateos <csander@purestorage.com>
-Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250224172337.2009871-1-csander@purestorage.com>
- <ebad3c9b-9305-4efd-97b7-bbdf07060fea@kernel.dk>
- <CADUfDZrXAn=+4B9boaKe3aMBq19TXn8JDQm4kL0ctOxwB6YF9g@mail.gmail.com>
- <fedd8628-327a-473b-9443-4504fab48c2c@kernel.dk>
- <91c200cd-2b2d-4756-b641-aa1bd4ec9796@gmail.com>
-From: Jens Axboe <axboe@kernel.dk>
-Content-Language: en-US
-In-Reply-To: <91c200cd-2b2d-4756-b641-aa1bd4ec9796@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250224174513.3600914-1-jeffxu@google.com> <20250224174513.3600914-2-jeffxu@google.com>
+ <443992d7-f694-4e46-b120-545350a5d598@intel.com> <CABi2SkVKhjShryG0K-NSjjBvGs0UOVsY-6MQVOuQCkfuph5K8Q@mail.gmail.com>
+ <3nxcy7zshqxmjia7y6cyajeoclcxizkrhhsitji5ujbafbvhlu@7hqs6uodor56>
+In-Reply-To: <3nxcy7zshqxmjia7y6cyajeoclcxizkrhhsitji5ujbafbvhlu@7hqs6uodor56>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Mon, 24 Feb 2025 11:10:22 -0800
+X-Gm-Features: AWEUYZmwpnqiN9sqZHdi21X3o8pzG8dSdU0zfO4HZpkMFe9rZXpLE-Vov3pXiB0
+Message-ID: <CABi2SkV-RwWjfXZfK4tHzQWG=dCJU7CRGmthSA8vqhHcbeCiQw@mail.gmail.com>
+Subject: Re: [PATCH v6 1/7] mseal, system mappings: kernel config and header change
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Jeff Xu <jeffxu@chromium.org>, 
+	Dave Hansen <dave.hansen@intel.com>, akpm@linux-foundation.org, keescook@chromium.org, 
+	jannh@google.com, torvalds@linux-foundation.org, vbabka@suse.cz, 
+	lorenzo.stoakes@oracle.com, adhemerval.zanella@linaro.org, oleg@redhat.com, 
+	avagin@gmail.com, benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
+	sroettger@google.com, hch@lst.de, ojeda@kernel.org, 
+	thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
+	johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com, 
+	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com, 
+	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
+	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, 
+	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com, 
+	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, 
+	peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com, 
+	groeck@chromium.org, mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com, 
+	mike.rapoport@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/24/25 12:10 PM, Pavel Begunkov wrote:
-> On 2/24/25 17:55, Jens Axboe wrote:
->> On 2/24/25 10:53 AM, Caleb Sander Mateos wrote:
->>> On Mon, Feb 24, 2025 at 9:44?AM Jens Axboe <axboe@kernel.dk> wrote:
->>>>
->>>> On 2/24/25 10:23 AM, Caleb Sander Mateos wrote:
->>>>> io_is_compat() is already defined to return false if CONFIG_COMPAT is
->>>>> disabled. So remove the additional #ifdef CONFIG_COMPAT guards. Let the
->>>>> compiler optimize out the dead code when CONFIG_COMPAT is disabled.
->>>>
->>>> Would you mind if I fold this into Pavel's patch? I can keep it
->>>> standalone too, just let me know.
->>>
->>> Fine by me, though I thought Pavel was suggesting keeping it separate:
->>> https://lore.kernel.org/io-uring/da109d01-7aab-4205-bbb1-f5f1387f1847@gmail.com/T/#u
->>
->> I'm reading it as he has other stuff that will go on top. I don't see
->> any reason to double stage this part, might as well remove the
->> CONFIG dependency at the same time, if it's doable.
->>
->> Pavel?
-> 
-> I'm not sure why you'd want that, but I don't mind
+On Mon, Feb 24, 2025 at 11:03=E2=80=AFAM Liam R. Howlett
+<Liam.Howlett@oracle.com> wrote:
+>
+> * Jeff Xu <jeffxu@chromium.org> [250224 13:44]:
+> > On Mon, Feb 24, 2025 at 10:21=E2=80=AFAM Dave Hansen <dave.hansen@intel=
+.com> wrote:
+> > >
+> > > On 2/24/25 09:45, jeffxu@chromium.org wrote:
+> > > > +/*
+> > > > + * mseal of userspace process's system mappings.
+> > > > + */
+> > > > +#ifdef CONFIG_MSEAL_SYSTEM_MAPPINGS
+> > > > +#define MSEAL_SYSTEM_MAPPINGS_VM_FLAG        VM_SEALED
+> > > > +#else
+> > > > +#define MSEAL_SYSTEM_MAPPINGS_VM_FLAG        VM_NONE
+> > > > +#endif
+> > >
+> > > This ends up looking pretty wonky in practice:
+> > >
+> > > > +     vm_flags =3D VM_READ|VM_MAYREAD|VM_IO|VM_DONTDUMP|VM_PFNMAP;
+> > > > +     vm_flags |=3D MSEAL_SYSTEM_MAPPINGS_VM_FLAG;
+> > >
+> > > because MSEAL_SYSTEM_MAPPINGS_VM_FLAG is so much different from the
+> > > other ones.
+> > >
+> > > Would it really hurt to have
+> > >
+> > >  #ifdef CONFIG_64BIT
+> > >  /* VM is sealed, in vm_flags */
+> > >  #define VM_SEALED       _BITUL(63)
+> > > +#else
+> > > +#define VM_SEALED       VM_NONE
+> > >  #endif
+> > >
+> > > ?
+> > >
+> > VM_SEALED isn't defined in 32-bit systems, and mseal.c isn't part of
+> > the build. This is intentional. Any 32-bit code trying to use the
+> > sealing function or the VM_SEALED flag will immediately fail
+> > compilation. This makes it easier to identify incorrect usage.
+> >
+>
+> The reason that two #defines are needed is because you can have mseal
+> enabled while not sealing system mappings, so for this to be clean we
+> need two defines.
+>
+> However MSEAL_SYSTEM_MAPPINGS_VM_FLAG, is _way_ too long, in my opinion.
+> Keeping with "VM_SEALED" I'd suggest "VM_SYSTEM_SEALED".
+>
+How about MSEAL_SYSTME_MAPPINGS as Kees suggested ?
 
-Just because it imho should've been in the initial commit, so I'd
-consider it more of a fixup commit. But if you're fine with it, I'll
-fold it in with a note.
+The VM_SYSTEM_SEALED doesn't have the MSEAL key or the MAPPING, so it
+might take longer for the new reader to understand what it is.
 
--- 
-Jens Axboe
+-Jeff
