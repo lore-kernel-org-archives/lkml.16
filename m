@@ -1,94 +1,84 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2090.outbound.protection.outlook.com [40.107.20.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C50E24A04A;
-	Mon, 24 Feb 2025 10:19:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326FE207A20;
+	Mon, 24 Feb 2025 10:21:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.90
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740392358; cv=fail; b=DU4aMCoDJ/qxnabZYi165RXLW/x3es+6BBklK4ftIgk94g+8fZnispcikjmX1VMhNRFIh6EPkfneqOdyPg/AcATUEB/j2zBHef+9a6LXIg9Bf5e+eVWTu7kkpW6LJ4Ysk73PZqq4XoLLOoaD9noCe+MeK3QbCY5Msr/VmHjfF20=
+	t=1740392508; cv=fail; b=BgLfJUWdYPmXiR+ikNEgjXF9hbuAkFpw3JrN+fa4D4cuK1MdvD5SnA88LLHHfQws0SrEP1xPueqtAcKjEOXOYUl4e3pnfWG2/hCOsVUxbJNp44m+Mxk8QYdqAqpNhpLIOgi7oGXbefQ0jEWbHUvG4/giG2geyMagC5mCIxRoaWY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740392358; c=relaxed/simple;
-	bh=W5b0IpBSL0M/91lSkSeMQw5TXn9nFGQcGyCKEl9i+Pg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=mcKCh46tvHXFbYMuJ4wJywZdtQHq+q/0tvfOztoG+Yz1/cU2yX3MxRwEr15WT1iakheurD+KKRdiJoWVdcVY63dzxpnrnrAI/scRS5oyvLOQaH8lUA1NEUH8tqs9AUGZLbM4bFBPAEY0ESIH/y1M83o51KAPq+pOirQJOxcHlGY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=EWISU7IO; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=AYkL6G0t; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1740392508; c=relaxed/simple;
+	bh=rU2sZV/8zR+8UnM+l0vQ1j6hvCDFuYHJLhooRpNsHHo=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=hdHPlML+Nf0+IdzUrjudcNlPQaZd6FJw1VNqcgTtKiWTEAI1JU9WpPxyCtL8sP5b13dtzoJGyKKrkM1Z+yAYbWbfsAcIV3vYm8oiJSwSaiUdZGe1qTHj3U2607xZPdQnzpXnHJCsDs6yWg2PZfj0UrU39oX9Nl/D6010SP7R9jA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net; spf=pass smtp.mailfrom=wolfvision.net; dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b=HpMf6Ewh; arc=fail smtp.client-ip=40.107.20.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wolfvision.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wolfvision.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EWISU7IO";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="AYkL6G0t"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51O7fp0B001037;
-	Mon, 24 Feb 2025 10:18:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=LtATkBKn3P1SHUBEDH
-	H8CT/AQzKER9exwEhlw75CDpQ=; b=EWISU7IOsU709wyzxivsoNweVSl/agrR6a
-	94KAgcFhQzjCTd9Y+UroLvKgCsrcoLtaiRNFdfjUYZtpBswqurZ8IGVs9Y96cNQj
-	Fs2PMQq3XPyMW9DV/FXb7mLThGyLrvpmb6y1H26b6e5x0WcdkNOw+6SJe//U7LQ6
-	DyLYhNdamktsjIc1ZtfOH4U7YWcGu0bd/nD6FowTIiiCTUafb9YvMOMLowmS3m2h
-	4t9S89y4u1HcCBH3DHoA+5S60PbyW2oL6IlpKPF34yDhGxBPMf79sWd0q8Z3m7by
-	DqXu8fc6+2jhRjV+G9rsWxKfQ/WrKpmL3PiBt0wNIHbKzvH8n4Ig==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44y5c2a8ut-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Feb 2025 10:18:56 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51OAGvQO007496;
-	Mon, 24 Feb 2025 10:18:55 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2169.outbound.protection.outlook.com [104.47.55.169])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44y51dfcjq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Feb 2025 10:18:55 +0000
+	dkim=pass (1024-bit key) header.d=wolfvision.net header.i=@wolfvision.net header.b="HpMf6Ewh"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ui4I5+fGJijCUoBHziZNgbFQ5Y4ryJlezemHhycqUlfe/xbojavCGRAjdJav4Y9x7QNRfCM/AwzIBoqfvSkm7PtObz2vcT/uoO4jdFj8cDvQBBpCKrECxh5Tj+Pudl2Z78v6C+kqtyTbzAkma1NaVEocChr0yXWUSzNuvXStGcsSuwXZHOxfiUYtzYYD9aXf4B4078z9K7nphu7jxWTiEZJlvPdb6NGf1tPfGANXHlLPeoVP6qyVMQXkb21kA8J0NS5UAGO7/V2mDww4klM9D2P6f67h8giDw3Jrj1obXYLD1CXBudDsmPoSQvs4ZYzDdSENSbOxlPrbb5nbB27ylg==
+ b=ndzqCKm98JwXsafTz96b/bAkrURh8p8ThKVSUel/+Y8zg9/3dTedvlUekIpvBEdsmcW8fo4h2j4YefI5uqgrIrYxjU9Nq9cbm1xzT4NAIbCvf+Vld1G/Oke+gUPZrvTQUsYdlW78Qp34mrdv2/MywfSdwtW0oHJDmGT63UrMrsXuguC3B3yraAIdnoJRHPapjNbvvwcuWAaYc/OTATntDr4+QnbMlzpaPUdgfaY0nyFP4ca0EobBCr6hIN5vuofSDBqSeToaWCuE701MhZP6P1eoky0UzmAP9QZaLedApDt9pzW+w/b9pVxcC2+r8JGqsQu/9gn4l8/pRza2inUVLA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LtATkBKn3P1SHUBEDHH8CT/AQzKER9exwEhlw75CDpQ=;
- b=DtMSn500NtqSdCgGoH1wfdJlorcj3ulkgNYgUpYt+ZAXadGGK5nkxtLIiHPu5u9FL5g0kowVyif/2hZnMRtZs5KFyifKrds1ichp4nUlmADdWRYC98cV0WTMlkAFeKhUosVLa0EfoqQ2i2Y2FE9d407CHPCg23CQ/pnuDF40TAfa4mZdjKub3FZ8566JWDHhiYj0YWN9uQZ/Y3G7KkQwvqoOoqBsyo79ad24LsAEMw66/SbpITU+E8rU/5n+S1JK9GaOGep6totvlagOJTT8UlULEiMTLqroW8li0G39DMCI2Q20lwOOZe8EGVrKhZULWuzq/2obp8IBa0dDUS1Duw==
+ bh=87Tx/ugPTlFWCzWBSrRXM/HmzoUeuXExYUVuxeSQ6+Y=;
+ b=yMWtgtP8hxlXT9tVX1KZ6PO+BY8Rwd0fdMURaAZ0Ae8yEpOwVi+ZKqtOzktr0sTmFIbrZenWas4/pZPbrK+frpH6dJbrfld6NeCuHgleQw9JKm//rkst1+7aPPAepdVKfxah3jS8pQGKUgE7GfcP48mQiEiCGpHqotWXZG2pY1eEhoyr7Fh+s3sZnhf6r/SAMxnzEl2dTnLnveoz9KWXI/wmZKA40f57TmTFTR4nJBuS6ac11GoBcCUgD2+wh40bwZqtrJSgcABqWs6b4Fkk3VvVzt+5Yp9ybzZt5qFPFqc5cqseJDnnV/e4ff6n/sg7PiEGuF0vGUObfzb68oyl6A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ smtp.mailfrom=wolfvision.net; dmarc=pass action=none
+ header.from=wolfvision.net; dkim=pass header.d=wolfvision.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wolfvision.net;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LtATkBKn3P1SHUBEDHH8CT/AQzKER9exwEhlw75CDpQ=;
- b=AYkL6G0tCBeVfp3Y6nctEf2kYc5pknd5F0kzIfT1SLVxzVM6bgm1VcnbzOVhov2o8EEO5f1tIX3ufylbP21WUG07utCbQJCeKbwIHbmJPA801JafS5cM30Qcd3TqMAdhr+pemJok0G2XQUHGniL5GBO7RYcTudwAHPZd0t0D18I=
-Received: from MN2PR10MB4112.namprd10.prod.outlook.com (2603:10b6:208:11e::33)
- by CO1PR10MB4674.namprd10.prod.outlook.com (2603:10b6:303:9c::15) with
+ bh=87Tx/ugPTlFWCzWBSrRXM/HmzoUeuXExYUVuxeSQ6+Y=;
+ b=HpMf6EwhKf1RaDObj0YqNQz1cu0KuDK7PF3qoXfKJewRhkgUZrs258/blWALC7m6fCK0zE3rl7pvuO0eJBRBAWctd0z3Ijs1qrLASMHZaaRwSiJuvpa5wlLzHqgiq/omHkWIxdbaNCkQG8KJ6RTXIb6PZ0seu3YiGiHq/v/Sq3w=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wolfvision.net;
+Received: from DU0PR08MB9155.eurprd08.prod.outlook.com (2603:10a6:10:416::5)
+ by GV1PR08MB8741.eurprd08.prod.outlook.com (2603:10a6:150:85::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.21; Mon, 24 Feb
- 2025 10:18:49 +0000
-Received: from MN2PR10MB4112.namprd10.prod.outlook.com
- ([fe80::3256:3c8c:73a9:5b9c]) by MN2PR10MB4112.namprd10.prod.outlook.com
- ([fe80::3256:3c8c:73a9:5b9c%7]) with mapi id 15.20.8466.016; Mon, 24 Feb 2025
- 10:18:49 +0000
-Date: Mon, 24 Feb 2025 10:18:43 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>,
-        "Paul E . McKenney" <paulmck@kernel.org>, Jann Horn <jannh@google.com>,
-        Juan Yescas <jyescas@google.com>, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH 1/2] fs/proc/task_mmu: add guard region bit to pagemap
-Message-ID: <cd57ed04-c6b1-4df3-a5cb-a33078a08e74@lucifer.local>
-References: <cover.1740139449.git.lorenzo.stoakes@oracle.com>
- <521d99c08b975fb06a1e7201e971cc24d68196d1.1740139449.git.lorenzo.stoakes@oracle.com>
- <857b2c3f-7be7-44e8-a825-82a7353665fb@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <857b2c3f-7be7-44e8-a825-82a7353665fb@redhat.com>
-X-ClientProxiedBy: LO2P265CA0203.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:9e::23) To MN2PR10MB4112.namprd10.prod.outlook.com
- (2603:10b6:208:11e::33)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.17; Mon, 24 Feb
+ 2025 10:21:41 +0000
+Received: from DU0PR08MB9155.eurprd08.prod.outlook.com
+ ([fe80::4e72:c5d4:488e:f16d]) by DU0PR08MB9155.eurprd08.prod.outlook.com
+ ([fe80::4e72:c5d4:488e:f16d%5]) with mapi id 15.20.8466.016; Mon, 24 Feb 2025
+ 10:21:41 +0000
+Message-ID: <0b19c544-f773-435e-9829-aaaa1c6daf7a@wolfvision.net>
+Date: Mon, 24 Feb 2025 11:21:41 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 03/11] media: dt-bindings: media: add bindings for
+ rockchip rk3568 vicap
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mehdi Djait <mehdi.djait@linux.intel.com>,
+ Maxime Chevallier <maxime.chevallier@bootlin.com>,
+ =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
+ Gerald Loacker <gerald.loacker@wolfvision.net>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring
+ <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Kever Yang <kever.yang@rock-chips.com>,
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+ Sebastian Fricke <sebastian.fricke@collabora.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Paul Kocialkowski <paulk@sys-base.io>,
+ Alexander Shiyan <eagle.alexander923@gmail.com>,
+ Val Packett <val@packett.cool>, Rob Herring <robh@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, linux-media@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+References: <20250219-v6-8-topic-rk3568-vicap-v4-0-e906600ae3b0@wolfvision.net>
+ <20250219-v6-8-topic-rk3568-vicap-v4-3-e906600ae3b0@wolfvision.net>
+ <Z7iJV1rOaqMmcjY7@kekkonen.localdomain>
+Content-Language: en-US
+From: Michael Riesch <michael.riesch@wolfvision.net>
+Organization: WolfVision GmbH
+In-Reply-To: <Z7iJV1rOaqMmcjY7@kekkonen.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: VI1PR09CA0175.eurprd09.prod.outlook.com
+ (2603:10a6:800:120::29) To DU0PR08MB9155.eurprd08.prod.outlook.com
+ (2603:10a6:10:416::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -96,172 +86,331 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN2PR10MB4112:EE_|CO1PR10MB4674:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3406026f-ad18-4732-1cab-08dd54bca12f
+X-MS-TrafficTypeDiagnostic: DU0PR08MB9155:EE_|GV1PR08MB8741:EE_
+X-MS-Office365-Filtering-Correlation-Id: a3531915-076c-4e21-138f-08dd54bd07d4
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?3pzSi6bMOTsgFJIoC9JTit7PrDPb0xygdSk+CG4yb7vpEOkuP7CCVwHlCjHV?=
- =?us-ascii?Q?/gkXAUdgAR+WFPwS/5V86sFmVaHH6GqhGw9JbWMMRv7g33uErrFi8Z1nOVum?=
- =?us-ascii?Q?wgEk38k9CHFa6CXH/EcYT9fUZIPJg+LrZMJZ4WQTCGSCQ83qPV2pVpqOT5aJ?=
- =?us-ascii?Q?eKvLpyFP10c3CgEKAsYLISi/Y6FRTVK0MZz29EVE4TuOaj47wHgbesQtdt/A?=
- =?us-ascii?Q?+F7sjZtDRwieR3oiiJrW8vwj84uaTPwisCRNlOec+u8UajeZhNwPxKTJFmia?=
- =?us-ascii?Q?f3r1gH7gWskQpROfQY/ZVGnaXyuNegbVJdPaTyUaERuchJDtjoWMBqDjfiME?=
- =?us-ascii?Q?KgwygdIYK4ShrnwgTI6jAAjNJhfxyN9bd3bnlAQlbyWwk5NexbWJkvPBqrBV?=
- =?us-ascii?Q?gNq4qAfFO2O37pdgW0r1fhSJhCJZFvNzjaM3lA08em2iG4CC3AWUDOcjvaVZ?=
- =?us-ascii?Q?N2IHO+ms02d/HxcxxMAWqiDcp6o/B8KC5v1HgTiiaGeePqpKPBb3U/aQiIYJ?=
- =?us-ascii?Q?OwnToXm8fw03fmRfvyE4NI9nJYkjSaIkpSWFFIMaEV6AwbEm44n0FFOU7xmN?=
- =?us-ascii?Q?ZD5t6aroY0MAjDr78wgrUZ3zer3Ts/Oh6oGKa+1LdWRJtkh7uHCjOmmb/f3N?=
- =?us-ascii?Q?pPnxynT2fHxFY4c0cqrpjRkUOBQIjI82GXV3c/eBKwTwN8gUQ5coP0oaBCbN?=
- =?us-ascii?Q?aWsEN+dpTJglxRz+3E9iCp5WAvE2ujRDyAQJDrsS+6R4MzZ4VU/mts5O+0Fk?=
- =?us-ascii?Q?eVeFuvYfK3eYeO8uKBAcVsuIXZ6PSZfgnDP3tnGwRcTw97w5T7xivMFEZ5bz?=
- =?us-ascii?Q?NIvbEuSxWsgJgXanTX63xU0hkmSEpa2nhhJEq+CpIR15H18Pn3KO0j+H2iGW?=
- =?us-ascii?Q?ZgHDsCM3fD3Auxxt/qWR5hJV0836yB/RfGUAszIqfU1CmFmcjxp9fBdUe5+K?=
- =?us-ascii?Q?iaft7AbtwQBME7qrmQLXJbr3PVxClN+cZQM9aDPHBkuni+LzQb3HlC11/JoL?=
- =?us-ascii?Q?6XiY3inwljYfJcyPMWD8ImHwQHIwTTr5EfvdaWeh4X5DhTcGg6tR21eQ3ugC?=
- =?us-ascii?Q?3ixnAuDqqlQV/k5kb30kdyKPFgFs3gL3Fw8jjJI0uvWi/YcrLtmYG3U56Q49?=
- =?us-ascii?Q?nCtNbLKbwb6Xt8JZ4LJr8Sy8LCeDLH7P66yAQSfLsiJx9ntgxOYObVTOi4Ar?=
- =?us-ascii?Q?BkrketMaKLX9/SmD/zpKZ1bEpoYLpznsILmacc6FWzwNoUl636BEMfopcdLE?=
- =?us-ascii?Q?GSSpvUzeIGymCR6VZNULZX8M8ESvaaeXuIMNPRsjxk7P/FGKpvecWuOPvw5E?=
- =?us-ascii?Q?91qXG4P0008MWpCGvVAOSXlEDwIAOmD8Tgi0E9zrfOxyLPmeVyL6we1OjmXy?=
- =?us-ascii?Q?Fv0XKSDIyeFHzzroOcF8oy4l5d5m?=
+	=?utf-8?B?MXpKNUtFdG1wcFhsWTF6RlF5ckVoYjRmaHo0VEp3ZWx0WFYzZ2QrZnBhQXVT?=
+ =?utf-8?B?K3dwSllBMTl4Z2xBR3E1R2lyZmI1bi90RXh3MGRqUlpQVzhJdnlIWmhiRFZ2?=
+ =?utf-8?B?Q2Y3MlJnMnNBWVpTVmtleDlDZWNlU1I4V0RFRWlKRzlKZjczZkE0K1RDbHlm?=
+ =?utf-8?B?ZXBSNFFqcTlXdTEzQ3NObEJMa3hUZmZPUUk3cWwxa0FpbkN0dklRSVZhUkZl?=
+ =?utf-8?B?WTM2eVRoc3lhY3B1dExpNnJGSVlxcS92V2paSUtYVFRORUQzd0V6RFFtN3Jy?=
+ =?utf-8?B?TXVOM1RtWWROa0NKNkFjbWV1SU9Kc0V6ZWFyekdtWFdub0s1cWE1K2pNYXRl?=
+ =?utf-8?B?dXptTWk3bkRsYjhNUkEvZ0NVU0Zzbit4UmozMGZhU0ZEcWtjY3VpRjBpSGVY?=
+ =?utf-8?B?VkN0TTUxSEtOUDNBeURSVXZNeUNkVHRhb3JwUlpVdzZoVTRzMEM4bkJWeHpG?=
+ =?utf-8?B?SlRTcmNqbTlPN1JFdlZwWVdneGttRkpGYmp6Mnc5ZUFSV1lhZ0gvT3cyZnBo?=
+ =?utf-8?B?YjZrV1dyZjNPQ0QyL3lZSk5HZS9ZV0FLSWdJT0d6MFFBN3FhaHh1R3BmOHE2?=
+ =?utf-8?B?RDBsRnNoU00xYS9QaFM0WWdHTnBMTittamlpSnFVTG1aUlN6azluY2U3V0t2?=
+ =?utf-8?B?cjUvbzF6NWZwV2tqT1FiVVRVckZFTUEweVd0bHVUK0lCcytOSDkrMVdJY253?=
+ =?utf-8?B?OU1hcTJ3WEtFMmp0Nmw1OUhwQmZSc2FJaFV3NFRPMXgxdTNhK1pGeG5DS0M2?=
+ =?utf-8?B?a0V3Q0IrZitIWHJPNHROQVh3R2R4SmNkUG1IUm4zMnVjVlNiSWI5NXJvekl3?=
+ =?utf-8?B?c2xlMW9PeEtWMUtPdW5qZW5MQlo5OXpNYk4xWXBZbkhINWpaT0hoYTlUdVBI?=
+ =?utf-8?B?MzIxNURPMEJEMWhjMWxUUmkzd3FPVStTOGpmNXl3Y0krOHZmSjZieldPUzB6?=
+ =?utf-8?B?RXp5b0tpUFR3dUJ3a3pyaEpUdHRma2pCVXpXc3VYNERibTZaOWtSZlhpYmlx?=
+ =?utf-8?B?K0JUWmhtaVk5YmYvelV1T05OOFp2aW5FUCtUY0ZVdHRXTzQ5dEsycWtyWUl0?=
+ =?utf-8?B?VFNSaWZtdjM1eE51cFJ3ZmlvNE1RMnZmbDBNbEd2YmhEODBKNUFwbE5XVXcv?=
+ =?utf-8?B?OG1WOThUbEc2WE56UzdyMUk3a3VmY1FVeThWc3E0eHVKQU8vdklZYmIxZGZG?=
+ =?utf-8?B?ZWNrY1c2TCtOaDVrWHJUbkwzcnlWajdvSTNmZ05zL3NHUU5QZUl4NWNlRytt?=
+ =?utf-8?B?cUdRNWNmbmFZV2VGb0VVaWdXLzF5Z2s5d1NTVnFkT0ZsMW9sWkFzWXozd2Jj?=
+ =?utf-8?B?UVVGVndIY01iZW1NZGNzd3cvTS81TU5wUWFobU95UWNTZjQ5NkZNN1V1ZHN4?=
+ =?utf-8?B?RXBnSGljeXdhSGl4QTA1Y1VIdldLZXhEMlVWVHVEQUNaaGJHU2s5NDdMQTAx?=
+ =?utf-8?B?SjZ6TXZZemoyWTR3ajQyaUdGMjdkRkdlYXFUMVJXNGdpNm5RbmZpVTliK04r?=
+ =?utf-8?B?T2RSRndTV1QveGZGaUVWVFBCZWNmaWw3R2JMeXFuNlZndTdIeGhQZHl5ZGRi?=
+ =?utf-8?B?U1dJVFc2QUdLa1pQQS9BR3lWcEROQmJKTjhOUXpzamVadFlNOFB4bVV4WVE2?=
+ =?utf-8?B?TWg1NGx2c0c4cVUrRDVyQlFmN24rTWNoRnNNR0l6SHQ1VmRQSDY4cjFta1da?=
+ =?utf-8?B?YzJUNlZKY0oxR295MmhxM1llMUhOQm5Id3JoVXhnU0RqSkY5dmNYNWVEdDV0?=
+ =?utf-8?B?WUlhMXlNT2lrcGFoVkVHVm5qK0Z1MTF3ZG11SzNsek9mZWFlalVzcjRCVzRo?=
+ =?utf-8?B?Z05mQjV2a3l2QmtxYVJydz09?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR10MB4112.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR08MB9155.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?NPluYuXM9ZRoCgfDVQnyyEbVWnuixIvJ3SVgc5Gob6Js30KlBy3REdn7r3fE?=
- =?us-ascii?Q?eW5xhs/Mz7tvK9CpSXe4rM7USwPjRAbnf5htrKO8ySPedRIQScXwiVHnC8KI?=
- =?us-ascii?Q?2tBS12+zoKfFnwIhVH2Ds0x5zeO1SjPpoZvGDEkBDP5uM2mBqfddMLv9xgME?=
- =?us-ascii?Q?KHVSxI6W3tf9MwH3uuczzqiVuVwIaFXHCxG6OV/wZMnvoGx1LopE0sbYr9Jg?=
- =?us-ascii?Q?Fin+XKWhlwEjsDijy3WF+CkEUwRrlAY6WRH3skxSARfVuRNhqCYHQ0VnPrLv?=
- =?us-ascii?Q?wZHTTGD20FjUneBvbcYOVWCpRk6RrsnjE4U69dMfsg//Cwws8OXc9ey43KaW?=
- =?us-ascii?Q?NBS6iP/r9PcWIjrCa53DzTv+7NAZqZsBkERd151SJvZsYeqmat5kY1TcdEwg?=
- =?us-ascii?Q?woD1XEaDC6b8yvMy1YOSiLAUejTnYzBxzFQK7fi6Olpz7x/BrqWh0NuSgC1F?=
- =?us-ascii?Q?EFimnlC+YyMY8NZ6Nf/bfcMjmMbx/sBu7XulWGVNi6hcwJjmI/clbithMWNm?=
- =?us-ascii?Q?f1n3hY3wVWR+be0mQjrYdAdMnUruWZaZGlAoKguxrRRaNzmWf2Xmg0jRGp36?=
- =?us-ascii?Q?Zegr8X2PFnNgyseasEoPa17YaaZs95fyqCkvHv1K6jyrUKweJS6NcV3iLeiK?=
- =?us-ascii?Q?cwUl6RW/J5cOyVhQGbTK3L/4XdbAOsSYT+ywsEcWS/7KKlAg5887Kr932V0v?=
- =?us-ascii?Q?yb32YTNDGfrO/P/2TI62rtNFvgZuUJAMb1bxTAUVwUyelNcOzpVMcDMFZfP7?=
- =?us-ascii?Q?Th4p6XKA8pQDn9YBAk1GvuKGDjkSjceBD3rTKCAimhrS87q5SNmi+WYc94ZU?=
- =?us-ascii?Q?VdnAOwKwCbdYN+9FxXXwYg8qbtIVvPPlfci+HIOazQhGD76MSnv+bSrUT7od?=
- =?us-ascii?Q?9tmec3Ap0gL5fJsBe+kYH2V4AfIKiGbDtNcAJtjR+TVRli/RYBfmZid/10o0?=
- =?us-ascii?Q?JHnvcIilL/mvObm3hAx/5wsrn+vryPtiuDXwu9scch+7hWXRKuehtC1hg9wG?=
- =?us-ascii?Q?a4ppgUWnfQoTr8R1BpoE4LgvfiqTWWTvGP4cTK3IqmJV7+uiOa2dgUe3OzlA?=
- =?us-ascii?Q?a7apqdz3ZUhO3TFWbzXegJlrzXNf4Jqu/syQeJF+sOQgHhoXeD9jZhxrpGAW?=
- =?us-ascii?Q?FSiZ5r4LmFUQ5TJatFtNRHwWNRAfq6GUOSuDlVAxcBwOpwRjPBGmtn9rqXGA?=
- =?us-ascii?Q?mL22hnap+Xy1GPdcZvGd1Qs5XbqlpXSGZjbmsPiP0VWXMEnON7Naky0noDRR?=
- =?us-ascii?Q?vVTlZrLmZAOhd9iBMiiw0J68eN2lT1Qj2KCAJdoteG16yiRhkcoWvR2tzIhG?=
- =?us-ascii?Q?tbtPmINoqsJ3MHd+NEur41Q4Vs81RCHQSInE2kA6d/G94LDynsWksvUVNXGD?=
- =?us-ascii?Q?nyRYl08GXY/m1Qxz7+0anBEQkimolxRKb4HTCw5P2o8DxyKTKUzDdsm1eO9b?=
- =?us-ascii?Q?r67PUKeZA6IeJD4t73PjuBXFdCDlr3ALRDIYt3DhvGl9mH1dT7QQTnHKrd7g?=
- =?us-ascii?Q?lOinDRoo9J0wrdGpOJ/6gA2RTYXGr7zCmg1YGIXksPuW5yU38vQdqP01N/g+?=
- =?us-ascii?Q?J3Mfeb6CrfNvVgGqm8Nu6hlcFU2V1XL8xuNAk4ti0qrGSBvXovZIfT7OgYjV?=
- =?us-ascii?Q?jw=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	2omcoRkXc7F3ea9QAQ4rRoBa9HjQj/679KpY44ysuyxhGdg2zWVRXSQXkxIxaKYdOLk4dnJX5xLde4o9Epe/krYJ53kMPhs+K9CerruDTFP9jVq0oJDVFJ+iyAYeXhgRGrHIp7GVJ2B7uEPw9zlBsEvyPr2VLcFf6SfB4UTQSGUpE3B44VHVNh7rrmMqd9z9Q1IyPls8gL5u715Rr8VIJjF66OFAWEKQ4BEpvWfG+4ustj92v1scELn6BdpTyvHpccP5IlBlPMHjCbks7ZQ4KCAuKJVJsF4WFzllbIzlLkA6kpTcLenoqhPNUs5Kafg1k3lz/Hei/XKEBwWE/0EaXMPB3t31k9tajz8SuKzuMArUm6FaVFyiA90tvpZqQQoaax/aTsK93OxZWfmToCz4z0XdlqW5w38ATrAU0RO8hk2jNYk8d7+VVYh069XltHfV3MpO45aoJqn1xcj/aLaz58I7r4qcKuBMs6zsh1aH2c+UCGkFpV7AEDNY4YCMkqrUW5ON9UNVlEvuOdhv9JgpBoiQ87VmXZpgsheljXWOm9PDwVIu4jxY4LraIrduxXHz9IUcHiWHoMfbpEp+Bt2bbuv7FCKBGbniBi2ckdbjK4c=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3406026f-ad18-4732-1cab-08dd54bca12f
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR10MB4112.namprd10.prod.outlook.com
+	=?utf-8?B?bXFiMkg4dUk5L3BPYW1MQWtOR2dvQ0I4R3N6S01JbEJVckpsRGhBU2pGNDUv?=
+ =?utf-8?B?WXRPalg1TGoxUGZuMTBGQmFrQUcyMmdoK2JVQmFHaDVJVUkxZlJRRzBtWXpI?=
+ =?utf-8?B?LzNWbEJRQ1FOU3FzaSs0eUNFQnRkZWo5MC9OR2dPMm9aUEhzTmhVYXBzRktk?=
+ =?utf-8?B?cUg0SnlPUGRJZzkwV2tYeDh3cVhBSkF1bGFmSDJ0SDNKc1Z1a3ZUQ3VrdGJi?=
+ =?utf-8?B?c09QeDlVTTgxMnkvS1FROXJJeEozeTRoaXRyZ2hlQTdzV2VxbWJiNmVXS0lh?=
+ =?utf-8?B?enlNVlEyanhTQjd4bGpBbkZsTFF1Rk8xVXYyQjhsWlozTzdyNFFVZE9sN0Jo?=
+ =?utf-8?B?YVhCdDB5cGN5aVcwZnd1UnF5Nm5Pd0lRbFdIYUIxL2hWOW5UeHR6QTMvSW1t?=
+ =?utf-8?B?NWZoYURqcWkzcGVvSDFVL09nc09Xc2FVZmdGT0RQdnptUy9lUE8rNXJKc0Vu?=
+ =?utf-8?B?ZTlab1NlcW5LdVNzUVhWbkxGbWZ6TXBPWk1ROENjTzdwZVdQek9NbHBpdFkv?=
+ =?utf-8?B?T2k1czRnSWVIZGZkN09oYkU5ZjlqUUlvU2s1VXgzMk5mcFF5VHFlREgxS0ZU?=
+ =?utf-8?B?cHh1UUx1OUx3VSswY0NwaXVmOUtaaHNGcnZydEhFRzFCaDFtamxxaWZrTkRp?=
+ =?utf-8?B?UEVORTdLSzhqK1A4VDBFZldiR2szczg3VHJFeWY0SzhaL0duN3BHTEp1K2lR?=
+ =?utf-8?B?cWxVbGNZYS9vQmZlSDdOajA5bTRzNVc4NDhDZWs5SHNFQUtrdlhla2lEKzFZ?=
+ =?utf-8?B?bm9HSHZKQjdITzhIUmkyQTBoT2lVajBBbHorcWVBTEUxdDJNcWRibm5kTFYw?=
+ =?utf-8?B?TnFKMFpibTBoVDRWY1lDR0JUMFBzM0JXWGRhaXJIcjBub1k0MW1PSUdpanpj?=
+ =?utf-8?B?KysxTGxtWjJ0WFZEUm4rZ1FQdzVGdGVrZmpvRUNmR3NBUmZ4SFlRdWlQeWhQ?=
+ =?utf-8?B?OVVvcm05cXdmUXEwTVk1aFpyQi9xd21MU3RjTHN5eFAwZ21rT0docmx4S2lp?=
+ =?utf-8?B?R2FRa0p1eEpZZnNKRnhKNTgyWjJwWXMrdmYwU3RDa1hOZDkzNlhnUW9uUkNZ?=
+ =?utf-8?B?eGV2NVAwcGVuKzh5eFdzSC9VUmJSV3U5dWxmczlUZ3NXV3NtcGNFM3k1TUty?=
+ =?utf-8?B?M3p5VzRxZlVvM1NrdFFUWm1CbUlhNXlMQXZrLy9xaGFZcFZYd2tySkg2ZEYr?=
+ =?utf-8?B?WTk5UGFMcDZTdUI5TW1GcUJoRzIyNjZTblV1Y2tSN3Fqb1dpbE1naGVQUjlk?=
+ =?utf-8?B?cXVVRkRONEpQSCtEczExd2N1TWRhY0hNektSV21aRHphWVJwTEpDeENJSlRv?=
+ =?utf-8?B?N2VDUE1DYUxBL2s2a2VaTEZPUENnazR2SzRTTlRGVmhUQWFhTWc2YTZ3cGhu?=
+ =?utf-8?B?UnRsSDl6a3VOR3FxV0RLUktjRFZHMEY2L1VwTnAwVjhnQzhnV2lMT1VRRkRJ?=
+ =?utf-8?B?WGkrRHVoc01jaW5zSWNjYktickdGK0ROenFYNlVSc3dJZWNHREtHc1p3Wksw?=
+ =?utf-8?B?T2UwVE1nQ3ZzQWdGOHNpOTdCWGNqQVFTSHU3b2svZ0hLSUJtVURKVTQ0RTV1?=
+ =?utf-8?B?YU1TUFVtVG11MDdUd3VJUlNoaVNkTWxIZjBMcFRZU0NCWWlvMDBvanhsRGpv?=
+ =?utf-8?B?M29YNEhabkE5QUt2ZzVNVFFCSmpNNGZPS0VSWUJncUc4TFhvb09xQXVYbGw5?=
+ =?utf-8?B?dGF4WHZOZjJta3dxclRLUUZ3SmVoYVVwNGIxY3FDeCtBT0VmOFI3MmE3Y0lt?=
+ =?utf-8?B?ZXVpWjMyTGVacThjekxHdGFaam1pVWRqMzBIb2g5WVczQ3pJeE8yMU95YzVs?=
+ =?utf-8?B?akUzd2ZPdytnZU1FYWdGVEtsUFhDTlN6V1QzdE15dWtzTmF5LzRaTDBxOStv?=
+ =?utf-8?B?MStUQ0k4a0tEUUhJanZtenBQZXBJUlpQYkxwWEl6VXpLWS9DLzBxZ2p3czgr?=
+ =?utf-8?B?Tzd2YW5PbE91YzdsSm5EeFhDU2t2WlBIY0FmcUxrOVhtb1VrVVJnV2luT0la?=
+ =?utf-8?B?c00yVkIyQ1Z6TS84NWlVdDdqUzNWMFJwUm9EZUlnRDFTbU1DNjk3UmgrOGFH?=
+ =?utf-8?B?ZXcvczQ0dFlMUzdlaU4rQ0h1VGlMbENBbS9QL1NrSyttUFoveCswa1BoNEdJ?=
+ =?utf-8?B?eDRCRWZyNnhSVmRiWmZHaVpVTlg4SXpZeXJYZjBNaEpFb3d3ck56TXljTy96?=
+ =?utf-8?B?akE9PQ==?=
+X-OriginatorOrg: wolfvision.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: a3531915-076c-4e21-138f-08dd54bd07d4
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR08MB9155.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2025 10:18:49.2737
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2025 10:21:41.5215
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-Id: e94ec9da-9183-471e-83b3-51baa8eb804f
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8bK0Zqrg9p6neatF2vALSDwaWQMX6+us7Xtf5EzHHJ5kTbEj3J1gzT7hYieh4e9bihHfwxVcfYzJJ8gIpCCZ5pMpkPJnAbaTOupTbSCSy9Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR10MB4674
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-24_04,2025-02-24_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
- suspectscore=0 adultscore=0 phishscore=0 bulkscore=0 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2502100000 definitions=main-2502240075
-X-Proofpoint-ORIG-GUID: 0OyZvwsHh2xtM4oe8UvUuAMyrbW_ku5m
-X-Proofpoint-GUID: 0OyZvwsHh2xtM4oe8UvUuAMyrbW_ku5m
+X-MS-Exchange-CrossTenant-UserPrincipalName: nIbDcUWTZy1hu7Fsz/1ArflSzp6bWWUp8DcKJdxvIeAqFNNu8hMLZqwn6nAK9HUvA2JENF0QyXIjh14RC3KxsOSVlrwHs1ChzbdJQuHlwHU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR08MB8741
 
-On Mon, Feb 24, 2025 at 10:27:28AM +0100, David Hildenbrand wrote:
-> On 21.02.25 13:05, Lorenzo Stoakes wrote:
-> > Currently there is no means by which users can determine whether a given
-> > page in memory is in fact a guard region, that is having had the
-> > MADV_GUARD_INSTALL madvise() flag applied to it.
-> >
-> > This is intentional, as to provide this information in VMA metadata would
-> > contradict the intent of the feature (providing a means to change fault
-> > behaviour at a page table level rather than a VMA level), and would require
-> > VMA metadata operations to scan page tables, which is unacceptable.
-> >
-> > In many cases, users have no need to reflect and determine what regions
-> > have been designated guard regions, as it is the user who has established
-> > them in the first place.
-> >
-> > But in some instances, such as monitoring software, or software that relies
-> > upon being able to ascertain the nature of mappings within a remote process
-> > for instance, it becomes useful to be able to determine which pages have
-> > the guard region marker applied.
-> >
-> > This patch makes use of an unused pagemap bit (58) to provide this
-> > information.
-> >
-> > This patch updates the documentation at the same time as making the change
-> > such that the implementation of the feature and the documentation of it are
-> > tied together.
-> >
-> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> > ---
->
->
-> Acked-by: David Hildenbrand <david@redhat.com>
+Hi Sakari,
 
-Thanks! :)
->
-> Something that might be interesting is also extending the PAGEMAP_SCAN
-> ioctl.
+Thanks for the review.
 
-Yeah, funny you should mention that, I did see that, but on reading the man
-page it struck me that it requires the region to be uffd afaict? All the
-tests seem to establish uffd, and the man page implies it:
+On 2/21/25 15:10, Sakari Ailus wrote:
+> Hi Michael,
+> 
+> Thanks for the update.
+> 
+> On Wed, Feb 19, 2025 at 11:16:34AM +0100, Michael Riesch wrote:
+>> Add documentation for the Rockchip RK3568 Video Capture (VICAP) unit.
+>>
+>> Signed-off-by: Michael Riesch <michael.riesch@wolfvision.net>
+>> ---
+>>  .../bindings/media/rockchip,rk3568-vicap.yaml      | 168 +++++++++++++++++++++
+>>  MAINTAINERS                                        |   1 +
+>>  2 files changed, 169 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/rockchip,rk3568-vicap.yaml b/Documentation/devicetree/bindings/media/rockchip,rk3568-vicap.yaml
+>> new file mode 100644
+>> index 000000000000..3dc15efeb32e
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/rockchip,rk3568-vicap.yaml
+>> @@ -0,0 +1,168 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/media/rockchip,rk3568-vicap.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Rockchip RK3568 Video Capture (VICAP)
+>> +
+>> +maintainers:
+>> +  - Michael Riesch <michael.riesch@wolfvision.net>
+>> +
+>> +description:
+>> +  The Rockchip RK3568 Video Capture (VICAP) block features a digital video
+>> +  port (DVP, a parallel video interface) and a MIPI CSI-2 port. It receives
+>> +  the data from camera sensors, video decoders, or other companion ICs and
+>> +  transfers it into system main memory by AXI bus.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: rockchip,rk3568-vicap
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: ACLK
+>> +      - description: HCLK
+>> +      - description: DCLK
+>> +      - description: ICLK
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: aclk
+>> +      - const: hclk
+>> +      - const: dclk
+>> +      - const: iclk
+>> +
+>> +  rockchip,cif-clk-delaynum:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    minimum: 0
+>> +    maximum: 127
+>> +    description:
+>> +      Delay the DVP path clock input to align the sampling phase, only valid
+>> +      in dual edge sampling mode.
+> 
+> I suppose there's further documentation on this somewhere else? A reference
+> would be nice.
 
-       To start tracking the written state (flag) of a page or range of
-       memory, the UFFD_FEATURE_WP_ASYNC must be enabled by UFFDIO_API
-       ioctl(2) on userfaultfd and memory range must be registered with
-       UFFDIO_REGISTER ioctl(2) in UFFDIO_REGISTER_MODE_WP mode.
+I like your optimism :-) No, I am afraid this single sentence is all the
+the RK3568 TRM has to say about it. I can add a reference to the TRM
+page, but everyone who actually follows this reference will be
+disappointed...
 
-It would be a bit of a weird edge case to add support there. I was excited
-when I first saw this ioctl, then disappointed afterwards... but maybe I
-got it wrong?
+>> +
+>> +  iommus:
+>> +    maxItems: 1
+>> +
+>> +  resets:
+>> +    items:
+>> +      - description: ARST
+>> +      - description: HRST
+>> +      - description: DRST
+>> +      - description: PRST
+>> +      - description: IRST
+>> +
+>> +  reset-names:
+>> +    items:
+>> +      - const: arst
+>> +      - const: hrst
+>> +      - const: drst
+>> +      - const: prst
+>> +      - const: irst
+>> +
+>> +  rockchip,grf:
+>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>> +    description:
+>> +      Phandle to general register file used for video input block control.
+>> +
+>> +  power-domains:
+>> +    maxItems: 1
+>> +
+>> +  ports:
+>> +    $ref: /schemas/graph.yaml#/properties/ports
+>> +
+>> +    properties:
+>> +      port@0:
+>> +        $ref: /schemas/graph.yaml#/$defs/port-base
+>> +        unevaluatedProperties: false
+>> +        description:
+>> +          The digital video port (DVP, a parallel video interface).
+>> +
+>> +        properties:
+>> +          endpoint:
+>> +            $ref: video-interfaces.yaml#
+>> +            unevaluatedProperties: false
+>> +
+>> +            properties:
+>> +              bus-type:
+>> +                enum: [5, 6]
+>> +
+>> +            required:
+>> +              - bus-type
+>> +
+>> +      port@1:
+>> +        $ref: /schemas/graph.yaml#/$defs/port-base
+>> +        unevaluatedProperties: false
+>> +        description: The MIPI CSI-2 port.
+>> +
+>> +        properties:
+>> +          endpoint:
+>> +            $ref: video-interfaces.yaml#
+>> +            unevaluatedProperties: false
+> 
+> Don't you need things like data-lanes here? Or is this a single lane
+> receiver?
 
->
->
-> See do_pagemap_scan().
->
-> The benefit here might be that one could effectively search/filter for guard
-> regions without copying 64bit per base-page to user space.
->
-> But the idea would be to indicate something like PAGE_IS_GUARD_REGION as a
-> category when we hit a guard region entry in pagemap_page_category().
->
-> (the code is a bit complicated, and I am not sure why we indicate
-> PAGE_IS_SWAPPED for non-swap entries, likely wrong ...)
+This may be a bit confusing, and I probably should extend the
+description a bit. This port/endpoint faces the MIPI CSI Host, which has
+its own driver provided in patch 6. The connection in between is a link
+with some internal format. Hence, no properties required.
 
-Yeah, I could go on here about how much I hate how uffd does a 'parallel
-implementation' of a ton of stuff and then chucks in if (uffd) { go do
-something weird + wonderful } but I'll resist the urge :P :))
+This is the same issue as the one discussed in the other thread, since
+the other end of this connection is discussed there. I'll fix the issue
+on both ends using Rob's suggestion.
 
-Do you think, if it were uffd-specific, this would be useful?
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +  - clocks
+>> +  - ports
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/clock/rk3568-cru.h>
+>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>> +    #include <dt-bindings/power/rk3568-power.h>
+>> +    #include <dt-bindings/media/video-interfaces.h>
+>> +
+>> +    parent {
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +
+>> +        vicap: video-capture@fdfe0000 {
+>> +            compatible = "rockchip,rk3568-vicap";
+>> +            reg = <0x0 0xfdfe0000 0x0 0x200>;
+>> +            interrupts = <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
+>> +            assigned-clocks = <&cru DCLK_VICAP>;
+>> +            assigned-clock-rates = <300000000>;
+>> +            clocks = <&cru ACLK_VICAP>, <&cru HCLK_VICAP>,
+>> +                     <&cru DCLK_VICAP>, <&cru ICLK_VICAP_G>;
+>> +            clock-names = "aclk", "hclk", "dclk", "iclk";
+>> +            iommus = <&vicap_mmu>;
+>> +            power-domains = <&power RK3568_PD_VI>;
+>> +            resets = <&cru SRST_A_VICAP>, <&cru SRST_H_VICAP>,
+>> +                     <&cru SRST_D_VICAP>, <&cru SRST_P_VICAP>,
+>> +                     <&cru SRST_I_VICAP>;
+>> +            reset-names = "arst", "hrst", "drst", "prst", "irst";
+>> +            rockchip,grf = <&grf>;
+>> +
+>> +            ports {
+>> +                #address-cells = <1>;
+>> +                #size-cells = <0>;
+>> +
+>> +                vicap_dvp: port@0 {
+>> +                    reg = <0>;
+>> +
+>> +                    vicap_dvp_input: endpoint {
+>> +                        bus-type = <MEDIA_BUS_TYPE_BT656>;
+>> +                        bus-width = <16>;
+>> +                        pclk-sample = <MEDIA_PCLK_SAMPLE_DUAL_EDGE>;
+>> +                        remote-endpoint = <&it6801_output>;
+>> +                    };
+>> +                };
+>> +
+>> +                vicap_mipi: port@1 {
+>> +                    reg = <1>;
+> 
+> Where is the endpoint?
 
-At any rate, I'm not sure it's _hugely_ beneficial in this form as pagemap
-is binary in any case so you're not having to deal with overhead of parsing
-a text file at least!
+I'll add the endpoint in the example.
 
->
-> --
-> Cheers,
->
-> David / dhildenb
->
+Regards,
+Michael
 
-Thanks!
+> 
+>> +                };
+>> +            };
+>> +        };
+>> +    };
+>> +...
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index bbfaf35d50c6..cd8fa1afe5eb 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -20407,6 +20407,7 @@ M:	Michael Riesch <michael.riesch@wolfvision.net>
+>>  L:	linux-media@vger.kernel.org
+>>  S:	Maintained
+>>  F:	Documentation/devicetree/bindings/media/rockchip,px30-vip.yaml
+>> +F:	Documentation/devicetree/bindings/media/rockchip,rk3568-vicap.yaml
+>>  
+>>  ROCKCHIP CRYPTO DRIVERS
+>>  M:	Corentin Labbe <clabbe@baylibre.com>
+>>
+> 
+
