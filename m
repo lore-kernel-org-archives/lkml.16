@@ -1,79 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE21204C19;
-	Mon, 24 Feb 2025 13:19:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6762D204C19
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 13:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740403198; cv=none; b=ko83P2hUYyycUCF9uLdgW37/OQmNJX6zy7W7oIuRRFswkjicIU3Ml3yFaSiXwGZtlWd4bqjIXXd27xxmb4MP5Q1XII6R+KDw5CeOUOn7xzqLnge+TqgteGY5JfFrSVxmMsRiT1kn0D994uAgfssPHJexBt3EzAxdo8Fbaj0YoHU=
+	t=1740403206; cv=none; b=bszsxR5ojCrGSxncDKO+bIbkTGXyESZ0JXfzuJCbdJRMPvGTRo/3hWzXAPv/Kj4pmJCrHiYpBwuaLyQCaesIAuOKhawiS3DlZ/n3+AdmGHz6TnZEHXlYa2wo9FXhJUBd/VAluRFZin2r6M2q6vda1drHPpXIndeafe1b2iGSpuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740403198; c=relaxed/simple;
-	bh=KA0U3yGXGRApRKSXSLe/A+8EbnTuZLr33bkGUSV34E8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=cZJtbMGrUECqcI3xm4M0g8Lzu0ACb2fmTgUtPNPYJd4RVn2hoEcHR03Q3yxL7JJdTyqf1zn5qFgLjQ7iQWWUxpX4Tww2lw1/L4pulFQNnmI7wD9EviwjQJPub128UoQYUv7p0m4v91TIxAv4LBSQ2Q7rM7msv8d/KxUPdq7zhfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WC67035u; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WC67035u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16342C4CEE9;
-	Mon, 24 Feb 2025 13:19:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740403197;
-	bh=KA0U3yGXGRApRKSXSLe/A+8EbnTuZLr33bkGUSV34E8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=WC67035uEDhZLCLF+fM4DWybhrnc8ELZshTrBfgVskOrNof/rUw5S1UH66RZH9R5A
-	 7KqdlmPoqur6lqx3I4SyvB8fZpyAloOMXdd3FO1dygceg5cPmEsgyrYKBEwfPGAgom
-	 pqgbh7LmWC8CXMXHRciufEBtBDgnhah3lLf+SX57xKNrVXgD82rA7Xkl69usXlQFeA
-	 /SRfE0pfrrXjn7AQ69Be8O2HXTWfovejM7dry8bhLAbF6u/hF3eB5a0qmESkw5fMyV
-	 sdg8ahrlHW5EeD0FU9vyS1UABvb/lkUKlz7SCGZhVRjh1ya86IJOdOdqo4GGpBGvQ2
-	 +moOnfmVO4g2w==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Frederic Weisbecker" <frederic@kernel.org>
-Cc: "Anna-Maria Behnsen" <anna-maria@linutronix.de>, "Thomas Gleixner"
- <tglx@linutronix.de>,  "Danilo Krummrich" <dakr@kernel.org>,  "Alex
- Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,
-  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno Lossin" <benno.lossin@proton.me>,
-  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Lyude Paul" <lyude@redhat.com>,  "Guangbo Cui" <2407018371@qq.com>,
-  "Dirk Behme" <dirk.behme@gmail.com>,  "Daniel Almeida"
- <daniel.almeida@collabora.com>,  "Tamir Duberstein" <tamird@gmail.com>,
-  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
- "Miguel Ojeda" <ojeda@kernel.org>
-Subject: Re: [PATCH v9 01/13] rust: hrtimer: introduce hrtimer support
-In-Reply-To: <20250224-hrtimer-v3-v6-12-rc2-v9-1-5bd3bf0ce6cc@kernel.org>
-	(Andreas Hindborg's message of "Mon, 24 Feb 2025 13:03:35 +0100")
-References: <20250224-hrtimer-v3-v6-12-rc2-v9-0-5bd3bf0ce6cc@kernel.org>
-	<Fg4QliwzbHj3m-Fr3ZeUiU11d6Bu-I7w_9xzSsnDlzQtqCkjgqxJpI6_YxuXnB8m0MqESq6V7vK7FhPnEcvGwg==@protonmail.internalid>
-	<20250224-hrtimer-v3-v6-12-rc2-v9-1-5bd3bf0ce6cc@kernel.org>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Mon, 24 Feb 2025 14:19:45 +0100
-Message-ID: <874j0j1nv2.fsf@kernel.org>
+	s=arc-20240116; t=1740403206; c=relaxed/simple;
+	bh=YlfiDa4ehp8gAnXZClnAykMpirIwal++7MaRs1hu1ik=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l+47h1pBiY74wNW3scRDZS7ltScpYJJliDVknOIuraO/ZkevyiGcjzOxiKU4KvdvNMBHEpWEvxLZ0LxHxbLTOyAk78sw8pGUFTzQJm/t1+U4udam/pTdhJ3ZeOnfy9JDMpnTl6JUkWl+fReJ4Tk1kOldNL5oEsJnbrQ6UUiqG7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4Z1gjd65vLz9sST;
+	Mon, 24 Feb 2025 13:56:53 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 8FR8LrDFc0wQ; Mon, 24 Feb 2025 13:56:53 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4Z1gjd5FVWz9sSR;
+	Mon, 24 Feb 2025 13:56:53 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 9D6D38B765;
+	Mon, 24 Feb 2025 13:56:53 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id u3om1-aGR3l0; Mon, 24 Feb 2025 13:56:53 +0100 (CET)
+Received: from [10.25.207.138] (unknown [10.25.207.138])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 6BB268B763;
+	Mon, 24 Feb 2025 13:56:53 +0100 (CET)
+Message-ID: <f872c2ef-4adc-4daa-aa12-769e3108abc8@csgroup.eu>
+Date: Mon, 24 Feb 2025 13:56:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND PATCH] powerpc: mpic: Use str_enabled_disabled() helper
+ function
+To: Thorsten Blum <thorsten.blum@linux.dev>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Naveen N Rao <naveen@kernel.org>, =?UTF-8?Q?Ricardo_B=2E_Marli=C3=A8re?=
+ <ricardo@marliere.net>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20250219112053.3352-2-thorsten.blum@linux.dev>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250219112053.3352-2-thorsten.blum@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Frederic,
+Hi,
 
-"Andreas Hindborg" <a.hindborg@kernel.org> writes:
-
-> This patch adds support for intrusive use of the hrtimer system. For now,
-> only one timer can be embedded in a Rust struct.
->
-> The hrtimer Rust API is based on the intrusive style pattern introduced by
-> the Rust workqueue API.
->
-> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+Le 19/02/2025 à 12:20, Thorsten Blum a écrit :
+> Remove hard-coded strings by using the str_enabled_disabled() helper
+> function.
+> 
+> Use pr_debug() instead of printk(KERN_DEBUG) to silence a checkpatch
+> warning.
+> 
+> Reviewed-by: Ricardo B. Marlière <ricardo@marliere.net>
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
 > ---
 
-I dropped your ack because I added the kconfig. Re-ack if you are still
-happy :)
 
+When you resend a patch, please tell why here (below the ---) so that we 
+know the reason.
 
-Best regards,
-Andreas Hindborg
+At the time being I have several duplicated patches from you and I don't 
+know what to do with them which one to keep and which one to drop.
 
+The list is here:
+
+https://patchwork.ozlabs.org/project/linuxppc-dev/list/?submitter=89400
+
+>   arch/powerpc/sysdev/mpic.c | 7 ++++---
+>   1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/powerpc/sysdev/mpic.c b/arch/powerpc/sysdev/mpic.c
+> index d94cf36b0f65..25fc4ac91814 100644
+> --- a/arch/powerpc/sysdev/mpic.c
+> +++ b/arch/powerpc/sysdev/mpic.c
+> @@ -27,6 +27,7 @@
+>   #include <linux/spinlock.h>
+>   #include <linux/pci.h>
+>   #include <linux/slab.h>
+> +#include <linux/string_choices.h>
+>   #include <linux/syscore_ops.h>
+>   #include <linux/ratelimit.h>
+>   #include <linux/pgtable.h>
+> @@ -474,9 +475,9 @@ static void __init mpic_scan_ht_msi(struct mpic *mpic, u8 __iomem *devbase,
+>   		addr = addr | ((u64)readl(base + HT_MSI_ADDR_HI) << 32);
+>   	}
+>   
+> -	printk(KERN_DEBUG "mpic:   - HT:%02x.%x %s MSI mapping found @ 0x%llx\n",
+> -		PCI_SLOT(devfn), PCI_FUNC(devfn),
+> -		flags & HT_MSI_FLAGS_ENABLE ? "enabled" : "disabled", addr);
+> +	pr_debug("mpic:   - HT:%02x.%x %s MSI mapping found @ 0x%llx\n",
+> +		 PCI_SLOT(devfn), PCI_FUNC(devfn),
+> +		 str_enabled_disabled(flags & HT_MSI_FLAGS_ENABLE), addr);
+>   
+>   	if (!(flags & HT_MSI_FLAGS_ENABLE))
+>   		writeb(flags | HT_MSI_FLAGS_ENABLE, base + HT_MSI_FLAGS);
 
