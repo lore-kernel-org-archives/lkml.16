@@ -1,414 +1,180 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC654C7D;
-	Mon, 24 Feb 2025 02:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CE5C199E89
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 02:53:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740365627; cv=none; b=BxcMfqhtdug8pCTWzxmbgv21cp0q+RZdTtXdT+4M3Wr3/t0QZ2Ni4o6zbiq4u/zmOh5hXlozpdzU117qwtRHQGUDHIjMQP2Pk4h7YfNKZXN2u9idVCcfaXHCbQhyWyGzWPznBXJdGGTBaGw4lLeJETIPXSTRBOt6BRgDjo+XHxo=
+	t=1740365640; cv=none; b=piytqlRoSn9m490kvBF9aSSWRIyC5KLHw1PFstFwCi33e0pl5AMoOjtBi7D9We1PSdfCObq9HlHWMAXYs2fCRgvvzosa1RtURNwCWpEZOWjx6rnsVZ98lkanLo1c72F77GI8+Mm10+TyWtBi8uZX9H+Inl63gjr2WF7eYQIcYko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740365627; c=relaxed/simple;
-	bh=foijeL5Itsh9S+L85UT7/IAoZ6MDUM4hQeHzc7LG7Q0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZLhkTIDi0JY9emi48sG+K6XGMTXyRYzYhfl4GhPNn+dvxrTh4gpjDqZh+QLwCqTJ0C9FCiFoSlNaKXw+lmb7YRkueB5t3lk6iNao0ZLLzjDnBh/iu5vzyzaTj5ZECZFKLv7XpArwoB4skDluFFTk81+74UqDMf5IL+lS36NVilc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l7/MPFk3; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740365640; c=relaxed/simple;
+	bh=h+Xk9Y6Pmk9iA0GahcG5PLNKXQIF4StDKJwWHIq1NZc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=svOBKvIe0F0/eaqZznlsWFB3fLrb4BtXL9+xZGWoYOzgtlVFQTZL1OpcqChSA4PFDm1i6u07sD/0eECjufLMFDNt43GrESa1aRqUrNThPeVFQZHc4fuh14LMAFfHLnSWp+fU6PwmC+er+BMqPRBHpab0Klni5wDUs69s2trF2o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mf/4lgRU; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l7/MPFk3"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-307c13298eeso45735131fa.0;
-        Sun, 23 Feb 2025 18:53:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740365623; x=1740970423; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CzTyM5TX4Isho0QNHdXsuq7CrMUhrffDZoeBkIIsq2I=;
-        b=l7/MPFk3dwSWwLQ/lTP4jQ4Cfa5hReCbG69Xi/1jSn6EJuFnB44Wudj/rIRNxdhmgo
-         2GQu7x3C0ER/MbgGWfyCDHqdhzVNcyYgwNuCzmVSMyQHrj5bGnYIy1bv1hNbT45kSJrn
-         iFraTwHBSaPBfCT71YMOGozBSzWSoBpS/omsRVqjz7Bfw75k87EQKLaJEE2BrzOtuAZI
-         F3l2u902Pyt+Mlq1ek8TpqLISvGZvv07hYZNsg75DUiS4v8aiHRruk9VdiNax/8Wsm0l
-         M3crw1d8DjNZSR3neLYloshJad0hNPwex4E4VNYl7/Kn+fLCIIInLDaVLxdC9wN8f5nF
-         LeqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740365623; x=1740970423;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CzTyM5TX4Isho0QNHdXsuq7CrMUhrffDZoeBkIIsq2I=;
-        b=hFErsFYLZYGtRBrud210gLnb2wX+t8n4/j6nIbtaIEDBatnAlSPF1f04DRtVyfpNbE
-         VmGVcFty8KshWE46OsNrAhjqdI5G76pcYQljMZNqWbRbiCOGqXrOAu3tPTiBEXU8rkFF
-         JSP1E9i2ImJbCu7mjkZIwU7Vta+TBqoCJ34nk4p/DeX0Zpwup2EH/rkQVGn504j+LpuB
-         c2YkEx4UhMO5p2zdivC34AJESObz4MZXHa9Kc2cGiDEATQbFV+FrY//70blZtYkIDDDV
-         EE5KNPypDn/JMW06OgCTFkj9dXekf/PmbdB+61Z2+48qd5QynA/wdPddWtX0hMyzSeQX
-         gjeg==
-X-Forwarded-Encrypted: i=1; AJvYcCUKJ8wSD8Qs31p4sRb7RrQJmr3RI/xElD75adfIw2LmSARmLRMKKSG8KRLvpDXrDm2YOgNdMwcu/U34QtQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZ+wMaB52wCGMonFm2V9oa+xOPV6aNHcO+Kv3oWDsxhGE24a9E
-	xBL9ITV4/UsYzrn/xjv87TmizEb3iRPuz4/iBcDZVbsa+yPEjTA7HW9i8swsIk85RFnYqPwupuC
-	phxmzWS1LM4W2tF1UHbke/g79bb8=
-X-Gm-Gg: ASbGnctvawZVMzHtk7qMnV8BOWG/CzRSpATPZThLAaLZudVLxk0Ah548kapbDGKewgS
-	qGkRaPXijab26ti2smrWFr1MTKXMXb4NTrmKJLV3NS4du2qfaHpXrB3Va5+7iyG1M8nnEQBOsWO
-	WBKgUPYWsE
-X-Google-Smtp-Source: AGHT+IEOx/eylnXhvhD90oQhCfOgz4Sw/IZohmH0LqS23uWAJioZj91bMDhQXN43VG/mxStFdEBCd5gsCU82MoL7BgI=
-X-Received: by 2002:a2e:b4a3:0:b0:30a:24bf:898d with SMTP id
- 38308e7fff4ca-30a5065136bmr61687971fa.18.1740365622708; Sun, 23 Feb 2025
- 18:53:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mf/4lgRU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740365639; x=1771901639;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=h+Xk9Y6Pmk9iA0GahcG5PLNKXQIF4StDKJwWHIq1NZc=;
+  b=Mf/4lgRUT6ixd3kt98SoepNNzawkx1OSvpiFw+nbD2zwegfitKH507rq
+   xMLbFRMPzZgHMXkdQqL3Ocqu54vX1YCAF9prRCPoTDXsFRvv/ZQ+hXDEq
+   vaoJHdliCC99l3NiVIZfNvPGNWY9yyxKbK1y8EDZZr9dfo6rGeZe6jNxW
+   H5fwjw47M7ngLVonf8EVmM8zi2EJNmJKbJQqasjh/egJHGw4NrMSWW9+O
+   KiqL7gVaKUr6GUE1IvWhUsnq2v7RqO6YXgKlq00MsQLJKGoUSynrPFW2j
+   dXUi8vOEFXOYwuEYiFr+pTo0u3rmySHs2pX27O/Yq1/QW+r68e/+D116I
+   Q==;
+X-CSE-ConnectionGUID: T89e9PbLTzmN7gzDmCTA5Q==
+X-CSE-MsgGUID: oitKt+CdSqGMe0/W9lVfhQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11354"; a="40297089"
+X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
+   d="scan'208";a="40297089"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2025 18:53:58 -0800
+X-CSE-ConnectionGUID: LjSHFoouSb23b3YU9LnzIA==
+X-CSE-MsgGUID: XHAJHJT6R4WxF4g+JxtBpQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
+   d="scan'208";a="115738067"
+Received: from zhaohaif-mobl1.ccr.corp.intel.com (HELO [10.124.242.192]) ([10.124.242.192])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2025 18:53:56 -0800
+Message-ID: <f4626354-b466-4fb7-9555-646877fd88d6@linux.intel.com>
+Date: Mon, 24 Feb 2025 10:53:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224022447.1141413-1-chharry@google.com>
-In-Reply-To: <20250224022447.1141413-1-chharry@google.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Sun, 23 Feb 2025 21:53:28 -0500
-X-Gm-Features: AWEUYZmE6u5kkTElQlu4aoa5HMerPruPeV8ap1kBStDn-Js-u-QqfPtjTbK7NKI
-Message-ID: <CABBYNZJUd1wU0wyPugz4E_WNQsg9qTJmWdu4k2GvvvgVFG8GPQ@mail.gmail.com>
-Subject: Re: [PATCH] Bluetooth: btusb: Configure altsetting for USER_CHANNEL
-To: Hsin-chen Chuang <chharry@google.com>
-Cc: linux-bluetooth@vger.kernel.org, gregkh@linuxfoundation.org, 
-	chromeos-bluetooth-upstreaming@chromium.org, 
-	Hsin-chen Chuang <chharry@chromium.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	Ying Hsu <yinghsu@chromium.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [External] Re: [PATCH] iommu/vt-d: fix system hang on reboot -f
+To: yunhui cui <cuiyunhui@bytedance.com>
+Cc: dwmw2@infradead.org, baolu.lu@linux.intel.com, joro@8bytes.org,
+ will@kernel.org, robin.murphy@arm.com, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250220101511.37602-1-cuiyunhui@bytedance.com>
+ <ba2a6295-7983-4701-8c42-797efe22ecb7@linux.intel.com>
+ <CAEEQ3wkygXexsu9x16Q+6yMtmtM+9aD=-DH1tMVNq1yuyZ7Dcg@mail.gmail.com>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+Autocrypt: addr=haifeng.zhao@linux.intel.com; keydata=
+ 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
+ 8TCx1OJHpvWFmL4Deq8=
+In-Reply-To: <CAEEQ3wkygXexsu9x16Q+6yMtmtM+9aD=-DH1tMVNq1yuyZ7Dcg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Hsin-chen,
+在 2025/2/21 17:46, yunhui cui 写道:
+> Hi Ethan,
+>
+> On Fri, Feb 21, 2025 at 4:40 PM Ethan Zhao <haifeng.zhao@linux.intel.com> wrote:
+>>
+>> 在 2025/2/20 18:15, Yunhui Cui 写道:
+>>> When entering intel_iommu_shutdown, system interrupts are disabled,
+>> System interrupts were disabled ? you mean all interrupts were disabled
+>> when entering intel_iommu_shutdown(), perhaps it is not true, at least
+>> for upstream latest code.
+>>
+>>> and the reboot process might be scheduled out by down_write(). If the
+>>> scheduled process does not yield (e.g., while(1)), the system will hang.
+>> No NMI lockup watchdog jumping out here ?
+> Steps to reproduce:
+>
+> 1. Avoid return in:
+> if (no_iommu || dmar_disabled)
+>      return;
+>
+> 2. Write a.out with while(1).
+>
+> 3. ./a.out &; reboot -f.
+>
+> 4. Observe. Send NMI via BIOS to check system response.
+>
+> 5. Add console=ttyS0,115200 to cmdline to increase reproduction chance.
+>
+> Let's continue discussing based on the above.
 
-On Sun, Feb 23, 2025 at 9:26=E2=80=AFPM Hsin-chen Chuang <chharry@google.co=
-m> wrote:
->
-> From: Hsin-chen Chuang <chharry@chromium.org>
->
-> Automatically configure the altsetting for USER_CHANNEL when a SCO is
-> connected or disconnected. This adds support for the USER_CHANNEL to
-> transfer SCO data over USB transport.
+I will try these steps to reproduce.
 
-I guess the tracking of handles is about handling disconnections,
-right? I wonder if we can get away without doing that, I didn't intend
-to add a whole bunch of changes in order to switch to the right mode,
-I get that you may want to disable the isochronous endpoint in case
-there is no connection, but I guess that only matters if we are
-talking about power but the impact is probably small so I don't think
-it is worth it. There is an alternative to match the SCO/eSCO handle
-via mask, like we do with ISO handles, that is probably a lot cheaper
-than attempting to add a whole list for tracking handles, but it has
-the downside that it is vendor/model specific.
+Per the lastest upstream code, the local processor's interrupt mask is cleaned. so
 
-> Fixes: b16b327edb4d ("Bluetooth: btusb: add sysfs attribute to control US=
-B alt setting")
-> Signed-off-by: Hsin-chen Chuang <chharry@chromium.org>
-> ---
->
->  drivers/bluetooth/btusb.c | 224 +++++++++++++++++++++++++++++++-------
->  1 file changed, 186 insertions(+), 38 deletions(-)
->
-> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-> index de3fa725d210..dfb0918dfe98 100644
-> --- a/drivers/bluetooth/btusb.c
-> +++ b/drivers/bluetooth/btusb.c
-> @@ -854,6 +854,11 @@ struct qca_dump_info {
->  #define BTUSB_ALT6_CONTINUOUS_TX       16
->  #define BTUSB_HW_SSR_ACTIVE    17
->
-> +struct sco_handle_list {
-> +       struct list_head list;
-> +       u16 handle;
-> +};
-> +
->  struct btusb_data {
->         struct hci_dev       *hdev;
->         struct usb_device    *udev;
-> @@ -920,6 +925,9 @@ struct btusb_data {
->         int oob_wake_irq;   /* irq for out-of-band wake-on-bt */
->
->         struct qca_dump_info qca_dump;
-> +
-> +       /* Records the exsiting SCO handles for HCI_USER_CHANNEL */
-> +       struct list_head sco_handle_list;
->  };
->
->  static void btusb_reset(struct hci_dev *hdev)
-> @@ -1113,6 +1121,131 @@ static inline void btusb_free_frags(struct btusb_=
-data *data)
->         spin_unlock_irqrestore(&data->rxlock, flags);
->  }
->
-> +static void btusb_sco_handle_list_clear(struct list_head *list)
-> +{
-> +       struct sco_handle_list *entry, *n;
-> +
-> +       list_for_each_entry_safe(entry, n, list, list) {
-> +               list_del(&entry->list);
-> +               kfree(entry);
-> +       }
-> +}
-> +
-> +static struct sco_handle_list *btusb_sco_handle_list_find(
-> +       struct list_head *list,
-> +       u16 handle)
-> +{
-> +       struct sco_handle_list *entry;
-> +
-> +       list_for_each_entry(entry, list, list)
-> +               if (entry->handle =3D=3D handle)
-> +                       return entry;
-> +
-> +       return NULL;
-> +}
-> +
-> +static int btusb_sco_handle_list_add(struct list_head *list, u16 handle)
-> +{
-> +       struct sco_handle_list *entry;
-> +
-> +       if (btusb_sco_handle_list_find(list, handle))
-> +               return -EEXIST;
-> +
-> +       entry =3D kzalloc(sizeof(*entry), GFP_KERNEL);
-> +       if (!entry)
-> +               return -ENOMEM;
-> +
-> +       entry->handle =3D handle;
-> +       list_add(&entry->list, list);
-> +
-> +       return 0;
-> +}
-> +
-> +static int btusb_sco_handle_list_del(struct list_head *list, u16 handle)
-> +{
-> +       struct sco_handle_list *entry;
-> +
-> +       entry =3D btusb_sco_handle_list_find(list, handle);
-> +       if (!entry)
-> +               return -ENOENT;
-> +
-> +       list_del(&entry->list);
-> +       kfree(entry);
-> +
-> +       return 0;
-> +}
-> +
-> +static void btusb_sco_conn_change(struct btusb_data *data, struct sk_buf=
-f *skb)
-> +{
-> +       struct hci_event_hdr *hdr =3D (void *) skb->data;
-> +       struct hci_dev *hdev =3D data->hdev;
-> +
-> +       if (hci_skb_pkt_type(skb) !=3D HCI_EVENT_PKT || skb->len < sizeof=
-(*hdr))
-> +               return;
-> +
-> +       switch (hdr->evt) {
-> +       case HCI_EV_DISCONN_COMPLETE: {
-> +               struct hci_ev_disconn_complete *ev =3D
-> +                       (void *) skb->data + sizeof(*hdr);
-> +               u16 handle;
-> +
-> +               if (skb->len !=3D sizeof(*hdr) + sizeof(*ev) || ev->statu=
-s)
-> +                       return;
-> +
-> +               handle =3D __le16_to_cpu(ev->handle);
-> +               if (btusb_sco_handle_list_del(&data->sco_handle_list,
-> +                                             handle) < 0)
-> +                       return;
-> +
-> +               bt_dev_info(hdev, "disabling SCO");
-> +               data->sco_num--;
-> +               data->air_mode =3D HCI_NOTIFY_DISABLE_SCO;
-> +               schedule_work(&data->work);
-> +
-> +               break;
-> +       }
-> +       case HCI_EV_SYNC_CONN_COMPLETE: {
-> +               struct hci_ev_sync_conn_complete *ev =3D
-> +                       (void *) skb->data + sizeof(*hdr);
-> +               unsigned int notify_air_mode;
-> +               u16 handle;
-> +
-> +               if (skb->len !=3D sizeof(*hdr) + sizeof(*ev) || ev->statu=
-s)
-> +                       return;
-> +
-> +               switch (ev->air_mode) {
-> +               case BT_CODEC_CVSD:
-> +                       notify_air_mode =3D HCI_NOTIFY_ENABLE_SCO_CVSD;
-> +                       break;
-> +
-> +               case BT_CODEC_TRANSPARENT:
-> +                       notify_air_mode =3D HCI_NOTIFY_ENABLE_SCO_TRANSP;
-> +                       break;
-> +
-> +               default:
-> +                       return;
-> +               }
-> +
-> +               handle =3D __le16_to_cpu(ev->handle);
-> +               if (btusb_sco_handle_list_add(&data->sco_handle_list,
-> +                                             handle) < 0) {
-> +                       bt_dev_err(hdev, "failed to add the new SCO handl=
-e");
-> +                       return;
-> +               }
-> +
-> +               bt_dev_info(hdev, "enabling SCO with air mode %u",
-> +                           ev->air_mode);
-> +               data->sco_num++;
-> +               data->air_mode =3D notify_air_mode;
-> +               schedule_work(&data->work);
-> +
-> +               break;
-> +       }
-> +       default:
-> +               break;
-> +       }
-> +}
-> +
->  static int btusb_recv_event(struct btusb_data *data, struct sk_buff *skb=
-)
->  {
->         if (data->intr_interval) {
-> @@ -1120,6 +1253,10 @@ static int btusb_recv_event(struct btusb_data *dat=
-a, struct sk_buff *skb)
->                 schedule_delayed_work(&data->rx_work, 0);
->         }
->
-> +       /* Configure altsetting for HCI_USER_CHANNEL on SCO dis/connected=
- */
-> +       if (hci_dev_test_flag(data->hdev, HCI_USER_CHANNEL))
-> +               btusb_sco_conn_change(data, skb);
+the processor could accept interrupts and handle them. and lagacy interrupt should
 
-I'd recommend adding a check for Kconfig/module parameter in the if
-statement so btusb_sco_conn_change only runs on distros with it
-enabled so we don't risk something not working as expected just
-because someone decided to open the user channel.
+be restored for later boot if there is lagacy device and as to NMI, no one could stop
 
->         return data->recv_event(data->hdev, skb);
->  }
->
-> @@ -1919,44 +2056,6 @@ static void btusb_stop_traffic(struct btusb_data *=
-data)
->         usb_kill_anchored_urbs(&data->ctrl_anchor);
->  }
->
-> -static int btusb_close(struct hci_dev *hdev)
-> -{
-> -       struct btusb_data *data =3D hci_get_drvdata(hdev);
-> -       int err;
-> -
-> -       BT_DBG("%s", hdev->name);
-> -
-> -       cancel_delayed_work(&data->rx_work);
-> -       cancel_work_sync(&data->work);
-> -       cancel_work_sync(&data->waker);
-> -
-> -       skb_queue_purge(&data->acl_q);
-> -
-> -       clear_bit(BTUSB_ISOC_RUNNING, &data->flags);
-> -       clear_bit(BTUSB_BULK_RUNNING, &data->flags);
-> -       clear_bit(BTUSB_INTR_RUNNING, &data->flags);
-> -       clear_bit(BTUSB_DIAG_RUNNING, &data->flags);
-> -
-> -       btusb_stop_traffic(data);
-> -       btusb_free_frags(data);
-> -
-> -       err =3D usb_autopm_get_interface(data->intf);
-> -       if (err < 0)
-> -               goto failed;
-> -
-> -       data->intf->needs_remote_wakeup =3D 0;
-> -
-> -       /* Enable remote wake up for auto-suspend */
-> -       if (test_bit(BTUSB_WAKEUP_AUTOSUSPEND, &data->flags))
-> -               data->intf->needs_remote_wakeup =3D 1;
-> -
-> -       usb_autopm_put_interface(data->intf);
-> -
-> -failed:
-> -       usb_scuttle_anchored_urbs(&data->deferred);
-> -       return 0;
-> -}
-> -
->  static int btusb_flush(struct hci_dev *hdev)
->  {
->         struct btusb_data *data =3D hci_get_drvdata(hdev);
-> @@ -2327,6 +2426,51 @@ static void btusb_work(struct work_struct *work)
->         }
->  }
->
-> +static int btusb_close(struct hci_dev *hdev)
-> +{
-> +       struct btusb_data *data =3D hci_get_drvdata(hdev);
-> +       int err;
-> +
-> +       BT_DBG("%s", hdev->name);
-> +
-> +       if (hci_dev_test_flag(hdev, HCI_USER_CHANNEL)) {
-> +               btusb_sco_handle_list_clear(&data->sco_handle_list);
-> +               data->sco_num =3D 0;
-> +               if (data->isoc_altsetting !=3D 0)
-> +                       btusb_switch_alt_setting(hdev, 0);
-> +       }
-> +
-> +       cancel_delayed_work(&data->rx_work);
-> +       cancel_work_sync(&data->work);
-> +       cancel_work_sync(&data->waker);
-> +
-> +       skb_queue_purge(&data->acl_q);
-> +
-> +       clear_bit(BTUSB_ISOC_RUNNING, &data->flags);
-> +       clear_bit(BTUSB_BULK_RUNNING, &data->flags);
-> +       clear_bit(BTUSB_INTR_RUNNING, &data->flags);
-> +       clear_bit(BTUSB_DIAG_RUNNING, &data->flags);
-> +
-> +       btusb_stop_traffic(data);
-> +       btusb_free_frags(data);
-> +
-> +       err =3D usb_autopm_get_interface(data->intf);
-> +       if (err < 0)
-> +               goto failed;
-> +
-> +       data->intf->needs_remote_wakeup =3D 0;
-> +
-> +       /* Enable remote wake up for auto-suspend */
-> +       if (test_bit(BTUSB_WAKEUP_AUTOSUSPEND, &data->flags))
-> +               data->intf->needs_remote_wakeup =3D 1;
-> +
-> +       usb_autopm_put_interface(data->intf);
-> +
-> +failed:
-> +       usb_scuttle_anchored_urbs(&data->deferred);
-> +       return 0;
-> +}
-> +
->  static void btusb_waker(struct work_struct *work)
->  {
->         struct btusb_data *data =3D container_of(work, struct btusb_data,=
- waker);
-> @@ -3782,6 +3926,8 @@ static int btusb_probe(struct usb_interface *intf,
->         data->udev =3D interface_to_usbdev(intf);
->         data->intf =3D intf;
->
-> +       INIT_LIST_HEAD(&data->sco_handle_list);
-> +
->         INIT_WORK(&data->work, btusb_work);
->         INIT_WORK(&data->waker, btusb_waker);
->         INIT_DELAYED_WORK(&data->rx_work, btusb_rx_work);
-> @@ -4117,6 +4263,8 @@ static void btusb_disconnect(struct usb_interface *=
-intf)
->         hdev =3D data->hdev;
->         usb_set_intfdata(data->intf, NULL);
->
-> +       btusb_sco_handle_list_clear(&data->sco_handle_list);
-> +
->         if (data->isoc) {
->                 device_remove_file(&intf->dev, &dev_attr_isoc_alt);
->                 usb_set_intfdata(data->isoc, NULL);
-> --
-> 2.48.1.601.g30ceb7b040-goog
->
+it. In a short, perhaps it is fact under your hardware configureation that no interrupt
+
+event come in to kick the scheduler to run when the a.out (while(1)) got scheduled in,
+
+but not because all system interrupts are disabled.
 
 
---=20
-Luiz Augusto von Dentz
+Thanks,
+Ethan
+
+>> Thanks,
+>> Ethan
+>>
+>>> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+>>> ---
+>>>    drivers/iommu/intel/iommu.c | 3 ++-
+>>>    1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+>>> index cc46098f875b..76a1d83b46bf 100644
+>>> --- a/drivers/iommu/intel/iommu.c
+>>> +++ b/drivers/iommu/intel/iommu.c
+>>> @@ -2871,7 +2871,8 @@ void intel_iommu_shutdown(void)
+>>>        if (no_iommu || dmar_disabled)
+>>>                return;
+>>>
+>>> -     down_write(&dmar_global_lock);
+>>> +     if (!down_write_trylock(&dmar_global_lock))
+>>> +             return;
+>>>
+>>>        /* Disable PMRs explicitly here. */
+>>>        for_each_iommu(iommu, drhd)
+>> --
+>> "firm, enduring, strong, and long-lived"
+>>
+> Thanks,
+> Yunhui
+>
+-- 
+"firm, enduring, strong, and long-lived"
+
