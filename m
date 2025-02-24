@@ -1,156 +1,154 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3302D204C2A;
-	Mon, 24 Feb 2025 21:59:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A968C11;
+	Mon, 24 Feb 2025 22:02:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740434378; cv=none; b=cpw2UqT+76NBoR6gIJic6j7/4GP7cXdD6g/WjgjeBi0GzL8ZnOubbK4q4jmyLMd87ZJR0qk2F3DU5G5NOA3/nCp4+JBhmId7TeXUWDVvJB4QufgmH4IjC3iZoO5+bc1ikA9fPzn3JlKIv1ENgObBwJ2xnPc+iF/C71nPxuCGZ5Q=
+	t=1740434539; cv=none; b=tTdALDBp5QQi7udF7S7PcMQHrgieLQpXdx1t8bHSFfOHCoItwBLmR/9vH97LIl8miVcDv+EAC2xH09Cb+rzHSdqiVcBJC5wir9iZ/gfv8cUnK9Gkd18T8KPC9zo9ZcLPg5zaDp0kmzc31OBJyfLF7QRDj88Xn4UGtBEjxPB5iBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740434378; c=relaxed/simple;
-	bh=mFJLihJkpwqErHdcMQlJt8XTyKO3+wsCZ2aq4cXwkPs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nhXhlKNdFApjio9YgtHlPxQTUpN8nvXLfS3JHrn47u3NHk7b7w+HgLuHaqmgE88+5CJZ1txqNDMd9OA4wfmBxkmK035BlGoLShwcUEmWxI+N1qXxGth+eei8GmZuwCLX49BwEECBxy0ITsaEjxFmv/rSa51ljPcbnePViQxJFdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=oSgE83Ez; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1740434539; c=relaxed/simple;
+	bh=/rKiPHdMJyKIoy0x6nRegxth6DbSPTz3v0tveGQPkHs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hd//RhS1GsGaIy71uyyjLF0njcaDtB/k81kwXCExJ3RAMO/slqHakIKnH/b49/BdFwdnNBPLycwXQ9Fdynwxmqvahq3PAvlQUGk6X1yvHt9q3+WjSeuVBi2eIs2KiI3v1647KkZ2EQ3anteX5H492Z/ccD5iyCKEyH81E2ZKaJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=FWpxCUm7; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="oSgE83Ez"
-Received: from [172.27.1.176] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 51OLtSud926291
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 24 Feb 2025 13:55:29 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 51OLtSud926291
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1740434140;
-	bh=mGxMwUsqCeYXbcs8sKTNgKdO9jufW4HfcjmafwUUTPQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oSgE83EzgtMz21WmUEJQchEwyeT2+esZ+KWZmZbpMnIxmjSCdKOx7GMtZxtUeuMOb
-	 fgxnAP0u+Y7y7qHCRMk2WcPKmHLTS78FSVtYi1r9YtWWKWmJMaiWD3YBVh2jDp2mLE
-	 b4BwNub50V8/SEH4tYhg05YnoQDCB66CtxEkgQaSBfQ7RVrhMZ+1NyaFvNQPX6ebJZ
-	 edcSTvvAUxlRBSvSoOL6AdT8ofMrNm5Y9/gATbzcdh9cEMD7Xwc6nw3oGlJ+LZeFzO
-	 M1iDUz4IaabvYD7h6G8g48ODoiaZf6CPS3zzYla0PFymyTZ7CDau1zbDFk0AveyIiH
-	 IGBE0vCJdvVzg==
-Message-ID: <e0b1c299-7f19-4453-a1ce-676068601213@zytor.com>
-Date: Mon, 24 Feb 2025 13:55:28 -0800
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="FWpxCUm7"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 16F6E40E01AD;
+	Mon, 24 Feb 2025 22:02:13 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id dasogVygUtBK; Mon, 24 Feb 2025 22:02:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1740434529; bh=ZBR+ADqnnnM3sXp77K9ZzJ39W0vxRbheejoHC6DUJTs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FWpxCUm7L7h99WwLCtPh++7b0CVG2n05Rklf8+bCimGPwpYUdTbVyACoenHRwI1An
+	 kAizWc+ZVoNFQpU3MJ71COJdWj0d1zU6BD7NCQ5d9h9q62o+PPHQ90ln9L7e+JDIn1
+	 2oCP9LZsLOUS17wai/mVhefPp5ERd8uPylL7T2B260kglWP4ZAGVd+EOUcKYJoYTBr
+	 bO1F/+pHuc8N8ra/QP53WcF2g5PUsqIX8pcFKOPLciIT/IJnilZ1+ehXoz+CYLodES
+	 t817GlpTK5J/bRJZA4OvVhFEl7WTZiRywDOz6GuY7fAN+3vPGaST1BcYulGjLzYD+c
+	 QNCD5n7asyFH612IJkLmigZUmjffWEMIFNuQaql8Qw8YC8Bu0V0iJpNRVRkrQZ3Rha
+	 eso/7QTqLZ95fYHA7ubaCX5Iq8xfSqe5h/jGNhf33ergcpyIkv1no+9xy5PLwrW3PX
+	 +jXwynO08uDvRCildtfgzmmblnccQZyo+NIpAnoJ6DCOxaFLeiklmO0Kf4ax9T+p0G
+	 tEm5WSONSwr2/EoGmt4lJB4FU/FwvaEmZavGURaVUvJY28ZGkT8FBQjFswAEi8KO+s
+	 Je59+cg8L+n7O1LLzL+Owv8FeyUckMPj1unnMuXz0GK1umUvHeuqJIn5Rhl1QhPeGs
+	 9VL0/jANcrrNvcmFyFaj/Adg=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D8B8F40E0184;
+	Mon, 24 Feb 2025 22:01:51 +0000 (UTC)
+Date: Mon, 24 Feb 2025 23:01:46 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+Cc: "Luck, Tony" <tony.luck@intel.com>,
+	"nao.horiguchi@gmail.com" <nao.horiguchi@gmail.com>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
+	"linmiaohe@huawei.com" <linmiaohe@huawei.com>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"peterz@infradead.org" <peterz@infradead.org>,
+	"jpoimboe@kernel.org" <jpoimboe@kernel.org>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"baolin.wang@linux.alibaba.com" <baolin.wang@linux.alibaba.com>,
+	"tianruidong@linux.alibaba.com" <tianruidong@linux.alibaba.com>
+Subject: Re: [PATCH v2 0/5] mm/hwpoison: Fix regressions in memory failure
+ handling
+Message-ID: <20250224220146.GBZ7zsSnXLftyqWzW_@fat_crate.local>
+References: <20250217063335.22257-1-xueshuai@linux.alibaba.com>
+ <20250218082727.GCZ7REb7OG6NTAY-V-@fat_crate.local>
+ <7393bcfb-fe94-4967-b664-f32da19ae5f9@linux.alibaba.com>
+ <20250218122417.GHZ7R78fPm32jKYUlx@fat_crate.local>
+ <SJ1PR11MB60836781C4CE26C4B43AFF0BFCFA2@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <20250219081037.GAZ7WR_YmRtRvN_LKA@fat_crate.local>
+ <SJ1PR11MB6083F7AC9C5AED072141B8CAFCC52@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <20250220111903.GDZ7cPp1qVq3t9Jgs6@fat_crate.local>
+ <SJ1PR11MB608335ACA7AEC51F7F6A75D2FCC42@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <4e13bef2-7402-4f75-8f0c-4a3cc210c5a6@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 03/17] x86: Replace open-coded parity calculation with
- parity8()
-To: Uros Bizjak <ubizjak@gmail.com>, Kuan-Wei Chiu <visitorckw@gmail.com>,
-        tglx@linutronix.de, Ingo Molnar <mingo@redhat.com>, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, jk@ozlabs.org,
-        joel@jms.id.au, eajames@linux.ibm.com, andrzej.hajda@intel.com,
-        neil.armstrong@linaro.org, rfoss@kernel.org,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-        dmitry.torokhov@gmail.com, mchehab@kernel.org, awalls@md.metrocast.net,
-        hverkuil@xs4all.nl, miquel.raynal@bootlin.com, richard@nod.at,
-        vigneshr@ti.com, louis.peens@corigine.com, andrew+netdev@lunn.ch,
-        davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
-        parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
-        johannes@sipsolutions.net, gregkh@linuxfoundation.org,
-        jirislaby@kernel.org, yury.norov@gmail.com, akpm@linux-foundation.org,
-        mingo@kernel.org
-Cc: alistair@popple.id.au, linux@rasmusvillemoes.dk,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@gmail.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
-        dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
-        oss-drivers@corigine.com, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
-        brcm80211-dev-list.pdl@broadcom.com, linux-serial@vger.kernel.org,
-        bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw,
-        Yu-Chun Lin <eleanor15x@gmail.com>
-References: <20250223164217.2139331-1-visitorckw@gmail.com>
- <20250223164217.2139331-4-visitorckw@gmail.com>
- <d080a2d6-9ec7-1c86-4cf4-536400221f68@gmail.com>
-Content-Language: en-US
-From: "H. Peter Anvin" <hpa@zytor.com>
-In-Reply-To: <d080a2d6-9ec7-1c86-4cf4-536400221f68@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <4e13bef2-7402-4f75-8f0c-4a3cc210c5a6@linux.alibaba.com>
 
-On 2/24/25 07:24, Uros Bizjak wrote:
+On Fri, Feb 21, 2025 at 02:05:28PM +0800, Shuai Xue wrote:
+> #perf script
+> kworker/48:1-mm 25516 [048]  1713.893549: probe:memory_failure: (ffffffffaa622db4)
+>         ffffffffaa622db5 memory_failure+0x5 ([kernel.kallsyms])
+>         ffffffffaa25aa93 uc_decode_notifier+0x73 ([kernel.kallsyms])
+>         ffffffffaa3068bb notifier_call_chain+0x5b ([kernel.kallsyms])
+>         ffffffffaa306ae1 blocking_notifier_call_chain+0x41 ([kernel.kallsyms])
+>         ffffffffaa25bbfe mce_gen_pool_process+0x3e ([kernel.kallsyms])
+>         ffffffffaa2f455f process_one_work+0x19f ([kernel.kallsyms])
+>         ffffffffaa2f509c worker_thread+0x20c ([kernel.kallsyms])
+>         ffffffffaa2fec89 kthread+0xd9 ([kernel.kallsyms])
+>         ffffffffaa245131 ret_from_fork+0x31 ([kernel.kallsyms])
+>         ffffffffaa2076ca ret_from_fork_asm+0x1a ([kernel.kallsyms])
 > 
+> einj_mem_uc 44530 [184]  1713.908089: probe:memory_failure: (ffffffffaa622db4)
+>         ffffffffaa622db5 memory_failure+0x5 ([kernel.kallsyms])
+>         ffffffffaa2594fb kill_me_maybe+0x5b ([kernel.kallsyms])
+>         ffffffffaa2fac29 task_work_run+0x59 ([kernel.kallsyms])
+>         ffffffffaaf52347 irqentry_exit_to_user_mode+0x1c7 ([kernel.kallsyms])
+>         ffffffffaaf50bce noist_exc_machine_check+0x3e ([kernel.kallsyms])
+>         ffffffffaa001303 asm_exc_machine_check+0x33 ([kernel.kallsyms])
+>                   405046 thread+0xe (/home/shawn.xs/ras-tools/einj_mem_uc)
 > 
-> On 23. 02. 25 17:42, Kuan-Wei Chiu wrote:
->> Refactor parity calculations to use the standard parity8() helper. This
->> change eliminates redundant implementations and improves code
->> efficiency.
-> 
-> The patch improves parity assembly code in bootflag.o from:
-> 
->    58:    89 de                    mov    %ebx,%esi
->    5a:    b9 08 00 00 00           mov    $0x8,%ecx
->    5f:    31 d2                    xor    %edx,%edx
->    61:    89 f0                    mov    %esi,%eax
->    63:    89 d7                    mov    %edx,%edi
->    65:    40 d0 ee                 shr    %sil
->    68:    83 e0 01                 and    $0x1,%eax
->    6b:    31 c2                    xor    %eax,%edx
->    6d:    83 e9 01                 sub    $0x1,%ecx
->    70:    75 ef                    jne    61 <sbf_init+0x51>
->    72:    39 c7                    cmp    %eax,%edi
->    74:    74 7f                    je     f5 <sbf_init+0xe5>
->    76:
-> 
-> to:
-> 
->    54:    89 d8                    mov    %ebx,%eax
->    56:    ba 96 69 00 00           mov    $0x6996,%edx
->    5b:    c0 e8 04                 shr    $0x4,%al
->    5e:    31 d8                    xor    %ebx,%eax
->    60:    83 e0 0f                 and    $0xf,%eax
->    63:    0f a3 c2                 bt     %eax,%edx
->    66:    73 64                    jae    cc <sbf_init+0xbc>
->    68:
-> 
-> which is faster and smaller (-10 bytes) code.
-> 
+> einj_mem_uc 44531 [089]  1713.916319: probe:memory_failure: (ffffffffaa622db4)
+>         ffffffffaa622db5 memory_failure+0x5 ([kernel.kallsyms])
+>         ffffffffaa2594fb kill_me_maybe+0x5b ([kernel.kallsyms])
+>         ffffffffaa2fac29 task_work_run+0x59 ([kernel.kallsyms])
+>         ffffffffaaf52347 irqentry_exit_to_user_mode+0x1c7 ([kernel.kallsyms])
+>         ffffffffaaf50bce noist_exc_machine_check+0x3e ([kernel.kallsyms])
+>         ffffffffaa001303 asm_exc_machine_check+0x33 ([kernel.kallsyms])
+>                   405046 thread+0xe (/home/shawn.xs/ras-tools/einj_mem_uc)
 
-Of course, on x86, parity8() and parity16() can be implemented very simply:
+What are those stack traces supposed to say?
 
-(Also, the parity functions really ought to return bool, and be flagged 
-__attribute_const__.)
+Two processes are injecting, cause a #MC and a kworker gets to handle the UC?
 
-static inline __attribute_const__ bool _arch_parity8(u8 val)
-{
-	bool parity;
-	asm("and %0,%0" : "=@ccnp" (parity) : "q" (val));
-	return parity;
-}
+All injecting to the same page?
 
-static inline __attribute_const__ bool _arch_parity16(u16 val)
-{
-	bool parity;
-	asm("xor %h0,%b0" : "=@ccnp" (parity), "+Q" (val));
-	return parity;
-}
+What's the upper limit on CPUs seeing the same hw error and all raising
+a CMCI/#MC?
 
-In the generic algorithm, you probably should implement parity16() in 
-terms of parity8(), parity32() in terms of parity16() and so on:
+> - kill_accessing_process() is only called when the flags are set to
+>   MF_ACTION_REQUIRED, which means it is in the MCE path.
+> - Whether the page is clean determines the behavior of try_to_unmap. For a
+>   dirty page, try_to_unmap uses TTU_HWPOISON to unmap the PTE and convert the
+>   PTE entry to a swap entry. For a clean page, try_to_unmap uses ~TTU_HWPOISON
+>   and simply unmaps the PTE.
+> - When does walk_page_range() with hwpoison_walk_ops return 1?
+>   1. If the poison page still exists, we should of course kill the current
+>      process.
+>   2. If the poison page does not exist, but is_hwpoison_entry is true, meaning
+>      it is a dirty page, we should also kill the current process, too.
+>   3. Otherwise, it returns 0, which means the page is clean.
 
-static inline __attribute_const__ bool parity16(u16 val)
-{
-#ifdef ARCH_HAS_PARITY16
-	if (!__builtin_const_p(val))
-		return _arch_parity16(val);
-#endif
-	return parity8(val ^ (val >> 8));
-}
+I think you're too deep into detail. What I'd do is step back, think what
+would be the *proper* recovery action and then make sure memory_failure does
+that. If it doesn't - fix it to do so.
 
-This picks up the architectural versions when available.
+So, what should really happen wrt recovery action if any number of CPUs see
+the same memory error?
 
-Furthermore, if a popcnt instruction is known to exist, then the parity 
-is simply popcnt(x) & 1.
+-- 
+Regards/Gruss,
+    Boris.
 
-	-hpa
-
+https://people.kernel.org/tglx/notes-about-netiquette
