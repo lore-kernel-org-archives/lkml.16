@@ -1,16 +1,16 @@
 Received: from dediextern.your-server.de (dediextern.your-server.de [85.10.215.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF534252904;
-	Mon, 24 Feb 2025 15:29:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22EC12561D1;
+	Mon, 24 Feb 2025 15:29:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.215.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740410986; cv=none; b=bm9LAYTrCAUL4RWJQGKel0emEqFNbX7RWA5e0U33G4e6kyp2OuvNAjXc3LVbVBmeDwfM7wDFkQFtNhmNjaRTDY8Vmhfmgj5AIcSlMOIey6nZATAhqtkNwhzBS4uAGzkImHOZTusz/eQzj0wNU5eoTL2LWwqy8aNjPU5TObFgJq4=
+	t=1740410987; cv=none; b=RmHdSAKWLmqA1lRroHfq5ij2N6pevWUzH9UnG76neeOWX6EM1a++YfbDwMQthWCPgx9nFkCX/QTeCqV/o50upvaX00J1pK7Czgg2aiQRSAKyI6YnlnX5R9eut38uwvwL9qekJ8tuvBF51h0eyoY+cs6QXo8wvW/zanGsmaQ97JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740410986; c=relaxed/simple;
-	bh=wA0QDO5QFIXhbuPjzvdXu3rzZQMwOqOZCdOKUbUiaTk=;
+	s=arc-20240116; t=1740410987; c=relaxed/simple;
+	bh=Bz9QAvk0n62OqPIRtmIU+QS9wEusbclae33SDw6IB54=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AbmieAczA+FCx4ZBJwcZz33bH4cnq7zw9Y9jW/XCJSjR3Fbmr1pvaoeFwst7zWuk0/zV5qrqu4kVCtEyjslTkhgNjRuNM8ReeR0e72RLRjBH3BRd9xqUipiSC5Y/tX3N9UK1ubATeYc93PL+/exb8loG9gB8hwVeb2eKD+EQsns=
+	 MIME-Version; b=rcdxB7kg1Xzo4rYpnwIjWkLV2jCqdVzOaFzx+B1syffxHj4sZhBPjcsc7J+oASV02FEP35oHWyMYqDl8Ga6bTpBrQ7tiE2GvP9VTXZqZs+IpDhdskUKU25512gHc55zKA7NvCccGNg+XKLWBpeH0V4F963JNywISekHbpG+EwkM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de; spf=pass smtp.mailfrom=hetzner-cloud.de; arc=none smtp.client-ip=85.10.215.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hetzner-cloud.de
@@ -18,12 +18,12 @@ Received: from sslproxy01.your-server.de ([78.46.139.224])
 	by dediextern.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
-	id 1tmaOQ-000A2B-OB; Mon, 24 Feb 2025 16:29:14 +0100
+	id 1tmaOR-000A2H-3P; Mon, 24 Feb 2025 16:29:15 +0100
 Received: from [78.47.5.107] (helo=sdn-nic-test01..)
 	by sslproxy01.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
-	id 1tmaOQ-0005Hj-1e;
+	id 1tmaOQ-0005Hj-2m;
 	Mon, 24 Feb 2025 16:29:14 +0100
 From: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>
 To: netdev@vger.kernel.org,
@@ -53,9 +53,9 @@ Cc: willemdebruijn.kernel@gmail.com,
 	shuah@kernel.org,
 	hawk@kernel.org,
 	marcus.wichelmann@hetzner-cloud.de
-Subject: [PATCH bpf-next v3 2/6] net: tun: enable transfer of XDP metadata to skb
-Date: Mon, 24 Feb 2025 15:29:05 +0000
-Message-ID: <20250224152909.3911544-3-marcus.wichelmann@hetzner-cloud.de>
+Subject: [PATCH bpf-next v3 5/6] selftests/bpf: add test for XDP metadata support in tun driver
+Date: Mon, 24 Feb 2025 15:29:08 +0000
+Message-ID: <20250224152909.3911544-6-marcus.wichelmann@hetzner-cloud.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250224152909.3911544-1-marcus.wichelmann@hetzner-cloud.de>
 References: <20250224152909.3911544-1-marcus.wichelmann@hetzner-cloud.de>
@@ -69,108 +69,99 @@ Content-Transfer-Encoding: 8bit
 X-Authenticated-Sender: marcus.wichelmann@hetzner-cloud.de
 X-Virus-Scanned: Clear (ClamAV 1.0.7/27559/Mon Feb 24 10:44:14 2025)
 
-When the XDP metadata area was used, it is expected that the same
-metadata can also be accessed from TC, as can be read in the description
-of the bpf_xdp_adjust_meta helper function. In the tun driver, this was
-not yet implemented.
+Add a selftest that creates a tap device, attaches XDP and TC programs,
+writes a packet with a test payload into the tap device and checks the
+test result. This test ensures that the XDP metadata support in the tun
+driver is enabled and that the metadata size is correctly passed to the
+skb.
 
-To make this work, the skb that is being built on XDP_PASS should know
-of the current size of the metadata area. This is ensured by adding
-calls to skb_metadata_set. For the tun_xdp_one code path, an additional
-check is necessary to handle the case where the externally initialized
-xdp_buff has no metadata support (xdp->data_meta == xdp->data + 1).
-
-More information about this feature can be found in the commit message
-of commit de8f3a83b0a0 ("bpf: add meta pointer for direct access").
+See the previous commit ("selftests/bpf: refactor xdp_context_functional
+test and bpf program") for details about the test design.
 
 Signed-off-by: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>
 ---
- drivers/net/tun.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
+ .../bpf/prog_tests/xdp_context_test_run.c     | 64 +++++++++++++++++++
+ 1 file changed, 64 insertions(+)
 
-diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-index 4ec8fbd93c8d..70208b3a2e93 100644
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -1600,7 +1600,8 @@ static bool tun_can_build_skb(struct tun_struct *tun, struct tun_file *tfile,
+diff --git a/tools/testing/selftests/bpf/prog_tests/xdp_context_test_run.c b/tools/testing/selftests/bpf/prog_tests/xdp_context_test_run.c
+index 4043f220d7c0..60aad6bd8882 100644
+--- a/tools/testing/selftests/bpf/prog_tests/xdp_context_test_run.c
++++ b/tools/testing/selftests/bpf/prog_tests/xdp_context_test_run.c
+@@ -8,6 +8,7 @@
+ #define TX_NAME "veth1"
+ #define TX_NETNS "xdp_context_tx"
+ #define RX_NETNS "xdp_context_rx"
++#define TAP_NAME "tap0"
  
- static struct sk_buff *__tun_build_skb(struct tun_file *tfile,
- 				       struct page_frag *alloc_frag, char *buf,
--				       int buflen, int len, int pad)
-+				       int buflen, int len, int pad,
-+				       int metasize)
- {
- 	struct sk_buff *skb = build_skb(buf, buflen);
+ #define TEST_PAYLOAD_LEN 32
+ static const __u8 test_payload[TEST_PAYLOAD_LEN] = {
+@@ -251,3 +252,66 @@ void test_xdp_context_veth(void)
+ 	netns_free(tx_ns);
+ }
  
-@@ -1609,6 +1610,8 @@ static struct sk_buff *__tun_build_skb(struct tun_file *tfile,
- 
- 	skb_reserve(skb, pad);
- 	skb_put(skb, len);
-+	if (metasize)
-+		skb_metadata_set(skb, metasize);
- 	skb_set_owner_w(skb, tfile->socket.sk);
- 
- 	get_page(alloc_frag->page);
-@@ -1668,6 +1671,7 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
- 	char *buf;
- 	size_t copied;
- 	int pad = TUN_RX_PAD;
-+	int metasize = 0;
- 	int err = 0;
- 
- 	rcu_read_lock();
-@@ -1695,7 +1699,7 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
- 	if (hdr->gso_type || !xdp_prog) {
- 		*skb_xdp = 1;
- 		return __tun_build_skb(tfile, alloc_frag, buf, buflen, len,
--				       pad);
-+				       pad, metasize);
- 	}
- 
- 	*skb_xdp = 0;
-@@ -1730,12 +1734,18 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
- 
- 		pad = xdp.data - xdp.data_hard_start;
- 		len = xdp.data_end - xdp.data;
++void test_xdp_context_tuntap(void)
++{
++	LIBBPF_OPTS(bpf_tc_hook, tc_hook, .attach_point = BPF_TC_INGRESS);
++	LIBBPF_OPTS(bpf_tc_opts, tc_opts, .handle = 1, .priority = 1);
++	struct test_xdp_meta *skel = NULL;
++	__u8 packet[sizeof(struct ethhdr) + TEST_PAYLOAD_LEN];
++	int tap_fd = -1;
++	int tap_ifindex;
++	int ret;
 +
-+		/* It is known that the xdp_buff was prepared with metadata
-+		 * support, so the metasize will never be negative.
-+		 */
-+		metasize = xdp.data - xdp.data_meta;
- 	}
- 	bpf_net_ctx_clear(bpf_net_ctx);
- 	rcu_read_unlock();
- 	local_bh_enable();
- 
--	return __tun_build_skb(tfile, alloc_frag, buf, buflen, len, pad);
-+	return __tun_build_skb(tfile, alloc_frag, buf, buflen, len, pad,
-+			       metasize);
- 
- out:
- 	bpf_net_ctx_clear(bpf_net_ctx);
-@@ -2452,6 +2462,7 @@ static int tun_xdp_one(struct tun_struct *tun,
- 	struct sk_buff_head *queue;
- 	u32 rxhash = 0, act;
- 	int buflen = hdr->buflen;
-+	int metasize = 0;
- 	int ret = 0;
- 	bool skb_xdp = false;
- 	struct page *page;
-@@ -2506,6 +2517,14 @@ static int tun_xdp_one(struct tun_struct *tun,
- 	skb_reserve(skb, xdp->data - xdp->data_hard_start);
- 	skb_put(skb, xdp->data_end - xdp->data);
- 
-+	/* The externally provided xdp_buff may have no metadata support, which
-+	 * is marked by xdp->data_meta being xdp->data + 1. This will lead to a
-+	 * metasize of -1 and is the reason why the condition checks for > 0.
++	tap_fd = open_tuntap(TAP_NAME, true);
++	if (!ASSERT_GE(tap_fd, 0, "open_tuntap"))
++		goto close;
++
++	/* By default, Linux sends IPv6 multicast listener reports which
++	 * interfere with this test. Set the IFF_NOARP flag to ensure
++	 * silence on the interface.
 +	 */
-+	metasize = xdp->data - xdp->data_meta;
-+	if (metasize > 0)
-+		skb_metadata_set(skb, metasize);
++	SYS(close, "ip link set dev " TAP_NAME " arp off");
++	SYS(close, "ip link set dev " TAP_NAME " up");
 +
- 	if (virtio_net_hdr_to_skb(skb, gso, tun_is_little_endian(tun))) {
- 		atomic_long_inc(&tun->rx_frame_errors);
- 		kfree_skb(skb);
++	skel = test_xdp_meta__open_and_load();
++	if (!ASSERT_OK_PTR(skel, "open and load skeleton"))
++		goto close;
++
++	tap_ifindex = if_nametoindex(TAP_NAME);
++	if (!ASSERT_GE(tap_ifindex, 0, "if_nametoindex"))
++		goto close;
++
++	tc_hook.ifindex = tap_ifindex;
++	ret = bpf_tc_hook_create(&tc_hook);
++	if (!ASSERT_OK(ret, "bpf_tc_hook_create"))
++		goto close;
++
++	tc_opts.prog_fd = bpf_program__fd(skel->progs.ing_cls);
++	ret = bpf_tc_attach(&tc_hook, &tc_opts);
++	if (!ASSERT_OK(ret, "bpf_tc_attach"))
++		goto close;
++
++	ret = bpf_xdp_attach(tap_ifindex, bpf_program__fd(skel->progs.ing_xdp),
++			     0, NULL);
++	if (!ASSERT_GE(ret, 0, "bpf_xdp_attach"))
++		goto close;
++
++	/* The ethernet header is not relevant for this test and doesn't need to
++	 * be meaningful.
++	 */
++	struct ethhdr eth = { 0 };
++
++	memcpy(packet, &eth, sizeof(eth));
++	memcpy(packet + sizeof(eth), test_payload, TEST_PAYLOAD_LEN);
++
++	ret = write(tap_fd, packet, sizeof(packet));
++	if (!ASSERT_EQ(ret, sizeof(packet), "write packet"))
++		goto close;
++
++	assert_test_result(skel);
++
++close:
++	if (tap_fd >= 0)
++		close(tap_fd);
++	test_xdp_meta__destroy(skel);
++}
 -- 
 2.43.0
 
