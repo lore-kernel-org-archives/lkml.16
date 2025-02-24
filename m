@@ -1,102 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gimli.kloenk.de (gimli.kloenk.de [49.12.72.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C871724A06C;
-	Mon, 24 Feb 2025 13:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D70A03FBB3;
+	Mon, 24 Feb 2025 13:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.72.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740405064; cv=none; b=auv3P8VTytZXbO0oRz+kUMljUxFLi2tTvrKQgnCVjK8n7A+KjFXVtUJv3pDzPtR9p3jhTFQERrzb0B1F3Sj4PSLqFy1Y2upw6pAjBaT9w7MgcYC2cAuWIWVOt3M86T9eCa6UPB9zbk6Z4nfpRLC5Q0ue5B/flyP6tJAEfgcAHaY=
+	t=1740405064; cv=none; b=tAsWAFUqAMgSIgeCSfbzrGigXb5UY5MwZ/yw9uvjYgHcwSyHhA1HdB85vgntiq11w5rlkf6X4C643IbtOtWlevdZ3275CSMAQyoVqHoPFoCp0iCOLv0PVpvkK8kdsB5vyBsfoMk7OX4zOZO/uHKgpYHmub3pR7t2vtgIDQ6DRTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740405064; c=relaxed/simple;
-	bh=pZKfDA3ali55C1jq54Pf/O8lGAmzjSBZ65ftlVmOLmA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gaCdNIaO82XRpaeqcjaYyhQreoMTMNYWY1f8aOacpYEjPsC+DMr/cguQgV+aLJImzAVld+bAf9FF8PG/uZizltS+4bDpgOaLNJiCe2osfFrTV13Io0R5FjbrR7WGYkQGvLBX4zL6yNiUAptaj3ljEQfLyUeEduuGV5362KXmNwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cM52n2M6; arc=none smtp.client-ip=10.30.226.201
+	bh=9RDuIIDDoRX3iUwz/B6eYJZ3G8+IPjNTeRWnefHxkUw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Oz6V04Yahp+R9+1TSZj+E2yabxfmlpxJnk1hCh53Gz6PEcskySrY7Uve84Dq0AEjopfbJYantDAU62dW9q82+5+9JQW3U/LNQzs4OolM502HpRuKi+mL4pwuX2m0t4HQ9oH6TG+isTTGq07vC2ADQ3nurIjwtLemPZe1h1TAFmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev; spf=pass smtp.mailfrom=kloenk.dev; dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b=EYmG3eqn; arc=none smtp.client-ip=49.12.72.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kloenk.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cM52n2M6"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 56299C4CEED;
-	Mon, 24 Feb 2025 13:51:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740405064;
-	bh=pZKfDA3ali55C1jq54Pf/O8lGAmzjSBZ65ftlVmOLmA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=cM52n2M6D8g8xJjlTRy3CFPc8+QvvP40luSWKnZyOHyrE6ahQSF7fEMvpwIUQ53HT
-	 qnU0HJWPI/V+8NmAhwrll8fjJ7OpUYascWVsTSYmnMXRebfbRajeTr6ICLv5EGrc8U
-	 VbGj01J8660oNcoEsMar1KuRjlP7Jtdw/WXkMrhuEbCXTfZk+B0xMjpRto6y6tOkjX
-	 9PLYLO9ToTM5Rfk1BW21ux09KgiAgtbvJLkFVoiqxiZ5wSF7rKOasOB9qe4vtnH179
-	 MupX4QiUPqqkFKwB/LyDFaoPiArmpz739ZG24lSxZkfzSVAdel2ZZtim/idUqek0/6
-	 HXVQFNQJEwDnw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB12C021B5;
-	Mon, 24 Feb 2025 13:51:04 +0000 (UTC)
-From: Maud Spierings via B4 Relay <devnull+maudspierings.gocontroll.com@kernel.org>
-Date: Mon, 24 Feb 2025 14:50:54 +0100
-Subject: [PATCH 04/14] dt-bindings: vendor-prefixes: add GOcontroll
+	dkim=pass (1024-bit key) header.d=kloenk.dev header.i=@kloenk.dev header.b="EYmG3eqn"
+From: Fiona Behrens <me@kloenk.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kloenk.dev; s=mail;
+	t=1740405052; bh=GoyOgU4F8MJF8xBQLwzVC2scpgFAnMUGWJKmA0XPqNw=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date;
+	b=EYmG3eqnM4MCQ0hLO2jgmWLWjqkqd00n6N6mN7raLyGsb/UFfbcyOO5mMQ/PIPf+z
+	 l/XQMWRzSY1FO4WSPtodgX95I3F4KIonw8h3eM7Nb7i3CaVAOXrc4qSYyCIYKgyLRs
+	 GFqMGgPIBwl5fdpk+qDGDgi8qJsISOryviETc/4I=
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>,  Alex Gaynor <alex.gaynor@gmail.com>,
+  Boqun Feng <boqun.feng@gmail.com>,  Gary Guo <gary@garyguo.net>,
+  =?utf-8?Q?Bj=C3=B6rn?=
+ Roy Baron <bjorn3_gh@protonmail.com>,  Benno Lossin
+ <benno.lossin@proton.me>,  Alice Ryhl <aliceryhl@google.com>,  Trevor
+ Gross <tmgross@umich.edu>,  Masahiro Yamada <masahiroy@kernel.org>,
+  Nathan Chancellor <nathan@kernel.org>,  Nicolas Schier
+ <nicolas@fjasle.eu>,  Luis Chamberlain <mcgrof@kernel.org>,
+  rust-for-linux@vger.kernel.org,  linux-kernel@vger.kernel.org,  Adam
+ Bratschi-Kaye <ark.email@gmail.com>,  linux-kbuild@vger.kernel.org,  Petr
+ Pavlu <petr.pavlu@suse.com>,  Sami Tolvanen <samitolvanen@google.com>,
+  Daniel Gomez <da.gomez@samsung.com>,  Simona Vetter
+ <simona.vetter@ffwll.ch>,  Greg KH <gregkh@linuxfoundation.org>,
+  linux-modules@vger.kernel.org
+Subject: Re: [PATCH v7 2/6] rust: str: implement `Index` for `BStr`
+In-Reply-To: <20250218-module-params-v3-v7-2-5e1afabcac1b@kernel.org> (Andreas
+	Hindborg's message of "Tue, 18 Feb 2025 14:00:44 +0100")
+References: <20250218-module-params-v3-v7-0-5e1afabcac1b@kernel.org>
+	<20250218-module-params-v3-v7-2-5e1afabcac1b@kernel.org>
+Date: Mon, 24 Feb 2025 14:50:51 +0100
+Message-ID: <87y0xvpi2s.fsf@kloenk.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250224-initial_display-v1-4-5ccbbf613543@gocontroll.com>
-References: <20250224-initial_display-v1-0-5ccbbf613543@gocontroll.com>
-In-Reply-To: <20250224-initial_display-v1-0-5ccbbf613543@gocontroll.com>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Thierry Reding <thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, 
- Liu Ying <victor.liu@nxp.com>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, 
- Maud Spierings <maudspierings@gocontroll.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740405062; l=973;
- i=maudspierings@gocontroll.com; s=20250214; h=from:subject:message-id;
- bh=GJs6pNBexRn96NM+OGXxZUfK9O73xNA0YJNFsc5BkjU=;
- b=IJEmmCyq9UEKO0tAanMOCXF7YyKSMtNx5xwL9il4SoqOZ0zccX5GR4svLEQ+D5oAUtrxo2Flu
- CzPPhebk0IOA4dQ509AFMK+reya+R2ZDIqRtiXy22t5OplPrBzlh7Vc
-X-Developer-Key: i=maudspierings@gocontroll.com; a=ed25519;
- pk=7chUb8XpaTQDvWhzTdHC0YPMkTDloELEC7q94tOUyPg=
-X-Endpoint-Received: by B4 Relay for maudspierings@gocontroll.com/20250214
- with auth_id=341
-X-Original-From: Maud Spierings <maudspierings@gocontroll.com>
-Reply-To: maudspierings@gocontroll.com
+Content-Type: text/plain
 
-From: Maud Spierings <maudspierings@gocontroll.com>
+Andreas Hindborg <a.hindborg@kernel.org> writes:
 
-GOcontroll produces embedded linux systems and IO modules to use in
-these sytems, add its a prefix.
+> The `Index` implementation on `BStr` was lost when we switched `BStr` from
+> a type alias of `[u8]` to a newtype. This patch adds back `Index` by
+> implementing `Index` for `BStr` when `Index` would be implemented for
+> `[u8]`.
+>
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 
-Signed-off-by: Maud Spierings <maudspierings@gocontroll.com>
----
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+Reviewed-by: Fiona Behrens <me@kloenk.dev>
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index dac80c62b742fec14cd7652d9d690acc4b4b1ee6..5dc61a05de0ce907caeb60bb92018569df0d19e3 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -597,6 +597,8 @@ patternProperties:
-     description: GlobalTop Technology, Inc.
-   "^gmt,.*":
-     description: Global Mixed-mode Technology, Inc.
-+  "^gocontroll,.*":
-+    description: GOcontroll Modular Embedded Electronics B.V.
-   "^goldelico,.*":
-     description: Golden Delicious Computers GmbH & Co. KG
-   "^goodix,.*":
-
--- 
-2.48.1
-
-
+> ---
+>  rust/kernel/str.rs | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+> index 002dcddf7c768..ba6b1a5c4f99d 100644
+> --- a/rust/kernel/str.rs
+> +++ b/rust/kernel/str.rs
+> @@ -114,6 +114,17 @@ fn eq(&self, other: &Self) -> bool {
+>      }
+>  }
+>  
+> +impl<Idx> Index<Idx> for BStr
+> +where
+> +    [u8]: Index<Idx, Output = [u8]>,
+> +{
+> +    type Output = Self;
+> +
+> +    fn index(&self, index: Idx) -> &Self::Output {
+> +        BStr::from_bytes(&self.0[index])
+> +    }
+> +}
+> +
+>  /// Creates a new [`BStr`] from a string literal.
+>  ///
+>  /// `b_str!` converts the supplied string literal to byte string, so non-ASCII
