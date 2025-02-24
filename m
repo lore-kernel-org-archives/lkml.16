@@ -1,95 +1,271 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C187719ABB6;
-	Mon, 24 Feb 2025 21:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBD8197558
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 21:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740431403; cv=none; b=UjtsGRMT9s10pq6d/meGLEi+Z8BIkfRUmiThdRkg1qB24pN8XDUyRQ4wigZ01V/GOEl8lwB3MfaAsn7a8WOzCe8J/6QJqeg0s36gHcX4f9NOwBG/+jcmezRVoN4kGpOaJYSySYRbmj2QBE9x3/Owyr+BhTFGWjAPEmczjtcYj3M=
+	t=1740431425; cv=none; b=NgvvXiroecciJyX5k9bTVKnLnQN8F6M11VaF2tjJVHXPbcn2fjQzMGLiKNzK/bO1ZD65T/KtQecLBbiTk5Ae4B71w5arrm1IcA5jvy5sJv6FD3lZ20fsYp6YJfxuFg+zBcgJy8Lhf/IyfLTHVT6YS8S2qunA2WewD5ROOrnXDcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740431403; c=relaxed/simple;
-	bh=ODMDPnUIj7jlAw0M/wbe31+KuqGOm0TmlZhNWLpCwzE=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=TOzg8fJB/7UqcyXGYt+1PZZeYrtLTFZ9y351gR9PLAyEMSsTa+2CPRAGJZnIs1ngmJuOdvMwrQLEK8nwQZxxwiYw5GfCirhvBdLZZDTTBVG0gUQ1DcNJwk0F+IG1MfWOlMQAyeh7L7GVby0NFlEUozAqOuSJ2fjB/Y0+reZQCpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eM96Wpgs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740431425; c=relaxed/simple;
+	bh=8ShZRzfgtCGLnrqMvTxM31tyjSi2afUVsge5F4qJXAE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=jbdbyandPIw6lLVXTwFnbFKzItwK8evFpP0qtwFPJtHp2B0S3z96xzahkeekggimmZ4yRC1Zzgi5m4kZ4SmlKJJyGZLu/5ueAyzfdNlV6us+rneWaq2sUFwz7A6iMU7oWULpnrDH+UeNW6uFENVh6P0TOiNL0UTZYU5i7kk1uS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OhcrhRoq; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eM96Wpgs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FE64C4CED6;
-	Mon, 24 Feb 2025 21:10:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740431403;
-	bh=ODMDPnUIj7jlAw0M/wbe31+KuqGOm0TmlZhNWLpCwzE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=eM96WpgsEgFDABBzkQbjUF1Wjuwtyvntse9gwMjQVWLofsUKqzqGf498QhPbyszZ+
-	 p7FEYUwiarX/CY4TNLYC49WEHkIAAmmTvaKNyjIw0JDQ26LwPxLmr0mlMB6eyK4Oem
-	 enqEpTmh1UPTPmDLfuc5jfP8kt+IBqIoeG5I9dGrzYQS0bVLUPhrw872ozdc6rdUAy
-	 FOuAXsESDzIpix1zzLBt6LJBZo6jAS8nqLDE4rZxK4PHOS9mlJLMKWXd6t6FUO+HHL
-	 +LK3u4UsgM9jQz1ml59vH3JVTnOEjMkneK5pwysWocku70s8uOpl/7hOgmR3Mhtory
-	 QTqmaKKEjS+vA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB58D380CEFC;
-	Mon, 24 Feb 2025 21:10:35 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OhcrhRoq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740431422;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=fzSTxledaSV06nALv2dcRKnCIBvTt88ZTAw50245vSk=;
+	b=OhcrhRoqgfruin7bTHpf0JGl43sIspaIIMF2Y9bfKm9bc4C09td/3+Pr5oeKwOKJ6158KT
+	EZv+zb+Jnlkzm5S75cFSnKDjCNZzSmkugg55FLJTvBkTgKv6j2NPw6B3m9V0MHFb2dQbZb
+	Et5SnJ13Y7eGFJpFHIIXoO5WUJIM2nU=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-674-pnAgZ-g8OwW23gBzsl1tUA-1; Mon, 24 Feb 2025 16:10:20 -0500
+X-MC-Unique: pnAgZ-g8OwW23gBzsl1tUA-1
+X-Mimecast-MFC-AGG-ID: pnAgZ-g8OwW23gBzsl1tUA_1740431419
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-38f443b4949so2290071f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 13:10:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740431419; x=1741036219;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:from:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fzSTxledaSV06nALv2dcRKnCIBvTt88ZTAw50245vSk=;
+        b=QTzZLdlrh3+4Wv0yw6Ojl+erG2gjhX53XizCBHrQZly00BRcX74NT64JDjyKzMoYZf
+         AVcmVF9KryhHzRkrnKMq63NLFgsEAMi+0HdGrHE3wXBybkH77opDHtBiZ1mlmSE6HHSc
+         E69S0O2PZTQLAATAv92pfUwkweRVx4vFhWjwdKe3l+YsW95sO36xhRWmGK0blw8Xhvju
+         MnC7m+s3WUQrDHUnG9gTwGMWwFC9pQLonGeNJN0BCKx1KfIKB5H8w/eNrc4Ump4UGPjT
+         lmq3aiC5wrWnQoXTTWwqb92YnsPa20DSXMsLokkhiUoxFPkNk2hI08+OPdHYzdlBaAsp
+         x1EA==
+X-Forwarded-Encrypted: i=1; AJvYcCWzBrcbyxnaE72n5NgDtDlnaDtu9maL0M62J3WKgUpL5h6aR/5uOzHWjwcE2MtWyaryRGMQBSDAK81Z7eY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhTsVqIfx/VG/zplelNeKHjUex8t7kcXQUS321/OLIlBH726ch
+	2gvb3ImUtGJ6uVeRZLAEcFY1rKWucd8If9Bx2LiRaeTOIduSHbFih90OABo4e3WxhNtA6SsfjNo
+	vYoEaIJGHp0ksoF9VucuEVqxyx5Dqt/GMlwB3KGUv9rVWzE5uRRb4Vxpu3gNTsw==
+X-Gm-Gg: ASbGnctiEKAlpU0Zbu+eIQhzjcdnNXvlvnzQB+ZV1kkhOTS0rk+WPkm+bCW63OWc4KE
+	TugptK87MAESyAzmjF7f3oO1c6q2XwBV56Dd5Oek9x6/OXc+XAZNmZz15XxuaE4w5jxtEfqni1R
+	r3cnqz90ctehcuQDHFNhyT/7XREbIScPbyID8txO3kXNrGkBEut/kob/1yLHFdP7Lp8hqJIHo1l
+	rrqvxF2Cu7ajRe5QvSXzeFxOI401r53Ru+07JuflD67UIeLZXv3bfYcR5j6KEHd21BvBKmOeSMm
+	Arau5J7NIgVM4rGdS6c6EPofc5fQ+Ac0ZxXaGsLERL1nc/DUsWcDsHKc3sb04SfpD9PXOeXBUxd
+	p5W6Cl23SiFfqPP5dvzXMMnDFA8U41KLhm8zJ68EQYB8=
+X-Received: by 2002:a05:6000:154b:b0:38f:2726:bc0e with SMTP id ffacd0b85a97d-390cc632329mr508268f8f.44.1740431419245;
+        Mon, 24 Feb 2025 13:10:19 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH0pfDUvAW4Xj762TXmpEfVTdueKZApc8ywd+tnC/XOKYVKmUOws9JdRuwbCwap5XWge/5ONw==
+X-Received: by 2002:a05:6000:154b:b0:38f:2726:bc0e with SMTP id ffacd0b85a97d-390cc632329mr508228f8f.44.1740431418811;
+        Mon, 24 Feb 2025 13:10:18 -0800 (PST)
+Received: from ?IPV6:2003:cb:c735:1900:ac8b:7ae5:991f:54fc? (p200300cbc7351900ac8b7ae5991f54fc.dip0.t-ipconnect.de. [2003:cb:c735:1900:ac8b:7ae5:991f:54fc])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b02ce60asm119493485e9.7.2025.02.24.13.10.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2025 13:10:17 -0800 (PST)
+Message-ID: <9466df6c-b169-4b98-8721-5722ff4284a6@redhat.com>
+Date: Mon, 24 Feb 2025 22:10:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v4 0/6] Bluetooth: qca: add Qualcomm WCN3950 BT/WiFi chip
- support
-From: patchwork-bot+bluetooth@kernel.org
-Message-Id: 
- <174043143476.3609111.6085562933196082342.git-patchwork-notify@kernel.org>
-Date: Mon, 24 Feb 2025 21:10:34 +0000
-References: <20250207-rb1-bt-v4-0-d810fc8c94a9@linaro.org>
-In-Reply-To: <20250207-rb1-bt-v4-0-d810fc8c94a9@linaro.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: marcel@holtmann.org, luiz.dentz@gmail.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, quic_bgodavar@quicinc.com,
- quic_rjliao@quicinc.com, andersson@kernel.org, konradybcio@kernel.org,
- linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- krzysztof.kozlowski@linaro.org, konrad.dybcio@oss.qualcomm.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 16/20] fs/proc/page: remove per-page mapcount
+ dependency for /proc/kpagecount (CONFIG_NO_PAGE_MAPCOUNT)
+From: David Hildenbrand <david@redhat.com>
+To: Zi Yan <ziy@nvidia.com>, linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org, cgroups@vger.kernel.org, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Tejun Heo <tj@kernel.org>,
+ Zefan Li <lizefan.x@bytedance.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+ Jonathan Corbet <corbet@lwn.net>, Andy Lutomirski <luto@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Muchun Song <muchun.song@linux.dev>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ owner-linux-mm@kvack.org
+References: <20250224165603.1434404-1-david@redhat.com>
+ <20250224165603.1434404-17-david@redhat.com>
+ <D80YSXJPTL7M.2GZLUFXVP2ZCC@nvidia.com>
+ <8a5e94a2-8cd7-45f5-a2be-525242c0cd16@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <8a5e94a2-8cd7-45f5-a2be-525242c0cd16@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello:
-
-This series was applied to bluetooth/bluetooth-next.git (master)
-by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
-
-On Fri, 07 Feb 2025 22:41:14 +0200 you wrote:
-> Qualcomm Robotics RB1 platform uses a new member of the WCN39xx family
-> of BT/WiFi chips. Add support for this member of the family and enable
-> it to be used on the RB1 board.
+On 24.02.25 22:02, David Hildenbrand wrote:
+> On 24.02.25 21:40, Zi Yan wrote:
+>> On Mon Feb 24, 2025 at 11:55 AM EST, David Hildenbrand wrote:
+>>> Let's implement an alternative when per-page mapcounts in large folios
+>>> are no longer maintained -- soon with CONFIG_NO_PAGE_MAPCOUNT.
+>>>
+>>> For large folios, we'll return the per-page average mapcount within the
+>>> folio, except when the average is 0 but the folio is mapped: then we
+>>> return 1.
+>>>
+>>> For hugetlb folios and for large folios that are fully mapped
+>>> into all address spaces, there is no change.
+>>>
+>>> As an alternative, we could simply return 0 for non-hugetlb large folios,
+>>> or disable this legacy interface with CONFIG_NO_PAGE_MAPCOUNT.
+>>>
+>>> But the information exposed by this interface can still be valuable, and
+>>> frequently we deal with fully-mapped large folios where the average
+>>> corresponds to the actual page mapcount. So we'll leave it like this for
+>>> now and document the new behavior.
+>>>
+>>> Note: this interface is likely not very relevant for performance. If
+>>> ever required, we could try doing a rather expensive rmap walk to collect
+>>> precisely how often this folio page is mapped.
+>>>
+>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>> ---
+>>>    Documentation/admin-guide/mm/pagemap.rst |  7 +++++-
+>>>    fs/proc/internal.h                       | 31 ++++++++++++++++++++++++
+>>>    fs/proc/page.c                           | 19 ++++++++++++---
+>>>    3 files changed, 53 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/Documentation/admin-guide/mm/pagemap.rst b/Documentation/admin-guide/mm/pagemap.rst
+>>> index caba0f52dd36c..49590306c61a0 100644
+>>> --- a/Documentation/admin-guide/mm/pagemap.rst
+>>> +++ b/Documentation/admin-guide/mm/pagemap.rst
+>>> @@ -42,7 +42,12 @@ There are four components to pagemap:
+>>>       skip over unmapped regions.
+>>>    
+>>>     * ``/proc/kpagecount``.  This file contains a 64-bit count of the number of
+>>> -   times each page is mapped, indexed by PFN.
+>>> +   times each page is mapped, indexed by PFN. Some kernel configurations do
+>>> +   not track the precise number of times a page part of a larger allocation
+>>> +   (e.g., THP) is mapped. In these configurations, the average number of
+>>> +   mappings per page in this larger allocation is returned instead. However,
+>>> +   if any page of the large allocation is mapped, the returned value will
+>>> +   be at least 1.
+>>>    
+>>>    The page-types tool in the tools/mm directory can be used to query the
+>>>    number of times a page is mapped.
+>>> diff --git a/fs/proc/internal.h b/fs/proc/internal.h
+>>> index 1695509370b88..16aa1fd260771 100644
+>>> --- a/fs/proc/internal.h
+>>> +++ b/fs/proc/internal.h
+>>> @@ -174,6 +174,37 @@ static inline int folio_precise_page_mapcount(struct folio *folio,
+>>>    	return mapcount;
+>>>    }
+>>>    
+>>> +/**
+>>> + * folio_average_page_mapcount() - Average number of mappings per page in this
+>>> + *				   folio
+>>> + * @folio: The folio.
+>>> + *
+>>> + * The average number of present user page table entries that reference each
+>>> + * page in this folio as tracked via the RMAP: either referenced directly
+>>> + * (PTE) or as part of a larger area that covers this page (e.g., PMD).
+>>> + *
+>>> + * Returns: The average number of mappings per page in this folio. 0 for
+>>> + * folios that are not mapped to user space or are not tracked via the RMAP
+>>> + * (e.g., shared zeropage).
+>>> + */
+>>> +static inline int folio_average_page_mapcount(struct folio *folio)
+>>> +{
+>>> +	int mapcount, entire_mapcount;
+>>> +	unsigned int adjust;
+>>> +
+>>> +	if (!folio_test_large(folio))
+>>> +		return atomic_read(&folio->_mapcount) + 1;
+>>> +
+>>> +	mapcount = folio_large_mapcount(folio);
+>>> +	entire_mapcount = folio_entire_mapcount(folio);
+>>> +	if (mapcount <= entire_mapcount)
+>>> +		return entire_mapcount;
+>>> +	mapcount -= entire_mapcount;
+>>> +
+>>> +	adjust = folio_large_nr_pages(folio) / 2;
 > 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
-> Changes in v4:
-> - Added empty line before status property (Konrad)
-> - Reword Bluetooth commit message to follow linux-firmware changes
->   (cmnv13t.bin and cmnv13s.bin were merged).
-> - Link to v3: https://lore.kernel.org/r/20250202-rb1-bt-v3-0-6797a4467ced@linaro.org
+> Thanks for the review!
 > 
-> [...]
+>>
+>> Is there any reason for choosing this adjust number? A comment might be
+>> helpful in case people want to change it later, either with some reasoning
+>> or just saying it is chosen empirically.
+> 
+> We're dividing by folio_large_nr_pages(folio) (shifting by
+> folio_large_order(folio)), so this is not a magic number at all.
+> 
+> So this should be "ordinary" rounding.
+> 
+> Assume nr_pages = 512.
+> 
+> With 255 we want to round down, with 256 we want to round up.
+> 
+> 255 / 512 = 0 :)
+> 256 / 512 = 0 :(
+> 
+> Compared to:
+> 
+> (255 + (512 / 2)) / 512 = (255 + 256) / 512 = 0 :)
+> (256 + (512 / 2)) / 512 = (256 + 256) / 512 = 1 :)
 
-Here is the summary with links:
-  - [v4,1/6] dt-bindings: net: bluetooth: qualcomm: document WCN3950
-    https://git.kernel.org/bluetooth/bluetooth-next/c/a3d5067f33d1
-  - [v4,2/6] Bluetooth: qca: simplify WCN399x NVM loading
-    https://git.kernel.org/bluetooth/bluetooth-next/c/28a5679ac56f
-  - [v4,3/6] Bluetooth: qca: add WCN3950 support
-    https://git.kernel.org/bluetooth/bluetooth-next/c/f6d6a24db7b3
-  - [v4,4/6] arm64: dts: qcom: qcm2290: fix (some) of QUP interconnects
-    (no matching commit)
-  - [v4,5/6] arm64: dts: qcom: qcm2290: add UART3 device
-    (no matching commit)
-  - [v4,6/6] arm64: dts: qcom: qrb2210-rb1: add Bluetooth support
-    (no matching commit)
+I think adding to the function doc:
 
-You are awesome, thank you!
+"The average is calculated by rounding to the nearest integer."
+
+might make it clearer.
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Cheers,
 
+David / dhildenb
 
