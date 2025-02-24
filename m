@@ -1,149 +1,185 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D1A19ADBF
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 02:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D6C4A1D
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 02:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740363290; cv=none; b=Q8a3UGqsDRqYvTWTYODRzQ7Gnv3Lh/OLCkIzcYJqbR5TAoxgxEVUr2mY76PoopZJo+jFRZyVUy+lKhGcewJNPuobaah2IJG+QdyUjsc1J8kTOZQn/Ewnb33arVVJKLjzr3kbdSOdjREfZIjt43zRXLYIGnICuDvxoTwvHOXjRnk=
+	t=1740363362; cv=none; b=upRbMGHKp8yuKtE1SSAtaekWuyFCiIFhTSZHZLzAPfUIIZmnIsN7eJYR9J7nNmmRQEWiZf32RgL8X0iKQ2eVqU4lfiw2bUh81Tp5MlPs1IGqACjuKeJ1OED+lLjkoDYlAZwVuldDloYdarKUYOiYyRzZE4AsgIagiWBvMrXZaMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740363290; c=relaxed/simple;
-	bh=cGFyDb3wkw3IVB4YHib65YBYJhFniNIy4H5n+N6cuTc=;
+	s=arc-20240116; t=1740363362; c=relaxed/simple;
+	bh=OZ57DLeYVQeJBZ23OF+2av3NRPTTcBQrLC0nD0ukQeM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uEtvATA1xZq8sKnFzZsIf9G5RhwyuoW5DRnacAzaCotrg+r788GGeg1M5d3OgxdiGgsAuu+GytU4VRzDPhHWM1K6EDTiKWkAE97KVnkcw9cpmGiWs+44DdpS5ei93f8ZavHmdoMvk4TTJjKWkF2EjGTHFaEDbND6+0W+/Jc0sM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=NhxQWEag; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	 Content-Type:Content-Disposition:In-Reply-To; b=iVdQUnDHYUqidHs2jna3BsyqZt+mK28EeXz/oGaI0S2Q7LgyoFTj455qHPGWCro109Jnt68+KsLqWzaqb3qyn9xbcbAHVeVA3viUPa19+cy9ix+hh9CC6q+viYq/HJ9Fu9yAPJkXYqbpVX4aw4BkGd8zmA+7n/ECqJng4nffxdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LEFfPGci; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="NhxQWEag"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c0ac2f439eso424630485a.0
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 18:14:48 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LEFfPGci"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54529eeb38aso3293929e87.2
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 18:16:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1740363287; x=1740968087; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=o9a8p1TLqjqUec+1waZ0PqoZqvLxcStUv4ZO4Yaqd4Q=;
-        b=NhxQWEag6dCa935UTygGOBpucwjgtok9kvt6u0P2P3ta4tesuGye13/L9b7BFyLMoy
-         Q75iO48Dt5rrV5tYQ+Dy3lvdnj9cCoiHKg1G2Z9q54FSQa6ewRqKbMHMO/62jXeaDDf2
-         Ab+S5v55BK2t8w4kcfAa/6bdH2YcmRbApCfHO98Rcm7IbVXLEAeclxdbG8TOcS2qa1RQ
-         GuLzTQ+i0REVtiwmku77ASYLw1KjvpK867TnDgBfMhidd/ITgTK90uY11ObpkAG7FfFt
-         jMVtoJtIJE98iSgvFPogEbVpqoFHWAhRYbkYEYpVSSyPSkcNP37GUupm1EcmX4nKUbcX
-         xGQA==
+        d=linaro.org; s=google; t=1740363359; x=1740968159; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=03x282i+KbbFm+Sge0tO2WLnHAQK0oVCuq/xqv36OUQ=;
+        b=LEFfPGcibYjFE+fnCpGXD7hL9icA/ceC87fkmVC3CoUEob/BGRMZrwoWjLwuw1hGLd
+         efG6fosuLwBRiB4JDudlxtRaRsQimXtGfiCXnPBU/bXgqj5GHsZUbV5To45s2fQjFzNo
+         4Ug3i+hXn/wP6ABaG6UAvUfh/xCxG+ifDHEAU0J96uhx0/DxYHawLoZ2uW8YX7FozJm6
+         u7WQyArwZdxYiTkunrIi8lSbh8G/VDYc/GjbpkpLBQM7qRfFb6lfrnZT4+2P1YtLmGnr
+         EwG8XMRhnySMWN1d4yS3ciTkf3xyY42ywhnewYW2K6UBUKZmf52zrMhLVktawtz0Utpd
+         R60Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740363287; x=1740968087;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o9a8p1TLqjqUec+1waZ0PqoZqvLxcStUv4ZO4Yaqd4Q=;
-        b=irZZXV7YBb2bnkXvTuTldI0x0BYCylBQY4nY5LopGRxonxmNoeJH+No+evTXPtDc9q
-         ynGIFBdsGo3G0tMAxSujFa45cxb5aMKS2uDMAgEWcPP9TJyi6OxqbCLwkKJS6w7f/AXV
-         7l9zCsRZV4IbR9tVOTIUFa4QbNBw9PB5710S8CJue1bELqjVuv2O5DQBZSnK3e0BlSY+
-         RBP0yQ53SJ5Zpm6NIZV1LdjBw/344JI99PmM7q92kBDkd5/mrAs2/+RZjYxfEOvj+ylR
-         cgXzMlL9BZzoilQysz5BAMf6U9mk20q9w4YR4DV7eqNqtjntcdINUn+eXaKwzAOKKhCv
-         DB0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUutO219FZ3crnFJCD7yZSEym5kSnTLWLy938bxBr046Z3Hz9ZVPTSJjV9ESCrjmWMdEw5rPV5iK9gdykY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywiw8nEcEXWOYwuBd3K5WXepbzF3FoEw4R1+ve3fQHId+HTaOVw
-	d2wZpaNZH8E7sUGh9DMTjfqq93SIZMIL51zpQscl8FzUw/H7c41z9Ls5b7XqFWCXexTCXZVcAbI
-	=
-X-Gm-Gg: ASbGncsoJXfST5fZ11SPh5kvopjexeMP1BRp4leBP7s0TygaF1eiTDeDJgO6Iuyq2TA
-	Fkk38lzl/vXo6Vnrw60MuZBC5hGXiMNIdvX/1ZwJHLtBo1Ev1RauWK0EoX5KXpL91piy9QgHUwI
-	1FzPBAeF/x9RC4JXpRwn0GpXICtcYkyGe7xEaD5sqpwfgeleYARTOdkA35Cb3iMYEEciinDiRrp
-	qmz7ug09/reArLSVBOiFWhD+yy/laTtUlo4UXWYhJQmQe0KqvS9/sX2FsFkE03SLCc1z+W/3cIm
-	0W8shUXZ1WB1TptpV+bwjgYv3Mw=
-X-Google-Smtp-Source: AGHT+IGqf6u3zyPa7YaviLfJibT07SED0t/CvblWsVMGNvullM0tAESY8XdRd3k+WL6em7xhdDW7tg==
-X-Received: by 2002:a05:620a:370e:b0:7c0:c0fc:c5c4 with SMTP id af79cd13be357-7c0cef0f362mr1278887785a.33.1740363287362;
-        Sun, 23 Feb 2025 18:14:47 -0800 (PST)
-Received: from rowland.harvard.edu ([2601:19b:681:fd10::2dc7])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e65dcf88d6sm128097686d6.122.2025.02.23.18.14.45
+        d=1e100.net; s=20230601; t=1740363359; x=1740968159;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=03x282i+KbbFm+Sge0tO2WLnHAQK0oVCuq/xqv36OUQ=;
+        b=mDkSPEFHFckB8P4lnbVEuECkXGKU/q2MnWKCh3zEsaYbnBJFnN71M4c9lgS2OoV0R3
+         muLDtRWP3bYwq9DHr+214RTIOojnJ5SmjvRvDJ1DNm+fdvhC1Fiqo5x6iu0GiVvQ4ENo
+         fTyZd0tCDk+a5cwKkAV5sPZa0hSZ2MXH8QAjT5rM4Ar5Jkfg56nXkU1jCCv7vtecveQO
+         1IyGoRuyXdSc0jNdgmYTVCRjgMZrc4wiPzLV0xZsxVWFuH5oVVpCe3XJiM9QAje1DfjA
+         ONf9jaaoMASOtJKxDS77V7DhSDvkHVNNgoHYXQwal26LKoCWgedLSQA6UmYLo8NTd183
+         qqLw==
+X-Forwarded-Encrypted: i=1; AJvYcCWoKqHzwWo4qh52c2j5zenFcI7xsW1EcigSjt6IfNh33fRgWYvw3LTC1goLCQ+zZrO9LGlDlp4BuiYgwmU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzegkALfVjivo0bmPzId66K9LfNfv++p0RadHi21s8tPms0M/lo
+	w1cnTkE6yfQRFur/lbpdxYw6jooopEjt3+QHPB+AUpMcCNRFjgTbOloiXvE0El0=
+X-Gm-Gg: ASbGncs4mzLekUC9WmIrQknEO4On6IoZMScl681uHpNi9TPQSs9M2nWAz3Mgv2r3wN5
+	WhhM4qmXPvbcP/UfXPK89Y54axNZjL0e0G4KpRCbyF5PTeEzf6ogEDn6Dt5AVqRirox37SJj4Av
+	U/JSb9saGS1DmHmYr6Y76TD+Wuno4hMDudxyRVZc89hWXnBJpHvFNUsLRrECsG8PjmV6p4RGzJ9
+	IsVJ6147BDX6iZTPAG2GVY4B72Le31EAEp6RQX8hlJHvGrI0D1Nu61K5iijLv0Kw6h+uPHuDeMB
+	th3VM2xj8whtJaIJnDJ8htW1WlQVQ1ATegaJRWaVlkF4hfqY0YG2TVNw8KxjDUxB5uk40xGWfZt
+	MthLRLw==
+X-Google-Smtp-Source: AGHT+IFD8yCSJdHxEzXcKOScOwjk4piZVuSgJw/kfPjGZPJZeEQwe/7hrMUi7SPPp71EVSbw+qv4rA==
+X-Received: by 2002:a05:6512:3094:b0:545:f0a:bf50 with SMTP id 2adb3069b0e04-54838f5b86emr4428391e87.35.1740363358410;
+        Sun, 23 Feb 2025 18:15:58 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54526745abcsm3068485e87.252.2025.02.23.18.15.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2025 18:14:46 -0800 (PST)
-Date: Sun, 23 Feb 2025 21:14:43 -0500
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Ma Ke <make24@iscas.ac.cn>
-Cc: gregkh@linuxfoundation.org, elder@kernel.org, quic_zijuhu@quicinc.com,
-	kekrby@gmail.com, oliver@neukum.org, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] USB: Skip resume if pm_runtime_set_active() fails
-Message-ID: <46943a7b-db0e-4799-84e6-23a9d0c6ddfe@rowland.harvard.edu>
-References: <20250224013325.2928731-1-make24@iscas.ac.cn>
+        Sun, 23 Feb 2025 18:15:57 -0800 (PST)
+Date: Mon, 24 Feb 2025 04:15:54 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Yongbang Shi <shiyongbang@huawei.com>
+Cc: xinliang.liu@linaro.org, tiantao6@hisilicon.com, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, 
+	daniel@ffwll.ch, kong.kongxinwei@hisilicon.com, liangjian010@huawei.com, 
+	chenjianmin@huawei.com, lidongming5@huawei.com, libaihan@huawei.com, 
+	shenjian15@huawei.com, shaojijie@huawei.com, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 drm-dp 3/8] drm/hisilicon/hibmc: Add dp serdes cfg in
+ dp process
+Message-ID: <scjsgypzxx7pkd255qf3t45nnqytp7q2urdvwo6zdffubawsa3@p6duklhgw3rv>
+References: <20250222025102.1519798-1-shiyongbang@huawei.com>
+ <20250222025102.1519798-4-shiyongbang@huawei.com>
+ <d77bfuqor2rsd5tg4abywkckiqwy7j5xr43p73to2ofwpirws3@4m4g7hkvji2a>
+ <c9d59963-2ebd-4a6f-bdff-1616ed8afec0@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250224013325.2928731-1-make24@iscas.ac.cn>
+In-Reply-To: <c9d59963-2ebd-4a6f-bdff-1616ed8afec0@huawei.com>
 
-On Mon, Feb 24, 2025 at 09:33:25AM +0800, Ma Ke wrote:
-> A race condition occurs during system suspend if interrupted between
-> usb_suspend() and the parent device’s PM suspend (e.g., a power
-> domain).
-
-I don't understand exactly what you mean.  Is this supposed to be a 
-scenario where a USB device is suspended during a system sleep 
-transition, but before the device's parent can be suspended, the 
-sleep transition is aborted?
-
->  This triggers PM resume workflows (via usb_resume()), but if
-> parent device is already runtime-suspended, pm_runtime_set_active()
-> fails.
-
-In other words, before the device can be resumed the parent goes into 
-runtime suspend?  I don't understand how that could happen.  The PM core 
-is careful to make sure that unwanted runtime PM changes don't occur 
-during system sleep/resume transitions.
-
-And if somehow this can happen, doesn't that indicate the real problem 
-lies in the PM core?  After all, why shouldn't the same sort of race 
-condition affect a device on any bus, not just USB devices?
-
->  Subsequent operations like pm_runtime_enable() and interface
-> unbinding may leave the USB device in an inconsistent state or trigger
-> unintended behavior.
+On Sat, Feb 22, 2025 at 06:32:35PM +0800, Yongbang Shi wrote:
+> > On Sat, Feb 22, 2025 at 10:50:56AM +0800, Yongbang Shi wrote:
+> > > From: Baihan Li <libaihan@huawei.com>
+> > > 
+> > > Add dp serdes cfg in link training process, and related adapting
+> > > and modificating. Change some init values about training,
+> > > because we want completely to negotiation process, so we start with
+> > > the maximum rate and the electrical characteristic level is 0.
+> > > 
+> > > Signed-off-by: Baihan Li <libaihan@huawei.com>
+> > > Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
+> > > ---
+> > > ChangeLog:
+> > > v2 -> v3:
+> > >    - change commit to an imperative sentence, suggested by Dmitry Baryshkov.
+> > >    - put HIBMC_DP_HOST_SERDES_CTRL in dp_serdes.h, suggested by Dmitry Baryshkov.
+> > > v1 -> v2:
+> > >    - splittting the patch and add more detailed the changes in the commit message, suggested by Dmitry Baryshkov.
+> > > ---
+> > >   .../gpu/drm/hisilicon/hibmc/dp/dp_config.h    |  1 +
+> > >   drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c    |  5 ++-
+> > >   drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c  | 33 ++++++++++++++++---
+> > >   drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h   |  1 +
+> > >   .../gpu/drm/hisilicon/hibmc/dp/dp_serdes.h    |  6 ++++
+> > >   .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c   |  8 ++---
+> > >   6 files changed, 43 insertions(+), 11 deletions(-)
+> > > 
+> > Mostly LGTM.
+> > 
+> > > diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_serdes.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_serdes.h
+> > > index 812d0794543c..e0537cc9af41 100644
+> > > --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_serdes.h
+> > > +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_serdes.h
+> > > @@ -4,12 +4,15 @@
+> > >   #ifndef DP_SERDES_H
+> > >   #define DP_SERDES_H
+> > > +#include "dp_comm.h"
+> > No, please include it directly, where required. This simplifies possible
+> > inter-header dependencies.
 > 
-> Found by code review.
+> Okay.
 > 
-> Cc: stable@vger.kernel.org
-> Fixes: 98d9a82e5f75 ("USB: cleanup the handling of the PM complete call")
-> Signed-off-by: Ma Ke <make24@iscas.ac.cn>
-> ---
->  drivers/usb/core/driver.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/usb/core/driver.c b/drivers/usb/core/driver.c
-> index 460d4dde5994..7478fcc11fd4 100644
-> --- a/drivers/usb/core/driver.c
-> +++ b/drivers/usb/core/driver.c
-> @@ -1624,11 +1624,17 @@ int usb_resume(struct device *dev, pm_message_t msg)
->  	status = usb_resume_both(udev, msg);
->  	if (status == 0) {
->  		pm_runtime_disable(dev);
-> -		pm_runtime_set_active(dev);
-> +		status = pm_runtime_set_active(dev);
-> +		if (status) {
-> +			pm_runtime_enable(dev);
-
-The patch description says that pm_runtime_enable() following an 
-unsuccessful pm_runtime_set_active() may trigger unintended behavior.  
-So why does the patch do it?
-
-Alan Stern
-
-> +			goto out;
-> +		}
-> +
->  		pm_runtime_enable(dev);
->  		unbind_marked_interfaces(udev);
->  	}
->  
-> +out:
->  	/* Avoid PM error messages for devices disconnected while suspended
->  	 * as we'll display regular disconnect messages just a bit later.
->  	 */
-> -- 
-> 2.25.1
+> > > +
+> > >   #define HIBMC_DP_HOST_OFFSET		0x10000
+> > >   #define HIBMC_DP_LANE0_RATE_OFFSET	0x4
+> > >   #define HIBMC_DP_LANE1_RATE_OFFSET	0xc
+> > >   #define HIBMC_DP_LANE_STATUS_OFFSET	0x10
+> > >   #define HIBMC_DP_PMA_LANE0_OFFSET	0x18
+> > >   #define HIBMC_DP_PMA_LANE1_OFFSET	0x1c
+> > > +#define HIBMC_DP_HOST_SERDES_CTRL	0x1f001c
+> > >   #define HIBMC_DP_PMA_TXDEEMPH		GENMASK(18, 1)
+> > >   /* dp serdes TX-Deempth Configuration */
+> > > @@ -24,6 +27,9 @@
+> > >   #define DP_SERDES_VOL2_PRE1		0x4500
+> > >   #define DP_SERDES_VOL3_PRE0		0x600
+> > >   #define DP_SERDES_BW_8_1		0x3
+> > > +#define DP_SERDES_BW_5_4		0x2
+> > > +#define DP_SERDES_BW_2_7		0x1
+> > > +#define DP_SERDES_BW_1_62		0x0
+> > >   #define DP_SERDES_DONE			0x3
+> > > diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> > > index e6de6d5edf6b..67d39e258cac 100644
+> > > --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> > > +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+> > > @@ -28,9 +28,7 @@
+> > >   #include "hibmc_drm_drv.h"
+> > >   #include "hibmc_drm_regs.h"
+> > > -#define HIBMC_DP_HOST_SERDES_CTRL		0x1f001c
+> > > -#define HIBMC_DP_HOST_SERDES_CTRL_VAL		0x8a00
+> > > -#define HIBMC_DP_HOST_SERDES_CTRL_MASK		0x7ffff
+> > > +#include "dp/dp_serdes.h"
+> > >   DEFINE_DRM_GEM_FOPS(hibmc_fops);
+> > > @@ -122,8 +120,8 @@ static int hibmc_kms_init(struct hibmc_drm_private *priv)
+> > >   	}
+> > >   	/* if DP existed, init DP */
+> > > -	if ((readl(priv->mmio + HIBMC_DP_HOST_SERDES_CTRL) &
+> > > -	     HIBMC_DP_HOST_SERDES_CTRL_MASK) == HIBMC_DP_HOST_SERDES_CTRL_VAL) {
+> > > +	ret = readl(priv->mmio + HIBMC_DP_HOST_SERDES_CTRL);
+> > > +	if (ret) {
+> > Why?
 > 
+> Becuase this is a serdes deempth configuration which is changed if we start cfg serdes.
+> The HIBMC_DP_HOST_SERDES_CTRL_VAL is default value, but we may change it. We can just
+> check if it is not zero. If it's not zero, it has dp block and we can init it.
+
+=> commit message, please.
+
+> 
+> 
+> > >   		ret = hibmc_dp_init(priv);
+> > >   		if (ret)
+> > >   			drm_err(dev, "failed to init dp: %d\n", ret);
+> > > -- 
+> > > 2.33.0
+> > > 
+
+-- 
+With best wishes
+Dmitry
