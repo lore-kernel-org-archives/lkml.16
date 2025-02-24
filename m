@@ -1,174 +1,298 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F1F18E377
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 03:21:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2C71F60A
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 03:21:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740367293; cv=none; b=ofXH9l8OF0rKTOtM8bjqANw6j4rXvEf5DAGy109eP7qRkzbZgYIJ17L6/c88180l5JfxzlxwNiyAFtudH4P206e6fAX88G9jb7ivgJ/s1Lwqp5mOQyF622RB11dgd9M8FvsMn51ryCHVtG9wlBFpPBJTLHG/2+B7dIJAUnDkHF8=
+	t=1740367319; cv=none; b=eWOqgeozaZAw7gUhsvWB/dAX7mol9RnpctxhIroB3WykvDEROAeq7+X5UD1wJxLHv0J6U2iNNwy1IWwxEbbriKLCtRQ2wp30nlwimNWL5QkzprSqsLjU/WWHRHC0l12IXixAWY55UEKobFiDSf6UQnM1KkFOE8rRQUGR4cnW6zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740367293; c=relaxed/simple;
-	bh=Rtkwit+ODzXSrct8uYhM6vK2d46Vf/IvqhJSrypKVZE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sOL0XueAtNXqy1oivaGbNeGP/JdqXJs80hx0jqE1G+0XLxyxbhOfcsnnpPtWvEo2wT+8zG0anJ7IyAOHahtMXf/szxf2P1d4V9BXj4j8C92zI6JFNX6tqV1i10Do/9BsTuO2EHEGMNkNZc0zQrbRS+n7pXcHJ/koBefjuO6pVkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JRN5MAaR; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740367319; c=relaxed/simple;
+	bh=GiULTZ2ipk+wIUbKL/FpRBpeW8mvkTFvKGmACFzv7hI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ucWkGXUixdTAVWBWQx4khJ9i1mFtLH5mMC3VSx2v+pGpuLuhbPro2CqB/hJZRntrM2Gcy7R/1oHEpoK+UKYqC39fo8Nv2GWjXPtarL4zqJYIHOb6Edv2v9GPCF22MoISA3yOtCqF7S5ksEDI/glXHJPGRbVV9T9hG7T0AusQL8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UNxRa3o3; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JRN5MAaR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UNxRa3o3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740367292; x=1771903292;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Rtkwit+ODzXSrct8uYhM6vK2d46Vf/IvqhJSrypKVZE=;
-  b=JRN5MAaRp40Dyp4PVxebuA2wY+BSrC/UVhpzeQ0Rj4ZSvFUjJ9aMX+0C
-   Nhn+c5vuVhcf8U9gLeSBZ1dwSeV47pu3b5xxMfE6G7zH/p+dePg8xXZad
-   S89l50/D05OoGExQwXx2S+LM4sWdRX54Ou14bw8a/n68oLJDdk726kspe
-   qKYRIbhPUGDJEjdXIAbbVqi8mgBtKyHJtWa73946Y936VJZiyiJXTKrmh
-   79PZXi392OwKVQUglmrFMCdaorfhRQe+P3Ju3OLth0fx9Iq636f2ZQgmI
-   lse7BQlfgaATK5yaBk/0eLR+3qATHY+L2n2pVd1m+ZGO00U34afksFEqP
-   Q==;
-X-CSE-ConnectionGUID: JmfGNIPQTvWDlI/Gtw35bw==
-X-CSE-MsgGUID: dunld2hwTNeDAmOFx0zjVw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11354"; a="44889690"
+  t=1740367317; x=1771903317;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=GiULTZ2ipk+wIUbKL/FpRBpeW8mvkTFvKGmACFzv7hI=;
+  b=UNxRa3o3LR275L3Zr0rb855DVgiT6D8JBMCgmqF1ggHEzva5AHmc8bfF
+   ePmytQeEMqakWvmnA2In+DuYDvTIVrvRCcbjeNjU+Usljbly4rKyzF5jK
+   e1oxcgFWCqeGm8+9T5cqfp38nPAzlBnBiaLnaGeARcrfmQlI9RgR9uD8E
+   e616fTkPq8mp+NoQXrZYL7ZW9HZDZJC93ywrCOO7P2mBcBetjEv8BoOzj
+   LpweVffm8yEC/id1J80eB3n6ZK9ZVSwefpuoWjl7zzQ7aquopnubdR0Br
+   PKf4IeDBBAls6HMnq8H6AgOCzp0BLuc3ReKY/wRvELm92D8YezjzV8MOR
+   g==;
+X-CSE-ConnectionGUID: YW+kXZPiTnixN0jksf+fPg==
+X-CSE-MsgGUID: xrg2+Ca8Q0OCDS2SCbOC7A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11354"; a="28706874"
 X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
-   d="scan'208";a="44889690"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2025 19:21:31 -0800
-X-CSE-ConnectionGUID: SO/Mc3uHTdK2B8HlADSqfg==
-X-CSE-MsgGUID: jIqyrmXkQ964zyZpVA0acA==
+   d="scan'208";a="28706874"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2025 19:21:56 -0800
+X-CSE-ConnectionGUID: RDRNehVqQZ6Gak3lT0KySw==
+X-CSE-MsgGUID: HbGLO86BTV2ZKeoSFt+WEw==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="121195979"
-Received: from zhaohaif-mobl1.ccr.corp.intel.com (HELO [10.124.242.192]) ([10.124.242.192])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2025 19:21:28 -0800
-Message-ID: <5df89435-49fb-4bdd-8034-af0b6acc69bc@linux.intel.com>
-Date: Mon, 24 Feb 2025 11:21:25 +0800
+X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
+   d="scan'208";a="116441902"
+Received: from shanagud-mobl.amr.corp.intel.com (HELO bxing-mobl1.clients.intel.com) ([10.246.117.251])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2025 19:21:15 -0800
+From: Cedric Xing <cedric.xing@intel.com>
+Date: Sun, 23 Feb 2025 21:20:13 -0600
+Subject: [PATCH v2 2/4] tsm: Add TSM measurement sample code
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [External] Re: [PATCH] iommu/vt-d: fix system hang on reboot -f
-To: yunhui cui <cuiyunhui@bytedance.com>
-Cc: dwmw2@infradead.org, baolu.lu@linux.intel.com, joro@8bytes.org,
- will@kernel.org, robin.murphy@arm.com, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20250220101511.37602-1-cuiyunhui@bytedance.com>
- <ba2a6295-7983-4701-8c42-797efe22ecb7@linux.intel.com>
- <CAEEQ3wkygXexsu9x16Q+6yMtmtM+9aD=-DH1tMVNq1yuyZ7Dcg@mail.gmail.com>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-Autocrypt: addr=haifeng.zhao@linux.intel.com; keydata=
- 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
- 8TCx1OJHpvWFmL4Deq8=
-In-Reply-To: <CAEEQ3wkygXexsu9x16Q+6yMtmtM+9aD=-DH1tMVNq1yuyZ7Dcg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20250223-tdx-rtmr-v2-2-f2d85b0a5f94@intel.com>
+References: <20250223-tdx-rtmr-v2-0-f2d85b0a5f94@intel.com>
+In-Reply-To: <20250223-tdx-rtmr-v2-0-f2d85b0a5f94@intel.com>
+To: Dan Williams <dan.j.williams@intel.com>, 
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
+ Dave Hansen <dave.hansen@linux.intel.com>, 
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, x86@kernel.org, 
+ "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev, 
+ Dionna Amalie Glaze <dionnaglaze@google.com>, 
+ James Bottomley <James.Bottomley@HansenPartnership.com>, 
+ Dan Middleton <dan.middleton@linux.intel.com>, 
+ Mikko Ylinen <mikko.ylinen@linux.intel.com>, 
+ Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Mailer: b4 0.13.0
 
+This sample kernel module demonstrates how to make MRs accessible to user
+mode through TSM.
 
-在 2025/2/21 17:46, yunhui cui 写道:
-> Hi Ethan,
->
-> On Fri, Feb 21, 2025 at 4:40 PM Ethan Zhao <haifeng.zhao@linux.intel.com> wrote:
->>
->> 在 2025/2/20 18:15, Yunhui Cui 写道:
->>> When entering intel_iommu_shutdown, system interrupts are disabled,
->> System interrupts were disabled ? you mean all interrupts were disabled
->> when entering intel_iommu_shutdown(), perhaps it is not true, at least
->> for upstream latest code.
->>
->>> and the reboot process might be scheduled out by down_write(). If the
->>> scheduled process does not yield (e.g., while(1)), the system will hang.
->> No NMI lockup watchdog jumping out here ?
-> Steps to reproduce:
->
-> 1. Avoid return in:
-> if (no_iommu || dmar_disabled)
->      return;
->
-> 2. Write a.out with while(1).
->
-> 3. ./a.out &; reboot -f.
->
-> 4. Observe. Send NMI via BIOS to check system response.
+Once loaded, this module registers a virtual measurement provider with the
+TSM core and will result in the directory tree below.
 
-Via BMC ? There is 'NMI' hardware physical button on some machines to trigger
+/sys/kernel/tsm/
+└── tsm_mr_sample
+    ├── config_mr
+    │   └── sha512
+    │       └── digest
+    ├── report_digest
+    │   └── sha512
+    │       └── digest
+    ├── rtmr0
+    │   └── sha256
+    │       └── digest
+    ├── rtmr1
+    │   └── sha384
+    │       └── digest
+    ├── rtmr_crypto_agile
+    │   ├── sha256
+    │   │   └── digest
+    │   └── sha384
+    │       └── digest
+    └── static_mr
+        └── sha384
+            └── digest
 
-NMI to OS for diagnostic purpose, you could check your box for that. but no luck,
+Among the MRs in this example:
 
-there is no NMI trigger in my GNR BMC.
+- `static_mr` and `config_mr` are *Readonly* (static) MRs.
+- `rtmr0` is an RTMR with `TSM_MR_F_W` **cleared**, preventing direct
+  extensions; as a result, the attribute rtmr0/sha256/digest is read-only.
+- `rtmr1` is an RTMR with `TSM_MR_F_W` **set**, permitting direct
+  extensions; thus, the attribute rtmr1/sha384/digest is writable.
+- `rtmr_crypto_agile` demonstrates a "single" MR that supports multiple
+  hash algorithms. Each supported algorithm has a corresponding digest,
+  usually referred to as a "bank" in TCG terminology. In this specific
+  sample, the 2 banks are aliased to `rtmr0` and `rtmr1`, respectively.
+- `report_digest` contains the digest of the internal report structure
+  living in this sample module's memory. It is to demonstrate the use of
+  the `TSM_MR_F_L` flag. Its value changes each time an RTMR is extended.
 
+More details are available in samples/tsm/tsm_mr_sample.c.
 
-Thanks,
-Ethan
+Signed-off-by: Cedric Xing <cedric.xing@intel.com>
+---
+ MAINTAINERS                 |   1 +
+ samples/Kconfig             |  13 ++++++
+ samples/Makefile            |   1 +
+ samples/tsm/Makefile        |   2 +
+ samples/tsm/tsm_mr_sample.c | 107 ++++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 124 insertions(+)
 
->
-> 5. Add console=ttyS0,115200 to cmdline to increase reproduction chance.
->
-> Let's continue discussing based on the above.
->
->> Thanks,
->> Ethan
->>
->>> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
->>> ---
->>>    drivers/iommu/intel/iommu.c | 3 ++-
->>>    1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
->>> index cc46098f875b..76a1d83b46bf 100644
->>> --- a/drivers/iommu/intel/iommu.c
->>> +++ b/drivers/iommu/intel/iommu.c
->>> @@ -2871,7 +2871,8 @@ void intel_iommu_shutdown(void)
->>>        if (no_iommu || dmar_disabled)
->>>                return;
->>>
->>> -     down_write(&dmar_global_lock);
->>> +     if (!down_write_trylock(&dmar_global_lock))
->>> +             return;
->>>
->>>        /* Disable PMRs explicitly here. */
->>>        for_each_iommu(iommu, drhd)
->> --
->> "firm, enduring, strong, and long-lived"
->>
-> Thanks,
-> Yunhui
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a5eef4c7234c..1d4232f5269e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -24106,6 +24106,7 @@ S:	Maintained
+ F:	Documentation/ABI/testing/configfs-tsm
+ F:	drivers/virt/coco/tsm*.c
+ F:	include/linux/tsm.h
++F:	samples/tsm/*
+ 
+ TRUSTED SERVICES TEE DRIVER
+ M:	Balint Dobszay <balint.dobszay@arm.com>
+diff --git a/samples/Kconfig b/samples/Kconfig
+index 820e00b2ed68..0b4592581648 100644
+--- a/samples/Kconfig
++++ b/samples/Kconfig
+@@ -184,6 +184,19 @@ config SAMPLE_TIMER
+ 	bool "Timer sample"
+ 	depends on CC_CAN_LINK && HEADERS_INSTALL
+ 
++config SAMPLE_TSM_MR
++	tristate "TSM measurement sample"
++	depends on TSM_REPORTS
++	help
++	  Build a sample module that emulates MRs (Measurement Registers) and
++	  exposes them to user mode applications through the TSM sysfs
++	  interface (/sys/kernel/tsm/tsm_mr_sample/).
++
++	  The module name will be tsm-mr-sample when built as a module.
++
++	  Note: TSM_MR_MAXBANKS must be at least 2 for this sample to work
++	  properly.
++
+ config SAMPLE_UHID
+ 	bool "UHID sample"
+ 	depends on CC_CAN_LINK && HEADERS_INSTALL
+diff --git a/samples/Makefile b/samples/Makefile
+index f24cd0d72dd0..c4b6dcc81df6 100644
+--- a/samples/Makefile
++++ b/samples/Makefile
+@@ -42,3 +42,4 @@ obj-$(CONFIG_SAMPLE_FPROBE)		+= fprobe/
+ obj-$(CONFIG_SAMPLES_RUST)		+= rust/
+ obj-$(CONFIG_SAMPLE_DAMON_WSSE)		+= damon/
+ obj-$(CONFIG_SAMPLE_DAMON_PRCL)		+= damon/
++obj-$(CONFIG_SAMPLE_TSM_MR)		+= tsm/
+diff --git a/samples/tsm/Makefile b/samples/tsm/Makefile
+new file mode 100644
+index 000000000000..587c3947b3a7
+--- /dev/null
++++ b/samples/tsm/Makefile
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0-only
++obj-$(CONFIG_SAMPLE_TSM_MR) += tsm_mr_sample.o
+diff --git a/samples/tsm/tsm_mr_sample.c b/samples/tsm/tsm_mr_sample.c
+new file mode 100644
+index 000000000000..4c2c6cde36e1
+--- /dev/null
++++ b/samples/tsm/tsm_mr_sample.c
+@@ -0,0 +1,107 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright(c) 2024 Intel Corporation. All rights reserved. */
++
++#define DEBUG
++#define pr_fmt(x) KBUILD_MODNAME ": " x
++
++#include <linux/module.h>
++#include <linux/tsm.h>
++#include <crypto/hash_info.h>
++#include <crypto/hash.h>
++
++struct {
++	u8 static_mr[SHA384_DIGEST_SIZE];
++	u8 config_mr[SHA512_DIGEST_SIZE];
++	u8 rtmr0[SHA256_DIGEST_SIZE];
++	u8 rtmr1[SHA384_DIGEST_SIZE];
++	u8 user_data[SHA512_DIGEST_SIZE];
++	u8 report_digest[SHA512_DIGEST_SIZE];
++} sample_report = {
++	.static_mr = "static_mr",
++	.config_mr = "config_mr",
++	.rtmr0 = "rtmr0",
++	.rtmr1 = "rtmr1",
++	.user_data = "user_data",
++};
++
++DEFINE_FREE(shash, struct crypto_shash *, if (!IS_ERR(_T)) crypto_free_shash(_T));
++
++static int sample_report_refresh(struct tsm_measurement *tmr,
++				 const struct tsm_measurement_register *mr)
++{
++	pr_debug("%s(%s,%s) is called\n", __func__, tmr->name, mr ? mr->mr_name : "<nil>");
++	struct crypto_shash *tfm __free(shash) =
++		crypto_alloc_shash(hash_algo_name[HASH_ALGO_SHA512], 0, 0);
++	if (IS_ERR(tfm))
++		return PTR_ERR(tfm);
++	return crypto_shash_tfm_digest(tfm, (u8 *)&sample_report,
++				       offsetof(typeof(sample_report), report_digest),
++				       sample_report.report_digest);
++}
++
++static int sample_report_extend_mr(struct tsm_measurement *tmr,
++				   const struct tsm_measurement_register *mr, const u8 *data)
++{
++	SHASH_DESC_ON_STACK(desc, 0);
++	int rc;
++
++	pr_debug("%s(%s,%s) is called\n", __func__, tmr->name, mr->mr_name);
++
++	desc->tfm = crypto_alloc_shash(hash_algo_name[mr->mr_hash], 0, 0);
++	if (IS_ERR(desc->tfm))
++		return PTR_ERR(desc->tfm);
++
++	rc = crypto_shash_init(desc);
++	if (!rc)
++		rc = crypto_shash_update(desc, mr->mr_value, mr->mr_size);
++	if (!rc)
++		rc = crypto_shash_finup(desc, data, mr->mr_size, mr->mr_value);
++
++	crypto_free_shash(desc->tfm);
++	return rc;
++}
++
++#define MR_(mr, hash) .mr_value = &sample_report.mr, TSM_MR_(mr, hash)
++static const struct tsm_measurement_register sample_mrs[] = {
++	/* static MR, read-only */
++	{ MR_(static_mr, SHA384) },
++	/* config MR, read-only */
++	{ MR_(config_mr, SHA512) },
++	/* RTMR, direct extension prohibited */
++	{ MR_(rtmr0, SHA256) | TSM_MR_F_RTMR },
++	/* RTMR, direct extension allowed */
++	{ MR_(rtmr1, SHA384) | TSM_MR_F_RTMR | TSM_MR_F_W },
++	/* RTMR, crypto agile, alaised to rtmr0 and rtmr1, respectively */
++	{ .mr_value = &sample_report.rtmr0,
++	  TSM_MR_(rtmr_crypto_agile, SHA256) | TSM_MR_F_RTMR | TSM_MR_F_W },
++	{ .mr_value = &sample_report.rtmr1,
++	  TSM_MR_(rtmr_crypto_agile, SHA384) | TSM_MR_F_RTMR | TSM_MR_F_W },
++	/* most CC archs allow including user data in attestation */
++	{ MR_(report_digest, SHA512) | TSM_MR_F_L },
++	/* terminating NULL entry */
++	{}
++};
++#undef MR_
++
++static struct tsm_measurement sample_mr_provider = {
++	.name = KBUILD_MODNAME,
++	.mrs = sample_mrs,
++	.refresh = sample_report_refresh,
++	.extend = sample_report_extend_mr,
++};
++
++static int __init tsm_mr_sample_init(void)
++{
++	return tsm_register_measurement(&sample_mr_provider);
++}
++
++static void __exit tsm_mr_sample_exit(void)
++{
++	tsm_unregister_measurement(&sample_mr_provider);
++}
++
++module_init(tsm_mr_sample_init);
++module_exit(tsm_mr_sample_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("Sample tsm_measurement implementation");
 
 -- 
-"firm, enduring, strong, and long-lived"
+2.43.0
 
