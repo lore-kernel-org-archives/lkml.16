@@ -1,60 +1,62 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6012A19924D;
-	Mon, 24 Feb 2025 08:39:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC231DDC28;
+	Mon, 24 Feb 2025 08:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740386385; cv=none; b=XQnW8XvK9yGEg1f3vb/terddleKxVuZ7xCk9P1hdwuqES62HUOX3Z25BEA4KK4segr3qmub629gaXVrgtW3zcfDu4rDgtmZfMFrsp9LpejFLkBlOOdjFv/JBcGJyDFHWLzenMdlpGOv1sws2RRzZYAH/PQlysQTFm+NHWrWuCnk=
+	t=1740386389; cv=none; b=eIPx5G5ZLA6jNG1XnVfkUw7MUWREQAn0BUs8QDM5K6/qgpaUuQTNKg8sZdjOt7JoX2r1kaPlFUNq26WxDNYgEj6HS4U6ZXnPy83ykOOAhset7io+kLq0SuPFiC6Ku/cmMirDFgPu070IUUZY/6e+Vm5pjXVmf6p+dKE7o6Tt+r4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740386385; c=relaxed/simple;
-	bh=LJXNlb8VuJl69ju1cbQ8GeEKDu056jhl3Fkj+aCWgVo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TXnARgjZRBVFi3288heHzwricTisWQZGuBHGpBiYI1gC8j276x8bHw+xu/sl788a2Gqi0DX1ZFJ7IITnwYUWrF/na8rnARFCJfM+hi8oJ322iJdb0j3z/R1W+wIvOHQSxtGn7ooqMLvE9tk3z/yODR520WUXq7lmqHYZmRgKCaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZoQm54JD; arc=none smtp.client-ip=209.85.214.175
+	s=arc-20240116; t=1740386389; c=relaxed/simple;
+	bh=OPib70z7RStdLqTILP/CTDIzshCEGAvZQiaDyNFFxIk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=shEZsM78ilKr9uAqcID3wzDtDpjuS++paOgX+9AyD/N//zpwiKXBZ+cfXhuKJ/nGbDKTRCTpkmDKU9k3pvoyUU06IdNTKsvKqA9FfAfad9+mWBeN2ii7Pe6DjOStNMllpEGDjY7t2BzPm0t8LpXUuhoXWA55ltT8Lu3MvxmbSkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K3ks3Uaq; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZoQm54JD"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-220dc3831e3so78355825ad.0;
-        Mon, 24 Feb 2025 00:39:44 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K3ks3Uaq"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-21c2f1b610dso117657025ad.0;
+        Mon, 24 Feb 2025 00:39:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740386383; x=1740991183; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zgImrHd0RRBAL4u0fyRPwzKU4+tbk6UR0vRrSIGp7oo=;
-        b=ZoQm54JDfKDWZ8XHpCkksr3WaLfHZhizWs9bw3LydT1pmoUZP/TaPN39AFXd5Ojkfp
-         dJyAb7UEo42O/6stMVTcMERAJEDsOXLH6re6u+YRsfUksVlI8PNACcmFxtgTQxIqLbK0
-         Dgo13g719t9oHiUlKDyabrF2ZkCLIVKMsO/Pcspmy+8LnKZEdyGkg7ZUERzSF1aOPeyK
-         IcbS1pgNq+vLWh8BOKUDjXsGSorMqQI7HxKjRDo+wsfn3NfWpxNoFMpwsGO/33S/Mj4i
-         EqOBYbnJYfuZE7IJEUmp0gahC00CrrmCH9YBsG0n+bS1c4nzJ/4ge+akdSEPjTpTT+ko
-         mefg==
+        d=gmail.com; s=20230601; t=1740386387; x=1740991187; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=95SHW6HzB6iNhL/wzrH3WG7qpOIgT6dZkumEvj+k6IY=;
+        b=K3ks3Uaq+YSU930lYDlice6Rw1iPLBsMk8pd7+HbiA3SPPcNQrJikIvJ7uYR14G0E7
+         0ZByAWdVsIf1UMMvurkqFZwnCqithN1+s6PQH/X+L7bD5VPTVYqMsstP5VXv4kw182rR
+         RgFmQV67eU616iOJSDxdynzWPEKvR/321UYy93MhvinE0qwM+kQPglKBVX0JBvtuvK8n
+         N1spDT1IjuYor83a1c0jve+U1pPS9LJNAk5ZLBRyOt4qDh7Uc1TwK34lUHg4slCVReEn
+         h5sTLmC6rMTUJrHr7KEI/bzLV7cbMfIqL4ZrVPVZ9RUROnyhnLN0DUXC7j6LWbOPSctA
+         zzEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740386383; x=1740991183;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zgImrHd0RRBAL4u0fyRPwzKU4+tbk6UR0vRrSIGp7oo=;
-        b=fm8GXRx4wu0XCGuehl7WrIWvz2EJlPFa21ydvRGQjU7KZmpgFCaJwujm94CWHYR2mc
-         HdApwAUBzqspOW7pFk1U4N0IHlfZ+qzrhPRhZN0BcyZxgDCXnAhPrsHxFZo2tZa/wR93
-         M8oIOsD2MuVqCgM2I33oOD2mNH90IqxNlrX8p8KAxvgEoTT6MpGS7+BqffceW63e3FB0
-         8RVOCwsN9LRFMnI+rEpR9ibXtlYZSY3GehMVGwAai2fLDNvLEYzwBdxF/Q9pBDreALCd
-         EJMdpZTTkygx+F1y9OTYKfjmaW1A4zKVMm51uYTDVTV5ZNUwCKc1K95FXzag3ZaE2cAQ
-         6h/w==
-X-Forwarded-Encrypted: i=1; AJvYcCVM0ICjClwVgVDeOy+Klq0saVGfa2gLz/Y38qNIR3XmbVBS2UUYNyR2RoxPhUMGOLCyR3vzRpa1GX0y@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywd7Q+J1Ekjvwbolfx2/MOVciGoAPBeTR7iBRlPQhNEtegF578r
-	IdY1c5TD+XQXhJ3gF9h+lw1JGrLhFXoz5/C0zGOaJoQLMTbyqHYZ
-X-Gm-Gg: ASbGncug6oMzXpGv33QkuT61yVUpfwQ0S3GGTcJHIksottwQPZYhcNlC+tfLXj8Fwcm
-	BSkoo4NwikUGIp7ybHalujWs2OjhECx41PHbMBHgtfiPWe5Q64K0961VE2XC95QPNiVXQGc3pqR
-	b90lGrI7KF4F8JmC0b459ZnHyxPigJebTuc5+HtSDlY/v/gphi1SZ74Gjhi9djPJatHKwrf0qBP
-	ZMNLJcOtkzTlPaqNcG+GTFwbSwdldiP9ecqpaGlFCr8U7yHtjdVseCPr7OupABqWnD6UG/EOCcd
-	TMX95Ya9ArcMiIDNj5EIpAJ3z7gu01zADQL7
-X-Google-Smtp-Source: AGHT+IEcb6Vmiu6r39Ib6PZeI+7bMy0EHmy7fhM6DiJP4D28MgnS5rIX2n3fCefV4ha1sPe28cT4dQ==
-X-Received: by 2002:a05:6a21:6e47:b0:1ee:76fb:8eb7 with SMTP id adf61e73a8af0-1eef3cbe982mr20076936637.10.1740386383559;
-        Mon, 24 Feb 2025 00:39:43 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740386387; x=1740991187;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=95SHW6HzB6iNhL/wzrH3WG7qpOIgT6dZkumEvj+k6IY=;
+        b=XPgtypLFQyNnX5HIsfvj8FibFArxRhCVClLK7wB+C0W8azY4y/cMnjChYihQaE8Jqr
+         WBA1XfnqNsVqBnaRPTGd+4i9xJ64M3dk791BEM0qa0ghxlWZwz/tK8wP3enbZcYvoaVe
+         GHXeQuPJB4tWHaRoYBEOu/OpL2oJkZLs7nLSFfSz8/6uzvWfmM+qZCUJUESeD0n81rh0
+         5VzlFrFkrxcApyiF3/Hh9q5t5ndBZDx7Xzp23KYzKw7eYS36enoGkpxqDeaKXVbfm8jF
+         3ZTuewIovmMFjX6YiGHyP5KALaU7Lv1HkB/MN6erSSKLtLcod0WUpKu99YUNXJVy+tHw
+         cDRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUaBIpHsHLp5UHWhJ5lF7QuIVLNz8P8cWKYNAe1O+fLWc9phaYPROzw22GQVloH/funtbiPmth2SI9v@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrZ+z2t1pdHsMWiKAIqtgjp/nKywqddUUCMnmq4nJknH1QeRgj
+	6UVk2kjpCEzn7XoE/2qNcEZjQpYhqF4+Ue6l8YsduUZz8iwnKXyu
+X-Gm-Gg: ASbGncvUZrAwKaow6mHgzT/Ht82EfF2SMIiOMXZdoMFkYsqSK/rJhfn554k8tgcDDQQ
+	PuFLgB5jThVBIiANZg9Z0aG0+/2fgXwQykju+eUJsW+G7kNuUszXmkB6NyYhkVWewfMlVhW5eUr
+	ghkmXMzLksKT4ljf2JgCPSNWy07PBfTe01hJdCzUNxpHJA0vgvA0FEQiRAlhI71IV56SIRYAZJO
+	t/EV8BK1yN9buhCVpKfvkPR9ZXvyN60tqjTfE3gtGgMf9ArGK7lEdsIxq9kxXGbZv74Sz7+LRes
+	WNNbwG8TQa+mRTKMTWyqw8bIeljLYRbbKRNv
+X-Google-Smtp-Source: AGHT+IFre9XOybV0YxAiqbX3XhSPOqNf9uDTbDbMVVNdbMkg+GELuP1pFb1lBJN/C9iaOtzknuA7gA==
+X-Received: by 2002:a05:6a00:2ea9:b0:731:771:38f2 with SMTP id d2e1a72fcca58-73426cab14fmr26237456b3a.8.1740386386696;
+        Mon, 24 Feb 2025 00:39:46 -0800 (PST)
 Received: from cs20-buildserver.lan ([2403:c300:cd02:bc36:2e0:4cff:fe68:863])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7327590ff12sm14634793b3a.115.2025.02.24.00.39.40
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7327590ff12sm14634793b3a.115.2025.02.24.00.39.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 00:39:43 -0800 (PST)
+        Mon, 24 Feb 2025 00:39:46 -0800 (PST)
 From: Stanley Chu <stanley.chuys@gmail.com>
 X-Google-Original-From: Stanley Chu <yschu@nuvoton.com>
 To: frank.li@nxp.com,
@@ -68,11 +70,14 @@ Cc: linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	tomer.maimon@nuvoton.com,
 	kwliu@nuvoton.com,
-	yschu@nuvoton.com
-Subject: [PATCH v4 0/5] Add support for Nuvoton npcm845 i3c controller
-Date: Mon, 24 Feb 2025 16:39:03 +0800
-Message-Id: <20250224083908.1880383-1-yschu@nuvoton.com>
+	yschu@nuvoton.com,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v4 1/5] dt-bindings: i3c: silvaco: Add npcm845 compatible string
+Date: Mon, 24 Feb 2025 16:39:04 +0800
+Message-Id: <20250224083908.1880383-2-yschu@nuvoton.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250224083908.1880383-1-yschu@nuvoton.com>
+References: <20250224083908.1880383-1-yschu@nuvoton.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,42 +86,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patchset adds support for the Nuvoton npcm845
-Board Management controller (BMC) SoC family.
+From: Stanley Chu <yschu@nuvoton.com>
 
-The Nuvoton npcm845 uses the same Silvico IP but an older version.
-This patchset adds fixes for the npcm845 specific hardware issues.
+Nuvoton npcm845 SoC uses the same Silvico IP but an older version.
+Need to add a new compatible string to distinguish between different
+hardware versions.
 
---
-v4:
- - Fix kernel test robot build warning.
- - Add SVC_I3C_QUIRK_DAA_CORRUPT fix
---
-v3:
- - Add more description in dt-binging commit message
- - Add the svc_i3c_drvdata structure in struct svc_i3c_master
- - Improve the do_daa
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Stanley Chu <yschu@nuvoton.com>
 ---
-v2:
- - Add a new compatible string in dt-binding doc.
- - Add driver data for npcm845 to address the quirks.
- - Modify svc_i3c_master_write to be reused by SVC_I3C_QUIRK_FIFO_EMPTY fix.
- - Fix typo of SVC_I3C_QUIRK_FALSE_SLVSTART fix.
- - Remove the code changes in svc_i3c_master_do_daa_locked, will add it in
-   another patch series for common improvement.
----
+ Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Stanley Chu (5):
-  dt-bindings: i3c: silvaco: Add npcm845 compatible string
-  i3c: master: svc: Add support for Nuvoton npcm845 i3c
-  i3c: master: svc: Fix npcm845 FIFO empty issue
-  i3c: master: svc: Fix npcm845 invalid slvstart event
-  i3c: master: svc: Fix npcm845 DAA process corruption
-
- .../bindings/i3c/silvaco,i3c-master.yaml      |   4 +-
- drivers/i3c/master/svc-i3c-master.c           | 115 ++++++++++++++++--
- 2 files changed, 105 insertions(+), 14 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml b/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml
+index c56ff77677f1..4fbdcdac0aee 100644
+--- a/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml
++++ b/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml
+@@ -14,7 +14,9 @@ allOf:
+ 
+ properties:
+   compatible:
+-    const: silvaco,i3c-master-v1
++    enum:
++      - nuvoton,npcm845-i3c
++      - silvaco,i3c-master-v1
+ 
+   reg:
+     maxItems: 1
 -- 
 2.34.1
 
