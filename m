@@ -1,107 +1,135 @@
-Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510E1261383;
-	Mon, 24 Feb 2025 15:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59C29261578
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 15:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740412174; cv=none; b=mIoEbE0sU0UeSSUAKM0mZibf1gzt2KnjS3ygOFGKHmcd9cGUHYWo3aMKtZR8mRAAeSLfYA3OgONUlhX56q5Zycvz7ZWj4qwgMs4epKUawS71GGCAWGUKj8i0s6xrDNqRDQqS4K88tHVqIeH6UZwead85kLm8WYBk89zwdX3dco8=
+	t=1740412178; cv=none; b=q62qG05S3a0B7vUMr9BarDTgcsWMDcE4vdJIPxK9AWMz+xSQGMyrzd0LurCtGtRJWu7aJUcqkITygr8YOAnopd7lxkfB9b7PsS7hQ0uHvt9lzjru0F+1jJPprWtQgWFpk8HklOWS/5ZLGArgsHNdioR0q2KnZeOJ6b6NH7VA5tM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740412174; c=relaxed/simple;
-	bh=x4hmtsNoaZPvA2XK6XOAhEj0ABwOAUsGA+qnNVorA/A=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ap+9W3X3TxknHzSVQ2aLIheDc1VgifIAHFh1kAWQk/kjnjftsopRDeYPpdYJ2fgPbQb3sLbbDNymWuTvrpxDQEbWMaUshCoz0CCAWd/xcI7hbEaa7ZOd2GQ+ayvSUUKTARgVVxQCtWG2EKDKbQkhqr4oAv2MN/z/BsVTzt6onAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
-Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
- (195.54.195.169) with Microsoft SMTP Server (TLS) id 14.3.498.0; Mon, 24 Feb
- 2025 18:49:29 +0300
-Received: from localhost (10.0.253.138) by Ex16-01.fintech.ru (10.0.10.18)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Mon, 24 Feb
- 2025 18:49:28 +0300
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-To: Shuah Khan <skhan@linuxfoundation.org>, Kieran Bingham
-	<kieran.bingham@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
-CC: Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	<linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<syzbot+5bcd7c809d365e14c4df@syzkaller.appspotmail.com>,
-	<syzkaller-bugs@googlegroups.com>
-Subject: [PATCH] media: vimc: skip .s_stream() for stopped entities
-Date: Mon, 24 Feb 2025 18:49:26 +0300
-Message-ID: <20250224154928.1220074-1-n.zhandarovich@fintech.ru>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1740412178; c=relaxed/simple;
+	bh=kIgQ44rc/tULacbSzqYNepzgyg03jclsgYTvnH/mowM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UuejYvJtd+/VKf4CSEbC6Nh/atSt5tGbK57S3ApGopSfUvTASiQ6UWhOWjI81ucXC5OhcrP2w57KLsPzJvUKQ3FPCLaIbkM14qSkwntG0xPkgbMo71uhY0UjOjVmWVh/9Q4qc2Ri/YtODt528lf6OaLNCCTEdrj+omI+pwWpcrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vn1v+OBA; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vn1v+OBA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740412177; x=1771948177;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=kIgQ44rc/tULacbSzqYNepzgyg03jclsgYTvnH/mowM=;
+  b=Vn1v+OBAU03MP5R+7tmvP5PUFXj16e6/dm6O0SnC7Q4XecaWrY6+4Jua
+   tyBcxu+ri+vrFJjMOkP2gw8/xSygNswvMcuInVYUBu7x+QpMUK3V5elu3
+   UQUlDGSpdUBCyQidwBdt0/gCvvjwiN3mUXLfItE7Su9PMcV3oFOPw0ZNc
+   Xb2gwS+sT9W8n9OP0K/6kBj0W72n7TWw31XFKNS7oTXWu90vcg6m/W2Fc
+   nrGMRSDPUzxCiCZeJ2foMmWGXYSo3R+mNWhI+Ak9bdcxUGR6wkI77O1Xt
+   Ac+xHlhi+GrQSCgd8evaxyMJwWskQmNBVBjP/r9m1tKjrbglh32CY0CMf
+   Q==;
+X-CSE-ConnectionGUID: sMUTZNBCQ9qcW/ITZ2bZAQ==
+X-CSE-MsgGUID: H7V1Qw7NSjS9b7f158F7kA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="41083136"
+X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
+   d="scan'208";a="41083136"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 07:49:36 -0800
+X-CSE-ConnectionGUID: RXmPiNT6SG2/Oyo+UUq0nw==
+X-CSE-MsgGUID: l0c7BmLRSruAi/dHsQSDqA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
+   d="scan'208";a="116071242"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 07:49:33 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tmai2-0000000Ejqm-00kF;
+	Mon, 24 Feb 2025 17:49:30 +0200
+Date: Mon, 24 Feb 2025 17:49:29 +0200
+From: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
+To: Aditya Garg <gargaditya08@live.com>
+Cc: "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+	"mripard@kernel.org" <mripard@kernel.org>,
+	"tzimmermann@suse.de" <tzimmermann@suse.de>,
+	"airlied@gmail.com" <airlied@gmail.com>,
+	"simona@ffwll.ch" <simona@ffwll.ch>,
+	Kerem Karabay <kekrby@gmail.com>,
+	Atharva Tiwari <evepolonium@gmail.com>,
+	Aun-Ali Zaidi <admin@kodeit.net>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v4 2/2] drm/tiny: add driver for Apple Touch Bars in x86
+ Macs
+Message-ID: <Z7yVCRIRU5V9JsWC@smile.fi.intel.com>
+References: <Z7yMIC1wxm0AGBCt@smile.fi.intel.com>
+ <PN3PR01MB9597D4FD9FD8B8A8FB0F2B3CB8C02@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <Z7yR_u6ISEQFAwsI@smile.fi.intel.com>
+ <PN3PR01MB959735D463E60E2952EC0986B8C02@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
- (10.0.10.18)
+In-Reply-To: <PN3PR01MB959735D463E60E2952EC0986B8C02@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Syzbot reported [1] a warning prompted by a check in call_s_stream()
-that checks whether .s_stream() operation is warranted for unstarted
-or stopped subdevs.
+On Mon, Feb 24, 2025 at 03:39:56PM +0000, Aditya Garg wrote:
+> > On 24 Feb 2025, at 9:07 PM, andriy.shevchenko@linux.intel.com wrote:
+> > On Mon, Feb 24, 2025 at 03:20:13PM +0000, Aditya Garg wrote:
+> >>>> On 24 Feb 2025, at 8:41 PM, andriy.shevchenko@linux.intel.com wrote:
+> >>> On Mon, Feb 24, 2025 at 03:03:40PM +0000, Aditya Garg wrote:
+> >>>>>> On 24 Feb 2025, at 8:27 PM, andriy.shevchenko@linux.intel.com wrote:
+> >>>>> On Mon, Feb 24, 2025 at 02:32:37PM +0000, Aditya Garg wrote:
+> >>>>>>> On 24 Feb 2025, at 7:30 PM, andriy.shevchenko@linux.intel.com wrote:
+> >>>>>>> On Mon, Feb 24, 2025 at 01:40:20PM +0000, Aditya Garg wrote:
 
-Add a simple fix in vimc_streamer_pipeline_terminate() ensuring that
-entities skip a call to .s_stream() unless they have been previously
-properly started.
-
-[1] Syzbot report:
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 5933 at drivers/media/v4l2-core/v4l2-subdev.c:460 call_s_stream+0x2df/0x350 drivers/media/v4l2-core/v4l2-subdev.c:460
-Modules linked in:
-CPU: 0 UID: 0 PID: 5933 Comm: syz-executor330 Not tainted 6.13.0-rc2-syzkaller-00362-g2d8308bf5b67 #0
-...
-Call Trace:
- <TASK>
- vimc_streamer_pipeline_terminate+0x218/0x320 drivers/media/test-drivers/vimc/vimc-streamer.c:62
- vimc_streamer_pipeline_init drivers/media/test-drivers/vimc/vimc-streamer.c:101 [inline]
- vimc_streamer_s_stream+0x650/0x9a0 drivers/media/test-drivers/vimc/vimc-streamer.c:203
- vimc_capture_start_streaming+0xa1/0x130 drivers/media/test-drivers/vimc/vimc-capture.c:256
- vb2_start_streaming+0x15f/0x5a0 drivers/media/common/videobuf2/videobuf2-core.c:1789
- vb2_core_streamon+0x2a7/0x450 drivers/media/common/videobuf2/videobuf2-core.c:2348
- vb2_streamon drivers/media/common/videobuf2/videobuf2-v4l2.c:875 [inline]
- vb2_ioctl_streamon+0xf4/0x170 drivers/media/common/videobuf2/videobuf2-v4l2.c:1118
- __video_do_ioctl+0xaf0/0xf00 drivers/media/v4l2-core/v4l2-ioctl.c:3122
- video_usercopy+0x4d2/0x1620 drivers/media/v4l2-core/v4l2-ioctl.c:3463
- v4l2_ioctl+0x1ba/0x250 drivers/media/v4l2-core/v4l2-dev.c:366
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl fs/ioctl.c:892 [inline]
- __x64_sys_ioctl+0x190/0x200 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f2b85c01b19
 ...
 
-Reported-by: syzbot+5bcd7c809d365e14c4df@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=5bcd7c809d365e14c4df
-Fixes: adc589d2a208 ("media: vimc: Add vimc-streamer for stream control")
-Cc: stable@vger.kernel.org
-Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
----
- drivers/media/test-drivers/vimc/vimc-streamer.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+> >>>>>>>> +#define __APPLETBDRM_MSG_STR4(str4) ((__le32 __force)((str4[0] << 24) | (str4[1] << 16) | (str4[2] << 8) | str4[3]))
+> >>>>>>> 
+> >>>>>>> As commented previously this is quite strange what's going on with endianess in
+> >>>>>>> this driver. Especially the above weirdness when get_unaligned_be32() is being
+> >>>>>>> open coded and force-cast to __le32.
+> >>>>>> 
+> >>>>>> I would assume it was also mimicked from the Windows driver, though I haven't
+> >>>>>> really tried exploring this there.
+> >>>>>> 
+> >>>>>> I’d rather be happy if you give me code change suggestions and let me review
+> >>>>>> and test them
+> >>>>> 
+> >>>>> For the starter I would do the following for all related constants and
+> >>>>> drop that weird and ugly macros at the top (it also has an issue with
+> >>>>> the str4 length as it is 5 bytes long, not 4, btw):
+> >>>>> 
+> >>>>> #define APPLETBDRM_MSG_CLEAR_DISPLAY cpu_to_le32(0x434c5244) /* CLRD */
+> >>>> 
+> >>>> Lemme test this.
+> >>> 
+> >>> Just in case it won't work, reverse bytes in the integer. Because I was lost in
+> >>> this conversion.
+> >> 
+> >> It works. What I understand is that you used the macro to get the final hex
+> >> and converted it into little endian, which on the x86 macs would technically
+> >> remain the same.
+> 
+> The Macro is just converting the letters into their hex form, but simply
+> calculating them and putting the letters in comments is equally good.
 
-diff --git a/drivers/media/test-drivers/vimc/vimc-streamer.c b/drivers/media/test-drivers/vimc/vimc-streamer.c
-index 807551a5143b..64dd7e0ea5ad 100644
---- a/drivers/media/test-drivers/vimc/vimc-streamer.c
-+++ b/drivers/media/test-drivers/vimc/vimc-streamer.c
-@@ -59,6 +59,12 @@ static void vimc_streamer_pipeline_terminate(struct vimc_stream *stream)
- 			continue;
- 
- 		sd = media_entity_to_v4l2_subdev(ved->ent);
-+		/*
-+		 * Do not call .s_stream() to stop an already
-+		 * stopped/unstarted subdev.
-+		 */
-+		if (!sd->s_stream_enabled)
-+			continue;
- 		v4l2_subdev_call(sd, video, s_stream, 0);
- 	}
- }
+Again, it does it in most confusing and weird way. Just kill it.
+
+> > Right, the problem is the macro itself which does really weird things altogether.
+> > Using integer + comment much clearer in my opinion.
+> > 
+> >>>>> (assuming we stick with __leXX for now). This will be much less confusing.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
