@@ -1,93 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0DE41C5F27;
-	Mon, 24 Feb 2025 18:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B099B1C5F27;
+	Mon, 24 Feb 2025 18:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740422145; cv=none; b=JohucLUN7aJKSrqXjyi/Y5Al1TAWIpDO3bZkNdk2AkojCQyg69WMXiFlpm3h6JfNSkj7+eqAYciTEy7NfApKyYej1F+WIG+AbIWwkCd4+JztDoMdwvA5Q/TyVMe4ziqDYLAC4d1FePLAoMSzVIEGrVI4RdA2/oM9PRJdQPm1LkM=
+	t=1740422185; cv=none; b=oXVfi5VrpO06NP4Guq3fc22xZZ242+yXkkAWzKg0vbukLxe+f67xOPJC4cGHV09cMf+3K5BpfHR8w9F3HgaHmY7sH+t7BP5gEseLjhEjBdj57FsV1SRjNlvLpuOP1jgMNcwz+87jvIBZP3KEFn4n852Kb7y4MCt6nzS+dQn5v4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740422145; c=relaxed/simple;
-	bh=Ht47a0c85YIjceFFL4ZLJ9SXKsfewmGSeF3ignBjavM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JHp+W0Jvu4J8c90VKXjXE8ioX67bwmvsnhxCBlx/ZJ3zBjnCkmtckzYKKxaK/XMeeaB3vb9pTIwouYkQ7qCP09OT5bjh2lqP2smQfUFMibqVH/pUxlMWVA+yJFxj/hiqynlouRrhd505F5REfX0Mw1P789VNs3odaJ+aMQBpbmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VrQTMUhJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VrQTMUhJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26185C4CEDD;
-	Mon, 24 Feb 2025 18:35:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740422144;
-	bh=Ht47a0c85YIjceFFL4ZLJ9SXKsfewmGSeF3ignBjavM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=VrQTMUhJiImF6tR3+Fh6YJOslFBDX1kJA+azbv8WdMkiSncZ9pD1z87olRBBqTfYF
-	 JapYQ7h7txQYFsYbbJ9Wk/SmiXaLn9aZZQ0AuBxpoKsOQZXI5+3D4p71Tv4aDHCToJ
-	 JPcc0Rr8P1gUNgQKKl+JFhiCKiIU3PFXDNxOb+OWah4zVSrAsW2X1ZcXbO8cZnXNrx
-	 fQlLZtQyZuzA0X75Rh9QbVqL7vLDyqRD7inGZScybpado4phyuPC3KWSU9yN47E+NT
-	 9IWP1VdZ/ETbQfPlsCPfPSiEhNXrtkHhCvfP46iP3m0uL2Ohs6jvZJXfb1JDt8Ou66
-	 l+/uV2ZCbxb1Q==
-From: Mark Brown <broonie@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, Sean Cross <xobs@kosagi.com>, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: kernel@collabora.com, Mark Brown <broonie@linaro.org>, 
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250222-es8328-route-bludgeoning-v1-1-99bfb7fb22d9@collabora.com>
-References: <20250222-es8328-route-bludgeoning-v1-1-99bfb7fb22d9@collabora.com>
-Subject: Re: [PATCH] ASoC: es8328: fix route from DAC to output
-Message-Id: <174042214288.92672.849071469187216884.b4-ty@kernel.org>
-Date: Mon, 24 Feb 2025 18:35:42 +0000
+	s=arc-20240116; t=1740422185; c=relaxed/simple;
+	bh=gwd0kHHM6yEt5vGNuet2cFmwY7fgQBCNxAjsE9uoDxw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g1VocN7UZF++z4yc22VPNLouSncjHE0SXXB0TnVB/hjJ+rvFWW6NNvPGxs0toSF3pTJB7OxzLothfaxhBqc+CFHy7lhGoPHrZDaSDBjAZj9BuqRzFa1Hiqwz6TR3df8mdSXE+ID1rr567qX8QjgEKItyQPu2W7BlDJL51ZFdO0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-220ecbdb4c2so16674285ad.3;
+        Mon, 24 Feb 2025 10:36:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740422183; x=1741026983;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C+iuRvEJQMhX8pBK/9EUfHF9HLzVHhSe33fGhQO8PJQ=;
+        b=bE4zPcWmJKboizyPkonldfAlJtWQotrjBapq9SzkCWRhH1UXmoW4t4JUakvSwWERaD
+         a8fqYFEUaW17INJdL/DhYHwRq63R4Tn5guv4vz85DQrD+Rbm4PABVpR1UWMXNW8iqsC7
+         v/+6cqkDnEOSierDGd2h4p26nzuTiBL5vit20PTNYoc5bmzKw8E9bn8usvvtpRFAFsPr
+         +mokK3TkELVgYG3xPqVN7HTuKOOCtShoA6mUAqlGEzx1RLfLgc72zdOyDtfUjBGI5DmF
+         ui2+AH1o2dLqRmVJPczNROshvGPPZoyqHmpLwjlQuhHKHPXXTz18ymYl6qShBihwwZ1O
+         z7VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUyzEwC02Yo9uCQWr9dklBTIYKuC5gebWpKiP4lClNQ4mi/2mxlIZ5lmXgzytH2pLrkj9nyUVq2yL0h@vger.kernel.org, AJvYcCXQ8FSPBvBBLSXe2DUzTo97dHWN1/Y4aPWUTZTVHCjlJ162RYU4uacDo50umBQp8o8k8HGtRdTSxRjfhWq0wg==@vger.kernel.org, AJvYcCXYa7qHfQwxIYmMKnFN4mlEVOHddHDpJ4rQjfAk0LGGQcpFXjfyzM0na2dHu5FsreHkjjCzdAQWyOAURwcw@vger.kernel.org, AJvYcCXtZhSFwM5ONMqV81xXa7ZYAQdLYA15yUQMOwBDlSnr8WeuLGL4iozDmncz6a7m2c3N9Lg2ONnbEQuJ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzw0v7jj9wVu4VI2jfOY23bHQGOsbFEb08t1/HJIWG9mrFL2goq
+	GNEP3AV/EjNLd4cKdkDjKYu7fGrRms7eR5/8ONZdOG1P004GEROK
+X-Gm-Gg: ASbGncuoINBuyGA0in9irvLUESmVS/bN/vkYzO8VAZYkM4qXRdWwExjFbE5r0QTrMAr
+	QS9eCjON2b1AgR9Bl8QhbjNylFYuVdTqlpWuNwvPfOBqAAFdBtHuz3UJ7oDSKEXOYH5snJ/du4P
+	uy0VfCho9f1wEhsMAkcByIIyCIOhnH+pq6wAtEyCxviAxWAJkdH8IlRybFlYKRcv2HvvTgT04bW
+	qwVm/a81su5LaOr/8v4B34jeQ1PLsUqoEic9G27a26gJcfk8Cf2IXvfknmSxwK5RHeBv/nZkO2b
+	muYtp4IvjCtK7KhPfqJI1vfziTYf8cbPeCcRBK/aTBYZTnG7xDJQGB4/6nEC
+X-Google-Smtp-Source: AGHT+IEplwsgnmJ40zGdd/jX9QmYaLpnH8VA9Jb9MgTmdt+M/WwD/lXDTq1aQNf0I+xwkJjllFIPBg==
+X-Received: by 2002:a17:902:d485:b0:221:87a2:ff9c with SMTP id d9443c01a7336-221a11ab572mr213110675ad.52.1740422182715;
+        Mon, 24 Feb 2025 10:36:22 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-220d5349226sm184951505ad.24.2025.02.24.10.36.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2025 10:36:22 -0800 (PST)
+Date: Tue, 25 Feb 2025 03:36:20 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Mrinmay Sarkar <quic_msarkar@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/8] PCI: qcom-ep: add support for using the EP on
+ SAR2130P and SM8450
+Message-ID: <20250224183620.GA2064156@rocinante>
+References: <20250221-sar2130p-pci-v3-0-61a0fdfb75b4@linaro.org>
+ <20250222143657.GA3735810@rocinante>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250222143657.GA3735810@rocinante>
 
-On Sat, 22 Feb 2025 20:39:57 +0100, Nicolas Frattaroli wrote:
-> The ES8328 codec driver, which is also used for the ES8388 chip that
-> appears to have an identical register map, claims that the output can
-> either take the route from DAC->Mixer->Output or through DAC->Output
-> directly. To the best of what I could find, this is not true, and
-> creates problems.
+> > Update the incomplete SM8450 support and bring in SAR2130P support for
+> > the PCIe1 controller to be used in EP mode.
 > 
-> Without DACCONTROL17 bit index 7 set for the left channel, as well as
-> DACCONTROL20 bit index 7 set for the right channel, I cannot get any
-> analog audio out on Left Out 2 and Right Out 2 respectively, despite the
-> DAPM routes claiming that this should be possible. Furthermore, the same
-> is the case for Left Out 1 and Right Out 1, showing that those two don't
-> have a direct route from DAC to output bypassing the mixer either.
-> 
-> [...]
+> Applied to controller/qcom, thank you!
 
-Applied to
+I updated the branch with "Reviewed-by" tags from Mani.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-
-Thanks!
-
-[1/1] ASoC: es8328: fix route from DAC to output
-      commit: 5b0c02f9b8acf2a791e531bbc09acae2d51f4f9b
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+	Krzysztof
