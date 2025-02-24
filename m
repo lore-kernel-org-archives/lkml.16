@@ -1,165 +1,148 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77B7526618E;
-	Mon, 24 Feb 2025 18:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F93526618C
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 18:03:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740420189; cv=none; b=HHS3qDYB8Wt7RaNNEe2dK5hitLlJvIr/T5ulcOAgEOuIq4C8MELz7llkYntZX1y1Id+DM4GOx591px5rGn9RpbZTXCjHGxYKrvafmmn3gu/60jvdxVIbspEHOVZvzOjIkzHjQnBkxo9CRNjHWlPsA6I8MNHAOr3xPLu9AWZvriQ=
+	t=1740420188; cv=none; b=CrqQ6vKCW+PtcLi1QXuVnycLyTekYtO6ppLDLPEfmIftdiR130JzJnmuoWdfVc+vq2wnPKf2A53zEoRh8uWK5yRy1E/WTLG+hWRJL/gA9TWJJG08IOa3k6B0spIPdbUFr1B7HMMjCXfeGqvV9g2fWjIjBnKU7ccWDF0+4unKZMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740420189; c=relaxed/simple;
-	bh=rUE/hQROradH9urjwJ+EoCG+n0ZEi4vngN2fnKmbyOg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LvxtVtmIqcda6U3Jw+eAu00UlzjFolPB/81wpKxUFNe9uEqdAWqQYR6oNPqeGWPqHvbrN+DjJkctcAK4NMH0CFY8o+CVCioHOb4HGiPJsKQQJ6qcxzKF1/vnyt7EbYL9dDIn+XJcAeHOb9/cPe/AXIFTQIRlwvooXtlLV9kBk+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A498152B;
-	Mon, 24 Feb 2025 10:03:23 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 654EE3F5A1;
-	Mon, 24 Feb 2025 10:03:06 -0800 (PST)
-Date: Mon, 24 Feb 2025 18:03:01 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH v20 11/11] perf: arm_pmuv3: Add support for the Branch
- Record Buffer Extension (BRBE)
-Message-ID: <20250224180301.GI8144@e132581.arm.com>
-References: <20250218-arm-brbe-v19-v20-0-4e9922fc2e8e@kernel.org>
- <20250218-arm-brbe-v19-v20-11-4e9922fc2e8e@kernel.org>
- <20250224122507.GE8144@e132581.arm.com>
- <CAL_Jsq+0fZ2uasgAam7qGTdCeDBQxXeyL-J1_suyxy6GE_ERTg@mail.gmail.com>
- <20250224140317.GF8144@e132581.arm.com>
- <Z7yY19UtSnND5KTl@J2N7QTR9R3.cambridge.arm.com>
+	s=arc-20240116; t=1740420188; c=relaxed/simple;
+	bh=5V8CRRxEKwAvlne0up0DL89xDRbM4OY8DNb00/7ZeuQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qF40iWXrIJ2fwWNqJsOEXyv2FRAVSQPef+f/ZgoSvbUYVW5PorSRkrSOV9EM94oR/JiEWy54U8TkLKn2Ptl832Uy4QDKRwhAglVTkDg2NGIalnL8SdN83ziQN4S/j2BmOAe1hWkpkGH/znxseeE8kBEoCsYFlXuKvEMcgLvyrQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iaNFLy0N; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iaNFLy0N"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-220c92c857aso81040795ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 10:03:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740420185; x=1741024985; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=XyR+PRc/eBOLkBnPi/9fuJnUVozTaiV4/upc2f3YPZU=;
+        b=iaNFLy0NPfFmaM8jG7VdBO2McQ9kKsJO+uHgYTgWGCjcYMtPZo1zTJNSm8OsmoNiD+
+         r0CYUW+7TS60DsPPhBhMrQqcboIkyrvBplbfV2ZmV2ANH1RMsWpwUm23IPbdRcttbVBo
+         1r+kz2s7bvgDL4aq+pZAm75gcGoXBqCIgXxK8xSqi0CLpN3sRcjwCBE6lXcL4aP5O/c4
+         HKRz8+w1x0PhaYC+WZ7vAc6/Ie/gmc10dqw6Ryeay81KCvuIg1XIV1wF/qlfFmstzCij
+         RfLzjMl1EeINwU7YQv1O1JlRuIz5MZF9BxkDDSQxti6+62EM5UOs5Th9NBMv9k0t0p5m
+         82qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740420185; x=1741024985;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XyR+PRc/eBOLkBnPi/9fuJnUVozTaiV4/upc2f3YPZU=;
+        b=CP/C29vsjhXHsKPeSQhwYj2U+lc1rqUL8dqU3WiIW+Ctjq+Xsu+LYos52yaNzy99ri
+         wbSysM+lRi0MA95T2tFbD3A8fUwX97YhnFQ9reQzN/tagmLP7BabUfcxdNS3ETVXm7Hw
+         ldaKBp7X1hk6K2Qly2RiTdEBvPgI5Zzq7de0Vn/BNR++lDnYhtjR9Dihz1mHeKbsZGug
+         774dUa6TiPwPenp2HzzDZkgwYvPmKTSp9oyZW8tyH8U2ef32QRtVd2ZDcoz7pJ7kwVCZ
+         KAFc+K6BGET10x1mon9zS4O7h+fOvsvuiFKpjjuUh/htXePQtr8DD2m4lSWQx4EVxwCz
+         x3Ng==
+X-Forwarded-Encrypted: i=1; AJvYcCVS7yEfCxKreEgjk59IVquM3diklS9zy4VkatO1qcqSbUGnvD5cakylE7f3LGphVWGLExlKSns4EK0Zqmk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUS6iITMsCY2paO7NdW0wOmP4rZfsEF7LeO7nn9nqKLMgChatY
+	ifaotsUFDoh6P5n8QUcI/G3r1xXYafNdu8HNMRdgDgL1gr5rZDeH
+X-Gm-Gg: ASbGnct9UlNSAk613qQ16+BwExbjP0YhInUfHN49/8s7mHDdupSRizceekrYZ5J64Bw
+	z9LDBddLQ5qv0qGD0czbRKaM+D9o7rmvnqkPv1Z9++i9+lMCYJZe/3ThMSK6Y6by1mre/15nu5R
+	sfsRBsxvbDQGxRns5Sq/LA/IdwccgAXcpS3i9gK20e/3W3DVGCBh5iUmCXkKDtrI0TWL17F3Y4E
+	xH9aYU90E96JimIhWlRldl9a2hh7TAGdJ/OnhCbwc27r9IY0pZU3K8gYmDeUWPkKUYBh6VKlN8G
+	mblUj5VDoDwChG9IEMxKlLNHVHeK0sL9gRxGXj9LuTsT
+X-Google-Smtp-Source: AGHT+IEWFKdxJ4VlDrM+6lJej0/o+uztgn5SKjZ2meUIah0cwkjkOUeetzc3bGXlgudO6SvyG97xhQ==
+X-Received: by 2002:a17:903:2312:b0:221:1eac:bf7a with SMTP id d9443c01a7336-2218c765b1amr310546725ad.24.1740420185393;
+        Mon, 24 Feb 2025 10:03:05 -0800 (PST)
+Received: from KASONG-MC4.tencent.com ([1.203.117.88])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d556e15esm184834695ad.190.2025.02.24.10.03.01
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 24 Feb 2025 10:03:04 -0800 (PST)
+From: Kairui Song <ryncsn@gmail.com>
+To: linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Chris Li <chrisl@kernel.org>,
+	Barry Song <v-songbaohua@oppo.com>,
+	Hugh Dickins <hughd@google.com>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	"Huang, Ying" <ying.huang@linux.alibaba.com>,
+	Baoquan He <bhe@redhat.com>,
+	Nhat Pham <nphamcs@gmail.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Kalesh Singh <kaleshsingh@google.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	linux-kernel@vger.kernel.org,
+	Kairui Song <kasong@tencent.com>
+Subject: [PATCH v2 4/7] mm, swap: don't update the counter up-front
+Date: Tue, 25 Feb 2025 02:02:09 +0800
+Message-ID: <20250224180212.22802-5-ryncsn@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250224180212.22802-1-ryncsn@gmail.com>
+References: <20250224180212.22802-1-ryncsn@gmail.com>
+Reply-To: Kairui Song <kasong@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7yY19UtSnND5KTl@J2N7QTR9R3.cambridge.arm.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 24, 2025 at 04:05:43PM +0000, Mark Rutland wrote:
+From: Kairui Song <kasong@tencent.com>
 
-[...]
+The counter update before allocation design was useful to avoid
+unnecessary scan when device is full, so it will abort early if the
+counter indicates the device is full. But that is an uncommon case,
+and now scanning of a full device is very fast, so the up-front update
+is not helpful any more.
 
-> > > > Just a minor concern.  I don't see any handling for task migration.
-> > > > E.g., for a task is migrated from one CPU to another CPU, I expect we
-> > > > need to save and restore branch records based on BRBE injection.  So
-> > > > far, the driver simply invalidates all records.
-> > > >
-> > > > I think this topic is very likely discussed before.  If this is the
-> > > > case, please ignore my comment.  Except this, the code looks good
-> > > > to me.
-> > > 
-> > > Not really discussed on the list, but that was present in v18 (though
-> > > not functional because .sched_task() hook wasn't actually enabled) and
-> > > Mark removed it. His work is here[1].The only comment was:
-> > > 
-> > > Note: saving/restoring at context-switch doesn't interact well with
-> > > event rotation (e.g. if filters change)
-> > 
-> > In the brbe_enable() function, it "Merge the permitted branch filters
-> > of all events".  Based on current implementation, all events share the
-> > same branch filter.
-> 
-> Critically, the brbe_enable() function merges the filters of all
-> *active* events which have been installed into hardware. It does not
-> track all events which can be rotated, and the resulting filter is not
-> the same -- it can change as a result of rotation.
+Remove it and simplify the slot allocation logic.
 
-In a perf session has multiple events, and events have different branch
-filters, seems to me, a simple way is to return error for this case.
+Signed-off-by: Kairui Song <kasong@tencent.com>
+---
+ mm/swapfile.c | 18 ++----------------
+ 1 file changed, 2 insertions(+), 16 deletions(-)
 
-I would argue BRBE is an IP for recording branches per CPU wise, it does
-not support recording for event wise.  If we can unify branch filter
-within a perf session, would this be much easier for handling?
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 6f2de59c6355..db836670c334 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -1201,22 +1201,10 @@ int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_order)
+ 	int order = swap_entry_order(entry_order);
+ 	unsigned long size = 1 << order;
+ 	struct swap_info_struct *si, *next;
+-	long avail_pgs;
+ 	int n_ret = 0;
+ 	int node;
+ 
+ 	spin_lock(&swap_avail_lock);
+-
+-	avail_pgs = atomic_long_read(&nr_swap_pages) / size;
+-	if (avail_pgs <= 0) {
+-		spin_unlock(&swap_avail_lock);
+-		goto noswap;
+-	}
+-
+-	n_goal = min3((long)n_goal, (long)SWAP_BATCH, avail_pgs);
+-
+-	atomic_long_sub(n_goal * size, &nr_swap_pages);
+-
+ start_over:
+ 	node = numa_node_id();
+ 	plist_for_each_entry_safe(si, next, &swap_avail_heads[node], avail_lists[node]) {
+@@ -1250,10 +1238,8 @@ int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_order)
+ 	spin_unlock(&swap_avail_lock);
+ 
+ check_out:
+-	if (n_ret < n_goal)
+-		atomic_long_add((long)(n_goal - n_ret) * size,
+-				&nr_swap_pages);
+-noswap:
++	atomic_long_sub(n_ret * size, &nr_swap_pages);
++
+ 	return n_ret;
+ }
+ 
+-- 
+2.48.1
 
-> > When event rotation happens, if without context switch, in theory we
-> > should can directly use the branch record (no invalidation, no injection)
-> > for all events.
-> 
-> No; that only works in *some* cases, and will produce incorrect results
-> in others.
-> 
-> For example, consider filtering. Imagine a PMU with a single counter,
-> and two events, where event-A filters for calls-and-returns and event-B
-> filters for calls-only. When switching from event-A to event-B, it's
-> theoretically possible to keep the existing records around, knowing that
-> the returns can be filtered out later. When switching from event-B to
-> event-A we cannot keep the existing records, since there are gaps
-> whenever a return should have been recorded.
-
-Seems to me, the problem is not caused by event rotation.  We need to
-calculate a correct filter in the first place - the BRBE driver should
-calculate a superset for all filters of events for a session.  Then,
-generate branch record based event's specific filter.
-
-> There are a number of cases of that shape given the set of configurable
-> filters. In theory it's possible to retain those in some cases, but I
-> don't think that the complexity is justified.
-> 
-> Similarly, whenever kernel branches are recorded it's necessary to drop
-> the stale branches whenever branch recording is paused, as there's
-> necessarily a blackout period and hence a gap in the records.
-
-If we save BRBE record when a process is switched out and then restore
-the record when a process is switched in, should we can keep a decent
-branch record for performance profiling?
-
-I understand it might be many things happen in the middle of a task
-switching or migration, but it is fine for not recording branches during
-the blackout period.  The missed branch records are not very helpful for
-forming a flow for a profiled program itself, especially, if we
-consider we will optimize userspace program in many cases.
-
-> Do you think that you have a case where losing branches across rotation
-> *really* matters?
-
-I agreed that event rotation case might be rare and complex.  Please see
-a comment below.
-
-> > For a context-switch case, we need to save and re-inject branch record.
-> > BRBE record sticks to a process context, no matter what events have been
-> > enabled.
-> 
-> I had originally wanted to keep per-event records around, but it doesn't
-> work in all cases. One reason events get discarded at context-switch
-> time is that CPU-bound events can sample branches, and would
-> mis-attribute stale userspace branches to the wrong context when
-> switching tasks. There are explicit comments about this in
-> amd_pmu_brs_sched_task() and intel_pmu_lbr_sched_task().
-> 
-> Given we discard records when reprogramming events, we *could* try to
-> preserve events in some cases, but I suspect that as with the rotation
-> case this'll be a lot of complexity for little gain. Note that as we
-> discard events when enabling the PMU, we'd throw some task-bound records
-> away anyway, and practically the gain would be limited to cpu-bound
-> records.
-> 
-> Do you have a reason why you think we *must* keep events around?
-
-Here I am really concerned are cases when a process is preempted or
-migrated.  The driver doesn't save and restore branch records for these
-cases, it just invalidates all records when a task is scheduled in.
-
-As a result, if an event overflow is close to context switch, it is
-likely to capture incomplete branch records.  For a userspace-only
-tracing, it is risk to capture empty branch record after preemption
-and migrations.
-
-Thanks,
-Leo
