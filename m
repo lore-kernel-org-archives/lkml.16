@@ -1,91 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8E81386B4;
-	Mon, 24 Feb 2025 14:13:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1424F1386B4
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 14:14:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740406429; cv=none; b=FxZRd1SDAdSMJNNoRaJXG96IiJHJlUDEg7aMhVSMMtEc/9+Z+mCeE+eRm9NzrqvwcqVg4leJhmKpQ3MIuW/LrMNwjCUgjV1yIgMs3am/yqicEKNo5Jmb1JUzN8i1+DRTwZP8DM0NlEGV1/Ie0owvg6P5dW0m/NQrv0f8E8QMl7k=
+	t=1740406450; cv=none; b=YMlAmaC8LQpWXmL8+OWoVqh7RXSbaivoxceOcbFrKocNQ263jiedjPhrX2H+oKA1KM2dHELH+5RPXqlAO0++NMGN6kzWTYeSzrv0+t/ZqMWQ4fQv1P0cOGJ0/t1sQc/JZd2SLg6Z1tON7JDUlnZZP/14lZSuPGnT9EtqABgdWW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740406429; c=relaxed/simple;
-	bh=Wj5zNTFE65XNxiA8k1aNlq7fh0+PHSo3kv55LtTe++g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gwW7mRGHSjh5M1aPWhnsOSvFLS6FBl0G/58S69GU7Ns0NJ9NCTPXabcQax4CaGEPQgASqvL+UWTjW0CqveLh33+1yKLUoGzEFIqBS4EFCRi4InxG4nUoHf8cvBzYFeNn3C7ky/WdNvuPgFKz1IZCe7VIIwyKB2age5WysCBxcE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KzUlrUEa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740406450; c=relaxed/simple;
+	bh=DKGjsCANAD2sHNCqw2vt8+l4X65ZIFI3H6CYNnRVlpg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ghWOjOlXM8rFQxlIFvHNYK6JLWxmFCbdyD4f9Sko4dOM81M5PnR+FuaYnI+nnV7716M4GJh305o1PHzuIsZx3K2s2WihdN/IHVtrXLtc23RV+K8PhvnaKPKjiS4s+C/xKeQsz7WYi5GnubKFGx240LXBhG65smInOiBeHGzk0uc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FMioRrts; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KzUlrUEa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E9A3C4CEE6;
-	Mon, 24 Feb 2025 14:13:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FMioRrts"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97828C4CEEA;
+	Mon, 24 Feb 2025 14:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740406429;
-	bh=Wj5zNTFE65XNxiA8k1aNlq7fh0+PHSo3kv55LtTe++g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KzUlrUEagmgWDkKMcYHpr3NF/IPe4G+kar7+P8A56kIuePhlML7wmBe1IHbDViWKe
-	 DaimGC8xz4/2YgHzW8v+mzDqDCzEjd2dhWKhqJz9f5pTvaD8htiZj0tuDDkNKOoDHX
-	 c3i2ZVFiw5RNkyVjiFn3cxazrNNePCNmzFhrwHZLSzpOLm5MS99S5YhahN33KkXE0A
-	 YXSJYRUSlVU1TxHbryTlNFKdJ0iAyjVdeQOgRu0SIE5CE2vQ1DROI7XQt4IaACKbUQ
-	 EhzCMUXxb5Ag6ueoRxT5eWBkzTEKK3gLhti1cG2hZpjgsXpq9+y6vGgOXZFshN/AoP
-	 at0TSPXrBj5pQ==
-Date: Mon, 24 Feb 2025 14:13:43 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Longbin Li <looong.bin@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Inochi Amaoto <inochiama@gmail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, linux-spi@vger.kernel.org,
-	devicetree@vger.kernel.org, sophgo@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 2/3] spi: sophgo: add Sophgo SPI NOR controller driver
-Message-ID: <0f129e58-e6fc-4089-8342-d80563884fcc@sirena.org.uk>
-References: <20250224101213.26003-1-looong.bin@gmail.com>
- <20250224101213.26003-3-looong.bin@gmail.com>
- <20250224132115-GYA41655@gentoo>
+	s=k20201202; t=1740406449;
+	bh=DKGjsCANAD2sHNCqw2vt8+l4X65ZIFI3H6CYNnRVlpg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=FMioRrts11CTCwEjkAF3lTbUqeILAx+oxGgcGWGfIA5sDHIVh19o8OS9c0+n1RBKJ
+	 qIPF/CfaRWasb4QVMlXWxd9lfMgge9oF9fdCjZYKVmldbNmFYPJln7nqfk0umjV0SO
+	 /xgnm7mFPyrVFzTYIV1zrNFpQTyXG7fS/SdVLH01/4RQUQbZT2kUzUMOvt8L4fp+js
+	 xcKG00v/9h/K0iUCO3d6Fw80tmPtZO251VH0FQYuBU0pEsF/NIS5s1Bvze+/ywvDW1
+	 EvDAJxC2dcMamL7/uB6Huu64IGMioSJOj5rSwh/vv94OkCT26BFY6Ivk3lQrpzeLM8
+	 AkBYDlnM7Ko3Q==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Christian Brauner <brauner@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] samples/vfs: fix printf format string for size_t
+Date: Mon, 24 Feb 2025 15:14:00 +0100
+Message-Id: <20250224141406.1400864-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="UWZHJyc+GhLlyMAz"
-Content-Disposition: inline
-In-Reply-To: <20250224132115-GYA41655@gentoo>
-X-Cookie: Phone call for chucky-pooh.
+Content-Transfer-Encoding: 8bit
 
+From: Arnd Bergmann <arnd@arndb.de>
 
---UWZHJyc+GhLlyMAz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+size_t needs a %z format string modifier instead of %l
 
-On Mon, Feb 24, 2025 at 01:21:15PM +0000, Yixun Lan wrote:
-> Hi Longbin:
->=20
-> On 18:12 Mon 24 Feb     , Longbin Li wrote:
-> > Add support for Sophgo SPI NOR controller in Sophgo SoC.
+samples/vfs/test-list-all-mounts.c:152:39: warning: format specifies type 'unsigned long' but the argument has type 'size_t' (aka 'unsigned int') [-Wformat]
+  152 |                                         printf("mnt_uidmap[%lu]:\t%s\n", idx, idmap);
+      |                                                            ~~~           ^~~
+      |                                                            %zu
+samples/vfs/test-list-all-mounts.c:161:39: warning: format specifies type 'unsigned long' but the argument has type 'size_t' (aka 'unsigned int') [-Wformat]
+  161 |                                         printf("mnt_gidmap[%lu]:\t%s\n", idx, idmap);
+      |                                                            ~~~           ^~~
+      |                                                            %zu
 
-Please delete unneeded context from mails when replying.  Doing this
-makes it much easier to find your reply in the message, helping ensure
-it won't be missed by people scrolling through the irrelevant quoted
-material.
+Fixes: fa204a65f1b6 ("samples/vfs: add STATMOUNT_MNT_{G,U}IDMAP")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ samples/vfs/test-list-all-mounts.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---UWZHJyc+GhLlyMAz
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/samples/vfs/test-list-all-mounts.c b/samples/vfs/test-list-all-mounts.c
+index bb3b83d8f1d7..713c174626aa 100644
+--- a/samples/vfs/test-list-all-mounts.c
++++ b/samples/vfs/test-list-all-mounts.c
+@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
+ 				const char *idmap = stmnt->str + stmnt->mnt_uidmap;
+ 
+ 				for (size_t idx = 0; idx < stmnt->mnt_uidmap_num; idx++) {
+-					printf("mnt_uidmap[%lu]:\t%s\n", idx, idmap);
++					printf("mnt_uidmap[%zu]:\t%s\n", idx, idmap);
+ 					idmap += strlen(idmap) + 1;
+ 				}
+ 			}
+@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
+ 				const char *idmap = stmnt->str + stmnt->mnt_gidmap;
+ 
+ 				for (size_t idx = 0; idx < stmnt->mnt_gidmap_num; idx++) {
+-					printf("mnt_gidmap[%lu]:\t%s\n", idx, idmap);
++					printf("mnt_gidmap[%zu]:\t%s\n", idx, idmap);
+ 					idmap += strlen(idmap) + 1;
+ 				}
+ 			}
+-- 
+2.39.5
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAme8fpYACgkQJNaLcl1U
-h9CvhwgAgA7reQo+bW2TBpz7S9P/Vf9l+tPV26EuZw1UD0BK6c26I2whD1dwZ/Cn
-YX6TXKPVtAW7/vg4GKLNlCjvV1CfGfPBa+3SMnW+o1a2VBbs02Yy4gK1G9JVlGI0
-qZ2qhE+RsgoWmLeb5/k3k/qN9OmWLXLIjBXAl5MtLpn0Zvxc60zLxfymrwmweR8f
-BHTKormpZ8eWY62Alb/9h99yW1tzG4UzhZTEBY0aBIsaZ+lfOGWg105ZJAOrhIIn
-ub3BU2ABas5zIiCtmAj9ya7FC/87J13/s6ZSjz14B0Mw+nm8fUQ6RHIJz9CpDmuG
-GApr8Se4bDfFXOB7ZHlGw34RfHczhg==
-=W+n0
------END PGP SIGNATURE-----
-
---UWZHJyc+GhLlyMAz--
