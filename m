@@ -1,109 +1,97 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4E73255E2E;
-	Mon, 24 Feb 2025 09:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A366250BE7
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 09:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740391147; cv=none; b=M9xu27QOTas4k+ON9OvcL83CLUCdiJCD8C/6/yjA09g4jyEb3saMJFJGYlYXU0KyN8i2Pmx0b53nem1ep7l0IwFy+bg1z0WUOwnOjdzd1zksZqmGoOadLAoYwXmJ024DvVoz7O6DE4xFouuOu224Hi33d9RH9HUio9oXh9NQTd8=
+	t=1740391148; cv=none; b=nJId071rYcFgKxnPknEnXmWKRAIM25ej7WDI74GCwsVAsuis7P34R+ta+ScDzeNal1jTr/cxe+NAj0j5cWQ4VnieCqyE/3EnOCb+K+1t51GuWYPuhC/OdWh7EG80PnLS0kpIk8TnDLbgZxyJakw7fC3R20ulPHTSOT4HXmLkYj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740391147; c=relaxed/simple;
-	bh=92w1mYu2LrpwoTvOF6GD+t7KNGibcy0h8niy3kMGIhQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hJLAk48hePi/HnhLQr4H/mrB9zu8Nf8zOYvY/jhpncfZ6iOvzEcucWF48qDQuFXulF8gO9au5zF6TIjV2B39BJW+xKEuwLam70YX7cNQZiHCYyIZ9bleEAmUbPoZTQd15QQ/YL/mprvOiD5mSKbrsuaAWdjTY0EcowdIVdL66TY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=clip-os.org; spf=pass smtp.mailfrom=clip-os.org; dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b=H5r1p7U9; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=clip-os.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=clip-os.org
+	s=arc-20240116; t=1740391148; c=relaxed/simple;
+	bh=O6osCXMkR+k5uk/QSyOuPdRTQUC9ZmT13/Ik/89AMIM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GszwXLCiaaapxc8p6WoaPfYAESCrHHlX0Jv2LQoMDM1+SaKBJepn2fBFR7Jhc0TOZbqM7lNElr50Xoj03uJqTq0KU+0PBS+AUWhLLIoliaR5uGqCU/hUT4/tduMbhxPiESQxcujwPiTU4wZb88g++B6POzjgQEPshrle3RRCa80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j6DqRpp1; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b="H5r1p7U9"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A8E8842FF1;
-	Mon, 24 Feb 2025 09:59:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=clip-os.org; s=gm1;
-	t=1740391143;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4ftHCXoMvXNvCt7bT9Q9tu29qrzOh1bSSFP4jqAR9CQ=;
-	b=H5r1p7U9RuTxG0DG9hwf8OPKItJi7IsEmy6t6zyiQcp/CPMR2oL2QbWlFlSjJKXBR8dEpS
-	3A5GtnZ4E+cGhDR0X3swv0aNr+5P14ZkEQcIkQ+qGJB4eA8oFL6jF2gCe/W2H4h2yr2JzR
-	HZ+ljFq4xVz1eVRdenQsJZCSJM30VV2QoeMmWk3Y2QogmGUDEj6IBVxj0BWIo74HQrPj62
-	86oCTYppPiNJX5c8MBnZt/9xKCDDaaUi42b3IFwwYF65nCp+oiEJ4+kpw1RAxDrIVcUx6R
-	Kg4AUD+F1CqVV0pyU8SUNZb6ZvrEJbGaheqXr8eZLbod90EocSaYwTy+2M4nGA==
-From: nicolas.bouchinet@clip-os.org
-To: linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	codalist@coda.cs.cmu.edu,
-	linux-nfs@vger.kernel.org
-Cc: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>,
-	Joel Granados <j.granados@samsung.com>,
-	Clemens Ladisch <clemens@ladisch.de>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Leon Romanovsky <leon@kernel.org>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Jan Harkes <jaharkes@cs.cmu.edu>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <okorniev@redhat.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>,
-	Bart Van Assche <bvanassche@acm.org>,
-	Zhu Yanjun <yanjun.zhu@linux.dev>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>
-Subject: [PATCH v2 3/6] sysctl/coda: Fixes timeout bounds
-Date: Mon, 24 Feb 2025 10:58:18 +0100
-Message-ID: <20250224095826.16458-4-nicolas.bouchinet@clip-os.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250224095826.16458-1-nicolas.bouchinet@clip-os.org>
-References: <20250224095826.16458-1-nicolas.bouchinet@clip-os.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j6DqRpp1"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5461a485aa2so3871843e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 01:59:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740391145; x=1740995945; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=O6osCXMkR+k5uk/QSyOuPdRTQUC9ZmT13/Ik/89AMIM=;
+        b=j6DqRpp1AqbwMkHB1n9gUajINEUExYQP0kpwjbsOILhltPoFCTqDxSDYpfFVica3Xd
+         UlvQkDyXQ19TQZ7WfLeRUxzh0EMMhHUVbewU3ye6evy0mGp3w2bhMpKq6cWsPSAcE/XF
+         AXfBf7zVwyW9k33XiG7FBUFo7hqEdF86mtgjDeiOYJNBWjwYEkKM8fzM9DfRJVLGoh3M
+         2PWtWV1z0A9h9s6Od7hN2+6AtN8e8fjrprRAmyofTFBlhH1W2s3JWB/ws/uX3hyeYUej
+         1NM/Ct8WBeZIpy5AfMQAD7iGL0kbDl0WERWEmphFlswlZC9wodk57utaS5iIxSdOOvJq
+         YwyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740391145; x=1740995945;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=O6osCXMkR+k5uk/QSyOuPdRTQUC9ZmT13/Ik/89AMIM=;
+        b=qed0Q/s2Bo6jbPzeEmEXvWMqJWIpLBjIzScugQVvdmMNKQL531VgXtBGNT/4DJL44b
+         QDPmm+P2OXiWV7EVEs5ze1bpENkGUa1bZhNTV80NjkmBllxaaVnQF8AeV+dd08rl4nD7
+         e+ZwdwjozSQBWiBoJBjkNIEzA2mtPnDkCyhghMrC1jDnf+HgGUSWsbtuadTHXjZX1zGO
+         WrdHhrIE7XP8eJrQ3ao9u9NF08iNitLETBitii926xeJ3GtbCyCaVFuMXvxfgO70O/MZ
+         nKDZjly9s3AGUn48rm642TzrCSsE2CB4voJmhkUvWCdi3opJUIaStmP2UZ7qmEB2nM9N
+         MHIA==
+X-Forwarded-Encrypted: i=1; AJvYcCXG8fh2/PcXU0rD67q7XGw69OBiKe5D2w75vN1gZtfSao32Mgd5ES0roN4vvSBLy/t5JPbRIKE9obH5lQ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRlbjmOEVCYT/gtXgT+PqTFXoMGFJ4aagdaB/sjIqgC/GrwK/0
+	kCh9yLxkrNB7xW43QrBULR/ex9dkkBwdN22wk/g32rkARHLSwJMXg5fxEDRRGt84rtaMrIXXtIb
+	zXjcEDnlnU/qFHO1fEZMlKmMQdTs7Jq0DGpe2jA==
+X-Gm-Gg: ASbGnctv4FGedlnfqdWArqKzLzriN0Knvj5tekUWVP7qV0xcEtg/m6ZEsFNKkUIn+1w
+	c1DUyq3Fs1pRUkYoW5FU5qgh/+6OS4pIix2CZm6qHNXkiqtEHZI02n4AQpZkf3+fIxLPExfCuHw
+	ebxd2sJmQ=
+X-Google-Smtp-Source: AGHT+IFopZlwkhYWY/RNr3zDptTVV6+70BUBCoxks79yWFjaOvVN8kY2ZRjnanDMYkS+tHav+OogpdOyTADvZGRmHWU=
+X-Received: by 2002:a05:6512:1307:b0:545:2a7f:8f79 with SMTP id
+ 2adb3069b0e04-54838ef04b8mr5854049e87.16.1740391144587; Mon, 24 Feb 2025
+ 01:59:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -60
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdejkeegkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnegoufhorhhtvggutfgvtghiphdvucdlgedtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpehnihgtohhlrghsrdgsohhutghhihhnvghtsegtlhhiphdqohhsrdhorhhgnecuggftrfgrthhtvghrnhepteehfeetkeeujeethfehieelhfejfeduteejieelveegfeefieeuheeiteethfevnecukfhppeeltddrieefrddvgeeirddukeejnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepledtrdeifedrvdegiedrudekjedphhgvlhhopegrrhgthhhlihhnuhigrddrpdhmrghilhhfrhhomhepnhhitgholhgrshdrsghouhgthhhinhgvthestghlihhpqdhoshdrohhrghdpnhgspghrtghpthhtohepvdejpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrhgumhgrsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqshgtshhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghouggrlhhishhtsegtohgurgdrtghsrdgtmhhurdgvughupdhrt
- ghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehnihgtohhlrghsrdgsohhutghhihhnvghtsehsshhirdhgohhuvhdrfhhrpdhrtghpthhtohepjhdrghhrrghnrgguohhssehsrghmshhunhhgrdgtohhmpdhrtghpthhtoheptghlvghmvghnsheslhgrughishgthhdruggv
-X-GND-Sasl: nicolas.bouchinet@clip-os.org
+References: <20250224051627.2956304-1-baolu.lu@linux.intel.com>
+In-Reply-To: <20250224051627.2956304-1-baolu.lu@linux.intel.com>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Date: Mon, 24 Feb 2025 17:58:53 +0800
+X-Gm-Features: AWEUYZkMSn4vPFEG-tzi12j8lxJKJk5iXrx5HLKwOufSb-G1VhIWg-Jk6pa97bc
+Message-ID: <CABQgh9G7Hv-qboRApRrVQF=Zpu5ZKaEf0zrv1=c=zv=LPB-O0g@mail.gmail.com>
+Subject: Re: [PATCH v2 00/12] iommu: Remove IOMMU_DEV_FEAT_SVA/_IOPF
+To: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>, 
+	Fenghua Yu <fenghuay@nvidia.com>, Zhou Wang <wangzhou1@hisilicon.com>, iommu@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+On Mon, 24 Feb 2025 at 13:16, Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>
+> The new method for driver fault reporting support relies on the domain
+> to specify a iopf_handler. The driver should detect this and setup the
+> HW when fault capable domains are attached.
+>
+> Move SMMUv3 to use this method and have VT-D validate support during
+> attach so that all three fault capable drivers have a no-op FEAT_SVA and
+> _IOPF. Then remove them.
+>
+> This was initiated by Jason. I'm following up to remove FEAT_IOPF and
+> further clean up.
+>
+> The whole series is also available at github:
+> https://github.com/LuBaolu/intel-iommu/commits/iommu_no_feat-v2
+>
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>
+Thanks Baolu
 
-Bound coda timeout sysctl writings between SYSCTL_ZERO
-and SYSCTL_INT_MAX.
-
-The proc_handler has thus been updated to proc_dointvec_minmax.
-
-Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
----
- fs/coda/sysctl.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/fs/coda/sysctl.c b/fs/coda/sysctl.c
-index 0df46f09b6cc5..d6f8206c51575 100644
---- a/fs/coda/sysctl.c
-+++ b/fs/coda/sysctl.c
-@@ -20,7 +20,9 @@ static const struct ctl_table coda_table[] = {
- 		.data		= &coda_timeout,
- 		.maxlen		= sizeof(int),
- 		.mode		= 0644,
--		.proc_handler	= proc_dointvec
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_INT_MAX,
- 	},
- 	{
- 		.procname	= "hard",
--- 
-2.48.1
-
+Tested-by: Zhangfei Gao <zhangfei.gao@linaro.org>
