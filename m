@@ -1,155 +1,123 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5F724BC11
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 10:00:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE69241CA6;
+	Mon, 24 Feb 2025 10:00:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740391218; cv=none; b=WmYOzey/t7G07wvD6mTY4y8Efql/S/evhm0dyXu2dsfc/kmc54Hy0toPGruRoI+zYCELJ+QZkEDvmW9MxF62ZplpmBN+bOq8VaU5UXativp/w26+NvjY22fx5RR+7IRo0T6ctJk6fw7YakSmR9braE/vV+hvUcARSfotKkwJdsY=
+	t=1740391249; cv=none; b=gBmHVAenkxEB4umqnao7VTp9AFzRl5zyo6nCU2DvzTXdmAt1MZRca6j6dxkj/uy2r3f0UbUPAH1hugByX2hIVkgUUc551Gtj0GHryCUDpfRdgo17RBkt1nFnJmDu/1/w1HaP0eQFTs709rqEX/T1R7JypfmZopsck5+RQAbJKG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740391218; c=relaxed/simple;
-	bh=L1CsTylPKpbe7mHhb0x/X+ZtkC9C5FKlAWnDYpGi04Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CII8MKg7mB3ZKFXk0fmTlvqcA4zwkdhQKY7h1MafIfMkgXerLbIJ3OrM7AVGVMGXJJ7fWd61Y0NifkmHcOLwbCXTzNOSYNUnHzkmzxJOKAC/vI7ZDe51qbh9lAq6sQCSG/gX0pXRUEcbI+8/M8GreMuSz86NqC2Dn3VB5rFpYn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fXgfXy+L; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740391249; c=relaxed/simple;
+	bh=nChE4LK8cNgAKNxmzM/m4plG3ZITdbtg/Hk1Zy69K6I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ch4VyRifY+FaKIvcR5ZCEseop4ljCBw08YWWHiXL99rb+8duROh0D4wIaW+f2EPK86TwlTB5aeENV5734Q5qgrED4A2niFHE9ZBFN2nDu2zIiAKzhpe2yDvjZ3EqHMdqOPkhEyTe27QwCU2gdPrELb62IYjDCRnCaelgNJw/IUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tNpwqWye; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fXgfXy+L"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-309311e7b39so38009751fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 02:00:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740391215; x=1740996015; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=e/af6Nf4pYTXjW+k5FHuuUBRQ1ISjrcs1BZad7L7cbM=;
-        b=fXgfXy+Lyvncc7TbLBMjXZe+5rFvdePGhHAr3XgVpCRVIZBLQBI0ZxsHYOUUVxLl9y
-         FFf1vD7RAdmgDziCljaBZ1p1v2DpVlpFARh0t7UkBELh0I62jsq8DtWiPPSAU2c6uaBE
-         jmjo8P08sMsUQikTK9vcYv8CuvQGRpwogJUMZuYknihJzj3O5wgT9XgjpDsMR/adlZu8
-         rVL1IYFdKRzmYE/nr380i4OUSUDBC3WLmt7rjbhXwKbf4vvsW3mlzef8NHjP0JvRDQ9Z
-         0ZYz+3Pg93tdRuVCz21O8z2tOKfBOil2TlASPKMuS8EvmUsBhpHOCq1Jv5m2TtTbSpI6
-         MbiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740391215; x=1740996015;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=e/af6Nf4pYTXjW+k5FHuuUBRQ1ISjrcs1BZad7L7cbM=;
-        b=S2DGuDUmmalLshZZxLv+cU2y5Tdj1d6ckB1U/zYT0UZRVSbEHtC1LSGWc7q9fwp/Nd
-         t4m85KBuFCdAFBsFFbbyJktI52f8U6XHoPQ5AYaWBd+NhbIvOb+/jT7eTLGbaYtMb8NK
-         d29ZV6YXMsO5h5yezOqU8Q15N3OMOSb9UQ00qKpF3jBfxcFEhThCC20TZEH1XKB+dGJ8
-         kBYmn9/Xp9lTEu3Rbati7jd3rZs10By/Bd2Ugk3/Ef1iX3qa1yVxREUZBaMHZiSm7LxX
-         5ulYfNsyc4w9NmOOMOtbCT7V2MZj6kw5kLLmmjMrWI8PxwHO/xEl+m/OLBIn0uZWZaXw
-         7rRg==
-X-Forwarded-Encrypted: i=1; AJvYcCWhmUqEcY8b9sooflJW1AqruPoBzcMR21G2tIySYWN8qLpkCOoR5MYRbyRIdcrEH6Q1Qe6qWPiL0OjEiMw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yygtvz0pBk9A+clmFFub7+KlYfAnfvP86JDuqhP0mMZhM2Yp+OK
-	ZyR4qnoKEFr+wILn2yKk/mOYhmVb9FDy0RRyt6L6XbF5wlELesBSs7ILuti6vybhRRnouN+aSdY
-	O/Q/Mdzn273XcFxpPKdzV+OoYPcv0SPnD8VyZNJ3jLy7Tb+1pAuThfg==
-X-Gm-Gg: ASbGncu/17mcex5pZ+wxGS3nvZraDm9OS1sJ95h+GC1ld+u09rpYQ1eg8Cff4lSP392
-	Wrjc/1DX2irNgdZRiuht/4ZD4tKcpZz7sZv3/TD+pPQZWF1K5B1u0fiqo8enq/kRFwiXOAkwKBI
-	bjqOTXCWQ=
-X-Google-Smtp-Source: AGHT+IFvhQ2d0kjawpOA6ae+ZD8D05Wtfz/zZq525EqV3G+li0jFar6Ns4sZTBNcqdZ5o6Ta+CQUR8CvSaROXGWj1Ug=
-X-Received: by 2002:a2e:9098:0:b0:308:ec25:9004 with SMTP id
- 38308e7fff4ca-30a59994167mr42426711fa.35.1740391215090; Mon, 24 Feb 2025
- 02:00:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tNpwqWye"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E5F9C4CED6;
+	Mon, 24 Feb 2025 10:00:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740391248;
+	bh=nChE4LK8cNgAKNxmzM/m4plG3ZITdbtg/Hk1Zy69K6I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tNpwqWyeOKSIcvnb2sWn6XJZqaAc3ytto3eXEQHMclnQYXGJD5BS9/tQHe49QPRGv
+	 It8jRM4GUVBE9mzxY1SfL4KF3WWkKz9OFmo3Tfu0qAPPbCK+UQuEBP/ebkduQdu96w
+	 GCdJHPnG6pgU8cj//rnP9GANvn2Q0B0FLl59XLbXBtgf+LTzmpJvMgWROsn2ZxnEeE
+	 GBnVf8A612NKaE2Q1/Y3CNf3YrgvFGFDynlSGKI51VKCbwQvEJvg1xE5lnW3DOf1r5
+	 4KTmC3UrA+JFgJ5uqtiSeQ//wUPj9engBAZc2R9AldwJjpgZAd5gC/jaVEKMNkCqZd
+	 zmbwIjLcSMBBw==
+Date: Mon, 24 Feb 2025 20:30:45 +1030
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Song Liu <song@kernel.org>, Yu Kuai <yukuai3@huawei.com>
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 7/8][next] md/raid5: Avoid -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <e6dfc07ceb44da02e9e012114a5ae44e4a9ec3d0.1739957534.git.gustavoars@kernel.org>
+References: <cover.1739957534.git.gustavoars@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224051627.2956304-1-baolu.lu@linux.intel.com> <20250224051627.2956304-11-baolu.lu@linux.intel.com>
-In-Reply-To: <20250224051627.2956304-11-baolu.lu@linux.intel.com>
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-Date: Mon, 24 Feb 2025 18:00:03 +0800
-X-Gm-Features: AWEUYZm_Vmy5gXLhP7OjFIo5QaYCXcBq4-MGlly3CV5_Yb7KKQuhKpAi4xpH3T0
-Message-ID: <CABQgh9E2N35pJ5Ehmhq0JydKjWqswypOH9qepu+9QmHmVzdvBw@mail.gmail.com>
-Subject: Re: [PATCH v2 10/12] uacce: Remove unnecessary IOMMU_DEV_FEAT_IOPF
-To: Lu Baolu <baolu.lu@linux.intel.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>, 
-	Fenghua Yu <fenghuay@nvidia.com>, Zhou Wang <wangzhou1@hisilicon.com>, iommu@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1739957534.git.gustavoars@kernel.org>
 
-On Mon, 24 Feb 2025 at 13:16, Lu Baolu <baolu.lu@linux.intel.com> wrote:
->
-> None of the drivers implement anything for IOMMU_DEV_FEAT_IOPF anymore,
-> remove it to avoid dead code.
->
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-Acked-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+Change the type of the middle struct members currently causing trouble
+from `struct bio` to `struct bio_hdr`.
 
-> ---
->  drivers/misc/uacce/uacce.c | 31 -------------------------------
->  1 file changed, 31 deletions(-)
->
-> diff --git a/drivers/misc/uacce/uacce.c b/drivers/misc/uacce/uacce.c
-> index 2a1db2abeeca..42e7d2a2a90c 100644
-> --- a/drivers/misc/uacce/uacce.c
-> +++ b/drivers/misc/uacce/uacce.c
-> @@ -465,31 +465,6 @@ static void uacce_release(struct device *dev)
->         kfree(uacce);
->  }
->
-> -static unsigned int uacce_enable_sva(struct device *parent, unsigned int flags)
-> -{
-> -       int ret;
-> -
-> -       if (!(flags & UACCE_DEV_SVA))
-> -               return flags;
-> -
-> -       flags &= ~UACCE_DEV_SVA;
-> -
-> -       ret = iommu_dev_enable_feature(parent, IOMMU_DEV_FEAT_IOPF);
-> -       if (ret) {
-> -               dev_err(parent, "failed to enable IOPF feature! ret = %pe\n", ERR_PTR(ret));
-> -               return flags;
-> -       }
-> -       return flags | UACCE_DEV_SVA;
-> -}
-> -
-> -static void uacce_disable_sva(struct uacce_device *uacce)
-> -{
-> -       if (!(uacce->flags & UACCE_DEV_SVA))
-> -               return;
-> -
-> -       iommu_dev_disable_feature(uacce->parent, IOMMU_DEV_FEAT_IOPF);
-> -}
-> -
->  /**
->   * uacce_alloc() - alloc an accelerator
->   * @parent: pointer of uacce parent device
-> @@ -509,8 +484,6 @@ struct uacce_device *uacce_alloc(struct device *parent,
->         if (!uacce)
->                 return ERR_PTR(-ENOMEM);
->
-> -       flags = uacce_enable_sva(parent, flags);
-> -
->         uacce->parent = parent;
->         uacce->flags = flags;
->         uacce->ops = interface->ops;
-> @@ -533,7 +506,6 @@ struct uacce_device *uacce_alloc(struct device *parent,
->         return uacce;
->
->  err_with_uacce:
-> -       uacce_disable_sva(uacce);
->         kfree(uacce);
->         return ERR_PTR(ret);
->  }
-> @@ -596,9 +568,6 @@ void uacce_remove(struct uacce_device *uacce)
->                 unmap_mapping_range(q->mapping, 0, 0, 1);
->         }
->
-> -       /* disable sva now since no opened queues */
-> -       uacce_disable_sva(uacce);
-> -
->         if (uacce->cdev)
->                 cdev_device_del(uacce->cdev, &uacce->dev);
->         xa_erase(&uacce_xa, uacce->dev_id);
-> --
-> 2.43.0
->
+We also use `container_of()` whenever we need to retrieve a pointer to
+the flexible structure `struct bio`, through which we can access the
+flexible-array member in it, if necessary.
+
+With these changes fix 10 of the following warnings:
+
+drivers/md/raid5.h:262:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/md/raid5.h:262:38: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/md/raid5.c | 10 +++++-----
+ drivers/md/raid5.h |  2 +-
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+index 5c79429acc64..76981d8cbc5d 100644
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -1178,8 +1178,8 @@ static void ops_run_io(struct stripe_head *sh, struct stripe_head_state *s)
+ 
+ again:
+ 		dev = &sh->dev[i];
+-		bi = &dev->req;
+-		rbi = &dev->rreq; /* For writing to replacement */
++		bi = container_of(&dev->req, struct bio, __hdr);
++		rbi = container_of(&dev->rreq, struct bio, __hdr); /* For writing to replacement */
+ 
+ 		rdev = conf->disks[i].rdev;
+ 		rrdev = conf->disks[i].replacement;
+@@ -2720,7 +2720,7 @@ static void raid5_end_read_request(struct bio * bi)
+ 	sector_t s;
+ 
+ 	for (i=0 ; i<disks; i++)
+-		if (bi == &sh->dev[i].req)
++		if (bi == container_of(&sh->dev[i].req, struct bio, __hdr))
+ 			break;
+ 
+ 	pr_debug("end_read_request %llu/%d, count: %d, error %d.\n",
+@@ -2848,11 +2848,11 @@ static void raid5_end_write_request(struct bio *bi)
+ 	int replacement = 0;
+ 
+ 	for (i = 0 ; i < disks; i++) {
+-		if (bi == &sh->dev[i].req) {
++		if (bi == container_of(&sh->dev[i].req, struct bio, __hdr)) {
+ 			rdev = conf->disks[i].rdev;
+ 			break;
+ 		}
+-		if (bi == &sh->dev[i].rreq) {
++		if (bi == container_of(&sh->dev[i].rreq, struct bio, __hdr)) {
+ 			rdev = conf->disks[i].replacement;
+ 			if (rdev)
+ 				replacement = 1;
+diff --git a/drivers/md/raid5.h b/drivers/md/raid5.h
+index eafc6e9ed6ee..3df59302e953 100644
+--- a/drivers/md/raid5.h
++++ b/drivers/md/raid5.h
+@@ -259,7 +259,7 @@ struct stripe_head {
+ 		/* rreq and rvec are used for the replacement device when
+ 		 * writing data to both devices.
+ 		 */
+-		struct bio	req, rreq;
++		struct bio_hdr	req, rreq;
+ 		struct bio_vec	vec, rvec;
+ 		struct page	*page, *orig_page;
+ 		unsigned int    offset;     /* offset of the page */
+-- 
+2.43.0
+
