@@ -1,65 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B5D26460A;
-	Mon, 24 Feb 2025 16:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13282638A8
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 16:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740416372; cv=none; b=THSOvo+Z6T2VKnAQl2K2Kx3MF0tB8TMY6754eSQ4UVVFmVyC59EuMxZjyAX5QpONoQIk2EF6rjuBztdMV9WuVcreIoiU8tbdb88k8kumHJG/6jHFYcjR30DG+Odyyurt77D/wmrl9d0SySSVCOduarQYGlZQUiarPV8RFyiknt4=
+	t=1740416391; cv=none; b=atCQOmZrpVceyICUo1m/wyi3pEcRPvVQP4TUb/JagDNMVu9JvEKfuuyNZJ5lsOy5RBPNS6PdFvxT9Pa+gXEss++7TdMNv1c34LwAE3o2/MkPKW6wgw1C48A2Pefd3X8uoxjbEbPwup/OvIhQiMD9DHFuCTShMfnt1okqtkmTeog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740416372; c=relaxed/simple;
-	bh=lHuXjtnGIwA8Zzr3bT7RPQh03xIe4TvMRJ0gk9Qtcas=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I0VbBGGsZvgtUfAYxG6nby70HQSvXaBi4BHQjP1mlMXUQIQkxzwFkVBac4iOgtJ8bMQXCNippMDuQuLH0DXjP+oW49l12KhijoUPKUOyC6e37R/oHYIgB34WpuGry7T84wodL8aeZ2r9rLOR6KFSMAopsj4pb3JQ3+700t6NAUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=Bsh9uTGi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740416391; c=relaxed/simple;
+	bh=QFtYzMCtAYvcjsT5gslas8Q1j/fnKz+V951oSzETkRw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HoiMVxBOUzMbaG0jvigaa2fH2Fskk6fesL5zjg1iWMpXAE+43vqOhoni4Shsul3t/zCo351z9cxJ1n5sjqB1+QdjcwoQ/b3FtVGZtStvAa1mS67DGn8LeMbLDPSmA3Mwwth1z74V121Ipu37DJjewbZ2iETnMYvgPaxst9Yx5pU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=oTSPNlY5; arc=none smtp.client-ip=91.218.175.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Bsh9uTGi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDEE5C4CED6;
-	Mon, 24 Feb 2025 16:59:30 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Bsh9uTGi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1740416368;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="oTSPNlY5"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740416377;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lHuXjtnGIwA8Zzr3bT7RPQh03xIe4TvMRJ0gk9Qtcas=;
-	b=Bsh9uTGiYhe1o8ZXOSqrPFWBmXQ1xZ6i4iCW91bSkJCVhH35s3W7gsgmJA0/fB2w4dJJ0f
-	jP2EMvnZ+zb0edTKNfba/gtbAuc+7d5nvexXWfUqBuaUwH9qGihPM6xFppbLWSyCSmV5x5
-	r05bEMj01G1Thw2Trn9nB15iq/P4CrI=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 022d9860 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Mon, 24 Feb 2025 16:59:28 +0000 (UTC)
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3f422d6e3b0so922832b6e.1;
-        Mon, 24 Feb 2025 08:59:28 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUxl78VYZ7bKpQ3dq+RHskNJ9GE6cuUmfLjhr8IrPXlP3V8DKtsHJqyY+RkIfff6UvbF1TjGUp5H3tjQS5IcaLP@vger.kernel.org, AJvYcCVB6jifDnSHbqvHu12VmpCA2rQhbP6IXGNux/CpeAtW53L8G2ISw9DrMbpg0eemClJrRj1iPdxS@vger.kernel.org, AJvYcCVVzMzFKdgSNT4/b6oxv6Y2MxN4nq8cM+yGXPXNBA9uZ3uosGW+Px6y9yyuGn6mA5iMJaExopCKs8SQKbY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxyv+i+Ac6duGTKPI5R8XNDKlBuAkfTbWJOURAHEig8fweJ0oGj
-	JCr6BBeXPlV7ScLTe09IpvWAk+h/45XAY1MakjSf2DqV/KWrXPeiHkJjqLAU1JQscQIZiLS6AvB
-	rRrVOhgm3+dx1F6BkwRt2Khq3zVk=
-X-Google-Smtp-Source: AGHT+IFtmDu5uSUGW95GD4oZE/+yQz6eG0LBmjYl0CcxM+BcvKE8kMWJ+nIwSVZEE0+psbkqclZn5gJikjdKQrHlg3k=
-X-Received: by 2002:a05:6808:2e89:b0:3f4:7a9:7bb9 with SMTP id
- 5614622812f47-3f425a7e72emr10406901b6e.11.1740416367403; Mon, 24 Feb 2025
- 08:59:27 -0800 (PST)
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Pgnmm2PNiYrAIIAl+3GQWPSNpgnW+rz9YHyx1c8UIUs=;
+	b=oTSPNlY543OZWNcJuWtYK79ariWYF+R34FXKcOL5a5NHo3dO2k+lLeY+agqIuue0UBmuFe
+	3l69Ybp5dZ8bgM2HdOuVw/Q1ob7FQ+j7i+hazjttl1Ku+u9w4/v8D3S/aJG9yeLgoYRBlH
+	F5IaDKyk+mOUByyuByk4wo13PM/vtx4=
+From: Tao Chen <chen.dylane@linux.dev>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	eddyz87@gmail.com,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	qmo@kernel.org
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	chen.dylane@gmail.com,
+	Tao Chen <chen.dylane@linux.dev>
+Subject: [PATCH bpf-next v8 0/5] Add prog_kfunc feature probe
+Date: Tue, 25 Feb 2025 00:59:07 +0800
+Message-Id: <20250224165912.599068-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6945896DD80A71BD+20250224041238.45039-1-wangyuli@uniontech.com>
-In-Reply-To: <6945896DD80A71BD+20250224041238.45039-1-wangyuli@uniontech.com>
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date: Mon, 24 Feb 2025 17:59:17 +0100
-X-Gmail-Original-Message-ID: <CAHmME9rGjwFKMhpAuWxNerRc9_0068d3k13n3wxZ8BwV_EeMHg@mail.gmail.com>
-X-Gm-Features: AWEUYZknNUYzGad3f0Uq5YaAmoyWIrddgaIGfC_iv0ceh4M9u47CYY8wOZTJJ-c
-Message-ID: <CAHmME9rGjwFKMhpAuWxNerRc9_0068d3k13n3wxZ8BwV_EeMHg@mail.gmail.com>
-Subject: Re: [RESEND PATCH v2] wireguard: selftests: Cleanup CONFIG_UBSAN_SANITIZE_ALL
-To: WangYuli <wangyuli@uniontech.com>
-Cc: shuah@kernel.org, horms@kernel.org, tglx@linutronix.de, jstultz@google.com, 
-	wireguard@lists.zx2c4.com, netdev@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	zhanjun@uniontech.com, niecheng1@uniontech.com, guanwentao@uniontech.com, 
-	chenlinxuan@uniontech.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Applied, thanks.
+More and more kfunc functions are being added to the kernel.
+Different prog types have different restrictions when using kfunc.
+Therefore, prog_kfunc probe is added to check whether it is supported,
+and the use of this api will be added to bpftool later.
+
+Change list:
+- v7 -> v8:
+  - fix "kfuncs require device-bound" verifier info
+  - init expected_attach_type for kprobe prog type
+  - patchset Reviewed-by: Eduard Zingerman <eddyz87@gmail.com>
+- v7
+  https://lore.kernel.org/bpf/20250212153912.24116-1-chen.dylane@gmail.com/  
+
+- v6 -> v7:
+  - wrap err with libbpf_err
+  - comments fix
+  - handle btf_fd < 0 as vmlinux
+  - patchset Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+- v6
+  https://lore.kernel.org/bpf/20250211111859.6029-1-chen.dylane@gmail.com
+
+- v5 -> v6:
+  - remove fd_array_cnt
+  - test case clean code
+- v5
+  https://lore.kernel.org/bpf/20250210055945.27192-1-chen.dylane@gmail.com
+
+- v4 -> v5:
+  - use fd_array on stack
+  - declare the scope of use of btf_fd
+- v4
+  https://lore.kernel.org/bpf/20250206051557.27913-1-chen.dylane@gmail.com/
+
+- v3 -> v4:
+  - add fd_array init for kfunc in mod btf
+  - add test case for kfunc in mod btf
+  - refactor common part as prog load type check for
+    libbpf_probe_bpf_{helper,kfunc}
+- v3
+  https://lore.kernel.org/bpf/20250124144411.13468-1-chen.dylane@gmail.com
+
+- v2 -> v3:
+  - rename parameter off with btf_fd
+  - extract the common part for libbpf_probe_bpf_{helper,kfunc}
+- v2
+  https://lore.kernel.org/bpf/20250123170555.291896-1-chen.dylane@gmail.com
+
+- v1 -> v2:
+  - check unsupported prog type like probe_bpf_helper
+  - add off parameter for module btf
+  - check verifier info when kfunc id invalid
+- v1
+  https://lore.kernel.org/bpf/20250122171359.232791-1-chen.dylane@gmail.com
+
+Tao Chen (5):
+  libbpf: Extract prog load type check from libbpf_probe_bpf_helper
+  libbpf: Init fd_array when prog probe load
+  libbpf: Add libbpf_probe_bpf_kfunc API
+  libbpf: Init kprobe prog expected_attach_type for kfunc probe
+  selftests/bpf: Add libbpf_probe_bpf_kfunc API selftests
+
+ tools/lib/bpf/libbpf.h                        |  19 ++-
+ tools/lib/bpf/libbpf.map                      |   1 +
+ tools/lib/bpf/libbpf_probes.c                 |  90 +++++++++++---
+ .../selftests/bpf/prog_tests/libbpf_probes.c  | 111 ++++++++++++++++++
+ 4 files changed, 205 insertions(+), 16 deletions(-)
+
+-- 
+2.43.0
+
