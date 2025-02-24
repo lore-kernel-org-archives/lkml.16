@@ -1,146 +1,119 @@
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8F9158870;
-	Mon, 24 Feb 2025 12:44:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B288F4E2
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 12:44:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740401053; cv=none; b=uy3sd22X51VJjXOf3WzLoE0/FNePkOnomAPc9B6NZd07RPfoFcXpnVWZ532fOpAbaZAshxeUOR1djFqkqrN/CacHpw5zf90bh81PUkcqA5+MvuYL8sG21odJNDVzmgVuTX3ma55zx2OPAav4p0kV0Tq7t/FRUJO2fe3rm+wnGYo=
+	t=1740401094; cv=none; b=ZZNXCUkE2Nhja0jTlYz4g1nwD0Db2hDajs35LiGiKrOPRTUIpiQxpWZgBVb2zvCHl5bjC+YODRXWZpIPu8MEQ9rMW6e5BvMs+m+7KaKlIitqBv5Tpkac97OYRpB8r6ud1uMCGRYHy7z1FNUVEUrYK0ItsijgY+PI9aQBjo0Trvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740401053; c=relaxed/simple;
-	bh=zUibEaqNaWJkz1+FPEIsiT0fEvu7iy7yfzN7V0cnt4I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yc/qLp3iVEd2TbpvKY1EQOcG5kAG4bVqoIz9LbLOr+MbJk9pq0IC75lSMqjTuKc7Aj2B6mqgpknDeMl16oBoIHtEXWGQgfJ9wk5IVt3Sr8pHo6PTk4mkPoXO3A3I9B5/l4y1x7h+utWqhWSSSo4wAyHPP/pMC+CnCJgHO2xD688=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1740401094; c=relaxed/simple;
+	bh=uUlJ/YqOHEUEcaQH1p9PSJzfXPsJSMUPR0Rqgv6f4Tw=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=o+61PY9qoOmZL313OxbFEUZagV4cqOwqaeOT574OYw2/U/wLSaxBp1zDTVCgL43dfZTtt3J3+nNqRX6ZE8h1oD6NOAXWytyNBEP4hi5J1fKo3E2XuWJlknh5fp9Hmq1IHoobuU2kr4yXTAo+H31r20u0temIQSq1yuym0M+5Tog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aoSca2HW; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-520a473d2adso2795660e0c.2;
-        Mon, 24 Feb 2025 04:44:09 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aoSca2HW"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-abbec6a0bfeso693616066b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 04:44:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740401091; x=1741005891; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uUlJ/YqOHEUEcaQH1p9PSJzfXPsJSMUPR0Rqgv6f4Tw=;
+        b=aoSca2HW+71BCBgDGBcsh7JyuWbq42fq8aKj6T0JTOHaCLdhW3duGz8n0/J2aXiRC0
+         hGbaA9/uzbaPAF+CBHf4KmdQ4dBw7mtn0WmisQXtiA9L1PES9VPsGz7stqUFPYvJ6Ulg
+         eklVnXUMyrKHVyeVLzWxWuHAcE+TsZBG7pQoJjAtnLUhj4S43h/QBaRWwp/m7YA7J6ks
+         JpEw3aK+JQ5/gx6v2aab3nG6S/FfkkB3+9GcfFyXpaCCGsKBc7cLe+Cp7BdmBp0XJlwz
+         21TZqNsFgm3nlvaad7ud9wOZp3wxemLnnwARYGf2AR98836hvXOOuFq60X+MQ+xHqmDb
+         IytA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740401048; x=1741005848;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kfKRKIWXmuVsvt2Fp1PvbnywriA6811yvZ1y23PVTWo=;
-        b=dLW5fYcFp33r5l4JEDUJJSw8lECEOO1k260gZ7fIkboP9TlodkcnBmKhqZVGlTiXaw
-         kRr4TqpVxAazMRsXTUdh7CKSFL0SuJkivxv90Bm8UJnlJTAbAE7z57z9TjyBe4yw8xbv
-         8hIacQB2rxwSCvukq2h0JkOoZzPPDEcnX5mo+sgXOJTzyJxCo8vaJ1xvsPwyjJb3Dwu7
-         EjbVN/TijztLTQyVVXFuQhi262nKiHLnXSI6TXZqo9e8cI439xROleQscZO1Agarq587
-         SNUHLMWPJed1olC2ClP3M1NnuDxz4W1NFxvFZsexbCk5WMT5AZGQJCXmi5v8cSLVnBhp
-         w1aw==
-X-Forwarded-Encrypted: i=1; AJvYcCVBbdT4+ExcnmiOQWrU/VBAtr68zVwPDRdWkyWEmrqdXIpfTzJYKcqTG6NWo8G55NqSKZfa5nQXzX+U@vger.kernel.org, AJvYcCWtXEH/HigNmcaTWOBGhkTiu7L/r7aW5VWbNO327QkzzTgEz/ZTvX2VShOCxYkKlW2qURkr7kJxEecK@vger.kernel.org, AJvYcCXdQV7sC7OVJb8UAzkBClStzsBEi+P5fy5e9ekh3bCp/nG088wglY2K2fr2KVjH/VnKApS7TnFtUkT442gL@vger.kernel.org, AJvYcCXnAP4nd6hf6Me6xrwL9XNPLYTzuUS9wHZD67wZ3htKRITcAaVNFaN6GfCAIYClqgyc45qvZXjySrPETcWPL/DI0P4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxE7c0GDZicQ3WQNrH1o7/QW7KhRYl2SJhn/otF8gGsv7fLClMs
-	BNd6DFlL6lEQq+SmFSwbJXylLoYz7xt08V/inSp0xzTQcvcg5Ezb0M03FZW8n3c=
-X-Gm-Gg: ASbGncv1zO4OJoo+ILZVKryVGjAC8CLCj2Xk++kE28j3LjSQ8GpmUuwIS1rKunP5jUF
-	cp/Tp8mI+D5sxMuJCO+Sj/viz1tmkXRdnfxSY0dysPJThDg/a7ZFFU6smYy/8XFvQ0pLW1lttx0
-	EnbXpyIpIzvPpVRrHFnQg/7gmToo9eiKEjK7Vp0XaEQ/ea34OQH+Mctk6hV9LxE1iqLBn9UmILF
-	hQb9kF2zJIkmv6HXVKe1tCom2C2Zbs7Tc1Aqf2w5S8MAxW6FyISsnXRnFlxRgK2dPG5b4oXSzjS
-	I80pe3OpWmOn0KuQqvevXrygOCcoXyJ5NQfX09aaXRoTfSxRoecBCDP1E8aUBo5z0h/g
-X-Google-Smtp-Source: AGHT+IHwRZmST5ujNiPY8sVjbqeHwaB1rnCTQVyhwmacKrDPFsQvVs1vIx7vAe3rNbzfhYtKTeYFjQ==
-X-Received: by 2002:a05:6122:1b84:b0:520:61ee:c821 with SMTP id 71dfb90a1353d-521ee241e4fmr6776100e0c.3.1740401048579;
-        Mon, 24 Feb 2025 04:44:08 -0800 (PST)
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com. [209.85.221.169])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52085b489bbsm4442325e0c.42.2025.02.24.04.44.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2025 04:44:08 -0800 (PST)
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-51eb1818d4fso3123333e0c.1;
-        Mon, 24 Feb 2025 04:44:08 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUQ49YXWw7HUY6ZvIZ8bF9PESfkwbVgN2hjlQd3kj7KxFdFpMfDx3hGaIcq6QfsG+l02hq6np5uOGZ+@vger.kernel.org, AJvYcCVSQRvRgXQYLt1gosD4RCo6d8HA+qTF1agDFq9KxHTkZbmQK2RJrPYta8cGlI9spgDZCg3i4IRrd6efzJP2IvN0OTc=@vger.kernel.org, AJvYcCVmZhgWDd2sZGUmW/fU6RNZ312qNFjE1FtpV7+69Ge+muf3vOHKOiDQdmhTGUf2ktkN34PXaXZ26Z9Y@vger.kernel.org, AJvYcCXciZhcCMwxnJkjTqcusYMH+1q7nGFvPSaqB3lmTvotlNnsF/V01izvD7bGLvcB6g0tp6BI7rPYVjMMIrop@vger.kernel.org
-X-Received: by 2002:a05:6102:54a6:b0:4bb:e80b:4731 with SMTP id
- ada2fe7eead31-4bfc023cce0mr6203694137.16.1740401048043; Mon, 24 Feb 2025
- 04:44:08 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740401091; x=1741005891;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uUlJ/YqOHEUEcaQH1p9PSJzfXPsJSMUPR0Rqgv6f4Tw=;
+        b=lRpor847jpx0+tBjlyenm9wYzcpjVpXiDm4UUBe23bh0bnIarCOvj2k6xi0G5tI0ar
+         EY5Y6hV9Os/sKl26AduedhxstMe1d1j2SvqjCWuzWSoTDHxW5sGq3Xe8T4RMlNrGERdv
+         CfGXfFctrs1R8Y0BW1yClO33wGi2S1M5VwtLqJn/Y3hhlvciTFjzt8JxEAktyz/BzpVC
+         sfAlXac3D65EUyy87J0d3nBiqBr2YHqcSbuT+kE66lb+qgO1On+7sEC4XEsTudC76uAP
+         JZI9348zpkZ5p6JCljRpUH7LdRZAFypuJKG7+K4Vb4LNc1esGA+mRf5BtmT+++12QKd7
+         v0cw==
+X-Forwarded-Encrypted: i=1; AJvYcCUk4jJBO6/PFbgO8tXfwAGpGJolvfC+35FrsajyWS46Pp8IJkwZsAvZ4g8ge85xrXbAqVPlxLDnmitHqnA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvJt2OxL+/C87U4/Hp5JELwhu3rubn0mHpx2QizBn5/p324hml
+	LAxDZHXaBVTcFVbGbPG2MDn1l3eGYmJwyJ8IXztGRVuStCwCV57X
+X-Gm-Gg: ASbGncvK1VEnjQ4+lGYZwKInmg9Jwdq91aRp6cWN05pnkLd/vFHF/lij/lt2s3q+vH1
+	kzzM2ufEKOxasOpREGzxK7YvXXZfq+p/epsrM1CykDn+WyvMBfsK8Pwi2gnD5XHN861IR5Q2GO3
+	k7v13BSb3SybHATpccncVdT7eXB92ga2tOn/DRrgIhjyFAD/LfelYoAmW3Q+ooxnvxGeYk+9vkm
+	zjM6Kk6XeIvi/Ej7ecrlqcM8bFxOPWwd1Waq7UK7OC19leZpspfULIHjM3CwomvpZn71ZcjQdbW
+	lCyFpdqHE890QK6X/dqowfCXuq5pXnTSrMBO5oXYdYe8mxE=
+X-Google-Smtp-Source: AGHT+IEJb/DYjRK1zQULnRrxfy1ILl8jlEBKOOE4wo/W0zWqZBA/YjJvnbL6+997MY2DmHfnXEtzSQ==
+X-Received: by 2002:a17:907:60c8:b0:abe:cbc3:a148 with SMTP id a640c23a62f3a-abecbc3b1c1mr12117666b.50.1740401090165;
+        Mon, 24 Feb 2025 04:44:50 -0800 (PST)
+Received: from smtpclient.apple ([212.59.70.42])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-aba53280ee4sm2222831766b.78.2025.02.24.04.44.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Feb 2025 04:44:49 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250220150110.738619-1-fabrizio.castro.jz@renesas.com> <20250220150110.738619-4-fabrizio.castro.jz@renesas.com>
-In-Reply-To: <20250220150110.738619-4-fabrizio.castro.jz@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 24 Feb 2025 13:43:56 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUjDw923oStxqY+1myEePH9ApHnyd7sH=_4SSCnGMr=sw@mail.gmail.com>
-X-Gm-Features: AWEUYZltwujls4aQb_CukANB_WNWYRKY2nodRlJJtmo77HvwChNCoZ7RyAdoUhE
-Message-ID: <CAMuHMdUjDw923oStxqY+1myEePH9ApHnyd7sH=_4SSCnGMr=sw@mail.gmail.com>
-Subject: Re: [PATCH v4 3/7] dt-bindings: dma: rz-dmac: Document RZ/V2H(P)
- family of SoCs
-To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Biju Das <biju.das.jz@bp.renesas.com>, 
-	dmaengine@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH v13 04/14] x86/mm: use INVLPGB for kernel TLB flushes
+From: Nadav Amit <nadav.amit@gmail.com>
+In-Reply-To: <20250224123142.GFZ7xmruuyrc2Wy0r7@fat_crate.local>
+Date: Mon, 24 Feb 2025 14:44:37 +0200
+Cc: the arch/x86 maintainers <x86@kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ peterz@infradead.org,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ zhengqi.arch@bytedance.com,
+ thomas.lendacky@amd.com,
+ kernel-team@meta.com,
+ "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ jackmanb@google.com,
+ jannh@google.com,
+ mhklinux@outlook.com,
+ andrew.cooper3@citrix.com,
+ Manali.Shukla@amd.com,
+ Ingo Molnar <mingo@kernel.org>,
+ Borislav Petkov <bp@alien8.de>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <1FC042E2-7210-45F1-A094-40849100F483@gmail.com>
+References: <20250223194943.3518952-1-riel@surriel.com>
+ <20250223194943.3518952-5-riel@surriel.com>
+ <20250224123142.GFZ7xmruuyrc2Wy0r7@fat_crate.local>
+To: Rik van Riel <riel@surriel.com>
+X-Mailer: Apple Mail (2.3826.400.131.1.6)
 
-Hi Fabrizio,
 
-On Thu, 20 Feb 2025 at 16:01, Fabrizio Castro
-<fabrizio.castro.jz@renesas.com> wrote:
-> Document the Renesas RZ/V2H(P) family of SoCs DMAC block.
-> The Renesas RZ/V2H(P) DMAC is very similar to the one found on the
-> Renesas RZ/G2L family of SoCs, but there are some differences:
-> * It only uses one register area
-> * It only uses one clock
-> * It only uses one reset
-> * Instead of using MID/IRD it uses REQ NO/ACK NO
-> * It is connected to the Interrupt Control Unit (ICU)
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
 
-> v1->v2:
-> * Removed RZ/V2H DMAC example.
-> * Improved the readability of the `if` statement.
+> On 24 Feb 2025, at 14:31, Borislav Petkov <bp@alien8.de> wrote:
+>=20
+> On Sun, Feb 23, 2025 at 02:48:54PM -0500, Rik van Riel wrote:
+>> Use broadcast TLB invalidation for kernel addresses when available.
+>>=20
+>> Remove the need to send IPIs for kernel TLB flushes.
+>>=20
+>> Signed-off-by: Rik van Riel <riel@surriel.com>
+>> Reviewed-by: Nadav Amit <nadav.amit@gmail.com>
 
-Thanks for the update!
+Nothing concrete against this patch, but I do not remember reviewing it
+thoroughly, and I do not see that I sent any =E2=80=9CReviewed-by=E2=80=9D=
+ tag for it
+before, so please remove it. I only reviewed thoroughly and gave
+=E2=80=9Creviewed-by=E2=80=9D for patch 9.
 
-> --- a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
-> +++ b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
-> @@ -61,14 +66,22 @@ properties:
->    '#dma-cells':
->      const: 1
->      description:
-> -      The cell specifies the encoded MID/RID values of the DMAC port
-> -      connected to the DMA client and the slave channel configuration
-> -      parameters.
-> +      For the RZ/A1H, RZ/Five, RZ/G2{L,LC,UL}, RZ/V2L, and RZ/G3S SoCs, the cell
-> +      specifies the encoded MID/RID values of the DMAC port connected to the
-> +      DMA client and the slave channel configuration parameters.
->        bits[0:9] - Specifies MID/RID value
->        bit[10] - Specifies DMA request high enable (HIEN)
->        bit[11] - Specifies DMA request detection type (LVL)
->        bits[12:14] - Specifies DMAACK output mode (AM)
->        bit[15] - Specifies Transfer Mode (TM)
-> +      For the RZ/V2H(P) SoC the cell specifies the REQ NO, the ACK NO, and the
-> +      slave channel configuration parameters.
-> +      bits[0:9] - Specifies the REQ NO
+[ I would note at this opportunity that while I managed to convince =
+myself
+patch 9 is safe, I personally would have considered taking a more =
+defensive
+approach there. I may reiterate it there. ]
 
-So REQ_NO is the new name for MID/RID.
-
-> +      bits[10:16] - Specifies the ACK NO
-
-This is a new field.
-However, it is not clear to me which value to specify here, and if this
-is a hardware property at all, and thus needs to be specified in DT?
-
-> +      bit[17] - Specifies DMA request high enable (HIEN)
-> +      bit[18] - Specifies DMA request detection type (LVL)
-> +      bits[19:21] - Specifies DMAACK output mode (AM)
-> +      bit[22] - Specifies Transfer Mode (TM)
-
-These are the same as on other RZ SoCs.
-So wouldn't it be simpler to move ACK NO to the end (iff you need it
-in DT), so the rest of the layout stays the same as on other RZ SoCs?
-
-The rest LGTM.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
