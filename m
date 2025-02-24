@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA51524A06F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B961624A059;
 	Mon, 24 Feb 2025 09:09:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740388143; cv=none; b=kWOj8I60jeNLR+IDoFaFg14CI3pb6v0nYK4lhfu7TbWIt2xp9JfRXi/AZAWADmKSUiRk5YLsEiFyuyf6+frsqycTO/FKwT7e2Mpiyl/LILGYs0GReLjfuycujqiGnJCC1EvjgUDe5xlhwg4lgqlKgr8FDvlryLk5xKc2Dy3pWx8=
+	t=1740388143; cv=none; b=MYtJQunr1t7dEeIepsG21znRQLbo7T98Fu3E0vX6snpyXcy0lzKb9Py9Hnz9vz6gfzxIPRpJpk8QsFnrlIp3c4tnJOJ6xxGeOJ6YQDdUKtqbbhz7mScqShSxy4MpsBefAXJ1avIxSU89wo57Wc8RYyjunKbVwmio4DsvLFUufPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740388143; c=relaxed/simple;
-	bh=nv2FWo3LGyCll6dWzmoWsroR9XM0kzMdOA2DYqUHwCw=;
+	bh=visFeBdmwWEXGD09mdOdO30j7sy6oK5qUh63NaeMIjk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EriE5YuF1IHSV0nqgwiGBOKsYw2IK8akdYS7x6pUGImMpwqFInqO5JmCnTrPfjcCGn4ss9o/8RQYf0VWtkFGbaAJIRaeh6vHlvF7yvZvrCKf6jMAdJ0eWZQ8r2wvkKW0JFwlVgWzdZOWok98Hm8tzv5CTtBKyeD9cDb9z4pArhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=al+Zq2Id; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=qXVVLS40twCGnjFj1qYnSQam2AiT7OxHO4gUNp7CFksnw+jjSLkoUyRBTPZ/Yw5qfhhF3IXashddFRzRg612XvOBTOHgYYJP28Gbm5ga26NHEzCg8doa+D4PIVWcN00QsZnQiIM3+re0kpxI9Yq/aj9H5lmzHihtB+1mVNQPrMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UYNoedzr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="al+Zq2Id"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CB1BC2BCAF;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UYNoedzr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CAF1C4CEF0;
 	Mon, 24 Feb 2025 09:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740388143;
-	bh=nv2FWo3LGyCll6dWzmoWsroR9XM0kzMdOA2DYqUHwCw=;
+	bh=visFeBdmwWEXGD09mdOdO30j7sy6oK5qUh63NaeMIjk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=al+Zq2Id6hZVKqX6SFl78E7mwKEUDlYGzUQ751uJ5CxgoxU1b8tM7dSa1cQQSbmIR
-	 YcZCatMiC/qnIJSlaOlBtfkJBtDwK4tqZ28GGV3n2sCLQ5NcEFqadt7zH8w3cicJo9
-	 v+yT7VQbObQvYWn3nhfE7jgq4xhL+Xmnl6KnyEKmElWRNTLeRnRKMhfC1gB4era1zg
-	 l65LQFizPFyTCtawJkc3Ki3hIQ0tDB1mxSZaU3FCQvWB3loYcLqeF1Yyz9gw577cNs
-	 D/9F2yja4dTV5SQUpTMbbvZO5PuRqHxQct9CRaK5MiT5FIDkKZ1DNvdTVFACBPSgCO
-	 vDZr/pgpi/jfA==
+	b=UYNoedzrk4yrV8BKWtMh6MleKLHnYVN+RvNQjy643BNEae3Jxrr6d6ScSfdmtY/oR
+	 Lp6qEOtUAI9Hi87Ms0G4YI8Tn9K82cUaQv1T1GzZoUC641o31tT1A7FQ+rR6lil4na
+	 BQ8CQdC8QzF9YshTHKm4ocSLfDgoPzJ1ina35cn8a6xa2qqHBlLWi1dlpOSGtwHpuW
+	 02AnxSFYndaazymwY5Jjn3XJEB/NNhUY+II5bi0PsIc/hMfh95gaUxWpE8aLzh2UFO
+	 iEK9sa3aFx783TXoczEHSr+fl6Kla2K3/E/AqiE4NDfU3zXDr9IRrJkV9kSBAlM1RH
+	 M9/QTfHeSCHKg==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tmUST-00000003p5A-2BzD;
+	id 1tmUST-00000003p52-1yTx;
 	Mon, 24 Feb 2025 10:09:01 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
+	Kees Cook <mchehab+huawei@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 27/39] docs: sphinx: kerneldoc: use kernel-doc.py script
-Date: Mon, 24 Feb 2025 10:08:33 +0100
-Message-ID: <c5d81e54daae8f69c924499afaf74740b6de1041.1740387599.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v2 25/39] docs: sphinx: kerneldoc: verbose kernel-doc command if V=1
+Date: Mon, 24 Feb 2025 10:08:31 +0100
+Message-ID: <299b7351d1f395031c79521cf3503e47baa1d4a1.1740387599.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1740387599.git.mchehab+huawei@kernel.org>
 References: <cover.1740387599.git.mchehab+huawei@kernel.org>
@@ -51,40 +52,81 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Switch to the new version when producing documentation.
+It is useful to know what kernel-doc command was used during
+document build time, as it allows one to check the output the same
+way as Sphinx extension does.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/Makefile | 2 +-
- Documentation/conf.py  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ Documentation/sphinx/kerneldoc.py | 34 +++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/Documentation/Makefile b/Documentation/Makefile
-index 63094646df28..c022b97c487e 100644
---- a/Documentation/Makefile
-+++ b/Documentation/Makefile
-@@ -60,7 +60,7 @@ endif #HAVE_LATEXMK
- # Internal variables.
- PAPEROPT_a4     = -D latex_paper_size=a4
- PAPEROPT_letter = -D latex_paper_size=letter
--KERNELDOC       = $(srctree)/scripts/kernel-doc
-+KERNELDOC       = $(srctree)/scripts/kernel-doc.py
- KERNELDOC_CONF  = -D kerneldoc_srctree=$(srctree) -D kerneldoc_bin=$(KERNELDOC)
- ALLSPHINXOPTS   =  $(KERNELDOC_CONF) $(PAPEROPT_$(PAPER)) $(SPHINXOPTS)
- ifneq ($(wildcard $(srctree)/.config),)
-diff --git a/Documentation/conf.py b/Documentation/conf.py
-index 3dad1f90b098..b126f6760b5f 100644
---- a/Documentation/conf.py
-+++ b/Documentation/conf.py
-@@ -540,7 +540,7 @@ pdf_documents = [
- # kernel-doc extension configuration for running Sphinx directly (e.g. by Read
- # the Docs). In a normal build, these are supplied from the Makefile via command
- # line arguments.
--kerneldoc_bin = '../scripts/kernel-doc'
-+kerneldoc_bin = '../scripts/kernel-doc.py'
- kerneldoc_srctree = '..'
+diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
+index 39ddae6ae7dd..d206eb2be10a 100644
+--- a/Documentation/sphinx/kerneldoc.py
++++ b/Documentation/sphinx/kerneldoc.py
+@@ -43,6 +43,29 @@ from sphinx.util import logging
  
- # ------------------------------------------------------------------------------
+ __version__  = '1.0'
+ 
++def cmd_str(cmd):
++    """
++    Helper function to output a command line that can be used to produce
++    the same records via command line. Helpful to debug troubles at the
++    script.
++    """
++
++    cmd_line = ""
++
++    for w in cmd:
++        if w == "" or " " in w:
++            esc_cmd = "'" + w + "'"
++        else:
++            esc_cmd = w
++
++        if cmd_line:
++            cmd_line += " " + esc_cmd
++            continue
++        else:
++            cmd_line = esc_cmd
++
++    return cmd_line
++
+ class KernelDocDirective(Directive):
+     """Extract kernel-doc comments from the specified file"""
+     required_argument = 1
+@@ -57,6 +80,7 @@ class KernelDocDirective(Directive):
+     }
+     has_content = False
+     logger = logging.getLogger('kerneldoc')
++    verbose = 0
+ 
+     def run(self):
+         env = self.state.document.settings.env
+@@ -65,6 +89,13 @@ class KernelDocDirective(Directive):
+         filename = env.config.kerneldoc_srctree + '/' + self.arguments[0]
+         export_file_patterns = []
+ 
++        verbose = os.environ.get("V")
++        if verbose:
++            try:
++                self.verbose = int(verbose)
++            except ValueError:
++                pass
++
+         # Tell sphinx of the dependency
+         env.note_dependency(os.path.abspath(filename))
+ 
+@@ -104,6 +135,9 @@ class KernelDocDirective(Directive):
+ 
+         cmd += [filename]
+ 
++        if self.verbose >= 1:
++            print(cmd_str(cmd))
++
+         try:
+             self.logger.verbose("calling kernel-doc '%s'" % (" ".join(cmd)))
+ 
 -- 
 2.48.1
 
