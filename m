@@ -1,114 +1,102 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5088828F1
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 01:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A8FEEAB;
+	Mon, 24 Feb 2025 01:23:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740359959; cv=none; b=hZeTBmwLkPvJJr4YSi0pfAEAqLyK7eptpDb1ZXoJTiwORLOgx8areKAFVsVKxRPau2JIFt0UvE9y5QpLnswds+AWUGRZa83UHCJXgn7re8xHymg7kkBDcKZF0xV0DzSb+WMIeNIq+qFwGW1vJNkBpxUpsksEGFJEBetFN+y+sXo=
+	t=1740360207; cv=none; b=uYNRRIqp0EmCvCiCG4XkhfiuT1jUomnqDS3nRolFeEMxDFmZnpCC29ClUnfp+xVL37Jzath9+EcFoAvaQkKiG8rrtMew9zo40JZzmtoliNHS0e+lMHyWMRcTZ5sG1YF2iEnyHh1wkBZBMu6CJi2gzz7h+IiEOo34Kl6FhD9G2W4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740359959; c=relaxed/simple;
-	bh=H+9A0VE2QeyHRrBytWf66i6/Qipgc3EEC1DoBddOhrg=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=uDk90aPhm3B8SNhPds7lDnBYeMBuv/RTzju0FCMkETEQO0+J30D69oHR66/+VOScKhbDmaNFTNHgtvoH3N3rum+ULSsTPXYVq7s1YB7CPG7aKISf77feKU1RQ7iEFXJMfM3dVGUs4jEAs26QwjG02RLOR6Tu6eWMSdkcMpXl5gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Z1ND22TV7z4f3kvt
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 09:18:42 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 85ADC1A169E
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 09:19:05 +0800 (CST)
-Received: from [10.174.178.129] (unknown [10.174.178.129])
-	by APP3 (Coremail) with SMTP id _Ch0CgBnB8IJybtnlgKiEg--.53879S2;
-	Mon, 24 Feb 2025 09:19:05 +0800 (CST)
-Subject: Re: [PATCH 1/6] mm: swap: avoid losting cluster in
- swap_reclaim_full_clusters()
-To: Kairui Song <ryncsn@gmail.com>, akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20250222160850.505274-1-shikemeng@huaweicloud.com>
- <20250222160850.505274-2-shikemeng@huaweicloud.com>
- <CAMgjq7Axk-rh+3hMpSisxKRU6W1tApgVA1H5zswC7z0q-t0-eg@mail.gmail.com>
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-Message-ID: <c745e8a1-5c94-4510-56fe-f1528295575c@huaweicloud.com>
-Date: Mon, 24 Feb 2025 09:17:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+	s=arc-20240116; t=1740360207; c=relaxed/simple;
+	bh=los1eCdEmVxhO5Tf9dnTGtubMObQft7Y2uFyJjHxoXU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tiaxIx720uwj3mNG2Brc5MoUCJ6JJHtrReicUugU3fUlxJtSVFV4aU9MhPdPS+2L0b0Bd+Vg7k24JzO91TC3d2OL5D4xtEPfqzInn0YRUIMWYmi3sVGf6DIz7GYDf5Ia7x+oViEYeaGk9TAal0dY44KSnJswPKuW5q5J8CD5dBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=FteeSEa0; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FteeSEa0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1740360200;
+	bh=nj1U2uSVkYkz/+hDpbISu/uTHKxGKwkrZgTl8Rgqf5o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FteeSEa0zwN0uy+Xz37wVeDuCYGnSY7OIUdV+GHdf4XMOoP+WFQ2309u6lPEJyFSE
+	 eFGyneDXhhvlXHVSEdU5p3oOyjvL/U7IZGVr+m9oTrK62jHm1DThSDaqX1e13UFe4S
+	 KGqd1j92GuYC1YrnP5q3u8IrQUjFcS5odPGR5Bcsd/VA8u4DH4RYHHnVAThnSAudyk
+	 UfJRjQYBVNwDCkhlSdEs84LIplMAPw7PAPwnX88c6dm1e7Eaw2sEpiA3EwtGLgqpAM
+	 GbqS/W30vP0GhIGWCoXZo7jtJdaFTCg1P9kjTyjgK9XloTqNwTb7Ohw3OQnhJsK5p3
+	 m2cXH+dUGMTYg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Z1NKM5rc4z4wbR;
+	Mon, 24 Feb 2025 12:23:19 +1100 (AEDT)
+Date: Mon, 24 Feb 2025 12:23:18 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Shawn Lin <shawn.lin@rock-chips.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the pmdomain tree
+Message-ID: <20250224122318.228f695c@canb.auug.org.au>
+In-Reply-To: <20250220113338.60ba2290@canb.auug.org.au>
+References: <20250220113338.60ba2290@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAMgjq7Axk-rh+3hMpSisxKRU6W1tApgVA1H5zswC7z0q-t0-eg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgBnB8IJybtnlgKiEg--.53879S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7KF4kKF4Uur1fJF1kCFW8tFb_yoW8Ww1xpF
-	93K3WDCFs5tryDKF12vwnFg34Y9r48KFy5JrWaqw1Skr98ur1SkrZrKr4rZayDur1kt34D
-	ZF1qg3W7urs0va7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyCb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF
-	7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UWHqcUUUUU=
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+Content-Type: multipart/signed; boundary="Sig_/UTwz0u31u38k7c7NQZZokZj";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/UTwz0u31u38k7c7NQZZokZj
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-on 2/23/2025 1:19 AM, Kairui Song wrote:
-> On Sat, Feb 22, 2025 at 3:12 PM Kemeng Shi <shikemeng@huaweicloud.com> wrote:
->>
->> If no swap cache is reclaimed, cluster taken off from full_clusters list
->> will not be put in any list and may not be reused. Do relocate_cluster
->> for such cluster to fix the issue.
->>
->> Fixes: 3b644773eefda ("mm, swap: reduce contention on device lock")
->> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
->> ---
->>  mm/swapfile.c | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/mm/swapfile.c b/mm/swapfile.c
->> index 34baefb000b5..e5f58ab86329 100644
->> --- a/mm/swapfile.c
->> +++ b/mm/swapfile.c
->> @@ -861,6 +861,10 @@ static void swap_reclaim_full_clusters(struct swap_info_struct *si, bool force)
->>                         offset++;
->>                 }
->>
->> +               /* in case no swap cache is reclaimed */
->> +               if (ci->flags == CLUSTER_FLAG_NONE)
->> +                       relocate_cluster(si, ci);
->> +
->>                 unlock_cluster(ci);
->>                 if (to_scan <= 0)
->>                         break;
->> --
->> 2.30.0
-> 
-> Thanks. A little nick pick, "losting" is not a word, I think you mean "leaking".
-> 
-> And BTW maybe it's better to describe the result of this leak in a bit
-> more details, "cluster leaking from lists" and "will not be reused"
-> looked a bit scary at a glance to me. But realizing it's full
-> clusters, they will be moved back to a list if any slots on them are
-> freed, so the worst result is inefficiently reclaiming of HAS_CACHE
-> slots, we didn't really lose these clusters.
-> 
-> We do need to fix it though. So other than the commit summary and
-> message nitpick:
-Thanks for feedback, I will improve commit summary and message in next
-verstion.
-> 
-> Reviewed-by: Kairui Song <kasong@tencent.com>
-> 
+On Thu, 20 Feb 2025 11:33:38 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> After merging the pmdomain tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+>=20
+> x86_64-linux-gnu-ld: vmlinux.o: in function `rockchip_do_pmu_set_power_do=
+main':
+> pm-domains.c:(.text+0x19aa103): undefined reference to `arm_smccc_1_1_get=
+_conduit'
+>=20
+> Caused by commit
+>=20
+>   61eeb9678789 ("pmdomain: rockchip: Check if SMC could be handled by TA")
+>=20
+> $ grep CONFIG_HAVE_ARM_SMCCC_DISCOVERY .config
+> $
+>=20
+> I have used the pmdomain tree from next-20250219 for today.
 
+I am still seeing this build failure.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/UTwz0u31u38k7c7NQZZokZj
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAme7ygYACgkQAVBC80lX
+0Gz9TggAlKSRBZLGUss58HGQ+4zfafAeoVGkdJuM3nSNNktPmvwbI5c+GAjpqG1i
+9ErGKyORTUyh5RDNjYxnv04GQS2W828IvOndYDKR7R7ElFf8vmiw8fWh1/sT57RA
+Y6pZNaBkbv0QNf5wSV5/zE3/pS6MNcI1GsnbrOWiziV2CDFFrTo2EYSFj8b8rxFU
+FmYqfOKcgJKu7M25d64P5epgVdgtNI5sfGrGtWRK4vO0xHU4oEMaiXl0UaDP6Rly
+0qHKadteO7tOshU8Vw5P2sljyYGzKh4s+q5gMzteY4pDd8aCm8qKOAU+P/WCrk77
+l5Z9A9hWb8ogkqYunsUst7QvKs0qcQ==
+=tWn7
+-----END PGP SIGNATURE-----
+
+--Sig_/UTwz0u31u38k7c7NQZZokZj--
