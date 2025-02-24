@@ -1,131 +1,122 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A46B1156F44;
-	Mon, 24 Feb 2025 14:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73DFB1B7F4;
+	Mon, 24 Feb 2025 14:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740408475; cv=none; b=V/KrlfVbdkjuDth/VJPdl8wkJ03pQvPoMc9tjzTX5kTRfkjb83ytN+xVFTuV9LZKs9jwht4ZUV8AHO0npHYGM3Q+YOncjEXi1r1DizjplC19Xqm1a6MPKVZPxrX6GOK23jVPGQm1fAmPFkAsirDtZp0zX+5yQBpqQBP2vZSTI6o=
+	t=1740408519; cv=none; b=mXLZU5QrnT2cfSCyRrlU1IGA4Y+L3rAknV10oroPXyLuXIheAIqcvrCtFlGTu+kkl9DSn9D0xCZ4Mn/sv6oYNkgfhWCSlS9GfcNKaeu3CY21q8eiuyKZ4hT4FUn/+3W9IdtAAVo5w5p/SRUhHPwI+1MPfn0qXdpT+E4Ped+GVcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740408475; c=relaxed/simple;
-	bh=89ktW5BzAn9iOHa5jek6f3ZHeVoyWQD1oH7vDvuK3rc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dFLCF3uQFYo+LSF5amgZyW3NRPzxNI0lvRiD1rCGBomQfuP6tYQApGmQvZSHF8yie+/OEDdHtYd/pCpxL5JeAs0ekjuipp1tCZ0SLURWODzg3JjWKgOq352rRgwTzNYOgmCogy3jRd4XBXmV/R9OS7nLE2lsC+FkvK1EZuu1kzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T5JB5Sjg; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740408519; c=relaxed/simple;
+	bh=v/i5uNRdv0lKpzjbyVJ/rUwzfVKBkuvu3O1tyNM6WNc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NNDyMO+z3a7/ftVHNxVbCE6dR48RS6RjXZ6Y8j/L/TWOfRWL8pYy6NKiP4s7PMHqInaFyDn+AzvCYrqhZlbawoyNlAA9jRoHjUhVJhy+S3m9uPhW8eno8bYDmJkn8x3dy6KO7qieOQ8UVY3vzu/8f91p0J2B26ra4P5SYSDlTPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=AC6owz5h; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T5JB5Sjg"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-222def4189aso2129995ad.0;
-        Mon, 24 Feb 2025 06:47:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740408473; x=1741013273; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RtB7Dub5njCes9mrJllt2CsrhPv34KUY3ewp7hLxbD8=;
-        b=T5JB5SjgO5FYCP7jlpu7ICh0WWNF8tS799AXQVnBH4p7x4d//RvXsfQwJUOBjcAefV
-         nzyO29d+5AnCV5IpdQkZNYn5Z8GCD5r1Mny5HA9qUPqMDNk9mzWydJZNJxDdH8PgWcQ5
-         Ory0+3hDuM4sqznppSULm/5AunOXiFwNtLp/lgKhmIwFa95lkRmKGSWQ3eEoxVBQD2cy
-         3A/XLYy8NgDBGrwOJXI2nRLT6s7KERsotQ+s7bmTvktJKzoovyWiBzgsITesUkJQVIaH
-         QfIS6CZnZASMzQXpOYB3s+DtBQJfehFid43Pb3sJXSJbk4JiU0kV382YJteH4aiOuDFB
-         8Pcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740408473; x=1741013273;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RtB7Dub5njCes9mrJllt2CsrhPv34KUY3ewp7hLxbD8=;
-        b=cJf+d1kuXrWE5snVTo5s1DNiH9OZLhSMVSAsmFuPEN4G43Iq1B69tawjeqNnhGwtHb
-         fE8IryaN8fXVtSHA6J9ALiFKMFb2lvvkuAOIY7qBJVfCf9rTwgoSpKxM+aplpLc5A22V
-         f2FX7HNA721OywLzqs88SRzd08NrCIzBbohEeOG21/bjCEkAF4rs0XrBzgYR/PJAnF+h
-         D/TbVMsIjoeTYxFTiQo4i+f4JqKKzLLrOVVCP1pV2SoUDGONR4PiA0etOE39KjZ1UR0k
-         u1Dg2Vwnxp+H6Tee61WS2xs/qIQazml7y/yA03pv3R/QHdRWZDw1FYE6NOJ8C4ZYRr7B
-         6RgA==
-X-Forwarded-Encrypted: i=1; AJvYcCUxRpBkRJxwHpgwvc1M0E/tO5gqcpcNQ23+q3PtKryKwK6uTVKvB1EjspqMHE3shH/aX17JX6rIZCL8cqtTK+s=@vger.kernel.org, AJvYcCV1GA8nbAlEmgMsVHnFvEDHTuSezGcXXW21g9hSKzskKd6m59CZktpA8cYS2WuAqxIwvhmMLji/qXyy5A4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsBeB6yP7ppexKfMnP0F/bjPaCxFNjHcPLAddbvDh9at9GsQJW
-	gXvlNgedtDzSE6/jcerIDMYxO6p01VW0XVXCC0rZSMv9eKZg1OO7lCptqp0xWotqRIbIXuYOmNK
-	+i8Ccyl8Ge+Fj8D49T3fbFfhGSvbpl/7QYC0=
-X-Gm-Gg: ASbGncv4AIK1uas3nHbhA0mY/BOKgfCAfpuLyoT7zr5QtJuU++kcOPC4Hg4+bFmXmCG
-	lv0pM1LiLh/ke0Ka7kBtnvEbwo98YP/LKYSnPgtyVpcqRN6Kr5qdHIijOBXIvu7C9vZMDo3cTYk
-	IjJ8mivMs=
-X-Google-Smtp-Source: AGHT+IFtHAt/2673bkl85WSepaiv/6+wkEUSaW/P5TB+5VYx4rV2nWG972KMsbRKwHotrhVZYVS2P5weLvxESTGhMug=
-X-Received: by 2002:a17:90b:3848:b0:2ee:acea:9ec4 with SMTP id
- 98e67ed59e1d1-2fce7af8da8mr8559798a91.3.1740408472804; Mon, 24 Feb 2025
- 06:47:52 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="AC6owz5h"
+Received: from hm-sls2 (bras-base-toroon4332w-grc-32-142-114-216-132.dsl.bell.ca [142.114.216.132])
+	by linux.microsoft.com (Postfix) with ESMTPSA id DD8B820DF168;
+	Mon, 24 Feb 2025 06:48:36 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DD8B820DF168
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1740408517;
+	bh=B1XHtWIka4rmClyLQc4wAzTbA5a3eeqHQdnViUvy9kU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AC6owz5hIgwCPb/60nWWp31kDbFvEMfSDHte5zvyQRfTgZMDJHuNmzUljmeb+nLDA
+	 FeQz/TFArAmXS8P0SEHyiUc6Lo6UXsG12TY5ts1QefxVqUTJ39MP20TK0DtehvwNRV
+	 MGXB81NfmVdlb15/rzikXrH6f2gJYKgttsm877EY=
+Date: Mon, 24 Feb 2025 09:48:31 -0500
+From: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Petr Mladek <pmladek@suse.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Jani Nikula <jani.nikula@intel.com>, Baoquan He <bhe@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ryo Takakura <takakura@valinux.co.jp>
+Subject: Re: [PATCH v2] panic: call panic handlers before
+ panic_other_cpus_shutdown()
+Message-ID: <Z7yGv_ZyeyUueXLz@hm-sls2>
+References: <20250221213055.133849-1-hamzamahfooz@linux.microsoft.com>
+ <SN6PR02MB4157D993CCE04F2D46E2B8A1D4C72@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
- <20250222141521.1fe24871@eugeo> <CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
- <6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
- <CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com>
- <CAFJgqgSqMO724SQxinNqVGCGc7=ibUvVq-f7Qk1=S3A47Mr-ZQ@mail.gmail.com> <20250224125805.GA5729@mit.edu>
-In-Reply-To: <20250224125805.GA5729@mit.edu>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 24 Feb 2025 15:47:39 +0100
-X-Gm-Features: AWEUYZlCQihPBjrSNYZpOKd-BwVo0fXGumHDWwVlhI4X09pccnCoeiBNU37wuHI
-Message-ID: <CANiq72k-K3-Cbnm=0556sXAWs0kXBCB4oR67M4UtD=fq=kyp7A@mail.gmail.com>
-Subject: Re: C aggregate passing (Rust kernel policy)
-To: "Theodore Ts'o" <tytso@mit.edu>
-Cc: Ventura Jack <venturajack85@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Gary Guo <gary@garyguo.net>, airlied@gmail.com, 
-	boqun.feng@gmail.com, david.laight.linux@gmail.com, ej@inai.de, 
-	gregkh@linuxfoundation.org, hch@infradead.org, hpa@zytor.com, 
-	ksummit@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, Ralf Jung <post@ralfj.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR02MB4157D993CCE04F2D46E2B8A1D4C72@SN6PR02MB4157.namprd02.prod.outlook.com>
 
-On Mon, Feb 24, 2025 at 1:58=E2=80=AFPM Theodore Ts'o <tytso@mit.edu> wrote=
-:
->
-> Hmm, I wonder if this is the reason of the persistent hostility that I
-> keep hearing about in the Rust community against alternate
-> implementations of the Rust compiler, such as the one being developed
-> using the GCC backend.  *Since* the aliasing model hasn't been
+On Fri, Feb 21, 2025 at 11:01:09PM +0000, Michael Kelley wrote:
+> From: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com> Sent: Friday, February 21, 2025 1:31 PM
+> > 
+> > Since, the panic handlers may require certain cpus to be online to panic
+> > gracefully, we should call them before turning off SMP. Without this
+> > re-ordering, on Hyper-V hv_panic_vmbus_unload() times out, because the
+> > vmbus channel is bound to VMBUS_CONNECT_CPU and unless the crashing cpu
+> > is the same as VMBUS_CONNECT_CPU, VMBUS_CONNECT_CPU will be offlined by
+> > crash_smp_send_stop() before the vmbus channel can be deconstructed.
+> 
+> Hamza -- what specifically is the problem with the way vmbus_wait_for_unload()
+> works today? That code is aware of the problem that the unload response comes
+> only on the VMBUS_CONNECT_CPU, and that cpu may not be able to handle
+> the interrupt. So the code polls the message page of each CPU to try to get the
+> unload response message. Is there a scenario where that approach isn't working?
+> 
 
-I guess you are referring to gccrs, i.e. the new GCC frontend
-developed within GCC (the other one, which is a backend,
-rustc_codegen_gcc, is part of the Rust project, so no hostility there
-I assume).
+It doesn't work on arm64 (if the crashing cpu isn't VMBUS_CONNECT_CPU), it
+always ends up at "VMBus UNLOAD did not complete" without fail. It seems
+like arm64's crash_smp_send_stop() is more aggressive than x86's.
 
-In any case, yes, there are some people out there that may not agree
-with the benefits/costs of implementing a new frontend in, say, GCC.
-But that does not imply everyone is hostile. In fact, as far as I
-understand, both Rust and gccrs are working together, e.g. see this
-recent blog post:
-
-    https://blog.rust-lang.org/2024/11/07/gccrs-an-alternative-compiler-for=
--rust.html
-
-> developed yet, potential alternate implementations might have
-> different semantics --- for example, I suspect a GCC-based backend
-> might *have* a way of opting out of aliasing, much like gcc and clang
-> has today, and this might cramp rustcc's future choices if the kernel
-> were to depend on it.
-
-The aliasing model is not fully defined, but you can still develop
-unsafe code being conservative, i.e. avoiding to rely on details that
-are not established yet and thus could end up being allowed or not.
-
-In addition, the models being researched, like the new Tree Borrows
-one I linked above, are developed with existing code in mind, i.e.
-they are trying to find a model that does not break the patterns that
-people actually want to write. For instance, in the paper they show
-how they tested ~670k tests across ~30k crates for conformance to the
-new model.
-
-In any case, even if, say, gccrs were to provide a mode that changes
-the rules, I doubt we would want to use it, for several reasons, chief
-among them because we would want to still compile with `rustc`, but
-also because we will probably want the performance, because some
-kernel developers may want to share code between userspace and
-kernelspace (e.g. for fs tools) and because we may want to eventually
-reuse some third-party code (e.g. a compression library).
-
-Cheers,
-Miguel
+> Note also that Hyper-V itself can take a long time (10's of seconds) to respond
+> to the unload request. See the comments in vmbus_wait_for_unload() about
+> flushing the Azure host disk cache. I worked on this code and did the
+> measurements, so I have some familiarity with the problems. :-)
+> 
+> Michael
+> 
+> > 
+> > Signed-off-by: Hamza Mahfooz <hamzamahfooz@linux.microsoft.com>
+> > ---
+> > v2: keep printk_legacy_allow_panic_sync() after
+> >     panic_other_cpus_shutdown().
+> > ---
+> >  kernel/panic.c | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/kernel/panic.c b/kernel/panic.c
+> > index fbc59b3b64d0..433cf651e213 100644
+> > --- a/kernel/panic.c
+> > +++ b/kernel/panic.c
+> > @@ -372,16 +372,16 @@ void panic(const char *fmt, ...)
+> >  	if (!_crash_kexec_post_notifiers)
+> >  		__crash_kexec(NULL);
+> > 
+> > -	panic_other_cpus_shutdown(_crash_kexec_post_notifiers);
+> > -
+> > -	printk_legacy_allow_panic_sync();
+> > -
+> >  	/*
+> >  	 * Run any panic handlers, including those that might need to
+> >  	 * add information to the kmsg dump output.
+> >  	 */
+> >  	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
+> > 
+> > +	panic_other_cpus_shutdown(_crash_kexec_post_notifiers);
+> > +
+> > +	printk_legacy_allow_panic_sync();
+> > +
+> >  	panic_print_sys_info(false);
+> > 
+> >  	kmsg_dump_desc(KMSG_DUMP_PANIC, buf);
+> > --
+> > 2.47.1
+> > 
+> 
