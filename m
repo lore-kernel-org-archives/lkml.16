@@ -1,119 +1,126 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864D624BC09;
-	Mon, 24 Feb 2025 11:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC69D2441A3;
+	Mon, 24 Feb 2025 11:48:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740397712; cv=none; b=SaRHTwba130cQxfsaI/IQBh+PtP3Se/cGT0ePIoblpigExsLaD1xgLxFSamUUvYgOhc5zD1SbTWqdlqu0gFJe00oSniltuhzCsw4s6xbu8d7nFyVrDIMTxeeLWM1QAoJ0M1BfdpQMTEYkTpgW8D+bVpu5MF1X59m+2xQuKreWnM=
+	t=1740397718; cv=none; b=kmcGonrA25y4trWLC0jyQ5no6JcGDVREencsrfF0Zk2RBxYlFjAH4xNYM5CTDkizEbcF/vedDkh7Ilsss+q2PUV5frrCOFjZp/QazrwjW/pGs7wvzT7vBuU2WzrVV6PqW8DTKosK5m29/gFyABfmx5SHmyC/Uoe5Be/HecvXEFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740397712; c=relaxed/simple;
-	bh=Xw9Qjb3C2GV9IJofjL+2f+6Vhp0kkxBbZpqQ9nfYZCU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NStfE7G54NvF9+0aSkOkFJEYpwXCsY53Ffb3KfA/t2uIdAyJsBSkkQb7lkv+TJ2zFL7AGElOo67eO5itaz8NijQBFx3ZRVLS1aN1ACAoMZcd9KLbb9R/Td3aQazLA7+J5kUKCJEyFThZOwam+QqcVY+VHOdMOmCoCZ37xO5TXgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EtBBr8i6; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740397718; c=relaxed/simple;
+	bh=7P6j3dztD40MRGc9WjjurcBvL9MdLNZfq9tKy3OQzIs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bfAvDQChvTZ7eV1bUwXH0TPYo8AP3uuvUcYA4+AMNuEdmaefTlI/PAxjxTTFObKPtrkd2FQpQxDIgMB3Kcg14SQcb46VNytYUPXfvGau0t9TBY5TX2GJ+NPbcVZmo6YAujkqjsrfhesOptVLGjoTZKcSrOncYD63lHIeYAyzRt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hL85U7/n; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EtBBr8i6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740397710; x=1771933710;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Xw9Qjb3C2GV9IJofjL+2f+6Vhp0kkxBbZpqQ9nfYZCU=;
-  b=EtBBr8i66I78rTo2cWgtbmwfQ7lFOMRVeyUIu6RBxzGf958U5h1+earG
-   msLqOZZKthSMwOr8B3gPtdt3kMAxeac53QNo/noBS0b1Fm1fTuUDlt2uo
-   l8Z6OgvFIIIn8qTZy/MF1OSuQArf/2KRviOGVh/jFGVGZM292cKjaOwvP
-   zplXf3D2+NJGElDuLSxBzLEb7/xDj79TuHuuGQHT3UTp3eF3KJ/QZ0kPp
-   /c1+WgsUeKcfogXWG5a4+Yaz1wh/JYLMW+IU4VuY4ZA7YrXMBP7ZnfX7t
-   /reND5+F8LdxY2dldkm+wFi9Ofzs/7hUk/hQ8llOa3zpnyJr3xXKvt1j/
-   Q==;
-X-CSE-ConnectionGUID: DqYWd9aNSoOYFdLJrgrT3A==
-X-CSE-MsgGUID: TSaKvwg6TWWzOIHmWLtbDA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11354"; a="40335707"
-X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
-   d="scan'208";a="40335707"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 03:48:30 -0800
-X-CSE-ConnectionGUID: zp9kI7nMQpGhT3DpmT/uAA==
-X-CSE-MsgGUID: +Gr0B2k2SkWpxLo2Z453rQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
-   d="scan'208";a="116665750"
-Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
-  by fmviesa009.fm.intel.com with ESMTP; 24 Feb 2025 03:48:28 -0800
-Message-ID: <91e9b2f6-d9f6-460e-965a-bf2d5b13878c@linux.intel.com>
-Date: Mon, 24 Feb 2025 13:49:29 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hL85U7/n"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-543d8badc30so5049380e87.0;
+        Mon, 24 Feb 2025 03:48:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740397715; x=1741002515; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=atnb8vT8PjjHld1I8ZHaKAb/081GPPRide+V3/o4HbQ=;
+        b=hL85U7/nIrta1upV3dqWjJQNfjHymn6F/XUTcLgq1UVj4NIucwzndi0aGODjdcAzsk
+         eN5I/fBAD+0vcvDqsToJr5qToMEI5DDXXQIUII8RSNUe0AIBUy6iIf30x6w/e7gUCo4f
+         1kDZ/Prm9NFy+dKFrg2TObXVJnr5RtGZstg7XlHE0Wg0IQYHZGZyn0N7BvrECCfyaxxl
+         IZr8ERewfb66yoArbsd6JUF7D/MEKCTSKafm5jM1NEgp1Zd4E+RXoMMKxjqVwYXBaeVE
+         SjO5hxStWd+ZJJ0c2dKVeZYcRB7HbuWQkSSwmUEXl1o9FlcyjbBlpkDcubOk96RWdH/T
+         fHtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740397715; x=1741002515;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=atnb8vT8PjjHld1I8ZHaKAb/081GPPRide+V3/o4HbQ=;
+        b=UH/Z9vg8xzyUMfvpFDMompOUaGBE+Oq7h1M2HC6IryP/XKJOKVgtt1Dn3JVNvQP1JR
+         3U3QU+xhU56n4W8eKBCGbqioqtt7cBlpGH+4f7KbxxJqVUXhIzZPl7mE+Fi8FZGUzuJM
+         blW+4zwVn63gUHiPwu+ZPPEHkl3+2SPrtSnttxR+kyOHwVPVHYXIAPwojlCxhc3mbwvr
+         nioiH9x2fdlW7Cy+voxQrm85cJgd6cbR8aocgGA+TGmKqw/erLu2KYju4VikSLzE1xKC
+         5aRh2VQMTZH4mZPzAuCLoXR18EbyA4k96kRkQtRFIR9eXbdcVz6nIJulaSiJkBO/NZDW
+         Yp0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUGhPxwk+mkmzqg3fgkT9OV9rjORQInjfZ0g6GGhBa/2nvW+Cl7IlEpeIM1HCaOXdFVk+MlsCQ/RyVb@vger.kernel.org, AJvYcCWDjew+COLaBe9CM70v1ow2V9IOEernRZFrB17afNSeYoJP0X/rffkJaAO1qwb0alCWhKTBve+e6nF3uQ==@vger.kernel.org, AJvYcCWe68KzgRYjtQbKrxOyFJUpNzv1989KSCK7Ydwo/ldeFkV0CDDUD+xvUOZgQle1YIPF2Zs/pG29+nkOVrqB@vger.kernel.org, AJvYcCXXzi7gv3BBmgJPSjAVcK2e7L/yY7vaLiJHUrBeoHQPOk38LymY0lE3MF3kxwRR53yjjcH0M/BB12aZ0A==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYpTRYCjP3+W4a+9XFpaLtVCDy9nBHOH7NZbKjD33Wr+jHysbh
+	fmP1ihRy9BPP1JMwThLbVoj0kn1KBwFwx5PURwVTrO19ixCGJPDa
+X-Gm-Gg: ASbGncsknbCXxi0Uu0vCqU7SbGDOwLMZYEnwNN1JXF/yYQbLFdjTNxrLzfMIrYCLVvY
+	rOkxbDlWQsMLzXG8FKm9FOtLzyOPifMjZsSgPyKTxOmDnjkMFiNW1xDQUxMavdWJnTuQcrAcl8y
+	7K2fQScFSSmddXf8no6/xZA6SGRx1O3BeHVVUxhLsQQpqC83hjorR3T/DeK+ydbaSH+tLtiVgX6
+	WlJdgrJcilR49FYtCtGejhAvjhUEXV+flEnkCMwreJQoMkpoXjRLAIu40PGke9YYgGn4n/IJD2N
+	efLKA62jqBRexmwi
+X-Google-Smtp-Source: AGHT+IGtaNoSRQNpqZE6mcTQCEU9FuEKP+HpNqYhMZ4Fh8GwXbsRAlQ2tLnm7O+tpwCdNz943QPcdg==
+X-Received: by 2002:a05:6512:e86:b0:545:60b:f38d with SMTP id 2adb3069b0e04-54838ee3406mr4784026e87.8.1740397714664;
+        Mon, 24 Feb 2025 03:48:34 -0800 (PST)
+Received: from xeon.. ([188.163.112.51])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54526338bf9sm3167862e87.85.2025.02.24.03.48.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2025 03:48:34 -0800 (PST)
+From: Svyatoslav Ryhel <clamor95@gmail.com>
+To: Lee Jones <lee@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Pavel Machek <pavel@ucw.cz>,
+	Daniel Thompson <danielt@kernel.org>,
+	Jingoo Han <jingoohan1@gmail.com>,
+	Helge Deller <deller@gmx.de>,
+	Svyatoslav Ryhel <clamor95@gmail.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org
+Subject: [PATCH v3 0/2] mfd: lm3533: convert to use OF
+Date: Mon, 24 Feb 2025 13:48:12 +0200
+Message-ID: <20250224114815.146053-1-clamor95@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] usb: xhci: Unify duplicate inc_enq() code
-To: =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>
-Cc: Mathias Nyman <mathias.nyman@intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250220234355.2386cb6d@foxbook>
- <20250220234719.5dc47877@foxbook>
- <d59a6694-e0e7-46b7-874e-0c6acd8c9126@linux.intel.com>
- <20250224004542.5861d4dc@foxbook>
-Content-Language: en-US
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-In-Reply-To: <20250224004542.5861d4dc@foxbook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 24.2.2025 1.45, Michał Pecio wrote:
-> On Fri, 21 Feb 2025 16:54:11 +0200, Mathias Nyman wrote:
->> On 21.2.2025 0.47, Michal Pecio wrote:
->>> Remove a block of code copied from inc_enq(). As often happens, the
->>> two copies have diverged somewhat - in this case, inc_enq() has a
->>> bug where it may leave the chain bit of a link TRB unset on a
->>> quirky HC. Fix this. Remove the pointless 'next' variable which
->>> only aliases ring->enqueue.
->>
->> The linnk TRB chain bit should be set when the ring is created, and
->> never cleared on those quirky hosts.
-> 
-> OK, I see, there is stuff in xhci-mem.c. I'll remove the above text
-> and any code which touches the bit on quirky HCs.
-> 
-> Speaking of which, I have some evidence that NEC uPD720200 has the
-> exact same bug as AMD, namely after a Missed Service Error near the
-> end of a segment it fetches TRBs out of bounds and trips the IOMMU
-> or stops with Ring Underrun. Link chain quirk seems to fix it.
+Add schema and add support for lm3533 mfd to use device tree bindings.
 
-Interesting, I wonder if setting the link TRB chain bit would
-also help with the TRB prefetch issue on VIA VL805 hosts.
+---
+Changes on switching from v2 to v3:
+- wrapped lines in schema and commit messages arround 80 chars
+- removed |
+- switched to MFD binding style
+- completed binding example
+- restored MFD
 
-Maybe we could avoid allocating the dummy page by just setting this
-quirk instead.
-   
-> 
->> maybe
->>
->> if (trb_is_link(ring->enqueue) && (chain || more_trbs_coming))
->> 	inc_eng_past_link(xhci, ring, chain);
->>
->> Avoids calling inc_enq_past_link() every time we increase enqueue,
->> and explains why we call it.
-> 
-> I can do that too. By the way, do we actually want this while loop in
-> inc_enq_past_link() at all? Currently links only exist at the end of a
-> segment and always point to the beginning of the next segment.
-> 
-> I noticed that per xHCI 4.11.7, "Software shall not define consecutive
-> Link TRBs within a TD". I suppose "consecutive" means "one pointing to
-> another". And if it's prohibited inside a TD, it will likely always be
-> easier to avoid doing it at all than try to manage special cases.
+Changes on switching from v1 to v2:
+- added unit seffix where it is suitable
+- added vendor prefixes where it is suitable
+- light sensor mover out of pattern properties
+- added references to common schemas
+- added detailed descriptions of properties
+- removed platform data use
+- devices bind and configure themself entirely
+  using device tree
+---
 
-I don't think that loop is needed. The xhci driver is the only creator
-of link TRBs, and at the moment they are placed exactly as you said.
+Svyatoslav Ryhel (2):
+  dt-bindings: mfd: Document TI LM3533 MFD
+  mfd: lm3533: convert to use OF
 
-Thanks
-Mathias
+ .../devicetree/bindings/mfd/ti,lm3533.yaml    | 231 ++++++++++++++++++
+ drivers/iio/light/lm3533-als.c                |  40 ++-
+ drivers/leds/leds-lm3533.c                    |  46 ++--
+ drivers/mfd/lm3533-core.c                     | 159 ++++--------
+ drivers/video/backlight/lm3533_bl.c           |  71 ++++--
+ include/linux/mfd/lm3533.h                    |  35 +--
+ 6 files changed, 395 insertions(+), 187 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/ti,lm3533.yaml
+
+-- 
+2.43.0
 
