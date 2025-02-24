@@ -1,120 +1,124 @@
-Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A81266B55
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 17:00:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D92264A72
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 17:00:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740416413; cv=none; b=LSObtbaO1ImCFHEesG2dJhQRe3A64h2YnMmQrhFkXcycHPd+L7gw+mHQVDdSaYKbml833yhgsIMfo7eJO5SwoCl/JILh8zvv+yHzBBCpidEJ8NIHpWk62WaWorD2tlICEYj4o0YpGXVK3VNP5KytqliujmDNyZZ8rIr0KZr5uDQ=
+	t=1740416443; cv=none; b=LVFjEx60tELp1hE1UKhOCmtg21Eh7trsPkcTWmNMsuBxyhBa/TivXNZKEDJHOLdBq3Pq8f3bft89Sc56gnnu+WVDYKxPuplinNpn5U+4z3SwOv1xWJ3jVYpv6HVEEUPoQOF/uR7dUz5QMLb4lo/Y4OA79+PS11tdWTmAK+JG/R4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740416413; c=relaxed/simple;
-	bh=jm9V/uGdHxg5OBS/aN+olvdgGrxxL3p39+/oZgyyRrw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oD5KLDNqnZhrln8epXifyOa8ZHfkioBgJ0Uokll5hfK74H3J4JOVbuAzfiVYIVIVG4VIZdNoOV0kcT5FPcc4kNTk5r0Jcn269t6uGaa2Azrbl9h+blmQgOzNuhIfiROxf4oLU78n5v3+22KyhU9emLqlgCqtQDK/Z+31DhC7toM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VRQ7d5UD; arc=none smtp.client-ip=95.215.58.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740416443; c=relaxed/simple;
+	bh=bTOtbXAYGDMeeWId57hTH2KaX9ZYq4OA04dE5E7f3QU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UFIFNyEcIfIM990Nd/h1ytVIg33AeFw7601H5rD/uWU0k0gyTIcAd/kMMMQSputAWCdWSNMnRA9q5N5/Fb0NpMfTaGJ+4TLxwlqOB6dOJqV5WzikYFdhPVTalF8LpliOP+thQR1mVTCl4Xm8XOSQdqQkR5ukstpTpfVoL87+yeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W8Bk8Qp/; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VRQ7d5UD"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740416399;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sXImHF+AatB2zWehHEZzkP3DgCbk67G0CTnxuxdEVxE=;
-	b=VRQ7d5UDZQ1lPbaD4QY3raHMG/CkJGI/nZfTYxApXF6OrKHQmK48OXXrKmvPgzvdYXI1p4
-	Y8+Q7CoALwE6/jjdTZzmW+QWELQVwm0QjdIJlgFTjRqaXIxo9c5EmE2ubWNA1pl/HGOmpR
-	KcwJSvVpL3KJkZJ+HVK9i5AvoqMmKDg=
-From: Tao Chen <chen.dylane@linux.dev>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	eddyz87@gmail.com,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	qmo@kernel.org
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	chen.dylane@gmail.com,
-	Tao Chen <chen.dylane@linux.dev>,
-	Tao Chen <dylane.chen@didiglobal.com>
-Subject: [PATCH bpf-next v8 1/5] libbpf: Extract prog load type check from libbpf_probe_bpf_helper
-Date: Tue, 25 Feb 2025 00:59:08 +0800
-Message-Id: <20250224165912.599068-2-chen.dylane@linux.dev>
-In-Reply-To: <20250224165912.599068-1-chen.dylane@linux.dev>
-References: <20250224165912.599068-1-chen.dylane@linux.dev>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W8Bk8Qp/"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-471fbfe8b89so696551cf.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 09:00:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740416441; x=1741021241; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aCDPYfQc9hPFOiWzrMrQ09gp/CGBhAXiyMFfJAzvH6I=;
+        b=W8Bk8Qp/+2wJULTNmx4OnSSPgvOwxPVn0cNshePJM1pOcQjf9lXZvCnBLE883NtjBG
+         n01oXxrhO2TwAXUyBqqp8MvttoZwwc7rP9GMFT5tkpGgpzMW729XRKOrLcDc5t4bL6Xr
+         D/J25KzdHLRws38Zrq8TnHfSXR1rH7lpc3F+CSK9nP2HdL8aeJDegel/lpYGk9nR74Qu
+         HFPEWDdrWlg/FrmDltw6Y8N6D/rPCzQ/A3Iz3f4s8yCE6PAEESUDfpNtXYbSyqrkcL3o
+         85d8Ny8i2WPxCnL2MRc/6WC45fcfjgoUd/GE+cfyF3i6LK5IsZ1LFCpyXQvV83wX7rRb
+         0X0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740416441; x=1741021241;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aCDPYfQc9hPFOiWzrMrQ09gp/CGBhAXiyMFfJAzvH6I=;
+        b=cjHl8xg0rjTZlMKxLeaXP3Phe7uy1qt4XLOx9TEpBOH5Do3+RXLikczlpZwuBSoGdY
+         l9AB7PDDUWs7Dw/ASTebEnW7GBwZzNX5CquShlSr1CydTiw1o5fL9x6jHrh306flyMlU
+         h0nXVwulPA0L7VaaILNzyK51FQmIoFZZi40iQSpjbnM0jEPcnrE+J+d6EyivN+3b463R
+         eDzG8wbirk6xBZJ09ZvO+LtaWsu3SjTgMhwvEeHtgO5j4tUYRceYROr/qFOHMz1DamFk
+         SHLMMoUZO0TgZOGJMWnt7pNN6DRsPxs6preHvik3jCKO1eejLoml1C946yrBmb2Qgt6W
+         meGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWPon0phgHP7gisjejx4CX1mDt02FinYj8FfsPGGUmy5zw11GqNjswvlIG0hgrnGodGuZA1LZw67DzpA2o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUirKgJuSjPZ7jVz6P+0lkKtXJFs/h7jMXm85pwCFImqn544CU
+	Rl7cWS2VYiKZQZpuO7EkYyG+vMtrX3tCZxj4UZH0pLGUy2kpLLfW7nNNGwxszFDMV0Pc9uP/L1K
+	hYpSVy2Pz0q4aw82MFB0WoMOHwiWsi+4VCLt6
+X-Gm-Gg: ASbGncv2FRdOxYVKOOIJTbY3/W1wi/aFQbukn4IsrxhP+/Y3Wj+M4qFP/4nldDKBsig
+	ulBBn7lHYxGf5X7Haq5HqL5UFVqDr6Z4gE2WWjRQNPboz3tXKtIFNWJAWZDBLGVvw7qeIXL9/JH
+	fjrEXV
+X-Google-Smtp-Source: AGHT+IGDiL/NzinuvOUr3+fEdY5ydwqjWixBjK5chxqAB4cgY6b/E2u3NNO77Wm/fNagSnSSnlNVN6JFC7ja6T0wMdw=
+X-Received: by 2002:ac8:5dce:0:b0:447:e59b:54eb with SMTP id
+ d75a77b69052e-4723358478emr7710481cf.26.1740416440442; Mon, 24 Feb 2025
+ 09:00:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250224141120.1240534-1-arnd@kernel.org>
+In-Reply-To: <20250224141120.1240534-1-arnd@kernel.org>
+From: Frank van der Linden <fvdl@google.com>
+Date: Mon, 24 Feb 2025 09:00:28 -0800
+X-Gm-Features: AQ5f1Jp7zC3xCebv78f9PiKcuUbXObQC3P1hoiW3UFkiO3HxC8Bls2jmj40XTdI
+Message-ID: <CAPTztWbLJ1iQ96okvTZX3JL2fkpHhOj=jPGULS2RriYg0T0eCg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm, cma: fix 32-bit warning
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Extract prog load type check part from libbpf_probe_bpf_helper
-suggested by Andrii, which will be used in both
-libbpf_probe_bpf_{helper, kfunc}.
+On Mon, Feb 24, 2025 at 6:11=E2=80=AFAM Arnd Bergmann <arnd@kernel.org> wro=
+te:
+>
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> clang warns about certain always-true conditions, like this one on 32-bit
+> builds:
+>
+> mm/cma.c:420:13: error: result of comparison of constant 4294967296 with =
+expression of type 'phys_addr_t' (aka 'unsigned int') is always true [-Werr=
+or,-Wtautological-constant-out-of-range-compare]
+>   420 |                 if (start < SZ_4G)
+>       |                     ~~~~~ ^ ~~~~~
+>
+> Replace this one with an equivalent expression that does not cause a warn=
+ing.
+>
+> Fixes: 4765deffa0f7 ("mm, cma: support multiple contiguous ranges, if req=
+uested")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  mm/cma.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/mm/cma.c b/mm/cma.c
+> index 34a4df29af72..ef0206c0f16d 100644
+> --- a/mm/cma.c
+> +++ b/mm/cma.c
+> @@ -417,7 +417,7 @@ int __init cma_declare_contiguous_multi(phys_addr_t t=
+otal_size,
+>          * Create a list of ranges above 4G, largest range first.
+>          */
+>         for_each_free_mem_range(i, nid, MEMBLOCK_NONE, &start, &end, NULL=
+) {
+> -               if (start < SZ_4G)
+> +               if (upper_32_bits(start) =3D=3D 0)
+>                         continue;
+>
+>                 start =3D ALIGN(start, align);
+> --
+> 2.39.5
+>
 
-Cc: Tao Chen <dylane.chen@didiglobal.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Reviewed-by: Eduard Zingerman <eddyz87@gmail.com>
-Signed-off-by: Tao Chen <chen.dylane@linux.dev>
----
- tools/lib/bpf/libbpf_probes.c | 31 +++++++++++++++++++------------
- 1 file changed, 19 insertions(+), 12 deletions(-)
+Thanks for fixing these nits in my patch series - which, btw, needs
+more reviews, if anyone's reading this - please :)
 
-diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
-index 9dfbe7750f56..a48a557314f6 100644
---- a/tools/lib/bpf/libbpf_probes.c
-+++ b/tools/lib/bpf/libbpf_probes.c
-@@ -413,6 +413,23 @@ int libbpf_probe_bpf_map_type(enum bpf_map_type map_type, const void *opts)
- 	return libbpf_err(ret);
- }
- 
-+static bool can_probe_prog_type(enum bpf_prog_type prog_type)
-+{
-+	/* we can't successfully load all prog types to check for BPF helper
-+	 * and kfunc support.
-+	 */
-+	switch (prog_type) {
-+	case BPF_PROG_TYPE_TRACING:
-+	case BPF_PROG_TYPE_EXT:
-+	case BPF_PROG_TYPE_LSM:
-+	case BPF_PROG_TYPE_STRUCT_OPS:
-+		return false;
-+	default:
-+		break;
-+	}
-+	return true;
-+}
-+
- int libbpf_probe_bpf_helper(enum bpf_prog_type prog_type, enum bpf_func_id helper_id,
- 			    const void *opts)
- {
-@@ -427,18 +444,8 @@ int libbpf_probe_bpf_helper(enum bpf_prog_type prog_type, enum bpf_func_id helpe
- 	if (opts)
- 		return libbpf_err(-EINVAL);
- 
--	/* we can't successfully load all prog types to check for BPF helper
--	 * support, so bail out with -EOPNOTSUPP error
--	 */
--	switch (prog_type) {
--	case BPF_PROG_TYPE_TRACING:
--	case BPF_PROG_TYPE_EXT:
--	case BPF_PROG_TYPE_LSM:
--	case BPF_PROG_TYPE_STRUCT_OPS:
--		return -EOPNOTSUPP;
--	default:
--		break;
--	}
-+	if (!can_probe_prog_type(prog_type))
-+		return libbpf_err(-EOPNOTSUPP);
- 
- 	buf[0] = '\0';
- 	ret = probe_prog_load(prog_type, insns, insn_cnt, buf, sizeof(buf));
--- 
-2.43.0
-
+Reviewed-by: Frank van der Linden <fvdl@google.com>
