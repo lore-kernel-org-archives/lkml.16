@@ -1,127 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBCCF2512D2;
-	Mon, 24 Feb 2025 12:06:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF602571A7;
+	Mon, 24 Feb 2025 12:07:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740398798; cv=none; b=U19QfjuX+HxecL6g9nnfk3CtT6dZly+MyePSXAjTKO2KFUz11zMnEFdrQJIBFnY4Zx21tB2eCAE5o/DkzpImW9lJlWfO3GwATFfwDulZDPKRRDYK3mW9LXHZXZwXuOXQ5O/9QB4BIM+Q6stgrQjjvn2ZGqo56Xu4E4ZUVS/fRsc=
+	t=1740398839; cv=none; b=XCOuBmt4TanssUJ8bf75GghRB8ndbgXtMUnQdZG5nzPfrUByskHud2FYF+/Cu3UGNVRQ1072nb+Ix0T93i+hb/yR7kZVqzxnuV5PzGz4TDl2V5QfTLF1SXi/4Wi1zvO+SvrX/ZoXjS/Yc8HzIZoT4oS67KpZ+teuKyzPOFRBQdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740398798; c=relaxed/simple;
-	bh=+Kma+nbFYfjc4yGFhq1umBDIXU4Jat/HmaZ3lk50G20=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OhNXgOxgOkv0BjHz6g+obKr8oay3LumRJaQ6ePTf6AlOPN+R1xg3ujSEG8t6iPmArYSLvBAA8t0a9UKI7CW09hacmArHBvp2a0k+hqHY2YLuG2Z/R3rk/zS0yKWl0G7surrIFNjohPaqDBLqbCrCQrC7n1z8jtMyvWesfQ9A1W4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jehlrj6F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740398839; c=relaxed/simple;
+	bh=Lj7AnxrvrJdZGqg0jt9Y26sh/3qsXsYiQTfMs9xf2bo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bhWeit/ywx05mWPZtJmIg7IPwCqkaZUHaqxCQQzBxQa2MtxeEsxwlLLZlBzLKLO5Jb2xeuNjE3H0eOXeEbnY5YRwf0lEDPNR19sXCfDYE4Xl43ky4Y84VsK0lgNFB+Bms9ZoUNNq7DDyoc/mk2F5zsBOWAjlEIVpsXkvlrV5UZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=llLJM4oI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jehlrj6F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C6F1C4CEE6;
-	Mon, 24 Feb 2025 12:06:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="llLJM4oI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D4B2C4CEE6;
+	Mon, 24 Feb 2025 12:07:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740398798;
-	bh=+Kma+nbFYfjc4yGFhq1umBDIXU4Jat/HmaZ3lk50G20=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Jehlrj6Fy59ueGbZq184namXTNyWTvz3YHbpUpN7GJn6+lNlZdX1rDphQEorxTeZf
-	 koeWXzIUk+0ytmYKTSTyRYkPsEp3CWsOJ8hfAtOpKiqkrZA7kDZdBELAIXQsAAYSRj
-	 96pNizEzIoCLRzbDjPLCfv1QwvqJLg58qG9uTHfa/0k3BqAuyIpvamfb59nc0EWQfS
-	 JyLknZvoZv2ShjUmMZkGcJOy7+rQqXpYh4GSmf3pBdEiboC7we1syd45OJ804/XOVd
-	 /eBHaldSUYCrcRehy0ZFyNd+lRaaCGJuhAKRCwX3FiLG12fzswrf0yDY6mX8WokJx4
-	 iVSVe8gk0OBbg==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Mon, 24 Feb 2025 13:03:36 +0100
-Subject: [PATCH v9 02/13] rust: sync: add `Arc::as_ptr`
+	s=k20201202; t=1740398839;
+	bh=Lj7AnxrvrJdZGqg0jt9Y26sh/3qsXsYiQTfMs9xf2bo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=llLJM4oIRH1SLrvaPQn/ZipABAJlry7z52TN2eJOr3wP5G9JsfqnpscjFGCMEcK0x
+	 8h6u8Z8F9FO/IrKvQmSInGHVYZyjCA4n8NPAdChcqiW8pamjDLpiYEm/tjc1KD1chO
+	 gPgq6fG6Butmyj5gzgDdtMxtB+a8bgmhCk+9RG+Ra7a56X29e0UiAVXPW3RYiNi45m
+	 GKySzUVt2gWhsMERCGpGydGPZc8P0Qu9aivv0nTPC6JCU5JbBR2+BquXhVrMNqw5ve
+	 0hpKJoEX3QmwYqoMfcgj+WrvP2XJq43S05I2/+KvqbGPfdboYqVmmDHe5UMv7BGhRo
+	 BxtX0sof8DcyA==
+Date: Mon, 24 Feb 2025 13:07:14 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Dave Airlie <airlied@gmail.com>, Gary Guo <gary@garyguo.net>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [RFC PATCH 0/3] gpu: nova-core: add basic timer subdevice
+ implementation
+Message-ID: <Z7xg8uArPlr2gQBU@pollux>
+References: <20250217-nova_timer-v1-0-78c5ace2d987@nvidia.com>
+ <Z7OrKX3zzjrzZdyz@pollux>
+ <CAPM=9tyu84z4Xk5X0fykO3Dazby2UqRgwtN4woNKe4Z2yMyDZg@mail.gmail.com>
+ <D80AK2CLL4AZ.1G6R7OBHOF08O@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250224-hrtimer-v3-v6-12-rc2-v9-2-5bd3bf0ce6cc@kernel.org>
-References: <20250224-hrtimer-v3-v6-12-rc2-v9-0-5bd3bf0ce6cc@kernel.org>
-In-Reply-To: <20250224-hrtimer-v3-v6-12-rc2-v9-0-5bd3bf0ce6cc@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>, 
- Anna-Maria Behnsen <anna-maria@linutronix.de>, 
- Frederic Weisbecker <frederic@kernel.org>, 
- Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, 
- Guangbo Cui <2407018371@qq.com>, Dirk Behme <dirk.behme@gmail.com>, 
- Daniel Almeida <daniel.almeida@collabora.com>, 
- Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1949; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=+Kma+nbFYfjc4yGFhq1umBDIXU4Jat/HmaZ3lk50G20=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBnvGAdj+YLySAKo9zDsGZQfQxAHbhFR3dO/o6Pu
- o+8gKS8KsaJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7xgHQAKCRDhuBo+eShj
- dzs7D/9Pl4CTzAU6DWHc1V180GZY0GWKM6oRmN1DbXI3UIwFNqXgcKt0VJ3f3pZFrck+sRrG2aL
- V4ipXkQsMK0eOyzb7Z9HwKyi6Uy2X0siWoZXoqBiiLR90wfIx42rd8TT1m92LC99veyGH1seE6z
- 63w7voF0h/3MIs4Kl1Ow1HmBFALjJkPQ/VJVcSOAF1+0Pu1v5zrFeeDdeTw+kJzVk9FE2gniz/j
- IY3eHqu71jMCo8KZtWF60gtUkt2be3irhPK3EhKLl1q2KNqzLYRzEEJNBGBXghlAY9rwhdPxh7X
- +3lHR10opiF/X3xLq7iTRLVRqz1HiGYrrFPds0hccPgn176O1tNuZ38RK4l0OOpVQ5Jqunyckbj
- dmiRFPWMJKZJhu1ccfysIeD9QvE0iMOHJjNrYs3zBNRmgsyhhXUpfHF8Xop3T4A4GAPKEufBNH1
- xqu6PAuZraipJowThYSUivuwQ1PvkzOEiXq6uPSoAfsXXb9f3SwSv6vSjvRvZoevY93Q9+cAMWX
- OO3cA3Zb+G/Oiwdycf2n+APDOBHGYS4qRpMuxYe30y5YZzkznyMheyrxymuIb6jvvC/TWy2/VdR
- PsVjs88K339iCaAsyS6HAaAftyIPGugPokYoV5q+ilvX7jKVn9eTTCepG9x20uziCgI7CS6iSqR
- 8uZIFYs2i1iEQjg==
-X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
- fpr=3108C10F46872E248D1FB221376EB100563EF7A7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D80AK2CLL4AZ.1G6R7OBHOF08O@nvidia.com>
 
-Add a method to get a pointer to the data contained in an `Arc`.
+CC: Gary
 
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
----
+On Mon, Feb 24, 2025 at 10:40:00AM +0900, Alexandre Courbot wrote:
+> This inability to sleep while we are accessing registers seems very
+> constraining to me, if not dangerous. It is pretty common to have
+> functions intermingle hardware accesses with other operations that might
+> sleep, and this constraint means that in such cases the caller would
+> need to perform guard lifetime management manually:
+> 
+>   let bar_guard = bar.try_access()?;
+>   /* do something non-sleeping with bar_guard */
+>   drop(bar_guard);
+> 
+>   /* do something that might sleep */
+> 
+>   let bar_guard = bar.try_access()?;
+>   /* do something non-sleeping with bar_guard */
+>   drop(bar_guard);
+> 
+>   ...
+> 
+> Failure to drop the guard potentially introduces a race condition, which
+> will receive no compile-time warning and potentialy not even a runtime
+> one unless lockdep is enabled. This problem does not exist with the
+> equivalent C code AFAICT, which makes the Rust version actually more
+> error-prone and dangerous, the opposite of what we are trying to achieve
+> with Rust. Or am I missing something?
 
-This is a dependency for:
+Generally you are right, but you have to see it from a different perspective.
 
-rust: hrtimer: implement `HrTimerPointer` for `Arc`
----
- rust/kernel/sync/arc.rs | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+What you describe is not an issue that comes from the design of the API, but is
+a limitation of Rust in the kernel. People are aware of the issue and with klint
+[1] there are solutions for that in the pipeline, see also [2] and [3].
 
-diff --git a/rust/kernel/sync/arc.rs b/rust/kernel/sync/arc.rs
-index 3cefda7a4372..1dfa75714f9d 100644
---- a/rust/kernel/sync/arc.rs
-+++ b/rust/kernel/sync/arc.rs
-@@ -246,6 +246,15 @@ pub fn into_raw(self) -> *const T {
-         unsafe { core::ptr::addr_of!((*ptr).data) }
-     }
- 
-+    /// Return a raw pointer to the data in this arc.
-+    pub fn as_ptr(this: &Self) -> *const T {
-+        let ptr = this.ptr.as_ptr();
-+
-+        // SAFETY: As `ptr` points to a valid allocation of type `ArcInner`,
-+        // field projection to `data`is within bounds of the allocation.
-+        unsafe { core::ptr::addr_of!((*ptr).data) }
-+    }
-+
-     /// Recreates an [`Arc`] instance previously deconstructed via [`Arc::into_raw`].
-     ///
-     /// # Safety
-@@ -539,11 +548,11 @@ unsafe fn new(inner: NonNull<ArcInner<T>>) -> Self {
-     }
- 
-     /// Creates an [`ArcBorrow`] to an [`Arc`] that has previously been deconstructed with
--    /// [`Arc::into_raw`].
-+    /// [`Arc::into_raw`] or [`Arc::as_ptr`].
-     ///
-     /// # Safety
-     ///
--    /// * The provided pointer must originate from a call to [`Arc::into_raw`].
-+    /// * The provided pointer must originate from a call to [`Arc::into_raw`] or [`Arc::as_ptr`].
-     /// * For the duration of the lifetime annotated on this `ArcBorrow`, the reference count must
-     ///   not hit zero.
-     /// * For the duration of the lifetime annotated on this `ArcBorrow`, there must not be a
-
--- 
-2.47.0
-
-
+[1] https://rust-for-linux.com/klint
+[2] https://github.com/Rust-for-Linux/klint/blob/trunk/doc/atomic_context.md
+[3] https://www.memorysafety.org/blog/gary-guo-klint-rust-tools/
