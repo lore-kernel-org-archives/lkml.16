@@ -1,332 +1,233 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazon11020097.outbound.protection.outlook.com [52.101.225.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5374D255E57;
-	Mon, 24 Feb 2025 11:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740395219; cv=none; b=GoTL5jx+5Nqcfw9xjyort/YDxql8unH87i8d/CtsX/4ZxwVZBH2giTKJfZK8WnZPUa0Bysz5RilgJ+uCk18ms2NajMgCywJarMukdJpI07KSm/brl2ScwbxWdbZldaz0vztNNy6netZHJZ9UJmX4CtUy3Jbop80qKXIdTVmaU8o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740395219; c=relaxed/simple;
-	bh=PS3iCXHd6nwh+/JTfZysXqzq8hK37yzKMC+1+45R7Ug=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HWZUWUIRNRgJdyzeJIVO6iEyw2Unfw6fnTjb3qAyWdFaFwFFNmOjqH/ai9s8mKR1lfkYDBSKY38ZNXdwl5aNskgZA6EyzWZOGLCAKmmaFJbqe5yw4i4nwkU0qbK9piwNXVQidJGIB8lul3Xbl6x3wYUmj/VWwzXwkYQk+yMx2xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PYNqGX4W; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PYNqGX4W"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51OB1DAD1472233
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Feb 2025 05:01:13 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1740394873;
-	bh=KlNindiLiNDrAm9cNMK4Q1NQ8biRJ2A3jRBYZMn6i+M=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=PYNqGX4WxmMAY8lbFER3qkomd+86glllFiK1aeZh4GJN8CvRc8BHtUy0774n7dJJ0
-	 nXqKlEUwPLY6WP9nlGtf12XaZQg2Si/2sl2qvf6LCvAEfYMI1KnoF1ClERUG494zbw
-	 AzX16fkvQah9/c1NjYtj9/xWaMv6iUVoMxvYdCI8=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51OB1Dtf000969
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 24 Feb 2025 05:01:13 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 24
- Feb 2025 05:01:12 -0600
-Received: from fllvsmtp8.itg.ti.com (10.64.41.158) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 24 Feb 2025 05:01:12 -0600
-Received: from lelv0854.itg.ti.com (lelv0854.itg.ti.com [10.181.64.140])
-	by fllvsmtp8.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51OB1C6k093085;
-	Mon, 24 Feb 2025 05:01:12 -0600
-Received: from localhost (meghana-pc.dhcp.ti.com [10.24.69.13] (may be forged))
-	by lelv0854.itg.ti.com (8.14.7/8.14.7) with ESMTP id 51OB1Bib002041;
-	Mon, 24 Feb 2025 05:01:12 -0600
-From: Meghana Malladi <m-malladi@ti.com>
-To: <rogerq@kernel.org>, <danishanwar@ti.com>, <pabeni@redhat.com>,
-        <kuba@kernel.org>, <edumazet@google.com>, <davem@davemloft.net>,
-        <andrew+netdev@lunn.ch>
-CC: <bpf@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <u.kleine-koenig@baylibre.com>, <matthias.schiffer@ew.tq-group.com>,
-        <dan.carpenter@linaro.org>, <m-malladi@ti.com>,
-        <schnelle@linux.ibm.com>, <diogo.ivo@siemens.com>,
-        <glaroque@baylibre.com>, <macro@orcam.me.uk>,
-        <john.fastabend@gmail.com>, <hawk@kernel.org>, <daniel@iogearbox.net>,
-        <ast@kernel.org>, <srk@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH net-next v3 2/3] net: ti: icssg-prueth: introduce and use prueth_swdata struct for SWDATA
-Date: Mon, 24 Feb 2025 16:31:01 +0530
-Message-ID: <20250224110102.1528552-3-m-malladi@ti.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250224110102.1528552-1-m-malladi@ti.com>
-References: <20250224110102.1528552-1-m-malladi@ti.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 646C31993B2;
+	Mon, 24 Feb 2025 11:07:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.225.97
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740395242; cv=fail; b=Q2SlXRAKDUtXuu6KBtdkjv90HVlWwXkydoXkJinFoAixhGeTsGh3i8MQfjT4vC76cNJic71oYEvUr2MY4+IzRscq/cdrSWgJGmMsATUE93Jqp93j68d2fpvf1CYtsiGiUq9R2uPs/jpr3FH2ZHGlkHAGZM51uQiNXZFLDproEiM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740395242; c=relaxed/simple;
+	bh=R9MElmt8eRDMNTi8VU1uyBTUgVWJrqihUwXAdlML8oI=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=p7AbN20E1gDem0epHXi6lMufyxciCRelb9BjtNU2HEcKM1zFJUrm4wpQalDR+BQGQZX9S8cm5S40VzC7dVT00VN4pfxnDgdzXGBIXGA9tkHEWTQ4Zqixn/yx9y4ZaLE9SIq0fOkkfa6k1lAImnXu+70qHeU2AQlr5PzgDn/NAT8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siliconsignals.io; spf=pass smtp.mailfrom=siliconsignals.io; arc=fail smtp.client-ip=52.101.225.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=siliconsignals.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=siliconsignals.io
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=UoWZj4v6xIM3WwkPuDaEBIvMVpTlighDmgQD1kjk1X74pdUdPHtyNT5nnem1dMKzXz5wQZf2fN4svpJMGSnNBVtJKsdROjLuDcb0leF76JSgaPRY34YGGxJH4ZBn5R9ThI/5h2wfRughV/48j7ffTUAmuLK5bFmaFDueP3H52p910MJS9In3i1fUvBIQ2MlZB3V7IBiRWXQcfcDi5HQS7IHZePt2tK5W3m8aCk2orJ07VPXmeSHVP++40nABLjQcbfvpthXF4kp+XSpg6HIKv4DEYLBuuPSG0vcpjo4Skrnn1NaTCvVNFTgdgE4XQallqttqyzZpmX54xK4UpFpQ8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=j2/U2IXj7rmj19w7+lmFM8Dmsl+rTI/BBIK388Z2zU8=;
+ b=Z5haCcaFFv9FHJTBp29EiQ+e5yjBHhJYpGVWkCo3xrCLMTgjpuES6j4EjpwSEbNLd1f1tVJZYefq4ucxJl5UbvknDMMAkYoaKnUqtjjbuwS6AaGJv8P8nEnoXV4YgHlIHgvaJHxh5m5mgJUKR+Ls1SZjmHr5JqUV1NMzET2A5bxyHtp3YTq2S2U8TAng/d06eKMr0tP8DwJQf9zROW7Tfb1Lr8lgw0+6Lj7R1KZc2pNKCD0wF8PP47KLCVUDyM3Lfac5OaYiZMR3N/wIa9hXZOLS/YQD0aW47ivEpzrcFYNtMmbcGG/CPb9WdvoVPYrVc0U7pXOEHBcd9pyrGktxlA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siliconsignals.io; dmarc=pass action=none
+ header.from=siliconsignals.io; dkim=pass header.d=siliconsignals.io; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siliconsignals.io;
+Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM (2603:1096:c01:199::7)
+ by MA0P287MB0186.INDP287.PROD.OUTLOOK.COM (2603:1096:a01:b2::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Mon, 24 Feb
+ 2025 11:07:15 +0000
+Received: from PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+ ([fe80::58ec:81a0:9454:689f]) by PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+ ([fe80::58ec:81a0:9454:689f%3]) with mapi id 15.20.8466.016; Mon, 24 Feb 2025
+ 11:07:14 +0000
+From: Tarang Raval <tarang.raval@siliconsignals.io>
+To: sakari.ailus@linux.intel.com
+Cc: Tarang Raval <tarang.raval@siliconsignals.io>,
+	Kieran Bingham <kieran.bingham@ideasonboard.com>,
+	Umang Jain <umang.jain@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] media: i2c: imx283: Drop runtime suspend/resume functions
+Date: Mon, 24 Feb 2025 16:35:54 +0530
+Message-Id: <20250224110554.23439-1-tarang.raval@siliconsignals.io>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BM1P287CA0010.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:b00:40::20) To PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:c01:199::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PN3P287MB1829:EE_|MA0P287MB0186:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0479dd23-43f8-417e-53e5-08dd54c364d9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|52116014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?PO8HZMxmBrYU7ZXyqI1mtRe0iAj6+qG1unN30ot02aaadStSyrYx+XP7Xada?=
+ =?us-ascii?Q?xQhz5GSdDQLSpmL1qKryHO3EcpZYjf8kUHioRbaGyiZd/5m8BqpTCg0U86tp?=
+ =?us-ascii?Q?Zap6wA5Runp/MEasnmXSOnob04JDiUdElb+pJx4oLNb0eXEzCg7pdaKjhQu8?=
+ =?us-ascii?Q?Ud19kUX+hYUaOx7H6m/i6/cPoR1YQajX4RM8i/MUo4yjdtMmQpxJNEHCJw0O?=
+ =?us-ascii?Q?HSmUDIlfPVnZiytQWi6ntRwjfyBiRhZvYM8ieN5VLnz/PpaLuyhsZ8c4+nQF?=
+ =?us-ascii?Q?di/awT3SuYulQe+P7GOA3L2c9lqSuePGkj91bnXdkdvV5wkDWOqXiCMLUl6+?=
+ =?us-ascii?Q?NM0GjyBEtYRxXamTDBe+TvmOHyS/Y777LQqVP68GRyAzzXVQPmOg+599ya9d?=
+ =?us-ascii?Q?2AXVJYeeZsAbHfhpvf25Ip7JIS9wR3d80P4iOMiFC6Z6UkjtPoaoIc94b8ly?=
+ =?us-ascii?Q?bHoz/ExBzIxnIVzT1jVYSktV3LPuzbIBHeIjxz7gj0FVykHsYikfP1C81qBE?=
+ =?us-ascii?Q?INuYxf/XwY/BnTB82RUixxKBpxgVObTh+GpUAeGLWc1DJQQl75KPIOlNgcTt?=
+ =?us-ascii?Q?/EkEQ3NpgR9GD8RYxQzG4q2Xpdcm2tl+3/78vYJY+UHEIAd+1UOoJzIsJyqh?=
+ =?us-ascii?Q?jzlaGSEBzQ/3a9LhNB3bznl0jlDoKbWZOvC1n/PpXZs4elUyupS0GA03ibkQ?=
+ =?us-ascii?Q?lW3aO3Fvqz2GWALrYt8gneXpn/nNaJBCGjgTVxOIhy4ejzJlfuClf4EPB3kf?=
+ =?us-ascii?Q?ITHUtag+5ypZawYVOMDSTPGpCGXUeipRR0u0v+WhVf99nS6cESExBpuKZRcl?=
+ =?us-ascii?Q?9AJ511Yh1MDejvRyz5yzUqSkhLJX30VWaqk6fIlDYE32nw2bI6Yi6eQHZBRH?=
+ =?us-ascii?Q?0UZjZyB4bsRv32taPfDZWrmjX/Up8FVDMUTT2hGndTd/VaHXIXcotlYeb9ie?=
+ =?us-ascii?Q?rJzaNN82BmQNKLnzJHQCoFbTYYtLd+SIyAlwTifLjXimzElbfM/hsp0p9iDe?=
+ =?us-ascii?Q?FaMkJB44Md9b14nwQdqZ3YHzL8VXLZIRM2zVZ1Z6dV/a6n0GZHFD+kzqGErk?=
+ =?us-ascii?Q?d96AVNtpVweiKKEwqcF/GOcwm2Vd/NOJTbtgXUkLOIoPbDqOELDg0lFVIsZS?=
+ =?us-ascii?Q?MZWcukksfXINlX7azqe6MWU8TvV1Xv+J1QIUCVFy95xjv8sKlI9UO7RqtifK?=
+ =?us-ascii?Q?f37CVBMZQHPsKFmo6Tv8L2SvJ92N86U3QIHIXKQdsaKnQN+tjO1BRCocNJXo?=
+ =?us-ascii?Q?AElfGecc7fgP3riSGn3Rug9X7CsolsfstE/6s/hFCuhbohYUMwCAisk9uVn7?=
+ =?us-ascii?Q?5YHqLKX3brWEBWQawaKtb5GVCtT+ox/ZPBPRGQjDhi+MjpK173ogD40ZjAyA?=
+ =?us-ascii?Q?xCwjIW46E3RBIgUUnp1wZQXQhOwEiw7hu7fBYG5x/4n0olilXimlhHiOlw7z?=
+ =?us-ascii?Q?xT3GHGSzDHso1j6MebcOiPnkM1EdlPTF?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PN3P287MB1829.INDP287.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(52116014)(366016)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?KJshOINZztBubgOVWMily01GQSduunIaogP4KxRTzVGiVJroxs9Ijv7QqBw8?=
+ =?us-ascii?Q?Hm3YVW3Am9CfyPcJtmo5mAcEVnk9FljcjSsUgWOiKwXVNyPD+RZ0OBN8II8B?=
+ =?us-ascii?Q?9r/MopSkRf/lrNwDkXeYT1TRIF03w9xjlQ1x3reUK9EiadlTT2+jTVj8WtqT?=
+ =?us-ascii?Q?WGzSxck4fLCCB4xRICnD1phAOOpAokQ/Em5f2s3i68PIjLJdFK4Vz2R1AQSf?=
+ =?us-ascii?Q?bK+Vwyl8gMwZ6Moc5S60WRsRNaAJcxl5Im1ycy4aMsEryr5kWPZ/nQNOJpma?=
+ =?us-ascii?Q?oJ/GOzb8cWiiFtg7tAcrcbmE/fjt9h/GPA4Ok1asukseENANIVDlWquznOIq?=
+ =?us-ascii?Q?5aZAmAY7wDf4DP7lYfGm4hZmWUWz+E0/PuSYdmX2jJ23tWPWu+SxABlt19JO?=
+ =?us-ascii?Q?YM9CQD45k11GCC0kaM+VKQY65dxEfy0Re5/R9bR0J6Fy6YCXf4PAwWkuNpGU?=
+ =?us-ascii?Q?2j3vsRm4l3XgVtr8/bq/VCDVlYI9+Hw20MtBhTc7bIN1a57hw2/K9rlaN3iH?=
+ =?us-ascii?Q?YnubtAZOAMEEwQ9DhUST1oSUIrMsc+FuYSZw/1aR2JYdhzkIpLT595G93HuF?=
+ =?us-ascii?Q?voYbs5MpbJO0jA8oHcu/wpfheub9ev35UKbxWxoLP/FDevitu6WmosRrS+ef?=
+ =?us-ascii?Q?5W8fXeS3uka0kP1Ckz+M/UWqaHtKLPUXI/R/hvVY98pazdS+MjxHQjXy7g+V?=
+ =?us-ascii?Q?f6oeMWRSCOD6PkqcGYM3/cGVkKXEl3ZgYUxNyN/BtzOd4T9y9rca71nXjXYJ?=
+ =?us-ascii?Q?PKLRF4SarXTARp2/r8oz3WIV+9ms9mZ1omqTDpah+AQ/WB5o3iWmiYBfnJMJ?=
+ =?us-ascii?Q?pf0ugt2nrwKJKLlMpE1WvA2CkcxwiNlysvaJFd1Ze/dF531ADx+FDh8nCYOh?=
+ =?us-ascii?Q?tWYi7+9ayt9mtejAy+J+XnSoq0uZshsePbzi/kJOKYddKlO6dSNmCT5CPSkM?=
+ =?us-ascii?Q?J9JuMLg3yXK8+EeQ44yIPrxGtDFl8yAXuwW/CUXi4dgVpjx7kcnhZeKJsjAk?=
+ =?us-ascii?Q?PMr08eX6g9JNAQO8qiUPFs/UHOgm2KS4/T0Ie6mPN2ALCqNZL1K7wCOGlO4b?=
+ =?us-ascii?Q?KJ+tc6qB8hX33XiOnWTyCXmjk7DcbAwHO2xGqcw/5q1Ncxdrx0bBnRxaN1Yk?=
+ =?us-ascii?Q?dx5eCINXwhroCPEfRNKbA/2e0/lIP0dg1ahxF0PozzzcuGs3qpE3b6PX2lw5?=
+ =?us-ascii?Q?kFfPKoyBf6qbz+LPErYjPQk52mLCY8UK1P9Ppy99n7xL60uSVzN17idsTWqh?=
+ =?us-ascii?Q?tdc+yLhni5y+3G2g1iPWXgVSATNOL0T2YL/fnyFS3kRkxPcBwaFWUwg3g0CG?=
+ =?us-ascii?Q?yGvziKtRxqziSgzbvy1TfPjHO+vXMEe/kXv/0WhMdsRwfuoXPDSuUdiBLJlZ?=
+ =?us-ascii?Q?QG6HKSWOg33EUUsLpll8Dcl25p4MMbg5WECEjlBKPZnPqa9inCQkQFfRNssn?=
+ =?us-ascii?Q?hV6ljqlUiONQnGAPdpumLKh6rbhvoVDFyUlOESjaTieocK8uKcN9ba009q/L?=
+ =?us-ascii?Q?jAE2DvFcNJqheNBE+kiJw43pk/jjH5X795Z8OoZUOlpkEdAMWcXws0LXYaFl?=
+ =?us-ascii?Q?nby09w/qrbqJqREySzTEiSAjE8d4FbRKJmN3LdWRnSjNzhDu1y0CvNvvdkFb?=
+ =?us-ascii?Q?9w=3D=3D?=
+X-OriginatorOrg: siliconsignals.io
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0479dd23-43f8-417e-53e5-08dd54c364d9
+X-MS-Exchange-CrossTenant-AuthSource: PN3P287MB1829.INDP287.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2025 11:07:14.8378
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 7ec5089e-a433-4bd1-a638-82ee62e21d37
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dIX537nPMnrv0wo1do8O5rbXkfbjEEMulyHOLmPQ+EZvfPPwcB2bt8jiukqcRpqYU2ILz8APYnScPHSh9H7EfSYo4piXZHnHNmMVs4/5yU4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MA0P287MB0186
 
-From: Roger Quadros <rogerq@kernel.org>
+The imx283_runtime_suspend and imx283_runtime_resume functions
+simply call imx283_power_off and imx283_power_on, respectively.
+Since these functions do not add any additional logic, they are
+unnecessary and can be removed.
 
-We have different cases for SWDATA (skb, page, cmd, etc)
-so it is better to have a dedicated data structure for that.
-We can embed the type field inside the struct and use it
-to interpret the data in completion handlers.
-
-Increase SWDATA size to 48 so we have some room to add
-more data if required.
-
-Signed-off-by: Roger Quadros <rogerq@kernel.org>
-Signed-off-by: MD Danish Anwar <danishanwar@ti.com>
-Signed-off-by: Meghana Malladi <m-malladi@ti.com>
+Signed-off-by: Tarang Raval <tarang.raval@siliconsignals.io>
 ---
-Changes since v2 (v3-v2):
-- Fix leaking tx descriptor in emac_tx_complete_packets()
-- Free rx descriptor if swdata type is not page in emac_rx_packet()
-- Revert back the size of PRUETH_NAV_SW_DATA_SIZE
-- Use build time check for prueth_swdata size
-- re-write prueth_swdata to have enum type as first member in the struct
-and prueth_data union embedded in the struct
+ drivers/media/i2c/imx283.c | 37 ++++++++++++-------------------------
+ 1 file changed, 12 insertions(+), 25 deletions(-)
 
-All the above changes have been suggested by Roger Quadros <rogerq@kernel.org>
-
- drivers/net/ethernet/ti/icssg/icssg_common.c  | 52 +++++++++++++------
- drivers/net/ethernet/ti/icssg/icssg_prueth.c  |  3 ++
- drivers/net/ethernet/ti/icssg/icssg_prueth.h  | 16 ++++++
- .../net/ethernet/ti/icssg/icssg_prueth_sr1.c  |  4 +-
- 4 files changed, 57 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_common.c b/drivers/net/ethernet/ti/icssg/icssg_common.c
-index acbb79ad8b0c..01eeabe83eff 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_common.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_common.c
-@@ -136,12 +136,12 @@ int emac_tx_complete_packets(struct prueth_emac *emac, int chn,
- 	struct net_device *ndev = emac->ndev;
- 	struct cppi5_host_desc_t *desc_tx;
- 	struct netdev_queue *netif_txq;
-+	struct prueth_swdata *swdata;
- 	struct prueth_tx_chn *tx_chn;
- 	unsigned int total_bytes = 0;
- 	struct sk_buff *skb;
- 	dma_addr_t desc_dma;
- 	int res, num_tx = 0;
--	void **swdata;
- 
- 	tx_chn = &emac->tx_chns[chn];
- 
-@@ -163,12 +163,19 @@ int emac_tx_complete_packets(struct prueth_emac *emac, int chn,
- 		swdata = cppi5_hdesc_get_swdata(desc_tx);
- 
- 		/* was this command's TX complete? */
--		if (emac->is_sr1 && *(swdata) == emac->cmd_data) {
-+		if (emac->is_sr1 && (void *)(swdata) == emac->cmd_data) {
- 			prueth_xmit_free(tx_chn, desc_tx);
- 			continue;
- 		}
- 
--		skb = *(swdata);
-+		if (swdata->type != PRUETH_SWDATA_SKB) {
-+			netdev_err(ndev, "tx_complete: invalid swdata type %d\n", swdata->type);
-+			prueth_xmit_free(tx_chn, desc_tx);
-+			budget++;
-+			continue;
-+		}
-+
-+		skb = swdata->data.skb;
- 		prueth_xmit_free(tx_chn, desc_tx);
- 
- 		ndev = skb->dev;
-@@ -472,9 +479,9 @@ int prueth_dma_rx_push_mapped(struct prueth_emac *emac,
- {
- 	struct net_device *ndev = emac->ndev;
- 	struct cppi5_host_desc_t *desc_rx;
-+	struct prueth_swdata *swdata;
- 	dma_addr_t desc_dma;
- 	dma_addr_t buf_dma;
--	void **swdata;
- 
- 	buf_dma = page_pool_get_dma_addr(page) + PRUETH_HEADROOM;
- 	desc_rx = k3_cppi_desc_pool_alloc(rx_chn->desc_pool);
-@@ -490,7 +497,8 @@ int prueth_dma_rx_push_mapped(struct prueth_emac *emac,
- 	cppi5_hdesc_attach_buf(desc_rx, buf_dma, buf_len, buf_dma, buf_len);
- 
- 	swdata = cppi5_hdesc_get_swdata(desc_rx);
--	*swdata = page;
-+	swdata->type = PRUETH_SWDATA_PAGE;
-+	swdata->data.page = page;
- 
- 	return k3_udma_glue_push_rx_chn(rx_chn->rx_chn, PRUETH_RX_FLOW_DATA,
- 					desc_rx, desc_dma);
-@@ -539,11 +547,11 @@ static int emac_rx_packet(struct prueth_emac *emac, u32 flow_id)
- 	u32 buf_dma_len, pkt_len, port_id = 0;
- 	struct net_device *ndev = emac->ndev;
- 	struct cppi5_host_desc_t *desc_rx;
-+	struct prueth_swdata *swdata;
- 	dma_addr_t desc_dma, buf_dma;
- 	struct page *page, *new_page;
- 	struct page_pool *pool;
- 	struct sk_buff *skb;
--	void **swdata;
- 	u32 *psdata;
- 	void *pa;
- 	int ret;
-@@ -561,7 +569,13 @@ static int emac_rx_packet(struct prueth_emac *emac, u32 flow_id)
- 
- 	desc_rx = k3_cppi_desc_pool_dma2virt(rx_chn->desc_pool, desc_dma);
- 	swdata = cppi5_hdesc_get_swdata(desc_rx);
--	page = *swdata;
-+	if (swdata->type != PRUETH_SWDATA_PAGE) {
-+		netdev_err(ndev, "rx_pkt: invalid swdata->type %d\n", swdata->type);
-+		k3_cppi_desc_pool_free(rx_chn->desc_pool, desc_rx);
-+		return 0;
-+	}
-+
-+	page = swdata->data.page;
- 	page_pool_dma_sync_for_cpu(pool, page, 0, PAGE_SIZE);
- 	cppi5_hdesc_get_obuf(desc_rx, &buf_dma, &buf_dma_len);
- 	k3_udma_glue_rx_cppi5_to_dma_addr(rx_chn->rx_chn, &buf_dma);
-@@ -626,15 +640,18 @@ static void prueth_rx_cleanup(void *data, dma_addr_t desc_dma)
- {
- 	struct prueth_rx_chn *rx_chn = data;
- 	struct cppi5_host_desc_t *desc_rx;
-+	struct prueth_swdata *swdata;
- 	struct page_pool *pool;
- 	struct page *page;
--	void **swdata;
- 
- 	pool = rx_chn->pg_pool;
- 	desc_rx = k3_cppi_desc_pool_dma2virt(rx_chn->desc_pool, desc_dma);
- 	swdata = cppi5_hdesc_get_swdata(desc_rx);
--	page = *swdata;
--	page_pool_recycle_direct(pool, page);
-+	if (swdata->type == PRUETH_SWDATA_PAGE) {
-+		page = swdata->data.page;
-+		page_pool_recycle_direct(pool, page);
-+	}
-+
- 	k3_cppi_desc_pool_free(rx_chn->desc_pool, desc_rx);
+diff --git a/drivers/media/i2c/imx283.c b/drivers/media/i2c/imx283.c
+index f676faf4b301..beb9169f93ad 100644
+--- a/drivers/media/i2c/imx283.c
++++ b/drivers/media/i2c/imx283.c
+@@ -1170,8 +1170,10 @@ static int imx283_disable_streams(struct v4l2_subdev *sd,
  }
  
-@@ -671,13 +688,13 @@ enum netdev_tx icssg_ndo_start_xmit(struct sk_buff *skb, struct net_device *ndev
- 	struct prueth_emac *emac = netdev_priv(ndev);
- 	struct prueth *prueth = emac->prueth;
- 	struct netdev_queue *netif_txq;
-+	struct prueth_swdata *swdata;
- 	struct prueth_tx_chn *tx_chn;
- 	dma_addr_t desc_dma, buf_dma;
- 	u32 pkt_len, dst_tag_id;
- 	int i, ret = 0, q_idx;
- 	bool in_tx_ts = 0;
- 	int tx_ts_cookie;
--	void **swdata;
- 	u32 *epib;
- 
- 	pkt_len = skb_headlen(skb);
-@@ -739,7 +756,8 @@ enum netdev_tx icssg_ndo_start_xmit(struct sk_buff *skb, struct net_device *ndev
- 	k3_udma_glue_tx_dma_to_cppi5_addr(tx_chn->tx_chn, &buf_dma);
- 	cppi5_hdesc_attach_buf(first_desc, buf_dma, pkt_len, buf_dma, pkt_len);
- 	swdata = cppi5_hdesc_get_swdata(first_desc);
--	*swdata = skb;
-+	swdata->type = PRUETH_SWDATA_SKB;
-+	swdata->data.skb = skb;
- 
- 	/* Handle the case where skb is fragmented in pages */
- 	cur_desc = first_desc;
-@@ -842,15 +860,17 @@ static void prueth_tx_cleanup(void *data, dma_addr_t desc_dma)
+ /* Power/clock management functions */
+-static int imx283_power_on(struct imx283 *imx283)
++static int imx283_power_on(struct device *dev)
  {
- 	struct prueth_tx_chn *tx_chn = data;
- 	struct cppi5_host_desc_t *desc_tx;
-+	struct prueth_swdata *swdata;
- 	struct sk_buff *skb;
--	void **swdata;
- 
- 	desc_tx = k3_cppi_desc_pool_dma2virt(tx_chn->desc_pool, desc_dma);
- 	swdata = cppi5_hdesc_get_swdata(desc_tx);
--	skb = *(swdata);
--	prueth_xmit_free(tx_chn, desc_tx);
-+	if (swdata->type == PRUETH_SWDATA_SKB) {
-+		skb = swdata->data.skb;
-+		dev_kfree_skb_any(skb);
-+	}
- 
--	dev_kfree_skb_any(skb);
-+	prueth_xmit_free(tx_chn, desc_tx);
- }
- 
- irqreturn_t prueth_rx_irq(int irq, void *dev_id)
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.c b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-index 00ed97860547..3ff8c322f9d9 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
-@@ -1522,6 +1522,9 @@ static int prueth_probe(struct platform_device *pdev)
- 
- 	np = dev->of_node;
- 
-+	BUILD_BUG_ON_MSG((sizeof(struct prueth_swdata) > PRUETH_NAV_SW_DATA_SIZE),
-+			 "insufficient SW_DATA size");
-+
- 	prueth = devm_kzalloc(dev, sizeof(*prueth), GFP_KERNEL);
- 	if (!prueth)
- 		return -ENOMEM;
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.h b/drivers/net/ethernet/ti/icssg/icssg_prueth.h
-index c7b906de18af..3bbabd007129 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_prueth.h
-+++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.h
-@@ -136,6 +136,22 @@ struct prueth_rx_chn {
- 	struct page_pool *pg_pool;
- };
- 
-+enum prueth_swdata_type {
-+	PRUETH_SWDATA_INVALID = 0,
-+	PRUETH_SWDATA_SKB,
-+	PRUETH_SWDATA_PAGE,
-+	PRUETH_SWDATA_CMD,
-+};
-+
-+struct prueth_swdata {
-+	enum prueth_swdata_type type;
-+	union prueth_data {
-+		struct sk_buff *skb;
-+		struct page *page;
-+		u32 cmd;
-+	} data;
-+};
-+
- /* There are 4 Tx DMA channels, but the highest priority is CH3 (thread 3)
-  * and lower three are lower priority channels or threads.
-  */
-diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c b/drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c
-index aeeb8a50376b..7bbe0808b3ec 100644
---- a/drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c
-+++ b/drivers/net/ethernet/ti/icssg/icssg_prueth_sr1.c
-@@ -275,10 +275,10 @@ static struct sk_buff *prueth_process_rx_mgm(struct prueth_emac *emac,
- 	struct net_device *ndev = emac->ndev;
- 	struct cppi5_host_desc_t *desc_rx;
- 	struct page *page, *new_page;
-+	struct prueth_swdata *swdata;
- 	dma_addr_t desc_dma, buf_dma;
- 	u32 buf_dma_len, pkt_len;
- 	struct sk_buff *skb;
--	void **swdata;
- 	void *pa;
++	struct v4l2_subdev *sd = dev_get_drvdata(dev);
++	struct imx283 *imx283 = to_imx283(sd);
  	int ret;
  
-@@ -301,7 +301,7 @@ static struct sk_buff *prueth_process_rx_mgm(struct prueth_emac *emac,
- 	}
+ 	ret = regulator_bulk_enable(ARRAY_SIZE(imx283_supply_name),
+@@ -1199,29 +1201,14 @@ static int imx283_power_on(struct imx283 *imx283)
+ 	return ret;
+ }
  
- 	swdata = cppi5_hdesc_get_swdata(desc_rx);
--	page = *swdata;
-+	page = swdata->data.page;
- 	cppi5_hdesc_get_obuf(desc_rx, &buf_dma, &buf_dma_len);
- 	pkt_len = cppi5_hdesc_get_pktlen(desc_rx);
+-static int imx283_power_off(struct imx283 *imx283)
+-{
+-	gpiod_set_value_cansleep(imx283->reset_gpio, 1);
+-	regulator_bulk_disable(ARRAY_SIZE(imx283_supply_name), imx283->supplies);
+-	clk_disable_unprepare(imx283->xclk);
+-
+-	return 0;
+-}
+-
+-static int imx283_runtime_resume(struct device *dev)
++static int imx283_power_off(struct device *dev)
+ {
+ 	struct v4l2_subdev *sd = dev_get_drvdata(dev);
+ 	struct imx283 *imx283 = to_imx283(sd);
  
+-	return imx283_power_on(imx283);
+-}
+-
+-static int imx283_runtime_suspend(struct device *dev)
+-{
+-	struct v4l2_subdev *sd = dev_get_drvdata(dev);
+-	struct imx283 *imx283 = to_imx283(sd);
+-
+-	imx283_power_off(imx283);
++	gpiod_set_value_cansleep(imx283->reset_gpio, 1);
++	regulator_bulk_disable(ARRAY_SIZE(imx283_supply_name), imx283->supplies);
++	clk_disable_unprepare(imx283->xclk);
+ 
+ 	return 0;
+ }
+@@ -1516,7 +1503,7 @@ static int imx283_probe(struct i2c_client *client)
+ 	 * The sensor must be powered for imx283_identify_module()
+ 	 * to be able to read the CHIP_ID register
+ 	 */
+-	ret = imx283_power_on(imx283);
++	ret = imx283_power_on(imx283->dev);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1589,7 +1576,7 @@ static int imx283_probe(struct i2c_client *client)
+ 	pm_runtime_disable(imx283->dev);
+ 	pm_runtime_set_suspended(imx283->dev);
+ error_power_off:
+-	imx283_power_off(imx283);
++	imx283_power_off(imx283->dev);
+ 
+ 	return ret;
+ }
+@@ -1606,12 +1593,12 @@ static void imx283_remove(struct i2c_client *client)
+ 
+ 	pm_runtime_disable(imx283->dev);
+ 	if (!pm_runtime_status_suspended(imx283->dev))
+-		imx283_power_off(imx283);
++		imx283_power_off(imx283->dev);
+ 	pm_runtime_set_suspended(imx283->dev);
+ }
+ 
+-static DEFINE_RUNTIME_DEV_PM_OPS(imx283_pm_ops, imx283_runtime_suspend,
+-				 imx283_runtime_resume, NULL);
++static DEFINE_RUNTIME_DEV_PM_OPS(imx283_pm_ops, imx283_power_off,
++				 imx283_power_on, NULL);
+ 
+ static const struct of_device_id imx283_dt_ids[] = {
+ 	{ .compatible = "sony,imx283" },
 -- 
-2.43.0
+2.34.1
 
