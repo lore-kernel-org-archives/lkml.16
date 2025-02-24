@@ -1,77 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E24263F57
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 16:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E4B265619
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 16:57:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740416260; cv=none; b=ip0W6Bca+e7j1bFoiuE7RkiWRoHnomvGjHqRB9o+qzFKwtnebfAYQWB87n0bInnwUvclYppX6NCR9H4pXN8xzSEjZTscp3zvloL95k6HsliofIKMRRALBOJTgMdL2DNMbI8qEUhp+kbZ7p9Zg5wzNPSqHERaRRdoJRHSmHHV9eU=
+	t=1740416274; cv=none; b=k/4Q86QzB30mXUEsB7YaaPWKn0h6UTU85FGKwehWnV600Tpi9rn2UIK9Tsr99NYCvTuGsuZC4QBtXckfizINx7e5eVCypWBJle7rJeNhnjoGIlfSnCiNmWz4ePwunHsUwKqjsCRDueBs3jQBOe0rpTDYHwyLWnkB0fRWjYNrm0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740416260; c=relaxed/simple;
-	bh=Kbt09C33MAk+YKGq1E7A3qrzPN58ot8VJKi0PWNi2bc=;
+	s=arc-20240116; t=1740416274; c=relaxed/simple;
+	bh=PbfsQL2sPiow+PCIjz3+Rkn8IIDh6NjOMMFOaOgAruU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X/9KByLFN7dLev3bVGaS+uWXRld3m092hcPKHNSMPzQ4TXvjWJLioKq+mYtkKWnoDKJ59/N+ecj/095ibigTyoxL+IYKSzXfUrOMfT8N2Sh4e0B2pDYRrRZFe1udHg6FU2Jc/WWoRrv9Kl6km2E6AapfywG4Ag+q3aMwVIptODw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=D3ZFpufe; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=O9Cz7bbUN1L+f69bA4tcexgIEcEcEHtmEjSI8+X2DoGNMpdHXHhW4MXWAMitdvFTH7/1l8DB+ycvwaUwYdMJ6cyELd2/vi4AJFBJnxVmvUfrBOQE4HQANJfNpV5vuzAlu8NWK/+oEc7YNTfORTfVYFvwfbRDLIISaE3QkPfOFds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PTTQ01OC; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="D3ZFpufe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9F07C4CEDD
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 16:57:39 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="D3ZFpufe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1740416257;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PTTQ01OC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740416272;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Kbt09C33MAk+YKGq1E7A3qrzPN58ot8VJKi0PWNi2bc=;
-	b=D3ZFpufeD3ztTYfod4kVBl23ryUYa9qgrY34Cw7kVAXfFxcw2VPdISJ8a+9qEuJlsjWUzm
-	NM98dT3zC59A0nivNybXrtHgaccxGIwlNKSnC8Yo7jiloMBrMv5M4IUGosElFrTMMnMNAY
-	1mSW/NYPYEvF0JjYfxwE9Mc0ReKPSf8=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 0cd3d26e (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO)
-	for <linux-kernel@vger.kernel.org>;
-	Mon, 24 Feb 2025 16:57:35 +0000 (UTC)
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3f41091f7c5so2267194b6e.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 08:57:35 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXKEQHMgOvrVPBDjbhUaupuHxzLf/5uYcbjrE4ao7MkReoNCTX0veNquG09/a0+xrPScjtWFZyIKt+xuck=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXOB9pltooMk5VFQjXwQzkjJU4FO2Js3UbgAFjCCZiR9x1pML/
-	f+Vb09xjb944oHCcOyFhqQ9vaW7hMylctomJYAh4ZY7+cPyFaQmsXaD0aG/OD+Zw75qfJvxl0pH
-	c/Mmk6sQkefB4AmJRcADbuvj/ISA=
-X-Google-Smtp-Source: AGHT+IFFefefdwhnFakKRznoH6UM2IfBKZSke6V097+eiJJj9e+hqoCv6KiH8wOCXuXZQfbi0ZsL5zMRaMnNN/OiqLk=
-X-Received: by 2002:a05:6808:3507:b0:3f4:1879:2af6 with SMTP id
- 5614622812f47-3f425c0a825mr8214115b6e.34.1740416254414; Mon, 24 Feb 2025
- 08:57:34 -0800 (PST)
+	bh=Biw2WTLSjf4saKl00azgbJFpGTFLYZbTKqchEcn3wv8=;
+	b=PTTQ01OCDDlhu7E6wpvq2/q3PgYy+okyGhSej7KToLA2o5SiNX8lI7PKOI5SX5MqFq6cWN
+	s/M7w0plZElQ+XS0Z18stXT0NZRyTaQMC7i3fU3AsCXTQ6t6xi5dpWzfFcxfXbvvkijHr4
+	niXKBVELf+p7xK6VCIhpPZy4/2uQxQw=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-340-cwlvTk3KPAm1Q98sYFFJ9A-1; Mon, 24 Feb 2025 11:57:51 -0500
+X-MC-Unique: cwlvTk3KPAm1Q98sYFFJ9A-1
+X-Mimecast-MFC-AGG-ID: cwlvTk3KPAm1Q98sYFFJ9A_1740416270
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-38f455a8e43so1778894f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 08:57:50 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740416270; x=1741021070;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Biw2WTLSjf4saKl00azgbJFpGTFLYZbTKqchEcn3wv8=;
+        b=HqlfWGElXUWW9oSsY22wwLva5vo81fUHwcQNWYM6JEi6xhAsBUipRqW9qJfIslZEeC
+         zhHdPQL5qfPVCwbBhWQ7N58Y6V5Xigv1TD5b4v8PZ2FCp77RDth1+H91l23OdfR3j5Pn
+         bmMLkzIsMviDYjC8jBhPcSTlNleKOWIfW9UrTrVk24RQzKkx3BWtXnyuZwFtqagzQhuZ
+         Kf67BpLtVdFVVEqkWJ6yQsjwihrXXzwaKYZMUbo0e7ID8kYYdHGX0jwqop0+8GvO6oJU
+         /kM1/buqLJuyIkGvTN1AjG2szpWoXNpX5q6Dyl0bLK2yk+KbZ65K5O6fJ0ua5r2A5DgG
+         r1Vg==
+X-Forwarded-Encrypted: i=1; AJvYcCW6szqvleWCHmDpli5UaqAAO+El9ibxFoaMO+paJSJ0johwhkAdo9kr+IUwckWnTKA1H/ViAUzVr+k+Oro=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8EbH2OVVaaPWiJUeOT836NrT8AuzZzZYiyQE2vNyGss8x47rR
+	yg6XL0yllbZLscjE7aU6QcFQp5Mpanvl1yu+Pg/7naIZL+SA5v+ZN8KgaNJIWzxDPbdrop5iduN
+	NTMKvbAZ2SDZJ1aMltt5PkbXj3dby9esVhcORphVVKQHULU03AbbYtCo8/FFe81GYMh2y/JkznZ
+	suIgLLkeJ/5wQVcXLupyJCPwq7suvX3Q1mITES
+X-Gm-Gg: ASbGncsXB2kdaBViwL/Dxgcs0VJdZc+T7CVVN6gb1sd8znFKXtK2LC0QMzM/yaF1v8P
+	6mlOhDps2ca1r/w3mJSgj5ZYJTk0yLfXFpHEGu1ewCaQqMuTYEypRCH/moja5lpNkET+I54+uvg
+	==
+X-Received: by 2002:a5d:5350:0:b0:38f:2a84:7542 with SMTP id ffacd0b85a97d-38f6e97af1emr9718371f8f.28.1740416269852;
+        Mon, 24 Feb 2025 08:57:49 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IG5dNRxtSyZLnAiRMZfJOPsJBulsojl4I5P8fndIcW5Ryl+25L4glEbkJHy6mYbN+5z31Sip8Eedjc7ZaCr0pE=
+X-Received: by 2002:a5d:5350:0:b0:38f:2a84:7542 with SMTP id
+ ffacd0b85a97d-38f6e97af1emr9718359f8f.28.1740416269554; Mon, 24 Feb 2025
+ 08:57:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224122541.65045-1-xry111@xry111.site>
-In-Reply-To: <20250224122541.65045-1-xry111@xry111.site>
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date: Mon, 24 Feb 2025 17:57:24 +0100
-X-Gmail-Original-Message-ID: <CAHmME9okzk+Cj1yrXQuwjwDsJd+x=UJVM_rLUqgdB6oeCYjw-Q@mail.gmail.com>
-X-Gm-Features: AWEUYZkuzElQp9cVAl_1iXa4R9rcNiIQYnYm0gUgHgwF0Zs5UMK7tkScIF0urC0
-Message-ID: <CAHmME9okzk+Cj1yrXQuwjwDsJd+x=UJVM_rLUqgdB6oeCYjw-Q@mail.gmail.com>
-Subject: Re: [PATCH] RISC-V: vDSO: Wire up getrandom() vDSO implementation
-To: Xi Ruoyao <xry111@xry111.site>
-Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Guo Ren <guoren@kernel.org>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
+References: <20250222014232.2301713-1-seanjc@google.com>
+In-Reply-To: <20250222014232.2301713-1-seanjc@google.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Mon, 24 Feb 2025 17:57:38 +0100
+X-Gm-Features: AWEUYZkqvFCDavxVA4pRYu9m38ZLfRG6NWtlLzkMwKjWG0F_dMA0RYDZW7PpZ40
+Message-ID: <CABgObfaUkZxE7g8Qic3oMzHVu1PozT=XixnfNxXLrVdq_wXRww@mail.gmail.com>
+Subject: Re: [kvm-unit-tests GIT PULL] x86: Fixes, new tests, and more!
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 24, 2025 at 1:26=E2=80=AFPM Xi Ruoyao <xry111@xry111.site> wrot=
-e:
+On Sat, Feb 22, 2025 at 2:42=E2=80=AFAM Sean Christopherson <seanjc@google.=
+com> wrote:
 >
-> Hook up the generic vDSO implementation to the LoongArch vDSO data page
-> by providing the required __arch_chacha20_blocks_nostack,
-> __arch_get_k_vdso_rng_data, and getrandom_syscall implementations. Also
-> wire up the selftests.
+> Please pull a pile of long-overdue changes.  Note, a few of the new tests
+> fail on AMD CPUs (LAM and  bus lock #DB).  I was hoping to get the KVM
+> fixes posted today, but I kept running into KUT failures (there's still
+> one more failure with apic-split when running on Turin with AVIC enabled,
+> but that one is pre-existing).
+>
+> If someone wants a project, SEV-ES, SEV-SNP, and TDX support is still
+> awaiting review+merge.
+>
+> The following changes since commit f77fb696cfd0e4a5562cdca189be557946bf52=
+2f:
+>
+>   arm: pmu: Actually use counter 0 in test_event_counter_config() (2025-0=
+2-04 14:09:20 +0100)
+>
+> are available in the Git repository at:
+>
+>   https://github.com/kvm-x86/kvm-unit-tests.git tags/kvm-x86-2025.02.21
+>
+> for you to fetch changes up to 8d9218bb6b7ced9e8244250b8f0d8b2090c1042a:
+>
+>   x86/debug: Add a split-lock #AC / bus-lock #DB testcase (2025-02-21 17:=
+11:29 -0800)
 
-Thomas noted the LoongArch copypasta, but also, there's no
-__arch_get_k_vdso_rng_data implementation here, like the message says,
-presumably because of the generic data storage work.
+Pulled, thanks.
+
+Paolo
+
