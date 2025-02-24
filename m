@@ -1,122 +1,110 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7EF2571A0;
-	Mon, 24 Feb 2025 12:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BCA1233739;
+	Mon, 24 Feb 2025 12:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740398759; cv=none; b=E4/Z3JyuM1kL3vLcqfx8g//aX659syWl+XMhOlehDQZV7GS+84YwXMv5widlmE718bwSqgVOSrWhH5OzK0NgW6x8AsUkPj42wUY0ZMnpDO+KG+R7g0G86o6sOaeE+wX1sSKBo2qvqqYLL5cfZcxjSfL4J05LRAbIDlLv8b6yKUo=
+	t=1740398762; cv=none; b=uj/odBD+duHtIk40y+2VpqZgti419phKZXXeLprtVJP8i4PTxloB9DcYtm1EhOqSc/hAvFcbFC9n60+4WjJBLfARHTRQsn6Trv6ohTnt5lOLS84AtakFC3weKbbGf6Utr4LYYXgBZNLVOe1S1z31uWBAiPjuSq9elTAcwgw91TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740398759; c=relaxed/simple;
-	bh=gbZMK59y7FwxsHSgwP+la5nktZVZ3d+fKs4Iy+HNUg0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=sNfIBHiGAEj7FbGg+IvqTOnQtJu8G3WGgAQTtAGlvYoErycEwRQEeQACnQVDruyP3XLp5wpu4NiHXiZcZD0qA7GYlWu8uzyjti8H6vuwYmStxl8HrxLsqDp1I22CtszbklOy4RoOTgLiISYaO9BD/u7/gfNOsfkPDA3MURorHUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=H3N+dfyp; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1740398762; c=relaxed/simple;
+	bh=r22q6T3iTRPtwznESGgzBK1H2yg/6SOqkTHLXaFCMZ0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=PtGmBnSbNjYReOJwkweD1Z8iOYu+nXCKRg230hTMmDfpNBD2qVsBZ8IFIgSvDf1Fp+d9ScWPLWWTHpy+8tJXUGF0afYo4u2DzFCbzkNov1se8LJRoqbJiDOpkUhEem8+d4SDEe49aOjTUKKLkJ0qKrS6nJgxIYsY19oBG15KUzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G43zGPOZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H3N+dfyp"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 51OC5pXW1484803
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Feb 2025 06:05:51 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1740398751;
-	bh=dKGBWYRfknZ7iK1RC8/+7OFUWMWukeU3pmJqdL1AngY=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=H3N+dfypXQjQfq0xw7E48JTWB+hcyrs/gUd1D+jA6AACEWXNnA+ec9GO8nE7hWI4S
-	 JBjQMfKEtgDPqKWgmGpvP1a8Py0FGmjeoy2YkF+k6P+ZZOMf7w6m2j+TjRiseRT8Yu
-	 Avdu8dGhdl4Nf1izFiwKFbochlWOCAUiWo357940=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 51OC5pJA008018
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 24 Feb 2025 06:05:51 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 24
- Feb 2025 06:05:51 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 24 Feb 2025 06:05:51 -0600
-Received: from [172.24.227.245] (uda0132425.dhcp.ti.com [172.24.227.245])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 51OC5lcd073883;
-	Mon, 24 Feb 2025 06:05:48 -0600
-Message-ID: <d6440feb-ea23-49f8-9886-82d0e2145f12@ti.com>
-Date: Mon, 24 Feb 2025 17:35:47 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G43zGPOZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF338C4CEE9;
+	Mon, 24 Feb 2025 12:05:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740398762;
+	bh=r22q6T3iTRPtwznESGgzBK1H2yg/6SOqkTHLXaFCMZ0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=G43zGPOZLKJL7CjAnhgTGwwQ1aFDZD601rLcEm/8xoaSGsUbBQrfNBWfbfVzD33jS
+	 ghrbfh+ulg3c+DTWC4sJnStQ2RFezaxqjRDIy7D7zxnUjq2DyM7gXWtrAwWT8oPePn
+	 +R1yvTErZVwDShmFamV9k3o7bO1T4IMdsqXc4aDSDYTcYrTinUlPWZgk3fEFn6DiOm
+	 8/Woolj0EiMuMl23eaNwvL9mqjLOehIsFi2OiBlXCKj+dFe/rBfeAvwj/kXp1FwHnV
+	 4fYu5zS5NrcyQVMC7R+wiAxQ3hXFqvBqJnooaPyFTpHNjeRgD73UKpRfhWcyrpFvkI
+	 wFXZItYjM/X5w==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+Date: Mon, 24 Feb 2025 13:03:47 +0100
+Subject: [PATCH v9 13/13] rust: hrtimer: add maintainer entry
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] arm64: dts: ti: k3-j784s4-j742s2-evm: Add overlay for
- PCIe NTB
-To: Siddharth Vadapalli <s-vadapalli@ti.com>, <nm@ti.com>, <kristo@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>
-References: <20250202093636.2699064-1-s-vadapalli@ti.com>
- <20250202093636.2699064-3-s-vadapalli@ti.com>
-From: Vignesh Raghavendra <vigneshr@ti.com>
-Content-Language: en-US
-In-Reply-To: <20250202093636.2699064-3-s-vadapalli@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Message-Id: <20250224-hrtimer-v3-v6-12-rc2-v9-13-5bd3bf0ce6cc@kernel.org>
+References: <20250224-hrtimer-v3-v6-12-rc2-v9-0-5bd3bf0ce6cc@kernel.org>
+In-Reply-To: <20250224-hrtimer-v3-v6-12-rc2-v9-0-5bd3bf0ce6cc@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>, 
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+ Frederic Weisbecker <frederic@kernel.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Danilo Krummrich <dakr@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Lyude Paul <lyude@redhat.com>, 
+ Guangbo Cui <2407018371@qq.com>, Dirk Behme <dirk.behme@gmail.com>, 
+ Daniel Almeida <daniel.almeida@collabora.com>, 
+ Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1044; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=r22q6T3iTRPtwznESGgzBK1H2yg/6SOqkTHLXaFCMZ0=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBnvGAnim0wmOoDxbgma7+5R5YqYhB9vpvyTzENt
+ a6C5dHvGdWJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7xgJwAKCRDhuBo+eShj
+ dzNuEACYMCAkXcodBftvIU5ttxbYTan/TCeKQjhiNMzF732OmA3/+SeZ3x3KQ73PZ7M5gs2/aTE
+ gnwQBDSTwI951ld18eiN1aezYvaBVW64omvj0m5QBf//sYTSgX0xmIEyHJ7M94wjLtPKbIAjIIg
+ kAo1dKZ4wBySk1WPfMoWnc+jWA7te1f0aVu5odRmmfxPcgBRFPSFqRux463uifazf+xQy3HDHy0
+ tTVgEd32ri0GXHLERHCiF5Dq4A3uJVvCYIJGwlKAGWGTx7SNu5ZsGiOyKp3X1goGYtUlSZ9nNH7
+ mkPgtsZebQng+8xA9mPLx5ma7/AYdxyNRjGXcERKD4A38nl/OFgV1brQs5RQkZNxWNDGzwIxAtl
+ NBkwtepiNYE59gCyJDlPUm3GRFu7Cnsj+ZRaBAjGZTNA9ojLEp1JJyN8GU6zthTOSeK+SNZjI98
+ nu5Jt0feqvX8Dh2rIuhsn52vqjjjEeW+dFa7hiSvJ39oYauhGWRaah7elZKTABrQXA8G4NgqBRD
+ YABZD/oEEYaaeHCQYHeEkMDJG5jOrsKOtaJTjVwGzm/hp7/Szk22AfSd4n3lbmV2EYjqAYU6JOe
+ HJrGUYciRRWSOE4OgB1/CbNbT9PGHRy4poUCr3+tdKbL4jfvsZDIXGRcGP2FK+GmUFc7nJkjGVG
+ s6l2l47gTJyMlew==
+X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
+ fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
+Add Andreas Hindborg as maintainer for Rust `hrtimer` abstractions. Also
+add Boqun Feng as reviewer.
 
+Acked-by: Boqun Feng <boqun.feng@gmail.com>
+Acked-by: Frederic Weisbecker <frederic@kernel.org>
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+---
+ MAINTAINERS | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-On 02/02/25 15:06, Siddharth Vadapalli wrote:
-> diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-evm-pcie-ntb.dtso b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-evm-pcie-ntb.dtso
-> new file mode 100644
-> index 000000000000..e44173f670fa
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-evm-pcie-ntb.dtso
-> @@ -0,0 +1,92 @@
-> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
-> +/**
-> + * DT Overlay for enabling NTB functionality using PCIE0 and PCIE1 instances of
-> + * PCIe on the J784S4 EVM and the J742S2 EVM.
-> + *
-> + * J784S4 EVM Product Link: https://www.ti.com/tool/J784S4XEVM
-> + * J742S2 EVM Product Link: https://www.ti.com/tool/J742S2XH01EVM
-> + *
-> + * Copyright (C) 2025 Texas Instruments Incorporated - https://www.ti.com/
-> + */
-> +
-> +/dts-v1/;
-> +/plugin/;
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/soc/ti,sci_pm_domain.h>
-> +
-> +#include "k3-pinctrl.h"
-> +
-> +&{/} {
-> +	epf_bus {
-
-
-no underscore in node name please
-
-> +		compatible = "pci-epf-bus";
-> +
-> +		ntb {
-> +			compatible = "pci-epf-ntb";
-> +			epcs = <&pcie0_ep>, <&pcie1_ep>;
-> +			epc-names = "primary", "secondary";
-> +			vendor-id = /bits/ 16 <0x104c>;
-> +			device-id = /bits/ 16 <0xb012>;
-> +			num-mws = <4>;
-> +			mws-size = <0x100000>, <0x100000>, <0x100000>, <0x100000>;
-> +		};
-> +	};
-> +};
-> +
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 896a307fa065..60fa77c41b3f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10355,6 +10355,16 @@ F:	kernel/time/timer_list.c
+ F:	kernel/time/timer_migration.*
+ F:	tools/testing/selftests/timers/
+ 
++HIGH-RESOLUTION TIMERS [RUST]
++M:	Andreas Hindborg <a.hindborg@kernel.org>
++R:	Boqun Feng <boqun.feng@gmail.com>
++L:	rust-for-linux@vger.kernel.org
++S:	Supported
++W:	https://rust-for-linux.com
++B:	https://github.com/Rust-for-Linux/linux/issues
++F:	rust/kernel/time/hrtimer.rs
++F:	rust/kernel/time/hrtimer/
++
+ HIGH-SPEED SCC DRIVER FOR AX.25
+ L:	linux-hams@vger.kernel.org
+ S:	Orphan
 
 -- 
-Regards
-Vignesh
-https://ti.com/opensource
+2.47.0
+
 
