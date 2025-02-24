@@ -1,140 +1,135 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09E938DD8;
-	Mon, 24 Feb 2025 14:42:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCFA198857
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 14:43:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740408122; cv=none; b=XCHQBJGvGZIwf+UFHt43LCJ8KRkHcnsc/dgWP71k5bVRki79A9HlocCy7FzTY82l00GzBoj3SKc/B3aID1SlLWpEGwaRkAWB6v3iCEmYGRWcILj+rY/2Zgs6R9MIQV6DyBYYhUhFNx4YVXrZhX0JlWz1c2F4/fm9XWLZ5z6ROWQ=
+	t=1740408236; cv=none; b=guCoTafJO5v5bMbjv/pjiYukWd8k7J9he4bDms3faohZk65WyyVv80DDLCxC8E/GUzkT5oDQfSnXBsS1vpejCK9a58BTGhiE7dRoRdTnfHb1iFmDHsKBi+9sOEiVrMo1yPCV+c7qefkDJ0xqmGtMb9hZthwjPdHJZRcGRrdk/Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740408122; c=relaxed/simple;
-	bh=C82abNrH3ZcypYfQQ4nCqd4+THVXdsD+JjQgHjKZk+8=;
+	s=arc-20240116; t=1740408236; c=relaxed/simple;
+	bh=Vplb6sVTkE1F6QC8kAIX9Js8pg7WFYwGMj49qCAS0nU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OhuqB8hsvGuW5vnSuGnhmiGaDxKUDUW6zYqhQunm+kmxam1rWKHQj1RomWRKy7C6sZ41mjo+g9zovMsxMbIy04lM9hSpRiodepUdpudb7ey6aFm7IHXffyaZ1GN5YPQsuIFi5NthLE4UwKetr6RY4TLDeluGlwNdmjkfQzI9vHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cjd90I9/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GIx2eUyhC1m/2S2OyoFKunCsNt3iGBN3B3CzARV6T5QmZQ+lzPuC1PgugewjjctVgMEA/Ex/K74LsimzNNPPy54WVvmmiH+ikHompUFBijYYx1+xqk3QcCyMpsgJVRlzv2PmY/pBBdpWWi5j0ufj/4QjeO9Yub4to/Virb3eof4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IH5p2viR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cjd90I9/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DB43C4CEE8;
-	Mon, 24 Feb 2025 14:41:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IH5p2viR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 913BDC4CED6;
+	Mon, 24 Feb 2025 14:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740408122;
-	bh=C82abNrH3ZcypYfQQ4nCqd4+THVXdsD+JjQgHjKZk+8=;
+	s=k20201202; t=1740408235;
+	bh=Vplb6sVTkE1F6QC8kAIX9Js8pg7WFYwGMj49qCAS0nU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cjd90I9/+wL8z2KK+BOjI9NRv5U8HB+KR3n65ZXqDM5qGx/Rcsy5rrXI7JtVb7r0h
-	 Fhmn7H6CtBCqBolOyRpzoZobWV1lZj+0zS2y+eULpllbYd6k5wXtCLI2h5iZIm0yKE
-	 PijRg7ZpUCUnO1n2jhb0kpWI4Y4ScVWaNMPw+yBvlFLuCWNWdmPIkmWHeRBxKijDG6
-	 +Tdi7Wyjt6k0JhhQUSd66kOsW2EMb7PUwZONeY9bos6MJXjrfZCC4LRbMXmMOmCHlX
-	 +38k9pEld41DUDfDsJSXwvTDRDzgIufun8/DHpJ9kwTizCji6zV+RG/F4mcqe3kVMG
-	 a3ofzWT4ovxQw==
-Date: Mon, 24 Feb 2025 20:11:55 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Kevin Xie <kevin.xie@starfivetech.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Minda Chen <minda.chen@starfivetech.com>,
-	"open list:PCIE DRIVER FOR STARFIVE JH71x0" <linux-pci@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] PCI: starfive: Fix kmemleak in StarFive PCIe driver's
- IRQ handling
-Message-ID: <20250224144155.omzrmls7hpjqw6yl@thinkpad>
-References: <20250208140110.2389-1-linux.amoon@gmail.com>
- <20250210174400.b63bhmtkuqhktb57@thinkpad>
- <CANAwSgQ20ANRh9wJ3E-T9yNi=g1g129mXq3cZYvPnK1bMx+w7g@mail.gmail.com>
- <20250214060935.cgnc436upawnfzn6@thinkpad>
- <CANAwSgTWa9gwpPhVCYzJM5BL5wUkpB4eyDtX+Vs3SX3a9541wA@mail.gmail.com>
- <CANAwSgRvT-Mqj3XPrME6oKhYmnCUZLnwHfFHmSL=PK+xVLHAqw@mail.gmail.com>
- <20250224080129.zm7fvxermgeyycav@thinkpad>
- <CANAwSgTsp19ri5SYYtD+VOYgBLYg5UqvGRrtNTXOWw7umxGCQg@mail.gmail.com>
- <20250224115452.micfqctwjkt6gwrs@thinkpad>
- <CANAwSgSdEr0X0F1AFAUfJoEjT1a63nj5Ar-ZfmehfhnE0=v+CA@mail.gmail.com>
+	b=IH5p2viR3R7F0TbMkt7TqkMFuqWPNnQtXsbbmzEk9ucOTW7sTsWL6a30Q8iV3/Wes
+	 WssP67K/SiQRgcQ4lVC4ryYl3VH3ZdUjfzFXIQfbS0o6Likyjt6hXqoiOn+yJR2gnT
+	 /8GPefiq62lVdbomDsRVmv9h6SJjm5TuVuRGSc1cd7ereItTtqMFN9JDV8WG9Qi+QI
+	 14aFnlKVUR2TobOp4/WiM/CiJ3xU4J1NVDL749IRwNIa7c0p05jN+OQlNekLLKzZ5w
+	 1KUZpKhMLmPgE9kjrl04cYs1m99DWBPW0kRSjaR9UZV2BUL9HWYaxgTKxSaW2M15MF
+	 3Y0BM2U7uhMjA==
+Date: Mon, 24 Feb 2025 15:43:49 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: =?iso-8859-1?Q?Ma=EDra?= Canal <mcanal@igalia.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>
+Cc: phasta@kernel.org, Matthew Brost <matthew.brost@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Tvrtko Ursulin <tvrtko.ursulin@igalia.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] drm/sched: Adjust outdated docu for run_job()
+Message-ID: <Z7yFpZMCFINhEht7@cassiopeiae>
+References: <20250220112813.87992-2-phasta@kernel.org>
+ <20250220112813.87992-4-phasta@kernel.org>
+ <12c53d41-21c4-443d-a572-fd22c3cc56ad@igalia.com>
+ <1457e985f88e02cd04b2152d2468a65b7a513e63.camel@mailbox.org>
+ <cfef8bd7-f335-4796-9d4f-93197bb3fc2d@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANAwSgSdEr0X0F1AFAUfJoEjT1a63nj5Ar-ZfmehfhnE0=v+CA@mail.gmail.com>
+In-Reply-To: <cfef8bd7-f335-4796-9d4f-93197bb3fc2d@igalia.com>
 
-On Mon, Feb 24, 2025 at 07:33:37PM +0530, Anand Moon wrote:
-> Hi Manivannan
+On Mon, Feb 24, 2025 at 10:29:26AM -0300, Ma�ra Canal wrote:
+> On 20/02/25 12:28, Philipp Stanner wrote:
+> > On Thu, 2025-02-20 at 10:28 -0300, Ma�ra Canal wrote:
+> > > Would it be possible to add a comment that `run_job()` must check if
+> > > `s_fence->finished.error` is different than 0? If you increase the
+> > > karma
+> > > of a job and don't check for `s_fence->finished.error`, you might run
+> > > a
+> > > cancelled job.
+> > 
+> > s_fence->finished is only signaled and its error set once the hardware
+> > fence got signaled; or when the entity is killed.
 > 
-> On Mon, 24 Feb 2025 at 17:24, Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > On Mon, Feb 24, 2025 at 03:38:29PM +0530, Anand Moon wrote:
-> > > Hi Manivannan
-> > >
-> > > On Mon, 24 Feb 2025 at 13:31, Manivannan Sadhasivam
-> > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > >
-> > > > On Thu, Feb 20, 2025 at 03:53:31PM +0530, Anand Moon wrote:
-> > > >
-> > > > [...]
-> > > >
-> > > > > Following the change fix this warning in a kernel memory leak.
-> > > > > Would you happen to have any comments on these changes?
-> > > > >
-> > > > > diff --git a/drivers/pci/controller/plda/pcie-plda-host.c
-> > > > > b/drivers/pci/controller/plda/pcie-plda-host.c
-> > > > > index 4153214ca410..5a72a5a33074 100644
-> > > > > --- a/drivers/pci/controller/plda/pcie-plda-host.c
-> > > > > +++ b/drivers/pci/controller/plda/pcie-plda-host.c
-> > > > > @@ -280,11 +280,6 @@ static u32 plda_get_events(struct plda_pcie_rp *port)
-> > > > >         return events;
-> > > > >  }
-> > > > >
-> > > > > -static irqreturn_t plda_event_handler(int irq, void *dev_id)
-> > > > > -{
-> > > > > -       return IRQ_HANDLED;
-> > > > > -}
-> > > > > -
-> > > > >  static void plda_handle_event(struct irq_desc *desc)
-> > > > >  {
-> > > > >         struct plda_pcie_rp *port = irq_desc_get_handler_data(desc);
-> > > > > @@ -454,13 +449,10 @@ int plda_init_interrupts(struct platform_device *pdev,
-> > > > >
-> > > > >                 if (event->request_event_irq)
-> > > > >                         ret = event->request_event_irq(port, event_irq, i);
-> > > > > -               else
-> > > > > -                       ret = devm_request_irq(dev, event_irq,
-> > > > > -                                              plda_event_handler,
-> > > > > -                                              0, NULL, port);
-> > > >
-> > > > This change is not related to the memleak. But I'd like to have it in a separate
-> > > > patch since this code is absolutely not required, rather pointless.
-> > > >
-> > > Yes, remove these changes to fix the memory leak issue I observed.
-> > >
-> >
-> > Sorry, I don't get you. This specific code change of removing 'devm_request_irq'
-> > is not supposed to fix memleak.
-> >
-> > If you are seeing the memleak getting fixed because of it, then something is
-> > wrong with the irq implementation. You need to figure it out.
+> If you have a timeout, increase the karma of that job with
+> `drm_sched_increase_karma()` and call `drm_sched_resubmit_jobs()`, the
+> latter will flag an error in the dma fence. If you don't check for it in
+> `run_job()`, you will run the guilty job again.
+
+Considering that drm_sched_resubmit_jobs() is deprecated I don't think we need
+to add this hint to the documentation; the drivers that are still using the API
+hopefully got it right.
+
+> I'm still talking about `drm_sched_resubmit_jobs()`, because I'm
+> currently fixing an issue in V3D with the GPU reset and we still use
+> `drm_sched_resubmit_jobs()`. I read the documentation of `run_job()` and
+> `timeout_job()` and the information I commented here (which was crucial
+> to fix the bug) wasn't available there.
+
+Well, hopefully... :-)
+
 > 
-> Declaring request_event_irq in the host controller facilitates the
-> creation of a dedicated IRQ event handler.
-> In its absence, a dummy devm_request_irq was employed, but this
-> resulted in unhandled IRQs and subsequent memory leaks.
+> `drm_sched_resubmit_jobs()` was deprecated in 2022, but Xe introduced a
+> new use in 2023
 
-What do you mean by 'unhandled IRQs'? There is a dummy IRQ handler invoked to
-handle these IRQs. Even your starfive_event_handler() that you proposed was
-doing the same thing.
+Yeah, that's a bit odd, since Xe relies on a firmware scheduler and uses a 1:1
+scheduler - entity setup. I'm a bit surprised Xe does use this function.
 
-> Eliminating the dummy code eliminated the memory leak logs.
+> for example. The commit that deprecated it just
+> mentions AMD's case, but do we know if the function works as expected
+> for the other users?
 
-Sorry, this is not a valid justification. But as I said before, the change
-itself (removing the dummy irq handler and related code) looks good to me as I
-see no need for that. But I cannot accept it as a fix for the memleak.
+I read the comment [1] you're referring to differently. It says that
+"Re-submitting jobs was a concept AMD came up as cheap way to implement recovery
+after a job timeout".
 
-- Mani
+It further explains that "there are many problem with the dma_fence
+implementation and requirements. Either the implementation is risking deadlocks
+with core memory management or violating documented implementation details of
+the dma_fence object", which doesn't give any hint to me that the conceptual
+issues are limited to amdgpu.
 
--- 
-மணிவண்ணன் சதாசிவம்
+> For V3D, it does. Also, we need to make it clear which
+> are the dma fence requirements that the functions violates.
+
+This I fully agree with, unfortunately the comment does not explain what's the
+issue at all.
+
+While I do think I have a vague idea of what's the potential issue with this
+approach, I think it would be way better to get Christian, as the expert for DMA
+fence rules to comment on this.
+
+@Christian: Can you please shed some light on this?
+
+> 
+> If we shouldn't use `drm_sched_resubmit_jobs()`, would it be possible to
+> provide a common interface for job resubmission?
+
+I wonder why this question did not come up when drm_sched_resubmit_jobs() was
+deprecated two years ago, did it?
+
+Anyway, let's shed some light on the difficulties with drm_sched_resubmit_jobs()
+and then we can figure out how we can do better.
+
+I think it would also be interesting to know how amdgpu handles job from
+unrelated entities being discarded by not re-submitting them when a job from
+another entitiy hangs the HW ring.
+
+[1] https://patchwork.freedesktop.org/patch/msgid/20221109095010.141189-5-christian.koenig@amd.com
