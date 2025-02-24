@@ -1,58 +1,58 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787C9265CC7
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 17:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E94266565
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 17:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740419122; cv=none; b=YJiO63nlpHBHxJ/5TdUarHXhbzAQW2DFDyM9o/gz18op8WkSu9G5O32wvLxnGSLH4NOluDyRhHYd3uBAI4+RVCQzJs/LhUoRfWpgk8KmTeNogXsGlyJp6vWo6H2ukyO5QozUU2kGvVX0r1kxJ+73N5iTBxwu2BiFM0aD4G3/vDc=
+	t=1740419125; cv=none; b=UeNBI7AUPRxBuIpsU0UwMqjH2g05MhOuz7zvvwrhPPzXBsPy8Q8QaQSbP4xlyNp4gRr/yDTyejw8ASLXc/hp/L6+7KdRYrivePk1cvnaqmEDFCCmEk8OHqM2+KX7GsibyMKWRq+Ch8Fis90TFB52vpSaNo2FSNeSQd0cc60uv/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740419122; c=relaxed/simple;
-	bh=Uk2AWseJqK82pjVKDpunCE3RpWexobHlM85zZUMX3CE=;
+	s=arc-20240116; t=1740419125; c=relaxed/simple;
+	bh=1BOlD3CY7Q7i+Oz86sDe82UKyhlevhIg+0IIHAWWAOY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aWLL+Eb5v93KrMg27ewHSIphF+wRxqQqlfT5m8saSsHudniAcP3SKGMitlj4SyhkHN00l/R1/WLF1+rbo+2b0s98qSaezTtxKnqXUMOgrgNwkABqbVAmY8AJgtHd6CRR2dMelEKcT7ddJ2HYfQZmNq3k98bgeZuGdUjWr99+ZSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=W6799ISL; arc=none smtp.client-ip=209.85.214.174
+	 MIME-Version; b=LEy3PQBrcZUBtPeV69uZ+tNNHtwhxZGa93kUU+ErB2Ynn8xgaMjQhG4tyADQFpwFmmtPDbkRgosFU1hkdTKf8Xs4dZ0O0gEptw5tIYVVTXORM1Y/BugV5T6/afqmBgLiukeuF+wclib+bhI/M7QQHiEjT+6cFoQi3Emu5Ocq1ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Rseh1RhV; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W6799ISL"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22134a64d8cso11339565ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 09:45:21 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Rseh1RhV"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-21f8f3bd828so10201025ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 09:45:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740419121; x=1741023921; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1740419123; x=1741023923; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uF6v4BAgInjRNjkqN7tLcQhcZv2LNrGaf63b7a8eFi0=;
-        b=W6799ISLIZIQMsswIKItspexqAysbUYphZUwt5VCGMLFuxMdsO9et90LthCg8lIlqK
-         F4KU3DFtpbjlVAq+IgkI4yMJubO2Y6eqgOXtLPuu/vCAXKp/S4tIwqzmQY7q7lHL1A79
-         2R9UGljo0wdEk00a+Smfak+AsuHZfzidtFHBU=
+        bh=NedlQ833R+dfasjp2xtVkBoypa1M9tQutc1AiNG511A=;
+        b=Rseh1RhVrbWeM2VulixoeyKqs9Qj49KooO2MR9jLWT03wzMGYNUsJUm2SoH6a5vCxY
+         A6uJfT+81yL5v20/BLjyROgzUGW3SiB6pJnqpDH4gXD0UDzdkmiPcUz2eglNmAU0qfOq
+         wa0Q2rbElFdCHaN7l785aOqpbiJrKkdHwzquE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740419121; x=1741023921;
+        d=1e100.net; s=20230601; t=1740419123; x=1741023923;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uF6v4BAgInjRNjkqN7tLcQhcZv2LNrGaf63b7a8eFi0=;
-        b=nH3vvlsRwjT0DMyKHxSvGD1qZkjcPGIh3p+EcxaMQlKDXSE2P9COREOem6B1pgb2Ar
-         cNAysznbifi5ZbzueN6QWxmZj65l8IwiqckDJL3zhRibvY8kJ7d4GKDty0ib9cUjLuog
-         oy3ACbATXpvQ5CARFSuHmTPfnviV+vk9BRJXLGrEwQZcKOpeFSOcvjXDhe7eJmV1XSqA
-         HEe1bNhcqEwnQ5t7W9gk6o8udRwJBvMWVOC0+LA4bkaCPMKzLw+1VBs3Zpr1syE/97vm
-         pqa36HE4M5bGgPm91s9rIsLxBHdSGB14B5JwXZWAkLPb+OTydfFL6BDLE4fAiubphP0Y
-         6aYg==
-X-Gm-Message-State: AOJu0YyNB+MUABA2rVufvWcgwBctz/GDk0Rb88Z163i2yrPqksU8uzif
-	YqXtD9mRo4cOruX4QDW5sACjO2RnOn4+hQX9ZiTdQa8n/KTV0+3OUsDzwx9eUA==
-X-Gm-Gg: ASbGncvhqXVgx9RGq8xFPNT4SvkyEdEsMlyvp+CnRqu6oXHteie0jnwBnRh1e5uLLpq
-	+78F9Vc0Pj4bk8yWA6Y+UAV8zfxtFgbV/NhXghzF6iUPTPHMQYgGKjuouLSEidMGshrj9GVS5Eu
-	lfECNzzrjlw9QlUMz0i99MYgQ/5DKzIZUb8/vPJr4GnHBbvUVwKldYTswUEZwCHSkJHSYA0gQky
-	9nyQwW2UBlFBCFVVC6D3T2rtzNG3Q+WqCkSBVv3TUAcQctKp/I14uiaBjytAgbyL3+mSYDm+rgd
-	M1NLrp/Z8nK8ARvoXx50b7Syg8ihMIjIlwAaKCYmCvAsouYAwnpyxvNB6crl
-X-Google-Smtp-Source: AGHT+IHchQT9dzoJY2LEcYJPdtfWM7ipynXQ721dymkyqhvRjPShYl+mqIPBkEeCSpT4D/DXL4HZjw==
-X-Received: by 2002:a17:903:22c8:b0:21f:b7f5:ee58 with SMTP id d9443c01a7336-2219ff5b3e9mr87660905ad.4.1740419120715;
-        Mon, 24 Feb 2025 09:45:20 -0800 (PST)
+        bh=NedlQ833R+dfasjp2xtVkBoypa1M9tQutc1AiNG511A=;
+        b=VIU07dgu/T07lm702IF7ASPGYjQNjSEg4vHI/UQI1tlzSkjaIJ1ViIe3KAz2wWNaRB
+         88PnsPomlYw3Z5UdYAQEGRNNn1JpKgC85Gzq8GgoTX+TM/Ml7h98W+oXtb27AfYzgB5Z
+         BVsDJl5O6bcpUMtd3LWWi/XQjBiVwiepM9vFG3k2k3na/8x3DGtXAkn0IClPdlm+6h/l
+         YW8PEOKTgZ+IAboYLzHA3i9XvdVUASboeYoJ3INy4JgeM741MUZmdwkHmwbX2vcf+V5Q
+         vQW4f6PXrEghI9AVa7aiyzJ54Y1kDE47l7P3P1WhaQ4OFXApgAj058xwVlZrb5oV9AmX
+         iKHg==
+X-Gm-Message-State: AOJu0YzjwAavggU6r2jBmiCsDjigiG9tgfPpjsAhvbNB58kiGLT5YtCC
+	PwAYge6PHKAjYWUtiLEijiBNsAscNxQ9OE5Mu3aZK57eXBAtuIiO4w1salt19g==
+X-Gm-Gg: ASbGncse23xMCls+PAIhxy3aUODMsi3n0J0GFk7zOrE2ZasgNCfM0SAjPY2l5/lO+4F
+	ZKLzvhnkK4kiGp4EHuFln8E4qG78kDXoGKHJWVA/dpwotiIEFXEJ1psVQklIUagwVcY28i7fDqn
+	yR99xWI8xyQFEHWJC+FNltR74BKhukSShSiQCjBuPIybdt9cLM40rULqeG4mpkJwqqlntmb+zrk
+	swhCKHdOsqit/P1FmfysDGuj1GAZJG9R9EkrZ72mJXpo6piJLYElUzNeryopQH4Eqe/ILXk+C3r
+	NNWmMlYJMoZLB0QpsuMydf87JlFsHCJ6MkpobPHgSCmhx3d3uSOsoz9SGJJ9
+X-Google-Smtp-Source: AGHT+IFZVTqhLnFv9AH6bcykjpAlvnpYSGZUQrdwYTW7+qFqbmLc8OL95CLeT9nCPZhlXuZDXrrHjg==
+X-Received: by 2002:a17:902:d488:b0:220:e98e:4f17 with SMTP id d9443c01a7336-2219ff39595mr87888225ad.2.1740419122867;
+        Mon, 24 Feb 2025 09:45:22 -0800 (PST)
 Received: from localhost (201.59.83.34.bc.googleusercontent.com. [34.83.59.201])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-220d5586080sm181990315ad.229.2025.02.24.09.45.19
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2fceb093d96sm6756326a91.40.2025.02.24.09.45.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2025 09:45:19 -0800 (PST)
+        Mon, 24 Feb 2025 09:45:22 -0800 (PST)
 From: jeffxu@chromium.org
 To: akpm@linux-foundation.org,
 	keescook@chromium.org,
@@ -101,11 +101,10 @@ Cc: linux-kernel@vger.kernel.org,
 	mpe@ellerman.id.au,
 	aleksandr.mikhalitsyn@canonical.com,
 	mike.rapoport@gmail.com,
-	Jeff Xu <jeffxu@chromium.org>,
-	Benjamin Berg <benjamin.berg@intel.com>
-Subject: [PATCH v6 5/7] mseal, system mappings: enable uml architecture
-Date: Mon, 24 Feb 2025 17:45:11 +0000
-Message-ID: <20250224174513.3600914-6-jeffxu@google.com>
+	Jeff Xu <jeffxu@chromium.org>
+Subject: [PATCH v6 7/7] mseal, system mappings: update mseal.rst
+Date: Mon, 24 Feb 2025 17:45:13 +0000
+Message-ID: <20250224174513.3600914-8-jeffxu@google.com>
 X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
 In-Reply-To: <20250224174513.3600914-1-jeffxu@google.com>
 References: <20250224174513.3600914-1-jeffxu@google.com>
@@ -119,55 +118,32 @@ Content-Transfer-Encoding: 8bit
 
 From: Jeff Xu <jeffxu@chromium.org>
 
-Provide support for CONFIG_MSEAL_SYSTEM_MAPPINGS on UML, covering
-the vdso.
-
-Testing passes on UML.
+Update memory sealing documentation to include details about system
+mappings.
 
 Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-Tested-by: Benjamin Berg <benjamin.berg@intel.com>
 ---
- arch/um/Kconfig        | 1 +
- arch/x86/um/vdso/vma.c | 6 ++++--
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ Documentation/userspace-api/mseal.rst | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/um/Kconfig b/arch/um/Kconfig
-index 18051b1cfce0..eb2d439a5334 100644
---- a/arch/um/Kconfig
-+++ b/arch/um/Kconfig
-@@ -10,6 +10,7 @@ config UML
- 	select ARCH_HAS_FORTIFY_SOURCE
- 	select ARCH_HAS_GCOV_PROFILE_ALL
- 	select ARCH_HAS_KCOV
-+	select ARCH_HAS_MSEAL_SYSTEM_MAPPINGS
- 	select ARCH_HAS_STRNCPY_FROM_USER
- 	select ARCH_HAS_STRNLEN_USER
- 	select HAVE_ARCH_AUDITSYSCALL
-diff --git a/arch/x86/um/vdso/vma.c b/arch/x86/um/vdso/vma.c
-index f238f7b33cdd..ee6d8a58f9f6 100644
---- a/arch/x86/um/vdso/vma.c
-+++ b/arch/x86/um/vdso/vma.c
-@@ -54,6 +54,7 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
- {
- 	struct vm_area_struct *vma;
- 	struct mm_struct *mm = current->mm;
-+	unsigned long vm_flags;
- 	static struct vm_special_mapping vdso_mapping = {
- 		.name = "[vdso]",
- 	};
-@@ -65,9 +66,10 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
- 		return -EINTR;
+diff --git a/Documentation/userspace-api/mseal.rst b/Documentation/userspace-api/mseal.rst
+index 41102f74c5e2..10147281bf2d 100644
+--- a/Documentation/userspace-api/mseal.rst
++++ b/Documentation/userspace-api/mseal.rst
+@@ -130,6 +130,13 @@ Use cases
  
- 	vdso_mapping.pages = vdsop;
-+	vm_flags = VM_READ|VM_EXEC|VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC;
-+	vm_flags |= MSEAL_SYSTEM_MAPPINGS_VM_FLAG;
- 	vma = _install_special_mapping(mm, um_vdso_addr, PAGE_SIZE,
--		VM_READ|VM_EXEC|
--		VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC,
-+		vm_flags,
- 		&vdso_mapping);
+ - Chrome browser: protect some security sensitive data structures.
  
- 	mmap_write_unlock(mm);
++- System mappings:
++  If supported by an architecture (via CONFIG_ARCH_HAS_MSEAL_SYSTEM_MAPPINGS),
++  the CONFIG_MSEAL_SYSTEM_MAPPINGS seals system mappings, e.g. vdso, vvar,
++  uprobes, sigpage, vectors, etc. CHECKPOINT_RESTORE, UML, gVisor, rr are
++  known to relocate or unmap system mapping, therefore this config can't be
++  enabled universally.
++
+ When not to use mseal
+ =====================
+ Applications can apply sealing to any virtual memory region from userspace,
 -- 
 2.48.1.601.g30ceb7b040-goog
 
