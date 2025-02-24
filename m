@@ -1,33 +1,33 @@
 Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F00221F00;
-	Mon, 24 Feb 2025 15:55:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4552C2627E2;
+	Mon, 24 Feb 2025 15:55:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740412518; cv=none; b=PgSlT/W32zoOvyLlw9p37p/3b8IgnHIsxbwQpiF2lXMUITo0XNvZ6EJBrOcIgDEZQIHm9Ij50Ht6Nc6+6Hs7kNxKq/SPG4zySL2chB93bwOM85RYxjTiB/bIiJYYUliRkY88gx9Lbf4qh9oNJNaotRlCF8CQoDwFA/4Gtbg0AqQ=
+	t=1740412521; cv=none; b=a1bJ5/iF9xBhQHdW1rSdmrwXUYnmBL72PSoale4ohrTcH6TdzgIXsir8ej5TcZS4Qba3mQ5EgbiF8jhvwwCSnZNUG0Qc0WIgjhwTEef7Sl1RdBqaabF6POFFjmHPW7yEgY2uPZ2h0dV0+r5W2aPFPV4hJY5OcG2T5cchLxM+MNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740412518; c=relaxed/simple;
-	bh=zUqgJStw7LAI5K7zUabnJlCU9IfT32qqy1wWSMnNcCk=;
+	s=arc-20240116; t=1740412521; c=relaxed/simple;
+	bh=dcG5/d7YsNTu2b54KQ6wCfzUCDNwYHtoap6j4u7RGNY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eyk4luAUIWV0xjhMmWzgYJoAd4BGkWe8ebKYngAxFtXEyBmgeTg6oq8A7j08smPQkL2FBeZxcR/W06G7DCSmpLXeNrXJ76ilnyK+sQdoj6aUpwcAX+JlJDmdDeMwkXHV7MltCCMJSeO6EPP9tA21s/1KClE31hTYR4uV+yHtY5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=tP4zyfNX; arc=none smtp.client-ip=217.194.8.81
+	 MIME-Version; b=dvV0qo5w9XQpta/Mlcgby0bQ6DMufjMzyPv0bWt/pXMJmHdY/E7+esnMg7p1iYncaAb3C/LuF8idWrJXeDqaMdAtIgQ8QX20PFXTwQyFy12LwckaC2MxQZX/mkyJcH+3L9thpSgqWG+z3GLyLXeLWZmrUn0ieXgxjz9HquTLihA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=NXKaI++C; arc=none smtp.client-ip=217.194.8.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="tP4zyfNX"
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="NXKaI++C"
 Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 10D2D1FB68;
-	Mon, 24 Feb 2025 16:55:07 +0100 (CET)
+	by mail11.truemail.it (Postfix) with ESMTPA id 7A87A1FBA2;
+	Mon, 24 Feb 2025 16:55:08 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1740412507;
-	bh=+1ZoflOzJXeYt9WTAcrPFAGrSpNtmA3nQiz905jptCk=; h=From:To:Subject;
-	b=tP4zyfNXvNXxjSpuOUYQR4sT0JrwQbpKB+VV6qSX71UVhCke+8iGYpznuECeKO82J
-	 ZkHCtpJJMsrbMojhYu175wtYJ4Afv3/YGuV1QAvkNP0oFEGixv40oeiR31oPsJ2OMW
-	 6Cc36vNJbK3VsxP+t5T1BgQf9JTLtd3Tk4VNmzrHcj/2Be8hxD0gANRdXzveYIiVyQ
-	 srt075bonoXcCgw3GxAG928P0krpowUIylpfGKwRGWKjPrQUOfxtuTT3NN4dwKd/22
-	 NRsoBdSDgPGZz0C5+o3+blrOkLlKqK50MretDGbQJ8uEW4ooNy7i15ORqgNXVZmbVk
-	 wzhy3m/ahT89w==
+	s=default; t=1740412509;
+	bh=hFbONcKyhjUHboYxM0ZaY3VOZ5oAiMtjcU/h4VEveuI=; h=From:To:Subject;
+	b=NXKaI++CDjuzppw/qLDI4RS2ZefxoOrXHPg7Zsmj+hCsuIMCEfYUYov3IMIkh7VQJ
+	 wBS5QfLaM/lXg3Mb7QosEMqJsK2q05E9pjYZ2HZYhJzSnoHg9CH6k67ELyjCe6dc7A
+	 pRSt/1oaPwHPQrn8onbcPzu5yAcjEv2QqCtPrdoHx/+EfjzgKrT2Hf9rUw6jmM5y/A
+	 3UZygtzTwAh+6UU+4RBu7L2vdMNRFUI6T0QxRqaCki3/jGQhUHMkruA7/c3Bx/awmq
+	 TNo2PYBHgVaX+KDeuGWew470q667hH/obzMbTV6ZTsxz5ak5buOLSEeN7CMblmtrEx
+	 WaKzOPBH289Yg==
 From: Francesco Dolcini <francesco@dolcini.it>
 To: Liam Girdwood <lgirdwood@gmail.com>,
 	Mark Brown <broonie@kernel.org>,
@@ -43,10 +43,10 @@ Cc: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: [PATCH v2 3/5] ASoC: dt-bindings: wm8904: Add DMIC, GPIO, MIC and EQ support
-Date: Mon, 24 Feb 2025 16:54:58 +0100
-Message-Id: <20250224155500.52462-4-francesco@dolcini.it>
+	ckeepax@opensource.cirrus.com
+Subject: [PATCH v2 5/5] ASoC: wm8904: add DMIC support
+Date: Mon, 24 Feb 2025 16:55:00 +0100
+Message-Id: <20250224155500.52462-6-francesco@dolcini.it>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250224155500.52462-1-francesco@dolcini.it>
 References: <20250224155500.52462-1-francesco@dolcini.it>
@@ -60,165 +60,217 @@ Content-Transfer-Encoding: 8bit
 
 From: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
 
-Add two properties to select the IN1L/DMICDAT1 and IN2R/DMICDAT2
-functionality:
-- wlf,in1l-as-dmicdat1
-- wlf,in1r-as-dmicdat2
+The WM8904 codec supports both ADC and DMIC inputs.
 
-Add a property to describe the GPIO configuration registers, that can be
-used to set the four multifunction pins:
-- wlf,gpio-cfg
+Get input pin functionality from the platform data and add the necessary
+controls depending on the possible additional routing.
 
-Add a property to describe the mic bias control registers:
-- wlf,mic-cfg
+The ADC and DMIC share the IN1L/DMICDAT1 and IN1R/DMICDAT2 pins.
 
-Add two properties to describe the Dynamic Range Controller (DRC),
-allowing multiple named configurations where each config sets the 4 DRC
-registers (R40-R43):
-- wlf,drc-cfg-regs
-- wlf,drc-cfg-names
+This leads to a few scenarios requiring different DAPM routing:
+- When both are connected to an analog input, only the ADC is used.
+- When one line is a DMIC and the other an analog input, the DMIC source
+  is set from the platform data and a mux is added to select whether to
+  use the ADC or DMIC.
+- When both are connected to a DMIC, another mux is added to this to
+  select the DMIC source. Note that we still need to be able to select
+  the ADC system for use with the IN2L, IN2R, IN3L and IN3R pins.
 
-Add three properties to describe the equalizer (ReTune Mobile), allowing
-multiple named configurations (associated with a samplerate) that set
-the 24 (R134-R157) EQ registers:
-- wlf,retune-mobile-cfg-regs
-- wlf,retune-mobile-cfg-names
-- wlf,retune-mobile-cfg-rates
-
-Datasheet: https://statics.cirrus.com/pubs/proDatasheet/WM8904_Rev4.1.pdf
 Signed-off-by: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
 Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
-v2: Added an example of how to use the ReTune Mobile config properties
-v1: https://lore.kernel.org/lkml/20250206163152.423199-4-francesco@dolcini.it/
----
- .../devicetree/bindings/sound/wlf,wm8904.yaml | 106 ++++++++++++++++++
- 1 file changed, 106 insertions(+)
+v2: DAPM routes have been reworked, please see the commit message body.
+    The previous approach forgot that the ADC is still needed for the
+    IN2L/R and IN3L/R pins, and did not properly disconnect the PGAs
+    from the ADC when only the DMIC was in use.
+v1: https://lore.kernel.org/lkml/20250206163152.423199-6-francesco@dolcini.it/
 
-diff --git a/Documentation/devicetree/bindings/sound/wlf,wm8904.yaml b/Documentation/devicetree/bindings/sound/wlf,wm8904.yaml
-index 329260cf0fa0..f4338efaee18 100644
---- a/Documentation/devicetree/bindings/sound/wlf,wm8904.yaml
-+++ b/Documentation/devicetree/bindings/sound/wlf,wm8904.yaml
-@@ -38,6 +38,74 @@ properties:
-   DCVDD-supply: true
-   MICVDD-supply: true
+Cc: ckeepax@opensource.cirrus.com
+---
+ sound/soc/codecs/wm8904.c | 125 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 120 insertions(+), 5 deletions(-)
+
+diff --git a/sound/soc/codecs/wm8904.c b/sound/soc/codecs/wm8904.c
+index 83cf59f6e879..ed717140ec76 100644
+--- a/sound/soc/codecs/wm8904.c
++++ b/sound/soc/codecs/wm8904.c
+@@ -844,6 +844,26 @@ static int out_pga_event(struct snd_soc_dapm_widget *w,
+ 	return 0;
+ }
  
-+  wlf,in1l-as-dmicdat1:
-+    type: boolean
-+    description:
-+      Use IN1L/DMICDAT1 as DMICDAT1, enabling the DMIC input path.
++static const char * const dmic_text[] = {
++	"DMIC1", "DMIC2"
++};
 +
-+  wlf,in1r-as-dmicdat2:
-+    type: boolean
-+    description:
-+      Use IN1R/DMICDAT2 as DMICDAT2, enabling the DMIC input path.
++static SOC_ENUM_SINGLE_DECL(dmic_enum, WM8904_DIGITAL_MICROPHONE_0,
++			    WM8904_DMIC_SRC_SHIFT, dmic_text);
 +
-+  wlf,gpio-cfg:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    minItems: 4
-+    maxItems: 4
-+    description:
-+      Default register values for R121/122/123/124 (GPIO Control).
-+      If any entry has the value 0xFFFF, the related register won't be set.
-+    default: [0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF]
++static const struct snd_kcontrol_new dmic_mux =
++	SOC_DAPM_ENUM("DMIC Mux", dmic_enum);
 +
-+  wlf,mic-cfg:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    minItems: 2
-+    maxItems: 2
-+    description:
-+      Default register values for R6/R7 (Mic Bias Control).
-+    default: [0, 0]
++static const char * const cin_text[] = {
++	"ADC", "DMIC"
++};
 +
-+  wlf,drc-cfg-names:
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+    description:
-+      List of strings for the available DRC modes.
-+      If absent, DRC is disabled.
++static SOC_ENUM_SINGLE_DECL(cin_enum, WM8904_DIGITAL_MICROPHONE_0,
++			    WM8904_DMIC_ENA_SHIFT, cin_text);
 +
-+  wlf,drc-cfg-regs:
-+    $ref: /schemas/types.yaml#/definitions/uint16-array
-+    description:
-+      Default register values for R40/41/42/43 (DRC).
-+      The list must be 4 times the length of wlf,drc-cfg-names.
-+      If absent, DRC is disabled.
++static const struct snd_kcontrol_new cin_mux =
++	SOC_DAPM_ENUM("Capture Input", cin_enum);
 +
-+  wlf,retune-mobile-cfg-names:
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+    description:
-+      List of strings for the available retune modes.
-+      If absent, retune is disabled.
+ static const char *input_mode_text[] = {
+ 	"Single-Ended", "Differential Line", "Differential Mic"
+ };
+@@ -963,6 +983,15 @@ SND_SOC_DAPM_AIF_OUT("AIFOUTL", "Capture", 0, SND_SOC_NOPM, 0, 0),
+ SND_SOC_DAPM_AIF_OUT("AIFOUTR", "Capture", 1, SND_SOC_NOPM, 0, 0),
+ };
+ 
++static const struct snd_soc_dapm_widget wm8904_dmic_dapm_widgets[] = {
++SND_SOC_DAPM_MUX("DMIC Mux", SND_SOC_NOPM, 0, 0, &dmic_mux),
++};
 +
-+  wlf,retune-mobile-cfg-rates:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    description:
-+      List of rates for the available retune modes.
-+      The list must be the same length as wlf,retune-mobile-cfg-names.
-+      If absent, retune is disabled.
++static const struct snd_soc_dapm_widget wm8904_cin_dapm_widgets[] = {
++SND_SOC_DAPM_MUX("Left Capture Input", SND_SOC_NOPM, 0, 0, &cin_mux),
++SND_SOC_DAPM_MUX("Right Capture Input", SND_SOC_NOPM, 0, 0, &cin_mux),
++};
 +
-+  wlf,retune-mobile-cfg-regs:
-+    $ref: /schemas/types.yaml#/definitions/uint16-array
-+    description:
-+      Default register values for R134/.../157 (EQ).
-+      The list must be 24 times the length of wlf,retune-mobile-cfg-names.
-+      If absent, retune is disabled.
+ static const struct snd_soc_dapm_widget wm8904_dac_dapm_widgets[] = {
+ SND_SOC_DAPM_AIF_IN("AIFINL", "Playback", 0, SND_SOC_NOPM, 0, 0),
+ SND_SOC_DAPM_AIF_IN("AIFINR", "Playback", 1, SND_SOC_NOPM, 0, 0),
+@@ -1101,12 +1130,45 @@ static const struct snd_soc_dapm_route adc_intercon[] = {
+ 	{ "AIFOUTR", NULL, "AIFOUTR Mux" },
+ 
+ 	{ "ADCL", NULL, "CLK_DSP" },
+-	{ "ADCL", NULL, "Left Capture PGA" },
+-
+ 	{ "ADCR", NULL, "CLK_DSP" },
++};
 +
-+dependencies:
-+  wlf,drc-cfg-names: [ 'wlf,drc-cfg-regs' ]
-+  wlf,drc-cfg-regs: [ 'wlf,drc-cfg-names' ]
++/* No DMICs, always connect PGAs */
++static const struct snd_soc_dapm_route cin_nodmic_con[] = {
++	{ "ADCL", NULL, "Left Capture PGA" },
+ 	{ "ADCR", NULL, "Right Capture PGA" },
+ };
+ 
++/* DMIC system in use: mux between ADC and DMICDAT1, 2 or both */
++static const struct snd_soc_dapm_route cin_adc_dmic_con[] = {
++	{ "Left Capture Input", "ADC", "Left Capture PGA" },
++	{ "Right Capture Input", "ADC", "Right Capture PGA" },
 +
-+  wlf,retune-mobile-cfg-names: [ 'wlf,retune-mobile-cfg-rates', 'wlf,retune-mobile-cfg-regs' ]
-+  wlf,retune-mobile-cfg-regs: [ 'wlf,retune-mobile-cfg-names', 'wlf,retune-mobile-cfg-rates' ]
-+  wlf,retune-mobile-cfg-rates: [ 'wlf,retune-mobile-cfg-names', 'wlf,retune-mobile-cfg-regs' ]
++	{ "ADCL", NULL, "Left Capture Input" },
++	{ "ADCR", NULL, "Right Capture Input" },
++};
 +
- required:
-   - compatible
-   - reg
-@@ -70,5 +138,43 @@ examples:
-             DBVDD-supply = <&reg_1p8v>;
-             DCVDD-supply = <&reg_1p8v>;
-             MICVDD-supply = <&reg_1p8v>;
++/*  IN1L as DMICDAT1 */
++static const struct snd_soc_dapm_route cin_dmic1_con[] = {
++	{ "Left Capture Input", "DMIC", "IN1L" },
++	{ "Right Capture Input", "DMIC", "IN1L" },
++};
 +
-+            wlf,drc-cfg-names = "default", "peaklimiter", "tradition", "soft", "music";
-+            wlf,drc-cfg-regs =
-+                /* coded default: KNEE_IP = KNEE_OP = 0, HI_COMP = LO_COMP = 1  */
-+                /bits/ 16 <0x01af 0x3248 0x0000 0x0000>,
-+                /* coded default: KNEE_IP = -24, KNEE_OP = -6, HI_COMP = 1/4, LO_COMP = 1 */
-+                /bits/ 16 <0x04af 0x324b 0x0010 0x0408>,
-+                /* coded default: KNEE_IP = -42, KNEE_OP = -3, HI_COMP = 0, LO_COMP = 1 */
-+                /bits/ 16 <0x04af 0x324b 0x0028 0x0704>,
-+                /* coded default: KNEE_IP = -45, KNEE_OP = -9, HI_COMP = 1/8, LO_COMP = 1 */
-+                /bits/ 16 <0x04af 0x324b 0x0018 0x078c>,
-+                /* coded default: KNEE_IP = -30, KNEE_OP = -10.5, HI_COMP = 1/4, LO_COMP = 1 */
-+                /bits/ 16 <0x04af 0x324b 0x0010 0x050e>;
++/* IN1R as DMICDAT2 */
++static const struct snd_soc_dapm_route cin_dmic2_con[] = {
++	{ "Left Capture Input", "DMIC", "IN1R" },
++	{ "Right Capture Input", "DMIC", "IN1R" },
++};
 +
-+            wlf,gpio-cfg = <
-+                0x0018 /* GPIO1 => DMIC_CLK */
-+                0xffff /* GPIO2 => don't touch */
-+                0xffff /* GPIO3 => don't touch */
-+                0xffff /* GPIO4 => don't touch */
++/* DMICDAT1 and DMICDAT2: mux between them, ADC still used for IN2 and IN3 */
++static const struct snd_soc_dapm_route cin_2dmics_con[] = {
++	{ "DMIC Mux", "DMIC1", "IN1L" },
++	{ "DMIC Mux", "DMIC2", "IN1R" },
 +
-+            wlf,retune-mobile-cfg-names = "bassboost", "bassboost", "treble";
-+            wlf,retune-mobile-cfg-rates = <48000 44100 48000>;
-+            wlf,retune-mobile-cfg-regs =
-+                /* bassboost: EQ_ENA = 1, +6 dB @ 100 Hz, +3 dB @ 300 Hz, 0 dB @ 875, 2400, 6900 Hz */
-+                /bits/ 16 <0x1 0x12 0xf 0xc 0xc 0xc>,
-+                /* default values for ReTune Mobile registers 140-157 */
-+                /bits/ 16 <0x0fca 0x0400 0x00d8 0x1eb5 0xf145 0x0bd5 0x0075 0x1c58 0xf3d3 0x0a54 0x0568 0x168e 0xf829 0x07ad 0x1103 0x0564 0x0559 0x4000>,
++	{ "Left Capture Input", "DMIC", "DMIC Mux" },
++	{ "Right Capture Input", "DMIC", "DMIC Mux" },
++};
 +
-+                /* bassboost: EQ_ENA = 1, +6 dB @ 100 Hz, +3 dB @ 300 Hz, 0 dB @ 875, 2400, 6900 Hz */
-+                /bits/ 16 <0x1 0x12 0xf 0xc 0xc 0xc>,
-+                /* default values for ReTune Mobile registers 140-157 */
-+                /bits/ 16 <0x0fca 0x0400 0x00d8 0x1eb5 0xf145 0x0bd5 0x0075 0x1c58 0xf3d3 0x0a54 0x0568 0x168e 0xf829 0x07ad 0x1103 0x0564 0x0559 0x4000>,
+ static const struct snd_soc_dapm_route dac_intercon[] = {
+ 	{ "DACL Mux", "Left", "AIFINL" },
+ 	{ "DACL Mux", "Right", "AIFINR" },
+@@ -2050,18 +2112,70 @@ static void wm8904_handle_retune_mobile_pdata(struct snd_soc_component *componen
+ 			"Failed to add ReTune Mobile control: %d\n", ret);
+ }
+ 
++static void wm8904_handle_dmic_pdata(struct snd_soc_component *component)
++{
++	struct snd_soc_dapm_context *dapm = snd_soc_component_get_dapm(component);
++	struct wm8904_priv *wm8904 = snd_soc_component_get_drvdata(component);
++	struct wm8904_pdata *pdata = wm8904->pdata;
++	unsigned int dmic_src;
 +
-+                /* treble: EQ_ENA = 1, -2 dB @ 100, 300 Hz, 0 dB @ 875, 2400 Hz, +3 dB @ 6900 Hz */
-+                /bits/ 16 <0x1 0xa 0xa 0xc 0xc 0xf>,
-+                /* default values for ReTune Mobile registers 140-157 */
-+                /bits/ 16 <0x0fca 0x0400 0x00d8 0x1eb5 0xf145 0x0bd5 0x0075 0x1c58 0xf3d3 0x0a54 0x0568 0x168e 0xf829 0x07ad 0x1103 0x0564 0x0559 0x4000>;
-+            >;
-         };
-     };
++	if (!pdata->in1l_as_dmicdat1 && !pdata->in1r_as_dmicdat2) {
++		snd_soc_dapm_add_routes(dapm, cin_nodmic_con,
++					ARRAY_SIZE(cin_nodmic_con));
++		snd_soc_component_update_bits(component, WM8904_DIGITAL_MICROPHONE_0,
++					      WM8904_DMIC_ENA_MASK, 0);
++		return;
++	}
++
++	/* Need a control and routing to switch between DMIC and ADC */
++	snd_soc_dapm_new_controls(dapm, wm8904_cin_dapm_widgets,
++				  ARRAY_SIZE(wm8904_cin_dapm_widgets));
++	snd_soc_dapm_add_routes(dapm, cin_adc_dmic_con,
++				ARRAY_SIZE(cin_adc_dmic_con));
++
++	if (pdata->in1l_as_dmicdat1 && pdata->in1r_as_dmicdat2) {
++		/* Need a control and routing to mux between DMICDAT1 and 2 */
++		dev_dbg(component->dev, "DMICDAT1 and DMICDAT2 in use\n");
++		snd_soc_dapm_new_controls(dapm, wm8904_dmic_dapm_widgets,
++					  ARRAY_SIZE(wm8904_dmic_dapm_widgets));
++		snd_soc_dapm_add_routes(dapm, cin_2dmics_con,
++					ARRAY_SIZE(cin_2dmics_con));
++		return;
++	}
++
++	/* Either DMICDAT1 or DMICDAT2 is in use, not both */
++	if (pdata->in1l_as_dmicdat1) {
++		dmic_src = 0;
++		snd_soc_dapm_add_routes(dapm, cin_dmic1_con,
++					ARRAY_SIZE(cin_dmic1_con));
++	} else {
++		dmic_src = 1;
++		snd_soc_dapm_add_routes(dapm, cin_dmic2_con,
++					ARRAY_SIZE(cin_dmic2_con));
++	}
++	dev_dbg(component->dev, "DMIC_SRC (0 or 1): %d\n", dmic_src);
++	snd_soc_component_update_bits(component, WM8904_DIGITAL_MICROPHONE_0,
++				      WM8904_DMIC_SRC_MASK,
++				      dmic_src << WM8904_DMIC_SRC_SHIFT);
++}
++
+ static void wm8904_handle_pdata(struct snd_soc_component *component)
+ {
++	struct snd_soc_dapm_context *dapm = snd_soc_component_get_dapm(component);
+ 	struct wm8904_priv *wm8904 = snd_soc_component_get_drvdata(component);
+ 	struct wm8904_pdata *pdata = wm8904->pdata;
+ 	int ret, i;
+ 
+ 	if (!pdata) {
++		snd_soc_dapm_add_routes(dapm, cin_nodmic_con,
++					ARRAY_SIZE(cin_nodmic_con));
+ 		snd_soc_add_component_controls(component, wm8904_eq_controls,
+-				     ARRAY_SIZE(wm8904_eq_controls));
++					       ARRAY_SIZE(wm8904_eq_controls));
+ 		return;
+ 	}
+ 
++	wm8904_handle_dmic_pdata(component);
++
+ 	dev_dbg(component->dev, "%d DRC configurations\n", pdata->num_drc_cfgs);
+ 
+ 	if (pdata->num_drc_cfgs) {
+@@ -2117,10 +2231,11 @@ static int wm8904_probe(struct snd_soc_component *component)
+ 		return -EINVAL;
+ 	}
+ 
+-	wm8904_handle_pdata(component);
+-
+ 	wm8904_add_widgets(component);
+ 
++	/* This can add dependent widgets, so it is done after add_widgets */
++	wm8904_handle_pdata(component);
++
+ 	return 0;
+ }
+ 
 -- 
 2.39.5
 
