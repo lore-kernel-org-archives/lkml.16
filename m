@@ -1,139 +1,75 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09A71C84B5
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 21:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 006E61C8630
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 21:56:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740434162; cv=none; b=uHeZ7NIERjcauoBPUnJaIhhVtlSp/drGv6pnwPfD2AC4hI4kESlzIxHGuWNEDkobvTf4wl1yezZHFuEXQbgQWEOJzEUGLtPJ/GJQw+NK3iGDttPZhxfWNXAzLnammgaja0/ygeiNNY1qFttmjNpd9OOVIQ+6nQh/X105fM87dnU=
+	t=1740434200; cv=none; b=oSjXyrOvrHmSUzy3huWeE9CDV+5p152pChkYExeHuecNXSGdY3DprQCXzr4C658XgYPmEEr+C/VyDMK+ytQNI2AWkgun/a4F+sTY9pVym/GCuEIvcoDd1Hmc1g+/Pi//tESne24hUtycaVdl4+8s3nPSWgrPQL+cw8/4BaRMRe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740434162; c=relaxed/simple;
-	bh=mWIZJqET3HJgUis/SSyKlHa7ZqHf/PaXaTw5+7spRfg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t1OKiCwSt5lFnmq1L2OpD4545p3kLZBx4SiZs67SROYSZlN8/aHZKOOyzO4I0WeVdqTlhpT0/hZRe/JcGXoDGVpRQLUE6bBLaE4l+DV0VV6UfqJwTp82XU4IDRDQJhj1l8691nmdHCRcD6G+5hgZoLyivnNNfXaOxiYq1Hf09CI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Zc6g/bV2; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1740434200; c=relaxed/simple;
+	bh=GUhgL6hS//UQepLQQDcUz5xENrHigAyZeokfv/kaliU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rg7MHu2q3uiEv3JBQXWv2iDLxd10sI4+p3+N98X7JrEB2jiPz/TDmLRrSXauqLoBiYwE1TRiregLyqjI9NF0Wun7LrPPY4G7wHbnC4Fh5SQWolJ+5jtkEsLzGOI7SR61RRzq2IkE0l72n5T8V7Ny5dvruykoug6KNG4msU647Oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BbnVatbb; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Zc6g/bV2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=X9l9Eo2ieuMHgoJ2/nm/UhtapZblbAjkWOIP6/3VAvE=; b=Zc6g/bV2F/c8RfKdMd71ftodhQ
-	PrhuPiYVhbv0SpVpm6Gllu1h0UoVD2wY1FSu6o6t1pRuferb/3qREQuQyQ5FRORA+DKFLEfIHt8Zn
-	auQaVfHPcUkpCtq9wi5PCY3DhmA3hC29W6oUodkVoizrrBbFrY38E04ePh6JetBJVnNCJtOJ4kwqm
-	DCGDeQFz60Nc2c7Xhpbt0oBhZ/b87A8jc8vxc5ZwfDuLx2PBGP6KVbxRBZy2fqy+BvVm12Zbldib1
-	fR6/KdWxu7L8NCsH95IY+9LOqpBEhIc7Y/6Uy1rGeMGClBvOhSLlhSNfYCZSab0yTARbwMdpUGfqc
-	4jCppn2g==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tmgQe-00000008mIj-2kua;
-	Mon, 24 Feb 2025 21:55:56 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E4181300192; Mon, 24 Feb 2025 22:55:55 +0100 (CET)
-Date: Mon, 24 Feb 2025 22:55:55 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Benjamin Segall <bsegall@google.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Andrey Vagin <avagin@openvz.org>,
-	Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-Subject: Re: [patch 04/11] posix-timers: Remove pointless unlock_timer()
- wrapper
-Message-ID: <20250224215555.GF11590@noisy.programming.kicks-ass.net>
-References: <20250224095736.145530367@linutronix.de>
- <20250224101343.211872476@linutronix.de>
- <20250224162103.GD11590@noisy.programming.kicks-ass.net>
- <87seo3fak1.ffs@tglx>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BbnVatbb"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740434197;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=rE+rorFgyeXZ3jXULEAJWqUQ+FDPOU0lGoqzwNbi0Hg=;
+	b=BbnVatbbD75pCJ5aXM9CE4hD8I/VZ3Bq4IEAOG/fRm4EWsRqqK2dx+xXp6xMzwcTx/2aBE
+	QJVXcVMlrDyD6KF/9vof3tvAgaJ5MqS6lPPtbxcKdwkP7zlvhfstLpft2dpbWcltkSwpy4
+	naK89UHgiI2gwyaPVS//qs4R3ZxJWcw=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	linux-hardening@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH]  MIPS: Loongson2ef: Replace deprecated strncpy() with strscpy()
+Date: Mon, 24 Feb 2025 22:54:50 +0100
+Message-ID: <20250224215451.195727-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87seo3fak1.ffs@tglx>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Feb 24, 2025 at 07:43:26PM +0100, Thomas Gleixner wrote:
-> On Mon, Feb 24 2025 at 17:21, Peter Zijlstra wrote:
-> > On Mon, Feb 24, 2025 at 11:15:28AM +0100, Thomas Gleixner wrote:
-> >> It's just a wrapper around spin_unlock_irqrestore() with zero value.
-> >
-> > Well, I disagree... the value is that is matches lock_timer(). Both in
-> > naming and in argument types.
-> 
-> Sure, but it's not used consistently as we have places where
-> lock_timer() is not involved.
-> 
-> > @@ -327,14 +350,13 @@ bool posixtimer_deliver_signal(struct ke
-> >  	 * Release siglock to ensure proper locking order versus
-> >  	 * timr::it_lock. Keep interrupts disabled.
-> >  	 */
-> > -	spin_unlock(&current->sighand->siglock);
-> > +	guard(spinlock)(&current->sighand->siglock);
-> 
-> How is that equivalent?
+strncpy() is deprecated for NUL-terminated destination buffers. Use
+strscpy() instead and remove the manual NUL-termination.
 
-I R idiot :-)
+Compile-tested only.
 
-> So the resulting code is:
-> 
-> 	scoped_guard (lock_timer, timer_id) {
-> 		struct k_itimer *timr = __guard_ptr(lock_timer)(&scope);
-> 		const struct k_clock *kc;
-> 
-> 		memset(setting, 0, sizeof(*setting));
-> 		kc = timr->kclock;
-> 		if (WARN_ON_ONCE(!kc || !kc->timer_get))
-> 			return -EINVAL;
->  
-> 		return 0;
-> 	}
-> 	return -EINVAL;
-> 
-> I had to go and stare at the guard/class muck 10 times to convince
-> myself, that this actually works. This really wants to be express the
-> condition of the scoped_guard() somehow, e.g. scoped_cond_guard() or
-> such.
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ arch/mips/loongson2ef/common/machtype.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Right, so the alternative form is something like:
+diff --git a/arch/mips/loongson2ef/common/machtype.c b/arch/mips/loongson2ef/common/machtype.c
+index 82f6de49f20f..e635e66d2e6c 100644
+--- a/arch/mips/loongson2ef/common/machtype.c
++++ b/arch/mips/loongson2ef/common/machtype.c
+@@ -48,8 +48,7 @@ void __init prom_init_machtype(void)
+ 		return;
+ 	}
+ 	p += strlen("machtype=");
+-	strncpy(str, p, MACHTYPE_LEN);
+-	str[MACHTYPE_LEN] = '\0';
++	strscpy(str, p);
+ 	p = strstr(str, " ");
+ 	if (p)
+ 		*p = '\0';
+-- 
+2.48.1
 
-	scoped_cond_guard (lock_timer, return -EINVAL, timer_id) {
-		struct k_itimer *timr = __guard_ptr(lock_timer)(&scope);
-		const struct k_clock *kc;
-
-		memset(setting, 0, sizeof(*setting));
-		kc = timr->kclock;
-		if (WARN_ON_ONCE(!kc || !kc->timer_get))
-			return -EINVAL;
-	}
-	return 0;
-
-Is that really so much better?
-
-> >  /* Delete a POSIX.1b interval timer. */
-> >  SYSCALL_DEFINE1(timer_delete, timer_t, timer_id)
-> >  {
-> > -	return posix_timer_delete(NULL, timer_id);
-> > +	scoped_guard (lock_timer, timer_id) {
-> > +		posix_timer_invalidate(scope.lock, scope.flags);
-> > +		scoped_guard_end(lock_timer);
-> > +		posix_timer_unhash_and_free(scope.lock);
-> 
-> Not sure whether it's a good idea to free the scope.lock and not
-> scope.timer :)
-
-There is no scope.timer, the way this work is that the main pointer is
-.lock, per the __DEFINE_UNLOCK_GUARD() helper.
-
-I said there were rough edges :-/
-
-Anyway, should I continue poking at this to see if I can clean it up /
-extract more useful helpers.
-
-Or shall I just let it be.
