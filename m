@@ -1,100 +1,117 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECD8F2571A7
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 12:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752E31D540
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 12:14:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740399214; cv=none; b=mZHrgJgUFcvIuzioLlzJ8h2aSZ3o55XHid2QaLe8z+Dy3dsUKG5Yp807ZhKPhLc+g+4P5Q/Ydlcop8MHWOZQrddsVZZwEwWGMR9Vkh0DH6WEgG90kj+Rd4DRVaqgMccYT/k7s7DGZVPBN5tKw8C5XqJbJcYqhtXL7Iy7KybEAwc=
+	t=1740399294; cv=none; b=rhlwbtReSyL40Zvj/3c8SQ9KRL2tNSv2xO5QG4yecHoOfeIXEpnNXRpFFig0F8c3HKTzjHGnxPI7w0RFnKICoD6QP+Co6uSep4DPKo5jPTwXPN3FWFuXRDAtheNNPFrWZ6fRKlxz+UWsTS3cgtpZC9JTmsOneSDrwpeHOcqc6FE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740399214; c=relaxed/simple;
-	bh=vjC/h8Z3iv7wFZ/G0WFZniTbYH3M8TBQUzKGM802XrY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RoL+CV42+HOvMAt/sF3GghiNv8cUUifk8OuP2kHsNbuo1BRkQWCURZQVYQ12mvIqVBa9kKTxVFKOEHJVvjEgkGqKTyihX+Yr+wJl3mvvAhKTMIiltgvNxhoJ9sQnTVxEuohB5ZXV0HdZQgN0s5CVvbYu4yAgHmIbDv+BYgPhUGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF6111756;
-	Mon, 24 Feb 2025 04:13:48 -0800 (PST)
-Received: from [10.1.27.150] (XHFQ2J9959.cambridge.arm.com [10.1.27.150])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 391C13F6A8;
-	Mon, 24 Feb 2025 04:13:27 -0800 (PST)
-Message-ID: <e4b5f389-e3c6-48f5-8d13-a4a6f364fd92@arm.com>
-Date: Mon, 24 Feb 2025 12:13:25 +0000
+	s=arc-20240116; t=1740399294; c=relaxed/simple;
+	bh=YCh++1ULCr/r55pj5INBB3ZeU2aoKb36FwPl248cnlQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=azIC12nU32ATK9XOhQBYmd6zYgeJ/96uCCfAMMKa534oWwx0U0z6QGmmertOVNkpRl+g8aFDNj0ALEO8SQ/6hAJC8KNumYYXzdMrtxddOyu3ngH9amp9XEUj2ATGwd3LXuGj+x3LlOVZNK1zEPDEKaxocmsI7afi3eQk4H4EX1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=f5qtBwvS; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="f5qtBwvS"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id E786040E01AE;
+	Mon, 24 Feb 2025 12:14:49 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id K6HgFcyKJ6Zt; Mon, 24 Feb 2025 12:14:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1740399286; bh=lhImJPjIcI0AMJM7iOO1E6DHn/v6OyLBkgq4ZZyrkPU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f5qtBwvSoiNLuR8DI8xbFYUVsZPYy1K69o15yw+zk1YwsQ3PxPN/4eI3w5PBjev4f
+	 NPxdZx2aWk6AzZ4XSZc95LefTiwwlst/g1caGg3B0bqYao8QxImsmXyeIzXwyzZxun
+	 IZzJvT3PcK9LIbgeyhw84Nc88Ds83C97WrX7Kr45jMirgGcZ23La85iGJAf3VL0EzO
+	 kQxlaDk3OPJSKEx6zXbeWeqS+Q8oiB7+X5DrDKI6McSlFW4coizLXfnl9t2DtnUDJX
+	 Oe1iHMvbA1U1Rj2/l8LDq1dGNxrxd+GpPQnQmIB/v+KnHKeTlhIcpzSZY7HSik6Hrt
+	 YRMRHR4tln45EYRkF2Vkk+DblvvVVblz+zXpf6LETYKsau+ockj9n31B+Fto52Pg7w
+	 40XejAFZs5gF1tG8o2DtmNZBkMLuYx0xaR3juWsaawX3osGPWStMvV1Z7kJ/ZpdrfX
+	 Uz99rXlMviPx3MdokKKbQmiRKQPAtt2GbJjeAyou9B1c31Fr4vsmU+3sr1AduVnDBg
+	 vEBuOmdUHdpIyH0Hq/Ex1Pm3tLMMDbVF8paRHm2nT7Azo422Eyj2sn7O1tm2errCeI
+	 8N9o5ZhnrKAVOjpFpeipBDeX5KT+1NXwx/AasGNe226DkOvNybb8DXm2/PXNM1Ucwu
+	 +gbBtG7PKO7GGzBQhR36fl/M=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A79C840E0184;
+	Mon, 24 Feb 2025 12:14:27 +0000 (UTC)
+Date: Mon, 24 Feb 2025 13:14:21 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Rik van Riel <riel@surriel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org,
+	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
+	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
+	linux-mm@kvack.org, akpm@linux-foundation.org, jackmanb@google.com,
+	jannh@google.com, mhklinux@outlook.com, andrew.cooper3@citrix.com,
+	Manali.Shukla@amd.com, mingo@kernel.org,
+	Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v13 03/14] x86/mm: add INVLPGB support code
+Message-ID: <20250224121421.GEZ7xinWhjstV_xPU_@fat_crate.local>
+References: <20250223194943.3518952-1-riel@surriel.com>
+ <20250223194943.3518952-4-riel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/4] Fixes for hugetlb and vmalloc on arm64
-Content-Language: en-GB
-To: Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>
-Cc: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Naveen N Rao <naveen@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
- "David S. Miller" <davem@davemloft.net>,
- Andreas Larsson <andreas@gaisler.com>, Arnd Bergmann <arnd@arndb.de>,
- Muchun Song <muchun.song@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>,
- Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- David Hildenbrand <david@redhat.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>, Dev Jain <dev.jain@arm.com>,
- Kevin Brodsky <kevin.brodsky@arm.com>,
- Alexandre Ghiti <alexghiti@rivosinc.com>,
- linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250217140419.1702389-1-ryan.roberts@arm.com>
- <Z7YsqO7ykGgcBFEI@arm.com> <20250221153501.GD20567@willie-the-truck>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250221153501.GD20567@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250223194943.3518952-4-riel@surriel.com>
 
-On 21/02/2025 15:35, Will Deacon wrote:
-> On Wed, Feb 19, 2025 at 07:10:32PM +0000, Catalin Marinas wrote:
->> Will, Ryan,
->>
->> On Mon, Feb 17, 2025 at 02:04:13PM +0000, Ryan Roberts wrote:
->>> This series contains some fixes for hugetlb on arm64, and is split out from v1
->>> of a wider series at [1]. While the last patch is technically targetting core-mm
->>> and is not directly related to arm64, I'd like to to go via the arm64 tree so
->>> that the wider performance improvement series (v2 to be posted shortly) that
->>> depends on this series doesn't have to be robust to the fix not being present.
->>>
->>> I've included maintainers/reviewers for all the arches that are (trivially)
->>> touched due to the API changes, hoping for some ACKs.
->>
->> These fixes look fine to me and I think we should get them in for 6.14.
->> I think Andrew was ok with them going in via the arm64 tree:
->>
->> https://lore.kernel.org/linux-arm-kernel/20250205235219.3c3a4b968087d1386d708b04@linux-foundation.org/
-> 
-> I think the diffstat looks worse than it really is, as the arch changes
-> are reasonably mechanical. I'd like to let it sit in next for a few days
-> though, so I'll pick this up once we've resolved my comment on patch #2.
+On Sun, Feb 23, 2025 at 02:48:53PM -0500, Rik van Riel wrote:
+> Add invlpgb.h with the helper functions and definitions needed to use
 
-Sounds good to me; if you're happy with my proposal in the patch 2 thread, then
-I'll respin.
+"invlpgb.h" is stale now.
 
-> 
-> Ryan -- did you find all of these issues by inspection, or are you aware
-> of anybody hitting them in practice?
+> diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
+> index c492bdc97b05..95997caf0935 100644
+> --- a/arch/x86/include/asm/disabled-features.h
+> +++ b/arch/x86/include/asm/disabled-features.h
+> @@ -129,6 +129,13 @@
+>  #define DISABLE_SEV_SNP		(1 << (X86_FEATURE_SEV_SNP & 31))
+>  #endif
+>  
+> +#ifdef CONFIG_X86_BROADCAST_TLB_FLUSH
+> +#define DISABLE_INVLPGB		0
+> +#else
+> +/* Keep 32 bit kernels smaller by compiling out the INVLPGB code. */
 
-All by inspection. So I guess they are not urgent to fix from that perspective.
+No need for that comment.
 
-> 
-> Will
+> +#define DISABLE_INVLPGB		(1 << (X86_FEATURE_INVLPGB & 31))
+> +#endif
+> +
+>  /*
+>   * Make sure to add features to the correct mask
+>   */
 
+...
+
+> +/* Wait for INVLPGB originated by this CPU to complete. */
+> +static inline void __tlbsync(void)
+> +{
+> +	cant_migrate();
+
+I could use a comment above that one...
+
+> +	/* TLBSYNC: supported in binutils >= 0.36. */
+> +	asm volatile(".byte 0x0f, 0x01, 0xff" ::: "memory");
+> +}
+> +
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
