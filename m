@@ -1,252 +1,194 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4703243370
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 09:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7EEF2AD2D
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 09:27:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740389212; cv=none; b=aDhQcbGDUCTLsTQKnXFxSAjRszgEf2huzgQoLi/wAdKWWVCOPaqwaRhumYKhMhfKiymuAcogWOmSOLhlmRQOqK1g3d+ye8AEw0wAa7eqwBDRhb3dDVP3SBWPLcaKAIKVpq3wTow0yQV3BoVql5PHXQBpZoBKnczEIrBnfpLIOBk=
+	t=1740389256; cv=none; b=RAxlTI6NGhZ8xbmnc0/+zTzNIt9zyojEvEcfsjgTMgB+L3gkgliJ/qHH855C3fTJ5ubWtkMdgunLkalqVn3wMC1+uAqMmM7uC4uM1X1kIVy2jJM3v9sTilaLuR/w8LBlqxEt1nKbOGeW5wl0ARLdVhnpLfBc3ez8x6p66fmzBDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740389212; c=relaxed/simple;
-	bh=/ryG12havO6GGoTrPBXBQA1dshzJ3F4G9J8CFEub8VQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QI1uoOIzxRKEkPLLVqOWMH+YVby2m2aD5IEq2sgYFJnJETQEHZafWAQxzirMsXqArJNmr1gpKI7JLZ5pnK+rhO5glLlAzN0AUp7CRiavUOh1hQSgcs1Cub5RH/wD/552rrsJuvLl7dR3/Mav07Ibxe+caB53rHu2X0BVGmKaaxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=D8A4ZQwT; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1740389256; c=relaxed/simple;
+	bh=I8ik0VnxEst77sjXmH68GWfeYOl9b9AYZW0gqNH3qq0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TyhAkhvldyOYreA29HLw74gx9Hdx5tqCje9ONMDtbBPAGLg1K6m+s2gd9sbQReXFpuf+/Q+7I7X5Uwm12FISpZwdy7W0PnQwOErspruOsvH+8CRjeDAKPyzlRd0LHDbwmALIJhXJrSIBKqSAHw0urLqUgn2q7fXiT/6z85WQJhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LhQZ7zMN; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D8A4ZQwT"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30613802a04so44301641fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 01:26:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740389209; x=1740994009; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=R9DwX5H0t5xZGrbvpWDysDlrDfS0kR6OfhPIwAFx6mo=;
-        b=D8A4ZQwTKHrnZk01/sUFcZbMWaYs3LeRVXQzesg91XPVVKhO3+TaRs3Aos6f6pSjFO
-         BHYh/pCpbfPlhKVSlxBal7PggrN31Z+aj7Lm9d0oQh4UqCOSz44hAk/vU7bQF/LArCHX
-         SywYTVIql9ZrYVhdbzLOANGQtKRbNdvRVkkv4=
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LhQZ7zMN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740389253;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=7Zn6SZZblvU2KN6afeUfX6cSk2JfetNjQceFn+mshcA=;
+	b=LhQZ7zMN1PnH3HP6UVwxv1qizF+3xK2DahzQlWgAExvPFWHytJSTFqX6UWYuRRNI+yORB9
+	C3t2zkdhnwbi9WGyGesNfpDQZETcn7SniaN3WfXUGYenvBQ3pollrwxsugc2k+UrCA9FP9
+	yqcDjnZvuIuNb09uG/9A6Tnouiw5eAw=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-615-a1AqiMkbP0GlKM7_tJS2YQ-1; Mon, 24 Feb 2025 04:27:32 -0500
+X-MC-Unique: a1AqiMkbP0GlKM7_tJS2YQ-1
+X-Mimecast-MFC-AGG-ID: a1AqiMkbP0GlKM7_tJS2YQ_1740389251
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-38f51a3a833so1586516f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 01:27:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740389209; x=1740994009;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=R9DwX5H0t5xZGrbvpWDysDlrDfS0kR6OfhPIwAFx6mo=;
-        b=IwsytOlwD44/HlPJJDI1NXBZL8360jO82V1DaNHECLUYUnPcQ//geGaf6Ry19kmYF3
-         ZV7FOxvCBbNXA4kR6Vecd/8wdx5/KpLawxMVEQz0D/E3lohWaaCNcLAHp9x6go23/hiu
-         EQ/bK3D8j3u/Xe7GDVJcqIS2SMw8eLZagpynf5IywDwg+MVXzc3ry60qrx/fGwNnZonJ
-         TLUdxmAcDFR8qIDsLVFZ1CIi63gyU6G8stGCgzEWYR8Q8Day2rhmCRHp0kcUnY2oY0uD
-         ca8zCmu2x7aopM0ml4Dv1EZqLvJ2CVnCU6OwvcoMrt8LKfTKvWvVGTEcDg4x5zFnfGq0
-         XDjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWcr0seYeuYjBEg/K5JnIxStiojwunx5wbQCLABtBOYyCG/d7AGEcHA06CLSCcdQVDVegWOtmXGjpQVZ1M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCh0eg2lC7+hMr8wWZiK6bWiKUoFSpo0HsW8OWqpE7UlT97iM1
-	sCuXHQ2FtiX0zT0J4Cb+vKWBpVgaCD4s3qZ5wOTJzby/HmgLzq0WVOCTL00iH/WvkMdmoa2izU3
-	//A==
-X-Gm-Gg: ASbGncs1o5HV1tAOqzofUUiRSgDXgfBpvAtfYFOXv3lt56kiRxX30pTw7lbIov+8Vjg
-	R5iuIp9bS2wERVbHPMn/A4Z8UyRK3Xp10HRziH5dJlBD5CT/WhgRNlvNkG2HxzFBpWKr/4/wIfv
-	f/YNlhP+0zVBsWbfZxTlo1HFbRr2/33rfuBHnngyiBROqCW0jOIDQcAT05zHGx0KZraZ4EM+ztA
-	z0jxaCg/E3y2dL2nOsLe8aJssMJhM+wxRA3Jpj8fI23s4v2uQ9s7pdkIgu4TXu8UkhK7amieDmY
-	GCrArT1j+cXuQbTaXhBKXUjd25rUn1MfUfKRgDfJMVuYqP6Vu08p7B1mqBnq+GxuxkrT
-X-Google-Smtp-Source: AGHT+IE36OYXxgN5bUd1ISnpCowjzuWl5K41xltZyeWXHnQvgP9Pi2kiIFnlkZEJ2j4ZGq3/QfOa6g==
-X-Received: by 2002:a05:6512:1296:b0:545:3034:7b8 with SMTP id 2adb3069b0e04-54839147d71mr5367128e87.23.1740389208581;
-        Mon, 24 Feb 2025 01:26:48 -0800 (PST)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5462c60f99fsm1721093e87.118.2025.02.24.01.26.47
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1740389251; x=1740994051;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=7Zn6SZZblvU2KN6afeUfX6cSk2JfetNjQceFn+mshcA=;
+        b=QpvPqXw+nbJeu7kixc+dfDVmNYeHtHJ7E/Odkvf51KuPUkJZxCn48iUQ6zVQA4WxTK
+         0HwBwqfN80tEZTkcfuWAdMQTmA5/lzHDQH2Qg1ZmMyXgejPUJE9BCvxlM31TfV+bTmJH
+         tqpqYhkPl8nYE6kdwc4cIo7PbQAWvcJRp41jQby9q4Sv8I28G9wjch1ET/eBADaKGKrR
+         MYPseYbbmqQ+AYygxZnYOh05apAGYSmAwdt9jJRh4Z5wb6TC939y9bAiRrA+CaND+cC4
+         qPxCUNUHzk1sILTCmUpFAvOI6s8EdC/OFh/eRzn5A/8P8URcuCauCwRcvbMEWfeDs7+q
+         amOA==
+X-Forwarded-Encrypted: i=1; AJvYcCXB1W8Z2aZJZEsUcnnAOJos0fM+zE5Zk5DwWJd4XBQZWyGarh0LFa3xsN1xKJnyOjnH5sugRaJgkv5kQBs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfFWyCh1b5c8Ptas6DLUKZ1paEOFKXeQZWPJzICg694dz9TNEM
+	li07sbBr/GVUftr5pFOTlU0mpQeKRwcIgFNvE++vKC2zjtwQShcxpq577IfDQpycvPGYnw9BMOl
+	/zMH4bi7mVOonLKfifii5/+4eCTuqfSaur6Rd1RRWMUemwj4y/T+MuF1Py2+ytA==
+X-Gm-Gg: ASbGncuHg0fZtdUNhMPQLbMwT5yeCcTAGyrW1OPHWtojgIlu5fyt8EqaM1Gs1BYE1TV
+	PB8OO8b0WAj2ROH4y0x0Un4v8zSrwvCUDvZ+ffBwNkbA7ixDHoRsyp5DtBCHTfJcgtnBzkIn0+o
+	t3cXutFWq3tl9mFf3j++h/XIQdJnAnQKE5pdkGv+tg8GIX99SnK1BV7Q3N4HcTfGtoTOM/HUXpO
+	kdsUiJDwgzvnUeEyBVFiPbrV77VSuEp22Epg8kavznWCbgVw9XXs7fmjQcdYIO6mgA77/rP6glN
+	SiIcVfIdE4csWOlRPL0TM/Vyh5U63imSfpYpUWQj0U3HfbJJzFC9wmPxhdQljZNMpHK+mT1InRq
+	sodgSFnVH6fdDv3bhUiuCwNgq36WIF/Kpbva7MInbL9A=
+X-Received: by 2002:a5d:59a7:0:b0:38d:e304:7478 with SMTP id ffacd0b85a97d-38f7082b185mr12874188f8f.38.1740389251250;
+        Mon, 24 Feb 2025 01:27:31 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE5HbPThRylS4ilKU1oY0b9sapnTNZTmqh2oQkysSGqBLm2fMAB+eMOTjT2FNPL02czMER6nQ==
+X-Received: by 2002:a5d:59a7:0:b0:38d:e304:7478 with SMTP id ffacd0b85a97d-38f7082b185mr12874144f8f.38.1740389250835;
+        Mon, 24 Feb 2025 01:27:30 -0800 (PST)
+Received: from ?IPV6:2003:cb:c735:1900:ac8b:7ae5:991f:54fc? (p200300cbc7351900ac8b7ae5991f54fc.dip0.t-ipconnect.de. [2003:cb:c735:1900:ac8b:7ae5:991f:54fc])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38f25a0fa38sm31629174f8f.98.2025.02.24.01.27.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2025 01:26:47 -0800 (PST)
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30613802a04so44301281fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 01:26:47 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXizL04EIj8IfNBQjEhIgt6U5MFbK+GH2og08ltKkJXFdwhPGnoRidP+h7BRxpkGL1GuNf7VJmuQ0X9OR8=@vger.kernel.org
-X-Received: by 2002:a05:6512:3e14:b0:545:576:cbca with SMTP id
- 2adb3069b0e04-5483912fcd7mr4198905e87.8.1740389206945; Mon, 24 Feb 2025
- 01:26:46 -0800 (PST)
+        Mon, 24 Feb 2025 01:27:30 -0800 (PST)
+Message-ID: <857b2c3f-7be7-44e8-a825-82a7353665fb@redhat.com>
+Date: Mon, 24 Feb 2025 10:27:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250111-uvc-eaccess-v4-1-c7759bfd1bd4@chromium.org> <20250223170319.GA2821@pendragon.ideasonboard.com>
-In-Reply-To: <20250223170319.GA2821@pendragon.ideasonboard.com>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Mon, 24 Feb 2025 10:26:34 +0100
-X-Gmail-Original-Message-ID: <CANiDSCv1HVu82D=PoJFu=XCQ97k_MM1dmYpufkUCiKpSgGRT9w@mail.gmail.com>
-X-Gm-Features: AWEUYZmvV4iGze7N3ugwoy0UYAWbTsMtuoDRa1uh5PWbgtlebItM-Je3dCsd9uI
-Message-ID: <CANiDSCv1HVu82D=PoJFu=XCQ97k_MM1dmYpufkUCiKpSgGRT9w@mail.gmail.com>
-Subject: Re: [PATCH v4] media: uvcvideo: Set V4L2_CTRL_FLAG_DISABLED during
- queryctrl errors
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Hans de Goede <hdegoede@redhat.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] fs/proc/task_mmu: add guard region bit to pagemap
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Kalesh Singh
+ <kaleshsingh@google.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>,
+ "Paul E . McKenney" <paulmck@kernel.org>, Jann Horn <jannh@google.com>,
+ Juan Yescas <jyescas@google.com>, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-api@vger.kernel.org
+References: <cover.1740139449.git.lorenzo.stoakes@oracle.com>
+ <521d99c08b975fb06a1e7201e971cc24d68196d1.1740139449.git.lorenzo.stoakes@oracle.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <521d99c08b975fb06a1e7201e971cc24d68196d1.1740139449.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, 23 Feb 2025 at 18:03, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Ricardo,
->
-> Thank you for the patch.
->
-> On Sat, Jan 11, 2025 at 09:57:21AM +0000, Ricardo Ribalda wrote:
-> > To implement VIDIOC_QUERYCTRL, we need to know the minimum, maximum,
-> > step and flags of the control. For some of the controls, this involves
-> > querying the actual hardware.
-> >
-> > Some non-compliant cameras produce errors when we query them. Right now,
-> > we populate that error to userspace. When an error happens, the v4l2
-> > framework does not copy the v4l2_queryctrl struct to userspace. Also,
-> > userspace apps are not ready to handle any other error than -EINVAL.
-> >
-> > One of the main usecases of VIDIOC_QUERYCTRL is enumerating the controls
-> > of a device. This is done using the V4L2_CTRL_FLAG_NEXT_CTRL flag. In
-> > that usecase, a non-compliant control will make it almost impossible to
-> > enumerate all controls of the device.
-> >
-> > A control with an invalid max/min/step/flags is better than non being
-> > able to enumerate the rest of the controls.
-> >
-> > This patch makes VIDIOC_QUERYCTRL return 0 in all the error cases
-> > different than -EINVAL, introduces a warning in dmesg so we can
-> > have a trace of what has happened and sets the V4L2_CTRL_FLAG_DISABLED.
-> >
-> > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> > ---
-> > Hi 2*Hans and Laurent!
-> >
-> > I came around a device that was listing just a couple of controls when
-> > it should be listing much more.
-> >
-> > Some debugging latter I found that the device was returning -EIO when
-> > all the focal controls were read.
-> >
-> > Lots of good arguments in favor/against this patch in the v1. Please
-> > check!
-> >
-> > Without this patch:
-> > $ v4l2-ctl --list-ctrls
-> >                   auto_exposure 0x009a0901 (menu)   : min=0 max=3 default=3 value=3 (Aperture Priority Mode)
-> >          exposure_time_absolute 0x009a0902 (int)    : min=50 max=10000 step=1 default=166 value=166 flags=inactive
-> >      exposure_dynamic_framerate 0x009a0903 (bool)   : default=0 value=0
-> > region_of_interest_auto_control 0x009a1902 (bitmask): max=0x00000001 default=0x00000001 value=1
-> >
-> > With this patch:
-> > $ v4l2-ctl --list-ctrls
-> >                   auto_exposure 0x009a0901 (menu)   : min=0 max=3 default=3 value=3 (Aperture Priority Mode)
-> >          exposure_time_absolute 0x009a0902 (int)    : min=50 max=10000 step=1 default=166 value=166 flags=inactive
-> >      exposure_dynamic_framerate 0x009a0903 (bool)   : default=0 value=0
-> > error 5 getting ext_ctrl Focus, Absolute
-> > error 5 getting ext_ctrl Focus, Automatic Continuous
-> >    region_of_interest_rectangle 0x009a1901 (unknown): type=107 value=unsupported payload type flags=has-payload
-> > region_of_interest_auto_control 0x009a1902 (bitmask): max=0x00000001 default=0x00000001 value=1
-> > --
-> > ---
-> > Changes in v4:
-> > - Display control name (Thanks Hans)
-> > - Link to v3: https://lore.kernel.org/r/20250107-uvc-eaccess-v3-1-99f3335d5133@chromium.org
-> >
-> > Changes in v3:
-> > - Add a retry mechanism during error.
->
-> This needs to be explained in the commit message, including when/why it
-> helps, and why the retry count is 2.
->
-> > - Set V4L2_CTRL_FLAG_DISABLED flag.
-> > - Link to v2: https://lore.kernel.org/r/20241219-uvc-eaccess-v2-1-bf6520c8b86d@chromium.org
-> >
-> > Changes in v2:
-> > - Never return error, even if we are not enumerating the controls
-> > - Improve commit message.
-> > - Link to v1: https://lore.kernel.org/r/20241213-uvc-eaccess-v1-1-62e0b4fcc634@chromium.org
-> > ---
-> >  drivers/media/usb/uvc/uvc_ctrl.c | 43 ++++++++++++++++++++++++++++++++--------
-> >  1 file changed, 35 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
-> > index 4e58476d305e..9d7812e8572d 100644
-> > --- a/drivers/media/usb/uvc/uvc_ctrl.c
-> > +++ b/drivers/media/usb/uvc/uvc_ctrl.c
-> > @@ -1280,6 +1280,8 @@ static u32 uvc_get_ctrl_bitmap(struct uvc_control *ctrl,
-> >       return ~0;
-> >  }
-> >
-> > +#define MAX_QUERY_RETRIES 2
-> > +
-> >  static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
-> >       struct uvc_control *ctrl,
-> >       struct uvc_control_mapping *mapping,
-> > @@ -1305,19 +1307,44 @@ static int __uvc_query_v4l2_ctrl(struct uvc_video_chain *chain,
-> >               __uvc_find_control(ctrl->entity, mapping->master_id,
-> >                                  &master_map, &master_ctrl, 0);
-> >       if (master_ctrl && (master_ctrl->info.flags & UVC_CTRL_FLAG_GET_CUR)) {
-> > +             unsigned int retries;
-> >               s32 val;
-> > -             int ret = __uvc_ctrl_get(chain, master_ctrl, master_map, &val);
-> > -             if (ret < 0)
-> > -                     return ret;
-> > +             int ret;
-> >
-> > -             if (val != mapping->master_manual)
-> > -                             v4l2_ctrl->flags |= V4L2_CTRL_FLAG_INACTIVE;
-> > +             for (retries = 0; retries < MAX_QUERY_RETRIES; retries++) {
-> > +                     ret = __uvc_ctrl_get(chain, master_ctrl, master_map,
-> > +                                          &val);
-> > +                     if (ret >= 0)
-> > +                             break;
-> > +             }
-> > +
-> > +             if (ret < 0) {
-> > +                     dev_warn_ratelimited(&chain->dev->udev->dev,
-> > +                                          "UVC non compliance: Error %d querying master control %x (%s)\n",
-> > +                                           ret, master_map->id,
-> > +                                           uvc_map_get_name(master_map));
-> > +             } else if (val != mapping->master_manual) {
-> > +                     v4l2_ctrl->flags |= V4L2_CTRL_FLAG_INACTIVE;
-> > +             }
-> >       }
-> >
-> >       if (!ctrl->cached) {
-> > -             int ret = uvc_ctrl_populate_cache(chain, ctrl);
-> > -             if (ret < 0)
-> > -                     return ret;
-> > +             unsigned int retries;
-> > +             int ret;
-> > +
-> > +             for (retries = 0; retries < MAX_QUERY_RETRIES; retries++) {
-> > +                     ret = uvc_ctrl_populate_cache(chain, ctrl);
-> > +                     if (ret >= 0)
-> > +                             break;
-> > +             }
-> > +
-> > +             if (ret < 0) {
-> > +                     dev_warn_ratelimited(&chain->dev->udev->dev,
-> > +                                          "UVC non compliance: Error %d populating cache of control %x (%s)\n",
-> > +                                          ret, mapping->id,
-> > +                                          uvc_map_get_name(mapping));
-> > +                     v4l2_ctrl->flags |= V4L2_CTRL_FLAG_DISABLED;
->
-> Can we make the control permanently disabled ?
-
-I'd rather not. In funky hardware the control might work with the
-right combination of other controls.
-
->
-> > +             }
-> >       }
-> >
-> >       if (ctrl->info.flags & UVC_CTRL_FLAG_GET_DEF) {
-> >
-> > ---
-> > base-commit: c5aa327e10b194884a9c9001a751f6e4703bc3e3
-> > change-id: 20241213-uvc-eaccess-755cc061a360
->
-> --
-> Regards,
->
-> Laurent Pinchart
+On 21.02.25 13:05, Lorenzo Stoakes wrote:
+> Currently there is no means by which users can determine whether a given
+> page in memory is in fact a guard region, that is having had the
+> MADV_GUARD_INSTALL madvise() flag applied to it.
+> 
+> This is intentional, as to provide this information in VMA metadata would
+> contradict the intent of the feature (providing a means to change fault
+> behaviour at a page table level rather than a VMA level), and would require
+> VMA metadata operations to scan page tables, which is unacceptable.
+> 
+> In many cases, users have no need to reflect and determine what regions
+> have been designated guard regions, as it is the user who has established
+> them in the first place.
+> 
+> But in some instances, such as monitoring software, or software that relies
+> upon being able to ascertain the nature of mappings within a remote process
+> for instance, it becomes useful to be able to determine which pages have
+> the guard region marker applied.
+> 
+> This patch makes use of an unused pagemap bit (58) to provide this
+> information.
+> 
+> This patch updates the documentation at the same time as making the change
+> such that the implementation of the feature and the documentation of it are
+> tied together.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> ---
 
 
+Acked-by: David Hildenbrand <david@redhat.com>
+
+Something that might be interesting is also extending the PAGEMAP_SCAN 
+ioctl.
+
+
+See do_pagemap_scan().
+
+The benefit here might be that one could effectively search/filter for 
+guard regions without copying 64bit per base-page to user space.
+
+But the idea would be to indicate something like PAGE_IS_GUARD_REGION as 
+a category when we hit a guard region entry in pagemap_page_category().
+
+(the code is a bit complicated, and I am not sure why we indicate 
+PAGE_IS_SWAPPED for non-swap entries, likely wrong ...)
 
 -- 
-Ricardo Ribalda
+Cheers,
+
+David / dhildenb
+
