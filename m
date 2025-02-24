@@ -1,153 +1,156 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2051.outbound.protection.outlook.com [40.107.236.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B3E71BC3C
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 07:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740382776; cv=none; b=u7QdbaxENfx7EPfPQFlIwdx4csbyv5tSDtg6ZxvGug/Z0po7AFEqMCjumpjCFioJVS7ZRycF78D3j9zkh3FD3NZ7PxSSTRZ945QjjHZ85Gt62f3OMJP57+bWzlpeuO9MrqiN1a4Zxst3XIbkTIOsyRX9uCdpYWAQ9JbCzNGg2sg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740382776; c=relaxed/simple;
-	bh=h5HmL4ux6ka3aBEH0fnT357JpL0NSonRdagSE/kWD6w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LHc+qb0vzPAqb8zSbKD9r0iSJ4ShbQSPidHuo4sSaa6c3YWKMcMia5lgBgyu7p6weSGDeFfBv/rTMhBCA0Y9Trm4xmFUCArOjHbgP0kROo5aSgVaq/lp/yXfzN9V0uZGJcDVL6LgqYCY1iYO+XDRac5MGDg0sd5TF01JwU010mQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pab/6lII; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0961BC3C;
+	Mon, 24 Feb 2025 07:41:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740382917; cv=fail; b=rPTPRjgxRVcJP48xzKLi8QFyQGcV9HQr28HO5BUkVzp0rWYp7Eb+LnfEwCNBodBR0mcuGPJmtntkbpvHkFeRrw7mxr6g3qRdW2hWR+lKdg1FNUcnLQm2Rl1gUE6epfj7PF+U89Mw6CqUqFB8RyH3qmeWbPMtJfokeAdp9FSaaIc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740382917; c=relaxed/simple;
+	bh=2Wbl1UFSdzsCLdWqF8BeuDa/KxCbmNldEqTD6ku2ZWA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=K1DM7QyKL5syi6aCVFrYg3iSexhEwvh2Ol/GGHs94FubVVVuLRsjtUavQcTStHCbzDC7n6WhCxWgxXeOTAXwSjxFSsuRLIsfisH8LgLfnxXCsZ1AX3pz4z4q/JS2DVSBQP19S+Bums5LPpZNbvmI2n+cX2RfzSyaTwyvXs7b7OM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=24zaAsNd; arc=fail smtp.client-ip=40.107.236.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pab/6lII"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30a3092a9ebso47002241fa.1
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 23:39:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740382772; x=1740987572; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HDC95XXrsQXG7FJZ558W140W31vF1F5itAr9zVKo84Y=;
-        b=Pab/6lII1zVMmSNP+KdHUTN1edfLymsI9OjV16kpgComgaNcwmQtMYg+3FEbBrqklC
-         mb+wE8pNJHVc30mzNAy2pfyekYFCGCHT7R1urgu2h9ke9ZwmpnH/zTth5rdETTtpkU99
-         5Bfq5eaUk/voCUCWkpb2MCVML9TZ75j3tKxzYYFKtP6nVxoT/ZzN5/ZUc8R0/I8OrZQj
-         L6rOZR+dPqzrJaLtD+YY/aH5H3RfVGivjoELr/RkVkcV8iujwnq4asvE0I0OQL/xjxPv
-         h576FuEfKZORyz4esAIPeIU1qCNXRpLym4JLn77tP+IVLZ3CRm260mnKnKF6Er1tzGHE
-         MMMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740382772; x=1740987572;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HDC95XXrsQXG7FJZ558W140W31vF1F5itAr9zVKo84Y=;
-        b=KgmHxoDOLW6pOZWyZIv14ZoUjcZJx3eXHevJVPiq0SGcxXM/Guhh2b3gx9ze3qdbed
-         v7YRZm1bl/vfMY/VDUzRgQNr3VjfhzfP/2EuLfAe1dmFuqEiKf9fATFqYjQakrppX+jM
-         SzC6QeibYuNRHcLjFU6VCLTUYvCmnVcABGi27gE5Fi3jwJhR0aXInE3nLzP3mMPdotgx
-         jqLOPqS1ZQh9oQsCkV85c61sZpfvUwqlNwHx3fPj1GWoudT3QNEtXoEL1cYd9uKY/L4L
-         nUB1gqRBMAGMWMNJqhIdsROppHTxYWtUC/Q+2Tfg4orcUXWcXbH0VlPZCk4Df9zHm/Jt
-         L0KQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXBEAI49Gl8lnQmJqo6lrRvKpYlpKyOhytqibDTdYVVHyYfAQnBwJbuzFR531IMhuvA4qJAYOdzifSoolo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbURq+Trs190SiF9k+BPbXpqzuMlYJAliCpQoSfkK3ZCN9T1fe
-	8AhemShFQXnH9aKCuOC9Kp8EHeolSyYHtfKNeR7D4z9+qwV4xDOJTntA6wb1OunhXzF0LLOAzXg
-	p3WZrjsp06uw0hmLKKPg8sKWFodtISy1lP+xfPw==
-X-Gm-Gg: ASbGncuFuntOgpNDMwidDIthxz99bvzUiNA9KHGMCybJ+Wv9ZA/dNkswyiuzgqz7nXo
-	bLWo1MWU4vu1dbgphF4gEaVO77Wuw3hW5B/YlNsL74c0PaourTYA9duBjHsgFFpP0zAWVRcp9T/
-	rEOn5tj3Y=
-X-Google-Smtp-Source: AGHT+IGbmFvy7R+Zs+dq7E9bRH4G25KnkTK+0Zys+P2vdYpnWunQVIzfoWzm9Kmjin7MNwQhig696R3wR+9e/+dIm9M=
-X-Received: by 2002:a2e:95c4:0:b0:302:175e:5abb with SMTP id
- 38308e7fff4ca-30a5b167c85mr28332211fa.3.1740382772217; Sun, 23 Feb 2025
- 23:39:32 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="24zaAsNd"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ahkFSABpH+d7lxwe7KhahQ6LBFYJQfz3qPSsylCysnZwMxCT1Iv5VeIxVJq2pjHOBqXmtj5QqOmw9tyOxncFCObwS2begYBaz66qjCfaTLQnue8tg8/luI3fZLCOlKKyljdcR6y1lfYSZQSo70USi68+WqMb9GZsL6vxqyhCo+XCThVvNwLjxpWBvRCH8X1rLMDP0Gv1pzBQz7ATA06SAtS2v2NMDrRP7SM/rKplLAeD64eFtX1GllQfac+Cr2MIxF4gbjG5QboKW3mvBkVjDTh83hsITMKD9AKjLllnxBUOAkdQ2Vfs5CAt4+3qOgU40sFbPWCmm1Ho/odI/f1uWA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+f0hSTerAk43VAGUB9kRwwRNMpNI0fZWl2ojyufimGE=;
+ b=e+8/sVxOyTEsJ9XIaICS7+SMC9Xz8uBMYWQec+UsJZaeYqmnvbrSeCv75B4MNKRsRTUKN9Y3AxRKONFlrrcwIFlxQI1QTdbCY7uzSJwZgk56ud35NkTQHCSxUSUG9WQM/KCZu7Pxv4iTSKKeqamqGEsWe5AJDt701XlVBl933/3s1wxXiD7CNVaGIz8PChxhd/Y+scXfODtinDn6C6DSvokrz8VEPGeS3oBozj+muyLIjPyQzoSJrDH6KNt40j8NiUGDDDaNhoTlK/TtnN7KCsEmD/i5dpoJsn7K9Ig4e11wYKE83bNuEUEjaI4BNiqqGSeNeRVIYqngW8hwJfPsKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+f0hSTerAk43VAGUB9kRwwRNMpNI0fZWl2ojyufimGE=;
+ b=24zaAsNdU1TREfvxt2V6KHd7irRYEvEwZfbZ+cTcT1b3aaB5xH2IyleDhNIAksvtkJ7f3gjKOr9iizuhRsqbUJxYbDzAodDsp1McqV+HB+t2tKldh68gvNrhrCWF4q0XLn0Ovh+K55R1LJMq36LsDvzN9gZofbHAhVUDkS08H+s=
+Received: from BN9PR03CA0907.namprd03.prod.outlook.com (2603:10b6:408:107::12)
+ by IA1PR12MB8493.namprd12.prod.outlook.com (2603:10b6:208:447::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.19; Mon, 24 Feb
+ 2025 07:41:49 +0000
+Received: from BL02EPF0001A103.namprd05.prod.outlook.com
+ (2603:10b6:408:107:cafe::b5) by BN9PR03CA0907.outlook.office365.com
+ (2603:10b6:408:107::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.21 via Frontend Transport; Mon,
+ 24 Feb 2025 07:41:49 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ BL02EPF0001A103.mail.protection.outlook.com (10.167.241.133) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8489.16 via Frontend Transport; Mon, 24 Feb 2025 07:41:49 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Feb
+ 2025 01:41:48 -0600
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Feb
+ 2025 01:41:48 -0600
+Received: from xhdthippesw40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Mon, 24 Feb 2025 01:41:45 -0600
+From: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+	<manivannan.sadhasivam@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
+	<bharat.kumar.gogada@amd.com>, Thippeswamy Havalige
+	<thippeswamy.havalige@amd.com>
+Subject: [PATCH v4 0/2] Add support for Versal Net CPM5N Root Port controller
+Date: Mon, 24 Feb 2025 13:11:41 +0530
+Message-ID: <20250224074143.767442-1-thippeswamy.havalige@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250129154920.6773-1-ubizjak@gmail.com> <31e1c7e4-5b24-4e56-9f17-8be9553fb6f9@kernel.org>
- <CAFULd4a4qbMiP3dYXDp0_vPapkoi-i-ApOY5pHfKG1h7=vfbbA@mail.gmail.com> <43c41ab4-1771-4b01-853e-08e1689df7f3@kernel.org>
-In-Reply-To: <43c41ab4-1771-4b01-853e-08e1689df7f3@kernel.org>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Mon, 24 Feb 2025 08:39:20 +0100
-X-Gm-Features: AWEUYZmbkMTZP4BmVrHdGTBrflrjlMAK2lY7kKTlIxA4zcjjUR8W05Qsr5XFirw
-Message-ID: <CAFULd4bTYudfNap1trVyjqA0xv5cQQeWxSZ8numv_uHqxz1Afw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] x86/bootflag: Change some static functions to bool
-To: Jiri Slaby <jirislaby@kernel.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB05.amd.com: thippeswamy.havalige@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF0001A103:EE_|IA1PR12MB8493:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5e5d9891-e504-45f7-2149-08dd54a6b268
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|1800799024|82310400026|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?NnapcPXpqFtzTgA3LQBG3Urgog8a+7efURfJfFTrO2qh19MRSA09N/qoizRU?=
+ =?us-ascii?Q?zJjU9Kp+ZYDDVhbeflu8T5qQv/WF/h6J6+c0GMJAU67PMSE8oDaQFe1qO1B0?=
+ =?us-ascii?Q?bCZM0QeTkJ5ubXm9PyjaPYroI0eonhBGoqIrydcuNlHQllFt0HId2xVThLbF?=
+ =?us-ascii?Q?7M7Q1O1sflH0tncVqvTdFPeoManzv/qc/WPI0fO2AuwnDZxOTa3yxThb6d/K?=
+ =?us-ascii?Q?GxDCYDfK4H89JdUAQK1s37HE1+xPtdz/AliF++42VuTxBAdYK+JcRYKZ7lLW?=
+ =?us-ascii?Q?Tx2VYzO1KFFAVv24Abh59L/KqtSscJJfXoZBBeOMXu7j0WYqa9lSdEAbQ57F?=
+ =?us-ascii?Q?0Z/6KN6ud6zho28o7TOMyE2uZZTgxk8FNluVsNZtih4B9ryvIlXKhZQxz2vX?=
+ =?us-ascii?Q?GTpXjJ/qpX6bi2sJo3vPL4GWsrN9VZW8nB3fO+Cx39TNCthcbYhLwpq7SXcM?=
+ =?us-ascii?Q?aJ0rVk42/VqurNTQdWlawc04bGCfyJS/4IjIEOWFKoCP9fsTKkQwK8GQF4JI?=
+ =?us-ascii?Q?L6QflKxito4Gvfx7+ZjHmBbsPBgDPrvfZ3KMxa+9g71juoApTZud00J0uQBB?=
+ =?us-ascii?Q?061e110CPxR00H94o6nOOxpqEswNLl5CE9mU92OyplDGfXweysUUiTbBMMAm?=
+ =?us-ascii?Q?Atw6Fmgw9s5JWPhD4gsb+qV2bQ2entnfdGStH8MULMypsB9aENYX4uqcIIRc?=
+ =?us-ascii?Q?l78xhwZsdh0iIUPpU00QXPtfRVywxMpgv1ASIO0Mwk0T9PEeuvrlE8cOe5E2?=
+ =?us-ascii?Q?8xAOvOBDmuMcjG5jfv7Wk+FWCRFcGC/PmM4FTDq+vRtGzTWo8D6U5+Z21F4t?=
+ =?us-ascii?Q?VGqLUajAI6Bh2VcR8sft5Tex+r02tfthdh2jXHALFVKau+rP8JIU5sGaiQAw?=
+ =?us-ascii?Q?U2kC1SL8gdlRN5MAEufhSZjqUdO0Vq/kA1ihyScBxJILueyO6cUu98nKPU5M?=
+ =?us-ascii?Q?fXIvB98agKfUmUuUzy/yuYZRfjwy9DXsnd7fzqYBh/i6FzLqr2LHT3s0PLmg?=
+ =?us-ascii?Q?h2c89BvxF7PaobMBEas3uzJaAbGbMeU+NVeab0JNB1YPJlXjG6ubX/dkTxIq?=
+ =?us-ascii?Q?9ZKlzUa5PcvEomi510QoZzG9xVjAyL3VPIs4Mn7IIOv4TYGhb2LqN5sZK0hL?=
+ =?us-ascii?Q?wSS3hjHp+NV0bqYxPH/2/bzlFJJoGxdYbvOQj0dBJf5e1yyxCOpz8Us5fJaX?=
+ =?us-ascii?Q?Rhya9J14y8XmOz0a9QH0xHyYlRDb63k6qXcj8dAjCYFmehifSeujK50qEinT?=
+ =?us-ascii?Q?+31/7gv9IxhGKLuB3Sx5/gSQbt2g9fv8QsB//A5Jj+r9lceV+3PVklLqlMc8?=
+ =?us-ascii?Q?MNty6UFMv9PBPJIIxT+5P8ZmLIY45szu3NLPToVckMdqGUfyxLDzOLKbwke0?=
+ =?us-ascii?Q?JP4FRu3zaNvXF+XjSuq9AYpZzWdsqcarersHwn13KjZBHYaQ3V9fTvcX0v2g?=
+ =?us-ascii?Q?vt9UNOYXpA+3yzfB3UGxXZ0RhMLPsvvQB2Lj9gSTpgrjp9xebUS4E05RysiA?=
+ =?us-ascii?Q?po8etiGHt34u5D0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2025 07:41:49.0482
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e5d9891-e504-45f7-2149-08dd54a6b268
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF0001A103.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8493
 
-On Mon, Feb 24, 2025 at 8:27=E2=80=AFAM Jiri Slaby <jirislaby@kernel.org> w=
-rote:
->
-> On 24. 02. 25, 8:24, Uros Bizjak wrote:
-> > On Mon, Feb 24, 2025 at 8:18=E2=80=AFAM Jiri Slaby <jirislaby@kernel.or=
-g> wrote:
-> >>
-> >> On 29. 01. 25, 16:47, Uros Bizjak wrote:
-> >>> The return values of some functions are of boolean type. Change the
-> >>> type of these function to bool and adjust their return values.
-> >>>
-> >>> No functional change intended.
-> >>>
-> >>> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> >>> Cc: Thomas Gleixner <tglx@linutronix.de>
-> >>> Cc: Ingo Molnar <mingo@kernel.org>
-> >>> Cc: Borislav Petkov <bp@alien8.de>
-> >>> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> >>> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> >>> ---
-> >>>    arch/x86/kernel/bootflag.c | 12 ++++++------
-> >>>    1 file changed, 6 insertions(+), 6 deletions(-)
-> >>>
-> >>> diff --git a/arch/x86/kernel/bootflag.c b/arch/x86/kernel/bootflag.c
-> >>> index 3fed7ae58b60..4d89a2d80d0f 100644
-> >>> --- a/arch/x86/kernel/bootflag.c
-> >>> +++ b/arch/x86/kernel/bootflag.c
-> >>> @@ -20,7 +20,7 @@
-> >>>
-> >>>    int sbf_port __initdata =3D -1;       /* set via acpi_boot_init() =
-*/
-> >>>
-> >>> -static int __init parity(u8 v)
-> >>> +static bool __init parity(u8 v)
-> >>>    {
-> >>>        int x =3D 0;
-> >>>        int i;
-> >>> @@ -30,7 +30,7 @@ static int __init parity(u8 v)
-> >>>                v >>=3D 1;
-> >>>        }
-> >>>
-> >>> -     return x;
-> >>> +     return !!x;
-> >>
-> >> This "!!" is unnecessary and only obfuscates the code, right?
-> >
-> > Not really, this idiom is used in place of (x !=3D 0) to change the typ=
-e
-> > to the return type of the function in a pedantic way.
->
-> Care to explain what exactly it changes?
+Add support for Versal Net CPM5NC Root Port controller 0.
 
-The internal compiler representation of the following testcase:
+The Versal-Net ACAP devices include CCIX-PCIe Module (CPM). The integrated
+block for CPM5NC along with the integrated bridge can function as PCIe Root
+Port.
 
-_Bool foo (int x) { return x; }
+Bridge error in Versal-Net CPM5NC are handled using Versal-Net CPM5N
+specific interrupt line & there is no support for legacy interrupts.
 
-is:
+Thippeswamy Havalige (2):
+  dt-bindings: PCI: xilinx-cpm: Add compatible string for CPM5NC Versal
+    Net host
+  PCI: xilinx-cpm: Add support for Versal Net CPM5NC Root Port
+    controller
 
---cut here--
-_Bool foo (int x)
-{
- _Bool _2;
+ .../bindings/pci/xilinx-versal-cpm.yaml       |  1 +
+ drivers/pci/controller/pcie-xilinx-cpm.c      | 40 ++++++++++++++-----
+ 2 files changed, 30 insertions(+), 11 deletions(-)
 
- <bb 2> [local count: 1073741824]:
- _2 =3D x_1(D) !=3D 0;
- return _2;
-}
---cut here--
+-- 
+2.43.0
 
-For me, !!x in the source means that the change of types was
-intentional. Surely, the compiler can do it by itself, so at the end
-of the day, it is just a matter of personal taste.
-
-FYI, the whole function will soon be removed and replaced with a
-generic parity8() function.
-
-Uros.
