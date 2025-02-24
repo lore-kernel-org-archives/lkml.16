@@ -1,70 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DDA257459;
-	Mon, 24 Feb 2025 14:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2C691537AC;
+	Mon, 24 Feb 2025 14:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740407570; cv=none; b=OcyxVvYD/nraECfuOfrycgZ12eo/KqQzJ+5Jv2P6+2xLPIwnQcplQuqGdQBFax+yAX8WxkoeG1Bk+JO8IE2Dhz9emRBjjWUgAWPo0zbybMEMwSdEhN9lvIbeNE3j/FabGxpJyeWD0/99AqPUdZKq5ZOynn39bc6Jq1quxZHRMjA=
+	t=1740407599; cv=none; b=ALJJIbBgN95JwCmJhY7Qm3H0SzXi8uWEZHaDdubnQLGORCVKqV70R5kAl9lYsRQS7sUrjSPtCSwqzOpZ02s8d2o9Kz/u9ciZM2j8NnMRvHewEhQ0/nkGRodGbwKUQSfX+HGs/OTPpLEhMaVfVzPbiWqCmbaVxd7PTwuKW4pu7LA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740407570; c=relaxed/simple;
-	bh=loUIEO2AC7Kh+BeI5l4HVh2nj8MVsKVBozbddWhyxsM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MLnQ6CEJj1mppfV5XAqZu9EIxfrr7XnZUGGZwuzEIHbSxB9aYTMaaAiPlzKCZoa898oy/QhA1kyT7QBM15sgU1mkCV5LYd2i1AkQovV4O068duKFuHb+n6PpBbfYkTVptYnW2IgP427nK/ZOdBhGhQ1gQ4iYNtO/D3XMVEyjPpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IT5k6XKC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740407599; c=relaxed/simple;
+	bh=wDbiPtUfE3pBD2ibGHCUp1eNQeURYMrRbZBQxQgN6Ek=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aRiMoWKXgubt8zQV4uHUQK5mTkQEZyubz2ZNqsVAB8TwY6AvLjzOdv6mqALEknSpyS4AFPsTUYWMkRVc7tZLiRevA48/NsMWHK+0w1O9z/p3CLbtBOo4nK4zT4W2stsBRYP7L2J+bT3199pKibWeG8r3GONZ5Tspb/EWBiV7aAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FJi61wtk; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IT5k6XKC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A837C4CED6;
-	Mon, 24 Feb 2025 14:32:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740407569;
-	bh=loUIEO2AC7Kh+BeI5l4HVh2nj8MVsKVBozbddWhyxsM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IT5k6XKCTKrb/qaWvhvZOi56fzZdXweZQi5AY8FEpjtPbCJTddi9Hnl/seaYS7qpP
-	 6ffqH+L3sOnuVSLZYUlM3nobFHTWWWzDf30je3tCUlRCIeUJRauOIyxdLWzvI7tyap
-	 EYR5xIZa3x9WuwcEGdO8/luMfQIcNauxgjuZBlDxjGI1udIN1HKyvDYa0Uf3bTCZ7Y
-	 tzptPy3GyHxFUdcpgmzP1J29ejgd9w7tL1fxSzSoAF5dsaIijbgUZfuUceJUANN9jC
-	 yXul2g/7y/9oS0fziew8VAZQsf77f53fU4aCuCJEuhmXzULXDdRA3xqFfTfv/2vPlI
-	 Gd7eyn84Pk8UQ==
-Date: Mon, 24 Feb 2025 15:32:43 +0100
-From: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Andrew Lunn <andrew@lunn.ch>, 
-	=?utf-8?B?QmrDuHJu?= Mork <bjorn@mork.no>, Maxime Chevallier <maxime.chevallier@bootlin.com>, 
-	davem@davemloft.net, Jakub Kicinski <kuba@kernel.org>, 
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	thomas.petazzoni@bootlin.com, Florian Fainelli <f.fainelli@gmail.com>, 
-	=?utf-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Simon Horman <horms@kernel.org>, 
-	Romain Gantois <romain.gantois@bootlin.com>, Antoine Tenart <atenart@kernel.org>, 
-	Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
-Subject: Re: [PATCH net-next 0/2] net: phy: sfp: Add single-byte SMBus SFP
- access
-Message-ID: <kqur446k5sryspwh4zzndytfqhpupfybimhgbtq5m7fm7vom7s@hhqlh3llrsxl>
-References: <20250223172848.1098621-1-maxime.chevallier@bootlin.com>
- <87r03otsmm.fsf@miraculix.mork.no>
- <Z7uFhc1EiPpWHGfa@shell.armlinux.org.uk>
- <3c6b7b3f-04a2-48ce-b3a9-2ea71041c6d2@lunn.ch>
- <87ikozu86l.fsf@miraculix.mork.no>
- <7c456101-6643-44d1-812a-2eae3bce9068@lunn.ch>
- <Z7x4oxR5_KtyvSYg@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FJi61wtk"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5df07041c24so6599481a12.0;
+        Mon, 24 Feb 2025 06:33:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740407596; x=1741012396; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=35t1hJFOdpa+T0AaHCGkVAi9es9mhFSUPTxVJx4I/9w=;
+        b=FJi61wtkedOmV4HEOK7e2YvQFhSlur5GH0VGy7i/hburgQa4OXk8ji4MavVwe9mQq6
+         qi5IZcKci0aavGMD2ZZUZ8LAVP143hM6S44bVltFvG6A8/pK8FmSFJq/qNwmIDkKJ3BP
+         PlYtJDxQYF3PLMIImcZuRCMTse6+4yZEBH5UxWD1ykpnUdsLNllGuX5+TxqHXcvGLQ4G
+         EyTXJjmL5oo6YRupzgn7kJZnaCuM2nD/yFxJ50FQjSACtdtfg6T2lCADPyBvMp0feCr+
+         WlxyE0A13nrczic2YiBUXS3vUJW/FziPeO1xCjtFch/4cmxld8SadFkoeyKHBsuayG7z
+         ZnOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740407596; x=1741012396;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=35t1hJFOdpa+T0AaHCGkVAi9es9mhFSUPTxVJx4I/9w=;
+        b=hq2GRnbpdas0ytHNEQiBgmXj2W+Exbqxlh7DSsvUKzPp/uwvdcgSrLUAMr3YG/wkEr
+         61MuUugkop058PurZHmsNDKdtE0P52tyS/rY03gsg5GoC08NuvP9z4BL1//zgRWnKh4h
+         R4MXIkzzyTVcNGhVd1e0mHX2Dye+MQIJQh6SkwsZcd0T9wRTNrMuoX9sw8Mfdd1HViQ5
+         1hDpfZceewhPzYizC0gUAOFeromz102aJuPoq7oCVRXvgo74AeBGuMyuQjUn2FebBQQs
+         gBa6K7Sjv3IFyzp+tuHyYeQ0SIfphp4VKpUdc5wWEpW7MUjMn+hYdoKJbW92+EPcF6N3
+         tvcw==
+X-Forwarded-Encrypted: i=1; AJvYcCUpYKxOoet6t6qbzV57Rir3J5MQEmGykDXgjrF2PculY22GzhhSVXBGadunty2ze0ZRyB65JyXmeMlL@vger.kernel.org, AJvYcCVsdOaQJFWawiVcGP3pxzqOsm+cim5peB/wHKQa7BI3ONyRc3cJ6WHjiP/FC2HokpcWNyu3kp31kJeLyOfG@vger.kernel.org, AJvYcCW989/cm+xPpYocB88fvxI/9cNNMedLOTBcL6VftzWDMQ8SBtPX0alUYUKb9TB+JGD6oDYerJLgiMm1@vger.kernel.org
+X-Gm-Message-State: AOJu0YwK3CEYumjTSNzVjEsu/g61FM/0GxE81tl+uE8doF2Qm68JTYhG
+	mKGi6WUJhJV3dKpZOTJCZtrcSBLaU7R6aWEQHFnxZaCKuvzBxISS
+X-Gm-Gg: ASbGncuQOyEZRYW+ovsQ1hfNO2nW9RHayygwE66H1Ae9n1LEA2rqNxU3OSHWFCrS17W
+	pT/55PHLadaUtT/HTkleqhb/KlHQtY6M/e308IfZ10sZ9TsA6+qG7uaaONcXizMiG77AmKMTz9f
+	XpF7pxW/lVF+vCRbMwI2taMHKa0Z7WBjrHm1TiWlsW4rS0e/0HShiXA5YPpxvhkRbCKklNdh4tJ
+	TFQ0uZe2NOBnipV+eIfalVp/+PKkg7K9GzYxmDUjTJvp/0Ah8K5MwO/8rMJyqNEMNoA6uvmQl7/
+	51ULpUujlRTNBIRIuQ8qzil9x/vzaWq96bS7vkwfOHh62ZkmJJg=
+X-Google-Smtp-Source: AGHT+IEpuzX6lyN2J9M4/ZBYAmLlIpNrQmbES6PeBLBJOGfxNsj0XhIs5KAuBO9sPVp0JF08jFkowg==
+X-Received: by 2002:a05:6402:13c8:b0:5de:d803:31f3 with SMTP id 4fb4d7f45d1cf-5e0b7222fa2mr10839330a12.21.1740407595653;
+        Mon, 24 Feb 2025 06:33:15 -0800 (PST)
+Received: from [192.168.5.199] ([92.120.5.6])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5dece2721d9sm18891253a12.56.2025.02.24.06.33.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2025 06:33:14 -0800 (PST)
+Message-ID: <36451a88-bfc6-4402-8e16-890d524a9368@gmail.com>
+Date: Mon, 24 Feb 2025 16:42:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7x4oxR5_KtyvSYg@shell.armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/4] arm64: dts: imx8mp: change AUDIO_AXI_CLK_ROOT
+ freq. to 800MHz
+Content-Language: en-GB
+To: Adam Ford <aford173@gmail.com>
+Cc: Abel Vesa <abelvesa@kernel.org>, Peng Fan <peng.fan@nxp.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Shawn Guo <shawnguo@kernel.org>, Marek Vasut <marex@denx.de>,
+ Stephen Boyd <sboyd@kernel.org>, Shengjiu Wang <shengjiu.wang@nxp.com>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>, linux-clk@vger.kernel.org,
+ imx@lists.linux.dev, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Lucas Stach <l.stach@pengutronix.de>
+References: <20250221190929.31469-1-laurentiumihalcea111@gmail.com>
+ <20250221190929.31469-5-laurentiumihalcea111@gmail.com>
+ <CAHCN7xL=QZHs5sD7Ja7pBOcXM8cWVQYe270EizDFN--CH_5+zQ@mail.gmail.com>
+From: Mihalcea Laurentiu <laurentiumihalcea111@gmail.com>
+In-Reply-To: <CAHCN7xL=QZHs5sD7Ja7pBOcXM8cWVQYe270EizDFN--CH_5+zQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 24, 2025 at 01:48:19PM +0000, Russell King (Oracle) wrote:
 
-...
+On 21.02.2025 21:37, Adam Ford wrote:
+> On Fri, Feb 21, 2025 at 1:11 PM Laurentiu Mihalcea
+> <laurentiumihalcea111@gmail.com> wrote:
+>> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+>>
+>> AUDIO_AXI_CLK_ROOT can't run at currently requested 600MHz w/ its parent
+>> SYS_PLL1 configured at 800MHz. Configure it to run at 800MHz as some
+>> applications running on the DSP expect the core to run at this frequency
+>> anyways. This change also affects the AUDIOMIX NoC.
+> Unless I am missing something, the i.MX 8M Plus Applications Processor
+> Datasheet (rev 2.1)  has a table of frequencies, and
+> AUDIO_AXI_CLK_ROOT is shown to be 600MHz nominal and 800MHz for
+> overdrive.  I agree that it's likely not running at 600MHz now, but
+> 800MHz may be out of spec for people who are using the nominal voltage
+> instead of the overdrive, since overdrive requires higher voltages
+> than the nominal.
+>
+> adam
 
-> "Please note:
-> This hardware is broken by design. There is nothing that the kernel or
 
-Doesn't "broken by design" mean "broken intentionally" ?
+You're right, this would not work if someone was using
 
-Marek
+nominal voltage. Do you have an upstream board in mind/usecase which
+
+works with nominal voltage instead of overdrive? As far as I understood from
+
+Lucas's patch ([1]) there's no upstream board using nominal voltage?
+
+
+CC-ing Lucas on this as his patch ([1]) is similar to this in that they're both
+
+trying to use overdrive clock frequencies in the DTSI and I'd very much like
+
+to have some sort of consistency in the DTSI if possible.
+
+
+
+[1]: https://lore.kernel.org/imx/20250204182737.3361431-1-l.stach@pengutronix.de/
+
