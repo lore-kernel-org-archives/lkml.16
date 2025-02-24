@@ -1,110 +1,138 @@
-Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48FD265CC9;
-	Mon, 24 Feb 2025 18:43:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4FDC26618C
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 18:44:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740422637; cv=none; b=aytIphbHdRpciYNgUrZ4nmqphfBRu4N5xvP7FkMdneoo/uIwF8QN7a6GaTPuRctmYu65DAJIbPZudydLwsHbn9Fje9DAJvEqfW4jIgXPhc1q2hB0uhE+JZreuzgzrEChW5umQQCZ04ggeuPcg91ZXMIaNh/apyAAZkItjjBj87I=
+	t=1740422660; cv=none; b=bwjiQKLIekZvGUmVTPv1xSbyBj0rBsDoRmCABgEgVgAeHGTMTgQq+qin0lXNy+hm+lpMtN8HBzpqxBxNBVWJMz1uPtoISNtpzbR14PO6dwG9ENchp2EhpDlJLGSZ0AO2JIIBOUncCPwkWaBLfpauZueh5oBEFCsfvWUgU9KkGE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740422637; c=relaxed/simple;
-	bh=OAk+L/m7x/cv0UJhgKlMAM86FPmhXcJlx0x+6YlYuSU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZrxCd1IHa64gAkKHGTvi8fP9DQScPQFtQyJVGXnavyHq+WiZCZbnYWWOxXSpw4oe70nHVd6C00IuldIGFLjmbctSgHTAoVXlTrX8ReiXzLyY2GTcCRpkjv55MYdM7bXaWqAvasxb+h/f8utTIazACyMdCxAk9lIIhbVoxot1Wpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=N+vSeZe7; arc=none smtp.client-ip=54.92.39.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1740422660; c=relaxed/simple;
+	bh=khj59qHPmTHqrt6WaeToKlT0AivW47rW2SfqTzUq9gw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qLyWuWRAkRUD2vTYidceUL/uFtX52xc5ZT77IO6Ea61gnFxpNAXnYR05UDxYXPMipZQekXz7Saz2THE1OY4RgGSdd2BbhTe8IDqvduUyaU6LG7+QFhRRGuPetygi47vJj2jjgjFqB+3dlyeejmUEgE2Vn8sYseXlJwAV7EC7Y5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=CpcE9dJ7; arc=none smtp.client-ip=209.85.167.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="N+vSeZe7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1740421602;
-	bh=1sX2eNn3l5oEvnLc1+fi+CI5BMXl1Ff+USd9YlIlS+s=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=N+vSeZe7k9zK7o7LYSEp/ZdnXfUWZgziuxpBZUA79ug57lRtNBcy8knZ/6KJI8r6j
-	 CFchJaXCerHQ3IvW9zf6F42ECyT+avc5HbPvt0FDZ8oq2DitEbzdb24FfccUMrOy2G
-	 i2Gv5PQE+rM3Wjn07uv/bEKk5GH1oRqpFCIa4DOY=
-X-QQ-mid: bizesmtpip2t1740421588tidkldu
-X-QQ-Originating-IP: O6Ik0ahvFrkWILBE+jZrq4jmedga7AVIgaWuSR78YVE=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 25 Feb 2025 02:26:26 +0800 (CST)
-X-QQ-SSF: 0002000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 52011159772379626
-From: WangYuli <wangyuli@uniontech.com>
-To: masahiroy@kernel.org,
-	nathan@kernel.org,
-	nicolas@fjasle.eu
-Cc: linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	chenhuacai@loongson.cn,
-	kernel@xen0n.name,
-	revy@deepin.org,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	guanwentao@uniontech.com,
-	chenlinxuan@uniontech.com,
-	WangYuli <wangyuli@uniontech.com>,
-	Shiwei Liu <liushiwei@anheng.com.cn>
-Subject: [PATCH] kbuild: deb-pkg: add debarch for ARCH=loongarch64
-Date: Tue, 25 Feb 2025 02:26:19 +0800
-Message-ID: <DB8BF02DB314013F+20250224182619.1557027-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CpcE9dJ7"
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3f3fa75b1e7so144553b6e.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 10:44:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1740422658; x=1741027458; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l3xWA/77tS/bA1FDIGO2ulCuHvVLqpsD27PQsdyeLvA=;
+        b=CpcE9dJ7cjnzj/lF4aefTjDC9/dHuSQdNXujN1lzu3gHUEeQ1i7CM36vYPVTbrQx2c
+         PkkwQ4vtxgH6nSyesy9KlAC4GbuAmzsGZB2uC7oL0S4FCdorLyobQEcqMxPUIMobhC7p
+         ookijqy+E7cEc60OkFm8C83sRJBXk186jtqG4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740422658; x=1741027458;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=l3xWA/77tS/bA1FDIGO2ulCuHvVLqpsD27PQsdyeLvA=;
+        b=uLkPGtafN9UKylZbKeIhpn0ovw82kvkZCnEN1y1rMt/y8xU8yT565faE6FgSWC83K1
+         LhwevuFU6bVrguxYHuBPrCnBjTfcTzLw+Z7xij2V0NDnJrA5S+NRc9dFLzkM1a+nlfHz
+         Ydpio7bQsoKSsHMSYpMm68m7JtF4+OZsrodv1S7bjm8dLXVnsSFNIiuRdinB5s5TgE0i
+         PdCKY2cVlUkLrmbbk3fPZX6we2GDDHrybcvnhcKHbXKPctBdLjUJ9TngKDgmkKUVj4bB
+         KFz5ngSfcOqm2azaiIEGQmeQZRiNxUr0VxmKXkEphNd6JOgjo6jMY/T0BD7OtMr2P1C8
+         Glrg==
+X-Forwarded-Encrypted: i=1; AJvYcCX9KqQJ6iGCMcQJ41K+8U0rwiBX8jxykTZvw51kO89fOGPL4Q/YYPMsoK7W5+/ApGv7xhIJdUe44+/f310=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhPjxq5Elpe3NMlIz3U/3BpmZNtG+ssQnjh9961uwN3nmVGRCX
+	YrXt2VR6MWE9W/PYZEVtAJAx5C+dfEz39uuU5BVwBUjqs9ZKrGzkk0rX+ZlYk5iY/rOo3Njue3C
+	E/H3503hOG3ZIrNsuRWyA3RDrnayfDYrvJSYT
+X-Gm-Gg: ASbGnctXOGS9tXDQ3sZwkgPWEu6tNVNdI+wymyS76K/ypKU3VpytuzeZ8r7A9k8QR9K
+	xKxw/oVSsIe9kmCsR6cYe4hnSdatsHwQnfthywm1dok0kx1VnYhfv8hSFeC+DGHOjOx3yXlR7al
+	1GLKjCYmUudjIFUgQUl/NJ785eljY3e2RoFfQx
+X-Google-Smtp-Source: AGHT+IFN+bvliOIeTRCEzzqueIeoaQOjdPQ9OrltDO6mVppq+7ugAyjJAg5Sdh7fwscXh0PnNqV1UaZJHQv0Bp5Y3+U=
+X-Received: by 2002:a05:6808:1525:b0:3f4:1f1e:7459 with SMTP id
+ 5614622812f47-3f4247bf741mr3932358b6e.6.1740422657819; Mon, 24 Feb 2025
+ 10:44:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: ODcDgdcDagQKd5vojsbs1QK7Qnv72QLp3+VphTZwn9zd2O7s5J33OY05
-	Movph5YfADliSfaib5ivzfueH9YtcI3GR6JJ4UCkM+6VMAd1B2zyx+gfjFi/K0J2HqCg29b
-	8yCsb3q9Byet6y0C7pYXKu/luSETKLUdBzr415JLj9qXa9s2VEYwiVJXWWs/8LUxwpnrADy
-	npDKWgVF009zCOPFLtDA4WNwA/OyMoSWA4oiWGeXazD/aXkxblNzf8gacFdSnYUVDEY3vzi
-	XwZj0nxy7BLLT+Y3Nj6+K9MNpOUDwUMPD23jsrBipwjHcRvyP2qWTqFGfkKeOMvw4QGMQrA
-	mwXTF3StdqQk7D2IschychvMjWQf63gcHsS/Ess0s/ifmWE53yNnJyGVYCp4f9a7+Lrx71m
-	PEMzRHDecF+POVCr5M1sKksh3rJtYUjtvIR0PaOSvWHSN38dNjbD5cY7HpYCS+QGqVKP6Ln
-	Wu5KifoW1sC8+RIClVZzmBdA819FWVhmt3dr7GoUClZmQrAkgMLgJxiuQHHVP5BpjoKdeOL
-	I9hYU9dD1Vd18e6NvC801TP9nhIE7PpRi/AHHoYsK27siOGaUDjsn8FzmE+0ePq5QoCMtA1
-	jXM0dIw0WcJrXm3Ww5jNjYB2gZizPT6XHfYDXzAm1u7XdG5G1MQgacU/bPs8kD2OulHOMvn
-	iTlDT5oyoUzZ+FVh6WdbVWoM/n9S/pk3cxpIhNJFwydNL1JLtCRtRJbEBGh53LrD0k3Fkt6
-	t/Z9uDokqBawU5TeiFWvabpUK4g45bY6/sYAx0siy45pjLyJyjMZg58nGeTy6TdfSRbjevN
-	xs9phHqwoopHCHqUFRR147yL2JoIM7jMx7vlMeAtzVZRvQ05tV+r/ZUryvvtw9V/YhQVNZr
-	7p5Z43qtSEZP0Vr8+Hp3BnnqL7gSIg5qBiR3gZAEzg7gxLCt1tUJL5QoW0UZIzsICjypHZ0
-	pGTMdCOgTRqVnKTAQzy9DlBW7jW/vUPIJNsFpRzXu2NNLDuWqwatsW7TEMNofY16h6c0g/s
-	UU+VWFEsEJ86fd211O
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-X-QQ-RECHKSPAM: 0
+References: <20250224174513.3600914-1-jeffxu@google.com> <20250224174513.3600914-2-jeffxu@google.com>
+ <443992d7-f694-4e46-b120-545350a5d598@intel.com>
+In-Reply-To: <443992d7-f694-4e46-b120-545350a5d598@intel.com>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Mon, 24 Feb 2025 10:44:07 -0800
+X-Gm-Features: AWEUYZmHQiSO8llCjmhY8a1Y8Dk59_j8_WwL1SOLQEoLurxsiSGp7YKgCz-mRG0
+Message-ID: <CABi2SkVKhjShryG0K-NSjjBvGs0UOVsY-6MQVOuQCkfuph5K8Q@mail.gmail.com>
+Subject: Re: [PATCH v6 1/7] mseal, system mappings: kernel config and header change
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
+	torvalds@linux-foundation.org, vbabka@suse.cz, lorenzo.stoakes@oracle.com, 
+	Liam.Howlett@oracle.com, adhemerval.zanella@linaro.org, oleg@redhat.com, 
+	avagin@gmail.com, benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, linux-mm@kvack.org, jorgelo@chromium.org, 
+	sroettger@google.com, hch@lst.de, ojeda@kernel.org, 
+	thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
+	johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com, 
+	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com, 
+	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
+	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, 
+	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com, 
+	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, 
+	peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com, 
+	groeck@chromium.org, mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com, 
+	mike.rapoport@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Fix follow warning when 'make ARCH=loongarch64 bindeb-pkg':
+On Mon, Feb 24, 2025 at 10:21=E2=80=AFAM Dave Hansen <dave.hansen@intel.com=
+> wrote:
+>
+> On 2/24/25 09:45, jeffxu@chromium.org wrote:
+> > +/*
+> > + * mseal of userspace process's system mappings.
+> > + */
+> > +#ifdef CONFIG_MSEAL_SYSTEM_MAPPINGS
+> > +#define MSEAL_SYSTEM_MAPPINGS_VM_FLAG        VM_SEALED
+> > +#else
+> > +#define MSEAL_SYSTEM_MAPPINGS_VM_FLAG        VM_NONE
+> > +#endif
+>
+> This ends up looking pretty wonky in practice:
+>
+> > +     vm_flags =3D VM_READ|VM_MAYREAD|VM_IO|VM_DONTDUMP|VM_PFNMAP;
+> > +     vm_flags |=3D MSEAL_SYSTEM_MAPPINGS_VM_FLAG;
+>
+> because MSEAL_SYSTEM_MAPPINGS_VM_FLAG is so much different from the
+> other ones.
+>
+> Would it really hurt to have
+>
+>  #ifdef CONFIG_64BIT
+>  /* VM is sealed, in vm_flags */
+>  #define VM_SEALED       _BITUL(63)
+> +#else
+> +#define VM_SEALED       VM_NONE
+>  #endif
+>
+> ?
+>
+VM_SEALED isn't defined in 32-bit systems, and mseal.c isn't part of
+the build. This is intentional. Any 32-bit code trying to use the
+sealing function or the VM_SEALED flag will immediately fail
+compilation. This makes it easier to identify incorrect usage.
 
-  ** ** **  WARNING  ** ** **
+For example:
+Consider the case below in src/third_party/kernel/v6.6/fs/proc/task_mmu.c,
 
-  Your architecture doesn't have its equivalent
-  Debian userspace architecture defined!
-  Falling back to the current host architecture (loong64).
-  Please add support for loongarch64 to ./scripts/package/mkdebian ...
+#ifdef CONFIG_64BIT
+[ilog2(VM_SEALED)] =3D "sl",
+#endif
 
-Reported-by: Shiwei Liu <liushiwei@anheng.com.cn>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- scripts/package/mkdebian | 2 ++
- 1 file changed, 2 insertions(+)
+Redefining VM_SEALED  to VM_NONE for 32 bit won't detect the problem
+in case that  "#ifdef CONFIG_64BIT" line is missing.
 
-diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
-index b6dd98ca860b..0178000197fe 100755
---- a/scripts/package/mkdebian
-+++ b/scripts/package/mkdebian
-@@ -77,6 +77,8 @@ set_debarch() {
- 			debarch=i386
- 		fi
- 		;;
-+	loongarch64)
-+		debarch=loong64 ;;
- 	esac
- 	if [ -z "$debarch" ]; then
- 		debarch=$(dpkg-architecture -qDEB_HOST_ARCH)
--- 
-2.47.2
+Please note, this has been like this since the first version of
+mseal() RFC patch, and I prefer to keep it this way.
 
+Thanks
+-Jeff
