@@ -1,160 +1,194 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx-rz-1.rrze.uni-erlangen.de (mx-rz-1.rrze.uni-erlangen.de [131.188.11.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7D953BE;
-	Mon, 24 Feb 2025 20:37:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFCAA25A359;
+	Mon, 24 Feb 2025 20:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740429471; cv=none; b=XS7T7FlPUeLXr92PH/rI7TDb9fU48uUSMYR3X/+J0/Hvc5hBGSuzCVg6jX+QE4qXzJejvNE0SrYqVttwfq83R/U9I0ph/1Z7ZrL0ZwCqXkIoX0p63nBeaS2r47ugm77vJxS7v4m/afCGKJIbCAsDbQF8DeEIIEOG6xr0uU6tD0g=
+	t=1740429481; cv=none; b=Rofwe0Q94diiOLiWU3z/aRp66awIpDHmhtS28OZP+Zjl/ssWFkTP++R2UisdW0o+x4nV7FZxjulqJSSOo1cjC59JhMlG+BKrGVCAXMdfYgspC7NBwo6QGRuGuoe6EETQsMitbMwTaqj8dTD4BdV+h43+DXilK7nymyGdG4Q78uI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740429471; c=relaxed/simple;
-	bh=CSaM3CTsdB8VvBBuF2udjUi2OuNHmqw4SUCPz7jaLFs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bN2dSfvbcaSHCGzBPhcI+1Iic9PNC/lzlh7f4ABGQ8feSovI1DTP6GoDfyWTHH8TvLgVT0LjjasTlrxHp3fS4sWBRXNSjMx0YeHKxH962NZxuxc2xXvTNqwJxJYD9T/zOPcBY1Br1Id2I7BmqcVWHwvu95alM6DFi4mU3T/SkZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jhyZvxnD; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740429481; c=relaxed/simple;
+	bh=FLCDMUK4i/z/Ua8ga5kkGdpo/wCS9V0hc9fimsti8QY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=d03sfkH3aUg1Nh2PNMwQstcqOV+CCm69h5+ZqsDlUIUo0Ptoo2tl1jWDCucQTTX4gimbCoxkmDczLLNALhOMLTBYkN8e+gtc+EHKm0gngNvbmdtf3QaFzrXJL1CWXIn1rIgKDJRy2BJnARHctf/KQ7KN9N+3f2Hn5XFGiX1KV9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=fOxu1qXI; arc=none smtp.client-ip=131.188.11.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhyZvxnD"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c0ba9825e9so308897085a.0;
-        Mon, 24 Feb 2025 12:37:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740429468; x=1741034268; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hvTahac7VoN8UIfPPDTOy2XoASsmvBZhy0HRy4LhMqE=;
-        b=jhyZvxnDQ55KXT1t9s4U+7Uw/2ITujjH/izFFV16moE4khHikdCgPL/gniFWExu730
-         WNGaXT03BkALh2KX9rRij+tf6z7nSnZg7K6m2vW1CMuF+6ZYA6Ad1cyTGWoT/POf67jP
-         C91b7/XNBMFJYaGRdQ/gw7/zg7LS/JbTrzNo5QbJo+vhysdnU16QRA9D8gJsNx+iHxJW
-         WnQnuqsJ8BrNeWaTTj2fYTfbMiu1Reg6Egb8xxWOQHO7OyOfwpadDx0eJq5sZfeYDkDU
-         lV0kUYUC3HV5wUG2+RrFWFEvIOWTjEg5xoT4f++QLs7at49JI9kwxDdBEVxGEuSiwPIZ
-         B2Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740429468; x=1741034268;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hvTahac7VoN8UIfPPDTOy2XoASsmvBZhy0HRy4LhMqE=;
-        b=xGQYnLhJV2Asay9Fx7PKm8b/D7lE2lEIS4Pnh12GyGYMaylTyxU6/I1uB8rP+TFPjd
-         ReqgTZe4IP95LPzMyKUNCqGJWf5l0cvpuh60f/gdVKd/HHaLy1klTtP0xmH0iQOg4NLD
-         4OviCn53ICst3R1vberpUTiw6P7pAQFg8izz/aUXId/PeUAVMCY2ZtQB/fy2Lo4UKnxo
-         kJPf1OumueQFTyD5k6UTL6i5G+SZ4oQwa6sr//qb/2TivxnBHslh8EqMKv3uN9NSl92Y
-         4LUxy4COPNBU4f0X9nnd8H9FSb3OiASTml+G0J9vr4AbF94JjQZqCxql/fUxg+hEEHAk
-         taxA==
-X-Forwarded-Encrypted: i=1; AJvYcCUFck4hvIBdtY3O9CLLKhIqkj+yTC5bYuJrzLexHhWcdS4PJN2zMZsgawH80cU40uq2sjdAui5fP6k5B0LnPWg=@vger.kernel.org, AJvYcCX1pUUgxxsGYWxfxIRVwenI/OV98u/DV7aZHqJC6Y9SpIkypUO9Ou2KpuJAxl24XStY16x6qPN6n7FpjRo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMMUqGqwdjhCjBnv0Yr/1p8hBlwsn8STurHUyrDqitvOYuQeLK
-	gGez3fWAZmNsnzO4G4VeajDKUe8yHKIVWgxt8fcWhWcy+PQW531h
-X-Gm-Gg: ASbGncvTYjmmE19MvjYpNkR3ovmj4GhPxt8mPVoJblsWHocIgvRlNzxMg4aygepb44D
-	JZ8lESVCoxowGbJRFNpXgrbkZpCUckW5b87GIsRoJ5jOxBlSTE+KLexg4EKyh7PzVSaTDu5KS4m
-	QX45tdh3ASGHUdqhhIwIZgQeQwiBiiHUCErxwCj8LC16/XguP5qOYJsPAP0Nwb2iHcux4wPvb55
-	zzWpgFz7vzkBpJ433pY7MlQbPvGZm8yc40d18IsKO8Gy9Tsexfho8Eq3KsA5gh39mujDH3iB+6e
-	XLu2Jd4OMFsBhr2IBhf2NOGS6sgR4yzZ6tL7TdYeI4BU+nktRhmYuQhDehWYKLn+l/oQyc35H3J
-	QELwcK7APQlJyPxC+
-X-Google-Smtp-Source: AGHT+IFT4gDG2ylFYDoxJMqAedimzIeqWHVtIBuyFpPAl0k5SuiVG6BEh2+gKDUkXECGw8juLszw+g==
-X-Received: by 2002:a05:620a:170f:b0:7c0:a5f4:4df with SMTP id af79cd13be357-7c0cef12528mr1893154985a.34.1740429468409;
-        Mon, 24 Feb 2025 12:37:48 -0800 (PST)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c23c329852sm16364385a.72.2025.02.24.12.37.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 12:37:48 -0800 (PST)
-Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 9E1EF1200068;
-	Mon, 24 Feb 2025 15:37:47 -0500 (EST)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-10.internal (MEProxy); Mon, 24 Feb 2025 15:37:47 -0500
-X-ME-Sender: <xms:m9i8Z3htkq1szULmKOCJ93b3ZDcZqF5GQYWy3ist86cWawfG9AyCwg>
-    <xme:m9i8Z0CISLhmKQZwUJoNh5An7DQbWTzOxWW__l3ngPsdTmDO9zC8tI-fRBATHF7wO
-    cwPFvt62hCGWM6I7A>
-X-ME-Received: <xmr:m9i8Z3Hbq7NL8kTiKhzQmPEfo_tcPPwW_yXp6yW3Jvoj17jO84rclhBNWU8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdejleejjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
-    necuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilh
-    drtghomheqnecuggftrfgrthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleel
-    ieevtdeguefhgeeuveeiudffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghl
-    ihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepgh
-    hmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopeduuddpmhho
-    uggvpehsmhhtphhouhhtpdhrtghpthhtohepfhgvlhhiphgvrdgtohhnthhrvghrrghsse
-    hgmhgrihhlrdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggr
-    thhiohhnrdhorhhgpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomhdprh
-    gtphhtthhopehhtghhsehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohephhhprges
-    iiihthhorhdrtghomhdprhgtphhtthhopehkshhumhhmihhtsehlihhsthhsrdhlihhnuh
-    igrdguvghvpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhn
-    vghlrdhorhhgpdhrtghpthhtohepmhhighhuvghlrdhojhgvuggrrdhsrghnughonhhish
-    esghhmrghilhdrtghomhdprhgtphhtthhopehruhhsthdqfhhorhdqlhhinhhugiesvhhg
-    vghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:m9i8Z0RhY3borjabk8JHmynQuNN9pOs47w3GYNM0zdqMjWzgx3cjQw>
-    <xmx:m9i8Z0xGp5A9H-SE-jJX5OYR8HBG_lFTiI-LIBct7WSS8aMDWkznHw>
-    <xmx:m9i8Z67SVxfeJlSqQCo90n5QFPATcX0yuhcXqX2at_2Lxus7QFGH2Q>
-    <xmx:m9i8Z5yZsmZuS4_xuOcWgjQrM9QfxuKohipBko2pSxzAcnzIwfajBg>
-    <xmx:m9i8Z0hcjhwwU-R2TUr3LvYVUDj1M_dYx0ehe_xwlVxVTUwXBqkPvWiz>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 24 Feb 2025 15:37:47 -0500 (EST)
-Date: Mon, 24 Feb 2025 12:37:08 -0800
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Felipe Contreras <felipe.contreras@gmail.com>
-Cc: gregkh@linuxfoundation.org, airlied@gmail.com, hch@infradead.org,
-	hpa@zytor.com, ksummit@lists.linux.dev,
-	linux-kernel@vger.kernel.org, miguel.ojeda.sandonis@gmail.com,
-	rust-for-linux@vger.kernel.org, torvalds@linux-foundation.org
-Subject: Re: Rust kernel policy
-Message-ID: <Z7zYdEM5TkT2LNN1@boqun-archlinux>
-References: <2025021954-flaccid-pucker-f7d9@gregkh>
- <20250221051909.37478-1-felipe.contreras@gmail.com>
- <Z7gQ3kSeCf7gY1i9@Mac.home>
- <CAMP44s1Ai5qMU4yV+Rwz4cY869ZA=cxBcTf2wuaUY1oyLKUNCg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="fOxu1qXI"
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4Z1sxY6QrJz8sjf;
+	Mon, 24 Feb 2025 21:37:53 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
+	t=1740429474; bh=UA+X6mmVUTj+Fwy2eA0enXAYeNRDahzcxnhY2l62vxg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From:To:CC:
+	 Subject;
+	b=fOxu1qXIDDJ7OxnH9V4Rd9zBejolTzZGr7/1mmYmxJHP0MTpwO5bzQ3iUKYn6puUY
+	 1kKJx7c96Cj2O9jlsjqCxs82GuMeH9ZyH7bWQCUI9Yk//1gubDZAiVqQAeSetUd08C
+	 4XjwTqdyeUbV/rzcH92zwVe8YeExDMhnoSiSAC4ftnFWCITRTi2271O9GgJEoebHAJ
+	 C+Nj0/Ku56dySKBhegP7mtZN8BWCVvo2vqeKTbnHnf2lLWNPA3wdFTbzW9hR+0tWrF
+	 j/CVz/hfMMOhXV8/9AXBdNhL+jcDHt2pu5JB9BT3eZ7tspt3il/jWGYm9i0XuOccN7
+	 OJsdiG5XIoDVA==
+X-Virus-Scanned: amavisd-new at boeck1.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 2001:9e8:362e:e00:55a6:11d5:2473:17a9
+Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:362e:e00:55a6:11d5:2473:17a9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: U2FsdGVkX18cE53wlyYjOUljqa4wuvt/kwPDr4UAD6I=)
+	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4Z1sxV5pgkz8slY;
+	Mon, 24 Feb 2025 21:37:50 +0100 (CET)
+From: Luis Gerhorst <luis.gerhorst@fau.de>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Xu Kuohai <xukuohai@huaweicloud.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Luis Gerhorst <luis.gerhorst@fau.de>,
+	Henriette Herzog <henriette.herzog@rub.de>,
+	Cupertino Miranda <cupertino.miranda@oracle.com>,
+	Matan Shachnai <m.shachnai@gmail.com>,
+	Dimitar Kanaliev <dimitar.kanaliev@siteground.com>,
+	Shung-Hsi Yu <shung-hsi.yu@suse.com>,
+	Daniel Xu <dxu@dxuuu.xyz>,
+	bpf@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Cc: Maximilian Ott <ott@cs.fau.de>,
+	Milan Stephan <milan.stephan@fau.de>
+Subject: [RFC PATCH 1/9] bpf/arm64: Unset bypass_spec_v4() instead of ignoring BPF_NOSPEC
+Date: Mon, 24 Feb 2025 21:36:11 +0100
+Message-ID: <20250224203619.594724-2-luis.gerhorst@fau.de>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250224203619.594724-1-luis.gerhorst@fau.de>
+References: <20250224203619.594724-1-luis.gerhorst@fau.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMP44s1Ai5qMU4yV+Rwz4cY869ZA=cxBcTf2wuaUY1oyLKUNCg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Feb 20, 2025 at 11:59:10PM -0600, Felipe Contreras wrote:
-> Boqun Feng wrote:
-> >
-> > On Thu, Feb 20, 2025 at 11:19:09PM -0600, Felipe Contreras wrote:
-> > > Greg KH wrote:
-> > > > But for new code / drivers, writing them in rust where these types of
-> > > > bugs just can't happen (or happen much much less) is a win for all of
-> > > > us, why wouldn't we do this?
-> > >
-> > > *If* they can be written in Rust in the first place. You are skipping that
-> > > very important precondition.
-> >
-> > Hmm.. there are multiple old/new drivers (not a complete list) already
-> > in Rust:
-> 
-> That is a black swan fallacy. Just because you've seen 4 white swans
-> that doesn't mean all swans are white.
-> 
-> > , so is there still a question that drivers can be written in Rust?
-> 
-> I didn't say no driver can be written Rust, I questioned whether *all*
-> drivers can be written in Rust.
-> 
+This changes the semantics of BPF_NOSPEC to always insert a speculation
+barrier. If this is not needed on some architecture, bypass_spec_v4()
+should instead return true.
 
-Huh? Your previous reply is:
+Consequently, sanitize_stack_spill is renamed to nospec_result.
 
-"*If* they can be written in Rust in the first place. You are skipping
-that very important precondition."
+This later allows us to rely on BPF_NOSPEC from v4 to reduce complexity
+of Spectre v1 verification.
 
-how does that imply you questioned whether *all* drivers can be written
-in Rust.
+Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
+Acked-by: Henriette Herzog <henriette.herzog@rub.de>
+Cc: Maximilian Ott <ott@cs.fau.de>
+Cc: Milan Stephan <milan.stephan@fau.de>
+---
+ arch/arm64/net/bpf_jit_comp.c | 10 +---------
+ include/linux/bpf.h           | 14 +++++++++++++-
+ include/linux/bpf_verifier.h  |  2 +-
+ kernel/bpf/verifier.c         |  4 ++--
+ 4 files changed, 17 insertions(+), 13 deletions(-)
 
-Care to explain your logic?
+diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.c
+index 8446848edddb..18370a45e8f2 100644
+--- a/arch/arm64/net/bpf_jit_comp.c
++++ b/arch/arm64/net/bpf_jit_comp.c
+@@ -1508,15 +1508,7 @@ static int build_insn(const struct bpf_insn *insn, struct jit_ctx *ctx,
+ 
+ 	/* speculation barrier */
+ 	case BPF_ST | BPF_NOSPEC:
+-		/*
+-		 * Nothing required here.
+-		 *
+-		 * In case of arm64, we rely on the firmware mitigation of
+-		 * Speculative Store Bypass as controlled via the ssbd kernel
+-		 * parameter. Whenever the mitigation is enabled, it works
+-		 * for all of the kernel code with no need to provide any
+-		 * additional instructions.
+-		 */
++		/* TODO: emit(A64_SB) */
+ 		break;
+ 
+ 	/* ST: *(size *)(dst + off) = imm */
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index f3f50e29d639..bd2a2c5f519e 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -2423,7 +2423,19 @@ static inline bool bpf_bypass_spec_v1(const struct bpf_token *token)
+ 
+ static inline bool bpf_bypass_spec_v4(const struct bpf_token *token)
+ {
+-	return cpu_mitigations_off() || bpf_token_capable(token, CAP_PERFMON);
++#ifdef ARM64
++	/* In case of arm64, we rely on the firmware mitigation of Speculative
++	 * Store Bypass as controlled via the ssbd kernel parameter. Whenever
++	 * the mitigation is enabled, it works for all of the kernel code with
++	 * no need to provide any additional instructions. Therefore, skip
++	 * inserting nospec insns against Spectre v4 if arm64
++	 * spectre_v4_mitigations_on/dynamic() is true.
++	 */
++	bool spec_v4 = arm64_get_spectre_v4_state() == SPECTRE_VULNERABLE;
++#else
++	bool spec_v4 = true;
++#endif
++	return !spec_v4 || cpu_mitigations_off() || bpf_token_capable(token, CAP_PERFMON);
+ }
+ 
+ int bpf_map_new_fd(struct bpf_map *map, int flags);
+diff --git a/include/linux/bpf_verifier.h b/include/linux/bpf_verifier.h
+index 32c23f2a3086..2af09d75c7cd 100644
+--- a/include/linux/bpf_verifier.h
++++ b/include/linux/bpf_verifier.h
+@@ -561,7 +561,7 @@ struct bpf_insn_aux_data {
+ 	u64 map_key_state; /* constant (32 bit) key tracking for maps */
+ 	int ctx_field_size; /* the ctx field size for load insn, maybe 0 */
+ 	u32 seen; /* this insn was processed by the verifier at env->pass_cnt */
+-	bool sanitize_stack_spill; /* subject to Spectre v4 sanitation */
++	bool nospec_result; /* ensure following insns from executing speculatively */
+ 	bool zext_dst; /* this insn zero extends dst reg */
+ 	bool needs_zext; /* alu op needs to clear upper bits */
+ 	bool storage_get_func_atomic; /* bpf_*_storage_get() with atomic memory alloc */
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 60611df77957..5be3bd38f540 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -4904,7 +4904,7 @@ static int check_stack_write_fixed_off(struct bpf_verifier_env *env,
+ 		}
+ 
+ 		if (sanitize)
+-			env->insn_aux_data[insn_idx].sanitize_stack_spill = true;
++			env->insn_aux_data[insn_idx].nospec_result = true;
+ 	}
+ 
+ 	err = destroy_if_dynptr_stack_slot(env, state, spi);
+@@ -20445,7 +20445,7 @@ static int convert_ctx_accesses(struct bpf_verifier_env *env)
+ 		}
+ 
+ 		if (type == BPF_WRITE &&
+-		    env->insn_aux_data[i + delta].sanitize_stack_spill) {
++		    env->insn_aux_data[i + delta].nospec_result) {
+ 			struct bpf_insn patch[] = {
+ 				*insn,
+ 				BPF_ST_NOSPEC(),
+-- 
+2.48.1
 
-Regards,
-Boqun
-
-> People are operating under that assumption, but it isn't necessarily true.
-> 
-> -- 
-> Felipe Contreras
