@@ -1,121 +1,175 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2032F264A8E
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 17:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735142673B2
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 17:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740416551; cv=none; b=laZ1qsC+s+z3Hik4UuBIdrXs089as7mNv1aVVln4ADNqt/6NKsP6mnh2dwnqqzUpBGS+WGN8ZTE4+lsAfbDUUKPTN9eHtX1+dAmnYolXo6Qoz5znz/8jdqhutveyLUINsWnHvsvBc9xM1YmN2TAD8rcoK5EBhrNfLCu4ojBkpTI=
+	t=1740416562; cv=none; b=bSxJyNFN+QgVixSI2rJ2x+8uW8HO59mUOKDWTUIbUQaHi4rrhBbFnJhaVeK8oIlPynbW+VIq5c8nIAytss2oKA+lGFp8+H9Scq1slthTCIJF6mwKdf3Jy8UBBtIaTioRXt7D4TkkdUx6rVzkeXp1qhz3UBkowzqWRK3s3BKTteQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740416551; c=relaxed/simple;
-	bh=YIKvgyamnQgmpSYwaI32gGdN6nJzCowQ2WNOrwnPjRQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gwAMdBI3EWJ1rKjABEcoogArMa4IEW6+YXUfddYUbWEwC8whfSrepWs5TljLasDGuJ2e0FamV2XQHINlpLLLddMtN3jTT+o1lTuvI41TOQDIyesQWp5gr4nloABJBlq0YvmdlSrFqUpB/7JzeVj/t8DIMZXK46y1FL7t9CZtElI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VKi9JINe; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1740416562; c=relaxed/simple;
+	bh=pWXtRo6gHo4DEJYISY33x6GfcFgrTWBD7e3ZWdUBELE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=uZ2REVroV7YF3G+/JOvG4JzOtV3PkIxO4OYTQR7bm7q3S42ZhdxyetU1tRDj2RqAsw/Rc8XoFHFRxecmzLhBKGyMM4bYGLSHP4Nlbu/AT2JX3rCVEBskstw6CFfDhB6OgVczc2K7V9hCLDZxnnehERWh4uaszcCwRgDtkUv8AmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Lz0y26a5; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VKi9JINe"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-472098e6e75so623551cf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 09:02:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740416549; x=1741021349; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VR9fYD4ulxXrS8gZJjWrfuiZTIdun+GiiSoBV4GR/Fw=;
-        b=VKi9JINeHdpQtjitOFe8py7OLEuAvlB5OFodKgm9DZQf4TNMrVDFMm990zfL8IhLAv
-         JOG+8CwOOukW1UDSVTaExQ8leq+nLFcpQxLZnHIL9i2BCmKddyZTOb/kNQg+JcrPrtKI
-         Y3m5HK0eVAthwI81HjftPSXQEWy2v1HcZxrnEhfDo8TK4OMIWWgj28T5h5Ohf27nL1xb
-         iTuzr/VB2ZQmL+YFekKb67brQ5E1Jlav9U8O+M6Ls9HLmXKSWxQ1kp3co2QLecciHJHn
-         ger84RcSfB6lTqQaXjFz1A2TKOf7LmX3n77vz1D4x12FrSYGAIA9HD0Wt/fNx5BEpas4
-         M7fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740416549; x=1741021349;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VR9fYD4ulxXrS8gZJjWrfuiZTIdun+GiiSoBV4GR/Fw=;
-        b=W9MQfutCBMpg2NOvDHaw0YlY4xKuRh1Ndr7EqDEhWq2mtqd9iFugv5tef24iyN96pC
-         OOEhjNcPR7S8wmFz+3CHChLG7vDCyB169zHaDqKOkgC2zO9X0S4xh7TXPxBiS/7NOjLb
-         +xuOsCTa85kWk7QD7lwx7orov7GXQbLpPwAuez7Y9Sm1J2QesyBMZmXbsOpgvZi2YXGN
-         Iu70Cgkn5R14B67cN0CvCzmzzo4r4F2NAx06ncpU9A4GtK6Xu4nf2yIxd2tA66VIQJ4w
-         vbKsv0eVVcvfQvniR4mDfAglcHGbpcHJyol2eXzl4np5DGoRM4GZosmNVrDXT4kLfzBf
-         g4qA==
-X-Forwarded-Encrypted: i=1; AJvYcCX7No7CicCqQdptj4pIm8dGMlSER1gyFTeKa8S7nxY4zpJ3N+bH8+ZEE6cBsq6+i99B8kRXCRKuQWUjCAA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMGB0sJwJbMH5hZbOQR9rEUtC8vmCut4QGzqjy790mQaQvml0M
-	GqEc7l+CALq4QknbjLYIVGvXTcSDZXj0c279ANf97/KVYuMUzY7CYIXydbos/f46YtZicoeAQJ9
-	cfa7+eoA9ifffU2Vm/AFdSdQTvpCDsi9BphE/
-X-Gm-Gg: ASbGncv38xtfinIVNROJPKhFQWzNe7TF/pUH/RorzRNLivlXfMvov+ODcLb6DHvI6Wb
-	BKAk+XI1AprOSK6IGug7mGB+ZDQ1GxRb6mWrcRelh8fg2fSOHRuAaShNom5+VbpXcuj5zPLsbM4
-	oj/Dwq
-X-Google-Smtp-Source: AGHT+IFVV/QSW2PsYP3VXHqjBpcE4L3RaCpSXY45J/dLEVmzaKzSZI2xSnS/YRNsQjCr3RqPRormupPSqzbPXf0Zgso=
-X-Received: by 2002:ac8:5781:0:b0:471:9ece:b13b with SMTP id
- d75a77b69052e-47376e5ae3amr68601cf.1.1740416548614; Mon, 24 Feb 2025 09:02:28
- -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Lz0y26a5"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740416558;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vB83pcYOlAu6TvcgZccjSdqVZZ3UtGjDlwpT4jeGmb0=;
+	b=Lz0y26a5V7KXg7FX07XUJ2txVeZf0Oz3QlBlyTSo404fe1maCZJbVz66PGD3I6E2K9ObMD
+	T+PHStGd/jMyzcSRV7u5WYp5qsip6Hx+i2LHL+RabM+jWtrVBTi5D2b8DseZySobBBnAZ9
+	VR7W8OTO/0uXWb0PURAxHFWaOJUNWOY=
+From: Tao Chen <chen.dylane@linux.dev>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	eddyz87@gmail.com,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	qmo@kernel.org
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	chen.dylane@gmail.com,
+	Tao Chen <chen.dylane@linux.dev>,
+	Tao Chen <dylane.chen@didiglobal.com>
+Subject: [PATCH bpf-next v8 3/5] libbpf: Add libbpf_probe_bpf_kfunc API
+Date: Tue, 25 Feb 2025 00:59:10 +0800
+Message-Id: <20250224165912.599068-4-chen.dylane@linux.dev>
+In-Reply-To: <20250224165912.599068-1-chen.dylane@linux.dev>
+References: <20250224165912.599068-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224141120.1240534-1-arnd@kernel.org> <20250224141120.1240534-2-arnd@kernel.org>
-In-Reply-To: <20250224141120.1240534-2-arnd@kernel.org>
-From: Frank van der Linden <fvdl@google.com>
-Date: Mon, 24 Feb 2025 09:02:17 -0800
-X-Gm-Features: AQ5f1JqyvF0cZUse3UCnnuocLyu1h_TE-Jmz-aTlK_6A7bNBbcPQf-el1-E8RJg
-Message-ID: <CAPTztWauUVnA+ZRytPadKv7oHaRb1xmf_MneiiNXrD1j_1N9xw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mm, cma: use literal printf format string
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Feb 24, 2025 at 6:11=E2=80=AFAM Arnd Bergmann <arnd@kernel.org> wro=
-te:
->
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> Using a variable string as a printf format can be a security issue
-> that clang warns about when extra warnings are enabled:
->
-> mm/cma.c:239:37: error: format string is not a string literal (potentiall=
-y insecure) [-Werror,-Wformat-security]
->   239 |                 snprintf(cma->name, CMA_MAX_NAME, name);
->       |                                                   ^~~~
->
-> This one does not appear to be a security issue since the string is
-> not user controlled, but it's better to avoid the warning.
-> Use "%s" as the format instead and just pass the name as the argument.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  mm/cma.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/mm/cma.c b/mm/cma.c
-> index ef0206c0f16d..09322b8284bd 100644
-> --- a/mm/cma.c
-> +++ b/mm/cma.c
-> @@ -236,7 +236,7 @@ static int __init cma_new_area(const char *name, phys=
-_addr_t size,
->         cma_area_count++;
->
->         if (name)
-> -               snprintf(cma->name, CMA_MAX_NAME, name);
-> +               snprintf(cma->name, CMA_MAX_NAME, "%s", name);
->         else
->                 snprintf(cma->name, CMA_MAX_NAME,  "cma%d\n", cma_area_co=
-unt);
->
-> --
-> 2.39.5
->
+Similarly to libbpf_probe_bpf_helper, the libbpf_probe_bpf_kfunc
+used to test the availability of the different eBPF kfuncs on the
+current system.
 
-Yes, thanks - not sure why I didn't use "%s" there.
+Cc: Tao Chen <dylane.chen@didiglobal.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Reviewed-by: Eduard Zingerman <eddyz87@gmail.com>
+Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+---
+ tools/lib/bpf/libbpf.h        | 19 ++++++++++++-
+ tools/lib/bpf/libbpf.map      |  1 +
+ tools/lib/bpf/libbpf_probes.c | 51 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 70 insertions(+), 1 deletion(-)
 
-Reviewed-by: Frank van der Linden <fvdl@google.com>
+diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
+index 3020ee45303a..c79b4475b956 100644
+--- a/tools/lib/bpf/libbpf.h
++++ b/tools/lib/bpf/libbpf.h
+@@ -1680,7 +1680,24 @@ LIBBPF_API int libbpf_probe_bpf_map_type(enum bpf_map_type map_type, const void
+  */
+ LIBBPF_API int libbpf_probe_bpf_helper(enum bpf_prog_type prog_type,
+ 				       enum bpf_func_id helper_id, const void *opts);
+-
++/**
++ * @brief **libbpf_probe_bpf_kfunc()** detects if host kernel supports the
++ * use of a given BPF kfunc from specified BPF program type.
++ * @param prog_type BPF program type used to check the support of BPF kfunc
++ * @param kfunc_id The btf ID of BPF kfunc to check support for
++ * @param btf_fd The module BTF FD, if kfunc is defined in kernel module,
++ * btf_fd is used to point to module's BTF, which is >= 0, and < 0 means kfunc
++ * defined in vmlinux.
++ * @param opts reserved for future extensibility, should be NULL
++ * @return 1, if given combination of program type and kfunc is supported; 0,
++ * if the combination is not supported; negative error code if feature
++ * detection for provided input arguments failed or can't be performed
++ *
++ * Make sure the process has required set of CAP_* permissions (or runs as
++ * root) when performing feature checking.
++ */
++LIBBPF_API int libbpf_probe_bpf_kfunc(enum bpf_prog_type prog_type,
++				      int kfunc_id, int btf_fd, const void *opts);
+ /**
+  * @brief **libbpf_num_possible_cpus()** is a helper function to get the
+  * number of possible CPUs that the host kernel supports and expects.
+diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
+index b5a838de6f47..3bbfe13aeb6a 100644
+--- a/tools/lib/bpf/libbpf.map
++++ b/tools/lib/bpf/libbpf.map
+@@ -438,4 +438,5 @@ LIBBPF_1.6.0 {
+ 		bpf_linker__new_fd;
+ 		btf__add_decl_attr;
+ 		btf__add_type_attr;
++		libbpf_probe_bpf_kfunc;
+ } LIBBPF_1.5.0;
+diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.c
+index de2b1205b436..8efebc18a215 100644
+--- a/tools/lib/bpf/libbpf_probes.c
++++ b/tools/lib/bpf/libbpf_probes.c
+@@ -431,6 +431,57 @@ static bool can_probe_prog_type(enum bpf_prog_type prog_type)
+ 	return true;
+ }
+ 
++int libbpf_probe_bpf_kfunc(enum bpf_prog_type prog_type, int kfunc_id, int btf_fd,
++			   const void *opts)
++{
++	struct bpf_insn insns[] = {
++		BPF_RAW_INSN(BPF_JMP | BPF_CALL, 0, BPF_PSEUDO_KFUNC_CALL, 1, kfunc_id),
++		BPF_EXIT_INSN(),
++	};
++	const size_t insn_cnt = ARRAY_SIZE(insns);
++	char buf[4096];
++	int fd_array[2] = {-1};
++	int ret;
++
++	if (opts)
++		return libbpf_err(-EINVAL);
++
++	if (!can_probe_prog_type(prog_type))
++		return libbpf_err(-EOPNOTSUPP);
++
++	if (btf_fd >= 0)
++		fd_array[1] = btf_fd;
++	else
++		/* insn.off = 0, means vmlinux btf */
++		insns[0].off = 0;
++
++	buf[0] = '\0';
++	ret = probe_prog_load(prog_type, insns, insn_cnt, btf_fd >= 0 ? fd_array : NULL,
++			      buf, sizeof(buf));
++	if (ret < 0)
++		return libbpf_err(ret);
++
++	if (ret > 0)
++		return 1; /* assume supported */
++
++	/* If BPF verifier recognizes BPF kfunc but it's not supported for
++	 * given BPF program type, it will emit "calling kernel function
++	 * <name> is not allowed". If the kfunc id is invalid,
++	 * it will emit "kernel btf_id <id> is not a function". If BTF fd
++	 * invalid in module BTF, it will emit "invalid module BTF fd specified" or
++	 * "negative offset disallowed for kernel module function call". If
++	 * kfunc prog not dev buound, it will emit "metadata kfuncs require
++	 * device-bound program".
++	 */
++	if (strstr(buf, "not allowed") || strstr(buf, "not a function") ||
++	   strstr(buf, "invalid module BTF fd") ||
++	   strstr(buf, "negative offset disallowed") ||
++	   strstr(buf, "device-bound program"))
++		return 0;
++
++	return 1;
++}
++
+ int libbpf_probe_bpf_helper(enum bpf_prog_type prog_type, enum bpf_func_id helper_id,
+ 			    const void *opts)
+ {
+-- 
+2.43.0
+
