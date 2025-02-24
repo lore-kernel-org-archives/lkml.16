@@ -1,135 +1,161 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mail.muc.de (mail.muc.de [193.149.48.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD5B265CCB;
-	Mon, 24 Feb 2025 18:21:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0E315B122
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 18:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.149.48.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740421312; cv=none; b=HDktQKSvRpq2MH82QefCNr53Hz1wl/wcteb0+kwNEjuXwDUl1ZsHy63tb8P0gcrsk/PI7gYHHaSel8BKkd0+LwHy/ZTqu88kYZrVkYzoVgkSdiWZ9sUBvHnc87HfqnbkJi8BrDvrP7dNkq/QN6ViaF/M+7k1lLdHJxWdWN9vxSc=
+	t=1740421336; cv=none; b=qOHGvWocoajvgcbt1FSR87J3qBVXcW/SmQlfDkTTIzlocnd4JrU2WzNY3n23QCbiKEnYCYIaGPL0KdlhMCznPFZ1+GoEhTTO8aEQYJACglA7Zo3f4DLdiyM8jV+6hrpc0mvB6fZjIlM2wWFYbCw4EBfq3wL3Vd8p501JW81qwvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740421312; c=relaxed/simple;
-	bh=q7Lmek9HUIwkWj2qiofEolInzTq2lrU6YLwM9WjDNRY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NAiWN3MyLwRvjhX+36ub/4VKBvYZ5HLpXioAiVCMt9Skx3VLLGiliufQ0F19kVY2MtR2dFNTWB5+/thaHaFdyGHjiDZwV1umDTYkomJqydpkMJxAzHC6cIKDfDb0iV88RSDZWtEOZGedAqdTN4IzhOhXmSd6tATas7kr0tZgnZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=kmQx0XJW; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="kmQx0XJW"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51OE5Cxi010861;
-	Mon, 24 Feb 2025 19:16:32 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	gsOzA2NrVZUJ3dT5idaHgkMXMJrvsF/zo/qXjaQqpvk=; b=kmQx0XJW3xk0u4AS
-	6s7c/W+f6AoiBYe3pKOg+XAFOPZ4EJCX7lkwDIT1STljXG5EewuUwAJX/S3H6h0h
-	ReGvXJDFhMOHoriooJl2F+ZtVrCFfPwJYPXlVfmzkbhm/0MIWMCDrR9Entafmk8h
-	5xdFYOYSWJj8BvY6wkHnALk8i28C92ho7LfVD9svFD3u7S4cm5js4fD63jcvSyEV
-	wBk7A+Cnct/UAVRMe3fiSkt/FA3kkImW88224D7QuOCeg+o9UtSVa4TmjHI3DQeB
-	/W/dghmcW5bW2vsG90vlT+gG21tetiu7gn76d7Vysgl768iUkMwuyhQjAcmvTTb2
-	jV/Qzw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 44y6t20r40-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Feb 2025 19:16:32 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id EA81340078;
-	Mon, 24 Feb 2025 19:12:29 +0100 (CET)
-Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id AF5DB546D7A;
-	Mon, 24 Feb 2025 19:02:35 +0100 (CET)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
- (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Feb
- 2025 19:02:35 +0100
-Received: from localhost (10.252.23.75) by SAFDAG1NODE1.st.com (10.75.90.17)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Feb
- 2025 19:02:35 +0100
-From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-To: <lee@kernel.org>, <ukleinek@kernel.org>, <alexandre.torgue@foss.st.com>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <wbg@kernel.org>, <jic23@kernel.org>, <daniel.lezcano@linaro.org>,
-        <tglx@linutronix.de>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        <olivier.moysan@foss.st.com>, <fabrice.gasnier@foss.st.com>
-Subject: [PATCH 7/8] arm64: defconfig: enable STM32 LP timers drivers
-Date: Mon, 24 Feb 2025 19:01:49 +0100
-Message-ID: <20250224180150.3689638-8-fabrice.gasnier@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
-References: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
+	s=arc-20240116; t=1740421336; c=relaxed/simple;
+	bh=LapUr4uhDE8WT47s1iRnSBv3OPnVfs++Nynyc7QEa20=;
+	h=Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To:From; b=kObBd2bzKMIfa6wtKvq7Kd2LcdMcMyrH092uUAi5QuiWMcLWeS4U7TjXM4xVJ3s4nH/C5xqbpxXAnHcZQLV9faJOncacxhg3oG50hxnBrYuucU5Nb1KYpMH0dYDJlA6yvxhu+Ogq6m8GCp5Mk2NDXH6ufKe29UzlVKC0phtT1S4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=muc.de; spf=pass smtp.mailfrom=muc.de; arc=none smtp.client-ip=193.149.48.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=muc.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=muc.de
+Received: (qmail 76694 invoked by uid 3782); 24 Feb 2025 19:22:01 +0100
+Received: from muc.de (p4fe15466.dip0.t-ipconnect.de [79.225.84.102]) (using
+ STARTTLS) by colin.muc.de (tmda-ofmipd) with ESMTP;
+ Mon, 24 Feb 2025 19:22:00 +0100
+Received: (qmail 19105 invoked by uid 1000); 24 Feb 2025 18:22:00 -0000
+Date: Mon, 24 Feb 2025 18:22:00 +0000
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jirislaby@kernel.org>, Simona Vetter <simona@ffwll.ch>,
+  linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: More than 256/512 glyphs on the Liinux console
+Message-ID: <Z7y4yHT0fNYYiPI8@MAC.fritz.box>
+References: <Z7idXzMcDhe_E5oN@MAC.fritz.box>
+ <2025022243-street-joylessly-6dfa@gregkh>
+ <Z7nu7HqKn4o2rMd5@MAC.fritz.box>
+ <2025022355-peroxide-defacing-4fa4@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SAFDAG1NODE1.st.com
- (10.75.90.17)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-24_09,2025-02-24_02,2024-11-22_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025022355-peroxide-defacing-4fa4@gregkh>
+X-Submission-Agent: TMDA/1.3.x (Ph3nix)
+From: Alan Mackenzie <acm@muc.de>
+X-Primary-Address: acm@muc.de
 
-Enable the STM32 timer drivers: MFD, counter, PWM and trigger as modules.
-Clocksource is a bool, hence set to y. These drivers can be used on
-STM32MP25.
+Hello, Greg.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
----
- arch/arm64/configs/defconfig | 5 +++++
- 1 file changed, 5 insertions(+)
+On Sun, Feb 23, 2025 at 08:47:53 +0100, Greg Kroah-Hartman wrote:
+> On Sat, Feb 22, 2025 at 03:36:12PM +0000, Alan Mackenzie wrote:
+> > On Sat, Feb 22, 2025 at 09:48:32 +0100, Greg Kroah-Hartman wrote:
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 1f25423de383..952eee30f21c 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -775,6 +775,7 @@ CONFIG_MFD_TI_LP873X=m
- CONFIG_MFD_TPS65219=y
- CONFIG_MFD_TPS6594_I2C=m
- CONFIG_MFD_ROHM_BD718XX=y
-+CONFIG_MFD_STM32_LPTIMER=m
- CONFIG_MFD_WCD934X=m
- CONFIG_MFD_KHADAS_MCU=m
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
-@@ -1401,6 +1402,7 @@ CONFIG_CLK_RENESAS_VBATTB=m
- CONFIG_HWSPINLOCK=y
- CONFIG_HWSPINLOCK_QCOM=y
- CONFIG_TEGRA186_TIMER=y
-+CONFIG_CLKSRC_STM32_LP=y
- CONFIG_RENESAS_OSTM=y
- CONFIG_ARM_MHU=y
- CONFIG_IMX_MBOX=y
-@@ -1526,6 +1528,7 @@ CONFIG_IIO_CROS_EC_LIGHT_PROX=m
- CONFIG_SENSORS_ISL29018=m
- CONFIG_VCNL4000=m
- CONFIG_IIO_ST_MAGN_3AXIS=m
-+CONFIG_IIO_STM32_LPTIMER_TRIGGER=m
- CONFIG_IIO_CROS_EC_BARO=m
- CONFIG_MPL3115=m
- CONFIG_PWM=y
-@@ -1543,6 +1546,7 @@ CONFIG_PWM_ROCKCHIP=y
- CONFIG_PWM_RZ_MTU3=m
- CONFIG_PWM_SAMSUNG=y
- CONFIG_PWM_SL28CPLD=m
-+CONFIG_PWM_STM32_LP=m
- CONFIG_PWM_SUN4I=m
- CONFIG_PWM_TEGRA=m
- CONFIG_PWM_TIECAP=m
-@@ -1682,6 +1686,7 @@ CONFIG_INTERCONNECT_QCOM_SM8750=y
- CONFIG_INTERCONNECT_QCOM_X1E80100=y
- CONFIG_COUNTER=m
- CONFIG_RZ_MTU3_CNT=m
-+CONFIG_STM32_LPTIMER_CNT=m
- CONFIG_HTE=y
- CONFIG_HTE_TEGRA194=y
- CONFIG_HTE_TEGRA194_TEST=m
+[ .... ]
+
+> > But I think you are also asking why I use the console at all.  That's
+> > a fair question which I'll try to answer.
+
+> I'm not disputing using the console, it's the vt layer that I'm talking
+> about.  The DRM developers have the long-term goal of getting rid of
+> CONFIG_VT which will remove a ton of mess that we have overall.
+> DRM-based consoles should provide the same functionality that a vt
+> console does today.  If not, please let them know so that the remaining
+> corner cases can be resolved.
+
+Does a DRM based console exist at the moment?  I spent quite some time
+looking for it yesterday, but found nothing.
+
+[ .... ]
+
+> > > What about the move to get rid of the vt code entirely, ....
+
+> > Getting rid of the vt code would be a Bad Thing.  People depend on it.
+> > What is the alternative?
+
+> The drm console layer.
+
+Again, does it exist yet, or alternatively are there plans to introduce
+it into the kernel in the near future?
+
+> > > .... if you do that, can't you get proper glyphs with the drm
+> > > subsystem?
+
+> > I don't know.  I've looked briefly at fbterm, a terminal which uses drm.
+> > It steals key sequences too, some of which are needed in Emacs.
+> > Although not as bad as GUIs, it puts awkward layers between the user and
+> > Linux too.
+
+> I don't know what fbterm is, sorry.
+
+It's a user level terminal emulator for the framebuffer.  It's not
+important.
+
+> > I think using drm in place of fbterm.c and bitblit.c would need a lot of
+> > design and implementation work.  The change I'm proposing barely changes
+> > the design at all.
+
+> Ok, but we haven't seen the patches to know this :)
+
+> > > Doing huge changes for a subsystem that almost everyone agrees should
+> > > only be kept around for legacy reasons is a rough undertaking.
+
+> > Isn't there a principle in Linux that preserving existing user
+> > interfaces is of utmost importance?
+
+> I agree, keeping the existing ones is key.  You are talking about
+> extending the existing ones in a way that adds additional complexity
+> when there might already be a solution for this for you.  That's why I
+> brought that up.
+
+Where/how can I find the DRM console?
+
+> > As I've already written, I've got working code, but it needs refinement
+> > before I submit it.  Otherwise reviewers would likely reject it for
+> > "inessential" reasons like code formatting.  This will likely take me
+> > several days.
+
+> code formatting is NOT "inessential", please never think that.
+
+However necessary code formatting is (and it is necessary), it doesn't
+form part of the essence of the changes.  I'm sure we're agreed that
+proposed changes are best judged by that essence.  That was all I meant.
+
+> Our brains run on patterns and common code formatting allows us to see
+> the real issues here.  To not follow those formatting rules means we
+> just can't review your code properly.
+
+I understand.
+
+[ .... ]
+
+> > What is the best way of submitting such a large patch (~3,500 lines)?
+> > I committed it to my own local git repository in three main stages
+> > (around equal size), and have applied corrections after rebasing and
+> > the odd bug fix.
+
+> Break down the changes into "one logical change per patch" to make them
+> easy to review.  It's an art form, think about how you want to get to
+> your end result and then take us on a path that is "obvious" to get
+> there over a series of changes.
+
+> Think of it as "showing your work" when solving a math or physics
+> problem that your teacher told you to follow.  No one wants to just see
+> the end result, they have to see all the steps along the way to even
+> begin to understand if the end result is correct or not.
+
+Thanks.  I have a fair amount of work to do to achieve this.
+
+> But again, before doing that work, see how using the drm console works
+> for you, or not.  If not, let us and the drm developers know so that we
+> can work toward solving those issues, as that might actually be easier
+> to do.
+
+I would actually appreciate the work I've done being superfluous.  ;-)
+But where can I find the drm console?
+
+> thanks,
+
+> greg k-h
+
+And thank you, too.
+
 -- 
-2.25.1
-
+Alan Mackenzie (Nuremberg, Germany).
