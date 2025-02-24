@@ -1,98 +1,126 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09BEF269896
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 11:19:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0770B26989E;
+	Mon, 24 Feb 2025 11:19:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740395982; cv=none; b=JeTk9k+gBYCMXCqI5RXsPztsZfm1xO7A6G7NsLnoq80RZZ6YnvaQHNPDlgiJ1zui3a0rhlminVu1+Rpg9i33Ryp0bNuO5QKS/wNGAFxvys+FaErvRpvTS5vCI5eht7HUZ7Yd+k4E6qUaEeSejZiP5osrmqDk1nZe+S2g/wq8KSU=
+	t=1740395985; cv=none; b=Zw0RUod2GvMbJIdTqzAUKNNdCoLqCqWX/l8qqM8y+eT6NMo/qocAamYnfuxM1G/SKzu5g8sL0RdO+etm7kafFDpGnPGhpQz2392t4K+0QgzpgqK6ugvr5Gpq1L76TZf4qGHMmz5eNizOYuklTTIDZReYRBcDWkmo5YX1ot2qNTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740395982; c=relaxed/simple;
-	bh=nbthR7RhGoVVTUAl39Aagc6UcJUc0m+dmOqj/KUfZkI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pz2fi/Btr+pl16pCk13eIF7P7vq9PbKl8nRhyRprh7yt8jv3g5if6IbwhZIc0qPEKJ66zKRz5NtrhEoqwI3h7k0o5aQW34ZuLIQtEDxzt5K02gSRV3FAtM/HnuxJ2Edolj+0hr4iCegKe4IDf2FnXuweFX06T+a1CCAmytlnewg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0VZ4GezC; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1740395985; c=relaxed/simple;
+	bh=vaNLaj3kI/6eNrxfLNxlOGuf3ZdW4gwfI8wVAGG4G3M=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=MKNzAXUJxtMxlrwkjzCNfZcqtSFNjmhBcOqokGtm598OMrvniNsIb0gAqVBtu8iBzvyKIgxMl44l2XwbzVlOYES4GW4XLaQOFBNwkggOAog02i7DMNdeDT4HCYLl2lyyB0ZQrpwz7/GZm3xWJjGiUT5a3o18P6aVMFd2ndewOMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VuN6EK+e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0VZ4GezC"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-439a1e8ba83so40395435e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 03:19:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740395979; x=1741000779; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rKNwKhh4dEnTxVcOajigIGSRE5tzPUoKtH97+XkBOAY=;
-        b=0VZ4GezCHOwKdwLfQ5VDyjZVSCXbOP0WjrkfEAJDlxXvGmbi4j89u6ULlqzWekFGQD
-         /RpJSkB/zWldxW2cGeVLX6xjkT96koI3DmOo9BmTmsVlkFJ0EXxVr+LseevM519Ooz7d
-         gH3eFRNhS4+E+0j01rFtHiGcyDxOG5k7LcsFA9Wty53FHACDYX5xku8QbM7lJTmdbG/N
-         wJmsoTTXzu64C2KOLCp8JvWh0q75bK1YNz3AzGkqNKyI/SCuAGwo8n0d9uePwxhNm+zJ
-         wmDWnqR1JHaI99ygIE1AlHk0hSFmdix2n+FhQvnXcGy88RVByyDcoO4sRVSzTJBV3kVS
-         +vgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740395979; x=1741000779;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rKNwKhh4dEnTxVcOajigIGSRE5tzPUoKtH97+XkBOAY=;
-        b=QVE2qB0bEeEvONrAwXAbek6DcL6YXA6E+tlf+eNHMPxKIR01RlShMhYqQYga8pwDwa
-         4dKhS7JvZZGLTZpLtNh6LCEwmY8AHuaE2oAXvKk8w3rvDz1GVxTSWqvFvuS7BM8/zkQa
-         886s1G9Pum8S5SPEHNFKUQ3dAxoMkzV2OPhr63bsonVoMDNg5Dch70oSZllHHxRwYyKP
-         thE05mTfkzhfRqSZsUVd5yveu/EMGoWFqKyP48C9Nb/WsqQ3wDrrTQYm9feube2SILA8
-         mb6e26IlPrm7Wh025RdL0IW0qSKrQHVXe/i1sDVyc5DHG0Osf2wNXVXR14makXcAnl8K
-         Rg1A==
-X-Gm-Message-State: AOJu0YyrpCHC5oVn04wMazfya/e3KFbwlHNCnNlpAVnOZKZpBRzpoSbG
-	JlbWAQWt7qF2dkTwPNKQrNU0Vg0h5fzbyUxmAyXBK8s4Qyl1uPR3A5IYrGIbHdkei1F8dtzaPQC
-	EVMnlf+WNJPgaiLwA+Pu2r3EfFIq5KmhYKROh
-X-Gm-Gg: ASbGncvtH7XIzYniVOIDdyrDw4y0cMrI4+HZjckJNcEz/Ogp5Uk4qcG1P1917H7SG0h
-	YAQNRqj/p+cAQOAS1FsgU+lBYsUOJsBDc59lrvbtYUQaUC/K65vgPW+Np/WRaw4e89hm2NusDfS
-	K+URs/RcctUPoIcb9tJzs1JEL39xTxnbCfcl6r
-X-Google-Smtp-Source: AGHT+IHfngivAfolpBCcXGBcAYbBekzzGYNr0zyvzMbAGXe+oiu7MNfqwRvlRvu1E0aoJ70PuTQ8YmFBD7fGj1cJG6E=
-X-Received: by 2002:a05:6000:154e:b0:38f:4d20:4a17 with SMTP id
- ffacd0b85a97d-38f70799935mr9568176f8f.13.1740395979256; Mon, 24 Feb 2025
- 03:19:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VuN6EK+e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26029C4CED6;
+	Mon, 24 Feb 2025 11:19:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740395984;
+	bh=vaNLaj3kI/6eNrxfLNxlOGuf3ZdW4gwfI8wVAGG4G3M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=VuN6EK+eXDpmY2esnRKIh+3JZaLNNcvUI21pIcP4YlxWcTOEgvVn7cVCJev4fZQhm
+	 Ax3OV0/3VpMWO3iuOYRIr3j/MhkFdZ/FiExv9MHKlwJFW2nAsRUdOxCfxYXk6eNZCJ
+	 LTOI3v3ULElvS0CWh8Q7maGVS9iPV9tfiHe2UlStbM14hEw3sxBTCcTy6bZXHyDBj8
+	 uCYUUWaX66GHnJJqEcyOd/aomal3c1UKbyCNd/OqQqAE017dpyOv1SwouuPOvZPfJZ
+	 t6I2xJzHbaaONzKu+Y5UKJX7azMPhEubj+M0Hd1fAK+kBWWHAOrht5HQSHafu89ND2
+	 8qokhxPdqkPcQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Mark Brown <broonie@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	lgirdwood@gmail.com,
+	peter.ujfalusi@linux.intel.com,
+	yung-chuan.liao@linux.intel.com,
+	ranjani.sridharan@linux.intel.com,
+	daniel.baluta@nxp.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	venkataprasad.potturu@amd.com,
+	gregkh@linuxfoundation.org,
+	peterz@infradead.org,
+	sound-open-firmware@alsa-project.org,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 10/20] ASoC: SOF: amd: Handle IPC replies before FW_BOOT_COMPLETE
+Date: Mon, 24 Feb 2025 06:19:03 -0500
+Message-Id: <20250224111914.2214326-10-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250224111914.2214326-1-sashal@kernel.org>
+References: <20250224111914.2214326-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250223072114.3715-1-boqun.feng@gmail.com>
-In-Reply-To: <20250223072114.3715-1-boqun.feng@gmail.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Mon, 24 Feb 2025 12:19:27 +0100
-X-Gm-Features: AWEUYZlG3dBja0S9lUuTrhyjnlqfO-rrsKw667VUMX7yjVkDuivZCQ1hf-oSPHg
-Message-ID: <CAH5fLgi2iXKg+Mwze41KHk1rLa1=f7=ofhbq_wz6mxmC4GNe6w@mail.gmail.com>
-Subject: Re: [PATCH] rust: sync: lock: Add an example for Guard::lock_ref()
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
-	Waiman Long <longman@redhat.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.79
+Content-Transfer-Encoding: 8bit
 
-On Sun, Feb 23, 2025 at 8:21=E2=80=AFAM Boqun Feng <boqun.feng@gmail.com> w=
-rote:
->
-> To provide examples on usage of `Guard::lock_ref()` along with the unit
-> test, an "assert a lock is held by a guard" example is added.
->
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+[ Upstream commit ac84ca815adb4171a4276b1d44096b75f6a150b7 ]
 
-> This depends on Alice's patch:
->
->         https://lore.kernel.org/all/20250130-guard-get-lock-v1-1-8ed87899=
-920a@google.com/
->
-> I'm also OK to fold this in if Alice thinks it's fine.
+In some cases, e.g. during resuming from suspend, there is a possibility
+that some IPC reply messages get received by the host while the DSP
+firmware has not yet reached the complete boot state.
 
-I think we can just keep two patches :)
+Detect when this happens and do not attempt to process the unexpected
+replies from DSP.  Instead, provide proper debugging support.
 
-Alice
+Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+Link: https://patch.msgid.link/20250207-sof-vangogh-fixes-v1-3-67824c1e4c9a@collabora.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/sof/amd/acp-ipc.c | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
+
+diff --git a/sound/soc/sof/amd/acp-ipc.c b/sound/soc/sof/amd/acp-ipc.c
+index fcb54f545fea3..a4e9bc20adaff 100644
+--- a/sound/soc/sof/amd/acp-ipc.c
++++ b/sound/soc/sof/amd/acp-ipc.c
+@@ -167,6 +167,7 @@ irqreturn_t acp_sof_ipc_irq_thread(int irq, void *context)
+ 
+ 	if (sdev->first_boot && sdev->fw_state != SOF_FW_BOOT_COMPLETE) {
+ 		acp_mailbox_read(sdev, sdev->dsp_box.offset, &status, sizeof(status));
++
+ 		if ((status & SOF_IPC_PANIC_MAGIC_MASK) == SOF_IPC_PANIC_MAGIC) {
+ 			snd_sof_dsp_panic(sdev, sdev->dsp_box.offset + sizeof(status),
+ 					  true);
+@@ -188,13 +189,21 @@ irqreturn_t acp_sof_ipc_irq_thread(int irq, void *context)
+ 
+ 	dsp_ack = snd_sof_dsp_read(sdev, ACP_DSP_BAR, ACP_SCRATCH_REG_0 + dsp_ack_write);
+ 	if (dsp_ack) {
+-		spin_lock_irq(&sdev->ipc_lock);
+-		/* handle immediate reply from DSP core */
+-		acp_dsp_ipc_get_reply(sdev);
+-		snd_sof_ipc_reply(sdev, 0);
+-		/* set the done bit */
+-		acp_dsp_ipc_dsp_done(sdev);
+-		spin_unlock_irq(&sdev->ipc_lock);
++		if (likely(sdev->fw_state == SOF_FW_BOOT_COMPLETE)) {
++			spin_lock_irq(&sdev->ipc_lock);
++
++			/* handle immediate reply from DSP core */
++			acp_dsp_ipc_get_reply(sdev);
++			snd_sof_ipc_reply(sdev, 0);
++			/* set the done bit */
++			acp_dsp_ipc_dsp_done(sdev);
++
++			spin_unlock_irq(&sdev->ipc_lock);
++		} else {
++			dev_dbg_ratelimited(sdev->dev, "IPC reply before FW_BOOT_COMPLETE: %#x\n",
++					    dsp_ack);
++		}
++
+ 		ipc_irq = true;
+ 	}
+ 
+-- 
+2.39.5
+
