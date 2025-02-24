@@ -1,158 +1,160 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13CC8244E8C
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 20:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E61253BE;
+	Mon, 24 Feb 2025 20:37:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740429413; cv=none; b=jFUez5EJGjITzve0mZOb/UjLE+zf0/XPImpVJ86aOlz94XbNHEaTJCTmgcqsPdTNtGl4Quje6C/ZLJ09ZMD2Tipx8mSqaz/jseBIk4L7QpzPLHL8xiCdN/RlUYBXjWJtw24aVNbxtGPGY/k/Q8br+twOtqGEGS0Z7+b9jJdYsIE=
+	t=1740429458; cv=none; b=PMWbjSUv52aGoF8q9ohJrotSwetXFClK3GA8o0WMEN6nDOdpJp/2sXDX5E20BWfnLIPyrltByLKlqUEXe//5AqPjqijVF7uoZhAn8PtUobkMiOWv8qNum0hgxuaOdUnHeFnKjmiPOjmw4E4EjF31nuLw4C+g8C+IUP8JHTSSg54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740429413; c=relaxed/simple;
-	bh=spJMz8cybwEG4kj0VE6B5U0ruf5O+qUd5rYFJUMBCWQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=cBZy0Vy+cLo4+XH3ll+17cTftDglhP0DlHIGpG3C8i8z+PMP+xlMT5CJs/qpAO0MBUgEfdCClb62Arj6T0QgKlSACWrjlVUAUpHKPCtGuK5YTdvPdjZprdAxHyvHDb1BpRR2mk5VyrO+orUskirtfIxCsydUKkGgrvrdy1n3A2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=O+T0os6w; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1740429458; c=relaxed/simple;
+	bh=+M384LVeG2Il1wh2/bradd1uAF59wMWgiJLPtUje9YA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=atf/F59tD2g9qKTsQVz38dENwbgxNYD0kQqWcA4qOeXxjNEh1rOmja/t/jWK3yjNanSWC2s/oENz2laLdklqmZjDqnGRfS1S5uhB8iqwWczXtlNso/AsK25Dh1eiyiZonlidOXln5PCUMMardgjAxtRkgn7oEaE9gdh/gmEz/+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l0QG5Yju; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="O+T0os6w"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51OKOKiQ029118
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 20:36:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	S91ADhtpxs6R6JlQUcvMy0LmrxiIl6wDfjwaNfgkjTY=; b=O+T0os6wGI6JLnE/
-	ow9ccrz+RSYHSHtlufp3sy3S6S1eoa/JsDbR2J8XE7DA2W5Rw1Kk6U+kOlDlRbJI
-	xyzhfU34GrQmqONZRwFVS8cw3WJIhk3piN+OVVioTpsNqG24SO5yRrTEPEwhMtUH
-	l7LNlEvtr/QO1IKFllnVza7CNy+4EiiGeSznkw1+yNjQwXzvdc0ietUFD6qoXMfj
-	TRe5L3c5mBmEqD9yv/a7mPmCo83MaKcI/gGAGQNnb7UM9s6kWU3wfiS2a5hVK7RC
-	rXUIJ0Fwcb7llQEZ87gzfTjMEqGuFhNaAoyOIEk7MTBzsM345TxUzk37hKq5We4k
-	hXsVvA==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44y49eemy9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 20:36:51 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e4546f8c47so10095466d6.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 12:36:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740429410; x=1741034210;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S91ADhtpxs6R6JlQUcvMy0LmrxiIl6wDfjwaNfgkjTY=;
-        b=SeiB01ntzgNx15Lj4h02XKq2WUs+6yy9gPBvRkELDgKu54spU0ft2Rt69BSfyz80Jh
-         GtDqpzwDWOpVltNCqnvRUKNU2q5ObqqGjNV88eYO1dMNxNYU9uYX9HNucy4JSDf/oEQ5
-         4jh9JscaE+lSEdppvR6L3c2zBfInGjFIDyDXorZ2Tcqy0jc38Q6bpukOW8KOAIuWcR37
-         VrYCdjxjCLUx2O2ak67x/TaJBxhlY7Nm68bQd56Z/JlOvTuBv3oP828E26E8GpkqbANq
-         PIqBgdkLJ0TLu+OyrY+JGWdRT/m8reJVgvDgXouQg3oqEuL1TPTitNH75IdMUPc93QZ8
-         77KA==
-X-Forwarded-Encrypted: i=1; AJvYcCUuLA/Iv2E8EIECasOoc2OwiJabdPnbvGPHwj/bB8OzIYW+6QfGJ2Uu0IZv2kAs9BuEaOTEEveUR/zqIGc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzal7qMB5AkYQrw6l26nEgE/CeIzMGoYQRVdMc/VPB14h6PjPPb
-	uN5FQAOyf/+p6JXmzg7urXeVN2aXCngvi20PvDAVhdohnQKNQs1nQF22KwPbUGulR2/rx/3qf4h
-	uW/En/pYn5dhyrsPzRZebk9E427lXm8I6lSbLhL1PTw8VFOYuDlVGi6lbxttpj8k=
-X-Gm-Gg: ASbGnctF644ifgqYE8oP7Ob7wQdYQYvrlBzcmqfAJn/QAhcu2q4ppERZ9J4sdEc612u
-	uIA1G6lvcal12HHcUTDsx8tV8S/lPsUv2kj4T6MJ1wn7rFABhqh6RpbpKpzLrMlSu5CCdKCxpxh
-	j5VAB5KdcW2xsiqz7BYFRlv+oSgoF6Li+zBiZ9oakN4XLZXcae138dR27KS9GP3Fu2wqD4Tu9VJ
-	zV8NE9YQ19PMDjFmHz8xHpsLifR6vlwohXZiXKMHiRvp/LgFU6umeOFVxZ+kmCttKbmf7629uy/
-	IePddjMOz5XQpZXNm4NWu1d6QDhkjHz20HQhyjiEBD2XUxcjzCQUygJwNj3YMcYij0pJFA==
-X-Received: by 2002:a05:6214:4105:b0:6e6:68df:6052 with SMTP id 6a1803df08f44-6e6ae84f58fmr71428106d6.5.1740429409770;
-        Mon, 24 Feb 2025 12:36:49 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE5X5aTXSZjTNCwyfhhJoCnKQ8bnyt7oV1gk7d6wYB1rVvBboqFH1XnSTew4yYsaig0xB06vg==
-X-Received: by 2002:a05:6214:4105:b0:6e6:68df:6052 with SMTP id 6a1803df08f44-6e6ae84f58fmr71427946d6.5.1740429409344;
-        Mon, 24 Feb 2025 12:36:49 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed20133f0sm17983766b.90.2025.02.24.12.36.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2025 12:36:48 -0800 (PST)
-Message-ID: <51ceb7ae-0dbe-4585-a955-e84bcde6c8f9@oss.qualcomm.com>
-Date: Mon, 24 Feb 2025 21:36:46 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l0QG5Yju"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11E71C4CED6;
+	Mon, 24 Feb 2025 20:37:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740429458;
+	bh=+M384LVeG2Il1wh2/bradd1uAF59wMWgiJLPtUje9YA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=l0QG5YjuEOX+85Kc164Adk9WSqRgX2J/Imv3o/5bb6WJJF6lQLHqZjKDMLHNuw7du
+	 EIy16qcZ3s5FjXK4+suVZgI/gj2JawEpD6yEoH8MtG03aTeRa8G0mQyglebShUYnB2
+	 +pCQUApEacIAh4NaumCZPbpfnbzXLIlLE4Lykx3C+PvQC8q+G0xkqDqHdbiZuObGZ3
+	 E4c+jlZwmOOX9A+StxpD303Rx7QxYrE1+ycQfKsuXSM1PvL2c3Ivzco3mefdKZ1Ub5
+	 kFxuoxkz4qJ0rpPf7SVK2ybv3+vHc+CHu27CLSsF0eFWgTcmLLSjcbXSFbyFCXlkeT
+	 FaEbNFacnDz1w==
+Date: Mon, 24 Feb 2025 12:37:37 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, cem@kernel.org, dchinner@redhat.com, hch@lst.de,
+	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com,
+	ritesh.list@gmail.com, martin.petersen@oracle.com, tytso@mit.edu,
+	linux-ext4@vger.kernel.org
+Subject: Re: [PATCH v2 11/11] xfs: Allow block allocator to take an alignment
+ hint
+Message-ID: <20250224203737.GL21808@frogsfrogsfrogs>
+References: <20250213135619.1148432-1-john.g.garry@oracle.com>
+ <20250213135619.1148432-12-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/3] arm64: dts: qcom: ipq9574: Enable SPI NAND for
- ipq9574
-To: Md Sadre Alam <quic_mdalam@quicinc.com>, andersson@kernel.org,
-        konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-        conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250224113742.2829545-1-quic_mdalam@quicinc.com>
- <20250224113742.2829545-3-quic_mdalam@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250224113742.2829545-3-quic_mdalam@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: nG_eprJnxv4gBWZn0A7w0tEac4p8jugb
-X-Proofpoint-GUID: nG_eprJnxv4gBWZn0A7w0tEac4p8jugb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-24_10,2025-02-24_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- impostorscore=0 spamscore=0 mlxlogscore=897 lowpriorityscore=0 mlxscore=0
- adultscore=0 malwarescore=0 clxscore=1015 phishscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2502240132
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250213135619.1148432-12-john.g.garry@oracle.com>
 
-On 24.02.2025 12:37 PM, Md Sadre Alam wrote:
-> Enable SPI NAND support for ipq9574 SoC.
+On Thu, Feb 13, 2025 at 01:56:19PM +0000, John Garry wrote:
+> When issuing an atomic write by the CoW method, give the block allocator a
+> hint to naturally align the data blocks.
 > 
-> Signed-off-by: Md Sadre Alam <quic_mdalam@quicinc.com>
-> ---
-> * Moved out ipq9574-rdp-common.dtsi changes into this patch from
->   previous patch
-> ---
->  .../boot/dts/qcom/ipq9574-rdp-common.dtsi     | 43 +++++++++++++++++++
->  1 file changed, 43 insertions(+)
+> This means that we have a better chance to issuing the atomic write via
+> HW offload next time.
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi b/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi
-> index ae12f069f26f..6d1e84301671 100644
-> --- a/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi
-> @@ -139,6 +139,49 @@ gpio_leds_default: gpio-leds-default-state {
->  		drive-strength = <8>;
->  		bias-pull-up;
+> Signed-off-by: John Garry <john.g.garry@oracle.com>
+> ---
+>  fs/xfs/libxfs/xfs_bmap.c | 7 ++++++-
+>  fs/xfs/libxfs/xfs_bmap.h | 6 +++++-
+>  fs/xfs/xfs_reflink.c     | 8 ++++++--
+>  3 files changed, 17 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_bmap.c b/fs/xfs/libxfs/xfs_bmap.c
+> index 0ef19f1469ec..9bfdfb7cdcae 100644
+> --- a/fs/xfs/libxfs/xfs_bmap.c
+> +++ b/fs/xfs/libxfs/xfs_bmap.c
+> @@ -3454,6 +3454,12 @@ xfs_bmap_compute_alignments(
+>  		align = xfs_get_cowextsz_hint(ap->ip);
+>  	else if (ap->datatype & XFS_ALLOC_USERDATA)
+>  		align = xfs_get_extsz_hint(ap->ip);
+> +
+> +	if (align > 1 && ap->flags & XFS_BMAPI_EXTSZALIGN)
+> +		args->alignment = align;
+> +	else
+> +		args->alignment = 1;
+> +
+>  	if (align) {
+>  		if (xfs_bmap_extsize_align(mp, &ap->got, &ap->prev, align, 0,
+>  					ap->eof, 0, ap->conv, &ap->offset,
+> @@ -3782,7 +3788,6 @@ xfs_bmap_btalloc(
+>  		.wasdel		= ap->wasdel,
+>  		.resv		= XFS_AG_RESV_NONE,
+>  		.datatype	= ap->datatype,
+> -		.alignment	= 1,
+>  		.minalignslop	= 0,
 >  	};
-> +
-> +	qpic_snand_default_state: qpic-snand-default-state {
-> +		clock-pins {
-> +			pins = "gpio5";
-> +			function = "qspi_clk";
-> +			drive-strength = <8>;
-> +			bias-disable;
-> +		};
-> +
-> +		cs-pins {
-> +			pins = "gpio4";
-> +			function = "qspi_cs";
-> +			drive-strength = <8>;
-> +			bias-disable;
-> +		};
-> +
-> +		data-pins {
-> +			pins = "gpio0", "gpio1", "gpio2", "gpio3";
-> +			function = "qspi_data";
-> +			drive-strength = <8>;
-> +			bias-disable;
-> +		};
-> +	};
-> +};
-> +
-> +&qpic_bam {
-> +	status = "okay";
-> +};
-> +
-> +&qpic_nand {
-> +	pinctrl-0 = <&qpic_snand_default_state>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
+>  	xfs_fileoff_t		orig_offset;
+> diff --git a/fs/xfs/libxfs/xfs_bmap.h b/fs/xfs/libxfs/xfs_bmap.h
+> index 4b721d935994..7a31697331dc 100644
+> --- a/fs/xfs/libxfs/xfs_bmap.h
+> +++ b/fs/xfs/libxfs/xfs_bmap.h
+> @@ -87,6 +87,9 @@ struct xfs_bmalloca {
+>  /* Do not update the rmap btree.  Used for reconstructing bmbt from rmapbt. */
+>  #define XFS_BMAPI_NORMAP	(1u << 10)
+>  
+> +/* Try to naturally align allocations to extsz hint */
+> +#define XFS_BMAPI_EXTSZALIGN	(1u << 11)
 
-Please add a newline before status
+IMO "naturally" makes things confusing here -- are we aligning to the
+extent size hint, or are we aligning to the length requested?  Or
+whatever it is that "naturally" means.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+(FWIW you and I have bumped over this repeatedly, so maybe this is
+simple one of those cognitive friction things where block storage always
+deals with powers of two and "naturally" means a lot, vs. filesystems
+where we don't usually enforce alignment anywhere.)
 
-Konrad
+I suggest "Try to align allocations to the extent size hint" for the
+comment, and with that:
+Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
+
+--D
+
+> +
+>  #define XFS_BMAPI_FLAGS \
+>  	{ XFS_BMAPI_ENTIRE,	"ENTIRE" }, \
+>  	{ XFS_BMAPI_METADATA,	"METADATA" }, \
+> @@ -98,7 +101,8 @@ struct xfs_bmalloca {
+>  	{ XFS_BMAPI_REMAP,	"REMAP" }, \
+>  	{ XFS_BMAPI_COWFORK,	"COWFORK" }, \
+>  	{ XFS_BMAPI_NODISCARD,	"NODISCARD" }, \
+> -	{ XFS_BMAPI_NORMAP,	"NORMAP" }
+> +	{ XFS_BMAPI_NORMAP,	"NORMAP" },\
+> +	{ XFS_BMAPI_EXTSZALIGN,	"EXTSZALIGN" }
+>  
+>  
+>  static inline int xfs_bmapi_aflag(int w)
+> diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
+> index d097d33dc000..033dff86ecf0 100644
+> --- a/fs/xfs/xfs_reflink.c
+> +++ b/fs/xfs/xfs_reflink.c
+> @@ -445,6 +445,11 @@ xfs_reflink_fill_cow_hole(
+>  	int			nimaps;
+>  	int			error;
+>  	bool			found;
+> +	uint32_t		bmapi_flags = XFS_BMAPI_COWFORK |
+> +					      XFS_BMAPI_PREALLOC;
+> +
+> +	if (atomic)
+> +		bmapi_flags |= XFS_BMAPI_EXTSZALIGN;
+>  
+>  	resaligned = xfs_aligned_fsb_count(imap->br_startoff,
+>  		imap->br_blockcount, xfs_get_cowextsz_hint(ip));
+> @@ -478,8 +483,7 @@ xfs_reflink_fill_cow_hole(
+>  	/* Allocate the entire reservation as unwritten blocks. */
+>  	nimaps = 1;
+>  	error = xfs_bmapi_write(tp, ip, imap->br_startoff, imap->br_blockcount,
+> -			XFS_BMAPI_COWFORK | XFS_BMAPI_PREALLOC, 0, cmap,
+> -			&nimaps);
+> +			bmapi_flags, 0, cmap, &nimaps);
+>  	if (error)
+>  		goto out_trans_cancel;
+>  
+> -- 
+> 2.31.1
+> 
+> 
