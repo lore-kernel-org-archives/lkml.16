@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480A824EF89;
-	Mon, 24 Feb 2025 12:06:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A3D821A424;
+	Mon, 24 Feb 2025 12:06:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740398787; cv=none; b=BJ3qI+zr1+L9h7axWbh11plFnO/YTpRaQUgK8PCQDzJ7xthd5LKe5BDRs0KN8i6VNau+JApq+m38muQrQernq73Ey1mxyMc6rArRAEOWabUACz8r8wExZC/eOwSFBWfAsEer565uWtYiSisUaSofKsJLgjYyBucoWdhOqm4rIlc=
+	t=1740398793; cv=none; b=tLS1+o2cuCBekh91aPE6eewljWt1rrCGrntSwdvISqx9EofamVbwR6lfskhlA1dUG/xotW2LA9t8M4liZG3cbN35MUIm6kFkSYDtmUHWJldYUdvv30rQmrnuQt+3K2h6B7iGTCO2BqwpTLcLVo7ACLIlP68TlurMM9EejJzckIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740398787; c=relaxed/simple;
-	bh=Cz+PPybrgL3Hjwl6SQDfq7mfUBbxBMfLAxxhdBqy5pM=;
+	s=arc-20240116; t=1740398793; c=relaxed/simple;
+	bh=llc7zOHamY6xKtss+EvtekopfzOfsV9jJqRh+gsSyCc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SGnHzmpQX/fAIOShlPvRIKmmAtC37dnuYy5qZbZbiBpp7tdJtDFjWfugeAQJmDMtq35u/771GWlPVCNTgFLlfCUKTLvfECvN221jwatE1LWjprAItBungRnwsp7B9UNg4Mjs9DQApcLHuPfWmvVdCbBRq8NOzvsZHzwPK/GFKqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n1pqX9pT; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=QUhPYhdQu/zBhP7cIt0y3G7LVHQwuzB1rkGVgOPQ+Je2U3AoQVmxMjCJ1hQxJd65psC1oDqIU9tE0WawlWBpArP9TPt035pPm3ma37wAWv2v7mvexBZqvuwls4bmjZt/F6brntLOJGGX9gvWMpl+DvK/8+ujjAqgFwbqYBPG4B8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M3Xtwy7w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n1pqX9pT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDA93C4CED6;
-	Mon, 24 Feb 2025 12:06:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M3Xtwy7w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04F20C4CED6;
+	Mon, 24 Feb 2025 12:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740398787;
-	bh=Cz+PPybrgL3Hjwl6SQDfq7mfUBbxBMfLAxxhdBqy5pM=;
+	s=k20201202; t=1740398792;
+	bh=llc7zOHamY6xKtss+EvtekopfzOfsV9jJqRh+gsSyCc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=n1pqX9pT/mG0mGatUilT03znChbge1Z0gnTT3jXhRsUlvGKW96Cj14v9czRaeUyVi
-	 TkC2DeDZNfepsSOq5wTkRxiLeMOMjW+Tzi3BZScW0EPZLVMttmLaWhgLibe2FZjiSZ
-	 szwirEyGQM5zd/x6YlZ1JwFA4D+CI4jRYAQYqpbJEB/D/u7dCjTXwsmgqy64A4O5qp
-	 l+djFLwn8FiMKxsZV1Xme+XreHL7w6wyzPf+HsI2Dhs5Emm3gMDlE7fD5I2qianWWE
-	 mz7ZG8urVRtQoyC8nPNNA5N27qz78Dc2Q7OT74u/7iZymMFYWgABG1QEz+jRG4jLiw
-	 /4nPHmX9EbOJQ==
+	b=M3Xtwy7wrQqxTskfUqWJbgbhMpDej0IyCGkEADsvaSClgbwk5tc7bd1geqS9DZglz
+	 aWYHilsY8/ZiomRmsA+al1tJK6f9x9ZIQA7Eewm6SWT+BCQinxeLevW/mqeBMnezm4
+	 lkK9fCWt+/1CRqQcIUw4HNXfw+xPu2WOlpWy13GUqneLpOA088qP8WXIP0voYBE53W
+	 53G4s2/7gcqkkGJdHlfzcpYcFv9jnSv3PS5pCCpfgqmK5IG6/kc56IBp4cCcTPTG51
+	 PFc4FlGrSyKK3y3OF82EvntkQ9YBifHJwvseRV/M5Trpk5kqSJDTxTkbutwnjiJVUl
+	 HP0CL90d5V9fA==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Mon, 24 Feb 2025 13:03:37 +0100
-Subject: [PATCH v9 03/13] rust: hrtimer: implement `HrTimerPointer` for
- `Arc`
+Date: Mon, 24 Feb 2025 13:03:44 +0100
+Subject: [PATCH v9 10/13] rust: hrtimer: implement `HrTimerPointer` for
+ `Pin<Box<T>>`
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250224-hrtimer-v3-v6-12-rc2-v9-3-5bd3bf0ce6cc@kernel.org>
+Message-Id: <20250224-hrtimer-v3-v6-12-rc2-v9-10-5bd3bf0ce6cc@kernel.org>
 References: <20250224-hrtimer-v3-v6-12-rc2-v9-0-5bd3bf0ce6cc@kernel.org>
 In-Reply-To: <20250224-hrtimer-v3-v6-12-rc2-v9-0-5bd3bf0ce6cc@kernel.org>
 To: Miguel Ojeda <ojeda@kernel.org>, 
@@ -55,58 +55,49 @@ Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
  Tamir Duberstein <tamird@gmail.com>, rust-for-linux@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
 X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4286; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=Cz+PPybrgL3Hjwl6SQDfq7mfUBbxBMfLAxxhdBqy5pM=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBnvGAe/84kGb1/9Af6ccIKbZAboSmZkU3vH06A1
- dFEhQIc5HmJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7xgHgAKCRDhuBo+eShj
- dygVEACqHjNH3F2N3GA11As7RSYy6OuRCmqMz27+i7mQL0jxdgDYm2Oz8ztjMyz7JvBc3YNEGLK
- t9XIPFLt+WtVqG7ZqXRrMb4ssDAXEjxcshIOTn/Zp2MwKyE9MxUp9PQaD8KFcJoGVdr1r7B8Lyz
- KAHslxEx6lSZ/t6FlO029DiWy7FnsHmKkmgLFwRwlty5PYmrXkGEhjuSpGACzOxukG8tsU3e9EU
- 9jgxgPUc6l2toNS+IVoJarB6BkHCMSscjfJEvzplKrfKM+CfzhgVVfSgXVfhAjZhcKwO0e1GZ93
- yZOm51aLVlHDChT1ey5KmtbIeIR39Otb9jHKu+zBuv/xlYHa8bLB+tBr6B23BsAX5ALpb0e8CXF
- kYoDhfjsd9ihOW77AqUoEYllvh8tUXJb3qevbUU/7IZD8wuQSXBbMajbjMj87DaNYpDUtlBxyxs
- dgx/qrWt70RehG31zmGFYcxf4bKnqecvXhFqfMIB6jXQwks5ANl7h23LCeU0KKHbJq+HPFUPXfA
- 4dJxmthU7FmFWZkjNlEZQczdKwGy3phqxYef6yF14Y4m9/LBDajZBWxXNF8bVHfCqlGQVOXoFXb
- ixcjpCvrkMjvCX3cqiXiro5LVFfsnD1Tw+ry+kqPCdj1aQiEVpKLc+OLCzzoqCjDq1TUS1kZmaL
- FsUNsN2E8ThBsrw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4707; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=llc7zOHamY6xKtss+EvtekopfzOfsV9jJqRh+gsSyCc=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBnvGAkT3Xg5K0oFkbT0YXJzRRIjym+i0t1snfzB
+ fx01Ffgkc6JAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCZ7xgJAAKCRDhuBo+eShj
+ d5uGD/9iJ3OVwKM9qb66nHejnrfq8VDMUgnvy4LBF7hJFXzEaDHJBwT0XjUBpOgkDT+Z05iHsi/
+ uAdv21julj35bz2R4ofmpIZ7W6ThaLBTPMVVHU2hQnBAtfktAXpjTkzWxHi/X29+TlBGFveYxPI
+ u1GfPJdN8FzL7639SM3eG/9dGqttcpFEI4oFORaIxfrD3tNLvqQkYe7Dxo0/BIGgnkL+YwY3Sz8
+ 1rjaJxo8rscCNG8aepg4eyczNg6PDP7do7nBPXElhdJusL2wndvyNAp5LNQ7K315iGcsuajyDw8
+ aBkAKNfFqTSPeV8kzL6qe/MWxjwXeGV1M3h049MrJISx1fJCFy89wD5TBOP6ofmlEUa08JYtYkp
+ F64349U/2nQhK1sBkv/qXncR7/3DgJQOOYvDFoq5tp40tXshRCGUX5eCaUI3wWsCzPoiFUdqmNd
+ vYzC7ze3cXjpfwECqpewg2r9aditzpuzgaQfBC5PpU7H9KZuJQCadKrXYfzWf4rxR+7h6AHb0go
+ VBaD7desB+oscbJxkgERCwUD1JvoQBerJNDylBLBIUjoIsmeu6t7zJMPlSW/Uund8snDWSVkF5D
+ zT4RxG7TaFkN/YyFCsL5XbzMMb9pr/LKX3JNcCTyVYcfeywrfOOXF8yJtFFQd3d8uZFOoUjtRP3
+ 8+MShHfydOR7zKQ==
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-This patch allows the use of intrusive `hrtimer` fields in structs that are
-managed by an `Arc`.
+Allow `Pin<Box<T>>` to be the target of a timer callback.
 
 Acked-by: Frederic Weisbecker <frederic@kernel.org>
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
- rust/kernel/time/hrtimer.rs     |  4 +-
- rust/kernel/time/hrtimer/arc.rs | 94 +++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 97 insertions(+), 1 deletion(-)
+ rust/kernel/time/hrtimer.rs      |   3 ++
+ rust/kernel/time/hrtimer/tbox.rs | 109 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 112 insertions(+)
 
 diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
-index fe20405d8bfe..d08fd7de158d 100644
+index 07b19699d4e8..fc4625ac2009 100644
 --- a/rust/kernel/time/hrtimer.rs
 +++ b/rust/kernel/time/hrtimer.rs
-@@ -143,7 +143,6 @@ unsafe fn raw_get(ptr: *const Self) -> *mut bindings::hrtimer {
-     /// # Safety
-     ///
-     /// `self_ptr` must point to a valid `Self`.
--    #[allow(dead_code)]
-     pub(crate) unsafe fn raw_cancel(self_ptr: *const Self) -> bool {
-         // SAFETY: timer_ptr points to an allocation of at least `HrTimer` size.
-         let c_timer_ptr = unsafe { HrTimer::raw_get(self_ptr) };
-@@ -345,3 +344,6 @@ unsafe fn raw_get_timer(ptr: *const Self) ->
-         }
-     }
- }
-+
-+mod arc;
-+pub use arc::ArcHrTimerHandle;
-diff --git a/rust/kernel/time/hrtimer/arc.rs b/rust/kernel/time/hrtimer/arc.rs
+@@ -432,3 +432,6 @@ unsafe fn raw_get_timer(ptr: *const Self) ->
+ pub use pin::PinHrTimerHandle;
+ mod pin_mut;
+ pub use pin_mut::PinMutHrTimerHandle;
++// `box` is a reserved keyword, so prefix with `t` for timer
++mod tbox;
++pub use tbox::BoxHrTimerHandle;
+diff --git a/rust/kernel/time/hrtimer/tbox.rs b/rust/kernel/time/hrtimer/tbox.rs
 new file mode 100644
-index 000000000000..5c916489fc13
+index 000000000000..a3b2ed849050
 --- /dev/null
-+++ b/rust/kernel/time/hrtimer/arc.rs
-@@ -0,0 +1,94 @@
++++ b/rust/kernel/time/hrtimer/tbox.rs
+@@ -0,0 +1,109 @@
 +// SPDX-License-Identifier: GPL-2.0
 +
 +use super::HasHrTimer;
@@ -115,31 +106,33 @@ index 000000000000..5c916489fc13
 +use super::HrTimerHandle;
 +use super::HrTimerPointer;
 +use super::RawHrTimerCallback;
-+use crate::sync::Arc;
-+use crate::sync::ArcBorrow;
++use crate::prelude::*;
 +use crate::time::Ktime;
++use core::mem::ManuallyDrop;
++use core::ptr::NonNull;
 +
-+/// A handle for an `Arc<HasHrTimer<T>>` returned by a call to
++/// A handle for a [`Box<HasHrTimer<T>>`] returned by a call to
 +/// [`HrTimerPointer::start`].
-+pub struct ArcHrTimerHandle<T>
++pub struct BoxHrTimerHandle<T, A>
 +where
 +    T: HasHrTimer<T>,
++    A: crate::alloc::Allocator,
 +{
-+    pub(crate) inner: Arc<T>,
++    pub(crate) inner: NonNull<T>,
++    _p: core::marker::PhantomData<A>,
 +}
 +
 +// SAFETY: We implement drop below, and we cancel the timer in the drop
 +// implementation.
-+unsafe impl<T> HrTimerHandle for ArcHrTimerHandle<T>
++unsafe impl<T, A> HrTimerHandle for BoxHrTimerHandle<T, A>
 +where
 +    T: HasHrTimer<T>,
++    A: crate::alloc::Allocator,
 +{
 +    fn cancel(&mut self) -> bool {
-+        let self_ptr = Arc::as_ptr(&self.inner);
-+
-+        // SAFETY: As we obtained `self_ptr` from a valid reference above, it
-+        // must point to a valid `T`.
-+        let timer_ptr = unsafe { <T as HasHrTimer<T>>::raw_get_timer(self_ptr) };
++        // SAFETY: As we obtained `self.inner` from a valid reference when we
++        // created `self`, it must point to a valid `T`.
++        let timer_ptr = unsafe { <T as HasHrTimer<T>>::raw_get_timer(self.inner.as_ptr()) };
 +
 +        // SAFETY: As `timer_ptr` points into `T` and `T` is valid, `timer_ptr`
 +        // must point to a valid `HrTimer` instance.
@@ -147,42 +140,58 @@ index 000000000000..5c916489fc13
 +    }
 +}
 +
-+impl<T> Drop for ArcHrTimerHandle<T>
++impl<T, A> Drop for BoxHrTimerHandle<T, A>
 +where
 +    T: HasHrTimer<T>,
++    A: crate::alloc::Allocator,
 +{
 +    fn drop(&mut self) {
 +        self.cancel();
++        // SAFETY: `self.inner` came from a `Box::into_raw` call
++        drop(unsafe { Box::<T, A>::from_raw(self.inner.as_ptr()) })
 +    }
 +}
 +
-+impl<T> HrTimerPointer for Arc<T>
++impl<T, A> HrTimerPointer for Pin<Box<T, A>>
 +where
 +    T: 'static,
 +    T: Send + Sync,
 +    T: HasHrTimer<T>,
-+    T: for<'a> HrTimerCallback<Pointer<'a> = Self>,
-+    Arc<T>: for<'a> RawHrTimerCallback<CallbackTarget<'a> = ArcBorrow<'a, T>>,
++    T: for<'a> HrTimerCallback<Pointer<'a> = Pin<Box<T, A>>>,
++    Pin<Box<T, A>>: for<'a> RawHrTimerCallback<CallbackTarget<'a> = Pin<&'a T>>,
++    A: crate::alloc::Allocator,
 +{
-+    type TimerHandle = ArcHrTimerHandle<T>;
++    type TimerHandle = BoxHrTimerHandle<T, A>;
 +
-+    fn start(self, expires: Ktime) -> ArcHrTimerHandle<T> {
++    fn start(self, expires: Ktime) -> Self::TimerHandle {
++        // SAFETY:
++        //  - We will not move out of this box during timer callback (we pass an
++        //    immutable reference to the callback).
++        //  - `Box::into_raw` is guaranteed to return a valid pointer.
++        let inner =
++            unsafe { NonNull::new_unchecked(Box::into_raw(Pin::into_inner_unchecked(self))) };
++
 +        // SAFETY:
 +        //  - We keep `self` alive by wrapping it in a handle below.
 +        //  - Since we generate the pointer passed to `start` from a valid
 +        //    reference, it is a valid pointer.
-+        unsafe { T::start(Arc::as_ptr(&self), expires) };
-+        ArcHrTimerHandle { inner: self }
++        unsafe { T::start(inner.as_ptr(), expires) };
++
++        BoxHrTimerHandle {
++            inner,
++            _p: core::marker::PhantomData,
++        }
 +    }
 +}
 +
-+impl<T> RawHrTimerCallback for Arc<T>
++impl<T, A> RawHrTimerCallback for Pin<Box<T, A>>
 +where
 +    T: 'static,
 +    T: HasHrTimer<T>,
-+    T: for<'a> HrTimerCallback<Pointer<'a> = Self>,
++    T: for<'a> HrTimerCallback<Pointer<'a> = Pin<Box<T, A>>>,
++    A: crate::alloc::Allocator,
 +{
-+    type CallbackTarget<'a> = ArcBorrow<'a, T>;
++    type CallbackTarget<'a> = Pin<&'a T>;
 +
 +    unsafe extern "C" fn run(ptr: *mut bindings::hrtimer) -> bindings::hrtimer_restart {
 +        // `HrTimer` is `repr(C)`
@@ -192,13 +201,10 @@ index 000000000000..5c916489fc13
 +        // queuing the timer, so it is a `HrTimer<T>` embedded in a `T`.
 +        let data_ptr = unsafe { T::timer_container_of(timer_ptr) };
 +
-+        // SAFETY: `data_ptr` points to the `T` that was used to queue the
-+        // timer. This `T` is contained in an `Arc`.
-+        let receiver = unsafe { ArcBorrow::from_raw(data_ptr) };
++        // SAFETY: We called `Box::into_raw` when we queued the timer.
++        let tbox = ManuallyDrop::new(Box::into_pin(unsafe { Box::<T, A>::from_raw(data_ptr) }));
 +
-+        T::run(receiver);
-+
-+        bindings::hrtimer_restart_HRTIMER_NORESTART
++        T::run(tbox.as_ref()).into_c()
 +    }
 +}
 
