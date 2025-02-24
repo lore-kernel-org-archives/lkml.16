@@ -1,157 +1,143 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961921411DE
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 08:01:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCE951D90DF
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 08:01:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740384095; cv=none; b=RYa1JW2uimqFsZVo3AaOnZKMEqgHRUGvHXWdhFVmL6awNlUtPQkYX45BjxkTYLnCaDhyMlO0AaSHnBnZ0OrbSgpjooZEyfWWhhl4G2zJKdBIX2RbrNY8pAit9yG46WFoJazi9fXbB5rmnaA6akkC5XQ+O104WxfOM6iTkCnWai0=
+	t=1740384096; cv=none; b=UBNbkv9sJ+ixQWvtscqDwIphgmPFiNj8McsdVSCafWti+Hy7SmNfiq3Pncr9yHaWqexTSkzTa18KZRyWmc8uKuAIAUA9Nxb4pE2hSwRcswNxZU20gpmpvN8MPRDDMp+GqCBbamt+7uhK6HFjdKNqrGRG0uodIgelKK7tQzd/i+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740384095; c=relaxed/simple;
-	bh=fLnEiSETJ8+PZ13rLV26ADkS/jCTNTqwXysxo5sNB1Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=i0IBvhZSrwvvFgus/B3Vma3kIOdl+/N7rTKMiN0XhOIYDVyIwCVsQGVE+Y65S6PA1L9lmKbub6fjR5UtpW9AWhLXAMVOkJC4RcJqP1ptmGyXIQKjjlT0J7qmVc7hhBMt3CfZ+idwqme3nV7hDFsX9av2tqVAY6xEJmMmZ1QV1ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rMBG1MHy; arc=none smtp.client-ip=209.85.128.50
+	s=arc-20240116; t=1740384096; c=relaxed/simple;
+	bh=c7+qy8I4aVajDJ7q8pwae9rTcGIOOfIbB3vrS74dFQ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gWUsDOvKral65LTJkRQRF/eDxP6vfT4LmehlUpb115AcDoWEXeimlr013b5yEXheH9iZXfNNGojRPcqU+MUeN9YBycpeCJA4JJvTZVKgkdkH0ov1wahVoHjiYH+o+M6bwp2BVar8wtSEbXl1GAvzUYKQmksr2YMXWop2o9VRruE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CPBqIrxD; arc=none smtp.client-ip=209.85.216.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rMBG1MHy"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-439ac3216dcso21455005e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 00:01:33 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CPBqIrxD"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2f9b9c0088fso6834512a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 00:01:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740384092; x=1740988892; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VDvEBdyqb+LCUK8JJ/EhfQ/X2vzVVFCo3S0RnsiF8pI=;
-        b=rMBG1MHytDMvfXTMelHJoNkoKbwfUApbDVwznlrfRZhea2Xjbqjg8Zfk2btKCCOaol
-         yyKcI28Mabj6BEsYixaDDxzgEJk7h3AHBL0QGggrTLQAkcyrhAwUI0fyBwaVL+U+OeoF
-         9wmHM3y0TmXvc1KBme4KmlNeeDW1d+o9wkEYMTeQ1R8eYlL9PbEylsvFGUweze0bSImR
-         EOr7DQsmi5YPR9ZnnRSKJzHC2UwRNYXw72ConwO18fCeTKjie+My5JQq0tgzjpYXftrc
-         309WA8pXgiVdTHHs0YoGmh3SXCd8RrGzn2ZsohrGjNClStPyk1VR/YuKAhddSEu+uaTg
-         EMZA==
+        d=linaro.org; s=google; t=1740384094; x=1740988894; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qbCbRKBT7nYUMZ7e71egOL9DxulLD66sFDSiePK/h4s=;
+        b=CPBqIrxDDRvxk/gnvGMM2UoxAvge/U4ZAbYL+4Wtnm9jPfjZfah1+C4adPJ8sz0LCy
+         cLBxz++t3S4pb5aVyL2hAuB4GpNfeRTXHb2JGNypCPaNr7w34sGBD9qrTxgnZuav2aTQ
+         dh5TGbl3iiiNo5jgw/dU6ucS97SK0h+/Y1TXolwTHmukYCx5sBLzDzp8lM3qG+UUCeMR
+         oINiLU/EDluP5CW1dGX0BYDLqA4EuvFPTYRWDRe39fcGTyagMr+zY1oO5EIJzWToTDQb
+         MZ9eXVW8WhnONuckSok59pXfl149VBTFXMAr/TIPS3+aXcFnDJLrEOMRIkDuSeoO7G72
+         g4Ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740384092; x=1740988892;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VDvEBdyqb+LCUK8JJ/EhfQ/X2vzVVFCo3S0RnsiF8pI=;
-        b=YBnRRyBZHTvLot4vSXS04sexg//uWDEt6POQEKuJnl8zP/3EpnnfkSvBXSK5JkjImv
-         w3sMmZ1EzUmAiYcxyfavWkJIZOvdtqAv6i0l7BxJtPWO8gTe2UzF2RVOpBNOi6OwthPG
-         xxO0AknT4V3Y3x3FukbZaLGu38pqDPq9fI8vfGm+4o80GUEofoBkGenLZ9V7c2SPiINf
-         TWJf2MEzdHcvHCPi4errGD8UEKrNM+5//QuZEJZQic19hYPQ3ruNbzjFMU86DKdIqjhd
-         WJ9Z+DJ7ld9T7k98q9aiNBkWA/mpYiZz+decyYLnOwdIVlv7AojpTBIzbL9RQfiADrjt
-         aN9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUGdp7v5BwfutS5HgxKhb0dLnsASyFGjLBmkmE2MTELzNeU//Ce82zg9za/ay+Q/5dDLjTd9lOJztClcTY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0ZBLEWgpfwi5ktQxK7FPMB6feEgnuguyCugbROMV1613EgofI
-	eN4ZNVJ+0Ka5Tujok/xyvRVnTgjLt3mhDuSWKuBQGL/U4TgcaunJOXRHqLW9lXc=
-X-Gm-Gg: ASbGncu+k3suX2r4YL+fnURc1LBU+S2x6q/wLeDUE0lzfdqTFnuC8fDn09tJp0ujg+F
-	qTawhDuGMuoafwslqVXNcoBlv9KTUJgdD5IDzSS3sx6sbHi7QhyUeGeaqtwsF3puO0SGZey6g8G
-	cioj3uXY7gLQBJwjLovEi7ZG0e6eIyZrfh8gublwZVsh4MG/CPmRgkgkdCs1ApuVeEUN3G0320Q
-	UZ8rCRFPWozCIRHTGbM4HQImvzCdsbIrRbEJTGj+wZQJ1ndDqKHmjhN5tdY2KIyGgpSJ3SQMYwt
-	rNnhvC/YtRA4jbi5Rp5uY47Y1TdlhnOsAcUT1wazf4S/lzyNlpux4v0O74MZ416/+gMAKxq56t6
-	WtA+pkA==
-X-Google-Smtp-Source: AGHT+IE4ZDfn8IZlrI1hvBZaxOYiDGG0nYOPyFk3VkBXJ9hbsd17nkiDUQ2UUuMCC3IuQ80wYzn30w==
-X-Received: by 2002:a05:600c:4f92:b0:439:9377:fa22 with SMTP id 5b1f17b1804b1-439aeb3453dmr95707715e9.18.1740384091916;
-        Mon, 24 Feb 2025 00:01:31 -0800 (PST)
-Received: from ta2.c.googlers.com (169.178.77.34.bc.googleusercontent.com. [34.77.178.169])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b0367533sm97690395e9.27.2025.02.24.00.01.30
+        d=1e100.net; s=20230601; t=1740384094; x=1740988894;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qbCbRKBT7nYUMZ7e71egOL9DxulLD66sFDSiePK/h4s=;
+        b=V6X/03mlm8kn58vyIWRN1Xyq7ijIYgRUW7J7ookRLb6GHIs1mFdH4PseVAABEJl5cg
+         NHvhadYPM5D1vuM+9ucphLf7e2OV/b8XLCbFNsCxuCVr1ARcD1mLzllyvVvgnpvqa6JE
+         mVj0IqAQz//6Gd0X3KOpAsvW7/ZsM1HDW+hPFYmGWAyVIlRQNsvs+5KFyn7KrTp9d81x
+         mjeb2dTbEkQn88X0S9aqckq6meyTYjeyYezz2Wo34dU8Rj20z4jg/PavzoEHlokvPbGr
+         D3CofJ9xFeXD4GEKAEivoid8R4jF0CICeXRA+fKUAIZUPlnWStuL9wnLTIH3yLs2FkhO
+         pKag==
+X-Forwarded-Encrypted: i=1; AJvYcCX6YbtzZiTSNtgweTkKyL8OdaBIx4Q2r1alrKslxo15u8E6eL872sw83m5rSEwg8GKRknouvQlps80efQ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZVkTHeNuUfw7Ea2HOOUo1NR/obWNPQF4ZlXZiJxysddgCNMly
+	3GO01Vm8QP5zKzxq/sZjP4RPaYzG9hkw5BofHKJ+W4JOkyNmlBK8FDHxKBq72g==
+X-Gm-Gg: ASbGncvmcgtBZdW4bx0Pv5CLpdZmkqmYEbE3ziWA6SmLsw+RjLQk2CCO/kn+lOI+Coz
+	gjnfHq86KT8FPpYoLRCrSupnUxL1Cax4xPJ4xqiq9tKPYLRgwC2VnyIhJzM/4vLAtcki74Ls67U
+	X1BA1Bs6hmYMmrkaZJ8Y1ZCh7J4CNQWPPuxkCWCL/jI1zCiLa9AFx7o6pn7DR0hWrAhSHvt8Nd5
+	yYan2h9Gn41Lz+HzWpeQ/bU4X2xYD1LlQv1HOCaFprn6JjtIJGAqNCaoUZWTVy22u5kQhHGrYEe
+	b7lOBRRIX5OHE7mS9l2+O2mtZ8hQIqCOE7/5
+X-Google-Smtp-Source: AGHT+IFSJRHQaoas4hBith0wVUqSgTYRtfPMiQmQRzahw7+ResAWhqCfmrXX0fr8xkSBMMUEpNn5Tg==
+X-Received: by 2002:a17:90b:350e:b0:2fa:2133:bc87 with SMTP id 98e67ed59e1d1-2fccc1172demr27937034a91.6.1740384094186;
+        Mon, 24 Feb 2025 00:01:34 -0800 (PST)
+Received: from thinkpad ([36.255.17.162])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fceb09f7fesm5736053a91.43.2025.02.24.00.01.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 00:01:31 -0800 (PST)
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-Date: Mon, 24 Feb 2025 08:01:22 +0000
-Subject: [PATCH 1/3] firmware: exynos-acpm: rename exynos-acpm.h to
- exynos-acpm-xfer.h
+        Mon, 24 Feb 2025 00:01:33 -0800 (PST)
+Date: Mon, 24 Feb 2025 13:31:29 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Kevin Xie <kevin.xie@starfivetech.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Minda Chen <minda.chen@starfivetech.com>,
+	"open list:PCIE DRIVER FOR STARFIVE JH71x0" <linux-pci@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1] PCI: starfive: Fix kmemleak in StarFive PCIe driver's
+ IRQ handling
+Message-ID: <20250224080129.zm7fvxermgeyycav@thinkpad>
+References: <20250208140110.2389-1-linux.amoon@gmail.com>
+ <20250210174400.b63bhmtkuqhktb57@thinkpad>
+ <CANAwSgQ20ANRh9wJ3E-T9yNi=g1g129mXq3cZYvPnK1bMx+w7g@mail.gmail.com>
+ <20250214060935.cgnc436upawnfzn6@thinkpad>
+ <CANAwSgTWa9gwpPhVCYzJM5BL5wUkpB4eyDtX+Vs3SX3a9541wA@mail.gmail.com>
+ <CANAwSgRvT-Mqj3XPrME6oKhYmnCUZLnwHfFHmSL=PK+xVLHAqw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250224-acpm-debugfs-v1-1-2418a3ea1b17@linaro.org>
-References: <20250224-acpm-debugfs-v1-0-2418a3ea1b17@linaro.org>
-In-Reply-To: <20250224-acpm-debugfs-v1-0-2418a3ea1b17@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>
-Cc: andre.draszik@linaro.org, peter.griffin@linaro.org, 
- willmcvicker@google.com, kernel-team@android.com, 
- linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- Tudor Ambarus <tudor.ambarus@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740384089; l=2304;
- i=tudor.ambarus@linaro.org; s=20241212; h=from:subject:message-id;
- bh=fLnEiSETJ8+PZ13rLV26ADkS/jCTNTqwXysxo5sNB1Y=;
- b=3T+7vTI0DjoqdFOzA1ETT/a2YAOdtQrNmTHKgkHboovpHfmPcXLCAGDs1fKlPZGN1M4U2WRzg
- ZwS4rhbBJLnDhj8MJEGz0gLckLiY937y7lH/k1/+7pa1o+7yd1Nce7y
-X-Developer-Key: i=tudor.ambarus@linaro.org; a=ed25519;
- pk=uQzE0NXo3dIjeowMTOPCpIiPHEz12IA/MbyzrZVh9WI=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANAwSgRvT-Mqj3XPrME6oKhYmnCUZLnwHfFHmSL=PK+xVLHAqw@mail.gmail.com>
 
-Rename header file to better indicate what it is used for.
-This is a preparation patch, as exynos-acpm.h will be later on
-introduced and included between the core driver and its debugfs
-logging feature.
+On Thu, Feb 20, 2025 at 03:53:31PM +0530, Anand Moon wrote:
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
----
- drivers/firmware/samsung/exynos-acpm-pmic.c                    | 2 +-
- drivers/firmware/samsung/{exynos-acpm.h => exynos-acpm-xfer.h} | 6 +++---
- drivers/firmware/samsung/exynos-acpm.c                         | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+[...]
 
-diff --git a/drivers/firmware/samsung/exynos-acpm-pmic.c b/drivers/firmware/samsung/exynos-acpm-pmic.c
-index 85e90d236da2..9ad4cb82fae1 100644
---- a/drivers/firmware/samsung/exynos-acpm-pmic.c
-+++ b/drivers/firmware/samsung/exynos-acpm-pmic.c
-@@ -9,7 +9,7 @@
- #include <linux/ktime.h>
- #include <linux/types.h>
- 
--#include "exynos-acpm.h"
-+#include "exynos-acpm-xfer.h"
- #include "exynos-acpm-pmic.h"
- 
- #define ACPM_PMIC_CHANNEL		GENMASK(15, 12)
-diff --git a/drivers/firmware/samsung/exynos-acpm.h b/drivers/firmware/samsung/exynos-acpm-xfer.h
-similarity index 79%
-rename from drivers/firmware/samsung/exynos-acpm.h
-rename to drivers/firmware/samsung/exynos-acpm-xfer.h
-index 2d14cb58f98c..0b76a270b773 100644
---- a/drivers/firmware/samsung/exynos-acpm.h
-+++ b/drivers/firmware/samsung/exynos-acpm-xfer.h
-@@ -4,8 +4,8 @@
-  * Copyright 2020 Google LLC.
-  * Copyright 2024 Linaro Ltd.
-  */
--#ifndef __EXYNOS_ACPM_H__
--#define __EXYNOS_ACPM_H__
-+#ifndef __EXYNOS_ACPM_XFER_H__
-+#define __EXYNOS_ACPM_XFER_H__
- 
- struct acpm_xfer {
- 	const u32 *txd;
-@@ -20,4 +20,4 @@ struct acpm_handle;
- int acpm_do_xfer(const struct acpm_handle *handle,
- 		 const struct acpm_xfer *xfer);
- 
--#endif /* __EXYNOS_ACPM_H__ */
-+#endif /* __EXYNOS_ACPM_XFER_H__ */
-diff --git a/drivers/firmware/samsung/exynos-acpm.c b/drivers/firmware/samsung/exynos-acpm.c
-index a85b2dbdd9f0..3c14afc89fd7 100644
---- a/drivers/firmware/samsung/exynos-acpm.c
-+++ b/drivers/firmware/samsung/exynos-acpm.c
-@@ -27,7 +27,7 @@
- #include <linux/slab.h>
- #include <linux/types.h>
- 
--#include "exynos-acpm.h"
-+#include "exynos-acpm-xfer.h"
- #include "exynos-acpm-pmic.h"
- 
- #define ACPM_PROTOCOL_SEQNUM		GENMASK(21, 16)
+> Following the change fix this warning in a kernel memory leak.
+> Would you happen to have any comments on these changes?
+> 
+> diff --git a/drivers/pci/controller/plda/pcie-plda-host.c
+> b/drivers/pci/controller/plda/pcie-plda-host.c
+> index 4153214ca410..5a72a5a33074 100644
+> --- a/drivers/pci/controller/plda/pcie-plda-host.c
+> +++ b/drivers/pci/controller/plda/pcie-plda-host.c
+> @@ -280,11 +280,6 @@ static u32 plda_get_events(struct plda_pcie_rp *port)
+>         return events;
+>  }
+> 
+> -static irqreturn_t plda_event_handler(int irq, void *dev_id)
+> -{
+> -       return IRQ_HANDLED;
+> -}
+> -
+>  static void plda_handle_event(struct irq_desc *desc)
+>  {
+>         struct plda_pcie_rp *port = irq_desc_get_handler_data(desc);
+> @@ -454,13 +449,10 @@ int plda_init_interrupts(struct platform_device *pdev,
+> 
+>                 if (event->request_event_irq)
+>                         ret = event->request_event_irq(port, event_irq, i);
+> -               else
+> -                       ret = devm_request_irq(dev, event_irq,
+> -                                              plda_event_handler,
+> -                                              0, NULL, port);
+
+This change is not related to the memleak. But I'd like to have it in a separate
+patch since this code is absolutely not required, rather pointless.
+
+> 
+>                 if (ret) {
+>                         dev_err(dev, "failed to request IRQ %d\n", event_irq);
+> +                       irq_dispose_mapping(event_irq);
+
+So the issue overall is that the 'devm_request_irq' fails on your platform
+because the interrupts are not defined in DT and then the IRQ is not disposed in
+the error path?
+
+In that case, none of the error paths below for_each_set_bit() loop is disposing
+the IRQs. Also, calling 'irq_dispose_mapping()' only once is not going to
+dispose all mappings that were created before in the loop.
+
+- Mani
 
 -- 
-2.48.1.601.g30ceb7b040-goog
-
+மணிவண்ணன் சதாசிவம்
