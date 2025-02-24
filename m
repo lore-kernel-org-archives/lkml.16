@@ -1,114 +1,349 @@
-Received: from dilbert.mork.no (dilbert.mork.no [65.108.154.246])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3032C155747;
-	Mon, 24 Feb 2025 07:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.108.154.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7951624D2
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 07:15:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740381358; cv=none; b=Q40UC5GDcPAExt9zCJxA9XqXJjW7sQiuIRbURkF0nNNbSjbBfFsihrgQ8lOCp/yLrhxKz9yEG99MUG/PnQfQHly11wImUh++IHFW3FDdWxzKvf8y+LHMNB/DQeBpZpAO8qhxXzMla2rGNJByzEdWLA+bJdWqUbcG6qvmuP1pFGI=
+	t=1740381360; cv=none; b=DWIWBwcTj5CS6NbvXyXMp4Vwq3jV6ZLXqedclRSMt3qfX32ZNb4zzIVsKlgOfOppmbkfeWLgPUy2PWk++Ev9x8Zymc8sv7qnqKGFrFx4B2bbuj4I7J5KEEKuI6gOXmT7lxz2v0QLU8lRZW4t6JaEtRnvUErX9J/IkTg+o8AzUHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740381358; c=relaxed/simple;
-	bh=LA91jSsheMxR4yC/e7jbT3VZ1jyx/nEH3cVwjan9ivs=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=q666mwewvLixZAJ7KQAMhzfuxNOWyWFJezyDFg96Hh0kKxVHiopG211wJbudKM0C+U9zamUbkG/qWs0/OfJk5dy9hrzmRgBXnbbLQ6pyqvxFyFAHEp79tA8HwM+x9ktnys0t8mwdKAex8ZJLjMDjg6+IXt6S6Y6IQV3+XSw/7Yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mork.no; spf=pass smtp.mailfrom=miraculix.mork.no; dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b=APteWDir; arc=none smtp.client-ip=65.108.154.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mork.no
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=miraculix.mork.no
+	s=arc-20240116; t=1740381360; c=relaxed/simple;
+	bh=CcIlasMlwGyRUnGlK2ln480ok4GS2N+woVsRBl1G40o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mQpG1F876qCKPIFwOl9UKqn7nqqJCarw/PeT6UQLFxBBompC4FWCAZWB+ePk7OdlPA1MgUIiVBKLB1evTniN5Mxts9Cxm4osd4/c9aQZQf66uTuts3QC4o3z+NMI05Gm3taAdnU+kuxaqzHf/2O3MlmlXhj52MlJNooS062V0zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RCIbHxqB; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="APteWDir"
-Authentication-Results: dilbert.mork.no;
-	dkim=pass (1024-bit key; secure) header.d=mork.no header.i=@mork.no header.a=rsa-sha256 header.s=b header.b=APteWDir;
-	dkim-atps=neutral
-Received: from canardo.dyn.mork.no ([IPv6:2a01:799:10de:2e00:0:0:0:1])
-	(authenticated bits=0)
-	by dilbert.mork.no (8.18.1/8.18.1) with ESMTPSA id 51O7DMHp962698
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
-	Mon, 24 Feb 2025 07:13:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
-	t=1740381202; bh=Qo7e4pHJOv6pCynpF4eYP+eH0PAvvJnROAiF5yvl18E=;
-	h=From:To:Cc:Subject:References:Date:Message-ID:From;
-	b=APteWDira/AXiyCs1XJGdVNQe0uORaD7fKVMZsPgRho24EY8j0hRfDA9xKEhWdcCd
-	 Pt13IlQACmkp6BeE++HlBME+psh/mEZ/TX/uyw6UWFwEik6KyHkdCAqq+8jz6jVHhL
-	 j9IWqvAACBD658BiBsuIlePq50N5Z27/l2raZw5I=
-Received: from miraculix.mork.no ([IPv6:2a01:799:10de:2e0a:149a:2079:3a3a:3457])
-	(authenticated bits=0)
-	by canardo.dyn.mork.no (8.18.1/8.18.1) with ESMTPSA id 51O7DMxE2373751
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
-	Mon, 24 Feb 2025 08:13:22 +0100
-Received: (nullmailer pid 997267 invoked by uid 1000);
-	Mon, 24 Feb 2025 07:13:22 -0000
-From: =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>, davem@davemloft.net,
-        Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        =?utf-8?Q?K=C3=B6ry?= Maincent <kory.maincent@bootlin.com>,
-        Simon Horman <horms@kernel.org>,
-        Romain Gantois <romain.gantois@bootlin.com>,
-        Antoine Tenart <atenart@kernel.org>,
-        Marek =?utf-8?Q?Beh=C3=BAn?= <kabel@kernel.org>
-Subject: Re: [PATCH net-next 0/2] net: phy: sfp: Add single-byte SMBus SFP
- access
-Organization: m
-References: <20250223172848.1098621-1-maxime.chevallier@bootlin.com>
-	<87r03otsmm.fsf@miraculix.mork.no>
-	<Z7uFhc1EiPpWHGfa@shell.armlinux.org.uk>
-	<3c6b7b3f-04a2-48ce-b3a9-2ea71041c6d2@lunn.ch>
-Date: Mon, 24 Feb 2025 08:13:22 +0100
-In-Reply-To: <3c6b7b3f-04a2-48ce-b3a9-2ea71041c6d2@lunn.ch> (Andrew Lunn's
-	message of "Mon, 24 Feb 2025 04:32:29 +0100")
-Message-ID: <87ikozu86l.fsf@miraculix.mork.no>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RCIbHxqB"
+Date: Mon, 24 Feb 2025 12:44:52 +0530
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740381345;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yMCBsuCxywFQdUGguzwFOiAlKOVDXhCL8WkyMF7aUdc=;
+	b=RCIbHxqBBl+y9TRQSb1MoRxJCT1aBon2X4cxiEot8bbWUD0QNpZwhlarz5+K+JfQ6Y/W29
+	YK5DB/dPs2QXA+RqXShfDqfBAd8GHEHUqbB1Rnvt2YzKzvPWc7Wo/4Z2oe4yBSuZUMGZQn
+	G84CJLV86vAx4YN+yyPxI6YocRYexjw=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Jai Luthra <jai.luthra@linux.dev>
+To: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, mripard@kernel.org, mchehab@kernel.org, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, devarsht@ti.com, vaishnav.a@ti.com, 
+	r-donadkar@ti.com, u-kumar1@ti.com
+Subject: Re: [PATCH v3 2/2] media: cadence: csi2rx: Enable csi2rx_err_irq
+ interrupt and add support for VIDIOC_LOG_STATUS
+Message-ID: <4ukas366gvkl7fljddneulgxwnzdvblkknantgv4iu427sfhor@d3rpvym4ynhn>
+X-PGP-Key: http://jailuthra.in/files/public-key.asc
+References: <20250221120337.3920874-1-y-abhilashchandra@ti.com>
+ <20250221120337.3920874-3-y-abhilashchandra@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4aroo4gfbhv2sbc4"
+Content-Disposition: inline
+In-Reply-To: <20250221120337.3920874-3-y-abhilashchandra@ti.com>
+X-Migadu-Flow: FLOW_OUT
+
+
+--4aroo4gfbhv2sbc4
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 1.0.7 at canardo.mork.no
-X-Virus-Status: Clean
+Subject: Re: [PATCH v3 2/2] media: cadence: csi2rx: Enable csi2rx_err_irq
+ interrupt and add support for VIDIOC_LOG_STATUS
+MIME-Version: 1.0
 
-Andrew Lunn <andrew@lunn.ch> writes:
+Hi Abhilash,
 
->> So, not only do I think that hwmon should be disabled if using SMBus,
->> but I also think that the kernel should print a warning that SMBus is
->> being used and therefore e.g. copper modules will be unreliable. We
->> don't know how the various firmwares in various microprocessors that
->> convert I2C to MDIO will behave when faced with SMBus transfers.
->
-> I agree, hwmon should be disabled, and that the kernel should printing
-> a warning that the hardware is broken and that networking is not
-> guaranteed to be reliable.
+Thanks for the patch.
 
-What do you think will be the effect of such a warning?  Who is the
-target audience?
+On Fri, Feb 21, 2025 at 05:33:37PM +0530, Yemike Abhilash Chandra wrote:
+> Enable the csi2rx_err_irq interrupt to record any errors during streaming
+> and also add support for VIDIOC_LOG_STATUS ioctl. The VIDIOC_LOG_STATUS
+> ioctl can be invoked from user space to retrieve the device status,
+> including details about any errors.
+>=20
+> Signed-off-by: Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
+> ---
+>=20
+> Changes in v3:
+> - Address Jai's review comment to enable FIFO overflow bits in the mask
+>   only for the source pads that have an active remote.
+> - Drop TI-specific interrupt and have support for only two interrupts
+>   that are common across all vendors.
+> - Address Changhuang's review to use pdev directly to get the interrupt.
+> - Set the interrupt mask register only if the interrupt is defined in the=
+ DT.
+>=20
+>=20
+>  drivers/media/platform/cadence/cdns-csi2rx.c | 125 +++++++++++++++++++
+>  1 file changed, 125 insertions(+)
+>=20
+> diff --git a/drivers/media/platform/cadence/cdns-csi2rx.c b/drivers/media=
+/platform/cadence/cdns-csi2rx.c
+> index cebcae196eec..81375f11a32f 100644
+> --- a/drivers/media/platform/cadence/cdns-csi2rx.c
+> +++ b/drivers/media/platform/cadence/cdns-csi2rx.c
+> @@ -57,6 +57,25 @@
+>  #define CSI2RX_LANES_MAX	4
+>  #define CSI2RX_STREAMS_MAX	4
+> =20
+> +#define CSI2RX_ERROR_IRQS_REG			0x28
+> +#define CSI2RX_ERROR_IRQS_MASK_REG		0x2C
+> +
+> +#define CSI2RX_STREAM3_FIFO_OVERFLOW_IRQ	BIT(19)
+> +#define CSI2RX_STREAM2_FIFO_OVERFLOW_IRQ	BIT(18)
+> +#define CSI2RX_STREAM1_FIFO_OVERFLOW_IRQ	BIT(17)
+> +#define CSI2RX_STREAM0_FIFO_OVERFLOW_IRQ	BIT(16)
+> +#define CSI2RX_FRONT_TRUNC_HDR_IRQ		BIT(12)
+> +#define CSI2RX_PROT_TRUNCATED_PACKET_IRQ	BIT(11)
+> +#define CSI2RX_FRONT_LP_NO_PAYLOAD_IRQ		BIT(10)
+> +#define CSI2RX_SP_INVALID_RCVD_IRQ		BIT(9)
+> +#define CSI2RX_DATA_ID_IRQ			BIT(7)
+> +#define CSI2RX_HEADER_CORRECTED_ECC_IRQ	BIT(6)
+> +#define CSI2RX_HEADER_ECC_IRQ			BIT(5)
+> +#define CSI2RX_PAYLOAD_CRC_IRQ			BIT(4)
+> +
+> +#define CSI2RX_ECC_ERRORS		GENMASK(7, 4)
+> +#define CSI2RX_PACKET_ERRORS		GENMASK(12, 9)
+> +
+>  enum csi2rx_pads {
+>  	CSI2RX_PAD_SINK,
+>  	CSI2RX_PAD_SOURCE_STREAM0,
+> @@ -71,9 +90,32 @@ struct csi2rx_fmt {
+>  	u8				bpp;
+>  };
+> =20
+> +struct csi2rx_event {
+> +	u32 mask;
+> +	const char *name;
+> +};
+> +
+> +static const struct csi2rx_event csi2rx_events[] =3D {
+> +	{ CSI2RX_STREAM3_FIFO_OVERFLOW_IRQ, "Overflow of the Stream 3 FIFO dete=
+cted" },
+> +	{ CSI2RX_STREAM2_FIFO_OVERFLOW_IRQ, "Overflow of the Stream 2 FIFO dete=
+cted" },
+> +	{ CSI2RX_STREAM1_FIFO_OVERFLOW_IRQ, "Overflow of the Stream 1 FIFO dete=
+cted" },
+> +	{ CSI2RX_STREAM0_FIFO_OVERFLOW_IRQ, "Overflow of the Stream 0 FIFO dete=
+cted" },
+> +	{ CSI2RX_FRONT_TRUNC_HDR_IRQ, "A truncated header [short or long] has b=
+een received" },
+> +	{ CSI2RX_PROT_TRUNCATED_PACKET_IRQ, "A truncated long packet has been r=
+eceived" },
+> +	{ CSI2RX_FRONT_LP_NO_PAYLOAD_IRQ, "A truncated long packet has been rec=
+eived. No payload" },
+> +	{ CSI2RX_SP_INVALID_RCVD_IRQ, "A reserved or invalid short packet has b=
+een received" },
+> +	{ CSI2RX_DATA_ID_IRQ, "Data ID error in the header packet" },
+> +	{ CSI2RX_HEADER_CORRECTED_ECC_IRQ, "ECC error detected and corrected" },
+> +	{ CSI2RX_HEADER_ECC_IRQ, "Unrecoverable ECC error" },
+> +	{ CSI2RX_PAYLOAD_CRC_IRQ, "CRC error" },
+> +};
+> +
+> +#define CSI2RX_NUM_EVENTS		ARRAY_SIZE(csi2rx_events)
+> +
+>  struct csi2rx_priv {
+>  	struct device			*dev;
+>  	unsigned int			count;
+> +	int				error_irq;
+> =20
+>  	/*
+>  	 * Used to prevent race conditions between multiple,
+> @@ -95,6 +137,7 @@ struct csi2rx_priv {
+>  	u8				max_lanes;
+>  	u8				max_streams;
+>  	bool				has_internal_dphy;
+> +	u32				events[CSI2RX_NUM_EVENTS];
+> =20
+>  	struct v4l2_subdev		subdev;
+>  	struct v4l2_async_notifier	notifier;
+> @@ -124,6 +167,50 @@ static const struct csi2rx_fmt formats[] =3D {
+>  	{ .code	=3D MEDIA_BUS_FMT_BGR888_1X24,  .bpp =3D 24, },
+>  };
+> =20
+> +static void csi2rx_configure_error_irq_mask(void __iomem *base, struct c=
+si2rx_priv *csi2rx)
+> +{
+> +	u32 error_irq_mask =3D 0;
+> +
+> +	error_irq_mask |=3D CSI2RX_ECC_ERRORS;
+> +	error_irq_mask |=3D CSI2RX_PACKET_ERRORS;
+> +
+> +	/*
+> +	 * iterate through all source pads and check if they are linked
 
-You can obviously add it, and I don't really care.  But I believe the
-result will be an endless stream of end users worrying about this scary
-warning and wanting to know what they can do about it.  What will be
-your answer?
+nit: s/iterate/Iterate
 
-No SoC/phy designer will ever see the warning.  They finished designing
-these chips decades ago.  The switch designers might see it. But
-probably not. They're not worried about running mainline Linux at all.
-They have they're vendor SDK.  Linux based of course, but it's never
-going to have that warning no matter what you do.  Firmware developers?
-Same as switch designers really.
+> +	 * to an active remote pad. If an active remote pad is found,
+> +	 * calculate the corresponding bit position and set it in
+> +	 * mask, enabling the stream overflow error in the mask.
+> +	 */
+> +
 
-The hardware exists. It's not perfect. We agree so far.  But I do not
-understand your way of dealing with that.
+nit: drop this extra whitespace
 
-If your intention is detecting this hardware problem in bug reports etc,
-then it makes more sense to me.  But I believe a more subtle method will
-be more effeicient than a standalone and scary warning. Like embedding
-"smbus" or similar in existing debug/warning/error messages, e.g by
-making it part of the mdio bus name.
+> +	for (int i =3D CSI2RX_PAD_SOURCE_STREAM0; i < CSI2RX_PAD_MAX; i++) {
+> +		struct media_pad *remote_pad =3D media_pad_remote_pad_first(&csi2rx->p=
+ads[i]);
+> +
+> +		if (remote_pad) {
+> +			int bit_position =3D 16 + (i - CSI2RX_PAD_SOURCE_STREAM0);
 
+It would be cleaner to not use the magic number of 16 here, instead using t=
+he=20
+already defined macro:
 
-Bj=C3=B8rn
+            error_irq_mask |=3D (CSI2RX_STREAM0_FIFO_OVERFLOW_IRQ
+					   << (i - CSI2RX_PAD_SOURCE_STREAM0));
+
+> +
+> +			error_irq_mask |=3D (1 << bit_position);
+> +		}
+> +	}
+> +
+> +	writel(error_irq_mask, base + CSI2RX_ERROR_IRQS_MASK_REG);
+> +}
+> +
+> +static irqreturn_t csi2rx_irq_handler(int irq, void *dev_id)
+> +{
+> +	struct csi2rx_priv *csi2rx =3D dev_id;
+> +	int i;
+> +	u32 error_status;
+> +
+> +	error_status =3D readl(csi2rx->base + CSI2RX_ERROR_IRQS_REG);
+> +
+> +	for (i =3D 0; i < CSI2RX_NUM_EVENTS; i++)
+> +		if (error_status & csi2rx_events[i].mask)
+> +			csi2rx->events[i]++;
+> +
+> +	writel(error_status, csi2rx->base + CSI2RX_ERROR_IRQS_REG);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+>  static const struct csi2rx_fmt *csi2rx_get_fmt_by_code(u32 code)
+>  {
+>  	unsigned int i;
+> @@ -220,6 +307,9 @@ static int csi2rx_start(struct csi2rx_priv *csi2rx)
+>  	reset_control_deassert(csi2rx->p_rst);
+>  	csi2rx_reset(csi2rx);
+> =20
+> +	if (csi2rx->error_irq >=3D 0)
+> +		csi2rx_configure_error_irq_mask(csi2rx->base, csi2rx);
+> +
+>  	reg =3D csi2rx->num_lanes << 8;
+>  	for (i =3D 0; i < csi2rx->num_lanes; i++) {
+>  		reg |=3D CSI2RX_STATIC_CFG_DLANE_MAP(i, csi2rx->lanes[i]);
+> @@ -332,6 +422,8 @@ static void csi2rx_stop(struct csi2rx_priv *csi2rx)
+>  	reset_control_assert(csi2rx->sys_rst);
+>  	clk_disable_unprepare(csi2rx->sys_clk);
+> =20
+> +	writel(0, csi2rx->base + CSI2RX_ERROR_IRQS_MASK_REG);
+> +
+>  	for (i =3D 0; i < csi2rx->max_streams; i++) {
+>  		writel(CSI2RX_STREAM_CTRL_STOP,
+>  		       csi2rx->base + CSI2RX_STREAM_CTRL_REG(i));
+> @@ -363,6 +455,21 @@ static void csi2rx_stop(struct csi2rx_priv *csi2rx)
+>  	}
+>  }
+> =20
+> +static int csi2rx_log_status(struct v4l2_subdev *sd)
+> +{
+> +	struct csi2rx_priv *csi2rx =3D v4l2_subdev_to_csi2rx(sd);
+> +	unsigned int i;
+> +
+> +	for (i =3D 0; i < CSI2RX_NUM_EVENTS; i++) {
+> +		if (csi2rx->events[i])
+> +			dev_info(csi2rx->dev, "%s events: %d\n",
+> +				 csi2rx_events[i].name,
+> +				 csi2rx->events[i]);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int csi2rx_s_stream(struct v4l2_subdev *subdev, int enable)
+>  {
+>  	struct csi2rx_priv *csi2rx =3D v4l2_subdev_to_csi2rx(subdev);
+> @@ -468,7 +575,12 @@ static const struct v4l2_subdev_video_ops csi2rx_vid=
+eo_ops =3D {
+>  	.s_stream	=3D csi2rx_s_stream,
+>  };
+> =20
+> +static const struct v4l2_subdev_core_ops csi2rx_core_ops =3D {
+> +	.log_status	=3D csi2rx_log_status,
+> +};
+> +
+>  static const struct v4l2_subdev_ops csi2rx_subdev_ops =3D {
+> +	.core		=3D &csi2rx_core_ops,
+>  	.video		=3D &csi2rx_video_ops,
+>  	.pad		=3D &csi2rx_pad_ops,
+>  };
+> @@ -705,6 +817,19 @@ static int csi2rx_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		goto err_cleanup;
+> =20
+> +	csi2rx->error_irq =3D platform_get_irq_byname_optional(pdev, "error_irq=
+");
+> +
+> +	if (csi2rx->error_irq < 0) {
+> +		dev_dbg(csi2rx->dev, "Optional interrupt not defined, proceeding witho=
+ut it\n");
+> +	} else {
+> +		ret =3D devm_request_irq(csi2rx->dev, csi2rx->error_irq, csi2rx_irq_ha=
+ndler, 0,
+> +					"csi2rx-error-irq", csi2rx);
+
+Why "csi2rx-error-irq" is passed in the devname argument instead of the dev=
+ice=20
+name `dev_name(&pdev->dev)`? Also there is an alignment issue:
+
+CHECK: Alignment should match open parenthesis
+#204: FILE: drivers/media/platform/cadence/cdns-csi2rx.c:824:
++               ret =3D devm_request_irq(csi2rx->dev, csi2rx->error_irq, cs=
+i2rx_irq_handler, 0,
++                                       "csi2rx-error-irq", csi2rx);
+
+> +		if (ret) {
+> +			dev_err(csi2rx->dev, "Unable to request interrupt: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+>  	ret =3D v4l2_subdev_init_finalize(&csi2rx->subdev);
+>  	if (ret)
+>  		goto err_cleanup;
+> --=20
+> 2.34.1
+>=20
+
+--4aroo4gfbhv2sbc4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEETeDYGOXVdejUWq/FQ96R+SSacUUFAme8HGsACgkQQ96R+SSa
+cUVZMw/+P+NfrNgRv9I3HrrgDUBcAquipWOLhPSiGrVVKB5NIHk6AHkSFQ8XAvqS
+jR1jRQsoCY97EXU3AXszc5UMAfNrAAnd7mXyRyrmOto6OobH36TFBXb5YCngP9rr
+Or+E+tQC9DY/urYiYmh/7N+xbQZ2kdgu6ZKnjaroWN7ePOw3ncBcfnIvD/4m3v52
+ofZj+nh/KT7CnEaxAx8avI4bavsJDTD8fKVyMUHA/3QjnGFVJZKv3wCx7GFof0Ac
+KwKG6A07IuM+fxLhltMhT7Ykrdhr6kyJIPXf6Rb6J9mHYpfBhuEeRezbwbutOgp9
+Ycn9hzM4DsfjFEo+r7l5rxcSYfiMBvUYkUfAvmTXHrxIf8fc+sfSSNt/I63hG926
+pAD22sJkct/fQVtvSR+Ijuy/dP/Gxh66tmFkkuxEqZ9g+Bexgx3kko5kUkyM8AqQ
+iwub+kXan5TD+LIWc7N5U7wW13HVn+qMnYKuiqlU7lE9bhLBiDUea6iO5pMJGhmu
+77Te3QIgL6t7eNukfL8Blv5G+6+y/1OKaQelkGjB+NnxvFxZpUHyD6Eve9fLMDBT
+VelQwKUJqwtrmlcvfoSzUgEUdjlS7ab6pT3X1uOnVfL1VTZjzlPGIGhcli4HJUDE
+VinnJJ7ZRaF5Bh9jfSNyecP/VUJW7bVUUaKjmsjGpR4u1kqAJ7s=
+=IBdl
+-----END PGP SIGNATURE-----
+
+--4aroo4gfbhv2sbc4--
