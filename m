@@ -1,44 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC22424A070;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA47024A06E;
 	Mon, 24 Feb 2025 09:09:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740388143; cv=none; b=PjK9G5RExRFmINlFreAqHFoA5Fqbedsc23vdLT2oQy3SY/Do5TDdfj2NK2RutBlO0piN3CTSXriJUKgWnuremEYzbwMoV2KahWmdpJ4MvpRkY/jkWj53ILCX4A/0O0xtoARTvemoWve71ujcSPfx+xA/4T8YtHR0Vw/5mav+sRI=
+	t=1740388143; cv=none; b=LBs4QqaRTP3IOk889nmHp7VvOBdyhG4CymyJgkXrPg1H7S1yUifsSMp7MAq9aIJKJ0+6pGKMutV8O6VOFc2KWyLuEuOW5IINWZoxw9uk39ZCu0WHe+9GUVvqHbtGhh1ra0j9DxILXYZkNNeZnKgRYctvjPV83TzZ6xOtLFGKUY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740388143; c=relaxed/simple;
-	bh=RPy+c9M9XnSF7fnvH42jTZeZw448FaaVZdh7+FOlT+M=;
+	bh=eHvxtpg5BcZjO8Wx7MxCSiuYJ025kjhp7csGrstaq+8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TkK2nwwwFuzUEncBbwmTYVP0Z1bKSIklSRNciX6Nm8RM6QPVe4ALcFWtRO2pHhvEHXqZsyuKBmzvjUAwIBTtv4bq2E0XiIDmS+S1gSQ9knK3l2lvD9SfUQal+TQS5FAZX9t22wEmcqompVBqoZo+mac15cL9ChYzGMPQRhtKUro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LZ8IKALf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BOBZkuGP9CiFVM/FUjsSHVCtLqIGnsl/e56Ov///WFN1Fv8VYkYjes3rAdMnwIHdUL0q5AYz0RjnN+jg0lG7edIZtOGSm3DpKECMeeh/p5IaQ5n8BjhwvhCaQ4h4EdFPeePIQDuadUhVMsSyHOnGgVmh6EpuloW1xYkoqIDJgwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hIzOAyNR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LZ8IKALf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62551C2BCB5;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hIzOAyNR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E1D1C4AF0F;
 	Mon, 24 Feb 2025 09:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740388143;
-	bh=RPy+c9M9XnSF7fnvH42jTZeZw448FaaVZdh7+FOlT+M=;
+	bh=eHvxtpg5BcZjO8Wx7MxCSiuYJ025kjhp7csGrstaq+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LZ8IKALflLotBxCoEeyv2AbjhjosmzsfIY9bKWgjxDYBsYNB+GB0zQ3cJrZW7IuVa
-	 7QgQ3JgO3hNPaJ/s0xz22XkXG1toLR2S7wUL9bBj/NQufW1cj9Yq8rpAq3D7/064hn
-	 FVofkdkWRHG1CBDspmhj7arlreXGMAwgyYwmHfQMnfHj4GcYeUur22p1TJtwi2Ab+0
-	 J0fgpN8DYHWMSWcZSiTlmCmDy2LHTBQ59+67akbb6AGv/TynfqebfAXUx/9SkKx95b
-	 2IsKdPVvddl+vRV3HMmmNeR2PoNPcFfR6vK+POJQ1xdtNQiO2XBA7xNIEu6js48Ypw
-	 momNAPq+0wdhQ==
+	b=hIzOAyNRO8+easKwXcS05uOtYtJnTHBBWFLpiNlAs5UvytYWn6cZO3Y7bhVyqHISa
+	 7JFlcLRh36k3qyfkOCV/ppnxcZV7+4HEozZc+/iJmCLfo+HFVwAwC3bpZM6bIOvi++
+	 9Llc/UNSaAwYTzXUCweyEqSwCuhoN+L7k5i3z8j15Yhz5YkVsWmkDR+tdoaEJ66zOY
+	 uluvw/17fyFLIfdacYYSnQSrk3nlVt1mowzH8Zavcrcv88phRfWuKP1aycO2kWhVe6
+	 MduYoApakXGUUEK8+Fj1Jw8SnvXzQU/2A5UVZf1V5VTA78Vn8WFb5D+XqyUz0cavh6
+	 lHZ0xvNr9StNg==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tmUST-00000003p5E-2J2i;
+	id 1tmUST-00000003p56-25Ff;
 	Mon, 24 Feb 2025 10:09:01 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
+	Kees Cook <mchehab+huawei@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 28/39] scripts/kernel-doc.py: Set an output format for --none
-Date: Mon, 24 Feb 2025 10:08:34 +0100
-Message-ID: <8c4b7ce0e79c20d6b5804e6e3cb86e3d47fc09f5.1740387599.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v2 26/39] docs: sphinx: kerneldoc: ignore "\" characters from options
+Date: Mon, 24 Feb 2025 10:08:32 +0100
+Message-ID: <3f2738d2e077232f5ee4c7a9f15ba6a59bdeab72.1740387599.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1740387599.git.mchehab+huawei@kernel.org>
 References: <cover.1740387599.git.mchehab+huawei@kernel.org>
@@ -51,38 +52,65 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Now that warnings output is deferred to the output plugin, we
-need to have an output style for none as well.
+Documentation/driver-api/infiniband.rst has a kernel-doc tag
+with "\" characters at the end:
 
-So, use the OutputFormat base class on such cases.
+	.. kernel-doc:: drivers/infiniband/ulp/iser/iscsi_iser.c
+	   :functions: iscsi_iser_pdu_alloc iser_initialize_task_headers \
+	        iscsi_iser_task_init iscsi_iser_mtask_xmit iscsi_iser_task_xmit \
+	        iscsi_iser_cleanup_task iscsi_iser_check_protection \
+	        iscsi_iser_conn_create iscsi_iser_conn_bind \
+	        iscsi_iser_conn_start iscsi_iser_conn_stop \
+	        iscsi_iser_session_destroy iscsi_iser_session_create \
+	        iscsi_iser_set_param iscsi_iser_ep_connect iscsi_iser_ep_poll \
+	        iscsi_iser_ep_disconnect
+
+This is not handled well, as the "\" strings will be just stored inside
+Sphinx options.
+
+While the actual problem deserves being fixed, better to relax the
+keneldoc.py extension to silently strip "\" from the end of strings,
+as otherwise this may cause troubles when preparing arguments to
+be executed by kernel-doc.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/lib/kdoc/kdoc_files.py | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/sphinx/kerneldoc.py | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/scripts/lib/kdoc/kdoc_files.py b/scripts/lib/kdoc/kdoc_files.py
-index c215ae3047b8..957aaeaed7e6 100755
---- a/scripts/lib/kdoc/kdoc_files.py
-+++ b/scripts/lib/kdoc/kdoc_files.py
-@@ -19,6 +19,7 @@ from datetime import datetime
- from dateutil import tz
- 
- from kdoc_parser import KernelDoc
-+from kdoc_output import OutputFormat
- 
- 
- class GlobSourceFiles:
-@@ -137,6 +138,9 @@ class KernelFiles():
-         if not modulename:
-             modulename = "Kernel API"
- 
-+        if out_style is None:
-+            out_style = OutputFormat()
+diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
+index d206eb2be10a..344789ed9ea2 100644
+--- a/Documentation/sphinx/kerneldoc.py
++++ b/Documentation/sphinx/kerneldoc.py
+@@ -118,6 +118,10 @@ class KernelDocDirective(Directive):
+             identifiers = self.options.get('identifiers').split()
+             if identifiers:
+                 for i in identifiers:
++                    i = i.rstrip("\\").strip()
++                    if not i:
++                        continue
 +
-         dt = datetime.now()
-         if os.environ.get("KBUILD_BUILD_TIMESTAMP", None):
-             # use UTC TZ
+                     cmd += ['-function', i]
+             else:
+                 cmd += ['-no-doc-sections']
+@@ -126,9 +130,17 @@ class KernelDocDirective(Directive):
+             no_identifiers = self.options.get('no-identifiers').split()
+             if no_identifiers:
+                 for i in no_identifiers:
++                    i = i.rstrip("\\").strip()
++                    if not i:
++                        continue
++
+                     cmd += ['-nosymbol', i]
+ 
+         for pattern in export_file_patterns:
++            pattern = pattern.rstrip("\\").strip()
++            if not pattern:
++                continue
++
+             for f in glob.glob(env.config.kerneldoc_srctree + '/' + pattern):
+                 env.note_dependency(os.path.abspath(f))
+                 cmd += ['-export-file', f]
 -- 
 2.48.1
 
