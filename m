@@ -1,368 +1,314 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from HK2PR02CU002.outbound.protection.outlook.com (mail-eastasiaazon11020087.outbound.protection.outlook.com [52.101.128.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B447C1A3174
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 02:26:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740364010; cv=none; b=oyMTdhXYIPcBu5TMBN+fFuvwSF/3qwOyu1hEa5QFy/A0EDIPTpnm5Z2vHy7dgDTD/b4vRYXX9Q2OY7aH5k6kevN1RKn9jw1HVSydhnhyR6wcBVMgM0XGcbs5teBnVXp1817MfBHZEUzbJsYQ6SoLGd6tfmehAMJROIvhu4iSdyQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740364010; c=relaxed/simple;
-	bh=r3dI7WiEKrFqvpwa8Xutcga0Pq3D9iRGQ2iWtyXOVYM=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=AGgFyogzpdu3BwfwFNN4nyPP+2/9i2+PHmd1ska0ajZZx2xItEJRBlD/r1H7BqvIEsHKKGKChHMLGksMWQVNzy32LinqtPX3xPagLmeCGd2bqdmzXki+/6OmEl4myyJlFuUUKIHcZkvwuB3r+BqbdOy7yqTg/YfipI9SGZOnKvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--chharry.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=39Ac9zHp; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--chharry.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E8321A317E;
+	Mon, 24 Feb 2025 02:27:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.128.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740364027; cv=fail; b=mEWdVP1z7Xly/5+FHpUCqfPaOK/xsljgAcOoPoaMNNSCXhfw2uApzjGuHqi+pDp2e0VaG5JJw4S1U3PbqkRf2mzrH3KZT3xJn4VfV8WHDlPesqlHUMGX1k59lyEWq2Ip7lsZwBlKIk+D8q7dEG/dpW/PKgXE1xTbX6liPzblrgo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740364027; c=relaxed/simple;
+	bh=9460166e2nvsJMw/L0KTefSI0sM862KrWYrVr9Qgx8g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kxsjDt9u3v2+5DaFQeutLH8VcQ2cb/eZkUEVdoccWZnKOjWGVxKC6IQ7yw2TMnPckSVvltif+f+PQ9LRtyRFUQPqVVBnkdw4sQXv6yADy9ysnxLkpgHY+rcZR2LMieX5K+psxNyNhb1w6IPJkyXLoRRqIwWaPG7QDDCCXPmXeag=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; dkim=pass (2048-bit key) header.d=cixtech.com header.i=@cixtech.com header.b=VWnmMkNU; arc=fail smtp.client-ip=52.101.128.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="39Ac9zHp"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-220cb5924a4so3929535ad.2
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 18:26:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740364008; x=1740968808; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=LhuIV3j7oQrzKR61zcRCUAWXcpdxwySje2S75gCH1tg=;
-        b=39Ac9zHpnAvwe/EUiw18MjzUCVHBH8XbGmx9dKlT+abcfCl6PryiyQgpDWM689rQku
-         GFwGwIM+R4UTXcQSFXdd1NEstAyejHy1/XfT6JvE+sgTfJbPkwUP9iAMOMAjT4H8OXqr
-         KCEZ+7M1TWZ+MN+k3/It4eFwqZp0Gi4gD6oifTmqE4aUxP+N3G+O3cCgn/KKyG8ILU+S
-         aBsOXPY2tMq6bFeAIpkujfKcakYLt34D7PUkQ5T89oQX1jalZgTo5PPgHxKyalMchmS3
-         vCwS+Noe4p2KgRnkeb4kNRdSnaQqzrREy3C1N5Z0YXJjyU3UBklPNCKtqoav1JF/2WHg
-         yHvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740364008; x=1740968808;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LhuIV3j7oQrzKR61zcRCUAWXcpdxwySje2S75gCH1tg=;
-        b=pJ24BFQnVfCmrQDKhMjZJetFojkXBteSW7W6NGH2XMOZwSJyIbjNrelt8nArB1I7e/
-         Wh2Zkt2oMUenz462oF8DOPhsyHF1aFBgP8y408zYNu+joANl/MurTokb+471XffeufZ0
-         RPsncEmw9rZH3ABRZzKUuSRnUpjUPQIHQBpsuM0C35Ya8/Qn0K66nUjJxI1R6IVbLam7
-         oUv/0J7PfgMULmDBglm7mjXKnRwdPhR0pag3iPZHmzAWZE+1g0eH6RVN0bTd09WYdq2+
-         huiCGC8swdHjMzzkm5TF+iTYhPINuk9cty9dkeiPXIdyUAhb0od21IaynXFS4BR9w4fe
-         An3w==
-X-Forwarded-Encrypted: i=1; AJvYcCXCAHf28CPiTx4Mbsj1rA3OrIRVLJioikTsTZ85hgu2eHp/DFjZfd687LBuSelEr9RdGmz9h4zmOjiJ8bg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9YtwnALLMNVluvAHmEAykEZ7azdjsfqcBP4Ui4dAyAPZrXZJx
-	3jC5+hZZfjUi1Ef+KgL1tCW3KRpHkgYAoZXQhN5Nsgwa9/eZDJPK7rzfwNlUzcPL07DG2fri9LT
-	DAgRn+w==
-X-Google-Smtp-Source: AGHT+IFZnn3FBdzh9D5B9RxsJfGUyqMzvkNo7PGV4SVPFh2QI3ZjakDkbKiu4nAUhfLmmp/1KDcEqC4BYEw2
-X-Received: from plblc12.prod.google.com ([2002:a17:902:fa8c:b0:215:5322:d126])
- (user=chharry job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:e5cc:b0:21f:1202:f2f5
- with SMTP id d9443c01a7336-2219ff3353bmr161316925ad.8.1740364007568; Sun, 23
- Feb 2025 18:26:47 -0800 (PST)
-Date: Mon, 24 Feb 2025 10:24:28 +0800
+	dkim=pass (2048-bit key) header.d=cixtech.com header.i=@cixtech.com header.b="VWnmMkNU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rBG1f+RCWNTWgsnimd2yoVLSDAsZNyZ5ZdZ2HPcutLUK0HRmdbUDsAWovrDLzKzXQkzBV6Fn8P8ZMw6WL0Co13wSeZdatE7tlhN236BXE8celykyJ0X0+3kH7WJPDhXMsyEYzJHEySSBcHz9TxhCvpPw77VLFKPtFpMRZIfHD7DwErefj76G7RnViIg/hAO3P/ZE+f064c8D0s81naezI88XpqBsLKkOM/5ofvaMn6Vz3FTfl+u/mLswt6OHlzGvd2o6lRIewVD/53napX7yya3Aiw1BttoR5ztzrHHirDomdO7QPNCIc0rmcpVk0JDSLclknrMgWVu9zznhUgEytQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=q+CQGTKaBKlOk4JW9/8KU0cpMDlr1GgqiyhTkD3wW/Q=;
+ b=TCeiqu+DFobv3OdEC9bnLfXcSUILt5vVAAgYelM7ZdC1H5MKo7nL9Q095Ra24t9lRrAokWwgF1CI9bP2wOYv9kg26EbW6MIGxQ0NHf2SvYY55aZTX+EjVWhchkMoJx69TWoXjBwUsJ5BXXOaFaRUzjfVNZ7aXbMrd3zsC9ejyksMm/xjMtyWKfBCXJmVFU9DX1Jup+qkW37yw/gs6EaNeYn21pneddVVmwIvX5cbI4eMz/qZBib7F2tRvc7eP8587ab+3pPAUYCRha45yqu6HF+FpPVMR4mqY6iAELzVuT6QGhXVYbuqqJN57alEeZmPCTJdDWnssJhqDyAzMaDGQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=arm.com smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cixtech.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q+CQGTKaBKlOk4JW9/8KU0cpMDlr1GgqiyhTkD3wW/Q=;
+ b=VWnmMkNUUxng1X4tSQf1Fmv0j5gvA4WKAx49+PDB9QsWmwpElnj89/4XOYz9h8NWcm/vy4k1KZrVH80fbPi+a9RNm83MRkBuJ7BnLYhEWFB44PGOdziIZwURjWMxbhvbmoinILb+6DkBnpXAFhACblCtd2c8/P0MRJXIUgKGO+viZ8CRsaOn87Uspc0dwPWT4DtDr6nXDm+eWqeNQOaHmhY7TP5QYT7OtNkRZKXL1GEa2DUk65LQ6WU6/Jim0D4lgCSjfvI4X+0C1kbJCyTObvrG06GL3bMF0qTdFlIb8RfLc7wtzIzPSw/VCQKENHE8zK6P2lJjgO6TluUDdwez1A==
+Received: from PS2PR02CA0033.apcprd02.prod.outlook.com (2603:1096:300:59::21)
+ by SEYPR06MB5670.apcprd06.prod.outlook.com (2603:1096:101:be::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.19; Mon, 24 Feb
+ 2025 02:26:59 +0000
+Received: from HK2PEPF00006FB0.apcprd02.prod.outlook.com
+ (2603:1096:300:59:cafe::21) by PS2PR02CA0033.outlook.office365.com
+ (2603:1096:300:59::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.20 via Frontend Transport; Mon,
+ 24 Feb 2025 02:26:59 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ HK2PEPF00006FB0.mail.protection.outlook.com (10.167.8.6) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8466.11 via Frontend Transport; Mon, 24 Feb 2025 02:26:58 +0000
+Received: from nchen-desktop (unknown [172.16.64.25])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 4887D4160CA0;
+	Mon, 24 Feb 2025 10:26:57 +0800 (CST)
+Date: Mon, 24 Feb 2025 10:26:46 +0800
+From: Peter Chen <peter.chen@cixtech.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>,
+	krzk+dt@kernel.org, Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	cix-kernel-upstream@cixtech.com,
+	"Fugang . duan" <fugang.duan@cixtech.com>
+Subject: Re: [PATCH 6/6] arm64: dts: cix: add initial CIX P1(SKY1) dts support
+Message-ID: <Z7vY5kHfEGzCCuWW@nchen-desktop>
+References: <20250220084020.628704-1-peter.chen@cixtech.com>
+ <20250220084020.628704-7-peter.chen@cixtech.com>
+ <4add2867-8c09-454a-b3e2-b4baaeccfd44@app.fastmail.com>
+ <Z7cga0L6UYmPXoFw@nchen-desktop>
+ <5f88cdbe-f396-49c6-bb48-f50cbbb21caf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
-Message-ID: <20250224022447.1141413-1-chharry@google.com>
-Subject: [PATCH] Bluetooth: btusb: Configure altsetting for USER_CHANNEL
-From: Hsin-chen Chuang <chharry@google.com>
-To: linux-bluetooth@vger.kernel.org, luiz.dentz@gmail.com, 
-	gregkh@linuxfoundation.org
-Cc: chromeos-bluetooth-upstreaming@chromium.org, 
-	Hsin-chen Chuang <chharry@chromium.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	Ying Hsu <yinghsu@chromium.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5f88cdbe-f396-49c6-bb48-f50cbbb21caf@kernel.org>
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HK2PEPF00006FB0:EE_|SEYPR06MB5670:EE_
+X-MS-Office365-Filtering-Correlation-Id: 721b272d-dd48-40fc-182b-08dd547ab6ab
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Hsw+16N17BYyqlUDes1/Dmyu9it/wSAfKTHUg7h67xcTF5G3BCIQypY4vEqu?=
+ =?us-ascii?Q?v4Y90BJdVT0mNHq9P/w/0H3dUVRPez7U4G019+sxndS+27hScRfKIZskx+Xf?=
+ =?us-ascii?Q?h6RF9bB4QFPt9rqdMrt3jngjIfl7Ed8sHoYwKlXlh9bfvS+OWC+fRKPDe9I4?=
+ =?us-ascii?Q?D03uERoR8qyOr8CQzWN3+VkpWx1vpZQv+xZ8mO6E1ygOyaA/IzqFPR702aZx?=
+ =?us-ascii?Q?9qK6h2uVfUj2wG51BHJK7GhClAp8qU3LtYshqLUEiWuInzhheNUY/dmKwyuB?=
+ =?us-ascii?Q?EY6VgP+jGpL6KmC/bZoo1uebi/n0BLJWUKG5durC+H/GyVh3/BOhImq/+Mh1?=
+ =?us-ascii?Q?UO7rvoK2VvwyVW8stP6DKXPYPMgLvoR3DdA0QMVg2Dl6FQBLYWPPDLgp0jS0?=
+ =?us-ascii?Q?VjHgbxIvByZAu/n2xsm9cfR7tgW4Fumiaoc8dYLqLczNImRTgA0Erq/FPWLo?=
+ =?us-ascii?Q?ww46/B/tyFQ0wv4vRYhTL+v0EsQLg2PtR0s4U1+iz8GxXBXqFRK2z3KbCL+Y?=
+ =?us-ascii?Q?N3WQOgxaACbEV/r2GHX4BuMKcXOIt9jlwmhsEAeKz/fqk5vtTC/dfxJKZSgG?=
+ =?us-ascii?Q?UcWxWTeF3fdBUkzySMPYN3daTQiWx9TWT40LVfZoBxTNIYQmsgtcHjKQHpI8?=
+ =?us-ascii?Q?3ajmG6yWpGaj4p+SnJwBbnPdJYgp/UzSJM1plGyWsfF8GuTdov/bSnhsYJAM?=
+ =?us-ascii?Q?+Ue0+zMIErm9Ryab+SZ8dyPlyEctTAZA7tx3kAkRJKTEFnbo8bGzVXQxJIvq?=
+ =?us-ascii?Q?fq4BUW6Fn7T4Em/sEfhAKlmPufK6j1Jr5UBC8LwnJXkN0nCO8ktX5GZ0szrQ?=
+ =?us-ascii?Q?vvfdinTvCIGIdP3sH7czQsjzVr9W3lQuvYGMB7l9xXmX2w/f2Hn90Dxj6eHx?=
+ =?us-ascii?Q?mDgMGds64Ge2RITl7LoqsxozsiaVKn/9JzlrLEzxul8CRsHSiSgNo3Ub1t50?=
+ =?us-ascii?Q?cybvNA6S02tFD8qDWvgPsGndo2AA4ylTQr2Xa8pdIvlvahJN4CCKeYnuewPb?=
+ =?us-ascii?Q?Wu6FH4jQPEvDib5Gkmenlf3evlfjFwHtjxJ9r3kaZKE9ezW9DxKMvyerUsZR?=
+ =?us-ascii?Q?jHViDmxMormc2bWc3kEg2zrRUZoXWN7ii1KQHW8Pml0ypqTIqyvU6ua1RLfu?=
+ =?us-ascii?Q?BV1V0uXEowQIkONq2vckL6Hc3fLrCfbQadiwtRy0s/cWPg9k9jV6EABQGTYG?=
+ =?us-ascii?Q?7fEDsVMFPJrH32sg1hMH0v/1ID0cm59EXwDMq4qFLRUi3aanB2w2MJoQkQai?=
+ =?us-ascii?Q?VzQutyCJNIDY5id15fL5XBLThzVprQrjZpEbODyY/Wjdd5yczLBXgIZnzoOw?=
+ =?us-ascii?Q?F55kQxdRdslj4fK6M3WT71EG7JcfraNWpgC+BwTnshcMjhIAlG+kfz5vwAHw?=
+ =?us-ascii?Q?B3t8nZ3/fZnM+zYuhomppNAnTdD3jqt12IonnUxyZndFPEKGeyE4bFq2+oKD?=
+ =?us-ascii?Q?ZFLMKTDSEb4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2025 02:26:58.1544
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 721b272d-dd48-40fc-182b-08dd547ab6ab
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource: HK2PEPF00006FB0.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB5670
 
-From: Hsin-chen Chuang <chharry@chromium.org>
+On 25-02-21 12:42:23, Krzysztof Kozlowski wrote:
 
-Automatically configure the altsetting for USER_CHANNEL when a SCO is
-connected or disconnected. This adds support for the USER_CHANNEL to
-transfer SCO data over USB transport.
+Hi Krysztof,
 
-Fixes: b16b327edb4d ("Bluetooth: btusb: add sysfs attribute to control USB alt setting")
-Signed-off-by: Hsin-chen Chuang <chharry@chromium.org>
----
+Thanks for your detail reviewing. I am afraid my email client did not
+receive your email for comment for this patch, I reply at this one.
 
- drivers/bluetooth/btusb.c | 224 +++++++++++++++++++++++++++++++-------
- 1 file changed, 186 insertions(+), 38 deletions(-)
+>> +#include "sky1.dtsi"
+>> +/ {
+>> +	model = "Radxa Orion O6";
+>> +	compatible = "radxa,orion-o6";
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index de3fa725d210..dfb0918dfe98 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -854,6 +854,11 @@ struct qca_dump_info {
- #define BTUSB_ALT6_CONTINUOUS_TX	16
- #define BTUSB_HW_SSR_ACTIVE	17
- 
-+struct sco_handle_list {
-+	struct list_head list;
-+	u16 handle;
-+};
-+
- struct btusb_data {
- 	struct hci_dev       *hdev;
- 	struct usb_device    *udev;
-@@ -920,6 +925,9 @@ struct btusb_data {
- 	int oob_wake_irq;   /* irq for out-of-band wake-on-bt */
- 
- 	struct qca_dump_info qca_dump;
-+
-+	/* Records the exsiting SCO handles for HCI_USER_CHANNEL */
-+	struct list_head sco_handle_list;
- };
- 
- static void btusb_reset(struct hci_dev *hdev)
-@@ -1113,6 +1121,131 @@ static inline void btusb_free_frags(struct btusb_data *data)
- 	spin_unlock_irqrestore(&data->rxlock, flags);
- }
- 
-+static void btusb_sco_handle_list_clear(struct list_head *list)
-+{
-+	struct sco_handle_list *entry, *n;
-+
-+	list_for_each_entry_safe(entry, n, list, list) {
-+		list_del(&entry->list);
-+		kfree(entry);
-+	}
-+}
-+
-+static struct sco_handle_list *btusb_sco_handle_list_find(
-+	struct list_head *list,
-+	u16 handle)
-+{
-+	struct sco_handle_list *entry;
-+
-+	list_for_each_entry(entry, list, list)
-+		if (entry->handle == handle)
-+			return entry;
-+
-+	return NULL;
-+}
-+
-+static int btusb_sco_handle_list_add(struct list_head *list, u16 handle)
-+{
-+	struct sco_handle_list *entry;
-+
-+	if (btusb_sco_handle_list_find(list, handle))
-+		return -EEXIST;
-+
-+	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
-+	if (!entry)
-+		return -ENOMEM;
-+
-+	entry->handle = handle;
-+	list_add(&entry->list, list);
-+
-+	return 0;
-+}
-+
-+static int btusb_sco_handle_list_del(struct list_head *list, u16 handle)
-+{
-+	struct sco_handle_list *entry;
-+
-+	entry = btusb_sco_handle_list_find(list, handle);
-+	if (!entry)
-+		return -ENOENT;
-+
-+	list_del(&entry->list);
-+	kfree(entry);
-+
-+	return 0;
-+}
-+
-+static void btusb_sco_conn_change(struct btusb_data *data, struct sk_buff *skb)
-+{
-+	struct hci_event_hdr *hdr = (void *) skb->data;
-+	struct hci_dev *hdev = data->hdev;
-+
-+	if (hci_skb_pkt_type(skb) != HCI_EVENT_PKT || skb->len < sizeof(*hdr))
-+		return;
-+
-+	switch (hdr->evt) {
-+	case HCI_EV_DISCONN_COMPLETE: {
-+		struct hci_ev_disconn_complete *ev =
-+			(void *) skb->data + sizeof(*hdr);
-+		u16 handle;
-+
-+		if (skb->len != sizeof(*hdr) + sizeof(*ev) || ev->status)
-+			return;
-+
-+		handle = __le16_to_cpu(ev->handle);
-+		if (btusb_sco_handle_list_del(&data->sco_handle_list,
-+					      handle) < 0)
-+			return;
-+
-+		bt_dev_info(hdev, "disabling SCO");
-+		data->sco_num--;
-+		data->air_mode = HCI_NOTIFY_DISABLE_SCO;
-+		schedule_work(&data->work);
-+
-+		break;
-+	}
-+	case HCI_EV_SYNC_CONN_COMPLETE: {
-+		struct hci_ev_sync_conn_complete *ev =
-+			(void *) skb->data + sizeof(*hdr);
-+		unsigned int notify_air_mode;
-+		u16 handle;
-+
-+		if (skb->len != sizeof(*hdr) + sizeof(*ev) || ev->status)
-+			return;
-+
-+		switch (ev->air_mode) {
-+		case BT_CODEC_CVSD:
-+			notify_air_mode = HCI_NOTIFY_ENABLE_SCO_CVSD;
-+			break;
-+
-+		case BT_CODEC_TRANSPARENT:
-+			notify_air_mode = HCI_NOTIFY_ENABLE_SCO_TRANSP;
-+			break;
-+
-+		default:
-+			return;
-+		}
-+
-+		handle = __le16_to_cpu(ev->handle);
-+		if (btusb_sco_handle_list_add(&data->sco_handle_list,
-+					      handle) < 0) {
-+			bt_dev_err(hdev, "failed to add the new SCO handle");
-+			return;
-+		}
-+
-+		bt_dev_info(hdev, "enabling SCO with air mode %u",
-+			    ev->air_mode);
-+		data->sco_num++;
-+		data->air_mode = notify_air_mode;
-+		schedule_work(&data->work);
-+
-+		break;
-+	}
-+	default:
-+		break;
-+	}
-+}
-+
- static int btusb_recv_event(struct btusb_data *data, struct sk_buff *skb)
- {
- 	if (data->intr_interval) {
-@@ -1120,6 +1253,10 @@ static int btusb_recv_event(struct btusb_data *data, struct sk_buff *skb)
- 		schedule_delayed_work(&data->rx_work, 0);
- 	}
- 
-+	/* Configure altsetting for HCI_USER_CHANNEL on SCO dis/connected */
-+	if (hci_dev_test_flag(data->hdev, HCI_USER_CHANNEL))
-+		btusb_sco_conn_change(data, skb);
-+
- 	return data->recv_event(data->hdev, skb);
- }
- 
-@@ -1919,44 +2056,6 @@ static void btusb_stop_traffic(struct btusb_data *data)
- 	usb_kill_anchored_urbs(&data->ctrl_anchor);
- }
- 
--static int btusb_close(struct hci_dev *hdev)
--{
--	struct btusb_data *data = hci_get_drvdata(hdev);
--	int err;
--
--	BT_DBG("%s", hdev->name);
--
--	cancel_delayed_work(&data->rx_work);
--	cancel_work_sync(&data->work);
--	cancel_work_sync(&data->waker);
--
--	skb_queue_purge(&data->acl_q);
--
--	clear_bit(BTUSB_ISOC_RUNNING, &data->flags);
--	clear_bit(BTUSB_BULK_RUNNING, &data->flags);
--	clear_bit(BTUSB_INTR_RUNNING, &data->flags);
--	clear_bit(BTUSB_DIAG_RUNNING, &data->flags);
--
--	btusb_stop_traffic(data);
--	btusb_free_frags(data);
--
--	err = usb_autopm_get_interface(data->intf);
--	if (err < 0)
--		goto failed;
--
--	data->intf->needs_remote_wakeup = 0;
--
--	/* Enable remote wake up for auto-suspend */
--	if (test_bit(BTUSB_WAKEUP_AUTOSUSPEND, &data->flags))
--		data->intf->needs_remote_wakeup = 1;
--
--	usb_autopm_put_interface(data->intf);
--
--failed:
--	usb_scuttle_anchored_urbs(&data->deferred);
--	return 0;
--}
--
- static int btusb_flush(struct hci_dev *hdev)
- {
- 	struct btusb_data *data = hci_get_drvdata(hdev);
-@@ -2327,6 +2426,51 @@ static void btusb_work(struct work_struct *work)
- 	}
- }
- 
-+static int btusb_close(struct hci_dev *hdev)
-+{
-+	struct btusb_data *data = hci_get_drvdata(hdev);
-+	int err;
-+
-+	BT_DBG("%s", hdev->name);
-+
-+	if (hci_dev_test_flag(hdev, HCI_USER_CHANNEL)) {
-+		btusb_sco_handle_list_clear(&data->sco_handle_list);
-+		data->sco_num = 0;
-+		if (data->isoc_altsetting != 0)
-+			btusb_switch_alt_setting(hdev, 0);
-+	}
-+
-+	cancel_delayed_work(&data->rx_work);
-+	cancel_work_sync(&data->work);
-+	cancel_work_sync(&data->waker);
-+
-+	skb_queue_purge(&data->acl_q);
-+
-+	clear_bit(BTUSB_ISOC_RUNNING, &data->flags);
-+	clear_bit(BTUSB_BULK_RUNNING, &data->flags);
-+	clear_bit(BTUSB_INTR_RUNNING, &data->flags);
-+	clear_bit(BTUSB_DIAG_RUNNING, &data->flags);
-+
-+	btusb_stop_traffic(data);
-+	btusb_free_frags(data);
-+
-+	err = usb_autopm_get_interface(data->intf);
-+	if (err < 0)
-+		goto failed;
-+
-+	data->intf->needs_remote_wakeup = 0;
-+
-+	/* Enable remote wake up for auto-suspend */
-+	if (test_bit(BTUSB_WAKEUP_AUTOSUSPEND, &data->flags))
-+		data->intf->needs_remote_wakeup = 1;
-+
-+	usb_autopm_put_interface(data->intf);
-+
-+failed:
-+	usb_scuttle_anchored_urbs(&data->deferred);
-+	return 0;
-+}
-+
- static void btusb_waker(struct work_struct *work)
- {
- 	struct btusb_data *data = container_of(work, struct btusb_data, waker);
-@@ -3782,6 +3926,8 @@ static int btusb_probe(struct usb_interface *intf,
- 	data->udev = interface_to_usbdev(intf);
- 	data->intf = intf;
- 
-+	INIT_LIST_HEAD(&data->sco_handle_list);
-+
- 	INIT_WORK(&data->work, btusb_work);
- 	INIT_WORK(&data->waker, btusb_waker);
- 	INIT_DELAYED_WORK(&data->rx_work, btusb_rx_work);
-@@ -4117,6 +4263,8 @@ static void btusb_disconnect(struct usb_interface *intf)
- 	hdev = data->hdev;
- 	usb_set_intfdata(data->intf, NULL);
- 
-+	btusb_sco_handle_list_clear(&data->sco_handle_list);
-+
- 	if (data->isoc) {
- 		device_remove_file(&intf->dev, &dev_attr_isoc_alt);
- 		usb_set_intfdata(data->isoc, NULL);
+> Never tested.
+
+> It does not look like you tested the DTS against bindings. Please run
+> `make dtbs_check W=1` (see
+> Documentation/devicetree/bindings/writing-schema.rst or
+> https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
+> for instructions).
+> Maybe you need to update your dtschema and yamllint. Don't rely on
+> distro packages for dtschema and be sure you are using the latest
+> released dtschema.
+
+I am sorry for that. I just reviewed device driver patch in recent 3-4 years,
+forget doing additional check for dts patch.
+
+> 
+> On 20/02/2025 13:30, Peter Chen wrote:
+> >>
+> >>> +
+> >>> +       aliases {
+> >>> +               serial2 = &uart2;
+> >>> +       };
+> >>
+> >> Please put the aliases in the .dts file, not the chip specific
+> >> .dtsi file, as each board typically wires these up differently.
+> >>
+> >> Note that the 'serial2' alias names are meant to correspond
+> >> to whatever label you find on the board, not the internal
+> >> numbering inside of the chip they are wired up to. Usually
+> >> these start with 'serial0' for the first one that is enabled.
+> >
+> > In fact, we would like to alias the SoC UART controller index here,
+> > and amba-pl011.c will try to get it, see function pl011_probe_dt_alias.
+> > It is initial dtsi file, so I only add console one which needs
+> > to align the bootargs passed by UEFI.
+> 
+> 
+> Your "in fact" is not really related to the problem described. If you
+> put it in the correct place, drivers will work just as fine.
+
+You also mentioned that in your comments. Yes, indeed the board dts file
+could remap physical controller index as different board serial number,
+but it is not what we would like to do (at least for CIX platforms).
+In our both HW and SW documents, we have fixed our uart usage cases,
+for example, UART2 as AP serial ports. UART0-UART1 as uart application,eg
+bluetooth. Customer will do their design to follow above rules, and
+it avoids each customer writing this alias at their board file.
+
+Meanwhile, fixed uart alias as its physical index is better to
+understand SW/HW relationship. Imaging you are debugging one UART
+bluetooth use case, your application passes "/dev/ttyAMA0" as its
+communication port due to board dts alias, but in board schematic,
+it is connects to SoC uart 1, the person to debug may confuse the
+different mapping at first.
+
+Also, in kernel device driver, it also uses alias id to its uart
+port index, it could better understand device driver hardware
+behaviours, esp you may dump hardware register to debug, you could
+easy to find related registers if the mapping is the same.
+
+> 
+> >
+> >>
+> >>> +               CPU0: cpu0@0 {
+> >>> +                       compatible = "arm,armv8";
+> >>> +                       enable-method = "psci";
+
+Will change Label "CPU0" as "cpu0", and name "cpu0" as "cpu"
+
+> >>
+> >> This should list the actual identifier of the CPU core, not
+> >> just "arm,armv8" which is the generic string used in the
+> >> models for emulators that don't try to model a particular
+> >> core.
+> >
+> > Will change big core to 'compatible = "arm,cortex-a720";'
+> > and LITTLE core to 'compatible = "arm,cortex-a520";'
+> >
+> >>
+> >>> +       memory@80000000 {
+> >>> +               #address-cells = <2>;
+> >>> +               #size-cells = <2>;
+> >>> +               device_type = "memory";
+> >>> +               reg = <0x00000000 0x80000000 0x1 0x00000000>;
+> >>> +       };
+> >>
+> >> The memory size is not part of the SoC either, unless the only
+> >> way to use this SoC is with on-chip eDRAM or similar.
+> >>
+> >> Normally this gets filled by the bootloader based on how
+> >> much RAM gets detected.
+> >
+> > Will move it to dts file.
+> >
+> >>
+> >>> +               linux,cma {
+> >>> +                       compatible = "shared-dma-pool";
+> >>> +                       reusable;
+> >>> +                       size = <0x0 0x28000000>;
+> >>> +                       linux,cma-default;
+> >>> +               };
+> >>
+> >> Same here, this is a setting from the firmware, not the
+> >> SoC.
+> >
+> > Will move it to dts file since our firmware has already released,
+> > and it needs to support different kernels.
+> >
+> >>
+> >>> +       sky1_fixed_clocks: fixed-clocks {
+> >>> +               uartclk: uartclk {
+> >>> +                       compatible = "fixed-clock";
+> >>> +                       #clock-cells = <0>;
+> >>> +                       clock-frequency = <100000000>;
+> >>> +                       clock-output-names = "uartclk";
+> >>
+> >>> +               uart_apb_pclk: uart_apb_pclk {
+> >>> +                       compatible = "fixed-clock";
+> >>> +                       #clock-cells = <0>;
+> >>> +                       clock-frequency = <200000000>;
+> >>> +                       clock-output-names = "apb_pclk";
+> >>
+> >>
+> >> Clock names don't need "clk" in them, and there should
+> >> be no underscore -- use '-' instead of '_' when separating
+> >> strings in DT.
+> >
+> > Will change to:
+> > uart_apb: clock-uart-apb {
+> 
+> No, instead explain why this is part of SoC - or what are you missing
+> here - and use preferred naming.
+
+It is in SoC part, APB clock uses to visit register, and the function
+amba_get_enable_pclk at file drivers/amba/bus.c needs it during uart
+device probes. It uses common Arm uart pl011 IP, the binding doc
+described at: Documentation/devicetree/bindings/serial/pl011.yaml
+
+Since it is the initial dts support patch, I do not want to add
+more to avoid reviewing efforts, eg, clock gate, reset, etc.
+That's the reason I use fixed clock here to let basic system
+work, and boots to console.
+
+> 
+> Please use name for all fixed clocks which matches current format
+> recommendation: 'clock-<freq>' (see also the pattern in the binding for
+> any other options).
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/clock/fixed-clock.yaml?h=v6.11-rc1
+> 
+
+Will change to "uart_apb: clock-1000000"
+
+>> +	pmu: pmu {
+
+> Keep some sort of order. See DTS coding style.
+
+I will follow: Documentation/devicetree/bindings/dts-coding-style.rst
+to fix coding sytle issue at v2 patch set.
+
+>> +		compatible = "arm,armv8-pmuv3";
+>> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW>;
+>> +		interrupt-parent = <&gic>;
+>> +		status = "okay";
+
+> Where did you disable it? Why only this has status=okay but other do not?
+
+I will remove this one at v2 patch set.
+
 -- 
-2.48.1.601.g30ceb7b040-goog
 
+Best regards,
+Peter
