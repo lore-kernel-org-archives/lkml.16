@@ -1,134 +1,128 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67F7E1537C8;
-	Mon, 24 Feb 2025 17:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16762263F26;
+	Mon, 24 Feb 2025 17:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740417489; cv=none; b=niJs3INEYJe8k6Z7mk6WW9LEUPlKwIIlthGRj3ENq0eT7EeuJu6M/ItnMm5zpJ3ZrnEC97cu6D69o3R1vJ7AcCn4guwC4HfOOT7kj45HmsLYJGKsx4xfCf8Jef6G37XybBGfVLi/6jvyukLXyuDSf3MDzXUGfCvMe5aKy9yfWkI=
+	t=1740417563; cv=none; b=nORxHtFTlkDMAWtl4D7iNNJIA5yqfcPaF+aCTsiP5Fh7eOBUZd0mQC2ukYCxuQLwwqX7ewtYoLSINI+acT2tkUb+KTS2dgtxHza9M0LuR3YgFYerCoXUm43JD3vZfrMd7jtv4xVFPXWU6rLb6iLZM3KlD46+X9PfCVXFUYcPtaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740417489; c=relaxed/simple;
-	bh=Udl67jI1Qm6fATwqGT1fr5PHHdw9h5FVAHOl8ACPIDE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UeRrfWNAqexR63utZhiSeTMriJX7h5sPgoNuewQd+5KiyycsnPmrluoJOg8SaY51R0c6zhZ1edU0bAVoL0SIs2I0isu1Lcba4EvL9H5g9akrPDMeyA7tt9ZQMg/4f70WJg+PcT/5f6A5Rv0peQ/efte/CUbKR+KLq1ScvH/fuHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14AA3152B;
-	Mon, 24 Feb 2025 09:18:21 -0800 (PST)
-Received: from e133380.arm.com (e133380.arm.com [10.1.197.51])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBDBF3F5A1;
-	Mon, 24 Feb 2025 09:17:59 -0800 (PST)
-Date: Mon, 24 Feb 2025 17:17:54 +0000
-From: Dave Martin <Dave.Martin@arm.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: "Moger, Babu" <babu.moger@amd.com>, corbet@lwn.net, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	tony.luck@intel.com, peternewman@google.com, x86@kernel.org,
-	hpa@zytor.com, paulmck@kernel.org, akpm@linux-foundation.org,
-	thuth@redhat.com, rostedt@goodmis.org, xiongwei.song@windriver.com,
-	pawan.kumar.gupta@linux.intel.com, daniel.sneddon@linux.intel.com,
-	jpoimboe@kernel.org, perry.yuan@amd.com, sandipan.das@amd.com,
-	kai.huang@intel.com, xiaoyao.li@intel.com, seanjc@google.com,
-	xin3.li@intel.com, andrew.cooper3@citrix.com, ebiggers@google.com,
-	mario.limonciello@amd.com, james.morse@arm.com,
-	tan.shaopeng@fujitsu.com, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, maciej.wieczor-retman@intel.com,
-	eranian@google.com
-Subject: Re: [PATCH v11 22/23] x86/resctrl: Introduce interface to list
- assignment states of all the groups
-Message-ID: <Z7ydx6vfuw8OdJzL@e133380.arm.com>
-References: <cover.1737577229.git.babu.moger@amd.com>
- <52c66bf98480c0ab6bb0f0762497e328fcbdeaac.1737577229.git.babu.moger@amd.com>
- <Z7XiQ+u3Pc+uvJCK@e133380.arm.com>
- <45a0a88a-b31e-447e-9d62-bc0cdedf06f7@amd.com>
- <Z7dN2KpsQjVUb3KR@e133380.arm.com>
- <7802f9e9-9a63-463d-a51e-e9ad0e60f77f@amd.com>
- <Z7ijCphcSM58AqA6@e133380.arm.com>
- <09f2f512-0428-4649-b8ef-33e5a03d5dcb@intel.com>
+	s=arc-20240116; t=1740417563; c=relaxed/simple;
+	bh=DqLA3R9+ncfGcr/YJS6lhTf2TaveCWhzLJel4MYNo6I=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=K/QVkVf7vaOBt93/nMmZuvE9H5OnyGgJl6loaUkpw3A1PHw7syCDxFea95JKSuaNPh8vslGQEjd3Uuy2mW3+EFeK18+/DTjC22svL8Yr73VnShMdhOzEaIMWYPeLhfEw3mm9oO8q8wjoaN+DjB92s1gEscOM6IuuFPqPywjE8eU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oj/5A4d6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oj/5A4d6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F9ADC4CEEB;
+	Mon, 24 Feb 2025 17:19:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740417561;
+	bh=DqLA3R9+ncfGcr/YJS6lhTf2TaveCWhzLJel4MYNo6I=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=oj/5A4d6B52s9netUSHzaXDHUKauk4ZcSJNpUdrGaxvCn3ezRAPD/QQgUpzHjFm8X
+	 f7h1I9h9c3piFl0NU62S/i0PL1ErNr0MKeaC8ADaF9VbT15kotJwl2t1to39SP/jNY
+	 bn6N5EXWAA6d4cigSjRIPgSOPtnVRmnW0FQW+ll+UHHHNeTMG+4MqDGCwTtMi2DBse
+	 rDBqxn9i1tPyVu5UKn3YYJZ8rfMJh43d0JGdXGi2CQgxm9yBtkmwVImJhhLQkNyTrs
+	 OK26oVeHXewjJaBw/jQElWNnnMCC2kMkmRT+p6ckzKEzWk0MfYEWWZUnXrPVb1YDxM
+	 UC96q7730INBA==
+Date: Mon, 24 Feb 2025 11:19:19 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <09f2f512-0428-4649-b8ef-33e5a03d5dcb@intel.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, 
+ Takashi Iwai <tiwai@suse.com>, 
+ Francesco Dolcini <francesco.dolcini@toradex.com>, 
+ Ernest Van Hoecke <ernest.vanhoecke@toradex.com>, 
+ patches@opensource.cirrus.com, Saravana Kannan <saravanak@google.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-sound@vger.kernel.org, 
+ Jaroslav Kysela <perex@perex.cz>, 
+ Charles Keepax <ckeepax@opensource.cirrus.com>, devicetree@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
+To: Francesco Dolcini <francesco@dolcini.it>
+In-Reply-To: <20250224155500.52462-4-francesco@dolcini.it>
+References: <20250224155500.52462-1-francesco@dolcini.it>
+ <20250224155500.52462-4-francesco@dolcini.it>
+Message-Id: <174041755964.3547413.4477664481191696884.robh@kernel.org>
+Subject: Re: [PATCH v2 3/5] ASoC: dt-bindings: wm8904: Add DMIC, GPIO, MIC
+ and EQ support
 
-On Fri, Feb 21, 2025 at 12:10:44PM -0800, Reinette Chatre wrote:
-> Hi Dave,
-> 
-> On 2/21/25 8:00 AM, Dave Martin wrote:
-> > On Thu, Feb 20, 2025 at 03:29:12PM -0600, Moger, Babu wrote:
-> >> Hi Dave,
-> >>
-> >> On 2/20/25 09:44, Dave Martin wrote:
 
-[...]
+On Mon, 24 Feb 2025 16:54:58 +0100, Francesco Dolcini wrote:
+> From: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+> 
+> Add two properties to select the IN1L/DMICDAT1 and IN2R/DMICDAT2
+> functionality:
+> - wlf,in1l-as-dmicdat1
+> - wlf,in1r-as-dmicdat2
+> 
+> Add a property to describe the GPIO configuration registers, that can be
+> used to set the four multifunction pins:
+> - wlf,gpio-cfg
+> 
+> Add a property to describe the mic bias control registers:
+> - wlf,mic-cfg
+> 
+> Add two properties to describe the Dynamic Range Controller (DRC),
+> allowing multiple named configurations where each config sets the 4 DRC
+> registers (R40-R43):
+> - wlf,drc-cfg-regs
+> - wlf,drc-cfg-names
+> 
+> Add three properties to describe the equalizer (ReTune Mobile), allowing
+> multiple named configurations (associated with a samplerate) that set
+> the 24 (R134-R157) EQ registers:
+> - wlf,retune-mobile-cfg-regs
+> - wlf,retune-mobile-cfg-names
+> - wlf,retune-mobile-cfg-rates
+> 
+> Datasheet: https://statics.cirrus.com/pubs/proDatasheet/WM8904_Rev4.1.pdf
+> Signed-off-by: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+> Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
+> v2: Added an example of how to use the ReTune Mobile config properties
+> v1: https://lore.kernel.org/lkml/20250206163152.423199-4-francesco@dolcini.it/
+> ---
+>  .../devicetree/bindings/sound/wlf,wm8904.yaml | 106 ++++++++++++++++++
+>  1 file changed, 106 insertions(+)
+> 
 
-> >>> But mbm_assign_control data is dynamically generated and potentially
-> >>> much bigger than a typical sysfs file.
-> >>
-> >> I have no idea how to handle this case. We may have to live with this
-> >> problem. Let us know if there are any ideas.
-> > 
-> > I think the current implication is that this will work for now provided
-> > that the generated text fits in a page.
-> > 
-> > 
-> > Reinette, what's your view on accepting this limitation in the interest
-> > of stabilising this series, and tidying up this corner case later?
-> > 
-> > As for writes to this file, we're unlikely to hit the limit unless
-> > there are a lot of RMIDs available and many groups with excessively
-> > long names.
-> 
-> I am more concerned about reads to this file. If only 4K writes are
-> supported then user space can reconfigure the system in page sized
-> portions. It may not be efficient if the user wants to reconfigure the
-> entire system but it will work. The problem with reads is that if
-> larger than 4K reads are required but not supported then it will be
-> impossible for user space to learn state of the system.
-> 
-> We may already be at that limit. Peter described [1] how AMD systems
-> already have 32 L3 monitoring domains and 256 RMIDs. With conservative
-> resource group names of 10 characters I see one line per monitoring group
-> that could look like below and thus easily be above 200 characters:
-> 
-> resgroupAA/mongroupAA/0=tl;1=tl;2=tl;3=tl;4=tl;5=tl;6=tl;7=tl;8=tl;9=tl;10=tl;11=tl;12=tl;13=tl;14=tl;15=tl;16=tl;17=tl;18=tl;19=tl;20=tl;21=tl;22=tl;23=tl;24=tl;25=tl;26=tl;27=tl;28=tl;29=tl;30=tl;31=tl;32=tl
-> 
-> Multiplying that with the existing possible 256 monitor groups the limit
-> is exceeded today.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-That's useful to know.  I guess we probably shouldn't just kick this
-issue down the road, then -- at least on the read side (as you say).
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/sound/wlf,wm8904.yaml:167:111: [warning] line too long (154 > 110 characters) (line-length)
+./Documentation/devicetree/bindings/sound/wlf,wm8904.yaml:172:111: [warning] line too long (154 > 110 characters) (line-length)
+./Documentation/devicetree/bindings/sound/wlf,wm8904.yaml:177:111: [warning] line too long (154 > 110 characters) (line-length)
 
-> I understand that all domains having "tl" flags are not possible today, but
-> even if that is changed to "_" the resulting display still looks to
-> easily exceed a page when many RMIDs are in use.
-> 
-> > 
-> > This looks perfectly fixable, but it might be better to settle the
-> > design of this series first before we worry too much about it.
-> 
-> I think it fair to delay support of writing more than a page of
-> data but it looks to me like we need a solution to support displaying
-> more than a page of data to user space.
-> 
-> Reinette
-> 
-> [1] https://lore.kernel.org/lkml/20241106154306.2721688-2-peternewman@google.com/
+dtschema/dtc warnings/errors:
+Error: Documentation/devicetree/bindings/sound/wlf,wm8904.example.dts:52.17-18 syntax error
+FATAL ERROR: Unable to parse input tree
+make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/bindings/sound/wlf,wm8904.example.dtb] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1511: dt_binding_check] Error 2
+make: *** [Makefile:251: __sub-make] Error 2
 
-Ack; if I can't find an off-the-shelf solution for this, I'll try to
-hack something as minimal as possible to provide the required
-behaviour, but I won't try to make it optimal or pretty for now.
+doc reference errors (make refcheckdocs):
 
-It has just occurred to be that ftrace has large, multi-line text files
-in sysfs, so I'll try to find out how they handle that there.  Maybe
-there is some infrastructure we can re-use.
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250224155500.52462-4-francesco@dolcini.it
 
-Either way, hopefully that will move the discussion forward (unless
-someone else comes up with a better idea first!)
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-Cheers
----Dave
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
