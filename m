@@ -1,33 +1,33 @@
 Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D173619DF8C;
-	Mon, 24 Feb 2025 15:55:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F71233714;
+	Mon, 24 Feb 2025 15:55:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740412517; cv=none; b=Kz/mDJVrivTwwUcGwsQ+RmEHkHZVXjvZV/nAL2Gt/wHFAIS/LOSbgomPGToZm/eP7YCaeJTAiMtg5huw7StZGlEBAWxxKqjT14/OmcIQ5YCMvmewC4Q9d/4vkgkYOsq+eAat0dLDqhZvY2SmlCdt39KZkew6xIWZqlnaCrdGZBo=
+	t=1740412517; cv=none; b=JlzEy6bwNkoy9KKGoJ18jMZrE+TFtRSMHxu/9P7RN/dsCloBe9UtKvLelWynPRl4YR/uHtlA9fqgUZ4pv25s7o77BYmUpEOix7uccbGwmlC8G9wmxWE9x0qIDApdHi3LC1jHOXK3u7GKcT601K8NPRa0K13Mgqx/abtq5f4t2RY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740412517; c=relaxed/simple;
-	bh=n1vzjyg+AAL5eoDMhMpdyqZw8VAPptGDuXWS/5jsk0k=;
+	bh=b7FaFj06eG3NydoTECTJkSmRx8X6pGTreLFj5Z0+02A=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QLC1JKD9aKqqJKedg4ym8U18xHbdLUATPUBOGTcyL9iKkF/44CP8PXA8eCTHNn4jZUJFyH2Bwz+5DKCuBKqfIEFQ8GzdUAX7IdjfhFsBW/PMDZ1L/w70QfbyvQUaY3o5E+NV+O8fgCdCz4ByI83zxuNEIVJ5a2HKUgdlIEjhtBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=Oe31VYAn; arc=none smtp.client-ip=217.194.8.81
+	 MIME-Version; b=uPbMkbWc01Oe1QPQ6h+pDh8otbjvpmNBcU7kwQCYrKFY8q/KTLGNUkZ9MnhL1LXFbOKr9iW2UCM0U3K3LpNYkhM5z8tJ3JC1WaZKaMGbOBmPVMjCEFDzKF3f9WQmDyJYmuR/GNoWw8O1AHogEYtAK80Il2KKk7nGdTfSQKTt01o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=AgrR/Iqz; arc=none smtp.client-ip=217.194.8.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="Oe31VYAn"
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="AgrR/Iqz"
 Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 99CEF1FB5E;
-	Mon, 24 Feb 2025 16:55:05 +0100 (CET)
+	by mail11.truemail.it (Postfix) with ESMTPA id BFB271FB8C;
+	Mon, 24 Feb 2025 16:55:07 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1740412506;
-	bh=kZZmY/KyJCWfsHeBvgPFKOqoIGsQ79eJkeNmXvmXmN0=; h=From:To:Subject;
-	b=Oe31VYAnLV1np47+2of/1eZPmLQqjC0bB43u+8WrN6FlsvdTnjpieRXfy7WKZfkJu
-	 A9M2ri9jz7kzPhU7FuPBuItj6JyDhBHQFTvNg5UJHx+EOd6tVJb9urPIWnn5s7Z/76
-	 lTAM4+o7MUA+nJX1Z2LE/9ZTm+0TJ/0vJLmhifbIXtqRPWQ9gRphZWrzJ0Jm3ElNB+
-	 /rN75EWjERzuQRycjDjXrQdICiWQL4VFK6KN1/7zuEwEu9/6vyXgFJPr/k0eGX+Cm1
-	 Ahn4A6TGqONC+A5BTiXAiz34mT6Dk6/gOJr/I9NqWYVNZPLXEfzfWxJv7A+OfSVhPJ
-	 RgW8ahQH7A3aw==
+	s=default; t=1740412508;
+	bh=lEX6XPbraoU2mAPkLBWD9pXLXIQQnoMkWm/NaiyYKYE=; h=From:To:Subject;
+	b=AgrR/IqzsveuHFSqCthzpjXhoycPAzH1DuvpASASqGv6vTYTNOCHvSG3+af6HnLPR
+	 iS33eekimvaeevtwksv3P/Kyrtiu/0caNoVvFUnNR9DNwlNlmEAjqiReQRBMeEbHPl
+	 0XjKfjmDb/IofUPD4wdE5+ZnwJ5gHm93pMQRzyzKidRs4GTSzhjJRKmhRbyEvwQOQI
+	 UVtdn2rk2msO6PGZoSHvMn+Hax6EvL2D8fbYekrDNGM+eWaSxLzTGRMUbsvm7hE8cT
+	 LDJ7IJ51ieD42z0TyktzZYSaevgYQgI/JWEM5KRSwcbNTUAirE6eQducQ/e36uJadC
+	 72zAF6f6407hQ==
 From: Francesco Dolcini <francesco@dolcini.it>
 To: Liam Girdwood <lgirdwood@gmail.com>,
 	Mark Brown <broonie@kernel.org>,
@@ -44,9 +44,9 @@ Cc: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>,
 	linux-kernel@vger.kernel.org,
 	Francesco Dolcini <francesco.dolcini@toradex.com>,
 	Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: [PATCH v2 1/5] of: Add of_property_read_u16_index
-Date: Mon, 24 Feb 2025 16:54:56 +0100
-Message-Id: <20250224155500.52462-2-francesco@dolcini.it>
+Subject: [PATCH v2 4/5] ASoC: wm8904: get platform data from DT
+Date: Mon, 24 Feb 2025 16:54:59 +0100
+Message-Id: <20250224155500.52462-5-francesco@dolcini.it>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250224155500.52462-1-francesco@dolcini.it>
 References: <20250224155500.52462-1-francesco@dolcini.it>
@@ -60,92 +60,255 @@ Content-Transfer-Encoding: 8bit
 
 From: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
 
-There is an of_property_read_u32_index and of_property_read_u64_index.
-This patch adds a similar helper for u16.
+Read in optional codec-specific properties from the device tree.
 
+The platform_data structure is not populated when using device trees.
+This change parses optional dts properties to populate it.
+
+- wlf,in1l-as-dmicdat1
+- wlf,in1r-as-dmicdat2
+- wlf,gpio-cfg
+- wlf,mic-cfg
+- wlf,drc-cfg-regs
+- wlf,drc-cfg-names
+- wlf,retune-mobile-cfg-regs
+- wlf,retune-mobile-cfg-names
+- wlf,retune-mobile-cfg-rates
+
+Datasheet: https://statics.cirrus.com/pubs/proDatasheet/WM8904_Rev4.1.pdf
 Signed-off-by: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
 Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
-v2: no changes
-v1: https://lore.kernel.org/lkml/20250206163152.423199-2-francesco@dolcini.it/
+v2: Fixed wm8904_parse_retune_cfg_from_of: refer to
+    pdata->retune_mobile_cfgs[i].name instead of pdata->drc_cfgs[i].name
+v1: https://lore.kernel.org/lkml/20250206163152.423199-5-francesco@dolcini.it/
 ---
- drivers/of/property.c | 33 +++++++++++++++++++++++++++++++++
- include/linux/of.h    |  9 +++++++++
- 2 files changed, 42 insertions(+)
+ include/sound/wm8904.h    |   3 +
+ sound/soc/codecs/wm8904.c | 189 +++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 191 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index 208d922cc24c..c1feb631e383 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -147,6 +147,39 @@ static void *of_find_property_value_of_size(const struct device_node *np,
- 	return prop->value;
- }
+diff --git a/include/sound/wm8904.h b/include/sound/wm8904.h
+index 88ac1870510e..8b2c16b524f7 100644
+--- a/include/sound/wm8904.h
++++ b/include/sound/wm8904.h
+@@ -151,6 +151,9 @@ struct wm8904_pdata {
+ 	int num_retune_mobile_cfgs;
+ 	struct wm8904_retune_mobile_cfg *retune_mobile_cfgs;
+ 
++	bool in1l_as_dmicdat1;
++	bool in1r_as_dmicdat2;
++
+ 	u32 gpio_cfg[WM8904_GPIO_REGS];
+ 	u32 mic_cfg[WM8904_MIC_REGS];
+ };
+diff --git a/sound/soc/codecs/wm8904.c b/sound/soc/codecs/wm8904.c
+index 2082ff12d336..83cf59f6e879 100644
+--- a/sound/soc/codecs/wm8904.c
++++ b/sound/soc/codecs/wm8904.c
+@@ -2168,6 +2168,184 @@ static const struct of_device_id wm8904_of_match[] = {
+ MODULE_DEVICE_TABLE(of, wm8904_of_match);
+ #endif
  
 +/**
-+ * of_property_read_u16_index - Find and read a u16 from a multi-value property.
++ * wm8904_read_cfg_reg_arr() - Reads a subarray from a DT u16 array
 + *
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ * @index:	index of the u16 in the list of values
-+ * @out_value:	pointer to return value, modified only if no error.
++ * @np: pointer to the device_node struct
++ * @regs_property: DT property of interest
++ * @size: size of subarrays within the array
++ * @idx: index of the subarray of interest
++ * @out: output
 + *
-+ * Search for a property in a device node and read nth 16-bit value from
-+ * it.
++ * Helper to read a subarray from a DT uint16-array,
++ *  divided into equally sized arrays of size `size`
 + *
-+ * Return: 0 on success, -EINVAL if the property does not exist,
-+ * -ENODATA if property does not have a value, and -EOVERFLOW if the
-+ * property data isn't large enough.
++ * Subset starts at `idx * size` and is of size `size`
 + *
-+ * The out_value is modified only if a valid u16 value can be decoded.
++ * Return: 0 on success, negative error code otherwise
 + */
-+int of_property_read_u16_index(const struct device_node *np,
-+				       const char *propname,
-+				       u32 index, u16 *out_value)
++static int wm8904_read_cfg_reg_arr(const struct device_node *np,
++				   const char * const regs_property,
++				   int size, int idx,
++				   u16 * const out)
 +{
-+	const u16 *val = of_find_property_value_of_size(np, propname,
-+					((index + 1) * sizeof(*out_value)),
-+					0, NULL);
++	int i, offset, ret;
 +
-+	if (IS_ERR(val))
-+		return PTR_ERR(val);
++	offset = idx * size;
 +
-+	*out_value = be16_to_cpup(((__be16 *)val) + index);
++	for (i = 0; i < size; i++) {
++		ret = of_property_read_u16_index(np, regs_property, i + offset, &out[i]);
++		if (ret)
++			return ret;
++	}
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(of_property_read_u16_index);
 +
- /**
-  * of_property_read_u32_index - Find and read a u32 from a multi-value property.
-  *
-diff --git a/include/linux/of.h b/include/linux/of.h
-index eaf0e2a2b75c..5e52d90f6408 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -314,6 +314,9 @@ extern struct property *of_find_property(const struct device_node *np,
- extern bool of_property_read_bool(const struct device_node *np, const char *propname);
- extern int of_property_count_elems_of_size(const struct device_node *np,
- 				const char *propname, int elem_size);
-+extern int of_property_read_u16_index(const struct device_node *np,
-+				       const char *propname,
-+				       u32 index, u16 *out_value);
- extern int of_property_read_u32_index(const struct device_node *np,
- 				       const char *propname,
- 				       u32 index, u32 *out_value);
-@@ -627,6 +630,12 @@ static inline int of_property_count_elems_of_size(const struct device_node *np,
- 	return -ENOSYS;
- }
- 
-+static inline int of_property_read_u16_index(const struct device_node *np,
-+			const char *propname, u32 index, u16 *out_value)
++static int wm8904_parse_retune_cfg_regs(const struct device_node *np,
++					struct wm8904_pdata *pdata, int cfg_idx)
 +{
-+	return -ENOSYS;
++	return wm8904_read_cfg_reg_arr(np, "wlf,retune-mobile-cfg-regs",
++				       WM8904_EQ_REGS, cfg_idx,
++				       &pdata->retune_mobile_cfgs[cfg_idx].regs[0]);
 +}
 +
- static inline int of_property_read_u32_index(const struct device_node *np,
- 			const char *propname, u32 index, u32 *out_value)
- {
++static int wm8904_parse_drc_cfg_regs(const struct device_node *np,
++				     struct wm8904_pdata *pdata, int cfg_idx)
++{
++	return wm8904_read_cfg_reg_arr(np, "wlf,drc-cfg-regs",
++				       WM8904_DRC_REGS, cfg_idx,
++				       &pdata->drc_cfgs[cfg_idx].regs[0]);
++}
++
++static int wm8904_parse_drc_cfg_from_of(struct i2c_client *i2c,
++					struct wm8904_pdata *pdata)
++{
++	const struct device_node *np = i2c->dev.of_node;
++	int i, n_cfgs;
++
++	n_cfgs = of_property_count_strings(np, "wlf,drc-cfg-names");
++	if (n_cfgs == -EINVAL)
++		return 0;
++
++	if (n_cfgs <= 0) {
++		dev_err(&i2c->dev, "Could not get wlf,drc-cfg-names length: %d",
++			n_cfgs);
++		return n_cfgs;
++	}
++
++	pdata->drc_cfgs = devm_kzalloc(&i2c->dev,
++				       n_cfgs * sizeof(struct wm8904_drc_cfg),
++				       GFP_KERNEL);
++	if (!pdata->drc_cfgs)
++		return -ENOMEM;
++
++	for (i = 0; i < n_cfgs; i++) {
++		if (wm8904_parse_drc_cfg_regs(np, pdata, i)) {
++			dev_err(&i2c->dev,
++				"Invalid 'wlf,drc-cfg-regs[%i,:]'\n", i);
++			return -EINVAL;
++		}
++
++		if (of_property_read_string_index(np, "wlf,drc-cfg-names", i,
++						  &pdata->drc_cfgs[i].name)) {
++			dev_err(&i2c->dev,
++				"Invalid 'wlf,drc-cfg-names[%i]'\n", i);
++			return -EINVAL;
++		}
++	}
++
++	pdata->num_drc_cfgs = n_cfgs;
++	return 0;
++}
++
++static int wm8904_parse_retune_cfg_from_of(struct i2c_client *i2c,
++					   struct wm8904_pdata *pdata)
++{
++	const struct device_node *np = i2c->dev.of_node;
++	int i, n_cfgs;
++
++	n_cfgs = of_property_count_strings(np, "wlf,retune-mobile-cfg-names");
++	if (n_cfgs == -EINVAL)
++		return 0;
++
++	if (n_cfgs <= 0) {
++		dev_err(&i2c->dev,
++			"Could not get wlf,retune-mobile-cfg-names length: %d",
++			n_cfgs);
++		return n_cfgs;
++	}
++
++	pdata->retune_mobile_cfgs = devm_kzalloc(&i2c->dev,
++						 n_cfgs * sizeof(struct wm8904_retune_mobile_cfg),
++						 GFP_KERNEL);
++	if (!pdata->retune_mobile_cfgs)
++		return -ENOMEM;
++
++	for (i = 0; i < n_cfgs; i++) {
++		if (wm8904_parse_retune_cfg_regs(np, pdata, i)) {
++			dev_err(&i2c->dev,
++				"Invalid 'wlf,retune-mobile-cfg-regs[%i,:]'\n", i);
++			return -EINVAL;
++		}
++
++		if (of_property_read_u32_index(np, "wlf,retune-mobile-cfg-rates", i,
++					       &pdata->retune_mobile_cfgs[i].rate)) {
++			dev_err(&i2c->dev,
++				"Invalid 'wlf,retune-mobile-cfg-rates[%i]'\n", i);
++			return -EINVAL;
++		}
++
++		if (of_property_read_string_index(np, "wlf,retune-mobile-cfg-names", i,
++						  &pdata->retune_mobile_cfgs[i].name)) {
++			dev_err(&i2c->dev,
++				"Invalid 'wlf,retune-mobile-cfg-names[%i]'\n", i);
++			return -EINVAL;
++		}
++	}
++
++	pdata->num_retune_mobile_cfgs = n_cfgs;
++	return 0;
++}
++
++static int wm8904_set_pdata_from_of(struct i2c_client *i2c,
++				    struct wm8904_priv *wm8904)
++{
++	const struct device_node *np = i2c->dev.of_node;
++	struct wm8904_pdata *pdata;
++	int ret, i;
++
++	pdata = devm_kzalloc(&i2c->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return -ENOMEM;
++
++	pdata->in1l_as_dmicdat1 =
++		of_property_read_bool(np, "wlf,in1l-as-dmicdat1");
++
++	pdata->in1r_as_dmicdat2 =
++		of_property_read_bool(np, "wlf,in1r-as-dmicdat2");
++
++	/* If absent, default to 0xFFFF for GPIO config (i.e.: don't set) */
++	for (i = 0; i < WM8904_GPIO_REGS; i++)
++		pdata->gpio_cfg[i] = 0xFFFF;
++
++	of_property_read_u32_array(np, "wlf,gpio-cfg", pdata->gpio_cfg,
++				   ARRAY_SIZE(pdata->gpio_cfg));
++
++	of_property_read_u32_array(np, "wlf,mic-cfg", pdata->mic_cfg,
++				   ARRAY_SIZE(pdata->mic_cfg));
++
++	ret = wm8904_parse_drc_cfg_from_of(i2c, pdata);
++	if (ret)
++		return ret;
++
++	ret = wm8904_parse_retune_cfg_from_of(i2c, pdata);
++	if (ret)
++		return ret;
++
++	wm8904->pdata = pdata;
++	return 0;
++}
++
+ static const struct i2c_device_id wm8904_i2c_id[];
+ 
+ static int wm8904_i2c_probe(struct i2c_client *i2c)
+@@ -2199,7 +2377,16 @@ static int wm8904_i2c_probe(struct i2c_client *i2c)
+ 	wm8904->devtype = (uintptr_t)i2c_get_match_data(i2c);
+ 
+ 	i2c_set_clientdata(i2c, wm8904);
+-	wm8904->pdata = i2c->dev.platform_data;
++
++	if (i2c->dev.of_node) {
++		ret = wm8904_set_pdata_from_of(i2c, wm8904);
++		if (ret) {
++			dev_err(&i2c->dev, "Failed to set platform data from of: %d\n", ret);
++			return ret;
++		}
++	} else {
++		wm8904->pdata = i2c->dev.platform_data;
++	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(wm8904->supplies); i++)
+ 		wm8904->supplies[i].supply = wm8904_supply_names[i];
 -- 
 2.39.5
 
