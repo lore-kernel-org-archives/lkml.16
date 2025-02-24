@@ -1,191 +1,130 @@
-Received: from mail.bonnevilleinformatics.com (mail.bn-i.net [69.92.154.19])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A026A24397B;
-	Mon, 24 Feb 2025 09:02:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=69.92.154.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC30EEB5;
+	Mon, 24 Feb 2025 09:03:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740387760; cv=none; b=ScezqifkjTo0Ur7MXKaA4Yr2EnLbQuAbh0nJonUQaVDlWG2dnfhr24863tuNwyDcIdMD2yURbmK1USDzxa86tp0C67T83hqsEVroPZSfAsgny991sLZ4mEVXa0r9T4C53EyTK95uAFNSMvwRBoma9HSvsRXyqqpBKoAotQxcUic=
+	t=1740387797; cv=none; b=en7iHcYvk/r2nkLDzJ14vS5xMYu7ntlkmejwRkn2imOVAcJHbbsxiPxXCQE9N2IHuMW4e52+jc44GARvK7HIhMJz1SF/AcnusmSHT+BqSHE2fLPIsKXgNv1eyqXT74wb3FCL5CRVj6cDsy9F+Zx5pBZQ7/wborRNVQbiHk+ZTI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740387760; c=relaxed/simple;
-	bh=gDHxG0kkUeldAgeCtL4jPoTiu0/zhSccpV0rqhMNq2A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pZpmimZ0WcBCkifx2sfp4NA4/BtNYym/7QLQuossGWm607eZB3i3v+DONhCELbDslJDu9VM6CGOMH39q7ziO9VpifF/jAZCCGk+CX5TqEVW9l3k4MjZf9G4MNcZdsTjXPnLs3fCZc4yM3ZlnEnJJs598fYHvc8zvUEKvJCFxy8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dougvj.net; spf=pass smtp.mailfrom=dougvj.net; dkim=pass (1024-bit key) header.d=dougvj.net header.i=@dougvj.net header.b=xVNJPimZ; arc=none smtp.client-ip=69.92.154.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=dougvj.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dougvj.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=dougvj.net header.i=@dougvj.net header.b="xVNJPimZ"
-From: Doug V Johnson <dougvj@dougvj.net>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dougvj.net; s=dkim;
-	t=1740387752;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jhl2WGlLymmY/OuBSoRdwp/PIswVgAd6LqWrZryYdwI=;
-	b=xVNJPimZDPsqHoaVWIC9c2zeFbew9/mjQnQF4EMZwLgI80rJfUKlPgyHDzVhhsUOFf/mUT
-	2I+awQxKObfqY1B43yB2dSiw3KhNBobK6iPs256E3eG7fNw9zGCffekSoZpilZirw8c/15
-	ODPtPHUuIGr6kGDxywEtfF/mO0C3LeM=
-Authentication-Results: mail.bonnevilleinformatics.com;
-	auth=pass smtp.mailfrom=dougvj@dougvj.net
-To: 
-Cc: Doug Johnson <dougvj@gmail.com>,
-	Doug V Johnson <dougvj@dougvj.net>,
-	Song Liu <song@kernel.org>,
-	Yu Kuai <yukuai3@huawei.com>,
-	linux-raid@vger.kernel.org (open list:SOFTWARE RAID (Multiple Disks) SUPPORT),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 3/3] md/raid5: check for overlapping bad blocks before starting reshape
-Date: Mon, 24 Feb 2025 02:02:03 -0700
-Message-ID: <20250224090209.2077-3-dougvj@dougvj.net>
-In-Reply-To: <20250224090209.2077-1-dougvj@dougvj.net>
-References: <9d878dea7b1afa2472f8f583fd116e31@dougvj.net>
- <20250224090209.2077-1-dougvj@dougvj.net>
+	s=arc-20240116; t=1740387797; c=relaxed/simple;
+	bh=vJ2USaPUJjTmBBCLDYOLZUd493kJxSxBFveztP1SVow=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rSD+8juJsPYDAbD+KgPjLGoU/vXFeeDD2o0A69RcNgB+kAwq55xZXm+miEHAkEzXwvn3OK3LebPwyCRy3Z6U8xtT/Wzx08PXI93PsqNk63cOzMCa7qzRQ6UuXsCPAALoXborDo0mLlaLExV9o5CBheUbi9YoCtBJjgw4WojSOjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Z1ZS13530zCs7m;
+	Mon, 24 Feb 2025 16:59:45 +0800 (CST)
+Received: from dggemv703-chm.china.huawei.com (unknown [10.3.19.46])
+	by mail.maildlp.com (Postfix) with ESMTPS id 31BA1140134;
+	Mon, 24 Feb 2025 17:03:11 +0800 (CST)
+Received: from kwepemn100006.china.huawei.com (7.202.194.109) by
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 24 Feb 2025 17:03:10 +0800
+Received: from huawei.com (10.175.113.133) by kwepemn100006.china.huawei.com
+ (7.202.194.109) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 24 Feb
+ 2025 17:03:09 +0800
+From: Wang Hai <wanghai38@huawei.com>
+To: <kerneljasonxing@gmail.com>, <edumazet@google.com>,
+	<ncardwell@google.com>, <kuniyu@amazon.com>, <davem@davemloft.net>,
+	<dsahern@kernel.org>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<horms@kernel.org>, <zhangchangzhong@huawei.com>, <liujian56@huawei.com>,
+	<yuehaibing@huawei.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 net] tcp: Defer ts_recent changes until req is owned
+Date: Mon, 24 Feb 2025 17:00:47 +0800
+Message-ID: <20250224090047.50748-1-wanghai38@huawei.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: -----
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemn100006.china.huawei.com (7.202.194.109)
 
-In addition to halting a reshape in progress when we encounter bad
-blocks, we want to make sure that we do not even attempt a reshape if we
-know before hand that there are too many overlapping bad blocks and we
-would have to stall the reshape.
+Recently a bug was discovered where the server had entered TCP_ESTABLISHED
+state, but the upper layers were not notified.
 
-To do this, we add a new internal function array_has_badblock() which
-first checks to see if there are enough drives with bad blocks for the
-condition to occur and if there are proceeds to do a simple O(n^2) check
-for overlapping bad blocks. If more overlaps are found than can be
-corrected for, we return 1 for the presence of bad blocks, otherwise 0
+The same 5-tuple packet may be processed by different CPUSs, so two
+CPUs may receive different ack packets at the same time when the
+state is TCP_NEW_SYN_RECV.
 
-This function is invoked in raid5_start_reshape() and if there are bad
-blocks present, returns -EIO which is reported to userspace.
+In that case, req->ts_recent in tcp_check_req may be changed concurrently,
+which will probably cause the newsk's ts_recent to be incorrectly large.
+So that tcp_validate_incoming will fail. At this point, newsk will not be
+able to enter the TCP_ESTABLISHED.
 
-It's possible for bad blocks to be discovered or put in the metadata
-after a reshape has started, so we want to leave in place the
-functionality to detect and halt a reshape.
+cpu1                                    cpu2
+tcp_check_req
+                                        tcp_check_req
+ req->ts_recent = rcv_tsval = t1
+                                         req->ts_recent = rcv_tsval = t2
 
-Signed-off-by: Doug V Johnson <dougvj@dougvj.net>
+ syn_recv_sock
+  tcp_sk(child)->rx_opt.ts_recent = req->ts_recent = t2 // t1 < t2
+tcp_child_process
+ tcp_rcv_state_process
+  tcp_validate_incoming
+   tcp_paws_check
+    if ((s32)(rx_opt->ts_recent - rx_opt->rcv_tsval) <= paws_win)
+        // t2 - t1 > paws_win, failed
+                                        tcp_v4_do_rcv
+                                         tcp_rcv_state_process
+                                         // TCP_ESTABLISHED
+
+The cpu2's skb or a newly received skb will call tcp_v4_do_rcv to get
+the newsk into the TCP_ESTABLISHED state, but at this point it is no
+longer possible to notify the upper layer application. A notification
+mechanism could be added here, but the fix is more complex, so the
+current fix is used.
+
+In tcp_check_req, req->ts_recent is used to assign a value to
+tcp_sk(child)->rx_opt.ts_recent, so removing the change in req->ts_recent
+and changing tcp_sk(child)->rx_opt.ts_recent directly after owning the
+req fixes this bug.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
 ---
- drivers/md/raid5.c | 94 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 94 insertions(+)
+v2->v3: changed code format and commit msg.
+ net/ipv4/tcp_minisocks.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 8b23109d6f37..4b907a674dd1 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -8451,6 +8451,94 @@ static int check_reshape(struct mddev *mddev)
- 				     + mddev->delta_disks));
- }
+diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
+index b089b08e9617..dfdb7a4608a8 100644
+--- a/net/ipv4/tcp_minisocks.c
++++ b/net/ipv4/tcp_minisocks.c
+@@ -815,12 +815,6 @@ struct sock *tcp_check_req(struct sock *sk, struct sk_buff *skb,
  
-+static int array_has_badblock(struct r5conf *conf)
-+{
-+	/* Searches for overlapping bad blocks on devices that would result
-+	 * in an unreadable condition
-+	 */
-+	int i, j;
-+	/* First see if we even have bad blocks on enough drives to have a
-+	 * bad read condition
-+	 */
-+	int num_badblock_devs = 0;
-+
-+	for (i = 0; i < conf->raid_disks; i++) {
-+		if (rdev_has_badblock(conf->disks[i].rdev,
-+				      0, conf->disks[i].rdev->sectors))
-+			num_badblock_devs++;
-+	}
-+	if (num_badblock_devs <= conf->max_degraded) {
-+		/* There are not enough devices with bad blocks to pose any
-+		 * read problem
-+		 */
-+		return 0;
-+	}
-+	pr_debug("%s: running overlapping bad block check",
-+		 mdname(conf->mddev));
-+	/* Do a more sophisticated check for overlapping regions */
-+	for (i = 0; i < conf->raid_disks; i++) {
-+		sector_t first_bad;
-+		int bad_sectors;
-+		sector_t next_check_s = 0;
-+		int next_check_sectors = conf->disks[i].rdev->sectors;
-+
-+		pr_debug("%s: badblock check: %i (s: %lu, sec: %i)",
-+			 mdname(conf->mddev), i,
-+			 (unsigned long)next_check_s, next_check_sectors);
-+		while (is_badblock(conf->disks[i].rdev,
-+				   next_check_s, next_check_sectors,
-+				   &first_bad,
-+				   &bad_sectors) != 0) {
-+			/* Align bad blocks to the size of our stripe */
-+			sector_t aligned_first_bad = first_bad &
-+				~((sector_t)RAID5_STRIPE_SECTORS(conf) - 1);
-+			int aligned_bad_sectors =
-+				max_t(int, RAID5_STRIPE_SECTORS(conf),
-+				      bad_sectors);
-+			int this_num_bad = 1;
-+
-+			pr_debug("%s: found blocks %i %lu -> %i",
-+				 mdname(conf->mddev), i,
-+				 (unsigned long)aligned_first_bad,
-+				 aligned_bad_sectors);
-+			for (j = 0; j < conf->raid_disks; j++) {
-+				sector_t this_first_bad;
-+				int this_bad_sectors;
-+
-+				if (j == i)
-+					continue;
-+				if (is_badblock(conf->disks[j].rdev,
-+						aligned_first_bad,
-+						aligned_bad_sectors,
-+						&this_first_bad,
-+						&this_bad_sectors)) {
-+					this_num_bad++;
-+					pr_debug("md/raid:%s: bad block overlap dev %i: %lu %i",
-+						 mdname(conf->mddev), j,
-+						 (unsigned long)this_first_bad,
-+						 this_bad_sectors);
-+				}
-+			}
-+			if (this_num_bad > conf->max_degraded) {
-+				pr_debug("md/raid:%s: %i drives with unreadable sector(s) around %lu %i due to bad block list",
-+					 mdname(conf->mddev),
-+					 this_num_bad,
-+					 (unsigned long)first_bad,
-+					 bad_sectors);
-+				return 1;
-+			}
-+			next_check_s = first_bad + bad_sectors;
-+			next_check_sectors =
-+				next_check_sectors - (first_bad + bad_sectors);
-+			pr_debug("%s: badblock check: %i (s: %lu, sec: %i)",
-+				 mdname(conf->mddev), i,
-+				 (unsigned long)next_check_s,
-+				 next_check_sectors);
-+		}
-+	}
-+	return 0;
-+}
-+
- static int raid5_start_reshape(struct mddev *mddev)
- {
- 	struct r5conf *conf = mddev->private;
-@@ -8498,6 +8586,12 @@ static int raid5_start_reshape(struct mddev *mddev)
- 		return -EINVAL;
- 	}
+ 	/* In sequence, PAWS is OK. */
  
-+	if (array_has_badblock(conf)) {
-+		pr_warn("md/raid:%s: reshape not possible due to bad block list",
-+			mdname(mddev));
-+		return -EIO;
-+	}
+-	/* TODO: We probably should defer ts_recent change once
+-	 * we take ownership of @req.
+-	 */
+-	if (tmp_opt.saw_tstamp && !after(TCP_SKB_CB(skb)->seq, tcp_rsk(req)->rcv_nxt))
+-		WRITE_ONCE(req->ts_recent, tmp_opt.rcv_tsval);
+-
+ 	if (TCP_SKB_CB(skb)->seq == tcp_rsk(req)->rcv_isn) {
+ 		/* Truncate SYN, it is out of window starting
+ 		   at tcp_rsk(req)->rcv_isn + 1. */
+@@ -869,6 +863,10 @@ struct sock *tcp_check_req(struct sock *sk, struct sk_buff *skb,
+ 	if (!child)
+ 		goto listen_overflow;
+ 
++	if (own_req && tmp_opt.saw_tstamp &&
++	    !after(TCP_SKB_CB(skb)->seq, tcp_rsk(req)->rcv_nxt))
++		tcp_sk(child)->rx_opt.ts_recent = tmp_opt.rcv_tsval;
 +
- 	atomic_set(&conf->reshape_stripes, 0);
- 	spin_lock_irq(&conf->device_lock);
- 	write_seqcount_begin(&conf->gen_lock);
+ 	if (own_req && rsk_drop_req(req)) {
+ 		reqsk_queue_removed(&inet_csk(req->rsk_listener)->icsk_accept_queue, req);
+ 		inet_csk_reqsk_queue_drop_and_put(req->rsk_listener, req);
 -- 
-2.48.1
+2.17.1
 
