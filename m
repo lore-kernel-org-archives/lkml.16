@@ -1,87 +1,68 @@
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8689A264F93;
-	Mon, 24 Feb 2025 18:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA7C265CC7;
+	Mon, 24 Feb 2025 18:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740421219; cv=none; b=sNTQI3AqiBRUfkljMvx8i35a5HLkMg10dZAlhY/gB7fy4F9DnZB/CW1sPY/kaBGuFxNp3xToINvki7YEm6ec2dkqxYhnowBcjqL8J1aovNVuJ856GxBUh/jX9P1l2Dgfesizb4F1fOnTNk69ritpsTogol7jgEFnGpiv4g6NrcE=
+	t=1740421275; cv=none; b=VptHVG+8mM9p7F1sxqCzli5P/GEeiVy/f63sFWqCMhmSydpadYDjAfBTNb3flnptyrFXtC9cA2gWVppZMMiNVtL2naKfl3RmTfoRbK7iN6FnbwooRNb4D/Tt4xRUUP3h2oBuaveYUS/Wu/rOFlXvIzF1ievbS+EDv+y5uCJZzWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740421219; c=relaxed/simple;
-	bh=49xXBc1ycQecRqINlj/S10WDVEpHaLb95IwbBpWVPn0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ngR8V5Kt1eaP/VWNsrbDS6RKgjX8hT6w1yD8clN7JfAblSQ0PD4vKSyLac5FHcx6jnRt2BvD2/KhOd80ja5hJq4LfKM1J16WjUQ+ZfFGBmed+cqypAwOmrNGclEA7BOGQPeQeHK2ym/ZJC8jdHViZUwdz11y1JJq4ikXjRmyfbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id 3013E3000222C;
-	Mon, 24 Feb 2025 19:12:11 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 099015F7D2D; Mon, 24 Feb 2025 19:12:11 +0100 (CET)
-Date: Mon, 24 Feb 2025 19:12:11 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Feng Tang <feng.tang@linux.alibaba.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Liguang Zhang <zhangliguang@linux.alibaba.com>,
-	Guanghui Feng <guanghuifeng@linux.alibaba.com>, rafael@kernel.org,
-	Markus Elfring <Markus.Elfring@web.de>, lkp@intel.com,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
+	s=arc-20240116; t=1740421275; c=relaxed/simple;
+	bh=N/T5IHIQwCEr77i8CTQCQnWFjgaLHWXY7H4FMMhO8NE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=q2LgkzVn8YICyID30vWf2tJ7va+GhYZ6Ol/952KYluKM7eLpGaM3qlyx7KvdKANJVsDDlNYzTnmHZkCZw5rHaEseIYVsh4Efb1KsGq6XUWo+k9P1FSNCD56yDJ059aTAKB1+b7CBvz2AkezlajmcuomKe80+w+nLj86fKsdM8UM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=G02tW++1; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="G02tW++1"
+Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id E3DD71F925;
+	Mon, 24 Feb 2025 19:08:04 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1740420485;
+	bh=1M7f396UBAmCxe+9OoMZbOkwcwDr8nFN1FiAHgkEDKw=; h=From:To:Subject;
+	b=G02tW++1t59ah+gMQCw6rNIexMpCQn4tbkpggdZBESNP314KmWnX6I7l3UfvPON8r
+	 lpwJs4TlO8idH2TYvsuD2TO9WLP23rOniO/1FT+C7+NmADsZC1hu2TXe0JeNFNZ6B3
+	 g2B0+I8G0DggYTAdj5KIxNLGEOvXLda+fTGIq/rnJhIfBA3wzdenzPjK82/sl007Wf
+	 4Fg0gSg1hZdqveaK7+Ag8ZMXWCqFx6pIq07+9Pz3vM2o2ykFACU876TZM5CxUKu7Sx
+	 Q8MycmK8MjAtfanOWyh9D2yeQy8ItI1b5ARx8lUZmNO+/yQIjfYuRiyKF7Xdjb6Jx2
+	 Jly1t9urHxBjg==
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Farouk Bouabid <farouk.bouabid@cherry.de>,
+	Quentin Schulz <quentin.schulz@cherry.de>
+Cc: Francesco Dolcini <francesco.dolcini@toradex.com>,
+	linux-hwmon@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] PCI/portdrv: Add necessary wait for disabling
- hotplug events
-Message-ID: <Z7y2e-EJLijQsp8D@wunner.de>
-References: <20250224034500.23024-1-feng.tang@linux.alibaba.com>
- <20250224034500.23024-3-feng.tang@linux.alibaba.com>
+Subject: [PATCH v2 0/2] hwmon: (amc6821) Add PWM polarity configuration with OF
+Date: Mon, 24 Feb 2025 19:07:59 +0100
+Message-Id: <20250224180801.128685-1-francesco@dolcini.it>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250224034500.23024-3-feng.tang@linux.alibaba.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 24, 2025 at 11:44:58AM +0800, Feng Tang wrote:
-> @@ -255,8 +271,7 @@ static int get_port_device_capability(struct pci_dev *dev)
->  		 * Disable hot-plug interrupts in case they have been enabled
->  		 * by the BIOS and the hot-plug service driver is not loaded.
->  		 */
-> -		pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
-> -			  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
-> +		pcie_disable_hp_interrupts_early(dev);
->  	}
+From: Francesco Dolcini <francesco.dolcini@toradex.com>
 
-Moving the Slot Control code from pciehp to portdrv (as is done in
-patch 1 of this series) is hackish.  It should be avoided if at all
-possible.
+Add support for configuring the PWM polarity of the amc6821 fan controller.
 
-As I've already said before...
+Francesco Dolcini (2):
+  dt-bindings: hwmon: amc6821: add PWM polarity
+  hwmon: (amc6821) Add PWM polarity configuration with OF
 
-https://lore.kernel.org/all/Z6HYuBDP6uvE1Sf4@wunner.de/
+ .../devicetree/bindings/hwmon/ti,amc6821.yaml     |  8 ++++++++
+ drivers/hwmon/amc6821.c                           | 15 ++++++++++-----
+ 2 files changed, 18 insertions(+), 5 deletions(-)
 
-...it seems clearing those interrupts is only necessary
-in the CONFIG_HOTPLUG_PCI_PCIE=n case.  And in that case,
-there is no second Slot Control write, so there is no delay
-to be observed.
+-- 
+2.39.5
 
-Hence the proper solution is to make the clearing of the
-interrupts conditional on: !IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE)
-
-You keep sending new versions of these patches that do not
-incorporate the feedback I provided in the above-linked e-mail.
-
-Please re-read that e-mail and verify if the solution that
-I proposed solves the problem.  That solution does not
-require moving the Slot Control code from pciehp to portdrv.
-
-Thanks,
-
-Lukas
