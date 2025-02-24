@@ -1,182 +1,92 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D05C616CD1D;
-	Mon, 24 Feb 2025 19:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41161FC7D0;
+	Mon, 24 Feb 2025 19:22:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740424907; cv=none; b=FYqHWO8Qd/cdVsNv8exWS4VOIEh45n1I6RAUyLwvrtzMndW7TLmqaNyDaJobPkHRlLDdpQPYaqUnRLEiNdW4nNJ+uZNaIXcrKD2WxKe3hiBwvHsgIEVEIAq1uYDj6zFP8zhsGPl9UH2GDHDZatz4EWaZE+pqSEo9NFT5mDD5ACQ=
+	t=1740424940; cv=none; b=pDG3eu4ll5/I1DNJqZ22sMRUW+SnVjYbUn1WAIjjRhmyrpS52mUzEaIQEfqZlfd3FFOoeohJZiHm2kD4eeJEGGidrreWw4+u0H06UeR+Z+6mmBOVHrV4Plr9yaShDJqM+rT9MFOVB4rKVq5LGjT4VF3mTQdLQeSMgkk8AkaC+Uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740424907; c=relaxed/simple;
-	bh=SIEX0kmZf7kOO8fpyH4yz9j1aCjbhbyIc/QuGQzWQpo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QiUN8zyyce78gC1/s5cPVdY6gfddfPD+yruzKst84Y0nrh2fGwkIIcRmGxOHXbr+QYhdK9f7Pa+MA+HJl2MDEhOQwQpfjg5QC2er6uaqFz3IFSk1yQUMj6NsOK7Ehxbqcp4+wcQgrvbMzT+XHRUCNdCyJL6zC4wTfWu++TnJTVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=JK0O6eJh; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="JK0O6eJh"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id EF96310382F1F;
-	Mon, 24 Feb 2025 20:21:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1740424897;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3nBzamUqMdlfRXckkErs4pAv4h1BBEDXXkK/O9CCOAM=;
-	b=JK0O6eJhfSu4TpdtUwDEhrK0mu/5Hyn83OEmXIPIGnml2feg6zabE84jltF2BjJGYB6y0M
-	tKgypKwHPB7sh2gRY8TDTfIom9GeiB2QbVQmDNgd1QLDU9Mh4sDK91bicjh9lgqb5x/eHM
-	y4Y7VPdKroXw7YmnomEPfXXOGTRauGwPY4ujY1Uqtdz5sBJQTNd9HkGlDnMaESerC02O8O
-	6tvIlfQ9T1q/F0rSPRL0VLnxpEWcEe8T40GpMSG7OmY4ykXun2m2wl3cqMMKmV1qewV3M5
-	iI71fNeH1W49vCTSiL0Oqmt4Xmh7UoF0ABCYkBhaSWfPI+16XyULt0IIcJa4Xg==
-Date: Mon, 24 Feb 2025 20:21:31 +0100
-From: Lukasz Majewski <lukma@denx.de>
-To: Conor Dooley <conor@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof@spud, Kozlowski@spud, Conor
- Dooley <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
- Heiko Stuebner <heiko@sntech.de>, Aradhya Bhatia <a-bhatia1@ti.com>,
- rafal@milecki.pl, devicetree@vger.kernel.org, Guenter Roeck
- <linux@roeck-us.net>, Noah Wang <noahwang.wang@outlook.com>,
- linux-kernel@vger.kernel.org, Peter Yin <peteryin.openbmc@gmail.com>,
- Naresh Solanki <naresh.solanki@9elements.com>, Alex Vdovydchenko
- <xzeol@yahoo.com>, Grant Peltier <grantpeltier93@gmail.com>, Laurent
- Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/2] dt-bindings: trivial-devices: Document SPI
- measurement on LWE boards
-Message-ID: <20250224202131.1b77a23d@wsk>
-In-Reply-To: <20250224-crux-tabasco-4107deee169e@spud>
-References: <20250221155418.1167670-1-lukma@denx.de>
-	<20250221155418.1167670-2-lukma@denx.de>
-	<20250221-scuba-rematch-ada1a9b750b1@spud>
-	<20250221215659.61ecc523@wsk>
-	<20250224-crux-tabasco-4107deee169e@spud>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1740424940; c=relaxed/simple;
+	bh=asplSircB2KkPfoRh/3ilOSroPQNAAH7pKA1/tcnHOs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rXhm0cgSZehbnk+kynrSz0nV9IJl/rdUpNXteMTCyiwb6FZsieE138bpLTIm7hG2iEcFdcIdwb4tmu7s1TZtNEFGklmOTJLfi7oU6pDKTjf4LwOZu8Ag/fFYgrOCs0VNARuN+sm6g8S3jZcrwL6eOVm3n0nq3gbaHm9F/e67tW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-220e989edb6so131255825ad.1;
+        Mon, 24 Feb 2025 11:22:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740424938; x=1741029738;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lby868p6RW66d7wZAeSh798V7d6U5V3PYrj576BWJWA=;
+        b=lH+jv1Nz0+nXFsjIC5YlutK6OyQsQxQbD0EPNZNMNm6fneMz2mede/y9201UzxCcYc
+         6aRPhOqa+aUTc7A4G5BXdL/gDKPIgJUtQ79xfIIdt2JMrg/sY+JvnLfq6AHgbHS+swXf
+         zBHvkcB4QZ29Yh9JYIi3ty5apa4+Vsx+g2e83c19YJ6YXcWCnEbvT65yLCjc5eSArHHl
+         +En4BT7L7LRpex83+uH2vjx7ESa9Tpj0peY1mLjBhpvnygnh8DWKb8gmrCptqmyT8tJ7
+         oOd65HKDxnMJHD4fm9ZsNMd07w3o9AWns49ofL13fN70koeh07TBDYsmEyrH9W0Ha5So
+         vOPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXSCk2DZjv7+v/uZp2//kf0vhoMewzqT3WH50YkBNUOiipAOPDB+EMaZ2D+gEEQuGqG8roDUGTzB8Bn@vger.kernel.org, AJvYcCXliCReILPKgULz/SrXyRRc4623lUE/mIJik5uchHKueXf0xi5uCjx3W23P8UK+uhpT3qB3ZkmMSW29@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQ5ZH34QQopRasUnAIaXMXmK1+LKcC6HRoEE9PL0pET30JMg16
+	Xc0KboxpSkYOgEvycFEVyDnx737qz7RgVI/URkBCrRdzw8tOalUa
+X-Gm-Gg: ASbGncttydC2wCSW/irX0aG5yuI0kv+3s6G4toDlS4P5ti6Pmfazc/iN1cqM2sbeweT
+	wLUqA1phNx+3hwghUdNeq9B2awLiQAXA4Vvv/2NuS6M8fYnp6HkRSCqZ+9ByBK9Uyxs/FVM0wSk
+	52MI5GztexI/RhRyg4BHodnrOc7+FGB80JaRKmNcEe75Jj2dG7HvKmXzm2frbuP0Zrm2KYppj0L
+	pnjkfAw1WFE4NoIn1r94xKXTIH7aiT0JLlG+mpt5w37rhJVNSEfMg2HrOA+X4QaLb0J+Zdrl9gF
+	4VrYJ3mOYnvfAG63UHJfbGq51ANv4ShFVpnm/ZmoyB/LrcWpch/g+KxTnIze
+X-Google-Smtp-Source: AGHT+IGW8hzZAZs2veSCvxujXgQK7/b4vuAT5K3Ok0ANy534lraLQTko72fQX1bO4hQEcTr85MZIhw==
+X-Received: by 2002:a17:902:c950:b0:21f:7a8b:d675 with SMTP id d9443c01a7336-22307b32c86mr6987075ad.4.1740424938111;
+        Mon, 24 Feb 2025 11:22:18 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-220d5349226sm185329855ad.24.2025.02.24.11.22.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2025 11:22:17 -0800 (PST)
+Date: Tue, 25 Feb 2025 04:22:15 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Stanimir Varbanov <svarbanov@suse.de>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	Phil Elwell <phil@raspberrypi.com>,
+	Jonathan Bell <jonathan@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>
+Subject: Re: [PATCH v6 0/7] Add PCIe support for bcm2712
+Message-ID: <20250224192215.GC2064156@rocinante>
+References: <20250224083559.47645-1-svarbanov@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/8j9ptH5L29iv71L9hMozt_h";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250224083559.47645-1-svarbanov@suse.de>
 
---Sig_/8j9ptH5L29iv71L9hMozt_h
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-Hi Conor,
+> Hello, v6 is re-based version of controller/brcmstb branch of pci tree.
 
-> On Fri, Feb 21, 2025 at 09:56:59PM +0100, Lukasz Majewski wrote:
-> > Hi Conor,
-> >  =20
-> > > On Fri, Feb 21, 2025 at 04:54:18PM +0100, Lukasz Majewski wrote: =20
-> > > > The measurement device on Liebherr's (LWE) boards is used to
-> > > > monitor the overall state of the device. It does have SPI
-> > > > interface to communicate with Linux host via spidev driver.
-> > > > Document the SPI DT binding as trivial SPI device.
-> > > >=20
-> > > > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
-> > > >  1 file changed, 2 insertions(+)
-> > > >=20
-> > > > diff --git
-> > > > a/Documentation/devicetree/bindings/trivial-devices.yaml
-> > > > b/Documentation/devicetree/bindings/trivial-devices.yaml index
-> > > > fadbd3c041c8..5d736a9792c2 100644 ---
-> > > > a/Documentation/devicetree/bindings/trivial-devices.yaml +++
-> > > > b/Documentation/devicetree/bindings/trivial-devices.yaml @@
-> > > > -161,6 +161,8 @@ properties:
-> > > >            - jedec,spd5118
-> > > >              # Linear Technology LTC2488
-> > > >            - lineartechnology,ltc2488
-> > > > +            # Liebherr on-board measurement SPI device
-> > > > +          - lwe,btt   =20
->                           ^^
-> Are these two trailing spaces an artefact of the mail?
->=20
+Applied to controller/brcmstb, thank you!
 
-No, there shall not be any.
+> v5 could be found at [1].
+[...]
 
-> > >=20
-> > > How does "btt" translate to what the device actually is? Seems
-> > > kinda random! =20
-> >=20
-> > Btt is a family of devices (bttc, btt3, xea) - to control heavy duty
-> > machines.
-> >=20
-> > That was the original codename - conceived probably 30+ years ago. =20
->=20
-> If there's 3 different devices, how come there aren't 3 compatibles, 1
-> for each?
+> [1] https://lore.kernel.org/lkml/20250120130119.671119-1-svarbanov@suse.de/
 
-There are devices from a single "family" of them, but different.
+The v5 is now superseded.  Thank you for the fixes!
 
-They are using similar approach for spidev devices connected.
-
->=20
-> >  =20
-> > > Also, where is patch 3, adding the lwe,btt to the spidev driver so
-> > > that it will probe? =20
-> >=20
-> > I've posted it to Mark Brown (and also linux-spi ML) for review.
-> >  =20
-> > >=20
-> > > Cheers,
-> > > Conor.
-> > >  =20
-> > > >              # 5 Bit Programmable, Pulse-Width Modulator
-> > > >            - maxim,ds1050
-> > > >              # 10 kOhm digital potentiometer with I2C interface
-> > > > --=20
-> > > > 2.39.5
-> > > >    =20
-> >=20
-> >=20
-> >=20
-> >=20
-> > Best regards,
-> >=20
-> > Lukasz Majewski
-> >=20
-> > --
-> >=20
-> > DENX Software Engineering GmbH,      Managing Director: Erika Unter
-> > HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell,
-> > Germany Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email:
-> > lukma@denx.de =20
->=20
->=20
-
-
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/8j9ptH5L29iv71L9hMozt_h
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAme8xrsACgkQAR8vZIA0
-zr1oKAf/WmdCs73CSvhwPwRIQJMJsk3zq7xeAnmKqwW2DlbbfFjwC/qN9BebVh0/
-C00ZxZc8dlOhNjz75f/kuXxGV2V387m3wsh1lNmJ2MdDBnrP76uZgQi9ckNxBcMS
-wflcyoBPzuabTCIhOicc+RIbuIT6aYyOh+hTJBf3sU1ZTwMg1CTGIOswjfOXXQlp
-bHZvqmhbKcY/DnmiByLO418wSgWMmMNx91hvlY8dxVtibsyyXDiZbDdVd+mR2YIu
-W3WEGzSL2sM7a1VIGxYG9bXl6q5PMq/IB82yCJfNP2dcIMLTwue+W0gSiSQEjJZ7
-I7Tn/aJRAl/SSNuzt/0ufDgagbGs0g==
-=qcwC
------END PGP SIGNATURE-----
-
---Sig_/8j9ptH5L29iv71L9hMozt_h--
+	Krzysztof
