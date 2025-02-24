@@ -1,103 +1,145 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mail-m49236.qiye.163.com (mail-m49236.qiye.163.com [45.254.49.236])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1639237717;
-	Mon, 24 Feb 2025 08:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE58724168A;
+	Mon, 24 Feb 2025 08:47:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.236
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740386860; cv=none; b=Z3RWiwXc8a+adwbCAmQhFsttM6H7yrImxNkGGs+GpoyfEn6fJqzA/mzzb30NYtO4ak464n4Mekow5N1hmaD+/lXH93D8KxcPRHMTcUhauNkQx4cOK5/EsNJ5W5O/Wab+I2BXKIXfMkPqzFaEEd9fKfkLRjkEPjhCSWiZOF0DYjw=
+	t=1740386873; cv=none; b=XXXadGOu7cCv7YWB5p2XLMBsc/m97rixkldWe3fWG8r8Onxgj0LT/T6BONp/rRHchbGP3yBeSoId9Gexun2nuC9UDP+k60CWHUq60s5coZWXigOzSE/BNPfiggksBwBuEpHdguubtLebF5sd0HWNqliNhNAzJHQ1uWgUnuhXZrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740386860; c=relaxed/simple;
-	bh=N/a0FSOcy4lpjIF/07vPlKdiNnwQDpKLGbXxcMbb8Ns=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rX5Q+X2mOmbfzopHWMYeMMKd1sJWCL87GU8DVabLQ6w2MoPMMNajmSWfmnZwwdso6RE6nT3Y70+Ai6YiaPXaDbeS5Yf6Sfcdynaz7rLxYSOTDS1nLphbSbGGybdTyuo6w0w9U03QtULSjvFpR4xWcWDGQ9EfXCEp4V1GlF3Es6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=hVsAGjGB; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1740386873; c=relaxed/simple;
+	bh=HYPzYTRdGvlsjbHeaX9TM/gXHq6UxnWgvSlWzFt18KE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hBbQvhTFxuP+nNCiEBXQCa2cWCls0n4PH9jhlBeyFVylVYBuvWzXZEaFApmmSgBpbzP0fFOkqgcFR0yWJ2lBqvAiHzTtEMS5qJOgM7Ji/ZvPDTOxT4PW8+Yt/CgMEM0gxBLsn6rsN80euLjl8xMaM/mR9dGMgZV8UFubcX85GJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=WA3pmr7Q; arc=none smtp.client-ip=45.254.49.236
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="hVsAGjGB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=8DSPR/pZ3Ub3yKWwJjoSPUXzbVMPDyN7eYUJoZQkSYM=; b=hVsAGjGBI3htPSzRcotE3hWsV/
-	dgNJq88/QpMnYHUx9oQDhMf3eTYnSG67e/s5kYV1Vo3ExraVDsT8FIjZpiE14bg2cSqkDOX3QbCug
-	GIswQYN+FwvTpuAxACeph+DSRpOW/Fi+yzZAnsZXsZVjLNfw2kqUjaagMCy2KVy4HOeHFCSAzv+C/
-	jjHxlFCRd/IG/7xnxMtlffDuNHVQ+oNZgQWk/9BiiGHm5Eg0owilNdJvUOAbUp/IR8A6bBVM3aNj2
-	b0s90E4LpU3l8PZwaWnesR9EwGXyLcRj9oRKzqJ86/WrZGaI1/tsQK5gK46ugF4XZKtxxHENF7le2
-	BWmvKTOg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:47184)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tmU7W-0005XM-2X;
-	Mon, 24 Feb 2025 08:47:22 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tmU7S-0004rI-2B;
-	Mon, 24 Feb 2025 08:47:18 +0000
-Date: Mon, 24 Feb 2025 08:47:18 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: =?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>
-Cc: Andrew Lunn <andrew@lunn.ch>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	davem@davemloft.net, Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
-	Simon Horman <horms@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Antoine Tenart <atenart@kernel.org>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Subject: Re: [PATCH net-next 0/2] net: phy: sfp: Add single-byte SMBus SFP
- access
-Message-ID: <Z7wyFolx3q6ACUHO@shell.armlinux.org.uk>
-References: <20250223172848.1098621-1-maxime.chevallier@bootlin.com>
- <87r03otsmm.fsf@miraculix.mork.no>
- <Z7uFhc1EiPpWHGfa@shell.armlinux.org.uk>
- <3c6b7b3f-04a2-48ce-b3a9-2ea71041c6d2@lunn.ch>
- <87ikozu86l.fsf@miraculix.mork.no>
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="WA3pmr7Q"
+Received: from [192.168.60.65] (unknown [103.29.142.67])
+	by smtp.qiye.163.com (Hmail) with ESMTP id bfe5cb08;
+	Mon, 24 Feb 2025 16:47:42 +0800 (GMT+08:00)
+Message-ID: <28dcac28-9060-4f65-8167-64f6a0e4532d@rock-chips.com>
+Date: Mon, 24 Feb 2025 16:47:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87ikozu86l.fsf@miraculix.mork.no>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] dt-bindings: clock, reset: rockchip: Add support
+ for rk3562
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: heiko@sntech.de, linux-rockchip@lists.infradead.org,
+ Finley Xiao <finley.xiao@rock-chips.com>, Liang Chen <cl@rock-chips.com>,
+ devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>,
+ Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20241224092310.3814460-1-kever.yang@rock-chips.com>
+ <20241224092310.3814460-2-kever.yang@rock-chips.com>
+ <z7jb32foci6bamqqddkkp34hazi2itp6uclarsoi5pkrgso2go@bxflagkaciq6>
+Content-Language: en-US
+From: Kever Yang <kever.yang@rock-chips.com>
+In-Reply-To: <z7jb32foci6bamqqddkkp34hazi2itp6uclarsoi5pkrgso2go@bxflagkaciq6>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDSk4fVhgaTE1NSRgeSx4fT1YVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKS0hVSUJVSk9JVU1MWVdZFhoPEhUdFFlBWU9LSFVKS0lCQ0NMVUpLS1
+	VLWQY+
+X-HM-Tid: 0a953724079603afkunmbfe5cb08
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mhg6USo6KDITPxMsKzQMHgxR
+	Kx1PC09VSlVKTE9LSENNQ01NQ05NVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlKS0hVSUJVSk9JVU1MWVdZCAFZQUlPTEg3Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=WA3pmr7QT5Hkf9NM5J4r4h5VyGiCXSrAlc66OXg1bmLMCGq8+B/MxJUJuUTBwUobsDxt5vimbfthlLTb8yGUl78OUnFzK+4mK+s/50Qw5ldgbqV+MuwYxHQP3gbV0JmYJr2l6940JfCv8oDALgFpshdtPcSBah52AfMtjoxPQqk=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=dG+gxPUSWpwDoki4eEh/9rwYbhNLk1VbVLvja7f2r94=;
+	h=date:mime-version:subject:message-id:from;
 
-On Mon, Feb 24, 2025 at 08:13:22AM +0100, Bjørn Mork wrote:
-> Andrew Lunn <andrew@lunn.ch> writes:
-> 
-> >> So, not only do I think that hwmon should be disabled if using SMBus,
-> >> but I also think that the kernel should print a warning that SMBus is
-> >> being used and therefore e.g. copper modules will be unreliable. We
-> >> don't know how the various firmwares in various microprocessors that
-> >> convert I2C to MDIO will behave when faced with SMBus transfers.
-> >
-> > I agree, hwmon should be disabled, and that the kernel should printing
-> > a warning that the hardware is broken and that networking is not
-> > guaranteed to be reliable.
-> 
-> What do you think will be the effect of such a warning?  Who is the
-> target audience?
-> 
-> You can obviously add it, and I don't really care.  But I believe the
-> result will be an endless stream of end users worrying about this scary
-> warning and wanting to know what they can do about it.  What will be
-> your answer?
+Hi Krzysztof,
 
-... which is good, because it raises the visibility of crap hardware
-and will make people think twice about whether to purchase it, thus
-penalising (a little) the sales of badly designed hardware.
+On 2024/12/27 16:28, Krzysztof Kozlowski wrote:
+> On Tue, Dec 24, 2024 at 05:23:09PM +0800, Kever Yang wrote:
+>> From: Finley Xiao <finley.xiao@rock-chips.com>
+>>
+>> Add the dt-bindings header for the rk3562, that gets shared between
+>> the clock controller and the clock references in the dts.
+>> Add softreset ID for rk3562.
+>>
+>> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+>> Signed-off-by: Liang Chen <cl@rock-chips.com>
+>> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+>> ---
+>>
+>> Changes in v2:
+>> - rename the file to rockchip,rk3562-cru.h
+>> - remove CLK_NR_CLKS
+>> - add new file for reset ID
+>> - update to use dual license
+>>
+>>   .../dt-bindings/clock/rockchip,rk3562-cru.h   | 377 ++++++++++++++++++
+>>   .../dt-bindings/reset/rockchip,rk3562-cru.h   | 360 +++++++++++++++++
+>
+> No, that's not a separate patch. Headers *ALWAYS* go with the bindings
+> patch.
+Will fix.
+>>   2 files changed, 737 insertions(+)
+>>   create mode 100644 include/dt-bindings/clock/rockchip,rk3562-cru.h
+>>   create mode 100644 include/dt-bindings/reset/rockchip,rk3562-cru.h
+>>
+>> diff --git a/include/dt-bindings/clock/rockchip,rk3562-cru.h b/include/dt-bindings/clock/rockchip,rk3562-cru.h
+>> new file mode 100644
+>> index 000000000000..ad07ad3a12ad
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/rockchip,rk3562-cru.h
+>> @@ -0,0 +1,377 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
+> Why not using license requested by checkpatch?
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+The checkpatch does not report error/warning for this license, and this 
+is the same as many other SoCs.
+
+Which license is recommend in the header file?
+
+>
+>> +/*
+>> + * Copyright (c) 2022-2024 Rockchip Electronics Co., Ltd.
+>> + * Author: Finley Xiao <finley.xiao@rock-chips.com>
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_CLK_ROCKCHIP_RK3562_H
+>> +#define _DT_BINDINGS_CLK_ROCKCHIP_RK3562_H
+>> +
+>> +/* cru-clocks indices */
+>> +
+>> +/* cru plls */
+>> +#define PLL_APLL			1
+> Start with 0. Your other binding also starts with 0, so be consistent.
+Will fix.
+>
+>> +#define PLL_GPLL			2
+>> +#define PLL_VPLL			3
+>> +#define PLL_HPLL			4
+>> +#define PLL_CPLL			5
+>> +#define PLL_DPLL			6
+>> +
+>> +/* cru clocks */
+> Missing clock for 7. You are not supposed to have any holes here.
+
+Will fix.
+
+Thanks,
+
+- Kever
+
+>> +#define ARMCLK				8
+>> +#define CLK_GPU				9
+>> +#define ACLK_RKNN			10
+> Best regards,
+> Krzysztof
+>
+>
