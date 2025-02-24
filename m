@@ -1,216 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7DA1C8621;
-	Mon, 24 Feb 2025 21:33:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479F5469D;
+	Mon, 24 Feb 2025 21:34:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740432811; cv=none; b=brZqsQO0YC7F/LxtjZEo7b5b9psxDc/OmzjrmnarpVdKoV1Ecq2GpWfIo1cO+tJigQBu2HM0gaYf82pILneCy/p51eAFwJthFAvmioVTO8qcPce1jt1H5CgmonGjjfeC/Fa7IAY9XyO4dTiCa7EwjukW2FoDimlhvN+YaM+W3Y0=
+	t=1740432881; cv=none; b=BLmwqga/xUsQFu8BtYUyjEpNiEezxDUivEy5NREfPqn9eybzne6s8EIaRNweaObhWuZY9trZpg8AT/cAH6WwfvbZhrM6JR1Nev8ZPxltaexL7xFMj6LxzzckWCY8cRXz3imQtSJeHRvrFCdwJ3WyV99ZKVIwJBFOqM8a+JKJTX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740432811; c=relaxed/simple;
-	bh=9HjqOTzB0ZWkUjJj4bfaVy2BMPhz6StSpstkHw9pnOE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GOMpTvhdjsDV9jPI5qBO/ie3OcDoxMUcEIamAc+bSDvWfGUh7R8eIblAq+EsnLq44D2KCP7WbkFsTRaXzKIrdDcJGRiAdAjGwKJYw+oq9M7XAMNcgJjwclBRtyJekG60+klvD0imzwDwlaV4RdW9W8+jSHoq27U+5bG/DEqJS/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uqj/vsks; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uqj/vsks"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3948DC4CED6;
-	Mon, 24 Feb 2025 21:33:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740432810;
-	bh=9HjqOTzB0ZWkUjJj4bfaVy2BMPhz6StSpstkHw9pnOE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Uqj/vsksO6F0MSH5GCmObkOaFAgMuMpG0CJzdilCS7OqQ0aMwPONo1h/VdTGr4noZ
-	 BfpV2XTAmHDlZrQD5fCT3CAYYEO2iAvWixYIMBd69m/lYVaz8pDvuqFqSwhbLeTcPT
-	 zJFaGS0qvnmPrD2E8nt/YZgpzA09+HFajAIt6EKNsEQXbis+y/M50RNd/zryEhCcRV
-	 TD2On5Irsd/UDDTS6wHx9jU7LHys3S5BcEr2OrrfmUMN9lpF79Yxwplu3d7Mnd6js2
-	 A29SqD9ZSQ77j0CXZIvvwBufM/ySZGvzIeLfE5Dqu73YYGGYVmwLLZNU5+2vl0L5v5
-	 w0IYEK/w2zgyA==
-Date: Mon, 24 Feb 2025 15:33:28 -0600
-From: Rob Herring <robh@kernel.org>
-To: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: linux-sound@vger.kernel.org,
-	Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/4] ASoC: dt-bindings: xlnx,spdif: Convert to
- json-schema
-Message-ID: <20250224213328.GB4107125-robh@kernel.org>
-References: <20250224182548.2715896-1-vincenzo.frascino@arm.com>
- <20250224182548.2715896-4-vincenzo.frascino@arm.com>
+	s=arc-20240116; t=1740432881; c=relaxed/simple;
+	bh=xJDyPX/kbtIszyonpoNVCKIWwERsN5Sbj1e5YYCc3vA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mif/dzXPMCRAVzxcx0sgGXmuFS6scXw+IVObz9qK0laRnYJrgW80P58ftOZ2Z/mnAFsBhJTHx4l02zPb8BWq1djg+JemVc7q9So+2ql0z9vZFmV7hRepIK1ArDvBd0QXQulElQNEEucKXdIVe6KaMKCKKfL08PCLmIiX/xEkSe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AF62C4CED6;
+	Mon, 24 Feb 2025 21:34:37 +0000 (UTC)
+Date: Mon, 24 Feb 2025 16:35:13 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, bpf <bpf@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, Linus
+ Torvalds <torvalds@linux-foundation.org>, Masahiro Yamada
+ <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas
+ Schier <nicolas@fjasle.eu>, Zheng Yejian <zhengyejian1@huawei.com>, Martin
+ Kelly <martin.kelly@crowdstrike.com>, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Josh Poimboeuf <jpoimboe@redhat.com>, Heiko
+ Carstens <hca@linux.ibm.com>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Vasily Gorbik <gor@linux.ibm.com>, Alexander
+ Gordeev <agordeev@linux.ibm.com>
+Subject: Re: [PATCH v5 4/6] scripts/sorttable: Zero out weak functions in
+ mcount_loc table
+Message-ID: <20250224163513.1ea561b7@gandalf.local.home>
+In-Reply-To: <5225b07b-a9b2-4558-9d5f-aa60b19f6317@sirena.org.uk>
+References: <20250218195918.255228630@goodmis.org>
+	<20250218200022.883095980@goodmis.org>
+	<5225b07b-a9b2-4558-9d5f-aa60b19f6317@sirena.org.uk>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250224182548.2715896-4-vincenzo.frascino@arm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 24, 2025 at 06:25:47PM +0000, Vincenzo Frascino wrote:
-> Convert the Xilinx SPDIF 2.0 device tree binding documentation to
-> json-schema.
+On Mon, 24 Feb 2025 20:06:28 +0000
+Mark Brown <broonie@kernel.org> wrote:
+
+> On Tue, Feb 18, 2025 at 02:59:22PM -0500, Steven Rostedt wrote:
+> > From: Steven Rostedt <rostedt@goodmis.org>
+> > 
+> > When a function is annotated as "weak" and is overridden, the code is not
+> > removed. If it is traced, the fentry/mcount location in the weak function
+> > will be referenced by the "__mcount_loc" section. This will then be added
+> > to the available_filter_functions list. Since only the address of the
+> > functions are listed, to find the name to show, a search of kallsyms is
+> > used.  
 > 
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> ---
->  .../devicetree/bindings/sound/xlnx,spdif.txt  | 28 ------
->  .../devicetree/bindings/sound/xlnx,spdif.yaml | 85 +++++++++++++++++++
->  2 files changed, 85 insertions(+), 28 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/sound/xlnx,spdif.txt
->  create mode 100644 Documentation/devicetree/bindings/sound/xlnx,spdif.yaml
+> This breaks builds with ftrace on architectures without KASLR, one
+> affected configuration is bcm2835_defconfig:
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/xlnx,spdif.txt b/Documentation/devicetree/bindings/sound/xlnx,spdif.txt
-> deleted file mode 100644
-> index 15c2d64d247c..000000000000
-> --- a/Documentation/devicetree/bindings/sound/xlnx,spdif.txt
-> +++ /dev/null
-> @@ -1,28 +0,0 @@
-> -Device-Tree bindings for Xilinx SPDIF IP
-> -
-> -The IP supports playback and capture of SPDIF audio
-> -
-> -Required properties:
-> - - compatible: "xlnx,spdif-2.0"
-> - - clock-names: List of input clocks.
-> -   Required elements: "s_axi_aclk", "aud_clk_i"
-> - - clocks: Input clock specifier. Refer to common clock bindings.
-> - - reg: Base address and address length of the IP core instance.
-> - - interrupts-parent: Phandle for interrupt controller.
-> - - interrupts: List of Interrupt numbers.
-> - - xlnx,spdif-mode: 0 :- receiver mode
-> -		    1 :- transmitter mode
-> - - xlnx,aud_clk_i: input audio clock value.
-> -
-> -Example:
-> -	spdif_0: spdif@80010000 {
-> -		clock-names = "aud_clk_i", "s_axi_aclk";
-> -		clocks = <&misc_clk_0>, <&clk 71>;
-> -		compatible = "xlnx,spdif-2.0";
-> -		interrupt-names = "spdif_interrupt";
-> -		interrupt-parent = <&gic>;
-> -		interrupts = <0 91 4>;
-> -		reg = <0x0 0x80010000 0x0 0x10000>;
-> -		xlnx,spdif-mode = <1>;
-> -		xlnx,aud_clk_i = <49152913>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/sound/xlnx,spdif.yaml b/Documentation/devicetree/bindings/sound/xlnx,spdif.yaml
-> new file mode 100644
-> index 000000000000..ad0b40a12c2b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/xlnx,spdif.yaml
-> @@ -0,0 +1,85 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/xlnx,spdif.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Xilinx SPDIF IP
-> +
-> +description:
-> +  The IP supports playback and capture of SPDIF audio.
-> +
-> +maintainers:
-> +  - Vincenzo Frascino <vincenzo.frascino@arm.com>
-> +
-> +allOf:
-> +  - $ref: dai-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - xlnx,spdif-2.0
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupt-names:
-> +    items:
-> +      - const: spdif_interrupt
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description: |
-> +      List of Interrupt numbers.
-
-Drop description.
-
-> +
-> +  clock-names:
-> +    items:
-> +      - const: aud_clk_i
-> +      - const: s_axi_aclk
-> +    description: |
-> +      List of input clocks.
-
-Drop
-
-> +
-> +  clocks:
-> +    maxItems: 2
-> +    description: |
-> +      Input clock specifier. Refer to common clock bindings.
-
-Drop
-
-> +
-> +  xlnx,spdif-mode:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    enum:
-> +      - 0
-> +      - 1
-> +    description: |
-> +      0 - receiver
-> +      1 - transmitter
-> +
-> +  xlnx,aud_clk_i:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-
-Drop '|'
-
-> +      Input audio clock value.
-
-Is value the frequency? If you know more detail, please add it.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupt-names
-> +  - interrupts
-> +  - clock-names
-> +  - clocks
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    spdif_0: spdif@80010000 {
-
-Drop unused labels.
-
-> +      clock-names = "aud_clk_i", "s_axi_aclk";
-> +      clocks = <&misc_clk_0>, <&clk 71>;
-> +      compatible = "xlnx,spdif-2.0";
-
-'compatible' goes first. Then reg. See 
-Documentation/devicetree/bindings/dts-coding-style.rst for more details.
-
-> +      interrupt-names = "spdif_interrupt";
-> +      interrupt-parent = <&gic>;
-> +      interrupts = <0 91 4>;
-> +      reg = <0x80010000 0x10000>;
-> +      xlnx,spdif-mode = <1>;
-> +      xlnx,aud_clk_i = <49152913>;
-> +    };
-> +
-> +...
-> -- 
-> 2.43.0
+> /home/broonie/git/bisect/kernel/trace/ftrace.c: In function 'ftrace_process_locs':
+> /home/broonie/git/bisect/kernel/trace/ftrace.c:7057:24: error: implicit declaration of function 'kaslr_offset' [-Werror=implicit-function-declaration]
+>  7057 |         kaslr = !mod ? kaslr_offset() : 0;
+>       |                        ^~~~~~~~~~~~
 > 
+> since that happens to enable CONFIG_FUNCTION_TRACER but doesn't have
+> KASLR, we don't have stubs for KASLR on architectures that don't have
+> it.  It also looks like from a quick glance at least RISC-V will fail to
+> link since it only provides kaslr_offset() with RANDOMIZE_BASE enabled.
+> This all feels a bit footgunish.
+
+Already reported:
+
+  https://lore.kernel.org/all/20250224180805.GA1536711@ax162/
+
+-- Steve
