@@ -1,137 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.3xo.fr (mail.3xo.fr [212.129.21.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344C02505B7;
-	Mon, 24 Feb 2025 09:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03BF22505DE
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 09:57:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.129.21.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740391069; cv=none; b=CDCDTddcGNurCPJPVW39XktWLeKCncBY/F5a2pciUXu0ivNvYLdSS63GnV9klJtp8WE6zs2fCY0TMCUMmAafNDE8SzH3yrsaAbHXaRdNDU6C8WFvANd2lMxdwQxY+9FuZ/xfHgi0sT55l1e9urNszhoWW084Zzy5sdoXmwEJw7Y=
+	t=1740391070; cv=none; b=aIEur2wDMZsAOg584SObCE1Ai24PzWyc/Ae+dUc61fUSeOj11uflXAclAUw4XCb4c4TAPvjIAR9GOU0zp4pG8tmji9mhtTqdLYdyu8pm0AP6biD6995Cs4VZSdCQymUz+LdKAYXXAwBI+Mggwul9L3kl2VDYEwRJe0C5LlFUZT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740391069; c=relaxed/simple;
-	bh=iE537x/MELrUY0Qtk8aCd5YLeWWHG15hTl09B9wGRWM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SQF99Ogla2XncNWI19M3IJU952sY2Oey+5XltVQ7vkN7+I0Do/BBp+tqJ9JQjaMRn+JicHHiANkrohn5T4rmeG7Er1/IShdy6lCoBzoc8Gqu52HuXiqZTtljeIf6hgMFBWb3gNVpGcf3atH/z7GLLBQh3RDsEUd+R6IEMYZtGr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TfIFXDJe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740391070; c=relaxed/simple;
+	bh=f38sbjkp8IsEbCigbaDtZbUmcaFSWIygdD0JyuwEVhM=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=NleDPcAXBpvE/RCTiyNRtEhR0xhDUg/eYms+GAAsHvILChHMthC0KE6U+rzFaaRgyj68hRelRuCKDkV56S+lYPVrlr0vvAfee0ePIL79sG6Z02LJoIQzyb2iIymmF4uiklkBg6MliVoN0rvP5i95tjzMX5MjrN0wUL8T9/4vn34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=3xo.fr; spf=pass smtp.mailfrom=3xo.fr; dkim=pass (2048-bit key) header.d=3xo.fr header.i=@3xo.fr header.b=BXW8cJ8A; arc=none smtp.client-ip=212.129.21.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=3xo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TfIFXDJe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 098C3C4CEE8;
-	Mon, 24 Feb 2025 09:57:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740391068;
-	bh=iE537x/MELrUY0Qtk8aCd5YLeWWHG15hTl09B9wGRWM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TfIFXDJen3mMesTjG7OhjLyO68Lu9krViqA7VC3vhkwnLojy4G3CBiTdUmL3na5zf
-	 ey2d8msVYSk18M5THfX+RJdtV/35HTBjjiieiPT1B9lKgRxUblNdrLhnR090a4dUDp
-	 FkP/7/PnwOILK+QWx4uFaUo67l3z3VqYe5pzZuknUTsNQ5E5UX2KyDSU5kOlq4JXSs
-	 Z1Bwr4k9KLgdBR37JAv6X9l6o/j1iGueZhQVbXva5c1h8hjI9PZAm1jeoz8P9C78du
-	 Upp41f6hNuhj6KQ/6UrooNmrkqTQr4K66zIME/NA1If65Ly8AwVuuEYnio7f84sn8m
-	 j8jH/pA1AvlLQ==
-Date: Mon, 24 Feb 2025 20:27:44 +1030
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Carlos Maiolino <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>
-Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 3/8][next] xfs: Avoid -Wflex-array-member-not-at-end warnings
-Message-ID: <e1b8405de7073547ed6252a314fb467680b4c7e8.1739957534.git.gustavoars@kernel.org>
-References: <cover.1739957534.git.gustavoars@kernel.org>
+	dkim=pass (2048-bit key) header.d=3xo.fr header.i=@3xo.fr header.b="BXW8cJ8A"
+Received: from localhost (mail.3xo.fr [212.129.21.66])
+	by mail.3xo.fr (Postfix) with ESMTP id 815E88D;
+	Mon, 24 Feb 2025 10:57:38 +0100 (CET)
+X-Virus-Scanned: Debian amavis at nxo2.3xo.fr
+Received: from mail.3xo.fr ([212.129.21.66])
+ by localhost (mail.3xo.fr [212.129.21.66]) (amavis, port 10024) with ESMTP
+ id eLhPAqcJMhzr; Mon, 24 Feb 2025 10:57:36 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.3xo.fr 0EC4C8C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xo.fr; s=3xo;
+	t=1740391056; bh=NFlPp2fA2pDpeFVq75KIRnfMMtdGC9swH34bQDpPKdk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=BXW8cJ8AoWFZakWzml0RkTc50uPb9O2nXfdFdjNicF08tRTxq1iWvbP8mdZQ3Z7nE
+	 m4wTpInI/9IVPb7IfsCXJfaTCUNesoWhHGewRr4fhCeuECz6XEeu5RdUSuzCv9/Eab
+	 m1fDECNnqZGUtIbOQmRKu6bPxSrX57i4YXdthDm1ZHpj44bb49u7HqD9qmDiZ37ht/
+	 BXLxRY1Xewx4wPRNPzmxPPd8OkSyeLRwzWO68+L7fZCZp/yWImG/4tNzqbuSnJaJyw
+	 nmFjj4f6cqtV8MhiPaCUhOnmZ8d+vK1OimHDZp1iDBErv3lY3DHpd72bf4/0IrtqKM
+	 yoMbznt+2EMPg==
+Received: from mail.3xo.fr (mail.3xo.fr [212.129.21.66])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by mail.3xo.fr (Postfix) with ESMTPSA id 0EC4C8C;
+	Mon, 24 Feb 2025 10:57:36 +0100 (CET)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1739957534.git.gustavoars@kernel.org>
+Date: Mon, 24 Feb 2025 10:57:35 +0100
+From: Nicolas Baranger <nicolas.baranger@3xo.fr>
+To: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>,
+ dri-devel@lists.freedesktop.org, airlied@redhat.com, Jocelyn Falempe
+ <jfalempe@redhat.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ linux-kernel@vger.kernel.org
+Subject: Re: Include ASPEED ast-drm 1.15.1 video driver in kernel tree
+In-Reply-To: <87o6yr911t.fsf@intel.com>
+References: <d507f6268ea3158b5af82b6860ca7b71@3xo.fr>
+ <194c4656963debcf074d87e89ab1a829@3xo.fr>
+ <b296bfef-1a9c-4452-baeb-09f86758addd@suse.de>
+ <984c317de1027f5886390a65f1f66126@3xo.fr> <87o6yr911t.fsf@intel.com>
+Message-ID: <78ac8b58affdd365506fe72822e30f6f@3xo.fr>
+X-Sender: nicolas.baranger@3xo.fr
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+Hi Jani
 
-Change the type of the middle struct members currently causing trouble
-from `struct bio` to `struct bio_hdr`.
+> I'm not sure what you're trying to say here. The driver date was 
+> removed
+> because it was virtually never updated for any driver. It provided no
+> useful information.
 
-We also use `container_of()` whenever we need to retrieve a pointer to
-the flexible structure `struct bio`, through which we can access the
-flexible-array member in it, if necessary.
+Sure your right, when I removed it from NVIDIA driver (to be able to 
+build nvidia driver with DKMS on mainline), the .date value was still 
+set to 20160202 !
+See the PR here 
+https://github.com/NVIDIA/open-gpu-kernel-modules/pull/783
 
-With these changes fix 27 of the following warnings:
+I did just say that to be able to build and use the ast_new on mainline 
+(6.14-rcX) I had to update the source which were working on linux-stable 
+and to remove .date from drm structure.
+That's why on the online directory there are 2 versions of the driver, 
+one for linux-stable (up to 6.13.2) and one for mainline (from 
+6.14.0-rc1).
 
-fs/xfs/xfs_log_priv.h:208:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+Kind regards
+Nicolas Baranger
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- fs/xfs/xfs_log.c      | 15 +++++++++------
- fs/xfs/xfs_log_priv.h |  2 +-
- 2 files changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
-index f8851ff835de..7e8b71f64a46 100644
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -1245,7 +1245,7 @@ xlog_ioend_work(
- 	}
- 
- 	xlog_state_done_syncing(iclog);
--	bio_uninit(&iclog->ic_bio);
-+	bio_uninit(container_of(&iclog->ic_bio, struct bio, __hdr));
- 
- 	/*
- 	 * Drop the lock to signal that we are done. Nothing references the
-@@ -1663,7 +1663,8 @@ xlog_write_iclog(
- 	 * writeback throttle from throttling log writes behind background
- 	 * metadata writeback and causing priority inversions.
- 	 */
--	bio_init(&iclog->ic_bio, log->l_targ->bt_bdev, iclog->ic_bvec,
-+	bio_init(container_of(&iclog->ic_bio, struct bio, __hdr),
-+		 log->l_targ->bt_bdev, iclog->ic_bvec,
- 		 howmany(count, PAGE_SIZE),
- 		 REQ_OP_WRITE | REQ_META | REQ_SYNC | REQ_IDLE);
- 	iclog->ic_bio.bi_iter.bi_sector = log->l_logBBstart + bno;
-@@ -1692,7 +1693,8 @@ xlog_write_iclog(
- 
- 	iclog->ic_flags &= ~(XLOG_ICL_NEED_FLUSH | XLOG_ICL_NEED_FUA);
- 
--	if (xlog_map_iclog_data(&iclog->ic_bio, iclog->ic_data, count))
-+	if (xlog_map_iclog_data(container_of(&iclog->ic_bio, struct bio, __hdr),
-+				iclog->ic_data, count))
- 		goto shutdown;
- 
- 	if (is_vmalloc_addr(iclog->ic_data))
-@@ -1705,16 +1707,17 @@ xlog_write_iclog(
- 	if (bno + BTOBB(count) > log->l_logBBsize) {
- 		struct bio *split;
- 
--		split = bio_split(&iclog->ic_bio, log->l_logBBsize - bno,
-+		split = bio_split(container_of(&iclog->ic_bio, struct bio, __hdr),
-+				  log->l_logBBsize - bno,
- 				  GFP_NOIO, &fs_bio_set);
--		bio_chain(split, &iclog->ic_bio);
-+		bio_chain(split, container_of(&iclog->ic_bio, struct bio, __hdr));
- 		submit_bio(split);
- 
- 		/* restart at logical offset zero for the remainder */
- 		iclog->ic_bio.bi_iter.bi_sector = log->l_logBBstart;
- 	}
- 
--	submit_bio(&iclog->ic_bio);
-+	submit_bio(container_of(&iclog->ic_bio, struct bio, __hdr));
- 	return;
- shutdown:
- 	xlog_force_shutdown(log, SHUTDOWN_LOG_IO_ERROR);
-diff --git a/fs/xfs/xfs_log_priv.h b/fs/xfs/xfs_log_priv.h
-index f3d78869e5e5..32abc48aef24 100644
---- a/fs/xfs/xfs_log_priv.h
-+++ b/fs/xfs/xfs_log_priv.h
-@@ -205,7 +205,7 @@ typedef struct xlog_in_core {
- #endif
- 	struct semaphore	ic_sema;
- 	struct work_struct	ic_end_io_work;
--	struct bio		ic_bio;
-+	struct bio_hdr		ic_bio;
- 	struct bio_vec		ic_bvec[];
- } xlog_in_core_t;
- 
--- 
-2.43.0
 
+Le 2025-02-24 09:53, Jani Nikula a écrit :
+
+> On Thu, 13 Feb 2025, Nicolas Baranger <nicolas.baranger@3xo.fr> wrote:
+> 
+>> Yes, due to .date total removal in linux 6.14
+>> (https://github.com/torvalds/linux/commit/cb2e1c2136f71618142557ceca3a8802e87a44cd)
+>> the last DKMS sources are :
+>> https://xba.soartist.net/ast-drm_nba_20250211/nba-dkms/nba_last_src_20250212/src/
+> 
+> I'm not sure what you're trying to say here. The driver date was 
+> removed
+> because it was virtually never updated for any driver. It provided no
+> useful information.
+> 
+> BR,
+> Jani.
