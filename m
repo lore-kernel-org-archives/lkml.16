@@ -1,126 +1,76 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 938E815B10D;
-	Mon, 24 Feb 2025 22:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF41215B10D;
+	Mon, 24 Feb 2025 22:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740437380; cv=none; b=JI2kIqzl8xYScJGykM6kXsCzLelStB8fKrt5JCFhbdCIRpJ7jk4r62rco/EPGvVcIx7MkTL5fbP0OZ2GwM3C0FgisBePF0QRtXHNjoqXsro+37sKVH0fjcYkJnpwBKA4yeS2ewA6o9SJhRfjzqkjfZ72U4t6vCcBT24Or5oUcqI=
+	t=1740437401; cv=none; b=I3j2dh8pGdYwkBOGB+DJE6g94muFIiIUQ7nQnkthfs7iIt+rzqCNI7iZZj5iH+haq//3OAZWIKIjbxO+GoFcgiiUukCOws+XgNjB6XBME3tZmTbXGzNwClmeJr1bInRSpewGCSSgQzfCKLGJvQN4ehQBtn51q/8SR30YqW27mbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740437380; c=relaxed/simple;
-	bh=Xy9HTvZEt1MPY0q0wd7PjYQMsZnSy2ro8SIqYGa0838=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bjBnWNzhMRsVp6mgTSXy0ICpL1XnUmg4vE8PXbGWBtHeB2bSL/BpOiXSQsFJ/1u+FGUOk0l5zYdtroDGogcID684/ak7D6gMpY5e6s9bdgVRkL7kEXqQxv2JO9PfsD04JUf54vVLM05gPsDkVq1U89qgq8LoJkqEpqqKAu889h0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=uTPOcOrp; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1740437401; c=relaxed/simple;
+	bh=m0VWXQc0+KWLoKOvTalZ2lmiF3taoCMKhQo96UyWEKQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=M/otPoldAf6FiAQNCVHNL/4caC2GSVGKNbTLguqiSY6jSHHA4zpFjyEXzzKWP5wbjzGAoaJrFhEi+iVTKVUAf/qbnAXPNkTvrPD8UscAQeQwJCpiRQGzABkEgiK/KH7U/RuYI1n2fS3HLlTl5FZxWq8/oIvO/Fhk4HKr++Mc4qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uLvLBq61; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="uTPOcOrp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1740437354; x=1741042154; i=w_armin@gmx.de;
-	bh=Xy9HTvZEt1MPY0q0wd7PjYQMsZnSy2ro8SIqYGa0838=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=uTPOcOrpHg3Zs88QyI41k2efFBZ8tahzrpgPQT+PEBf2jQO7dXAWUHA7mXrg+jeh
-	 V1hRO8Ng841PNaNHtMc5h3B8/tIrx5wD5EtU2gWv/VVPzEThRcbYgWHTijYRkGBu6
-	 QmNYa9mwEjpUvBISMhmqrV/bJKO2uyp7CGgHFhWsjby+wLXBY7RTVgWsuWQebjvXx
-	 e0i9Kw4GTC9Zodg8S+LcYGM03vaOpptdyl40f+0aJRGlYbgx1N+ZeEFAdtARa1aZv
-	 mtR2RYxFmD/z7xj3Hf/ZuICNa3FY69Ic+5OGJAvsbrJTzmOyzpU+zufm2HUXsjxkK
-	 TgIBF8QKr/MeGC7g3g==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.24] ([87.177.78.219]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MJE2D-1u2rCL2KGh-00MLZn; Mon, 24
- Feb 2025 23:49:14 +0100
-Message-ID: <9fa91732-3085-4e79-9a8f-b38263ee7d08@gmx.de>
-Date: Mon, 24 Feb 2025 23:49:13 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uLvLBq61"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CA0CC4CED6;
+	Mon, 24 Feb 2025 22:50:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740437400;
+	bh=m0VWXQc0+KWLoKOvTalZ2lmiF3taoCMKhQo96UyWEKQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=uLvLBq615Kcjje0MOmwxsSIdxiJZrKWKkp8J8mAmiM+1TrN/+EcnxrRez9Bb6hGqo
+	 /T94aMwAgEubKncBuYB3iWqgq1Vxsxw4SYAaTrTzN7c4PjrvRbirufBp20OBSNunEW
+	 L5Jafls1ZVskNSEjbO2t/rD+ClLoPJjN2EX1ieerDMgGOCsNhP0W44oYvw8qTjV5Cz
+	 G6mogAV+6nFglfwVsO75yRzxmq7jtSvvCGfBioqFpe/wWyK57jgIx3xGl5I/F20Lio
+	 fbl4rpNRY+z8jpfJnnS1cO+CGJq4B6B/aRPdK5vVbw+CffpzSb7JaQ13nDzPxbxDOj
+	 GLn04/xeb0rEg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D68380CFD7;
+	Mon, 24 Feb 2025 22:50:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] ACPI: platform_profile: fix legacy sysfs with
- multiple handlers
-To: Antheas Kapenekakis <lkml@antheas.dev>, Luke Jones <luke@ljones.dev>
-Cc: Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Limonciello, Mario" <mario.limonciello@amd.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Len Brown <lenb@kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- linux-kernel@vger.kernel.org,
- "platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Hans de Goede
- <hdegoede@redhat.com>, me@kylegospodneti.ch
-References: <20250224195059.10185-1-lkml@antheas.dev>
- <1c0c988b-8fe6-4857-9556-6ac6880b76ff@app.fastmail.com>
- <633bbd2d5469db5595f66c9eb6ea3172ab7c56b7.camel@ljones.dev>
- <CAGwozwGmDHMRbURuCvWsk8VTJEf-eFXTh+mamB1sKaHX5DO8WA@mail.gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <CAGwozwGmDHMRbURuCvWsk8VTJEf-eFXTh+mamB1sKaHX5DO8WA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:ibwYsx4t9xisw7mRoLddwREaXllX2vD7tbYNXXUX2pSwe3a8m8m
- Qfn0tKhZODeeKi1/xSCZH+e2R10E2kOSjjSek8aiS+lJWVkpcanKSkL2TfuyU+gU/rxzA6/
- 3gnIycgtc9EOJxc/OVWab4RgWnfB9aZ2cgpNaNo/rv11ALSKhJSsc9POHDtXN1iaAJpTPQe
- zO93ECOJfLYqBsHUlB2Og==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:DMWThMoawBg=;MhipS2UA6kqDN/eHH6TFo+IRh/H
- LrsNO7GGeWOtPO18CG/8megNUxtqgMLKHulDareH9HlDzOKqR58tyeJy0Doc7915BvKDNqLg6
- KgCE/NsRBF/3H84sr/jRj4mnewQtt4cX6xF3jSpUhEJ3zD9fbdNhjhh//0QU4+R7Pfqj8YQmT
- aYfCsdCfAo+H5Tfd1IKt7/A/HSoKtaYJxZmqhGMkf1W4z4YX8XkpaLs5Xx4ZdpxkcHrHll8mP
- f2ppDN0zqcO/0WmmMABRbk2qztYXyafixqJ9ILFvBx3MbbIG8VYnhJpvkd4tEFZFBEV/7RT9e
- DUGyjxRr7EVUAj02fKUv7YwdrwGZjfWXqjXEUElQPQXvUFTXPQeW7u2bZKmXpyOiAns78Dis9
- z1fa38CXmKNAhcubNUuX49sMwj63CRkVU0C7A3L4UrJXt1mt4ETvTpEUTobTn7ZTqI3N1bybm
- UcUVmhTQrCxB/aq005Ji5eKjMvuSYwpxVp2Cw9Z4iOEsQQIu73Noe64MsOlfVwwhDWzIhXlSR
- ILvajRUizozs5w/fiqijx1Ng+ekQXp9OUupBNc8b+CXvX3U5gF0ihO9tN/qepX8+7nNwZQ3Hl
- cEj7XT4W7brUTLwn2wrVmMf3QT8f+zObltFfrT7JM5Mwn0WEDvZCRT5bkAiPXZzmOvSgQUunb
- 9uukMv/tSvQyzdEnxUpJEColIaUcDMP454Lh4i7f/uyojY/mSmcSqK+6m8x5W1GucjEXXjDTh
- fd+z4QrD9D1ZaOOQvIfQbIsOsHdeL/FHTYL8sDwrNIiKdfu/yuZBWWgb2BqdCgXj+KAIsYdsq
- +7fp5hyfTznkSJtw1LEZWUmUnYiCmIAOgEMTZPUuFjpeIn74kdEHmWVvJ8Mf9DECqi84UCHK6
- QxUnZSkoU/MI08uM71yqpbV34HXBdW5YjpO2YfEpKb7KxZQKZ56ZPstEXei+YyewEPWMBMP/B
- uyKhZVZUFhXOhNJu/VNyrQTJnE3d3oXTL8xC78YKg1AWK9kIErRcr1cEur6Y7KrtRfFvE9WOd
- NW7HrbuBjPuKKvOaD/UlGTGXr2hoWQb0VYC8271NYKMqkJNiV8XvDsishnbdLu0QK9jI1g7yw
- oqQXkjFF9MzPHKDKyE1YzRbkn7Ntbz7VOo1kbYZu2+GKpnWA2rlfeXwh1Mx7PrVnQVkJMpVyc
- gv+lp7DCT0gy72zaN00PNdjSp9vesgEqv57ddRj/qr7qIRjimW8ADCX375BJgx7edCq4zN2jg
- sxOss0R5Z8cWbtPuKKZar0C9Gwn8aoqvu1O49bSsk8TQp0jJguoVVqkIOMgcUScCvCNGGuzm2
- 28MABgIeCw/UIFI45u4Vh1kXwg8LBGp7hZ0jl6N0I3HbGroYOWNp78i3ukYD2tGnEpB1mTEdx
- V67e8d+saXjFw849Ih3F0HDw30c3UeNrhx0SxT4ppbdOcFrflC5jNb/Pbl
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] net: Remove shadow variable in netdev_run_todo()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174043743202.3635590.16881580455531026695.git-patchwork-notify@kernel.org>
+Date: Mon, 24 Feb 2025 22:50:32 +0000
+References: <20250221-netcons_fix_shadow-v1-1-dee20c8658dd@debian.org>
+In-Reply-To: <20250221-netcons_fix_shadow-v1-1-dee20c8658dd@debian.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, horms@kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
-Am 24.02.25 um 22:58 schrieb Antheas Kapenekakis:
+Hello:
 
-> I will tell you that compared with other manufacturers, when asus says
-> quiet, they mean quiet and not low power
->
-> Z13's quiet mode is 40W, not very low-power if you ask me. Ally X uses
-> 13w+boost, a source of many complaints. Other manufacturers use around
-> 8W for low power modes.
->
-> In any case, any rename might break user scripts and there are
-> actually 3 types of low power profiles:
-> PLATFORM_PROFILE_COOL
-> PLATFORM_PROFILE_QUIET
-> PLATFORM_PROFILE_LOW_POWER
->
-> Then, there is also:
-> PLATFORM_PROFILE_BALANCED_PERFORMANCE
->
-> Some ACER laptops implement many of those
->
-> Obscuring any of those is not ideal.
->
->
-> Antheas
->
-I see. Maybe extending userspace to support the new platform-profile class interface
-could solve this issue without breaking already existing scripts.
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-However i do not know the amount of work which needs to be done to achieve this.
+On Fri, 21 Feb 2025 09:51:27 -0800 you wrote:
+> Fix a shadow variable warning in net/core/dev.c when compiled with
+> CONFIG_LOCKDEP enabled. The warning occurs because 'dev' is redeclared
+> inside the while loop, shadowing the outer scope declaration.
+> 
+> 	net/core/dev.c:11211:22: warning: declaration shadows a local variable [-Wshadow]
+> 		struct net_device *dev = list_first_entry(&unlink_list,
+> 
+> [...]
 
-Thanks,
-Armin Wolf
+Here is the summary with links:
+  - [net-next] net: Remove shadow variable in netdev_run_todo()
+    https://git.kernel.org/netdev/net-next/c/7183877d6853
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
