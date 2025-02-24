@@ -1,237 +1,384 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA8B2571CA
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 14:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0ED27701
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 14:52:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740408724; cv=none; b=ZUS+QaXkgQy10OMXpNeGinBb836hD5LsMJNlzmQ9KcJAq6Jqaoti3NDt/UI2q0gPTIDO7Fk7fbap7o9qspnlOCxJNV4SB2HkYoizXx51+HumcK2VFvwjnaRJb99PI0WGgzRBMbMWyXAyvFQwU16/U7O9x3BXg2hZNWfMQYcJA1A=
+	t=1740408726; cv=none; b=bdYKAqAemCY5lJWwIbKbxD4tWf0WadW++XD4GBjwpuN3aRow/Nv0FIoSCn8oX9D3xDn7R+qAwgDmqZyxjisVvNxaTEW20kZ/pbpAxLxrhQQ+oi1e0xWKxrjBSaNu/0yZdiSz8Qa15Yo/9SFsYR/+1Q8n/duNHUT/NbJz0oAWQnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740408724; c=relaxed/simple;
-	bh=N0rAj0CwYfuQupwASK4RYBKzzj3tcT+p74zaGCG9lSI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rNdIY6OlEKihlz5pt4MumnMCwRij8NN+pXa5/486EqD675vIFakfxQQtWZU+/8nmD4Lo5Bki6sivNsra9rJky7ztsT4aLLMBApzg53VK8FBQb5BVU8GQmXVjLbPA7GOOp/vOxYvpSaQ+ujWeWLS6NGAQK10nGMHAw5qu2MUd0po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=IbnGiZmU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cWRaYggq; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=IbnGiZmU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cWRaYggq; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="IbnGiZmU";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cWRaYggq";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="IbnGiZmU";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cWRaYggq"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 0D5E71F45A;
-	Mon, 24 Feb 2025 14:52:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740408721; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=98Ess9Xi9Tt/i1CFWqq9z57i+lTRznXPlwccb0kNr/I=;
-	b=IbnGiZmUMN5hy7ayozyKKM2kBLIdW/OXDtlEWZBb8S/2l4naiNg1TdLvd971odH920ZHrq
-	E3TA0V2Tol0z+3K2jmsshBDTR0CWg3IXEihsMkoHLb50dx1cK8Wc5aYUcmkb9WWXeGz9gs
-	CVQc/YtCmX68giIIS26T8LzX34JeqnM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740408721;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=98Ess9Xi9Tt/i1CFWqq9z57i+lTRznXPlwccb0kNr/I=;
-	b=cWRaYggq8nRVifyQgDFZ51ttd02Up/o0+x+Yt0EySL7aCkhs5SmMqKqpOOeubGDpM0UZGp
-	5+HG3x3INgwreiBw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740408721; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=98Ess9Xi9Tt/i1CFWqq9z57i+lTRznXPlwccb0kNr/I=;
-	b=IbnGiZmUMN5hy7ayozyKKM2kBLIdW/OXDtlEWZBb8S/2l4naiNg1TdLvd971odH920ZHrq
-	E3TA0V2Tol0z+3K2jmsshBDTR0CWg3IXEihsMkoHLb50dx1cK8Wc5aYUcmkb9WWXeGz9gs
-	CVQc/YtCmX68giIIS26T8LzX34JeqnM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740408721;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=98Ess9Xi9Tt/i1CFWqq9z57i+lTRznXPlwccb0kNr/I=;
-	b=cWRaYggq8nRVifyQgDFZ51ttd02Up/o0+x+Yt0EySL7aCkhs5SmMqKqpOOeubGDpM0UZGp
-	5+HG3x3INgwreiBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 02B6C13332;
-	Mon, 24 Feb 2025 14:52:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id fKelAJGHvGdVTgAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 24 Feb 2025 14:52:01 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id AF040A0785; Mon, 24 Feb 2025 15:52:00 +0100 (CET)
-Date: Mon, 24 Feb 2025 15:52:00 +0100
-From: Jan Kara <jack@suse.cz>
-To: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-Cc: linux-ext4@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>, 
-	Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org, 
-	Mahesh Kumar <maheshkumar657g@gmail.com>, Ritesh Harjani <ritesh.list@gmail.com>
-Subject: Re: [PATCH 1/2] ext4: only defer sb update on error if SB_ACTIVE
-Message-ID: <jnxpphuradrsf73cxfmohfu7wwwckihtulw6ovsitddgt5pqkg@2uoejkr66qnl>
-References: <cover.1740212945.git.ojaswin@linux.ibm.com>
- <da8af2e5170f0d94031b812d7d50c6ec1967db1b.1740212945.git.ojaswin@linux.ibm.com>
+	s=arc-20240116; t=1740408726; c=relaxed/simple;
+	bh=xy39ggpOVcHFJ3qKs4FOcmSbW7m3wk//CJVQcSOgu8U=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=BSjyk5QgndakbecAwk4Do7nbiiuG3eg5ZuGGoPBcovG8Y95DXkNaT599yJQqmyR5qnylnUxJpHeALwHVJuKSNzFdcqyXs78CHW33qwlQaC1NTNJfqwTtnhErr2Ctq7ZzuyjNzZ81apyddvDAq/vnZNZ1Md4eKcMnJv7X1M9PKO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d05b1ae6e3so36931235ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 06:52:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740408723; x=1741013523;
+        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
+         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SqwUQMJUg44jOnNZHtwXrogOE3Yi1IIhfOW1pnTgqOw=;
+        b=XQc93GJywN6XQ5Vu2ISeKxBouZftgNn1Guec7Z8v7vTWsaXc5voGu5n3MB0+0PceGE
+         nE4+FdwFbXSxQy7wpm1qaoDoSMXPX52nIFDFoxdpBCvw2uDb0rWrAlIhNU5R6MV1Ht3e
+         ZGYAsUTwWm6gbjtIPuN8OuBuYkXoIrLOiSZLwAll1VJ9MfCxGLxbxrJ9FalI7QfR9TFU
+         L3VAoBUBdJduzLdDd/WTtV/ccctgRW1RRWdVkCaaT6/MchHH8Jz/3cYdbGQGXrj8jgw6
+         poE740rB9Ku8zG0iOqmJGqVnK3pHrcgkNsz4xEbQXalij0PxnssuvZAldrLfy7xDcbfg
+         sVwg==
+X-Gm-Message-State: AOJu0YylPmG130q8cfKW7heAT1M6RT0BFzOg82DvP2KKuwdSzEvqS1mC
+	3zkhljmBUq+P/BsLgHkHPaub/sJD6xuZKL0ckoPmi4sI/SWNArqdqY5lnjCRyvfKTD0Y1Q3G+F6
+	1ZDdZcJmKwYSQw9/DEyAheuk5niVVJeAqeCRh0lF9U56mFMuycwAJIAk=
+X-Google-Smtp-Source: AGHT+IEKRQpNAp4T+TFOC4D2y/nOnx6zTw9fByRSCa9olS5HmbNHB57dD1rtcjL66K5XT4t1cvNFzcLgapTvidyA2qq7BY3xX/Tk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <da8af2e5170f0d94031b812d7d50c6ec1967db1b.1740212945.git.ojaswin@linux.ibm.com>
-X-Spam-Score: -2.30
-X-Spamd-Result: default: False [-2.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[3];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,mit.edu,suse.cz,gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+X-Received: by 2002:a05:6e02:1c89:b0:3d0:4e2b:9bbb with SMTP id
+ e9e14a558f8ab-3d2caf19fe2mr119227905ab.21.1740408723067; Mon, 24 Feb 2025
+ 06:52:03 -0800 (PST)
+Date: Mon, 24 Feb 2025 06:52:03 -0800
+In-Reply-To: <20250224143012.1215895-1-n.zhandarovich@fintech.ru>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67bc8793.050a0220.bbfd1.0089.GAE@google.com>
+Subject: Re: [syzbot] [media?] WARNING in call_s_stream
+From: syzbot <syzbot+5bcd7c809d365e14c4df@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, n.zhandarovich@fintech.ru, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat 22-02-25 14:10:22, Ojaswin Mujoo wrote:
-> Presently we always BUG_ON if trying to start a transaction on a journal
-> marked with JBD2_UNMOUNT, since this should never happen. However while
-> running stress tests it was observed that in case of some error handling
-> paths, it is possible for update_super_work to start a transaction after
-> the journal is destroyed eg:
-> 
-> (umount)
-> ext4_kill_sb
->   kill_block_super
->     generic_shutdown_super
->       sync_filesystem /* commits all txns */
->       evict_inodes
->         /* might start a new txn */
->       ext4_put_super
-> 	flush_work(&sbi->s_sb_upd_work) /* flush the workqueue */
->         jbd2_journal_destroy
->           journal_kill_thread
->             journal->j_flags |= JBD2_UNMOUNT;
->           jbd2_journal_commit_transaction
->             jbd2_journal_get_descriptor_buffer
->               jbd2_journal_bmap
->                 ext4_journal_bmap
->                   ext4_map_blocks
->                     ...
->                     ext4_inode_error
->                       ext4_handle_error
->                         schedule_work(&sbi->s_sb_upd_work)
-> 
->                                                /* work queue kicks in */
->                                                update_super_work
->                                                  jbd2_journal_start
->                                                    start_this_handle
->                                                      BUG_ON(journal->j_flags &
->                                                             JBD2_UNMOUNT)
-> 
-> Hence, make sure we only defer the update of ext4 sb if the sb is still
-> active.  Otherwise, just fallback to an un-journaled commit.
-> 
-> The important thing to note here is that we must only defer sb update if
-> we have not yet flushed the s_sb_update_work queue in umount path else
-> this race can be hit (point 1 below). Since we don't have a direct way
-> to check for that we use SB_ACTIVE instead. The SB_ACTIVE check is a bit
-> subtle so adding some notes below for future reference:
-> 
-> 1. Ideally we would want to have a something like (flags & JBD2_UNMOUNT
-> == 0) however this is not correct since we could end up scheduling work
-> after it has been flushed:
-> 
->  ext4_put_super
->   flush_work(&sbi->s_sb_upd_work)
-> 
->                            **kjournald2**
->                            jbd2_journal_commit_transaction
->                            ...
->                            ext4_inode_error
->                              /* JBD2_UNMOUNT not set */
->                              schedule_work(s_sb_upd_work)
-> 
->    jbd2_journal_destroy
->     journal->j_flags |= JBD2_UNMOUNT;
-> 
->                                       **workqueue**
->                                       update_super_work
->                                        jbd2_journal_start
->                                         start_this_handle
->                                           BUG_ON(JBD2_UNMOUNT)
-> 
-> Something like the above doesn't happen with SB_ACTIVE check because we
-> are sure that the workqueue would be flushed at a later point if we are
-> in the umount path.
-> 
-> 2. We don't need a similar check in ext4_grp_locked_error since it is
-> only called from mballoc and AFAICT it would be always valid to schedule
-> work here.
-> 
-> Fixes: 2d01ddc86606 ("ext4: save error info to sb through journal if available")
-> Reported-by: Mahesh Kumar <maheshkumar657g@gmail.com>
-> Suggested-by: Ritesh Harjani <ritesh.list@gmail.com>
-> Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+Hello,
 
-Good catch! But I think the solution will have to be slightly different.
-Basing the check on SB_ACTIVE has the problem that you can have racing
-updates of the sb in the still running transaction and in your direct
-update leading to inconsistencies after a crash (that was the reason why
-we've created the s_sb_upd_work in the first place).
+syzbot tried to test the proposed patch but the build/boot failed:
 
-I would solve this by implementing something like
-ext4_update_sb_destroy_journal() which will set a flag in sbi, flush the
-workqueue, and then destroy the journal. And ext4_handle_error() will check
-for the sbi flag.
+000000000000000 0000000000000000
+ZMM25=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 45425f434900414e 41445f444c005242 494c444449005f44 4c00574f4e5f444e
+ZMM26=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000004644 4c0057444c004441
+ZMM27=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM28=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM29=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM30=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM31=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+info registers vcpu 2
 
-								Honza
+CPU#2
+RAX=3D00000000000425df RBX=3D0000000000000002 RCX=3Dffffffff8b585469 RDX=3D=
+0000000000000000
+RSI=3Dffffffff8b6ced20 RDI=3Dffffffff8bd36940 RBP=3Dffffed1003b54000 RSP=3D=
+ffffc90000197e08
+R8 =3D0000000000000001 R9 =3Dffffed100d506f85 R10=3Dffff88806a837c2b R11=3D=
+0000000000000000
+R12=3D0000000000000002 R13=3Dffff88801daa0000 R14=3Dffffffff90628e10 R15=3D=
+0000000000000000
+RIP=3Dffffffff8b58684f RFL=3D00000202 [-------] CPL=3D0 II=3D0 A20=3D1 SMM=
+=3D0 HLT=3D1
+ES =3D0000 0000000000000000 ffffffff 00c00000
+CS =3D0010 0000000000000000 ffffffff 00a09b00 DPL=3D0 CS64 [-RA]
+SS =3D0018 0000000000000000 ffffffff 00c09300 DPL=3D0 DS   [-WA]
+DS =3D0000 0000000000000000 ffffffff 00c00000
+FS =3D0000 0000000000000000 ffffffff 00c00000
+GS =3D0000 ffff88806a800000 ffffffff 00c00000
+LDT=3D0000 0000000000000000 ffffffff 00c00000
+TR =3D0040 fffffe0000091000 00004087 00008b00 DPL=3D0 TSS64-busy
+GDT=3D     fffffe000008f000 0000007f
+IDT=3D     fffffe0000000000 00000fff
+CR0=3D80050033 CR2=3D00007fc6781f3870 CR3=3D000000000df80000 CR4=3D00352ef0
+DR0=3D0000000000000000 DR1=3D0000000000000000 DR2=3D0000000000000000 DR3=3D=
+0000000000000000=20
+DR6=3D00000000fffe0ff0 DR7=3D0000000000000400
+EFER=3D0000000000000d01
+FCW=3D037f FSW=3D0000 [ST=3D0] FTW=3D00 MXCSR=3D00001f80
+FPR0=3D0000000000000000 0000 FPR1=3D0000000000000000 0000
+FPR2=3D0000000000000000 0000 FPR3=3D0000000000000000 0000
+FPR4=3D0000000000000000 0000 FPR5=3D0000000000000000 0000
+FPR6=3D0000000000000000 0000 FPR7=3D0000000000000000 0000
+Opmask00=3D00000000fffc0000 Opmask01=3D000000000000000f Opmask02=3D00000000=
+ffffffef Opmask03=3D0000000000000000
+Opmask04=3D0000000000000000 Opmask05=3D0000000000000000 Opmask06=3D00000000=
+00000000 Opmask07=3D0000000000000000
+ZMM00=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM01=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM02=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM03=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM04=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM05=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM06=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM07=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM08=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM09=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM10=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM11=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM12=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM13=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM14=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM15=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM16=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM17=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 20303d766765735f 656c646e61683d53 4e4f4954504f5f4e 4153410063657865
+ZMM18=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 162d2c203a5f1754 34203c2d37260d2d 3a28291b13000000 0000000000000000
+ZMM19=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 3d534e4f4954504f 5f4e415341006365 786500726f747563 6578652d7a79732f
+ZMM20=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 243b3c2d2c12332b 2d2a3a1b34672710 212c2038161d5f29 2364392e3c2b2129
+ZMM21=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000362e325f5855 4e494c0054555054 554f5f454c49464f 52505f444c004b41
+ZMM22=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0200362e04716a0a 161c02491855617a 3a3c712a3f2d3062 2a25312d20002e37
+ZMM23=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 363f3e2f3e7f7f7f 3f3e3e7f3f776f7f 3b3c7b3b3f3d7f7b 6f777d7f7f7f6f7f
+ZMM24=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM25=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 45425f434900414e 41445f444c005242 494c444449005f44 4c00574f4e5f444e
+ZMM26=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000004644 4c0057444c004441
+ZMM27=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM28=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM29=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM30=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM31=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+info registers vcpu 3
 
-> ---
->  fs/ext4/super.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-> index a963ffda692a..b7341e9acf62 100644
-> --- a/fs/ext4/super.c
-> +++ b/fs/ext4/super.c
-> @@ -706,7 +706,7 @@ static void ext4_handle_error(struct super_block *sb, bool force_ro, int error,
->  		 * constraints, it may not be safe to do it right here so we
->  		 * defer superblock flushing to a workqueue.
->  		 */
-> -		if (continue_fs && journal)
-> +		if (continue_fs && journal && (sb->s_flags & SB_ACTIVE))
->  			schedule_work(&EXT4_SB(sb)->s_sb_upd_work);
->  		else
->  			ext4_commit_super(sb);
-> -- 
-> 2.48.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+CPU#3
+RAX=3D0000000000033083 RBX=3D0000000000000003 RCX=3Dffffffff8b585469 RDX=3D=
+0000000000000000
+RSI=3Dffffffff8b6ced20 RDI=3Dffffffff8bd36940 RBP=3Dffffed1003b54488 RSP=3D=
+ffffc900001a7e08
+R8 =3D0000000000000001 R9 =3Dffffed100d526f85 R10=3Dffff88806a937c2b R11=3D=
+0000000000000000
+R12=3D0000000000000003 R13=3Dffff88801daa2440 R14=3Dffffffff90628e10 R15=3D=
+0000000000000000
+RIP=3Dffffffff8b58684f RFL=3D00000202 [-------] CPL=3D0 II=3D0 A20=3D1 SMM=
+=3D0 HLT=3D1
+ES =3D0000 0000000000000000 ffffffff 00c00000
+CS =3D0010 0000000000000000 ffffffff 00a09b00 DPL=3D0 CS64 [-RA]
+SS =3D0018 0000000000000000 ffffffff 00c09300 DPL=3D0 DS   [-WA]
+DS =3D0000 0000000000000000 ffffffff 00c00000
+FS =3D0000 0000000000000000 ffffffff 00c00000
+GS =3D0000 ffff88806a900000 ffffffff 00c00000
+LDT=3D0000 0000000000000000 ffffffff 00c00000
+TR =3D0040 fffffe00000d8000 00004087 00008b00 DPL=3D0 TSS64-busy
+GDT=3D     fffffe00000d6000 0000007f
+IDT=3D     fffffe0000000000 00000fff
+CR0=3D80050033 CR2=3D00007f6baa94f150 CR3=3D000000003117c000 CR4=3D00352ef0
+DR0=3D0000000000000000 DR1=3D0000000000000000 DR2=3D0000000000000000 DR3=3D=
+0000000000000000=20
+DR6=3D00000000fffe0ff0 DR7=3D0000000000000400
+EFER=3D0000000000000d01
+FCW=3D037f FSW=3D0000 [ST=3D0] FTW=3D00 MXCSR=3D00001f80
+FPR0=3D0000000000000000 0000 FPR1=3D0000000000000000 0000
+FPR2=3D0000000000000000 0000 FPR3=3D0000000000000000 0000
+FPR4=3D0000000000000000 0000 FPR5=3D0000000000000000 0000
+FPR6=3D0000000000000000 0000 FPR7=3D0000000000000000 0000
+Opmask00=3D0000000000004080 Opmask01=3D0000000000000000 Opmask02=3D00000000=
+0000ffdf Opmask03=3D0000000000000000
+Opmask04=3D00000000ffffffff Opmask05=3D00000000004007ff Opmask06=3D00000000=
+07ffe7ff Opmask07=3D0000000000000000
+ZMM00=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM01=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 00007ffc87155dd0 0000003000000018
+ZMM02=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 2f2f2f2f2f2f2f2f 2f2f2f2f2f2f2f2f
+ZMM03=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM04=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 00000000ff000000
+ZMM05=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000ff0000 0000000000000000
+ZMM06=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM07=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM08=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM09=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM10=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM11=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM12=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM13=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM14=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM15=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM16=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM17=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 00000000000000b1 0000000000000000 44455a494c414954 494e495f43455355
+ZMM18=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 6f6f742079617272 6120656c75722079 7261726f706d6574 002a3f005b3f2a00
+ZMM19=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 4a4a51055c445757 440540495057055c 5744574a55484051 000f1a005b1a0f00
+ZMM20=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ a975cc939d455b17 000000055fa1ebe3 00000000000003f1 0000000000000000
+ZMM21=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 44455a494c414954 494e495f43455355 0000000000000021 0000000000007374
+ZMM22=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 4943213f395b2249 5a6e786b6e646b7e 59647a305f474f5b 647c79303a243a78
+ZMM23=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+ZMM24=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 26483b3a3a264b3b 3a0a00307f617930 382433273f397b27 697a787c69303b7e
+ZMM25=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 692054524f50202c 2064696c61696d20 0070253a20252054 524f504d49005452
+ZMM26=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 692020520050202c 2025204f504d4900 0061253a20252000 2527204d49005452
+ZMM27=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 282b2e2fdf37342d 280bbfbf23243324 26312033fc040f18 1317140d080b0412
+ZMM28=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 343133bffc121104 1214041204110814 100411bffc040f18 1317140d080b0412
+ZMM29=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 4141414141414141 4141414141414141 4141414141414141 4141414141414141
+ZMM30=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 1a1a1a1a1a1a1a1a 1a1a1a1a1a1a1a1a 1a1a1a1a1a1a1a1a 1a1a1a1a1a1a1a1a
+ZMM31=3D0000000000000000 0000000000000000 0000000000000000 0000000000000000=
+ 2020202020202020 2020202020202020 2020202020202020 2020202020202020
+
+
+syzkaller build log:
+go env (err=3D<nil>)
+GO111MODULE=3D'auto'
+GOARCH=3D'amd64'
+GOBIN=3D''
+GOCACHE=3D'/syzkaller/.cache/go-build'
+GOENV=3D'/syzkaller/.config/go/env'
+GOEXE=3D''
+GOEXPERIMENT=3D''
+GOFLAGS=3D''
+GOHOSTARCH=3D'amd64'
+GOHOSTOS=3D'linux'
+GOINSECURE=3D''
+GOMODCACHE=3D'/syzkaller/jobs/linux/gopath/pkg/mod'
+GONOPROXY=3D''
+GONOSUMDB=3D''
+GOOS=3D'linux'
+GOPATH=3D'/syzkaller/jobs/linux/gopath'
+GOPRIVATE=3D''
+GOPROXY=3D'https://proxy.golang.org,direct'
+GOROOT=3D'/usr/local/go'
+GOSUMDB=3D'sum.golang.org'
+GOTMPDIR=3D''
+GOTOOLCHAIN=3D'auto'
+GOTOOLDIR=3D'/usr/local/go/pkg/tool/linux_amd64'
+GOVCS=3D''
+GOVERSION=3D'go1.22.7'
+GCCGO=3D'gccgo'
+GOAMD64=3D'v1'
+AR=3D'ar'
+CC=3D'gcc'
+CXX=3D'g++'
+CGO_ENABLED=3D'1'
+GOMOD=3D'/syzkaller/jobs/linux/gopath/src/github.com/google/syzkaller/go.mo=
+d'
+GOWORK=3D''
+CGO_CFLAGS=3D'-O2 -g'
+CGO_CPPFLAGS=3D''
+CGO_CXXFLAGS=3D'-O2 -g'
+CGO_FFLAGS=3D'-O2 -g'
+CGO_LDFLAGS=3D'-O2 -g'
+PKG_CONFIG=3D'pkg-config'
+GOGCCFLAGS=3D'-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=3D0=
+ -ffile-prefix-map=3D/tmp/go-build4153462404=3D/tmp/go-build -gno-record-gc=
+c-switches'
+
+git status (err=3D<nil>)
+HEAD detached at 7cbfbb3ab4
+nothing to commit, working tree clean
+
+
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+go list -f '{{.Stale}}' ./sys/syz-sysgen | grep -q false || go install ./sy=
+s/syz-sysgen
+make .descriptions
+tput: No value for $TERM and no -T specified
+tput: No value for $TERM and no -T specified
+Makefile:31: run command via tools/syz-env for best compatibility, see:
+Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
+ing.md#using-syz-env
+bin/syz-sysgen
+go fmt ./sys/... >/dev/null
+touch .descriptions
+GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
+/syzkaller/prog.GitRevision=3D7cbfbb3ab457b0a8ecf525a27a65a2078c5dcaa8 -X '=
+github.com/google/syzkaller/prog.gitRevisionDate=3D20241213-162906'" "-tags=
+=3Dsyz_target syz_os_linux syz_arch_amd64 " -o ./bin/linux_amd64/syz-execpr=
+og github.com/google/syzkaller/tools/syz-execprog
+mkdir -p ./bin/linux_amd64
+g++ -o ./bin/linux_amd64/syz-executor executor/executor.cc \
+	-m64 -O2 -pthread -Wall -Werror -Wparentheses -Wunused-const-variable -Wfr=
+ame-larger-than=3D16384 -Wno-stringop-overflow -Wno-array-bounds -Wno-forma=
+t-overflow -Wno-unused-but-set-variable -Wno-unused-command-line-argument -=
+static-pie -std=3Dc++17 -I. -Iexecutor/_include -fpermissive -w -DGOOS_linu=
+x=3D1 -DGOARCH_amd64=3D1 \
+	-DHOSTGOOS_linux=3D1 -DGIT_REVISION=3D\"7cbfbb3ab457b0a8ecf525a27a65a2078c=
+5dcaa8\"
+/usr/bin/ld: /tmp/ccA02fEm.o: in function `Connection::Connect(char const*,=
+ char const*)':
+executor.cc:(.text._ZN10Connection7ConnectEPKcS1_[_ZN10Connection7ConnectEP=
+KcS1_]+0x104): warning: Using 'gethostbyname' in statically linked applicat=
+ions requires at runtime the shared libraries from the glibc version used f=
+or linking
+
+
+Error text is too large and was truncated, full error text is at:
+https://syzkaller.appspot.com/x/error.txt?x=3D11550c98580000
+
+
+Tested on:
+
+commit:         d082ecbc Linux 6.14-rc4
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3Daad00f970c77405=
+6
+dashboard link: https://syzkaller.appspot.com/bug?extid=3D5bcd7c809d365e14c=
+4df
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Deb=
+ian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D15cbe7a45800=
+00
+
