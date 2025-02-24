@@ -1,82 +1,94 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 907051A76BC
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 09:45:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA1B12B63;
+	Mon, 24 Feb 2025 09:47:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740390353; cv=none; b=Z8zdVVK6vHlmU2yXPbe5s19Zo+mdj/Qi72LnplL02NZcPqVA6H7ZhKzTriLsTgVY7jsRKvmB2pteQpMsxoHWnAlLCTpc1bkpRdMSV8DK7cx2PytCa0bqrvHlJCIQ+Fl3Uh2RJHgq955OI2knty/glRr5FnxD/jRTbTy2UPHjNnI=
+	t=1740390447; cv=none; b=CUhOYthcThOznoPq2Silkphk/0UtNUp919m3/eiJ6CGuWPrBmz9945srW4aKEO2HE9Je8qX3uT87imFIhua7eZI6e+HtnPtCc9IDoiMUhGkfFuso3qMac9p8R5vrjgY5e3fFqsSc5AP0d77E5X+luCY8bn8R2t1OCqPnANz64TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740390353; c=relaxed/simple;
-	bh=yI9tsEdrCq+JVlU4+kbKkbwWKZIvMC5rRRc9jI/P0aI=;
+	s=arc-20240116; t=1740390447; c=relaxed/simple;
+	bh=+WTxUZC6daTEmaagLEmds/XTc+7JQgGYHuO1yDEuspo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NOAOFq+x1jflMqsO3Wt9mv3WUx8wLXaQq4eVVBMzSKWAkRgPiNfP3yM+5Hl6jgAVV29ld4wfBfuArbBAuiutWcKiv03RySTdI6n81QnZ1HiRwSwZk4kREhvN8ZI3A0yb7sXjFDwiF/QMxve0stP6ZVnampPrJt6hAeO48AELWMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I4eU5hQ9; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=IrNgzpcouyPuu23Xc8Wl6VGX5x63JWgcMczKtElkKmCRe9uGr+mDvNeqLh1qF0sLU2+EsdP0v3xZ42J0Zbg0OABCOHhRnYWuTP9SuJKvCbNf9QiK2/otjQT80656oV4eC9Qn75pUVdnRPxJ1QraOJGOaCoWcklaV1ZAaW3ieT+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bT2ICR5Y; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I4eU5hQ9"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2210d92292eso123585435ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 01:45:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740390351; x=1740995151; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RxGqqeJLsYbeTE+fl2BbkVU3VCr8NgnhEkdjvf5/E4g=;
-        b=I4eU5hQ96a3BiKJELv/W5VvP4ql8/+5FakUXyNF9yyQ89OgNA4TTEcOz6VADNhn574
-         tDpjrdZzAaMVCfgrBP9w4wgwIMPeUXI7hKCf2185ulMVnIlVG1hn8DpQhB8Bfr5ZSwE2
-         TOPk/lCzFyYCF8/o9z0Nh9/MEnOTYXbldgauErMmgw2hvy6iUZGPb9I7A7wDW/rS15mO
-         jMirpWR9gpYo9szt5uWmiiKSoG0rGzYBVZkEcUfY0o5uB4OXMTOznDhDnmTztBFpq8ql
-         ROGfgqqk76i1XxX5iPGRPP8phk/ljgjWXBEyMYQB20UNiwKJkmkw3F1r8Bmm2pyv7NSV
-         hZUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740390351; x=1740995151;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RxGqqeJLsYbeTE+fl2BbkVU3VCr8NgnhEkdjvf5/E4g=;
-        b=n4melqV/nvX74zB/TfLzUQ2wDoEuttXA+qYrQa9jJSH62gsCHJpwhCtEtXF04NkmP7
-         GSKn0HHVkb/LuZpAUJBKCFt2BnmFncT8dRvn9MKG/3Zo3ZHAMPDtrkBRg0a/K8aKsqIk
-         kO73FWyiXyDdC04sSuF6vFw/Q38/4QEW2Xl4huVaZlcEDPbUVd+APShXt5BtFFG6uj6H
-         0m/BStlHe0t+SMKrqX1Ib+513vA/VXAz1EY/KCZw6Ab7jGDfySBB14AvLk7G7xc0qJfx
-         WTO1lNfFIIMsEWZdbUyVnHeObDTQaHtmfhT461rOz1hfuSUaC0EqbXbGuUSp7w+uwqc0
-         +4AQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWc1SmNUMo0CPMEWzRKuAHeFWxXEhhBiGBJ1q43zKyTYJpjMHfbSbqBEnBbUFuuQaknS9KwH7bokPRkiOs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBkdWHxYpkN83GWT+4PSBpMTGCJhuQM7Bj8YuRjblepyj3XFXw
-	9NUEo7NCvolrSifPw2zOvf1ON76hMzHvA1d36/CjC23042DXdHtZlUsCAvVLakk=
-X-Gm-Gg: ASbGncuTSNAmAEzbY6H5zOq3lwkNtTZlkPaR4AJlqmLTF+CvihGU7l6z94sRfomDLFB
-	d63w0h7ITEli9giSXWERwqpdqQTtBznysrEfZYvBZhPhweBXl9x3dGVimxofqlcIosQLFmO9g+d
-	IF81Y26RydGsnelo7kedPaegBXKKVxlrPGenMbHFJIwbIzJTpDO1EsQs+9vhcREc8A/vhyC9wrY
-	Cjkn6VGLYcc1wHQ5JCKQcwS4BGCNumybQ36BtNIl72H4CaK5dgfm/UWoOZ7+BdvYL5DlztzOuGe
-	QVEzAuCACCZ4GSttBSuF2KViHpg=
-X-Google-Smtp-Source: AGHT+IFJVi7/YSBChXY4dh8iK5Nu0pMgjUbuxiXxygSfU840h8IClcdVJYvYBB1ghUBATj9XYVnhcA==
-X-Received: by 2002:a05:6a00:1956:b0:732:6480:2bed with SMTP id d2e1a72fcca58-73426ce76a4mr21390090b3a.13.1740390350591;
-        Mon, 24 Feb 2025 01:45:50 -0800 (PST)
-Received: from localhost ([122.172.84.15])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73287ed12e8sm12957914b3a.180.2025.02.24.01.45.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 01:45:49 -0800 (PST)
-Date: Mon, 24 Feb 2025 15:15:47 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH V2 2/2] rust: Add basic bindings for clk APIs
-Message-ID: <20250224094547.dv3apdbpwhesminm@vireshk-i7>
-References: <cover.1740118863.git.viresh.kumar@linaro.org>
- <a0a1ba4e27c3a0d9e38c677611eb88027e463287.1740118863.git.viresh.kumar@linaro.org>
- <Z7iGHiQcqa-_AXli@pollux>
- <4AD8A8F3-EA7E-4FBE-9F0D-58CF7BB09ED5@collabora.com>
- <Z7iSHR0F2QpiNpMZ@pollux>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bT2ICR5Y"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740390446; x=1771926446;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+WTxUZC6daTEmaagLEmds/XTc+7JQgGYHuO1yDEuspo=;
+  b=bT2ICR5YhKL7qLMRyyaG2mtQb0x9lXzASSTMq78q5g0QXxQEm000K7ZW
+   go4SZKEXCLQh5pcrzqR6nKECmwPs0vzf2QikoXtg4dNBkLCrc/7OafJA/
+   2/oUBPRNKnZ7sDwdw8Kk+kaUJqflX0YAoyNU5ksfcGm030AhEcI+sTlKV
+   QYrvnrPCS7zfHeOinzyDTe8PGtUX9eZ3jedwWwgTtN9fY5a8RY3xhCOg8
+   wVSRQ/FdA3mqC4haJrwMKX2WSVKc4Qdkov4hD99OvHTDQ8mmuS6vKVjPc
+   wfknpS3mkGkSqwx9AcDG51ZkdYVS8dfPAYrqjWVfMaEV7Y4u3Ic93XRf0
+   w==;
+X-CSE-ConnectionGUID: OB2dOGlzQy2Z7ZCoXLJaUw==
+X-CSE-MsgGUID: HDAPtGfORNmV1LsT6ff9wg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11354"; a="44789692"
+X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
+   d="scan'208";a="44789692"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 01:47:26 -0800
+X-CSE-ConnectionGUID: vQmcoqNlR3C0fKUshxY8iA==
+X-CSE-MsgGUID: oCE9LlNOTnOO77JGa4IywQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
+   d="scan'208";a="121097706"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 01:47:19 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tmV3R-0000000EXdv-14JO;
+	Mon, 24 Feb 2025 11:47:13 +0200
+Date: Mon, 24 Feb 2025 11:47:12 +0200
+From: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Aditya Garg <gargaditya08@live.com>,
+	"pmladek@suse.com" <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	"linux@rasmusvillemoes.dk" <linux@rasmusvillemoes.dk>,
+	"senozhatsky@chromium.org" <senozhatsky@chromium.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+	"mripard@kernel.org" <mripard@kernel.org>,
+	"airlied@gmail.com" <airlied@gmail.com>,
+	"simona@ffwll.ch" <simona@ffwll.ch>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"apw@canonical.com" <apw@canonical.com>,
+	"joe@perches.com" <joe@perches.com>,
+	"dwaipayanray1@gmail.com" <dwaipayanray1@gmail.com>,
+	"lukas.bulwahn@gmail.com" <lukas.bulwahn@gmail.com>,
+	"sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
+	"christian.koenig@amd.com" <christian.koenig@amd.com>,
+	Kerem Karabay <kekrby@gmail.com>, Aun-Ali Zaidi <admin@kodeit.net>,
+	Orlando Chamberlain <orlandoch.dev@gmail.com>,
+	Atharva Tiwari <evepolonium@gmail.com>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+	"linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+	Hector Martin <marcan@marcan.st>,
+	"linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+	Asahi Linux Mailing List <asahi@lists.linux.dev>,
+	Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>
+Subject: Re: [PATCH v3 3/3] drm/tiny: add driver for Apple Touch Bars in x86
+ Macs
+Message-ID: <Z7xAINooeB7zpnhf@smile.fi.intel.com>
+References: <DC5079B2-9D3D-4917-A50D-20D633071808@live.com>
+ <8F522D41-5417-467E-B9D3-7D9FC24AE536@live.com>
+ <Z7igVXqvRYTVFpXU@smile.fi.intel.com>
+ <A373EDB5-528D-4ECF-8CF3-4F96DE6E3797@live.com>
+ <Z7jlORk0MiMFTmp6@smile.fi.intel.com>
+ <E8256A03-5D13-4B8B-932D-70E734E580FE@live.com>
+ <6f7b0886-5f31-4ba9-b82e-e9d3614b504f@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,25 +97,72 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z7iSHR0F2QpiNpMZ@pollux>
+In-Reply-To: <6f7b0886-5f31-4ba9-b82e-e9d3614b504f@suse.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 21-02-25, 15:47, Danilo Krummrich wrote:
-> This was badly phrased, the current implementation does not need to consider it
-> indeed. What I meant is that we have to consider it potentially. Especially,
-> when adding new functionality later on. For instance, when accessing fields of
-> struct clk directly. Maybe this only becomes relevant once we write a clk driver
-> itself in Rust, but still.
+On Mon, Feb 24, 2025 at 09:41:43AM +0100, Thomas Zimmermann wrote:
+> Am 22.02.25 um 10:07 schrieb Aditya Garg:
 
-I don't think we will _ever_ access fields of the struct clk directly.
-For the most common use, common clk API, the struct clk is defined in
-drivers/clk/clk.c.
+...
 
-> > MaybeNull<T> sounds nice.
+> > > What padding, please? Why TCP UAPI headers do not have these attributes?
+> > > Think about it, and think about what actually __packed does and how it affects
+> > > (badly) the code generation. Otherwise it looks like a cargo cult.
+> > > 
+> > > > I tried removing __packed btw and driver no longer works.
+> > > So, you need to find a justification why. But definitely not due to padding in
+> > > many of them. They can go without __packed as they are naturally aligned.
+> > Alright, I did some debugging, basically printk sizeof(struct). Did it for both packed and unpacked with the following results:
+> > 
+> > Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_msg_request_header is 16
+> > Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_msg_request_header_unpacked is 16
+> > 
+> > Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_msg_response_header is 20
+> > Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_msg_response_header_unpacked is 20
+> > 
+> > Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_msg_simple_request is 32
+> > Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_msg_simple_request_unpacked is 32
+> > 
+> > Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_msg_information is 65
+> > Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_msg_information_unpacked is 68
 > 
-> Yeah, it's probably the correct thing to do, to make things obvious.
+> In the unpacked version, there is a 3-byte gap after the 'bits_per_pixel' to
+> align the next field. Using __packed removes those gaps at the expense of
+> runtime overhead.
+> > 
+> > Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_frame is 12
+> > Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_frame_unpacked is 12
+> > 
+> > Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_fb_request_footer is 80
+> > Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_fb_request_footer_unpacked is 80
+> > 
+> > Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_fb_request is 48
+> > Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_fb_request_unpacked is 48
+> > 
+> > Feb 22 13:02:03 MacBook kernel: size of struct appletbdrm_fb_request_response is 40
+> > Feb 22 13:02:04 MacBook kernel: size of struct appletbdrm_fb_request_response_unpacked is 40
+> > 
+> > So, the difference in sizeof in unpacked and packed is only in appletbdrm_msg_information. So, I kept this packed, and removed it from others. The Touch Bar still works.
+> > 
+> > So maybe keep just this packed?
+> 
+> The fields in the TCP header are aligned by design.
 
-Still need this ? Any example code that I can refer to implement it or
-if someone can help with implementing it ?
+> Unfortunately, this hardware's protocol is not. And there's no way of fixing
+> this now. Just keep all of them packed if you want.
+
+It would be nice to see the difference in the code generation for the all
+__packed vs. only those that require it.
+
+> At least it's clear then
+> what happens. And if your hardware requires this, you can't do much anyway.
+
+One aspect (member level alignment) is clear but the other is not
+(object level alignment). I dunno if it makes sense to be pedantic about this,
+but would like to see the binary outcome asked for.
 
 -- 
-viresh
+With Best Regards,
+Andy Shevchenko
+
+
