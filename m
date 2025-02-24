@@ -1,41 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC4A2661B7;
-	Mon, 24 Feb 2025 18:06:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3122641D8;
+	Mon, 24 Feb 2025 18:08:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740420376; cv=none; b=MoMDWw0Bjh2b21lgpyqx5zAOgLeYXFd5hX2YFC0J3KiSz8W7UMWwjsX9x25ciFmOTpNrrAG+YJektWM8puudrWUgiQ/cZAUpNfSF7d60n+zdG/quJXgS40FppjeJgxTzAdgaI9rFAKLY7DkS2cSSyPZGjocHBE76lsEbWijn6Fs=
+	t=1740420492; cv=none; b=JbglQWOQEMnUSxa2TweNaaGY/tzNAeLjUKCgb0fjE0aIuAoGtQvhaD+uDu5fC9+qmWnvTw9JBmC7GfxKMer+SuL5xzV9lJbbMiql59gKGehTTt3fis9/Q+H93ZIPKgyzGMPgI1wsEuMsjm1UL3doL+0wlG4/NvidmH1drR0RXTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740420376; c=relaxed/simple;
-	bh=fLLXimX9ynfgWBIWIxxfLc92QfSdbBwQm11gCIosTSY=;
+	s=arc-20240116; t=1740420492; c=relaxed/simple;
+	bh=OAGKsUmy5EtMSVfMc9WTBde8Uxv0P28mK2h80COKX7M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mcvl7SnGMBM1d2yVzVNMVo+xC75XqyvHwDCfZjqbd6/FrG2T154qEckEZ+MsvDXmJ93q0JWmgPjB1UCPWmjHy8JX4UIGHaHfuJm8VYqGzizYkAL9WkfEbo1peFc1Lp60nPjOweB292Holn8zIUtnKlreKgSSnTtN8lWRxBUmQTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AeCL1aaO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=WYuG6iuLw5OagsKp+F1lrB6u+NHE4yUw/pYWbKKXTLDHFe6QEJ0F/8Whx5D0jWO8i2+nLsyxpzoEoBjFGSOSJ+cuhq0Q9Ax/ZYvVKXHkkfXLH17mavvgjlsPnJ3NS6gK87Mh1ZiieI2F4y2PIwryaBgHxlN/YekJ5YBy0apRPgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qelw19KD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AeCL1aaO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBC5CC4CED6;
-	Mon, 24 Feb 2025 18:06:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qelw19KD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68671C4CED6;
+	Mon, 24 Feb 2025 18:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740420376;
-	bh=fLLXimX9ynfgWBIWIxxfLc92QfSdbBwQm11gCIosTSY=;
+	s=k20201202; t=1740420492;
+	bh=OAGKsUmy5EtMSVfMc9WTBde8Uxv0P28mK2h80COKX7M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AeCL1aaOnkeSIok2hceVAi8lIKo0Gd4fEIrcc1zJ5cdsXeHxoXEGWnCJ/hADdqtdK
-	 N2ZDtbNRLQB2sPslywxDh9nlot8TGDfheps9d8+lVu7aAevaB8CNT3G9axE6AMPAX1
-	 crWe0y3wP8oDb5e3mhXjPGN1bKvvrD20v9k4LMywQCaf6DththB+6ElignJRB8oV1B
-	 pDo/yyC7d8EvipgNaI5sMlJcxzGtgPHVOHmXHYNobbLDDbPjUOyJz2aYaBJkvElT0S
-	 ydYJt3RRTKBKERUOZFR/s82jUGV08OaAD98VyZeAEahBrMI5r/UZsfFIQ7YPeGkd9d
-	 bwwgd03l6/Hsg==
-Date: Mon, 24 Feb 2025 18:06:14 +0000
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: linux-crypto@vger.kernel.org, linux-riscv@lists.infradead.org,
-	Zhihang Shao <zhihang.shao.iscas@gmail.com>,
-	Ard Biesheuvel <ardb@kernel.org>, Xiao Wang <xiao.w.wang@intel.com>,
-	Charlie Jenkins <charlie@rivosinc.com>
-Subject: Re: [PATCH 0/4] RISC-V CRC optimizations
-Message-ID: <20250224180614.GA11336@google.com>
-References: <20250216225530.306980-1-ebiggers@kernel.org>
+	b=Qelw19KDNu3QrsBuONGuAhKFvM8rTeBIVxDIr1U788i1+zWZCnhxgLph12LRkIbXr
+	 3+uXYdtoIHMNlQD+kSDJO9bwuz8oQmuaY7lgUqp81HJ2/QomcbuHb7/8KFjHe4z8PI
+	 AAFcpOyN0Xi30jU2JDvk/sciKh8+U60Yzsg4Ym/+czneNs3tp1qj+K9p9bfrdi0S/x
+	 1/OBrHyUC+vonPIlWNYbJiQhhPDZP9iySdKmMxeg4GmFfOAC+Pgzr6jqpUUrqsjw0K
+	 Sa3Qdwe3Mg42KjWZRNx2YPyMK8V/J71bprho2oxqyCGekYgEVUwyMzhYJeUrDKQT+C
+	 BkeKqEgaS7XGg==
+Date: Mon, 24 Feb 2025 10:08:05 -0800
+From: Nathan Chancellor <nathan@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	bpf <bpf@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Zheng Yejian <zhengyejian1@huawei.com>,
+	Martin Kelly <martin.kelly@crowdstrike.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Josh Poimboeuf <jpoimboe@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>
+Subject: Re: [for-next][PATCH 4/6] scripts/sorttable: Zero out weak functions
+ in mcount_loc table
+Message-ID: <20250224180805.GA1536711@ax162>
+References: <20250219151815.734900568@goodmis.org>
+ <20250219151904.476350486@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,31 +58,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250216225530.306980-1-ebiggers@kernel.org>
+In-Reply-To: <20250219151904.476350486@goodmis.org>
 
-On Sun, Feb 16, 2025 at 02:55:26PM -0800, Eric Biggers wrote:
-> This patchset is a replacement for
-> "[PATCH v4] riscv: Optimize crct10dif with Zbc extension"
-> (https://lore.kernel.org/r/20250211071101.181652-1-zhihang.shao.iscas@gmail.com/).
-> It adopts the approach that I'm taking for x86 where code is shared
-> among CRC variants.  It replaces the existing Zbc optimized CRC32
-> functions, then adds Zbc optimized CRC-T10DIF and CRC64 functions.
-> 
-> This new code should be significantly faster than the current Zbc
-> optimized CRC32 code and the previously proposed CRC-T10DIF code.  It
-> uses "folding" instead of just Barrett reduction, and it also implements
-> Barrett reduction more efficiently.
-> 
-> This applies to crc-next at
-> https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/log/?h=crc-next.
-> It depends on other patches that are queued there for 6.15, so I plan to
-> take it through there if there are no objections.
-> 
-> Tested with crc_kunit in QEMU (set CONFIG_CRC_KUNIT_TEST=y and
-> CONFIG_CRC_BENCHMARK=y), both 32-bit and 64-bit.  I don't have real Zbc
-> capable hardware to benchmark this on, but the new code should work very
-> well; similar optimizations work very well on other architectures.
+Hi Steve,
 
-Any feedback on this series from the RISC-V side?
+On Wed, Feb 19, 2025 at 10:18:19AM -0500, Steven Rostedt wrote:
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 728ecda6e8d4..e3f89924f603 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -7004,6 +7004,7 @@ static int ftrace_process_locs(struct module *mod,
+>  	unsigned long count;
+>  	unsigned long *p;
+>  	unsigned long addr;
+> +	unsigned long kaslr;
+>  	unsigned long flags = 0; /* Shut up gcc */
+>  	int ret = -ENOMEM;
+>  
+> @@ -7052,6 +7053,9 @@ static int ftrace_process_locs(struct module *mod,
+>  		ftrace_pages->next = start_pg;
+>  	}
+>  
+> +	/* For zeroed locations that were shifted for core kernel */
+> +	kaslr = !mod ? kaslr_offset() : 0;
+> +
+>  	p = start;
+>  	pg = start_pg;
+>  	while (p < end) {
+> @@ -7063,7 +7067,7 @@ static int ftrace_process_locs(struct module *mod,
+>  		 * object files to satisfy alignments.
+>  		 * Skip any NULL pointers.
+>  		 */
+> -		if (!addr) {
+> +		if (!addr || addr == kaslr) {
+>  			skipped++;
+>  			continue;
+>  		}
 
-- Eric
+Our CI and KernelCI reports that this change as commit ef378c3b8233
+("scripts/sorttable: Zero out weak functions in mcount_loc table") in
+next-20250224 breaks when an architecture does not have kaslr_offset()
+defined:
+
+  $ make -skj"$(nproc)" ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- mrproper allmodconfig kernel/trace/ftrace.o
+  kernel/trace/ftrace.c: In function 'ftrace_process_locs':
+  kernel/trace/ftrace.c:7074:24: error: implicit declaration of function 'kaslr_offset' [-Wimplicit-function-declaration]
+   7074 |         kaslr = !mod ? kaslr_offset() : 0;
+        |                        ^~~~~~~~~~~~
+
+https://lore.kernel.org/CACo-S-0GeJjWWcrGvos_Avg2FwGU2tj2QZpgoHOvPT+YbyknSg@mail.gmail.com/
+
+Cheers,
+Nathan
