@@ -1,82 +1,106 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2723081732;
-	Mon, 24 Feb 2025 01:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D532746A;
+	Mon, 24 Feb 2025 01:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740360254; cv=none; b=qHvijBCKJq0N7HUyI3428OE0q2M8XcglNc5B1PmIBLyjd+kg0Dfyh9GZ5B92FkdxaY9tFmVH6KqQ4euueSVOJMw+BCSwX3t7Z5Pl081J3Nnx0U7gv8UrCZ16QL4yM24YlpWLICCoMm1g0MB0UsjFqR7QLjXE8hiU6Q6+Gb63X18=
+	t=1740360389; cv=none; b=uke0sfxHHXMKxBUIsnctg0XuwdjDujDTIjkoX0BJfJ+hfvaSnamt7myaswyUA7v3AVT8zlIIplD03GZtrW2JaashZ8wKnUXfnptZLiTXoJFk/PXlm4Y1VnjRtOyrQgGgD010ujt2fmlkR+v+LdJwh13P0anhnDgFJTnw/UbyNo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740360254; c=relaxed/simple;
-	bh=muEyjcQX89HxkIdlTEjavVGhd848csPb2p7ljgYJI1k=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bztTaNndBXN32/nwqMeK5/DuixYmhUKQfFaixU0PXMoc70SQgOJYkBguxkwrIht2ft0nUCw/196Z0+aXsLBcKrkuWd0UtWBsghUfM/+uy9k21GaI+dz/1p4NLkKxll9EnCVG4EeD1aFWnXvFm3WlDfHQJpcIBzVeVvdJRNwkSyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Z1NGb72j9z21p0d;
-	Mon, 24 Feb 2025 09:20:55 +0800 (CST)
-Received: from kwepemf100017.china.huawei.com (unknown [7.202.181.16])
-	by mail.maildlp.com (Postfix) with ESMTPS id 85E4C140368;
-	Mon, 24 Feb 2025 09:23:59 +0800 (CST)
-Received: from huawei.com (10.175.104.67) by kwepemf100017.china.huawei.com
- (7.202.181.16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 24 Feb
- 2025 09:23:58 +0800
-From: Zizhi Wo <wozizhi@huawei.com>
-To: <linux-ext4@vger.kernel.org>, <jack@suse.com>, <tytso@mit.edu>
-CC: <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<wozizhi@huawei.com>, <yangerkun@huawei.com>
-Subject: [PATCH] ext4: Modify the comment about mb_optimize_scan
-Date: Mon, 24 Feb 2025 09:20:05 +0800
-Message-ID: <20250224012005.689549-1-wozizhi@huawei.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1740360389; c=relaxed/simple;
+	bh=hjai5cWeX6pZYG1rCJTwsLHGKRcbgXuPJ+E4fwroHKA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bX/qOusFeqLybwfIam8G7/rd6CSYMU5hgP9ss78TolbC/9r6UrlUlwAztLwpnO15DSDFKX/NXvEoegBp4HajH8zAWpeku/2Z0pFJCDAaWg79Trbp7OOmaP0uN9dW2y8dVX+m9lvFqNsz2x2xnfnFLxdrwVuaRSSawM9xoHpvgW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1tmNEf-0000000020f-2b9H;
+	Sun, 23 Feb 2025 20:26:17 -0500
+Message-ID: <0bb6a374a02995e78db49beb69e0f369480520a4.camel@surriel.com>
+Subject: Re: [PATCH v13 08/14] x86/mm: global ASID context switch & TLB
+ flush handling
+From: Rik van Riel <riel@surriel.com>
+To: kernel test robot <lkp@intel.com>, x86@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+ bp@alien8.de, 	peterz@infradead.org, dave.hansen@linux.intel.com,
+ zhengqi.arch@bytedance.com, 	nadav.amit@gmail.com, thomas.lendacky@amd.com,
+ kernel-team@meta.com, 	linux-mm@kvack.org, akpm@linux-foundation.org,
+ jackmanb@google.com, 	jannh@google.com, mhklinux@outlook.com,
+ andrew.cooper3@citrix.com, 	Manali.Shukla@amd.com, mingo@kernel.org
+Date: Sun, 23 Feb 2025 20:26:17 -0500
+In-Reply-To: <202502240650.kzshiji7-lkp@intel.com>
+References: <20250223194943.3518952-9-riel@surriel.com>
+	 <202502240650.kzshiji7-lkp@intel.com>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemf100017.china.huawei.com (7.202.181.16)
+Sender: riel@surriel.com
 
-Commit 196e402adf2e ("ext4: improve cr 0 / cr 1 group scanning") introduces
-the sysfs control interface "mb_max_linear_groups" to address the problem
-that rotational devices performance degrades when the "mb_optimize_scan"
-feature is enabled, which may result in distant block group allocation.
+On Mon, 2025-02-24 at 07:08 +0800, kernel test robot wrote:
+>=20
+> All errors (new ones prefixed by >>):
+>=20
+> =C2=A0=C2=A0 In file included from <command-line>:
+> =C2=A0=C2=A0 arch/x86/include/asm/tlbflush.h: In function 'in_asid_transi=
+tion':
+> > > arch/x86/include/asm/tlbflush.h:253:43: error: 'mm_context_t' has
+> > > no member named 'asid_transition'
+> =C2=A0=C2=A0=C2=A0=C2=A0 253 |=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 return mm && READ_ONCE(mm-
+> >context.asid_transition);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 ^
 
-However, the name of the interface was incorrect in the comment to the
-ext4/mballoc.c file, and this patch fixes it, without further changes.
+Looks like this one needs to be moved under
+the #ifdef, too.
 
-Signed-off-by: Zizhi Wo <wozizhi@huawei.com>
----
- fs/ext4/mballoc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Short-circuiting the build by hard-disabling
+X86_FEATURE_INVLPGB, or even adding an explicit
+if(!IS_ENABLED(CONFIG_X86_BROADCAST_TLB_FLUSH))
+is not enough to get the compiler to short-circuit
+the rest of the code in that function.
 
-diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-index b25a27c86696..68b54afc78c7 100644
---- a/fs/ext4/mballoc.c
-+++ b/fs/ext4/mballoc.c
-@@ -187,7 +187,7 @@
-  * /sys/fs/ext4/<partition>/mb_min_to_scan
-  * /sys/fs/ext4/<partition>/mb_max_to_scan
-  * /sys/fs/ext4/<partition>/mb_order2_req
-- * /sys/fs/ext4/<partition>/mb_linear_limit
-+ * /sys/fs/ext4/<partition>/mb_max_linear_groups
-  *
-  * The regular allocator uses buddy scan only if the request len is power of
-  * 2 blocks and the order of allocation is >= sbi->s_mb_order2_reqs. The
-@@ -209,7 +209,7 @@
-  * get traversed linearly. That may result in subsequent allocations being not
-  * close to each other. And so, the underlying device may get filled up in a
-  * non-linear fashion. While that may not matter on non-rotational devices, for
-- * rotational devices that may result in higher seek times. "mb_linear_limit"
-+ * rotational devices that may result in higher seek times. "mb_max_linear_groups"
-  * tells mballoc how many groups mballoc should search linearly before
-  * performing consulting above data structures for more efficient lookups. For
-  * non rotational devices, this value defaults to 0 and for rotational devices
--- 
-2.39.2
+We might need an #ifdef inside destroy_context_free_global_asid
+as well, no good way to move that one into a .h file without
+making the global asid data structures in tlb.c visible to
+the entire kernel instead of keeping them static in tlb.c
 
+--=20
+All Rights Reversed.
