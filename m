@@ -1,134 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85977221F26;
-	Mon, 24 Feb 2025 12:39:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D6E8158870;
+	Mon, 24 Feb 2025 12:39:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740400770; cv=none; b=GWZquWe4hoJ7oCWDc1+z/84Nc0ln2MJFm/Sl8fLY7na0VlgUrt1wXIyZQbeVzpg2bTKUbB+tjvL6+YOT7IiAvvfh36FXrnF3Ln5CVnqOoD2elBOgipC7eMw1YX8FiP6zqQStnOH/zz1Om1/t2P5/6uizVqQ+8okAWC3K2yy4OLE=
+	t=1740400791; cv=none; b=T1ueAKORuc+lu//lC//D9xJx2tvGxxNK8JR3Jv6p6sooZQ0PMokdbmLuxQVXiQc7hEyQ5JR1NthEA8CBsiVD+nKOAd656as0VkJ/iZhE4uqbDnIUcZC4a+/xSNDi7w81udcLQMS4EdpOCrbCMm+s47clefjUyEpo2a5repcDQ5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740400770; c=relaxed/simple;
-	bh=S6ZfOA+HSoIxuZxmAVC9m4CnDBFj730TlTYYvZud6AI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=msgyVwfUxh6Df1KDLpomBcvPE3Cow5qWg2gCfakwn3EcPzfO8+Fftrk78Klc9fR5miFT75760eTXpFrR8wY8t/IdeedaPtF/IHyJE0QGfwiwve7tlgSBwj9LKd9BghraD0UbhhVezWxZqVkaE7ReiNEsE3wkPrIlwZuS3Czw9vE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ACYSwwiS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740400791; c=relaxed/simple;
+	bh=M7xfGxE+1+9CnrKKPeCrSKVuWSa5PClicD3wQIhbkUw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C31PXTVCdKzrvq+Nc5YH7wLDJpAYTpZqxBxNLqYNm2mbmkqi7AWYqUpJ3wteewZ9nioxpYTq9iodhXyA2PbJz0r4PmqZEJM1AVv9oz7W76wHEZGBw0aEFwW9tdByx+Fm/w/NLiVXeve2FIViRmDs7d8uY2j6F3nQEB9Ffdl+C0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ElD85YUo; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ACYSwwiS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67594C4CEE6;
-	Mon, 24 Feb 2025 12:39:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740400770;
-	bh=S6ZfOA+HSoIxuZxmAVC9m4CnDBFj730TlTYYvZud6AI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ACYSwwiSiadXb6UglhqGqNQ/VbzzEbQIAZds28mZoqO6ZB2x/uUwGFOZhTWF4iQtB
-	 V+htWTqSNKDoxjFr9DJNUm/a1UyR7WCpz++50KVONsr/KPjTzkMaIY+Bi1YPDzkSNJ
-	 xnlj+I2n0fLWZrGYFzk/4h6JRxVlZbIpLnFTMAAQbhretkjtcp4m8QMmTJSHIYcILO
-	 KhHjqd4LEMqn09yiRc7QaPwen/5JioDFIFEY58O+z4YYVLLbYHOwfth8fHs0NtF0Lu
-	 HmdWlBqhYjjNRX41Uxc94t3WdLvLFiPSYy7o7UDgpxLwLVwZ5JxF949cFAltP8EYPJ
-	 JrX8kxJ2x/jJQ==
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-724d1724657so2723203a34.0;
-        Mon, 24 Feb 2025 04:39:30 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUX3Jyllh8LKDbrLJDCDL4MrpoQy5R7bO0cBPOKowbMLhKf/TJemZ4dX6oUJwKdl/UDsow1sCw3ERqLAGA=@vger.kernel.org, AJvYcCUYM1nVPKW9yFYKiai3gjlran6c+G/x0oFFSjuBl2OIZ+yWcmsKoIIiz83zhJ/l7PA88hn1HWgPCT0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2oWC+jT5j//ycOl5wLAnI7q5vPNXPmCkJvynWSj86oL9YQoUw
-	BZUZ4jTndBSNp/QJRC2pKY5H9UW9UPJrdkLn4LhgZjuFp9G8plMuKBADBSvQVoYe68XRmrzpTXJ
-	r/fkj8ColpVNMHPg2d3luyFYbw6w=
-X-Google-Smtp-Source: AGHT+IHggqicMJe4po68oFh3AV+MbbEgliSfKFxjCzT478bb4j8IJW6Xkp8IGccC+aW4rtOOm0njgxkUFQ9W+jhX3As=
-X-Received: by 2002:a05:6808:abb:b0:3f3:d367:52fa with SMTP id
- 5614622812f47-3f419f8937fmr9732251b6e.18.1740400769737; Mon, 24 Feb 2025
- 04:39:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ElD85YUo"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c0892e4b19so525109585a.3;
+        Mon, 24 Feb 2025 04:39:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740400787; x=1741005587; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LzSKwUi9mVzdzy8b78pt0N9MM54Qsm8BhYBMY8MEQ6s=;
+        b=ElD85YUo2sBklKUE63shtjR9Ub3fVM5bNDx2MUQcmC8mB7L0Ebuyv1VDkoRO+xgbsK
+         zPx16nO2eghGbyKYOMgBEYA5D5XSt5sNVKNINDGLUA1xtXP0XOdvq0q2QPTay6TAc5tf
+         VPrxPDKCHWVmkwGaS+2V2Aox1TJ8pJc6bfHPXS10/SrATIUepuyayKLjA/u3FBUVvSe3
+         e9eceXTXHygpTgCqsIb8DTz4VjFTfNcSl4cvLhhpCrSpB4uAb33EK0ADyZiw/3tcv4wT
+         L0iuKNBCcgocICOdbSpbYmjQp6BqlWjSH8UyDpbthdcWCO4SuRLT15ChJuysqiOk3hVs
+         mP8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740400787; x=1741005587;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LzSKwUi9mVzdzy8b78pt0N9MM54Qsm8BhYBMY8MEQ6s=;
+        b=OAuDR+rOkyXg+yCG/ZEKkQcYYPFmE5vI4/Ch8yGu/hLO42IAXgl4HtWOsZ3pVf3+tf
+         UG57ZmTZH/EvMJv6Ta6dQjJ/ntB8nVbFj/BOy7SPqqCXHe5q5fo7TwgxNe8QVWyc17D/
+         +GIU0dACs9hv88YtC7dItBrfLTDZPAs6K3U36XiHwZch1PlanE7iiQm94nyx4Hc0Acg/
+         LirRmu2bBPPJceXxWrdu+M9Al654pNXa7XZm5HZwf56XAaVGObUZafZJHhEDP0ahz64b
+         PESQnmZ6xPje8czPqU9tTi7Y9Km2FGnTsWeckXraZ8+kX+G6IW6AbRddE7/hwbrI8Jbg
+         WvsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXnGGkkxNjPmz8bziRP8TwvztykGDX8nO5WZIFmnwKwBqSbhmY3l+rxa3ySfnNz2QplSIFXjYRHVHy1Ugc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWfq+FjPVcxQQ1UA++JBPFf7GtRMiagcrMgsSviDbJrcbNSh74
+	20Glc4VjrS5wgtGRVD3BisV97AT/IkOXJsTWh7O0pBNjuRdvFQvpT9zc008j
+X-Gm-Gg: ASbGnctzPSx/sipU23fUxXWdX/91tfaVWv64zwNojutvejK7TcDmgoTHtXzXoQHlhBn
+	kfpJgH9it1x/vrPdYp0pxAIo/FQZRH6BvUQ8wJGpT6TpQasbWAzDIL4F1Nxb/0SyaLL6MfUz3P2
+	RE0wxosboO6YEoo/E3002Og5AXc1QIcnTU1+rTZFqPCRUPLTBnZVGAnYp6zugtkYd19jCvv5D1k
+	Z2RI1IBTPCfkeQg+ssJawZtuO1RhCv202OpirKmvb9Jb/KctHBCusR6MOA1CFHDYllUp7cDk3NF
+	IHEZuy9/UgOeROMAb5stteJkuyFzL0NR4u0SdTJ152n2ERt1N3cjoV/GCAkWZn/P
+X-Google-Smtp-Source: AGHT+IGrtikCg+RcBxZv3Glu2xPqW9W83hOhQsGqRrWIK7BYTk9UUmQnFBpKAnwUlxpcf+JkowjJBw==
+X-Received: by 2002:a05:620a:472a:b0:7c0:82c8:e42c with SMTP id af79cd13be357-7c0cef64787mr1834828985a.42.1740400787597;
+        Mon, 24 Feb 2025 04:39:47 -0800 (PST)
+Received: from nerdopolis2.mynetworksettings.com ([2600:4040:5e66:a800:3cb7:1064:72b6:f891])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c0ad774f81sm831922785a.37.2025.02.24.04.39.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2025 04:39:47 -0800 (PST)
+From: adamsimonelli@gmail.com
+To: linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Adam Simonelli <adamsimonelli@gmail.com>
+Subject: [PATCH v5 0/2] Optionally allow ttynull to be selected as a default console
+Date: Mon, 24 Feb 2025 07:39:13 -0500
+Message-ID: <20250224123915.2859682-1-adamsimonelli@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1922654.tdWV9SEqCh@rjwysocki.net> <Z7rPOt0x5hWncjhr@black.fi.intel.com>
- <CAJZ5v0jwn0e4HF1SsAG1OXr59tHzh=E2rcGkTdj1FOQdK2Uisw@mail.gmail.com> <Z7tB5wshbGtO6LGg@black.fi.intel.com>
-In-Reply-To: <Z7tB5wshbGtO6LGg@black.fi.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 24 Feb 2025 13:39:14 +0100
-X-Gmail-Original-Message-ID: <CAJZ5v0jmp4PFb6z+K9cGS83CmX=5Ms0F9HSgcpq-VXn=rTdXgg@mail.gmail.com>
-X-Gm-Features: AWEUYZnrxMu49N4Mo5yLfVkT6yju4vb6gvnJgw62dhhnaeg90o5cilnqap9M89U
-Message-ID: <CAJZ5v0jmp4PFb6z+K9cGS83CmX=5Ms0F9HSgcpq-VXn=rTdXgg@mail.gmail.com>
-Subject: Re: [PATCH v1] PM: runtime: Unify error handling during suspend and resume
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, 
-	Linux PM <linux-pm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>, 
-	Oliver Neukum <oneukum@suse.com>, Ajay Agarwal <ajayagarwal@google.com>, 
-	Brian Norris <briannorris@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Feb 23, 2025 at 4:42=E2=80=AFPM Raag Jadav <raag.jadav@intel.com> w=
-rote:
->
-> On Sun, Feb 23, 2025 at 01:56:07PM +0100, Rafael J. Wysocki wrote:
-> > On Sun, Feb 23, 2025 at 8:33=E2=80=AFAM Raag Jadav <raag.jadav@intel.co=
-m> wrote:
-> > >
-> > > On Thu, Feb 20, 2025 at 09:18:23PM +0100, Rafael J. Wysocki wrote:
-> > > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > >
-> > > > There is a confusing difference in error handling between rpm_suspe=
-nd()
-> > > > and rpm_resume() related to the special way in which the -EAGAIN an=
-d
-> > > > -EBUSY error values are treated by the former.  Also, converting
-> > > > -EACCES coming from the callback to an I/O error, which it quite li=
-kely
-> > > > is not, may confuse runtime PM users a bit.
-> > > >
-> > > > To address the above, modify rpm_callback() to convert -EACCES comi=
-ng
-> > > > from the driver to -EAGAIN and to set power.runtime_error only if t=
-he
-> > > > return value is not -EAGAIN or -EBUSY.
-> > > >
-> > > > This will cause the error handling in rpm_resume() and rpm_suspend(=
-) to
-> > > > work consistently, so drop the no longer needed -EAGAIN or -EBUSY
-> > > > special case from the latter and make it retry autosuspend if
-> > > > power.runtime_error is unset.
-> > > >
-> > > > Link: https://lore.kernel.org/linux-pm/20220620144231.GA23345@axis.=
-com/
-> > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > ---
-> > > >  drivers/base/power/runtime.c |   34 ++++++++++++++++++------------=
-----
-> > > >  1 file changed, 18 insertions(+), 16 deletions(-)
-> > > >
-> > > > --- a/drivers/base/power/runtime.c
-> > > > +++ b/drivers/base/power/runtime.c
-> > > > @@ -448,8 +448,13 @@
-> > > >               retval =3D __rpm_callback(cb, dev);
-> > > >       }
-> > > >
-> > > > -     dev->power.runtime_error =3D retval;
-> > > > -     return retval !=3D -EACCES ? retval : -EIO;
-> > > > +     if (retval =3D=3D -EACCES)
-> > > > +             retval =3D -EAGAIN;
-> > >
-> > > While this is one way to address the problem, are we opening the door
-> > > to changing error codes when convenient? This might lead to different
-> > > kind of confusion from user standpoint.
-> >
-> > Are you saying that if a mistake was made sufficiently long ago, it
-> > can't be fixed any more because someone may be confused?
->
-> Nothing against the fix but "sufficiently long ago" is why we might
-> have users that rely on it. As long as we don't break anything I don't
-> see a problem.
->
-> Messing with error codes is usually received with mixed feelings and
-> coming across such a code raises more questions than answers. Perhaps a
-> small explanation might do the trick?
+From: Adam Simonelli <adamsimonelli@gmail.com>
 
-Do you mean an explanation why -EACCES needs to be converted to something e=
-lse?
+When switching to a CONFIG_VT=n world, at least on x86 systems,
+/dev/console becomes /dev/ttyS0. This can cause some undesired effects.
+/dev/console's behavior is now tied to the physical /dev/ttyS0, which when
+disconnected can cause isatty() to fail when /dev/ttyS0 is disconnected,
+and users who upgrade to a theoretical vt-less kernel from their
+distribution who have a device such as a science instrument connected to
+their /dev/ttyS0 port will suddenly see it receive kernel log messages.
 
-That's because -EACCES has a special meaning in runtime PM: it means
-that runtime PM is disabled for the given device.
+When the new CONFIG_NULL_TTY_CONSOLE option is turned on, this will allow
+the ttynull device to be leveraged as the default console. Distributions
+that had CONFIG_VT turned on before will be able to leverage this option
+to where /dev/console is still backed by a psuedo device, avoiding these
+issues, without needing to enable the entire VT subsystem.
 
-Thanks!
+v2:
+    rebase
+
+v3:
+    Clarify commit messages.
+
+    Guard the all the register_console()s in ttynull to prevent it from being
+    registered twice.
+
+    Only change the link order if CONFIG_NULL_TTY_CONSOLE is enabled, otherwise
+    use the existing order for ttynull if only CONFIG_NULL_TTY is enabled.
+
+    Document why the link order changes in the drivers/tty/Makefile file.
+
+    Replace #ifdefs
+
+v4:
+    Remember to actually include the changes to v3 in the cover letter.
+
+v5:
+    Correct code formatting in Makefile comment.
+
+Adam Simonelli (2):
+  ttynull: Add an option to allow ttynull to be used as a console device
+  tty: Change order of ttynull to be linked sooner if enabled as a
+    console.
+
+ drivers/tty/Kconfig   | 15 ++++++++++++++-
+ drivers/tty/Makefile  | 10 ++++++++++
+ drivers/tty/ttynull.c | 20 +++++++++++++++++++-
+ 3 files changed, 43 insertions(+), 2 deletions(-)
+
+-- 
+2.45.2
+
