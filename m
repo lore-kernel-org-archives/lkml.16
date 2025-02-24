@@ -1,263 +1,87 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E056619C542
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 02:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 537AB70824
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 02:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740364920; cv=none; b=HEhG2KS+ERGfEF0ampMg4OnNKU5ZXOr94TCEcEZM38wOkJqYiig2cNiHHPVbGo3a0gctanKRWbVFcVridfl2oobfwQtrFRe5KpTEEq9+sT1Xk0oWV170LkfhSc+pTeCvtnsDcVjhzLTPNoh4eLZWMDo7LZv21bC+E+jfxUnd2tQ=
+	t=1740364978; cv=none; b=KPJGmUkoDHWWtf1l+zjGRgdRRfTJSqUDWVF1IpIeCjVsK9MYk/jwsvc/qNE+jEo2HpG5zrkyxoR529S+GzxZN0fp2wOVbdxWx9Dvm8y3gi+ElPCpDfoIpQWp8jI4wR4bwm/wxCgOD5Ram5w2pan8pwOuxtLuevEq7n5WxLInSUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740364920; c=relaxed/simple;
-	bh=GfXBhWrXc6OEGTVKWTPvQSlNsaOlNuIkwaMkb/7+ySI=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=jaPpu3WvraNoJo6oTH09LjFfRofsn/ithSpv8p1mR/82vrnk11o4REpJ6m99s18sC/hWzV4st8WjK+V9UGgb7/DknUoPTK3J4f42OxSHB1KBeIIKvjXnHSJekl8QW0O3fj9zDnzQVEZyR+IZu82SuBcuECHxI7OrYY+5HgEvokI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=PF1/A9db; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4W/SAG+f; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=J7xr5LAV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=2FUNoupm; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="PF1/A9db";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="4W/SAG+f";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="J7xr5LAV";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="2FUNoupm"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E24EE1F383;
-	Mon, 24 Feb 2025 02:41:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1740364916; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sokZcRi5Jle+fsK51aZ7tjNiImsvREKG7vGnUqDo1c4=;
-	b=PF1/A9dbKEquPdrr+y+sOIJOOSf8woWxlVHOwGLWU8Dbhu1YxsLdDU/bC0u4Wqm+q5o+6D
-	hNvr6eWdM+/bz/17A5Pp3pP3AeCkxJ1UGnS6YyTiQgt6AHodPSIAsAFyyxOZEw09DdKlj4
-	C2TGaRGduVqP+MYYWWF1DG89EHrwh3s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1740364916;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sokZcRi5Jle+fsK51aZ7tjNiImsvREKG7vGnUqDo1c4=;
-	b=4W/SAG+fRUk7tp1wd1ozQxfjBIqxOqr4nqDIxvYnaLAQOnNOyiaOJI4CQvuUdeCjLGYj52
-	lJS3rRsYKQLb1KAA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=J7xr5LAV;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=2FUNoupm
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1740364915; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sokZcRi5Jle+fsK51aZ7tjNiImsvREKG7vGnUqDo1c4=;
-	b=J7xr5LAVZNN5Mh8sDgv6/hHinb6Iuf/Ln5E5/G3ELY1aOwfF54zp55MTeawr5BiI1Bk4uz
-	FtVeccRBlZZxHc4tw69hJD5HJZfkhCrYT63OdzsL3iiwG0bsZwpcUBKObsr9q6bSDIw9gC
-	STSzkXWsfKRb2MldZbU+uY3e+ib+2hU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1740364915;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sokZcRi5Jle+fsK51aZ7tjNiImsvREKG7vGnUqDo1c4=;
-	b=2FUNoupmwUKtO/g8AMP0aUFbysA9B7OVFNWZUTF5EcBMJ1OImqv8CcszVjdJvbnFACkwF/
-	16e0OuJo856N4NBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DBE2613332;
-	Mon, 24 Feb 2025 02:41:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id yOoRH2vcu2csegAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 24 Feb 2025 02:41:47 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1740364978; c=relaxed/simple;
+	bh=Ih2vmHXajFO/sfOB+dozRyHrCrkHKSPIZ0+H5Pr/4AY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cUfY18skaCcy+M10B9aR+wBceqrM01FaLy8njguDhXiV7JiHO9tLBxbGxrBWip8x8wFbn0fyErEjg1euiw/W9/ad9zMnAQDvI85uhLl7TfM6kV6TZiOYjmN7OL7IcqRVkPkSCPfkF6ziPQo/lcLVXALMJ1KwvVAUdQmtY4IBA1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Z1Q4p4Pk4z4f3jqM
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 10:42:34 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 1199D1A0F5B
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 10:42:51 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.101.6])
+	by APP4 (Coremail) with SMTP id gCh0CgCX+1+p3LtnhuPnEg--.32591S2;
+	Mon, 24 Feb 2025 10:42:50 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: akpm@linux-foundation.org,
+	kasong@tencent.com
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] mm: swap: add back full cluster when no entry is reclaimed
+Date: Mon, 24 Feb 2025 19:39:10 +0800
+Message-Id: <20250224113910.522439-1-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Al Viro" <viro@zeniv.linux.org.uk>
-Cc: "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
- "Miklos Szeredi" <miklos@szeredi.hu>, "Xiubo Li" <xiubli@redhat.com>,
- "Ilya Dryomov" <idryomov@gmail.com>, "Richard Weinberger" <richard@nod.at>,
- "Anton Ivanov" <anton.ivanov@cambridgegreys.com>,
- "Johannes Berg" <johannes@sipsolutions.net>,
- "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- "Olga Kornievskaia" <okorniev@redhat.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>,
- "Sergey Senozhatsky" <senozhatsky@chromium.org>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
- linux-um@lists.infradead.org, ceph-devel@vger.kernel.org,
- netfs@lists.linux.dev
-Subject: Re: [PATCH 5/6] nfs: change mkdir inode_operation to return alternate
- dentry if needed.
-In-reply-to: <20250222044130.GO1977892@ZenIV>
-References: <>, <20250222044130.GO1977892@ZenIV>
-Date: Mon, 24 Feb 2025 13:41:44 +1100
-Message-id: <174036490460.74271.3866837223419464073@noble.neil.brown.name>
-X-Rspamd-Queue-Id: E24EE1F383
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[kernel.org,suse.cz,szeredi.hu,redhat.com,gmail.com,nod.at,cambridgegreys.com,sipsolutions.net,oracle.com,talpey.com,chromium.org,vger.kernel.org,lists.infradead.org,lists.linux.dev];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCX+1+p3LtnhuPnEg--.32591S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7GFy5Kr4fXF4rKFWftr15XFb_yoWfXwc_Ca
+	4vy348CrW5Jw1kCr12y3yrXrWkKrs3ZFyj9ry3tFWxA34fGFZ7tan7GFW2gw1fJa1DCa4S
+	ywnYyrn3J39F9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JFv_Gryl8c
+	AvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWD
+	JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oV
+	Cq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG
+	8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2js
+	IE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY
+	0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I
+	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAI
+	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcV
+	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j-6pPUUUUU=
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-On Sat, 22 Feb 2025, Al Viro wrote:
-> On Fri, Feb 21, 2025 at 10:36:34AM +1100, NeilBrown wrote:
->=20
-> >  nfs3_proc_mkdir(struct inode *dir, struct dentry *dentry, struct iattr *=
-sattr)
-> >  {
-> >  	struct posix_acl *default_acl, *acl;
-> > @@ -612,15 +612,18 @@ nfs3_proc_mkdir(struct inode *dir, struct dentry *d=
-entry, struct iattr *sattr)
-> >  		dentry =3D d_alias;
-> > =20
-> >  	status =3D nfs3_proc_setacls(d_inode(dentry), acl, default_acl);
-> > +	if (status && d_alias)
-> > +		dput(d_alias);
-> > =20
-> > -	dput(d_alias);
-> >  out_release_acls:
-> >  	posix_acl_release(acl);
-> >  	posix_acl_release(default_acl);
-> >  out:
-> >  	nfs3_free_createdata(data);
-> >  	dprintk("NFS reply mkdir: %d\n", status);
-> > -	return status;
-> > +	if (status)
-> > +		return ERR_PTR(status);
-> > +	return d_alias;
->=20
-> Ugh...  That's really hard to follow - you are leaving a dangling
-> reference in d_alias textually upstream of using that variable.
-> The only reason it's not a bug is that dput() is reachable only
-> with status && d_alias and that guarantees that we'll
-> actually go away on if (status) return ERR_PTR(status).
->=20
-> Worse, you can reach 'out:' with d_alias uninitialized.  Yes,
-> all such branches happen with status either still unmodified
-> since it's initialization (which is non-zero) or under
-> if (status), so again, that return d_alias; is unreachable.
->=20
-> So the code is correct, but it's really asking for trouble down
-> the road.
->=20
-> BTW, dput(NULL) is guaranteed to be a no-op...
->=20
+If no swap cache is reclaimed, cluster taken off from full_clusters list
+will not be put in any list and we can't reclaime HAS_CACHE slots
+efficiently. Do relocate_cluster for such cluster to avoid inefficiency.
 
-Thanks for that.  I've minimised the use of status and mostly
-stored errors in d_alias - which I've renamed to 'ret'.
-I think that answers your concerns.
+Fixes: 3b644773eefda ("mm, swap: reduce contention on device lock")
+Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+Reviewed-by: Kairui Song <kasong@tencent.com>
+---
+ mm/swapfile.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Thanks,
-NeilBrown
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 34baefb000b5..e5f58ab86329 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -861,6 +861,10 @@ static void swap_reclaim_full_clusters(struct swap_info_struct *si, bool force)
+ 			offset++;
+ 		}
+ 
++		/* in case no swap cache is reclaimed */
++		if (ci->flags == CLUSTER_FLAG_NONE)
++			relocate_cluster(si, ci);
++
+ 		unlock_cluster(ci);
+ 		if (to_scan <= 0)
+ 			break;
+-- 
+2.30.0
 
---- a/fs/nfs/nfs3proc.c
-+++ b/fs/nfs/nfs3proc.c
-@@ -578,13 +578,13 @@ nfs3_proc_symlink(struct inode *dir, struct dentry *den=
-try, struct folio *folio,
- 	return status;
- }
-=20
--static int
-+static struct dentry *
- nfs3_proc_mkdir(struct inode *dir, struct dentry *dentry, struct iattr *satt=
-r)
- {
- 	struct posix_acl *default_acl, *acl;
- 	struct nfs3_createdata *data;
--	struct dentry *d_alias;
--	int status =3D -ENOMEM;
-+	struct dentry *ret =3D ERR_PTR(-ENOMEM);
-+	int status;
-=20
- 	dprintk("NFS call  mkdir %pd\n", dentry);
-=20
-@@ -592,8 +592,9 @@ nfs3_proc_mkdir(struct inode *dir, struct dentry *dentry,=
- struct iattr *sattr)
- 	if (data =3D=3D NULL)
- 		goto out;
-=20
--	status =3D posix_acl_create(dir, &sattr->ia_mode, &default_acl, &acl);
--	if (status)
-+	ret =3D ERR_PTR(posix_acl_create(dir, &sattr->ia_mode,
-+				       &default_acl, &acl));
-+	if (IS_ERR(ret))
- 		goto out;
-=20
- 	data->msg.rpc_proc =3D &nfs3_procedures[NFS3PROC_MKDIR];
-@@ -602,25 +603,27 @@ nfs3_proc_mkdir(struct inode *dir, struct dentry *dentr=
-y, struct iattr *sattr)
- 	data->arg.mkdir.len =3D dentry->d_name.len;
- 	data->arg.mkdir.sattr =3D sattr;
-=20
--	d_alias =3D nfs3_do_create(dir, dentry, data);
--	status =3D PTR_ERR_OR_ZERO(d_alias);
-+	ret =3D nfs3_do_create(dir, dentry, data);
-=20
--	if (status !=3D 0)
-+	if (IS_ERR(ret))
- 		goto out_release_acls;
-=20
--	if (d_alias)
--		dentry =3D d_alias;
-+	if (ret)
-+		dentry =3D ret;
-=20
- 	status =3D nfs3_proc_setacls(d_inode(dentry), acl, default_acl);
-+	if (status) {
-+		dput(ret);
-+		ret =3D ERR_PTR(status);
-+	}
-=20
--	dput(d_alias);
- out_release_acls:
- 	posix_acl_release(acl);
- 	posix_acl_release(default_acl);
- out:
- 	nfs3_free_createdata(data);
--	dprintk("NFS reply mkdir: %d\n", status);
--	return status;
-+	dprintk("NFS reply mkdir: %d\n", PTR_ERR_OR_ZERO(ret));
-+	return ret;
- }
-=20
- static int
