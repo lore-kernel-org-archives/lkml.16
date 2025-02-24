@@ -1,263 +1,151 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F373618E377
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 07:13:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4A518E377;
+	Mon, 24 Feb 2025 07:13:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740381227; cv=none; b=uQvS4yYIsqULu3hSOX8LMHChbYuyoxiuOm+1RCgPtYLX4sYR5TFiXN6OFTp1Q915IYXtstpfNfFTVnD3qY3Pn8QhyWdatC6ncwdPWBirg5HnTntQkD/kr9yfDQIWJBEeQHKkXKvcwj/yXNsPh0m7dvJunFveii/zScO4SaC1PxA=
+	t=1740381239; cv=none; b=E75O0X0AMUlt1+pNKG0SKogaBNSqc7uoMXfMUEF4aa/GOyF3i0qhZO94b4xEuCUiX9vEpXhz85/Y4LkTtaipJeuH9RbrhyVL0zaY3XDAnYS/r6yM36jnNwww8RdvKYsk8SMghMYe3pfXZhbeu8KYjhw7mBa5+sHXOf1Ky/eiq1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740381227; c=relaxed/simple;
-	bh=ptAje5SiDVEq7xxyOAtG4fwOQmV0CrpzXKDFEFCBgo0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B4+R+moMY3pokV4yeY8vRlmu5qlw8p43hXQmx2D6+B6pOKna3wgF5MDkj1A3gN3/mXTmBiNyA3DgLpcwbPb2v4BCqvYiOaybBQmzUJADib2+XXlFNgxSyA57CxZWUV1/TvxV5fHHcT4+oaaxZpYRJRDHnFZTpOgZQs13+CfgbYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qk+BW5ie; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1740381239; c=relaxed/simple;
+	bh=bQb2/dc1WzW2BE++gvgsOTmck7L6Nvf4DdHExnkKCCM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GQItS5JxsX0RjbknyaG64b+bhrHsVV/iBuzYvOrKJS1onmjfxJlF/9EMpFYCot8cgJmX+wFFDEa/hizuFjKTi+5pbBSuibz9m2bZ9l3q5TRYMh1DLdtenQqqYCen+3o3Rxhm7mUV5V0GacBTt/pRhUkFsGDxY03DXUPkrwuQ36c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=if8lQvhE; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qk+BW5ie"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e5dc299deb4so3587297276.1
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 23:13:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="if8lQvhE"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-abb81285d33so779239366b.0;
+        Sun, 23 Feb 2025 23:13:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740381225; x=1740986025; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1740381236; x=1740986036; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Semc5mMpQsWkD1sVkCsLdhfdCNCpbBhtUCrwzr2j3F8=;
-        b=qk+BW5iezKqzWpx2NJq9SuBagfOzgkXYrjz0XRj5niege8b5NHSYxrCAZVot7AxStj
-         utHjc8+9MfkipHrRFHWdbu/BE2PYk9kqi7GMeQKKw+cOZDrsZDGA3mk6lHj1NONK3gJa
-         n3abzjBIZyYMhXEknNtX/k/oLeqcmyQYo9eQdTJiP+l9XqjS+WlkWUwNszfQr+Gj7bXk
-         t4Ai4klET+63/3Pe3GGkxvj/WGk6KrsVIqhKJHe9C2nV1ob77JetygNow3q6tAxrGu2G
-         64MMJYlMuNbH0XL0RzoWHRylr7lJMzkc2lBAL2CIeZKfjFRrfNkhDHRDAm+Ye/4dClEY
-         zuhg==
+        bh=AhJ1T/fwWWXZEiEbcn+HPev6I/zpx52m+r3y5yvwxno=;
+        b=if8lQvhE8okM+fuHSrY8eK39/VGmeaUcFJrAx40FA4YzbZ6TV7vToKIgU4l23coK/Q
+         VrzWqn21m6/dctQNLrxMp4LcDkQz765JfhmMteSiMx6SCL4EKkmDdTVuzC1Gu2z8nBCN
+         tKiXkowgKLPe0Lni9Z8I69SyYEtZc+tKYTYUJ7oZpuVV3HkOMGWBoZdmYB91P86sh1lg
+         LZpZJodjbKP8Z9aZir9XDgkB+6lRft+JSOFr33rmGbIOhxndwj2XvMJxAhELMcSdrkBC
+         +6J1udlYb0ElWU1ZK/7zJ+HD9HN7ExmRYm/uGJYTPaweCWknBVw/nxVr2/JISmvS8IoN
+         AtAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740381225; x=1740986025;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Semc5mMpQsWkD1sVkCsLdhfdCNCpbBhtUCrwzr2j3F8=;
-        b=uF7HZpHLC0XaeSxGP8kW3ra1pJMXMsXvs7ie025O17BzeP3DdBnOeyam0RPLxcNrwE
-         6afgFwGMWK7dAdYfCUqsV1rrTUgjifAPUC2M5PM8ByHS4wzIIQBkHTd+qlEUQSM0CMqn
-         uewsOfask90OkPaXkszEKE/i7vyfhxt9TeJ0h2Q9GLCbrItRSNZ0eT+Wnw7TQNG/5PYU
-         A+/lPfgDXAu0Dy/FG6+UW3Rm1pyyUcUqXHQjs9jLPH1aSLrI5WkDR8UVeHnfp+aY9J3Q
-         pGHMjOR5kew+KfGuCznwzVDg6M/i/y364VXORPldpWHH3dZoHI5j9aLOYt/GjXqn/QUV
-         A6zA==
-X-Forwarded-Encrypted: i=1; AJvYcCVt9fIsXUQuH5cSm/I6/fVXzyKcVGjUGvkRb2T5h/835VJz4Pc0zHY2rcsfz11Aimrhxpgj523WMfZpvyo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeGQAKxwcytPOQOGBymRBiIgzI5/YA9GmHKw9MT0M1FIbMikWV
-	wHWMpnYQhBFujOardxLPw40Lz0XXV9xqr2zkT7yhK1mmRjWpZRo58aricDe//+dUNLCI23Gpfks
-	r3weeGWn19vt3vOaHlr+ff29XHgeJNZ3nMPEI
-X-Gm-Gg: ASbGncu6eMfY7HAHWltYw2jjv7patpj6akK0xBIs+KDD8kAKvs4tHyEJPX7NHhsKWKR
-	JLPwXUdXtNrzKhUUSpLGtx+NnhsuL1dWbg3MERL3yegI6v8s1O4D1wxIGGsY1tURNNR3CPKD8yf
-	bMFo0h+kjv
-X-Google-Smtp-Source: AGHT+IEZrbBxm1LF/NEV8MZgFjYkpaICrfTfY23T8mXdJKPIdn+h6eA2w91MUwKAQjYZVvwQ3NYaXFLF5bTvlaUNkco=
-X-Received: by 2002:a05:6902:168e:b0:e5b:42c7:8f21 with SMTP id
- 3f1490d57ef6-e5e245b784dmr9327159276.7.1740381224723; Sun, 23 Feb 2025
- 23:13:44 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740381236; x=1740986036;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=AhJ1T/fwWWXZEiEbcn+HPev6I/zpx52m+r3y5yvwxno=;
+        b=ZJTbiE8vByRsWdeg1sNDN5vdOsFl9ptOxR40G3gypNrqSWhNoNwgmlTWRTF5Yj4i47
+         Cy6GpWPuPpRgcnGfkGaKVbcaTvAL5+RotJzm4h3Naw9WapmlOMWs+vsy8LXEYU7gYeIG
+         6dmLgqaqTNH8bX33uQmcONLqqkAIYsBFxGAg54p7V2j6gTUQZMe9jwWNLKO21XCOanNI
+         GdXmszUVgsWyhsP9UCv7lNtZXsqy5cPUFqJy4qfjJXw+UyVdOFnTG6wGMhvxgJx106fI
+         /k4lf3AogfkFoa2Z5FN8VGM5Cy/TKYG3vD8S4UrmTC3Hh3bC+cEbvYmxZrwDCEujydv7
+         bYLw==
+X-Forwarded-Encrypted: i=1; AJvYcCUAGs33thR+1rGjZbMInSttBDQF4Rn5nY+chXFVLxXNpiu1/UhSl2G4VMJYTYwTPOGEdQUU8jTPHVv3@vger.kernel.org, AJvYcCV76yqCjfKyycTLXq4ta3cb0s2AvUlllcUlRW8/Jdc4bFbtnnXOOn4Y/YpFhiVhrAPF9WvydtucVYWq@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWA1EV3LsOP1LcWRrcoap2jtonB9WhJxnovLd6igmi6zczhkxQ
+	V9vrohrjhNlNbqKm4bgJdn1j2uCuxnRr7OU8GXmDjL1exSu0D6bY
+X-Gm-Gg: ASbGnctQCLMj6W9X3KBWwhn022xzBNMyuyI/7aCrqsbj6SIpKXh+p2bDRU5nq9ET410
+	w9Dhj6mRc2kHnCTMxnkm8Ev5fUIb+AUrzr46sZY7hbYspc/Bdg09eUv7Upn7HazVBM1MSn9GCIM
+	+FEAwt+xurcxE+Uw/lZ3mQZU8XZM4eEhAEq4uKVr/hJiN5YGV4qUwJnaIPMoqY2k0UfYO1zCXZm
+	Q1S1F8Q8y18+y+ht4CWLL9DonS5VusTDuuzJ3GAuAMZ+lESaY8X3S9elFwsotYegvW4WT2kws70
+	WRPGYqBDWy9H02i46uI/z5ZgqQ==
+X-Google-Smtp-Source: AGHT+IFTl/OJwiOMCrQwp/6jVuRvgGddWSjPDFK5GMI5evFJFlBu1ePwDd5puvr/8TxFgsTqVzZxSQ==
+X-Received: by 2002:a17:907:7ea0:b0:ab7:d361:11b4 with SMTP id a640c23a62f3a-abc099b7f3fmr1362031766b.7.1740381235930;
+        Sun, 23 Feb 2025 23:13:55 -0800 (PST)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abbda707e3dsm1034964866b.106.2025.02.23.23.13.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 23 Feb 2025 23:13:55 -0800 (PST)
+Date: Mon, 24 Feb 2025 07:13:55 +0000
+From: Wei Yang <richard.weiyang@gmail.com>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Alexander Graf <graf@amazon.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Anthony Yznaga <anthony.yznaga@oracle.com>,
+	Arnd Bergmann <arnd@arndb.de>, Ashish Kalra <ashish.kalra@amd.com>,
+	Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Ingo Molnar <mingo@redhat.com>, James Gowans <jgowans@amazon.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Pratyush Yadav <ptyadav@amazon.de>,
+	Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Usama Arif <usama.arif@bytedance.com>,
+	Will Deacon <will@kernel.org>, devicetree@vger.kernel.org,
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
+Subject: Re: [PATCH v4 12/14] x86: Add KHO support
+Message-ID: <20250224071355.xsl2dbupda4dhfzl@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20250206132754.2596694-1-rppt@kernel.org>
+ <20250206132754.2596694-13-rppt@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224045237.1290971-1-chharry@google.com> <2025022431-ditto-shy-c62f@gregkh>
- <CADg1FFeW5EXOJTqTS+jwBphGnDSCreNwM8hcFOhB1Tatdti6QA@mail.gmail.com> <2025022407-polo-disgrace-9655@gregkh>
-In-Reply-To: <2025022407-polo-disgrace-9655@gregkh>
-From: Hsin-chen Chuang <chharry@google.com>
-Date: Mon, 24 Feb 2025 15:13:17 +0800
-X-Gm-Features: AWEUYZlT4OeXusnFgsZdXBLpnk2X21PFJOMgjPDL0SyEns4KFZ132qombPDpNzg
-Message-ID: <CADg1FFehoZr3DmDhV_ri69+XBHLQcpKjoxLMaVhQUdzRuhST9A@mail.gmail.com>
-Subject: Re: [PATCH v2] Bluetooth: btusb: Configure altsetting for USER_CHANNEL
-To: Greg KH <gregkh@linuxfoundation.org>, luiz.dentz@gmail.com
-Cc: linux-bluetooth@vger.kernel.org, 
-	chromeos-bluetooth-upstreaming@chromium.org, 
-	Hsin-chen Chuang <chharry@chromium.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	Ying Hsu <yinghsu@chromium.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250206132754.2596694-13-rppt@kernel.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 
-On Mon, Feb 24, 2025 at 2:44=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> On Mon, Feb 24, 2025 at 02:25:52PM +0800, Hsin-chen Chuang wrote:
-> > Hi Greg,
-> >
-> > On Mon, Feb 24, 2025 at 2:10=E2=80=AFPM Greg KH <gregkh@linuxfoundation=
-.org> wrote:
-> > >
-> > > On Mon, Feb 24, 2025 at 12:52:32PM +0800, Hsin-chen Chuang wrote:
-> > > > From: Hsin-chen Chuang <chharry@chromium.org>
-> > > >
-> > > > Automatically configure the altsetting for USER_CHANNEL when a SCO =
-is
-> > > > connected. This adds support for the USER_CHANNEL to transfer SCO d=
-ata
-> > > > over USB transport.
-> > > >
-> > > > Fixes: b16b327edb4d ("Bluetooth: btusb: add sysfs attribute to cont=
-rol USB alt setting")
-> > > > Signed-off-by: Hsin-chen Chuang <chharry@chromium.org>
-> > > > ---
-> > > >
-> > > > Changes in v2:
-> > > > - Give up tracking the SCO handles. Only configure the altsetting w=
-hen
-> > > >   SCO connected.
-> > > > - Put the change behind Kconfig/module parameter
-> > > >
-> > > >  drivers/bluetooth/Kconfig | 11 ++++++++++
-> > > >  drivers/bluetooth/btusb.c | 46 +++++++++++++++++++++++++++++++++++=
-++++
-> > > >  2 files changed, 57 insertions(+)
-> > > >
-> > > > diff --git a/drivers/bluetooth/Kconfig b/drivers/bluetooth/Kconfig
-> > > > index 4ab32abf0f48..7c497f878732 100644
-> > > > --- a/drivers/bluetooth/Kconfig
-> > > > +++ b/drivers/bluetooth/Kconfig
-> > > > @@ -56,6 +56,17 @@ config BT_HCIBTUSB_POLL_SYNC
-> > > >         Say Y here to enable USB poll_sync for Bluetooth USB device=
-s by
-> > > >         default.
-> > > >
-> > > > +config BT_HCIBTUSB_AUTO_SET_ISOC_ALT
-> > > > +     bool "Auto set isoc_altsetting for USER_CHANNEL when SCO conn=
-ected"
-> > > > +     depends on BT_HCIBTUSB
-> > > > +     default n
-> > > > +     help
-> > > > +       Say Y here to enable auto set isoc_altsetting for USER_CHAN=
-NEL
-> > > > +       when SCO connected
-> > > > +
-> > > > +       This can be overridden by passing btusb.auto_set_isoc_alt=
-=3D[y|n]
-> > > > +       on the kernel commandline.
-> > > > +
-> > > >  config BT_HCIBTUSB_BCM
-> > > >       bool "Broadcom protocol support"
-> > > >       depends on BT_HCIBTUSB
-> > > > diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-> > > > index de3fa725d210..af93d757911b 100644
-> > > > --- a/drivers/bluetooth/btusb.c
-> > > > +++ b/drivers/bluetooth/btusb.c
-> > > > @@ -34,6 +34,8 @@ static bool force_scofix;
-> > > >  static bool enable_autosuspend =3D IS_ENABLED(CONFIG_BT_HCIBTUSB_A=
-UTOSUSPEND);
-> > > >  static bool enable_poll_sync =3D IS_ENABLED(CONFIG_BT_HCIBTUSB_POL=
-L_SYNC);
-> > > >  static bool reset =3D true;
-> > > > +static bool auto_set_isoc_alt =3D
-> > > > +     IS_ENABLED(CONFIG_BT_HCIBTUSB_AUTO_SET_ISOC_ALT);
-> > > >
-> > > >  static struct usb_driver btusb_driver;
-> > > >
-> > > > @@ -1113,6 +1115,42 @@ static inline void btusb_free_frags(struct b=
-tusb_data *data)
-> > > >       spin_unlock_irqrestore(&data->rxlock, flags);
-> > > >  }
-> > > >
-> > > > +static void btusb_sco_connected(struct btusb_data *data, struct sk=
-_buff *skb)
-> > > > +{
-> > > > +     struct hci_event_hdr *hdr =3D (void *) skb->data;
-> > > > +     struct hci_ev_sync_conn_complete *ev =3D
-> > > > +             (void *) skb->data + sizeof(*hdr);
-> > > > +     struct hci_dev *hdev =3D data->hdev;
-> > > > +     unsigned int notify_air_mode;
-> > > > +
-> > > > +     if (hci_skb_pkt_type(skb) !=3D HCI_EVENT_PKT)
-> > > > +             return;
-> > > > +
-> > > > +     if (skb->len < sizeof(*hdr) || hdr->evt !=3D HCI_EV_SYNC_CONN=
-_COMPLETE)
-> > > > +             return;
-> > > > +
-> > > > +     if (skb->len !=3D sizeof(*hdr) + sizeof(*ev) || ev->status)
-> > > > +             return;
-> > > > +
-> > > > +     switch (ev->air_mode) {
-> > > > +     case BT_CODEC_CVSD:
-> > > > +             notify_air_mode =3D HCI_NOTIFY_ENABLE_SCO_CVSD;
-> > > > +             break;
-> > > > +
-> > > > +     case BT_CODEC_TRANSPARENT:
-> > > > +             notify_air_mode =3D HCI_NOTIFY_ENABLE_SCO_TRANSP;
-> > > > +             break;
-> > > > +
-> > > > +     default:
-> > > > +             return;
-> > > > +     }
-> > > > +
-> > > > +     bt_dev_info(hdev, "enabling SCO with air mode %u", ev->air_mo=
-de);
-> > > > +     data->sco_num =3D 1;
-> > > > +     data->air_mode =3D notify_air_mode;
-> > > > +     schedule_work(&data->work);
-> > > > +}
-> > > > +
-> > > >  static int btusb_recv_event(struct btusb_data *data, struct sk_buf=
-f *skb)
-> > > >  {
-> > > >       if (data->intr_interval) {
-> > > > @@ -1120,6 +1158,11 @@ static int btusb_recv_event(struct btusb_dat=
-a *data, struct sk_buff *skb)
-> > > >               schedule_delayed_work(&data->rx_work, 0);
-> > > >       }
-> > > >
-> > > > +     /* Configure altsetting for HCI_USER_CHANNEL on SCO connected=
- */
-> > > > +     if (auto_set_isoc_alt &&
-> > > > +         hci_dev_test_flag(data->hdev, HCI_USER_CHANNEL))
-> > > > +             btusb_sco_connected(data, skb);
-> > > > +
-> > > >       return data->recv_event(data->hdev, skb);
-> > > >  }
-> > > >
-> > > > @@ -4354,6 +4397,9 @@ MODULE_PARM_DESC(enable_autosuspend, "Enable =
-USB autosuspend by default");
-> > > >  module_param(reset, bool, 0644);
-> > > >  MODULE_PARM_DESC(reset, "Send HCI reset command on initialization"=
-);
-> > > >
-> > > > +module_param(auto_set_isoc_alt, bool, 0644);
-> > > > +MODULE_PARM_DESC(auto_set_isoc_alt, "Auto set isoc_altsetting for =
-USER_CHANNEL when SCO connected");
-> > >
-> > > This is not the 1990's, why are you adding new module parameters when=
- we
-> > > have so many other more proper ways to do this?  And really, this wou=
-ld
-> >
-> > Sorry but could you please provide an example to guard a feature like t=
-his.
->
-> Depends on what you want to do with this configuration.  Why is it an
-> option at all?  Why can't it "just work"?  Module parameters are a pain
+On Thu, Feb 06, 2025 at 03:27:52PM +0200, Mike Rapoport wrote:
+>From: Alexander Graf <graf@amazon.com>
+[...]
+>diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+>index 82b96ed9890a..0b81cd70b02a 100644
+>--- a/arch/x86/kernel/e820.c
+>+++ b/arch/x86/kernel/e820.c
+>@@ -1329,6 +1329,24 @@ void __init e820__memblock_setup(void)
+> 		memblock_add(entry->addr, entry->size);
+> 	}
+> 
+>+	/*
+>+	 * At this point with KHO we only allocate from scratch memory.
+>+	 * At the same time, we configure memblock to only allow
+>+	 * allocations from memory below ISA_END_ADDRESS which is not
+>+	 * a natural scratch region, because Linux ignores memory below
+>+	 * ISA_END_ADDRESS at runtime. Beside very few (if any) early
+>+	 * allocations, we must allocate real-mode trapoline below
+>+	 * ISA_END_ADDRESS.
+>+	 *
+>+	 * To make sure that we can actually perform allocations during
+>+	 * this phase, let's mark memory below ISA_END_ADDRESS as scratch
+>+	 * so we can allocate from there in a scratch-only world.
+>+	 *
+>+	 * After real mode trampoline is allocated, we clear scratch
+>+	 * marking from the memory below ISA_END_ADDRESS
+>+	 */
+>+	memblock_mark_kho_scratch(0, ISA_END_ADDRESS);
+>+
 
-I would like to hand this question to Luiz. I believe this patch just
-works because this configuration is defined in the spec.
-I think Luiz's point is to project the potential existing user, but
-there's probably no User channel user sending SCO data with the latest
-btusb driver because:
-a) There's no way to configure alt setting from userspace
-b) Before eafcfcfca97d, SCO data would be rejected since User channel
-shouldn't be able to modify hci_conn_num
+At the beginning of e820__memblock_setup() we call memblock_allow_resize(),
+which means during adding memory region it could double the array. And the
+memory used here is from some region just added.
 
-> to configure, we have loads of other ways to do this now (configfs,
-> debugfs for debugging stuff, sysfs for device-specific things, etc.)
->
-> > > not work at all for multiple controllers in teh same system, right?
-> >
-> > Do you mean we can't have separate parameters for different
-> > controllers? Yes that's true, but why would a user want the different
-> > behavior on the same machine?
->
-> Why would you prevent them from allowing this to happen for a
-> device-specific option?
->
-> thanks,
->
-> greg k-h
+But with KHO, I am afraid it would fail?
 
---=20
-Best Regards,
-Hsin-chen
+> 	/* Throw away partial pages: */
+> 	memblock_trim_memory(PAGE_SIZE);
+> 
+
+-- 
+Wei Yang
+Help you, Help me
