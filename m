@@ -1,96 +1,99 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D2B264FA9;
-	Mon, 24 Feb 2025 17:39:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40691BEF81
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 17:39:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740418751; cv=none; b=NW79Oa4E97yE1sSXqfrieLpsDcrcf2ym+ud0bVXbDVYHv1nRwPSiZaajv0QiPHUpFcWHj7yiUwO7eC4kJcGUNf3++mbt5rFjnHzJcj+Gyuys3pd+Mwp1zqbgKm1Eg+6X+WG1i2M/t+pNxT83ht6hRwpMqI+FTbR38EeG5RIgH4M=
+	t=1740418790; cv=none; b=AdgF+ftAxZy4ldn1LHHK4fU8A6B6GFOfExn9bHI0rregezz8aiiP+8nVpS86XfeNSXdpN7GbmYTpTevVsBh/HPmEvzrLwTCgDbgalOzfNXtlrw+OMXELVGFYfPJPG0lmcs9wbcOeeeV0WrfJIyL/b/2BRhuwdlFBmXgc+HaIj/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740418751; c=relaxed/simple;
-	bh=uEaCqTit3Hs30MjNpx5mW1Lh1YKGgfb9eHc2xm3HRtU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XXgU835IiVbVG5ipOZ/0AUUoGQY6KWIBG2zEv6kGhgJ+Aj+R6Ou0pB1JdGQXLCTzBUzctHETslwio1cqIJDL/zvpaXYBTRKO9tG56DLoMlvgyEX49mqbjJmQdcCnug6EXdfIwIRhFz0GCSyWUcmTAK1EVJYz17Kd3uxESE7J2WM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=pfZLdgoZ; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1740418790; c=relaxed/simple;
+	bh=4lq1u+Vg4c4+yWArBVNq2YzRcRNdLD4JckKo5A8x8Xs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jXdMSIX9b0f7BFjVOsd6sG4jYHIF3PvLk8UCSGBBsjyJCk6FMAHyqWsAI/Q+/0yu8hphRjr5ePACz5d8bcu05ivijhcyosxYzDsFX8euRibF5FyqRgNkA3ZtZ1x/siNtvcEmh7kpuFToMGxyPEoLYhBeaOM2z0RGFf0PlAzFb1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i2NSNRLb; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="pfZLdgoZ"
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id F128D2E08FD2;
-	Mon, 24 Feb 2025 19:39:01 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1740418744;
-	bh=uEaCqTit3Hs30MjNpx5mW1Lh1YKGgfb9eHc2xm3HRtU=;
-	h=Received:From:Subject:To;
-	b=pfZLdgoZRsGj7flsBNAsYCE/QWi/Gwn6lfqVKEY4tz12sW08w3pwnRZLwYBlOM/sb
-	 5OVO6NBiWIThF866NR0t7DwOkYeOJZYaXdVhJ+M3RJCmKQ5xY35OQv9P33jvocfC3V
-	 n+dA1Bx7u64EjNq1WS4/H/PoL6jMDIS161WLIVOQ=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.177) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f177.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f177.google.com with SMTP id
- 38308e7fff4ca-307325f2436so45402691fa.0;
-        Mon, 24 Feb 2025 09:39:01 -0800 (PST)
-X-Forwarded-Encrypted: i=1;
- AJvYcCVFXogWmP14jkFpjeRCsdWw31DaclK9XelGGnxl9RQ6nAn8Zbkre8lJ1fJZWGa3WCQbscbCpjvpc5CFOxw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw316CQQAt9pa7W0ErLk7DtaVaeKGVcbazrusChdplGtrhFVtMI
-	BMcmDdYoUY8xJiAxO1QOU3FXIm58z54pwcNQHQ/jXcDyWwcKbJhhkAM2SjHU77X0DYH3wQeCCOE
-	wy6vdlbsYW7DYFWNK3Ien6ftvZrc=
-X-Google-Smtp-Source: 
- AGHT+IHDf/8mxULisWDqSsVCPQZDiH/35WgwcCQjxHgPMcGxWVL12+DEduABrs4BXemzCqAtnX9uVLyIsSHQNmJSzuM=
-X-Received: by 2002:a2e:b006:0:b0:308:f01f:182c with SMTP id
- 38308e7fff4ca-30a59898391mr43439631fa.12.1740418741149; Mon, 24 Feb 2025
- 09:39:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i2NSNRLb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740418788; x=1771954788;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=4lq1u+Vg4c4+yWArBVNq2YzRcRNdLD4JckKo5A8x8Xs=;
+  b=i2NSNRLbThbRyYlpqHL0YwFhIQfZT19pAbth56cGpKF1VVHz1h5jkXmX
+   /1BTt0avTU+JLpZPn3efhc9cOMPZXTgBiIcZ9jIe9BaauAXjWjbN1kS1L
+   JDlhhOrV8CgzCbyOmqiqu3ztFwIwsJzcNUoj0D93yeTFllB1wjSz2myaO
+   91fPN4suUglhxU+eSrgzp6MR+RII92zhpEDQKr1sjcXW1Xlsk/gUMZ0hS
+   MR+xsR/3/hzV5kJqMq0p7/4zXBjA3yk2qnW1uX5HR1p4KkIU9niqiqHEu
+   VZDNiDlTFxT6FJ4yF1xq/5EwNzbNpyMH4MQ283Iy/TxKyjf9kFFThkhzt
+   Q==;
+X-CSE-ConnectionGUID: +YFWOVryTuy1HXEjRCUQMg==
+X-CSE-MsgGUID: wVbgnliqRju1V5nO1fK5Qw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="40895804"
+X-IronPort-AV: E=Sophos;i="6.13,312,1732608000"; 
+   d="scan'208";a="40895804"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 09:39:48 -0800
+X-CSE-ConnectionGUID: I8c25QPLQdiBkDUpD1m+gA==
+X-CSE-MsgGUID: FwY/wvYIS++TuOGjxFe9Iw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,312,1732608000"; 
+   d="scan'208";a="116625052"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa010.fm.intel.com with ESMTP; 24 Feb 2025 09:39:45 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 5845C19E; Mon, 24 Feb 2025 19:39:44 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH v1 1/1] x86/mm: Check if PTRS_PER_PMD is defined before use
+Date: Mon, 24 Feb 2025 19:39:40 +0200
+Message-ID: <20250224173940.219820-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224161016.439696-1-lkml@antheas.dev>
- <20250224161016.439696-3-lkml@antheas.dev>
- <004001db86dc$b32dec60$1989c520$@opensource.cirrus.com>
- <CAGwozwHSbzDxCiO-xYNqNH20HovMnMk+rNLEatToX4js=gO_RQ@mail.gmail.com>
- <CAGwozwE3dceooZouM2Ay9YXfehrQBk+STa1HRH5nkZ6QohTjhA@mail.gmail.com>
-In-Reply-To: 
- <CAGwozwE3dceooZouM2Ay9YXfehrQBk+STa1HRH5nkZ6QohTjhA@mail.gmail.com>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Mon, 24 Feb 2025 18:38:49 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwHwbX_LCm5ZOJzC3CxR3UkGnmo1UVUE0685FZdjFV806Q@mail.gmail.com>
-X-Gm-Features: AWEUYZlX79aScACefcN5jqida4vr4EdufKHNwqv2xqoy0LRMx0MNbhSHtemmY8c
-Message-ID: 
- <CAGwozwHwbX_LCm5ZOJzC3CxR3UkGnmo1UVUE0685FZdjFV806Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ALSA: hda/realtek: Fix Asus Z13 2025 audio
-To: "Stefan Binding (Opensource)" <sbinding@opensource.cirrus.com>
-Cc: linux-sound@vger.kernel.org, kailang@realtek.com,
-	linux-kernel@vger.kernel.org, perex@perex.cz, tiwai@suse.com,
-	baojun.xu@ti.com, simont@opensource.cirrus.com,
-	Kyle Gospodnetich <me@kylegospodneti.ch>
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <174041874381.28762.2039195872684370119@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
 
-Sounds about the same, perhaps a bit better. I'll swap to that one for
-our use and for when/if there is a V2.
+Compiler is not happy about PTRS_PER_PMD being undefined
 
-Any tips about going through this stuff are well appreciated. Online
-documentation is very sparse
+In file included from arch/x86/kernel/head_32.S:29:
+arch/x86/include/asm/pgtable_32.h:59:5: error: "PTRS_PER_PMD" is not defined, evaluates to 0 [-Werror=undef]
+   59 | #if PTRS_PER_PMD > 1
 
-On that note, what's the timeline for adding support to these laptops?
+Add a check to make sure PTRS_PER_PMD is defined before use.
 
-And speaking of a V2, the Ally X quirk is a bit suspect. Yes it fixes
-the popping during boot, but which part of it does that? It is very
-long and touches a different amp quirk in the process I'd say, so it
-would be nice to clean up. Let's forget about the original Ally, but
-the Ally X is still relevant.
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/r/202412152358.l9RJiVaH-lkp@intel.com/
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ arch/x86/include/asm/pgtable_32.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Of course, I do not expect an answer from you Stefan, as it is a
-competitor amp, haha. This is mostly for Baojun et al.
+diff --git a/arch/x86/include/asm/pgtable_32.h b/arch/x86/include/asm/pgtable_32.h
+index 7d4ad8907297..3c0523588f59 100644
+--- a/arch/x86/include/asm/pgtable_32.h
++++ b/arch/x86/include/asm/pgtable_32.h
+@@ -56,7 +56,7 @@ do {						\
+  * With PAE paging (PTRS_PER_PMD > 1), we allocate PTRS_PER_PGD == 4 pages for
+  * the PMD's in addition to the pages required for the last level pagetables.
+  */
+-#if PTRS_PER_PMD > 1
++#if defined(PTRS_PER_PMD) && (PTRS_PER_PMD > 1)
+ #define PAGE_TABLE_SIZE(pages) (((pages) / PTRS_PER_PMD) + PTRS_PER_PGD)
+ #else
+ #define PAGE_TABLE_SIZE(pages) ((pages) / PTRS_PER_PGD)
+-- 
+2.45.1.3035.g276e886db78b
 
-Best,
-Antheas
