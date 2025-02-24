@@ -1,84 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9602264A60;
-	Mon, 24 Feb 2025 17:56:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E595264A92;
+	Mon, 24 Feb 2025 17:57:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740419785; cv=none; b=gfhSFli1QtEK3ttD3fF6lmsCMSUpEEIU+bOuzqWn3jstiAZw8UCf91UKTpnLzOVT4h4Cv/AQxiTkzVvSLLRUeJH+tMHzuCYjxAPDsquKMW40l+CN2mnQQxHsQM26EHeIrUn5oLlNKJtW4em4+dvwNGs0t+lYMpNYMNOVKzUkqZY=
+	t=1740419821; cv=none; b=MkKp1xt2+8dXq7KuaR7Vhg6uHfxfARoGOFyhzRtSkBXFvgZEo/BjvngtpnulEM7L2RpNQRUUOPNlVkYzXWTUCHpP/3pzXkEcUQW//NKZPqyaB/ByGIoDRgcTllZVHvjr1xIOsatWeOu0DW6eJLFr222mP7QseLh98QKTIDEEnlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740419785; c=relaxed/simple;
-	bh=Bt7VoPhcsSkXtYjPHqWG20sRUthCsltNi81xM60UOWc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NHogbMjDSzWuJkkEwi8+UVg2MNrIpBf9rxRBVeWRctwaexBkCvRr8MZaqb1XWhGmKpCheI0Pb7SKO6i9PoDou5EuvP49eSXF3dCRhD+Uno1DiFFCcvQw3hMEZQyY5+7kcUb4bg72plkKQp3QR1MAxaUhC5HPKRFo3sUl9iiSA2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GGXguZ/q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740419821; c=relaxed/simple;
+	bh=98Z6rWquwnb+oqau6pISJGfTMsaiWJKg9oR7AsN7MLQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VtuHnP978L+TZmYEea0K9nKWylU9nY+b9jsO67TrvYpXoSiHvyWL28wdv53wjOE+notPCNNwc2c8xy1dcr5Xu4cRMC0W+X1dqCfA89+qoF/42heSXaK4w1F5sgeW4PfuBvMz/rW7uYyHDbzj8cSwAWtO9jNcQtJL14rEGSLfBGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vKY/Xj9U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GGXguZ/q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28DE2C4CED6;
-	Mon, 24 Feb 2025 17:56:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vKY/Xj9U"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E503AC4CED6;
+	Mon, 24 Feb 2025 17:57:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740419785;
-	bh=Bt7VoPhcsSkXtYjPHqWG20sRUthCsltNi81xM60UOWc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GGXguZ/qhyClnkyquiJduCOndGjtbuEHy51vgO2CgfUp+T7mVmkc/gKDJZNqC5YqC
-	 kVwpTJYN6GbyDaTm+3LcD85SnkMHbJu6PHfmbxGA49igZ0gZ3ee0MDti+bO91h3Nuj
-	 sSwbgSKaWxVxDz8JD/OjVoZBXjyKXAsusTV3Aemn57N1Uhgc1SuKoMBq/tuQVWmw0+
-	 JjkF8BUo17JNM5rkz8L4FhL4EXQ9xc5wgRhmDWbU28fsCkO/V8bdrp2FRO3UdFmjX6
-	 dr93AlMnkFKsR52pEGJaEVA8lSw342sfv/6nOulOwG7yv++fxZM7etsczsQGkiDMj7
-	 FpyDIUi3HerxQ==
-Date: Mon, 24 Feb 2025 17:56:18 +0000
-From: Simon Horman <horms@kernel.org>
-To: Peter Hilber <quic_philber@quicinc.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
-	Trilok Soni <quic_tsoni@quicinc.com>,
-	Srivatsa Vaddagiri <quic_svaddagi@quicinc.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
-	Richard Cochran <richardcochran@gmail.com>,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	netdev@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>,
-	"Ridoux, Julien" <ridouxj@amazon.com>,
-	Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Parav Pandit <parav@nvidia.com>,
-	Matias Ezequiel Vara Larsen <mvaralar@redhat.com>,
-	Cornelia Huck <cohuck@redhat.com>, virtio-dev@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 2/4] virtio_rtc: Add PTP clocks
-Message-ID: <20250224175618.GG1615191@kernel.org>
-References: <20250219193306.1045-1-quic_philber@quicinc.com>
- <20250219193306.1045-3-quic_philber@quicinc.com>
+	s=k20201202; t=1740419821;
+	bh=98Z6rWquwnb+oqau6pISJGfTMsaiWJKg9oR7AsN7MLQ=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=vKY/Xj9UEObtFXb1O4O4gx+CotG9LPPrPo5gAo61O4uqu9J5ffjOaiRUfAVLJB0ka
+	 HpM/XaU+RLmv7AkPiP/i0hNMvycYKB9CYCGq79CZPkdb/C+IAmIti8lReIIn7ZS4xD
+	 n3mkaMjX8b3PgQRj7zFvttEMxsJFTQnBxPQJ5EHd42SE36OrZwD4T/3QPCiUCrsyiE
+	 AlQwg/fAgTguxyAvmu5P+TeelivESdJlhUC+vPvIaiRX+pDMKTE/OObOee/gXRU3QO
+	 +26XZgn+7ih1q/d+rtPPcJzf/tUgcvZZxniPKWRB3FXx+rXpIG8vpqu4o4ninhj/vQ
+	 xBL7EnxU5AwzQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC103C021BB;
+	Mon, 24 Feb 2025 17:57:00 +0000 (UTC)
+From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
+Subject: [PATCH 0/2] (no cover subject)
+Date: Mon, 24 Feb 2025 11:55:32 -0600
+Message-Id: <20250224-build-tegra234-v1-0-39e4e912f968@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250219193306.1045-3-quic_philber@quicinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJSyvGcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDIyMT3aTSzJwU3ZLU9KJEI2MT3WRDC9OklETLtBSTRCWgpoKi1LTMCrC
+ B0bG1tQDeDU1GYAAAAA==
+X-Change-ID: 20250224-build-tegra234-c185bda9fd4a
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, Sumit Gupta <sumitg@nvidia.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Vidya Sagar <vidyas@nvidia.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pci@vger.kernel.org, Aaron Kling <webgeek1234@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740419820; l=723;
+ i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
+ bh=98Z6rWquwnb+oqau6pISJGfTMsaiWJKg9oR7AsN7MLQ=;
+ b=iARYKkm2gfxVmnVK8DYl1ygPH+MXiUi2obi+p9pHnMiJJH3kPeSHY4FES+MyFsGKXyVN4z984
+ mxKf7YYuNk0DrCqYGfvBq/7H/VUvvLRujZj1xLNpRYw92WAaZu3INUa
+X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
+ pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
+X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
+ auth_id=342
+X-Original-From: Aaron Kling <webgeek1234@gmail.com>
+Reply-To: webgeek1234@gmail.com
 
-On Wed, Feb 19, 2025 at 08:32:57PM +0100, Peter Hilber wrote:
+When Tegra234 support was added to existing Tegra drivers, many of them
+did not have the matching Kconfig entries updated to allow building for
+the arch. A few of those have already been fixed. This series fixes a
+couple more.
 
-...
+Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+---
+Aaron Kling (2):
+      cpufreq: tegra194: Allow building for Tegra234
+      PCI: tegra194: Allow building for Tegra234
 
-> +/**
-> + * viortc_ptp_gettimex64() - PTP clock gettimex64 op
-> + *
+ drivers/cpufreq/Kconfig.arm        | 2 +-
+ drivers/pci/controller/dwc/Kconfig | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+---
+base-commit: d082ecbc71e9e0bf49883ee4afd435a77a5101b6
+change-id: 20250224-build-tegra234-c185bda9fd4a
 
-Hi Peter,
+Best regards,
+-- 
+Aaron Kling <webgeek1234@gmail.com>
 
-Tooling recognises this as a kernel doc, and complains
-that there is no documentation present for the function's
-parameters: ptp, ts, and sts.
 
-Flagged by W=1 builds.
-
-> + * Context: Process context.
-> + */
-> +static int viortc_ptp_gettimex64(struct ptp_clock_info *ptp,
-> +				 struct timespec64 *ts,
-> +				 struct ptp_system_timestamp *sts)
-
-...
