@@ -1,379 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D45FF13CA81;
-	Mon, 24 Feb 2025 14:04:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C4371519B1;
+	Mon, 24 Feb 2025 14:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740405884; cv=none; b=sxLuYhsOzf4ETQWLDWVLE/1P+5ReBnXN0rpE25eS1s6ImQqgFbETG0MHxj2X3MuLF6nIgdKTHp2UN4MQDixySVjyGjx6wHY05VKn1FCj9sNM9BdotVab20/v3W6h0pXIVQHFVMeYVeSXgYg0rufn/iOSGby28WKta1m+oBlUZ6Q=
+	t=1740405886; cv=none; b=DocfmpUyGX7TO9HOAo2y9sDhY2lCyOil/8RTgymdSJNlw8OjzIeioB8TGOgLVlitnci7etM/x1VOdr5RX2I86F6jdrIscekgl4RON+LbZ2QcE3rxgKPqYfIQZP0Z3XV0AyuZu4xVRo9jBKl7FETNOfuCpH5JOQWkWPUWMNYMOYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740405884; c=relaxed/simple;
-	bh=08yQ2M1QgstTqrVMfXHy3RZ7HxixmsWT8XAzUUgbydU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fJLIKvJwwcDn1lqn8y4/zfR75YC1a/8lM6io89aWJOEEh/eYmGqLOtWZMoUNYOrBOsROps2O37pS1ohk3SFXZ9+YWGTfGERCcUl3AX9zno6OXqRMWCZYjHjWc6sc9RGi3KjdAXhW6B+2di37cpkvOwb6A8AbwTFlwXP1odwJd/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=injkndbs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740405886; c=relaxed/simple;
+	bh=wpz590THDcE9wqMfPaT5hc7NmvHv6lJEXmYoo0dMfV8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P7AQgG8arI5wFMU/c/yKdFx0ZQyfZ0hHbKpYu0EnwiC/pr1jgbO1Dcnt88lH4qvdwN+sunmzxvP1ZY1BxV2E8MZaaF8bhgVt7TzM1NzreqmeB4F9NjrUOJZslfvttLLWp5jd2sefoR21k1/c3TTR1isGAI8eTAnkrM23aTcpZVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FaCKg6cs; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="injkndbs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7365DC4CED6;
-	Mon, 24 Feb 2025 14:04:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740405884;
-	bh=08yQ2M1QgstTqrVMfXHy3RZ7HxixmsWT8XAzUUgbydU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=injkndbs5AF3zSz55cqvJ9AgjmVI9s35ei4aeqrvLoIdI/TOt4VoKTrlcIJCqOXY4
-	 Z32b6JIzIpmd+oyGvFLylA4NIrFRLEHxZJ4WvUROLDlj8prGlxeIvEVyrJMxwvBCM4
-	 2zBLEC0vNFPtoJvZ2W/qQhjuQ4yD359ZrEtpk0Qamkf5VFq7CEGMxPoMDyTxa+oFHp
-	 vBHfT5UXEN9qIZRHQRvTAGjim5IGNAUDZIiSAcJ5kjV0ThTWYCNwgI0AQYFMJPDBrY
-	 b/6iXxC4ig8MyNnEiCtMTnaNSarF2uldwv7DrgNdmlONNoxNioPq3MY8DbuSQFXhwb
-	 PtnuoQn6o+aAg==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@ACULAB.COM>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-Subject: [PATCH RFCv2 15/18] selftests/bpf: Add uprobe/usdt syscall tests
-Date: Mon, 24 Feb 2025 15:01:47 +0100
-Message-ID: <20250224140151.667679-16-jolsa@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250224140151.667679-1-jolsa@kernel.org>
-References: <20250224140151.667679-1-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FaCKg6cs"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3F66F44124;
+	Mon, 24 Feb 2025 14:04:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740405882;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EPcHCivrgVNEm/ByMHyUufAZZi+qh9K6loCNTwKX1V0=;
+	b=FaCKg6csEf5Yj70+AItRKH2YVOKtzEd4JKrPyZsWGELHjx66vdfqN0tMT1FtlsZ9tuZYmY
+	3gavhs9ZLYl1nbadbctHOZOmYWNhLMKjRVHVUhYjaB2R2QChme68lbkXqTmrZOj1Svq6ba
+	EZOwMv91cOBXdNfC5RyG1h5743HAX9fE6D/s4iDD1lJUx45mvoTtjqcFAZBf5sV4H94BGr
+	/HaRDCgYqGsEcU6qlLCyfRSeooFiNZjT/4TJ/A6fZA96OB5UAMCTthxFLpwrqpUuhRZjn0
+	9wG9wvNqrwseXAx/l5B8CZcJ5PF+36yiFq6y1RwYjO3nuHE/T/+r6t18Pai+ZQ==
+Date: Mon, 24 Feb 2025 15:04:40 +0100
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>, davem@davemloft.net,
+ Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Heiner
+ Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+ linux-arm-kernel@lists.infradead.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean
+ <vladimir.oltean@nxp.com>, Oleksij Rempel <o.rempel@pengutronix.de>, Simon
+ Horman <horms@kernel.org>, Romain Gantois <romain.gantois@bootlin.com>
+Subject: Re: [PATCH net-next 12/13] net: phy: phylink: Use phy_caps_lookup
+ for fixed-link configuration
+Message-ID: <20250224150440.7fe5458d@kmaincent-XPS-13-7390>
+In-Reply-To: <Z7x52C5dE3eXWomq@shell.armlinux.org.uk>
+References: <20250222142727.894124-1-maxime.chevallier@bootlin.com>
+	<20250222142727.894124-13-maxime.chevallier@bootlin.com>
+	<20250224144431.2dca9d19@kmaincent-XPS-13-7390>
+	<Z7x52C5dE3eXWomq@shell.armlinux.org.uk>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdejkeeljecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefguddtfeevtddugeevgfevtdfgvdfhtdeuleetffefffffhffgteekvdefudeiieenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghlohepkhhmrghinhgtvghnthdqigfrufdqudefqdejfeeltddpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduledprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrt
+ ghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomh
+X-GND-Sasl: kory.maincent@bootlin.com
 
-Adding tests for optimized uprobe/usdt probes.
+On Mon, 24 Feb 2025 13:53:28 +0000
+"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
 
-Checking that we get expected trampoline and attached bpf programs
-get executed properly.
+> On Mon, Feb 24, 2025 at 02:44:31PM +0100, Kory Maincent wrote:
+> > On Sat, 22 Feb 2025 15:27:24 +0100
+> > Maxime Chevallier <maxime.chevallier@bootlin.com> wrote:
+> >  =20
+> > > When phylink creates a fixed-link configuration, it finds a matching
+> > > linkmode to set as the advertised, lp_advertising and supported modes
+> > > based on the speed and duplex of the fixed link.
+> > >=20
+> > > Use the newly introduced phy_caps_lookup to get these modes instead of
+> > > phy_lookup_settings(). This has the side effect that the matched
+> > > settings and configured linkmodes may now contain several linkmodes (=
+the
+> > > intersection of supported linkmodes from the phylink settings and the
+> > > linkmodes that match speed/duplex) instead of the one from
+> > > phy_lookup_settings(). =20
+> >=20
+> > ...
+> >  =20
+> > > =20
+> > >  	linkmode_set_bit(ETHTOOL_LINK_MODE_Pause_BIT, mask);
+> > >  	linkmode_set_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT, mask);
+> > > @@ -588,9 +591,9 @@ static int phylink_parse_fixedlink(struct phylink=
+ *pl,
+> > > =20
+> > >  	phylink_set(pl->supported, MII);
+> > > =20
+> > > -	if (s) {
+> > > -		__set_bit(s->bit, pl->supported);
+> > > -		__set_bit(s->bit, pl->link_config.lp_advertising);
+> > > +	if (c) {
+> > > +		linkmode_or(pl->supported, pl->supported, match);
+> > > +		linkmode_or(pl->link_config.lp_advertising,
+> > > pl->supported, match); =20
+> >=20
+> > You are doing the OR twice. You should use linkmode_copy() instead. =20
+>=20
+> No, we don't want to copy pl->supported to
+> pl->link_config.lp_advertising. We just want to set the linkmode bit
+> that corresponds to the speed/duplex in each mask.
+>=20
+> That will result in e.g. the pause mode bits will be overwritten despite
+> being appropriately set in the advertising mask in the code above this.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- .../selftests/bpf/prog_tests/uprobe_syscall.c | 221 +++++++++++++++++-
- .../bpf/progs/uprobe_syscall_executed.c       |  34 ++-
- 2 files changed, 249 insertions(+), 6 deletions(-)
+Ok, so the right thing should be this:
+linkmode_or(pl->link_config.lp_advertising, pl->link_config.lp_advertising,
+	    match)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-index 2b00f16406c8..b337db6e12be 100644
---- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-+++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-@@ -14,6 +14,7 @@
- #include <asm/prctl.h>
- #include "uprobe_syscall.skel.h"
- #include "uprobe_syscall_executed.skel.h"
-+#include "sdt.h"
- 
- __naked unsigned long uretprobe_regs_trigger(void)
- {
-@@ -277,10 +278,10 @@ static void test_uretprobe_syscall_call(void)
- 		_exit(0);
- 	}
- 
--	skel->links.test = bpf_program__attach_uprobe_multi(skel->progs.test, pid,
--							    "/proc/self/exe",
--							    "uretprobe_syscall_call", &opts);
--	if (!ASSERT_OK_PTR(skel->links.test, "bpf_program__attach_uprobe_multi"))
-+	skel->links.test_uretprobe_multi = bpf_program__attach_uprobe_multi(skel->progs.test_uretprobe_multi,
-+							pid, "/proc/self/exe",
-+							"uretprobe_syscall_call", &opts);
-+	if (!ASSERT_OK_PTR(skel->links.test_uretprobe_multi, "bpf_program__attach_uprobe_multi"))
- 		goto cleanup;
- 
- 	/* kick the child */
-@@ -351,6 +352,212 @@ static void test_uretprobe_shadow_stack(void)
- 	ARCH_PRCTL(ARCH_SHSTK_DISABLE, ARCH_SHSTK_SHSTK);
- }
- 
-+#define TRAMP "[uprobes-trampoline]"
-+
-+static unsigned char nop5[5] = { 0x0f, 0x1f, 0x44, 0x00, 0x00 };
-+
-+__naked noinline void uprobe_test(void)
-+{
-+	asm volatile ("					\n"
-+		".byte 0x0f, 0x1f, 0x44, 0x00, 0x00	\n"
-+		"ret					\n"
-+	);
-+}
-+
-+noinline void usdt_test(void)
-+{
-+	STAP_PROBE(optimized_uprobe, usdt);
-+}
-+
-+static void *find_nop5(void *fn)
-+{
-+	int i;
-+
-+	for (i = 0; i < 10; i++) {
-+		if (!memcmp(nop5, fn + i, 5))
-+			return fn + i;
-+	}
-+	return NULL;
-+}
-+
-+static int find_uprobes_trampoline(void **start, void **end)
-+{
-+	char line[128];
-+	int ret = -1;
-+	FILE *maps;
-+
-+	maps = fopen("/proc/self/maps", "r");
-+	if (!maps) {
-+		fprintf(stderr, "cannot open maps\n");
-+		return -1;
-+	}
-+
-+	while (fgets(line, sizeof(line), maps)) {
-+		int m = -1;
-+
-+		/* We care only about private r-x mappings. */
-+		if (sscanf(line, "%p-%p r-xp %*x %*x:%*x %*u %n", start, end, &m) != 2)
-+			continue;
-+		if (m < 0)
-+			continue;
-+		if (!strncmp(&line[m], TRAMP, sizeof(TRAMP)-1)) {
-+			ret = 0;
-+			break;
-+		}
-+	}
-+
-+	fclose(maps);
-+	return ret;
-+}
-+
-+static void check_attach(struct uprobe_syscall_executed *skel, void (*trigger)(void), void *addr)
-+{
-+	void *tramp_start, *tramp_end;
-+	struct __arch_relative_insn {
-+		u8 op;
-+		s32 raddr;
-+	} __packed *call;
-+
-+	s32 delta;
-+
-+	/* Uprobe gets optimized after first trigger, so let's press twice. */
-+	trigger();
-+	trigger();
-+
-+	if (!ASSERT_OK(find_uprobes_trampoline(&tramp_start, &tramp_end), "uprobes_trampoline"))
-+		return;
-+
-+	/* Make sure bpf program got executed.. */
-+	ASSERT_EQ(skel->bss->executed, 2, "executed");
-+
-+	/* .. and check the trampoline is as expected. */
-+	call = (struct __arch_relative_insn *) addr;
-+	delta = (unsigned long) tramp_start - ((unsigned long) addr + 5);
-+
-+	ASSERT_EQ(call->op, 0xe8, "call");
-+	ASSERT_EQ(call->raddr, delta, "delta");
-+	ASSERT_EQ(tramp_end - tramp_start, 4096, "size");
-+}
-+
-+static void check_detach(struct uprobe_syscall_executed *skel, void (*trigger)(void), void *addr)
-+{
-+	void *tramp_start, *tramp_end;
-+
-+	/* [uprobes_trampoline] stays after detach */
-+	ASSERT_OK(find_uprobes_trampoline(&tramp_start, &tramp_end), "uprobes_trampoline");
-+	ASSERT_OK(memcmp(addr, nop5, 5), "nop5");
-+}
-+
-+static void check(struct uprobe_syscall_executed *skel, struct bpf_link *link,
-+		  void (*trigger)(void), void *addr)
-+{
-+	check_attach(skel, trigger, addr);
-+	bpf_link__destroy(link);
-+	check_detach(skel, trigger, addr);
-+}
-+
-+static void test_uprobe_legacy(void)
-+{
-+	LIBBPF_OPTS(bpf_uprobe_opts, opts,
-+		.retprobe = true,
-+	);
-+	struct uprobe_syscall_executed *skel;
-+	struct bpf_link *link;
-+	unsigned long offset;
-+
-+	skel = uprobe_syscall_executed__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "uprobe_syscall_executed__open_and_load"))
-+		return;
-+
-+	/* uprobe */
-+	offset = get_uprobe_offset(&uprobe_test);
-+	if (!ASSERT_GE(offset, 0, "get_uprobe_offset"))
-+		goto cleanup;
-+
-+	link = bpf_program__attach_uprobe_opts(skel->progs.test_uprobe,
-+				0, "/proc/self/exe", offset, NULL);
-+	if (!ASSERT_OK_PTR(link, "bpf_program__attach_uprobe_opts"))
-+		goto cleanup;
-+
-+	check(skel, link, uprobe_test, uprobe_test);
-+
-+	/* uretprobe */
-+	skel->bss->executed = 0;
-+	offset = get_uprobe_offset(&uprobe_test);
-+	if (!ASSERT_GE(offset, 0, "get_uprobe_offset"))
-+		goto cleanup;
-+
-+	link = bpf_program__attach_uprobe_opts(skel->progs.test_uretprobe,
-+				0, "/proc/self/exe", offset, NULL);
-+	if (!ASSERT_OK_PTR(link, "bpf_program__attach_uprobe_opts"))
-+		goto cleanup;
-+
-+	check(skel, link, uprobe_test, uprobe_test);
-+
-+cleanup:
-+	uprobe_syscall_executed__destroy(skel);
-+}
-+
-+static void test_uprobe_multi(void)
-+{
-+	LIBBPF_OPTS(bpf_uprobe_multi_opts, opts,
-+		.retprobe = true,
-+	);
-+	struct uprobe_syscall_executed *skel;
-+	struct bpf_link *link;
-+
-+	skel = uprobe_syscall_executed__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "uprobe_syscall_executed__open_and_load"))
-+		return;
-+
-+	/* uprobe.multi */
-+	link = bpf_program__attach_uprobe_multi(skel->progs.test_uprobe_multi,
-+				0, "/proc/self/exe", "uprobe_test", NULL);
-+	if (!ASSERT_OK_PTR(link, "bpf_program__attach_uprobe_multi"))
-+		goto cleanup;
-+
-+	check(skel, link, uprobe_test, uprobe_test);
-+
-+	/* uretprobe.multi */
-+	skel->bss->executed = 0;
-+	link = bpf_program__attach_uprobe_multi(skel->progs.test_uretprobe_multi,
-+				0, "/proc/self/exe", "uprobe_test", &opts);
-+	if (!ASSERT_OK_PTR(link, "bpf_program__attach_uprobe_multi"))
-+		goto cleanup;
-+
-+	check(skel, link, uprobe_test, uprobe_test);
-+
-+cleanup:
-+	uprobe_syscall_executed__destroy(skel);
-+}
-+
-+static void test_uprobe_usdt(void)
-+{
-+	struct uprobe_syscall_executed *skel;
-+	struct bpf_link *link;
-+	void *addr;
-+
-+	errno = 0;
-+	addr = find_nop5(usdt_test);
-+	if (!ASSERT_OK_PTR(addr, "find_nop5"))
-+		return;
-+
-+	skel = uprobe_syscall_executed__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "uprobe_syscall_executed__open_and_load"))
-+		return;
-+
-+	link = bpf_program__attach_usdt(skel->progs.test_usdt,
-+				-1 /* all PIDs */, "/proc/self/exe",
-+				"optimized_uprobe", "usdt", NULL);
-+	if (!ASSERT_OK_PTR(link, "bpf_program__attach_usdt"))
-+		goto cleanup;
-+
-+	check(skel, link, usdt_test, addr);
-+
-+cleanup:
-+	uprobe_syscall_executed__destroy(skel);
-+}
-+
- static void __test_uprobe_syscall(void)
- {
- 	if (test__start_subtest("uretprobe_regs_equal"))
-@@ -361,6 +568,12 @@ static void __test_uprobe_syscall(void)
- 		test_uretprobe_syscall_call();
- 	if (test__start_subtest("uretprobe_shadow_stack"))
- 		test_uretprobe_shadow_stack();
-+	if (test__start_subtest("uprobe_legacy"))
-+		test_uprobe_legacy();
-+	if (test__start_subtest("uprobe_multi"))
-+		test_uprobe_multi();
-+	if (test__start_subtest("uprobe_usdt"))
-+		test_uprobe_usdt();
- }
- #else
- static void __test_uprobe_syscall(void)
-diff --git a/tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c b/tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c
-index 0d7f1a7db2e2..802fd562ce4c 100644
---- a/tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c
-+++ b/tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c
-@@ -1,6 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "vmlinux.h"
- #include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
-+#include <bpf/usdt.bpf.h>
- #include <string.h>
- 
- struct pt_regs regs;
-@@ -9,9 +11,37 @@ char _license[] SEC("license") = "GPL";
- 
- int executed = 0;
- 
-+SEC("uprobe")
-+int BPF_UPROBE(test_uprobe)
-+{
-+	executed++;
-+	return 0;
-+}
-+
-+SEC("uretprobe")
-+int BPF_URETPROBE(test_uretprobe)
-+{
-+	executed++;
-+	return 0;
-+}
-+
-+SEC("uprobe.multi")
-+int test_uprobe_multi(struct pt_regs *ctx)
-+{
-+	executed++;
-+	return 0;
-+}
-+
- SEC("uretprobe.multi")
--int test(struct pt_regs *regs)
-+int test_uretprobe_multi(struct pt_regs *ctx)
-+{
-+	executed++;
-+	return 0;
-+}
-+
-+SEC("usdt")
-+int test_usdt(struct pt_regs *ctx)
- {
--	executed = 1;
-+	executed++;
- 	return 0;
- }
--- 
-2.48.1
-
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
