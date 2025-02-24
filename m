@@ -1,71 +1,74 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73963265CD3;
-	Mon, 24 Feb 2025 17:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D61264FBB;
+	Mon, 24 Feb 2025 17:35:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740418497; cv=none; b=AcRfU6GYdKIJRhfKnzeJvq8dN59BwtLlD25C1LsyXabUn3tTQw1fG8bZkwZ33c8Qva3eJOIoX3908JzuBGfdgf0zJ0e6nLLC9oJQOIhEksqzPfC+bIhHHx8Ov+vuVRsDZT5Q9fAgDKKmXUQ8hZUzjG3HIxiZNVxBqC3eoEc7Jag=
+	t=1740418513; cv=none; b=NLJVcAQr/s8D6mKsWXME8PYueEz5Uep0DQ1Ccaxt6lmUHNC5SDSOwjiU99ZhtlCXJaoHri2W3JUa2MWoBFi2aidqXDUsus0+JS0ZKwzUNYF6aDUN0SpQGxdusOD9PBhrt+N9E1GmRaw4GFwjA5OcOVpeyGZXQgLxTbRWBeiGDhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740418497; c=relaxed/simple;
-	bh=4FN3Kso8IEB/8nRwPwS1e0s0rSpmccUC6yRgfCqU3tI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iyuKbzwAjyxPzZbPtrdi/HPCkZY1z3fsl+m7RtpClDw237NSX7gwhWG0vipcrhEE2GswkT9dw8fYE1ZfEeWm2AC63qq+0racZ9/w4qrci2Ef39R/PL9dFbXkDJXQkZTE9DsTFKyC8UBsykBJFz/Zjn1G7FdM0hmBvMpfNuSkruA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7DF63152B;
-	Mon, 24 Feb 2025 09:35:08 -0800 (PST)
-Received: from e129166.arm.com (unknown [10.57.65.109])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 242AB3F5A1;
-	Mon, 24 Feb 2025 09:34:49 -0800 (PST)
-From: Lukasz Luba <lukasz.luba@arm.com>
-To: linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	rafael@kernel.org,
-	daniel.lezcano@linaro.org
-Cc: lukasz.luba@arm.com,
-	rui.zhang@intel.com,
-	srinivas.pandruvada@linux.intel.com
-Subject: [PATCH 3/4] thermal: int340x: Use kcalloc() instead of kzalloc() with multiplication
-Date: Mon, 24 Feb 2025 17:33:05 +0000
-Message-ID: <20250224173432.1946070-4-lukasz.luba@arm.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250224173432.1946070-1-lukasz.luba@arm.com>
-References: <20250224173432.1946070-1-lukasz.luba@arm.com>
+	s=arc-20240116; t=1740418513; c=relaxed/simple;
+	bh=7BpnJlKXV4oOIFthAX5G/EP8mXIMBtpkyr/ME1iFYgg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BP8S2qurkqAbvDCPM6nQYKwHpgpk73ss9+d2yq4JAJsxjncebvyk8g+axHDJr4B8If3Q8/F0Y3qs84b8ZUC5kcZoMpjVT9hLSFF4iApxvQXtrynkE52D0eZQSKbzEWBw2EG4Sr0FMmXGg2yHUNib5dBpcua6AuF9yrsn+QmlSrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OjV8/oTM; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OjV8/oTM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26CAFC4CED6;
+	Mon, 24 Feb 2025 17:35:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740418512;
+	bh=7BpnJlKXV4oOIFthAX5G/EP8mXIMBtpkyr/ME1iFYgg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OjV8/oTMaCzcrzFkD1o/RYCGAqz9fsdIfse+sngs8/DWwH4h3/fWkukPjBD7xgws2
+	 41skETsxIOKiqpnZl210JKMqvEfMNkquLvD2QBTF4fwjX31mMP1WCDIH+ly14zlS62
+	 vo24YZZCTCan8RJFokb4JS4nOsR9TXD/QCB+ib/kRVtXA3qGFBBfQ5dQsmrMhvKOMY
+	 BjofZXZMYYZBGnVzqDsKPDyMaOxisxa5Zz/Gbiqnv2asvrEnIoYvMYWOobfYwfU5U6
+	 TPTjVu3d4CldxmrDIH+68Jd+nBvjrk1km5NfZQ1Bcykp+zeDBv0ECKvLiZ/uk5gSjt
+	 mBs57JSN1cSew==
+Date: Mon, 24 Feb 2025 11:35:10 -0600
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+Cc: Daniel Baluta <daniel.baluta@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	linux-kernel@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 2/5] dt-bindings: dsp: fsl,dsp: document
+ 'access-controllers' property
+Message-ID: <174041850878.3566701.4991435952633058623.robh@kernel.org>
+References: <20250221191909.31874-1-laurentiumihalcea111@gmail.com>
+ <20250221191909.31874-3-laurentiumihalcea111@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250221191909.31874-3-laurentiumihalcea111@gmail.com>
 
-According to the latest recommendations, kcalloc() should be used instead
-of kzalloc() with multiplication (which might overflow).
-Switch to this new scheme and use more safe kcalloc().
 
-No functional impact changes.
+On Fri, 21 Feb 2025 14:19:06 -0500, Laurentiu Mihalcea wrote:
+> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+> 
+> Some DSP instances may have their access to certain peripherals
+> conditioned by a bus access controller such as the one from the
+> AIPSTZ bridge.
+> 
+> Add the optional 'access-controllers' property, which may be used
+> in such cases.
+> 
+> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/dsp/fsl,dsp.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
 
-Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
----
- drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c b/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c
-index 8dca6a6aceca1..2d672c4be3ce5 100644
---- a/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c
-+++ b/drivers/thermal/intel/int340x_thermal/int340x_thermal_zone.c
-@@ -133,8 +133,8 @@ struct int34x_thermal_zone *int340x_thermal_zone_add(struct acpi_device *adev,
- 	if (ACPI_SUCCESS(status))
- 		int34x_zone->aux_trip_nr = trip_cnt;
- 
--	zone_trips = kzalloc(sizeof(*zone_trips) * (trip_cnt + INT340X_THERMAL_MAX_TRIP_COUNT),
--			     GFP_KERNEL);
-+	zone_trips = kcalloc(trip_cnt + INT340X_THERMAL_MAX_TRIP_COUNT,
-+			     sizeof(*zone_trips), GFP_KERNEL);
- 	if (!zone_trips) {
- 		ret = -ENOMEM;
- 		goto err_trips_alloc;
--- 
-2.48.1
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
