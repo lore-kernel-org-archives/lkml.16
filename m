@@ -1,111 +1,95 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2424F770FE;
-	Mon, 24 Feb 2025 14:03:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B52E81624F4
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 14:03:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740405804; cv=none; b=JuIUEtE84G9gjdEjozkcr91Z4AOmpYAr0Wa9JHgJ70H5JupvETyLPY6vc0CGvQHSHglyRzjMdMbVJgnkMKfvv+RrqC6Bx8AgiyTMRQyYBxcys0WX0yErw+JFg9RAYSQNmEMNEXDjz+3YJOS32cPfvNQjpPW5NgEld7IsPOHOsNU=
+	t=1740405808; cv=none; b=WABJZvGjjqvndt/tvb1qZZxf8NVSTblC4sVRvxJE/AXsIFwR72mgQJ+qEUeUgVRn7CiugmLjr7xeH16ul/M/BN7+3R0SojXIx0foTfGyNjzG9KPwJfvXM+bJuagoRjFGkokKC8aVFT8AbexRftQrIqxLjSHmI0PcWRQuSXHjKOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740405804; c=relaxed/simple;
-	bh=uRt4tqRoqDTY5+lgkCiQnEEqaFHzDQE2OPfebgftqD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LcqKYDO0zpaRCuGe8LIdVC7LEFa9+BVKGZKGPLlNURcVHuavkoqN1oGkwU/BNXfAHs9GKl8n4n0CK4bPoF7SC3AMYRzgp3zlw1oPOwG7NGIi6bCisgQ2G7AXGsr3uN6vsh/63IzkK/Z3UcT9K/r5GWg0iaiGB9LqeLtuish3Pfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37BD71516;
-	Mon, 24 Feb 2025 06:03:39 -0800 (PST)
-Received: from localhost (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 234F93F5A1;
-	Mon, 24 Feb 2025 06:03:22 -0800 (PST)
-Date: Mon, 24 Feb 2025 14:03:17 +0000
-From: Leo Yan <leo.yan@arm.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH v20 11/11] perf: arm_pmuv3: Add support for the Branch
- Record Buffer Extension (BRBE)
-Message-ID: <20250224140317.GF8144@e132581.arm.com>
-References: <20250218-arm-brbe-v19-v20-0-4e9922fc2e8e@kernel.org>
- <20250218-arm-brbe-v19-v20-11-4e9922fc2e8e@kernel.org>
- <20250224122507.GE8144@e132581.arm.com>
- <CAL_Jsq+0fZ2uasgAam7qGTdCeDBQxXeyL-J1_suyxy6GE_ERTg@mail.gmail.com>
+	s=arc-20240116; t=1740405808; c=relaxed/simple;
+	bh=BTefghr7eqJvklKX/qO3ZwWK2a9Y1cf2mtRMmV7Lsv4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=PLJvlNdGqNjQvET95i+pc9oQe1TQGatj7844+3lU7MwyaydbQdNA6i3ZN0h69HQxeq/wpVU1H5Jv2hPye1r4omL+hKiGncednsCzIa46nHxgEkGatCDPh5eLnVfKLv0v9w0Ea5y1aWKSa6FQYfpb8wHbGSUGLlfZBfablr+g3ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Z1j6q187Lz21p5G;
+	Mon, 24 Feb 2025 22:00:19 +0800 (CST)
+Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
+	by mail.maildlp.com (Postfix) with ESMTPS id EDBBD140120;
+	Mon, 24 Feb 2025 22:03:22 +0800 (CST)
+Received: from [10.159.166.136] (10.159.166.136) by
+ kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Mon, 24 Feb 2025 22:03:21 +0800
+Message-ID: <6634386b-afc1-4e31-a2f4-9c1afed2d1d8@huawei.com>
+Date: Mon, 24 Feb 2025 22:03:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_Jsq+0fZ2uasgAam7qGTdCeDBQxXeyL-J1_suyxy6GE_ERTg@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 drm-dp 7/8] drm/hisilicon/hibmc: Enable this hot plug
+ detect of irq feature
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
+	<kong.kongxinwei@hisilicon.com>, <liangjian010@huawei.com>,
+	<chenjianmin@huawei.com>, <lidongming5@huawei.com>, <libaihan@huawei.com>,
+	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+	<shiyongbang@huawei.com>
+References: <20250222025102.1519798-1-shiyongbang@huawei.com>
+ <20250222025102.1519798-8-shiyongbang@huawei.com>
+ <reqpxlbvlz5qssgy6gbjuou33h4zevo4xeztqbsr4keehplyhx@utv22a5ihohx>
+ <eef68fc7-30f4-4246-a82e-4f90cd6a665d@huawei.com>
+ <6jx5ldpidy2ycrqognfiv5ttqr5ia4dtbryta3kc2mkndrvvgo@qzuakucz765k>
+From: Yongbang Shi <shiyongbang@huawei.com>
+In-Reply-To: <6jx5ldpidy2ycrqognfiv5ttqr5ia4dtbryta3kc2mkndrvvgo@qzuakucz765k>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd500013.china.huawei.com (7.221.188.12)
 
-On Mon, Feb 24, 2025 at 06:46:35AM -0600, Rob Herring wrote:
-> On Mon, Feb 24, 2025 at 6:25 AM Leo Yan <leo.yan@arm.com> wrote:
-> > On Tue, Feb 18, 2025 at 02:40:06PM -0600, Rob Herring (Arm) wrote:
-> > >
-> > > From: Anshuman Khandual <anshuman.khandual@arm.com>
-> >
-> > [...]
-> >
-> > > BRBE records are invalidated whenever events are reconfigured, a new
-> > > task is scheduled in, or after recording is paused (and the records
-> > > have been recorded for the event). The architecture allows branch
-> > > records to be invalidated by the PE under implementation defined
-> > > conditions. It is expected that these conditions are rare.
-> >
-> > [...]
-> >
-> > > +static void armv8pmu_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in)
-> > > +{
-> > > +       struct arm_pmu *armpmu = *this_cpu_ptr(&cpu_armpmu);
-> > > +       struct pmu_hw_events *hw_events = this_cpu_ptr(armpmu->hw_events);
-> > > +
-> > > +       if (!hw_events->branch_users)
-> > > +               return;
-> > > +
-> > > +       if (sched_in)
-> > > +               brbe_invalidate();
-> > > +}
-> >
-> > Just a minor concern.  I don't see any handling for task migration.
-> > E.g., for a task is migrated from one CPU to another CPU, I expect we
-> > need to save and restore branch records based on BRBE injection.  So
-> > far, the driver simply invalidates all records.
-> >
-> > I think this topic is very likely discussed before.  If this is the
-> > case, please ignore my comment.  Except this, the code looks good
-> > to me.
-> 
-> Not really discussed on the list, but that was present in v18 (though
-> not functional because .sched_task() hook wasn't actually enabled) and
-> Mark removed it. His work is here[1].The only comment was:
-> 
-> Note: saving/restoring at context-switch doesn't interact well with
-> event rotation (e.g. if filters change)
+> On Sat, Feb 22, 2025 at 06:35:48PM +0800, Yongbang Shi wrote:
+>>>> +static int hibmc_dp_hpd_event(struct drm_client_dev *client)
+>>>> +{
+>>>> +	struct hibmc_dp *dp = container_of(client, struct hibmc_dp, client);
+>>>> +	struct hibmc_drm_private *priv = to_hibmc_drm_private(dp->drm_dev);
+>>>> +	struct drm_display_mode *mode = &priv->crtc.state->adjusted_mode;
+>>>> +	int ret;
+>>>> +
+>>>> +	if (dp->hpd_status) {
+>>>> +		hibmc_dp_hpd_cfg(&priv->dp);
+>>>> +		ret = hibmc_dp_prepare(dp, mode);
+>>>> +		if (ret)
+>>>> +			return ret;
+>>>> +
+>>>> +		hibmc_dp_display_en(dp, true);
+>>>> +	} else {
+>>>> +		hibmc_dp_display_en(dp, false);
+>>>> +		hibmc_dp_reset_link(&priv->dp);
+>>>> +	}
+>>> If I understand this correctly, you are using a separate drm_client to
+>>> enable and disable the link & display. Why is it necessary? Existing
+>>> drm_clients and userspace compositors use drm framework, they should be
+>>> able to turn the display on and off as required.
+>>>
+>> Thanks for your asking, there are cfg/reset process when the connector 's pluging in/out.
+>> We want to cfg DP registers again when the connector changes. Not only dp link training, but also cfg
+>> the different video modes into DP registers.
+> Why? The link training and mode programming should happen during
+> pre_enable / enable stage (legacy or atomic).
 
-In the brbe_enable() function, it "Merge the permitted branch filters
-of all events".  Based on current implementation, all events share the
-same branch filter.
+Hi Dmitry,
 
-When event rotation happens, if without context switch, in theory we
-should can directly use the branch record (no invalidation, no injection)
-for all events.
+Right, that's what I'm curious about. It won't call encoder enble/disable functions when I triggered HPD.
+And I'm sure the drm_connector_helper_hpd_irq_event() is called. So I add a drm_client for it.
 
-For a context-switch case, we need to save and re-inject branch record.
-BRBE record sticks to a process context, no matter what events have been
-enabled.
 
-Thanks,
-Leo
+>>
