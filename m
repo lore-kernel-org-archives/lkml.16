@@ -1,157 +1,154 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE1623373F
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 12:37:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8D2221F32
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 12:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740400662; cv=none; b=mI8jIIx+FTGaPqASpEvahj0aAe3SKnqR+0JefDXx9g3xjf5dPnHpU5EPJg8IAj/ZliItPesNZJbHG+pZcrdaDhU/7Oo0X68Wv/cz/Wiy29rk8FUsawlbTqhPfa56sm27hMWCLhfrmd8H+zP7hImHUYCVy5/THlh45ro4la7HhZk=
+	t=1740400682; cv=none; b=qe9eGbz198qlRynGzU4xMXnES84KHn9+nG7g4AU9X7S4fC6bzoWHjXrRDsJaWZebIuOOhdwlHNVl4MGyx4+tO2KfXP27eTkXQ/Z6ERuaW9GBecl6IHJW+HITETDLLqYsEFGSb/KU3xN8pEd2Kr1lDeglm21wjnt6sn5/xFcCu24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740400662; c=relaxed/simple;
-	bh=z6lk/P4QasBTfrnQhTYhSQH1MJxcuLsTjlFtJQhgB8g=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=vCd31XYLan9sQGv2TiqUIP4T2GR0ISBjOhIrnUTSmEuPo+lwZvfmODIYKvmjdoYZjNhe68WvAgY1WDtEP1LoF3NsLayNbDoBkmRVuq6hvivJynMAKN+JThYzUWCT8fuxCmpTWwYXNRicz2qsh+X9zSCDU074Hn1GYcQ/K3x6Jm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uKgLDRaF; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
+	s=arc-20240116; t=1740400682; c=relaxed/simple;
+	bh=OIakarWoMeNm1+9A78XkiOJS7zdSHXLoTKBw4WTe1J0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Byuv91z6or9kXMnl0HAVaAg5Y/2SrHb5X7l40VTZqUYayZm3VkV64F7A1QPZI7GK7sRs6AcrTN8gBPlsWR7xc0jaocUkcdBxubQgXvj92z/8VJOb1Bwf0cJfwzlU2/366tD4PJxRzh/shyq2GAhEl1u3I9ue/sbKyoQYaBHotzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=FMfDW40Q; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uKgLDRaF"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43947a0919aso33920595e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 04:37:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740400659; x=1741005459; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9H3uAh8z39ZL705dy+lsEsP19JzvEAhzwdccc5XF6GE=;
-        b=uKgLDRaFeTDJTuspkyrwYAILcc8YKQs2gpN7lM99VorP5qjfmWARgTgNxkXKQgZXBI
-         HbKFXDtXwVTl/pDJMlIW12QOeEXZtoVLfIxH7Z6TmpPsEQgv9lkfQ4gFxacf5rsEdNS6
-         eXvFoNyqRd0cgv+yWV8Vp2FzGwVjYG6AI+gDszzwpPsF+TW9MaWeHjgf54IBd2FhOG3V
-         OOnjRje+OY2YvB2vQGfii7hq/18T7Thnn2ZvnEwWUczXEe5v6ZrfShbuN4FHlKiCyQxJ
-         ViIZ74Vlw76xw2YgXACOpdR9F0WZwsczeEk7g2jLjGD6X0XIWSU4RqlWuerGfA2Y/SDt
-         vsOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740400659; x=1741005459;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9H3uAh8z39ZL705dy+lsEsP19JzvEAhzwdccc5XF6GE=;
-        b=Rusfj+BikqfHnrcwMXQMWvQJuLLi5TIL5FLOZUUkFavtGJVIGCT985ZBYhgeLi+Lvq
-         stkYvtXk16MqjV1Pd1v11EZDL3yQVgTSzwK5g0Exff7X7/mGbpaR7rMB9JNaCVlPMJct
-         xmJjZHjQXG/4zgognjmeFluWdcsUrc9M+bFkQHqSTT0oQuKpXChSW0UDGWpz6OSBV+Vb
-         dIVMGP3ei6sXHYgWX9X7ikT7hTqZuWqmGEX6RyVw5Bn7dy2vSGY6cVAziAqGA4t/WhcJ
-         4dAHMqSWyfXyrHZVrvN9kpNOkC2Bp9iFaI8KLUvsahLwv2+PV3K09W2IR5kxPjKXDrsf
-         Z18Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVQB8hEXygRSclB5qh/JLMNoI45ZcPQE2KH9/KbKkgHBqnDzxD5XmqWkhB66qbqy/WTE5kR2jGEp9ZKOaA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKbq7qZ/ewzLPqS3T9p75OdGkgau+tbnjI03ALWulFsbOgqzzw
-	suIGCqKyWJisCJRzF3CcagAERRKnMBb9+FEMw3xmtsn0rOicrT1w0+WbWlVURc1Ivi80jmiPvpN
-	Mr2jn9Q4lIA==
-X-Google-Smtp-Source: AGHT+IG06C12mCh6DOgP0VK1wSYmbo1aaL50c6VFj4ZklSRSFPy/ILkeB2EyUg8/wsegGye3DKVKomcDzBRQ8g==
-X-Received: from wmsp10.prod.google.com ([2002:a05:600c:1d8a:b0:439:8664:577a])
- (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:4006:b0:38f:2856:7dc2 with SMTP id ffacd0b85a97d-38f6e95d596mr12371877f8f.18.1740400659184;
- Mon, 24 Feb 2025 04:37:39 -0800 (PST)
-Date: Mon, 24 Feb 2025 12:37:29 +0000
-In-Reply-To: <20250224-clarify-steal-v2-0-be24da656764@google.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="FMfDW40Q"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1740400674; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=77wyXoRkLV4oo9tYPoFRu8JPKiM3mw/dn6Qq/i2OJjA=;
+	b=FMfDW40QaulUxNpqFoUbxNnc4C1B4z5UTnXEndI3N0y+PwEyBnyrymgPamdJdI/Jwz1Ui1MsZ3kGX2qvY62WVCHqghGCRkJFoobfgT3ue97tlNKgDaNh2mPnV0ZEQ823yEYuV0l2xrYMs+0UkXa6Uev4lweFTP62cPhyf91Pt2M=
+Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WQ7msAv_1740400673 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Mon, 24 Feb 2025 20:37:54 +0800
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+To: linux-erofs@lists.ozlabs.org
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Gao Xiang <hsiangkao@linux.alibaba.com>
+Subject: [PATCH v2 2/2] erofs: clean up header parsing for ztailpacking and fragments
+Date: Mon, 24 Feb 2025 20:37:47 +0800
+Message-ID: <20250224123747.1387122-2-hsiangkao@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <20250224123747.1387122-1-hsiangkao@linux.alibaba.com>
+References: <20250224123747.1387122-1-hsiangkao@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250224-clarify-steal-v2-0-be24da656764@google.com>
-X-Mailer: b4 0.15-dev
-Message-ID: <20250224-clarify-steal-v2-2-be24da656764@google.com>
-Subject: [PATCH v2 2/2] mm/page_alloc: Clarify should_claim_block() commentary
-From: Brendan Jackman <jackmanb@google.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Mel Gorman <mgorman@techsingularity.net>, 
-	Michal Hocko <mhocko@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Brendan Jackman <jackmanb@google.com>, 
-	Yosry Ahmed <yosry.ahmed@linux.dev>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-There's lots of text here but it's a little hard to follow, this is an
-attempt to break it up and align its structure more closely with the
-code.
+Simplify the logic in z_erofs_fill_inode_lazy() by combining the
+handling of ztailpacking and fragments, as they are mutually exclusive.
 
-Reword the top-level function comment to just explain what question the
-function answers from the point of view of the caller.
+Note that `h->h_clusterbits >> Z_EROFS_FRAGMENT_INODE_BIT` is handled
+above, so no need to duplicate the check.
 
-Break up the internal logic into different sections that can have their
-own commentary describing why that part of the rationale is present.
-
-Note the page_groupy_by_mobility_disabled logic is not explained in the
-commentary, that is outside the scope of this patch...
-
-Signed-off-by: Brendan Jackman <jackmanb@google.com>
+Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 ---
- mm/page_alloc.c | 39 +++++++++++++++++++++++----------------
- 1 file changed, 23 insertions(+), 16 deletions(-)
+v2:
+ - rebase on the previous one;
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 50d6c503474fa4c1d21b5bf5dbfd3eb0eef2c415..547cdba789d8f3f04c5aab04ba7e74cb54c1261b 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1826,16 +1826,9 @@ static void change_pageblock_range(struct page *pageblock_page,
- }
- 
- /*
-- * When we are falling back to another migratetype during allocation, try to
-- * claim entire blocks to satisfy further allocations, instead of polluting
-- * multiple pageblocks.
-- *
-- * If we are stealing a relatively large buddy page, it is likely there will be
-- * more free pages in the pageblock, so try to claim the whole block. For
-- * reclaimable and unmovable allocations, we claim the whole block regardless of
-- * page size, as fragmentation caused by those allocations polluting movable
-- * pageblocks is worse than movable allocations stealing from unmovable and
-- * reclaimable pageblocks.
-+ * When we are falling back to another migratetype during allocation, should we
-+ * try to claim an entire block to satisfy further allocations, instead of
-+ * polluting multiple pageblocks?
-  */
- static bool should_claim_block(unsigned int order, int start_mt)
+ fs/erofs/zmap.c | 40 ++++++++++++++--------------------------
+ 1 file changed, 14 insertions(+), 26 deletions(-)
+
+diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
+index 9518d341cd82..dd120306a272 100644
+--- a/fs/erofs/zmap.c
++++ b/fs/erofs/zmap.c
+@@ -394,7 +394,8 @@ static int z_erofs_get_extent_decompressedlen(struct z_erofs_maprecorder *m)
+ static int z_erofs_do_map_blocks(struct inode *inode,
+ 				 struct erofs_map_blocks *map, int flags)
  {
-@@ -1849,6 +1842,26 @@ static bool should_claim_block(unsigned int order, int start_mt)
- 	if (order >= pageblock_order)
- 		return true;
+-	struct erofs_inode *const vi = EROFS_I(inode);
++	struct erofs_inode *vi = EROFS_I(inode);
++	struct super_block *sb = inode->i_sb;
+ 	bool fragment = vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER;
+ 	bool ztailpacking = vi->z_idata_size;
+ 	struct z_erofs_maprecorder m = {
+@@ -438,7 +439,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
+ 		}
+ 		/* m.lcn should be >= 1 if endoff < m.clusterofs */
+ 		if (!m.lcn) {
+-			erofs_err(inode->i_sb, "invalid logical cluster 0 at nid %llu",
++			erofs_err(sb, "invalid logical cluster 0 at nid %llu",
+ 				  vi->nid);
+ 			err = -EFSCORRUPTED;
+ 			goto unmap_out;
+@@ -454,7 +455,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
+ 			goto unmap_out;
+ 		break;
+ 	default:
+-		erofs_err(inode->i_sb, "unknown type %u @ offset %llu of nid %llu",
++		erofs_err(sb, "unknown type %u @ offset %llu of nid %llu",
+ 			  m.type, ofs, vi->nid);
+ 		err = -EOPNOTSUPP;
+ 		goto unmap_out;
+@@ -473,10 +474,16 @@ static int z_erofs_do_map_blocks(struct inode *inode,
+ 		map->m_flags |= EROFS_MAP_META;
+ 		map->m_pa = vi->z_fragmentoff;
+ 		map->m_plen = vi->z_idata_size;
++		if (erofs_blkoff(sb, map->m_pa) + map->m_plen > sb->s_blocksize) {
++			erofs_err(sb, "invalid tail-packing pclustersize %llu",
++				  map->m_plen);
++			err = -EFSCORRUPTED;
++			goto unmap_out;
++		}
+ 	} else if (fragment && m.lcn == vi->z_tailextent_headlcn) {
+ 		map->m_flags |= EROFS_MAP_FRAGMENT;
+ 	} else {
+-		map->m_pa = erofs_pos(inode->i_sb, m.pblk);
++		map->m_pa = erofs_pos(sb, m.pblk);
+ 		err = z_erofs_get_extent_compressedlen(&m, initial_lcn);
+ 		if (err)
+ 			goto unmap_out;
+@@ -495,7 +502,7 @@ static int z_erofs_do_map_blocks(struct inode *inode,
+ 		afmt = m.headtype == Z_EROFS_LCLUSTER_TYPE_HEAD2 ?
+ 			vi->z_algorithmtype[1] : vi->z_algorithmtype[0];
+ 		if (!(EROFS_I_SB(inode)->available_compr_algs & (1 << afmt))) {
+-			erofs_err(inode->i_sb, "inconsistent algorithmtype %u for nid %llu",
++			erofs_err(sb, "inconsistent algorithmtype %u for nid %llu",
+ 				  afmt, vi->nid);
+ 			err = -EFSCORRUPTED;
+ 			goto unmap_out;
+@@ -596,31 +603,12 @@ static int z_erofs_fill_inode_lazy(struct inode *inode)
+ 		goto out_put_metabuf;
+ 	}
  
-+	/*
-+	 * Above a certain threshold, always try to claim, as it's likely there
-+	 * will be more free pages in the pageblock.
-+	 */
-+	if (order >= pageblock_order / 2)
-+		return true;
-+
-+	/*
-+	 * Unmovable/reclaimable allocations would cause permanent
-+	 * fragmentations if they fell back to allocating from a movable block
-+	 * (polluting it), so we try to claim the whole block regardless of the
-+	 * allocation size. Later movable allocations can always steal from this
-+	 * block, which is less problematic.
-+	 */
-+	if (start_mt == MIGRATE_RECLAIMABLE || start_mt == MIGRATE_UNMOVABLE)
-+		return true;
-+
-+	if (page_group_by_mobility_disabled)
-+		return true;
-+
- 	/*
- 	 * Movable pages won't cause permanent fragmentation, so when you alloc
- 	 * small pages, you just need to temporarily steal unmovable or
-@@ -1857,12 +1870,6 @@ static bool should_claim_block(unsigned int order, int start_mt)
- 	 * and the next movable allocation may not need to steal.  Unmovable and
- 	 * reclaimable allocations need to actually claim the whole block.
- 	 */
--	if (order >= pageblock_order / 2 ||
--		start_mt == MIGRATE_RECLAIMABLE ||
--		start_mt == MIGRATE_UNMOVABLE ||
--		page_group_by_mobility_disabled)
--		return true;
+-	if (vi->z_idata_size) {
++	if (vi->z_idata_size ||
++	    (vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER)) {
+ 		struct erofs_map_blocks map = {
+ 			.buf = __EROFS_BUF_INITIALIZER
+ 		};
+ 
+-		err = z_erofs_do_map_blocks(inode, &map,
+-					    EROFS_GET_BLOCKS_FINDTAIL);
+-		erofs_put_metabuf(&map.buf);
 -
- 	return false;
- }
- 
-
+-		if (erofs_blkoff(sb, map.m_pa) + map.m_plen > sb->s_blocksize) {
+-			erofs_err(sb, "invalid tail-packing pclustersize %llu",
+-				  map.m_plen);
+-			err = -EFSCORRUPTED;
+-		}
+-		if (err < 0)
+-			goto out_put_metabuf;
+-	}
+-
+-	if (vi->z_advise & Z_EROFS_ADVISE_FRAGMENT_PCLUSTER &&
+-	    !(h->h_clusterbits >> Z_EROFS_FRAGMENT_INODE_BIT)) {
+-		struct erofs_map_blocks map = {
+-			.buf = __EROFS_BUF_INITIALIZER
+-		};
+-
+-		vi->z_fragmentoff = le32_to_cpu(h->h_fragmentoff);
+ 		err = z_erofs_do_map_blocks(inode, &map,
+ 					    EROFS_GET_BLOCKS_FINDTAIL);
+ 		erofs_put_metabuf(&map.buf);
 -- 
-2.48.1.601.g30ceb7b040-goog
+2.43.5
 
