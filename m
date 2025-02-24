@@ -1,140 +1,195 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428E5241CA6;
-	Mon, 24 Feb 2025 09:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07599241CA6;
+	Mon, 24 Feb 2025 09:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740391101; cv=none; b=f3FYzAbVj3AMMeuq3t1x/8hyWmQAAdEXFhpgoazs3aOhLwg1Bf5BdwsWSw5eMI8ZTfbmvd3dAoEUvPKLAWqQF8Lyb8CYoiSJCsOne59TFDpsYg+sgB2fZN4QjbOrBODCbP5Xg+1As8EjqKKF+NjxqUQxS0pBi054v6kqODKXbFw=
+	t=1740391129; cv=none; b=qIG7AI5gDE7jtAZN9+Tm/VMkhR5UYCIsZG0njnajUGMRAQvUrmyVr7GEjZeshKDFFBTgXbkHhMS9tUaLyxz46K6FpieRdDG9mrBaasSXadbK5YDwfZCD8Dp1KEXtLrvNRScUwmHgr5XcM9k38hhZ4OQIDogfvGRcB9fOluSFWuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740391101; c=relaxed/simple;
-	bh=nAiaU3xwjMDNRMLJw8qN9OXA1uMi4hAnYos+MNgxPWo=;
+	s=arc-20240116; t=1740391129; c=relaxed/simple;
+	bh=ZjDnXrksprqcdBpDIG/amfeXKgB6c4lJruai5qe5AhA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sdTgid5Ay+BMvRRjBZ19DYqZE/igxvPmFzU0u1VUBQoj/Gh2R1Hx4G8557L4Bg/agUNavO5PWLUNnHz1dW0vuJdevKrj7khRwYMR8hk7q29SK1160uZ/6L7PTrlteuIJuBrfV3xvl6pENq7KsPkftImCVCPEw0DWDbyKYsg8lVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gIwc1H79; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=kRezzpmoXdHAjcx5ptw32YSazg4kDJ0ZZ8GzFMwNqKjkYeaAw7BNnepEuGjxr+a+7KqNYdIor2KycJDuqcWke6ICuNTWk7c/aaVPLx5LUapAbf5ZfXeGN0R9qcH/Rb6P2/MLT7uPudfLhaRlDzOJ5dbTGa0Nw6g+O55MPLQvZXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PO1llj0k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gIwc1H79"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740391100; x=1771927100;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=nAiaU3xwjMDNRMLJw8qN9OXA1uMi4hAnYos+MNgxPWo=;
-  b=gIwc1H79NKR+8XApGQXGJ1bj0iBAsr0NFDkYg07gDhEEl9z6uhPz5aum
-   bCYJP89IgFpOslUS2xvO3cVuJ+IPTixG0kEpWS2Yb9+BsL7s9rIcb8sM0
-   bRLXHWy5UZYvJmGwvaaHzgPgOoOHJGVqOx3wAI7ky41xdRptEvEe1+GYH
-   8ECxINfXEmRnRKFc1/VQLzHoCepUWc+joC3nL8C7hY9Na+QKUDoL3LxD8
-   p7BzoFuWDZl7Ok+HazfjicX9f1GJzxSbTb41VbLX2sEl66I5N3frwvVEo
-   rI8kcsUuqQf1/hNvG/AvQKfQvWp7xJHdZmRt3oCBMARBEx2iz+6WNjv4D
-   Q==;
-X-CSE-ConnectionGUID: MNsXkAJ/T9KU9b+CUpDRzQ==
-X-CSE-MsgGUID: l2FIXTfFRRu4SBJjMnUlMg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="41349421"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="41349421"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 01:58:19 -0800
-X-CSE-ConnectionGUID: 11TMVs8TQuSz6IfVkUqtCg==
-X-CSE-MsgGUID: zRpSnxCBTH6o2zWgA+I+MQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,309,1732608000"; 
-   d="scan'208";a="116206670"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 01:58:11 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tmVDz-0000000Eequ-1e5o;
-	Mon, 24 Feb 2025 11:58:07 +0200
-Date: Mon, 24 Feb 2025 11:58:07 +0200
-From: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
-To: Aditya Garg <gargaditya08@live.com>
-Cc: "pmladek@suse.com" <pmladek@suse.com>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>,
-	"linux@rasmusvillemoes.dk" <linux@rasmusvillemoes.dk>,
-	"senozhatsky@chromium.org" <senozhatsky@chromium.org>,
-	"corbet@lwn.net" <corbet@lwn.net>,
-	"maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
-	"mripard@kernel.org" <mripard@kernel.org>,
-	"tzimmermann@suse.de" <tzimmermann@suse.de>,
-	"airlied@gmail.com" <airlied@gmail.com>,
-	"simona@ffwll.ch" <simona@ffwll.ch>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"apw@canonical.com" <apw@canonical.com>,
-	"joe@perches.com" <joe@perches.com>,
-	"dwaipayanray1@gmail.com" <dwaipayanray1@gmail.com>,
-	"lukas.bulwahn@gmail.com" <lukas.bulwahn@gmail.com>,
-	"sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
-	"christian.koenig@amd.com" <christian.koenig@amd.com>,
-	"kekrby@gmail.com" <kekrby@gmail.com>,
-	"admin@kodeit.net" <admin@kodeit.net>,
-	Orlando Chamberlain <orlandoch.dev@gmail.com>,
-	"evepolonium@gmail.com" <evepolonium@gmail.com>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-	Hector Martin <marcan@marcan.st>,
-	"linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-	"asahi@lists.linux.dev" <asahi@lists.linux.dev>,
-	Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>
-Subject: Re: [PATCH v2 2/3] lib/vsprintf: Add support for generic FOURCCs by
- extending %p4cc
-Message-ID: <Z7xCr4iPmIkPoWGC@smile.fi.intel.com>
-References: <716BCB0A-785B-463A-86C2-94BD66D5D22E@live.com>
- <C66F35BB-2ECC-4DB8-8154-DEC5177967ED@live.com>
- <6CB20172-906F-4D13-B5E4-100A9CF74F02@live.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PO1llj0k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30C03C4CED6;
+	Mon, 24 Feb 2025 09:58:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740391128;
+	bh=ZjDnXrksprqcdBpDIG/amfeXKgB6c4lJruai5qe5AhA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PO1llj0k12h5/Jb8CQuV57BkdgYfH/eqbVrzvtMdBv4G6bGDgxunu7xzsOu2NcAHI
+	 PlCedtu+UkUKI2UZXTaIRl0ltFlFDeBPxRC83CzYSEPFqd9bp3ovwjLYLSljJxTagn
+	 oQMHZa4qstKk4u3mvru+7XQSTjUiTQk13D5PzzBJChsWn2qBBphPqTK7QToFd0sa+8
+	 1ke1OxIH4CQChKZDNFzuPV765Og8okFL3psFARQzGAGcWXX7OWRgBsLkFUxf0X+hBS
+	 nkPPO3ctYZmqfgdFMDw2V+50D0ky4xivMPA1a1rP4V7OeKV3G3ikmsJPkHkS3frsB8
+	 HeGzCJ72wsshw==
+Date: Mon, 24 Feb 2025 20:28:43 +1030
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+	Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
+	Sandeep Dhavale <dhavale@google.com>
+Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH 4/8][next] erofs: Avoid -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <334f60e884cc0314ef98731e60a1b419e462e2d2.1739957534.git.gustavoars@kernel.org>
+References: <cover.1739957534.git.gustavoars@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6CB20172-906F-4D13-B5E4-100A9CF74F02@live.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <cover.1739957534.git.gustavoars@kernel.org>
 
-On Sat, Feb 22, 2025 at 03:46:03PM +0000, Aditya Garg wrote:
-> > On 20 Feb 2025, at 10:09 PM, Aditya Garg <gargaditya08@live.com> wrote:
-> > 
-> > %p4cc is designed for DRM/V4L2 FOURCCs with their specific quirks, but
-> > it's useful to be able to print generic 4-character codes formatted as
-> > an integer. Extend it to add format specifiers for printing generic
-> > 32-bit FOURCCs with various endian semantics:
-> > 
-> > %p4ch   Host-endian
-> > %p4cl Little-endian
-> > %p4cb Big-endian
-> > %p4cr Reverse-endian
-> > 
-> > The endianness determines how bytes are interpreted as a u32, and the
-> > FOURCC is then always printed MSByte-first (this is the opposite of
-> > V4L/DRM FOURCCs). This covers most practical cases, e.g. %p4cr would
-> > allow printing LSByte-first FOURCCs stored in host endian order
-> > (other than the hex form being in character order, not the integer
-> > value).
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-...
+Change the type of the middle struct member currently causing trouble from
+`struct bio` to `struct bio_hdr`.
 
-> BTW, after looking at the comments by Martin [1], its actually better to use
-> existing specifiers for the appletbdrm driver.  The driver needs the host
-> endian as proposed by this patch, so instead of that, we can use %.4s
+We also use `container_of()` whenever we need to retrieve a pointer to
+the flexible structure `struct bio`, through which we can access the
+flexible-array member in it, if necessary.
 
-Do you mean this patch will not be needed? If this a case, that would be the
-best solution.
+With these changes fix the following warnings:
+fs/erofs/fileio.c:10:20: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+fs/erofs/fscache.c:179:20: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-> [1]: https://lore.kernel.org/asahi/E753B391-D2CB-4213-AF82-678ADD5A7644@cutebit.org/
-> 
-> Alternatively we could add a host endian only. Other endians are not really
-> used by any driver AFAIK. The host endian is being used by appletbdrm and
-> Asahi Linux’ SMC driver only.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ fs/erofs/fileio.c  | 25 +++++++++++++++----------
+ fs/erofs/fscache.c | 13 +++++++------
+ 2 files changed, 22 insertions(+), 16 deletions(-)
 
+diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
+index 0ffd1c63beeb..3080963caf78 100644
+--- a/fs/erofs/fileio.c
++++ b/fs/erofs/fileio.c
+@@ -7,7 +7,7 @@
+ 
+ struct erofs_fileio_rq {
+ 	struct bio_vec bvecs[16];
+-	struct bio bio;
++	struct bio_hdr bio;
+ 	struct kiocb iocb;
+ 	struct super_block *sb;
+ };
+@@ -26,20 +26,21 @@ static void erofs_fileio_ki_complete(struct kiocb *iocb, long ret)
+ 
+ 	if (ret > 0) {
+ 		if (ret != rq->bio.bi_iter.bi_size) {
+-			bio_advance(&rq->bio, ret);
+-			zero_fill_bio(&rq->bio);
++			bio_advance(container_of(&rq->bio, struct bio, __hdr),
++				    ret);
++			zero_fill_bio(container_of(&rq->bio, struct bio, __hdr));
+ 		}
+ 		ret = 0;
+ 	}
+ 	if (rq->bio.bi_end_io) {
+-		rq->bio.bi_end_io(&rq->bio);
++		rq->bio.bi_end_io(container_of(&rq->bio, struct bio, __hdr));
+ 	} else {
+-		bio_for_each_folio_all(fi, &rq->bio) {
++		bio_for_each_folio_all(fi, container_of(&rq->bio, struct bio, __hdr)) {
+ 			DBG_BUGON(folio_test_uptodate(fi.folio));
+ 			erofs_onlinefolio_end(fi.folio, ret);
+ 		}
+ 	}
+-	bio_uninit(&rq->bio);
++	bio_uninit(container_of(&rq->bio, struct bio, __hdr));
+ 	kfree(rq);
+ }
+ 
+@@ -68,7 +69,8 @@ static struct erofs_fileio_rq *erofs_fileio_rq_alloc(struct erofs_map_dev *mdev)
+ 	struct erofs_fileio_rq *rq = kzalloc(sizeof(*rq),
+ 					     GFP_KERNEL | __GFP_NOFAIL);
+ 
+-	bio_init(&rq->bio, NULL, rq->bvecs, ARRAY_SIZE(rq->bvecs), REQ_OP_READ);
++	bio_init(container_of(&rq->bio, struct bio, __hdr), NULL, rq->bvecs,
++		 ARRAY_SIZE(rq->bvecs), REQ_OP_READ);
+ 	rq->iocb.ki_filp = mdev->m_dif->file;
+ 	rq->sb = mdev->m_sb;
+ 	return rq;
+@@ -76,12 +78,13 @@ static struct erofs_fileio_rq *erofs_fileio_rq_alloc(struct erofs_map_dev *mdev)
+ 
+ struct bio *erofs_fileio_bio_alloc(struct erofs_map_dev *mdev)
+ {
+-	return &erofs_fileio_rq_alloc(mdev)->bio;
++	return container_of(&erofs_fileio_rq_alloc(mdev)->bio, struct bio, __hdr);
+ }
+ 
+ void erofs_fileio_submit_bio(struct bio *bio)
+ {
+-	return erofs_fileio_rq_submit(container_of(bio, struct erofs_fileio_rq,
++	return erofs_fileio_rq_submit(container_of(&bio->__hdr,
++						   struct erofs_fileio_rq,
+ 						   bio));
+ }
+ 
+@@ -150,7 +153,9 @@ static int erofs_fileio_scan_folio(struct erofs_fileio *io, struct folio *folio)
+ 			}
+ 			if (!attached++)
+ 				erofs_onlinefolio_split(folio);
+-			if (!bio_add_folio(&io->rq->bio, folio, len, cur))
++			if (!bio_add_folio(container_of(&io->rq->bio,
++							struct bio, __hdr),
++					   folio, len, cur))
+ 				goto io_retry;
+ 			io->dev.m_pa += len;
+ 		}
+diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+index ce3d8737df85..719ec96c8f22 100644
+--- a/fs/erofs/fscache.c
++++ b/fs/erofs/fscache.c
+@@ -176,7 +176,7 @@ static int erofs_fscache_read_io_async(struct fscache_cookie *cookie,
+ 
+ struct erofs_fscache_bio {
+ 	struct erofs_fscache_io io;
+-	struct bio bio;		/* w/o bdev to share bio_add_page/endio() */
++	struct bio_hdr bio;	/* w/o bdev to share bio_add_page/endio() */
+ 	struct bio_vec bvecs[BIO_MAX_VECS];
+ };
+ 
+@@ -187,7 +187,7 @@ static void erofs_fscache_bio_endio(void *priv,
+ 
+ 	if (IS_ERR_VALUE(transferred_or_error))
+ 		io->bio.bi_status = errno_to_blk_status(transferred_or_error);
+-	io->bio.bi_end_io(&io->bio);
++	io->bio.bi_end_io(container_of(&io->bio, struct bio, __hdr));
+ 	BUILD_BUG_ON(offsetof(struct erofs_fscache_bio, io) != 0);
+ 	erofs_fscache_io_put(&io->io);
+ }
+@@ -197,17 +197,18 @@ struct bio *erofs_fscache_bio_alloc(struct erofs_map_dev *mdev)
+ 	struct erofs_fscache_bio *io;
+ 
+ 	io = kmalloc(sizeof(*io), GFP_KERNEL | __GFP_NOFAIL);
+-	bio_init(&io->bio, NULL, io->bvecs, BIO_MAX_VECS, REQ_OP_READ);
++	bio_init(container_of(&io->bio, struct bio, __hdr), NULL, io->bvecs,
++		 BIO_MAX_VECS, REQ_OP_READ);
+ 	io->io.private = mdev->m_dif->fscache->cookie;
+ 	io->io.end_io = erofs_fscache_bio_endio;
+ 	refcount_set(&io->io.ref, 1);
+-	return &io->bio;
++	return container_of(&io->bio, struct bio, __hdr);
+ }
+ 
+ void erofs_fscache_submit_bio(struct bio *bio)
+ {
+-	struct erofs_fscache_bio *io = container_of(bio,
+-			struct erofs_fscache_bio, bio);
++	struct erofs_fscache_bio *io =
++		container_of(&bio->__hdr, struct erofs_fscache_bio, bio);
+ 	int ret;
+ 
+ 	iov_iter_bvec(&io->io.iter, ITER_DEST, io->bvecs, bio->bi_vcnt,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.0
 
