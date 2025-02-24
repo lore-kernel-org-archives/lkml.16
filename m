@@ -1,98 +1,176 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4D523BD11;
-	Mon, 24 Feb 2025 11:21:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8596A25486A;
+	Mon, 24 Feb 2025 11:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740396076; cv=none; b=GnRg66eWWrsBe2eB2WnwjxK7rkfn74Ui+WAghPPqkyxS5S5jlULr4/sjdADIrrCrEYcugJMW35YZ23bX/bEO39ed7LEgD9k5ckCPlE5O3MZ9jrTYsj80VPS/vO8f/1PPw0B+uWLz/fmZ18bbh+FMQt95jkZvmWulLbFe89C5OTU=
+	t=1740396079; cv=none; b=eWSEL0ASEIX2pQTt0twmr+HoLcrA45ZhJ28KFG5jnyWF4OEiEKwyglfw1h/cR0uOM5EDh6R5XBqb8T/rsvCqhoUBs0++v+uam3g8GQw77vj1KiaEzJrNSmMBFg6zVZeO9HpKOe9QZJdtJnodMh49vKjF6yx6kTUGszU2hnAEp9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740396076; c=relaxed/simple;
-	bh=UR/V5CaH1smA/Ep6TuqVVJoHIRliBWAMQqudackZJOo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ePi6u8F0r58Y/JwaSEtRVCIT2MIDIq/y+/NscSKbyaCjhbcOMyReXe+UfepyIy//RJ9aoLZYaR8qcEQ/VL1F755sZE/72jbABhnqyefp0EvA7erBCQHnVkpe536rWsRjsSHqHqY2Fddfc0etfoQCDXyIV9jAxGI9IDjZGtwQMIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=k3VDnIYo; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1740396079; c=relaxed/simple;
+	bh=toydJgH2nmF7gMH3/64+M1PbX4qPotu5zduetlLV84s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=W/jXdym5X9WsEUkFnRTOr02YlFcqHrfUHRsJg7nXU/rYHneroE5TItWunOsWz7O1lR9Ka6voKOrl8mQafDHrDySWJ4JK6dEjPDRibX3UJYNXDI4d1te0uzy5QMp44MyysCh1/nWH3CKOTDxADWLFFjGHFdCdR7MTSD7xztWWYRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hGRcgeRo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="k3VDnIYo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xry111.site;
-	s=default; t=1740396074;
-	bh=x+JZ0bZh6o31FzL/bWs2L2enB0qu5OHjl9gf7Goj11o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=k3VDnIYouVr0xuGpeuELmGYMzdWobg9FRDuC7C9Ezp9heZVLghfX8FkRtu2F7dDHT
-	 Kkkq7HbrnLxWRaK/eMZiQsJyjeG6FRUei2AEg/LnV7gQrdulTn+JnyRv/tFHXSOAk8
-	 Dl81KF6d1PcEAr5VfpGYtWbDbzhEzWuGwV+nG0ho=
-Received: from stargazer.. (unknown [IPv6:240e:358:1110:6100:dc73:854d:832e:7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 44E931A40EF;
-	Mon, 24 Feb 2025 06:21:08 -0500 (EST)
-From: Xi Ruoyao <xry111@xry111.site>
-To: Guo Ren <guoren@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Fangrui Song <i@maskray.me>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>,
-	linux-csky@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Xi Ruoyao <xry111@xry111.site>
-Subject: [PATCH 3/3] LoongArch: vDSO: Remove --hash-style=sysv
-Date: Mon, 24 Feb 2025 19:20:42 +0800
-Message-ID: <20250224112042.60282-4-xry111@xry111.site>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250224112042.60282-1-xry111@xry111.site>
-References: <20250224112042.60282-1-xry111@xry111.site>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hGRcgeRo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5A3DC4CEE8;
+	Mon, 24 Feb 2025 11:21:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740396078;
+	bh=toydJgH2nmF7gMH3/64+M1PbX4qPotu5zduetlLV84s=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hGRcgeRo1SaxSIxq//YYD4fn4pTLuY7BpeqJNWM/Fnlr9/87SrKJUvRBg/RKbydo0
+	 iTfxtFZKvIuskZkl487DlnoP7azt4UQloXCb2sUomP6NAH0IRuqRPfNN/HK/RsyH25
+	 cW408ycm/ISfL20aH3iL5LUhsKTME5sGALq2M4ufjW1YG3/K8b/Mt6xqyZ6TQFcYEN
+	 QpRvOhhY27kKlEwjNhzyN24DUVB2mR+wQ1HBXgg7SwQnXNc2ohzp4dNoQ7kTa4s0sx
+	 ixWETuwGx60EB0f5ZTM4SLB7SRsPBOBtxZbbV7m8FtNtZB1kZY+E9/raT7RX0/CBWT
+	 GYgxP4xDL5S/A==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	Mark Brown <broonie@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	lgirdwood@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	prabhakar.mahadev-lad.rj@bp.renesas.com,
+	krzysztof.kozlowski@linaro.org,
+	u.kleine-koenig@baylibre.com,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 1/4] ASoC: rsnd: don't indicate warning on rsnd_kctrl_accept_runtime()
+Date: Mon, 24 Feb 2025 06:21:09 -0500
+Message-Id: <20250224112115.2215137-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.4.290
 Content-Transfer-Encoding: 8bit
 
-glibc added support for .gnu.hash in 2006 and .hash has been obsoleted
-far before the first LoongArch CPU was taped.  Using
---hash-style=sysv might imply unaddressed issues and confuse readers.
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-Some architectures use an explicit --hash-style=both here, but
-DT_GNU_HASH has already been supported by Glibc and Musl and become the
-de-facto standard of the distros when the first LoongArch CPU was taped.
-So DT_HASH seems just wasting storage space for LoongArch.
+[ Upstream commit c3fc002b206c6c83d1e3702b979733002ba6fb2c ]
 
-Just drop the option and rely on the linker default, which is likely
-"gnu" (Arch, Debian, Gentoo, LFS) on all LoongArch distros (confirmed on
-Arch, Debian, Gentoo, and LFS; AOSC now defaults to "both" but it seems
-just an oversight).
+rsnd_kctrl_accept_runtime() (1) is used for runtime convert rate
+(= Synchronous SRC Mode). Now, rsnd driver has 2 kctrls for it
 
-Following the logic of commit 48f6430505c0
-("arm64/vdso: Remove --hash-style=sysv").
+(A):	"SRC Out Rate Switch"
+(B):	"SRC Out Rate"		// it calls (1)
 
-Link: https://github.com/AOSC-Dev/aosc-os-abbs/pull/9796
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+(A): can be called anytime
+(B): can be called only runtime, and will indicate warning if it was used
+   at non-runtime.
+
+To use runtime convert rate (= Synchronous SRC Mode), user might uses
+command in below order.
+
+(X):	> amixer set "SRC Out Rate" on
+	> aplay xxx.wav &
+(Y):	> amixer set "SRC Out Rate" 48010 // convert rate to 48010Hz
+
+(Y): calls B
+(X): calls both A and B.
+
+In this case, when user calls (X), it calls both (A) and (B), but it is not
+yet start running. So, (B) will indicate warning.
+
+This warning was added by commit b5c088689847 ("ASoC: rsnd: add warning
+message to rsnd_kctrl_accept_runtime()"), but the message sounds like the
+operation was not correct. Let's update warning message.
+
+The message is very SRC specific, implement it in src.c
+
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Link: https://patch.msgid.link/8734gt2qed.wl-kuninori.morimoto.gx@renesas.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/loongarch/vdso/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/sh/rcar/core.c | 14 --------------
+ sound/soc/sh/rcar/rsnd.h |  1 -
+ sound/soc/sh/rcar/src.c  | 18 +++++++++++++++++-
+ 3 files changed, 17 insertions(+), 16 deletions(-)
 
-diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
-index fdde1bcd4e26..abaf87c58f9d 100644
---- a/arch/loongarch/vdso/Makefile
-+++ b/arch/loongarch/vdso/Makefile
-@@ -37,7 +37,7 @@ endif
- # VDSO linker flags.
- ldflags-y := -Bsymbolic --no-undefined -soname=linux-vdso.so.1 \
- 	$(filter -E%,$(KBUILD_CFLAGS)) -nostdlib -shared \
--	--hash-style=sysv --build-id -T
-+	--build-id -T
+diff --git a/sound/soc/sh/rcar/core.c b/sound/soc/sh/rcar/core.c
+index df8d7b53b7600..1564809dff3c9 100644
+--- a/sound/soc/sh/rcar/core.c
++++ b/sound/soc/sh/rcar/core.c
+@@ -1612,20 +1612,6 @@ int rsnd_kctrl_accept_anytime(struct rsnd_dai_stream *io)
+ 	return 1;
+ }
  
- #
- # Shared build commands.
+-int rsnd_kctrl_accept_runtime(struct rsnd_dai_stream *io)
+-{
+-	struct snd_pcm_runtime *runtime = rsnd_io_to_runtime(io);
+-	struct rsnd_priv *priv = rsnd_io_to_priv(io);
+-	struct device *dev = rsnd_priv_to_dev(priv);
+-
+-	if (!runtime) {
+-		dev_warn(dev, "Can't update kctrl when idle\n");
+-		return 0;
+-	}
+-
+-	return 1;
+-}
+-
+ struct rsnd_kctrl_cfg *rsnd_kctrl_init_m(struct rsnd_kctrl_cfg_m *cfg)
+ {
+ 	cfg->cfg.val = cfg->val;
+diff --git a/sound/soc/sh/rcar/rsnd.h b/sound/soc/sh/rcar/rsnd.h
+index d47608ff5facc..ea7a9939981b5 100644
+--- a/sound/soc/sh/rcar/rsnd.h
++++ b/sound/soc/sh/rcar/rsnd.h
+@@ -737,7 +737,6 @@ struct rsnd_kctrl_cfg_s {
+ #define rsnd_kctrl_vals(x)	((x).val)	/* = (x).cfg.val[0] */
+ 
+ int rsnd_kctrl_accept_anytime(struct rsnd_dai_stream *io);
+-int rsnd_kctrl_accept_runtime(struct rsnd_dai_stream *io);
+ struct rsnd_kctrl_cfg *rsnd_kctrl_init_m(struct rsnd_kctrl_cfg_m *cfg);
+ struct rsnd_kctrl_cfg *rsnd_kctrl_init_s(struct rsnd_kctrl_cfg_s *cfg);
+ int rsnd_kctrl_new(struct rsnd_mod *mod,
+diff --git a/sound/soc/sh/rcar/src.c b/sound/soc/sh/rcar/src.c
+index fd52e26a3808b..577d50e2cf8c6 100644
+--- a/sound/soc/sh/rcar/src.c
++++ b/sound/soc/sh/rcar/src.c
+@@ -521,6 +521,22 @@ static irqreturn_t rsnd_src_interrupt(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
+ 
++static int rsnd_src_kctrl_accept_runtime(struct rsnd_dai_stream *io)
++{
++	struct snd_pcm_runtime *runtime = rsnd_io_to_runtime(io);
++
++	if (!runtime) {
++		struct rsnd_priv *priv = rsnd_io_to_priv(io);
++		struct device *dev = rsnd_priv_to_dev(priv);
++
++		dev_warn(dev, "\"SRC Out Rate\" can use during running\n");
++
++		return 0;
++	}
++
++	return 1;
++}
++
+ static int rsnd_src_probe_(struct rsnd_mod *mod,
+ 			   struct rsnd_dai_stream *io,
+ 			   struct rsnd_priv *priv)
+@@ -584,7 +600,7 @@ static int rsnd_src_pcm_new(struct rsnd_mod *mod,
+ 			       rsnd_io_is_play(io) ?
+ 			       "SRC Out Rate" :
+ 			       "SRC In Rate",
+-			       rsnd_kctrl_accept_runtime,
++			       rsnd_src_kctrl_accept_runtime,
+ 			       rsnd_src_set_convert_rate,
+ 			       &src->sync, 192000);
+ 
 -- 
-2.48.1
+2.39.5
 
