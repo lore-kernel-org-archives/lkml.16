@@ -1,158 +1,116 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 514A62661BA
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 17:45:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE58266597
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 17:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740419125; cv=none; b=FbmXulDnTFQDjL/fKCi3djLBdl/meB1u5nU0K2uIHqrIKcqUqAQyID/nmKN+XtceYWixBGtNrpAB64g4T5NYUDOC0pT2QFf8HEG4zmeTGUqa5pMuRFn+aHy2I0h4S+FOuEL8l2/GryJdOM/HWExlxCYPpqzKocBcKU35vR6xTYU=
+	t=1740419127; cv=none; b=YyE94Ah28BM7LiI5Y4ZjTiHDQj2RfhyFOW/Rli9rKEnf1/1E/5hhL67TcscJnF346YX8MTJfoqK6TY6lsSFxay3uE4gMAq9ABR0BmlXQtUk+zllHKbRRrWKQ8PUVIKsmh7+Ke6KQMH5xk/1WV/RUCozmVVu++NgZhEFYoQaXsJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740419125; c=relaxed/simple;
-	bh=GaZ3NHGqOhxDUVbP3LqTaXZumX7Y4lZDhfizHB7R2Kk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MPLLcJCepkq0VNYPOD4dfU9+i8tyLLSRvS0F+oUCYm514WYFmTewvTVGiwTd3cOxpaHP82KQxzx6a4LRilFTBwuG81ysqPTojiKUl20bLQ8Ec36MBpKHUd+w76ZxD8y/ngrAfyUC5rptE++ZFLMbOorr+YXw+CvAUcbWmyv/uPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IW7AmgjR; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1740419127; c=relaxed/simple;
+	bh=l5ZgNCYskiqkSoA/TUMNtF9JvJdQrEdFRT/eNswpPGQ=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=M2qMSuxBVZgtDOW0P4e5wm7frx8g8y/NTQusug6y1ayidV619Adk+COugQDWrnjoQXYZ8Q/sFwYrPrwdZJ4ox7SgQ7LUDjbrDs+od8WTJxQrd7tywaQLcHJ6HV3qMnveSt6OGMaQ2MN0ctMUrQrGaPYcWIdHMTpQ1SoxbJWYWhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P7AGe+dT; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IW7AmgjR"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2fc0ab102e2so1225580a91.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 09:45:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P7AGe+dT"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fc1c7c8396so9664303a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 09:45:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1740419122; x=1741023922; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pPTxJ+9VApNW1wIyXAimG9WYLhdSeBQuD2wh8D+5JoY=;
-        b=IW7AmgjRUZVUtX8De3//5x9KrWT+xqHCNPoU2YkjrQjBwYZu+RifIoaJxuGmoTQtg8
-         UzNJTuFt+9K+fFb0SsyrRrSHrOOSMDJafEfDFs11KuishRJa7NT5f9KjHtYkWPM9EMU8
-         sHnoZ9xpj1OKDf/eEBI68ks7w4g1Jh2bCgwdI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740419122; x=1741023922;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=google.com; s=20230601; t=1740419125; x=1741023925; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pPTxJ+9VApNW1wIyXAimG9WYLhdSeBQuD2wh8D+5JoY=;
-        b=BoHwkq6L6LhHaErbxr1bFtkDElsH1CEYjtINs9RyhU4MOfwJc8k075LikNH8h2JbZX
-         trv2aK1+R4iKqjh5MBjBQlsUWtUTwTdgafPjnPk0oy7BamgTaJ5ynSM/2YxA1kjLAq+Y
-         5Y1yO4ZBrlLUtu/30zXYZI61YWLIYHUfbKI2Vzkmfs8hf/EiLIzA9YDmuenjlRnW/tuP
-         6bx2unMBSEBSMML5RBK6s+QUyc0ZGLGD+kBNTywYQs+rluZwCipoYliGHrWQHpgR6snq
-         46Gsyp5i22fZty5FNz1Nga+HUP05aT9HplUWmLUaGOPacUD/Hs8JExBhjx2dl+kFLBCi
-         T6Dg==
-X-Gm-Message-State: AOJu0Yy1YvpdI68A58EjkvWJGoX0DIGPuLuze/Ju+tagOjn1WSkCL6Sj
-	QR5a76CE++NM6wRjoIENzEVgvaev7e659Grn7Kr7fR7SiGQXgRW2rS0EViihvw==
-X-Gm-Gg: ASbGncuTyxTrUw5Ky4LYuqz8pSKAHwwAXTL3+R7UsD1bN5DCmPLE0ZyX0l6jX00pw7T
-	xFmrjYigKtiG33NPFYv2Mt11zEx33C39R7M6HW6WNQ8Uij85PT70cuY19BKGirsbwNUdcECYIgg
-	A/cs/LMuJ6YCkHFSmUVl5JLNMNg/MRoN13cKsZVlaQxMJJvHDWI6TjBdEEkkMDE0OyrA9jf8sQy
-	fBcY6DAyDVMy/j1Zv2nY7hugjLqpLPIxtNxwncTuJea2BmhgLc4KrtmvheVttwTEwKqNNiI++w6
-	0a0kYUeuHXIAL1uTzzoUFwpfsL1yUThOPNfGwxoSeGFAM+44IM4sHX1Xmn6z
-X-Google-Smtp-Source: AGHT+IHP5BJhLkG1y5WlyMonne7HfrmaKX102f8M0T9GVc1W+S/OC3k6B6HWY8ssc4OyfR7EtUf+nA==
-X-Received: by 2002:a17:90b:3848:b0:2ee:cbc9:d50b with SMTP id 98e67ed59e1d1-2fce7aef973mr9370465a91.4.1740419121838;
-        Mon, 24 Feb 2025 09:45:21 -0800 (PST)
-Received: from localhost (201.59.83.34.bc.googleusercontent.com. [34.83.59.201])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-2fceb02d9b4sm7708790a91.6.2025.02.24.09.45.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2025 09:45:21 -0800 (PST)
-From: jeffxu@chromium.org
-To: akpm@linux-foundation.org,
-	keescook@chromium.org,
-	jannh@google.com,
-	torvalds@linux-foundation.org,
-	vbabka@suse.cz,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@Oracle.com,
-	adhemerval.zanella@linaro.org,
-	oleg@redhat.com,
-	avagin@gmail.com,
-	benjamin@sipsolutions.net
-Cc: linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	linux-mm@kvack.org,
-	jorgelo@chromium.org,
-	sroettger@google.com,
-	hch@lst.de,
-	ojeda@kernel.org,
-	thomas.weissschuh@linutronix.de,
-	adobriyan@gmail.com,
-	johannes@sipsolutions.net,
-	pedro.falcato@gmail.com,
-	hca@linux.ibm.com,
-	willy@infradead.org,
-	anna-maria@linutronix.de,
-	mark.rutland@arm.com,
-	linus.walleij@linaro.org,
-	Jason@zx2c4.com,
-	deller@gmx.de,
-	rdunlap@infradead.org,
-	davem@davemloft.net,
-	peterx@redhat.com,
-	f.fainelli@gmail.com,
-	gerg@kernel.org,
-	dave.hansen@linux.intel.com,
-	mingo@kernel.org,
-	ardb@kernel.org,
-	mhocko@suse.com,
-	42.hyeyoo@gmail.com,
-	peterz@infradead.org,
-	ardb@google.com,
-	enh@google.com,
-	rientjes@google.com,
-	groeck@chromium.org,
-	mpe@ellerman.id.au,
-	aleksandr.mikhalitsyn@canonical.com,
-	mike.rapoport@gmail.com,
-	Jeff Xu <jeffxu@chromium.org>
-Subject: [PATCH v6 6/7] mseal, system mappings: uprobe mapping
-Date: Mon, 24 Feb 2025 17:45:12 +0000
-Message-ID: <20250224174513.3600914-7-jeffxu@google.com>
-X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
-In-Reply-To: <20250224174513.3600914-1-jeffxu@google.com>
-References: <20250224174513.3600914-1-jeffxu@google.com>
+        bh=XWA+FxxVK+hkRyqbtAFCYtZ9HKJOeSYLUKlQGx7IIeQ=;
+        b=P7AGe+dTHSHzj/9XHZuQHEd45MkDhBFBfB7Kl/4TLJSf4s/l8k3nxS2h+1CxRjRn2H
+         NL4iLV+4d8gbhg+VNGdsS6UDiRBgDAPBV1dN5yyb3OmyhmhrSH5AzmAYsGBpeE/TZCea
+         hgkHfPwE4Ne/uYl82eYx3Xa2SedS8x3JG+p9UtP3RBIkbI8JH09CCUSGU9DEKfiO/PWk
+         30TVvNX0RjUbUkAqiHiRKIduL3BKOX8eR8c/VsrxJRU2pPMFB9nao8sv9I9N21ytznu5
+         PWecxle8UxDoR2MpWBA5Y6Iuezl3NF/Ef2MN3VX0EGqk7775TriHAhQPPfaHTH8CcZs2
+         9Zug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740419125; x=1741023925;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XWA+FxxVK+hkRyqbtAFCYtZ9HKJOeSYLUKlQGx7IIeQ=;
+        b=TNGf4Dn4gzt975CTt0HgRQyDCCILYhI/HatYlVc8CalIkS9KBjZX3Fqs7Juoy8aRpB
+         VzHekAVNys/mIAaoH1+KXffgdz1RNoY2p0ZrDbwzakegcJJszZVcCahsUzR4IpGs6xqj
+         BM2MIPIf3m9Co6tj4QmbbhHj2XAh7DP6CBVwUQ+gkzLpVgH8qzVkiBnyEaWGhtqMzVJH
+         aIU9Is1G/nWyIfwEVLEiDk7qFZLcjER7JmkfXajZw0D7myQNYiw5JeKeKKmSou5g0pLf
+         V2kgG70/Xed8c6yy9JGy/9rg7ZztUMQyePDfdJWBZI4D4EBvTV/VO01SXSUHGt6U4AhN
+         fmlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJM/Ch66Nl4NiVj3GjuN9E5loeYcul5qsIYFvVFhefwgN8yT9AQ9mFmDIiq4F8R9UXlHf43mlfzADvh6Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqTQN0N7C5g07qcqPGTWCvFSJZk1+GJ/9UPgkjLXbUNUgLGaW+
+	mOqg2HwkL21mkLDyY+XqnRZ2PCcz5+aaeS8Y5p7guFS7pBqzsum/izgTwgVwqfIA5KgbldBFBzv
+	OyA==
+X-Google-Smtp-Source: AGHT+IFA/iTKhpk1su7Z2GppPGgcs4f0AD+MLglFgL17N3OCminF65QjQemKGEfNHudWQOxGA3dEOxpzkcI=
+X-Received: from pjyp8.prod.google.com ([2002:a17:90a:e708:b0:2fc:d2ac:1724])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5148:b0:2ee:c9b6:4c42
+ with SMTP id 98e67ed59e1d1-2fce86cf0ebmr25680660a91.16.1740419125015; Mon, 24
+ Feb 2025 09:45:25 -0800 (PST)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Mon, 24 Feb 2025 09:45:22 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
+Message-ID: <20250224174522.2363400-1-seanjc@google.com>
+Subject: [PATCH] KVM: SVM: Inject #GP if memory operand for INVPCID is non-canonical
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Babu Moger <babu.moger@amd.com>, Jim Mattson <jmattson@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Jeff Xu <jeffxu@chromium.org>
+Inject a #GP if the memory operand received by INVCPID is non-canonical.
+The APM clearly states that the intercept takes priority over all #GP
+checks except the CPL0 restriction.
 
-Provide support to mseal the uprobe mapping.
+Of course, that begs the question of how the CPU generates a linear
+address in the first place.  Tracing confirms that EXITINFO1 does hold a
+linear address, at least for 64-bit mode guests (hooray GS prefix).
+Unfortunately, the APM says absolutely nothing about the EXITINFO fields
+for INVPCID intercepts, so it's not at all clear what's supposed to
+happen.
 
-Unlike other system mappings, the uprobe mapping is not
-established during program startup. However, its lifetime is the same
-as the process's lifetime. It could be sealed from creation.
+Add a FIXME to call out that KVM still does the wrong thing for 32-bit
+guests, and if the stack segment is used for the memory operand.
 
-Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+Cc: Babu Moger <babu.moger@amd.com>
+Cc: Jim Mattson <jmattson@google.com>
+Fixes: 4407a797e941 ("KVM: SVM: Enable INVPCID feature on AMD")
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- kernel/events/uprobes.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/x86/kvm/svm/svm.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 2ca797cbe465..c23ca39b81ac 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1662,6 +1662,7 @@ static const struct vm_special_mapping xol_mapping = {
- static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
- {
- 	struct vm_area_struct *vma;
-+	unsigned long vm_flags;
- 	int ret;
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index b8aa0f36850f..63268d940ce1 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -3272,6 +3272,17 @@ static int invpcid_interception(struct kvm_vcpu *vcpu)
+ 	type = svm->vmcb->control.exit_info_2;
+ 	gva = svm->vmcb->control.exit_info_1;
  
- 	if (mmap_write_lock_killable(mm))
-@@ -1682,8 +1683,10 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
- 		}
- 	}
++	/*
++	 * FIXME: Perform segment checks for 32-bit mode, and inject #SS if the
++	 *        stack segment is used.  The intercept takes priority over all
++	 *        #GP checks except CPL>0, but somehow still generates a linear
++	 *        address?  The APM is sorely lacking.
++	 */
++	if (is_noncanonical_address(gva, vcpu, 0)) {
++		kvm_queue_exception_e(vcpu, GP_VECTOR, 0);
++		return 1;
++	}
++
+ 	return kvm_handle_invpcid(vcpu, type, gva);
+ }
  
-+	vm_flags = VM_EXEC|VM_MAYEXEC|VM_DONTCOPY|VM_IO;
-+	vm_flags |= MSEAL_SYSTEM_MAPPINGS_VM_FLAG;
- 	vma = _install_special_mapping(mm, area->vaddr, PAGE_SIZE,
--				VM_EXEC|VM_MAYEXEC|VM_DONTCOPY|VM_IO,
-+				vm_flags,
- 				&xol_mapping);
- 	if (IS_ERR(vma)) {
- 		ret = PTR_ERR(vma);
+
+base-commit: fed48e2967f402f561d80075a20c5c9e16866e53
 -- 
-2.48.1.601.g30ceb7b040-goog
+2.48.1.658.g4767266eb4-goog
 
