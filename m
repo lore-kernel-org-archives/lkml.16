@@ -1,70 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D227CF16;
-	Mon, 24 Feb 2025 14:10:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CC9D13BC26;
+	Mon, 24 Feb 2025 14:11:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740406254; cv=none; b=gdJhZQf4RVs1LN4Ee83CAqZK7shVZgI9WtdxW8j9pfykMN5nopDJhId3/U8iEUuZKQ6oUrTwTJ9GeASe013MnyfHK93fM9yth14+BvOQ2Ku3ZLTqa6P2xoDN6OcmK8BLaCausP13v0iWWcu9LM93nLes/KysRSJTFMLZftdRpgs=
+	t=1740406289; cv=none; b=Fw4+fp/B7F/2bEh4Vtkq6e7eh2rpcnl1bQvR08MnEjIN5xESKDwqHSTLq4qnCubCEHLrXLJO4anQVYu8ch8rFfrnkfbnw0deu6bhOl2bcDfWvMIJbWNHuOaHT2wyZGkYz91yW5iVJ4YvKI2yqdXWdAdDY1SmV5qeb9BB7xGllnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740406254; c=relaxed/simple;
-	bh=GiP5euhQ7Tgb9tgg9gtkD++luXm6ukZAr5cbuUIaBl4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i2wTTwOSxZbUe1bCtM72rOQ6j0pdsuPRnim/WXvYlgXfr4l+GmwUikGDoUmyZCx99R9jS3fazNMEPc/h8hG8BO4LnAlnWmt3zX/Hksu0HzX30EU/SdNjxikpYXUvpTyF/ik/e3KAoj/4e+53wv9/PnuaMTseUewFRF7R/E7fpag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ugwrNakz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740406289; c=relaxed/simple;
+	bh=RQdVPYUPxuE56GoXKqcHw8DD6iWVMqD2pu1GTpiafhg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=j8wYsNz9tkEpqeTr0r/l/y/ELaRbmKf+m28jwMsBAV5EfOqvOg8yLoi2K/Ey7q/HgbNHtcY+7AhU8TiFMYa/RfEOXG7++PrexsxnecivGvbUKMoq/v7utxvVsvlaxPptk+9l0KHLp4Nq88QtFqR+oADh/+J6gve10hXnAF0yW84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k1QOofvF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ugwrNakz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D98FEC4CEE6;
-	Mon, 24 Feb 2025 14:10:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1740406254;
-	bh=GiP5euhQ7Tgb9tgg9gtkD++luXm6ukZAr5cbuUIaBl4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ugwrNakzuxN0YDO2FiNPGQxy/XA5Um9B+l/8jkMh3tcdyLLp23RT/7w9CG5T4KM1Z
-	 720iAxZGxjuRT4MfG+QqsGtho1BN2RlLMUge1wEfqNZdlXrn9KtTeFvRm2TUg0KnrR
-	 IYOHRNf/TF7TG9gKFo2sGF8YvqachVKKb9RQ1Ces=
-Date: Mon, 24 Feb 2025 15:10:51 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Wang Yugui <wangyugui@e16-tech.com>
-Cc: Tomas Glozar <tglozar@redhat.com>, linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org, torvalds@linux-foundation.org,
-	stable@vger.kernel.org, lwn@lwn.net, jslaby@suse.cz
-Subject: Re: Linux 6.6.78
-Message-ID: <2025022439-moisten-crave-b6a5@gregkh>
-References: <2025021711-elephant-decathlon-9b66@gregkh>
- <20250224182918.C75A.409509F4@e16-tech.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k1QOofvF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA91BC4CED6;
+	Mon, 24 Feb 2025 14:11:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740406289;
+	bh=RQdVPYUPxuE56GoXKqcHw8DD6iWVMqD2pu1GTpiafhg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=k1QOofvF8qjd2BhDzXY2lzFSfZlTU9nlFLKbhztRIolki5vp1ZsqoSpykZpnUqg4h
+	 Xm3rODsno22eUymgUI3L+5AHfYvAbGb4xZR0l5YTQ+lHi8BGw0OBZK/6fXnRq0Tzgc
+	 ZTmdprto+vVRrEbVylp27siCaZBgWkZfo/V8o+ulgS1jRC3y3rLyO8bnRklcB86KTi
+	 SmUq6V3UUhQqMx8wLv/LDC3jMR98zO+Lj8Teyi/o7kK4lIo0izD/fCQtoQqsRqyO4J
+	 qZv5pmWzlDsk6294meAG4ELObwdo4eA0Unk1VSiYHGmEHUKCIK0vDMFhuoNr4jpyFi
+	 CT7KwdiCTaBJg==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Frank van der Linden <fvdl@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	David Hildenbrand <david@redhat.com>,
+	Zi Yan <ziy@nvidia.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: [PATCH 1/2] mm, cma: fix 32-bit warning
+Date: Mon, 24 Feb 2025 15:07:35 +0100
+Message-Id: <20250224141120.1240534-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250224182918.C75A.409509F4@e16-tech.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 24, 2025 at 06:29:19PM +0800, Wang Yugui wrote:
-> Hi
-> 
-> > I'm announcing the release of the 6.6.78 kernel.
-> > 
-> > All users of the 6.6 kernel series must upgrade.
-> > 
-> > The updated 6.6.y git tree can be found at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-6.6.y
-> > and can be browsed at the normal kernel.org git web browser:
-> > 	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
-> > 
-> 
-> please revert these 2 patches.
-> because the struct member kernel_workload is yet not defined.
-> 
-> > Tomas Glozar (6):
-> >       rtla/timerlat_hist: Set OSNOISE_WORKLOAD for kernel threads
-> >       rtla/timerlat_top: Set OSNOISE_WORKLOAD for kernel threads
+From: Arnd Bergmann <arnd@arndb.de>
 
-Can you send a series of reverts for us to apply?
+clang warns about certain always-true conditions, like this one on 32-bit
+builds:
 
-thanks,
+mm/cma.c:420:13: error: result of comparison of constant 4294967296 with expression of type 'phys_addr_t' (aka 'unsigned int') is always true [-Werror,-Wtautological-constant-out-of-range-compare]
+  420 |                 if (start < SZ_4G)
+      |                     ~~~~~ ^ ~~~~~
 
-greg k-h
+Replace this one with an equivalent expression that does not cause a warning.
+
+Fixes: 4765deffa0f7 ("mm, cma: support multiple contiguous ranges, if requested")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ mm/cma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/cma.c b/mm/cma.c
+index 34a4df29af72..ef0206c0f16d 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -417,7 +417,7 @@ int __init cma_declare_contiguous_multi(phys_addr_t total_size,
+ 	 * Create a list of ranges above 4G, largest range first.
+ 	 */
+ 	for_each_free_mem_range(i, nid, MEMBLOCK_NONE, &start, &end, NULL) {
+-		if (start < SZ_4G)
++		if (upper_32_bits(start) == 0)
+ 			continue;
+ 
+ 		start = ALIGN(start, align);
+-- 
+2.39.5
+
