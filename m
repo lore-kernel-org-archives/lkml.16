@@ -1,106 +1,177 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30142641D0
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 16:54:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59F7926159A
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 16:56:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740416090; cv=none; b=phhYqCLinju0MbqHrNPWHoOsSEsC6L80WdrQ2BvPO7FWcc4ugA/BC920HtrtZm2+oSCPJvyQcq/HYGMgfTr2lbOVFcwMkggGL79/YeUroSXWpETYVD47gCheksgQfub6hrFeKYXXvtXpY5X9dVctaMZnBKLc4uU0e6RJpaVL8II=
+	t=1740416174; cv=none; b=q9UrgG7QC7776Tp3Jzhg8uxBf/JrtCE4UsWR3idP2DjljftNhRktgrNZxBzRDnA3mrzrdsUkB3gr8V6SvSuqh0rFSq+Au2Kwv5Wrc25tX+9CAz80v6mEwATMbMQDjWqhrZQKUBzNy814o5CzqZSuoMrTs0So3y3J96WmqaiK0/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740416090; c=relaxed/simple;
-	bh=k08kYOr5amr0PMaAsg/vb1TyI0SEHxFgH5fDVqymMUA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=XPponZkoaX9+h8HfISd3uC9isYe2FNnq2so8DGwanAbwKGoeLTM77N4g/rpzMvfuApx7DhEWnYx6lI8zu5yMehpjRBSl3wpsXtxuZcF4SMc8ZwUU9X5FDegBd2q20JbGfB2CSV8jvdXrxsrAcFZWxhLBUn7MSuQ7gSk4B1udE68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MMbXH3+4; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1740416174; c=relaxed/simple;
+	bh=VmpdZSRRUc/hbRQ4rkKLLuRh8r6J0srT0ICzqEnE21Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=R+tbuL7/DTDnNbn+KoFHFK/LKkudNPWIFH+Zm5g2uDDOIwsnxwtDfrMzW6BM9O9jBgPJVJCu2DAzto9ohHrzuntMRdcyDMCHPYto9fiKKZh3nlG+FUtpaA3fdlF2I6u095CrTwJIVPc1RTLF01x8iuBOiatUOGy4sS9U40DkWFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cha1gSw3; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MMbXH3+4"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fc4dc34291so8902076a91.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 08:54:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740416088; x=1741020888; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=daGjRlPn538a7Mhk1b9p32Ju5z76xxGZiL/mJoi1gQY=;
-        b=MMbXH3+4Cd25m4zUu8rlIwOsLWg1shCbPrnLq7G9j0EJ2Bc9IZMOSCBG8BlfoOxBrc
-         RBV1JQxM+r8t2kq6c9yHhbBt7en12r+NqFt/sliGytUKFvcuKr7WdzGbzjlnsE8o1Dog
-         pQ3fUYztFjPKNAbuCbD9ippC3aXN2E9ZFnzSOiD6iJMtH1rvErpSsHaKWHeqAGIAuGpB
-         osgTa1EdELifo5ANHs+FJMz+azHYJ56ziUVY+53BRApfJdcpRXU/lcmngpZOVFr14qjw
-         4EpZKb4ZoLoTGhdZCz/V8jM5L4cmexo2snduVTGAwzslRdyay+/2OBLwQjeyfOTStEFV
-         37Sg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cha1gSw3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740416171;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8Yy4w/XZlsv8uxY4mojETBma8CfgELpSYNnd4DKCaPQ=;
+	b=cha1gSw3Kiv8Yl+3JboraN1PwPJ2OlR6kRiZz4R8DoHXA8GuLUBzxxGnbEintqA7onK5zB
+	y7jczqnG/Qhmqr8IQ0Vi1PpCqE1GWcJsRd7uBY5sRlu6rohkizUhGH8A72pfqfI0JihEw4
+	CuAnDbV0iRbFTEsTDzPGtC5/Q1oiK6c=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-606-lT5u7ZiNNJe_VyYC6djmTw-1; Mon, 24 Feb 2025 11:56:10 -0500
+X-MC-Unique: lT5u7ZiNNJe_VyYC6djmTw-1
+X-Mimecast-MFC-AGG-ID: lT5u7ZiNNJe_VyYC6djmTw_1740416168
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43945f32e2dso40222405e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 08:56:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740416088; x=1741020888;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=daGjRlPn538a7Mhk1b9p32Ju5z76xxGZiL/mJoi1gQY=;
-        b=C1Kp7BTwS1qSdgxdpHMnJS3pmxDsodQlXN9hwKfdvvTRKL8sRNxVz3t4Wn6x5ITbnd
-         xtTz8+lqCy2DOG4svkF3EG+1AAfsQbVL45OW2jZPoR4tDOBm88cKQ0tHDvHAg5hpg7t0
-         Yl7Gmou8HRPXOFefU8AMghp2OtTfhnb2vkCTL7enLAfo7hHliIQb7jZSRnJdkag3/KO/
-         DxKf7rWhgU+YHywomdyCPdl3hQs0m+eUpPDiK4Qojzoppj6D++CcUtmS/BxyRadUEMmX
-         uzwQm7ev8ZdJRQMUe73g0VQ5iF3gbfNmIchd8jjjn6H3IKLNq/O7VJqjIBRNOMXKbZEp
-         crWg==
-X-Forwarded-Encrypted: i=1; AJvYcCVoMsd/1hApAg7n7Y+a00wflNQITV4UTbEACeYadDrgxXA9LFgExbwJOfnoiXySogIviFkQTg9ACuqeLRI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyeOYXieHkLIvl3QwnEi8h8MkE8WM0GeS1EUV4L9EfUlwFBKOGW
-	lwmK6vUyIU2UeVVQWxftdw3chiCZ5RCc90kIeCOf3T0H/RpaGVw09ETa98u52BT9Z97j1bmH7y7
-	UbA==
-X-Google-Smtp-Source: AGHT+IH+KEvQ9vCv7mHp7B4rZulwnRTcTJdx+Vfa7nofNtJtLF+U/LGwZGdzx9zvN5HOlsBR7jE4qNXI9oA=
-X-Received: from pjbdb16.prod.google.com ([2002:a17:90a:d650:b0:2fa:1b0c:4150])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:17cd:b0:2f9:c139:b61f
- with SMTP id 98e67ed59e1d1-2fce78a3812mr27531134a91.14.1740416088081; Mon, 24
- Feb 2025 08:54:48 -0800 (PST)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Mon, 24 Feb 2025 08:54:42 -0800
-In-Reply-To: <20250224165442.2338294-1-seanjc@google.com>
+        d=1e100.net; s=20230601; t=1740416168; x=1741020968;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8Yy4w/XZlsv8uxY4mojETBma8CfgELpSYNnd4DKCaPQ=;
+        b=YAcgd9CU138lnoxPKqBwgKoCeYenqxbPJtYpdqvkYS317FiHhEf/rXV524gC3MNxDp
+         Of5puFS/XEzIkwzLRvaY/5mCvCHzcn5He1xoUWZ7/ayskypJWyqwyQFIYmf2/IiXbana
+         WDQVFYWwTZurvAEq+lRZtzf8LJiPRIDvrOhuAtVckBopdmLZvh9uIO8+yIOCT2PlF6Lz
+         zQHP2BzFBRFMGlqSkXb3wLVyXUNnAcpDL+NN6WH+Tnmv3vGOiTPa6Ci+Z7N990FCBoZL
+         NB3Tyspn59CA5bYWJwRBfjwKgPrZ+XrDvOMbl4XgaIAlS8STlWUuURsk5aaBNSSNsz+T
+         u53A==
+X-Gm-Message-State: AOJu0YwefqRfhuJF3VTl8HSv/oHwpysa8JbkTq0VvrsG167krbd5t57Y
+	E3fPnW8r4gfVvBqfyfRpBczHCTjiNjMF5YwCPLby2mE2SXg58UzwXQ5/H0mdOwNBHmhYOGTRAH8
+	5wdRY6Ge+Fp1GD/gorfpQgvhH9R32LAyK4H4y9Q7+mb0UPkbteLzaqPaGmouubUZCkkfOLRbOcg
+	rYayWPJu7AohctLhInCf7R6D5lFwUkH6lj7DvleClyjugF
+X-Gm-Gg: ASbGncsJ+j4FeypIUoq6oIeRcNXWW81spZpHmRBIuZBYOtsGvL3K6HShwL66/JUgers
+	Eqvsfrs5HWuhzBPcP6r25UFhDrtB7wlzV91nl0RY5YNouMWuixWckf8Gl9qrHebMH5KcSvc879z
+	rPX+biE10AOyl9I8B8631WFHCbvaiNyc5tfm/mEIMOPfy4gaHepG3+O2FNb4Fv9PMVEAgFetqI/
+	jkvK5owAYr4SNBYfoio2aBPyJH5aTTQeAqm0oIjCf20eqfzjuZpLYKNd0ftIUWmgbi/7LDCxE6q
+	bpFmobVE2qoVS2apSYIv3Akb2olBp2DFdn3qLL96Bw==
+X-Received: by 2002:a05:6000:1ac7:b0:38f:2a99:b377 with SMTP id ffacd0b85a97d-38f6f0c4523mr13709717f8f.53.1740416167716;
+        Mon, 24 Feb 2025 08:56:07 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHrYsCtuTnI9EW4wn4ZrbygGJqAwQI73Wf+OvRO5jakiYr702W8tJwU3BfJXILKECpWzIC3lQ==
+X-Received: by 2002:a05:6000:1ac7:b0:38f:2a99:b377 with SMTP id ffacd0b85a97d-38f6f0c4523mr13709656f8f.53.1740416167205;
+        Mon, 24 Feb 2025 08:56:07 -0800 (PST)
+Received: from localhost (p4ff234b6.dip0.t-ipconnect.de. [79.242.52.182])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38f259d5e92sm32611493f8f.66.2025.02.24.08.56.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2025 08:56:06 -0800 (PST)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org,
+	cgroups@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-api@vger.kernel.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Tejun Heo <tj@kernel.org>,
+	Zefan Li <lizefan.x@bytedance.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Jann Horn <jannh@google.com>,
+	Lance Yang <ioworker0@gmail.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH v2 01/20] mm: factor out large folio handling from folio_order() into folio_large_order()
+Date: Mon, 24 Feb 2025 17:55:43 +0100
+Message-ID: <20250224165603.1434404-2-david@redhat.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250224165603.1434404-1-david@redhat.com>
+References: <20250224165603.1434404-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250224165442.2338294-1-seanjc@google.com>
-X-Mailer: git-send-email 2.48.1.601.g30ceb7b040-goog
-Message-ID: <20250224165442.2338294-3-seanjc@google.com>
-Subject: [PATCH v2 2/2] KVM: selftests: Assert that STI blocking isn't set
- after event injection
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Doug Covelli <doug.covelli@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Add an L1 (guest) assert to the nested exceptions test to verify that KVM
-doesn't put VMRUN in an STI shadow (AMD CPUs bleed the shadow into the
-guest's int_state if a #VMEXIT occurs before VMRUN fully completes).
+Let's factor it out into a simple helper function. This helper will
+also come in handy when working with code where we know that our
+folio is large.
 
-Add a similar assert to the VMX side as well, because why not.
+Maybe in the future we'll have the order readily available for small and
+large folios; in that case, folio_large_order() would simply translate to
+folio_order().
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
+Reviewed-by: Lance Yang <ioworker0@gmail.com>
+Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- tools/testing/selftests/kvm/x86/nested_exceptions_test.c | 2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/mm.h | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/x86/nested_exceptions_test.c b/tools/testing/selftests/kvm/x86/nested_exceptions_test.c
-index 3eb0313ffa39..3641a42934ac 100644
---- a/tools/testing/selftests/kvm/x86/nested_exceptions_test.c
-+++ b/tools/testing/selftests/kvm/x86/nested_exceptions_test.c
-@@ -85,6 +85,7 @@ static void svm_run_l2(struct svm_test_data *svm, void *l2_code, int vector,
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index d82feabbe44f8..d00214e22a174 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -1194,6 +1194,11 @@ struct inode;
  
- 	GUEST_ASSERT_EQ(ctrl->exit_code, (SVM_EXIT_EXCP_BASE + vector));
- 	GUEST_ASSERT_EQ(ctrl->exit_info_1, error_code);
-+	GUEST_ASSERT(!ctrl->int_state);
+ extern void prep_compound_page(struct page *page, unsigned int order);
+ 
++static inline unsigned int folio_large_order(const struct folio *folio)
++{
++	return folio->_flags_1 & 0xff;
++}
++
+ /*
+  * compound_order() can be called without holding a reference, which means
+  * that niceties like page_folio() don't work.  These callers should be
+@@ -1207,7 +1212,7 @@ static inline unsigned int compound_order(struct page *page)
+ 
+ 	if (!test_bit(PG_head, &folio->flags))
+ 		return 0;
+-	return folio->_flags_1 & 0xff;
++	return folio_large_order(folio);
  }
  
- static void l1_svm_code(struct svm_test_data *svm)
-@@ -122,6 +123,7 @@ static void vmx_run_l2(void *l2_code, int vector, uint32_t error_code)
- 	GUEST_ASSERT_EQ(vmreadz(VM_EXIT_REASON), EXIT_REASON_EXCEPTION_NMI);
- 	GUEST_ASSERT_EQ((vmreadz(VM_EXIT_INTR_INFO) & 0xff), vector);
- 	GUEST_ASSERT_EQ(vmreadz(VM_EXIT_INTR_ERROR_CODE), error_code);
-+	GUEST_ASSERT(!vmreadz(GUEST_INTERRUPTIBILITY_INFO));
+ /**
+@@ -1223,7 +1228,7 @@ static inline unsigned int folio_order(const struct folio *folio)
+ {
+ 	if (!folio_test_large(folio))
+ 		return 0;
+-	return folio->_flags_1 & 0xff;
++	return folio_large_order(folio);
  }
  
- static void l1_vmx_code(struct vmx_pages *vmx)
+ #include <linux/huge_mm.h>
+@@ -2139,7 +2144,7 @@ static inline long folio_nr_pages(const struct folio *folio)
+ #ifdef CONFIG_64BIT
+ 	return folio->_folio_nr_pages;
+ #else
+-	return 1L << (folio->_flags_1 & 0xff);
++	return 1L << folio_large_order(folio);
+ #endif
+ }
+ 
+@@ -2164,7 +2169,7 @@ static inline unsigned long compound_nr(struct page *page)
+ #ifdef CONFIG_64BIT
+ 	return folio->_folio_nr_pages;
+ #else
+-	return 1L << (folio->_flags_1 & 0xff);
++	return 1L << folio_large_order(folio);
+ #endif
+ }
+ 
 -- 
-2.48.1.601.g30ceb7b040-goog
+2.48.1
 
