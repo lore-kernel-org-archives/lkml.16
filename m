@@ -1,69 +1,69 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB03266B5C
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 16:56:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF22266599
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 16:56:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740416193; cv=none; b=SlM/EYi3vKV8SHqYHrvRVKJaDhYAHmnQWhPdyIsAbYPTs5TQyzaXKIsppTlFcxx72F0QWVGL846LEZYkH0GW+RGaZ+NL89Jef06JOiOaKrd0gvcNtS7B3b8tfVTMdU4MnIuR3eT01T4I76e78hGN2zKfi/8yGpHWeUZ5N3GtBWE=
+	t=1740416198; cv=none; b=QDiiCuel8avbfzvTD7PHwu5ga+AMMldhz0UGUXXjP43vxFQlaBHh65Io1OqaC/OSj3IudstycBnWxtgBr/DQeOmFNk+R95KGEhr4R9grgIJHfrq9037J78nh4/qoodgyDayVE/w72eTD7DPyhBIBqBxraeOfhbUStHwG5n+s3fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740416193; c=relaxed/simple;
-	bh=RlWl3fpiF9O9sdm/iMb9TRR2Zh30yDuqbmqk7QeHHkM=;
+	s=arc-20240116; t=1740416198; c=relaxed/simple;
+	bh=+oO0YOFo2loLfbEqLOJlR2w0XdWVO+uOgMtYkv7+0wA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iKLDDn8SRng/znswASc1lmALSjTrb/TUUPONDMPCP2+JKSE0uAW2/BY7S+0s72olVdzbBFNLPSI/Z7NRleZmTRnv+MQRkocy+cryWLN12qpxuIM+EnYV8hnm470Rvu9RM1Vde1OBTZduR9dXQfd8OCMTDjCe5jQP3UWDrgiwBSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N6x230+x; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=vFfBJgF2oGqeo3u/2TLfnDQcjacLJqisHO+2TaE+oLs22ai2bC/IjQCfzhtj7GVEugtY6dBhRmKsaqJE3KDSKUElLInxcBnqoY/kU6M+T4E8Sl12kv3B4KjNuBH/XVLs/RezpMoGWX1HfDkhStG+nZOk5BK8emT5AGhwgnuBv9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bxb+WrKb; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N6x230+x"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bxb+WrKb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740416190;
+	s=mimecast20190719; t=1740416195;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TqnqolcXMjdbgOoHxDkquZtgq0jreZJuwmbRkc4obqU=;
-	b=N6x230+xCXv2O/9pqIOzFsCrDX97wuOwVG+FD5/TWPf1Hsm/zyAKzWNLWmUvJqsS/xrBjI
-	+7J8c7lZz9cqW+ZSuCq6WeXd7OC2kfE2KLnzmQpsQ8kEcEUWNFwBaEmVYkX8UFRmgpbpVJ
-	w5C4i7lnNFwMLhijh1Qy3sIqtKP19bM=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=pg2vY9vqWz7IHDYregwabj5LRZT1HxPxFKsGucVLMU4=;
+	b=Bxb+WrKbyvXSXgGJjpMwICQUQNQhB00d5hchNzMIJ5WfPw0G3AB6DL/KUXwQ47VlE6GLFN
+	n+O2U97CeIkDmFm0ZjRFSFnsrnOWjO2FgIaKIuGfM09QchtwoXnsEgLlXjGEpbXhowPNoS
+	yqWe9AdTdOf00hsexXRAqA/koEejg38=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-596-dSqbwZGdNx-GLPnDpo_MfA-1; Mon, 24 Feb 2025 11:56:29 -0500
-X-MC-Unique: dSqbwZGdNx-GLPnDpo_MfA-1
-X-Mimecast-MFC-AGG-ID: dSqbwZGdNx-GLPnDpo_MfA_1740416188
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38f44be93a8so2474431f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 08:56:29 -0800 (PST)
+ us-mta-686-D2C0LbqBMgmet-OFDEqZCg-1; Mon, 24 Feb 2025 11:56:34 -0500
+X-MC-Unique: D2C0LbqBMgmet-OFDEqZCg-1
+X-Mimecast-MFC-AGG-ID: D2C0LbqBMgmet-OFDEqZCg_1740416193
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-38f4cce15c8so2207832f8f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 08:56:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740416188; x=1741020988;
+        d=1e100.net; s=20230601; t=1740416193; x=1741020993;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TqnqolcXMjdbgOoHxDkquZtgq0jreZJuwmbRkc4obqU=;
-        b=mwIJaTlQDF+6yexjXO1nBMcjo61t16WJwo098SQWagttN5Hw7TdfrMO0Wzd9SAuLa3
-         p7wVpkSMkQBj7wDETFGM3l8Vh/CxzL/NtlrOza/KWhwUWXJS+7Bxzt0H2oIUDjCn9yaG
-         1kAmiUIPEDOWv7jIUsclbeAXHLqUDZ1cnmGjG9ex8lqNJYFoqKbGYTZVZFg6NQCbgz2v
-         CYy0UhO+x6qSGzYHGGpu8I2b3Hic/JYdgzl9J1jml+s4ehOM3/L9hCKSKm55/SZbvvYu
-         Gpt7B4FYrKSZSvlTcWDAlvl+it4mZ+ag5HB1ITgAiZz3btf7pw62qJiJD3Z7pI1OK7/J
-         vEqg==
-X-Gm-Message-State: AOJu0Yw+oP06ovrrF4X2PmQHrrHcX85rYiX70r8sjmFGxEwvIyqt/LOA
-	xlU3+zE8cxLFxKQMb1v1MmTixiaLE1UPkWNkfz2DU5LWUzDO9GEzm4sQSBjl7ikiOambbUPNRyr
-	SJxoptcTTMjIypb41JgYN1v8WtY1RBB7bi9jQFbP80+OJoIq60ALiHGqIyzDi0n5XItyTJ1m/cR
-	4Z8WVimdygBJIg/cAYGh5f/NJAFA4IYBta+ld+rSwArOCb
-X-Gm-Gg: ASbGnctNFoAwzixYUYCja5kdV/EBzzY6Y8sg6rTGs007STWXO9tUGncpoTluolPO+Ur
-	YZds+jtHG3vjRdGLjOsAdYb5sFqWzpJQCRl1/UU9llGQ8gBVvMq4yZcmYRoH8b+FVbNxgQSXdcH
-	5e8ZtzgnUwnin48JS1aSKFFN6jfkkwiLcREIIN4VXGGdqSRQSM2U1AyAPs+ere7MMl3sFrx2rKE
-	RB+b6hiAXMGE7mn3onmhPs0wo12wBGZPiGwBOYr6bOu1u2StRgEVVYb9Ni779OpjFizQLSj+6Qi
-	fYIXVsQzBtR/v92yOpLjCJ5++eJSt9jBSzGetV7wHg==
-X-Received: by 2002:adf:e50d:0:b0:38f:2f9f:5249 with SMTP id ffacd0b85a97d-38f6e95b1acmr9525768f8f.19.1740416188414;
-        Mon, 24 Feb 2025 08:56:28 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEFpYW1I6Rdgq9wh83UDsQAXL1XjDcZxKn17wlosPtiSthbm9EkXmkPxjrqhOMZ4wG7mJ1LrA==
-X-Received: by 2002:adf:e50d:0:b0:38f:2f9f:5249 with SMTP id ffacd0b85a97d-38f6e95b1acmr9525729f8f.19.1740416187961;
-        Mon, 24 Feb 2025 08:56:27 -0800 (PST)
+        bh=pg2vY9vqWz7IHDYregwabj5LRZT1HxPxFKsGucVLMU4=;
+        b=Ap5y6v7CxSRqG0ZTvlPMkZITXJucgaqJhjI9vZZHIalocjLnBg01LOnaBBSF3LMzgK
+         gdZpboDgoEFsWXhDdGtKdlPOxplvXuaVFBvx1UQ4TnrIEHhZdK7svDORTueaI3bUr/PX
+         t0ncZ20SDPJEwUuKp5Sz/rP+wxkbhJNhJCy/5Zj5zBr/cKzyiHSzVfweKwmEvhH0ht4e
+         zdPDnhUrzxc4f8a8GtBRMATxM9buSMI3z1l0xhOywRd9+WmCbsXF/b6ZgUkybNKLwZQs
+         20huFTulqGz/x3Y3WgQqNA0ZUBLX/F2psrYy1Q0sxhXAHwl3rpEUkEQd3S3q39wT8aOd
+         A4uw==
+X-Gm-Message-State: AOJu0YxEtc50LAIRZW8pcOWRT67OGaDSrjZBmTPOqr6wdESAafNSflKO
+	yn34nf/R1X3a+p1DmlBYMDrti6ANB+q8AHSeukAtZuFMK2DlJ2tGhDtCc4whUcQ/yMx44TBp7Kj
+	bqAjGl4JNX4cQbgkfbUb7+LhLoHxt5enIqTrJYZOAt76u15ROuorng5qqvQreJcoCszeLYMxcZ/
+	KfGzPfY4X+lXJWjnK1zv7ptJgFQY4IpoXBvcvolFhlKs/l
+X-Gm-Gg: ASbGncsrpKpx7tPSFpoA7Z5C0Pb81Oxo5jSTyNM9kN3C0F54fFG3Cakjcpd/YcnK0iK
+	Tp3RQc/dIrAdZwiUqJ6IB69Mwq16n+aNX/g3gjuWo3UaIvaoQgnUCuv+DSLnR0GJvt7+uxCS/5A
+	5J/M6vH9gk3TF0Txb4XJIa/fGnJuQeM+e7h+V2wV9RBJ1CQmPcVYObjK6auiyvnBVM9sux5FeMM
+	g1hGEmhXxdits6f8gogCay2z8u7HFCU8pKZXgJzaHJ2k6RbFdEDE5qCVMDBRdqzx6XJkq5AILC7
+	XrPPu5vN1RRtMWsJnLiZjUGTHZLu6Eq6ArHVXs0Sgw==
+X-Received: by 2002:a5d:648a:0:b0:38d:db7b:5d90 with SMTP id ffacd0b85a97d-38f6f0951bbmr11757109f8f.41.1740416192565;
+        Mon, 24 Feb 2025 08:56:32 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHaIBsZiKHsVYYcLtCIPoeZB3FHIPU3YJhCLPdlvukEQ+/K5hEIgCDRy8AjGPWVYvGgArScYA==
+X-Received: by 2002:a5d:648a:0:b0:38d:db7b:5d90 with SMTP id ffacd0b85a97d-38f6f0951bbmr11757061f8f.41.1740416192060;
+        Mon, 24 Feb 2025 08:56:32 -0800 (PST)
 Received: from localhost (p4ff234b6.dip0.t-ipconnect.de. [79.242.52.182])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38f259f8121sm31621063f8f.88.2025.02.24.08.56.26
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-38f258b4163sm32531566f8f.19.2025.02.24.08.56.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2025 08:56:27 -0800 (PST)
+        Mon, 24 Feb 2025 08:56:31 -0800 (PST)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: linux-doc@vger.kernel.org,
@@ -88,11 +88,10 @@ Cc: linux-doc@vger.kernel.org,
 	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
 	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
 	Vlastimil Babka <vbabka@suse.cz>,
-	Jann Horn <jannh@google.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH v2 11/20] mm/rmap: use folio_large_nr_pages() in add/remove functions
-Date: Mon, 24 Feb 2025 17:55:53 +0100
-Message-ID: <20250224165603.1434404-12-david@redhat.com>
+	Jann Horn <jannh@google.com>
+Subject: [PATCH v2 13/20] mm: Copy-on-Write (COW) reuse support for PTE-mapped THP
+Date: Mon, 24 Feb 2025 17:55:55 +0100
+Message-ID: <20250224165603.1434404-14-david@redhat.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250224165603.1434404-1-david@redhat.com>
 References: <20250224165603.1434404-1-david@redhat.com>
@@ -104,87 +103,133 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Let's just use the "large" variant in code where we are sure that we
-have a large folio in our hands: this way we are sure that we don't
-perform any unnecessary "large" checks.
+Currently, we never end up reusing PTE-mapped THPs after fork. This
+wasn't really a problem with PMD-sized THPs, because they would have to
+be PTE-mapped first, but it's getting a problem with smaller THP
+sizes that are effectively always PTE-mapped.
 
-While at it, convert the VM_BUG_ON_VMA to a VM_WARN_ON_ONCE.
+With our new "mapped exclusively" vs "maybe mapped shared" logic for
+large folios, implementing CoW reuse for PTE-mapped THPs is straight
+forward: if exclusively mapped, make sure that all references are
+from these (our) mappings. Add some helpful comments to explain the
+details.
 
-Maybe in the future there will not be a difference in that regard
-between large and small folios; in that case, unifying the handling again
-will be easy. E.g., folio_large_nr_pages() will simply translate to
-folio_nr_pages() until we replace all instances.
+CONFIG_TRANSPARENT_HUGEPAGE selects CONFIG_MM_ID. If we spot an anon
+large folio without CONFIG_TRANSPARENT_HUGEPAGE in that code, something
+is seriously messed up.
 
-Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+There are plenty of things we can optimize in the future: For example, we
+could remember that the folio is fully exclusive so we could speedup
+the next fault further. Also, we could try "faulting around", turning
+surrounding PTEs that map the same folio writable. But especially the
+latter might increase COW latency, so it would need further
+investigation.
+
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- mm/rmap.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ mm/memory.c | 84 ++++++++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 76 insertions(+), 8 deletions(-)
 
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 08846b7eced60..c9922928616ee 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1274,7 +1274,7 @@ static __always_inline unsigned int __folio_add_rmap(struct folio *folio,
- 		if (first) {
- 			nr = atomic_add_return_relaxed(ENTIRELY_MAPPED, mapped);
- 			if (likely(nr < ENTIRELY_MAPPED + ENTIRELY_MAPPED)) {
--				nr_pages = folio_nr_pages(folio);
-+				nr_pages = folio_large_nr_pages(folio);
- 				/*
- 				 * We only track PMD mappings of PMD-sized
- 				 * folios separately.
-@@ -1522,14 +1522,11 @@ void folio_add_anon_rmap_pmd(struct folio *folio, struct page *page,
- void folio_add_new_anon_rmap(struct folio *folio, struct vm_area_struct *vma,
- 		unsigned long address, rmap_t flags)
- {
--	const int nr = folio_nr_pages(folio);
- 	const bool exclusive = flags & RMAP_EXCLUSIVE;
--	int nr_pmdmapped = 0;
-+	int nr = 1, nr_pmdmapped = 0;
- 
- 	VM_WARN_ON_FOLIO(folio_test_hugetlb(folio), folio);
- 	VM_WARN_ON_FOLIO(!exclusive && !folio_test_locked(folio), folio);
--	VM_BUG_ON_VMA(address < vma->vm_start ||
--			address + (nr << PAGE_SHIFT) > vma->vm_end, vma);
- 
- 	/*
- 	 * VM_DROPPABLE mappings don't swap; instead they're just dropped when
-@@ -1547,6 +1544,7 @@ void folio_add_new_anon_rmap(struct folio *folio, struct vm_area_struct *vma,
- 	} else if (!folio_test_pmd_mappable(folio)) {
- 		int i;
- 
-+		nr = folio_large_nr_pages(folio);
- 		for (i = 0; i < nr; i++) {
- 			struct page *page = folio_page(folio, i);
- 
-@@ -1559,6 +1557,7 @@ void folio_add_new_anon_rmap(struct folio *folio, struct vm_area_struct *vma,
- 		folio_set_large_mapcount(folio, nr, vma);
- 		atomic_set(&folio->_nr_pages_mapped, nr);
- 	} else {
-+		nr = folio_large_nr_pages(folio);
- 		/* increment count (starts at -1) */
- 		atomic_set(&folio->_entire_mapcount, 0);
- 		folio_set_large_mapcount(folio, 1, vma);
-@@ -1568,6 +1567,9 @@ void folio_add_new_anon_rmap(struct folio *folio, struct vm_area_struct *vma,
- 		nr_pmdmapped = nr;
- 	}
- 
-+	VM_WARN_ON_ONCE(address < vma->vm_start ||
-+			address + (nr << PAGE_SHIFT) > vma->vm_end);
-+
- 	__folio_mod_stat(folio, nr, nr_pmdmapped);
- 	mod_mthp_stat(folio_order(folio), MTHP_STAT_NR_ANON, 1);
+diff --git a/mm/memory.c b/mm/memory.c
+index ef74c4f009f84..8dc241961b684 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -3706,19 +3706,87 @@ static vm_fault_t wp_page_shared(struct vm_fault *vmf, struct folio *folio)
+ 	return ret;
  }
-@@ -1681,7 +1683,7 @@ static __always_inline void __folio_remove_rmap(struct folio *folio,
- 		if (last) {
- 			nr = atomic_sub_return_relaxed(ENTIRELY_MAPPED, mapped);
- 			if (likely(nr < ENTIRELY_MAPPED)) {
--				nr_pages = folio_nr_pages(folio);
-+				nr_pages = folio_large_nr_pages(folio);
- 				if (level == RMAP_LEVEL_PMD)
- 					nr_pmdmapped = nr_pages;
- 				nr = nr_pages - (nr & FOLIO_PAGES_MAPPED);
+ 
+-static bool wp_can_reuse_anon_folio(struct folio *folio,
+-				    struct vm_area_struct *vma)
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++static bool __wp_can_reuse_large_anon_folio(struct folio *folio,
++		struct vm_area_struct *vma)
+ {
++	bool exclusive = false;
++
++	/* Let's just free up a large folio if only a single page is mapped. */
++	if (folio_large_mapcount(folio) <= 1)
++		return false;
++
+ 	/*
+-	 * We could currently only reuse a subpage of a large folio if no
+-	 * other subpages of the large folios are still mapped. However,
+-	 * let's just consistently not reuse subpages even if we could
+-	 * reuse in that scenario, and give back a large folio a bit
+-	 * sooner.
++	 * The assumption for anonymous folios is that each page can only get
++	 * mapped once into each MM. The only exception are KSM folios, which
++	 * are always small.
++	 *
++	 * Each taken mapcount must be paired with exactly one taken reference,
++	 * whereby the refcount must be incremented before the mapcount when
++	 * mapping a page, and the refcount must be decremented after the
++	 * mapcount when unmapping a page.
++	 *
++	 * If all folio references are from mappings, and all mappings are in
++	 * the page tables of this MM, then this folio is exclusive to this MM.
+ 	 */
+-	if (folio_test_large(folio))
++	if (folio_test_large_maybe_mapped_shared(folio))
++		return false;
++
++	VM_WARN_ON_ONCE(folio_test_ksm(folio));
++	VM_WARN_ON_ONCE(folio_mapcount(folio) > folio_nr_pages(folio));
++	VM_WARN_ON_ONCE(folio_entire_mapcount(folio));
++
++	if (unlikely(folio_test_swapcache(folio))) {
++		/*
++		 * Note: freeing up the swapcache will fail if some PTEs are
++		 * still swap entries.
++		 */
++		if (!folio_trylock(folio))
++			return false;
++		folio_free_swap(folio);
++		folio_unlock(folio);
++	}
++
++	if (folio_large_mapcount(folio) != folio_ref_count(folio))
+ 		return false;
+ 
++	/* Stabilize the mapcount vs. refcount and recheck. */
++	folio_lock_large_mapcount(folio);
++	VM_WARN_ON_ONCE(folio_large_mapcount(folio) < folio_ref_count(folio));
++
++	if (folio_test_large_maybe_mapped_shared(folio))
++		goto unlock;
++	if (folio_large_mapcount(folio) != folio_ref_count(folio))
++		goto unlock;
++
++	VM_WARN_ON_ONCE(folio_mm_id(folio, 0) != vma->vm_mm->mm_id &&
++			folio_mm_id(folio, 1) != vma->vm_mm->mm_id);
++
++	/*
++	 * Do we need the folio lock? Likely not. If there would have been
++	 * references from page migration/swapout, we would have detected
++	 * an additional folio reference and never ended up here.
++	 */
++	exclusive = true;
++unlock:
++	folio_unlock_large_mapcount(folio);
++	return exclusive;
++}
++#else /* !CONFIG_TRANSPARENT_HUGEPAGE */
++static bool __wp_can_reuse_large_anon_folio(struct folio *folio,
++		struct vm_area_struct *vma)
++{
++	BUILD_BUG();
++}
++#endif /* CONFIG_TRANSPARENT_HUGEPAGE */
++
++static bool wp_can_reuse_anon_folio(struct folio *folio,
++				    struct vm_area_struct *vma)
++{
++	if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) && folio_test_large(folio))
++		return __wp_can_reuse_large_anon_folio(folio, vma);
++	VM_WARN_ON_ONCE(folio_test_large(folio));
++
+ 	/*
+ 	 * We have to verify under folio lock: these early checks are
+ 	 * just an optimization to avoid locking the folio and freeing
 -- 
 2.48.1
 
