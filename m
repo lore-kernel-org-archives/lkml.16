@@ -1,102 +1,355 @@
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12B21A0739;
-	Mon, 24 Feb 2025 03:50:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5C52F37;
+	Mon, 24 Feb 2025 03:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740369030; cv=none; b=fqrBBSxQkpkAmv7KiQ0K4nbNwIf5DxYK6Q9U+Q1FOmKlTYNnKJ1bqtp2dzxji+uXKBpHe8X748vVEUIhmM16OlHKy5D5853gshEc+v0UUiqHJwI1knhzitA7JTGr84UdLRxIxFrIo7SD3p2ptZY343EOBRFMaRq2HtqW6Ee27/A=
+	t=1740369218; cv=none; b=e6NjqHk1KNLgg40LyjCLsHFsVFPdkhszQkOnjoWanx45lf+ygNtVjih520cETDMfMtF92CFdOZ8E/tHUjwjmVcXptMhrNmUNe84HuLYMkCxLTGIM/aLMP9J2XY0XZcPAl6gawipHkZuhPR+z/Zws5vY0Ggy0MNq2MKlMuRV6sIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740369030; c=relaxed/simple;
-	bh=LgkDryLjvEZr6bXpKPqMRGIdv3/PyW9iQTas3G5G60M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Q3TBIEf7oRmNCAD1lOjzyQPHOoUdo5WTA59nPyIQg+ct9R6nAWcmXMlu6TDu31/hvio4WlLlIx2hacVKv4cqLczPku/JnF9sf3jYYlPTBBlerJrUnNDMSzN5uT6AXjQkCcIZK5kGdoy9Vbiw+5SwVrq20mkqiwjigLJWCFeTF9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=dlStPqtj; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1740369218; c=relaxed/simple;
+	bh=BgGAI3pxXU1Uoocpx4XfCjTkfUCi0/ElCAZHaydlay8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=NGCbCygRng3UeGuLN5xbx8QgEmNFrQni2yKsuJ5RVFr6a/4ZW4qSWvGLNg6cnbVvEbDYWfo1YIlYka9x/uZa0NSl5jGDRihx8FPRaKBrrAGHAm0Cr4dzMqeKuohP00aRtwnHTm4KRKPIdOwIQu8+torRwYqvbQDEcli2eJwmMy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=CeUtgmJ4; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="dlStPqtj"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1740369024; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=JWdHXTM9C/dfJCHXa70ZhO8Ss2I8+1cp0VWtCNbkVn0=;
-	b=dlStPqtjlvWvD9ScvLHz6ay6b/s4XS90EovacqcAvpu/+dHmC+m0lerTOKm9Bo1bTUtJKGXrdrTipBkrh/QUQHLi2OGRobtU/h+FULfU1YtyfaSKC3CiaYAKay7iRN80ns6Lptmy2AYrUhFYq7fy0s6SZ5zc+6v5RT09/6Qe6mI=
-Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WQ1rZgc_1740368704 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 24 Feb 2025 11:45:05 +0800
-From: Feng Tang <feng.tang@linux.alibaba.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Liguang Zhang <zhangliguang@linux.alibaba.com>,
-	Guanghui Feng <guanghuifeng@linux.alibaba.com>,
-	rafael@kernel.org
-Cc: Markus Elfring <Markus.Elfring@web.de>,
-	lkp@intel.com,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	ilpo.jarvinen@linux.intel.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Feng Tang <feng.tang@linux.alibaba.com>
-Subject: [PATCH v3 4/4] PCI: Disable PCIe hotplug interrupts early when msi is disabled
-Date: Mon, 24 Feb 2025 11:45:00 +0800
-Message-Id: <20250224034500.23024-5-feng.tang@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250224034500.23024-1-feng.tang@linux.alibaba.com>
-References: <20250224034500.23024-1-feng.tang@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="CeUtgmJ4"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51NM4Hin001740;
+	Mon, 24 Feb 2025 03:53:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ALU04tsqdZsRPiZwa5Y6ZXqz2LMFNuvmWWw14DcDdbI=; b=CeUtgmJ48KQhhit0
+	84ugcNOGp9lmAOhyD1xbKk9M3uGwFjHtGnIKI05EblYKrpy/G34i+A1GYHv5J4xf
+	nlfi3dxyKp3qdmn4n0E+KguyGcbNjhuSJJvvl4mDSvrsiyTUUu+EKqbASV2uITvW
+	lg9zTGIlYkE7A494ycr9U9E9JKmNwiaxuLuf9hpEa0XUKmfP8EAzHbiYfaO1dAxg
+	csMeNSaW7jvmhLyDNhRF2W4QC83c3p5mVASpuES1eilWi7kJ4NF44+604WrbgCLM
+	i253xFM8polYGnml+/uObqMtj1+iQmEoCaWd4rqYhYAsIa8M/e/7EqJsIm5BrNYl
+	UsvECg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44y3xnbq2w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Feb 2025 03:53:27 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51O3rQNW005913
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Feb 2025 03:53:26 GMT
+Received: from [10.110.85.197] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Sun, 23 Feb
+ 2025 19:53:26 -0800
+Message-ID: <a49164d9-50ec-4362-954d-5667725d1a94@quicinc.com>
+Date: Sun, 23 Feb 2025 19:53:25 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] drm/msm/dpu: allow sharing SSPP between planes
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Rob Clark
+	<robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona
+ Vetter <simona@ffwll.ch>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20241215-dpu-share-sspp-v5-1-665d266183f9@linaro.org>
+Content-Language: en-US
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <20241215-dpu-share-sspp-v5-1-665d266183f9@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: J4cGPwJ5op0wOEYXkWlTFI3bXNF8R20e
+X-Proofpoint-GUID: J4cGPwJ5op0wOEYXkWlTFI3bXNF8R20e
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-24_01,2025-02-20_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
+ suspectscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015
+ priorityscore=1501 spamscore=0 malwarescore=0 phishscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2502240026
 
-There was an irq storm bug when testing "pci=nomsi" case, and the root
-cause is: 'nomsi' will disable MSI and let devices and root ports use
-legacy INTX interrupt, and likely make several devices/ports share one
-interrupt. In the failure case, BIOS doesn't disable the PCIe hotplug
-interrupts, and the command-complete interrupt was actually asserted.
 
-So the timeline is:
-1. pciehp's CCIE/HPIE enabled and command-complete interrupts asserted
-2. the interrupt is shared by PCIe root port and nvme/nic device
-3. nvme/nic driver's probe function enables the interrupt line
-4. pciehp driver is loaded later or never loaded
 
-And the "nobody cared irq storm" happens between 3 and 4. This is not
-an issue for normal MSI case, as each interrupt is controlled by its own
-driver. When the driver is not loaded, the interrupt won't get fired
-to kernel even if it is physically asserted.
+On 12/15/2024 5:10 AM, Dmitry Baryshkov wrote:
+> Since SmartDMA planes provide two rectangles, it is possible to use them
+> to drive two different DRM planes, first plane getting the rect_0,
+> another one using rect_1 of the same SSPP. The sharing algorithm is
+> pretty simple, it requires that each of the planes can be driven by the
+> single rectangle and only consequetive planes are considered.
+> 
 
-So disable the PCIe hotplug CCIE/HPIE interrupt in early boot phase when
-MSI is not enabled.
+consequetive - > consecutive (this was highlighted in v4 too)
 
-Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
----
- drivers/pci/probe.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+> This patch has been deferred from v5 of virtual wide patchset to
+> simplify the merging path. Now as the wide planes have been merged, pick
+> up the patch that allows sharing of the SSPPs between two planes.
+> ---
+> Changes since v4:
+> - Rebased on top of the current msm-next-lumag
+> - Renamed dpu_plane_try_multirect() to dpu_plane_try_multirect_shared()
+>    (Abhinav)
+> - Link to v4: https://lore.kernel.org/dri-devel/20240314000216.392549-11-dmitry.baryshkov@linaro.org/
+> ---
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 153 +++++++++++++++++++++++++-----
+>   1 file changed, 128 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> index 098abc2c0003cde90ce6219c97ee18fa055a92a5..2fd21d27df4741a8d942f9c9bae989f319cfb8d8 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> @@ -887,10 +887,9 @@ static int dpu_plane_atomic_check_nosspp(struct drm_plane *plane,
+>   	return 0;
+>   }
+>   
+> -static int dpu_plane_is_multirect_parallel_capable(struct dpu_hw_sspp *sspp,
+> -						   struct dpu_sw_pipe_cfg *pipe_cfg,
+> -						   const struct msm_format *fmt,
+> -						   uint32_t max_linewidth)
+> +static int dpu_plane_is_multirect_capable(struct dpu_hw_sspp *sspp,
+> +					  struct dpu_sw_pipe_cfg *pipe_cfg,
+> +					  const struct msm_format *fmt)
+>   {
+>   	if (drm_rect_width(&pipe_cfg->src_rect) != drm_rect_width(&pipe_cfg->dst_rect) ||
+>   	    drm_rect_height(&pipe_cfg->src_rect) != drm_rect_height(&pipe_cfg->dst_rect))
+> @@ -902,10 +901,6 @@ static int dpu_plane_is_multirect_parallel_capable(struct dpu_hw_sspp *sspp,
+>   	if (MSM_FORMAT_IS_YUV(fmt))
+>   		return false;
+>   
+> -	if (MSM_FORMAT_IS_UBWC(fmt) &&
+> -	    drm_rect_width(&pipe_cfg->src_rect) > max_linewidth / 2)
+> -		return false;
+> -
+>   	if (!test_bit(DPU_SSPP_SMART_DMA_V1, &sspp->cap->features) &&
+>   	    !test_bit(DPU_SSPP_SMART_DMA_V2, &sspp->cap->features))
+>   		return false;
+> @@ -913,6 +908,27 @@ static int dpu_plane_is_multirect_parallel_capable(struct dpu_hw_sspp *sspp,
+>   	return true;
+>   }
+>   
+> +static int dpu_plane_is_parallel_capable(struct dpu_sw_pipe_cfg *pipe_cfg,
+> +					 const struct msm_format *fmt,
+> +					 uint32_t max_linewidth)
+> +{
+> +	if (MSM_FORMAT_IS_UBWC(fmt) &&
+> +	    drm_rect_width(&pipe_cfg->src_rect) > max_linewidth / 2)
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+> +static int dpu_plane_is_multirect_parallel_capable(struct dpu_hw_sspp *sspp,
+> +						   struct dpu_sw_pipe_cfg *pipe_cfg,
+> +						   const struct msm_format *fmt,
+> +						   uint32_t max_linewidth)
+> +{
+> +	return dpu_plane_is_multirect_capable(sspp, pipe_cfg, fmt) &&
+> +		dpu_plane_is_parallel_capable(pipe_cfg, fmt, max_linewidth);
+> +}
+> +
+> +
+>   static int dpu_plane_atomic_check_sspp(struct drm_plane *plane,
+>   				       struct drm_atomic_state *state,
+>   				       const struct drm_crtc_state *crtc_state)
+> @@ -1001,6 +1017,69 @@ static bool dpu_plane_try_multirect_parallel(struct dpu_sw_pipe *pipe, struct dp
+>   	return true;
+>   }
+>   
+> +static int dpu_plane_try_multirect_shared(struct dpu_plane_state *pstate,
+> +					  struct dpu_plane_state *prev_pstate,
+> +					  const struct msm_format *fmt,
+> +					  uint32_t max_linewidth)
+> +{
+> +	struct dpu_sw_pipe *pipe = &pstate->pipe;
+> +	struct dpu_sw_pipe *r_pipe = &pstate->r_pipe;
+> +	struct dpu_sw_pipe_cfg *pipe_cfg = &pstate->pipe_cfg;
+> +	struct dpu_sw_pipe *prev_pipe = &prev_pstate->pipe;
+> +	struct dpu_sw_pipe_cfg *prev_pipe_cfg = &prev_pstate->pipe_cfg;
+> +	const struct msm_format *prev_fmt = msm_framebuffer_format(prev_pstate->base.fb);
+> +	u16 max_tile_height = 1;
+> +
+> +	if (prev_pstate->r_pipe.sspp != NULL ||
+> +	    prev_pipe->multirect_mode != DPU_SSPP_MULTIRECT_NONE)
+> +		return false;
+> +
+> +	if (!dpu_plane_is_multirect_capable(pipe->sspp, pipe_cfg, fmt) ||
+> +	    !dpu_plane_is_multirect_capable(prev_pipe->sspp, prev_pipe_cfg, prev_fmt))
+> +		return false;
+> +
+> +	if (MSM_FORMAT_IS_UBWC(fmt))
+> +		max_tile_height = max(max_tile_height, fmt->tile_height);
+> +
+> +	if (MSM_FORMAT_IS_UBWC(prev_fmt))
+> +		max_tile_height = max(max_tile_height, prev_fmt->tile_height);
+> +
+> +	r_pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> +	r_pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> +
+> +	r_pipe->sspp = NULL;
+> +
+> +	if (dpu_plane_is_parallel_capable(pipe_cfg, fmt, max_linewidth) &&
+> +	    dpu_plane_is_parallel_capable(prev_pipe_cfg, prev_fmt, max_linewidth) &&
+> +	    (pipe_cfg->dst_rect.x1 >= prev_pipe_cfg->dst_rect.x2 ||
+> +	     prev_pipe_cfg->dst_rect.x1 >= pipe_cfg->dst_rect.x2)) {
+> +		pipe->sspp = prev_pipe->sspp;
+> +
+> +		pipe->multirect_index = DPU_SSPP_RECT_1;
+> +		pipe->multirect_mode = DPU_SSPP_MULTIRECT_PARALLEL;
+> +
+> +		prev_pipe->multirect_index = DPU_SSPP_RECT_0;
+> +		prev_pipe->multirect_mode = DPU_SSPP_MULTIRECT_PARALLEL;
+> +
+> +		return true;
+> +	}
+> +
+> +	if (pipe_cfg->dst_rect.y1 >= prev_pipe_cfg->dst_rect.y2 + 2 * max_tile_height ||
+> +	    prev_pipe_cfg->dst_rect.y1 >= pipe_cfg->dst_rect.y2 + 2 * max_tile_height) {
+> +		pipe->sspp = prev_pipe->sspp;
+> +
+> +		pipe->multirect_index = DPU_SSPP_RECT_1;
+> +		pipe->multirect_mode = DPU_SSPP_MULTIRECT_TIME_MX;
+> +
+> +		prev_pipe->multirect_index = DPU_SSPP_RECT_0;
+> +		prev_pipe->multirect_mode = DPU_SSPP_MULTIRECT_TIME_MX;
+> +
+> +		return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>   static int dpu_plane_atomic_check(struct drm_plane *plane,
+>   				  struct drm_atomic_state *state)
+>   {
+> @@ -1098,13 +1177,14 @@ static int dpu_plane_virtual_atomic_check(struct drm_plane *plane,
+>   static int dpu_plane_virtual_assign_resources(struct drm_crtc *crtc,
+>   					      struct dpu_global_state *global_state,
+>   					      struct drm_atomic_state *state,
+> -					      struct drm_plane_state *plane_state)
+> +					      struct drm_plane_state *plane_state,
+> +					      struct drm_plane_state *prev_plane_state)
+>   {
+>   	const struct drm_crtc_state *crtc_state = NULL;
+>   	struct drm_plane *plane = plane_state->plane;
+>   	struct dpu_kms *dpu_kms = _dpu_plane_get_kms(plane);
+>   	struct dpu_rm_sspp_requirements reqs;
+> -	struct dpu_plane_state *pstate;
+> +	struct dpu_plane_state *pstate, *prev_pstate;
+>   	struct dpu_sw_pipe *pipe;
+>   	struct dpu_sw_pipe *r_pipe;
+>   	struct dpu_sw_pipe_cfg *pipe_cfg;
+> @@ -1116,6 +1196,7 @@ static int dpu_plane_virtual_assign_resources(struct drm_crtc *crtc,
+>   							   plane_state->crtc);
+>   
+>   	pstate = to_dpu_plane_state(plane_state);
+> +	prev_pstate = prev_plane_state ? to_dpu_plane_state(prev_plane_state) : NULL;
+>   	pipe = &pstate->pipe;
+>   	r_pipe = &pstate->r_pipe;
+>   	pipe_cfg = &pstate->pipe_cfg;
+> @@ -1134,24 +1215,42 @@ static int dpu_plane_virtual_assign_resources(struct drm_crtc *crtc,
+>   
+>   	reqs.rot90 = drm_rotation_90_or_270(plane_state->rotation);
+>   
+> -	pipe->sspp = dpu_rm_reserve_sspp(&dpu_kms->rm, global_state, crtc, &reqs);
+> -	if (!pipe->sspp)
+> -		return -ENODEV;
+> +	if (drm_rect_width(&r_pipe_cfg->src_rect) == 0) {
+> +		if (!prev_pstate ||
+> +		    !dpu_plane_try_multirect_shared(pstate, prev_pstate, fmt,
+> +						    dpu_kms->catalog->caps->max_linewidth)) {
+> +			pipe->sspp = dpu_rm_reserve_sspp(&dpu_kms->rm, global_state, crtc, &reqs);
+> +			if (!pipe->sspp)
+> +				return -ENODEV;
+>   
+> -	if (!dpu_plane_try_multirect_parallel(pipe, pipe_cfg, r_pipe, r_pipe_cfg,
+> -					      pipe->sspp,
+> -					      msm_framebuffer_format(plane_state->fb),
+> -					      dpu_kms->catalog->caps->max_linewidth)) {
+> -		/* multirect is not possible, use two SSPP blocks */
+> -		r_pipe->sspp = dpu_rm_reserve_sspp(&dpu_kms->rm, global_state, crtc, &reqs);
+> -		if (!r_pipe->sspp)
+> +			r_pipe->sspp = NULL;
+> +
+> +			pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> +			pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> +
+> +			r_pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> +			r_pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> +		}
+> +	} else {
+> +		pipe->sspp = dpu_rm_reserve_sspp(&dpu_kms->rm, global_state, crtc, &reqs);
+> +		if (!pipe->sspp)
+>   			return -ENODEV;
+>   
+> -		pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> -		pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> +		if (!dpu_plane_try_multirect_parallel(pipe, pipe_cfg, r_pipe, r_pipe_cfg,
+> +						      pipe->sspp,
+> +						      msm_framebuffer_format(plane_state->fb),
+> +						      dpu_kms->catalog->caps->max_linewidth)) {
+> +			/* multirect is not possible, use two SSPP blocks */
+> +			r_pipe->sspp = dpu_rm_reserve_sspp(&dpu_kms->rm, global_state, crtc, &reqs);
+> +			if (!r_pipe->sspp)
+> +				return -ENODEV;
+>   
+> -		r_pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> -		r_pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> +			pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> +			pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> +
+> +			r_pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> +			r_pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> +		}
+>   	}
+>   
+>   	return dpu_plane_atomic_check_sspp(plane, state, crtc_state);
+> @@ -1165,6 +1264,7 @@ int dpu_assign_plane_resources(struct dpu_global_state *global_state,
+>   {
+>   	unsigned int i;
+>   	int ret;
+> +	struct drm_plane_state *prev_plane_state = NULL;
+>   
+>   	for (i = 0; i < num_planes; i++) {
+>   		struct drm_plane_state *plane_state = states[i];
+> @@ -1174,9 +1274,12 @@ int dpu_assign_plane_resources(struct dpu_global_state *global_state,
+>   			continue;
+>   
+>   		ret = dpu_plane_virtual_assign_resources(crtc, global_state,
+> -							 state, plane_state);
+> +							 state, plane_state,
+> +							 prev_plane_state);
+>   		if (ret)
+>   			break;
+> +
+> +		prev_plane_state = plane_state;
+>   	}
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 246744d8d268..ffea7851366a 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1665,6 +1665,15 @@ void set_pcie_hotplug_bridge(struct pci_dev *pdev)
- 	pcie_capability_read_dword(pdev, PCI_EXP_SLTCAP, &reg32);
- 	if (reg32 & PCI_EXP_SLTCAP_HPC)
- 		pdev->is_hotplug_bridge = 1;
-+
-+	/*
-+	 * When MSI is disabled, root port will use legacy INTX, and likely
-+	 * share INTX interrupt line with other devices like NIC/NVME. There
-+	 * was real world issue that the CCIE IRQ is asserted afer boot, but
-+	 * will not be handled well and cause IRQ storm. So disable it early.
-+	 */
-+	if (!pci_msi_enabled())
-+		pcie_disable_hp_interrupts_early(pdev);
- }
- 
- static void set_pcie_thunderbolt(struct pci_dev *dev)
--- 
-2.43.5
+We agreed to rename this to prev_adjacent_plane_state in v4. This has 
+not been addressed.
+
+With these two changes done,
+
+Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+>   
+>   	return ret;
+> 
+> ---
+> base-commit: d82c9281189d2b27642ede2760db495379503b86
+> change-id: 20241215-dpu-share-sspp-75a566eec185
+> 
+> Best regards,
 
