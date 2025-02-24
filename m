@@ -1,74 +1,86 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB50F9F8;
-	Mon, 24 Feb 2025 14:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29687664C6
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 14:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740406717; cv=none; b=D0dtBk91R7kclFBBJ0ZBMP19FTaQ5rpFV24zoh2ZMFyX+GGOaNKh/7ewK1NUXY9p+TiD0GW6euiVD6wdYpJRxedQaDQHuua1iqmPpYVegptDmHDkR8leL8VvEbm2N+kVT57n1PprprCWFhuucSC4afYSAuhVAJtDjlbxBGOhiLo=
+	t=1740406734; cv=none; b=tuyFY6fHk4XDe8jSYn26klceHXi6F8YM4ajv87K+wFHZPASBfVsl0pan5ATZL0G6aJciBa6Gohcuu6eljsYlww3Ch0NjnN9CfS738Ru4tp900K1EY1n5IJh0momQqnfieo+EfOPyEkn0eX1CDsQCHWA7PNSgupD0I+5M01WJaL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740406717; c=relaxed/simple;
-	bh=TZMvKoS23Bgd5fkbnhBSdwZISP6VFkX5FvuY4M0tonw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=blYwaHLN0bxdGq7U3Pisom4W1j7078cIfFJR1dImVkRm5jEzPTZ+5aNESg+kGxAR4oh20+Rd4H0csYiRgqWrVaqPV0E4KzNKAYGbGrR99koANv5j1eVIC23c5t/4vRxQdCAhuXva9E+u242+5fXtYLhtQF6aUY+HjtcIs2Y3em8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=x2U1bWuj; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1740406734; c=relaxed/simple;
+	bh=XGy6ySdf82izw5K6kTl82Njx2t9JHfIhacnjeWsK05E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RDPmgP1wa9kfkj3SsYgiCUM9n5p1hnnWSea5SMOeAVyJBfWCAjAzd2FLYmMu1t00BCEeu8xiV2SsQK5wBRug99bhgshJ+vIPkmN5bjoIFBGoLTqCJ67tHgytyYf9SzhWb2TOsRMBOTz99sd5j0mh4qnfyv46pRG+GKBWiC9Q5LU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TPOBNDx0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="x2U1bWuj"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=sTRzsTWPEY8VAwBUDsx7WMrpBUI6EPw7F0vhHruQ4JM=; b=x2U1bWujqzxGD/usFeNweAq4t/
-	BfB4tOjCbb8xgL8w1ImFFTF0nsiyexTiqudFpNLk29U18MS6jCqMMXgJgURc88iGhxfyTlKeeYN6z
-	ogh48TZZojVPUlr4d77SfkYna3rzjMEWb/P15RIu9f+xDRa7JWHhwnPWoRh0wqYfWKxc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tmZHw-00HBSe-AF; Mon, 24 Feb 2025 15:18:28 +0100
-Date: Mon, 24 Feb 2025 15:18:28 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: =?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	davem@davemloft.net, Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
-	Simon Horman <horms@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Antoine Tenart <atenart@kernel.org>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Subject: Re: [PATCH net-next 0/2] net: phy: sfp: Add single-byte SMBus SFP
- access
-Message-ID: <50494dd0-6d0c-4eac-adac-cac9b6e224f6@lunn.ch>
-References: <20250223172848.1098621-1-maxime.chevallier@bootlin.com>
- <87r03otsmm.fsf@miraculix.mork.no>
- <Z7uFhc1EiPpWHGfa@shell.armlinux.org.uk>
- <3c6b7b3f-04a2-48ce-b3a9-2ea71041c6d2@lunn.ch>
- <87ikozu86l.fsf@miraculix.mork.no>
- <7c456101-6643-44d1-812a-2eae3bce9068@lunn.ch>
- <Z7x4oxR5_KtyvSYg@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TPOBNDx0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BCFAC4CED6;
+	Mon, 24 Feb 2025 14:18:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740406732;
+	bh=XGy6ySdf82izw5K6kTl82Njx2t9JHfIhacnjeWsK05E=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TPOBNDx029SXmHcLYeKjRmmBLYUvh+UMCB1n5W7o8yGin5F/yk/dxCP6KseDI5NEX
+	 zvVctgn2wFyt4QIDTYlfKL6d0BSA2o7OyaZoUYcEUThdr8k48rY5tcD614hfmylF/x
+	 BHM6MiEABHhwm+HpKop7lpbtkATvqJl0/b2kWMSsR5JnpfgH4/1NL0cXxFDWu25i+2
+	 pc7VNlgLW7C1g2wUDJ9xBECnBWbUXFjYylSUpulkMImLQ2YbAXqK1oWB5eqk7X0Y3U
+	 40vRrCZ0PmvfBa14OTPzP8qDJLskhjiypxEYSsybLV8shMaauDEe/Gkjx2OlzHnJSW
+	 bx0I/UWpkRoUg==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Ahmad Fatoum <a.fatoum@pengutronix.de>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Joel Granados <joel.granados@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] reboot: hide unused hw_protection_attr
+Date: Mon, 24 Feb 2025 15:16:09 +0100
+Message-Id: <20250224141849.1546019-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7x4oxR5_KtyvSYg@shell.armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
 
-> "Please note:
-> This hardware is broken by design. There is nothing that the kernel or
-> community can do to fix it. The kernel will try best efforts, but some
-> features are disabled, other features may be unreliable or sporadically
-> fail. Use with caution. Please verify any problems on hardware that
-> supports multi-byte I2C transactions."
+From: Arnd Bergmann <arnd@arndb.de>
 
-I'm good with that.
+The reference to hw_protection_attr is inside of an #ifdef block,
+but the definition is not:
 
-	Andrew
+kernel/reboot.c:1092:30: error: unused variable 'hw_protection_attr' [-Werror,-Wunused-variable]
+ 1092 | static struct kobj_attribute hw_protection_attr = __ATTR_RW(hw_protection);
+      |                              ^~~~~~~~~~~~~~~~~~
+
+Add another #ifdef to match the first.
+
+Fixes: 6f0ec17b2d82 ("reboot: add support for configuring emergency hardware protection action")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ kernel/reboot.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/reboot.c b/kernel/reboot.c
+index 5299790a2832..2d6a06fe6c66 100644
+--- a/kernel/reboot.c
++++ b/kernel/reboot.c
+@@ -1071,6 +1071,7 @@ static int __init hw_protection_setup(char *str)
+ }
+ __setup("hw_protection=", hw_protection_setup);
+ 
++#ifdef CONFIG_SYSFS
+ static ssize_t hw_protection_show(struct kobject *kobj,
+ 				  struct kobj_attribute *attr, char *buf)
+ {
+@@ -1090,6 +1091,7 @@ static ssize_t hw_protection_store(struct kobject *kobj,
+ 	return count;
+ }
+ static struct kobj_attribute hw_protection_attr = __ATTR_RW(hw_protection);
++#endif
+ 
+ static int __init reboot_setup(char *str)
+ {
+-- 
+2.39.5
+
