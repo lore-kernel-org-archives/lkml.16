@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC30263F5B
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 17:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3E8264A6E
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 17:30:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740418233; cv=none; b=MXo6CNFGR5WFKG8z1AetylWeU5ebEADFVDPtktZ3Sj1sl1qsj5cYqluigRTTZK6jEUOGKiOGu7xG0Ko31v8n5/RDQuZ4qKNqWuSooHXHdeayhxdBXbKyZYWRtCzTvVpoQbVqRhUaKhUAYqG/5WM3uEUYCmU2mh7XiFE/4kNb9Rg=
+	t=1740418250; cv=none; b=XzAYy31JAeZpzhKzgjv38F7EwXHIPF5Ai2OSUO8CwcMh6Hu6TQFdqB0CwV58mJDpMLZDyitrimUXq38i6kHPxXeeG6V5M3/27dzyUAiCSx9nJR//cSErwijE4iKtX9embvETHRn+nxPQS6kbhWMA+bK9r2lPYUYqYNuK+ZDdyqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740418233; c=relaxed/simple;
-	bh=ja3yxX6RihsXvHqYTvrLS3Ry5RDySEQXHVAQ/lDoxXE=;
+	s=arc-20240116; t=1740418250; c=relaxed/simple;
+	bh=7xUv+TO8IbMC37opWagll0H8eevWflJ9+aQI8RFk9ek=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OO0sdEKYdx9p97xWQHncIbKSkk9WztarmBjLgOpBETDVFnhrWxVBd8tqiVKMPtlOFhwIZWSU0PCqInADk9+HAXLvt909uKudYhiZZq17GSuEKgHAMZ7af0yOV4sDfy0RFKwvvEH8eVBMiMGD+CfunBUEGqaMrDken40F+KlDLRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ROJ70+h4; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version; b=jJsh77r99yNZmaSuN0HxDCzFTAzpFwhmFZMHP4DRKtX0IXSHdiS3vTGY0S1ACL6Dw49Pc/BiU55GXzdXzdYaPiTH0bekhRZMJn+TznfC7VhnEw0wNt0HsjmSCCL6BeNMj3PK17ToqiBt25Bvh6f3n/BIMCVQYtCmaCnIHz1LVAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LSeeF1cv; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ROJ70+h4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LSeeF1cv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740418232; x=1771954232;
+  t=1740418250; x=1771954250;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=ja3yxX6RihsXvHqYTvrLS3Ry5RDySEQXHVAQ/lDoxXE=;
-  b=ROJ70+h4RPmUP7k8/G6HUW4/pFx7ssEgDrLUN12UEVipXL1CxGmirR51
-   sMGh3hgzbTnAVWwha9yKQnFLinrmcCrjxalQG4qbypom5/4xqzs3hf9NS
-   5einuuYED/IRnELLmaPoGTXkfjHWlOiQimVUXbFe6z8qIOdRLBJhAPjBz
-   zVKLLVqbeWJQMSo8R1S9J4NwxAhi5ytpTTBmWCjj3bAbtzl1Z93yN4qWV
-   2kfr904UUCwn4TOpJKcroZJm+/7Ik2HXJEKwEadH4vbY79bConztbNf/V
-   Ioc97KhRxle/L4jS1rY3ubPTHA5SFAEW2e30yAiTVNu3Kr+4m7LBVppLg
-   g==;
-X-CSE-ConnectionGUID: JCb0Co4zTAiQHAjVRD+8KQ==
-X-CSE-MsgGUID: V7TnRK8/T3aZg2HDy0vSNg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="41307958"
+  bh=7xUv+TO8IbMC37opWagll0H8eevWflJ9+aQI8RFk9ek=;
+  b=LSeeF1cvV3vrsvZAyZ1BW3gXNjEta8r+peIsHE+3J9N8X2TnEDQTBL3/
+   pG5N4h0sLK61xP56yMPhQqksYcD+8nt7yOMb9YHaPWhvGjUBYLbLmp/gJ
+   M8YiWqlB7i+vd6SDF8tqJ0D/hs7/fhyDu6sYYuVxcG2zBiQZiU2ahKEFL
+   LhQbksDorexGk5H8jjXWy06BwbMPAEjk5Msfx9aF1bC6SNNi3B+wd+wd6
+   m9qvrvmbqMXOIFRP1USHX8gMgDO6Ua+EAnP5nc8tT7p+k2rvieWj5gFb6
+   BJFa36Jz4EngwBs3y8FHGwmvl/MiZgD+SJs4kAUY2eRKx5TweGEVWKc01
+   A==;
+X-CSE-ConnectionGUID: QXbQ8Q3GQv+IZ6P9ZUp7ig==
+X-CSE-MsgGUID: WNTbK9gNQLeaPxkP4RQMTg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="66555681"
 X-IronPort-AV: E=Sophos;i="6.13,312,1732608000"; 
-   d="scan'208";a="41307958"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 09:30:26 -0800
-X-CSE-ConnectionGUID: gWWZSQJyQ5Kj7FWyOI6bbw==
-X-CSE-MsgGUID: qEGQn4ySQvSPAHM42qZjzg==
+   d="scan'208";a="66555681"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 09:30:42 -0800
+X-CSE-ConnectionGUID: OhmlKL0zSoeFyw+z018vgw==
+X-CSE-MsgGUID: ih40IuXyT+WEY0M8EDioFg==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="117027896"
+X-IronPort-AV: E=Sophos;i="6.13,312,1732608000"; 
+   d="scan'208";a="115875659"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa008.jf.intel.com with ESMTP; 24 Feb 2025 09:30:25 -0800
+  by orviesa009.jf.intel.com with ESMTP; 24 Feb 2025 09:30:21 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 37082700; Mon, 24 Feb 2025 19:30:20 +0200 (EET)
+	id 033A8495; Mon, 24 Feb 2025 19:30:19 +0200 (EET)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	linux-kernel@vger.kernel.org
@@ -52,9 +52,9 @@ Cc: Andy Shevchenko <andy@kernel.org>,
 	Geert Uytterhoeven <geert@linux-m68k.org>,
 	Willy Tarreau <willy@haproxy.com>,
 	Ksenija Stanojevic <ksenija.stanojevic@gmail.com>
-Subject: [PATCH v1 7/7] auxdisplay: hd44780: Rename hd to hdc in hd44780_common_alloc()
-Date: Mon, 24 Feb 2025 19:27:44 +0200
-Message-ID: <20250224173010.219024-8-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 3/7] auxdisplay: hd44780: Introduce hd44780_common_free()
+Date: Mon, 24 Feb 2025 19:27:40 +0200
+Message-ID: <20250224173010.219024-4-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.45.1.3035.g276e886db78b
 In-Reply-To: <20250224173010.219024-1-andriy.shevchenko@linux.intel.com>
 References: <20250224173010.219024-1-andriy.shevchenko@linux.intel.com>
@@ -66,44 +66,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The hd44780_common_alloc() uses hd for local variable while
-the respective header uses hdc, rename to make it consistent
-and avoid potential confuse with the drivers that use both
-for different reasons. No functional changes intended.
+Introduce hd44780_common_free() for symmetrical operation
+to hd44780_common_alloc(). It will allow to modify the both
+in the future without touching the users.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/auxdisplay/hd44780_common.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/auxdisplay/hd44780_common.c | 6 ++++++
+ drivers/auxdisplay/hd44780_common.h | 2 ++
+ 2 files changed, 8 insertions(+)
 
 diff --git a/drivers/auxdisplay/hd44780_common.c b/drivers/auxdisplay/hd44780_common.c
-index fb340d18fcad..1792fe2a4460 100644
+index 4ef87c3118c0..3f8a496ccb8e 100644
 --- a/drivers/auxdisplay/hd44780_common.c
 +++ b/drivers/auxdisplay/hd44780_common.c
-@@ -353,17 +353,17 @@ EXPORT_SYMBOL_GPL(hd44780_common_redefine_char);
- 
- struct charlcd *hd44780_common_alloc(void)
- {
--	struct hd44780_common *hd;
-+	struct hd44780_common *hdc;
- 	struct charlcd *lcd;
- 
--	lcd = charlcd_alloc(sizeof(*hd));
-+	lcd = charlcd_alloc(sizeof(*hdc));
- 	if (!lcd)
- 		return NULL;
- 
--	hd = lcd->drvdata;
--	hd->ifwidth = 8;
--	hd->bwidth = DEFAULT_LCD_BWIDTH;
--	hd->hwidth = DEFAULT_LCD_HWIDTH;
-+	hdc = lcd->drvdata;
-+	hdc->ifwidth = 8;
-+	hdc->bwidth = DEFAULT_LCD_BWIDTH;
-+	hdc->hwidth = DEFAULT_LCD_HWIDTH;
- 	return lcd;
+@@ -366,5 +366,11 @@ struct hd44780_common *hd44780_common_alloc(void)
  }
  EXPORT_SYMBOL_GPL(hd44780_common_alloc);
+ 
++void hd44780_common_free(struct hd44780_common *hd)
++{
++	kfree(hd);
++}
++EXPORT_SYMBOL_GPL(hd44780_common_free);
++
+ MODULE_DESCRIPTION("Common functions for HD44780 (and compatibles) LCD displays");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/auxdisplay/hd44780_common.h b/drivers/auxdisplay/hd44780_common.h
+index a16aa8c29c99..fe1386e3cf79 100644
+--- a/drivers/auxdisplay/hd44780_common.h
++++ b/drivers/auxdisplay/hd44780_common.h
+@@ -30,4 +30,6 @@ int hd44780_common_blink(struct charlcd *lcd, enum charlcd_onoff on);
+ int hd44780_common_fontsize(struct charlcd *lcd, enum charlcd_fontsize size);
+ int hd44780_common_lines(struct charlcd *lcd, enum charlcd_lines lines);
+ int hd44780_common_redefine_char(struct charlcd *lcd, char *esc);
++
+ struct hd44780_common *hd44780_common_alloc(void);
++void hd44780_common_free(struct hd44780_common *hd);
 -- 
 2.45.1.3035.g276e886db78b
 
