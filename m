@@ -1,192 +1,84 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD14B264A9E
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 17:02:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56681264FB1;
+	Mon, 24 Feb 2025 17:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740416577; cv=none; b=lBXsO7SHVw3Gr9Sl9Rw3NW6ROdiV9ZGPSzZS0131+GAYMo+/6ynHpJIX1FxJGdlt0eVY6rTr26l5ZrP/RN3YxIZ6hd8Wu2xKAOyFluEdLJE9qb42oU81pZTS5NGWfBEAVkn3RJrCFoSOKgC2AgxpIgUqmsuNsAMxDuznm0jYWzo=
+	t=1740416586; cv=none; b=XrvBlraS56sgQ0l9hqV4f7+aAF19flq725cTKfi2ihq4Uzeildejxpw4J1iRqUbhYF+z8ZRAp0AT4zG5XJa5dndB8lAEotTQet2sVrzeJiFKaDr6FMNDzwQI9hKsI6GMGTOSd3uZP1Gl0gYc6BWCtuuDXQQFoWhQliay6ZqLUtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740416577; c=relaxed/simple;
-	bh=e1HU03QaEH/WJqwMrSHwDYP8oWlp/FRk7I/D+9cATTo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=anxNUEGVZL/kse+IrteziPjAHBRpyWytHcAi2Ealcb8MPCuZz1jfvLfcsl5uhgExYlslW0xsoi1uyhuiqF4q2ADY4ILiBZuFLp/YaRU+I7jQnTzoO99szVOLZx6NO5jH4ESQ9lw7as2fZrwwo3nlH/njZaU3tMcrOunss5CZhSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=lpDm5H4s; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740416586; c=relaxed/simple;
+	bh=n2lZ8k9oUq22PKfrQ6ce22//L3GqOg01Nk5ixHKJsvE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gu/ArF4WZy1vFA7rNR+Q4vnrknmyOUH+z5HrGxhZXhuvwwsODKdovx8vghnIG4svZS0qJPi9G9BLKOJ0HxIfAi+n5Dy8KXOTjYwLPuU4CpeCogXcaMFCdGz8koAh9oXqBPl8YPj03dyn0gDkw6mmNaeLqAIV9M2iTNFBHtvSzF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=3gIivHkK; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="lpDm5H4s"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740416573;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qiQKTOacPogCTZt2sF84QiGnZvXEsGlrdkRpybzF4+0=;
-	b=lpDm5H4sJdnzN0FVGveCI+7jrxzFfbnhmXhpxW3Nnuhh6TdXNlMAdIcXDFOXlU/7+yYqRC
-	kg744NhFn8Epzua9iaUK3upeY8Ab4LxungmSXp5/ewmkDWRmAHr4VDpyOQurVCcO/LyXAP
-	P5CH5gjfz8nr0fvspiPu0PQ08IjrGzs=
-From: Tao Chen <chen.dylane@linux.dev>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	eddyz87@gmail.com,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	qmo@kernel.org
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	chen.dylane@gmail.com,
-	Tao Chen <chen.dylane@linux.dev>,
-	Tao Chen <dylane.chen@didiglobal.com>
-Subject: [PATCH bpf-next v8 5/5] selftests/bpf: Add libbpf_probe_bpf_kfunc API selftests
-Date: Tue, 25 Feb 2025 00:59:12 +0800
-Message-Id: <20250224165912.599068-6-chen.dylane@linux.dev>
-In-Reply-To: <20250224165912.599068-1-chen.dylane@linux.dev>
-References: <20250224165912.599068-1-chen.dylane@linux.dev>
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="3gIivHkK"
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 76D6C2E08F44;
+	Mon, 24 Feb 2025 19:02:59 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1740416580;
+	bh=n2lZ8k9oUq22PKfrQ6ce22//L3GqOg01Nk5ixHKJsvE=;
+	h=Received:From:Subject:To;
+	b=3gIivHkKxINwkI0NXbhow3EGi30oCQMc7ilLznbktaLSaHvdRjyybe5GegewltXbX
+	 Qgug7Si/uKOCS0+AIY8YAXPyvOd9NalgYTIS3q4mByVtRQPicETwAUvKvD301ThCyJ
+	 DNE7wTiF6U+E1cfudBKPG5LX14b7z8X4hhbyr/vs=
+Authentication-Results: linux1587.grserver.gr;
+        spf=pass (sender IP is 209.85.167.52) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lf1-f52.google.com
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+Received: by mail-lf1-f52.google.com with SMTP id
+ 2adb3069b0e04-5484fa1401cso474326e87.1;
+        Mon, 24 Feb 2025 09:02:59 -0800 (PST)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCXpSoSOdMssRLq7YvFEIqHxlCDt3AVYYyGb89tT8EjI++3NQ8HVrpvlEFCu3xJGaNCYFuHgUqb7wILSjgM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxc1Z77Qi1ALQzzcAmoxqelJLP84ZvfiJAjHO89mTBUDkwaTg4M
+	2FFPjRSlryraQvW8FdxjE7ylVMLhCY9dVO2+UbKUA/8EUNLfB/r4ohylZvEFjLMvTtoyF1WKjqA
+	yhnAfUizuTE3UquWJdJJmqPMkvv0=
+X-Google-Smtp-Source: 
+ AGHT+IGFQ72mOtg94FYVjEVsFldi/A6WofYFElWbdydv5ti61fFGgws/gBH8KthURKtfBjz1pRBUK2R4S00FM3JrNZo=
+X-Received: by 2002:a05:6512:239b:b0:545:10cf:3462 with SMTP id
+ 2adb3069b0e04-54838f4e423mr5642542e87.41.1740416578675; Mon, 24 Feb 2025
+ 09:02:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250224161016.439696-1-lkml@antheas.dev>
+ <20250224161016.439696-3-lkml@antheas.dev>
+ <004001db86dc$b32dec60$1989c520$@opensource.cirrus.com>
+In-Reply-To: <004001db86dc$b32dec60$1989c520$@opensource.cirrus.com>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Mon, 24 Feb 2025 18:02:47 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwHSbzDxCiO-xYNqNH20HovMnMk+rNLEatToX4js=gO_RQ@mail.gmail.com>
+X-Gm-Features: AWEUYZl1DWVsw0PLPt9fKMNHMejG65PcIh5oxap3br6wh9Kqvn2_VdKHoFq484E
+Message-ID: 
+ <CAGwozwHSbzDxCiO-xYNqNH20HovMnMk+rNLEatToX4js=gO_RQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ALSA: hda/realtek: Fix Asus Z13 2025 audio
+To: "Stefan Binding (Opensource)" <sbinding@opensource.cirrus.com>
+Cc: linux-sound@vger.kernel.org, kailang@realtek.com,
+	linux-kernel@vger.kernel.org, perex@perex.cz, tiwai@suse.com,
+	baojun.xu@ti.com, simont@opensource.cirrus.com,
+	Kyle Gospodnetich <me@kylegospodneti.ch>
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <174041658016.14046.9167718211215169635@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-Add selftests for prog_kfunc feature probing.
+Hi Stefan,
 
- ./test_progs -t libbpf_probe_kfuncs
- #153     libbpf_probe_kfuncs:OK
- Summary: 1/0 PASSED, 0 SKIPPED, 0 FAILED
+> If possible, could you provide an acpidump of this system, so I can compare
+> against what I have?
 
-Cc: Tao Chen <dylane.chen@didiglobal.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Reviewed-by: Eduard Zingerman <eddyz87@gmail.com>
-Signed-off-by: Tao Chen <chen.dylane@linux.dev>
----
- .../selftests/bpf/prog_tests/libbpf_probes.c  | 111 ++++++++++++++++++
- 1 file changed, 111 insertions(+)
+sure, see [1]
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/libbpf_probes.c b/tools/testing/selftests/bpf/prog_tests/libbpf_probes.c
-index 4ed46ed58a7b..d8f5475a94ce 100644
---- a/tools/testing/selftests/bpf/prog_tests/libbpf_probes.c
-+++ b/tools/testing/selftests/bpf/prog_tests/libbpf_probes.c
-@@ -126,3 +126,114 @@ void test_libbpf_probe_helpers(void)
- 		ASSERT_EQ(res, d->supported, buf);
- 	}
- }
-+
-+static int module_btf_fd(char *module)
-+{
-+	int fd, err;
-+	__u32 id = 0, len;
-+	struct bpf_btf_info info;
-+	char name[64];
-+
-+	while (true) {
-+		err = bpf_btf_get_next_id(id, &id);
-+		if (err)
-+			return -1;
-+
-+		fd = bpf_btf_get_fd_by_id(id);
-+		if (fd < 0) {
-+			if (errno == ENOENT)
-+				continue;
-+			return -1;
-+		}
-+		len = sizeof(info);
-+		memset(&info, 0, sizeof(info));
-+		info.name = ptr_to_u64(name);
-+		info.name_len = sizeof(name);
-+		err = bpf_btf_get_info_by_fd(fd, &info, &len);
-+		if (err) {
-+			close(fd);
-+			return -1;
-+		}
-+		/* find target module BTF */
-+		if (!strcmp(name, module))
-+			break;
-+
-+		close(fd);
-+	}
-+
-+	return fd;
-+}
-+
-+void test_libbpf_probe_kfuncs(void)
-+{
-+	int ret, kfunc_id, fd;
-+	char *kfunc = "bpf_cpumask_create";
-+	struct btf *vmlinux_btf = NULL;
-+	struct btf *module_btf = NULL;
-+
-+	vmlinux_btf = btf__parse("/sys/kernel/btf/vmlinux", NULL);
-+	if (!ASSERT_OK_PTR(vmlinux_btf, "btf_parse"))
-+		return;
-+
-+	kfunc_id = btf__find_by_name_kind(vmlinux_btf, kfunc, BTF_KIND_FUNC);
-+	if (!ASSERT_GT(kfunc_id, 0, kfunc))
-+		goto cleanup;
-+
-+	/* prog BPF_PROG_TYPE_SYSCALL supports kfunc bpf_cpumask_create */
-+	ret = libbpf_probe_bpf_kfunc(BPF_PROG_TYPE_SYSCALL, kfunc_id, -1, NULL);
-+	if (!ASSERT_EQ(ret, 1, "kfunc in vmlinux support"))
-+		goto cleanup;
-+
-+	/* prog BPF_PROG_TYPE_KPROBE does not support kfunc bpf_cpumask_create */
-+	ret = libbpf_probe_bpf_kfunc(BPF_PROG_TYPE_KPROBE, kfunc_id, -1, NULL);
-+	if (!ASSERT_EQ(ret, 0, "kfunc in vmlinux not suuport"))
-+		goto cleanup;
-+
-+	ret = libbpf_probe_bpf_kfunc(BPF_PROG_TYPE_KPROBE, -1, -1, NULL);
-+	if (!ASSERT_EQ(ret, 0, "invalid kfunc id:-1"))
-+		goto cleanup;
-+
-+	ret = libbpf_probe_bpf_kfunc(100000, kfunc_id, -1, NULL);
-+	if (!ASSERT_ERR(ret, "invalid prog type:100000"))
-+		goto cleanup;
-+
-+	if (!env.has_testmod)
-+		goto cleanup;
-+
-+	module_btf = btf__load_module_btf("bpf_testmod", vmlinux_btf);
-+	if (!ASSERT_OK_PTR(module_btf, "load module BTF"))
-+		goto cleanup;
-+
-+	kfunc_id = btf__find_by_name(module_btf, "bpf_kfunc_call_test1");
-+	if (!ASSERT_GT(kfunc_id, 0, "func not found"))
-+		goto cleanup;
-+
-+	fd = module_btf_fd("bpf_testmod");
-+	if (!ASSERT_GE(fd, 0, "module BTF fd"))
-+		goto cleanup;
-+
-+	/* prog BPF_PROG_TYPE_SYSCALL supports kfunc bpf_kfunc_call_test1 in bpf_testmod */
-+	ret = libbpf_probe_bpf_kfunc(BPF_PROG_TYPE_SYSCALL, kfunc_id, fd, NULL);
-+	if (!ASSERT_EQ(ret, 1, "kfunc in module BTF support"))
-+		goto cleanup_fd;
-+
-+	/* prog BPF_PROG_TYPE_KPROBE does not support kfunc bpf_kfunc_call_test1
-+	 * in bpf_testmod
-+	 */
-+	ret = libbpf_probe_bpf_kfunc(BPF_PROG_TYPE_KPROBE, kfunc_id, fd, NULL);
-+	if (!ASSERT_EQ(ret, 0, "kfunc in module BTF not support"))
-+		goto cleanup_fd;
-+
-+	ret = libbpf_probe_bpf_kfunc(BPF_PROG_TYPE_SYSCALL, -1, fd, NULL);
-+	if (!ASSERT_EQ(ret, 0, "invalid kfunc id in module BTF"))
-+		goto cleanup_fd;
-+
-+	ret = libbpf_probe_bpf_kfunc(BPF_PROG_TYPE_SYSCALL, kfunc_id, 100, NULL);
-+	ASSERT_EQ(ret, 0, "invalid BTF fd in module BTF");
-+
-+cleanup_fd:
-+	close(fd);
-+cleanup:
-+	btf__free(vmlinux_btf);
-+	btf__free(module_btf);
-+}
--- 
-2.43.0
+Antheas
 
+[1] https://github.com/hhd-dev/hwinfo/blob/5bb16fa59f533e036e430016f2c85facd0325f5a/devices/Asus%20Z13%202025/decoded/dsdt.dsl
