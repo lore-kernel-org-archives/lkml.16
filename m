@@ -1,397 +1,122 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B741624EB
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 02:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F0A4430
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 02:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740365528; cv=none; b=iabcji4zTRCC4pNLjKsXwTz2ZkAuts/JOXP5R0ncIWHbaLrKQKBSCB4XJ7ApmKreOTH+aspzbtfoTrrK4/P3rbf5cBIWEq/HvfiYjBUYVEerNpzAF4mDmwQJ3TfYIMXLyE0R4eSiiGUClRa5Is0w2q1viRc7ElsWUzX403vdXZ0=
+	t=1740365571; cv=none; b=cLTpEwoxKwDpowaxEBzd3uwQm2y6QJz/7nPkwAo99FuAitWG/9YKtYQ9t2vm/XC01M4GObNKzPFg17Wb3PQ17/cePpym6/dNfL1sP50/ILqOraOjnT+0CWhpZeCr4j0m84LND9cH7c5h6QKI2Y1AcOluSlv/hFIKnF8lLwkwJ8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740365528; c=relaxed/simple;
-	bh=jXWor17FKnDDhH0VmC5rCoae7iirHq7pFepPZzbda1c=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=Rg0FkOgA9SglDLwCNVUl4nx4G7Y4l3tg2DcN2WBxLnqGoMwe/pk1xKHKkEXmGBi76LDPE17aZGIHJhDp2STXaLBCvJI1bhd/O+rXv+0cG7kVCIlHW4CgNAWaNrAWqMAavbP2FytYR9wwIrLDWNEJsXnSz3i43aKTf4fUa/E02cA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Lk/uqCJj; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=nC37crRK; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rTreylf5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=UtAzLv+z; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1740365571; c=relaxed/simple;
+	bh=X+jZl9yjWxMVT4yYJA/b1HzJa0muchAg22wzqZtgmIs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k7v/lSKWpk37gWC0XLYSpcloXtyXU0KsgdPJOgHlG5rRzi/bUiul/3jkolctuLPEfd73RhuunHKUjgWPzvH9tsRv8B0ujOSE2voe4eyRLEmbPrnVSd6mzYW4Xgb0hfTKzTPkfo6GfnjuhciErsBNExks0H+2bjQyQQYhK7KdhMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SxAxZCx2; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Lk/uqCJj";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="nC37crRK";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rTreylf5";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="UtAzLv+z"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D85891F383;
-	Mon, 24 Feb 2025 02:52:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1740365524; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rF0P8a6Hwqb95loG5irVcapgwjZVYtE4gO0QxGgiXKQ=;
-	b=Lk/uqCJjdUedvIhGrbOAhb8qtZ3FfBPtE8qHepyDIlrpFbh/yZ01eiQxtE0rKc+jEleib+
-	LA7V135lQ2hI1sT35cd6C3lABAgoCYLZb96H1FpDNNX2nvJtJgCgJpI5xIH447L/MZoPho
-	oabDOojCcr2vu9Tk3Y7Rs1LPjTFnKJE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1740365524;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rF0P8a6Hwqb95loG5irVcapgwjZVYtE4gO0QxGgiXKQ=;
-	b=nC37crRKvzCDWHFvhLEPngNSUcjS8veQogPaXTK4/xMSfgMn3Va7tsnLP8TJXuh4XVdfPZ
-	i1xGq9X/ZNMeB0CA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1740365522; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rF0P8a6Hwqb95loG5irVcapgwjZVYtE4gO0QxGgiXKQ=;
-	b=rTreylf5qRbHpxi0Ie6+jW+DLuU1eaXKk5q3GZlOrPiM3ts2gDZb0b9UfdKoQXBibzTIDG
-	HDaQaoxaLkmtsGXUH0wwAenyFfVlNFX3oCh/ZbU6+eyzXy2fRx4JLaBHj3XmV77HN7JQJe
-	YeRLrwciELmH3FLeSg4sT4LLL8Hkg5k=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1740365522;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rF0P8a6Hwqb95loG5irVcapgwjZVYtE4gO0QxGgiXKQ=;
-	b=UtAzLv+zO/zhrpZzsvVcXozs26QN4HAyaaOEqxBUY+hU+6nmIeKpoqzqqmU0GYWFXZx45B
-	+nK2BFE0IZUk3mDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2D28413332;
-	Mon, 24 Feb 2025 02:51:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Lp4zNMneu2eXfAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 24 Feb 2025 02:51:53 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SxAxZCx2"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5461cb12e39so3728325e87.2
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 18:52:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740365567; x=1740970367; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=N79cu7iC2Cqqnin+PLo4xCdrijtvr/2XsDeBhnAhIuo=;
+        b=SxAxZCx25MjB9yd+nhpYqRFOySLyHXv+K5E3w/36MFzoqsPpaLsm+3ePFQHPeYfDmI
+         Aifvg96ci/Y9L1mpKeIO3AWaHUzE91BxKL4lA1AnoE3gtQ2Yv+RMXPvNgeAh341Vh3YY
+         L6GN0tEkIWUcybBuBhTrFuUPWaxtWNV8Ur4o/Cu/WRLTleqA+J5KM5Bt68AtrXgPw18c
+         N9et6eE0LHpGlmfsDhTYVyHsOftEdxtBLE8IEDxpZ94AcCM3fsJKC0h8cinToGAFMedn
+         rQsnWZYpd7tx0fpYRwgmLDZhQipGOI0a+ddtjN64vF8kBR3YZ4sZO6f2Oxj3h6zAMgHp
+         FxDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740365567; x=1740970367;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N79cu7iC2Cqqnin+PLo4xCdrijtvr/2XsDeBhnAhIuo=;
+        b=FNUUwZNG9evY/Rs4VIrIstkod3USbgUQBwHtbl4u+R0Vl5jX0XcuF/E2U3r5Ida4AK
+         8npAZeaxiR/YuVWUBUOE36EYEyqLikH8LPsOTaIhoDyIuxrc5NJdhWd+09+3WPf34sqv
+         TF65w+VOf46zxsB66sg9C24I/dc4iUHI+08SE5UtsBgw22nszIKfB1kFDDLbsUYcHN/W
+         brAKD4yQS28J6kEmfA7jqEVW1/tXb4kkEX6QgsAcJNhDSG2XiLwVK0QEctGDPj6+u4kA
+         9GQfT+f3I06y7Xj65f0xKiuZG5lHmEtH3MSVgEgP1agJCOyYIjZEh/y5RNVQKDt+nxRj
+         ZZAA==
+X-Forwarded-Encrypted: i=1; AJvYcCXrwvDrIi5HQLM3fHNoBGu4EUbaj2lAy/GK9EIGRFIzJep+IiIHYBMoGA7KILf7uPJx3y7TQPBUV+eRmf0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YybV/s1uB+KWm0RWet57wj85uQfWzw9aBfON7DH1O8ntccXdbpn
+	EKHiISuitR45XX+A4gLYI8JW9ZlHys+MqczbEL/fuilaBTg0ebEodqjkiru2guA=
+X-Gm-Gg: ASbGncsYU333diRAfxLB/vTxn6Y8ohXW1Uqj0dYzxED3j4uhXV9yNH7E+TbRuVYOWDX
+	U8HRL3CMEnSqnMWfXdvJOw7x+c0IFJk4CX8938o1pMfxi4Q4FDQFcM8HoaTBMZAGiNHrMONGnaw
+	RGeVuyr58DTbbqHjYjxsgB+sT9BVeKT4W84I6HOKuftvVJe/1Ut+4/q5cMY0D6Io+Y7soMmKwgt
+	7JjHszOFYDzrIL4NVye8q3EH3bVKDz/M97FJdO5ODV3RVZkAcaL6VoOtXh/tHwscxZzqFHHeW2m
+	6Bsb/4LHSeaqPRFNvFq0i5RLopRBzL454L9IqxXcVj+F6xErA9yMVQgPdPA4w7W7mdca+tc72zd
+	FrcoQxA==
+X-Google-Smtp-Source: AGHT+IEa5Mf84ph5T/ZdHvdKMLIs5jH8HXd1tjLXSn92MqsxBCI728iU6GLsECzIInK2/X8Pt2Ep/A==
+X-Received: by 2002:a05:6512:110d:b0:545:62c:4b13 with SMTP id 2adb3069b0e04-54838f4c9efmr4290701e87.40.1740365567236;
+        Sun, 23 Feb 2025 18:52:47 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54839cd339dsm838172e87.203.2025.02.23.18.52.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Feb 2025 18:52:45 -0800 (PST)
+Date: Mon, 24 Feb 2025 04:52:43 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Yongbang Shi <shiyongbang@huawei.com>
+Cc: xinliang.liu@linaro.org, tiantao6@hisilicon.com, 
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, 
+	daniel@ffwll.ch, kong.kongxinwei@hisilicon.com, liangjian010@huawei.com, 
+	chenjianmin@huawei.com, lidongming5@huawei.com, libaihan@huawei.com, 
+	shenjian15@huawei.com, shaojijie@huawei.com, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 drm-dp 7/8] drm/hisilicon/hibmc: Enable this hot plug
+ detect of irq feature
+Message-ID: <6jx5ldpidy2ycrqognfiv5ttqr5ia4dtbryta3kc2mkndrvvgo@qzuakucz765k>
+References: <20250222025102.1519798-1-shiyongbang@huawei.com>
+ <20250222025102.1519798-8-shiyongbang@huawei.com>
+ <reqpxlbvlz5qssgy6gbjuou33h4zevo4xeztqbsr4keehplyhx@utv22a5ihohx>
+ <eef68fc7-30f4-4246-a82e-4f90cd6a665d@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Christian Brauner" <brauner@kernel.org>, "Jan Kara" <jack@suse.cz>,
- "Miklos Szeredi" <miklos@szeredi.hu>, "Xiubo Li" <xiubli@redhat.com>,
- "Ilya Dryomov" <idryomov@gmail.com>, "Richard Weinberger" <richard@nod.at>,
- "Anton Ivanov" <anton.ivanov@cambridgegreys.com>,
- "Johannes Berg" <johannes@sipsolutions.net>,
- "Trond Myklebust" <trondmy@kernel.org>, "Anna Schumaker" <anna@kernel.org>,
- "Jeff Layton" <jlayton@kernel.org>, "Olga Kornievskaia" <okorniev@redhat.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- "Sergey Senozhatsky" <senozhatsky@chromium.org>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
- linux-um@lists.infradead.org, ceph-devel@vger.kernel.org,
- netfs@lists.linux.dev
-Subject: Re: [PATCH 6/6] VFS: Change vfs_mkdir() to return the dentry.
-In-reply-to: <01a3f184-940c-494e-ade2-775e3441fc4e@oracle.com>
-References: <>, <01a3f184-940c-494e-ade2-775e3441fc4e@oracle.com>
-Date: Mon, 24 Feb 2025 13:51:50 +1100
-Message-id: <174036551056.74271.9438990163654268476@noble.neil.brown.name>
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[zeniv.linux.org.uk,kernel.org,suse.cz,szeredi.hu,redhat.com,gmail.com,nod.at,cambridgegreys.com,sipsolutions.net,oracle.com,talpey.com,chromium.org,vger.kernel.org,lists.infradead.org,lists.linux.dev];
-	R_RATELIMIT(0.00)[from(RLewrxuus8mos16izbn)];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,noble.neil.brown.name:mid]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eef68fc7-30f4-4246-a82e-4f90cd6a665d@huawei.com>
 
-On Sat, 22 Feb 2025, Chuck Lever wrote:
-> On 2/20/25 6:36 PM, NeilBrown wrote:
-...
-> > +		dchild =3D vfs_mkdir(&nop_mnt_idmap, dirp, dchild, iap->ia_mode);
-> > +		if (IS_ERR(dchild)) {
-> > +			host_err =3D PTR_ERR(dchild);
-> > +		} else if (d_is_negative(dchild)) {
-> > +			err =3D nfserr_serverfault;
-> > +			goto out;
-> > +		} else if (unlikely(dchild !=3D resfhp->fh_dentry)) {
-> >  			dput(resfhp->fh_dentry);
-> > -			resfhp->fh_dentry =3D dget(d);
-> > -			err =3D fh_update(resfhp);
->=20
-> Hi Neil, why is this fh_update() call no longer necessary?
->=20
+On Sat, Feb 22, 2025 at 06:35:48PM +0800, Yongbang Shi wrote:
+> > > +static int hibmc_dp_hpd_event(struct drm_client_dev *client)
+> > > +{
+> > > +	struct hibmc_dp *dp = container_of(client, struct hibmc_dp, client);
+> > > +	struct hibmc_drm_private *priv = to_hibmc_drm_private(dp->drm_dev);
+> > > +	struct drm_display_mode *mode = &priv->crtc.state->adjusted_mode;
+> > > +	int ret;
+> > > +
+> > > +	if (dp->hpd_status) {
+> > > +		hibmc_dp_hpd_cfg(&priv->dp);
+> > > +		ret = hibmc_dp_prepare(dp, mode);
+> > > +		if (ret)
+> > > +			return ret;
+> > > +
+> > > +		hibmc_dp_display_en(dp, true);
+> > > +	} else {
+> > > +		hibmc_dp_display_en(dp, false);
+> > > +		hibmc_dp_reset_link(&priv->dp);
+> > > +	}
+> > If I understand this correctly, you are using a separate drm_client to
+> > enable and disable the link & display. Why is it necessary? Existing
+> > drm_clients and userspace compositors use drm framework, they should be
+> > able to turn the display on and off as required.
+> > 
+> Thanks for your asking, there are cfg/reset process when the connector 's pluging in/out.
+> We want to cfg DP registers again when the connector changes. Not only dp link training, but also cfg
+> the different video modes into DP registers.
 
-I tried to explain that in the commit message:
+Why? The link training and mode programming should happen during
+pre_enable / enable stage (legacy or atomic).
 
-                                        I removed the fh_update()
-      call as that is not needed and out-of-place.  A subsequent
-      nfsd_create_setattr() call will call fh_update() when needed.
+> 
+> 
 
-I don't think the fh_update() was needed even when first added in=20
-Commit 3819bb0d79f5 ("nfsd: vfs_mkdir() might succeed leaving dentry negative=
- unhashed")
-
-as there was already an fh_update() call later in the function.
-
-Thanks,
-NeilBrown
-
-
-
->=20
-> > -			dput(dchild);
-> > -			dchild =3D d;
-> > -			if (err)
-> > -				goto out;
-> > +			resfhp->fh_dentry =3D dget(dchild);
-> >  		}
-> >  		break;
-> >  	case S_IFCHR:
-> > @@ -1530,7 +1517,8 @@ nfsd_create_locked(struct svc_rqst *rqstp, struct s=
-vc_fh *fhp,
-> >  	err =3D nfsd_create_setattr(rqstp, fhp, resfhp, attrs);
-> > =20
-> >  out:
-> > -	dput(dchild);
-> > +	if (!IS_ERR(dchild))
-> > +		dput(dchild);
-> >  	return err;
-> > =20
-> >  out_nfserr:
-> > diff --git a/fs/overlayfs/dir.c b/fs/overlayfs/dir.c
-> > index 21c3aaf7b274..fe493f3ed6b6 100644
-> > --- a/fs/overlayfs/dir.c
-> > +++ b/fs/overlayfs/dir.c
-> > @@ -138,37 +138,6 @@ int ovl_cleanup_and_whiteout(struct ovl_fs *ofs, str=
-uct inode *dir,
-> >  	goto out;
-> >  }
-> > =20
-> > -int ovl_mkdir_real(struct ovl_fs *ofs, struct inode *dir,
-> > -		   struct dentry **newdentry, umode_t mode)
-> > -{
-> > -	int err;
-> > -	struct dentry *d, *dentry =3D *newdentry;
-> > -
-> > -	err =3D ovl_do_mkdir(ofs, dir, dentry, mode);
-> > -	if (err)
-> > -		return err;
-> > -
-> > -	if (likely(!d_unhashed(dentry)))
-> > -		return 0;
-> > -
-> > -	/*
-> > -	 * vfs_mkdir() may succeed and leave the dentry passed
-> > -	 * to it unhashed and negative. If that happens, try to
-> > -	 * lookup a new hashed and positive dentry.
-> > -	 */
-> > -	d =3D ovl_lookup_upper(ofs, dentry->d_name.name, dentry->d_parent,
-> > -			     dentry->d_name.len);
-> > -	if (IS_ERR(d)) {
-> > -		pr_warn("failed lookup after mkdir (%pd2, err=3D%i).\n",
-> > -			dentry, err);
-> > -		return PTR_ERR(d);
-> > -	}
-> > -	dput(dentry);
-> > -	*newdentry =3D d;
-> > -
-> > -	return 0;
-> > -}
-> > -
-> >  struct dentry *ovl_create_real(struct ovl_fs *ofs, struct inode *dir,
-> >  			       struct dentry *newdentry, struct ovl_cattr *attr)
-> >  {
-> > @@ -191,7 +160,8 @@ struct dentry *ovl_create_real(struct ovl_fs *ofs, st=
-ruct inode *dir,
-> > =20
-> >  		case S_IFDIR:
-> >  			/* mkdir is special... */
-> > -			err =3D  ovl_mkdir_real(ofs, dir, &newdentry, attr->mode);
-> > +			newdentry =3D  ovl_do_mkdir(ofs, dir, newdentry, attr->mode);
-> > +			err =3D PTR_ERR_OR_ZERO(newdentry);
-> >  			break;
-> > =20
-> >  		case S_IFCHR:
-> > @@ -219,7 +189,8 @@ struct dentry *ovl_create_real(struct ovl_fs *ofs, st=
-ruct inode *dir,
-> >  	}
-> >  out:
-> >  	if (err) {
-> > -		dput(newdentry);
-> > +		if (!IS_ERR(newdentry))
-> > +			dput(newdentry);
-> >  		return ERR_PTR(err);
-> >  	}
-> >  	return newdentry;
-> > diff --git a/fs/overlayfs/overlayfs.h b/fs/overlayfs/overlayfs.h
-> > index 0021e2025020..6f2f8f4cfbbc 100644
-> > --- a/fs/overlayfs/overlayfs.h
-> > +++ b/fs/overlayfs/overlayfs.h
-> > @@ -241,13 +241,14 @@ static inline int ovl_do_create(struct ovl_fs *ofs,
-> >  	return err;
-> >  }
-> > =20
-> > -static inline int ovl_do_mkdir(struct ovl_fs *ofs,
-> > -			       struct inode *dir, struct dentry *dentry,
-> > -			       umode_t mode)
-> > +static inline struct dentry *ovl_do_mkdir(struct ovl_fs *ofs,
-> > +					  struct inode *dir,
-> > +					  struct dentry *dentry,
-> > +					  umode_t mode)
-> >  {
-> > -	int err =3D vfs_mkdir(ovl_upper_mnt_idmap(ofs), dir, dentry, mode);
-> > -	pr_debug("mkdir(%pd2, 0%o) =3D %i\n", dentry, mode, err);
-> > -	return err;
-> > +	dentry =3D vfs_mkdir(ovl_upper_mnt_idmap(ofs), dir, dentry, mode);
-> > +	pr_debug("mkdir(%pd2, 0%o) =3D %i\n", dentry, mode, PTR_ERR_OR_ZERO(den=
-try));
-> > +	return dentry;
-> >  }
-> > =20
-> >  static inline int ovl_do_mknod(struct ovl_fs *ofs,
-> > @@ -838,8 +839,6 @@ struct ovl_cattr {
-> > =20
-> >  #define OVL_CATTR(m) (&(struct ovl_cattr) { .mode =3D (m) })
-> > =20
-> > -int ovl_mkdir_real(struct ovl_fs *ofs, struct inode *dir,
-> > -		   struct dentry **newdentry, umode_t mode);
-> >  struct dentry *ovl_create_real(struct ovl_fs *ofs,
-> >  			       struct inode *dir, struct dentry *newdentry,
-> >  			       struct ovl_cattr *attr);
-> > diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
-> > index 61e21c3129e8..b63474d1b064 100644
-> > --- a/fs/overlayfs/super.c
-> > +++ b/fs/overlayfs/super.c
-> > @@ -327,9 +327,10 @@ static struct dentry *ovl_workdir_create(struct ovl_=
-fs *ofs,
-> >  			goto retry;
-> >  		}
-> > =20
-> > -		err =3D ovl_mkdir_real(ofs, dir, &work, attr.ia_mode);
-> > -		if (err)
-> > -			goto out_dput;
-> > +		work =3D ovl_do_mkdir(ofs, dir, work, attr.ia_mode);
-> > +		err =3D PTR_ERR(work);
-> > +		if (IS_ERR(work))
-> > +			goto out_err;
-> > =20
-> >  		/* Weird filesystem returning with hashed negative (kernfs)? */
-> >  		err =3D -EINVAL;
-> > diff --git a/fs/smb/server/vfs.c b/fs/smb/server/vfs.c
-> > index fe29acef5872..8554aa5a1059 100644
-> > --- a/fs/smb/server/vfs.c
-> > +++ b/fs/smb/server/vfs.c
-> > @@ -206,8 +206,8 @@ int ksmbd_vfs_mkdir(struct ksmbd_work *work, const ch=
-ar *name, umode_t mode)
-> >  {
-> >  	struct mnt_idmap *idmap;
-> >  	struct path path;
-> > -	struct dentry *dentry;
-> > -	int err;
-> > +	struct dentry *dentry, *d;
-> > +	int err =3D 0;
-> > =20
-> >  	dentry =3D ksmbd_vfs_kern_path_create(work, name,
-> >  					    LOOKUP_NO_SYMLINKS | LOOKUP_DIRECTORY,
-> > @@ -222,27 +222,15 @@ int ksmbd_vfs_mkdir(struct ksmbd_work *work, const =
-char *name, umode_t mode)
-> > =20
-> >  	idmap =3D mnt_idmap(path.mnt);
-> >  	mode |=3D S_IFDIR;
-> > -	err =3D vfs_mkdir(idmap, d_inode(path.dentry), dentry, mode);
-> > -	if (!err && d_unhashed(dentry)) {
-> > -		struct dentry *d;
-> > -
-> > -		d =3D lookup_one(idmap, dentry->d_name.name, dentry->d_parent,
-> > -			       dentry->d_name.len);
-> > -		if (IS_ERR(d)) {
-> > -			err =3D PTR_ERR(d);
-> > -			goto out_err;
-> > -		}
-> > -		if (unlikely(d_is_negative(d))) {
-> > -			dput(d);
-> > -			err =3D -ENOENT;
-> > -			goto out_err;
-> > -		}
-> > -
-> > -		ksmbd_vfs_inherit_owner(work, d_inode(path.dentry), d_inode(d));
-> > -		dput(d);
-> > -	}
-> > +	d =3D dentry;
-> > +	dentry =3D vfs_mkdir(idmap, d_inode(path.dentry), dentry, mode);
-> > +	if (IS_ERR(dentry))
-> > +		err =3D PTR_ERR(dentry);
-> > +	else if (d_is_negative(dentry))
-> > +		err =3D -ENOENT;
-> > +	if (!err && dentry !=3D d)
-> > +		ksmbd_vfs_inherit_owner(work, d_inode(path.dentry), d_inode(dentry));
-> > =20
-> > -out_err:
-> >  	done_path_create(&path, dentry);
-> >  	if (err)
-> >  		pr_err("mkdir(%s): creation failed (err:%d)\n", name, err);
-> > diff --git a/fs/xfs/scrub/orphanage.c b/fs/xfs/scrub/orphanage.c
-> > index c287c755f2c5..3537f3cca6d5 100644
-> > --- a/fs/xfs/scrub/orphanage.c
-> > +++ b/fs/xfs/scrub/orphanage.c
-> > @@ -167,10 +167,11 @@ xrep_orphanage_create(
-> >  	 * directory to control access to a file we put in here.
-> >  	 */
-> >  	if (d_really_is_negative(orphanage_dentry)) {
-> > -		error =3D vfs_mkdir(&nop_mnt_idmap, root_inode, orphanage_dentry,
-> > -				0750);
-> > -		if (error)
-> > -			goto out_dput_orphanage;
-> > +		orphanage_dentry =3D vfs_mkdir(&nop_mnt_idmap, root_inode,
-> > +					     orphanage_dentry, 0750);
-> > +		error =3D PTR_ERR(orphanage_dentry);
-> > +		if (IS_ERR(orphanage_dentry))
-> > +			goto out_unlock_root;
-> >  	}
-> > =20
-> >  	/* Not a directory? Bail out. */
-> > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> > index 8f4fbecd40fc..eaad8e31c0d4 100644
-> > --- a/include/linux/fs.h
-> > +++ b/include/linux/fs.h
-> > @@ -1971,8 +1971,8 @@ bool inode_owner_or_capable(struct mnt_idmap *idmap,
-> >   */
-> >  int vfs_create(struct mnt_idmap *, struct inode *,
-> >  	       struct dentry *, umode_t, bool);
-> > -int vfs_mkdir(struct mnt_idmap *, struct inode *,
-> > -	      struct dentry *, umode_t);
-> > +struct dentry *vfs_mkdir(struct mnt_idmap *, struct inode *,
-> > +			 struct dentry *, umode_t);
-> >  int vfs_mknod(struct mnt_idmap *, struct inode *, struct dentry *,
-> >                umode_t, dev_t);
-> >  int vfs_symlink(struct mnt_idmap *, struct inode *,
->=20
->=20
-> --=20
-> Chuck Lever
->=20
-
+-- 
+With best wishes
+Dmitry
