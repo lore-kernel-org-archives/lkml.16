@@ -1,221 +1,163 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5842561A3;
-	Mon, 24 Feb 2025 14:04:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42869189919;
+	Mon, 24 Feb 2025 14:04:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740405887; cv=none; b=ds/6bdu9krUJXXNqL4OnOLP1r+HTLgzXgPob17Arn6Ir0zfNhuMr0LdKk9nPzy8K/RNAfgkuKjWTu2y9woLMLtT7ElQXsPtU5qUtYWnRBmm6Gz3vacetge7hMGa5Nml9ge+yST1xOwlInmijxSE8PVpcM1tbzhjVCL9tacniuaU=
+	t=1740405895; cv=none; b=fCX+Wefy7UvUNbyV9G0hODDATOtXApFLXfkCKRBhmxtotBM1uVYsrH+3ncF/Hs7t6CvB7LuBy7/P0yxo36iATXCxutfhKLa0OAprvoFN9N+ITP4VQJwygYl9qr/qhVMsHU48tRsEHDQfAaQZkQW0wMbnNH0VjWE1Xsmst6XXWvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740405887; c=relaxed/simple;
-	bh=wt1dZX2Kgz4k5MbqpHvvb55cRgHsD3fZPjdzvbscas0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CMZ/j3A8COCykRWl7UzKvL2tEsZOBzjLkROGlQOP8aKS9qbOkLFHVt1+oB6US//Nhd3YsRFKHuv7sLtv7vKJt7mF4tP+2dtRq5Fou/aCqa4fVM9wCq3TSsJu2rs0Qg65pvKO5Da3N9XKz1aygUIW36Bohff6T6WVtmoW9Vz78kU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L3QVej+E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740405895; c=relaxed/simple;
+	bh=JbGJaHSVed+ELnCA8sbA8yO96hrYhyAbp8Q38B7qOHg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=okRfFMCKdD0Vead4Q4tnZKAlCmiGey8ng57wypn6JGrVtjCxQGUqkA4MV0GqA/lvT+FOEboLfOLLONQcwyTnj1Hb/uYdjD7xv0Du2oAJSTgu/Mz3ylRkX+o8r/AkxCxP942z8pMkVXttdo72zrNmHQkNp25MSB7wnoULzGamvXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I0DQHa2F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L3QVej+E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C613FC4CEEB;
-	Mon, 24 Feb 2025 14:04:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I0DQHa2F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CE59C4CED6;
+	Mon, 24 Feb 2025 14:04:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740405886;
-	bh=wt1dZX2Kgz4k5MbqpHvvb55cRgHsD3fZPjdzvbscas0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L3QVej+ElgkWSmoU2923NLDFfdOwosVNkseVwHcEvtNvwP8EaiMSCIFMb1YcZRXcH
-	 vWr+8A+HIfjdV+w4lM6Hw96mNeu77eX/fAhXdd3E+Nf08J1+XOzhATP1JfhGZriEUi
-	 1Cc1pXbRrxLnlBY9kgLaqlR9Jb4UzlWN2RUCod2iG34rksF7CvOQDxYM81GIHeSdo9
-	 VbxN9tOzVRm5i7TMSMK00qSgyB2jntWbhh2JghPZriu0qa58itKAHUz4Sjw1voubuV
-	 lUiNH1BwPRl4RBQ0JqVBAVSS0kcjahGxGUcoYboO5MbYEMyhgK/FAH5LtX3h3rYtUZ
-	 HXEUOs9T5+2Aw==
-Date: Mon, 24 Feb 2025 22:04:41 +0800
-From: Coly Li <colyli@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Kent Overstreet <kent.overstreet@linux.dev>, 
-	linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 8/8][next] bcache: Avoid -Wflex-array-member-not-at-end
- warnings
-Message-ID: <5pauuhdlh2jaeqixofoips7f4zjl7pcyeykkglkmihsko3cnjy@4cbebl2x3qod>
-References: <cover.1739957534.git.gustavoars@kernel.org>
- <f9f20ad9362972ef920dd9aecd7b98ab345ee866.1739957534.git.gustavoars@kernel.org>
+	s=k20201202; t=1740405895;
+	bh=JbGJaHSVed+ELnCA8sbA8yO96hrYhyAbp8Q38B7qOHg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=I0DQHa2Fa6r4ntsI8OAL/Ycw8jyUhH4xXP5R5DFCwVUvg8ZECrqeUtcWSuu80DwPM
+	 4KfCZYTSgPpAiE6VJthpv1HShjm5x4ayqKFXEokC8qSEZhr8CGv6F5ugb9RlwViauZ
+	 0JRASwZErLBHvOV7iXPQYkPexp6LF2feWx47iEFQPJpjJTt2y45KBKcGsWMDi7mxRV
+	 cHCuKkRH8qJCs4liVi9oN6YU1U4c8HQ/AzcyXdxlkI8Ewd7xZdUj4TBB2QuITpzQ2+
+	 XTw6aNsdHQ9sgc1FACShyAOXl/absjjGkE4AIMvOF+F4NlNdRUaFKJaeWoG9gUwpYL
+	 nL4a/h+Q9SmGA==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@ACULAB.COM>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Subject: [PATCH RFCv2 16/18] selftests/bpf: Add hit/attach/detach race optimized uprobe test
+Date: Mon, 24 Feb 2025 15:01:48 +0100
+Message-ID: <20250224140151.667679-17-jolsa@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250224140151.667679-1-jolsa@kernel.org>
+References: <20250224140151.667679-1-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <f9f20ad9362972ef920dd9aecd7b98ab345ee866.1739957534.git.gustavoars@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Feb 24, 2025 at 08:31:26PM +0800, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Change the type of the middle struct members currently causing trouble
-> from `struct bio` to `struct bio_hdr`.
-> 
-> We also use `container_of()` whenever we need to retrieve a pointer to
-> the flexible structure `struct bio`, through which we can access the
-> flexible-array member in it, if necessary.
-> 
-> With these changes fix 112 of the following warnings:
-> 
-> drivers/md/bcache/bcache.h:233:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/md/bcache/bcache.h:241:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/md/bcache/bcache.h:242:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/md/bcache/bcache.h:308:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/md/bcache/bcache.h:422:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/md/bcache/bcache.h:639:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/md/bcache/journal.h:152:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> drivers/md/bcache/journal.h:156:33: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Adding test that makes sure parallel execution of the uprobe and
+attach/detach of optimized uprobe on it works properly.
 
-Hi Gustavo,
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ .../selftests/bpf/prog_tests/uprobe_syscall.c | 75 +++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
-each struct bio followed by a struct bio_vec at the location where
-struct bio is embedded into middle of a structure. So the general
-flex-array-in-middle issue doesn't exist here indeed.
-
-I don't suggest to introduce extra complication in bcache code.
-
-How about to improve the checking script, if there is no following
-struct bio_vec after struct bio, then that should be something really
-suspicious.
-
-Thanks.
-
-Coly Li
-
-> ---
->  drivers/md/bcache/bcache.h  |  4 ++--
->  drivers/md/bcache/journal.c | 10 +++++-----
->  drivers/md/bcache/journal.h |  4 ++--
->  drivers/md/bcache/super.c   |  8 +++++---
->  4 files changed, 14 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/md/bcache/bcache.h b/drivers/md/bcache/bcache.h
-> index 785b0d9008fa..328023e90eb2 100644
-> --- a/drivers/md/bcache/bcache.h
-> +++ b/drivers/md/bcache/bcache.h
-> @@ -305,7 +305,7 @@ struct cached_dev {
->  
->  	struct cache_sb		sb;
->  	struct cache_sb_disk	*sb_disk;
-> -	struct bio		sb_bio;
-> +	struct bio_hdr		sb_bio;
->  	struct bio_vec		sb_bv[1];
->  	struct closure		sb_write;
->  	struct semaphore	sb_write_mutex;
-> @@ -419,7 +419,7 @@ struct cache {
->  	struct cache_set	*set;
->  	struct cache_sb		sb;
->  	struct cache_sb_disk	*sb_disk;
-> -	struct bio		sb_bio;
-> +	struct bio_hdr		sb_bio;
->  	struct bio_vec		sb_bv[1];
->  
->  	struct kobject		kobj;
-> diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
-> index 7ff14bd2feb8..2ead129f7758 100644
-> --- a/drivers/md/bcache/journal.c
-> +++ b/drivers/md/bcache/journal.c
-> @@ -36,7 +36,7 @@ static int journal_read_bucket(struct cache *ca, struct list_head *list,
->  			       unsigned int bucket_index)
->  {
->  	struct journal_device *ja = &ca->journal;
-> -	struct bio *bio = &ja->bio;
-> +	struct bio *bio = container_of(&ja->bio, struct bio, __hdr);
->  
->  	struct journal_replay *i;
->  	struct jset *j, *data = ca->set->journal.w[0].data;
-> @@ -571,7 +571,7 @@ static void btree_flush_write(struct cache_set *c)
->  static void journal_discard_endio(struct bio *bio)
->  {
->  	struct journal_device *ja =
-> -		container_of(bio, struct journal_device, discard_bio);
-> +		container_of(&bio->__hdr, struct journal_device, discard_bio);
->  	struct cache *ca = container_of(ja, struct cache, journal);
->  
->  	atomic_set(&ja->discard_in_flight, DISCARD_DONE);
-> @@ -585,13 +585,13 @@ static void journal_discard_work(struct work_struct *work)
->  	struct journal_device *ja =
->  		container_of(work, struct journal_device, discard_work);
->  
-> -	submit_bio(&ja->discard_bio);
-> +	submit_bio(container_of(&ja->discard_bio, struct bio, __hdr));
->  }
->  
->  static void do_journal_discard(struct cache *ca)
->  {
->  	struct journal_device *ja = &ca->journal;
-> -	struct bio *bio = &ja->discard_bio;
-> +	struct bio *bio = container_of(&ja->discard_bio, struct bio, __hdr);
->  
->  	if (!ca->discard) {
->  		ja->discard_idx = ja->last_idx;
-> @@ -787,7 +787,7 @@ static CLOSURE_CALLBACK(journal_write_unlocked)
->  
->  	for (i = 0; i < KEY_PTRS(k); i++) {
->  		ca = c->cache;
-> -		bio = &ca->journal.bio;
-> +		bio = container_of(&ca->journal.bio, struct bio, __hdr);
->  
->  		atomic_long_add(sectors, &ca->meta_sectors_written);
->  
-> diff --git a/drivers/md/bcache/journal.h b/drivers/md/bcache/journal.h
-> index cd316b4a1e95..b4ff5269aee3 100644
-> --- a/drivers/md/bcache/journal.h
-> +++ b/drivers/md/bcache/journal.h
-> @@ -149,11 +149,11 @@ struct journal_device {
->  	atomic_t		discard_in_flight;
->  
->  	struct work_struct	discard_work;
-> -	struct bio		discard_bio;
-> +	struct bio_hdr		discard_bio;
->  	struct bio_vec		discard_bv;
->  
->  	/* Bio for journal reads/writes to this device */
-> -	struct bio		bio;
-> +	struct bio_hdr		bio;
->  	struct bio_vec		bv[8];
->  };
->  
-> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-> index e42f1400cea9..cd1342355cf2 100644
-> --- a/drivers/md/bcache/super.c
-> +++ b/drivers/md/bcache/super.c
-> @@ -337,7 +337,7 @@ static CLOSURE_CALLBACK(bch_write_bdev_super_unlock)
->  void bch_write_bdev_super(struct cached_dev *dc, struct closure *parent)
->  {
->  	struct closure *cl = &dc->sb_write;
-> -	struct bio *bio = &dc->sb_bio;
-> +	struct bio *bio = container_of(&dc->sb_bio, struct bio, __hdr);
->  
->  	down(&dc->sb_write_mutex);
->  	closure_init(cl, parent);
-> @@ -374,7 +374,7 @@ void bcache_write_super(struct cache_set *c)
->  {
->  	struct closure *cl = &c->sb_write;
->  	struct cache *ca = c->cache;
-> -	struct bio *bio = &ca->sb_bio;
-> +	struct bio *bio = container_of(&ca->sb_bio, struct bio, __hdr);
->  	unsigned int version = BCACHE_SB_VERSION_CDEV_WITH_UUID;
->  
->  	down(&c->sb_write_mutex);
-> @@ -2230,7 +2230,9 @@ static int cache_alloc(struct cache *ca)
->  	__module_get(THIS_MODULE);
->  	kobject_init(&ca->kobj, &bch_cache_ktype);
->  
-> -	bio_init(&ca->journal.bio, NULL, ca->journal.bio.bi_inline_vecs, 8, 0);
-> +	bio_init(container_of(&ca->journal.bio, struct bio, __hdr), NULL,
-> +		 container_of(&ca->journal.bio, struct bio, __hdr)->bi_inline_vecs,
-> +		 8, 0);
->  
->  	/*
->  	 * when ca->sb.njournal_buckets is not zero, journal exists,
-> -- 
-> 2.43.0
-> 
-
+diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+index b337db6e12be..3f320da4ac46 100644
+--- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
++++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
+@@ -558,6 +558,79 @@ static void test_uprobe_usdt(void)
+ 	uprobe_syscall_executed__destroy(skel);
+ }
+ 
++static volatile bool race_stop;
++
++static void *worker_trigger(void *arg)
++{
++	unsigned long rounds = 0;
++
++	while (!race_stop) {
++		uprobe_test();
++		rounds++;
++	}
++
++	printf("tid %d trigger rounds: %lu\n", gettid(), rounds);
++	return NULL;
++}
++
++static void *worker_attach(void *arg)
++{
++	struct uprobe_syscall_executed *skel;
++	unsigned long rounds = 0;
++
++	skel = uprobe_syscall_executed__open_and_load();
++	if (!ASSERT_OK_PTR(skel, "uprobe_syscall_executed__open_and_load"))
++		return NULL;
++
++	while (!race_stop) {
++		skel->links.test_uprobe_multi = bpf_program__attach_uprobe_multi(skel->progs.test_uprobe_multi,
++						-1, "/proc/self/exe", "uprobe_test", NULL);
++		if (!ASSERT_OK_PTR(skel->links.test_uprobe_multi, "bpf_program__attach_uprobe_multi"))
++			break;
++		bpf_link__destroy(skel->links.test_uprobe_multi);
++		skel->links.test_uprobe_multi = NULL;
++		rounds++;
++	}
++
++	printf("tid %d attach rounds: %lu hits: %d\n", gettid(), rounds, skel->bss->executed);
++	uprobe_syscall_executed__destroy(skel);
++	return NULL;
++}
++
++static void test_uprobe_race(void)
++{
++	int err, i, nr_cpus, nr;
++	pthread_t *threads;
++
++        nr_cpus = libbpf_num_possible_cpus();
++	if (!ASSERT_GE(nr_cpus, 0, "nr_cpus"))
++		return;
++
++	nr = nr_cpus * 2;
++	threads = malloc(sizeof(*threads) * nr);
++	if (!ASSERT_OK_PTR(threads, "malloc"))
++		return;
++
++	for (i = 0; i < nr_cpus; i++) {
++		err = pthread_create(&threads[i], NULL, worker_trigger, NULL);
++		if (!ASSERT_OK(err, "pthread_create"))
++			goto cleanup;
++	}
++
++	for (; i < nr; i++) {
++		err = pthread_create(&threads[i], NULL, worker_attach, NULL);
++		if (!ASSERT_OK(err, "pthread_create"))
++			goto cleanup;
++	}
++
++	sleep(4);
++
++cleanup:
++	race_stop = true;
++	for (nr = i, i = 0; i < nr; i++)
++		pthread_join(threads[i], NULL);
++}
++
+ static void __test_uprobe_syscall(void)
+ {
+ 	if (test__start_subtest("uretprobe_regs_equal"))
+@@ -574,6 +647,8 @@ static void __test_uprobe_syscall(void)
+ 		test_uprobe_multi();
+ 	if (test__start_subtest("uprobe_usdt"))
+ 		test_uprobe_usdt();
++	if (test__start_subtest("uprobe_race"))
++		test_uprobe_race();
+ }
+ #else
+ static void __test_uprobe_syscall(void)
 -- 
-Coly Li
+2.48.1
+
