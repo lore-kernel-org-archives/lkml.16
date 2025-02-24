@@ -1,147 +1,159 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC69B266B77;
-	Mon, 24 Feb 2025 18:59:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F28F1EA7F5;
+	Mon, 24 Feb 2025 19:00:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740423574; cv=none; b=LSQrcV5q5ynX7EERCB+MY0mA7H2T52P+Q09R3AyI7233F7+cMsh3Qf1zv8Sw+a6n2ByWOZ7xuNK7dKcJ/poxzWnnsckq0XXLNAnsVzRXBO9RkiwNW4EuscYrPdmoljSiC97+DSjVzGykdL31nVw225iYvDcVFj/iZAa0w30op8Y=
+	t=1740423615; cv=none; b=Hwnj1JRkjeH6I0nCkHjpMqYYQB4HOZG4jmcSr8SK02qe7nD5dBoJF7M6asXZuL8mD8PNyrpHIMQBu8GkhSPpEWGZ0I8dhr2+QHkSrAbGqzKuMDRz3clonsu391Y/OJBbHkM9X/zMPaGLtOTsz8mPDdv7bd8Z0a0K10NXmnP3e8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740423574; c=relaxed/simple;
-	bh=AwdzRDLRxrAa+DwJG43Ykw1x+ugkSQyavOnKvWa1C38=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=GNqqG39VkzC908ck1MmsYAJvypXSCSGb2RWznGPh/5qCzEDTzROT1p23U4M1VLwaFJFqyNuSJgiSJ26kOM0FpK+8RQD2DakdP0TM+weN5VvwBrsbxu1+j7cek8gHlNLsWPQuPxSv6a8iXtFRovZgr3Axh0O8bJI806GdW3lGT7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HkfYIwBX; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1740423615; c=relaxed/simple;
+	bh=rRzI+z2ajIxRRUGlvU9sCaGc7lpzj0vAIq9Bs546a34=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=VRQ8jL1gitwD81rUSanjj5m1eTLD0loD7LhRLSYMQvRbRmi2KYB1v0KVcW6tqoYADWZ2l5U7xCjIo1eC8+edPA8Ti2fGeT48ruFIzQ8VT+F0KQJn7UkyYw2+YxHDZ+4uEAk4YR8RvKzAjdVWXn3vyQn+JAQzd9pA81rk6pVx8pM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pRG3NEaj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HkfYIwBX"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51ODDTv8012179;
-	Mon, 24 Feb 2025 18:59:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	iB0zlCvg2FIP9w2eDttuFf7K9oZ36VP0mfOhuZax8HM=; b=HkfYIwBXEayVKY4J
-	2GZR5DFPbd41G1OPmUnkjFv+oZ5zNYBzt+Ei5l7+XIWpFJJerfXCHRzeENlw2573
-	0sC95EqVa8j0M+2iLbz2++lYwl9dTfPOVkCqyi8YQBmlx2jI375wsTKM1QehsCqH
-	Olg1Xalpab8P8i5VW3poSh+iir0DCGIRyYFurcZ5sHktuDpKouu2cb1dCSz102Ix
-	SoAzhOdfFiApkAArJlovBnBpzWDauCba3sORRUvtZA8ROU7DQvmFWdTFC6ykE2RO
-	AI6FIJNwoc/7OsHvjpBMAKIKGG4hNKHEq5Qnkm3UcOYu+3GvJe26BkcHrUKWq/sr
-	iXoaTA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 450kqg2ekc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Feb 2025 18:59:08 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51OIx8uR017973
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Feb 2025 18:59:08 GMT
-Received: from [10.110.85.197] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 24 Feb
- 2025 10:59:06 -0800
-Message-ID: <4e82404a-0ea5-4641-829a-bba666edd352@quicinc.com>
-Date: Mon, 24 Feb 2025 10:59:06 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pRG3NEaj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2CACC4CED6;
+	Mon, 24 Feb 2025 19:00:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740423614;
+	bh=rRzI+z2ajIxRRUGlvU9sCaGc7lpzj0vAIq9Bs546a34=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=pRG3NEajpiumXR6hcxs0jbECWDvqIbeir6FHSoIC/RFiuomiqRhLZtSq+ErPxDhey
+	 C6bnEnWDwdd+BhsyEx6HCghdlQTQBJ34dzqkQ5pa+jQPeOLs0CUQzAo48NsVfGpYV0
+	 rbNZMODQQmfV84VPoepOTK6cMDFtU2ir0cRGb01flNvx2WpxKibBW0suAEVOFilKcc
+	 Ob9wjmb1qxTE6YO09A1x81F1yGNNJdYheyztRn+Q3+ZHVE+wU9kUhd1DX472ma41yp
+	 YiCbssvfGG9urnDhKCoZeTq3iDv7+Gp9GYVTmOs/Lyq5CA4RotLe4BPY9a4ZBg7VBL
+	 +J6GHK1MIj1Rw==
+Date: Mon, 24 Feb 2025 13:00:13 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Hau <hau@realtek.com>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>, nic_swsd <nic_swsd@realtek.com>,
+	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH net-next 2/3] r8169: enable
+ RTL8168H/RTL8168EP/RTL8168FP/RTL8125/RTL8126 LTR support
+Message-ID: <20250224190013.GA469168@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 05/16] dt-bindings: display/msm: dp-controller: Add
- SM8750
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-CC: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        "Marijn
- Suijten" <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Krishna Manikandan <quic_mkrishn@quicinc.com>,
-        Jonathan Marek
-	<jonathan@marek.ca>,
-        Kuogee Hsieh <quic_khsieh@quicinc.com>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Srini
- Kandagatla" <srinivas.kandagatla@linaro.org>
-References: <20250217-b4-sm8750-display-v2-0-d201dcdda6a4@linaro.org>
- <20250217-b4-sm8750-display-v2-5-d201dcdda6a4@linaro.org>
- <aqpuik4zitdfuk4pahn4wyzxdvxldy4dcqjs3mhr6fqtxpoxhf@ssfzzbfce2nu>
- <2dfe466c-ad94-4683-a2e9-a49e77a61f4f@linaro.org>
- <h2shpen65r7v4in54avsez7qtlwojbt2cthyomqrsgs5ewprwb@bn53suqrzkac>
-Content-Language: en-US
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <h2shpen65r7v4in54avsez7qtlwojbt2cthyomqrsgs5ewprwb@bn53suqrzkac>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: vYKClvgaWABcBprHm3ba0mVLaY9iAKAI
-X-Proofpoint-ORIG-GUID: vYKClvgaWABcBprHm3ba0mVLaY9iAKAI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-24_09,2025-02-24_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 lowpriorityscore=0 malwarescore=0 priorityscore=1501
- bulkscore=0 mlxscore=0 spamscore=0 clxscore=1011 mlxlogscore=894
- adultscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502240123
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1544e50b9e4c4ee6a6d8ba6a777c2f07@realtek.com>
 
-
-
-On 2/19/2025 9:08 AM, Dmitry Baryshkov wrote:
-> On Wed, Feb 19, 2025 at 06:02:20PM +0100, Krzysztof Kozlowski wrote:
->> On 17/02/2025 19:58, Dmitry Baryshkov wrote:
->>> On Mon, Feb 17, 2025 at 05:41:26PM +0100, Krzysztof Kozlowski wrote:
->>>> Add DisplayPort controller for Qualcomm SM8750 SoC which so far looks
->>>> fully compatible with earlier SM8650 variant.
->>>
->>> As that became a question for QCS8300, does SM8750 also support exactly
->>> two MST streams?
->>
->> v1.5 of DP (starting from SA8775p , then SM8650 and SM8750) support 4x
->> MST for DPTX0 and 2x MST for DPTX1.
->>
->> The DP in SM8650 and SM8750 are identical, according to datasheet (v1.5.1).
+On Mon, Feb 24, 2025 at 04:33:50PM +0000, Hau wrote:
+> > On 21.02.2025 08:18, ChunHao Lin wrote:
+> > > This patch will enable RTL8168H/RTL8168EP/RTL8168FP/RTL8125/RTL8126
+> > > LTR support on the platforms that have tested with LTR enabled.
+> > 
+> > Where in the code is the check whether platform has been tested with LTR?
+> > 
+> LTR is for L1,2. But L1 will be disabled when rtl_aspm_is_safe()
+> return false. So LTR needs rtl_aspm_is_safe() to return true.
 > 
-> Hmm. This also means that QCS8300 is compatible with SM8650. I'll let
-> Abhinav comment here.
-> 
+> > > Signed-off-by: ChunHao Lin <hau@realtek.com>
+> > > ---
+> > >  drivers/net/ethernet/realtek/r8169_main.c | 108
+> > > ++++++++++++++++++++++
+> > >  1 file changed, 108 insertions(+)
+> > >
+> > > diff --git a/drivers/net/ethernet/realtek/r8169_main.c
+> > > b/drivers/net/ethernet/realtek/r8169_main.c
+> > > index 731302361989..9953eaa01c9d 100644
+> > > --- a/drivers/net/ethernet/realtek/r8169_main.c
+> > > +++ b/drivers/net/ethernet/realtek/r8169_main.c
+> > > @@ -2955,6 +2955,111 @@ static void rtl_disable_exit_l1(struct
+> > rtl8169_private *tp)
+> > >       }
+> > >  }
+> > >
+> > > +static void rtl_set_ltr_latency(struct rtl8169_private *tp) {
+> > > +     switch (tp->mac_version) {
+> > > +     case RTL_GIGA_MAC_VER_70:
+> > > +     case RTL_GIGA_MAC_VER_71:
+> > > +             r8168_mac_ocp_write(tp, 0xcdd0, 0x9003);
+> > > +             r8168_mac_ocp_write(tp, 0xcdd2, 0x8c09);
+> > > +             r8168_mac_ocp_write(tp, 0xcdd8, 0x9003);
+> > > +             r8168_mac_ocp_write(tp, 0xcdd4, 0x9003);
+> > > +             r8168_mac_ocp_write(tp, 0xcdda, 0x9003);
+> > > +             r8168_mac_ocp_write(tp, 0xcdd6, 0x9003);
+> > > +             r8168_mac_ocp_write(tp, 0xcddc, 0x9003);
+> > > +             r8168_mac_ocp_write(tp, 0xcde8, 0x887a);
+> > > +             r8168_mac_ocp_write(tp, 0xcdea, 0x9003);
+> > > +             r8168_mac_ocp_write(tp, 0xcdec, 0x8c09);
+> > > +             r8168_mac_ocp_write(tp, 0xcdee, 0x9003);
+> > > +             r8168_mac_ocp_write(tp, 0xcdf0, 0x8a62);
+> > > +             r8168_mac_ocp_write(tp, 0xcdf2, 0x9003);
+> > > +             r8168_mac_ocp_write(tp, 0xcdf4, 0x883e);
+> > > +             r8168_mac_ocp_write(tp, 0xcdf6, 0x9003);
+> > > +             break;
+> > > +     case RTL_GIGA_MAC_VER_61 ... RTL_GIGA_MAC_VER_66:
+> > > +             r8168_mac_ocp_write(tp, 0xcdd0, 0x9003);
+> > > +             r8168_mac_ocp_write(tp, 0xcdd2, 0x889c);
+> > > +             r8168_mac_ocp_write(tp, 0xcdd8, 0x9003);
+> > > +             r8168_mac_ocp_write(tp, 0xcdd4, 0x8c30);
+> > > +             r8168_mac_ocp_write(tp, 0xcdda, 0x9003);
+> > > +             r8168_mac_ocp_write(tp, 0xcdd6, 0x9003);
+> > > +             r8168_mac_ocp_write(tp, 0xcddc, 0x9003);
+> > > +             r8168_mac_ocp_write(tp, 0xcde8, 0x883e);
+> > > +             r8168_mac_ocp_write(tp, 0xcdea, 0x9003);
+> > > +             r8168_mac_ocp_write(tp, 0xcdec, 0x889c);
+> > > +             r8168_mac_ocp_write(tp, 0xcdee, 0x9003);
+> > > +             r8168_mac_ocp_write(tp, 0xcdf0, 0x8C09);
+> > > +             r8168_mac_ocp_write(tp, 0xcdf2, 0x9003);
+> > > +             break;
+> > > +     case RTL_GIGA_MAC_VER_46 ... RTL_GIGA_MAC_VER_53:
+> > > +             r8168_mac_ocp_write(tp, 0xcdd8, 0x9003);
+> > > +             r8168_mac_ocp_write(tp, 0xcdda, 0x9003);
+> > > +             r8168_mac_ocp_write(tp, 0xcddc, 0x9003);
+> > > +             r8168_mac_ocp_write(tp, 0xcdd2, 0x883c);
+> > > +             r8168_mac_ocp_write(tp, 0xcdd4, 0x8c12);
+> > > +             r8168_mac_ocp_write(tp, 0xcdd6, 0x9003);
+> > > +             break;
+> > > +     default:
+> > > +             break;
+> > > +     }
+> > > +}
+> > > +
+> > > +static void rtl_reset_pci_ltr(struct rtl8169_private *tp) {
+> > > +     struct pci_dev *pdev = tp->pci_dev;
+> > > +     u16 cap;
+> > > +
+> > > +     pcie_capability_read_word(pdev, PCI_EXP_DEVCTL2, &cap);
+> > > +     if (cap & PCI_EXP_DEVCTL2_LTR_EN) {
+> > > +             pcie_capability_clear_word(pdev, PCI_EXP_DEVCTL2,
+> > > +                                        PCI_EXP_DEVCTL2_LTR_EN);
+> > > +             pcie_capability_set_word(pdev, PCI_EXP_DEVCTL2,
+> > > +                                      PCI_EXP_DEVCTL2_LTR_EN);
+> > 
+> > I'd prefer that only PCI core deals with these registers
+> > (functions like pci_configure_ltr()). Any specific reason for this
+> > reset? Is it something which could be applicable for other devices
+> > too, so that the PCI core should be extended?
+> > 
+> It is for specific platform. On that platform driver needs to do
+> this to let LTR works.
 
-DP version by itself is not a good measure of whether the controller can 
-support 4 streams or not.
+This definitely looks like code that should not be in a driver.
+Drivers shouldn't need to touch ASPM or LTR configuration unless
+there's a device defect to work around, and that should use a PCI core
+interface.  Depending on what the defect is, we may need to add a new
+interface.
 
-Firstly, sm8650/sm8750 do not have a DPTX1 so we are only discussing 
-about DP TX0.
+This clear/set of PCI_EXP_DEVCTL2_LTR_EN when it was already set could
+work around some kind of device defect, or it could be a hint that
+something in the PCI core is broken.  Maybe the core is configuring
+ASPM/LTR incorrectly.
 
-Coming to the QCS8300 Vs sm8650/sm8750, even though the DP controller 
-version is the same, there is no HW support for more than 2 streams on 
-sm8650/sm8750 because there are no INTF blocks to drive 4 streams.
-
-On sm8650/sm8750, only INTF_0 and INTF_3 can be used for DP. Hence 2 
-streams.
-
-Whereas on Monaco, we have INTF_0, INTF_3, INTF_6 and INTF_7 capable of 
-driving DP. Hence 4 streams.
-
-Let me know if there are more questions.
-
-Thanks
-
-Abhinav
-
-
+Bjorn
