@@ -1,46 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8764924503B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848E1245039;
 	Mon, 24 Feb 2025 09:09:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740388143; cv=none; b=IT8IM52mvbuGeMKLqzWQ1S3E/ycOGrkkb4OFkwHCg5SA4KQSNbwtR+l4MyWr48/DyLoGyH9BJVM+LF43af2itdudyKkFoH5MalWcjNr+gJQUpl69cSqSCvDXnYcEpDQsSUh4ljIbGbnEZe0Z1ukdE9oIgO2IevJ1IFZFcD3AbmA=
+	t=1740388143; cv=none; b=CEXG2lDYWizWXpifM9JYMo5Cc8iXYzuQaPznmsnvxFukT8SPS5SIr6nbOqpz2mdAEZgEKn8UaELg+M01D4TQtx5sBJ+NSRyv4Ni8d0q84Y5SJ+3Nm2+XWmnHkG4WtNPOB83sM/J+SwstLTJyjMk0SEAr9dsPxN6gUM+se5RR/XY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740388143; c=relaxed/simple;
-	bh=EuSV6D3szJ0VW+HjV2NwWusmhdj/JnS4ByP03OXscaU=;
+	bh=g3yjKUYPJng0/MFnsVcxoDKnYWevbS21H1bMLGz3lcY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LIxCofcEr8FMnMIjLnJMndBwuZdElDNiTcGyi+pokhQIbAv7ErONtKXKND6+773/jBVeGzlhzdaRQheCgcuBsd23iOZUtBCjxAcJ19mRjr38pU3HyH1fJqUM1bgTS3yRGJZTbP6Z7r06yuAp0k2fjuBKjHAk7IDGMJv7Cv2wh6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bsOZrf5n; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fe87NIVi3pOB6xZGFWK1G0XcO6BoJCldXHnil215OywwF0A0G9HxMcET1dFg1H0wvpFYEP5ytlZWNnqZKcVo16paSwIKP+nO+GJCyPWqomtGRt60zRiXOvGPNXVCJDVzg7FMhbK4WZWuwjUfKIxgXg4NgTQcSl5/sA2i/1RdiWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s/3bMDI1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bsOZrf5n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0054C4CEEE;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s/3bMDI1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8F7AC4AF09;
 	Mon, 24 Feb 2025 09:09:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740388142;
-	bh=EuSV6D3szJ0VW+HjV2NwWusmhdj/JnS4ByP03OXscaU=;
+	bh=g3yjKUYPJng0/MFnsVcxoDKnYWevbS21H1bMLGz3lcY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bsOZrf5nwEoDs4PAkYNZQTExuSUaayjHTC6H/oIgO/6PMkQD5GWDteUkRDrMDA7ti
-	 sLWAdADhYmAzDLUvKbKdfufuVJ4TgM1a5Gehkwg9GR9FxtQFa7KUJC/e+bNopQdPn/
-	 RA7OxnKnDxGADrYA9n4ufY2b7SMXQ0ydroUcnNIM6TZIBccVkYeMyPdPQ4ZRX89lz3
-	 8gtuKy1z4fsBt4Sx7be61sX8hTBECfUhKjW3fwLTwuJYhGInb1UYl8Szec9uyJFYB6
-	 ll/scl0iG7LEDAgI0ScFz4Ye9s2p0uchmZzO6FQxwTec6WISiUmW+wASWCvZPU8P+k
-	 wFL37vt5In6TA==
+	b=s/3bMDI1lwgqp6ZprTksJ5lTicEc+aV3eqlJ0aGAk6W1wvHcUpojedbSZ1wHv/sNr
+	 ZgJ7gcOqGA2fXxU0kOG8Bzy3E04ivqPv+5RkeMvGsbvkrNMPiko/ngSp6R3YRsAeSZ
+	 8hWNFo6jR7INl+hSh279x9KJeALqSmq1eQMONNdkJjBPvd0iIhDmBHz6CpYA/VThfZ
+	 dWKIQkKjRabYvw+avP5SQ19BEHwO30jIrpdrRRvlAgqnw59PCODNT20bJyhWPa1UFS
+	 9r5HUmh6JwP5Ec2G5ey02EyDq6rHRQYs1yIR928N+/F2zpHL4nX/aLz3T9czj+vb55
+	 tta8Wh8uhWkwg==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1tmUSS-00000003p3c-3c3Y;
-	Mon, 24 Feb 2025 10:09:00 +0100
+	id 1tmUST-00000003p48-0NA9;
+	Mon, 24 Feb 2025 10:09:01 +0100
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-	Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-	linux-kernel@vger.kernel.org,
-	linux1394-devel@lists.sourceforge.net
-Subject: [PATCH v2 03/39] drivers: firewire: firewire-cdev.h: fix identation on a kernel-doc markup
-Date: Mon, 24 Feb 2025 10:08:09 +0100
-Message-ID: <8238bed1c0375e6b389a8cafe1ad99fdeb1cb1f2.1740387599.git.mchehab+huawei@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 11/39] scripts/kernel-doc.py: better handle empty sections
+Date: Mon, 24 Feb 2025 10:08:17 +0100
+Message-ID: <af68c1894255eb9cd3591fd1019577ea80652877.1740387599.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1740387599.git.mchehab+huawei@kernel.org>
 References: <cover.1740387599.git.mchehab+huawei@kernel.org>
@@ -53,29 +51,82 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-The description of @tstamp parameter has one line that starts at the
-beginning. This moves such line to the description, which is not the
-intent here.
+While doing the conversion, we opted to skip empty sections
+(description, return), but this makes harder to see the differences
+between kernel-doc (Perl) and kernel-doc.py.
+
+Also, the logic doesn't always work properly. So, change the
+way this is done by adding an extra step to remove such
+sections, doing it only for Return and Description.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- include/uapi/linux/firewire-cdev.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ scripts/kernel-doc.py | 31 ++++++++++++++++++++++++++++---
+ 1 file changed, 28 insertions(+), 3 deletions(-)
 
-diff --git a/include/uapi/linux/firewire-cdev.h b/include/uapi/linux/firewire-cdev.h
-index 1f2c9469f921..05e3aa8fa8bc 100644
---- a/include/uapi/linux/firewire-cdev.h
-+++ b/include/uapi/linux/firewire-cdev.h
-@@ -449,7 +449,8 @@ struct fw_cdev_event_phy_packet {
-  *		which the packet arrived. For %FW_CDEV_EVENT_PHY_PACKET_SENT2 and non-ping packet,
-  *		the time stamp of isochronous cycle at which the packet was sent. For ping packet,
-  *		the tick count for round-trip time measured by 1394 OHCI controller.
-- * The time stamp of isochronous cycle at which either the response was sent for
-+ *
-+ *		The time stamp of isochronous cycle at which either the response was sent for
-  *		%FW_CDEV_EVENT_PHY_PACKET_SENT2 or the request arrived for
-  *		%FW_CDEV_EVENT_PHY_PACKET_RECEIVED2.
-  * @data:	Incoming data
+diff --git a/scripts/kernel-doc.py b/scripts/kernel-doc.py
+index 8bc0470d3720..886256e87692 100755
+--- a/scripts/kernel-doc.py
++++ b/scripts/kernel-doc.py
+@@ -242,6 +242,19 @@ class KernelDoc:
+         name = self.entry.section
+         contents = self.entry.contents
+ 
++        # TODO: we can prevent dumping empty sections here with:
++        #
++        #    if self.entry.contents.strip("\n"):
++        #       if start_new:
++        #           self.entry.section = self.section_default
++        #           self.entry.contents = ""
++        #
++        #        return
++        #
++        # But, as we want to be producing the same output of the
++        # venerable kernel-doc Perl tool, let's just output everything,
++        # at least for now
++
+         if type_param.match(name):
+             name = type_param.group(1)
+ 
+@@ -298,6 +311,19 @@ class KernelDoc:
+ 
+         args["type"] = dtype
+ 
++        # TODO: use colletions.OrderedDict
++
++        sections = args.get('sections', {})
++        sectionlist = args.get('sectionlist', [])
++
++        # Drop empty sections
++        # TODO: improve it to emit warnings
++        for section in [ "Description", "Return" ]:
++            if section in sectionlist:
++                if not sections[section].rstrip():
++                    del sections[section]
++                    sectionlist.remove(section)
++
+         self.entries.append((name, args))
+ 
+         self.config.log.debug("Output: %s:%s = %s", dtype, name, pformat(args))
+@@ -401,7 +427,7 @@ class KernelDoc:
+         # to ignore "[blah" in a parameter string.
+ 
+         self.entry.parameterlist.append(param)
+-        org_arg = Re(r'\s\s+').sub(' ', org_arg, count=1)
++        org_arg = Re(r'\s\s+').sub(' ', org_arg)
+         self.entry.parametertypes[param] = org_arg
+ 
+     def save_struct_actual(self, actual):
+@@ -1309,8 +1335,7 @@ class KernelDoc:
+             return
+ 
+         if doc_end.search(line):
+-            if self.entry.contents.strip("\n"):
+-                self.dump_section()
++            self.dump_section()
+ 
+             # Look for doc_com + <text> + doc_end:
+             r = Re(r'\s*\*\s*[a-zA-Z_0-9:\.]+\*/')
 -- 
 2.48.1
 
