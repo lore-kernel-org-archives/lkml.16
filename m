@@ -1,118 +1,140 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4048E242929
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 09:05:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86A63245007;
+	Mon, 24 Feb 2025 09:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740387951; cv=none; b=HV2Zb71V+/nwlGYCD8DdEBRxvusS776WA7SCyqqR2pkY44gTNuUf7Y1MQqgFu+EPooAM+MNiQ9EwZRF92ISE91/3BwlpCk0dG3CNMt2IXJ1S1lf1DocQJNS2nuMaI2mi+VDomegVtVTSwvz7USuMcfrArXftbX/FGTTPHwKo8nY=
+	t=1740387954; cv=none; b=Q0fjVWVQQWK6xPKgOZAHNrsw4qsljzg4yzU0/zEtNj7ZUQB8dV5u90lMebRVs5FEyP+xtF5+a0d7eqSx0p1rru0FH/4wlQfYFp89u7wSpwlkyZVcHkcqe9/6Y15XtwGBCydkpUCV4NQI7dKEHDji3L8qmBxCD0aCGB5TafCPJDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740387951; c=relaxed/simple;
-	bh=3e9NHcUNxohh2CpI0RlnEGP7bLm3cOQid8XcKAi7Rxk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nBcHERPzkm4SNft0xDFyY1+xzNcX7YFU7fQXpNoJzoOhOf62cLjo4P83bNPgZVt8wMLnKksANM7BW3AXoYrXIvUAXLsDPUJlEH5atUQjgBMUWmnyQaTAhVA77o5yALdlO1GDGfubM7SQ/sOZQPgpb0pzHfNWOrL61UYGKUHXKqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=lwjKvi1R; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="lwjKvi1R"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-438a39e659cso25996195e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 01:05:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740387948; x=1740992748; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bFYRxGlQrFZDLwzhBGeR9eonPXy+s09Qb4jWFcOTfYk=;
-        b=lwjKvi1RytbVCoP4cuouJqr6jEQ1c/yk1qAOThNe4yjLAzISP3OEJAFzKO1TyqOp7z
-         BJkocSwKjEl10m9TrBApBuHJe6MzWXO9ymTglT6hpsm3Df7LDO3hPvnh0oZCYofOYiK3
-         0NuSYdrD2mABozCAhl88F1/aR/sbjYsDQTbTMqUcV7Oy0UEFzCNXdaFf0EjdJeVgQ8b4
-         kAyILX3WDXWKOyKZtmlR70nImEUP3Yl1wo/pG1EVCvG/+wxL6hXu8hrGVVKPs3bP9GJI
-         da8TvvIDsw7LLNmh5DljfQbgiOB1famIljEms3SSssmP1Gf6GPRil7zJ2sXsQxoBbBZU
-         pnKg==
+	s=arc-20240116; t=1740387954; c=relaxed/simple;
+	bh=eUkPwQ9m36exbMkdtZ5SGav/mKYeXKb0WO6zAUjz2jo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U3IIpE2gqNeCKQbpCnxKBeP5hgJ1kIbBJeBChcQLZbIWhJ3hHUjjLkSDbYTIM+txTs1nErWhj35NV3rHyJIQnMxt7YZ7aDW1itMdLf9+hnr/e3Jug+1dIoYk+ZpJ5/sgI6ulgaCiiNB0O9hv0JSWa3ZTGGi/ftnFczp3SrZtj3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-38f22fe889aso3531533f8f.3;
+        Mon, 24 Feb 2025 01:05:52 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740387948; x=1740992748;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bFYRxGlQrFZDLwzhBGeR9eonPXy+s09Qb4jWFcOTfYk=;
-        b=JN7DR7H1F318Ok2IAWLgwRldNyQY5lQgZcFP9hIbKW+35tuLsDkjxwuctAHAMW1arr
-         p19vzFxZRwT3ZQRjf+YhBGDrrQxyviECoWeUdPGF9XytaOPKpEde7hjt8U9oPgeNc3tf
-         eq1Se15qJvru3HzhM+gwXQJ5k+cy2m9pyF+g9z3DDrN6AQ+A7q2VmIO1l1CYfZHb62CD
-         8q2+XMOn4fay3V1r0CYUoVP36ZumDC0Xy96ihTtrAJbRxukydHgQYLM+zxNAC6hP2GAB
-         M9PvjZGxqjinv+NWN8X/8tyc4YcwuftNGlQHOhgykarkcG1G/htIkiwgURDZkPn49XWa
-         BpYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXgDGzibvvAzrArMXh1SRcWOM+0W9qRAX7rXaBM4XK6hrCPfdSIEspqovkQO7sHtIADQgFi0oq8AX5bPbk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3NVpxixfLs0uNR82aIE8mgB2b7ahWKj7srJpQ05OP/plWy5fG
-	YokQhayw+LbtbmM6efzm+pcBtQWy1FiksGR0MwDYiaMu+pbkcbk5Mi+Bgnt4EmQ=
-X-Gm-Gg: ASbGncucz9R+wCn3Oybip5PTNJW330vTzN3yyzLl0/r63e3Vf4hSOuUSIXrVaPyUCAX
-	WlFj/rzANpnzx5eV4L8HkTxBB2bl4QVoagp1ssnX3BIeVraJNPQXwk7Qjy1J3Gt+8mRRcb5iVN1
-	fqemLnO9pGSyvZyAWgJZQ9E5RKwicyW1rbk+PU5C/5l2dk+nOqkfLYCbh08t0dbBIjSnX0EboL1
-	pz1CVuIpe0B7hPb7++ZtDQnVrbCwmnCL5p17saRj5NtNBwUvNpLgZ9S35DpHxeAR/snO7ibZKho
-	onVSMoRIxkwmKceH+8d4j1//
-X-Google-Smtp-Source: AGHT+IEFHiBEmy8sXEyrtqQXwnh8dEXvmz0066u4ABmknFw9wG4yoH3NVSTLUkjYgwsYUVJbfwi7Zw==
-X-Received: by 2002:a05:600c:3c9d:b0:439:88bb:d026 with SMTP id 5b1f17b1804b1-439aeadf8a3mr101484835e9.5.1740387948472;
-        Mon, 24 Feb 2025 01:05:48 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:eb70:990:c1af:664a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b02ce37fsm101497385e9.8.2025.02.24.01.05.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 01:05:48 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 0/8] gpiolib: sanitize return values of callbacks
-Date: Mon, 24 Feb 2025 10:05:46 +0100
-Message-ID: <174038792740.24614.6901327376350274039.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250210-gpio-sanitize-retvals-v1-0-12ea88506cb2@linaro.org>
-References: <20250210-gpio-sanitize-retvals-v1-0-12ea88506cb2@linaro.org>
+        d=1e100.net; s=20230601; t=1740387946; x=1740992746;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XW7SoAHFjEV752Biy5J96qJjLeCuR0/5/9KQgU4Yvq8=;
+        b=Kva0ZaSvBl5AsUWkJuKc/0/KQCWsS+kVHPvUR3ZtvqgIWjr0JjB6gksSdUAbiu0N1+
+         QlTb7YVJvEx+42CHkvmoTWADD+cY7UCJw6ZeHC5I0oWieEn2ixhWURTjFZVNFEbbM0ql
+         5LjFUxJ0HpoEz8keBM9syisIjwVdexmZGnbwB/pKzyhNm0T/MkbT/a5f3hpS3SQP4m0e
+         kRx32iP5Hk4Jv10edVONEY0htHN5i0XwqEPObRdhixxX6do0KdLAE0q1U/Ui58tParw5
+         +0lesz/GG6F/Rt82hjW9GVof8qmu1N7bODG+XOaR0ntbPULVdUJZcq/97g+pElRAXlda
+         cT7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUF9+PdbB4GRTJlAQYv+sapA7G/CeV5FnD9bwTXET62xXNc1s3ZEOl+8oDSzYYKSroZxe9lIJlj6aUz@vger.kernel.org, AJvYcCVJU6hGZrYond0pG9stIBhVoZC4NOiIwDHd6dckdWWXzCq6doTefhDqpj39UhPjOsYlBwBN3ZHL/u96LxuW@vger.kernel.org, AJvYcCXMPXvkJ2ahgUbPZ68i1uC1yhEn+ryu4D3wrIop7dKqF7ojoSEIiJoivj3FzsRk1W4aOiVa3IdSlzvcaP8=@vger.kernel.org, AJvYcCXpCHLIxm9rKasO3hTpiwshRh7y0CABDezgW4VZLjIvnP/xYN2aii6osRySVrpE6uqaHGmyrjJKQpA8GjtbfTeW9UU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAOP5n5rn2aejNYsqQ3pZz3Q/vb1eG4rRX8Wr3EG2XXbxb9Vqh
+	ViVDrfQFrO/VIpqDANI49HMrTf7PKAoXZWzu9cJn2hejsLYp4aEq3UISOMKYInA=
+X-Gm-Gg: ASbGncvqsaS6s4sOB4dsuCzctvDvj1DXqrJLCyunbMyMQSJ3OoFZUyqpJvqCSVnKNXa
+	BZi2uuSm/+wBUfyLOMGFx6vjQmU+0oTntC5t+sjl+FmXdMTRoDZpNXmeFU3Vqtnd8qRQZV9Julz
+	3jAgXOtMA5qCz72QUsvfzSJNvn9tVS2HcLt+M3OwCeJMXPubkbOxlMRBmfpa4KETmysDnu6xwaM
+	TPhn20YRDuFkm4YmQ1XnFtOIzSYj9U8OdyE2Ao0oig6o5Gg8dRvXVXKoNHRwslYs++dbTB/a/+W
+	LO9cxsk+QdHgV5WcCtdUWZPn1Xtymc7qzgoj9XUrbHx6yOlXCkMLvi806tliK0Sm
+X-Google-Smtp-Source: AGHT+IG2byA6VcTZexHq+P++yju4e8je8MyD4ZSKRXtHQfqNAa+mSxi0Bs7t8nt7woVT/BN81WvKEQ==
+X-Received: by 2002:a5d:5f51:0:b0:38d:d9e4:9ba6 with SMTP id ffacd0b85a97d-38f6e756860mr11598232f8f.3.1740387946504;
+        Mon, 24 Feb 2025 01:05:46 -0800 (PST)
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com. [209.85.218.50])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abbabfe1d9dsm1389651666b.101.2025.02.24.01.05.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2025 01:05:44 -0800 (PST)
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-aaedd529ba1so500781666b.1;
+        Mon, 24 Feb 2025 01:05:43 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU/qOzLTLrHMfGjK96Kl8BQEJIn34htAiF4GGv5rDaIMoPHPysh+VNkQkQjLfwNeEdNvQVDZQc/Z9weIZXzxd2ycYY=@vger.kernel.org, AJvYcCWA6wSTC5uOtqoyxx0Y1As2yrg3SFtPIhr4Vm8ydJkj32iXAvoy3nDvktcbK9VX+Gkl9N8ZYJ7DNBeUqkPL@vger.kernel.org, AJvYcCWGtlkP6qsCvoOKLcEiDlgrOMnx7Vf2aHsNOrinLAB5PAk2pVMJ6v410Tc6OYFwMcMhmWwuvNwMBHpWPgs=@vger.kernel.org, AJvYcCWmhXcNLIpXgn66xtLxcJt6X7p9YJsZEU93XgsNj41w5DYxS2b/XMf542t9LU705/79c1YNtwDw9Gyq@vger.kernel.org
+X-Received: by 2002:a05:6402:274d:b0:5e0:49e4:2180 with SMTP id
+ 4fb4d7f45d1cf-5e0b725286fmr28663134a12.25.1740387943126; Mon, 24 Feb 2025
+ 01:05:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20250221155532.576759-1-tommaso.merciai.xr@bp.renesas.com>
+ <20250221155532.576759-2-tommaso.merciai.xr@bp.renesas.com>
+ <20250223180855.GD15078@pendragon.ideasonboard.com> <CAMuHMdU-H-6zLJAX06Zx+cu2vjCYvKghNAEw=55eu+sYqDoSgw@mail.gmail.com>
+In-Reply-To: <CAMuHMdU-H-6zLJAX06Zx+cu2vjCYvKghNAEw=55eu+sYqDoSgw@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 24 Feb 2025 10:05:27 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdV_hc2DCLzmHO8jNAsb9oy2MTvn-7Z-h+EwCU1gaH8ioA@mail.gmail.com>
+X-Gm-Features: AWEUYZlqi2EGmND0ZEA8Us8Hs9h0LJdT8q-1XVxelx3fRONaDfoLe8xmQ1d33Ck
+Message-ID: <CAMuHMdV_hc2DCLzmHO8jNAsb9oy2MTvn-7Z-h+EwCU1gaH8ioA@mail.gmail.com>
+Subject: Re: [PATCH v2 01/18] media: dt-bindings: renesas,rzg2l-csi2: Document
+ Renesas RZ/V2H(P) SoC
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>, tomm.merciai@gmail.com, 
+	linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, 
+	biju.das.jz@bp.renesas.com, prabhakar.mahadev-lad.rj@bp.renesas.com, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, 24 Feb 2025 at 10:00, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Sun, 23 Feb 2025 at 19:09, Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> > On Fri, Feb 21, 2025 at 04:55:15PM +0100, Tommaso Merciai wrote:
+> > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > >
+> > > The MIPI CSI-2 block on the Renesas RZ/V2H(P) SoC is similar to the one
+> > > found on the Renesas RZ/G2L SoC, with the following differences:
+> > > - A different D-PHY
+> > > - Additional registers for the MIPI CSI-2 link
+> > > - Only two clocks
+> > >
+> > > Add a new compatible string, `renesas,r9a09g057-csi2`, for the RZ/V2H(P)
+> > > SoC.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > Signed-off-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
+>
+> > > --- a/Documentation/devicetree/bindings/media/renesas,rzg2l-csi2.yaml
+> > > +++ b/Documentation/devicetree/bindings/media/renesas,rzg2l-csi2.yaml
+>
+> > > @@ -48,7 +58,7 @@ properties:
+> > >    resets:
+> > >      items:
+> > >        - description: CRU_PRESETN reset terminal
+> > > -      - description: CRU_CMN_RSTB reset terminal
+> > > +      - description: CRU_CMN_RSTB reset terminal or D-PHY reset
+> >
+> > I'd mention which SoCs these apply to:
+> >
+> >       - description:
+> >           CRU_CMN_RSTB reset terminal (all but RZ/V2H) or D-PHY reset (RZ/V2H)
+>
+> Note that RZ/G3E uses the same naming, so be prepared for more churn...
+>
+> However, I am confused...
+>
+> 1. According to Section 35.3.1 "Starting Reception for the MIPI CSI-2
+>    Input" (RZ/G2L Rev. 1.45) CPG_RST_CRU.CRU_CMN_RSTB _is_ the
+>    D-PHY reset.
 
+This is still valid.
 
-On Mon, 10 Feb 2025 11:51:54 +0100, Bartosz Golaszewski wrote:
-> We've had instances of drivers returning invalid values from gpio_chip
-> calbacks. In several cases these return values would be propagated to
-> user-space and confuse programs that only expect 0 or negative errnos
-> from ioctl()s. Let's sanitize the return values of callbacks and make
-> sure we don't allow anyone see invalid ones.
-> 
-> The first patch checks the return values of get_direction() in kernel
-> where needed and is a backportable fix.
-> 
-> [...]
+> 2. The CRU has three (not two) resets on all:
+>      - CRU_PRESETN,
+>      - CRU_ARESETN,
+>      - CRU_CMN_RSTB (RZ/G2L, RZ/V2L, and RZ/G2UL) or
+>        CRU_S_RESETN (RZ/V2H and RZ/G3E).
 
-Applied, thanks!
+Sorry, I missed this binding is about the CSI-2, not the CRU.
+So the third interrupt is really about the CSI-2 PHY.
 
-[1/8] gpiolib: check the return value of gpio_chip::get_direction()
-      commit: 9d846b1aebbe488f245f1aa463802ff9c34cc078
-[2/8] gpiolib: sanitize the return value of gpio_chip::request()
-      commit: 69920338f8130da929ade6f93e6fa3e0e68433ee
-[3/8] gpiolib: sanitize the return value of gpio_chip::set_config()
-      commit: dcf8f3bffa2de2c7f3b5771b63605194ccd2286f
-[4/8] gpiolib: sanitize the return value of gpio_chip::get()
-      commit: 86ef402d805d606a10e6da8e5a64a51f6f5fb7e2
-[5/8] gpiolib: sanitize the return value of gpio_chip::get_multiple()
-      commit: 74abd086d2ee5ef10f68848cfe39e271ac798685
-[6/8] gpiolib: sanitize the return value of gpio_chip::direction_output()
-      commit: dfeb70c86d637d49af9313245e6b1f2ead08ce9b
-[7/8] gpiolib: sanitize the return value of gpio_chip::direction_input()
-      commit: 4750ddce95ae8be618e31b0aa51efcf50e23a78e
-[8/8] gpiolib: sanitize the return value of gpio_chip::get_direction()
-      commit: e623c4303ed112a1fc20aec8427ba8407e2842e6
+Gr{oetje,eeting}s,
 
-Best regards,
+                        Geert
+
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
