@@ -1,67 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F2E1514CC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D952C156F44
 	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 14:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740408677; cv=none; b=BCEIxN0QhBg+cZu9rJTqTO3Qzo01no/EGG3ItZTv+hJu0NqI2F5bz5LfVkq1sd/zsCckulmvu/QN0PpvMTghFaZZsg2FzCHHOFytrnSsrOslYa77R8af6D7Hoy/z8gD0U0RT6xyE4byLItQaHfmkjIIi75wN+/SHOJn1RAYzJjQ=
+	t=1740408679; cv=none; b=Zfhgw+pVKCTgAQeAGch5p4xLCgBrAzj4EEFSc3MN4j8IKCVN46mmTZC7mUYLNslU0c2ZynE/QCD62GT5aFHi+tNnTiucRx7bvyYYTdPLPzdzBPcx5PRAMqvKaRKcjRSoFpdAgScdc3o7i4U3NrsUmLG7/FZXgd4HT5Q9gfEDsWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740408677; c=relaxed/simple;
-	bh=cwf3jm6aMSVc6JQ7dhTsI7esG32Jh5GKjdebKYnF47M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IjbVO4VVW9yaGnQQVFhGIheODUp/W8ZeyAl4lqX4HqAy99iXsOceL95VMqfE6DeZl+n4JY4ctFPE6EqC0kUvzipHqIVlR8Wb3kI4JvGFqYftI0t4345DvE9g28XGNDh6OOj1IMIkOva3ThqfwGmP7GbUYT9j+wKcYFCQze0M9W4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBB3DC4CEE8;
-	Mon, 24 Feb 2025 14:51:15 +0000 (UTC)
-Date: Mon, 24 Feb 2025 09:51:51 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Waiman Long <llong@redhat.com>
-Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon
- <will@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Boqun Feng
- <boqun.feng@gmail.com>, Joel Granados <joel.granados@kernel.org>, Anna
- Schumaker <anna.schumaker@oracle.com>, Lance Yang <ioworker0@gmail.com>,
- Kent Overstreet <kent.overstreet@linux.dev>, Yongliang Gao
- <leonylgao@tencent.com>, Tomasz Figa <tfiga@chromium.org>, Sergey
- Senozhatsky <senozhatsky@chromium.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] hung_task: Show the blocker task if the task is
- hung on mutex
-Message-ID: <20250224095151.73e809f8@gandalf.local.home>
-In-Reply-To: <30f8fa10-4527-4e03-91c6-638834412466@redhat.com>
-References: <174018982058.2766225.1721562132740498299.stgit@mhiramat.tok.corp.google.com>
-	<174018983078.2766225.824985516904203702.stgit@mhiramat.tok.corp.google.com>
-	<fdb8adb0-efaf-45c7-8814-212026d7da53@redhat.com>
-	<30f8fa10-4527-4e03-91c6-638834412466@redhat.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1740408679; c=relaxed/simple;
+	bh=WHYbN9/AyM5Wfc5ZUi39uIR3gq4zirgVBh9ocXtA+bc=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=QUQab5NY+dKlZfxD6xDFGj+pD76qSvtnP1UOH1RLFEI1uwuU9MgyQLHZKoU/0oY6LVWMamrephbC2V6MNUbrREJTGu0rcicOsj9AplKJHM3+RZom5/tK45V5l7lHE9E6J5FFN0jlqpYf/rPKLNzsrtS8uCmjA2Q3VTkje0TMBC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d18a1a0f0eso90900485ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 06:51:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740408677; x=1741013477;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WHYbN9/AyM5Wfc5ZUi39uIR3gq4zirgVBh9ocXtA+bc=;
+        b=Cs44Dc4Btgpj6TcVg7mPboaF97/LJN8F8rzL2uUw1tC76N4Se5zFbMALG67AQ0Fgzy
+         E9vWUjliAcDSHbGKwn0kzD1nzvzWDa8DMNyguHxmrcxCP0fLLx2gtiOMDmrUcmeRRpU2
+         epVM7YadChDea57oxen4PZtxIZoC21/7qaY32xOhx8EUeggPWvYGcJB8PHMaejeQuNSZ
+         qhT4PBa0jAcADPojAT4khoxSAcxuSYcR+ZQ7pUMMQAHNIP9KLEz19wQRQ6zyrv/NETTs
+         Q0+Q3vjecCAeH/1nOVmCd1YMU2sMEXkMrKcmBSN04vMski4aEWjA9DBaVi1JrO0jTQSm
+         9lBg==
+X-Forwarded-Encrypted: i=1; AJvYcCXdfgTqrMW/+jH7/jwddF6RLsx+YCbYEqoGwDK28TsudLh532L3fJHQwQGtA1Nw7LYeTyVVbkm4yk4PMXg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzr8E3WNfQvtOWsNbTVnxuOw7qIs+rK/oFyqKU4VxzrO6IpJwyx
+	eKoVjNFi04qnII0pepoKnoBzT5RC53x2DhluXiB0fmxyup6LDbbnVknrtVzDkAEY5ye++GcArVd
+	ugINhYg2qYtAsvxNvz0xzfCIEMx90HnLBaSxp3hnco2YWMheh3MwCqvg=
+X-Google-Smtp-Source: AGHT+IFBU7widGjmEz7cZDPNrguQdpGyuQ1TAilarnJLLrcoBg3mSrgkS4WA2yqbXF13p8Egh8LPbbVkhJYHrJnJ4qNz6GsVHQ6I
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a05:6e02:248b:b0:3d0:e6c:e9c5 with SMTP id
+ e9e14a558f8ab-3d2caf099fcmr159588545ab.21.1740408676909; Mon, 24 Feb 2025
+ 06:51:16 -0800 (PST)
+Date: Mon, 24 Feb 2025 06:51:16 -0800
+In-Reply-To: <6738c3ba.050a0220.bb738.000d.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67bc8764.050a0220.bbfd1.0088.GAE@google.com>
+Subject: Re: [syzbot] WARNING: locking bug in get_random_u8
+From: syzbot <syzbot+7f4f9a43a9c78eaee04f@syzkaller.appspotmail.com>
+To: Jason@zx2c4.com, bigeasy@linutronix.de, boqun.feng@gmail.com, 
+	hdanton@sina.com, jason@zx2c4.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, 23 Feb 2025 14:53:28 -0500
-Waiman Long <llong@redhat.com> wrote:
+This bug is marked as fixed by commit:
+kasan: Make kasan_record_aux_stack_noalloc() the default behaviour
 
-> >> =C2=A0 +
-> >> +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-> >> +static void debug_show_blocker(struct task_struct *task) =20
->=20
-> I think the easiest way forward is to change it to "#if=20
-> defined(CONFIG_DETECT_HUNG_TASK_BLOCKER) && !defined(CONFIG_PREEMPT_RT)"=
-=20
-> to skip this feature for PREEMPT_RT right now . Otherwise, you will have=
-=20
-> to deal with the rtmutex code.
+But I can't find it in the tested trees[1] for more than 90 days.
+Is it a correct commit? Please update it by replying:
 
-If this isn't supported by PREEMPT_RT (yet), then just make the
-DETECT_HUNG_TASK_BLOCKER in the Kconfig be:
+#syz fix: exact-commit-title
 
-	Depends on !PREEMPT_RT
+Until then the bug is still considered open and new crashes with
+the same signature are ignored.
 
-Don't put that dependency in the code.
+Kernel: Linux
+Dashboard link: https://syzkaller.appspot.com/bug?extid=7f4f9a43a9c78eaee04f
 
--- Steve
+---
+[1] I expect the commit to be present in:
+
+1. for-kernelci branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
+
+2. master branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git
+
+3. master branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git
+
+4. main branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git
+
+The full list of 10 trees can be found at
+https://syzkaller.appspot.com/upstream/repos
