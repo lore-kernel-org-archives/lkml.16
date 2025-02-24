@@ -1,101 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B142C24394F;
-	Mon, 24 Feb 2025 18:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3177D265CD4;
+	Mon, 24 Feb 2025 18:19:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740421161; cv=none; b=WpU1C6PYaNdZocj1LB1gODrd/OKxKk8BxsIsZPQIMhI2BMKvZb118zOEMqemdMPFaQysqCiPzs+NVbkhOhGlsSNxG5kbYrrciZ9JdpBK1GcGBsNJr3psgT4FJjdmWHjniw0gjw8PKQCmP011wFIAE1mVSO7qMm6LEfCZcedMUE4=
+	t=1740421168; cv=none; b=o4jGpZpxeJSufS2miTrr5q021qEI1Lx8CFE8jPM1KKmCJOP4ELbxXxIxwK/d/dxZkyE1EZNHj6Al0rM+EXq4QgQ+DO1tDjRuEf3X5fOXinkfzYzQNucwb3xkqQPYWLbAkvgoAXMT1o9XwOeGyz19EGeCUhhbtkfZG+x6rGvianY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740421161; c=relaxed/simple;
-	bh=uwyoOtIyHLqC9nZ97BA9itdUvfRcvpHiv3XhxZ/ILuE=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FJr8D258Y18iGOwiGegEewOs002WbBuJIbUaLNGMfxmxcEZvBP+b+trMI0d93JbAJ+5wJ+4EuCOyU6uhcuf/94XaCylLXT5t9j2VfWejXmUZmbrQwOjPosAlLDuB5HsrvcEVxxP6cqRGL8yD5aHzBhYIREwjq2jIyGkF49xYmdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uwkbPPry; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740421168; c=relaxed/simple;
+	bh=K8Pt8n3Cjrm4U3ZHDVZarmu2EEqAMXmBS/rpZBzOhuc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EoA1DxwAh3ZhoIpnjvXiE7IKAxd/PpZez/wWnUgbh+COYC2gxkkdOJNrn3HrSrjBqUkl/iMnLvBOMMzWGVcCP2imbA/YN19kNWEo34t6zKh2nE8Zboy2Y8sNGQ7LAn2znbxVf4qRwiqrsUqSaLNNwaXxpUfs4oV3jP6ga5Fs8gY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RwbQISGt; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uwkbPPry"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DF33C4CED6;
-	Mon, 24 Feb 2025 18:13:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740421161;
-	bh=uwyoOtIyHLqC9nZ97BA9itdUvfRcvpHiv3XhxZ/ILuE=;
-	h=From:Subject:Date:To:Cc:From;
-	b=uwkbPPryHUMDqO+hc+E4Fusjct9SUtD4RluVMaGMy6omU7WWpmxk9a0DzT5Wq6xgI
-	 SZ/idgHZo8u9AjCsIgjGDdTv8Hh9GhLqiQlWQalyNfMSW8TesrHZYqlEgbGnJ2vkSG
-	 QULe7bVc3zDt3Rbm/p7PByJVlgRYP59zKQWxcQ1+2mTGmJ1eNLWgUYbH7mkyzQdoC8
-	 C6YGQpOSNfrNkDXPrjDbWOpy9GkM2TJ9vrJHr/vScNqtKchPHc9MI6/vl85iHMsjlg
-	 /l+4h5LtsMHqKxtO6mt1/fzHb7ryyexS+E2rCvFCaQH7/9dXbsiB/TWjd45owW+CDy
-	 pF2zX3ZGSWGqw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH net 0/3] mptcp: misc. fixes
-Date: Mon, 24 Feb 2025 19:11:49 +0100
-Message-Id: <20250224-net-mptcp-misc-fixes-v1-0-f550f636b435@kernel.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RwbQISGt"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E3619442BD;
+	Mon, 24 Feb 2025 18:19:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740421160;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SbO1pVG5xjunhNjVFKdnoAkjHJGfbJL6V7hh0xCFAVM=;
+	b=RwbQISGt0vpZPPf+v4In6D7byhkKBz5dM/mIjAmLNip4JfThV1TSFG8F1MrFyZUWjX2KBh
+	zh562h3VYgS6WaTU384rYbIHNw7LVagU1QEFvWJtzNFnPTG/nOlqeJPRakkBsAqeMKLVgf
+	Ipng/fxyuOx2iW8gGaXtTLjf7T6vDIeu/AoO9mhgKt/HS84VD9A7jFALuKeyiP8WtrYEZg
+	krIXm1rTgQU/XHWnPsafcSOAcSWMHEGBde19sbT8Ok2mQZt7aELF5VMRvAWdayjiee0VRO
+	DRpWgcApAygb9UCmnJ8T3eK34IPYAOGN252UU1qSFs7B7mXtCJUZA1F9QvqfdQ==
+Date: Mon, 24 Feb 2025 19:19:17 +0100
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Donald Hunter
+ <donald.hunter@gmail.com>, Rob Herring <robh@kernel.org>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, Dent
+ Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, Maxime
+ Chevallier <maxime.chevallier@bootlin.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v5 02/12] net: pse-pd: Add support for
+ reporting events
+Message-ID: <20250224191917.31063062@kmaincent-XPS-13-7390>
+In-Reply-To: <20250224120228.62531319@kmaincent-XPS-13-7390>
+References: <20250218-feature_poe_port_prio-v5-0-3da486e5fd64@bootlin.com>
+	<20250218-feature_poe_port_prio-v5-2-3da486e5fd64@bootlin.com>
+	<Z7g-WYQNpVp5w7my@pengutronix.de>
+	<20250224120228.62531319@kmaincent-XPS-13-7390>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAGW2vGcC/x3LSwqAMAwA0atI1gZq8YdXERdSU82itTQiQvHuB
- pfD8AoIZSaBqSqQ6WbhM2o0dQXuWONOyJs2WGM7Y22LkS4M6XIJA4tDzw8Jjqsfh741mycPSlO
- mf6icQQUs7/sBGPPiHGsAAAA=
-X-Change-ID: 20250224-net-mptcp-misc-fixes-8af87640dfef
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org, 
- syzbot+cd3ce3d03a3393ae9700@syzkaller.appspotmail.com, 
- "Chester A. Unal" <chester.a.unal@xpedite-tech.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1036; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=uwyoOtIyHLqC9nZ97BA9itdUvfRcvpHiv3XhxZ/ILuE=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnvLbE/Sc41iqtpNEO42OrCzrDoc6CwtVMpsVom
- V2EeuGwq+WJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ7y2xAAKCRD2t4JPQmmg
- c2ifD/9eV4Mq4huRH7bhLHLHZmYz25C/ayWVEGmV+T3aYi1PviW3XMbUXwRGPUzYSRldUPPgpRk
- Q4haHwrGxYQYN1UTFr0t9a0pbVn9yo0Pm2fzNNfHhlsTVvnE1kJOKxnM5+K1kIr8xwNUFgxx3J0
- 2nI3ZZzOe5eJRxOklVBBV3G4Gx8KoS6pSRgI0WQePW0rhGwa1mN+hvCVaGzjJMnKwXnH0SZkiCp
- 8dT1wL8RfxiR8PJc3oMQKaaonCHE40Bhf5bzg5deA7eEDOZDt7C7r2Dasskkz0Sx2zsLOt8DqGV
- FMIoN7lI13p+bEBYt/T4z6frDwVOjnNUBGnUNc6oQo5iTvTd2wUbrdnyQROywvfXS/Wy+kS6ybr
- t7X/gMnSljSo3E84ycpskSqTzUaMh1GGAWRofGCqKi7dqcbK3gkruaRNNv+21uvWys5tsYbSsMX
- rTg0qKgEtdcun6yHJTAGS+dDx1JFiCF8Sp3fCQdxUMCd2w5wBlMWU2b6XceP5o9/uQoRltrTw0P
- 7mKmBU1Fkv1VpQk9FD1Jbp0A5qx30ZFlqGtJ2dWZr9Z18Jm/FEh3yOgves0LFMTRdVbHPF+vxDo
- fqqrST11wbT2R/PF6WtoF1KePl2lnK+wR1DTY8QlPUCuCe9uXXuDvWbqPsDg0Rq5CDl6+hCjAw9
- SYRaijJWjcekdMA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdejleeglecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqfedtredtjeenucfhrhhomhepmfhorhihucforghinhgtvghnthcuoehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefhjeevfeeggeeghffgudfhhedvvedvueekleevjeduvddutefhvddugedtfeeludenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgduleemleehrggvmeelfhdttdemkegrudelmehfvgejtdemvgegtggtmegsfhdugeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeelhegrvgemlehftddtmeekrgduleemfhgvjedtmegvgegttgemsghfudegpdhhvghlohepkhhmrghinhgtvghnthdqigfrufdqudefqdejfeeltddpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvgedprhgtphhtthhopehordhrvghmphgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepuggrvhgvm
+ hesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvghtpdhrtghpthhtohepughonhgrlhgurdhhuhhnthgvrhesghhmrghilhdrtghomh
+X-GND-Sasl: kory.maincent@bootlin.com
 
-Here are two unrelated fixes, plus an extra patch:
+On Mon, 24 Feb 2025 12:02:28 +0100
+Kory Maincent <kory.maincent@bootlin.com> wrote:
 
-- Patch 1: prevent a warning by removing an unneeded and incorrect small
-  optimisation in the path-manager. A fix for v5.10.
+> Hello Oleksij,
+>=20
+> On Fri, 21 Feb 2025 09:50:33 +0100
+> Oleksij Rempel <o.rempel@pengutronix.de> wrote:
+>=20
+> > Hi Kory,
+> >=20
+> > On Tue, Feb 18, 2025 at 05:19:06PM +0100, Kory Maincent wrote: =20
+> > > From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
+> > >=20
+> > > Add support for devm_pse_irq_helper() to register PSE interrupts. This
+> > > aims to report events such as over-current or over-temperature condit=
+ions
+> > > similarly to how the regulator API handles them but using a specific =
+PSE
+> > > ethtool netlink socket.   =20
+> >=20
+> > Thank you for your work. Here some comments.
+> >=20
+> > ...
+> >  =20
+> > > --- a/drivers/net/mdio/fwnode_mdio.c
+> > > +++ b/drivers/net/mdio/fwnode_mdio.c
+> > > @@ -18,7 +18,8 @@ MODULE_LICENSE("GPL");
+> > >  MODULE_DESCRIPTION("FWNODE MDIO bus (Ethernet PHY) accessors");
+> > > =20
+> > >  static struct pse_control *
+> > > -fwnode_find_pse_control(struct fwnode_handle *fwnode)
+> > > +fwnode_find_pse_control(struct fwnode_handle *fwnode,
+> > > +			struct phy_device *phydev)
+> > >  {   =20
+> >=20
+> > This change seems to be not directly related to the commit message.
+> > Is it the preparation for the multi-phy support? =20
+>=20
+> I need to save the phy_device related to PSE control to use the right net=
+work
+> interface for the ethtool notification. (ethnl_pse_send_ntf())
+> Indeed I have not described this in the commit message.
 
-- Patch 2: reset a subflow when MPTCP opts have been dropped after
-  having correctly added a new path. A fix for v5.19.
+In fact, there is another solution. We can go over all the PHYs and look for
+the one that matches the psec pointer.
 
-- Patch 3: add a safety check to prevent issues like the one fixed by
-  the second patch.
+Mmh it is maybe better, it will avoid saving the phy_device pointer into
+the newly attached_phydev.
 
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-Matthieu Baerts (NGI0) (2):
-      mptcp: reset when MPTCP opts are dropped after join
-      mptcp: safety check before fallback
+I will go for it in v6.
 
-Paolo Abeni (1):
-      mptcp: always handle address removal under msk socket lock
-
- net/mptcp/pm_netlink.c |  5 -----
- net/mptcp/protocol.h   |  2 ++
- net/mptcp/subflow.c    | 15 +--------------
- 3 files changed, 3 insertions(+), 19 deletions(-)
----
-base-commit: f15176b8b6e72ac30e14fd273282d2b72562d26b
-change-id: 20250224-net-mptcp-misc-fixes-8af87640dfef
-
-Best regards,
--- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
