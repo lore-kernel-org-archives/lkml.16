@@ -1,122 +1,124 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F0A4430
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 02:52:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 817211624EB;
+	Mon, 24 Feb 2025 02:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740365571; cv=none; b=cLTpEwoxKwDpowaxEBzd3uwQm2y6QJz/7nPkwAo99FuAitWG/9YKtYQ9t2vm/XC01M4GObNKzPFg17Wb3PQ17/cePpym6/dNfL1sP50/ILqOraOjnT+0CWhpZeCr4j0m84LND9cH7c5h6QKI2Y1AcOluSlv/hFIKnF8lLwkwJ8U=
+	t=1740365586; cv=none; b=QvyIuBajwJtkgnpblUnm2CQUpU8eHxOiXgQ+gDVcA6Hhy0qIqoazpP6Sa9inoYVEWeWkconkwzf21jkEKzsukCPoZbaGne30CKsvN8z274vbz1wz9oFIlECkHkJMiIf9zXEYiXATgMgJbGxSL12HIm0TlO4yiHQJ5/tk08ScHso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740365571; c=relaxed/simple;
-	bh=X+jZl9yjWxMVT4yYJA/b1HzJa0muchAg22wzqZtgmIs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k7v/lSKWpk37gWC0XLYSpcloXtyXU0KsgdPJOgHlG5rRzi/bUiul/3jkolctuLPEfd73RhuunHKUjgWPzvH9tsRv8B0ujOSE2voe4eyRLEmbPrnVSd6mzYW4Xgb0hfTKzTPkfo6GfnjuhciErsBNExks0H+2bjQyQQYhK7KdhMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SxAxZCx2; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740365586; c=relaxed/simple;
+	bh=J9123hZZrTlIOXBBpLmo8l+k5NrzmEjd/ByKPLqak5s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=lSqcb/3BWosdKd+y/v/h5fg14DDIQzJi0NyXdL+uiZLXsWDxE1mnQHEfBetg0HIGMGvtD8oefc/E3UNTnLzfF67skpf+1WQytfIWad1JQXVVgG58Ntln5NSNs0UfT0CV9Ft5yRKoAC3qIvzkvcRoxhIt/hmpPdhrVTHKGP113go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=QxCB1Aom; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SxAxZCx2"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5461cb12e39so3728325e87.2
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Feb 2025 18:52:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740365567; x=1740970367; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=N79cu7iC2Cqqnin+PLo4xCdrijtvr/2XsDeBhnAhIuo=;
-        b=SxAxZCx25MjB9yd+nhpYqRFOySLyHXv+K5E3w/36MFzoqsPpaLsm+3ePFQHPeYfDmI
-         Aifvg96ci/Y9L1mpKeIO3AWaHUzE91BxKL4lA1AnoE3gtQ2Yv+RMXPvNgeAh341Vh3YY
-         L6GN0tEkIWUcybBuBhTrFuUPWaxtWNV8Ur4o/Cu/WRLTleqA+J5KM5Bt68AtrXgPw18c
-         N9et6eE0LHpGlmfsDhTYVyHsOftEdxtBLE8IEDxpZ94AcCM3fsJKC0h8cinToGAFMedn
-         rQsnWZYpd7tx0fpYRwgmLDZhQipGOI0a+ddtjN64vF8kBR3YZ4sZO6f2Oxj3h6zAMgHp
-         FxDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740365567; x=1740970367;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N79cu7iC2Cqqnin+PLo4xCdrijtvr/2XsDeBhnAhIuo=;
-        b=FNUUwZNG9evY/Rs4VIrIstkod3USbgUQBwHtbl4u+R0Vl5jX0XcuF/E2U3r5Ida4AK
-         8npAZeaxiR/YuVWUBUOE36EYEyqLikH8LPsOTaIhoDyIuxrc5NJdhWd+09+3WPf34sqv
-         TF65w+VOf46zxsB66sg9C24I/dc4iUHI+08SE5UtsBgw22nszIKfB1kFDDLbsUYcHN/W
-         brAKD4yQS28J6kEmfA7jqEVW1/tXb4kkEX6QgsAcJNhDSG2XiLwVK0QEctGDPj6+u4kA
-         9GQfT+f3I06y7Xj65f0xKiuZG5lHmEtH3MSVgEgP1agJCOyYIjZEh/y5RNVQKDt+nxRj
-         ZZAA==
-X-Forwarded-Encrypted: i=1; AJvYcCXrwvDrIi5HQLM3fHNoBGu4EUbaj2lAy/GK9EIGRFIzJep+IiIHYBMoGA7KILf7uPJx3y7TQPBUV+eRmf0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybV/s1uB+KWm0RWet57wj85uQfWzw9aBfON7DH1O8ntccXdbpn
-	EKHiISuitR45XX+A4gLYI8JW9ZlHys+MqczbEL/fuilaBTg0ebEodqjkiru2guA=
-X-Gm-Gg: ASbGncsYU333diRAfxLB/vTxn6Y8ohXW1Uqj0dYzxED3j4uhXV9yNH7E+TbRuVYOWDX
-	U8HRL3CMEnSqnMWfXdvJOw7x+c0IFJk4CX8938o1pMfxi4Q4FDQFcM8HoaTBMZAGiNHrMONGnaw
-	RGeVuyr58DTbbqHjYjxsgB+sT9BVeKT4W84I6HOKuftvVJe/1Ut+4/q5cMY0D6Io+Y7soMmKwgt
-	7JjHszOFYDzrIL4NVye8q3EH3bVKDz/M97FJdO5ODV3RVZkAcaL6VoOtXh/tHwscxZzqFHHeW2m
-	6Bsb/4LHSeaqPRFNvFq0i5RLopRBzL454L9IqxXcVj+F6xErA9yMVQgPdPA4w7W7mdca+tc72zd
-	FrcoQxA==
-X-Google-Smtp-Source: AGHT+IEa5Mf84ph5T/ZdHvdKMLIs5jH8HXd1tjLXSn92MqsxBCI728iU6GLsECzIInK2/X8Pt2Ep/A==
-X-Received: by 2002:a05:6512:110d:b0:545:62c:4b13 with SMTP id 2adb3069b0e04-54838f4c9efmr4290701e87.40.1740365567236;
-        Sun, 23 Feb 2025 18:52:47 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54839cd339dsm838172e87.203.2025.02.23.18.52.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2025 18:52:45 -0800 (PST)
-Date: Mon, 24 Feb 2025 04:52:43 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Yongbang Shi <shiyongbang@huawei.com>
-Cc: xinliang.liu@linaro.org, tiantao6@hisilicon.com, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, 
-	daniel@ffwll.ch, kong.kongxinwei@hisilicon.com, liangjian010@huawei.com, 
-	chenjianmin@huawei.com, lidongming5@huawei.com, libaihan@huawei.com, 
-	shenjian15@huawei.com, shaojijie@huawei.com, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 drm-dp 7/8] drm/hisilicon/hibmc: Enable this hot plug
- detect of irq feature
-Message-ID: <6jx5ldpidy2ycrqognfiv5ttqr5ia4dtbryta3kc2mkndrvvgo@qzuakucz765k>
-References: <20250222025102.1519798-1-shiyongbang@huawei.com>
- <20250222025102.1519798-8-shiyongbang@huawei.com>
- <reqpxlbvlz5qssgy6gbjuou33h4zevo4xeztqbsr4keehplyhx@utv22a5ihohx>
- <eef68fc7-30f4-4246-a82e-4f90cd6a665d@huawei.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="QxCB1Aom"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1740365584; x=1771901584;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:references:in-reply-to:to:cc;
+  bh=J9123hZZrTlIOXBBpLmo8l+k5NrzmEjd/ByKPLqak5s=;
+  b=QxCB1AomDNs50AMf6RSTYLFfStSw3FiGwy6GsIq0xctVTp9cvmE1gxTI
+   6l7NkxooqP0iOWH1hZCzgSTW/tQ+LplZLrohu4f7oiaqcBW6d2HTeCZru
+   VoHuPNPXfBNUaEv2eJcd8S+3li9sRzDZsAWiHKWTmcCyrXNi5dz3ERDmc
+   MKsQ9DETy7DkU2Ks7G0TVtTJ9kwJ80ImIuOYZnQJuy8vcimTlR3c/AEc3
+   nP2btxMPdRsClnq5oidQubhHqNWTTGEbtghoMhGArfw8VjpPgcJU6MWlR
+   yd5Ozoe/Y/cU5ILrDL2yRkHoGjzVWjZcRH9g9L2Qu6PUGI33vA08hmriv
+   g==;
+X-CSE-ConnectionGUID: 6rVg96LVQkmrqYQWG6Firw==
+X-CSE-MsgGUID: 1zih4FZmSx+QgG3aHGhnsA==
+X-IronPort-AV: E=Sophos;i="6.13,309,1732604400"; 
+   d="scan'208";a="42149827"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 Feb 2025 19:52:57 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 23 Feb 2025 19:52:40 -0700
+Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Sun, 23 Feb 2025 19:52:35 -0700
+From: Dharma Balasubiramani <dharma.b@microchip.com>
+Date: Mon, 24 Feb 2025 08:22:27 +0530
+Subject: [PATCH v4 1/2] dt-bindings: mmc: mmc-slot: Make compatible
+ property optional
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eef68fc7-30f4-4246-a82e-4f90cd6a665d@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250224-mmc-slot-v4-1-231620a31e88@microchip.com>
+References: <20250224-mmc-slot-v4-0-231620a31e88@microchip.com>
+In-Reply-To: <20250224-mmc-slot-v4-0-231620a31e88@microchip.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman
+	<khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, "Martin
+ Blumenstingl" <martin.blumenstingl@googlemail.com>
+CC: <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-amlogic@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, Dharma Balasubiramani
+	<dharma.b@microchip.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740365548; l=1669;
+ i=dharma.b@microchip.com; s=20240209; h=from:subject:message-id;
+ bh=J9123hZZrTlIOXBBpLmo8l+k5NrzmEjd/ByKPLqak5s=;
+ b=iDQoQc5oZ8QR9avJPK5QkY2uuNY3zyCIOqDnd0geowgfmnyOkIzbvtD2WwO1bpiOqrNyHdy6+
+ FGdvWNIhq7LB1aK78lpkwa21FvcUe+3Z/3M9DeOVdjaWKx4mtFRlxWz
+X-Developer-Key: i=dharma.b@microchip.com; a=ed25519;
+ pk=kCq31LcpLAe9HDfIz9ZJ1U7T+osjOi7OZSbe0gqtyQ4=
 
-On Sat, Feb 22, 2025 at 06:35:48PM +0800, Yongbang Shi wrote:
-> > > +static int hibmc_dp_hpd_event(struct drm_client_dev *client)
-> > > +{
-> > > +	struct hibmc_dp *dp = container_of(client, struct hibmc_dp, client);
-> > > +	struct hibmc_drm_private *priv = to_hibmc_drm_private(dp->drm_dev);
-> > > +	struct drm_display_mode *mode = &priv->crtc.state->adjusted_mode;
-> > > +	int ret;
-> > > +
-> > > +	if (dp->hpd_status) {
-> > > +		hibmc_dp_hpd_cfg(&priv->dp);
-> > > +		ret = hibmc_dp_prepare(dp, mode);
-> > > +		if (ret)
-> > > +			return ret;
-> > > +
-> > > +		hibmc_dp_display_en(dp, true);
-> > > +	} else {
-> > > +		hibmc_dp_display_en(dp, false);
-> > > +		hibmc_dp_reset_link(&priv->dp);
-> > > +	}
-> > If I understand this correctly, you are using a separate drm_client to
-> > enable and disable the link & display. Why is it necessary? Existing
-> > drm_clients and userspace compositors use drm framework, they should be
-> > able to turn the display on and off as required.
-> > 
-> Thanks for your asking, there are cfg/reset process when the connector 's pluging in/out.
-> We want to cfg DP registers again when the connector changes. Not only dp link training, but also cfg
-> the different video modes into DP registers.
+The compatible property is required for some vendor-specific device trees,
+such as Amlogic's meson-mx-sdio, but is unnecessary for others, like
+Microchip's DTS. To resolve unintended warnings for configurations that do
+not require it, remove compatible from the required properties in
+mmc-slot.yaml.
 
-Why? The link training and mode programming should happen during
-pre_enable / enable stage (legacy or atomic).
+Since meson-mx-sdio still requires compatible, explicitly add it to its
+required list in amlogic,meson-mx-sdio.yaml.
 
-> 
-> 
+Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdio.yaml | 3 +++
+ Documentation/devicetree/bindings/mmc/mmc-slot.yaml              | 1 -
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdio.yaml b/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdio.yaml
+index 022682a977c6..0d4d9ca6a8d9 100644
+--- a/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdio.yaml
++++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdio.yaml
+@@ -60,6 +60,9 @@ patternProperties:
+       bus-width:
+         enum: [1, 4]
+ 
++    required:
++      - compatible
++
+     unevaluatedProperties: false
+ 
+ required:
+diff --git a/Documentation/devicetree/bindings/mmc/mmc-slot.yaml b/Documentation/devicetree/bindings/mmc/mmc-slot.yaml
+index 1f0667828063..ca3d0114bfc6 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc-slot.yaml
++++ b/Documentation/devicetree/bindings/mmc/mmc-slot.yaml
+@@ -29,7 +29,6 @@ properties:
+     maxItems: 1
+ 
+ required:
+-  - compatible
+   - reg
+ 
+ unevaluatedProperties: false
 
 -- 
-With best wishes
-Dmitry
+2.43.0
+
