@@ -1,131 +1,372 @@
-Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE481266184;
-	Mon, 24 Feb 2025 18:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79491265CC9
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 18:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740422467; cv=none; b=iT7rZ3//Q2o7LdPTcItJDYUXsFADCkMyvqMXlG0EtRas3FIC7pBkqsON4FSofU/E6AGuuz6YKDC4fCyehVsMWpVOfsWbz9YwR4mMv1EnkdEZZp4y6PZo637sDBS21Od4ctiPlmYGKFqCLRcJBLSb1hTPButrQ3TB1eVYu26tcBM=
+	t=1740422483; cv=none; b=ALnmuD23s6RCsYrDsxDUpv1Pl8ezcC5eVcr8ztKQIcB7hdfHyMHA+XcmFfSYr/b1ufevCl1SE9pVMnewDcicULfGYj9sIqSzbZzVNfmOigGThc9WKJomm8XB+qV3vcWA4aum/YV27fqj5MI0yXIKI1pvdl5YA6og91q7ssJlC4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740422467; c=relaxed/simple;
-	bh=cphWkFLix8d6i9Z1K5YLAhd8RuvGZJxPpG66vWFcP9A=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ma2GxsX90yDOSdFZnQGaFzJKp7VJsbdy3hETaMfuUkzrjtAEjA2AJlL5yV0A4WS/oNKyYU8mv/UxjMAsGciOUHZRLJWnw9+YM2nychmxw/69hoqZ7JnhrGeuQAkiGrgUEiKbTuZ4ZnI+/hAZIxxXKlE/cDNZ1tBOTAPZzkDdyVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=Tz7V9Gvt; arc=none smtp.client-ip=52.119.213.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1740422483; c=relaxed/simple;
+	bh=H5u5t78apVgFWoMyuTLsAd75JlD93pE6vK/sjxJuLIw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XEZcml3gBVznkfo8tRrS/CdXxfXkG2Yv0ajGrMBpSnL0cvN5DxTNojdjMy7s7QQfDPMOB3FA9ydFfmdrdSNvj7YFgcE8TLCyc/7WIUZDt2Sa1AWAXkoj4LXydAprZLavaXd9rmjvHdM5vP2Ys3dJ+qFFa/HmPXY8ayNxew1+8nI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FMITLekG; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Tz7V9Gvt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1740422465; x=1771958465;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=LEFCqhcG8wpp885eIFR7TiqnC7q8YedBfxREnJ154Sw=;
-  b=Tz7V9Gvtq+acp7yDcAaZaDUPN90lIxX0CvaVK+dRLXNNxH9+ShbD3Gwm
-   iwFLjNq+/UpC2xD3nVwBdfHoBgKx5uQjltA5nNEgfiD6XQPHZ7coI2b2i
-   dA+0E5yf34jWyD4S7qr8jda82gsxXUDb2H2nJ6mcl+s/tRXQh08RNKr+k
-   o=;
-X-IronPort-AV: E=Sophos;i="6.13,312,1732579200"; 
-   d="scan'208";a="68815604"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 18:41:01 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.21.151:29075]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.35.58:2525] with esmtp (Farcaster)
- id 329f09ea-1828-467a-b87d-a103d2ae36e4; Mon, 24 Feb 2025 18:41:00 +0000 (UTC)
-X-Farcaster-Flow-ID: 329f09ea-1828-467a-b87d-a103d2ae36e4
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 24 Feb 2025 18:40:56 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.119.221.99) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 24 Feb 2025 18:40:53 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <adrianhuang0701@gmail.com>
-CC: <ahuang12@lenovo.com>, <davem@davemloft.net>, <edumazet@google.com>,
-	<horms@kernel.org>, <kuba@kernel.org>, <kuniyu@amazon.com>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>, <pabeni@redhat.com>
-Subject: Re: [PATCH 1/1] af_unix: Fix memory leak in unix_dgram_sendmsg()
-Date: Mon, 24 Feb 2025 10:40:45 -0800
-Message-ID: <20250224184045.74801-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20250224152846.13650-1-ahuang12@lenovo.com>
-References: <20250224152846.13650-1-ahuang12@lenovo.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FMITLekG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740422481; x=1771958481;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=H5u5t78apVgFWoMyuTLsAd75JlD93pE6vK/sjxJuLIw=;
+  b=FMITLekG3Td16pcp6nCv7uJ/QnEGvmueZfyZV++vgWz9OOcmDYbZhzgo
+   QeHLjE+SgrY6XvL7OGtFBVvMAOIiWP0iJv0JOUDwM5BCgTunKU9FJd5Or
+   GC4IGrtc0bQm1C9T9GS60dMfKx28fUEOU74RYKGo/JhB9ecbZdpzHoBKO
+   eblQOgf6jveqiQDtuHmIldwRzkb3TfYXVfxZJKhU0wKBz+8QoKdpLUd47
+   Xw+2vA+K480BWZeP7n49nFnuTMOfaOpes9+4yBNcFSpXV61Bx3ZAkIzLD
+   xAgc2dEDCCXwp+rmKjuEbSUScFYY5deqdmEngbVwdMaLfb7s2WcEiJcoj
+   Q==;
+X-CSE-ConnectionGUID: hBzd0HppSWe1gv22HykfzA==
+X-CSE-MsgGUID: FV31PGDgTkuc34Rz0neVKQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="45105756"
+X-IronPort-AV: E=Sophos;i="6.13,312,1732608000"; 
+   d="scan'208";a="45105756"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 10:41:20 -0800
+X-CSE-ConnectionGUID: nZXLhhy4SSGOQY2MsrgAtw==
+X-CSE-MsgGUID: w30vh+RGScKFAVkb2EoDYQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="116632868"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by orviesa007.jf.intel.com with ESMTP; 24 Feb 2025 10:41:10 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tmdO7-0009E7-1m;
+	Mon, 24 Feb 2025 18:41:07 +0000
+Date: Tue, 25 Feb 2025 02:41:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: Rik van Riel <riel@surriel.com>, x86@kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, bp@alien8.de, peterz@infradead.org,
+	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
+	nadav.amit@gmail.com, thomas.lendacky@amd.com, kernel-team@meta.com,
+	linux-mm@kvack.org, akpm@linux-foundation.org, jackmanb@google.com,
+	jannh@google.com, mhklinux@outlook.com, andrew.cooper3@citrix.com,
+	Manali.Shukla@amd.com, mingo@kernel.org,
+	Rik van Riel <riel@surriel.com>
+Subject: Re: [PATCH v13 08/14] x86/mm: global ASID context switch & TLB flush
+ handling
+Message-ID: <202502250255.UQONr93N-lkp@intel.com>
+References: <20250223194943.3518952-9-riel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D043UWC001.ant.amazon.com (10.13.139.202) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250223194943.3518952-9-riel@surriel.com>
 
-From: Adrian Huang <adrianhuang0701@gmail.com>
-Date: Mon, 24 Feb 2025 23:28:46 +0800
-> From: Adrian Huang <ahuang12@lenovo.com>
-> 
-> After running the 'sendmsg02' program of Linux Test Project (LTP),
-> kmemleak reports the following memory leak:
-> 
->   # cat /sys/kernel/debug/kmemleak
->   unreferenced object 0xffff888243866800 (size 2048):
->     comm "sendmsg02", pid 67, jiffies 4294903166
->     hex dump (first 32 bytes):
->       00 00 00 00 00 00 00 00 5e 00 00 00 00 00 00 00  ........^.......
->       01 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
->     backtrace (crc 7e96a3f2):
->       kmemleak_alloc+0x56/0x90
->       kmem_cache_alloc_noprof+0x209/0x450
->       sk_prot_alloc.constprop.0+0x60/0x160
->       sk_alloc+0x32/0xc0
->       unix_create1+0x67/0x2b0
->       unix_create+0x47/0xa0
->       __sock_create+0x12e/0x200
->       __sys_socket+0x6d/0x100
->       __x64_sys_socket+0x1b/0x30
->       x64_sys_call+0x7e1/0x2140
->       do_syscall_64+0x54/0x110
->       entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> 
-> Commit 689c398885cc ("af_unix: Defer sock_put() to clean up path in
-> unix_dgram_sendmsg().") defers sock_put() in the error handling path.
-> However, it fails to account for the condition 'msg->msg_namelen != 0',
-> resulting in a memory leak when the code jumps to the 'lookup' label.
-> 
-> Fix issue by calling sock_put() if 'msg->msg_namelen != 0' is met.
-> 
-> Fixes: 689c398885cc ("af_unix: Defer sock_put() to clean up path in unix_dgram_sendmsg().")
-> Signed-off-by: Adrian Huang <ahuang12@lenovo.com>
-> ---
->  net/unix/af_unix.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
-> index 34945de1fb1f..cf37a1f92831 100644
-> --- a/net/unix/af_unix.c
-> +++ b/net/unix/af_unix.c
-> @@ -2100,6 +2100,8 @@ static int unix_dgram_sendmsg(struct socket *sock, struct msghdr *msg,
->  		if (!msg->msg_namelen) {
->  			err = -ECONNRESET;
->  			goto out_sock_put;
-> +		} else {
-> +			sock_put(other);
->  		}
->  
->  		goto lookup;
+Hi Rik,
 
-nit: else is not needed:
+kernel test robot noticed the following build errors:
 
-	if (!msg->msg_namelen) {
-		err = -ECONNRESET;
-		goto out_sock_put;
-	}
+[auto build test ERROR on tip/x86/core]
+[also build test ERROR on tip/x86/mm tip/master linus/master v6.14-rc4 next-20250224]
+[cannot apply to tip/auto-latest]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-	sock_put(other);
-	goto lookup;
+url:    https://github.com/intel-lab-lkp/linux/commits/Rik-van-Riel/x86-mm-consolidate-full-flush-threshold-decision/20250224-035335
+base:   tip/x86/core
+patch link:    https://lore.kernel.org/r/20250223194943.3518952-9-riel%40surriel.com
+patch subject: [PATCH v13 08/14] x86/mm: global ASID context switch & TLB flush handling
+config: i386-buildonly-randconfig-001-20250224 (https://download.01.org/0day-ci/archive/20250225/202502250255.UQONr93N-lkp@intel.com/config)
+compiler: clang version 19.1.3 (https://github.com/llvm/llvm-project ab51eccf88f5321e7c60591c5546b254b6afab99)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250225/202502250255.UQONr93N-lkp@intel.com/reproduce)
 
-Thanks!
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502250255.UQONr93N-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from arch/x86/kernel/asm-offsets.c:14:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:13:
+   In file included from include/linux/cgroup.h:17:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:9:
+   In file included from include/linux/sched/task.h:13:
+   In file included from include/linux/uaccess.h:12:
+   In file included from arch/x86/include/asm/uaccess.h:17:
+>> arch/x86/include/asm/tlbflush.h:253:37: error: no member named 'asid_transition' in 'mm_context_t'
+     253 |         return mm && READ_ONCE(mm->context.asid_transition);
+         |                                ~~~~~~~~~~~ ^
+   include/asm-generic/rwonce.h:49:33: note: expanded from macro 'READ_ONCE'
+      49 |         compiletime_assert_rwonce_type(x);                              \
+         |                                        ^
+   include/asm-generic/rwonce.h:36:35: note: expanded from macro 'compiletime_assert_rwonce_type'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |                                          ^
+   include/linux/compiler_types.h:509:10: note: expanded from macro '__native_word'
+     509 |         (sizeof(t) == sizeof(char) || sizeof(t) == sizeof(short) || \
+         |                 ^
+   include/linux/compiler_types.h:542:22: note: expanded from macro 'compiletime_assert'
+     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |                             ^~~~~~~~~
+   include/linux/compiler_types.h:530:23: note: expanded from macro '_compiletime_assert'
+     530 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |                              ^~~~~~~~~
+   include/linux/compiler_types.h:522:9: note: expanded from macro '__compiletime_assert'
+     522 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+   In file included from arch/x86/kernel/asm-offsets.c:14:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:13:
+   In file included from include/linux/cgroup.h:17:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:9:
+   In file included from include/linux/sched/task.h:13:
+   In file included from include/linux/uaccess.h:12:
+   In file included from arch/x86/include/asm/uaccess.h:17:
+>> arch/x86/include/asm/tlbflush.h:253:37: error: no member named 'asid_transition' in 'mm_context_t'
+     253 |         return mm && READ_ONCE(mm->context.asid_transition);
+         |                                ~~~~~~~~~~~ ^
+   include/asm-generic/rwonce.h:49:33: note: expanded from macro 'READ_ONCE'
+      49 |         compiletime_assert_rwonce_type(x);                              \
+         |                                        ^
+   include/asm-generic/rwonce.h:36:35: note: expanded from macro 'compiletime_assert_rwonce_type'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |                                          ^
+   include/linux/compiler_types.h:509:39: note: expanded from macro '__native_word'
+     509 |         (sizeof(t) == sizeof(char) || sizeof(t) == sizeof(short) || \
+         |                                              ^
+   include/linux/compiler_types.h:542:22: note: expanded from macro 'compiletime_assert'
+     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |                             ^~~~~~~~~
+   include/linux/compiler_types.h:530:23: note: expanded from macro '_compiletime_assert'
+     530 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |                              ^~~~~~~~~
+   include/linux/compiler_types.h:522:9: note: expanded from macro '__compiletime_assert'
+     522 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+   In file included from arch/x86/kernel/asm-offsets.c:14:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:13:
+   In file included from include/linux/cgroup.h:17:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:9:
+   In file included from include/linux/sched/task.h:13:
+   In file included from include/linux/uaccess.h:12:
+   In file included from arch/x86/include/asm/uaccess.h:17:
+>> arch/x86/include/asm/tlbflush.h:253:37: error: no member named 'asid_transition' in 'mm_context_t'
+     253 |         return mm && READ_ONCE(mm->context.asid_transition);
+         |                                ~~~~~~~~~~~ ^
+   include/asm-generic/rwonce.h:49:33: note: expanded from macro 'READ_ONCE'
+      49 |         compiletime_assert_rwonce_type(x);                              \
+         |                                        ^
+   include/asm-generic/rwonce.h:36:35: note: expanded from macro 'compiletime_assert_rwonce_type'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |                                          ^
+   include/linux/compiler_types.h:510:10: note: expanded from macro '__native_word'
+     510 |          sizeof(t) == sizeof(int) || sizeof(t) == sizeof(long))
+         |                 ^
+   include/linux/compiler_types.h:542:22: note: expanded from macro 'compiletime_assert'
+     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |                             ^~~~~~~~~
+   include/linux/compiler_types.h:530:23: note: expanded from macro '_compiletime_assert'
+     530 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |                              ^~~~~~~~~
+   include/linux/compiler_types.h:522:9: note: expanded from macro '__compiletime_assert'
+     522 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+   In file included from arch/x86/kernel/asm-offsets.c:14:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:13:
+   In file included from include/linux/cgroup.h:17:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:9:
+   In file included from include/linux/sched/task.h:13:
+   In file included from include/linux/uaccess.h:12:
+   In file included from arch/x86/include/asm/uaccess.h:17:
+>> arch/x86/include/asm/tlbflush.h:253:37: error: no member named 'asid_transition' in 'mm_context_t'
+     253 |         return mm && READ_ONCE(mm->context.asid_transition);
+         |                                ~~~~~~~~~~~ ^
+   include/asm-generic/rwonce.h:49:33: note: expanded from macro 'READ_ONCE'
+      49 |         compiletime_assert_rwonce_type(x);                              \
+         |                                        ^
+   include/asm-generic/rwonce.h:36:35: note: expanded from macro 'compiletime_assert_rwonce_type'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |                                          ^
+   include/linux/compiler_types.h:510:38: note: expanded from macro '__native_word'
+     510 |          sizeof(t) == sizeof(int) || sizeof(t) == sizeof(long))
+         |                                             ^
+   include/linux/compiler_types.h:542:22: note: expanded from macro 'compiletime_assert'
+     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |                             ^~~~~~~~~
+   include/linux/compiler_types.h:530:23: note: expanded from macro '_compiletime_assert'
+     530 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |                              ^~~~~~~~~
+   include/linux/compiler_types.h:522:9: note: expanded from macro '__compiletime_assert'
+     522 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+   In file included from arch/x86/kernel/asm-offsets.c:14:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:13:
+   In file included from include/linux/cgroup.h:17:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:9:
+   In file included from include/linux/sched/task.h:13:
+   In file included from include/linux/uaccess.h:12:
+   In file included from arch/x86/include/asm/uaccess.h:17:
+>> arch/x86/include/asm/tlbflush.h:253:37: error: no member named 'asid_transition' in 'mm_context_t'
+     253 |         return mm && READ_ONCE(mm->context.asid_transition);
+         |                                ~~~~~~~~~~~ ^
+   include/asm-generic/rwonce.h:49:33: note: expanded from macro 'READ_ONCE'
+      49 |         compiletime_assert_rwonce_type(x);                              \
+         |                                        ^
+   include/asm-generic/rwonce.h:36:48: note: expanded from macro 'compiletime_assert_rwonce_type'
+      36 |         compiletime_assert(__native_word(t) || sizeof(t) == sizeof(long long),  \
+         |                                                       ^
+   include/linux/compiler_types.h:542:22: note: expanded from macro 'compiletime_assert'
+     542 |         _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER__)
+         |                             ^~~~~~~~~
+   include/linux/compiler_types.h:530:23: note: expanded from macro '_compiletime_assert'
+     530 |         __compiletime_assert(condition, msg, prefix, suffix)
+         |                              ^~~~~~~~~
+   include/linux/compiler_types.h:522:9: note: expanded from macro '__compiletime_assert'
+     522 |                 if (!(condition))                                       \
+         |                       ^~~~~~~~~
+   In file included from arch/x86/kernel/asm-offsets.c:14:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:13:
+   In file included from include/linux/cgroup.h:17:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:9:
+   In file included from include/linux/sched/task.h:13:
+   In file included from include/linux/uaccess.h:12:
+   In file included from arch/x86/include/asm/uaccess.h:17:
+>> arch/x86/include/asm/tlbflush.h:253:37: error: no member named 'asid_transition' in 'mm_context_t'
+     253 |         return mm && READ_ONCE(mm->context.asid_transition);
+         |                                ~~~~~~~~~~~ ^
+   include/asm-generic/rwonce.h:50:14: note: expanded from macro 'READ_ONCE'
+      50 |         __READ_ONCE(x);                                                 \
+         |                     ^
+   include/asm-generic/rwonce.h:44:65: note: expanded from macro '__READ_ONCE'
+      44 | #define __READ_ONCE(x)  (*(const volatile __unqual_scalar_typeof(x) *)&(x))
+         |                                                                  ^
+   include/linux/compiler_types.h:498:13: note: expanded from macro '__unqual_scalar_typeof'
+     498 |                 _Generic((x),                                           \
+         |                           ^
+   In file included from arch/x86/kernel/asm-offsets.c:14:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:13:
+   In file included from include/linux/cgroup.h:17:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:9:
+   In file included from include/linux/sched/task.h:13:
+   In file included from include/linux/uaccess.h:12:
+   In file included from arch/x86/include/asm/uaccess.h:17:
+>> arch/x86/include/asm/tlbflush.h:253:37: error: no member named 'asid_transition' in 'mm_context_t'
+     253 |         return mm && READ_ONCE(mm->context.asid_transition);
+         |                                ~~~~~~~~~~~ ^
+   include/asm-generic/rwonce.h:50:14: note: expanded from macro 'READ_ONCE'
+      50 |         __READ_ONCE(x);                                                 \
+         |                     ^
+   include/asm-generic/rwonce.h:44:65: note: expanded from macro '__READ_ONCE'
+      44 | #define __READ_ONCE(x)  (*(const volatile __unqual_scalar_typeof(x) *)&(x))
+         |                                                                  ^
+   include/linux/compiler_types.h:505:15: note: expanded from macro '__unqual_scalar_typeof'
+     505 |                          default: (x)))
+         |                                    ^
+   In file included from arch/x86/kernel/asm-offsets.c:14:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:13:
+   In file included from include/linux/cgroup.h:17:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:9:
+   In file included from include/linux/sched/task.h:13:
+   In file included from include/linux/uaccess.h:12:
+   In file included from arch/x86/include/asm/uaccess.h:17:
+>> arch/x86/include/asm/tlbflush.h:253:37: error: no member named 'asid_transition' in 'mm_context_t'
+     253 |         return mm && READ_ONCE(mm->context.asid_transition);
+         |                                ~~~~~~~~~~~ ^
+   include/asm-generic/rwonce.h:50:14: note: expanded from macro 'READ_ONCE'
+      50 |         __READ_ONCE(x);                                                 \
+         |                     ^
+   include/asm-generic/rwonce.h:44:72: note: expanded from macro '__READ_ONCE'
+      44 | #define __READ_ONCE(x)  (*(const volatile __unqual_scalar_typeof(x) *)&(x))
+         |                                                                         ^
+   In file included from arch/x86/kernel/asm-offsets.c:14:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:13:
+   In file included from include/linux/cgroup.h:17:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:9:
+   In file included from include/linux/sched/task.h:13:
+   In file included from include/linux/uaccess.h:12:
+   In file included from arch/x86/include/asm/uaccess.h:17:
+>> arch/x86/include/asm/tlbflush.h:253:12: error: invalid operands to binary expression ('struct mm_struct *' and 'void')
+     253 |         return mm && READ_ONCE(mm->context.asid_transition);
+         |                ~~ ^  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   9 errors generated.
+   make[3]: *** [scripts/Makefile.build:102: arch/x86/kernel/asm-offsets.s] Error 1 shuffle=1461763656
+   make[3]: Target 'prepare' not remade because of errors.
+   make[2]: *** [Makefile:1264: prepare0] Error 2 shuffle=1461763656
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:251: __sub-make] Error 2 shuffle=1461763656
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:251: __sub-make] Error 2 shuffle=1461763656
+   make: Target 'prepare' not remade because of errors.
+
+
+vim +253 arch/x86/include/asm/tlbflush.h
+
+   247	
+   248	static inline bool in_asid_transition(struct mm_struct *mm)
+   249	{
+   250		if (!cpu_feature_enabled(X86_FEATURE_INVLPGB))
+   251			return false;
+   252	
+ > 253		return mm && READ_ONCE(mm->context.asid_transition);
+   254	}
+   255	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
