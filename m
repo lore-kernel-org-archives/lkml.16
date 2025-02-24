@@ -1,31 +1,39 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96EA8163;
-	Mon, 24 Feb 2025 12:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74A5023BD1B
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 12:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740401403; cv=none; b=Va9lmJzjNe0A2zx5q/MIX2ZmWEHzQ0A0qinkEOFXdLVSNMcIrtdh8YhAOSorL+VuPbRgXQS1MeP1CuNMFOF0w17vCvFv8XpKBX7DcoDQjgNLqCzbnJD0tVefqB8ROeUNWFkJRBp+XSfT1m07UrvZhBDq4BGUibzHz0YYMWejn/8=
+	t=1740401406; cv=none; b=jFnzd6/bP9WhlYBMRPNX/btitlY5N4CqA6028KqJ5FFJm8R/bh7GwLVqF6njuLhPln//jd8UINgSqYt01Ok/1vYMeij1jz48rTyavYjTAA5wHuaaIOI4XF3A1GiK4w1bvw6eREESMSwfHmJcj4Jldl88frYRCu8rOoUA9pzQbOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740401403; c=relaxed/simple;
-	bh=ZdBCdF5KOs1JctRObwGVJkOHnGlGXqRbiACo9SOfprU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=g31zbF02UvgCZ6loq4RgN4NXehIFvuNUHXjc+bAsNVkQNrQRG/nWZM6jPcQQw7G6fdZDEAomgl6phlc1YIEHF0OlyPgDrGchIJWagrFMhcfkJ4srjuGFCgPR5u2Wtn9daU3QMiqdqEDRj8u+RJElyQgFa0urNqPS4T59wfbLp0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Z1gT108Dcz1ltby;
-	Mon, 24 Feb 2025 20:45:57 +0800 (CST)
-Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1C17E180069;
-	Mon, 24 Feb 2025 20:49:58 +0800 (CST)
-Received: from [10.67.121.90] (10.67.121.90) by kwepemh100008.china.huawei.com
- (7.202.181.93) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 24 Feb
- 2025 20:49:57 +0800
-Message-ID: <5162cd2c-e239-4fc6-b2da-2e2fe087cb1b@huawei.com>
-Date: Mon, 24 Feb 2025 20:49:56 +0800
+	s=arc-20240116; t=1740401406; c=relaxed/simple;
+	bh=kaz06ZhSsxx1ZWchTDKD82bnV/7Kdj0DtD6Wa1LG4d8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X3VKjJzTgpFLU9U/OzqUkdUKQ8ItKmaDipZe+VRYILcTfXVDQhS8JpbresifcZpzHX3fvfNnnML2L1I6UT0b0xesZNNwJ3xNrsrneTsTEeqk5Kckq6uiNFlIEWpcNDaqoJLMwSbjYgmDTUcetCWqaoWWASesCc4BDC4o9fmbU6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4Z1fnL0yhnz9sSR;
+	Mon, 24 Feb 2025 13:15:02 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id l-9wox-Pwuus; Mon, 24 Feb 2025 13:15:02 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4Z1fnK6nYJz9sSL;
+	Mon, 24 Feb 2025 13:15:01 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id D161B8B765;
+	Mon, 24 Feb 2025 13:15:01 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id tSydbj3FVjDx; Mon, 24 Feb 2025 13:15:01 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id CCE528B763;
+	Mon, 24 Feb 2025 13:15:00 +0100 (CET)
+Message-ID: <ffd5dd44-babc-480a-b1bc-61bd7ff1e920@csgroup.eu>
+Date: Mon, 24 Feb 2025 13:15:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,150 +41,92 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/8] Support for autonomous selection in cppc_cpufreq
-To: Pierre Gondois <pierre.gondois@arm.com>
-CC: "Rafael J. Wysocki" <rafael@kernel.org>, <lenb@kernel.org>,
-	<robert.moore@intel.com>, <viresh.kumar@linaro.org>,
-	<mario.limonciello@amd.com>, <gautham.shenoy@amd.com>, <ray.huang@amd.com>,
-	<acpica-devel@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-	<linuxarm@huawei.com>, <yumpusamongus@gmail.com>,
-	<srinivas.pandruvada@linux.intel.com>, <jonathan.cameron@huawei.com>,
-	<zhanjie9@hisilicon.com>, <lihuisong@huawei.com>, <hepeng68@huawei.com>,
-	<fanghao11@huawei.com>
-References: <20250206131428.3261578-1-zhenglifeng1@huawei.com>
- <0097a9a3-fe61-4200-9a54-5a9c81d3219c@huawei.com>
- <CAJZ5v0hP9a8g8UR2oPyivP1C65=csR245PSHay+nOx3vkoKoaA@mail.gmail.com>
- <ddbc0336-9083-4054-8930-c22bd8337488@huawei.com>
- <828ab846-fe03-4830-a722-a86e57ba89c7@arm.com>
-From: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
-In-Reply-To: <828ab846-fe03-4830-a722-a86e57ba89c7@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] powerpc: Don't use %pK through printk
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Naveen N Rao <naveen@kernel.org>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20250217-restricted-pointers-powerpc-v1-1-32c6bff63c9a@linutronix.de>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250217-restricted-pointers-powerpc-v1-1-32c6bff63c9a@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemh100008.china.huawei.com (7.202.181.93)
 
-On 2025/2/24 18:31, Pierre Gondois wrote:
-> 
-> 
-> On 2/22/25 11:07, zhenglifeng (A) wrote:
->> On 2025/2/19 3:17, Rafael J. Wysocki wrote:
->>> On Thu, Feb 13, 2025 at 2:55 AM zhenglifeng (A) <zhenglifeng1@huawei.com> wrote:
->>>>
->>>> On 2025/2/6 21:14, Lifeng Zheng wrote:
->>>>> Add sysfs interfaces for CPPC autonomous selection in the cppc_cpufreq
->>>>> driver.
->>>>>
->>>>> The patch series is organized in two parts:
->>>>>
->>>>>   - patch 1-5 refactor out the general CPPC register get and set functions
->>>>>     in cppc_acpi.c
->>>>>
->>>>>   - patches 6-8 expose sysfs files for users to control CPPC autonomous
->>>>>     selection when supported
->>>>>
->>>>> Changelog:
->>>>>
->>>>> v5:
->>>>>
->>>>>   - add more explanation to the commit logs and comments
->>>>>   - change REG_OPTIONAL from bin to hex
->>>>>   - split patch 2 into 3 smaller patches
->>>>>   - remove CPPC_REG_VAL_READ() and CPPC_REG_VAL_WRITE() macros
->>>>>   - move the modification part in patch 5 into a separate patch
->>>>>   - rename the sysfs file from "energy_perf" to
->>>>>     energy_performance_preference_val
->>>>>
->>>>> v4:
->>>>>
->>>>>   - add REG_OPTIONAL and IS_OPTIONAL_CPC_REG to judge if a cpc register is
->>>>>     an optional one
->>>>>   - check whether the register is optional before CPC_SUPPORTED check in
->>>>>     cppc_get_reg_val() and cppc_set_reg_val()
->>>>>   - check the register's type in cppc_set_reg_val()
->>>>>   - add macros to generally implement registers getting and setting
->>>>>     functions
->>>>>   - move some logic codes from cppc_cpufreq.c to cppc_acpi.c
->>>>>   - replace cppc_get_auto_sel_caps() by cppc_get_auto_sel()
->>>>>
->>>>> v3:
->>>>>
->>>>>   - change cppc_get_reg() and cppc_set_reg() name to cppc_get_reg_val() and
->>>>>     cppc_set_reg_val()
->>>>>   - extract cppc_get_reg_val_in_pcc() and cppc_set_reg_val_in_pcc()
->>>>>   - return the result of cpc_read() in cppc_get_reg_val()
->>>>>   - add pr_debug() in cppc_get_reg_val_in_pcc() when pcc_ss_id < 0
->>>>>   - rename 'cpunum' to 'cpu' in cppc_get_reg_val()
->>>>>   - move some macros from drivers/cpufreq/cppc_cpufreq.c to
->>>>>     include/acpi/cppc_acpi.h with a CPPC_XXX prefix
->>>>>
->>>>> v2:
->>>>>
->>>>>   - fix some incorrect placeholder
->>>>>   - change kstrtoul to kstrtobool in store_auto_select
->>>>>
->>>>> Lifeng Zheng (8):
->>>>>    ACPI: CPPC: Add IS_OPTIONAL_CPC_REG macro to judge if a cpc_reg is
->>>>>      optional
->>>>>    ACPI: CPPC: Optimize cppc_get_perf()
->>>>>    ACPI: CPPC: Rename cppc_get_perf() to cppc_get_reg_val()
->>>>>    ACPI: CPPC: Add cppc_set_reg_val()
->>>>>    ACPI: CPPC: Refactor register value get and set ABIs
->>>>>    ACPI: CPPC: Modify cppc_get_auto_sel_caps() to cppc_get_auto_sel()
->>>>>    ACPI: CPPC: Add three functions related to autonomous selection
->>>>>    cpufreq: CPPC: Support for autonomous selection in cppc_cpufreq
->>>>>
->>>>>   .../ABI/testing/sysfs-devices-system-cpu      |  54 ++++
->>>>>   drivers/acpi/cppc_acpi.c                      | 303 +++++++++++-------
->>>>>   drivers/cpufreq/amd-pstate.c                  |   3 +-
->>>>>   drivers/cpufreq/cppc_cpufreq.c                | 109 +++++++
->>>>>   include/acpi/cppc_acpi.h                      |  30 +-
->>>>>   5 files changed, 372 insertions(+), 127 deletions(-)
->>>>>
->>>>
->>>> Gentle ping.
->>>
->>> OK, so I'm wondering how this is related to the patch series at
->>>
->>> https://lore.kernel.org/linux-acpi/20250211103737.447704-1-sumitg@nvidia.com/
->>
->> This series refactors some cppc_acpi ABIs and supports cppc autonomous
->> selection with sysfs files in cpufreq policy.  Later, [1] proposed another
->> design with different user interfaces.We will discuss and reach a consensus
->> with regard to this.
->>
->> However, as mentioned in [1], patch 1-7 in this series (the cppc_acpi part)
->> are not related to user interfaces, so can be reviewed and applied
->> separately.  I can also send patch 1-7 as a new thread if preferred.
->>
->> [1] https://lore.kernel.org/linux-acpi/20250211103737.447704-1-sumitg@nvidia.com/
-> 
-> I tried the patchset on a platform which doesn't implement CPC and everything worked well.
-> As Lifeng said,
->   PATCH v5 8/8] cpufreq: CPPC: Support for autonomous selection in cppc_cpufreq
-> seems to be still in discussion, but for patches 1-7 FWIW:
-> 
-> Reviewed-by: Pierre Gondois <pierre.gondois@arm.com>
 
-Thank you!
 
-Regards,
-Lifeng
+Le 17/02/2025 à 08:39, Thomas Weißschuh a écrit :
+> Restricted pointers ("%pK") are not meant to be used through printk().
+> It can unintentionally expose security sensitive, raw pointer values.
+> 
+> Use regular pointer formatting instead.
+> 
+> Link: https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flkml%2F20250113171731-dc10e3c1-da64-4af0-b767-7c7070468023%40linutronix.de%2F&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C75a852a0fef54fa43a3608dd4f263f45%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638753747883689862%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=aUgq6pXb1ySaQ6e%2FdyM09jfc4MNLE71Njw0%2FnCg%2F6VU%3D&reserved=0
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
+Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+
+> ---
+>   arch/powerpc/kernel/eeh_driver.c | 2 +-
+>   arch/powerpc/perf/hv-24x7.c      | 8 ++++----
+>   2 files changed, 5 insertions(+), 5 deletions(-)
 > 
-> Regards,
-> Pierre
+> diff --git a/arch/powerpc/kernel/eeh_driver.c b/arch/powerpc/kernel/eeh_driver.c
+> index 7efe04c68f0fe3fb1c3c13d97d58e79e47cf103b..10ce6b3bd3b7c54f91544ae7f7fd3f32a51ee09a 100644
+> --- a/arch/powerpc/kernel/eeh_driver.c
+> +++ b/arch/powerpc/kernel/eeh_driver.c
+> @@ -907,7 +907,7 @@ void eeh_handle_normal_event(struct eeh_pe *pe)
+>   		/* FIXME: Use the same format as dump_stack() */
+>   		pr_err("EEH: Call Trace:\n");
+>   		for (i = 0; i < pe->trace_entries; i++)
+> -			pr_err("EEH: [%pK] %pS\n", ptrs[i], ptrs[i]);
+> +			pr_err("EEH: [%p] %pS\n", ptrs[i], ptrs[i]);
+>   
+>   		pe->trace_entries = 0;
+>   	}
+> diff --git a/arch/powerpc/perf/hv-24x7.c b/arch/powerpc/perf/hv-24x7.c
+> index d400fa391c2765cf201ee4dc754007e655cc74ca..f6d734431b1dcdfec3b9205c3b48577b4fc26b53 100644
+> --- a/arch/powerpc/perf/hv-24x7.c
+> +++ b/arch/powerpc/perf/hv-24x7.c
+> @@ -713,12 +713,12 @@ static ssize_t catalog_event_len_validate(struct hv_24x7_event_data *event,
+>   	ev_len = be16_to_cpu(event->length);
+>   
+>   	if (ev_len % 16)
+> -		pr_info("event %zu has length %zu not divisible by 16: event=%pK\n",
+> +		pr_info("event %zu has length %zu not divisible by 16: event=%p\n",
+>   				event_idx, ev_len, event);
+>   
+>   	ev_end = (__u8 *)event + ev_len;
+>   	if (ev_end > end) {
+> -		pr_warn("event %zu has .length=%zu, ends after buffer end: ev_end=%pK > end=%pK, offset=%zu\n",
+> +		pr_warn("event %zu has .length=%zu, ends after buffer end: ev_end=%p > end=%p, offset=%zu\n",
+>   				event_idx, ev_len, ev_end, end,
+>   				offset);
+>   		return -1;
+> @@ -726,14 +726,14 @@ static ssize_t catalog_event_len_validate(struct hv_24x7_event_data *event,
+>   
+>   	calc_ev_end = event_end(event, end);
+>   	if (!calc_ev_end) {
+> -		pr_warn("event %zu has a calculated length which exceeds buffer length %zu: event=%pK end=%pK, offset=%zu\n",
+> +		pr_warn("event %zu has a calculated length which exceeds buffer length %zu: event=%p end=%p, offset=%zu\n",
+>   			event_idx, event_data_bytes, event, end,
+>   			offset);
+>   		return -1;
+>   	}
+>   
+>   	if (calc_ev_end > ev_end) {
+> -		pr_warn("event %zu exceeds its own length: event=%pK, end=%pK, offset=%zu, calc_ev_end=%pK\n",
+> +		pr_warn("event %zu exceeds its own length: event=%p, end=%p, offset=%zu, calc_ev_end=%p\n",
+>   			event_idx, event, ev_end, offset, calc_ev_end);
+>   		return -1;
+>   	}
 > 
->>
->>>
->>>> Attach discussions of previous versions:
->>>> v1: https://lore.kernel.org/all/20241114084816.1128647-1-zhenglifeng1@huawei.com/
->>>> v2: https://lore.kernel.org/all/20241122062051.3658577-1-zhenglifeng1@huawei.com/
->>>> v3: https://lore.kernel.org/all/20241216091603.1247644-1-zhenglifeng1@huawei.com/
->>>> v4: https://lore.kernel.org/all/20250113122104.3870673-1-zhenglifeng1@huawei.com/
->>>>
->>>
->>
->>
+> ---
+> base-commit: 0ad2507d5d93f39619fc42372c347d6006b64319
+> change-id: 20250217-restricted-pointers-powerpc-f11876496464
 > 
+> Best regards,
 
