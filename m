@@ -1,124 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCE711185;
-	Mon, 24 Feb 2025 18:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65446144304
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 18:47:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740422815; cv=none; b=a5ldrw44t0aTBfTzJBDP8o+wnMmdzltFnT2yYppe64fYSi5dOugWfl7bGCp6KEBhfbtkLup4igCYAhsoYBJ6E1LjBc39dsVci+Vt8LLcNdgiISXaRh6BEQYZTpJ+Vcr07L8gIeWqpdQxEaHmnJTrjhloKSBVGwFsH6IsQ+hisHs=
+	t=1740422846; cv=none; b=H+d3YNGNXcA0gyuWlW/oFE/7K3mf0ndP7EoK3q4aI7TPmg/V61860CA2dBqtYMSHgXXGFpr1XXFPxaLR0l9JI9Wz4Ii+ks3S/QIoxnt2/yrL7FygNt8PrROzdttCrm1pusjYrVEm3R2ErYXOFIEGbfsjpL16JPDeEucrym8a6uI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740422815; c=relaxed/simple;
-	bh=/9XEwpYnicVuWAD8/l1pDfwiKoB8ajZoewUaq9rOkwk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=deQAgR7QBe/Ps4RtXvCqp4gqwhRfwCWnyVSf+aPFcs8P8F/j/nmYUXNZeEuCUoODS68ssaPRlWvqglOVW7lEnGYBqzWSlJWKao4sHqn/iE121KaaQiC8OZdt8pTUp61E5zoMBHW1P7RRtc9Z6wvAKI5GOJrCln7f1AaS2pQLUl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=joQbmD8D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740422846; c=relaxed/simple;
+	bh=UCTg3g/tkcfH1gJmx3kVcTsAp9a72p1V4y77QyBKanE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mFkT+XCfyy8XtgaZUldyMh+8YurtUbycwZBwpbjKdGaUpgdD7dbBWZ54I8PWHlwRXSs2tuJZZhhvlQxiOcZRhz6a8fQ1SG6Ph4W8k2ooOIcHUUVrFkZYhIBNC4aajmnA3Y7+h2JDhvaInip8vgGrzD/gpRWJKWxOZO0RwHnJRdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=bnHXeaZ7; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="joQbmD8D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82BEEC4CEDD;
-	Mon, 24 Feb 2025 18:46:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740422815;
-	bh=/9XEwpYnicVuWAD8/l1pDfwiKoB8ajZoewUaq9rOkwk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=joQbmD8Dlm/rcU8cHKF28oFBH+pplRZ7yq8Yk9ZphffAC71lrqqxFB+eN5TuIdLai
-	 +BVlmZQgJHYOT1knIYJPgSqxOyJtcxgahK/sf8kx75xsKq3jr6PXMl10xtxcm4z2KR
-	 8RIARDh/LN43obOLl3q27+nPYOqG7i0neP8qmZCBUNG+E1oY/DKoEpyIO/IssA5ZGC
-	 psnaVDQp7K5HW6cxTk/VDLS1QcD8/tMqrksuuIaU4KONXMrVQXJ6Li6XIgJi5DE84o
-	 /p8TsZZn697oYw4lBQhPoNnNMfmyxkXEnxS/e4fOBTsWLIU34LMCrZ2dudnvEKnHeO
-	 QzZYI/O52QU8A==
-Date: Mon, 24 Feb 2025 19:46:43 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>
-Subject: Re: [PATCH RFCv2 00/18] uprobes: Add support to optimize usdt probes
- on x86_64
-Message-ID: <Z7y-kwkXZzbv-CQs@gmail.com>
-References: <20250224140151.667679-1-jolsa@kernel.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bnHXeaZ7"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-abb86beea8cso853160266b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 10:47:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1740422842; x=1741027642; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UCTg3g/tkcfH1gJmx3kVcTsAp9a72p1V4y77QyBKanE=;
+        b=bnHXeaZ7kI16nsBIF5WRZhsH90r55j+usE5vLddDWF8WxG9mChn8Px3JEfXX2DhZlD
+         ZzFFNhLNAI1CA+acJNx23ptyUQ3QeG9uwq1UdKgRkkh5EnupdqT3dedEGgSSCCLd2+Gv
+         ws29JbL0emHY3DaBbKZAsc+4C789B33E/GnYE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740422842; x=1741027642;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UCTg3g/tkcfH1gJmx3kVcTsAp9a72p1V4y77QyBKanE=;
+        b=BKYMxfntXb135bR0YcCq9iEzQBtySQx3Ag9nD0mc+L5o9fPGT8RBb3zGNEdB+B1YP1
+         66vFXwPuCq/N33bJK79FR8fkbekJPmnstCuedwNShCEuggUXoqWP7SBfYBm3Hg4K8PTt
+         AZCcIE6Au+xsHR2MhQvGlzZm8Lj3jnNlcZpfL1orzD+YlPeR+tP61AA1rqFuLzDKmjqF
+         o0TBV3aWkLwMjp1tTF/uWYp1kwMoxu6gNi7FspIZbWmkNnZMB6dlCldFzyK3DgKmZIr3
+         DfkhvqeTavw/ioc0RH5Sc8LCPCcvpixHt5I0mrDSTScXEHp1MsCRB8gwpDoaUddHBK3W
+         fCCw==
+X-Forwarded-Encrypted: i=1; AJvYcCWmpg6q/ilkDVpfcYA8kxFwalEm7hdy9OFuD/71e1y/D5BX1zq1FXsvMtWPv6F0lH6rkhy0T/S4yRHA0Tg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzcx2OSILCcZH6gL7UqW5IH2AhY3OhOWwMoBoeFT2L3eamTxKIQ
+	FYumpzFLblMQigITFqfVgMokUQyKtcZOvVCmDHdLGNzsJBrVBJzLOeOaTMoOC9v3+l/QLjCdjQe
+	W7lJz
+X-Gm-Gg: ASbGncvXXOiaIzYFlOWOWh+eH4d6JYQYoi3wG/RVfJiusnYBeCStiFYNXvJl8OLbd8x
+	x7HmFQQKtP9hoHMsTdA0/GwCSJuY8mbP360XpNG7H6uhW7+8MFCTXa2FQwy0Ni8R5rmtrubnWjw
+	7CNQbDK8oItRDZdjWqYqYyTbwvWT1zkk4GL5jGMcYrTlUfQnZO5Ex8cpeyNe6C49Ty9/doegwo8
+	rsjArjdQkqGdwjOw0MbFtVIHmmIZe60zp4Bah71sBiC8vyabESjbU1+bB57IExJAYk2ofrtEIHv
+	LcZtDfYW/oDdlfMN+D9iObseKMhf07MRns/SgnznT4fbuQ0z/ZFq8SGlwVjWsrkkjw==
+X-Google-Smtp-Source: AGHT+IFeSPZ689wVhtcXe00p5F++W0l1TBncM4TnGeyKWll5H3Ov/hwNsw+iStSd6iswQ8x6exccfA==
+X-Received: by 2002:a17:906:7956:b0:ab2:b84b:2dab with SMTP id a640c23a62f3a-abc09ab8f13mr1386346566b.30.1740422841597;
+        Mon, 24 Feb 2025 10:47:21 -0800 (PST)
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed2054fecsm3944466b.150.2025.02.24.10.47.21
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2025 10:47:21 -0800 (PST)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e0b70fb1daso5851154a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 10:47:21 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXZcN4FA+CCp6B5F9PstdCqHNDHSl2CIOPZzXqbIJ0jrc1jJ9FaWwnt00gFIOsNXs6yn/2nqXq+hFlhUZA=@vger.kernel.org
+X-Received: by 2002:a05:6512:e99:b0:545:c51:4a0f with SMTP id
+ 2adb3069b0e04-54838edd8e6mr6201702e87.4.1740422441508; Mon, 24 Feb 2025
+ 10:40:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250224140151.667679-1-jolsa@kernel.org>
+References: <20250213-mipi_cocci_multi-v1-0-67d94ff319cc@redhat.com>
+ <CAD=FV=Vyx8vAeRohw3W11Tuv26_-zi-GV__G2cXFxF+e76MJkw@mail.gmail.com> <20250218-fabulous-agile-corgi-9a5ee0@houat>
+In-Reply-To: <20250218-fabulous-agile-corgi-9a5ee0@houat>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 24 Feb 2025 10:40:29 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=UPY-VGr0qWnHcmdJpVGo-xqJyT81FxqJVp3qcrhcii2A@mail.gmail.com>
+X-Gm-Features: AWEUYZn5kJ7jvupKGMyzFLJ3TnjjiDiS2fSx64zjhWAkyHi1oX6mHN7o3rYIme8
+Message-ID: <CAD=FV=UPY-VGr0qWnHcmdJpVGo-xqJyT81FxqJVp3qcrhcii2A@mail.gmail.com>
+Subject: Re: [PATCH 00/20] drm/panel: Move to using mipi_dsi_*_multi()
+ variants when available
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Anusha Srivatsa <asrivats@redhat.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Joel Selvaraj <jo@jsfamily.in>, 
+	Ondrej Jirman <megi@xff.cz>, Javier Martinez Canillas <javierm@redhat.com>, Jianhua Lu <lujianhua000@gmail.com>, 
+	Robert Chiras <robert.chiras@nxp.com>, Artur Weber <aweber.kernel@gmail.com>, 
+	Jonathan Corbet <corbet@lwn.net>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	Tejas Vipin <tejasvipin76@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Tue, Feb 18, 2025 at 1:55=E2=80=AFAM Maxime Ripard <mripard@kernel.org> =
+wrote:
+>
+> > I also questioned whether this really made sense to try to do with a
+> > Coccinelle script and I still don't think so. It looks like Dmitry has
+> > already reviewed the first few of your patches and has repeated my
+> > advice. If you want to help with the effort of addressing this TODO
+> > item then that's great, but I'll stop reviewing (and start silently
+> > deleting) any future submissions of yours that say that they're done
+> > entirely with a Coccinelle script unless you address this point and
+> > convince me that your Coccinelle script is really smart enough to
+> > handle all the corner cases. I'll also assert that you should review
+> > Tejas's submissions to see how these conversions are expected to go.
+>
+> I couldn't find that in your first answer though. What corner cases do
+> you have in mind, and why do you think coccinelle can't handle them?
+
+My gut says that it is a difficult problem to make this kind of change
+purely with Coccinelle. That's not to say I couldn't be convinced if
+someone gave some good evidence showing some amazing patches generated
+by a Cocinelle script. To show this, I would expect someone to
+understand what Tejas has been doing and then compare that to what the
+script can produce. In theory, you could even run the script on an old
+version of panels (before Tejas's fixes) and compare what the script
+does. If you can make the results nearly the same then that's amazing.
 
 
-* Jiri Olsa <jolsa@kernel.org> wrote:
+> Also, why do you think ignoring a contributor after a second mistake is
+> a reasonable reaction?
 
-> hi,
-> this patchset adds support to optimize usdt probes on top of 5-byte
-> nop instruction.
-> 
-> The generic approach (optimize all uprobes) is hard due to emulating
-> possible multiple original instructions and its related issues. The
-> usdt case, which stores 5-byte nop seems much easier, so starting
-> with that.
-> 
-> The basic idea is to replace breakpoint exception with syscall which
-> is faster on x86_64. For more details please see changelog of patch 8.
-> 
-> The run_bench_uprobes.sh benchmark triggers uprobe (on top of different
-> original instructions) in a loop and counts how many of those happened
-> per second (the unit below is million loops).
-> 
-> There's big speed up if you consider current usdt implementation
-> (uprobe-nop) compared to proposed usdt (uprobe-nop5):
-> 
->   # ./benchs/run_bench_uprobes.sh 
-> 
->           usermode-count :  818.386 ± 1.886M/s
->           syscall-count  :    8.923 ± 0.003M/s
->   -->     uprobe-nop     :    3.086 ± 0.005M/s
->           uprobe-push    :    2.751 ± 0.001M/s
->           uprobe-ret     :    1.481 ± 0.000M/s
->   -->     uprobe-nop5    :    4.016 ± 0.002M/s
->           uretprobe-nop  :    1.712 ± 0.008M/s
->           uretprobe-push :    1.616 ± 0.001M/s
->           uretprobe-ret  :    1.052 ± 0.000M/s
->           uretprobe-nop5 :    2.015 ± 0.000M/s
-
-So I had to dig into patch #12 to see the magnitude of the speedup:
-
-# current:
-#         usermode-count :  818.836 ± 2.842M/s
-#         syscall-count  :    8.917 ± 0.003M/s
-#         uprobe-nop     :    3.056 ± 0.013M/s
-#         uprobe-push    :    2.903 ± 0.002M/s
-#         uprobe-ret     :    1.533 ± 0.001M/s
-# -->     uprobe-nop5    :    1.492 ± 0.000M/s
-#         uretprobe-nop  :    1.783 ± 0.000M/s
-#         uretprobe-push :    1.672 ± 0.001M/s
-#         uretprobe-ret  :    1.067 ± 0.002M/s
-# -->     uretprobe-nop5 :    1.052 ± 0.000M/s
-# 
-# after the change:
-# 
-#         usermode-count :  818.386 ± 1.886M/s
-#         syscall-count  :    8.923 ± 0.003M/s
-#         uprobe-nop     :    3.086 ± 0.005M/s
-#         uprobe-push    :    2.751 ± 0.001M/s
-#         uprobe-ret     :    1.481 ± 0.000M/s
-# -->     uprobe-nop5    :    4.016 ± 0.002M/s
-#         uretprobe-nop  :    1.712 ± 0.008M/s
-#         uretprobe-push :    1.616 ± 0.001M/s
-#         uretprobe-ret  :    1.052 ± 0.000M/s
-# -->     uretprobe-nop5 :    2.015 ± 0.000M/s
-
-That's a +169% and a +91% speedup - pretty darn impressive!
-
-Thanks,
-
-	Ingo
+Just to be clear, I said that "unless you address this point and
+convince me...". My problem was that I brought up the questions of the
+suitability of Cocinelle for this problem in response to v1. Then I
+saw v2 posted without any reply to my concerns and with the same types
+of problems. I was simply saying that if a v3 was posted in the same
+vein then I would ignore it. I'm more than happy to have a
+conversation, but if I start getting new versions that ignore previous
+feedback and no response saying why feedback was ignored then I will
+start ignoring new versions. That feels pretty reasonable to me.
