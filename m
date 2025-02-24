@@ -1,183 +1,85 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84BF158558;
-	Mon, 24 Feb 2025 08:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC0881519A1;
+	Mon, 24 Feb 2025 08:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740385221; cv=none; b=NAZrrlwigNJzHupYKhcfSDE+WScNgSn10I1+Y6Vj3BOuEeaEcjoR43zEqpxv7J/ih7N2fxeTGGv4FS9eDiekl9eN2+M8XYtUAee1CoI8RUVPpmJNuukFLt4mJDKcOXAL4KgdXLSydgla8a55Usi0wQ62TuhbonudgjERqjk8748=
+	t=1740385262; cv=none; b=Qk6Mx4NGiR+1FVkvvGo5aZH6c+oHZXQSer0ouGGE9T3z/V7X9o0gDbp7HTsH8GmfZosj3FbIwRzCOaBnu1RejmvGJgXvkG92zRCB6laiTh+L0GFqYuyQ2S6ipubZhU2JBy2B33cvuVfKbMg94YZfbeT2LSOPWLWXkI0bb4CjT9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740385221; c=relaxed/simple;
-	bh=bnADvqVjOnZxk0sLsbIJnA70d9jXuiQCyeY3qHVIUC4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NyGv0hsDfqjUq80HmUMwGmQMWx37d0PpBWdkignzDtTntDQytyCsE4NgUZ0gitpJZgB9Oa0xPUBXtjYNzVDjgfiZIMrZgXp6Gxy1wnNijdeCV+NxX0u1rySC20AqHzHNDaNI9yFvi8dhr+0+jwHFhsHWQ4iUQRQYBhEAXR+2no0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=C5ox613m; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1740385262; c=relaxed/simple;
+	bh=4yXsV2/LB2SciH7nkwJ9VHcDfoQGnZX60SaMgs0Jh/U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XOt+WgcSiQ9SYPEzmCyoDzeySKySlcK/fupNOAfZ2i6qSNuo/7aQ9rKZsTPBRLoXkFB09DyZ/ZB8f1cm9ZiNFqgoZYL4v/YT4OdzXKGz0UwZLKG8dqBbJxZMdQOG2kJ04FyoZFhZhFIU+oQKrkLbJ3Tqn1PvIQFR8MK6Y68wZiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LLxIHTAT; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="C5ox613m"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51O2DZIq013806;
-	Mon, 24 Feb 2025 08:20:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=OsFn2Z
-	xs78d5dqGLlCyQmgsyPmdY+R0BhdnGfkT9/Zo=; b=C5ox613mD1RC7jeghh13/A
-	Om8herRKgwjAzp8Ft6qwbhw+uEIp/dXZGAxE2da9Lfbw3z4NxCCNqAODMmHhIHFI
-	xleIWy83W6bCxDgy7Pe+sn+eNDZ3ZptS3tT1moGIHRjX92UyRvK9Ffv8eigBZidl
-	+HUs8I28yZLVLvd6DxbXJd+tB+5dT1LXw10Ex+cvLwtIUwmcvtuKWDFVHDCK9A1o
-	nzijXwcT1Hh+muS9iglEdwD85+uUbhjfPYzv2izX6sD7vwksWk4HT85OYDDEVJOU
-	q9bGafHHlPtSB3vsvTzTRQmK4kHtCl4sF0HGR+ndGcEoohAvprJ9/C2iOWfYTo4A
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 450fm017sv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Feb 2025 08:20:02 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51O5PVj5002548;
-	Mon, 24 Feb 2025 08:20:02 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 44yu4jdv4x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Feb 2025 08:20:02 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51O8K0eD34865894
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 24 Feb 2025 08:20:00 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 82F6C2004E;
-	Mon, 24 Feb 2025 08:20:00 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9A18F20040;
-	Mon, 24 Feb 2025 08:19:59 +0000 (GMT)
-Received: from [9.109.215.252] (unknown [9.109.215.252])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 24 Feb 2025 08:19:59 +0000 (GMT)
-Message-ID: <ed7386c2-50f9-4fa0-8a94-fd67ae2bba4f@linux.ibm.com>
-Date: Mon, 24 Feb 2025 13:49:58 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LLxIHTAT"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2f9b91dff71so6163382a91.2;
+        Mon, 24 Feb 2025 00:21:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740385260; x=1740990060; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4yXsV2/LB2SciH7nkwJ9VHcDfoQGnZX60SaMgs0Jh/U=;
+        b=LLxIHTATCEaPlVyff933rfKTEjybNOfNMPmgyrwRQfpXS4jYLIKcnSIzsztLq8q3ih
+         VRHppK4VyXne0u4ZjUoFJRNP19tZrPwK7xk9BDyLYQOpvCkjkf0oqmzLg8YLg5+F3CnZ
+         ojgveIzSipQWDyT9awIpMizJMBmPg+oXuJlf2R1CNnH/75O2Pm6lmd3GmQK6Wd4e6kzD
+         +eZ3Jz4yRAorMkQXd3Im7dE7xvrDmd1418iCS+BCaBBQPFgUIKzpoIGffNkmT9Yj9aVQ
+         mgaG01H4FjYE90VFqwxusJ+FaMZ+A1mqVyVX0pqWq74Agi6Nc8Bg5DYBb4x6nAGHGUAs
+         0tGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740385260; x=1740990060;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4yXsV2/LB2SciH7nkwJ9VHcDfoQGnZX60SaMgs0Jh/U=;
+        b=ZKx49l35sTAmsuvrueUOnUERFzve2FTGYvvBxxscMmgG+QdrvDEt4M70vbuceQDuO8
+         7jG44ATFVNiFxB2oY7jxPPxPfdJmI4TTlhrhLmGHVL6G7dIaYa/6mnb9geLbPzMqj9sv
+         q5a9/TDanSmvaVC2yX1ebTgQL2Kdw26xvXlVGBpwnKT7gBCmg/xEZcrmUBh5A0wREURH
+         nPh68sBHVs3g2hYssdDpHu8ZQfdvXhpa8Fj/17xasoSFBP4LmvkZgcWMmtP0Wm68IDui
+         TMcKKpBmkXh4EFPdloqivXtlTZx4kwZ5o9qovfvx9bKsxKbG9RCETRKW1V0MFy+kCzO+
+         c5Jg==
+X-Forwarded-Encrypted: i=1; AJvYcCXUhfjW1NMyXaYdQVjTuClaVFQutxYMbB6O6g1Cyo2UlSzl4j09De0un1GY3dvMs2BbneCwk7LVpmWz@vger.kernel.org, AJvYcCXdRPvYSeNruJ9rLFgcIa3ErJTO5Rjl8meHWAq65WFlesul7mwut2DpnIEGAzj6MObD31mP0/h94oGbTruL@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4ipThVCwZ2fxtXw89W1NFV8JHIBcCxES65oOcsVn8vCCTxMC1
+	KWMTBVDRI5s7Iqtgzw6Lh1n1gWkyG0JjQtEFNQaS8/DN4EH55S80OiH+5uYtspzyTKU/xxwQl+3
+	e74xzdu1mNyulIX3YCZWNawuv2jM=
+X-Gm-Gg: ASbGncvM3f0VrFjrRTNHQg/kYxoHTkesnF8zeuUH2gSC2UdE5i9xXEDey05koq70B36
+	zDxO7lu2FMKk2GEOwmkO2BjSVjvvsy46PM0y+1nDa6z++XZIcikrJ0TXBxeij+l5xjdWIpE+sPX
+	KOwJhI
+X-Google-Smtp-Source: AGHT+IFSIoZtx5tOAmzcah9AyzKdcvqgQQFQ3kwXEXdt9bo6IsFtTyTRuheP5O2mOJ7Yg+7fM9dG3dpRP3aMlab/o44=
+X-Received: by 2002:a17:90b:4b06:b0:2ee:a04b:92ce with SMTP id
+ 98e67ed59e1d1-2fce7b354d8mr18309742a91.32.1740385259942; Mon, 24 Feb 2025
+ 00:20:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] selftests: sched: skip cs_prctl_test for systems
- with core scheduling disabled
-To: Sinadin Shan <sinadin.shan@oracle.com>, shuah@kernel.org
-Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        chris.hyser@oracle.com
-References: <20250221115750.631990-1-sinadin.shan@oracle.com>
- <20250221115750.631990-3-sinadin.shan@oracle.com>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <20250221115750.631990-3-sinadin.shan@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 7vOjMe4Hu1fsyWyIqGqTylDuh1GtC0-3
-X-Proofpoint-GUID: 7vOjMe4Hu1fsyWyIqGqTylDuh1GtC0-3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-24_03,2025-02-20_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 spamscore=0 priorityscore=1501
- mlxlogscore=999 impostorscore=0 malwarescore=0 bulkscore=0 clxscore=1015
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502240057
+References: <20250220-imx95_15x15-v3-0-247777ed91c4@nxp.com> <20250220-imx95_15x15-v3-3-247777ed91c4@nxp.com>
+In-Reply-To: <20250220-imx95_15x15-v3-3-247777ed91c4@nxp.com>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Date: Mon, 24 Feb 2025 10:22:36 +0200
+X-Gm-Features: AWEUYZm8TV1XLlsHGFmvB7e9AgvFyAGTWUyACsVmTUYTvwHG2UC3MRv44aFAl5Y
+Message-ID: <CAEnQRZDHage3=xzN6bqbMjHjxuX1aPPQfTrRjicu=8qxoSToRg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] arm64: dts: imx95: Add i3c1 and i3c2
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Feb 20, 2025 at 6:27=E2=80=AFPM Frank Li <Frank.Li@nxp.com> wrote:
+>
+> Add i3c1 and i3c2 support.
+>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-
-On 2/21/25 17:27, Sinadin Shan wrote:
-> For kernels with CONFIG_SCHED_CORE=n, the sched selftest cs_prctl_test
-> fails with "Not a core sched system" error. Change this to gracefully
-> skip the test for systems with core scheduling disabled. Exiting early
-> would also ensure failures reported in obtaining cookie are valid
-> failures and not due to the config.
-> 
-> Skip cs_prctl_test for systems with CONFIG_SCHED_CORE=n
-
-I tried this on kernel built with CONFIG_SCHED_CORE=y.
-I did make, make modules_install and make install and reboot.
-
-./cs_prctl_test
-## Checking for CONFIG_SCHED_CORE support
-Cannot find kernel config in /proc or /boot
-
-This happens because, make install wouldnt copy the .config to 
-/boot/config-<kernel-release>.
-
-If the self-tests are to be used in development flow, these checks may 
-not be sufficient.
-
-Not sure if i have missed any steps in building process.
-
-
-> 
-> Signed-off-by: Sinadin Shan <sinadin.shan@oracle.com>
-> ---
->   tools/testing/selftests/sched/cs_prctl_test.c | 29 ++++++++++++++++++-
->   1 file changed, 28 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/sched/cs_prctl_test.c b/tools/testing/selftests/sched/cs_prctl_test.c
-> index 52d97fae4dbd8..60fd657b56c84 100644
-> --- a/tools/testing/selftests/sched/cs_prctl_test.c
-> +++ b/tools/testing/selftests/sched/cs_prctl_test.c
-> @@ -23,6 +23,7 @@
->   #include <sys/eventfd.h>
->   #include <sys/wait.h>
->   #include <sys/types.h>
-> +#include <sys/utsname.h>
->   #include <sched.h>
->   #include <sys/prctl.h>
->   #include <unistd.h>
-> @@ -109,6 +110,30 @@ static void handle_usage(int rc, char *msg)
->   	exit(rc);
->   }
->   
-> +static void check_core_sched_support(void)
-> +{
-> +	char config[128] = "/proc/config.gz";
-> +	char cmd[128];
-> +	struct utsname kernel;
-> +
-> +	printf("## Checking for CONFIG_SCHED_CORE support\n");
-> +
-> +	if (access(config, F_OK) != 0)
-> +		if (uname(&kernel) == 0)
-> +			snprintf(config, sizeof(config), "/boot/config-%s", kernel.release);
-> +
-> +	if (access(config, F_OK) != 0) {
-> +		printf("Cannot find kernel config in /proc or /boot\n");
-> +		exit(EXIT_FAILURE);
-> +	}
-> +
-> +	snprintf(cmd, sizeof(cmd), "zgrep CONFIG_SCHED_CORE=[ym] %s", config);
-> +	if (system(cmd)) {
-> +		printf("Core scheduling not enabled in kernel, hence skipping tests\n");
-> +		exit(4);
-> +	}
-> +}
-> +
->   static unsigned long get_cs_cookie(int pid)
->   {
->   	unsigned long long cookie;
-> @@ -117,7 +142,7 @@ static unsigned long get_cs_cookie(int pid)
->   	ret = prctl(PR_SCHED_CORE, PR_SCHED_CORE_GET, pid, PIDTYPE_PID,
->   		    (unsigned long)&cookie);
->   	if (ret) {
-> -		printf("Not a core sched system\n");
-> +		printf("Failed to get cookie\n");
->   		return -1UL;
->   	}
->   
-> @@ -270,6 +295,8 @@ int main(int argc, char *argv[])
->   	if (keypress)
->   		delay = -1;
->   
-> +	check_core_sched_support();
-> +
->   	srand(time(NULL));
->   
->   	/* put into separate process group */
-
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
