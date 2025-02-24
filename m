@@ -1,110 +1,171 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDEE423CEF8;
-	Mon, 24 Feb 2025 09:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45FF24501D;
+	Mon, 24 Feb 2025 09:41:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740390027; cv=none; b=BDDzq6PEd0NhF/5CQkDuD5hhPK5Q1YBrk4oUH2bIo2XivwXwzcyBwRccY2Qr4xiFHyKbEXVORD7Nyw3+9Y8AhNNFwIOkkJ+9OX8mhO2rI26sqfG9n6SFWpF2xP62cNcJqo7Nn2HB2sH/CG1GMH7L4bepwMpi8l17iPZs0CoVWZg=
+	t=1740390092; cv=none; b=Aw5VjGvRY8IPaO7GCOlncx4/aAShxdfBsHCqnjOQHJBmacn2h8dRA0XsoJbCnsdS2v2zxkJisCV93qlzWG+6XBdRNqxRXV+DyvitRtcl62RVlz29J00o2UBELJIB5GtOJiCQTr6FTUPeR6CHpEqzzribRWMWPYiKlfm5JPXOauY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740390027; c=relaxed/simple;
-	bh=ilXjny4q/Us+KcVpV3D4oZwsNv29nwKsDXaZzHNSPi4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W2khzHeCj0arvq/affW79oFJkMOOYLpyEfZH47u7mz6768x/rOft70HGFge+sMaQOp4WPTLj73SuFkX9VyXY3XTmyusQwmJd6uxJST/263LgR7y+JRSnXTzwtcjIMZlEPK0oGdYSCOcoUWqAyYUC4JxMyr4tK+Zl+5GU99dqeyc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gsVlEx5H; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740390092; c=relaxed/simple;
+	bh=K/BMaw7yksUW7asTY2fGFkaWht/cMbjJx1rTVr0UTP4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dMAgIMRP33L/wZ8kNxxELQO4sNH/nja7SNwkyaeOvSOmIKc28EJk663Ocr846d8w8Dj/XQwbuLLol6NYeg3nTuBDiuNnJVajSkPtXuDGLMEpiVDXgq+X/LszTbJnxSdU9EnIlRkTODZtI+iiq6xYKujghQ3OfyOzN1D8XXEb6lA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KhmrJpQS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gsVlEx5H"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-220e83d65e5so75348405ad.1;
-        Mon, 24 Feb 2025 01:40:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740390024; x=1740994824; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bevg+LVVnCsvNGhct+JIEKUyr6Ml9IDUZSl7fki44E8=;
-        b=gsVlEx5HAMX9irJOPUUvm4yIKrpcM8NGNgqZRCjZ58bCvKn9Sy8cLKDo2zNXP37F4D
-         LoD0muVP44HqnowqDT+bLDbbjNIdPUIFbR5nFf9crqZYlG/Fb1WzTf61GhZpw2CMPp7w
-         6OMkASWX67LUvXOi6mTKxd73NDJACROMJ+V0dWEjwongg9ar+UxipGh+W5N30P+QgNy/
-         Dmy2RROvMXyoTzrKvo33bWK7t3F/O2p1F7VZOrn3S81XTwPniHmmxHH8hYxtGtpjWzYo
-         icQFrcsNrQ4LJRe9si/Gna4tCGsear9nf30KsX+ceLODPlip5SZKiOAJp0js2zQZYUoe
-         snBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740390024; x=1740994824;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bevg+LVVnCsvNGhct+JIEKUyr6Ml9IDUZSl7fki44E8=;
-        b=HIMyF9Xpr/w1BUxcSITlHyl0fHtddsEDDzWV1r+qw2mY7SH8SXKLuIHqe0HAePiDKF
-         UI64OeArn8ZbOVRYAcYFhqj5KbUW34vLF+PW3I1rwoHfHF6axhkVzZeR7yF7g+8Yjd26
-         38DHkd0wjtaCvNma9k8hkvOlwIULwW0nNt+pN5O8rfoNcRscPc81vDIDTaRtkVLw5RgQ
-         CUZa7M7wJPU+cHcyCM8dxlzBa6ufneBrt5tqmnqIWuUALhmmQVL03GznPDMRMoD+8yMV
-         xpQ0Diig1t+BadGN2s+/gvcvqMQNVTlsXU//Ek9WFQGnATwy1omDOh+/lY7o/58KiL4X
-         0kfw==
-X-Forwarded-Encrypted: i=1; AJvYcCUstS2ThEf9KssIcMHI8zLlOpf6KXpmi1jCdUD+LofeZibfWYZMVrWtQC/l7o7aZrK0q4OJv9utwA1b8/g=@vger.kernel.org, AJvYcCXrm8amlij6id1uwUwqIWDBU2UW5yD6sJdi3MeOLIdOjbmGfKkKvULwqUHMA9CjtaPsTBHPA6WlJo+RSDoKzKPj@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/7mqINpX4VG0UiMbkDjNIxFzG0nNbKbK9Bz5N3O3xBEGMxEOm
-	ajod6piEa1dmUeOQyN1orhvOGFgnJilT+ZLSAG4skCl6g9sJtfKh6Dfv6gIa0qCEKg==
-X-Gm-Gg: ASbGncvaI0Gw/qSqS9hioS5ZGS9Qjb4tD3J1IpR0mG5uw8TxUsb9yp5Zi8nqkCpNtVT
-	mryBXQ8Vjy6kmZ1tS8uguOH/4G0BVQvBIGA9guW3urYFIIhd5SDrQb3kTSQGnP5ip1P8fZUYFM6
-	Nzo5G7NFxJlCl8WuXzTOJIiBZhYEKsI5+cL+n2gbKGBQjbJkUUNWnvpTZv6ianBZxtDQq4OO9ol
-	jJSmPNf8VBv/Ff+3W5STovFElY93BCifnSUaelLb/AfUPYOIYwXiZ5PfyJuuLSpIAKzAphWhYgH
-	oQXbOH7RajZCs1IrTYDkl/hnhdAd8pF+HP5Pc/kJ3eDd6g==
-X-Google-Smtp-Source: AGHT+IGrYjhnd1mtJatruaBZmgzR0U8jgZlGpbLb6oKcHDPmebw2maz/URmQwGWhntaF6zbsrDic9w==
-X-Received: by 2002:a17:902:e88d:b0:220:f91a:4650 with SMTP id d9443c01a7336-2219ff55febmr182062595ad.19.1740390024315;
-        Mon, 24 Feb 2025 01:40:24 -0800 (PST)
-Received: from fedora.dns.podman ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-220d545d453sm173056105ad.115.2025.02.24.01.40.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 01:40:22 -0800 (PST)
-From: Hangbin Liu <liuhangbin@gmail.com>
-To: netdev@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hangbin Liu <liuhangbin@gmail.com>,
-	Davide Caratti <dcaratti@redhat.com>
-Subject: [PATCH net-next] selftests/net: ensure mptcp is enabled in netns
-Date: Mon, 24 Feb 2025 09:40:13 +0000
-Message-ID: <20250224094013.13159-1-liuhangbin@gmail.com>
-X-Mailer: git-send-email 2.46.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KhmrJpQS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1968C4CED6;
+	Mon, 24 Feb 2025 09:41:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740390092;
+	bh=K/BMaw7yksUW7asTY2fGFkaWht/cMbjJx1rTVr0UTP4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KhmrJpQSqlbJvrog1f0QHlNyHDozd/5pew3gkhjaMJTlYGT1dzBQcpDRw+2p9FIy9
+	 2s4YAtUkyEQJrSerisG7+sH5UJ5wmVt/YtRfMXCeDxnsbIZlxEhJIQstInwuBc4ZTP
+	 v39bYkIaCO5hlX+4DgPv7tai36HwjkdHD6KsIgCNtRYsBCBWlqomWp45rP2SgXrlun
+	 YG93mEu7sejdgpEfeiIyOL2ksJZ5oqdKEAhoF+2GWD5Q4RiQykZ1coUhVJjfYma2B3
+	 NAYFriOCgVbjb3vzDNgGd2Ok0qMWCn6n3pudTyyFypOrY33ewo6We+XzuVMAYtnq9i
+	 Imqk3pdx9QcrA==
+Message-ID: <fa49d52f-0a55-4bce-8742-5b4f018c170c@kernel.org>
+Date: Mon, 24 Feb 2025 10:41:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] dt-bindings: clock: add rk3562 cru bindings
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+ Kever Yang <kever.yang@rock-chips.com>
+Cc: linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+ Conor Dooley <conor+dt@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>,
+ Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Elaine Zhang <zhangqing@rock-chips.com>, linux-clk@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20241224092310.3814460-1-kever.yang@rock-chips.com>
+ <krrqtjllx6akrurefbtuhgxw6bwmkiro5rtvdexoevjyufm2uz@r5biw7kbttyr>
+ <23c84fd5-83f4-46b3-a247-56e4a2c06d1d@rock-chips.com>
+ <3234236.fEcJ0Lxnt5@diego>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <3234236.fEcJ0Lxnt5@diego>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Some distributions may not enable MPTCP by default. All other MPTCP tests
-source mptcp_lib.sh to ensure MPTCP is enabled before testing. However,
-the ip_local_port_range test is the only one that does not include this
-step.
+On 24/02/2025 10:05, Heiko Stübner wrote:
+> Am Montag, 24. Februar 2025, 09:52:12 MEZ schrieb Kever Yang:
+>> Hi Krzysztof,
+>>
+>> On 2024/12/27 16:25, Krzysztof Kozlowski wrote:
+>>> On Tue, Dec 24, 2024 at 05:23:08PM +0800, Kever Yang wrote:
+>>>> Document the device tree bindings of the rockchip rk3562 SoC
+>>>> clock and reset unit.
+>>>>
+>>>> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+>>>> ---
+>>> A nit, subject: drop second/last, redundant "bindings". The
+>>> "dt-bindings" prefix is already stating that these are bindings.
+>>> See also:
+>>> https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
+>>>
+>>>
+>>> s/rk3562/Rocchip RK3562/
+>>> or whatever your proper name is (and use proper capitalized parts of
+>>> products)
+>> Will update.
+>>>
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    const: rockchip,rk3562-cru
+>>>> +
+>>>> +  reg:
+>>>> +    maxItems: 1
+>>>> +
+>>>> +  "#clock-cells":
+>>>> +    const: 1
+>>>> +
+>>>> +  "#reset-cells":
+>>>> +    const: 1
+>>>> +
+>>>> +  clocks:
+>>>> +    maxItems: 2
+>>>
+>>> Why clocks are not required?
+>> The cru is the clock-controller, which is always on module in SoC,
+>> so we don't need to enable "clock" for this clock-controller.
+> 
+> hmm, shouldn't clocks be
+> 
+>   clocks:
+>     minItems: 1
+>     maxItems: 2
+> 
+> The CRU _needs_ the xin24m because that is the main oscillator
+> supplying everything, but _can_ work work without xin32k .
+> 
+> Sidenote: itseems we're doing this wrong on rk3588
 
-Let's also ensure MPTCP is enabled in netns for ip_local_port_range so
-that it passes on all distributions.
 
-Suggested-by: Davide Caratti <dcaratti@redhat.com>
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
----
- tools/testing/selftests/net/ip_local_port_range.sh | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Kever responded to a review 2 months ago. None of these emails are in my
+inbox anymore. All context is gone as well.
 
-diff --git a/tools/testing/selftests/net/ip_local_port_range.sh b/tools/testing/selftests/net/ip_local_port_range.sh
-index 6c6ad346eaa0..4ff746db1256 100755
---- a/tools/testing/selftests/net/ip_local_port_range.sh
-+++ b/tools/testing/selftests/net/ip_local_port_range.sh
-@@ -2,4 +2,6 @@
- # SPDX-License-Identifier: GPL-2.0
- 
- ./in_netns.sh \
--  sh -c 'sysctl -q -w net.ipv4.ip_local_port_range="40000 49999" && ./ip_local_port_range'
-+  sh -c 'sysctl -q -w net.mptcp.enabled=1 && \
-+         sysctl -q -w net.ipv4.ip_local_port_range="40000 49999" && \
-+         ./ip_local_port_range'
--- 
-2.46.0
+No, I expect the comments to be applied full in such case. This is a bit
+ridicilous  that now I need to look for that email somwhere to check
+whether implementation follows received response. Response after 2 months!
 
+
+
+> 
+> Heiko
+> 
+> 
+
+
+Best regards,
+Krzysztof
