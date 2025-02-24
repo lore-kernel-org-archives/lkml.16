@@ -1,73 +1,55 @@
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012028.outbound.protection.outlook.com [52.101.71.28])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AFC4233737
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 12:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.28
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740401681; cv=fail; b=H0ysb4TC7715ps558lihePalUoOGyNRTFxpL3RsIrXnWsR/xmFDQMkpiJBwpTtjZWJ0eKAyc8fARZ7IHxlNuUPS8jfyRuL7uAmLst+8qpSP5HQpOzrGYuZtGFf9BZmJYUO+D2TNEdeT63S+TaMyMoZ4CRsNEqezsUky2GzbvB20=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740401681; c=relaxed/simple;
-	bh=CL8+e011908UactK+BB2kPw6A3IdDdizVF6JZPq6ITo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BhlGeQFCbrpt3g9TDeKth+rGXmj85YrY8/NPQvWTY0XuKhQBXt7ryh4sQVWXJTZ7vqSdEL3IypznTEkH02A84Gw6gy/3e8FCOZB/3I9RuTBrpIcP0kvMvMfDr9mmdzxVxYmmNVdZFTnfbFdrhK6NrGTR+rRlvSle/sV2gctzn9c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arri.de; spf=pass smtp.mailfrom=arri.de; dkim=pass (1024-bit key) header.d=arri.de header.i=@arri.de header.b=vCO18ODv; arc=fail smtp.client-ip=52.101.71.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arri.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arri.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E89612571A1;
+	Mon, 24 Feb 2025 12:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740401751; cv=none; b=Bz4aXg122y6X/9fG1IbsPtSbnlnwtdhz+LPWmkCFSshoT2BvQ6JaPUK0sA41UGa9XZpiiWy//KoHr/8LC9f9cbbnqnWRSCzIWGtmebk2e7r/+4RzG+S83L3ExtDIYGU0Vl/pEqeiQF6rMK70+fst1K0JZX/RzAVySHrIjC/FPjk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740401751; c=relaxed/simple;
+	bh=2FOD7ueO1lpP0lFcbQNPAEJ9bOQMhzziN7e+H5DRTgU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=das+ETpjW2xie1mcB4kBtBvB0LMUdDFKSGNd/BsCSi1XjGiCAAV6ezK7EhwRJh9Nn8xhRA1PKMr+ioXpVzYcVNXbbAKNQUzYCrrrdpKnuDXriKx8tthvgxQjZa9WBRYcHDxpPG+7W4gxsWJ9tYZCz4WdgyXROEQg2bZsgrwYwgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=OJZR1rd+; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arri.de header.i=@arri.de header.b="vCO18ODv"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=W9KqT+PVAsUUjrSWedw7RidmU7by31BlHOniO0rFlCweDLAyixmz4mOfPGY52RLSQMA+Mzfnla94+mnNb6xd3nFm43iVvNleBwByk5ZpDRMJJsHMx4cfJWasKH/ixZwa59L/aZEt+VhpTH1L262Jhj1ecnXZDBZqCPSvicN7warfU7l25bYgqIsYXRxj6H2HcZczPgoZQV7CwEsyHYikyKc5FoFcPeEsr1KvJx4Lblx8IPkh4F7/XJ/C36K0xaRjx58SufkgBU1UYX58euQiOpgmDSm1ffp+wpoD9YLSCFCzcKUuxU3zg/sQ3+X0Cf3VTha/PwszBku1VKJXP7UX5g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EPY+AbXPVqEBqj6CfiA4mxL6D1mnsKj9EIJzZOWAfG8=;
- b=VVo+ODdncsPeMhwcJWY0J1PUPCTCfP3iQ4nuqZAyUM+3luFhA7B8NbFLBg0r0TI8nBDfDxga2ztgQ4SuenloL/p+x2GBHQ757LTkRFC7ZehXJTGWZBJUCesXfwEzgnr8iy/wjHC2YEo40NMRjOGHHbRD3EkOBBLkS+zyzEC9p44//yG7MP4kM80XJY4XQJ0Rg8p5KwO8OzcEyaQNYzLlHLtGqgpEYHtSxFflu85tV9ZUQjaxmmf3axzTMnyAcP9Rzd0hnChmVFCvKAq/5uHcKBfsCd2ss7/pgW7jw7/pr59+56ZgAl/h00c9ML0lJVEG7XOe2ZUWCo2V8kiNHz+RrQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 217.111.95.7) smtp.rcpttodomain=armlinux.org.uk smtp.mailfrom=arri.de;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=arri.de;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arri.de; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EPY+AbXPVqEBqj6CfiA4mxL6D1mnsKj9EIJzZOWAfG8=;
- b=vCO18ODvLXVbXUwz1ULRyyCplBlygbrP9wgNhVE7zGUqnLiszdHMXf/0fcdLIg0K57cL9YdyVdZQyh157p1oRatcwUI6ngZlUOTVg7T9TxV+7CjfIeOUWVwVf3fb+1iCo5Fs389XA1AYj5TTYdnBYqDKWVl5XfvDS5/1NR0HV3o=
-Received: from DUZPR01CA0008.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:3c3::17) by AS8PR07MB8102.eurprd07.prod.outlook.com
- (2603:10a6:20b:371::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Mon, 24 Feb
- 2025 12:54:34 +0000
-Received: from DB5PEPF00014B89.eurprd02.prod.outlook.com
- (2603:10a6:10:3c3:cafe::b2) by DUZPR01CA0008.outlook.office365.com
- (2603:10a6:10:3c3::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.20 via Frontend Transport; Mon,
- 24 Feb 2025 12:54:33 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 217.111.95.7)
- smtp.mailfrom=arri.de; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=arri.de;
-Received-SPF: Fail (protection.outlook.com: domain of arri.de does not
- designate 217.111.95.7 as permitted sender) receiver=protection.outlook.com;
- client-ip=217.111.95.7; helo=mta.arri.de;
-Received: from mta.arri.de (217.111.95.7) by
- DB5PEPF00014B89.mail.protection.outlook.com (10.167.8.197) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8489.16 via Frontend Transport; Mon, 24 Feb 2025 12:54:34 +0000
-Received: from N9W6SW14.arri.de (10.30.5.17) by mta.arri.de (10.10.18.5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.38; Mon, 24 Feb
- 2025 13:54:33 +0100
-From: Christian Eggers <ceggers@arri.de>
-To: Russell King <linux@armlinux.org.uk>, Yuntao Liu <liuyuntao12@huawei.com>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Arnd Bergmann
-	<arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Catalin Marinas <catalin.marinas@arm.com>,
-	Nathan Chancellor <nathan@kernel.org>, <linux-arm-kernel@lists.infradead.org>
-CC: <linux-kernel@vger.kernel.org>, Christian Eggers <ceggers@arri.de>
-Subject: [PATCH v2 2/2] ARM: avoid that vectors are removed during linker garbage collection
-Date: Mon, 24 Feb 2025 13:54:14 +0100
-Message-ID: <20250224125414.2184-2-ceggers@arri.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250224125414.2184-1-ceggers@arri.de>
-References: <20250224125414.2184-1-ceggers@arri.de>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="OJZR1rd+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1740401750; x=1771937750;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2FOD7ueO1lpP0lFcbQNPAEJ9bOQMhzziN7e+H5DRTgU=;
+  b=OJZR1rd+s6Crlc1EaqDTuVtx2agy8hCFq76eSBWh6rXDndqLcb9Lp+Hq
+   30hoqusUBQ0SnfA6C55HeHy8+UzBu2AZjBmpiK3babNY1ORIyRdkhO9h2
+   CeGNUXzcvgEuk1VGEj+YC2yVo4G3oYks1ACAdRTmicxpWjsESQYODbUN2
+   +MS9S/vr16nG8yjUtRXWS+UPwSnn4wnzqBpSs3GJzBENtA+nC3QAm/Qbo
+   AV/mH+ZIhYay/djFU1K/WyL8jYE2af5ErFWpXDbYUJnC+hBPWCBamuPSQ
+   GNl2kqzd2XfnSMCucmFi1CzpCrpo0pvPq619IQL7Mkx4Qalq1hr6qe+7z
+   Q==;
+X-CSE-ConnectionGUID: /8fsfx1RQVGJXkJVz/DYcQ==
+X-CSE-MsgGUID: VzYruJjPTO+HV1b/5yIYgg==
+X-IronPort-AV: E=Sophos;i="6.13,309,1732604400"; 
+   d="scan'208";a="38044922"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Feb 2025 05:55:49 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 24 Feb 2025 05:55:28 -0700
+Received: from che-dk-ungapp03lx.microchip.com (10.10.85.11) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Mon, 24 Feb 2025 05:55:26 -0700
+From: Rengarajan S <rengarajan.s@microchip.com>
+To: <unglinuxdriver@microchip.com>, <broonie@kernel.org>,
+	<linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <rengarajan.s@microchip.com>
+Subject: [PATCH v1 for-next] spi: mchp-pci1xxxx: Updated memcpy implementation for x64 and bcm2711 processors
+Date: Mon, 24 Feb 2025 18:21:53 +0530
+Message-ID: <20250224125153.13728-1-rengarajan.s@microchip.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,92 +58,171 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB5PEPF00014B89:EE_|AS8PR07MB8102:EE_
-X-MS-Office365-Filtering-Correlation-Id: 53f2f877-6beb-4e29-4658-08dd54d26354
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|82310400026|1800799024|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?r9FTJH+Ym/Md5mgn6VJG04Y5ILulrxXV9l4Tabugbl/Y9B9NAAQhp1PHtpPx?=
- =?us-ascii?Q?uFdY07NgAqj8UWxsJn8l4umRGTKQEz62tQfDiIizwkvvvZPoFwNuIoqOKfHz?=
- =?us-ascii?Q?35zinvTs8UiN9WlqQQruzhSjPxZBWgzC2OgoRF/H3H4aGWE74289CgnVQK+E?=
- =?us-ascii?Q?hVyRbJ6goZ9Y4YJGtFFfKz7IVSchCrnscGKogatJbYyxBP1c8vAIgsYb273P?=
- =?us-ascii?Q?ETkj9b9RsEkcpVe52cZ8kMgq2MirDn18Of8yTvlV38S1D+JV/JgrbwNSCZcJ?=
- =?us-ascii?Q?Nc0p4mJw7ZCu/C6ZPBUQHXW5Fc5G4leJhu2jMYXZ6sEDvorwpKSlDqDup9DT?=
- =?us-ascii?Q?ZKMtxOIs8UpCrEl9jIp8XO4QYJa2a3xJ5uPckKC0HtUTU/hwdXp+NmKEmlsi?=
- =?us-ascii?Q?3dCJf0lok0bMxe3AgibLhOP/DaIHPZlbLpCQxM8W84TgKPrOfh7vtDttAUKy?=
- =?us-ascii?Q?hdBqEBkGhtvyWwKKr11qnxhatr6vIY+xfRsDf/TR4YT2zNRg3bd2VJ6Br/e8?=
- =?us-ascii?Q?S+Yk1O/F6odlDfjS8o8yZTsOsMGJan9ls/OONUdAj8tFHmzLVXG1oR+cjExo?=
- =?us-ascii?Q?UjDObbFeMTOi0u11Kk2oNq5Q9pTQR0gtCS95AKbVjRGV6a4iNpN+GMfn5XcK?=
- =?us-ascii?Q?i9hElRB69kEQbAqhJWNVJeJzErJsdDqp+IT2WQmNH1YFg6gQn3sMqLsDNv4e?=
- =?us-ascii?Q?5oSMnIGrlhX5Dbt3DUs82WX62iW/AYPQD5mA4yplzuhR84K8e6bIW1m6LmQj?=
- =?us-ascii?Q?Buio8DKMVZNsIbfXBp7xPV5NmrxnIM0mHrfH9sMX0WdwYHrwzTrLo2TETQa3?=
- =?us-ascii?Q?owAZzG3zjgtwAKUV7tRYMkV4njMRhEPwEJSWkPNR2D9+0XgLr68VTZ1sxKJH?=
- =?us-ascii?Q?lHteeILDM9QjzBJTQY/DiheMWSZmuthTByeVX2Uvfq4ORRhRIE+FTaYrSTl6?=
- =?us-ascii?Q?btmL25a7atgph3whcW4TK1MeQSiSA2e8h89hCowvcKNE/2PZtlaRCHRl/zbB?=
- =?us-ascii?Q?ztDoeEfaHKQpb6dYdmk+1qHnzn4OJ1jPTuBCVc58iYtnJx39sjzfEf+4GoB0?=
- =?us-ascii?Q?EQErp8ujwW8L8OJhDDCBRRjv9qOxV/umjYlg8XIGeto5f1r1rQrUSj/VxK7X?=
- =?us-ascii?Q?2diLMM1o8KgW18RFe4EMIqWOjy2U0AcJeF3PqiVfvtJOjGAD/wjhBWk9ubTY?=
- =?us-ascii?Q?GSmIWkOergsZat2CwqyadJZv4Ru0pOBdMB6Vk2t9xueKfwRgmKovmUCnrvb6?=
- =?us-ascii?Q?gUmkBtQ35pkDDXh0OTH0A1KbH6Vm2XM0FLyhK99GOOBj2VxLQntp9YegUVXx?=
- =?us-ascii?Q?hC8APcdhcptUEYnAJdltUJn3AnNs7gsbiVA0accuYbtVjIenmzQft4DEDuRN?=
- =?us-ascii?Q?o87uKbkxVwX7haKfmPSC5lkRHw5vLRp15MRJviz7r37gy5K49rErU+W1qwfB?=
- =?us-ascii?Q?CftnPif1yuTXd8fBv8Lxv6ZKqf67w9haEK7ZBYQWo4zrvQad5eEGKDnn32Pt?=
- =?us-ascii?Q?ybpAnzjORHGXLh8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:217.111.95.7;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mta.arri.de;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arri.de
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2025 12:54:34.2186
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 53f2f877-6beb-4e29-4658-08dd54d26354
-X-MS-Exchange-CrossTenant-Id: e6a73a5a-614d-4c51-b3e3-53b660a9433a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e6a73a5a-614d-4c51-b3e3-53b660a9433a;Ip=[217.111.95.7];Helo=[mta.arri.de]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB5PEPF00014B89.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR07MB8102
 
-Without this, the vectors are removed if LD_DEAD_CODE_DATA_ELIMINATION
-is enabled.  At startup, the CPU (silently) hangs in the undefined
-instruction exception as soon as the first timer interrupt arrives.
+In Raspberry-pi CM4 devices with BCM2711 processor, the documentation
+points to a limitation with 64-bit accesses. Using memcpy_fromio and
+memcpy_toio for each 64-bit SPI read/write causes the first 4 bytes to be
+repeated. To address the limitation, each read/write is limited to 4
+bytes in case of BCM2711 processors.
 
-Fixes: ed0f94102251 ("ARM: 9404/1: arm32: enable HAVE_LD_DEAD_CODE_DATA_ELIMINATION")
-Signed-off-by: Christian Eggers <ceggers@arri.de>
+On x64 systems, using memcpy_toio and memcpy_fromio results in 4-byte TLP
+writes instead of 8-byte. Add the custom IO write and read for enabling
+64-bit access by default.
+
+Tested and verified performance improvement on x64 devices while
+transferring 1024 bytes for 20000 iterations at 25 MHz clock frequency:
+
+Test 1: With memcpy_fromio and memcpy_toio
+spi mode: 0x0
+bits per word: 8
+max speed: 25000000 Hz (25000 kHz)
+rate: tx 6232.5kbps, rx 6232.5kbps
+rate: tx 6889.5kbps, rx 6889.5kbps
+rate: tx 6765.0kbps, rx 6765.0kbps
+rate: tx 6873.1kbps, rx 6873.1kbps
+total: tx 20000.0KB, rx 20000.0KB
+
+Test 2: With the custom IO write and read
+spi mode: 0x0
+bits per word: 8
+max speed: 25000000 Hz (25000 kHz)
+rate: tx 9774.7kbps, rx 9774.7kbps
+rate: tx 10985.5kbps, rx 10985.5kbps
+rate: tx 10749.5kbps, rx 10749.5kbps
+total: tx 20000.0KB, rx 20000.0KB
+
+Signed-off-by: Rengarajan S <rengarajan.s@microchip.com>
 ---
-v2:
-- changed patch title
+ drivers/spi/spi-pci1xxxx.c | 95 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 91 insertions(+), 4 deletions(-)
 
- arch/arm/include/asm/vmlinux.lds.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/include/asm/vmlinux.lds.h b/arch/arm/include/asm/vmlinux.lds.h
-index 7ba309f826f9..288057e07e69 100644
---- a/arch/arm/include/asm/vmlinux.lds.h
-+++ b/arch/arm/include/asm/vmlinux.lds.h
-@@ -126,16 +126,16 @@
- 	/* Note: The LLD linker seems not to support marking input */	\
- 	/* sections with KEEP() inside a OVERLAY statement */		\
- 	.vectors 0xffff0000 : AT (__vectors_lma) {			\
--			*(.vectors)					\
-+			KEEP(*(.vectors))				\
- 	}								\
- 	.vectors.bhb.loop8 0xffff0000 : AT (__vectors_lma +		\
- 		SIZEOF(.vectors)) {					\
--			*(.vectors.bhb.loop8)				\
-+			KEEP(*(.vectors.bhb.loop8))			\
- 	}								\
- 	.vectors.bhb.bpiall 0xffff0000 : AT (__vectors_lma +		\
- 		SIZEOF(.vectors) +					\
- 		SIZEOF(.vectors.bhb.loop8)) {				\
--			*(.vectors.bhb.bpiall)				\
-+			KEEP(*(.vectors.bhb.bpiall))			\
- 	}								\
- 	ARM_LMA(__vectors, .vectors);					\
- 	ARM_LMA(__vectors_bhb_loop8, .vectors.bhb.loop8);		\
+diff --git a/drivers/spi/spi-pci1xxxx.c b/drivers/spi/spi-pci1xxxx.c
+index fc98979eba48..ae1d76f03268 100644
+--- a/drivers/spi/spi-pci1xxxx.c
++++ b/drivers/spi/spi-pci1xxxx.c
+@@ -12,6 +12,7 @@
+ #include <linux/irq.h>
+ #include <linux/module.h>
+ #include <linux/msi.h>
++#include <linux/of.h>
+ #include <linux/pci_regs.h>
+ #include <linux/pci.h>
+ #include <linux/spinlock.h>
+@@ -407,6 +408,68 @@ static void pci1xxxx_start_spi_xfer(struct pci1xxxx_spi_internal *p, u8 hw_inst)
+ 	writel(regval, p->parent->reg_base + SPI_MST_CTL_REG_OFFSET(hw_inst));
+ }
+ 
++static void pci1xxxx_spi_write_to_io(void __iomem *to, const void *from,
++				     size_t count, size_t size)
++{
++	while (count) {
++		if (size == 8 && (IS_ALIGNED((unsigned long)to, 8)) &&
++		    count >= 8) {
++			__raw_writeq(*(u64 *)from, to);
++			from += 8;
++			to += 8;
++			count -= 8;
++		} else if (size >= 4 && (IS_ALIGNED((unsigned long)to, 4)) &&
++			   count >= 4) {
++			__raw_writel(*(u32 *)from, to);
++			from += 4;
++			to += 4;
++			count -= 4;
++		} else if (size >= 2 && (IS_ALIGNED((unsigned long)to, 2)) &&
++			   count >= 2) {
++			__raw_writew(*(u16 *)from, to);
++			from += 2;
++			to += 2;
++			count -= 2;
++		} else {
++			__raw_writeb(*(u8 *)from, to);
++			from += 1;
++			to += 1;
++			count -= 1;
++		}
++	}
++}
++
++static void pci1xxxx_spi_read_from_io(void *to, const void __iomem *from,
++				      size_t count, size_t size)
++{
++	while (count) {
++		if (size == 8 && (IS_ALIGNED((unsigned long)from, 8)) &&
++		    count >= 8) {
++			*(u64 *)to = __raw_readq(from);
++			from += 8;
++			to += 8;
++			count -= 8;
++		} else if (size >= 4 && (IS_ALIGNED((unsigned long)from, 4)) &&
++			   count >= 4) {
++			*(u32 *)to = __raw_readl(from);
++			from += 4;
++			to += 4;
++			count -= 4;
++		} else if (size >= 2 && (IS_ALIGNED((unsigned long)from, 2)) &&
++			   count >= 2) {
++			*(u16 *)to = __raw_readw(from);
++			from += 2;
++			to += 2;
++			count -= 2;
++		} else {
++			*(u8 *)to = __raw_readb(from);
++			from += 1;
++			to += 1;
++			count -= 1;
++		}
++	}
++}
++
+ static int pci1xxxx_spi_transfer_with_io(struct spi_controller *spi_ctlr,
+ 					 struct spi_device *spi, struct spi_transfer *xfer)
+ {
+@@ -444,8 +507,23 @@ static int pci1xxxx_spi_transfer_with_io(struct spi_controller *spi_ctlr,
+ 				len = transfer_len % SPI_MAX_DATA_LEN;
+ 
+ 			reinit_completion(&p->spi_xfer_done);
+-			memcpy_toio(par->reg_base + SPI_MST_CMD_BUF_OFFSET(p->hw_inst),
+-				    &tx_buf[bytes_transfered], len);
++			/*
++			 * Raspberry Pi CM4 BCM2711 doesn't support 64-bit
++			 * accesses.
++			 */
++			if (of_machine_is_compatible("brcm,bcm2711")) {
++				pci1xxxx_spi_write_to_io(par->reg_base +
++							 SPI_MST_CMD_BUF_OFFSET
++							 (p->hw_inst),
++							 &tx_buf[bytes_transfered],
++							 len, 4);
++			} else {
++				pci1xxxx_spi_write_to_io(par->reg_base +
++							 SPI_MST_CMD_BUF_OFFSET
++							 (p->hw_inst),
++							 &tx_buf[bytes_transfered],
++							 len, 8);
++			}
+ 			bytes_transfered += len;
+ 			pci1xxxx_spi_setup(par, p->hw_inst, spi->mode, clkdiv, len);
+ 			pci1xxxx_start_spi_xfer(p, p->hw_inst);
+@@ -457,8 +535,17 @@ static int pci1xxxx_spi_transfer_with_io(struct spi_controller *spi_ctlr,
+ 				return -ETIMEDOUT;
+ 
+ 			if (rx_buf) {
+-				memcpy_fromio(&rx_buf[bytes_recvd], par->reg_base +
+-					      SPI_MST_RSP_BUF_OFFSET(p->hw_inst), len);
++				if (of_machine_is_compatible("brcm,bcm2711")) {
++					pci1xxxx_spi_read_from_io(&rx_buf[bytes_recvd],
++								  par->reg_base +
++								  SPI_MST_RSP_BUF_OFFSET
++								  (p->hw_inst), len, 4);
++				} else {
++					pci1xxxx_spi_read_from_io(&rx_buf[bytes_recvd],
++								  par->reg_base +
++								  SPI_MST_RSP_BUF_OFFSET
++								  (p->hw_inst), len, 8);
++				}
+ 				bytes_recvd += len;
+ 			}
+ 		}
 -- 
-2.43.0
+2.25.1
 
