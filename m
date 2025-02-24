@@ -1,193 +1,220 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC2C018C337
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 08:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027B3185B76
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 08:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740385201; cv=none; b=cNgu31zVcS4zdu0esWYzqJAplAQ4NQbQ350MdRW31Od+BEOQJhY0S2gR8WiTbotqNyIBZOfO1OkEwxxSPDDD4yRHjoH5LJqpkNRK0p0LcVQjIwx9XOJX15+k/lnxjcueoCzXlECRu28XUyMplyUvXvqxpRj8giuBVYDd1+TO03A=
+	t=1740385215; cv=none; b=AYDUV+k8faTTxShgSxksnAkKgqWNqC863Mj/TQ351jhQgaLYSijrfT3PZfMSkzr45KLSgbrWEv4oWYZQzrAMlw6ZuiP0WjMwLaPPWxbihcXWOBbAvJiTeaakQp2ZZfOwzF+LbBk4G89g0iHcQCOelD6G238RbXGPsKjZqsLkHY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740385201; c=relaxed/simple;
-	bh=aPBmcWzxRZ793+P17lZYUhIEtRt1ahNijA11PsDEAbE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KW/Vq8SHGChRo2cTqUy+5Pi4NUpG+X7q/Y+KPw3CwCIt4H/xMKDfIDnfhQj+gGJ3jBewAMQ/ylpOAtupENicj3AoQ7aI16mLCpZWtAxmdE2+dF0tT2xDg4OC3iDRatp3SVNxofUKsv6rszIrOjOc5kxCBbMFBTjQ1ECAi+tEBJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BllI6CKN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hxL6KaR9; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1740385215; c=relaxed/simple;
+	bh=21E7UgrvRkxRMCUgPTzjSwSV9qomtLwoLuLUv0Zpa7w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gxU9aA3vvb1C3NR8gNQ0tDuv7D1d42TsjQHWTHFqZeNcob+2Ed/kXLDAxFpHjQ1JErsI8BHEHEfR00yptRT3qUwsjQkgQoQC6/Kv5JBrytULAimNUGu0HxIlBvv/f2nQ7jJRJInwH0/256PV/EvC8Rw/905qjHMOGxMpvJxWmo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oFiToFM2; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BllI6CKN";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hxL6KaR9"
-Date: Mon, 24 Feb 2025 09:19:56 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740385197;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9b6JI1PAYyIfk1s7vLaQh6uto3DYX7c5B+kYCp5fkFk=;
-	b=BllI6CKNnuo6xYkmJqFOsIkmEJBxivlt8tjDn5uFY+6g134dkoSaguOBHNnAxowunfWhBE
-	aXFnPZc0evUNstXD3Fd5T45Rgoqk24MOzlRTjiOfLawj1tguU9U0ltbNOZXOoJJyleAjn4
-	Su/yTOFoJRLTfho8iLKwOVuKJv+aQRTdzuTPu5nSAbpt/FivLo4sRR8uTxRk4H1AwpbR+W
-	W2ip5t0b7EVmxIaky9mPDZUtHesrTKGbeRkrA+JfNSpb9+XtRuc2uFqyLjcI8aub3eJ/SR
-	XrEgWVMWHsCnA3g40ikMm8uAUt4zmyVuauBnQMbyZfYuaps/RJ3sG3kNXjuarQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740385197;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9b6JI1PAYyIfk1s7vLaQh6uto3DYX7c5B+kYCp5fkFk=;
-	b=hxL6KaR9KJV4d90jn/TKI1wfgV8r0ZUB+HQv6e1PgA5wrDKroIBz05Ju6ojvT3XNPY6Xag
-	GbzWlV2BumnsSQAA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Hillf Danton <hdanton@sina.com>, Kairui Song <ryncsn@gmail.com>,
-	Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 01/17] zram: sleepable entry locking
-Message-ID: <20250224081956.knanS8L_@linutronix.de>
-References: <20250221222958.2225035-1-senozhatsky@chromium.org>
- <20250221222958.2225035-2-senozhatsky@chromium.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oFiToFM2"
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-5209962eefbso3177145e0c.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 00:20:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740385211; x=1740990011; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j6r85kezRIutcCGmLi1srTZWWPXuVJ6TvYefvLy8aRc=;
+        b=oFiToFM2RRqtIdfQ8GfyOV6Aa/uE/qT62hHNpX3sB7DbKJylU5+bGU3p+fA/etXkQV
+         J8MYSbdVhgEkceayh2Yg7BGO701UDjmgp7Vns9hITq+iwPELrEJ/WzTF0BIXA4/cKd2U
+         tksZpfCbmU+84sNCUZJzB9o8Gen65mU/wIS3P4oJ1Ntib9i4ge7XibGwgDTAeyHfgZMe
+         pveQ+eJmMl+aVn3HNEWhV3l+20NPSDM7woK4nMfR3bV4d3/KJgHc1yaGUnympydo84NC
+         TSF7kWfJbv6C7RMor/fZjswVec8ZFHTSG+YrWTnpjd4Q6d7RT8OT60bCG5uLhme/qZjL
+         35tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740385211; x=1740990011;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j6r85kezRIutcCGmLi1srTZWWPXuVJ6TvYefvLy8aRc=;
+        b=UCBEGF5P0cZnoenDRYQCVmUUf1vQlDQWXHeTWMFC1NqqIwyowcO50vtNwsaHiTwWRt
+         EhrL1hZG6YTFLqnmFnQN31xkMFHZB1B8SMpaeJ13Ib0stZf6lG6EVGpTNKGWF+Eo2Eoa
+         AQMbqRXMv7IXdv3X6LvmpQUjND8CfXMXjF+12mZB1RS0ytRMaVaSck1NZPokeNLfGKL7
+         6fzEFBlccfRuk0JbqQn4Rb2JQ6HTKsA3oIH21dQgd41rwgKLANxAU+v6yY8u68urtJK5
+         TuPLwQq2XnMePEpE2f/00WkAJhcX2+N9Q/EQAWfZXWnpJ8VO4qrbU/Xy5Ks/SRxecrsK
+         10fQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVxjWzZoSLhU4qEFUAW5Nk0gTcuLu+LzVt8C6ZUSpRTWbKx8rgM8nUB3RGBgSEiuq7DydgvqA51urVsjns=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhdTmWM7XEwygNV6ihK/BlKlK3TbxIDIMyKz9Nnoouf8iX07Aw
+	EBrCDS/ktlbSl0XUW7g2Yy2TzygLuFZOcJylIsKJBT6yIh5cDHswTj6f39tbYhyj6uzTATgu+kx
+	/EDzg26pf9W8d9eN1K+RHsCLfJJIN8+0RDmnyZQ==
+X-Gm-Gg: ASbGncvMgeyP21WRA5FbojLz+gaHoZM79uXZ42gL6Jc65H/st2hzLmBVcNXeKf05TDt
+	RDWeH31947VJ1MZXZ1TqKxbz01JlALtATEQ+CaMv+6WTfmccgyVijzd+XTIUCntAmDRoxzVwOzZ
+	0hJdktfCuYnZyh2sH4Gn07L06NJ4dV8a0fgS32Cddu
+X-Google-Smtp-Source: AGHT+IGGzBs8e4QC3zhjyLv0Q2Kb5xRXaFl1GSs1fX52Ac61Q9Lj9A2GVQb5hQJPza9sD0lao51FBajmXwOvO1rVoSk=
+X-Received: by 2002:a05:6122:3190:b0:51f:a02b:45d4 with SMTP id
+ 71dfb90a1353d-521eeadca66mr5091486e0c.1.1740385210804; Mon, 24 Feb 2025
+ 00:20:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20250220104500.178420129@linuxfoundation.org>
+In-Reply-To: <20250220104500.178420129@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 24 Feb 2025 13:49:58 +0530
+X-Gm-Features: AWEUYZlEaOoTQqQ6ZfWquTdxPh6cQo7pAekxnBccb5yJ3vfsbf5zMYnRWYnbUyE
+Message-ID: <CA+G9fYuGk8vO3-OHRe3AHzgDWhNYWpZnuhT3p49zytXgeCN1Gg@mail.gmail.com>
+Subject: Re: [PATCH 6.13 000/258] 6.13.4-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250221222958.2225035-2-senozhatsky@chromium.org>
 
-On 2025-02-22 07:25:32 [+0900], Sergey Senozhatsky wrote:
-=E2=80=A6
-> diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-> index 9f5020b077c5..37c5651305c2 100644
-> --- a/drivers/block/zram/zram_drv.c
-> +++ b/drivers/block/zram/zram_drv.c
-> @@ -58,19 +58,62 @@ static void zram_free_page(struct zram *zram, size_t =
-index);
->  static int zram_read_from_zspool(struct zram *zram, struct page *page,
->  				 u32 index);
-> =20
-> -static int zram_slot_trylock(struct zram *zram, u32 index)
-> +#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> +#define slot_dep_map(zram, index) (&(zram)->table[(index)].dep_map)
-> +#define zram_lock_class(zram) (&(zram)->lock_class)
-> +#else
-> +#define slot_dep_map(zram, index) NULL
-> +#define zram_lock_class(zram) NULL
-> +#endif
+On Thu, 20 Feb 2025 at 16:28, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.13.4 release.
+> There are 258 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 22 Feb 2025 10:44:04 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.13.4-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.13.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-That CONFIG_DEBUG_LOCK_ALLOC here is not needed because dep_map as well
-as lock_class goes away in !CONFIG_DEBUG_LOCK_ALLOC case.
 
-> +static void zram_slot_lock_init(struct zram *zram, u32 index)
->  {
-> -	return spin_trylock(&zram->table[index].lock);
-> +	lockdep_init_map(slot_dep_map(zram, index),
-> +			 "zram->table[index].lock",
-> +			 zram_lock_class(zram), 0);
-> +}
-Why do need zram_lock_class and slot_dep_map? As far as I can tell, you
-init both in the same place and you acquire both in the same place.
-Therefore it looks like you tell lockdep that you acquire two locks
-while it would be enough to do it with one.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-> +/*
-> + * entry locking rules:
-> + *
-> + * 1) Lock is exclusive
-> + *
-> + * 2) lock() function can sleep waiting for the lock
-> + *
-> + * 3) Lock owner can sleep
-> + *
-> + * 4) Use TRY lock variant when in atomic context
-> + *    - must check return value and handle locking failers
-> + */
-> +static __must_check bool zram_slot_trylock(struct zram *zram, u32 index)
-> +{
-> +	unsigned long *lock =3D &zram->table[index].flags;
-> +
-> +	if (!test_and_set_bit_lock(ZRAM_ENTRY_LOCK, lock)) {
-> +		mutex_acquire(slot_dep_map(zram, index), 0, 1, _RET_IP_);
-> +		lock_acquired(slot_dep_map(zram, index), _RET_IP_);
-> +		return true;
-> +	}
-> +
-> +	lock_contended(slot_dep_map(zram, index), _RET_IP_);
-> +	return false;
->  }
-> =20
->  static void zram_slot_lock(struct zram *zram, u32 index)
->  {
-> -	spin_lock(&zram->table[index].lock);
-> +	unsigned long *lock =3D &zram->table[index].flags;
-> +
-> +	mutex_acquire(slot_dep_map(zram, index), 0, 0, _RET_IP_);
-> +	wait_on_bit_lock(lock, ZRAM_ENTRY_LOCK, TASK_UNINTERRUPTIBLE);
-> +	lock_acquired(slot_dep_map(zram, index), _RET_IP_);
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-This looks odd. The first mutex_acquire() can be invoked twice by two
-threads, right? The first thread gets both (mutex_acquire() and
-lock_acquired()) while, the second gets mutex_acquire() and blocks on
-wait_on_bit_lock()).
+## Build
+* kernel: 6.13.4-rc2
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: 191ccd3d65d15205ada79613c4f4a38e01e56b28
+* git describe: v6.13.3-259-g191ccd3d65d1
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.13.y/build/v6.13=
+.3-259-g191ccd3d65d1
 
->  }
-> =20
->  static void zram_slot_unlock(struct zram *zram, u32 index)
->  {
-> -	spin_unlock(&zram->table[index].lock);
-> +	unsigned long *lock =3D &zram->table[index].flags;
-> +
-> +	mutex_release(slot_dep_map(zram, index), _RET_IP_);
-> +	clear_and_wake_up_bit(ZRAM_ENTRY_LOCK, lock);
->  }
-> =20
->  static inline bool init_done(struct zram *zram)
-=E2=80=A6
-> diff --git a/drivers/block/zram/zram_drv.h b/drivers/block/zram/zram_drv.h
-> index db78d7c01b9a..794c9234e627 100644
-> --- a/drivers/block/zram/zram_drv.h
-> +++ b/drivers/block/zram/zram_drv.h
-> @@ -58,13 +58,18 @@ enum zram_pageflags {
->  	__NR_ZRAM_PAGEFLAGS,
->  };
-> =20
-> -/*-- Data structures */
-> -
-> -/* Allocated for each disk page */
-> +/*
-> + * Allocated for each disk page.  We use bit-lock (ZRAM_ENTRY_LOCK bit
-> + * of flags) to save memory.  There can be plenty of entries and standard
-> + * locking primitives (e.g. mutex) will significantly increase sizeof()
-> + * of each entry and hence of the meta table.
-> + */
->  struct zram_table_entry {
->  	unsigned long handle;
-> -	unsigned int flags;
-> -	spinlock_t lock;
-> +	unsigned long flags;
-> +#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> +	struct lockdep_map dep_map;
-> +#endif
->  #ifdef CONFIG_ZRAM_TRACK_ENTRY_ACTIME
->  	ktime_t ac_time;
->  #endif
-> @@ -137,5 +142,8 @@ struct zram {
->  	struct dentry *debugfs_dir;
->  #endif
->  	atomic_t pp_in_progress;
-> +#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> +	struct lock_class_key lock_class;
-> +#endif
-As mentioned earlier, no need for CONFIG_DEBUG_LOCK_ALLOC.
+## Test Regressions (compared to v6.13.2-443-gf10c3f62c5fd)
 
->  };
->  #endif
-> --=20
-> 2.48.1.601.g30ceb7b040-goog
->=20
+## Metric Regressions (compared to v6.13.2-443-gf10c3f62c5fd)
+
+## Test Fixes (compared to v6.13.2-443-gf10c3f62c5fd)
+
+## Metric Fixes (compared to v6.13.2-443-gf10c3f62c5fd)
+
+## Test result summary
+total: 125960, pass: 103347, fail: 3715, skip: 18898, xfail: 0
+
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 137 total, 137 passed, 0 failed
+* arm64: 48 total, 48 passed, 0 failed
+* i386: 17 total, 17 passed, 0 failed
+* mips: 32 total, 32 passed, 0 failed
+* parisc: 3 total, 3 passed, 0 failed
+* powerpc: 38 total, 38 passed, 0 failed
+* riscv: 22 total, 22 passed, 0 failed
+* s390: 21 total, 20 passed, 1 failed
+* sh: 6 total, 5 passed, 1 failed
+* sparc: 3 total, 3 passed, 0 failed
+* x86_64: 44 total, 44 passed, 0 failed
+
+## Test suites summary
+* boot
+* commands
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-exec
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-kvm
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-rust
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-filecaps
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
+
+--
+Linaro LKFT
+https://lkft.linaro.org
