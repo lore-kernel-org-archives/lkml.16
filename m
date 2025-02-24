@@ -1,142 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08892136327;
-	Mon, 24 Feb 2025 13:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5749A24BBFC
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 13:59:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740405424; cv=none; b=BWNneHT6sRaAKiAzf7iwaioqjK+T9LEny/8Y8viJNK1UUJjRLAlMDkELfCLAMBBr602ZYA+76ggb3swtavPpD3LeXx0jKCHLPD2DipTXNj5vTJZyIwOgpthgp8zQVNBgh/uSolBDI/PYJy5hNuGRXk0YbSvbf3qBwF9S6OlBAzA=
+	t=1740405544; cv=none; b=UNdZv/OE7ff+auc+pcGjGzKipPdXZKKHy8UuNE6paVF7VwOEtSw+Kfc65mw1wm7p9PFnjFifoGoqAqB0l5RqtUpHYzSZcLlkRaoPH6cpl+czxZf6hZQETZ2mV4eogBvA+a/DSCiNBbERVGuKdOFpgHxIdBxfpdy/NcG+JIRFwpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740405424; c=relaxed/simple;
-	bh=OQ7YbuLAqtoQmHB21uw+7T4OIQyqMIGl/9dHS8SMf3I=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=N7AU7AoYiosiceNS8eicOntOf59K8vx4RE5pHPL1CkpMaonjOU9kDxvfTn2Huz9/0BxVv+DY6P5yEeO4DYRV7pxQ8sJmOyF5lYXJqlFfsCpu+73taydVEXd0yfN7QwnKU8PojfGPENKSbzlhyQuswITEd9h5Dl+xDpNbHHR9SGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IBekRFC0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740405544; c=relaxed/simple;
+	bh=KJAjATzJr8jGQvQpU1dCW7Hnx/8ze/nn6XH4TERPhp4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DCaopGKetJ21UUiCFzm8EwfhD9O+t5CTHhoIkrs8Xb/fBf33RbMkpksL5ErfrQK5waXy2bDr5xudZoZJu7b/96pjsnRyn7zyDnZRyk6sD0r+3ksUXlBppu2z5rx7Elwk4XrliEINWqcqAaZZvF8CetAgdm1zpWj24DsUuHql2XA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=C9QenuBo; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IBekRFC0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34C8DC4CEE6;
-	Mon, 24 Feb 2025 13:57:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740405423;
-	bh=OQ7YbuLAqtoQmHB21uw+7T4OIQyqMIGl/9dHS8SMf3I=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=IBekRFC0f6gWwCSFDsRNzMkpGSB2uuxZWf8eLw1JIuQCbgnybT8Nr9dWdAq6C7sis
-	 +UhxPIog8lJhYq50ZvxT4ZQ8NTT1ltpdZcoKdSf1iVYg7itMrVXxF4evLvHMo0f8F4
-	 20aj9DfOAFix0I2zhLERV2oEPOyuYXlhPMgr92riUWrfPD54dcZZEYTlGHtao8N75W
-	 6T/XtUBmY64ed3q7yWX6vVFP4g7XwXNBRrVgAuHcNk42BwG91wLRJc+KqvDgknPm/a
-	 /8BBroJCopj4QsMIfGtEgKfLq+RmA+Q3EugyZ4Mv4AaSY03IBqYxn/pwkIYSBvjJ0O
-	 V+SGYdotM9nvQ==
-Date: Mon, 24 Feb 2025 07:57:01 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="C9QenuBo"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-439350f1a0bso26249155e9.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 05:59:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1740405540; x=1741010340; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xwQMQDOZfV3huFqPSokcnS5jFHBZg9nLFIfYzvl2178=;
+        b=C9QenuBo5XASCmDniZKNqRRDx1lpM8qoHX9x7wfXJAZ0oWEXud2I40E8w50toWsmtF
+         epGIDe81HsJoQMIDsvRDLEerF8/FodrPLkXp5Xa7FiVARpM5+jEIe8lsWGZgcmCJ4at5
+         kjvXuE8MD6kC41dgAIZ3x9Kake+jWW6VLudcFeWfSOrP8KDR3KyhNBEVNbc7GphioQU/
+         pU464xJJuOeFRuNZTt1Z5U5T7RU8F6KD8wspbkQWy2TzgrKE8Oh1GZ3mIWnAlydq0JGs
+         JmZA/rCqxJMS6c/c4lvUwYoQk4W7BN7ZowN+8NAgxuWMozF1pNnwycFnhaVpzA8lenWh
+         de3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740405540; x=1741010340;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xwQMQDOZfV3huFqPSokcnS5jFHBZg9nLFIfYzvl2178=;
+        b=eIYHK2vgEVZXjJKedxgsh3uigEYBK3ObsUS4Mtsrey9bNMydrETH0LXzqKEp5F3L6w
+         LXylVvvJ6ollxkW+nevA9Tg8xOm2eLAWLh4ELVZpSq/DCg74aTpV5/sevl2oF041cqok
+         9/ssg0moik6U9CGUGGK6awSih8LuSL5hfQ+LmLQm8QRaXQJyzLj7lZ9k7VbAcziDHis2
+         Aa/+Rylvvnq1e42LPZYJo4rZUSkb1rZevZIC/jjabn3gdveRKQ1c2YSexDXLYghRT4P+
+         vNJ194gziZVQMuZaFGXCNQLyLD9xyES3xU65U8jgRdBYfxiDnF/7kxMcSAyN//MKUsjC
+         da8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWCnt5lIYHHBF/UhgnbHyJ8O0sRjRDPI9GHrkMmdsbnuBZs5iwTmaA6bopE5ctxB2cBre100+QW8rWvPyg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzpllsNs38/ICbmpThHeu1q9HNQ0S4Jm/8ePMJBKtUn4KinQbx2
+	oIt3q7c/j72ZuXalDCQhv7DTzoiEvzbRSYoNYz89F4NKIurW7VGhgfPEppfjEj4=
+X-Gm-Gg: ASbGncvmV/woeScqX9rgBzyVan3aWxvVNL1kAUR98B3HKfP+YzHsXmYQU0H2nCdNy76
+	ytalo3z10AUqFOesUzDC/OcCgMnGoCo7uwr9QPLrM9N5zxB5zBZ4Tc1Wnx48KjkJO60+qhUUJdR
+	nXJUslgDcp147u/goUXgTu9HvoVi6RCgdcBp+SWJvDRTpAR2RVXGnNXBFJIT1eHLP8alHII32/L
+	sW1n7nivIAPAIlgL73AFejEA4x61MUo7Z3FN9KBlAqRzFEDCemD0hjVQbedmbGmOT3wbgXm2kcG
+	sWzchhElOpe6vO+5BOVYgCjC
+X-Google-Smtp-Source: AGHT+IH5Jq0uXoNvpa8b9PRdgJON3IwyYfWk3fQO9KX90xo4mvjpcxwEFrV7a5vo2KNF0wJv5+V04Q==
+X-Received: by 2002:a05:600c:3548:b0:434:9e17:190c with SMTP id 5b1f17b1804b1-439ae272bcfmr98738955e9.0.1740405540468;
+        Mon, 24 Feb 2025 05:59:00 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:eb70:990:c1af:664a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4399c4e3b1esm114523185e9.1.2025.02.24.05.58.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2025 05:59:00 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: linux-gpio@vger.kernel.org,
+	Koichiro Den <koichiro.den@canonical.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	brgl@bgdev.pl,
+	geert+renesas@glider.be,
+	linus.walleij@linaro.org,
+	maciej.borzecki@canonical.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] Add synchronous fake device creation utility for GPIO drivers
+Date: Mon, 24 Feb 2025 14:58:58 +0100
+Message-ID: <174040547574.48618.1949653889364615138.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250221133501.2203897-1-koichiro.den@canonical.com>
+References: <20250221133501.2203897-1-koichiro.den@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-mediatek@lists.infradead.org, 
- Yow-Shin Liou <yow-shin.liou@mediatek.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Chris-qj chen <chris-qj.chen@mediatek.com>, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
- Alexandre Mergnat <amergnat@baylibre.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Simon Sun <simon.sun@yunjingtech.com>, linux-usb@vger.kernel.org, 
- Conor Dooley <conor+dt@kernel.org>, Macpaul Lin <macpaul@gmail.com>, 
- Fabien Parent <fparent@baylibre.com>, ChiYuan Huang <cy_huang@richtek.com>, 
- Bear Wang <bear.wang@mediatek.com>, 
- Project_Global_Chrome_Upstream_Group@mediatek.com, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- Pablo Sun <pablo.sun@mediatek.com>
-To: Macpaul Lin <macpaul.lin@mediatek.com>
-In-Reply-To: <20250224114934.3583191-1-macpaul.lin@mediatek.com>
-References: <20250224114934.3583191-1-macpaul.lin@mediatek.com>
-Message-Id: <174040535775.2710776.691558658609135796.robh@kernel.org>
-Subject: Re: [PATCH v6] arm64: dts: mediatek: mt8395-genio-1200-evk: add
- support for TCPC port
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 
-On Mon, 24 Feb 2025 19:49:34 +0800, Macpaul Lin wrote:
-> From: Fabien Parent <fparent@baylibre.com>
+On Fri, 21 Feb 2025 22:34:58 +0900, Koichiro Den wrote:
+> This patch series introduces a utility for some GPIO devices to reduce
+> code duplication. There are no functional changes.
 > 
-> Enable USB Type-C support on MediaTek MT8395 Genio 1200 EVK by adding
-> configuration for TCPC Port, USB-C connector, MUX IT5205 and related
-> settings.
+> In this series, only gpio-sim and gpio-virtuser are updated to use
+> dev-sync-probe, as the current gpio-aggregator does not benefit from it at
+> all. A follow-up patch series that introduces a configfs interface for
+> gpio-aggregator will convert it to use dev-sync-probe as well.
 > 
-> Configure dual role switch capability, set up PD (Power Delivery) profiles,
-> and establish endpoints for SS (SuperSpeed) and HS (HighSpeed) USB.
-> 
-> Update pinctrl configurations for U3 P0 VBus default pins and set dr_mode
-> to "otg" for OTG (On-The-Go) mode operation.
-> 
-> Add ITE IT5205 (TYPEC MUX) under I2C2 bus and configure its properties;
-> also add references and configurations to 'typec-mux' node.
-> 
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
-> Signed-off-by: Yow-Shin Liou <yow-shin.liou@mediatek.com>
-> Signed-off-by: Simon Sun <simon.sun@yunjingtech.com>
-> Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> ---
->  .../dts/mediatek/mt8395-genio-1200-evk.dts    | 102 ++++++++++++++++++
->  1 file changed, 102 insertions(+)
-> 
-> Changes for v2:
->  - Drop the no need '1/2' DT Schema update patch in the 1st version.
->  - Fix indent for 'ports' node, it should under the 'connector' node.
->  - Correct the index for 'port@0' and 'port@1' node.
-> 
-> Changes for v3:
->  - Correct the order between new added nodes.
-> 
-> Changes for v4:
->  - Reorder for property 'op-sink-microwatt'.
->  - Fix indentation for 'source-pdos' and 'sink-pdos' nodes.
->  - Correct node 'pin-cmd-dat' with 'pins-vbus'.
->  - Add both Highspeed and Superspeed ports to ssusb0 port.
->  - Set 'role-switch-default-mode' = "peripheral" for ssusb0 port.
->  - Rename endpoint of USB data port to 'mtu3_hs0_role_sw' and
->    'mtu3_ss0_role_sw'.
->  - Drop it5205fn phandle for node typec-mux@48.
->  - Reorder properties of typec-mux@48
->  - Add "Reviewed-by:" tag. Thanks!
-> 
-> Changes for v5:
->  - Squash two patches into one patch and refine commit messages:
->    suggested by reviewer.
->  - Drop 'role-switch-default-mode'
->  - Add altmodes settings
->  - Drop 'Reviewed-by:' tag since the two sub patches has been combined
->    into a new patch.
-> 
-> Changes for v6:
->  - Add 'pd-revision' property to 'connector', thanks ChiYuan Huang's help!.
->  - Add 'Reviewed-by' tag. Thanks!
-> 
+> [...]
 
+I don't see any further issues and it passes my libgpiod tests so I queued
+this series for v6.15. You can now base your aggregator work on top of my
+gpio/for-next branch. Thanks!
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
+[1/3] gpio: introduce utilities for synchronous fake device creation
+      commit: eb5ab6ffb4ca2d28121455dd7452061367ed5588
+[2/3] gpio: sim: convert to use dev-sync-probe utilities
+      commit: 2f41dbf9cb84349f510ebf2165c13102f79a550b
+[3/3] gpio: virtuser: convert to use dev-sync-probe utilities
+      commit: 45af02f06f6943d73cf9309fd2a63a908b587f57
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/mediatek/' for 20250224114934.3583191-1-macpaul.lin@mediatek.com:
-
-arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dtb: usb@11201000: 'ports' does not match any of the regexes: '^usb@[0-9a-f]+$', 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/usb/mediatek,mtu3.yaml#
-
-
-
-
-
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
