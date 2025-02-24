@@ -1,218 +1,183 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19E081537C8;
-	Mon, 24 Feb 2025 17:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740417797; cv=fail; b=E8IQwyKNU41zKiSQS0Qhjn+5LQ1doc9m4A4mMpedTjsrVwbyOx03d5F6jDtS/EGqwj7xjS3/GRcWjydjVGXxtViD8sXmU2INDABhHmi42Naor18skS59Md71NkTLuLMNKiwgCvFNaj1aZ20b7HZP2pm4flY34jCdzvTrCBEQVMI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740417797; c=relaxed/simple;
-	bh=rgGXUoixunNWGRLMhr6PdhS/Bq3cNriS/zpFr9AUj1I=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=RTfvia3OvOhv4AEr0kgpnXAUHRrNxi810V7ZNZA+zO9A1nW/aMQVFAU1fg5RJy4hQYxH4uguS8nQ2b/NwBWGZrXi2NxGFNUUnMYA8lKjSPQkg8QZ+ZDF3fOclBaIAwxgvGF5XDzpSZ1tL5feAwO4F45TEuLapxvfSFgJof0kadU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lX5AOCWF; arc=fail smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5157E262D37;
+	Mon, 24 Feb 2025 17:23:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740417822; cv=none; b=UlpFv0MGwrGz+aV0l8P0euQR5MDHbDtDo64rQ45Ixtc694UTNBnp8eHqBUaRfi9EwmtxT8bWG3Krc8Y7Qf+t4kY59H49EDGq3lpNXsQH7qKzbTBuC3PHt9lYqEqxD+noz5h3JEaSMCWSesQ8TJo/4smXrBUqyiWUm4exU0q5e3s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740417822; c=relaxed/simple;
+	bh=EOHkScJ21kPJERJ4vHxyi3a9gQDRS0eSBhy4oC7+jlk=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Sm/g9e5u/aAP77OwrwRRH47TSziqbi2lCM8eD/Dv18FDau0vzH92Kb/4ImW63lSTYSIb2cCN0nxkWXFWLcTNj8yTU0lrUaKyHXwQ3TmwSOBvVlTlTNUE2t+oCiy6gY8dOfKCR8F4is2dpOk4rBcb3WbQZ/GjvDo2dUETVJTiaGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kq/FbduV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lX5AOCWF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740417796; x=1771953796;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=rgGXUoixunNWGRLMhr6PdhS/Bq3cNriS/zpFr9AUj1I=;
-  b=lX5AOCWFdVjhaZBUb4o/MsMQ5kzJ8iQ55gYUIp4+t0Lq/+aIIjUlfzyz
-   rbTNrmndi26Y6Eb7+bA4NsBT/KRNNw55jwZrogAiOjjiyOUBzMJfeHMJQ
-   4LZzsnlZjH+4uDFztN3kH7HX2ZnpDp9BKtVulRBBu0WpxDBy5MmMOD85f
-   emYuvCXEvnQY46e5Bn+BJgTpMRv583JJZQO3HA7QixsiFvyI8+iKpqJH8
-   etZ0sruEMj2IDp4PxGrk5AK2dN/puzRJdy6jV6C4kpnHaFb799W2mBhk/
-   dPbTF+REyuv1qjZp5QhAiwTdt0s9ieBittTEb825soz+CvnpoOXGxWFP5
-   g==;
-X-CSE-ConnectionGUID: GYa1XwHcQvGjPb4Ujs9mRQ==
-X-CSE-MsgGUID: wpfxKJA/SU+kcG7c5eSH1Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="58731632"
-X-IronPort-AV: E=Sophos;i="6.13,312,1732608000"; 
-   d="scan'208";a="58731632"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 09:23:14 -0800
-X-CSE-ConnectionGUID: GREZt6zyR8Wh2SklIegMhg==
-X-CSE-MsgGUID: aTq5kwsUQ7CoRs6ok0IZYg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="153334079"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 09:23:14 -0800
-Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1544.14; Mon, 24 Feb 2025 09:23:13 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44 via Frontend Transport; Mon, 24 Feb 2025 09:23:13 -0800
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.41) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 24 Feb 2025 09:23:13 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lxW9CoWTzTwkYkw+6pKedgGPZQlhRazawSUhQILSB9B6nSD3fA1Ga0gt83wPVjJq4eAUSu1eW2KdK64S13nYeaRS5sCqEneZhOv/1zOD73PN01mcpC6y2vCjNQcaFOkqY/AnD1w+aX9F5VQuYNts++sdLgCuj4/e7sFq7mNXeb1YjTBs/ug5Zj8n3yWusgXJ2v6ZrA/8+WaOo4V5cyVi0YKgzwksuBryjTscAxDHDjithlCiQn0iuvoGP4JpelpLDz3ZFsdnIY+jogzUrmOtgCm5pcW8B9h0aB+CbTMgsGBF8yj0oC/r5SMzwG2vfPOMs4LHWxGczyAJDYmtXpmxJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YQtH6qRGNDOlJxFmAuIuQ2EMTxYyYRw9ZrXsj4VBM2c=;
- b=ucRknbSgDSagFXdlyEichxee4/AVD8nIYMWHpxFq+UBVjdBK9+8DKaJDZXHYOTV3usnJSXY6N35XqIwffYnADxS7CwjTveEJQOFugkKHXSBRXkX9KdX+9FA7/+1f3iWvChpOgkVVtHDqBX4aSpwMhMH/0xWofuVXBLYWnuxOr7ZtE86E/jzbJ4cHG/DeDJNyDXRjmbnSWRKGofRLUA2nPQYxNHRBVqGQzeDQPe/C6wWx9lRu8GP7BxgL3kb1goBquHtPC0jW5lbMraWXsp0m5y0CKjUnH77kwHMNHwXhALu0Y18FrhcRN+6ZvXBv6Ef3zbK7u+exuNwbLG8bL46QMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SJ1PR11MB6083.namprd11.prod.outlook.com (2603:10b6:a03:48a::9)
- by PH0PR11MB4999.namprd11.prod.outlook.com (2603:10b6:510:37::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Mon, 24 Feb
- 2025 17:23:06 +0000
-Received: from SJ1PR11MB6083.namprd11.prod.outlook.com
- ([fe80::acfd:b7e:b73b:9361]) by SJ1PR11MB6083.namprd11.prod.outlook.com
- ([fe80::acfd:b7e:b73b:9361%7]) with mapi id 15.20.8466.016; Mon, 24 Feb 2025
- 17:23:06 +0000
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Dave Martin <Dave.Martin@arm.com>, "Chatre, Reinette"
-	<reinette.chatre@intel.com>
-CC: "Moger, Babu" <babu.moger@amd.com>, "corbet@lwn.net" <corbet@lwn.net>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
-	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"peternewman@google.com" <peternewman@google.com>, "x86@kernel.org"
-	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "paulmck@kernel.org"
-	<paulmck@kernel.org>, "akpm@linux-foundation.org"
-	<akpm@linux-foundation.org>, "thuth@redhat.com" <thuth@redhat.com>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>, "xiongwei.song@windriver.com"
-	<xiongwei.song@windriver.com>, "pawan.kumar.gupta@linux.intel.com"
-	<pawan.kumar.gupta@linux.intel.com>, "daniel.sneddon@linux.intel.com"
-	<daniel.sneddon@linux.intel.com>, "jpoimboe@kernel.org"
-	<jpoimboe@kernel.org>, "perry.yuan@amd.com" <perry.yuan@amd.com>,
-	"sandipan.das@amd.com" <sandipan.das@amd.com>, "Huang, Kai"
-	<kai.huang@intel.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>,
-	"seanjc@google.com" <seanjc@google.com>, "Li, Xin3" <xin3.li@intel.com>,
-	"andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
-	"ebiggers@google.com" <ebiggers@google.com>, "mario.limonciello@amd.com"
-	<mario.limonciello@amd.com>, "james.morse@arm.com" <james.morse@arm.com>,
-	"tan.shaopeng@fujitsu.com" <tan.shaopeng@fujitsu.com>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Wieczor-Retman, Maciej" <maciej.wieczor-retman@intel.com>, "Eranian,
- Stephane" <eranian@google.com>
-Subject: RE: [PATCH v11 22/23] x86/resctrl: Introduce interface to list
- assignment states of all the groups
-Thread-Topic: [PATCH v11 22/23] x86/resctrl: Introduce interface to list
- assignment states of all the groups
-Thread-Index: AQHbbQuX8YqJ+kbnJkKujoWHd7glMbNO0R2AgAB6BoCAATdnAIAAYFYAgAE2lYCAAEXTAIAEhrUAgAAAnXA=
-Date: Mon, 24 Feb 2025 17:23:06 +0000
-Message-ID: <SJ1PR11MB608377BD540169FF3B0FF82DFCC02@SJ1PR11MB6083.namprd11.prod.outlook.com>
-References: <cover.1737577229.git.babu.moger@amd.com>
- <52c66bf98480c0ab6bb0f0762497e328fcbdeaac.1737577229.git.babu.moger@amd.com>
- <Z7XiQ+u3Pc+uvJCK@e133380.arm.com>
- <45a0a88a-b31e-447e-9d62-bc0cdedf06f7@amd.com>
- <Z7dN2KpsQjVUb3KR@e133380.arm.com>
- <7802f9e9-9a63-463d-a51e-e9ad0e60f77f@amd.com>
- <Z7ijCphcSM58AqA6@e133380.arm.com>
- <09f2f512-0428-4649-b8ef-33e5a03d5dcb@intel.com>
- <Z7ydx6vfuw8OdJzL@e133380.arm.com>
-In-Reply-To: <Z7ydx6vfuw8OdJzL@e133380.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SJ1PR11MB6083:EE_|PH0PR11MB4999:EE_
-x-ms-office365-filtering-correlation-id: 5dfb2785-4356-4a42-e0c5-08dd54f7e6c5
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?hFFy/mG0tNWo0YyFhv4yd9zM6Xjy8ayRQoMOFnva/UBhx7kSBxCxQ3kAG7k9?=
- =?us-ascii?Q?KN3SgpMkH4Hu1bLBcg+6KU4QtxQ67j6Zl1P40HpPXNLIDDs7ObXqur+y0Qzv?=
- =?us-ascii?Q?eLfIj9z4nyrUgWhWW/We/qrKd3kmqP5ZeT0EtSJaOA5dIfsfk0MYjRoH8LUc?=
- =?us-ascii?Q?I4c8tOVgGPsdyStPwFvIsL438i+6kEqIdFi7R6xhY27miEjeufi1QQ5dgxsW?=
- =?us-ascii?Q?tDmHQszbmdiWKC80WEduf0G3itLZ3Y2Np0LyWHgbRJslFJ2L7B/wBkSaG8Fl?=
- =?us-ascii?Q?t3foOTb3Ik9Rwopb400NxiXK91MEsZI1nbNA3gJWnYTHAjYLlpjvmcnxtMQS?=
- =?us-ascii?Q?iqdvZR/ly/7MT28HghiRVGx64AbRk8P8YnMxl0aVvvLTzfOKFDD9SMS4bl55?=
- =?us-ascii?Q?ixEVHI6xw9jbYz1EElo/HTWRBe8fvx7JbkYlgC6jOd3LSfH1RpP2fLN+C4D/?=
- =?us-ascii?Q?U4lq/O6XFOdWM7l5I8n1hinwYkVlGc6JPrE02UZaBBj65qkYbTn4GOlrYz69?=
- =?us-ascii?Q?brXP3bRvhO00W3jJMogpRQZOKXAh6rbGEJxyO0stsaqnUe23XL8afBe5wkM/?=
- =?us-ascii?Q?Vw9VTX+16K57YKOqRwtvfEVSYaYU4U1+RCve9CF+5PbkdA05I7BJRwMvEf7h?=
- =?us-ascii?Q?LFXu8SRSl1EkLJtQMfu1MBvMq/64LLZP/TeKn/LXtJb/TrsB9lk9A0r9FUH2?=
- =?us-ascii?Q?2bAOqYorFe9xh5kNNzvB8WoRzSItIgf/23/Kz/tM93UjFvb+QGFEkqup+TOv?=
- =?us-ascii?Q?Fli4fuuAKP0ZdPfOCsJOK8xGJKOg/p4JQr8+mdFQZ4ciHxXkBr3Wt6bVRvLs?=
- =?us-ascii?Q?uPtE1QuoO06mWFdcxf+rww3NHkuVI5JtaYdSzAjG8aq+dxKRz7+kN3inqR/b?=
- =?us-ascii?Q?nFmZ0D3YE4JLLr3yHNC2wY9EGpNI/aZGk+Y0h+PuZdlCJHBcbMD3eTQw+zHM?=
- =?us-ascii?Q?0DEbY1Z+v1vmKaoH86U1D3RMLvKKue4/E2lM8dYTMa+FNH3eNhKZhGRZyJt1?=
- =?us-ascii?Q?In0PO8fP7e25SgnjF/ti7jFpEDxJWmOaLUHs1RCH0RGqVtX5ffhB298rBd2+?=
- =?us-ascii?Q?hUFN6W+xF/DQT8l5z/Ad7IrszxUzMXxFfAJDitfWHvYjidzL86m1Ur1cMz+z?=
- =?us-ascii?Q?I9GQ/ZmZDzpAETY5O441Iq2Ybv05VAucjRgT8Iu4sAJcfNi5pRVqSwU7NlPs?=
- =?us-ascii?Q?2f2F5f3qEjCb55d6esTXHwtcxcZsWgpiO6F0FS+QDP3yg/QD6HSx/GVT9+9x?=
- =?us-ascii?Q?drEDSyPZ5lxp/7X1jkWzJyUgwcSJ7oguGb8Bzc2nyl9LMO1IfzsTcvDTpqTi?=
- =?us-ascii?Q?ZDH2rV3dpYTbssmIkfaDzZCuw5fEp1Lms0g3U0hwLNFqR0NgAYrdp3UDYduj?=
- =?us-ascii?Q?NPTv/s5I1JKyugMdywX4JAnns1Z0A67QXuSOFWsJmQW3h65QPfS0TiuLEYlh?=
- =?us-ascii?Q?1j7pT9CqZxym4aRwImtqtuauC43qXOaJ?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR11MB6083.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?w1keVdhKyzgMzge8BZfyRlXSa6JQKYLaPctMBS5C1agZv8NkLmt1pmkN8pk4?=
- =?us-ascii?Q?6yaf5+d++YyzjwspiI+z2YCUp6SJfs+wrwBaXuYCXvMBCpMhMZJg7+wYeg9U?=
- =?us-ascii?Q?PDU+WtGd63b5W/K8PBoALEf/SzvAkRNasVRfsLQGvfLk5ru65j+qDCZQ3obM?=
- =?us-ascii?Q?qdEFIrhuMqWCiDK9AGfT1yPluPIwq8jw0G3EEx0a4N/tygnBcOneW6Yzp5JT?=
- =?us-ascii?Q?CXZwxNJ/Yo8SQxbsWAU1d3N95NBeW/c0x0EqjYAiLawhVgUrndl8EqUDfJlr?=
- =?us-ascii?Q?vM0SfudAC6JxRK/vkO19woFD4eMDlqs7pz7v8VElxlCtYC3KACtqZMdjrjOE?=
- =?us-ascii?Q?oVBGSnX5WHEOyH6/A42zBfXe7/nY2ovUQnC8H9u6WjkIqxRtYPZWmgQ/9LSn?=
- =?us-ascii?Q?6aCqSbtUqRrPl/emTAuRe9luM0pvbselsc/AJSDJZbF0St8SJHoG9v6Z44NY?=
- =?us-ascii?Q?FdCmqUC7y8V+0UQFkJ/ngtnxGSL01ZP7jxAIkpikQYjqAJdGwYE8fgKFRvpn?=
- =?us-ascii?Q?Ns9pHVV4bgryal8Iqigs7viGhnK6GkDOZMgQqm8AkhguEXg5YQ3oF9NYv+rQ?=
- =?us-ascii?Q?T7hCnA758RdCHaArTGSHfByt2sJ2+pa03z7jrpAabOQ/J0SIwnqiSj6Lin96?=
- =?us-ascii?Q?hxBA+ieq+xKCEns2yJptcGrOV4kv3l4wIpA/iuNqYuF+HWNlWYruPW5f623N?=
- =?us-ascii?Q?asHM8KJqZ7Fi0SDpz/sVl/znPgtIuzk1CxduASmbOvul5mylU/ZxYBi5VscT?=
- =?us-ascii?Q?ORUWv/Mt8GjX5+o6wDRyiYV/GrUnuLoTbALUAyecAOpR0zXu7xYxgYdkQQ6+?=
- =?us-ascii?Q?kFAOrgXC4zA3KkunNhKXem3Fw9qgDDFPCk735mjWFlH59RA5bVd+AIpAu1Ds?=
- =?us-ascii?Q?9P0bfpnFudJzWIiiECiG45rS22lty9f5TMsUPzHh6gtWxTnh/rmTbIKBN7dP?=
- =?us-ascii?Q?OrrZ84iJffF701IOEgItL5f2p5iEpayoXmfgxLgaCJ7HUUBMqnuUWWi24Lbv?=
- =?us-ascii?Q?FNSa8VPkAZGYyhXhuoNPNcQpXc9vgDEREKW38HuO0cQXYRhPnPV9DZaoi6qg?=
- =?us-ascii?Q?0wj3e8cGYCZgwfp2x916Rwvf+KTDYPsqLunXdXDl+EKPMNEAPzC2Xl6Mt6gv?=
- =?us-ascii?Q?lsdKUirOXixXVNlKLc4gCE1xgx/mnGP+t4XWxD5ZGN4giD5fSkDQeCBeynbB?=
- =?us-ascii?Q?DlLYvqFn7uRKoChuVjrKbdF2XRAHZvxtQLHIquR5lpyI3cvMLUNCNV0FZSDU?=
- =?us-ascii?Q?Zh0Teae2v1q7ZYy8g7VZOpsrXd6nZ2vn8zFpLf+GPbotRtKcBk/PiTqGJq56?=
- =?us-ascii?Q?RJmUtLQ2Lo+d7c0NeACHS18eO8GibgobMkz/9Z1IZJoqyFkZ8iuuekIuCa7d?=
- =?us-ascii?Q?Iya25qbWpbrhik3/ULGO9X7CKiZ9G6gqvWAZjplmlsyLDPnO4SA41l5BStoN?=
- =?us-ascii?Q?NpO8dJztvk6nffRx4baoxLRnJNEe5JUqr+1Mpd6uaFzOSmleX8XBYf7K/xgJ?=
- =?us-ascii?Q?ApL/XMc55lIp6+GgeMewMEHSSD1/GXIPhUhOlL15c4+0to3oFHqB8KtTI+Dj?=
- =?us-ascii?Q?M7ZNVtc5CpcF/JyekRGrF6CcCXOu4TGW5tPtLHF0?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kq/FbduV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1129C4CED6;
+	Mon, 24 Feb 2025 17:23:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740417821;
+	bh=EOHkScJ21kPJERJ4vHxyi3a9gQDRS0eSBhy4oC7+jlk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Kq/FbduVIRmEUdzkGlX2ICEd2o6ytA+MHjXmK1DWaFyrK1zFS9k0UcJZqxb25ObgF
+	 3xJIZMDMhj9Lcztzid6pp4CQRz6Gvv8tez2HNTU7iDQ4YciY0DcLIZfIUTMNuMw10J
+	 Ne87AKYvOE+OhArM7LokqzeXUGXi1XvjnMTIJW/RNcFl7HodXnQb31P/v9OuZe+6wJ
+	 f/ko5bx2uTJjuOg2FsQqIUagjUgje/VLfTdYfuK/UsQk1QdjQwgbIyOuCVOf2TWUb3
+	 uEa7go52Zh3/PiuXwOtO9Iwg8ODDd4tfaIScV2t+EZ2YUDLn6dKU3FkXVtTzAOjGUw
+	 olTIbh1VkHXLw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tmcB9-007SPs-FT;
+	Mon, 24 Feb 2025 17:23:39 +0000
+Date: Mon, 24 Feb 2025 17:23:38 +0000
+Message-ID: <86ikozqmsl.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Will Deacon <will@kernel.org>,
+	Suzuki K Poulose <Suzuki.Poulose@arm.com>,
+	Steven Price <steven.price@arm.com>,
+	Peter Collingbourne <pcc@google.com>
+Subject: Re: [PATCH] KVM: arm64: Drop mte_allowed check during memslot creation
+In-Reply-To: <yq5aseo3gund.fsf@kernel.org>
+References: <20250224093938.3934386-1-aneesh.kumar@kernel.org>
+	<Z7xSfVME4z2ComUm@arm.com>
+	<86ldtvr0nl.wl-maz@kernel.org>
+	<Z7yElHKrJGn8XuPS@arm.com>
+	<86jz9fqtbk.wl-maz@kernel.org>
+	<yq5aseo3gund.fsf@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ1PR11MB6083.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5dfb2785-4356-4a42-e0c5-08dd54f7e6c5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Feb 2025 17:23:06.1230
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BMyq7TYs6AxTYTk8YKA621KAB7wxTEXQXLSYeu45l3jHLfwDByb9K6sp4z974YMHv8D51z1Jxe4xBjcK8Z7z7Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4999
-X-OriginatorOrg: intel.com
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: aneesh.kumar@kernel.org, catalin.marinas@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, oliver.upton@linux.dev, joey.gouly@arm.com, yuzenghui@huawei.com, will@kernel.org, Suzuki.Poulose@arm.com, steven.price@arm.com, pcc@google.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-> It has just occurred to be that ftrace has large, multi-line text files
-> in sysfs, so I'll try to find out how they handle that there.  Maybe
-> there is some infrastructure we can re-use.
+On Mon, 24 Feb 2025 16:44:06 +0000,
+Aneesh Kumar K.V <aneesh.kumar@kernel.org> wrote:
+> 
+> Marc Zyngier <maz@kernel.org> writes:
+> 
+> > On Mon, 24 Feb 2025 14:39:16 +0000,
+> > Catalin Marinas <catalin.marinas@arm.com> wrote:
+> >>
+> >> On Mon, Feb 24, 2025 at 12:24:14PM +0000, Marc Zyngier wrote:
+> >> > On Mon, 24 Feb 2025 11:05:33 +0000,
+> >> > Catalin Marinas <catalin.marinas@arm.com> wrote:
+> >> > > On Mon, Feb 24, 2025 at 03:09:38PM +0530, Aneesh Kumar K.V (Arm) wrote:
+> >> > > > This change is needed because, without it, users are not able to use MTE
+> >> > > > with VFIO passthrough (currently the mapping is either Device or
+> >> > > > NonCacheable for which tag access check is not applied.), as shown
+> >> > > > below (kvmtool VMM).
+> >> > >
+> >> > > Another nit: "users are not able to user VFIO passthrough when MTE is
+> >> > > enabled". At a first read, the above sounded to me like one wants to
+> >> > > enable MTE for VFIO passthrough mappings.
+> >> >
+> >> > What the commit message doesn't spell out is how MTE and VFIO are
+> >> > interacting here. I also don't understand the reference to Device or
+> >> > NC memory here.
+> >>
+> >> I guess it's saying that the guest cannot turn MTE on (Normal Tagged)
+> >> for these ranges anyway since Stage 2 is Device or Normal NC. So we
+> >> don't break any use-case specific to VFIO.
+> >>
+> >> > Isn't the issue that DMA doesn't check/update tags, and therefore it
+> >> > makes little sense to prevent non-tagged memory being associated with
+> >> > a memslot?
+> >>
+> >> The issue is that some MMIO memory range that does not support MTE
+> >> (well, all MMIO) could be mapped by the guest as Normal Tagged and we
+> >> have no clue what the hardware does as tag accesses, hence we currently
+> >> prevent it altogether. It's not about DMA.
+> >>
+> >> This patch still prevents such MMIO+MTE mappings but moves the decision
+> >> to user_mem_abort() and it's slightly more relaxed - only rejecting it
+> >> if !VM_MTE_ALLOWED _and_ the Stage 2 is cacheable. The side-effect is
+> >> that it allows device assignment into the guest since Stage 2 is not
+> >> Normal Cacheable (at least for now, we have some patches Ankit but they
+> >> handle the MTE case).
+> >
+> > The other side effect is that it also allows non-tagged cacheable
+> > memory to be given to the MTE-enabled guest, and the guest has no way
+> > to distinguish between what is tagged and what's not.
+> >
+> >>
+> >> > My other concern is that this gives pretty poor consistency to the
+> >> > guest, which cannot know what can be tagged and what cannot, and
+> >> > breaks a guarantee that the guest should be able to rely on.
+> >>
+> >> The guest should not set Normal Tagged on anything other than what it
+> >> gets as standard RAM. We are not changing this here. KVM than needs to
+> >> prevent a broken/malicious guest from setting MTE on other (physical)
+> >> ranges that don't support MTE. Currently it can only do this by forcing
+> >> Device or Normal NC (or disable MTE altogether). Later we'll add
+> >> FEAT_MTE_PERM to permit Stage 2 Cacheable but trap on tag accesses.
+> >>
+> >> The ABI change is just for the VMM, the guest shouldn't be aware as
+> >> long as it sticks to the typical recommendations for MTE - only enable
+> >> on standard RAM.
+> >
+> > See above. You fall into the same trap with standard memory, since you
+> > now allow userspace to mix things at will, and only realise something
+> > has gone wrong on access (and -EFAULT is not very useful).
+> >
+> >>
+> >> Does any VMM rely on the memory slot being rejected on registration if
+> >> it does not support MTE? After this change, we'd get an exit to the VMM
+> >> on guest access with MTE turned on (even if it's not mapped as such at
+> >> Stage 1).
+> >
+> > I really don't know what userspace expects w.r.t. mixing tagged and
+> > non-tagged memory. But I don't expect anything good to come out of it,
+> > given that we provide zero information about the fault context.
+> >
+> > Honestly, if we are going to change this, then let's make sure we give
+> > enough information for userspace to go and fix the mess. Not just "it
+> > all went wrong".
+> >
+> 
+> What if we trigger a memory fault exit with the TAGACCESS flag, allowing
+> the VMM to use the GPA to retrieve additional details and print extra
+> information to aid in analysis? BTW, we will do this on the first fault
+> in cacheable, non-tagged memory even if there is no tagaccess in that
+> region. This can be further improved using the NoTagAccess series I
+> posted earlier, which ensures the memory fault exit occurs only on
+> actual tag access
+> 
+> Something like below?
 
-Resctrl was built on top of "kernfs" because that was a simple base
-that met needs at the time.
+Something like that, only with:
 
-Do we need to look at either extending capabilities of kernfs? Or
-move to sysfs?
+- a capability informing userspace of this behaviour
 
--Tony
+- a per-VM (or per-VMA) flag as a buy-in for that behaviour
+
+- the relaxation is made conditional on the memslot not being memory
+(i.e. really MMIO-only).
+
+and keep the current behaviour otherwise.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
