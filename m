@@ -1,185 +1,196 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE0221DD874;
-	Mon, 24 Feb 2025 21:23:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740432206; cv=pass; b=UVmE4vl6/xz45DfxVfR51xXsZd5Gkdh6Eep4U1qHgOhcTpi2nPdIGcXoC9QuzXnOWfrr2xGfhWZkDC/nE1Z2UfttEhJsISJDTYoWjmQTLWpybOlgontpnCOxvupvE+LEcgaOHeTexk9b53YkbgxgXvdUN1quraKKxEPo54DRfkI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740432206; c=relaxed/simple;
-	bh=CiQCFozHRMC5GSFLhzKvrkJ++OZ4CJ/yKjFd6Kp60Pc=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=NkwBD3jZRvi4+cpjlitSHezXY8IJielY7bUl9VtBhLTM9enRC5nMzZutpaDKN4DAYlo1SirWcJqXBZXEDDDNleRk1O+KBYQNroatO4h3aYcrR8oY35PPyVFxwynJcU4uZahbqRwC1kob0l9gvlRd1btHtAxwdjTUHH7cLUUA9rs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=F7hu11Ca; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 860E51D86E8
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 21:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740432261; cv=none; b=mA5cpZDJteGtLBHCYggaYYgYfGODWBNkw3unp0RFvM8HsByq4rV1VA3LkzSLaY5rbQZpB1z/7EhS2v28F8jmYk69o/d34/d6ubArRmDWhsW0TLyB40vTak4AQrzS3Ddt865KaGneHIF59mLlJNejCNZbvgT2BJaxExA/zJVMNdI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740432261; c=relaxed/simple;
+	bh=bEDCYKhvga/mKYUVmOKtSTNWxEWhshTpD85PfZW1ikg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=Q+zhBxHF0lSDor5YwQosqO3AACB7nNX23ldEec7yBideAPKufV0tGkafcZ0EqwpXQHDJY6OR5ihuz0vSWKSIq3Og9+SN8P7i00crdyd9mUe0sbBLG90BYfUfa9KMsVUTggoMjCpsv58RFOFPvWsHHfuN7nzKoziNredOVHMqBHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Vfe8WNU1; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="F7hu11Ca"
-ARC-Seal: i=1; a=rsa-sha256; t=1740432158; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Ktye3AcPnFCS56IwjIoT21xG1YEXmvOV7hbyNP3D1EiFbiuklctz3VthmOL7GUpkECO3vnyJ/9CycbWAtWSUf3UMdXOcJzJcrnNpfoM5yvhaw6PUJiJe33bvFZfSXfONxVxZY/IhZ83kbPR7k5Lw76Y00xgnMwG1WOTA4SdC/ys=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740432158; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Jwgy8EHw2ByXiT/plCbjBi2u1K3sOMpK7LJiWKz5MpI=; 
-	b=aD7TC7JE5Q/VulEeFl2ZDdxHsZNgzFAv7bV3YuQ+XA62IvmetTyMFKfBqcgCVlQQBeGbzcOHkobUZ9F6jGEG21JffuCnXZPsMu1HjJRZrHTWwHcaPATx2RVj0GKGZKLC39UA43HCuvJJPM+m1mJ1RGP+v70YtA/GwEEIEoSIJo0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740432158;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=Jwgy8EHw2ByXiT/plCbjBi2u1K3sOMpK7LJiWKz5MpI=;
-	b=F7hu11CaCZwNU2vKsF/EJ0Xc7AATEwfyQxA+EN9PXrf8wQeoa7iSgpmwHQfuFafy
-	CVeY0A34N02lXenQ9PKKznXT+a2gnZgCoUUW1bXjXFJ0UBU/xWyuO5oGMTwf31TDUZk
-	5v8wVocIVw9MK7kdZ8Tvkfy7gB7NuPE6xoKzhHy0=
-Received: by mx.zohomail.com with SMTPS id 1740432155442578.9933183629962;
-	Mon, 24 Feb 2025 13:22:35 -0800 (PST)
-Content-Type: text/plain;
-	charset=us-ascii
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Vfe8WNU1"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-724daedf8c3so1258285a34.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 13:24:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1740432258; x=1741037058; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h6iVakU+60mPaapVIM2KyzfWT5FktcIRYWFJxMwHmNA=;
+        b=Vfe8WNU11bANwf08zC1km1SFNjh/q26f+pkpUsyz8Zw3ka1FZqKV6iss9zE7wUuVOm
+         C+GzB8hiV3+dviJbwSyWUrcCPeLmgUU8rlI/bZIcCoTH5AWZ4RLoQ7MP1JPrhSIW1Ncq
+         LnPa43X022L3/+kRX/wxEGdeM6iOUGMC80wFs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740432258; x=1741037058;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h6iVakU+60mPaapVIM2KyzfWT5FktcIRYWFJxMwHmNA=;
+        b=EiRKg2rAsZy2z2YTHbP4wXOMeM8aCqT72xE3G/yZVicCY3LwSG2YBKd9N3ThME2fMS
+         kgw193TCMCMfvBhgVnvKBTR0J7CuG6j/GaJhPE8XqUQq36uaj/pPJAWUlC9zBq7eRiqg
+         ue1XyQNwbhaGP28yoYbKLO95jlDY38gtcYsToQMrfaB/nl2ecngVD8CLTIlnH5Dx0G0L
+         xzsjs9AcFoMJTC2Hv1OLvoTvVnYVKG48SglH6MqHw7dgZCTqNn8w8t6wtaO+OynBfFzg
+         MFAxovTCB0GDTczL8icFlT95vGUl3CuN4yNIX5f0lLeR48ZFCxiIpSt1FsJpfyM/yoxF
+         6IIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVd093CiMk5Pv/hmijm5w1VmGDv1jbED7cQSxRI4kayFJ5+A6o/bt9ARndj52d1NgxjObEqsK+Sf0zIBuI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeZbzFiYiZO7feVVogofCXATUCtDE51mpm+k32bbczfIhB4iOQ
+	+D+Q+dr2XxwP1mIQCcX/O9Mex6VAsLCUZ57v3D35x7VdWo2kHbhaRmOLJQaGL9TvWYOExRerxlF
+	JLJtWy0J7bhzg1Lgj81q5IuAlKkJIc1yUyD74
+X-Gm-Gg: ASbGncuDWpQLfK4kRaDs4ZHgEbTAz286Ydaosb/vFxZNi/e+WxBFHg95g9Xzixza+K3
+	hAU1QUFaDY2cwJlWl7eUmdftciu3c2jzXEdpa+I1n/SjrJEcPbDWXfek0EUvJz/4fmyOTHhTjTn
+	kKpwMRWM0W4Zc6vc74KSA/fiEWldjfsJvPf19F
+X-Google-Smtp-Source: AGHT+IGMjE2zpqlEIxhyMnwPoWpVAV8akw2/JtJyPdliPxKUHbc3QQ+N1vzjzgPsyyVVDxpLrkNwME4I1eTncXfPbtI=
+X-Received: by 2002:a05:6808:1313:b0:3f3:fbed:9ff6 with SMTP id
+ 5614622812f47-3f4247be049mr4586259b6e.7.1740432258593; Mon, 24 Feb 2025
+ 13:24:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
-Subject: Re: [PATCH v4 1/4] rust: sync: change `<Arc<T> as
- ForeignOwnable>::PointedTo` to `T`
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20250224-configfs-v4-1-9af9b5e611f6@kernel.org>
-Date: Mon, 24 Feb 2025 18:22:16 -0300
-Cc: Danilo Krummrich <dakr@kernel.org>,
- Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Joel Becker <jlbec@evilplan.org>,
- Christoph Hellwig <hch@lst.de>,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>,
- Will Deacon <will@kernel.org>,
- Waiman Long <longman@redhat.com>,
- Fiona Behrens <me@kloenk.dev>,
- Charalampos Mitrodimas <charmitro@posteo.net>,
- rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+References: <20250224174513.3600914-1-jeffxu@google.com> <20250224174513.3600914-3-jeffxu@google.com>
+ <6oak6ibdf7yxan3cos3brcqojgjeud4rhlii5nlrlmu7lckalk@zypcm67ac2vk>
+In-Reply-To: <6oak6ibdf7yxan3cos3brcqojgjeud4rhlii5nlrlmu7lckalk@zypcm67ac2vk>
+From: Jeff Xu <jeffxu@chromium.org>
+Date: Mon, 24 Feb 2025 13:24:07 -0800
+X-Gm-Features: AWEUYZlrQK862CQsES86S0aPmYhOQ_SB2BdR_3R20vQplfaNi9olgHcBYg1SjhE
+Message-ID: <CABi2SkVyOj_nxHnj6RueCoADVbQY1tpz-GbH1Y9pu6qdZ5OMZA@mail.gmail.com>
+Subject: Re: [PATCH v6 2/7] selftests: x86: test_mremap_vdso: skip if vdso is msealed
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, jeffxu@chromium.org, akpm@linux-foundation.org, 
+	keescook@chromium.org, jannh@google.com, torvalds@linux-foundation.org, 
+	vbabka@suse.cz, lorenzo.stoakes@oracle.com, adhemerval.zanella@linaro.org, 
+	oleg@redhat.com, avagin@gmail.com, benjamin@sipsolutions.net, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com, hch@lst.de, 
+	ojeda@kernel.org, thomas.weissschuh@linutronix.de, adobriyan@gmail.com, 
+	johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com, 
+	willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com, 
+	linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
+	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, 
+	f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com, 
+	mingo@kernel.org, ardb@kernel.org, mhocko@suse.com, 42.hyeyoo@gmail.com, 
+	peterz@infradead.org, ardb@google.com, enh@google.com, rientjes@google.com, 
+	groeck@chromium.org, mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com, 
+	mike.rapoport@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <B462F0CD-60F2-4494-B1DA-B19A54944EAE@collabora.com>
-References: <20250224-configfs-v4-0-9af9b5e611f6@kernel.org>
- <20250224-configfs-v4-1-9af9b5e611f6@kernel.org>
-To: Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: Apple Mail (2.3826.300.87.4.3)
-X-ZohoMailClient: External
 
-Hi Andreas,
+On Mon, Feb 24, 2025 at 1:05=E2=80=AFPM Liam R. Howlett <Liam.Howlett@oracl=
+e.com> wrote:
+>
+> * jeffxu@chromium.org <jeffxu@chromium.org> [250224 12:45]:
+> > From: Jeff Xu <jeffxu@chromium.org>
+> >
+> > Add code to detect if the vdso is memory sealed, skip the test
+> > if it is.
+>
+> It also skips the test if fopen fails on smaps, but maybe that's super
+> rare?
+>
+If we can't access /proc/pid/smaps, that's an "environment" issue
+unrelated to this test, therefore skip().
 
-> On 24 Feb 2025, at 10:21, Andreas Hindborg <a.hindborg@kernel.org> =
-wrote:
->=20
-> Using `ArcInner` as `PoinedTo` in the `ForeignOwnable` implementation =
-for
-> `Arc` is a bit unfortunate. Using `T` as `PointedTo` does not remove =
-any
-> functionality, but allows `ArcInner` to be private. Further, it allows
-> downstream users to write code that is generic over `Box` and `Arc`, =
-when
-> downstream users need access to `T` after calling `into_foreign`.
->=20
-> Reviewed-by: Fiona Behrens <me@kloenk.dev>
-> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
-> ---
->=20
-> This patch is a dependency for Rust `configfs` abstractions. It allows =
-both
-> `Box` and `Arc` to be used as pointer types in the `configfs` =
-hierarchy.
-> ---
-> rust/kernel/sync/arc.rs | 21 ++++++++++++++++-----
-> 1 file changed, 16 insertions(+), 5 deletions(-)
->=20
-> diff --git a/rust/kernel/sync/arc.rs b/rust/kernel/sync/arc.rs
-> index dfe4abf82c25..3d77a31e116f 100644
-> --- a/rust/kernel/sync/arc.rs
-> +++ b/rust/kernel/sync/arc.rs
-> @@ -143,7 +143,7 @@ pub struct Arc<T: ?Sized> {
-> #[doc(hidden)]
-> #[pin_data]
-> #[repr(C)]
-> -pub struct ArcInner<T: ?Sized> {
-> +struct ArcInner<T: ?Sized> {
->     refcount: Opaque<bindings::refcount_t>,
->     data: T,
-> }
-> @@ -345,18 +345,25 @@ pub fn into_unique_or_drop(self) -> =
-Option<Pin<UniqueArc<T>>> {
->=20
-> // SAFETY: The `into_foreign` function returns a pointer that is =
-well-aligned.
-> unsafe impl<T: 'static> ForeignOwnable for Arc<T> {
-> -    type PointedTo =3D ArcInner<T>;
-> +    type PointedTo =3D T;
->     type Borrowed<'a> =3D ArcBorrow<'a, T>;
->     type BorrowedMut<'a> =3D Self::Borrowed<'a>;
->=20
->     fn into_foreign(self) -> *mut Self::PointedTo {
-> -        ManuallyDrop::new(self).ptr.as_ptr()
-> +        let this =3D ManuallyDrop::new(self).ptr.as_ptr();
-> +        // SAFETY: `x` is a valid pointer to `Self` so the projection =
-below is
-> +        // in bounds of the allocation.
-> +        unsafe { core::ptr::addr_of_mut!((*this).data) }
->     }
->=20
->     unsafe fn from_foreign(ptr: *mut Self::PointedTo) -> Self {
-> +        // SAFETY: We did the reverse offset calculation in =
-`into_foreign`, so
-> +        // the offset calculation below is in bounds of the =
-allocation.
-> +        let inner_ptr =3D unsafe { kernel::container_of!(ptr, =
-ArcInner<T>, data).cast_mut() };
-> +
->         // SAFETY: The safety requirements of this function ensure =
-that `ptr` comes from a previous
->         // call to `Self::into_foreign`.
-> -        let inner =3D unsafe { NonNull::new_unchecked(ptr) };
-> +        let inner =3D unsafe { NonNull::new_unchecked(inner_ptr) };
->=20
->         // SAFETY: By the safety requirement of this function, we know =
-that `ptr` came from
->         // a previous call to `Arc::into_foreign`, which guarantees =
-that `ptr` is valid and
-> @@ -365,9 +372,13 @@ unsafe fn from_foreign(ptr: *mut Self::PointedTo) =
--> Self {
->     }
->=20
->     unsafe fn borrow<'a>(ptr: *mut Self::PointedTo) -> ArcBorrow<'a, =
-T> {
-> +        // SAFETY: We did the reverse offset calculation in =
-`into_foreign`, so
-> +        // the offset calculation below is in bounds of the =
-allocation.
-> +        let inner_ptr =3D unsafe { kernel::container_of!(ptr, =
-ArcInner<T>, data).cast_mut() };
-> +
->         // SAFETY: The safety requirements of this function ensure =
-that `ptr` comes from a previous
->         // call to `Self::into_foreign`.
-> -        let inner =3D unsafe { NonNull::new_unchecked(ptr) };
-> +        let inner =3D unsafe { NonNull::new_unchecked(inner_ptr) };
->=20
->         // SAFETY: The safety requirements of `from_foreign` ensure =
-that the object remains alive
->         // for the lifetime of the returned value.
->=20
-> --=20
-> 2.47.0
->=20
->=20
+> >
+> > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+> > ---
+> >  .../testing/selftests/x86/test_mremap_vdso.c  | 38 +++++++++++++++++++
+> >  1 file changed, 38 insertions(+)
+> >
+> > diff --git a/tools/testing/selftests/x86/test_mremap_vdso.c b/tools/tes=
+ting/selftests/x86/test_mremap_vdso.c
+> > index d53959e03593..c68077c56b22 100644
+> > --- a/tools/testing/selftests/x86/test_mremap_vdso.c
+> > +++ b/tools/testing/selftests/x86/test_mremap_vdso.c
+> > @@ -14,6 +14,7 @@
+> >  #include <errno.h>
+> >  #include <unistd.h>
+> >  #include <string.h>
+> > +#include <stdbool.h>
+> >
+> >  #include <sys/mman.h>
+> >  #include <sys/auxv.h>
+> > @@ -55,13 +56,50 @@ static int try_to_remap(void *vdso_addr, unsigned l=
+ong size)
+> >
+> >  }
+> >
+> > +#define VDSO_NAME "[vdso]"
+> > +#define VMFLAGS "VmFlags:"
+> > +#define MSEAL_FLAGS "sl"
+> > +#define MAX_LINE_LEN 512
+> > +
+> > +bool vdso_sealed(FILE *maps)
+> > +{
+> > +     char line[MAX_LINE_LEN];
+> > +     bool has_vdso =3D false;
+> > +
+> > +     while (fgets(line, sizeof(line), maps)) {
+> > +             if (strstr(line, VDSO_NAME))
+> > +                     has_vdso =3D true;
+> > +
+> > +             if (has_vdso && !strncmp(line, VMFLAGS, strlen(VMFLAGS)))=
+ {
+> > +                     if (strstr(line, MSEAL_FLAGS))
+> > +                             return true;
+> > +
+> > +                     return false;
+> > +             }
+> > +     }
+> > +
+> > +     return false;
+> > +}
+> > +
+> >  int main(int argc, char **argv, char **envp)
+> >  {
+> >       pid_t child;
+> > +     FILE *maps;
+> >
+> >       ksft_print_header();
+> >       ksft_set_plan(1);
+> >
+> > +     maps =3D fopen("/proc/self/smaps", "r");
+> > +     if (!maps) {
+> > +             ksft_test_result_skip("Could not open /proc/self/smaps\n"=
+);
+>
+> fork() below prints errno, should this also print errno?
+>
+Sure.
 
+> > +             return 0;
+>
+> I guess the logic here is that you might fail later because it's sealed
+> but you don't know?  Is this rare enough not to matter?
+>
+yes. We should check the "sl" flag of vdso before continuing, or the
+results will be unpredictable.
 
-Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>=
+Android currently includes this selftest. In addition, you or someone
+commented that  the selftest framework can randomly turn on kernel
+config and run selftest, so it is necessary to add this check to skip.
+
+> > +     }
+> > +
+> > +     if (vdso_sealed(maps)) {
+> > +             ksft_test_result_skip("vdso is sealed\n");
+> > +             return 0;
+> > +     }
+> > +
+>
+> This file also has an #ifdef __i386__ later,  Using it here would
+> prevent unnecessary scanning of the maps file.  Probably not a big deal?
+>
+> Do you need to close the maps file?
+>
+OK, I will add close for good coding practice.
+
+Thanks
+-Jeff
