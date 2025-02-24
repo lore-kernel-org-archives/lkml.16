@@ -1,424 +1,339 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA091D6187
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 21:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A8718E377
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 21:35:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740432887; cv=none; b=VLx7C2VR/z8k4S6r9bHe7lGz/M4B+KlcfWnjAiisShO9D9jM1VC89YzLwFin0K8vZU0sNRgCSh/fSinT1mDabdkdvs3zOLX6z2XU8E3EXB6ZxttwBtc4EUEpyU+6C75qc2+sHFZZFXjPmWnfySR4ajrqn3fulTo7V6LBvC3jQHs=
+	t=1740432929; cv=none; b=qozaXqSWdJlVYikxo14JJn/myF2zzw4aMGLEP5IXoBrqumVPHXmtEnayjPaD/2SSYqyk6lHdsuQIxXRBDIbyRAIV5IDN/152qIs6ylOmd3I82HHmn7CCGIZGK6wv7dmVakPqNRqMF/4VgSK2I97rLdjBlT1fNL7FOLFj0YSomdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740432887; c=relaxed/simple;
-	bh=USLyXsURBeXakktGgHLRyNMX7pul3PIBls8bVbd7wDQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iBexWtfHCYeCgo/7vnwac7ttsuKY8AJYDG+UnCLLEGadpA6ZgUyjayli8dAs/Ki21yvIJvEtHfqaKyQSCRtphmjQ82EkUqOORUv+3layy1eUbsZwZAPr7PNB8+pwjTir3rE+f5nIK/RMVeNPr1klOq55cn9wfYhgFqPwwo+kQHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wnKtCZif; arc=none smtp.client-ip=209.85.214.170
+	s=arc-20240116; t=1740432929; c=relaxed/simple;
+	bh=CklY92L/luBbyXKHUyxRozag9ZBDMc/0NOvwGO8rZRE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QqUDTBHbJVZUvYA7dxFNgE9ovShBh763TJsl5f+LD0zDQrCd/dUo/lmQsWjLgM7yxVTWlJE7mPdzJ9RlmCoVQowTNrUq144uxNX6X/AjcxzMLB8xJtsAmM9a0nF7Lnhq0hktNdSV1b6aIu5QVLK7dUBadz8DJeDjuV8EvS1cWMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yIo4sNmB; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wnKtCZif"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-221ac1f849fso10975ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 13:34:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yIo4sNmB"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22117c396baso12605ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 13:35:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740432885; x=1741037685; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9su8PHKEPkF3T5ao4+5SnLvoyBnWsJwgTlzhqLlsy7I=;
-        b=wnKtCZif/BxuTgiM87iaHkTheK3IjcFI37YRD6QB1ltBhhTdGxhx6dFjKBoRgPrxja
-         4KJYmoQ4q2RnRps3Yjl1mOXahaaqL0HccCb9JLaj+4RywXwSwPuto+7V7qMYbRr2KDNG
-         PRYPgXVAuEPN6A87lOBPk43/xBUzSMrnInvJOJmIBc2B+PCROTOOFAHKhMIsZk9b+Vf/
-         SyAxnJCLEGDvIyaPTpPtJDv/61zqixO8/9/AEchfyhEBrgx5KkxOfSVQ9tgCLslZWSP7
-         tI/Ws5c1O7maUnvmL5HRdsINlPDmHI/480mqqcNC/Zadmy77kqDvfj2o7Y0WFd6mhqO5
-         qCjA==
+        d=google.com; s=20230601; t=1740432926; x=1741037726; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=B6MDLYjLn+ocuz7r4vs09MXpA233UNWx/xCnRJqXepo=;
+        b=yIo4sNmBhoj13Cj4WSyFIsmJiJDR5FV6ogljpf0d/N8bR30aVMl9Ch0r5JP19BE3XJ
+         IbuMWX61NRAuB/09oCK2Bc6dYlMB9k5EIX/rY0cxh3BM7DFIN3D7zvHIMG5/Hk5wPwx9
+         dro926fQ1y5OaywNdOpCV9uzzpHjBlK78cCO/qzP30OTeplObvliCVAIAOzbFaPqIh17
+         tQaXrmZixHfDKnJ6pHo6c0E17Y0VWgx6sL4dmhKvTkh9Le17Kic/mjY86LhTPbKGDLea
+         Z49eSwUIx1w1q2xqKKkDpA2QbKpccGOvfCnAUOJPnqpq6LJ/cxv3NCr8Rly7C41Nj4XP
+         JgSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740432885; x=1741037685;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9su8PHKEPkF3T5ao4+5SnLvoyBnWsJwgTlzhqLlsy7I=;
-        b=lZrODhi7kM8fCD62Vi2w6xIxK4lIpo+eQHQlhTuVjLWtbtaKts1gUCKOqxD4eTo7Mz
-         Bv9JVq8EZeylOWAOvlk6h7/aBd4WETxsg7Enf3PkqMVkNPZemotOZNrSt0hsLmwfD+H+
-         EUprwuQHmcp/QBrqQKSEmPV9anHE5cwVTTa4Atw/oCGItDK/Lxcve81iCJqzu7pEQJyS
-         0fa5cAK68gmFZyhVyrS9ycOuJASHw14k/1yHStw4VgOc50H67V/1aJfIBuSGXas1ULGD
-         gDhILrrg03a+3p+c5kxdjHCzYCqiNNgj0GgrKc/ToHjg5m9//MmlbA1GudeW3n2ned51
-         l5Og==
-X-Forwarded-Encrypted: i=1; AJvYcCVKftj3qxHjydbc69pSuecrXsG1oKz8bG+SRe31k2nliJg17CU+vBKtWtvMZ3MnOWr2cH7fqsk/lW/0Cnw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx12jtAMrkSpJCkdxiNU9DSX4JijZvNt/pDEfdVcTM8prN89PJ8
-	8KkWQeOfYNwQkHQLrqU93p94Sw77DcxA40xigtqyAeYQF3uCqcNrFD2snT0c86gmygfLUsPWqhT
-	JbTrG4ivZDE5aqik4d/6uP7Y7ovXYdTbaXowq
-X-Gm-Gg: ASbGncsVE1t3sOuME2gxVhSeu5mjhQ2nuMSJ/+/o5Q1VOOfj1YEN2mKRRgoBK7HTGOj
-	9kVtsvgzxyzfvJ6EkwxCPLUN/XkK+019UFZgvEi+AA1a9VGMWNhwoQP2FmroT/vAvlTO2gW8Hn8
-	En62a6f/5z9siGvVm2AlJRgXbYn36hBrHamQU=
-X-Google-Smtp-Source: AGHT+IFwp3aDY1xdKOGIvNzmNzrE+EbC7dhnuNvWbEqrnN0gDbxK7QEI4q9unX3KH2yI0y+SPV0okonhdvPx7sZ3Bzg=
-X-Received: by 2002:a17:902:db11:b0:216:4d90:47af with SMTP id
- d9443c01a7336-22307aad240mr1020335ad.29.1740432884571; Mon, 24 Feb 2025
- 13:34:44 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740432926; x=1741037726;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B6MDLYjLn+ocuz7r4vs09MXpA233UNWx/xCnRJqXepo=;
+        b=mK8fKcQxGWsYT8DTrqr0rXDQ4Dhj7KHYUAeb84uFf2xAQBvgpYixWa/t3f1ONK8jUk
+         kvdK635Ka06B9G2REVHb5o7Y8wGvIo2Siu8uIiFY7Qd4x7JsjNKgZyZ3/V9d4Q+O3lol
+         mRKwK/mpfpIh2R9NPWF9+xpxDijDN7OFOL9Evc5SY67QAZD85dB5WrfypuLNZTExWiUq
+         UKr5aKKWqa8dGu5Kos6DUfXPiDzvRdyQwCqf05zjxG1QeIqOOQKgzhOLKMWiZELiHmkn
+         /M+ebeQlw4O5eT5aYXQR5VxF8KG54usCd+XxwkP70UhtoLdeeRsP657RqJOho8NJ7bgz
+         UuPA==
+X-Forwarded-Encrypted: i=1; AJvYcCWIlM2cGe8DbZyUsRBi5Rxg8lHwRkMowuvrZDj3+/aBUD4P0dcShQGvJ1WlwB+qQeIMK37/XB5u9NJqOV0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfJmCO+jKGn3wDRqcYEjiKXenDDOdCW6qVshjQnIWO6QIKgcgU
+	nV7SvB1fxiFRCOUq3WxEy88sfwmGXOWg7Y9v2d8WDGxJHq49z0B7Y7Nq7zeaSg==
+X-Gm-Gg: ASbGncuvd4AoC24BWId2YXOUdUlyD4LZwqOuTbNU2UOEPQXnRzq5eFHtlmDw2E4HrWX
+	mwpohOnVK3BXRubEAkTtMa3ExbFE0nOQzPPrfwHC78TblzI2yNGA2AP7ROXoNfo/jQ1vBKZl8rw
+	MFxOVBfg8gPYvPziGr8vnANGkgZAjsw2IU0HsajViH17oAmpRsnN5oU4GeibV98IquPu4l5BeIT
+	ZMq1ZKXIEZcAenLqywpKOjikkoztu+IXqaubEmmcMtPzJtR6gHueszZCy4wLDbBmm36MsrqAeIY
+	+0mYyk4SApQ0s6szrE/pcRtUn/pgkhex7PTQjV2f+iMZmLHD1juDwmVEuINgLgM=
+X-Google-Smtp-Source: AGHT+IEvbtSCavbWzJzTUhgymYrP41u+KdaH4TpPZexQDV04gmMsaPcW7ZdSgqeE7hyABwizrzsr3A==
+X-Received: by 2002:a17:903:234c:b0:21f:2ded:bfc5 with SMTP id d9443c01a7336-22307aab886mr1036055ad.28.1740432925555;
+        Mon, 24 Feb 2025 13:35:25 -0800 (PST)
+Received: from google.com (169.224.198.35.bc.googleusercontent.com. [35.198.224.169])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a0a3ca8sm730145ad.169.2025.02.24.13.35.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2025 13:35:25 -0800 (PST)
+Date: Mon, 24 Feb 2025 21:35:14 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
+	joro@8bytes.org, suravee.suthikulpanit@amd.com,
+	robin.murphy@arm.com, dwmw2@infradead.org, baolu.lu@linux.intel.com,
+	shuah@kernel.org, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
+	eric.auger@redhat.com, jean-philippe@linaro.org, mdf@kernel.org,
+	mshavit@google.com, shameerali.kolothum.thodi@huawei.com,
+	smostafa@google.com, ddutile@redhat.com, yi.l.liu@intel.com,
+	patches@lists.linux.dev
+Subject: Re: [PATCH v7 13/14] iommu/arm-smmu-v3: Report events that belong to
+ devices attached to vIOMMU
+Message-ID: <Z7zmErar4YvQSSxw@google.com>
+References: <cover.1740238876.git.nicolinc@nvidia.com>
+ <b1930038cf828dc13c080e2b46b3003a8c98ef24.1740238876.git.nicolinc@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z7Z5kv75BMML2A1q@google.com> <CAP-5=fVbti6efu6uA9a5os6xhnTuJ0egyesZsy0dmkiScwYFqQ@mail.gmail.com>
- <Z7yJ0Vpub6JeQyYo@x1> <CAP-5=fXSgpZaAgickZSWgjt-2iTWK7FFZc65_HG3QhrTg1mtBw@mail.gmail.com>
- <Z7zVzKbQIdB6-bFn@x1>
-In-Reply-To: <Z7zVzKbQIdB6-bFn@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 24 Feb 2025 13:34:33 -0800
-X-Gm-Features: AWEUYZnHJNclQdrWA_kOnPPjWgKKj8hpkivAtF4Q7CYh9TMEeUXvd9VshD-qvSA
-Message-ID: <CAP-5=fU3YSCiHygnOt6MN7i2mJBOwm202tXSefBHaPR3JmptkA@mail.gmail.com>
-Subject: Re: [RFC] perf tools: About encodings of legacy event names
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b1930038cf828dc13c080e2b46b3003a8c98ef24.1740238876.git.nicolinc@nvidia.com>
 
-On Mon, Feb 24, 2025 at 12:25=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Mon, Feb 24, 2025 at 09:36:16AM -0800, Ian Rogers wrote:
-> > On Mon, Feb 24, 2025 at 7:01=E2=80=AFAM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > On Wed, Feb 19, 2025 at 10:37:33PM -0800, Ian Rogers wrote:
-> > > > On Wed, Feb 19, 2025 at 4:38=E2=80=AFPM Namhyung Kim <namhyung@kern=
-el.org> wrote:
-> > > > > Ian and I have been discussing the behaviors of event encodings a=
-nd it's
-> > > > > hard to find a point so far that we can agree on.  So I'd like to=
- hear
-> > > > > your opinion to resolve this.  If you happen to have some time, y=
-ou can
-> > > > > follow the thread here:
-> > >
-> > > > > https://lore.kernel.org/linux-perf-users/20250109222109.567031-5-=
-irogers@google.com/#r
-> > >
-> > > > > Basically there are some events that were defined in the perf ABI=
-.
-> > >
-> > > > >   PERF_COUNT_HW_CPU_CYCLES, PERF_COUNT_HW_INSTRUCTIONS, ...
-> > >
-> > > > > So perf tools use those (legacy) encodings with the matching name=
-s like
-> > > > > "cycles" (or "cpu-cycles"), "instructions", etc.
-> > >
-> > > > > On the another hand, it has wildcard matching for event names in =
-PMUs so
-> > > > > that users can conveniently use events without specifying PMU nam=
-es.
-> > > > > For example, "event1" would expand to "pmuX/event1/", "pmuY/event=
-1/", etc
-> > > > > as long as the PMUs have the event in sysfs or JSON.
-> > >
-> > > > > And there are platforms where "cycles" event is defined in a (cor=
-e) PMU
-> > > > > (like "blah/cycles") and the event has a different behavior than =
-the
-> > > > > legacy encoding.  Then it has to choose which encoding is better =
-for the
-> > > > > given name.  But it's a general issue for the legacy event names.
-> > >
-> > > So we pick the "legacy" one, as always, and the one that is in a PMU
-> > > needs to have its pmu name specified, no?
-> > >
-> > > > >   Q. what should it do with "cycles"?
-> > > > >   -----------------------------------
-> > > > >   1. just use the legacy encoding (PERF_COUNT_HW_CPU_CYCLES).
-> > >
-> > > Right
-> > >
-> > > > >   2. expand to (possibly multiple) PMU events (like "cpu/cycles/"=
-) and
-> > > > >      use the encoding defined there.
-> > >
-> > > Nope
-> > >
-> > > > > I think the #1 is the current behavior.  The upside is it's simpl=
-e and
-> > > > > intuitive.  But it's different than other names and can make conf=
-usion.
-> > > > > Users should use the full name ("cpu/cycles/") if they need sysfs=
- one.
-> > >
-> > > Right
-> > >
-> > > > So the code keeps changing, for example, the removal of BPF events.=
- I
-> > >
-> > > Humm, this seems like a different discussion.
-> > >
-> > > > think the important change and the thing that has brought us here i=
-s
-> > > > the addition of what Intel call hybrid and ARM call BIG.little. ARM
-> > >
-> > > Right, the support for hybrid systems brought lots of problems, most
-> > > people didn't have access to such systems and thus couldn't test
-> > > patches, so the attempt was to keep the existing code working as it h=
-ad
-> > > been while allowing for the support for the new hybrid systems.
-> > >
-> > > As more people get access to hybrid systems we started noticing probl=
-ems
-> > > and working on fixing it, you did a lot of work in this area, highly
-> > > appreciated.
-> > >
-> > > > have got architectural events and so the same event encoding on BIG
-> > > > and little cores. On x86 the e-core (atom) and p-cores have differe=
-nt
-> > > > event encodings. In the original hybrid work, pushed on for the lau=
-nch
-> > > > of Alderlake and reviewed by Jiri and Arnaldo with no involvement f=
-rom
-> > > > me, Intel wanted the event names to work transparently. So a cycles
-> > >
-> > > Without access to such systems, yes, see above.
-> > >
-> > > > event would be gathered on the e-core and p-core with a command lin=
-e
-> > > > option to merge the legacy event cycles on both cores. To be specif=
-ic
-> > > > the expected behavior of:
-> > > > $ perf (stat|record) -e cycles ...
-> > > > would be as if:
-> > > > $ perf (stat|record) -e cpu_atom/cycles/,cpu_core/cycles/ ...
-> > >
-> > > Yes, and if somebody wants to profile in just one of those core types=
-,
-> > > just specify the "cpu_atom" or "cpu_core" to have it fully specified.
-> > >
-> > > > An unfortunate thing in the hybrid code was that it was hardcoded t=
-o
-> > > > PMU names of cpu_atom and cpu_core, but what to do for metrics? The
-> > >
-> > > Yeah, metrics IIRC came before hybrid systems.
-> > >
-> > > > original proposal was that metrics would have a PMU name and all na=
-mes
-> > > > would be relative to that, but what about uncore events? What about
-> > > > metrics that refer to other metrics? A decision was made to not to
-> > > > have PMUs implicitly in metrics and the events in the metric would
-> > > > match those given to perf's -e command line. This also greatly
-> > > > simplifies testing events when creating a metric.
-> > >
-> > > > I set about rewriting the hybrid code not to use hard coded PMU nam=
-es
-> > > > but to discover core PMUs at runtime. This was to make the metric a=
-nd
-> > > > event parsing code as generic as possible, but this had an unintend=
-ed
-> > > > consequence. ARM's core PMU had previously not been seen as handlin=
-g
-> > > > legacy events like cycles, and appeared as an uncore PMU. When ther=
-e
-> > >
-> > > > are both legacy and sysfs/json events then previously the legacy
-> > > > events had priority. This broke events like cycles on Apple M
-> > > > processors where the legacy events were broken and the sysfs ones n=
-ot.
-> > > > Yes this is a driver bug, but everybody told me a change in behavio=
-r
-> > > > of the tool was needed to fix it, that fix was to make sysfs/json
-> > > > events have priority over legacy events. I prioritized fixing event
-> > > > parsing when a PMU was specified but given "cycles" means
-> > > > "cpu_atom/cycles/ and cpu_core/cycles/" for hybrid, why would the
-> > > > prioritization be different without a PMU specified?
-> > >
-> > > > I knew of this tech debt and separately RISC-V was also interested =
-to
-> > > > have sysfs/json be the priority so that the legacy to config encodi=
-ng
-> > > > could exist more in the perf tool than the PMU driver. I'm a SIG
-> > >
-> > > I saw them saying that supporting PERF_TYPE_HARDWARE counters was ok =
-as
-> > > they didn't want to break the perf tooling workflow, no?
-> >
-> > No. The request has always been that they don't want the PMU driver to
-> > do the PERF_TYPE_HARDWARE/PERF_COUNT_HW_* to PMU/config=3D??? mapping
-> > given the diversity of hardware and to keep the PMU driver simple.
-> > Here is Atish's feedback:
-> > https://lore.kernel.org/lkml/CAHBxVyH1q5CRW3emWTZu1oLZEfTWWVRH6B0OVggFx=
-t-0NRzvwQ@mail.gmail.com/
-> > """
-> > If the overriding legacy with JSON is available, each future vendor
-> > may just provide the json file instead of modifying the driver.
-> > """
->
-> So, making users to figure out what is the best event to use for some
-> specific processor was one of the major reasons for perf to come about,
-> otherwise we would still be stuck with oprofile.
+On Sat, Feb 22, 2025 at 07:54:10AM -0800, Nicolin Chen wrote:
+> Aside from the IOPF framework, iommufd provides an additional pathway to
+> report hardware events, via the vEVENTQ of vIOMMU infrastructure.
+> 
+> Define an iommu_vevent_arm_smmuv3 uAPI structure, and report stage-1 events
+> in the threaded IRQ handler. Also, add another four event record types that
+> can be forwarded to a VM.
+> 
+> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> ---
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h   |  7 +++
+>  include/uapi/linux/iommufd.h                  | 23 +++++++
+>  .../arm/arm-smmu-v3/arm-smmu-v3-iommufd.c     | 17 ++++++
+>  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   | 60 +++++++++++--------
+>  4 files changed, 82 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> index 85352504343b..c8574969e700 100644
+> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
+> @@ -1067,6 +1067,7 @@ int arm_smmu_attach_prepare_vmaster(struct arm_smmu_attach_state *state,
+>  				    struct iommu_domain *domain);
+>  void arm_smmu_attach_commit_vmaster(struct arm_smmu_attach_state *state);
+>  void arm_smmu_master_clear_vmaster(struct arm_smmu_master *master);
+> +int arm_vmaster_report_event(struct arm_smmu_vmaster *vmaster, u64 *evt);
+>  #else
+>  #define arm_smmu_hw_info NULL
+>  #define arm_vsmmu_alloc NULL
+> @@ -1085,6 +1086,12 @@ arm_smmu_attach_commit_vmaster(struct arm_smmu_attach_state *state)
+>  static inline void arm_smmu_master_clear_vmaster(struct arm_smmu_master *master)
+>  {
+>  }
+> +
+> +static inline int arm_vmaster_report_event(struct arm_smmu_vmaster *vmaster,
+> +					   u64 *evt)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+>  #endif /* CONFIG_ARM_SMMU_V3_IOMMUFD */
+>  
+>  #endif /* _ARM_SMMU_V3_H */
+> diff --git a/include/uapi/linux/iommufd.h b/include/uapi/linux/iommufd.h
+> index 2ade4839880d..5fc7e27804b7 100644
+> --- a/include/uapi/linux/iommufd.h
+> +++ b/include/uapi/linux/iommufd.h
+> @@ -1054,9 +1054,32 @@ struct iommufd_vevent_header {
+>  /**
+>   * enum iommu_veventq_type - Virtual Event Queue Type
+>   * @IOMMU_VEVENTQ_TYPE_DEFAULT: Reserved for future use
+> + * @IOMMU_VEVENTQ_TYPE_ARM_SMMUV3: ARM SMMUv3 Virtual Event Queue
+>   */
+>  enum iommu_veventq_type {
+>  	IOMMU_VEVENTQ_TYPE_DEFAULT = 0,
+> +	IOMMU_VEVENTQ_TYPE_ARM_SMMUV3 = 1,
+> +};
+> +
+> +/**
+> + * struct iommu_vevent_arm_smmuv3 - ARM SMMUv3 Virtual Event
+> + *                                  (IOMMU_VEVENTQ_TYPE_ARM_SMMUV3)
+> + * @evt: 256-bit ARM SMMUv3 Event record, little-endian.
+> + *       Reported event records: (Refer to "7.3 Event records" in SMMUv3 HW Spec)
+> + *       - 0x04 C_BAD_STE
+> + *       - 0x06 F_STREAM_DISABLED
+> + *       - 0x08 C_BAD_SUBSTREAMID
+> + *       - 0x0a C_BAD_CD
+> + *       - 0x10 F_TRANSLATION
+> + *       - 0x11 F_ADDR_SIZE
+> + *       - 0x12 F_ACCESS
+> + *       - 0x13 F_PERMISSION
+> + *
+> + * StreamID field reports a virtual device ID. To receive a virtual event for a
+> + * device, a vDEVICE must be allocated via IOMMU_VDEVICE_ALLOC.
+> + */
+> +struct iommu_vevent_arm_smmuv3 {
+> +	__aligned_le64 evt[4];
+>  };
+>  
+>  /**
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
+> index 364d8469a480..42c7daf4c8c7 100644
+> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
+> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
+> @@ -445,4 +445,21 @@ struct iommufd_viommu *arm_vsmmu_alloc(struct device *dev,
+>  	return &vsmmu->core;
+>  }
+>  
+> +int arm_vmaster_report_event(struct arm_smmu_vmaster *vmaster, u64 *evt)
+> +{
+> +	struct iommu_vevent_arm_smmuv3 vevt;
+> +	int i;
+> +
+> +	lockdep_assert_held(&vmaster->vsmmu->smmu->streams_mutex);
+> +
+> +	vevt.evt[0] = cpu_to_le64((evt[0] & ~EVTQ_0_SID) |
+> +				  FIELD_PREP(EVTQ_0_SID, vmaster->vsid));
+> +	for (i = 1; i < EVTQ_ENT_DWORDS; i++)
+> +		vevt.evt[i] = cpu_to_le64(evt[i]);
 
-Tbh, I think OProfile's major issue was a lack of active development.
-There were arguments that perf was going to be more integrated into
-the kernel, but there are no arch events, for example, in
-arch/arm64/events. Perf provided new energy for something started as a
-student project, it was and is good for having done that.
+Just thinking out loud here:
+I understand the goal here is to "emulate" an IOMMU. But I'm just
+wondering if we could report struct events instead of the raw event?
 
-> While it is clear that picking some "most important event and ratios of
-> events" is super difficult, that was one of the ideas that made perf to
-> come about.
->
-> I wasn=C2=B4t the architect of this, Ingo and Thomas were, with Peter the=
-n
-> tryhing to make the kernel part sane.
->
-> I just tried to follow those principles while not getting in the way of
-> people wanting to have a common ground for observability in Linux.
->
-> Having all these JSON tables was in place was a major concession to that
-> original vision.
->
-> Changing things as we go, with all these changes in the hardware
-> landscape, some fleeting, some reinforced, is super difficult and leads
-> to all this pain in trying to provide a sane experience to people using
-> these tools.
->
-> I don't think we can have it super consistent.
->
-> It is super useful as is, or at least that what people say.
->
-> So we need to keep on improving it while not telling people used to its
-> workflows that they should re-learn the tool because at some point a
-> decision was not properly made.
+For example, can't we have something like arm_smmu_event here with the
+sid changed to vsid? 
 
-So yes, but no. If you are used to perf on a pentium core 2 and then
-move to a hybrid alderlake system there has to be some notion of what
-cycles means on each core type. We had to change the tool to support
-this. ARM dealt with this long before Intel hybrid ever did, but they
-did so with no legacy event support just sysfs/json. Of course the
-wildcard behavior means that all the PMUs that supply an event will
-have it selected and people have been happy with this a long time.
-We used to have BPF events but no longer. It seemed like a fruitful
-thing, it became obsolete and was removed.
-We have legacy encodings where LLC means L2:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/evsel.c?h=3Dperf-tools-next#n801
-Fine at the time, now seems silly. LLC seems like a reasonable PMU
-name, but event parsing will trip over it in the clumsy way it does
-with raw events and "read" (raw event of 0xEAD). Event parsing used to
-broken for events like "llc-llc" now you can have that as an event
-now.
+Are we taking the raw event since we want to keep the `u64 event_data[]`
+field within `struct iommufd_vevent` generic to all architectures?
 
-Anyway, I dislike that you are arguing that I am trying to tell people
-to change their way of using the tool, it implies the patch series
-breaks something. If you feel this then you should provide an example.
-Yes Linus had a problem with the cycles event on Neoverse and now
-that, as you suggested, is lowered to be a warning. The original patch
-landed for weeks on linux-next without complaint. I am not asking
-people to "re-lean the tool", I am trying to fix things and make order
-out of something less than that.
+> +
+> +	return iommufd_viommu_report_event(&vmaster->vsmmu->core,
+> +					   IOMMU_VEVENTQ_TYPE_ARM_SMMUV3, &vevt,
+> +					   sizeof(vevt));
+> +}
+> +
+>  MODULE_IMPORT_NS("IOMMUFD");
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> index 9e50bcee69d1..fdf8bba14303 100644
+> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> @@ -1813,8 +1813,8 @@ static void arm_smmu_decode_event(struct arm_smmu_device *smmu, u64 *raw,
+>  	mutex_unlock(&smmu->streams_mutex);
+>  }
+>  
+> -static int arm_smmu_handle_event(struct arm_smmu_device *smmu,
+> -			       struct arm_smmu_event *event)
+> +static int arm_smmu_handle_event(struct arm_smmu_device *smmu, u64 *evt,
+> +				 struct arm_smmu_event *event)
+>  {
+>  	int ret = 0;
+>  	u32 perm = 0;
+> @@ -1823,6 +1823,10 @@ static int arm_smmu_handle_event(struct arm_smmu_device *smmu,
+>  	struct iommu_fault *flt = &fault_evt.fault;
+>  
+>  	switch (event->id) {
+> +	case EVT_ID_BAD_STE_CONFIG:
+> +	case EVT_ID_STREAM_DISABLED_FAULT:
+> +	case EVT_ID_BAD_SUBSTREAMID_CONFIG:
+> +	case EVT_ID_BAD_CD_CONFIG:
+>  	case EVT_ID_TRANSLATION_FAULT:
+>  	case EVT_ID_ADDR_SIZE_FAULT:
+>  	case EVT_ID_ACCESS_FAULT:
+> @@ -1832,31 +1836,30 @@ static int arm_smmu_handle_event(struct arm_smmu_device *smmu,
+>  		return -EOPNOTSUPP;
+>  	}
+>  
+> -	if (!event->stall)
+> -		return -EOPNOTSUPP;
+> -
+> -	if (event->read)
+> -		perm |= IOMMU_FAULT_PERM_READ;
+> -	else
+> -		perm |= IOMMU_FAULT_PERM_WRITE;
+> +	if (event->stall) {
+> +		if (event->read)
+> +			perm |= IOMMU_FAULT_PERM_READ;
+> +		else
+> +			perm |= IOMMU_FAULT_PERM_WRITE;
+>  
+> -	if (event->instruction)
+> -		perm |= IOMMU_FAULT_PERM_EXEC;
+> +		if (event->instruction)
+> +			perm |= IOMMU_FAULT_PERM_EXEC;
+>  
+> -	if (event->privileged)
+> -		perm |= IOMMU_FAULT_PERM_PRIV;
+> +		if (event->privileged)
+> +			perm |= IOMMU_FAULT_PERM_PRIV;
+>  
+> -	flt->type = IOMMU_FAULT_PAGE_REQ;
+> -	flt->prm = (struct iommu_fault_page_request) {
+> -		.flags = IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE,
+> -		.grpid = event->stag,
+> -		.perm = perm,
+> -		.addr = event->iova,
+> -	};
+> +		flt->type = IOMMU_FAULT_PAGE_REQ;
+> +		flt->prm = (struct iommu_fault_page_request){
+> +			.flags = IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE,
+> +			.grpid = event->stag,
+> +			.perm = perm,
+> +			.addr = event->iova,
+> +		};
+>  
+> -	if (event->ssv) {
+> -		flt->prm.flags |= IOMMU_FAULT_PAGE_REQUEST_PASID_VALID;
+> -		flt->prm.pasid = event->ssid;
+> +		if (event->ssv) {
+> +			flt->prm.flags |= IOMMU_FAULT_PAGE_REQUEST_PASID_VALID;
+> +			flt->prm.pasid = event->ssid;
+> +		}
+>  	}
+>  
+>  	mutex_lock(&smmu->streams_mutex);
+> @@ -1866,7 +1869,14 @@ static int arm_smmu_handle_event(struct arm_smmu_device *smmu,
+>  		goto out_unlock;
+>  	}
+>  
+> -	ret = iommu_report_device_fault(master->dev, &fault_evt);
+> +	if (event->stall) {
+> +		ret = iommu_report_device_fault(master->dev, &fault_evt);
+> +	} else {
+> +		if (master->vmaster && !event->s2)
+> +			ret = arm_vmaster_report_event(master->vmaster, evt);
+> +		else
+> +			ret = -EFAULT; /* Unhandled events should be pinned */
+> +	}
 
-> > Because of the pain in landing the reverted patch then RISC-V has had
-> > to work with perf's behavior as it is, they need to ship products. I
->
-> you can present it like that, or you can say that they wanted the API to
-> be different but since it wasn't like they liked they had to comply.
->
-> Differently phrased he finally understood the value of the current API,
-> maybe.
+Nit:
+I don't see the `arm_smmu_handle_event` being called elsewhere, is there
+a reason to return -EFAULT instead of -EOPNOTSUPP here?
 
-So Atish spoke to us at LPC 2023:
-https://lpc.events/event/17/
-Mark Rutland also spoke to me at that time explaining how unhappy he
-was that ARM Apple-M was broken. I combined both issues in our
-discussions.
-Atish has also spoken to Namhyung and myself face-to-face during the
-RISC-V conference.
-These issues were discussed verbally before I wrote patches, before
-Atish made assumptions, and I think we both believe the proposals were
-and are reasonable.
+I think the current behavior here is to return -EOPNOTSUPP if (!event->stall).
+Whereas, what we're doing here is:
+	if (event->stall) {
+	...
+	/* do legacy stuff */
+	...
+	}
 
-So let me completely disagree with your rephrasing. It is rude to
-imply that Atish and myself somehow are trying to push an agenda of
-changing and breaking an API. What has always been done is an attempt
-at pragmatism, such as cleaning up the hard coded issues with the
-original hybrid support, fixing Apple-M, ..
+	else {
+		if (master->vmaster && !event->s2)
+			arm_vmaster_report_event(vmaster, evt);
+		else
+			ret = -EFAULT
+	}
 
-> > think things would have been simpler in their driver and the wider
-> > ecosystem if this hadn't been forced to happen.
->
-> > > > vice-chair for RISC-V and hope to push things forward for RISC-V wh=
-en
-> > > > I can. Given that ARM had originally required the prioritization,
-> > > > Intel signed off on this (with a huge number of Intel test
-> > > > expectations updated as a consequence), RISC-V desiring consistency=
- I
-> > > > thought there was a pretty broad consensus to move forward with hav=
-ing
-> > > > the same prioritization of legacy and sysfs/json events for event
-> > > > names without PMUs as those with it.
-> > >
-> > > > In doing this change I made:
-> > > > $ perf (stat|record) -e cycles ...
-> > > > behave like:
-> > > > $ perf (stat|record) -e */cycles/ ...
-> > > > This is the behavior with sysfs/json events (ie not legacy). For ex=
-ample:
-> > > > $ perf (stat|record) -e inst_retired.any ...
-> > > > in the event parsing code behaves like:
-> > > > $ perf (stat|record) -e */inst_retired.any/ ...
-> > > > That is every PMU advertising the event inst_retired.any (in the sy=
-sfs
-> > > > events directory or in json) will have it opened by the tool.
-> > >
-> > > > My intent was that "cycles" behaving like "*/cycles/" was that it
-> > > > would match the change already done for hybrid of "cycles" behaving
-> > > > like "cpu_atom/cycles/,cpu_core/cycles/". However, this change caus=
-ed
-> > > > an issue on ARM Neoverse that Linus couldn't tolerate and so revert=
-ed
-> > > > the change. Specifically ARM Neoverse's L3 cache PMU advertises a
-> > > > "cycles" event and such an event will fail to open with perf record=
-.
-> > >
-> > > > Specifying the PMU with the event avoids the wild card behavior and
-> > > > fixes the issue but it was put over strongly that "cycles" without =
-a
-> > > > PMU should only ever mean CPU cycles. This missed hybrid/BIG.little
-> > > > type systems, but one could imagine in that case CPU means all core
-> > > > PMUs.
-> > >
-> > > > As with not wanting hybrid PMU names hard coded, I dislike special
-> > > > cases for events. Not least as there are an exciting plethora of
-> > >
-> > > Ok, but the desire for consistency clashes with how things have been =
-for
-> > > a long time, tools expect, scripts, etc, so we seem to need the speci=
-al
-> > > case for what has been called in these threads "legacy events".
->
-> > There is only one known issue of a problem for 1 event on 1 ARM model.
-> > If ARM renamed the event this wouldn't be an issue. The patch series
-> > works for this event but warns about it if you try to use it with perf
-> > record.
->
-> Well, maybe just the event name shouldn't be what determines if it
-> should be used in some cases? Maybe some other characteristic should be
-> probed for in each case?
+	mutex_unlock(&smmu->streams_mutex);
+	return ret;
 
-Do you want to explain this? We have events, without a PMU all events
-wildcard on every PMU. This is existing and long standing behavior.
-Uncore PMUs rely on it. Core PMUs with say a json event like
-inst_retired.any rely on it.
-You want a magic list of events that only work on core PMUs? Fine,
-what is it? I hate the idea as why does cpu_cycles mean something
-different than cpu-cycles, but if that is the only way to land the
-series then let's do it. You had been arguing for lowering the failure
-to just being a warning and not doing this. I do not understand where
-you stand. My stance is hopefully clear with the patch series. If you
-and Namhyung are worried that Linus seeing a warning message is a
-blocker the easiest fix is to rename 1 ARM uncore event. We could hide
-warnings and move them to verbose, imo that's gross. We can have a
-magic list of events, similarly imo gross but at least it unblocks
-this.
+Thus, we end up returning -EFAULT instead of -EOPNOTSUPP in case
+event->stall == false. I agree that we aren't really checking the return
+value in the evtq_thread handler, but I'm wondering if we should ensure
+that we end up retaining the same behaviour as we have right now?
 
-> Have to stop here, not enough bandwidth.
+>  out_unlock:
+>  	mutex_unlock(&smmu->streams_mutex);
+>  	return ret;
+> @@ -1944,7 +1954,7 @@ static irqreturn_t arm_smmu_evtq_thread(int irq, void *dev)
+>  	do {
+>  		while (!queue_remove_raw(q, evt)) {
+>  			arm_smmu_decode_event(smmu, evt, &event);
+> -			if (arm_smmu_handle_event(smmu, &event))
+> +			if (arm_smmu_handle_event(smmu, evt, &event))
+>  				arm_smmu_dump_event(smmu, evt, &event, &rs);
+>  
+>  			put_device(event.dev);
+> -- 
+> 2.43.0
+> 
 
-Thanks for making some time on this,
-Ian
+Thanks,
+Praan
