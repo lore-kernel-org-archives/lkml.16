@@ -1,24 +1,24 @@
-Received: from mail-m3298.qiye.163.com (mail-m3298.qiye.163.com [220.197.32.98])
+Received: from mail-m32123.qiye.163.com (mail-m32123.qiye.163.com [220.197.32.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E13E5D8F0;
-	Mon, 24 Feb 2025 08:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3FF5D8F0;
+	Mon, 24 Feb 2025 08:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740385158; cv=none; b=TJSw4rdpmdr9xBoumi49emqKL8IzGg6op0LJM09F4/siDOQmYBydo0cuvL+mER/AJdqvp8M7vRTkQ1IFt6MKIMUMqbrZ1/UTD7uhGLZuY9VUn8/tCnvRa8qwozk4/Z2Gd58ipni5QBv4v9vbFqOUQRncju2AyGCeOtgV/KaUf6Y=
+	t=1740385164; cv=none; b=FdtpVIaMTZGHuaZU/Onv5QMmDFnZglGs9svQvoYet8eSinFd7Dm0r79VB4PzfzV1mubuDEAKb4ee+TAAVYMNir+tZ0Bg8tIsr+zil4w7KGDxt7NkYy2eqrz3xI4e1EdFYYibUs0VEwSABOkkkGHh3ilIP/AibBLzlNyi/9EzDa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740385158; c=relaxed/simple;
-	bh=Sek2ZphyNHaJ+Ru7vO98mkXvniDKzHpeNP+ZcytH11Y=;
+	s=arc-20240116; t=1740385164; c=relaxed/simple;
+	bh=AEerpXENcstHX1+gXDYcSpc0e7XUtWzyacOmwlgaeUk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=N6tENDOfHURXeHJswodrSlzXMlbYdg0CCCqYRD5YkJEbaVt0tzpSJaOWO6y5PEvs0cF/ZoNbTDpD3ag2BM3p2nePO7VRlZyn2O9BM+BoQQE4bCC1abDVQHJn+zw2RpeknYq8QCq51vXOIPP3q3ziXVRYngIeyQNd+w1f1eDmFLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=KVtLZnR2; arc=none smtp.client-ip=220.197.32.98
+	 MIME-Version; b=k38vaPeyJHXNzq8Uy6f0kl6C1UDmN5nMSMFlyiaDyX9dVFM/tYlN0ZrIwhpRqinkBGRXX/UHX6Rf2N5ycusjQCh8CWeCrociDr4uTSUITNNNUQJvplaaiRYm2oirRU5nS9k+LiHHb4tQKN0sV4CBP/RKNIiPpkgS6Q1M3hTaAy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=RhFY3D8+; arc=none smtp.client-ip=220.197.32.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="KVtLZnR2"
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="RhFY3D8+"
 Received: from zyb-HP-ProDesk-680-G2-MT.. (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTP id bfd28788;
-	Mon, 24 Feb 2025 16:13:56 +0800 (GMT+08:00)
+	by smtp.qiye.163.com (Hmail) with ESMTP id bfd287c2;
+	Mon, 24 Feb 2025 16:14:03 +0800 (GMT+08:00)
 From: Damon Ding <damon.ding@rock-chips.com>
 To: heiko@sntech.de
 Cc: andy.yan@rock-chips.com,
@@ -44,9 +44,9 @@ Cc: andy.yan@rock-chips.com,
 	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Damon Ding <damon.ding@rock-chips.com>
-Subject: [PATCH v7 01/15] drm/rockchip: analogix_dp: Use formalized struct definition for grf field
-Date: Mon, 24 Feb 2025 16:13:11 +0800
-Message-Id: <20250224081325.96724-2-damon.ding@rock-chips.com>
+Subject: [PATCH v7 04/15] drm/bridge: analogix_dp: Remove the unnecessary calls to clk_disable_unprepare() during probing
+Date: Mon, 24 Feb 2025 16:13:14 +0800
+Message-Id: <20250224081325.96724-5-damon.ding@rock-chips.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250224081325.96724-1-damon.ding@rock-chips.com>
 References: <20250224081325.96724-1-damon.ding@rock-chips.com>
@@ -58,171 +58,83 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUpKGFZJH0lNHU4aGk9JQk9WFRQJFh
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ05JSFZPQh8eGhgYSUpPSkNWFRQJFh
 	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
 	hVSktLVUpCS0tZBg++
-X-HM-Tid: 0a9537051cda03a3kunmbfd28788
+X-HM-Tid: 0a953705365703a3kunmbfd287c2
 X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6P1E6ORw4PzILERMxCD0CEToP
-	FApPCQ9VSlVKTE9LSENPQ0hDQkxOVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFPTU1DNwY+
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pz46FQw4MzIONxNWTT4uETEv
+	AzpPCS1VSlVKTE9LSENPQ09OSE1NVTMWGhIXVR8aFhQVVR8SFRw7CRQYEFYYExILCFUYFBZFWVdZ
+	EgtZQVlOQ1VJSVVMVUpKT1lXWQgBWUFJSENONwY+
 DKIM-Signature:a=rsa-sha256;
-	b=KVtLZnR2FSrrM27t5EQ5+cHBVwTgOA6SmY0fdULygZKvmcBwLgGfEjVFcP0FR7gLQOu6esS59caaJLUOR6e/luji1jkiKo4GoWzjSafGuwDto4/rnw/V1MXaBcpdeMSJWKQdi2GiRXGKLau7hU0gzsrdDH0JGH79xtVWozzXzxA=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=DeKL38QgJPxWr8vk6VR+WnpBvTZ9seV20fol6Q/bbw8=;
+	b=RhFY3D8+01Zany8/FVPwFeNfI8Nep2zTus9v0jfNh2VgjfdPDmvgF9hY0aLTlYEWq47hRGpbrwBns//Y5TcLc7m/GATrGdY2eNDBqE2u/z+yoJPwUmCtKn2/8KHbxb2+S3SW1QWzoB/S0/eoIkVmyXc9wJ98i9/scTJUJRu674M=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=qIDpDUZK6hSel5I8fxZivGCbqLzNct87SHt9UpVS6tg=;
 	h=date:mime-version:subject:message-id:from;
 
-The formalized struct definition will makes grf field operations more
-concise and easier to extend.
+With the commit f37952339cc2 ("drm/bridge: analogix_dp: handle clock via
+runtime PM"), the PM operations can help enable/disable the clock. The
+err_disable_clk label and clk_disable_unprepare() operations are no
+longer necessary because the analogix_dp_resume() will not be called
+during probing.
 
+Fixes: f37952339cc2 ("drm/bridge: analogix_dp: handle clock via runtime PM")
 Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
-
 ---
+ .../gpu/drm/bridge/analogix/analogix_dp_core.c | 18 +++++-------------
+ 1 file changed, 5 insertions(+), 13 deletions(-)
 
-Changes in v2:
-- Initialize struct rockchip_dp_chip_data rk3399_edp/rk3288_dp in order
-  of its members
-
-Changes in v6:
-- Pass 'dp' in drm_...() rather than 'dp->drm_dev'
-
-Changes in v7:
-- Just keep the DRM_...() as they were in the previous for this series
----
- .../gpu/drm/rockchip/analogix_dp-rockchip.c   | 77 +++++++++++--------
- 1 file changed, 45 insertions(+), 32 deletions(-)
-
-diff --git a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-index 0844175c37c5..0d93df6b5144 100644
---- a/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/analogix_dp-rockchip.c
-@@ -32,26 +32,29 @@
+diff --git a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+index e23af674d91c..d9dafb038e7a 100644
+--- a/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
++++ b/drivers/gpu/drm/bridge/analogix/analogix_dp_core.c
+@@ -1608,10 +1608,8 @@ analogix_dp_probe(struct device *dev, struct analogix_dp_plat_data *plat_data)
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
  
- #include "rockchip_drm_drv.h"
+ 	dp->reg_base = devm_ioremap_resource(&pdev->dev, res);
+-	if (IS_ERR(dp->reg_base)) {
+-		ret = PTR_ERR(dp->reg_base);
+-		goto err_disable_clk;
+-	}
++	if (IS_ERR(dp->reg_base))
++		return ERR_CAST(dp->reg_base);
  
--#define RK3288_GRF_SOC_CON6		0x25c
--#define RK3288_EDP_LCDC_SEL		BIT(5)
--#define RK3399_GRF_SOC_CON20		0x6250
--#define RK3399_EDP_LCDC_SEL		BIT(5)
--
--#define HIWORD_UPDATE(val, mask)	(val | (mask) << 16)
--
- #define PSR_WAIT_LINE_FLAG_TIMEOUT_MS	100
+ 	dp->force_hpd = of_property_read_bool(dev->of_node, "force-hpd");
  
-+#define GRF_REG_FIELD(_reg, _lsb, _msb) {	\
-+				.reg = _reg,	\
-+				.lsb = _lsb,	\
-+				.msb = _msb,	\
-+				.valid = true,	\
-+				}
-+
-+struct rockchip_grf_reg_field {
-+	u32 reg;
-+	u32 lsb;
-+	u32 msb;
-+	bool valid;
-+};
-+
- /**
-  * struct rockchip_dp_chip_data - splite the grf setting of kind of chips
-- * @lcdsel_grf_reg: grf register offset of lcdc select
-- * @lcdsel_big: reg value of selecting vop big for eDP
-- * @lcdsel_lit: reg value of selecting vop little for eDP
-+ * @lcdc_sel: grf register field of lcdc_sel
-  * @chip_type: specific chip type
-  */
- struct rockchip_dp_chip_data {
--	u32	lcdsel_grf_reg;
--	u32	lcdsel_big;
--	u32	lcdsel_lit;
-+	const struct rockchip_grf_reg_field lcdc_sel;
- 	u32	chip_type;
- };
- 
-@@ -84,6 +87,26 @@ static struct rockchip_dp_device *pdata_encoder_to_dp(struct analogix_dp_plat_da
- 	return container_of(plat_data, struct rockchip_dp_device, plat_data);
- }
- 
-+static int rockchip_grf_write(struct regmap *grf, u32 reg, u32 mask, u32 val)
-+{
-+	return regmap_write(grf, reg, (mask << 16) | (val & mask));
-+}
-+
-+static int rockchip_grf_field_write(struct regmap *grf,
-+				    const struct rockchip_grf_reg_field *field,
-+				    u32 val)
-+{
-+	u32 mask;
-+
-+	if (!field->valid)
-+		return 0;
-+
-+	mask = GENMASK(field->msb, field->lsb);
-+	val <<= field->lsb;
-+
-+	return rockchip_grf_write(grf, field->reg, mask, val);
-+}
-+
- static int rockchip_dp_pre_init(struct rockchip_dp_device *dp)
- {
- 	reset_control_assert(dp->rst);
-@@ -181,7 +204,6 @@ static void rockchip_dp_drm_encoder_enable(struct drm_encoder *encoder,
- 	struct drm_crtc *crtc;
- 	struct drm_crtc_state *old_crtc_state;
- 	int ret;
--	u32 val;
- 
- 	crtc = rockchip_dp_drm_get_new_crtc(encoder, state);
- 	if (!crtc)
-@@ -192,24 +214,19 @@ static void rockchip_dp_drm_encoder_enable(struct drm_encoder *encoder,
- 	if (old_crtc_state && old_crtc_state->self_refresh_active)
- 		return;
- 
--	ret = drm_of_encoder_active_endpoint_id(dp->dev->of_node, encoder);
--	if (ret < 0)
--		return;
--
--	if (ret)
--		val = dp->data->lcdsel_lit;
--	else
--		val = dp->data->lcdsel_big;
--
--	DRM_DEV_DEBUG(dp->dev, "vop %s output to dp\n", (ret) ? "LIT" : "BIG");
--
- 	ret = clk_prepare_enable(dp->grfclk);
- 	if (ret < 0) {
- 		DRM_DEV_ERROR(dp->dev, "failed to enable grfclk %d\n", ret);
- 		return;
+@@ -1623,8 +1621,7 @@ analogix_dp_probe(struct device *dev, struct analogix_dp_plat_data *plat_data)
+ 	if (IS_ERR(dp->hpd_gpiod)) {
+ 		dev_err(dev, "error getting HDP GPIO: %ld\n",
+ 			PTR_ERR(dp->hpd_gpiod));
+-		ret = PTR_ERR(dp->hpd_gpiod);
+-		goto err_disable_clk;
++		return ERR_CAST(dp->hpd_gpiod);
  	}
  
--	ret = regmap_write(dp->grf, dp->data->lcdsel_grf_reg, val);
-+	ret = drm_of_encoder_active_endpoint_id(dp->dev->of_node, encoder);
-+	if (ret < 0)
-+		return;
-+
-+	DRM_DEV_DEBUG(dp->dev, "vop %s output to dp\n", (ret) ? "LIT" : "BIG");
-+
-+	ret = rockchip_grf_field_write(dp->grf, &dp->data->lcdc_sel, ret);
- 	if (ret != 0)
- 		DRM_DEV_ERROR(dp->dev, "Could not write to GRF: %d\n", ret);
+ 	if (dp->hpd_gpiod) {
+@@ -1644,8 +1641,7 @@ analogix_dp_probe(struct device *dev, struct analogix_dp_plat_data *plat_data)
  
-@@ -448,16 +465,12 @@ static DEFINE_RUNTIME_DEV_PM_OPS(rockchip_dp_pm_ops, rockchip_dp_suspend,
- 		rockchip_dp_resume, NULL);
+ 	if (dp->irq == -ENXIO) {
+ 		dev_err(&pdev->dev, "failed to get irq\n");
+-		ret = -ENODEV;
+-		goto err_disable_clk;
++		return ERR_PTR(-ENODEV);
+ 	}
  
- static const struct rockchip_dp_chip_data rk3399_edp = {
--	.lcdsel_grf_reg = RK3399_GRF_SOC_CON20,
--	.lcdsel_big = HIWORD_UPDATE(0, RK3399_EDP_LCDC_SEL),
--	.lcdsel_lit = HIWORD_UPDATE(RK3399_EDP_LCDC_SEL, RK3399_EDP_LCDC_SEL),
-+	.lcdc_sel = GRF_REG_FIELD(0x6250, 5, 5),
- 	.chip_type = RK3399_EDP,
- };
+ 	ret = devm_request_threaded_irq(&pdev->dev, dp->irq,
+@@ -1654,14 +1650,10 @@ analogix_dp_probe(struct device *dev, struct analogix_dp_plat_data *plat_data)
+ 					irq_flags, "analogix-dp", dp);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "failed to request irq\n");
+-		goto err_disable_clk;
++		return ERR_PTR(ret);
+ 	}
  
- static const struct rockchip_dp_chip_data rk3288_dp = {
--	.lcdsel_grf_reg = RK3288_GRF_SOC_CON6,
--	.lcdsel_big = HIWORD_UPDATE(0, RK3288_EDP_LCDC_SEL),
--	.lcdsel_lit = HIWORD_UPDATE(RK3288_EDP_LCDC_SEL, RK3288_EDP_LCDC_SEL),
-+	.lcdc_sel = GRF_REG_FIELD(0x025c, 5, 5),
- 	.chip_type = RK3288_DP,
- };
+ 	return dp;
+-
+-err_disable_clk:
+-	clk_disable_unprepare(dp->clock);
+-	return ERR_PTR(ret);
+ }
+ EXPORT_SYMBOL_GPL(analogix_dp_probe);
  
 -- 
 2.34.1
