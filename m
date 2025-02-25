@@ -1,115 +1,129 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73F326A0DA
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5275B26981F;
+	Tue, 25 Feb 2025 14:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740492786; cv=none; b=HSi4bmqjawIkBPGFpCZgKItur8FMTOur/3GKFfK15aLNn1YEsoWHukwck0PdVWhmZTJtZL+RrVqr6EpKz4IP+rr28+tBiPmh9DMjRi87KRrlB5X0z0foxvyB5xbYFMElZ1r9JZaw4bDvNevtDKuFoeQ8JhwhCGA2YKHEQTngz/Q=
+	t=1740492901; cv=none; b=JSq3KL/W9nXN5i2BiONACJJGPJFJLlQuxjAQk3Jfa/boIj7iXuDX0RZtR5JGoI5qsM4ShT9LLzothag5O8B1az2RNuyzm5CaxIhQkU5MSv4zlYHbEOX6stLBdQcwHOD9qACRQArRToWMG7aZ2fQBfiN7WRSBnioVWxRaTgWycks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740492786; c=relaxed/simple;
-	bh=PYf63rhqlg/chZOT8GhwTctxmuRCcI63sCYIcCez/8U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rNtMeWn343EyGa44k76mHrBwcmuc23feyzEfwKKoLQ0GQgGFMCXrjrP9F9Tef9uYi13n9TvyYDKYzUsUQj+/SB3sLYkSAAnMq3Uz0HQSePuv09oTUO2eytOYn4BYB/X3Qe1kaib9hxUsGMO6+PFl2EzdsAWTRwFhWbxnWHag2dY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=L34uO6r/; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1740492901; c=relaxed/simple;
+	bh=+4sOTnaI32gMkpbK4Vc4mkjXdozIuu22YMJvCGL12gk=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=QyGnhCVTbl8Yxxh8JufbM74ziN3REA6BG8IfGigjUoqQScy3qyMQmxyfl28VvPllzyxdQrrP62PbnQ2v9DURpdP8oRUYm8lD/tdMJVktYA3OpEaGbNbDxPEh+ito3W1QVs4FEwfK0Ym59e7M1gn9F1UXqobQtKnn/P0pU9WaJXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SO/IXozv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rHj85Edp; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="L34uO6r/"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 382DA441A0;
-	Tue, 25 Feb 2025 14:12:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1740492777;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SO/IXozv";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rHj85Edp"
+Date: Tue, 25 Feb 2025 14:14:56 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740492897;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=camQ4hVJd9PIINUG4lm5DWjwsMW9lCso6fLvApRD17I=;
-	b=L34uO6r/kxO1kT14Gon9v/Xb8uNGSPBLtBZTTHEj7mj9fYLO9UQuGqZJSpr6S6tJJE5X3K
-	uMDQ2QHWaEYBmRfMY6h5z5C9qGsuvmk226PeyVeQRFz5z9mUxXKhSN6l/JFppMgDK0E7xH
-	dbqLghVInKOX/DVcpMU0DKNHSCz5M8ESAwd+VJ/NrtNirdFTqyDWliDSUOh7QIkzNEC+gQ
-	9uLoqu6g7gdb4TSDaVzFJtw44S0bMcsRVrPjUc1EwRZcGdr7wSTok+qy2Y01R0XRD9cAVt
-	TcCZCG1Ptqcy0rOHAygANr68VncVEYBDindzntgyDtTNOrgNF3D91C51PvUWPw==
-Date: Tue, 25 Feb 2025 15:12:54 +0100
-From: Louis Chauvet <louis.chauvet@bootlin.com>
-To: Jim Cromie <jim.cromie@gmail.com>, linux-kernel@vger.kernel.org,
-	jbaron@akamai.com, gregkh@linuxfoundation.org, ukaszb@chromium.org
-Cc: intel-gfx-trybot@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	amd-gfx@lists.freedesktop.org, intel-gvt-dev@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org, daniel.vetter@ffwll.ch,
-	tvrtko.ursulin@linux.intel.com, jani.nikula@intel.com,
-	ville.syrjala@linux.intel.com, Andy Whitcroft <apw@canonical.com>,
-	Joe Perches <joe@perches.com>,
-	Dwaipayan Ray <dwaipayanray1@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: Re: [PATCH 15/63] checkpatch: add an exception to the do-while
- wrapper advice
-Message-ID: <270e6d31-c4e2-4c23-98f1-3ebb2d946e63@bootlin.com>
-Mail-Followup-To: Jim Cromie <jim.cromie@gmail.com>,
-	linux-kernel@vger.kernel.org, jbaron@akamai.com,
-	gregkh@linuxfoundation.org, ukaszb@chromium.org,
-	intel-gfx-trybot@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-	intel-gvt-dev@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org, daniel.vetter@ffwll.ch,
-	tvrtko.ursulin@linux.intel.com, jani.nikula@intel.com,
-	ville.syrjala@linux.intel.com, Andy Whitcroft <apw@canonical.com>,
-	Joe Perches <joe@perches.com>,
-	Dwaipayan Ray <dwaipayanray1@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>
-References: <20250125064619.8305-1-jim.cromie@gmail.com>
- <20250125064619.8305-16-jim.cromie@gmail.com>
+	bh=YlVBUYBwZpW8JMX4dMGaTAmNpH8sM3M7GOc48qsT1LI=;
+	b=SO/IXozvwZhN3mRcVqQw3E/ehzRh1yQDCLcMOhFxs5xwH80dH2nE5E+PgWOkOxS+qJ1xjL
+	3kTfH4A1IJXfPwXBYzA5DIFsxBeTvvjWjuH96xCSsLM4/beEw0HDx+BTnURQx+EPyLrHO/
+	AJPZfHD8P7OHcGpy/heXr25esuXriHnsnf2VK54rQhjRgjgC3zgKG8p1LnxyQA1xJffTiV
+	ps/GSSu5UM/KuThlLZt9vS9H+2diDO+tPuHrRQYgLB4B9XwkKuLm7ploreP6VQtPQRUPDN
+	HPxWs8UzKL5WGFtplgzuPjvjIsAhYFjQSGoZ9XemTVkefTU0r990t9xVoHFyTw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740492897;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YlVBUYBwZpW8JMX4dMGaTAmNpH8sM3M7GOc48qsT1LI=;
+	b=rHj85Edpt1NJhLOQHSImVCYZTwJCHuLzknZCZexgf1aRBf355qIo/1wNLZ3KaLNGg0/meW
+	3EeHwrjVnLmCGQAA==
+From: "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: perf/urgent] perf/core: Fix low freq setting via IOC_PERIOD
+Cc: Kan Liang <kan.liang@linux.intel.com>, Ingo Molnar <mingo@kernel.org>,
+ Ravi Bangoria <ravi.bangoria@amd.com>, Peter Zijlstra <peterz@infradead.org>,
+ stable@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250117151913.3043942-2-kan.liang@linux.intel.com>
+References: <20250117151913.3043942-2-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250125064619.8305-16-jim.cromie@gmail.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekudeludcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttddunecuhfhrohhmpefnohhuihhsucevhhgruhhvvghtuceolhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepudeiffduffeivdejgfejheeuudekkedvjeeuffegfefghfffkeelgffgieevudejnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohhuihhsqdgthhgruhhvvghtqdhlrghpthhophdpmhgrihhlfhhrohhmpehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedukedprhgtphhtthhopehjihhmrdgtrhhomhhivgesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehjsggrrhhonhesrghkrghmrghirdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnr
- dhorhhgpdhrtghpthhtohepuhhkrghsiigssegthhhrohhmihhumhdrohhrghdprhgtphhtthhopehinhhtvghlqdhgfhigqdhtrhihsghotheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtoheprghmugdqghhfgieslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrgh
-X-GND-Sasl: louis.chauvet@bootlin.com
+Message-ID: <174049289699.10177.3800796469110076364.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
+The following commit has been merged into the perf/urgent branch of tip:
 
+Commit-ID:     0d39844150546fa1415127c5fbae26db64070dd3
+Gitweb:        https://git.kernel.org/tip/0d39844150546fa1415127c5fbae26db64070dd3
+Author:        Kan Liang <kan.liang@linux.intel.com>
+AuthorDate:    Fri, 17 Jan 2025 07:19:12 -08:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 25 Feb 2025 14:54:14 +01:00
 
-Le 25/01/2025 à 07:45, Jim Cromie a écrit :
-> Several new DYNDBG_CLASSMAP_* macros (added in following commits)
-> expand to multi-statement declarations, like module_param_named does.
-> They are invoked in file-scope, not in function scope, and cannot be
-> wrapped by a do-while, so add an exception by name for them.
-> 
-> cc: Andy Whitcroft <apw@canonical.com>
-> cc: Joe Perches <joe@perches.com>
-> cc: Dwaipayan Ray <dwaipayanray1@gmail.com>
-> cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+perf/core: Fix low freq setting via IOC_PERIOD
 
-Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
+A low attr::freq value cannot be set via IOC_PERIOD on some platforms.
 
-> ---
->   scripts/checkpatch.pl | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 9eed3683ad76..4a93b2ede8cd 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -5963,6 +5963,7 @@ sub process {
->   				MODULE_PARM_DESC|
->   				DECLARE_PER_CPU|
->   				DEFINE_PER_CPU|
-> +				DYNDBG_CLASSMAP|
->   				__typeof__\(|
->   				union|
->   				struct|
+The perf_event_check_period() introduced in:
 
--- 
-Louis Chauvet, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+  81ec3f3c4c4d ("perf/x86: Add check_period PMU callback")
 
+was intended to check the period, rather than the frequency.
+A low frequency may be mistakenly rejected by limit_period().
+
+Fix it.
+
+Fixes: 81ec3f3c4c4d ("perf/x86: Add check_period PMU callback")
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20250117151913.3043942-2-kan.liang@linux.intel.com
+Closes: https://lore.kernel.org/lkml/20250115154949.3147-1-ravi.bangoria@amd.com/
+---
+ kernel/events/core.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 086d46d..6364319 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5969,14 +5969,15 @@ static int _perf_event_period(struct perf_event *event, u64 value)
+ 	if (!value)
+ 		return -EINVAL;
+ 
+-	if (event->attr.freq && value > sysctl_perf_event_sample_rate)
+-		return -EINVAL;
+-
+-	if (perf_event_check_period(event, value))
+-		return -EINVAL;
+-
+-	if (!event->attr.freq && (value & (1ULL << 63)))
+-		return -EINVAL;
++	if (event->attr.freq) {
++		if (value > sysctl_perf_event_sample_rate)
++			return -EINVAL;
++	} else {
++		if (perf_event_check_period(event, value))
++			return -EINVAL;
++		if (value & (1ULL << 63))
++			return -EINVAL;
++	}
+ 
+ 	event_function_call(event, __perf_event_period, &value);
+ 
