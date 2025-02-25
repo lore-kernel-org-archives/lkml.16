@@ -1,106 +1,109 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF62319CC34;
-	Tue, 25 Feb 2025 16:46:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B9C433A0
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 16:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740501989; cv=none; b=fA9yDbQ4Vkg41faJJArfclh/Oi1lOFdhNKryw2G6CGY3llPxXov7b8XaLN42F5F88+OwdTdGGVErwgJqzi+jImrbolC95EvSXXkfG0DUdfp51nstg+DSZukfStI+6rKNpnYh6fGlBX3kKuAJ6Jjc17OGgc8onGJ9i0qJXtroQF8=
+	t=1740502023; cv=none; b=ZhqbffBrNCUtkTAhKui5qLi26VHIWOd2zGNuDLcqIdChtwPwd8UxKjpODXqalxdu8ncuXM6xy9/iFQcSOFYwdw8GCe4WhZgkM8/Bgnjj3nzuzQzlpY+X2kIASl1nayWXHkWfwBr6vOtK2MZDPLlh8rVXK1RuyXr6vSffKxkOdo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740501989; c=relaxed/simple;
-	bh=rUhGtkeEKO5bgIAnZW0g4xICaX1zD95BWrXoltsZvcQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cLZe4MjNbqlIKS9MGb3vYeKZ7ESdqw8F9jOIgkMv7TN1axHgiIxsvc906QlbD+WOMOJgHUOQi7qtX9N+KSHtiQnGU26qsISIsJX5DH5zvugSyyJsOuuGAGC+9IeW3cgQM32KvgOdqNQk87lco7Jne+4dnQDO60VgTDt8jxmH53Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=AMpBHNJa; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1740502023; c=relaxed/simple;
+	bh=OQpRQcQVxXe+edvh1YblQ5RBIrqz+IWlCtlibqXhqc4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZMnw6nKb+oM12B32UQ7DUuzZIOXc/lBDrZzgQWkls2eLRot79asaBAgtxp2q1/c9qs8wICiIzmt8zJvpeQpZG+NetPfYw+9GHkNYZxFkvXkjdc9si0Db2f1EfE9n0z6EdBHJF/NhEIP0fgGMi15jhoM6kRl17/ryLVGm4tXayQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=huqWsyP9; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="AMpBHNJa"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.1)
- id 25b314a4524873c0; Tue, 25 Feb 2025 17:46:20 +0100
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 943EC22C28BF;
-	Tue, 25 Feb 2025 17:46:19 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1740501980;
-	bh=rUhGtkeEKO5bgIAnZW0g4xICaX1zD95BWrXoltsZvcQ=;
-	h=From:Subject:Date;
-	b=AMpBHNJaC6riQO5RLvDgwyK/IRNpNgzCCdUYJYTbF8ee79t1G0ZTDm2ixoJa+50PS
-	 Nblp9kB93bYuzFBzXtED611EuWCeYCAXlgfYkC9rsAM7QEyH2Q+eyb0xsS9WvK/+DQ
-	 DgOXj1/H5RQjBrj0Bz6Q6g+20dXpzy78TBFbUIbqwCGWdpZevXZTDHA2MCibhmzFP9
-	 Hzt32Z5QbPvWrMNSfw9gBgBowBs/thQ1XBWT13gtfhFDBhu48oKI1uOR6ZWkYEUUL3
-	 QUA9KLnDa7n2brdDMI4OheoL64lMrxxHAFC652oOr0bfgU8l4CkZufYvAYYO4uTK5U
-	 tSquc+5pl4E0g==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>,
- Johan Hovold <johan@kernel.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Saravana Kannan <saravanak@google.com>
-Subject:
- [PATCH v1 0/5] PM: sleep: Improvements of async suspend and resume of devices
-Date: Tue, 25 Feb 2025 17:38:01 +0100
-Message-ID: <13709135.uLZWGnKmhe@rjwysocki.net>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="huqWsyP9"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-38f325ddbc2so4248967f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 08:47:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740502020; x=1741106820; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XkQxvp4D/2a6lNDlzyRZd3Y+3HL8xskDBwPpQvdRzfg=;
+        b=huqWsyP9vB74LJBeMdyj3qB9n2xBVztXjvQkKwEENhBNhhHe3wCkjzhKEDGI0H1mq6
+         3Ml6lc65+iKEuGgw3Idu5e+7nbR3+kgpMDeT0Qsm4USmsbGNM0sgBRuWpMaMevTpKHrG
+         bWjXKw67mwnAdfZX6ThTAFlf2W//wSIHC3WyVXuCkj4M9FQTQ2lnqt0F96v5HPkVTgWO
+         Hma3He5Lyk36dWu2mVhvO+gjqdBTCi8WcRr5giR6aIhinkFhFl4OWxRddg9OwPAzdmxw
+         Z/HY2F+iDhrJT3NL0HfrNvs0IwF3qrVkdy8tHQ6JPAv/f3dmGv9M/HnbgY3bez/ixReG
+         4ynQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740502020; x=1741106820;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XkQxvp4D/2a6lNDlzyRZd3Y+3HL8xskDBwPpQvdRzfg=;
+        b=PXtp/KH5yIybSawKkG9nrNoRgWFtrjpoZwYO5Obi5ye1lXDUKa2uBabSK3nSM0IZjW
+         moOzZx6VN2oDEGJRsZh9RO1ke/FestbwGGanrDujV7Qb6nigMrA3pqy6wzwwPeiQRrd2
+         7wMDA+k0iUndxiTLeoJUMZbnfHyl8rnYES1rSCJ+9iT0L2K8YQQFy/+MaxLnl9S4T8zE
+         150PGvCxK8RRUl+O+m+vh0oji+Bfa9oL+CbhTwqn2I+DdynanNkc/3/O2zT2GURMD6Ty
+         VOie5wrDbl7AA0vE5jAvlZGMWHspmBr0cWA4FXvdXQ5mR8UVoRmEYcY6Qr6aLmIZ+Nn9
+         LBkg==
+X-Forwarded-Encrypted: i=1; AJvYcCWph3EdCr7SOm0U03IeEIxSQyeVM62UcChpmsRKbu7PfeoXiZd5tCKHJmQQBLuLwWfcb8QHiBaLsfM0hG0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNZ2Ob+bNjX2oBGoOX9JDG9+XfINypI0vvtbFk5Z0c8m4r4X/L
+	Pn61Row1ekQrth74UJS+IVzHCsR/y/TjJZHNva+71yw9MrHL0VSufMSdgVNo0hE=
+X-Gm-Gg: ASbGncu1c52fszxxNvFjpraKSi4NriKzzE/HW/MaorTPKzS15wAeXfyT4Ysr3a1AEiU
+	3S2UwJR5X3nJCtIS27X2yj9ydyq8caHcFRW/oiBaQjmKCdD9pWGPGr6RX5MquOAk8gc+Fw8XoU+
+	GMGCt4SGwcWZNnQ9lBRaIhwYXGKYe1PV7SdadeA55TqDRWP2QniRZDrxE79SSs7gXn7gegLLC3I
+	PSgyus7zkTWsDISao9VyMu6DHg+4zSNfF480EezOH0czy2Gr8DWG9YafDnUF/4MeQdjFIFVMPof
+	om9fXbcsFI96BJm+R3Ib2vVd+Q==
+X-Google-Smtp-Source: AGHT+IEx1hi4grLoN/YpVbZi7IffgGHtsWzKhP67uDqANfNBhSA1o6apjbKViGQ/G3u3hWJGv+0kHA==
+X-Received: by 2002:a05:6000:18ae:b0:38d:e070:6cf5 with SMTP id ffacd0b85a97d-38f708553e2mr16068784f8f.51.1740502019748;
+        Tue, 25 Feb 2025 08:46:59 -0800 (PST)
+Received: from pop-os.lan ([145.224.90.0])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ab154754esm32072415e9.21.2025.02.25.08.46.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 08:46:59 -0800 (PST)
+From: James Clark <james.clark@linaro.org>
+To: linux-perf-users@vger.kernel.org,
+	irogers@google.com,
+	namhyung@kernel.org,
+	cyy@cyyself.name
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Yoshihiro Furudera <fj5100bi@fujitsu.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Junhao He <hejunhao3@huawei.com>,
+	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] perf pmu: Dynamically allocate tool PMU
+Date: Tue, 25 Feb 2025 16:46:27 +0000
+Message-Id: <20250225164639.522741-1-james.clark@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekvddvvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpeegfffhudejlefhtdegffekteduhfethffhieettefhkeevgfdvgfefieekiefgheenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduleehrddufeeirdduledrleegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepudelhedrudefiedrudelrdelgedphhgvlhhopehkrhgvrggthhgvrhdrlhhotggrlhhnvghtpdhmrghilhhfrhhomheprhhjfiesrhhjfiihshhotghkihdrnhgvthdpnhgspghrtghpthhtohepjedprhgtphhtthhopehlihhnuhigqdhpmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehsthgvrhhnsehrohiflhgrnhgurdhhrghrvhgrrhgurdgvughupdhrtghpthhtohepuhhlfhdrhhgrnhhsshhonheslhhinhgrrhhordhorhhgpdhrtghpthhtohepjhhohhg
-X-DCC--Metrics: v370.home.net.pl 1024; Body=7 Fuz1=7 Fuz2=7
+Content-Transfer-Encoding: 8bit
 
-Hi Everyone,
+A few minor fixes that I came across when poking around with the Perf
+list behavior on hybrid Arm.
 
-Initially, this was an attempt to address the problems described by
-Saravana related to spawning async work for any async device upfront
-in the resume path:
+James Clark (3):
+  perf pmu: Dynamically allocate tool PMU
+  perf pmu: Don't double count common sysfs and json events
+  perf list: Document -v option deduplication feature
 
-https://lore.kernel.org/linux-pm/20241114220921.2529905-1-saravanak@google.com/
+ tools/perf/Documentation/perf-list.txt |  2 +-
+ tools/perf/builtin-list.c              |  2 +-
+ tools/perf/util/pmu.c                  |  7 ++++---
+ tools/perf/util/pmu.h                  |  5 +++++
+ tools/perf/util/pmus.c                 |  2 +-
+ tools/perf/util/tool_pmu.c             | 23 +++++++++++------------
+ tools/perf/util/tool_pmu.h             |  2 +-
+ 7 files changed, 24 insertions(+), 19 deletions(-)
 
-but then I realized that it could be extended to the suspend path and
-used for speeding it up, which it really does.
-
-Overall, the idea is that instead of starting an async work item for every
-async device upfront, which is not very efficient because the majority of
-those devices will not be able to make progress due to dependencies anyway,
-the async handling is only started upfront for the devices that are likely
-to be able to make progress.  That is, devices without parents in the resume
-path and leaf devices (ie. devices without children or consumers) in the
-suspend path (the underlying observation here is that devices without parents
-are likely to have no suppliers too whereas devices without children that
-have consumers are not unheard of).  This allows to reduce the amount of
-processing that needs to be done to start with.
-
-Then, after processing every device ("async" or "sync"), "async" processing
-is started for some devices that have been "unblocked" by it, which are its
-children in the resume path or its parent and its suppliers in the suspend
-path.  This allows asynchronous handling to start as soon as it makes sense
-without delaying the "async" devices unnecessarily.
-
-Fortunately, the additional plumbing needed to implement this is not
-particularly complicated.
-
-The first two patches in the series are preparatory.
-
-Patch [3/5] deals with the resume path for all device resume phases.
-
-Patch [4/5] optimizes the "suspend" phase which has the most visible effect (on
-the systems in my office the speedup is in the 100 ms range which is around 20%
-of the total device resume time).
-
-Patch [5/5] extend this to the "suspend late" and "suspend noirq" phases.
-
-Thanks!
-
-
+-- 
+2.34.1
 
