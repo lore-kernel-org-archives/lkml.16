@@ -1,182 +1,110 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F46213D897;
-	Tue, 25 Feb 2025 01:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764F57DA73
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 01:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740448110; cv=none; b=cNNBX/4kiYV4LN4Y5TCrPgQtOmXtBey6Ij2WsLg8JUmesbYxW1LvFoGSW/Te7YVy50m9ZnyNYfgKC7kJ9EYxrgf3QhKIuOlusU2B3jH1R6+3LNsKT7Nxg4ZSb8UP+h9TqDSCBUuMcgD0ION3ahy4EOUTx97JwaY7xBi/uCg6fe4=
+	t=1740448113; cv=none; b=bv329S8I5xUQfjscg4+WT2k4SiUPzamaqKlwyRQFh/ZX5WMDzXVnSShfbk5MkMZRwa54nf8q7HB33ym8pNWWrtayhoxsq3pMbnW2paQbUIiY8Ag/bJoJVRnUBTRmnIUAuAz0CHLsUBxzB2Gl6tzh3LumIplvLRPSSVYvRuMTuGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740448110; c=relaxed/simple;
-	bh=nymM0ct3LcKrBqldgPir/y62KHjxez7MAYPfwaiGtoE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Yh3pEfo3motVo5hYay8IoZ1otwzCvslbrrOTm/JORwj6IF14x9fczG5IhpnobaW01/RqsFarJt3sqodJVy3reyUtdZnLQ1MAAoYc6NEAjKy9pFsf2wspPbpYoTbmjw7tFE6ZY0yylOKVhG+uRCvYKsg2N8jSoUMOFEkGvMGnrL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Z20l46r9LzHxf3;
-	Tue, 25 Feb 2025 09:44:16 +0800 (CST)
-Received: from kwepemg100017.china.huawei.com (unknown [7.202.181.58])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7C4E61A0188;
-	Tue, 25 Feb 2025 09:48:19 +0800 (CST)
-Received: from [10.67.120.108] (10.67.120.108) by
- kwepemg100017.china.huawei.com (7.202.181.58) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 25 Feb 2025 09:48:18 +0800
-Message-ID: <25552c7d-858d-ea1e-0987-55f71642a503@huawei.com>
-Date: Tue, 25 Feb 2025 09:48:18 +0800
+	s=arc-20240116; t=1740448113; c=relaxed/simple;
+	bh=c4anI0ppkEyU8s1QPXkM2U43MHW3YTHuNeOkaKXZjpw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K4dXVIeN+b9z97YbMWInmaKhKM2Unc5/zIPST0wTILNxiPswwEsD9lbqqYK8RI6k8f2HfZimVZ19Kh8P5watF8Wq5YCy9mthVlF382VNi8TCMiKMx+SmPUGteMP1RXSBOJsMUaBzPgo1KZisCgnbCFrsQyo24DXuYWI07LyuTIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=B0fJUYY9; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="B0fJUYY9"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30930b0b420so44277631fa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 17:48:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1740448109; x=1741052909; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iiZFDEoMMUeQmVYehoWgRQ2XvY7Zgjn8HI/dvzzcXBQ=;
+        b=B0fJUYY9eoJRwelDmfyToZt/Ac4MU3CZ6FleYQpbddKO586XPEpMVZFyhIRLLD5k/w
+         te1/PbZq5SN5xy/KPnxLSd7qB5SzYTs0rPapWSPIDjPtMEJUr603FdaJKbL5+/voZ9IO
+         CtUKR2/vbbOv1uSlNCFQ243ydrhat1UbSI4aU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740448109; x=1741052909;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iiZFDEoMMUeQmVYehoWgRQ2XvY7Zgjn8HI/dvzzcXBQ=;
+        b=CfdXOsd0nQWFXB4DFbzvXZpEARjHom79mDmHsvcsM982cHfl7vBsW6gbHmypRw4Xd+
+         LTrnU7bd+SPDDr+29aRitVxZDglB/yzN+GBtssH16Gt75LSyPJMftjOjF983szrBsRM4
+         XYfM09Hf/xvWOcxzvrLGcRd0vAB+zgc8/zHiPZ8xPfjPrO7vHjh2WHHze+X+l0O/eCsP
+         Frs5ltaKfVX2+/7FiCFIwBn+wqSRhd1VFmmh/VfzzYB5OzTzgMpUXqwKynLkEbJ5ySDr
+         F+cS6R7JipLS70ByMoGMtsbxvq28swdwAgVeKv2GP+sgZ9/ffGjaxV1RHWxIejNXWKKO
+         Dkxw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNY3Wt/emGyiiBQtzG61tF/T+S0zxhTRpJI7WtWJJS7jQVV7FVEbfB9LNJV1tpWocBG8PfZEdF/kipsUw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPgPTCBdgJ5m7CUTdx7mBm68Ab9akoBk+HppokVE9q7MdKMnhO
+	EGSHBfwh64Dssq/1w52ZiAwUasIamrDzucaGkkHO/iLBkEJyFmfdC5jxfptDUg9nACE2RLUyl/c
+	pPFFW
+X-Gm-Gg: ASbGncu4f0x6wWUkcPRE5lFsABrDFkxKehh4Qx0p/G9ikWYzy+ptBZQOp31Oc5E2qsV
+	RRhUJvyByNaUAqult8ZtEAp9p2WwXGQEWTf4lQQGAS0VQPCuorStZisOBcEIgzGTgrbc39fVc5+
+	Ev5V+OE9qHPeXn9gbyeVtCnqnDYUn5SG68+5TX8DXqoBoATRABgfRxuNhqDUkG873zsbMfHqWes
+	We//asMPtuzEEtyWAxTcnXzQzPXiLP1XTfQ3qkn0EH3418vCfsUzWHNKk2KT3MdFnax0i++ik4v
+	HstGuhlxZQ5LWgENlvbuw6KkVE1KPlJKPE4sl/gv+68QT7YgVPYkyfnaS05VNsF+MPqJvg==
+X-Google-Smtp-Source: AGHT+IHTgIhmhRcEGu50KYnJa6g92HhRnJsw4fNQel4BIC1BNInmQ91lLSSbofiNXTyujYUdd98f5g==
+X-Received: by 2002:a2e:9909:0:b0:30a:45af:c18d with SMTP id 38308e7fff4ca-30a599899eemr52430311fa.25.1740448109230;
+        Mon, 24 Feb 2025 17:48:29 -0800 (PST)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30a81ae8163sm827771fa.102.2025.02.24.17.48.27
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2025 17:48:29 -0800 (PST)
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30930b0b420so44277431fa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 17:48:27 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWrxla7hsuAwh7Qu/gktggg6p81+9SpYHAcFR4VJpDsOlKvj5JcYguGZjk9bt2a8m6zoX2NlzOreqFg/l4=@vger.kernel.org
+X-Received: by 2002:a05:6512:1591:b0:545:102f:8788 with SMTP id
+ 2adb3069b0e04-54838ee917cmr5921345e87.19.1740447651791; Mon, 24 Feb 2025
+ 17:40:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
-Subject: Re: [PATCH v3 1/3] scsi: hisi_sas: Enable force phy when SATA disk
- directly connected
-Content-Language: en-CA
-To: John Garry <john.g.garry@oracle.com>, <liyihang9@huawei.com>,
-	<yanaijie@huawei.com>
-CC: <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
-	<linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@huawei.com>, <prime.zeng@huawei.com>, <liuyonglong@huawei.com>,
-	<kangfenglong@huawei.com>, <liyangyang20@huawei.com>,
-	<f.fangjian@huawei.com>, <xiabing14@h-partners.com>
-References: <20250220130546.2289555-1-yangxingui@huawei.com>
- <20250220130546.2289555-2-yangxingui@huawei.com>
- <4bf89b6c-8730-4ae8-8b26-770b2aab2c13@oracle.com>
- <5a4384dc-4edb-9e29-d1dd-190d69b9e313@huawei.com>
- <1e98a1eb-a763-4190-94c5-a867cdf0e09b@oracle.com>
- <235e7ad8-1e19-4b7b-c64b-b6703851ca65@huawei.com>
- <d233a108-a46e-47dd-86ad-756c60c8665e@oracle.com>
- <cc9ba6f8-1efb-4910-8952-9ca07c707658@huawei.com>
- <5d34595f-ff57-4679-b263-fa3fea006ce3@oracle.com>
-From: yangxingui <yangxingui@huawei.com>
-In-Reply-To: <5d34595f-ff57-4679-b263-fa3fea006ce3@oracle.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepemh500016.china.huawei.com (7.202.181.150) To
- kwepemg100017.china.huawei.com (7.202.181.58)
+References: <20250224081325.96724-1-damon.ding@rock-chips.com> <20250224081325.96724-4-damon.ding@rock-chips.com>
+In-Reply-To: <20250224081325.96724-4-damon.ding@rock-chips.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 24 Feb 2025 17:40:39 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=UJb=-TsXS3bgv-rgiON5-4icGgh81gYEJuA=ieDaBT+Q@mail.gmail.com>
+X-Gm-Features: AWEUYZnEpuNKLIwyvEJM2DgjUifuLCeYu_2BU0vlX35x8eRwRX1_fUCYojEGI6Y
+Message-ID: <CAD=FV=UJb=-TsXS3bgv-rgiON5-4icGgh81gYEJuA=ieDaBT+Q@mail.gmail.com>
+Subject: Re: [PATCH v7 03/15] drm/bridge: analogix_dp: Add irq flag
+ IRQF_NO_AUTOEN instead of calling disable_irq()
+To: Damon Ding <damon.ding@rock-chips.com>
+Cc: heiko@sntech.de, andy.yan@rock-chips.com, hjc@rock-chips.com, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org, 
+	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@gmail.com, 
+	dmitry.baryshkov@linaro.org, sebastian.reichel@collabora.com, 
+	cristian.ciocaltea@collabora.com, boris.brezillon@collabora.com, 
+	l.stach@pengutronix.de, dri-devel@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
+On Mon, Feb 24, 2025 at 12:14=E2=80=AFAM Damon Ding <damon.ding@rock-chips.=
+com> wrote:
+>
+> The IRQF_NO_AUTOEN can be used for the drivers that don't want
+> interrupts to be enabled automatically via devm_request_threaded_irq().
+> Using this flag can provide be more robust compared to the way of
+> calling disable_irq() after devm_request_threaded_irq() without the
+> IRQF_NO_AUTOEN flag.
+>
+> Signed-off-by: Damon Ding <damon.ding@rock-chips.com>
+> ---
+>  drivers/gpu/drm/bridge/analogix/analogix_dp_core.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 
-On 2025/2/25 1:34, John Garry wrote:
-> On 24/02/2025 13:12, yangxingui wrote:
->> Hi, John
->>
->> On 2025/2/24 20:21, John Garry wrote:
->>> On 24/02/2025 09:36, yangxingui wrote:
->>>>>
->>>>>
->>>>> So do you mean that all IO to this disk will error? If yes, then 
->>>>> this is good.
->>>> Yes, IO error or IO result does not meet expectations. As shown in 
->>>> the log below, due to an abnormal port ID, the SNs of the two disks 
->>>> read are the same.
->>>
->>> Do you mean that this is mainline kernel behaviour, below:
->> Yes
->>>
->>>>
->>>> [448000.504979] hisi_sas_v3_hw 0000:d4:02.0: phyup: phy1 
->>>> link_rate=10(sata)
->>>> [448000.505070] sas: phy-10:1 added to port-10:1, phy_mask:0x2 
->>>> (5000000000000a01)
->>>> [448000.505247] sas: DOING DISCOVERY on port 1, pid:2239187
->>>> [448000.505255] hisi_sas_v3_hw 0000:d4:02.0: dev[2:5] found
->>>> [448000.505274] sas: Enter sas_scsi_recover_host busy: 0 failed: 0
->>>> [448000.505295] sas: ata31: end_device-10:0: dev error handler
->>>> [448000.505299] sas: ata32: end_device-10:1: dev error handler
->>>> [448001.300517] hisi_sas_v3_hw 0000:d4:02.0: phydown: phy1 
->>>> phy_state=0x1   // phy1's hw port id released
->>>> [448001.300522] hisi_sas_v3_hw 0000:d4:02.0: ignore flutter phy1 down
->>>> [448001.436187] hisi_sas_v3_hw 0000:d4:02.0: phyup: phy2 
->>>> link_rate=10(sata) // phy2 occupies the hardware port ID of phy1
->>>> [448001.608766] hisi_sas_v3_hw 0000:d4:02.0: phyup: phy1 
->>>> link_rate=10(sata) // phy1 was assigned a new hardware port ID
->>>> [448001.775605] ata32.00: ATA-11: WUH721816ALE6L4, PCGAW660, max 
->>>> UDMA/133
->>>> [448002.159364] sas: phy-10:2 added to port-10:2, phy_mask:0x4 
->>>> (5000000000000a02)
->>>> [448002.159575] sas: DOING DISCOVERY on port 2, pid:2239187
->>>> [448002.159581] hisi_sas_v3_hw 0000:d4:02.0: dev[3:5] found
->>>> [448002.159602] sas: Enter sas_scsi_recover_host busy: 0 failed: 0
->>>> [448002.159623] sas: ata31: end_device-10:0: dev error handler
->>>> [448002.159633] sas: ata32: end_device-10:1: dev error handler
->>>> [448002.159636] sas: ata33: end_device-10:2: dev error handler
->>>> [448002.393349] hisi_sas_v3_hw 0000:d4:02.0: phydown: phy2 
->>>> phy_state=0x3
->>>> [448002.393354] hisi_sas_v3_hw 0000:d4:02.0: ignore flutter phy2 down
->>>> [448002.684937] hisi_sas_v3_hw 0000:d4:02.0: phyup: phy2 
->>>> link_rate=10(sata)
->>>> [448002.851639] ata33.00: ATA-11: WUH721816ALE6L4, PCGAW660, max 
->>>> UDMA/133
->>>> [448002.851644] ata33.00: 31251759104 sectors, multi 0: LBA48 NCQ 
->>>> (depth 32)
->>>>
->>>>>
->>>>> But I still don't like the handling in this patch. If we get a phy 
->>>>> up, then the directly-attached disk ideally should be gone already, 
->>>>> so should not have to do this handling.
->>>> There is no problem when the disk is removed. The current problem is 
->>>> that multiple phy up at the same time. When one of the phys up and 
->>>> enters error handler to execute hardreset, the phy will down and 
->>>> then up. other phy up will probably occupy the hw port id of the 
->>>> previous phy which do hardreset in EH.
->>>
->>> Could you do this work (itct update) in lldd_ata_check_ready CB?
->>
->> It's a good idea only for sata disks, but the current problem is not 
->> only the scenario of connecting the sata disk. This phenomenon 
->> occasionally occurs when the SAS disk is connected after the 
->> controller is reset. The following is the log of the stress test 
->> recurrence after incorporating the current repair patch. Although we 
->> called hisi_sas_refresh_port_id() on controller reset.
->>
->> [ 5387.235015] hisi_sas_v3_hw 0000:74:02.0: I_T nexus reset: internal 
->> abort (-5)
->> [ 5387.242126] sas: clear nexus ha
->> [ 5387.245283] hisi_sas_v3_hw 0000:74:02.0: controller resetting...
->> [ 5388.908489] hisi_sas_v3_hw 0000:74:02.0: phyup: phy5 
->> link_rate=10(sata)
->> [ 5388.915090] hisi_sas_v3_hw 0000:74:02.0: phyup: phy6 
->> link_rate=10(sata)
->> [ 5388.934505] hisi_sas_v3_hw 0000:74:02.0: phyup: phy0 link_rate=9(sata)
->> [ 5388.941009] hisi_sas_v3_hw 0000:74:02.0: phyup: phy1 link_rate=9(sata)
->> [ 5388.950976] hisi_sas_v3_hw 0000:74:02.0: phyup: phy4 link_rate=11
->> [ 5388.957048] hisi_sas_v3_hw 0000:74:02.0: phyup: phy7 link_rate=11
->> [ 5388.980097] hisi_sas_v3_hw 0000:74:02.0: phyup: phy2 link_rate=11
->> [ 5388.986169] hisi_sas_v3_hw 0000:74:02.0: phyup: phy3 link_rate=11 
->> // phy3 attached a sas disk.
->> [ 5389.065103] hisi_sas_v3_hw 0000:74:02.0: task prep: SAS port1 not 
->> attach device
->> [ 5389.072409] sas: executing TMF task failed 5000c500ae49c8f1 (-70)
->> [ 5389.078492] hisi_sas_v3_hw 0000:74:02.0: task prep: SAS port1 not 
->> attach device
->> [ 5389.085780] sas: executing TMF task failed 5000c500ae49c8f1 (-70)
->> [ 5389.091861] hisi_sas_v3_hw 0000:74:02.0: task prep: SAS port1 not 
->> attach device
->> [ 5389.099146] sas: executing TMF task failed 5000c500ae49c8f1 (-70)
->> [ 5389.107419] hisi_sas_v3_hw 0000:74:02.0: controller reset complete 
->> // controller reset finished
->> [ 5389.113686] hisi_sas_v3_hw 0000:74:02.0: phydown: phy0 phy_state=0xfe
->> [ 5389.120099] hisi_sas_v3_hw 0000:74:02.0: ignore flutter phy0 down
->> [ 5389.136399] hisi_sas_v3_hw 0000:74:02.0: phy3's hw port id changed 
->> from 1 to 7
->> [ 5389.308114] hisi_sas_v3_hw 0000:74:02.0: phyup: phy0 link_rate=9(sata)
->>
-> 
-> 
-> pm8001 sends sas_notify_port_event(sas_phy, PORTE_LINK_RESET_ERR,) link 
-> reset errors - can you consider doing that in hisi_sas_update_port_id() 
-> when you find an inconstant port id?
-Currently during phyup, the hw port id may change, and the corresponding 
-hisi_sas_port.id and the port id in itct are not updated synchronously. 
-The problem caused is not a link error, so we don't need deform port, 
-just update the port id when phyup.
-
-Thanks.
-Xingui
-
+Suggested-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
