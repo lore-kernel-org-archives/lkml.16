@@ -1,80 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC6619ADA2
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 18:30:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B239518C035;
+	Tue, 25 Feb 2025 18:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740508238; cv=none; b=OZ8BWIJXNFcbQtz0aANyxNXeDFpEORomb8zMRJ56PwhCjSW1LFLZm42UWjUL0hbtwH+StYZfc8DbdvQdGiD3NjVlVq+gK/u+iCQXdJmxR/yD6ZX6e97jP4pEuF6ZABC3UCc97wnydC1dP+5/ho3hA6MC2f8aoqbaBsoSfqVm8gw=
+	t=1740508263; cv=none; b=m1wD40l+8cqaaJ1WSxRaPd91fLVJIRFLzaa9x/NaZehtu99szIDaJWn0WqX3gnG2UYuI4G7TsKLaONTMWDpDjoeJkRObUw6hmB0mi2udVrA3oNntaMSI+WxYIIiNdNcFtuPCMIZcdvh5AVMTpEXQcVMl0oU2jb8FEMqaQr5223I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740508238; c=relaxed/simple;
-	bh=Ium2QLfl32OjTwDrKz/6n4+Fa0knub6CtKddhBxbL/M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h6U5aty0+FAjIvAhIP/eCk0vP9/lYbsXnjsmwr2aGX5XRolj4iTLTmOIpntszF3Lbk3nOBBWRm1BTTYLXaX8OW2k4NhDCFEnFLWZfgC0wQO586/umPyAHLGFOfIM27H5mMXY2YHvXOEjVsURel9pM5Jdn7KIyv1lBqJ5ePkb10c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NM5jAP5N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740508263; c=relaxed/simple;
+	bh=nmjNE2/5IDHBVbgl4kdcWs687grdd6MfsW3lMGDz4lU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nrDbYH2xCTIuGfjMHJNrKmsno1LvZM6HOaTg6B5jhXQ5JNzI+YHNWHU32xPGhgcNA6db8l8zmZ9JcYIQJCMyFX6em7tJ4B+Z4QIOAL0EeZrVXE4B8VM+fXIgdUOV5JDb+ZKekXnajv8ysvqtyrHRopUKM82ez9rRbA+ypGU9PSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=acBmjohJ; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NM5jAP5N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8A8AC4CEDD;
-	Tue, 25 Feb 2025 18:30:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740508238;
-	bh=Ium2QLfl32OjTwDrKz/6n4+Fa0knub6CtKddhBxbL/M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NM5jAP5NvgWZ8AVJpBGdRj8j4Bd8UDcTfyS2M0bjx8SZhphZbgvDnaX7poDs0knX+
-	 QbcZ43zSKgh9Z5KbZWrQ2ThOcUeIjK2EUaN0vci35p95aoYSolmDnLUI8/EHauOv9D
-	 uds0loE/qhlrEOiLYDSgqbcZeTQuezXqCdYQ4yycZNYB/InhaZ9fN91oK1vbRz04Tm
-	 NrmtEWFkSrrm0VHVwanWNJV8M2u+snYcsus07lBODs9dEepN7wbG7InRqamVu0I057
-	 69oB8reJaqKvs64YQkd+6LAgEQgTFnTol1G3p6+dWmXfjp7Kjp1r4pDKSpAMPq/1YH
-	 gCN/99IjszhDw==
-Date: Tue, 25 Feb 2025 08:30:36 -1000
-From: Tejun Heo <tj@kernel.org>
-To: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>
-Cc: linux-kernel@vger.kernel.org, sched-ext@meta.com
-Subject: Re: [PATCH sched_ext/for-6.14-fixes] sched_ext: Fix pick_task_scx()
- picking non-queued tasks when it's called without balance()
-Message-ID: <Z74MTER2Mycqt8xg@slm.duckdns.org>
-References: <Z73pjysZYNEIbkiy@slm.duckdns.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="acBmjohJ"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2fc6272259cso9660928a91.0;
+        Tue, 25 Feb 2025 10:31:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740508261; x=1741113061; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=clbxucH2qa/HYexBlCEIH5MMYzU5Q2jGNyXDV7K5VTM=;
+        b=acBmjohJf8VsvngejxoLazEayJoK9UpleysTZ1/qTWpQvDz5DHE0ZYdChAJp6W6YjT
+         ymOm4wcWa4yzT1HL62TVvRw3R980Q5y/3rYdY+d4aRHsnQgPUhTZQtGvqa3GKsBLIOca
+         V/1dAD9Ucz3GWLNOjomSEGSNa8gfcL3AIUgQ+6MFPnpydFM+6pBLfDwjQ8qRztSqpil3
+         iZyHaAFuj/X8onExGUhCXAuxViaY0Q9nfUAlZzX64bn432dKk8Q/bU4u0ilVX504auHc
+         iPHhpj7ibkPHTv93ece/4YSONWj9hCKhoJ+G/ON9+yyeFQouyDb3Lhtzs2khhO3R4i8+
+         2cmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740508261; x=1741113061;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=clbxucH2qa/HYexBlCEIH5MMYzU5Q2jGNyXDV7K5VTM=;
+        b=CjA45YavYJxxdK6GNxPKIW78WOpvrSKt3mH7pC4jrM+TzxZN9B1ILafZlJNl9tbtTi
+         Yv8QkW90LSPgVbHQMHLYMiTJSws9s6BIzjbt6GX1VzQ6tyuGNOrwlJsCBi8wl/sX71nb
+         gDlt8I/hXpY4nF1BmrUOvCXKs2u8UVoTOWuscgCFW0mBAQrLKstJExVibJHeA2FiIqJD
+         KwLT4F4/obopDGK6+iYyUF/bOcPV2SRwZp78VSvBXv14+MsiUic8j+nmFn/odBOFrAqa
+         aVEJjXwfXl3EtpW/EA2EcF1ZDZ86c2zINAWBeShvkrsnvFEAOczznrYST2r4R6qHZdZ0
+         L72g==
+X-Forwarded-Encrypted: i=1; AJvYcCVBM+FT7iSUZcawqUrKIjncOzAdSsXT/8nXCknO9arHXhkgUfMdX7oIH0MkxID+CBklLbEfBC8kIApl@vger.kernel.org, AJvYcCVTJRxxQpYHiHtfHDPg95acgRep9KFQSxOUBZdCz7tbklQuYRqfCO0hOJPOmHvESY1tTaxWztHX5rzDfVdH@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjBJbM+FCs/28HkfE55pAW9YPCc27gLgDdq0WRluvpCs7gK/8Y
+	ATXlSsNt1NqGh3L/sbQhM3jOgNjs+gR6TK3afmGaTJdrSUoF1IMY
+X-Gm-Gg: ASbGncvJ5jWlmiEC6+uNbqZc21qff0oYZgjFnIDELZ2eu1QrmVEsxKUXCQpkW7zJlPl
+	HYOhYvRj3yKAaMOxzyAWOPuAhkx7VbFBnSwpB0bB8Zx7FX876g7p71uyVrUkBWrVCNEF8vfdbTY
+	pIAqbNUDinsiiw2XMPGorM2kp8RY+uouV5YXhmFRee/hgn8x73r6CrLYgFkiVEJRaz3juLlyHgN
+	Opes8LUSjUvGH2XcakK3guGyYdJvwqQM1DZ6U+Ue4xznU83fX5za9OgDBkdsVP1xC6Y3KBnzGFL
+	iuXz4vNcv7r+/qIJ8rZA9gBIAxkf+ELvBxmGeI3djEKE3P6F6V/1OUaPfB/qGR25V+00YVKito0
+	=
+X-Google-Smtp-Source: AGHT+IHs98MecKlAIN7pAThXOrkUh7E3AIRt/vYcixB4+zqZvpAdTtK8So0vPkRa7+Wpv2+CNmw02w==
+X-Received: by 2002:a17:90b:538f:b0:2f6:d266:f467 with SMTP id 98e67ed59e1d1-2fe68d061d4mr5465187a91.34.1740508260846;
+        Tue, 25 Feb 2025 10:31:00 -0800 (PST)
+Received: from ?IPV6:2804:14d:887:95a9:e1a5:e9d5:ba9a:df82? ([2804:14d:887:95a9:e1a5:e9d5:ba9a:df82])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe6cf86486sm1952600a91.0.2025.02.25.10.30.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2025 10:31:00 -0800 (PST)
+Message-ID: <c3407b84-7698-4102-b600-c1a6701fe67f@gmail.com>
+Date: Tue, 25 Feb 2025 15:30:55 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z73pjysZYNEIbkiy@slm.duckdns.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: interrupt-controller: Convert
+ nxp,lpc3220-mic.txt to yaml format
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, vz@mleia.com,
+ Leonardo Felipe Takao Hirata <leofthirata@gmail.com>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ skhan@linuxfoundation.org, linux-kernel-mentees@lists.linuxfoundation.org
+References: <20250224210432.94851-1-leofthirata@gmail.com>
+ <20250225-lean-bronze-millipede-03edd9@krzk-bin>
+Content-Language: en-US
+From: Leonardo Felipe Takao Hirata <leo.fthirata@gmail.com>
+In-Reply-To: <20250225-lean-bronze-millipede-03edd9@krzk-bin>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Feb 25, 2025 at 06:02:23AM -1000, Tejun Heo wrote:
-> a6250aa251ea ("sched_ext: Handle cases where pick_task_scx() is called
-> without preceding balance_scx()") added a workaround to handle the cases
-> where pick_task_scx() is called without prececing balance_scx() which is due
-> to a fair class bug where pick_taks_fair() may return NULL after a true
-> return from balance_fair().
-> 
-> The workaround detects when pick_task_scx() is called without preceding
-> balance_scx() and emulates SCX_RQ_BAL_KEEP and triggers kicking to avoid
-> stalling. Unfortunately, the workaround code was testing whether @prev was
-> on SCX to decide whether to keep the task running. This is incorrect as the
-> task may be on SCX but no longer runnable.
-> 
-> This could lead to a non-runnable task to be returned from pick_task_scx()
-> which cause interesting confusions and failures. e.g. A common failure mode
-> is the task ending up with (!on_rq && on_cpu) state which can cause
-> potential wakers to busy loop, which can easily lead to deadlocks.
-> 
-> Fix it by testing whether @prev has SCX_TASK_QUEUED set. This makes
-> $prev_on_scx only used in one place. Open code the usage and improve the
-> comment while at it.
-> 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Reported-by: Pat Cody <patcody@meta.com>
-> Fixes: a6250aa251ea ("sched_ext: Handle cases where pick_task_scx() is called without preceding balance_scx()")
-> Cc: stable@vger.kernel.org # v6.12+
+Hello Krzysztof,
 
-Applied to sched_ext/for-6.14-fixes.
+On 25/02/2025 9:06 AM, Krzysztof Kozlowski wrote:
+> On Mon, Feb 24, 2025 at 06:04:30PM -0300, Leonardo Felipe Takao Hirata wrote:
+>> Convert NXP LPC3220-MIC to DT schema.
+>>
+>> Signed-off-by: Leonardo Felipe Takao Hirata <leofthirata@gmail.com>
+> SoB mismatch.
+>
+> Run checkpatch.
+>
+>> ---
+>>   .../interrupt-controller/nxp,lpc3220-mic.txt  | 58 -------------
+>>   .../interrupt-controller/nxp,lpc3220-mic.yaml | 86 +++++++++++++++++++
+>>   2 files changed, 86 insertions(+), 58 deletions(-)
+>>   delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.txt
+>>   create mode 100644 Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.yaml
+> ...
+>
+>> +title: NXP LPC32xx MIC, SIC1 and SIC2 Interrupt Controllers
+>> +
+>> +maintainers:
+>> +  - Vladimir Zapolskiy <vz@mleia.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - nxp,lpc3220-mic
+>> +      - nxp,lpc3220-sic
+>> +
+>> +  reg:
+>> +    description:
+>> +      Should contain IC registers location and length.
+> Drop description
+>
+>> +    maxItems: 1
+>> +
+>> +  interrupt-controller: true
+>> +
+>> +  '#interrupt-cells':
+>> +    const: 2
+>> +    description:
+>> +      The number of cells to define an interrupt, should be 2.
+> Don't repeat constraints in free form text. Drop.
+>
+>> +      The first cell is the IRQ number, the second cell is used to specify
+>> +      one of the supported IRQ types.
+>> +          IRQ_TYPE_EDGE_RISING = low-to-high edge triggered,
+>> +          IRQ_TYPE_EDGE_FALLING = high-to-low edge triggered,
+>> +          IRQ_TYPE_LEVEL_HIGH = active high level-sensitive,
+>> +          IRQ_TYPE_LEVEL_LOW = active low level-sensitive.
+>> +      Reset value is IRQ_TYPE_LEVEL_LOW.
+>> +
+>> +  interrupts:
+> Need to list and describe the items.
+>
+>> +    description:
+>> +      Empty for MIC interrupt controller, cascaded MIC hardware interrupts for
+>> +      SIC1 and SIC2
+> And then allOf:if:then restricting it per variant (interrupts: false).
+>
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupt-controller
+>> +  - '#interrupt-cells'
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/interrupt-controller/irq.h>
+>> +
+>> +    mic: interrupt-controller@40008000 {
+>> +      compatible = "nxp,lpc3220-mic";
+>> +      reg = <0x40008000 0x4000>;
+>> +      interrupt-controller;
+>> +      #interrupt-cells = <2>;
+>> +    };
+>> +
+>> +    sic1: interrupt-controller@4000c000 {
+>> +      compatible = "nxp,lpc3220-sic";
+>> +      reg = <0x4000c000 0x4000>;
+>> +      interrupt-controller;
+>> +      #interrupt-cells = <2>;
+>> +      interrupt-parent = <&mic>;
+>> +      interrupts = <0 IRQ_TYPE_LEVEL_LOW>,
+>> +                  <30 IRQ_TYPE_LEVEL_LOW>;
+>> +    };
+>> +
+>> +    sic2: interrupt-controller@40010000 {
+> Drop, two examples are enough.
+>
+>> +      compatible = "nxp,lpc3220-sic";
+>> +      reg = <0x40010000 0x4000>;
+>> +      interrupt-controller;
+>> +      #interrupt-cells = <2>;
+>> +      interrupt-parent = <&mic>;
+>> +      interrupts = <1 IRQ_TYPE_LEVEL_LOW>,
+>> +                  <31 IRQ_TYPE_LEVEL_LOW>;
+>> +    };
+>> +
+>> +    adc@40048000 {
+>> +      compatible = "nxp,lpc3220-adc";
+> Drop, not relevant.
+>
+> Best regards,
+> Krzysztof
+>
+Thanks for the feedback. The fixes will be in v2.
 
-Thanks.
+Best regards,
+Leonardo Hirata
 
--- 
-tejun
