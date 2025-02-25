@@ -1,102 +1,86 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A5F4C80
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 11:37:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28974C80;
+	Tue, 25 Feb 2025 11:38:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740483479; cv=none; b=opKva25HmdlCoPreCq4ozVpuNOVDWxkTI/YxjJCGnglSzv2pGd4/+0vSq3W2zrUu1+a/f14yvHBV5xukHYyxObdnPiUcgvLRocXLdFi28CUqGpct+cOpAiOZNXOIDEU7unIg3DWOvqaoQbfm2p2guLADdAeIdwLvROtWCTIabqE=
+	t=1740483528; cv=none; b=kyZ0b8T8fOYCNWhVB2N3NlnKwOMSRTFcmGuVcx4p6oiQbY+0cW/IBZ65XTkWFNkRQ8DxE4ng2JRjzoNAhz7tpdnBpcBeInP0TT/9BhMqG86MRs7Aoc7s9sc2oMpWOrIaKDm022QCz4810oDnb2NPUXfJHdLlnaGRuWZD0zlk9v0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740483479; c=relaxed/simple;
-	bh=yt2R0RS1TqSbKw/Jt2UsZPUVcnMdVRQFPe4UhVWU6gw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GSYoovWIMNO3S6tIcq+9o8xzsrzNQeK4IJ1B7c06LOrj1E59ACp3xNibHRc/iFpP3VyTe/beDJ6arz2qI/dBt/kFXsZIVzyEMrHlb1i82iLBV09gbnC9FmwpcGEEqxYbKgtNDpFN9Y2N6iskhv/dnBvcguUpGrhPJuSDNFQSM1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mKQL5vi4; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740483528; c=relaxed/simple;
+	bh=7o1LhwlAcsJgqFTK4J681khp+AvnA4zXAdW/ZK8fgcY=;
+	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
+	 References:In-Reply-To; b=cqALK0FjI1FTDIVOabHs0Y2T2wARYNGaVAclDlGqg5Y4GghsOfToPY83tyvw8msMPVb4U10bcrbrz1IVjggSm1oap2CcqC5Y5Gbm3JEUu4V58x+r9Y8swN4HybFEmYouR5n+XygWUvYv5ORzImdkcmCvnJaEar725UB5XVkX8rE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=Fx8DmUwN; arc=none smtp.client-ip=54.254.200.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mKQL5vi4"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e549be93d5eso5890610276.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 03:37:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740483476; x=1741088276; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=n1TWnKYSjWgGvb3cyxt3TX5DamTHuovBzjkuSknBSeU=;
-        b=mKQL5vi4qGOJRLNpfXdtofuJbytPCxHNMU9f1tg4sQGkA9LmiJLUUnYV2K/6x+Foqo
-         X4b1+WjYxO0NbzdXZ2x9I6xbWGj6s8mmaVDuzv3K71KgfISMkkbl89BpTPmecRPl/DNf
-         lkw8yLL+brU/PjVEKZZCMUgMoGuL25c28+T2unlydgObpEmUc7nftZCGlxkHOEvqHPZS
-         LATnblprmHKRH8zZ629/vS8HUTGBQY1pGgpnaC3jBGbyZiO94TJlGoMmPyy2CmuENXlV
-         Wb570NAxOAfyPJ9R0mXBwM/YwU/sd3SxplXuCHLDcekbb7KfRb9HsDC1Bp94Y8qnberX
-         hi/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740483476; x=1741088276;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=n1TWnKYSjWgGvb3cyxt3TX5DamTHuovBzjkuSknBSeU=;
-        b=Ewru888H7nsG1gWqXO+3lyRqsFAtrzzBNtc4HL3c6pApJ8SKJDgBiH+z+AgRcdUL5j
-         mgHaV2o3xTXbCW/ID5ilo4Tesx/QFeqHkIOyhOop6xO813IDK/UZb8sg6Zybm+tedcTe
-         uJn4l/sjn5b1xZom6nzN0w1i0YsrQMqKdKOt602oLKSn7TqkEPlDmJBGRM3bqJTSl9Fs
-         FbsY5gZ1WwQKE6+XwuS6OPCCiMV9SUdUi+7ALVPOU/0QToBNeloBd75i24vOoOHug6VA
-         vNR5daEC+Y309Ru1hlhrhoRbDW5Rx+E9PADduNrFFybtjs/gqiTlY1JjiahG47b2tTh9
-         sOfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUIh+d+unEzlbpHm9V66ZA2TwjcCPcGLB3eS4t0+pM1ptvtOlUdBtGtLbRF0dpaevWbK9FBMF6Be6rlWqQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsMMslJz+u/XRZrOkP158vfxQAeGj+EUJ1Dp6f/jKU1VdXQvZm
-	NpiWvUF/7GeD0GVmQlcDbU3bQ6U2w5VWsGQ1NjtGUoyBTjEd5AH53Qy9ocoobGGdFCnkQd6Grz7
-	FlokHxVKSbx7Lg5GHuxZ8M/nmzr+v1Jc3h2oeVQ==
-X-Gm-Gg: ASbGnctvYe5bPEpYCPsAmQ7Ac1+CMM2zOrzqx/I4naajeCLCH4ksVAdZviv1Wzkx0Yx
-	2FXjtowncWgf7U0xZ1rcidnd0n2Y1wv21ufQ8m7rCjh9ura3pN5FzsuM/vdhV4Umj7yd02+WK/X
-	Ri4NmShPv++FgbEuGIsguD1UfaJQoj1+C5UUouE88=
-X-Google-Smtp-Source: AGHT+IFoRV0tABvVleGcPGFjITHVSAozbUIV7vt/JXOPnNAtmYOOQYQ8LJ70dKpeCX04ppbU+mmusjSHjBwHx6qf6uI=
-X-Received: by 2002:a05:6902:18cd:b0:e5d:fccc:7907 with SMTP id
- 3f1490d57ef6-e607a4e3c9bmr1939202276.14.1740483476663; Tue, 25 Feb 2025
- 03:37:56 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="Fx8DmUwN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1740483461;
+	bh=7o1LhwlAcsJgqFTK4J681khp+AvnA4zXAdW/ZK8fgcY=;
+	h=From:To:Subject:Mime-Version:Date:Message-ID;
+	b=Fx8DmUwNZJewxD15LNTJ5vMNr/YQUsIpa6YNjUaamLHwwREp5btz+eurbZ1nHB4Cj
+	 +68/+D+/+9PuWQ4s4rf1GSyKtGfScO1zkgdZia3BxEZtylhuL2UfgEItxvv/q13d/o
+	 2pzYSNqO29PCoNmypHUZINnrOA1qE0UEIk503a8I=
+X-QQ-GoodBg: 1
+X-QQ-SSF: 00400000000000F0
+X-QQ-FEAT: D4aqtcRDiqT6iyfUez+DXx4B7ybItHVbSxkDlA8/kMI=
+X-QQ-BUSINESS-ORIGIN: 2
+X-QQ-Originating-IP: Xptfm9en8kSztH5x5sLIfL3u/YSEDpg5TCpVOgsGmtg=
+X-QQ-STYLE: 
+X-QQ-mid: v3sz3a-6t1740483459t397160
+From: "=?utf-8?B?V2VudGFvIEd1YW4=?=" <guanwentao@uniontech.com>
+To: "=?utf-8?B?U2xhZGUgV2F0a2lucw==?=" <srw@sladewatkins.net>, "=?utf-8?B?R3JlZyBLSA==?=" <gregkh@linuxfoundation.org>
+Cc: "=?utf-8?B?Sm9obiBLZWVwaW5n?=" <jkeeping@inmusicbrands.com>, "=?utf-8?B?SmlyaSBTbGFieQ==?=" <jirislaby@kernel.org>, "=?utf-8?B?RmVycnkgVG90aA==?=" <ftoth@exalondelft.nl>, "=?utf-8?B?SWxwbyBKw6RydmluZW4=?=" <ilpo.jarvinen@linux.intel.com>, "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>, "=?utf-8?B?bGludXgtc2VyaWFs?=" <linux-serial@vger.kernel.org>, "=?utf-8?B?c3RhYmxl?=" <stable@vger.kernel.org>
+Subject: Re: [PATCH] serial: 8250_dma: terminate correct DMA in tx_dma_flush()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250217-adpdrm-v7-0-ca2e44b3c7d8@gmail.com> <174047913824.2131221.6545389561298332217.b4-ty@linaro.org>
-In-Reply-To: <174047913824.2131221.6545389561298332217.b4-ty@linaro.org>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 25 Feb 2025 13:37:45 +0200
-X-Gm-Features: AQ5f1Jq_8vz2X92aaDmmCRK3QuSACEM5CmHNBFF9CumkaBecyk4PuPviBAdIWp0
-Message-ID: <CAA8EJpqM8ZQ-ScEtEBXaUF2Nargtp_TBAyMYvbJ49PGbwPWjaQ@mail.gmail.com>
-Subject: Re: (subset) [PATCH v7 0/5] Driver for pre-DCP apple display controller.
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, asahi@lists.linux.dev, 
-	Janne Grunau <j@jannau.net>, Sasha Finkelstein <fnkl.kernel@gmail.com>, 
-	linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Alyssa Ross <hi@alyssa.is>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Neal Gompa <neal@gompa.dev>, Nick Chan <towinchenmi@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
+Date: Tue, 25 Feb 2025 19:37:38 +0800
+X-Priority: 3
+Message-ID: <tencent_729B631A3339DFCB4BFA873E@qq.com>
+X-QQ-MIME: TCMime 1.0 by Tencent
+X-Mailer: QQMail 2.x
+X-QQ-Mailer: QQMail 2.x
+References: <20250224121831.1429323-1-jkeeping@inmusicbrands.com>
+	<tencent_09E5A20410369ED253A21788@qq.com>
+	<2025022434-subsiding-esquire-1de2@gregkh>
+	<tencent_013690E01596D03C0362D092@qq.com>
+	<2faa8912-a699-47d9-b9d6-dc2fb22fe7c8@sladewatkins.net>
+In-Reply-To: <2faa8912-a699-47d9-b9d6-dc2fb22fe7c8@sladewatkins.net>
+X-QQ-ReplyHash: 829435416
+X-BIZMAIL-ID: 9039354056843283055
+X-QQ-SENDSIZE: 520
+Received: from qq.com (unknown [127.0.0.1])
+	by smtp.qq.com (ESMTP) with SMTP
+	id ; Tue, 25 Feb 2025 19:37:40 +0800 (CST)
+Feedback-ID: v:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MgQY1K25Ph0m1naNLl6PTlAFYKFI+WJ3bVu4EThSbzozVxcMfEWbbzRW
+	4N7uMs+393LogP+FLkIofNR0nsWjS2BN6UF1YAIr/gACxhPL2xyPJ9lf5T0R+mh5kPbkdgc
+	NaE7RdGocNgBAOkmmuN+6ecjMuw7H4StlEk/OS8pEB+xyCdV3MWoQeb3p/nQye6ICleV7sn
+	uGtDZneJklQ/Jn//jJ1C7KgTx5jr8SzbnL4NeBkETJvf2OH5AFmCRDq49FP90vWZXLM4qF2
+	oFyzo2eJ2sCi+PlvNTPB/EpCubrqGfYnrPgT0d54yVbcToQHM92t2UR35bazj2KJ4vugHB+
+	MlmmaHQYldK5smP0g+w6C8X40XwldoB5c8ReLbb0e0s3R0ifUDonYzdrdW3i6EpjpvelwzQ
+	U6tikRNjBAkrPLGsIUPVYAVCwzqRMpHfWAcpBHUzsfRz8ZSf7K8dFAo8bsgqIR5EBZuH5nM
+	XdpWFvBfoiw35y4TI4da/ZDShTOagmckk7mEKgPV194vLHjy5zkJGKY66o3weON0iRmEvkF
+	15g5/WgprvwVRKZfbN8N/wtjINikYh3QvnTUcAlxPe4vpYdrbGuxNWYv4I2X75QvSqY/8sQ
+	1NVOL8ZTWNSrnVd3QjXAylK6tCb5kGE9/UQqKzqfwyGCPCFpaDJiC9ahGjw7hzXOtz+7lmk
+	7MB3zOIDDpd74SkE1un7X141YvA+2lWmjtsokUt+Q0/oPypW3yUBYCOc358Ys04b0rR2VTR
+	viJypw/uawzgxsA0/PsTL6Lzwhm/Wox883so+s0o49/m25FGeG1xy4TDiFg88DjDa/sJBrV
+	ev/O8HnxoyJZ4CpoqfkiCJVJ4TQPU2Y4274+n75Y6wkgSb6cYN7gt9b6SVWTAqrW8PTOeAl
+	jg5i3xpDasIAKUKtBjIlwT/iv7RcX6fe6aIb9kC9/n5vjvYUCH7m83QvQADt9xxAuwWLvkw
+	0xJ7ErqmVSdDY309erRfxQ6MLgLkRTPl2eDDdzLwpB6uivlLK8/hZ0PmrMvRV2CCAJMZEF/
+	GrZOZAQA==
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+X-QQ-RECHKSPAM: 0
 
-On Tue, 25 Feb 2025 at 12:25, Neil Armstrong <neil.armstrong@linaro.org> wrote:
->
-> Hi,
->
-> On Mon, 17 Feb 2025 12:39:30 +0100, Sasha Finkelstein wrote:
-> > This patch series adds support for a secondary display controller
-> > present on Apple M1/M2 chips and used to drive the display of the
-> > "touchbar" touch panel present on those.
-> >
-> >
->
-> Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-next)
->
-> [3/5] drm: panel: Add a panel driver for the Summit display
->       https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/40115947b59f2ca361a47615304dff0a2b69a2b4
+SGVsbG8gU2xhZGUsDQoNClRoYW5rcyBmb3IgcmVwbHkgbXkgcXVlc3Rpb24uDQoNCkJScw0K
+V2VudGFvIEd1YW4=
 
-Without the bindings?!
-
--- 
-With best wishes
-Dmitry
