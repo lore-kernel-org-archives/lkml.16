@@ -1,125 +1,177 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B6D205502
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 11:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1971C84A4
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 11:02:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740481380; cv=none; b=QCKDu+JwEKYdxiPy+US0IwXHxdHsKMl1kyWyF/2TLhYtEBIhQrvCnAVRDy9ezRCSPnxPrmz2iS5/3QzKpaUBYDvvRqr6kOI73r2YRtM+ML6LCE74YT8+u15FoGrAIUHEwJ3JTxhIZAu5sMFvxaaKO0SG8z7LEISiKOeJalXrOWo=
+	t=1740481379; cv=none; b=SWpW2Yv/FZQdeB52em+0uGyfD3h0B+NXfUhzHw4NP9HMvNe7JwX7VylaWsKLz2FwfEq5+2zuDa5JxqqOod0B8fMlEu0ZJI2XtRp8S9FN/u7aMJDyhKrtc/byTeW2UZp5vjpwwZG1ynrLIxHBzXC6hTHDVYoJ0FsZeedlAxpy5bM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740481380; c=relaxed/simple;
-	bh=gQc+M1MxzMAK4raon5GNtplgYSMzzyLfAB8UOS9YtMU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kP1w4jPurQ7NFA1nfuWU9b24AuGC94b26L/64jOXxxMs9VipbGWIBRqvWNez3q3AM2In4u4x3qYEz2is/8g6QR8h8sGEew6h5GNkn0rDLQwQP+oc8KfpfxayCdQy+MEXKgyO1t0hzPEFid1R1TDBxDTyE2/iq2XYwbtYYMcJPjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=GOLogiGy; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1740481379; c=relaxed/simple;
+	bh=/5oehaQRDfOqwYSy2tdlesHLrXTpR04f0MVfMIs+KO8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C7mMM/QTke9GGHva4X216GS7ozgSUGITAXxr2J1+Oc0zhybJUImxlXYVLEBgHdmPedQrTdM807EiXL0FfkusOX2IoFqOP+XOwN8KULFj0zSWbSageURnq6YkdPsFclDMo28Cy4rGIWN+jLLIVRdQ+r+Si2f2l+jgDdO0MKhxZHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=XWsxPICX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=f8L/Ov7Z; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=b1WXHAbc; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=kKmat18i; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="GOLogiGy"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-38f1e8efef5so3182952f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 03:02:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1740481376; x=1741086176; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cyShyny9G2/yY7DkjMFQ2r6rzy1CSrizU536iAKhGig=;
-        b=GOLogiGyWvjTaJcyC7f6K0r5ZP9Mb8CFXnYuEN/xjq2YpZhOd8sc+I2Zw9h6vSwuR0
-         ZQBdgV+cGtoZe55K2jGhTsPTyFvYpiBbs3vB+wpa6f23OQ6qDHQ6kd3bPzjMg4HM/ZWP
-         8F7UmYi5Ef/0VwI1ElmOMN19FY0Dj3WWHvBid2Tu7xwHaMorPxIEvHTJeZIubiJFipEp
-         sXqEAxa/ymuT4dYYbuJvf8clH13U2ggpInsxz8XxcuABqvkBQiVTLnt9v5ofkSQbxA0G
-         XLYrUhty4pWn5UjONMjugI2hREyDiHQ8TmSgczhn3OJKr8Z2PC3wH+z6o2KBwP/7PAGW
-         /zHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740481376; x=1741086176;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cyShyny9G2/yY7DkjMFQ2r6rzy1CSrizU536iAKhGig=;
-        b=rN+lb5j/hmiVEHzCJGa88oCTF9iKZA9RS6bbhR8Ya4XVhcmJWbWUvcT4DcuRV3usNr
-         4bSaBn+uSTiVypcd9M3UuK+OaoaUPzRyPjil+DNyc9goQag5g/oEUSWNeTR0ctUh/Ttd
-         y7IKCGX293OICwW/PWczpTpuim9QzQ0XGhUiPd8FWVDrIbAKDs1HduuhU7bFLn2FZ1WP
-         Jm792PngfCXG3Qo+jb137LnyN7tx6GuJnAbwKuR5kOkcwt/xRgW9beop04uYQaxzuu9f
-         q6rmjcWM4kZMzFVB1xKwB77VP8K5iWrDeaO/HZLFS+MU24hoEKj91gsiQU7f3Bil1AIX
-         pj+g==
-X-Forwarded-Encrypted: i=1; AJvYcCVXjVWkl73CithoHmHUnLk+pWneHt4K8UbaRL6PYlONbengRd7RW/t1mmCvi48/n4YtITzS/HptpLs8htk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUrp0bGHTa/vOH8jAajtOtW6Uq2F7/1pUwq+L3/u43uXYdyiEL
-	Tod1YOFSb3tiKxapCvM8/6b/n38Wf6FiX8veKcqJVVpV3g9JQDngzvt1su7UW7A=
-X-Gm-Gg: ASbGncuSs86/0Q5FnMyGiO19j5kz7+1Y1oNKfwaL+G2cjaH9Cja31Q7pl7rrvEtB9Po
-	DDqeVaEWKxxWUWKYB1+/89u5udC/5WsRaomrcajVLwkEG901nX7wsVjn1jf0rxhtLi1Jmh1t/VK
-	Un1/c6bInIZSJX0nKCUwXiju8s8npXWcqamRa+oVu5kIXb1Lang4pH0dZo0eCOcWhRzfXlvZA9x
-	IZqMVQC6c6pDiTO4ndcla1PakqhkjhUgYk/nPqdlRx/7ex/sgs/P8vdSJnb+8qeq3xnAhmoGirz
-	v/v8lOf2kKUQPRpGyFxNmN+T3L8xZuZLd26vAMf1/3XjRXCq5rg0Hgo=
-X-Google-Smtp-Source: AGHT+IHGZ6gHlw9kSoahDWlxrbg/CLJ26q2dMB3XznLEbdWlGW9T87Nbkw4gSgN5rUEuHOYL93HXMQ==
-X-Received: by 2002:a05:6000:1541:b0:38f:38eb:fcff with SMTP id ffacd0b85a97d-390cc60a682mr2129316f8f.29.1740481376531;
-        Tue, 25 Feb 2025 03:02:56 -0800 (PST)
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.25])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ab1532dccsm21972385e9.7.2025.02.25.03.02.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 03:02:56 -0800 (PST)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: gregkh@linuxfoundation.org,
-	geert+renesas@glider.be,
-	biju.das.jz@bp.renesas.com,
-	yoshihiro.shimoda.uh@renesas.com,
-	phil.edworthy@renesas.com,
-	balbi@ti.com,
-	laurent.pinchart@ideasonboard.com,
-	kuninori.morimoto.gx@renesas.com
-Cc: claudiu.beznea@tuxon.dev,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2 1/3] usb: renesas_usbhs: Call clk_put()
-Date: Tue, 25 Feb 2025 13:02:46 +0200
-Message-ID: <20250225110248.870417-2-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250225110248.870417-1-claudiu.beznea.uj@bp.renesas.com>
-References: <20250225110248.870417-1-claudiu.beznea.uj@bp.renesas.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="XWsxPICX";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="f8L/Ov7Z";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="b1WXHAbc";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="kKmat18i"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1CDD51F44F;
+	Tue, 25 Feb 2025 11:02:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1740481376; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=aKA2XWFjIGM3qi+J2PbpE1/yIHpAHqo3iyJqNOFmVXs=;
+	b=XWsxPICXmfGCOTot0Tox7l36Iff0cStxpCyUd1bAgE2bbMyK18xXdnAdRP+nzVy6FGFZjF
+	H+JEv4wK36fEOkNdkDcxkxCfpR4U0GKn+Qg2nYzsZ06kT0TrTEB1YayDoh3NjnwsOkIFZi
+	VA2RH8Rvy8O91gKnrNaeY1KD5QPXHx8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1740481376;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=aKA2XWFjIGM3qi+J2PbpE1/yIHpAHqo3iyJqNOFmVXs=;
+	b=f8L/Ov7ZMDqtusNKBZDZA4ZyMlsEN8xWKS+dhGnSAsXeqeLOXnKcaOIP+7sFjV1/ebR7ON
+	umZKGs7KuSnyc4DQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=b1WXHAbc;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=kKmat18i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1740481375; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=aKA2XWFjIGM3qi+J2PbpE1/yIHpAHqo3iyJqNOFmVXs=;
+	b=b1WXHAbc8wMKduifpMVY6J+bhPRDI0tAYAcD6630blGyijgOSwVtgnNzfc68+sbbWItRrf
+	0i3Tkxdlhi1a0RbVtH2mrkrXP7Dr0iQ7ciOTrcRIDAB861cWpuaER2z3oOMCYvt3pzjucP
+	QYsUgqF+iJ1bKJs8e2rhD9ujgHqAb44=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1740481375;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=aKA2XWFjIGM3qi+J2PbpE1/yIHpAHqo3iyJqNOFmVXs=;
+	b=kKmat18ilnQUMPitIgawMhqx8kEdNCON91ZoYblNBd5b14C6uhI6CGj5pCzZrKclsbo9t+
+	IpjPdcYkDJYtP6CA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0CCBD13332;
+	Tue, 25 Feb 2025 11:02:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id yHWvAl+jvWc6NAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 25 Feb 2025 11:02:55 +0000
+Message-ID: <e6b42857-6be5-48c3-a25e-f44fef2225d4@suse.cz>
+Date: Tue, 25 Feb 2025 12:02:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] mm: page_alloc: group fallback functions together
+Content-Language: en-US
+To: Johannes Weiner <hannes@cmpxchg.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Brendan Jackman <jackmanb@google.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250225001023.1494422-1-hannes@cmpxchg.org>
+ <20250225001023.1494422-4-hannes@cmpxchg.org>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ EP+ylKVEKb0Q2A==
+In-Reply-To: <20250225001023.1494422-4-hannes@cmpxchg.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 1CDD51F44F
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_TLS_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:dkim,suse.cz:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,cmpxchg.org:email];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On 2/25/25 01:08, Johannes Weiner wrote:
+> The way the fallback rules are spread out makes them hard to
+> follow. Move the functions next to each other at least.
+> 
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 
-Clocks acquired with of_clk_get() need to be freed with clk_put(). Call
-clk_put() on priv->clks[0] on error path.
-
-Fixes: 3df0e240caba ("usb: renesas_usbhs: Add multiple clocks management")
-Cc: stable@vger.kernel.org
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
-
-Changes in v2:
-- collected tags
-
- drivers/usb/renesas_usbhs/common.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
-index 935fc496fe94..6c7857b66a21 100644
---- a/drivers/usb/renesas_usbhs/common.c
-+++ b/drivers/usb/renesas_usbhs/common.c
-@@ -312,8 +312,10 @@ static int usbhsc_clk_get(struct device *dev, struct usbhs_priv *priv)
- 	priv->clks[1] = of_clk_get(dev_of_node(dev), 1);
- 	if (PTR_ERR(priv->clks[1]) == -ENOENT)
- 		priv->clks[1] = NULL;
--	else if (IS_ERR(priv->clks[1]))
-+	else if (IS_ERR(priv->clks[1])) {
-+		clk_put(priv->clks[0]);
- 		return PTR_ERR(priv->clks[1]);
-+	}
- 
- 	return 0;
- }
--- 
-2.43.0
+Vlastimil Babka <vbabka@suse.cz>
 
