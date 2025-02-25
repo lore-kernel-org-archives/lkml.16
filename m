@@ -1,140 +1,118 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 490AD26FA40
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:53:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3D026AAAF
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740491641; cv=none; b=J6y1+CDL/XYvLyJfydKQCutKRnn+tBk5FkVtCXMegprfnh4+kR+rzb+TEpkszo1/MxqWq0yqzecq4M+eSIj/75quq4idAG+LxsAt/KBUC18uZronXa6BDzIUt7OBJFvxHQsFkjx+hn2LyCRpdoL6SBYSHAtMYLzo+mjLNfLUdnc=
+	t=1740491645; cv=none; b=YMGRVHfgg+nGevliDR9HGiLtvPfHwH1Zj6U3+nYS3o01FE1rNadTPhlj99xSYj6Ye0iDPNziOD53u4USP9jQL3XEIdccNYyTEl6ZPk+VW0sOttDxffKttvbymBNAmhk+Ikb9XFb5LQaDBjCjHfKTJaVsJnDE7PJnAUiQ9TEVUqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740491641; c=relaxed/simple;
-	bh=RIe/5ZaCtNLHo29qreZI0j1qk+lpe9VGGmd6j6rEDJ4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=C7Gn/ErUxH4TPpRZpTMeLBxa9I3AAND6H+RnMUFOLcKqv1dooxPbxWm7wm89nHKgEq7tbsQYmTKsMCy1kKyhllQblFcBLlGIeqUUHRFIt5Ho7r5cNP2NlaAHMZBGkQBAT+sIdUHQa1gIqU2+ZiNRmgYBLGUvthiOZmEfo0ExT4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EEB641E4D;
-	Tue, 25 Feb 2025 05:54:13 -0800 (PST)
-Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E2ECE3F6A8;
-	Tue, 25 Feb 2025 05:53:55 -0800 (PST)
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: suzuki.poulose@arm.com,
-	mike.leach@linaro.org,
-	james.clark@linaro.org,
-	alexander.shishkin@linux.intel.com,
-	bigeasy@linutronix.de,
-	clrkwllms@kernel.org,
-	rostedt@goodmis.org
-Cc: coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev,
-	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH v5 9/9] coresight/ultrasoc: change smb_drv_data spinlock's type to raw_spinlock_t
-Date: Tue, 25 Feb 2025 13:53:00 +0000
-Message-Id: <20250225135300.339976-10-yeoreum.yun@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250225135300.339976-1-yeoreum.yun@arm.com>
-References: <20250225135300.339976-1-yeoreum.yun@arm.com>
+	s=arc-20240116; t=1740491645; c=relaxed/simple;
+	bh=7T+woGzLt/Dv7H8qjIXUZwcKiN3Lqtq8hr6b5QK6/L0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=mo3hC1/MbEGoX+wk1qbd5np6owAgAwVhRmRMJPmdpeRYiKCFOWmcrMo0yGXBby/vL3LOaKSlKzzA015rPGuyR2+lwg/kVOVvPjILmrr2hEqV1fAQTrUIEbw3ttEEGOVQmNn4CK3pNr5KvU6RUr5hfD1lsbEq6bOaPZCgJqxqgQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nGxEevVB; arc=none smtp.client-ip=209.85.208.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nGxEevVB"
+Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-5df498f31ccso6219048a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 05:54:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740491642; x=1741096442; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rRu6yyYSzh917fLY2aJ+R7v2o4C7OnB3uc3vDaSHhDU=;
+        b=nGxEevVB246OEifrrlDBHH2kj1JgPnMz3izYijs/DD5cKTHgRqR12RBGBvMsI6Wz1Q
+         I7qmkc2m9hDcDx9UB21bjlmBddo/E33Is+Y7oBkXiCUDi+KJeoUji9jLyU1VlvXzXjaK
+         UQNsXKlc2UcPgzBmD+3bF6kXe1BoZ9TtsaJcZg/5b0w20Q4DagodD6y62QoSwFCW0AnW
+         cYIjovg4I6KHbvRNlBOabkQkUR2FBTLrrcT7gbpY5cczSwY5VDu7kPfR2zgnGf/uRgiX
+         bvmtKavKEHVcyWEgKIHMkQN8Z7/lbT/FwjnukqkBpoDENoi0/ypnRuIEzFxV++5Iq8Ck
+         VVIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740491642; x=1741096442;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rRu6yyYSzh917fLY2aJ+R7v2o4C7OnB3uc3vDaSHhDU=;
+        b=NomLKbgCWJHZ0RLh65TZ0s2hkqCBxaRbsEob0kwnK90XidyGfnoviezVXZF7gSD9/L
+         x4qRDcX1fFqZK9iqX0Sa+/CYiI4J8vbP/PA2IyV+CmbWYAx6AJG2PDOkv+DxSpbHQm3O
+         6Cshj/sfXeK10C9a7/gp+dQfyZ6E2/e25/+oqQZ68YO62Pbc+z4EDIg6vrxFzK9+OZ3f
+         xvZ4CyOui5aiqv7nXw0uN4PzMfjAmkxmalSP6ycnhOmNgqo+uy2aTztObsYb06Cpi/kQ
+         f325y+DOwv11oRaDUXC6szijwCTNkbou4B6dDipzuFpB48XkupJi+/GrixvE527AEbX9
+         rDSg==
+X-Forwarded-Encrypted: i=1; AJvYcCWn8JZBP3L4lfnoKFSMD63nMIG2pnzjGns7grbKhstBJjuY0kzfp7inv2VyHGa+aYUDolR9Ci6zxy+KCPk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzo1p1ikhPvMumgV8LNctxbZwPbsE2tzGW3YTRiP6LsKdMweBf6
+	9XBfvdXWH89McoD6SyLr0yJrvi6SH4Ry0mPBimVIdFLyyVPmTYbs5j0FK2fIGDMAsOx2W+1XyNe
+	hxY+BpQ==
+X-Google-Smtp-Source: AGHT+IEDITYRYzNpXEF0E49ruJ89SeBOs3d9GOHmcVGxOQS0ID8RBHnr9ungUCVtCuj3RBnyfqZjrPFafwNt
+X-Received: from edc8.prod.google.com ([2002:a05:6402:4608:b0:5e0:5324:1331])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:2347:b0:5e0:8064:b42e
+ with SMTP id 4fb4d7f45d1cf-5e0b7223106mr17105321a12.25.1740491642547; Tue, 25
+ Feb 2025 05:54:02 -0800 (PST)
+Date: Tue, 25 Feb 2025 14:53:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
+Message-ID: <cover.1740491413.git.dvyukov@google.com>
+Subject: [PATCH v5 0/4] rseq: Make rseq work with protection keys
+From: Dmitry Vyukov <dvyukov@google.com>
+To: mathieu.desnoyers@efficios.com, peterz@infradead.org, boqun.feng@gmail.com, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, aruna.ramakrishna@oracle.com, 
+	elver@google.com
+Cc: Dmitry Vyukov <dvyukov@google.com>, "Paul E. McKenney" <paulmck@kernel.org>, x86@kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-In ultrasoc-smb drivers, smb_drv_data->spinlock can be held
-during __schedule() by perf_event_task_sched_out()/in().
+If an application registers rseq, and ever switches to another pkey
+protection (such that the rseq becomes inaccessible), then any
+context switch will cause failure in __rseq_handle_notify_resume()
+attempting to read/write struct rseq and/or rseq_cs. Since context
+switches are asynchronous and are outside of the application control
+(not part of the restricted code scope), temporarily enable access
+to 0 (default) PKEY to read/write rseq/rseq_cs.
+0 is the only PKEY supported for rseq for now.
+Theoretically other PKEYs can be supported, but it's unclear
+how/if that can work. So for now we don't support that to simplify
+code.
 
-Since smb__drv_data->spinlock type is spinlock_t and
-perf_event_task_sched_out()/in() is called after acquiring rq_lock,
-which is raw_spinlock_t (an unsleepable lock),
-this poses an issue in PREEMPT_RT kernel where spinlock_t is sleepable.
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
+Cc: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-To address this, change type smb_drv_data->spinlock in ultrasoc-smb drivers,
-which can be called by perf_event_task_sched_out()/in(),
-from spinlock_t to raw_spinlock_t.
+Dmitry Vyukov (4):
+  pkeys: add API to switch to permissive/zero pkey register
+  x86/signal: Use write_permissive_pkey_val() helper
+  rseq: Make rseq work with protection keys
+  selftests/rseq: Add test for rseq+pkeys
 
-Reviewed-by: James Clark <james.clark@linaro.org>
-Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
----
- drivers/hwtracing/coresight/ultrasoc-smb.c | 12 ++++++------
- drivers/hwtracing/coresight/ultrasoc-smb.h |  2 +-
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ arch/x86/Kconfig                         |  1 +
+ arch/x86/include/asm/pkeys.h             | 30 ++++++++
+ arch/x86/include/asm/pkru.h              | 10 ++-
+ arch/x86/kernel/signal.c                 |  6 +-
+ include/linux/pkeys.h                    | 31 ++++++++
+ kernel/rseq.c                            | 11 +++
+ mm/Kconfig                               |  2 +
+ tools/testing/selftests/rseq/Makefile    |  2 +-
+ tools/testing/selftests/rseq/pkey_test.c | 98 ++++++++++++++++++++++++
+ tools/testing/selftests/rseq/rseq.h      |  1 +
+ 10 files changed, 184 insertions(+), 8 deletions(-)
+ create mode 100644 tools/testing/selftests/rseq/pkey_test.c
 
-diff --git a/drivers/hwtracing/coresight/ultrasoc-smb.c b/drivers/hwtracing/coresight/ultrasoc-smb.c
-index dc3c9504dd7c..26cfc939e5bd 100644
---- a/drivers/hwtracing/coresight/ultrasoc-smb.c
-+++ b/drivers/hwtracing/coresight/ultrasoc-smb.c
-@@ -98,7 +98,7 @@ static int smb_open(struct inode *inode, struct file *file)
- 	struct smb_drv_data *drvdata = container_of(file->private_data,
- 					struct smb_drv_data, miscdev);
- 
--	guard(spinlock)(&drvdata->spinlock);
-+	guard(raw_spinlock)(&drvdata->spinlock);
- 
- 	if (drvdata->reading)
- 		return -EBUSY;
-@@ -152,7 +152,7 @@ static int smb_release(struct inode *inode, struct file *file)
- 	struct smb_drv_data *drvdata = container_of(file->private_data,
- 					struct smb_drv_data, miscdev);
- 
--	guard(spinlock)(&drvdata->spinlock);
-+	guard(raw_spinlock)(&drvdata->spinlock);
- 	drvdata->reading = false;
- 
- 	return 0;
-@@ -245,7 +245,7 @@ static int smb_enable(struct coresight_device *csdev, enum cs_mode mode,
- 	struct smb_drv_data *drvdata = dev_get_drvdata(csdev->dev.parent);
- 	int ret = 0;
- 
--	guard(spinlock)(&drvdata->spinlock);
-+	guard(raw_spinlock)(&drvdata->spinlock);
- 
- 	/* Do nothing, the trace data is reading by other interface now */
- 	if (drvdata->reading)
-@@ -280,7 +280,7 @@ static int smb_disable(struct coresight_device *csdev)
- {
- 	struct smb_drv_data *drvdata = dev_get_drvdata(csdev->dev.parent);
- 
--	guard(spinlock)(&drvdata->spinlock);
-+	guard(raw_spinlock)(&drvdata->spinlock);
- 
- 	if (drvdata->reading)
- 		return -EBUSY;
-@@ -378,7 +378,7 @@ static unsigned long smb_update_buffer(struct coresight_device *csdev,
- 	if (!buf)
- 		return 0;
- 
--	guard(spinlock)(&drvdata->spinlock);
-+	guard(raw_spinlock)(&drvdata->spinlock);
- 
- 	/* Don't do anything if another tracer is using this sink. */
- 	if (csdev->refcnt != 1)
-@@ -563,7 +563,7 @@ static int smb_probe(struct platform_device *pdev)
- 
- 	smb_reset_buffer(drvdata);
- 	platform_set_drvdata(pdev, drvdata);
--	spin_lock_init(&drvdata->spinlock);
-+	raw_spin_lock_init(&drvdata->spinlock);
- 	drvdata->pid = -1;
- 
- 	ret = smb_register_sink(pdev, drvdata);
-diff --git a/drivers/hwtracing/coresight/ultrasoc-smb.h b/drivers/hwtracing/coresight/ultrasoc-smb.h
-index a91d39cfccb8..c4c111275627 100644
---- a/drivers/hwtracing/coresight/ultrasoc-smb.h
-+++ b/drivers/hwtracing/coresight/ultrasoc-smb.h
-@@ -115,7 +115,7 @@ struct smb_drv_data {
- 	struct coresight_device	*csdev;
- 	struct smb_data_buffer sdb;
- 	struct miscdevice miscdev;
--	spinlock_t spinlock;
-+	raw_spinlock_t spinlock;
- 	bool reading;
- 	pid_t pid;
- };
+
+base-commit: d082ecbc71e9e0bf49883ee4afd435a77a5101b6
 -- 
-LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+2.48.1.658.g4767266eb4-goog
 
