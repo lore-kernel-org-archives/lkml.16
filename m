@@ -1,141 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46AE326A0A4;
-	Tue, 25 Feb 2025 14:00:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F6D526A0DD;
+	Tue, 25 Feb 2025 14:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740492012; cv=none; b=teFmOvRnMjmkh470H2jkWcSNdIcO9mtfXdoJLYFK8fZglQLoD//kzQXB5GzMfDavAIZ3hJ2lJbwfc4uKIjjEaPU5MRc1eI3jrRQREHaskBtEdoMmIYOhwMvfalFqOwqpOyb/6+yNRvSTbHQyJtQaN45I+wwHgHHukReV1q24v9o=
+	t=1740492013; cv=none; b=msHN4pJgBHzejLN1EL4+oNmeinEnxtHLCZ+psu2UE5n8MIz3qVo9vNNvPcahkBIUQUjM3ek39B4GmP522M+7zXY0GQ7qZgys5+AvHQ9LtQoe7Qk0f93Jro3ZB2gvaFuLGRK8w8iiTCpunWlMstljrwglE9HZLsC6Ab3ODpnfj0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740492012; c=relaxed/simple;
-	bh=z0NM4k/FSSDfqS2mjYdariSVt/ETmZ+fP+JtXH7aT5c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j1C6hLOlHdfmtj7KtYo1bCKaRtMjxFOOrcSWzU27NtkQ5SMoIO7xfmXMai76pqDSd8TOo1K3kHC/2tCCE/B/P6HTOtq/IQkarssn8vLiuHw5Hhi4z5ux3xZFTDRSp1bYWK+qCyrV/NDeCkvV1o5mCJLBA/v2cpam6hX7W2OgwFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BnFEFeYs; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1740492013; c=relaxed/simple;
+	bh=BhCL6BrxT5nxXUnjaAAPt59Z+GHxn/wDdR1kkVg1Rm4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FWgcrdRfdWml/8eG9Vd7+NnbhvMH0lx9JL/TFhgpk9TRWwcngHBvWBQTEwyob2o1AxPRzptU+XGcV34t7ceoVnuTz9wSUzeM36tvHaRz7OCZwfAT8xVmoAU+I8dHxfwn52gljbHgcN5DpRrm+aSllhJXEIna/pN0Yrd+1PP3dso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=aM2+WPQg; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BnFEFeYs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740492010; x=1772028010;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=z0NM4k/FSSDfqS2mjYdariSVt/ETmZ+fP+JtXH7aT5c=;
-  b=BnFEFeYs5WvgShhEO3zjeYqdiwPp8U1AL5wJ9Vwwyu4kGCrPqTGtP2t9
-   +n5wcvlmF9OdQKINQGmtXi/1ispDF2G6AcYelMFia1BULqpIyB9mj4VFW
-   6SpEeQIPnHj83pipWCZpF5unakpFfDFgMTGCH1VxYH/tJjHXPoS0C77w4
-   br9tsK/dUX7ivzRRxvsdAJ+GXCGsmvoLp5jh1+bNBKBdncRqGY8N6Me+v
-   1OdDEjOF661hSIlPuyywPJiDLiZ7jpnn478/UIJT7DFHL87lAPiJZm9xs
-   S3ByjzUAg7wkFqRYTd66qQcjmjj4hFgnnyDBSY7QZFfuH/BOejApO1bfF
-   g==;
-X-CSE-ConnectionGUID: SqwrGY74SfeYSku1DNJ6EA==
-X-CSE-MsgGUID: yotztxgiSOmvf8pldCj9bA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11314"; a="41500373"
-X-IronPort-AV: E=Sophos;i="6.12,310,1728975600"; 
-   d="scan'208";a="41500373"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 06:00:09 -0800
-X-CSE-ConnectionGUID: 5wdBO304QIGqIKmBnH0WxA==
-X-CSE-MsgGUID: o2kscnJVSLCiJ/DTQH/+dw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="120502479"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 06:00:02 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tmvTa-0000000F0fX-0FCE;
-	Tue, 25 Feb 2025 15:59:58 +0200
-Date: Tue, 25 Feb 2025 15:59:57 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Nuno Sa <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Guillaume Stols <gstols@baylibre.com>,
-	Olivier Moysan <olivier.moysan@foss.st.com>,
-	Dumitru Ceclan <mitrutzceclan@gmail.com>,
-	Trevor Gamblin <tgamblin@baylibre.com>,
-	Matteo Martelli <matteomartelli3@gmail.com>,
-	Alisa-Dariana Roman <alisadariana@gmail.com>,
-	Ramona Alexandra Nechita <ramona.nechita@analog.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev
-Subject: Re: [PATCH v4 02/10] property: Add
- device_get_child_node_count_named()
-Message-ID: <Z73M3Ua6u1FpgBEK@smile.fi.intel.com>
-References: <cover.1740421248.git.mazziesaccount@gmail.com>
- <29ec24f1498392cafbecc0e0c0e23e1ce3289565.1740421248.git.mazziesaccount@gmail.com>
- <Z72QAOA9xXbP16K-@kuha.fi.intel.com>
- <Z72Zp8tpnvlFGdQ_@smile.fi.intel.com>
- <ad39b453-7e5b-49bd-a4fd-6a4988636130@gmail.com>
- <Z72d7TzZ21WITW3f@smile.fi.intel.com>
- <893a3c45-537e-47ad-afbd-1e5d3b9abe2c@gmail.com>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="aM2+WPQg"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=BhCL6BrxT5nxXUnjaAAPt59Z+GHxn/wDdR1kkVg1Rm4=;
+	t=1740492011; x=1741701611; b=aM2+WPQg6iPWjHrA5a9ox26oKSMNx99B6vHhRmoarPMdXev
+	U8aUwZOCHJ8DEiN9y20cBqcwKhjYJXlnCz56kgeV/AF2EKYU9Ji+t2aa0OSC+xKQCXcgo4CmGusG8
+	SdUMwYlzr3BG+lUV4/gkxmcDKuDa4mwPaNoiCLNCjm1qCYZQq+owAAFhfmdik2pb3JDj4whKR3Dvn
+	L7Lr+444FWcKeIM0uEve8xyY+pkCXyrgeC/AQAY3XuBZNWG9E1p3PnNa9W8XIgUUBq2h0999MQLR7
+	7eoryFxOFtAD02i+3lT5ZSB/+ObqKAJ1mGBb8ETWEkpZsMUPE7AIdMPwVOwS7dMg==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1tmvTB-00000009va0-3KcC;
+	Tue, 25 Feb 2025 14:59:34 +0100
+Message-ID: <47a3d0c82e716c1838d76d079c89d230d2d1fe19.camel@sipsolutions.net>
+Subject: Re: [PATCH v7 5/7] mseal, system mappings: enable uml architecture
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Benjamin Berg
+	 <benjamin@sipsolutions.net>
+Cc: "jeffxu@chromium.org" <jeffxu@chromium.org>, "Jason@zx2c4.com"	
+ <Jason@zx2c4.com>, "adobriyan@gmail.com" <adobriyan@gmail.com>,
+ "deller@gmx.de"	 <deller@gmx.de>, "gerg@kernel.org" <gerg@kernel.org>, 
+ "anna-maria@linutronix.de"	 <anna-maria@linutronix.de>,
+ "davem@davemloft.net" <davem@davemloft.net>,  "avagin@gmail.com"	
+ <avagin@gmail.com>, "mhocko@suse.com" <mhocko@suse.com>, "enh@google.com"	
+ <enh@google.com>, "thomas.weissschuh@linutronix.de"	
+ <thomas.weissschuh@linutronix.de>, "hch@lst.de" <hch@lst.de>, 
+ "hca@linux.ibm.com"	 <hca@linux.ibm.com>, "peterz@infradead.org"
+ <peterz@infradead.org>,  "adhemerval.zanella@linaro.org"	
+ <adhemerval.zanella@linaro.org>, "linux-kernel@vger.kernel.org"	
+ <linux-kernel@vger.kernel.org>, "ojeda@kernel.org" <ojeda@kernel.org>, 
+ "jannh@google.com"	 <jannh@google.com>, "f.fainelli@gmail.com"
+ <f.fainelli@gmail.com>,  "sroettger@google.com"	 <sroettger@google.com>,
+ "ardb@google.com" <ardb@google.com>,  "jorgelo@chromium.org"	
+ <jorgelo@chromium.org>, "rdunlap@infradead.org" <rdunlap@infradead.org>, 
+ "mark.rutland@arm.com"	 <mark.rutland@arm.com>, "Liam.Howlett@oracle.com"
+ <Liam.Howlett@oracle.com>,  "vbabka@suse.cz"	 <vbabka@suse.cz>,
+ "mpe@ellerman.id.au" <mpe@ellerman.id.au>, "oleg@redhat.com"	
+ <oleg@redhat.com>, "willy@infradead.org" <willy@infradead.org>, 
+ "keescook@chromium.org"	 <keescook@chromium.org>, "peterx@redhat.com"
+ <peterx@redhat.com>,  "mike.rapoport@gmail.com"	 <mike.rapoport@gmail.com>,
+ "mingo@kernel.org" <mingo@kernel.org>,  "rientjes@google.com"	
+ <rientjes@google.com>, "groeck@chromium.org" <groeck@chromium.org>, 
+ "linus.walleij@linaro.org"	 <linus.walleij@linaro.org>,
+ "pedro.falcato@gmail.com" <pedro.falcato@gmail.com>,  "ardb@kernel.org"	
+ <ardb@kernel.org>, "42.hyeyoo@gmail.com" <42.hyeyoo@gmail.com>, 
+ "linux-mm@kvack.org"	 <linux-mm@kvack.org>,
+ "linux-hardening@vger.kernel.org"	 <linux-hardening@vger.kernel.org>,
+ "torvalds@linux-foundation.org"	 <torvalds@linux-foundation.org>,
+ "akpm@linux-foundation.org"	 <akpm@linux-foundation.org>,
+ "dave.hansen@linux.intel.com"	 <dave.hansen@linux.intel.com>,
+ "aleksandr.mikhalitsyn@canonical.com"	 <aleksandr.mikhalitsyn@canonical.com>
+Date: Tue, 25 Feb 2025 14:59:32 +0100
+In-Reply-To: <19e81e87-7430-4e23-ac67-dbb987496dd4@lucifer.local>
+References: <20250224225246.3712295-1-jeffxu@google.com>
+	 <20250224225246.3712295-6-jeffxu@google.com>
+	 <c5d3927e-06e3-49e7-a1d6-f4c9e817def4@lucifer.local>
+	 <96ebddf3fe31353c89f6a4680eaeb2793c25cd09.camel@intel.com>
+	 <d2aeeb56-ba8c-49f3-957d-1ac790522233@lucifer.local>
+	 <7e91bea34552472757a8eec425d1d10643ca584b.camel@sipsolutions.net>
+	 <19e81e87-7430-4e23-ac67-dbb987496dd4@lucifer.local>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <893a3c45-537e-47ad-afbd-1e5d3b9abe2c@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-malware-bazaar: not-scanned
 
-On Tue, Feb 25, 2025 at 03:29:17PM +0200, Matti Vaittinen wrote:
-> On 25/02/2025 12:39, Andy Shevchenko wrote:
-> > On Tue, Feb 25, 2025 at 12:29:31PM +0200, Matti Vaittinen wrote:
-> > > On 25/02/2025 12:21, Andy Shevchenko wrote:
-> > > > On Tue, Feb 25, 2025 at 11:40:16AM +0200, Heikki Krogerus wrote:
+On Tue, 2025-02-25 at 13:41 +0000, Lorenzo Stoakes wrote:
+> > I figured it is not a lot of churn and there isn't really any cost to
+> > enabling the feature.
+> >=20
+> > That said, the only possible real-life use case I can see is doing MM
+> > subsystem testing using UML. We certainly do not need the feature to
+> > run our UML based wireless stack and driver tests.
+>=20
+> OK ack - my concern is users getting confused about this ironic host
+> vs. client thing, must disable the security feature in the _actual kernel=
+_
+> to enable it in the client.
 
-...
+Well, s/to enable it in the client/to run the client/, I guess.
 
-> > > > > 
-> > > > > I did not check how many users are you proposing for this, but if
-> > > > > there's only one, then IMO this should not be a global function yet.
-> > > > > It just feels to special case to me. But let's see what the others
-> > > > > think.
-> > > > 
-> > > > The problem is that if somebody hides it, we might potentially see
-> > > > a duplication in the future. So I _slightly_ prefer to publish and
-> > > > then drop that after a few cycles if no users appear.
-> > > 
-> > > After taking a very quick grep I spotted one other existing place where we
-> > > might be able to do direct conversion to use this function.
-> > > 
-> > > drivers/net/ethernet/freescale/gianfar.c
-> > > 
-> > > That'd be 2 users.
-> > 
-> > I haven't checked myself, I believe your judgement,
-> 
-> I took a better look and you obviously shouldn't believe :) The gianfar used
-> of_node instead of the fwnode. So, it'd be a single caller at starters.
+I'm still a bit disappointed in the whole thing anyway - if this does
+get enabled in e.g. ChromeOS (as it looks like), then it'll mean that
+gvisor/rr/UML will never run on chromebooks, which ... I mean yeah who's
+going to do that, so it's more of a purist disappointment I guess. Can't
+run kunit on a chromebook then, for example. This looks much different
+for more general purpose distros too.
 
-...which is the same as dev_of_node(), which means that you can use your
-function there.
-
--- 
-With Best Regards,
-Andy Shevchenko
+I also don't really want to reopen a discussion that was probably had
+before, but I did wonder now what the security downsides of having an
+opt-out, e.g. a new ELF property, for skipping the sealings would be.
+Perhaps, depending on the impact, even making that mean "no system
+mappings at all", at least for UML I believe they're not needed in the
+first place.
 
 
+> I'm not sure this is really worth it?
+>=20
+> I mean I agree this isn't a _huge_ amount added here and I don't want to =
+be
+> difficult - Jeff, Kees are you really keen on having this? Do you have
+> specific use cases in mind or was this just a 'because we can':>)
+
+There's always kunit that can run with UML, but I don't see tests being
+added for this feature, in fact the only thing here is _disabling_ a
+test. Maybe it should come with tests and then it'd be more interesting
+;-)
+
+The commit says "Testing passes on UML" but I'm not sure I see what
+testing that might have been, per the cover letter Benjamin did that?
+
+> I guess if intent is to slowly add architectures, it's not totally insane
+> since we kinda know this one is ok so if that's what it is, probably won'=
+t
+> oppose it _too_ badly.
+
+I think it still makes _some_ sense to have it for the testing aspect,
+but perhaps might then make sense to split it out of the series to avoid
+all the confusion and submit it to UML separately later? Or just leave
+it since you can always test with qemu.
+
+johannes
