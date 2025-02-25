@@ -1,125 +1,130 @@
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9C618A6BA;
-	Tue, 25 Feb 2025 07:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.248.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10AC18A6BA;
+	Tue, 25 Feb 2025 07:23:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740467948; cv=none; b=exaz92AsjBvEK5v+XYd0Bsa3n505P3m7b6i2fabfOW3oazBLGpTdZdBiJWWhwAqZcFVNUI3rdPTZN8Qyr6/er2Ea4ccgURNjixppJp7aWn+2Ft13MDjP+LYIR++zP/X2lS94vaULyUC7A6Zikofsw3qMBL8OQD1csPzHCoiuSaM=
+	t=1740468201; cv=none; b=ZUvbrySWOayLUKZaTRfUonlXOjxBU6KTObZ1hTCub06/tGSSSygt6XOVryskHI6uBIDIcrz2qt8lSQmXowa0GIE7ik01AAOe2InCC0Bcc7jV0IaODw6a6NY67KYDGLNgDy6G8kydmFEOVqnF9OlLa9Ju7zMvM21yAjTmjBt64Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740467948; c=relaxed/simple;
-	bh=jJv616jfTn0ZGbYwwYOpX5lWgGqrU9i3HLdGP4o/yI8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BmCCzW3K/8AgnezZbLvXbAnvCmnb3yg2mgyX1R38NnvDbdCtB8+0cWEjONIHMPPna5mPu88yMvCdciHYVsMV+XE4CBsA1j091nHH3zfFmD04FjwUB5CF+QhTc/Mx6l0bHtHk8JyZ/wXarsZYVZ0RQYNDQ7fy1iiCfRR3yvAytU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=IDkQE1t8; arc=none smtp.client-ip=159.100.248.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	s=arc-20240116; t=1740468201; c=relaxed/simple;
+	bh=h4bia+mYMyIlaxguzLk4TmwyvzKI/fME2tnOPYbHvqE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=dDTopnyyWCbN/varYS9WM3DlZzzE8b7FYWEruGPm2VQJp3pkpw+/MqivyQ7EvccKW8DxIYhythkSivYi2Uz8B+xgnCgZu0BaNjqJBmLQj2NgCGvIBcKwSKpNPjvSJxwHfxuKQ9TQEUSp5h4qfy5mmtNBdwzbLaDjbN/eQhyufRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=U21nOR8x; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="IDkQE1t8"
-Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [217.182.66.162])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id D2559260EB;
-	Tue, 25 Feb 2025 07:18:58 +0000 (UTC)
-Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
-	by relay2.mymailcheap.com (Postfix) with ESMTPS id 38EE23E8A5;
-	Tue, 25 Feb 2025 07:18:51 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf2.mymailcheap.com (Postfix) with ESMTPSA id 0F6AC40078;
-	Tue, 25 Feb 2025 07:18:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1740467928; bh=jJv616jfTn0ZGbYwwYOpX5lWgGqrU9i3HLdGP4o/yI8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=IDkQE1t8xRbZN/mwwZFvUmhXPNlSQRtgAb8WAUTtEocKf5kG84sKN4Cnf9sXtvBMB
-	 f9zCH2gG7dtxxZmgZKFnLQjSxHb2PDXeSHCGjGqG5s/ikcm9zqdFjyXBZuliRcyz5o
-	 FfoFhBpkXVTPwnfaTxDkcqK7PzrfQeg1uZtaSQQs=
-Received: from JellyNote.localdomain (unknown [203.175.14.48])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 239E240875;
-	Tue, 25 Feb 2025 07:18:40 +0000 (UTC)
-From: Mingcong Bai <jeffbai@aosc.io>
-To: linux-kernel@vger.kernel.org
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>,
-	stable@vger.kernel.org,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Matt Roper <matthew.d.roper@intel.com>,
-	Ashutosh Dixit <ashutosh.dixit@intel.com>,
-	Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
-	Ilia Levi <ilia.levi@intel.com>,
-	Gustavo Sousa <gustavo.sousa@intel.com>,
-	=?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH 1/5] drm/xe/regs: remove a duplicate definition for RING_CTL_SIZE(size)
-Date: Tue, 25 Feb 2025 15:18:29 +0800
-Message-ID: <20250225071832.864133-1-jeffbai@aosc.io>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="U21nOR8x"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51OKOlvO014309;
+	Tue, 25 Feb 2025 07:23:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	N9GZ15BBI9v3KLlPyeqhB3Cuz7Tplf+rh37APLGCQ7c=; b=U21nOR8xwfoy5B+V
+	Akntuznn5TNQCvlFLBhOSBChVateXLB+KGMyTnQYch69OkXPKfaVwLaQ6eV3GfjT
+	18s1ufQcKrJVZs+6Ftgz5zJ5parwmbeI/F9zyujBw9JltIW1AW6gJna7LWvOPgVL
+	aSucI3ITrZaSGXDyAf063iqPnOLQEdqLif3EW9+sqj9Jcd/3Zfh+gYXueHfC7Z4I
+	vc5ffEs+hGc01cphla8yxqH8tyN+XYIFDbwdAg0swSqyY668qR3Nil9f5+Ea/uOl
+	JNaLNdWozgPX+WcCHxq9lsRP30Cv4EubvuJ+OYiBd1C/eDBHkXw5Q35plIazq72O
+	PRh4zQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44y5wgr0xv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Feb 2025 07:23:10 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51P7N9C9008828
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Feb 2025 07:23:09 GMT
+Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 24 Feb
+ 2025 23:23:08 -0800
+Message-ID: <4dc9e860-7417-480f-ba89-439498138d3f@quicinc.com>
+Date: Tue, 25 Feb 2025 15:23:04 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 0F6AC40078
-X-Rspamd-Server: nf2.mymailcheap.com
-X-Spamd-Result: default: False [1.40 / 10.00];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	RCVD_COUNT_ONE(0.00)[1];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	SPFBL_URIBL_EMAIL_FAIL(0.00)[jeffbai.aosc.io:server fail,stable.vger.kernel.org:server fail];
-	FREEMAIL_CC(0.00)[aosc.io,vger.kernel.org,intel.com,linux.intel.com,kernel.org,suse.de,gmail.com,ffwll.ch,lists.freedesktop.org];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[]
-X-Rspamd-Action: no action
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] wifi: ath11k: Clear affinity hint before calling
+ ath11k_pcic_free_irq() in error path
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        <jjohnson@kernel.org>
+CC: <linux-wireless@vger.kernel.org>, <ath12k@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <ath11k@lists.infradead.org>
+References: <20250225053447.16824-1-manivannan.sadhasivam@linaro.org>
+ <20250225053447.16824-2-manivannan.sadhasivam@linaro.org>
+Content-Language: en-US
+From: Baochen Qiang <quic_bqiang@quicinc.com>
+In-Reply-To: <20250225053447.16824-2-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 3fDWGSD2xZucQUa23DR48OgTFkKynFOK
+X-Proofpoint-ORIG-GUID: 3fDWGSD2xZucQUa23DR48OgTFkKynFOK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-25_02,2025-02-24_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 suspectscore=0 lowpriorityscore=0 bulkscore=0
+ clxscore=1011 adultscore=0 phishscore=0 mlxlogscore=999 spamscore=0
+ mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502250048
 
-Commit b79e8fd954c4 ("drm/xe: Remove dependency on intel_engine_regs.h")
-introduced an internal set of engine registers, however, as part of this
-change, it has also introduced two duplicate `define' lines for
-`RING_CTL_SIZE(size)'. This commit was introduced to the tree in v6.8-rc1.
 
-While this is harmless as the definitions did not change, so no compiler
-warning was observed.
 
-Drop this line anyway for the sake of correctness.
+On 2/25/2025 1:34 PM, Manivannan Sadhasivam wrote:
+> If a shared IRQ is used by the driver due to platform limitation, then the
+> IRQ affinity hint is set right after the allocation of IRQ vectors in
+> ath11k_pci_alloc_msi(). This does no harm unless one of the functions
+> requesting the IRQ fails and attempt to free the IRQ. This results in the
+> below warning:
+> 
+> WARNING: CPU: 7 PID: 349 at kernel/irq/manage.c:1929 free_irq+0x278/0x29c
+> Call trace:
+>  free_irq+0x278/0x29c
+>  ath11k_pcic_free_irq+0x70/0x10c [ath11k]
+>  ath11k_pci_probe+0x800/0x820 [ath11k_pci]
+>  local_pci_probe+0x40/0xbc
+> 
+> The warning is due to not clearing the affinity hint before freeing the
+> IRQs.
+> 
+> So to fix this issue, clear the IRQ affinity hint before calling
+> ath11k_pcic_free_irq() in the error path. The affinity will be cleared once
+> again further down the error path due to code organization, but that does
+> no harm.
+> 
+> Tested-on: QCA6390 hw2.0 PCI WLAN.HST.1.0.1-05266-QCAHSTSWPLZ_V2_TO_X86-1
+> 
+> Cc: Baochen Qiang <quic_bqiang@quicinc.com>
+> Fixes: 39564b475ac5 ("wifi: ath11k: fix boot failure with one MSI vector")
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/net/wireless/ath/ath11k/pci.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/net/wireless/ath/ath11k/pci.c b/drivers/net/wireless/ath/ath11k/pci.c
+> index b93f04973ad7..eaac9eabcc70 100644
+> --- a/drivers/net/wireless/ath/ath11k/pci.c
+> +++ b/drivers/net/wireless/ath/ath11k/pci.c
+> @@ -939,6 +939,8 @@ static int ath11k_pci_probe(struct pci_dev *pdev,
+>  	return 0;
+>  
+>  err_free_irq:
+> +	/* __free_irq() expects the caller to have cleared the affinity hint */
+> +	ath11k_pci_set_irq_affinity_hint(ab_pci, NULL);
+>  	ath11k_pcic_free_irq(ab);
+>  
+>  err_ce_free:
 
-Cc: <stable@vger.kernel.org> # v6.8-rc1+
-Fixes: b79e8fd954c4 ("drm/xe: Remove dependency on intel_engine_regs.h")
-Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
----
- drivers/gpu/drm/xe/regs/xe_engine_regs.h | 1 -
- 1 file changed, 1 deletion(-)
+LGTM
 
-diff --git a/drivers/gpu/drm/xe/regs/xe_engine_regs.h b/drivers/gpu/drm/xe/regs/xe_engine_regs.h
-index d86219dedde2a..b732c89816dff 100644
---- a/drivers/gpu/drm/xe/regs/xe_engine_regs.h
-+++ b/drivers/gpu/drm/xe/regs/xe_engine_regs.h
-@@ -53,7 +53,6 @@
- 
- #define RING_CTL(base)				XE_REG((base) + 0x3c)
- #define   RING_CTL_SIZE(size)			((size) - PAGE_SIZE) /* in bytes -> pages */
--#define   RING_CTL_SIZE(size)			((size) - PAGE_SIZE) /* in bytes -> pages */
- 
- #define RING_START_UDW(base)			XE_REG((base) + 0x48)
- 
--- 
-2.48.1
 
