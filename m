@@ -1,191 +1,209 @@
-Received: from smtp.smtpout.orange.fr (smtp-73.smtpout.orange.fr [80.12.242.73])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEFF921B1A8
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 20:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADEEC215187
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 20:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740515174; cv=none; b=G+eCHRu4S8EO7opB2TL9RktIRcKjPfJpNByUvH7wT4wzvUpwjbIAzS9kOV7BWXrnbuTctM41FyBFPvWoQmwgeyHb5Z9cijwX5Mi6maw12TUQHYid5m7zMx2zWTZ/O10/k2vmOHZKcpDC97Oz2mC7ZD/1xskAVyj0tTV00jFUiC0=
+	t=1740515233; cv=none; b=UxbWWp/FkUuMV2iwUgE1b85S7rAxw8pxSSFc0QBxotoYBlR/G6rdTUYkFBB7H0LmaRWtT5u43Ore15asx6R27WBydw8ZQL89olVuw9jZLrw7bcQTiM0xUHp7gxCIovwoY1q1u7twVgzfQzMetaTZWtv9PbLyS8rEgDI1ADhaosQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740515174; c=relaxed/simple;
-	bh=sq4Py1SncPuWnYp7w/jC/603O9qbMx0qUhATBq2iLfs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mB9nB0I6bUdg3iUB+HbqzHlgGz6nSeJ3A5iean+okk4rpX1vS7B87RU1tpYxP7WUQYnnpCn1X7T974UkGycn+cFGPO5zpTQ+1UX2DekgNugNWRRjuLkQ+1igOH4Bo39ralB0NNlbR1bGO5BZ+j8KVwBy+E7Wk3ESSws6+iYybZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=iKuXRQiU; arc=none smtp.client-ip=80.12.242.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1740515233; c=relaxed/simple;
+	bh=jOV9DB5WPTaZrpMDKS5aIFTdsLbmUkjQend9KEGp9DQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K1Lkj/PVtBAzrF59AUaA9OdxFOHeQoOMEjkL4Cl3Zkx9cZdLXexRlMqY1Z4XazOuoV+caQ1eGxf1YHyE5iA/J5C8MYSUQ/0WDYVUW+8cdZfHg+6WX/K8/4bXU6oHL+iNTD39sjFck61YDJtInqp9mGKfBB5fepC9b6IPcxkAEvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N/dhDZh/; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="iKuXRQiU"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id n1U9t3mIzJOH0n1UCtJZCE; Tue, 25 Feb 2025 21:25:02 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1740515102;
-	bh=7/99hPUZC748Mfc5SetBP+1lFgI4nJzICmyhFWlU/iY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=iKuXRQiUr4DSCN5YIjxL5fg+7xNtpFVZ388ceGflyCUTRIIraXZLLuxfLRt1rrdNq
-	 Mcjfh/bu78BMQ979Ocb32NIh4hMx/UBFK9+rWMK68e2oOfgtVSYYpvHuZQqqwhM2F4
-	 xRwYDyIJ9r0JB4PyvxQtQnEJN+jWAM02yipCG6hFatdFz8hlHfys2cnAVfkfdrAGCL
-	 pbmW/Xdk5r/cz1npcrMZCtEd64iGOZfOEwjYGUS28IlBKl6/iAZPdwpObirhwpHycQ
-	 /bAX2zUVl+6cKzjA3iPLpYnaLHwK17kJN5G8XVfsNCrSwwR8hPHbqGldVViffZaaPe
-	 7QvOVydYdewhQ==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Tue, 25 Feb 2025 21:25:02 +0100
-X-ME-IP: 90.11.132.44
-Message-ID: <dd1a326a-e165-4796-9005-6bff2019deef@wanadoo.fr>
-Date: Tue, 25 Feb 2025 21:24:56 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N/dhDZh/"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-472098e6e75so3401cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 12:27:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740515230; x=1741120030; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z+xN7AiTJrC0ynsK4hEQTFSzLqDnqccgLdu8kvgFfMA=;
+        b=N/dhDZh/e+SwQug83Gzli7nf7ImrCT00j8jiB9ymdafOOaKyDV1NEtpIuPJU6mzPgg
+         BHJWUK2oI3uClBq8Z2tXAJwTKMP1GzTMqZdosbBqqfnb7XyVODaVqsBwvZYC2mJOJJ7P
+         pq1Sb9x+76nS/kb9sGkLAm+aLFNRlx+CyFG8f5lyQQH8KRfzztcBp0+EpPNWKE+G0goa
+         oT/n4wskg2+b1tJiO9F9qC2XdVtqw6ly4MfFMA3MHBO79mkuv7yMbVXBTWNAyWm4B/r2
+         8wxWe4ep3jcvl8AuV9l9lT/JQoaRManldKNQUIi/PCMjijgKjcYQ7vh5DL21WSxjfXax
+         W0zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740515230; x=1741120030;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z+xN7AiTJrC0ynsK4hEQTFSzLqDnqccgLdu8kvgFfMA=;
+        b=Jta4dZxZEGQuPRBei6s0jv1j7Lpa8UJOz5FVK0Lah/mAAc4GR9igWuCknkZ0mUm3Po
+         OtI3T8Dm/cQhuS1EZIF9XKz9dNYbDBAg+rpO//+dlQ2LA8swXPCqGstUFdmupKyhVFVi
+         o/M/rLJ4PRzDrhHJlhBqpYe2/M9fuBuqIChPBkdxHuCbhkxNPEXhmItG2Vb9IOijoPeb
+         OG2CfqjMNFfQCZ39wvYktMhn42V/qGH8ghpJgtNEvjI6ropJA44VLeTTzlsJ0NuRvErg
+         ie5IPGyAzkF3HjybXTDkoSv1NkUhQQsIKDQOTmuBFGyU+RCj2TuBgMzmCU96cmsHW3mv
+         ZPVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUv5dlKb14waZAoaDMNKlSwmISZV7H1LTEFdw9fzwKHKa4bLCqCwnlV63oVe4jYFh62EVZNE22LtXuycWM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yysh4ZzI4eEU3+m2uF8r08zEGOzhsH45HbwHY1CrelDSstN1trM
+	lC4lwfbeBV1imT/y4bZ2XHJWDtGEeKBsVCmSY+RS7wcRhjoqGXKFjOf2fnMN3RjV+RuNz90iDrO
+	liKE1lBMDo28qo7I9pM9X6ugsGSlJ2fokkniK
+X-Gm-Gg: ASbGncuVExlVDZmxFU8NsSgHAKPDOp/bxBkkks+kH7SDM++2CwoE+jBELIoY2ZXARw3
+	J1+z6wluFCplyh1CshSqDmI0W6YttaAwnEPfTN9y69z6r1si17zTE/4QCdp3G7KPveYYoir7OzO
+	+Ul5GUlLY=
+X-Google-Smtp-Source: AGHT+IGCPRUl7EyfMG5UNOKIzDP+flI/Kvq0Te1XG5ifn6l5XLiP/ay3uq/Wy8cM0LsrEbECRUyyFMnrwQptEMRROk4=
+X-Received: by 2002:a05:622a:1a95:b0:471:f34d:1d83 with SMTP id
+ d75a77b69052e-47376e6f153mr5771291cf.7.1740515230157; Tue, 25 Feb 2025
+ 12:27:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] orangefs: move s_kmod_keyword_mask_map[] into debugfs.c
-To: Arnd Bergmann <arnd@kernel.org>, Mike Marshall <hubcap@omnibond.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Martin Brandenburg <martin@omnibond.com>,
- Al Viro <viro@zeniv.linux.org.uk>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devel@lists.orangefs.org,
- linux-kernel@vger.kernel.org
-References: <20250225200901.4041575-1-arnd@kernel.org>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20250225200901.4041575-1-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250214-slub-percpu-caches-v2-0-88592ee0966a@suse.cz>
+ <ztssad52ikws3a2dwodju4o73h6rsutxnvzj5i6vyjjkudkiel@g7c7g5i3l7jd>
+ <CAJuCfpHi4Od4K2xQEUFWuG=a4zCKecWBMwBiy_7mVn6QgsTSvA@mail.gmail.com>
+ <CAJuCfpEq8P4cz7HXaRVqaagONPBKrFgOSqdigEYU60sGAE4-rg@mail.gmail.com>
+ <173d4dbe-399d-4330-944c-9689588f18e8@suse.cz> <CAJuCfpHHXYKGjaOxHcuJcuQbUVO7YqLMpcYeF3HM5Ayxy1fE+g@mail.gmail.com>
+In-Reply-To: <CAJuCfpHHXYKGjaOxHcuJcuQbUVO7YqLMpcYeF3HM5Ayxy1fE+g@mail.gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 25 Feb 2025 12:26:59 -0800
+X-Gm-Features: AWEUYZmbUvBZYQOEnyJSGvoQZOLqN-tvNLOGbur4IzoQIF06Ruiv7YZpQQ18P-k
+Message-ID: <CAJuCfpE7t83PKWw+8XJLE5538kKJnbhirLg2siDSw=F4sw=9uA@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 00/10] SLUB percpu sheaves
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
+	Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	rcu@vger.kernel.org, maple-tree@lists.infradead.org, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Alexei Starovoitov <ast@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Le 25/02/2025 à 21:08, Arnd Bergmann a écrit :
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> gcc warns about unused const variables when building with W=1
-> 
->      In file included from fs/orangefs/protocol.h:287,
->                       from fs/orangefs/acl.c:8:
->      fs/orangefs/orangefs-debug.h:86:18: error: 'num_kmod_keyword_mask_map' defined but not used [-Werror=unused-const-variable=]
->         86 | static const int num_kmod_keyword_mask_map = (int)
->            |                  ^~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> This one is only used in one file, so just move the definition
-> next to its only user.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->   fs/orangefs/orangefs-debug.h   | 43 ----------------------------------
->   fs/orangefs/orangefs-debugfs.c | 43 ++++++++++++++++++++++++++++++++++
->   2 files changed, 43 insertions(+), 43 deletions(-)
-> 
-> diff --git a/fs/orangefs/orangefs-debug.h b/fs/orangefs/orangefs-debug.h
-> index 6e079d4230d0..d4463534cec6 100644
-> --- a/fs/orangefs/orangefs-debug.h
-> +++ b/fs/orangefs/orangefs-debug.h
-> @@ -43,47 +43,4 @@
->   #define GOSSIP_MAX_NR                 16
->   #define GOSSIP_MAX_DEBUG              (((__u64)1 << GOSSIP_MAX_NR) - 1)
->   
-> -/* a private internal type */
-> -struct __keyword_mask_s {
-> -	const char *keyword;
-> -	__u64 mask_val;
-> -};
-> -
-> -/*
-> - * Map all kmod keywords to kmod debug masks here. Keep this
-> - * structure "packed":
-> - *
-> - *   "all" is always last...
-> - *
-> - *   keyword     mask_val     index
-> - *     foo          1           0
-> - *     bar          2           1
-> - *     baz          4           2
-> - *     qux          8           3
-> - *      .           .           .
-> - */
-> -static struct __keyword_mask_s s_kmod_keyword_mask_map[] = {
-> -	{"super", GOSSIP_SUPER_DEBUG},
-> -	{"inode", GOSSIP_INODE_DEBUG},
-> -	{"file", GOSSIP_FILE_DEBUG},
-> -	{"dir", GOSSIP_DIR_DEBUG},
-> -	{"utils", GOSSIP_UTILS_DEBUG},
-> -	{"wait", GOSSIP_WAIT_DEBUG},
-> -	{"acl", GOSSIP_ACL_DEBUG},
-> -	{"dcache", GOSSIP_DCACHE_DEBUG},
-> -	{"dev", GOSSIP_DEV_DEBUG},
-> -	{"name", GOSSIP_NAME_DEBUG},
-> -	{"bufmap", GOSSIP_BUFMAP_DEBUG},
-> -	{"cache", GOSSIP_CACHE_DEBUG},
-> -	{"debugfs", GOSSIP_DEBUGFS_DEBUG},
-> -	{"xattr", GOSSIP_XATTR_DEBUG},
-> -	{"init", GOSSIP_INIT_DEBUG},
-> -	{"sysfs", GOSSIP_SYSFS_DEBUG},
-> -	{"none", GOSSIP_NO_DEBUG},
-> -	{"all", GOSSIP_MAX_DEBUG}
-> -};
-> -
-> -static const int num_kmod_keyword_mask_map = (int)
-> -	(ARRAY_SIZE(s_kmod_keyword_mask_map));
-> -
->   #endif /* __ORANGEFS_DEBUG_H */
-> diff --git a/fs/orangefs/orangefs-debugfs.c b/fs/orangefs/orangefs-debugfs.c
-> index f52073022fae..6a34e6feac45 100644
-> --- a/fs/orangefs/orangefs-debugfs.c
-> +++ b/fs/orangefs/orangefs-debugfs.c
-> @@ -54,6 +54,49 @@
->   #define ORANGEFS_VERBOSE "verbose"
->   #define ORANGEFS_ALL "all"
->   
-> +/* a private internal type */
-> +struct __keyword_mask_s {
-> +	const char *keyword;
-> +	__u64 mask_val;
-> +};
-> +
-> +/*
-> + * Map all kmod keywords to kmod debug masks here. Keep this
-> + * structure "packed":
-> + *
-> + *   "all" is always last...
-> + *
-> + *   keyword     mask_val     index
-> + *     foo          1           0
-> + *     bar          2           1
-> + *     baz          4           2
-> + *     qux          8           3
-> + *      .           .           .
-> + */
-> +static struct __keyword_mask_s s_kmod_keyword_mask_map[] = {
+On Mon, Feb 24, 2025 at 1:12=E2=80=AFPM Suren Baghdasaryan <surenb@google.c=
+om> wrote:
+>
+> On Mon, Feb 24, 2025 at 12:53=E2=80=AFPM Vlastimil Babka <vbabka@suse.cz>=
+ wrote:
+> >
+> > On 2/24/25 02:36, Suren Baghdasaryan wrote:
+> > > On Sat, Feb 22, 2025 at 8:44=E2=80=AFPM Suren Baghdasaryan <surenb@go=
+ogle.com> wrote:
+> > >>
+> > >> Don't know about this particular part but testing sheaves with maple
+> > >> node cache and stress testing mmap/munmap syscalls shows performance
+> > >> benefits as long as there is some delay to let kfree_rcu() do its jo=
+b.
+> > >> I'm still gathering results and will most likely post them tomorrow.
+> >
+> > Without such delay, the perf is same or worse?
+>
+> The perf is about the same if there is no delay.
+>
+> >
+> > > Here are the promised test results:
+> > >
+> > > First I ran an Android app cycle test comparing the baseline against =
+sheaves
+> > > used for maple tree nodes (as this patchset implements). I registered=
+ about
+> > > 3% improvement in app launch times, indicating improvement in mmap sy=
+scall
+> > > performance.
+> >
+> > There was no artificial 500us delay added for this test, right?
+>
+> Correct. No artificial changes in this test.
+>
+> >
+> > > Next I ran an mmap stress test which maps 5 1-page readable file-back=
+ed
+> > > areas, faults them in and finally unmaps them, timing mmap syscalls.
+> > > Repeats that 200000 cycles and reports the total time. Average of 10 =
+such
+> > > runs is used as the final result.
+> > > 3 configurations were tested:
+> > >
+> > > 1. Sheaves used for maple tree nodes only (this patchset).
+> > >
+> > > 2. Sheaves used for maple tree nodes with vm_lock to vm_refcnt conver=
+sion [1].
+> > > This patchset avoids allocating additional vm_lock structure on each =
+mmap
+> > > syscall and uses TYPESAFE_BY_RCU for vm_area_struct cache.
+> > >
+> > > 3. Sheaves used for maple tree nodes and for vm_area_struct cache wit=
+h vm_lock
+> > > to vm_refcnt conversion [1]. For the vm_area_struct cache I had to re=
+place
+> > > TYPESAFE_BY_RCU with sheaves, as we can't use both for the same cache=
+.
+> >
+> > Hm why we can't use both? I don't think any kmem_cache_create check mak=
+es
+> > them exclusive? TYPESAFE_BY_RCU only affects how slab pages are freed, =
+it
+> > doesn't e.g. delay reuse of individual objects, and caching in a sheaf
+> > doesn't write to the object. Am I missing something?
+>
+> Ah, I was under impression that to use sheaves I would have to ensure
+> the freeing happens via kfree_rcu()->kfree_rcu_sheaf() path but now
+> that you mentioned that, I guess I could keep using kmem_cache_free()
+> and that would use free_to_pcs() internally... When time comes to free
+> the page, TYPESAFE_BY_RCU will free it after the grace period.
+> I can try that combination as well and see if anything breaks.
 
-Unrelated to your patch, but I think that this could be made const.
+This seems to be working fine. The new configuration is:
 
-Just my 2c.
+4. Sheaves used for maple tree nodes and for vm_area_struct cache with
+vm_lock to vm_refcnt conversion [1]. vm_area_struct cache uses both
+TYPESAFE_BY_RCU and sheaves (but obviously not kfree_rcu_sheaf()).
 
-CJ
+>
+> >
+> > > The values represent the total time it took to perform mmap syscalls,=
+ less is
+> > > better.
+> > >
+> > > (1)                  baseline       control
+> > > Little core       7.58327       6.614939 (-12.77%)
+> > > Medium core  2.125315     1.428702 (-32.78%)
+> > > Big core          0.514673     0.422948 (-17.82%)
+> > >
+> > > (2)                  baseline      control
+> > > Little core       7.58327       5.141478 (-32.20%)
+> > > Medium core  2.125315     0.427692 (-79.88%)
+> > > Big core          0.514673    0.046642 (-90.94%)
+> > >
+> > > (3)                   baseline      control
+> > > Little core        7.58327      4.779624 (-36.97%)
+> > > Medium core   2.125315    0.450368 (-78.81%)
+> > > Big core           0.514673    0.037776 (-92.66%)
 
-> +	{"super", GOSSIP_SUPER_DEBUG},
-> +	{"inode", GOSSIP_INODE_DEBUG},
-> +	{"file", GOSSIP_FILE_DEBUG},
-> +	{"dir", GOSSIP_DIR_DEBUG},
-> +	{"utils", GOSSIP_UTILS_DEBUG},
-> +	{"wait", GOSSIP_WAIT_DEBUG},
-> +	{"acl", GOSSIP_ACL_DEBUG},
-> +	{"dcache", GOSSIP_DCACHE_DEBUG},
-> +	{"dev", GOSSIP_DEV_DEBUG},
-> +	{"name", GOSSIP_NAME_DEBUG},
-> +	{"bufmap", GOSSIP_BUFMAP_DEBUG},
-> +	{"cache", GOSSIP_CACHE_DEBUG},
-> +	{"debugfs", GOSSIP_DEBUGFS_DEBUG},
-> +	{"xattr", GOSSIP_XATTR_DEBUG},
-> +	{"init", GOSSIP_INIT_DEBUG},
-> +	{"sysfs", GOSSIP_SYSFS_DEBUG},
-> +	{"none", GOSSIP_NO_DEBUG},
-> +	{"all", GOSSIP_MAX_DEBUG}
-> +};
-> +
-> +static const int num_kmod_keyword_mask_map = (int)
-> +	(ARRAY_SIZE(s_kmod_keyword_mask_map));
-> +
->   /*
->    * An array of client_debug_mask will be built to hold debug keyword/mask
->    * values fetched from userspace.
+(4)                   baseline      control
+Little core        7.58327      4.642977 (-38.77%)
+Medium core   2.125315    0.373692 (-82.42%)
+Big core           0.514673    0.043613 (-91.53%)
 
+I think the difference between (3) and (4) is noise.
+Thanks,
+Suren.
+
+> > >
+> > > Results in (3) vs (2) indicate that using sheaves for vm_area_struct
+> > > yields slightly better averages and I noticed that this was mostly du=
+e
+> > > to sheaves results missing occasional spikes that worsened
+> > > TYPESAFE_BY_RCU averages (the results seemed more stable with
+> > > sheaves).
+> >
+> > Thanks a lot, that looks promising!
+>
+> Indeed, that looks better than I expected :)
+> Cheers!
+>
+> >
+> > > [1] https://lore.kernel.org/all/20250213224655.1680278-1-surenb@googl=
+e.com/
+> > >
+> >
