@@ -1,312 +1,233 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2085.outbound.protection.outlook.com [40.107.105.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1E526560F
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 10:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740478718; cv=none; b=Ox16DG/BB7l0X33P4VF7vldvfAlKau46s3a1ao0K98HjjPcKpCnbwM6Z8dAo9OUskDPICJ7MFxu7FXUZXgftl2XQxrPMqYyIZJbeJuSKJ1ZkjD6B9wNqF9iJvbdEtv38X3rNz52OWqCYWn6IiCqzpMaWjj3H6sQ/eRopTbElgYY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740478718; c=relaxed/simple;
-	bh=LzMHqQIKenmWRMaELjtMuKWK0CqO4oiLDXSoq35/okA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F3AVX7YDut8/tna9oMB+ch+J36r3cINZCkEfb4QIstpotot9vqs2n6WRH8Lunq7fG5WB17zTnrG6SS50tAfCIeI1RE8pSDEG7Bf19zarqdsa0aRmJZzD6zUtSIi3EtJKf8MaMxLWHoC28IeakfZjKBWZ3H7L7VF+IilRYKjkNlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kIKoL46c; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE797266569;
+	Tue, 25 Feb 2025 10:19:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740478746; cv=fail; b=Y4TtpSvLBPhBnDpmk4HI5YBkPxxZrUp5HVbZetx1WKBsCDtMN8dDTlvxLegMpJV0LrEo4jG5eMu782Am6N5tW8flA8FY5R5s+ioDjLzdEBtnd7rx0mCHB3TWcImQsLn5I97gAdnaj+RGm14W/gPzWmchn/UMjidih95gEjzWK2k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740478746; c=relaxed/simple;
+	bh=ultLxeWDa4jRK7QnJZcJZQC+BGqHHeJtgZbK2SQK0Gw=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=HQpSIbj7Nn3/MEnS2swSsf8+z0J2dLrGBYxRZYBGjg3yjtjqQRIMUOboyr70fErifoifW9mDFwlQ0i+/hc0S2Rb/00LycHbPUdA5b1eA9QO8gUsqPiGS/4ji3PUk/GKFrhoMStpsf2/phOK0hKGI4mW5X9F6zs3O0wM6L4vcMTQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=BK4nKdtq; arc=fail smtp.client-ip=40.107.105.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kIKoL46c"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ab7e08f56a0so97147066b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 02:18:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740478713; x=1741083513; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=of1Aj+b2AygxrQL0A6JMIgE22awWJ2bmoSsFSdWAD6k=;
-        b=kIKoL46cSsgLCErj68O0bzBxOJoNRQuPJmUrrwIPW3p/G0yoMlLev0GafN9mHqgJKI
-         ByTDR8eXcR/d9xxtD3hVPF/bCfk2ccXQwBU6y1wvy8ARtXFi2JjxWPwgUa2eg+h7P0wX
-         uhUYl+aHADfukHPC25BKDf8Hy0+g99MgLaNs2gizBx0f+RPb1hPSLaDyNRuWgynqdv6B
-         ceJvmW1ZolexU8ESWcTd90JOSUTx9NbtVZ2mFny9dBXbtzp1cH3VblkUAdiYFK5bqmcl
-         GetqBXPTd9sOd0G9UqBcZrd9DzyE/2tEYH+cBDKrnIV70Q+gh16UjfKStOtZZ5+oATHF
-         7lSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740478713; x=1741083513;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=of1Aj+b2AygxrQL0A6JMIgE22awWJ2bmoSsFSdWAD6k=;
-        b=wykRlKNQlnf2tdzORyX3D30FEdOQZgo4myQ8+gtz3lyQ3vmfw0fWqWIaBI+Q8gsTgy
-         IH3KAvPCKm61E/DAktDRycgXmmU7pdes3ZjFXIBduVtP3rJ3VnRs1Ir76L+LJjCzXdmE
-         gi1hrgh9JR0sNImJwvHGwQ2ixbSGQ6+pAhRz54K9uhcF7/Frj2kfuGg7LG8GUWAceid2
-         znSRoUJs2uke+anGVuboVEZCMGZkyfJW1EJFx/Sjg4XzUMblTjzxNNcwJWVuvOwJOReK
-         FVW7BB46rn3cf5MqDlo6fXnzvcZhJySbA0YpQ8OOo3yBC5vUDGb3Vp5kmTQA6F+Eek7b
-         4G2A==
-X-Forwarded-Encrypted: i=1; AJvYcCV1pM+dlPrwU7Sq6eNlOnYmcuFXR4ueG9iaIUpfJ/09Fv/8hmDzqkWzuZf/rlzNnicdjqOp8RB8KbSLZ8Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+l26jFCvG6FZ5fbt+LZMpQTNOGwmKjP0L3MjEiZwewRK/pJRu
-	uwSRog5v+hNZfDPdxuybyPUtAE1MRITEJLgP5LYSnWkxYcoRi5r9av09M/jq2C4=
-X-Gm-Gg: ASbGnctZYldrDx3NFfRScO1DKrUu+SHG4OmkUISEl3k7ih0HFDHWVLmlB16V/w4I+DZ
-	0YboUqOS+dvOsUXE25QTYv0R+4lnerqE4eo008VXzELso7q1NeUS2W9Pas0dpm5IRerSG8VLk3U
-	KfqBPl6P501zLpOdgGb0m1XsUjTbHlD9mPGDo2wJacsA5MAbTjatjTMX25M6UfQoGb2NXsRqfob
-	JIqS18sqjQ7tULcULpBC7rfiFyGqNnbFdbK/DAZYb9ZYt3MotNm09mhONOAiHhiFKxVXIAnbISK
-	2II+Bm1G86cY4KAYpDJAbgwvPTXQZeWkhtE/3HVw6NGte2QKeMlFjsc6EClqJxetSkced4RBKV0
-	=
-X-Google-Smtp-Source: AGHT+IF/O2qgzDlpSiG1lR7ObLbGjnnjV2zONrsTr1vx1NDwvqVNso6CnH5NNmLxDNPJVXo6dnHsfQ==
-X-Received: by 2002:a17:907:9713:b0:ab7:5fcd:d4be with SMTP id a640c23a62f3a-abc099c6a2dmr707107666b.1.1740478713100;
-        Tue, 25 Feb 2025 02:18:33 -0800 (PST)
-Received: from krzk-bin.. (78-11-220-99.static.ip.netia.com.pl. [78.11.220.99])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed2016014sm113954566b.112.2025.02.25.02.18.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 02:18:32 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="BK4nKdtq"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LFFtW+ORn+CKRbpHlOQnpEiz/UZWT4xAwPOuqGghSAr27jo4DGE4wLoHV8laBNRVsuXCQi7sgyXIzNzkIff1fJxlE4BSdZ5UT1148yOm6JH0VjSHt3EeBrXfPQzsmWHJEPMmupZYGDiybeycvDQhENTJnB4l0fwJ6U7tiL8k1YZPJDfDyFhsA1Vh4AklPxEBoFja7BPw2M3/XahbvIEirhMT3p6/xgW8R+XUS2GdJhB/8Pt47U2s2wl+/UO1ioBZQvCmqHQS1qhEudXV0HEvLog5xZIltbRtL0vuxA5VxW2QubBKvZ7iRAFRb2mWr49ILGLwBJgeve8q37goebhFZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zKINwTrGuf/ZSM3V/VNC36zlq4pjIkL+wF/W5LhiUFU=;
+ b=g+W6/RYvQowAM/HlhHJwE7zWGqZ+V9C7lT0K2SaJPL0U/10BS+Wa8i25stKOQSnHGUkjt15egxuONRmq7u1sB6AmheA6vHhmqBOsn96jCdzc7eVzWeA0z/sd3i34tDAUUj+jZ3YwJwCaYwASoBFhCL/QTojZec6Dv4WnycgkDBA/TjY/TAGHSE8ynt+cTGagqOUPYQzSUfITXXOv8CmNnjypJVJs/3MZdc50qquMqGJ+FxSy6HgK+z/PNsL4IbTq/oXEDwMeRV12dJp8yshjFG7lE8RUN1dAwIUnP4PjksdPoMoiO/4KwYc18IJWxfyO1CvV+0c/OUvuo5765qRgJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zKINwTrGuf/ZSM3V/VNC36zlq4pjIkL+wF/W5LhiUFU=;
+ b=BK4nKdtquK7mDxaDYo2DrAMvaDrS9F1kLT2OOisQbAQoFPlMZdYQtyVbx6RdQEtP1z8pZLPnLHgJ5UmmXJMi0sBaMHBC+kUZNBoNnmr6fQc0eIk2NRW/xShccWkfu8LR7T8dPyy++cVrrHyF7jV/YL79qYmm2qXzsMccbd4fIR2juXgpCP94eODPSlMybPMUY6GV6m/qAwiwT6gx7RZ9aqgka63ZFnAQd5bf3R+cwirc9gZNDOwm/hS2d02uUZtQEytmhKlNp/lZnMvCr7OLbik3ggtQvJWx9lof0g/M4CrTBStVZJLQAnstsA6p88cHJs44zifDOEYyHaF8SplE6Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS8PR04MB8247.eurprd04.prod.outlook.com (2603:10a6:20b:3f2::13)
+ by DU0PR04MB9393.eurprd04.prod.outlook.com (2603:10a6:10:358::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.19; Tue, 25 Feb
+ 2025 10:19:00 +0000
+Received: from AS8PR04MB8247.eurprd04.prod.outlook.com
+ ([fe80::84f7:e2c3:ceed:c0a6]) by AS8PR04MB8247.eurprd04.prod.outlook.com
+ ([fe80::84f7:e2c3:ceed:c0a6%5]) with mapi id 15.20.8466.016; Tue, 25 Feb 2025
+ 10:19:00 +0000
+From: Daniel Baluta <daniel.baluta@nxp.com>
+To: p.zabel@pengutronix.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	shawnguo@kernel.org,
+	mathieu.poirier@linaro.org
+Cc: conor+dt@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
 	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH RFC] arm64: dts: mediatek: mt8183: Switch to undeprecated qcom,calibration-variant
-Date: Tue, 25 Feb 2025 11:18:28 +0100
-Message-ID: <20250225101828.107509-1-krzysztof.kozlowski@linaro.org>
+	linux-remoteproc@vger.kernel.org,
+	andersson@kernel.org,
+	Frank.Li@nxp.com,
+	peng.fan@nxp.com,
+	laurentiu.mihalcea@nxp.com,
+	iuliana.prodan@nxp.com,
+	Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH v3 0/8] imx8mp: Add support to Run/Stall DSP via reset API
+Date: Tue, 25 Feb 2025 12:19:57 +0200
+Message-ID: <20250225102005.408773-1-daniel.baluta@nxp.com>
 X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: WA1P291CA0015.POLP291.PROD.OUTLOOK.COM
+ (2603:10a6:1d0:19::13) To AS8PR04MB8247.eurprd04.prod.outlook.com
+ (2603:10a6:20b:3f2::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8247:EE_|DU0PR04MB9393:EE_
+X-MS-Office365-Filtering-Correlation-Id: caed5d03-1f12-4da1-1b0c-08dd5585d248
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|52116014|7416014|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?dVL2+Akwa4WbDB8fYELSVEoTneyzgI8Pp/Stoblkj96ed4FSPFCW8nPzcclI?=
+ =?us-ascii?Q?Gv+SVzUTzsk+IKJUsm08T6Z+WL3t6/Yvq+3ehHdlKtEEXhasf0bs8nCxy3vk?=
+ =?us-ascii?Q?6r9+WruJHFHfklR3MR3yHHjQPEVTJKmQCtTWx5kQEl8PGlYTlJrRr5ch+Cy0?=
+ =?us-ascii?Q?FSuysZ93NfxQvV6In+xEEASo699fXlM93ctZNyFN9iRRytii4lNzL7NskaOR?=
+ =?us-ascii?Q?naWCiHWdHro2YBX/ECZylWbnfmA9aoC8nAQJFig602fHw7zVCeZIkQ+qe6cU?=
+ =?us-ascii?Q?e8hj8tF9MrenYdJvNk1bLVSaTKfOEEv/OapOt844Y3XWxxwDdMb+w9PX+rO8?=
+ =?us-ascii?Q?fBDljglaZrCjAM36JY219To8aFlgQLs5Zg9PQKSM+Dm0G5goJHyvsmjnTy7f?=
+ =?us-ascii?Q?VPH9+S/R6yXHLpV0Zkl6R0kYY/HZvpaKH0KxRJNFhDhT9DDDQImz58fh+07u?=
+ =?us-ascii?Q?DRe3YyZCoNt9UhFF6Z7XuIFvWaSMiJpNIx+lyysEcKM0wK2ozFAIqCUWVRjJ?=
+ =?us-ascii?Q?hxkkGeIvgbyTHEPpw/KSLO9ae+j/jHK9Lwg92jB52l5SM2M+aqigZj7LZwmS?=
+ =?us-ascii?Q?TM+534fgyDgoVMD9VsUTLGdpnk5dgsECWYSOpJ+e2AG6nyPe3BL0FWDTVqzk?=
+ =?us-ascii?Q?6SytL89kNlDhQCKSruih0duTPG2VfiB66ZLRckrnUwX7h2JGI0tbrlLP9iFT?=
+ =?us-ascii?Q?wX06oBvIdTcRc7gKWCUzL/98uUwZrBlUIVu1ez+YJKK8vyHZgN0Cz8PeNhuG?=
+ =?us-ascii?Q?dXNYhcN+62siCvd/9mUGXBuxSgFMzgg2tg+v07sbrx1TSRhC/ngctbeD52dL?=
+ =?us-ascii?Q?KTAiMOOFUGo0nsDZJ09RQVZUg1PBQTokTSQ4AVxCsfr8k2hHdYySNWBfybwH?=
+ =?us-ascii?Q?Y44adeGbOWwVIM33TLP55iA31YyYt5djFfQG+L4PCHFJnDWh/Uiie0J+BF2n?=
+ =?us-ascii?Q?XHqGdadv7Ql5nc20/SBOJ0ypyrDuP5biQbTNhMP2mZ6tNG4R60PB9uBWiv/E?=
+ =?us-ascii?Q?9t0FIcdUjNqfb5eFt7cNepE71De1Ff+4eFxW4ZI5kY600Rp2xRZhPd2T3rH+?=
+ =?us-ascii?Q?d7hWYb6iKurhoQfX+mTHVMLhhXhIDkkr73CeeQVUxYNbjT5f3sOo4g/2S7P7?=
+ =?us-ascii?Q?ff0anIj1ulx5Mu3AyzJhWvz6H/Ug2Uejp2GVeFlty9Qd6H+yIBhD5MeQsH3W?=
+ =?us-ascii?Q?m8wKfRRN+e9elR3vaC7tjsePhVJB1eeWtFrScpBuzA3h/zVkP0aCUkgGVwwe?=
+ =?us-ascii?Q?vOS9RInDAbcureSwkStZ1ZqVR0GiwSrekhlbBIvgtjwrwrYYXG0z4MQT2kxo?=
+ =?us-ascii?Q?DgCU2N1kIsAPsT1Vf7BWcaRlttxAMmlGLKOqle4PnZQCSLMb/ejLykphJaDg?=
+ =?us-ascii?Q?7oT9vkTO1sWI8Z7DezSDE7oLTni/tRF2FdQ0rSyFmaPggzPYIfIfynWYLF8b?=
+ =?us-ascii?Q?YO1RpST4D4Z0kFeRHubK7QPjcJ1+wCUwtddRSCC+DvB5lC5IkS2SOw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8247.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(7416014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?zmOiPG+o+Q83VzTO0rFSPgTWPnirwzHVE6UzvmLdgpaihfCo3KqLMhNWdcLR?=
+ =?us-ascii?Q?e/cYs9HmICPJOt4O8L/qyGPamsBKUcZETRClVmLZzzyB2ih8HV8ZL+ecmLQg?=
+ =?us-ascii?Q?VutuKQ4CVLjIQ3swBMFv9l4W2XWGyK2i9wLUWErNArvV+tyU68X3GEZV2yT4?=
+ =?us-ascii?Q?Mz9Zsftbvj6sBvDgR4FbgByTAg1KI1+hIrL7khryKECOORN578ENgSFPrYtR?=
+ =?us-ascii?Q?guDiAUfEZYIu9c66EWmXT0x6QXvLVJ5UL1v7wH7Nq0U+CqN43LgFP1EpmTo7?=
+ =?us-ascii?Q?fltDnVhltw7Vjtx4pXivna0dur8PFsMvZqn7/OQTOBTAjlABbIPXZmeT2GVE?=
+ =?us-ascii?Q?uVnnsr7LqBuSCV5hD93Q+pYlDN2ElEC3U3xB/9TDerLkM4C4cQapK7xJywYq?=
+ =?us-ascii?Q?1yLVwjcRCS9TjUkMZY/V0ZcO2aYI25FEi/8x/tGCTNeNYTqvwZA+4tt+RDGB?=
+ =?us-ascii?Q?To2SSXcyFy309Nm4WRhLB6QGvvyL0FRmx2ubSLzUNupW0k3souvZD7SINaKB?=
+ =?us-ascii?Q?8jmFjdwuWU+aLPywjMDpqnDF0/s0CQX1a/3QsSa8DhMeadCzOnLaNfNPJz4J?=
+ =?us-ascii?Q?NXnR++u4Hwt43SaGfJDhhSwGav4ccVGTQHkxBnPJFEHerLtGdQhB0yI0rJ5T?=
+ =?us-ascii?Q?jMKhFU1DmmgbKgCmNxA4rPtotoGl5JIm4eEdWMZ0QTr+H6t416D5TiPJAE6b?=
+ =?us-ascii?Q?ncKRlzPllk67Pujnjpi9JGES1xrXoqurnirHFN4U2YHSRr0akRlPcXGxheJI?=
+ =?us-ascii?Q?5J2C97Z8EN24XQ/lcvJhNAKRkZnlkuC7V4Bh/GS1yzyt4K9IiqIZdKQA27/i?=
+ =?us-ascii?Q?d9D4sp7mU/B7Hrr3XoaEC15JVO2wQvri4Nd6aedvU8IxjHyQsy9093JU3tHG?=
+ =?us-ascii?Q?UzA/87mxdwYqzc9yTJdLoKHhDsztxP3ltMk+1oFSCrGbZpsrXdHwvPpxwRPh?=
+ =?us-ascii?Q?Rxcqf1WNtuzOmON4PENopKi7W1z85xLX79Ft3pthfb4M5KMOCKJc5xh2oQQA?=
+ =?us-ascii?Q?y9v02WAOue/TxRcPKJAgO2Y4Zn2b8nWug0+BR4u+7UqlbXbQszQLKQD+bDfX?=
+ =?us-ascii?Q?5u2YvCk0ToOFPYkbC/XPfJOgG4e26NkflpFBIlySrI0yykxSZd7CytbJfnRz?=
+ =?us-ascii?Q?UGns0fT0F6Pa6AKOW6gF50Cs9m522wDF0L7wrlwuAzE0Sk5Bp1yKiA2D1cQE?=
+ =?us-ascii?Q?MJORrZZqAUzVttz5iEiiT3uMsKPqwDpbDaQHagQBqfrm7ZJT41VvcLBs8r6G?=
+ =?us-ascii?Q?TzpQV9HUs0mj1IlkNBLWWNu8vec1W2BMy4t1/EX+pUwd08Tf/NlTab7NxYuq?=
+ =?us-ascii?Q?qWtfk6fManEBBfiSEkaiUqaaKrrl4O2mWWlJK6bSrWHCsRtk5gD5eKCqImMZ?=
+ =?us-ascii?Q?Wx14d+/aZLDhCXx3St0Vxm5iF2Yu0yvH+WTE1IYNl/VghMmr0q1LZY7Hw5TS?=
+ =?us-ascii?Q?AsHefv55OyWG2DoFsPjzFYhYmozj68hByYcR/CHaFcQ2qKcTx83pk1Py2A3a?=
+ =?us-ascii?Q?AwjwjF/D9Azs34p+5Pz3GHln9sbzNufdL0HKFQEfAjMnyYIH7HQmP/6JR/KZ?=
+ =?us-ascii?Q?efVZxavKtzQj+9R6o52xXwU2wok2J9RHCzGRm6ul?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: caed5d03-1f12-4da1-1b0c-08dd5585d248
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8247.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2025 10:19:00.7204
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LWlLH6VRjo/PvFihIK0QGz687oCN2Cgq26CVtdPf5CJ4GMy3XG2yGnrdk5DbCE0hnuNLWnFdbBfCLPjfc6r2pw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR04MB9393
 
-The property qcom,ath10k-calibration-variant was deprecated in favor of
-recently introduced generic qcom,calibration-variant, common to all
-Qualcomm Atheros WiFi bindings.
+This patch series adds support to control the Run/Stall DSP bits found on
+i.MX8MP via the reset controller API instead of using the syscon API.
 
-Change will affect out of tree users, like other projects, of this DTS.
+Patches 1,4-7 - should be merged first via Rest Controller Tree.
+Patch 8 - should be merged via Remoteproc tree.
+Patch 2,3 - should be last merged via Shawn's Tree.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+DSP found on i.MX8MP doesn't have a direct reset line so according to hardware
+design team in order to handle assert/deassert/reset functionality we
+need to use a combination of control bits from two modules.
 
----
+Audio block control module 
+	- for Run/Stall control bits of the DSP
 
-Dependency/RFC!
+Debug Access Port (DAP)
+	- for Software Reset via IMX8M_DAP_PWRCTL register
 
-RFC, because this should be merged release after driver support is
-merged:
-https://lore.kernel.org/linux-devicetree/20250225-b-wifi-qcom-calibration-variant-v1-0-3b2aa3f89c53@linaro.org/T/#t
----
- arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-cozmo.dts     | 2 +-
- arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-damu.dts      | 2 +-
- .../boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku1.dts      | 2 +-
- .../boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku6.dts      | 2 +-
- .../boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku7.dts      | 2 +-
- .../boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel14-sku2.dts    | 2 +-
- arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel14.dts  | 2 +-
- arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-juniper.dtsi  | 2 +-
- .../boot/dts/mediatek/mt8183-kukui-jacuzzi-makomo-sku0.dts      | 2 +-
- .../boot/dts/mediatek/mt8183-kukui-jacuzzi-makomo-sku1.dts      | 2 +-
- arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-willow.dtsi   | 2 +-
- arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi           | 2 +-
- arch/arm64/boot/dts/mediatek/mt8183-kukui-katsu-sku32.dts       | 2 +-
- arch/arm64/boot/dts/mediatek/mt8183-kukui-katsu-sku38.dts       | 2 +-
- arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi           | 2 +-
- arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi            | 2 +-
- 16 files changed, 16 insertions(+), 16 deletions(-)
+The current implementation for IMX DSP Remotproc driver and for Sound Open
+Firmware driver (already upstream) uses the following approach:
+	- maps the Audio Block Control address via syscon API through
+	  the fsl,dsp-ctrl property of the dsp node.
+	- maps the DAP address space using directly a call to ioremap
+	  with IMX8M_DAP_DEBUG macro depicting the DAP base address.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-cozmo.dts b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-cozmo.dts
-index 83bbcfe62083..f2303d9f125f 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-cozmo.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-cozmo.dts
-@@ -35,5 +35,5 @@ trackpad@2c {
- };
- 
- &qca_wifi {
--	qcom,ath10k-calibration-variant = "GO_COZMO";
-+	qcom,calibration-variant = "GO_COZMO";
- };
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-damu.dts b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-damu.dts
-index 3935d83a047e..13ec15fa284f 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-damu.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-damu.dts
-@@ -31,7 +31,7 @@ &mt6358codec {
- };
- 
- &qca_wifi {
--	qcom,ath10k-calibration-variant = "GO_DAMU";
-+	qcom,calibration-variant = "GO_DAMU";
- };
- 
- &i2c2 {
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku1.dts b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku1.dts
-index 72852b760038..b576b974cf23 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku1.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku1.dts
-@@ -40,6 +40,6 @@ &touchscreen {
- };
- 
- &qca_wifi {
--	qcom,ath10k-calibration-variant = "GO_FENNEL";
-+	qcom,calibration-variant = "GO_FENNEL";
- };
- 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku6.dts b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku6.dts
-index 757d0afd14fb..d64581f35d2c 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku6.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku6.dts
-@@ -28,6 +28,6 @@ &touchscreen {
- 
- 
- &qca_wifi {
--	qcom,ath10k-calibration-variant = "GO_FENNEL";
-+	qcom,calibration-variant = "GO_FENNEL";
- };
- 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku7.dts b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku7.dts
-index 6641b087e7c5..d0c98d0aba95 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku7.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel-sku7.dts
-@@ -28,6 +28,6 @@ &touchscreen {
- 
- 
- &qca_wifi {
--	qcom,ath10k-calibration-variant = "GO_FENNEL";
-+	qcom,calibration-variant = "GO_FENNEL";
- };
- 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel14-sku2.dts b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel14-sku2.dts
-index 877256eab262..3a81786084da 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel14-sku2.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel14-sku2.dts
-@@ -14,5 +14,5 @@ / {
- };
- 
- &qca_wifi {
--	qcom,ath10k-calibration-variant = "GO_FENNEL14";
-+	qcom,calibration-variant = "GO_FENNEL14";
- };
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel14.dts b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel14.dts
-index b981dd31a430..959c4d3d9707 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel14.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-fennel14.dts
-@@ -14,5 +14,5 @@ / {
- };
- 
- &qca_wifi {
--	qcom,ath10k-calibration-variant = "GO_FENNEL14";
-+	qcom,calibration-variant = "GO_FENNEL14";
- };
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-juniper.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-juniper.dtsi
-index 078bc765646f..4788edaeab87 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-juniper.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-juniper.dtsi
-@@ -22,6 +22,6 @@ trackpad@2c {
- };
- 
- &qca_wifi {
--	qcom,ath10k-calibration-variant = "GO_JUNIPER";
-+	qcom,calibration-variant = "GO_JUNIPER";
- };
- 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-makomo-sku0.dts b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-makomo-sku0.dts
-index ddb993521bbf..01cd59993a7c 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-makomo-sku0.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-makomo-sku0.dts
-@@ -14,7 +14,7 @@ / {
- };
- 
- &qca_wifi {
--	qcom,ath10k-calibration-variant = "GO_FENNEL14";
-+	qcom,calibration-variant = "GO_FENNEL14";
- };
- 
- &mmc1_pins_uhs {
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-makomo-sku1.dts b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-makomo-sku1.dts
-index 10c4f920a7d8..c939ef3965ec 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-makomo-sku1.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-makomo-sku1.dts
-@@ -14,7 +14,7 @@ / {
- };
- 
- &qca_wifi {
--	qcom,ath10k-calibration-variant = "GO_FENNEL14";
-+	qcom,calibration-variant = "GO_FENNEL14";
- };
- 
- &mmc1_pins_uhs {
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-willow.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-willow.dtsi
-index c942e461a177..14d03419b92c 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-willow.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-jacuzzi-willow.dtsi
-@@ -37,5 +37,5 @@ trackpad@2c {
- };
- 
- &qca_wifi {
--	qcom,ath10k-calibration-variant = "GO_JUNIPER";
-+	qcom,calibration-variant = "GO_JUNIPER";
- };
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi
-index ff02f63bac29..c4c08c0f715e 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kakadu.dtsi
-@@ -370,7 +370,7 @@ keyboard-controller {
- };
- 
- &qca_wifi {
--	qcom,ath10k-calibration-variant = "GO_KAKADU";
-+	qcom,calibration-variant = "GO_KAKADU";
- };
- 
- &panel {
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-katsu-sku32.dts b/arch/arm64/boot/dts/mediatek/mt8183-kukui-katsu-sku32.dts
-index 2b5a8d1f900e..7428efec95a0 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-katsu-sku32.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-katsu-sku32.dts
-@@ -32,5 +32,5 @@ &panel {
- };
- 
- &qca_wifi {
--	qcom,ath10k-calibration-variant = "GO_KATSU";
-+	qcom,calibration-variant = "GO_KATSU";
- };
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-katsu-sku38.dts b/arch/arm64/boot/dts/mediatek/mt8183-kukui-katsu-sku38.dts
-index 75fadf2c7059..a36b6ddb71f6 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-katsu-sku38.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-katsu-sku38.dts
-@@ -32,7 +32,7 @@ &panel {
- };
- 
- &qca_wifi {
--	qcom,ath10k-calibration-variant = "GO_KATSU";
-+	qcom,calibration-variant = "GO_KATSU";
- };
- 
- &sound {
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi
-index da6e767b4cee..2b283a55f653 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-kodama.dtsi
-@@ -349,7 +349,7 @@ keyboard-controller {
- };
- 
- &qca_wifi {
--	qcom,ath10k-calibration-variant = "GO_KODAMA";
-+	qcom,calibration-variant = "GO_KODAMA";
- };
- 
- &i2c_tunnel {
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
-index 8b56b8564ed7..00da50a41574 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui-krane.dtsi
-@@ -353,7 +353,7 @@ keyboard-controller {
- };
- 
- &qca_wifi {
--	qcom,ath10k-calibration-variant = "LE_Krane";
-+	qcom,calibration-variant = "LE_Krane";
- };
- 
- &sound {
+The both approaches are problematic when comes to describing the address
+spaces via the DT:
+	- for Audio Block Control, because it uses the syscon interface
+	- for DAP because it hardcodes de base address.
+
+This patch series aims to fix the Audio Block control usage of the
+syscon interface and replace it with Reset Controller interface.
+
+Main advantages of using the Reset Controller API is that we stop
+abusing the syscon interface, offer a better probe ordering, PM runtime
+support. Main critique of using the Reset Controller API is that
+Run/Stall bits are not reset bits (but according the hardware design
+team they are part of the reset proccess since there is no real reset
+line).
+
+Initial discussion is here:
+https://patchwork.kernel.org/project/imx/patch/20250212085222.107102-6-daniel.baluta@nxp.com/
+
+Note that we can safely remove the fsl,dsp-ctrl property usage from IMX DSP
+remoteproc driver because there is no Device Tree users.
+
+Changes since v2:
+(https://lore.kernel.org/lkml/Z7ZNngd3wtJ5MZgl@lizhi-Precision-Tower-5810/T/)
+	- picked R-b and A-b tags
+	- use run_stall instead of reset to refer to reset controller
+	  instance
+	- remove 'resets' description as it is a common property
+        - add correct include in the yaml dts snippet example
+Changes since v1:
+(https://lore.kernel.org/imx/20250219030809.GD6537@nxa18884-linux/T/)
+	- addresed comments received on v1
+	- picked up R-b and A-b tags
+
+Daniel Baluta (8):
+  dt-bindings: reset: audiomix: Add reset ids for EARC and DSP
+  dt-bindings: dsp: fsl,dsp: Add resets property
+  arm64: dts: imx8mp: Use resets property
+  reset: imx8mp-audiomix: Add prefix for internal macro
+  reset: imx8mp-audiomix: Prepare the code for more reset bits
+  reset: imx8mp-audiomix: Introduce active_low configuration option
+  reset: imx8mp-audiomix: Add support for DSP run/stall
+  imx_dsp_rproc: Use reset controller API to control the DSP
+
+ .../devicetree/bindings/dsp/fsl,dsp.yaml      | 16 +++-
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi     |  2 +
+ drivers/remoteproc/imx_dsp_rproc.c            | 25 ++++--
+ drivers/remoteproc/imx_rproc.h                |  2 +
+ drivers/reset/reset-imx8mp-audiomix.c         | 78 +++++++++++++------
+ .../dt-bindings/reset/imx8mp-reset-audiomix.h | 13 ++++
+ 6 files changed, 105 insertions(+), 31 deletions(-)
+ create mode 100644 include/dt-bindings/reset/imx8mp-reset-audiomix.h
+
 -- 
 2.43.0
 
