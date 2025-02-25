@@ -1,93 +1,100 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1BB218DB09;
-	Tue, 25 Feb 2025 16:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F694315F
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 16:23:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740500589; cv=none; b=sw6zOLbybkkCwDR7/w+rALwQ75P+uk+TPWkmXVZXYf7PfNsKYoFA+nRXCh1v8hZ5T6N2lnTrqznugfpOXSzUxwOMyIeJd+kgotyi+8fY09Cx+z+PSkLdVz94gaDWXle7sNMDwt0frRC7ebgBSYznNUqokqKG/deM/ve5dzWpNNU=
+	t=1740500610; cv=none; b=d1+YdVofKPje5DajtJ4ajKLmx2j7Eo9v71RbN447b7lwZ+3ahbydIzs+s+yrUE3Iq8muTgGIEXDaR56AguwkikhgP6uVJ+fmLUuI3xtIUE+Oc4MzNf4Ovm4Dwco7bJF/RLYeN1ANdEehTOeRTivy3CfRXKpl/X55pWDtn5DUG5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740500589; c=relaxed/simple;
-	bh=njrjcyJPge/h5dZ0Uk9mlzgjkTwBWMZIka8AEb5N860=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=GbgGnUrDwK5nb0c5bqpHBu69NMcrpkATuDfS2o0EX0IytPWGBsjLwGO6A7fzrxQ5I6zd4ivhJsS88TtIvQB8LRL4GWl24zkgMjf8k7C3xmiKDk0DtUIIi6RvVpjIrKzm9JwsIz1tJVYaUyvC4FrvrNEiJ0xU42gtkrvpApMp1kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=FSosTLsX; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1740500610; c=relaxed/simple;
+	bh=p2muOdipPBPelc0G8QVVmxLLKm2ZUwbsy/AC035S7AE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mm8Cs9CeH0uVrbSCvP6F3GVji72SNKrbhShTI9oIfmsgw5UHy0kQpL2TStLGJvafF7xuMjVo1s8OOu59e+1Z5DRPt0C57bu9TJO/t3vV9MgsqfIJudKIqlPENgqxJFI1HsNAygPb4pWhq5og62zzQwHhYB3q8Uyraamxq61qjDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JjR4vTPt; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="FSosTLsX"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P4Sj4J005888;
-	Tue, 25 Feb 2025 10:22:51 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=zAI3cVRk/zYi3skFlAy3pn2KRdgiwLHEQmJNZuB9oxk=; b=
-	FSosTLsXWSz3xt/uyytE7j4HYXRn7cnueCJJlG3Fz1gLTrWIa6WfkWPPEKKiMpyZ
-	KJhN7zfNrvtHm88sb7maIo25jSMWUsed5irLQjKcAP2ZdgfKn/YDk64AMPA9bx8S
-	Nd73k/W0vATjgWwAwRnKYPuFUzArD81YSyUrl8UQmYvSQ9ONjCjAzz+ly9+VWH0P
-	pwGXHGEdMMOG4Zu+g6941lRpeu2Ftr5l5d/vmxIl6/ZUAn679TbdHfHeTr2Pgtwa
-	0qs8d3ZaDqsDEMDU1J1BcWLTNnS1DozHDsocYPQVVuIpNSj9uwsvjJpdX+CoiH0d
-	eP8dVM+lhONE520g0nFa5g==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 44ybvpy85w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 10:22:51 -0600 (CST)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 25 Feb
- 2025 16:22:49 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
- 15.2.1544.14 via Frontend Transport; Tue, 25 Feb 2025 16:22:49 +0000
-Received: from [198.90.208.18] (ediswws06.ad.cirrus.com [198.90.208.18])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id B6A7782025A;
-	Tue, 25 Feb 2025 16:22:49 +0000 (UTC)
-Message-ID: <a027bb81-01a9-4658-a089-8035ae5f0815@opensource.cirrus.com>
-Date: Tue, 25 Feb 2025 16:22:49 +0000
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JjR4vTPt"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-307bc125e2eso53951681fa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 08:23:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740500607; x=1741105407; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JwTVpdV2JjSXgTvzENZ9IyWWdkDRBnMKH/dfCxaMyOU=;
+        b=JjR4vTPtJb+aSd/emRscX4dnrfsdPwYtvgOxAf2m2Svb2hmq0M2xEHL7ozvDoYvYRr
+         riA7s8EgWoKSELiz0tcR3oyCoRdCXzY5z09UswE6k2HTTWhCcfLUp0O3tGBTGw7hyfRU
+         idLAgx53TUGigm0EZI/O+olk+Io9FwvOE932BAtG13Kv/4LB6P14Q5GmoY1lYolJ+7qC
+         wkR+qhv+EEy3uLmcpxH40huSqEj6AFT0Zwyofx8dBy+Vs54+t+rwxkJrPmpD1D82geMq
+         +xX3jQfKXEzcE3gsODdspdYuVpPyGVHbtOzM0sX/fyWOnX3tWqqOS0lgUwZamhojEh8R
+         1BwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740500607; x=1741105407;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JwTVpdV2JjSXgTvzENZ9IyWWdkDRBnMKH/dfCxaMyOU=;
+        b=t4Myrhm8byJJ5fFHmVsmWMaUoIJA+daFyI1Jdm8ppdYMb6UfE4JvoCvX04GAqUrdr0
+         KmONIFRYc8CmkX1dXSpZBPVNoJjPDqIwOknBM2y6sfecv1mr+Y/99RKdJwn9XKf+jaLg
+         RHWdrLt6n8w0CObCyJCBOcJObgKmyRT2msI8TlkYjOEbgV6qpMKytmQ3tO4K15eThD4R
+         325penmmmleG3q2v0jIe7lmz31OUtdRnoQ+lwFdajp/t494tdeH4R6es8xsEDMppNjoR
+         HPanU5WjGRz4yeYMpxaU2OAy3xe3BPzJQzg+0aE5LtjWUj0cRQtYSH4daIPlfLVi0a4I
+         5mZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXn26xTx6/NSwNlpfXT576CAPD1+ltgJIYdP64GUlYDAydkPbX8knFkUdQCTN8lHJjNwJmE4f9Ww3mWgUI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyXrbV7hbG0BAYcGz9OVpo6WxG1sFJ/9za23GBwpCHkX+YPsRl
+	FKjpp8v9H1nVGZqbr5el1AM1A1sE/Pec2uD2z5J441oNTY53gYuHGk6fzNrlyxqkvSuTlmrzRy2
+	LaIdNGCiHk7p1qk0NEW2kfl9gA57c6IaWCcwnyQ==
+X-Gm-Gg: ASbGncseSO+oIE+L2/1RBz2PQMTkuG5HQnocpPL21OueETXdrUPFAtLkpPtinlMVGuG
+	3QXRHvkcHgZ7qIpFM+RV0GKt7AAbR9/ho2/M5RnfEM6kXVmbP6isk8uAla7mHUmhrjDYQimS1P+
+	RGhl9muk4=
+X-Google-Smtp-Source: AGHT+IH1cSBiJaqWZBQz+1oq5/PChixqiVALnH9bhFgTe0md4+MN+IzZ3AEODUq6QzG1w0FaEprZGS9Czr6Kk3AzBSQ=
+X-Received: by 2002:a2e:9ad3:0:b0:308:fd11:770e with SMTP id
+ 38308e7fff4ca-30a80c0f167mr16005611fa.5.1740500607109; Tue, 25 Feb 2025
+ 08:23:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] firmware: cs_dsp: Remove async regmap writes
-To: Mark Brown <broonie@kernel.org>
-CC: <tiwai@suse.com>, <linux-sound@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
-References: <20250225131843.113752-1-rf@opensource.cirrus.com>
- <20250225131843.113752-2-rf@opensource.cirrus.com>
- <e2f3397b-05c0-42f7-9950-29c4d9b24350@sirena.org.uk>
-Content-Language: en-GB
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-In-Reply-To: <e2f3397b-05c0-42f7-9950-29c4d9b24350@sirena.org.uk>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=HoCMG1TS c=1 sm=1 tr=0 ts=67bdee5b cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=l4K2p79tHvvzm6wvxRIA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: 8USdONOCFGdy5sACm-iHsmNeeJuWcyGi
-X-Proofpoint-ORIG-GUID: 8USdONOCFGdy5sACm-iHsmNeeJuWcyGi
-X-Proofpoint-Spam-Reason: safe
+References: <20250218-k1-pinctrl-option-v3-1-36e031e0da1b@gentoo.org> <20250223120638-GYA39613@gentoo>
+In-Reply-To: <20250223120638-GYA39613@gentoo>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 25 Feb 2025 17:23:16 +0100
+X-Gm-Features: AWEUYZlkLTGEHvbrZyxHu4Q2yRspVFfhcab6__rjgENXWUAEaf3SKXErwl_alg0
+Message-ID: <CACRpkdZLAtxOdF5TkGtdrbXB+S2jV8Lh_47vMdiwUt74Hez7OQ@mail.gmail.com>
+Subject: Re: [PATCH v3] pinctrl: spacemit: enable config option
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Alex Elder <elder@kernel.org>, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	spacemit@lists.linux.dev, Conor Dooley <conor.dooley@microchip.com>, 
+	Alex Elder <elder@riscstar.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 25/02/2025 3:15 pm, Mark Brown wrote:
-> On Tue, Feb 25, 2025 at 01:18:42PM +0000, Richard Fitzgerald wrote:
-> 
->> The async writes are a 12-year-old workaround for inefficiency of
->> synchronous writes in the SPI subsystem. The SPI subsystem has since
->> been changed to avoid the overheads, so this workaround should not be
->> necessary.
-> 
-> That wasn't really the issue, it was that on systems with low numbers of
-> slower cores (especially single core but there were some dual core
-> systems too) there was a surprisingly low threashold where it was useful
-> to overlap the marshalling of data to send to the device with
-> transmitting already marshalled data.  SMP adds locking requirements
-> which loose a lot of the gains, and it's controller dependent where the
-> cuttoff points for interrupts and/or DMA are.
+On Sun, Feb 23, 2025 at 1:06=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wrote:
 
-Ok. It was a very long time ago.
-Do you want a V2 with a commit message that doesn't libel the SPI
-framework?
+> Hi Linus Walleij:
+>
+> On 08:31 Tue 18 Feb     , Yixun Lan wrote:
+> > Pinctrl is an essential driver for SpacemiT's SoC,
+> > The uart driver requires it, same as sd card driver,
+> > so let's enable it by default for this SoC.
+> >
+> > The CONFIG_PINCTRL_SPACEMIT_K1 isn't enabled when using
+> > 'make defconfig' to select kernel configuration options.
+> > This result in a broken uart driver where fail at probe()
+> > stage due to no pins found.
+> >
+>
+> Can you take this patch via pinctrl fixes tree? if possible in this cycle
 
-FWIW switching to sync write reduced the download of small amp firmware
-by 200ms on a 1.67MHz SPI bus.
+OK!
+
+Patch applied for fixes.
+
+Yours,
+Linus Walleij
