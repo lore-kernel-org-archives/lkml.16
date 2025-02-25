@@ -1,129 +1,142 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1188D267AF6;
-	Tue, 25 Feb 2025 11:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 355DB19259E;
+	Tue, 25 Feb 2025 11:29:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740482941; cv=none; b=Ko9CmGeb8vAZbINqnmBR8rj954n9DNyM3g02/1E89e5BFMBevH7akPdffjbGgBxsnYGpDIZEUBokzS2C9ptdOsOUs3mn3GWS04TCu9Va+bf3SNEIaINTmEU+O7me/bqyRgstwCe8jyeTh1OnohxvpOMIv4VrXa8cdbmyfpRuHWU=
+	t=1740482975; cv=none; b=gcccb7Gb99/0YBOaLwqyBoFrG2oqZBfQI8nF8E+7Q1POq3IXxmj05Y7itXm9MtIhrp7Q9wt2Hrybh8KLL9V7j7xA6AsplcpATs5gOKTvz4l1NK3OsWhmBH4y0f9yBycINHXtLD4JsI01BUTugthlbraIeSWawhFUj+4HvRWtwG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740482941; c=relaxed/simple;
-	bh=4sgbNAfckysK5yUpsHXkpcHylYnfBrrpT1xYb428eDc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j2YQBuc+ZlIDHapx6UEXd0RuR6bl9NcwT85n4cxFuNJvss1TbygJU6EgA5jKsvrGLSRmK5THiBm7zMX8crj98qJC0CIf14d64UuEydX+pVXZMKIeQU9Uq0GJ/Y47PASqxQ11WiKDUbg1WDdB0v67zcwcLx4Tbz2W4wxLX1NRvPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aDNjx0O6; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1740482975; c=relaxed/simple;
+	bh=NKedsfUkieXfxiUN7z3yWpWCUJzwcsbZVYDJyCoU/r4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=tMss/DrggfFaF+3XdxwBNgKPfTzFwlx/NHDtxZ45ID7MqXcjeiexiVnsana/5VCwzLsSrmGdIOYwBZg7o9apQsZ4LWi1STbBg4IpLRM0cU1H0689W4F3fajCHkLb55l0CWo42WbweAXMAfAeBh79wxxuw/Zfk8PSi/BDhehE8Xk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aJ9kvOky; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aDNjx0O6"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P8Dmgu009109;
-	Tue, 25 Feb 2025 11:28:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=AH6XyKMQKy1L5/1/4qcQ3Dq5
-	+Ibr/w74DoNERr7pYSI=; b=aDNjx0O6kRUrZmxs1FJNFDwlArHvEk4P1kDlXtSl
-	+TwgnKsIULHWmVIlIBfrmBYQUDcILJ8a2LCogStr90Np0sZgk9Em7NfA1P9jX/li
-	gC3CuPC0+JKmfDAWoEly+Gy5Ga85wX/6mSInUc6XaH7fvLWsaU+5aFj9rdIwPktc
-	BgTvgYPBVAi9gvfL/xEZMnJsn46DCWy0eUTuHAoA5n/zI06TlEXpWEOjTn0noRTP
-	WBmKG7D/o3u3cHVqORlaUf5+NpVcP9lHr8HtS5iKmSat+bOaJV9AaHae4Sf4/rLR
-	gEqsuxsN3jDL170vvn+wdhEAw0kmzEUxiOUoFHRMC8j4ng==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44y6y6rp38-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 11:28:33 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51PBSW8O029297
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 11:28:32 GMT
-Received: from PHILBER.na.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 25 Feb 2025 03:28:27 -0800
-Date: Tue, 25 Feb 2025 12:28:24 +0100
-From: Peter Hilber <quic_philber@quicinc.com>
-To: Simon Horman <horms@kernel.org>
-CC: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
-        Trilok Soni <quic_tsoni@quicinc.com>,
-        Srivatsa Vaddagiri
-	<quic_svaddagi@quicinc.com>,
-        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-        Eugenio
- =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
-        Richard Cochran
-	<richardcochran@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <virtualization@lists.linux.dev>,
-        <netdev@vger.kernel.org>, David Woodhouse
-	<dwmw2@infradead.org>,
-        "Ridoux, Julien" <ridouxj@amazon.com>, Marc Zyngier
-	<maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Daniel Lezcano
-	<daniel.lezcano@linaro.org>,
-        Alexandre Belloni
-	<alexandre.belloni@bootlin.com>,
-        Parav Pandit <parav@nvidia.com>,
-        "Matias
- Ezequiel Vara Larsen" <mvaralar@redhat.com>,
-        Cornelia Huck
-	<cohuck@redhat.com>, <virtio-dev@lists.linux.dev>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v5 2/4] virtio_rtc: Add PTP clocks
-Message-ID: <vhlhes7wepjrtfo6qsnw5tmtvw6pdt2tfi4woqdejlit5ruczj@4cs2yvffhx74>
-References: <20250219193306.1045-1-quic_philber@quicinc.com>
- <20250219193306.1045-3-quic_philber@quicinc.com>
- <20250224175618.GG1615191@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aJ9kvOky"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740482973; x=1772018973;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=NKedsfUkieXfxiUN7z3yWpWCUJzwcsbZVYDJyCoU/r4=;
+  b=aJ9kvOkya8DhuPu6V5i0XokyNv6Eh1SSrJ1Qfj/UKSPd6cMPP1MTk+C3
+   I5v6tP07wVR1CDihLGE23DcIa7ZNb5YAYbTaCoPxTXwkoLpHpB278UHqM
+   9xCm6uaKxpk6GXZNTAJcp8CaHElGeQyBAPDxaslHWD1DiTZDJbGNm9vXp
+   BAd5ruAWAys0FRPw13CrPdYz/06KF6rfKvdqpLQ8PDe2SgbEZbx4qJhQC
+   jvILuvitbJtmVnSiObGFFOK8lYsMt63sZOlYIzf3v2js+glITqLg8BHpd
+   Md9eyWz9iOJggEZl3jtkKKCl3sK2M547+ScNig6ig7UHOSAp9yuaudvBD
+   Q==;
+X-CSE-ConnectionGUID: yNkY8SyuSguEtGvlh96iug==
+X-CSE-MsgGUID: 5TzVwhHwQeC/zET2s3a0YQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="41198780"
+X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
+   d="scan'208";a="41198780"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 03:29:32 -0800
+X-CSE-ConnectionGUID: /fXmTyiFQkG/6ivPziotjA==
+X-CSE-MsgGUID: i7XrO8h1R2mz9UkjF/+iig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="121615259"
+Received: from monicael-mobl3 (HELO localhost) ([10.245.246.246])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 03:29:24 -0800
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Abel Vesa
+ <abel.vesa@linaro.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David
+ Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Karol Herbst
+ <kherbst@redhat.com>, Lyude Paul <lyude@redhat.com>, Danilo Krummrich
+ <dakr@redhat.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>,
+ Rob Clark <robdclark@gmail.com>, Abhinav Kumar
+ <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, Marijn Suijten
+ <marijn.suijten@somainline.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Johan Hovold <johan@kernel.org>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+ freedreno@lists.freedesktop.org, Johan Hovold <johan+linaro@kernel.org>,
+ Imre Deak <imre.deak@intel.com>
+Subject: Re: [PATCH v5 0/4] drm/dp: Rework LTTPR transparent mode handling
+ and add support to msm driver
+In-Reply-To: <frsbcvxcvtp45mh45cld3rzbgl52gomzmzs73crv53pwbc4fns@sygnt6z2avht>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250203-drm-dp-msm-add-lttpr-transparent-mode-set-v5-0-c865d0e56d6e@linaro.org>
+ <frsbcvxcvtp45mh45cld3rzbgl52gomzmzs73crv53pwbc4fns@sygnt6z2avht>
+Date: Tue, 25 Feb 2025 13:29:20 +0200
+Message-ID: <87o6yq5kkv.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250224175618.GG1615191@kernel.org>
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: HaD8-URwhEOYl4JEkmXZIwXbLt2o3JAj
-X-Proofpoint-GUID: HaD8-URwhEOYl4JEkmXZIwXbLt2o3JAj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_04,2025-02-25_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 spamscore=0
- malwarescore=0 phishscore=0 adultscore=0 lowpriorityscore=0
- mlxlogscore=537 impostorscore=0 priorityscore=1501 bulkscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502250081
+Content-Type: text/plain
 
-On Mon, Feb 24, 2025 at 05:56:18PM +0000, Simon Horman wrote:
-> On Wed, Feb 19, 2025 at 08:32:57PM +0100, Peter Hilber wrote:
-> 
-> ...
-> 
-> > +/**
-> > + * viortc_ptp_gettimex64() - PTP clock gettimex64 op
-> > + *
-> 
-> Hi Peter,
-> 
-> Tooling recognises this as a kernel doc, and complains
-> that there is no documentation present for the function's
-> parameters: ptp, ts, and sts.
-> 
-> Flagged by W=1 builds.
-> 
+On Fri, 21 Feb 2025, Dmitry Baryshkov <dmitry.baryshkov@linaro.org> wrote:
+> On Mon, Feb 03, 2025 at 12:57:55PM +0200, Abel Vesa wrote:
+>> Looking at both i915 and nouveau DP drivers, both are setting the first
+>> LTTPR (if found) in transparent mode first and then in non-transparent
+>> mode, just like the DP v2.0 specification mentions in section 3.6.6.1.
+>> 
+>> Being part of the standard, setting the LTTPR in a specific operation mode
+>> can be easily moved in the generic framework. So do that by adding a new
+>> helper.
+>> 
+>> Then, the msm DP driver is lacking any kind of support for LTTPR handling,
+>> so add it by reading the LTTPR caps for figuring out the number of LTTPRs
+>> found on plug detect and then do exactly what the i915 and nouveau drivers
+>> do with respect to toggling through operating modes, just like the
+>> up-mentioned section from DP spec describes.
+>> 
+>> At some point, link training per sub-segment will probably be needed, but
+>> for now, toggling the operating modes seems to be enough at least for the
+>> X Elite-based platforms that this patchset has been tested on.
+>> 
+>> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+>
+> [...]
+>> 
+>> ---
+>> Abel Vesa (4):
+>>       drm/dp: Add helper to set LTTPRs in transparent mode
+>>       drm/nouveau/dp: Use the generic helper to control LTTPR transparent mode
+>>       drm/i915/dp: Use the generic helper to control LTTPR transparent mode
+>
+> Lyude, Jani, what would be your preferred way of merging these patches?
+> Would you ack merging of those through drm-misc or would you prefer for
+> the first patch only to be landed to drm-misc, which you can then pull
+> into nouveau and i915 trees.
 
-Thanks, I will change the offending documentation to non kernel-doc. I
-was not aware that these warnings are always considered a problem.
+Either way is fine with me, up to you. But please try to ensure these
+get into drm-misc-next pull request by this cycle, so we can backmerge
+and catch up sooner rather than later.
 
-Peter
+Acked-by: Jani Nikula <jani.nikula@intel.com>
 
-> > + * Context: Process context.
-> > + */
-> > +static int viortc_ptp_gettimex64(struct ptp_clock_info *ptp,
-> > +				 struct timespec64 *ts,
-> > +				 struct ptp_system_timestamp *sts)
-> 
-> ...
+
+
+>
+>>       drm/msm/dp: Add support for LTTPR handling
+>> 
+>>  drivers/gpu/drm/display/drm_dp_helper.c            | 61 ++++++++++++++++++++++
+>>  .../gpu/drm/i915/display/intel_dp_link_training.c  | 24 ++-------
+>>  drivers/gpu/drm/msm/dp/dp_display.c                | 15 ++++++
+>>  drivers/gpu/drm/nouveau/nouveau_dp.c               | 17 +-----
+>>  include/drm/display/drm_dp_helper.h                |  2 +
+>>  5 files changed, 85 insertions(+), 34 deletions(-)
+>> ---
+>> base-commit: 00f3246adeeacbda0bd0b303604e46eb59c32e6e
+>> change-id: 20241031-drm-dp-msm-add-lttpr-transparent-mode-set-136cd5bfde07
+>> 
+>> Best regards,
+>> -- 
+>> Abel Vesa <abel.vesa@linaro.org>
+>> 
+
+-- 
+Jani Nikula, Intel
