@@ -1,63 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7A320C476;
-	Tue, 25 Feb 2025 21:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2910F151991
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 21:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740518961; cv=none; b=bXigZmtkfCG8lw8bhAOxLDkQKLyKyBHseDrEOOueu69XEbxRoICFEvpTW1GwgyRV/quZZqceg2QGhxWxVLi60KiQQ3zk9b6fM+AI7DMY6AxdNzhp3RDv16kqIKruZM/gTCtjrrNLv9nfYk3CisNVxB/Rt5NUTNv8ysuoQDq8y3s=
+	t=1740519106; cv=none; b=E/E/7FNGJqy0+lARDb3UafELufRs48AZr/TNdq4VuxlmWyy86Skb6J9pQ0vzH3TLxiOqzcOlYTInntMQyYQnKYcMLbbqnaXaYztFMYfM03uyhCudLDxNT2m94OcFL8gPx/nDwQaEiL42O9fJPa0gCkdi4rFktWZo0QWWnLXrTtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740518961; c=relaxed/simple;
-	bh=u/SAUmzyS2rFg21YRo0XOKpna2X+UiI1G4MhDNEbIZs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XT6qUPuLJbOvG9pelzpSsaGs90zUefYQrMC2uru8rFM68vWNjcIxZutKTLCy6zJPfWwGpApqlgiU7U96MnTf//tfJ3QDabdxSva3nwBchs/nysWq0Ye0liLK9fpqnqvXJpO5o0THw83XL07g0FkeAiJWeRGo6AWd7UPJy751kUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m11Wp4DM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740519106; c=relaxed/simple;
+	bh=xlg464ew3opO/LyRYtVloxvbMwY7+YtKVzHRJlUTBTQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ill7FhOW+/FODQb2bxWJhqueL5muzUgU2czMfFXxy/EuJpovd1qhAa+D8O4K2neB9Y9e29kFW53NpZsaT48NNwYCmuZpRF5AigyuBONbgRRuxU4p7Ieu8EMlbkUMufgiEIqoeEieq0TiqWfvPopXG4BJpB1ggj5jNLwqwaNBwpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rj9BSboV; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m11Wp4DM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2CE0C4CEDD;
-	Tue, 25 Feb 2025 21:29:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740518961;
-	bh=u/SAUmzyS2rFg21YRo0XOKpna2X+UiI1G4MhDNEbIZs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m11Wp4DMUQ+GSNUeuHAYa2TAzseYGio4zNz7WxrpQUa0glqYll1wpS5w+3IQXDgvu
-	 cLzOleNaJqZ5aVBhrZbWwZLwuVk6jMtAvAy3WoIqNwVix8AiX9biIN5KF5l1WzfNcO
-	 2GKmaNMkjY4ewSsiwCVUIGOMkjV5bTZnDzbvYyWayxMyi2mDC3qJFwlX0Nop0e5eZQ
-	 Z82ZJV8zJ18YDeraRGRzE2/JjhLQXs0sXnh0BS53eLuLJZqwgZQ8sZz0OWlpRRx6QT
-	 VGwoDWVkaZyuW9VgPQGbeGWWy/nesZJS/3YTL76R8PYcOzrbDx4v0IAQSjxK2pvjdj
-	 YBufiAocc+IHA==
-Date: Tue, 25 Feb 2025 14:29:19 -0700
-From: Keith Busch <kbusch@kernel.org>
-To: Caleb Sander Mateos <csander@purestorage.com>
-Cc: Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-	io-uring@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ublk: complete command synchronously on error
-Message-ID: <Z742L4k3yY1QB2CD@kbusch-mbp>
-References: <20250225212456.2902549-1-csander@purestorage.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rj9BSboV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740519104;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sZKXJkPcoNRAgFvPogAot/4joh9+80KcwrTaxPccCHM=;
+	b=Rj9BSboVyUtqbiq7mEHJy/BoGmJ9hMUam+g2/kt5kWBdJ+E60QK1UbKcdEhsM5HxtZ3y2n
+	yA1XmQqZ5S7/gTxSxaoTDEqu8X+UhJfWG02E01HStMXrNAPRAzigcR0YS/vKMMfBPOVKy1
+	bkTTLv8bg7KuBGZmE3ekEFLPDdBfYKA=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-134-Io3cleewMbmc_qAoa5t7nQ-1; Tue,
+ 25 Feb 2025 16:31:40 -0500
+X-MC-Unique: Io3cleewMbmc_qAoa5t7nQ-1
+X-Mimecast-MFC-AGG-ID: Io3cleewMbmc_qAoa5t7nQ_1740519098
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BD95019357B1;
+	Tue, 25 Feb 2025 21:31:37 +0000 (UTC)
+Received: from chopper.redhat.com (unknown [10.22.65.234])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8A7CC1955BD4;
+	Tue, 25 Feb 2025 21:31:34 +0000 (UTC)
+From: Lyude Paul <lyude@redhat.com>
+To: rust-for-linux@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	=?UTF-8?q?Ma=C3=ADra=20Canal?= <mairacanal@riseup.net>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/2] rust/faux: Drop #[repr(transparent)] from faux::Registration
+Date: Tue, 25 Feb 2025 16:29:00 -0500
+Message-ID: <20250225213112.872264-2-lyude@redhat.com>
+In-Reply-To: <20250225213112.872264-1-lyude@redhat.com>
+References: <20250225213112.872264-1-lyude@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250225212456.2902549-1-csander@purestorage.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Tue, Feb 25, 2025 at 02:24:55PM -0700, Caleb Sander Mateos wrote:
-> In case of an error, ublk's ->uring_cmd() functions currently return
-> -EIOCBQUEUED and immediately call io_uring_cmd_done(). -EIOCBQUEUED and
-> io_uring_cmd_done() are intended for asynchronous completions. For
-> synchronous completions, the ->uring_cmd() function can just return the
-> negative return code directly. This skips io_uring_cmd_del_cancelable(),
-> and deferring the completion to task work. So return the error code
-> directly from __ublk_ch_uring_cmd() and ublk_ctrl_uring_cmd().
-> 
-> Update ublk_ch_uring_cmd_cb(), which currently ignores the return value
-> from __ublk_ch_uring_cmd(), to call io_uring_cmd_done() for synchronous
-> completions.
+I think this change got missed during review, we don't need
+ #[repr(transparent)] since Registration just holds a single NonNull. This
+attribute had originally been added by me when I was still figuring out how
+the bindings should look like but got committed by mistake. So, just drop
+it.
 
-Makes sense, and looks good.
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ rust/kernel/faux.rs | 1 -
+ 1 file changed, 1 deletion(-)
 
-Reviewed-by: Keith Busch <kbusch@kernel.org>
+diff --git a/rust/kernel/faux.rs b/rust/kernel/faux.rs
+index 5acc0c02d451f..41751403cd868 100644
+--- a/rust/kernel/faux.rs
++++ b/rust/kernel/faux.rs
+@@ -19,7 +19,6 @@
+ /// `self.0` always holds a valid pointer to an initialized and registered [`struct faux_device`].
+ ///
+ /// [`struct faux_device`]: srctree/include/linux/device/faux.h
+-#[repr(transparent)]
+ pub struct Registration(NonNull<bindings::faux_device>);
+ 
+ impl Registration {
+-- 
+2.48.1
+
