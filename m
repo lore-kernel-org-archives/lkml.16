@@ -1,130 +1,62 @@
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB17BE49;
-	Tue, 25 Feb 2025 03:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84A3199B9;
+	Tue, 25 Feb 2025 03:09:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740452821; cv=none; b=E7U4b2fMV18m6y3HrwC2RzzSjsmVN+7pSYqjYBzie37Kg7v+rv8yGFNAnZ2tfe8wKH6+FAsFvm3TUJnH3Y4R1r28UhVQVXCdrKf0Dcd5qYr10o80+NUOc+yxtyX5intHPh6hmAC5sFrnFsEXLbxDHjNkGBgy2wDeulkZcMHmMu4=
+	t=1740452949; cv=none; b=sdLgVJeWQGMEenMwsuFWodQVQNZUcTw63BEKrHIwOld0uy5PZz6/Sao2qs5AX9OvYodDj/W1NARVjqTVAJajFujFC09ruBK+uKA3C5xRdntJCt2LbtkZt4h2C1ZYPttFv8v3avDgYGdaRtuljJ6ZMgOywgWke0LYGoAKqEzj/fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740452821; c=relaxed/simple;
-	bh=lHEAxf5ZJA2azxyY/oKi7P/y8H4bZ4x9CyA6kaJAiGI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jr40HIE5HuAMl6JPKX5xDxXBrjZy/B5h8WiFHjZlbUDxI+/AnymMhKH3LVaDaaTyPNPnvotACP71NdKM4NdfBv1SH1oM9hzwOIIzI/jr8gFIxAx3Ab4qV+rrEZdHJADSYh9PfjK3Q/N2TlzETaDHfz03qzK0k4rLcw0oRPcvdQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=W9LLfq+5; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1740452949; c=relaxed/simple;
+	bh=Gu/8lJ9QVz5G73e/GMvq7QOK+xTz3/H/pqcRLEym0C0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RgmYxEPqmvpRyv9xND5QNhbgcwRy6Ck8fZXngoLH2OTI4+spJZGg5xbninqO7DQhL613u2qXGQrxHONuvGPsF10etOq8qbJIKzatuHWpqPOWKHU+eDpYf54seUkwgXZof/OITTwocpreNuPgSr5tJ8pyATcI+FJWAkst8G/43zI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qds7/a+x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="W9LLfq+5"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1740452811; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-	bh=tPFJL3Zgq99hh+p83jK5GeOO9zW89CPdsTMm5GrF2Dc=;
-	b=W9LLfq+5/W5AmwotnDp4n7Hmd1wB85LE/53Y4iwvDbL7jm+Qotk/8ErUdR6troUsfDNMcJzCqTESOxKRIL4xBWDLa/+XcDdRzVG8+fRKCKFn1s+XxOpEfGrwae3hbjHUgPMcIE/MEfmNaWZxC2w0xntQkltvGdBRXmsq//vuXQk=
-Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WQD2tsl_1740452810 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 25 Feb 2025 11:06:51 +0800
-Date: Tue, 25 Feb 2025 11:06:50 +0800
-From: Feng Tang <feng.tang@linux.alibaba.com>
-To: Lukas Wunner <lukas@wunner.de>, rafael@kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Liguang Zhang <zhangliguang@linux.alibaba.com>,
-	Guanghui Feng <guanghuifeng@linux.alibaba.com>, rafael@kernel.org,
-	Markus Elfring <Markus.Elfring@web.de>, lkp@intel.com,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	ilpo.jarvinen@linux.intel.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/4] PCI/portdrv: Add necessary wait for disabling
- hotplug events
-Message-ID: <Z70zyhZe6OrxNNT3@U-2FWC9VHC-2323.local>
-References: <20250224034500.23024-1-feng.tang@linux.alibaba.com>
- <20250224034500.23024-3-feng.tang@linux.alibaba.com>
- <Z7y2e-EJLijQsp8D@wunner.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qds7/a+x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2621C4CED6;
+	Tue, 25 Feb 2025 03:09:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740452949;
+	bh=Gu/8lJ9QVz5G73e/GMvq7QOK+xTz3/H/pqcRLEym0C0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qds7/a+xSfZmt4rw0TlIjjFaZg+C7tC5FM+j/J5A0cvt6vnIAzCIKY2b3d82Pi5TJ
+	 ajkHzb26UeC5kxcKr9Z3cyKEGhwcas8crf4Vplqj1y5ip8rU+894PYR86/rKjxTLw2
+	 qg9FuaoEMU+56B0jpgqF7VRysLvhpHPY3PyXJJXBywFcmEJ4ZTfRUlzQ+ZHhA4n/d7
+	 8Y4vSjMesYLyOlA3Tvs+4D9iU+pwnsRppdZGBUwCJYAOUtf/sYsPyFm8YwH0oACeVA
+	 IW80/Jocp9Hrpa2kiE9gjmiCyQ8aV1mH94xyCU/xe/U3xxqcHhXSeVji6yTwr/uI+Y
+	 Mglf9aRrmDqTQ==
+Date: Mon, 24 Feb 2025 19:09:08 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Jijie Shao <shaojijie@huawei.com>
+Cc: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+ <andrew+netdev@lunn.ch>, <horms@kernel.org>, <shenjian15@huawei.com>,
+ <wangpeiyang1@huawei.com>, <liuyonglong@huawei.com>,
+ <chenhao418@huawei.com>, <sudongming1@huawei.com>, <xujunsheng@huawei.com>,
+ <shiyongbang@huawei.com>, <libaihan@huawei.com>,
+ <jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
+ <salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <kalesh-anakkur.purayil@broadcom.com>
+Subject: Re: [PATCH v3 net-next 4/6] net: hibmcge: Add support for mac link
+ exception handling feature
+Message-ID: <20250224190908.1a5ba74e@kernel.org>
+In-Reply-To: <20250221115526.1082660-5-shaojijie@huawei.com>
+References: <20250221115526.1082660-1-shaojijie@huawei.com>
+	<20250221115526.1082660-5-shaojijie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z7y2e-EJLijQsp8D@wunner.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Lukas,
+On Fri, 21 Feb 2025 19:55:24 +0800 Jijie Shao wrote:
+> +	if (!(priv->stats.np_link_fail_cnt % HBG_NP_LINK_FAIL_RETRY_TIMES)) {
 
-On Mon, Feb 24, 2025 at 07:12:11PM +0100, Lukas Wunner wrote:
-> On Mon, Feb 24, 2025 at 11:44:58AM +0800, Feng Tang wrote:
-> > @@ -255,8 +271,7 @@ static int get_port_device_capability(struct pci_dev *dev)
-> >  		 * Disable hot-plug interrupts in case they have been enabled
-> >  		 * by the BIOS and the hot-plug service driver is not loaded.
-> >  		 */
-> > -		pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
-> > -			  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
-> > +		pcie_disable_hp_interrupts_early(dev);
-> >  	}
-> 
-> Moving the Slot Control code from pciehp to portdrv (as is done in
-> patch 1 of this series) is hackish.  It should be avoided if at all
-> possible.
+This adds a 64b divide which breaks the build on some 32b arches:
 
-I tried to remove the code duplication of 2 waiting function, according
-to Bjorn's comment in https://lore.kernel.org/lkml/20250218223354.GA196886@bhelgaas/.
-Maybe I didn't git it right. Any suggestion?
-
-> 
-> As I've already said before...
-> 
-> https://lore.kernel.org/all/Z6HYuBDP6uvE1Sf4@wunner.de/
-> 
-> ...it seems clearing those interrupts is only necessary
-> in the CONFIG_HOTPLUG_PCI_PCIE=n case.  And in that case,
-> there is no second Slot Control write, so there is no delay
-> to be observed.
-> 
-> Hence the proper solution is to make the clearing of the
-> interrupts conditional on: !IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE)
-> 
-> You keep sending new versions of these patches that do not
-> incorporate the feedback I provided in the above-linked e-mail.
-> 
-> Please re-read that e-mail and verify if the solution that
-> I proposed solves the problem.  That solution does not
-> require moving the Slot Control code from pciehp to portdrv.
-
-There might be some misunderstaning here :), I responded in
-https://lore.kernel.org/lkml/Z6LRAozZm1UfgjqT@U-2FWC9VHC-2323.local/
-that your suggestion could solve our issue.
-
-And the reason I didn't take it is I was afraid that it might hurt
-the problem what commit 2bd50dd800b5 ("PCI: PCIe: Disable PCIe port
-services during port initialization") tried to solve.
-
-As you mentioned, the comment for 2bd50dd800b5 is "a bit confusing",
-and I tried to guess in my previous reply: 
-"
-I'm not sure what problem this piece of code try to avoid, maybe
-something simliar to the irq storm isseu as mentioned in the 2/2 patch?
-The code comments could be about the small time window between this
-point and the loading of pciehp driver, which will request_irq and
-enable hotplug interrupt again.
-"
-
-The code comment from 2bd50dd800b5 is:
-
-	/*
-	 * Disable hot-plug interrupts in case they have been
-	 * enabled by the BIOS and the hot-plug service driver
-	 * is not loaded.
-	 */
-
-The "is not loaded" has 2 possible meanings:
-1. the pciehp driver is not loaded yet at this point inside
-   get_port_device_capability(), and will be loaded later
-2. the pciehp will never be loaded, i.e. CONFIG_HOTPLUG_PCI_PCIE=n 
-
-If it's case 2, your suggestion can solve it nicely, but for case 1,
-we may have to keep the interrupt disabling.
-
-Thanks,
-Feng
+ERROR: modpost: "__umoddi3" [drivers/net/ethernet/hisilicon/hibmcge/hibmcge.ko] undefined!
+-- 
+pw-bot: cr
