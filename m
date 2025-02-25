@@ -1,134 +1,223 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0A326A0DE
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:26:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7492626A0F8;
+	Tue, 25 Feb 2025 14:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740493575; cv=none; b=AGB2NaM9Zrq91idRSVO2cgqI8KVLHvBI0pUmNHMGt0op/KAzYVQ5rz1AWRHooVMkdB7dzoOzyIqi0fxSfLGD/beem30x70BjsQ6mNtUBgxMuPtYkmuYOQMljQPEfzc5oewH27oUo2GAljZZnoaSVNVuLquSMe5x2hkHgcuJBJBc=
+	t=1740493575; cv=none; b=K1/19MHBIh/K9XLmpCaDlV6hOPPD94vPOFeG7cvMJRcTdGemxd22HlwqNiydvQARuPjUWNhiiucPnytLHP0iB2HWk4LnIC4WNd328y/RbKjEPmSjRAmIzBz1PnHy3P5Zytl/Pe0nBb1rslZzGsRvZ7DnQsJtlMV/YELI4DYoYGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740493575; c=relaxed/simple;
-	bh=Plm3zhceI2EsfgR0QC5YmTkIcALi4hgt2KqwRV6YhxI=;
+	bh=6aFXEeCl3RUxWqTW/8/3CQdy1VKisFZuTMrjOOnvBLw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hsu4xl+i0tDxK7klK3QPVIP4/j7FQ+5d+XDvgB4lWkDrSUCvjJfzK5riB7so1htbuUVA0+OPitS0hLY9umSK4pz9WVClgxZRM/1QO4QDEUimw7jRDNBJlw0zvPnmkSsbT/kcUj4kGvKyDhhT+vgjyk60WPKpPWwS/x+RObF3H6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=cWTu6Ji6; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	 Content-Type:Content-Disposition:In-Reply-To; b=iYXsQEBf7ZJA+4S2/SURV795EB726Xaf5KONVDBIow1ycE29m1BUu2sF7hQpGrXj1Y4Cfc8rwaMLDjrMPdrWt6FVlEa9+l9b9iyjTzDyPYv8GoWN0oMOP6wkUtQrFCDRf+ub2bHaffhaw+xun3WQ7StLdL+gwgRx2QzeNY3Sqhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=jtRnHEGo; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="cWTu6Ji6"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-471fabc5bf5so30953011cf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 06:26:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1740493572; x=1741098372; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=k4i0Vgd5RfbJH8MJ8ai1ZPYpkgJMwx/lYshgGsgkxWc=;
-        b=cWTu6Ji6CzU80wB2gqCiFq13z8HT6jciD7Qo5tLiI64qWTmYPWoSnHWkHfCV1BJb+S
-         r7Kw5cJzD+AI7m0hNKdPxaGxzotj5zCn7ztAn450ZcshgP+u3fhU1PR8BcytF2JLnrmM
-         k9DtgWuZBHJQQ3oP0YDF6tVXgYmPgehPFcvroS9RyKObpOwGbFxRlNacuChYTP46fPfd
-         4M5IrJe9dLQ5Wbe7rsTL94yT0u8V2WH65szkcJzTnJ7Z6s3QSAxxHa3Vy2vC0XlNaFBe
-         O22q5TY8AA8EcVq80ySAciauDL8j0nxb9Rj4aIW6BmlH7ksZRaY/lECoR8PPH6k0HDEM
-         GxHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740493572; x=1741098372;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=k4i0Vgd5RfbJH8MJ8ai1ZPYpkgJMwx/lYshgGsgkxWc=;
-        b=jv7v06ZL1ryXnkivZCQIX1ni0wMZKMmi0LAS/nRMamiPO54w9s7uCtQR5MVTvV1+pn
-         vJXacJf2E1JWHDKtVBOrc6et9FF8QPwYs0/IvUzsfSIGrXBHlhS70o2ADB4jVDEBnyUD
-         kBKJOj9ZH/up+ZiPZ0G/SYqNKUZH8yJfaEB+hnWk3yLcS+w6mRGRPJi0ID0w0pf/k3QZ
-         qvQ8RWjfbRzEsTsm9md1+18Ay1u0dhJoElWPsW/lKjUWa0jRNeOA5fSQ0FN8Zi+6KzRS
-         uOhY0ah/PwKYkKzJscIjGV3sQVJhH4+5UHg/bxpGPweErcMprgMmikVQa7suxtdmwjZh
-         I3bw==
-X-Forwarded-Encrypted: i=1; AJvYcCVbnDD7vaQtcsRlfQvxM+0cSiNojVzoh3zZezHyYH/5Qad1egQM/DXdWRWksX9uh35lqylFHcFcgZSBYqo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyI4Z48ykmkkhyAHo8Z1D9WZuNTasZ87pmkFpIrPCuaPSXZASPW
-	oQm/XiN54CLxCkr1SamlyczzxZuBSOY6199yjg45NK0VqJBornP6L+Bpb0uIlhA=
-X-Gm-Gg: ASbGncvPhRFdH5JtEC9nMGA+U3l9NYqj/EP6mKSyYMgmbOyVLf/Dqw+YWDptv5EEonB
-	2MvKZDN41E4rs2OSTI2uIeEKDn0ePO8vnAocicBQuh3jArTJiyXFvh/LF3ZUoeNaRoQlkqV4kqq
-	qX69eR3PdvRGISZ9IVXQGGn1HLXA8RM1BddqHiKGTslEtEAL2yKfOlXlnL1p+caFqWc4I08dJtD
-	wdvKVjshaM76UTpM+El5fqyNz3QXO9LT30u+twe6BsntHDS9iX+489eIeGYGeIq1ET/e30yKKYI
-X-Google-Smtp-Source: AGHT+IHgdn2BGwPZLyzqvQVUbs/cFzFmDkgeqEMG0KDyXW3S8CcuC7D8hSNeNQK7BC7I60PEYyZD0Q==
-X-Received: by 2002:a05:622a:1394:b0:471:f869:8d4c with SMTP id d75a77b69052e-4722295ded2mr175422951cf.48.1740493572264;
-        Tue, 25 Feb 2025 06:26:12 -0800 (PST)
-Received: from ziepe.ca ([130.41.10.206])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47377e19aa4sm10461611cf.32.2025.02.25.06.26.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 06:26:11 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1tmvsw-00000002T1K-3qkO;
-	Tue, 25 Feb 2025 10:26:10 -0400
-Date: Tue, 25 Feb 2025 10:26:10 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Ethan Zhao <haifeng.zhao@linux.intel.com>
-Cc: Baolu Lu <baolu.lu@linux.intel.com>,
-	Yunhui Cui <cuiyunhui@bytedance.com>, dwmw2@infradead.org,
-	joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] iommu/vt-d: fix system hang on reboot -f
-Message-ID: <20250225142610.GB545008@ziepe.ca>
-References: <20250225064831.63348-1-cuiyunhui@bytedance.com>
- <0691a295-0883-47b3-84a6-47d9a94af69a@linux.intel.com>
- <c059fb19-9e03-426c-a06a-41f46a07b30a@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jtRnHEGo"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51PDjZh8022623;
+	Tue, 25 Feb 2025 14:25:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=wvxAuSGVB9Fk2YXlPJPH6TjtzJg78C
+	c3kmQfhG3Xd3w=; b=jtRnHEGoTj6EJFDmINcSULObNgdDWy6ro0FozVsnHV2eQY
+	qLzh3kD5Gvxo6yw46CKSxwRFyQ36iYBUqO7oMWPZQDRR9TTe5T+KNL8Eip5mALGq
+	btHuDCFdZUGq55vDaJfVRKzmRSoTG95jnw54s96zu6DhhQcjl9QDxBjp1ZNa6vVN
+	iojCsFCYV+KZk5okWrwZu+W5tTcKhzwpULwrsQiLYw6D9dDcUmOwRygFnKGz1LUs
+	aHbu0SbWV8efEIHqcKNpaTRBCMCtawK3r3UlfmjODC1upfAneRoBMy2EpT5OiE2d
+	fVJgkfEquORT1c29LFkakg/OIDLsMHs+bjbIh+Jg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4511wabtb5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Feb 2025 14:25:27 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51PEPOoh025571;
+	Tue, 25 Feb 2025 14:25:26 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4511wabtb0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Feb 2025 14:25:26 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51PCtwCK012457;
+	Tue, 25 Feb 2025 14:25:25 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44yrwsnjmr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Feb 2025 14:25:25 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51PEPLDs31261438
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 25 Feb 2025 14:25:22 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D28C52004E;
+	Tue, 25 Feb 2025 14:25:21 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D253A2004D;
+	Tue, 25 Feb 2025 14:25:20 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.155.204.135])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 25 Feb 2025 14:25:20 +0000 (GMT)
+Date: Tue, 25 Feb 2025 15:25:19 +0100
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+        Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Naveen N Rao <naveen@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Andreas Larsson <andreas@gaisler.com>, Arnd Bergmann <arnd@arndb.de>,
+        Muchun Song <muchun.song@linux.dev>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        David Hildenbrand <david@redhat.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Dev Jain <dev.jain@arm.com>, Kevin Brodsky <kevin.brodsky@arm.com>,
+        Alexandre Ghiti <alexghiti@rivosinc.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] mm: hugetlb: Add huge page size param to
+ huge_ptep_get_and_clear()
+Message-ID: <Z73Szw4rSHSyfpoy@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+References: <20250217140419.1702389-1-ryan.roberts@arm.com>
+ <20250217140419.1702389-2-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c059fb19-9e03-426c-a06a-41f46a07b30a@linux.intel.com>
+In-Reply-To: <20250217140419.1702389-2-ryan.roberts@arm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: hRWfN18hEO2fPQP9rHHQq1sJOqEpDKtg
+X-Proofpoint-ORIG-GUID: fwGWLQmJP9EGxhfU0y0PNHJe6OP6pufb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-25_04,2025-02-25_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=824 mlxscore=0
+ malwarescore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 suspectscore=0 phishscore=0 clxscore=1011
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502250096
 
-On Tue, Feb 25, 2025 at 04:54:54PM +0800, Ethan Zhao wrote:
-> > On 2025/2/25 14:48, Yunhui Cui wrote:
-> > > We found that executing the command ./a.out &;reboot -f (where a.out
-> > > is a
-> > > program that only executes a while(1) infinite loop) can
-> > > probabilistically
-> > > cause the system to hang in the intel_iommu_shutdown() function,
-> > > rendering
-> > > it unresponsive. Through analysis, we identified that the factors
-> > > contributing to this issue are as follows:
-> > > 
-> > > 1. The reboot -f command does not prompt the kernel to notify the
-> > > application layer to perform cleanup actions, allowing the
-> > > application to
-> > > continue running.
-> > > 
-> > > 2. When the kernel reaches the intel_iommu_shutdown() function, only the
-> > > BSP (Bootstrap Processor) CPU is operational in the system.
-> > > 
-> > > 3. During the execution of intel_iommu_shutdown(), the function
-> > > down_write
-> > > (&dmar_global_lock) causes the process to sleep and be scheduled out.
+On Mon, Feb 17, 2025 at 02:04:14PM +0000, Ryan Roberts wrote:
 
-Why does this happen? If the kernel has shutdown other CPUs then what
-thread is holding the other side of this lock and why?
+Hi Ryan,
 
-> > > 4. At this point, though the processor's interrupt flag is not cleared,
-> > >   allowing interrupts to be accepted. However, only legacy devices
-> > > and NMI
-> > > (Non-Maskable Interrupt) interrupts could come in, as other interrupts
-> > > routing have already been disabled. If no legacy or NMI interrupts occur
-> > > at this stage, the scheduler will not be able to run.
+> In order to fix a bug, arm64 needs to be told the size of the huge page
+> for which the huge_pte is being set in huge_ptep_get_and_clear().
+> Provide for this by adding an `unsigned long sz` parameter to the
+> function. This follows the same pattern as huge_pte_clear() and
+> set_huge_pte_at().
+> 
+> This commit makes the required interface modifications to the core mm as
+> well as all arches that implement this function (arm64, loongarch, mips,
+> parisc, powerpc, riscv, s390, sparc). The actual arm64 bug will be fixed
+> in a separate commit.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 66b3923a1a0f ("arm64: hugetlb: add support for PTE contiguous bit")
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> ---
+...
+> diff --git a/arch/s390/include/asm/hugetlb.h b/arch/s390/include/asm/hugetlb.h
+> index 7c52acaf9f82..420c74306779 100644
+> --- a/arch/s390/include/asm/hugetlb.h
+> +++ b/arch/s390/include/asm/hugetlb.h
+> @@ -26,7 +26,11 @@ void __set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+>  pte_t huge_ptep_get(struct mm_struct *mm, unsigned long addr, pte_t *ptep);
+>  
+>  #define __HAVE_ARCH_HUGE_PTEP_GET_AND_CLEAR
+> -pte_t huge_ptep_get_and_clear(struct mm_struct *mm, unsigned long addr, pte_t *ptep);
+> +pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+> +			      unsigned long addr, pte_t *ptep,
+> +			      unsigned long sz);
 
-> > > 5. If the application got scheduled at this time is executing a
-> > > while(1)-
-> > > type loop, it will be unable to be preempted, leading to an infinite
-> > > loop
-> > > and causing the system to become unresponsive.
+Please, format parameters similarily to set_huge_pte_at() few lines above.
 
-If the schedular doesn't run how did we get from 4 -> 5?
+> +pte_t __huge_ptep_get_and_clear(struct mm_struct *mm,
+> +			      unsigned long addr, pte_t *ptep);
 
-Maybe the issue is the shutdown handler here is running in the wrong
-time and it should not be running after the scheduler has been shut
-down.
+The formatting is broken, but please see below.
 
-I don't think removing the lock is a great idea without more
-explanation.
+>  static inline void arch_clear_hugetlb_flags(struct folio *folio)
+>  {
+> @@ -48,7 +52,7 @@ static inline void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
+>  static inline pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+>  					  unsigned long address, pte_t *ptep)
+>  {
+> -	return huge_ptep_get_and_clear(vma->vm_mm, address, ptep);
+> +	return __huge_ptep_get_and_clear(vma->vm_mm, address, ptep);
+>  }
+>  
+>  #define  __HAVE_ARCH_HUGE_PTEP_SET_ACCESS_FLAGS
+> @@ -59,7 +63,7 @@ static inline int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+>  	int changed = !pte_same(huge_ptep_get(vma->vm_mm, addr, ptep), pte);
+>  
+>  	if (changed) {
+> -		huge_ptep_get_and_clear(vma->vm_mm, addr, ptep);
+> +		__huge_ptep_get_and_clear(vma->vm_mm, addr, ptep);
+>  		__set_huge_pte_at(vma->vm_mm, addr, ptep, pte);
+>  	}
+>  	return changed;
+> @@ -69,7 +73,7 @@ static inline int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+>  static inline void huge_ptep_set_wrprotect(struct mm_struct *mm,
+>  					   unsigned long addr, pte_t *ptep)
+>  {
+> -	pte_t pte = huge_ptep_get_and_clear(mm, addr, ptep);
+> +	pte_t pte = __huge_ptep_get_and_clear(mm, addr, ptep);
+>  
+>  	__set_huge_pte_at(mm, addr, ptep, pte_wrprotect(pte));
+>  }
+> diff --git a/arch/s390/mm/hugetlbpage.c b/arch/s390/mm/hugetlbpage.c
+> index d9ce199953de..52ee8e854195 100644
+> --- a/arch/s390/mm/hugetlbpage.c
+> +++ b/arch/s390/mm/hugetlbpage.c
+> @@ -188,8 +188,8 @@ pte_t huge_ptep_get(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
+>  	return __rste_to_pte(pte_val(*ptep));
+>  }
+>  
+> -pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+> -			      unsigned long addr, pte_t *ptep)
+> +pte_t __huge_ptep_get_and_clear(struct mm_struct *mm,
+> +				unsigned long addr, pte_t *ptep)
+>  {
+>  	pte_t pte = huge_ptep_get(mm, addr, ptep);
+>  	pmd_t *pmdp = (pmd_t *) ptep;
+> @@ -202,6 +202,12 @@ pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+>  	return pte;
+>  }
+>  
+> +pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+> +			      unsigned long addr, pte_t *ptep, unsigned long sz)
+> +{
+> +	return __huge_ptep_get_and_clear(mm, addr, ptep);
+> +}
 
-Jason
+Is there a reason why this is not a header inline, as other callers of
+__huge_ptep_get_and_clear()?
+
+>  pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
+>  			unsigned long addr, unsigned long sz)
+>  {
+...
+
+Thanks!
