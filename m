@@ -1,80 +1,65 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85782267713
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 11:05:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7047E207DED
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 11:05:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740481521; cv=none; b=tj56ZHPSwbXqBiuEx1VtO7JZTdooSdTH0f5DXCJIm08gyEuH+gQ/MRb7liZQhALvgR97j0yxcWpVzqt/KpA0LHN4WsNUkIf2oLAzitflkneh7/gvM+HbPd8oyganhks+hcvSmZGnNTgg0aJq5MZXQ5nKq/oju/cieG/shK2tACE=
+	t=1740481531; cv=none; b=N5PFQfzwxUyVgGRnPfQybcypeiQL2r2WyFR7ebnl1FnsxIKzJqmAVDFVuWo05qztYL7UtqyMqJO1SPzvIxgR8Oe2O9qqdmBaTZoi359wKOni83oe9ZFdwJmDHDE/eoktljTOIOmqZi2w/Lo6yDQwyfUPhbalIwVRYF2KiY1Efag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740481521; c=relaxed/simple;
-	bh=b3bnQD/l5Wpk6L2IJX8JY9/gE+Wb9zl9eVUE2R0i3gE=;
+	s=arc-20240116; t=1740481531; c=relaxed/simple;
+	bh=aEXBdctr5lNL6y49esuCSJvaeiXkXyVBBu5rr2gf1mg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FamdFn7wiUfExxQjaLy8nSfBLKEOA5WCRsmo4lVMeZNu29Nsny6SJrLF01aTz/1C40gX9/dGgeiXc6mHwp2S06fJV3cwV0oYBYjIw9hGMOpRQ1POnlxvInXW7bPNboWjfP2kfgWJc4+hsi5B+xr09oWEWEwT7l/raoidnw17vOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2vZMTCDl; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6w5BRe8U; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dfl9gErN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=lAkUVDmm; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 In-Reply-To:Content-Type; b=TIE8pQh0cF+QQ46yXlhfBJBjUIs1bmHrIFDxK8nn2pirZ3S4xyYEUwnj/hvdS5KhmOH8Dx2md4xA6soci786r8Eb9/WDvaMIsj0xXpHHAaEEtHWqc/QUofHZ3LXzY/uxokaptRbP5yk2ZeY/91C+IaKR+DHI+pFhutyR9L8AgXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=GhDBSjHS; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2vZMTCDl";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6w5BRe8U";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dfl9gErN";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="lAkUVDmm"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 7665921114;
-	Tue, 25 Feb 2025 11:05:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740481517; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=MdTnOuzetLYhdOVMQR9JvtjsxaqGFFkijXtlqpX2JJQ=;
-	b=2vZMTCDlMynkRZxi5uHVIfZQHch5U0XrUHiI8NJ8hMWt8WEM07l7wXkQi4jcJhG8SBfwIk
-	PzOgyg0WYGm75wKVBbqHdoQuWbAdcoa+lmbuPtc1jItvQpXUsGNVrUlcaXiwVvPHqcs0H/
-	J1yayuTNcxM7/uIHGuRgT/lCyxDA7NI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740481517;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=MdTnOuzetLYhdOVMQR9JvtjsxaqGFFkijXtlqpX2JJQ=;
-	b=6w5BRe8UhKyq1Slf5NfITrNNIAtkRGdepq6IjwHJXqSnB971RhtfUK7t4KU5SJiBBlkZH9
-	NqbVXVwZnbZSS/AQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740481516; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=MdTnOuzetLYhdOVMQR9JvtjsxaqGFFkijXtlqpX2JJQ=;
-	b=dfl9gErNqE5CqhJ8ovGO0ofoc1KshjSRMSI9qPgkhxpqhHX/qQHlKkYRClHSliZ1njGI8R
-	beOwi4D3DBfayquRQ42PFH5bsVFtifzl0+mY7UIT6GANZcWFxdjVpPTvK8w0kRElj8SVrZ
-	n5Adw5Y6uL0j+zR9n1woMl3LuwIV7V4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740481516;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=MdTnOuzetLYhdOVMQR9JvtjsxaqGFFkijXtlqpX2JJQ=;
-	b=lAkUVDmm0FvHNLsmqGN6EUZHYqoZvDXCynas0Ty76d7vqCNcKNF+XPM8YARjooB6mMLbeN
-	IVky9lYVEqDMDJDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 61A4E13332;
-	Tue, 25 Feb 2025 11:05:16 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id h7eEF+yjvWfpNAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 25 Feb 2025 11:05:16 +0000
-Message-ID: <218b81f2-3ed4-4389-b08b-c26dd8c0a4bc@suse.cz>
-Date: Tue, 25 Feb 2025 12:05:16 +0100
+	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="GhDBSjHS"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-38f504f087eso4287685f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 03:05:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1740481528; x=1741086328; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oijdNUsjFcALDUXEJZ3Jn2gl36QQtJ0DV7NEsfpNP/g=;
+        b=GhDBSjHSCNCvn8PhfCXLlDQ+odAZA6EQrlW/wyslfhO1BhEIYRi95Q0pJM24xtU8Gr
+         oKxu6k+wd+pLiUAagGoICEy0HMvf/1zXUOJgaPDfPD4oU8NRa72/2UMwGjPQz7lgIbON
+         sN9BwFehjZRyqrQ7BOwPxHt5Ihdi6vFFySZ3TfkcDztcxWEpVqdznov39sSNa9boeDYy
+         FwUUTf8XKdKGKkSEKe3HIU13hDeG3oB48r32R+WA/ujtwNJ9EPelDDHhxjvOIo5h1/2R
+         8/mM8CUjHRE5pLRnD5KqxhZhxSUvN52PQAXrauMXHwaIP0lOszW78BeGQg14hY/TblWE
+         Hufw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740481528; x=1741086328;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oijdNUsjFcALDUXEJZ3Jn2gl36QQtJ0DV7NEsfpNP/g=;
+        b=S3UL2QxnL2Yx21xwXOVi2nPzIK3NJoxWcRcWYm9v8KUzcrpqDs9J+Ig1dWuvQ6TJlP
+         RQqd9Xm7F+40CAGhFw28Byesh7PWNn7bkeebfa99osiRmtltlNkydXbeeWVUkxYcoq1e
+         pQV8Nkn71oJAckHnHvUEyQOCR3JmKgIcTEGs7osH80KpKYPBKTyskGvhaBNKocZwltou
+         HpDvJja/kjBygXDQKf3aA71vGT/eic+Ij7jbxWInPbUGdeZeqQcOXxViLJ/ZQd69VyBc
+         iGZl3c08qUKYnQs+9rdXuvH9p577AziJWGVyjhs5rthVg/dDE49cRrrpLEaOpCFk1brM
+         JruA==
+X-Forwarded-Encrypted: i=1; AJvYcCX6Sf1EUa9JHU7Bw6pv+jKzAWrusOgiJDNaM/eCv5tBWYaZVCCDOHz9cqPxLap5Msyy68ZTc/bRrjBXaWM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywMj7NEQGWGbXSQhJXzxFA0FTQ+hMqf3Uk0dL6wKBJTooJ9Nde
+	agUTWx+28EsI/m/EbxxIBGf34n0b0KvgI8+GuJpX2f2LqLdBkbTP0GArJvcI6IgORv0A+AW148X
+	7EXY=
+X-Gm-Gg: ASbGncuddaCI3iEaFMGk27A+zLQ2N0iQ4PhF5W1QTEtQG5aubx0GhDJ3Cmc4bBQglrL
+	UWSvOiiFHwKxupdySC5ZNRCpJV/0JpCgtk1qvaWZr7293xdg262fbJFJD7fParQ70PajijQ3qaS
+	/Iiq2RaQ8nZRUuN1zQKC/MQh2JSUYC7tq9FuLWaWphIZZCKmARACjVJUZiHhXIuCB1VtijdMm7N
+	/XeqLRZnV/VYvrRBZrOFNMe7bbryi2uww5PQ5R7d1tilqxG7IXyHqksZKtXVw9P7HtDPYmzVFaC
+	KBs0lZq97iX6lJnYOuq6x5Wikh3D8NtBYgLw25PyU0zpPRsF6ZBzlGB0kQ==
+X-Google-Smtp-Source: AGHT+IG2xH9B5u1dDk4QWKBV/GBsT+RYSX6ctwfXsQLP5EsocYKyv24QKv5mom87WEbHTozESZO4yg==
+X-Received: by 2002:a5d:6daa:0:b0:38a:87cc:fb42 with SMTP id ffacd0b85a97d-38f6e95d5famr14803550f8f.21.1740481527619;
+        Tue, 25 Feb 2025 03:05:27 -0800 (PST)
+Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390cd8fc1f9sm1840718f8f.88.2025.02.25.03.05.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2025 03:05:27 -0800 (PST)
+Message-ID: <a658145a-df99-4c79-92a2-0f67dd5c157b@blackwall.org>
+Date: Tue, 25 Feb 2025 13:05:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,96 +67,134 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] mm/page_alloc: Clarify terminology in migratetype
- fallback code
+Subject: Re: [PATCHv2 net 1/3] bonding: move mutex lock to a work queue for
+ XFRM GC tasks
+To: Hangbin Liu <liuhangbin@gmail.com>, netdev@vger.kernel.org
+Cc: Jay Vosburgh <jv@jvosburgh.net>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>,
+ Tariq Toukan <tariqt@nvidia.com>, Jianbo Liu <jianbol@nvidia.com>,
+ Jarod Wilson <jarod@redhat.com>,
+ Steffen Klassert <steffen.klassert@secunet.com>,
+ Cosmin Ratiu <cratiu@nvidia.com>, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250225094049.20142-1-liuhangbin@gmail.com>
+ <20250225094049.20142-2-liuhangbin@gmail.com>
 Content-Language: en-US
-To: Brendan Jackman <jackmanb@google.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Mel Gorman <mgorman@techsingularity.net>, Michal Hocko
- <mhocko@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Yosry Ahmed <yosry.ahmed@linux.dev>
-References: <20250224-clarify-steal-v2-0-be24da656764@google.com>
- <20250224-clarify-steal-v2-1-be24da656764@google.com>
- <CA+i-1C0J5DiFXB3begMqe+TeuFDHqaGc1cg5C9z3=_ue6q0KLg@mail.gmail.com>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- EP+ylKVEKb0Q2A==
-In-Reply-To: <CA+i-1C0J5DiFXB3begMqe+TeuFDHqaGc1cg5C9z3=_ue6q0KLg@mail.gmail.com>
+From: Nikolay Aleksandrov <razor@blackwall.org>
+In-Reply-To: <20250225094049.20142-2-liuhangbin@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	URIBL_BLOCKED(0.00)[suse.cz:mid];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:mid]
-X-Spam-Flag: NO
-X-Spam-Level: 
 
-On 2/24/25 19:42, Brendan Jackman wrote:
-> On Mon, 24 Feb 2025 at 13:37, Brendan Jackman <jackmanb@google.com> wrote:
->>  int find_suitable_fallback(struct free_area *area, unsigned int order,
->> -                       int migratetype, bool only_stealable, bool *can_steal);
->> +                       int migratetype, bool need_whole_block, bool *whole_block);
+On 2/25/25 11:40, Hangbin Liu wrote:
+> The fixed commit placed mutex_lock() inside spin_lock_bh(), which triggers
+> a warning like:
 > 
-> Agh, sorry, I was meant to rename all of these to claim_block.
-> Apparently I got halfway through doing that then got distracted.
+> BUG: sleeping function called from invalid context at...
 > 
-> (Literally the whole point of this patch was to clean this up, and I
-> somehow failed to actually do that!)
+> Fix this by moving the mutex_lock() operation to a work queue.
+> 
+> Fixes: 2aeeef906d5a ("bonding: change ipsec_lock from spin lock to mutex")
+> Reported-by: Jakub Kicinski <kuba@kernel.org>
+> Closes: https://lore.kernel.org/netdev/20241212062734.182a0164@kernel.org
+> Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+> ---
+>  drivers/net/bonding/bond_main.c | 41 +++++++++++++++++++++++++--------
+>  include/net/bonding.h           |  6 +++++
+>  2 files changed, 37 insertions(+), 10 deletions(-)
+> 
 
-Given Johannes' patches went to mm-unstable meanwhile, this now expectedly
-conflicts a lot so I'll wait with review for a new rebased version. Thanks!
+Hi,
+I think there are a few issues with this solution, comments below.
+
+> diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+> index e45bba240cbc..cc7064aa4b35 100644
+> --- a/drivers/net/bonding/bond_main.c
+> +++ b/drivers/net/bonding/bond_main.c
+> @@ -551,6 +551,25 @@ static void bond_ipsec_add_sa_all(struct bonding *bond)
+>  	mutex_unlock(&bond->ipsec_lock);
+>  }
+>  
+> +static void bond_xfrm_state_gc_work(struct work_struct *work)
+> +{
+> +	struct bond_xfrm_work *xfrm_work = container_of(work, struct bond_xfrm_work, work);
+> +	struct bonding *bond = xfrm_work->bond;
+> +	struct xfrm_state *xs = xfrm_work->xs;
+> +	struct bond_ipsec *ipsec;
+> +
+> +	mutex_lock(&bond->ipsec_lock);
+> +	list_for_each_entry(ipsec, &bond->ipsec_list, list) {
+> +		if (ipsec->xs == xs) {
+> +			list_del(&ipsec->list);
+> +			kfree(ipsec);
+> +			xfrm_state_put(xs);
+> +			break;
+> +		}
+> +	}
+> +	mutex_unlock(&bond->ipsec_lock);
+> +}
+> +
+>  /**
+>   * bond_ipsec_del_sa - clear out this specific SA
+>   * @xs: pointer to transformer state struct
+> @@ -558,9 +577,9 @@ static void bond_ipsec_add_sa_all(struct bonding *bond)
+>  static void bond_ipsec_del_sa(struct xfrm_state *xs)
+>  {
+>  	struct net_device *bond_dev = xs->xso.dev;
+> +	struct bond_xfrm_work *xfrm_work;
+>  	struct net_device *real_dev;
+>  	netdevice_tracker tracker;
+> -	struct bond_ipsec *ipsec;
+>  	struct bonding *bond;
+>  	struct slave *slave;
+>  
+> @@ -592,15 +611,17 @@ static void bond_ipsec_del_sa(struct xfrm_state *xs)
+>  	real_dev->xfrmdev_ops->xdo_dev_state_delete(xs);
+>  out:
+>  	netdev_put(real_dev, &tracker);
+> -	mutex_lock(&bond->ipsec_lock);
+> -	list_for_each_entry(ipsec, &bond->ipsec_list, list) {
+> -		if (ipsec->xs == xs) {
+> -			list_del(&ipsec->list);
+> -			kfree(ipsec);
+> -			break;
+> -		}
+> -	}
+> -	mutex_unlock(&bond->ipsec_lock);
+> +
+> +	xfrm_work = kmalloc(sizeof(*xfrm_work), GFP_ATOMIC);
+> +	if (!xfrm_work)
+> +		return;
+> +
+
+What happens if this allocation fails? I think you'll leak memory and
+potentially call the xdo_dev callbacks for this xs again because it's
+still in the list. Also this xfrm_work memory doesn't get freed anywhere, so
+you're leaking it as well.
+
+Perhaps you can do this allocation in add_sa, it seems you can sleep
+there and potentially return an error if it fails, so this can never
+fail later. You'll have to be careful with the freeing dance though.
+Alternatively, make the work a part of struct bond so it doesn't need
+memory management, but then you need a mechanism to queue these items (e.g.
+a separate list with a spinlock) and would have more complexity with freeing
+in parallel.
+
+> +	INIT_WORK(&xfrm_work->work, bond_xfrm_state_gc_work);
+> +	xfrm_work->bond = bond;
+> +	xfrm_work->xs = xs;
+> +	xfrm_state_hold(xs);
+> +
+> +	queue_work(bond->wq, &xfrm_work->work);
+
+Note that nothing waits for this work anywhere and .ndo_uninit runs before
+bond's .priv_destructor which means ipsec_lock will be destroyed and will be
+used afterwards when destroying bond->wq from the destructor if there were
+any queued works.
+
+[snip]
+
+Cheers,
+ Nik
+
