@@ -1,151 +1,112 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67DBE6AA7
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 01:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28819EC0;
+	Tue, 25 Feb 2025 01:15:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740446007; cv=none; b=mQtd8UlFHAtjVRIDiCkYbphTO5+DlsqKRQgMqjBcMEkDWZ7mQrr2DtRhu7vS2EbqGXVNVY542NlJXcBtoJrlAU05Of9VaAt4FSocv9CYNG7WB6QiMl1WNCQlR1y0aSaetXv0Svz/Z9qYkztCGJshZXTVqXiGb3AaZgKTWpz42hE=
+	t=1740446139; cv=none; b=Pc1qB6ahM7cl0V7VRnQFTAeR4RSqdjmFH/NruWm4N+MZkWhP4UtcUVco+3gOwzLRJr5gW18/lIT8R+7I1vo9JbZpWJVOHgyZSQ3c98Qx0U0ntHujPdWrXKXiASCfc4LwqvipxJ9PLU3BnuWEZaLX/6Kp0Xy17fp7XWTBWYUsvf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740446007; c=relaxed/simple;
-	bh=sNyhVyQv0VA1vkJvtKy5BEdJycXecj0nyHKXfyEJWjY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=Im3lLE64AEEQ48dNx8vOV40gnRJsYG1TdoyZC09G03oVhEfoVv+tYFsheT5zx3lk+u/ShXaDNBvKd+WbvtwVhidGnshkfT2L2fKEdJkTK8uY0vajdFIREO/DH6v28S42rWncPnRtmd3ksoXpNEAx14cu6d9JMleNJZTD6MqT79w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=OrjUtc+d; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1740446139; c=relaxed/simple;
+	bh=NQzxdzth5Cj0AaIEYGgiMzEzV801esG7x9P3uFqCPYA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SDtl72O8WJnQ9EsU2y70aSKJxhh+hq1uretGkq0hRPlOT4IQfN++euuXyYxLly8w3X6Mc5nSUStSiZtqofSkgeZz0fUsZW/vRe6sIfjcaAQ95DyfAi7y+icIC0vxW8WA2duaXn3qjBcP9vyVFenqEgSRh8IOsC2MbVzi8WppytI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FN34Ii9m; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OrjUtc+d"
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250225011322epoutp037212d1a0b795890a93f56560af89d5dc~nTmsY3i282004920049epoutp03N
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 01:13:22 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250225011322epoutp037212d1a0b795890a93f56560af89d5dc~nTmsY3i282004920049epoutp03N
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1740446002;
-	bh=MTWtqLPydZIhx4hoCh35M7njM0H8vWlViIKvoqL1epI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=OrjUtc+dA49/t5uNhfp2QJEMVwWoHaDewuI7LM/sk8eGpK+oQSPuzRlD87LJrVlRC
-	 ehGWN7VImXISBqZUPdCJ/qrYhPrcU/bkVsFngS8QnxXrBt8EFSl5VVe/o8UqKWMAUe
-	 HTDZbJWwsN4jPthpdaXewS5XUtWRB5OvTy6D1k9Q=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTP id
-	20250225011322epcas2p3c611a053c4b88a576e80c6b8c8d176d5~nTmr_YFb71642416424epcas2p3D;
-	Tue, 25 Feb 2025 01:13:22 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.36.101]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4Z203Q03r3z4x9Py; Tue, 25 Feb
-	2025 01:13:22 +0000 (GMT)
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	5B.3A.23368.1391DB76; Tue, 25 Feb 2025 10:13:21 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250225011321epcas2p1dfe6b96f5749767781b113a0b1d57cea~nTmrMDVsM0932209322epcas2p1C;
-	Tue, 25 Feb 2025 01:13:21 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250225011321epsmtrp1df0ab98bb664f29f7a45dd3f7a5a87b5~nTmrLDUd31608316083epsmtrp1j;
-	Tue, 25 Feb 2025 01:13:21 +0000 (GMT)
-X-AuditID: b6c32a45-dc9f070000005b48-d0-67bd1931a100
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	63.0D.18949.1391DB76; Tue, 25 Feb 2025 10:13:21 +0900 (KST)
-Received: from tiffany (unknown [10.229.95.142]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250225011321epsmtip1c8473a8c93e38786f6a553a96f8ca548~nTmq_mis51465714657epsmtip1K;
-	Tue, 25 Feb 2025 01:13:21 +0000 (GMT)
-Date: Tue, 25 Feb 2025 10:11:54 +0900
-From: Hyesoo Yu <hyesoo.yu@samsung.com>
-To: "Christoph Lameter (Ampere)" <cl@gentwo.org>
-Cc: janghyuck.kim@samsung.com, vbabka@suse.cz, Pekka Enberg
-	<penberg@kernel.org>, David Rientjes <rientjes@google.com>, Joonsoo Kim
-	<iamjoonsoo.kim@lge.com>, Andrew Morton <akpm@linux-foundation.org>, Roman
-	Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] mm: slub: Print the broken data before restoring
- slub.
-Message-ID: <20250225011154.GB2345951@tiffany>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FN34Ii9m"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2f441791e40so7793896a91.3;
+        Mon, 24 Feb 2025 17:15:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740446137; x=1741050937; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tyKs/kcdHFl90mbe3FwJHSCtUYzcfmgTEFBbzRP6mj0=;
+        b=FN34Ii9mE6MaFU3sPkiAv7apif8mTM5ji2n3IsxBhJeHGPBjb+dwpuM1t1V/RiRl9W
+         TKswYrBtwmEZ75g76ov4XKg1dkmmtPrlzxmtarx8nQkyPkavOwZVWYQY0995SJ5WnNG2
+         sWD49oIO+kFuroCGSjX4doFGBY7ch7whoY9IFlLWIcsRw4i0XvYjsTWc01qFF7UIYr1P
+         CWInO0W4fAkrhtJfcDGoSJCms1FBJWoeJJaRkIP68yPOgWxG2Fp1dafbAg1RWFi6Ckx2
+         fbVDMF06x4HElLYg3aKGTBNACaGyxE7ktFqx5qrdwGzUx4XVkK3JNs0OPv66enVHqYu9
+         zKWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740446137; x=1741050937;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tyKs/kcdHFl90mbe3FwJHSCtUYzcfmgTEFBbzRP6mj0=;
+        b=ANEt2EvL1HOTeBAIlDZvBB/r2BXg9kQ7BAkuZchERtkeEkybDL5vKxRaVHHz9rX0Mc
+         rTGDWuOJMGgnmJoIpxtfoBexlFTbnIV9+faR76CWZ1Ob17YbKZiI4+zxG4lqKPUZYEmj
+         BbwWVlyvPlxuUxM/44tHgqoZ2XP8Lhady1cdZsmKehT+G9QANdbr+vhemUl8pr/G6Ryw
+         0+pmy1g/J3L6xVG9ZevptCyY2JY2sP8jzb5s9HqU0I/+r3S9Mf9EMq7LWIrZoE1qSc3E
+         REl0Qj+/0tkMY0iu6VNrVM3y9pPp8q8fxw8f7uD/wsspyOyTkB64GlgPWIvyR0zZGq5r
+         ie+w==
+X-Forwarded-Encrypted: i=1; AJvYcCXPpcx00DZoG2cCadaC4bkQvi5rYCPEfaqGX65lx41lYNZgaKIvvYdWqdWf0+IC7fCH3o8=@vger.kernel.org, AJvYcCXShY5sdaAeGWUKokkhdRjI4lnoc3S7u6MuuJ+uF23wt2ygSuMBvjApBSv95iw9/Y8qmmFwjlJ4NY/bU2sn@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrXEe8rsR5205XUoT5gJ+5W9Pf2EIBPJQpx4ItN7sEDNYX1yym
+	Nr40yPjI32uZXZYmytwQ1ZNqg+cDlQ38fcvpy+NqOT2XtbKPRMGzGl8qy8Bp/EPooiy4coDLCXi
+	L2C6vooeF9RrbwuqtEJLFMRgm91s=
+X-Gm-Gg: ASbGncvA/uIbFk1DTDI278WIfATGygmsFukjLCm/sD8VhTrk7vgnzqs/OtT+Lo62LIW
+	xeQVAxP8FkpRE4fzUH7O3hPSOPmzU1YqyTiRBmIUdv3oNx9yL08GmPAkQIT8LueQjdDaVkz1fHl
+	TSublSFg9K6bWJIz99dLnnu50=
+X-Google-Smtp-Source: AGHT+IFl8ZxqOKXVRKDMI1btod3FzWxvBVAz4GdCJCYphZLfSpz06wRSaD8qLL3uldJM5lG++sabWKv5qZT9dIWX5MM=
+X-Received: by 2002:a17:90b:5202:b0:2fa:b8e:3d26 with SMTP id
+ 98e67ed59e1d1-2fce875bd28mr23927096a91.30.1740446137373; Mon, 24 Feb 2025
+ 17:15:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <8befd391-3741-40ca-fd84-47112a75c7ac@gentwo.org>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrBJsWRmVeSWpSXmKPExsWy7bCmha6h5N50g6vHLC0m9hhYzFm/hs1i
-	+Zy5TBYru5vZLDbPKba4vGsOm8W9Nf9ZLdo+/wMSSzYyWUxcI2oxu7GP0YHbY//hIo+ds+6y
-	eyzYVOqxaVUnm8emT5PYPbreXmHyODHjN4vHwoapzB59W1YxepxZcITd4/MmuQDuqGybjNTE
-	lNQihdS85PyUzLx0WyXv4HjneFMzA0NdQ0sLcyWFvMTcVFslF58AXbfMHKCblRTKEnNKgUIB
-	icXFSvp2NkX5pSWpChn5xSW2SqkFKTkF5gV6xYm5xaV56Xp5qSVWhgYGRqZAhQnZGX9X32Aq
-	WM5eMefmZKYGxi62LkYODgkBE4nu/T5djFwcQgI7GCXW/O9g7mLkBHI+MUqcmqwPkfjGKNHQ
-	+4ARJAHWsHgGG0RiL6PE884L7BDOU0aJayungrWzCKhKHD4/jx3EZhNQlzixZRkjyDoRAQOJ
-	hTciQOqZBS4ySTzu3M4GUiMsECIxc/o6FhCbV0BPomvfGmYIW1Di5MwnYHFOATugOb8ZQZol
-	BNZySLzbe50N4iQXiXs/D7JD2MISr45vgbKlJF72t0HZxRLbFh9mgmhuYJTY3HGfGSJhLDHr
-	WTvYb8wCmRJ7rk+GBoyyxJFbLBBhPomOw3/ZIcK8Eh1tQhCdyhL7l81jgbAlJR6tbWeFsD0k
-	LpzaygoJlO+MEicOt7FPYJSbheSfWUi2Qdg6Egt2fwKyOYBsaYnl/zggTE2J9bv0FzCyrmIU
-	Sy0ozk1PLTYqMIRHcHJ+7iZGcBLWct3BOPntB71DjEwcjIcYJTiYlUR4OTP3pAvxpiRWVqUW
-	5ccXleakFh9iNAVGzkRmKdHkfGAeyCuJNzSxNDAxMzM0NzI1MFcS563e0ZIuJJCeWJKanZpa
-	kFoE08fEwSnVwOR26NhKptuiBU3LYp68cjxclnrsicH9B06cq1ubStznRnhwWm2YUt9X8MiP
-	can8tPCw7+ZTuB4f3BzaWPCoMOBSeaWv0YYrodN/njHRueon0v/qrrmw7BXH+2f99nx0iSr9
-	6dR05kOwpfw0u2dflFOX8y7YKGK8sKVB8w+XIsOFgr4ZvoyhOoVKGzxK8tp3Tbcv7ecv/3bR
-	Pmp2oPeLVL994Q846id/abspGGpx4Pbz7P7+1k7GHhaDtQGRnxyPbZK6+bt0v125b69g1PX3
-	ujkxeXy/1+5dn+KmJOVWq/DyS7vMHm0p1iDukzosZ57dX71Jx6a7Ye26z4/Tdrw4cbXYY331
-	jrtGgQy3/7kuV2Ipzkg01GIuKk4EAKA73KRLBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHLMWRmVeSWpSXmKPExsWy7bCSnK6h5N50g9Y3shYTewws5qxfw2ax
-	fM5cJouV3c1sFpvnFFtc3jWHzeLemv+sFm2f/wGJJRuZLCauEbWY3djH6MDtsf9wkcfOWXfZ
-	PRZsKvXYtKqTzWPTp0nsHl1vrzB5nJjxm8VjYcNUZo++LasYPc4sOMLu8XmTXAB3FJdNSmpO
-	Zllqkb5dAlfGpx0/WAqesFT86nzF0sD4gLmLkZNDQsBEonvxDDYQW0hgN6PElRuOEHFJiVmf
-	TzJB2MIS91uOsHYxcgHVPGaUWNqzGayZRUBV4vD5eewgNpuAusSJLcsYuxg5OEQEDCQW3ogA
-	qWcWuM4k8ePOVrAFwgIhEjOnr2MBsXkF9CS69q1hhhj6nVGif95pNoiEoMTJmU/AipgFtCRu
-	/HvJBDKUWUBaYvk/DpAwp4Ad0K7fjBMYBWYh6ZiFpGMWQscCRuZVjJKpBcW56bnFhgVGeanl
-	esWJucWleel6yfm5mxjBUaSltYNxz6oPeocYmTgYDzFKcDArifByZu5JF+JNSaysSi3Kjy8q
-	zUktPsQozcGiJM777XVvipBAemJJanZqakFqEUyWiYNTqoFpgkL/ht45/U77M1MU7M4t3de7
-	M+H98Zbpx44GB3/9aGLdKK65grN/kvydxR+u9UvKZec9vp86Vb/cguu458+eqDK+k66+eT+e
-	fGm3qvU8/NUgJupCgGv23S86t3yS5+UUyB+d1CPhd2+tLaPsrPvfRRf2Npm7S9xmKXkc2tIp
-	0pad3RGkt5XhsazY2bsntq2sMfua/eVymfC7++yJ7dcczexvHfDVqrqeUyfe2+HAONXmeqGF
-	wsMdSre6kwqtmJmOSfTxzl8cGznlS4pG9V6jinbeHMZL2wOv7i8LveKRsqOVVTxnnpLQHqtt
-	6j4aZct2z91rsMjN2cD9WPhBo5O1S1R6wpYlbvMLDpv1WYmlOCPRUIu5qDgRAGy8oGURAwAA
-X-CMS-MailID: 20250225011321epcas2p1dfe6b96f5749767781b113a0b1d57cea
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----m7PZ4BT1ldTQPVcONAqyTj2Zy1CXq_CO7oNb.DekQ57E.lpM=_139d21_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250220034153epcas2p286194dda687b47a3dec8fb89b868f96f
-References: <20250220033953.1606820-1-hyesoo.yu@samsung.com>
-	<CGME20250220034153epcas2p286194dda687b47a3dec8fb89b868f96f@epcas2p2.samsung.com>
-	<20250220033953.1606820-2-hyesoo.yu@samsung.com>
-	<8befd391-3741-40ca-fd84-47112a75c7ac@gentwo.org>
+References: <20250224165912.599068-1-chen.dylane@linux.dev> <20250224165912.599068-5-chen.dylane@linux.dev>
+In-Reply-To: <20250224165912.599068-5-chen.dylane@linux.dev>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 24 Feb 2025 17:15:25 -0800
+X-Gm-Features: AQ5f1JrqSFMS2tmwxvdSrMwyGbL-RQYhPjDBwsSR17YcNGH6DgXWn0kFjO7HU5Q
+Message-ID: <CAEf4BzYz9_0Po-JLU+Z4kB7L5snuh2KFSTO0X9KK00GKSq91Sw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v8 4/5] libbpf: Init kprobe prog
+ expected_attach_type for kfunc probe
+To: Tao Chen <chen.dylane@linux.dev>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com, 
+	haoluo@google.com, jolsa@kernel.org, qmo@kernel.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, chen.dylane@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-------m7PZ4BT1ldTQPVcONAqyTj2Zy1CXq_CO7oNb.DekQ57E.lpM=_139d21_
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
+On Mon, Feb 24, 2025 at 9:03=E2=80=AFAM Tao Chen <chen.dylane@linux.dev> wr=
+ote:
+>
+> Kprobe prog type kfuncs like bpf_session_is_return and
+> bpf_session_cookie will check the expected_attach_type,
+> so init the expected_attach_type here.
+>
+> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+> ---
+>  tools/lib/bpf/libbpf_probes.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/tools/lib/bpf/libbpf_probes.c b/tools/lib/bpf/libbpf_probes.=
+c
+> index 8efebc18a215..bb5b457ddc80 100644
+> --- a/tools/lib/bpf/libbpf_probes.c
+> +++ b/tools/lib/bpf/libbpf_probes.c
+> @@ -126,6 +126,7 @@ static int probe_prog_load(enum bpf_prog_type prog_ty=
+pe,
+>                 break;
+>         case BPF_PROG_TYPE_KPROBE:
+>                 opts.kern_version =3D get_kernel_version();
+> +               opts.expected_attach_type =3D BPF_TRACE_KPROBE_SESSION;
 
-On Mon, Feb 24, 2025 at 09:24:42AM -0800, Christoph Lameter (Ampere) wrote:
-> On Thu, 20 Feb 2025, Hyesoo Yu wrote:
-> 
-> > @@ -1396,11 +1400,6 @@ static int check_object(struct kmem_cache *s, struct slab *slab,
-> >  		ret = 0;
-> >  	}
-> >
-> > -	if (!ret && !slab_in_kunit_test()) {
-> 
-> 
-> > -		print_trailer(s, slab, object);
-> > -		add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
-> 
-> No tainting and printing of the trailer anymore?
-> 
+so KPROBE_SESSION is relative recent feature, if we unconditionally
+specify this, we'll regress some feature probes for old kernels where
+KPROBE_SESSION isn't supported, no?
 
-If there is an error before on check_object, the check_bytes_and_report
-calls object_err that calls print_trailer and add_traint.
+pw-bot: cr
 
-Thanks,
-Regards.
-
-------m7PZ4BT1ldTQPVcONAqyTj2Zy1CXq_CO7oNb.DekQ57E.lpM=_139d21_
-Content-Type: text/plain; charset="utf-8"
-
-
-------m7PZ4BT1ldTQPVcONAqyTj2Zy1CXq_CO7oNb.DekQ57E.lpM=_139d21_--
+>                 break;
+>         case BPF_PROG_TYPE_LIRC_MODE2:
+>                 opts.expected_attach_type =3D BPF_LIRC_MODE2;
+> --
+> 2.43.0
+>
