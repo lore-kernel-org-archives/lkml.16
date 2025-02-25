@@ -1,206 +1,295 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1843B26619A;
-	Tue, 25 Feb 2025 09:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740476474; cv=pass; b=Vk3a9y7j2Q6ctoEwO6V3FDqGLUpZyzWpxjxFPS0IBwl/Tx5YgGVTYx70EqWmHrZAyDip/h6iyVQG/WyzRr/Q1++4wZgfU8rhT6gSTZH5Ni6l6M/t9wRLQVguN7fENBHQBlHdfrcf+nTP928su5b+0YK7Fa8ukf4cBui5VI7bHa8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740476474; c=relaxed/simple;
-	bh=Bp4YW+XO9Qnwio1RyRjN4t9zT2ygsbWThuLxANadOqk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=H53CAQW1pQUOdOSJIOM4Kkpa8McumdYqTGm0Kw+hGHrESA+nk/uJadTREnmzkePQAJ8T2t+17pd7BzDDflIsLAtjb+LjGznaENlWtBqhjsIiQgH4jX/Wov2NSH7mQrUXmf4FzyyGJnhWReoYIqgvoJjF0BXy49Sle0D/TQQCAgY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b=CyP3ttGF; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C3212638B2;
+	Tue, 25 Feb 2025 09:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740476478; cv=none; b=kXhEmGp7gNyWHV2SupBpQDwwxzVTXIwzdtnBen4s1FHNYY67uYTzg95LgDNmox1w2ivn50StN9IRK+6bzf8f5O42lIAJJYeAwVrrLcM1EWi7saq8GBJZXekr5kjSmCTDEaJz0yuKBpF+0l1WHJ2hrbq9B8/uWsDRV89ELtC04lk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740476478; c=relaxed/simple;
+	bh=FzT/ECMeABHeNeF84rIs6l8GIuZokm7ac23EJgGF+xs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qvrFE/7LvKoKUG3tSKk1kUgHgqjSk1ChTzZCplslPST6wSinWnFMBcSQVPFIOwgEVQweS71yrvBdKRtQz5FGR3HVZ1UAzthMUsqAiv5OgrTHXwDGwgBdG67QXyrbgiTQCpIHO44YolZ8owwxBEg1LdMazuc3wENfM9E4l0iQz8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gQgV0xHc; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b="CyP3ttGF"
-ARC-Seal: i=1; a=rsa-sha256; t=1740476448; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=A+3H+Sm8971x07Thz6YRpTX6I7MU3G6eCL/so7IDyshmrTt7ZUIVZAUuZguHF8LwjtzXWLaW5vo6yoOkGVk4HZvdPgI7xRK2HNXwO4Ttt69sW+RaqoyKPMOyNLM7b9QXh8H31mlPCT/ul9kdaN2HI2bAe70pH2sx8ab5nOmCUJM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740476448; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=XOrdNCeBVmp7JW4IX9rpLDSJz1pZUE//UCPRZc0Tlts=; 
-	b=UvxWQTKXExhzCbuKTZtAD8SiVGUaSmiRJlpFOo4h0jZz/aixRb/4Jo41671uJOHVC6C0NvkcF0bgVJIi7H79346+Zcw/b/ve6QLj7s8r5aa/AExDGN37UCLlOaeDgtm3kyVnPZO4jUpGAfip223/NO+pcjlMYYMTtbNvspUG88o=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.fricke@collabora.com;
-	dmarc=pass header.from=<sebastian.fricke@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740476448;
-	s=zohomail; d=collabora.com; i=sebastian.fricke@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=XOrdNCeBVmp7JW4IX9rpLDSJz1pZUE//UCPRZc0Tlts=;
-	b=CyP3ttGFWLsPMwoCNjCgrHntmyi4q008g86x4pYjO/tZh0Ncue81briwHJ9nUCUh
-	MN5ZZ7kYQgmJGtFpJ+sWcqnb4gHZn0GB8PDXQNll8FTqTqP1t5B1t5IQamZAQWEoxeN
-	deigPhce8mHbxjVaH1923d4i2J6mLRwXSpcSx6Fw=
-Received: by mx.zohomail.com with SMTPS id 1740476445870556.2785058092115;
-	Tue, 25 Feb 2025 01:40:45 -0800 (PST)
-From: Sebastian Fricke <sebastian.fricke@collabora.com>
-Date: Tue, 25 Feb 2025 10:40:22 +0100
-Subject: [PATCH v7 01/12] media: v4l2-common: Add helpers to calculate
- bytesperline and sizeimage
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQgV0xHc"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-220f048c038so101624705ad.2;
+        Tue, 25 Feb 2025 01:41:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740476475; x=1741081275; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=afOILgA/zHRb8Nw9ui16zGP2yzgeLzRcNXnyvIsurfI=;
+        b=gQgV0xHcs066hJfCuDGQYpTx3bFJY/f6ZF7cKrk6jCvpanyveq+RiHnZfceda0MH3a
+         bsFCvHjEA0t5tvmPK95LA6Z1wJL70cBbIPlsnuiwT9neLOVYkipbSUuJLK44hkANpjDq
+         UbKtzSq1w7y9US1l+4taAjUWjL3GtIk7djLscBpPYBYbKe0RFxIjzh9KYJDuEL1kLgTI
+         lqF60c1oakWWLymZSMjmykRUedb/twoGePkN0r82Jhf7MwYUBaMa0ZwfNE3omKTI7icR
+         XOI3MPETjknbBVOza7gOmtDx28iw4unN0xDmrUPvBlX/k4fYjKIMZQoQw3M3zpXBuZqr
+         rlSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740476475; x=1741081275;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=afOILgA/zHRb8Nw9ui16zGP2yzgeLzRcNXnyvIsurfI=;
+        b=eDLoXsO9YlnsXqW0Q0JAxF7mRuzNzRVTQICJiaIF8WydJEuDQc1lvsKDHjjaF1k5aN
+         pt5yWYWPzkvwT7jlt63jn+0DI6nAztvaSzu9yRXi2GxGqu94f0a+69o3Hky/itbieHRf
+         G8B7zop1+2M1mwsOAE+NzhoSs6/1w8pU7XAR3AsrSvB337yJXdAKk7Fz+yLBDgfxt9Tg
+         3nKdcJr+Sqsnb+ExzCjCzUOxT+Jktz7tAyG7RhSwqkht3LkPKeE2hNzqPDxYTTIy2xzF
+         kDEC08i7MRkkMtPniL7Y5baof2sAP2Z77RiiekeMjxvwLKgjeDJBLA/rt3XyGkd0QVSl
+         wHMg==
+X-Forwarded-Encrypted: i=1; AJvYcCU7/AKFviAEqdISWGM0951PzX+BBbCyRBBbC1bSCaHIIhfMVhoRk1ntpL1+77BmIoz1DBuASfLphHgatYmXTX+H@vger.kernel.org, AJvYcCV4G+jlAhECvhp24Tnq34UupMZngwKjJpPbS8JyESEvHmEfYCEhs+5CwZBg/IpftpmfE+79Fqp0eHPSbsQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIE0kSc2J9pnxvyv1amsstXzBopW7xCLXYVhx38YntfZb4Eayf
+	MX64UNfsVZ7oeR1yEsW3zFNYDePqu30zuA0KHSfM+6MFwOkK/772YBzGNmfZ2wWDQg==
+X-Gm-Gg: ASbGncvRbLy1Kc/fflpBmbuYYItwBpHZOjvrqCh0HI3xyzAZcp0DljRMdc2YtdLueXr
+	ddfSFjrqkJ+nbU+1i/DzLzFD2bHAY+COg2srCj38b9TYk7RoGM+jD28IQt8Zkcp+G8BK3Wr5WHM
+	/0JRlFmDrfYzTySs9n3Vtncba6VUqG0NFJKsYV8gIQ+xbjDHOoPjV9locT2rkxw5yvgJMLB4XPa
+	bClacBK8V6PrmJW0+2eXoNlbx9pwaMkCM20QxZkhMKZo/+zfzrVI+bB/KntJ7mM4DPVMdBljRJ3
+	SpS/6YOc/YqQ91IADqDcHoHXV56c2agtvXVTwBxzndHAVA==
+X-Google-Smtp-Source: AGHT+IFJmZ7Sk5dhvMYx5VBnMk7wHl+pK6YrB7A+OwFAyOenTMOJ9d+agjqzGuYDcyJliI4uA5kqUw==
+X-Received: by 2002:a05:6a21:7a93:b0:1ee:df88:9f80 with SMTP id adf61e73a8af0-1f0fc7795dfmr4290781637.26.1740476474968;
+        Tue, 25 Feb 2025 01:41:14 -0800 (PST)
+Received: from fedora.dns.podman ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7347a6f9e6dsm1065597b3a.64.2025.02.25.01.41.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 01:41:14 -0800 (PST)
+From: Hangbin Liu <liuhangbin@gmail.com>
+To: netdev@vger.kernel.org
+Cc: Jay Vosburgh <jv@jvosburgh.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Simon Horman <horms@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Jianbo Liu <jianbol@nvidia.com>,
+	Jarod Wilson <jarod@redhat.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Cosmin Ratiu <cratiu@nvidia.com>,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hangbin Liu <liuhangbin@gmail.com>
+Subject: [PATCHv2 net 3/3] selftests: bonding: add ipsec offload test
+Date: Tue, 25 Feb 2025 09:40:49 +0000
+Message-ID: <20250225094049.20142-4-liuhangbin@gmail.com>
+X-Mailer: git-send-email 2.46.0
+In-Reply-To: <20250225094049.20142-1-liuhangbin@gmail.com>
+References: <20250225094049.20142-1-liuhangbin@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250225-rkvdec_h264_high10_and_422_support-v7-1-7992a68a4910@collabora.com>
-References: <20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
-In-Reply-To: <20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Hans Verkuil <hverkuil@xs4all.nl>, 
- Boris Brezillon <boris.brezillon@collabora.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev, 
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, 
- Alex Bee <knaerzche@gmail.com>, 
- Nicolas Dufresne <nicolas.dufresne@collabora.com>, 
- Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
- Detlev Casanova <detlev.casanova@collabora.com>, 
- Dan Carpenter <dan.carpenter@linaro.org>, Jonas Karlman <jonas@kwiboo.se>, 
- Christopher Obbard <christopher.obbard@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740476425; l=4939;
- i=sebastian.fricke@collabora.com; s=linux-media; h=from:subject:message-id;
- bh=195spnsrZZZYoE7GJpxYB5yGeOEYBI+wvXl7j9HaYVw=;
- b=KEtBAJL7KLKKy7iIvsAwg2Uxmm5/AqJ0/bquKxBMeaA7QH+iiNIQ1pNS9Ea/7OGK+Y9IUooaSkhV
- rdAU1XXqC3QYfCmQ/XbAXbCXh05JNcvkIo+AakS2W1ke2v2e+Evq
-X-Developer-Key: i=sebastian.fricke@collabora.com; a=ed25519;
- pk=pYXedPwrTtErcj7ERYeo/IpTrpe4QbJuEzSB52fslBg=
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-From: Jonas Karlman <jonas@kwiboo.se>
+This introduces a test for IPSec offload over bonding, utilizing netdevsim
+for the testing process, as veth interfaces do not support IPSec offload.
+The test will ensure that the IPSec offload functionality remains operational
+even after a failover event occurs in the bonding configuration.
 
-Add helper functions to calculate plane bytesperline and sizeimage,
-these new helpers consider bpp div, block width and height when
-calculating plane bytesperline and sizeimage.
-
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Tested-by: Christopher Obbard <chris.obbard@collabora.com>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
 ---
- drivers/media/v4l2-core/v4l2-common.c | 78 +++++++++++++++++------------------
- 1 file changed, 39 insertions(+), 39 deletions(-)
+ .../selftests/drivers/net/bonding/Makefile    |   3 +-
+ .../drivers/net/bonding/bond_ipsec_offload.sh | 155 ++++++++++++++++++
+ .../selftests/drivers/net/bonding/config      |   4 +
+ 3 files changed, 161 insertions(+), 1 deletion(-)
+ create mode 100755 tools/testing/selftests/drivers/net/bonding/bond_ipsec_offload.sh
 
-diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
-index e4b2de3833ee3d440493f94fca5ee2049b013ef0..fdab16b9d481300eecf2202b3930fdf0a97a3023 100644
---- a/drivers/media/v4l2-core/v4l2-common.c
-+++ b/drivers/media/v4l2-core/v4l2-common.c
-@@ -357,6 +357,34 @@ static inline unsigned int v4l2_format_block_height(const struct v4l2_format_inf
- 	return info->block_h[plane];
- }
+diff --git a/tools/testing/selftests/drivers/net/bonding/Makefile b/tools/testing/selftests/drivers/net/bonding/Makefile
+index 2b10854e4b1e..d5a7de16d33a 100644
+--- a/tools/testing/selftests/drivers/net/bonding/Makefile
++++ b/tools/testing/selftests/drivers/net/bonding/Makefile
+@@ -10,7 +10,8 @@ TEST_PROGS := \
+ 	mode-2-recovery-updelay.sh \
+ 	bond_options.sh \
+ 	bond-eth-type-change.sh \
+-	bond_macvlan_ipvlan.sh
++	bond_macvlan_ipvlan.sh \
++	bond_ipsec_offload.sh
  
-+static inline unsigned int v4l2_format_plane_stride(const struct v4l2_format_info *info, int plane,
-+						   unsigned int width)
-+{
-+	unsigned int hdiv = plane ? info->hdiv : 1;
-+	unsigned int aligned_width =
-+		ALIGN(width, v4l2_format_block_width(info, plane));
+ TEST_FILES := \
+ 	lag_lib.sh \
+diff --git a/tools/testing/selftests/drivers/net/bonding/bond_ipsec_offload.sh b/tools/testing/selftests/drivers/net/bonding/bond_ipsec_offload.sh
+new file mode 100755
+index 000000000000..169866b47a67
+--- /dev/null
++++ b/tools/testing/selftests/drivers/net/bonding/bond_ipsec_offload.sh
+@@ -0,0 +1,155 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
 +
-+	return DIV_ROUND_UP(aligned_width, hdiv) *
-+	       info->bpp[plane] / info->bpp_div[plane];
++# IPsec over bonding offload test:
++#
++#  +----------------+
++#  |     bond0      |
++#  |       |        |
++#  |  eth0    eth1  |
++#  +---+-------+----+
++#
++# We use netdevsim instead of physical interfaces
++#-------------------------------------------------------------------
++# Example commands
++#   ip x s add proto esp src 192.0.2.1 dst 192.0.2.2 \
++#            spi 0x07 mode transport reqid 0x07 replay-window 32 \
++#            aead 'rfc4106(gcm(aes))' 1234567890123456dcba 128 \
++#            sel src 192.0.2.1/24 dst 192.0.2.2/24
++#            offload dev bond0 dir out
++#   ip x p add dir out src 192.0.2.1/24 dst 192.0.2.2/24 \
++#            tmpl proto esp src 192.0.2.1 dst 192.0.2.2 \
++#            spi 0x07 mode transport reqid 0x07
++#
++#-------------------------------------------------------------------
++
++lib_dir=$(dirname "$0")
++source "$lib_dir"/../../../net/lib.sh
++algo="aead rfc4106(gcm(aes)) 0x3132333435363738393031323334353664636261 128"
++srcip=192.0.2.1
++dstip=192.0.2.2
++ipsec0=/sys/kernel/debug/netdevsim/netdevsim0/ports/0/ipsec
++ipsec1=/sys/kernel/debug/netdevsim/netdevsim0/ports/1/ipsec
++ret=0
++
++cleanup()
++{
++	modprobe -r netdevsim
++	cleanup_ns $ns
 +}
 +
-+static inline unsigned int v4l2_format_plane_height(const struct v4l2_format_info *info, int plane,
-+						    unsigned int height)
++active_slave_changed()
 +{
-+	unsigned int vdiv = plane ? info->vdiv : 1;
-+	unsigned int aligned_height =
-+		ALIGN(height, v4l2_format_block_height(info, plane));
-+
-+	return DIV_ROUND_UP(aligned_height, vdiv);
++        local old_active_slave=$1
++        local new_active_slave=$(ip -n ${ns} -d -j link show bond0 | \
++				 jq -r ".[].linkinfo.info_data.active_slave")
++        [ "$new_active_slave" != "$old_active_slave" -a "$new_active_slave" != "null" ]
 +}
 +
-+static inline unsigned int v4l2_format_plane_size(const struct v4l2_format_info *info, int plane,
-+						  unsigned int width, unsigned int height)
++test_offload()
 +{
-+	return v4l2_format_plane_stride(info, plane, width) *
-+	       v4l2_format_plane_height(info, plane, height);
++	# use ping to exercise the Tx path
++	ip netns exec $ns ping -I bond0 -c 3 -W 1 -i 0 $dstip >/dev/null
++
++	active_slave=$(ip -n ${ns} -d -j link show bond0 | \
++		       jq -r ".[].linkinfo.info_data.active_slave")
++
++	if [ $active_slave = $nic0 ]; then
++		sysfs=$ipsec0
++	elif [ $active_slave = $nic1 ]; then
++		sysfs=$ipsec1
++	else
++		echo "FAIL: bond_ipsec_offload invalid active_slave $active_slave"
++		ret=1
++	fi
++
++	# The tx/rx order in sysfs may changed after failover
++	if grep -q "SA count=2 tx=3" $sysfs && grep -q "tx ipaddr=$dstip" $sysfs; then
++		echo "PASS: bond_ipsec_offload has correct tx count with link ${active_slave}"
++	else
++		echo "FAIL: bond_ipsec_offload incorrect tx count with link ${active_slave}"
++		ret=1
++	fi
 +}
 +
- void v4l2_apply_frmsize_constraints(u32 *width, u32 *height,
- 				    const struct v4l2_frmsize_stepwise *frmsize)
- {
-@@ -392,37 +420,19 @@ int v4l2_fill_pixfmt_mp(struct v4l2_pix_format_mplane *pixfmt,
- 
- 	if (info->mem_planes == 1) {
- 		plane = &pixfmt->plane_fmt[0];
--		plane->bytesperline = ALIGN(width, v4l2_format_block_width(info, 0)) * info->bpp[0] / info->bpp_div[0];
-+		plane->bytesperline = v4l2_format_plane_stride(info, 0, width);
- 		plane->sizeimage = 0;
- 
--		for (i = 0; i < info->comp_planes; i++) {
--			unsigned int hdiv = (i == 0) ? 1 : info->hdiv;
--			unsigned int vdiv = (i == 0) ? 1 : info->vdiv;
--			unsigned int aligned_width;
--			unsigned int aligned_height;
--
--			aligned_width = ALIGN(width, v4l2_format_block_width(info, i));
--			aligned_height = ALIGN(height, v4l2_format_block_height(info, i));
--
--			plane->sizeimage += info->bpp[i] *
--				DIV_ROUND_UP(aligned_width, hdiv) *
--				DIV_ROUND_UP(aligned_height, vdiv) / info->bpp_div[i];
--		}
-+		for (i = 0; i < info->comp_planes; i++)
-+			plane->sizeimage +=
-+				v4l2_format_plane_size(info, i, width, height);
- 	} else {
- 		for (i = 0; i < info->comp_planes; i++) {
--			unsigned int hdiv = (i == 0) ? 1 : info->hdiv;
--			unsigned int vdiv = (i == 0) ? 1 : info->vdiv;
--			unsigned int aligned_width;
--			unsigned int aligned_height;
--
--			aligned_width = ALIGN(width, v4l2_format_block_width(info, i));
--			aligned_height = ALIGN(height, v4l2_format_block_height(info, i));
--
- 			plane = &pixfmt->plane_fmt[i];
- 			plane->bytesperline =
--				info->bpp[i] * DIV_ROUND_UP(aligned_width, hdiv) / info->bpp_div[i];
--			plane->sizeimage =
--				plane->bytesperline * DIV_ROUND_UP(aligned_height, vdiv);
-+				v4l2_format_plane_stride(info, i, width);
-+			plane->sizeimage = plane->bytesperline *
-+				v4l2_format_plane_height(info, i, height);
- 		}
- 	}
- 	return 0;
-@@ -446,22 +456,12 @@ int v4l2_fill_pixfmt(struct v4l2_pix_format *pixfmt, u32 pixelformat,
- 	pixfmt->width = width;
- 	pixfmt->height = height;
- 	pixfmt->pixelformat = pixelformat;
--	pixfmt->bytesperline = ALIGN(width, v4l2_format_block_width(info, 0)) * info->bpp[0] / info->bpp_div[0];
-+	pixfmt->bytesperline = v4l2_format_plane_stride(info, 0, width);
- 	pixfmt->sizeimage = 0;
- 
--	for (i = 0; i < info->comp_planes; i++) {
--		unsigned int hdiv = (i == 0) ? 1 : info->hdiv;
--		unsigned int vdiv = (i == 0) ? 1 : info->vdiv;
--		unsigned int aligned_width;
--		unsigned int aligned_height;
--
--		aligned_width = ALIGN(width, v4l2_format_block_width(info, i));
--		aligned_height = ALIGN(height, v4l2_format_block_height(info, i));
--
--		pixfmt->sizeimage += info->bpp[i] *
--			DIV_ROUND_UP(aligned_width, hdiv) *
--			DIV_ROUND_UP(aligned_height, vdiv) / info->bpp_div[i];
--	}
-+	for (i = 0; i < info->comp_planes; i++)
-+		pixfmt->sizeimage +=
-+			v4l2_format_plane_size(info, i, width, height);
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(v4l2_fill_pixfmt);
-
++if ! mount | grep -q debugfs; then
++	mount -t debugfs none /sys/kernel/debug/ &> /dev/null
++fi
++
++# setup netdevsim since dummy/veth dev doesn't have offload support
++if [ ! -w /sys/bus/netdevsim/new_device ] ; then
++	modprobe -q netdevsim
++	if [ $? -ne 0 ]; then
++		echo "SKIP: can't load netdevsim for ipsec offload"
++		exit $ksft_skip
++	fi
++fi
++
++trap cleanup EXIT
++
++setup_ns ns
++ip -n $ns link add bond0 type bond mode active-backup miimon 100
++ip -n $ns addr add $srcip/24 dev bond0
++ip -n $ns link set bond0 up
++
++ifaces=$(ip netns exec $ns bash -c '
++	sysfsnet=/sys/bus/netdevsim/devices/netdevsim0/net/
++	echo "0 2" > /sys/bus/netdevsim/new_device
++	while [ ! -d $sysfsnet ] ; do :; done
++	udevadm settle
++	ls $sysfsnet
++')
++nic0=$(echo $ifaces | cut -f1 -d ' ')
++nic1=$(echo $ifaces | cut -f2 -d ' ')
++ip -n $ns link set $nic0 master bond0
++ip -n $ns link set $nic1 master bond0
++
++# create offloaded SAs, both in and out
++ip -n $ns x p add dir out src $srcip/24 dst $dstip/24 \
++    tmpl proto esp src $srcip dst $dstip spi 9 \
++    mode transport reqid 42
++
++ip -n $ns x p add dir in src $dstip/24 dst $srcip/24 \
++    tmpl proto esp src $dstip dst $srcip spi 9 \
++    mode transport reqid 42
++
++ip -n $ns x s add proto esp src $srcip dst $dstip spi 9 \
++    mode transport reqid 42 $algo sel src $srcip/24 dst $dstip/24 \
++    offload dev bond0 dir out
++
++ip -n $ns x s add proto esp src $dstip dst $srcip spi 9 \
++    mode transport reqid 42 $algo sel src $dstip/24 dst $srcip/24 \
++    offload dev bond0 dir in
++
++# does offload show up in ip output
++lines=`ip -n $ns x s list | grep -c "crypto offload parameters: dev bond0 dir"`
++if [ $lines -ne 2 ] ; then
++	echo "FAIL: bond_ipsec_offload SA offload missing from list output"
++	ret=1
++fi
++
++# we didn't create a peer, make sure we can Tx by adding a permanent neighbour
++# this need to be added after enslave
++ip -n $ns neigh add $dstip dev bond0 lladdr 00:11:22:33:44:55
++
++# start Offload testing
++test_offload
++
++# do failover
++ip -n $ns link set $active_slave down
++slowwait 5 active_slave_changed $active_slave
++test_offload
++
++# make sure offload get removed from driver
++ip -n $ns x s flush
++ip -n $ns x p flush
++line0=$(grep -c "SA count=0" $ipsec0)
++line1=$(grep -c "SA count=0" $ipsec1)
++if [ $line0 -ne 1 -o $line1 -ne 1 ]  ; then
++	echo "FAIL: bond_ipsec_offload SA not removed from driver"
++	ret=1
++else
++	echo "PASS: bond_ipsec_offload SA removed from driver"
++fi
++
++exit $ret
+diff --git a/tools/testing/selftests/drivers/net/bonding/config b/tools/testing/selftests/drivers/net/bonding/config
+index dad4e5fda4db..054fb772846f 100644
+--- a/tools/testing/selftests/drivers/net/bonding/config
++++ b/tools/testing/selftests/drivers/net/bonding/config
+@@ -9,3 +9,7 @@ CONFIG_NET_CLS_FLOWER=y
+ CONFIG_NET_SCH_INGRESS=y
+ CONFIG_NLMON=y
+ CONFIG_VETH=y
++CONFIG_INET_ESP=y
++CONFIG_INET_ESP_OFFLOAD=y
++CONFIG_XFRM_USER=m
++CONFIG_NETDEVSIM=m
 -- 
-2.25.1
+2.46.0
 
