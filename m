@@ -1,126 +1,139 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380DE25EF8A;
-	Tue, 25 Feb 2025 13:40:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26FE4267AE5;
+	Tue, 25 Feb 2025 13:41:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740490824; cv=none; b=OpUnYkcCwYfeiMST7mr0AAwwFKaNKvaF0M+qVHxYJaEWk9d0r041ueGDELbaznRj3U1JYMgKl2wSh9PBaYV1u/MpngLa7goBs1g08lG+ntsa8txhrTsw27K7w8ayxE5wV3TxaBslb4bB89k8r0BOuTbFKebs1YIIy7CCjrQk9do=
+	t=1740490873; cv=none; b=movXY7DOQGC4jg+ifmkaedh5vhMwTpuVY6ADqndSTwn2rx2yhXtf2n8O93BWVTDBLW8GOHkYS6LlQ9r+ttmoBCGeLAB2nZWNwYoxqAymRWoqzVw4Jtcc0Gqej483iC45g7O57JLa6/rBMLknB46R8Q3V65jxjFk3Xn7N/pDqTew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740490824; c=relaxed/simple;
-	bh=ZHfwPlIcEqwwyokGZO5UWjLSpzt2Pib8HNJGFAPJi3w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PJl6hefw3ufbAB7oj5end05MdhcTy0dQENBNUUIZQen9eyOSbKbWCoh5BlIPFzSwe09hxtsdNQEUG6jSjmNrsEhteB4Ea+R+Zg0feAEiRWoZkxIY636gKzfRQkla/C/BQVdBElnmAy/p9WXrVgJbmT7Q7ae7DsJSAcVFiJG2cv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gr2KeRKs; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740490873; c=relaxed/simple;
+	bh=8o2HtVC4FM1XL6kCNAFsNzIUp3tYpuDgORl59KzI2dQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sh3VGMv8nBIA8qbhZ3asOynUZ4H05Mz3PD02ddp2fnWM7GAN0pEtK740GUo5hMzRI1JDi3xP8ptIIwj9jPXYR0ZDt53pDktnnSEAo91ELUGJUqsrBcOlJQ2UyxVx7D4BAbXVKn7G+ghjT9NxtZv37oz6y0p1f6omLZrSetmx678=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=aABty445; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gr2KeRKs"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-220c92c857aso94659335ad.0;
-        Tue, 25 Feb 2025 05:40:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740490822; x=1741095622; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=btIzpaiXBm39xMpzgFyr6PPx6n79OgifTZ30SVyZSrU=;
-        b=gr2KeRKspfEAm9ZC9v0SaxGrUAibKYMYD4TdjYbIBtZ4h0oIBT3qLvKvbFd+FgY9KQ
-         yaex0aNCSYKV2KE1NHTf/ITW5by8g0ggTY6GbBb3/V2AL6O5+v3TW04TcwRWAb8IAPzN
-         fE9toXEsl6lXarLtpe2slrerEh/OXt9+MK/sIQeFpt+nqEAabmrJDSEvVofEOUVrLwTQ
-         dHfMKqDh1inD+t/l1iUEH95XW+tUgEFKy9t55V2wUgJbzeewvVvHUroFY+GucgzhgxbA
-         Ny/xuiY1oF4cyOH58wPIEXE3xF0GeE+ksKCkwWaoyDM/+kP6RrSx2BNvaGiuqd6l45/C
-         rzBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740490822; x=1741095622;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=btIzpaiXBm39xMpzgFyr6PPx6n79OgifTZ30SVyZSrU=;
-        b=Wp/RnX44uH4Er75gPQnVBIoI8fYuFhDCA2XIHg3nULbTcNPPPpt29TucIILL1jo3oS
-         d8FAQ5Z6UyyW0KGGzoL+FYQKWd3vFG0ZDS0tvNHkFzkYWtQO3hK7avmFb5F8SYT7OLvs
-         emexeJ9ETiHBvNgGLOFtpx15BX4SSrZfhJrSOMIAKCCEd4TNsusK5838wh62PqH/Ew0c
-         7oslPzueX6hONtwXHxzC+pOL6vhVA1OW9WnZBrxk6WEIr/kv/NnDvCV40na2OS1b3T0q
-         LhyXKbyITnEl9Xr3SsEaTeSDnDj53J/82LCXcUgqpn23fhAcrcgyZSIkvEbf911he3/h
-         YB5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUktf77P8IIR+4TS6RhriIwCIMWHTDZ7aJFFtn1WWfWZtG/Q8yGnrofC+WtUIfuR6nprGYGrTSHn+G7@vger.kernel.org, AJvYcCWVoZAQtZHENVVmTRE+oJWhuGPOiiXpHEhNA4EFVUcaE/47d5SIjW3dRYt1mdynrtNSjhFIc4RsIKB/qp4sq3akNA==@vger.kernel.org, AJvYcCWtxSFP6dc+9pjWLrqjLrGFWRgRHz6Y+hJQKNX3lID8Hm0c8RPID4++wBFuL2DzdW7h7GXMQz4mcR7ySobP@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTUs9mBqXjn40R+9bCvJGrzlGvPqDIB6aYqr/zOMxzTykMDChD
-	pVbVxSJUu4aFU4geztwQ9mEHU+oHdyi1o/QJ/UBtY3YxO9Q2UCc4PtOA4WGOD3EkdIgpa1er5Qa
-	5ca6egYwiotsIzYo2VO1wJbBxLhU=
-X-Gm-Gg: ASbGnct/KsFrMkHe9Vr+9Le0b/8MZ3oT4WQYQUq63ONic2eWCrnD4017fdUHDC00ufZ
-	zr4CXhc7EWW2TsDNeyKmeENfWjH1VAPobFY55F1fzrZ2wpyMuCXlQ4fXzDkrWO3I3msyDdf0NKs
-	kB/hPx
-X-Google-Smtp-Source: AGHT+IEqvx+vLUoWU+bH7g7MTRR7upTwyq8plc/LIRpW15G1pS1TD1Y8exEPj6fQZzzsjKBHvHSHg/l/PmukuoidDeo=
-X-Received: by 2002:a17:902:d4cf:b0:21f:6546:9adc with SMTP id
- d9443c01a7336-2218c3f4333mr351935475ad.13.1740490822321; Tue, 25 Feb 2025
- 05:40:22 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="aABty445"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=jKrGQQamhJ8YtplUcRQjmzSHfY9OrteybnOt/SSElS0=; b=aABty445XXKeIao5C45E3biwF2
+	EfP7YysQoO7WNpL550cbNMOlSyTc16oMQKSTLvRn7FkdprFZnlb9qTX1BRS4OMTMLi48L6RVHHun0
+	foT+ZyHpEiHco8U/j17i7B+avvjInmo+Nap3pTJptLscI68Uj6tmH22FjLAF7TsX+rMk=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tmvBI-00HWgW-Ue; Tue, 25 Feb 2025 14:41:04 +0100
+Date: Tue, 25 Feb 2025 14:41:04 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: davem@davemloft.net, Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
+	Simon Horman <horms@kernel.org>,
+	Romain Gantois <romain.gantois@bootlin.com>,
+	Antoine Tenart <atenart@kernel.org>,
+	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+	Sean Anderson <sean.anderson@linux.dev>,
+	=?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>
+Subject: Re: [PATCH net-next v2 1/2] net: phy: sfp: Add support for SMBus
+ module access
+Message-ID: <6ff4a225-07c0-40f6-9509-c4fa79966266@lunn.ch>
+References: <20250225112043.419189-1-maxime.chevallier@bootlin.com>
+ <20250225112043.419189-2-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250225102005.408773-1-daniel.baluta@nxp.com>
- <20250225102005.408773-3-daniel.baluta@nxp.com> <78e60d723c27b7fa0f03bc6a74f6ad37d6508734.camel@pengutronix.de>
-In-Reply-To: <78e60d723c27b7fa0f03bc6a74f6ad37d6508734.camel@pengutronix.de>
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Date: Tue, 25 Feb 2025 15:41:58 +0200
-X-Gm-Features: AWEUYZkKeH8Ee9X0dKf1ks0eIJRo2-c4LR6sVRs9-5VD4M6vPScOpUqA3j5lyUI
-Message-ID: <CAEnQRZBL+r2-CRDszK54SD_8E9=1QRKRj3_YDHsM7YetKMcs_w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/8] dt-bindings: dsp: fsl,dsp: Add resets property
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Daniel Baluta <daniel.baluta@nxp.com>, robh@kernel.org, krzk+dt@kernel.org, 
-	shawnguo@kernel.org, mathieu.poirier@linaro.org, conor+dt@kernel.org, 
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-remoteproc@vger.kernel.org, 
-	andersson@kernel.org, Frank.Li@nxp.com, peng.fan@nxp.com, 
-	laurentiu.mihalcea@nxp.com, iuliana.prodan@nxp.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225112043.419189-2-maxime.chevallier@bootlin.com>
 
-Hello Philipp,
+On Tue, Feb 25, 2025 at 12:20:39PM +0100, Maxime Chevallier wrote:
+> The SFP module's eeprom and internals are accessible through an i2c bus.
+> However, all the i2c transfers that are performed are SMBus-style
+> transfers for read and write operations.
+> 
+> It is possible that the SFP might be connected to an SMBus-only
+> controller, such as the one found in some PHY devices in the VSC85xx
+> family.
+> 
+> Introduce a set of sfp read/write ops that are going to be used if the
+> i2c bus is only capable of doing smbus byte accesses.
+> 
+> As Single-byte SMBus transaction go against SFF-8472 and breaks the
+> atomicity for diagnostics data access, hwmon is disabled in the case
+> of SMBus access.
+> 
+> Moreover, as this may cause other instabilities, print a warning at
+> probe time to indicate that the setup may be unreliable because of the
+> hardware design.
+> 
+> Tested-by: Sean Anderson <sean.anderson@linux.dev>
+> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> ---
+> 
+> V2: - Added Sean's tested-by
+>     - Added a warning indicating that operations won't be reliable, from
+>       Russell and Andrew's reviews
+>     - Also added a flag saying we're under a single-byte-access bus, to
+>       both print the warning and disable hwmon.
+> 
+>  drivers/net/phy/sfp.c | 79 +++++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 73 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
+> index 9369f5297769..6e9d3d95eb95 100644
+> --- a/drivers/net/phy/sfp.c
+> +++ b/drivers/net/phy/sfp.c
+> @@ -282,6 +282,7 @@ struct sfp {
+>  	unsigned int rs_state_mask;
+>  
+>  	bool have_a2;
+> +	bool single_byte_access;
+>  
+>  	const struct sfp_quirk *quirk;
+>  
+> @@ -690,14 +691,70 @@ static int sfp_i2c_write(struct sfp *sfp, bool a2, u8 dev_addr, void *buf,
+>  	return ret == ARRAY_SIZE(msgs) ? len : 0;
+>  }
+>  
+> -static int sfp_i2c_configure(struct sfp *sfp, struct i2c_adapter *i2c)
+> +static int sfp_smbus_read(struct sfp *sfp, bool a2, u8 dev_addr, void *buf,
 
-Thanks for your comments!
+Maybe call this sfp_smbus_byte_read(), leaving space for
+sfp_smbus_word_read() in the future.
 
-> The DAP core reset is mentioned in the commit message. Why is it
-> missing here? After reading the discussion in [1], I'd expect both the
-> stall and the (core) reset signal to be documented, something like:
+> +			  size_t len)
+>  {
+> -	if (!i2c_check_functionality(i2c, I2C_FUNC_I2C))
+> -		return -EINVAL;
+> +	u8 bus_addr = a2 ? 0x51 : 0x50;
+> +	union i2c_smbus_data smbus_data;
+> +	u8 *data = buf;
+> +	int ret;
+> +
+> +	while (len) {
+> +		ret = i2c_smbus_xfer(sfp->i2c, bus_addr, 0,
+> +				     I2C_SMBUS_READ, dev_addr,
+> +				     I2C_SMBUS_BYTE_DATA, &smbus_data);
+> +		if (ret < 0)
+> +			return ret;
 
-There is no reset controller driver for DAP area yet. We manipulate
-the bits directly by
-remapping the DAP address space inside remoteproc driver.
-
-See for example: drivers/remoteproc/imx_dsp_rproc.c
-
-/* Reset function for DSP on i.MX8MP */
-static int imx8mp_dsp_reset(struct imx_dsp_rproc *priv)
-{
-=C2=BB       void __iomem *dap =3D ioremap_wc(IMX8M_DAP_DEBUG,
-IMX8M_DAP_DEBUG_SIZE);
-=C2=BB       int pwrctl;
-
-=C2=BB       /* Put DSP into reset and stall */
-=C2=BB       pwrctl =3D readl(dap + IMX8M_DAP_PWRCTL);
-=C2=BB       pwrctl |=3D IMX8M_PWRCTL_CORERESET;
-=C2=BB       writel(pwrctl, dap + IMX8M_DAP_PWRCTL);
+Isn't this the wrong order? You should do the upper byte first, then
+the lower?
 
 
-If we agree that this is the right way to go, the next step would be
-to create a new reset
-controller driver for DAP area.
+    Andrew
 
-I want to keep this as a follow up patch in order to not compilate
-this patch series even more.
-
-<snip>
-
-> >        memory-region =3D <&dsp_vdev0buffer>, <&dsp_vdev0vring0>,
-> >                        <&dsp_vdev0vring1>, <&dsp_reserved>;
-> > -      fsl,dsp-ctrl =3D <&audio_blk_ctrl>;
->
-> Is there nothing else in this range that will have to be controlled by
-> the DSP driver in the future, such as the IMPWIRE register or the
-> XOCDMODE[OCDHALTONRESET] bit?
-
-We are internally running SOF for couple of years now and we didn't
-need any of these bits.
+---
+pw-bot: cr
