@@ -1,116 +1,109 @@
-Received: from ganesha.gnumonks.org (ganesha.gnumonks.org [213.95.27.120])
+Received: from pv50p00im-ztdg10012001.me.com (pv50p00im-ztdg10012001.me.com [17.58.6.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805A526B2B8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C82F26B2CE
 	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.27.120
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740491920; cv=none; b=MM/HZPP5Jyx8KptfHyTUVgR0pT+GU1/r2BKwn5vMPhgO3Xj0ErsGVUUhHyZ09XvoRynE8K5s+P+dXGDDiQIb05x+nb2IkgNwEXrXC3n/G8x7pt/CIMQ6WSz1OTI7GazmF2l5bNKBiM4DFKhLR0ySRc2YszZsI4U1nJk6FirbHpU=
+	t=1740491919; cv=none; b=lFCo+gY2wYvqCrV0jSVTukFczvuDH+UbCNYFvefJXrpZjkFRGcRc8f9B5fzXm5KUuYkbLXRssJcQoxqsWMQSpmaBNzsc6HAsxpFJ08bKWc97hhJTIsaqq6ehH9f0WZpjw0Z8zw0SUvj7J2H1ADdt1UD/9BYUNa9H9J8SZ8spetY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740491920; c=relaxed/simple;
-	bh=9Ry8UCXH97A+xa9D+Tan6hCfWl3wRKXIOp8GynzNJkk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vd68sIBohzRGd1FylRHx8UjxtLTuFrRZP+i/rIfoGgFhtXdheCSagYb79crOsyu3IglHeWotfxD7RCemiF/DBlI/MFnVz2jp0IpJxdaWnLY8M0t5ypKVF7NohUzxh4kg/6tDkehXQwlIfWIfMRA3YmNTWz1opX9ru9XFFgtqOj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gnumonks.org; spf=pass smtp.mailfrom=gnumonks.org; arc=none smtp.client-ip=213.95.27.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gnumonks.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnumonks.org
-Received: from uucp by ganesha.gnumonks.org with local-bsmtp (Exim 4.94.2)
-	(envelope-from <laforge@gnumonks.org>)
-	id 1tmvSD-003lBM-TC; Tue, 25 Feb 2025 14:58:34 +0100
-Received: from laforge by nataraja.fritz.box with local (Exim 4.98)
-	(envelope-from <laforge@gnumonks.org>)
-	id 1tmvRy-00000000a9g-3PWX;
-	Tue, 25 Feb 2025 14:58:18 +0100
-Date: Tue, 25 Feb 2025 14:58:18 +0100
-From: Harald Welte <laforge@gnumonks.org>
-To: "Dr. David Alan Gilbert" <linux@treblig.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, david@rowetel.com
-Subject: Re: users of drivers/misc/echo ?
-Message-ID: <Z73MevharqkC5dt8@nataraja>
-References: <Z7tZhYET41DAoHVf@gallifrey>
- <07afd3cb-3ab1-4dc9-b0c1-3fef2d52f60b@app.fastmail.com>
- <Z724l3DFJbGevtPF@nataraja>
- <Z72_EnXyHoDACRk5@gallifrey>
+	s=arc-20240116; t=1740491919; c=relaxed/simple;
+	bh=I6vIdo5caMDfgodjkmCj0aPi0uiu+W/a0z9fSb5kuUw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=fpog1Q01VRZEzMtorQ9dD+XU6AgzOxyJ002wBr3roCk/jPOr2q7DHCrKwCNYNwSA6/yi73Mzdd39G1uxSxPPGCrkg9MrCAlhUVorBoJc9ov17nr6n+oKLHe6Gpg4XZDOdU56du/O7HBER4ZpNtDGeghUE26vG8NRInA+9pvhy3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=yUEHRhis; arc=none smtp.client-ip=17.58.6.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="yUEHRhis"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=U8YUCglIDwUVoRlxt3ZLEgCNvlGpMK2uk9RfQ5HAMgo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
+	b=yUEHRhishJt/22Ui8i/ValjZ88t8uIgIt5fbv58NR5BsvGbPUMX84Oea4m/qC3wup
+	 KsyDp88IM184WepB2U1IgakapXxNegJDmuEsyvj6mkWEBKwK9wMCb2768i6K4NNiT4
+	 PMZwZpjtHXlWO8vf5RRev+Y1nONco5jc4iOcBnbUONodCaVZt0Xk4aIiafGZ63HyFZ
+	 8lSkwH57eZAEjirQ5XPq0swTphMc553i248nexmSeo3Rfu/W4pLXydEW+HTcgkr0mO
+	 aMJUQagJy1CU+VTdwHau/2thxsyeC/u1WzILTXdECFdz+tEy1Oi4erwcOrQjVpmj/C
+	 wJC97g6dy3gPA==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-ztdg10012001.me.com (Postfix) with ESMTPSA id 7DE73A028B;
+	Tue, 25 Feb 2025 13:58:31 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Date: Tue, 25 Feb 2025 21:58:06 +0800
+Subject: [PATCH v4 1/2] of: property: Increase NR_FWNODE_REFERENCE_ARGS
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z72_EnXyHoDACRk5@gallifrey>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250225-fix_arg_count-v4-1-13cdc519eb31@quicinc.com>
+References: <20250225-fix_arg_count-v4-0-13cdc519eb31@quicinc.com>
+In-Reply-To: <20250225-fix_arg_count-v4-0-13cdc519eb31@quicinc.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Daniel Scally <djrscally@gmail.com>, 
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Danilo Krummrich <dakr@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Saravana Kannan <saravanak@google.com>
+Cc: Zijun Hu <zijun_hu@icloud.com>, linux-acpi@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Zijun Hu <quic_zijuhu@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-ORIG-GUID: 96cRp-a3OAKXGHWqE5_OEgQWo7UnDmYz
+X-Proofpoint-GUID: 96cRp-a3OAKXGHWqE5_OEgQWo7UnDmYz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-25_04,2025-02-25_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=940
+ suspectscore=0 phishscore=0 adultscore=0 malwarescore=0 bulkscore=0
+ clxscore=1015 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2502250096
+X-Apple-Remote-Links: v=1;h=KCk=;charset=UTF-8
 
-Hi Dave, Arnd, Greg,
+From: Zijun Hu <quic_zijuhu@quicinc.com>
 
-On Tue, Feb 25, 2025 at 01:01:06PM +0000, Dr. David Alan Gilbert wrote:
-> > However, those DAHDI-using deployments that I personally am familiar
-> > with do not use the software echo canceller discussed here.  On the
-> > other hand, I'm quite certain that there are many PBX/IVR related
-> > systems out there (unrelated to my area of cellular or trunked radio)
-> > that would still use the echo canceller discussed here.
+Currently, the following two macros have different values:
 
-I have to correct myself here:  "that would still use software echo cancellation".
+// The maximal argument count for firmware node reference
+ #define NR_FWNODE_REFERENCE_ARGS	8
+// The maximal argument count for DT node reference
+ #define MAX_PHANDLE_ARGS 16
 
-As I stated before, in "my" deployments, the echo canceller is not used
-and hence I'm not super familiar with it.  My use cases either don't
-need echo cancellation, or use hardware echo cancellation.
+It may cause firmware node reference's argument count out of range if
+directly assign DT node reference's argument count to firmware's.
 
-Revisiting the DAHDI source code as a result of this thread: There are
-actually several different software echo cancellation implementations,
-only one of which (oslec) is using the drivers/misc/echo.
+drivers/of/property.c:of_fwnode_get_reference_args() is doing the direct
+assignment, so may cause firmware's argument count @args->nargs got out
+of range, namely, in [9, 16].
 
-> Some questions:
-> 
-> 1) I see drivers/dahdi/dahdi_echocan_oslec.c
-> 
-> /* Fix this if OSLEC is elsewhere */
-> #include "../staging/echo/oslec.h"
-> //#include <linux/oslec.h>
-> 
-> now that moved to drivers/misc in 2014 by Greg's
-> 6e2055a9e56e ("staging: echo: move to drivers/misc/")
-> 
-> So is most of this on ancient kernels or do people
-> actually use modern stuff?
+Fix by increasing NR_FWNODE_REFERENCE_ARGS to 16 to meet DT requirement.
+Will align both macros later to avoid such inconsistency.
 
-Actually, looking at DAHDI, I really don't think anyone is still using
-the dahdi_echocan_oslec code.  It is disabled by default and only built
-if explicitly enabled by the user, and indeed if anyone did that it
-would fail to build for any kernels that have moved it out of staging.
+Fixes: 3e3119d3088f ("device property: Introduce fwnode_property_get_reference_args")
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+---
+ include/linux/fwnode.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 2) I see there is a fir.h that's different from the kernels
-> drivers/misc/echo/fir.h  doesn't that cause problems?
-> Should one get updated from the other somehow?
-
-I'll not investigate that given the above determination.
-
-> 3) Any idea why it's never been upstreamed?
-
-I can only speculate, but I guess it was never a strong priority for the authors,
-and indeed likely the code would have had to undergo quite some changes.
-
-DAHDI is clearly well beyond its peak user base these days, and I would
-expect the amount of effort into mainlining it, together with the
-associated risk of introducing bugs during required refactoring simply
-doesn't make it an attractive proposition.  Also, given that userspace
-applications for it have been around for decades, it would be impossible
-to address any upstreaming related change requests without rendering
-those applications incompatible.
-
-So I'd really not bother at this point anymore.  The few adjustments
-I/we had to make to keep it building + working with recent kernels over
-the past few years are minimal, and mostly trivial stuff like minor
-kernel API changes.  In the end, DAHDI doesn't interact with a lot of
-other kernel.  It talks to the hardware via its own device drivers, and
-it talks to userspace programs via character devices.  So unless some
-core kernel memory allocator, or PCI or USB device drive APIs or
-character device API changes, we're mostly good.
+diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+index 0731994b9d7c832cae8a30063f3a64194e4f19aa..6fa0a268d53827a376d7f258c6194a2a088e4325 100644
+--- a/include/linux/fwnode.h
++++ b/include/linux/fwnode.h
+@@ -91,7 +91,7 @@ struct fwnode_endpoint {
+ #define SWNODE_GRAPH_PORT_NAME_FMT		"port@%u"
+ #define SWNODE_GRAPH_ENDPOINT_NAME_FMT		"endpoint@%u"
+ 
+-#define NR_FWNODE_REFERENCE_ARGS	8
++#define NR_FWNODE_REFERENCE_ARGS	16
+ 
+ /**
+  * struct fwnode_reference_args - Fwnode reference with additional arguments
 
 -- 
-- Harald Welte <laforge@gnumonks.org>          https://laforge.gnumonks.org/
-============================================================================
-"Privacy in residential applications is a desirable marketing option."
-                                                  (ETSI EN 300 175-7 Ch. A6)
+2.34.1
+
