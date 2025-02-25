@@ -1,82 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FDB25A2D4;
-	Tue, 25 Feb 2025 09:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E0E2627E6;
+	Tue, 25 Feb 2025 09:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740475975; cv=none; b=uucsJGPmPxMLsqSooFfzSa+gGodm0o6v/Bf7DmK3ujS6Ez9MYEzDC3Mv/ogXBrCNhnugrgp1OaKIMN1sZQMpSpQZ2hZXrK/uz1NWP2pNDAQokhX6BCnfqofBsLcYJluillEfcmhj1MusEO3EXqvaMt+WS+eb5CgersiGUyuBlcs=
+	t=1740475978; cv=none; b=eb7RX7OjuzfAmBp1EVH6Ui4fT7xKunkudrlc7os9D82bcivaKuuE8v6vHYDRuaJFooIU6GWpSeB+3N8o7Q4ajqOTGTwFR/tMGgCZ7Ta1pG5UQ+hydK09ME5jViDcCC1G7hXtCPtLN06hqYvMazmIRWjfSvQAgLdphiXunNIn/nY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740475975; c=relaxed/simple;
-	bh=3vyiDv0/EKdVyd0wOgOhy6MPHW+txdIZfyH6UME8zuk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ce7k2/nAhyZJ+DG7lQQvo7TZNS5r7oAa0gczATR/FVKtZ7LCMYMJHXL1PhUsrTKTOrPNlgF2qKODCS5FG0ZYzceg6RjcXy/avWLVTTQx420WFRJRWY4UfcC3EyaUb9NaKKz3E1dHHakG1ewgpKzrt5CxUKr2ETHTxs3bcublbxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WTg4IHMt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740475978; c=relaxed/simple;
+	bh=VO+G51UF3rWRuWcNfxbs+DYejBc+3+YybdTX2xscr6w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BR/+yPotzx9VK5yk70G/f0Y91XXortIGYZKrEA+XHB6OP33Ikgqxuq39HM4Ahcj5BSaxChreeW6AfViO6UVt+y3Q/yLWWk2BkoIvhrjZllAnatFzuLjawK+S4di6kacS8ASuCekgh+5O/7aClsN3AKbVD83BrWA4Wj32tbLAVR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UvuoQ0WY; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WTg4IHMt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E76A3C4CEDD;
-	Tue, 25 Feb 2025 09:32:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740475974;
-	bh=3vyiDv0/EKdVyd0wOgOhy6MPHW+txdIZfyH6UME8zuk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WTg4IHMtfkQSENr4GaeEwK1qPGxq3SFQ/VcVeBODoOfGifDu6oqkyV4sRbbvwI+CV
-	 sptFLJvB0E3/pfZAnyYHQKelDBdRO7dzUW7ZRYTDOgznpfLguKeM+JRWMkRR6vTOQG
-	 cIyLDMlmUdvK4Pg+4rVk2oQposlfnB+dOk4bfxmelSbJ6PnOsZWekKemFedP6KQieN
-	 Np8OyE/kBmXxWeFMy2K26KTCQRBKi7jK5EIRyPvXM+n+VqKBRMowy0uKsTxNT3HvEZ
-	 fYZWGRU79xZceC46eUNXrbiobrgXENzeq1WagvLjarHei4cq2jXBEMKTTZjEBD/h8M
-	 lEn2j9rVap0lA==
-Date: Tue, 25 Feb 2025 09:32:49 +0000
-From: Simon Horman <horms@kernel.org>
-To: Jiayuan Chen <jiayuan.chen@linux.dev>
-Cc: Jakub Kicinski <kuba@kernel.org>, bpf@vger.kernel.org,
-	netdev@vger.kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, pabeni@redhat.com, ricardo@marliere.net,
-	viro@zeniv.linux.org.uk, dmantipov@yandex.ru,
-	aleksander.lobakin@intel.com, linux-ppp@vger.kernel.org,
-	linux-kernel@vger.kernel.org, mrpre@163.com,
-	syzbot+853242d9c9917165d791@syzkaller.appspotmail.com
-Subject: Re: [PATCH net-next v1 1/1] ppp: Fix KMSAN warning by initializing
- 2-byte header
-Message-ID: <20250225093249.GI1615191@kernel.org>
-References: <20250218133145.265313-1-jiayuan.chen@linux.dev>
- <20250218133145.265313-2-jiayuan.chen@linux.dev>
- <20250220152703.619bf1c9@kernel.org>
- <rqdpj4pdxkiad7amqp7qzsrdtgy3i5beqpz7gsrjy4dwkmwg2x@3bsn7svbawic>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UvuoQ0WY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740475978; x=1772011978;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=VO+G51UF3rWRuWcNfxbs+DYejBc+3+YybdTX2xscr6w=;
+  b=UvuoQ0WY8M4fGLC642CTCiXlbmmbe105mLrre1/eaNnubHz2rJ2y5Yl6
+   QHw3D8x0ZzZKdCAtLfIELFrFCn3L2NSLIGnuTNXOOnlXjE0zGXLlNEqC0
+   JgPqofpDmbrVUTtDI+fz8Lrvtd181Cb9HbWnOTyCpJr5+UfjMsNrRmiHl
+   OqXfPDoENDNmOeIXsslh2CZi0azBv4/bEuQ2yXvSRiSn4iulHQDBDTd5A
+   SD+GdkmnEd5nlOjRcB/PfElIaayFLRfpELGs6yRhJF0PefxnCdfridljz
+   Di80E3wWmffF1VK1WqmLatOXMX/5b4jNLOtzM5iXlLJEmZYiW4zR+c9Sn
+   g==;
+X-CSE-ConnectionGUID: GwkcIcHKQpKkEn9bibolFA==
+X-CSE-MsgGUID: f00gF9OfS+2N1rRlSq09xg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="58693237"
+X-IronPort-AV: E=Sophos;i="6.13,313,1732608000"; 
+   d="scan'208";a="58693237"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 01:32:57 -0800
+X-CSE-ConnectionGUID: KnO1Mn95TQ+LDjIm/0Qzxg==
+X-CSE-MsgGUID: kpGWlHU+T1qtwXP4ZTc38g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
+   d="scan'208";a="121581434"
+Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
+  by orviesa005.jf.intel.com with ESMTP; 25 Feb 2025 01:32:54 -0800
+Message-ID: <7a59ca83-133a-4cd1-b7b4-1e70aa7fb746@linux.intel.com>
+Date: Tue, 25 Feb 2025 11:33:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <rqdpj4pdxkiad7amqp7qzsrdtgy3i5beqpz7gsrjy4dwkmwg2x@3bsn7svbawic>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] usb: xhci: Unify duplicate inc_enq() code
+To: =?UTF-8?Q?Micha=C5=82_Pecio?= <michal.pecio@gmail.com>
+Cc: Mathias Nyman <mathias.nyman@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250220234355.2386cb6d@foxbook>
+ <20250220234719.5dc47877@foxbook>
+ <d59a6694-e0e7-46b7-874e-0c6acd8c9126@linux.intel.com>
+ <20250224004542.5861d4dc@foxbook>
+ <91e9b2f6-d9f6-460e-965a-bf2d5b13878c@linux.intel.com>
+ <20250224220148.4b91de02@foxbook>
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <20250224220148.4b91de02@foxbook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 21, 2025 at 09:48:33AM +0800, Jiayuan Chen wrote:
-> On Thu, Feb 20, 2025 at 03:27:03PM -0800, Jakub Kicinski wrote:
-> > On Tue, 18 Feb 2025 21:31:44 +0800 Jiayuan Chen wrote:
-> > > -		*(u8 *)skb_push(skb, 2) = 1;
-> > > +		*(u16 *)skb_push(skb, 2) = 1;
-> > 
-> > This will write the 1 to a different byte now, on big endian machines.
-> > Probably doesn't matter but I doubt it's intentional?
-> > -- 
-> > pw-bot: cr
-> You are correct that I assigned the value in a way that produces different
-> data on big-endian and little-endian systems, although it doesn't cause
-> any issues.
-> I think it's better to assign it correctly according to the corresponding
-> header and add more comments to avoid confusion for other developers in
-> the future.
+On 24.2.2025 23.01, Michał Pecio wrote:
+> On Mon, 24 Feb 2025 13:49:29 +0200, Mathias Nyman wrote:
+>> Interesting, I wonder if setting the link TRB chain bit would
+>> also help with the TRB prefetch issue on VIA VL805 hosts.
+> 
+> Good idea, but unfortunately not.
+> 
+> With xhci_hcd quirks=1, which is XHCI_LINK_TRB_QUIRK:
+> 
+> [    0.543465] pci 0000:0a:00.0: [1106:3483] type 00 class 0x0c0330 PCIe Endpoint
+> 
+> [  406.745905] xhci_hcd 0000:0a:00.0: xHCI Host Controller
+> [  406.745916] xhci_hcd 0000:0a:00.0: new USB bus registered, assigned bus number 11
+> [  406.747265] xhci_hcd 0000:0a:00.0: hcc params 0x002841eb hci version 0x100 quirks 0x0000000000000891
+> 
+> [  407.475672] usb 11-1.4: Found UVC 1.00 device USB2.0 Camera (1e4e:0103)
+> 
+> [  407.697768] usb 11-1.4: Selecting alternate setting 12 (3060 B/frame bandwidth)
+> [  407.700432] usb 11-1.4: Allocated 5 URB buffers of 32x3060 bytes each
+> [  407.732047] xhci_hcd 0000:0a:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0005 address=0xffccc000 flags=0x0000]
+> [  407.732122] xhci_hcd 0000:0a:00.0: WARNING: Host System Error
+> [  407.732133] xhci_hcd 0000:0a:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0005 address=0xffccc000 flags=0x0000]
+> [  407.732151] xhci_hcd 0000:0a:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0005 address=0xffccc000 flags=0x0000]
+> 
+> Link TRBs from debugfs:
+> 
+>   0 0x00000000ffccbff0: LINK 00000000ffcca000 intr 0 type 'Link' flags i:C:t:C
+>   1 0x00000000ffccaff0: LINK 00000000ffccb000 intr 0 type 'Link' flags i:C:T:c
 
-I agree correctness is good.
+It was worth a shot,
+thanks for trying it out
 
-Perhaps I am over-thinking things, but does the following approach
-achieve both of the following?
+I'll send the original fix to Greg
 
-a) Initialise both bytes.
-b) Place the 1 consistently on both big and little endian hosts,
-   as is the case without this patch (which I assume is correct).
-
-	*(__be16 *)skb_push(skb, 2) = cpu_to_be16(1);
+-Mathias
