@@ -1,173 +1,206 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52929263C75;
-	Tue, 25 Feb 2025 09:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740476471; cv=none; b=WrARrB2hyoq4PCYl4+ii7TOlPdef/5HQkgpHmrvzD2JVfi48nKxJStlbdGKi9y0Gv5ItdL2/A+spEyAktGYcU/+jk5Yy/15XJejo32aSFeU/rRPrgdCyS0FL67lvREwffIndX4D1brFHCHNvkKs/lmBhcJNokpysfXBCpnGvn/k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740476471; c=relaxed/simple;
-	bh=sQhxvoukCDtsyFQ2gDfGlhvbXHHwIBvtZyvewvnGC78=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LJCa8OCJxpNZRrfjK/Scg3g1lLxkkIPrFcqRPFZJ29U0kVAfBe6GxIFIPOHU9I4GIvThPyADdk1qRJkFKKwpJYUlp8R4Fc+fwtWBuejCpSmb6wTa+tJ6Yjr/dGeIclBHNRiKSxEb7BIDCAnLeOmOkA8jdBqUI6Vs5vTua0QPPwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WNrij+Nd; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1843B26619A;
+	Tue, 25 Feb 2025 09:41:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740476474; cv=pass; b=Vk3a9y7j2Q6ctoEwO6V3FDqGLUpZyzWpxjxFPS0IBwl/Tx5YgGVTYx70EqWmHrZAyDip/h6iyVQG/WyzRr/Q1++4wZgfU8rhT6gSTZH5Ni6l6M/t9wRLQVguN7fENBHQBlHdfrcf+nTP928su5b+0YK7Fa8ukf4cBui5VI7bHa8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740476474; c=relaxed/simple;
+	bh=Bp4YW+XO9Qnwio1RyRjN4t9zT2ygsbWThuLxANadOqk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=H53CAQW1pQUOdOSJIOM4Kkpa8McumdYqTGm0Kw+hGHrESA+nk/uJadTREnmzkePQAJ8T2t+17pd7BzDDflIsLAtjb+LjGznaENlWtBqhjsIiQgH4jX/Wov2NSH7mQrUXmf4FzyyGJnhWReoYIqgvoJjF0BXy49Sle0D/TQQCAgY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b=CyP3ttGF; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WNrij+Nd"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-220c8cf98bbso26770315ad.1;
-        Tue, 25 Feb 2025 01:41:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740476469; x=1741081269; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LKV50k5oKnw6MK8vZSME6ax/mJXjZVzGCmPzRh9r8Fo=;
-        b=WNrij+Nd84uldIsr0W5xug1OQYHCwr/oFXpulXhRBxuGDrbOAT/26KY989D4IzAALN
-         KpjK/FLOsdxPjgWH9SCHrDgs+pLD5Is8LKPRDwAZeQvlijSJnmfRqwCbOz9GYVvmai/O
-         DT3ehffa0hmeSGkbinkWcKSyiCuG/IBsyTkiU8W+Em9sBsg1PGprwthFAkXWcKb01S1G
-         LpfjNkLJOqKybimwWkLaXmjuiDx6qozNJHUgDpz4yJvyaclNFDJuLWxW4x2PeG1HfN8E
-         ahtY68hoxjTcbfxm4btMYIkiJD8hLStPnc2YUc5UN8ZWbX4pJqVgnnOsalIgG9ARpGac
-         TnJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740476469; x=1741081269;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LKV50k5oKnw6MK8vZSME6ax/mJXjZVzGCmPzRh9r8Fo=;
-        b=YtJr93KpZCWwo2toZl6UXUzXXkdMfxr/oKcm7onNfkdOfY1MS98wcdC3PSeTTxLPgi
-         tElX5P/vMkzr1+eQyvmMhSJsma8EVI4Abvld4brcnOaqTQoLE/KHZg//Zwjk/b13L/so
-         ByIqRP+1h98RFQn6A1hmRSFFM2adhVataM90O7/0RlVPE8v1P0MdFT92gl2ce9yxRRsG
-         mNpn4VMewzBI3Ksv3r7h7Y3+wCts7L3RVGnXnNiTSxborbq3LXKJfUpSd6T2RiMTfgej
-         SdS8apHLKVTPaKjakxKQDERRD9tflM7Iy7Wd7XuYQlF28rT8iL53vdBu76eR36jf8SIY
-         Jazw==
-X-Forwarded-Encrypted: i=1; AJvYcCVBJNOLzT1+jkeytjYCF8RJ0kXNF8X/8KhnNxD4iG4ijEV/plauOvM3QXrldajexLsvrggaAbZMXHuc+2CjtgKR@vger.kernel.org, AJvYcCXHCJI6MafDRDcna5LoeR0EiPjNnU31ZbrGmvMhmr2d23uOBXUk/IhNIdpIkID1zJr9DI4wBvCm3mY/zNg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2CNUT8PdPyyMxIk8SxIONB1XsLzY8i/55sM9bAHtJoDv93lvN
-	8MCNH5tkaBR0g/iSsVSCg6UGYX5wIqXnY5gKkhDvZeSlZFnouMhvT7y3PvcBsNiN2Q==
-X-Gm-Gg: ASbGnctGr88GKJ6gdX5RRcTChFY+cBTu37woYhDfrkbHMzn9oj340eyB2S1ejHPE/ya
-	4NA/TdvkZDfHU3ymlBdRUYbheCgFrbVoVQxqd5F5RW4q+wKNHG6xZJTE4jlptUfdKlHxHhYwitk
-	1/CvcvooanOIzKVJvORl0anG/GUTH2GphJHlP06d9ijSfUwr0s7spUh4Tj0IYUaTLScF1qlo30C
-	JKDFZGcLvcAJQ97jLEGglZRy53z+7q0kaJWP5UlRzArKtvLLAvFYRnyxYWg4IIe3moCnpRs3sYn
-	z34TlmTF1a30Lej16HhBR013epN43JCX9gOpFCKWfWXXzg==
-X-Google-Smtp-Source: AGHT+IHGrX3RShBzXNqqV1Asd6wqOTK/PbOyHp8r7dSAjVFWnm231L/QjCTXrCJV5At0/kThynXQSA==
-X-Received: by 2002:a05:6a20:7348:b0:1f1:432:5396 with SMTP id adf61e73a8af0-1f104325399mr871796637.22.1740476469357;
-        Tue, 25 Feb 2025 01:41:09 -0800 (PST)
-Received: from fedora.dns.podman ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7347a6f9e6dsm1065597b3a.64.2025.02.25.01.41.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 01:41:08 -0800 (PST)
-From: Hangbin Liu <liuhangbin@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Jay Vosburgh <jv@jvosburgh.net>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Simon Horman <horms@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	Tariq Toukan <tariqt@nvidia.com>,
-	Jianbo Liu <jianbol@nvidia.com>,
-	Jarod Wilson <jarod@redhat.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Cosmin Ratiu <cratiu@nvidia.com>,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hangbin Liu <liuhangbin@gmail.com>
-Subject: [PATCHv2 net 2/3] bonding: fix xfrm offload feature setup on active-backup mode
-Date: Tue, 25 Feb 2025 09:40:48 +0000
-Message-ID: <20250225094049.20142-3-liuhangbin@gmail.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <20250225094049.20142-1-liuhangbin@gmail.com>
-References: <20250225094049.20142-1-liuhangbin@gmail.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b="CyP3ttGF"
+ARC-Seal: i=1; a=rsa-sha256; t=1740476448; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=A+3H+Sm8971x07Thz6YRpTX6I7MU3G6eCL/so7IDyshmrTt7ZUIVZAUuZguHF8LwjtzXWLaW5vo6yoOkGVk4HZvdPgI7xRK2HNXwO4Ttt69sW+RaqoyKPMOyNLM7b9QXh8H31mlPCT/ul9kdaN2HI2bAe70pH2sx8ab5nOmCUJM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1740476448; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=XOrdNCeBVmp7JW4IX9rpLDSJz1pZUE//UCPRZc0Tlts=; 
+	b=UvxWQTKXExhzCbuKTZtAD8SiVGUaSmiRJlpFOo4h0jZz/aixRb/4Jo41671uJOHVC6C0NvkcF0bgVJIi7H79346+Zcw/b/ve6QLj7s8r5aa/AExDGN37UCLlOaeDgtm3kyVnPZO4jUpGAfip223/NO+pcjlMYYMTtbNvspUG88o=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.fricke@collabora.com;
+	dmarc=pass header.from=<sebastian.fricke@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740476448;
+	s=zohomail; d=collabora.com; i=sebastian.fricke@collabora.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=XOrdNCeBVmp7JW4IX9rpLDSJz1pZUE//UCPRZc0Tlts=;
+	b=CyP3ttGFWLsPMwoCNjCgrHntmyi4q008g86x4pYjO/tZh0Ncue81briwHJ9nUCUh
+	MN5ZZ7kYQgmJGtFpJ+sWcqnb4gHZn0GB8PDXQNll8FTqTqP1t5B1t5IQamZAQWEoxeN
+	deigPhce8mHbxjVaH1923d4i2J6mLRwXSpcSx6Fw=
+Received: by mx.zohomail.com with SMTPS id 1740476445870556.2785058092115;
+	Tue, 25 Feb 2025 01:40:45 -0800 (PST)
+From: Sebastian Fricke <sebastian.fricke@collabora.com>
+Date: Tue, 25 Feb 2025 10:40:22 +0100
+Subject: [PATCH v7 01/12] media: v4l2-common: Add helpers to calculate
+ bytesperline and sizeimage
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250225-rkvdec_h264_high10_and_422_support-v7-1-7992a68a4910@collabora.com>
+References: <20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
+In-Reply-To: <20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Hans Verkuil <hverkuil@xs4all.nl>, 
+ Boris Brezillon <boris.brezillon@collabora.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev, 
+ Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, 
+ Alex Bee <knaerzche@gmail.com>, 
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>, 
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+ Detlev Casanova <detlev.casanova@collabora.com>, 
+ Dan Carpenter <dan.carpenter@linaro.org>, Jonas Karlman <jonas@kwiboo.se>, 
+ Christopher Obbard <christopher.obbard@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740476425; l=4939;
+ i=sebastian.fricke@collabora.com; s=linux-media; h=from:subject:message-id;
+ bh=195spnsrZZZYoE7GJpxYB5yGeOEYBI+wvXl7j9HaYVw=;
+ b=KEtBAJL7KLKKy7iIvsAwg2Uxmm5/AqJ0/bquKxBMeaA7QH+iiNIQ1pNS9Ea/7OGK+Y9IUooaSkhV
+ rdAU1XXqC3QYfCmQ/XbAXbCXh05JNcvkIo+AakS2W1ke2v2e+Evq
+X-Developer-Key: i=sebastian.fricke@collabora.com; a=ed25519;
+ pk=pYXedPwrTtErcj7ERYeo/IpTrpe4QbJuEzSB52fslBg=
+X-ZohoMailClient: External
 
-The active-backup bonding mode supports XFRM ESP offload. However, when
-a bond is added using command like `ip link add bond0 type bond mode 1
-miimon 100`, the `ethtool -k` command shows that the XFRM ESP offload is
-disabled. This occurs because, in bond_newlink(), we change bond link
-first and register bond device later. So the XFRM feature update in
-bond_option_mode_set() is not called as the bond device is not yet
-registered, leading to the offload feature not being set successfully.
+From: Jonas Karlman <jonas@kwiboo.se>
 
-To resolve this issue, we can modify the code order in bond_newlink() to
-ensure that the bond device is registered first before changing the bond
-link parameters. This change will allow the XFRM ESP offload feature to be
-correctly enabled.
+Add helper functions to calculate plane bytesperline and sizeimage,
+these new helpers consider bpp div, block width and height when
+calculating plane bytesperline and sizeimage.
 
-Fixes: 007ab5345545 ("bonding: fix feature flag setting at init time")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Tested-by: Christopher Obbard <chris.obbard@collabora.com>
 ---
- drivers/net/bonding/bond_main.c    |  2 +-
- drivers/net/bonding/bond_netlink.c | 16 +++++++++-------
- include/net/bonding.h              |  1 +
- 3 files changed, 11 insertions(+), 8 deletions(-)
+ drivers/media/v4l2-core/v4l2-common.c | 78 +++++++++++++++++------------------
+ 1 file changed, 39 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
-index cc7064aa4b35..881d8d94dd9f 100644
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -4410,7 +4410,7 @@ void bond_work_init_all(struct bonding *bond)
- 	INIT_DELAYED_WORK(&bond->slave_arr_work, bond_slave_arr_handler);
+diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
+index e4b2de3833ee3d440493f94fca5ee2049b013ef0..fdab16b9d481300eecf2202b3930fdf0a97a3023 100644
+--- a/drivers/media/v4l2-core/v4l2-common.c
++++ b/drivers/media/v4l2-core/v4l2-common.c
+@@ -357,6 +357,34 @@ static inline unsigned int v4l2_format_block_height(const struct v4l2_format_inf
+ 	return info->block_h[plane];
  }
  
--static void bond_work_cancel_all(struct bonding *bond)
-+void bond_work_cancel_all(struct bonding *bond)
++static inline unsigned int v4l2_format_plane_stride(const struct v4l2_format_info *info, int plane,
++						   unsigned int width)
++{
++	unsigned int hdiv = plane ? info->hdiv : 1;
++	unsigned int aligned_width =
++		ALIGN(width, v4l2_format_block_width(info, plane));
++
++	return DIV_ROUND_UP(aligned_width, hdiv) *
++	       info->bpp[plane] / info->bpp_div[plane];
++}
++
++static inline unsigned int v4l2_format_plane_height(const struct v4l2_format_info *info, int plane,
++						    unsigned int height)
++{
++	unsigned int vdiv = plane ? info->vdiv : 1;
++	unsigned int aligned_height =
++		ALIGN(height, v4l2_format_block_height(info, plane));
++
++	return DIV_ROUND_UP(aligned_height, vdiv);
++}
++
++static inline unsigned int v4l2_format_plane_size(const struct v4l2_format_info *info, int plane,
++						  unsigned int width, unsigned int height)
++{
++	return v4l2_format_plane_stride(info, plane, width) *
++	       v4l2_format_plane_height(info, plane, height);
++}
++
+ void v4l2_apply_frmsize_constraints(u32 *width, u32 *height,
+ 				    const struct v4l2_frmsize_stepwise *frmsize)
  {
- 	cancel_delayed_work_sync(&bond->mii_work);
- 	cancel_delayed_work_sync(&bond->arp_work);
-diff --git a/drivers/net/bonding/bond_netlink.c b/drivers/net/bonding/bond_netlink.c
-index 2a6a424806aa..ed16af6db557 100644
---- a/drivers/net/bonding/bond_netlink.c
-+++ b/drivers/net/bonding/bond_netlink.c
-@@ -568,18 +568,20 @@ static int bond_newlink(struct net *src_net, struct net_device *bond_dev,
- 			struct nlattr *tb[], struct nlattr *data[],
- 			struct netlink_ext_ack *extack)
- {
-+	struct bonding *bond = netdev_priv(bond_dev);
- 	int err;
+@@ -392,37 +420,19 @@ int v4l2_fill_pixfmt_mp(struct v4l2_pix_format_mplane *pixfmt,
  
--	err = bond_changelink(bond_dev, tb, data, extack);
--	if (err < 0)
-+	err = register_netdevice(bond_dev);
-+	if (err)
- 		return err;
+ 	if (info->mem_planes == 1) {
+ 		plane = &pixfmt->plane_fmt[0];
+-		plane->bytesperline = ALIGN(width, v4l2_format_block_width(info, 0)) * info->bpp[0] / info->bpp_div[0];
++		plane->bytesperline = v4l2_format_plane_stride(info, 0, width);
+ 		plane->sizeimage = 0;
  
--	err = register_netdevice(bond_dev);
--	if (!err) {
--		struct bonding *bond = netdev_priv(bond_dev);
-+	netif_carrier_off(bond_dev);
-+	bond_work_init_all(bond);
- 
--		netif_carrier_off(bond_dev);
--		bond_work_init_all(bond);
-+	err = bond_changelink(bond_dev, tb, data, extack);
-+	if (err) {
-+		bond_work_cancel_all(bond);
-+		unregister_netdevice(bond_dev);
+-		for (i = 0; i < info->comp_planes; i++) {
+-			unsigned int hdiv = (i == 0) ? 1 : info->hdiv;
+-			unsigned int vdiv = (i == 0) ? 1 : info->vdiv;
+-			unsigned int aligned_width;
+-			unsigned int aligned_height;
+-
+-			aligned_width = ALIGN(width, v4l2_format_block_width(info, i));
+-			aligned_height = ALIGN(height, v4l2_format_block_height(info, i));
+-
+-			plane->sizeimage += info->bpp[i] *
+-				DIV_ROUND_UP(aligned_width, hdiv) *
+-				DIV_ROUND_UP(aligned_height, vdiv) / info->bpp_div[i];
+-		}
++		for (i = 0; i < info->comp_planes; i++)
++			plane->sizeimage +=
++				v4l2_format_plane_size(info, i, width, height);
+ 	} else {
+ 		for (i = 0; i < info->comp_planes; i++) {
+-			unsigned int hdiv = (i == 0) ? 1 : info->hdiv;
+-			unsigned int vdiv = (i == 0) ? 1 : info->vdiv;
+-			unsigned int aligned_width;
+-			unsigned int aligned_height;
+-
+-			aligned_width = ALIGN(width, v4l2_format_block_width(info, i));
+-			aligned_height = ALIGN(height, v4l2_format_block_height(info, i));
+-
+ 			plane = &pixfmt->plane_fmt[i];
+ 			plane->bytesperline =
+-				info->bpp[i] * DIV_ROUND_UP(aligned_width, hdiv) / info->bpp_div[i];
+-			plane->sizeimage =
+-				plane->bytesperline * DIV_ROUND_UP(aligned_height, vdiv);
++				v4l2_format_plane_stride(info, i, width);
++			plane->sizeimage = plane->bytesperline *
++				v4l2_format_plane_height(info, i, height);
+ 		}
  	}
+ 	return 0;
+@@ -446,22 +456,12 @@ int v4l2_fill_pixfmt(struct v4l2_pix_format *pixfmt, u32 pixelformat,
+ 	pixfmt->width = width;
+ 	pixfmt->height = height;
+ 	pixfmt->pixelformat = pixelformat;
+-	pixfmt->bytesperline = ALIGN(width, v4l2_format_block_width(info, 0)) * info->bpp[0] / info->bpp_div[0];
++	pixfmt->bytesperline = v4l2_format_plane_stride(info, 0, width);
+ 	pixfmt->sizeimage = 0;
  
- 	return err;
-diff --git a/include/net/bonding.h b/include/net/bonding.h
-index d54ba5e3affb..aa326fd90eba 100644
---- a/include/net/bonding.h
-+++ b/include/net/bonding.h
-@@ -713,6 +713,7 @@ struct bond_vlan_tag *bond_verify_device_path(struct net_device *start_dev,
- int bond_update_slave_arr(struct bonding *bond, struct slave *skipslave);
- void bond_slave_arr_work_rearm(struct bonding *bond, unsigned long delay);
- void bond_work_init_all(struct bonding *bond);
-+void bond_work_cancel_all(struct bonding *bond);
- 
- #ifdef CONFIG_PROC_FS
- void bond_create_proc_entry(struct bonding *bond);
+-	for (i = 0; i < info->comp_planes; i++) {
+-		unsigned int hdiv = (i == 0) ? 1 : info->hdiv;
+-		unsigned int vdiv = (i == 0) ? 1 : info->vdiv;
+-		unsigned int aligned_width;
+-		unsigned int aligned_height;
+-
+-		aligned_width = ALIGN(width, v4l2_format_block_width(info, i));
+-		aligned_height = ALIGN(height, v4l2_format_block_height(info, i));
+-
+-		pixfmt->sizeimage += info->bpp[i] *
+-			DIV_ROUND_UP(aligned_width, hdiv) *
+-			DIV_ROUND_UP(aligned_height, vdiv) / info->bpp_div[i];
+-	}
++	for (i = 0; i < info->comp_planes; i++)
++		pixfmt->sizeimage +=
++			v4l2_format_plane_size(info, i, width, height);
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(v4l2_fill_pixfmt);
+
 -- 
-2.46.0
+2.25.1
 
