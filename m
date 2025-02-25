@@ -1,95 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57165433CE;
-	Tue, 25 Feb 2025 13:20:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A1B2690CE
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:20:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740489624; cv=none; b=RwNWZnpUKZQa90LJRGyq0V96NzLRIbKflzD5QEh17UWjelkcntjHnFJQKEEoLAcemGo1WyMtIhtlP9febnzLOcALH5PZfRMeVx7JYUfOczsSNQ8avEkKQkNjnwGltb7TNzcGY8GwVRjU9/MKQhJLVBUhrK7WXIFUOo9bTDgs3oU=
+	t=1740489640; cv=none; b=gaaJff2S3W4x0V4tHlrVLzBEEe4HQMTDnevAGRmzSydbghZ35R2Buta79FDTq+jWO4LFDCrYeb4dty0/qj2qTk5+6bF9ISF9IN8hsjD5XGUd6HyaIK2Qa0WUnLnSJw1IXklbUIBOUkavM1u+B9Fh6O0CEj0F6cVz1G/VcQLTT5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740489624; c=relaxed/simple;
-	bh=dfAK7SX3PAcngLvN+TTXq78fi95cSmXCJNnXQz5sDYg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EvsGyALcSQ15EIg+sUQ0CbyAf2GpvJzx2pee4zGOw5TR1yJuTz9D9U+UL/uo+8Ic/aYKfvAvj8vR32tLrOnVK6Pg5HY+h2nzbyT83sGIdaq9LwMlIywcih/2E9bIj7ee2iIpj1ryUwPKPhRT5pJbHu1vdA6uDQxRaCj0g5A5V5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XdhwUbrR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740489640; c=relaxed/simple;
+	bh=u3yEwLudzQn5Appg1EKIWuwC8eP34YxzNljiK7UUCCg=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p9Jvvy0pUCUr2CQdw99SSbx18N/ZDhrC4CX2OMwmLYSVyhNDN5PQKXpLphdvAaSoYrVlhg4j9k6nRqEqMxZQX1DjO4t38WEVzdcX0gDo2WGE99IHEqrQPpCvfkBV856DFIuAdQEy+5N+KlmVxnw7kpTBbTl5x4L+WEDcst3nqfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=vceDglkQ; arc=none smtp.client-ip=203.205.221.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XdhwUbrR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EDC9C4CEDD;
-	Tue, 25 Feb 2025 13:20:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740489623;
-	bh=dfAK7SX3PAcngLvN+TTXq78fi95cSmXCJNnXQz5sDYg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XdhwUbrRy4MkEPdJOvsjlXWHY9v2ddvBSerrHVuHx7x/aUgSeZ+HouitztqlMatlK
-	 sKJbq8sknggxLvSqNgGqA0O80avqdF0t1MWfvF7gFY9Z4K8MCqRX1P8qyKGqHhkSYJ
-	 35/DClm8586xGkiD/U8UTDzGvqEL8A1U3E5yjWInyLqYVhajagM/N/MaW4Y/QMlJR5
-	 sb5rf1RdMZljuGDxzliuSri1KaSWhO+gzvZgTTkE7LdlrWV/93FAhp4fMVnZt2Keq5
-	 2Yf/eiOxOg3rI5AZV9Hxjqpkw4kXwPVMUmz5XDgHVp1jy43q0JZblxZ3r3redl/4iD
-	 sGXe37pzc63xA==
-Date: Tue, 25 Feb 2025 13:20:17 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Weidong Wang <wangweidong.a@awinic.com>, linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	Ben Yi <yijiangtao@awinic.com>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Igor Prusov <ivprusov@salutedevices.com>,
-	Jack Yu <jack.yu@realtek.com>, Jaroslav Kysela <perex@perex.cz>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Paul Handrigan <paulha@opensource.cirrus.com>,
-	Prasad Kumpatla <quic_pkumpatl@quicinc.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Rob Herring <robh@kernel.org>, Takashi Iwai <tiwai@suse.com>
-Subject: Re: [PATCH 2/2] ASoC: codecs: Add aw88166 amplifier driver
-Message-ID: <2f9dcbc4-22dc-4663-8972-328a2faab5de@sirena.org.uk>
-References: <20250221102623.369435-3-wangweidong.a@awinic.com>
- <32992dc7-15a1-4ca5-a5a1-e7e26ce74fbc@web.de>
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="vceDglkQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1740489327;
+	bh=+oQG0kubNNcrUEyDC0x1SXjD6cJ/muvA92NEGb9rnSs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=vceDglkQgrwvb/l71lq6tNX5AivBJf7PHhg0WpslKeAkEbD9s5SMJ1dMxhJv9STtT
+	 JH3+MhM+JbM6Ac94WjVUXw+095nUErB/9pNzdjAnoA9cjCHVvehOerfBzajg4OZCRf
+	 ECRhw9bpjaw7TM3BftwSlFsD74WSvwhnzIkNc14A=
+Received: from chenyu5-mobl2 ([118.114.56.201])
+	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
+	id 3D80A29F; Tue, 25 Feb 2025 21:15:24 +0800
+X-QQ-mid: xmsmtpt1740489324ty7p96lgy
+Message-ID: <tencent_CC411B43EAD996961A06366F606C96DD0406@qq.com>
+X-QQ-XMAILINFO: NyTsQ4JOu2J2E6enTI6knP98gdgIednHXvZvEccsRAn9oe1QGR85OzNNIkaslU
+	 Q+h5S9Q1+2jjv1ibfUEDZ8WjHmIsJuCdBSokzipwjIAldc3a8CrJTh6bhbQCGqg8ZIzGWQE46gy2
+	 6kr5DGGTUMwBtLiHN++HGGETiGq/ScptKEOPD0v3ewPGqNV/fcXbUw8q1lNN+oQ7g1c2hVshM910
+	 ciRiT7BsPcTBREqtrGnRRXmFO6ghcxSZI8pvbR0tiKm5WvhPtmFCRbL798g4eMP4xkZE/CeTp+GX
+	 MAfEXVCBdZ15TtEr2/Lr1nQcfDvXdZPLxHWRo6yAzMXZsLy6P6Pm1YcSOZeJeHF5KI1oq9MdaVFE
+	 Ab0Ayfx4eUwN3YgSuUB2IR1Js10SPUmKFZGg+yuDXUq44VS/BQkJLN7KeugpQdwK/1WoFjwy410P
+	 VCzckYVh1FYCQ54DqqkEm/Ht6mjba/PIFuDYYwk2rJRNBVvoj9xzeHELV8UCmvyhokdOsTeKXyRJ
+	 rwsK6JnlEdWSNjcpovR2tIUOHT0pYzvBUS8sOA87WYR/BKTOZNqB1nEuQ4J5Zj8/hyQJTP0FyWhg
+	 C/yeTC92fyzKuwSIiJtNJFDHTqSc+ojmsUYKApwwLlPecGg0wkLSPQ02BPlcBPJ4o1iIdpF0nnJu
+	 QV6WICJ1ChGZYJZpavGvm3yEEOYdxDoxF9qKl2HJEO8j18W0z69EOnFTKV9nLjtC/go3hLGad2t+
+	 1pe/HbNuE7qs3vjXz3EyJ3jEhtYZQu9LCPvY/qBFWuC3ZOtli0StsOzHaKX7ofDXX0hh9GSZT2er
+	 8V/Wp3v1E44dO0Pfb14rWQYWfcZHaCgnKVX+Ief4tBOVE5Cs7QQuombY+EPmx/iJzKooqC19v0cg
+	 /+wTonDgeIUgMDTrb/RqTKJlh0WJXkikKstYBmkqOaApQjzR0rXNisFPa2gRi8LsW6h/6QiMY8Nr
+	 bZPfmQjgNXppMuDnjMoF+5toFXjbEOqcuaB53IaM/IcRd1NKfhxA==
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+Date: Tue, 25 Feb 2025 21:15:56 +0800
+From: Chen Yu <yu.chen.surf@foxmail.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: zihan zhou <15645113830zzh@gmail.com>, oe-lkp@lists.linux.dev,
+	kernel test robot <oliver.sang@intel.com>, lkp@intel.com,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	aubrey.li@linux.intel.com, yu.c.chen@intel.com
+Subject: Re: [tip:sched/core] [sched]  2ae891b826:  hackbench.throughput 6.2%
+ regression
+X-OQ-MSGID: <Z73CjBppcf/zhrOW@chenyu5-mobl2>
+References: <202502251026.bb927780-lkp@intel.com>
+ <tencent_6D9B516AFF16965A3BB652A049D6CA847706@qq.com>
+ <20250225122705.GD34233@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="5ksm0M28hlCWRaWJ"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <32992dc7-15a1-4ca5-a5a1-e7e26ce74fbc@web.de>
-X-Cookie: I'm not available for comment..
+In-Reply-To: <20250225122705.GD34233@noisy.programming.kicks-ass.net>
 
+On 2025-02-25 at 13:27:05 +0100, Peter Zijlstra wrote:
+> On Tue, Feb 25, 2025 at 05:31:34PM +0800, Chen Yu wrote:
+> 
+> > 
+> > But consider that the 6% regression is not that high, and the user might customize
+> > base_slice via debugfs on-demand, we can keep an eye on this and revist it in the
+> > future(we have encountered some SPECjbb regression due to over-preemption).
+> 
+> You can specify a per-task slice using sched_attr::sched_runtime. Also
+> see commit 857b158dc5e8 ("sched/eevdf: Use sched_attr::sched_runtime to
+> set request/slice suggestion")
+> 
+>
 
---5ksm0M28hlCWRaWJ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks, we'll have a try during the next test cycle.
 
-On Tue, Feb 25, 2025 at 02:09:39PM +0100, Markus Elfring wrote:
-> =E2=80=A6
-> > The driver is for amplifiers aw88166 of Awinic Technology
-> =E2=80=A6
->=20
-> You may occasionally put more than 57 characters into text lines
-> of such a change description.
+thanks,
+Chenyu
 
-Feel free to ignore Markus, he has a long history of sending
-unhelpful review comments and continues to ignore repeated requests
-to stop.
-
---5ksm0M28hlCWRaWJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAme9w5AACgkQJNaLcl1U
-h9ASjwf/R7DZkWb0naPakmHeXGgxosFU2gDD3YLyChZWaCOyoXciu1t2yk7Nf9EY
-WBj9hulz0Ycae1Ll/hYDw5yoG6Uxwi7CrUlHg1g2u9ws/IkIegzP1oMVFu5iCAeu
-ONtCH4Zfw/RL7PvcCnK50XN6cqwcVGGlaTrJFX+DMjRdL8FfcJlgzjTDMzHY/HYc
-Nj31A0bH76+7BduJndc0/W5DieFTxCxOYpRVMWbArdHLLrp1uK8PJAEayPXd7oR/
-H34gQkXoAEc+vYHtTP56761jX3uCBcpwGNgknVOA4qL0upasUof2HLfQU3/pYGr0
-TMwlAGyv+xYWBdCIpd55eopERPdTQg==
-=X+KE
------END PGP SIGNATURE-----
-
---5ksm0M28hlCWRaWJ--
