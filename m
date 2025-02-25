@@ -1,146 +1,229 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683852698A8
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:27:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FF926B0B8
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740493641; cv=none; b=DUHT2ys3d0QgMnz+awcKITsfhB/MMQiXYwoAU+cn7l1P7mNY7B01OyvI29/C2EeQR5LLwJBVODq84tfibBADgIdCs+gZlkDlibC6tOi/3dejd5/ryCGzuTkwZFKITWNiVh5vTFWXLjcbcdNIiZsNxTqFsximUlqi3iMNxOei5qQ=
+	t=1740493644; cv=none; b=Pbgz2eNgx5m5bi8n41CtEOY+VkKDnvfS+DMKyayzq0HnIRWABVuEsugYLWAqMLrl4EtDeBFJNnwwTMYIjhIouznXp4AKQsWIBNkEoPv3JhYlgE4BU6n3GzYdQpTbEQvW7txScjgQYeze6hxldQ/17cbhXynMnsclSfmKT5KBmSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740493641; c=relaxed/simple;
-	bh=s3CzAGQ9fUPMQrxptT1MpknPbszwu1n+Vjd/Wk9sOQE=;
+	s=arc-20240116; t=1740493644; c=relaxed/simple;
+	bh=VOyeap2V4VvrNDUc/T4wa2Ycc1cF0m6fX095b2mIBOM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cpck8gaTReu64UbnbZYs/jW/+cigrAVSECI0O7abTOs4LLlwMRrxlVGiZbxCfeklQ1Gz1Sz/tgGbQLnr3MliMn95ch0UwnjRdVxoiJhQCiOnp1kCeojU0qcaHGtyxIKyBxk9lWlVQhmukiw4Bhf0cvfaatcg9XQ4/s8UW6SB1Qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D+bt/1zR; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=opN8rmYGV6T5SrBOgbftWDiXl649dX8pTseRk6ND9KGxs8EPuNpdSd13fb29aRzdH5+MevjStnwzEWOSBVNjLOjmQ8JyJ57LDzYmWJtiB3SLwNuthEftudHP05/z40ip0Dfc2hvO5RfQR0Lq9HUCNENQT5zzgAlJhyEnfqAyyr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UxkQG5db; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D+bt/1zR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740493638;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UxkQG5db"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 551F04442F;
+	Tue, 25 Feb 2025 14:27:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740493641;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=G4fu2PpV3y/MvTpLFuGZiqVh37Wll4MVy1MUpDTWvbQ=;
-	b=D+bt/1zRFC0ZOT+xeoMOSUAAxQHdhe0+xRsR067RnnHcdAYT4qHH8BKoIdrV5d/ck6sYyF
-	Ayiveoq3kn1AGURcli3GlYmmPEa2RQrAgMvNLt7Aa3LYQj+L6UiGMpEnV6Fdw3/d2H4CMi
-	jYclCAX45Uo894ekAPTbd4CcmFHXjm8=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-81-tITzaPO9OMK2Znf-2BEB0w-1; Tue,
- 25 Feb 2025 09:27:15 -0500
-X-MC-Unique: tITzaPO9OMK2Znf-2BEB0w-1
-X-Mimecast-MFC-AGG-ID: tITzaPO9OMK2Znf-2BEB0w_1740493633
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0AF2118D95DC;
-	Tue, 25 Feb 2025 14:27:13 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.211])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id C6C1F1800352;
-	Tue, 25 Feb 2025 14:27:04 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 25 Feb 2025 15:26:42 +0100 (CET)
-Date: Tue, 25 Feb 2025 15:26:33 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "Sapkal, Swapnil" <swapnil.sapkal@amd.com>,
-	Manfred Spraul <manfred@colorfullife.com>,
-	Christian Brauner <brauner@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	"Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>,
-	Neeraj.Upadhyay@amd.com
-Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still
- full
-Message-ID: <20250225142632.GA29585@redhat.com>
-References: <20250102140715.GA7091@redhat.com>
- <e813814e-7094-4673-bc69-731af065a0eb@amd.com>
- <20250224142329.GA19016@redhat.com>
- <CAHk-=wi+P5__7LfbTX66shvYC1X11G2ZdKcg4psi+k_pD3sO+w@mail.gmail.com>
+	bh=ksF7rsjoy0iP9hn3MuB5+OiMn4k7YbnH9STHuf8uDAI=;
+	b=UxkQG5dbGt+tSDyvxdAcaQ/tAsfRGtqmGzlChs+y3LOyB+9jX5jmFEjf72H1Ggym+k/DOC
+	VB3I5kz6N9L6lZ4Mh3gX6BB+QcUYL30eCPPQlmM/XCzXNNTv7zYUs1vxP2lAVe0HjVAMu+
+	TC/x4zncUiWxlS3OzqnZYt7X24Q8eNWpD2rvWIVLIR0AGOKXHVRSdu306xqArgB4vKd4hT
+	8+BCY2Evu4EA03yeu6W6+0QVlzUv0bPTcDnzp5mBrxb4XerQG8iwEtOslZ3ZYh85v/LXrp
+	2AWL+RWAavDiFqE8FmNarRvJGRjPi8fPlPTtI1/SeqXW4VqM7lZHMIuMecz/7g==
+Date: Tue, 25 Feb 2025 15:27:19 +0100
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+To: Jim Cromie <jim.cromie@gmail.com>, linux-kernel@vger.kernel.org,
+	jbaron@akamai.com, gregkh@linuxfoundation.org, ukaszb@chromium.org
+Cc: intel-gfx-trybot@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	amd-gfx@lists.freedesktop.org, intel-gvt-dev@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org, daniel.vetter@ffwll.ch,
+	tvrtko.ursulin@linux.intel.com, jani.nikula@intel.com,
+	ville.syrjala@linux.intel.com
+Subject: Re: [PATCH 23/63] dyndbg: fail modprobe on
+ ddebug_class_range_overlap()
+Message-ID: <6234628f-4085-40ad-b521-4590db2cb5f5@bootlin.com>
+Mail-Followup-To: Jim Cromie <jim.cromie@gmail.com>,
+	linux-kernel@vger.kernel.org, jbaron@akamai.com,
+	gregkh@linuxfoundation.org, ukaszb@chromium.org,
+	intel-gfx-trybot@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+	intel-gvt-dev@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org, daniel.vetter@ffwll.ch,
+	tvrtko.ursulin@linux.intel.com, jani.nikula@intel.com,
+	ville.syrjala@linux.intel.com
+References: <20250125064619.8305-1-jim.cromie@gmail.com>
+ <20250125064619.8305-24-jim.cromie@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wi+P5__7LfbTX66shvYC1X11G2ZdKcg4psi+k_pD3sO+w@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250125064619.8305-24-jim.cromie@gmail.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekudelfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttddunecuhfhrohhmpefnohhuihhsucevhhgruhhvvghtuceolhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepudeiffduffeivdejgfejheeuudekkedvjeeuffegfefghfffkeelgffgieevudejnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohhuihhsqdgthhgruhhvvghtqdhlrghpthhophdpmhgrihhlfhhrohhmpehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedugedprhgtphhtthhopehjihhmrdgtrhhomhhivgesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehjsggrrhhonhesrghkrghmrghirdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnr
+ dhorhhgpdhrtghpthhtohepuhhkrghsiigssegthhhrohhmihhumhdrohhrghdprhgtphhtthhopehinhhtvghlqdhgfhigqdhtrhihsghotheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtoheprghmugdqghhfgieslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrgh
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-On 02/24, Linus Torvalds wrote:
->
-> However, I see at least one case where this exclusive wakeup seems broken:
->
->                 /*
->                  * But because we didn't read anything, at this point we can
->                  * just return directly with -ERESTARTSYS if we're interrupted,
->                  * since we've done any required wakeups and there's no need
->                  * to mark anything accessed. And we've dropped the lock.
->                  */
->                 if (wait_event_interruptible_exclusive(pipe->rd_wait,
-> pipe_readable(pipe)) < 0)
->                         return -ERESTARTSYS;
->
-> and I'm wondering if the issue is that the *readers* got stuck,
-> Because that "return -ERESTARTSYS" path now basically will by-pass the
-> logic to wake up the next exclusive waiter.
 
-I think this is fine... lets denote this reader as R.
 
-> Because that "return -ERESTARTSYS" is *after* the reader has been on
-> the rd_wait queue - and possibly gotten the only wakeup that any of
-> the readers will ever get - and now it returns without waking up any
-> other reader.
+Le 25/01/2025 à 07:45, Jim Cromie a écrit :
+> 1. All classes used by a module (declared DYNDBG_CLASSMAP_{DEFINE,USE}
+> by module code) must share 0..62 class-id space; ie their respective
+> base,+length reservations shouldn't overlap.  Overlaps would lead to
+> unintended changes in ddebug enablements.
+> 
+> Detecting these class-id range overlaps at compile-time would be ideal
+> but is not obvious how; failing at modprobe at least insures that the
+> developer sees and fixes the conflict.
+> 
+> ddebug_class_range_overlap() implements the range check, accumulating
+> the reserved-ids as it examines each class.  It probably should use
+> bitmaps.
+> 
+> A previous commit reworked the modprobe callchain to allow failure,
+> now call ddebug_class_range_overlap() to check when classid conflicts
+> happen, and signal that failure.
+> 
+> NB: this can only happen when a module defines+uses several classmaps,
+> 
+> TBD: failing modprobe is kinda harsh, maybe warn and proceed ?
+> 
+> test_dynamic_debug*.ko:
+> 
+> If built with -DFORCE_CLASSID_CONFLICT_MODPROBE, the modules get 2 bad
+> DYNDBG_CLASS_DEFINE declarations, into parent and the _submod.  These
+> conflict with one of the good ones in the parent (D2_CORE..etc),
+> causing the modprobe(s) to fail.  TODO: do in submod only, since fail
+> of parent prevents submod from ever trying.
+> 
+> Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+> ---
+> ---
+>   lib/dynamic_debug.c      | 30 ++++++++++++++++++++++++------
+>   lib/test_dynamic_debug.c | 11 ++++++++++-
+>   2 files changed, 34 insertions(+), 7 deletions(-)
+> 
+> diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+> index 8afcd4111531..8e1e087e07c3 100644
+> --- a/lib/dynamic_debug.c
+> +++ b/lib/dynamic_debug.c
+> @@ -1211,6 +1211,21 @@ static void ddebug_apply_params(const struct ddebug_class_map *cm, const char *m
+>   	}
+>   }
+>   
+> +static int ddebug_class_range_overlap(struct ddebug_class_map *cm,
+> +				      u64 *reserved_ids)
+> +{
+> +	u64 range = (((1ULL << cm->length) - 1) << cm->base);
+> +
+> +	if (range & *reserved_ids) {
+> +		pr_err("[%d..%d] on %s conflicts with %llx\n", cm->base,
+> +		       cm->base + cm->length - 1, cm->class_names[0],
+> +		       *reserved_ids);
+> +		return -EINVAL;
+> +	}
+> +	*reserved_ids |= range;
+> +	return 0;
+> +}
+> +
+>   /*
+>    * scan the named array: @_vec, ref'd from inside @_box, for the
+>    * start,len of the sub-array of elements matching on ->mod_name;
+> @@ -1242,9 +1257,11 @@ static int ddebug_module_apply_class_maps(struct ddebug_table *dt,
+>   	struct ddebug_class_map *cm;
+>   	int i;
+>   
+> -	for_subvec(i, cm, &dt->info, maps)
+> +	for_subvec(i, cm, &dt->info, maps) {
+> +		if (ddebug_class_range_overlap(cm, reserved_ids))
+> +			return -EINVAL;
+>   		ddebug_apply_params(cm, cm->mod_name);
+> -
+> +	}
+>   	vpr_info("module:%s attached %d classmaps\n", dt->mod_name, dt->info.maps.len);
+>   	return 0;
+>   }
+> @@ -1255,10 +1272,11 @@ static int ddebug_module_apply_class_users(struct ddebug_table *dt,
+>   	struct ddebug_class_user *cli;
+>   	int i;
+>   
+> -	/* now iterate dt */
+> -	for_subvec(i, cli, &dt->info, users)
+> +	for_subvec(i, cli, &dt->info, users) {
+> +		if (ddebug_class_range_overlap(cli->map, reserved_ids))
+> +			return -EINVAL;
+>   		ddebug_apply_params(cli->map, cli->mod_name);
+> -
+> +	}
+>   	vpr_info("module:%s attached %d classmap uses\n", dt->mod_name, dt->info.users.len);
+>   	return 0;
+>   }
+> @@ -1311,11 +1329,11 @@ static int ddebug_add_module(struct _ddebug_info *di, const char *modname)
+>   			return rc;
+>   		}
+>   	}
+> +
+>   	mutex_lock(&ddebug_lock);
+>   	list_add_tail(&dt->link, &ddebug_tables);
+>   	mutex_unlock(&ddebug_lock);
+>   
+> -
 
-I think this can't happen. ___wait_event() does
+Hi Jim,
 
-	init_wait_entry(&__wq_entry, exclusive ? WQ_FLAG_EXCLUSIVE : 0);	\
-	for (;;) {								\
-		long __int = prepare_to_wait_event(&wq_head, &__wq_entry, state);\
-										\
-		if (condition)							\
-			break;							\
-										\
-		if (___wait_is_interruptible(state) && __int) {			\
-			__ret = __int;						\
-			goto __out;						\
-		}								\
-										\
-		cmd;								\
-	}									\
+Strange line issues, can you squash it with the correct patch?
 
-and in this case condition == pipe_readable(pipe), cmd == schedule().
+Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
 
-Suppose that R got that only wakeup, and wake_up() races with some signal
-so that signal_pending(R) is true.
+Thanks,
 
-In this case prepare_to_wait_event() will return -ERESTARTSYS, but
-___wait_event() won't return this error code, it will check pipe_readable()
-and return 0.
+>   	if (dt->info.users.len) {
+>   		rc = ddebug_module_apply_class_users(dt, &reserved_ids);
+>   		if (rc)
+> diff --git a/lib/test_dynamic_debug.c b/lib/test_dynamic_debug.c
+> index b1555b0a2bb1..74b98adc4ed0 100644
+> --- a/lib/test_dynamic_debug.c
+> +++ b/lib/test_dynamic_debug.c
+> @@ -81,7 +81,7 @@ enum cat_disjoint_bits {
+>   	D2_DRMRES };
+>   
+>   /* numeric verbosity, V2 > V1 related */
+> -enum cat_level_num { V0 = 14, V1, V2, V3, V4, V5, V6, V7 };
+> +enum cat_level_num { V0 = 16, V1, V2, V3, V4, V5, V6, V7 };
+>   
+>   /* recapitulate DRM's parent(drm.ko) <-- _submod(drivers,helpers) */
+>   #if !defined(TEST_DYNAMIC_DEBUG_SUBMOD)
+> @@ -90,6 +90,7 @@ enum cat_level_num { V0 = 14, V1, V2, V3, V4, V5, V6, V7 };
+>    * classmaps on the client enums above, and then declares the PARAMS
+>    * ref'g the classmaps.  Each is exported.
+>    */
+> +
+>   DYNDBG_CLASSMAP_DEFINE(map_disjoint_bits, DD_CLASS_TYPE_DISJOINT_BITS,
+>   		       D2_CORE,
+>   		       "D2_CORE",
+> @@ -113,6 +114,14 @@ DYNDBG_CLASSMAP_DEFINE(map_level_num, DD_CLASS_TYPE_LEVEL_NUM,
+>   DYNDBG_CLASSMAP_PARAM(disjoint_bits, p);
+>   DYNDBG_CLASSMAP_PARAM(level_num, p);
+>   
+> +#ifdef FORCE_CLASSID_CONFLICT_MODPROBE
+> +/*
+> + * Enable with -Dflag on compile to test overlapping class-id range
+> + * detection.  This should break on modprobe.
+> + */
+> +DYNDBG_CLASSMAP_DEFINE(classid_range_conflict, 0, D2_CORE + 1, "D3_CORE");
+> +#endif
+> +
+>   #else /* TEST_DYNAMIC_DEBUG_SUBMOD */
+>   
+>   /*
 
-After that R will restart the main loop with wake_next_reader = true,
-and whatever it does it should do wake_up(pipe->rd_wait) before return.
-
-Note also that prepare_to_wait_event() removes the waiter from the
-wait_queue_head->head list, so another wake_up() can't pick this task.
-
-Can ___wait_event() miss the pipe_readable() event in this case? No,
-both wake_up() and prepare_to_wait_event() take the same wq_head->lock.
-
-What if pipe_readable() is actually false? Say, a spurios wakeup or, say,
-pipe_write() does wake_up(rd_wait) when another reader has already made
-the pipe_readable() condition false? This case looks "obviously fine" too.
-
-So I am still confused.
-
-I will wait for reply from Sapkal, then I'll try to make a debugging patch.
-
-Oleg.
+-- 
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
