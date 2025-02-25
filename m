@@ -1,345 +1,154 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BFA21931C
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683A9269CED
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:29:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740490139; cv=none; b=Up7KLo6gwcqnEWvoan5BMi0/OxKciCOiyCYw0bmc/S5A5BFjFIBx5kv/ARagWis6Y0M07+YsU7PwnpKLNLKnSnTbafATfuWAI8qWLGYcMqifN9sKAoECSidhnSZzLtvhWQo3wlfHeOAmPUWjtbEM1kLlMa4Ygz4mWkWLw9/VO+s=
+	t=1740490146; cv=none; b=oD/Ir8mCpVMFS6ygVNR8MkEkN24mxCP1UoldCZpJLlDlVA+1CS1xWA757C2cqDgaOKdhjO5YaUM65G8ZwhZTS/jxkdfC0kM5jJpgy9odJ9Y5KlBhNEKcJDpTJThoOgfpq7+TDi+KsiqaELVeUfO5m6jksP5ou9oaEkawilGeF/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740490139; c=relaxed/simple;
-	bh=wsU4kJ1XGzokvgOGLtJpT/bXWw/ITBLYkrSt5rEXIDo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d4fd5HwEvDh7uyLeyYDfmNfL1BQiXOuWYX014zuxacytXXL4EGMGl36rpN97x4vJIkkB3mNaxZSTZK+Ge8q6lla9x522YExdQnouy4RGjWaV4tDlSh6kegSO4XjxKCOM9wKQ0xsz0znOMF79+oXQtQf3T5jnHRxpV/riaMHeaZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=bhllHNYj; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1740490146; c=relaxed/simple;
+	bh=v9Qsz54UX2sSgijSuzcDKRcq8piDRum228xBYvlKgr0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:Content-Type:
+	 References; b=ijmKO+w7D+jYhig/Sst8gZGb0JVPw78dU1sIlLzKltvL7DL12qALmLvUkDm2JqCMm63ZYSQUZhMoE4ky7TH0oyqi1h+8rY1kAF/v8z+8snTrJ28XrthufmN/lmam4oBsKB8lMVsEJht7COmwqwpUifSUvaCDtDIZ/NOJV5DGpKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=CZsN1oNe; arc=none smtp.client-ip=203.254.224.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="bhllHNYj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1740490135;
-	bh=wsU4kJ1XGzokvgOGLtJpT/bXWw/ITBLYkrSt5rEXIDo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bhllHNYj49a9OWjQdFME3L8gLMCfI5obbF6NCs1gZK3j5iB3nHqnGEKAxq/g54Fxs
-	 TqGOrJB7tZB4L6kxN1lMR1jnd70Ol639bgcuGeVqTDUfW2hXSnwRLBA8Imwfj8TsLl
-	 rOHjTds71Jd+KWfdDg8hh4J+Aeoky5HrukCyWjthchQszCtY+o5WCxXQJD9zVpJtCJ
-	 fH+96Ui1lyfkyX/wHy8ZbvaWKWL7ImITRJAWkdk0Q0SY4X7tWgiSBmgE4MWtNMGP5C
-	 zmPAGLrUo/so15DDfTtN039znY/robn4Cv/Sy3YJau+Mcd98N5aK7uLCyAH2Su0zk5
-	 +JMbif5vKUKmg==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id B2D6B17E00FC;
-	Tue, 25 Feb 2025 14:28:54 +0100 (CET)
-Date: Tue, 25 Feb 2025 14:28:49 +0100
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Steven
- Price <steven.price@arm.com>, Rob Herring <robh@kernel.org>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, kernel@collabora.com
-Subject: Re: [RFC PATCH 4/7] drm/shmem: Introduce the notion of sparse
- objects
-Message-ID: <20250225142849.4dcec919@collabora.com>
-In-Reply-To: <20250218232552.3450939-5-adrian.larumbe@collabora.com>
-References: <20250218232552.3450939-1-adrian.larumbe@collabora.com>
-	<20250218232552.3450939-5-adrian.larumbe@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CZsN1oNe"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250225132857epoutp03bb4fed5cf2c9a29da8098dd3b8ca2f24~ndo7n8wtJ1565915659epoutp03h
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:28:57 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250225132857epoutp03bb4fed5cf2c9a29da8098dd3b8ca2f24~ndo7n8wtJ1565915659epoutp03h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1740490137;
+	bh=2MAJzguUYhBfDEljgxRB6xfhBZs+MafQSb669WMeyxY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=CZsN1oNeGXBmm1SlgXmF6oVXCJQtQADBRLU2rvOCF8tRQ+9HnkdbvXkLJyn33Yok9
+	 uKHbYWLNie6nNGOq12L5apalg7DXSE4OyYH5ZwHpiBCx/jPWh73YksA2tDyGvWQuAl
+	 BM0ygObAqsuiwsON/sBmGmnIQiTlVw74DIMz3aJ4=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
+	20250225132856epcas5p4c00e3f2c4785a8c34a3d92831b28c9d9~ndo674h1D2353323533epcas5p4O;
+	Tue, 25 Feb 2025 13:28:56 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.180]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4Z2JN65Tbtz4x9Pr; Tue, 25 Feb
+	2025 13:28:54 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	9D.2F.19710.695CDB76; Tue, 25 Feb 2025 22:28:54 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250225132507epcas5p455347acbd580b26ee807e467d3a6a05e~ndllaSuq30676506765epcas5p4J;
+	Tue, 25 Feb 2025 13:25:07 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250225132507epsmtrp2cc1f0ed3025eda297d65637b9082b286~ndllZUgWT1195711957epsmtrp2N;
+	Tue, 25 Feb 2025 13:25:07 +0000 (GMT)
+X-AuditID: b6c32a44-363dc70000004cfe-d3-67bdc5966a7b
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	24.C2.18729.2B4CDB76; Tue, 25 Feb 2025 22:25:06 +0900 (KST)
+Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
+	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250225132503epsmtip25254faae58fd31792ae09430c3351f4a~ndliPTjwt1947719477epsmtip2o;
+	Tue, 25 Feb 2025 13:25:03 +0000 (GMT)
+From: Varada Pavani <v.pavani@samsung.com>
+To: krzk@kernel.org, aswani.reddy@samsung.com, pankaj.dubey@samsung.com,
+	s.nawrocki@samsung.com, cw00.choi@samsung.com, alim.akhtar@samsung.com,
+	mturquette@baylibre.com, sboyd@kernel.org,
+	linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: gost.dev@samsung.com, Varada Pavani <v.pavani@samsung.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2 2/2] clk: samsung: update PLL locktime for PLL142XX used
+ on FSD platform
+Date: Tue, 25 Feb 2025 18:49:18 +0530
+Message-Id: <20250225131918.50925-3-v.pavani@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250225131918.50925-1-v.pavani@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphk+LIzCtJLcpLzFFi42LZdlhTU3fa0b3pBh/2qVk8mLeNzeLQ5q3s
+	Fte/PGe1uHlgJ5PF+fMb2C02Pb7GavGx5x6rxeVdc9gsZpzfx2Rx8ZSrxaKtX9gtDr9pZ7X4
+	d20ji8WCjY8YLTb0vmJ34Pd4f6OV3WPTqk42j81L6j36tqxi9Pi8SS6ANSrbJiM1MSW1SCE1
+	Lzk/JTMv3VbJOzjeOd7UzMBQ19DSwlxJIS8xN9VWycUnQNctMwfoWCWFssScUqBQQGJxsZK+
+	nU1RfmlJqkJGfnGJrVJqQUpOgUmBXnFibnFpXrpeXmqJlaGBgZEpUGFCdsa9qdIFOzkrPq5d
+	xNzA+IS9i5GTQ0LAROLJm7esILaQwG5GiZbW2i5GLiD7E6PE8oPn2SGcb4wS85qnssB0XHn4
+	mREisZdRYv2Ew2wQzhdGifeHNrOBVLEJaEmsnrocbK6IwBEmiT8nUkFsZoEIiV2NN8FqhAVi
+	Jf4eawKbyiKgKtG04A9YPa+ApcTH89Oh7pOXWL3hADOIzSlgJXHtxzuwkyQE/rJLPO37zQZR
+	5CLR8+kfI4QtLPHq+BaoZimJz+/2AtVwANnJEu2fuCHCORKXdq9igrDtJQ5cmcMCUsIsoCmx
+	fpc+RFhWYuqpdUwQJ/NJ9P5+AlXOK7FjHoytJLFzxwQoW0Li6eo1UNd4SLT13WWFhEkvo8T0
+	td2MExjlZiGsWMDIuIpRMrWgODc9Ndm0wDAvtRweZ8n5uZsYwclRy2UH4435//QOMTJxMB5i
+	lOBgVhLh5czcky7Em5JYWZValB9fVJqTWnyI0RQYfhOZpUST84HpOa8k3tDE0sDEzMzMxNLY
+	zFBJnLd5Z0u6kEB6YklqdmpqQWoRTB8TB6dUA9OTzFqF2DOT6/wfLj+7WGxOZ0z90kKZ3Ybm
+	ZwNbLDQ0k+KWx/kFc/C9vWkw2UmMdcdp37cyLgd6w05Nsdqs5zPVadX1wixWO7P9cs9Ub74+
+	svHolvbrXzdali2XnrNqruOfb1Y/Cvcv1OjKY/+w96w2S9y6bZFuP1UsueskXHX+PqnQm/Vq
+	vfemFWn6TVEfDF93Td2dfb657HECf/z53JNT57yebh5YZOxjMeFtbKTtHDNzDd2covz5aW/Y
+	fosdylEptQ26JafWILjVsjxm3ZUJj8WLtk4R2xF3ISEn5Km1hWc7X+752X2LM4Vj1+4w+a00
+	51/R5igzc6aFtjLu5w73/36363j8/jn119zX6yixFGckGmoxFxUnAgCZA5atFwQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDLMWRmVeSWpSXmKPExsWy7bCSvO6mI3vTDQ5wWDyYt43N4tDmrewW
+	1788Z7W4eWAnk8X58xvYLTY9vsZq8bHnHqvF5V1z2CxmnN/HZHHxlKvFoq1f2C0Ov2lntfh3
+	bSOLxYKNjxgtNvS+Ynfg93h/o5XdY9OqTjaPzUvqPfq2rGL0+LxJLoA1issmJTUnsyy1SN8u
+	gSvj3lTpgp2cFR/XLmJuYHzC3sXIySEhYCJx5eFnxi5GLg4hgd2MElPPPYRKSEjs/NbKDGEL
+	S6z895wdougTo8TL9kY2kASbgJbE6qnLWUESIgKXmCQOHIEYyywQJfG6dSUjiC0sEC0xe+Nl
+	MJtFQFWiacEfVhCbV8BS4uP56VDb5CVWbzgAto1TwEri2o93YHEhoJpD3z+xTWDkW8DIsIpR
+	MrWgODc9t9iwwDAvtVyvODG3uDQvXS85P3cTIziAtTR3MG5f9UHvECMTB+MhRgkOZiURXs7M
+	PelCvCmJlVWpRfnxRaU5qcWHGKU5WJTEecVf9KYICaQnlqRmp6YWpBbBZJk4OKUamE7Hsrk4
+	7HvzgCVx0/nSKWlMKmcvihQH2fjlOQh6VO7x0v6xjduM6aDIwxfdej8eal2bfnzB62/mx5TE
+	XfSzTpg+a2QukZOM35vyyXq2D9Pv3bde9trftFBPObIpKcuK73Aqk97niRcVxGuXXmI5vHvf
+	tpytj1/673+e80cz3v0FY1+W8YE9qgvj59qYWTbyPjozpXXLU6m0Yl85Zaf72jLPgjxPrPxf
+	Xr5yq0ZCy8vZb5/8m7oxwKhTd8+l0D1COwNk/xYpnRdbaVfy4MNK9bxD4dt1uqeucPqoc/H1
+	q76DxRnV6+p5rBVuzQs/3v5HYcGRdRcnWXZt72HedUFW4pjltqbN3Gzf3ug/aZ/myaLEUpyR
+	aKjFXFScCAC2dwDCzwIAAA==
+X-CMS-MailID: 20250225132507epcas5p455347acbd580b26ee807e467d3a6a05e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250225132507epcas5p455347acbd580b26ee807e467d3a6a05e
+References: <20250225131918.50925-1-v.pavani@samsung.com>
+	<CGME20250225132507epcas5p455347acbd580b26ee807e467d3a6a05e@epcas5p4.samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, 18 Feb 2025 23:25:34 +0000
-Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
+Currently PLL142XX locktime is 270. As per spec, it should be 150. Hence
+update PLL142XX controller locktime to 150.
 
-> Sparse DRM objects will store their backing pages in an xarray, to avoid =
-the
-> overhead of preallocating a huge struct page pointer array when only a ve=
-ry
-> small range of indices might be assigned.
->=20
-> For now, only the definition of a sparse object as a union alternative to=
- a
-> 'dense' object is provided, with functions that exploit it being part of =
-later
-> commits.
->=20
-> Signed-off-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
-> ---
->  drivers/gpu/drm/drm_gem_shmem_helper.c | 42 +++++++++++++++++++++++---
->  include/drm/drm_gem_shmem_helper.h     | 18 ++++++++++-
->  2 files changed, 54 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm=
-_gem_shmem_helper.c
-> index 5ab351409312..d63e42be2d72 100644
-> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-> @@ -10,6 +10,7 @@
->  #include <linux/shmem_fs.h>
->  #include <linux/slab.h>
->  #include <linux/vmalloc.h>
-> +#include <linux/xarray.h>
-> =20
->  #ifdef CONFIG_X86
->  #include <asm/set_memory.h>
-> @@ -50,7 +51,7 @@ static const struct drm_gem_object_funcs drm_gem_shmem_=
-funcs =3D {
-> =20
->  static struct drm_gem_shmem_object *
->  __drm_gem_shmem_create(struct drm_device *dev, size_t size, bool private,
-> -		       struct vfsmount *gemfs)
-> +		       bool sparse, struct vfsmount *gemfs)
->  {
->  	struct drm_gem_shmem_object *shmem;
->  	struct drm_gem_object *obj;
-> @@ -90,6 +91,11 @@ __drm_gem_shmem_create(struct drm_device *dev, size_t =
-size, bool private,
-> =20
->  	INIT_LIST_HEAD(&shmem->madv_list);
-> =20
-> +	if (unlikely(sparse))
-> +		xa_init_flags(&shmem->xapages, XA_FLAGS_ALLOC);
-> +
-> +	shmem->sparse =3D sparse;
+Cc: stable@vger.kernel.org
+Signed-off-by: Varada Pavani <v.pavani@samsung.com>
+---
+ drivers/clk/samsung/clk-pll.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Looks like the only caller passing sparse=3Dtrue is
-drm_gem_shmem_create_sparse(), and the sparse property is not used for
-the rest of the gem_shmem object initialization, so maybe we could move
-that code to drm_gem_shmem_create_sparse() instead of modifying the
-prototype of __drm_gem_shmem_create().
-
-> +
->  	if (!private) {
->  		/*
->  		 * Our buffers are kept pinned, so allocating them
-> @@ -124,10 +130,16 @@ __drm_gem_shmem_create(struct drm_device *dev, size=
-_t size, bool private,
->   */
->  struct drm_gem_shmem_object *drm_gem_shmem_create(struct drm_device *dev=
-, size_t size)
->  {
-> -	return __drm_gem_shmem_create(dev, size, false, NULL);
-> +	return __drm_gem_shmem_create(dev, size, false, false, NULL);
->  }
->  EXPORT_SYMBOL_GPL(drm_gem_shmem_create);
-> =20
-> +struct drm_gem_shmem_object *drm_gem_shmem_create_sparse(struct drm_devi=
-ce *dev, size_t size)
-> +{
-> +	return __drm_gem_shmem_create(dev, size, false, true, NULL);
-> +}
-> +EXPORT_SYMBOL_GPL(drm_gem_shmem_create_sparse);
-> +
->  /**
->   * drm_gem_shmem_create_with_mnt - Allocate an object with the given siz=
-e in a
->   * given mountpoint
-> @@ -145,7 +157,7 @@ struct drm_gem_shmem_object *drm_gem_shmem_create_wit=
-h_mnt(struct drm_device *de
->  							   size_t size,
->  							   struct vfsmount *gemfs)
->  {
-> -	return __drm_gem_shmem_create(dev, size, false, gemfs);
-> +	return __drm_gem_shmem_create(dev, size, false, false, gemfs);
->  }
->  EXPORT_SYMBOL_GPL(drm_gem_shmem_create_with_mnt);
-> =20
-> @@ -173,7 +185,9 @@ void drm_gem_shmem_free(struct drm_gem_shmem_object *=
-shmem)
->  			sg_free_table(shmem->sgt);
->  			kfree(shmem->sgt);
->  		}
-> -		if (shmem->pages)
-> +
-> +		if ((!shmem->sparse && shmem->pages) ||
-> +		    (shmem->sparse && !xa_empty(&shmem->xapages)))
->  			drm_gem_shmem_put_pages(shmem);
-
-Can we let drm_gem_shmem_put_pages() do the is_empty() check?
-
-> =20
->  		drm_WARN_ON(obj->dev, shmem->pages_use_count);
-> @@ -191,11 +205,19 @@ static int drm_gem_shmem_get_pages(struct drm_gem_s=
-hmem_object *shmem)
->  	struct drm_gem_object *obj =3D &shmem->base;
->  	struct page **pages;
-> =20
-> +	if (drm_WARN_ON(obj->dev, shmem->sparse))
-> +		return -EINVAL;
-> +
->  	dma_resv_assert_held(shmem->base.resv);
-> =20
->  	if (shmem->pages_use_count++ > 0)
->  		return 0;
-> =20
-> +	/* We only allow increasing the user count in the case of
-> +	  sparse shmem objects with some backed pages for now */
-> +	if (shmem->sparse && xa_empty(&shmem->xapages))
-> +		return -EINVAL;
-
-You'll never enter this branch because you return -EINVAL early when
-sparse=3D=3Dtrue.
-
-> +
->  	pages =3D drm_gem_get_pages(obj);
->  	if (IS_ERR(pages)) {
->  		drm_dbg_kms(obj->dev, "Failed to get pages (%ld)\n",
-> @@ -541,6 +563,8 @@ static vm_fault_t drm_gem_shmem_fault(struct vm_fault=
- *vmf)
->  	struct page *page;
->  	pgoff_t page_offset;
-> =20
-> +	drm_WARN_ON(obj->dev, shmem->sparse);
-
-For all those WARN_ON()s you add, I would add a comment explaining why
-you don't expect sparse objects to enter this path. In that case, it
-has to do with the fact sparse GEMs are not mmap-able (yet?).
-And, if you don't want to populate on-demand, you should probably
-return VM_FAULT_SIGBUS here, even if that's not expected.
-
-> +
->  	/* We don't use vmf->pgoff since that has the fake offset */
->  	page_offset =3D (vmf->address - vma->vm_start) >> PAGE_SHIFT;
-> =20
-> @@ -567,6 +591,7 @@ static void drm_gem_shmem_vm_open(struct vm_area_stru=
-ct *vma)
->  	struct drm_gem_shmem_object *shmem =3D to_drm_gem_shmem_obj(obj);
-> =20
->  	drm_WARN_ON(obj->dev, obj->import_attach);
-> +	drm_WARN_ON(obj->dev, shmem->sparse);
-> =20
->  	dma_resv_lock(shmem->base.resv, NULL);
-> =20
-> @@ -666,6 +691,9 @@ void drm_gem_shmem_print_info(const struct drm_gem_sh=
-mem_object *shmem,
->  	if (shmem->base.import_attach)
->  		return;
-> =20
-> +	if (drm_WARN_ON(shmem->base.dev, shmem->sparse))
-> +		return;
-> +
-
-We probably want to print some of these in case we're dealing with a
-sparse GEM object.
-
->  	drm_printf_indent(p, indent, "pages_use_count=3D%u\n", shmem->pages_use=
-_count);
->  	drm_printf_indent(p, indent, "vmap_use_count=3D%u\n", shmem->vmap_use_c=
-ount);
->  	drm_printf_indent(p, indent, "vaddr=3D%p\n", shmem->vaddr);
-> @@ -691,6 +719,7 @@ struct sg_table *drm_gem_shmem_get_sg_table(struct dr=
-m_gem_shmem_object *shmem)
->  	struct drm_gem_object *obj =3D &shmem->base;
-> =20
->  	drm_WARN_ON(obj->dev, obj->import_attach);
-> +	drm_WARN_ON(obj->dev, shmem->sparse);
-> =20
->  	return drm_prime_pages_to_sg(obj->dev, shmem->pages, obj->size >> PAGE_=
-SHIFT);
->  }
-> @@ -702,6 +731,9 @@ static struct sg_table *drm_gem_shmem_get_pages_sgt_l=
-ocked(struct drm_gem_shmem_
->  	int ret;
->  	struct sg_table *sgt;
-> =20
-> +	if (drm_WARN_ON(obj->dev, shmem->sparse))
-> +		return ERR_PTR(-EINVAL);
-> +
->  	if (shmem->sgt)
->  		return shmem->sgt;
-> =20
-> @@ -787,7 +819,7 @@ drm_gem_shmem_prime_import_sg_table(struct drm_device=
- *dev,
->  	size_t size =3D PAGE_ALIGN(attach->dmabuf->size);
->  	struct drm_gem_shmem_object *shmem;
-> =20
-> -	shmem =3D __drm_gem_shmem_create(dev, size, true, NULL);
-> +	shmem =3D __drm_gem_shmem_create(dev, size, true, false, NULL);
->  	if (IS_ERR(shmem))
->  		return ERR_CAST(shmem);
-> =20
-> diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shm=
-em_helper.h
-> index d22e3fb53631..902039cfc4ce 100644
-> --- a/include/drm/drm_gem_shmem_helper.h
-> +++ b/include/drm/drm_gem_shmem_helper.h
-> @@ -6,6 +6,7 @@
->  #include <linux/fs.h>
->  #include <linux/mm.h>
->  #include <linux/mutex.h>
-> +#include <linux/xarray.h>
-> =20
->  #include <drm/drm_file.h>
->  #include <drm/drm_gem.h>
-> @@ -29,7 +30,11 @@ struct drm_gem_shmem_object {
->  	/**
->  	 * @pages: Page table
->  	 */
-> -	struct page **pages;
-> +	union {
-> +
-> +		struct page **pages;
-> +		struct xarray xapages;
-> +	};
-> =20
->  	/**
->  	 * @pages_use_count:
-> @@ -91,6 +96,11 @@ struct drm_gem_shmem_object {
->  	 * @map_wc: map object write-combined (instead of using shmem defaults).
->  	 */
->  	bool map_wc : 1;
-> +
-> +	/**
-> +	 * @sparse: the object's virtual memory space is only partially backed =
-by pages
-
-I would drop the "virtual memory space" part. sparse just means the
-object might be partially backed by physical memory, and that memory
-will be allocated on-demand (most likely on-GPU-demand, but there's
-nothing preventing us from doing it on-CPU-demand, as long as the fault
-handler knows the allocation granularity).
-
-> +	 */
-> +	bool sparse : 1;
->  };
-> =20
->  #define to_drm_gem_shmem_obj(obj) \
-> @@ -229,6 +239,9 @@ static inline int drm_gem_shmem_object_vmap(struct dr=
-m_gem_object *obj,
->  {
->  	struct drm_gem_shmem_object *shmem =3D to_drm_gem_shmem_obj(obj);
-> =20
-> +	if (shmem->sparse)
-> +		return -EACCES;
-> +
->  	return drm_gem_shmem_vmap(shmem, map);
-
-Do we need a WARN_ON() in drm_gem_shmem_vunmap()?
-
->  }
-> =20
-> @@ -263,6 +276,9 @@ static inline int drm_gem_shmem_object_mmap(struct dr=
-m_gem_object *obj, struct v
->  {
->  	struct drm_gem_shmem_object *shmem =3D to_drm_gem_shmem_obj(obj);
-> =20
-> +	if (shmem->sparse)
-> +		return -EACCES;
-> +
->  	return drm_gem_shmem_mmap(shmem, vma);
->  }
-> =20
-
-I guess we also need to fail in drm_gem_shmem_get_sg_table() is this is
-a sparse object.
+diff --git a/drivers/clk/samsung/clk-pll.c b/drivers/clk/samsung/clk-pll.c
+index 2e94bba6c396..023a25af73c4 100644
+--- a/drivers/clk/samsung/clk-pll.c
++++ b/drivers/clk/samsung/clk-pll.c
+@@ -206,6 +206,7 @@ static const struct clk_ops samsung_pll3000_clk_ops = {
+  */
+ /* Maximum lock time can be 270 * PDIV cycles */
+ #define PLL35XX_LOCK_FACTOR	(270)
++#define PLL142XX_LOCK_FACTOR	(150)
+ 
+ #define PLL35XX_MDIV_MASK       (0x3FF)
+ #define PLL35XX_PDIV_MASK       (0x3F)
+@@ -272,7 +273,11 @@ static int samsung_pll35xx_set_rate(struct clk_hw *hw, unsigned long drate,
+ 	}
+ 
+ 	/* Set PLL lock time. */
+-	writel_relaxed(rate->pdiv * PLL35XX_LOCK_FACTOR,
++	if (pll->type == pll_142xx)
++		writel_relaxed(rate->pdiv * PLL142XX_LOCK_FACTOR,
++			pll->lock_reg);
++	else
++		writel_relaxed(rate->pdiv * PLL35XX_LOCK_FACTOR,
+ 			pll->lock_reg);
+ 
+ 	/* Change PLL PMS values */
+-- 
+2.17.1
 
