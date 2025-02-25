@@ -1,135 +1,165 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3C1262D29
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC796263C83
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740474907; cv=none; b=owvlpZN1pPugdzghJgGKwpQQsh4sJG8Izlpmr7/VWMtHcfYGl0jZ3wJSiNFsH5/mLKUhw198Q2ScvKMSEP/PjWQGZxSIhX4O7dCyJI9MjmTZgAcfz3wtD/nT5nMmHSuJ0nv7GznAEqycZ6XYHjoMpYhPRcOiFh8yFNIg8rFEFOI=
+	t=1740474911; cv=none; b=Hd11ajiMaZRaWdeKuIXZ+Z/KWFoWkS1/sTLidp6/raNviR80rfJ9bvMP4uA6VZsQzPj43O8vg9n1fHVsy+e9VYi5s2OZhLjHQMFvxpDq+ADeCDTnLkVgvm6KNFyygMr8IWhlXfUmkjwoUteA3uSreo3LhWdWC3eC56pKD4/waX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740474907; c=relaxed/simple;
-	bh=/aoKHTFCh/xZrGmXea5tqIzv5tq6WilIrV4jsOaJ6AU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=G8vp/GgCUXi9EzDKnf7TXXAiEdnRzIFeL6ZAJDxfKkpZm3Z7xUTz7ZZzRpsT1VS0uyDO7bkNkZJ7bhkSE8ElM3TKKYDTa2Sl4OceP9yTv6Kks5vCEt1qod+pWUWgtN/XjksROZIRGFD4AqdQ173FJBeMZ4z3CynGw5bcRBq5Mt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=C+UKbjAT; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740474911; c=relaxed/simple;
+	bh=fHGpW80fYUJHEoegs7hdiagul4opbNfZJrlcvH16f+k=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=muPmt4Zl6912Uo8Be0Z/H+sISJ4n/hZvNSsAjiA0ac4Qn1xNz2RXZFvBqPOQPwkwXgGw+R0DXxpQBgZT6EBxxa9kE3PhsO4WNIBpMoHOQO7KJk2d9ZByx4iyQGuL8eMJvLIp6rGDGyh7Tegui1aQpi/hCBbJqPouz20xwdKG6zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MsCAJDir; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="C+UKbjAT"
-Message-ID: <a042e0ff-3c9e-45f9-a621-c15a8fc27965@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740474904;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MsCAJDir"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740474908;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=NwOgRv8FWM7xC0FLic5dPPFOQVWWI1lXpTN1kw/ZIng=;
-	b=C+UKbjATfvY0KqJWT6lphcLfXqHfKo7sdCeqWUhAYnvzIZ4Yr1OGgyBr+bJvChgYPNaTW5
-	TpxMuj2FPHWVPSBP7hLMCJsjU0skTjFQehT+r5cBYNUPKViVXigjO7QrL7b+XxdYtJLE96
-	WGniK67QN5MD30Jb6CMLXv1kbwh13ew=
-Date: Tue, 25 Feb 2025 17:14:51 +0800
+	bh=5mY0Y8NDtCq9U6kZXa7z7cTNd5hZ8Jf2lYO6g2P04nc=;
+	b=MsCAJDira7fBdWqqIboShoJUxzfqpXAG7ElCMPF/xP2oRROfTeO3MrdvKzSEmcNVB576LF
+	znW5PjWuLu9gBINYkw8KiNGv/0zkOqEl6ed+oS8hCBN1duR3R9mR6ygeaGIGYHQTScPi3n
+	NgVP9SpcFNZ0m7n8YBAyhKdNYP0idQc=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-187-lKPlpMCDNg26HOCRUz_8tg-1; Tue, 25 Feb 2025 04:15:07 -0500
+X-MC-Unique: lKPlpMCDNg26HOCRUz_8tg-1
+X-Mimecast-MFC-AGG-ID: lKPlpMCDNg26HOCRUz_8tg_1740474906
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-438e180821aso26927555e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 01:15:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740474906; x=1741079706;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5mY0Y8NDtCq9U6kZXa7z7cTNd5hZ8Jf2lYO6g2P04nc=;
+        b=ojzufIiHuJTcew0Ug0LmgnQQbwQj4y1s6AyPkVQn8wmQEYUDcaEEB6qU5nZGxKLiHg
+         kYf4TjL3mzgXBNdJ080HekhVqv2UZ0hj/igTyYFOXbCuBSucfOOSRm5x/3HHLT1zH2st
+         TBdubZcA4DbD5uJTldqRJWC1mQHs95+76DLz+dBoalFyn5lxIIlGiMkOA3qHZhqdgNdJ
+         znelmfBnxC9Owzz/DMmL8O5mvfmlQF/og6HqeqVW+A6fvNVx5APDy3BNeAn9EryZlOdC
+         SIhYCUG1wqMHAqgGGK1GKrQ9KNe9sx1Q/36GPJadwKKrJd0HR5JHuNmwFHQQTK7+FgJz
+         X/eg==
+X-Forwarded-Encrypted: i=1; AJvYcCWerngKU6w5GMXdTTUPu5C/Oeegeva+0SRp+8VC3iD01E6fQCVKCPPvKAYImT/+0xlc4QgsQnFmeZYp5Uo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yylj69cJ927DG2rnGe9TpYKjctfodi7Q6d6JCVZg+nGkF16U2ef
+	4RE09MomqUPKtYrsXYAgmQV2xtWjjZcQtbVn3bff0cxbpg93TYLoutV0WG6K4NF8Bp9iRiV8G/r
+	Esmuxh1D09byhyX1WNvuJFfXVNMcZa1P99jkRHafNNGUBCgIFhUR0VG2BmfGR3A==
+X-Gm-Gg: ASbGncsMn6ZXVP5XaJLJXYKuothfDQjb+FJKRKQdatBJrSWhSlKqdArf84qQfotpXCd
+	Znk8p9589oZc3QaFf76l7G++aoUBkYfzEAr8hvx5z3mMhnxZjWzQZLY+mRq+Q/I4Q78NKvjw56+
+	cFyfRXg34ydChwvfONDRVmEIft+Zi/YDlWgGl/saXHsINvE2BYF0qgTxoM7LCXqs4FtjfpgSULa
+	Xo1MGtpIqfMTnSAKWnd/0Jk6LqpmUgct9r/7VGq2+oFchunqy8yDGGyUMXQBoVIXsMdjeXnwbhF
+	JetWVkcAYGZUtV1pxeqIPbv336cC4k16cirnOAFB/g==
+X-Received: by 2002:a05:600c:1546:b0:439:9946:af60 with SMTP id 5b1f17b1804b1-43ab0f72b03mr17377105e9.25.1740474905742;
+        Tue, 25 Feb 2025 01:15:05 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFv74YgG8Iolf174w9Y9ybHGXlvSToIfrToEGjP2c4/7Rl0aROxWh/UMKakDjj4UqxbgXB2bQ==
+X-Received: by 2002:a05:600c:1546:b0:439:9946:af60 with SMTP id 5b1f17b1804b1-43ab0f72b03mr17376785e9.25.1740474905347;
+        Tue, 25 Feb 2025 01:15:05 -0800 (PST)
+Received: from [10.32.64.164] (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ab1532f0asm18718845e9.4.2025.02.25.01.15.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 01:15:04 -0800 (PST)
+Message-ID: <7df6e1846ed6932c789a913c6a10aa8df5e26519.camel@redhat.com>
+Subject: Re: [PATCH net-next v3 2/4] stmmac: loongson: Remove surplus loop
+From: Philipp Stanner <pstanner@redhat.com>
+To: Yanteng Si <si.yanteng@linux.dev>, Philipp Stanner <phasta@kernel.org>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Huacai Chen <chenhuacai@kernel.org>,
+ Yinggang Gu <guyinggang@loongson.cn>, Feiyang Chen
+ <chenfeiyang@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Qing
+ Zhang <zhangqing@loongson.cn>
+Cc: netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date: Tue, 25 Feb 2025 10:15:03 +0100
+In-Reply-To: <437d4fad-6cd4-4f90-a1bb-07193d015cad@linux.dev>
+References: <20250224135321.36603-2-phasta@kernel.org>
+	 <20250224135321.36603-4-phasta@kernel.org>
+	 <437d4fad-6cd4-4f90-a1bb-07193d015cad@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next v3 4/4] stmmac: Replace deprecated PCI functions
-To: Philipp Stanner <pstanner@redhat.com>, Philipp Stanner
- <phasta@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Huacai Chen <chenhuacai@kernel.org>, Yinggang Gu <guyinggang@loongson.cn>,
- Feiyang Chen <chenfeiyang@loongson.cn>, Jiaxun Yang
- <jiaxun.yang@flygoat.com>, Qing Zhang <zhangqing@loongson.cn>
-Cc: netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250224135321.36603-2-phasta@kernel.org>
- <20250224135321.36603-6-phasta@kernel.org>
- <f1c3e538e19aca7fd46dd7f10da190d691bace83.camel@redhat.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <f1c3e538e19aca7fd46dd7f10da190d691bace83.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
+On Tue, 2025-02-25 at 17:06 +0800, Yanteng Si wrote:
+>=20
+> =E5=9C=A8 2/24/25 9:53 PM, Philipp Stanner =E5=86=99=E9=81=93:
+> > loongson_dwmac_probe() contains a loop which doesn't have an
+> > effect,
+> > because it tries to call pcim_iomap_regions() with the same
+> > parameters
+> > several times. The break statement at the loop's end furthermore
+> > ensures
+> > that the loop only runs once anyways.
+> >=20
+> > Remove the surplus loop.
+> >=20
+> > Signed-off-by: Philipp Stanner <phasta@kernel.org>
+>=20
+> It seems that the fix-tag has been forgotten, next two patches as
+> well.
 
-在 2/25/25 3:16 PM, Philipp Stanner 写道:
-> On Mon, 2025-02-24 at 14:53 +0100, Philipp Stanner wrote:
->> From: Philipp Stanner <pstanner@redhat.com>
->>
->> The PCI functions
->>    - pcim_iomap_regions() and
->>    - pcim_iomap_table()
->> have been deprecated.
->>
->> Replace them with their successor function, pcim_iomap_region().
->>
->> Make variable declaration order at closeby places comply with reverse
->> christmas tree order.
->>
->> Signed-off-by: Philipp Stanner <pstanner@redhat.com>
->> ---
->>   .../net/ethernet/stmicro/stmmac/dwmac-loongson.c   | 11 ++++-------
->>   drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c   | 14 ++++++------
->> --
->>   2 files changed, 10 insertions(+), 15 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
->> b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
->> index f3ea6016be68..25ef7b9c5dce 100644
->> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
->> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
->> @@ -521,10 +521,10 @@ static int loongson_dwmac_acpi_config(struct
->> pci_dev *pdev,
->>   static int loongson_dwmac_probe(struct pci_dev *pdev, const struct
->> pci_device_id *id)
->>   {
->>   	struct plat_stmmacenet_data *plat;
->> +	struct stmmac_resources res = {};
->>   	struct stmmac_pci_info *info;
->> -	struct stmmac_resources res;
->>   	struct loongson_data *ld;
->> -	int ret, i;
->> +	int ret;
->>   
->>   	plat = devm_kzalloc(&pdev->dev, sizeof(*plat), GFP_KERNEL);
->>   	if (!plat)
->> @@ -554,13 +554,11 @@ static int loongson_dwmac_probe(struct pci_dev
->> *pdev, const struct pci_device_id
->>   	pci_set_master(pdev);
->>   
->>   	/* Get the base address of device */
->> -	ret = pcim_iomap_regions(pdev, BIT(0), DRIVER_NAME);
->> +	res.addr = pcim_iomap_region(pdev, 0, DRIVER_NAME);
->> +	ret = PTR_ERR_OR_ZERO(res.addr);
->>   	if (ret)
->>   		goto err_disable_device;
->>   
->> -	memset(&res, 0, sizeof(res));
->> -	res.addr = pcim_iomap_table(pdev)[0];
->> -
->>   	plat->bsp_priv = ld;
->>   	plat->setup = loongson_dwmac_setup;
->>   	ld->dev = &pdev->dev;
->> @@ -603,7 +601,6 @@ static void loongson_dwmac_remove(struct pci_dev
->> *pdev)
->>   	struct net_device *ndev = dev_get_drvdata(&pdev->dev);
->>   	struct stmmac_priv *priv = netdev_priv(ndev);
->>   	struct loongson_data *ld;
->> -	int i;
-> Just saw that this is a left-over that actually should be in patch 3.
-> Will fix.
->
-Yeah, with this
+Not forgotten, I just think that patches 2-4 are code improvements, not
+bug fixes.
 
+The issue in patch 1 would cause actual misbehavior (a useless debug
+information print in case of a resource collision), whereas 2-4 are
+just ugly code, but not actual bugs: the loop always just runs once;
+and unmapping the PCI resources manually is valid, but obviously
+unnecessary.
 
-Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
+Agreed?
 
-Thanks,
-Yanteng
+P.
+
+>=20
+>=20
+> Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
+>=20
+> Thanks,
+> Yanteng
+>=20
+> > ---
+> > =C2=A0 drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c | 11 +++---=
+-
+> > ----
+> > =C2=A0 1 file changed, 3 insertions(+), 8 deletions(-)
+> >=20
+> > diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> > b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> > index 73a6715a93e6..e3cacd085b3f 100644
+> > --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> > +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> > @@ -554,14 +554,9 @@ static int loongson_dwmac_probe(struct pci_dev
+> > *pdev, const struct pci_device_id
+> > =C2=A0=C2=A0	pci_set_master(pdev);
+> > =C2=A0=20
+> > =C2=A0=C2=A0	/* Get the base address of device */
+> > -	for (i =3D 0; i < PCI_STD_NUM_BARS; i++) {
+> > -		if (pci_resource_len(pdev, i) =3D=3D 0)
+> > -			continue;
+> > -		ret =3D pcim_iomap_regions(pdev, BIT(0),
+> > DRIVER_NAME);
+> > -		if (ret)
+> > -			goto err_disable_device;
+> > -		break;
+> > -	}
+> > +	ret =3D pcim_iomap_regions(pdev, BIT(0), DRIVER_NAME);
+> > +	if (ret)
+> > +		goto err_disable_device;
+> > =C2=A0=20
+> > =C2=A0=C2=A0	memset(&res, 0, sizeof(res));
+> > =C2=A0=C2=A0	res.addr =3D pcim_iomap_table(pdev)[0];
 
