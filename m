@@ -1,223 +1,345 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED260269819
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:28:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BFA21931C
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:28:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740490135; cv=none; b=Wf5sHfAnhLbQSA8nVSUbhTRSsHwjnFTIj4HuvDczgf1frDrO0FDIQA0g47b0yTUIUUnycNpvw0jOKOWeD9riR2JSl0raLlTAGjC9CLk8SXQKk57sbN0kul42HDZ9uhn6cehjqtiW0q85x7l3Pz6bMMhO6C9J0U190kjeuLvMpns=
+	t=1740490139; cv=none; b=Up7KLo6gwcqnEWvoan5BMi0/OxKciCOiyCYw0bmc/S5A5BFjFIBx5kv/ARagWis6Y0M07+YsU7PwnpKLNLKnSnTbafATfuWAI8qWLGYcMqifN9sKAoECSidhnSZzLtvhWQo3wlfHeOAmPUWjtbEM1kLlMa4Ygz4mWkWLw9/VO+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740490135; c=relaxed/simple;
-	bh=PoDtDtnLOgdOhhX8B8E6bkJ3+Eabd005Zke25eUtRBI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:Content-Type:
-	 References; b=j+ViJJUCLMksLtacGqg0/AGL2OuBBX3rbe1fSi5XdSB9PH/Inme8e6YkNxsyJaOzDiNOP8RbhCS4iPsdMO/nlI6C3XQcvCmVK8tx9cLcFTg76hRvtq1rXTsc7vo90LcQbA5apHX+JHAWRV9rw0/DuHcLqUXMwGSX0QjwG+zJWBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=fT4D40Xo; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1740490139; c=relaxed/simple;
+	bh=wsU4kJ1XGzokvgOGLtJpT/bXWw/ITBLYkrSt5rEXIDo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d4fd5HwEvDh7uyLeyYDfmNfL1BQiXOuWYX014zuxacytXXL4EGMGl36rpN97x4vJIkkB3mNaxZSTZK+Ge8q6lla9x522YExdQnouy4RGjWaV4tDlSh6kegSO4XjxKCOM9wKQ0xsz0znOMF79+oXQtQf3T5jnHRxpV/riaMHeaZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=bhllHNYj; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fT4D40Xo"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250225132849epoutp021c901ff6458af99a43111bd1effe9cc4~ndo00Kf3V3272932729epoutp02r
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:28:49 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250225132849epoutp021c901ff6458af99a43111bd1effe9cc4~ndo00Kf3V3272932729epoutp02r
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1740490129;
-	bh=iByPpyU+f6q9fpMqiXBgPWh/Orb61g/26dgeOYhx3TE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fT4D40XodcGQ/BInDMaUUgZErfU241Aet2hS1Uwp4kCQIg6rIfJf/b04N/xoWnbJb
-	 62WqRRSdLXXBhqzbQ1Ma0quw8bN3akubgpkOLVQF3wErsGwYUJJnR4ybKzY2Rk7YIx
-	 nPa4wF/yuCnfHr9TfOc7j6WOfEA3aAm3EF6vgv/o=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-	20250225132849epcas5p3122a8cb82b3aae631e363ba60cb98475~ndo0b3sgd1848618486epcas5p3_;
-	Tue, 25 Feb 2025 13:28:49 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.181]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4Z2JMz28Qsz4x9Pw; Tue, 25 Feb
-	2025 13:28:47 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	47.45.19933.F85CDB76; Tue, 25 Feb 2025 22:28:47 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250225132447epcas5p4576a3dac624edbd5edc0a047e008de05~ndlS8_KGV0676106761epcas5p4k;
-	Tue, 25 Feb 2025 13:24:47 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250225132447epsmtrp131ecfea8029ff60e824f546e6ae84125~ndlS8LYen2478624786epsmtrp1q;
-	Tue, 25 Feb 2025 13:24:47 +0000 (GMT)
-X-AuditID: b6c32a4a-c1fda70000004ddd-64-67bdc58fb93c
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	FC.DA.33707.F94CDB76; Tue, 25 Feb 2025 22:24:47 +0900 (KST)
-Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250225132441epsmtip2e358945fc21168f55389f2090fe7b0b9~ndlNcADRW1998219982epsmtip2D;
-	Tue, 25 Feb 2025 13:24:40 +0000 (GMT)
-From: Varada Pavani <v.pavani@samsung.com>
-To: krzk@kernel.org, aswani.reddy@samsung.com, pankaj.dubey@samsung.com,
-	s.nawrocki@samsung.com, cw00.choi@samsung.com, alim.akhtar@samsung.com,
-	mturquette@baylibre.com, sboyd@kernel.org,
-	linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: gost.dev@samsung.com, Varada Pavani <v.pavani@samsung.com>
-Subject: [PATCH v2 1/2] clk: samsung: Use samsung CCF common function
-Date: Tue, 25 Feb 2025 18:49:17 +0530
-Message-Id: <20250225131918.50925-2-v.pavani@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250225131918.50925-1-v.pavani@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrPKsWRmVeSWpSXmKPExsWy7bCmum7/0b3pBivu8Fo8mLeNzeLQ5q3s
-	Fte/PGe1uHlgJ5PF+fMb2C02Pb7GavGx5x6rxeVdc9gsZpzfx2Rx8ZSrxaKtX9gtDr9pZ7X4
-	d20ji8WG3lfsDnwe72+0sntsWtXJ5rF5Sb1H35ZVjB6fN8kFsEZl22SkJqakFimk5iXnp2Tm
-	pdsqeQfHO8ebmhkY6hpaWpgrKeQl5qbaKrn4BOi6ZeYA3amkUJaYUwoUCkgsLlbSt7Mpyi8t
-	SVXIyC8usVVKLUjJKTAp0CtOzC0uzUvXy0stsTI0MDAyBSpMyM6Y/Na24Lhyxc4zd5gaGPvl
-	uxg5OSQETCTWbb7L0sXIxSEksJtR4vXi46wQzidGiakNx9jgnEt7drLDtCz9MJ0ZIrGTUWLi
-	1/1QzhdGifYL7cwgVWwCWhKrpy5nBbFFBI4wSfw5kQpiMwvYSayfOhesRljAVWLhjGdsIDaL
-	gKpE15+TjCA2r4ClxNWlV5kgtslLrN5wAKyeU8BK4tqPd+wgyyQEvrJLXL68AOhyDiDHRaJ5
-	pi1EvbDEq+NboC6VknjZ38YOUZIs0f6JGyKcI3Fp9yqo8fYSB67MAZvCLKApsX6XPkRYVmLq
-	qXVMEBfzSfT+fgJVziuxYx6MrSSxc8cEKFtC4unqNWwQtofEk7VnGSFB0ssosXTaW+YJjHKz
-	EFYsYGRcxSiZWlCcm55abFpglJdaDo+z5PzcTYzglKjltYPx4YMPeocYmTgYDzFKcDArifBy
-	Zu5JF+JNSaysSi3Kjy8qzUktPsRoCgy+icxSosn5wKScVxJvaGJpYGJmZmZiaWxmqCTO27yz
-	JV1IID2xJDU7NbUgtQimj4mDU6qBiTvj2TvZtzzGPuGLNyWdZjc2E9x05bBc8sF+V4W/RzxT
-	js5eUX9I7o37Az7PORpv9T4cDfd/GbyizirBfyarXv41RretzOWzTjo+jK0PX3coj3/uHLsV
-	Bb33Vmgf7RJuDeHlZzisFhqtoXZD5SHzp0X/DNl7uDrvLQ5Vnve36vJkT9k0t8sbX2o81fzn
-	Ul60xHGusKnMh87Gpmb/PToxc1X3bC0Xb3WccmIBa03M5HlSVtua1/688OlJ2y/DyEAXC/8d
-	b5eKmGtpxOhU6rTYNfoeFF0ilZbZu57Ta7uA6OIpFa/OdjSkm9hI36lXEtHsC2VP+Kj/4nLh
-	3fjmX4xxLTPu7WZQmWVtvNf/5VwlluKMREMt5qLiRAAXegEaEgQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCLMWRmVeSWpSXmKPExsWy7bCSvO78I3vTDXZf57V4MG8bm8WhzVvZ
-	La5/ec5qcfPATiaL8+c3sFtsenyN1eJjzz1Wi8u75rBZzDi/j8ni4ilXi0Vbv7BbHH7Tzmrx
-	79pGFosNva/YHfg83t9oZffYtKqTzWPzknqPvi2rGD0+b5ILYI3isklJzcksSy3St0vgypj8
-	1rbguHLFzjN3mBoY++W7GDk5JARMJJZ+mM7cxcjFISSwnVHi1qGf7BAJCYmd31qZIWxhiZX/
-	nrNDFH1ilHg7bQEjSIJNQEti9dTlrCAJEYFLTBIHjjwB62YWcJC4ePYJC4gtLOAqsXDGMzYQ
-	m0VAVaLrz0mwZl4BS4mrS68yQWyQl1i94QDYNk4BK4lrP96BzRECqjn0/RPbBEa+BYwMqxhF
-	UwuKc9NzkwsM9YoTc4tL89L1kvNzNzGCA1YraAfjsvV/9Q4xMnEwHmKU4GBWEuHlzNyTLsSb
-	klhZlVqUH19UmpNafIhRmoNFSZxXOaczRUggPbEkNTs1tSC1CCbLxMEp1cCU33NN7tLXuAdp
-	8QVmKmeE0yfmz1/yO2rqR97PNTHxSe/ybhzsXHez2TkqRvVLSMGTBGF1pvrjJtN+sYQlzUze
-	/ouzZMqDmKnJdT6KcnJd04Jz/BWDz2+/tGgpzwKnc6VmXD+qNE6Z+RhemPKIe2fxKw6FRQuZ
-	ecUvnajYWVwfmLVqlk+KyYa+WpbVqt171mr+XLPvhbtY2s006euXfnrVMS/3re+UPFiVF37O
-	lNnr2ZRJ7ArKEkwHdKY4Cf2QZhfZf8DnWliD8JlZ5vKvVi7Se+l7SPqZeYh98J3U04luC4JW
-	zb+xYVHZc5Wb955s/NC4V4dHc89SHe77+bXi7s8XXH3cUiHx6W3zllnXJ7crsRRnJBpqMRcV
-	JwIAm5Z1MscCAAA=
-X-CMS-MailID: 20250225132447epcas5p4576a3dac624edbd5edc0a047e008de05
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250225132447epcas5p4576a3dac624edbd5edc0a047e008de05
-References: <20250225131918.50925-1-v.pavani@samsung.com>
-	<CGME20250225132447epcas5p4576a3dac624edbd5edc0a047e008de05@epcas5p4.samsung.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="bhllHNYj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1740490135;
+	bh=wsU4kJ1XGzokvgOGLtJpT/bXWw/ITBLYkrSt5rEXIDo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=bhllHNYj49a9OWjQdFME3L8gLMCfI5obbF6NCs1gZK3j5iB3nHqnGEKAxq/g54Fxs
+	 TqGOrJB7tZB4L6kxN1lMR1jnd70Ol639bgcuGeVqTDUfW2hXSnwRLBA8Imwfj8TsLl
+	 rOHjTds71Jd+KWfdDg8hh4J+Aeoky5HrukCyWjthchQszCtY+o5WCxXQJD9zVpJtCJ
+	 fH+96Ui1lyfkyX/wHy8ZbvaWKWL7ImITRJAWkdk0Q0SY4X7tWgiSBmgE4MWtNMGP5C
+	 zmPAGLrUo/so15DDfTtN039znY/robn4Cv/Sy3YJau+Mcd98N5aK7uLCyAH2Su0zk5
+	 +JMbif5vKUKmg==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id B2D6B17E00FC;
+	Tue, 25 Feb 2025 14:28:54 +0100 (CET)
+Date: Tue, 25 Feb 2025 14:28:49 +0100
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Steven
+ Price <steven.price@arm.com>, Rob Herring <robh@kernel.org>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, kernel@collabora.com
+Subject: Re: [RFC PATCH 4/7] drm/shmem: Introduce the notion of sparse
+ objects
+Message-ID: <20250225142849.4dcec919@collabora.com>
+In-Reply-To: <20250218232552.3450939-5-adrian.larumbe@collabora.com>
+References: <20250218232552.3450939-1-adrian.larumbe@collabora.com>
+	<20250218232552.3450939-5-adrian.larumbe@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Use samsung CCF function which registers multiple clock providers using
-single function call samsung_cmu_register_clocks().
+On Tue, 18 Feb 2025 23:25:34 +0000
+Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
 
-Signed-off-by: Varada Pavani <v.pavani@samsung.com>
----
- drivers/clk/samsung/clk-exynos4.c | 78 +++++++++++++++++--------------
- 1 file changed, 44 insertions(+), 34 deletions(-)
+> Sparse DRM objects will store their backing pages in an xarray, to avoid =
+the
+> overhead of preallocating a huge struct page pointer array when only a ve=
+ry
+> small range of indices might be assigned.
+>=20
+> For now, only the definition of a sparse object as a union alternative to=
+ a
+> 'dense' object is provided, with functions that exploit it being part of =
+later
+> commits.
+>=20
+> Signed-off-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
+> ---
+>  drivers/gpu/drm/drm_gem_shmem_helper.c | 42 +++++++++++++++++++++++---
+>  include/drm/drm_gem_shmem_helper.h     | 18 ++++++++++-
+>  2 files changed, 54 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm=
+_gem_shmem_helper.c
+> index 5ab351409312..d63e42be2d72 100644
+> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
+> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/shmem_fs.h>
+>  #include <linux/slab.h>
+>  #include <linux/vmalloc.h>
+> +#include <linux/xarray.h>
+> =20
+>  #ifdef CONFIG_X86
+>  #include <asm/set_memory.h>
+> @@ -50,7 +51,7 @@ static const struct drm_gem_object_funcs drm_gem_shmem_=
+funcs =3D {
+> =20
+>  static struct drm_gem_shmem_object *
+>  __drm_gem_shmem_create(struct drm_device *dev, size_t size, bool private,
+> -		       struct vfsmount *gemfs)
+> +		       bool sparse, struct vfsmount *gemfs)
+>  {
+>  	struct drm_gem_shmem_object *shmem;
+>  	struct drm_gem_object *obj;
+> @@ -90,6 +91,11 @@ __drm_gem_shmem_create(struct drm_device *dev, size_t =
+size, bool private,
+> =20
+>  	INIT_LIST_HEAD(&shmem->madv_list);
+> =20
+> +	if (unlikely(sparse))
+> +		xa_init_flags(&shmem->xapages, XA_FLAGS_ALLOC);
+> +
+> +	shmem->sparse =3D sparse;
 
-diff --git a/drivers/clk/samsung/clk-exynos4.c b/drivers/clk/samsung/clk-exynos4.c
-index 16be0c53903c..ca5036ba45b9 100644
---- a/drivers/clk/samsung/clk-exynos4.c
-+++ b/drivers/clk/samsung/clk-exynos4.c
-@@ -1269,6 +1269,45 @@ static const struct samsung_cpu_clock exynos4412_cpu_clks[] __initconst = {
- 		CPUCLK_LAYOUT_E4210, e4412_armclk_d),
- };
- 
-+static const struct samsung_cmu_info cmu_info_exynos4 __initconst = {
-+	.mux_clks		= exynos4_mux_clks,
-+	.nr_mux_clks		= ARRAY_SIZE(exynos4_mux_clks),
-+	.div_clks		= exynos4_div_clks,
-+	.nr_div_clks		= ARRAY_SIZE(exynos4_div_clks),
-+	.gate_clks		= exynos4_gate_clks,
-+	.nr_gate_clks		= ARRAY_SIZE(exynos4_gate_clks),
-+	.fixed_factor_clks	= exynos4_fixed_factor_clks,
-+	.nr_fixed_factor_clks	= ARRAY_SIZE(exynos4_fixed_factor_clks),
-+	.fixed_clks	= exynos4_fixed_rate_clks,
-+	.nr_fixed_clks	= ARRAY_SIZE(exynos4_fixed_rate_clks),
-+};
-+
-+static const struct samsung_cmu_info cmu_info_exynos4210 __initconst = {
-+	.mux_clks		= exynos4210_mux_clks,
-+	.nr_mux_clks		= ARRAY_SIZE(exynos4210_mux_clks),
-+	.div_clks		= exynos4210_div_clks,
-+	.nr_div_clks		= ARRAY_SIZE(exynos4210_div_clks),
-+	.gate_clks		= exynos4210_gate_clks,
-+	.nr_gate_clks		= ARRAY_SIZE(exynos4210_gate_clks),
-+	.fixed_factor_clks	= exynos4210_fixed_factor_clks,
-+	.nr_fixed_factor_clks	= ARRAY_SIZE(exynos4210_fixed_factor_clks),
-+	.fixed_clks	= exynos4210_fixed_rate_clks,
-+	.nr_fixed_clks	= ARRAY_SIZE(exynos4210_fixed_rate_clks),
-+	.cpu_clks		= exynos4210_cpu_clks,
-+	.nr_cpu_clks		= ARRAY_SIZE(exynos4210_cpu_clks),
-+};
-+
-+static const struct samsung_cmu_info cmu_info_exynos4x12 __initconst = {
-+	.mux_clks		= exynos4x12_mux_clks,
-+	.nr_mux_clks		= ARRAY_SIZE(exynos4x12_mux_clks),
-+	.div_clks		= exynos4x12_div_clks,
-+	.nr_div_clks		= ARRAY_SIZE(exynos4x12_div_clks),
-+	.gate_clks		= exynos4x12_gate_clks,
-+	.nr_gate_clks		= ARRAY_SIZE(exynos4x12_gate_clks),
-+	.fixed_factor_clks	= exynos4x12_fixed_factor_clks,
-+	.nr_fixed_factor_clks	= ARRAY_SIZE(exynos4x12_fixed_factor_clks),
-+};
-+
- /* register exynos4 clocks */
- static void __init exynos4_clk_init(struct device_node *np,
- 				    enum exynos4_soc soc)
-@@ -1322,41 +1361,12 @@ static void __init exynos4_clk_init(struct device_node *np,
- 					ARRAY_SIZE(exynos4x12_plls));
- 	}
- 
--	samsung_clk_register_fixed_rate(ctx, exynos4_fixed_rate_clks,
--			ARRAY_SIZE(exynos4_fixed_rate_clks));
--	samsung_clk_register_mux(ctx, exynos4_mux_clks,
--			ARRAY_SIZE(exynos4_mux_clks));
--	samsung_clk_register_div(ctx, exynos4_div_clks,
--			ARRAY_SIZE(exynos4_div_clks));
--	samsung_clk_register_gate(ctx, exynos4_gate_clks,
--			ARRAY_SIZE(exynos4_gate_clks));
--	samsung_clk_register_fixed_factor(ctx, exynos4_fixed_factor_clks,
--			ARRAY_SIZE(exynos4_fixed_factor_clks));
-+	samsung_cmu_register_clocks(ctx, &cmu_info_exynos4);
- 
--	if (exynos4_soc == EXYNOS4210) {
--		samsung_clk_register_fixed_rate(ctx, exynos4210_fixed_rate_clks,
--			ARRAY_SIZE(exynos4210_fixed_rate_clks));
--		samsung_clk_register_mux(ctx, exynos4210_mux_clks,
--			ARRAY_SIZE(exynos4210_mux_clks));
--		samsung_clk_register_div(ctx, exynos4210_div_clks,
--			ARRAY_SIZE(exynos4210_div_clks));
--		samsung_clk_register_gate(ctx, exynos4210_gate_clks,
--			ARRAY_SIZE(exynos4210_gate_clks));
--		samsung_clk_register_fixed_factor(ctx,
--			exynos4210_fixed_factor_clks,
--			ARRAY_SIZE(exynos4210_fixed_factor_clks));
--		samsung_clk_register_cpu(ctx, exynos4210_cpu_clks,
--				ARRAY_SIZE(exynos4210_cpu_clks));
--	} else {
--		samsung_clk_register_mux(ctx, exynos4x12_mux_clks,
--			ARRAY_SIZE(exynos4x12_mux_clks));
--		samsung_clk_register_div(ctx, exynos4x12_div_clks,
--			ARRAY_SIZE(exynos4x12_div_clks));
--		samsung_clk_register_gate(ctx, exynos4x12_gate_clks,
--			ARRAY_SIZE(exynos4x12_gate_clks));
--		samsung_clk_register_fixed_factor(ctx,
--			exynos4x12_fixed_factor_clks,
--			ARRAY_SIZE(exynos4x12_fixed_factor_clks));
-+	if (exynos4_soc == EXYNOS4210)
-+		samsung_cmu_register_clocks(ctx, &cmu_info_exynos4210);
-+	else {
-+		samsung_cmu_register_clocks(ctx, &cmu_info_exynos4x12);
- 		if (soc == EXYNOS4412)
- 			samsung_clk_register_cpu(ctx, exynos4412_cpu_clks,
- 					ARRAY_SIZE(exynos4412_cpu_clks));
--- 
-2.17.1
+Looks like the only caller passing sparse=3Dtrue is
+drm_gem_shmem_create_sparse(), and the sparse property is not used for
+the rest of the gem_shmem object initialization, so maybe we could move
+that code to drm_gem_shmem_create_sparse() instead of modifying the
+prototype of __drm_gem_shmem_create().
+
+> +
+>  	if (!private) {
+>  		/*
+>  		 * Our buffers are kept pinned, so allocating them
+> @@ -124,10 +130,16 @@ __drm_gem_shmem_create(struct drm_device *dev, size=
+_t size, bool private,
+>   */
+>  struct drm_gem_shmem_object *drm_gem_shmem_create(struct drm_device *dev=
+, size_t size)
+>  {
+> -	return __drm_gem_shmem_create(dev, size, false, NULL);
+> +	return __drm_gem_shmem_create(dev, size, false, false, NULL);
+>  }
+>  EXPORT_SYMBOL_GPL(drm_gem_shmem_create);
+> =20
+> +struct drm_gem_shmem_object *drm_gem_shmem_create_sparse(struct drm_devi=
+ce *dev, size_t size)
+> +{
+> +	return __drm_gem_shmem_create(dev, size, false, true, NULL);
+> +}
+> +EXPORT_SYMBOL_GPL(drm_gem_shmem_create_sparse);
+> +
+>  /**
+>   * drm_gem_shmem_create_with_mnt - Allocate an object with the given siz=
+e in a
+>   * given mountpoint
+> @@ -145,7 +157,7 @@ struct drm_gem_shmem_object *drm_gem_shmem_create_wit=
+h_mnt(struct drm_device *de
+>  							   size_t size,
+>  							   struct vfsmount *gemfs)
+>  {
+> -	return __drm_gem_shmem_create(dev, size, false, gemfs);
+> +	return __drm_gem_shmem_create(dev, size, false, false, gemfs);
+>  }
+>  EXPORT_SYMBOL_GPL(drm_gem_shmem_create_with_mnt);
+> =20
+> @@ -173,7 +185,9 @@ void drm_gem_shmem_free(struct drm_gem_shmem_object *=
+shmem)
+>  			sg_free_table(shmem->sgt);
+>  			kfree(shmem->sgt);
+>  		}
+> -		if (shmem->pages)
+> +
+> +		if ((!shmem->sparse && shmem->pages) ||
+> +		    (shmem->sparse && !xa_empty(&shmem->xapages)))
+>  			drm_gem_shmem_put_pages(shmem);
+
+Can we let drm_gem_shmem_put_pages() do the is_empty() check?
+
+> =20
+>  		drm_WARN_ON(obj->dev, shmem->pages_use_count);
+> @@ -191,11 +205,19 @@ static int drm_gem_shmem_get_pages(struct drm_gem_s=
+hmem_object *shmem)
+>  	struct drm_gem_object *obj =3D &shmem->base;
+>  	struct page **pages;
+> =20
+> +	if (drm_WARN_ON(obj->dev, shmem->sparse))
+> +		return -EINVAL;
+> +
+>  	dma_resv_assert_held(shmem->base.resv);
+> =20
+>  	if (shmem->pages_use_count++ > 0)
+>  		return 0;
+> =20
+> +	/* We only allow increasing the user count in the case of
+> +	  sparse shmem objects with some backed pages for now */
+> +	if (shmem->sparse && xa_empty(&shmem->xapages))
+> +		return -EINVAL;
+
+You'll never enter this branch because you return -EINVAL early when
+sparse=3D=3Dtrue.
+
+> +
+>  	pages =3D drm_gem_get_pages(obj);
+>  	if (IS_ERR(pages)) {
+>  		drm_dbg_kms(obj->dev, "Failed to get pages (%ld)\n",
+> @@ -541,6 +563,8 @@ static vm_fault_t drm_gem_shmem_fault(struct vm_fault=
+ *vmf)
+>  	struct page *page;
+>  	pgoff_t page_offset;
+> =20
+> +	drm_WARN_ON(obj->dev, shmem->sparse);
+
+For all those WARN_ON()s you add, I would add a comment explaining why
+you don't expect sparse objects to enter this path. In that case, it
+has to do with the fact sparse GEMs are not mmap-able (yet?).
+And, if you don't want to populate on-demand, you should probably
+return VM_FAULT_SIGBUS here, even if that's not expected.
+
+> +
+>  	/* We don't use vmf->pgoff since that has the fake offset */
+>  	page_offset =3D (vmf->address - vma->vm_start) >> PAGE_SHIFT;
+> =20
+> @@ -567,6 +591,7 @@ static void drm_gem_shmem_vm_open(struct vm_area_stru=
+ct *vma)
+>  	struct drm_gem_shmem_object *shmem =3D to_drm_gem_shmem_obj(obj);
+> =20
+>  	drm_WARN_ON(obj->dev, obj->import_attach);
+> +	drm_WARN_ON(obj->dev, shmem->sparse);
+> =20
+>  	dma_resv_lock(shmem->base.resv, NULL);
+> =20
+> @@ -666,6 +691,9 @@ void drm_gem_shmem_print_info(const struct drm_gem_sh=
+mem_object *shmem,
+>  	if (shmem->base.import_attach)
+>  		return;
+> =20
+> +	if (drm_WARN_ON(shmem->base.dev, shmem->sparse))
+> +		return;
+> +
+
+We probably want to print some of these in case we're dealing with a
+sparse GEM object.
+
+>  	drm_printf_indent(p, indent, "pages_use_count=3D%u\n", shmem->pages_use=
+_count);
+>  	drm_printf_indent(p, indent, "vmap_use_count=3D%u\n", shmem->vmap_use_c=
+ount);
+>  	drm_printf_indent(p, indent, "vaddr=3D%p\n", shmem->vaddr);
+> @@ -691,6 +719,7 @@ struct sg_table *drm_gem_shmem_get_sg_table(struct dr=
+m_gem_shmem_object *shmem)
+>  	struct drm_gem_object *obj =3D &shmem->base;
+> =20
+>  	drm_WARN_ON(obj->dev, obj->import_attach);
+> +	drm_WARN_ON(obj->dev, shmem->sparse);
+> =20
+>  	return drm_prime_pages_to_sg(obj->dev, shmem->pages, obj->size >> PAGE_=
+SHIFT);
+>  }
+> @@ -702,6 +731,9 @@ static struct sg_table *drm_gem_shmem_get_pages_sgt_l=
+ocked(struct drm_gem_shmem_
+>  	int ret;
+>  	struct sg_table *sgt;
+> =20
+> +	if (drm_WARN_ON(obj->dev, shmem->sparse))
+> +		return ERR_PTR(-EINVAL);
+> +
+>  	if (shmem->sgt)
+>  		return shmem->sgt;
+> =20
+> @@ -787,7 +819,7 @@ drm_gem_shmem_prime_import_sg_table(struct drm_device=
+ *dev,
+>  	size_t size =3D PAGE_ALIGN(attach->dmabuf->size);
+>  	struct drm_gem_shmem_object *shmem;
+> =20
+> -	shmem =3D __drm_gem_shmem_create(dev, size, true, NULL);
+> +	shmem =3D __drm_gem_shmem_create(dev, size, true, false, NULL);
+>  	if (IS_ERR(shmem))
+>  		return ERR_CAST(shmem);
+> =20
+> diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shm=
+em_helper.h
+> index d22e3fb53631..902039cfc4ce 100644
+> --- a/include/drm/drm_gem_shmem_helper.h
+> +++ b/include/drm/drm_gem_shmem_helper.h
+> @@ -6,6 +6,7 @@
+>  #include <linux/fs.h>
+>  #include <linux/mm.h>
+>  #include <linux/mutex.h>
+> +#include <linux/xarray.h>
+> =20
+>  #include <drm/drm_file.h>
+>  #include <drm/drm_gem.h>
+> @@ -29,7 +30,11 @@ struct drm_gem_shmem_object {
+>  	/**
+>  	 * @pages: Page table
+>  	 */
+> -	struct page **pages;
+> +	union {
+> +
+> +		struct page **pages;
+> +		struct xarray xapages;
+> +	};
+> =20
+>  	/**
+>  	 * @pages_use_count:
+> @@ -91,6 +96,11 @@ struct drm_gem_shmem_object {
+>  	 * @map_wc: map object write-combined (instead of using shmem defaults).
+>  	 */
+>  	bool map_wc : 1;
+> +
+> +	/**
+> +	 * @sparse: the object's virtual memory space is only partially backed =
+by pages
+
+I would drop the "virtual memory space" part. sparse just means the
+object might be partially backed by physical memory, and that memory
+will be allocated on-demand (most likely on-GPU-demand, but there's
+nothing preventing us from doing it on-CPU-demand, as long as the fault
+handler knows the allocation granularity).
+
+> +	 */
+> +	bool sparse : 1;
+>  };
+> =20
+>  #define to_drm_gem_shmem_obj(obj) \
+> @@ -229,6 +239,9 @@ static inline int drm_gem_shmem_object_vmap(struct dr=
+m_gem_object *obj,
+>  {
+>  	struct drm_gem_shmem_object *shmem =3D to_drm_gem_shmem_obj(obj);
+> =20
+> +	if (shmem->sparse)
+> +		return -EACCES;
+> +
+>  	return drm_gem_shmem_vmap(shmem, map);
+
+Do we need a WARN_ON() in drm_gem_shmem_vunmap()?
+
+>  }
+> =20
+> @@ -263,6 +276,9 @@ static inline int drm_gem_shmem_object_mmap(struct dr=
+m_gem_object *obj, struct v
+>  {
+>  	struct drm_gem_shmem_object *shmem =3D to_drm_gem_shmem_obj(obj);
+> =20
+> +	if (shmem->sparse)
+> +		return -EACCES;
+> +
+>  	return drm_gem_shmem_mmap(shmem, vma);
+>  }
+> =20
+
+I guess we also need to fail in drm_gem_shmem_get_sg_table() is this is
+a sparse object.
 
