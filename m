@@ -1,145 +1,202 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 604F21A2567;
-	Tue, 25 Feb 2025 17:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 914BA1A4E98;
+	Tue, 25 Feb 2025 17:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740504294; cv=none; b=efwb7XZ+INT5WV3Tn5RVcJyiRVMuXsPPgO0Ambu6KIMNab9KzAGdP/IPXLsEX3wyJi4EVdVwP49ZkiuhyDNLl1Ousm4F190AEdWyAWZU10nY/RkGEq28nSfYv0RYpzqM1uH2IIIhHPA2+I4u77vhVmFicqe+Ggo3NLR8Manz60g=
+	t=1740504296; cv=none; b=fUPoZuTIszrS6vwwBwVO8XXc4cjBevWdPCdjmW6mUsFx+480mVKYwWRz80mtp6JrILmDTeWxZmyxLE2WhL+mBPsZ2fCoVka7Wj+OzoWUFYJ4fRnNWxj2fpRAaz0zZoMQ5OHrdLU3rUFPMKOWvc8V2IdIiw4/yInjONZIjyBXo5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740504294; c=relaxed/simple;
-	bh=aDY7TR4VTCyrtKDgPwDtxqtP5TeeW3MyhnHze/eIGxI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sIEsU0a/FfMVQHnwisKYJugMKHJyjdGOP46qAPGZvaiNR7ocnesXS7oxt8yBjNmC1eqHprrcVh7tPxUFEcmRP8orik3d8aFJRfuAaZdTyXnmDZ4XcS6LJHA+LkdBKieVH5ajITl2RAhMIPVe1nQ83VbnsIE4XgadBBcNXuGoYdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BSdiKB3i; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1740504296; c=relaxed/simple;
+	bh=zzkUs89S3RVdWMvT270E4MEpXAYIkkV8Rgdhw4YfLUI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BeMEsREmOMVOivKgy75AZpMQAFzKuWCtWcXhZy9pCpfHNes+3rmledg2D7RUoEeT7ynXs570ExD3H0J1K6mnqVanWTHqcgYwmGmIvJ6bua7RkrltX8tLXPR+eJksxIG4hhVvU6lw2UpWuvUg7DvpOTbiOMazZmOLfvUr1NKx+GQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Sg6NdyG7; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BSdiKB3i"
-Received: by linux.microsoft.com (Postfix, from userid 1152)
-	id EAB6A203CDED; Tue, 25 Feb 2025 09:24:45 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EAB6A203CDED
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1740504285;
-	bh=plsJhPJfP5AMhTGoZAobBxfnGCypJcfkAH+Ajvih/uE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BSdiKB3inbR3DLGJIOt6h+/rE0ZLTI6+fMQCfbGGcvPOc78AGZAp4kbCsMRcLOpwO
-	 SJ/rxaScF9xxJ43Me+3dtGYwaaCSlchcAOnx8qZvKtaDIF0KPbuJge8xqEqcCswi23
-	 zyNNcqRfFsBfSU2wNRRavAmCD8P4QIiFxKQlJ1K8=
-Date: Tue, 25 Feb 2025 09:24:45 -0800
-From: Shyam Saini <shyamsaini@linux.microsoft.com>
-To: Petr Pavlu <petr.pavlu@suse.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org,
-	code@tyhicks.com, christophe.leroy@csgroup.eu, hch@infradead.org,
-	mcgrof@kernel.org, frkaya@linux.microsoft.com,
-	vijayb@linux.microsoft.com, linux@weissschuh.net,
-	samitolvanen@google.com, da.gomez@samsung.com,
-	gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org
-Subject: Re: [PATCH v3 2/4] kernel: refactor lookup_or_create_module_kobject()
-Message-ID: <20250225172445.GA28595@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20250211214842.1806521-1-shyamsaini@linux.microsoft.com>
- <20250211214842.1806521-3-shyamsaini@linux.microsoft.com>
- <4039ec74-8b46-417e-ad71-eff22239b90f@suse.com>
- <87wmdjo9yp.fsf@prevas.dk>
- <e8ba9f36-e33d-4c53-9d34-ff611cb1c221@suse.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Sg6NdyG7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740504295; x=1772040295;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=zzkUs89S3RVdWMvT270E4MEpXAYIkkV8Rgdhw4YfLUI=;
+  b=Sg6NdyG7M4rus6bHgu2215Nmt+HrHIhpQwGEtaz3niEo1LBF+sxqVFsg
+   JQY0PnJx4M0tvQbYN3uM4tEiiVbPX3/try156giYDZ3qoONEJQLcg+Y1a
+   hzpGOaPuHgxelhd6jU/gYXt7THmJTayZm9oltoaNYPY7jHBLbbRrTZDZP
+   iHPme2zKIjroemjaRR3A9EJwv5bUuv86WTXCGrSvJJpACCRX/yvZU9cZJ
+   G/yT78kbOGqf1LMBLzN8q0Pidu23SVHNcM7NjWkb1tNqQwBjjNWTYYFhz
+   7ckFAL4LHHjf3hLNBW7EdUKge25uXP+KMZvDtIzRgI3SpkLQhAOfy1fRd
+   Q==;
+X-CSE-ConnectionGUID: h+4F9YesSxS7sQQRw8cfKQ==
+X-CSE-MsgGUID: GlivEZUSQnO/w6T1+/wVMg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="44974146"
+X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
+   d="scan'208";a="44974146"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 09:24:54 -0800
+X-CSE-ConnectionGUID: RtflafJeQrSYS8OMG2TLuw==
+X-CSE-MsgGUID: kLJwXuF9QXmE2cwXrMfpuA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
+   d="scan'208";a="116256926"
+Received: from newjersey.igk.intel.com ([10.102.20.203])
+  by fmviesa006.fm.intel.com with ESMTP; 25 Feb 2025 09:24:50 -0800
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+To: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Daniel Xu <dxu@dxuuu.xyz>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@kernel.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	netdev@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	=?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+Subject: [PATCH net-next v5 5/8] net: skbuff: introduce napi_skb_cache_get_bulk()
+Date: Tue, 25 Feb 2025 18:17:47 +0100
+Message-ID: <20250225171751.2268401-6-aleksander.lobakin@intel.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250225171751.2268401-1-aleksander.lobakin@intel.com>
+References: <20250225171751.2268401-1-aleksander.lobakin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e8ba9f36-e33d-4c53-9d34-ff611cb1c221@suse.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Petr,
+Add a function to get an array of skbs from the NAPI percpu cache.
+It's supposed to be a drop-in replacement for
+kmem_cache_alloc_bulk(skbuff_head_cache, GFP_ATOMIC) and
+xdp_alloc_skb_bulk(GFP_ATOMIC). The difference (apart from the
+requirement to call it only from the BH) is that it tries to use
+as many NAPI cache entries for skbs as possible, and allocate new
+ones only if needed.
 
-Thank you for the reviews
+The logic is as follows:
 
-On Tue, Feb 25, 2025 at 09:33:10AM +0100, Petr Pavlu wrote:
-> On 2/21/25 11:42, Rasmus Villemoes wrote:
-> > On Thu, Feb 13 2025, Petr Pavlu <petr.pavlu@suse.com> wrote:
-> > 
-> >> On 2/11/25 22:48, Shyam Saini wrote:
-> >>> In the unlikely event of the allocation failing, it is better to let
-> >>> the machine boot with a not fully populated sysfs than to kill it with
-> >>> this BUG_ON(). All callers are already prepared for
-> >>> lookup_or_create_module_kobject() returning NULL.
-> >>>
-> >>> This is also preparation for calling this function from non __init
-> >>> code, where using BUG_ON for allocation failure handling is not
-> >>> acceptable.
-> >>
-> >> I think some error reporting should be cleaned up here.
-> >>
-> >> The current situation is that locate_module_kobject() can fail in
-> >> several cases and all these situations are loudly reported by the
-> >> function, either by BUG_ON() or pr_crit(). Consistently with that, both
-> >> its current callers version_sysfs_builtin() and kernel_add_sysfs_param()
-> >> don't do any reporting if locate_module_kobject() fails; they simply
-> >> return.
-> >>
-> >> The series seems to introduce two somewhat suboptimal cases.
-> >>
-> >> With this patch, when either version_sysfs_builtin() or
-> >> kernel_add_sysfs_param() calls lookup_or_create_module_kobject() and it
-> >> fails because of a potential kzalloc() error, the problem is silently
-> >> ignored.
-> >>
-> > 
-> > No, because (IIUC) when a basic allocation via kzalloc fails, the kernel
-> > complains loudly already; there's no reason for every caller of
-> > kmalloc() and friends to add their own pr_err("kmalloc failed"), that
-> > just bloats the kernel .text.
-> 
-> I wasn't suggesting to log a kmalloc() error specifically. The idea was
-> that if lookup_or_create_module_kobject() fails for whatever reason,
-> kernel_add_sysfs_param() and version_sysfs_builtin() should log the
-> failure to create/get the kobject.
-> 
-> > 
-> >> Similarly, in the patch #4, when module_add_driver() calls
-> >> lookup_or_create_module_kobject() and the function fails, the problem
-> >> may or may not be reported, depending on the error.
-> >>
-> >> I'd suggest something as follows:
-> >> * Drop the pr_crit() reporting in lookup_or_create_module_kobject().
-> > 
-> > No, because that reports on something other than an allocation failing
-> > (of course, it could be that the reason kobject_init_and_add or
-> > sysfs_create_file failed was an allocation failure, but it could
-> > also be something else), so reporting there is the right thing to do.
-> 
-> The error message says:
-> pr_crit("Adding module '%s' to sysfs failed (%d), the system may be unstable.\n", name, err);
-> 
-> I think it was appropriate for locate_module_kobject() to do this error
-> reporting when the function was only called by code in kernel/params.c
-> and in the boot context. Now that the patch makes the function available
-> to external callers, I'm not sure if it should remain reporting this
-> error.
-> 
-> The function itself shouldn't directly make the system unstable when it
-> fails. Each caller can appropriately determine how to handle the error.
-> Functions kernel_add_sysfs_param() and version_sysfs_builtin() don't
-> have much of an option and can only log it, but module_add_driver()
-> could roll back its operation.
-> 
+* there is enough skbs in the cache: decache them and return to the
+  caller;
+* not enough: try refilling the cache first. If there is now enough
+  skbs, return;
+* still not enough: try allocating skbs directly to the output array
+  with %GFP_ZERO, maybe we'll be able to get some. If there's now
+  enough, return;
+* still not enough: return as many as we were able to obtain.
 
-before this patch series [1] kset_find_obj() was called in module_add_driver()
-and the function immediately returned when no valid module_kobject was found,
+Most of times, if called from the NAPI polling loop, the first one will
+be true, sometimes (rarely) the second one. The third and the fourth --
+only under heavy memory pressure.
+It can save significant amounts of CPU cycles if there are GRO cycles
+and/or Tx completion cycles (anything that descends to
+napi_skb_cache_put()) happening on this CPU.
 
-module_add_driver returns immediately if some error is encountered or module_kobject
-is not found in lookup_or_create_module_kobject()
-Since module_kobject() is anyway no-op if it [2] returns early so it shouldn't require
-any rollback, right?
+Tested-by: Daniel Xu <dxu@dxuuu.xyz>
+Reviewed-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+---
+ include/linux/skbuff.h |  1 +
+ net/core/skbuff.c      | 62 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 63 insertions(+)
 
-Assuming rollback is not required for module_add_driver() in lookup_or_create_module_kobject()
-failure scenario, what should be the appropriate messaging from pr_crit() if it
-fails in module_add_driver()?
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index f2bb8473d99a..e8e190ad2b16 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -1321,6 +1321,7 @@ struct sk_buff *build_skb_around(struct sk_buff *skb,
+ 				 void *data, unsigned int frag_size);
+ void skb_attempt_defer_free(struct sk_buff *skb);
+ 
++u32 napi_skb_cache_get_bulk(void **skbs, u32 n);
+ struct sk_buff *napi_build_skb(void *data, unsigned int frag_size);
+ struct sk_buff *slab_build_skb(void *data);
+ 
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 5b241c9e6f38..f12815f9c83d 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -295,6 +295,68 @@ static struct sk_buff *napi_skb_cache_get(void)
+ 	return skb;
+ }
+ 
++/**
++ * napi_skb_cache_get_bulk - obtain a number of zeroed skb heads from the cache
++ * @skbs: pointer to an at least @n-sized array to fill with skb pointers
++ * @n: number of entries to provide
++ *
++ * Tries to obtain @n &sk_buff entries from the NAPI percpu cache and writes
++ * the pointers into the provided array @skbs. If there are less entries
++ * available, tries to replenish the cache and bulk-allocates the diff from
++ * the MM layer if needed.
++ * The heads are being zeroed with either memset() or %__GFP_ZERO, so they are
++ * ready for {,__}build_skb_around() and don't have any data buffers attached.
++ * Must be called *only* from the BH context.
++ *
++ * Return: number of successfully allocated skbs (@n if no actual allocation
++ *	   needed or kmem_cache_alloc_bulk() didn't fail).
++ */
++u32 napi_skb_cache_get_bulk(void **skbs, u32 n)
++{
++	struct napi_alloc_cache *nc = this_cpu_ptr(&napi_alloc_cache);
++	u32 bulk, total = n;
++
++	local_lock_nested_bh(&napi_alloc_cache.bh_lock);
++
++	if (nc->skb_count >= n)
++		goto get;
++
++	/* No enough cached skbs. Try refilling the cache first */
++	bulk = min(NAPI_SKB_CACHE_SIZE - nc->skb_count, NAPI_SKB_CACHE_BULK);
++	nc->skb_count += kmem_cache_alloc_bulk(net_hotdata.skbuff_cache,
++					       GFP_ATOMIC | __GFP_NOWARN, bulk,
++					       &nc->skb_cache[nc->skb_count]);
++	if (likely(nc->skb_count >= n))
++		goto get;
++
++	/* Still not enough. Bulk-allocate the missing part directly, zeroed */
++	n -= kmem_cache_alloc_bulk(net_hotdata.skbuff_cache,
++				   GFP_ATOMIC | __GFP_ZERO | __GFP_NOWARN,
++				   n - nc->skb_count, &skbs[nc->skb_count]);
++	if (likely(nc->skb_count >= n))
++		goto get;
++
++	/* kmem_cache didn't allocate the number we need, limit the output */
++	total -= n - nc->skb_count;
++	n = nc->skb_count;
++
++get:
++	for (u32 base = nc->skb_count - n, i = 0; i < n; i++) {
++		u32 cache_size = kmem_cache_size(net_hotdata.skbuff_cache);
++
++		skbs[i] = nc->skb_cache[base + i];
++
++		kasan_mempool_unpoison_object(skbs[i], cache_size);
++		memset(skbs[i], 0, offsetof(struct sk_buff, tail));
++	}
++
++	nc->skb_count -= n;
++	local_unlock_nested_bh(&napi_alloc_cache.bh_lock);
++
++	return total;
++}
++EXPORT_SYMBOL_GPL(napi_skb_cache_get_bulk);
++
+ static inline void __finalize_skb_around(struct sk_buff *skb, void *data,
+ 					 unsigned int size)
+ {
+-- 
+2.48.1
 
-[1] https://elixir.bootlin.com/linux/v6.14-rc4/source/drivers/base/module.c#L48
-[2] https://elixir.bootlin.com/linux/v6.14-rc4/source/drivers/base/module.c#L58
-
-Thanks,
-Shyam
