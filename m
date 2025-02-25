@@ -1,64 +1,66 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2D92676EB
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 10:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F082676EB
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 10:22:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740478933; cv=none; b=hsZIcUreJLds8/GW/yzPJm2CC8gdhdeq7wEfImWzO/kv/qFZtKAdWRAY+kYP4Cs/ho9+IoOBxb/G2rDyBpeq3yF0sF91lv4bL7pIezq5YqyMLxaVHx4FQqssg4uq8GMlYZs1uKCBfr7ZBbeVkqbt9F8q60hNKueF6fgX+5d6COI=
+	t=1740478950; cv=none; b=CYT4AzQPlaxyffoBrCY66SeA/QlxxIrpvp47bPbJSANOPxsGzw8yYsZv46E+jbrBPnAfrmI/qJQzqSgmT9PZza3XPvsAwyFRzFsiu+RDVBRHXr2k/CfVsWA1ub8rSFVXFOiChjRjdk8BX/miG8Vx8NlEa3YjtGmM8FmsmOLWj+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740478933; c=relaxed/simple;
-	bh=7jS32IN9BvBO2WdCNC43qfDUQ12l0omi15BL6gdKjSA=;
+	s=arc-20240116; t=1740478950; c=relaxed/simple;
+	bh=U5zkt/oMGFqmvC1+SOvMTHXlaeCxYp1H/iVGRBn1FbQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Imjencbke05uTQM0GZZerl1DOpBaTPEUBf+oY5mzyFrAr1XIKVC2Lv9ylhKpWPY8RdY11XRSLZGb2iwTAcBxJj+v0NiX+icpf0mL/SPRjlujC8aJW5t8r7CESpBDhZZqjBNQvggQLOK9Zpq2Do74KUrW5QLaCe8JNesVir6hDjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BYmSE/vw; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	 In-Reply-To:Content-Type; b=AL6Ann/bV6muk5Nh4aZIx/MTp+NFpHPC6CS44LjIlgN4VKJ4x6qG03ILESJ7pVWGyuCTDIb9LH1pI+DZnJ3AOY1BbqprmgB2ohDXq1RfUIbV251b++HFd5t2KoNojQYi/aG0S6DFV/S+pbNcXN/TzzGQlu8bs0zFEvb8VN1vkyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IQ+eArjQ; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BYmSE/vw"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e0939c6456so8624975a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 02:22:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IQ+eArjQ"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5ded7cb613eso1073262a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 02:22:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1740478929; x=1741083729; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tirQLw4kKN2n7nJcTTMNgrKBrHBCr4gOSdhS88B+7TQ=;
-        b=BYmSE/vwCQqhOVHnXgdu2OnPBHYSAN0tc0MAV0xqBuUsGDzq8lNT0fCAr2oLfrk1df
-         ssJ+NPzNKFdg3DOfwx6mbmYp/hDrT4yxQC/2f1NXN+sR1jUL1Ri6eB9tvLpZUPIG9EtN
-         TD8MVQSZG3KrJw0FEiwcJYw7pQgyJOFWhoYmGJtbdJw1kuwuJ5R50lwDirRMd34u/St+
-         lqbx2/K6XAaXn/+RsqQOYnirwuAhmae+df/oXjmdXBkQlDxrT9NBreqjZdKZFg58cyBS
-         UdHYpYL+56yqXoraJv+i7epmRGp7AxfcexqKsSjtA5TRszKp2kfoC3McVOjyS4cK6RyF
-         OSAQ==
+        d=linaro.org; s=google; t=1740478947; x=1741083747; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=sNm9CF22nxSn0y6dAdKNE8VFXGgWPtm2tN0cbfkS55c=;
+        b=IQ+eArjQAl+J8MhniyuafBycpo3z+gyEu6MYjuUTjmwUVJM/1KfAzMXRh3KQRHLHU2
+         5d9cfClaplqoprvPXUWNb57xatazT5r7yM2+hdcKMzCn/6fniPaMiNcUkgMXYHzBrMI5
+         YcaA/R9NgIf0d9mRg0w3blGtP2UQSISUI8xBkJdZ+o2wz85VnDfTmCU44H3mmajaNFh6
+         XTHNwyUPsJTaFAUNW481XTeMnjaNtx8TEWgF7tMb+t5helP4FGE8Golu6adJJkh6WzX/
+         s92GnSxJA9jkqmRCyZXnP89g8IppHvAx+j3tpcq3OfT9zJhw1RF0mFTGyBPH1adyFC9s
+         tu2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740478929; x=1741083729;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tirQLw4kKN2n7nJcTTMNgrKBrHBCr4gOSdhS88B+7TQ=;
-        b=QUkpKOQgxrAB5MkvMEpFOO+GDST0cwiWdk5lE9Y8mcAmE1HEn4Z9hW4yvVy9o4sk0K
-         G4HEfJZAjV87WIcu6ferK3QDqibC/4ne2JnDebxoUSWr7Zh4sfUX23oEelkWThkhkXPw
-         6gU42C0IIxD3LsRT8Wr0LOpHpVYz7e2J9iB8Gli1IHyFBaSDGjPigdD1LC2yWm7P0hFO
-         Cd9PhSmik24mMplX232Ii+N45eCI9JJwHhYlsC7u4BIYojshkvx5yXQwZAzgnUYYZ2sb
-         TEOMbhnmO4tZSaQy+KgQf+RclHj9RzZAAWoLapmhMGPg3n+8fIOKbNbSdNV4lg1u8CMV
-         aqmw==
-X-Forwarded-Encrypted: i=1; AJvYcCXmglbXTmIpQwMKWFl3cRNxJNXOG/swv19cFTEKs9aFLhmhjC07CBkXm27XFeHZixFWJL71l+fYBRXZOtw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9Sf7gyrtbri0n0dauO1jAGf4YsAtQoXOF11pC2ZMZgb0kERA/
-	6ul7JH4kctX/Ul8nSNghgnICgi7HMSLUt1gV4vL2srZgdEFyv27wjTfL94eSZmM=
-X-Gm-Gg: ASbGncsEyOcbSKLB53KXf7pULEDQNxJmbtU+jeknkJGQhoCQNqbuMthMnq9e6OVcM3/
-	g0yUV2z07RTQgqq0TTEw3OdBL0/EwZG/CABVZNI9nE3tL1YP5YsPLaQyo0KDpXLbaNNrsQIy0w8
-	ZqMZvyWsAff0jFCf0SXI8aAba8rfN5TujKHNGPDFRjBKoe/bs29bwZElCZsp1gYKsvK7QB+w36K
-	Pvco8wy3+8ycx1rK3+yoPXFLAPUcWkDsnwDrwU3Z+nmcMhDor5T/Refl5vpfRW0OVUMh405SibO
-	I429j8UfCD1hzQDYPiv5tuyhuQpkCg==
-X-Google-Smtp-Source: AGHT+IGt6pTVXx3wx/wRIHWsfSGAMt1cqb6es2jvkO8FnqdPuOZ02O/dkb0pjA9QIhd5xREqhWrTXg==
-X-Received: by 2002:a05:6402:e87:b0:5e0:82a0:50d7 with SMTP id 4fb4d7f45d1cf-5e0b70db116mr11539027a12.8.1740478929084;
-        Tue, 25 Feb 2025 02:22:09 -0800 (PST)
-Received: from [10.100.51.161] ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e45a8b8c06sm1001139a12.22.2025.02.25.02.22.08
+        d=1e100.net; s=20230601; t=1740478947; x=1741083747;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sNm9CF22nxSn0y6dAdKNE8VFXGgWPtm2tN0cbfkS55c=;
+        b=PZzodE/rhoQW1cG+N1BgG4fsXfzR5fxCj0uvjn8r/O+1x1+tTJDvyD3OVWvCbeG4Wz
+         MbkFX7qEXLySPxChhzewk5l7VS51aixxLnZ67EjGDHzHGyZxX0rIeXJyzrHYyEVGV+CN
+         Wi0HgVxGwC7ukUCwEY4M3E9LjkhqIrHK2Ste4nLXD2AxxlM6p1unQNX1ttxuBKKfT3uw
+         lvrI0T5Osh4PSDZztWdDn56Qz4ehARE3x0zdomT2buLA9dTfZTRGea41c7iKnJEGE7YC
+         h6GajRPTbz9I3XzTcpnS8yXPIxJmnSBkE4WbY+teCAPirKha5h5lZtI9aIG1Rxvj/6kC
+         g9Aw==
+X-Forwarded-Encrypted: i=1; AJvYcCXhkNqSccAfUxblLcMqJmLZUNOUPuyLUekL3v7oW/iR3YBm2WZLERmNwkIFSt2z9sfIoQGkBDj2cn4nUZM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6Z3r3DMIquCxXrwLJkS1AR4EzhSDt2kfwdfiY6NFvchzPGMlb
+	sSsiyQEMBxJaHAfXQiJyIJiZQ94t8GxOoIRKZBM2wmxFSWvk+y2crPePTKt4mRM=
+X-Gm-Gg: ASbGnctaSRh5LogEzwQ9I+PI1xF1GdDXg/5LyHkx65eRrqGsMIBD+2XgKaqm8MMR/hB
+	e3Ez7WZ1VGbOi46Fyb+/IOOhD9BkVcN6aWRicj6TZTgt3/HvsgX8mRJ86scj+gmIF9e1dLL76BH
+	lNdDnFWfsF2aBG6wFw3in3bYrO2v85E0lj+Au1nPH8b79y8+TmWWwExCa+JpDBzQHNR5KTTO1Jl
+	M+6xuQqTw4f439QzkvrgsAmuS9KsVhdGdLhISICsb6DHXiTxiNo9ql8zJsktCaHudUf+5wBNecj
+	K1JzdAmgrcIxh8j/xGZ/7hfvd+Ejo2uT/Z6OMB57ZUQI71tkBFzVerM6NSdc2j4I4CcMqGT+xpZ
+	4TGBF
+X-Google-Smtp-Source: AGHT+IHtffeLLh1yLu7nCHYhcNqtippdudVEDeBKKKKJEXeyYUCZJ5Ybf+sLAGKVXPIbB1aDmboHMA==
+X-Received: by 2002:a17:907:7e90:b0:abb:ebfe:d5e9 with SMTP id a640c23a62f3a-abc09becfd6mr572181266b.9.1740478947358;
+        Tue, 25 Feb 2025 02:22:27 -0800 (PST)
+Received: from [192.168.0.18] (78-11-220-99.static.ip.netia.com.pl. [78.11.220.99])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed20122b0sm117367966b.107.2025.02.25.02.22.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2025 02:22:08 -0800 (PST)
-Message-ID: <0d9e596a-5316-4e00-862b-fd77552ae4b5@suse.com>
-Date: Tue, 25 Feb 2025 11:22:07 +0100
+        Tue, 25 Feb 2025 02:22:26 -0800 (PST)
+Message-ID: <7b54e965-3395-4349-8ae7-51a28c759235@linaro.org>
+Date: Tue, 25 Feb 2025 11:22:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,73 +68,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 0/6] rust: extend `module!` macro with integer
- parameter support
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
- Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor
- <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>,
- Luis Chamberlain <mcgrof@kernel.org>, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org, Adam Bratschi-Kaye <ark.email@gmail.com>,
- linux-kbuild@vger.kernel.org, Daniel Gomez <da.gomez@samsung.com>,
- Simona Vetter <simona.vetter@ffwll.ch>, Greg KH
- <gregkh@linuxfoundation.org>, linux-modules@vger.kernel.org,
- Miguel Ojeda <ojeda@kernel.org>, Sami Tolvanen <samitolvanen@google.com>
-References: <JKqjFnoTeEbURcTQ5PpmUZWDS2VMEt0eZl68dWkgk3e8ROFpb2eTWH2mStKkkXJw__Ql5DdYvIR9I7qYks-lag==@protonmail.internalid>
- <20250218-module-params-v3-v7-0-5e1afabcac1b@kernel.org>
- <87ldtv1t1c.fsf@kernel.org>
+Subject: Re: [PATCH] arm64: dts: qcom: x1e80100-slim7x: Drop incorrect
+ qcom,ath12k-calibration-variant
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Jeff Johnson <jjohnson@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ath12k@lists.infradead.org
+References: <20250225093051.58406-1-krzysztof.kozlowski@linaro.org>
+ <sfhcmlz3x254fdowufeeuh4uiwxfgkphm4ch4laceivbrs3zir@qvqk6jxi6zhf>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Language: en-US
-From: Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <87ldtv1t1c.fsf@kernel.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <sfhcmlz3x254fdowufeeuh4uiwxfgkphm4ch4laceivbrs3zir@qvqk6jxi6zhf>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 2/24/25 12:27, Andreas Hindborg wrote:
-> Hi Petr,
-> 
-> "Andreas Hindborg" <a.hindborg@kernel.org> writes:
-> 
->> This series extends the `module!` macro with support module parameters. It
->> also adds some string to integer parsing functions and updates `BStr` with
->> a method to strip a string prefix.
+On 25/02/2025 10:50, Dmitry Baryshkov wrote:
+> On Tue, Feb 25, 2025 at 10:30:51AM +0100, Krzysztof Kozlowski wrote:
+>> There is no such property as qcom,ath12k-calibration-variant: neither in
+>> the bindings nor in the driver.  See dtbs_check:
 >>
->> This series stated out as code by Adam Bratschi-Kaye lifted from the original
->> `rust` branch [1].
+>>   x1e80100-lenovo-yoga-slim7x.dtb: wifi@0: 'qcom,ath12k-calibration-variant' does not match any of the regexes: 'pinctrl-[0-9]+'
 >>
->> After a bit of discussion on v3 about whether or not module parameters
->> is a good idea, it seems that module parameters in Rust has a place
->> in the kernel for now. This series is a dependency for `rnull`, the Rust
->> null block driver [2].
 > 
-> 
-> Luis told me you are the one wearing the modules hat for the moment. How
-> do you want to handle merging of patch 6 and subsequent maintenance of
-> the code?
+> Adding Jeff and ath12k@ to the cc list. Is the driver able to find the
+> calibration variant in case it is not running on the ACPI system? I see
+> that it uses dmi_walk. Does it work in the non-ACPI case?
 
-I'd say the easiest is for the entire series to go through the Rust
-tree. I'd also propose that any updates go primarily through that tree
-as well.
 
-> 
-> I think we discussed you guys taking this under the current module
-> maintainer entry? If that is correct, will you add the new files to your
-> entry yourself, or should I include an update to MAINTAINERS in the next
-> version of this series?
+But nothing parses such string as 'qcom,ath12k-calibration-variant' (see
+git grep), so how would driver use it?
 
-Makes sense, I think it is useful for all changes to this code to be
-looked at by both Rust and modules people. To that effect, we could add
-the following under the MODULES SUPPORT entry:
-F:	rust/kernel/module_param.rs
-F:	rust/macros/module.rs
 
-My slight worry is that this might suggest the entirety of maintenance
-is on the modules folks. Fortunately, adding the above and running
-get_maintainer.pl on rust/kernel/module_param.rs gives me a list of
-people for both Rust and modules, so this could be ok?
-
--- 
-Thanks,
-Petr
+Best regards,
+Krzysztof
