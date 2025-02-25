@@ -1,150 +1,98 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A30D267731
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B112641C7;
+	Tue, 25 Feb 2025 09:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740476133; cv=none; b=VBnMd9ZKRr+WKgsEB7BxGzGvXuuCkN2n2B/0Beb7uz1o7vVy1tznaVfmgZADYkEyOLQMFhi75c1huMxJIpsKqrxaqDt7LSDxyuO3d78LfAqCs0Teo+RD9HBvEpiriZZrkZx3lLSbKQGEHT1exECwJWSmfWgtnCmDVuwykawIO5g=
+	t=1740476140; cv=none; b=YJu+1jZaw+OsIrENHgZlwk9YWiYZrqgI6p2rJkpBGP8ZZ1DBtJW7PAgi4J3ZjmXMPvWEXBnkMxIrW4+plc2NDT10PRO1j/1HB6ExzRk6G1E7Vd0AHs6rc66BlnWzX3HOoNQUAOW2hhBoDyugm2up07zrPJaGY7TDGL9urfkoRXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740476133; c=relaxed/simple;
-	bh=J9FPWpMy4pUYh48OOv9ER9vlynBjXbryZTb/XXp/SPY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LXeOw09F2Dibsi/TqDlx668QfApYPHnESHj2CM7r+3cgox/Khvccto6tgP3VHHnL+apWw56pVP5Llj1WI2oMLzyWf6RvO5GlXUpDCyO9vUKrkRaMWOu+ocKJomhawTb5ElWjSfVeXjbgnILSUd6dHc3x+V8p6HEnUi1NstPpM8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bOwZPU7x; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bOwZPU7x"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P8OcLB001880
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:35:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Id9QzYlVF4SSM5ossbE+J7tOH0yV5nBNwKnqTmgpscE=; b=bOwZPU7xYc6egLfE
-	Xof6G0gTn+4RBzOFvOeMRkzLWcFjeJ0vq6gVC07z8jfEr+Sq1GW6dvotTK4/TFTG
-	tz66NR5MKb/GdFExhm/8qEbCoJBPMYFdhGVxgdxr4xhO+QutN0P0vbwrrWo4Db/y
-	1uiitMUSn/Mh7fG2wsC/OWWscDbn2WGjxr9kFf+r23ySwFwv+gzuL8m9FdxRoDqt
-	YQ7NHiXzQDvjZvxBtwxLgxrGgRNH6WpkgzFAYhn+itFllNp5L+6Lmbmv0s+rx2mX
-	eBu8RITCmNXrJjDAoTIwAMw1vJdxVMG2TKwhCzHPp125zwkyNWjVMSWkuiFPpZ0Y
-	prILCw==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44y7rk062y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:35:31 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-2fc4fc93262so11820383a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 01:35:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740476130; x=1741080930;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Id9QzYlVF4SSM5ossbE+J7tOH0yV5nBNwKnqTmgpscE=;
-        b=CffvEYDyFvB+e4SKgp5OIKmkVHIEYCDczPKGI5yoKATGrSEYSLbvxFzvFrR0YOPMSU
-         M4thUjgwxNZUXm45q2DcnPijgq4qe5vUhHydA1gVnhCKUCxHVHfZ296T1/C8hHCKIDlE
-         uBBTMxBRluY/y4ypl9ZtQL0pkK1B8OCKzUWd3lLVEAFbolUvgqBCaICwOMLNAXJSS4k1
-         S988Pn1gUVDxg62ITpqtKuTGspJYUCJA4ZNoAuNv6gZl/A4UVCclUNK1TMqXSdh1VFm7
-         5riv0gR6CxdeqNS2zpmglqGwY6L2Nq+1Hv+C0ddl8x905ooXl+4S+FWzhivwXdCQC5hC
-         4fxw==
-X-Forwarded-Encrypted: i=1; AJvYcCU3S85uEk+0Mf/70aO5afotHQ2kYQsn2vnIG4N8+x+n1ujU53ZxB6GLmjtNyiGqQIhzey8DtW7PLGVcsjo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyT5EaVJTvj1F/UiwHHk5rCoa6geAuTTqCy/IQQjMpQ/jU9dej4
-	2PPZDJDqHy+66D7h0pGZU3EJZNSyqKDpXeGnFJUOco87VIPOZmPGqmO08u3Y/6CqZF2QUWSHFVO
-	weTVRDcyW50SwWzNDrlLJFvWzpSrSfL4fWS3kMg+08uoIU5bTW9u9sc9++3HryDc=
-X-Gm-Gg: ASbGncvx38HWJNbO9vNMDxVb6dV9l/S1wkH6INmokKJYD3AL6mxfei0CTt0UY1dTVQ+
-	ps0tsL3VDaoUWwvbRGKqtRqGTuumdkxkwhGL34Or/WUMThr55wUNd0cr0uoS19jq4FfOmLS6fVz
-	3o3bu0BBAL3WjoeTmq0skqBEdiK/0S0/4TKuH9SUVSE7Vt9nbFlMHWxukuOjM8Ggz+cQXm2v7u7
-	EsrTB8Fm8RzPTselKERNwn3vfEdt7EmUw/DXQyA+CEGDlVfv3xIf/m5tvw8xxVL3RVC1lJGy1DI
-	EPXLY+Dl4Mm+C/sDqGydk0vVee+66krK9b1AQIF2TDCg/pnPMLg=
-X-Received: by 2002:a17:90b:2590:b0:2ea:5dea:eb0a with SMTP id 98e67ed59e1d1-2fce769a8aemr26694224a91.4.1740476130277;
-        Tue, 25 Feb 2025 01:35:30 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHz30ox0pDjSCuTt9O9dB7MKT/+6sp1RCPDV+Hn7y4uwuJiwd9xcSnmP6sOZP+2onXPWAjN9A==
-X-Received: by 2002:a17:90b:2590:b0:2ea:5dea:eb0a with SMTP id 98e67ed59e1d1-2fce769a8aemr26694191a91.4.1740476129901;
-        Tue, 25 Feb 2025 01:35:29 -0800 (PST)
-Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe6a3dec52sm1080770a91.20.2025.02.25.01.35.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 01:35:29 -0800 (PST)
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Date: Tue, 25 Feb 2025 15:04:07 +0530
-Subject: [PATCH v4 10/10] arm64: dts: qcom: sc7280: Add 'global' interrupt
- to the PCIe RC nodes
+	s=arc-20240116; t=1740476140; c=relaxed/simple;
+	bh=VzmHHAJ4lfXuHw0Z6bdVgeMX5QBu24Qi/C6qVXpxxRw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=p1WbUr5A2lzRyR0iwsrNIevdyoK7ppJQURZ3opU8/iiUrh2KvW2Jsvgobmm/PmI79pizpphSbR/rs+MX0hGnaEZJhF0VeenfbeZjjRlw56o1aP1x+TdBss+mjA9jSWP2B0J/AfA3e81P9dpt6oftK4dI43cGgIeDUucvYxFFmXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Z2C6C2pwnz2CpdL;
+	Tue, 25 Feb 2025 17:31:31 +0800 (CST)
+Received: from kwepemg100017.china.huawei.com (unknown [7.202.181.58])
+	by mail.maildlp.com (Postfix) with ESMTPS id BFCA3140203;
+	Tue, 25 Feb 2025 17:35:33 +0800 (CST)
+Received: from [10.67.120.108] (10.67.120.108) by
+ kwepemg100017.china.huawei.com (7.202.181.58) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 25 Feb 2025 17:35:33 +0800
+Message-ID: <d4b7ae14-5b60-883a-c4f8-be11fc51a4f7@huawei.com>
+Date: Tue, 25 Feb 2025 17:35:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250225-qps615_v4_1-v4-10-e08633a7bdf8@oss.qualcomm.com>
-References: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
-In-Reply-To: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        chaitanya chundru <quic_krichai@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org, Jingoo Han <jingoohan1@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: quic_vbadigan@quicnic.com, amitk@kernel.org, dmitry.baryshkov@linaro.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        jorge.ramirez@oss.qualcomm.com,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740476062; l=1320;
- i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
- bh=J9FPWpMy4pUYh48OOv9ER9vlynBjXbryZTb/XXp/SPY=;
- b=WOlWMX+kIeY2N8YTUwAYj0VddkFeHag0EknvUTM3VaxmVM236/nVGuRz/ImSIHtcCmYtacv/T
- +cR0HO8dFH7BLzzTFlAbRrRlSOW1jZI8utrAjX1hgYW4Mo2UkayZR+u
-X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-Proofpoint-GUID: -u8SpDU4j9py2OsrZ_yNrXldOkzaXtDf
-X-Proofpoint-ORIG-GUID: -u8SpDU4j9py2OsrZ_yNrXldOkzaXtDf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_03,2025-02-24_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- phishscore=0 impostorscore=0 malwarescore=0 adultscore=0 spamscore=0
- priorityscore=1501 mlxlogscore=682 lowpriorityscore=0 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502250066
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.1
+Subject: Re: [PATCH v3 1/3] scsi: hisi_sas: Enable force phy when SATA disk
+ directly connected
+Content-Language: en-CA
+To: John Garry <john.g.garry@oracle.com>, <liyihang9@huawei.com>,
+	<yanaijie@huawei.com>
+CC: <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+	<linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@huawei.com>, <prime.zeng@huawei.com>, <liuyonglong@huawei.com>,
+	<kangfenglong@huawei.com>, <liyangyang20@huawei.com>,
+	<f.fangjian@huawei.com>, <xiabing14@h-partners.com>
+References: <20250220130546.2289555-1-yangxingui@huawei.com>
+ <20250220130546.2289555-2-yangxingui@huawei.com>
+ <4bf89b6c-8730-4ae8-8b26-770b2aab2c13@oracle.com>
+ <5a4384dc-4edb-9e29-d1dd-190d69b9e313@huawei.com>
+ <1e98a1eb-a763-4190-94c5-a867cdf0e09b@oracle.com>
+ <235e7ad8-1e19-4b7b-c64b-b6703851ca65@huawei.com>
+ <d233a108-a46e-47dd-86ad-756c60c8665e@oracle.com>
+ <cc9ba6f8-1efb-4910-8952-9ca07c707658@huawei.com>
+ <5d34595f-ff57-4679-b263-fa3fea006ce3@oracle.com>
+ <25552c7d-858d-ea1e-0987-55f71642a503@huawei.com>
+ <420fde94-28ec-4321-943b-5cb84cf14f0e@oracle.com>
+From: yangxingui <yangxingui@huawei.com>
+In-Reply-To: <420fde94-28ec-4321-943b-5cb84cf14f0e@oracle.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepemh200004.china.huawei.com (7.202.181.111) To
+ kwepemg100017.china.huawei.com (7.202.181.58)
 
-Qcom PCIe RC controllers are capable of generating 'global' SPI interrupt
-to the host CPUs. This interrupt can be used by the device driver to
-identify events such as PCIe link specific events, safety events, etc...
+Hi, John
 
-Hence, add it to the PCIe RC node along with the existing MSI interrupts.
+On 2025/2/25 16:19, John Garry wrote:
+> On 25/02/2025 01:48, yangxingui wrote:
+>>>
+>>>
+>>> pm8001 sends sas_notify_port_event(sas_phy, PORTE_LINK_RESET_ERR,) 
+>>> link reset errors - can you consider doing that in 
+>>> hisi_sas_update_port_id() when you find an inconstant port id?
+>> Currently during phyup, the hw port id may change, and the 
+>> corresponding hisi_sas_port.id and the port id in itct are not updated 
+>> synchronously. The problem caused is not a link error, so we don't 
+>> need deform port, just update the port id when phyup.
+> 
+> Sure, but I am just trying to keep this simple. If you deform and reform 
+> the port - and so lose and find the disk (which does the itct config) - 
+> will that solve the problem?
 
-Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
----
- arch/arm64/boot/dts/qcom/sc7280.dtsi | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+1、phyup ->form port -> eh -> ata reset -> found hw port change -> 
+deform port -> let dev gone -> refound
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-index b2e2b1f26731..6d71353592c9 100644
---- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-@@ -2225,9 +2225,10 @@ pcie1: pcie@1c08000 {
- 				     <GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>;
-+				     <GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "msi0", "msi1", "msi2", "msi3",
--					  "msi4", "msi5", "msi6", "msi7";
-+					  "msi4", "msi5", "msi6", "msi7", "global";
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0x7>;
- 			interrupt-map = <0 0 0 1 &intc 0 0 0 434 IRQ_TYPE_LEVEL_HIGH>,
+2、controller reset -> phyup -> finish controller reset -> found hw port 
+change -> deform port -> let dev gone -> refound
 
--- 
-2.34.1
+I also thought about the plan you mentioned in the early days. The above 
+will make the process more complicated and retriggering phyup may result 
+in a new round of port id changes. Lose and find the disk will cause the 
+upper layer IO to report error when controller reset. It seems that it 
+is better to make the upper layer unaware of the hw port id change when 
+phyup in reset, like ata reset or controller reset. ^_^
+
+Thanks,
+Xingui
 
