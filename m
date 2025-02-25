@@ -1,268 +1,255 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09236E567
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 00:47:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC5915E96
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 00:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740444442; cv=none; b=qZUG84om0F7qFCmZFfwkntfxTmISPZtrhj6OU+Jo1ius4WJENC4RFmRvldhoClQ/YI1G1A/L5vFZFyH8Kyy5BuIZT9i64lZVxi3iSBv66yRtpcuKYAxCwV0HH6/0G7OpVGsm5BljpUo1HdSymuuBmwv5mZjkNn38mG6o97P/czk=
+	t=1740444443; cv=none; b=plgWeRaEs2a2QqUjWQo5PtiWzqlMzrfEntjHFf0rumzVLX51+I9kevW6OBmFtSgoIA4XFBzN0wODyClQ7ObJeCIGG7anruK36j3oHqqJLF8u7mSIVlmUgbJ+Lh75qFPaL1xBO/JQ/TLNo18kTIybR/Aa/sdarWBvdgyV38Sbqqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740444442; c=relaxed/simple;
-	bh=3mtPsOfT9ojAGFE+polh5JdtQVdH14kWrEKVhtvdhjU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=J/H2/M/e49VNjSlZdCAo076AUlwfEUwZY9N1HyDzLRqah7SNqWawtQORXw+tca1JfBezXpTDUg//cWDsKPNOnogXZLAd9ZH5CcdzYlrDtLjXvwF+d+vxaJ0ewhsBotC2tT37bNV+0yj3uPTgS8Ng0MXH21R1E4yLx3rtpeHCghg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vannapurve.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KfbkXHzm; arc=none smtp.client-ip=209.85.216.74
+	s=arc-20240116; t=1740444443; c=relaxed/simple;
+	bh=9VyoE5rqBPdWDwAYMqaw+sWflGZ3yC3uju/Z14kM9NY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Bx1mD9qvGUsdMrfSs+liniPHtbV/y9MBPxZZPRAIorpZl9pTVLMWOJnxXvNbUIGpQ9+U/Dj7bxjxgyB6hH1bjjynNrHqMRq2M+Jc5VojZg+5R+Umm97HzqTw0i/xjl404gMXH1/k7FAtwN5UiwqMjUCnu9uVggZJ1nUxTY2BmqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jmattson.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ue3Zy9F4; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vannapurve.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jmattson.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KfbkXHzm"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fc1a4c150bso9696043a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 16:47:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ue3Zy9F4"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fce2954a10so13886315a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 16:47:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740444440; x=1741049240; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=upe1z0XO8U6H/8RV3tx+JYjBzbZmjKheupo6lIMhV+w=;
-        b=KfbkXHzmce77Z1MIwOu2h/hOukcFfmY0GDCplxutzXrIwxHRfFIghrISoxdVvAjK7h
-         XFwQosAhql7v1bFw7s294YWaCQYujnnAFSgjFxy00SZJMlRyynkVNzZ6o9lMTnaOrQfU
-         lE1rOsZC0drR5QDSI3A0NL4kDxBR1+hC7Ey6Mvwea/1n6m2+t4FlO3gGDu1hrmD4LQqz
-         rIyRxlAjjC9fFF5zwGVA2Vbt1ldIUQ4DprYNI1Jf5Urjho9pMJK3ik5NRDczesIm9tKH
-         EydoYb48vfz5fKIOhXiI/lLF/E+ciwkzD9FrUk8MmucATj+vDoHkdUuWupjaUk1XtU48
-         dbgg==
+        d=google.com; s=20230601; t=1740444441; x=1741049241; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LLn0ouDWavOo+k23cGEFyx3GWlevLRlbuFWAFagmycY=;
+        b=ue3Zy9F4/lVYxCTqL1P2UsOLfyLvZMzv2LJENCSTrfWocqFa5PNhSNEwvB5xsOavbr
+         mo4TOHMJa3zA9pcVVsRUe7Ve06Fepwqv16m2IaMRMcbjxoAl9OdsF9KoWNQmBH6Xe9iq
+         8IGUd0xDz8PFqqwsq+mYo2Wi3G3TUSiaMqO9A7dTCu0jn2gM3SUO1gVj4veXuKMAv1M3
+         rcmbXibEDBbVUNgyHnvDgUj4FZUKNZ4XnfRP1iot+7pyQnWANIbd4p0UvvJJxdMhQUqv
+         AjBxXVH37wiBRGGHs59fnSNv7MKAW9wlWug7ogJVbWwuqJO5lafwa3VPpec0MfwC3mQd
+         X62w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740444440; x=1741049240;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=upe1z0XO8U6H/8RV3tx+JYjBzbZmjKheupo6lIMhV+w=;
-        b=njB/LMXEwgFq1lvGkW7ZJ9yhdfQ1LLJrCLbM/Acdn9kxWJcz/8iPKGi/Hp217phVwL
-         u6eI0xH7jbjk3FLDfXQICJO5FXYlRG4PUyETWINJOKSqjxmhysPfn7DABxLcjVLNfeu3
-         BQt4pjCb5jVwioUW6yuDQ0pJQG9j6WkKPfFClCnbxiChuHZhoM5ejvQXXrxAXnKLkRJT
-         Fu/mGf34ZsTcFae1Dc8ApsWA5U/GRx4RoDTy2Fm+mKq+IpDooiCLC1I2TahBW2Rco2iY
-         tDDMzTJFS9NJG2j7QcVJz2ASegqHBmyWS1k/bbBhBDKbtgeg1T3aPlNpN/VXwbwKZc4t
-         GMLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNX4c5ehAB0LwXQ5XtzfLDjj+XF3E9uX5Tl7+Z4j2ynFKjsWNHi7Xtcf48BhbhovPnYVDwjz89nLCvCHY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWsYX5EjdHFNqXP75O3XFkQqyIk9Um9EDpSRtEkC0kdS3Jw5xQ
-	O9tyBQlVMrrZd+Ie7hv2KZrsygZoBHaKWStwnjmmU141iOq2zldnIOhsGlc3LZxMPRGZaYVtk01
-	lRgE7OyglRoAKLjOAyA==
-X-Google-Smtp-Source: AGHT+IGRKk4bnK43g7ZfQMF0GdoxO23fj+tUCCpnvsK3dBFKZXeGnwF4nImVNkEYzEqwmGYWTut4Zw+tPUA4HizZ
-X-Received: from pjz8.prod.google.com ([2002:a17:90b:56c8:b0:2fc:c98:ea47])
- (user=vannapurve job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:1d83:b0:2fc:3264:3666 with SMTP id 98e67ed59e1d1-2fce7b221c3mr24368106a91.30.1740444440378;
+        d=1e100.net; s=20230601; t=1740444441; x=1741049241;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LLn0ouDWavOo+k23cGEFyx3GWlevLRlbuFWAFagmycY=;
+        b=wGikZJG4bcEz+UUxREe+f03zx6C/H9WL8qJ+DSUsNsU4MPS6ocEUoqdnBenK6v3xyU
+         ZMtJNQ+D809+q50xTtGuXp2oZY+bJgD0sOCFs7W1S6ZkHY9MYAI8uiERwFTwtVaBj3s6
+         +g6m3fpV3olBAI/fRICmrGF5ETA/p052L5XMkMrFHoqLsaXKaAb6ycDFUDvy/CQYSs3O
+         Sz7YwIdfge6xbMDOsUpfLxpwOL4tmc2FHY7jMGaFCYIh0kMPpkSIVw3icK2C2CtvLfQO
+         cFiT02eMUPgIymPMnngO41NafNDawyRHWgpx/O/HNvY3k5DuakwFZ1rLfDFVZ1Xhdnfw
+         95XQ==
+X-Gm-Message-State: AOJu0YxUBsAUoA4wMxqr5luhQaJh6BqCXX9Kp4Dyq8lI2d31LvmZKGG2
+	5+LkB4kPctm62pqh2h8A9UUmx0+4LO5GHrBWXGORazrbQ2OiQfJHYLkNE2pHGNFLB/ClWEhHX/V
+	ge2YDfEcFbMVjQCsvB4S64GAzv6aROFl8XpzCqQiCb1+ktPaRAwRojxr3y54w95mdJWIVGXy7d0
+	5d6umCBHgoXv9XMx9AW6OlKfdHHpzexhlt7mIGJ8S85HIQpPNklfo=
+X-Google-Smtp-Source: AGHT+IGjTB7OqTkNMNzcfyv0LdWUXTWhbdIyRa+cJKyKRwTrcEIT6xduBck8PQaOscdeB6AJZA6OXuOCQQ8MTQ==
+X-Received: from pjbqx15.prod.google.com ([2002:a17:90b:3e4f:b0:2fc:3022:36b8])
+ (user=jmattson job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:3b83:b0:2f6:d266:f45c with SMTP id 98e67ed59e1d1-2fce868c637mr26094804a91.2.1740444440607;
  Mon, 24 Feb 2025 16:47:20 -0800 (PST)
-Date: Tue, 25 Feb 2025 00:47:02 +0000
-In-Reply-To: <20250225004704.603652-1-vannapurve@google.com>
+Date: Mon, 24 Feb 2025 16:45:45 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250225004704.603652-1-vannapurve@google.com>
 X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
-Message-ID: <20250225004704.603652-2-vannapurve@google.com>
-Subject: [PATCH v6 1/3] x86/paravirt: Move halt paravirt calls under CONFIG_PARAVIRT
-From: Vishal Annapurve <vannapurve@google.com>
-To: dave.hansen@linux.intel.com, kirill.shutemov@linux.intel.com, 
-	jgross@suse.com, ajay.kaher@broadcom.com, ak@linux.intel.com, 
-	tony.luck@intel.com, thomas.lendacky@amd.com
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, 
-	pbonzini@redhat.com, seanjc@google.com, kai.huang@intel.com, 
-	chao.p.peng@linux.intel.com, isaku.yamahata@gmail.com, 
-	sathyanarayanan.kuppuswamy@linux.intel.com, erdemaktas@google.com, 
-	ackerleytng@google.com, jxgao@google.com, sagis@google.com, 
-	afranji@google.com, kees@kernel.org, jikos@kernel.org, peterz@infradead.org, 
-	x86@kernel.org, linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev, 
-	virtualization@lists.linux.dev, bcm-kernel-feedback-list@broadcom.com, 
-	stable@vger.kernel.org, Vishal Annapurve <vannapurve@google.com>
+Message-ID: <20250225004708.1001320-1-jmattson@google.com>
+Subject: [PATCH] KVM: x86: Provide a capability to disable APERF/MPERF read intercepts
+From: Jim Mattson <jmattson@google.com>
+To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: Jim Mattson <jmattson@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Allow a guest to read the physical IA32_APERF and IA32_MPERF MSRs
+without interception.
 
-CONFIG_PARAVIRT_XXL is mainly defined/used by XEN PV guests. For
-other VM guest types, features supported under CONFIG_PARAVIRT
-are self sufficient. CONFIG_PARAVIRT mainly provides support for
-TLB flush operations and time related operations.
+The IA32_APERF and IA32_MPERF MSRs are not virtualized. Writes are not
+handled at all. The MSR values are not zeroed on vCPU creation, saved
+on suspend, or restored on resume. No accommodation is made for
+processor migration or for sharing a logical processor with other
+tasks. No adjustments are made for non-unit TSC multipliers. The MSRs
+do not account for time the same way as the comparable PMU events,
+whether the PMU is virtualized by the traditional emulation method or
+the new mediated pass-through approach.
 
-For TDX guest as well, paravirt calls under CONFIG_PARVIRT meets
-most of its requirement except the need of HLT and SAFE_HLT
-paravirt calls, which is currently defined under
-CONFIG_PARAVIRT_XXL.
+Nonetheless, in a properly constrained environment, this capability
+can be combined with a guest CPUID table that advertises support for
+CPUID.6:ECX.APERFMPERF[bit 0] to induce a Linux guest to report the
+effective physical CPU frequency in /proc/cpuinfo. Moreover, there is
+no performance cost for this capability.
 
-Since enabling CONFIG_PARAVIRT_XXL is too bloated for TDX guest
-like platforms, move HLT and SAFE_HLT paravirt calls under
-CONFIG_PARAVIRT.
-
-Moving HLT and SAFE_HLT paravirt calls are not fatal and should not
-break any functionality for current users of CONFIG_PARAVIRT.
-
-Cc: stable@vger.kernel.org
-Fixes: bfe6ed0c6727 ("x86/tdx: Add HLT support for TDX guests")
-Co-developed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Vishal Annapurve <vannapurve@google.com>
+Signed-off-by: Jim Mattson <jmattson@google.com>
 ---
- arch/x86/include/asm/irqflags.h       | 40 +++++++++++++++------------
- arch/x86/include/asm/paravirt.h       | 20 +++++++-------
- arch/x86/include/asm/paravirt_types.h |  3 +-
- arch/x86/kernel/paravirt.c            | 14 ++++++----
- 4 files changed, 41 insertions(+), 36 deletions(-)
+ Documentation/virt/kvm/api.rst  | 1 +
+ arch/x86/include/asm/kvm_host.h | 1 +
+ arch/x86/kvm/svm/svm.c          | 7 +++++++
+ arch/x86/kvm/svm/svm.h          | 2 +-
+ arch/x86/kvm/vmx/vmx.c          | 4 ++++
+ arch/x86/kvm/x86.c              | 7 +++++--
+ arch/x86/kvm/x86.h              | 5 +++++
+ include/uapi/linux/kvm.h        | 1 +
+ tools/include/uapi/linux/kvm.h  | 4 +++-
+ 9 files changed, 28 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/irqflags.h b/arch/x86/include/asm/irqflags.h
-index cf7fc2b8e3ce..1c2db11a2c3c 100644
---- a/arch/x86/include/asm/irqflags.h
-+++ b/arch/x86/include/asm/irqflags.h
-@@ -76,6 +76,28 @@ static __always_inline void native_local_irq_restore(unsigned long flags)
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index 2b52eb77e29c..6431cd33f06a 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -7684,6 +7684,7 @@ Valid bits in args[0] are::
+   #define KVM_X86_DISABLE_EXITS_HLT              (1 << 1)
+   #define KVM_X86_DISABLE_EXITS_PAUSE            (1 << 2)
+   #define KVM_X86_DISABLE_EXITS_CSTATE           (1 << 3)
++  #define KVM_X86_DISABLE_EXITS_APERFMPERF       (1 << 4)
  
- #endif
+ Enabling this capability on a VM provides userspace with a way to no
+ longer intercept some instructions for improved latency in some
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 0b7af5902ff7..53de91fccc20 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1380,6 +1380,7 @@ struct kvm_arch {
+ 	bool hlt_in_guest;
+ 	bool pause_in_guest;
+ 	bool cstate_in_guest;
++	bool aperfmperf_in_guest;
  
-+#ifndef CONFIG_PARAVIRT
-+#ifndef __ASSEMBLY__
-+/*
-+ * Used in the idle loop; sti takes one instruction cycle
-+ * to complete:
-+ */
-+static __always_inline void arch_safe_halt(void)
-+{
-+	native_safe_halt();
-+}
-+
-+/*
-+ * Used when interrupts are already enabled or to
-+ * shutdown the processor:
-+ */
-+static __always_inline void halt(void)
-+{
-+	native_halt();
-+}
-+#endif /* __ASSEMBLY__ */
-+#endif /* CONFIG_PARAVIRT */
-+
- #ifdef CONFIG_PARAVIRT_XXL
- #include <asm/paravirt.h>
- #else
-@@ -97,24 +119,6 @@ static __always_inline void arch_local_irq_enable(void)
- 	native_irq_enable();
- }
+ 	unsigned long irq_sources_bitmap;
+ 	s64 kvmclock_offset;
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index a713c803a3a3..5ebcbff341bc 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -111,6 +111,8 @@ static const struct svm_direct_access_msrs {
+ 	{ .index = MSR_IA32_CR_PAT,			.always = false },
+ 	{ .index = MSR_AMD64_SEV_ES_GHCB,		.always = true  },
+ 	{ .index = MSR_TSC_AUX,				.always = false },
++	{ .index = MSR_IA32_APERF,			.always = false },
++	{ .index = MSR_IA32_MPERF,			.always = false },
+ 	{ .index = X2APIC_MSR(APIC_ID),			.always = false },
+ 	{ .index = X2APIC_MSR(APIC_LVR),		.always = false },
+ 	{ .index = X2APIC_MSR(APIC_TASKPRI),		.always = false },
+@@ -1359,6 +1361,11 @@ static void init_vmcb(struct kvm_vcpu *vcpu)
+ 	if (boot_cpu_has(X86_FEATURE_V_SPEC_CTRL))
+ 		set_msr_interception(vcpu, svm->msrpm, MSR_IA32_SPEC_CTRL, 1, 1);
  
--/*
-- * Used in the idle loop; sti takes one instruction cycle
-- * to complete:
-- */
--static __always_inline void arch_safe_halt(void)
--{
--	native_safe_halt();
--}
--
--/*
-- * Used when interrupts are already enabled or to
-- * shutdown the processor:
-- */
--static __always_inline void halt(void)
--{
--	native_halt();
--}
--
- /*
-  * For spinlocks, etc:
-  */
-diff --git a/arch/x86/include/asm/paravirt.h b/arch/x86/include/asm/paravirt.h
-index 041aff51eb50..29e7331a0c98 100644
---- a/arch/x86/include/asm/paravirt.h
-+++ b/arch/x86/include/asm/paravirt.h
-@@ -107,6 +107,16 @@ static inline void notify_page_enc_status_changed(unsigned long pfn,
- 	PVOP_VCALL3(mmu.notify_page_enc_status_changed, pfn, npages, enc);
- }
++	if (kvm_aperfmperf_in_guest(vcpu->kvm)) {
++		set_msr_interception(vcpu, svm->msrpm, MSR_IA32_APERF, 1, 0);
++		set_msr_interception(vcpu, svm->msrpm, MSR_IA32_MPERF, 1, 0);
++	}
++
+ 	if (kvm_vcpu_apicv_active(vcpu))
+ 		avic_init_vmcb(svm, vmcb);
  
-+static __always_inline void arch_safe_halt(void)
-+{
-+	PVOP_VCALL0(irq.safe_halt);
-+}
-+
-+static inline void halt(void)
-+{
-+	PVOP_VCALL0(irq.halt);
-+}
-+
- #ifdef CONFIG_PARAVIRT_XXL
- static inline void load_sp0(unsigned long sp0)
+diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
+index 9d7cdb8fbf87..3ee2b7e07395 100644
+--- a/arch/x86/kvm/svm/svm.h
++++ b/arch/x86/kvm/svm/svm.h
+@@ -44,7 +44,7 @@ static inline struct page *__sme_pa_to_page(unsigned long pa)
+ #define	IOPM_SIZE PAGE_SIZE * 3
+ #define	MSRPM_SIZE PAGE_SIZE * 2
+ 
+-#define MAX_DIRECT_ACCESS_MSRS	48
++#define MAX_DIRECT_ACCESS_MSRS	50
+ #define MSRPM_OFFSETS	32
+ extern u32 msrpm_offsets[MSRPM_OFFSETS] __read_mostly;
+ extern bool npt_enabled;
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 6c56d5235f0f..88a555328932 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7597,6 +7597,10 @@ int vmx_vcpu_create(struct kvm_vcpu *vcpu)
+ 		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
+ 		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
+ 	}
++	if (kvm_aperfmperf_in_guest(vcpu->kvm)) {
++		vmx_disable_intercept_for_msr(vcpu, MSR_IA32_APERF, MSR_TYPE_R);
++		vmx_disable_intercept_for_msr(vcpu, MSR_IA32_MPERF, MSR_TYPE_R);
++	}
+ 
+ 	vmx->loaded_vmcs = &vmx->vmcs01;
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 02159c967d29..98f3df24ac9a 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -4533,7 +4533,7 @@ static inline bool kvm_can_mwait_in_guest(void)
+ 
+ static u64 kvm_get_allowed_disable_exits(void)
  {
-@@ -170,16 +180,6 @@ static inline void __write_cr4(unsigned long x)
- 	PVOP_VCALL1(cpu.write_cr4, x);
+-	u64 r = KVM_X86_DISABLE_EXITS_PAUSE;
++	u64 r = KVM_X86_DISABLE_EXITS_PAUSE | KVM_X86_DISABLE_EXITS_APERFMPERF;
+ 
+ 	if (!mitigate_smt_rsb) {
+ 		r |= KVM_X86_DISABLE_EXITS_HLT |
+@@ -6543,7 +6543,8 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+ 
+ 		if (!mitigate_smt_rsb && boot_cpu_has_bug(X86_BUG_SMT_RSB) &&
+ 		    cpu_smt_possible() &&
+-		    (cap->args[0] & ~KVM_X86_DISABLE_EXITS_PAUSE))
++		    (cap->args[0] & ~(KVM_X86_DISABLE_EXITS_PAUSE |
++				      KVM_X86_DISABLE_EXITS_APERFMPERF)))
+ 			pr_warn_once(SMT_RSB_MSG);
+ 
+ 		if (cap->args[0] & KVM_X86_DISABLE_EXITS_PAUSE)
+@@ -6554,6 +6555,8 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+ 			kvm->arch.hlt_in_guest = true;
+ 		if (cap->args[0] & KVM_X86_DISABLE_EXITS_CSTATE)
+ 			kvm->arch.cstate_in_guest = true;
++		if (cap->args[0] & KVM_X86_DISABLE_EXITS_APERFMPERF)
++			kvm->arch.aperfmperf_in_guest = true;
+ 		r = 0;
+ disable_exits_unlock:
+ 		mutex_unlock(&kvm->lock);
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index 91e50a513100..0c3ac99454e5 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -488,6 +488,11 @@ static inline bool kvm_cstate_in_guest(struct kvm *kvm)
+ 	return kvm->arch.cstate_in_guest;
  }
  
--static __always_inline void arch_safe_halt(void)
--{
--	PVOP_VCALL0(irq.safe_halt);
--}
--
--static inline void halt(void)
--{
--	PVOP_VCALL0(irq.halt);
--}
--
- static inline u64 paravirt_read_msr(unsigned msr)
- {
- 	return PVOP_CALL1(u64, cpu.read_msr, msr);
-diff --git a/arch/x86/include/asm/paravirt_types.h b/arch/x86/include/asm/paravirt_types.h
-index fea56b04f436..abccfccc2e3f 100644
---- a/arch/x86/include/asm/paravirt_types.h
-+++ b/arch/x86/include/asm/paravirt_types.h
-@@ -120,10 +120,9 @@ struct pv_irq_ops {
- 	struct paravirt_callee_save save_fl;
- 	struct paravirt_callee_save irq_disable;
- 	struct paravirt_callee_save irq_enable;
--
-+#endif
- 	void (*safe_halt)(void);
- 	void (*halt)(void);
--#endif
- } __no_randomize_layout;
- 
- struct pv_mmu_ops {
-diff --git a/arch/x86/kernel/paravirt.c b/arch/x86/kernel/paravirt.c
-index 1ccaa3397a67..c5bb980b8a67 100644
---- a/arch/x86/kernel/paravirt.c
-+++ b/arch/x86/kernel/paravirt.c
-@@ -110,6 +110,11 @@ int paravirt_disable_iospace(void)
- 	return request_resource(&ioport_resource, &reserve_ioports);
- }
- 
-+static noinstr void pv_native_safe_halt(void)
++static inline bool kvm_aperfmperf_in_guest(struct kvm *kvm)
 +{
-+	native_safe_halt();
++	return kvm->arch.aperfmperf_in_guest;
 +}
 +
- #ifdef CONFIG_PARAVIRT_XXL
- static noinstr void pv_native_write_cr2(unsigned long val)
+ static inline bool kvm_notify_vmexit_enabled(struct kvm *kvm)
  {
-@@ -125,11 +130,6 @@ static noinstr void pv_native_set_debugreg(int regno, unsigned long val)
- {
- 	native_set_debugreg(regno, val);
- }
--
--static noinstr void pv_native_safe_halt(void)
--{
--	native_safe_halt();
--}
- #endif
+ 	return kvm->arch.notify_vmexit_flags & KVM_X86_NOTIFY_VMEXIT_ENABLED;
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 45e6d8fca9b9..b4a4eb52f6df 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -617,6 +617,7 @@ struct kvm_ioeventfd {
+ #define KVM_X86_DISABLE_EXITS_HLT            (1 << 1)
+ #define KVM_X86_DISABLE_EXITS_PAUSE          (1 << 2)
+ #define KVM_X86_DISABLE_EXITS_CSTATE         (1 << 3)
++#define KVM_X86_DISABLE_EXITS_APERFMPERF     (1 << 4)
  
- struct pv_info pv_info = {
-@@ -186,9 +186,11 @@ struct paravirt_patch_template pv_ops = {
- 	.irq.save_fl		= __PV_IS_CALLEE_SAVE(pv_native_save_fl),
- 	.irq.irq_disable	= __PV_IS_CALLEE_SAVE(pv_native_irq_disable),
- 	.irq.irq_enable		= __PV_IS_CALLEE_SAVE(pv_native_irq_enable),
-+#endif /* CONFIG_PARAVIRT_XXL */
-+
-+	/* Irq HLT ops. */
- 	.irq.safe_halt		= pv_native_safe_halt,
- 	.irq.halt		= native_halt,
--#endif /* CONFIG_PARAVIRT_XXL */
+ /* for KVM_ENABLE_CAP */
+ struct kvm_enable_cap {
+diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
+index 502ea63b5d2e..9b60f0509cdc 100644
+--- a/tools/include/uapi/linux/kvm.h
++++ b/tools/include/uapi/linux/kvm.h
+@@ -617,10 +617,12 @@ struct kvm_ioeventfd {
+ #define KVM_X86_DISABLE_EXITS_HLT            (1 << 1)
+ #define KVM_X86_DISABLE_EXITS_PAUSE          (1 << 2)
+ #define KVM_X86_DISABLE_EXITS_CSTATE         (1 << 3)
++#define KVM_X86_DISABLE_EXITS_APERFMPERF     (1 << 4)
+ #define KVM_X86_DISABLE_VALID_EXITS          (KVM_X86_DISABLE_EXITS_MWAIT | \
+                                               KVM_X86_DISABLE_EXITS_HLT | \
+                                               KVM_X86_DISABLE_EXITS_PAUSE | \
+-                                              KVM_X86_DISABLE_EXITS_CSTATE)
++					      KVM_X86_DISABLE_EXITS_CSTATE | \
++					      KVM_X86_DISABLE_EXITS_APERFMPERF)
  
- 	/* Mmu ops. */
- 	.mmu.flush_tlb_user	= native_flush_tlb_local,
+ /* for KVM_ENABLE_CAP */
+ struct kvm_enable_cap {
 -- 
 2.48.1.658.g4767266eb4-goog
 
