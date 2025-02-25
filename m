@@ -1,116 +1,104 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01CC1C6FFF
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 18:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E921207DE0;
+	Tue, 25 Feb 2025 18:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740509311; cv=none; b=h3t0E7Y6pSqAntFud7vcPfGkupZiClcHz23YhgfWe0F1PDm1YMwS5PZwd4N19Ors/+svQyp7RqnrA2mHH8fiC/c5lEjK7j2O26PkBURgqKGSh+FKRVdtXidzvoHc7toEvpmaIbVQZjB91F/UL9IiULEJJR8rcpXia3860AFoIKQ=
+	t=1740509316; cv=none; b=oEbiHl8HCT89s8w0wOw4MHDvlDpUrepU8Pij0oY0/z5iPL2+BwUUU00iIprxxSitjZx7IN9rYMj3R8I6mUmI1vZ7z/Qon2GRtoGhhVDJ8srS1ew2bdHsLfbxS4izAozzsEOej6dpH6uxNH87FMfj3KLAOzeqEpBnrlhCe2Z/MSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740509311; c=relaxed/simple;
-	bh=tCCjly+Qh5AY74QbK5LfS4mXEJXwkw/OWlEpJf5244k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d0bNwWkmKTx9E6rvWiKKLRHu1T1sQC3Lrb9wvNpuMvCtTdpqKsU4JlHsNUyO4QoQ/9K5Ztjgz8uzTmYXEgnSTYCSvU2SSJYyYeG3E/Nt9q9eP5Y62/QsnitcMwhG/POz3TIji3r8oHF3rk1auCInAIJ8IHdAIa3119FdRlPbZRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IoH3j/SJ; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740509316; c=relaxed/simple;
+	bh=c1AWhEQKXBN0pDxq/6dbjwZZ7dZ8/2abYpSUcIwcCb0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=m7/Qf0lyrBwHazzuBqj5AmsvylCqMxwTGwiMgsPjW83199N8YBorMq4CyL0CHRIFbqzXQcUb3HdIbR3YEV8VYeZ4WQzZeAs7Yd9iME5ToGXm+dan49maKiRDZI2Gr8B7+gKa56veMEXohdMuWQkP++AW4qPgTSL+1X4ST2Q26kM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BPmyylDZ; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IoH3j/SJ"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-abb4944fa73so88051166b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 10:48:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740509308; x=1741114108; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/oN23gi/Cv1G/Zd8ve35VhHoD43rI+bSAAj2I1PX/Ag=;
-        b=IoH3j/SJJNMyiCNeXqg+0ck4j8VISqO5IN9kZ5nBdSnw9B3b4QcdgP5xP67i9rpDxX
-         dmTS2sxtoRltGWqdZvOserGg7UJhrR3BixI/OXKBDKtSDThMkPp5Mze3LXLzGFV3g0tj
-         pRHBYiCOKVK+GcpBi1OKpuL+ZuGa4xeBvln5nRp1fc4qz2YXfkMrT9SB4L7XWyoGujBn
-         E3PYoLNkZoZr/RzT557MuOvqOthd1f1TCQkS0gihwQAnYtVIzvusr265UD/UOiC/c2CJ
-         COQ9hrI/cMSEUg9jqyFs6q/yCivfqO6Gbmps9BmvaMKbdk0ilfCCcFVkhbbTxUCnYeQD
-         g0FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740509308; x=1741114108;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/oN23gi/Cv1G/Zd8ve35VhHoD43rI+bSAAj2I1PX/Ag=;
-        b=NoIokCQKLOaHFTAfxEBD9ukl1wK5OEIliQZaDFoy/swOoNjHVKj7Vo0Xytm827X08K
-         uYtwwbLMV8WbNDR3qvAraP0Gnv68yrhf4rJCbZJ89hzTTyZS9UH4N1FikhBwz6DmAV1Q
-         1izWFNUQIOiM33ZbtA7sj1+YiJxh8tcAhKEt+5J9a5t++us7KOv915q98g5maBlm8XED
-         Yf1ixaHriXPZs7AtnWG9irO1+amRbNZfROzHuQTdLTugBbZftoYPKqF943FtUZ5QkzOW
-         bL+PR6uLj0FvzdEff8bIX64sBog7zwPaty7Ot3FkbX7HrnoKsMpXy8wUBkYg6/p6jyfM
-         vHEw==
-X-Forwarded-Encrypted: i=1; AJvYcCWXoRB3Byzf9+ZWQatVw12zFngOZUetRYV4T1owQkMSP3FvQx8ZjUqJe09B93AzBaq4lHD7ECxitRShiMA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBkH1PVwIh556N0+SJ7QWEDgHng/QIfV5rKRP3qMay2AM0j8dR
-	LORqWQoOyD406kkCV1p9mn2FGWrRmDpXXlcRY2XDkVIRw06rSRVpd/q+/PwApJM=
-X-Gm-Gg: ASbGnct/0I3kwsjwXWmGbHORGHC8lLYNoJSPJEuIvLHf/jUEtsSIcd7PV5mUCIL0Ao9
-	h/EMaO4kU1cACkHWKroHnrtLmRRUlCN3lSjS6LN1UnH80/tQQW3UT4DLdqZnW16C20B333dyhDw
-	Ls4gruPrNvSEa0dGC/5+k+ehT44MgN83dLbW+QNiKIdXGBEXsfFuGLA7HJUxukkNGKAH17S7PYU
-	PlcuFMM1aW83q4pCm8nUJJ3mVByK7xjYp8JWtMbsdeaMutLoooyS/OhYHg6f5fcAfpbODDKhkYW
-	sTRO/b43P7oVuSYjzKRiUC1aUl5T25pa9zvaSpb4GOL/mAX8N6y0tOn9toV4JQA0Kyox8qpoNFE
-	=
-X-Google-Smtp-Source: AGHT+IFKOZhRHtEHCCTN5BHVYVCPkFDsRkb7jCM4fs2ECH+kp2S3Jaa2qQ2qzrnOEoKDVZtT2N63uw==
-X-Received: by 2002:a17:907:2d20:b0:ab6:b8e0:4f25 with SMTP id a640c23a62f3a-abc09a14d0dmr792407366b.4.1740509307824;
-        Tue, 25 Feb 2025 10:48:27 -0800 (PST)
-Received: from krzk-bin.. (78-11-220-99.static.ip.netia.com.pl. [78.11.220.99])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed1cdbf55sm185359466b.15.2025.02.25.10.48.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 10:48:27 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	soc@lists.linux.dev,
-	workflows@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 2/2] docs: process: maintainer-soc-clean-dts: linux-next is decisive
-Date: Tue, 25 Feb 2025 19:48:22 +0100
-Message-ID: <20250225184822.213296-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250225184822.213296-1-krzysztof.kozlowski@linaro.org>
-References: <20250225184822.213296-1-krzysztof.kozlowski@linaro.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BPmyylDZ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 48ED54435C;
+	Tue, 25 Feb 2025 18:48:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740509312;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+8UIDh5lGL3kiPNmlRgHMn2oJTdbmJuHjGWmpptPu70=;
+	b=BPmyylDZSev8v1FhSAMvsthjGSDN6XPMp0aVBNKz7Tjpe3glccSjGQErP/eEjpZASoWs/K
+	hy+m1IAILfLTeo7gbxC4UC9uAvup77OJ+VYOR6UL1CLVKL/KOasQod0nO2xjV7Cyb0nb3Z
+	KRPUReH7Lr2s36jjjSw5vyJP0Ioi9OHRdcStsmiUZyIQ6weKfJL7eeU+AE3KNPGpaK3Bd9
+	gqNFT4TxZW3s0usheUBZvd/0F6KMQkilCyhh8Be/Z4D149Ah7pgnB5CD1GzW5fER0VOeud
+	PDPGOxKH64rfz3TzBkdOfkuYKW7CUBjBuAwTZHxVTN6NkDUpsPZxKyUzrmfFPg==
+Date: Tue, 25 Feb 2025 19:48:29 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, davem@davemloft.net,
+ Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Heiner
+ Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, Florian
+ Fainelli <f.fainelli@gmail.com>, =?UTF-8?B?S8O2cnk=?= Maincent
+ <kory.maincent@bootlin.com>, Simon Horman <horms@kernel.org>, Romain
+ Gantois <romain.gantois@bootlin.com>, Antoine Tenart <atenart@kernel.org>,
+ Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, =?UTF-8?B?QmrDuHJu?= Mork
+ <bjorn@mork.no>
+Subject: Re: [PATCH net-next v2 1/2] net: phy: sfp: Add support for SMBus
+ module access
+Message-ID: <20250225194829.724eca08@fedora.home>
+In-Reply-To: <cd630175-d0e4-41e3-bc4c-41d32647e9ed@linux.dev>
+References: <20250225112043.419189-1-maxime.chevallier@bootlin.com>
+	<20250225112043.419189-2-maxime.chevallier@bootlin.com>
+	<Z74GLblGUPhHID8a@shell.armlinux.org.uk>
+	<cd630175-d0e4-41e3-bc4c-41d32647e9ed@linux.dev>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekvdegjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegveeltddvveeuhefhvefhlefhkeevfedtgfeiudefffeiledttdfgfeeuhfeukeenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedukedprhgtphhtthhopehsvggrnhdrrghnuggvrhhsohhnsehlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtr
+ dhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomh
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Devicetree bindings patches go usually via driver subsystem tree, so
-obviously testing only SoC branches would result in new dtbs_check
-warnings.  Mention that linux-next branch is decisice for zero-warnings
-rule.
+Hi Sean,
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- Documentation/process/maintainer-soc-clean-dts.rst | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+On Tue, 25 Feb 2025 13:41:57 -0500
+Sean Anderson <sean.anderson@linux.dev> wrote:
 
-diff --git a/Documentation/process/maintainer-soc-clean-dts.rst b/Documentation/process/maintainer-soc-clean-dts.rst
-index 1b32430d0cfc..5423fb7d6047 100644
---- a/Documentation/process/maintainer-soc-clean-dts.rst
-+++ b/Documentation/process/maintainer-soc-clean-dts.rst
-@@ -17,8 +17,9 @@ Strict DTS DT Schema and dtc Compliance
- No changes to the SoC platform Devicetree sources (DTS files) should introduce
- new ``make dtbs_check W=1`` warnings.  Warnings in a new board DTS, which are
- results of issues in an included DTSI file, are considered existing, not new
--warnings.  The platform maintainers have automation in place which should point
--out any new warnings.
-+warnings.  For series split between different trees (DT bindings go via driver
-+subsystem tree), warnings on linux-next are decisive.  The platform maintainers
-+have automation in place which should point out any new warnings.
- 
- If a commit introducing new warnings gets accepted somehow, the resulting
- issues shall be fixed in reasonable time (e.g. within one release) or the
--- 
-2.43.0
+> On 2/25/25 13:04, Russell King (Oracle) wrote:
+> > On Tue, Feb 25, 2025 at 12:20:39PM +0100, Maxime Chevallier wrote:  
+> >> The SFP module's eeprom and internals are accessible through an i2c bus.
+> >> However, all the i2c transfers that are performed are SMBus-style
+> >> transfers for read and write operations.  
+> > 
+> > Note that there are SFPs that fail if you access them by byte - the
+> > 3FE46541AA locks the bus if you byte access the emulated EEPROM at
+> > 0x50, address 0x51. This is documented in sfp_sm_mod_probe().
+> > 
+> > So there's a very real reason for adding the warning - this module
+> > will not work!
+> >   
+> 
+> I had a look at sfp_sm_mod_probe, and from what I can tell the SFP that
+> I was having issues with should have been fixed by commit 426c6cbc409c
+> ("net: sfp: add workaround for Realtek RTL8672 and RTL9601C chips"). I
+> re-tested without this series applied, and the SFP still worked. So I
+> guess I don't have an SFP module with the issue this series is trying to
+> address after all.
 
+I see, this series actually wasn't supposed to solve that at all (but
+it's true that the solution was to fallback to 1-byte access, as
+Russell explains on that thread) :)
+
+The use-case for that series is to deal with situations where the Host
+(i2c master) is only capable of 1-byte transactions (it's not a true
+i2c controller, but rather a very limited smbus controller) :)
+
+Maxime
