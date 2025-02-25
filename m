@@ -1,74 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F84213A88A;
-	Tue, 25 Feb 2025 08:47:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4454813A88A;
+	Tue, 25 Feb 2025 08:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740473256; cv=none; b=e/rmBDnnxAl7TxOx3apf3HL2B3ATAhr5SkA01EWE0xgtyLuqxeyQJAl4CoAjSADpN4mGm85JinTMVYILri8kx5i1WFRifWyRGdPk/wGzWNfo/lQ6Ly8Oq2cvgMpzTinD9OLGYJTlRBZnVDvcYQyrA4RZ6eB/A5xCnvXkFqd9M8A=
+	t=1740473265; cv=none; b=NBuvON05QEdyxFKKcBqYP58e3rRNFmLCXspRokXI9ilstWT2np+9fzF9bWEY1lFVdEl51uF6NF5kFlmlrq+ews0y8xOQMIghKt6r9yKaZgL65PyMYhwzzd4ts4/14YVtSwNq6mhWd61iBpxr4Z0z1m0t06Nkc76nYeJmRX5sC2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740473256; c=relaxed/simple;
-	bh=jkoutzfuhyhscH3rYrY6wsqgU+1ykH7c9nmt11/wUgo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MKq2AZjEFM+AQO3w20vRXWrHSdWydFZDa+NUbnxh2wjzceMAa4bqpDvDt6OU+JMM3MjRaVd2Uolft2wahxv7ZFblr0kGOaHuPZ498aaE2w1VAMnThrE9whUuU/Td8nTEQdTSI9gwrtsRVjiOhAH8urTjBOSxuzUY2nRBbbIfxfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K30fuygb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740473265; c=relaxed/simple;
+	bh=IvrsNh1PoziXp5gsBXRLYUYz8EOp7rsmJMbgVpDub9I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=cjOOe4bI4Bro4X9e91ahGp+WuHRQP5CG8iJ2mohMFRfmrdZMVj+UtypXgJNGlDkkbjrjpu2uYXazBanC8kcyfLGTML2YcVHq3Sm8nxTnBuOfZ3rdLm4kZVYhxTKOCaUXvmdQw66h1Z1SWeG+Y1Adjy03qRyTzyHWKv0ExM852p4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=CodEsv4e; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K30fuygb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 204D0C4CEE2;
-	Tue, 25 Feb 2025 08:47:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740473255;
-	bh=jkoutzfuhyhscH3rYrY6wsqgU+1ykH7c9nmt11/wUgo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K30fuygbSJHkOo+oklTE+KOeEMMAX06jAIb81BHPEmuKxL77/5/qHIAo39C6Nhqp6
-	 cf503saHuLaJwoWWnxAzpoI/uW+lk7xPdQRwvuXEC6Bi6ZjtSIY3GlOMCc/rtbI5CT
-	 s55NsDpPJwUCPN4aMnx45r8NMjou5CTl6VVqHyjnhChFA8Zvrwn9p7MzoVfZOmqAo0
-	 47lVtbueWpZ9Orz9mYaDJWMJc8uoG7AqdZMc73hs2GBS1iwyue+XG2FPiYwOCKRAjs
-	 NIXYZjGKP05DP8M82XA7bBEIXbFXUevMq6lxrfecxV8uLHbnE5UfQWSzY3SHK86jD7
-	 Ltf3op4wqQstg==
-Date: Tue, 25 Feb 2025 09:47:32 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
-Cc: ath12k@lists.infradead.org, Johannes Berg <johannes@sipsolutions.net>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Jeff Johnson <jjohnson@kernel.org>, 
-	linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 01/13] dt-bindings: net: wireless: describe the ath12k
- AHB module for IPQ5332
-Message-ID: <20250225-abstract-arcane-chimpanzee-ca7e4f@krzk-bin>
-References: <20250225064834.2002499-1-quic_rajkbhag@quicinc.com>
- <20250225064834.2002499-2-quic_rajkbhag@quicinc.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="CodEsv4e"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P7LgQ0003966;
+	Tue, 25 Feb 2025 09:47:27 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	yHiS+n00ibzlP5REtMR+ddXLiK9OUJ+uzaby4EVh4iM=; b=CodEsv4eyIfFhzYg
+	ppgKu4xEWudziYqyzc6o4+V04zZ9hb2GoY5E3k8+YGSgW1XJh4FYciD1d8ZTfiB1
+	HWrAGQMacZjm+JsMIxqVuGatBAr2dcKZh+XQD16NZ3RPJRG6Qin5KHOOZaqZc1y7
+	cd0zu6WUaGwEWMk+odatGnvR8FpWKwz6Oj2/vqJeDGwNBnkVGW9MKjSIFwqfzxt/
+	Uo9uXsTDYMxnokHSXiSJiJC2NAaTWEejQ80wuuH9aNdb+RA+1+BXe7qyATYn9TnU
+	Wa/4Eyy8BsE0EaqNfsPMErBymX6znxmfg1a7MonpedGO+L73X9L0y5RHG5cQLVo3
+	Z6P34A==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4512sphr2p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Feb 2025 09:47:26 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 380F040044;
+	Tue, 25 Feb 2025 09:46:16 +0100 (CET)
+Received: from Webmail-eu.st.com (eqndag1node6.st.com [10.75.129.135])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8B9C9430105;
+	Tue, 25 Feb 2025 09:44:00 +0100 (CET)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE6.st.com
+ (10.75.129.135) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 25 Feb
+ 2025 09:44:00 +0100
+Received: from [10.48.86.222] (10.48.86.222) by SAFDAG1NODE1.st.com
+ (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 25 Feb
+ 2025 09:43:59 +0100
+Message-ID: <696ac9eb-f223-4993-b288-b6c3e07f4ed7@foss.st.com>
+Date: Tue, 25 Feb 2025 09:43:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250225064834.2002499-2-quic_rajkbhag@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 7/8] arm64: defconfig: enable STM32 LP timers drivers
+To: Krzysztof Kozlowski <krzk@kernel.org>, <lee@kernel.org>,
+        <ukleinek@kernel.org>, <alexandre.torgue@foss.st.com>,
+        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <wbg@kernel.org>, <jic23@kernel.org>, <daniel.lezcano@linaro.org>,
+        <tglx@linutronix.de>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <olivier.moysan@foss.st.com>
+References: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
+ <20250224180150.3689638-8-fabrice.gasnier@foss.st.com>
+ <f76a3a6c-795e-4fc8-905f-4655115ea99d@kernel.org>
+Content-Language: en-US
+From: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
+In-Reply-To: <f76a3a6c-795e-4fc8-905f-4655115ea99d@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-25_03,2025-02-24_02,2024-11-22_01
 
-On Tue, Feb 25, 2025 at 12:18:22PM +0530, Raj Kumar Bhagat wrote:
-> +  memory-region:
-> +    description:
-> +      Memory regions used by the ath12k firmware.
-> +    items:
-> +      - description: Q6 memory region
-> +      - description: m3 dump memory region
-> +      - description: Q6 caldata memory region
-> +      - description: Multi Link Operation (MLO) Global memory region
-> +
-> +  memory-region-names:
-> +    items:
-> +      - const: q6-region
-> +      - const: m3-dump
-> +      - const: q6-caldb
-> +      - const: mlo-global-mem
-> +
-> +  qcom,ath12k-calibration-variant:
+On 2/25/25 08:48, Krzysztof Kozlowski wrote:
+> On 24/02/2025 19:01, Fabrice Gasnier wrote:
+>> Enable the STM32 timer drivers: MFD, counter, PWM and trigger as modules.
+>> Clocksource is a bool, hence set to y. These drivers can be used on
+>> STM32MP25.
+> 
+> 
+> Which upstream board? If you do not have upstream board, the defconfig
+> is pointless for us. It's not defconfig for your downstream forks.
 
-qcom,calibration-variant
+Hi Krzysztof,
+
+It's going to be used on stm32mp257f-dk and stm32mp257f-ev1 boards.
+I can add the relevant DT for the(se) board(s) in next revision.
 
 Best regards,
-Krzysztof
+Fabrice
 
+> 
+> 
+> Best regards,
+> Krzysztof
