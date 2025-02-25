@@ -1,64 +1,65 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82CB48F5E
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:55:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B09326463E
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:55:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740477303; cv=none; b=Xr6jDz/AbVSOzq5Hxrxi2Bk8p7hDLv1hu3bw2dawXZd3Ic5dVx1kr8e4UybAAOaiDRrZkc4/mBMbvCM704BdXTImKpTBRkhb/VhqcfBr9bu3lAULMMDFwzR3xK6tjGhM4cZ3Bb05dY9p6sNs35I9Ag91gX709rSlmaj/f0Znp3A=
+	t=1740477308; cv=none; b=IUxsAWg3F+57s0jFPoKErWk4Sf6RyJEFiCZQSE7f3ttscapZHT0/DfOCtbCenDgrtAkhrRhuSLrUmdE4CYaHp6Uh5Rst2wOy55JEW/t99jFCoRASK1SqIuf7hLWdHSOt+QiBOPG0qehJFqdXNOLIoGyYCiCYFQHW5Kezsp/KrSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740477303; c=relaxed/simple;
-	bh=24G85a9aExXowfEGdxlD42OEjTkgbfxYAySwcezIHkM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HiTQxIHo6XyeLF3rhGXgMDY6BX0XEVeUgo9qkVw14cf6YMWA4hV8T+L65gjBNznxUTBWF5ocWhX9O5E0DZq4RMkLJxEdL75PIeZC7kV2hw/mK43MUlpY+TxFVubcg1Xjdc8KllXyZoOl4CQWbWpPVSWIbkm+dc3gkXT/Kabl9m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JiiGLsAr; arc=none smtp.client-ip=209.85.167.50
+	s=arc-20240116; t=1740477308; c=relaxed/simple;
+	bh=e2Y7p8dyN9eqj7U5017bQRwN6g3lLgcIgAe2Fqj3P7s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=jPmrR6TQCK7iF+htJtmVnBuMNRnvOfDAYUvrV8JFDl5Ww99RFisWgU4b/xj1v0cNfmHrZ5F79gJ5VV11A6ThjT4g5DbsnD0T8IRNWdC4OIRP2Upx142F4+jvLMdwI85EUpnEV/Eh6EWSK+7lP0GsTgldXhxRtHV//yKIKYlc4Ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bqRSA5fN; arc=none smtp.client-ip=209.85.208.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JiiGLsAr"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5439a6179a7so5997470e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 01:55:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bqRSA5fN"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30761be8fa8so58400491fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 01:55:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740477299; x=1741082099; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=k1b/SjlUrBiwlpdBltEgRRZu4gwMrGWqne2jsJj45xA=;
-        b=JiiGLsArRi795JzbHLQx+vRizYIKvEPKVDs4kxgzNU/nDPZ8S6AnL0epbiJkbiDKP6
-         A8LhU3mgDH9BiOK014ie/rCobbUP6vLmGA5lTW2LbwVMcKydJfVZ/WNQsokFZ2ZVjim4
-         HiZ9MbEBKyHRk8jYtKYsTIg5aNoD+L4GZ1TbsWY1YohAAjJDvg/vAcvdOGdde5iKlJQA
-         W3vlVLsv511Qnh+eZb5vZ+KSKRDnsu12zrIQumNeWlHFO90RRlCSS9bJqsCqCNPuXXlp
-         lOsKSqZW09yW6OWB/N/QNYL4zkZ0vMhMPOhuKbu1gntFDglHQqheSw6+yi/KRAhfeNb1
-         WQAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740477299; x=1741082099;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1740477304; x=1741082104; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=k1b/SjlUrBiwlpdBltEgRRZu4gwMrGWqne2jsJj45xA=;
-        b=dpcmFgO+vvKh3BnAKOVJvPJao2JTHU5+u5r2lCKVy2PuCBRuFXTtJeFYKTE1JinSRq
-         FdsotE5R9NhBdE1id6eKXLrAJK2Pq/hTSWfJuQ3vLiCwzd2RVMlgPaTdlgjddMLBzWT9
-         2JziOIocuLQHh0ivJoZxn9kdNYy7JiqBxXz8Vl4/FEfixNvYJgjOqcgVZHT8ad3ZTUFj
-         Jo5vyx1x+H3UlLY5eUNssMpDGSeuaVSRSPnb5Ztx4bUlH8SXRPo1Sw1Imp8Q0G3djLYA
-         TTGPD0pvisZSDrZWIZXLbei3HLb2qJY85mDiUNfEbwVFl8N6ei4JQWJpw3g1+oP4DXle
-         CH5w==
-X-Forwarded-Encrypted: i=1; AJvYcCXRUxgo1430HGy4pT8oD5cX4oy9F7BnyW+GcV7sgyVCt0MaqIoJKzEwkerYkO4GISrqj/G6uYeYeIByXyE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzlvixf9tBDSoC4zKherQtgIlpXI/jdtMLuds5dJwzP6HBFhjdZ
-	DlLabIP41kktRbRqiuxbai/UFeQQyyhxFQPH7r12QW666ZXGKjHDHLVDKKMCQD4=
-X-Gm-Gg: ASbGnctHwGSFqFmXLNLu7ctE2YV3JkC3QM4MBH1CEf7UyLx2CnLixCEcpSOPrSjlnUF
-	MOv1MRTtfIbzQihPFJVllS2ig8MgTI7hxGoLD+ZK9nRQHgZgqL1Z4lB1+CM0ewc724Epscjl2Yt
-	2ELFag4EUCtulpioOCx7V2Mfp59y7AbgxHkiLqIREVx1HUhbfbS27QTDUCOzYb0MOtiBQfZkhIj
-	XiPbKoYt6PBCtk2ObOZOSwXPFDvc377mIhvXhAnLJrZPcwsxbSitg/wx+pzU71LfGUNzHl5dw07
-	/GH4waQLbOdWt56JYCZxYnbtRWJ+dZRBw7pM
-X-Google-Smtp-Source: AGHT+IFjVQdNVlNztbhb0smgUJy6TbBsJtMWQwTKEIv0dNyr+RTtwx+laNU5QftfX73TCxWRyfGmMQ==
-X-Received: by 2002:a05:6512:3b86:b0:545:4ca:d395 with SMTP id 2adb3069b0e04-54838c56efdmr5685365e87.2.1740477299456;
-        Tue, 25 Feb 2025 01:54:59 -0800 (PST)
+        bh=7LU1Mx0M1JJLQ6X7nOndn1GNJ7UBsOKiHS90jS7YqHQ=;
+        b=bqRSA5fN6E8krWpqOd8VGZEpqTQ7cM4dVr8AJab1pVot4biW3btcFoBErbF0QqlGp7
+         XfAnnuvmy7zQIhl/YDRk44CxQfMtPTj7Hz8iB9kYxZzuS+uF6Fpr04RxFugfBkGuxZaF
+         qAveVEQQ5W85JDJ2lSIPo53GwVl8JwT3Bv30FDAc3LMuAVBO9hEwy5O1o0E5+f+oTLm9
+         GhVcm45eNSXtna+4rgkW6twBPTvgpDs1rrVmCNWYyFp7Zi/DDjR8YjHeMzLSQeidQHG6
+         R4MQ6c1h+LSeEcJBVFzAkVjmFZXvM9dFkbZXLxXnBYKfGN9Zp6eazSD63Dupxoq59FQ1
+         gEEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740477304; x=1741082104;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7LU1Mx0M1JJLQ6X7nOndn1GNJ7UBsOKiHS90jS7YqHQ=;
+        b=xErKmuYt51JlNbksxVTecm+rsx1ej60dKfUu3g8Wjg76LYGtei2D4gAxYes2e2+2H2
+         dzgqH1k6uTNydzpfY4Jc/iUWduiUM7251yvwC/hOtZusg3grsuLr/zIIyN3XBKw4mMG4
+         GVTmkiqGCkseVIWYJiuV26sg5oq5n+1HPqtov3zEM0uyLod83dXgvr+KPdAhaoP21YYO
+         jhJ4+VF8HiK94/MxwPY62LwPfvEkRbYzDvfUZQ4CRIquDHPAGRFylex7TG1ZPLEcXjWX
+         IXFgWps9OzDriTsKKxKtZk61wFWjX+CeCGutAlQOOg52KuVxQqWhSouBxb6aErxHUbOX
+         ywjg==
+X-Forwarded-Encrypted: i=1; AJvYcCUBqKV+f6d0x/5tr5BiueikmeU+iuHxuPFsvDIVTlvj5XI6/ee1VkGcQwW/3ImSCtGhjPzh/j7hiGClVT4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymmlKzLX+NKe/NuLCD7MglQxHOXZ9+Nbi1O9HPiIuA+MEgiQ1C
+	a1q9Awo2CtmniNmC71mmf88jZJFp5HZk1W2CCTKAyN2AIQSNdzWhoddSYBgrCUw=
+X-Gm-Gg: ASbGncsFB2KGJ9KH0OjZ0fYZh25CCj7XzPgbyg8m5XtNS0VQQdssE6pQFri9UnJ8ipO
+	wIuZTj/PDxiLbHz7u+l2oPKN9UMDI9PrCNr5IucwDUioXViQ/FTwwsplSZPJ4OEyJIUfShkO7dV
+	ds11bfwVxyzu/1Q8F83EifLRoVE3kgW3PDwkUb0zSMKftXp1pzZHuUnQWEzBdGRK1f9NbVZTkje
+	u9ZDbZmqPmsgLtjuo5ElpNMizJMIdqpmzo0G7iFOMVU14VucY1qInQ3DNNK40virQ8bN8kP7QlU
+	vB0fcHuKG3IzAU30UWLX5ATmxlEO51QII/qO
+X-Google-Smtp-Source: AGHT+IFtzOWDVP2t0fNNEuMAk2DHjCVRvoPLmi06C6RBehYosOgRfNKzND5MSNgjwgco26/R488VhA==
+X-Received: by 2002:a05:6512:104e:b0:546:2ff9:1542 with SMTP id 2adb3069b0e04-548510ef882mr775478e87.53.1740477304323;
+        Tue, 25 Feb 2025 01:55:04 -0800 (PST)
 Received: from [192.168.1.140] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-548514b261esm132867e87.24.2025.02.25.01.54.58
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-548514b261esm132867e87.24.2025.02.25.01.55.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 01:54:58 -0800 (PST)
+        Tue, 25 Feb 2025 01:55:03 -0800 (PST)
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v5 00/31] ARM: Switch to generic entry
-Date: Tue, 25 Feb 2025 10:54:47 +0100
-Message-Id: <20250225-arm-generic-entry-v5-0-2f02313653e5@linaro.org>
+Date: Tue, 25 Feb 2025 10:54:51 +0100
+Subject: [PATCH v5 04/31] ARM: process: Rewrite ret_from_fork i C
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,12 +68,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAGeTvWcC/23OQWrDMBAF0KsErauikTSR3VXvEbKQrJEjSOUgG
- 5MQfPdMDKUN8fIP/PfnLkaqmUbxtbuLSnMe81A44MdOdCdfepI5chZaaataZaSvP7Knwq1OUpn
- qTfrowaJxTQgkuHeplPJ1NQ9Hzqc8TkO9rRMzPK+rBgrUhjaDVDK0NlmEqBoXvs+5+Dp8DrUXT
- 27W/wjdbhGaCXQGofWBkmneCPNLID/htgjDhCVMpgOMQcc3wv4RGvQWYZnwFl1Kyu8h7l+IZVk
- eXnBEG3wBAAA=
-X-Change-ID: 20240903-arm-generic-entry-ada145378bbe
+Message-Id: <20250225-arm-generic-entry-v5-4-2f02313653e5@linaro.org>
+References: <20250225-arm-generic-entry-v5-0-2f02313653e5@linaro.org>
+In-Reply-To: <20250225-arm-generic-entry-v5-0-2f02313653e5@linaro.org>
 To: Dmitry Vyukov <dvyukov@google.com>, Oleg Nesterov <oleg@redhat.com>, 
  Russell King <linux@armlinux.org.uk>, Kees Cook <kees@kernel.org>, 
  Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, 
@@ -84,284 +82,128 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
  Linus Walleij <linus.walleij@linaro.org>
 X-Mailer: b4 0.14.2
 
-This patch series converts a slew of ARM assembly into the
-corresponding C code, step by step moving the codebase
-closer to the expectations of the generic entry code,
-then switches ARM over to the generic entry code.
+Move the direct assembly call to schedule_tail() and the
+call starting a kernel thread into a C version of ret_from_fork()
+in process.c and rename the old ret_from_fork to ret_from_fork_asm
+following the pattern in x86.
 
-This was inspired by Jinjie Ruans similar work for ARM64.
-
-The low-level assembly calls into arch/arm/kernel/syscall.c
-to invoke syscalls from userspace, and to the functions listed
-in arch/arm/kernel/entry.c for any other transitions to
-and from userspace. Looking at these functions and the
-call sites in the assembly on the final result should give
-a pretty good idea about how this works, and what the
-generic entry expects from an architecture.
-
-This was successfully booted on ARMv7m as well: the v7m
-avoids the interrupt path in the generic entry, because it
-never called the context tracker to begin with. It uses
-the common path for syscalls however and this works just
-fine. Adding proper context tracking to the ARMv7m IRQs is
-probably a good idea but a separate issue altogether.
-
-There is a git branch you can pull in and test (v6.14-rc1
-based):
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-integrator.git/log/?h=b4/arm-generic-entry-v6.14-rc1
-
-Upsides:
-
-- Same code paths as x86, S390, RISCV, Loongarch and probably
-  soon ARM64 is used for the ARM systems. This includes some
-  instrumentation stubs helping out with things we haven't
-  even started to look at such as kmsan and live patching (!).
-
-- By introducing the new callbacks to C, we can move away
-  from the deprecated (and I think partly unmaintained) context
-  tracking mechanism for RCU (user_exit_callable(),
-  user_enter_callable()) in favor of what everyone else
-  is using, i.e. calling rcu_irq_enter_check_tick() on
-  IRQ entry. If we do not go with this patch set we can
-  perhaps look into a separate patch just switching ARM32
-  to the new context tracking, as tests show the performance
-  impact appears negligible for this.
-
-- I think also lockdep is now behaving more according to
-  expectations (the lockdep calls in ARM64 and generic entry
-  seems different and more fine-granular from the ARM32 code)
-  and the three warnings I see on Vexpress boots with mainline
-  goes away after this patch set, but I am no expert in lockdep
-  so I cannot really tell if this is a real improvement.
-  The patches does make ARM lockdep clean.
-
-Downsides:
-
-- The "superfast return to userspace" using just very
-  small assembly snippets to get back to userspace on
-  e.g. IRQs if and only if no instrumentation was compiled
-  in, is no longer possible, since we unconditionally
-  call into code written in C. I *think* this accounts
-  for the majority of the ~6% performance impact (see
-  measurements below).
-
-This more or less an unavoidable side effect if we just
-want to use the non-deprecated context tracking,
-as that involves calling into C from every exception,
-without exceptions.
-
-Testing:
-
-- Booted into Versatile Express QEMU (ARMv7), Ux500 full
-  graphic UI (PostmarketOS Phosh, ARMv7 on hardware,
-  Gemini ARMv4 on hardware. No special issues.
-
-- Tested some ptrace/strace obviously, such as issuing
-  several instances of "ptrace find /" and let this scroll
-  by in the terminal over some 10 minutes or so. Then
-  I ran the strace test suite and the results are the same
-  before and after the patch set.
-
-- Ran the strace test suite (and that was a good thing
-  because it found regressions).
-
-- Turned on RCU torture tests and ran for a while. Seems
-  stable and the test outputs look normal.
-
-- Ran stress-ng, works fine.
-
-- Booted with "lockdep" (CONFIG_PROVE_LOCKING). The ARM32
-  mainline produce 3 warnings at boot and those go away
-  after these patches. I haven't looked closer at what
-  it was that I inadvertedly fixed here, but I suspect the
-  current context tracking has issues with interrupts being
-  interrupted by paging exceptions, and these are solved
-  in this patch series.
-
-Performance impact:
-
-The changes were tested using the standard syscall overhead
-testing oneliner:
-
-  perf bench syscall all
-
-This executes 10,000,000 getppid() in sequence and measures
-the time taken for this to complete. The numbers vary a bit
-but they are consistent.
-
-In QEMU I tested with Vexpress and two CPU cores (-M vexpress-a15
--m 2G -smp cpus=2). DRM graphics and framebuffer was activated to
-give a bit of background IRQ activity (vsync interrupts).
-
-I ran the perf command three times on each configuration, and
-picked the one iteration where the original code performed the
-best, and the one where the patches kernel performed the worst, to
-get a worst-case comparison.
-
-v6.14-rc1 vexpress_defconfig, best invocation:
-
-     Total time: 146.546 [sec]
-      14.654698 usecs/op
-         68,237 ops/sec
-
-v6.14-rc1 vexpress_defconfig, and this patch set, worst invocation:
-
-     Total time: 156.263 [sec]
-      15.626398 usecs/op
-         63,994 ops/sec
-
-Here we see a performance degradation of around 6-7% operations/sec
-for a vexpress dualcore defconfig in the best vs worst case. (This
-isn't statistically correct, the effect is likely smaller.)
-
-Debians stock kernel was noticably faster, so I investigated what
-causes this. It turns out that the big performance hog for syscalls
-is actually PAN which cause an order of magnitude syscall performance
-decrease, and I think Debian armhf simply turns this off. Consistent
-tests with PAN disabled also see around 6-7% on that performance
-figure.
-
-To conclude if any of this was due to the new context tracking,
-at one point I tested to patch back the old context tracking on top
-of generic entry. This is hardly something that can be recommended,
-and anyway showed no noticeable overhead difference.
+Leave a comment on what we will do when we get to switching to
+generic entry with this as a base.
 
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
-Changes in v5:
-- Reimplement local syscall restart after the strace test
-  suite showed me that this is strictly required. The strace
-  test suite results are now the same before and after the
-  patch set.
-- Tested on an OABI rootfs (Footbridge RedHat!) it works
-  fine after dropping the last patch, which was just an
-  optimization anyway. That can wait for later.
-- Link to v4: https://lore.kernel.org/r/20250212-arm-generic-entry-v4-0-a457ff0a61d6@linaro.org
+ arch/arm/include/asm/switch_to.h |  4 ++++
+ arch/arm/kernel/entry-common.S   | 22 +++++++++++++++-------
+ arch/arm/kernel/process.c        | 24 ++++++++++++++++++++++--
+ 3 files changed, 41 insertions(+), 9 deletions(-)
 
-Changes in v4:
-- Rebased on v6.14-rc1, marked non-RFC.
-- Tested on ARMv7m, it works.
-- Fixed a bug where I missed to handle syscall "-1" which
-  when tracing means "skip syscall". This took some time to
-  find, taking up much of my debug time despite being so
-  obvious :/
-- Added stubs for PTRACE_SYSEMU and PTRACE_SYSEMU_SINGLESTEP.
-- No feedback on the "fast syscall restart" so I conclude
-  that this is some ARM oddity, if it is needed for
-  performance (i.e. a workload constantly restarting syscalls)
-  we should look at recreating it inside the generic entry
-  code.
-- After discussing with Ard about the IRQ stacks, altered
-  the irqstack handling to just assume IRQ stack or overflow
-  stack is in use if we are not on the main thread stack.
-- Unmark the patch to block IRQs in early IRQ context as
-  "RFC": when doing proper context tracking this is likely
-  plain necessary. Block IRQs in the early assembly entry
-  directly in CPSR instead of later in the exception handler.
-- New cleanup patch in the tail of the patch series.
-- Link to v3: https://lore.kernel.org/r/20250107-arm-generic-entry-v3-0-4e5f3c15db2d@linaro.org
+diff --git a/arch/arm/include/asm/switch_to.h b/arch/arm/include/asm/switch_to.h
+index 9372348516ce9b80fa713966943d0bc622e86066..18d084aff5a4faa7cc5e40d48fbc4aa97a89b0c6 100644
+--- a/arch/arm/include/asm/switch_to.h
++++ b/arch/arm/include/asm/switch_to.h
+@@ -17,6 +17,10 @@
+ #define __complete_pending_tlbi()
+ #endif
+ 
++asmlinkage void ret_from_fork_asm(void);
++__visible void ret_from_fork(struct task_struct *prev, struct pt_regs *regs,
++			     int (*fn)(void *), void *fn_arg);
++
+ /*
+  * switch_to(prev, next) should switch from task `prev' to `next'
+  * `prev' will never be the same as `next'.  schedule() itself
+diff --git a/arch/arm/kernel/entry-common.S b/arch/arm/kernel/entry-common.S
+index 2f93c2f6d5b8fdf6aaf3dda0192bde144fcf238d..df6961a1006b7a0f3522728812bf52ccb849e511 100644
+--- a/arch/arm/kernel/entry-common.S
++++ b/arch/arm/kernel/entry-common.S
+@@ -5,6 +5,7 @@
+  *  Copyright (C) 2000 Russell King
+  */
+ 
++#include <linux/cfi_types.h>
+ #include <asm/assembler.h>
+ #include <asm/unistd.h>
+ #include <asm/ftrace.h>
+@@ -128,15 +129,22 @@ ENDPROC(ret_to_user)
+ /*
+  * This is how we return from a fork.
+  */
+-ENTRY(ret_from_fork)
+-	bl	schedule_tail
+-	cmp	r5, #0
+-	movne	r0, r4
+-	badrne	lr, 1f
+-	retne	r5
++SYM_TYPED_FUNC_START(ret_from_fork_asm)
++	/*
++	 * ret_from_fork() expects:
++	 * r0: prev
++	 * r1: regs
++	 * r2: fn() for kernel process or NULL
++	 * r3: fn_arg for kernel process or N/A
++	 */
++	mov	r1, sp
++	mov	r2, r5
++	mov	r3, r4
++	bl	ret_from_fork
++	mov	r0, #0
+ 1:	get_thread_info tsk
+ 	b	ret_to_user
+-ENDPROC(ret_from_fork)
++SYM_FUNC_END(ret_from_fork_asm)
+ 
+ /*=============================================================================
+  * SWI handler
+diff --git a/arch/arm/kernel/process.c b/arch/arm/kernel/process.c
+index e16ed102960cb01d625e2ccc484f238b824b03b3..81c1c3f988344185917cf4e53d0d8ee47ae912f4 100644
+--- a/arch/arm/kernel/process.c
++++ b/arch/arm/kernel/process.c
+@@ -29,6 +29,7 @@
+ #include <asm/processor.h>
+ #include <asm/thread_notify.h>
+ #include <asm/stacktrace.h>
++#include <asm/switch_to.h>
+ #include <asm/system_misc.h>
+ #include <asm/mach/time.h>
+ #include <asm/tls.h>
+@@ -230,7 +231,26 @@ void flush_thread(void)
+ 	thread_notify(THREAD_NOTIFY_FLUSH, thread);
+ }
+ 
+-asmlinkage void ret_from_fork(void) __asm__("ret_from_fork");
++/* The assembly stub sets up the parameters and calls ret_from_fork() */
++asmlinkage void ret_from_fork_asm(void) __asm__("ret_from_fork_asm");
++
++__visible void ret_from_fork(struct task_struct *prev, struct pt_regs *regs,
++				     int (*fn)(void *), void *fn_arg)
++{
++	schedule_tail(prev);
++
++	/* Is this a kernel thread? */
++	if (unlikely(fn)) {
++		fn(fn_arg);
++		/*
++		 * A kernel thread is allowed to return here after successfully
++		 * calling kernel_execve().  Exit to userspace to complete the
++		 * execve() syscall.
++		 */
++	}
++
++	/* syscall_exit_to_user_mode(regs); here once we switch to generic entry */
++}
+ 
+ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+ {
+@@ -263,7 +283,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+ 		thread->cpu_context.r5 = (unsigned long)args->fn;
+ 		childregs->ARM_cpsr = SVC_MODE;
+ 	}
+-	thread->cpu_context.pc = (unsigned long)ret_from_fork;
++	thread->cpu_context.pc = (unsigned long)ret_from_fork_asm;
+ 	thread->cpu_context.sp = (unsigned long)childregs;
+ 
+ 	clear_ptrace_hw_breakpoint(p);
 
-Changes in v3:
-- Rewrote the code in entry.c so the IRQ handler saves pt_regs
-  calls IRQ handler (including switching to IRQ stack!) and
-  restores pt_regs in one function instead of one entry and
-  one exit function. This is what every other arch using
-  generic entry is doing, and we should do it too.
-- The rewrite solved the caveat warnings from the previous patch
-  set which was blatantly not SMP safe :/
-- Rewrite the data abort and prefetch abort handlers in a
-  separate patch which we may squash in the end, but this makes
-  the patch set easier to review.
-- Drop a pointless patch rewriting the NMI handlers in C, it's
-  better to just patch into the end result in the last patch,
-  as we're replacing handle_fiq_as_nmi().
-- Syscall C invocations have to be tagged __ADDRESSABLE() in order
-  not to upset KCFI: the file is only referenced in both ends by
-  assembly so we need to point this out to the compiler.
-- Link to v2: https://lore.kernel.org/r/20241029-arm-generic-entry-v2-0-573519abef38@linaro.org
-
-Changes in v2:
-- Performance impact measurements have been provided.
-- Link to v1: https://lore.kernel.org/r/20241010-arm-generic-entry-v1-0-b94f451d087b@linaro.org
-
----
-Linus Walleij (31):
-      ARM: Prepare includes for generic entry
-      ARM: ptrace: Split report_syscall()
-      ARM: entry: Skip ret_slow_syscall label
-      ARM: process: Rewrite ret_from_fork i C
-      ARM: process: Remove local restart
-      ARM: entry: Invoke syscalls using C
-      ARM: entry: Rewrite two asm calls in C
-      ARM: entry: Move trace entry to C function
-      ARM: entry: save the syscall sp in thread_info
-      ARM: entry: move all tracing invocation to C
-      ARM: entry: Merge the common and trace entry code
-      ARM: entry: Rename syscall invocation
-      ARM: entry: Create user_mode_enter/exit
-      ARM: entry: Drop trace argument from usr_entry macro
-      ARM: entry: Separate call path for syscall SWI entry
-      ARM: entry: Drop argument to asm_irqentry macros
-      ARM: entry: Implement syscall_exit_to_user_mode()
-      ARM: entry: Drop the superfast ret_fast_syscall
-      ARM: entry: Remove fast and offset register restore
-      ARM: entry: Untangle ret_fast_syscall/to_user
-      ARM: entry: Do not double-call exit functions
-      ARM: entry: Move work processing to C
-      ARM: entry: Stop exiting syscalls like IRQs
-      ARM: entry: Complete syscall and IRQ transition to C
-      ARM: entry: Create irqentry calls from kernel mode
-      ARM: entry: Move in-kernel hardirq tracing to C
-      ARM: irq: Add irqstack helper
-      ARM: entry: Convert to generic entry
-      ARM: entry: Handle dabt, pabt, and und as interrupts
-      ARM: entry: Block IRQs in early IRQ context
-      ARM: entry: Reimplement local restart in C
-
- arch/arm/Kconfig                    |   1 +
- arch/arm/include/asm/entry-common.h |  66 ++++++++++++
- arch/arm/include/asm/entry.h        |  14 +++
- arch/arm/include/asm/ptrace.h       |   8 +-
- arch/arm/include/asm/signal.h       |   4 -
- arch/arm/include/asm/stacktrace.h   |   2 +-
- arch/arm/include/asm/switch_to.h    |   4 +
- arch/arm/include/asm/syscall.h      |   7 ++
- arch/arm/include/asm/thread_info.h  |  22 ++--
- arch/arm/include/asm/traps.h        |   5 +-
- arch/arm/include/uapi/asm/ptrace.h  |   2 +
- arch/arm/kernel/Makefile            |   5 +-
- arch/arm/kernel/asm-offsets.c       |   1 +
- arch/arm/kernel/entry-armv.S        |  82 ++++-----------
- arch/arm/kernel/entry-common.S      | 198 +++++++++++++-----------------------
- arch/arm/kernel/entry-header.S      | 100 ++----------------
- arch/arm/kernel/entry.c             | 120 ++++++++++++++++++++++
- arch/arm/kernel/irq.c               |   6 ++
- arch/arm/kernel/irq.h               |   2 +
- arch/arm/kernel/process.c           |  25 ++++-
- arch/arm/kernel/ptrace.c            |  81 +--------------
- arch/arm/kernel/signal.c            |  68 +++----------
- arch/arm/kernel/syscall.c           |  59 +++++++++++
- arch/arm/kernel/traps.c             |  30 +-----
- arch/arm/mm/abort-ev4.S             |   2 +-
- arch/arm/mm/abort-ev4t.S            |   2 +-
- arch/arm/mm/abort-ev5t.S            |   4 +-
- arch/arm/mm/abort-ev5tj.S           |   6 +-
- arch/arm/mm/abort-ev6.S             |   2 +-
- arch/arm/mm/abort-ev7.S             |   2 +-
- arch/arm/mm/abort-lv4t.S            |  36 +++----
- arch/arm/mm/abort-macro.S           |   2 +-
- arch/arm/mm/abort-nommu.S           |   2 +-
- arch/arm/mm/fault.c                 |   4 +-
- arch/arm/mm/fault.h                 |   8 +-
- arch/arm/mm/pabort-legacy.S         |   2 +-
- arch/arm/mm/pabort-v6.S             |   2 +-
- arch/arm/mm/pabort-v7.S             |   2 +-
- 38 files changed, 484 insertions(+), 504 deletions(-)
----
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
-change-id: 20240903-arm-generic-entry-ada145378bbe
-
-Best regards,
 -- 
-Linus Walleij <linus.walleij@linaro.org>
+2.48.1
 
