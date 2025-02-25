@@ -1,164 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84D43267738;
-	Tue, 25 Feb 2025 12:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C162529CF0;
+	Tue, 25 Feb 2025 12:06:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.10.64.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740485211; cv=none; b=g5O0AAPpMGIbIvCbpsFS00ePwyM1Nj5z2kcvvti2C25krlI4mdBzNnkU3JHah2OCA/emuM4EehbP5K//58fakUoA6kMQEZM4p41JGIm54Aa3FnZ6BZu4j6LOY1ohP8Xaq4bObD+LuDsT2Le+FXI6LT6u7l+NU4jdj2dz/gySses=
+	t=1740485213; cv=none; b=qPjTkc1+jcMrhA1QnRF1vQy19O/bXe026NgXHqVOmAplYFZp+PJFu3CKCQMJedFITbPJ9lYZYVEYPUF8E7/fTFKBh9khNEWAnn+3HXTLVFhOXZdTOeBT7vl93LS+uToctVAqeMCOC+CKlRoTYrd/lzmbbEO1fCkXMpUA/1J3t4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740485211; c=relaxed/simple;
-	bh=M9uKEUq8wn1OiK4A1Sr0SpwlETpU2D5rT6iicUMUS1Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZTDyY65Fwfh+ZjbU4l1EqhqjEjuAaGy0uqZvVA/0aaq4LLWesRmNwYHwtAPZT9LKCEPkUH5mF8T4BxwdPHFXzvK8TA2ncXHjsmdPvK8zFja3eOrvvV1ML+k7tiWWNgsg5ctQPa99kVjtqzX8uA9zO1ElsPMlYwWHChmfScUk5Xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fLPNIKyQ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fLPNIKyQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE59DC4CEDD;
-	Tue, 25 Feb 2025 12:06:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740485211;
-	bh=M9uKEUq8wn1OiK4A1Sr0SpwlETpU2D5rT6iicUMUS1Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fLPNIKyQnCzj28tki4yV9v+CUMXKJW+LhrPH/IGrA85Bn5ky46l80LYAIM6m1d/rM
-	 a8uYmQQSd5gLKQYy0dp9r6cuOr01gxQrF9R3a2bh6yEgoli8ajXK4c29euyGaLVCey
-	 Lw1NX7ADGj35VLWeLs2kY10+9vO+w0StzGefOnQP7D3Y7JhAGfxVe/CvpTXPmpyvfa
-	 +FmAozCrOXoLeUApjCkOGjX8dBLBLFRWA4gIyCp9mj4EBxz4fLnDaYljDasJNu5JMl
-	 GCVe9ZrTyj+cmPbxEfcmFfWYGeTjRmGrAIx4akqRIImn3Gtgpy2RyJAX8Sp2jpqK1G
-	 lhswYgpdvf4Kg==
-Date: Tue, 25 Feb 2025 13:06:48 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Leonardo Felipe Takao Hirata <leo.fthirata@gmail.com>
-Cc: tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, vz@mleia.com, 
-	Leonardo Felipe Takao Hirata <leofthirata@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] dt-bindings: interrupt-controller: Convert
- nxp,lpc3220-mic.txt to yaml format
-Message-ID: <20250225-lean-bronze-millipede-03edd9@krzk-bin>
-References: <20250224210432.94851-1-leofthirata@gmail.com>
+	s=arc-20240116; t=1740485213; c=relaxed/simple;
+	bh=Zeua9U34mpIZzVNmoPv424NWh2Wy8ELnVKvzqhinVv0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i03HtnOqg69vlB4K3QIi9IBFrlXB3jWXPvHK5vTWA6IlvwvVe/CMebSUxhPmVX8rsorRIM5bkd8edj4xQALQRDdBsQQVPVsyKdw38k8y+TfAsfZv4/WiD0oatcbgv5L6mRAJBuciUIGZzeAXfwCIZYBsm7ac9UFZDzv0LE7Suh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com; spf=pass smtp.mailfrom=wind.enjellic.com; arc=none smtp.client-ip=76.10.64.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wind.enjellic.com
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+	by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 51PC1Gsg013755;
+	Tue, 25 Feb 2025 06:01:16 -0600
+Received: (from greg@localhost)
+	by wind.enjellic.com (8.15.2/8.15.2/Submit) id 51PC1E2h013753;
+	Tue, 25 Feb 2025 06:01:14 -0600
+Date: Tue, 25 Feb 2025 06:01:14 -0600
+From: "Dr. Greg" <greg@enjellic.com>
+To: Paul Moore <paul@paul-moore.com>
+Cc: linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jmorris@namei.org
+Subject: Re: [PATCH v4 2/14] Add TSEM specific documentation.
+Message-ID: <20250225120114.GA13368@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <20240826103728.3378-3-greg@enjellic.com> <8642afa96650e02f50709aa3361b62c4@paul-moore.com> <20250117044731.GA31221@wind.enjellic.com> <CAHC9VhTphGpnVNPkm0P=Ndk84z3gpkJeg90EAJiJEyareLUVTA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250224210432.94851-1-leofthirata@gmail.com>
+In-Reply-To: <CAHC9VhTphGpnVNPkm0P=Ndk84z3gpkJeg90EAJiJEyareLUVTA@mail.gmail.com>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Tue, 25 Feb 2025 06:01:16 -0600 (CST)
 
-On Mon, Feb 24, 2025 at 06:04:30PM -0300, Leonardo Felipe Takao Hirata wrote:
-> Convert NXP LPC3220-MIC to DT schema.
-> 
-> Signed-off-by: Leonardo Felipe Takao Hirata <leofthirata@gmail.com>
+On Tue, Jan 28, 2025 at 05:23:52PM -0500, Paul Moore wrote:
 
-SoB mismatch.
+For the record, further documentation of our replies to TSEM technical
+issues.
 
-Run checkpatch.
+> On Thu, Jan 16, 2025 at 11:47???PM Dr. Greg <greg@enjellic.com> wrote:
+> > > > +In order to handle modeling of security events in atomic context, the
+> > > > +TSEM implementation maintains caches (magazines) of structures that
+> > > > +are needed to implement the modeling and export of events.  The size
+> > > > +of this cache can be configured independently for each individual
+> > > > +security modeling namespace that is created.  The default
+> > > > +implementation is for a cache size of 32 for internally modeled
+> > > > +namespaces and 128 for externally modeled namespaces.
+> > > > +
+> > > > +By default the root security namespace uses a cache size of 128.  This
+> > > > +value can be configured by the 'tsem_cache' kernel command-line
+> > > > +parameter to an alternate value.
+> >
+> > > I haven't looked at the implementation yet, but I don't understand
+> > > both why a kmem_cache couldn't be used here as well as why this
+> > > implementation detail is deemed significant enough to be mentioned
+> > > in this high level design document.
+> >
+> > TSEM does use kmem_cache allocations for all of its relevant data
+> > structures.
+> >
+> > The use of a kmem_cache, however, does not solve the problem for
+> > security event handlers that are required to run in atomic context.
+> > To address the needs of those handlers you need to serve the
+> > structures out of a pre-allocated magazine that is guaranteed to not
+> > require any memory allocation or sleeping locks.
 
-> ---
->  .../interrupt-controller/nxp,lpc3220-mic.txt  | 58 -------------
->  .../interrupt-controller/nxp,lpc3220-mic.yaml | 86 +++++++++++++++++++
->  2 files changed, 86 insertions(+), 58 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.txt
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/nxp,lpc3220-mic.yaml
+> This still seems somewhat suspicious as there are a couple of GFP
+> flags that allow for non-blocking allocations in all but a few cases,
+> but I'll defer further discussion of that until I get to the code.  In
+> my opinion, there are still enough red flags in these documentation
+> reviews to keep me from investing the time in reviewing the TSEM code.
 
-...
+As a group, we can state quite affirmatively to the fact that we have
+experience and understanding in use of memory allocation instruction
+flags.  Our use of namespace specific event processing structure
+caches is not driven by unfamiliarity with the use and implications of
+GFP_ATOMIC.
 
-> +title: NXP LPC32xx MIC, SIC1 and SIC2 Interrupt Controllers
-> +
-> +maintainers:
-> +  - Vladimir Zapolskiy <vz@mleia.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - nxp,lpc3220-mic
-> +      - nxp,lpc3220-sic
-> +
-> +  reg:
-> +    description:
-> +      Should contain IC registers location and length.
+The use of independent structure magazines, for security events
+running in atomic context in a security modeling namespace, is driven
+by the need to prevent security adversaries from placing pressure on
+the global kernel atomic page reserves.
 
-Drop description
+These namespace specific event magazines prevent an adversary from
+waging a memory denial of service attack against the kernel at large.
+Adversaries can only impair their own functionality in a security
+modeling namespace through the use of a synthetic attack workload that
+stresses the availability of atomic context memory.
 
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 2
-> +    description:
-> +      The number of cells to define an interrupt, should be 2.
+Further, TSEM is formulated on the premise that software teams,
+as a by product of CI/CD automation and testing, can develop precise
+descriptions of the security behavior of their workloads.  One
+component of that description is the cache depth needed to support
+security event handlers running in atomic context.
 
-Don't repeat constraints in free form text. Drop.
+Exceeding that cache depth would be a sentinel forensic event for a
+workload.  For anyone unfamiliar with modern IT security
+architectures, a very specific alert on your security dashboard that
+one of the tens of thousands of workloads that are running is doing
+something it shouldn't.
 
-> +      The first cell is the IRQ number, the second cell is used to specify
-> +      one of the supported IRQ types.
-> +          IRQ_TYPE_EDGE_RISING = low-to-high edge triggered,
-> +          IRQ_TYPE_EDGE_FALLING = high-to-low edge triggered,
-> +          IRQ_TYPE_LEVEL_HIGH = active high level-sensitive,
-> +          IRQ_TYPE_LEVEL_LOW = active low level-sensitive.
-> +      Reset value is IRQ_TYPE_LEVEL_LOW.
-> +
-> +  interrupts:
+Adversaries really hate to be noticed.
 
-Need to list and describe the items.
+> Regardless, I stand by my previous comment that discussion of these
+> caches may be a bit more detail that is needed in this document, but
+> of course that is your choice.  It's a balancing act between providing
+> enough high level detail to satisfy users and reviewers, and producing
+> a document that is so verbose that the time required to properly
+> review it is prohibitive.
 
-> +    description:
-> +      Empty for MIC interrupt controller, cascaded MIC hardware interrupts for
-> +      SIC1 and SIC2
+It was our understanding that the administrative guides to a security
+architecture are intended to provide comprehensive information on the
+use and management of the implementation.
 
-And then allOf:if:then restricting it per variant (interrupts: false).
+We were attempting to be thorough in the description and rationale for
+all the technical aspects of TSEM.  The discourse in
+Documentation/memory-barriers.txt would seem to provide justification
+for intimate detail on important operational issues in the kernel.
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupt-controller
-> +  - '#interrupt-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    mic: interrupt-controller@40008000 {
-> +      compatible = "nxp,lpc3220-mic";
-> +      reg = <0x40008000 0x4000>;
-> +      interrupt-controller;
-> +      #interrupt-cells = <2>;
-> +    };
-> +
-> +    sic1: interrupt-controller@4000c000 {
-> +      compatible = "nxp,lpc3220-sic";
-> +      reg = <0x4000c000 0x4000>;
-> +      interrupt-controller;
-> +      #interrupt-cells = <2>;
-> +      interrupt-parent = <&mic>;
-> +      interrupts = <0 IRQ_TYPE_LEVEL_LOW>,
-> +                  <30 IRQ_TYPE_LEVEL_LOW>;
-> +    };
-> +
-> +    sic2: interrupt-controller@40010000 {
+> > > > +The 'cache' keyword is used to specify the size of the caches used to
+> > > > +hold pointers to data structures used for the internal modeling of
+> > > > +security events or the export of the security event to external trust
+> > > > +orchestrators.  These pre-allocated structures are used to service
+> > > > +security event hooks that are called while the process is running in
+> > > > +atomic context and thus cannot sleep in order to allocate memory.
+> > > > +
+> > > > +The argument to this keyword is a numeric value specifying the number
+> > > > +of structures that are to be held in reserve for the namespace.
+> > > > +
+> > > > +By default the root security modeling namespace and externally modeled
+> > > > +namespaces have a default value of 128 entries.  An internally modeled
+> > > > +namespace has a default value of 32 entries.  The size requirements of
+> > > > +these caches can be highly dependent on the characteristics of the
+> > > > +modeled workload and may require tuning to the needs of the platform
+> > > > +or workload.
+> >
+> > > Presumably TSEM provides usage statistics somewhere so admins can
+> > > monitor and tune as desired?  If so, it seems like it would be a
+> > > good idea to add a reference here.
+> >
+> > We have trended toward the Linus philosophy of reducing the need to
+> > worry about properly tuning knobs.
 
-Drop, two examples are enough.
+> I agree that generally speaking the less tuning knobs to get wrong,
+> the better.  However, that assumes a system that can adjust itself
+> as necessary to ensure a reasonable level of operation.  If TSEM can
+> not dynamically adjust itself you should consider exposing those
+> tunables.
 
-> +      compatible = "nxp,lpc3220-sic";
-> +      reg = <0x40010000 0x4000>;
-> +      interrupt-controller;
-> +      #interrupt-cells = <2>;
-> +      interrupt-parent = <&mic>;
-> +      interrupts = <1 IRQ_TYPE_LEVEL_LOW>,
-> +                  <31 IRQ_TYPE_LEVEL_LOW>;
-> +    };
-> +
-> +    adc@40048000 {
-> +      compatible = "nxp,lpc3220-adc";
+The atomic structure magazine sizes (cache depth) can be set on a per
+namespace basis, including the root modeling namespace.
 
-Drop, not relevant.
+Our current development tree, on our GitHub site if anyone is
+interested, has simplified the cache sizing by using a single default
+value that is of sufficient size to boot a standard Linux (Debian)
+implementation.
 
-Best regards,
-Krzysztof
+For subordinate modeling namespaces, experience has shown that to be
+more than what is needed, but it greatly simplifies the ability to use
+TSEM 'out of the box'.
 
+We still need to update the documentation to call out this fact and
+note that development teams can adjust this value downward for
+subordinate workloads that require lower levels of atomic event
+reserves, if there is a desire to save memory.  Or upward if a
+workload generates a pathologically large corpus of security events
+that run in atomic context.
+
+One could arguably make this self-tuning by setting a low water mark
+that would trigger the expansion of the depth of the event structure
+caches.  Which would invariably lead to a request to have a tunable to
+set that low water mark....
+
+Not to mention an argument about the performance impacts of locking
+the namespace context to prevent atomic context events from running
+while the event magazines are expanded.
+
+> paul-moore.com
+
+Have a good day.
+
+As always,
+Dr. Greg
+
+The Quixote Project - Flailing at the Travails of Cybersecurity
+              https://github.com/Quixote-Project
