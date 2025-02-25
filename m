@@ -1,320 +1,204 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F7E2139B5
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 22:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6643214A97
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 22:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740522111; cv=none; b=t3eKH4am1cm0iyOOkRGpl8tWEOVOfiK3djEX5vylxQs3QDVBqIggBEsWlyB1ABUtM7Fmp9f6lw8f6OcEcfi/jf/XvoQVZWJUXp6QF5b4clyPlFFSVcycJfC5kFS1BFi/Qpkgtel0IUNoPF00DOqz1gJ6CRWZ+EocxP9s98p+GfY=
+	t=1740522114; cv=none; b=nyskvKLHmuR2bFLNVjAQ2niyVYyuFNIpuwMU6PPAu2PquenoBqBG23zIX1xfKMM8Z20fz90XXRj15oo04QIwERsidMXc3taqLe//I7JjaxIx+FOjhI3Th/8l3C1ohPwLRT8pvtQXph9aLK2FMqTYIqQb0psyqIjznF9DbOjBDkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740522111; c=relaxed/simple;
-	bh=kFCOcGQY9D8TzyaRT9RN2mfIAjcd4C4Nrt+RPwYLIdE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Zx7sEO8uHzrAdRqj9D4flr+ncoSnwHN0G4Ul3W4m0nwk8y++IsY+ChV9y1vFZYc54/1kA1U5GWTKEagCrCPq63U/kSivm/zhd8DhqsNcITaZraPQWtVErEcwTo1bsPm6Yfv35dh2J8r151F+4rUFlhApogoqjRuNvjLLD29ti+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W3gTyuRd; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740522114; c=relaxed/simple;
+	bh=V8hikXjTftw0cXBaUEV3kLVcBYfQoNmDC86IxHTVlsA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JIay2XZiL02Crb8i13Z24DIYpjxE25da2R/WLHAcFIs4GoKlYSL8a8JCYS9bTAawD+Ql4cIaLiXxzTPH/d9qJGHYl/siCR45UIS1CnguWVNWAzbBQV/mLpQiPrKPwTIc1/5IJUTg2wgROURwUvPAXb8kvwa5kse4FXe8OPw+p9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T9YXZA4S; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W3gTyuRd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740522108;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6AwvElau9bWD8//2IbXRBKfSQA+YGh6bloJOkjJckZ8=;
-	b=W3gTyuRdQbs/xwKEMrzn9aEWuUIZPOPvBSb0Pb7314f1zYrC5tA8JeW1f4/A43FqMx8Hnj
-	ND4ih72yhQHTSmkP003M+Hw0T4o4QRbAGVtGbYgkEaNuxRE3rUtSXIBkZGOn1CAf7RldNJ
-	bKSZ1B8+RJWTrdL8smUjaOD0RNTswLg=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-185-P-y_jBRNMsSoazN8fQ8Vvw-1; Tue,
- 25 Feb 2025 17:21:45 -0500
-X-MC-Unique: P-y_jBRNMsSoazN8fQ8Vvw-1
-X-Mimecast-MFC-AGG-ID: P-y_jBRNMsSoazN8fQ8Vvw_1740522104
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B31FE193578F;
-	Tue, 25 Feb 2025 22:21:44 +0000 (UTC)
-Received: from asrivats-na.rmtustx.csb (unknown [10.2.16.79])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9B8991800366;
-	Tue, 25 Feb 2025 22:21:34 +0000 (UTC)
-From: Anusha Srivatsa <asrivats@redhat.com>
-Date: Tue, 25 Feb 2025 17:20:45 -0500
-Subject: [PATCH RESEND 04/12] drm/mediatek: move to
- devm_platform_ioremap_resource() usage
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T9YXZA4S"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-472098e6e75so42971cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:21:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740522111; x=1741126911; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nU6IIXGWGh9H/ehdT9Qc/ulzK83hLj2Kl5Kcq106fII=;
+        b=T9YXZA4SrxfPJNcdorf87P60efwr7zyVH61MqA+kGbNWXJJzgZrNNSWVa0dkjPm2RY
+         XtK4B+0OADdqdMF2VT4JXAbEiUR7RXXAzQxcFjoSdRxffSIfWIwe/CYAIqZedGQ7zGt8
+         ++Uesp+ldNZ4JJDy88przxkGs14ZknYubWUl1eCbs6P5hUwKdBk2U+Gd3Af14UAeRPwZ
+         OMZd0bNMZZ5EeCs+O6nJrqEiKvgbR/qvdyx7nN18Vu3xKzOFlYB5Cva6NhI0pThlTyB5
+         kGFhyrxa1KtOtIR7fvwmKeNslNodqdFnsX/aTImbsWnjVx+y9OJ0Ba0dWBL0mGltHfxX
+         etWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740522111; x=1741126911;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nU6IIXGWGh9H/ehdT9Qc/ulzK83hLj2Kl5Kcq106fII=;
+        b=BKnSVrl8BXU3x1DIKN5AqUganfdZVej03gQQXfnRAFe4EM0J0uw/Ds5BplGn7Y/NN1
+         QEUPhTKiXXhBUy7M6INkSr9uROXnX11OP05GDYfY7RVYneKZ9Xrm62jX2dzxW2LzOZzz
+         ZwvGAfr9HudQuoKaeq12D/mnptpz1dSbg4UgZU7FV3M7Uf8lWe+/X+EFKzzzsUBUH2Wd
+         FmcchPD2Zlr83H9jB9UyrSc35FPe7Z8Tg2e9HVdel5nLJslhwzMEjj/kfzQXE7dUwqcS
+         yCAoLlfvJpYlgIuCs/kOErteXTP3/zEH/ibNFDuk/M9sRsC4lH/H3cwUFsR7ugb416Yk
+         sMdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUvhGql2IvRZ6cJvmKOTUb1EGUi4o+WJ5fGaejDnDkR01w0bfjV9zaKMwqsmB7eQVfy2vCAMo6SuQ/ucjw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBIze/JlsCxK1JUoVb/Rn2kS0IiW//yC2YlSPfGeo7WRsdiWvP
+	OyHko7elyIZWA8ynKv3JDXaknAqY8YjW+woUts37LfMzTSnzfEwAXSRDlrviOkkutN412sTBior
+	O4wNjQDjVcdUWNiHsPwdZYu39ITz44SHrqHxC
+X-Gm-Gg: ASbGncuImzuwHBbPW0h29gFov0jsWn8baNrAjzf7sYYWfJsEW+qwz5c/k+kvkkvG5ns
+	n/1+OXsR8Pf/iDMC3e2Sh0Je7+buD8T4g8slvnpMtVIgCtnaU+1Lea7q3fLmi3T4/8EjeOpDhpu
+	TWi/4h8Ec=
+X-Google-Smtp-Source: AGHT+IEq/AKzX+cYl7aJmSUqhtY1SddAAUnJW41lZVjVI/xrlYAHTtZS1Og5x8RQPWjaHO4K/43BSUS1zvjg+LAB+A4=
+X-Received: by 2002:ac8:7f95:0:b0:471:f257:7a5f with SMTP id
+ d75a77b69052e-47376e8f38cmr7477371cf.13.1740522111074; Tue, 25 Feb 2025
+ 14:21:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250225-memory-drm-misc-next-v1-4-9d0e8761107a@redhat.com>
-References: <20250225-memory-drm-misc-next-v1-0-9d0e8761107a@redhat.com>
-In-Reply-To: <20250225-memory-drm-misc-next-v1-0-9d0e8761107a@redhat.com>
-To: Joel Stanley <joel@jms.id.au>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Andrew Jeffery <andrew@codeconstruct.com.au>, 
- Stefan Agner <stefan@agner.ch>, Alison Wang <alison.wang@nxp.com>, 
- Xinliang Liu <xinliang.liu@linaro.org>, Tian Tao <tiantao6@hisilicon.com>, 
- Xinwei Kong <kong.kongxinwei@hisilicon.com>, 
- Sumit Semwal <sumit.semwal@linaro.org>, 
- Yongqin Liu <yongqin.liu@linaro.org>, John Stultz <jstultz@google.com>, 
- Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Marek Vasut <marex@denx.de>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, Orson Zhai <orsonzhai@gmail.com>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, 
- Chunyan Zhang <zhang.lyra@gmail.com>, 
- Alain Volmat <alain.volmat@foss.st.com>, 
- Raphael Gallais-Pou <rgallaispou@gmail.com>, 
- Yannick Fertre <yannick.fertre@foss.st.com>, 
- Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>, 
- Philippe Cornu <philippe.cornu@foss.st.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Mikko Perttunen <mperttunen@nvidia.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, 
- Alexey Brodkin <abrodkin@synopsys.com>, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>, 
- =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
- Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: linux-aspeed@lists.ozlabs.org, dri-devel@lists.freedesktop.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-mediatek@lists.infradead.org, imx@lists.linux.dev, 
- linux-stm32@st-md-mailman.stormreply.com, linux-tegra@vger.kernel.org, 
- linux-doc@vger.kernel.org, Anusha Srivatsa <asrivats@redhat.com>, 
- CK Hu <ck.hu@mediatek.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740522045; l=8775;
- i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
- bh=kFCOcGQY9D8TzyaRT9RN2mfIAjcd4C4Nrt+RPwYLIdE=;
- b=qYv7i5GwH+Bi37QflJq1taNo71j8iMT5Gf5a12sVcte27tGRYcxtPGTcibkw3JKboZtdGQvOQ
- z5HXAZ3Xck7Bw9Vdc3Z3XBw26xq9q86DC4QffQqkW1QqDgGBfITObfX
-X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
- pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+References: <20250225204613.2316092-1-surenb@google.com> <Z7420bbHoz3y73xh@x1.local>
+ <CAJuCfpGLcxSLNek7bUALKcg8HwF8vd9piaBf+cvjYRhY=xOfrA@mail.gmail.com>
+In-Reply-To: <CAJuCfpGLcxSLNek7bUALKcg8HwF8vd9piaBf+cvjYRhY=xOfrA@mail.gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 25 Feb 2025 14:21:39 -0800
+X-Gm-Features: AWEUYZlr9psNh16uDKwukoh4oYDN-sgVhvIBloc0uSr9nmxcabIzsX5L3_guFh0
+Message-ID: <CAJuCfpH8-LrNuK8xWHU9kGM7QjYqWBdjy1TKe4DuuPd1s+g11Q@mail.gmail.com>
+Subject: Re: [PATCH 1/1] userfaultfd: do not block on locking a large folio
+ with raised refcount
+To: Peter Xu <peterx@redhat.com>
+Cc: akpm@linux-foundation.org, lokeshgidra@google.com, aarcange@redhat.com, 
+	21cnbao@gmail.com, v-songbaohua@oppo.com, david@redhat.com, 
+	willy@infradead.org, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, 
+	hughd@google.com, jannh@google.com, kaleshsingh@google.com, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Replace platform_get_resource + devm_ioremap_resource
-with just devm_platform_ioremap_resource()
+On Tue, Feb 25, 2025 at 2:12=E2=80=AFPM Suren Baghdasaryan <surenb@google.c=
+om> wrote:
+>
+> On Tue, Feb 25, 2025 at 1:32=E2=80=AFPM Peter Xu <peterx@redhat.com> wrot=
+e:
+> >
+> > On Tue, Feb 25, 2025 at 12:46:13PM -0800, Suren Baghdasaryan wrote:
+> > > Lokesh recently raised an issue about UFFDIO_MOVE getting into a dead=
+lock
+> > > state when it goes into split_folio() with raised folio refcount.
+> > > split_folio() expects the reference count to be exactly
+> > > mapcount + num_pages_in_folio + 1 (see can_split_folio()) and fails w=
+ith
+> > > EAGAIN otherwise. If multiple processes are trying to move the same
+> > > large folio, they raise the refcount (all tasks succeed in that) then
+> > > one of them succeeds in locking the folio, while others will block in
+> > > folio_lock() while keeping the refcount raised. The winner of this
+> > > race will proceed with calling split_folio() and will fail returning
+> > > EAGAIN to the caller and unlocking the folio. The next competing proc=
+ess
+> > > will get the folio locked and will go through the same flow. In the
+> > > meantime the original winner will be retried and will block in
+> > > folio_lock(), getting into the queue of waiting processes only to rep=
+eat
+> > > the same path. All this results in a livelock.
+> > > An easy fix would be to avoid waiting for the folio lock while holdin=
+g
+> > > folio refcount, similar to madvise_free_huge_pmd() where folio lock i=
+s
+> > > acquired before raising the folio refcount.
+> > > Modify move_pages_pte() to try locking the folio first and if that fa=
+ils
+> > > and the folio is large then return EAGAIN without touching the folio
+> > > refcount. If the folio is single-page then split_folio() is not calle=
+d,
+> > > so we don't have this issue.
+> > > Lokesh has a reproducer [1] and I verified that this change fixes the
+> > > issue.
+> > >
+> > > [1] https://github.com/lokeshgidra/uffd_move_ioctl_deadlock
+> > >
+> > > Reported-by: Lokesh Gidra <lokeshgidra@google.com>
+> > > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> >
+> > Reviewed-by: Peter Xu <peterx@redhat.com>
+> >
+> > One question irrelevant of this change below..
+> >
+> > > ---
+> > >  mm/userfaultfd.c | 17 ++++++++++++++++-
+> > >  1 file changed, 16 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> > > index 867898c4e30b..f17f8290c523 100644
+> > > --- a/mm/userfaultfd.c
+> > > +++ b/mm/userfaultfd.c
+> > > @@ -1236,6 +1236,7 @@ static int move_pages_pte(struct mm_struct *mm,=
+ pmd_t *dst_pmd, pmd_t *src_pmd,
+> > >                */
+> > >               if (!src_folio) {
+> > >                       struct folio *folio;
+> > > +                     bool locked;
+> > >
+> > >                       /*
+> > >                        * Pin the page while holding the lock to be su=
+re the
+> > > @@ -1255,12 +1256,26 @@ static int move_pages_pte(struct mm_struct *m=
+m, pmd_t *dst_pmd, pmd_t *src_pmd,
+> > >                               goto out;
+> > >                       }
+> > >
+> > > +                     locked =3D folio_trylock(folio);
+> > > +                     /*
+> > > +                      * We avoid waiting for folio lock with a raise=
+d refcount
+> > > +                      * for large folios because extra refcounts wil=
+l result in
+> > > +                      * split_folio() failing later and retrying. If=
+ multiple
+> > > +                      * tasks are trying to move a large folio we ca=
+n end
+> > > +                      * livelocking.
+> > > +                      */
+> > > +                     if (!locked && folio_test_large(folio)) {
+> > > +                             spin_unlock(src_ptl);
+> > > +                             err =3D -EAGAIN;
+> > > +                             goto out;
+> > > +                     }
+> > > +
+> > >                       folio_get(folio);
+> > >                       src_folio =3D folio;
+> > >                       src_folio_pte =3D orig_src_pte;
+> > >                       spin_unlock(src_ptl);
+> > >
+> > > -                     if (!folio_trylock(src_folio)) {
+> > > +                     if (!locked) {
+> > >                               pte_unmap(&orig_src_pte);
+> > >                               pte_unmap(&orig_dst_pte);
+> >
+> > .. just notice this.  Are these problematic?  I mean, orig_*_pte are st=
+ack
+> > variables, afaict.  I'd expect these things blow on HIGHPTE..
+>
+> Ugh! Yes, I think so. From a quick look, move_pages_pte() is the only
+> place we have this issue and I don't see a reason for copying src_pte
+> and dst_pte values. I'll spend some more time trying to understand if
+> we really need these local copies.
 
-Used Coccinelle to do this change. SmPl patch:
-@rule_1@
-identifier res;
-expression ioremap_res;
-identifier pdev;
-@@
--struct resource *res;
-...
--res = platform_get_resource(pdev,...);
--ioremap_res = devm_ioremap_resource(...);
-+ioremap_res = devm_platform_ioremap_resource(pdev,0);
+Ah, we copy the values to later check if PTEs changed from under us.
+But I see no reason we need to use orig_{src|dst}_pte instead of
+{src|dst}_pte when doing pte_unmap(). I think we can safely replace
+them with the original ones. WDYT?
 
-Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Reviewed-by: Maxime Ripard <mripard@kernel.org>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
-Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
----
- drivers/gpu/drm/mediatek/mtk_disp_color.c | 4 +---
- drivers/gpu/drm/mediatek/mtk_disp_gamma.c | 4 +---
- drivers/gpu/drm/mediatek/mtk_disp_merge.c | 4 +---
- drivers/gpu/drm/mediatek/mtk_disp_ovl.c   | 4 +---
- drivers/gpu/drm/mediatek/mtk_disp_rdma.c  | 4 +---
- drivers/gpu/drm/mediatek/mtk_dsi.c        | 4 +---
- drivers/gpu/drm/mediatek/mtk_hdmi.c       | 4 +---
- drivers/gpu/drm/mediatek/mtk_mdp_rdma.c   | 4 +---
- 8 files changed, 8 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_color.c b/drivers/gpu/drm/mediatek/mtk_disp_color.c
-index dd8433a38282a9ba1bcc3a4ddd01dd89738ccb60..39c7de4cdcc16b56a5a1d046aaabaf5580227ed2 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_color.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_color.c
-@@ -96,7 +96,6 @@ static int mtk_disp_color_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct mtk_disp_color *priv;
--	struct resource *res;
- 	int ret;
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-@@ -108,8 +107,7 @@ static int mtk_disp_color_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(priv->clk),
- 				     "failed to get color clk\n");
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->regs = devm_ioremap_resource(dev, res);
-+	priv->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->regs))
- 		return dev_err_probe(dev, PTR_ERR(priv->regs),
- 				     "failed to ioremap color\n");
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_gamma.c b/drivers/gpu/drm/mediatek/mtk_disp_gamma.c
-index b17b11d93846f2019d8c4afb294375333e22dc42..8afd15006df2a21f3f52fe00eca3c5501f4fb76a 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_gamma.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_gamma.c
-@@ -256,7 +256,6 @@ static int mtk_disp_gamma_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct mtk_disp_gamma *priv;
--	struct resource *res;
- 	int ret;
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-@@ -268,8 +267,7 @@ static int mtk_disp_gamma_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(priv->clk),
- 				     "failed to get gamma clk\n");
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->regs = devm_ioremap_resource(dev, res);
-+	priv->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->regs))
- 		return dev_err_probe(dev, PTR_ERR(priv->regs),
- 				     "failed to ioremap gamma\n");
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_merge.c b/drivers/gpu/drm/mediatek/mtk_disp_merge.c
-index 563b1b248fbbb38ef03bb3e3ceecdd265961df60..b174dda091d3fbd16796e8e128b030fccf5b902c 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_merge.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_merge.c
-@@ -306,7 +306,6 @@ static const struct component_ops mtk_disp_merge_component_ops = {
- static int mtk_disp_merge_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct resource *res;
- 	struct mtk_disp_merge *priv;
- 	int ret;
- 
-@@ -314,8 +313,7 @@ static int mtk_disp_merge_probe(struct platform_device *pdev)
- 	if (!priv)
- 		return -ENOMEM;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->regs = devm_ioremap_resource(dev, res);
-+	priv->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->regs))
- 		return dev_err_probe(dev, PTR_ERR(priv->regs),
- 				     "failed to ioremap merge\n");
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-index df82cea4bb79c472acbb66e0df27fbad3e70bd20..d0581c4e3c999cf865fdd0aaf4c2f38dd404926e 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-@@ -604,7 +604,6 @@ static int mtk_disp_ovl_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct mtk_disp_ovl *priv;
--	struct resource *res;
- 	int irq;
- 	int ret;
- 
-@@ -621,8 +620,7 @@ static int mtk_disp_ovl_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(priv->clk),
- 				     "failed to get ovl clk\n");
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->regs = devm_ioremap_resource(dev, res);
-+	priv->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->regs))
- 		return dev_err_probe(dev, PTR_ERR(priv->regs),
- 				     "failed to ioremap ovl\n");
-diff --git a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-index bf47790e4d6be5d60070c63c15c75fa201cc4b27..c9d41d75e7f2a3af5820921b7e563da377ce8d0d 100644
---- a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-+++ b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
-@@ -313,7 +313,6 @@ static int mtk_disp_rdma_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct mtk_disp_rdma *priv;
--	struct resource *res;
- 	int irq;
- 	int ret;
- 
-@@ -330,8 +329,7 @@ static int mtk_disp_rdma_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(priv->clk),
- 				     "failed to get rdma clk\n");
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->regs = devm_ioremap_resource(dev, res);
-+	priv->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->regs))
- 		return dev_err_probe(dev, PTR_ERR(priv->regs),
- 				     "failed to ioremap rdma\n");
-diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index b50dc9a013ac5a50e464134f548fa773a5662138..0683c2b3ca5bc5b09439c42d30fb1380e1c67c97 100644
---- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -1192,7 +1192,6 @@ static int mtk_dsi_probe(struct platform_device *pdev)
- {
- 	struct mtk_dsi *dsi;
- 	struct device *dev = &pdev->dev;
--	struct resource *regs;
- 	int irq_num;
- 	int ret;
- 
-@@ -1217,8 +1216,7 @@ static int mtk_dsi_probe(struct platform_device *pdev)
- 	if (IS_ERR(dsi->hs_clk))
- 		return dev_err_probe(dev, PTR_ERR(dsi->hs_clk), "Failed to get hs clock\n");
- 
--	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	dsi->regs = devm_ioremap_resource(dev, regs);
-+	dsi->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(dsi->regs))
- 		return dev_err_probe(dev, PTR_ERR(dsi->regs), "Failed to ioremap memory\n");
- 
-diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-index ac5e40c2761710dfbe722e1ba569d76e4cd5b8fb..d4ab098e117477eea8fad568a134c0a796b380db 100644
---- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
-@@ -1424,7 +1424,6 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
- 	struct device_node *cec_np, *remote, *i2c_np;
- 	struct platform_device *cec_pdev;
- 	struct regmap *regmap;
--	struct resource *mem;
- 	int ret;
- 
- 	ret = mtk_hdmi_get_all_clk(hdmi, np);
-@@ -1470,8 +1469,7 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
- 	}
- 	hdmi->sys_regmap = regmap;
- 
--	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	hdmi->regs = devm_ioremap_resource(dev, mem);
-+	hdmi->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(hdmi->regs)) {
- 		ret = PTR_ERR(hdmi->regs);
- 		goto put_device;
-diff --git a/drivers/gpu/drm/mediatek/mtk_mdp_rdma.c b/drivers/gpu/drm/mediatek/mtk_mdp_rdma.c
-index fc69ee38ce7d6a245a7460cfde8de426e83b2e80..7982788ae9df51f1a378d8d538737f38af7299f2 100644
---- a/drivers/gpu/drm/mediatek/mtk_mdp_rdma.c
-+++ b/drivers/gpu/drm/mediatek/mtk_mdp_rdma.c
-@@ -291,7 +291,6 @@ static const struct component_ops mtk_mdp_rdma_component_ops = {
- static int mtk_mdp_rdma_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct resource *res;
- 	struct mtk_mdp_rdma *priv;
- 	int ret = 0;
- 
-@@ -299,8 +298,7 @@ static int mtk_mdp_rdma_probe(struct platform_device *pdev)
- 	if (!priv)
- 		return -ENOMEM;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	priv->regs = devm_ioremap_resource(dev, res);
-+	priv->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->regs))
- 		return dev_err_probe(dev, PTR_ERR(priv->regs),
- 				     "failed to ioremap rdma\n");
-
--- 
-2.48.1
-
+>
+> >
+> > >                               src_pte =3D dst_pte =3D NULL;
+> > >
+> > > base-commit: 801d47bd96ce22acd43809bc09e004679f707c39
+> > > --
+> > > 2.48.1.658.g4767266eb4-goog
+> > >
+> >
+> > --
+> > Peter Xu
+> >
