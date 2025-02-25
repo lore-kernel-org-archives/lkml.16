@@ -1,108 +1,144 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AD2266B4C;
-	Tue, 25 Feb 2025 09:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740476661; cv=pass; b=kwtj1PxDCYNx2cE3yeWOz/evwpjWnKBIom4n2A6IgIZdv/ncy1A5kAL93K3UjoadBh+6gXl6mMPxgy9OXwxZW+YZGvUM99DjSaO92OxpqZZ2jv4v24YzSvlLyMcU2cmsOJFy+49xp+b5DO//GimwvWyS54FlDpys7QAo/bYCCLY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740476661; c=relaxed/simple;
-	bh=mGa1ZVpVEgPerlEBMmFu55L7BuMoyO1RjFa7unAYWsE=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=EdUrn4zDv/ltTlBViPNAbMqdvNn8uKluYKoup+WKgpe1X6lzAKxM9iRNZtzY5u+TG+38UgxvIiZzZthkiw8tcEKYU4OzspM4JXeBcVbQcHZSoHiseBCVx4JBBr5y9+oUcQRq56u9c0fetV0IwxczNnSJ3El7Cz4pUtnxgDcqI6I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=iqgJce1V; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC7A2641CA
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740476750; cv=none; b=p2tVu6cQ3+9sPmoMGNG/TxWIKAvblK7xHbheZz5EsSEKn1yvCury9acQojLAqA2bt62e1YdohdOlZjMieNIrtAk54Ngzc0kWS2GmPIpcAs/xdy/+eouLCr8cgWoTjyd2UnQiO1GPS12cP54sdKXcbc2QbxCAXbaECtnniheFCls=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740476750; c=relaxed/simple;
+	bh=bsdbdybJum/9TKHMpxJaYeBEjyIt+O6OA8vVk7UB/0s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BezWktMzgNWiS4OvqZ9ctZMqDwLFqzWiiwJLaAQ9Ac6EZzL+j4/KrRJMQXmgjd5F7IyVxvR/99jW0tIgAP3Mru6bqaxS3Mz5DzHsCo0xKQMvei1GkS3zF8Gz8leYRApVZMkwl4s+tVW82YLYk0FWBhTIlaqepD6kCPTWgr/P568=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sOThd8BC; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="iqgJce1V"
-ARC-Seal: i=1; a=rsa-sha256; t=1740476632; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=hOAzLH10upnYM8mrUCJKeSFvpPQF4X8pbBP9U6Ib/J7wI6gKqAAg4x5D8BL+LJz18gdMEEWwAOxYCaGB97NqmdSU4Xz4JctrwSmMqKO9GpxyVOLWKq8sK6uAxreSaYlvk4vvl1ENV/rdNL4B5qdfc1L4g5M0KIhNUyee/Ieo3Po=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740476632; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=mGa1ZVpVEgPerlEBMmFu55L7BuMoyO1RjFa7unAYWsE=; 
-	b=BwekNULxccjsZMNQ2D+mGAlVx8pLyZLfiTRT1g3RySnmMJIStUHZZKlEhWhVwJxxEd6p1vIZPnqpvUlbigZAxhB5E1Hy5GNbgXQh2WXOti62u5uusjvrOPXHDRq4sWrPJcXhLUwnHn5kZ+vo9PTAuEzWTWZEskE2BQE9FJm3FcI=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740476632;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=mGa1ZVpVEgPerlEBMmFu55L7BuMoyO1RjFa7unAYWsE=;
-	b=iqgJce1VS9nGMtrO+a5XqdIt09odx5cAGf8CDtM6aHzUc5+szZL4elVjc0e0UpLt
-	z7pqmLPMaT3PTcEfQGp+ogA6fT9gsY08KsVPuJ6exnvUVafH9iI/udDcI36SC3G/y3Q
-	F4Mr6GwIXFKpwtTinI4J1RbPqVxQIDfj7as9+YUo=
-Received: by mx.zohomail.com with SMTPS id 1740476629225362.08681216406217;
-	Tue, 25 Feb 2025 01:43:49 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sOThd8BC"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e0939c6456so8569736a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 01:45:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740476747; x=1741081547; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hHVXaGLoHnHcEuRO0aCTBF6tz3V90gTR/4gwvCrCe3c=;
+        b=sOThd8BC+JmOj2/1xyzeDc6U5CnD6IbMzhi/cxRLG4I83SduVn6AIBGBH5oPP1BXV/
+         8+2nwDtwhREeBKrOoNTMQQCabqWT2qmHbrU4YptRhyUOgeEgc6M1lmqn9pMX4P+bEX9v
+         9F9ewlFLRDrn257Aj2oNEUThtg0PxpX1kzeNmOue1J9bbYQ6QwqwxmocKjQHC5OhJ5r7
+         g+Phnq6XMeGKTrK53UchInOiClyMTQIPXpJvikwOnIUgC7jBhhBwdU3wBoduPf3waZ0H
+         bIDLmSgqF0XZ4SPaQLHgGul6uC/3SJWCFIoI6laM6HGeAo2AD5jcgtb08HW3kKXsnbvn
+         FdRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740476747; x=1741081547;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hHVXaGLoHnHcEuRO0aCTBF6tz3V90gTR/4gwvCrCe3c=;
+        b=pUdaez7tql0KTRE8khSf1s241eA6VSEcZPlHp/ThdBgF6s+hgmP2HccK/uw5DzpM16
+         WhoGS6p8UxdnMtFs/trLnbAuwsFZakKR0UukK/N3Cdu/ywcAnEFsbrELptDEucKMArug
+         Ft6oDU4Sk77/4S3EB7BRI6Sdu5H+909fIU+iVxMAjhtWn91PprhuLrGlzi6B8aomoA2/
+         xuQ+66N4Mm2NMzkI7b9yRyzXVpT4afdY1w7qk9RhTzUpCL3gTvhlfBiIuU36lK/GRTyi
+         Lmwbf6+8zfNT6b6Xf7R0OwX63ixw2b80xJTnCgWR0xiGD/iA/rhplmPiKHdeI/8H9dyJ
+         NWDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU55hAjIjZ5RDupy9uwwQyK0WPEOnHRJEzCUW4JJrxBnjXlyJ+AMvyg3hktpJCOTw8AZ7/51EnH6r53h7k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLG3/lja6TovNWXD9b8wQ28x8y8fUDd33279DtCZ9TPEubPrBz
+	YxlBenMU1LN6fO9v6vtVgeSlMw/zvD43jqUxOsIYZgctMlLJYBhc0IXqy75nBMBrxAKvTyQcL6Y
+	7ERI4d1C/M7+jnXTqdSHpMNWR1RrvwDJ7N51dWA==
+X-Gm-Gg: ASbGncu6rwRFoJJa2fgLfNpTTJhF9my7vbK0fOMkgNUJD+jB9JvkdUvg+clZpnBLdA8
+	GZt4NrJ25GhLuqSGSiNygNBhI0AOK6Su3ViLPdJoULZatOh37Lcm1hHbm0Anx7QrVZu53WTXtHQ
+	3WMVBkzN0uWbDWoqWuQh1rBIci3IrpL6imqZbe
+X-Google-Smtp-Source: AGHT+IHy5CXUnGuuk5vTmSwlwqnhNPOn45I7gdCsEA2weqy4YQrc6Fq6PBRDF776Svd8jFTrDK4CUkwKi2Vp+4Fmcsc=
+X-Received: by 2002:a17:907:970c:b0:abc:b96:7bd2 with SMTP id
+ a640c23a62f3a-abc0d97d421mr1576384066b.11.1740476746998; Tue, 25 Feb 2025
+ 01:45:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
-Subject: Re: [PATCH 1/2] rust: Add cpumask helpers
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20250224233938.3158-2-yury.norov@gmail.com>
-Date: Tue, 25 Feb 2025 06:43:31 -0300
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- Danilo Krummrich <dakr@redhat.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Stephen Boyd <sboyd@kernel.org>,
- Nishanth Menon <nm@ti.com>,
- Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
- Erik Schilling <erik.schilling@linaro.org>,
- =?utf-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
- Joakim Bech <joakim.bech@linaro.org>,
- Rob Herring <robh@kernel.org>,
- Christoph Hellwig <hch@lst.de>,
- Jason Gunthorpe <jgg@nvidia.com>,
- John Hubbard <jhubbard@nvidia.com>,
- linux-pm@vger.kernel.org,
- rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+References: <202502251026.bb927780-lkp@intel.com> <tencent_6D9B516AFF16965A3BB652A049D6CA847706@qq.com>
+In-Reply-To: <tencent_6D9B516AFF16965A3BB652A049D6CA847706@qq.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Tue, 25 Feb 2025 10:45:35 +0100
+X-Gm-Features: AWEUYZmvkDsNth2SEizMKQjlIz2X8mlnwK3RzzO7EOkh1PJdhu483jlPhyWEu-w
+Message-ID: <CAKfTPtBWDFSj8E53i=qSK7kR1qsT68xLvVp4+HGr5FXrna-xRg@mail.gmail.com>
+Subject: Re: [tip:sched/core] [sched] 2ae891b826: hackbench.throughput 6.2% regression
+To: Chen Yu <yu.chen.surf@foxmail.com>
+Cc: zihan zhou <15645113830zzh@gmail.com>, oe-lkp@lists.linux.dev, 
+	kernel test robot <oliver.sang@intel.com>, lkp@intel.com, linux-kernel@vger.kernel.org, 
+	x86@kernel.org, Peter Zijlstra <peterz@infradead.org>, aubrey.li@linux.intel.com, 
+	yu.c.chen@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <9E7A81AA-6460-4F87-942E-2EEA145257F2@collabora.com>
-References: <20250224233938.3158-1-yury.norov@gmail.com>
- <20250224233938.3158-2-yury.norov@gmail.com>
-To: Yury Norov <yury.norov@gmail.com>
-X-Mailer: Apple Mail (2.3826.300.87.4.3)
-X-ZohoMailClient: External
 
-Hi Yury,
+On Tue, 25 Feb 2025 at 10:31, Chen Yu <yu.chen.surf@foxmail.com> wrote:
+>
+> On 2025-02-25 at 10:32:13 +0800, kernel test robot wrote:
+> >
+> >
+> > Hello,
+> >
+> > kernel test robot noticed a 6.2% regression of hackbench.throughput on:
+> >
+> >
+> > commit: 2ae891b826958b60919ea21c727f77bcd6ffcc2c ("sched: Reduce the de=
+fault slice to avoid tasks getting an extra tick")
+> > https://git.kernel.org/cgit/linux/kernel/git/tip/tip.git sched/core
+> >
+> > [test failed on linux-next/master d4b0fd87ff0d4338b259dc79b2b3c6f7e70e8=
+afa]
+> >
+> > testcase: hackbench
+> > config: x86_64-rhel-9.4
+> > compiler: gcc-12
+> > test machine: 128 threads 2 sockets Intel(R) Xeon(R) Gold 6338 CPU @ 2.=
+00GHz (Ice Lake) with 256G memory
+> > parameters:
+> >
+> >       nr_threads: 100%
+> >       iterations: 4
+> >       mode: process
+> >       ipc: socket
+> >       cpufreq_governor: performance
+> >
+> >
+> >   39754543 =C4=85  3%     +56.8%   62349308        hackbench.time.invol=
+untary_context_switches
+> >
+>
+> This patch shrinks the base_slice so the deadline is reached earlier to t=
+rigger the
+> tick preemption IIUC. For the hackbench case, my assumption is that hackb=
+ench seems to
 
-> On 24 Feb 2025, at 20:39, Yury Norov <yury.norov@gmail.com> wrote:
->=20
-> From: Viresh Kumar <viresh.kumar@linaro.org>
->=20
-> In order to prepare for adding Rust abstractions for cpumask, add
-> the required helpers for inline cpumask functions that cannot be
-> called by rust code directly.
+For systems with more than 8 CPUs, the base slice was
+0.75*(1+ilog2(8)) =3D 3ms which is exactly 3 tick periods at 1000hz but
+because the tick period is almost never fully accounted to the task,
+the task was running 4 tick periods instead of 3. The normalized
+base_slice has been reduced from 0.75 to 0.70ms so the base slice
+becomes 2.8ms for 8 CPUs and more and the main result is that tasks
+will run 3 tick periods instead of 4.
 
-I don=E2=80=99t understand what is going on here. You apparently did not =
-provide the
-Rust code itself.
-
-Usually, when I see a =E2=80=9Cin order to prepare for =E2=80=A6=E2=80=9D =
-I expect the actual patch to
-follow in the same series.
-
-Right now - and correct me if I'm wrong - it seems like you=E2=80=99ve =
-essentially added
-dead code.
-
-=E2=80=94 Daniel=
+> encounter more wakeup preemption and hurts throughtput. If more frequent =
+tick preemption
+> is needed, but more frequent wakeup preemption is not, are we able to do =
+this base_slice
+> shrink for tick preemption only rather than the wakeup preemption? A wild=
+ guess, can we
+> add smaller base_slice 0.7 in update_deadline() for tick preemption, but =
+remains the old
+> value 0.75 in update_deadline() for wakeup preemption during enqueue.
+>
+> But consider that the 6% regression is not that high, and the user might =
+customize
+> base_slice via debugfs on-demand, we can keep an eye on this and revist i=
+t in the
+> future(we have encountered some SPECjbb regression due to over-preemption=
+).
+>
+> thanks,
+> Chenyu
+>
