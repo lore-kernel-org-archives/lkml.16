@@ -1,199 +1,183 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927B0267AE1;
-	Tue, 25 Feb 2025 13:13:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740489190; cv=pass; b=nZY9EQTYsqi/Wq0dSNyCmvcr1nFs3f0QeYenv+6p33zrh1JHGBpqSP2KizEogCADr8hzoP4sD6e23PeAeYIg9bAawjgAFoXY8PbhFQ38AT0r74Hu/2iaOrXwLsrrB+JSuQrYsy4lDFAOdzwlJWL4MCYWfnaPuauJxEm/oxHCngQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740489190; c=relaxed/simple;
-	bh=Pn/Fx/yuU/lUaA3NedAbSiQkqvsmm1dENaJyUG5J8kw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E2zSNLcAMTIsnga7QLovxBTDRAeYbVMtI31YUgSK0biST5Khg1OAnGBcvor2MJbmqjHFIvGMmf99SuL1WwEFx2+BNBFj5G7rKKFaVyzycGfpKNmEKNwdeT/WIbQ3A/T9H/X+1Db5au+tZSsTnqyDoS75yh5cC08ODmYZfXdIkH4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=BZbhRsHR; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852C0268FFE
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740489225; cv=none; b=F2KIlKdOZP20OWb9x7HozndOv28kKuNKlpcDpqTniK82fFnIvQr0dauCrsrKfbj+WUDhQNxSeSmRYRGtggcZWiGiaDxvlXDTKtf+GoTY7pdzko67DsAwYVzT5VRvUvSdG0cKpaDII7PLt6vL92Gb9RtRxj5Xbvw+Q7xiwgxZ/W4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740489225; c=relaxed/simple;
+	bh=v3vhG6xQGzI0DMMzaxCeUJboG/v/IKUZbpAI+vrakSc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aLgarXKPnfAZwzE0wphSnZBgeBe0xp5bZtlOCC+l7puPKo2JV/obW1mEDO7uCE572cmHuHAqMnNn3H5JubGVT6SlShqx1OQ30RscQqgVx2b4pyAZfCP/iYtEEu2SbgrxKgtzB6RFoAVaHvKDQBL0azD0ydMD4m8r4dBFOBza5Dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n9yBI0JH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="BZbhRsHR"
-ARC-Seal: i=1; a=rsa-sha256; t=1740489110; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=NZnfyVR7IyMTyXDLIEUCrMKSCGoTGqsj+069o9fihhvi0eGkpqCRiv1yIih6DatPyzlCBSWvAsLckZwjO9/nbLliRC7JxzVJA+QyiqPD3cZYsiG7DJbvKMqStVYQlixILKLnz5qBzKpwFqyeWef1GwDDsaeQ2d72qVshwNoPClY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740489110; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=xrERTREY6YsrpdfbtuvBlrDzb+rIm9ucee5+fOc7+3s=; 
-	b=X7bylatDMJhFwzJK5XJCxJMbpRaKeNdxWn9zmgwee2JcjP3pxIuzStBLo07Zm+wfPfQpdT8fcBBHjWisd4+4pFSZ83A8/tQpT9Kzmet+b05HUFguneYiG/dsBHrfO36oBqNdsEEYY5JNX2mejJwyfaeqPW4PrA3A2LqKhBLrp2o=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740489110;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=xrERTREY6YsrpdfbtuvBlrDzb+rIm9ucee5+fOc7+3s=;
-	b=BZbhRsHRaCk8oCx4V1IJthqAD0y0f1aA6Jq9zf2qb0ab+nE18X2Bc3s7PUOLdqwP
-	VHKDCjsBwixxUM9KyNmeRpL+tHO6jPqaQjhxFSLOXyJc+d5mNkD6cNqk5v+3YqWtH3N
-	T8L2lHl6rizRn1UcYqljqJYFtXSY5q4dVNz5yrCg=
-Received: by mx.zohomail.com with SMTPS id 1740489106492893.7559376695295;
-	Tue, 25 Feb 2025 05:11:46 -0800 (PST)
-Received: by venus (Postfix, from userid 1000)
-	id EB08C180403; Tue, 25 Feb 2025 14:11:39 +0100 (CET)
-Date: Tue, 25 Feb 2025 14:11:39 +0100
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Hans de Goede <hdegoede@redhat.com>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Chen-Yu Tsai <wens@csie.org>, Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, 
-	Paul Cercueil <paul@crapouillou.net>, Samuel Holland <samuel@sholland.org>, 
-	David Lechner <david@lechnology.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, Sebastian Krzyszkowiak <sebastian.krzyszkowiak@puri.sm>, 
-	Purism Kernel Team <kernel@puri.sm>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Orson Zhai <orsonzhai@gmail.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH 1/7] power: supply: core: get rid of of_node
-Message-ID: <ocbwzuqk56yx34kc5vp6aaxnhxqd4zp2wixlv7p3mex66ibntu@ahigikrf5cg4>
-References: <20250225-psy-core-convert-to-fwnode-v1-0-d5e4369936bb@collabora.com>
- <20250225-psy-core-convert-to-fwnode-v1-1-d5e4369936bb@collabora.com>
- <491e20bb-5ab4-40e9-bb35-5e05dc7bd46c@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n9yBI0JH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B25FC4CEDD;
+	Tue, 25 Feb 2025 13:13:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740489224;
+	bh=v3vhG6xQGzI0DMMzaxCeUJboG/v/IKUZbpAI+vrakSc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=n9yBI0JHpqPrL18vMSJt9LxihAY3EpUZS2131sVvk/Qz4+j+k04lIwd20biHupHfo
+	 hA/aUBQu79CLxPm+whsGJXqXSYU3a6p9HGIxSV+CvqPBsqQIe3t7pQCdJwE0bTt7rd
+	 SxKKe0wzxips2uw6hpPwFiwNl9fJUUz3dtrw801T5Ct9v9gjg2T3JaLljDnGf09Fx+
+	 QfsdskoQDL2Oue9PMnfKPUltRhyWfM2MmlerpOUbEu3QZHwxTUZF7hwHtzzxemmNOl
+	 0frKpBpeHZZfC4lNCkXe8B0TyS1xcYHgGVnpReMBo4lAJVIdpko0yEGJkH8P3Dz4Bh
+	 wp5U3X3/Ts4ig==
+From: Philipp Stanner <phasta@kernel.org>
+To: Matthew Brost <matthew.brost@intel.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Philipp Stanner <phasta@kernel.org>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] drm/sched: Fix outdated comments referencing thread
+Date: Tue, 25 Feb 2025 14:13:32 +0100
+Message-ID: <20250225131332.83415-2-phasta@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qokyrq4gcjmy6fsj"
-Content-Disposition: inline
-In-Reply-To: <491e20bb-5ab4-40e9-bb35-5e05dc7bd46c@gmail.com>
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.2/240.466.79
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
+The GPU scheduler's comments refer to a "thread" at various places.
+Those are leftovers stemming from a rework in which the scheduler was
+ported from using a kthread to workqueues.
 
---qokyrq4gcjmy6fsj
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/7] power: supply: core: get rid of of_node
-MIME-Version: 1.0
+Replace all references to kthreads.
 
-Hi,
+Fixes: a6149f039369 ("drm/sched: Convert drm scheduler to use a work queue rather than kthread")
+Signed-off-by: Philipp Stanner <phasta@kernel.org>
+---
+ drivers/gpu/drm/scheduler/sched_entity.c |  8 ++++----
+ drivers/gpu/drm/scheduler/sched_main.c   | 21 +++++++++++----------
+ include/drm/gpu_scheduler.h              | 12 ++++++------
+ 3 files changed, 21 insertions(+), 20 deletions(-)
 
-On Tue, Feb 25, 2025 at 01:14:03PM +0200, Matti Vaittinen wrote:
-> On 25/02/2025 01:21, Sebastian Reichel wrote:
-> > This removes .of_node from 'struct power_supply', since there
-> > is already a copy in .dev.of_node and there is no need to have
-> > two copies.
-> >=20
-> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> > ---
-> >   drivers/power/supply/power_supply_core.c | 17 ++++++++---------
-> >   include/linux/power_supply.h             |  1 -
-> >   2 files changed, 8 insertions(+), 10 deletions(-)
-> >=20
-> > diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/s=
-upply/power_supply_core.c
-> > index d0bb52a7a0367a8e07787be211691cad14a41a54..11030035da6f121ca76bebf=
-800c06cfd5db57578 100644
-> > --- a/drivers/power/supply/power_supply_core.c
-> > +++ b/drivers/power/supply/power_supply_core.c
-> > @@ -200,11 +200,11 @@ static int __power_supply_populate_supplied_from(=
-struct power_supply *epsy,
-> >   	int i =3D 0;
-> >   	do {
-> > -		np =3D of_parse_phandle(psy->of_node, "power-supplies", i++);
-> > +		np =3D of_parse_phandle(psy->dev.of_node, "power-supplies", i++);
-> >   		if (!np)
-> >   			break;
-> > -		if (np =3D=3D epsy->of_node) {
-> > +		if (np =3D=3D epsy->dev.of_node) {
-> >   			dev_dbg(&psy->dev, "%s: Found supply : %s\n",
-> >   				psy->desc->name, epsy->desc->name);
-> >   			psy->supplied_from[i-1] =3D (char *)epsy->desc->name;
-> > @@ -235,7 +235,7 @@ static int  __power_supply_find_supply_from_node(st=
-ruct power_supply *epsy,
-> >   	struct device_node *np =3D data;
-> >   	/* returning non-zero breaks out of power_supply_for_each_psy loop */
-> > -	if (epsy->of_node =3D=3D np)
-> > +	if (epsy->dev.of_node =3D=3D np)
-> >   		return 1;
-> >   	return 0;
-> > @@ -270,13 +270,13 @@ static int power_supply_check_supplies(struct pow=
-er_supply *psy)
-> >   		return 0;
-> >   	/* No device node found, nothing to do */
-> > -	if (!psy->of_node)
-> > +	if (!psy->dev.of_node)
-> >   		return 0;
-> >   	do {
-> >   		int ret;
-> > -		np =3D of_parse_phandle(psy->of_node, "power-supplies", cnt++);
-> > +		np =3D of_parse_phandle(psy->dev.of_node, "power-supplies", cnt++);
-> >   		if (!np)
-> >   			break;
-> > @@ -606,8 +606,8 @@ int power_supply_get_battery_info(struct power_supp=
-ly *psy,
-> >   	const __be32 *list;
-> >   	u32 min_max[2];
-> > -	if (psy->of_node) {
-> > -		battery_np =3D of_parse_phandle(psy->of_node, "monitored-battery", 0=
-);
-> > +	if (psy->dev.of_node) {
-> > +		battery_np =3D of_parse_phandle(psy->dev.of_node, "monitored-battery=
-", 0);
-> >   		if (!battery_np)
-> >   			return -ENODEV;
->=20
-> This reminded me of a change I once did to power_supply - but maybe never
-> got it further than RFC stage. Anyways, do you think it would be possible=
- to
-> decouple the battery info and struct power_suppply (while at it)?
->
-> I believe that the chargers and especially fuel-gauges which are designed=
- to
-> operate with different batteries (and which get battery details using sta=
-tic
-> battery nodes), would like to get the battery info _before_ registering t=
-he
-> power_supply (to avoid sending bogus values while operating on defaults,
-> before the battery info is read and before things are set accordingly).
->=20
-> I know this may be a bit much to ask, but I believe it'd be an improvemen=
-t.
->=20
-> Other than that, looks good to me.
+diff --git a/drivers/gpu/drm/scheduler/sched_entity.c b/drivers/gpu/drm/scheduler/sched_entity.c
+index 87f88259ddf6..f9811420c787 100644
+--- a/drivers/gpu/drm/scheduler/sched_entity.c
++++ b/drivers/gpu/drm/scheduler/sched_entity.c
+@@ -538,10 +538,10 @@ void drm_sched_entity_select_rq(struct drm_sched_entity *entity)
+ 		return;
+ 
+ 	/*
+-	 * Only when the queue is empty are we guaranteed that the scheduler
+-	 * thread cannot change ->last_scheduled. To enforce ordering we need
+-	 * a read barrier here. See drm_sched_entity_pop_job() for the other
+-	 * side.
++	 * Only when the queue is empty are we guaranteed that
++	 * drm_sched_run_job_work() cannot change entity->last_scheduled. To
++	 * enforce ordering we need a read barrier here. See
++	 * drm_sched_entity_pop_job() for the other side.
+ 	 */
+ 	smp_rmb();
+ 
+diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
+index c634993f1346..015ee327fe52 100644
+--- a/drivers/gpu/drm/scheduler/sched_main.c
++++ b/drivers/gpu/drm/scheduler/sched_main.c
+@@ -389,7 +389,7 @@ static void drm_sched_run_free_queue(struct drm_gpu_scheduler *sched)
+  * drm_sched_job_done - complete a job
+  * @s_job: pointer to the job which is done
+  *
+- * Finish the job's fence and wake up the worker thread.
++ * Finish the job's fence and wake up the work item.
+  */
+ static void drm_sched_job_done(struct drm_sched_job *s_job, int result)
+ {
+@@ -550,8 +550,8 @@ static void drm_sched_job_timedout(struct work_struct *work)
+ 	if (job) {
+ 		/*
+ 		 * Remove the bad job so it cannot be freed by concurrent
+-		 * drm_sched_cleanup_jobs. It will be reinserted back after sched->thread
+-		 * is parked at which point it's safe.
++		 * drm_sched_cleanup_jobs. It will be reinserted back after the
++		 * scheduler's workqueues are stopped at which point it's safe.
+ 		 */
+ 		list_del_init(&job->list);
+ 		spin_unlock(&sched->job_list_lock);
+@@ -597,10 +597,10 @@ void drm_sched_stop(struct drm_gpu_scheduler *sched, struct drm_sched_job *bad)
+ 
+ 	/*
+ 	 * Reinsert back the bad job here - now it's safe as
+-	 * drm_sched_get_finished_job cannot race against us and release the
++	 * drm_sched_get_finished_job() cannot race against us and release the
+ 	 * bad job at this point - we parked (waited for) any in progress
+-	 * (earlier) cleanups and drm_sched_get_finished_job will not be called
+-	 * now until the scheduler thread is unparked.
++	 * (earlier) cleanups and drm_sched_get_finished_job() will not be
++	 * called now until the scheduler's workqueues are unparked.
+ 	 */
+ 	if (bad && bad->sched == sched)
+ 		/*
+@@ -613,7 +613,8 @@ void drm_sched_stop(struct drm_gpu_scheduler *sched, struct drm_sched_job *bad)
+ 	 * Iterate the job list from later to  earlier one and either deactive
+ 	 * their HW callbacks or remove them from pending list if they already
+ 	 * signaled.
+-	 * This iteration is thread safe as sched thread is stopped.
++	 * This iteration is thread safe as the scheduler's workqueues are
++	 * stopped.
+ 	 */
+ 	list_for_each_entry_safe_reverse(s_job, tmp, &sched->pending_list,
+ 					 list) {
+@@ -678,9 +679,9 @@ void drm_sched_start(struct drm_gpu_scheduler *sched, int errno)
+ 	struct drm_sched_job *s_job, *tmp;
+ 
+ 	/*
+-	 * Locking the list is not required here as the sched thread is parked
+-	 * so no new jobs are being inserted or removed. Also concurrent
+-	 * GPU recovers can't run in parallel.
++	 * Locking the list is not required here as the scheduler's workqueues
++	 * are paused, so no new jobs are being inserted or removed. Also
++	 * concurrent GPU recovers can't run in parallel.
+ 	 */
+ 	list_for_each_entry_safe(s_job, tmp, &sched->pending_list, list) {
+ 		struct dma_fence *fence = s_job->s_fence->parent;
+diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
+index 50928a7ae98e..7da7b0b52a7e 100644
+--- a/include/drm/gpu_scheduler.h
++++ b/include/drm/gpu_scheduler.h
+@@ -192,8 +192,8 @@ struct drm_sched_entity {
+ 	 * @last_scheduled:
+ 	 *
+ 	 * Points to the finished fence of the last scheduled job. Only written
+-	 * by the scheduler thread, can be accessed locklessly from
+-	 * drm_sched_job_arm() if the queue is empty.
++	 * by &struct drm_gpu_scheduler.submit_wq. Can be accessed locklessly
++	 * from drm_sched_job_arm() if the queue is empty.
+ 	 */
+ 	struct dma_fence __rcu		*last_scheduled;
+ 
+@@ -426,14 +426,14 @@ struct drm_sched_backend_ops {
+ 	 * Drivers typically issue a reset to recover from GPU hangs, and this
+ 	 * procedure usually follows the following workflow:
+ 	 *
+-	 * 1. Stop the scheduler using drm_sched_stop(). This will park the
+-	 *    scheduler thread and cancel the timeout work, guaranteeing that
+-	 *    nothing is queued while we reset the hardware queue
++	 * 1. Stop the scheduler using drm_sched_stop(). This will stop the
++	 *    scheduler's workqueues and cancel the timeout work, guaranteeing
++	 *    that  nothing is queued while we reset the hardware queue
+ 	 * 2. Try to gracefully stop non-faulty jobs (optional)
+ 	 * 3. Issue a GPU reset (driver-specific)
+ 	 * 4. Re-submit jobs using drm_sched_resubmit_jobs()
+ 	 * 5. Restart the scheduler using drm_sched_start(). At that point, new
+-	 *    jobs can be queued, and the scheduler thread is unblocked
++	 *    jobs can be queued, and the scheduler's workqueues be started again.
+ 	 *
+ 	 * Note that some GPUs have distinct hardware queues but need to reset
+ 	 * the GPU globally, which requires extra synchronization between the
+-- 
+2.48.1
 
-I was thinking about adding an init function to power_supply_desc,
-which would be called directly before psy->initialized is set to
-true in the power-supply registration phase. I think that would be
-the right place to setup device registers based on battery-info data.
-But it's definitely not a thing for this series.
-
-Greetings,
-
--- Sebastian
-
---qokyrq4gcjmy6fsj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAme9wYEACgkQ2O7X88g7
-+pqiLw//XIliVc9d8leYVw9Zg1Ou2CIFlkNNs0jNuGp/9lBRbbqU3i1ak4YxVKtX
-Gwz4lsiJCZAACkP7CuEb5IguHkrl/pMT0hWEa+Lt1rwqx+F18FVdoWK5mujphYXK
-oE+4iXNfaU0hYoypPpgqWorMtKs7KKVw7cv7BuIgGp+LYXEeBRdde6W5t9mMYY4y
-IwppeBvxwmOoNc+E0nXErhERfiydaEwm6BFWuBnKfmeHoXPnCL0jVamXJbDVjczE
-+1oLmR5iZYfuSrmRczsPiqj1Mcw5iD2avPWX0hi92SEz3KQunNHrsYdfH67nJzw1
-qvCCjn9fnT22fTH5Ttny1Cg//zsOnfmBQsDYuY6WVmQZ6ioXDwV6nXlfydr14ZRT
-66oYdUBsDh/Gxy68lUMaLDiKus2I4WrVgqNNXazlnDaMsSrKn6MRZ0O5JJBtY4yD
-yqByN1yiZLRSfhPmJqXZlCIXBp4PJ19wfMg8HWynQVuHv/T8YgOso15Tbucp+qWf
-IOfMOx8HxTJeDuCezPkCZV7GJeVMsOYHzLrwvLnwk9AHGb+VIFiWu4I+iRzkV8pR
-9cYRHe78FNnqRCnf69jmZd8IBp/qnRIcelg00w4vo1A5mrVLI6YYt2oUuj/6yEqr
-ljWvdVK5cQo/CvXH/3zlL4AZNW/tsPlLT2WKpFyuVqwIOvS1SLw=
-=+mrH
------END PGP SIGNATURE-----
-
---qokyrq4gcjmy6fsj--
