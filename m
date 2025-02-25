@@ -1,155 +1,153 @@
-Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D03B4A1E
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 20:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA7C18DB04;
+	Tue, 25 Feb 2025 20:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740515782; cv=none; b=llBEHXlNslC2IJ6jRVw8MuPuYsbaEGQoB6EQGprgnw9g+OZxLUs565/KQSHL/lKLDVrj/inzHjPB3/rD8/1DQhnyLDMAMiJqbF8IO/PV0SvhvGTflS1QczNaDjAfxfsZ/lCEfUHW8i6CQEyD9h0Uj3v6bwZDUCRYaaNEn3wcNAs=
+	t=1740515807; cv=none; b=RetCtSdHn9RzwLfYWe/3c5VIOZeyqxtehYY9Pq+hF+F7qn8h0WNvsa2ML7mgZ2UA8IADgVhK9gc/VTc8tQX5GHZY6/79HsMuHnEJ8841G/wCP7wBuyniUIhinGksMbaZi6A4TLxAEcMN0FxHgaIngGdys5vUkPS4kcsEmvsTLkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740515782; c=relaxed/simple;
-	bh=J2XYNnf+yOUe3k4gQM0drsOfsUb37QQyfUWGVgTP9vM=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=qXrEujGzlcOjMh+goL3WEp6U+Y7v5U/GhwhrMlJC+jBucMQGoHI47TGKAnaZhYQVIRvD9dqVdwhFQBXVWzy+APM2I4bT2UpkwILJUvAdI+x2VaiEbvGu/AHg2JlG1Mc3a+BoeBR8OzuuFSyVJjPtTVuNz3WBBUSfQj3uivLTPKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=rAbBPoQH; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=XkG9IFJi; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1740515807; c=relaxed/simple;
+	bh=bBsSca7iPGoKC51DbyRKuTIoqdblhn5vEaotnZn1898=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NnHjH7bnJjJyKO4E1Z5FISToJJ4p24yOA9dCM+5bhzH60aQkC22OMAR0o06+1ciA2rvJxOGsb/bIIzZNd9b6sFww3mGQn9yn7vbZNzkvoyot2mBqKgB3ugHlKXbWazm4hWiRVqnWROKyYykOtuAEQh+w14tJI26JlNnfZ4jOXSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gIXMuKf6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="rAbBPoQH";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="XkG9IFJi"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfout.phl.internal (Postfix) with ESMTP id 1C6941380A38;
-	Tue, 25 Feb 2025 15:36:19 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-11.internal (MEProxy); Tue, 25 Feb 2025 15:36:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1740515779;
-	 x=1740602179; bh=7D6bJfmXOGzdLvZy1vlb2xlVVaSEYnFr82KLKUChPY8=; b=
-	rAbBPoQH11CHKHyUr0RELVm34qQSrNSNm+EvdAhA/XQ4PNwnk5aOex5emNXiwbvk
-	0un6wFPwOL/eXuYgqRwLvtTj7er3n5Gy4jROr9p8Zl+Tyib22UyAm4xMw/jYntc9
-	5pMDeMMUeiq+6bejmRhSBgaAsC5KIDn2y3gNUwGxcbYwj2VAYJAPevbsuwFg67do
-	zsYvIRtP55yNGE+OAf4p40qZlDoUabtYfrj6slFReOB7eKI5SpbNNuW5hvvGw2k/
-	dI0jfRof5uyNGuTKKO91dEpvcFf4mrxNO5cUsD+ntqiM2Y5gwTuSiZL3ILXptpQA
-	yGsT/97YEMWB+NffPuTz+Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740515779; x=
-	1740602179; bh=7D6bJfmXOGzdLvZy1vlb2xlVVaSEYnFr82KLKUChPY8=; b=X
-	kG9IFJiTjJs14yVFZDzYsJNs7EaVYZRl4JEStaxfLTaIabVoexI0otEpl8LnIEgP
-	FrRTWwlCwV90IHznNA3h2a/l+cZr1WaDbkzad85bU6P35WHkMBjas1uphbyiBjm5
-	+t6Eeakl5Ok698LgzaSjDrAb/ldMiekucJls3cB+jdpYwDIKHlr/DNyi+/dl852+
-	XEaA9mcEtTXXb7RkWhzIqlsU3K0bfqqQ5tDT6gMCILHHwnGFiNaHrr/Lw0fXsyZz
-	FyzFZYlYqbCDiMcc8S/BHJF/yxAZfekIoXqQjVnTiRYhtoreLJ1ESZOl8gMtl5fK
-	Z6BcovI7+b0T0gakByiKg==
-X-ME-Sender: <xms:wim-Z9DtxNbK3DsuI8S-dAS5saT-y3T-a3VW4-QU2e4lJllYG50tMA>
-    <xme:wim-Z7g9OEN9_uYtLd4nenKKQAjyllQsL4LzeyRW_Fwt510OyPW-CkgT4Z0ppnJHc
-    E3g9R3BP1Uy8Si1vXE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekvdeijecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
-    jeenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpedvhfdvkeeuudevfffftefgvdevfedvleehvddv
-    geejvdefhedtgeegveehfeeljeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeek
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrrhhnugeskhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhg
-    pdhrtghpthhtohepuggvvhgvlheslhhishhtshdrohhrrghnghgvfhhsrdhorhhgpdhrtg
-    hpthhtohephhhusggtrghpsehomhhnihgsohhnugdrtghomhdprhgtphhtthhopehmrghr
-    thhinhesohhmnhhisghonhgurdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvg
-    hlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghhrhhishhtohhphhgv
-    rdhjrghilhhlvghtseifrghnrgguohhordhfrhdprhgtphhtthhopehvihhrohesiigvnh
-    hivhdrlhhinhhugidrohhrghdruhhk
-X-ME-Proxy: <xmx:wim-Z4nvZZPpY4TtFhyd1mCPoKAsn3bhs-Ty62_78Z4Jz0c_7WlaLQ>
-    <xmx:wim-Z3x_yzxr6iOzQEhDnT_xhW312zdVqzr7lkxgiGlokaJU3702Wg>
-    <xmx:wim-ZyR0wgFAyphUbGIowmnmr1j2a8VXzMEyJ1Lrf2qhvSSk4QRUTQ>
-    <xmx:wim-Z6ZnOj4Rsjn21J4Q_C6blLzic47SpxqHLt2ovBzht7Gs_DHOAw>
-    <xmx:wym-Z_SljGvPzzGiuZq_a-sWn7Rrc-JJ_r3FMPHup926LSf7r0zV4a89>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 53B2B2220072; Tue, 25 Feb 2025 15:36:18 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gIXMuKf6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD672C4CEDD;
+	Tue, 25 Feb 2025 20:36:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740515806;
+	bh=bBsSca7iPGoKC51DbyRKuTIoqdblhn5vEaotnZn1898=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gIXMuKf6St13MvzpEG60kV3wue5KSI7lX03EQ/mLq6d9GN1AoPzuQjJve2DJAjNIJ
+	 syeEBlNr98VOASB/mcvUGk2naiSHu65m/DkWtUdG4Dp1DYX4ZNUZqB1N5JaaloFlv6
+	 nc1VYLS40dPYtQpS8o70/WPfs9MU+SyGX/oqULWasZAsExIwTS3jc2GoOCfPsJzYye
+	 k0zM7B5WsJddaantrmPhKMBnGS1lLPbWNUQqo3mcdJZ/qFHJWdq8lFqNF5rYmpIYxC
+	 ewWs+4PAEF24ybf4MyTN+d1MvhGw3ksAn5D/GmxDNAOd63VZPPC6JDaHfdL6VlapDn
+	 CNSNjzqLHtUsg==
+Date: Tue, 25 Feb 2025 21:36:37 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Yeo Reum Yun <YeoReum.Yun@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	"mingo@redhat.com" <mingo@redhat.com>,
+	"acme@kernel.org" <acme@kernel.org>,
+	"namhyung@kernel.org" <namhyung@kernel.org>,
+	Mark Rutland <Mark.Rutland@arm.com>,
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
+	"jolsa@kernel.org" <jolsa@kernel.org>,
+	"irogers@google.com" <irogers@google.com>,
+	"adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] events/core: fix acoount failure for event's
+ total_enable_time
+Message-ID: <Z74p1QaMdNKQRNeu@gmail.com>
+References: <20241220100202.804062-1-yeoreum.yun@arm.com>
+ <20241220133359.GC17537@noisy.programming.kicks-ass.net>
+ <Z2V5s2JM4W7BRckR@e129823.arm.com>
+ <20241220151414.GO11133@noisy.programming.kicks-ass.net>
+ <Z2WMsnbFmqpEV5Pu@e129823.arm.com>
+ <20241220153040.GP11133@noisy.programming.kicks-ass.net>
+ <Z2WaC0CqSwU5Ux1B@e129823.arm.com>
+ <20250110163643.GB4213@noisy.programming.kicks-ass.net>
+ <GV1PR08MB105213E200ED463126D478DF1FBEF2@GV1PR08MB10521.eurprd08.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 25 Feb 2025 21:35:56 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Christophe JAILLET" <christophe.jaillet@wanadoo.fr>,
- "Arnd Bergmann" <arnd@kernel.org>, "Mike Marshall" <hubcap@omnibond.com>
-Cc: "Martin Brandenburg" <martin@omnibond.com>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, devel@lists.orangefs.org,
- linux-kernel@vger.kernel.org
-Message-Id: <def39f2c-abc0-457b-9807-9a76e7da3161@app.fastmail.com>
-In-Reply-To: <dd1a326a-e165-4796-9005-6bff2019deef@wanadoo.fr>
-References: <20250225200901.4041575-1-arnd@kernel.org>
- <dd1a326a-e165-4796-9005-6bff2019deef@wanadoo.fr>
-Subject: Re: [PATCH] orangefs: move s_kmod_keyword_mask_map[] into debugfs.c
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <GV1PR08MB105213E200ED463126D478DF1FBEF2@GV1PR08MB10521.eurprd08.prod.outlook.com>
 
-On Tue, Feb 25, 2025, at 21:24, Christophe JAILLET wrote:
-> Le 25/02/2025 =C3=A0 21:08, Arnd Bergmann a =C3=A9crit=C2=A0:
->> From: Arnd Bergmann <arnd@arndb.de>
 
->> + *      .           .           .
->> + */
->> +static struct __keyword_mask_s s_kmod_keyword_mask_map[] =3D {
->
-> Unrelated to your patch, but I think that this could be made const.
->
+* Yeo Reum Yun <YeoReum.Yun@arm.com> wrote:
 
-Right, but not trivially, probably something like the change below.
+> Hi Peter,
+> 
+> Sorry to late answer. I've missed your last repsonse in this thread,
+> and waiting for in new thread:
+> https://lore.kernel.org/all/20250110163643.GB4213@noisy.programming.kicks-ass.net/
+> 
+> > > This patch doesn't work when the event is child event.
+> > > In case of parent's event, when you see the list_del_event(),
+> > > the total_enable_time is updated properly by changing state with
+> > > PERF_EVENT_STATE_OFF.
+> > >
+> > > However, child event's total_enable_time is added before list_del_event.
+> > > So, the missing total_enable_time isn't added to parents event and the
+> > > error print happens.
+> > >
+> > > So, I think it wouldn't be possible to update time with set_state.
+> > > instead I think it should update total_enable_time before
+> > > child's total_enable_time is added to parents' child_total_enable_time
+> > >
+> > > like
+> > >
+> > > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > > index 065f9188b44a..d27717c44924 100644
+> > > --- a/kernel/events/core.c
+> > > +++ b/kernel/events/core.c
+> > > @@ -13337,6 +13337,7 @@ static void sync_child_event(struct perf_event *child_event)
+> > >         }
+> > >
+> > >         child_val = perf_event_count(child_event, false);
+> > > +       perf_event_update_time(child_event);
+> > >
+> > >         /*
+> > >          * Add back the child's count to the parent's count:
+> >
+> > Well, that again violates the rule that we update time on state change.
+> > 
+> > AFAICT there is no issue with simply moving the perf_event_set_state()
+> > up a few lines in __perf_remove_from_context().
+> >
+> > Notably event_sched_out() will already put us in OFF state; and nothing
+> > after that cares about further states AFAICT.
+> >
+> > So isn't the below the simpler solution?
+> >
+> > --- a/kernel/events/core.c
+> > +++ b/kernel/events/core.c
+> > @@ -2438,14 +2438,13 @@ __perf_remove_from_context(struct perf_e
+> >                state = PERF_EVENT_STATE_DEAD;
+> >        }
+> >       event_sched_out(event, ctx);
+> > +       perf_event_set_state(event, min(event->state, state));
+> >       if (flags & DETACH_GROUP)
+> >                perf_group_detach(event);
+> >       if (flags & DETACH_CHILD)
+> >                perf_child_detach(event);
+> >        list_del_event(event, ctx);
+> >
+> > -       perf_event_set_state(event, min(event->state, state));
+> > -
+> >        if (!pmu_ctx->nr_events) {
+> >                pmu_ctx->rotate_necessary = 0;
+> 
+> Agree, for DETACH_EXIT case, below code in list_del_event()
+> doesn't need to be considered because
+> the all of event related to event ctx would be freed:
+> 
+>      /*
+>       * If event was in error state, then keep it
+>       * that way, otherwise bogus counts will be
+>       * returned on read(). The only way to get out
+>       * of error state is by explicit re-enabling
+>       * of the event
+>       */
+>       if (event->state > PERF_EVENT_STATE_OFF) {
+>           perf_cgroup_event_disable(event, ctx);
+>           perf_event_set_state(event, PERF_EVENT_STATE_OFF);
+>       }
+> 
+> With your suggestion, Could I send the v4 for this?
 
-There are obviously countless variables that should be const.
+Yes, please send a -v4 version.
 
-     Arnd
+Thanks,
 
---- a/fs/orangefs/orangefs-debugfs.c
-+++ b/fs/orangefs/orangefs-debugfs.c
-@@ -73,7 +73,7 @@ struct __keyword_mask_s {
-  *     qux          8           3
-  *      .           .           .
-  */
--static struct __keyword_mask_s s_kmod_keyword_mask_map[] =3D {
-+static const struct __keyword_mask_s s_kmod_keyword_mask_map[] =3D {
-        {"super", GOSSIP_SUPER_DEBUG},
-        {"inode", GOSSIP_INODE_DEBUG},
-        {"file", GOSSIP_FILE_DEBUG},
-@@ -131,7 +131,7 @@ static int orangefs_prepare_cdm_array(char *);
- static void debug_mask_to_string(void *, int);
- static void do_k_string(void *, int);
- static void do_c_string(void *, int);
--static int keyword_is_amalgam(char *);
-+static int keyword_is_amalgam(const char *);
- static int check_amalgam_keyword(void *, int);
- static void debug_string_to_mask(char *, void *, int);
- static void do_c_mask(int, char *, struct client_debug_mask **);
-@@ -764,7 +764,7 @@ static void do_k_string(void *k_mask, int index)
- {
-        __u64 *mask =3D (__u64 *) k_mask;
-=20
--       if (keyword_is_amalgam((char *) s_kmod_keyword_mask_map[index].k=
-eyword))
-+       if (keyword_is_amalgam((const char *) s_kmod_keyword_mask_map[in=
-dex].keyword))
-                goto out;
-=20
-        if (*mask & s_kmod_keyword_mask_map[index].mask_val) {
-@@ -811,7 +811,7 @@ static void do_c_string(void *c_mask, int index)
-        return;
- }
-=20
--static int keyword_is_amalgam(char *keyword)
-+static int keyword_is_amalgam(const char *keyword)
- {
-        int rc =3D 0;
-=20
+	Ingo
