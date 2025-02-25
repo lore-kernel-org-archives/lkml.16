@@ -1,120 +1,109 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02685EC2
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 19:18:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A8E1EC2;
+	Tue, 25 Feb 2025 19:18:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740511084; cv=none; b=V3IP99UC4jphW4gj8AOfLwmQVezXCKiDcbifAO2pbiNBsieWb88AEPistwI6rv+zwCjk4tdS2xvNM+wlqJ3Ss/zDBWFktgdxCp8JI/E56rz1kTzN/pzipTTYKvQUELqEY9Lrou+8pusIQTBSonxX5GHfF9TlOe6+vfY4uCoKwUs=
+	t=1740511135; cv=none; b=ZG4eOPG866U3KOBh4rYI/ujf2fnt2X83rcAdoUkHLbDsb8aG1ylCkO0OTlzZmOeu5tBaUYrsq/tBhoyeijMa41FQ22QnDFaitOkWwJAVYyK6hOwp6Usml4wOF57GekO9QqKydRBE87/OdsczBhtw9TZr+MTsBGctmYyGxxm5PPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740511084; c=relaxed/simple;
-	bh=xZXN1LUmK23+/0JBU5dwIm98J8Qqdrq3sNTAb9iX0QM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HFG0CDgb7fNIWJBVuLCS6fzaXyRfHfnz6+ZJDUntAWFcOc16IU4ad8Mejt+gn2EDChioIYeEJLB+Of2CM1/pxHDIrPyvb9Q3ydERiFkDrZoNJkKpSLrx1ioPsOLuYaSfFH4oOK9rK2xptno0wDVfsGr/m4EnXtogUdgYV3yCZK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1tn0Qi-0000000062h-3AxP;
-	Tue, 25 Feb 2025 14:17:20 -0500
-Message-ID: <7c2baf33265444089ab780848de29a1336a9a4cc.camel@surriel.com>
-Subject: Re: [PATCH v13 06/14] x86/mm: use broadcast TLB flushing for page
- reclaim TLB flushing
-From: Rik van Riel <riel@surriel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org, 
-	dave.hansen@linux.intel.com, zhengqi.arch@bytedance.com,
- nadav.amit@gmail.com, 	thomas.lendacky@amd.com, kernel-team@meta.com,
- linux-mm@kvack.org, 	akpm@linux-foundation.org, jackmanb@google.com,
- jannh@google.com, 	mhklinux@outlook.com, andrew.cooper3@citrix.com,
- Manali.Shukla@amd.com, 	mingo@kernel.org
-Date: Tue, 25 Feb 2025 14:17:20 -0500
-In-Reply-To: <20250224132711.GHZ7xzr0vdhva3-TvK@fat_crate.local>
-References: <20250223194943.3518952-1-riel@surriel.com>
-	 <20250223194943.3518952-7-riel@surriel.com>
-	 <20250224132711.GHZ7xzr0vdhva3-TvK@fat_crate.local>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
- eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
- Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
- lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
- dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
- mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
- gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
- r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
- WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
- 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
- Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
- +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
- g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
- KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
- fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
- 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
- G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
- okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
- TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
- cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
- omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
- QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
- c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1740511135; c=relaxed/simple;
+	bh=+O/jLlBPENXadD95GrBWGZEENjjbBIHuh1VsORmZ0DU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GbcsvB3IE0JIdoihPHpFYtUGg4Wzx8mNjosccMkaPE3owsOTyQ3a/UXPFlflpXxVC9ixbIPZG9AZ4J5bJLlFoorhMeVQzHeYOJBQIP1p8r+rTj/zZyBljhS5R7dL5UPeOg2LFIZOXZ5Hceg1DKbTKzeXpbs6ngAPlKNROrxgCU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E0E6152B;
+	Tue, 25 Feb 2025 11:19:09 -0800 (PST)
+Received: from bogus (unknown [10.57.37.210])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B6DB83F5A1;
+	Tue, 25 Feb 2025 11:18:49 -0800 (PST)
+Date: Tue, 25 Feb 2025 19:18:46 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Russell King <linux@armlinux.org.uk>, Will Deacon <will@kernel.org>,
+	Jessica Clarke <jrtc27@jrtc27.com>
+Subject: Re: [PATCH v7 00/10] arm64: dts: Add Arm Morello support
+Message-ID: <20250225191846.5zopbxloo4zuoxp5@bogus>
+References: <20250221180349.1413089-1-vincenzo.frascino@arm.com>
+ <Z7jL5wBUJNjOlg4r@J2N7QTR9R3.cambridge.arm.com>
+ <58ee2a8d-d3c1-4bc2-92dd-6568f645b01f@arm.com>
+ <Z72ydHCLxd-WGsJu@bogus>
+ <Z720J5kXEnj5sZn0@J2N7QTR9R3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: riel@surriel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z720J5kXEnj5sZn0@J2N7QTR9R3>
 
-On Mon, 2025-02-24 at 14:27 +0100, Borislav Petkov wrote:
-> On Sun, Feb 23, 2025 at 02:48:56PM -0500, Rik van Riel wrote:
-> >=20
-> > +++ b/arch/x86/mm/tlb.c
-> > @@ -1326,7 +1326,9 @@ void arch_tlbbatch_flush(struct
-> > arch_tlbflush_unmap_batch *batch)
-> > =C2=A0	 * a local TLB flush is needed. Optimize this use-case by
-> > calling
-> > =C2=A0	 * flush_tlb_func_local() directly in this case.
-> > =C2=A0	 */
-> > -	if (cpumask_any_but(&batch->cpumask, cpu) < nr_cpu_ids) {
-> > +	if (cpu_feature_enabled(X86_FEATURE_INVLPGB)) {
-> > +		invlpgb_flush_all_nonglobals();
->=20
-> I'm confused. The docs say rAX needs to be 0x6 to do "Invalidate all
-> TLB
-> entries that match {ASID, PCID} excluding Global". But you're calling
-> INVLPGB
-> with rAX=3D=3D0 and the APM doesn't say what this does.
->=20
-> I'm guessing you want this to mean invalidate all non-globals for any
-> ASID and
-> PCID. So I muss be missing the place in the docs where it says so...
+On Tue, Feb 25, 2025 at 12:14:31PM +0000, Mark Rutland wrote:
+> Hi Sudeep,
+> 
+> On Tue, Feb 25, 2025 at 12:07:16PM +0000, Sudeep Holla wrote:
+> > On Mon, Feb 24, 2025 at 10:08:18AM +0000, Vincenzo Frascino wrote:
+> > > On 21/02/2025 18:54, Mark Rutland wrote:
+> > > > On Fri, Feb 21, 2025 at 06:03:39PM +0000, Vincenzo Frascino wrote:
+> > > >> This series adds dts support for the Arm Morello System Development
+> > > >> Platform.
+> > > >
+> > > > Do we actually need the dts for this board?
+> > > >
+> > > > I have one on my desk; it boots vanilla Debian 12 via UEFI + ACPI just
+> > > > fine, with the Debian 6.1.0-13-arm64 kernel.
+> > > >
+> > > > Is there something that we can only do with the DT? i.e. some
+> > > > functionality that isn't exposed via ACPI?
+> > > >
+> > > > How do you expect this DT to be used?
+> > >
+> > > There are functionalities that are not exposed via ACPI, e.g. gpu, dpu, i2c for
+> > > the phy, etc. My aim to have upstream support for all the hardware exposed by
+> > > the platform.
+> > 
+> > Does this address some of your concerns ? I do understand some of these
+> > are not well addressed in ACPI and hence people use DT as an alternative.
+> 
+> Yep; I'm happy with this so long as there's an actual functional reason
+> to have the DT, which it seems there is.
+> 
+> It would have been nice for that to be spelled out a bit clearer in the
+> cover / commit messages, but that's not important and doesn't need a
+> respin.
+>
 
-You are right that it does not explicitly say it.
-However, it does strongly hint at it:
+I can add that info in my pull request as it is very valid point. One needs
+to know why we are pushing DTS now after couple of years after the boards
+are available and why DT over ACPI which is shipped with the device.
 
-"The TLB control field is specified in rAX[5:0]. It determines
-which components of the address (VA, PCID, ASID) are valid for
-comparison in the TLB and whether to include global entries in=C2=A0
-the invalidation process.
+> > I was thinking of queuing this in -next if all the bindings are acked.
+> > Let me know if you still have concerns and would like to avoid getting
+> > these merged. I will hold off then.
+> 
+> No need to hold off.
+> 
+> Sorry for the confusion; I should have been clearer with my questions.
+> 
 
-...
+No confusion as such, good to ask explicitly and get the motivation for
+this series captured on the list. Since I had gone through this motion
+even with N1SDP which for some reasons I don't know didn't appear on the
+list, I didn't ask it and implicitly assumed similar reasoning.
 
-rAX[3:0] provides for various types of invalidations. A few=C2=A0
-examples are listed in the following table, but all values=C2=A0
-are legal."=20
+So, it is good that you asked and got it answered for wider audience here.
 
-This text, to me, suggests we can filter the TLB
-invalidations by some combination of virtual address,
-PCID, or ASID, or not filter by any of those keys,
-and invalidate them all.
-
-Who do we need to ask to confirm that reading?
-
---=20
-All Rights Reversed.
+-- 
+Regards,
+Sudeep
