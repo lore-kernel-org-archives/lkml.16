@@ -1,107 +1,88 @@
-Received: from smtpcmd0987.aruba.it (smtpcmd0987.aruba.it [62.149.156.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE2626B09C
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:27:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8532698A8
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740493646; cv=none; b=qU7TOhOwEmAPqrX7xYOh9Usd0TZ8lvyhN8B5/QiR7lo3rytuCV7ej9pD1iaFWadUQynkTCawSmCwLl3d7C/jjB7ceyJVmXu9TAt+6D04EZ3RzC/qO+V1W9DMOgcbt4e4dxhtI6GVNa+hC8HK9hDwvkfg8SLRue8wATa0kHKjHQo=
+	t=1740493714; cv=none; b=HfZXEgY16qEgBjsD5jTZjGU473x7GnrMkcx8MWJ9LNlaabzPr29sUXSHBEE+kO2aRJkvTnCfpRcUNWb2OqF+jIKprhHgcvoYieWaaytOmWAHhGdio+pSL62PWYDul4WLMfxBeUDF9MgopVr37QhuvUuifnust1QoU7MZk0Al20Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740493646; c=relaxed/simple;
-	bh=Q1PAwSYP5N2acovyf6NbSeLosza1uVnYcw4+mKEx22I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Uq2zkhhOIpGo9NN+MEXxueSHe+5lATWGEKxp0iBoFMjNxL8bRo0+ei8fT6T9iDkjzNEC+uCP22ubgeVMTMeWeWP0/zhoeNl3RXY7aFr53jPczlsy6JC0cvx/8SbSCjbsPIVNkfIRNQm9UHJXgR80RCEBE8NdXPUjzHjYh0uk0s4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b=Urj+lX3X; arc=none smtp.client-ip=62.149.156.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
+	s=arc-20240116; t=1740493714; c=relaxed/simple;
+	bh=gvIBwaSJNTvZ8M88E/Zqfyzlre6QRNCoiRn2farrnhc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jJfL01FMuReSPeQDm6QnbBlTDLqHgwUcp5MvxhmN0QTv1aZq0TqO/22FnzXfTJtOZMkfajsXndSmQScSWozz7orZOXl4A5zFrWKY1ePSAY2PHukVP8xQeBE75lnGYS7VYNUc9UoW5aiVzwRYewkM45zdbqsybthkilC8wtRM+r8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s0y6+WsF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b="Urj+lX3X"
-Received: from [192.168.1.58] ([79.0.204.227])
-	by Aruba SMTP with ESMTPSA
-	id mvr2tADX4S934mvr3tLfyb; Tue, 25 Feb 2025 15:24:13 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-	t=1740493453; bh=Q1PAwSYP5N2acovyf6NbSeLosza1uVnYcw4+mKEx22I=;
-	h=Date:MIME-Version:Subject:To:From:Content-Type;
-	b=Urj+lX3XOgoF5r8UyKJBnvytqgZFIgFAle77rggZzJ1TVO9ak/r1fU30m5kRCeoD5
-	 Ug8ms+xEeAhPoCxvAMWp7Pp6gBqPtkUj8UkcRrvjZgZtMsJXQRR7a6E7fhOITQkXtB
-	 ko7jdVrJupKCxEB7onDWPrTG5oWfvH++dHPFMbicGUXy07R6JCbPgHrA/31YOzJT+e
-	 U74vwUjiY3QY+G/Tcuqyx45KcdEZ3V4yWpeM9QlJu4aYRJb92pRVjyYuxo2WwDfuUZ
-	 lgAD1pNcJOtOLwNbV3P9KAPW51fX/0+9+ugBNuToYwPIBeMXjDp8M4LyAy/vBXGgt2
-	 v20VRmZEJY75g==
-Message-ID: <a0f5aff2-3437-4b70-baa0-fe1555ec81e7@enneenne.com>
-Date: Tue, 25 Feb 2025 15:24:10 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s0y6+WsF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D5A3C4CEDD;
+	Tue, 25 Feb 2025 14:28:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740493713;
+	bh=gvIBwaSJNTvZ8M88E/Zqfyzlre6QRNCoiRn2farrnhc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=s0y6+WsFGO+M1MC082PAovNBh/ze6iQUyhg1hCCIo3nISlQvZVrPFYB6fkZRAsI/i
+	 OWuVuGqgg4D+zwOBlyIVgt6IdyZDaz0ta88qAvJVY8Chi9fqYGa7ZYlCob8cGt/BwT
+	 rGI2hQ8JJj/dQlu5Qwy8oppOtL9jZsnN3xx6w8XsCsnO29vnITnBwXgoUySvEOzHHm
+	 /bolLoaIAauC0ceQERCL0W3Ms9sxv3erenSZd7CwGdU93EZb9iFQnuzPFrQh1YA927
+	 IrU5gaRyj9QWANr3m0ozY8eVw+jERb7gQscEXaJ06llH8n7UtFgxSjSyrnHJxg6Ly1
+	 sn7BMIXdsCLUw==
+Date: Tue, 25 Feb 2025 15:28:31 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Waiman Long <longman@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] task_work: Consume only item at a time while invoking
+ the callbacks.
+Message-ID: <Z73Tj3SAzNjaHwV3@localhost.localdomain>
+References: <20250221170530.L3yMvO0i@linutronix.de>
+ <20250223224014.GC23282@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pps: add epoll support
-Content-Language: en-US
-To: Denis OSTERLAND-HEIM <denis.osterland@diehl.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <05ac823e44504921a6e864fe6fb283d6@diehl.com>
-From: Rodolfo Giometti <giometti@enneenne.com>
-In-Reply-To: <05ac823e44504921a6e864fe6fb283d6@diehl.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4xfMus3A2SkhhuTmS+mVuI/mlCoA2xpL+S4kqrUhYYapOtC/S+ulAzxwrjoRGj80n0F6Y2OK138lqLQoBcuYfnnMQV2WXPal4YPg44Tg6tgXjzw8rju1p5
- s2+lyI9s62C2Z+76mxhZq+Gz8nq+V7g+AFh+L6e5MdP0VWND989FZhLEz+NH+17yQZ2fQK5eywyOEPu877OVS8XPsxOwHGJeHjG3EDos6I3nMODqnPcBNg5D
- gfoYssdUOjVKfnm3bg1irA==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250223224014.GC23282@redhat.com>
 
-On 25/02/25 14:39, Denis OSTERLAND-HEIM wrote:
-> Hi,
+Le Sun, Feb 23, 2025 at 11:40:15PM +0100, Oleg Nesterov a écrit :
+> Well... I won't really argue because I can't suggest a better fix at
+> least right now. Most probably never.
 > 
-> I fixed-up s/pps->fetched_ev/pps->last_fetched_ev/ and tested it.
+> However, let me say that this patch doesn't make me happy ;) See below.
 > 
-> With one process it works well.
+> On 02/21, Sebastian Andrzej Siewior wrote:
+> >
+> > Oleg pointed out that this might be problematic if one closes 2.000.000
+> > files at once. While testing this scenario by opening that many files
+> > following by exit() to ensure that all files are closed at once, I did
+> > not observe anything outside of noise.
 > 
-> ```
-> # cat /sys/class/pps/pps1/assert; PpsPollTest /dev/pps1; cat /sys/class/pps/pps1/assert
-> 1520599383.268749168#29
-> assert: 29
-> time: 1520599383.268749168
-> assert: 30
-> time: 1520599384.292728352
-> assert: 31
-> time: 1520599385.316788416
-> 1520599385.316788416#31
-> ```
-
-OK.
-
-> If I start multiple user space programs data races are visible.
+> and this probably means that we can revert c82199061009 ("task_work: remove
+> fifo ordering guarantee") and restore the fifo ordering which IMO makes much
+> more sense.
 > 
-> ```
-> # for i in 0 1 2 3 4 5 6; do PpsPollTest /dev/pps1 > log$i & done
-> # sleep 6
-> # tail log*
-> ==> log0 <==
-> timeout
-> assert: 196
-> time: 1520599554.276752928
-> assert: 197
-> time: 1520599555.300692704
+> But:
+> 
+> > Fixes: c5d93d23a2601 ("perf: Enqueue SIGTRAP always via task_work.")
+> 
+> Yes. So, to fix this specific problem in perf this patch changes task_work.c
+> 
+> And after this change we can never enforce a "clear" ordering, fifo or even lifo.
+> The ordering is simply "unpredictable/random".
+> 
+> I'll try to find and read the previous discussions tomorrow, but iirc Frederic
+> had another solution?
 
-This is the same behavior we have when working with a serial port: if more than 
-one process gets access to it, data is stolen.
+This:
 
->>From my point of view it would be great to fix this bug without such an limitation.
+	https://lore.kernel.org/all/Zx-B0wK3xqRQsCOS@localhost.localdomain/
 
-I disagree, it is not a limitation! It is like a normal char device work.
+Though I'm not entirely happy with it either.
 
-What we have to test now is if your initial goal has been addressed! That is, in 
-an application that has more to do than just dealing with one PPS device, we can 
-use poll()/select() in order to avoid using threads.
-
-Ciao,
-
-Rodolfo
-
--- 
-GNU/Linux Solutions                  e-mail: giometti@enneenne.com
-Linux Device Driver                          giometti@linux.it
-Embedded Systems                     phone:  +39 349 2432127
-UNIX programming
-
+Thanks.
