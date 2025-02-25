@@ -1,101 +1,102 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39FA42676F8
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 11:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A5F4C80
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 11:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740483407; cv=none; b=AUJqHatmP68aiReRhtXygmPuum3UBYKIfeIlge89VcHcTiVRzjvWtcmW//GkaZ2Ab9ILv9sJ9mJVBw/lBeHjdpCG+n0+7qxiRziIHXLZpgFqgoqvYeDPaMT+5PF5RzRcPhmJ+deyXfuMpx+OWeRuIt1PsOKfoc+Md0WpZXBjH08=
+	t=1740483479; cv=none; b=opKva25HmdlCoPreCq4ozVpuNOVDWxkTI/YxjJCGnglSzv2pGd4/+0vSq3W2zrUu1+a/f14yvHBV5xukHYyxObdnPiUcgvLRocXLdFi28CUqGpct+cOpAiOZNXOIDEU7unIg3DWOvqaoQbfm2p2guLADdAeIdwLvROtWCTIabqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740483407; c=relaxed/simple;
-	bh=SPyeeF8ZDM6n3BTkbmavwfPW3rzBXox6GvsTJ1dVtH4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aZPYJgBJuxQxGk2MuSjndNPKFM3/AQCmwVGzldULFcOiKrFwnSQBPe7mbYxQXAC3h3d3LeTzDbk45g49x0h2shOD5YmNcVHBmzZckwlOd9vunAt9g2VENQD3v0YP31dMoE7B8H2DgvH9LLXVqTqOEEQdzH7g1ee9dqMkdFegGao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XPpsczPE; arc=none smtp.client-ip=209.85.214.178
+	s=arc-20240116; t=1740483479; c=relaxed/simple;
+	bh=yt2R0RS1TqSbKw/Jt2UsZPUVcnMdVRQFPe4UhVWU6gw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GSYoovWIMNO3S6tIcq+9o8xzsrzNQeK4IJ1B7c06LOrj1E59ACp3xNibHRc/iFpP3VyTe/beDJ6arz2qI/dBt/kFXsZIVzyEMrHlb1i82iLBV09gbnC9FmwpcGEEqxYbKgtNDpFN9Y2N6iskhv/dnBvcguUpGrhPJuSDNFQSM1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mKQL5vi4; arc=none smtp.client-ip=209.85.219.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XPpsczPE"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-219f8263ae0so114435045ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 03:36:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mKQL5vi4"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e549be93d5eso5890610276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 03:37:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740483405; x=1741088205; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WC5C3PmHDugL9d2JtiXigt+VtVDMX7X1fFRsAgejZKI=;
-        b=XPpsczPEga9uRDg0PbzIhCzB0QMqEBg9peZEIxqbORhGvZlp88cC5uPDQbBXT0rSWL
-         jt2629EU6DGBZaSjTatwybtPWhO7T9VaSY218uC1QOA8W5oM7tUAdeyvK9eU5u7Afknj
-         3sJuNWdqCG5W+NnVlvoTEqhNpkDdpBVPhN9pXecQxQSOlD2OPCspZwCkmYcsga8JciJc
-         HoaejBYZ7yu91HionGAKtiOssHIj3iy6e+LQtEvcqBAJploPsBYNqQV/dHWZYfhpb37N
-         il1c0Q8VfyxZ7FqKKli7VjTcpfpHK++7/OxgADSGdXJ7L+mgBKMcHovDmp/M4q89r03O
-         BOXQ==
+        d=linaro.org; s=google; t=1740483476; x=1741088276; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=n1TWnKYSjWgGvb3cyxt3TX5DamTHuovBzjkuSknBSeU=;
+        b=mKQL5vi4qGOJRLNpfXdtofuJbytPCxHNMU9f1tg4sQGkA9LmiJLUUnYV2K/6x+Foqo
+         X4b1+WjYxO0NbzdXZ2x9I6xbWGj6s8mmaVDuzv3K71KgfISMkkbl89BpTPmecRPl/DNf
+         lkw8yLL+brU/PjVEKZZCMUgMoGuL25c28+T2unlydgObpEmUc7nftZCGlxkHOEvqHPZS
+         LATnblprmHKRH8zZ629/vS8HUTGBQY1pGgpnaC3jBGbyZiO94TJlGoMmPyy2CmuENXlV
+         Wb570NAxOAfyPJ9R0mXBwM/YwU/sd3SxplXuCHLDcekbb7KfRb9HsDC1Bp94Y8qnberX
+         hi/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740483405; x=1741088205;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WC5C3PmHDugL9d2JtiXigt+VtVDMX7X1fFRsAgejZKI=;
-        b=gdIXqGOeQ5G0hqEQxccnVEkLlveIyqgkY8Fnm4drcwoEWZBZp5tagUL1KdA1c0t2Yz
-         06A6+LFnenYSyBqebAkMShr9vNy8A3qDZ6IpGzIMlDh8PEdFel7MdimFSxviSpVcjptq
-         qvbde/fdpDRvdAcxXk7e0kQweNPZs3QGsxvxyzaPNHuhUqTEPxxf7CNOGgymsrfVscn+
-         TyGmkGXtqM5XcUeeq5pVrP6fDPBsUJHFhbxE4IV1ItiXrEOSL0aDpVmkkl9GQGl1uPNn
-         hR0Uzqk3nCBcaWv6Ur4ArVrScVrrTGUvzRBBuWLpAfunzvr8N1o5VCOgVoagYeqGYdvA
-         Vzew==
-X-Forwarded-Encrypted: i=1; AJvYcCVHZqd1X2EPeIVORSicg5eBEwtMVPYzgm7oyfoGuk6fO99aLRWDo05qATjN35k8QsBbL7ctnIs+3qJoR7k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxtEYJrasOr/VixTzC4pqOasfaYfPHR1UPRoPR3rQHwUABNwpqX
-	mVS2wf55qDWrnMCYUR6XDCXHixCiHK+Ny2JxtYwX1AUCLebLjOTTiZDvLn0OCSU=
-X-Gm-Gg: ASbGncv145Y9kJatB2/fWRFIgElnJbD7QXO3fOjlzPJBpxC3jQBLXZe6Z08alyAjtqK
-	a7VRsF8RD+h68JwPUsFaaWeK4FT25de9dqiKtc7vIFmBSwL8AceBXGsIY6rrBiZ2AGdrH0OJqxQ
-	t40ULef8I/5JdlLX/0oyqhF5upVBCLMtTWf4Za4nHdHvWeCTBvAINPJySTz1JTo0MQwzLJ12H/+
-	LEB2ZHaTzKUOyw9mjADLJzmySHYl/C55j7/EztOSqod82k9jXIKg+XkxzGFeBbs34meVPYmNghv
-	X9bzlu3vc2kcffvVJjfduOjTCus=
-X-Google-Smtp-Source: AGHT+IFf9+/TCwETlYZrGvNe//P5GmUmZ2zWdQMKr87qE/PBaYFhyRDJ/Ygg/isUFT38R/PMmw+VtQ==
-X-Received: by 2002:a05:6a20:6a04:b0:1f1:431:edaf with SMTP id adf61e73a8af0-1f10431edc5mr1333969637.10.1740483405445;
-        Tue, 25 Feb 2025 03:36:45 -0800 (PST)
-Received: from localhost ([122.172.84.15])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aedaac32a42sm1091445a12.70.2025.02.25.03.36.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 03:36:44 -0800 (PST)
-Date: Tue, 25 Feb 2025 17:06:42 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org,
-	Danilo Krummrich <dakr@redhat.com>, rust-for-linux@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH 1/2] rust: Add initial cpumask abstractions
-Message-ID: <20250225113642.5fek3cy3jvmusunz@vireshk-i7>
-References: <cover.1740475625.git.viresh.kumar@linaro.org>
- <68ac0f0ee3c0ebd3d3cc078a6270752778a1b732.1740475625.git.viresh.kumar@linaro.org>
- <CAH5fLgg7o7hs5B4mMzPd6RzYm+RcX8gw1Aw8voJqnmfnA_aM4Q@mail.gmail.com>
- <20250225105425.ooqvefiae5bmr723@vireshk-i7>
- <CAH5fLgjbW0yGm0TQcQEG9cc+i3WxbF8JKaqBUFD7=pJ-JkJ9zg@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1740483476; x=1741088276;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=n1TWnKYSjWgGvb3cyxt3TX5DamTHuovBzjkuSknBSeU=;
+        b=Ewru888H7nsG1gWqXO+3lyRqsFAtrzzBNtc4HL3c6pApJ8SKJDgBiH+z+AgRcdUL5j
+         mgHaV2o3xTXbCW/ID5ilo4Tesx/QFeqHkIOyhOop6xO813IDK/UZb8sg6Zybm+tedcTe
+         uJn4l/sjn5b1xZom6nzN0w1i0YsrQMqKdKOt602oLKSn7TqkEPlDmJBGRM3bqJTSl9Fs
+         FbsY5gZ1WwQKE6+XwuS6OPCCiMV9SUdUi+7ALVPOU/0QToBNeloBd75i24vOoOHug6VA
+         vNR5daEC+Y309Ru1hlhrhoRbDW5Rx+E9PADduNrFFybtjs/gqiTlY1JjiahG47b2tTh9
+         sOfg==
+X-Forwarded-Encrypted: i=1; AJvYcCUIh+d+unEzlbpHm9V66ZA2TwjcCPcGLB3eS4t0+pM1ptvtOlUdBtGtLbRF0dpaevWbK9FBMF6Be6rlWqQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsMMslJz+u/XRZrOkP158vfxQAeGj+EUJ1Dp6f/jKU1VdXQvZm
+	NpiWvUF/7GeD0GVmQlcDbU3bQ6U2w5VWsGQ1NjtGUoyBTjEd5AH53Qy9ocoobGGdFCnkQd6Grz7
+	FlokHxVKSbx7Lg5GHuxZ8M/nmzr+v1Jc3h2oeVQ==
+X-Gm-Gg: ASbGnctvYe5bPEpYCPsAmQ7Ac1+CMM2zOrzqx/I4naajeCLCH4ksVAdZviv1Wzkx0Yx
+	2FXjtowncWgf7U0xZ1rcidnd0n2Y1wv21ufQ8m7rCjh9ura3pN5FzsuM/vdhV4Umj7yd02+WK/X
+	Ri4NmShPv++FgbEuGIsguD1UfaJQoj1+C5UUouE88=
+X-Google-Smtp-Source: AGHT+IFoRV0tABvVleGcPGFjITHVSAozbUIV7vt/JXOPnNAtmYOOQYQ8LJ70dKpeCX04ppbU+mmusjSHjBwHx6qf6uI=
+X-Received: by 2002:a05:6902:18cd:b0:e5d:fccc:7907 with SMTP id
+ 3f1490d57ef6-e607a4e3c9bmr1939202276.14.1740483476663; Tue, 25 Feb 2025
+ 03:37:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAH5fLgjbW0yGm0TQcQEG9cc+i3WxbF8JKaqBUFD7=pJ-JkJ9zg@mail.gmail.com>
+References: <20250217-adpdrm-v7-0-ca2e44b3c7d8@gmail.com> <174047913824.2131221.6545389561298332217.b4-ty@linaro.org>
+In-Reply-To: <174047913824.2131221.6545389561298332217.b4-ty@linaro.org>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Tue, 25 Feb 2025 13:37:45 +0200
+X-Gm-Features: AQ5f1Jq_8vz2X92aaDmmCRK3QuSACEM5CmHNBFF9CumkaBecyk4PuPviBAdIWp0
+Message-ID: <CAA8EJpqM8ZQ-ScEtEBXaUF2Nargtp_TBAyMYvbJ49PGbwPWjaQ@mail.gmail.com>
+Subject: Re: (subset) [PATCH v7 0/5] Driver for pre-DCP apple display controller.
+To: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, asahi@lists.linux.dev, 
+	Janne Grunau <j@jannau.net>, Sasha Finkelstein <fnkl.kernel@gmail.com>, 
+	linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Alyssa Ross <hi@alyssa.is>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Neal Gompa <neal@gompa.dev>, Nick Chan <towinchenmi@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 25-02-25, 12:34, Alice Ryhl wrote:
-> Hmm, ok. I would have expected it to format on one line:
-> unsafe { drop(KBox::from_raw(self.ptr)) };
+On Tue, 25 Feb 2025 at 12:25, Neil Armstrong <neil.armstrong@linaro.org> wrote:
+>
+> Hi,
+>
+> On Mon, 17 Feb 2025 12:39:30 +0100, Sasha Finkelstein wrote:
+> > This patch series adds support for a secondary display controller
+> > present on Apple M1/M2 chips and used to drive the display of the
+> > "touchbar" touch panel present on those.
+> >
+> >
+>
+> Thanks, Applied to https://gitlab.freedesktop.org/drm/misc/kernel.git (drm-misc-next)
+>
+> [3/5] drm: panel: Add a panel driver for the Summit display
+>       https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/40115947b59f2ca361a47615304dff0a2b69a2b4
 
-I did try this earlier and rustfmt suggested to format it the way I
-have done it currently :)
-
-> That is what normally happens when the semi-colon is outside the
-> block. Not sure why it did not happen in this case.
+Without the bindings?!
 
 -- 
-viresh
+With best wishes
+Dmitry
