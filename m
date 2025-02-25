@@ -1,115 +1,96 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3926625A656
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 06:29:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42FF725B678;
+	Tue, 25 Feb 2025 06:29:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740464980; cv=none; b=q3c2rQzeaG+CSqRHCjt3gXBVqCX461qYpUCyEA5nqUnoFhBgWBlyPSL/Kvz2UIHMf/wI329Nbx9Uj2mpUa1RmIulpp1N35N3fM6NkfLaSjSJdV/Vx0bG2lZhr1P9TK76e/bRR24H0Hh6u+tx6Kn7kftsQLUq94u86UsTPw152NE=
+	t=1740464986; cv=none; b=Muej5xEFdsVRmEMHWYPPcHk65kJc1NRuXQxGoDfFs4afdon0O7qfsJO3mF4YZ36YS0VBHmf4q4G/gwn2kSR3pWcK+7gu8GXf0L++1rDn37btRpginIpU2rTElSYkFftnTEaFapR3+7SlqtErgBuxDQ49iv2Cke/KjrsB1dYv5DM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740464980; c=relaxed/simple;
-	bh=uKuBlokBvPGBuN/aA3ShwwrScxXjn5dY6lPoWkH0Y64=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N8Diln3NoXb4qcGoTJnbj4AOCGPP3SrPKUHXsGJKDlyXqO+/uE8hXuA9o5zkCTWtPvNiIDgM8Lrh7Ce5gvkMagw0jNURN2U0C7iRAON0P7wLjeK7HTBmVAolmIh4UpZfUwovzgZCwJOTAwF1g2D9ZHiIs2k17/0YkS+WYk7bx38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=NO9IHf6m; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1740464986; c=relaxed/simple;
+	bh=yRYOKfULkV53oO8Rz0BODMQU3XKL2g/35WTPAX2HXUY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kqs2RhYfZPm9Nnu0BvzBJhmUr0TDWeSTgsOifztXCT5FYMUFsumKqzp0lXWYmXRa1g8vNTVn/Ysa2zipkXfNolhRRccOeEvfliActeMuS/8HGOy9YSvA8tiIOd1Z8Srzd2orrhPdBm9dQrBzNswrbxNTlzUDWUU8s9G+8Kff92M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IcLdfoF6; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="NO9IHf6m"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2217875d103so12072855ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 22:29:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IcLdfoF6"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-220c8f38febso110181185ad.2;
+        Mon, 24 Feb 2025 22:29:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1740464977; x=1741069777; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V6z/8+91nHat9ckEqgr7u9U4KjYLG/s10VzX3531Ejw=;
-        b=NO9IHf6m+Oyk46V34G74MZEVu23sgGUYL7KqgTTkvb5ahkRCshrhJU34o7znaGoEJR
-         vylEpX2TnK2UMLueG9BB/QLH9Ba1m6acceCjG13QAJEtSfEfgyv9EfYIf4DsGhBh0uo3
-         /tYC9U5L1LeLXLnBy9q3P2gbmmi1aSeo1xBFA479+0AaByHhJX+qr76YVKAWRH+O/H9v
-         5ozVY4JV2ItP/3NX+JFyzkUcFTeCjBg6Y4siTkQFGH3ukGgvX6FNvjAhAw+jfVERbGnf
-         T/0rlVlVPEoXiOqYlwlq98hVSkCJizDZA980Npic2wVnDxc+RBbEl3S/sNZORsI4N5s4
-         ojMQ==
+        d=gmail.com; s=20230601; t=1740464984; x=1741069784; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+f1hUvDkXZQBjtzK58ov0lklvW60dTX93rXfPj7emh4=;
+        b=IcLdfoF6aeQ0wx7lPXNSivTYaWWTXCpc2Tbh/Oy/cLtORRKeKOV7xlST/W6xJGtxBH
+         hht113EvAEGrsYdRPswyX+CKVcm9h/BV8DZCf/4D8t2G6rCfqIoLijZwb0aAPG6oFGhP
+         h4m+S0ZO4H98IJNzheN0tOxe7byHxurjkVf9l//lFlyzaZ3ost3wgfdVCZckWxjFvC5q
+         JTecEaojBDe1hEuq+Zgvbd7pRMONc8Ab1W14FFLBNtuhXKTnXMLH6og/71DrAs/E6N0A
+         B66LKG0ZoR9N8+9a5i6ZNKE6a1DD69sSfOuNue8OBLjkZ1tQ6MORwf3UWfzfJbEW+GCS
+         WHhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740464977; x=1741069777;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V6z/8+91nHat9ckEqgr7u9U4KjYLG/s10VzX3531Ejw=;
-        b=jw0Ks1t3BCZN11zTqOPDlwjoXTXaY0SvcA/ruIt5kgf85j91p0tMg6g1BNCmQ9IsaW
-         u+/fIi+WcvvGAXto40aeuZOTOWkKQkSnReeugfWdZcu6RTJctt1nsKjYow4qhXRZtHDG
-         LA3yKasO8lMjJWr0SXYDIKpGOdSO2ZxDPk9snK/J+XC8CwPd1AYziifzLjdWCK5gL3kd
-         Wr5JLgWITseCPig1U5PAoumHKyj/gWgHJjU3g+B3DfqYYYBvsK9g/m+1mckFt1etejef
-         OuI3Givo4y6r9e9XNY6OJs1mJrXl5yJMQAdACgZ/+Qw3MTFrNvz3rf+SyUQop0bALW4K
-         8ZsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXE5jmR5V1UFYzW0Nc6hVcB1XFGXbuAZIf4UOz1tiax737oHloeqxjlqraiLqV4Kx5A4Q5ZxSCI32Zpg88=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQOGNAoJ7zXEG1R86wbZ7HcnfGbqt63tUJaIGWs7eysxkqwXRE
-	I7RAx4hbvxXgEnLsDuH2nlJwagqLXCeI3S98AennUgfaVGJ0TESrwMtcYDRomEY=
-X-Gm-Gg: ASbGncv8hE8rFZvNQ60vPh6sx0Al1gUanEa3U4mg4ySFKKjiURXqMn2/8jVDsJvPWyz
-	PAB/JPtwo+4BkUs1Sx60LgrTNyDaMkSdlAYWiDYTmezz8UhtUPXUiX+LQ+xg4RHnySsYs1RwJQU
-	S5iTl63dm8Ie9BmRw+xvN0Vkv/J/w3EJyw9VnrkqUADgMR9T6Prdyae9rrdhRibTkPOnMfs30Y/
-	8TvE9vcIozDZbhaXHL/IvkA8MYGW/LaEjkAwWt5aux5Vi1j9ISGQvykeRDWnScD729FF6ZU+rB7
-	1mVoF27VaLcmqFcprjriiIb2pKyoptANj/FA2azBLb6lQodSLPQ=
-X-Google-Smtp-Source: AGHT+IHp+WTVqTQ28yaZi771O04yQ4aN3/6wJ/pB4pphXxS3ZSUNqRwvlD3gBEb/+/fcfdqAfPOsIA==
-X-Received: by 2002:a17:902:cec6:b0:220:d71d:4666 with SMTP id d9443c01a7336-2219fff855emr99523615ad.13.1740464977368;
-        Mon, 24 Feb 2025 22:29:37 -0800 (PST)
-Received: from [10.254.176.198] ([139.177.225.240])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a000874sm6675515ad.24.2025.02.24.22.29.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2025 22:29:36 -0800 (PST)
-Message-ID: <ffda0c9a-0794-4080-921f-99f0c31e2d6c@bytedance.com>
-Date: Tue, 25 Feb 2025 14:29:29 +0800
+        d=1e100.net; s=20230601; t=1740464984; x=1741069784;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+f1hUvDkXZQBjtzK58ov0lklvW60dTX93rXfPj7emh4=;
+        b=EPxbjL0f3Mej2ViWotr2qppC0cQXrmDhM/g6mJkOjLufrW3koVFgj3hIiC+Xi5W4q8
+         LPghhS7gwB6L/yksiZ45TigjWn5dfoX2xjF7e1XgOr/7pLYEkOtFU82BwD0UVYpwZZL6
+         JpFNdzyQ8nOTntLPrItnsbk6a/3bvraOAa1lLnondVzI/U8V9qeM3fp+mjdEUbCVd3aO
+         au+JNv8eaOGNY+F524YAFTjjxEXplE6UrVMDH0bpHpZ6GalYI5m6cRGiPQhgm95WPAXX
+         b/otd4K9sZAzBRJyxTc0eeKjwKlh6MSU8TxbBnA7av6RMehsDwcVOTdLRem1YLEHjEw/
+         NcTA==
+X-Forwarded-Encrypted: i=1; AJvYcCUbIeyHlNqma24EeT7AbPM5J0B1Opa7hI/PDt1ftb1Kf5OcNnyJnBNXuHQev3AqfGTo50/gxoH4qBL0kYQ=@vger.kernel.org, AJvYcCV8P/tIXMJ1Vr8shEH1kzLNATzs/ckcSAHWs3ilXHOnbEWd7r1BCNieEyB2DPd4+OslMPj6x1g16TnU5Q==@vger.kernel.org, AJvYcCVVFlHBWnUgpGMGUWdp7RUoDOdGSXuEzDhzqb5B8Y02aD5vhcoDYMi8L38hShKazz7K7o2Gdtjthe+a+cpq@vger.kernel.org, AJvYcCXWgRGeDTl1F75fekIok+6JvY7M2kxXT14xexoV/JgSW7Rw6ABfufc0139w+cVZWqTs+g7y1MrV@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbmeF2xN7J1wZID0uBe+ZMErQh/rxykzc3/hjugL7MGmYAIfTz
+	f/RRnu3hFE0I1O5ARcNSRPOIUuv5QE7SxQrnf1ri5Irv/Hwmk+mL
+X-Gm-Gg: ASbGncuVqzJZovBVsVMNuWZgjSJj9nmdNG4b29AgqPiuTU/Dxogf9heUlMmkcJ06tG+
+	U3L2SjzK+0GyksqQC7pyISgD6QwkBjbawyoz7gJ/kvwxG+p/8Grk8pmcFKptuJYlI6kNuPVVyH8
+	yzzA+VXR/v7Ufsmlh5cIVoG0kQzw0KyqkWXSlavFo3VVavqidw0JgxzU2EGjke4UMrmzOpm+mwv
+	5DkwnjX7E5/L1SUFtyC4m/RrvTwT4LCLYXhL2cDiub6sNqXeujTJNJtS59DZcBTroGEFfv9ILjY
+	SEPeriaThIINPmDeMDwaz72VPQY=
+X-Google-Smtp-Source: AGHT+IFXSieuGfl63NCGaegFak2YYGly32E4Gjw0/onV28txeg789Sb7vqek4p48AX/riu1hOGv1PA==
+X-Received: by 2002:a17:902:e550:b0:216:282d:c67a with SMTP id d9443c01a7336-221a00156f6mr243620125ad.39.1740464984499;
+        Mon, 24 Feb 2025 22:29:44 -0800 (PST)
+Received: from google.com ([2620:15c:9d:2:464c:6229:2280:227e])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a0aec2dsm6547595ad.221.2025.02.24.22.29.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2025 22:29:44 -0800 (PST)
+Date: Mon, 24 Feb 2025 22:29:41 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Luca Weiss <luca.weiss@fairphone.com>
+Cc: Bastien Nocera <hadess@hadess.net>, Hans de Goede <hdegoede@redhat.com>,
+	Jeff LaBundy <jeff@labundy.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Charles Wang <charles.goodix@gmail.com>,
+	Jens Reidel <adrian@travitia.xyz>,
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 2/2] Input: goodix-berlin - fix vddio regulator references
+Message-ID: <Z71jVeD10z_25sWr@google.com>
+References: <20250103-goodix-berlin-fixes-v1-0-b014737b08b2@fairphone.com>
+ <20250103-goodix-berlin-fixes-v1-2-b014737b08b2@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Re: [PATCH 2/2] sched/fair: Fix premature check of
- WAKEUP_PREEMPTION
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Madadi Vineeth Reddy <vineethr@linux.ibm.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Juri Lelli <juri.lelli@redhat.com>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- Josh Don <joshdon@google.com>, Tianchen Ding <dtcccc@linux.alibaba.com>,
- "open list:SCHEDULER" <linux-kernel@vger.kernel.org>
-References: <20250221111226.64455-1-wuyun.abel@bytedance.com>
- <20250221111226.64455-3-wuyun.abel@bytedance.com>
- <CAKfTPtBzsX6GKZP_NGTONrkp96qx9uOHr0+XG7tC6ELy4tbHBg@mail.gmail.com>
- <6097164a-aa99-4869-b666-9dc7018c1f96@bytedance.com>
- <e1cfabab-1326-4cd8-a8a4-4b3fc4c1f7ec@linux.ibm.com>
- <9d9d7432-9a5d-4216-ac53-a0f333a35d8f@bytedance.com>
- <d1237acd-9e3c-4ab9-8628-31d98fcf7638@linux.ibm.com>
- <83f8b833-af79-4d77-a179-5065aec994dc@bytedance.com>
- <CAKfTPtBL4aPbEDOa8jJ+h2wQ9CLU80=0mQdrc07vfqBVswzAsg@mail.gmail.com>
-Content-Language: en-US
-From: Abel Wu <wuyun.abel@bytedance.com>
-In-Reply-To: <CAKfTPtBL4aPbEDOa8jJ+h2wQ9CLU80=0mQdrc07vfqBVswzAsg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250103-goodix-berlin-fixes-v1-2-b014737b08b2@fairphone.com>
 
-On 2/24/25 9:47 PM, Vincent Guittot wrote:
+On Fri, Jan 03, 2025 at 10:21:36AM +0100, Luca Weiss wrote:
+> As per dt-bindings the property is called vddio-supply, so use the
+> correct name in the driver instead of iovdd. The datasheet also calls
+> the supply 'VDDIO'.
 > 
-> Or we should just remove it. I'm curious to know who used it during
-> the last couple of years ? Having in mind that lazy preemption adds
+> Fixes: 44362279bdd4 ("Input: add core support for Goodix Berlin Touchscreen IC")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
 
-TBH I have never used this feature. But since Phil mentioned a case
-in debugging DELAY_DEQUEUE, I think we'd better keep it, what do you
-think?
+Applied, thank you.
 
-> another level as check_preempt_wakeup_fair()  uses it so sched-idle
-> tasks might not always be immediately preempted anyway.
-
-Right, thanks for mention that.
-
-> 
-> 
->>
->> Thanks,
->>          Abel
->>
-
+-- 
+Dmitry
