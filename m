@@ -1,96 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A8C01A9B46;
-	Tue, 25 Feb 2025 18:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70D8F19DF4F;
+	Tue, 25 Feb 2025 18:21:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740507616; cv=none; b=DuqDnd3ycbN9lrhsrpXDw548Xnj/U3Ua0XgoZVBmsKfGjdF48xAadGIz2Tirt0mBzs/9NWQESXBsjd7Te6GaRPcoNan6ZMlT0+TNwVTkDUK+nxdE4kRAw1sk2Fqplo02KYaG97QeqOdGUuSnxS12Cc6uLsqa6UPgohWxVh5ZzN0=
+	t=1740507667; cv=none; b=uHnbVGh6RMr9EbPZdtHVGn0/PMLIdD2zL/cUthuAnF6Sj67/Ja6bNZA6vVThGguRz9sIATeuBBno8QAdk18x669L5xLuhHx+xn2yuMbVVMpe2o6LwtNQyKhvVra+KzL2G6vfIM5sPeWxRuyM945sfb8+/soXLzecyJ/GfUr+IDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740507616; c=relaxed/simple;
-	bh=K/F1CY7g3Rg1wpx3W23+5xHOx/IOS3QKZnW8nZXMLXE=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=pRAItC2amRNkhM5OpEk+8QQwoYWRaN5yjL4Mq0DHgaJTwT/voWH+mzm5tDwNVdNlGV1L1+qRG2KUOqSBV2Ncys6f8Jja4nGz1ieXzddWLdEamQchbDdAOdYLj9c2AQjKUgwcvdlrn4iodBZYFqUKQzU97+ULkPtGGPPk+wLR9Go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFFD2C4CEF1;
-	Tue, 25 Feb 2025 18:20:15 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1tmzY6-000000095Yu-3KXv;
-	Tue, 25 Feb 2025 13:20:54 -0500
-Message-ID: <20250225182054.648398403@goodmis.org>
-User-Agent: quilt/0.68
-Date: Tue, 25 Feb 2025 13:20:07 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Masahiro Yamada <masahiroy@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- "Arnd Bergmann" <arnd@arndb.de>,
- Mark Brown <broonie@kernel.org>
-Subject: [PATCH 3/4] scripts/sorttable: Use normal sort if theres no relocs in the mcount
- section
-References: <20250225182004.473875894@goodmis.org>
+	s=arc-20240116; t=1740507667; c=relaxed/simple;
+	bh=Cn/mewwWYXy4+YNwH4XczW57RlDnZqheZRJagcYXGkY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Y9lF6UExRDmAQSg4qyh3Qb9Oy0gTVASigbzcegYcT5BOanlBE7VKCRFDMRd3ouD7bDB8FWYb+4LGhoR8CUyZolm8LT+JlO1ee2f/1yz2P0Tr82JyY3BT4/VdAdA17qgALu80beNkKTFYkNND1FVIPaZaTECWrnBkudGvBAVnvZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CVqql2uZ; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CVqql2uZ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7B44B44469;
+	Tue, 25 Feb 2025 18:20:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740507658;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fLHCu1SzDUA81bfOLrX40HQiaQBQLCEnAu274pcYQI8=;
+	b=CVqql2uZnn25u38xUpnKUfNUVQhNWeQZuyo6ovNiU1q2OF6rFT5LluPVTdNoaKf2ZsujlG
+	VOb37t+gS+AzpzdUlsffmNG0uh1OsUZY2+1GWauWuS4Vi3PaY4WYelX/aJwiaQTd7AtJWe
+	ewCKVjysXsjeSm5CUlMTgoNu6NGL72OEbEzqM6loCbrDNz8ndhEaW8E0MGwsggFhS+3C2S
+	CGRs0VMzSfV6FYN8LfaxQYM87mxjDMwaTCFKj0msLbuErOhH5NcH/jVbf6Bf5ZIG5o96Lj
+	gk8qeb2ljL2AndLEM4VHkx2J2jixaTIqZuC0oUPtajmQSEAKS9zVRdOi0eeJww==
+Date: Tue, 25 Feb 2025 19:20:55 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Heiner Kallweit <hkallweit1@gmail.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ thomas.petazzoni@bootlin.com, Florian Fainelli <f.fainelli@gmail.com>,
+ =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Simon Horman
+ <horms@kernel.org>, Romain Gantois <romain.gantois@bootlin.com>, Antoine
+ Tenart <atenart@kernel.org>, Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
+ Sean Anderson <sean.anderson@linux.dev>, =?UTF-8?B?QmrDuHJu?= Mork
+ <bjorn@mork.no>
+Subject: Re: [PATCH net-next v2 1/2] net: phy: sfp: Add support for SMBus
+ module access
+Message-ID: <20250225192055.32168b48@fedora.home>
+In-Reply-To: <Z74GLblGUPhHID8a@shell.armlinux.org.uk>
+References: <20250225112043.419189-1-maxime.chevallier@bootlin.com>
+	<20250225112043.419189-2-maxime.chevallier@bootlin.com>
+	<Z74GLblGUPhHID8a@shell.armlinux.org.uk>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekvdegudcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegveeltddvveeuhefhvefhlefhkeevfedtgfeiudefffeiledttdfgfeeuhfeukeenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedukedprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtt
+ hhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Tue, 25 Feb 2025 18:04:29 +0000
+"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
 
-When ARM 64 is compiled with gcc, the mcount_loc section will be filled
-with zeros and the addresses will be located in the Elf_Rela sections. To
-sort the mcount_loc section, the addresses from the Elf_Rela need to be
-placed into an array and that is sorted.
+> On Tue, Feb 25, 2025 at 12:20:39PM +0100, Maxime Chevallier wrote:
+> > The SFP module's eeprom and internals are accessible through an i2c bus.
+> > However, all the i2c transfers that are performed are SMBus-style
+> > transfers for read and write operations.  
+> 
+> Note that there are SFPs that fail if you access them by byte - the
+> 3FE46541AA locks the bus if you byte access the emulated EEPROM at
+> 0x50, address 0x51. This is documented in sfp_sm_mod_probe().
+> 
+> So there's a very real reason for adding the warning - this module
+> will not work!
 
-But when ARM 64 is compiled with clang, it does it the same way as other
-architectures and leaves the addresses as is in the mcount_loc section.
+That's indeed pretty serious and since we can't even read the
+eeprom, there's not even a chance to have, say, a list of modules that
+will break with 1-byte io. So indeed the warning is needed...
 
-To handle both cases, ARM 64 will first try to sort the Elf_Rela section,
-and if it doesn't find any functions, it will then fall back to the
-sorting of the addresses in the mcount_loc section itself.
+Thanks
 
-Fixes: b3d09d06e052 ("arm64: scripts/sorttable: Implement sorting mcount_loc at boot for arm64")
-Reported-by: "Arnd Bergmann" <arnd@arndb.de>
-Tested-by: Nathan Chancellor <nathan@kernel.org>
-Closes: https://lore.kernel.org/all/893cd8f1-8585-4d25-bf0f-4197bf872465@app.fastmail.com/
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- scripts/sorttable.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/scripts/sorttable.c b/scripts/sorttable.c
-index 23c7e0e6c024..07ad8116bc8d 100644
---- a/scripts/sorttable.c
-+++ b/scripts/sorttable.c
-@@ -827,9 +827,14 @@ static void *sort_mcount_loc(void *arg)
- 		pthread_exit(m_err);
- 	}
- 
--	if (sort_reloc)
-+	if (sort_reloc) {
- 		count = fill_relocs(vals, size, ehdr, emloc->start_mcount_loc);
--	else
-+		/* gcc may use relocs to save the addresses, but clang does not. */
-+		if (!count) {
-+			count = fill_addrs(vals, size, start_loc);
-+			sort_reloc = 0;
-+		}
-+	} else
- 		count = fill_addrs(vals, size, start_loc);
- 
- 	if (count < 0) {
--- 
-2.47.2
-
-
+Maxime
