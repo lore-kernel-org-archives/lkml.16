@@ -1,154 +1,139 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683A9269CED
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:29:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23ACF268C52;
+	Tue, 25 Feb 2025 13:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740490146; cv=none; b=oD/Ir8mCpVMFS6ygVNR8MkEkN24mxCP1UoldCZpJLlDlVA+1CS1xWA757C2cqDgaOKdhjO5YaUM65G8ZwhZTS/jxkdfC0kM5jJpgy9odJ9Y5KlBhNEKcJDpTJThoOgfpq7+TDi+KsiqaELVeUfO5m6jksP5ou9oaEkawilGeF/Q=
+	t=1740490162; cv=none; b=rqKN+UlswhnY/z0+66gpdGxJ1HC9JdDbxtauXDOrwep3MIbgZrGBevmpiH2oj9JngpXUh5o2JzPsEseIugSK8Yi6CNpaQtfQzyvCuk1uAfzXwRN74+yEAB5g3B3sLdUTr6nRe0ollkV06YolpScsRgtPy7sKoqpLcVNX7Z/ih/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740490146; c=relaxed/simple;
-	bh=v9Qsz54UX2sSgijSuzcDKRcq8piDRum228xBYvlKgr0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:Content-Type:
-	 References; b=ijmKO+w7D+jYhig/Sst8gZGb0JVPw78dU1sIlLzKltvL7DL12qALmLvUkDm2JqCMm63ZYSQUZhMoE4ky7TH0oyqi1h+8rY1kAF/v8z+8snTrJ28XrthufmN/lmam4oBsKB8lMVsEJht7COmwqwpUifSUvaCDtDIZ/NOJV5DGpKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=CZsN1oNe; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1740490162; c=relaxed/simple;
+	bh=rHQexzBVm+h27NJGWaGxccjhnh05Li9527fFlp5jf58=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XA+mvSzbl4aH4ERIQJ9y5YixNDxG5bo/c6lPlM6qP1VqJpeHvC5IDQfgDLG8m2Pl2uwXa8js4O9h7xXwi8aj+zWHYIGpb5SWvOZwkfQQz0PZXZq/S35YAyrYTd2ZuodGgdY7UtwZ/qD8ONJLe5tXFWYk1r2+YcYp7M/WijCX1u4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iQaa1Bmp; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="CZsN1oNe"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250225132857epoutp03bb4fed5cf2c9a29da8098dd3b8ca2f24~ndo7n8wtJ1565915659epoutp03h
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:28:57 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250225132857epoutp03bb4fed5cf2c9a29da8098dd3b8ca2f24~ndo7n8wtJ1565915659epoutp03h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1740490137;
-	bh=2MAJzguUYhBfDEljgxRB6xfhBZs+MafQSb669WMeyxY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CZsN1oNeGXBmm1SlgXmF6oVXCJQtQADBRLU2rvOCF8tRQ+9HnkdbvXkLJyn33Yok9
-	 uKHbYWLNie6nNGOq12L5apalg7DXSE4OyYH5ZwHpiBCx/jPWh73YksA2tDyGvWQuAl
-	 BM0ygObAqsuiwsON/sBmGmnIQiTlVw74DIMz3aJ4=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20250225132856epcas5p4c00e3f2c4785a8c34a3d92831b28c9d9~ndo674h1D2353323533epcas5p4O;
-	Tue, 25 Feb 2025 13:28:56 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.180]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4Z2JN65Tbtz4x9Pr; Tue, 25 Feb
-	2025 13:28:54 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	9D.2F.19710.695CDB76; Tue, 25 Feb 2025 22:28:54 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250225132507epcas5p455347acbd580b26ee807e467d3a6a05e~ndllaSuq30676506765epcas5p4J;
-	Tue, 25 Feb 2025 13:25:07 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250225132507epsmtrp2cc1f0ed3025eda297d65637b9082b286~ndllZUgWT1195711957epsmtrp2N;
-	Tue, 25 Feb 2025 13:25:07 +0000 (GMT)
-X-AuditID: b6c32a44-363dc70000004cfe-d3-67bdc5966a7b
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	24.C2.18729.2B4CDB76; Tue, 25 Feb 2025 22:25:06 +0900 (KST)
-Received: from cheetah.samsungds.net (unknown [107.109.115.53]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250225132503epsmtip25254faae58fd31792ae09430c3351f4a~ndliPTjwt1947719477epsmtip2o;
-	Tue, 25 Feb 2025 13:25:03 +0000 (GMT)
-From: Varada Pavani <v.pavani@samsung.com>
-To: krzk@kernel.org, aswani.reddy@samsung.com, pankaj.dubey@samsung.com,
-	s.nawrocki@samsung.com, cw00.choi@samsung.com, alim.akhtar@samsung.com,
-	mturquette@baylibre.com, sboyd@kernel.org,
-	linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: gost.dev@samsung.com, Varada Pavani <v.pavani@samsung.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2 2/2] clk: samsung: update PLL locktime for PLL142XX used
- on FSD platform
-Date: Tue, 25 Feb 2025 18:49:18 +0530
-Message-Id: <20250225131918.50925-3-v.pavani@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250225131918.50925-1-v.pavani@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphk+LIzCtJLcpLzFFi42LZdlhTU3fa0b3pBh/2qVk8mLeNzeLQ5q3s
-	Fte/PGe1uHlgJ5PF+fMb2C02Pb7GavGx5x6rxeVdc9gsZpzfx2Rx8ZSrxaKtX9gtDr9pZ7X4
-	d20ji8WCjY8YLTb0vmJ34Pd4f6OV3WPTqk42j81L6j36tqxi9Pi8SS6ANSrbJiM1MSW1SCE1
-	Lzk/JTMv3VbJOzjeOd7UzMBQ19DSwlxJIS8xN9VWycUnQNctMwfoWCWFssScUqBQQGJxsZK+
-	nU1RfmlJqkJGfnGJrVJqQUpOgUmBXnFibnFpXrpeXmqJlaGBgZEpUGFCdsa9qdIFOzkrPq5d
-	xNzA+IS9i5GTQ0LAROLJm7esILaQwG5GiZbW2i5GLiD7E6PE8oPn2SGcb4wS85qnssB0XHn4
-	mREisZdRYv2Ew2wQzhdGifeHNrOBVLEJaEmsnrocbK6IwBEmiT8nUkFsZoEIiV2NN8FqhAVi
-	Jf4eawKbyiKgKtG04A9YPa+ApcTH89Oh7pOXWL3hADOIzSlgJXHtxzuwkyQE/rJLPO37zQZR
-	5CLR8+kfI4QtLPHq+BaoZimJz+/2AtVwANnJEu2fuCHCORKXdq9igrDtJQ5cmcMCUsIsoCmx
-	fpc+RFhWYuqpdUwQJ/NJ9P5+AlXOK7FjHoytJLFzxwQoW0Li6eo1UNd4SLT13WWFhEkvo8T0
-	td2MExjlZiGsWMDIuIpRMrWgODc9Ndm0wDAvtRweZ8n5uZsYwclRy2UH4435//QOMTJxMB5i
-	lOBgVhLh5czcky7Em5JYWZValB9fVJqTWnyI0RQYfhOZpUST84HpOa8k3tDE0sDEzMzMxNLY
-	zFBJnLd5Z0u6kEB6YklqdmpqQWoRTB8TB6dUA9OTzFqF2DOT6/wfLj+7WGxOZ0z90kKZ3Ybm
-	ZwNbLDQ0k+KWx/kFc/C9vWkw2UmMdcdp37cyLgd6w05Nsdqs5zPVadX1wixWO7P9cs9Ub74+
-	svHolvbrXzdali2XnrNqruOfb1Y/Cvcv1OjKY/+w96w2S9y6bZFuP1UsueskXHX+PqnQm/Vq
-	vfemFWn6TVEfDF93Td2dfb657HECf/z53JNT57yebh5YZOxjMeFtbKTtHDNzDd2covz5aW/Y
-	fosdylEptQ26JafWILjVsjxm3ZUJj8WLtk4R2xF3ISEn5Km1hWc7X+752X2LM4Vj1+4w+a00
-	51/R5igzc6aFtjLu5w73/36363j8/jn119zX6yixFGckGmoxFxUnAgCZA5atFwQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDLMWRmVeSWpSXmKPExsWy7bCSvO6mI3vTDQ5wWDyYt43N4tDmrewW
-	1788Z7W4eWAnk8X58xvYLTY9vsZq8bHnHqvF5V1z2CxmnN/HZHHxlKvFoq1f2C0Ov2lntfh3
-	bSOLxYKNjxgtNvS+Ynfg93h/o5XdY9OqTjaPzUvqPfq2rGL0+LxJLoA1issmJTUnsyy1SN8u
-	gSvj3lTpgp2cFR/XLmJuYHzC3sXIySEhYCJx5eFnxi5GLg4hgd2MElPPPYRKSEjs/NbKDGEL
-	S6z895wdougTo8TL9kY2kASbgJbE6qnLWUESIgKXmCQOHIEYyywQJfG6dSUjiC0sEC0xe+Nl
-	MJtFQFWiacEfVhCbV8BS4uP56VDb5CVWbzgAto1TwEri2o93YHEhoJpD3z+xTWDkW8DIsIpR
-	MrWgODc9t9iwwDAvtVyvODG3uDQvXS85P3cTIziAtTR3MG5f9UHvECMTB+MhRgkOZiURXs7M
-	PelCvCmJlVWpRfnxRaU5qcWHGKU5WJTEecVf9KYICaQnlqRmp6YWpBbBZJk4OKUamE7Hsrk4
-	7HvzgCVx0/nSKWlMKmcvihQH2fjlOQh6VO7x0v6xjduM6aDIwxfdej8eal2bfnzB62/mx5TE
-	XfSzTpg+a2QukZOM35vyyXq2D9Pv3bde9trftFBPObIpKcuK73Aqk97niRcVxGuXXmI5vHvf
-	tpytj1/673+e80cz3v0FY1+W8YE9qgvj59qYWTbyPjozpXXLU6m0Yl85Zaf72jLPgjxPrPxf
-	Xr5yq0ZCy8vZb5/8m7oxwKhTd8+l0D1COwNk/xYpnRdbaVfy4MNK9bxD4dt1uqeucPqoc/H1
-	q76DxRnV6+p5rBVuzQs/3v5HYcGRdRcnWXZt72HedUFW4pjltqbN3Gzf3ug/aZ/myaLEUpyR
-	aKjFXFScCAC2dwDCzwIAAA==
-X-CMS-MailID: 20250225132507epcas5p455347acbd580b26ee807e467d3a6a05e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250225132507epcas5p455347acbd580b26ee807e467d3a6a05e
-References: <20250225131918.50925-1-v.pavani@samsung.com>
-	<CGME20250225132507epcas5p455347acbd580b26ee807e467d3a6a05e@epcas5p4.samsung.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iQaa1Bmp"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-543d8badc30so6499615e87.0;
+        Tue, 25 Feb 2025 05:29:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740490159; x=1741094959; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=R+FbrRxOgnYTZyaA+lF8b6QjfgGK+98gNFHNL4vg+8M=;
+        b=iQaa1BmpqwEtlhxZMJq69qGcoCfsj2ngBK3g6fVwyHnbuTF0+oQ6NDPWoMqvfnir9L
+         pXkFAhkzxlgDruRLbi5DHj7IDFVxIoDlKFSA57hxw64WYWxd4imKCfjRDeMFcSIqlBSe
+         uoWgGHYuLZndPcYHL+az9678E5uEbQJcyXJSPWAC8Fz6m5+UkcoM9QN+Qut8pnKhzl/F
+         tTUNG+Z4ZVeaW+9WKL6L4G3t1OgvWEWyCdq5+CKB4xhTEiuDtUtIX2X2ZGRwV5npkKqY
+         dfdH1KSOz+S86DxTDfdX9v3vXcunOlu6i3nMJQBMw693W3OG/0o5NmlA9qnN9cegRmHR
+         p8eA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740490159; x=1741094959;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=R+FbrRxOgnYTZyaA+lF8b6QjfgGK+98gNFHNL4vg+8M=;
+        b=QEDAXNqkbABnjIBPoQZ88KzhNIpeeye7fpyGKho/pDU+jBD70SQrHK12DixapvKIvD
+         yEagVq3L4uhf/t9rz4RpHPGHAYeLmEI5+x7vlpnMl3elojXyxgmsYBG5cPcNONybmDmu
+         S5pQqWuaBq9KyabYb+6MzxAfFgaSkrYMse8bM6NTD8A3ZI2sJoa3m+2GJba+TsA+xJml
+         Kez6CUntlp7js6HBW4fAjIW95GWkIAGAKmq5Es3irV7ryfY8GiHfbdIdxeeLUQfcQH8H
+         V2YtDYAkoY+wSoNOSyXKoc9jQItN3xQHjA2mLbFfjef/ZYtKqGZ0V1IkTeSnQlP2RUcs
+         Tbqg==
+X-Forwarded-Encrypted: i=1; AJvYcCUXDDbQGCoaDGD7bk7upmD3DgsLqYvExaYdpJxBgjm9eDdURgpFYPAlXLtKNVDoUaotT+ginpUZDd4x@vger.kernel.org, AJvYcCVzadywxTL2eSBTBT8iQLWz7VrGxjvZUqnRfmvEXni1BHRQu428Hddqg1dfaDVJMSzvXxCeFxAhGr5PL+07@vger.kernel.org, AJvYcCW0drSk5cxtXogapboWqhvEJekh22+Ldt5GUmdEXBs9jldIvl1OZuDWHXQuttdvCNP00VEo/9h5jn3fgtw66+1Eu54=@vger.kernel.org, AJvYcCXU8Yn8XpliQGWEmjf3n4kImvfY4bdB/c1L4g1WkkzqpwDanUY/5/7gci1rWe3pi5n3HrekegZkwKVkDQ==@vger.kernel.org, AJvYcCXt2sGPma7zSGmJEn+foyQrNRwIGaLSLFRQVgjbfdd6a0NueUDKPnT21qZ1FRaPXZ17dteX1T0HPrsS@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0MVaZS5TGjqxHA1xkhMTyOQA9gvuh7fZY1mpym/SeM8dC2R22
+	26QazjA1UMp2PuK1Y05RLyAkdDp8bU1hMfo2GW6oaUGJH80uWKuk
+X-Gm-Gg: ASbGncsoVszor2AjrItl39iAY2lHCQLAZRyIvOWgu4n3p48vXeKqb3KNQKUa5g43ZVT
+	WJMWlJrHgeSzUS5bohJrRc36RdvORvqOGsWUuJue5/AVnRyvQHuT7EkGhu+a/AcY0vs5oMs8+ZM
+	otSj6Hz6GWs7Z5hSKyIfW5VCGtxcNfOrnkrnVUNG8Djxnag4UpapII5EWYblN0owBopZZbq6NCq
+	DcJYy3k7kvJv31c9sWzVaLTATkcmWrqbxUIiGcwimJ+L+63j87lfV8+OImmamv/oizERbawjPbt
+	pnsJBmIXKUubTtf7DysWdyTzuqHrFCNq0OQMPNU=
+X-Google-Smtp-Source: AGHT+IGjIiZRQoCqQpRaub+un/XzTU053MAFUSi2TNm85/fj9TbmZ/3TfRa1taLP4aGsaQej3mQfPg==
+X-Received: by 2002:a05:6512:224b:b0:545:54b:6a05 with SMTP id 2adb3069b0e04-548510eebcdmr1461663e87.45.1740490158959;
+        Tue, 25 Feb 2025 05:29:18 -0800 (PST)
+Received: from [172.16.183.207] ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-548514b9db3sm181711e87.88.2025.02.25.05.29.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2025 05:29:18 -0800 (PST)
+Message-ID: <893a3c45-537e-47ad-afbd-1e5d3b9abe2c@gmail.com>
+Date: Tue, 25 Feb 2025 15:29:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 02/10] property: Add
+ device_get_child_node_count_named()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+ Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Daniel Scally <djrscally@gmail.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>,
+ Hugo Villeneuve <hvilleneuve@dimonoff.com>, Nuno Sa <nuno.sa@analog.com>,
+ David Lechner <dlechner@baylibre.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ Guillaume Stols <gstols@baylibre.com>,
+ Olivier Moysan <olivier.moysan@foss.st.com>,
+ Dumitru Ceclan <mitrutzceclan@gmail.com>,
+ Trevor Gamblin <tgamblin@baylibre.com>,
+ Matteo Martelli <matteomartelli3@gmail.com>,
+ Alisa-Dariana Roman <alisadariana@gmail.com>,
+ Ramona Alexandra Nechita <ramona.nechita@analog.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev
+References: <cover.1740421248.git.mazziesaccount@gmail.com>
+ <29ec24f1498392cafbecc0e0c0e23e1ce3289565.1740421248.git.mazziesaccount@gmail.com>
+ <Z72QAOA9xXbP16K-@kuha.fi.intel.com> <Z72Zp8tpnvlFGdQ_@smile.fi.intel.com>
+ <ad39b453-7e5b-49bd-a4fd-6a4988636130@gmail.com>
+ <Z72d7TzZ21WITW3f@smile.fi.intel.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <Z72d7TzZ21WITW3f@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Currently PLL142XX locktime is 270. As per spec, it should be 150. Hence
-update PLL142XX controller locktime to 150.
+On 25/02/2025 12:39, Andy Shevchenko wrote:
+> On Tue, Feb 25, 2025 at 12:29:31PM +0200, Matti Vaittinen wrote:
+>> On 25/02/2025 12:21, Andy Shevchenko wrote:
+>>> On Tue, Feb 25, 2025 at 11:40:16AM +0200, Heikki Krogerus wrote:
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Varada Pavani <v.pavani@samsung.com>
----
- drivers/clk/samsung/clk-pll.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+...
 
-diff --git a/drivers/clk/samsung/clk-pll.c b/drivers/clk/samsung/clk-pll.c
-index 2e94bba6c396..023a25af73c4 100644
---- a/drivers/clk/samsung/clk-pll.c
-+++ b/drivers/clk/samsung/clk-pll.c
-@@ -206,6 +206,7 @@ static const struct clk_ops samsung_pll3000_clk_ops = {
-  */
- /* Maximum lock time can be 270 * PDIV cycles */
- #define PLL35XX_LOCK_FACTOR	(270)
-+#define PLL142XX_LOCK_FACTOR	(150)
- 
- #define PLL35XX_MDIV_MASK       (0x3FF)
- #define PLL35XX_PDIV_MASK       (0x3F)
-@@ -272,7 +273,11 @@ static int samsung_pll35xx_set_rate(struct clk_hw *hw, unsigned long drate,
- 	}
- 
- 	/* Set PLL lock time. */
--	writel_relaxed(rate->pdiv * PLL35XX_LOCK_FACTOR,
-+	if (pll->type == pll_142xx)
-+		writel_relaxed(rate->pdiv * PLL142XX_LOCK_FACTOR,
-+			pll->lock_reg);
-+	else
-+		writel_relaxed(rate->pdiv * PLL35XX_LOCK_FACTOR,
- 			pll->lock_reg);
- 
- 	/* Change PLL PMS values */
--- 
-2.17.1
+>>>>
+>>>> I did not check how many users are you proposing for this, but if
+>>>> there's only one, then IMO this should not be a global function yet.
+>>>> It just feels to special case to me. But let's see what the others
+>>>> think.
+>>>
+>>> The problem is that if somebody hides it, we might potentially see
+>>> a duplication in the future. So I _slightly_ prefer to publish and
+>>> then drop that after a few cycles if no users appear.
+>>
+>> After taking a very quick grep I spotted one other existing place where we
+>> might be able to do direct conversion to use this function.
+>>
+>> drivers/net/ethernet/freescale/gianfar.c
+>>
+>> That'd be 2 users.
+> 
+> I haven't checked myself, I believe your judgement,
 
+I took a better look and you obviously shouldn't believe :) The gianfar 
+used of_node instead of the fwnode. So, it'd be a single caller at starters.
+
+Yours,
+	-- Matti
