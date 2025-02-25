@@ -1,152 +1,80 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2E5267B7D
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 12:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647E4267F79;
+	Tue, 25 Feb 2025 12:30:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740486519; cv=none; b=mdUcFr0luVLz7pqDdREdiUZcwG4V/dfMbuOAiDItGBlCzyUzbRSkDBnSgT2Zs10fpeNYW2TOcILY0T6fRELsaILSDhaJzYN4I2nQS++QhpK9FiZXJD6orf8YRKkJD9vwiVHUXDDuLYjYdL6XEvX352EVgALUcltbKC4ujjS7IYk=
+	t=1740486601; cv=none; b=loi6IOZQbjet8rZ9FS8rt/IxHxjGr9t0vP2OcTGyfckwFXFTZuHLdeR12H9D5ZB5GbdJ3rjA8fa2vlxWt6CqsT8f6RG3eprOBrrpSFDjeKtC9T5/xS/lb90BoB+etqU0psfr4k7ylegi6pld12HnWRbWkhBH+RMSHOiwxt1Kx18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740486519; c=relaxed/simple;
-	bh=MuDBLjAZ9U2+vCu5yoNNXavZNRZysUPXPdcP52zUuHo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pN7mmRW9YXkGRWF12JaDYBxX+f9Uk7boC8qbdAqq7irbfsLIMb9kLOvhSjEjUqU+FWVNd0etqNqYhD6C9ak505Ers3HPKW8/+pWmgapa+MRcXv9QY99CT7RIWYMVvKtXRoanBsbQpCbZTns6d6rbmd9/ZLuTsMaW/Jt7k8v0QV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=sOATRaCr; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=CfKwfuD2; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=sOATRaCr; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=CfKwfuD2; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1740486601; c=relaxed/simple;
+	bh=XW++pQBAsxBSIdf5lR6Pzeu7mCFc5KfkHsVWatPr7xY=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=AVyFFPXbM36ThFQQUGdi0MN//NUm2za5+dyoDrfslBdTX1MMOatFL+BnbWzWEtFaEcfSzGxJmY9/RQEoiRC7Iti5ip7aOLTvxFKtmsKoEC8/gUl7qXzl7QXnrp2OOdBoawpQMIzV7cblBMuWGK0Ekvkc9DHcwl4HHFtqTxYlqdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QeeQTGRN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="sOATRaCr";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="CfKwfuD2";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="sOATRaCr";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="CfKwfuD2"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 8C1861F44F;
-	Tue, 25 Feb 2025 12:28:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740486514;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K6Zh0aZsMEjnChLeM8bm+c0liv3N6f210rW3vv1RlWs=;
-	b=sOATRaCrDHxgN7SBOeHPyT41M/40zOXg/q6cE6UuXqUy8UnJamNzzhSOOyoR+Ush4CT3Pu
-	272LFT1nhXu0p/1KcwgUEU8UmkAvqM0x1YgFngGopmoL51SsK5CWx0yYsP+NLqK8TD512r
-	ObaeXogJfeSjBu3XyI35ji80hOHR/1Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740486514;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K6Zh0aZsMEjnChLeM8bm+c0liv3N6f210rW3vv1RlWs=;
-	b=CfKwfuD2hLBniAvbKdO8TSBxkxsT88qDe55V3hMNeH1XrNJ8N2mYp8w5W58jQQqxQmdUfL
-	mWxPrlF7fZI+kZAw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1740486514;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K6Zh0aZsMEjnChLeM8bm+c0liv3N6f210rW3vv1RlWs=;
-	b=sOATRaCrDHxgN7SBOeHPyT41M/40zOXg/q6cE6UuXqUy8UnJamNzzhSOOyoR+Ush4CT3Pu
-	272LFT1nhXu0p/1KcwgUEU8UmkAvqM0x1YgFngGopmoL51SsK5CWx0yYsP+NLqK8TD512r
-	ObaeXogJfeSjBu3XyI35ji80hOHR/1Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1740486514;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K6Zh0aZsMEjnChLeM8bm+c0liv3N6f210rW3vv1RlWs=;
-	b=CfKwfuD2hLBniAvbKdO8TSBxkxsT88qDe55V3hMNeH1XrNJ8N2mYp8w5W58jQQqxQmdUfL
-	mWxPrlF7fZI+kZAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6F23F13888;
-	Tue, 25 Feb 2025 12:28:34 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id tDjmGnK3vWfyTwAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Tue, 25 Feb 2025 12:28:34 +0000
-Date: Tue, 25 Feb 2025 13:28:28 +0100
-From: David Sterba <dsterba@suse.cz>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, linux-hardening@vger.kernel.org,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] btrfs: Replace deprecated strncpy() with strscpy_pad()
-Message-ID: <20250225122828.GM5777@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20250225092949.287300-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QeeQTGRN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D661AC4CEE6;
+	Tue, 25 Feb 2025 12:30:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740486600;
+	bh=XW++pQBAsxBSIdf5lR6Pzeu7mCFc5KfkHsVWatPr7xY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=QeeQTGRNf8ilQEL/BUq6EgWqHOHZbEGh+/gMGjZOjkwVlHz/Y7uhEcpsXa/qAxYIL
+	 /KuhjjGoyjw+H26qgwk2v/rGZHYVrKufYRgKaoIC/8N3kY6GP43YhPMbmMABqiOEKc
+	 X+sI4O1IYvMwCNMc0WBMm++4CgvqnFv/AQ8b3MSXFCQlN/q5BbOmyaR+3dnqzWjLob
+	 30SaHquotf2hRdfufJccdJkG2jD+da/51hRN9XmTImqzilg/1EJ9sQdm7M6JWdGnIL
+	 tjL0hDWudGjHEvLsqcRd1bgOGDu3W+zClB4pKvaqv7XSDeg8tVfXILzDhMNRmb1IpJ
+	 RPIelKAGbkcCw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD60380CEDC;
+	Tue, 25 Feb 2025 12:30:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250225092949.287300-2-thorsten.blum@linux.dev>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Score: -4.00
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCHv2 net] ipvs: Always clear ipvs_property flag in
+ skb_scrub_packet()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174048663224.4155054.13422794267665315194.git-patchwork-notify@kernel.org>
+Date: Tue, 25 Feb 2025 12:30:32 +0000
+References: <20250222033518.126087-1-lulie@linux.alibaba.com>
+In-Reply-To: <20250222033518.126087-1-lulie@linux.alibaba.com>
+To: Philo Lu <lulie@linux.alibaba.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, asml.silence@gmail.com,
+ willemb@google.com, almasrymina@google.com, chopps@labn.net,
+ aleksander.lobakin@intel.com, nicolas.dichtel@6wind.com,
+ dust.li@linux.alibaba.com, hustcat@gmail.com, ja@ssi.bg, horms@verge.net.au,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2025 at 10:29:49AM +0100, Thorsten Blum wrote:
-> strncpy() is deprecated for NUL-terminated destination buffers. Use
-> strscpy_pad() instead and don't zero-initialize the param array.
-> 
-> Compile-tested only.
-> 
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
->  fs/btrfs/sysfs.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/btrfs/sysfs.c b/fs/btrfs/sysfs.c
-> index 53b846d99ece..b941fb37776d 100644
-> --- a/fs/btrfs/sysfs.c
-> +++ b/fs/btrfs/sysfs.c
-> @@ -1330,13 +1330,13 @@ MODULE_PARM_DESC(read_policy,
->  
->  int btrfs_read_policy_to_enum(const char *str, s64 *value_ret)
->  {
-> -	char param[32] = { 0 };
-> +	char param[32];
->  	char __maybe_unused *value_str;
->  
->  	if (!str || strlen(str) == 0)
->  		return 0;
->  
-> -	strncpy(param, str, sizeof(param) - 1);
-> +	strscpy_pad(param, str);
+Hello:
 
-I don't think we need the padding, so strscpy is probably ok. We copy
-input string to a temporary modifiable buffer and then match it against
-a table, so the NUL termination is ok.
+This patch was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Sat, 22 Feb 2025 11:35:18 +0800 you wrote:
+> We found an issue when using bpf_redirect with ipvs NAT mode after
+> commit ff70202b2d1a ("dev_forward_skb: do not scrub skb mark within
+> the same name space"). Particularly, we use bpf_redirect to return
+> the skb directly back to the netif it comes from, i.e., xnet is
+> false in skb_scrub_packet(), and then ipvs_property is preserved
+> and SNAT is skipped in the rx path.
+> 
+> [...]
+
+Here is the summary with links:
+  - [PATCHv2,net] ipvs: Always clear ipvs_property flag in skb_scrub_packet()
+    https://git.kernel.org/netdev/net/c/de2c211868b9
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
