@@ -1,312 +1,173 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2060.outbound.protection.outlook.com [40.107.237.60])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C55F19ABD4
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 17:25:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740504307; cv=none; b=jsmKIF2Y2aGg6j1DKZvgR/uTLh8x/IhNsDUd0YE3a/4NkW04GX7/ljfErBfbFIHxCWTAMowX3mN9HeoSaBt5a+QIIKv6S6dgFtckt5LPommWql8/qVGS6gIRLlwC9HbPU397WKYdRdHr27XhDhGnx0epIEmJ/oFOZ0Qtm6222ZU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740504307; c=relaxed/simple;
-	bh=GxOQwmQiGHnba5gt1J2RmU+W0OoyNHD9HFAHgmbtgAU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X27qIcujVW+lb71qk80d7lMcrfPE4ln5S2MiqAxQJAU7hHSYbmyDanJKZ6BConA2OPrdd7yxf2HkprRKXQAwm300uVlHPtriDnbSD+leJcENhqll8OzSeJZnbyZsuFtqsLFx4kO0+0SYMkhyguF007sqPMz9zcZmyTQz92AiEko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BSOEIyKg; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35C217B418;
+	Tue, 25 Feb 2025 17:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740504378; cv=fail; b=MMJSbT0+IfAqMg3e1jBOze6KvXcsa1oFtcwpoqsKhIzJIXBz9tKKP0aOJVyDMOH7YJO6gYyfpQea9aG3alB7HTJkwlyW2A1TSbo3n8mqwhignAqnf76m2wsJa5JSAd8VW6FnCeV+EepPuRuBNIWKLVHg+t79JA98pfxiPV42xTg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740504378; c=relaxed/simple;
+	bh=K+5L3HSdgIfiT/YMZGM1NRRJ+WNYbPntlxZb6t9GOh0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ed3NHszQUH3nYRkZ1niaz+FmlfwW/5rY2O2erhJ7390aRilCuIi7m/SjFZK81IQ9REODqoePJvZabxTxBt8gVKrEss5gQEone6BXFmxwneGJzz+PBPfbF5MkSKrwmnt8u4B1AOwwf/DV75BkzyQ4Dr6mViDUWraxcuVSEoHlu1Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=hImp3Hyj; arc=fail smtp.client-ip=40.107.237.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BSOEIyKg"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-472098e6e75so387111cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:25:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740504304; x=1741109104; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=75hfp2Z42eIGcb2goeqHLvg9bqhQMwNL1ix3XCMfK/g=;
-        b=BSOEIyKg+wqDPj297jpYLlT9DvmkW328Zxh39BLSq6YgYDjGTqp734WsNWOVHV6t1V
-         C9ujTtg174EpY8hudHrecTll7veayTfYx0z3mmwBbH85ieWVJ2UrasGjio8u1Ufi/xtZ
-         6/Vc8jmdGsnwsC6lifpC1UdqPGmtDqI+9DM/AdxQ+RyS92KvtUxD85z+7Ra2uCSwjWJr
-         rfqvP8R9OkhPIeWt2ueJMjtDEx2IjYSOqHT08moYafZx14aFKS2QctEdTuOcohUdCe9C
-         r4jPU9Upgfr80C6Vkkrzan1Sn87cfZhQmk45eaQcpjhTI5vyzWw7WnHvUEIseb5ZLzOg
-         Blww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740504304; x=1741109104;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=75hfp2Z42eIGcb2goeqHLvg9bqhQMwNL1ix3XCMfK/g=;
-        b=cFAQ1b/IqG42LDV9CpaR7lY5+E1ZAuHctyOkcfMwxtDC6dZJcM+rroQjZkyRsizuf8
-         jPjD0ENVGuaewB1/jYOJo8od+Ou9n0G3gdHas9tLMvPuHKv4aLAkbXhXunigUAeDt4c0
-         JhPUnP3yBCQ2FwIII1VuorIZzMSmSYswJAiZz0rXi0lwCnGGNk/3hmA14UT4WFQwFSjQ
-         9Z1bWNTzpxb8MN9s2ZQX/Z8GLB6rf0Pu6kT/DboH8N59Eyvo2lqta8VTnia3Uck1WAvq
-         kw5Rn4csqS5sWVk3qd7ur/UaG8K0tT0rU7newXzj0QOm+h38Ou74QDQA08wtYZcTpVB1
-         Sf2g==
-X-Forwarded-Encrypted: i=1; AJvYcCXtSJdWrUZVlf+rzEyrXEzURfqw8DRb3tnacYkfR5RdnHQBATvI9Q0pQt4PzLnexeCEi1x5EPM2IlAh+EQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywrCt9OVwjPqaskM8h8uaCjQUbP2NEGGTOWdjQHnZywuHDJ3Rk
-	r3p7zJYT/Is/PkMsbnIrQSrnyc7p2uAPDt/Vj+Wm1F1/0j1O9soSfRMwCrQseAJM+MCx4+3v5to
-	7s/7I/XYV2MUeEQFSOB3RbPK59Uz55NNNJ91x
-X-Gm-Gg: ASbGnctjLDtH3boNDZyAmfuSF8HdSRXzQh0U2D2R+HiOZ/gLAuIptggTcv4mhLOXUT8
-	11GddLmKik68/ZxKadQYa/A3AuwRjVr8jVg6vPwgDhWr8d729ea7ukR4dasqM1KwzvDXHwVjq9V
-	icRNeg1RHfARwIFRgm1i4X6FSzjqZ44tbCMqrTB96O
-X-Google-Smtp-Source: AGHT+IEgCi3luOMK49RIezNsV02TX8cvdABlFxynF3pOmgArh3s4ioMJGNwkhQ3fRzLYgZez6QpvvC35o8BZxQK3q5E=
-X-Received: by 2002:ac8:7f8d:0:b0:46e:2561:e8a9 with SMTP id
- d75a77b69052e-47376e5b001mr5537451cf.2.1740504304120; Tue, 25 Feb 2025
- 09:25:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="hImp3Hyj"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=B26IWHQ00EhVcilWx6dDlfFR36QSZObhLbSo1hRnf3Hj+PnFlRUTx9V7LOyHXVm9b5kodoZcUy5s8gj6eRnsJXz2osB77IZ1GhvYiA7dWYqc4OoE/WCcdrxMvvQqhFS1rSGrfJ9pSRjvwD3nuFhShi4xLzZke3+Hvd8ACCpVq7pxa1YBpOe7YF1BYs6SLbgcUZe88PMJOa3nvpsQsWiTvq6vIzYkGAbUJnWWOdHUGv2Z54fGYlGqCobWbtkZoLMPg+Uwdof/YQay/kT/G9yyH3aS2q8dMxvl4rCC1ZXlp0iUNn9V73kfKYDSwJTlQ2gKomkKcgeVoHcNRc6PkvJNvw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Qhvw+OY5rWzXvgenwxNHj4+yj2zdbIVe/Hrx8rdxbSY=;
+ b=q8K79Hvk61aAsaMtHV75NnkSpUGZdcZyJXxpytHo6KBfZe4s4mtZcUiezUdDog7su+dmwUQHPsmhKM4QH19+BH/zstehW5MnpVjQeSfdh5Pfq+S0TKfTcQncW9awCyL1dLlW5zE9LcQu/mDsV85+A0fyPZQqdWM5thk8F8zzesIhJMtSn6KSedZ2R23D8aKiz/CwId88fmteOIr2RSJ0b9FeBhAfOUhg/jPYFgDdOFOAvIvKd6KqmZ+S2XDqw2UHiBqLBmH5ypR8jwxY+7BjMrtyPPrdHMqBScTb8PwYD/husvg4V6lbUpUbFMY4sWgOWa7H2FcRzQXi7lH18SnSwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Qhvw+OY5rWzXvgenwxNHj4+yj2zdbIVe/Hrx8rdxbSY=;
+ b=hImp3Hyjkv8Y3/o9pqUMoWDF5FneDX/9LV3CwrVwNLzI67mu6u7mpwI/qhtVSwFrQIBYOwwEA32PS2Rd10j/VpZjlEUn1hc/s17D9jfbdvBe1lBN5sei5ZrVV5LxaeGNtNyLqpXr1IOhIcf34oKBwngYWGguej8h6yXOtHPyoY/j0YJo/TMlYjpW7YLgPPBM+S9iNq8MrwmyyBuZkEpqR8/DlQGMStHKe2haEh5zwobuuJF8DZ8SnMUHq8YJIB9QVFbnWQnJZogvJNa8Z5xz3jkw5F9brkFT4+T23P3KXFKm9+xQ8XtYsNm1Z5yG0mW9CIZTSLwHNftr8tJVZJ0EwQ==
+Received: from DM6PR07CA0098.namprd07.prod.outlook.com (2603:10b6:5:337::31)
+ by PH7PR12MB7188.namprd12.prod.outlook.com (2603:10b6:510:204::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.19; Tue, 25 Feb
+ 2025 17:26:13 +0000
+Received: from DS1PEPF00017090.namprd03.prod.outlook.com
+ (2603:10b6:5:337:cafe::93) by DM6PR07CA0098.outlook.office365.com
+ (2603:10b6:5:337::31) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.21 via Frontend Transport; Tue,
+ 25 Feb 2025 17:26:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ DS1PEPF00017090.mail.protection.outlook.com (10.167.17.132) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8489.16 via Frontend Transport; Tue, 25 Feb 2025 17:26:12 +0000
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 25 Feb
+ 2025 09:25:59 -0800
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail205.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 25 Feb
+ 2025 09:25:59 -0800
+Received: from Asurada-Nvidia.nvidia.com (10.127.8.11) by mail.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Tue, 25 Feb 2025 09:25:58 -0800
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: <jgg@nvidia.com>, <kevin.tian@intel.com>, <corbet@lwn.net>,
+	<will@kernel.org>
+CC: <joro@8bytes.org>, <suravee.suthikulpanit@amd.com>,
+	<robin.murphy@arm.com>, <dwmw2@infradead.org>, <baolu.lu@linux.intel.com>,
+	<linux-kernel@vger.kernel.org>, <iommu@lists.linux.dev>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <eric.auger@redhat.com>,
+	<jean-philippe@linaro.org>, <mdf@kernel.org>, <mshavit@google.com>,
+	<shameerali.kolothum.thodi@huawei.com>, <smostafa@google.com>,
+	<ddutile@redhat.com>, <yi.l.liu@intel.com>, <praan@google.com>,
+	<patches@lists.linux.dev>
+Subject: [PATCH v8 04/14] iommufd: Rename fault.c to eventq.c
+Date: Tue, 25 Feb 2025 09:25:32 -0800
+Message-ID: <60b7038bcccb7b5a3937784441da8459f5e4fa10.1740504232.git.nicolinc@nvidia.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1740504232.git.nicolinc@nvidia.com>
+References: <cover.1740504232.git.nicolinc@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CADVnQynUspJL4e3UnZTKps9WmgnE-0ngQnQmn=8gjSmyg4fQ5A@mail.gmail.com>
- <20241203181839.7d0ed41c@kernel.org> <Z0/O1ivIwiVVNRf0@perf>
- <CANn89iKms_9EX+wArf1FK7Cy3-Cr_ryX+MJ2YC8yt1xmvpY=Uw@mail.gmail.com>
- <009e01db4620$f08f42e0$d1adc8a0$@samsung.com> <CADVnQykPo35mQ1y16WD3zppENCeOi+2Ea_2m-AjUQVPc9SXm4g@mail.gmail.com>
- <Z4nl0h1IZ5R/KDEc@perf> <CADVnQykZYT+CTWD3Ss46aGHPp5KtKMYqKjLxEmd5DDgdG3gfDA@mail.gmail.com>
- <CGME20250120001504epcas2p1d766c193256b4b7f79d19f61d76d697d@epcas2p1.samsung.com>
- <Z42WaFf9+oNkoBKJ@perf> <Z6BSXCRw/9Ne1eO1@perf> <CADVnQykpHsN1rPJobKVfFGwtAJ9qwPrwG21HiunHqfykxyPD1g@mail.gmail.com>
-In-Reply-To: <CADVnQykpHsN1rPJobKVfFGwtAJ9qwPrwG21HiunHqfykxyPD1g@mail.gmail.com>
-From: Neal Cardwell <ncardwell@google.com>
-Date: Tue, 25 Feb 2025 12:24:47 -0500
-X-Gm-Features: AQ5f1JqXanvSWbiSecfhBvqTILnS-DUPnw2qWauzzQvA4KjLlHyi1MixCzeF3Xg
-Message-ID: <CADVnQymr=sst5foNOF7ydr-fUyAK6XLvRyNvnTVBV=wgPLpBBQ@mail.gmail.com>
-Subject: Re: [PATCH] tcp: check socket state before calling WARN_ON
-To: Youngmin Nam <youngmin.nam@samsung.com>
-Cc: Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, davem@davemloft.net, 
-	dsahern@kernel.org, pabeni@redhat.com, horms@kernel.org, 
-	guo88.liu@samsung.com, yiwang.cai@samsung.com, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, joonki.min@samsung.com, hajun.sung@samsung.com, 
-	d7271.choe@samsung.com, sw.ju@samsung.com, 
-	"Dujeong.lee" <dujeong.lee@samsung.com>, Yuchung Cheng <ycheng@google.com>, Kevin Yang <yyd@google.com>, 
-	Xueming Feng <kuro@kuroa.me>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF00017090:EE_|PH7PR12MB7188:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9155a70c-453e-423c-f78f-08dd55c1809a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|36860700013|82310400026|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?4QbagbZUVsq2qidoEH8PTRs0CKeq+N9KBuPnTSBpGCpjMYg93Q/VyUMI8aA3?=
+ =?us-ascii?Q?1FsSlhuJg7JMwgWu2IbpOiSOu+4BKxx456N06KpuZ3J4JrmOVnC4YWdnFoQ+?=
+ =?us-ascii?Q?GbajIh7AkrW1OCn1BEwWUvUHrSZzlJLoYGFGDmDLdKJXUm5deoxoTA6xxlFE?=
+ =?us-ascii?Q?+Sfp0bBL0wiOIerdltU0miNqSyo7SLdIMnis1x8ojydO1rlbVcMjDXKgdYLk?=
+ =?us-ascii?Q?8XUpD6n54zCHKQGBtIh3yC2POUaWv4i1S8Y+2xcJA0UKqU3pm1wra8mtMisd?=
+ =?us-ascii?Q?cu501xo+tIJNt7vmb1WZSqJGFdRLPqzKRHYMEs6NFW23cuFnzta5RQQQ5OjY?=
+ =?us-ascii?Q?XaqaZhCEXjbq3+EDOqy8QifP8W4pOzcOjDPf5hb8xpCxfQlILAWtCs5MFEcO?=
+ =?us-ascii?Q?rZIggyuRqFBG9KHgcOpYe2bD53MIOPbsHlaCwrFiCMPf7ihfCD97dX8Tf7AD?=
+ =?us-ascii?Q?NUTunSeZZi3yvTlCvVmMlK692r4kVXH7panFW85y/rcu9pcqsV5FZOgScN/m?=
+ =?us-ascii?Q?GbLTCte8rDZUM+KJiOSJMFPxA/PBYJmcFpY3YJunHHW0oV1mUXSu72arRimv?=
+ =?us-ascii?Q?7KTTYbJekFoOTcA0M4PY+qn8/VTyY6DDv9mgFVSYT3clr+NgRcc/arq7BPeo?=
+ =?us-ascii?Q?HUMZSn+oAy7hc9IoUxRC3ak+HeZOSBMCYjnDSHaHTjzOTwp8cBOugzOWeq1B?=
+ =?us-ascii?Q?vVZmePidNaa8NzqzlL7/NU+2yB67i1vxlWPMBdm9hxOO9W4CqvIQihT412dZ?=
+ =?us-ascii?Q?18oPCIZ6f/Ym7WH66j8IY8bdHvsOLogBhKdw57QELdS3oPUn7ZN7I8XwVihl?=
+ =?us-ascii?Q?xgkRPMnMTmBWgl1Cbgx//ZtnsPXUULtcScrr/dqP4hpu1OeSSSwgLYUTZb9C?=
+ =?us-ascii?Q?Yun7XiF4tQYwOrwuFqmlL2udhBVo/hTDSd24bk8ToKaAN3dCn/PAbPRNqr00?=
+ =?us-ascii?Q?bZbSyEVzgYi6oIXxv5a3KQ6G1rUdIQTtTQk428J8M45jpGTwA3gSxwlnSDfH?=
+ =?us-ascii?Q?N8tKwbHHQACu5ozk001EEYhwlcRPVcBibZ2FZoBmiBqjugiUYX9isWlH1Auj?=
+ =?us-ascii?Q?w1Ycw3I/W1pKpjwCdy1Mg2CSfF2l1kgQAoljOdM7e52QWS+4zSwsyBn0FuoQ?=
+ =?us-ascii?Q?TZd2uHmSKjgHaBcOiBmq0+vwgHOpb58z19dQdOrZOxTnHGIg5o5nzRlWrTLU?=
+ =?us-ascii?Q?B9rSk7bngUAkTjfUaciIWWPq1/JT8LCuwPQgy3482lkAC65B8OiqS5uUAb3x?=
+ =?us-ascii?Q?odI2KmMm4SCkBD0viIz/yzX32jyRKgcZ8YzeVhss0DlLv4qZLzc5wYHp87AC?=
+ =?us-ascii?Q?44Iy2U5y9G3EJxQXZ47iHvQ2PYvtwPzGFzSMV6TszHz4Aa39dgyoC7ZZQi3/?=
+ =?us-ascii?Q?QpVanf1ItNLh+v+vUom+42v5zNXp096+N4oKn1YClVtvbhH+vxXbcHmb5RhE?=
+ =?us-ascii?Q?xFc2DqIiq9oX3IlC051WPOgXJOD9M/RzeXE04STbjx8YgYhlZTpvJXbNuSzV?=
+ =?us-ascii?Q?adZ7z/A1jxxai8M=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700013)(82310400026)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2025 17:26:12.9604
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9155a70c-453e-423c-f78f-08dd55c1809a
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF00017090.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7188
 
-On Mon, Feb 24, 2025 at 4:13=E2=80=AFPM Neal Cardwell <ncardwell@google.com=
-> wrote:
->
-> On Mon, Feb 3, 2025 at 12:17=E2=80=AFAM Youngmin Nam <youngmin.nam@samsun=
-g.com> wrote:
-> >
-> > > Hi Neal,
-> > > Thank you for looking into this issue.
-> > > When we first encountered this issue, we also suspected that tcp_writ=
-e_queue_purge() was being called.
-> > > We can provide any information you would like to inspect.
->
-> Thanks again for raising this issue, and providing all that data!
->
-> I've come up with a reproducer for this issue, and an explanation for
-> why this has only been seen on Android so far, and a theory about a
-> related socket leak issue, and a proposed fix for the WARN and the
-> socket leak.
->
-> Here is the scenario:
->
-> + user process A has a socket in TCP_ESTABLISHED
->
-> + user process A calls close(fd)
->
-> + socket calls __tcp_close() and tcp_close_state() decides to enter
-> TCP_FIN_WAIT1 and send a FIN
->
-> + FIN is lost and retransmitted, making the state:
-> ---
->  tp->packets_out =3D 1
->  tp->sacked_out =3D 0
->  tp->lost_out =3D 1
->  tp->retrans_out =3D 1
-> ---
->
-> + someone invokes "ss" to --kill the socket using the functionality in
-> (1e64e298b8 "net: diag: Support destroying TCP sockets")
->
->   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
-it/?id=3Dc1e64e298b8cad309091b95d8436a0255c84f54a
->
->  (note: this was added for Android, so would not be surprising to have
-> this inet_diag --kill run on Android)
->
-> + the ss --kill causes a call to tcp_abort()
->
-> + tcp_abort() calls tcp_write_queue_purge()
->
-> + tcp_write_queue_purge() sets packets_out=3D0 but leaves lost_out=3D1,
-> retrans_out=3D1
->
-> + tcp_sock still exists in TCP_FIN_WAIT1 but now with an inconsistent sta=
-te
->
-> + ACK arrives and causes a WARN_ON from tcp_verify_left_out():
->
-> #define tcp_verify_left_out(tp) WARN_ON(tcp_left_out(tp) > tp->packets_ou=
-t)
->
-> because the state has:
->
->  ---
->  tcp_left_out(tp) =3D sacked_out + lost_out =3D 1
->   tp->packets_out =3D 0
-> ---
->
-> because the state is:
->
-> ---
->  tp->packets_out =3D 0
->  tp->sacked_out =3D 0
->  tp->lost_out =3D 1
->  tp->retrans_out =3D 1
-> ---
->
-> I guess perhaps one fix would be to just have tcp_write_queue_purge()
-> zero out those other fields:
->
-> ---
->  tp->sacked_out =3D 0
->  tp->lost_out =3D 0
->  tp->retrans_out =3D 0
-> ---
->
-> However, there is a related and worse problem. Because this killed
-> socket has tp->packets_out, the next time the RTO timer fires,
-> tcp_retransmit_timer() notices !tp->packets_out is true, so it short
-> circuits and returns without setting another RTO timer or checking to
-> see if the socket should be deleted. So the tcp_sock is now sitting in
-> memory with no timer set to delete it. So we could leak a socket this
-> way. So AFAICT to fix this socket leak problem, perhaps we want a
-> patch like the following (not tested yet), so that we delete all
-> killed sockets immediately, whether they are SOCK_DEAD (orphans for
-> which the user already called close() or not) :
->
-> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-> index 28cf19317b6c2..a266078b8ec8c 100644
-> --- a/net/ipv4/tcp.c
-> +++ b/net/ipv4/tcp.c
-> @@ -5563,15 +5563,12 @@ int tcp_abort(struct sock *sk, int err)
->         local_bh_disable();
->         bh_lock_sock(sk);
->
-> -       if (!sock_flag(sk, SOCK_DEAD)) {
-> -               if (tcp_need_reset(sk->sk_state))
-> -                       tcp_send_active_reset(sk, GFP_ATOMIC);
-> -               tcp_done_with_error(sk, err);
-> -       }
-> +       if (tcp_need_reset(sk->sk_state))
-> +               tcp_send_active_reset(sk, GFP_ATOMIC);
-> +       tcp_done_with_error(sk, err);
->
->         bh_unlock_sock(sk);
->         local_bh_enable();
-> -       tcp_write_queue_purge(sk);
->         release_sock(sk);
->         return 0;
->  }
-> ---
+Rename the file, aligning with the new eventq object.
 
-Actually, it seems like a similar fix was already merged into Linux v6.11:
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+---
+ drivers/iommu/iommufd/Makefile              | 2 +-
+ drivers/iommu/iommufd/{fault.c => eventq.c} | 0
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename drivers/iommu/iommufd/{fault.c => eventq.c} (100%)
 
-bac76cf89816b tcp: fix forever orphan socket caused by tcp_abort
+diff --git a/drivers/iommu/iommufd/Makefile b/drivers/iommu/iommufd/Makefile
+index cb784da6cddc..71d692c9a8f4 100644
+--- a/drivers/iommu/iommufd/Makefile
++++ b/drivers/iommu/iommufd/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ iommufd-y := \
+ 	device.o \
+-	fault.o \
++	eventq.o \
+ 	hw_pagetable.o \
+ 	io_pagetable.o \
+ 	ioas.o \
+diff --git a/drivers/iommu/iommufd/fault.c b/drivers/iommu/iommufd/eventq.c
+similarity index 100%
+rename from drivers/iommu/iommufd/fault.c
+rename to drivers/iommu/iommufd/eventq.c
+-- 
+2.43.0
 
-Details below.
-
-Youngmin, does your kernel have this bac76cf89816b fix? If not, can
-you please cherry-pick this fix and retest?
-
-Thanks!
-neal
-
-ps: details for bac76cf89816b:
-
-commit bac76cf89816bff06c4ec2f3df97dc34e150a1c4
-Author: Xueming Feng <kuro@kuroa.me>
-Date:   Mon Aug 26 18:23:27 2024 +0800
-
-    tcp: fix forever orphan socket caused by tcp_abort
-
-    We have some problem closing zero-window fin-wait-1 tcp sockets in our
-    environment. This patch come from the investigation.
-
-    Previously tcp_abort only sends out reset and calls tcp_done when the
-    socket is not SOCK_DEAD, aka orphan. For orphan socket, it will only
-    purging the write queue, but not close the socket and left it to the
-    timer.
-
-    While purging the write queue, tp->packets_out and sk->sk_write_queue
-    is cleared along the way. However tcp_retransmit_timer have early
-    return based on !tp->packets_out and tcp_probe_timer have early
-    return based on !sk->sk_write_queue.
-
-    This caused ICSK_TIME_RETRANS and ICSK_TIME_PROBE0 not being resched
-    and socket not being killed by the timers, converting a zero-windowed
-    orphan into a forever orphan.
-
-    This patch removes the SOCK_DEAD check in tcp_abort, making it send
-    reset to peer and close the socket accordingly. Preventing the
-    timer-less orphan from happening.
-
-    According to Lorenzo's email in the v1 thread, the check was there to
-    prevent force-closing the same socket twice. That situation is handled
-    by testing for TCP_CLOSE inside lock, and returning -ENOENT if it is
-    already closed.
-
-    The -ENOENT code comes from the associate patch Lorenzo made for
-    iproute2-ss; link attached below, which also conform to RFC 9293.
-
-    At the end of the patch, tcp_write_queue_purge(sk) is removed because i=
-t
-    was already called in tcp_done_with_error().
-
-    p.s. This is the same patch with v2. Resent due to mis-labeled "changes
-    requested" on patchwork.kernel.org.
-
-    Link: https://patchwork.ozlabs.org/project/netdev/patch/1450773094-7978=
--3-git-send-email-lorenzo@google.com/
-    Fixes: c1e64e298b8c ("net: diag: Support destroying TCP sockets.")
-    Signed-off-by: Xueming Feng <kuro@kuroa.me>
-    Tested-by: Lorenzo Colitti <lorenzo@google.com>
-    Reviewed-by: Jason Xing <kerneljasonxing@gmail.com>
-    Reviewed-by: Eric Dumazet <edumazet@google.com>
-    Link: https://patch.msgid.link/20240826102327.1461482-1-kuro@kuroa.me
-    Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index e03a342c9162b..831a18dc7aa6d 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -4637,6 +4637,13 @@ int tcp_abort(struct sock *sk, int err)
-                /* Don't race with userspace socket closes such as tcp_clos=
-e. */
-                lock_sock(sk);
-
-+       /* Avoid closing the same socket twice. */
-+       if (sk->sk_state =3D=3D TCP_CLOSE) {
-+               if (!has_current_bpf_ctx())
-+                       release_sock(sk);
-+               return -ENOENT;
-+       }
-+
-        if (sk->sk_state =3D=3D TCP_LISTEN) {
-                tcp_set_state(sk, TCP_CLOSE);
-                inet_csk_listen_stop(sk);
-@@ -4646,16 +4653,13 @@ int tcp_abort(struct sock *sk, int err)
-        local_bh_disable();
-        bh_lock_sock(sk);
-
--       if (!sock_flag(sk, SOCK_DEAD)) {
--               if (tcp_need_reset(sk->sk_state))
--                       tcp_send_active_reset(sk, GFP_ATOMIC,
--                                             SK_RST_REASON_NOT_SPECIFIED);
--               tcp_done_with_error(sk, err);
--       }
-+       if (tcp_need_reset(sk->sk_state))
-+               tcp_send_active_reset(sk, GFP_ATOMIC,
-+                                     SK_RST_REASON_NOT_SPECIFIED);
-+       tcp_done_with_error(sk, err);
-
-        bh_unlock_sock(sk);
-        local_bh_enable();
--       tcp_write_queue_purge(sk);
-        if (!has_current_bpf_ctx())
-                release_sock(sk);
-        return 0;
