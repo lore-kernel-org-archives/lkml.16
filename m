@@ -1,47 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80DF20C49C;
-	Tue, 25 Feb 2025 20:08:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46BD1A0B0E
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 20:08:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740514097; cv=none; b=EdzRt2VMxaV1czbW2IUqvaZXw5KzPy72R3RFBLaPSmW+vD5ou884/oBREPdEoaIycXdk+2heGd2fMQZFBR3ZfFG3TMSoccJ7khcpVDyVKg7sYOmhuytBINAQ5MAsb8aiqF2rTAVNVAoNmg7sX3nyp2S9bzalZc7AFdct/GlbrSE=
+	t=1740514114; cv=none; b=rXxAoZGnQdhKS9cKpQnZCU5SlHi4UQetGtc21mWH0mKJhjmbQFJhyWxKfXJZ5GbQSgNP/7vhs1xPmmH8wCxpoecpLnWsamY3UoW85DgFHG4wk1Ws1k99CVuoRGscyol9ldXP6VVGdUHfxPK/kfdj25dQrJaeljvbCoSG2yTFUVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740514097; c=relaxed/simple;
-	bh=1X9gti/AqBedO64ZojlHc4HxFQ9alWiuV/NkoEvikIg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rFA86qd1PZ3IXBF5d4DbhFoUzX+IeHck4MQhzOlLd4FGZ4rbgW//EXZnuNr4IQF9eTyYOObhXzDmOn6Ne83P4ahnFbqhVZ9O6rPFtA9z41mKdCwDJ0Kj7Gu43ntMKsI8mVwBsAYGHZn3WROf2z+CowqbjlndWhsF5uMTgyPPkKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GXUctQDM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740514114; c=relaxed/simple;
+	bh=n3+MMDAPtTCs/1iTDunsmqHajEcFiEAtGY10JIW4VaQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=foeKNqXkrNBbSG0jzQU9ZdUQ1s0N5qxYe/4+KwINphA7k/+5erCNvkJk3/owR2/u6P4I7XhleZHtkdorrKvhjThpjUoykEGY2+v7gefV5IKS/J/f8vO2nIcD49wkJdsfLFhy6lL3G1o4Rfja94MR3lCaXrU4YFCkN6yqwbUoZW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OXLE/Qnv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GXUctQDM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5EACC4CEDD;
-	Tue, 25 Feb 2025 20:08:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OXLE/Qnv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D583C4CEDD;
+	Tue, 25 Feb 2025 20:08:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740514096;
-	bh=1X9gti/AqBedO64ZojlHc4HxFQ9alWiuV/NkoEvikIg=;
+	s=k20201202; t=1740514114;
+	bh=n3+MMDAPtTCs/1iTDunsmqHajEcFiEAtGY10JIW4VaQ=;
 	h=From:To:Cc:Subject:Date:From;
-	b=GXUctQDMq2dJR5ZYCXwcuvk755B0POltC5zhf8NUQfss9+z4wFY4nnYvZu9kLCwhR
-	 RCBDsDNEp0sTpOTO2bNjLX6yo67/kT4Q4BsdqrS0GpVIvtoMGnW+iaQXUUDtWjrFMX
-	 2gPyuvBvDYzbeODgfvPmLgW7cg7pvs4IPuuk+6mBH9T9W6EeptdGaC7WHdpe9KTpqy
-	 fVUNHWqtk7DBI7n70E94o3F+jYmc3ndJUwtIs+J6QWVz1JlEJ7G6kTAqQG89BUHDbq
-	 g1h7swkC84a2d8i3yZuGPBAcSBg/CmfjWO6w75ARxUff94PmMQ/PLDU1LLjnLq0e2w
-	 aEhwxAqPF3U9w==
+	b=OXLE/QnveyxCr5zLkoC0yrS/U3aswTSaM33S30kbH6fyME46ZYHXNEcB9O4WmsFJK
+	 rMdRnMv2W7OUpz7DYZCyLO0yRjKHyWfAX7m5hGBbb12y6qfYw1qlaRkwKCDQXuHn25
+	 aVZfhxy6w4kU9wUCdFwdp+rO1xLJmFGDzjeoqtu4OcPxcAk3RIYQW3sSlUaSlKrJ0A
+	 qYn0IA1B/Al7Ca0Bhxy2wb7/D6QHHE6RFEOhrJ4UCAX3VgYhJL/xOBW6mgyQ/0qytx
+	 pZf+crlYC7cz5RoyoPNIt7n3esvDCAtdrK505kzBQshhCCwO2nrQqILuvboKIYUxcx
+	 7KmFKwHpQlhtA==
 From: Arnd Bergmann <arnd@kernel.org>
-To: Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Nathan Chancellor <nathan@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH] sched: open-code max_rt_runtime definition
-Date: Tue, 25 Feb 2025 21:07:39 +0100
-Message-Id: <20250225200806.4012494-1-arnd@kernel.org>
+	Waiman Long <longman@redhat.com>,
+	Carlos Llamas <cmllamas@google.com>,
+	Ying Huang <huang.ying.caritas@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] lockdep: change 'static const' variables to enum values
+Date: Tue, 25 Feb 2025 21:08:26 +0100
+Message-Id: <20250225200830.4031742-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -53,58 +49,75 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-Building with clang using "make W=1" normally produces warnings about unused
-const variables, but clang does not warn about those in header files.
-In case of rt.c it also doesn't warn because this gets included by
-from build_policy.c.
+gcc warns about 'static const' variables even in headers when building
+with -Wunused-const-variables enabled:
 
-Enabling the same warning on gcc also warns about it in included files,
-so we end up with a warning when all users of max_rt_runtime are
-hidden because both CONFIG_RT_GROUP_SCHED and CONFIG_SYSCTL are
-disabled:
+In file included from kernel/locking/lockdep_proc.c:25:
+kernel/locking/lockdep_internals.h:69:28: error: 'LOCKF_USED_IN_IRQ_READ' defined but not used [-Werror=unused-const-variable=]
+   69 | static const unsigned long LOCKF_USED_IN_IRQ_READ =
+      |                            ^~~~~~~~~~~~~~~~~~~~~~
+kernel/locking/lockdep_internals.h:63:28: error: 'LOCKF_ENABLED_IRQ_READ' defined but not used [-Werror=unused-const-variable=]
+   63 | static const unsigned long LOCKF_ENABLED_IRQ_READ =
+      |                            ^~~~~~~~~~~~~~~~~~~~~~
+kernel/locking/lockdep_internals.h:57:28: error: 'LOCKF_USED_IN_IRQ' defined but not used [-Werror=unused-const-variable=]
+   57 | static const unsigned long LOCKF_USED_IN_IRQ =
+      |                            ^~~~~~~~~~~~~~~~~
+kernel/locking/lockdep_internals.h:51:28: error: 'LOCKF_ENABLED_IRQ' defined but not used [-Werror=unused-const-variable=]
+   51 | static const unsigned long LOCKF_ENABLED_IRQ =
+      |                            ^~~~~~~~~~~~~~~~~
 
-ernel/sched/rt.c:9:18: error: 'max_rt_runtime' defined but not used [-Werror=unused-const-variable]
-
-It's not possible to avoid the warning by moving max_rt_runtime
-into one of the #ifdef sections, but since it is itself defined
-as MAX_BW, simply open-coding that is an easy workaround.
+This one is easy to avoid by changing the generated constant definition
+into an equivalent enum.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- kernel/sched/rt.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ kernel/locking/lockdep_internals.h | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index 7a9ed4d93397..5dd6280442f0 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -5,8 +5,6 @@
-  */
+diff --git a/kernel/locking/lockdep_internals.h b/kernel/locking/lockdep_internals.h
+index 20f9ef58d3d0..8b4cd6540e49 100644
+--- a/kernel/locking/lockdep_internals.h
++++ b/kernel/locking/lockdep_internals.h
+@@ -47,29 +47,31 @@ enum {
+ 	__LOCKF(USED_READ)
+ };
  
- int sched_rr_timeslice = RR_TIMESLICE;
--/* More than 4 hours if BW_SHIFT equals 20. */
--static const u64 max_rt_runtime = MAX_BW;
++enum {
+ #define LOCKDEP_STATE(__STATE)	LOCKF_ENABLED_##__STATE |
+-static const unsigned long LOCKF_ENABLED_IRQ =
++	LOCKF_ENABLED_IRQ =
+ #include "lockdep_states.h"
+-	0;
++	0,
+ #undef LOCKDEP_STATE
  
- /*
-  * period over which we measure -rt task CPU usage in us.
-@@ -2779,7 +2777,7 @@ static int tg_set_rt_bandwidth(struct task_group *tg,
- 	/*
- 	 * Bound quota to defend quota against overflow during bandwidth shift.
- 	 */
--	if (rt_runtime != RUNTIME_INF && rt_runtime > max_rt_runtime)
-+	if (rt_runtime != RUNTIME_INF && rt_runtime > MAX_BW)
- 		return -EINVAL;
+ #define LOCKDEP_STATE(__STATE)	LOCKF_USED_IN_##__STATE |
+-static const unsigned long LOCKF_USED_IN_IRQ =
++	LOCKF_USED_IN_IRQ =
+ #include "lockdep_states.h"
+-	0;
++	0,
+ #undef LOCKDEP_STATE
  
- 	mutex_lock(&rt_constraints_mutex);
-@@ -2891,7 +2889,7 @@ static int sched_rt_global_validate(void)
- 	if ((sysctl_sched_rt_runtime != RUNTIME_INF) &&
- 		((sysctl_sched_rt_runtime > sysctl_sched_rt_period) ||
- 		 ((u64)sysctl_sched_rt_runtime *
--			NSEC_PER_USEC > max_rt_runtime)))
-+			NSEC_PER_USEC > MAX_BW)))
- 		return -EINVAL;
+ #define LOCKDEP_STATE(__STATE)	LOCKF_ENABLED_##__STATE##_READ |
+-static const unsigned long LOCKF_ENABLED_IRQ_READ =
++	LOCKF_ENABLED_IRQ_READ =
+ #include "lockdep_states.h"
+-	0;
++	0,
+ #undef LOCKDEP_STATE
  
- 	return 0;
+ #define LOCKDEP_STATE(__STATE)	LOCKF_USED_IN_##__STATE##_READ |
+-static const unsigned long LOCKF_USED_IN_IRQ_READ =
++	LOCKF_USED_IN_IRQ_READ =
+ #include "lockdep_states.h"
+-	0;
++	0,
+ #undef LOCKDEP_STATE
++};
+ 
+ #define LOCKF_ENABLED_IRQ_ALL (LOCKF_ENABLED_IRQ | LOCKF_ENABLED_IRQ_READ)
+ #define LOCKF_USED_IN_IRQ_ALL (LOCKF_USED_IN_IRQ | LOCKF_USED_IN_IRQ_READ)
 -- 
 2.39.5
 
