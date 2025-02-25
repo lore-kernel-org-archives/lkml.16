@@ -1,94 +1,130 @@
-Received: from pv50p00im-ztdg10011301.me.com (pv50p00im-ztdg10011301.me.com [17.58.6.40])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D455E26A1C1
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 15:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7AB26BD90
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 15:05:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740495906; cv=none; b=Acr4pGduA93zp9e+/qX51F+kE2WZ464DiWT0wT2zOmsPdzK7SpkTuJ3ZFL60UxsehQfF0QkbtAG+YoqEBNCBGBhvjciwzFxJJjG5ZZqJyZvfo4QCXXf7PVfhWA4+L2XghUr15FLbdOpVYmXwbRqe7wraW83duYEi6T8zSnfbUd8=
+	t=1740495909; cv=none; b=rRx+3W17FUJbTpmsmrAKyEge41KYkF9ii9scQzFcNG+SjoU110MXyFL6w81FFemPN4EZc81V5nBvoP9cyT+QUMgc+yieD9s63bjodPAgWIQ6K3vr/p7wTgoYhEOmoIEuiXbqrsxqvFxka5z/IEJArC3kyhvC3L52Q8r7tT9/mJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740495906; c=relaxed/simple;
-	bh=OqIUwNrI2NRVYapWjZN4ov2VJL8MMbFqYHRE3TL8lps=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KSEFodt98BGm0dnl0dUvMcgfnOqSYE6oBmWu0Ikq8/JuUMuTXXbfI6o0m77gIjDVuO/LQcP1QRbQHh2bwvxNoGe+GW6meqt3jmnOzJyswnn3Bb5TCOsjk9HsmhZpW6kngRZ+luYTydSrzGCtOp/clkarVTO1QwHdwchv1/h2PZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=ESMyZAlv; arc=none smtp.client-ip=17.58.6.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1740495909; c=relaxed/simple;
+	bh=xCTtrHDdXUTIma0E6i1UNMQGYB9gWHwdyQbD5ikxQig=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=i5UBf8Um1fr7ic4IEKKOFrGkYl9zNE8x5tU2ym3XxJ0C3Hc5xfms2PQ2MRjKhWdqpMqVg4Bq12E0tUuRY55+4d+Xe6hFKAS1mXrDBktcHThFIEHQrs9tDCXzxo0yQTPukmP0Z2aqFmUO/nOBnVld7lKEzbp/+4JH4g9gdoycUqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MLWQZpXz; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="ESMyZAlv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=q87VqXrF2/CmhKNXioWRVSBysK57pH279yUQysqPB0k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
-	b=ESMyZAlvgvWfdOYJZRFBB97U30piSmDiH0/KmQJ0XSHfol0Xb1WzIdOEjTP7eggeX
-	 47DDRfGAtpIe97KSZgtbUr/5IziZx3MItS22LCIcbLptFq8PPNKTn9ZS5xrifGhHh7
-	 GbN+R4cXAlRItzoPoUjfR/Zf9QVmQN/kY5xLgm38ySpVLWtRaqnRCCJAxutThHOxTv
-	 zHyJJ39O3qGxGskuGj3kWCDgXMxlE3znp92g6AWv+gBbZ7zLe5b0FZAnSTfoe0ilKk
-	 GXKnqzh6ISHo25oz/1qJI7lsJ3AV6GdOVYeuFeRUqT+q1SRzvAgEJMR6yU4oYPs2be
-	 YrybiI1z9Lj5g==
-Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-	by pv50p00im-ztdg10011301.me.com (Postfix) with ESMTPSA id EC8DE1804BF;
-	Tue, 25 Feb 2025 15:04:59 +0000 (UTC)
-Message-ID: <e6faab90-b4f3-4c73-b486-2e44d15d22a2@icloud.com>
-Date: Tue, 25 Feb 2025 23:04:55 +0800
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MLWQZpXz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1740495905;
+	bh=xCTtrHDdXUTIma0E6i1UNMQGYB9gWHwdyQbD5ikxQig=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=MLWQZpXzxGEwiizt3jBSXSieYKq5MHfftP6Zw4kzkzUVZ6eyd+EhyCwqgrrWqKnt7
+	 mFhuEpstRuKMWuY+ONICCuMs6jxVOefolMEMx5fOWERsqa33NhtVvhDv70yl289oP6
+	 QD/r/0Al8nXN/t34OV6fYGmiWrNsv0jvWyplMxHH6Rj7Mth47iRccC2Plk0YxNcWoC
+	 Sb43qL4SUXJBtWDfBwra2nSbj9AzwcDhlED0Vs4poJMHQNRryp3taSnw7qgZUGqv5k
+	 sRN3og3MfutSmqt5eUrelyAn8fTtH15NvKNbyskHebDYD083sC0+boRJRBaEdwVnSR
+	 P0h26cIWx6I2A==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9FB5217E0CFA;
+	Tue, 25 Feb 2025 16:05:04 +0100 (CET)
+Date: Tue, 25 Feb 2025 16:04:59 +0100
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Steven
+ Price <steven.price@arm.com>, Rob Herring <robh@kernel.org>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, kernel@collabora.com
+Subject: Re: [RFC PATCH 6/7] drm/panfrost: Use shmem sparse allocation for
+ heap BOs
+Message-ID: <20250225160459.664ce342@collabora.com>
+In-Reply-To: <20250218232552.3450939-7-adrian.larumbe@collabora.com>
+References: <20250218232552.3450939-1-adrian.larumbe@collabora.com>
+	<20250218232552.3450939-7-adrian.larumbe@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] of: Correct property name comparison in
- __of_add_property()
-To: Rob Herring <robh@kernel.org>
-Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-References: <20250224-of_bugfix-v1-0-03640ae8c3a6@quicinc.com>
- <20250224-of_bugfix-v1-3-03640ae8c3a6@quicinc.com>
- <20250225143844.GA2279028-robh@kernel.org>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <20250225143844.GA2279028-robh@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: --H0-2Ohtd1z-A1QUBh5rO5UZOF2IauI
-X-Proofpoint-ORIG-GUID: --H0-2Ohtd1z-A1QUBh5rO5UZOF2IauI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_04,2025-02-25_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=628 malwarescore=0
- suspectscore=0 mlxscore=0 spamscore=0 phishscore=0 clxscore=1015
- adultscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2502250101
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/2/25 22:38, Rob Herring wrote:
-> On Mon, Feb 24, 2025 at 10:27:59PM +0800, Zijun Hu wrote:
->> From: Zijun Hu <quic_zijuhu@quicinc.com>
->>
->> __of_add_property() compares property name by strcmp(), and that is
->> improper for SPARC which wants strcasecmp().
-> Except that 'name' is the nodename (usually, with a few rare 
-> exceptions). Sparc node names are case sensitive, so strcmp was correct. 
+On Tue, 18 Feb 2025 23:25:36 +0000
+Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
 
-Here, it is property's name and NOT node's name.
+> Panfrost heap BOs grow on demand when the GPU triggers a page fault after
+> accessing an address within the BO's virtual range.
+>=20
+> We still store the sgts we get back from the shmem sparse allocation func=
+tion,
+> since it was decided management of sparse memory SGTs should be done by c=
+lient
+> drivers rather than the shmem subsystem.
+>=20
+> Signed-off-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
+> ---
+>  drivers/gpu/drm/panfrost/panfrost_gem.c | 12 ++--
+>  drivers/gpu/drm/panfrost/panfrost_gem.h |  2 +-
+>  drivers/gpu/drm/panfrost/panfrost_mmu.c | 85 +++++--------------------
+>  3 files changed, 25 insertions(+), 74 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.c b/drivers/gpu/drm/pa=
+nfrost/panfrost_gem.c
+> index 8e0ff3efede7..0cda2c4e524f 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_gem.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_gem.c
+> @@ -40,10 +40,10 @@ static void panfrost_gem_free_object(struct drm_gem_o=
+bject *obj)
+>  		int n_sgt =3D bo->base.base.size / SZ_2M;
+> =20
+>  		for (i =3D 0; i < n_sgt; i++) {
+> -			if (bo->sgts[i].sgl) {
+> -				dma_unmap_sgtable(pfdev->dev, &bo->sgts[i],
+> +			if (bo->sgts[i]) {
+> +				dma_unmap_sgtable(pfdev->dev, bo->sgts[i],
+>  						  DMA_BIDIRECTIONAL, 0);
+> -				sg_free_table(&bo->sgts[i]);
+> +				sg_free_table(bo->sgts[i]);
+>  			}
+>  		}
+>  		kvfree(bo->sgts);
+> @@ -274,7 +274,11 @@ panfrost_gem_create(struct drm_device *dev, size_t s=
+ize, u32 flags)
+>  	if (flags & PANFROST_BO_HEAP)
+>  		size =3D roundup(size, SZ_2M);
+> =20
+> -	shmem =3D drm_gem_shmem_create(dev, size);
+> +	if (flags & PANFROST_BO_HEAP)
+> +		shmem =3D drm_gem_shmem_create_sparse(dev, size);
+> +	else
+> +		shmem =3D drm_gem_shmem_create(dev, size);
+> +
+>  	if (IS_ERR(shmem))
+>  		return ERR_CAST(shmem);
+> =20
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.h b/drivers/gpu/drm/pa=
+nfrost/panfrost_gem.h
+> index 7516b7ecf7fe..2a8d0752011e 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_gem.h
+> +++ b/drivers/gpu/drm/panfrost/panfrost_gem.h
+> @@ -11,7 +11,7 @@ struct panfrost_mmu;
+> =20
+>  struct panfrost_gem_object {
+>  	struct drm_gem_shmem_object base;
+> -	struct sg_table *sgts;
+> +	struct sg_table **sgts;
 
-arch/sparc/include/asm/prom.h:
-
-#define of_compat_cmp(s1, s2, l) strncmp((s1), (s2), (l))
-#define of_prop_cmp(s1, s2)	strcasecmp((s1), (s2)) //SPARC HERE
-#define of_node_cmp(s1, s2)	strcmp((s1), (s2))
-
-
-include/linux/of.h:
-/* Default string compare functions, Allow arch asm/prom.h to override */
-#if !defined(of_compat_cmp)
-#define of_compat_cmp(s1, s2, l) strcasecmp((s1), (s2))
-#define of_prop_cmp(s1, s2)	strcmp((s1), (s2))      // others HERE
-#define of_node_cmp(s1, s2)	strcasecmp((s1), (s2))
-#endif
-
-actually, later __of_update_property() and __of_find_property() use
-of_prop_cmp() instead of strcmp() to compare property name.
-
-perhaps, compatible and node name also have similar issues in current
-OF codes.
-
+I guess using an xarray here would make sense. Or maybe even an
+sg_append_table, since we don't expect holes in the populated pages.
+This makes me wonder if we really want the gem_shmem layer to automate
+sgt creation for sparse GEM objects. Looks like something the driver
+can easily optimize for its use-case.
