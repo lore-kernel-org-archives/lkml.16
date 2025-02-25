@@ -1,523 +1,161 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31AC410A1F
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 00:10:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5A8EC0;
+	Tue, 25 Feb 2025 00:14:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740442246; cv=none; b=nVop8/Z3KVxXlVcAoAwxlqQ1xKcrOCqm5eScPpv2CEJglhRvYzjHaxE/4UlKsmkl+lHgBU6ufPwJnsazKQv0P4Y/+kmmK/Aizyu5MSyvFwrvCWAh23FdinrTEVgGYkUxvtSCgWA2sA9tvr22ziWmlzOXQy2FXDyvdMo/72dlCsE=
+	t=1740442450; cv=none; b=YnI9W4fDztOnRdusn5jhonympxbhI7KSuDvIqxsv76qFyzn3BTv4FyKT6YE50kv6Z+BxeZHjLC+o7XkLIrdpOMiwXfKIpwwIs6EYqR56mbJHRkka3f7W5Zt2TAwcnHX1Om0gDUV7p9gMT23HZpEOkGFs74pQk0u1Vfke+qgbujo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740442246; c=relaxed/simple;
-	bh=uJIYBBKABsWx06IUAxuzKVX6yW0jaug2nCyJnRc1UsA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BHiaHY2B8vfoseo4vCm2MaXNZnKR+xyRGzXWoPEgYv5IixDAuWWWwfl1UBITuoDNbtJrN7H5xu+7f+K4pX0l5Jc95CRlfLhu5ViGT+/pIrBBqU0ZTLawNefAhA0e0/rdaW+ntVjKmR8QVkqTmbtxlegVOWgX2wOLoSFzRHqfJyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=zeJL418W; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1740442450; c=relaxed/simple;
+	bh=RrjZywtok7pmqjRXq+52Mw3aIZaqlkmt827OKazuRN8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Xy+mLPr2bnlK6bJRZayOYllshRH9DYTrRyOnXL+l1oF4MXSSNAFF8PW+T5ON7M2Ad6PCnPPm3ffyx1aofJlmE9b2q9gK02TbthuKLhMw5eHym2z1O+3qbBkApaDHOXZwyviIcA4dRNg9CCejDKj7bssiPbNzbsVhQc24Zix8gKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JSXg4Hv3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="zeJL418W"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6e41e17645dso52768516d6.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 16:10:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1740442242; x=1741047042; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2e25n5vpfxDFEGmdOG76BnXvJ2FJi0Uv+lwO0Tt+wqc=;
-        b=zeJL418Wpl6jakxYO61WfUMKtRolKcWTQSrAAkWC4u0kQjYr2YVHgevXkR1YW9K5Ja
-         5nSfzvsoyXr6qH2WsrxCgvSDR+WDzIrMDPkbJzpPBeVoimPa0MqHfz3ATs/tes2q6ETl
-         JB5lss1UN9jhtA6h5wqc0uaeNaUhFIDJ39hAFQViFWXujvrkNeFYRs1Smfztqc/b9tDY
-         khbIhP88TtkO7LnRgosIBlU89MesoI0TVTYcCc+AX07+E4TcI3YCRu4/kBYMMBBnDPPn
-         TRV+uwFT7ECsk1FNBSrrV3iY2IvQhEvPfj178Cg+K/kW94ADIRu1mxraf0ubmLArqan/
-         xJjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740442242; x=1741047042;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2e25n5vpfxDFEGmdOG76BnXvJ2FJi0Uv+lwO0Tt+wqc=;
-        b=lHBbZHHEql+xj/7eOiKyiU5zn/S9cQk+7Po4eeB5W6RvNDMdLkOvv9JxLYCtoaCxMZ
-         ke0J7oKyy1fn2p8raSbmVS/+XMXzShD4KiG6bclJiVNaUKBqIICpyxcdlbtU/V7UYjl9
-         MP7gUHOsP5j/e+ebmN94tdAper+b7ZyXv3G6DWxzusIVs2di+ZgZYNkmJSkZ3Hy5q9kk
-         jWWeJzZRkQsrIBWm7WSAl3OfIZ8rzssfmrpGzVO1Knj56lFwYw8dK5hydQCBhL+u58lw
-         Xs00RoMRuRqr6amFt0sy+5Zuc4Aqi61Kiq4BL5aN4ZEkKwGYOMlMV5ry/u95DLS/jx3Q
-         Td8g==
-X-Forwarded-Encrypted: i=1; AJvYcCWBnNnIME/ddAKdZWVH8sijYVRL29iy+w4dcUQy1/FngO1NuafgvcEzldc0rxPaIqOtV8kTB9FsUkzab1k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqGoufXbCfIfD8FoCSa/ExwwkRXMNpKUXqFn+pP3vfZ2d44EKi
-	uXYMVEZ3rpTiOwULp1rkFluoO7ginmZwed+GfxjNos2NwkG6s4TY2VBfAE3BdU0=
-X-Gm-Gg: ASbGncuKDeXHbqhwJHoJOGnQo8nyMlgZDvBZyzhFLkUxI42SvWsx4C0dzAdkrgRZ/JW
-	oBJ0OSPE1nMr+zQk5t92uVVyqU4qaMVXxZqdy3hTwOljTtvhtRPyZNZfk/ScoICR9DqxdwAnTKI
-	dIEfNDE8qzTkgo+maWzREuQcGxlJB+p3H31TF5p3O43ahkm+Qw1RhFbQEpCvlSb07cNurs/XkCa
-	UhnMnlXGT4o74rMHmS8+eHOl0VYZUPdfZ1+q2kB3nQqnSwUKzSXWyEGCOJqWqHkeDfMGaT85bQb
-	R6uoxtb6UYicZId2pmGJIAHX
-X-Google-Smtp-Source: AGHT+IGgkiR9iptSEyFu7U9mGo/QIIVICqxDDnkseqj6QpgDVUGUnhk9KHuZIRF7lIakpsCc0f0yiA==
-X-Received: by 2002:a05:6214:2463:b0:6e4:1e1d:10a7 with SMTP id 6a1803df08f44-6e6ae7c6211mr196896276d6.1.1740442241870;
-        Mon, 24 Feb 2025 16:10:41 -0800 (PST)
-Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6e87b0871e2sm3224846d6.27.2025.02.24.16.10.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 16:10:36 -0800 (PST)
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>,
-	Brendan Jackman <jackmanb@google.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] mm: page_alloc: group fallback functions together
-Date: Mon, 24 Feb 2025 19:08:26 -0500
-Message-ID: <20250225001023.1494422-4-hannes@cmpxchg.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250225001023.1494422-1-hannes@cmpxchg.org>
-References: <20250225001023.1494422-1-hannes@cmpxchg.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JSXg4Hv3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EA89C4CEEA;
+	Tue, 25 Feb 2025 00:14:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740442450;
+	bh=RrjZywtok7pmqjRXq+52Mw3aIZaqlkmt827OKazuRN8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=JSXg4Hv3hAgWNZiLAcLwodBsvL355TD9HhBuHHgJxH64OhFw6QwjwpJi5/sRd2hnE
+	 bacx8UiqoRurkn5hnZjOe9ZkV3pcMJ1r5E1GbmEO0RuOgK9gKQFFWy8OEA2R/3C/Zz
+	 OsxVw8lNacqv2tIViGLMII/Tr1Pgfmky/feOJfXW3L76HFNGzBUJl5VvF+7tABbW4l
+	 SOkj6z6zrqAIe+S+ZkMZpcZcC1RQ59Ovi9r76EZme/hVAUn60+35VQzQEIKbJTIcVg
+	 tEniDvRB761XJK2VrxWbzz9ZrIH1WnT36lmUUlgsGcjut7uRal2T2dKXPi/CvX5F87
+	 82qwpNiXaZuUw==
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-855d73856f3so347941539f.1;
+        Mon, 24 Feb 2025 16:14:10 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUb8rPJ1/N9aO7tjvv2En3cfQVoQfPPxClvprG/l5RbN0sSeQ2vyIGWvXgskDnoKkGnNsAFp1fBUQhRTFFNFA==@vger.kernel.org, AJvYcCV/F7ZjbazXAovT5iCkBbHC8KlrcSxurz1yCUmFgOWeZUEIU2in6TQ3N/+qXNk8EoBjrR6SEeBmh/O1KF+xSsSRtA==@vger.kernel.org, AJvYcCX6p9BR2R4RQ8KHJXppywrSBx+TbsocnOqv7ACk2TozqFZ1mwhnyBs/NRUUnhZix+LmK9x2B2ZV0e1yMsc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5dgqpOFKSceFZJJeM3Y+/QREDCcLPGMFagdf9GI882OPZ86YK
+	YLCOR5LrW2KHBH989n17AMLj3azR3EZL62d5uFpy08WUnxuqqQlAeU4VGA8i+lYrHgt9ov16On6
+	7Dmr6A8EeUJpKgftZpFHLsicoDNU=
+X-Google-Smtp-Source: AGHT+IEGfSMvQhcmxe+D0QwBwqdzpgzsf7C3s6D4Gjai2KF9IRKGDa/39Olkwm6B0VNAodvYcGSMocV0IYhoCmStwQE=
+X-Received: by 2002:a05:6e02:148e:b0:3d2:b7b6:e80d with SMTP id
+ e9e14a558f8ab-3d2fc0c54a4mr18692795ab.3.1740442449607; Mon, 24 Feb 2025
+ 16:14:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAPhsuW6dxPtgqZaHrZEVhQXwm2+sETreZnGybZXVKYKfG9H6tg@mail.gmail.com>
+ <20250214193400.j4hp45jlufihv5eh@jpoimboe> <CAPhsuW6q+yhn0pGQb0K+RhXHYDkjEgomZ2pu3P_MEeX+xNRe0g@mail.gmail.com>
+ <20250214232342.5m3hveygqb2qafpp@jpoimboe> <CAPhsuW48h11yLuU7uHuPgYNCzwaxVKG+TaGOZeT7fR60+brTwA@mail.gmail.com>
+ <20250218063702.e2qrpjk4ylhnk5s7@jpoimboe> <CAPhsuW5ZauBrSz11cvVtG5qQBfNmbcwPgMf=BScHtyZfHvK4FQ@mail.gmail.com>
+ <20250218184059.iysrvtaoah6e4bu4@jpoimboe> <CAPhsuW4pd8gEiRNj920kO8c4JuEWoXT=MhFK-nWvJZ9QseefaQ@mail.gmail.com>
+ <CAPhsuW57xpR1YZqENvDr0vNZGVrq4+LUzPRA-wZipurTTy7MmA@mail.gmail.com>
+ <20250220182221.vdmmnoyvc2do5mnn@jpoimboe> <CAPhsuW53DK2vFH-BZeUYN-eythX3NQEbcxrYf6jvBDtDmctRgw@mail.gmail.com>
+In-Reply-To: <CAPhsuW53DK2vFH-BZeUYN-eythX3NQEbcxrYf6jvBDtDmctRgw@mail.gmail.com>
+From: Song Liu <song@kernel.org>
+Date: Mon, 24 Feb 2025 16:13:58 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW5Codoe2NViZJRE4JjM2Qc_v-qPzKZ1vOyr+9Oi0CxpAQ@mail.gmail.com>
+X-Gm-Features: AWEUYZlhFxBXD7xdQSvghIzbkdQB4xbhvgY6aZ3jRtXIkzKgZAdiM9UvB5WldRw
+Message-ID: <CAPhsuW5Codoe2NViZJRE4JjM2Qc_v-qPzKZ1vOyr+9Oi0CxpAQ@mail.gmail.com>
+Subject: Re: [PATCH 0/8] unwind, arm64: add sframe unwinder for kernel
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Puranjay Mohan <puranjay@kernel.org>, Weinan Liu <wnliu@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Indu Bhagat <indu.bhagat@oracle.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Mark Rutland <mark.rutland@arm.com>, roman.gushchin@linux.dev, 
+	Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>, linux-toolchains@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, live-patching@vger.kernel.org, 
+	joe.lawrence@redhat.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The way the fallback rules are spread out makes them hard to
-follow. Move the functions next to each other at least.
+On Thu, Feb 20, 2025 at 10:33=E2=80=AFAM Song Liu <song@kernel.org> wrote:
+>
+>
+> On Thu, Feb 20, 2025 at 10:22=E2=80=AFAM Josh Poimboeuf <jpoimboe@kernel.=
+org> wrote:
+>>
+>> On Wed, Feb 19, 2025 at 08:50:09PM -0800, Song Liu wrote:
+>> > Indu, is this behavior (symbols with same name are not in
+>> > sorted order from readelf -s) expected? Or is this a bug?
+>> > I am using this gcc:
+>> >
+>> > $ gcc --version
+>> > gcc (GCC) 14.2.1 20240801 (Red Hat 14.2.1-1)
+>> > Copyright (C) 2024 Free Software Foundation, Inc.
+>> > This is free software; see the source for copying conditions.  There i=
+s NO
+>> > warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PUR=
+POSE.
+>>
+>> Are you using different binutils versions as well?
+>
+>
+> I am using binutil 2.41, for both gcc -11 and gcc-14.
+>
+>>
+>> It sounds like a linker "issue" to me.  I'm not sure if it qualifies as
+>> a bug, the linker might be free to layout symbols how it wishes.
+>
+>
+> We can probably handle that in kpatch-build.
 
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
----
- mm/page_alloc.c | 394 ++++++++++++++++++++++++------------------------
- 1 file changed, 197 insertions(+), 197 deletions(-)
+OK, something like the following gets the proper sympos for
+gcc-14 built kernel.
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 53d315aa69c4..d02edb7d5e21 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1903,6 +1903,43 @@ static void change_pageblock_range(struct page *pageblock_page,
- 	}
- }
- 
-+static inline bool boost_watermark(struct zone *zone)
-+{
-+	unsigned long max_boost;
-+
-+	if (!watermark_boost_factor)
-+		return false;
-+	/*
-+	 * Don't bother in zones that are unlikely to produce results.
-+	 * On small machines, including kdump capture kernels running
-+	 * in a small area, boosting the watermark can cause an out of
-+	 * memory situation immediately.
-+	 */
-+	if ((pageblock_nr_pages * 4) > zone_managed_pages(zone))
-+		return false;
-+
-+	max_boost = mult_frac(zone->_watermark[WMARK_HIGH],
-+			watermark_boost_factor, 10000);
-+
-+	/*
-+	 * high watermark may be uninitialised if fragmentation occurs
-+	 * very early in boot so do not boost. We do not fall
-+	 * through and boost by pageblock_nr_pages as failing
-+	 * allocations that early means that reclaim is not going
-+	 * to help and it may even be impossible to reclaim the
-+	 * boosted watermark resulting in a hang.
-+	 */
-+	if (!max_boost)
-+		return false;
-+
-+	max_boost = max(pageblock_nr_pages, max_boost);
-+
-+	zone->watermark_boost = min(zone->watermark_boost + pageblock_nr_pages,
-+		max_boost);
-+
-+	return true;
-+}
-+
- /*
-  * When we are falling back to another migratetype during allocation, try to
-  * steal extra free pages from the same pageblocks to satisfy further
-@@ -1944,41 +1981,38 @@ static bool can_steal_fallback(unsigned int order, int start_mt)
- 	return false;
- }
- 
--static inline bool boost_watermark(struct zone *zone)
-+/*
-+ * Check whether there is a suitable fallback freepage with requested order.
-+ * If only_stealable is true, this function returns fallback_mt only if
-+ * we can steal other freepages all together. This would help to reduce
-+ * fragmentation due to mixed migratetype pages in one pageblock.
-+ */
-+int find_suitable_fallback(struct free_area *area, unsigned int order,
-+			int migratetype, bool only_stealable, bool *can_steal)
- {
--	unsigned long max_boost;
-+	int i;
-+	int fallback_mt;
- 
--	if (!watermark_boost_factor)
--		return false;
--	/*
--	 * Don't bother in zones that are unlikely to produce results.
--	 * On small machines, including kdump capture kernels running
--	 * in a small area, boosting the watermark can cause an out of
--	 * memory situation immediately.
--	 */
--	if ((pageblock_nr_pages * 4) > zone_managed_pages(zone))
--		return false;
-+	if (area->nr_free == 0)
-+		return -1;
- 
--	max_boost = mult_frac(zone->_watermark[WMARK_HIGH],
--			watermark_boost_factor, 10000);
-+	*can_steal = false;
-+	for (i = 0; i < MIGRATE_PCPTYPES - 1 ; i++) {
-+		fallback_mt = fallbacks[migratetype][i];
-+		if (free_area_empty(area, fallback_mt))
-+			continue;
- 
--	/*
--	 * high watermark may be uninitialised if fragmentation occurs
--	 * very early in boot so do not boost. We do not fall
--	 * through and boost by pageblock_nr_pages as failing
--	 * allocations that early means that reclaim is not going
--	 * to help and it may even be impossible to reclaim the
--	 * boosted watermark resulting in a hang.
--	 */
--	if (!max_boost)
--		return false;
-+		if (can_steal_fallback(order, migratetype))
-+			*can_steal = true;
- 
--	max_boost = max(pageblock_nr_pages, max_boost);
-+		if (!only_stealable)
-+			return fallback_mt;
- 
--	zone->watermark_boost = min(zone->watermark_boost + pageblock_nr_pages,
--		max_boost);
-+		if (*can_steal)
-+			return fallback_mt;
-+	}
- 
--	return true;
-+	return -1;
- }
- 
- /*
-@@ -2054,175 +2088,6 @@ try_to_steal_block(struct zone *zone, struct page *page,
- 	return NULL;
- }
- 
--/*
-- * Check whether there is a suitable fallback freepage with requested order.
-- * If only_stealable is true, this function returns fallback_mt only if
-- * we can steal other freepages all together. This would help to reduce
-- * fragmentation due to mixed migratetype pages in one pageblock.
-- */
--int find_suitable_fallback(struct free_area *area, unsigned int order,
--			int migratetype, bool only_stealable, bool *can_steal)
--{
--	int i;
--	int fallback_mt;
--
--	if (area->nr_free == 0)
--		return -1;
--
--	*can_steal = false;
--	for (i = 0; i < MIGRATE_PCPTYPES - 1 ; i++) {
--		fallback_mt = fallbacks[migratetype][i];
--		if (free_area_empty(area, fallback_mt))
--			continue;
--
--		if (can_steal_fallback(order, migratetype))
--			*can_steal = true;
--
--		if (!only_stealable)
--			return fallback_mt;
--
--		if (*can_steal)
--			return fallback_mt;
--	}
--
--	return -1;
--}
--
--/*
-- * Reserve the pageblock(s) surrounding an allocation request for
-- * exclusive use of high-order atomic allocations if there are no
-- * empty page blocks that contain a page with a suitable order
-- */
--static void reserve_highatomic_pageblock(struct page *page, int order,
--					 struct zone *zone)
--{
--	int mt;
--	unsigned long max_managed, flags;
--
--	/*
--	 * The number reserved as: minimum is 1 pageblock, maximum is
--	 * roughly 1% of a zone. But if 1% of a zone falls below a
--	 * pageblock size, then don't reserve any pageblocks.
--	 * Check is race-prone but harmless.
--	 */
--	if ((zone_managed_pages(zone) / 100) < pageblock_nr_pages)
--		return;
--	max_managed = ALIGN((zone_managed_pages(zone) / 100), pageblock_nr_pages);
--	if (zone->nr_reserved_highatomic >= max_managed)
--		return;
--
--	spin_lock_irqsave(&zone->lock, flags);
--
--	/* Recheck the nr_reserved_highatomic limit under the lock */
--	if (zone->nr_reserved_highatomic >= max_managed)
--		goto out_unlock;
--
--	/* Yoink! */
--	mt = get_pageblock_migratetype(page);
--	/* Only reserve normal pageblocks (i.e., they can merge with others) */
--	if (!migratetype_is_mergeable(mt))
--		goto out_unlock;
--
--	if (order < pageblock_order) {
--		if (move_freepages_block(zone, page, mt, MIGRATE_HIGHATOMIC) == -1)
--			goto out_unlock;
--		zone->nr_reserved_highatomic += pageblock_nr_pages;
--	} else {
--		change_pageblock_range(page, order, MIGRATE_HIGHATOMIC);
--		zone->nr_reserved_highatomic += 1 << order;
--	}
--
--out_unlock:
--	spin_unlock_irqrestore(&zone->lock, flags);
--}
--
--/*
-- * Used when an allocation is about to fail under memory pressure. This
-- * potentially hurts the reliability of high-order allocations when under
-- * intense memory pressure but failed atomic allocations should be easier
-- * to recover from than an OOM.
-- *
-- * If @force is true, try to unreserve pageblocks even though highatomic
-- * pageblock is exhausted.
-- */
--static bool unreserve_highatomic_pageblock(const struct alloc_context *ac,
--						bool force)
--{
--	struct zonelist *zonelist = ac->zonelist;
--	unsigned long flags;
--	struct zoneref *z;
--	struct zone *zone;
--	struct page *page;
--	int order;
--	int ret;
--
--	for_each_zone_zonelist_nodemask(zone, z, zonelist, ac->highest_zoneidx,
--								ac->nodemask) {
--		/*
--		 * Preserve at least one pageblock unless memory pressure
--		 * is really high.
--		 */
--		if (!force && zone->nr_reserved_highatomic <=
--					pageblock_nr_pages)
--			continue;
--
--		spin_lock_irqsave(&zone->lock, flags);
--		for (order = 0; order < NR_PAGE_ORDERS; order++) {
--			struct free_area *area = &(zone->free_area[order]);
--			unsigned long size;
--
--			page = get_page_from_free_area(area, MIGRATE_HIGHATOMIC);
--			if (!page)
--				continue;
--
--			/*
--			 * It should never happen but changes to
--			 * locking could inadvertently allow a per-cpu
--			 * drain to add pages to MIGRATE_HIGHATOMIC
--			 * while unreserving so be safe and watch for
--			 * underflows.
--			 */
--			size = max(pageblock_nr_pages, 1UL << order);
--			size = min(size, zone->nr_reserved_highatomic);
--			zone->nr_reserved_highatomic -= size;
--
--			/*
--			 * Convert to ac->migratetype and avoid the normal
--			 * pageblock stealing heuristics. Minimally, the caller
--			 * is doing the work and needs the pages. More
--			 * importantly, if the block was always converted to
--			 * MIGRATE_UNMOVABLE or another type then the number
--			 * of pageblocks that cannot be completely freed
--			 * may increase.
--			 */
--			if (order < pageblock_order)
--				ret = move_freepages_block(zone, page,
--							   MIGRATE_HIGHATOMIC,
--							   ac->migratetype);
--			else {
--				move_to_free_list(page, zone, order,
--						  MIGRATE_HIGHATOMIC,
--						  ac->migratetype);
--				change_pageblock_range(page, order,
--						       ac->migratetype);
--				ret = 1;
--			}
--			/*
--			 * Reserving the block(s) already succeeded,
--			 * so this should not fail on zone boundaries.
--			 */
--			WARN_ON_ONCE(ret == -1);
--			if (ret > 0) {
--				spin_unlock_irqrestore(&zone->lock, flags);
--				return ret;
--			}
--		}
--		spin_unlock_irqrestore(&zone->lock, flags);
--	}
--
--	return false;
--}
--
- /*
-  * Try finding a free buddy page on the fallback list.
-  *
-@@ -3143,6 +3008,141 @@ struct page *rmqueue(struct zone *preferred_zone,
- 	return page;
- }
- 
-+/*
-+ * Reserve the pageblock(s) surrounding an allocation request for
-+ * exclusive use of high-order atomic allocations if there are no
-+ * empty page blocks that contain a page with a suitable order
-+ */
-+static void reserve_highatomic_pageblock(struct page *page, int order,
-+					 struct zone *zone)
-+{
-+	int mt;
-+	unsigned long max_managed, flags;
-+
-+	/*
-+	 * The number reserved as: minimum is 1 pageblock, maximum is
-+	 * roughly 1% of a zone. But if 1% of a zone falls below a
-+	 * pageblock size, then don't reserve any pageblocks.
-+	 * Check is race-prone but harmless.
-+	 */
-+	if ((zone_managed_pages(zone) / 100) < pageblock_nr_pages)
-+		return;
-+	max_managed = ALIGN((zone_managed_pages(zone) / 100), pageblock_nr_pages);
-+	if (zone->nr_reserved_highatomic >= max_managed)
-+		return;
-+
-+	spin_lock_irqsave(&zone->lock, flags);
-+
-+	/* Recheck the nr_reserved_highatomic limit under the lock */
-+	if (zone->nr_reserved_highatomic >= max_managed)
-+		goto out_unlock;
-+
-+	/* Yoink! */
-+	mt = get_pageblock_migratetype(page);
-+	/* Only reserve normal pageblocks (i.e., they can merge with others) */
-+	if (!migratetype_is_mergeable(mt))
-+		goto out_unlock;
-+
-+	if (order < pageblock_order) {
-+		if (move_freepages_block(zone, page, mt, MIGRATE_HIGHATOMIC) == -1)
-+			goto out_unlock;
-+		zone->nr_reserved_highatomic += pageblock_nr_pages;
-+	} else {
-+		change_pageblock_range(page, order, MIGRATE_HIGHATOMIC);
-+		zone->nr_reserved_highatomic += 1 << order;
-+	}
-+
-+out_unlock:
-+	spin_unlock_irqrestore(&zone->lock, flags);
-+}
-+
-+/*
-+ * Used when an allocation is about to fail under memory pressure. This
-+ * potentially hurts the reliability of high-order allocations when under
-+ * intense memory pressure but failed atomic allocations should be easier
-+ * to recover from than an OOM.
-+ *
-+ * If @force is true, try to unreserve pageblocks even though highatomic
-+ * pageblock is exhausted.
-+ */
-+static bool unreserve_highatomic_pageblock(const struct alloc_context *ac,
-+						bool force)
-+{
-+	struct zonelist *zonelist = ac->zonelist;
-+	unsigned long flags;
-+	struct zoneref *z;
-+	struct zone *zone;
-+	struct page *page;
-+	int order;
-+	int ret;
-+
-+	for_each_zone_zonelist_nodemask(zone, z, zonelist, ac->highest_zoneidx,
-+								ac->nodemask) {
-+		/*
-+		 * Preserve at least one pageblock unless memory pressure
-+		 * is really high.
-+		 */
-+		if (!force && zone->nr_reserved_highatomic <=
-+					pageblock_nr_pages)
-+			continue;
-+
-+		spin_lock_irqsave(&zone->lock, flags);
-+		for (order = 0; order < NR_PAGE_ORDERS; order++) {
-+			struct free_area *area = &(zone->free_area[order]);
-+			unsigned long size;
-+
-+			page = get_page_from_free_area(area, MIGRATE_HIGHATOMIC);
-+			if (!page)
-+				continue;
-+
-+			/*
-+			 * It should never happen but changes to
-+			 * locking could inadvertently allow a per-cpu
-+			 * drain to add pages to MIGRATE_HIGHATOMIC
-+			 * while unreserving so be safe and watch for
-+			 * underflows.
-+			 */
-+			size = max(pageblock_nr_pages, 1UL << order);
-+			size = min(size, zone->nr_reserved_highatomic);
-+			zone->nr_reserved_highatomic -= size;
-+
-+			/*
-+			 * Convert to ac->migratetype and avoid the normal
-+			 * pageblock stealing heuristics. Minimally, the caller
-+			 * is doing the work and needs the pages. More
-+			 * importantly, if the block was always converted to
-+			 * MIGRATE_UNMOVABLE or another type then the number
-+			 * of pageblocks that cannot be completely freed
-+			 * may increase.
-+			 */
-+			if (order < pageblock_order)
-+				ret = move_freepages_block(zone, page,
-+							   MIGRATE_HIGHATOMIC,
-+							   ac->migratetype);
-+			else {
-+				move_to_free_list(page, zone, order,
-+						  MIGRATE_HIGHATOMIC,
-+						  ac->migratetype);
-+				change_pageblock_range(page, order,
-+						       ac->migratetype);
-+				ret = 1;
-+			}
-+			/*
-+			 * Reserving the block(s) already succeeded,
-+			 * so this should not fail on zone boundaries.
-+			 */
-+			WARN_ON_ONCE(ret == -1);
-+			if (ret > 0) {
-+				spin_unlock_irqrestore(&zone->lock, flags);
-+				return ret;
-+			}
-+		}
-+		spin_unlock_irqrestore(&zone->lock, flags);
-+	}
-+
-+	return false;
-+}
-+
- static inline long __zone_watermark_unusable_free(struct zone *z,
- 				unsigned int order, unsigned int alloc_flags)
- {
--- 
-2.48.1
+Thanks,
+Song
 
+
+diff --git i/kpatch-build/lookup.c w/kpatch-build/lookup.c
+index bd2b732de910..87ac127184c5 100644
+--- i/kpatch-build/lookup.c
++++ w/kpatch-build/lookup.c
+@@ -479,13 +479,10 @@ static bool lookup_local_symbol(struct
+lookup_table *table,
+        struct object_symbol *sym;
+        unsigned long sympos =3D 0;
+        int i, in_file =3D 0;
++       bool found =3D false;
+
+        memset(result, 0, sizeof(*result));
+        for_each_obj_symbol(i, sym, table) {
+-               if (sym->bind =3D=3D STB_LOCAL && !strcmp(sym->name,
+-                                       lookup_sym->name))
+-                       sympos++;
+-
+                if (lookup_sym->lookup_table_file_sym =3D=3D sym) {
+                        in_file =3D 1;
+                        continue;
+@@ -499,20 +496,29 @@ static bool lookup_local_symbol(struct
+lookup_table *table,
+
+                if (sym->bind =3D=3D STB_LOCAL && !strcmp(sym->name,
+                                        lookup_sym->name)) {
+-                       if (result->objname)
++                       if (found)
+                                ERROR("duplicate local symbol found for %s"=
+,
+                                                lookup_sym->name);
+
+                        result->objname         =3D table->objname;
+                        result->addr            =3D sym->addr;
+                        result->size            =3D sym->size;
+-                       result->sympos          =3D sympos;
+                        result->global          =3D false;
+                        result->exported        =3D false;
++                       found =3D true;
+                }
+        }
++       if (!found)
++               return false;
+
+-       return !!result->objname;
++       for_each_obj_symbol(i, sym, table) {
++               if (sym->bind =3D=3D STB_LOCAL &&
++                   !strcmp(sym->name, lookup_sym->name) &&
++                   sym->addr < result->addr)
++                       sympos++;
++       }
++       result->sympos =3D sympos;
++       return true;
+ }
+
+ static bool lookup_exported_symbol(struct lookup_table *table, char *name,
