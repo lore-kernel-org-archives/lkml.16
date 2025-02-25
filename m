@@ -1,54 +1,42 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B03B267AF2;
-	Tue, 25 Feb 2025 11:25:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF30919259E;
+	Tue, 25 Feb 2025 11:28:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740482751; cv=none; b=FPK80oS5xncH84BBQfaQtJhwDvh4sbAy0wRwVTD1/4xus1Wzie/E0LArkExyTlr5kTjNqUnZEiA4tgePvuy7i+TA3hEhmNv9Ks4m7KOrc/DOY1QDoiXjTtkOvH70vdaxvxub5m85Us9B1QOxXK5tIvQroWZd3NoNX9ya3asdmjw=
+	t=1740482929; cv=none; b=I5xUwoj0+YmVr9YIPJS0iEm/aEXi7Ge26XJ2Qj+oG4zPMgwIGMrSOKRQpMpCQO8bivISo4M+UWn3776RU06wHa9drttpS95iLg5caUpfwaYX73O42NLThNqy8IO57xSuc6AetWp6p6P751+GjKL9o/2z/eFGhuHksFDhQckKx4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740482751; c=relaxed/simple;
-	bh=Lhrwl1x6WS1e4L0zo3QZm7lLfOMmhJbsDbNnkKZwnoc=;
+	s=arc-20240116; t=1740482929; c=relaxed/simple;
+	bh=4N4sE1FmHGRGYMUMbzc2iDZq6cPiV731uxTPKSJWtQM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ien8MnF3Ty8oQKgStkZivCy/NkTzOFuwJYqMrl5mgY1Lxy6jh/i52Zf/H5RwgxEo/dm+GQf0zhJstkE3aqK2u8MrNTypd2VM2N7VXCNjU/ObkX7ZjFncuyzefR2Y0DXNXcYD02xrV3UOX/N7rJyUCTIIA+E0N7bQhr9A3llLeVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=WL0S8IpA; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WL0S8IpA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Lhrwl1x6WS1e4L0zo3QZm7lLfOMmhJbsDbNnkKZwnoc=; b=WL0S8IpAQoEwauZY6lBtK5wOR9
-	5O5SN6NWP0e5vkh+piwcr7J1+FN4O6oiABvTqF6EMpPg2tsL+LJd6cbyfIInpEYpgdclKGSNAZMiS
-	p5szNhj617nQInk8okB5JuYAvhi7vkxUCenxvVwt91pZbcoQSKqkOshl1jdaCnTpcWyhodPUJsV70
-	PTEFm6Ey6Vk3Bn5Z01ZVeSnG6bXkPnZW0SHOMKWOuzp5iVJhrmVc2Y4iRuafFgzFpkuGmgxMhHMoI
-	lE8RhK7wCPEQVlNbOzCsgQjeHtokHqtsEJ20CeD9zlsd078JXDXiN42bEQuRFFFLkoni7vp1kVUwY
-	QEBBfQOQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
-	id 1tmt4J-00000003Ktc-2raQ;
-	Tue, 25 Feb 2025 11:25:44 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 451C73006E6; Tue, 25 Feb 2025 12:25:43 +0100 (CET)
-Date: Tue, 25 Feb 2025 12:25:43 +0100
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-Subject: Re: [Patch v2 12/24] perf/x86/intel: Allocate arch-PEBS buffer and
- initialize PEBS_BASE MSR
-Message-ID: <20250225112543.GM11590@noisy.programming.kicks-ass.net>
-References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
- <20250218152818.158614-13-dapeng1.mi@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=GyC0xCTUsOZw02M8rStvWNnoRfp2N6mJtOB1kyIm/8Zicy0+hobo6WaK4sPcbA2SlyY+ygI1xqoUR/nnThctjKbjR3Y9jozTp6/ffmMiP3sTWhqq3od4JTmaaEj7EuNekIyOuEzMuSH+zosgQMa6wrtrSes7xb2QaO7DSX3BW7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A19BD1516;
+	Tue, 25 Feb 2025 03:29:03 -0800 (PST)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 24A463F673;
+	Tue, 25 Feb 2025 03:28:45 -0800 (PST)
+Date: Tue, 25 Feb 2025 11:28:42 +0000
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	linux-kernel@vger.kernel.org, arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	devicetree@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v2 6/7] firmware: imx: Add i.MX95 SCMI CPU driver
+Message-ID: <Z72paopAu67kQCBC@pluto>
+References: <20250212-imx-lmm-cpu-v2-0-3aee005968c1@nxp.com>
+ <20250212-imx-lmm-cpu-v2-6-3aee005968c1@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,13 +45,210 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250218152818.158614-13-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250212-imx-lmm-cpu-v2-6-3aee005968c1@nxp.com>
 
-On Tue, Feb 18, 2025 at 03:28:06PM +0000, Dapeng Mi wrote:
-> Arch-PEBS introduces a new MSR IA32_PEBS_BASE to store the arch-PEBS
-> buffer physical address. This patch allocates arch-PEBS buffer and then
-> initialize IA32_PEBS_BASE MSR with the buffer physical address.
+On Wed, Feb 12, 2025 at 03:40:28PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> The i.MX95 System manager exports SCMI CPU protocol for linux to manage
+> cpu cores. The driver is to use the cpu Protocol interface to
+> start, stop a cpu cores (eg, M7).
+> 
 
-Just to clarify, parts with ARCH PEBS will not have BTS and thus not
-have DS?
+Hi,
 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/firmware/imx/Kconfig    | 11 +++++
+>  drivers/firmware/imx/Makefile   |  1 +
+>  drivers/firmware/imx/sm-cpu.c   | 91 +++++++++++++++++++++++++++++++++++++++++
+>  include/linux/firmware/imx/sm.h | 29 +++++++++++++
+>  4 files changed, 132 insertions(+)
+> 
+> diff --git a/drivers/firmware/imx/Kconfig b/drivers/firmware/imx/Kconfig
+> index c3e344d6ecc645df1f0e3ee8078934c47f347fd7..91c753921dffbe16ced8c10565d44c15b66b2797 100644
+> --- a/drivers/firmware/imx/Kconfig
+> +++ b/drivers/firmware/imx/Kconfig
+> @@ -23,6 +23,17 @@ config IMX_SCU
+>  	  This driver manages the IPC interface between host CPU and the
+>  	  SCU firmware running on M4.
+>  
+> +config IMX_SCMI_CPU_DRV
+> +	tristate "IMX SCMI CPU Protocol driver"
+> +	depends on IMX_SCMI_CPU_EXT || COMPILE_TEST
+> +	default y if ARCH_MXC
+> +	help
+> +	  The System Controller Management Interface firmware (SCMI FW) is
+> +	  a low-level system function which runs on a dedicated Cortex-M
+> +	  core that could provide cpu management features.
+> +
+> +	  This driver can also be built as a module.
+> +
+>  config IMX_SCMI_LMM_DRV
+>  	tristate "IMX SCMI LMM Protocol driver"
+>  	depends on IMX_SCMI_LMM_EXT || COMPILE_TEST
+> diff --git a/drivers/firmware/imx/Makefile b/drivers/firmware/imx/Makefile
+> index 7762855d2a771169d4f1867d27e0d51be7c9ad03..3bbaffa6e3478112638ed031375602389f18ef09 100644
+> --- a/drivers/firmware/imx/Makefile
+> +++ b/drivers/firmware/imx/Makefile
+> @@ -1,5 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  obj-$(CONFIG_IMX_DSP)		+= imx-dsp.o
+>  obj-$(CONFIG_IMX_SCU)		+= imx-scu.o misc.o imx-scu-irq.o rm.o imx-scu-soc.o
+> +obj-${CONFIG_IMX_SCMI_CPU_DRV}	+= sm-cpu.o
+>  obj-${CONFIG_IMX_SCMI_MISC_DRV}	+= sm-misc.o
+>  obj-${CONFIG_IMX_SCMI_LMM_DRV}	+= sm-lmm.o
+> diff --git a/drivers/firmware/imx/sm-cpu.c b/drivers/firmware/imx/sm-cpu.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..1ce694a34b22843db5c1697ecb33c0479edb2ed9
+> --- /dev/null
+> +++ b/drivers/firmware/imx/sm-cpu.c
+> @@ -0,0 +1,91 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2025 NXP
+> + */
+> +
+> +#include <linux/firmware/imx/sm.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/scmi_protocol.h>
+> +#include <linux/scmi_imx_protocol.h>
+> +
+> +static const struct scmi_imx_cpu_proto_ops *imx_cpu_ops;
+> +static struct scmi_protocol_handle *ph;
+> +
+> +int scmi_imx_cpu_reset_vector_set(u32 cpuid, u64 vector, bool start, bool boot,
+> +				  bool resume)
+> +{
+> +	if (!ph)
+> +		return -EPROBE_DEFER;
+> +
+> +	return imx_cpu_ops->cpu_reset_vector_set(ph, cpuid, vector, start,
+> +						 boot, resume);
+> +}
+> +EXPORT_SYMBOL(scmi_imx_cpu_reset_vector_set);
+> +
+> +int scmi_imx_cpu_start(u32 cpuid)
+> +{
+> +	if (!ph)
+> +		return -EPROBE_DEFER;
+> +
+> +	return imx_cpu_ops->cpu_start(ph, cpuid);
+> +};
+> +EXPORT_SYMBOL(scmi_imx_cpu_start);
+> +
+
+...same as in LMM...this...
+
+> +int scmi_imx_cpu_started(u32 cpuid, bool *started)
+> +{
+> +	if (!ph)
+> +		return -EPROBE_DEFER;
+> +
+> +	if (!started)
+> +		return -EINVAL;
+> +
+> +	return imx_cpu_ops->cpu_started(ph, cpuid, started);
+> +};
+> +EXPORT_SYMBOL(scmi_imx_cpu_started);
+> +
+> +int scmi_imx_cpu_stop(u32 cpuid)
+> +{
+> +	if (!ph)
+> +		return -EPROBE_DEFER;
+> +
+> +	return imx_cpu_ops->cpu_stop(ph, cpuid);
+> +};
+> +EXPORT_SYMBOL(scmi_imx_cpu_stop);
+> +
+
+...and this can be just one with ONLY one symbol exported...
+
+> +static int scmi_imx_cpu_probe(struct scmi_device *sdev)
+> +{
+> +	const struct scmi_handle *handle = sdev->handle;
+> +
+> +	if (!handle)
+> +		return -ENODEV;
+> +
+> +	if (imx_cpu_ops) {
+> +		dev_err(&sdev->dev, "sm cpu already initialized\n");
+> +		return -EEXIST;
+> +	}
+> +
+> +	imx_cpu_ops = handle->devm_protocol_get(sdev, SCMI_PROTOCOL_IMX_CPU, &ph);
+> +	if (IS_ERR(imx_cpu_ops))
+> +		return PTR_ERR(imx_cpu_ops);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct scmi_device_id scmi_id_table[] = {
+> +	{ SCMI_PROTOCOL_IMX_CPU, "imx-cpu" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(scmi, scmi_id_table);
+> +
+> +static struct scmi_driver scmi_imx_cpu_driver = {
+> +	.name = "scmi-imx-cpu",
+> +	.probe = scmi_imx_cpu_probe,
+> +	.id_table = scmi_id_table,
+> +};
+> +module_scmi_driver(scmi_imx_cpu_driver);
+> +
+> +MODULE_AUTHOR("Peng Fan <peng.fan@nxp.com>");
+> +MODULE_DESCRIPTION("IMX SM CPU driver");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/linux/firmware/imx/sm.h b/include/linux/firmware/imx/sm.h
+> index e02b7b558afb6f430f6fbeeaf3ee1f59feea3c1b..0eff427e5ba2cb3f93c26f7d055c346a1d1433f0 100644
+> --- a/include/linux/firmware/imx/sm.h
+> +++ b/include/linux/firmware/imx/sm.h
+> @@ -21,6 +21,35 @@
+>  int scmi_imx_misc_ctrl_get(u32 id, u32 *num, u32 *val);
+>  int scmi_imx_misc_ctrl_set(u32 id, u32 val);
+>  
+
+Same kind of heads up here too..
+
+> +#if IS_ENABLED(CONFIG_IMX_SCMI_CPU_DRV) || IS_ENABLED(CONFIG_COMPILE_TEST)
+> +int scmi_imx_cpu_start(u32 cpuid);
+> +int scmi_imx_cpu_started(u32 cpuid, bool *started);
+> +int scmi_imx_cpu_stop(u32 cpuid);
+> +int scmi_imx_cpu_reset_vector_set(u32 cpuid, u64 vector, bool start, bool boot,
+> +				  bool resume);
+> +#else
+> +static inline int scmi_imx_cpu_start(u32 cpuid)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static inline int scmi_imx_cpu_started(u32 cpuid, bool *started)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static inline int scmi_imx_cpu_stop(u32 cpuid)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static inline int scmi_imx_cpu_reset_vector_set(u32 cpuid, u64 vector,
+> +						bool start, bool boot, bool resume)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +#endif
+> +
+>  #if IS_ENABLED(CONFIG_IMX_SCMI_LMM_DRV) || IS_ENABLED(CONFIG_COMPILE_TEST)
+>  int scmi_imx_lmm_boot(u32 lmid);
+>  int scmi_imx_lmm_info(u32 lmid, struct scmi_imx_lmm_info *info);
+> 
+
+Other than this:
+
+Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
+
+Thanks,
+Cristian
