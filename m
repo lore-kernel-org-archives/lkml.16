@@ -1,166 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850CF26B0B6;
-	Tue, 25 Feb 2025 14:20:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7758926A1B4
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740493246; cv=none; b=nGPyXPo1vgV7R12MrcrwVjQPhHwkYW+wmUw4vOtK4KWqBT+D1Uc1LS+Q+8PyRDm6p++9ZZplFGjgp1vwkU7XSaixkgXZ6y/0laXzelqAJ79Twh8BqtllrhCJGwo8wK3Znh/CXfW5zOhMQvnXmnxnL3S/U4o87v9ZH7vPPWRYdUg=
+	t=1740493255; cv=none; b=eu+H36cu4zaCWlqb+rkMBh+K9NWJRil27ye/sWiqRg2MqB1eFPQqRI2dLbj4m3+kMcycmot61Cbch3OJLtOhhVz9gEnLmQH/wPHg2LaWJSbEHpSRom5QU1h9ims3zJMZBhYTpEDT0Fm0mjEyu+jNAMRDhTrvuzYThD6Tqyv0VHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740493246; c=relaxed/simple;
-	bh=eDBxPB2ey6CEl5Fn4xbiSGUKr6VohrZZtt7brOucJf4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R7YgSu23OeSXrgEYmBTcusfSWxKCw/H/ikJWFaAvdkbp33iLRffeUm1VXMWbEZhVOvsjXo8LsamRbKBdUGE7cLWRAPkvgndSAQDRcmsR0CzjzqU//4o8gtAulv3vYHQvdTgIN7xEF9zRUfsm+MLYcF9O8VOFKZ9Rb7UzzCNIBSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tB6gpsOp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740493255; c=relaxed/simple;
+	bh=4aRVcR1MtxzUuDinO58olTCgo2qDQEdNqepuqBaC/20=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=USM7iuzc4KBq9mpZG+5DCEYk+78PQuuvurDn3Ep4Gi7SEI3ZJSfQzHqLHJefa/zXAVIyqgXiOQR6LA9f6GKdA6W3KMpUAWPFxqDMAgBq9a8XYIyan5xTIG/3LJKQL3IYAnkmemzxkUxc9pztmXZI2wH6XhT8g9zSbur2c3MAgnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=nIsJWFUV; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tB6gpsOp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5AC2C4CEDD;
-	Tue, 25 Feb 2025 14:20:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740493246;
-	bh=eDBxPB2ey6CEl5Fn4xbiSGUKr6VohrZZtt7brOucJf4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tB6gpsOpZKp5aTOboDdyxR0i9eLXFNrNmyJ2DQAcxZG7y0ROWfd86e0ofq4/C3GmW
-	 EoCE+8hsHyQGRO/TQXvZQdoSp9FTZkRL/VMEmLJjvofLyy3tzlQwy+CQJ45ZX/HxYM
-	 qYoEvZyo6xCSG6gT0xlwTda3Y6XBPkTinf/6qbuTQCzHwPgfynS90twSPxcsBZI+Pq
-	 G09SKxwrVNnJdcStCTcZBUYGHwHDk6SFEZsdeEasBb73x2fyoBXbk5v6ca2PkcAj0N
-	 pwBFnmEMnFTVvBKPYPiKIQUcq9Fi8M1eepSTS3PR0XBqAycnnW8jxPdnfYbo13+5WQ
-	 b0QY4QMg0kaAw==
-Date: Tue, 25 Feb 2025 08:20:43 -0600
-From: Rob Herring <robh@kernel.org>
-To: Maud Spierings | GOcontroll <maudspierings@gocontroll.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Sam Ravnborg <sam@ravnborg.org>, Liu Ying <victor.liu@nxp.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 05/14] dt-bindings: trivial-devices: add GOcontroll
- Moduline IO modules
-Message-ID: <20250225142043.GA2173114-robh@kernel.org>
-References: <20250224-initial_display-v1-0-5ccbbf613543@gocontroll.com>
- <20250224-initial_display-v1-5-5ccbbf613543@gocontroll.com>
- <20250224204428.GA4050751-robh@kernel.org>
- <PA4PR04MB763009E88F6406CD84ACBD33C5C32@PA4PR04MB7630.eurprd04.prod.outlook.com>
- <20250225-smart-industrious-groundhog-41deb2@krzk-bin>
- <PA4PR04MB76306D77C93FF2C51524BD95C5C32@PA4PR04MB7630.eurprd04.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="nIsJWFUV"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e5ad75ca787so4593661276.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 06:20:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google; t=1740493252; x=1741098052; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=yLGj3f01/5YqskB/AMHKol9KSvNGpbV7f974e7GtQ0U=;
+        b=nIsJWFUVPNvfheUD0MUZufKF654v4pxGi87gALKIYaHHUUQuyeU5xFijZM0cJ2RYqG
+         phYCIFwesyEK4kRNVgrTrDApp8aDCjaF5XMJTh7oYacvAvPFUdcOTA+mrm2veSm5OA9O
+         rnjDunJ8Itk42bUf8qlqQVQm72kx2oZAhSFLglqTIg15K0WShjUmB2Z/FExjSaV16wI2
+         WDu6gUMuEFpU8Z1OzSNdXYShzINVOrzpRN8pYUsqtGayndG9ykZkzx1tzcCarUrdl2uP
+         Crg/YSNkSq3i9dmLuA5s/fLI4baibikpicY8gAVfxBRDrYjs3lnku29eFfDLOn7t979l
+         bbFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740493252; x=1741098052;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yLGj3f01/5YqskB/AMHKol9KSvNGpbV7f974e7GtQ0U=;
+        b=guKZXrkooDd7DUkHuRKOyIpG2BgMgEAGiWT2bJ7xPOfG4Quz5TuKWJJa5DdhGbikkm
+         /TdTxcBRxdFAAQ5IcaK3SuYqw0pc9Lqy7dMKUwfQcylO/Q0yeafKZv8PjeZBeR2xfxUg
+         Jyv9PY0woC6nSwLp4oEPGpYhcUhl1Ir4aM6JXjwM+VTYOgcHuKthjvJ5HeZ73shrGfw5
+         EG3TGIt2W1SDGdO8QhQiCgr5W9LuMEYFuZLr68oizGyFJlpF+RNNXP265q40B08XBxB1
+         KR25iUIxmGOheXJUSn91OrV2LoYMbLSyR5Ux/WSZAUXCdNsTElWcJ6EOX6QJUjLpN0Hu
+         +gLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXUVolD+T/YUAosny5uC73Slj6B4sKRJJHslnO0YuEX6JEi2orReYtFpBHGjpz50VAXEdVUbNJlJ39woWU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxFynJ9RrSY4OIyqyO5AQaAtNezcpHGEas4hXTkalMEGnMElm4
+	l6OvnLd7C8QOVUb0JVqBfE6wtE287Uv8eZHI75RP3vW4YTedcwk9ph/E6nqlUT914iw9uymigdI
+	QN769fE0xAxiezEfWXi3ilVmRYCgN0fcTC2Sxbw==
+X-Gm-Gg: ASbGncvg4Dh1XqYoFOQUlO2c1uD6SVEfEgMP/5nmB0qZpc6uYUHlg4DZvSxVYf45/tB
+	GP3x4IuSXLP7DyaHHdc0DpQKKhbCIeCLJKrg4scPaLUFiwKXEhNSEWrOhqaDv+Xu7O4uyJbeeV/
+	nOuXP2DSyoK3G4PxaPCvQB6ErKI2kXaGb6lIYG424=
+X-Google-Smtp-Source: AGHT+IENualTBjQ0gC23IsPS4Y3OAVTdoidslIODPAXgztEQkt/QwuDATXiFsWJ/F2T2gnPhUdShHIX8sQEr6smL7nA=
+X-Received: by 2002:a05:6902:2493:b0:e5b:43dd:cf18 with SMTP id
+ 3f1490d57ef6-e5e2490dc3amr14360779276.22.1740493251235; Tue, 25 Feb 2025
+ 06:20:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <PA4PR04MB76306D77C93FF2C51524BD95C5C32@PA4PR04MB7630.eurprd04.prod.outlook.com>
+References: <20250225-b4-ov9282-gain-v1-0-a24af2820dde@linux.dev> <20250225-b4-ov9282-gain-v1-2-a24af2820dde@linux.dev>
+In-Reply-To: <20250225-b4-ov9282-gain-v1-2-a24af2820dde@linux.dev>
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date: Tue, 25 Feb 2025 14:20:34 +0000
+X-Gm-Features: AQ5f1JpnFy2Fej1Tv3LO4JDgq3THZkPkBcXgbtSirWhgQwozrTWSiHSj1Na7Bi0
+Message-ID: <CAPY8ntCoerdGgM1CjLWzNPx-0gACR1O9yaccRoHByq-B3D-rJg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] media: i2c: ov9282: add AEC Manual register definition
+To: Richard Leitner <richard.leitner@linux.dev>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Feb 25, 2025 at 12:24:09PM +0000, Maud Spierings | GOcontroll wrote:
-> From: Krzysztof Kozlowski <krzk@kernel.org>
-> Sent: Tuesday, February 25, 2025 12:52 PM
->  
-> >On Tue, Feb 25, 2025 at 07:39:52AM +0000, Maud Spierings | GOcontroll wrote:
-> >> From: Rob Herring <robh@kernel.org>
-> >> Sent: Monday, February 24, 2025 9:44 PM
-> >>  
-> >> >On Mon, Feb 24, 2025 at 02:50:55PM +0100, Maud Spierings wrote:
-> >> >> The main point of the Moduline series of embedded controllers is its
-> >> >> ecosystem of IO modules, these currently are operated through the spidev
-> >> >> interface. Ideally there will be a full dedicated driver in the future.
-> >> >>
-> >> >> Add the gocontroll moduline-module-slot device to enable the required
-> >> >> spidev interface.
-> >> >>
-> >> >> Signed-off-by: Maud Spierings <maudspierings@gocontroll.com>
-> >> >> ---
-> >> >>  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
-> >> >>  1 file changed, 2 insertions(+)
-> >> >>
-> >> >> diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-> >> >> index 8255bb590c0cc619d15b27dcbfd3aa85389c0a54..24ba810f91b73efdc615c7fb46f771a300926f05 100644
-> >> >> --- a/Documentation/devicetree/bindings/trivial-devices.yaml
-> >> >> +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-> >> >> @@ -107,6 +107,8 @@ properties:
-> >> >>            - fsl,mpl3115
-> >> >>              # MPR121: Proximity Capacitive Touch Sensor Controller
-> >> >>            - fsl,mpr121
-> >> >> +            # GOcontroll Moduline module slot for spi based IO modules
-> >> >
-> >> >I couldn't find anything about SPI for GOcontroll Moduline. Can you
-> >> >point me to what this hardware looks like. Based on what I did find,
-> >> >this seems incomplete and not likely a trivial device.
-> >>
-> >> I'll give some more details, if there is a v2 of this patch I will also
-> >> add more information in the commit message.
-> >>
-> >> The module slots have a number of pins, a lot of them currently unused as
-> >> they have not found a function yet, this is very much still a developing
-> >> product. The currently used interfaces to the SoC are:
-> >> 1. SPI bus as a spidev to ease developing new modules and quickly
-> >> integrate them. This is the main communication interface for control and
-> >> firmware updates.
-> >> 2. A reset pin, this is/was driven with the gpio-led driver but I doubt
-> >> that would get accepted upstream so I intend to switch to the much better
-> >> suited libgpio.
-> >
-> >reset-gpios is not in trivial devices, so that's already a hint you
-> >cannot use this binding.
-> >
-> >> 3. An interrupt pin, this is currently only used in the firmware update
-> >> utility [2] to speed up the update process. Other communication is done at
-> >> a regular interval.
-> >>
-> >> What is unused:
-> >> 1. A potentially multi-master i2c bus between all the module slots and
-> >> the SoC
-> >> 2. An SMBus alert line is shared between the modules, but not the SoC.
-> >> 3. A shared line designated as a clock line, intended to in the future
-> >> aid with synchronizing modules to each other for time critical control.
-> >>
-> >> current software that is used to work with the modules can be found at
-> >> [2] and [3], one of them is a Node-RED module the other is a blockset for
-> >> Matlab/Simulink generated code.
-> >>
-> >> If you know a better way I could describe this in the devicetree then I
-> >
-> >You need dedicated binding where you describe entire device, entire
-> >hardware, not what your driver supports in current release.
-> 
-> I see now that I also forgot the patch that adds this compatible to the
-> spidev driver. Didn't check for the spidevs in testing I guess.
-> 
-> Could I write bindings for this device, and then add the compatible to the
-> spidev driver for now? So it probes that driver, and then later when there
-> is a driver remove the compatible there and keep it only in the purpose
-> built driver?
-> 
-> So I'll write gocontroll,moduline-module-slot.yaml, don't quite know where
-> that would go. Define all these attributes in there and then add the 
-> compatible to drivers/spi/spidev.c
-> 
-> Is that okay?
+Hi Richard
 
-Yes. Bindings are forever, but drivers change. ;)
+Thanks for the patch
 
-Perhaps put it in connector/ as this looks a bit like a connector. Do 
-you envision DT overlays for the IO modules? Or modules don't have 
-sub-devices you need to describe? There's some effort to on connector 
-bindings (for mikrobus in particular) in order to de-couple host 
-buses/signals from the modules (i.e. so a DT overlay can be applied to 
-any DT defining the connector).
+On Tue, 25 Feb 2025 at 13:09, Richard Leitner <richard.leitner@linux.dev> wrote:
+>
+> Add #define's for the "AEC MANUAL" (0x3503) register and its
+> values/flags. Use those in the registers single usage within the
+> `common_regs` struct.
+>
+> All values are based on the OV9281 datasheet v1.01 (09.18.2015).
+>
+> Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
 
-Rob
+Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+
+> ---
+>  drivers/media/i2c/ov9282.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/media/i2c/ov9282.c b/drivers/media/i2c/ov9282.c
+> index c926842257893c4da3319b847fab9908b5bdaec6..c882a021cf18852237bf9b9524d3de0c5b48cbcb 100644
+> --- a/drivers/media/i2c/ov9282.c
+> +++ b/drivers/media/i2c/ov9282.c
+> @@ -44,6 +44,15 @@
+>  #define OV9282_EXPOSURE_STEP   1
+>  #define OV9282_EXPOSURE_DEFAULT        0x0282
+>
+> +/* AEC/AGC manual */
+> +#define OV9282_REG_AEC_MANUAL          0x3503
+> +#define OV9282_DIGFRAC_GAIN_DELAY      BIT(6)
+> +#define OV9282_GAIN_CHANGE_DELAY       BIT(5)
+> +#define OV9282_GAIN_DELAY              BIT(4)
+> +#define OV9282_GAIN_PREC16_EN          BIT(3)
+> +#define OV9282_GAIN_MANUAL_AS_SENSGAIN BIT(2)
+> +#define OV9282_AEC_MANUAL_DEFAULT      0x00
+> +
+>  /* Analog gain control */
+>  #define OV9282_REG_AGAIN       0x3509
+>  #define OV9282_AGAIN_MIN       0x10
+> @@ -214,7 +223,7 @@ static const struct ov9282_reg common_regs[] = {
+>         {0x3030, 0x10},
+>         {0x3039, 0x32},
+>         {0x303a, 0x00},
+> -       {0x3503, 0x08},
+> +       {OV9282_REG_AEC_MANUAL, OV9282_GAIN_PREC16_EN},
+>         {0x3505, 0x8c},
+>         {0x3507, 0x03},
+>         {0x3508, 0x00},
+>
+> --
+> 2.47.2
+>
+>
