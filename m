@@ -1,104 +1,95 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C769E2206B1;
-	Tue, 25 Feb 2025 10:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A2A2661BF;
+	Tue, 25 Feb 2025 10:48:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740480470; cv=none; b=t6/Zad3gNgu2pKHaxxhr0iStLZS+SBqRMFMTylDEvhP42oq+QoUNojC3063Uo3Z+DFOwgQGI3OHVhMPWTd7xHr2bnSE3YbRIMUqFJl/TfqftspYI4wiyH+JoIY/txrj0t4Av6Uu5U4psO83zrF/2muCrI3O9OG9orPGtJytlHm4=
+	t=1740480527; cv=none; b=pjslda/r+ARTN4AoBriCVq/atFkuXw6JKOecu3147Z6Ecs281DvpgdyVSSy/edpxUqh01yNX0yxU7yzoiMjpYTcb7xX5QHNmQ69BH4Nf2W8AM9cRRt3dOct8C1fAW1VWnnqkrq3zpM4/Hof5ebHSCqsIdgYxHBl31pE1SF8KDRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740480470; c=relaxed/simple;
-	bh=Ens5XgXC4MKgv2L9LSCoGm1j56Oge5R3ycKjE8QDjQs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FMP33er0wVQMb0uJP159jvKlGZ7XueJ7H5GT5F/oGdaRXzbsf7+ujZKv46s4hg0ULJFiNfvqHVahQNgNzFFgNXK3Okt4Tyy92ZbStLKEZr7rvJOnTlTMzcgY1sjn7Yrsxv1jF8LvdFlTZV1J4JezacgwespdSSluAY41mMCIJdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=clip-os.org; spf=pass smtp.mailfrom=clip-os.org; dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b=kcInWPB3; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=clip-os.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=clip-os.org
+	s=arc-20240116; t=1740480527; c=relaxed/simple;
+	bh=EZKl7xM2WjqoTZlxLf/CzLm4NBTsfbDvB7dPSIoct5M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cSmcC+ngvE3Hw4fRUz89WsI46jJ+6UEm4DKvxduiSafMKnMp8t8sO85pw9Bzd3QKIRpPxgFQiBIUuy1Raw0YmafoHT9keIX14a+2O9azGvvgMZQe7Ra+GP3aj+9EJ4l57/2u8gUTxNjBUzj7CA87qElzuBYeF2Q5nQMn3g4p3Ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RPUpgYZr; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=clip-os.org header.i=@clip-os.org header.b="kcInWPB3"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6A874443D5;
-	Tue, 25 Feb 2025 10:47:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=clip-os.org; s=gm1;
-	t=1740480466;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/w8wVTRHE/xGj7ErqQjnktVc7tmwi8xBB602HEhKIQM=;
-	b=kcInWPB3d6ED1aer/OXVITpGPrFrMZnE4f7xk9QJT4izYp/1IWL2qLjHXMnOenc19ukFbS
-	mROPt5RSMsNzV1P1wyjOPXqp6VRQUMUfDSjSFMwIHZU81z+Qf3S8n+GGZcpseQIuph6V1x
-	DXftMkvHLkgXI8H9PJHobC959CDRn1qGlKRcuHC7MLZDcSsflErnekQFyMYcu7bCoJiX7G
-	RM74hv8rr5ika2NQqI0fShNgXX2Ap3DvTt5Y/I0znYS/5DLAVDyFPx7lJhBHXK+7yrnYUR
-	WycIYcXmun2AO/01L9k8z6oqNZEIpSP4hDwjoUkNPXDR3GWOoaiAH3/2fISaGg==
-Message-ID: <0a9869e0-d091-4568-a6e7-8d7d72b296a9@clip-os.org>
-Date: Tue, 25 Feb 2025 11:47:42 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RPUpgYZr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740480526; x=1772016526;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=EZKl7xM2WjqoTZlxLf/CzLm4NBTsfbDvB7dPSIoct5M=;
+  b=RPUpgYZrnuOG2f8YGbJdF97ruE/GuYfUZLP0ppCsnTTfnOsHc6jQ6EGl
+   j+znUi58fFGs47uiibV9RN2d4UQECx7Yz9908nxbsNfxK+qkrYnyzDQ0P
+   ci5asP4zlvhUbuUBuC+/M8W/y/cx5N18KU+II24Nvn1fi4GS06fJ/yVw7
+   8T9X+A6wenos7/jrDFWYQLp+rlwyFPaYptu2h3AzMbb75gGy7vntVdaCQ
+   3ZKHV9X8bKPEJF4E+I9VciOv1beNgJhLwKzSJ6z+ty+lHShu5LJt/TBSq
+   +GTqcm+EJUt5v0+YzppXtMwTyfc782BhZowEVsYG8t5E14GU51DXvFSE2
+   g==;
+X-CSE-ConnectionGUID: ZSSH63FaSJGaX7vhEbHtOA==
+X-CSE-MsgGUID: g6FCnYdtStekxjDyuwIytA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="58820754"
+X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
+   d="scan'208";a="58820754"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 02:48:45 -0800
+X-CSE-ConnectionGUID: vwyC81D1ROOtVro34sXGOg==
+X-CSE-MsgGUID: P5oBdL3NR5mjjo1tMZr/1w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
+   d="scan'208";a="116339812"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 02:48:44 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tmsUT-0000000Exjr-0jss;
+	Tue, 25 Feb 2025 12:48:41 +0200
+Date: Tue, 25 Feb 2025 12:48:40 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v1 1/1] at24: Drop of_match_ptr() and ACPI_PTR()
+ protections
+Message-ID: <Z72gCD7B0_jj-f2s@smile.fi.intel.com>
+References: <20250225100838.362125-1-andriy.shevchenko@linux.intel.com>
+ <b8a1315a-8d86-4904-92d1-179699f54e03@app.fastmail.com>
+ <Z72dfxKzLLORkLl1@smile.fi.intel.com>
+ <745ff032-1e71-4569-ac9f-07c44cbcb344@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/6] sysctl: Fixes scsi_logging_level bounds
-To: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
- linux-scsi@vger.kernel.org, codalist@coda.cs.cmu.edu,
- linux-nfs@vger.kernel.org, Nicolas Bouchinet
- <nicolas.bouchinet@ssi.gouv.fr>, Joel Granados <j.granados@samsung.com>,
- Clemens Ladisch <clemens@ladisch.de>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Jan Harkes <jaharkes@cs.cmu.edu>, Chuck Lever <chuck.lever@oracle.com>,
- Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
- Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>, Trond Myklebust <trondmy@kernel.org>,
- Anna Schumaker <anna@kernel.org>, Bart Van Assche <bvanassche@acm.org>,
- Zhu Yanjun <yanjun.zhu@linux.dev>, Al Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>
-References: <20250224095826.16458-1-nicolas.bouchinet@clip-os.org>
- <20250224095826.16458-5-nicolas.bouchinet@clip-os.org>
- <yq1y0xubz40.fsf@ca-mkp.ca.oracle.com>
-Content-Language: en-US
-From: Nicolas Bouchinet <nicolas.bouchinet@clip-os.org>
-In-Reply-To: <yq1y0xubz40.fsf@ca-mkp.ca.oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekudehtdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtvdejnecuhfhrohhmpefpihgtohhlrghsuceuohhutghhihhnvghtuceonhhitgholhgrshdrsghouhgthhhinhgvthestghlihhpqdhoshdrohhrgheqnecuggftrfgrthhtvghrnheptdfggeejjefhleeuffetueektefhledukeegvefgteeugeeuhfekudffleehgfetnecukfhppeeltddrieefrddvgeeirddukeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdeifedrvdegiedrudekjedphhgvlhhopegludelvddrudeikedrfeefrdeihegnpdhmrghilhhfrhhomhepnhhitgholhgrshdrsghouhgthhhinhgvthestghlihhpqdhoshdrohhrghdpnhgspghrtghpthhtohepvdejpdhrtghpthhtohepmhgrrhhtihhnrdhpvghtvghrshgvnhesohhrrggtlhgvrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrhgumhgrsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqshgtshhisehvghgvrhdrkhgvrhhnv
- ghlrdhorhhgpdhrtghpthhtoheptghouggrlhhishhtsegtohgurgdrtghsrdgtmhhurdgvughupdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehnihgtohhlrghsrdgsohhutghhihhnvghtsehsshhirdhgohhuvhdrfhhrpdhrtghpthhtohepjhdrghhrrghnrgguohhssehsrghmshhunhhgrdgtohhm
-X-GND-Sasl: nicolas.bouchinet@clip-os.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <745ff032-1e71-4569-ac9f-07c44cbcb344@app.fastmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
+On Tue, Feb 25, 2025 at 11:42:48AM +0100, Arnd Bergmann wrote:
+> On Tue, Feb 25, 2025, at 11:37, Andy Shevchenko wrote:
+> > On Tue, Feb 25, 2025 at 11:29:05AM +0100, Arnd Bergmann wrote:
+> >> On Tue, Feb 25, 2025, at 11:08, Andy Shevchenko wrote:
+> >
+> >> Subject: [PATCH] [SUBMITTED 20240403] spi: remove incorrect of_match_ptr
+> >>  annotations
+> >
+> > Was it applied (and the rest you provided here)?
+> 
+> It was part of a longer series. Some were applied, but the ones
+> I provided here are those that for some reason did not make it.
+> They should apply cleanly to today's linux-next.
 
-On 2/25/25 02:20, Martin K. Petersen wrote:
-> Hi Nicolas!
->
->> --- a/drivers/scsi/scsi_sysctl.c
->> +++ b/drivers/scsi/scsi_sysctl.c
->> @@ -17,7 +17,9 @@ static const struct ctl_table scsi_table[] = {
->>   	  .data		= &scsi_logging_level,
->>   	  .maxlen	= sizeof(scsi_logging_level),
->>   	  .mode		= 0644,
->> -	  .proc_handler	= proc_dointvec },
->> +	  .proc_handler	= proc_dointvec_minmax,
->> +	  .extra1	= SYSCTL_ZERO,
->> +	  .extra2	= SYSCTL_INT_MAX },
-> scsi_logging_level is a bitmask and should be unsigned.
->
+I can review them and give a tag if you issue a new version.
 
-Hi Martin,
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Thank's for your review.
-
-Does `scsi_logging_level` needs the full range of a unsigned 32-bit 
-integer ?
-As it was using `proc_dointvec`, it was capped to an INT_MAX.
-
-If it effectively need the full range of an unsigned 32-bit integer, the
-`proc_handler` could be changed to `proc_douintvec` as suggested by Chuck.
-
-Best regards,
-
-Nicolas
 
