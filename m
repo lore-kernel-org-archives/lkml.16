@@ -1,65 +1,39 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB6D192590;
-	Tue, 25 Feb 2025 17:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7A9192590;
+	Tue, 25 Feb 2025 17:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740503429; cv=none; b=FFk+hXCLez3HOy68KyYkumGHzz/kiGjlekiSKNCe9+yCY6IL7ozVrbXwn6QntJy7JZ7hOQcVAjHhHBYwR8UgK0gXMRyzlHFmi5LUkmfTMNqcLLN20wzSDnwuJgw4WtmiyHjBy1DdyJtcZVuARALR96tfCtX1Y6/N4Kbay+EcBv8=
+	t=1740503434; cv=none; b=TxB/EEl9EQscY8nfDYDu9AotrD/lf7CGVqp/cpIcBPg0I5Q1aBagw5cUyEV4GcIQzvJnmZVpgC7M8fQsXMe0gPjrPQS60gR11OHoGTSokdPRicNf1ShrfpYBpbYCi/NpJns8KCoiiVHQJBnj0r4vDbeAKStgqXuFE3HG6C5e+Kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740503429; c=relaxed/simple;
-	bh=ERQwZnsyoQHMKJY3CYdQrCBoN9md4r7dtDwmZmlQpRc=;
+	s=arc-20240116; t=1740503434; c=relaxed/simple;
+	bh=tXxaorPHn4pHiMqvjZfTU/Y22wBYgpx0AiOrDyr5FMQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JqVimSUU/R3mFe4q7Yct1ZzZEM0NcMpqkGKjhAOChWhczXx+Onx52CIrhLaqA1OiVBFGvhovSI0aSNoUdhqn3F6c5ZnffOCiAS4EyVXGtA50T+sbH1bjzIqbAlB94IfIa+MVBHsNATgxdzmuot06jykqNwmIgQM7bTehfzklyLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C04iSjW1; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=Q6wOMbpTWiApPrR2Fo7xXMjHYqne8XAwjL4+g5SU5Z4KJjOLJMiu6Z3VUX3fmZswcZO7zz0GlLcxUpMMxkN6J/MiRLViSnc+N2a/hohvjir/oui63NbEOjDlEyrZxJuOrmjl9JAnIC44nDTPnq57Jq3d/zNTzckwXUr/VXxSgmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=N4yrIpzu; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C04iSjW1"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30761be8fa7so54588081fa.2;
-        Tue, 25 Feb 2025 09:10:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740503426; x=1741108226; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IgyP5e7xOUTpkQRETAnA3jifh9ceyBbmwJiNbPRBD18=;
-        b=C04iSjW11PpkyyUDTEsKFYFKEEdJlalrzqY1cOVTUXulicuWVsSa+LCAGbaEZh/rJ3
-         lcO2u3qi8tPTpzy2LdSYeW+FrWjVeq+uB3kbaE4KdBWBSwtUgedKrScOOEKd+ZuNyaVZ
-         ENBc5Uk/bT97uZo6U3v49rmBxfxk718Oae/5IjNl4S2Zty0rzhcNLoLwjp9lgkGXjRlg
-         CLNDqwaGRYfR+85QNOS1DqA8TECfOuZK6kL4klnB5Ys5k6GKiAizSQbmiqiux3rGwrk8
-         VC/ohjQk9kuMpNVImKHrh5adfZinJ1fKrJNeoahG5xdT1Il1deGO6hI9iAs1oLLjCN4A
-         OdkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740503426; x=1741108226;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IgyP5e7xOUTpkQRETAnA3jifh9ceyBbmwJiNbPRBD18=;
-        b=XuHYgJLUzcyPcFe5Ck6ITlfhS2L2NfQ28wqoTJrynd3ACWEG4WY6JRWZ9NcJyXA6cz
-         Ndf5X4hwNAk6eStCaqKIa0wu28vjZYbIrk0UTFyec4R/PaNBQoE41KepCTMjvSZkla7m
-         TeVm4JG2Aw2eEn0DiyyVWB3uxFYUubYMKMmbihAkakYkWabpv0ySq5TMdLjG6+jNHOuO
-         pTLbGSSXLUbT+Hinq8t/ZhWgfF1fThW6dX1wCL08ZGGWS/rBvHe2X1FEYXM6iXzHAd3f
-         smnF1EjQDBO/fTL9O4pfYsY4U82DaDilFKaUXOZauszXVLoZ/q3l2COWlTi7nqxQ+L+i
-         Ryfw==
-X-Forwarded-Encrypted: i=1; AJvYcCV2WwXEvtgMaEuYihcTUoVOWpXF31dIQHbu/xfYcH77g5+Y0/thVZUbEPIYuZo7ULUBAIYiQRqCdzVEFWVSbsqNWKw=@vger.kernel.org, AJvYcCWiPgUt3P1KYRsvfBCSMprES5N6/DB0TzEbsv4a9pI6Q5HWOnUGtD7A6l8SW5nBv1g27Q2JxkuuocvppQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzv/lkBm2yptOIckH5XPYT+pGjy2MbWR4r1iPiseS1itRqIhZBa
-	7h9UcKj6BX4is8hcs0y8dmarYPEdhegzZnBd+dhy/2xoQkeSuGHZqenuPw==
-X-Gm-Gg: ASbGncuJeI3T5fQPJjdNm3/1CbX7ixoHfn/UsowkS5RW8a/VQ+NmFwXMCBpDjZ4r8Xz
-	yTQK+TAzv0rvtcIYXB43AmCuMsvH0eDq9c2uN/44kh40mZCweLq3dTXk/BC+A7EXCTfsFe2z+qz
-	vDbrNbV89H0ZxVrKC0pE1ucOpN+blNTtNstubHkwO9MzJwl2ZdaVILLZYjyiDeZnQM2/UtNlM0u
-	4omMiXHrO891CEIHUNvkAqcboyK7UUiUWzDzCxaJCrp9yQj7GW8BnunhykOpNdE9CrovBw/5J1D
-	9UxMKdQzrzmwKT/HKZMfNw1hNz+zn/XHiP/WcoD145sE7RRs7JYlTsVbTwyrO1P/OQBoZsfjLnM
-	S+5oyFfs=
-X-Google-Smtp-Source: AGHT+IF3Vp9P32MjQngfYLkStg04hGRZaKV13OwL27k3Cdmw2AdlXT4Wapr5xuF4c/2i9fwe/6luaQ==
-X-Received: by 2002:a2e:98d5:0:b0:309:d7f:f156 with SMTP id 38308e7fff4ca-30b7915f64cmr3301411fa.13.1740503425858;
-        Tue, 25 Feb 2025 09:10:25 -0800 (PST)
-Received: from ?IPV6:2a00:1fa0:4291:201c:341d:2759:437f:4b85? ([2a00:1fa0:4291:201c:341d:2759:437f:4b85])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30a819f4a99sm2742881fa.52.2025.02.25.09.10.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2025 09:10:24 -0800 (PST)
-Message-ID: <12d6d0dc-bef2-45be-af42-393276a4c7ea@gmail.com>
-Date: Tue, 25 Feb 2025 20:10:21 +0300
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="N4yrIpzu"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 51PHA2tZ1360058
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 25 Feb 2025 09:10:02 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 51PHA2tZ1360058
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025021701; t=1740503403;
+	bh=li5piKz6gNejYYWNkGKJI9BlmhWBdeMwWCFBAi8IYKI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=N4yrIpzu+oDV1Wqo1K8nqaTXD/Ad6YlGS8lBPiQwaqo1q4QdGRhTk837oULDAcWJW
+	 oUUhO/5UCAs+9n2hUEpGX+Wy+g0pGqnA9ZbwJxJmMy8W6ERPWaKHiYX+6/V/QTdfNc
+	 14bfgGmBujtpCVYRcChJQqEQUNtSDs7uNMXjDEy43R7+/k2wbvpVm0NuV/VrV35JsJ
+	 6Nu/yzmj4p8yTr04CJFNrllQvYIcYIKQd3FKughSYQVyHg1HlIv76eFWPqUWSa2/ZZ
+	 NJa0P2uzCXWffnQb/ymj7isbL9BS5S3FFc+aiKABD0FUCdpH0XzjGHy2Pkc4agtd6K
+	 9ZIhjyVUheghQ==
+Message-ID: <1a444a2e-75b6-46f9-8f38-0458655873ac@zytor.com>
+Date: Tue, 25 Feb 2025 09:10:01 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,53 +41,163 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/6] media: vsp1: Clean FRE interrupt status
-To: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
- =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org
-References: <20250224-v4h-iif-v2-0-0305e3c1fe2d@ideasonboard.com>
- <20250224-v4h-iif-v2-2-0305e3c1fe2d@ideasonboard.com>
+Subject: Re: [PATCH v5 0/5] x86/cpufeatures: Automatically generate required
+ and disabled feature masks
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, will@kernel.org, peterz@infradead.org,
+        yury.norov@gmail.com, akpm@linux-foundation.org, acme@kernel.org,
+        namhyung@kernel.org, brgerst@gmail.com, andrew.cooper3@citrix.com,
+        nik.borisov@suse.com
+References: <20250106070727.3211006-1-xin@zytor.com>
+ <20250223102723.GAZ7r4C7C6sTUnbe4I@fat_crate.local>
 Content-Language: en-US
-From: Sergey Shtylyov <sergei.shtylyov@gmail.com>
-In-Reply-To: <20250224-v4h-iif-v2-2-0305e3c1fe2d@ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <20250223102723.GAZ7r4C7C6sTUnbe4I@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2/24/25 11:19 PM, Jacopo Mondi wrote:
-
-> The VSPX generates "FRame End" (FRE) interrutps, one for each
-> buffer transferred to the ISP.
+On 2/23/2025 2:27 AM, Borislav Petkov wrote:
+> On Sun, Jan 05, 2025 at 11:07:22PM -0800, Xin Li (Intel) wrote:
+>>   arch/x86/Kconfig                              |   4 +-
+>>   arch/x86/Kconfig.cpu                          |  12 +-
+>>   arch/x86/Kconfig.cpufeatures                  | 197 ++++++++++++++++++
+>>   arch/x86/Makefile                             |  17 +-
+>>   arch/x86/boot/cpucheck.c                      |   3 +-
+>>   arch/x86/boot/cpuflags.c                      |   1 -
+>>   arch/x86/boot/mkcpustr.c                      |   3 +-
+>>   arch/x86/include/asm/Kbuild                   |   1 +
+>>   arch/x86/include/asm/asm-prototypes.h         |   2 +-
+>>   arch/x86/include/asm/atomic64_32.h            |   2 +-
+>>   arch/x86/include/asm/bitops.h                 |   4 +-
+>>   arch/x86/include/asm/cmpxchg_32.h             |   2 +-
+>>   arch/x86/include/asm/cpufeature.h             |  71 +------
+>>   arch/x86/include/asm/cpufeatures.h            |  13 +-
+>>   arch/x86/include/asm/disabled-features.h      | 161 --------------
+>>   arch/x86/include/asm/required-features.h      | 105 ----------
+>>   arch/x86/kernel/cpu/common.c                  |   1 +
+>>   arch/x86/kernel/verify_cpu.S                  |   4 +
+>>   arch/x86/lib/Makefile                         |   2 +-
+>>   arch/x86/lib/cmpxchg8b_emu.S                  |   2 +-
+>>   arch/x86/tools/featuremasks.awk               |  88 ++++++++
+>>   lib/atomic64_test.c                           |   2 +-
+>>   tools/arch/x86/include/asm/cpufeatures.h      |   8 -
+>>   .../arch/x86/include/asm/disabled-features.h  | 161 --------------
+>>   .../arch/x86/include/asm/required-features.h  | 105 ----------
+>>   tools/perf/check-headers.sh                   |   2 -
+>>   26 files changed, 327 insertions(+), 646 deletions(-)
+>>   create mode 100644 arch/x86/Kconfig.cpufeatures
+>>   delete mode 100644 arch/x86/include/asm/disabled-features.h
+>>   delete mode 100644 arch/x86/include/asm/required-features.h
+>>   create mode 100755 arch/x86/tools/featuremasks.awk
+>>   delete mode 100644 tools/arch/x86/include/asm/disabled-features.h
+>>   delete mode 100644 tools/arch/x86/include/asm/required-features.h
 > 
-> Even if the FRE interrupt is not enabled, it is reported as active
-> in the interrupt status register.
+> make --no-print-directory -C /home/kernel/linux \
+> -f /home/kernel/linux/Makefile
+> # GEN     arch/x86/include/generated/asm/orc_hash.h
+>    mkdir -p arch/x86/include/generated/asm/; sh ./scripts/orc_hash.sh < arch/x86/include/asm/orc_types.h > arch/x86/include/generated/asm/orc_hash.h
+> make -f ./scripts/Makefile.build obj=scripts/basic
+> set -e; mkdir -p include/config/; trap "rm -f include/config/.tmp_kernel.release" EXIT; { ./scripts/setlocalversion .; } > include/config/.tmp_kernel.release; if [ ! -r include/config/kernel.release ] || ! cmp -s include/config/kernel.release include/config/.tmp_kernel.release; then : '  UPD     include/config/kernel.release'; mv -f include/config/.tmp_kernel.release include/config/kernel.release; fi
+> # GEN     arch/x86/include/generated/asm/featuremasks.h
+>    awk -f ./arch/x86/tools/featuremasks.awk ./arch/x86/include/asm/cpufeatures.h .config > arch/x86/include/generated/asm/featuremasks.h
+> make -f ./scripts/Makefile.asm-headers obj=arch/x86/include/generated/uapi/asm \
+> generic=include/uapi/asm-generic
+> awk: ./arch/x86/tools/featuremasks.awk: line 16: syntax error at or near {
+> awk: ./arch/x86/tools/featuremasks.awk: line 20: syntax error at or near :
+> awk: ./arch/x86/tools/featuremasks.awk: line 24: syntax error at or near }
+> make[1]: *** [arch/x86/Makefile:285: arch/x86/include/generated/asm/featuremasks.h] Error 2
+> make[1]: *** Deleting file 'arch/x86/include/generated/asm/featuremasks.h'
+> make[1]: *** Waiting for unfinished jobs....
+> # WRAP    arch/x86/include/generated/uapi/asm/bpf_perf_event.h
+>    echo "#include <asm-generic/bpf_perf_event.h>" > arch/x86/include/generated/uapi/asm/bpf_perf_event.h
+> # WRAP    arch/x86/include/generated/uapi/asm/fcntl.h
+>    echo "#include <asm-generic/fcntl.h>" > arch/x86/include/generated/uapi/asm/fcntl.h
+> # WRAP    arch/x86/include/generated/uapi/asm/errno.h
+>    echo "#include <asm-generic/errno.h>" > arch/x86/include/generated/uapi/asm/errno.h
+> # WRAP    arch/x86/include/generated/uapi/asm/ioctl.h
+>    echo "#include <asm-generic/ioctl.h>" > arch/x86/include/generated/uapi/asm/ioctl.h
+> # WRAP    arch/x86/include/generated/uapi/asm/ioctls.h
+>    echo "#include <asm-generic/ioctls.h>" > arch/x86/include/generated/uapi/asm/ioctls.h
+> # WRAP    arch/x86/include/generated/uapi/asm/ipcbuf.h
+>    echo "#include <asm-generic/ipcbuf.h>" > arch/x86/include/generated/uapi/asm/ipcbuf.h
+> # WRAP    arch/x86/include/generated/uapi/asm/param.h
+>    echo "#include <asm-generic/param.h>" > arch/x86/include/generated/uapi/asm/param.h
+> # WRAP    arch/x86/include/generated/uapi/asm/poll.h
+>    echo "#include <asm-generic/poll.h>" > arch/x86/include/generated/uapi/asm/poll.h
+> # WRAP    arch/x86/include/generated/uapi/asm/resource.h
+>    echo "#include <asm-generic/resource.h>" > arch/x86/include/generated/uapi/asm/resource.h
+> # WRAP    arch/x86/include/generated/uapi/asm/socket.h
+>    echo "#include <asm-generic/socket.h>" > arch/x86/include/generated/uapi/asm/socket.h
+> # WRAP    arch/x86/include/generated/uapi/asm/sockios.h
+>    echo "#include <asm-generic/sockios.h>" > arch/x86/include/generated/uapi/asm/sockios.h
+> # WRAP    arch/x86/include/generated/uapi/asm/termbits.h
+>    echo "#include <asm-generic/termbits.h>" > arch/x86/include/generated/uapi/asm/termbits.h
+> # WRAP    arch/x86/include/generated/uapi/asm/termios.h
+>    echo "#include <asm-generic/termios.h>" > arch/x86/include/generated/uapi/asm/termios.h
+> # WRAP    arch/x86/include/generated/uapi/asm/types.h
+>    echo "#include <asm-generic/types.h>" > arch/x86/include/generated/uapi/asm/types.h
+> make: *** [Makefile:251: __sub-make] Error 2
 > 
-> Make sure to clean it when handling the interrupt.
+> Probably due to:
 > 
-> Signed-off-by: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
-> ---
->  drivers/media/platform/renesas/vsp1/vsp1_drv.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> $ awk --version
+> mawk 1.3.4 20250131
+> Copyright 2008-2024,2025, Thomas E. Dickey
+> Copyright 1991-1996,2014, Michael D. Brennan
 > 
-> diff --git a/drivers/media/platform/renesas/vsp1/vsp1_drv.c b/drivers/media/platform/renesas/vsp1/vsp1_drv.c
-> index d13e9b31aa7cff8610ea196ae4de88ab22e44e0f..17ace4c6844d19aaafc27e79f016cc05091372bf 100644
-> --- a/drivers/media/platform/renesas/vsp1/vsp1_drv.c
-> +++ b/drivers/media/platform/renesas/vsp1/vsp1_drv.c
-> @@ -69,7 +69,8 @@ static irqreturn_t vsp1_irq_handler(int irq, void *data)
->  				i, wpf->entity.pipe->underrun_count);
->  		}
->  
-> -		if (status & VI6_WPF_IRQ_STA_DFE) {
-> +		if (status & VI6_WPF_IRQ_STA_DFE ||
-> +		    status & VI6_WPF_IRQ_STA_FRE) {
+> random-funcs:       srandom/random
+> regex-funcs:        internal
+> 
+> compiled limits:
+> sprintf buffer      8192
+> maximum-integer     9223372036854775808
+> 
+> while the other box has GNU awk where it obviously works.
 
-   Maybe:
+After looking into the build issue, we think it's better to change to 
+perl; GNU awk has quite a few extended features that standard awk 
+doesn't support, e.g., BEGINFILE/FPAT/...
 
-		if (status & (VI6_WPF_IRQ_STA_DFE | VI6_WPF_IRQ_STA_FRE)) {
+Thanks!
+     Xin
 
-[...]
-
-MBR, Sergey
+> 
+> HTH.
+> 
 
