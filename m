@@ -1,193 +1,256 @@
-Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C162529CF0;
-	Tue, 25 Feb 2025 12:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=76.10.64.91
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40F7267B1A;
+	Tue, 25 Feb 2025 12:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740485213; cv=none; b=qPjTkc1+jcMrhA1QnRF1vQy19O/bXe026NgXHqVOmAplYFZp+PJFu3CKCQMJedFITbPJ9lYZYVEYPUF8E7/fTFKBh9khNEWAnn+3HXTLVFhOXZdTOeBT7vl93LS+uToctVAqeMCOC+CKlRoTYrd/lzmbbEO1fCkXMpUA/1J3t4o=
+	t=1740485227; cv=none; b=bAhtYNiPZLfh1YJpILC/s+14kj6boLBD3egI8quygvtfa1vQtyYFhEgTz4SBeulntsj/xHiZtBwXc+cw8jWpivFqj+uVAhslaQuWvapp9A9xUrIIBLAzVCaPu+vYJxVs46X8WuYcTVFE2WRZtibiLkPQM9dms32ppxAA+OMAhMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740485213; c=relaxed/simple;
-	bh=Zeua9U34mpIZzVNmoPv424NWh2Wy8ELnVKvzqhinVv0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i03HtnOqg69vlB4K3QIi9IBFrlXB3jWXPvHK5vTWA6IlvwvVe/CMebSUxhPmVX8rsorRIM5bkd8edj4xQALQRDdBsQQVPVsyKdw38k8y+TfAsfZv4/WiD0oatcbgv5L6mRAJBuciUIGZzeAXfwCIZYBsm7ac9UFZDzv0LE7Suh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com; spf=pass smtp.mailfrom=wind.enjellic.com; arc=none smtp.client-ip=76.10.64.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=enjellic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wind.enjellic.com
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-	by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 51PC1Gsg013755;
-	Tue, 25 Feb 2025 06:01:16 -0600
-Received: (from greg@localhost)
-	by wind.enjellic.com (8.15.2/8.15.2/Submit) id 51PC1E2h013753;
-	Tue, 25 Feb 2025 06:01:14 -0600
-Date: Tue, 25 Feb 2025 06:01:14 -0600
-From: "Dr. Greg" <greg@enjellic.com>
-To: Paul Moore <paul@paul-moore.com>
-Cc: linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jmorris@namei.org
-Subject: Re: [PATCH v4 2/14] Add TSEM specific documentation.
-Message-ID: <20250225120114.GA13368@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20240826103728.3378-3-greg@enjellic.com> <8642afa96650e02f50709aa3361b62c4@paul-moore.com> <20250117044731.GA31221@wind.enjellic.com> <CAHC9VhTphGpnVNPkm0P=Ndk84z3gpkJeg90EAJiJEyareLUVTA@mail.gmail.com>
+	s=arc-20240116; t=1740485227; c=relaxed/simple;
+	bh=R0YZwPa/j81Upn6H8+MQGjK/pv9flKnpttvi/0LYwVk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YCdmu2sfqzIA3czJQU7g6eWWX+8gCT71VBC27ARdM7MvKQP7Q51Fw+17amyBP19BxMVdSOODifV8QbvzZEQId1jY+F3tsE/tKUs/I03t2m2XJ2cDyErJAYWEBpCvY4B1iP8pqIRPN6kxISCEfLlMYKRd/ANtMEovvknmZUHXHM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ioC2Ggv9; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ioC2Ggv9"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P5Novm004885;
+	Tue, 25 Feb 2025 12:06:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=stcecdV4WR1w+pgTJ4RS+UPRZOfLI1
+	L48wPKI0ZpCDE=; b=ioC2Ggv9SkRIJcJGaQj5hhu/PmbmcDZpLmW8gEqwNzoP2t
+	1Qklnhan/VIZ5m1dNG+8M/SS6LtShBz0XH3XTT/DyhdhNN1USj2+hxeXTekikEZB
+	QmmlO5adSTzuSpa9O9syVhccZgsAXQ8+RgKpwRk+lZaTSRKyzye4djlFtkcW8WhD
+	shDDzgV7hlfmxAPmLgHIaExguT/faYEz1YTxxFZgXZosHKtoZPSNZE+Zk5x9u8qW
+	EBXHB/pwoNvOjLF2w2V+o/hgdz+CVYSL9BrESWreknKuoBswB8Gd/hWCh1G4PYxO
+	AcOW7PB+ewDxn6vFTiCvDhstB1H6Zq8N3cGydmfw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4517p8hua5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Feb 2025 12:06:50 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 51PC1am0009865;
+	Tue, 25 Feb 2025 12:06:50 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4517p8hua1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Feb 2025 12:06:50 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 51P9wwXK012470;
+	Tue, 25 Feb 2025 12:06:49 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 44yrwsn0r4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Feb 2025 12:06:49 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 51PC6l3230999286
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 25 Feb 2025 12:06:47 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8DEE820040;
+	Tue, 25 Feb 2025 12:06:47 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 77A3E2004B;
+	Tue, 25 Feb 2025 12:06:45 +0000 (GMT)
+Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.109.219.249])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 25 Feb 2025 12:06:45 +0000 (GMT)
+Date: Tue, 25 Feb 2025 17:36:42 +0530
+From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+To: Baokun Li <libaokun1@huawei.com>
+Cc: linux-ext4@vger.kernel.org, "Theodore Ts'o" <tytso@mit.edu>,
+        Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
+        Mahesh Kumar <maheshkumar657g@gmail.com>,
+        Ritesh Harjani <ritesh.list@gmail.com>,
+        Yang Erkun <yangerkun@huawei.com>
+Subject: Re: [PATCH 1/2] ext4: only defer sb update on error if SB_ACTIVE
+Message-ID: <Z72yUqGWHdRyCE25@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+References: <cover.1740212945.git.ojaswin@linux.ibm.com>
+ <da8af2e5170f0d94031b812d7d50c6ec1967db1b.1740212945.git.ojaswin@linux.ibm.com>
+ <3f9a67e2-ef08-47d4-b35e-41841e24bb71@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHC9VhTphGpnVNPkm0P=Ndk84z3gpkJeg90EAJiJEyareLUVTA@mail.gmail.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Tue, 25 Feb 2025 06:01:16 -0600 (CST)
+In-Reply-To: <3f9a67e2-ef08-47d4-b35e-41841e24bb71@huawei.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: sp-LYtRSr40l-UtyIL0GwCBAnZ7jOTQB
+X-Proofpoint-ORIG-GUID: DIEIlSmlvfnTVSdl5ijDVoylXAEfgk_8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-25_04,2025-02-25_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
+ mlxlogscore=999 malwarescore=0 impostorscore=0 clxscore=1015 mlxscore=0
+ priorityscore=1501 phishscore=0 adultscore=0 lowpriorityscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502250081
 
-On Tue, Jan 28, 2025 at 05:23:52PM -0500, Paul Moore wrote:
+On Tue, Feb 25, 2025 at 09:53:10AM +0800, Baokun Li wrote:
+> On 2025/2/22 16:40, Ojaswin Mujoo wrote:
+> > Presently we always BUG_ON if trying to start a transaction on a journal
+> > marked with JBD2_UNMOUNT, since this should never happen. However while
+> > running stress tests it was observed that in case of some error handling
+> > paths, it is possible for update_super_work to start a transaction after
+> > the journal is destroyed eg:
+> > 
+> > (umount)
+> > ext4_kill_sb
+> >    kill_block_super
+> >      generic_shutdown_super
+> >        sync_filesystem /* commits all txns */
+> >        evict_inodes
+> >          /* might start a new txn */
+> >        ext4_put_super
+> > 	flush_work(&sbi->s_sb_upd_work) /* flush the workqueue */
+> >          jbd2_journal_destroy
+> >            journal_kill_thread
+> >              journal->j_flags |= JBD2_UNMOUNT;
+> >            jbd2_journal_commit_transaction
+> >              jbd2_journal_get_descriptor_buffer
+> >                jbd2_journal_bmap
+> >                  ext4_journal_bmap
+> >                    ext4_map_blocks
+> >                      ...
+> >                      ext4_inode_error
+> Just curious, since jbd2_journal_bmap() only queries the map and does not
+> create it, how does it fail here? Is there more information in dmesg?
+> Is s_journal_inum normal after file system corruption?
 
-For the record, further documentation of our replies to TSEM technical
-issues.
+Hey Baokun, 
 
-> On Thu, Jan 16, 2025 at 11:47???PM Dr. Greg <greg@enjellic.com> wrote:
-> > > > +In order to handle modeling of security events in atomic context, the
-> > > > +TSEM implementation maintains caches (magazines) of structures that
-> > > > +are needed to implement the modeling and export of events.  The size
-> > > > +of this cache can be configured independently for each individual
-> > > > +security modeling namespace that is created.  The default
-> > > > +implementation is for a cache size of 32 for internally modeled
-> > > > +namespaces and 128 for externally modeled namespaces.
-> > > > +
-> > > > +By default the root security namespace uses a cache size of 128.  This
-> > > > +value can be configured by the 'tsem_cache' kernel command-line
-> > > > +parameter to an alternate value.
-> >
-> > > I haven't looked at the implementation yet, but I don't understand
-> > > both why a kmem_cache couldn't be used here as well as why this
-> > > implementation detail is deemed significant enough to be mentioned
-> > > in this high level design document.
-> >
-> > TSEM does use kmem_cache allocations for all of its relevant data
-> > structures.
-> >
-> > The use of a kmem_cache, however, does not solve the problem for
-> > security event handlers that are required to run in atomic context.
-> > To address the needs of those handlers you need to serve the
-> > structures out of a pre-allocated magazine that is guaranteed to not
-> > require any memory allocation or sleeping locks.
+So I dug a bit more into the vmcore. The error information in sbi looks
+like this:
 
-> This still seems somewhat suspicious as there are a couple of GFP
-> flags that allow for non-blocking allocations in all but a few cases,
-> but I'll defer further discussion of that until I get to the code.  In
-> my opinion, there are still enough red flags in these documentation
-> reviews to keep me from investing the time in reviewing the TSEM code.
+  s_add_error_count = 1,
+  s_first_error_code = 117,
+  s_first_error_line = 475,
+  s_first_error_ino = 0,
+  s_first_error_block = 0,
+  s_first_error_func = 0xc0080000055300d0 <__func__.6> "ext4_read_block_bitmap_nowait",
+  s_first_error_time = 1737023235,
 
-As a group, we can state quite affirmatively to the fact that we have
-experience and understanding in use of memory allocation instruction
-flags.  Our use of namespace specific event processing structure
-caches is not driven by unfamiliarity with the use and implications of
-GFP_ATOMIC.
+  s_last_error_code = 117,
+  s_last_error_line = 609,
+  s_last_error_ino = 8,
+  s_last_error_block = 783,
+  s_last_error_func = 0xc008000005531b10 <__func__.41> "ext4_map_blocks",
+  s_last_error_time = 1737023236,
 
-The use of independent structure magazines, for security events
-running in atomic context in a security modeling namespace, is driven
-by the need to prevent security adversaries from placing pressure on
-the global kernel atomic page reserves.
+  The first error is here:
 
-These namespace specific event magazines prevent an adversary from
-waging a memory denial of service attack against the kernel at large.
-Adversaries can only impair their own functionality in a security
-modeling namespace through the use of a synthetic attack workload that
-stresses the availability of atomic context memory.
+      if ((bitmap_blk <= le32_to_cpu(sbi->s_es->s_first_data_block)) ||
+     474               (bitmap_blk >= ext4_blocks_count(sbi->s_es))) {
+  *  475                   ext4_error(sb, "Invalid block bitmap block %llu in "
+     476                              "block_group %u", bitmap_blk, block_group);
+     477                   ext4_mark_group_bitmap_corrupted(sb, block_group,
+     478                                           EXT4_GROUP_INFO_BBITMAP_CORRUPT);
+     479                   return ERR_PTR(-EFSCORRUPTED);
+     480           }
 
-Further, TSEM is formulated on the premise that software teams,
-as a by product of CI/CD automation and testing, can develop precise
-descriptions of the security behavior of their workloads.  One
-component of that description is the cache depth needed to support
-security event handlers running in atomic context.
+and the last error is here:
 
-Exceeding that cache depth would be a sentinel forensic event for a
-workload.  For anyone unfamiliar with modern IT security
-architectures, a very specific alert on your security dashboard that
-one of the tens of thousands of workloads that are running is doing
-something it shouldn't.
+    608           if (retval > 0 && map->m_flags & EXT4_MAP_MAPPED) {
+ *  609                   ret = check_block_validity(inode, map);
+    610                   if (ret != 0)
+    611                           return ret;
+    612           }
 
-Adversaries really hate to be noticed.
 
-> Regardless, I stand by my previous comment that discussion of these
-> caches may be a bit more detail that is needed in this document, but
-> of course that is your choice.  It's a balancing act between providing
-> enough high level detail to satisfy users and reviewers, and producing
-> a document that is so verbose that the time required to properly
-> review it is prohibitive.
+And indeed we have the traces of the first error in dmesg:
 
-It was our understanding that the administrative guides to a security
-architecture are intended to provide comprehensive information on the
-use and management of the implementation.
+[75284.713463] EXT4-fs error (device loop36): ext4_read_block_bitmap_nowait:475: comm proc01: Invalid block bitmap block 0 in block_group 0
+[75284.713470] EXT4-fs error (device loop36): ext4_read_block_bitmap_nowait:475: comm proc01: Invalid block bitmap block 0 in block_group 0
+[75284.713476] EXT4-fs error (device loop36): ext4_read_block_bitmap_nowait:475: comm proc01: Invalid block bitmap block 0 in block_group 0
 
-We were attempting to be thorough in the description and rationale for
-all the technical aspects of TSEM.  The discourse in
-Documentation/memory-barriers.txt would seem to provide justification
-for intimate detail on important operational issues in the kernel.
+However, the last error seems strange. It seems like check_block_validity
+should ideally never fail for a journal inode. Unfortunately, sbi->s_es page is
+not recorded in the crash dump for some reason so idk the exact value at the
+time of the check, but looking in journal->j_inode->i_ino, the inode num is 8,
+which seems fine to me. So yeah, I'm a bit unsure what caused the corruption.
+I'll look a bit more into the proc01 ltp to see if we can recreate the failure
+to get more info.
 
-> > > > +The 'cache' keyword is used to specify the size of the caches used to
-> > > > +hold pointers to data structures used for the internal modeling of
-> > > > +security events or the export of the security event to external trust
-> > > > +orchestrators.  These pre-allocated structures are used to service
-> > > > +security event hooks that are called while the process is running in
-> > > > +atomic context and thus cannot sleep in order to allocate memory.
-> > > > +
-> > > > +The argument to this keyword is a numeric value specifying the number
-> > > > +of structures that are to be held in reserve for the namespace.
-> > > > +
-> > > > +By default the root security modeling namespace and externally modeled
-> > > > +namespaces have a default value of 128 entries.  An internally modeled
-> > > > +namespace has a default value of 32 entries.  The size requirements of
-> > > > +these caches can be highly dependent on the characteristics of the
-> > > > +modeled workload and may require tuning to the needs of the platform
-> > > > +or workload.
-> >
-> > > Presumably TSEM provides usage statistics somewhere so admins can
-> > > monitor and tune as desired?  If so, it seems like it would be a
-> > > good idea to add a reference here.
-> >
-> > We have trended toward the Linus philosophy of reducing the need to
-> > worry about properly tuning knobs.
-
-> I agree that generally speaking the less tuning knobs to get wrong,
-> the better.  However, that assumes a system that can adjust itself
-> as necessary to ensure a reasonable level of operation.  If TSEM can
-> not dynamically adjust itself you should consider exposing those
-> tunables.
-
-The atomic structure magazine sizes (cache depth) can be set on a per
-namespace basis, including the root modeling namespace.
-
-Our current development tree, on our GitHub site if anyone is
-interested, has simplified the cache sizing by using a single default
-value that is of sufficient size to boot a standard Linux (Debian)
-implementation.
-
-For subordinate modeling namespaces, experience has shown that to be
-more than what is needed, but it greatly simplifies the ability to use
-TSEM 'out of the box'.
-
-We still need to update the documentation to call out this fact and
-note that development teams can adjust this value downward for
-subordinate workloads that require lower levels of atomic event
-reserves, if there is a desire to save memory.  Or upward if a
-workload generates a pathologically large corpus of security events
-that run in atomic context.
-
-One could arguably make this self-tuning by setting a low water mark
-that would trigger the expansion of the depth of the event structure
-caches.  Which would invariably lead to a request to have a tunable to
-set that low water mark....
-
-Not to mention an argument about the performance impacts of locking
-the namespace context to prevent atomic context events from running
-while the event magazines are expanded.
-
-> paul-moore.com
-
-Have a good day.
-
-As always,
-Dr. Greg
-
-The Quixote Project - Flailing at the Travails of Cybersecurity
-              https://github.com/Quixote-Project
+> 
+> Thanks,
+> Baokun
+> >                        ext4_handle_error
+> >                          schedule_work(&sbi->s_sb_upd_work)
+> > 
+> >                                                 /* work queue kicks in */
+> >                                                 update_super_work
+> >                                                   jbd2_journal_start
+> >                                                     start_this_handle
+> >                                                       BUG_ON(journal->j_flags &
+> >                                                              JBD2_UNMOUNT)
+> > 
+> > Hence, make sure we only defer the update of ext4 sb if the sb is still
+> > active.  Otherwise, just fallback to an un-journaled commit.
+> > 
+> > The important thing to note here is that we must only defer sb update if
+> > we have not yet flushed the s_sb_update_work queue in umount path else
+> > this race can be hit (point 1 below). Since we don't have a direct way
+> > to check for that we use SB_ACTIVE instead. The SB_ACTIVE check is a bit
+> > subtle so adding some notes below for future reference:
+> > 
+> > 1. Ideally we would want to have a something like (flags & JBD2_UNMOUNT
+> > == 0) however this is not correct since we could end up scheduling work
+> > after it has been flushed:
+> > 
+> >   ext4_put_super
+> >    flush_work(&sbi->s_sb_upd_work)
+> > 
+> >                             **kjournald2**
+> >                             jbd2_journal_commit_transaction
+> >                             ...
+> >                             ext4_inode_error
+> >                               /* JBD2_UNMOUNT not set */
+> >                               schedule_work(s_sb_upd_work)
+> > 
+> >     jbd2_journal_destroy
+> >      journal->j_flags |= JBD2_UNMOUNT;
+> > 
+> >                                        **workqueue**
+> >                                        update_super_work
+> >                                         jbd2_journal_start
+> >                                          start_this_handle
+> >                                            BUG_ON(JBD2_UNMOUNT)
+> > 
+> > Something like the above doesn't happen with SB_ACTIVE check because we
+> > are sure that the workqueue would be flushed at a later point if we are
+> > in the umount path.
+> > 
+> > 2. We don't need a similar check in ext4_grp_locked_error since it is
+> > only called from mballoc and AFAICT it would be always valid to schedule
+> > work here.
+> > 
+> > Fixes: 2d01ddc86606 ("ext4: save error info to sb through journal if available")
+> > Reported-by: Mahesh Kumar <maheshkumar657g@gmail.com>
+> > Suggested-by: Ritesh Harjani <ritesh.list@gmail.com>
+> > Signed-off-by: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+> > ---
+> >   fs/ext4/super.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> > index a963ffda692a..b7341e9acf62 100644
+> > --- a/fs/ext4/super.c
+> > +++ b/fs/ext4/super.c
+> > @@ -706,7 +706,7 @@ static void ext4_handle_error(struct super_block *sb, bool force_ro, int error,
+> >   		 * constraints, it may not be safe to do it right here so we
+> >   		 * defer superblock flushing to a workqueue.
+> >   		 */
+> > -		if (continue_fs && journal)
+> > +		if (continue_fs && journal && (sb->s_flags & SB_ACTIVE))
+> >   			schedule_work(&EXT4_SB(sb)->s_sb_upd_work);
+> >   		else
+> >   			ext4_commit_super(sb);
+> 
+> 
