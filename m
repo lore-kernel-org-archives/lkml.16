@@ -1,192 +1,182 @@
-Received: from mail-lf1-f68.google.com (mail-lf1-f68.google.com [209.85.167.68])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2049.outbound.protection.outlook.com [40.107.236.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4539821ABC6;
-	Tue, 25 Feb 2025 17:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.68
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740504106; cv=none; b=WDgMbz9++JwNdGPA/co7mwUem5DiWS8Lp8HfjDzThfyTKAX8MgwGoSyGKsiDQ1IcVE+X7R1TmHNDL+0BpX0kO4f31Lo21W06IxbKJpz8KaG5qGD2JQ0AuHvwlbzIUVRqZRGv/g/vNhsYkD7QDwK2SiR3fWZQ+uh8xFy2kxzg7r8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740504106; c=relaxed/simple;
-	bh=g8b94iQeKit7M6efwtxa16qoL3Q0/wQFaWwGXIVnAsc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NZP0FGYXLGE5RaRYNM+P+Hdn6l38WUVUMQLZ1p5rHb/uVuwCo4zE1IOhpoEMLhYhfHUaLRAOl16uRocpxJ27pzLe+rRiLB8uEktdxt6fEniRsYCoubew/y5W8Se7HDxOdAc+JULKt9sELzkCcC5XHxKPjKsum0xlywfcg+7L+68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AZWAVlzM; arc=none smtp.client-ip=209.85.167.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091F4155756;
+	Tue, 25 Feb 2025 17:22:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740504152; cv=fail; b=GavVchZ+FW3IxnOE6fwOv7WN+dLtrksHJw2eT+Pum+YFmgPksXKnlAdrZ1YQBmOVSQ6ZX+yY+Xhu5kMoesKzbKx1TMtrSBAQLEPrxQPWf7ljqY68JcXTTofnYiYo9Kq4LLDCFXlXQ4kQ/eyU/p3fl84PwlZs3Dkn/JVsDjPXRqQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740504152; c=relaxed/simple;
+	bh=y9RzLbpVVw+WeXcDMu3umoMztLKaOwhxXF+57Jhb4JQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rYqNLPiTIjKS8OSPxqDc9uAkRlB5lmTv3+N6PE0byIUMOtxg7LvFw96eGj5zUol/zkVYhPY8Rr7FQ17kBNLU0nRPXnIJRNy62iylDAHLDCJl6u4XiGAgxPsESz9CaKC2ByMRtSUlVJE8Cr7x3cV5i2IJuI1o9N0Wc/SdmUnCPso=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=jbh4Mlfz; arc=fail smtp.client-ip=40.107.236.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AZWAVlzM"
-Received: by mail-lf1-f68.google.com with SMTP id 2adb3069b0e04-54298ec925bso8193991e87.3;
-        Tue, 25 Feb 2025 09:21:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740504102; x=1741108902; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MFp1PXg9ibzgWTyF7i/yFKZcS7KZ9Zv8rxtRiXS5hLs=;
-        b=AZWAVlzMdwdjIGOrezZTMBWOz56YA2HBpLlNos2w6jQRp0lE8f24w42E7e4b+YwU1U
-         VVfKgfyF1v+/lWAUx+4Yf68IxkLqfOcCWA9Sdxne0QEn4kQxGeQT9Hm1IzMyS7alaRpx
-         ZUbLRF2fyOfrtKvF1XaJgkndQK5stnSiA3uXH190SnFEo0YD4o6dYxuYzMnUVk9j1saO
-         qeDsugHQShTW0/I3zkaxHbnVTMohkORJQnRj6glrDTLJwsp4ee1mBBCse28Fj3d3vxh+
-         1bL+fsJkd7Phw3c1IhSHpSuBXPU2xZSpjBibJ7oHWqCNypB5RJGKd3pnw97XlEkHe0ej
-         jujQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740504102; x=1741108902;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MFp1PXg9ibzgWTyF7i/yFKZcS7KZ9Zv8rxtRiXS5hLs=;
-        b=wCar+sF5tySi9SNRETVCcwRN/c5P4Y/X7AuqOs6sa1shnM7/kzEYhQK7Y6+1kT/HXq
-         MnmkBlvCp2juOWZEKF9M0pLzTHvt7xQA1q5q8Z67iKqTd6HZlbNO/s789B/T2RVMfbQW
-         yu/tkVdKPkDJXW4ALBQm2/RmEmJ38XWC8PYVp+eRwvGwvfIgM/RkGujQQwqZE2SlxnQf
-         u5kQSc/OpOaWQHBMEL4EzKJ60/7+L+7uzBY6AfU5sx4S+O0GIFn5Kga+H54aCWgzE+l2
-         tb1UL23G276W/pdYCZPP/9FUShs/CnDHIxb45t7ueDjC6cwkr8skxGLk/shXbfT9ek9p
-         0k1w==
-X-Forwarded-Encrypted: i=1; AJvYcCULH0kEbWQnkoxdyxDzQseWAiv8EuMUpRDarTB8kctAsOTF592G0uJOY9vStv17G6JGfv0OmKJZQxci76A=@vger.kernel.org, AJvYcCUeS94/zCjsktjSImEK4p+wxjmtRSkgfKYiR+Tg1+u9KZeIFSLjyiPnl8FIR6X8ihxCnZd8d3lmVD0HsmwzA9Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqyvgA+PhTG+xfQ1Ep4aRtMXYBtOHRaLTFhfj2oZYIoNRfXo1w
-	/++hrAtoUiLtTBlV4/6e7CY4bUugAT7bUd9x94qR1arBM/RA8st3lADshMUHgLDFwVg/L52iTYG
-	dX5CtoGNW+V2pwLLBYGY0hgu5Oyw=
-X-Gm-Gg: ASbGncu07hyFRA5R1gZ5+13+BSNG6uYapn9YPR0hwMEfbfa572D/XOocmBf/ENeQsNj
-	TMTAl8uXB0euDsD/kmBTfcO1kpAEKmZCWRVocMubKxB5GevHll3D1qw8ONGiNt4wX9R+rc7WKaj
-	oAG2pRBbUa
-X-Google-Smtp-Source: AGHT+IGg0L2G18ybzjJhT/nuNLljUfMebQR4U+Qx20CQIV2uJH1FVYMEDY2DEJ77A8Q/BgGVqabuhNZ/bsrJvAlDy/I=
-X-Received: by 2002:a05:6512:39c5:b0:545:d70:1d0e with SMTP id
- 2adb3069b0e04-5493c54ce34mr128422e87.3.1740504101982; Tue, 25 Feb 2025
- 09:21:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="jbh4Mlfz"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HO6SaoRWus4zi4qPvW1b/t62tvVxFB8NbtA8ET8Hnnby7PVuVmTwRxFRJWL65oujEIxVOp8Ko0Tb9ujKB5NmzHA2/M2bYkVa/TS3CzBLTG1gY8XF3Ia6exYjPU+XC4037D3wrcejg8sUYoqsjM8XE/Lj1Q0hpuRRQAHRHhx3aPa2kTLFuHzT1NB8KMTGAessN1hwzyUVDaS4Td6KSeJNHQ0TRN+vPuphTUajyrsYxU5s/8uZyr8ew0oCLM0FARKHE08dUS9usvvdxdpIY3+BtsUrqAoWQCpKeYQleozF1caps9jhPots4vt+ziu2WYEIHXJGG4eJMQe2l7f6aavQHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GZy3sQ4BoPVTFOnFIfxwbdlouHG7+YZ8QDgPZTjTI0E=;
+ b=L2kTzQZkO8WNhLllE8ExSbMOjZ67RA5/amAqlkutbsTLMEWG6j5O1a8WE5som/VImkxRvpO3sWWn+vJFR5sw4H4N/khWfuY8A497xnSsVTNQ176p4ZWUU6xq8iSTKlDDijqkus8EShOZJW3gMkzQtF5dfUoWZm/Iq8YLBUTUO/7qeBkRQWLGLav9eOCGD0xxCgYysepmDuKrtnBBhklEYqN4S87m3ZjnybFqNQNNZjRxCFXxCf0auxf1dg0F1QRm4+Xoy482aM9gsnuk92mk5YQs5CHEbORroe70Dej7PrsTrkTYvnaJzyum4H3/kkyUO7hQY8iZH0fWU9vcik685A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GZy3sQ4BoPVTFOnFIfxwbdlouHG7+YZ8QDgPZTjTI0E=;
+ b=jbh4MlfzFm0hba2wuXFNgDD/+Q7/bHb5E3gGwTtO2EOB+KruJXERAuFOFeDWc+JQm3+7l3+CMCIFX0UyOnOFLx9rUqemYQLqtlbN3VEAoQbFOOFUNLOeYqFhFbu64jH9USMjS2iaB2Gh9O9nuswee2DjoEyE61cwMtGxWaKJCqwf3zJjw5ZbwxIatvx29rX/Ft27UBM9YQyqLNXFdQJGSWcrmwUItgrqtl2+we7N2J2LJ9swM93ZCOA9lSOP6OFlGXtinRnB/XWB+a8R7q2IDgAjaDcg9yBXQGOai2rY66PqUd6yM/UeCZWXapbBPyUOrnzwoyFlJSRImH650hqi1Q==
+Received: from SA1P222CA0188.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:3c4::16)
+ by DM4PR12MB8560.namprd12.prod.outlook.com (2603:10b6:8:189::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.19; Tue, 25 Feb
+ 2025 17:22:25 +0000
+Received: from SA2PEPF00003AEB.namprd02.prod.outlook.com
+ (2603:10b6:806:3c4:cafe::84) by SA1P222CA0188.outlook.office365.com
+ (2603:10b6:806:3c4::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.21 via Frontend Transport; Tue,
+ 25 Feb 2025 17:22:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ SA2PEPF00003AEB.mail.protection.outlook.com (10.167.248.11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8489.16 via Frontend Transport; Tue, 25 Feb 2025 17:22:25 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 25 Feb
+ 2025 09:22:14 -0800
+Received: from drhqmail202.nvidia.com (10.126.190.181) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 25 Feb 2025 09:22:14 -0800
+Received: from Asurada-Nvidia (10.127.8.11) by mail.nvidia.com
+ (10.126.190.181) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Tue, 25 Feb 2025 09:22:13 -0800
+Date: Tue, 25 Feb 2025 09:22:12 -0800
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Pranjal Shrivastava <praan@google.com>
+CC: Jason Gunthorpe <jgg@nvidia.com>, <kevin.tian@intel.com>,
+	<corbet@lwn.net>, <will@kernel.org>, <joro@8bytes.org>,
+	<suravee.suthikulpanit@amd.com>, <robin.murphy@arm.com>,
+	<dwmw2@infradead.org>, <baolu.lu@linux.intel.com>, <shuah@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <iommu@lists.linux.dev>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kselftest@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <eric.auger@redhat.com>,
+	<jean-philippe@linaro.org>, <mdf@kernel.org>, <mshavit@google.com>,
+	<shameerali.kolothum.thodi@huawei.com>, <smostafa@google.com>,
+	<ddutile@redhat.com>, <yi.l.liu@intel.com>, <patches@lists.linux.dev>
+Subject: Re: [PATCH v7 12/14] iommu/arm-smmu-v3: Introduce struct
+ arm_smmu_vmaster
+Message-ID: <Z738RHVFhgCmxoIx@Asurada-Nvidia>
+References: <cover.1740238876.git.nicolinc@nvidia.com>
+ <be799951a817557ac093ac3e18d02a631306aa35.1740238876.git.nicolinc@nvidia.com>
+ <Z7zYLBLZGKim-5UL@google.com>
+ <Z7zlH74/orq9HF7Q@Asurada-Nvidia>
+ <Z7zqdrQn7Q8yXfcn@google.com>
+ <Z7zxsbJsOFp41Dzd@Asurada-Nvidia>
+ <Z70EnQ5CXacc4ysT@Asurada-Nvidia>
+ <20250225160225.GA593877@nvidia.com>
+ <Z73yt4r0iDFwbty2@Asurada-Nvidia>
+ <Z735AMlhP29YEndU@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
- <20250222141521.1fe24871@eugeo> <CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
- <6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
- <CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com>
- <CAFJgqgSqMO724SQxinNqVGCGc7=ibUvVq-f7Qk1=S3A47Mr-ZQ@mail.gmail.com> <CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
-In-Reply-To: <CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
-From: Ventura Jack <venturajack85@gmail.com>
-Date: Tue, 25 Feb 2025 10:21:28 -0700
-X-Gm-Features: AWEUYZkUwDT8aBSZwqWOVandZso4Q43TwCtZOPgm5JWe1L0EPqYxR9ThVnT5vic
-Message-ID: <CAFJgqgREAj-eP-d244WpqO-9H48ajZh83AxE31GqoONZ=DJe-g@mail.gmail.com>
-Subject: Re: C aggregate passing (Rust kernel policy)
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Gary Guo <gary@garyguo.net>, airlied@gmail.com, 
-	boqun.feng@gmail.com, david.laight.linux@gmail.com, ej@inai.de, 
-	gregkh@linuxfoundation.org, hch@infradead.org, hpa@zytor.com, 
-	ksummit@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	miguel.ojeda.sandonis@gmail.com, rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <Z735AMlhP29YEndU@google.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF00003AEB:EE_|DM4PR12MB8560:EE_
+X-MS-Office365-Filtering-Correlation-Id: a000826d-cf12-423f-1e6b-08dd55c0f8b8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|7416014|376014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?CaBaPzh7xyZPEskb86/qaIoWd5DQl2T5/YoHyS2AtIhXG0+0MAi50tBVt/cP?=
+ =?us-ascii?Q?SdQFEQxrWpHafnqtIZY3nOZYQyybiN69F9swoqs+N/4GxgkMrKv73oyKKRdG?=
+ =?us-ascii?Q?mVFLwvvJTbBVjfUbP3K5uy+EkBISl4v20TgQvsmGFdOvRwRcBsQc+Rt2AslD?=
+ =?us-ascii?Q?7lNEORnDj9lo2UDl91BFj4bKDZdhL+o/8hAm0SXV5sn0Vrwsy7bD+ITSJddM?=
+ =?us-ascii?Q?ASiV8F9eujjfylu2VjhIfmV/q/nPJGcGdmzOReOS/tYkiO1TkhkjDc/tdZzP?=
+ =?us-ascii?Q?SXgp5LxE9qazdP4FpcMJhezSf/DQLl/bmXCuA1lJDYMctcvRahiDzNCwf4+W?=
+ =?us-ascii?Q?jiMZJX094RgdIo9UzpOu9WeaAfTE+37WMEk7iXuHoyiUzB0VpIqqGLR1BACf?=
+ =?us-ascii?Q?bbw4CTlRmP0K4XYmprXIm0Q8/xic8hq41+Uzv4aPlQsx/aRoXOy69hJb7b03?=
+ =?us-ascii?Q?LN24huNGgXEnEI2YgdTURvJ+EVsk+WDHgL6SBmETW1wUzxZ9O8hNL+CszcFe?=
+ =?us-ascii?Q?mOPB2Y9Gf9pBx7/Tzk8fY91Ccpf6bRk7EZ/aagChw1kXrdjYZI/zYjv1GOZj?=
+ =?us-ascii?Q?bkTzC4PSwg/ZjR6ZMFnp90Xk4aDTiD0HHeZFsFVeS3KQEC96lvfHh58wqbAk?=
+ =?us-ascii?Q?6WRSXEvuQWnLS6pUBRnaQDrU4Rr7mLh+jR5zc7neaJ54o4ppjSCBf8gl/Gac?=
+ =?us-ascii?Q?g0pGfPii+gM/cj+I2iSXdA0e6kXcdEZi+NDtdq2RkZGM3Zz409N29t5uxCTu?=
+ =?us-ascii?Q?CtloRFBcB9j0qlxPWRFBgNnXdcA625750QZi1U7S1e6Qna+UquDXTsePA8zA?=
+ =?us-ascii?Q?BDR9YSIpWn4oyEsWeWm1xD48UV4l4XnqaXftDVoe1/9ujBpPHPQ8ji12Qi9G?=
+ =?us-ascii?Q?gRPSaQVbbSCw78OXp/viMeWJCQJC+qsjL9c6ZbjUXNV0PPdgEkELZ4NZPD9/?=
+ =?us-ascii?Q?V5sK3aLv9xqKu1+K2tJdkzoJfmXngRf7wVxk4kmxLMmPJnKrhJVmNA1bYLyv?=
+ =?us-ascii?Q?2BBzBhRsNReMVOrs9uAtgIt+e0L+miVMX+b+eif+Cblm7xk+69LktVr4zpTr?=
+ =?us-ascii?Q?+65YjZq8IAtj6qvqPGZGKZFHT5VwVkhGZ2snOpzXs5gUFtvyGo0KdLcA1Csx?=
+ =?us-ascii?Q?4oPsd39ZphtHL+6jBArU4gU0BiuaBzekGcfyOyweBo8Uo63msk8Fgeqipri8?=
+ =?us-ascii?Q?6wUir1Q0R9H0kPdLHJrc/F5aBttk0NZ5OFCFnp0jpcIs5J1WkgDzgxV5PbXj?=
+ =?us-ascii?Q?yiVQa9vJkFoQvdYt0tnMhoRE97yzDiMcZE6SvaZd+37U+OeuvPN7t/QDJmnw?=
+ =?us-ascii?Q?JYhHL4KToKCM4Dh1546DQcWKzgU5Rj6e3KaLh1vovaTsRI+/2Y2opkEYSHgw?=
+ =?us-ascii?Q?oPXjXvlyYnZkdHr/cSXU6Mx4r4AV8ePvc5UrdsGQFPQdjXJ1M7HsKTfzg7dl?=
+ =?us-ascii?Q?BdyTHGPrgkGUYneTfaJO2qDkZEUWvrHUP7fctW6CaRDBLuDZR+e5H6yc8CsL?=
+ =?us-ascii?Q?AiKdrfmvk+JAtrQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(7416014)(376014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2025 17:22:25.0126
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a000826d-cf12-423f-1e6b-08dd55c0f8b8
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF00003AEB.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8560
 
-On Tue, Feb 25, 2025 at 9:12=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> On Sun, Feb 23, 2025 at 4:30=E2=80=AFPM Ventura Jack <venturajack85@gmail=
-.com> wrote:
-> >
-> > Just to be clear and avoid confusion, I would
-> > like to clarify some aspects of aliasing.
-> > In case that you do not already know about this,
-> > I suspect that you may find it very valuable.
-> >
-> > I am not an expert at Rust, so for any Rust experts
-> > out there, please feel free to point out any errors
-> > or mistakes that I make in the following.
-> >
-> > The Rustonomicon is (as I gather) the semi-official
-> > documentation site for unsafe Rust.
-> >
-> > Aliasing in C and Rust:
-> >
-> > C "strict aliasing":
-> > - Is not a keyword.
-> > - Based on "type compatibility".
-> > - Is turned off by default in the kernel by using
-> >     a compiler flag.
-> >
-> > C "restrict":
-> > - Is a keyword, applied to pointers.
-> > - Is opt-in to a kind of aliasing.
-> > - Is seldom used in practice, since many find
-> >     it difficult to use correctly and avoid
-> >     undefined behavior.
-> >
-> > Rust aliasing:
-> > - Is not a keyword.
-> > - Applies to certain pointer kinds in Rust, namely
-> >     Rust "references".
-> >     Rust pointer kinds:
-> >     https://doc.rust-lang.org/reference/types/pointer.html
-> > - Aliasing in Rust is not opt-in or opt-out,
-> >     it is always on.
-> >     https://doc.rust-lang.org/nomicon/aliasing.html
-> > - Rust has not defined its aliasing model.
-> >     https://doc.rust-lang.org/nomicon/references.html
-> >         "Unfortunately, Rust hasn't actually
-> >         defined its aliasing model.
-> >         While we wait for the Rust devs to specify
-> >         the semantics of their language, let's use
-> >         the next section to discuss what aliasing is
-> >         in general, and why it matters."
-> >     There is active experimental research on
-> >     defining the aliasing model, including tree borrows
-> >     and stacked borrows.
-> > - The aliasing model not being defined makes
-> >     it harder to reason about and work with
-> >     unsafe Rust, and therefore harder to avoid
-> >     undefined behavior/memory safety bugs.
->
-> I think all of this worrying about Rust not having defined its
-> aliasing model is way overblown. Ultimately, the status quo is that
-> each unsafe operation that has to do with aliasing falls into one of
-> three categories:
->
-> * This is definitely allowed.
-> * This is definitely UB.
-> * We don't know whether we want to allow this yet.
->
-> The full aliasing model that they want would eliminate the third
-> category. But for practical purposes you just stay within the first
-> subset and you will be happy.
->
-> Alice
+On Tue, Feb 25, 2025 at 05:08:16PM +0000, Pranjal Shrivastava wrote:
+> > @@ -824,6 +829,9 @@ struct arm_smmu_master {
+> >         struct arm_smmu_device          *smmu;
+> >         struct device                   *dev;
+> >         struct arm_smmu_stream          *streams;
+> > +#ifdef CONFIG_ARM_SMMU_V3_IOMMUFD
+> > +       struct arm_smmu_vmaster         *vmaster; /* use smmu->streams_mutex */
+> > +#endif
+> >         /* Locked by the iommu core using the group mutex */
+> >         struct arm_smmu_ctx_desc_cfg    cd_table;
+> >         unsigned int                    num_streams;
+> > @@ -972,6 +980,9 @@ struct arm_smmu_attach_state {
+> >         bool disable_ats;
+> >         ioasid_t ssid;
+> >         /* Resulting state */
+> > +#ifdef CONFIG_ARM_SMMU_V3_IOMMUFD
+> > +       struct arm_smmu_vmaster *vmaster;
+> > +#endif
+> >         bool ats_enabled;
+> >  };
+> > 
+> 
+> Umm.. I'm not too sure how I feel about these #ifdefs _between_ a struct
+> definition. Given that currently, the arm_smmu_v3.h file doesn't have
+> such `#ifdef CONFIG`s between structs. I'd say, in case
+> CONFIG_ARM_SMMU_V3_IOMMUFD is turned off, we can simply leave the
+> vmaster ptr NULL?
+ 
+OK. Will drop..
 
-Is there a specification for aliasing that defines your first bullet
-point, that people can read and use, as a kind of partial
-specification? Or maybe a subset of your first bullet point, as a
-conservative partial specification? I am guessing that stacked
-borrows or tree borrows might be useful for such a purpose.
-But I do not know whether either of stacked borrows or tree
-borrows have only false positives, only false negatives, or both.
-
-For Rust documentation, I have heard of the official
-documentation websites at
-
-    https://doc.rust-lang.org/book/
-    https://doc.rust-lang.org/nomicon/
-
-And various blogs, forums and research papers.
-
-If there is no such conservative partial specification for
-aliasing yet, I wonder if such a conservative partial
-specification could be made with relative ease, especially if
-it is very conservative, at least in its first draft. Though there
-is currently no specification of the Rust language and just
-one major compiler.
-
-I know that Java defines an additional conservative reasoning
-model for its memory model that is easier to reason about
-than the full memory model, namely happens-before
-relationship. That conservative reasoning model is taught in
-official Java documentation and in books.
-
-On the topic of difficulty, even if there was a full specification,
-it might still be difficult to work with aliasing in unsafe Rust.
-For C "restrict", I assume that "restrict" is fully specified, and
-C developers still typically avoid "restrict". And for unsafe
-Rust, the Rust community helpfully encourages people to
-avoid unsafe Rust when possible due to its difficulty.
-
-Best, VJ.
+Nicolin
