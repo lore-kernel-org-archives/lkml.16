@@ -1,57 +1,31 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB0025EF8A
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 10:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E506118CC1C;
+	Tue, 25 Feb 2025 10:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740478431; cv=none; b=AURDqSkpwooO/ikHQS1JxtCW2ek91/+KbyPD49DLluvUwWGwRXmAV48sXf+k97jAk1WL8i8bxX5QhgDYCnO3uIaJ2GofRAmklMYIAG59qSTp9+YLcDot7OMZxa9Y5N2olnnJjTZzZCiBbCYab8zV7L5gFNZpUsO0gkVp59Zaimk=
+	t=1740478556; cv=none; b=Has9zV7HepeZIbDotD6NDMsQW6yTR8VAx8q1L/idYx4bavdS5OPIfkjw8AwEp8ao8Bb/dJCjUns4fTsykmLyG13YDhxJ9lbPnjBX1DjTlVhbNA4ZFlwEUh8pkLvusKm6JIYFQl8A3PAaALIG9UK4IdqhEcEAt7Pl8GlkVEy0HX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740478431; c=relaxed/simple;
-	bh=EK2z1/mY11k+Yb49rOAUKqHQhZiWMwS9lP8bNojUrdE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=sEePn0fJtO9NuFoevMvsLD93DvYM6LpQKdUUVfQ6vqIwfGEw2pwm/JlnbNLBFHF7Lp5ptdG4vYIfpuIL6TNFZXYbGSH0/3NubxG3mHdgfL0cNBP2G8jmfcY74eITz+cQIsI4BWNS1fIWkmiTqz+SplEaY/ukxcev4QVYdGaLcmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=uUcArU5m; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1740478556; c=relaxed/simple;
+	bh=Zo0opcPKGQ/pu9FzDTV+Lkxg6BFsS3+OMq13Rm4Lons=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=KSi+gs1zNsu6uUQH6CKgBZZnXe0Kn2oVdMK+e2eEQa7JIseb787pDU2MsYpIw2jKi78Wr3I5JsdeDtdUIUjDuY0ueFDJHK4KPIjwk/FmW4e7Ig6PlCLXAPu8/hxPylBVg/n6yAdjCDL99XbRzxZUCsH1IaO2nq8dzuMqw3gmHKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=SxPhmuMb; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="uUcArU5m"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250225101340euoutp027a55f4a1ce67c4909afc162129acd29d~na_by6P9c2419524195euoutp02g
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 10:13:40 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250225101340euoutp027a55f4a1ce67c4909afc162129acd29d~na_by6P9c2419524195euoutp02g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1740478420;
-	bh=e4LoxeP+NNcsDPVZ19HjPLj+ANosetEFcVUdRrnEUHk=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=uUcArU5mgRaynZ7gI0Za9HkSBPmwQz7W4TXg/UNMkJ2PA9OFICiEqPlUIETM6D6QU
-	 MbHXzX3aRtx7LRNGWvsTRVii2d0QlGjtcuJ6ZZVw4dtYGRdZxILS7V22JB2YKs3+er
-	 NMTsFTDCcsvy5CvRNSoqfU269nFQzSMatNg5Udlw=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20250225101340eucas1p24e6b1dcf0b1c21cc4f14ae4f5bce2cb8~na_boJNfM2612526125eucas1p23;
-	Tue, 25 Feb 2025 10:13:40 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges3new.samsung.com (EUCPMTA) with SMTP id 9A.A4.20397.4D79DB76; Tue, 25
-	Feb 2025 10:13:40 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250225101340eucas1p13c0c9cbc62ee7c9bfe964941c901bd1b~na_bW4vV30133801338eucas1p1V;
-	Tue, 25 Feb 2025 10:13:40 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250225101340eusmtrp2a4228c2859af6cb4c14eadbe9858fe3a~na_bWYsNm1504215042eusmtrp2P;
-	Tue, 25 Feb 2025 10:13:40 +0000 (GMT)
-X-AuditID: cbfec7f5-e59c770000004fad-dd-67bd97d4b2ce
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 81.2D.19654.4D79DB76; Tue, 25
-	Feb 2025 10:13:40 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250225101339eusmtip28791148859bb831304eea6c9258be84e~na_a8IrGO2867128671eusmtip2y;
-	Tue, 25 Feb 2025 10:13:39 +0000 (GMT)
-Message-ID: <81f890fc-6688-42f0-9756-567efc8bb97a@samsung.com>
-Date: Tue, 25 Feb 2025 11:13:39 +0100
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="SxPhmuMb"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1740478549; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
+	bh=G1//MzoBhkItqh36YQVUEyzPgpeaLo06j7nacJ5WR2A=;
+	b=SxPhmuMbpdm03d0p7oT5Q9as3ev8gZYumVSVOXaSzm3UXMqzXC95R4KSnb3mWLHw4+KINEc1v20JB45F9S7ZajAD/by6/eOKVk49ByBNAS/wC1CDy3u7HMIUlhC4LStbUFjBBbAPH6Jl/fKvLgJ1zslgz7XbqxIRjF5v5DtFg+w=
+Received: from 30.74.144.116(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WQEMMgT_1740478548 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 25 Feb 2025 18:15:48 +0800
+Message-ID: <af6122b4-2324-418b-b925-becf6036d9ab@linux.alibaba.com>
+Date: Tue, 25 Feb 2025 18:15:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,197 +33,303 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 8/8] gpiolib: sanitize the return value of
- gpio_chip::get_direction()
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij
-	<linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz
-	Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <20250210-gpio-sanitize-retvals-v1-8-12ea88506cb2@linaro.org>
+Subject: Re: [PATCH v2 2/2] mm/shmem: use xas_try_split() in
+ shmem_split_large_entry()
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: Zi Yan <ziy@nvidia.com>
+Cc: linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+ Matthew Wilcox <willy@infradead.org>, Hugh Dickins <hughd@google.com>,
+ Kairui Song <kasong@tencent.com>, Miaohe Lin <linmiaohe@huawei.com>,
+ linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+References: <20250218235444.1543173-1-ziy@nvidia.com>
+ <20250218235444.1543173-3-ziy@nvidia.com>
+ <f899d6b3-e607-480b-9acc-d64dfbc755b5@linux.alibaba.com>
+ <AD348832-5A6A-48F1-9735-924F144330F7@nvidia.com>
+ <47d189c7-3143-4b59-a3af-477d4c46a8a0@linux.alibaba.com>
+ <2e4b9927-562d-4cfa-9362-f23e3bcfc454@linux.alibaba.com>
+ <42440332-96FF-4ECB-8553-9472125EB33F@nvidia.com>
+ <37C4B6AC-0757-4B92-88F3-75F1B4DEFFC5@nvidia.com>
+ <655589D4-7E13-4F5B-8968-3FCB71DCE0FC@nvidia.com>
+ <bd30dc5e-880c-4daf-a86b-b814a1533931@linux.alibaba.com>
+In-Reply-To: <bd30dc5e-880c-4daf-a86b-b814a1533931@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupkleLIzCtJLcpLzFFi42LZduznOd0r0/emG7z7LGmx4tsaJotdD7ax
-	WUz5s5zJYvP8P4wWl3fNYXNg9Vh87Tarx51re9g8Pm+SC2CO4rJJSc3JLEst0rdL4Mp43beM
-	teCkdsX25QdZGxh3qXQxcnJICJhI3H03h7WLkYtDSGAFo0T3uQ4mCOcLo0T/+2YmkCohgc+M
-	Eid+18N0PO99wgZRtJxRYtuaJ8wQzkdGiS8v1jKCVPEK2Ekc3LOIDcRmEVCVWLPrOAtEXFDi
-	5MwnYLaogLzE/Vsz2EFsYYFoiQ87/jKD2CICwRJfnt4A62UWKJH4/n8bI4QtLnHryXywi9gE
-	DCW63naB1XAKeEl03f7IClEjL9G8dTbYQRICOzgkVmybwwpxtovE9PProGxhiVfHt7BD2DIS
-	/3fOZ4JoaGeUWPD7PpQzgVGi4fktRogqa4k7534BreMAWqEpsX6XPogpIeAo8aOzEMLkk7jx
-	VhDiBj6JSdumM0OEeSU62oQgZqhJzDq+Dm7rwQuXmCcwKs1CCpVZSL6cheSbWQhrFzCyrGIU
-	Ty0tzk1PLTbOSy3XK07MLS7NS9dLzs/dxAhMLaf/Hf+6g3HFq496hxiZOBgPMUpwMCuJ8HJm
-	7kkX4k1JrKxKLcqPLyrNSS0+xCjNwaIkzrtof2u6kEB6YklqdmpqQWoRTJaJg1OqgWnWPpf3
-	F/5feC4psF/3YoaWk2XPjLNF++w2pPyOOcz46uNdMxNVQyl2j+eCPEpfbZuNFu2N96tTf33a
-	Vf3Pwq7nLCoX/ohMTT4119FBW2Pu89mXCttKq5IdjvOFPrnId2Tq1lsezQfye79eMbWfIcEn
-	2S2xidc6M4Wra6fnVaPrr/KeBGomZtV0PYtzNXppOqut79Xm/xFsTh3XtuZsT8iytDwebb/8
-	u7FkbNnP+fUBm63yovzmhu+OOe4jdOT2+5lv5jqvfxxptsS590jlJpmqzg+2Ricea609OMlm
-	s5jSu/hfO5NVT65TNNjz6cjCCL9u1k//jM0u3hW/IZmxxn7D9kZO7kBGztezJx45dkSJpTgj
-	0VCLuag4EQDvJI/UnAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLIsWRmVeSWpSXmKPExsVy+t/xe7pXpu9NN7i2mcNixbc1TBa7Hmxj
-	s5jyZzmTxeb5fxgtLu+aw+bA6rH42m1WjzvX9rB5fN4kF8AcpWdTlF9akqqQkV9cYqsUbWhh
-	pGdoaaFnZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJfxum8Za8FJ7Yrtyw+yNjDuUuli5OSQ
-	EDCReN77hK2LkYtDSGApo8SrjXcYIRIyEienNbBC2MISf651QRW9Z5RoX3GeGSTBK2AncXDP
-	IjYQm0VAVWLNruMsEHFBiZMzn4DZogLyEvdvzWAHsYUFoiU+7PgL1isiECyx6G4n2DJmgRKJ
-	SQ//Qy3oZJQ4cOMZK0RCXOLWk/lMIDabgKFE19susGWcAl4SXbc/QtWYSXRt7YIaJC/RvHU2
-	8wRGoVlI7piFZNQsJC2zkLQsYGRZxSiSWlqcm55bbKRXnJhbXJqXrpecn7uJERhP24793LKD
-	ceWrj3qHGJk4GA8xSnAwK4nwcmbuSRfiTUmsrEotyo8vKs1JLT7EaAoMjInMUqLJ+cCIziuJ
-	NzQzMDU0MbM0MLU0M1YS52W7cj5NSCA9sSQ1OzW1ILUIpo+Jg1Oqgan7T/kptcNqU1flilyw
-	uGG3Iup4vk71v6vKLkdCy1LcZi0OjNnw74+1nZqFprvJSg5Bs0kb+5ak71Tc+tRw1vukrkXX
-	PbvePj4TWLvkzJdJxSmnWtxmiZjc8J9apXhFOLSee25QLvOWt4Vumb84dxy8/FeohvFAh5Pd
-	5rsKjBIv+Yseuiwqs1UPCVNZ6vRHO/3qBznlZV9yCz5yVsUf0p83cZOBxZq3F6tPpCxi+e0a
-	Wmr/unLqvlNl9rWO268tTYxpfbH9mmuHsMOhdfEh/ZYztTxDvnoI514oDOJVUXzxt0ci8vNj
-	168xHck7n88Wu2iq28odLqzY72gZWFLffq7uTLV20ySVScuWLJpmpsRSnJFoqMVcVJwIANdT
-	0tcwAwAA
-X-CMS-MailID: 20250225101340eucas1p13c0c9cbc62ee7c9bfe964941c901bd1b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250225101340eucas1p13c0c9cbc62ee7c9bfe964941c901bd1b
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250225101340eucas1p13c0c9cbc62ee7c9bfe964941c901bd1b
-References: <20250210-gpio-sanitize-retvals-v1-0-12ea88506cb2@linaro.org>
-	<20250210-gpio-sanitize-retvals-v1-8-12ea88506cb2@linaro.org>
-	<CGME20250225101340eucas1p13c0c9cbc62ee7c9bfe964941c901bd1b@eucas1p1.samsung.com>
-
-On 10.02.2025 11:52, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> As per the API contract, the get_direction() callback can only
-> return 0, 1 or a negative error number. Add a wrapper around the callback
-> calls that filters out anything else.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-This patch landed in today's linux-next as commit e623c4303ed11 
-("gpiolib: sanitize the return value of gpio_chip::get_direction()"). It 
-introduced a lockdep warning from the gpiochip_get_direction() function. 
-IMHO it looks that gpiochip_add_data_with_key() lacks proper srcu 
-locking/annotation for the newly created gpio chip. Here is the log:
-
-gpio gpiochip1: Static allocation of GPIO base is deprecated, use 
-dynamic allocation.
-------------[ cut here ]------------
-WARNING: CPU: 2 PID: 35 at drivers/gpio/gpiolib.c:349 
-gpiochip_get_direction+0x48/0x66
-Modules linked in: cdns_usb_common roles cdns3_starfive 
-snd_soc_simple_card snd_soc_simple_card_utils phy_jh7110_dphy_rx 
-clk_starfive_jh7110_vout pcie_starfive(+) clk_starfive_jh7110_isp 
-jh7110_trng sfctemp dwmac_starfive stmmac_platform 
-spi_cadence_quadspi(+) clk_starfive_jh7110_stg stmmac 
-clk_starfive_jh7110_aon jh7110_pwmdac pcs_xpcs phy_jh7110_usb spi_pl022 
-phy_jh7110_pcie snd_soc_spdif_tx i2c_dev drm 
-drm_panel_orientation_quirks backlight dm_mod configfs ip_tables x_tables
-CPU: 2 UID: 0 PID: 35 Comm: kworker/u18:0 Tainted: G W          
-6.14.0-rc4-next-20250225 #1054
-Tainted: [W]=WARN
-Hardware name: StarFive VisionFive 2 v1.2A (DT)
-Workqueue: events_unbound deferred_probe_work_func
-epc : gpiochip_get_direction+0x48/0x66
-  ra : gpiochip_get_direction+0x46/0x66
-...
-[<ffffffff805fc72c>] gpiochip_get_direction+0x48/0x66
-[<ffffffff80603a14>] gpiochip_add_data_with_key+0x74a/0xde2
-[<ffffffff806044e6>] devm_gpiochip_add_data_with_key+0x1e/0x5a
-[<ffffffff805f8738>] jh7110_pinctrl_probe+0x298/0x3aa
-[<ffffffff80731116>] platform_probe+0x4e/0x92
-[<ffffffff8000c366>] really_probe+0x10a/0x2de
-[<ffffffff8000c5e4>] __driver_probe_device.part.0+0xaa/0xe0
-[<ffffffff8072ee34>] driver_probe_device+0x78/0xc4
-[<ffffffff8072eee6>] __device_attach_driver+0x66/0xc6
-[<ffffffff8072d0b0>] bus_for_each_drv+0x5c/0xb0
-[<ffffffff8072f33e>] __device_attach+0x84/0x13c
-[<ffffffff8072f55e>] device_initial_probe+0xe/0x16
-[<ffffffff8072e002>] bus_probe_device+0x88/0x8a
-[<ffffffff8072e516>] deferred_probe_work_func+0xd4/0xee
-[<ffffffff80047b7e>] process_one_work+0x1d0/0x57a
-[<ffffffff8004854e>] worker_thread+0x166/0x2cc
-[<ffffffff80051568>] kthread+0xdc/0x1b4
-[<ffffffff80bcb942>] ret_from_fork+0xe/0x18
-irq event stamp: 17857
-hardirqs last  enabled at (17857): [<ffffffff80bca986>] 
-_raw_spin_unlock_irqrestore+0x4c/0x4e
-hardirqs last disabled at (17856): [<ffffffff80bca73c>] 
-_raw_spin_lock_irqsave+0x5e/0x64
-softirqs last  enabled at (17322): [<ffffffff80adff1a>] 
-inet6_fill_ifla6_attrs+0x3d0/0x420
-softirqs last disabled at (17320): [<ffffffff80adfefe>] 
-inet6_fill_ifla6_attrs+0x3b4/0x420
----[ end trace 0000000000000000 ]---
 
 
-> ---
->   drivers/gpio/gpiolib.c | 27 +++++++++++++++++++++------
->   1 file changed, 21 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 683a03d237c0..7f2aca9f81a1 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -341,6 +341,22 @@ static int gpiochip_find_base_unlocked(u16 ngpio)
->   	}
->   }
->   
-> +static int gpiochip_get_direction(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +	int ret;
-> +
-> +	lockdep_assert_held(&gc->gpiodev->srcu);
-> +
-> +	if (WARN_ON(!gc->get_direction))
-> +		return -EOPNOTSUPP;
-> +
-> +	ret = gc->get_direction(gc, offset);
-> +	if (ret > 1)
-> +		ret = -EBADE;
-> +
-> +	return ret;
-> +}
-> +
->   /**
->    * gpiod_get_direction - return the current direction of a GPIO
->    * @desc:	GPIO to get the direction of
-> @@ -381,7 +397,7 @@ int gpiod_get_direction(struct gpio_desc *desc)
->   	if (!guard.gc->get_direction)
->   		return -ENOTSUPP;
->   
-> -	ret = guard.gc->get_direction(guard.gc, offset);
-> +	ret = gpiochip_get_direction(guard.gc, offset);
->   	if (ret < 0)
->   		return ret;
->   
-> @@ -1057,7 +1073,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
->   		desc->gdev = gdev;
->   
->   		if (gc->get_direction && gpiochip_line_is_valid(gc, desc_index)) {
-> -			ret = gc->get_direction(gc, desc_index);
-> +			ret = gpiochip_get_direction(gc, desc_index);
->   			if (ret < 0)
->   				goto err_cleanup_desc_srcu;
->   
-> @@ -2770,8 +2786,7 @@ int gpiod_direction_input_nonotify(struct gpio_desc *desc)
->   		ret = gpiochip_direction_input(guard.gc,
->   					       gpio_chip_hwgpio(desc));
->   	} else if (guard.gc->get_direction) {
-> -		ret = guard.gc->get_direction(guard.gc,
-> -					      gpio_chip_hwgpio(desc));
-> +		ret = gpiochip_get_direction(guard.gc, gpio_chip_hwgpio(desc));
->   		if (ret < 0)
->   			return ret;
->   
-> @@ -2818,8 +2833,8 @@ static int gpiod_direction_output_raw_commit(struct gpio_desc *desc, int value)
->   	} else {
->   		/* Check that we are in output mode if we can */
->   		if (guard.gc->get_direction) {
-> -			ret = guard.gc->get_direction(guard.gc,
-> -						      gpio_chip_hwgpio(desc));
-> +			ret = gpiochip_get_direction(guard.gc,
-> +						     gpio_chip_hwgpio(desc));
->   			if (ret < 0)
->   				return ret;
->   
->
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
 
+On 2025/2/25 17:20, Baolin Wang wrote:
+> 
+> 
+> On 2025/2/21 10:38, Zi Yan wrote:
+>> On 20 Feb 2025, at 21:33, Zi Yan wrote:
+>>
+>>> On 20 Feb 2025, at 8:06, Zi Yan wrote:
+>>>
+>>>> On 20 Feb 2025, at 4:27, Baolin Wang wrote:
+>>>>
+>>>>> On 2025/2/20 17:07, Baolin Wang wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 2025/2/20 00:10, Zi Yan wrote:
+>>>>>>> On 19 Feb 2025, at 5:04, Baolin Wang wrote:
+>>>>>>>
+>>>>>>>> Hi Zi,
+>>>>>>>>
+>>>>>>>> Sorry for the late reply due to being busy with other things:)
+>>>>>>>
+>>>>>>> Thank you for taking a look at the patches. :)
+>>>>>>>
+>>>>>>>>
+>>>>>>>> On 2025/2/19 07:54, Zi Yan wrote:
+>>>>>>>>> During shmem_split_large_entry(), large swap entries are 
+>>>>>>>>> covering n slots
+>>>>>>>>> and an order-0 folio needs to be inserted.
+>>>>>>>>>
+>>>>>>>>> Instead of splitting all n slots, only the 1 slot covered by 
+>>>>>>>>> the folio
+>>>>>>>>> need to be split and the remaining n-1 shadow entries can be 
+>>>>>>>>> retained with
+>>>>>>>>> orders ranging from 0 to n-1.  This method only requires
+>>>>>>>>> (n/XA_CHUNK_SHIFT) new xa_nodes instead of (n % XA_CHUNK_SHIFT) *
+>>>>>>>>> (n/XA_CHUNK_SHIFT) new xa_nodes, compared to the original
+>>>>>>>>> xas_split_alloc() + xas_split() one.
+>>>>>>>>>
+>>>>>>>>> For example, to split an order-9 large swap entry (assuming 
+>>>>>>>>> XA_CHUNK_SHIFT
+>>>>>>>>> is 6), 1 xa_node is needed instead of 8.
+>>>>>>>>>
+>>>>>>>>> xas_try_split_min_order() is used to reduce the number of calls to
+>>>>>>>>> xas_try_split() during split.
+>>>>>>>>
+>>>>>>>> For shmem swapin, if we cannot swap in the whole large folio by 
+>>>>>>>> skipping the swap cache, we will split the large swap entry 
+>>>>>>>> stored in the shmem mapping into order-0 swap entries, rather 
+>>>>>>>> than splitting it into other orders of swap entries. This is 
+>>>>>>>> because the next time we swap in a shmem folio through 
+>>>>>>>> shmem_swapin_cluster(), it will still be an order 0 folio.
+>>>>>>>
+>>>>>>> Right. But the swapin is one folio at a time, right? 
+>>>>>>> shmem_split_large_entry()
+>>>>>>
+>>>>>> Yes, now we always swapin an order-0 folio from the async swap 
+>>>>>> device at a time. However, for sync swap device, we will skip the 
+>>>>>> swapcache and swapin the whole large folio by commit 1dd44c0af4fa, 
+>>>>>> so it will not call shmem_split_large_entry() in this case.
+>>>>
+>>>> Got it. I will check the commit.
+>>>>
+>>>>>>
+>>>>>>> should split the large swap entry and give you a slot to store 
+>>>>>>> the order-0 folio.
+>>>>>>> For example, with an order-9 large swap entry, to swap in first 
+>>>>>>> order-0 folio,
+>>>>>>> the large swap entry will become order-0, order-0, order-1, 
+>>>>>>> order-2,… order-8,
+>>>>>>> after the split. Then the first order-0 swap entry can be used.
+>>>>>>> Then, when a second order-0 is swapped in, the second order-0 can 
+>>>>>>> be used.
+>>>>>>> When the last order-0 is swapped in, the order-8 would be split to
+>>>>>>> order-7,order-6,…,order-1,order-0, order-0, and the last order-0 
+>>>>>>> will be used.
+>>>>>>
+>>>>>> Yes, understood. However, for the sequential swapin scenarios, 
+>>>>>> where originally only one split operation is needed. However, your 
+>>>>>> approach increases the number of split operations. Of course, I 
+>>>>>> understand that in non-sequential swapin scenarios, your patch 
+>>>>>> will save some xarray memory. It might be necessary to evaluate 
+>>>>>> whether the increased split operations will have a significant 
+>>>>>> impact on the performance of sequential swapin?
+>>>>
+>>>> Is there a shmem swapin test I can run to measure this? 
+>>>> xas_try_split() should
+>>>> performance similar operations as existing 
+>>>> xas_split_alloc()+xas_split().
+>>>>
+>>>>>>
+>>>>>>> Maybe the swapin assumes after shmem_split_large_entry(), all 
+>>>>>>> swap entries
+>>>>>>> are order-0, which can lead to issues. There should be some check 
+>>>>>>> like
+>>>>>>> if the swap entry order > folio_order, shmem_split_large_entry() 
+>>>>>>> should
+>>>>>>> be used.
+>>>>>>>>
+>>>>>>>> Moreover I did a quick test with swapping in order 6 shmem 
+>>>>>>>> folios, however, my test hung, and the console was continuously 
+>>>>>>>> filled with the following information. It seems there are some 
+>>>>>>>> issues with shmem swapin handling. Anyway, I need more time to 
+>>>>>>>> debug and test.
+>>>>>>> To swap in order-6 folios, shmem_split_large_entry() does not 
+>>>>>>> allocate
+>>>>>>> any new xa_node, since XA_CHUNK_SHIFT is 6. It is weird to see OOM
+>>>>>>> error below. Let me know if there is anything I can help.
+>>>>>>
+>>>>>> I encountered some issues while testing order 4 and order 6 swapin 
+>>>>>> with your patches. And I roughly reviewed the patch, and it seems 
+>>>>>> that the new swap entry stored in the shmem mapping was not 
+>>>>>> correctly updated after the split.
+>>>>>>
+>>>>>> The following logic is to reset the swap entry after split, and I 
+>>>>>> assume that the large swap entry is always split to order 0 
+>>>>>> before. As your patch suggests, if a non-uniform split is used, 
+>>>>>> then the logic for resetting the swap entry needs to be changed? 
+>>>>>> Please correct me if I missed something.
+>>>>>>
+>>>>>> /*
+>>>>>>    * Re-set the swap entry after splitting, and the swap
+>>>>>>    * offset of the original large entry must be continuous.
+>>>>>>    */
+>>>>>> for (i = 0; i < 1 << order; i++) {
+>>>>>>       pgoff_t aligned_index = round_down(index, 1 << order);
+>>>>>>       swp_entry_t tmp;
+>>>>>>
+>>>>>>       tmp = swp_entry(swp_type(swap), swp_offset(swap) + i);
+>>>>>>       __xa_store(&mapping->i_pages, aligned_index + i,
+>>>>>>              swp_to_radix_entry(tmp), 0);
+>>>>>> }
+>>>>
+>>>> Right. I will need to adjust swp_entry_t. Thanks for pointing this out.
+>>>>
+>>>>>
+>>>>> In addition, after your patch, the shmem_split_large_entry() seems 
+>>>>> always return 0 even though it splits a large swap entry, but we 
+>>>>> still need re-calculate the swap entry value after splitting, 
+>>>>> otherwise it may return errors due to shmem_confirm_swap() 
+>>>>> validation failure.
+>>>>>
+>>>>> /*
+>>>>>   * If the large swap entry has already been split, it is
+>>>>>   * necessary to recalculate the new swap entry based on
+>>>>>   * the old order alignment.
+>>>>>   */
+>>>>>   if (split_order > 0) {
+>>>>>     pgoff_t offset = index - round_down(index, 1 << split_order);
+>>>>>
+>>>>>     swap = swp_entry(swp_type(swap), swp_offset(swap) + offset);
+>>>>> }
+>>>>
+>>>> Got it. I will fix it.
+>>>>
+>>>> BTW, do you mind sharing your swapin tests so that I can test my new 
+>>>> version
+>>>> properly?
+>>>
+>>> The diff below adjusts the swp_entry_t and returns the right order after
+>>> shmem_split_large_entry(). Let me know if it fixes your issue.
+>>
+>> Fixed the compilation error. It will be great if you can share a 
+>> swapin test, so that
+>> I can test locally. Thanks.
+>>
+>> diff --git a/mm/shmem.c b/mm/shmem.c
+>> index b35ba250c53d..bfc4ef511391 100644
+>> --- a/mm/shmem.c
+>> +++ b/mm/shmem.c
+>> @@ -2162,7 +2162,7 @@ static int shmem_split_large_entry(struct inode 
+>> *inode, pgoff_t index,
+>>   {
+>>       struct address_space *mapping = inode->i_mapping;
+>>       XA_STATE_ORDER(xas, &mapping->i_pages, index, 0);
+>> -    int split_order = 0;
+>> +    int split_order = 0, entry_order = 0;
+>>       int i;
+>>
+>>       /* Convert user data gfp flags to xarray node gfp flags */
+>> @@ -2180,6 +2180,7 @@ static int shmem_split_large_entry(struct inode 
+>> *inode, pgoff_t index,
+>>           }
+>>
+>>           order = xas_get_order(&xas);
+>> +        entry_order = order;
+>>
+>>           /* Try to split large swap entry in pagecache */
+>>           if (order > 0) {
+>> @@ -2192,23 +2193,23 @@ static int shmem_split_large_entry(struct 
+>> inode *inode, pgoff_t index,
+>>                   xas_try_split(&xas, old, cur_order, GFP_NOWAIT);
+>>                   if (xas_error(&xas))
+>>                       goto unlock;
+>> +
+>> +                /*
+>> +                 * Re-set the swap entry after splitting, and the swap
+>> +                 * offset of the original large entry must be 
+>> continuous.
+>> +                 */
+>> +                for (i = 0; i < 1 << cur_order; i += (1 << 
+>> split_order)) {
+>> +                    pgoff_t aligned_index = round_down(index, 1 << 
+>> cur_order);
+>> +                    swp_entry_t tmp;
+>> +
+>> +                    tmp = swp_entry(swp_type(swap), swp_offset(swap) 
+>> + i);
+>> +                    __xa_store(&mapping->i_pages, aligned_index + i,
+>> +                           swp_to_radix_entry(tmp), 0);
+>> +                }
+>>                   cur_order = split_order;
+>>                   split_order =
+>>                       xas_try_split_min_order(split_order);
+>>               }
+> 
+> This looks incorrect to me. Suppose we are splitting an order-9 swap 
+> entry, in the first iteration of the loop, it splits the order-9 swap 
+> entry into 8 order-6 swap entries. At this point, the order-6 swap 
+> entries are reset, and everything seems fine.
+> 
+> However, in the second iteration, where an order-6 swap entry is split 
+> into 63 order-0 swap entries, the split operation itself is correct. But 
+
+typo: 64
+
+> when resetting the order-0 swap entry, it seems incorrect. Now the 
+> 'cur_order' = 6 and 'split_order' = 0, which means the range for the 
+> reset index is always between 0 and 63 (see __xa_store()).
+
+Sorry for confusing. The 'aligned_index' will be rounded down by 
+'cur_order' (which is 6), so the index is correct. But the swap offset 
+calculated by 'swp_offset(swap) + i' looks incorrect, cause the 'i' is 
+always between 0 and 63.
+
+>  > +for (i = 0; i < 1 << cur_order; i += (1 << split_order)) {
+>  > +    pgoff_t aligned_index = round_down(index, 1 << cur_order);
+>  > +    swp_entry_t tmp;
+>  > +
+>  > +    tmp = swp_entry(swp_type(swap), swp_offset(swap) + i);
+>  > +    __xa_store(&mapping->i_pages, aligned_index + i,
+>  > +        swp_to_radix_entry(tmp), 0);
+>  > +}
+> 
+> However, if the index is greater than 63, it appears that it is not set 
+> to the correct new swap entry after splitting. Please corect me if I 
+> missed anyting.
+> 
+>> -
+>> -            /*
+>> -             * Re-set the swap entry after splitting, and the swap
+>> -             * offset of the original large entry must be continuous.
+>> -             */
+>> -            for (i = 0; i < 1 << order; i++) {
+>> -                pgoff_t aligned_index = round_down(index, 1 << order);
+>> -                swp_entry_t tmp;
+>> -
+>> -                tmp = swp_entry(swp_type(swap), swp_offset(swap) + i);
+>> -                __xa_store(&mapping->i_pages, aligned_index + i,
+>> -                       swp_to_radix_entry(tmp), 0);
+>> -            }
+>>           }
+>>
+>>   unlock:
+>> @@ -2221,7 +2222,7 @@ static int shmem_split_large_entry(struct inode 
+>> *inode, pgoff_t index,
+>>       if (xas_error(&xas))
+>>           return xas_error(&xas);
+>>
+>> -    return split_order;
+>> +    return entry_order;
+>>   }
+>>
+>>   /*
+>>
+>>
+>> Best Regards,
+>> Yan, Zi
