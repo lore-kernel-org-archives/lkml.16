@@ -1,66 +1,50 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43E50265CBE
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9051D266196
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740474322; cv=none; b=Uv460T8B9qfTLGEP9Maw1JWq39JdtXjhLQVrZglgcSe4Vr2y/NkLU7HfYokfi9OfOjvVMsbeazGFHl8+tcP2HcFSrQJw5AWnPSgZViY2AyTzkE/blT7lE4YSz8Lj4rIOQ4eyWR4KEAbeGY3eAroseMxaBX1dbY84dqX25j+OnjY=
+	t=1740474323; cv=none; b=ciVsfuBoEuXOV/NXAncBWuVnvD38lBt/PWljjky00FaRu5LFF597NEJ+XpuvKl6nKOqK4z0R4iijUgeHi2kcfEx67e1vQh5qACLG6DYrNkwtfK13U+01aPcLcN/lZgWQ8iH/kJAOejkaM+Xba45rprGnn6Y6JLIe9ReKBeCcbhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740474322; c=relaxed/simple;
-	bh=o96kxA33+1DrhbtMAFBL4Wa8Hn4604gRt15P/wcggIw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lhr4HNfKaA0RZQWb/IFzIKZGe23RwKc7R1ILMVD0hSgNhUXpB8vfB5qRyqPKWBZODOrem9H+7bP/MBGwv1ncAjsO2T4aablra33IVBoHGTgqToAUSjB8qyRacXnR7FOh2I1hkU7MccUteEoGkPmcOwAmbSQkTS2yW2oDAQWdpTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rj99jgDq; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740474323; c=relaxed/simple;
+	bh=fhAvNwf3S/C3P4S0nP2ZiO1M1JWrZ+3nKs2jQvYh0EQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=iJ7Lc3A1R2g1HoIpKhUquqid7NxNf4nwlzCNkKuQMG2U4Qkcb0t2yqrzq/U4dYAzXe0dFKELBvP8zo34zMUfiE+uNoLexViXdvBdWj808ObQm/al0OkmUfkLQGQxUQs+fjfU04xBOE23Y7gCIWy92Hri4wHUB2q+GMtMQH+DYpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=eyAPlUtC; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rj99jgDq"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-38f2b7ce319so4427747f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 01:05:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740474318; x=1741079118; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8ehOa7QEJ7cqt0L5jMNiAxatA6Uuy7MmcV53RpYdRAY=;
-        b=rj99jgDqK6yECkkzkOV2T2YCwK7ZFa82dpIN4dv/XRJbeSan/x0IFjpVtFQO3sTEoB
-         yJrMru14GwJ9uaS3yhr3C81XSPyOJfgCxhUyFkXMeInCOlneFHov8PPcTygEiMtElOCw
-         cU+M7icH+se3kn+4Ka23usCMMGPY/hMWOx9UQFZl988EWgkFhFySs0LOb1qvXD/l9BbG
-         KOk8teT2EPH7aqATNFt+Q608r8OhBcPtVCWsf2JoMEI1TbY+3mtFJZqSHZex4Wt5Zmil
-         Gq1YnorT0s4NP6oB/hp+J6ARsIo8pD5locW8wFlROiEhvq7PKmnLJDSXUY6TPRk7xA6g
-         nJoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740474318; x=1741079118;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8ehOa7QEJ7cqt0L5jMNiAxatA6Uuy7MmcV53RpYdRAY=;
-        b=ml8ok+jiHjDNyfcPDWLNjjKQSgasDzhESdTQjnsGrsbWq67EjDNFBpktMbHKB/JMHo
-         GHoZGzyEcuzZ9wuhAAHWhrMMDzdY541KcbASvBHcziAOe1Jau0t4tDf5/w+5wph2gJ07
-         fpUwbvM7BiEk+bITFC9StNByh+nyb0rNqRmOlu1oZfW9xpDPABpeN+v7TKI0KHsuR1JZ
-         ynBILo4SF+zcXBYmUhbKpQzeUYIzMxUo0pw6zZLamnStry4P0GH6fU2gugCy71sa7x1T
-         3RN2WFtI1CnQtHiJM37lp7sqtr2SM7hUuyzWXNQj1+cRz2cG/EmdoehYshkNoeBHH2bX
-         /TNw==
-X-Forwarded-Encrypted: i=1; AJvYcCWDTUhQdhH/iBT+oqRYzz4e9AvHbsesXz6xKvy0JisgsghZe3o2tGPAxJ16M4QXwItACdRR6cV6/2NpX2o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx07we+lFJL0KRIIglNwFTt8YgMW4lnIDLIIrOQ/JqG6Uy992uO
-	529FUVOoWjEqPlSmQ9eUGeEQx9GYSve/Ty2umtWdz96OZw8Ziz69JEAeGqGKs9U=
-X-Gm-Gg: ASbGncs8MkwZ8ZIPH5/UwJe3NHKkG2nzclTbLLvVmmdeT3FAGKytxRz72O/A0Lh+Zav
-	zPpYn4C8LGTlqaCc5J/AbU2UxGSacAuopGL4jLqy/ZcG0Bj+eluIF6AfU//3uWa0szE/QjAMw+E
-	xVdn68GFE4LOpKff/clIZk7/5RLyNWCuDP2V16+TPKaFSGHgP4bywSjK55q574MeR6en2d0KVqi
-	AsyF0miSvwQqw9P/QCAKsXlhHh8s/29YCOMOJY+rZd071mIjipgirV+D80sNEFVBolpyJx7N/nl
-	qZ/NgMchTqBEMLF9avwGcEpVn57NRdWl2FM4gMvFwDtv0Zc=
-X-Google-Smtp-Source: AGHT+IH2ZJqkhcU51FRNDxP7cqoLd2ysClzetd+2vjMdITpSxqbkRCJvF21LQcIWviwRZOaK7J+uww==
-X-Received: by 2002:a05:6000:18a9:b0:38f:30a3:51fe with SMTP id ffacd0b85a97d-38f6f09c087mr14993157f8f.42.1740474318541;
-        Tue, 25 Feb 2025 01:05:18 -0800 (PST)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390cd86c93bsm1573540f8f.26.2025.02.25.01.05.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 01:05:18 -0800 (PST)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Tue, 25 Feb 2025 10:05:09 +0100
-Subject: [PATCH 1/4] dt-bindings: media: qcom,sm8550-iris: document SM8650
- IRIS accelerator
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="eyAPlUtC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1740474319;
+	bh=fhAvNwf3S/C3P4S0nP2ZiO1M1JWrZ+3nKs2jQvYh0EQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=eyAPlUtCpHNl0RMIgAneO5Y+Jth+DkR1empGojPRixoK/bjWcItLCwv4Y7KT3XtYx
+	 RvNIjzh79Gnfgyj8TwZCT6fBNcWin3+3aEIsq1Ea53aeomgA6t4Af61ApJdoWxsEha
+	 VaOc0xpSIv6E0W1zbcV4/k+H4sjXwQgX92OEAns7O7L/OBOHkeX3Et7uaFrRKxGWTn
+	 IOx8tXxxN+h/9hKHGewICb0I8c/W81ZwMfJiQYDJPdxHMitb9uiVFuvFmUUEggFGRn
+	 mLl7P+p0skSOtQgW5EIYMKsTUOZazgS9P45heSwpi0v4n5+c5fgr5+Tin9YbNu5UzQ
+	 zbyqHA65ZH9GA==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id E561517E0B63;
+	Tue, 25 Feb 2025 10:05:18 +0100 (CET)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: matthias.bgg@gmail.com, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: shawn.sung@mediatek.com, fparent@baylibre.com, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, pablo.sun@mediatek.com, 
+ kernel@collabora.com
+In-Reply-To: <20250212100012.33001-1-angelogioacchino.delregno@collabora.com>
+References: <20250212100012.33001-1-angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH v1 0/8] MediaTek mmsys/mutex fixes and improvements
+Message-Id: <174047431886.20024.8850797193074768931.b4-ty@collabora.com>
+Date: Tue, 25 Feb 2025 10:05:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,110 +53,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250225-topic-sm8x50-iris-v10-v1-1-128ef05d9665@linaro.org>
-References: <20250225-topic-sm8x50-iris-v10-v1-0-128ef05d9665@linaro.org>
-In-Reply-To: <20250225-topic-sm8x50-iris-v10-v1-0-128ef05d9665@linaro.org>
-To: Vikash Garodia <quic_vgarodia@quicinc.com>, 
- Dikshita Agarwal <quic_dikshita@quicinc.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Neil Armstrong <neil.armstrong@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1916;
- i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=o96kxA33+1DrhbtMAFBL4Wa8Hn4604gRt15P/wcggIw=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBnvYfL1rNkJHBYRMe4xHZwtWc5t05wyovD/w0krXGt
- XE8I77uJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZ72HywAKCRB33NvayMhJ0T+6D/
- 9/rAzKiZ2Ef+u7ZXKQWwghwGgPOmMPhvn86QEDzGfNszva4mGYjRQTdQ2QYAEF+TzqtjWCUATNNiLL
- uDRl93fy9Mb+HgqNiGekRbsHU+eNLvaV+wR5iwbkOMIQ0bfff7AFXZ0wgsLaK4bkA1u6hU/20xn5KW
- E6kO5FJzVaWfcXPlHzjNgAY2NtqylhmwtC5D7QLDmE7y9BTjhoCxyd+jYfeeXkWeEHHoS0LSkUuTWZ
- LgP8T2bmZP8w+tWRtgVNUZcHiIi2c8F2uJbGQPSSGTG+YPcKUULX24wqYCp8/F1bAfINqwFU2K3HKh
- /HX7XSY8yiTIVZqmyxcAb75Q0hhWONoIVSkgfNM+fHXzWX+8Okf777dJoVrVWk9pEnMoP+0QCmyeC8
- ZsO6OlhBqhBeFgbV9jSOmZ2eFnAGUva8MQCBLZDBvInki19lpJhDyJn/IoRU5o9QkxbczFae+Vvi85
- ZaGlmRSp+ecrJHWYLSNxUx/vq+bx6GzIEqHtOq6S75X5w/8HQTMg7KiHa+q1ipgeB00JNiEeya9SNj
- Kv8uP1LXEtXe2zckJ8MVX8MVsX64tTzjn2GajCrs23Q9VWBnPiNy4DmCUjaxE5sAmsbyiymYqJG70V
- nMDoRMUY1+XhKtqYNocT1gRwLzGxxyjGxTJaFzlsvmuu3Vv8Vjza5+7aZRjw==
-X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
- fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
-Document the IRIS video decoder and encoder accelerator found in the
-SM8650 platform, it requires 2 more reset lines in addition to the
-properties required for the SM8550 platform.
+On Wed, 12 Feb 2025 11:00:04 +0100, AngeloGioacchino Del Regno wrote:
+> This series adds the missing DPI1 SOF/EOF to the MT8188 mutex tables,
+> required to support output through DPI1->HDMI Transmitter, and also
+> adds a few fixes and improvements to the mtk-mmsys driver and tables
+> for all SoCs.
+> For MT8188, in MMSYS, this adds the DSC path for the display
+> controller, and fixes the current DPI1 one to actually do something
+> meaningful... and speaking of mmsys....
+> 
+> [...]
 
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
----
- .../bindings/media/qcom,sm8550-iris.yaml           | 33 ++++++++++++++++++----
- 1 file changed, 28 insertions(+), 5 deletions(-)
+Applied to v6.14-next/soc, thanks!
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
-index e424ea84c211f473a799481fd5463a16580187ed..536cf458dcb08141e5a1ec8c3df964196e599a57 100644
---- a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
-+++ b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
-@@ -14,12 +14,11 @@ description:
-   The iris video processing unit is a video encode and decode accelerator
-   present on Qualcomm platforms.
- 
--allOf:
--  - $ref: qcom,venus-common.yaml#
--
- properties:
-   compatible:
--    const: qcom,sm8550-iris
-+    enum:
-+      - qcom,sm8550-iris
-+      - qcom,sm8650-iris
- 
-   power-domains:
-     maxItems: 4
-@@ -49,11 +48,15 @@ properties:
-       - const: video-mem
- 
-   resets:
--    maxItems: 1
-+    minItems: 1
-+    maxItems: 3
- 
-   reset-names:
-+    minItems: 1
-     items:
-       - const: bus
-+      - const: xo
-+      - const: core
- 
-   iommus:
-     maxItems: 2
-@@ -75,6 +78,26 @@ required:
-   - iommus
-   - dma-coherent
- 
-+allOf:
-+  - $ref: qcom,venus-common.yaml#
-+  - if:
-+      properties:
-+        compatible:
-+          enum:
-+            - qcom,sm8650-iris
-+    then:
-+      properties:
-+        resets:
-+          minItems: 3
-+        reset-names:
-+          minItems: 3
-+    else:
-+      properties:
-+        resets:
-+          maxItems: 1
-+        reset-names:
-+          maxItems: 1
-+
- unevaluatedProperties: false
- 
- examples:
+[1/8] soc: mediatek: mtk-mutex: Add DPI1 SOF/EOF to MT8188 mutex tables
+      commit: ecb051fd99dcda50a9b93fa6e9399094b37488f0
+[2/8] soc: mediatek: mtk-mmsys: Fix MT8188 VDO1 DPI1 output selection
+      commit: 643ec3e1e2d070fba8f94dedc702211f501889da
+[3/8] soc: mediatek: mtk-mmsys: Add compile time check for mmsys routes
+      commit: 650de00b6b9c5690c6c3e8474d431f59a6f89b0b
+[4/8] soc: mediatek: mt8188-mmsys: Migrate to MMSYS_ROUTE() macro
+      commit: ba7877ba5353f0a2e8f15151e8053647eed5ad5c
+[5/8] soc: mediatek: mt8167-mmsys: Fix missing regval in all entries
+      commit: d0202d007a27ecea8c609f55d8757d75b521ea5b
+[6/8] soc: mediatek: mt8365-mmsys: Fix routing table masks and values
+      commit: 773140aa314218ba92ee4d69956f2813f593216e
+[7/8] soc: mediatek: mmsys: Migrate all tables to MMSYS_ROUTE() macro
+      commit: f9435e9c1a0c579db4edeb32f8fb317fb721c659
+[8/8] soc: mediatek: mt8188-mmsys: Add support for DSC on VDO0
+      commit: 89ef9bb1ece1a70bb79715be48a5afece39cae44
 
--- 
-2.34.1
+Cheers,
+Angelo
+
 
