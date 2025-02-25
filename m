@@ -1,190 +1,487 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11012009.outbound.protection.outlook.com [52.101.66.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDAC2673B9
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 08:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090B426139E;
+	Tue, 25 Feb 2025 08:18:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.9
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740471485; cv=fail; b=kSeatG0DjfeIB3MnpC6uj/OKlDV4eZZ0PwbU3ka419K+4/PkthpKdbkL+IBJ1x/zeQbs1OdZmSIezYVBk+iRgdL1coq3n+0NfBMtBhf7if8AssOepRtX71S9JS4S1AMcNatjOYrDADpV4pY4h+abvTCWaZJ6Loap418BcvEpdEw=
+	t=1740471495; cv=fail; b=ESmVvkehcz6kVhn5R3Rspf6O06Xph8IvSxpFkL0PpCVav1wSmN5dNp/CGNV8iYRH2ctYFli+n8oM6g/VZTpG5V+M4GGC2Sm/C0NW/+2nR+jCbWCPDRtN4ZzX5mssr3nUqEHwoHxIqnDOHyqQAt5znGVgqI7p0PfDmxPi6NWaL2Y=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740471485; c=relaxed/simple;
-	bh=4iHCQUBRyiu5DfFpqPot8VBiGZ7YYbKOexHG7WJMpTs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=muc8d+ZDvWKm+q6003Hrf+4DhUr3zG5XHmAeS0OcsUnUjGgZW/Ddv4MDdNNSLqtsn4gcBxyCmKmZxzCoofbD5kUF96TOD7ubwyU3dH3AgIQemZH0O7kR4d5giE0t1/359TrN96aXFRjmuxWigPBBiB1JRJHj8u0QCPhFG14aRyY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c0rb1a+f; arc=fail smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740471495; c=relaxed/simple;
+	bh=kvrFOZZj4pNKFZaYyHZOgY45/hvSKqUoiqIK6LOdHFw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=e71A0A08uzTAzjIw3KioPSvuLvHi9128k1mAz+B5woLvaTBOXyQyRf6RF0yCiVjDgqcA1KndQgutoR90BszE6uRjzSTia8rS/PXsYCt2mGhaQ+/3pFDN7jig7xioomkIOQN+cxCjteyBZAUL3kdBX6ejakKd3D0/NnMFcPclvrY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=wiFZl8xE; arc=fail smtp.client-ip=52.101.66.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c0rb1a+f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740471482; x=1772007482;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=4iHCQUBRyiu5DfFpqPot8VBiGZ7YYbKOexHG7WJMpTs=;
-  b=c0rb1a+f1yRKX0lwP50rrP3j/AmtMA6cdpoCGNKhfvCjaIFoZcuf/JKP
-   xxByOU+30Mq67kVZb8RRqdGywwHavCpk0mpl5kBFdEEKeYnbS94ZfQYwH
-   HkQkhVa1qli2WPu3/Kw+U7Qln3CVq2hhrqLs1TuKctpgIZZjVha0iG712
-   qsaTUTvf4dAxJgdREfqBRRXg/PzAO/DCmLsGpXXSty51JwoT3m7wZIiG6
-   41rWJa1FLf8/VJUQ7Wy5hfg4ocjTWvLGzrHmrjcMrFv82AV+tmpcJ8ozc
-   38TXdzbVgOPLiE+r3myEd2WoS7m1b0Q3Otw2VV9t8rcIhQZndEuxtYe5m
-   A==;
-X-CSE-ConnectionGUID: GU0cmbwTR3aPNVUVHoUaug==
-X-CSE-MsgGUID: 1/NsN5SsTcCUp8oY5Ifgcg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="41394234"
-X-IronPort-AV: E=Sophos;i="6.13,313,1732608000"; 
-   d="scan'208";a="41394234"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 00:17:57 -0800
-X-CSE-ConnectionGUID: eCLpatbARAmn6u8tAmk4jw==
-X-CSE-MsgGUID: 3icJEPNuRIyLUqS6/cXf9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,313,1732608000"; 
-   d="scan'208";a="120941404"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Feb 2025 00:17:57 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 25 Feb 2025 00:17:56 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Tue, 25 Feb 2025 00:17:56 -0800
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.47) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 25 Feb 2025 00:17:54 -0800
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="wiFZl8xE"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QoTVJV/MaJN+APDP2d4l5f5dOErZRORKTRtMFOPY6sryYR6KQiq4EbHxSivLnIBsed8+5Iy2djxc8efE9j+4JY9NuFnXH2vxxXS3RLC/TH5bOyOg9ItKIOWQlwgIvyU+MVWLPXFnXmEezPyklB/lWAYIiuuZKfu5z0o36cw6LyPx7dOTiO2WhljpkO+vM21dDBUErNae07RJG91kahlJrr14uHMkDPx9QsAN/Dz+7kqxrlovQC5/aJ+4aCntXDkZP/Jxi23HR46lEv4Uu42asyq3IXZsP1sJxNCgkiIUniU0n5KMzOz0pK/6NjaGmmBEBWlW42rKmJoDhB1QO83sEQ==
+ b=wxVEq0SxORPdaKIIHvm4JGsGsXlXQEkHRhValt5h7acecuyxlVY+I+hwECxdt8VZonWTVEHGlSzdkZNFi36XiluTLX5SnOI/aJYEsBhHOkIzbZeix9Jfsm7s+IaVVX7PH+ojQ+dj9GxAqoAD1qfCDj1Km0eXnnzy/iZLNhz6JtRan03kZVW4jYokjMZsGOqQ1pOBT1aSF6cVqPaBjIheof8XKr7iRBsEyEWLVTGgiqeD/PviQMYeDDkggP6gvwKiGrKSTIxaKtMPrZmbUj+5P5scDCXYmY/fH/xNnvQJbAVtzXKrhu83aOS8ilGN9Y1GVlHEeWc1TtuzobAAGvYl5Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4iHCQUBRyiu5DfFpqPot8VBiGZ7YYbKOexHG7WJMpTs=;
- b=Nf3lGqABe10WC9iU7mXjXfjBFkXdftB4mKYAhbEfSnuohUecKX9ljMqg902Ryk9svEfE2CiWxuKUkapvOtKZCUr2JAp0BA768YvjCeJPUjjhqCmOhF7BoFQjJFcu6GZPN4WfNFmPk9ytrGmvtmAqse8rYO6z4zCjkfmFK5MjxOJsznseqauGn7N6siBFfNahdk6IcJrVX5157pEAo+DeOgwaNQJqrktMIzpNKBZkCiql0qiVjflGVKQNtbly7hbk8m9jPglH/x81sR8OQ/nZTBPN/9sJmX5Lsm19hA8spoa/D3zJLokXngLLJN+2TFinDasIwrB+wlIeN1aqpid8Zw==
+ bh=50O4UI3VYydFwSDrUR8rkObc+8B/yThHB7b6YzvYZv0=;
+ b=CtlhhXEjFRZqtojXEepRonZJvmh1ttaKoFtNyNis+0xMDURqJ1CJPeU8RqR78/oLvZ9gxk8nqEuFlwAuRWdN4gk245FZkd6Cx5L5MtU85X9IMVJDR32kTzFWGmE8ei6psWHBO9RQdKoT63EkhoeOSNslRaUdl2BFp0/fL4k5Gt64d28by1Hr362GCy3zh1QmUoZx4AZrgMOEcmtJmigLASSL5ZKUc0N/ZMnsZN8L7+4O3lRsHV7Pg++Ez/VP1k9hTanglpZausH0g+Ax7aXq70pHJL47Zwgss/pwfETXiaZ/Z7nx9tHhyLcM7IdRRNnJf+npWQeXu17LTnzfbDDYIg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
- by MW3PR11MB4620.namprd11.prod.outlook.com (2603:10b6:303:54::14) with
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=50O4UI3VYydFwSDrUR8rkObc+8B/yThHB7b6YzvYZv0=;
+ b=wiFZl8xEUbbdS4I9puUex2dscpKIJhBHgD0/IwiIQDxLNgKEiIxPXAjRmuIWWBgnDStECriTZJoW3urULfzd8WCIj7HB8d8zJhBRLKGIlqXCQn6E2ZT4F3ViVQFsgf882z82c9lWJ/Gnq2rcJynW8xtbgkZjhMJhqzbrmpjhLZEuAO723hrWSX7uCxuLKo9MW/p0qTGVpsj4LkbTBHLEcPJ5W7aqYhBftDlPMHYF9RfvRiilLMefoYC77aXFuCgfUvb/nERrHfpspypUEHUUJ8ObHQPhs41smB/2C4OojjpPG40a/+GbtJoPqxHdyo9OEmbt6J19ZRilz8c4fYWn8Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by DUZPR04MB9945.eurprd04.prod.outlook.com (2603:10a6:10:4d8::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.21; Tue, 25 Feb
- 2025 08:17:12 +0000
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::b576:d3bd:c8e0:4bc1]) by BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::b576:d3bd:c8e0:4bc1%6]) with mapi id 15.20.8466.020; Tue, 25 Feb 2025
- 08:17:12 +0000
-From: "Tian, Kevin" <kevin.tian@intel.com>
-To: Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>, "Will
- Deacon" <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, "Jason
- Gunthorpe" <jgg@ziepe.ca>
-CC: "Jiang, Dave" <dave.jiang@intel.com>, Vinod Koul <vkoul@kernel.org>,
-	Fenghua Yu <fenghuay@nvidia.com>, Zhangfei Gao <zhangfei.gao@linaro.org>,
-	Zhou Wang <wangzhou1@hisilicon.com>, "iommu@lists.linux.dev"
-	<iommu@lists.linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgg@nvidia.com>
-Subject: RE: [PATCH v2 10/12] uacce: Remove unnecessary IOMMU_DEV_FEAT_IOPF
-Thread-Topic: [PATCH v2 10/12] uacce: Remove unnecessary IOMMU_DEV_FEAT_IOPF
-Thread-Index: AQHbhntUjUrCABRfAUmOFdDsdaR50bNXrkbQ
-Date: Tue, 25 Feb 2025 08:17:12 +0000
-Message-ID: <BN9PR11MB5276D4184B1ABC3260FE79B68CC32@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20250224051627.2956304-1-baolu.lu@linux.intel.com>
- <20250224051627.2956304-11-baolu.lu@linux.intel.com>
-In-Reply-To: <20250224051627.2956304-11-baolu.lu@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|MW3PR11MB4620:EE_
-x-ms-office365-filtering-correlation-id: 768d15f3-9a41-4a36-29b1-08dd5574ce56
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|7416014|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?4t+dcCNgSI+8YITVTFDV79jmLiJqmvNNyV6emY4sTYRTzzaghET0Wen9v0Lq?=
- =?us-ascii?Q?Q1tPrv/4n4i2bNUH/0KXXYhSTfvqE0dwvq2Hgk4SCzH8bFxTf5Ze1mXnKg2m?=
- =?us-ascii?Q?cJkhDTJ7J+vhYFOdIsE+WN5OklDObNrmhFeuY1j4cdX5T9UTmCTm+a5Op0N3?=
- =?us-ascii?Q?h2VQNQ1HZXQjV9qcsgH8y6G5h9hUgVxmJUKHVw0dz2Y4YfPXNODQkBKbkePG?=
- =?us-ascii?Q?ukNNCjqe8MNycTFcEh8jHq4pSHBKF9K5kum7fVwUeC/LyQ7qBNA5k63VUnQV?=
- =?us-ascii?Q?wz+ka9w2kCF4j5WuwOcd5Q9ciE5dYchIKkp5z5p6Zbf0d7NV5myPClTUP7oe?=
- =?us-ascii?Q?ql/OGE1XXPlDtUSdtQe6IQ4k/B3nwaeHXEjZt8JMhJ3R9tdmr/aKEq+9CHsd?=
- =?us-ascii?Q?4HGJKRU/kH+5V95bNFBMLbWYESA4jX1NE8azTo2G5gGurOwFCu+hEQ8dbWsC?=
- =?us-ascii?Q?DL7/C42U9XyYWOUovcWb5XpWpz13UBehjLs06s8ui9Vg5KX6pdLX/FxdoInL?=
- =?us-ascii?Q?f1ndfaZNnGcf7NsPHzriEBHjCI2hnx6kAZjYYU61vhXTzaYpNjubqeYZ/hAt?=
- =?us-ascii?Q?O98b08CpqNVReFJYZQaVdvUB6YMNJyOwHpegC533qOWdOHEW/RrPDvlnUy/T?=
- =?us-ascii?Q?U23cmKE2jdRPJZRESH26xtqEHmQUyAS2cm0neo24Iki5jsZxn4qZs+/LFRyV?=
- =?us-ascii?Q?aScwOZcy/cnvV+YguAY9z011fbq9IvEh00obV4TKw8Uon51vWIBu+EIscwaa?=
- =?us-ascii?Q?oWSMVlCeTC/VUvB8/P6S8vUmRmDNxvY5LWMUQhLmrCMhQsNiE3qWqrA1ZE5P?=
- =?us-ascii?Q?atYhh8Di9HXTQ+vIGtHZswAOp0/fyUyAhfjA/IoWBG9AYN/knyLBEDMbmRb6?=
- =?us-ascii?Q?exS8Jo6yhcmMEkkb7MMc7J1FCKAUCmU74tYykts0oS6pIn0SGBWvP7xDv053?=
- =?us-ascii?Q?fo73W0/DWuqLWu24QIwuK1JvbGfcEbTjClhBDU1nZrGQQ3d4o8yytsIA18bO?=
- =?us-ascii?Q?o0rbRg3Q/2Jd83Mb+/E8DQyeR4w9AtVfuLIQb6lp6aHeIiX3vObTAnpKfk99?=
- =?us-ascii?Q?kV7LMIW/KCW8DGgNXFT3iJYkOcAubgfscuZ60DTVCYQB6apGvWRj/70E2uWE?=
- =?us-ascii?Q?3wU1wKz2T/JjJhgBd2rZnvQrd02888gsPTaGiodlMiQUVScPMi+cgk/Mnp+P?=
- =?us-ascii?Q?SSNwMaeY1utoaxixWN8x+XBHAEhRfrHuXuIvRVBElyzgBDANTP04sjlJegl7?=
- =?us-ascii?Q?x3PRChAPKqlX5Y6Nb/MT6XgI9OKHpTH2sE8owTmxxb4LH4ji5LwU9WJ20nmr?=
- =?us-ascii?Q?VXWigJb4CQ53X2kx1CW0/gCfzQFmzkZZG6gOsIT9t3atteT55muITd8Xgt6r?=
- =?us-ascii?Q?Lj4+e/hYJAwlHCow8pgm/utEUguu43arM+OzjwuqRmZ+irG8KOE8aV8JbNcZ?=
- =?us-ascii?Q?EeXy3h2XgyIBezOOf6Hx5LxdwD8/XJke?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(7416014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?ahiRHuOxwnyTeZQGuo0vpMONdjL6M+dCqpKWiYtGwsGxiKtHNnDDMz8b1EJ8?=
- =?us-ascii?Q?TIxzyfEhBF7F5VStbJz4dY1fmCyQVdGWe6STkeQT+rhnNTGnwwKChBGmgx5L?=
- =?us-ascii?Q?aLkh9f1niXjgpAb3j5VsKpE5o0n+JNXnMvHIU0h6XbLUv0YxzwnUbYI1IEo2?=
- =?us-ascii?Q?893LXe73mWEg9SlTBo4n41Beo/VzejzvQazPBjsw4Q9pOAeOSUu8Gtdy1KlI?=
- =?us-ascii?Q?0+laGOWMrViCns70ldhjyCpcmtkX9cj5FHXUQqPCgOI8GCnb7V93RZVipzId?=
- =?us-ascii?Q?spgAmkfoWeTV2ng9wiAXd8cdjdchGT6Nu2sKwz0YUyZa4OnqIBn8NN4melTz?=
- =?us-ascii?Q?A3lXqk+BF1jJSPHq3IGAXD7CwhTA9Qrej/dnaYLycB/Jeic4eNy5ly/4m2Ip?=
- =?us-ascii?Q?ClbAdHj3v3rUkG8fAV/FEwYSGuuRqSifqfpYqzKU7DdGyGaTkdj/NbVVoH7/?=
- =?us-ascii?Q?v3qgnHcz+WfDDiJW5HjTAXa9KJZkUzZatEiZ6j4szVqK6Ql/TWnu/wKhQ2zQ?=
- =?us-ascii?Q?HPNd6WtH10pAvq2B6ss6bK3JE2IZ6SNbqVGL4J1wRosINFT/IH97Za4Vc40I?=
- =?us-ascii?Q?htximBOJv7L4kJQ3POpm/TvObkNrD4NE1AVFrUzQnfNOMgdRa9ABLv8diS3Y?=
- =?us-ascii?Q?0LOaS6BvstjrZWR8jgmvgiKlCQIm6m//x1h45+EAFO+cJu+B70bfklQRHwGr?=
- =?us-ascii?Q?z/CdHeNNryzBt9ModDnuGUwoFlJ4pHUDbiFiiOIeVVBcvfCVYPkc5u9k6AyE?=
- =?us-ascii?Q?lkZCS5ShfFTrGqn1TKzfX5I+rC6aZ9xWAgediThYyHa3IW0/DKGi57kikDUC?=
- =?us-ascii?Q?yazzCZugEkqVJnVsngWpQ+qkumeEBxPGT+8jpopn8HLNttXzWLBnOwcdrSPB?=
- =?us-ascii?Q?dOQVVXzKpJ3dWGJFHvMAT0sh+r4KvOSR0MFeVkSpleAuoyc34oujw33AMj+f?=
- =?us-ascii?Q?O4UqfniFTE6TbrzkFALASpB2UXpEYY81Ps6X4/0abr4MSSGTQq32GqsIWiJ4?=
- =?us-ascii?Q?G7pru00d6hIPGIMlkTLwNJvCeObhMZ+1mqxcnhtRuhydT6EeVOKcdb8hZyoN?=
- =?us-ascii?Q?nhzDLq4f/7yWs8SxJ5TP0v3YDOtDIaSdNfk4UTk6qKpNcAd5MhAv/IBddhB0?=
- =?us-ascii?Q?fEFzEJCqAnsDv+6SHH+8CiCzNJQh6NLhE61pNO7VGESJuCaWBEuuU7dCrybA?=
- =?us-ascii?Q?PX4C3FnZ+cfAYF5TVvoRqyqPCN9jvWfeB8Lj1TM0HzaWnzDNK+5jPKdhVKkM?=
- =?us-ascii?Q?AZpaCQ+aEfEZGPgUrAae0uxYl/0MWutF0viz4aCN1y5uwgs8DF/ugo28I18o?=
- =?us-ascii?Q?ePNO8PNffZxhCUIFPIHPRjD/F5mfzW0pqPUVvdw90SR0Y7V+QyoL89OQtD6u?=
- =?us-ascii?Q?MaLVOn80maPoTPG0N93qb0WwApC08Ej2ndd2rdthB/OVJwbjWkc7HC+PjJ+6?=
- =?us-ascii?Q?V5aF22tSYEjG1K0Y+OW3Jov/ZaNxgrHhC5X01OeqvBZSOQ2d+IFEmJmSbhxy?=
- =?us-ascii?Q?+uJaBp1tKDcXM50UT02yzIt0W1Cr6x5N4as3ql5D0AS6R4TP4BZEBd4bDnrq?=
- =?us-ascii?Q?sXg61nHilFqbAph+znVpqUkTkJaumolgzDqX8z/v?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.19; Tue, 25 Feb
+ 2025 08:18:09 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%4]) with mapi id 15.20.8466.013; Tue, 25 Feb 2025
+ 08:18:09 +0000
+Date: Tue, 25 Feb 2025 17:25:23 +0800
+From: Peng Fan <peng.fan@oss.nxp.com>
+To: Cristian Marussi <cristian.marussi@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	linux-kernel@vger.kernel.org, arm-scmi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	devicetree@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v2 3/7] firmware: arm_scmi: imx: Add i.MX95 LMM protocol
+Message-ID: <20250225092523.GB25303@nxa18884-linux>
+References: <20250212-imx-lmm-cpu-v2-0-3aee005968c1@nxp.com>
+ <20250212-imx-lmm-cpu-v2-3-3aee005968c1@nxp.com>
+ <Z7yWK3E5inW39jeJ@pluto>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z7yWK3E5inW39jeJ@pluto>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: SI2PR04CA0001.apcprd04.prod.outlook.com
+ (2603:1096:4:197::12) To PAXPR04MB8459.eurprd04.prod.outlook.com
+ (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|DUZPR04MB9945:EE_
+X-MS-Office365-Filtering-Correlation-Id: 86123006-150e-45b5-2f93-08dd5574f023
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|52116014|366016|7416014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?grw7vtQSXFE9Q0sHvuouty5UtLf0Ve1VRjQ/TGFY9MPDcY2smGT/6wBHe+wP?=
+ =?us-ascii?Q?tlzMH5EQZbBnq3xOAoCClAnlVR4kyOS1rQ2+pep/jNWVULInHCgSrnAqOCNG?=
+ =?us-ascii?Q?hDVj4zdX7ZQd0XQCVQZOFT7pEEzK+z9hM/KqhxoHSJjYG9hlVlPYizT07OWM?=
+ =?us-ascii?Q?ZPsBHFEKbQ+UcixdctW4j5jvZCMp6FKa73PuBdyRq8kxQ4izgsrfgwnJ4R+p?=
+ =?us-ascii?Q?o2K3wH+EIbwVW5fXbpd46jmpzUx8mNulHBk6vaqvRfJ1P2Ce1AAHgf4L0FK7?=
+ =?us-ascii?Q?GXDan9gfKyitVQRC1gw6tGLue8gtMuYKjkUc0DLRFHEsD6eaMP3C/WHh99a+?=
+ =?us-ascii?Q?t/uMZK7irOUhsGcHwbqsyeGvBCJg3c4xkd514iTVSCRwIgbVnKp3SuDolnd4?=
+ =?us-ascii?Q?FTnnPIJPazxZgQwPY9NB5WpG3+AAuYQmXK4C/cyOAxGY/OxQW2QoKkWsHoFN?=
+ =?us-ascii?Q?1D9awnwqvUqOxVh/H++kXwS9mX8YYck5nDYVfqgXgvZgChq0uJ2MdofCQ1OY?=
+ =?us-ascii?Q?W+Hqa3L3R9sT6BkL0d8H/xS63fRQfuSyebBWHKI8adj0EYRNYpRn7GSzUSg+?=
+ =?us-ascii?Q?7zeWatxsMyR4mBx3/yefnc4WQ3H3seqBAV0kKbAWegztrHb0eEpybDGwI6CP?=
+ =?us-ascii?Q?xLQGlEOzIO09xCpUzSSfcq6EFC4TIPSAVNXhOfD3l2uSMA2zeCH0tTBFaQm8?=
+ =?us-ascii?Q?CKiupMy5RfDbQi0htWfcaalAu+9V/02yb43xw2JkP+PrE1suZaZxmvkqFcAJ?=
+ =?us-ascii?Q?hTbIkizNAYuvMC/WcZfkvGDRJFq0CPyaeiX5f1N6uZMfI+ze76C7Fh04RqZA?=
+ =?us-ascii?Q?0yDSqP4PRSy8e2vZVLqRPRMRREIKusyHLFsqTYY8dIB6TmvaJMR+Mi9dfsvp?=
+ =?us-ascii?Q?NZEMgWctgspKbBTOF+Asi0JdV/fqjg4dzzKOdvQitrZN2NXo/9ibHUsIBXI6?=
+ =?us-ascii?Q?uzUROeNeNO03cvDGvVwYXviH8aL6rkR1C8wOtvm8Ahzbzvwb3Tw4HlbNyjmx?=
+ =?us-ascii?Q?Yu8lxQD5DA1v47ZfTnopD0tuyFAULOrCnkKnvyjWgpHROrCwzNdIvqS0lwol?=
+ =?us-ascii?Q?l2bs1dgwhZajd3mIXttAvXRNohp4niwrrs2/jpMB8j4MAYk/gNSFBzD6EHJq?=
+ =?us-ascii?Q?WV8CH1Ks8dHPggGWN+7VwinxEn0Rc4hrEE8bAI+lKW2lh89AqcaVK7FCu4Ie?=
+ =?us-ascii?Q?BPpS27R6xHSNN56/mPcrRTVXJ5orAu/rlj6KU/fWYpYZxAx5gAzvKoeuu5KL?=
+ =?us-ascii?Q?+h793Q38P9XQeEjE9LC3mwecdqkzzLVUWYUP0gDxYE1MJk86t8Vx/UUWNFX4?=
+ =?us-ascii?Q?85E8I84aiGAK8boreDcYF90mXv6TXtNwqLskM5yHMuF55OObEldWK36mtlCI?=
+ =?us-ascii?Q?k3TOADq/e7qkmYVKzu26L33IeNqDUtQY9nU58/c8XFJ+Kji55lkEti5wK2d3?=
+ =?us-ascii?Q?WloM5tEy2IAR6+mrMAoE1jy2UneIaAoR?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(52116014)(366016)(7416014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ucaIg1G/voH2xaPdhnJphhyULcGFbrZ4v+Pmb4mRarhoEB5oqMdD9ZxyREKW?=
+ =?us-ascii?Q?ZXA1JnLbh6W8QKD/VzukCpD5puW9V6gtbC4DOIrhOJsIolmWJDTfhyFgzHkP?=
+ =?us-ascii?Q?FYJ5w1OnH9cDxLf8Ed9oDTOXVWFfVvPnDuGl3v8TIS57wuvd5SxgmIwyqdsW?=
+ =?us-ascii?Q?495TDi1eB6Q16GeKhI1V/hSxS5o9vwnagVeRfCqU2Z1dqWCAuHPXOvehTCvA?=
+ =?us-ascii?Q?ubzwRB513jfvqRVLaQxvsMd1xcps9t0BErp3pVGT8+QbOlBWTSRuetVw5Fwm?=
+ =?us-ascii?Q?MlICSuD82e8iCitsKbixs8AyBUYV7gTnzgDvcZyDSTReBwOK2GfzCPdOha6Z?=
+ =?us-ascii?Q?Bx65p2U7ssDLwaPJnXa1wIm+xY9qI0jrN+gfZc8cEZn9X5xDtIsB2Jx1ZU29?=
+ =?us-ascii?Q?Z7U4BNT4S5IxGGIz/RNt2eMPxm4omKyUWhfRYvhZMG8KAiGjtfPdA3GoJllj?=
+ =?us-ascii?Q?1YLEBpQ3WssUMdXSiroOEnf8pZ7P1qSHCvqiac1TLQWxDdYLpOWdW1oXN/va?=
+ =?us-ascii?Q?gK+TYagroga9UZjnZY1Dl0JlGUyrgqCP6gFkk/7keXk2YYRuG7lZBxYtJSFd?=
+ =?us-ascii?Q?Llo++Xwx8JFz6itSWKR3kx0ArALnG95RUV+Pp9Siy+nuIbOq9Lsdzor9Lv+U?=
+ =?us-ascii?Q?zY5CqCgex8Rrbvew7nvszpgnxqeIyR82eT/AQW2feenHfP0os7WlbTvr5lTg?=
+ =?us-ascii?Q?vqGU1PXJbkmlhxtbEtQNY8Qb7N8JMLPRqZEJ+wDLp7z2VoLzWH0ddXS6EUgY?=
+ =?us-ascii?Q?QqmMMvnDJPufSl67KSgEYOmS7Imht7ESRRat51TZYu9ZrjLu/q5UNp2DarFR?=
+ =?us-ascii?Q?Hv3ier4q+oUlXnh7MXoay5DPeFdTEBCTeQhrk9EkMj/q/OX+cfBH8o9qBzFp?=
+ =?us-ascii?Q?EzFpv/X85DBfjgN+8rIf35ZEK96tMpDiBVuCTVx4w7UN5faaqIg3xoz5qSX3?=
+ =?us-ascii?Q?bKVSTdjI2Yin7+Cn3300eCF4cv35Foa+BO3VeihyV1g9EoCsJ1PCBhOTHdVx?=
+ =?us-ascii?Q?ghQYDROv0ju2J3spkeZTI2xz6hpPzoQvZSpOippiMBO7P0c3pzKnH2XQhd2S?=
+ =?us-ascii?Q?2pKwefrDOZiXWX9JQWCstqOFeSohyDtn6IyQv2oCDLduX9EU5MDe0dC2+Fja?=
+ =?us-ascii?Q?dea82Aj3LByn1fOiZ731gTuMDI60c4TSRq8gi3a6yRkJsLmPaSE5WNCI82e1?=
+ =?us-ascii?Q?a3bEdM2awm8SH+oe2m70YsLbP+cW32l+5Z0icHG8EQaOeNziyFlRtjhBB6xE?=
+ =?us-ascii?Q?0awxoPL9RaY7foEIALn45UjVAPyk+8TYmhOK4zhgocxBfzJEraDQFFbGbULI?=
+ =?us-ascii?Q?oyyp8bNLDe6vYOA3LETYAoWrOYPAFFntd6TcN9jj+VJ1EGDrBxVcIItEm/Zm?=
+ =?us-ascii?Q?W2fUCdv9PiioPNL7H/OzXonNEiZT+15O9lQUUkjp5ILpsTIgIr9XgmfheWvV?=
+ =?us-ascii?Q?rjdg6cTrcnQITKJrGxrV+G3484OEOlLF5YyeqS5jNSeGDXW9MqW0SUnLU0QW?=
+ =?us-ascii?Q?esqgHeCc0I5jyPZgL7kWtSD4dTtcvjm+wCSuiea+1GV3znpLFFkSFEBZlSEH?=
+ =?us-ascii?Q?H69boI+IawWm0CcpCmczofYYszSD8OFoa4Vz2sbv?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 86123006-150e-45b5-2f93-08dd5574f023
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 768d15f3-9a41-4a36-29b1-08dd5574ce56
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Feb 2025 08:17:12.2496
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2025 08:18:09.2682
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 3jltSIJSEkjVo1PMy0FUhfM1sVNj6m0nJgZ9tIgUuwln8S2NUgBppiMONGrus0KuC4Gi7mc7euTMWVwwYHfuqw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR11MB4620
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2ls7cC376S98qUQ8C6OSRvK8ZlDuVBAfmngR5Qm8MLaLLPImCRON0UaayyI9OkLB5SLX8VMctQvEAHY835xV0A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DUZPR04MB9945
 
-> From: Lu Baolu <baolu.lu@linux.intel.com>
-> Sent: Monday, February 24, 2025 1:16 PM
->=20
-> None of the drivers implement anything for IOMMU_DEV_FEAT_IOPF
-> anymore,
-> remove it to avoid dead code.
->=20
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+On Mon, Feb 24, 2025 at 03:54:19PM +0000, Cristian Marussi wrote:
+>On Wed, Feb 12, 2025 at 03:40:25PM +0800, Peng Fan (OSS) wrote:
+>> From: Peng Fan <peng.fan@nxp.com>
+>> 
+>> Add Logical Machine Management(LMM) protocol which is intended for boot,
+>> shutdown, and reset of other logical machines (LM). It is usually used to
+>> allow one LM to manager another used as an offload or accelerator engine.
+>> 
+>
+>Hi,
+>
+>> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+>> ---
+>>  drivers/firmware/arm_scmi/vendors/imx/Kconfig      |  11 +
+>>  drivers/firmware/arm_scmi/vendors/imx/Makefile     |   1 +
+>>  drivers/firmware/arm_scmi/vendors/imx/imx-sm-lmm.c | 270 +++++++++++++++++++++
+>>  include/linux/scmi_imx_protocol.h                  |  31 +++
+>>  4 files changed, 313 insertions(+)
+>> 
+>> diff --git a/drivers/firmware/arm_scmi/vendors/imx/Kconfig b/drivers/firmware/arm_scmi/vendors/imx/Kconfig
+>> index a01bf5e47301d2f93c9bfc7eebc77e083ea4ed75..1a936fc87d2350e2a21bccd45dfbeebfa3b90286 100644
+>> --- a/drivers/firmware/arm_scmi/vendors/imx/Kconfig
+>> +++ b/drivers/firmware/arm_scmi/vendors/imx/Kconfig
+>> @@ -12,6 +12,17 @@ config IMX_SCMI_BBM_EXT
+>>  	  To compile this driver as a module, choose M here: the
+>>  	  module will be called imx-sm-bbm.
+>>  
+>> +config IMX_SCMI_LMM_EXT
+>> +	tristate "i.MX SCMI LMM EXTENSION"
+>> +	depends on ARM_SCMI_PROTOCOL || (COMPILE_TEST && OF)
+>> +	default y if ARCH_MXC
+>> +	help
+>> +	  This enables i.MX System Logical Machine Protocol to
+>> +	  manage Logical Machines boot, shutdown and etc.
+>> +
+>> +	  To compile this driver as a module, choose M here: the
+>> +	  module will be called imx-sm-lmm.
+>> +
+>>  config IMX_SCMI_MISC_EXT
+>>  	tristate "i.MX SCMI MISC EXTENSION"
+>>  	depends on ARM_SCMI_PROTOCOL || (COMPILE_TEST && OF)
+>> diff --git a/drivers/firmware/arm_scmi/vendors/imx/Makefile b/drivers/firmware/arm_scmi/vendors/imx/Makefile
+>> index d3ee6d5449244a4f5cdf6abcf1845f312c512325..f39a99ccaf9af757475e8b112d224669444d7ddc 100644
+>> --- a/drivers/firmware/arm_scmi/vendors/imx/Makefile
+>> +++ b/drivers/firmware/arm_scmi/vendors/imx/Makefile
+>> @@ -1,3 +1,4 @@
+>>  # SPDX-License-Identifier: GPL-2.0-only
+>>  obj-$(CONFIG_IMX_SCMI_BBM_EXT) += imx-sm-bbm.o
+>> +obj-$(CONFIG_IMX_SCMI_LMM_EXT) += imx-sm-lmm.o
+>>  obj-$(CONFIG_IMX_SCMI_MISC_EXT) += imx-sm-misc.o
+>> diff --git a/drivers/firmware/arm_scmi/vendors/imx/imx-sm-lmm.c b/drivers/firmware/arm_scmi/vendors/imx/imx-sm-lmm.c
+>> new file mode 100644
+>> index 0000000000000000000000000000000000000000..4b9211df2329623fae0400039db91cb2b98cded1
+>> --- /dev/null
+>> +++ b/drivers/firmware/arm_scmi/vendors/imx/imx-sm-lmm.c
+>> @@ -0,0 +1,270 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * System control and Management Interface (SCMI) NXP LMM Protocol
+>> + *
+>> + * Copyright 2025 NXP
+>> + */
+>> +
+>> +#include <linux/bits.h>
+>> +#include <linux/io.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/scmi_protocol.h>
+>> +#include <linux/scmi_imx_protocol.h>
+>> +
+>> +#include "../../protocols.h"
+>> +#include "../../notify.h"
+>> +
+>> +#define SCMI_PROTOCOL_SUPPORTED_VERSION		0x10000
+>> +
+>> +enum scmi_imx_lmm_protocol_cmd {
+>> +	SCMI_IMX_LMM_ATTRIBUTES	= 0x3,
+>> +	SCMI_IMX_LMM_BOOT = 0x4,
+>> +	SCMI_IMX_LMM_RESET = 0x5,
+>> +	SCMI_IMX_LMM_SHUTDOWN = 0x6,
+>> +	SCMI_IMX_LMM_WAKE = 0x7,
+>> +	SCMI_IMX_LMM_SUSPEND = 0x8,
+>> +	SCMI_IMX_LMM_NOTIFY = 0x9,
+>> +	SCMI_IMX_LMM_RESET_REASON = 0xA,
+>> +	SCMI_IMX_LMM_POWER_ON = 0xB,
+>> +	SCMI_IMX_LMM_RESET_VECTOR_SET = 0xC,
+>> +};
+>> +
+>> +struct scmi_imx_lmm_priv {
+>> +	u32 nr_lmm;
+>> +};
+>> +
+>> +#define	SCMI_IMX_LMM_PROTO_ATTR_NUM_LM(x)	(((x) & 0xFFU))
+>> +struct scmi_msg_imx_lmm_protocol_attributes {
+>> +	__le32 attributes;
+>> +};
+>> +
+>> +struct scmi_msg_imx_lmm_attributes_out {
+>> +	__le32 lmid;
+>> +	__le32 attributes;
+>> +	__le32 state;
+>> +	__le32 errstatus;
+>> +	u8 name[LMM_MAX_NAME];
+>> +};
+>> +
+>> +struct scmi_imx_lmm_reset_vector_set_in {
+>> +	__le32 lmid;
+>> +	__le32 cpuid;
+>> +#define SCMI_LMM_VEC_FLAGS_TABLE	BIT(0)
+>> +	__le32 flags;
+>> +	__le32 resetvectorlow;
+>> +	__le32 resetvectorhigh;
+>> +};
+>> +
+>> +struct scmi_imx_lmm_shutdown_in {
+>> +	__le32 lmid;
+>> +	__le32 flags;
+>> +};
+>> +
+>> +static int scmi_imx_lmm_validate_lmid(const struct scmi_protocol_handle *ph, u32 lmid)
+>> +{
+>> +	struct scmi_imx_lmm_priv *priv = ph->get_priv(ph);
+>> +
+>> +	if (lmid >= priv->nr_lmm)
+>> +		return -EINVAL;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int scmi_imx_lmm_attributes(const struct scmi_protocol_handle *ph,
+>> +				   u32 lmid, struct scmi_imx_lmm_info *info)
+>> +{
+>> +	struct scmi_msg_imx_lmm_attributes_out *out;
+>> +	struct scmi_xfer *t;
+>> +	int ret;
+>> +
+>> +	ret = ph->xops->xfer_get_init(ph, SCMI_IMX_LMM_ATTRIBUTES, sizeof(u32), 0, &t);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	put_unaligned_le32(lmid, t->tx.buf);
+>> +	ret = ph->xops->do_xfer(ph, t);
+>> +	if (!ret) {
+>> +		out = t->rx.buf;
+>> +		info->lmid = le32_to_cpu(out->lmid);
+>> +		info->state = le32_to_cpu(out->state);
+>> +		info->errstatus = le32_to_cpu(out->errstatus);
+>> +		strscpy(info->name, out->name);
+>> +		dev_dbg(ph->dev, "i.MX LMM: Logical Machine(%d), name: %s\n",
+>> +			info->lmid, out->name);
+>> +	} else {
+>> +		dev_err(ph->dev, "i.MX LMM: Failed to get info of Logical Machine(%u)\n", lmid);
+>> +	}
+>> +
+>> +	ph->xops->xfer_put(ph, t);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int scmi_imx_lmm_boot(const struct scmi_protocol_handle *ph, u32 lmid)
+>> +{
+>> +	struct scmi_xfer *t;
+...
+>> +
+>
+>..this....
+>
+>> +static int scmi_imx_lmm_power_on(const struct scmi_protocol_handle *ph, u32 lmid)
+>> +{
+>> +
+...
+>> +	return ret;
+>> +}
+>
+>...can be refatcored to use one common workhorse fcuntion sued by both
+>ops...
 
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+ok. I will merge power on and boot into one function.
+
+>
+>> +
+>> +static int scmi_imx_lmm_reset_vector_set(const struct scmi_protocol_handle *ph,
+>> +					 u32 lmid, u32 cpuid, u32 flags, u64 vector)
+>> +{
+>> +	struct scmi_imx_lmm_reset_vector_set_in *in;
+>> +	struct scmi_xfer *t;
+>> +	int ret;
+>> +
+>> +	ret = ph->xops->xfer_get_init(ph, SCMI_IMX_LMM_RESET_VECTOR_SET, sizeof(*in),
+>> +				      0, &t);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	in = t->tx.buf;
+>> +	in->lmid = cpu_to_le32(lmid);
+>> +	in->cpuid = cpu_to_le32(cpuid);
+>> +	in->flags = cpu_to_le32(flags);
+>
+>...bitfields in a flag field must not be enianity converted...only
+>eventually subfields representing numbers (liek you did above)...
+>
+>..I feel FIELD_PREP should be fine...or even BIT(0) really given what
+>these flags represents...
+
+I will mark flags as reserved as updated doc, because this flag is not
+used as of now.
+
+>
+>...again check issues with smatch....
+
+yes, I will try this.
+
+>
+>> +	in->resetvectorlow = cpu_to_le32(lower_32_bits(vector));
+>> +	in->resetvectorhigh = cpu_to_le32(upper_32_bits(vector));
+>> +	ret = ph->xops->do_xfer(ph, t);
+>> +
+>> +	ph->xops->xfer_put(ph, t);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int scmi_imx_lmm_shutdown(const struct scmi_protocol_handle *ph, u32 lmid,
+>> +				 u32 flags)
+>> +{
+>> +	struct scmi_imx_lmm_shutdown_in *in;
+>> +	struct scmi_xfer *t;
+>> +	int ret;
+>> +
+>> +	ret = scmi_imx_lmm_validate_lmid(ph, lmid);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret = ph->xops->xfer_get_init(ph, SCMI_IMX_LMM_SHUTDOWN, sizeof(*in),
+>> +				      0, &t);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	in = t->tx.buf;
+>> +	in->lmid = cpu_to_le32(lmid);
+>> +	in->flags = cpu_to_le32(flags);
+>
+>Same here, smatch would complain if you remove straight away this
+>cpu_to_le32(), BUT this is a bitfield and does NOT contain any
+>longer-than-2 number value that needs to be endianess manipulated...you
+>just have to be able to set the required BIT 0 and 1, whitouth pissing
+>off smatch :P
+
+Only BIT0 used as of now. I will update as you suggest.
+
+>
+>> +	ret = ph->xops->do_xfer(ph, t);
+>> +
+>> +	ph->xops->xfer_put(ph, t);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static const struct scmi_imx_lmm_proto_ops scmi_imx_lmm_proto_ops = {
+>> +	.lmm_boot = scmi_imx_lmm_boot,
+>> +	.lmm_info = scmi_imx_lmm_attributes,
+>> +	.lmm_power_on = scmi_imx_lmm_power_on,
+>> +	.lmm_reset_vector_set = scmi_imx_lmm_reset_vector_set,
+>> +	.lmm_shutdown = scmi_imx_lmm_shutdown,
+>> +};
+>> +
+>> +static int scmi_imx_lmm_protocol_attributes_get(const struct scmi_protocol_handle *ph,
+>> +						struct scmi_imx_lmm_priv *priv)
+>> +{
+>> +	struct scmi_msg_imx_lmm_protocol_attributes *attr;
+>> +	struct scmi_xfer *t;
+>> +	int ret;
+>> +
+>> +	ret = ph->xops->xfer_get_init(ph, PROTOCOL_ATTRIBUTES, 0,
+>> +				      sizeof(*attr), &t);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	attr = t->rx.buf;
+>> +
+>> +	ret = ph->xops->do_xfer(ph, t);
+>> +	if (!ret) {
+>> +		priv->nr_lmm = SCMI_IMX_LMM_PROTO_ATTR_NUM_LM(le32_to_cpu(attr->attributes));
+>
+>This seems wrong to me...you have an 8bit field to extract from an
+>attribute field...so I would at first cut the byte out and then convert
+>to LE, NOT the other way around like you are doing
+>(i.e.: le32_to_cpu((attr->attributes & 0xFF))).
+>
+>Even BETTER to use:
+>
+>	le32_get_bits((x), GENMASK(7, 0))
+>
+>...the thing is, being a single byte you really SHOULD NOT need to address
+>any endianity concern (i.e. FIELD_GET(GENMASK(7, 0), (x))), BUT I fear that
+>if you dont use some of the le32_ accessors smatch/sparse will complain since
+>the message field is, correctly, declared as __le32.
+>
+>So le32_get_bits is the way to go (bit check with the static analyzer :P)
+
+Yup, fix in next version.
+
+>
+>> +		dev_info(ph->dev, "i.MX LMM: %d Logical Machines\n",
+>> +			 priv->nr_lmm);
+>> +	}
+>> +
+...
+>> +};
+>> +module_scmi_protocol(scmi_imx_lmm);
+>> +
+>
+>
+>Should this also be added:
+>
+>MODULE_ALIAS("scmi-protocol-" __stringify(SCMI_PROTOCOL_IMX_LMM) "-" SCMI_IMX_VENDOR);
+>
+>...after this went in:
+
+fix in next version.
+
+>
+>>  };
+....
+>> +
+>> +#define	LMM_ID_DISCOVER	0xFFFFFFFFU
+>
+>What is this ? Documented anywhere ?
+
+LMM_ATTRIBUTES if ID is 0xFFFFFFFF, it will return current lmid.
+I will update in doc patch.
+
+>
