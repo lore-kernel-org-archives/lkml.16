@@ -1,90 +1,108 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC1F726981C;
-	Tue, 25 Feb 2025 13:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF328433CE;
+	Tue, 25 Feb 2025 13:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740489540; cv=none; b=rWuIc999DjGtKawcvVHPD9QcwXl0q8cs1b0N21qiMK+cTeq3g2ZrR4lCEM86+GdR4mZb7EpHTZSCKA8W+rLSHsghAgG40ImZCSlLewpodQs08a9NdOUOie/TgL06kM8b5aTnliVpxwv/yxnCypnzWcagmYMdvpDN4V7cx6GiePo=
+	t=1740489569; cv=none; b=JVEdAYabzYjc3NvqAZsoDzyhKvhW5mF97vWyalTmIJg5XdOzAyosMrxT93yXz6i0/nEIYxp7zbiav5JRQ5gEBmppkqbjAjyZJWJd8GoUmdB+XP358WvVDyCF/nW7UVg7rnYRkzQyBNQdk8oRoLshnlvrHgdT0Q7LsMmRfowZjtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740489540; c=relaxed/simple;
-	bh=3Br8De3rsbk5eXKIjNmSvdHO8Uz1uZyZg2mMvLBwt5M=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PqtJRLKgQ9URON6iWbqhNPhziB1vmtGPWg8CY8SXFQquxBakJJskMmZSJVUYT56etIByGAvmI1O8aZBYf3n2knpQltz2wnXXmRPv+g9PbK/igRtKCbJkbkCNJfVecLouZ3vlV2vtrg6XJfLT7b1s5CKX1ULnXtCcUz1fVVzJ3JA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=PQ6t27+J; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1740489569; c=relaxed/simple;
+	bh=uEs0MAHmOiOcijcgY2FO3pVkG7ras2voCoIqnM+mBQ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gbgANx+VnYcrLQGMtEZNeJxMAnAxLJaTYL45QUvdy/8PNWOWNoAoI6UE5Qd/yf3ken/VlslfMdrXTeRXHNnlv98LYWqNUPQIkImAF+81XsNXvs6caCVTTlG5DXExrNiPVLl5fZiZ6N2SvFdO+KeA/I5Dw1SayuCiZhell5qecSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cypeVvTG; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="PQ6t27+J"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P4j5jJ001538;
-	Tue, 25 Feb 2025 07:18:47 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=PODMain02222019; bh=icybtQtm8VTLJVPt
-	AfJ8hZ7tG9SIv3LwIg71SMmRhM8=; b=PQ6t27+J8rJd2k8VbOw4CR62VkBGaNaj
-	wD3SLPYg3Y1Ptkj0fFRWQGSx8jOuNm3cEdwlpJtOamtVPkdNh1S/ZkTWzqxg+8Kr
-	1sZ4Fz9GNvgaPPgiKIrGDYC7MazXr+vDgYGHRE0IFdqpbjZ8sHlah19G5AfeAMEk
-	84jmiIjY1726LmozPiqXj5SNfjXkRUTuk12SNRhTqxIKa+UBKiVOlxDtv2DfMs+p
-	VxAEHMIPipYxQci5mrSBmVUDOsyREYj/EgjojhyBml4PsiNZSDdqnuD0oOm1YdRC
-	M2Skag3mNgR4Y9Ch1ZLagpVxbSolfEZK/qWi6uA+oWtc1k7v01IPmg==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 44ycv5ptdu-3
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 07:18:47 -0600 (CST)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 25 Feb
- 2025 13:18:43 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.14 via Frontend Transport; Tue, 25 Feb 2025 13:18:43 +0000
-Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.18])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 43F6682025A;
-	Tue, 25 Feb 2025 13:18:43 +0000 (UTC)
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-To: <broonie@kernel.org>, <tiwai@suse.com>
-CC: <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-Subject: [PATCH 0/2] ALSA: cs35l56: Fix for races when soft-resetting on SPI
-Date: Tue, 25 Feb 2025 13:18:41 +0000
-Message-ID: <20250225131843.113752-1-rf@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cypeVvTG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740489568; x=1772025568;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uEs0MAHmOiOcijcgY2FO3pVkG7ras2voCoIqnM+mBQ0=;
+  b=cypeVvTGx1YZpdtzhmT6ao08z+tOcM4sXua25ei4g6RGqlKIYgJNccMD
+   jzxVCxG+cVAK9xA81fS7qK1RydEoH8SU3y7q3wZfk3bidSLTfj+h8iuYn
+   hMOv6ByoP3/wj7ZDbGMRvulJz0OnjehQFc18grrvyzmHic32EkyHspT8v
+   29JtKOB2yyk87X8UIcFdTk2h3y7hIelXXu9yDQ0OKJ+WadDZQH9JQK0Og
+   PU33LZl6WxVw3UDEFzdt+/bYsRSEqIlYsFmq1MOPXrVlz2o0ZvDYqYu8d
+   SWoj1fysTjEDB85dTCMAEToBn7aWUTWLIrlgnp8wRTvENSJwz0n/YGjys
+   w==;
+X-CSE-ConnectionGUID: lFFNL9umR3aeu/5I9uiKjA==
+X-CSE-MsgGUID: EdxvuUjUQCuHTx55Pq8blQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="41139342"
+X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
+   d="scan'208";a="41139342"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 05:19:28 -0800
+X-CSE-ConnectionGUID: Lax3sQzJQ8Sp5KJea8gVgQ==
+X-CSE-MsgGUID: tfLDb+9XRIqscJoZnScmkg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
+   d="scan'208";a="116163984"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 05:19:25 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tmuqJ-0000000F09U-021Q;
+	Tue, 25 Feb 2025 15:19:23 +0200
+Date: Tue, 25 Feb 2025 15:19:22 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 2/3] gpiolib: use a more explicit retval logic in
+ gpiochip_get_direction()
+Message-ID: <Z73DWoscARsC06gS@smile.fi.intel.com>
+References: <20250225-retval-fixes-v1-0-078c4c98517a@linaro.org>
+ <20250225-retval-fixes-v1-2-078c4c98517a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=HoqMG1TS c=1 sm=1 tr=0 ts=67bdc337 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=T2h4t0Lz3GQA:10 a=oBivd6-D-XcVIxPnMd4A:9
-X-Proofpoint-GUID: OVvdlIHVe5Z_bjjltr5ErmOuOVfJK4kO
-X-Proofpoint-ORIG-GUID: OVvdlIHVe5Z_bjjltr5ErmOuOVfJK4kO
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225-retval-fixes-v1-2-078c4c98517a@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-These two patches fix a race condition between driver and amp when issuing
-a soft-reset over SPI. The main problem with the race is that the driver
-could read the amp status as fully booted, when in fact the amp is about
-to reset or is in the process of resetting.
+On Tue, Feb 25, 2025 at 12:56:24PM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> We have existing macros for direction settings so we don't need to rely
+> on the magic value of 1 in the retval check. Use readable logic that
+> explicitly says we expect INPUT, OUTPUT or a negative errno and nothing
+> else in gpiochip_get_direction().
 
-This is mainly contained within the ASoC driver code but a small change is
-needed to the HDA driver.
+...
 
-The first patch, to cs_dsp, is to remove async regmap writes so that the
-cs35l56 driver can call spi_bus_lock() without breaking firmware download to
-other amps on the same SPI bus.
+>  	ret = gc->get_direction(gc, offset);
+> -	if (ret > 1)
+> +	if (!(ret == GPIO_LINE_DIRECTION_OUT ||
+> +	      ret == GPIO_LINE_DIRECTION_IN || ret < 0))
+>  		ret = -EBADE;
 
-Richard Fitzgerald (2):
-  firmware: cs_dsp: Remove async regmap writes
-  ASoC: cs35l56: Prevent races when soft-resetting using SPI control
+Wouldn't be better to write it as
 
- drivers/firmware/cirrus/cs_dsp.c  | 24 +++-------
- include/sound/cs35l56.h           | 31 ++++++++++++
- sound/pci/hda/cs35l56_hda_spi.c   |  3 ++
- sound/soc/codecs/cs35l56-shared.c | 80 +++++++++++++++++++++++++++++++
- sound/soc/codecs/cs35l56-spi.c    |  3 ++
- 5 files changed, 123 insertions(+), 18 deletions(-)
+	if (ret < 0)
+		return ret;
+
+	if (ret != GPIO_LINE_DIRECTION_OUT && ret != GPIO_LINE_DIRECTION_IN)
+		ret = -EBADE;
+
+	return ret;
+
+
+Otherwise LGTM,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+after addressing the above.
 
 -- 
-2.39.5
+With Best Regards,
+Andy Shevchenko
+
 
