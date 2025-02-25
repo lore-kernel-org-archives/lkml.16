@@ -1,67 +1,66 @@
 Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0089D26BDA5
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 15:29:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFE426BDBF
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 15:30:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740497398; cv=none; b=q+Z6zwwfaYiQjD17lfzaAAF/hb84OeAN/o2pixqUep46eBvxvVLzJIgOOwvwG92/venHNnDnTJ+3CSzEDJ1VUrCVyZ9g7TY8uHEoAFwWWq2MNYI3JhNEz98SviEq/KE7N+QIiolM5L6upr20GQInQKDgJd9IDhxTWZ5WccrSmDg=
+	t=1740497402; cv=none; b=hEtur+B/cCLRHrVnJy7GfOkdD1/Vdzt2e5rO3Bco2NLrwOOlvTyvdbKeEvbcqQiil5rJTce0w2hKuvR43li+CkPrcf+PaJHAvLltN1noVYGrCZR/mZZzSxI63VcONm+kvFYb4A/YRWI58nGIyB7hkdQ/6HULsMQ4UhjpimcZAhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740497398; c=relaxed/simple;
-	bh=RLsorROFwBBMfUlu6ca/nd5YJGIqnKQsJnln5ydYiBI=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=MDE38Habk7Q3hNF8W7f+5Q7iH1kJK4dOit1yn0AZxnXk0oqUabRDI3mq4X++r465+kB/dT+k69vFHYAnQ4FuGsF21kBO3SzWxXbGwLE/r7uUNsY8Mgao1HUZ03udJMnBuGYX7Abn475uxAN2Rm3czHPufKxUsnsD+9T7oRX8Pis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vfzffp7j; arc=none smtp.client-ip=209.85.128.74
+	s=arc-20240116; t=1740497402; c=relaxed/simple;
+	bh=2t7x2tjKNw2qIHCtZTtrUlEyUmTO9R0TRnhffv1XEwM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=jfgVD9TdczDu7HbA+eKPPidAXYzrp/UZHjbcn7PaIyfbG9AZgy5JekLJm8orrWJUG0yFy9Odn/ACbP0OzJJpkW2eNbR/EINW71wsNzH7VdJD7asI+Z17B6IX5eV2gGmCEgatH+oCWytnasf5f4G12bSJFp1tLINIylTngdSAKFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yZFm787S; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vfzffp7j"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4394b8bd4e1so29612845e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 07:29:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yZFm787S"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-438e4e9a53fso46035075e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 07:30:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740497395; x=1741102195; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=J8OYSBSiWmuORPMaPvvvkcx69CZNTKOmuoq2J/BinMQ=;
-        b=vfzffp7jxqoTLerybKceRbaaTaM9MkSE5uieISgEcBQ6XD0mCGwF46kz+VWn+88EzA
-         rUqj063NHXTWeOBQnSmpSZpYbvLwI9QPbusyy7MZpZFf2W6e8Zjaw0b++1/LI6EXUjJC
-         qnFhQfpopDrhuqIq6q+6/yUUqXLdPGp44/Ze4KbQl3BOlZRTLazd5y+x5RyhLSVhO1u9
-         GvSrP0/fHmDolBQsuaZd27I849lBW16IIwgJAcN556SfCzAI0KDsazuEP7RTlKIl/J6X
-         Q7oMEvCWcfv+5Cp70uHQecEcHFyXKfIuaY4Y2uuGp2fjOFzfRf0kjJAfK0z/aQLaqzrX
-         Qg/g==
+        d=google.com; s=20230601; t=1740497399; x=1741102199; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NLwoRANke7kr877qFcAfj/lJYQPtzdEo7Afw90Odwbs=;
+        b=yZFm787SImXmOE4/jgnBaC/RMffXZRgeq1wm3Eq1kXBio24R0gWa2UK24jjIGHV7nK
+         3UsjDy3NUJI+vMY5Zoq5wNMS2SZ6SIUQuIkJFev+kKzRNaJec03j9mqaC6QSSNh/cGld
+         jGoqDK/tMi3MkdlWIVoQDAxEE4Af5noK8fyBsUTcF2IlxlDtFsY/tTmcKIofz2RJ3pti
+         X5y78NOCAMb/PnSObmv40aWxKS6/MC8FGGEga7J0mel5n2cAGxHTUhmofrFZ32KykzED
+         SaWl/LVGA51ffemcusou2P2yxFWdH2jYrvImY6l6j/F8QVnZRiUXDRg+wGKd9t6bPnDB
+         Bx8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740497395; x=1741102195;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=J8OYSBSiWmuORPMaPvvvkcx69CZNTKOmuoq2J/BinMQ=;
-        b=SV8jS+JskgBpnyh1uc3xSbG8mEbkZ6Ijj6dqqS6Yh6wqetlaukNVjt0mvfZsZlkJXa
-         1WEwVty1bTT0KHEzCs8KOWxJ2f7q/8G3bdFscymWtYoTo6sIyYG9duHwBv7+QniSRW8u
-         tJD6TVhWRFbv5QH173zXp/idfbl5iRfhVfvWfAmeYWF2KpsKJIlvJ/ljesl0qi1FYIkH
-         DCXhAAjlJlIGptvbZl0ibiWMkOUWJI1mR6uezanD8SHhRirVc1lK/H3MiX5ctPN8o/ks
-         zIatIaEyl4ObIQSvyCFbQMGyR6muBEcaI/ogqixZStv0iRNR7OCfFA7F+fXrkLJ0uXBD
-         wrhA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZxV6RT/ueuaD7iXAPPaDDsDAOhX7s7YNingExSr1f5oYUKBSfDf6YwNA6Q8ColJbJX/7a+Q+FBTai+qo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzw4uEo5X4DdGOLVydmvn056FynEeOd2wpKbpW2LJrjJ9N+uK9B
-	W6GeyU+QgqyW4znaKxMbnbLnpfasnZROqtrRYIK7zUTWSYZpBMq46QVy6JZY24PcXy6HIy997EG
-	nSDw1xM7MRA==
-X-Google-Smtp-Source: AGHT+IHaOjWXrfAn70S+bygs3HR7doHIL+V0Tpo6ZxQyuZusTOvcqMi9FI6lDjFvFVsyrT5UFP4/n/DOg4EzzQ==
-X-Received: from wmbfp16.prod.google.com ([2002:a05:600c:6990:b0:439:9379:38c7])
+        d=1e100.net; s=20230601; t=1740497399; x=1741102199;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NLwoRANke7kr877qFcAfj/lJYQPtzdEo7Afw90Odwbs=;
+        b=Km0QXNmNTUde/egQcY81+DUr3/8nAs7uPyVp+yn2+uRYXWef/pPDzrpQf7oSRez85S
+         P8ztbPWMykGsg917Cl9C9bTvcBfNNw1hmsNnfN90DIU0bzXD1fL0Ud2YC9/yD2DoS4tm
+         LEaAGqn/UkypnZJ8TkiGjWYV56AozIup4J9zUL56vKV9oSnrd/yCNV0k5/Lh4ANxlkGF
+         XY2nQBXQc2rWnrLKPAR+r0+UpXRd4pzPQRfgAJz4ZrhKboLSs29J8KPDcxRtu5SWGTen
+         w//8MXp8Bt3tBwdnRJ+wq1oFUY5ao38WR/dnrhyW7xwb8jy/XkEMEl8zZca8ybaevrMM
+         rrVA==
+X-Forwarded-Encrypted: i=1; AJvYcCVnQt3usjwSpD/b3/CGtZi11uJSLaYEIMSq0UwC1aiG+J1xt9GoJU+XmbFviTzqerO1knKFPfES72QI+yA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8o0t0NxerlcXtb4XlYUjV6IiyvrhcZdJYARVYWpzRV/MCXSVn
+	DTgFqT9NE5Shi/4i/VAmSVAK8p3yJMz18TcFoAkYzYeeshZp2HeOW1zYPIr6OxP0IeycApIS/QW
+	yo268vfsMeA==
+X-Google-Smtp-Source: AGHT+IGO83dLwzMAW2+OSLdDNKSAMPRJx7wbGvVzqnB7FL9rEUp8ltEN+IEPBCHAKKIyLKaCJmNhINOp203v6A==
+X-Received: from wmbed10.prod.google.com ([2002:a05:600c:614a:b0:439:985c:9199])
  (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:350a:b0:439:8e3e:b0d6 with SMTP id 5b1f17b1804b1-439aeb2ab04mr138373815e9.13.1740497395390;
- Tue, 25 Feb 2025 07:29:55 -0800 (PST)
-Date: Tue, 25 Feb 2025 15:29:47 +0000
+ 2002:a05:600c:1910:b0:439:98f6:8bc8 with SMTP id 5b1f17b1804b1-439aebcf61dmr138093215e9.26.1740497399462;
+ Tue, 25 Feb 2025 07:29:59 -0800 (PST)
+Date: Tue, 25 Feb 2025 15:29:49 +0000
+In-Reply-To: <20250225-clarify-steal-v3-0-f2550ead0139@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAOvhvWcC/3WMSwrCMBQAryJZ+yR5pj9X3kNcpMlLG6iNJCVYS
- u9u2pUiLmdgZmGRgqPILoeFBUouOj9mOB8PTPdq7AicycyQY8FRSNCDCs7OECdSA1iUsq65lEI
- LlptnIOte++92z9y7OPkw7/skNvvvlAQIqBqjC2WsaKvm2nnfDXTS/sG2VcKPHH9yBA4toTSqL MqqlF/5uq5vgEPR8+oAAAA=
-X-Change-Id: 20250214-clarify-steal-f244880441c1
+References: <20250225-clarify-steal-v3-0-f2550ead0139@google.com>
 X-Mailer: b4 0.15-dev
-Message-ID: <20250225-clarify-steal-v3-0-f2550ead0139@google.com>
-Subject: [PATCH v3 0/2] mm/page_alloc: Some clarifications for migratetype fallback
+Message-ID: <20250225-clarify-steal-v3-2-f2550ead0139@google.com>
+Subject: [PATCH v3 2/2] mm/page_alloc: Clarify should_claim_block() commentary
 From: Brendan Jackman <jackmanb@google.com>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Vlastimil Babka <vbabka@suse.cz>, Mel Gorman <mgorman@techsingularity.net>, 
@@ -70,35 +69,89 @@ Cc: Vlastimil Babka <vbabka@suse.cz>, Mel Gorman <mgorman@techsingularity.net>,
 	Yosry Ahmed <yosry.ahmed@linux.dev>
 Content-Type: text/plain; charset="utf-8"
 
-A couple of patches to try and make the code easier to follow.
+There's lots of text here but it's a little hard to follow, this is an
+attempt to break it up and align its structure more closely with the
+code.
+
+Reword the top-level function comment to just explain what question the
+function answers from the point of view of the caller.
+
+Break up the internal logic into different sections that can have their
+own commentary describing why that part of the rationale is present.
+
+Note the page_groupy_by_mobility_disabled logic is not explained in the
+commentary, that is outside the scope of this patch...
 
 Signed-off-by: Brendan Jackman <jackmanb@google.com>
 ---
-Changes in v3:
-- Rebased onto mm-unstable to get on top of Johannes' cleanups:
-  https://lore.kernel.org/linux-mm/20250225001023.1494422-1-hannes@cmpxchg.org/
-- Fixed missing renames
-- Link to v2: https://lore.kernel.org/r/20250224-clarify-steal-v2-0-be24da656764@google.com
+ mm/page_alloc.c | 39 +++++++++++++++++++++++----------------
+ 1 file changed, 23 insertions(+), 16 deletions(-)
 
-Changes in v2:
-- Tweaked some naming
-- Added clarifications of should_claim_block()
-- Link to v1: https://lore.kernel.org/r/20250214-clarify-steal-v1-1-79dc5adf1b79@google.com
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 5e694046ef92965b34d4831e96d92f02681a8b45..475ec1284033acec69da4a39dd4e7d7fbaee6d0f 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1941,16 +1941,9 @@ static inline bool boost_watermark(struct zone *zone)
+ }
+ 
+ /*
+- * When we are falling back to another migratetype during allocation, try to
+- * claim entire blocks to satisfy further allocations, instead of polluting
+- * multiple pageblocks.
+- *
+- * If we are stealing a relatively large buddy page, it is likely there will be
+- * more free pages in the pageblock, so try to claim the whole block. For
+- * reclaimable and unmovable allocations, we claim the whole block regardless of
+- * page size, as fragmentation caused by those allocations polluting movable
+- * pageblocks is worse than movable allocations stealing from unmovable and
+- * reclaimable pageblocks.
++ * When we are falling back to another migratetype during allocation, should we
++ * try to claim an entire block to satisfy further allocations, instead of
++ * polluting multiple pageblocks?
+  */
+ static bool should_claim_block(unsigned int order, int start_mt)
+ {
+@@ -1964,6 +1957,26 @@ static bool should_claim_block(unsigned int order, int start_mt)
+ 	if (order >= pageblock_order)
+ 		return true;
+ 
++	/*
++	 * Above a certain threshold, always try to claim, as it's likely there
++	 * will be more free pages in the pageblock.
++	 */
++	if (order >= pageblock_order / 2)
++		return true;
++
++	/*
++	 * Unmovable/reclaimable allocations would cause permanent
++	 * fragmentations if they fell back to allocating from a movable block
++	 * (polluting it), so we try to claim the whole block regardless of the
++	 * allocation size. Later movable allocations can always steal from this
++	 * block, which is less problematic.
++	 */
++	if (start_mt == MIGRATE_RECLAIMABLE || start_mt == MIGRATE_UNMOVABLE)
++		return true;
++
++	if (page_group_by_mobility_disabled)
++		return true;
++
+ 	/*
+ 	 * Movable pages won't cause permanent fragmentation, so when you alloc
+ 	 * small pages, you just need to temporarily steal unmovable or
+@@ -1972,12 +1985,6 @@ static bool should_claim_block(unsigned int order, int start_mt)
+ 	 * and the next movable allocation may not need to steal.  Unmovable and
+ 	 * reclaimable allocations need to actually claim the whole block.
+ 	 */
+-	if (order >= pageblock_order / 2 ||
+-		start_mt == MIGRATE_RECLAIMABLE ||
+-		start_mt == MIGRATE_UNMOVABLE ||
+-		page_group_by_mobility_disabled)
+-		return true;
+-
+ 	return false;
+ }
+ 
 
----
-Brendan Jackman (2):
-      mm/page_alloc: Clarify terminology in migratetype fallback code
-      mm/page_alloc: Clarify should_claim_block() commentary
-
- mm/compaction.c |  4 +--
- mm/internal.h   |  2 +-
- mm/page_alloc.c | 95 +++++++++++++++++++++++++++++++--------------------------
- 3 files changed, 54 insertions(+), 47 deletions(-)
----
-base-commit: 801d47bd96ce22acd43809bc09e004679f707c39
-change-id: 20250214-clarify-steal-f244880441c1
-
-Best regards,
 -- 
-Brendan Jackman <jackmanb@google.com>
+2.48.1.658.g4767266eb4-goog
 
