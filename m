@@ -1,236 +1,146 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92DF7126C18
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683852698A8
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740493629; cv=none; b=aE+bPdsTHbSkrUR4AKAoqDP79F1voheoOIgaSkXdwyfNFeJSWnqv0IEznvKgf7H9gPvW9c/HnsAuuzm8eXja8wM3LZlm/l9O98cyGVDLLxTAT7lnRoIbTJXPA28ay8X8Z0ZlvVRbw6laFgGcYDoUZoVbRMr0u7OO2EpLqARRxCQ=
+	t=1740493641; cv=none; b=DUHT2ys3d0QgMnz+awcKITsfhB/MMQiXYwoAU+cn7l1P7mNY7B01OyvI29/C2EeQR5LLwJBVODq84tfibBADgIdCs+gZlkDlibC6tOi/3dejd5/ryCGzuTkwZFKITWNiVh5vTFWXLjcbcdNIiZsNxTqFsximUlqi3iMNxOei5qQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740493629; c=relaxed/simple;
-	bh=C3ccY3ZwLQzrjCIq91J7594C9RCW7z3ZBoYXdo9TRY4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qExdYwDgFN0KOx1KpYMyvxEeHA3PzBjSG4XSBWwMmzcJIquhIhOHzrEGr1Y1FsU4kjIqyLFXl+PcqzBPvR36zQf1K7MTYYaZicHiQIiU1HokSRzZvTHTF0boN6lgqyUbPrquMmcRGhiO8ZHv8PiqdjGjDQn0/WsMjvpUdozdeQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=uZKXyjii; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
+	s=arc-20240116; t=1740493641; c=relaxed/simple;
+	bh=s3CzAGQ9fUPMQrxptT1MpknPbszwu1n+Vjd/Wk9sOQE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cpck8gaTReu64UbnbZYs/jW/+cigrAVSECI0O7abTOs4LLlwMRrxlVGiZbxCfeklQ1Gz1Sz/tgGbQLnr3MliMn95ch0UwnjRdVxoiJhQCiOnp1kCeojU0qcaHGtyxIKyBxk9lWlVQhmukiw4Bhf0cvfaatcg9XQ4/s8UW6SB1Qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D+bt/1zR; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="uZKXyjii"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43690d4605dso35639215e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 06:27:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1740493626; x=1741098426; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9QMi4VwrXU66Ki1nrs6Wu07Na08oHbBCCOqst7KVciY=;
-        b=uZKXyjiirVKrZtOv4mtkmz5YbjG90NsdeG1q9ISWkKMi+E06Yf/GnBcR02ARkbNqgD
-         OQorZi0DdW+aCHk8fUZum2yqczwUu226l0xEtr0vEw1S1rOBxTwSZDdWFBeH+nGwVcj7
-         cdaW6GFS3DlrP+x6/bpzrMM2IsrXYlTFRe1kkg/tqH+dG5xQSregssHVd/ryB/XV4iOk
-         E76SfbbE3KZMEN/xZVuEktQJMCfPMogEQqkwVtrSBtZHfFUkUCwG2c+aJL41LjSrdqZ/
-         7DUwT1sTjvpGEsD5INGLjuVRE735/5MKLKs97nFKJmzgxHPwUqdeOFNCnH4qsSToYpva
-         8jKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740493626; x=1741098426;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9QMi4VwrXU66Ki1nrs6Wu07Na08oHbBCCOqst7KVciY=;
-        b=G+WQDgpTkXQUlXNZl3QJDdQU7CaH5JYcpDD2OA9QG5alNaUGNCZflAnAWMtWnRfmNC
-         bmJes49cetz3WHgD9EVKQa8AuA+1Vw3iwF2yka9yGP2VMOM99ncd2Pv8+UV4n47oeZEj
-         uKj4Y49xaVoM0DDhiAI21pVRxuhgzIm0RyMpdCbORqXnp8zF7KnYP2PmbMamVlSiEo1B
-         kqWuKIdVdvNsluHtREAf3xfiijBHtxp6Bz0NrXQzlbG85SwCU+1zid17LE7aDcOkL9wH
-         3PpnibUnY+EkLkZutMy6pUlDhh2EGMni0tuTzN/o+aB88lQpGdm1Aq7RhDwJwehvVDqD
-         z32A==
-X-Forwarded-Encrypted: i=1; AJvYcCUI+41bUGDWHIKo+lru/TnUxm1YUIJQzroIy37H8xxDCgNYQzYDcDIhYzcYL+XAnuvu/zBShxaHx87jd5g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypkKmLQlBCgXvIqIkCc1gaS2zCsJGQWv/OxhYxqu3zA5BgscAo
-	8t00wNRtVBOjEJW5o+S//IkfGrSlYmPLLB83pHtoaGVnwRGvV1qGRA5RkQTOP00=
-X-Gm-Gg: ASbGncvjIGxeca5nEQ7LX71McHgU+Krh/9E94HAv/xcJuXZL7GVt8B95aLzGazw2DWo
-	b7rpXO/o+aik6E7WGgYqJjjQ0e9AdA1k58KEnujYilbPMVfoBcfIdC7nvUr22DODQnJPtMDlGqF
-	YM2uNAW9Zr8pEr30cdVmggMEenYG0XO4co9LPMb6FNPXDuZjD3cpeRctlnh2pc3Qk5Kt5+e/U8X
-	oL10wHQ4HC0u7I2ETJVU+oJj5O/fCGDXFvryVkIITZQrTsQg+cQRRzj+oYIMMVF57m8qCpUunRI
-	0ZS8IV54IkkI7dZCLwrBxdKysOoriCUrCi/ImkrAsVSee0kpUypkNpJyrQ==
-X-Google-Smtp-Source: AGHT+IFNcS5uUX050ewRgWcIyhrXix/tCXL61jbnelT4nfWUEiLJOaKXbpfRwTQNi9QiybtpYofh5A==
-X-Received: by 2002:a5d:5846:0:b0:38d:dc4d:3473 with SMTP id ffacd0b85a97d-390cc63e06dmr2928097f8f.51.1740493625602;
-        Tue, 25 Feb 2025 06:27:05 -0800 (PST)
-Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390cd8fbc31sm2390594f8f.85.2025.02.25.06.27.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2025 06:27:05 -0800 (PST)
-Message-ID: <70c953c7-f442-4e38-9071-c7bb6ad5fedc@blackwall.org>
-Date: Tue, 25 Feb 2025 16:27:04 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D+bt/1zR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740493638;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G4fu2PpV3y/MvTpLFuGZiqVh37Wll4MVy1MUpDTWvbQ=;
+	b=D+bt/1zRFC0ZOT+xeoMOSUAAxQHdhe0+xRsR067RnnHcdAYT4qHH8BKoIdrV5d/ck6sYyF
+	Ayiveoq3kn1AGURcli3GlYmmPEa2RQrAgMvNLt7Aa3LYQj+L6UiGMpEnV6Fdw3/d2H4CMi
+	jYclCAX45Uo894ekAPTbd4CcmFHXjm8=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-81-tITzaPO9OMK2Znf-2BEB0w-1; Tue,
+ 25 Feb 2025 09:27:15 -0500
+X-MC-Unique: tITzaPO9OMK2Znf-2BEB0w-1
+X-Mimecast-MFC-AGG-ID: tITzaPO9OMK2Znf-2BEB0w_1740493633
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0AF2118D95DC;
+	Tue, 25 Feb 2025 14:27:13 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.211])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id C6C1F1800352;
+	Tue, 25 Feb 2025 14:27:04 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue, 25 Feb 2025 15:26:42 +0100 (CET)
+Date: Tue, 25 Feb 2025 15:26:33 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "Sapkal, Swapnil" <swapnil.sapkal@amd.com>,
+	Manfred Spraul <manfred@colorfullife.com>,
+	Christian Brauner <brauner@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	"Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>,
+	Neeraj.Upadhyay@amd.com
+Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still
+ full
+Message-ID: <20250225142632.GA29585@redhat.com>
+References: <20250102140715.GA7091@redhat.com>
+ <e813814e-7094-4673-bc69-731af065a0eb@amd.com>
+ <20250224142329.GA19016@redhat.com>
+ <CAHk-=wi+P5__7LfbTX66shvYC1X11G2ZdKcg4psi+k_pD3sO+w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv2 net 1/3] bonding: move mutex lock to a work queue for
- XFRM GC tasks
-To: Cosmin Ratiu <cratiu@nvidia.com>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "liuhangbin@gmail.com" <liuhangbin@gmail.com>
-Cc: "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
- "jarod@redhat.com" <jarod@redhat.com>,
- "davem@davemloft.net" <davem@davemloft.net>, Tariq Toukan
- <tariqt@nvidia.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "shuah@kernel.org" <shuah@kernel.org>,
- "steffen.klassert@secunet.com" <steffen.klassert@secunet.com>,
- "jv@jvosburgh.net" <jv@jvosburgh.net>, "pabeni@redhat.com"
- <pabeni@redhat.com>, "horms@kernel.org" <horms@kernel.org>,
- "edumazet@google.com" <edumazet@google.com>,
- "kuba@kernel.org" <kuba@kernel.org>,
- "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
- Jianbo Liu <jianbol@nvidia.com>
-References: <20250225094049.20142-1-liuhangbin@gmail.com>
- <20250225094049.20142-2-liuhangbin@gmail.com>
- <d298da7bc638c323e6d492b2dec7f1b9ea1e1350.camel@nvidia.com>
-Content-Language: en-US
-From: Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <d298da7bc638c323e6d492b2dec7f1b9ea1e1350.camel@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wi+P5__7LfbTX66shvYC1X11G2ZdKcg4psi+k_pD3sO+w@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-On 2/25/25 16:00, Cosmin Ratiu wrote:
-> On Tue, 2025-02-25 at 09:40 +0000, Hangbin Liu wrote:
->> The fixed commit placed mutex_lock() inside spin_lock_bh(), which
->> triggers
->> a warning like:
->>
->> BUG: sleeping function called from invalid context at...
->>
->> Fix this by moving the mutex_lock() operation to a work queue.
->>
->> Fixes: 2aeeef906d5a ("bonding: change ipsec_lock from spin lock to
->> mutex")
->> Reported-by: Jakub Kicinski <kuba@kernel.org>
->> Closes:
->> https://lore.kernel.org/netdev/20241212062734.182a0164@kernel.org
->> Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
->> ---
->>  drivers/net/bonding/bond_main.c | 41 +++++++++++++++++++++++++------
->> --
->>  include/net/bonding.h           |  6 +++++
->>  2 files changed, 37 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/net/bonding/bond_main.c
->> b/drivers/net/bonding/bond_main.c
->> index e45bba240cbc..cc7064aa4b35 100644
->> --- a/drivers/net/bonding/bond_main.c
->> +++ b/drivers/net/bonding/bond_main.c
->> @@ -551,6 +551,25 @@ static void bond_ipsec_add_sa_all(struct bonding
->> *bond)
->>  	mutex_unlock(&bond->ipsec_lock);
->>  }
->>  
->> +static void bond_xfrm_state_gc_work(struct work_struct *work)
->> +{
->> +	struct bond_xfrm_work *xfrm_work = container_of(work, struct
->> bond_xfrm_work, work);
->> +	struct bonding *bond = xfrm_work->bond;
->> +	struct xfrm_state *xs = xfrm_work->xs;
->> +	struct bond_ipsec *ipsec;
->> +
->> +	mutex_lock(&bond->ipsec_lock);
->> +	list_for_each_entry(ipsec, &bond->ipsec_list, list) {
->> +		if (ipsec->xs == xs) {
->> +			list_del(&ipsec->list);
->> +			kfree(ipsec);
->> +			xfrm_state_put(xs);
-> 
-> I would expect xfrm_state_put to be called from outside the loop,
-> regardless of whether an entry is found in the list or not, because it
-> was unconditionally referenced when the work was created.
-> 
->> +			break;
->> +		}
->> +	}
->> +	mutex_unlock(&bond->ipsec_lock);
->> +}
->> +
->>  /**
->>   * bond_ipsec_del_sa - clear out this specific SA
->>   * @xs: pointer to transformer state struct
->> @@ -558,9 +577,9 @@ static void bond_ipsec_add_sa_all(struct bonding
->> *bond)
->>  static void bond_ipsec_del_sa(struct xfrm_state *xs)
->>  {
->>  	struct net_device *bond_dev = xs->xso.dev;
->> +	struct bond_xfrm_work *xfrm_work;
->>  	struct net_device *real_dev;
->>  	netdevice_tracker tracker;
->> -	struct bond_ipsec *ipsec;
->>  	struct bonding *bond;
->>  	struct slave *slave;
->>  
->> @@ -592,15 +611,17 @@ static void bond_ipsec_del_sa(struct xfrm_state
->> *xs)
->>  	real_dev->xfrmdev_ops->xdo_dev_state_delete(xs);
->>  out:
->>  	netdev_put(real_dev, &tracker);
->> -	mutex_lock(&bond->ipsec_lock);
->> -	list_for_each_entry(ipsec, &bond->ipsec_list, list) {
->> -		if (ipsec->xs == xs) {
->> -			list_del(&ipsec->list);
->> -			kfree(ipsec);
->> -			break;
->> -		}
->> -	}
->> -	mutex_unlock(&bond->ipsec_lock);
->> +
->> +	xfrm_work = kmalloc(sizeof(*xfrm_work), GFP_ATOMIC);
->> +	if (!xfrm_work)
->> +		return;
->> +
->> +	INIT_WORK(&xfrm_work->work, bond_xfrm_state_gc_work);
->> +	xfrm_work->bond = bond;
->> +	xfrm_work->xs = xs;
->> +	xfrm_state_hold(xs);
->> +
->> +	queue_work(bond->wq, &xfrm_work->work);
->>  }
->>  
->>  static void bond_ipsec_del_sa_all(struct bonding *bond)
->> diff --git a/include/net/bonding.h b/include/net/bonding.h
->> index 8bb5f016969f..d54ba5e3affb 100644
->> --- a/include/net/bonding.h
->> +++ b/include/net/bonding.h
->> @@ -209,6 +209,12 @@ struct bond_ipsec {
->>  	struct xfrm_state *xs;
->>  };
->>  
->> +struct bond_xfrm_work {
->> +	struct work_struct work;
->> +	struct bonding *bond;
->> +	struct xfrm_state *xs;
->> +};
-> 
-> Also, like Nikolai said, something needs to wait on all in-flight work
-> items.
-> 
-> This got me to stare at the code again. What if we move the removal of
-> the xs from bond->ipsec from bond_ipsec_del_sa to bond_ipsec_free_sa?
-> bond_ipsec_free_sa, unlike bond_ipsec_del_sa, is not called with x-
->> lock held. It is called from the xfrm gc task or directly via
-> xfrm_state_put_sync and therefore wouldn't suffer from the locking
-> issue.
-> 
-> The tricky part is to make sure that inactive bond->ipsec entries
-> (after bond_ipsec_del_sa calls) do not cause issues if there's a
-> migration (bond_ipsec_del_sa_all is called) happening before
-> bond_ipsec_free_sa. Perhaps filtering by x->km.state != XFRM_STATE_DEAD
-> in bond_ipsec_del_sa_all.
-> 
-> What do you think about this idea?
-> 
-> Cosmin.
+On 02/24, Linus Torvalds wrote:
+>
+> However, I see at least one case where this exclusive wakeup seems broken:
+>
+>                 /*
+>                  * But because we didn't read anything, at this point we can
+>                  * just return directly with -ERESTARTSYS if we're interrupted,
+>                  * since we've done any required wakeups and there's no need
+>                  * to mark anything accessed. And we've dropped the lock.
+>                  */
+>                 if (wait_event_interruptible_exclusive(pipe->rd_wait,
+> pipe_readable(pipe)) < 0)
+>                         return -ERESTARTSYS;
+>
+> and I'm wondering if the issue is that the *readers* got stuck,
+> Because that "return -ERESTARTSYS" path now basically will by-pass the
+> logic to wake up the next exclusive waiter.
 
-I know the question was for Hangbin, but I do like this solution. I missed
-the xdo_dev_state_free callback, it could lead to a much simpler solution
-with some care.
+I think this is fine... lets denote this reader as R.
 
-Cheers,
- Nik
+> Because that "return -ERESTARTSYS" is *after* the reader has been on
+> the rd_wait queue - and possibly gotten the only wakeup that any of
+> the readers will ever get - and now it returns without waking up any
+> other reader.
+
+I think this can't happen. ___wait_event() does
+
+	init_wait_entry(&__wq_entry, exclusive ? WQ_FLAG_EXCLUSIVE : 0);	\
+	for (;;) {								\
+		long __int = prepare_to_wait_event(&wq_head, &__wq_entry, state);\
+										\
+		if (condition)							\
+			break;							\
+										\
+		if (___wait_is_interruptible(state) && __int) {			\
+			__ret = __int;						\
+			goto __out;						\
+		}								\
+										\
+		cmd;								\
+	}									\
+
+and in this case condition == pipe_readable(pipe), cmd == schedule().
+
+Suppose that R got that only wakeup, and wake_up() races with some signal
+so that signal_pending(R) is true.
+
+In this case prepare_to_wait_event() will return -ERESTARTSYS, but
+___wait_event() won't return this error code, it will check pipe_readable()
+and return 0.
+
+After that R will restart the main loop with wake_next_reader = true,
+and whatever it does it should do wake_up(pipe->rd_wait) before return.
+
+Note also that prepare_to_wait_event() removes the waiter from the
+wait_queue_head->head list, so another wake_up() can't pick this task.
+
+Can ___wait_event() miss the pipe_readable() event in this case? No,
+both wake_up() and prepare_to_wait_event() take the same wq_head->lock.
+
+What if pipe_readable() is actually false? Say, a spurios wakeup or, say,
+pipe_write() does wake_up(rd_wait) when another reader has already made
+the pipe_readable() condition false? This case looks "obviously fine" too.
+
+So I am still confused.
+
+I will wait for reply from Sapkal, then I'll try to make a debugging patch.
+
+Oleg.
 
