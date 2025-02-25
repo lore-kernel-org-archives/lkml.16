@@ -1,50 +1,51 @@
 Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7206C25EF9C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E907A25EFB8;
 	Tue, 25 Feb 2025 08:52:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740473537; cv=none; b=dJ81k+6ytQCrZODT8hrW5TQqVYeAYNlcXI94n4vpnlUFcZ+MuGODljQRL2H/CvgUaLxvrjBujJkFa0LkOTZwuhwpsaNeuQZDTIFI1CUsReRTBGHyusnEwuAzHzTL+Nyh/5TO0QyQmBu7SWQI/4BLDn62TL1kmF9xxU20l1J/l3g=
+	t=1740473537; cv=none; b=bGiL2rVXHltOtPEzbw/W8M1g7qNoEHy1kPuW/7SFPnFynkEFjjXM+wAdr+4xyU7AWJmCMeSOcIIa+QIs6WqMVifFMnpgZEK7ImgPNvuz9j5W1S7jeOfEVGpF7w+MjaHUIMULfAoLbBTbPE58Yu1G0SY5e00Fs6WW2vESCpQq8/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740473537; c=relaxed/simple;
-	bh=yNnxrxmeT0tzlxDl2G//TdoPZleuNF92l8GJUkb7+yU=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=ICF+ZkPJCq5yJPCG+X7hE/NxTGyrQoeCOhz+Qycy1Ht7F1pvRCJSlut9Ok51K/nnTlzv8mzm877KAR3ykHjEpddz88O2EhBdgF1dYnXcMosBtvtxYsuj1WYgEiu/wlPDgcsE91KntE513hvFL8ZPEhnK7mr5XpXdpSvTkMyo748=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=wokAmkmN; arc=none smtp.client-ip=185.132.182.106
+	bh=yx2IM/yL7ryYbbIybRQIN89bS3vtR1R2dpJBnCS8F6s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=afrgXiMqmNHvBeZbwgHIclvR7PRZf+pZyKL+0iDrzmsq5Y1/08PFJ9iELqeQzWfCefZ1Yab3ZsgnMWFHlNtnEF8GbJN9KBlwgD2VQlBotEYMyIH29nnPkAXs/XD4a9EjHkNRUSofBm7rWLzYGUcmHpYcoPsnqDm6EL/TtYmsbgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=3ZF/nRpS; arc=none smtp.client-ip=185.132.182.106
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="wokAmkmN"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P7nJ8V022886;
-	Tue, 25 Feb 2025 09:51:59 +0100
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="3ZF/nRpS"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P7qIWK025335;
+	Tue, 25 Feb 2025 09:52:01 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=selector1; bh=hJp37HjRsS682VOG5jU/XH
-	JBc6aQu3148SnFqqYYIJs=; b=wokAmkmNpW2iVOAoTyplt01g7lc3I6lK1JoBYv
-	5ukC+rWeH/OUKA6tcVveTCTqohwD+FQFBxAkroO50xd2+xp0tgbVg6tQ6myJn/N0
-	lyeL7PeVQ5dIents9G6bl8VMQNSS3W2sEtSMWsGEzEDgl7x5f6nt9ah/SsJlpXns
-	63rWLs+63cui536rbOoI88B+z8kP4s04Dbve5AZyBVMk5XyysyfsDqnPvlXYI6Ht
-	e+3tErD9obpGTVFpMaSTFKHn8A6FwIcBSjRvMW2/FrWmtbB4hT0TYhE5FwM5nXiH
-	+DXxQKzkHArsgWBkg7zKoteVc4BkmtduikXKly5OvKPtR8TA==
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	PoNUkbtMyBQo7qulpQlZywD2O/n9xiN+esl2pnpD4vg=; b=3ZF/nRpStXZOGnf2
+	vM4VyTdNSt9jGqT0xjc2XyKN7YoEZhDHDTV02qeF0soWaLqQ8ujLTx8QiOdvDqHB
+	ckgK87sTTrqMyvRZCjlDXc2qmgQtonZrqlEBk6ua3tw2p3ONPDRg4NTK6gc7soVj
+	g+m+Txsh5gIah26Y3V4UwAxupbqgI0WQMO4c5aE0ViY26xihskl7HHG31pHpnFn9
+	3ALjP4rakPFCAQY0WEJJU7IpJPA8c3zdVkRKnSujiOi08DNJr64JWJ052fllBYN6
+	1FKZM7PB7UixJNlUzdK05BiCoAEnXMyOrvt0hJU8Ij2okKUzE4hbKPkQlqoLi8CF
+	ZrQMaA==
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4512sp1td1-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4512spstfn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 09:51:59 +0100 (CET)
+	Tue, 25 Feb 2025 09:52:01 +0100 (CET)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1BA7B40056;
-	Tue, 25 Feb 2025 09:50:50 +0100 (CET)
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1BAE040057;
+	Tue, 25 Feb 2025 09:50:51 +0100 (CET)
 Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 06FFC479F61;
-	Tue, 25 Feb 2025 09:48:06 +0100 (CET)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7698047A7A3;
+	Tue, 25 Feb 2025 09:48:07 +0100 (CET)
 Received: from localhost (10.48.86.185) by SHFDAG1NODE2.st.com (10.75.129.70)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 25 Feb
- 2025 09:48:05 +0100
+ 2025 09:48:07 +0100
 From: =?utf-8?q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>
-Subject: [PATCH 0/9] Introduce HDP support for STM32MP platforms
-Date: Tue, 25 Feb 2025 09:47:59 +0100
-Message-ID: <20250225-hdp-upstream-v1-0-9d049c65330a@foss.st.com>
+Date: Tue, 25 Feb 2025 09:48:01 +0100
+Subject: [PATCH 2/9] dt-bindings: pinctrl: stm32: Introduce HDP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,10 +54,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAL+DvWcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDIyMT3YyUAt3SguKSotTEXF0zI6NU05REQ5NEyzQloJaCotS0zAqwcdG
- xtbUAc+Fd+l4AAAA=
-X-Change-ID: 20250224-hdp-upstream-622e5da14a9f
+Message-ID: <20250225-hdp-upstream-v1-2-9d049c65330a@foss.st.com>
+References: <20250225-hdp-upstream-v1-0-9d049c65330a@foss.st.com>
+In-Reply-To: <20250225-hdp-upstream-v1-0-9d049c65330a@foss.st.com>
 To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
         Conor Dooley <conor+dt@kernel.org>,
@@ -77,48 +77,99 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-02-25_03,2025-02-24_02,2024-11-22_01
 
-This patch series introduces the Hardware Debug Port (HDP) support for
-STM32MP platforms.
+Introduce dt-bindings for HDP driver.
 
-It includes the addition of device tree bindings, the HDP driver,
-and updates to the device tree files for STM32MP13, STM32MP15,
-and STM32MP25 SoCs.
-The series also updates the MAINTAINERS file to include myself as the
-maintainer for the STM32 HDP driver and adds the necessary
-pinmux configurations for HDP pins on STM32MP157C-DK2 as example.
+'HDP' stands for Hardware Debug Port, it is an hardware block in
+STMicrolectronics' MPUs that let the user decide which internal SoC's
+signal to observe.
+It provides 8 ports and for each port there is up to 16 different
+signals that can be output.
+Signals are different for each MPU.
 
 Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
 ---
-Clément Le Goffic (9):
-      dt-bindings: pinctrl: stm32: Add HDP includes for stm32mp platforms
-      dt-bindings: pinctrl: stm32: Introduce HDP
-      pinctrl: stm32: Introduce HDP driver
-      MAINTAINERS: Add Clément Le Goffic as STM32 HDP maintainer
-      ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp13
-      ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp15
-      ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp25
-      ARM: dts: stm32: add alternate pinmux for HDP pin and add HDP pinctrl node
-      ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp157c-dk2 board
+ .../bindings/pinctrl/st,stm32-pinctrl-hdp.yaml     | 72 ++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
 
- .../bindings/pinctrl/st,stm32-pinctrl-hdp.yaml     |  72 +++++
- MAINTAINERS                                        |   7 +
- arch/arm/boot/dts/st/stm32mp131.dtsi               |   7 +
- arch/arm/boot/dts/st/stm32mp15-pinctrl.dtsi        |  26 ++
- arch/arm/boot/dts/st/stm32mp151.dtsi               |   7 +
- arch/arm/boot/dts/st/stm32mp157c-dk2.dts           |   6 +
- arch/arm64/boot/dts/st/stm32mp251.dtsi             |   7 +
- drivers/pinctrl/stm32/Kconfig                      |  14 +
- drivers/pinctrl/stm32/Makefile                     |   1 +
- drivers/pinctrl/stm32/pinctrl-stm32-hdp.c          | 301 +++++++++++++++++++++
- include/dt-bindings/pinctrl/stm32mp13-hdp.h        | 130 +++++++++
- include/dt-bindings/pinctrl/stm32mp15-hdp.h        | 116 ++++++++
- include/dt-bindings/pinctrl/stm32mp25-hdp.h        | 144 ++++++++++
- 13 files changed, 838 insertions(+)
----
-base-commit: d01895c5b11849113e70f012d9d142f1d88852f0
-change-id: 20250224-hdp-upstream-622e5da14a9f
+diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl-hdp.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl-hdp.yaml
+new file mode 100644
+index 000000000000..b6787162faaa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl-hdp.yaml
+@@ -0,0 +1,72 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (C) STMicroelectronics 2025.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/st,stm32-pinctrl-hdp.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STM32 Hardware Debug Port Mux/Config
++
++maintainers:
++  - Clément LE GOFFIC <clement.legoffic@foss.st.com>
++
++description: |
++  STMicroelectronics's STM32 MPUs integrate a Hardware Debug Port (HDP).
++  It allows to output internal signals on SoC's GPIO.
++
++properties:
++  compatible:
++    const: st,stm32mp-hdp
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++patternProperties:
++  '-pins$':
++    type: object
++    $ref: pinmux-node.yaml#
++
++    properties:
++      function:
++        enum: [ "0", "1", "2", "3", "4", "5", "6", "7",
++                "8", "9", "10", "11", "12", "13", "14",
++                "15" ]
++
++      pins:
++        enum: [ hdp0, hdp1, hdp2, hdp3, hdp4, hdp5, hdp6, hdp7 ]
++
++    required:
++      - function
++      - pins
++
++    additionalProperties: false
++
++allOf:
++  - $ref: pinctrl.yaml#
++
++required:
++  - compatible
++  - reg
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/stm32mp1-clks.h>
++    #include <dt-bindings/pinctrl/stm32mp15-hdp.h>
++    //Example 1
++    pinctrl@54090000 {
++      compatible = "st,stm32mp-hdp";
++      reg = <0x54090000 0x400>;
++      clocks = <&rcc HDP>;
++      pinctrl-names = "default";
++      pinctrl-0 = <&hdp2>;
++      hdp2-pins {
++        function = HDP2_GPOVAL_2;
++        pins = "hdp2";
++      };
++    };
 
-Best regards,
 -- 
-Clément Le Goffic <clement.legoffic@foss.st.com>
+2.43.0
 
