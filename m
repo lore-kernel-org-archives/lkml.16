@@ -1,82 +1,112 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5602638A8
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74A6026389C
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:31:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740475876; cv=none; b=YLH4WhBy3+ggwpou5nUhqjjZ/TiPfX1p6yPmN4d2UkTFi5KttND6JO/Q7KdoJZ1JE02u25QqsjNs8wXgRIS9ObfMWmO+7tJarfvFZ4spNpLsxgjtDdCHIqzvUDiafEPuDImkwJ0TEG7aa8Aqiz0XseecmRGb0Th7ZIuxybei0IA=
+	t=1740475879; cv=none; b=ga1wj67qV8U2MGmrY2lxuYOaM7rcJRAhqPxT+NiCaAbWtzrbq1T+tAyWFIBfUUt7u/ReMeaB4aKwi1o7jjG+I0f9oqLUIysTUrvWf8hut5E28ihOKMyj6fHnd1/83or3u+ao6HeGgkYJ5FrDgVgrNOVAne+sFOG1Ui8Da+xMA4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740475876; c=relaxed/simple;
-	bh=gwp2fuJXCL/bjNIarZEPkgmjBf8NLWIelOI9giPWV8s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B3cCY2MmWrsrsK9LBcOh6Xka0TfcD6pUcaomlbvRQJmUL2AA0e4YRzPJGcPHeEzKkkRDsnjnK6vjPAp9cKjaZ2Zp9HZzkQTlagWAQWDbnwvrIGkpqJ9sgIatInfoEtKAzF0xoNoSQvfINndmtayP36oJLUEBO23ZjB1rl1qaEB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=qtzOxqD9; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740475879; c=relaxed/simple;
+	bh=vDsEiamb3M+Mmy27y8EplwRdWCku4uyVDcOnwntuzxo=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aLFwXIlGA6WDNz900CyrbJCPrMPHhuusEelKEeN+tw6DU01zC0PNXfPVXXb9Joqx6kxmqyzOdrEenvUJjtkNv4CZ4FX3s9JNbqiVb3ymudgF7OY2pMiy/l40UMNzpGoULZC6BRVNQPaJXBxrLfbNRqrI14pivLgdv+KnQWVrK2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=ZnCuW7Q8; arc=none smtp.client-ip=162.62.57.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="qtzOxqD9"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740475861;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=isPQgwurSdwU4T9ma6rP9Qtz5aT2veuB9Ji0NyBAn4o=;
-	b=qtzOxqD9Ri5jjb902pbFYhzZ6EzVrV12wtzG47jsrGdYj7Sg2QCW9dKlkagI5EIv5pRgIL
-	0g/P6xRW1qyAchXbFS0h7FAm1hB6JpPmn0JKgQfczdufF5Wi8ps59ZhbGhrCUjhudYqvCe
-	xpdRdnUOV+AyDBIb+ndHJknC6QocUWk=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-hardening@vger.kernel.org,
-	linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] btrfs: Replace deprecated strncpy() with strscpy_pad()
-Date: Tue, 25 Feb 2025 10:29:49 +0100
-Message-ID: <20250225092949.287300-2-thorsten.blum@linux.dev>
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="ZnCuW7Q8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1740475865;
+	bh=aKBjUG98HQzVsVaLctKLhwcLcI10ldf6jcbX57WesZs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ZnCuW7Q8me5OA2Sti55jI8aKaJfgTui+bZgILV6r4ScMXo0E6MxYjGFnOM6WqDC0j
+	 J3rzb0LOPCFwgV75TQdMXIo1EgCnN34FRXOJAxBuJV41k0Mee2/6OQf1jHGmD0nqt8
+	 XzUvESIVGmg4AoG6mINdGpMhGB1aDINTAJTmst54=
+Received: from chenyu5-mobl2 ([118.114.56.201])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id 7C19BE72; Tue, 25 Feb 2025 17:31:01 +0800
+X-QQ-mid: xmsmtpt1740475861thw19023d
+Message-ID: <tencent_6D9B516AFF16965A3BB652A049D6CA847706@qq.com>
+X-QQ-XMAILINFO: MQ+wLuVvI2LQXEKluU0QGaNMGYtho6EYQosrSrVaIqFLw1AKg0YQHpUgmkMTwV
+	 9iE7HEIWj4lAS1N6iNB+1lRmIjEHr94IYg/a1KMAqRO1jJBG1nfQMGUl3mtjHpEMgU3uuqTyx7rc
+	 3fL6iHz5+0xZzWB4smmqAgwvED841vFyUBVaL5nmnIzdoQxNDs2xjLXTMiywB9GW90rGXAQUnHqt
+	 rUQ0CRkuQTL4O20A7hxhmWigdb27ggVkdIzzkeI2ndjQOMwh/O4iwruiOIXr8+dNeHowQmYhZTmJ
+	 1fP74ycrM3qKOFUzip5nTdBCZPro6CiF7ZuTPQbEYZ2R7WETs1UAqgUDwZxkB2d+gDRJ7ykjpvJj
+	 O/rRVTN5mKlervn4zpHko+0qvvEBc9Spu8CSAxBbrgY3NWBzzu91yLa0cGBu+4SPm3DO//wm8NLF
+	 5oyiwilC4k3HmfNQbm59iIHyXEvn55akde+nBjx3B8yH1pfPfufNpmouKdqowi7qoJXzwGeWWVGu
+	 rI7fxnnbjd+HJFoCgMxZQcrDDHxmXJzys+sEi8WT+ZWjEjWYqbHfcKoNLslq1vWjN0Fpyaw4RQU3
+	 r9dGhqoF2jGH93wEAktgi68JuUVWnq+WlychEXRj8X7yDZAFsk9Th3W+Za6ATYdp7Ay8gBjqmGZc
+	 5vSJuiNmkmbzkvn0W2cUXAxejsYtDJoyCHwa70r61JbYyT7HgZW9lomzu2nZIhn/HzLv0HyI/Ukw
+	 wQ+r6iq7hdms4vAcnS25hUpcQwGiabgf/SdSFVD9yNSRHzx7K6JkEtYsEr8gi2xLfB2S842s/3aK
+	 0sBxhEwNvc4zSCspYpJHdnox2wHPXbQQ/7JTwnHrLL3c2nkqehjK+9lyCdk12ksK92FwvDGPbE8y
+	 zK42Apsl9nDQDxK7bbv6moFgzj2WjZ4SWH41WOqymgFCd7oLDJDMYQBgSoXDIf/+79P2dlodWtxZ
+	 X46acF5wwuvRlRPvep9Nnp5xdTcpDWo+3NYurvrq4=
+X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
+Date: Tue, 25 Feb 2025 17:31:34 +0800
+From: Chen Yu <yu.chen.surf@foxmail.com>
+To: zihan zhou <15645113830zzh@gmail.com>
+Cc: oe-lkp@lists.linux.dev, kernel test robot <oliver.sang@intel.com>,
+	lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	aubrey.li@linux.intel.com, yu.c.chen@intel.com
+Subject: Re: [tip:sched/core] [sched]  2ae891b826:  hackbench.throughput 6.2%
+ regression
+X-OQ-MSGID: <Z72N9qZfX32UMrrG@chenyu5-mobl2>
+References: <202502251026.bb927780-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <202502251026.bb927780-lkp@intel.com>
 
-strncpy() is deprecated for NUL-terminated destination buffers. Use
-strscpy_pad() instead and don't zero-initialize the param array.
+On 2025-02-25 at 10:32:13 +0800, kernel test robot wrote:
+> 
+> 
+> Hello,
+> 
+> kernel test robot noticed a 6.2% regression of hackbench.throughput on:
+> 
+> 
+> commit: 2ae891b826958b60919ea21c727f77bcd6ffcc2c ("sched: Reduce the default slice to avoid tasks getting an extra tick")
+> https://git.kernel.org/cgit/linux/kernel/git/tip/tip.git sched/core
+> 
+> [test failed on linux-next/master d4b0fd87ff0d4338b259dc79b2b3c6f7e70e8afa]
+> 
+> testcase: hackbench
+> config: x86_64-rhel-9.4
+> compiler: gcc-12
+> test machine: 128 threads 2 sockets Intel(R) Xeon(R) Gold 6338 CPU @ 2.00GHz (Ice Lake) with 256G memory
+> parameters:
+> 
+> 	nr_threads: 100%
+> 	iterations: 4
+> 	mode: process
+> 	ipc: socket
+> 	cpufreq_governor: performance
+> 
+> 
+>   39754543 ±  3%     +56.8%   62349308        hackbench.time.involuntary_context_switches
+>
 
-Compile-tested only.
+This patch shrinks the base_slice so the deadline is reached earlier to trigger the
+tick preemption IIUC. For the hackbench case, my assumption is that hackbench seems to
+encounter more wakeup preemption and hurts throughtput. If more frequent tick preemption
+is needed, but more frequent wakeup preemption is not, are we able to do this base_slice
+shrink for tick preemption only rather than the wakeup preemption? A wild guess, can we
+add smaller base_slice 0.7 in update_deadline() for tick preemption, but remains the old
+value 0.75 in update_deadline() for wakeup preemption during enqueue.
 
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- fs/btrfs/sysfs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+But consider that the 6% regression is not that high, and the user might customize
+base_slice via debugfs on-demand, we can keep an eye on this and revist it in the
+future(we have encountered some SPECjbb regression due to over-preemption).
 
-diff --git a/fs/btrfs/sysfs.c b/fs/btrfs/sysfs.c
-index 53b846d99ece..b941fb37776d 100644
---- a/fs/btrfs/sysfs.c
-+++ b/fs/btrfs/sysfs.c
-@@ -1330,13 +1330,13 @@ MODULE_PARM_DESC(read_policy,
- 
- int btrfs_read_policy_to_enum(const char *str, s64 *value_ret)
- {
--	char param[32] = { 0 };
-+	char param[32];
- 	char __maybe_unused *value_str;
- 
- 	if (!str || strlen(str) == 0)
- 		return 0;
- 
--	strncpy(param, str, sizeof(param) - 1);
-+	strscpy_pad(param, str);
- 
- #ifdef CONFIG_BTRFS_EXPERIMENTAL
- 	/* Separate value from input in policy:value format. */
--- 
-2.48.1
+thanks,
+Chenyu
 
