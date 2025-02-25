@@ -1,127 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C119268FD9;
-	Tue, 25 Feb 2025 13:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ECD6268FE9
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740488959; cv=none; b=skv52FIRdVCnqYfxc6K4Jay1O01x15++0eDjP+wX1Q+/PbrJDnAfGlJ+I8fMLQbp0ETa+3AYIhU6WaAiQEk7q39P5kgkocJswz3FcFqGbjQda6lQt70kpnswnLMJtn+Jsy3LuIlIxojObsauFuaKn59uE9Vwsciy2S1valMvV6Q=
+	t=1740488985; cv=none; b=I+MsD+y6VEVnXllT0YElOYDxhcWNi/OW21V6HezT6I2Mw0YJta0xnsqaZHlh7k7loRPeCCjBhUTGakDAfx/M95YHs2egwpaX2UYYWCvu7MPsXBhc4aDZAlm6NBwAUzwZDdAvPDs8HaRDBAkc6zEPiaeM2aNFUSzDEW36qn3oVpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740488959; c=relaxed/simple;
-	bh=KF5ZO6ejS0ACndO4NFjdXXOOXXaUCY9pfvk3vfNCGDc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WLB6nbagsgtKIB0CgGFXSInCO1CJCLid01+hxK+z8/wVIJfiGCBEDxgZjQhL2ml+uQz+J4gDfRC/9mmj87GRvjdt/M4lcfPLeDcajohtSEsrf4IJKc4sS1T5ozphZs1nsDHjfoxhgZ/VAv3waLiDQ2wnl4Zsw3m4v+MUZXjoP/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=cyCMC6uO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740488985; c=relaxed/simple;
+	bh=s9Gi53PmVOqxw7AnIxREx7dHjZ0HbHTPvpQ+a0nltag=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pRvk9Eb864PdTRSZ1K8BBqOKM37ob88Y9VLXsc/HxT5bgKgN6bN9KBkA6PLsuPhP83wO0nHJF6WADXtzPFpBEa8JcqMSejjN/OS9b2MXQd/K0yYC6WupvNIM/K2LRj4nT97+tWxzEI9b9V9FA3DPDwui2cGj08Q8ghAr6IC6iQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=H65x+jn1; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="cyCMC6uO"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 35B6DC4CEEB;
-	Tue, 25 Feb 2025 13:09:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux.dev; s=korg;
-	t=1740488959; bh=KF5ZO6ejS0ACndO4NFjdXXOOXXaUCY9pfvk3vfNCGDc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=cyCMC6uOVL6ENJBMx1lXJrPO0uR1bu1jjC30djlZQ78iRHEqdynObv6jUjVwBrc0N
-	 9evlK/yYrORjOHTwJESmj3GBeHBQiX3HOhUvHFHPbm4VRDr9eS2oNVjZt5zX3gfIz9
-	 O2trTR2gDcjzZTIVRdIohh4aJ4XlWRrAb40HXu6A=
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2330FC021BB;
-	Tue, 25 Feb 2025 13:09:19 +0000 (UTC)
-From: Richard Leitner <richard.leitner@linux.dev>
-Date: Tue, 25 Feb 2025 14:08:42 +0100
-Subject: [PATCH 3/3] media: i2c: ov9282: fix analogue gain maximum
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="H65x+jn1"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P816vD009083
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:09:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	JXrbx//ujq81B4fzdK64SVgLYo/iHJ8aMUM9T0W/s8w=; b=H65x+jn1hBliDPdj
+	VMZE5Dh0TVa72wVR+siWa9hQLAeXnZxWpdn51hKjD4fkkGTqWP3V1hjR/ES07liH
+	apMwOKugawG1GL59ioQSavLP2OhL+touePl7kqF+kjAERTYEO9qHEiIbnQhYpHqv
+	FSnZfTWXuEL0gToLFevA+MYm6iRgsNmuw0gpY0Z9Ohpb3T09CiNa9wPD63q4D3Y3
+	1G1q10FzYJDfHNuUYiudBUH+mtrZaWqNBcLlingxk1A9hoq/b0PCENHKJjdf6XDx
+	rArHYMT/GCg6bcfeB6OzxTgb98HKxQvOG2CRaZqyBeAOQUvUgFSCIKucLh1Dedek
+	R/ur4w==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44y6y6rx1u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:09:39 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c0a0893762so105530485a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 05:09:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740488979; x=1741093779;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JXrbx//ujq81B4fzdK64SVgLYo/iHJ8aMUM9T0W/s8w=;
+        b=d5SJ1pzXh6KxwJu2KUhugWqvGTQ+pffEgpA4G6jQ52IdWjyXDHSNd/Y9ZRkfz6A/XA
+         aCpZLspgNs3FAsDcj79h9ocIwxi96lIegY9tAhStPTwcy1QlwjLJsBz8dixKwECzi1WV
+         LGTgt/JxELAXcGeWP/rtNHJMmzCpeAXWvRjZMpJV3z45SjQhDWax8CtZK0CKUAbMFCG7
+         0eeyxTDIen2C15AZ+nacwCXIiogL+vR8UydDJPTxF6xqXk9fdYMNqK03DnCALj4voKm2
+         zkc+anvR5E8BKaP9WEt0ZPXzLU2be28zaLpg42YYFbaqBxD5q2klNENFXykyyhgEQtfD
+         tO5A==
+X-Forwarded-Encrypted: i=1; AJvYcCXJy8EcVEPvatwhAYTFdGG5uuI59H4zt9f2CxH6lBBq9UA2SqUyGC6KT0kBPsq8c+si1jpGwXBkJqqO9iw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGREKXOaXCuMdSgKg22oFuuxdyVIGdcycQf83ifjDnk4goyoEt
+	QVw8KX5UJGaPSJ5sfRXPxvpuDazB6XNYvGwzsflRcKggCoBJO6Dh53MksarUUFik6UqgcpKY2X8
+	TJw5a88gacUMHUo4qKVcrg432HMjg59TXM3qi0V8uUuy8LIwa9maSKgapcH4FB0A=
+X-Gm-Gg: ASbGncue4Ol/h/gilyyVnegJj2VxWBTif18e6fGjXZoKxHn0Ti+OZwqJaL324F1HNzl
+	5pm/lpoTZ8sS7HtkqDq/3cCjOrPKM7A2H6nJFvqvVDobjD5+QFB5Ud4+uU5LAu0ycNTieM92h6M
+	WO0UdLOdP5CRmUWGMBrVcZX/+C40AawLeNuAmhY6xl+1rNyzZ7dSUC687vXREiBkT/G9PQsdDqO
+	5Jsjwi8UziqzYt/6R2w7KjXYVp4/rwjQPCRH4+jL0bSAIyel6UfZmSxwQtZ4qXOX1AaOndQrHOI
+	ineAg/9l+vD2pOgpeoS9QMr1TRrC9mWKhU0aWrMcdmIdkP5zNcDyKqhwDdsaHIJXe2lhKQ==
+X-Received: by 2002:a05:620a:22ec:b0:7c0:a1ca:93af with SMTP id af79cd13be357-7c0cef00e4bmr741969985a.6.1740488978932;
+        Tue, 25 Feb 2025 05:09:38 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGa0uJOUkscoJFqZcu/UhVHgYJ8ocIz6ucSftAjdSN31RKxhGpmSriOBUPSXTaf+LkELJ1nhg==
+X-Received: by 2002:a05:620a:22ec:b0:7c0:a1ca:93af with SMTP id af79cd13be357-7c0cef00e4bmr741968385a.6.1740488978416;
+        Tue, 25 Feb 2025 05:09:38 -0800 (PST)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e461f3e84bsm1208986a12.76.2025.02.25.05.09.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2025 05:09:37 -0800 (PST)
+Message-ID: <7785000b-db32-483f-ba2d-8536e00e10fc@oss.qualcomm.com>
+Date: Tue, 25 Feb 2025 14:09:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 06/11] arm64: dts: qcom: sa8775p: add Display Serial
+ Interface device nodes
+To: Ayushi Makhija <quic_amakhija@quicinc.com>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: robdclark@gmail.com, dmitry.baryshkov@linaro.org, sean@poorly.run,
+        marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
+        robh+dt@kernel.org, krzk+dt@kernel.org, konradybcio@kernel.org,
+        conor+dt@kernel.org, andrzej.hajda@intel.com,
+        neil.armstrong@linaro.org, rfoss@kernel.org,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
+        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
+        quic_jesszhan@quicinc.com
+References: <20250225121824.3869719-1-quic_amakhija@quicinc.com>
+ <20250225121824.3869719-7-quic_amakhija@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250225121824.3869719-7-quic_amakhija@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250225-b4-ov9282-gain-v1-3-a24af2820dde@linux.dev>
-References: <20250225-b4-ov9282-gain-v1-0-a24af2820dde@linux.dev>
-In-Reply-To: <20250225-b4-ov9282-gain-v1-0-a24af2820dde@linux.dev>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Richard Leitner <richard.leitner@linux.dev>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740488957; l=2508;
- i=richard.leitner@linux.dev; s=20250225; h=from:subject:message-id;
- bh=KF5ZO6ejS0ACndO4NFjdXXOOXXaUCY9pfvk3vfNCGDc=;
- b=Wy3qIvcFnUZxA6mDs+WE167dDcqWuS83NVPC7MitfLarLKKapbyUYFnFzapJIgVl6JQsg2/Hf
- /irWAutIOKQCLac2qmTmi2mz9uo/8jG2Nwvy1oR3Vk8J40E43apvdXe
-X-Developer-Key: i=richard.leitner@linux.dev; a=ed25519;
- pk=8hZNyyyQFqZ5ruVJsSGBSPIrmJpfDm5HwHU4QVOP1Pk=
-X-Endpoint-Received: by B4 Relay for richard.leitner@linux.dev/20250225
- with auth_id=350
+X-Proofpoint-ORIG-GUID: f6klOrUNcBlTAu6ynwacYDIVRqCcyf5N
+X-Proofpoint-GUID: f6klOrUNcBlTAu6ynwacYDIVRqCcyf5N
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-25_04,2025-02-25_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
+ malwarescore=0 phishscore=0 adultscore=0 lowpriorityscore=0
+ mlxlogscore=999 impostorscore=0 priorityscore=1501 bulkscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502250091
 
-The sensors analogue gain is stored within two "LONG GAIN" registers
-(0x3508 and 0x3509) where the first one holds the upper 5 bits of the
-value. The second register (0x3509) holds the lower 4 bits of the gain
-value in its upper 4 bits. The lower 4 register bits are fraction bits.
+On 25.02.2025 1:18 PM, Ayushi Makhija wrote:
+> Add device tree nodes for the DSI0 and DSI1 controllers
+> with their corresponding PHYs found on Qualcomm SA8775P SoC.
+> 
+> Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
+> ---
 
-This patch changes the gain control to adhere to the datasheet and
-make the "upper gain register" (0x3508) accessible via the gain control,
-resulting in a new maximum of 0x1fff instead of 0xff.
+[...]
 
-As the "upper gain register" is now written during exposure/gain update
-remove the hard-coded 0x00 write to it from common_regs.
+> +				assigned-clocks = <&dispcc0 MDSS_DISP_CC_MDSS_BYTE0_CLK_SRC>,
+> +						  <&dispcc0 MDSS_DISP_CC_MDSS_PCLK0_CLK_SRC>;
+> +				assigned-clock-parents = <&mdss0_dsi0_phy 0>,
+> +							 <&mdss0_dsi0_phy 1>;
 
-We cover only the "real gain format" use-case. The "sensor gain
-format" one is ignored as based on the hard-coded "AEC MANUAL" register
-configuration it is disabled.
+Please rebase on this patchset:
 
-All values are based on the OV9281 datasheet v1.01 (09.18.2015).
+https://lore.kernel.org/linux-arm-msm/20250127-dts-qcom-dsi-phy-clocks-v1-0-9d8ddbcb1c7f@linaro.org/
 
-Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
----
- drivers/media/i2c/ov9282.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/media/i2c/ov9282.c b/drivers/media/i2c/ov9282.c
-index c882a021cf18852237bf9b9524d3de0c5b48cbcb..e6effb2b42d4d5d0ca3d924df59c60512f9ce65d 100644
---- a/drivers/media/i2c/ov9282.c
-+++ b/drivers/media/i2c/ov9282.c
-@@ -54,11 +54,11 @@
- #define OV9282_AEC_MANUAL_DEFAULT	0x00
- 
- /* Analog gain control */
--#define OV9282_REG_AGAIN	0x3509
--#define OV9282_AGAIN_MIN	0x10
--#define OV9282_AGAIN_MAX	0xff
--#define OV9282_AGAIN_STEP	1
--#define OV9282_AGAIN_DEFAULT	0x10
-+#define OV9282_REG_AGAIN	0x3508
-+#define OV9282_AGAIN_MIN	0x0010
-+#define OV9282_AGAIN_MAX	0x1fff
-+#define OV9282_AGAIN_STEP	0x0001
-+#define OV9282_AGAIN_DEFAULT	0x0010
- 
- /* Group hold register */
- #define OV9282_REG_HOLD		0x3308
-@@ -226,7 +226,6 @@ static const struct ov9282_reg common_regs[] = {
- 	{OV9282_REG_AEC_MANUAL, OV9282_GAIN_PREC16_EN},
- 	{0x3505, 0x8c},
- 	{0x3507, 0x03},
--	{0x3508, 0x00},
- 	{0x3610, 0x80},
- 	{0x3611, 0xa0},
- 	{0x3620, 0x6e},
-@@ -605,7 +604,11 @@ static int ov9282_update_exp_gain(struct ov9282 *ov9282, u32 exposure, u32 gain)
- 	if (ret)
- 		goto error_release_group_hold;
- 
--	ret = ov9282_write_reg(ov9282, OV9282_REG_AGAIN, 1, gain);
-+	ret = ov9282_write_reg(ov9282, OV9282_REG_AGAIN, 1, (gain >> 8) & 0x1f);
-+	if (ret)
-+		goto error_release_group_hold;
-+
-+	ret = ov9282_write_reg(ov9282, OV9282_REG_AGAIN + 1, 1, gain & 0xff);
- 
- error_release_group_hold:
- 	ov9282_write_reg(ov9282, OV9282_REG_HOLD, 1, 0);
-
--- 
-2.47.2
-
-
+Konrad
