@@ -1,146 +1,170 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B08D4A1A;
-	Tue, 25 Feb 2025 08:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF024A1A;
+	Tue, 25 Feb 2025 08:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740470797; cv=none; b=YUJ/qVs8e+MbZIle4Ltva0FM7ZbMm5L+BabgS/FKFtkgnWP75wcPtPw8HSTRTAaUMq3rDoxAwfVyAjTD6SCIhNsLM9h97QWleXU/EWFOCq1t/b7JH/WVv+EC/+3X3Exz/H49J3GGe25a58g0tImzJkF2795/XPJTm7FKJk6yoOo=
+	t=1740470888; cv=none; b=Pf0cd/0QwiMle7wE2ElI/wZg2cbDTWAjIvG2CoOO7QiijMns96h2ZwIjpr/xrjfEcZbeNafPz2YAWgiMlOtgX7Ens6o1WTRSNA6OY7AIL57+tTpxLTIjnuEhVKm9hRg+actKRwn+uTzBWF4T3SGPV9B7zfzGPk6BYbixPGaiv6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740470797; c=relaxed/simple;
-	bh=nTVauD8mUtF0eeGZkVyKSxs/AAJdpcyUJOrGpJCMI/M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=PVsBUnvwe/4+CKq7SVUkXQ7KrRMoDVaCNzAJGYp0MparqZZ5zuY7IewoK4bh7/t/QG5GD63BPfbx6OMTTga0X/D2ONnSNukKmD3TkOr/mqAMdwtoYz5VJgYrmOVOLJS+vdgYaDkKvU8Sbia3MV0M1lHmRedNX1Sxmkr7eGPDtEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TiNpYwCR; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1740470888; c=relaxed/simple;
+	bh=jDu0V+akQ3h725aTgIuKzINMQUKK/xDZt/5z+cC5YTs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ml1aEXrD7Oa/FPlOmdwjWRByq0pG8WGVvyCVxUepbtldQewSLD2Cbd8BjztnCnfOCRYd0FijDGUPMe4nG3wgS5/gxtaLs0iLpj/Xt0OqDZbOnPq4kDoPDq9Fh1lqIwmFjt15xrvjGcizxMCvq049O65wtXryNziTPvEM5zfvWtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aSd0uwaM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=K82ey+kS; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TiNpYwCR"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51OKOYRu010037;
-	Tue, 25 Feb 2025 08:06:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	5O68Mj+7dFmG6ZMWG24pX3oU3pJbZ3qlRJlq0dxmRLk=; b=TiNpYwCRISTP0hn1
-	oHcyOtzTB+YDPJAXv7bHpSBwZelaQmM0WuhiH5fbCFvnemUbIsqJmiltlsAC9n6K
-	dNNqqRaPMqnw6BBTSt5pRXxdMNGodVeBkf+2smhD+JdqU7uZYX/odFImlbGV9QAe
-	uAXe5l9c2rmTNzqxIeKYzlmFtumBihJdyz6oz7KNgIlSYt92xCaDmQQkzl7s4b25
-	v2pWLMN+E49EXk3ucTU2Ryd9l65lVUAMpDbNqjTCWtBge59vpIwxd7H0U1EUGvVw
-	UfuB78l3jqVwuc90qDxIdowSOu+8qASwXa1znsm7FUdq7D8b6pfKwIcDHTm/GKE6
-	Zk5ovw==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44y3xnga4w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 08:06:23 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51P86MEc008205
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 08:06:22 GMT
-Received: from [10.233.19.224] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 25 Feb
- 2025 00:06:19 -0800
-Message-ID: <eea55dfa-3dd3-488b-958c-cd20e18a7d7d@quicinc.com>
-Date: Tue, 25 Feb 2025 16:06:16 +0800
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aSd0uwaM";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K82ey+kS"
+Date: Tue, 25 Feb 2025 09:08:03 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1740470884;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9SrLxlsEKlN3z3PPX6qEc7Y1rqFZZfeIMG6CIYjw5ec=;
+	b=aSd0uwaMRywXvfcwXz6E1s7WMMvPcS0fYeUImVK48trosJ/EnRp7LhEgrMV21c+66KVfb7
+	68PvEh3spC0ixnzYv27hMl+brE4z78pFErb/7JUsLrxuTKaycdO/GzJJFOmjtRtgTB7ugx
+	3TFTgnpMe7RT5g8tgvNX7T+N1G7Xg8VCUT3rNPT+kafdqaNq1r2L9oX8dt/bpYZTeGV7Qd
+	7mhK8dl9FaVKXK9mELw/pgmctxokVMVyuUjcU6Zx408mhtgNftILuvY9CPOhyIpVXxbrfB
+	3N8WtEHxXanUo9y89jAfzlXW+6aDBnEzFt5gUG0cjhzNo+yKZVFsV2VWSsKQSg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1740470884;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9SrLxlsEKlN3z3PPX6qEc7Y1rqFZZfeIMG6CIYjw5ec=;
+	b=K82ey+kSuc3PRkirrZCoSiOX7lC9ayDulqa2XPhk/ii8GpYPFzo//WeKXtLq/Qxa8f55Jc
+	u70VogiGsVuYjhAA==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: jeffxu@chromium.org
+Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com, 
+	torvalds@linux-foundation.org, vbabka@suse.cz, lorenzo.stoakes@oracle.com, 
+	Liam.Howlett@oracle.com, adhemerval.zanella@linaro.org, oleg@redhat.com, avagin@gmail.com, 
+	benjamin@sipsolutions.net, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	linux-mm@kvack.org, jorgelo@chromium.org, sroettger@google.com, hch@lst.de, 
+	ojeda@kernel.org, adobriyan@gmail.com, johannes@sipsolutions.net, 
+	pedro.falcato@gmail.com, hca@linux.ibm.com, willy@infradead.org, anna-maria@linutronix.de, 
+	mark.rutland@arm.com, linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de, 
+	rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com, f.fainelli@gmail.com, 
+	gerg@kernel.org, dave.hansen@linux.intel.com, mingo@kernel.org, ardb@kernel.org, 
+	mhocko@suse.com, 42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com, 
+	enh@google.com, rientjes@google.com, groeck@chromium.org, mpe@ellerman.id.au, 
+	aleksandr.mikhalitsyn@canonical.com, mike.rapoport@gmail.com
+Subject: Re: [PATCH v7 3/7] mseal, system mappings: enable x86-64
+Message-ID: <20250225085728-24167715-8562-45a8-86cd-0ea503e4bc73@linutronix.de>
+References: <20250224225246.3712295-1-jeffxu@google.com>
+ <20250224225246.3712295-4-jeffxu@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] phy: qcom: qmp-pcie: Add PHY register retention
- support
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Konrad Dybcio
-	<konrad.dybcio@oss.qualcomm.com>
-CC: <vkoul@kernel.org>, <kishon@kernel.org>, <p.zabel@pengutronix.de>,
-        <dmitry.baryshkov@linaro.org>, <abel.vesa@linaro.org>,
-        <quic_qianyu@quicinc.com>, <neil.armstrong@linaro.org>,
-        <quic_devipriy@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20250220102253.755116-1-quic_wenbyao@quicinc.com>
- <20250220102253.755116-3-quic_wenbyao@quicinc.com>
- <20250224073301.aqbw3gxjnupbejfy@thinkpad>
- <7ffb09cd-9c77-4407-9087-3e789cd8bf44@quicinc.com>
- <ea5de507-1252-4ff3-9b18-40981624afea@oss.qualcomm.com>
- <20250224122439.njrcoyrfsisddoer@thinkpad>
-Content-Language: en-US
-From: "Wenbin Yao (Consultant)" <quic_wenbyao@quicinc.com>
-In-Reply-To: <20250224122439.njrcoyrfsisddoer@thinkpad>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: aJUzIFz9JneBG7BE_VGzNqbmuREjOsMs
-X-Proofpoint-GUID: aJUzIFz9JneBG7BE_VGzNqbmuREjOsMs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_03,2025-02-24_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
- suspectscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015
- priorityscore=1501 spamscore=0 malwarescore=0 phishscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
- definitions=main-2502250053
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250224225246.3712295-4-jeffxu@google.com>
 
-On 2/24/2025 8:24 PM, Manivannan Sadhasivam wrote:
-> On Mon, Feb 24, 2025 at 12:46:44PM +0100, Konrad Dybcio wrote:
->> On 24.02.2025 9:46 AM, Wenbin Yao (Consultant) wrote:
->>> On 2/24/2025 3:33 PM, Manivannan Sadhasivam wrote:
->>>> On Thu, Feb 20, 2025 at 06:22:53PM +0800, Wenbin Yao wrote:
->>>>> From: Qiang Yu <quic_qianyu@quicinc.com>
->>>>>
->>>>> Some QCOM PCIe PHYs support no_csr reset. Unlike BCR reset which resets the
->>>>> whole PHY (hardware and register), no_csr reset only resets PHY hardware
->>>>> but retains register values, which means PHY setting can be skipped during
->>>>> PHY init if PCIe link is enabled in booltloader and only no_csr is toggled
->>>>> after that.
->>>>>
->>>>> Hence, determine whether the PHY has been enabled in bootloader by
->>>>> verifying QPHY_START_CTRL register. If it's programmed and no_csr reset is
->>>>> available, skip BCR reset and PHY register setting to establish the PCIe
->>>>> link with bootloader - programmed PHY settings.
->>>>>
->>>>> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
->>>>> Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
->>>> Some nitpicks below.
->>>>
->>>>> ---
->> [...]
->>
->>>>> +     * In this way, no matter whether the PHY settings were initially
->>>>> +     * programmed by bootloader or PHY driver itself, we can reuse them
->>>> It is really possible to have bootloader not programming the init sequence for
->>>> no_csr reset platforms? The comment sounds like it is possible. But I heard the
->>>> opposite.
->>> PCIe3 on X1E80100 QCP is disabled by default in UEFI. We need to enable it
->>> manually in UEFI shell if we want.
->> IIUC this will not be a concern going forward, and this is a special case
->>
-> I'm wondering how many *special* cases we may have to deal with going forward.
-> Anyhow, I would propose to atleast throw an error and fail probe() if:
->
-> * the platform has no_csr reset AND
-> * bootloader has not initialized the PHY AND
-> * there are no init sequences in the kernel
->
-> - Mani
+Hi Jeff,
 
-Hmmm, regardless of whether it's a special case, we can't assume that UEFI
-will enable the PHY supporting no_csr reset on all platforms. It's a bit
-risky. If we make such an assumption, we also won't need to check whether
-the PHY is enabled by UEFI during powering on. We just need to check
-whether no_csr reset is available.
+On Mon, Feb 24, 2025 at 10:52:42PM +0000, jeffxu@chromium.org wrote:
+> From: Jeff Xu <jeffxu@chromium.org>
+> 
+> Provide support for CONFIG_MSEAL_SYSTEM_MAPPINGS on x86-64,
+> covering the vdso, vvar, vvar_vclock.
+> 
+> Production release testing passes on Android and Chrome OS.
+> 
+> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+> ---
+>  arch/x86/Kconfig          |  1 +
+>  arch/x86/entry/vdso/vma.c | 16 ++++++++++------
+>  2 files changed, 11 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 87198d957e2f..8fa17032ca46 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -26,6 +26,7 @@ config X86_64
+>  	depends on 64BIT
+>  	# Options that are inherently 64-bit kernel only:
+>  	select ARCH_HAS_GIGANTIC_PAGE
+> +	select ARCH_HAS_MSEAL_SYSTEM_MAPPINGS
+>  	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
+>  	select ARCH_SUPPORTS_PER_VMA_LOCK
+>  	select ARCH_SUPPORTS_HUGE_PFNMAP if TRANSPARENT_HUGEPAGE
+> diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
+> index 39e6efc1a9ca..1b1c009f20a8 100644
+> --- a/arch/x86/entry/vdso/vma.c
+> +++ b/arch/x86/entry/vdso/vma.c
+> @@ -247,6 +247,7 @@ static int map_vdso(const struct vdso_image *image, unsigned long addr)
+>  	struct mm_struct *mm = current->mm;
+>  	struct vm_area_struct *vma;
+>  	unsigned long text_start;
+> +	unsigned long vm_flags;
+>  	int ret = 0;
+>  
+>  	if (mmap_write_lock_killable(mm))
+> @@ -264,11 +265,12 @@ static int map_vdso(const struct vdso_image *image, unsigned long addr)
+>  	/*
+>  	 * MAYWRITE to allow gdb to COW and set breakpoints
+>  	 */
+> +	vm_flags = VM_READ|VM_EXEC|VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC;
+> +	vm_flags |= VM_SEALED_SYSMAP;
+>  	vma = _install_special_mapping(mm,
+>  				       text_start,
+>  				       image->size,
+> -				       VM_READ|VM_EXEC|
+> -				       VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC,
+> +				       vm_flags,
+>  				       &vdso_mapping);
+>  
+>  	if (IS_ERR(vma)) {
+> @@ -276,11 +278,12 @@ static int map_vdso(const struct vdso_image *image, unsigned long addr)
+>  		goto up_fail;
+>  	}
+>  
+> +	vm_flags = VM_READ|VM_MAYREAD|VM_IO|VM_DONTDUMP|VM_PFNMAP;
+> +	vm_flags |= VM_SEALED_SYSMAP;
+>  	vma = _install_special_mapping(mm,
+>  				       addr,
+>  				       (__VVAR_PAGES - VDSO_NR_VCLOCK_PAGES) * PAGE_SIZE,
+> -				       VM_READ|VM_MAYREAD|VM_IO|VM_DONTDUMP|
+> -				       VM_PFNMAP,
+> +				       vm_flags,
+>  				       &vvar_mapping);
 
-But it makes sense to check the exsitence of PHY senquence. How about
-adding the check in qmp_pcie_init, if a PHY supports no_csr reset and isn't
-initialized in UEFI and there is no cfg->tbls, return error and print some
-error log so that the PCIe controller will fail to probe.
+This hunk (and the vvar mapping in the arm64 patch) will conflict with my
+"Generic vDSO datapage" series.
+That series is already part of the tip tree (branch timers/vdso) and scheduled
+for the next merge window.
 
--- 
-With best wishes
-Wenbin
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=timers/vdso
 
+The conflict resolution is fairly easy:
+Move the new flag logic into lib/vdso/datastore.c
+
+Depending on the expected mainline timing for this series either mention this
+somewhere for the conflict resolution by Linus or rebase your series on top of
+tip/timers/vdso.
+
+>  	if (IS_ERR(vma)) {
+> @@ -289,11 +292,12 @@ static int map_vdso(const struct vdso_image *image, unsigned long addr)
+>  		goto up_fail;
+>  	}
+>  
+> +	vm_flags = VM_READ|VM_MAYREAD|VM_IO|VM_DONTDUMP|VM_PFNMAP;
+> +	vm_flags |= VM_SEALED_SYSMAP;
+>  	vma = _install_special_mapping(mm,
+>  				       addr + (__VVAR_PAGES - VDSO_NR_VCLOCK_PAGES) * PAGE_SIZE,
+>  				       VDSO_NR_VCLOCK_PAGES * PAGE_SIZE,
+> -				       VM_READ|VM_MAYREAD|VM_IO|VM_DONTDUMP|
+> -				       VM_PFNMAP,
+> +				       vm_flags,
+>  				       &vvar_vclock_mapping);
+>  
+>  	if (IS_ERR(vma)) {
+> -- 
+> 2.48.1.658.g4767266eb4-goog
+> 
