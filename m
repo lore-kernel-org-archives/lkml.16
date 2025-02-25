@@ -1,230 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BE525D541;
-	Tue, 25 Feb 2025 08:40:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9A6170A26;
+	Tue, 25 Feb 2025 08:41:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740472845; cv=none; b=MtOT65i8COyKGEp3LKplR0LDT3be8eInE/pBfsD9TTrYdIeeptnFjv/u7rFmOuRpvfB2o9H1KfEp1g5y0JGOre/N/lNcXxCEa/t8uFyY8I7PgVF2CaXw3HDJKpW4DeCFo6V6g0Db7/6W+7YGehZpyT5VZvOIr4zdQvGmzpb7rkU=
+	t=1740472880; cv=none; b=iJd31PkAxd1k+JRC8bjpupP+18ebzBLKEl0TgG0Aoexb8fRqhHuG5cFOGlHWF7tLXC4miLbQvd8O4osQGDyPjXdb0aT0vhrp/OS0Mo8Rc4MzoTiVUKSpZcmxWXHiUcoQ2ANfwZ0p99sJ+3OgzoRsTk3AS7prIWPXc6lw6Oo8dAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740472845; c=relaxed/simple;
-	bh=nYTjMJ1HG4v5wj/7GVed50qI5CmtP75J9mDus97hIpY=;
+	s=arc-20240116; t=1740472880; c=relaxed/simple;
+	bh=vIQYdyOEzWu+41zMz1p5OCKUmlP+4f9CSqgxogleOFU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ABg9AIXQSOOFXarnRuvH7s6wwufml/LcqDXJwOn41OFEJ2vsDNpuq0SfFwnht5jdMopEE9rPEhq7kSjRd4N+rKYpHF5RXFOqNQjEGvZp06jFYz+5zVRhnu9qZAdGw/9A5UGRYmMcO0m4k0JclIT/FNyU5LbaNdAYMPD7+fb5FEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=txupU22k; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=m2Ts/kmWYf3/cNE6oYyex/o3neiINXjt5pOHaEEMJ8NcX2CQp3YuvrkZw0ychOtY44qrdccZXFt1qiqnYxjxddXg5nR98P6PAvK9qDV0yu2WMuEDkjA+eKeo+n4c8FEGpSBrBL3arzOW16KBWMUNDAJILYqhwRhzX57cf1N/d/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tPGaAN7T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="txupU22k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 569D7C4CEDD;
-	Tue, 25 Feb 2025 08:40:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1740472844;
-	bh=nYTjMJ1HG4v5wj/7GVed50qI5CmtP75J9mDus97hIpY=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tPGaAN7T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E35A7C4CEDD;
+	Tue, 25 Feb 2025 08:41:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740472880;
+	bh=vIQYdyOEzWu+41zMz1p5OCKUmlP+4f9CSqgxogleOFU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=txupU22k3wqRj/Tvwm3CCnlyOPttCnFr04hohRttdeW7N2uqCeB/3ICENwZHbwzRC
-	 cCrZH82SRbAujv6MZBJZe2b1pumvUKuF3z2YaWijX4mPQ3Wxk+36R8JwavN2XTHKvZ
-	 HEWRSQw9I6jFmqkHrllD5STn5WXCzK9RbQ1M/9YI=
-Date: Tue, 25 Feb 2025 09:39:33 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Naman Jain <namjain@linux.microsoft.com>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Stephen Hemminger <stephen@networkplumber.org>,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Long Li <longli@microsoft.com>
-Subject: Re: [PATCH] uio_hv_generic: Fix sysfs creation path for ring buffer
-Message-ID: <2025022515-lasso-carrot-4e1d@gregkh>
-References: <20250225052001.2225-1-namjain@linux.microsoft.com>
- <2025022504-diagnosis-outsell-684c@gregkh>
- <9ee65987-4353-42c6-b517-d6f52428f718@linux.microsoft.com>
+	b=tPGaAN7Th6HycsZsaacoGSR8Dh0cuUxMZZBWi83PHwXsPLxStxPX493fz1Ak3+bDX
+	 lg8PgRxXJ45npe2td1IoNrj72tEvuWP99SJEev2chGJiPjIM7oX1Z9F3KZmFiqOCtN
+	 6kTIa26b4cquFXyMe/zEK5KXicpDMKw/UStlP+1RcqFJgmdPD0Z4guSJrmuj0v1tf5
+	 klOmsqt+286Frm4FhriFVmtcoiluXP+EDTgSCSdqdnFP9fRvN7FiPZNLU+o6dNSbdK
+	 FNjbfJseEoroqFVXzzB/MoDDSx3Sb05WNL6pTEyzjJC0hZuHIYtGq2qovxejg6b5yB
+	 5F5kkB+NfP1MQ==
+Date: Tue, 25 Feb 2025 09:41:17 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, patches@opensource.cirrus.com, 
+	Ernest Van Hoecke <ernest.vanhoecke@toradex.com>, linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Francesco Dolcini <francesco.dolcini@toradex.com>, 
+	Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH v2 3/5] ASoC: dt-bindings: wm8904: Add DMIC, GPIO, MIC
+ and EQ support
+Message-ID: <20250225-delicate-tortoise-of-management-e43fa2@krzk-bin>
+References: <20250224155500.52462-1-francesco@dolcini.it>
+ <20250224155500.52462-4-francesco@dolcini.it>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <9ee65987-4353-42c6-b517-d6f52428f718@linux.microsoft.com>
+In-Reply-To: <20250224155500.52462-4-francesco@dolcini.it>
 
-On Tue, Feb 25, 2025 at 02:04:43PM +0530, Naman Jain wrote:
-> 
-> 
-> On 2/25/2025 11:42 AM, Greg Kroah-Hartman wrote:
-> > On Tue, Feb 25, 2025 at 10:50:01AM +0530, Naman Jain wrote:
-> > > On regular bootup, devices get registered to vmbus first, so when
-> > > uio_hv_generic driver for a particular device type is probed,
-> > > the device is already initialized and added, so sysfs creation in
-> > > uio_hv_generic probe works fine. However, when device is removed
-> > > and brought back, the channel rescinds and device again gets
-> > > registered to vmbus. However this time, the uio_hv_generic driver is
-> > > already registered to probe for that device and in this case sysfs
-> > > creation is tried before the device gets initialized completely.
-> > > 
-> > > Fix this by moving the core logic of sysfs creation for ring buffer,
-> > > from uio_hv_generic to HyperV's vmbus driver, where rest of the sysfs
-> > > attributes for the channels are defined. While doing that, make use
-> > > of attribute groups and macros, instead of creating sysfs directly,
-> > > to ensure better error handling and code flow.
-> > > 
-> > > Problem path:
-> > > vmbus_device_register
-> > >      device_register
-> > >          uio_hv_generic probe
-> > >                      sysfs_create_bin_file (fails here)
-> > >          kset_create_and_add (dependency)
-> > >          vmbus_add_channel_kobj (dependency)
-> > > 
-> > > Fixes: 9ab877a6ccf8 ("uio_hv_generic: make ring buffer attribute for primary channel")
-> > > Cc: stable@kernel.org
-> > > Suggested-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> > > Suggested-by: Michael Kelley <mhklinux@outlook.com>
-> > > Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
-> > > ---
-> > > Hi,
-> > > This is the first patch after initial RFC was posted.
-> > > https://lore.kernel.org/all/20250214064351.8994-1-namjain@linux.microsoft.com/
-> > > 
-> > > Changes since RFC patch:
-> > > * Different approach to solve the problem is proposed (credits to
-> > >    Michael Kelley).
-> > > * Core logic for sysfs creation moved out of uio_hv_generic, to VMBus
-> > >    drivers where rest of the sysfs attributes for a VMBus channel
-> > >    are defined. (addressed Greg's comments)
-> > > * Used attribute groups instead of sysfs_create* functions, and bundled
-> > >    ring attribute with other attributes for the channel sysfs.
-> > > 
-> > > Error logs:
-> > > 
-> > > [   35.574120] ------------[ cut here ]------------
-> > > [   35.574122] WARNING: CPU: 0 PID: 10 at fs/sysfs/file.c:591 sysfs_create_bin_file+0x81/0x90
-> > > [   35.574168] Workqueue: hv_pri_chan vmbus_add_channel_work
-> > > [   35.574172] RIP: 0010:sysfs_create_bin_file+0x81/0x90
-> > > [   35.574197] Call Trace:
-> > > [   35.574199]  <TASK>
-> > > [   35.574200]  ? show_regs+0x69/0x80
-> > > [   35.574217]  ? __warn+0x8d/0x130
-> > > [   35.574220]  ? sysfs_create_bin_file+0x81/0x90
-> > > [   35.574222]  ? report_bug+0x182/0x190
-> > > [   35.574225]  ? handle_bug+0x5b/0x90
-> > > [   35.574244]  ? exc_invalid_op+0x19/0x70
-> > > [   35.574247]  ? asm_exc_invalid_op+0x1b/0x20
-> > > [   35.574252]  ? sysfs_create_bin_file+0x81/0x90
-> > > [   35.574255]  hv_uio_probe+0x1e7/0x410 [uio_hv_generic]
-> > > [   35.574271]  vmbus_probe+0x3b/0x90
-> > > [   35.574275]  really_probe+0xf4/0x3b0
-> > > [   35.574279]  __driver_probe_device+0x8a/0x170
-> > > [   35.574282]  driver_probe_device+0x23/0xc0
-> > > [   35.574285]  __device_attach_driver+0xb5/0x140
-> > > [   35.574288]  ? __pfx___device_attach_driver+0x10/0x10
-> > > [   35.574291]  bus_for_each_drv+0x86/0xe0
-> > > [   35.574294]  __device_attach+0xc1/0x200
-> > > [   35.574297]  device_initial_probe+0x13/0x20
-> > > [   35.574315]  bus_probe_device+0x99/0xa0
-> > > [   35.574318]  device_add+0x647/0x870
-> > > [   35.574320]  ? hrtimer_init+0x28/0x70
-> > > [   35.574323]  device_register+0x1b/0x30
-> > > [   35.574326]  vmbus_device_register+0x83/0x130
-> > > [   35.574328]  vmbus_add_channel_work+0x135/0x1a0
-> > > [   35.574331]  process_one_work+0x177/0x340
-> > > [   35.574348]  worker_thread+0x2b2/0x3c0
-> > > [   35.574350]  kthread+0xe3/0x1f0
-> > > [   35.574353]  ? __pfx_worker_thread+0x10/0x10
-> > > [   35.574356]  ? __pfx_kthread+0x10/0x10
-> > > 
-> > > ---
-> > >   drivers/hv/hyperv_vmbus.h    |  4 +++
-> > >   drivers/hv/vmbus_drv.c       | 62 ++++++++++++++++++++++++++++++++++++
-> > >   drivers/uio/uio_hv_generic.c | 34 ++------------------
-> > >   include/linux/hyperv.h       |  3 ++
-> > >   4 files changed, 72 insertions(+), 31 deletions(-)
-> > > 
-> > > diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-> > > index 29780f3a7478..e0c7b75e6c7a 100644
-> > > --- a/drivers/hv/hyperv_vmbus.h
-> > > +++ b/drivers/hv/hyperv_vmbus.h
-> > > @@ -477,4 +477,8 @@ static inline int hv_debug_add_dev_dir(struct hv_device *dev)
-> > >   #endif /* CONFIG_HYPERV_TESTING */
-> > > +/* Create and remove sysfs entry for memory mapped ring buffers for a channel */
-> > > +int hv_create_ring_sysfs(struct vmbus_channel *channel);
-> > > +int hv_remove_ring_sysfs(struct vmbus_channel *channel);
-> > > +
-> > >   #endif /* _HYPERV_VMBUS_H */
-> > > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> > > index 22afebfc28ff..0110643bad3f 100644
-> > > --- a/drivers/hv/vmbus_drv.c
-> > > +++ b/drivers/hv/vmbus_drv.c
-> > > @@ -1802,6 +1802,39 @@ static ssize_t subchannel_id_show(struct vmbus_channel *channel,
-> > >   }
-> > >   static VMBUS_CHAN_ATTR_RO(subchannel_id);
-> > > +/* Functions to create sysfs interface to allow mmap of the ring buffers.
-> > > + * The ring buffer is allocated as contiguous memory by vmbus_open
-> > > + */
-> > > +static int hv_mmap_ring_buffer(struct vmbus_channel *channel, struct vm_area_struct *vma)
-> > > +{
-> > > +	void *ring_buffer = page_address(channel->ringbuffer_page);
-> > > +
-> > > +	if (channel->state != CHANNEL_OPENED_STATE)
-> > > +		return -ENODEV;
-> > > +
-> > > +	return vm_iomap_memory(vma, virt_to_phys(ring_buffer),
-> > > +			       channel->ringbuffer_pagecount << PAGE_SHIFT);
-> > > +}
-> > > +
-> > > +static int hv_mmap_ring_buffer_wrapper(struct file *filp, struct kobject *kobj,
-> > > +				       const struct bin_attribute *attr,
-> > > +				       struct vm_area_struct *vma)
-> > > +{
-> > > +	struct vmbus_channel *channel = container_of(kobj, struct vmbus_channel, kobj);
-> > > +
-> > > +	if (!channel->mmap_ring_buffer)
-> > > +		return -ENODEV;
-> > > +	return channel->mmap_ring_buffer(channel, vma);
-> > 
-> > What is preventing mmap_ring_buffer from being set to NULL right after
-> > checking it and then calling it here?  I see no locks here or where you
-> > are assigning this variable at all, so what is preventing these types of
-> > races?
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> Thank you so much for reviewing.
-> I spent some time to understand if this race condition can happen and it
-> seems execution flow is pretty sequential, for a particular channel of a
-> device.
-> 
-> Unless hv_uio_remove (which makes channel->mmap_ring_buffer NULL) can be
-> called in parallel to hv_uio_probe (which had set
-> channel->mmap_ring_buffer to non NULL), I doubt race can happen here.
-> 
-> Code Flow: (R, W-> Read, Write to channel->mmap_ring_buffer)
-> 
-> vmbus_device_register
->   device_register
->     hv_uio_probe
-> 	  hv_create_ring_sysfs (W to non NULL)
->         sysfs_update_group
->           vmbus_chan_attr_is_visible (R)
->   vmbus_add_channel_kobj
->     sysfs_create_group
->       vmbus_chan_attr_is_visible  (R)
->       hv_mmap_ring_buffer_wrapper (critical section)
-> 
-> hv_uio_remove
->   hv_remove_ring_sysfs (W to NULL)
+On Mon, Feb 24, 2025 at 04:54:58PM +0100, Francesco Dolcini wrote:
+> +  wlf,drc-cfg-regs:
+> +    $ref: /schemas/types.yaml#/definitions/uint16-array
+> +    description:
+> +      Default register values for R40/41/42/43 (DRC).
+> +      The list must be 4 times the length of wlf,drc-cfg-names.
+> +      If absent, DRC is disabled.
+> +
+> +  wlf,retune-mobile-cfg-names:
+> +    $ref: /schemas/types.yaml#/definitions/string-array
+> +    description:
+> +      List of strings for the available retune modes.
+> +      If absent, retune is disabled.
 
-Yes, and right in here someone mmaps the file.
+How is this retune supposed to be used? If by user-space I can easily
+imagine that static DTS configuration won't be enough, because you need
+to factor for example temperature or some other minor differences
+between same boards.
 
-I think you can race here, no locks at all feels wrong.
+> +
+> +  wlf,retune-mobile-cfg-rates:
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
 
-Messing with sysfs groups and files like this is rough, and almost never
-a good idea, why can't you just do this all at once with the default
-groups, why is this being added/removed out-of-band?
+Drop
 
-thanks,
+> +    description:
+> +      List of rates for the available retune modes.
 
-greg k-h
+Use standard property suffixes - hz or whatever is matching here.
+
+> +      The list must be the same length as wlf,retune-mobile-cfg-names.
+> +      If absent, retune is disabled.
+> +
+> +  wlf,retune-mobile-cfg-regs:
+> +    $ref: /schemas/types.yaml#/definitions/uint16-array
+> +    description:
+> +      Default register values for R134/.../157 (EQ).
+> +      The list must be 24 times the length of wlf,retune-mobile-cfg-names.
+> +      If absent, retune is disabled.
+> +
+> +dependencies:
+> +  wlf,drc-cfg-names: [ 'wlf,drc-cfg-regs' ]
+> +  wlf,drc-cfg-regs: [ 'wlf,drc-cfg-names' ]
+> +
+> +  wlf,retune-mobile-cfg-names: [ 'wlf,retune-mobile-cfg-rates', 'wlf,retune-mobile-cfg-regs' ]
+> +  wlf,retune-mobile-cfg-regs: [ 'wlf,retune-mobile-cfg-names', 'wlf,retune-mobile-cfg-rates' ]
+> +  wlf,retune-mobile-cfg-rates: [ 'wlf,retune-mobile-cfg-names', 'wlf,retune-mobile-cfg-regs' ]
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -70,5 +138,43 @@ examples:
+>              DBVDD-supply = <&reg_1p8v>;
+>              DCVDD-supply = <&reg_1p8v>;
+>              MICVDD-supply = <&reg_1p8v>;
+> +
+> +            wlf,drc-cfg-names = "default", "peaklimiter", "tradition", "soft", "music";
+> +            wlf,drc-cfg-regs =
+> +                /* coded default: KNEE_IP = KNEE_OP = 0, HI_COMP = LO_COMP = 1  */
+
+Please follow DTS coding style - how you wrap, where to break lines.
+
+> +                /bits/ 16 <0x01af 0x3248 0x0000 0x0000>,
+> +                /* coded default: KNEE_IP = -24, KNEE_OP = -6, HI_COMP = 1/4, LO_COMP = 1 */
+> +                /bits/ 16 <0x04af 0x324b 0x0010 0x0408>,
+> +                /* coded default: KNEE_IP = -42, KNEE_OP = -3, HI_COMP = 0, LO_COMP = 1 */
+> +                /bits/ 16 <0x04af 0x324b 0x0028 0x0704>,
+> +                /* coded default: KNEE_IP = -45, KNEE_OP = -9, HI_COMP = 1/8, LO_COMP = 1 */
+> +                /bits/ 16 <0x04af 0x324b 0x0018 0x078c>,
+> +                /* coded default: KNEE_IP = -30, KNEE_OP = -10.5, HI_COMP = 1/4, LO_COMP = 1 */
+> +                /bits/ 16 <0x04af 0x324b 0x0010 0x050e>;
+> +
+> +            wlf,gpio-cfg = <
+
+There is almost never empty line after <
+
+> +                0x0018 /* GPIO1 => DMIC_CLK */
+> +                0xffff /* GPIO2 => don't touch */
+> +                0xffff /* GPIO3 => don't touch */
+> +                0xffff /* GPIO4 => don't touch */
+
+Not mentioning this looks really incorrect or incomplete. No ending of
+property.
+
+> +
+> +            wlf,retune-mobile-cfg-names = "bassboost", "bassboost", "treble";
+> +            wlf,retune-mobile-cfg-rates = <48000 44100 48000>;
+> +            wlf,retune-mobile-cfg-regs =
+> +                /* bassboost: EQ_ENA = 1, +6 dB @ 100 Hz, +3 dB @ 300 Hz, 0 dB @ 875, 2400, 6900 Hz */
+> +                /bits/ 16 <0x1 0x12 0xf 0xc 0xc 0xc>,
+> +                /* default values for ReTune Mobile registers 140-157 */
+> +                /bits/ 16 <0x0fca 0x0400 0x00d8 0x1eb5 0xf145 0x0bd5 0x0075 0x1c58 0xf3d3 0x0a54 0x0568 0x168e 0xf829 0x07ad 0x1103 0x0564 0x0559 0x4000>,
+
+See DTS coding style.
+
+Best regards,
+Krzysztof
+
