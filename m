@@ -1,79 +1,72 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0CD2DF59
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 20:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7880F1A3142;
+	Tue, 25 Feb 2025 20:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740517034; cv=none; b=jN1pMMbeoDTHiI5isrpO8zquBHW0oxHz+NFtMLCvSv+nkdLkxt0VfqRFMMt107ChWtURP5XSFOpat0MeAeHN4Rq8D2duEx9GpZkfjirX4lnJ+uSZM+R7AxrJbgUCq/1hNJplHBOZSzWOdvgo3omhJU4XjYbO+/djmr2LcSeyxek=
+	t=1740517186; cv=none; b=HLWkD11UO4vbt1JL/TZur08CYVvb49vWV73lhlksoYxXC1+8P7GUyD0XRYs2nmlxf9hX0wvtVe6lReVYlFGroSylJlHuOmhqtF67kC6edS0DeVW1pkh/4JY7mOamtVyo7JDTYScmzWjS4AKs/eypcyYPxPywkQWA6S6I04tZkQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740517034; c=relaxed/simple;
-	bh=Ho2tqjl8RDylbwgCGJsLcMFxwZUteXNFVsZvLqhv/J4=;
+	s=arc-20240116; t=1740517186; c=relaxed/simple;
+	bh=+3bhPAdyfaod3PZw9U0HDRQGKTtCLjMMQIxRkSmZ/v4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XrADpcijLOMwHjmvljg52sBQ3YAzA50R3serdFS5ikUXJ+oN+IfhS6PHKXL2HWkNPorvfODFzG6l+ycqDqSW7fjmvkvy5gzS/kugmupOW7IhCgCcPZzly5043ND5UimH4I4zwx16vW2PE7uxJbZ9RbrqNbsaERuKwW+f71p5WCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hEnpq2bB; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=YcnjepINCJ44PnrCOzT4Q79ckwa/L6JDUSFe9DharDKs1mlnUqdGUX8ERQZ9OzQb0ib4Z6fFjMAzAp87SSg55n2BiMfADnRH/9B7B5qPaXdTo22pGYZxqBfOJN7+DlRg4Oo+LaApfOCmQe2pnXBOvOHWHhVHma2+tUVC/EoIXIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P5YfGFl4; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hEnpq2bB"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5493b5bc6e8so441773e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 12:57:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P5YfGFl4"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22185cddbffso3458475ad.1;
+        Tue, 25 Feb 2025 12:59:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740517031; x=1741121831; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1740517185; x=1741121985; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RC4nwCVky+xPc0uxnaEdDnOXaTOZCldxGM13yaUgyKU=;
-        b=hEnpq2bBclErB10VRewV/heBsllNtj/RkNZP3JbPvS9U8DZafDKwiXKxSflRHLKFsO
-         aSWI9IzFXm1/KU4W2o7f5tzgkPdwlp2TyUknllJC2KAsg0qPuZYVYHRM9ImBDLxceX96
-         g9QK0iZRo2vJP2QDj8vNpBG6aHY+ehoZjwaN1Kq4Qn6We20+DbAw8RZYRs5fsYMi6uCZ
-         cqkUbEp7nA44lzwGcmXgT9/IUdD32q1sXW8H2yP8oXiq8bTtTlWWBKg6B/tziVG5s15b
-         xkna29tSQM58+4JS7Ho8ZswatUjgJaWPeQQ+cPH8ib1H3fZacqlC/n6WXrJFJVlzkzzU
-         GTJg==
+        bh=1O7Y90t6kj121J9vA/lw13SRmx7Y5MgSyLYR040wf8Y=;
+        b=P5YfGFl4uJKgFMf5czTGcTfARUjlSxmXQUmSjcIpA/HcBqLa1mzwuzZT+VtT1QNBIU
+         7s1RdJhi1Gkg12yagdwFJl/m8NYsIZXnb0UA+t/Fld1HUv8MvrTdSIc/+t2k5LTDdfNd
+         gPavAG8taMMUA9wDXX7/VtaJE5WkBxlXpku8TQ9zOcIEQjBQT3f7PY0Y+JDXqU5uqU3g
+         D7PWR3m0TF5+Owrie6GdPRR8N58K90kzVuZ2OxmvA+JwbXj2yvEqW3nwYEKVoaNi7tia
+         X6at1CR6b00XO+yieby1ys/hqLyi2UsQ/FbZ50vaWT51uFgLflMZ/A/g1bx/5DEByCcw
+         X9eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740517031; x=1741121831;
+        d=1e100.net; s=20230601; t=1740517185; x=1741121985;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RC4nwCVky+xPc0uxnaEdDnOXaTOZCldxGM13yaUgyKU=;
-        b=FV9/Q6WetEuukJX6xP4mIes8PI0YeOhzD4zSmGq5qAYKdkihQ+WdZYLWNKV8n/lLYR
-         Iwh12w1p6kf3rP+I8xtgxkYXvVR0xFqkIC1ZUlQDdCw3pGKX8Lj7VQgSSCtDABEvAT63
-         n5fuxk6GZtO7OZHWJ9RWQwZY54hpPZI3eFRIfreMdCGbd9XSvscRB8zmtr+eM2f8yUXV
-         H5HuyC3+96qiNddXVaYpXnl6s8Q6LpNrUkeXhLR+/HvQozr4IZ5QOL+4LFk3jN1zTult
-         2vkgY+czi2dplTdIC98jsmncIdx9R59CtX97t3W/eZtht++vqulmO0/GsNalYNTHA59p
-         +WBA==
-X-Forwarded-Encrypted: i=1; AJvYcCXNHlUYn7hTQsQKjpZf6ghmJlCSjRJlVjoPEu1Q3FbQ9zF4yGGcY7ERBbIzshdsp1QFp4movVYvBYhByoo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbefS8jBzk14dhe6tG5cuNr8uZH3TrHHig5MQRg1hWkwMvqPOl
-	2n023nuUzQmdYrSbWD80BgB5oB5mmWd+ZhNyPCXKEGdEaMvyFIviF+WDMSUEMLs=
-X-Gm-Gg: ASbGncvUhW969gHS+QyIaTsKjd8eBJfsTCmxRzlHG+eMw72RO+uaLN3w9xYssjviWUl
-	uWBrcp+m9s2wkLSt/a/RUUu1XbRQ29t1WIg6jKynHeTMl4PmWU6qhyA8fLnOgg0S7DRlBfziWbA
-	H0zLZTcYLbBcVFDrKL4Ad+cyW4KADtDEDwUybdXZ281rsod4igNcb9ycC34bK6PfKFAUsQ43ST9
-	AySzT5e4x1JT+0ITXFFAf/s6bBiUmXrVf6J46I3T+52toYelVihE2xveA5qxUHwYpXF2QhiTarM
-	WrbWC4wpvzLqvdISuY5Vh34jspGrkjMtE3B0ryqBuEMwmVIKlmMdvXedJy6SRkbym2XhZ5QO1jb
-	2qD35Bw==
-X-Google-Smtp-Source: AGHT+IHRv8mh/QNtBZyrnliPjjpkMnU2s4zUsA7EqzstzJNaDy/fNbCuH+kkInHHb1dD5QukYC4paA==
-X-Received: by 2002:a05:6512:130c:b0:545:2953:1667 with SMTP id 2adb3069b0e04-5493c57a2eamr788746e87.13.1740517031002;
-        Tue, 25 Feb 2025 12:57:11 -0800 (PST)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-548514b9d78sm271652e87.79.2025.02.25.12.57.09
+        bh=1O7Y90t6kj121J9vA/lw13SRmx7Y5MgSyLYR040wf8Y=;
+        b=LaAdwnHjVA6NCtfbK4G3x++2Jg7gq3VPq8zSTfvZKmI5iWBYVaBWjFJq1sKZjbokAw
+         7lC+10pCuCahe1o+uc3kNW7zWVnIHQ0bnBwCJOcyfnxBUpLRetkeFcrnhSO9Y6s5Az8l
+         yrHCpjC4KeforYyK0cLrUK9vSML7vUJ4BAfTLKd5O2mE9mT+TwdZw093REMz0Zje3uxK
+         xo5bbkswz7r1VRuRW/GIlgSbOvYC2JrFADu3DXe6SVHeRQbRdBDSkX7ve5Fmiu6vo8AW
+         0HYKQi35oXVBKkwC8qFSzdbn741TpDilspVtvhHWYXLmxLHauEkfH6k8tX8pJ7bLwCbZ
+         QZpg==
+X-Forwarded-Encrypted: i=1; AJvYcCUnG1mqcB3UccpV5GTn2+CQ7D3cy6Z0HhaRPQro3QBC5/kXc9uuJTp4xJeAXBAySYVaZfdFQSswL45F9Q==@vger.kernel.org, AJvYcCXt1fSIbC5Kg6oo8tm70+1VuHzmsnhRojWaN3gpO2ZSKbSfEpTcNrthX3HemUpsL0ofdHZC0E1i4CaZbRoh@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIETiS2bY3OEvIf9LUEVEZost+883bDZa9s3vzNR/2b9syeRst
+	31q2x76NPdUh5oKUDQSj50dDrlPakOdhcJ2T/oQxjUsNCK0fSUcf
+X-Gm-Gg: ASbGncv3nASD/9AUszXg17SBLVRrFvJE9JxK2IhdkljhOUKTBQvHRC3XI6sTsqT8ruX
+	BYLEAk6XmzY8a+Qdia2hKk3ZevB3VW5OYgv7iGy5wtCblEprjfAKTY0JNsy5sow/ubyJqgKmTJv
+	wVQqRUR+yUuPWrGolbIn5jCM9OJHXMewF+oGZCPR2obpgP1gHQTmSjRAQloLKjrJehP722/gLyR
+	aUHccUq1tk2J5uOL9Z5/UjLvX37bo8hWgWYHpKGx3pcIQxP+f2vMzzS6NwsQSPlYh/3gXpxfnJX
+	WYu3yLafv0ScYBdWRZN037wT5YI=
+X-Google-Smtp-Source: AGHT+IGl4Je6RrhO3Pxpk4OqIcDpXzJLg2JMEYUIAVQ49VtMSo+wo4PJ2OOcksaH84CllnjjQMEHqA==
+X-Received: by 2002:a05:6300:8981:b0:1f0:e2e6:f41e with SMTP id adf61e73a8af0-1f0e2e6f4ecmr11261006637.8.1740517184718;
+        Tue, 25 Feb 2025 12:59:44 -0800 (PST)
+Received: from google.com ([2620:15c:9d:2:987e:29fc:176a:2ed5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7347a7f9d77sm2041499b3a.101.2025.02.25.12.59.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 12:57:10 -0800 (PST)
-Date: Tue, 25 Feb 2025 22:57:08 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To: Ayushi Makhija <quic_amakhija@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	robdclark@gmail.com, sean@poorly.run, marijn.suijten@somainline.org, 
-	andersson@kernel.org, robh@kernel.org, robh+dt@kernel.org, krzk+dt@kernel.org, 
-	konradybcio@kernel.org, conor+dt@kernel.org, andrzej.hajda@intel.com, 
-	neil.armstrong@linaro.org, rfoss@kernel.org, Laurent.pinchart@ideasonboard.com, 
-	jonas@kwiboo.se, jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com, 
-	quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com, quic_jesszhan@quicinc.com
-Subject: Re: [PATCH 10/11] drm/bridge: anx7625: update bridge_ops and sink
- detect logic
-Message-ID: <yvjb7sd42uhvomsw2svotyxrvdxihsa3qch3lfynpaoap6g3hp@dcqmaw65zsk2>
-References: <20250225121824.3869719-1-quic_amakhija@quicinc.com>
- <20250225121824.3869719-11-quic_amakhija@quicinc.com>
- <ne35ljkudi5jta2cby7fgjzqsd5sjpwcjpwhv6kmedq6nomho5@txynsflvtc6f>
+        Tue, 25 Feb 2025 12:59:43 -0800 (PST)
+Date: Tue, 25 Feb 2025 12:59:41 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Benjamin Tissoires <bentiss@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Takashi Iwai <tiwai@suse.de>, Jonathan Denose <jdenose@google.com>,
+	Erick Archer <erick.archer@outlook.com>,
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [RESEND] Input: synaptics: hide unused smbus_pnp_ids[]
+ array
+Message-ID: <Z74vPf6-qETZG0t1@google.com>
+References: <20250225145451.1141995-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,82 +75,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ne35ljkudi5jta2cby7fgjzqsd5sjpwcjpwhv6kmedq6nomho5@txynsflvtc6f>
+In-Reply-To: <20250225145451.1141995-1-arnd@kernel.org>
 
-On Tue, Feb 25, 2025 at 07:58:24PM +0200, Dmitry Baryshkov wrote:
-> On Tue, Feb 25, 2025 at 05:48:23PM +0530, Ayushi Makhija wrote:
-> > The anx7625_link_bridge() checks if a device is a not a panel
-> > bridge and add DRM_BRIDGE_OP_HPD and DRM_BRIDGE_OP_DETECT to
-> > the bridge operations. However, on port 1 of the anx7625
-> > bridge, any device added is always treated as a panel
-> > bridge, preventing connector_detect function from being
-> > called. To resolve this, instead of just checking if it is a
-> > panel bridge, we should verify the type of panel bridge
-> > whether it is a DisplayPort or eDP panel. If the panel
-> > bridge is of the DisplayPort type, we should add
-> > DRM_BRIDGE_OP_HPD or DRM_BRIDGE_OP_DETECT to the bridge
-> > operations.
-> > 
-> > In the anx7625_sink_detect(), the device is checked to see
-> > if it is a panel bridge, and it always sends a "connected"
-> > status to the connector. When adding the DP port on port 1 of the
-> > anx7625, it incorrectly treats it as a panel bridge and sends an
-> > always "connected" status. Instead of checking the status on the
-> > panel bridge, it's better to check the hpd_status for connectors
-> > like DisplayPort. This way, it verifies the hpd_status variable
-> > before sending the status to the connector.
-> > 
-> > Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
-> > ---
-> >  drivers/gpu/drm/bridge/analogix/anx7625.c | 10 ++++------
-> >  1 file changed, 4 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/bridge/analogix/anx7625.c
-> > index d2655bf46842..9b6303267924 100644
-> > --- a/drivers/gpu/drm/bridge/analogix/anx7625.c
-> > +++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
-> > @@ -1814,9 +1814,6 @@ static enum drm_connector_status anx7625_sink_detect(struct anx7625_data *ctx)
-> >  
-> >  	DRM_DEV_DEBUG_DRIVER(dev, "sink detect\n");
-> >  
-> > -	if (ctx->pdata.panel_bridge)
-> > -		return connector_status_connected;
-> > -
-> >  	return ctx->hpd_status ? connector_status_connected :
-> >  				     connector_status_disconnected;
-> >  }
-> > @@ -2596,9 +2593,10 @@ static int anx7625_link_bridge(struct drm_dp_aux *aux)
-> >  	platform->bridge.of_node = dev->of_node;
-> >  	if (!anx7625_of_panel_on_aux_bus(dev))
-> >  		platform->bridge.ops |= DRM_BRIDGE_OP_EDID;
-> > -	if (!platform->pdata.panel_bridge)
-> > -		platform->bridge.ops |= DRM_BRIDGE_OP_HPD |
-> > -					DRM_BRIDGE_OP_DETECT;
-> > +	if (!platform->pdata.panel_bridge ||
-> > +	    platform->pdata.panel_bridge->type == DRM_MODE_CONNECTOR_DisplayPort) {
+On Tue, Feb 25, 2025 at 03:54:38PM +0100, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> This is incorrect, because there can be other kinds of bridges in the DP
-> chain. I think it's better to check for !eDP instead.
+> When SMBUS is disabled, this is never referenced, causing a W=1 warning:
+> 
+> drivers/input/mouse/synaptics.c:164:27: error: 'smbus_pnp_ids' defined but not used [-Werror=unused-const-variable=]
+> 
+> Hide the array behind the same #ifdef as the code referencing it.
+> 
+> Fixes: e839ffab0289 ("Input: synaptics - add support for Intertouch devices")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Another option comes from the aux-bus bindings. If there is an aux-bus
-node, it is an eDP. If there is none, it is most likely DP (well, unless
-anybody has been using the bridge with eDP panels defclared using
-platform devices rather than the aux-bus.
-
-> 
-> > +		platform->bridge.ops |= DRM_BRIDGE_OP_HPD | DRM_BRIDGE_OP_DETECT;
-> > +	}
-> >  	platform->bridge.type = platform->pdata.panel_bridge ?
-> >  				    DRM_MODE_CONNECTOR_eDP :
-> >  				    DRM_MODE_CONNECTOR_DisplayPort;
-> > -- 
-> > 2.34.1
-> > 
-> 
-> -- 
-> With best wishes
-> Dmitry
+Applied, thank you.
 
 -- 
-With best wishes
 Dmitry
