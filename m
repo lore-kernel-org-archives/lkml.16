@@ -1,180 +1,140 @@
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF2E20E70C;
-	Tue, 25 Feb 2025 20:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39FF313B5B6;
+	Tue, 25 Feb 2025 20:38:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740515838; cv=none; b=cPhZ52pnm3NHeD8LdKvgIQXRQ9l9vGT9pfKfiddHluy+dNb97WLOc1Q4fswzWA5LjxJiFGxUZSeWZBW5xq/uEoKyst36FaLZT22Wb5qzjBfgbhDhoyHEvczeArERD58roH3U8xihQsIkVjnwycFUt+Ire0nB52C64UCKlB1aGNI=
+	t=1740515901; cv=none; b=ZZB7hSU6yfl29DQsAwC06IMJOrVkOo+yBPVUC5LIT7eZDhaXaYu1hbAReln0Zx3Nz1557z8FV72qiS1vR3Y9BsrAYexcpo0R3e0mMU7MwCUVOnJ5m/ySUBSEp40pB170VaK84epsfrvaDgnN4oTYb/6QfJpsPJH1BAbozoJ4Vz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740515838; c=relaxed/simple;
-	bh=QD5JiDDyXsPHqrw0/A3B2UFGdqNGf7bGZM6WRv9bwQE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hm90jFdMpvFiiWnIMPLw4GzaW8nn5kGTlXt7rWFIafX2w/S+aNf/T+085gHrhgg0LXGJepfSPU6l2Ex6ocLK8yaHyjcO2NBaR1jYEgE1+ZCHZcNrGlkosicAUOqEFu6eSCUgmR01zDMfDNgo+wXm2iBZd9Q5Ya3/YHxmpE531uI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mBsDKwfC; arc=none smtp.client-ip=209.85.221.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740515901; c=relaxed/simple;
+	bh=J2rkB2PHUhOcdIxRiQMlCkNw1+TaIn4gTsxuIvAhsoo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=MNF9zy/xMWOTDn+ivTdSw3hW4Bek0JvoZgu9TR6nFl8qI/npKLMT7VvwnD3jDZnb+eMHpCIXGFrw8JQqDAx3mnXUrz9ey3GIUvjJqpSRvMsacpvgTEJ7NSGh7jTKuWi7VHOa/tYC6Wr4beu7FLIbqIhtvY4HJ9qkroDgr/gsBQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GGrtdVth; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mBsDKwfC"
-Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-5209437e773so1646571e0c.3;
-        Tue, 25 Feb 2025 12:37:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740515836; x=1741120636; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eH8MpmM78j+iib/pM9nd1FTI7DaYEcTE4LGOHyCUfsY=;
-        b=mBsDKwfC77RWqYvaYIbYq7luOt4S5oUoqg9fdp2U4zVo6x1K3Mbm1xaOHvBow8cKjs
-         Ro7eP2IA3Sp189N7s26DntoGxLYkCWMKOCqflzqkSe5Pl7JUdadDCCre0txrpo1sZra5
-         q6ZzxC4xALML0mKxUx4h7aTgSwWxFiuWl21BHxJcQAU12+g9RoNnJj+hdZp2Fll6j29v
-         OYYZkwFpABWYccak8R/CUDte414LXVAcmBzCQMUg4Ek0b+kqeoLwuWcdrQIFCiSUakvl
-         k5PALkQNIO0o4JXOWXXfSfnwpUn6/Yt8jNHDRRc01fKBV83lkSi65MottPMMBDDnYw7w
-         Iv9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740515836; x=1741120636;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eH8MpmM78j+iib/pM9nd1FTI7DaYEcTE4LGOHyCUfsY=;
-        b=YpWrhhm52gISY3HlygDckYz6Ye2tfRyYML783lozWwIjD7a8S1HMXKqJqGA8HenGg0
-         fEOZYY7jmMh7xIQRJTNCgYJwZNf6nDGHLxSWBfH3y1w44kbP2Jq6Izwinwv42ER2MZc1
-         lL9mIWXCVbd84Qgt6Tbccn5/iRH8JZvLDL97Kea5NzipgS/hq5MQiDXeZ+gePPjJvCbc
-         VniSg6aLxQV8DSYk3DtyqlVKdhPTmDwAcjPH1u4uJcRLhUZkW2wOvP3PU2bQdUaxSyi5
-         9lZ9fra6e9J2fGbKr0a15Q2x/BuJ4GMScTaaMot5VPKEQ7q8GL3piz8G97iGkQU5Azh3
-         eLNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUudAHilp0oi0wCP/pF84z2bvFLv8VmKMNcOO2ikECFOTtNXfawIRhOyX6+Bf0ogANk4yDewBT3HnE2p9Dl@vger.kernel.org, AJvYcCUzNTHi5/rc9s2qNy4aJtsD1wvlrkXmwUuNmGOj4BNFACQgZHkox/loV7ipvuBw8OR87GaSX/zPuqsonNXSYfBfQJs=@vger.kernel.org, AJvYcCXcSmIwEcM/vcV3W08UB9JN5M5uvZ1qD+WcGq9RXfge23u6griJXW9J2thtwAtWreC81YbGxFA/olU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTmgZVDdwMs5H//2wqi66mkxg6ahDQ7/AVd62CWnsipYDIUOEo
-	5VXUIHqGv/03jPjxg+BIEtiU2IDghygP5F8omZPT4gEix/7LF9HNYTGHiwgV/nM+o4EeAlqip4+
-	eo6FRLXVIa7jEHWnpEa/L5cWz6h4=
-X-Gm-Gg: ASbGnctzHKG6WpcbMUQbUOC37a4ICpCqKJ/zbXrnj3YSNFtKguxyKVntWU0qCOEWt/C
-	H6bOvEbLfVtOf8DyYY2qLCM3CdIGf3BcpenVabSqnMzi7BrMOF9bikpV6J/Uc9P53wraMbecp/W
-	p+UY46/GM=
-X-Google-Smtp-Source: AGHT+IExQMHoNBfnz0e2JCdwvItc8XUqO/8OGgYYcvgIbrZjWdNKg/L+r67NJOf17hkUCcV4QvFDyQBa5luny6opYVk=
-X-Received: by 2002:a05:6122:330e:b0:520:652b:ce18 with SMTP id
- 71dfb90a1353d-5224ca44a91mr655026e0c.0.1740515836053; Tue, 25 Feb 2025
- 12:37:16 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GGrtdVth"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8051FC4CEDD;
+	Tue, 25 Feb 2025 20:38:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740515900;
+	bh=J2rkB2PHUhOcdIxRiQMlCkNw1+TaIn4gTsxuIvAhsoo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=GGrtdVthoxLVMlEI/fF8VwHYL/Yw7TMYgSCbDxAM7dUxLvnktgJFAcBNpBxvOZZ/M
+	 bIN9kq4blyIwTx+m3XVuXnGOh3iMLQ5IkK+eRCNVL4J8OzpzHnDzywLlyWYKZAj+R8
+	 zvcP75LCQUidbJaQ0wvtMu1m1KIMalzVJhmHhLP86DyoMpQBwlidgtTPjBbWXT0tFG
+	 ivY846gbSAMcjYa9OuBLh3DDZ0/yX/XM6Xx8s5IvVWidW1yL3t/7CSB1hhWPep73+x
+	 JO/N/J6XjENKEgwNDFm18UNX2mzY6Ylo2cPOcJAb3Luo+O/QIXqqki64UDBINWUGoN
+	 hU6tkRHgi5qMQ==
+Date: Tue, 25 Feb 2025 14:38:18 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Naveen Kumar P <naveenkumar.parna@gmail.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernelnewbies <kernelnewbies@kernelnewbies.org>,
+	linux-acpi@vger.kernel.org
+Subject: Re: PCI: hotplug_event: PCIe PLDA Device BAR Reset
+Message-ID: <20250225203818.GA516645@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250224120608.1769039-1-claudiu.beznea.uj@bp.renesas.com> <20250224120608.1769039-3-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20250224120608.1769039-3-claudiu.beznea.uj@bp.renesas.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Tue, 25 Feb 2025 20:36:50 +0000
-X-Gm-Features: AQ5f1Jo4yBcvY2RYMCiCO9Kb3cXMgLq2iq8E_Nnn-p4EJnAoTwHoukq4lOnKFcc
-Message-ID: <CA+V-a8uF+y-SuVNs=iBpgitnGgDzVGzc9YK8KBnxfVHtp+swUw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] iio: adc: rzg2l: Cleanup suspend/resume path
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: prabhakar.mahadev-lad.rj@bp.renesas.com, jic23@kernel.org, lars@metafoo.de, 
-	linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMciSVX3X=DxLU0tfj4rG5WPaS5BCUDcMp2MYWBitT0ecEH+ig@mail.gmail.com>
 
-On Mon, Feb 24, 2025 at 12:13=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev>=
- wrote:
+On Tue, Feb 25, 2025 at 06:46:02PM +0530, Naveen Kumar P wrote:
+> On Tue, Feb 25, 2025 at 1:24 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Tue, Feb 25, 2025 at 12:29:00AM +0530, Naveen Kumar P wrote:
+> > > On Mon, Feb 24, 2025 at 11:03 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > On Mon, Feb 24, 2025 at 05:45:35PM +0530, Naveen Kumar P wrote:
+> > > > > On Wed, Feb 19, 2025 at 10:36 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > On Wed, Feb 19, 2025 at 05:52:47PM +0530, Naveen Kumar P wrote:
+> > > > > > > Hi all,
+> > > > > > >
+> > > > > > > I am writing to seek assistance with an issue we are experiencing with
+> > > > > > > a PCIe device (PLDA Device 5555) connected through PCI Express Root
+> > > > > > > Port 1 to the host bridge.
+> > > > > > >
+> > > > > > > We have observed that after booting the system, the Base Address
+> > > > > > > Register (BAR0) memory of this device gets reset to 0x0 after
+> > > > > > > approximately one hour or more (the timing is inconsistent). This was
+> > > > > > > verified using the lspci output and the setpci -s 01:00.0
+> > > > > > > BASE_ADDRESS_0 command.
+> >
+> > > ...
+> > > I booted with the pcie_aspm=off kernel parameter, which means that
+> > > PCIe Active State Power Management (ASPM) is disabled. Given this
+> > > context, should I consider removing this setting to see if it affects
+> > > the occurrence of the Bus Check notifications and the BAR0 reset
+> > > issue?
+> >
+> > Doesn't seem likely to be related.  Once configured, ASPM operates
+> > without any software intervention.  But note that "pcie_aspm=off"
+> > means the kernel doesn't touch ASPM configuration at all, and any
+> > configuration done by firmware remains in effect.
+> >
+> > You can tell whether ASPM has been enabled by firmware with "sudo
+> > lspci -vv" before the problem occurs.
+> >
+> > > > > During the ACPI_NOTIFY_BUS_CHECK event, the lspci output initially
+> > > > > showed all FF's, and then the next run of the same command showed
+> > > > > BASE_ADDRESS_0 reset to zero:
+> > > > > $ sudo lspci -xxx -s 01:00.0 | grep "10:"
+> > > > > 10: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+> > > >
+> > > > Looks like the device isn't responding at all here.  Could happen if
+> > > > the device is reset or powered down.
+> > >
+> > > From the kernel driver or user space tools, is it possible to
+> > > determine whether the device has been reset or powered down?  Are
+> > > there any power management settings or configurations that could be
+> > > causing the device to reset or power down unexpectedly?
+> >
+> > Not really.  By "powered down", I meant D3cold, where the main power
+> > is removed.  Config space is readable in all other power states.
+> >
+> > > > What is this device?  What driver is bound to it?  I don't see
+> > > > anything in dmesg that identifies a driver.
+> > >
+> > > The PCIe device in question is a Xilinx FPGA endpoint, which is
+> > > flashed with RTL code to expose several host interfaces to the system
+> > > via the PCIe link.
+> > >
+> > > We have an out-of-tree driver for this device, but to eliminate the
+> > > driver's role in this issue, I renamed the driver to prevent it from
+> > > loading automatically after rebooting the machine. Despite not using
+> > > the driver, the issue still occurred.
+> >
+> > Oh, right, I forgot that you mentioned this before.
+> >
+> > > > You're seeing the problem on v5.4 (Nov 2019), which is much newer than
+> > > > v4.4 (Jan 2016).  But v5.4 is still really too old to spend a lot of
+> > > > time on unless the problem still happens on a current kernel.
+> >
+> > This part is important.  We don't want to spend a lot of time
+> > debugging an issue that may have already been fixed upstream.
 >
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> There is no need to manually track the runtime PM status in the driver.
-> The pm_runtime_force_suspend() and pm_runtime_force_resume() functions
-> already call pm_runtime_status_suspended() to check the runtime PM state.
->
-> Additionally, avoid calling pm_runtime_put_autosuspend() during the
-> suspend/resume path, as this would decrease the usage counter of a
-> potential user that had the ADC open before the suspend/resume cycle.
->
-> Fixes: cb164d7c1526 ("iio: adc: rzg2l_adc: Add suspend/resume support")
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
->
-> Changes in v3:
-> - collected tags
->
-> Changes in v2:
-> - none
->
->  drivers/iio/adc/rzg2l_adc.c | 29 ++++++++---------------------
->  1 file changed, 8 insertions(+), 21 deletions(-)
->
-Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Sure, I started building the 6.13 kernel and will post more
+> information if I notice the issue on the 6.13 kernel.
+> 
+> Regarding the CommClk- (Common Clock Configuration) bit, it indicates
+> whether the common clock configuration is enabled or disabled. When it
+> is set to CommClk-, it means that the common clock configuration is
+> disabled.
+> 
+> LnkCtl: ASPM Disabled; RCB 64 bytes Disabled- CommClk-
+>         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+> 
+> For my device, I noticed that the common clock configuration is
+> disabled. Could this be causing the BAR reset issue?
 
-Cheers,
-Prabhakar
+Not to my knowledge.
 
-> diff --git a/drivers/iio/adc/rzg2l_adc.c b/drivers/iio/adc/rzg2l_adc.c
-> index 7db04416e1cf..5236ca0da167 100644
-> --- a/drivers/iio/adc/rzg2l_adc.c
-> +++ b/drivers/iio/adc/rzg2l_adc.c
-> @@ -89,7 +89,6 @@ struct rzg2l_adc {
->         struct completion completion;
->         struct mutex lock;
->         u16 last_val[RZG2L_ADC_MAX_CHANNELS];
-> -       bool was_rpm_active;
->  };
->
->  /**
-> @@ -594,14 +593,9 @@ static int rzg2l_adc_suspend(struct device *dev)
->         };
->         int ret;
->
-> -       if (pm_runtime_suspended(dev)) {
-> -               adc->was_rpm_active =3D false;
-> -       } else {
-> -               ret =3D pm_runtime_force_suspend(dev);
-> -               if (ret)
-> -                       return ret;
-> -               adc->was_rpm_active =3D true;
-> -       }
-> +       ret =3D pm_runtime_force_suspend(dev);
-> +       if (ret)
-> +               return ret;
->
->         ret =3D reset_control_bulk_assert(ARRAY_SIZE(resets), resets);
->         if (ret)
-> @@ -610,9 +604,7 @@ static int rzg2l_adc_suspend(struct device *dev)
->         return 0;
->
->  rpm_restore:
-> -       if (adc->was_rpm_active)
-> -               pm_runtime_force_resume(dev);
-> -
-> +       pm_runtime_force_resume(dev);
->         return ret;
->  }
->
-> @@ -630,11 +622,9 @@ static int rzg2l_adc_resume(struct device *dev)
->         if (ret)
->                 return ret;
->
-> -       if (adc->was_rpm_active) {
-> -               ret =3D pm_runtime_force_resume(dev);
-> -               if (ret)
-> -                       goto resets_restore;
-> -       }
-> +       ret =3D pm_runtime_force_resume(dev);
-> +       if (ret)
-> +               goto resets_restore;
->
->         ret =3D rzg2l_adc_hw_init(dev, adc);
->         if (ret)
-> @@ -643,10 +633,7 @@ static int rzg2l_adc_resume(struct device *dev)
->         return 0;
->
->  rpm_restore:
-> -       if (adc->was_rpm_active) {
-> -               pm_runtime_mark_last_busy(dev);
-> -               pm_runtime_put_autosuspend(dev);
-> -       }
-> +       pm_runtime_force_suspend(dev);
->  resets_restore:
->         reset_control_bulk_assert(ARRAY_SIZE(resets), resets);
->         return ret;
-> --
-> 2.43.0
->
->
+> How is the CommClk bit determined(to set or clear)? and is it okay to
+> enable this bit after booting the kernel?
+
+It is somewhere in drivers/pci/pcie/aspm.c, i.e.,
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/aspm.c?id=v6.13#n383
