@@ -1,208 +1,86 @@
-Received: from sonic307-53.consmr.mail.ir2.yahoo.com (sonic307-53.consmr.mail.ir2.yahoo.com [87.248.110.30])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B50C2673B3
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=87.248.110.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6414C261588;
+	Tue, 25 Feb 2025 09:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740474134; cv=none; b=OUJ8Yfn+gzobLwrMgnpUZLYFqkFh2Q8ycfCPoA4kth06Cks6erH4zPucY8sR6G6yyZUpbrF2czci5FJddyIJ1wKHMdLZnKH9xzjurPMSerULcVaOa0JSxT6roOleqoSGmuHzZsBJrZcxJrSv8jmP5tkkA5r2yHDQR5gAK8Cs9pw=
+	t=1740474158; cv=none; b=Z3d3Fag47BjkmHgBX1d/xnYkhucnAkW765XZIM+i4gzG5aqPbOV4uQ6ai2EXMGb43xUCW9QtXxHZ32gn3lx2IjGDelyqCvs5rSNqfaB61aTh7j0/ABpLQ1BS38gTP5Wx997ivtm9QQ9UOG6P1CV5gakZzt8bpJodUiuuI/R+g6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740474134; c=relaxed/simple;
-	bh=eOtoRA1UznQEW/4tIpUqYVRREMlrPe5+FGyg4aMAR1I=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To; b=U7H5iSJmwQ+feD6MeGUBVX5QVrsbEmHE3YsPo4RXoSIg4eKR2/fTTLty6RmbKRanet4s+ueK2fsXJAgzwxdufseppWXxEBbVTAGWQushO4Bsp3z9Sfrs87SUbecKOC/OeuYx3DwrIMkbQH78xeQOG3/0VeNMh6kfq/LvKal7wPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.fr; spf=pass smtp.mailfrom=yahoo.fr; dkim=pass (2048-bit key) header.d=yahoo.fr header.i=@yahoo.fr header.b=H0WnNSof; arc=none smtp.client-ip=87.248.110.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.fr
+	s=arc-20240116; t=1740474158; c=relaxed/simple;
+	bh=JZ65kyyb42EYs7pE3JmcICyKoed4JwUuRQyyeLuWluo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=bMpdBVX0hL+f3/+jB1yq0P+zs3Vj4MS1vr+STvC5RbKyHtsi5DLHJe+XQstX8yDj9rnbwa62wJ7K2mBTqh4ilmuk3rhR5HdAE1JPwTttLznklF8pCgEPRA/LP7NclLlCvcmZisUIh26xplYGyW44PpDRJM/ih7gDodlp+D/eY5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=I9iwetpJ; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.fr header.i=@yahoo.fr header.b="H0WnNSof"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.fr; s=s2048; t=1740474130; bh=eOtoRA1UznQEW/4tIpUqYVRREMlrPe5+FGyg4aMAR1I=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=H0WnNSofVEq3gYo69vaAKzj//pA0KKqMYJ75s9dhyS+lK8iDiYpLlyc75Cn0lcFimitAPZOqa4sVACHfI+iC5+x6oAUgOyJt0+p9geotITgExMzWvCKRNmEdGHaLySCb96njvoP9B0hOYr1UxMFApGvByKtOHLk0hblLm6nBO4QSx6GmHZn9sUQk4q1K1ETBBMifBEgP+OehSq1NCwLCuNeLou6pYuGtlSeXJa77MShDNL9f7kVj2h4BBx749URq91yHBmxbsGuk4TNh1nbHAvOO2QhOZ/OnBNRAfDZzpGLDegIPxnhS3OHr3iegIPeC47TVBt9jQkUmjT5oOAIOwQ==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1740474130; bh=I8Fr3samn9HlwQPM/so1irsXJVmaP2HPovcjW2CEfCz=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=rq9iuShyitrWYghXORaaxlY/Xt68qFp13f3LeNAqcUaCaPnUF+9vWIeuDmJJoVnKE7uQGW/NaDOjMnbqqFGLurZSRf/cNpteDFMFG0ye7SkLPz9H08gIlc+vedtDdfV9nZBEZ9IRdqWIOpz0Lw++ynpzkLCrTTN3DyipPp2jU8qbqlPTyZd3NoRrsAeafwVkQJDqrlAB2dxJcMUmFLzvw7D1iEe4TN4IXAUbei6us7TrrcUjcRoaMpph1SF14YoMr7SDk/BD3F4J/YGe+tpsetSFgRRmKoF+hXQb7RLsJdH0r6WAB8Q8uNYQU7ywrz+kAiBn0ygfiNsI7IdOxVuILw==
-X-YMail-OSG: nhdoS3IVM1lFlDFbpgegKfwkhO9dPihjmmtL2gilvy3AAzeN5gH05fNSVMaARXI
- VjkshDGajT7TCCeGMZra9n90Lbn7RgJbOHInFjGP2U230lVUYFPAw9b3c4yW7cbdDHz7t1mD1DNz
- uMX9xh91b.y.6S9X7gbnWJdfDDXMZmj9NqyXp75ewd_Ul8Ps94A9QvX6cCmTybLHRg_SPB7GK6kL
- mZ7bnQLQXx2FFLK5S4aybSEN2LWB3IW8VfKPiQYKcmvuI35VGwG39BLIUHysPDdndgu4HmcRWdfK
- M4fAlO2KmlNe2NjlZ14334QCFocdmorSR6lHVC4CpBu9DJFHqJBWAZnAdU6E20RD34AGNnAZnTFA
- 2FFNIO2N9iwt_hZfpbUwyl6R_.wg.deJzHHVH5PpIP2i.HXVKOQirr4jsuICHT7S7OtTNccpCaEv
- Ed6izHtVqCt4bjWk_YxWW0dQ8AJoTPlxncVyrDZLl_pkm5w2LzRI_lB8JWAXgkhDArz007AAyQLd
- GWeTT2iylOaN9uXbnbu3ZWxrLPOLozj.2C3H1IPYEjV471f8aIHtpKSX4QrO.WaMaStsCWv48vm0
- dqr8ppo5tgBuhvE_nihx4O8D9mPqATTTgtUW7oXMxjTVuMFg7kJJy4yTGGOYAqNz_b1uSJNGTFq9
- S_vCkN7DdmSl7Nay8iBJzLRfmqGJnOfvEU96HUexb5Q7qPFikmMZXV7H8TeoQJ4dEP_3c2Tk.Hms
- .vX..XMub0afi10b5cl8vSGdFtAOvxKa1LEsOtuN4Zoh7ya4Now2Li.OjcxRZGNVSEt_uJVX4fPj
- tRjzYQ9o8cOcSV7fd3pAYrx6Uo4PyVLpIjUisEDOb5WRlNRBlb_U84Ah2bsUtteP.JzQ3wHB0I4A
- cwgsEMrrDZquvkpP6yzHwGRp067MhtUO9oZ_D59TNEdcbado.MwUgYhvtoCTh_hNZqWLr80_lSba
- HRFMIVKf8oJEWCs6McClzlvOA3FhONMZv9tMKmql09ZTxVCFiUvDK7MwPBrWBXTrgwrJceXqTWCI
- 0tTmfsQ9UZ4LPF.lN1L2xlcGufvt19maohYAR0At0bH5L3ICtcEr7DjR64wbx4Z3hoDnbGwM0Dsa
- mZMXggAPTWauGSW2PwIjVvsvAgr4BUkHqKFils1QYOapn38FvkwfSojD8picdHzwg6jdwKWY645X
- wXCDejrdwj9rVuSoc93JkR5PaLKDFn7jgDcd5m9C0lvaLHXznbt7vZ4uwviJpr565g7wxnnsGiP3
- SIZriDpK7uJzkW105goSLFuH4JIVfkqGDxvyxgaaEEysaoDmw69ySJgzYZ.9CgBzdr4LpHPekNeC
- TZO9m.w7Vd71p8R.GG7aLFG9U2EeTDnF8GZwymkHGWOZzHDQkebmgST5DPiqCU5IFrlj3.Qd67SX
- WwJ8_ObNxZB2Is_Y_FOvqfFbHy3963S2N9lX8PsMtG18OE3bJNP7NUXmypCICY1aTzew1l1bgCgO
- 6GAhAhYDGyVPqusrid23yh8j12a9R8VtK2YquElIGc7yQC168XdqkXbpKPlrKj7NotDR0TynZCc9
- 6fkDbEkTj5SnSpBdUkNb4OT9hmOOm4Gmd4KjZEe98n24IrldtZlEgujq444wJHZobNRppyCw7HX4
- a2HuAq6Xs4CffRGGJUcNTvF05IbsmqYjAAwJpSTDd2M68fcFfOVJvGQa5BH5Ww_9YhDCGptmQE4F
- 8CerHKPAX.77E2rOjd2FvaH842QAzCZ0AorhQeBgZsaOJeUhbAdTdDNeTIWXOFgXnwYJ7CjIeLKM
- 63r9CQHMQ3hHqENfpvuP1sHM4nnRS7gHfbFZuXXWCe5SBXJEnIU70lesE_Tx2XF0bAXUDy2XO5bc
- KQJ3EpKRaXesYRMgoYh_PI97W921r6udEmpEHgzwX96ir6w_LyrHGtyjBlZf6gd24WuOzKMAxQlU
- S_8l7EGflpqV94qcgBdzFKAGuLVc9rKWUl.n5ntH8wJ_4EAEZBvH2YbLcWBTdfvS5pnbJVEz_7gn
- fXEI.dkPBWDUtBFZ3oUu4JKQD7LwEO..BP8wjCx72syRpzI1u22jU8vc5uIvCPEcxytb9nO_hdk1
- QSIZetM71W_3rtb9qJH2ZZT4v7e6JePdalK7dK5yF7gL18co2cqHIbRQgy8zsswwITgvvsEDwy8g
- P57KDcVBJDet8eRHPHDzBjahTVuvacvGe3YUwbZ6KYjjNcDwVgAVVNcFCN16V0IM5S1ZsnjfCpdg
- jBQM5hxbikas8GY26YYnuzPPAAADfPUcifmnaWS3KuxT6pf55okw1MMZCd_fX3K0nGNT1lg.lqEg
- HIw--
-X-Sonic-MF: <fabstz-it@yahoo.fr>
-X-Sonic-ID: cd149f49-b79c-4cd2-abbd-8b3d12b5c130
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.ir2.yahoo.com with HTTP; Tue, 25 Feb 2025 09:02:10 +0000
-Received: by hermes--production-ir2-c694d79d9-fn2jw (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 8660da2360555df5db648c075f235f5f;
-          Tue, 25 Feb 2025 08:11:27 +0000 (UTC)
-Content-Type: multipart/mixed; boundary="------------gt3me3eyncxcnV0IisBnI0C9"
-Message-ID: <5114de6a-e6ef-4459-9570-6dd2245fabd5@yahoo.fr>
-Date: Tue, 25 Feb 2025 09:11:26 +0100
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="I9iwetpJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1740474154;
+	bh=JZ65kyyb42EYs7pE3JmcICyKoed4JwUuRQyyeLuWluo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=I9iwetpJ/xmLEUngxZav8VV48HxmV3ZZI/mpK6muc09p+Y1KOfUmNWAcmcddE7MNk
+	 UBw95YeRj19GLoZRZXQatGHCQ04Aq3YQ0QMemn3IP3ajiQY9kZLl8dzfr2TkhkkxFG
+	 Uxg4WV5OlM4LZ/r/NjeSZ4mGTULvyKgZpXArZBU8aV+HeLuoiQRBql+DgMCrdt3xGU
+	 iXjlZoQsFHldHP9ITwaEsKr8V4hpHS3JL+A82BzY4pp0s6wTaFWfYqUsL0E6xmUEnA
+	 it69Q2aT8dVEuPrfN4SAofTtXBrvug/Qw6VcTcViEz2kgqB/1ulQcyCWls6sOye09q
+	 ACrj7LQyRtz3g==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 74C9417E0DD7;
+	Tue, 25 Feb 2025 10:02:33 +0100 (CET)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: ChiYuan Huang <cy_huang@richtek.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, 
+ Alexandre Mergnat <amergnat@baylibre.com>, 
+ Macpaul Lin <macpaul.lin@mediatek.com>
+Cc: Bear Wang <bear.wang@mediatek.com>, Pablo Sun <pablo.sun@mediatek.com>, 
+ Macpaul Lin <macpaul@gmail.com>, 
+ Project_Global_Chrome_Upstream_Group@mediatek.com, 
+ linux-usb@vger.kernel.org, Chris-qj chen <chris-qj.chen@mediatek.com>, 
+ Fabien Parent <fparent@baylibre.com>, 
+ Yow-Shin Liou <yow-shin.liou@mediatek.com>, 
+ Simon Sun <simon.sun@yunjingtech.com>
+In-Reply-To: <20250224114934.3583191-1-macpaul.lin@mediatek.com>
+References: <20250224114934.3583191-1-macpaul.lin@mediatek.com>
+Subject: Re: [PATCH v6] arm64: dts: mediatek: mt8395-genio-1200-evk: add
+ support for TCPC port
+Message-Id: <174047415339.19243.12568175700223517936.b4-ty@collabora.com>
+Date: Tue, 25 Feb 2025 10:02:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] ? system is stuck in clocksource, >60s delay at boot
- time without tsc=unstable
-To: Thomas Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
- Anna-Maria Behnsen <anna-maria@linutronix.de>,
- Frederic Weisbecker <frederic@kernel.org>, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, Jacob Pan <jacob.jun.pan@linux.intel.com>,
- Len Brown <lenb@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>
-References: <10cf96aa-1276-4bd4-8966-c890377030c3.ref@yahoo.fr>
- <10cf96aa-1276-4bd4-8966-c890377030c3@yahoo.fr> <22539099.EfDdHjke4D@debian>
- <CANDhNCqdpbi=r81NyXVWBbB5POj5nmrc7qo3r2bi1yYqYBgiAg@mail.gmail.com>
- <CANDhNCqFi1adk_MdejQC1bod5STHPDjaSB9imSGpRtJt3TbW1Q@mail.gmail.com>
- <c1d1b79c-bb2e-4a69-888d-a3301bcbfeb2@yahoo.fr>
- <CANDhNCreiCQUKccmW1wBtvVzQrfB=xC0GFRO65SHG-+Wfu1wtA@mail.gmail.com>
- <b9b58a9e-eb56-4acd-b854-0b5ccb8e6759@yahoo.fr> <87plkoau8w.ffs@tglx>
- <15f4f44d-6f73-4031-a7dc-d2105672bc81@yahoo.fr> <874j0jhiag.ffs@tglx>
-Content-Language: fr
-From: Fab Stz <fabstz-it@yahoo.fr>
-In-Reply-To: <874j0jhiag.ffs@tglx>
-X-Mailer: WebService/1.1.23369 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-This is a multi-part message in MIME format.
---------------gt3me3eyncxcnV0IisBnI0C9
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+On Mon, 24 Feb 2025 19:49:34 +0800, Macpaul Lin wrote:
+> Enable USB Type-C support on MediaTek MT8395 Genio 1200 EVK by adding
+> configuration for TCPC Port, USB-C connector, MUX IT5205 and related
+> settings.
+> 
+> Configure dual role switch capability, set up PD (Power Delivery) profiles,
+> and establish endpoints for SS (SuperSpeed) and HS (HighSpeed) USB.
+> 
+> [...]
 
-SGVsbG8gVGhvbWFzLA0KDQpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaCEgSSBidWlsdCB0aGUg
-Ni4xIGtlcm5lbCB3aXRoIGl0IGFwcGxpZWQgYW5kIGl0IA0KYXBwYXJlbnRseSB3b3JrcyBh
-cyBleHBlY3RlZCAobm8gZGVsYXkpLiBQbGVhc2UgZmluZCBsb2dzIGJlbG93ICYgDQphdHRh
-Y2hlZCBkbWVzZyBsb2cuIE1heWJlIHRoZSBpbnRlcmVzdGluZyBsaW5lIGlzOg0KDQpGZWIg
-MjUgMDg6NTM6NTEgZGViaWFuIGtlcm5lbDogdHNjOiBNYXJraW5nIFRTQyB1bnN0YWJsZSBk
-dWUgdG8gVFNDIA0KaGFsdHMgaW4gaWRsZQ0KDQpDb21wYXJpc29uIHNob3dzIHRoYXQgaXQg
-aXMgIk1hcmtpbmcgVFNDIHVuc3RhYmxlIGR1ZSB0byBib290IHBhcmFtZXRlciIgDQp3aXRo
-IGEgbm9uIHBhdGNoZWQga2VybmVsICsgdHNjPXVuc3RhYmxlLg0KDQorIGNhdCAvc3lzL2Rl
-dmljZXMvc3lzdGVtL2NwdS9jcHVpZGxlL2F2YWlsYWJsZV9nb3Zlcm5vcnMNCmxhZGRlciBt
-ZW51DQorIGNhdCAvc3lzL2RldmljZXMvc3lzdGVtL2NwdS9jcHVpZGxlL2N1cnJlbnRfZHJp
-dmVyDQppbnRlbF9pZGxlDQorIGNhdCAvc3lzL2RldmljZXMvc3lzdGVtL2NwdS9jcHVpZGxl
-L2N1cnJlbnRfZ292ZXJub3INCm1lbnUNCisgY2F0IC9zeXMvZGV2aWNlcy9zeXN0ZW0vY3B1
-L2NwdWlkbGUvY3VycmVudF9nb3Zlcm5vcl9ybw0KbWVudQ0KKyBscyAvc3lzL2RldmljZXMv
-c3lzdGVtL2NwdS9jcHUwL2NwdWlkbGUvDQpzdGF0ZTAgIHN0YXRlMSAgc3RhdGUyICBzdGF0
-ZTMNCisgY2F0IC9zeXMvZGV2aWNlcy9zeXN0ZW0vY3B1L2NwdTAvY3B1aWRsZS9zdGF0ZTAv
-bmFtZQ0KUE9MTA0KKyBjYXQgL3N5cy9kZXZpY2VzL3N5c3RlbS9jcHUvY3B1MC9jcHVpZGxl
-L3N0YXRlMC9kaXNhYmxlDQowDQorIGNhdCAvc3lzL2RldmljZXMvc3lzdGVtL2NwdS9jcHUw
-L2NwdWlkbGUvc3RhdGUxL25hbWUNCkMxX0FDUEkNCisgY2F0IC9zeXMvZGV2aWNlcy9zeXN0
-ZW0vY3B1L2NwdTAvY3B1aWRsZS9zdGF0ZTEvZGlzYWJsZQ0KMA0KKyBjYXQgL3N5cy9kZXZp
-Y2VzL3N5c3RlbS9jcHUvY3B1MC9jcHVpZGxlL3N0YXRlMi9uYW1lDQpDMl9BQ1BJDQorIGNh
-dCAvc3lzL2RldmljZXMvc3lzdGVtL2NwdS9jcHUwL2NwdWlkbGUvc3RhdGUyL2Rpc2FibGUN
-CjANCisgY2F0IC9zeXMvZGV2aWNlcy9zeXN0ZW0vY3B1L2NwdTAvY3B1aWRsZS9zdGF0ZTMv
-bmFtZQ0KQzNfQUNQSQ0KKyBjYXQgL3N5cy9kZXZpY2VzL3N5c3RlbS9jcHUvY3B1MC9jcHVp
-ZGxlL3N0YXRlMy9kaXNhYmxlDQowDQoNCg0KV2lsbCB0aGUgcGF0Y2ggYWxzbyBlbnRlciB0
-aGUgbG9uZ3Rlcm0gcmVsZWFzZXMgbGlrZSA2LjE/DQoNClJlZ2FyZHMNCkZhYg0KDQoNCkxl
-IDI0LzAyLzIwMjUgw6AgMDk6MTMsIFRob21hcyBHbGVpeG5lciBhIMOpY3JpdMKgOg0KPj4+
-PiBCVFcsIEkgdHJpZWQgdGhlICJwcm9jZXNzb3IubWF4X2NzdGF0ZT0xIiB5b3UgbWVudGlv
-bmVkIGJ1dCBpdCBkaWRuJ3QNCj4+Pj4gY2hhbmdlIGFueXRoaW5nIG9uIHRoZSBkZWxheSBh
-bmQvb3Igd2FybmluZy4NCj4+Pg0KPj4+IFRoYXQncyB3ZWlyZCwgYnV0IHdlIGhhdmUgbm8g
-aWRlYSB3aGF0IGtpbmQgb2YgbWFnaWMgdGhlIEJJT1MgaW1wbGVtZW50cw0KPj4+IHRoZXJl
-IGZvciBwb3dlciBtYW5hZ2VtZW50IGJlaGluZCB0aGUga2VybmVscyBiYWNrLiBJIGFzc3Vt
-ZSB0aGF0IGl0DQo+Pj4gZG9lcyBiZWNhdXNlIHRoaXMgZ2VuZXJhdGlvbiBvZiBDUFVzIHVz
-ZXMgdGhlIEFDUEkgcHJvY2Vzc29yIGlkbGUgZHJpdmVyDQo+Pj4gYW5kIHRoYXQgZGlzYWJs
-ZXMgVFNDIHdoZW4gaXQgZGV0ZWN0cyB0aGF0IHRoZSBzeXN0ZW0gc3VwcG9ydHMNCj4+PiBD
-LXN0YXRlcyA+IDEuDQo+Pg0KPj4gT3V0cHV0IG9mIHRoZXNlIGNvbW1hbmRzIGNhbiBiZSBm
-b3VuZCBpbiBhdHRhY2hlZCBmaWxlIGNwdWlkbGUudHh0DQo+IA0KPj4gKyBjYXQgL3N5cy9k
-ZXZpY2VzL3N5c3RlbS9jcHUvY3B1aWRsZS9jdXJyZW50X2RyaXZlcg0KPj4gaW50ZWxfaWRs
-ZQ0KPiANCj4gU28gYWNjb3JkaW5nIHRvIHRoYXQgdGhlIGludGVsX2lkbGUgZHJpdmVyIGlz
-IGluIHVzZSwgd2hpY2ggZG9lcyBub3QNCj4gaGF2ZSB0aGUgbWFnaWMgVFNDIHdvcmthcm91
-bmRzIGxpa2UgdGhlIGFjcGkgcHJvY2Vzc29yIGRyaXZlciBoYXMsIGJ1dA0KPiBpdCBzZWVt
-cyB0byBiZSBsb2FkZWQgcHJlZmVycmVkLg0KPiANCj4gU2lnaC4gV2h5IGlzIHRoZSBpbnRl
-bF9pZGxlIGRyaXZlciBzbyBhZ3Jlc3NpdmUgaW4gdGFraW5nIG92ZXIgZGVzcGl0ZQ0KPiB0
-aGUgZmFjdCB0aGF0IGl0IGRvZXMgbm90IGhhbmRsZSB0aGUgb2xkIENQVXMsIHdoaWNoIGFy
-ZSBrbm93biB0bw0KPiByZXF1aXJlIHRoZSBUU0Mgd29ya2Fyb3VuZD8gSXQgaGFuZGxlcyB0
-aGUgQVBJQyBzdG9wcyBpbiBDMiwgYnV0IG5vdCB0aGUNCj4gVFNDIG9kZGl0eSB3aGlsZSB0
-aGUgb3JpZ2luYWwgQUNQSSBwcm9jZXNzb3JfaWRsZSBkcml2ZXIgZG9lcyB0aGUgcmlnaHQN
-Cj4gdGhpbmcgZm9yIG1vcmUgdGhhbiB0d28gZGVjYWRlcy4uLi4NCj4gDQo+PiBDYW4gdGhl
-IGtlcm5lbCBiZSBwYXRjaGVkIHNvIHRoYXQgdGhlIHByb3BlciBjb25maWcgaXMgdXNlZA0K
-Pj4gYXV0b21hdGljYWxseSAoaWUuIHdpdGhvdXQgdGhlIHVzZXIgaGF2aW5nIHRvIHNldCBh
-bnkgcGFyYW1ldGVyKT8gSSdtDQo+PiBub3Qgc3VyZSBteSBxdWVzdGlvbiBhY3R1YWxseSBt
-YWtlcyBzZW5zZS4NCj4gDQo+IFllcywgd2UgY2FuLiBVbnRlc3RlZCBwYXRjaCBiZWxvdy4g
-SXQganVzdCBicmluZ3MgdGhlIGludGVsIGlkbGUgZHJpdmVyDQo+IG9uIHBhciB3aXRoIHRo
-ZSBvcmlnaW5hbCBBQ1BJIHByb2Nlc3NvciBpZGxlIGRyaXZlciB0byBkZWFsIHdpdGggdGhh
-dA0KPiBwcm9ibGVtLg0KPiANCj4gVGhhbmtzLA0KPiANCj4gICAgICAgICAgdGdseA0KPiAt
-LS0NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaWRsZS9pbnRlbF9pZGxlLmMgYi9kcml2ZXJz
-L2lkbGUvaW50ZWxfaWRsZS5jDQo+IGluZGV4IDExOGZlMWQzN2MyMi4uMGZkYjFkMTMxNmM0
-IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2lkbGUvaW50ZWxfaWRsZS5jDQo+ICsrKyBiL2Ry
-aXZlcnMvaWRsZS9pbnRlbF9pZGxlLmMNCj4gQEAgLTU2LDYgKzU2LDcgQEANCj4gICAjaW5j
-bHVkZSA8YXNtL2ludGVsLWZhbWlseS5oPg0KPiAgICNpbmNsdWRlIDxhc20vbXdhaXQuaD4N
-Cj4gICAjaW5jbHVkZSA8YXNtL3NwZWMtY3RybC5oPg0KPiArI2luY2x1ZGUgPGFzbS90c2Mu
-aD4NCj4gICAjaW5jbHVkZSA8YXNtL2ZwdS9hcGkuaD4NCj4gICANCj4gICAjZGVmaW5lIElO
-VEVMX0lETEVfVkVSU0lPTiAiMC41LjEiDQo+IEBAIC0xNzk5LDYgKzE4MDAsOSBAQCBzdGF0
-aWMgdm9pZCBfX2luaXQgaW50ZWxfaWRsZV9pbml0X2NzdGF0ZXNfYWNwaShzdHJ1Y3QgY3B1
-aWRsZV9kcml2ZXIgKmRydikNCj4gICAJCWlmIChpbnRlbF9pZGxlX3N0YXRlX25lZWRzX3Rp
-bWVyX3N0b3Aoc3RhdGUpKQ0KPiAgIAkJCXN0YXRlLT5mbGFncyB8PSBDUFVJRExFX0ZMQUdf
-VElNRVJfU1RPUDsNCj4gICANCj4gKwkJaWYgKGN4LT50eXBlID4gQUNQSV9TVEFURV9DMSAm
-JiAhYm9vdF9jcHVfaGFzKFg4Nl9GRUFUVVJFX05PTlNUT1BfVFNDKSkNCj4gKwkJCW1hcmtf
-dHNjX3Vuc3RhYmxlKCJUU0MgaGFsdHMgaW4gaWRsZSIpOw0KPiArDQo+ICAgCQlzdGF0ZS0+
-ZW50ZXIgPSBpbnRlbF9pZGxlOw0KPiAgIAkJc3RhdGUtPmVudGVyX3MyaWRsZSA9IGludGVs
-X2lkbGVfczJpZGxlOw0KPiAgIAl9DQoNCg==
---------------gt3me3eyncxcnV0IisBnI0C9
-Content-Type: text/x-log; charset=UTF-8; name="patched.log"
-Content-Disposition: attachment; filename="patched.log"
-Content-Transfer-Encoding: base64
+Applied to v6.14-next/dts64, thanks!
 
-RmViIDI1IDA4OjUzOjUwIGRlYmlhbiBrZXJuZWw6IENvbW1hbmQgbGluZTogcm9vdD1VVUlE
-PTQ2MmY1N2I0LTEzNmUtNGMxOC04YzU1LWU0YmM1OWNmYjdhYSBybyAgenN3YXAuZW5hYmxl
-ZD0xIG1lbV9zbGVlcF9kZWZhdWx0PWRlZXAgc2luZ2xlIGluaXRyZD1cYm9vdFxpbml0cmQu
-aW1nLTYuMS4wLTAuYS50ZXN0LWFtZDY0ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIApGZWIgMjUgMDg6NTM6NTAgZGViaWFuIGtlcm5lbDogdHNjOiBGYXN0IFRTQyBj
-YWxpYnJhdGlvbiB1c2luZyBQSVQKRmViIDI1IDA4OjUzOjUwIGRlYmlhbiBrZXJuZWw6IHRz
-YzogRGV0ZWN0ZWQgMjY1My4zNjMgTUh6IHByb2Nlc3NvcgpGZWIgMjUgMDg6NTM6NTAgZGVi
-aWFuIGtlcm5lbDogY2xvY2tzb3VyY2U6IHJlZmluZWQtamlmZmllczogbWFzazogMHhmZmZm
-ZmZmZiBtYXhfY3ljbGVzOiAweGZmZmZmZmZmLCBtYXhfaWRsZV9uczogNzY0NTUxOTYwMDIx
-MTU2OCBucwpGZWIgMjUgMDg6NTM6NTAgZGViaWFuIGtlcm5lbDogS2VybmVsIGNvbW1hbmQg
-bGluZTogcm9vdD1VVUlEPTQ2MmY1N2I0LTEzNmUtNGMxOC04YzU1LWU0YmM1OWNmYjdhYSBy
-byAgenN3YXAuZW5hYmxlZD0xIG1lbV9zbGVlcF9kZWZhdWx0PWRlZXAgc2luZ2xlIGluaXRy
-ZD1cYm9vdFxpbml0cmQuaW1nLTYuMS4wLTAuYS50ZXN0LWFtZDY0ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIApGZWIgMjUgMDg6NTM6NTAgZGViaWFuIGtlcm5lbDog
-VW5rbm93biBrZXJuZWwgY29tbWFuZCBsaW5lIHBhcmFtZXRlcnMgInNpbmdsZSIsIHdpbGwg
-YmUgcGFzc2VkIHRvIHVzZXIgc3BhY2UuCkZlYiAyNSAwODo1Mzo1MCBkZWJpYW4ga2VybmVs
-OiBjbG9ja3NvdXJjZTogaHBldDogbWFzazogMHhmZmZmZmZmZiBtYXhfY3ljbGVzOiAweGZm
-ZmZmZmZmLCBtYXhfaWRsZV9uczogNzY0NTA0MTc4NzAgbnMKRmViIDI1IDA4OjUzOjUwIGRl
-YmlhbiBrZXJuZWw6IGNsb2Nrc291cmNlOiB0c2MtZWFybHk6IG1hc2s6IDB4ZmZmZmZmZmZm
-ZmZmZmZmZiBtYXhfY3ljbGVzOiAweDI2M2YyNWVjNjg3LCBtYXhfaWRsZV9uczogNDQwNzk1
-MjE3NjUxIG5zCkZlYiAyNSAwODo1Mzo1MCBkZWJpYW4ga2VybmVsOiBjbG9ja3NvdXJjZTog
-amlmZmllczogbWFzazogMHhmZmZmZmZmZiBtYXhfY3ljbGVzOiAweGZmZmZmZmZmLCBtYXhf
-aWRsZV9uczogNzY0NTA0MTc4NTEwMDAwMCBucwpGZWIgMjUgMDg6NTM6NTEgZGViaWFuIGtl
-cm5lbDogY2xvY2tzb3VyY2U6IFN3aXRjaGVkIHRvIGNsb2Nrc291cmNlIHRzYy1lYXJseQpG
-ZWIgMjUgMDg6NTM6NTEgZGViaWFuIGtlcm5lbDogY2xvY2tzb3VyY2U6IGFjcGlfcG06IG1h
-c2s6IDB4ZmZmZmZmIG1heF9jeWNsZXM6IDB4ZmZmZmZmLCBtYXhfaWRsZV9uczogMjA4NTcw
-MTAyNCBucwpGZWIgMjUgMDg6NTM6NTEgZGViaWFuIGtlcm5lbDogdHNjOiBSZWZpbmVkIFRT
-QyBjbG9ja3NvdXJjZSBjYWxpYnJhdGlvbjogMjY1My4zMzUgTUh6CkZlYiAyNSAwODo1Mzo1
-MSBkZWJpYW4ga2VybmVsOiBjbG9ja3NvdXJjZTogdHNjOiBtYXNrOiAweGZmZmZmZmZmZmZm
-ZmZmZmYgbWF4X2N5Y2xlczogMHgyNjNmMGJkYTZhOCwgbWF4X2lkbGVfbnM6IDQ0MDc5NTI1
-NDM0NSBucwpGZWIgMjUgMDg6NTM6NTEgZGViaWFuIGtlcm5lbDogY2xvY2tzb3VyY2U6IFN3
-aXRjaGVkIHRvIGNsb2Nrc291cmNlIHRzYwpGZWIgMjUgMDg6NTM6NTEgZGViaWFuIGtlcm5l
-bDogdHNjOiBNYXJraW5nIFRTQyB1bnN0YWJsZSBkdWUgdG8gVFNDIGhhbHRzIGluIGlkbGUK
-RmViIDI1IDA4OjUzOjUxIGRlYmlhbiBrZXJuZWw6IGNsb2Nrc291cmNlOiBDaGVja2luZyBj
-bG9ja3NvdXJjZSB0c2Mgc3luY2hyb25pemF0aW9uIGZyb20gQ1BVIDEgdG8gQ1BVcyAwLgpG
-ZWIgMjUgMDg6NTM6NTEgZGViaWFuIGtlcm5lbDogY2xvY2tzb3VyY2U6IFN3aXRjaGVkIHRv
-IGNsb2Nrc291cmNlIGhwZXQKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG9uIHRo
-ZSBrZXJuZWwgY29tbWFuZCBsaW5lCg==
+[1/1] arm64: dts: mediatek: mt8395-genio-1200-evk: add support for TCPC port
+      commit: b232a43b5c60a0c994cb486792d4f4c80199052f
 
---------------gt3me3eyncxcnV0IisBnI0C9--
+Cheers,
+Angelo
+
+
