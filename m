@@ -1,189 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-a6-smtp.messagingengine.com (fout-a6-smtp.messagingengine.com [103.168.172.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8152566F1;
-	Tue, 25 Feb 2025 06:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B405256C68;
+	Tue, 25 Feb 2025 06:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740463996; cv=none; b=SeRnWbywAvWT8OvkaWTJT5ycr2qTsQWiJvtfBx+pLxZiKiEFwAh4v89tXksqOdDdWRF5vz7Vc1M4slT6G2VsETKyY+RiVRLwztJkEOrekviKLqj2hHIo/KB0XCfgtg0CJ+/lrpjuDqvhart0W7VfMriNxgpOY9NCR5cR5sZrm1o=
+	t=1740464020; cv=none; b=JV8h8M39lW0mv7DhBES/6wKqIWG6rnNpXzBcQJbNq59ydJyRxizbAx5McZlHk2roiaRAd+t+P60QIU1PvZY3EaJ58dkhEJhJsmISVjwq9qWbneX2Hwc49PUcuZ4T9uN3+fTiEvaZMEdUbY2KDkkRh0DbEmISQDYwCaG5leThFJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740463996; c=relaxed/simple;
-	bh=GPUPZeCXKfXNhvuJExZ+jWuWgptD83dizoihy6ohZF8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pr5tqvXrB/e8I6HaFDIclYkUc08tFtoTENsvVulP0CZNLghaNZGra4jIURdeuqs85kFnvLJPz/nBcntPrRxSIMNfo8IzSiEtQY+rHW19jvzJh853QZnqAU2Fr4zvTed2CmZ667eECMRklEY7hNRWCvuykTf+8Z/g10+98HvXAOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CKjWH1i8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740464020; c=relaxed/simple;
+	bh=0bNrTd+0Kri939AjowYkwp5sI3m8I9so+4v3iNbKFNc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=MylY6py2i3wyJjoKwd3I2D9lBLFUTDzIxgT4s7jgLEGCEByQE/uDIzZD3Lv4CljwEQvCzv1obXIviVvGdWL+QZaiVOPIamFSEMFRsNsUd4BHiT77soELOCs0LAlFXCS2noJ5mcM82Q3bZdAZ83heW71jm21SWyHhjoR/BWeK5VY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=Fqj4ChlC; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=e1LoKoWI; arc=none smtp.client-ip=103.168.172.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CKjWH1i8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 516F4C4CEDD;
-	Tue, 25 Feb 2025 06:13:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1740463994;
-	bh=GPUPZeCXKfXNhvuJExZ+jWuWgptD83dizoihy6ohZF8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CKjWH1i8Fk+EJ/pwcIYxJUS/PNq18v6Z4w0XWq7OfGIoIE3TUzOES3H32VUbBQCmn
-	 eNpBhlw6Pvt6CcqSq0Ayy4aZgLqrCq7lD+Z0+4HViEcaM5Mo5ESQG8jLqO/bZJlIGr
-	 77Q3v/A3spDsjDhJux/rvtHPtytU/xl6orlmFUps=
-Date: Tue, 25 Feb 2025 07:12:03 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Naman Jain <namjain@linux.microsoft.com>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-	Stephen Hemminger <stephen@networkplumber.org>,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>
-Subject: Re: [PATCH] uio_hv_generic: Fix sysfs creation path for ring buffer
-Message-ID: <2025022504-diagnosis-outsell-684c@gregkh>
-References: <20250225052001.2225-1-namjain@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="Fqj4ChlC";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="e1LoKoWI"
+Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
+	by mailfout.phl.internal (Postfix) with ESMTP id 2587113816C4;
+	Tue, 25 Feb 2025 01:13:36 -0500 (EST)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-03.internal (MEProxy); Tue, 25 Feb 2025 01:13:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1740464016;
+	 x=1740550416; bh=66pDvVk6+iDQJbtSXtpwsgbq4SfVodI4UVwSnweQfZ4=; b=
+	Fqj4ChlCV6CGNNn0iS4msDiYQ+4+GvJYES/bix1GYkljSYFBzOLSENl5a4xV8xfi
+	/kvSAiqPZdlL4h4cCU4WspxzvkAClTu3ITfIeZOJSsdZzkW8aN6/sTgZHKHjeZBc
+	s8sF+AXRm6PKI0uMiA3AoxzjZbyM2/uCFPYf87iFGw8TeBXhLIIinbxHuN2NxtRT
+	Qg+7OmkNE08QpAaWXM074DdKjVCPgv+qLizEjPu2XNs3P2YQFhcTboeA+DB1FDlc
+	mIflIbi5Q8IhpKSXjW0APJhFcIieeMKTiEohQ5B7Cq2gfA4QqySPLkWLgYSZTkLL
+	og9BiHo3ArdkI3cH6Ei4rw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740464016; x=
+	1740550416; bh=66pDvVk6+iDQJbtSXtpwsgbq4SfVodI4UVwSnweQfZ4=; b=e
+	1LoKoWIiSoMw2FFxNGrUxCEcXKyxI90SWeuEZZ1Zt9Rd0P12Qv1RPLdu906UX0BE
+	iMPRW/zkrTiW6Puq/fgBfsi1oyyzwXnGH5loRuEp5ScVFCKv3iW4lgE1jvVJXrjT
+	2ClCzP7iNUSiydBevhWsJHFWkKPJR3exS7SIEu57soKHRLcQjG9khl4jWIlWk5wd
+	F8cPuwE9b9yPWeaQVxssnIJmyIEFfYi0XBvPWQq0EiKRArEAyRIifyTCgiYARrrV
+	JR4M1Acg0EKg+LEXNrlxAJSgtOMeH+juRmt5R51vXSxaFtOAFKKk/Iq0OATlA+oQ
+	sxSkqH8GkUlEsvRbspFqw==
+X-ME-Sender: <xms:j1-9Z3Bz5Fxt4lGOsdVaBNttyE9O7CSPvTfyvgYXhiiyaSYAX0kaPw>
+    <xme:j1-9Z9jiMaBrAanuNvJdT9cros7R6u7phBKcruChjsF96Fj_sjIs1H_NTarY0vJjV
+    OleacGE3BJGmvEkD4c>
+X-ME-Received: <xmr:j1-9Zyn-i20TFebVjb5013k1IyNtdN8CTs7KarOxzdP6o-gDGUrgRNKAc2WAbr3Cn2niS5xt2xk4SP7s9w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdektdelgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
+    hnthhsucdlqddutddtmdenucfjughrpefkuffhvfevffgjfhgtgfgfggesthhqredttder
+    jeenucfhrhhomhepnfhukhgvucflohhnvghsuceolhhukhgvsehljhhonhgvshdruggvvh
+    eqnecuggftrfgrthhtvghrnhepkeefffeujeevueejueegleelhedtgedvledukedttdff
+    hfeifeelvdduheefjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
+    hilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvhdpnhgspghrtghpthhtohepiedp
+    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhgrrhhiohdrlhhimhhonhgtihgvlh
+    hlohesrghmugdrtghomhdprhgtphhtthhopehplhgrthhfohhrmhdqughrihhvvghrqdig
+    keeisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghorhgvnhhtihhnrd
+    gthhgrrhihsehgmhgrihhlrdgtohhmpdhrtghpthhtohephhguvghgohgvuggvsehrvggu
+    hhgrthdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhvihhnvghnsehlihhnuhigrd
+    hinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdr
+    khgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:j1-9Z5x5o4sAMjF9hDDrRHGya6_sQ4H_EpZk6FdAcaGfZTyQjdl6hQ>
+    <xmx:kF-9Z8Sz8POeMpYxl4tMpcynCIuqLA6MyhlJSvvQoqoGqDuvyo_gyA>
+    <xmx:kF-9Z8Y-lVDcHP_SE2ZXg9a1Ji6sOCDCWoqagwayjQfLqAb-UMf_lw>
+    <xmx:kF-9Z9QvF2srdtSlt8ASmMdOVbelwn128eJPxq1XwG8PSLPM9iPYzg>
+    <xmx:kF-9ZxJ40EA_2UhlkPz5GbUS5cd2RhwGKKP8KzVEFl35dAwPnTB4epCV>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 25 Feb 2025 01:13:33 -0500 (EST)
+Message-ID: <0d67e31ce334085b815f79f9c57a2c4e35870423.camel@ljones.dev>
+Subject: Re: [PATCH] platform/x86: asus-wmi: change quiet to low-power
+From: Luke Jones <luke@ljones.dev>
+To: Mario Limonciello <mario.limonciello@amd.com>, 
+	platform-driver-x86@vger.kernel.org
+Cc: corentin.chary@gmail.com, hdegoede@redhat.com, 
+	ilpo.jarvinen@linux.intel.com, linux-kernel@vger.kernel.org
+Date: Tue, 25 Feb 2025 19:13:29 +1300
+In-Reply-To: <7a958091-84a0-4ec5-bd4a-3e5f973772e0@amd.com>
+References: <20250224223551.16918-1-luke@ljones.dev>
+	 <7a958091-84a0-4ec5-bd4a-3e5f973772e0@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250225052001.2225-1-namjain@linux.microsoft.com>
 
-On Tue, Feb 25, 2025 at 10:50:01AM +0530, Naman Jain wrote:
-> On regular bootup, devices get registered to vmbus first, so when
-> uio_hv_generic driver for a particular device type is probed,
-> the device is already initialized and added, so sysfs creation in
-> uio_hv_generic probe works fine. However, when device is removed
-> and brought back, the channel rescinds and device again gets
-> registered to vmbus. However this time, the uio_hv_generic driver is
-> already registered to probe for that device and in this case sysfs
-> creation is tried before the device gets initialized completely.
-> 
-> Fix this by moving the core logic of sysfs creation for ring buffer,
-> from uio_hv_generic to HyperV's vmbus driver, where rest of the sysfs
-> attributes for the channels are defined. While doing that, make use
-> of attribute groups and macros, instead of creating sysfs directly,
-> to ensure better error handling and code flow.
-> 
-> Problem path:
-> vmbus_device_register
->     device_register
->         uio_hv_generic probe
->                     sysfs_create_bin_file (fails here)
->         kset_create_and_add (dependency)
->         vmbus_add_channel_kobj (dependency)
-> 
-> Fixes: 9ab877a6ccf8 ("uio_hv_generic: make ring buffer attribute for primary channel")
-> Cc: stable@kernel.org
-> Suggested-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-> Suggested-by: Michael Kelley <mhklinux@outlook.com>
-> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
-> ---
-> Hi,
-> This is the first patch after initial RFC was posted.
-> https://lore.kernel.org/all/20250214064351.8994-1-namjain@linux.microsoft.com/
-> 
-> Changes since RFC patch:
-> * Different approach to solve the problem is proposed (credits to
->   Michael Kelley).
-> * Core logic for sysfs creation moved out of uio_hv_generic, to VMBus
->   drivers where rest of the sysfs attributes for a VMBus channel
->   are defined. (addressed Greg's comments)
-> * Used attribute groups instead of sysfs_create* functions, and bundled
->   ring attribute with other attributes for the channel sysfs.  
-> 
-> Error logs:
-> 
-> [   35.574120] ------------[ cut here ]------------
-> [   35.574122] WARNING: CPU: 0 PID: 10 at fs/sysfs/file.c:591 sysfs_create_bin_file+0x81/0x90
-> [   35.574168] Workqueue: hv_pri_chan vmbus_add_channel_work
-> [   35.574172] RIP: 0010:sysfs_create_bin_file+0x81/0x90
-> [   35.574197] Call Trace:
-> [   35.574199]  <TASK>
-> [   35.574200]  ? show_regs+0x69/0x80
-> [   35.574217]  ? __warn+0x8d/0x130
-> [   35.574220]  ? sysfs_create_bin_file+0x81/0x90
-> [   35.574222]  ? report_bug+0x182/0x190
-> [   35.574225]  ? handle_bug+0x5b/0x90
-> [   35.574244]  ? exc_invalid_op+0x19/0x70
-> [   35.574247]  ? asm_exc_invalid_op+0x1b/0x20
-> [   35.574252]  ? sysfs_create_bin_file+0x81/0x90
-> [   35.574255]  hv_uio_probe+0x1e7/0x410 [uio_hv_generic]
-> [   35.574271]  vmbus_probe+0x3b/0x90
-> [   35.574275]  really_probe+0xf4/0x3b0
-> [   35.574279]  __driver_probe_device+0x8a/0x170
-> [   35.574282]  driver_probe_device+0x23/0xc0
-> [   35.574285]  __device_attach_driver+0xb5/0x140
-> [   35.574288]  ? __pfx___device_attach_driver+0x10/0x10
-> [   35.574291]  bus_for_each_drv+0x86/0xe0
-> [   35.574294]  __device_attach+0xc1/0x200
-> [   35.574297]  device_initial_probe+0x13/0x20
-> [   35.574315]  bus_probe_device+0x99/0xa0
-> [   35.574318]  device_add+0x647/0x870
-> [   35.574320]  ? hrtimer_init+0x28/0x70
-> [   35.574323]  device_register+0x1b/0x30
-> [   35.574326]  vmbus_device_register+0x83/0x130
-> [   35.574328]  vmbus_add_channel_work+0x135/0x1a0
-> [   35.574331]  process_one_work+0x177/0x340
-> [   35.574348]  worker_thread+0x2b2/0x3c0
-> [   35.574350]  kthread+0xe3/0x1f0
-> [   35.574353]  ? __pfx_worker_thread+0x10/0x10
-> [   35.574356]  ? __pfx_kthread+0x10/0x10
-> 
-> ---
->  drivers/hv/hyperv_vmbus.h    |  4 +++
->  drivers/hv/vmbus_drv.c       | 62 ++++++++++++++++++++++++++++++++++++
->  drivers/uio/uio_hv_generic.c | 34 ++------------------
->  include/linux/hyperv.h       |  3 ++
->  4 files changed, 72 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-> index 29780f3a7478..e0c7b75e6c7a 100644
-> --- a/drivers/hv/hyperv_vmbus.h
-> +++ b/drivers/hv/hyperv_vmbus.h
-> @@ -477,4 +477,8 @@ static inline int hv_debug_add_dev_dir(struct hv_device *dev)
->  
->  #endif /* CONFIG_HYPERV_TESTING */
->  
-> +/* Create and remove sysfs entry for memory mapped ring buffers for a channel */
-> +int hv_create_ring_sysfs(struct vmbus_channel *channel);
-> +int hv_remove_ring_sysfs(struct vmbus_channel *channel);
-> +
->  #endif /* _HYPERV_VMBUS_H */
-> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-> index 22afebfc28ff..0110643bad3f 100644
-> --- a/drivers/hv/vmbus_drv.c
-> +++ b/drivers/hv/vmbus_drv.c
-> @@ -1802,6 +1802,39 @@ static ssize_t subchannel_id_show(struct vmbus_channel *channel,
->  }
->  static VMBUS_CHAN_ATTR_RO(subchannel_id);
->  
-> +/* Functions to create sysfs interface to allow mmap of the ring buffers.
-> + * The ring buffer is allocated as contiguous memory by vmbus_open
-> + */
-> +static int hv_mmap_ring_buffer(struct vmbus_channel *channel, struct vm_area_struct *vma)
-> +{
-> +	void *ring_buffer = page_address(channel->ringbuffer_page);
-> +
-> +	if (channel->state != CHANNEL_OPENED_STATE)
-> +		return -ENODEV;
-> +
-> +	return vm_iomap_memory(vma, virt_to_phys(ring_buffer),
-> +			       channel->ringbuffer_pagecount << PAGE_SHIFT);
-> +}
-> +
-> +static int hv_mmap_ring_buffer_wrapper(struct file *filp, struct kobject *kobj,
-> +				       const struct bin_attribute *attr,
-> +				       struct vm_area_struct *vma)
-> +{
-> +	struct vmbus_channel *channel = container_of(kobj, struct vmbus_channel, kobj);
-> +
-> +	if (!channel->mmap_ring_buffer)
-> +		return -ENODEV;
-> +	return channel->mmap_ring_buffer(channel, vma);
+On Mon, 2025-02-24 at 18:39 -0800, Mario Limonciello wrote:
+> On 2/24/2025 16:35, Luke Jones wrote:
+> > From: "Luke D. Jones" <luke@ljones.dev>
+> >=20
+> > Change the profile name "quiet" to "low-power" to match the AMD
+> > name. The
+> > primary reason for this is to match AMD naming for
+> > platform_profiles and
+> > allow both to match. It does not affect Intel machines.
+> >=20
+> > The quiet profile is essentially a low-power profile which tweaks
+> > both TDP and fans - this applies to 80+ ASUS laptops.
+> >=20
+> > Signed-off-by: Luke D. Jones <luke@ljones.dev>
+>=20
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
+>=20
+> IMO - this should have a fixes tag since this should probably go in
+> the=20
+> 6.14 cycle too.
+>=20
+> Fixes: 688834743d67 ("ACPI: platform_profile: Allow multiple
+> handlers")
+>=20
 
-What is preventing mmap_ring_buffer from being set to NULL right after
-checking it and then calling it here?  I see no locks here or where you
-are assigning this variable at all, so what is preventing these types of
-races?
+Good point, thanks. I assume when pulled in this can be added?
 
-thanks,
+> > ---
+> > =C2=A0 drivers/platform/x86/asus-wmi.c | 6 +++---
+> > =C2=A0 1 file changed, 3 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/drivers/platform/x86/asus-wmi.c
+> > b/drivers/platform/x86/asus-wmi.c
+> > index d22748f1e154..de19c3b3d8fb 100644
+> > --- a/drivers/platform/x86/asus-wmi.c
+> > +++ b/drivers/platform/x86/asus-wmi.c
+> > @@ -3945,7 +3945,7 @@ static int
+> > asus_wmi_platform_profile_get(struct device *dev,
+> > =C2=A0=C2=A0		*profile =3D PLATFORM_PROFILE_PERFORMANCE;
+> > =C2=A0=C2=A0		break;
+> > =C2=A0=C2=A0	case ASUS_THROTTLE_THERMAL_POLICY_SILENT:
+> > -		*profile =3D PLATFORM_PROFILE_QUIET;
+> > +		*profile =3D PLATFORM_PROFILE_LOW_POWER;
+> > =C2=A0=C2=A0		break;
+> > =C2=A0=C2=A0	default:
+> > =C2=A0=C2=A0		return -EINVAL;
+> > @@ -3969,7 +3969,7 @@ static int
+> > asus_wmi_platform_profile_set(struct device *dev,
+> > =C2=A0=C2=A0	case PLATFORM_PROFILE_BALANCED:
+> > =C2=A0=C2=A0		tp =3D ASUS_THROTTLE_THERMAL_POLICY_DEFAULT;
+> > =C2=A0=C2=A0		break;
+> > -	case PLATFORM_PROFILE_QUIET:
+> > +	case PLATFORM_PROFILE_LOW_POWER:
+> > =C2=A0=C2=A0		tp =3D ASUS_THROTTLE_THERMAL_POLICY_SILENT;
+> > =C2=A0=C2=A0		break;
+> > =C2=A0=C2=A0	default:
+> > @@ -3982,7 +3982,7 @@ static int
+> > asus_wmi_platform_profile_set(struct device *dev,
+> > =C2=A0=20
+> > =C2=A0 static int asus_wmi_platform_profile_probe(void *drvdata,
+> > unsigned long *choices)
+> > =C2=A0 {
+> > -	set_bit(PLATFORM_PROFILE_QUIET, choices);
+> > +	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
+> > =C2=A0=C2=A0	set_bit(PLATFORM_PROFILE_BALANCED, choices);
+> > =C2=A0=C2=A0	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
+> > =C2=A0=20
+>=20
 
-greg k-h
