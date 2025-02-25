@@ -1,105 +1,137 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E8012686A8
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:04:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7705233CFC;
+	Tue, 25 Feb 2025 14:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740492287; cv=none; b=Nbn8/GAGOdShnmuxq25HoBpcdp7WKEeRu8mJY6i44Pj2YzFh+pknmk63p2L+sfOE8Wont+yGmdtgxD8VdbWusoMQCQROi6LEqeashjSpt/FmkrzDHkRcW0VDw0WILFShlh/irRR+vy7vU+C3m2S4vl5jydvQT5wa3OlYGFvEyb8=
+	t=1740492286; cv=none; b=K86/bYJjseGDa8oZFQ4+pVAelNGlyeeJmJbCJ9+URQpiMJ7Pk6x8LvP5YUvAgrlf3/WeexOp+pW2naJL4BMPrNH5mC+VjX1K2qzyu9WEgsOpyJcwVD2a/e/d3jdIXDimLREcGPBvJWr5H590tNDZUo5xOg23y7K1xEmtHuGiLwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740492287; c=relaxed/simple;
-	bh=L434M/O3oCkZpW7cHEiVIKwlK34tRrLWx2AxIrRqUj0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f9q9Jgow16Cwm6WAbR66/H3tMk8MaSpVYQ0r2OXBST9qa0iVOCxUslsXg480id18IAQMrxgbnI6SfmUog2AcI+3pQvGcIHo8XfEbYmYlyTCMt45DLTD2l3VHpkLoSvC2Fiky1hOf5oa0SvZ1rQo6oGob1LPpVAaiZNBCP3T1zp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15760152B;
-	Tue, 25 Feb 2025 06:05:00 -0800 (PST)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 49A9A3F6A8;
-	Tue, 25 Feb 2025 06:04:42 -0800 (PST)
-Message-ID: <34a0b098-d9c5-4605-8ce7-abd6fa59d38b@arm.com>
-Date: Tue, 25 Feb 2025 14:04:29 +0000
+	s=arc-20240116; t=1740492286; c=relaxed/simple;
+	bh=sUXTHt6eh+QXI81EQBaYj0iPTuZrYTa5Od8UTyPzP8E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=IiSSdy4NADt1Ldyp7aAba6riAk+LkoDWtSFkgKperq4/zwAc0/O6MR2pgu6RKH5Qnui6/RbcOi/Um3DbrkkZcPjL1Ho+Qu+93InDV8+HlqMdvlxVIEqRe1Jh0ULbk7bECTB0GKqTEQ6UFwYM7XFsqGkwu0cj6bxfULNaC9+jQHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fEar1t4h; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fEar1t4h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740492285; x=1772028285;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sUXTHt6eh+QXI81EQBaYj0iPTuZrYTa5Od8UTyPzP8E=;
+  b=fEar1t4how0iMWoj0GdcED7yPNQmSznw2pMM0KIUIBzmPI2k8ePuiCgE
+   Obu+mBoSgc7Ud8WVy0SfVY05nUc/+zFwGtcFUF91CpjWYLRoJ2TUUeZcW
+   bTotjmfaaRJLETOUjMDdQnryBK2KPu1BI/nvH8K7UDTzP+Od6hcyoUCcX
+   aTajly2t5q1L3XLoG5ODRS/jZhvBGWR5xaooRrRCcIvviLmxjgCFZSWAt
+   VU4jaZXrmMqSJIpxcV+qgcP3c6T7SywltR1bFABCbAp4mENht4frMd+oL
+   d73QxuuLfSr+/Y9TqldzdpRlGP31fOOpDlNWwLvGCjeinnsGWu9SCVl/X
+   A==;
+X-CSE-ConnectionGUID: vqU87cMgQ6e9R/cKGVM8mQ==
+X-CSE-MsgGUID: UdVqnBnOR5C9FkFe2TY7ZA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="41424557"
+X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
+   d="scan'208";a="41424557"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 06:04:44 -0800
+X-CSE-ConnectionGUID: DLHCB871RPS+O8m+2dz66Q==
+X-CSE-MsgGUID: vS2aVbs+RjSh1G++J6j2IA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
+   d="scan'208";a="116590673"
+Received: from chenyu-dev.sh.intel.com ([10.239.62.107])
+  by fmviesa008.fm.intel.com with ESMTP; 25 Feb 2025 06:04:38 -0800
+From: Chen Yu <yu.c.chen@intel.com>
+To: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Rik van Riel <riel@redhat.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Huang, Ying" <ying.huang@linux.alibaba.com>,
+	Tim Chen <tim.c.chen@intel.com>,
+	Aubrey Li <aubrey.li@intel.com>,
+	Michael Wang <yun.wang@linux.alibaba.com>,
+	Kaiyang Zhao <kaiyang2@cs.cmu.edu>,
+	David Rientjes <rientjes@google.com>,
+	Raghavendra K T <raghavendra.kt@amd.com>,
+	cgroups@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Chen Yu <yu.c.chen@intel.com>
+Subject: [RFC PATCH 0/3] sched/numa: Introduce per cgroup numa balance control 
+Date: Tue, 25 Feb 2025 21:59:33 +0800
+Message-Id: <cover.1740483690.git.yu.c.chen@intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dma: Fix encryption bit clearing for dma_to_phys
-To: Robin Murphy <robin.murphy@arm.com>, will@kernel.org,
- catalin.marinas@arm.com
-Cc: maz@kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
- aneesh.kumar@kernel.org, steven.price@arm.com,
- Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Christoph Hellwig <hch@lst.de>, Tom Lendacky <thomas.lendacky@amd.com>
-References: <20250219220751.1276854-1-suzuki.poulose@arm.com>
- <20250219220751.1276854-2-suzuki.poulose@arm.com>
- <68405608-564c-4e79-9cbc-545626e736f1@arm.com>
-Content-Language: en-US
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <68405608-564c-4e79-9cbc-545626e736f1@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 25/02/2025 11:25, Robin Murphy wrote:
-> On 2025-02-19 10:07 pm, Suzuki K Poulose wrote:
->> phys_to_dma() sets the encryption bit on the translated DMA address. But
->> dma_to_phys() clears the encryption bit after it has been translated back
->> to the physical address, which could fail if the device uses DMA ranges.
->>
->> Hopefully, AMD SME doesn't use it.
-> 
-> ...by which you mean we don't think any AMD systems are using the ACPI 
-> _DMA method to constrain physical DMA ranges, otherwise SME with dma- 
-> direct would presumably already be broken by this lookup going wrong.
+Introduce a per-cgroup interface to enable NUMA balancing
+for specific cgroups. The system administrator needs to set
+the NUMA balancing mode to NUMA_BALANCING_CGROUP=4 to enable
+this feature. When in the NUMA_BALANCING_CGROUP mode, all
+cgroups' NUMA balancing is disabled by default. After the
+administrator enables this feature for a specific cgroup,
+NUMA balancing for that cgroup is enabled.
 
-Yep, that AMD systems aren't using DMA ranges.
+This per-cgroup NUMA balancing control was once proposed in
+2019 by Yun Wang[1]. Then, in 2024, Kaiyang Zhao mentioned
+that he was working with Meta on per-cgroup NUMA control[2]
+during a discussion with David Rientjes.
 
+I could not find further discussion regarding per-cgroup NUMA
+balancing from that point on. This set of RFC patches is a
+rough and compile-passed version, and may have unhandled cases
+(for example, THP). It has not been thoroughly tested and is
+intended to initiate or resume the discussion on the topic of
+per-cgroup NUMA load balancing.
 
-> 
->> Anyways, let us fix it, before cleanup
->> the infrastructure for supporting other architectures.
-> 
-> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+The first patch is a NUMA load balancing statistics enhancement.
+The second patch introduces per-cgroup NUMA balancing. The third
+one enhances NUMA load balancing for the MPOL_INTERLEAVE policy.
 
-Thanks
+Any feedback would be appreciated.
 
-Suzuki
+[1] https://lore.kernel.org/linux-fsdevel/60b59306-5e36-e587-9145-e90657daec41@linux.alibaba.com/
+[2] https://lore.kernel.org/linux-mm/ZrukILyQhMAKWwTe@localhost.localhost/T/
 
-> 
->> Reported-by: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
->> Link: https://lkml.kernel.org/r/yq5amsen9stc.fsf@kernel.org
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Robin Murphy <robin.murphy@arm.com>
->> Cc: Steven Price <steven.price@arm.com>
->> Cc: Christoph Hellwig <hch@lst.de>
->> Cc: Tom Lendacky <thomas.lendacky@amd.com>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> ---
->>   include/linux/dma-direct.h | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
->> index d7e30d4f7503..d20ecc24cb0f 100644
->> --- a/include/linux/dma-direct.h
->> +++ b/include/linux/dma-direct.h
->> @@ -101,12 +101,13 @@ static inline phys_addr_t dma_to_phys(struct 
->> device *dev, dma_addr_t dma_addr)
->>   {
->>       phys_addr_t paddr;
->> +    dma_addr = __sme_clr(dma_addr);
->>       if (dev->dma_range_map)
->>           paddr = translate_dma_to_phys(dev, dma_addr);
->>       else
->>           paddr = dma_addr;
->> -    return __sme_clr(paddr);
->> +    return paddr;
->>   }
->>   #endif /* !CONFIG_ARCH_HAS_PHYS_TO_DMA */
-> 
+Chen Yu (3):
+  sched/numa: Introduce numa balance task migration and swap in
+    schedstats
+  sched/numa: Introduce per cgroup numa balance control
+  sched/numa: Allow intervale memory allocation for numa balance
+
+ include/linux/numa.h           |  1 +
+ include/linux/sched.h          |  4 ++++
+ include/linux/sched/sysctl.h   |  1 +
+ include/linux/vm_event_item.h  |  2 ++
+ include/uapi/linux/mempolicy.h |  1 +
+ kernel/sched/core.c            | 42 ++++++++++++++++++++++++++++++++--
+ kernel/sched/debug.c           |  4 ++++
+ kernel/sched/fair.c            | 18 +++++++++++++++
+ kernel/sched/sched.h           |  3 +++
+ mm/memcontrol.c                |  2 ++
+ mm/memory.c                    |  2 +-
+ mm/mempolicy.c                 |  7 ++++++
+ mm/mprotect.c                  |  5 ++--
+ mm/vmstat.c                    |  2 ++
+ 14 files changed, 89 insertions(+), 5 deletions(-)
+
+-- 
+2.25.1
 
