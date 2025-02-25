@@ -1,134 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f68.google.com (mail-lf1-f68.google.com [209.85.167.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4652B194A59;
-	Tue, 25 Feb 2025 17:21:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4539821ABC6;
+	Tue, 25 Feb 2025 17:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740504095; cv=none; b=PPHdS75X+hJzjRto/WxbgK7DpFgsx6IwAahqyfeHDpcnU0YXOZ0as5N3T+YWU1tAY9a9HKi5V21BIEnRjcm1eUszATSn3TVoFpes9qYsp9kJNKZPxb/krfcQbRPPF64Vw5mMukYlyc0Yk4EMP9GAdgkgv8oe6lDfl4Pu0C0RJo4=
+	t=1740504106; cv=none; b=WDgMbz9++JwNdGPA/co7mwUem5DiWS8Lp8HfjDzThfyTKAX8MgwGoSyGKsiDQ1IcVE+X7R1TmHNDL+0BpX0kO4f31Lo21W06IxbKJpz8KaG5qGD2JQ0AuHvwlbzIUVRqZRGv/g/vNhsYkD7QDwK2SiR3fWZQ+uh8xFy2kxzg7r8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740504095; c=relaxed/simple;
-	bh=hKXLkuM3FN6kXQcjzQ9YRMZO0eUyoRz+aYAgWNJduuM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D7Y+e7v53hNxuOxb2lI6rUJA3y7AK3zHflyp/t2cAhPih5Q06Wu8M7cYPAJQDg1xU8cYjib2e6TjsP1aO1m+8O1YRdDNLe1jvQ/x+/Z5ewHCx+IEQmBFu7K1bHakw94Xt7qR7OxI/jq4smBgSEZXKarHONbqvlOw8+PC3vnN24U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T5M/2r2a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740504106; c=relaxed/simple;
+	bh=g8b94iQeKit7M6efwtxa16qoL3Q0/wQFaWwGXIVnAsc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NZP0FGYXLGE5RaRYNM+P+Hdn6l38WUVUMQLZ1p5rHb/uVuwCo4zE1IOhpoEMLhYhfHUaLRAOl16uRocpxJ27pzLe+rRiLB8uEktdxt6fEniRsYCoubew/y5W8Se7HDxOdAc+JULKt9sELzkCcC5XHxKPjKsum0xlywfcg+7L+68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AZWAVlzM; arc=none smtp.client-ip=209.85.167.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T5M/2r2a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB252C4CEE7;
-	Tue, 25 Feb 2025 17:21:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740504094;
-	bh=hKXLkuM3FN6kXQcjzQ9YRMZO0eUyoRz+aYAgWNJduuM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=T5M/2r2atk10gTu5gdTOJ/67+oTXmgl/MHcFukCC+3H3YlPKB4RSsUQVkIbI/GAfG
-	 W/ABOSeaUCbnL/Dw346PTsaGjWUDTpC63hDAHbYidFxzZ16ll4dFV1bz8YsmUiMQ/2
-	 Ti2uN9uP9uKHT1YXMV3ttDklm3KzODibbLAbPrd8vEfWNywsSe7I+l0GVrAN5T1YZI
-	 jEvGyl5dKe4iwaXhcuKWjdRwrSufw9spVWE6PMYHfdkqLISv3yjVUHx0+Og+5SZ4Hg
-	 5nHdzwz2Px8z6l5NH0t6aSUGjDNpRKQ9rn2Ur28fTh2SeMlG0mZdp6dqSZRXajpbhJ
-	 VJ7DvT0nGVvYA==
-Message-ID: <88ad89bc-9261-4af0-a7ab-28dd760af567@kernel.org>
-Date: Tue, 25 Feb 2025 18:21:29 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AZWAVlzM"
+Received: by mail-lf1-f68.google.com with SMTP id 2adb3069b0e04-54298ec925bso8193991e87.3;
+        Tue, 25 Feb 2025 09:21:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740504102; x=1741108902; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MFp1PXg9ibzgWTyF7i/yFKZcS7KZ9Zv8rxtRiXS5hLs=;
+        b=AZWAVlzMdwdjIGOrezZTMBWOz56YA2HBpLlNos2w6jQRp0lE8f24w42E7e4b+YwU1U
+         VVfKgfyF1v+/lWAUx+4Yf68IxkLqfOcCWA9Sdxne0QEn4kQxGeQT9Hm1IzMyS7alaRpx
+         ZUbLRF2fyOfrtKvF1XaJgkndQK5stnSiA3uXH190SnFEo0YD4o6dYxuYzMnUVk9j1saO
+         qeDsugHQShTW0/I3zkaxHbnVTMohkORJQnRj6glrDTLJwsp4ee1mBBCse28Fj3d3vxh+
+         1bL+fsJkd7Phw3c1IhSHpSuBXPU2xZSpjBibJ7oHWqCNypB5RJGKd3pnw97XlEkHe0ej
+         jujQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740504102; x=1741108902;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MFp1PXg9ibzgWTyF7i/yFKZcS7KZ9Zv8rxtRiXS5hLs=;
+        b=wCar+sF5tySi9SNRETVCcwRN/c5P4Y/X7AuqOs6sa1shnM7/kzEYhQK7Y6+1kT/HXq
+         MnmkBlvCp2juOWZEKF9M0pLzTHvt7xQA1q5q8Z67iKqTd6HZlbNO/s789B/T2RVMfbQW
+         yu/tkVdKPkDJXW4ALBQm2/RmEmJ38XWC8PYVp+eRwvGwvfIgM/RkGujQQwqZE2SlxnQf
+         u5kQSc/OpOaWQHBMEL4EzKJ60/7+L+7uzBY6AfU5sx4S+O0GIFn5Kga+H54aCWgzE+l2
+         tb1UL23G276W/pdYCZPP/9FUShs/CnDHIxb45t7ueDjC6cwkr8skxGLk/shXbfT9ek9p
+         0k1w==
+X-Forwarded-Encrypted: i=1; AJvYcCULH0kEbWQnkoxdyxDzQseWAiv8EuMUpRDarTB8kctAsOTF592G0uJOY9vStv17G6JGfv0OmKJZQxci76A=@vger.kernel.org, AJvYcCUeS94/zCjsktjSImEK4p+wxjmtRSkgfKYiR+Tg1+u9KZeIFSLjyiPnl8FIR6X8ihxCnZd8d3lmVD0HsmwzA9Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqyvgA+PhTG+xfQ1Ep4aRtMXYBtOHRaLTFhfj2oZYIoNRfXo1w
+	/++hrAtoUiLtTBlV4/6e7CY4bUugAT7bUd9x94qR1arBM/RA8st3lADshMUHgLDFwVg/L52iTYG
+	dX5CtoGNW+V2pwLLBYGY0hgu5Oyw=
+X-Gm-Gg: ASbGncu07hyFRA5R1gZ5+13+BSNG6uYapn9YPR0hwMEfbfa572D/XOocmBf/ENeQsNj
+	TMTAl8uXB0euDsD/kmBTfcO1kpAEKmZCWRVocMubKxB5GevHll3D1qw8ONGiNt4wX9R+rc7WKaj
+	oAG2pRBbUa
+X-Google-Smtp-Source: AGHT+IGg0L2G18ybzjJhT/nuNLljUfMebQR4U+Qx20CQIV2uJH1FVYMEDY2DEJ77A8Q/BgGVqabuhNZ/bsrJvAlDy/I=
+X-Received: by 2002:a05:6512:39c5:b0:545:d70:1d0e with SMTP id
+ 2adb3069b0e04-5493c54ce34mr128422e87.3.1740504101982; Tue, 25 Feb 2025
+ 09:21:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] at24: Drop of_match_ptr() and ACPI_PTR()
- protections
-To: Arnd Bergmann <arnd@arndb.de>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20250225100838.362125-1-andriy.shevchenko@linux.intel.com>
- <b8a1315a-8d86-4904-92d1-179699f54e03@app.fastmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <b8a1315a-8d86-4904-92d1-179699f54e03@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
+ <20250222141521.1fe24871@eugeo> <CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
+ <6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
+ <CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com>
+ <CAFJgqgSqMO724SQxinNqVGCGc7=ibUvVq-f7Qk1=S3A47Mr-ZQ@mail.gmail.com> <CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
+In-Reply-To: <CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
+From: Ventura Jack <venturajack85@gmail.com>
+Date: Tue, 25 Feb 2025 10:21:28 -0700
+X-Gm-Features: AWEUYZkUwDT8aBSZwqWOVandZso4Q43TwCtZOPgm5JWe1L0EPqYxR9ThVnT5vic
+Message-ID: <CAFJgqgREAj-eP-d244WpqO-9H48ajZh83AxE31GqoONZ=DJe-g@mail.gmail.com>
+Subject: Re: C aggregate passing (Rust kernel policy)
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, Gary Guo <gary@garyguo.net>, airlied@gmail.com, 
+	boqun.feng@gmail.com, david.laight.linux@gmail.com, ej@inai.de, 
+	gregkh@linuxfoundation.org, hch@infradead.org, hpa@zytor.com, 
+	ksummit@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	miguel.ojeda.sandonis@gmail.com, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 25/02/2025 11:29, Arnd Bergmann wrote:
-> On Tue, Feb 25, 2025, at 11:08, Andy Shevchenko wrote:
->> These result in a very small reduction in driver size, but at the cost
->> of more complex build and slightly harder to read code. In the case of
->> of_match_ptr() it also prevents use of PRP0001 ACPI based identification.
->> In this particular case we have a valid ACPI/PNP ID that should be used
->> in preference to PRP0001 but doesn't mean we should prevent that route.
->>
->> With this done, drop unneeded of*.h inclusions and __maybe_unused markers.
->>
->> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> 
-> For reference, see below for a couple of patches in this area that
-> I have sent in the past. Ideally I think we should try to fix these
-> all up and enable -Wunused-const-variable, which is useful in its
-> own right.
-> 
+On Tue, Feb 25, 2025 at 9:12=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
+rote:
+>
+> On Sun, Feb 23, 2025 at 4:30=E2=80=AFPM Ventura Jack <venturajack85@gmail=
+.com> wrote:
+> >
+> > Just to be clear and avoid confusion, I would
+> > like to clarify some aspects of aliasing.
+> > In case that you do not already know about this,
+> > I suspect that you may find it very valuable.
+> >
+> > I am not an expert at Rust, so for any Rust experts
+> > out there, please feel free to point out any errors
+> > or mistakes that I make in the following.
+> >
+> > The Rustonomicon is (as I gather) the semi-official
+> > documentation site for unsafe Rust.
+> >
+> > Aliasing in C and Rust:
+> >
+> > C "strict aliasing":
+> > - Is not a keyword.
+> > - Based on "type compatibility".
+> > - Is turned off by default in the kernel by using
+> >     a compiler flag.
+> >
+> > C "restrict":
+> > - Is a keyword, applied to pointers.
+> > - Is opt-in to a kind of aliasing.
+> > - Is seldom used in practice, since many find
+> >     it difficult to use correctly and avoid
+> >     undefined behavior.
+> >
+> > Rust aliasing:
+> > - Is not a keyword.
+> > - Applies to certain pointer kinds in Rust, namely
+> >     Rust "references".
+> >     Rust pointer kinds:
+> >     https://doc.rust-lang.org/reference/types/pointer.html
+> > - Aliasing in Rust is not opt-in or opt-out,
+> >     it is always on.
+> >     https://doc.rust-lang.org/nomicon/aliasing.html
+> > - Rust has not defined its aliasing model.
+> >     https://doc.rust-lang.org/nomicon/references.html
+> >         "Unfortunately, Rust hasn't actually
+> >         defined its aliasing model.
+> >         While we wait for the Rust devs to specify
+> >         the semantics of their language, let's use
+> >         the next section to discuss what aliasing is
+> >         in general, and why it matters."
+> >     There is active experimental research on
+> >     defining the aliasing model, including tree borrows
+> >     and stacked borrows.
+> > - The aliasing model not being defined makes
+> >     it harder to reason about and work with
+> >     unsafe Rust, and therefore harder to avoid
+> >     undefined behavior/memory safety bugs.
+>
+> I think all of this worrying about Rust not having defined its
+> aliasing model is way overblown. Ultimately, the status quo is that
+> each unsafe operation that has to do with aliasing falls into one of
+> three categories:
+>
+> * This is definitely allowed.
+> * This is definitely UB.
+> * We don't know whether we want to allow this yet.
+>
+> The full aliasing model that they want would eliminate the third
+> category. But for practical purposes you just stay within the first
+> subset and you will be happy.
+>
+> Alice
 
-I tried to fix this in SPI, regulator and ASoC 2 years ago and Mark
-rejected such approach of dropping ACPI/of_match_ptr. AFAIU, Mark wants
-this to be fixed in more generic way, on the OF and ACPI common code,
-not per driver.
+Is there a specification for aliasing that defines your first bullet
+point, that people can read and use, as a kind of partial
+specification? Or maybe a subset of your first bullet point, as a
+conservative partial specification? I am guessing that stacked
+borrows or tree borrows might be useful for such a purpose.
+But I do not know whether either of stacked borrows or tree
+borrows have only false positives, only false negatives, or both.
 
-SPI:
-https://lore.kernel.org/all/7a65d775-cf07-4393-8b10-2cef4d5266ab@sirena.org.uk/
+For Rust documentation, I have heard of the official
+documentation websites at
 
-regulator:
-https://lore.kernel.org/all/20230310214553.275450-1-krzysztof.kozlowski@linaro.org/
+    https://doc.rust-lang.org/book/
+    https://doc.rust-lang.org/nomicon/
 
-ASoC:
-https://lore.kernel.org/all/20230310214333.274903-1-krzysztof.kozlowski@linaro.org/
+And various blogs, forums and research papers.
 
+If there is no such conservative partial specification for
+aliasing yet, I wonder if such a conservative partial
+specification could be made with relative ease, especially if
+it is very conservative, at least in its first draft. Though there
+is currently no specification of the Rust language and just
+one major compiler.
 
+I know that Java defines an additional conservative reasoning
+model for its memory model that is easier to reason about
+than the full memory model, namely happens-before
+relationship. That conservative reasoning model is taught in
+official Java documentation and in books.
 
-Best regards,
-Krzysztof
+On the topic of difficulty, even if there was a full specification,
+it might still be difficult to work with aliasing in unsafe Rust.
+For C "restrict", I assume that "restrict" is fully specified, and
+C developers still typically avoid "restrict". And for unsafe
+Rust, the Rust community helpfully encourages people to
+avoid unsafe Rust when possible due to its difficulty.
+
+Best, VJ.
