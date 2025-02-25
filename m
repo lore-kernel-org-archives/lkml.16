@@ -1,102 +1,278 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A85267B14
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 11:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3CD1C861B
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 11:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740484704; cv=none; b=j24TIkrZFlSksDM81ZcDV7Xy8TaNG13oh1cbCJsTrk6LesxvOC0FERxrAm09iSMvFUTq8Cmad+XjcX2EPH8pPgI7/vk8JJJumSzIgx9rlalrJMBBR8HHs7RR/UAUDC7utIeIkpzi/hy0pXHOHOxBInpnv9HR6Y3XCYO5dzVSirk=
+	t=1740484702; cv=none; b=qtlau00Dhyv5Ge9zB1q80iC90QWaYWBiuvFp3mh61e1slXt4OCKicq14GetkS2BQWEoUT+63YJsIvUvYrtVd0wDXTQeJBESRT3Ku5mJBPDBHqo6pnE39AgiI0ef2DQOtWiZ8Q6yLttmSLs/Gp1IdcONvkAeRJ9/4FUCEHJ66mKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740484704; c=relaxed/simple;
-	bh=ZML+M6SNb254B3okUsOvmT/4Q3X+djWXrWToFKbLH/I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sznb2lBwQiqNlXfwsyXI0I4mvbSl1Y4ub098Wq6vLXzs9oTNlzPiGgTOtQ9d/JQjrlxc28bb8cnW6jqY+ORE+CUGNSKuoMii4jFvvvv3gs0BgXIHePPz7NOZcKbLwAsVOBZjvU/oFRFRYoTnF9wE75J1kJN0cgdKFSAsx4yBOYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=deO5mD1n; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740484702; c=relaxed/simple;
+	bh=r6875Ufr1YtSuAWpxko7YCgQbRxxoTMsoP5oOSmbW88=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LOcdp/1q4yKaPEtsytGlyqB6HKJCJPlTGCQ3UJfrSMOgJdxgcru+LT5EOcNXePorBgHL95CVpUkEJh5kdgL4zlER6f9SCOTBcWkqIwshG2r3JWbq2ToCeSUK1lT3UF3QFws7uE/naUkIduSooz7Q7bDCmMPlmOKihXclcqid6I8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hD8M3+2P; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=54M5y1Ui; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hD8M3+2P; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=54M5y1Ui; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="deO5mD1n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740484700;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MCyJOCDY4s4V1OSV5l5wvh4COV+tZP6Tfm0smlf+8X4=;
-	b=deO5mD1ne3YXzOTAXRJTevVLpdydrfbuBRYXHg5fIAN2vW3q92xDahbTu4tPcrqEVmXObJ
-	dc+4LqR2tW5gzhPyvnOZt0FyTcEWGaV2MrLdSVPEiUyj1arCbL3B2wYGPNcEx3DJrUpdQG
-	YIusBAhuJZjrQT16esoSvgEQ3EU2s50=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-550-LiOX7p_OP_qs-CkJIUfpJQ-1; Tue,
- 25 Feb 2025 06:58:15 -0500
-X-MC-Unique: LiOX7p_OP_qs-CkJIUfpJQ-1
-X-Mimecast-MFC-AGG-ID: LiOX7p_OP_qs-CkJIUfpJQ_1740484693
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hD8M3+2P";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="54M5y1Ui";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hD8M3+2P";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="54M5y1Ui"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 49A9A1800879;
-	Tue, 25 Feb 2025 11:58:13 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.211])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id EE376180035E;
-	Tue, 25 Feb 2025 11:58:08 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 25 Feb 2025 12:57:43 +0100 (CET)
-Date: Tue, 25 Feb 2025 12:57:37 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Sapkal, Swapnil" <swapnil.sapkal@amd.com>
-Cc: Manfred Spraul <manfred@colorfullife.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Christian Brauner <brauner@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	WangYuli <wangyuli@uniontech.com>, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	"Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>,
-	Neeraj.Upadhyay@amd.com
-Subject: Re: [PATCH] pipe_read: don't wake up the writer if the pipe is still
- full
-Message-ID: <20250225115736.GA18523@redhat.com>
-References: <20250102140715.GA7091@redhat.com>
- <e813814e-7094-4673-bc69-731af065a0eb@amd.com>
- <20250224142329.GA19016@redhat.com>
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 26F352116A;
+	Tue, 25 Feb 2025 11:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740484698; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=jh8MVDz39OwecAZp/7HIGitwnLQCkwTN0crf5zZ3TP4=;
+	b=hD8M3+2PHeRZOb7tYnptgG9PRQJsGwKau1ceVYMDIAI+qWug2fcgwq0osKfcSwJhXzo9Y2
+	WDBU82ZvZlDQ3fKmnV9xnXgdo+1nqNIhzChgRaSuzbDGQpN/RpQENzDz0sG0kGJF/Rcrqx
+	zF+TBMt7TXGQbOefNR86Cth7oAhnB1A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740484698;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=jh8MVDz39OwecAZp/7HIGitwnLQCkwTN0crf5zZ3TP4=;
+	b=54M5y1UiYvdlSGzgCZiGgC/9uEQQYL4qDPH3lY+5kBu/4wvtV7bND/Dhne1wjqiZpq1i4H
+	vaWuLHhVXMVTdNBA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740484698; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=jh8MVDz39OwecAZp/7HIGitwnLQCkwTN0crf5zZ3TP4=;
+	b=hD8M3+2PHeRZOb7tYnptgG9PRQJsGwKau1ceVYMDIAI+qWug2fcgwq0osKfcSwJhXzo9Y2
+	WDBU82ZvZlDQ3fKmnV9xnXgdo+1nqNIhzChgRaSuzbDGQpN/RpQENzDz0sG0kGJF/Rcrqx
+	zF+TBMt7TXGQbOefNR86Cth7oAhnB1A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740484698;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=jh8MVDz39OwecAZp/7HIGitwnLQCkwTN0crf5zZ3TP4=;
+	b=54M5y1UiYvdlSGzgCZiGgC/9uEQQYL4qDPH3lY+5kBu/4wvtV7bND/Dhne1wjqiZpq1i4H
+	vaWuLHhVXMVTdNBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CDBA513888;
+	Tue, 25 Feb 2025 11:58:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id RUULMVmwvWdYRgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 25 Feb 2025 11:58:17 +0000
+Message-ID: <c0249cd8-68e4-4860-b5c3-e054df10ae30@suse.de>
+Date: Tue, 25 Feb 2025 12:58:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250224142329.GA19016@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/2] drm/tiny: add driver for Apple Touch Bars in x86
+ Macs
+To: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
+ Aditya Garg <gargaditya08@live.com>
+Cc: "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "mripard@kernel.org" <mripard@kernel.org>,
+ "airlied@gmail.com" <airlied@gmail.com>, "simona@ffwll.ch"
+ <simona@ffwll.ch>, Kerem Karabay <kekrby@gmail.com>,
+ Atharva Tiwari <evepolonium@gmail.com>, Aun-Ali Zaidi <admin@kodeit.net>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+References: <3457BF95-0E50-4B70-86DE-EE5EE95D3ACE@live.com>
+ <4D7C00B4-7B75-4715-8D37-0059B22C030D@live.com>
+ <Z72chunE_vvxtjLQ@smile.fi.intel.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <Z72chunE_vvxtjLQ@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.996];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,live.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[linux.intel.com,live.com];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux.intel.com,kernel.org,gmail.com,ffwll.ch,kodeit.net,vger.kernel.org,lists.freedesktop.org];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,imap1.dmz-prg2.suse.org:helo,suse.de:mid]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 02/24, Oleg Nesterov wrote:
+Hi
+
+Am 25.02.25 um 11:33 schrieb andriy.shevchenko@linux.intel.com:
+> On Tue, Feb 25, 2025 at 10:09:42AM +0000, Aditya Garg wrote:
+>> From: Kerem Karabay <kekrby@gmail.com>
+>>
+>> The Touch Bars found on x86 Macs support two USB configurations: one
+>> where the device presents itself as a HID keyboard and can display
+>> predefined sets of keys, and one where the operating system has full
+>> control over what is displayed.
+>>
+>> This commit adds support for the display functionality of the second
+>> configuration. Functionality for the first configuration has been
+>> merged in the HID tree.
+>>
+>> Note that this driver has only been tested on T2 Macs, and only includes
+>> the USB device ID for these devices. Testing on T1 Macs would be
+>> appreciated.
+>>
+>> Credit goes to Ben (Bingxing) Wang on GitHub for reverse engineering
+>> most of the protocol.
+>>
+>> Also, as requested by Andy, I would like to clarify the use of __packed
+>> structs in this driver:
+>>
+>> - All the packed structs are aligned except for appletbdrm_msg_information.
+>> - We have to pack appletbdrm_msg_information since it is requirement of
+>>    the protocol.
+>> - We compared binaries compiled by keeping the rest structs __packed and
+>>    not __packed using bloat-o-meter, and __packed was not affecting code
+>>    generation.
+>> - To maintain consistency, rest structs have been kept __packed.
+>>
+>> I would also like to point out that since the driver was reverse-engineered
+>> the actual data types of the protocol might be different, including, but
+>> not limited to, endianness.
+> ...
 >
-> Just in case, did you use
+>> +static int appletbdrm_probe(struct usb_interface *intf,
+>> +			    const struct usb_device_id *id)
+>> +{
+>> +	struct usb_endpoint_descriptor *bulk_in, *bulk_out;
+>> +	struct device *dev = &intf->dev;
+>> +	struct appletbdrm_device *adev;
+>> +	struct drm_device *drm;
+>> +	int ret;
+>> +
+>> +	ret = usb_find_common_endpoints(intf->cur_altsetting, &bulk_in, &bulk_out, NULL, NULL);
+>> +	if (ret) {
+>> +		drm_err(drm, "Failed to find bulk endpoints\n");
+> This is simply wrong (and in this case even lead to crash in some circumstances).
+> drm_err() may not be used here. That's my point in previous discussions.
+> Independently on the subsystem the ->probe() for the sake of consistency and
+> being informative should only rely on struct device *dev,
+
+That's never going to work with DRM. There's so much code in a DRM probe 
+function that uses the DRM error functions.
+
+This specific instance here is wrong, as the drm pointer hasn't been 
+initialized. But as soon as it is, it's much better to use drm_err() and 
+friends. It will do the right thing and give consistent output across 
+drivers.
+
+Best regards
+Thomas
+
 >
-> 	https://git.kernel.org/pub/scm/utils/rt-tests/rt-tests.git/tree/src/hackbench/hackbench.c
->
-> ?
+>> +		return ret;
+>> +	}
+>> +
+>> +	adev = devm_drm_dev_alloc(dev, &appletbdrm_drm_driver, struct appletbdrm_device, drm);
+>> +	if (IS_ERR(adev))
+>> +		return PTR_ERR(adev);
+>> +
+>> +	adev->in_ep = bulk_in->bEndpointAddress;
+>> +	adev->out_ep = bulk_out->bEndpointAddress;
+>> +	adev->dmadev = dev;
+>> +
+>> +	drm = &adev->drm;
+>> +
+>> +	usb_set_intfdata(intf, adev);
+>> +
+>> +	ret = appletbdrm_get_information(adev);
+>> +	if (ret) {
+>> +		drm_err(drm, "Failed to get display information\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = appletbdrm_signal_readiness(adev);
+>> +	if (ret) {
+>> +		drm_err(drm, "Failed to signal readiness\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = appletbdrm_setup_mode_config(adev);
+>> +	if (ret) {
+>> +		drm_err(drm, "Failed to setup mode config\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = drm_dev_register(drm, 0);
+>> +	if (ret) {
+>> +		drm_err(drm, "Failed to register DRM device\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = appletbdrm_clear_display(adev);
+>> +	if (ret) {
+>> +		drm_err(drm, "Failed to clear display\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
 
-Or did you use another version?
-
-Exactly what parameters did you use?
-
-If possible, please reproduce the hang again. How many threads/processes
-sleeping in pipe_read() or pipe_write() do you see? (you can look at
-/proc/$pid/stack).
-
-Please pick one sleeping writer, and do
-
-	$ strace -p pidof_that_write
-
-this should wake this writer up. If a missed wakeup is the only problem,
-hackbench should continue.
-
-The more info you can provide the better ;)
-
-Oleg.
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
