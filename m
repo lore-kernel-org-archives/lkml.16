@@ -1,137 +1,157 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F1F269CF5;
-	Tue, 25 Feb 2025 14:05:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEFEE269CF5;
+	Tue, 25 Feb 2025 14:05:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740492336; cv=none; b=nD3EXju4l/zaCo1VRJrr1DkjspsuwYUowBkVtvMAzoPHSlCsBwFbRBUyP6pLn94C4afiuYl9hi6ILKyQvjY9CIf8ZQHFr0/IO4EyY+5phTFW5ribZTH2nMcYmWXd2Mmr/IOCx0NObyiXgY7diUj3VBC/U7CePLFT8amjj/oLrF4=
+	t=1740492343; cv=none; b=JNlnMjyE+h6+2Fo5RUziVWs1OKydFyazytqv9f+md+wQPTLM52g/khblKl1mrmqFouzxtXDSrEKC46aRLNwqYrOSLqmiR+tBjtn7ph+mO5b/z30ZCKjWuABJH9+r/bSrCblyuvG5wfdulqyColhxHB0vsocirzbYOtY8e7GkKUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740492336; c=relaxed/simple;
-	bh=SrlaSBpwPqmnPKBwwpLbhryOe+dfDdFe+sPMj9Vemu4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uVEMim/o0uyfyNqKmRzE/OvRQq0MVp6TeJqmcPLDjt1O2cPquQXDhkYbE/7F817q5nbtmbtll9h4iEWTKxTUP8dLX8YONNlimKak8bFmYnqpsEjJdjErxMpagbi3yMWwTYxkG7T1mgv5gU+/bGOse2C010twefZ5Wk+tmUOSZQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=N1q6kuDK; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1740492343; c=relaxed/simple;
+	bh=kwghDFALfMvkIRmE1HPwrpB/0PzINC5FZ1kBkLfD77w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cQC34gRgR8o34ZFl6+FTSiL4mDDzNNakEWfJpAdoapv9MgqdIFeZc2qwXsJu/Z/+mzJ+EwZ0Y3mgmkfKWHAHDdDp1dDPV7iLlAlXvDSJPOofFb2940jNRucsfzQHslmCXMe/3KANVFjEInT/l/X6OozowHZ8/pNnH2Af1KLc3oM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dKWz4F6d; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="N1q6kuDK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1740492331;
-	bh=SrlaSBpwPqmnPKBwwpLbhryOe+dfDdFe+sPMj9Vemu4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=N1q6kuDK+8ntA0AaElI0VJl2/OzVvACcjDQ/P2V6svRV3s3WHMve5JiVdUTd80Qnr
-	 K58KBSM2Qb7dmqKHwGdQaEiK3UWwswphxj1skJWk1RbYRl4Fj7bXE/qs/9fgEg50J1
-	 BUP3XOGCQjOG8C/VDC0iKES/YCq/oVsixPwtuRDOfp3wtG2gZxbKZOIkh59FjX7prU
-	 k5WwdWnA5MuwVDcYr2pkAGTOoAABa8gLQTvBDrGUiJ4VFzdwQHUOpvoXn2UXoNOzgs
-	 47beLJVO33KZ7Qr8qaSaU7DXYtnjHXjT2fRY6GwNfwkZe2dUs3zweivyihBuC63lEM
-	 Y9DZpkTydLIRA==
-Received: from [IPv6:2606:6d00:11:e976::5ac] (unknown [IPv6:2606:6d00:11:e976::5ac])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4453317E09B5;
-	Tue, 25 Feb 2025 15:05:29 +0100 (CET)
-Message-ID: <808a9d14be9c8de25e2ba5232ee01f874acb66b6.camel@collabora.com>
-Subject: Re: [PATCH] fixup! media: v4l2-common: Add helpers to calculate
- bytesperline and sizeimage
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: Hans Verkuil <hverkuil@xs4all.nl>, Sebastian Fricke
-	 <sebastian.fricke@collabora.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Ezequiel Garcia	
- <ezequiel@vanguardiasur.com.ar>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,  Boris Brezillon
- <boris.brezillon@collabora.com>, linux-media <linux-media@vger.kernel.org>,
- linux-kernel	 <linux-kernel@vger.kernel.org>, linux-rockchip	
- <linux-rockchip@lists.infradead.org>, linux-staging	
- <linux-staging@lists.linux.dev>, Mauro Carvalho Chehab	
- <mchehab+huawei@kernel.org>, Alex Bee <knaerzche@gmail.com>, Benjamin
- Gaignard	 <benjamin.gaignard@collabora.com>, Detlev Casanova	
- <detlev.casanova@collabora.com>, Dan Carpenter <dan.carpenter@linaro.org>, 
- Jonas Karlman <jonas@kwiboo.se>
-Date: Tue, 25 Feb 2025 09:05:27 -0500
-In-Reply-To: <795082c4-499f-4935-b580-72b01d82fe1b@xs4all.nl>
-References: 
-	<20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
-	 <20250225124008.195405-1-sebastian.fricke@collabora.com>
-	 <1953d249c3c.d1d6678f34821.5333341344528638254@collabora.com>
-	 <795082c4-499f-4935-b580-72b01d82fe1b@xs4all.nl>
-Organization: Collabora Canada
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dKWz4F6d"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e04064af07so8747093a12.0;
+        Tue, 25 Feb 2025 06:05:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740492340; x=1741097140; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tPd/d1lS+e5D1SoZ8oB+qy8yBKc1e4tlJLwqgs9YB9g=;
+        b=dKWz4F6dk5lcJFaLBki+JN5UBVuaAQY1bcAQMbEHEjabOwHFF8PyJ4iVn+Yrda91Vr
+         9NAgHqKrPfpk511jRJNdFZCrwsFHAYMITy9WEkI0Xk59lxx43MNSmCvnfUdaQAH62OfZ
+         Yo2Yyx9OTL1UXnaOjasd3epKhrz4ZsfdfZ3HOb2mLmgMo+MQMLnO4c+GZcvindiSAyga
+         pJ2Qtf6mTdvD/3UeEZAVGgaLurjesTux5gj/CJpCn9PKcBwUZjC1wp5bN5BvCoKtqPFK
+         cQrlKFVhLwJk4Ywf21NbLRL7NAbCHXoCL+2AT1ic2Sx5izUVgYa4oh83Jktx8tnYRKGj
+         +AJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740492340; x=1741097140;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tPd/d1lS+e5D1SoZ8oB+qy8yBKc1e4tlJLwqgs9YB9g=;
+        b=mJXJgDpgVOxkQntWSIijd85kV8qT1edhNJLfiGwf9icD8p+m5+KQVfD/pQlGk/OMSh
+         nQTORtuWIiKLpaOqa517UTBXrob1XpB5wZ4KMXQ65ZwrC2sWFfI+OdrykUGml5YTxCFQ
+         GzGAGsP1dv4CWUU1zPhjI1OBXHNzfTzc7BMuXiqV0PCBVBe5eiFgro8NVfO4eS+gDSoW
+         IjY6VPhlpNe0icRMpRaCMYMWvLRq2e365gkW+dUFbe/UEob63xpfNhXhSPYfl8cSa4Zh
+         rYrt76yxuPE68r/Ot7c5E3EReStzpWO68YaqKvRTDMa50X0tNM5k9+6hkDkrpw0a28CC
+         lWIA==
+X-Forwarded-Encrypted: i=1; AJvYcCX/UhE2PykRkw8QfFgGU+isRRMso4EMtx74GzyVhugHKowsV6XbuiERD/Jz2QMK2TJ5yCE+0bMNpYRTLEZv@vger.kernel.org, AJvYcCXN60XqyjMR+hDGNJe2drnGi/5X+XlP3NxdubYXTezWB3JX65kjtWiLYH6qNwug/webVBaKWK+XrgZH@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzz8l8v4D5OlVUvztb5hDGz7tkg8xqFwHlpc2niC0sWJ7wS3syU
+	LcKz0pDQvVDwdLbXhTopAA1qiXMfOTnuRtlzjRtw1WtdhvY6iEiMCYFnmVoF
+X-Gm-Gg: ASbGnctVWrk/7so07eUAIAPrgwkjsq9ikJxoE2hWv4qwDZ5qzmSPQkEbIRw83M5sjCW
+	3BkVRUbiuMyfrCelQAkF+8S3riG51Wdxvzvzs3bgI6K1fiNjHV7ryIfzgGFKMWKmMemLYo6SxW/
+	3osKtNdp6jg8XcoAnSPmmno0Ati8xdp9CQPo9MEK9fffcKeIolzj9a6t8l/sKpJIGV832AV9Qo0
+	h0Yn8rF9XYpSU/7MbmGZ/BxUIiMhOCJsG/7NEh06Px1R0R08ngsx0f/pTq+BMQFWQLFBofOsjG4
+	dCnWW75NNKT3iIoJYOQoSEZstp3Ag8W2yUdOC/soqbjjJfOfMI8=
+X-Google-Smtp-Source: AGHT+IEduCdNbL7IFjCYL/sa3Uw1eSpI/ch7S+DMg3yhWwQhhBhMD+Xp89Ze8+kev4lk/55fC5U9WQ==
+X-Received: by 2002:a05:6402:1e8c:b0:5de:3478:269b with SMTP id 4fb4d7f45d1cf-5e44ba3ff2emr3170354a12.32.1740492339723;
+        Tue, 25 Feb 2025 06:05:39 -0800 (PST)
+Received: from [192.168.6.238] ([92.120.5.7])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e45b716aadsm1258001a12.36.2025.02.25.06.05.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2025 06:05:39 -0800 (PST)
+Message-ID: <cd6a84cd-ff17-45df-becc-9bfc74522f73@gmail.com>
+Date: Tue, 25 Feb 2025 16:14:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/5] arm64: dts: imx8mp: convert 'aips5' to 'aipstz5'
+Content-Language: en-GB
+To: Frank Li <Frank.li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>, Shengjiu Wang
+ <shengjiu.wang@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ devicetree@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250221191909.31874-1-laurentiumihalcea111@gmail.com>
+ <20250221191909.31874-5-laurentiumihalcea111@gmail.com>
+ <Z7jahtO3bxjkMfnc@lizhi-Precision-Tower-5810>
+From: Mihalcea Laurentiu <laurentiumihalcea111@gmail.com>
+In-Reply-To: <Z7jahtO3bxjkMfnc@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Le mardi 25 février 2025 à 13:50 +0100, Hans Verkuil a écrit :
-> On 2/25/25 13:46, Sebastian Fricke wrote:
-> > Hey,
-> > 
-> > sorry about missing this in the patch series, if you don't like the
-> > fixup path, then I can send a new patch series as well.
-> > I just thought the change was minor enough and addressed the final
-> > comments.
-> 
-> Ah, this relates to patch 01/12 of this patch series:
-> 
-> https://patchwork.linuxtv.org/project/linux-media/list/?series=14577
-> 
-> Next time it might be better to just reply to the offending patch
-> with the fixup.
-> 
-> That way it is clear for the maintainer what the fixup is for.
 
-I believe you could have used:
+On 21.02.2025 21:56, Frank Li wrote:
+> On Fri, Feb 21, 2025 at 02:19:08PM -0500, Laurentiu Mihalcea wrote:
+>> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+>>
+>> AIPS5 is actually AIPSTZ5 as it offers some security-related
+>> configurations. Since these configurations need to be applied before
+>> accessing any of the peripherals on the bus, it's better to make AIPSTZ5
+>> be their parent instead of keeping AIPS5 and adding a child node for
+>> AIPSTZ5. Also, because of the security configurations, the address space
+>> of the bus has to be changed to that of the configuration registers.
+> The orginal 0x30c0_0000..0x31200000 include 0x30df0000, why not map only
+> config address part in your drivers.
+>
+> Frank
 
-  git send-email -in-reply-to=9db356bd-4d71-4975-91c6-7435bee8aef3@xs4all.nl <somepatch>
 
-To make that a reply.
+Any concerns/anything wrong with current approach?
 
-cheers,
-Nicolas
-> 
-> Regards,
-> 
-> 	Hans
-> 
-> > 
-> > Regards,
-> > Sebastian
-> > 
-> >  ---- On Tue, 25 Feb 2025 13:40:08 +0100  Sebastian Fricke
-> > <sebastian.fricke@collabora.com> wrote --- 
-> >  > ---
-> >  >  drivers/media/v4l2-core/v4l2-common.c | 2 +-
-> >  >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >  > 
-> >  > diff --git a/drivers/media/v4l2-core/v4l2-common.c
-> > b/drivers/media/v4l2-core/v4l2-common.c
-> >  > index 07a999f75755..aa86b8c6aa75 100644
-> >  > --- a/drivers/media/v4l2-core/v4l2-common.c
-> >  > +++ b/drivers/media/v4l2-core/v4l2-common.c
-> >  > @@ -360,7 +360,7 @@ static inline unsigned int
-> > v4l2_format_block_height(const struct v4l2_format_inf
-> >  >  }
-> >  >  
-> >  >  static inline unsigned int v4l2_format_plane_stride(const
-> > struct v4l2_format_info *info, int plane,
-> >  > -                           unsigned int width)
-> >  > +                            unsigned int width)
-> >  >  {
-> >  >      unsigned int hdiv = plane ? info->hdiv : 1;
-> >  >      unsigned int aligned_width =
-> >  > -- 
-> >  > 2.25.1
-> >  > 
-> >  > 
-> > 
-> 
 
--- 
-Nicolas Dufresne
-Principal Engineer at Collabora
+I find it a bit awkward to have the whole bus address space
+
+in the DT given that we're only interested in using the access
+
+controller register space.
+
+
+I'm fine with the approach you suggested but I don't see a
+
+reason for using it?
+
+
+>
+>> Finally, since AIPSTZ5 belongs to the AUDIOMIX power domain, add the
+>> missing 'power-domains' property. The domain needs to be powered on before
+>> attempting to configure the security-related registers.
+>>
+>> The DT node name is not changed to avoid potential issues with DTs in
+>> which this node is referenced.
+>>
+>> Co-developed-by: Daniel Baluta <daniel.baluta@nxp.com>
+>> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+>> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+>> ---
+>>  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 8 +++++---
+>>  1 file changed, 5 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+>> index e0d3b8cba221..a1d9b834d2da 100644
+>> --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+>> +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+>> @@ -1399,11 +1399,13 @@ eqos: ethernet@30bf0000 {
+>>  			};
+>>  		};
+>>
+>> -		aips5: bus@30c00000 {
+>> -			compatible = "fsl,aips-bus", "simple-bus";
+>> -			reg = <0x30c00000 0x400000>;
+>> +		aips5: bus@30df0000 {
+>> +			compatible = "fsl,imx8mp-aipstz", "simple-bus";
+>> +			reg = <0x30df0000 0x10000>;
+>> +			power-domains = <&pgc_audio>;
+>>  			#address-cells = <1>;
+>>  			#size-cells = <1>;
+>> +			#access-controller-cells = <0>;
+>>  			ranges;
+>>
+>>  			spba-bus@30c00000 {
+>> --
+>> 2.34.1
+>>
