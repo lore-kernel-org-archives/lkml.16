@@ -1,146 +1,126 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B13E265CBE;
-	Tue, 25 Feb 2025 09:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740476515; cv=pass; b=ikj7WY3rpNpsOHeflC/tSAjse2NNhdDHfleU0hGCzBFp1zCHBXrOlm4UVlQwwkwMj/tpXr/lb5tJhDgEv+HsYSs+z4GFBqa1MeJ3jk61JWZ0Un1cm+mXOcb87CK+fCUoe+wgsyr9yWCgY3G63s5WonCnWRG6vlSXcXNTgM3qlgE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740476515; c=relaxed/simple;
-	bh=kAferTJjlOsMKikcDc7px611q51eaR5rbJpvRFKjTvI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EqTaFMvqmEWy+pzbifAT71jGWhrmMXh1j7Kmyhpyy1Urcb4WLKzQ7CG6c1VejwcuZu2AkqZBPv545pk00lsh2f1MfDio5zr/gLBhw4Tno5OLBznQCsjJh/kczty3s/3vX9Xdb+HKyrHhgutwYDkzueJvTYuHN2hjnIqDzR65GWQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b=HdCkfLMP; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD712676EA;
+	Tue, 25 Feb 2025 09:41:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740476520; cv=none; b=gWivCpwEJX/Al3yVdvmqzl6+iJbWum+FI8JhF7EDYCoCZg3ZBZ1ErlOijM7xsj/lM/HbeQyg2BY+CzP+/S74ZURwZkoxN+yG7Jfe7OupMAaio487n/oF/r7j35xqhsJ6IuwFtiZcXbOtuu1vFzgRXLYv20PJmt0M5T7vuOFmXmo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740476520; c=relaxed/simple;
+	bh=1rX3Tw5OEZ9iVi69R/Vz5QGBAg03OkLYqvziaLFw+lE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GI8Jpvtv13McvD638J1nApl7MhiooOJ2fVgemgWuxTqI3yGJ9Ro2yDYGLY2jgqgASrv3xZ+B2mLaOXMnLi6s/EDhwHEiOcRRsSt1GE/qZBXY1zueBkgThljvmjkel/Juo5+8+KiKfln3CCIMGbvIOJQf6OnquuYWDD9bnN4dGeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JQLnok9r; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b="HdCkfLMP"
-ARC-Seal: i=1; a=rsa-sha256; t=1740476490; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=JhLOqeuFXnKZMj2rD9nXOmFkznlC5b19ET3bqj2g/LuQN1XksBtYT4w3a96ePCOkCwwpHbj5LxlYe7GUzxc3baLJ8/GquyQUsWwdwZLyAbwNVX5AI9aJh5tyyIInXwfAIDWvyrTFysB2FSha/0OylIO77tvNm9g1C5OBptWprbg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740476490; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=PyXzFAnSQaYFyXOwZuHcTzIPanIxLt2OaFJApPYWtf0=; 
-	b=WNevAdJm1/W0x7hWwvZxLfD6IVpHApb1klWbmZDQeQPSyi1615M/keo6hjeFL2wArZYXzPU+eWn7PbiVN7HXlPUDvsdPBS5yhqSd7r3NqJANE0oDnqRCKwAKD5jhdn/vWx/Q0F7LyFD4t5fPB1l53rSzJgVKmas8sC618ysacTw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.fricke@collabora.com;
-	dmarc=pass header.from=<sebastian.fricke@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740476490;
-	s=zohomail; d=collabora.com; i=sebastian.fricke@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=PyXzFAnSQaYFyXOwZuHcTzIPanIxLt2OaFJApPYWtf0=;
-	b=HdCkfLMPSUzZM6YFRpWJ3IEAEalPzzz7DP5NjyyyI/0Td1fPU00RCuLlkKJwDAr2
-	SQKhiHYYAUoBHPMK6sjf3HgfWne8JszLUVtWk06HGjaU6AlcKxCR3mfd2shCcXAqV6y
-	8ofrUTiiANxHEnj975m8IyAngAP4Gy8rvhE5xyMk=
-Received: by mx.zohomail.com with SMTPS id 1740476488070578.0276658322202;
-	Tue, 25 Feb 2025 01:41:28 -0800 (PST)
-From: Sebastian Fricke <sebastian.fricke@collabora.com>
-Date: Tue, 25 Feb 2025 10:40:26 +0100
-Subject: [PATCH v7 05/12] media: rkvdec: Extract rkvdec_fill_decoded_pixfmt
- into helper
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JQLnok9r"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2217875d103so12386975ad.3;
+        Tue, 25 Feb 2025 01:41:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740476518; x=1741081318; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xl+Y1l5voHQwtJP92LWp/7002pAoHO14kkZNlQkkxFE=;
+        b=JQLnok9rnpqSsFLMPMTHuMsGj5JwiFRVYM4GIMP/CKER6QfjdZIPmr0NcXYSIbeYzV
+         CQwqd0aNk9XfL0V+HzLN3R1gMBKcJ6NGzBsaokACMLnrqYeC95ekBYoBnY7JQyAbA5sK
+         e6zcS+3b+10wvfpAjgwwkAxxKjjwOsbTp8sBKYlfMDMab0Ax27YGamTMzO1PSzpdXXnY
+         60ziJIy0t5tWSU2u0HvQgnqWmBGyZJI1yqiat6oZeXu2F/BtKPRYgfUJ2svGjeWP0yw0
+         Szce6O8heqJaZVEt/tcODL7iVHQ/0QIl3tpvYbAo9PnTvMngQt28Rp0WmROugcPm/8GN
+         lBJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740476518; x=1741081318;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Xl+Y1l5voHQwtJP92LWp/7002pAoHO14kkZNlQkkxFE=;
+        b=S4O73sBzMTOFULiPeqKH9nRmupHG20cWPajPGvUW3g71k7ai3jZcW+yFXyVjQBUZzi
+         rYhp8JQTCjAHiYIksAFq98RQVUIBd4comVFyn0u0ZtRrGvCn3dJnPU6oLZAVuAXLmrgr
+         Kn2IftE8MjKtAegWsKkB1ESEpGeSmbL7l/2Uchb34f+uxW26/CbBBAIMztx3bklnko7w
+         CzRXdWvgJwTo+w170B5xW5TaBILcY/fjpxwMTUz3DP6O9WlnXY0u7NESAxESkAWcxAzn
+         Fpv2758Hp9/z72OgKCjO8/IMmTVqkkbrZhqRwyZhF1txM9Crau8TnW/VGWLWLFPcStL3
+         ruCA==
+X-Forwarded-Encrypted: i=1; AJvYcCW4flXJIa6enKzyJYIIfPdqtQgObLz0h8hXcRzuussVuvQZDhYbovgq06/tJQZKijxR/fO/gu8ZujlljiM=@vger.kernel.org, AJvYcCWroyHgZ630GE09Tijqvb32Hq9qoK5eL5/WqCvUYMe1DkQPCW2yxvrRK0baPG57UoXbSFFm/b1w@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxj3l0D62vunp1sng3xEQN/NJtDaLn/bwC06h1NVTBsTLnabRYp
+	m7Kld2+nqiw8DVhoqCotwpCKrWnz5IjS1PQKiL5plV32EP5WdHb1
+X-Gm-Gg: ASbGncsX9g/gVNwN3tGK6Gc/VCr23XzGHGNhqDBjGTR+k9UaPpzjxLV5FwHLYMI8hlW
+	tn9hcJ+sgo6gP0pDv8/+ZQpxar/x+j5NQdsyI5ryRGnTqMs+X8ekNJLJ2M+AEwC5h2+iO1su6xA
+	bN+rAUp0dZdDGbZqOJlyFrIMTZmPBalq3ic+GWY6+e2kIGTtdQK+6Bxw0AcYNyjkeHPUuyE26J2
+	/qs6r+nsZEDXxwkHwooJos2SaUhlf+e3i833cFOxeHdqPQisM9MNS+KzulTJCoTcSxLQkkyAQRg
+	1JA9topc93E5LfXLCmqscXFAVGG+tVcahbbvREr6Sg==
+X-Google-Smtp-Source: AGHT+IGtCeMHEORvZ0nZqeqoPBF/JydV8dIFt56d4Ce/z/GzK8FrT+PFRSwZV3bo/lzU5Od9Izv+Zw==
+X-Received: by 2002:a17:902:dace:b0:221:7854:7618 with SMTP id d9443c01a7336-2219ff78bafmr97636405ad.8.1740476517699;
+        Tue, 25 Feb 2025 01:41:57 -0800 (PST)
+Received: from localhost.localdomain ([182.148.13.61])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a0b0d61sm9986085ad.240.2025.02.25.01.41.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 01:41:57 -0800 (PST)
+From: Qianyi Liu <liuqianyi125@gmail.com>
+To: matthew.brost@intel.com,
+	airlied@gmail.com,
+	ckoenig.leichtzumerken@gmail.com,
+	dakr@kernel.org,
+	daniel@ffwll.ch,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	phasta@kernel.org,
+	tzimmermann@suse.de
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	liuqianyi125@gmail.com,
+	stable@vger.kernel.org
+Subject: [PATCH V2] drm/sched: fix fence reference count leak
+Date: Tue, 25 Feb 2025 17:41:25 +0800
+Message-Id: <20250225094125.224580-1-liuqianyi125@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250225-rkvdec_h264_high10_and_422_support-v7-5-7992a68a4910@collabora.com>
-References: <20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
-In-Reply-To: <20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Hans Verkuil <hverkuil@xs4all.nl>, 
- Boris Brezillon <boris.brezillon@collabora.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev, 
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, 
- Alex Bee <knaerzche@gmail.com>, 
- Nicolas Dufresne <nicolas.dufresne@collabora.com>, 
- Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
- Detlev Casanova <detlev.casanova@collabora.com>, 
- Dan Carpenter <dan.carpenter@linaro.org>, Jonas Karlman <jonas@kwiboo.se>, 
- Christopher Obbard <christopher.obbard@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740476426; l=2573;
- i=sebastian.fricke@collabora.com; s=linux-media; h=from:subject:message-id;
- bh=gOBDVDAsV9VKnb0HLH+du/+hR99gKUsl0D8BUoTDXz4=;
- b=9C8Iecm1IxnOeOqZwUDfahA/UDWeue/VkjdEQ3Y63UPo6LOEq4pTlUHkb1MVPx2NDKtaezxTGdX0
- Yqft9IORC5MXRD7Z+IbEVrQtXSaFZgecW1dFJU9O1BkLZu5AX83m
-X-Developer-Key: i=sebastian.fricke@collabora.com; a=ed25519;
- pk=pYXedPwrTtErcj7ERYeo/IpTrpe4QbJuEzSB52fslBg=
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-From: Jonas Karlman <jonas@kwiboo.se>
+From: qianyi liu <liuqianyi125@gmail.com>
 
-Extract call to v4l2_fill_pixfmt_mp() and ajusting of sizeimage into a
-helper. Replace current code with a call to the new helper.
+We leaked last_scheduled fences when the entity was being killed and the
+fence callback add fails.
 
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Tested-by: Christopher Obbard <chris.obbard@collabora.com>
+To fix this, we should decrement the reference count of prev when
+dma_fence_add_callback() fails, ensuring proper balance.
+
+v2:
+ * Make commit message more clearly. (Philipp and Matt)
+ * Add "Fixes: " tag and put the stable kernel on Cc. (Philipp)
+ * Correct subject line from "drm/scheduler" to "drm/sched". (Philipp)
+
+Cc: stable@vger.kernel.org
+Fixes: 2fdb8a8f07c2 ("drm/scheduler: rework entity flush, kill and fini")
+
+Signed-off-by: qianyi liu <liuqianyi125@gmail.com>
 ---
- drivers/staging/media/rkvdec/rkvdec.c | 27 ++++++++++++++-------------
- 1 file changed, 14 insertions(+), 13 deletions(-)
+ drivers/gpu/drm/scheduler/sched_entity.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
-index f9bef5173bf25c0cd6b09d2b253d36aa78d7b0c4..e354360f4acc1fe9b7c4b90745f0a818fa2b7cab 100644
---- a/drivers/staging/media/rkvdec/rkvdec.c
-+++ b/drivers/staging/media/rkvdec/rkvdec.c
-@@ -27,6 +27,16 @@
- #include "rkvdec.h"
- #include "rkvdec-regs.h"
+diff --git a/drivers/gpu/drm/scheduler/sched_entity.c b/drivers/gpu/drm/scheduler/sched_entity.c
+index 69bcf0e99d57..1c0c14bcf726 100644
+--- a/drivers/gpu/drm/scheduler/sched_entity.c
++++ b/drivers/gpu/drm/scheduler/sched_entity.c
+@@ -259,9 +259,12 @@ static void drm_sched_entity_kill(struct drm_sched_entity *entity)
+ 		struct drm_sched_fence *s_fence = job->s_fence;
  
-+static void rkvdec_fill_decoded_pixfmt(struct rkvdec_ctx *ctx,
-+				       struct v4l2_pix_format_mplane *pix_mp)
-+{
-+	v4l2_fill_pixfmt_mp(pix_mp, pix_mp->pixelformat,
-+			    pix_mp->width, pix_mp->height);
-+	pix_mp->plane_fmt[0].sizeimage += 128 *
-+		DIV_ROUND_UP(pix_mp->width, 16) *
-+		DIV_ROUND_UP(pix_mp->height, 16);
-+}
-+
- static int rkvdec_try_ctrl(struct v4l2_ctrl *ctrl)
- {
- 	struct rkvdec_ctx *ctx = container_of(ctrl->handler, struct rkvdec_ctx, ctrl_hdl);
-@@ -192,13 +202,9 @@ static void rkvdec_reset_decoded_fmt(struct rkvdec_ctx *ctx)
+ 		dma_fence_get(&s_fence->finished);
+-		if (!prev || dma_fence_add_callback(prev, &job->finish_cb,
+-					   drm_sched_entity_kill_jobs_cb))
++		if (!prev ||
++		    dma_fence_add_callback(prev, &job->finish_cb,
++					   drm_sched_entity_kill_jobs_cb)) {
++			dma_fence_put(prev);
+ 			drm_sched_entity_kill_jobs_cb(NULL, &job->finish_cb);
++		}
  
- 	rkvdec_reset_fmt(ctx, f, ctx->coded_fmt_desc->decoded_fmts[0]);
- 	f->type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
--	v4l2_fill_pixfmt_mp(&f->fmt.pix_mp,
--			    ctx->coded_fmt_desc->decoded_fmts[0],
--			    ctx->coded_fmt.fmt.pix_mp.width,
--			    ctx->coded_fmt.fmt.pix_mp.height);
--	f->fmt.pix_mp.plane_fmt[0].sizeimage += 128 *
--		DIV_ROUND_UP(f->fmt.pix_mp.width, 16) *
--		DIV_ROUND_UP(f->fmt.pix_mp.height, 16);
-+	f->fmt.pix_mp.width = ctx->coded_fmt.fmt.pix_mp.width;
-+	f->fmt.pix_mp.height = ctx->coded_fmt.fmt.pix_mp.height;
-+	rkvdec_fill_decoded_pixfmt(ctx, &f->fmt.pix_mp);
- }
- 
- static int rkvdec_enum_framesizes(struct file *file, void *priv,
-@@ -264,12 +270,7 @@ static int rkvdec_try_capture_fmt(struct file *file, void *priv,
- 				       &pix_mp->height,
- 				       &coded_desc->frmsize);
- 
--	v4l2_fill_pixfmt_mp(pix_mp, pix_mp->pixelformat,
--			    pix_mp->width, pix_mp->height);
--	pix_mp->plane_fmt[0].sizeimage +=
--		128 *
--		DIV_ROUND_UP(pix_mp->width, 16) *
--		DIV_ROUND_UP(pix_mp->height, 16);
-+	rkvdec_fill_decoded_pixfmt(ctx, pix_mp);
- 	pix_mp->field = V4L2_FIELD_NONE;
- 
- 	return 0;
-
+ 		prev = &s_fence->finished;
+ 	}
 -- 
 2.25.1
 
