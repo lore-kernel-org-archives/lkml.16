@@ -1,41 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60701EBFE6
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 20:09:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC83720DD75;
+	Tue, 25 Feb 2025 20:09:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740514147; cv=none; b=tx7/KagDHBmG4sPws8PPmvjUD3sfHthZ78+UfizZmyTwQ57HbONpKbwzZFqZNQEkSkVg3n5miwJrNt/66zZ+jXw+kOGQYmgXD1AAJ8R+0NgEWFktAcs+phBPn4rD4Ae1v6j1AykKpWCcqK3xy0dluw1ALtlxbhlXnfZR6cUw1I4=
+	t=1740514170; cv=none; b=j7C8xqoW9YeH1LS16ultitqUtfxfkGrlMV2JMQIjgEFp+nWHeAyuPfOsfbAOryMs2LYzNRpmg885F0WV2KjAfuxkWE7FcvlO7xVk7nli83MuXaTWXcUKFXChlGIZOgNAjy+VUgVL+UIGwnSDgYNgwEOFnfQBvqGuK30ECAtXBmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740514147; c=relaxed/simple;
-	bh=xBkc39cTQDwiDEofgep3iX9dGL/1NrWOWxUE4XdfEXs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K1kut2bdavF5iyii0SD68BCBEn77vLuOvirJtBNk23qmp7stuA+TIr67jydFl6z+cf25lHzkN1oIDqsZqQsspQeBx9RngnGLQ1dbtAqJ1VtwUaIC7kf6Vtv6JN5KIBtuq/pmQxK1I2PZwmR/KGX6F23Zfa3ubSJa5sFqmII39Tw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EvodTOYi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740514170; c=relaxed/simple;
+	bh=v8YED1uXtPIzed3xcqm8lNSETlB2B2EtR243as9ZzjA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RntwCRBxUfwFSd/msSRoBoP3yEWHOHNd5WyNQlvl8qlV9QvhjmXjwxQvjtStGNJJLUp2dF+K7DHLU58aR+1hgFs9duqIjl1cAaGP+NLRw5VCFvCXyPrE6/Grn8TTf4KQg3/Ds9k96Gvc+Sunn9ulxNIrP+tCKm1vnQhJaTAgsYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cUju4poL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EvodTOYi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2BF6C4CEDD;
-	Tue, 25 Feb 2025 20:09:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cUju4poL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B82DC4CEE2;
+	Tue, 25 Feb 2025 20:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740514146;
-	bh=xBkc39cTQDwiDEofgep3iX9dGL/1NrWOWxUE4XdfEXs=;
+	s=k20201202; t=1740514170;
+	bh=v8YED1uXtPIzed3xcqm8lNSETlB2B2EtR243as9ZzjA=;
 	h=From:To:Cc:Subject:Date:From;
-	b=EvodTOYiuc93Q3u7BJGsP8U4+iqK2hqXcvoHVm6JCz0a/Zf9sllragKc6SGBFDm83
-	 JyuFUKs/ka/eLlLxcSxY1I4cZfoBDjhzajtIRgVHRnXyPsaF6AY1pHzIMek1bz3qO6
-	 MHOULi0CV9OfZIn07Fxt3RFEggehmyrjndIhxdPpb0F6Deq0hbzozWZaME20b5AaLc
-	 DlzdzptQWHR3/rrj+HwZV+Qltci+3YxVHxat0j/+gQFF5ay3+0axUXF07xVUhIHUl+
-	 zlciV9KcIKekVAve5ol4Phu7GgJE+QvnVvoIAOE97KO+9DyfSaWX3WIQXD5jMB5IOa
-	 n0LOCVu38DT3Q==
+	b=cUju4poLsGVFL8f0aPa877dzFlwkKDcXMncn7DPdKhYU0RT2GeuLTu8prmcathKpI
+	 j8duCw3/SyV5Mo44NaCrz+Vux4xgMablK2eRS0Htacd/j6bGSxsjNsG1jG1spuCL2F
+	 6mqUHX2jpVrtTpmxFelJ9ZgjhHxBVAT+405wx2DhYERz6rb3+nPkY5JZP/aRGPXDjs
+	 NakYEUqzmdsmelPsAP1+pB7cG3JyKaoaq/0aESBkp2dxa7zq5en/jREy4FiiRomUqa
+	 cZRHZbqteDmMkP88masPKHdlXT5NLOyQWt8IY/7GrfXxaizfGBH9tQk4LG923r82pC
+	 a0cG+NmkxVeMw==
 From: Arnd Bergmann <arnd@kernel.org>
-To: Mike Marshall <hubcap@omnibond.com>
+To: Manish Chopra <manishc@marvell.com>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	Martin Brandenburg <martin@omnibond.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	devel@lists.orangefs.org,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] orangefs: move s_kmod_keyword_mask_map[] into debugfs.c
-Date: Tue, 25 Feb 2025 21:08:52 +0100
-Message-Id: <20250225200901.4041575-1-arnd@kernel.org>
+Subject: [PATCH] net: qed: make 'qed_ll2_ops_pass' as __maybe_unused
+Date: Tue, 25 Feb 2025 21:09:23 +0100
+Message-Id: <20250225200926.4057723-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -47,129 +44,36 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-gcc warns about unused const variables when building with W=1
+gcc warns about unused const variables even in header files when
+building with W=1:
 
-    In file included from fs/orangefs/protocol.h:287,
-                     from fs/orangefs/acl.c:8:
-    fs/orangefs/orangefs-debug.h:86:18: error: 'num_kmod_keyword_mask_map' defined but not used [-Werror=unused-const-variable=]
-       86 | static const int num_kmod_keyword_mask_map = (int)
-          |                  ^~~~~~~~~~~~~~~~~~~~~~~~~
+    In file included from include/linux/qed/qed_rdma_if.h:14,
+                     from drivers/net/ethernet/qlogic/qed/qed_rdma.h:16,
+                     from drivers/net/ethernet/qlogic/qed/qed_cxt.c:23:
+    include/linux/qed/qed_ll2_if.h:270:33: error: 'qed_ll2_ops_pass' defined but not used [-Werror=unused-const-variable=]
+      270 | static const struct qed_ll2_ops qed_ll2_ops_pass = {
 
-This one is only used in one file, so just move the definition
-next to its only user.
+This one is intentional, so mark it as __maybe_unused to it can be
+included from a file that doesn't use this variable.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/orangefs/orangefs-debug.h   | 43 ----------------------------------
- fs/orangefs/orangefs-debugfs.c | 43 ++++++++++++++++++++++++++++++++++
- 2 files changed, 43 insertions(+), 43 deletions(-)
+ include/linux/qed/qed_ll2_if.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/orangefs/orangefs-debug.h b/fs/orangefs/orangefs-debug.h
-index 6e079d4230d0..d4463534cec6 100644
---- a/fs/orangefs/orangefs-debug.h
-+++ b/fs/orangefs/orangefs-debug.h
-@@ -43,47 +43,4 @@
- #define GOSSIP_MAX_NR                 16
- #define GOSSIP_MAX_DEBUG              (((__u64)1 << GOSSIP_MAX_NR) - 1)
- 
--/* a private internal type */
--struct __keyword_mask_s {
--	const char *keyword;
--	__u64 mask_val;
--};
--
--/*
-- * Map all kmod keywords to kmod debug masks here. Keep this
-- * structure "packed":
-- *
-- *   "all" is always last...
-- *
-- *   keyword     mask_val     index
-- *     foo          1           0
-- *     bar          2           1
-- *     baz          4           2
-- *     qux          8           3
-- *      .           .           .
-- */
--static struct __keyword_mask_s s_kmod_keyword_mask_map[] = {
--	{"super", GOSSIP_SUPER_DEBUG},
--	{"inode", GOSSIP_INODE_DEBUG},
--	{"file", GOSSIP_FILE_DEBUG},
--	{"dir", GOSSIP_DIR_DEBUG},
--	{"utils", GOSSIP_UTILS_DEBUG},
--	{"wait", GOSSIP_WAIT_DEBUG},
--	{"acl", GOSSIP_ACL_DEBUG},
--	{"dcache", GOSSIP_DCACHE_DEBUG},
--	{"dev", GOSSIP_DEV_DEBUG},
--	{"name", GOSSIP_NAME_DEBUG},
--	{"bufmap", GOSSIP_BUFMAP_DEBUG},
--	{"cache", GOSSIP_CACHE_DEBUG},
--	{"debugfs", GOSSIP_DEBUGFS_DEBUG},
--	{"xattr", GOSSIP_XATTR_DEBUG},
--	{"init", GOSSIP_INIT_DEBUG},
--	{"sysfs", GOSSIP_SYSFS_DEBUG},
--	{"none", GOSSIP_NO_DEBUG},
--	{"all", GOSSIP_MAX_DEBUG}
--};
--
--static const int num_kmod_keyword_mask_map = (int)
--	(ARRAY_SIZE(s_kmod_keyword_mask_map));
--
- #endif /* __ORANGEFS_DEBUG_H */
-diff --git a/fs/orangefs/orangefs-debugfs.c b/fs/orangefs/orangefs-debugfs.c
-index f52073022fae..6a34e6feac45 100644
---- a/fs/orangefs/orangefs-debugfs.c
-+++ b/fs/orangefs/orangefs-debugfs.c
-@@ -54,6 +54,49 @@
- #define ORANGEFS_VERBOSE "verbose"
- #define ORANGEFS_ALL "all"
- 
-+/* a private internal type */
-+struct __keyword_mask_s {
-+	const char *keyword;
-+	__u64 mask_val;
-+};
-+
-+/*
-+ * Map all kmod keywords to kmod debug masks here. Keep this
-+ * structure "packed":
-+ *
-+ *   "all" is always last...
-+ *
-+ *   keyword     mask_val     index
-+ *     foo          1           0
-+ *     bar          2           1
-+ *     baz          4           2
-+ *     qux          8           3
-+ *      .           .           .
-+ */
-+static struct __keyword_mask_s s_kmod_keyword_mask_map[] = {
-+	{"super", GOSSIP_SUPER_DEBUG},
-+	{"inode", GOSSIP_INODE_DEBUG},
-+	{"file", GOSSIP_FILE_DEBUG},
-+	{"dir", GOSSIP_DIR_DEBUG},
-+	{"utils", GOSSIP_UTILS_DEBUG},
-+	{"wait", GOSSIP_WAIT_DEBUG},
-+	{"acl", GOSSIP_ACL_DEBUG},
-+	{"dcache", GOSSIP_DCACHE_DEBUG},
-+	{"dev", GOSSIP_DEV_DEBUG},
-+	{"name", GOSSIP_NAME_DEBUG},
-+	{"bufmap", GOSSIP_BUFMAP_DEBUG},
-+	{"cache", GOSSIP_CACHE_DEBUG},
-+	{"debugfs", GOSSIP_DEBUGFS_DEBUG},
-+	{"xattr", GOSSIP_XATTR_DEBUG},
-+	{"init", GOSSIP_INIT_DEBUG},
-+	{"sysfs", GOSSIP_SYSFS_DEBUG},
-+	{"none", GOSSIP_NO_DEBUG},
-+	{"all", GOSSIP_MAX_DEBUG}
-+};
-+
-+static const int num_kmod_keyword_mask_map = (int)
-+	(ARRAY_SIZE(s_kmod_keyword_mask_map));
-+
- /*
-  * An array of client_debug_mask will be built to hold debug keyword/mask
-  * values fetched from userspace.
+diff --git a/include/linux/qed/qed_ll2_if.h b/include/linux/qed/qed_ll2_if.h
+index 5b67cd03276e..aa29ac53b833 100644
+--- a/include/linux/qed/qed_ll2_if.h
++++ b/include/linux/qed/qed_ll2_if.h
+@@ -267,7 +267,7 @@ struct qed_ll2_ops {
+ int qed_ll2_alloc_if(struct qed_dev *);
+ void qed_ll2_dealloc_if(struct qed_dev *);
+ #else
+-static const struct qed_ll2_ops qed_ll2_ops_pass = {
++static __maybe_unused const struct qed_ll2_ops qed_ll2_ops_pass = {
+ 	.start = NULL,
+ 	.stop = NULL,
+ 	.start_xmit = NULL,
 -- 
 2.39.5
 
