@@ -1,121 +1,86 @@
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D161918C035;
-	Tue, 25 Feb 2025 18:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14BFF199E88;
+	Tue, 25 Feb 2025 18:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740507016; cv=none; b=umqNq6uwpFopyAo3+pZp5s/M3L+FywqzJKku81i/MUuLRWfPbsFjduKAfQVUk2SAKySSDGxV/gD7akxSztOsi34SQvnkeFDODBcorPLlvPGhf6FwVN4RfpErKI5UZdRkfjXZuhJMBFLBYpEk55bA6CkqXGWXsN7QWYrsLxaYXG4=
+	t=1740507045; cv=none; b=pNkgdHX2DJ++xM2gOzp6kglCm650Ey+YKmYqQ3DY//0IuEhiszIjCwKJTKsqglpaCHz90/NaU5kSP0hofl6QKmckGpSAHZO33WnUL+jEVcyN8mqQz5smojvJJ/kcS9jbZlr5uhJgjoq/maieI/PCBD32V08le89zXi36cE2V/0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740507016; c=relaxed/simple;
-	bh=pE6mwKaK2JZXowpxUDNk2mqTSwB4ssHc8ViDMMbikb4=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=pKelKiSD92i0ANsErkfwvwu7zHv9DbI7reywzs/V8x0QdoE6L1cFwbzEy9Hd/vXDZWVK3MlDuV4fbzQPYuq1PAyWT2vUxG6CgAYJwlSGEghFVtK64kgQvR96aX/lo/ZtaCCNsb/IEKLFlwHbxup2TfzKhdHK3naq1cwnW21vl1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Z+LG7KC9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=dDvdqvuk; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1740507045; c=relaxed/simple;
+	bh=QTZLuCuhfSWV3Z4wszthnMUFp3B71TOx36/COfQlT/w=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=QqeQV4ds4UH/QHYfXvdWS1sBJNPtr+oL/zP8uhkzSocHeBDLgR7y0K7VLnk0DlBAnCru0LoObEoqRSgPkreN8Yohz11dnz9P0yAzSTHbdKbQzFvk0T6Fk13MSF/R7CnVigj6lgf0wi99mCkPJV+sGEmPIJjrA42iwDYmVUjvA0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=wNNGjqz4; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Z+LG7KC9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="dDvdqvuk"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfout.phl.internal (Postfix) with ESMTP id 992D91381131;
-	Tue, 25 Feb 2025 13:10:12 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-11.internal (MEProxy); Tue, 25 Feb 2025 13:10:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1740507012;
-	 x=1740593412; bh=EWRP+F9bm2++vDb4CJaW13Ey4HHcxOh+x9OLFaSDzJk=; b=
-	Z+LG7KC9RBjRFy/63YM5vCgnvUKAaPe8qzrC6KGVajTgImO5OkjWW2TOVKX4LEUV
-	WqFFv8fvQveDkdHZDipThwJ8UYa69k/nZvEN3mtkEqyLV/s1+Oal9bdVodjzwQPQ
-	HpemR2ux40et9sgM2ShT+dIV2bxVRCB08dlEEvYFNByAHZtsHIKOjnWnKb5uO7qA
-	aGE+nzuk1JHZsKPdOBHe48dCaSFE+CsfqempJQULPVKhBRJo5yHjpGLl5uP2yqNf
-	/LiRwOYQXLYXemC/gnaLBDfDKyjNlfX5mQVvPSv6RCgeuSSynaaUEZUZV94J7yrQ
-	kCvvrv0IL9636BOp+aULuw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740507012; x=
-	1740593412; bh=EWRP+F9bm2++vDb4CJaW13Ey4HHcxOh+x9OLFaSDzJk=; b=d
-	DvdqvukWQQZNaZC2mwP/5pLhgt/DnHcplDthHnC4CkbGJJUSWFRgd6I/I7xsxe9z
-	2kmNBJi/zjPFNiOzTqhS7NLXmefSkV3GBbTy1Uf1waNLu/78cWDyEIft7d44+sfN
-	nPTGfBfWnsTrOAd/caLWXCTxaSPJb4tXCQXgvx9p1yacOKj8MSyNBAQP2cPrRcli
-	JWnDHDHUYHf66zhPbt9VAsHZCdo1mdSVpnCcKNCKF8x2fU3QGtXrIOUwJeP+o5A5
-	/jm8sOz06pyDnmCb+QKnu2ugkczIqDzbr92jQMO/lbkH6UycHAR8naexnaOSB0c7
-	J2E3dfKQnlsjnHIiLXCSg==
-X-ME-Sender: <xms:gwe-Z73Xs_Yr8gTI1aYL6TmnRFmFfkYxXuqUVGFtqs91jByH5-nsVA>
-    <xme:gwe-Z6HFmK6ZsGc5Ed0Jp1ImmvgA0sjIQn8ipy13n6SBH2txUPNFoa3yUgK0SGTol
-    ULktWU98ghevonADIQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekvdefkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
-    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeei
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegsrhhglhessghguggvvhdrphhlpd
-    hrtghpthhtohepsggrrhhtohhsiidrghholhgrshiivgifshhkiheslhhinhgrrhhordho
-    rhhgpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrih
-    hnthgvlhdrtghomhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurght
-    ihhonhdrohhrghdprhgtphhtthhopehlihhnuhigqdhivdgtsehvghgvrhdrkhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhn
-    vghlrdhorhhg
-X-ME-Proxy: <xmx:gwe-Z74jZ16WpYl-fD9AE2CNACKFGmf79rKl1QHMZTQo8GziJHHVBQ>
-    <xmx:gwe-Zw1YEtgNPukA1idlD4Rl0VVrHqzGlceTRVj20HkpF7xae0S-HA>
-    <xmx:gwe-Z-HvKimagNdCznDFurZxcMflETDx5pCS6hXdL5-mxwR0vRoz4g>
-    <xmx:gwe-Zx_lHt3QsxJ8Mg_gz_QHZ72r4leI9CPqnIWllwuNNwKEkhsRmg>
-    <xmx:hAe-Z7PbfFf3KSmpGMWpf2jC9iU8kiBh1TnnFKSY2FJh-c-cy2cb7acP>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 709CC2220073; Tue, 25 Feb 2025 13:10:11 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="wNNGjqz4"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 51PIA5JR1380275
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 25 Feb 2025 10:10:06 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 51PIA5JR1380275
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025021701; t=1740507007;
+	bh=F60m0iCyIzI+vMniVHY4Tn5c8XkNN4GK+Fvq4OTAdpc=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=wNNGjqz41V6E1zMgklEVzv/UMNYv9qz6Rf6dk733AUzrUFoRe/ZxfL2LUQOR9p6s+
+	 U+RsPneEwyaXM8i+GD+EIobfrhp8P8XTyKlCGZPdmUeXpgIbNZ3jgDTBOfoi0dus5x
+	 wObVVoFq5z/AgVSK0qKjysK3CDbXk7btSw/oTzdflg/Gm6rRypntreJOyY/rKoFNvU
+	 aT5a7eYbXC/ZPuPxrVJktEQnsJSRkrasJ7RIQ6vz1fWqMgfraFqe51YE3F9aGZ2Yjm
+	 2wl8piqpD/sf7IBSYVwBl4iGGeCr+6kxDF43ydOd3bBASptOvwiz+AEETGkjGBqyrV
+	 l6PVLTAxtdg6A==
+Date: Tue, 25 Feb 2025 10:10:03 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Borislav Petkov <bp@alien8.de>, Nikolay Borisov <nik.borisov@suse.com>
+CC: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        dave.hansen@linux.intel.com, x86@kernel.org, will@kernel.org,
+        peterz@infradead.org, yury.norov@gmail.com, akpm@linux-foundation.org,
+        acme@kernel.org, namhyung@kernel.org, brgerst@gmail.com,
+        andrew.cooper3@citrix.com
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v5_0/5=5D_x86/cpufeatures=3A_Automatical?=
+ =?US-ASCII?Q?ly_generate_required_and_disabled_feature_masks?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250225180051.GCZ74FU-PrcosEHZb1@fat_crate.local>
+References: <20250106070727.3211006-1-xin@zytor.com> <20250223102723.GAZ7r4C7C6sTUnbe4I@fat_crate.local> <1a444a2e-75b6-46f9-8f38-0458655873ac@zytor.com> <20250225174915.GBZ74Cm2Xpc_WwS3oe@fat_crate.local> <8973bfd4-d8b2-4dd7-ae1a-3f685dff769f@suse.com> <20250225180051.GCZ74FU-PrcosEHZb1@fat_crate.local>
+Message-ID: <A8B4322F-F298-406F-8F84-9151FD3CEA5F@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 25 Feb 2025 19:09:49 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Cc: "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
- linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
- "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Message-Id: <2ff27d1a-cda2-4dec-ae9b-23b63f20febb@app.fastmail.com>
-In-Reply-To: <Z72gCD7B0_jj-f2s@smile.fi.intel.com>
-References: <20250225100838.362125-1-andriy.shevchenko@linux.intel.com>
- <b8a1315a-8d86-4904-92d1-179699f54e03@app.fastmail.com>
- <Z72dfxKzLLORkLl1@smile.fi.intel.com>
- <745ff032-1e71-4569-ac9f-07c44cbcb344@app.fastmail.com>
- <Z72gCD7B0_jj-f2s@smile.fi.intel.com>
-Subject: Re: [PATCH v1 1/1] at24: Drop of_match_ptr() and ACPI_PTR() protections
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 25, 2025, at 11:48, Andy Shevchenko wrote:
-> On Tue, Feb 25, 2025 at 11:42:48AM +0100, Arnd Bergmann wrote:
->> On Tue, Feb 25, 2025, at 11:37, Andy Shevchenko wrote:
->> > On Tue, Feb 25, 2025 at 11:29:05AM +0100, Arnd Bergmann wrote:
->> >> On Tue, Feb 25, 2025, at 11:08, Andy Shevchenko wrote:
->> >
->> >> Subject: [PATCH] [SUBMITTED 20240403] spi: remove incorrect of_match_ptr
->> >>  annotations
->> >
->> > Was it applied (and the rest you provided here)?
->> 
->> It was part of a longer series. Some were applied, but the ones
->> I provided here are those that for some reason did not make it.
->> They should apply cleanly to today's linux-next.
+On February 25, 2025 10:00:51 AM PST, Borislav Petkov <bp@alien8=2Ede> wrot=
+e:
+>On Tue, Feb 25, 2025 at 07:54:50PM +0200, Nikolay Borisov wrote:
+>> But don't we use perl even now:
+>>=20
+>> $ find =2E -iname *=2Epl | wc -l
+>> 55
 >
-> I can review them and give a tag if you issue a new version.
+>You're searching wrong:
+>
+>$ git grep -w perl arch/x86/
+>arch/x86/crypto/poly1305-x86_64-cryptogams=2Epl:1:#!/usr/bin/env perl
+>$
+>
+>That's some crypto-special thing=2E
+>
+>This'll force it on *everything*=2E
+>
 
-I've sent a bunch of those to maintainers directly now but
-in the end forgot to Cc you. Let's see what gets accepted,
-and then I'll send the rest as a series fro the endgame.
+Yeah we had that debate back and forth=2E Although I personally feel that =
+any sensible build host would have or be able to have Perl, the consensus o=
+pinion seems to be that if it can be done with POSIX standard tools or host=
+-side C it should be unless there is a very strong justification to the con=
+trary=2E=20
 
-         Arnd
+I guess at some point that will add host-side Rust, which will be fun sinc=
+e that adds the whole Rust user space runtime=2E 
