@@ -1,62 +1,64 @@
-Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A1B2690CE
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:20:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D052690CE;
+	Tue, 25 Feb 2025 13:20:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740489640; cv=none; b=gaaJff2S3W4x0V4tHlrVLzBEEe4HQMTDnevAGRmzSydbghZ35R2Buta79FDTq+jWO4LFDCrYeb4dty0/qj2qTk5+6bF9ISF9IN8hsjD5XGUd6HyaIK2Qa0WUnLnSJw1IXklbUIBOUkavM1u+B9Fh6O0CEj0F6cVz1G/VcQLTT5w=
+	t=1740489647; cv=none; b=Zh1EO7fGe+n/h6I/fatOGYvmLHmZDprTzvzhcfpGdNMkjzH4OnSxFs7Np5DY3tuIGcUj8FeOtRCGi7J5fAaiz+sxR6GWw9TEmDy+gV/LZ6vBFc3VPV8nhT93MgC/bTZiMg99uXs3VJUTcLiSAUIghXFxcCBb4c4tq33klMlTuNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740489640; c=relaxed/simple;
-	bh=u3yEwLudzQn5Appg1EKIWuwC8eP34YxzNljiK7UUCCg=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p9Jvvy0pUCUr2CQdw99SSbx18N/ZDhrC4CX2OMwmLYSVyhNDN5PQKXpLphdvAaSoYrVlhg4j9k6nRqEqMxZQX1DjO4t38WEVzdcX0gDo2WGE99IHEqrQPpCvfkBV856DFIuAdQEy+5N+KlmVxnw7kpTBbTl5x4L+WEDcst3nqfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=vceDglkQ; arc=none smtp.client-ip=203.205.221.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1740489647; c=relaxed/simple;
+	bh=1A13FZECMkoqrJtBXrU7NR0L2ARqxaUUuSaWU3FtDwI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VkwAWTzer25ngb4XTuSKvC6154kX02oGsTW+ENviNZLkq8vVoIvaQZ37Ri6ZFRRcBNXs8lROtLjyOBGpfCu36pwgD2ddQktFq/fV5TTAH3GofSNETQBYfuiMLp/4POdMFiKSL6AK6vBW7/G3iJsSupBb7Nc2No9zWcw11qRpd1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iSHSoA9w; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="vceDglkQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1740489327;
-	bh=+oQG0kubNNcrUEyDC0x1SXjD6cJ/muvA92NEGb9rnSs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=vceDglkQgrwvb/l71lq6tNX5AivBJf7PHhg0WpslKeAkEbD9s5SMJ1dMxhJv9STtT
-	 JH3+MhM+JbM6Ac94WjVUXw+095nUErB/9pNzdjAnoA9cjCHVvehOerfBzajg4OZCRf
-	 ECRhw9bpjaw7TM3BftwSlFsD74WSvwhnzIkNc14A=
-Received: from chenyu5-mobl2 ([118.114.56.201])
-	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
-	id 3D80A29F; Tue, 25 Feb 2025 21:15:24 +0800
-X-QQ-mid: xmsmtpt1740489324ty7p96lgy
-Message-ID: <tencent_CC411B43EAD996961A06366F606C96DD0406@qq.com>
-X-QQ-XMAILINFO: NyTsQ4JOu2J2E6enTI6knP98gdgIednHXvZvEccsRAn9oe1QGR85OzNNIkaslU
-	 Q+h5S9Q1+2jjv1ibfUEDZ8WjHmIsJuCdBSokzipwjIAldc3a8CrJTh6bhbQCGqg8ZIzGWQE46gy2
-	 6kr5DGGTUMwBtLiHN++HGGETiGq/ScptKEOPD0v3ewPGqNV/fcXbUw8q1lNN+oQ7g1c2hVshM910
-	 ciRiT7BsPcTBREqtrGnRRXmFO6ghcxSZI8pvbR0tiKm5WvhPtmFCRbL798g4eMP4xkZE/CeTp+GX
-	 MAfEXVCBdZ15TtEr2/Lr1nQcfDvXdZPLxHWRo6yAzMXZsLy6P6Pm1YcSOZeJeHF5KI1oq9MdaVFE
-	 Ab0Ayfx4eUwN3YgSuUB2IR1Js10SPUmKFZGg+yuDXUq44VS/BQkJLN7KeugpQdwK/1WoFjwy410P
-	 VCzckYVh1FYCQ54DqqkEm/Ht6mjba/PIFuDYYwk2rJRNBVvoj9xzeHELV8UCmvyhokdOsTeKXyRJ
-	 rwsK6JnlEdWSNjcpovR2tIUOHT0pYzvBUS8sOA87WYR/BKTOZNqB1nEuQ4J5Zj8/hyQJTP0FyWhg
-	 C/yeTC92fyzKuwSIiJtNJFDHTqSc+ojmsUYKApwwLlPecGg0wkLSPQ02BPlcBPJ4o1iIdpF0nnJu
-	 QV6WICJ1ChGZYJZpavGvm3yEEOYdxDoxF9qKl2HJEO8j18W0z69EOnFTKV9nLjtC/go3hLGad2t+
-	 1pe/HbNuE7qs3vjXz3EyJ3jEhtYZQu9LCPvY/qBFWuC3ZOtli0StsOzHaKX7ofDXX0hh9GSZT2er
-	 8V/Wp3v1E44dO0Pfb14rWQYWfcZHaCgnKVX+Ief4tBOVE5Cs7QQuombY+EPmx/iJzKooqC19v0cg
-	 /+wTonDgeIUgMDTrb/RqTKJlh0WJXkikKstYBmkqOaApQjzR0rXNisFPa2gRi8LsW6h/6QiMY8Nr
-	 bZPfmQjgNXppMuDnjMoF+5toFXjbEOqcuaB53IaM/IcRd1NKfhxA==
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-Date: Tue, 25 Feb 2025 21:15:56 +0800
-From: Chen Yu <yu.chen.surf@foxmail.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: zihan zhou <15645113830zzh@gmail.com>, oe-lkp@lists.linux.dev,
-	kernel test robot <oliver.sang@intel.com>, lkp@intel.com,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	aubrey.li@linux.intel.com, yu.c.chen@intel.com
-Subject: Re: [tip:sched/core] [sched]  2ae891b826:  hackbench.throughput 6.2%
- regression
-X-OQ-MSGID: <Z73CjBppcf/zhrOW@chenyu5-mobl2>
-References: <202502251026.bb927780-lkp@intel.com>
- <tencent_6D9B516AFF16965A3BB652A049D6CA847706@qq.com>
- <20250225122705.GD34233@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iSHSoA9w"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740489646; x=1772025646;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1A13FZECMkoqrJtBXrU7NR0L2ARqxaUUuSaWU3FtDwI=;
+  b=iSHSoA9wGeZHJR0GB+rWv7BJYIcR5EBFPAcvVqJrpVX1Q7Wl++cviC8O
+   jEOk7KwC+v/V2icfzZZjz0A6BdWQjuJbQfkKLKY18sk1EDjibvXAsxYjT
+   PFZNI12AkFiwH/P1yr1Vgd9c07XQihTvPY+o/a0vvrHDHaOIVwnFrZMJi
+   DeE/HiaOqMgJcOla+dDfn/IUT7xXzjKZvZ8o4jRu8O6yDh1GLngPewRcG
+   hsy6p+UlAHBhHDGAhHditOonq+lwewuZApz8Nf9z7HYJg9VC7HYxX7029
+   aTVbXb7z8JhK4DMWrF1yM3Bu4AyRINmc5XJawkzD/8Kwv+Qop++y7TX+J
+   A==;
+X-CSE-ConnectionGUID: Ll7oWkK+T7ytetfHYHBmXA==
+X-CSE-MsgGUID: 2T5nvjAcR62nl6HqszwAkQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="41175587"
+X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
+   d="scan'208";a="41175587"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 05:20:45 -0800
+X-CSE-ConnectionGUID: 6i21MTHnTLKl04xdRt63zQ==
+X-CSE-MsgGUID: yHRYqWq7TreSahEUq+lDEQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
+   d="scan'208";a="116368175"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 05:20:43 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tmurY-0000000F0AZ-0Oqr;
+	Tue, 25 Feb 2025 15:20:40 +0200
+Date: Tue, 25 Feb 2025 15:20:39 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 3/3] gpiolib: don't double-check the gc->get callback's
+ existence
+Message-ID: <Z73Dp5EH3sHMZDZ7@smile.fi.intel.com>
+References: <20250225-retval-fixes-v1-0-078c4c98517a@linaro.org>
+ <20250225-retval-fixes-v1-3-078c4c98517a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,24 +67,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250225122705.GD34233@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250225-retval-fixes-v1-3-078c4c98517a@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 2025-02-25 at 13:27:05 +0100, Peter Zijlstra wrote:
-> On Tue, Feb 25, 2025 at 05:31:34PM +0800, Chen Yu wrote:
+On Tue, Feb 25, 2025 at 12:56:25PM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> > 
-> > But consider that the 6% regression is not that high, and the user might customize
-> > base_slice via debugfs on-demand, we can keep an eye on this and revist it in the
-> > future(we have encountered some SPECjbb regression due to over-preemption).
-> 
-> You can specify a per-task slice using sched_attr::sched_runtime. Also
-> see commit 857b158dc5e8 ("sched/eevdf: Use sched_attr::sched_runtime to
-> set request/slice suggestion")
-> 
->
+> gpiochip_get() is called only in two places: in gpio_chip_get_value()
+> and in gpiochip_get_multiple() where the existence of the gc->get()
+> callback is already checked. It makes sense to unduplicate the check by
+> moving it one level up the stack.
 
-Thanks, we'll have a try during the next test cycle.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-thanks,
-Chenyu
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
