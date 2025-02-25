@@ -1,223 +1,228 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2070.outbound.protection.outlook.com [40.107.92.70])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D81619E833;
-	Tue, 25 Feb 2025 16:41:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740501717; cv=fail; b=H4lnocWfBfGY0ETNDcBATQwJJ7DiPKs/wL51pwvLX/IkAPGhqBAQBg5TL0Wq3Tg+akVqHwNwmmPRtHkkgDdLtbqWoGkD46/RIkaU0GQcaYBWV29G/EKtS/joNvTVqPFi8xzgK6w7mtUJbd79mzQTlcJO6sZ3nNY5UYP/U9lud2U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740501717; c=relaxed/simple;
-	bh=geutMUmGInbYPhEWNr/0mhLhtBnGxn72dK7u30t1UKk=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WDXz3ykSOh/VSTR+/wrGW9t1MzfB5BqnKzaa2TzHyg5fFTz+Fw+BiB94GwGlz1zH8L5azCHQOn8iOHiIxtiReDuoNhQc+03y728MuzZOaoET6KO0WOg//ldZINymp2I2/dM7fO4fiOI/EjP9uX9mTKVkZt9rTMAlr5kdyRwaAvQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=BCRvrTK9; arc=fail smtp.client-ip=40.107.92.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875A5198A19;
+	Tue, 25 Feb 2025 16:42:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740501743; cv=none; b=IMLVQZswWkt6HihikbS+dWwlQN8Y7gWVX/OM0kJeYVwDFhlR93OYBkTxb4rg0al9tW0f8rZ7I3Uj+q8d6JLYM7eir02aGM8gyBI/rQFD0lIK/onCjcg2l7TqxeyvFMHiqb3UIY2B0KV6+Oqb02Dryg29dHYhMEptHzo1LgNbTEc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740501743; c=relaxed/simple;
+	bh=E1I+A2ijUQsaJXZ97m6qRzEkqsAgeCC2zPqldsjqxWo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aS7pRMH9DUlGVqk51pQ7qyIiDPCoZM+ENANRaOQhMADtyxv51SXE5bdWyEcAA6TRXbcaVaq4yqmxzUNNxIQd7Ptd6UgiG7I1e7LtR15p5R7LPfc1w/zUwOWrTbYFMDtNaCFu1fO2DP+ftLAXW/WMlU6u5Rs4Hm9XlwwbMC6CIc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gMVjLfi8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="BCRvrTK9"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JF3ecVSxWlxQcYBEHebnmViCp0527kL/pJRuHNGU0HI4oiNguXYhZiV6VheNSoOCF22UgZEjUwZfWp9jf8Vla9cIv9ylKrcF9BUc8q7lnH7FlvJowAd3JM4UTyda+CUh5OnqHtwlmk5DH/vr5wODTDL65nrnG0jYS7CPGpWzjUmZ7WVhLACn7Myr+FsSuBIwiWlCAOH6RMQpd6Gmxjclc8HBE1p+fJlwEap+f6vwezWTTh3xwpGAUTYGSEwxlLDCBWZukAeqQJtd+6DGa86c/kQdhY9atAnLqW8bltMDSE2InIHHP4V3PaTacF0Q38RgyJvMZR7OwqM/5/LsuI14FA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oQzwjHZLgpxUYciJqtWuSoygM9wjRLKnUx9VAR3mK1Q=;
- b=X7Xguuljxx55Su6FXbC3nzG5ZHxwj4w7w+UnlZwd4Ju5yIy1K3V/MZ9gKIFg/1T5XoOnT6zhUZ+/jrciD8ZGGm8T8iWeL/wA4w0gwqHkEIIqvYYEyXh2m0jSXr93JGYCx2//Zo70aTkeYMfwWLxQRT2XGrctQ7l1HRuhzQk+wgn7CPG+HZc6NdE1YIKykum7oJo7ylMYPbPvKHqcVLnwmDOucj6L6dg2Q944jXiyRg2ZtYc0oqc3HBuiplggpcjVzPJLbU+5Je1JO/WDYO/YFHKmJ/Ml5bvpKVMw9iuemTIdKFU8gTtfwEYrk/FH3mM3PvFMf0aGWqhoDXJQruhGUg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=redhat.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oQzwjHZLgpxUYciJqtWuSoygM9wjRLKnUx9VAR3mK1Q=;
- b=BCRvrTK9WNiPzCG2wZrLYh3KCUoYq5cbfm9yJry5wqB4NfUIpMpHUrPKc2Kv2ivjdidGzq6PPOreGoCJrnhfICgAI44bqBTlRQqm9vZiKhmm3E/bKBqgLl6hBjphVNoA/tJtCEjy85z2+wO/f63lNoY++SoiwN7oL6O41p/0ePe+ET9YI57hTZvC3hqH4/hdddZztJ5JWybVjOG3pGVyoPaazK+XBheCMEJOSPQMG3lNoRcN/rb8uwdvpObLcOpLB4xzPNeiPB2Lcz8W3Y2eINob+x/wteD+QhYzVryLtwDuIQKvpV8L81Cn6ILDIRRV3yc5K6pIx/a3+Ke2lrr4vg==
-Received: from MN2PR12CA0022.namprd12.prod.outlook.com (2603:10b6:208:a8::35)
- by BL1PR12MB5707.namprd12.prod.outlook.com (2603:10b6:208:386::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.21; Tue, 25 Feb
- 2025 16:41:48 +0000
-Received: from BL6PEPF0001AB52.namprd02.prod.outlook.com
- (2603:10b6:208:a8:cafe::c7) by MN2PR12CA0022.outlook.office365.com
- (2603:10b6:208:a8::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8466.21 via Frontend Transport; Tue,
- 25 Feb 2025 16:41:48 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- BL6PEPF0001AB52.mail.protection.outlook.com (10.167.241.4) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8489.16 via Frontend Transport; Tue, 25 Feb 2025 16:41:48 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 25 Feb
- 2025 08:41:30 -0800
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 25 Feb
- 2025 08:41:29 -0800
-Received: from Asurada-Nvidia (10.127.8.11) by mail.nvidia.com (10.129.68.9)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Tue, 25 Feb 2025 08:41:28 -0800
-Date: Tue, 25 Feb 2025 08:41:27 -0800
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-CC: Pranjal Shrivastava <praan@google.com>, <kevin.tian@intel.com>,
-	<corbet@lwn.net>, <will@kernel.org>, <joro@8bytes.org>,
-	<suravee.suthikulpanit@amd.com>, <robin.murphy@arm.com>,
-	<dwmw2@infradead.org>, <baolu.lu@linux.intel.com>, <shuah@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <iommu@lists.linux.dev>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <eric.auger@redhat.com>,
-	<jean-philippe@linaro.org>, <mdf@kernel.org>, <mshavit@google.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <smostafa@google.com>,
-	<ddutile@redhat.com>, <yi.l.liu@intel.com>, <patches@lists.linux.dev>
-Subject: Re: [PATCH v7 12/14] iommu/arm-smmu-v3: Introduce struct
- arm_smmu_vmaster
-Message-ID: <Z73yt4r0iDFwbty2@Asurada-Nvidia>
-References: <cover.1740238876.git.nicolinc@nvidia.com>
- <be799951a817557ac093ac3e18d02a631306aa35.1740238876.git.nicolinc@nvidia.com>
- <Z7zYLBLZGKim-5UL@google.com>
- <Z7zlH74/orq9HF7Q@Asurada-Nvidia>
- <Z7zqdrQn7Q8yXfcn@google.com>
- <Z7zxsbJsOFp41Dzd@Asurada-Nvidia>
- <Z70EnQ5CXacc4ysT@Asurada-Nvidia>
- <20250225160225.GA593877@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gMVjLfi8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D075BC4CEE6;
+	Tue, 25 Feb 2025 16:42:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740501743;
+	bh=E1I+A2ijUQsaJXZ97m6qRzEkqsAgeCC2zPqldsjqxWo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gMVjLfi8RUbNJ1VSvtuyy71POodgGy0/kNnREyvDNg64smohUM2ALzQWrZi8w3f9I
+	 4LVmOLgrARJol4lLYOoUiobbX7Y3aQFL3sOxabO6oTV7550ZjxQ2xUAMdZ3szOUVhj
+	 CUPx79Br1nHmlgNXnJu7UF5b1ZfWSFhb6beB0/4BpMk6aGhwJT296Nyz+zHxGSZc1o
+	 ZGDGCza9K9x6n7zMHowk721uOxmBPdUDnEEby16e1qkZLrvjqigseSzNQa6PhG7Len
+	 hbONMGfxrM3RqDXrhZO0vN+dvny2/0bRrL91EkMBKKZR9FqYZPeEStSR4wYc9ujzIi
+	 5EtkuYflCfmHA==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Harald Freudenberger <freude@linux.ibm.com>,
+	Holger Dengler <dengler@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Eric Biggers <ebiggers@google.com>,
+	James Bottomley <James.Bottomley@HansenPartnership.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	linux-crypto@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-s390@vger.kernel.org
+Subject: [PATCH] crypto: lib/Kconfig - fix chacha/poly1305 dependencies more more
+Date: Tue, 25 Feb 2025 17:42:07 +0100
+Message-Id: <20250225164216.4807-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250225160225.GA593877@nvidia.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB52:EE_|BL1PR12MB5707:EE_
-X-MS-Office365-Filtering-Correlation-Id: f160a562-86b6-4b43-20f1-08dd55bb4c5b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?rXpPdERVcJpT2AV1PouQTcJUQKzvmGjIfdiuhzoTyUnZyZaQsSZjD0KzvylR?=
- =?us-ascii?Q?IXb76n4TgsUenOlIqH4C1iiSNPJdh0r2dKWRNWffzZ7LYgEcxw85vTCdXxRB?=
- =?us-ascii?Q?8K0SOxP8WqrXPViGUK7O4Xt4ZUV1zLBBzGhozvYfxekjRbOEVUa0Vwl6DS2y?=
- =?us-ascii?Q?1PVEpLwjG03EQIeGwQa6ArVozhzFZ+nf5YROP28mmbF/zCgiRcU0DWF6+X/Z?=
- =?us-ascii?Q?f0bGbRhzet64XekbzB2i5sC9YPCjRKnO6zSVOp4teMwJ/XU0nWowawPkbIH4?=
- =?us-ascii?Q?4/7EUSquxm3m5PdC590sDvmrGNw/+aT2EsryApuPkGKzn7VRJh1KzyYxOWQA?=
- =?us-ascii?Q?ouATWC9DwyfLcv5GEVmOsTDpgnR4RgU35aqN7I4m4LCC5IEHztd9TFgOpbjK?=
- =?us-ascii?Q?LzcMN1HwnKtVeRPbToN5pHM9QPcR/PAliCO6LBmvrNreeW7z5vxnyfuDLhyS?=
- =?us-ascii?Q?/VY0DFFLS2NseZ/Ymkh3mjvbjtM/ixsr4pHNXKTeMVt2t0IP+Ovr+T+oawY6?=
- =?us-ascii?Q?LmuTr75dRPF4GCACNI2HRrdh4DPsEh5EOTHZ0gd0HnsANsR+/h7XkCxqkDqB?=
- =?us-ascii?Q?ZdULKJkPitU5i9If72fpJTRRpibM3N2x01UNnJU/y0AXXzgmvlkxGj1uQxSc?=
- =?us-ascii?Q?GJv5PVhkSYe2ptnK2Zg+dpgep8YWOMrffD+OVmk3wVniVIvoKgCBi+4bicFl?=
- =?us-ascii?Q?5YBomFPf2QsuAn0psUeH3AfwiKeUtm4nRl9plR8gl4BvrRlLArkLh8+Oe04U?=
- =?us-ascii?Q?ap/GP86eh1WBsdZn6TS96FOaSSV/JDbTiJo3AnXKTiRd1iNqxg/Of/RG1tQV?=
- =?us-ascii?Q?YF++95XQC7DwQFSQok7b8QjhHx/ZpxWo8IS/C5ZG86324t38Swgyub79NgmB?=
- =?us-ascii?Q?rZncuv3TdzqLq9HP34frHvjb8jjV/lpdWpx3pagpL2BBC79gsY4otEbnelkX?=
- =?us-ascii?Q?jpPO6PjKmISmbe1Z8aPaHq8CERPrtRllwE4XXw8/5QZaibtUeJn2GCnk0RkA?=
- =?us-ascii?Q?Yaf6Usxnh3Gc6KVNMyG5rXJkPEOPvpwxIG5LPISbv9SYXaj28+W1zTwQdXpM?=
- =?us-ascii?Q?myWecQS+9owGtaA71AqR8YsHg7M5lPw6nkab+LRlTMMNGcOAxBi5HmHOUiN6?=
- =?us-ascii?Q?Xrufk4rg+Dm4x/mPSuisc3u7K6D4xrO3CQRVm/mVswx62MVwUw5lp4ax1rBx?=
- =?us-ascii?Q?WQfMrKpJgVyt59etGje5rgC2oPnsSp5/KwILM8zepkK5wUEjHSYcDC+9xq37?=
- =?us-ascii?Q?lU+XBCDgZE3Xcf4q4AKUqAUPN8b8WL6A0PvjBhTI8BwppQYtXh7YT1UVywX5?=
- =?us-ascii?Q?v+8zeriaFUhk4OqFH0D+TkaZjKvuCbfyJ/qM84np8p+b4l9V5hzuMMghZ26h?=
- =?us-ascii?Q?YPYBUygVY9Tt9kzQ4rwMsYB8ZH97CjLwcvEBvj36Uw8hsvTepn+cpbyee0Ck?=
- =?us-ascii?Q?pCsoi8meoc1WOZ3OXPTLV6kC0NOSwSw28zdFpVRG0HUoeHX2p9jRKsDVOLJw?=
- =?us-ascii?Q?3K5cbYc+RQONuMI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2025 16:41:48.2733
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f160a562-86b6-4b43-20f1-08dd55bb4c5b
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB52.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5707
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 25, 2025 at 12:02:25PM -0400, Jason Gunthorpe wrote:
-> On Mon, Feb 24, 2025 at 03:45:33PM -0800, Nicolin Chen wrote:
-> 
-> > --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
-> > +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
-> > @@ -95,8 +95,6 @@ int arm_smmu_attach_prepare_vmaster(struct arm_smmu_attach_state *state,
-> >  
-> >  	iommu_group_mutex_assert(state->master->dev);
-> >  
-> > -	if (domain->type != IOMMU_DOMAIN_NESTED)
-> > -		return 0;
-> >  	nested_domain = to_smmu_nested_domain(domain);
-> >  
-> >  	/* Skip invalid vSTE */
-> > @@ -122,19 +120,9 @@ void arm_smmu_attach_commit_vmaster(struct arm_smmu_attach_state *state)
-> >  {
-> >  	struct arm_smmu_master *master = state->master;
-> >  
-> > -	mutex_lock(&master->smmu->streams_mutex);
-> > -	if (state->vmaster != master->vmaster) {
-> > -		kfree(master->vmaster);
-> > -		master->vmaster = state->vmaster;
-> > -	}
-> > -	mutex_unlock(&master->smmu->streams_mutex);
-> > -}
-> > -
-> > -void arm_smmu_master_clear_vmaster(struct arm_smmu_master *master)
-> > -{
-> >  	mutex_lock(&master->smmu->streams_mutex);
-> >  	kfree(master->vmaster);
-> > -	master->vmaster = NULL;
-> > +	master->vmaster = state->vmaster;
-> >  	mutex_unlock(&master->smmu->streams_mutex);
-> >  }
-> 
-> I'd leave the clear_vmaster just for clarity. Commit should not be
-> unpaired with prepare in the other functions.
-> 
-> It looks fine with this on top too
-> 
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-Ack. I added it back and a #ifdef to the vmaster: 
+A recent change tries to fix Kconfig dependencies, but introduced
+two problems in the process:
 
-+void arm_smmu_master_clear_vmaster(struct arm_smmu_master *master)
-+{
-+       struct arm_smmu_attach_state state = { .master = master };
-+
-+       arm_smmu_attach_commit_vmaster(&state);
-+}
-[...]
-@@ -824,6 +829,9 @@ struct arm_smmu_master {
-        struct arm_smmu_device          *smmu;
-        struct device                   *dev;
-        struct arm_smmu_stream          *streams;
-+#ifdef CONFIG_ARM_SMMU_V3_IOMMUFD
-+       struct arm_smmu_vmaster         *vmaster; /* use smmu->streams_mutex */
-+#endif
-        /* Locked by the iommu core using the group mutex */
-        struct arm_smmu_ctx_desc_cfg    cd_table;
-        unsigned int                    num_streams;
-@@ -972,6 +980,9 @@ struct arm_smmu_attach_state {
-        bool disable_ats;
-        ioasid_t ssid;
-        /* Resulting state */
-+#ifdef CONFIG_ARM_SMMU_V3_IOMMUFD
-+       struct arm_smmu_vmaster *vmaster;
-+#endif
-        bool ats_enabled;
- };
+ - only arm, powerpc and x86 are changed, while mips, arm64 and s390
+   are now broken
 
-Thanks
-Nicolin
+ - there are now configurations where the architecture enables its
+   own helper functions as loadable modules, but they remain silently
+   unused because CRYPTO_LIB_* falls back to the generic helpers
+
+Address both by changing the logic again: the architecture functions
+select CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA, which may be a loadable
+module or built-in, and this controls whether the library is
+also built-in.
+
+Fixes: 04f9ccc955c7 ("crypto: lib/Kconfig - Fix lib built-in failure when arch is modular")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+I did not quite understand what problem the 04f9ccc955c7 patch
+actually tried to solve, so there is a chance that my version
+undoes it. I tested this on randconfig builds across, arm,
+arm64 and x86 and found no other dependency problems with these
+libraries.
+---
+ arch/arm64/crypto/Kconfig |  4 ++--
+ arch/mips/crypto/Kconfig  |  4 ++--
+ arch/s390/crypto/Kconfig  |  2 +-
+ lib/crypto/Kconfig        | 20 +++++++++++---------
+ 4 files changed, 16 insertions(+), 14 deletions(-)
+
+diff --git a/arch/arm64/crypto/Kconfig b/arch/arm64/crypto/Kconfig
+index 5636ab83f22a..3d90efdcf5a5 100644
+--- a/arch/arm64/crypto/Kconfig
++++ b/arch/arm64/crypto/Kconfig
+@@ -29,7 +29,7 @@ config CRYPTO_POLY1305_NEON
+ 	tristate "Hash functions: Poly1305 (NEON)"
+ 	depends on KERNEL_MODE_NEON
+ 	select CRYPTO_HASH
+-	select CRYPTO_ARCH_HAVE_LIB_POLY1305
++	select CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305
+ 	help
+ 	  Poly1305 authenticator algorithm (RFC7539)
+ 
+@@ -190,7 +190,7 @@ config CRYPTO_CHACHA20_NEON
+ 	depends on KERNEL_MODE_NEON
+ 	select CRYPTO_SKCIPHER
+ 	select CRYPTO_LIB_CHACHA_GENERIC
+-	select CRYPTO_ARCH_HAVE_LIB_CHACHA
++	select CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA
+ 	help
+ 	  Length-preserving ciphers: ChaCha20, XChaCha20, and XChaCha12
+ 	  stream cipher algorithms
+diff --git a/arch/mips/crypto/Kconfig b/arch/mips/crypto/Kconfig
+index 7decd40c4e20..cbeb2f62eb79 100644
+--- a/arch/mips/crypto/Kconfig
++++ b/arch/mips/crypto/Kconfig
+@@ -5,7 +5,7 @@ menu "Accelerated Cryptographic Algorithms for CPU (mips)"
+ config CRYPTO_POLY1305_MIPS
+ 	tristate "Hash functions: Poly1305"
+ 	depends on MIPS
+-	select CRYPTO_ARCH_HAVE_LIB_POLY1305
++	select CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305
+ 	help
+ 	  Poly1305 authenticator algorithm (RFC7539)
+ 
+@@ -55,7 +55,7 @@ config CRYPTO_CHACHA_MIPS
+ 	tristate "Ciphers: ChaCha20, XChaCha20, XChaCha12 (MIPS32r2)"
+ 	depends on CPU_MIPS32_R2
+ 	select CRYPTO_SKCIPHER
+-	select CRYPTO_ARCH_HAVE_LIB_CHACHA
++	select CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA
+ 	help
+ 	  Length-preserving ciphers: ChaCha20, XChaCha20, and XChaCha12
+ 	  stream cipher algorithms
+diff --git a/arch/s390/crypto/Kconfig b/arch/s390/crypto/Kconfig
+index b760232537f1..6f7495264943 100644
+--- a/arch/s390/crypto/Kconfig
++++ b/arch/s390/crypto/Kconfig
+@@ -112,7 +112,7 @@ config CRYPTO_CHACHA_S390
+ 	depends on S390
+ 	select CRYPTO_SKCIPHER
+ 	select CRYPTO_LIB_CHACHA_GENERIC
+-	select CRYPTO_ARCH_HAVE_LIB_CHACHA
++	select CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA
+ 	help
+ 	  Length-preserving cipher: ChaCha20 stream cipher (RFC 7539)
+ 
+diff --git a/lib/crypto/Kconfig b/lib/crypto/Kconfig
+index c542ef1d64d0..6b45bd634cd9 100644
+--- a/lib/crypto/Kconfig
++++ b/lib/crypto/Kconfig
+@@ -50,8 +50,6 @@ config CRYPTO_ARCH_HAVE_LIB_CHACHA
+ 
+ config CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA
+ 	tristate
+-	select CRYPTO_ARCH_HAVE_LIB_CHACHA if CRYPTO_LIB_CHACHA=m
+-	select CRYPTO_ARCH_HAVE_LIB_CHACHA if CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA=y
+ 
+ config CRYPTO_LIB_CHACHA_GENERIC
+ 	tristate
+@@ -65,7 +63,9 @@ config CRYPTO_LIB_CHACHA_GENERIC
+ 
+ config CRYPTO_LIB_CHACHA
+ 	tristate "ChaCha library interface"
+-	select CRYPTO_LIB_CHACHA_GENERIC if CRYPTO_ARCH_HAVE_LIB_CHACHA=n
++	select CRYPTO_LIB_CHACHA_GENERIC if CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA=n
++	select CRYPTO_ARCH_HAVE_LIB_CHACHA if CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA!=n
++	depends on CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA || !CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA
+ 	help
+ 	  Enable the ChaCha library interface. This interface may be fulfilled
+ 	  by either the generic implementation or an arch-specific one, if one
+@@ -80,8 +80,6 @@ config CRYPTO_ARCH_HAVE_LIB_CURVE25519
+ 
+ config CRYPTO_ARCH_MAY_HAVE_LIB_CURVE25519
+ 	tristate
+-	select CRYPTO_ARCH_HAVE_LIB_CURVE25519 if CRYPTO_LIB_CURVE25519=m
+-	select CRYPTO_ARCH_HAVE_LIB_CURVE25519 if CRYPTO_ARCH_MAY_HAVE_LIB_CURVE25519=y
+ 
+ config CRYPTO_LIB_CURVE25519_GENERIC
+ 	tristate
+@@ -94,7 +92,9 @@ config CRYPTO_LIB_CURVE25519_GENERIC
+ 
+ config CRYPTO_LIB_CURVE25519
+ 	tristate "Curve25519 scalar multiplication library"
+-	select CRYPTO_LIB_CURVE25519_GENERIC if CRYPTO_ARCH_HAVE_LIB_CURVE25519=n
++	select CRYPTO_LIB_CURVE25519_GENERIC if CRYPTO_ARCH_MAY_HAVE_LIB_CURVE25519=n
++	select CRYPTO_ARCH_HAVE_LIB_CURVE25519 if CRYPTO_ARCH_MAY_HAVE_LIB_CURVE25519!=n
++	depends on CRYPTO_ARCH_MAY_HAVE_LIB_CURVE25519 || !CRYPTO_ARCH_MAY_HAVE_LIB_CURVE25519
+ 	select CRYPTO_LIB_UTILS
+ 	help
+ 	  Enable the Curve25519 library interface. This interface may be
+@@ -120,8 +120,6 @@ config CRYPTO_ARCH_HAVE_LIB_POLY1305
+ 
+ config CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305
+ 	tristate
+-	select CRYPTO_ARCH_HAVE_LIB_POLY1305 if CRYPTO_LIB_POLY1305=m
+-	select CRYPTO_ARCH_HAVE_LIB_POLY1305 if CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305=y
+ 
+ config CRYPTO_LIB_POLY1305_GENERIC
+ 	tristate
+@@ -134,7 +132,9 @@ config CRYPTO_LIB_POLY1305_GENERIC
+ 
+ config CRYPTO_LIB_POLY1305
+ 	tristate "Poly1305 library interface"
+-	select CRYPTO_LIB_POLY1305_GENERIC if CRYPTO_ARCH_HAVE_LIB_POLY1305=n
++	select CRYPTO_LIB_POLY1305_GENERIC if CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305=n
++	select CRYPTO_ARCH_HAVE_LIB_POLY1305 if CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305!=n
++	depends on CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305 || !CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305
+ 	help
+ 	  Enable the Poly1305 library interface. This interface may be fulfilled
+ 	  by either the generic implementation or an arch-specific one, if one
+@@ -143,6 +143,8 @@ config CRYPTO_LIB_POLY1305
+ config CRYPTO_LIB_CHACHA20POLY1305
+ 	tristate "ChaCha20-Poly1305 AEAD support (8-byte nonce library version)"
+ 	depends on CRYPTO
++	depends on CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305 || !CRYPTO_ARCH_MAY_HAVE_LIB_POLY1305
++	depends on CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA || !CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA
+ 	select CRYPTO_LIB_CHACHA
+ 	select CRYPTO_LIB_POLY1305
+ 	select CRYPTO_ALGAPI
+-- 
+2.39.5
 
