@@ -1,122 +1,118 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from fgw20-4.mail.saunalahti.fi (fgw20-4.mail.saunalahti.fi [62.142.5.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F49263C86;
-	Tue, 25 Feb 2025 09:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740476584; cv=pass; b=nYFYyj8J3/3/+BQFkSDLaug63jIUj5Rvxq3q493omYLAN+zWm1iT7Gt16glRsw3nTeSnY8Ij+cYozqkBspCgA0y+tN2mAK0mpiMYAdNas7KUmne3ZBRChM3ZAUCOLV96FeSr8FTXG9RmJ8qxI5SfvJ7SqI+5ib0FiftjD52mrfk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740476584; c=relaxed/simple;
-	bh=udQgYnY0T+LsKgOGYVjffMy7LxsVcTFzEcKMkmphUrM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iVd20Fb81WyNlNBUI2R9NagVVuodMl+xzxAwlFgJ9nuyFUNl7PQD320ZW6wQE7AMMVEqIRn/uIFYTBflOJ2FfB0c/Uc8xP7aQPyVYfy8kPvpzGID5gT0cFIhlzP64Fp0CzvY+gnx14MTnOIbFMtiryoeillw9eo9cJJU541b5zo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b=SwTZhSUS; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8683B2627E6
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:43:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.107
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740476609; cv=none; b=qkohM72h75lpj5kgtvcF0LYJ3fFQOosSYOHnLIIxFwqGCyiPBLI/GGD4JOLZBPub8cBb7OEjTQeBlQyoU7z6gD0mTQmkM1hIJf2+FCEc6HhhYvRLtWcI46CvtY9T9mc1ZsuGHiICpcnicl6ut/f/3mnccV/OcVIvdIxuAnBW+WM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740476609; c=relaxed/simple;
+	bh=6B0qB5/pvSZ5jcD/a3OGepgdBy2JO4/9bJDqujJ6z1g=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=f+H4wguvqRyRR2tct7VY2Qb291TVd4x/09pdM0kQ3pIBgXrSHjs9vKQIAXty+Sr5NqA5vnE0iXTJblCcqNlN/ymRJraRa1K6srs8pIAUbMI7IUe51eQUbIPB1FRWP6KAyjUSSo4uSIwP3lqDJmZ1cXWb8oQ7xZe77FAOyYsvvpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kolumbus.fi; spf=pass smtp.mailfrom=kolumbus.fi; dkim=pass (2048-bit key) header.d=kolumbus.fi header.i=@kolumbus.fi header.b=AdLPzF3U; arc=none smtp.client-ip=62.142.5.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kolumbus.fi
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kolumbus.fi
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b="SwTZhSUS"
-ARC-Seal: i=1; a=rsa-sha256; t=1740476561; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ZWUJALE3X+EXUeuC2EHLQZNFqyFdh0NyYCe1oJLHcFinI5O1gqcZwIuo8zzBTELcLU/U55QeGCcAI4g5ZBV6vX/sFX7Hkah1yxdCN0R7W9Wmy7XXNT6wWUXxKUKYg1t0nLYPw5tnsfiC1cKh3dzFcoPEQDnLLgGwCErkhDCbDWA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740476561; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=PhcqlwF/W6SeudJ8/ZbUsIGtxuzwWHoYjUaWleuL8+I=; 
-	b=TA3afxHgC71oyjPZoqoTxcGG3fe5GS22oaYJI6oa/b0s8LbNxX7KfG85qGUb7ipfnFfn4MM2nc6U60+CfMTHIMa0/4AlttB1/OD6zi01EO4FftTDb4SCLulgIBNLUquRbfdnMdDsnPrkaKLrHrky3+2Ut55aaqH61rZILxBLdJ8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.fricke@collabora.com;
-	dmarc=pass header.from=<sebastian.fricke@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740476561;
-	s=zohomail; d=collabora.com; i=sebastian.fricke@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=PhcqlwF/W6SeudJ8/ZbUsIGtxuzwWHoYjUaWleuL8+I=;
-	b=SwTZhSUSS07oCVYZ7P8zHNLwJATsEosEOvICiwuAzESDn4DYfSTXFpIXdr9S+xQC
-	6D8v8KR197526XXRCrYmO+CHelHCXvScBaZvkScaXl4QJeXbqfvn2k9GWnpPBNYc4P9
-	IMZLAegHQE3sh0zbiE9W81ETWhT0qqSAIDQPnfWs=
-Received: by mx.zohomail.com with SMTPS id 1740476559938497.44456290913297;
-	Tue, 25 Feb 2025 01:42:39 -0800 (PST)
-From: Sebastian Fricke <sebastian.fricke@collabora.com>
-Date: Tue, 25 Feb 2025 10:40:33 +0100
-Subject: [PATCH v7 12/12] media: rkvdec: Fix frame size enumeration
+	dkim=pass (2048-bit key) header.d=kolumbus.fi header.i=@kolumbus.fi header.b="AdLPzF3U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=kolumbus.fi; s=elisa1;
+	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
+	 subject:mime-version:content-type:from:to:cc:reply-to:subject:date:in-reply-to:
+	 references:list-archive:list-subscribe:list-unsubscribe:content-type:
+	 content-transfer-encoding:message-id;
+	bh=4HJGFwO7iJWP35BGN8gS4/yzq08A26mPEUXcqi1UmOs=;
+	b=AdLPzF3UGEceEUAr5vBH/Juw35neeJ0zqnAhX2lBVUoAdWis+ncEWSrEWRvD47rmpE+YA6pjeGoTF
+	 M4RxdvpHUWhXU/FBXOSWK8jE/zrFfx139HlyI6BlLeJWS8YZaDOUZIMotBk7c0KfUkp5HUD3gu+seE
+	 YQrnOWRi4t4wk5dRTBmxjnreWspY5fIK5guuIDQpuozHjvObPS+YrwvuITnGS2hDG6fhEpV0VCmQBR
+	 G8RJfIsoy95nvogDclZacgoBEG5KJveq25wJzGNmFeEcMbe+Ns9rDkC3drVhmQ81JoYQ8ySB6X7V2f
+	 ItggHSqa/aLT5UYNPcpAQAavqiL9New==
+Received: from smtpclient.apple (85-156-116-90.elisa-laajakaista.fi [85.156.116.90])
+	by fgw20.mail.saunalahti.fi (Halon) with ESMTPSA
+	id f03b8702-f35c-11ef-9d7a-005056bd6ce9;
+	Tue, 25 Feb 2025 11:43:17 +0200 (EET)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250225-rkvdec_h264_high10_and_422_support-v7-12-7992a68a4910@collabora.com>
-References: <20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
-In-Reply-To: <20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Hans Verkuil <hverkuil@xs4all.nl>, 
- Boris Brezillon <boris.brezillon@collabora.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev, 
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, 
- Alex Bee <knaerzche@gmail.com>, 
- Nicolas Dufresne <nicolas.dufresne@collabora.com>, 
- Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
- Detlev Casanova <detlev.casanova@collabora.com>, 
- Dan Carpenter <dan.carpenter@linaro.org>, Jonas Karlman <jonas@kwiboo.se>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740476426; l=1653;
- i=sebastian.fricke@collabora.com; s=linux-media; h=from:subject:message-id;
- bh=XlwiKB1TZIfyBLPYonxnSRa0aWPI3tSsmicak1dzrfc=;
- b=q/95JUmsPUkLNHHlVioAh4sQTO1NQQiDcwSphBb+wKl6MvHs3vchivIK17RMr3pyksypC7hAwrpN
- iaWY0pKgCJzs8UZvgM6oJzdXtbl5LzubPtqBjgNQy6OtSPsbiUoj
-X-Developer-Key: i=sebastian.fricke@collabora.com; a=ed25519;
- pk=pYXedPwrTtErcj7ERYeo/IpTrpe4QbJuEzSB52fslBg=
-X-ZohoMailClient: External
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
+Subject: Re: [PATCH] scsi: scsi_debug: fix uninitialized variable use
+From: =?utf-8?B?IkthaSBNw6RraXNhcmEgKEtvbHVtYnVzKSI=?= <kai.makisara@kolumbus.fi>
+In-Reply-To: <20250225085644.456498-1-arnd@kernel.org>
+Date: Tue, 25 Feb 2025 11:43:06 +0200
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ John Meneghini <jmeneghi@redhat.com>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Bart Van Assche <bvanassche@acm.org>,
+ John Garry <john.g.garry@oracle.com>,
+ linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <367BED6D-3187-473C-BBF4-EB71A0E1677A@kolumbus.fi>
+References: <20250225085644.456498-1-arnd@kernel.org>
+To: Arnd Bergmann <arnd@kernel.org>
+X-Mailer: Apple Mail (2.3826.400.131.1.6)
 
-From: Jonas Karlman <jonas@kwiboo.se>
 
-The VIDIOC_ENUM_FRAMESIZES ioctl should return all frame sizes (i.e.
-width and height in pixels) that the device supports for the given pixel
-format.
+> On 25. Feb 2025, at 10.56, Arnd Bergmann <arnd@kernel.org> wrote:
+>=20
+> From: Arnd Bergmann <arnd@arndb.de>
+>=20
+> It appears that a typo has made it into the newly added code
+>=20
+> drivers/scsi/scsi_debug.c:3035:3: error: variable 'len' is =
+uninitialized when used here [-Werror,-Wuninitialized]
+> 3035 |                 len +=3D resp_compression_m_pg(ap, pcontrol, =
+target, devip->tape_dce);
+>      |                 ^~~
+>=20
+> Replace the '+=3D' with the intended '=3D' here.
 
-It doesn't make a lot of sense to return the frame-sizes in a stepwise
-manner, which is used to enforce hardware alignments requirements for
-CAPTURE buffers, for coded formats.
+One more of these ;) The fix is correct. (And now I checked with grep =
+that v2 does not have any more of these.)
 
-Instead, applications should receive an indication, about the maximum
-supported frame size for that hardware decoder, via a continuous
-frame-size enumeration.
+>=20
+> Fixes: e7795366c41d ("scsi: scsi_debug: Add READ BLOCK LIMITS and =
+modify LOAD for tapes")
 
-Fixes: cd33c830448b ("media: rkvdec: Add the rkvdec driver")
-Suggested-by: Alex Bee <knaerzche@gmail.com>
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
----
- drivers/staging/media/rkvdec/rkvdec.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+The bug was actually in 568354b24c7d "scsi: scsi_debug: Add compression =
+mode page for tapes"
 
-diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
-index 2859041bcc932bd638b4288bb8eba6b1443a08e3..619031b8cadc8d7185712ec6121a895e6ab89046 100644
---- a/drivers/staging/media/rkvdec/rkvdec.c
-+++ b/drivers/staging/media/rkvdec/rkvdec.c
-@@ -334,8 +334,14 @@ static int rkvdec_enum_framesizes(struct file *file, void *priv,
- 	if (!fmt)
- 		return -EINVAL;
- 
--	fsize->type = V4L2_FRMSIZE_TYPE_STEPWISE;
--	fsize->stepwise = fmt->frmsize;
-+	fsize->type = V4L2_FRMSIZE_TYPE_CONTINUOUS;
-+	fsize->stepwise.min_width = 1;
-+	fsize->stepwise.max_width = fmt->frmsize.max_width;
-+	fsize->stepwise.step_width = 1;
-+	fsize->stepwise.min_height = 1;
-+	fsize->stepwise.max_height = fmt->frmsize.max_height;
-+	fsize->stepwise.step_height = 1;
-+
- 	return 0;
- }
- 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
--- 
-2.25.1
+Acked-by: Kai M=C3=A4kisara <kai.makisara@kolumbus.fi =
+<mailto:kai.makisara@kolumbus.fi>>
+
+> ---
+> drivers/scsi/scsi_debug.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
+> index 722ee8c067ae..f3e9a63bbf02 100644
+> --- a/drivers/scsi/scsi_debug.c
+> +++ b/drivers/scsi/scsi_debug.c
+> @@ -3032,7 +3032,7 @@ static int resp_mode_sense(struct scsi_cmnd =
+*scp,
+> case 0xf: /* Compression Mode Page (tape) */
+> if (!is_tape)
+> goto bad_pcode;
+> - len +=3D resp_compression_m_pg(ap, pcontrol, target, =
+devip->tape_dce);
+> + len =3D resp_compression_m_pg(ap, pcontrol, target, =
+devip->tape_dce);
+> offset +=3D len;
+> break;
+> case 0x11: /* Partition Mode Page (tape) */
+> --=20
+> 2.39.5
+>=20
+>=20
+
+Thanks,
+Kai
 
