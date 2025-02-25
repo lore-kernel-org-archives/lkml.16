@@ -1,131 +1,301 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8906F269826
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:55:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A632690F1
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740477334; cv=none; b=Dxbx9LUmpsY4Ne//rnJHKpqymsEh+1zdyTqmgyUDm9/5T2FehqY+qg7uW9awVfHbToiTdh7yWi5k8cWG7LYXioqON2UB8t/nm+LSItIFWW/tLIaisqJKrzjOBf2xDtm2tFG1bVgOKAqGFx7bOW1GqNYtwxzrBTmFwqLr1nrFv+w=
+	t=1740477332; cv=none; b=Q1wzQ3TMeRX08nysMULQVzuYMM7ELoGZqsCJJwS0D9bfrIjEwWKqBkOyUI5RARTw37wjzud75TQSZFws/HdVD+d825DXR1NJS8/5o7UxTHcGcCmf5XCYEKtPbJ6gpWhh2xRmcnCpxa3z7/CBoEFpEHfVSUvxIRZFilFjhIdwMyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740477334; c=relaxed/simple;
-	bh=RRy9IfHS8ViSPW/Yi1kyEfOO/viJ3F6e0+y9lZRUOlM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bp7NCQqb7r5FeN4NEVV+E69uP4LrIUZIPvtizwSkdG5FGItiffqczlAd9LIgOgrULLRDfiekFhfaVMAlqVL8c9boGPLZjBfCC5hEc8DchX8omVu1hTxFIxvhRjXzwMUykWbzYL2jieTIceZrPrnaHlZ3lD3ydHC9N31i0s4SbhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ak+6+jnv; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740477332; c=relaxed/simple;
+	bh=6WofqscdOjqMijz3N9pp8TU409eaANCWzBo+sQz0RLA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rGQoGUGpLWwbh4Tkp7CLKYCaBzUpBwLQSvo2QSqGtBPij48XPDAVKr4spjpCCcf2LJ6mMSybsNZEHCR1szCmV4XmZg4HRZMC2sSIQNFo+SHT1ABZ2WhKqviD3QyPPT13LILD7hP4SJMAAlRZ2dUUr+GM68BXvyG9m5DigU9ymFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dl6pwGNE; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ak+6+jnv"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-543e4bbcd86so6219072e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 01:55:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dl6pwGNE"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-38f403edb4eso3096581f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 01:55:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740477331; x=1741082131; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PgPYwUz2C3jq2K678fDOOKopXFthUCF1z0KBZvQ8kgo=;
-        b=Ak+6+jnvdzsJhnwXWAaomXqlxhXNUk6TMeRS9g7uaGyjQxDS2KmUQvh7EvltTH4BfM
-         20ziCLTtEI8HP3Flh7mu8qJ58zRgQnH0K4AWZ5d3eO5OOIIxqUjdjjDjdSGrT0wDk4KT
-         vpl2V42SrBQuav07ZKB1LTOh7npTHk7RfClU5GGo32m2bFHAgho9GXQIVhsRRcTywe5r
-         eHjJByFOrxnkC9JoGzQtOOM898o1Q7OjLsHWyh/2rpVVu8n15/6ELFzXEhz+GdNC6W8B
-         UsRynY0qEoTN15hF11ibeiuxEM8mvSdaiWoetS+OYJv9d3+MqVKpSdgm2DLaBSnqCVpi
-         ju+A==
+        d=google.com; s=20230601; t=1740477329; x=1741082129; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DPxaQia6Cvd2gxcPU/EG6ad16GELvZyMWz258B0x5vU=;
+        b=dl6pwGNE0xkTnOzaQfvTSfrRRqCTh7tV8WJZOtE0y5pLgbg2kNOtpEUjfMREgJtcDO
+         XA8tTky6i/QOdKs8OiI9cHp7kK6QzVqbjxUjJnq1v498agOrW6URiYmWUrH/7kWca2bg
+         kSC13xtAhRZYNTEt9VmRJUhtMj7j83GGK5gueLQS4pwePiL/h84ugSM/PRrCmWUgpmqY
+         Es7EdPsnXQbgAmtGekNoclXuN1FR01Smwm4JdbR60yITLiTF+vyfGaoIewXdd8jVR4P7
+         rjZ0pUK6DtDnc8t6r0Swnq/X4wyhSL+kGuhfuTnIs8sgf0eEsc9c/6Jlk6xUczIp+pqI
+         b/wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740477331; x=1741082131;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1740477329; x=1741082129;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PgPYwUz2C3jq2K678fDOOKopXFthUCF1z0KBZvQ8kgo=;
-        b=wu4MYCqghqg8ItZf2sUupx3iat4Bp9ma9tB4l8Q5gHIMUS4FyvS/R1ZmY4SVqYGIGh
-         hiEhl+JgMxtrDB2nxm+ZOic0i0jWGFQbtK90NoP6y8sTNwG1Ily86uxS/BSLYUqWwAez
-         c/OEoivtJNmA3TutfSOhOXkpErDVe5y8KCMbXd0Y2+rfhLILj6J+m8s4TUrbmPyFPUYQ
-         ygb1miiSisZYIubetNyYhp3uMorFWYnzLbk0vNukWmWaSaNzlHXEaRh98RjpbPmDIc8m
-         AWKDrBRCOx8h767hupcEWlABJdiKaK5nURmO3IWPG+k83hNZn6hFvv+xB9zShH8FZHME
-         5tLw==
-X-Forwarded-Encrypted: i=1; AJvYcCVWLIwalAZ68kQvjbD0NUqYm0gY3513lLIQCb3/y4TMqHVeaTUDVCy81zw3Bhj/ssBOfPXAaB3VnMPfo8M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywcd3JpDoVW36IG+74DKWJBJ9rcPSRrSfhKsDbxaVYk6tda9bST
-	SGHlj7/gXm91FCU6uyUGwUBCMFUqF69W65tKpvuhEXdwxPXRPVlTzUonxYvqPOs=
-X-Gm-Gg: ASbGncuEkplIb0g46GbKWvHE5qSAM1XKwDBctQ3SxTIUJOSbbPbbzDdvFP81DVTnRzC
-	8kJtS95faz7EGULoxoYiurYg0iMe++v+9SViXwbIYSxz5FLFd1nV8sCEFJw/IbGhR5nkFJPXvlb
-	skZa2aGzBIoUhy2D1zK6xJ2KZgbUfgMb4WcsVVGWZhjvsBLc10A9qh7VeH4OTi+qkTcXtz0W1F2
-	sFYwv+YcADgPG+VbnVCNdVZkHhlhF57i9+d2SnlCYBAPimPaByLzv0ykfM7oY2u0x3WseL52jJn
-	8uBPnzHIkSQfSK4GrGsnGlr4NaHBZefQsMUQ
-X-Google-Smtp-Source: AGHT+IHrYBKEgwrOsqtabCf77riVA6wTLLPZltwvy4MPKuhYyJsmmbuvXTyEaXfB9oGzNDCBGFjJZw==
-X-Received: by 2002:a05:6512:3093:b0:545:2f9b:7589 with SMTP id 2adb3069b0e04-54838f79d15mr5814906e87.50.1740477330711;
-        Tue, 25 Feb 2025 01:55:30 -0800 (PST)
-Received: from [192.168.1.140] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-548514b261esm132867e87.24.2025.02.25.01.55.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 01:55:30 -0800 (PST)
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 25 Feb 2025 10:55:14 +0100
-Subject: [PATCH v5 27/31] ARM: irq: Add irqstack helper
+        bh=DPxaQia6Cvd2gxcPU/EG6ad16GELvZyMWz258B0x5vU=;
+        b=Js0dFulRwarIYUA+Q0Z4t+ntwFKPLTcnCskRcMufs294Rp0LTlLmJMkpzSrxaYJB2/
+         lhRHm7+E4TQKbKP51wxyQ+iBEw21/Lugym5L5UmVFRQ+49zSEl5IewLSXypBVn1PgLT6
+         Gfco8X8kiUCjrezs0slJn0bQZdpoycMehzR1skn8ZxfXC6Tr/wi/YVT8tL/onMxyLNGy
+         xGx87Mjz4N38HQ3PSdSAyrc2hxOyUqXP7Air+ztr0+qCK2fAPavWsTk/UTVU5rG9ZWTr
+         o1ISUeilWDdBT7lBJ9itGwRwxUDS2u3Xq2O0NxJD6BJMnksI3feq64OheKSg/MMG/hqE
+         qyUw==
+X-Forwarded-Encrypted: i=1; AJvYcCXrYxK1j80VT5JXlMFxRkROCHIR+SmWdr0jW/sXf6Z2Qp275jzjMET08fRBOQVm2eT1XlN2TM1bXmUWfDA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxid4Rbib9Iqe9LTvoCjrIXJRv3PQPVJmw8QaSEgfgzSVcm3rQJ
+	A1PRirguyfReg56AuDGCgqfoDPkx2jLiDIukWHHuQ5cu5FuMolGv3fcoDKVCLXcON+Eti+uUENg
+	mmouQzrDYNoH4ls2z21nxElOXv+VuHymFoX/f
+X-Gm-Gg: ASbGncuzwiJMFlW8EPPcEjo/6jHUQyOTa8C49oLg8i6Z+9KR9iHyfugXY2FuzzvoK4m
+	uDCuFfFFIqT3O0WHPB8KVAsjq2EzV3xhuIQzlS02vI3WLAowdpf91jiRm9e1SS+U4Zzd0+MFkTw
+	T08NoFnzhDOBVoTTJH8uebzzMtLArles2ZaHZfSg==
+X-Google-Smtp-Source: AGHT+IFgvJGRsWUD8wDqc0CmBB3fAAIHAhx4Jx/iLEXYfAX75626uh/92RniiahYJU5Ze0IAc077HhN54wYWIRv3SdU=
+X-Received: by 2002:adf:e74a:0:b0:38f:225b:3122 with SMTP id
+ ffacd0b85a97d-390cc630d47mr1713381f8f.44.1740477328936; Tue, 25 Feb 2025
+ 01:55:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250225-arm-generic-entry-v5-27-2f02313653e5@linaro.org>
-References: <20250225-arm-generic-entry-v5-0-2f02313653e5@linaro.org>
-In-Reply-To: <20250225-arm-generic-entry-v5-0-2f02313653e5@linaro.org>
-To: Dmitry Vyukov <dvyukov@google.com>, Oleg Nesterov <oleg@redhat.com>, 
- Russell King <linux@armlinux.org.uk>, Kees Cook <kees@kernel.org>, 
- Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, 
- Frederic Weisbecker <frederic@kernel.org>, 
- "Paul E. McKenney" <paulmck@kernel.org>, 
- Jinjie Ruan <ruanjinjie@huawei.com>, Arnd Bergmann <arnd@arndb.de>, 
- Ard Biesheuvel <ardb@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Linus Walleij <linus.walleij@linaro.org>
-X-Mailer: b4 0.14.2
+References: <cover.1740475625.git.viresh.kumar@linaro.org> <68ac0f0ee3c0ebd3d3cc078a6270752778a1b732.1740475625.git.viresh.kumar@linaro.org>
+In-Reply-To: <68ac0f0ee3c0ebd3d3cc078a6270752778a1b732.1740475625.git.viresh.kumar@linaro.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 25 Feb 2025 10:55:17 +0100
+X-Gm-Features: AQ5f1JrlE3fKBz1AuXpYeG-8bidig5hJE5ASmGeypi8dyqvZFnkfRS8vXFlUP0o
+Message-ID: <CAH5fLgg7o7hs5B4mMzPd6RzYm+RcX8gw1Aw8voJqnmfnA_aM4Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] rust: Add initial cpumask abstractions
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, 
+	Danilo Krummrich <dakr@redhat.com>, rust-for-linux@vger.kernel.org, 
+	Vincent Guittot <vincent.guittot@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a helper to dispatch IRQ execution to the IRQ stack:
-call_on_irq_stack() so we can explicitly issue handle_irq()
-on the IRQ stack from a C program.
+On Tue, Feb 25, 2025 at 10:47=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.=
+org> wrote:
+>
+> Add initial Rust abstractions for struct cpumask, covering a subset of
+> its APIs. Additional APIs can be added as needed.
+>
+> These abstractions will be used in upcoming Rust support for cpufreq and
+> OPP frameworks.
+>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  rust/kernel/cpumask.rs | 168 +++++++++++++++++++++++++++++++++++++++++
+>  rust/kernel/lib.rs     |   1 +
+>  2 files changed, 169 insertions(+)
+>  create mode 100644 rust/kernel/cpumask.rs
+>
+> diff --git a/rust/kernel/cpumask.rs b/rust/kernel/cpumask.rs
+> new file mode 100644
+> index 000000000000..13864424420b
+> --- /dev/null
+> +++ b/rust/kernel/cpumask.rs
+> @@ -0,0 +1,168 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! CPU mask abstractions.
+> +//!
+> +//! C header: [`include/linux/cpumask.h`](srctree/include/linux/cpumask.=
+h)
+> +
+> +use crate::{bindings, error::Result, prelude::ENOMEM};
+> +
+> +#[cfg(not(CONFIG_CPUMASK_OFFSTACK))]
+> +use crate::prelude::{KBox, GFP_KERNEL};
+> +
+> +#[cfg(CONFIG_CPUMASK_OFFSTACK)]
+> +use core::ptr;
+> +
+> +/// A simple implementation of `struct cpumask` from the C code.
+> +pub struct Cpumask {
+> +    ptr: *mut bindings::cpumask,
+> +    owned: bool,
+> +}
+> +
+> +impl Cpumask {
+> +    /// Creates cpumask.
+> +    #[cfg(CONFIG_CPUMASK_OFFSTACK)]
+> +    fn new_inner(empty: bool) -> Result<Self> {
+> +        let mut ptr: *mut bindings::cpumask =3D ptr::null_mut();
+> +
+> +        // SAFETY: Depending on the value of `gfp_flags`, this call may =
+sleep. Other than that, it
+> +        // is always safe to call this method.
+> +        if !unsafe {
+> +            if empty {
+> +                bindings::zalloc_cpumask_var(&mut ptr, bindings::GFP_KER=
+NEL)
+> +            } else {
+> +                bindings::alloc_cpumask_var(&mut ptr, bindings::GFP_KERN=
+EL)
+> +            }
+> +        } {
+> +            return Err(ENOMEM);
+> +        }
+> +
+> +        Ok(Self { ptr, owned: true })
+> +    }
+> +
+> +    /// Creates cpumask.
+> +    #[cfg(not(CONFIG_CPUMASK_OFFSTACK))]
+> +    fn new_inner(empty: bool) -> Result<Self> {
+> +        let ptr =3D KBox::into_raw(KBox::new([bindings::cpumask::default=
+(); 1], GFP_KERNEL)?);
 
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- arch/arm/kernel/irq.c | 6 ++++++
- arch/arm/kernel/irq.h | 2 ++
- 2 files changed, 8 insertions(+)
+I don't really understand this CPUMASK_OFFSTACK logic. You seem to
+always allocate memory, but if OFFSTACK=3Dn, then shouldn't it be on the
+stack ...?
 
-diff --git a/arch/arm/kernel/irq.c b/arch/arm/kernel/irq.c
-index e1993e28a9ecfd80b55b2677253ac582467e6c14..f99d6b24d8ff56f901e4a817c61a1e57b7e532cc 100644
---- a/arch/arm/kernel/irq.c
-+++ b/arch/arm/kernel/irq.c
-@@ -43,6 +43,7 @@
- #include <asm/mach/irq.h>
- #include <asm/mach/time.h>
- 
-+#include "irq.h"
- #include "reboot.h"
- 
- unsigned long irq_err_count;
-@@ -71,6 +72,11 @@ static void __init init_irq_stacks(void)
- 	}
- }
- 
-+void call_on_irq_stack(void (*fn)(void *), void *arg)
-+{
-+	call_with_stack(fn, arg, __this_cpu_read(irq_stack_ptr));
-+}
-+
- #ifdef CONFIG_SOFTIRQ_ON_OWN_STACK
- static void ____do_softirq(void *arg)
+> +        // SAFETY: Depending on the value of `gfp_flags`, this call may =
+sleep. Other than that, it
+> +        // is always safe to call this method.
+> +        if !unsafe {
+> +            if empty {
+> +                bindings::zalloc_cpumask_var(ptr, bindings::GFP_KERNEL)
+> +            } else {
+> +                bindings::alloc_cpumask_var(ptr, bindings::GFP_KERNEL)
+> +            }
+> +        } {
+> +            return Err(ENOMEM);
+> +        }
+> +
+> +        Ok(Self {
+> +            ptr: ptr as *mut _,
+> +            owned: true,
+> +        })
+> +    }
+> +
+> +    /// Creates empty cpumask.
+> +    pub fn new() -> Result<Self> {
+> +        Self::new_inner(true)
+> +    }
+> +
+> +    /// Creates uninitialized cpumask.
+> +    fn new_uninit() -> Result<Self> {
+> +        Self::new_inner(false)
+> +    }
+> +
+> +    /// Clones cpumask.
+> +    pub fn try_clone(&self) -> Result<Self> {
+> +        let mut cpumask =3D Self::new_uninit()?;
+> +
+> +        self.copy(&mut cpumask);
+> +        Ok(cpumask)
+> +    }
+> +
+> +    /// Creates a new abstraction instance of an existing `struct cpumas=
+k` pointer.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// Callers must ensure that `ptr` is valid, and non-null.
+> +    #[cfg(CONFIG_CPUMASK_OFFSTACK)]
+> +    pub unsafe fn get_cpumask(ptr: &mut *mut bindings::cpumask) -> Self =
+{
+> +        Self {
+> +            ptr: *ptr,
+> +            owned: false,
+
+Using an owned variable in this way isn't great, IMO. We should use
+two different types such as Owned<CpuMask> and &CpuMask to represent
+owned vs borrowed instead.
+
+> +        }
+> +    }
+> +
+> +    /// Creates a new abstraction instance of an existing `struct cpumas=
+k` pointer.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// Callers must ensure that `ptr` is valid, and non-null.
+> +    #[cfg(not(CONFIG_CPUMASK_OFFSTACK))]
+> +    pub unsafe fn get_cpumask(ptr: &mut bindings::cpumask_var_t) -> Self=
  {
-diff --git a/arch/arm/kernel/irq.h b/arch/arm/kernel/irq.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..80dd5bfe6403d68fc62fab30666d5645748d329f
---- /dev/null
-+++ b/arch/arm/kernel/irq.h
-@@ -0,0 +1,2 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+void call_on_irq_stack(void (*fn)(void *), void *arg);
+> +        Self {
+> +            ptr: ptr as *mut _,
+> +            owned: false,
+> +        }
+> +    }
+> +
+> +    /// Obtain the raw `struct cpumask *`.
+> +    pub fn as_raw(&mut self) -> *mut bindings::cpumask {
+> +        self.ptr
+> +    }
+> +
+> +    /// Sets CPU in the cpumask.
+> +    ///
+> +    /// Update the cpumask with a single CPU.
+> +    pub fn set(&mut self, cpu: u32) {
+> +        // SAFETY: `ptr` is guaranteed to be valid for the lifetime of `=
+self`. And it is safe to
+> +        // call `cpumask_set_cpus()` for any CPU.
+> +        unsafe { bindings::cpumask_set_cpu(cpu, self.ptr) };
+> +    }
+> +
+> +    /// Clears CPU in the cpumask.
+> +    ///
+> +    /// Update the cpumask with a single CPU.
+> +    pub fn clear(&mut self, cpu: i32) {
+> +        // SAFETY: `ptr` is guaranteed to be valid for the lifetime of `=
+self`. And it is safe to
+> +        // call `cpumask_clear_cpu()` for any CPU.
+> +        unsafe { bindings::cpumask_clear_cpu(cpu, self.ptr) };
+> +    }
+> +
+> +    /// Sets all CPUs in the cpumask.
+> +    pub fn set_all(&mut self) {
+> +        // SAFETY: `ptr` is guaranteed to be valid for the lifetime of `=
+self`. And it is safe to
+> +        // call `cpumask_setall()`.
+> +        unsafe { bindings::cpumask_setall(self.ptr) };
+> +    }
+> +
+> +    /// Gets weight of a cpumask.
+> +    pub fn weight(&self) -> u32 {
+> +        // SAFETY: `ptr` is guaranteed to be valid for the lifetime of `=
+self`. And it is safe to
+> +        // call `cpumask_weight()`.
+> +        unsafe { bindings::cpumask_weight(self.ptr) }
+> +    }
+> +
+> +    /// Copies cpumask.
+> +    pub fn copy(&self, dstp: &mut Self) {
+> +        // SAFETY: `ptr` is guaranteed to be valid for the lifetime of `=
+self`. And it is safe to
+> +        // call `cpumask_copy()`.
+> +        unsafe { bindings::cpumask_copy(dstp.as_raw(), self.ptr) };
+> +    }
+> +}
+> +
+> +impl Drop for Cpumask {
+> +    fn drop(&mut self) {
+> +        if self.owned {
+> +            // SAFETY: `ptr` is guaranteed to be valid for the lifetime =
+of `self`. And it is safe
+> +            // to call `free_cpumask_var()`.
+> +            unsafe { bindings::free_cpumask_var(self.ptr) }
 
--- 
-2.48.1
+This is missing a semicolon, but it's not the last statement in the
+block. Did you compile this with CPUMASK_OFFSTACK=3Dn? I don't think it
+compiles with that setting.
 
+> +            #[cfg(not(CONFIG_CPUMASK_OFFSTACK))]
+> +            // SAFETY: The pointer was earlier initialized from the resu=
+lt of `KBox::into_raw()`.
+> +            unsafe {
+> +                drop(KBox::from_raw(self.ptr))
+> +            };
+
+This looks like you did not run rustfmt.
+
+Alice
