@@ -1,33 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD9E126C18;
-	Tue, 25 Feb 2025 07:41:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D962A1BA
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 07:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740469297; cv=none; b=n3T/8e9omPTR3J7GPcTJXmRWJgkM/TkXfpGTg4maX+sCeus7KCW2QVgcsm9Ir2Ykkc4qH8GnNKgjT8EFXgw9l+IQskug7yIVfGPOAHdsR4a/hG79yuGEJfR60k8klz/tmSh4/0q/sLGSJ4BE+rlTD8iZhDgkn5RUXxjBUYvtLic=
+	t=1740469383; cv=none; b=M24fn4nKdrV8+epHZIR/UuqOBmD/NMBx531xlsFGhWVUPx2i4bURk6Y5PbEUqxYdVINohWe59LzTn4kgsUxbb8hfSqwqcrInd2Fq+z1/0V27W7wosL0KTFlmaLyj+L50KAinlQgdLS/gwKT1rgnNZVOlSRMTmLTy2AHJEg7L1oY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740469297; c=relaxed/simple;
-	bh=2XYXMJOoj8jR7rOLBVWUvoeGA6TeanSWB2tNbRdbaQU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T6yxrAhCuRSPXn5W3Dr9HiXCWtSj3ZHcB6A1IClB6FaF2xPKPET7qvVOjV7wPZNTihJ/hMtkovi8yDoa/SxVmosEBKhN5d/nzQd7FShBOa70rNNEXblgZd/M2cn9Wt6cW4uYfWfGUceD4IQzZv9lZ69VpITGL54hVBNqZEPSLDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RLKIoIsg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740469383; c=relaxed/simple;
+	bh=IbYlX3PEQuVexzHhbqBghr9OI2n08wKQS1XCpeyjorI=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=W6TZAmNmbQfyMictlRYyXgMLwpqCAGoLFV093Vjaa122eTU5t8edAWKBtyDpddgyrIrjmAFQlSl1/+812kD+723+o2kQV3QthfSThaFShdxui0Ykw/ozYHN7w11rpbNIcmndWoRAX71RT0wS0xKFVMkftsmN8SYMj1Nnoy8S7lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com; spf=pass smtp.mailfrom=shopee.com; dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b=F+nkqvDR; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shopee.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RLKIoIsg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB343C4CEDD;
-	Tue, 25 Feb 2025 07:41:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740469296;
-	bh=2XYXMJOoj8jR7rOLBVWUvoeGA6TeanSWB2tNbRdbaQU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RLKIoIsgeoicWMs+xqA4V4aZNWo2G8yktpiOZlISV4mUzuWt9fLm1yWSzzP9eZgZ/
-	 bcFztsBRKEibxZ3c1sniOKr9IVzzgNmovqwWag/gXHFtn0yGbxMRFvGVFRr9LZrKH0
-	 nqBbGQwxXpExqaVNbSnhSn0xOQKfqQgPxDcTJ67zrPUhOcqOaAVJBLPlGwO9qb9heu
-	 CcDpIj0gfM4W/qlBIfLvgCI6Qi9RdWvakvJFmXPNxoinjGXrTvO7FGE9cBG9vLLbKl
-	 +f+MSIHmCPLf+abECnqs9Xm+znb73qVK44E7X6YFNiHzZbw4yZXX5oHviJEAZAAHTE
-	 DBEZ5XtHZKGbw==
-Message-ID: <2e383452-9a06-4278-930d-d6f8deed13a9@kernel.org>
-Date: Tue, 25 Feb 2025 08:41:32 +0100
+	dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b="F+nkqvDR"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-220bff984a0so111592795ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 23:43:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shopee.com; s=shopee.com; t=1740469381; x=1741074181; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:from:to:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y2/Bi/+um9TiTy0GDGglUry/DmFoADFyro0SU2c0Y80=;
+        b=F+nkqvDRp7tgG9gyoO/pPfNhhDnuBQ3IvJe/TTG8cwPzcuRJGt1xrO0bRjgzXcKKEj
+         WX8UcEeC36T+i3jq0z/sPGRR3ZudB5v/0GTU2a2A/Bk76uJneEgxkSoAU+Lo/En31Ji5
+         Tcw/QR+oJUwDy2nUGPogqgWssTwxUH0mn2YdD8mFNrVGnhSp6HN35pGVbiQW7CadGjPV
+         pEmNYsYN924KvZMpB5Y1QCiHmJchV6vMNcQTOsuwbQnYHVvqDY/l5GAIeQmf7J4pTASz
+         1k3tBUMTyE8OR/MFSjiyzwfZt63sCneF+QzIt6V7Jkeit4FeO8S6M4w1W5Cq5TsYmMUl
+         SATw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740469381; x=1741074181;
+        h=content-transfer-encoding:subject:from:to:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y2/Bi/+um9TiTy0GDGglUry/DmFoADFyro0SU2c0Y80=;
+        b=xN8e+dyN5ejg7oAW58EfwkvlnD2t67h4hydprdWfMpftJTAKHD08qVTBoi9FvFW4VI
+         ncoJ6IaB3+pZohVHxGjVtsKRodVt/fOqShMh1r6aAFrHUdt2tNqRxzlkJBZxYc5CUC2I
+         ze9tWbRyR3B6nPP131sBsSz7RICW3pvDqL898aySalOEWoQIpO9H2VTyloLlWhkBnZIw
+         vbWwRNxhC+d0lKT1nsu/phBOEpYyKKnD1SZarMszF+4OeUbOem5NMKT2Wm+1V+RiJIQJ
+         5p4G5hHXvIFr8gOlVH+ChStlP3kpsxlapQjEwQeujaQBsvteZRzNhXa2r6HfHcLrth24
+         NrAw==
+X-Forwarded-Encrypted: i=1; AJvYcCXoeEDaSjxnfPshU8lzCrmnXCGsZxiij538R9PDhse6MufX9g0t9roEyyCRMSKyuv5NoUi4TNuhjsY3x1I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9LXPnF/erQ4M+7LmTWizo6V8fsdjQKAYFlOd8Ih7RH+Qp/cVt
+	KGw75OAbUhmJYL3glExm8/KIR5q65rtQ5PO4+tuYa8tOqwBJgpx4U7bQehMu8yHDfFbl0zuAyOw
+	ZNiMaUQ==
+X-Gm-Gg: ASbGncubwvG30NCYsxYU/PH/Xw7Xu+J/La5ooHildLL/pLd4pUFgX10JFpjhojDPFHk
+	EqIhoDWlBzGjNfbZ58/bd9XP7D7Aut+sXvLzPHoH8WnopkndFrkjxJ7zvRfu21miJVVV5Sx8qdO
+	YVZZs/r2tk0KlV5qJqk/+ZRzNdabZL9RHamQdURXhtPNNZtb1OTZ9WtzTMObvYX1gKjTtGtmakR
+	kGZZfWwjqy+vhuIQyI04wH9OfRImf2OHKJEb0AJZ3zAEBZ9l5AzzLkq9JUzK4+XCM49ukG4NKic
+	6mFdAbMiFjmj/k15KSAANfPzdcGnR3wTjxrQ98I=
+X-Google-Smtp-Source: AGHT+IGPooWi5k55owu/1zq3Dx2BUeqGX+MWLBCsPeXe+/xkrCkl5y754dU0xILKnqlRW3HR3wZ6Jg==
+X-Received: by 2002:a17:902:d4ce:b0:220:bd61:a337 with SMTP id d9443c01a7336-22307b595demr36974005ad.23.1740469380973;
+        Mon, 24 Feb 2025 23:43:00 -0800 (PST)
+Received: from [10.54.24.77] ([143.92.118.3])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a02159csm8014965ad.72.2025.02.24.23.42.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2025 23:43:00 -0800 (PST)
+Message-ID: <3d67a75b-0819-4f0e-87b6-99dd836e88e9@shopee.com>
+Date: Tue, 25 Feb 2025 15:42:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,100 +65,88 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] input/touchscreen: imagis: document ist3038h
-To: Andras Sebok <sebokandris2009@gmail.com>, markuss.broks@gmail.com,
- dmitry.torokhov@gmail.com, linux-input@vger.kernel.org
-Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+To: Pavel Begunkov <asml.silence@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+ "Eric W. Biederman" <ebiederm@xmission.com>,
+ Olivier Langlois <olivier@trillion01.com>, io-uring@vger.kernel.org,
  linux-kernel@vger.kernel.org
-References: <20250224090354.102903-2-sebokandris2009@gmail.com>
- <20250224090354.102903-4-sebokandris2009@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250224090354.102903-4-sebokandris2009@gmail.com>
+From: Haifeng Xu <haifeng.xu@shopee.com>
+Subject: io_uring : deadlock between io_uring and coredump
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 24/02/2025 10:03, Andras Sebok wrote:
-> Signed-off-by: Andras Sebok <sebokandris2009@gmail.com>
-> ---
->  .../devicetree/bindings/input/touchscreen/imagis,ist3038c.yaml   | 1 +
+Hi masters,
+	In our production environment, we found many hung tasks.
 
-Please use subject prefixes matching the subsystem. You can get them for
-example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
-your patch is touching. For bindings, the preferred subjects are
-explained here:
-https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
+	Thead A (exit_mm)
+	...
+		if (core_state) {
+		struct core_thread self;
 
-Please run scripts/checkpatch.pl and fix reported warnings. After that,
-run also `scripts/checkpatch.pl --strict` and (probably) fix more
-warnings. Some warnings can be ignored, especially from --strict run,
-but the code here looks like it needs a fix. Feel free to get in touch
-if the warning is not clear.
+		mmap_read_unlock(mm);
 
-<form letter>
-Please use scripts/get_maintainers.pl to get a list of necessary people
-and lists to CC. It might happen, that command when run on an older
-kernel, gives you outdated entries. Therefore please be sure you base
-your patches on recent Linux kernel.
+		self.task = current;
+		if (self.task->flags & PF_SIGNALED)
+			self.next = xchg(&core_state->dumper.next, &self);
+		else
+			self.task = NULL;
+		/*
+		 * Implies mb(), the result of xchg() must be visible
+		 * to core_state->dumper.
+		 */
+		if (atomic_dec_and_test(&core_state->nr_threads))
+			complete(&core_state->startup);
 
-Tools like b4 or scripts/get_maintainer.pl provide you proper list of
-people, so fix your workflow. Tools might also fail if you work on some
-ancient tree (don't, instead use mainline) or work on fork of kernel
-(don't, instead use mainline). Just use b4 and everything should be
-fine, although remember about `b4 prep --auto-to-cc` if you added new
-patches to the patchset.
+		for (;;) {
+			set_current_state(TASK_UNINTERRUPTIBLE);
+			if (!self.task) /* see coredump_finish() */
+				break;
+			freezable_schedule();
+		}
+		__set_current_state(TASK_RUNNING);
+		mmap_read_lock(mm);
+	}
+	...
 
-You missed at least devicetree list (maybe more), so this won't be
-tested by automated tooling. Performing review on untested code might be
-a waste of time.
+	Thead B (coredump_wait)
+	...
+		if (core_waiters > 0) {
+		struct core_thread *ptr;
 
-Please kindly resend and include all necessary To/Cc entries.
-</form letter>
+		freezer_do_not_count();
+		wait_for_completion(&core_state->startup);
+		freezer_count();
+		/*
+		 * Wait for all the threads to become inactive, so that
+		 * all the thread context (extended register state, like
+		 * fpu etc) gets copied to the memory.
+		 */
+		ptr = core_state->dumper.next;
+		while (ptr != NULL) {
+			wait_task_inactive(ptr->task, 0);
+			ptr = ptr->next;
+		}
+	...
+
+	Thead C (io_worker_exit)
+	...
+		if (refcount_dec_and_test(&worker->ref))
+		complete(&worker->ref_done);
+		wait_for_completion(&worker->ref_done);
+	...
+		
+
+	Thread A is waiting Thead B to finish core dump, but Thead B found that there is still one thread which doesn't 
+	step into exit_mm() to dec core_state->nr_threads. The thead is Thread C, it has submitted a task_work (create_worker_cb)
+	to Thread B and then wait Thread B to execute or cancel the work. So this leads to a deadlock.
+
+	Our kernel vesion is stable 5.15.125, and the commit 1d5f5ea7cb7d ("io-wq: remove worker to owner tw dependency") is included.
+	when the last io woker exits, it doesn't find any callback. Once scheduled out, it will invoke io_wq_worker_sleeping
+	to submit a task work to the master thread. If the above guess is right, the commit 1d5f5ea7cb7d won't help.
+
+	Can we cancel the io_uring requests before dumping core?
+
+Thanks!
+	
 
 
 
-Best regards,
-Krzysztof
