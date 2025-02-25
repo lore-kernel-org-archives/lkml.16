@@ -1,96 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F4C4414;
-	Tue, 25 Feb 2025 19:44:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D0820DD42
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 19:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740512661; cv=none; b=b41eDAoM6xidL8027EPrKmoUhQpDCssxL2km3l3PmNcSiO71jxQ1cKKuKTIC3Ecf2CjUW++JWi3t8gmgL4J8C6kMlZqLNZMlZGzhPKvwi3A5L1yJwOJpOIZzLL0qfACCEga9rmB+5heYM4oytV7uEDqinDt9on2kU486pF/+AJc=
+	t=1740512667; cv=none; b=bxlgDmz0fGE0l45S6fRIGOVtagrr0zUzGoWd7ju72ypE+AZ5l14Xvx5tbaQqp0SSwqaqR/3ZeokrEiUf96aDtwpSio5MFtl4UbJRrmPn6Q8MB6HNcY1t5mGvU2QuAMj4q5IrrawtY7AtGJRjTLJUYOoREgosQjPo5PQTAPJwDbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740512661; c=relaxed/simple;
-	bh=vIw4jvWwt8g3Zin5gdtPAweCnwzLAN65nBkcmGz60X8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GVU6ogvHQri/whP3TkkSRJ0Ccw6Z3v3VIXXFodG7zVhY83uJjlO76Sdl71E6pf11NaCuM8ohGx4hSkz7LjBrqcgpAGvtz5PlZJpD9W1fMIgDSOt/nX2C+i7ss3GeKfiKEq79nnNh+hkLsJofRXCMjY8VvnyMMEjynrK+QFEjzdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r8sAATfI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r8sAATfI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EFD2C4CEDD;
-	Tue, 25 Feb 2025 19:44:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740512660;
-	bh=vIw4jvWwt8g3Zin5gdtPAweCnwzLAN65nBkcmGz60X8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=r8sAATfIOix1IgDBq8FbEqOhGec2nmE/cv4BFDSEGWs22fWPT29ItLfHqxzhqByIl
-	 2+KNfxTaW5BoFhpT02FKZ4CXf+rvbgpse5gALazikiBTrt5idFZmRC1kfE6y6pgrsp
-	 B5EGuQWx/h0vjyM/SnptAFnG1LoawGs53A1qyMgTfHVIIEm4bCB5azWNGZ3H+hrNn4
-	 47IIY9JJt3f7cM4Scl/TE/22CCylkLviwoi1BU3qXBc3fDeheJBMvblDI1ppN3RMkb
-	 3jx/Nk9hEvtsnXRYeRVqtA+CuSDvPJ0lyfJMxDMePCg8i7khXe0nuNdIUigIYWjNgY
-	 rjRYjPJep1hEg==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>,
-	Qu Wenruo <wqu@suse.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	kernel test robot <lkp@intel.com>,
-	Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-	Anand Jain <anand.jain@oracle.com>,
-	Filipe Manana <fdmanana@suse.com>,
-	Li Zetao <lizetao1@huawei.com>,
-	linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] btrfs: use min_t() for mismatched type comparison
-Date: Tue, 25 Feb 2025 20:44:10 +0100
-Message-Id: <20250225194416.3076650-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1740512667; c=relaxed/simple;
+	bh=Z2fFK85mzRgcR7RW7ufzAyzQ8Q7Chtjm54Vmco841ZU=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=iwV9NqOnbFu9AeGguS/2GcBtXRSWaCxESwLuEQVk4kjrQfR2XQc/Uzq3T/TrseyYLkc6iMKmfHHdPUdvDefwYpl0039pM6ElDIlBXWEgKXHPR2PGPWF/s3dOiZ/5Qb5qWdOs0uEyP8MjW6Vgjkc6CJaknMRjVXA/NZWBwrxEQSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d1a365d10fso1278995ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 11:44:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740512664; x=1741117464;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=76x+UPV5MX91QGzIZEkWwMxGpj5DzJVSb7MVwzvstts=;
+        b=MSW6pHZJK2MGIFWoRg76LpcZDMroJXZT5O9REM82nVPFAOVjf3yfbQkqo8nFiohplu
+         KHvv9FG8y2Cw5gON5Y/pOGAb/i4KCodNUYRYXyNz7uR6ZcZ/H2BGm967h9wo66bBgpay
+         i2D5zas68bOnSCyK/JzMSsqpdG5PMGmyFm/nm74MNOZ1Wkp5DY322mdY1dI6tbPsUXBm
+         Q0v25/DUBcgVxcrQjzrzXeDAWPfjCJtPZJ/4W6NRyYoLCrKKavysFlpBudNq576anuvZ
+         HHRXazb6MsjJOcSlIvjFqbS3fWu9PFjny4seX8Kqyk61UPHNzg3FB4Dp0Xy3cN9M2Hhp
+         5rVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWFFntenHZHCXTE4R46P03QtYpBOrFpR5Yspv9lQj4WCOXLybzUj5wYGlB8wZ4VLCUUJGIekoiTruvaIhM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwARhtwUdBpJqobazElKXZe74lxMxQgD+IaVF8zzcqZaVH0RUH7
+	tQyaJiFDN31dHNcOJp+d90vCsGa7F6E/lv4NW7HOUv9f9aJDY6PRik9AyNWQq/KOBJimOYSTPU1
+	th/mZL915kSQ4eXG57dRtZGWXMZRM49TZF8njpD5VnFf7h5ukJgaDR0E=
+X-Google-Smtp-Source: AGHT+IG4MLCKeVgpdvui/NNSnjP81MVT3zXXfY2Km1qdmyJCOO453G2qxPE1zHlajevDs6hE442++KBrTozK6a2ekmHDhvQioWHS
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1686:b0:3cf:fd62:e39c with SMTP id
+ e9e14a558f8ab-3d2cacde097mr161618245ab.5.1740512664445; Tue, 25 Feb 2025
+ 11:44:24 -0800 (PST)
+Date: Tue, 25 Feb 2025 11:44:24 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67be1d98.050a0220.bbfd1.00b0.GAE@google.com>
+Subject: [syzbot] [bluetooth?] possible deadlock in l2cap_info_timeout
+From: syzbot <syzbot+d8bca25877c7eda36f5b@syzkaller.appspotmail.com>
+To: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Arnd Bergmann <arnd@arndb.de>
+Hello,
 
-loff_t is a signed type, so using min() to compare it against a u64
-causes a compiler warning:
+syzbot found the following issue on:
 
-fs/btrfs/extent_io.c:2497:13: error: call to '__compiletime_assert_728' declared with 'error' attribute: min(folio_pos(folio) + folio_size(folio) - 1, end) signedness error
- 2497 |                 cur_end = min(folio_pos(folio) + folio_size(folio) - 1, end);
-      |                           ^
+HEAD commit:    8a61cb6e150e Merge tag 'block-6.14-20250221' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17261fdf980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=b7bde34acd8f53b1
+dashboard link: https://syzkaller.appspot.com/bug?extid=d8bca25877c7eda36f5b
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-Use min_t() instead.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202502211908.aCcQQyEY-lkp@intel.com/
-Fixes: aba063bf9336 ("btrfs: prepare extent_io.c for future larger folio support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-8a61cb6e.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/420db9e4c0d8/vmlinux-8a61cb6e.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6ce6feff857d/bzImage-8a61cb6e.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+d8bca25877c7eda36f5b@syzkaller.appspotmail.com
+
+======================================================
+WARNING: possible circular locking dependency detected
+6.14.0-rc3-syzkaller-00213-g8a61cb6e150e #0 Not tainted
+------------------------------------------------------
+kworker/0:2/56 is trying to acquire lock:
+ffff888042bae338 (&conn->lock#2){+.+.}-{4:4}, at: l2cap_info_timeout+0x60/0xa0 net/bluetooth/l2cap_core.c:1666
+
+but task is already holding lock:
+ffffc9000103fc60 ((work_completion)(&(&conn->info_timer)->work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3212 [inline]
+ffffc9000103fc60 ((work_completion)(&(&conn->info_timer)->work)){+.+.}-{0:0}, at: process_scheduled_works+0x9c6/0x18e0 kernel/workqueue.c:3317
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #1 ((work_completion)(&(&conn->info_timer)->work)){+.+.}-{0:0}:
+       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+       touch_work_lockdep_map kernel/workqueue.c:3920 [inline]
+       start_flush_work kernel/workqueue.c:4174 [inline]
+       __flush_work+0x739/0xc60 kernel/workqueue.c:4206
+       __cancel_work_sync+0xbc/0x110 kernel/workqueue.c:4362
+       l2cap_conn_del+0x507/0x690 net/bluetooth/l2cap_core.c:1794
+       hci_disconn_cfm include/net/bluetooth/hci_core.h:2069 [inline]
+       hci_conn_hash_flush+0x1be/0x350 net/bluetooth/hci_conn.c:2698
+       hci_dev_do_reset net/bluetooth/hci_core.c:547 [inline]
+       hci_dev_reset+0x3ed/0x5d0 net/bluetooth/hci_core.c:591
+       sock_do_ioctl+0x158/0x460 net/socket.c:1199
+       sock_ioctl+0x626/0x8e0 net/socket.c:1318
+       vfs_ioctl fs/ioctl.c:51 [inline]
+       __do_sys_ioctl fs/ioctl.c:906 [inline]
+       __se_sys_ioctl+0xf5/0x170 fs/ioctl.c:892
+       do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+       do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #0 (&conn->lock#2){+.+.}-{4:4}:
+       check_prev_add kernel/locking/lockdep.c:3163 [inline]
+       check_prevs_add kernel/locking/lockdep.c:3282 [inline]
+       validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
+       __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
+       lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+       __mutex_lock_common kernel/locking/mutex.c:585 [inline]
+       __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
+       l2cap_info_timeout+0x60/0xa0 net/bluetooth/l2cap_core.c:1666
+       process_one_work kernel/workqueue.c:3236 [inline]
+       process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3317
+       worker_thread+0x870/0xd30 kernel/workqueue.c:3398
+       kthread+0x7a9/0x920 kernel/kthread.c:464
+       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+other info that might help us debug this:
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock((work_completion)(&(&conn->info_timer)->work));
+                               lock(&conn->lock#2);
+                               lock((work_completion)(&(&conn->info_timer)->work));
+  lock(&conn->lock#2);
+
+ *** DEADLOCK ***
+
+2 locks held by kworker/0:2/56:
+ #0: ffff88801b074d48 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3211 [inline]
+ #0: ffff88801b074d48 ((wq_completion)events){+.+.}-{0:0}, at: process_scheduled_works+0x98b/0x18e0 kernel/workqueue.c:3317
+ #1: ffffc9000103fc60 ((work_completion)(&(&conn->info_timer)->work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3212 [inline]
+ #1: ffffc9000103fc60 ((work_completion)(&(&conn->info_timer)->work)){+.+.}-{0:0}, at: process_scheduled_works+0x9c6/0x18e0 kernel/workqueue.c:3317
+
+stack backtrace:
+CPU: 0 UID: 0 PID: 56 Comm: kworker/0:2 Not tainted 6.14.0-rc3-syzkaller-00213-g8a61cb6e150e #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: events l2cap_info_timeout
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ print_circular_bug+0x13a/0x1b0 kernel/locking/lockdep.c:2076
+ check_noncircular+0x36a/0x4a0 kernel/locking/lockdep.c:2208
+ check_prev_add kernel/locking/lockdep.c:3163 [inline]
+ check_prevs_add kernel/locking/lockdep.c:3282 [inline]
+ validate_chain+0x18ef/0x5920 kernel/locking/lockdep.c:3906
+ __lock_acquire+0x1397/0x2100 kernel/locking/lockdep.c:5228
+ lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5851
+ __mutex_lock_common kernel/locking/mutex.c:585 [inline]
+ __mutex_lock+0x19c/0x1010 kernel/locking/mutex.c:730
+ l2cap_info_timeout+0x60/0xa0 net/bluetooth/l2cap_core.c:1666
+ process_one_work kernel/workqueue.c:3236 [inline]
+ process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3317
+ worker_thread+0x870/0xd30 kernel/workqueue.c:3398
+ kthread+0x7a9/0x920 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+
+
 ---
- fs/btrfs/extent_io.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index f0a1da40d641..7dc996e7e249 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -2485,7 +2485,7 @@ void extent_write_locked_range(struct inode *inode, const struct folio *locked_f
- 		 * code is just in case, but shouldn't actually be run.
- 		 */
- 		if (IS_ERR(folio)) {
--			cur_end = min(round_down(cur, PAGE_SIZE) + PAGE_SIZE - 1, end);
-+			cur_end = min_t(u64, round_down(cur, PAGE_SIZE) + PAGE_SIZE - 1, end);
- 			cur_len = cur_end + 1 - cur;
- 			btrfs_mark_ordered_io_finished(BTRFS_I(inode), NULL,
- 						       cur, cur_len, false);
-@@ -2494,7 +2494,7 @@ void extent_write_locked_range(struct inode *inode, const struct folio *locked_f
- 			continue;
- 		}
- 
--		cur_end = min(folio_pos(folio) + folio_size(folio) - 1, end);
-+		cur_end = min_t(u64, folio_pos(folio) + folio_size(folio) - 1, end);
- 		cur_len = cur_end + 1 - cur;
- 
- 		ASSERT(folio_test_locked(folio));
--- 
-2.39.5
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
