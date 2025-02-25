@@ -1,48 +1,52 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD651F95C;
-	Tue, 25 Feb 2025 08:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71138261586
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 08:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740473651; cv=none; b=lSgsQfmBUVon+gehO//LQdRNcgn1U7vjHwQMXo0QMG5yC4JrTHgiK+7rU0lk7nWxKGEgSg2q7FkRva745xXTgCrUuJNIkZyhh8RIB+iY3hk50DGZcv7bbkIoiXKctxFLo9oxlMPdbKVAi9x2ak2mVRS1+0nz3/BLFlqp2/QCO4A=
+	t=1740473658; cv=none; b=jwcIH26/KzD8HkKyh9YA1LveoiPqSP8/d64mR0q7E70ZRyHRsL/ZZwYAIlzgpuMF5X22T3W4CmdQFx2MdyIaiyC4m6zj7663eqZX7LFOIqj+++6aHaFlaabp3HACyU0PVOedjGmC1ww4wDCZSREJdSvYjZm4mNH5Ino19cqm0i8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740473651; c=relaxed/simple;
-	bh=yaXbbybvqdIZS5sCRuYjv1ZkyvR/QGry9ofzxyYxLFE=;
+	s=arc-20240116; t=1740473658; c=relaxed/simple;
+	bh=H6eBJlZ0MjZo3PEfUNW+LYpR7w4IejSuVblrFazHj7E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mxt+AzGuSVeb0APKT+fK/30gfHxIImudU6bYzxMOpBXAxBBbmUqW54tSD0l+ZpmoKDpRe5JpdPAzG2WfBEWq36I7ekY7tPwlTkcHt68x3zKB26tPGAaBHG+h6pIhSGdbb6IVI1PI4oCKuOQvBdJZ/Ev2o4UBpbU1tM7QwtqRVp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=MBQ0fVm2; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	 Content-Type:Content-Disposition:In-Reply-To; b=QcFBkbkMWENhDLJQTFI8d6urTkClR2jJBU+MNRNX74q1AjaxpnykbnAbO6e+1z0b7ltAD2j9xK5MH6CTWRP5z/uLqcPP8feC7Sur6JLSLfITcw9PNGiMaK7S8hejFi4nr8bpvizqkjWAjF0DuYzbjh5Ci3KUEa0ZFxgpkoleL4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mJDf8EUn; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="MBQ0fVm2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=m/uE5AbjUgTrqaB5TvMD0hL1QbOzaO5ZccZ+IZl0Aqw=; b=MBQ0fVm2AHhupKDLf2RD8erw6D
-	89jeBLcCBDOXI4IOJH7xufAvPx8+87/YbUtM35d10R8wWycbobGy7Z/E2dHkTc/fmsmHmIwiKPtiv
-	V9TJ6jRvdd04msxpx9Df/9Fr5CJpSJt9iLh2w1EFH28KdRNSMEYdAwELY/X/WC97PTYgJw19GlTbB
-	4aS1hQXJmskPhqpPC58l/2Qdz5NZzLpmYt9W+lAnWMCZCc+HNf1mXcy9PhWd9Kf0lTFJFT3RM3du6
-	vMYh3Hdns/Wn5AFTWPYoiJ+2vQxnepUBEmP/KM/CbrbeH51OoKZprvyyAsBE4ZpfE3XVyKIH6tNv5
-	3wrQLmZw==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1tmqhS-001Xuy-0c;
-	Tue, 25 Feb 2025 16:53:59 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Tue, 25 Feb 2025 16:53:58 +0800
-Date: Tue, 25 Feb 2025 16:53:58 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: syzbot <syzbot+1a517ccfcbc6a7ab0f82@syzkaller.appspotmail.com>
-Cc: davem@davemloft.net, linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>, linux-mm@kvack.org
-Subject: mm: zswap: fix crypto_free_acomp deadlock in zswap_cpu_comp_dead
-Message-ID: <Z72FJnbA39zWh4zS@gondor.apana.org.au>
-References: <67bcea51.050a0220.bbfd1.0096.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mJDf8EUn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=ol5dy1S8jF5La50bagO80NpvW4GDvP3HgM9TsCiAWHk=; b=mJDf8EUnXe/Uy4f8/k6tSPQrIc
+	7c21ZUAVu8Gy958C+S1QZcQwhxxxFDF8HWa1taJzrUmkjbsh/xGGdlYbjL+xNpoqukO6ll167JHtT
+	qXd2UKgOD7Q0Ynp8cnLcGlJPGgh7iKZB2Of+turn9G/nDXHwh4qxxEfsq/BFtCIYk+/qwMhCetSmH
+	HpZdkzU1nwZnR03aatzc8Jqt5DMxBURQhqZ/lfpCyftO6CGIttxptm4oyuQy0Sl4zW8f/EqVqoq38
+	QTcSzvpfaQy6ZxTjehdL7SP55pQ1zdqwYum8wPeDBSFFVEQS244c7EsFKD+mT7XZ2XUuBRigIt3LL
+	QKmnTZUQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tmqhc-00000003K8G-1Eic;
+	Tue, 25 Feb 2025 08:54:08 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id CEA51300472; Tue, 25 Feb 2025 09:54:07 +0100 (CET)
+Date: Tue, 25 Feb 2025 09:54:07 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Kees Cook <kees@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, alyssa.milburn@intel.com,
+	scott.d.constable@intel.com, joao@overdrivepizza.com,
+	andrew.cooper3@citrix.com, jpoimboe@kernel.org,
+	jose.marchesi@oracle.com, hjl.tools@gmail.com,
+	ndesaulniers@google.com, samitolvanen@google.com, nathan@kernel.org,
+	ojeda@kernel.org, alexei.starovoitov@gmail.com, mhiramat@kernel.org,
+	jmill@asu.edu
+Subject: Re: [PATCH v4 04/10] x86/traps: Allow custom fixups in handle_bug()
+Message-ID: <20250225085407.GH11590@noisy.programming.kicks-ass.net>
+References: <20250224123703.843199044@infradead.org>
+ <20250224124200.275223080@infradead.org>
+ <202502241058.BF06AF37C@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,76 +55,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <67bcea51.050a0220.bbfd1.0096.GAE@google.com>
+In-Reply-To: <202502241058.BF06AF37C@keescook>
 
-On Mon, Feb 24, 2025 at 01:53:21PM -0800, syzbot wrote:
+On Mon, Feb 24, 2025 at 10:59:21AM -0800, Kees Cook wrote:
+> On Mon, Feb 24, 2025 at 01:37:07PM +0100, Peter Zijlstra wrote:
+> > The normal fixup in handle_bug() is simply continuing at the next
+> > instruction. However upcomming patches make this the wrong thing, so
+> > allow handlers (specifically handle_cfi_failure()) to over-ride
+> > regs->ip.
+> > 
+> > The callchain is such that the fixup needs to be done before it is
+> > determined if the exception is fatal, as such, revert any changes in
+> > that case.
+> > 
+> > Additinoally, have handle_cfi_failure() remember the regs->ip value it
 > 
-> syzbot found the following issue on:
+> typo above, if you want to tweak that in your tree.
+
+Typing is forever hard :-)
+
+> > starts with for reporting.
+> > 
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > 
-> HEAD commit:    e9a8cac0bf89 Merge tag 'v6.14-rc3-smb3-client-fixes' of gi..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17b667f8580000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=61cbf5ac8a063ad4
-> dashboard link: https://syzkaller.appspot.com/bug?extid=1a517ccfcbc6a7ab0f82
-> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> Thanks for the added comment, my future brain will appreciate it. :)
 > 
-> Unfortunately, I don't have any reproducer for this issue yet.
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/8441f1b50402/disk-e9a8cac0.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/65b1f8d2f790/vmlinux-e9a8cac0.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/1d6f6d8c3d6b/bzImage-e9a8cac0.xz
+> Reviewed-by: Kees Cook <kees@kernel.org>
 
----8<---
-Call crypto_free_acomp outside of the mutex in zswap_cpu_comp_dead
-as otherwise this could dead-lock as the allocation path may lead
-back into zswap while holding the same lock.  Zap the pointers to
-acomp and buffer after freeing.
-
-Also move the NULL check on acomp_ctx so that it takes place before
-the mutex dereference.
-
-Fixes: 12dcb0ef5406 ("mm: zswap: properly synchronize freeing resources during CPU hotunplug")
-Reported-by: syzbot+1a517ccfcbc6a7ab0f82@syzkaller.appspotmail.com
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-
-diff --git a/mm/zswap.c b/mm/zswap.c
-index 6504174fbc6a..24d36266a791 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -881,18 +881,23 @@ static int zswap_cpu_comp_dead(unsigned int cpu, struct hlist_node *node)
- {
- 	struct zswap_pool *pool = hlist_entry(node, struct zswap_pool, node);
- 	struct crypto_acomp_ctx *acomp_ctx = per_cpu_ptr(pool->acomp_ctx, cpu);
-+	struct crypto_acomp *acomp = NULL;
-+
-+	if (IS_ERR_OR_NULL(acomp_ctx))
-+		return 0;
- 
- 	mutex_lock(&acomp_ctx->mutex);
--	if (!IS_ERR_OR_NULL(acomp_ctx)) {
--		if (!IS_ERR_OR_NULL(acomp_ctx->req))
--			acomp_request_free(acomp_ctx->req);
--		acomp_ctx->req = NULL;
--		if (!IS_ERR_OR_NULL(acomp_ctx->acomp))
--			crypto_free_acomp(acomp_ctx->acomp);
--		kfree(acomp_ctx->buffer);
--	}
-+	if (!IS_ERR_OR_NULL(acomp_ctx->req))
-+		acomp_request_free(acomp_ctx->req);
-+	acomp_ctx->req = NULL;
-+	acomp = acomp_ctx->acomp;
-+	acomp_ctx->acomp = NULL;
-+	kfree(acomp_ctx->buffer);
-+	acomp_ctx->buffer = NULL;
- 	mutex_unlock(&acomp_ctx->mutex);
- 
-+	crypto_free_acomp(acomp);
-+
- 	return 0;
- }
- 
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Thanks!
