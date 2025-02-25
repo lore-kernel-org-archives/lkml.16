@@ -1,109 +1,94 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53CD19B5A3;
-	Tue, 25 Feb 2025 20:09:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E47D19B5A3;
+	Tue, 25 Feb 2025 20:10:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740514179; cv=none; b=WyIzcdfFUUGL6P/Dkj8XC71loxoqBV58cI3ZF6djB2//xZ7hPRNKhEe9t9zfz68uDkg3f7TTyxdWVB7xmb7XCiAGD+bx+sqcsefVwUSj/WeCZ1JEQ/8kmYTxnlhQFNRjhG+J5mK04sWwsn6aV4YMb6gO0u/ytqAv0eM6MsBEvKA=
+	t=1740514223; cv=none; b=VV7JHWgNrjnzvkxa0kIUjpw2LpoeDO8vEUoZVuEt+yizf0Jmx0Z5lYZVaY+W66CMkBuUuD+ngSbUNUR3JKiiqiS+CPvXrZO2P7Ge8cI8QALk0YDEvvPOa4P01Le/s6d/26zwiE3UBAjdTS+N0wgBkxXUTxrw5O3y/wt0fy+olnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740514179; c=relaxed/simple;
-	bh=gSp+iwas8q4fURy87r3vrpRkdO6BQ2hmPXt4cLfksSg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VnjEM6MjM5S2oNR9p4x+zbV3zM8BoNgJl5luR6ZbQA1IzZP5A4dC0i/tCBNpDoS0ANK7fPQ3FYKHLpiJ18s3hcXsMQMZ/qkDbawnjycw/wMuXrNHXmqppjSYWAL2nnj1TJCgZGIoo4dNIUhzy/igFZXcqBeAGhGXl7aRerfpX/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=O0IR2pws; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1740514223; c=relaxed/simple;
+	bh=9Sikho32R619XOFYLt/q+5TkXxnLWtEEZEAnylAOoGs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ewzLvcPsCuWfVu914tC3vS89s7oPdMziEQjy7nJnV3B50JPiyr6Z3qLszkX4Y0vVLhgICJFuWTuVqY9Dx8eg9IPjhJbUvny7TO1ga6ZG9aEgZdHgLmvZTJyVm/tGaSO4OL+B5VZ3TcevwPoT1V4HG+Kw0F8L3srGZW2GKlhHCKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=obGn1mYL; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="O0IR2pws"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51PIXgRa007526;
-	Tue, 25 Feb 2025 20:09:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=corp-2023-11-20; bh=EhxAP
-	HTe66rLGXBARqiCtEmzc2aeftoE87GPqQGMK5w=; b=O0IR2pwswYcsLUpsnh3ki
-	xVtpiLC2TeWneVFiSiPoF7JbSV9zP5dDb5T5hfS5IriCtUSlgD8b3fA+iQydW60F
-	khSlfUiJud/cpW2pgFGKd1x3/rZE2j539fTf4E/nabVKd+cQLpJe3DN3b2+MmlmU
-	RvrFbCHEwMlQaV+LIEf/66GEd8mSHtnLmYuzng5+mjJnnss5sbBFnYG8UY4AJeZu
-	tDorbKUmeWAWnphf/XxyZa0NtDK+HC/B6M9LbvORs4SeAGT9g2Tl5YW8dstXWbDz
-	/RW52qKQH7v7CHeWjEqhpFAtinqB44U8vzR3fQ/PzstK72A2ZBT70fopfXVrevWt
-	g==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44y6f9e4mv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Feb 2025 20:09:32 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51PJSTHK025470;
-	Tue, 25 Feb 2025 20:09:28 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 44y51g9yt8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Feb 2025 20:09:28 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 51PK9QpV011891;
-	Tue, 25 Feb 2025 20:09:27 GMT
-Received: from sishan-generic.osdevelopmeniad.oraclevcn.com (sishan-generic.appad1iad.osdevelopmeniad.oraclevcn.com [100.100.231.227])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 44y51g9yrn-2;
-	Tue, 25 Feb 2025 20:09:27 +0000
-From: Sinadin Shan <sinadin.shan@oracle.com>
-To: shuah@kernel.org, sshegde@linux.ibm.com, chris.hyser@oracle.com
-Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sinadin Shan <sinadin.shan@oracle.com>
-Subject: [PATCH v3 1/2] selftests: sched: add sched as a default selftest target
-Date: Tue, 25 Feb 2025 20:09:09 +0000
-Message-ID: <20250225200910.260569-2-sinadin.shan@oracle.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20250225200910.260569-1-sinadin.shan@oracle.com>
-References: <20250225200910.260569-1-sinadin.shan@oracle.com>
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="obGn1mYL"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 2FE5748EC1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1740514220; bh=slRgZF0YUGBpz++3WDLE3bOeRLCVZObJIeYEzYOIpCc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=obGn1mYLsYj0Td+2DDjCeU5YLxeiAW2kMrjnQxi7v/Wa4GRvnuTSspJUZnShbImxB
+	 Q2SkDVdcrD9X9ivjbPRE6P6QSc952yqQ9o70c4hP1+zQRyCF6cGk7ptjQsBKJY1nX9
+	 /A0pi3oHnK9cJQmdIw+g19qkIHirm/++2WQHG0BJCjip93wmVmvb1uxKORgw7gfaWZ
+	 95Pmz7+UGqG58IBC1Xn5zg+PTTyAdenWFvaQEzds/tf/7IGuzgdJmvrRDKdkMy3i6Y
+	 RFXDlXlkgIQV4HPWHS3UqrsYAaJuj1qzsikZcAzM/ODaYRM96mSmuMkoLOGXKi73l/
+	 SDUVGmKvSErRg==
+Received: from localhost (unknown [IPv6:2601:280:4600:2d7f::1fe])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 2FE5748EC1;
+	Tue, 25 Feb 2025 20:10:20 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+ linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 09/39] scripts/kernel-doc.py: add a Python parser
+In-Reply-To: <20250225083814.51975742@foz.lan>
+References: <cover.1740387599.git.mchehab+huawei@kernel.org>
+ <3905b7386d5f1bfa76639cdf1108a46f0bccbbea.1740387599.git.mchehab+huawei@kernel.org>
+ <87v7sy29rh.fsf@trenco.lwn.net> <20250225083814.51975742@foz.lan>
+Date: Tue, 25 Feb 2025 13:10:19 -0700
+Message-ID: <87tt8hyedw.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_06,2025-02-25_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
- phishscore=0 mlxscore=0 suspectscore=0 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502100000
- definitions=main-2502250122
-X-Proofpoint-GUID: iE34fYeTF-WS28dy0ys-Z5yFNVm4NDKw
-X-Proofpoint-ORIG-GUID: iE34fYeTF-WS28dy0ys-Z5yFNVm4NDKw
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-The sched tests are missing a target entry and hence out-of-tree build
-support.
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-For instance:
-make -C tools/testing/selftests install INSTALL_PATH=/foo/bar
+> Em Mon, 24 Feb 2025 16:38:58 -0700
+> Jonathan Corbet <corbet@lwn.net> escreveu:
+>
+>> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+>>=20
+>>=20
+>> I also think you should give consideration to preserving the other
+>> copyright notices in the Perl version.  A language translation doesn't
+>> remove existing copyrights...who knows how much creativity went into
+>> some of those regexes?
+>
+> Makes sense, but the copyrights at kernel-doc.pl:
+>
+> 	## Copyright (c) 1998 Michael Zucchi, All Rights Reserved        ##
+> 	## Copyright (C) 2000, 1  Tim Waugh <twaugh@redhat.com>          ##
+> 	## Copyright (C) 2001  Simon Huggins                             ##
+> 	## Copyright (C) 2005-2012  Randy Dunlap                         ##
+> 	## Copyright (C) 2012  Dan Luedtke                               ##
+> 	##                                                               ##
+> 	## #define enhancements by Armin Kuster <akuster@mvista.com>     ##
+> 	## Copyright (c) 2000 MontaVista Software, Inc.                  ##
+> 	#
+> 	# Copyright (C) 2022 Tomasz Warnie=C5=82=C5=82o (POD)
+>
+> Also doesn't preserve all copyrights from people that worked hard to
+> maintain it all over those years.
 
-is expected to build the sched tests and place them at /foo/bar.
-But this is not observed since a TARGET entry is not present for sched.
+Agreed ... and I'm not sure what we can do about that.  But *removing*
+existing copyright notices is a bit of a different story; that is
+generally considered to be fairly bad form.
 
-This was suggested by Shuah in this conversation
-Link: https://lore.kernel.org/linux-kselftest/60dd0240-8e45-4958-acf2-7eeee917785b@linuxfoundation.org/
+I don't have a problem with adding a longer credits area, I guess, if we
+want to do that (though it's not normal for other source files).  But
+I'm not sure we need to.
 
-Add support for sched selftests by adding sched as a default TARGET
+Thanks,
 
-Signed-off-by: Sinadin Shan <sinadin.shan@oracle.com>
----
- tools/testing/selftests/Makefile | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index 8daac70c2f9d2..e2d0d389ad912 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -91,6 +91,7 @@ TARGETS += rlimits
- TARGETS += rseq
- TARGETS += rtc
- TARGETS += rust
-+TARGETS += sched
- TARGETS += sched_ext
- TARGETS += seccomp
- TARGETS += sgx
--- 
-2.43.5
-
+jon
