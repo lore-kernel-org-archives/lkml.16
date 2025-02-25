@@ -1,135 +1,123 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from dispatch1-us1.ppe-hosted.com (dispatch1-us1.ppe-hosted.com [67.231.154.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 907FB19C554;
-	Tue, 25 Feb 2025 18:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBDAB19DF4F
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 18:24:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.154.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740507818; cv=none; b=iVGjlWkt7WINgQCXJIFWrB5s5fbMzizHwVlIbE+SCG9/lZtBCQMmM7GTblOy1Fhvfqb/H5BeOoNAEzOvJEPsazDbwldzJrhFdAf9cs6XtExoNqH6UhA9WxrtShvLdx4EF31pi7j0LTpXmNgQqVC0WxoAnRX6Sto/Bs22HMbi9EU=
+	t=1740507847; cv=none; b=PYBt2NQj9O3ajfyr5OocyMHfCmA0TYPcTn2uCxxXKU4m7h/3Db9oysulbgMvsOC8ULBh4GbPezl1vGn9nm4K5sHtBZKgvQuQ+gYshLTCoxrIoKO1mxA9ufc4W3IP57P23Fqbcsk7mtliNDjoh6/ZuakmA9vebmb0PfhKABYhY8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740507818; c=relaxed/simple;
-	bh=lWR9ZhfqT3Bv67jIPPD27ihMnSVP5uwrvTX15okoLkc=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=NVzwzo0+BWH+Iv9qokRuWyGKVUzFstZb6dVyLIM678HtpmaeuIHlCPPp4cS9fhRSKDwNily02hFb96xAnKsXKbuWvy4ykLTfIsIplz+NZu03Ba2oe62o8yUjR0IAUvJC+wdh55TfRXHkCw4D0E8R/NqLmnmeHrLxsEa0fBG8xkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YXf4X5DW; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740507847; c=relaxed/simple;
+	bh=SBkC6K1saiGACNoan7QB2EPwo5J7cMg6MkvBnK5tNHY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KTxOYkaGsZt4sZu0GxwWYwj6nrQ/hGMotOPfCQiA/jHjz5RBHfO8pGq5YiKt1Lpw5kqtv1/LMkn9iEY2Rr9qNc32jlYfFQFybU5UrVl7ctwqpYFtHEM3LXwtq0MQNcAp8v/xwPJU29/7MlFnQdeo4P5+4YRt0DoKE18dwAe+Wi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sladewatkins.net; spf=pass smtp.mailfrom=sladewatkins.com; dkim=pass (2048-bit key) header.d=sladewatkins.com header.i=@sladewatkins.com header.b=GNbCf/o3; dkim=pass (2048-bit key) header.d=sladewatkins.net header.i=@sladewatkins.net header.b=ByhPtz+6; arc=none smtp.client-ip=67.231.154.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sladewatkins.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sladewatkins.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YXf4X5DW"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4721f53e6ecso54424891cf.1;
-        Tue, 25 Feb 2025 10:23:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sladewatkins.com header.i=@sladewatkins.com header.b="GNbCf/o3";
+	dkim=pass (2048-bit key) header.d=sladewatkins.net header.i=@sladewatkins.net header.b="ByhPtz+6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sladewatkins.com;
+ h=cc:cc:content-transfer-encoding:content-transfer-encoding:content-type:content-type:date:date:from:from:in-reply-to:in-reply-to:message-id:message-id:mime-version:mime-version:references:references:subject:subject:to:to;
+ s=selector-1739986532; bh=xkCeOl6nj9IK5tQwcy8oiuh52jYXAnIOceDA8IVe+lQ=;
+ b=GNbCf/o3kO4exRHdGWDWiY3J0McRGr0JhvLtWvKZSi4gvTxctTYvYJCMrZN8wnFMs8w+0oVAqH0YfOrErVm8FUZ4FSZsGrVKTDIVBPOdfSgpn4NTX27FeXDKHSEkiLKQepjv6ZSqjyq59K74d1ND3tDVtKrWisFydo2+PFMpu6qbDHeT+RJAsVewpWVvkqWVSVc1xDQQyP1qHuEaWgVS0nPr+9jYA25c/xslJQ8HB6X8r5B/DatCUNg9ySwXvC2XqnaQ7fvpjzHkPxo18tUi8w7HiV0mis8Z2FI3LndPM2NvyI8yRX673H01XrACrPX3xo4f55gZypUc6SkVtoXQqg==
+X-Virus-Scanned: Proofpoint Essentials engine
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id CB548C000A4
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 18:23:57 +0000 (UTC)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c0a3568f4eso603741485a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 10:23:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740507815; x=1741112615; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yiB/fe1k4Uf/k4EA3SbSx/T++Ad/tM1CJM/bJ+YtZPU=;
-        b=YXf4X5DWKiH+BchWbMr+cSaE7JoLbbhtiJYO+Kfqywg9t6Nu3EyUnCPSUsNi1h4tLF
-         Sia7dO5EqHQFv3alWgHzDWi6t0J3pOGqs4lnEgeMiRtRB4wVXiG8V0J+cL0UKUOVONp5
-         1bsVeykCSflAJ03mAkoMohSzGjj+28+wkox2G9tZbi/QsLPKzM82/meoMMGKvsdoG2av
-         mWiL1FDQJFMhZ8AMxglvBeoqCg1kQ4ctcLnf7JbAhs0GU6HTXcyKvdohLAemSzHgOf5j
-         ohUxKTEZ1vRupMKAV+f+2IgyiSdaaKlgbEv/0ytmJRc3MDbN432NviYnCay1OzfSOSJG
-         Nuyw==
+        d=sladewatkins.net; s=google; t=1740507837; x=1741112637; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xkCeOl6nj9IK5tQwcy8oiuh52jYXAnIOceDA8IVe+lQ=;
+        b=ByhPtz+6sYVf8zlqsbegd7OBAPxJEaI+Sa4hVVjMqZWjlEPCOObPpn9Pa69c4bRcrO
+         qnxHWgfM4/9grqrl94sWuniKGSW+hVUKxXGYJUdsDmJcte6tmDRepOUNTrNAnVODX9qL
+         /hMioBcHCNQqSiLUKy1c4CUutUK3KpkhW4MvjaaWBss8mBXnpAKvbFMQa8dsPtgnEcPA
+         qRFZzaLh3oWGpbVU5yDIqevqCIv4oEdse63nWnu2w0e5Pj0WAdUUMuD+xEwjE8NflsvP
+         p4t1dKlREyexIyk3GJ8GA8/NpgM4n1pIjOvy5iVRgfOsNOP6ck/rCqHgKhfyiZHTR/bn
+         FrOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740507815; x=1741112615;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=yiB/fe1k4Uf/k4EA3SbSx/T++Ad/tM1CJM/bJ+YtZPU=;
-        b=To4FedeJvWSSmG4cfbMhwoSHBcVb5iIhPLGGWrZ9vmE+1/GQ6eANx+YCZdRJWirKcw
-         xDSVVPTk6zXqNeeBdG47cxufaFXmMnr1xStidTpcrGWzc+WPhF6Xx6C5N3pZV7w8yYOx
-         QfUdt7YPTD9ywyme7Iu8Y/nJKS5VVD8CkV4ZTJt1HjuVjlSiay6mdkOLaVw4fHrMGLX9
-         zBoQlNMOAne3I2pCsnKj01vG5ht6MOkM7uRh2N4YabGSkGvBAMpgi9YqegwiFV/s/Knj
-         SQ8OgIjdWa8ypIci4I90tmdZlxjtxXr5MUZeqVhQWuz6+EBDLwurOWE5l7cjFp2guff6
-         iHbg==
-X-Forwarded-Encrypted: i=1; AJvYcCV5+nN7E5sH8nuGs6jsTSZwh1yX1zGBHZMd/BcM7tk+/mW86l8PBnYEEnApHNzzYg7rAVVWYQSR@vger.kernel.org, AJvYcCVX/NIWfDh9jIQX4tlkIFUmO2SLZPKNqWJy5qLj+XUzLcWWfWiNxxLSJiIf1k/ayObm6Ee8HgY6OT/ZHnVMQgx7@vger.kernel.org, AJvYcCWesA1XHDUac1x1T3Kc/udstifnM6JbDcr4RY0WlmTjaMfCMUGFTRLXu0ehGk19HuTAL/0=@vger.kernel.org, AJvYcCXSo4960T1daA87qA1PC5VEJA+V8aZgzc7cisPbFYI9T5tJ0L/Rx6Xb6TdnBaQMv1jSK6E6GV18s1qmYk81@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxug6wDh2I/DfKvEYBYBTMjhBhdZNrbMKTPudpgZztaleO2JYV7
-	cEqXW+YsgsaEEHr071tcxzHiN2v/nYuguNR6Z/nP/sN7/LztB+S+
-X-Gm-Gg: ASbGnctK5F1Q/UN9iinsVlH3fPsxNdLY5aM2sUnVXfRGl2MS8qJPDcG7iEebaAb1wrh
-	BCy6bp0ZDVpRX92fF0REjOZsC78qweR4Bko+sZkd5lYLC6gQyO5k9MBWeuYLvVY3tNJoUY+XL3C
-	4q9iJPCcEUVmTcWRQG4v+BWnUpUAjvYC5FbE9UJ6qZxJnwaRpbJh+t5a7es21wc5n8GyrtQvUF2
-	6PH755KqX/VaFAfKocmEj97kvtBVZZFmV7NUmmNgw48P7KNdFBXrjAtvnmSsidkqSh9FDvSGbUh
-	N0zgfY+XUAfllynLKEB7j8fZNK6K0L2wXSq0wkgpqyjp3qjDla8BiceMnu2PD7NSnK1zMJch5Nm
-	tcnk=
-X-Google-Smtp-Source: AGHT+IFaHBS8n0aQ9zJrj4XBYciVZAF1BuQgnxQ6bsbcGDqmkd1fbgUyb7IL/cXKQNEnFfHujzg+jA==
-X-Received: by 2002:ac8:7c52:0:b0:471:f992:8c24 with SMTP id d75a77b69052e-47224909608mr224383651cf.49.1740507815296;
-        Tue, 25 Feb 2025 10:23:35 -0800 (PST)
-Received: from localhost (234.207.85.34.bc.googleusercontent.com. [34.85.207.234])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47377e22008sm12838371cf.35.2025.02.25.10.23.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 10:23:34 -0800 (PST)
-Date: Tue, 25 Feb 2025 13:23:34 -0500
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>, 
- netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- bpf@vger.kernel.org, 
- linux-kselftest@vger.kernel.org
-Cc: willemdebruijn.kernel@gmail.com, 
- jasowang@redhat.com, 
- andrew+netdev@lunn.ch, 
- davem@davemloft.net, 
- edumazet@google.com, 
- kuba@kernel.org, 
- pabeni@redhat.com, 
- andrii@kernel.org, 
- eddyz87@gmail.com, 
- mykolal@fb.com, 
- ast@kernel.org, 
- daniel@iogearbox.net, 
- martin.lau@linux.dev, 
- song@kernel.org, 
- yonghong.song@linux.dev, 
- john.fastabend@gmail.com, 
- kpsingh@kernel.org, 
- sdf@fomichev.me, 
- haoluo@google.com, 
- jolsa@kernel.org, 
- shuah@kernel.org, 
- hawk@kernel.org
-Message-ID: <67be0aa61e400_25ccfc29426@willemb.c.googlers.com.notmuch>
-In-Reply-To: <efcc6e11-2d3a-489e-80bc-cbc3f72f7afa@hetzner-cloud.de>
-References: <20250224152909.3911544-1-marcus.wichelmann@hetzner-cloud.de>
- <20250224152909.3911544-5-marcus.wichelmann@hetzner-cloud.de>
- <efcc6e11-2d3a-489e-80bc-cbc3f72f7afa@hetzner-cloud.de>
-Subject: Re: [PATCH bpf-next v3 4/6] selftests/bpf: refactor
- xdp_context_functional test and bpf program
+        d=1e100.net; s=20230601; t=1740507837; x=1741112637;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xkCeOl6nj9IK5tQwcy8oiuh52jYXAnIOceDA8IVe+lQ=;
+        b=TyVQMx3A698DFBmBVpEJpESyGHXxny1q1cqeRFz7dwHuw/YLBT3lKtQzIzq6PUbd1g
+         bxvJb/Wwe9PhGh0jqUEhYCt/Sd6Ce5qEDkFX7SsrW/IfhqXtG9F+vHy932X33FQSG7ju
+         qE947CaP2lSFZc+7AnH0E2T2XIEljLIy+c51/edohqpBny+qcPGY92/9uzLW4zd7Yy1h
+         LWseuWtgKl9p1yJTMKwTGJsZsYNjoXxI+lapdAWuSmHQA6onFQRZGkCYbyuUxRA6qApD
+         CWpWaB0H0KYHE7WD1aGzHYgh8B7eUbt2d4xDqg0twzQU0YncIiODsWLmSv/6+uU7Fm3q
+         bQiA==
+X-Forwarded-Encrypted: i=1; AJvYcCX53506oQGL4pozoTa3h/LySCGM5ejUEUqbuuDMBiDckjypztDtuawtbUpinw/JZGkhy0JRFSK8SmjjqKs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRtmibmjyCP/T54bWKPW3lxa7kgLLhkAH34tvF9q7Efc/c8S7a
+	whoOWdx9psRgDwbDJzjwwB4IVUgtoUmukqSzZEQzNdrPhjW13iHj0BHoJcw2SVLN7bD558ENSWa
+	SDAsrh0Q+Voip86dDkZ8KV0tMM5RCRpHVYKmXWD9uxXbLFHMW7ZqeBxgf7cedIpPbSm5ZT9zYGc
+	qXVVs+6QI=
+X-Gm-Gg: ASbGnct9jyxlymMpGDTNLZVBgEAVyquIPZBV3/BPMW5JzAqmiu6a3/E8dLHD/3vhRgK
+	u/ljokRisQHZUaqAvrF6hIp2EOZSS1uW5V9nAo00jIe2+YRuJenY14lspVjdfCsSsNmFWFXkA3C
+	OPy50vLkGDsRM9BIvAhODZmR57pdA1zL1AhoiDHK+2n1D9GmBk2mWzBiRQW9x3k/nMUe8B5xgTF
+	zyObOn3Xou3oxsk+V9IhyH0WjxVn/wHplKdtwEbDaBn2tcWrdVczicr5sjfyN9TXz4dKlXeyIvG
+	4tmsvoAZWSYngjXnnl7ahYR4qykn/5F74btqS19iS75pyGoq7AJVsI7HPYjwJaFJa3PQFUQMuWo
+	m8Dw1KaDWSCBDTV1WMjKTFLnPcN99iWzCobHU
+X-Received: by 2002:a05:620a:294f:b0:7b6:d8da:9095 with SMTP id af79cd13be357-7c247f20022mr65059885a.13.1740507837368;
+        Tue, 25 Feb 2025 10:23:57 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH55M+1Ifas+XqNzr8X3+KkOff8XpRApkTQhxLbzscTrrKWkaE4uVGMnrWH4qExo9dqce3f1g==
+X-Received: by 2002:a05:620a:294f:b0:7b6:d8da:9095 with SMTP id af79cd13be357-7c247f20022mr65054885a.13.1740507837013;
+        Tue, 25 Feb 2025 10:23:57 -0800 (PST)
+Received: from ghostleviathan.computer.sladewatkins.net (syn-076-037-141-128.res.spectrum.com. [76.37.141.128])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6e87b06dd6esm12101966d6.19.2025.02.25.10.23.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2025 10:23:56 -0800 (PST)
+Message-ID: <09882df3-a186-404f-adce-cdde1a6e887a@sladewatkins.net>
+Date: Tue, 25 Feb 2025 13:23:55 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.12 000/153] 6.12.17-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250225064751.133174920@linuxfoundation.org>
+Content-Language: en-US
+From: Slade Watkins <srw@sladewatkins.net>
+In-Reply-To: <20250225064751.133174920@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-MDID: 1740507838-bH1dWjC0lI69
+X-MDID-O:
+ us5;at1;1740507838;bH1dWjC0lI69;<slade@sladewatkins.com>;c71d53d8b4bf163c84f4470b0e4d7294
+X-PPE-TRUSTED: V=1;DIR=OUT;
 
-Marcus Wichelmann wrote:
-> Am 24.02.25 um 16:29 schrieb Marcus Wichelmann:
-> > [...]
-> > +	/* By default, Linux sends IPv6 multicast listener reports which
-> > +	 * interfere with this test. Set the IFF_NOARP flag to ensure
-> > +	 * silence on the interface.
-> > +	 */
-> > +	SYS(close, "ip link set dev " RX_NAME " arp off");
-> >   	SYS(close, "ip link set dev " RX_NAME " up");
+
+On 2/25/2025 1:49 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.12.17 release.
+> There are 153 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Hm, setting the NOARP flag seems to have not been sufficient to fix the flaky
-> test:
-> https://github.com/kernel-patches/bpf/actions/runs/13507111620/job/37739614229
-> 
-> I was not able to reproduce it locally or with my own CI runs unfortunately, but
-> I'll try something else in the next patch version which should definitely stop
-> IPv6 multicast listener report packets from messing with the tests.
+> Responses should be made by Thu, 27 Feb 2025 06:47:31 +0000.
+> Anything received after that time might be too late.
 
-You probably want to pass nodad to any ip -6 addr add.
+Hey Greg,
+No regressions or any sort of issues to speak of. Builds fine on my 
+x86_64 test machine.
 
-This is a common option you'll find in tools/testing/selftests/net.
+Tested-by: Slade Watkins <srw@sladewatkins.net>
 
-RFC 3810 section 5.2.13 says
+All the best,
+-slade
 
-"
-   For stateless autoconfiguration, as defined in [RFC2462], a node is
-   required to join several IPv6 multicast groups, in order to perform
-   Duplicate Address Detection (DAD).
-"
