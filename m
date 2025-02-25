@@ -1,55 +1,43 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31BAB18BB9C;
-	Tue, 25 Feb 2025 09:52:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CB58494
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740477148; cv=none; b=M1KgQx/NB9yL1Vpw4xMJlP+iT9kLS+B7iBvhYRUaLzajAaiag3dHXUJmel5i4r0uIE7QfZmh4PA5a8+kXnALXX6n62h7m8ev+twbApjW2jjviTns590RjCq7ob5KUMawaz4zSEOQvsFh/5ORosADNUjmLQFNuSkhH3sWGIAOeys=
+	t=1740477203; cv=none; b=qqlp1Io1a0GexiX4Rn0PFNhas3NWzEMAFiwHeSjHEJm2RStmkHFghWgkXwGY/BYsGa84mAzR7vJXaOwTRAVMevkGBydJxkNWKf6NehsLgB4lAPePNMkUKOZdqcXpTELJqlBx75nq/Td7LGP/u+kysWZHpYrWX6ipICXu8HjCN7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740477148; c=relaxed/simple;
-	bh=13XhFyThWjddbCcTyIBgYU0jGQLILu93dCMct+l48CM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UcLaVlLbjatEfgxzII56ujiMQQqOLsCXBGhyzRcKrjer90cCsNojn8+1zEUHvrf8NacFXNVk3/mYsupePCUb9kJ5VSqj0uQIW4Ls3MOCW45KHpTOxwUAfLtxh71kvrK7XZbGBBFRT5wmhCSp7xyn8XAQ4IRXhYkeGbBm0pwaGWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=H944BIbK; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1740477203; c=relaxed/simple;
+	bh=G0sFW0Mo6iUqWeHZuGXwZDimuwqPDerwTIjkQQh8+Rk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZnKkLNH3eycVoNPRSym+nJmpU22QnQkn4SF2JzxOX71NYI+o+i9KUuiPy6vhDhCoF6oNVcRkPjSvdyVfmx2ZllDhqNcvFo56qMQlKTelC82lCRetvsYnjS//r2p8jh2OAMSMutGHvVnyI2XLw+e3wbXShV/HeG7ytulqVJRZY1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=uj5DyjEp; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="H944BIbK"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51ONUwVT005162;
-	Tue, 25 Feb 2025 01:52:10 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=pfpt0220; bh=RI8q8A+C/mMkg4mX0jo9fet
-	GEHZ8oz6WKdpobl6FLG0=; b=H944BIbKRL0vlXMoJ9WSdviz8Qbrxpe6D57RR2O
-	p8mF1I9Cdag3mEhLpHnrZUijr+Y02qlpYVNc/Lq7PaMXyrHP0WzRyckiA+zHNMkD
-	KcbeuIsDcdT8gYGJoQlfj1DQVssJyF9cA1lGjqlq/g0p32FS9OG6n6B+HmwPaKzr
-	4BoI3vwwKb2yaIUWBLM8F1MnMi8ActDhWr9qfJ4bEeVODh7W3U4FJc43C+avXClY
-	2mqtLGWrqjZLVsVwVZYkTF7oSeC2dNDoT2G+yr8UfUCN+4rjFZzYNanlNTNtRSTB
-	pdJnOfUmu9z8eytc3OH7w+ih9oq1BgSF1BKLxUn9F2yuCxQ==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 4512gh972j-4
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 01:52:09 -0800 (PST)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 25 Feb 2025 01:52:06 -0800
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Tue, 25 Feb 2025 01:52:06 -0800
-Received: from tx2-sever.caveonetworks.com (unknown [10.110.141.15])
-	by maili.marvell.com (Postfix) with ESMTP id 35CAC3F706D;
-	Tue, 25 Feb 2025 01:52:06 -0800 (PST)
-From: George Cherian <george.cherian@marvell.com>
-To: <wim@linux-watchdog.org>, <linux@roeck-us.net>, <corbet@lwn.net>
-CC: <linux-watchdog@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        George Cherian <george.cherian@marvell.com>
-Subject: [PATCH v2] drivers: watchdog: Add support for panic notifier callback
-Date: Tue, 25 Feb 2025 09:52:03 +0000
-Message-ID: <20250225095203.2139482-1-george.cherian@marvell.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="uj5DyjEp"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1740477191; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=VVoLc33zPMeaiAyTcxHiedjnEIt4XQjILMkv0uRR958=;
+	b=uj5DyjEpO5VItRSzbsL/s5ik26t8ZyklVFbPcvJcDJg1D3kgfAzM4v6btBCzZ/APb7yVkyLpNG16TspAvV2QHsAtJwd569hLYKoOOpIeeeAiWxmHUi1u5zSwrqwLGuxo9JsF1+nvmA8MAHrNnMCnhlSzz1c+jxVoryBqSCdGsCk=
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WQELTmb_1740477190 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 25 Feb 2025 17:53:10 +0800
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: akpm@linux-foundation.org,
+	hughd@google.com
+Cc: willy@infradead.org,
+	david@redhat.com,
+	ioworker0@gmail.com,
+	alex_y_xu@yahoo.ca,
+	ryncsn@gmail.com,
+	baolin.wang@linux.alibaba.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] mm: shmem: fix potential data corruption during shmem swapin
+Date: Tue, 25 Feb 2025 17:52:55 +0800
+Message-ID: <2fe47c557e74e9df5fe2437ccdc6c9115fa1bf70.1740476943.git.baolin.wang@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,155 +45,101 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: bGCIOzTepTq8SHJVlu2mrXvmlXKmvUCl
-X-Authority-Analysis: v=2.4 cv=FLrhx/os c=1 sm=1 tr=0 ts=67bd92c9 cx=c_pps a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17 a=T2h4t0Lz3GQA:10 a=M5GUcnROAAAA:8 a=OmVHwVlGuMYDsWmUhBYA:9 a=OBjm3rFKGHvpk9ecZwUJ:22
-X-Proofpoint-ORIG-GUID: bGCIOzTepTq8SHJVlu2mrXvmlXKmvUCl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_03,2025-02-24_02,2024-11-22_01
 
-Watchdog is not turned off in kernel panic situation.
-In certain systems this might prevent the successful loading
-of kdump kernel. The kdump kernel might hit a watchdog reset
-while it is booting.
+Alex and Kairui reported some issues (system hang or data corruption) when
+swapping out or swapping in large shmem folios. This is especially easy to
+reproduce when the tmpfs is mount with the 'huge=within_size' parameter.
+Thanks to Kairui's reproducer, the issue can be easily replicated.
 
-To avoid such scenarios add a panic notifier call back function
-which can stop the watchdog. This provision can be enabled by
-passing watchdog.stop_on_panic=1 via kernel command-line parameter.
+The root cause of the problem is that swap readahead may asynchronously
+swap in order 0 folios into the swap cache, while the shmem mapping can
+still store large swap entries. Then an order 0 folio is inserted into
+the shmem mapping without splitting the large swap entry, which overwrites
+the original large swap entry, leading to data corruption.
 
-Signed-off-by: George Cherian <george.cherian@marvell.com>
+When getting a folio from the swap cache, we should split the large swap
+entry stored in the shmem mapping if the orders do not match, to fix this
+issue.
+
+Fixes: 809bc86517cc ("mm: shmem: support large folio swap out")
+Reported-by: Alex Xu (Hello71) <alex_y_xu@yahoo.ca>
+Reported-by: Kairui Song <ryncsn@gmail.com>
+Closes: https://lore.kernel.org/all/1738717785.im3r5g2vxc.none@localhost/
+Tested-by: Kairui Song <kasong@tencent.com>
+Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 ---
-Changelog:
-v1 -> v2
-- Remove the per driver flag setting option
-- Take the parameter via kernel command-line parameter to watchdog_core.
+Changes from v1:
+ - Add the tested tag from Kairui. Thanks Kairui.
+ - Add Closes information to the commit message.
+---
+ mm/shmem.c | 31 +++++++++++++++++++++++++++----
+ 1 file changed, 27 insertions(+), 4 deletions(-)
 
- drivers/watchdog/watchdog_core.c | 42 ++++++++++++++++++++++++++++++++
- include/linux/watchdog.h         |  8 ++++++
- 2 files changed, 50 insertions(+)
-
-diff --git a/drivers/watchdog/watchdog_core.c b/drivers/watchdog/watchdog_core.c
-index d46d8c8c01f2..8cbebe38b7dd 100644
---- a/drivers/watchdog/watchdog_core.c
-+++ b/drivers/watchdog/watchdog_core.c
-@@ -34,6 +34,7 @@
- #include <linux/idr.h>		/* For ida_* macros */
- #include <linux/err.h>		/* For IS_ERR macros */
- #include <linux/of.h>		/* For of_get_timeout_sec */
-+#include <linux/panic_notifier.h> /* For panic handler */
- #include <linux/suspend.h>
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 4ea6109a8043..cebbac97a221 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2253,7 +2253,7 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 	struct folio *folio = NULL;
+ 	bool skip_swapcache = false;
+ 	swp_entry_t swap;
+-	int error, nr_pages;
++	int error, nr_pages, order, split_order;
  
- #include "watchdog_core.h"	/* For watchdog_dev_register/... */
-@@ -47,6 +48,9 @@ static int stop_on_reboot = -1;
- module_param(stop_on_reboot, int, 0444);
- MODULE_PARM_DESC(stop_on_reboot, "Stop watchdogs on reboot (0=keep watching, 1=stop)");
+ 	VM_BUG_ON(!*foliop || !xa_is_value(*foliop));
+ 	swap = radix_to_swp_entry(*foliop);
+@@ -2272,10 +2272,9 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
  
-+static int stop_on_panic = -1;
-+module_param(stop_on_panic, int, 0444);
-+MODULE_PARM_DESC(stop_on_panic, "Stop watchdogs on panic (0=keep watching, 1=stop)");
- /*
-  * Deferred Registration infrastructure.
-  *
-@@ -155,6 +159,23 @@ int watchdog_init_timeout(struct watchdog_device *wdd,
- }
- EXPORT_SYMBOL_GPL(watchdog_init_timeout);
+ 	/* Look it up and read it in.. */
+ 	folio = swap_cache_get_folio(swap, NULL, 0);
++	order = xa_get_order(&mapping->i_pages, index);
+ 	if (!folio) {
+-		int order = xa_get_order(&mapping->i_pages, index);
+ 		bool fallback_order0 = false;
+-		int split_order;
  
-+static int watchdog_panic_notify(struct notifier_block *nb,
-+				 unsigned long action, void *data)
-+{
-+	struct watchdog_device *wdd;
-+
-+	wdd = container_of(nb, struct watchdog_device, panic_nb);
-+	if (watchdog_active(wdd)) {
-+		int ret;
-+
-+		ret = wdd->ops->stop(wdd);
-+		if (ret)
-+			return NOTIFY_BAD;
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
- static int watchdog_reboot_notifier(struct notifier_block *nb,
- 				    unsigned long code, void *data)
- {
-@@ -299,6 +320,14 @@ static int ___watchdog_register_device(struct watchdog_device *wdd)
- 			clear_bit(WDOG_STOP_ON_REBOOT, &wdd->status);
- 	}
- 
-+	/* Module parameter to force watchdog policy on panic. */
-+	if (stop_on_panic != -1) {
-+		if (stop_on_panic &&  !test_bit(WDOG_NO_WAY_OUT, &wdd->status))
-+			set_bit(WDOG_STOP_ON_PANIC, &wdd->status);
-+		else
-+			clear_bit(WDOG_STOP_ON_PANIC, &wdd->status);
-+	}
-+
- 	if (test_bit(WDOG_STOP_ON_REBOOT, &wdd->status)) {
- 		if (!wdd->ops->stop)
- 			pr_warn("watchdog%d: stop_on_reboot not supported\n", wdd->id);
-@@ -334,6 +363,16 @@ static int ___watchdog_register_device(struct watchdog_device *wdd)
- 				wdd->id, ret);
- 	}
- 
-+	if (test_bit(WDOG_STOP_ON_PANIC, &wdd->status)) {
-+		if (!wdd->ops->stop) {
-+			pr_warn("watchdog%d: stop_on_panic not supported\n", wdd->id);
-+		} else {
-+			wdd->panic_nb.notifier_call = watchdog_panic_notify;
-+			atomic_notifier_chain_register(&panic_notifier_list,
-+						       &wdd->panic_nb);
+ 		/* Or update major stats only when swapin succeeds?? */
+ 		if (fault_type) {
+@@ -2339,6 +2338,29 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 			error = -ENOMEM;
+ 			goto failed;
+ 		}
++	} else if (order != folio_order(folio)) {
++		/*
++		 * Swap readahead may swap in order 0 folios into swapcache
++		 * asynchronously, while the shmem mapping can still stores
++		 * large swap entries. In such cases, we should split the
++		 * large swap entry to prevent possible data corruption.
++		 */
++		split_order = shmem_split_large_entry(inode, index, swap, gfp);
++		if (split_order < 0) {
++			error = split_order;
++			goto failed;
 +		}
-+	}
 +
- 	return 0;
- }
- 
-@@ -390,6 +429,9 @@ static void __watchdog_unregister_device(struct watchdog_device *wdd)
- 	if (test_bit(WDOG_STOP_ON_REBOOT, &wdd->status))
- 		unregister_reboot_notifier(&wdd->reboot_nb);
- 
-+	if (test_bit(WDOG_STOP_ON_PANIC, &wdd->status))
-+		atomic_notifier_chain_unregister(&panic_notifier_list,
-+						 &wdd->panic_nb);
- 	watchdog_dev_unregister(wdd);
- 	ida_free(&watchdog_ida, wdd->id);
- }
-diff --git a/include/linux/watchdog.h b/include/linux/watchdog.h
-index 99660197a36c..3c21b527ede9 100644
---- a/include/linux/watchdog.h
-+++ b/include/linux/watchdog.h
-@@ -108,6 +108,7 @@ struct watchdog_device {
- 	struct notifier_block reboot_nb;
- 	struct notifier_block restart_nb;
- 	struct notifier_block pm_nb;
-+	struct notifier_block panic_nb;
- 	void *driver_data;
- 	struct watchdog_core_data *wd_data;
- 	unsigned long status;
-@@ -118,6 +119,7 @@ struct watchdog_device {
- #define WDOG_HW_RUNNING		3	/* True if HW watchdog running */
- #define WDOG_STOP_ON_UNREGISTER	4	/* Should be stopped on unregister */
- #define WDOG_NO_PING_ON_SUSPEND	5	/* Ping worker should be stopped on suspend */
-+#define WDOG_STOP_ON_PANIC	6	/* Should be stopped on panic for loading kdump kernels */
- 	struct list_head deferred;
- };
- 
-@@ -146,6 +148,12 @@ static inline void watchdog_set_nowayout(struct watchdog_device *wdd, bool noway
- 		set_bit(WDOG_NO_WAY_OUT, &wdd->status);
- }
- 
-+/* Use the following function to stop the watchdog on panic */
-+static inline void watchdog_stop_on_panic(struct watchdog_device *wdd)
-+{
-+	set_bit(WDOG_STOP_ON_PANIC, &wdd->status);
-+}
++		/*
++		 * If the large swap entry has already been split, it is
++		 * necessary to recalculate the new swap entry based on
++		 * the old order alignment.
++		 */
++		if (split_order > 0) {
++			pgoff_t offset = index - round_down(index, 1 << split_order);
 +
- /* Use the following function to stop the watchdog on reboot */
- static inline void watchdog_stop_on_reboot(struct watchdog_device *wdd)
- {
++			swap = swp_entry(swp_type(swap), swp_offset(swap) + offset);
++		}
+ 	}
+ 
+ alloced:
+@@ -2346,7 +2368,8 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 	folio_lock(folio);
+ 	if ((!skip_swapcache && !folio_test_swapcache(folio)) ||
+ 	    folio->swap.val != swap.val ||
+-	    !shmem_confirm_swap(mapping, index, swap)) {
++	    !shmem_confirm_swap(mapping, index, swap) ||
++	    xa_get_order(&mapping->i_pages, index) != folio_order(folio)) {
+ 		error = -EEXIST;
+ 		goto unlock;
+ 	}
 -- 
-2.34.1
+2.43.5
 
