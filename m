@@ -1,163 +1,98 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A2D20C002
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 21:25:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80FA1A23BD
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 21:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740518705; cv=none; b=L3Ste/xNsLQ4ttMLde1LGImMU9IMK8/pKrNcSbEjVJ/pETUUXX1/r+dPh4JQAezr8WQ+7P/0lN1xlbeD6QLHvo3MRuO6+kqnldLtSEwuFsQyMFx7rB+tneMbTSaUYJ5GXG7N7bJSqsnePAyS6ExilTvu2qsXn7ZWdpgUX0ybMt0=
+	t=1740518715; cv=none; b=qfFMitAslTvX4VSasHV/5FyQ9BBdPQTA4PPOA+164Dc5xbLKq33g8A3JR2+ZqnnbvLtEawm1CrolNG0KWkIA9SiCCKT9wG9S51J6e/4sqhAjtaOhw1e628f+YtRi7iTD4oI7BZZjOLQXszIWkLdGF44hsY61a1pCarM5wtdoqU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740518705; c=relaxed/simple;
-	bh=TT313L3NHuTIEIP3Ta9oDB6MUWAlR8LnnBX8lq4WH7g=;
+	s=arc-20240116; t=1740518715; c=relaxed/simple;
+	bh=/vRSuHy/MB9RlaMV0AzRys+6Fkmzrnt3K/gEdJxjiII=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=heh1xtRhsBln5fX2Wf83YptSUSp+kD/7Iq9Iz2R5bD/5uKbx5vZn7f3ibzAX4XDGhNCcJqfcZeV8wkdNEOE+q1muEG8jkwLNFucA7jl9hd+qWsoQnulJlUgXM+MaxWj18W5qbZB7bUxh+TDiMCK2ustVP6yeqrpXpUMF2/7fGY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=h7DIY8tW; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=JFWLPKoyzqbHalvJBLtMa6ZP9ybX/NnDGnts+X1DDx0MtWGhH2mhnADP/YX/jfkzsnzB+BCYxTokrkvmiBAACoja3f6I+8/DYbH04x0hUk4f+FQRN8hjuyBMCTUOa1w0RITUWO/na4nls8beHTyoDXAHSEkXyaCbV1nAmF/rv2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DMDrhvL5; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="h7DIY8tW"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-abb7520028bso822099366b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:25:02 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DMDrhvL5"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5454f00fc8dso5694380e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:25:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1740518701; x=1741123501; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1740518712; x=1741123512; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YVCy8UyD4kIHBFsMDFYHTvvtj3ZtXS1BkBR61VGCyI4=;
-        b=h7DIY8tW8KEOiYiKTAqPXHnVc/aDTbpMSaS6uKoKwAFu2cYFA02PfJksrOcC9KzbXl
-         6OOD1XcVbuakbz0qi3d35E14t7VHUd84ezydlN3Q3qCa43PgUKLoWDF7NxdGmdEZb0X3
-         AbBhtq6bwet5hYOI2AkC6iRbK2SpjCmuyKw5s=
+        bh=/vRSuHy/MB9RlaMV0AzRys+6Fkmzrnt3K/gEdJxjiII=;
+        b=DMDrhvL5DQeEdUzS/WqjMdIJeBSmpmgNROXnxrutW2/u+Y8+Uc3WZ+hx+RRi9AyJY5
+         3kFKsgqrPEEuXXdHs8aSCdI+JZqSJryYdStzncj4N8wNON1RuEnMrgS6i12ufeNpqbU6
+         aZ57Jkz5OIPErLkWSWxSLh53aj5FJhv2gIOUfevqWRJ2L+Fa4WxYWgYFajSGT7Pm5quj
+         nKro6inJQE34uPd0TuBlDjSDol6r5F2Iqqpa7mO4Xfb233M2nW5WJqSfV3+1foSkwcJg
+         1VqtDrPWgx94yshWDnZTqRsJ+q4uIE7autBJQqNFUx5yK2MHOP9FljiP73vDtj5vTzPw
+         VK0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740518701; x=1741123501;
+        d=1e100.net; s=20230601; t=1740518712; x=1741123512;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YVCy8UyD4kIHBFsMDFYHTvvtj3ZtXS1BkBR61VGCyI4=;
-        b=f9R8rv7x1Iw667K8RqgHhkkvqh/aVWUT27id3HJTIWbI8yivuoR0gHL8nzqsFEbTa7
-         uM/FZL7ejvEjV3B4FnJVBq0sJUhcliSfyGkDmBVwdHTvNnajB6Rs9LrBEFHnyKfM6PCl
-         P1K/ZXuZ55n+SzwQ9xVzc0fxSIjVion9bla1aWeoLMB/hfyeT/uqHqPWFkilOb2eLSHj
-         +soR3Uwu7cNnXwB6OdBjb5/b4jPVqlY9cnxo3EIHBaFtBv6Z2PPhP4IXz5TZtO1OJ2q8
-         cTECOqKFat0ZH3wEJYk40Ia3DezvSGk65ZAj1bdqiACXCzmR8Luz+9/nSP1B43rWW4XR
-         1AoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUkJBBClMkzI0FcTa48eA2fWnT23rZaljXkVmPFKz3AE/v8eu4yb+DaO3+MBNBa9HfhhOWbN+fP6JVxDuU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCEaBfG6A6Z9Mnfu2bFPdMM1WrKAYJOK7OTu7iMdMfCZcv371T
-	mhFWVesHiMJehRlw3B5/R4ON1ZpNrVuXnDf69l6OdgJ8ggq1VyNgQfgFlhhnDZkiywgZNBPOnRs
-	Revc=
-X-Gm-Gg: ASbGncu+FrF90MPZHOh+8I01W+vhV0W/TeY4SSwil7hDZeRtawrUctV2kFTOCoC9ahQ
-	bAjj5nJaR2SVlHoxUuZ8oiSmh8Wvi5jDOjEL51dwPoG0CrjxVTiGOULBCqz4tF3FEelhRt36qoA
-	zEZjnrj+zjpjXtyqXnzhEed+Yuk52+yKUuHIo7vOdK7pEbBAWmkyaRSGJWDpwqEAkm82mnRcOtL
-	6LTXMsWDbd7tq7mOuqo3gTFftO4F6dtB/vxYoaTS9nqMT/Oum7NbhThFYJfaWA4DAvaGV5JZZGq
-	sVK12Tnwvj5xzrK7XgSHDY14nfWklq24aIhdHSSQEQKK2mCt2uSfCWG99FnLWFvGM1LnCSh2MU3
-	v
-X-Google-Smtp-Source: AGHT+IFpUrWx9jtsIkgcB2RkGpOu3z6Ga3R/08rqZsgNeH8cErMZDac9HUKoHj9QW9csvK7Y+Zb3GA==
-X-Received: by 2002:a17:907:60cf:b0:abb:9a1e:47cb with SMTP id a640c23a62f3a-abeeef726d5mr71146966b.55.1740518700632;
-        Tue, 25 Feb 2025 13:25:00 -0800 (PST)
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com. [209.85.208.52])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed2016014sm201687766b.112.2025.02.25.13.24.59
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2025 13:24:59 -0800 (PST)
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e02eba02e8so8284396a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:24:59 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXQtXAK/tdzWBAd0007kZ9mOwiQyuNfjju/YKMCKs+HMBzD9VqFOsTRCFUC1lzi3+P3dtfVO9i/6QH+i7M=@vger.kernel.org
-X-Received: by 2002:a17:907:86a5:b0:abe:ea8d:a8a2 with SMTP id
- a640c23a62f3a-abeeee40ec6mr75902266b.33.1740518698732; Tue, 25 Feb 2025
- 13:24:58 -0800 (PST)
+        bh=/vRSuHy/MB9RlaMV0AzRys+6Fkmzrnt3K/gEdJxjiII=;
+        b=SBk8gzROb8HsZ+4xBag5xXRow+J8TvJncVanGf4uIrt7o4QupNsu2IX2RMQA0NoYBQ
+         B/VqPNPXxeg0TibAUcA2ewpmRwuGkZfHKKkOWCEZl3nMHYNfJOEjoMQhNBlLn/PABzE4
+         Pl8e89y/uIOpITPAkdJvA3H6ohtG03xp8x7AYLB960buAPLqYhbuWpPVPNrNFITupsIB
+         6DtJ1r6tYqO4Qls+QE74cFxdtDp3zX4MWsOurwTuLLgeS13xOwZq4NjWNh85W42MK2c1
+         pmu85+KhPu51OdSOlIb9cDYGMwi5kMepvb8UNiWSqR9Swgvpyn7evplxrblhMHKnbGFF
+         x7qg==
+X-Forwarded-Encrypted: i=1; AJvYcCXloqDM1lhkmM6F6aaXItrAbRf1hKs2IPQhphrNG2s3+jhvlBqMAWYtIAfTEFsuBxWFmBXX9rmlB2LdfNU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEappNdGHOqWzJk1L9yc8JC1Cu7k5hSQ8K64DsgINs2ZuVHL30
+	1Ob94jk6seWScJnsyInEH5Jnsd584Hkofm0/8zzXj/uldo/Hq8/iiUK10T9bqocxreHctWy97Jy
+	Y1e8LhdcNC/lrZdt38aMoK4wdbyBd3q/TITrvEA==
+X-Gm-Gg: ASbGnctXUJHSRWrMPBkPFkPyKtBWFjMykl7MpJyvz/1uC0zYr0ifheCkrVYCWgNzAyL
+	K6TrEhLV9uwkKABYkifZSvg0+Yox6cps25uM3rAMwcLFPwgVWCkuMjxNsn/+C3lWWeioZK7I/Ab
+	DY4yAY0Fg=
+X-Google-Smtp-Source: AGHT+IF3ruZ628pBl6inkD8sS/QNk1YiGKVIu9y3PQfjbqSfBuCZZhhr7tnwuzfKq3rBfnyExymhHSh/RSe22mil/wk=
+X-Received: by 2002:a05:6512:3e17:b0:545:5d:a5cd with SMTP id
+ 2adb3069b0e04-5493c570908mr788055e87.6.1740518711634; Tue, 25 Feb 2025
+ 13:25:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
- <20250222141521.1fe24871@eugeo> <CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
- <6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
- <CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com>
- <CAFJgqgSqMO724SQxinNqVGCGc7=ibUvVq-f7Qk1=S3A47Mr-ZQ@mail.gmail.com>
- <CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
- <CAHk-=wgJQAPaYubnD3YNu8TYCLmmqs89ET4xE8LAe2AVFc_q9A@mail.gmail.com>
- <gqw7cvclnfa7x4xdz4vkns2msf2bqrms5ecxp2lwzbws7ab6dt@7zbli7qwiiz6>
- <CAHk-=whGY2uYcXog8kmuAAAPJy4R84Jy9rEfXfoHBe-evmuYDQ@mail.gmail.com> <4l6xl5vnpulcvssfestsgrzoazoveopzupb32z5bv6mk23gazo@qn63k7rgsckv>
-In-Reply-To: <4l6xl5vnpulcvssfestsgrzoazoveopzupb32z5bv6mk23gazo@qn63k7rgsckv>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 25 Feb 2025 13:24:42 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgMnSOnaddFzfAFwjT-dGO9yeSkv6Lt21LgWmCKYCM7cg@mail.gmail.com>
-X-Gm-Features: AWEUYZmB_Wr6TV7gwJy_39meCdZ0vPmT0Ykzda91InpP6j1aByc6OUNdAIm7q8c
-Message-ID: <CAHk-=wgMnSOnaddFzfAFwjT-dGO9yeSkv6Lt21LgWmCKYCM7cg@mail.gmail.com>
-Subject: Re: C aggregate passing (Rust kernel policy)
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Alice Ryhl <aliceryhl@google.com>, Ventura Jack <venturajack85@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, airlied@gmail.com, boqun.feng@gmail.com, 
-	david.laight.linux@gmail.com, ej@inai.de, gregkh@linuxfoundation.org, 
-	hch@infradead.org, hpa@zytor.com, ksummit@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, miguel.ojeda.sandonis@gmail.com, 
-	rust-for-linux@vger.kernel.org
+References: <9ded85ef-46f1-4682-aabd-531401b511e5@molgen.mpg.de>
+ <CAMRc=McJpGMgaUDM2fHZUD7YMi2PBMcWhDWN8dU0MAr911BvXw@mail.gmail.com>
+ <36cace3b-7419-409d-95a9-e7c45d335bef@molgen.mpg.de> <CAMRc=Mf-ObnFzau9OO1RvsdJ-pj4Tq2BSjVvCXkHgkK2t5DECQ@mail.gmail.com>
+ <a8c9b81c-bc0d-4ed5-845e-ecbf5e341064@molgen.mpg.de> <CAMRc=MdNnJZBd=eCa5ggATmqH4EwsGW3K6OgcF=oQrkEj_5S_g@mail.gmail.com>
+In-Reply-To: <CAMRc=MdNnJZBd=eCa5ggATmqH4EwsGW3K6OgcF=oQrkEj_5S_g@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 25 Feb 2025 22:25:00 +0100
+X-Gm-Features: AWEUYZnAhHxOSjeQsA9Hvi6qL2kbj-epkwY6Lo47qumj0GmjgfH9AG5WnY1exP8
+Message-ID: <CACRpkdZbu=ii_Aq1rdNN_z+T0SBRpLEm-aoc-QnWW9OnA83+Vw@mail.gmail.com>
+Subject: Re: Linux logs new warning `gpio gpiochip0: gpiochip_add_data_with_key:
+ get_direction failed: -22`
+To: brgl@bgdev.pl, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org, 
+	regressions@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 25 Feb 2025 at 12:55, Kent Overstreet <kent.overstreet@linux.dev> w=
-rote:
->
-> The problem isn't that "pointer aliasing is fundamentally unsafe and
-> dangerous and therefore the compiler just has to stay away from it
-> completely" - the problem has just been the lack of a workable model.
+On Mon, Feb 24, 2025 at 9:51=E2=80=AFAM <brgl@bgdev.pl> wrote:
 
-It's not entirely clear that a workable aliasing model exists outside
-of "don't assume lack of aliasing".
+> In any case: Linus: what should be our policy here? There are some pinctr=
+l
+> drivers which return EINVAL if the pin in question is not in GPIO mode. I=
+ don't
+> think this is an error. Returning errors should be reserved for read fail=
+ures
+> and so on. Are you fine with changing the logic here to explicitly defaul=
+t to
+> INPUT as until recently all errors would be interpreted as such anyway?
 
-Because THAT is the only truly workable model I know of. It's the one
-we use in the kernel, and it works just fine.
+Oh hm I guess. There was no defined semantic until now anyway. Maybe
+Andy has something to say about it though, it's very much his pin controlle=
+r.
 
-For anything else, we only have clear indications that _unworkable_
-models exist.
-
-We know type aliasing is garbage.
-
-We know "restrict" doesn't work very well: part of that is that it's
-fairly cumbersome to use, but a large part of that is that a pointer
-will be restricted in one context and not another, and it's just
-confusing and hard to get right.
-
-That, btw, tends to just generally indicate that any model where you
-expect the programmer to tell you the aliasing rule is likely to be
-unworkable. Not because it might not be workable from a *compiler*
-standpoint (restrict certainly works on that level), but because it's
-simply not a realistic model for most programmers.
-
-What we do know works is hard rules based on provenance. All compilers
-will happily do sane alias analysis based on "this is a variable that
-I created, I know it cannot alias with anything else, because I didn't
-expose the address to anything else".
-
-I argued a few years ago that while "restrict" doesn't work in C, what
-would have often worked is to instead try to attribute things with
-their provenance. People already mark allocator functions, so that
-compilers can see "oh, that's a new allocation, I haven't exposed the
-result to anything yet, so I know it can't be aliasing anything else
-in this context". That was a very natural extension from what C
-compilers already do with local on-stack allocations etc.
-
-So *provenance*-based aliasing works, but it only works in contexts
-where you can see the provenance. Having some way to express
-provenance across functions (and not *just* at allocation time) might
-be a good model.
-
-But in the absence of knowledge, and in the absence of
-compiler-imposed rules (and "unsafe" is by *definition* that absence),
-I think the only rule that works is "don't assume they don't alias".
-
-Some things are simply undecidable. People should accept that. It's
-obviously true in a theoretical setting (CS calls it "halting
-problem", the rest of the academic world calls it "G=C3=B6del's
-incompleteness theorem").
-
-But it is even *MORE* true in practice, and I think your "the problem
-has just been the lack of a workable model" is naive. It implies there
-must be a solution to aliasing issues. And I claim that there is no
-"must" there.
-
-Just accept that things alias, and that you might sometimes get
-slightly worse code generation. Nobody cares. Have you *looked* at the
-kind of code that gets productized?
-
-              Linus
+Yours,
+Linus Walleij
