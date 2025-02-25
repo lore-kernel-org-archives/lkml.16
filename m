@@ -1,178 +1,114 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8138D261599
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:00:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DD3262D19
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740474004; cv=none; b=ZV+1l7SwrurY7CK+0I51HQvTkPothq8UcVQoFSsbxEqdsksvqNZyVe9zPnNUrIOZOoWkEDCPJk4i/MI/35llcW/BSZzIeNrK4jTppHSFMRENjzUXC/ruphb1DDlHGLtx+9xx5J6CLTGWxEm/duLN1hpuG6F8lKFn0DzssLrUCJc=
+	t=1740474047; cv=none; b=LO/37qzbIDN18fZ6KBSoBcnyizJxcWhJAfEm6AfMts7BQgFMriodKy4RESclMTCBo24RilY+QyXhx0T+tNtz8ql6Gf14IXzDRv0qAfPonCXNwoQ3SEt+4YpGfV64nvpi8vmqaim1RdbnA1Hy9teZhP4JhYs5cSKWRSqha7PRqT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740474004; c=relaxed/simple;
-	bh=boTfjNidvkL9xSdsP+7mdkh2MyGP2uPcA28blGXnIoI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d6XA/lVp/DC6yVPKPGfHj7zc1VSiLtUZByS5OCgPeHrKEGuFcCZ1KpKUcd2NhWP8HdMKqCh/T8VHqzZkGprcpeQneAybQz+pEdmH74ztW2ynG2If+LJrE1TEdpoVTC7pqJL86WCbPa65L8zYpTe5fAtPsyZe0ntifvCnxXnQ4AA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RiLOyJ66; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740474047; c=relaxed/simple;
+	bh=PJqWQ/02kk6J61XSsGKz1EvoWTK5P+BFQ4HcbBAmqcc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VbiZFg3V4wd1SHQkku73oFGljtPT3fp8w9nMfe/yoL9KO2Pi8YKC/+Pd/8MVBs3nPGYMdxDRJY2g8GkU6uEXpykrW1W6f92V73uCRKKR6xS0z2jC+SfsnrMMW3cOyA9WS7qa+tWp2uMCKbx2hdQMLek+tljZnoaNzmfcqNKbijI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=B6wq9Mq3; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RiLOyJ66"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-abbda4349e9so769524966b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 01:00:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740474001; x=1741078801; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3nWDpO2Hjvy5Jf1DN3BUQOgX67wDnAHnQxhRWc9ZcCE=;
-        b=RiLOyJ66Tri/808WtN5rZT79CD2CjO0Vvx7MbhRdazJyksAxX4yQ22mCg7SLz9yQJb
-         Np3ZCuQpUXuWL0ehfTVoOiefaBcXgcpOfb3xxrFB4oOtWjNtjlWIqwH7sW89KhZxJP/9
-         Rju/L+6AUpZ7RxRWGM+ONmQNA+52YcPwalWpyw/gv+cde5PZbK6JD4dMOHRKm2fr3JM6
-         5xQrTpKDKV2KbsREzzshfcFLmt2hh0fgdhaeLo4Wv03OgWM+3wFUoUZ1cgCwsawgLuNT
-         0Y042xrW5alE2nFK50OQjUiHWM6MjGukIoTjt8Q/+nVbd15CWYMJ0p9yzMpKcEbxU1tI
-         UYYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740474001; x=1741078801;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3nWDpO2Hjvy5Jf1DN3BUQOgX67wDnAHnQxhRWc9ZcCE=;
-        b=gtoqIzX2G08EiOOBdOdrgpDncijPAZn372UDCQlFnGOz14pG0hXcE0R/xnFL/U20iW
-         Fz80vf6Q6O1gBE/hdYnD5qalgb3M3bQw2bjbG/wvrTu8C2CtBfpqSfzXG8ZHp6lyoCbR
-         oKn+RYJ9LUro86K1mqP4dhHcByWG38kjDQDdAxSKrWAITUAbt2ZLKavTdBHxS8ig+nuj
-         jYdEJxSaJ8nYyYwDnAw/vYKfNCZyFMCi1ZA9joWN/YeCZsYSlFbBeDtkuezL/Ay/5gFW
-         ewMPKmVDgaWlMwo+b58wJXWeXtFULoD7ckcboVNOb5h6PxO0z5kv8JumT81rmrSfLHRE
-         8vvw==
-X-Forwarded-Encrypted: i=1; AJvYcCXAkQYVDFVQsTqooxzjXVxW7zRlW7b+Ta67mxeLmEkBiuqlJwLAWNF1obScYsyNsYNf2W2Xgd9Lb3eRu2A=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzw14Vcot0tCIIqZaYVT9fS07Ila6pTwVKC2sMvKNLz5OsZOnLN
-	DvwumP5GqessJEFAotwC1bYBm9waD1RieCsUyl1Sm19RZLrIxzBc2UKRNRszmxQ=
-X-Gm-Gg: ASbGncsbHxgMlB9eYifUu+ZRZtbZGV85I/VcK0a/QeklW5uf5YZBb+9RAM28U4wR7qw
-	p3/1nQj3RZ6xLTXuCGzzvebRquAJCc9sd//5HdRPKndeRgokyz9KcVYUoPQlZ9ob3kyRSRMPhwH
-	EGS8dUYoCn6gbqVHgVuVjgcmZb3kEeaNtw0zrFLzRrNB3fj+V5mCUSoXZmPOU6hZHYocOZ78pis
-	c2uFdN2DZv+8i1fhPPAN1VOC3DfRtexdyd6KjU+2u7keovVzKYv22afqPSHNGR38LHE5G4bc8zc
-	mFrBirN/c7wIUwo6papKPHv6+utE/KQ=
-X-Google-Smtp-Source: AGHT+IHamUcVmT0cGXoadH2vs+yJ3faYw3PpkiOoCJcL9UZbYnBclxMPxwyo75rCi5dXwBfvFaNHbw==
-X-Received: by 2002:a17:906:7311:b0:ab7:cfe7:116f with SMTP id a640c23a62f3a-abc0de0de62mr1522518766b.46.1740474000688;
-        Tue, 25 Feb 2025 01:00:00 -0800 (PST)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-abed1d68de8sm105893666b.70.2025.02.25.00.59.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 01:00:00 -0800 (PST)
-Date: Tue, 25 Feb 2025 11:59:56 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Dave Penkler <dpenkler@gmail.com>
-Cc: gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: gpib: Add return value to request_control
-Message-ID: <f7521c95-e69c-4618-b078-283c156ca594@stanley.mountain>
-References: <20250222202301.3729-1-dpenkler@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="B6wq9Mq3"
+Message-ID: <9cf9c128-9f66-488c-bd43-3f1752ec4eaa@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1740474041;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YyvddXJudmim1yoVeF2sZBvah7MinIT5ZBHD+XI91UM=;
+	b=B6wq9Mq3uylr8OfT/MoCcqJNqcVngx4TPD6UK0+RB4M0sFWDXL91l5ukvrfU6ywvlsS3ml
+	4qvMg0EmJFYFbI40yubALIDts/0glf0WXptuRXkY5cLq9ITuCrPkKo6uc9rNTFW00PilKj
+	b0A+ABQ+npLY2eBgHx6CdEK+gsDCmcw=
+Date: Tue, 25 Feb 2025 17:00:29 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250222202301.3729-1-dpenkler@gmail.com>
+Subject: Re: [PATCH net-next v3 1/4] stmmac: loongson: Pass correct arg to PCI
+ function
+To: Philipp Stanner <phasta@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Huacai Chen <chenhuacai@kernel.org>, Yinggang Gu <guyinggang@loongson.cn>,
+ Feiyang Chen <chenfeiyang@loongson.cn>, Philipp Stanner
+ <pstanner@redhat.com>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+ Qing Zhang <zhangqing@loongson.cn>
+Cc: netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20250224135321.36603-2-phasta@kernel.org>
+ <20250224135321.36603-3-phasta@kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <20250224135321.36603-3-phasta@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Sat, Feb 22, 2025 at 09:23:01PM +0100, Dave Penkler wrote:
-> A number of drivers are unable to release control due to
-> hardware or software limitations. As request_control was defined
-> as void - no error could be signalled. Some drivers also did
-> not implement request_control correctly by setting
-> controller_in_charge instead of system_controller.
-> 
-> This patch changes the prototype of request_control to int
-> and adds the appropriate checking and returns. In the case
-> that a board cannot release control EPERM is returned. The
-> faulty implementations have been corrected.
-> 
 
-This patch is hard to read because it does several things:
-1) It changes the functions from returning void to int.
-   This is the overwhelming noisiest part of the patch so
-   it's hard to even see the other changes in amongst the
-   noise.
-2) Returns -EPERM if request_control is false.
-3) Changes some stuff like SET_DIR_WRITE(priv); and
-   ENABLE_IRQ(priv->irq_SRQ, IRQ_TYPE_EDGE_FALLING);  I can't tell if
-   that's related or not.
+在 2/24/25 9:53 PM, Philipp Stanner 写道:
+> pcim_iomap_regions() should receive the driver's name as its third
+> parameter, not the PCI device's name.
+>
+> Define the driver name with a macro and use it at the appropriate
+> places, including pcim_iomap_regions().
+>
+> Cc: stable@vger.kernel.org # v5.14+
+> Fixes: 30bba69d7db4 ("stmmac: pci: Add dwmac support for Loongson")
+> Signed-off-by: Philipp Stanner <phasta@kernel.org>
 
-You'll need to do it in two or three patches.  The first thing is to
-just change the void to int.  That's a simple mechanical change.  The
-only worry is if some functions are returning an error code on failure
-and I don't know the answer to that.  (That would break git bisect so it
-would be against the rules, even if it's fixed in patch 2 and 3).
+Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
 
-The actual logic changes will hopefully be easier to understand when the
-diff is smaller.
 
-> -static void agilent_82350b_request_system_control(gpib_board_t *board, int request_control)
-> +static int agilent_82350b_request_system_control(gpib_board_t *board, int request_control)
->  
->  {
->  	struct agilent_82350b_priv *a_priv = board->private_data;
-> +	int retval;
->  
->  	if (request_control) {
->  		a_priv->card_mode_bits |= CM_SYSTEM_CONTROLLER_BIT;
-> @@ -354,7 +355,9 @@ static void agilent_82350b_request_system_control(gpib_board_t *board, int reque
->  			writeb(0, a_priv->gpib_base + INTERNAL_CONFIG_REG);
->  	}
->  	writeb(a_priv->card_mode_bits, a_priv->gpib_base + CARD_MODE_REG);
-> -	tms9914_request_system_control(board, &a_priv->tms9914_priv, request_control);
-> +	retval = tms9914_request_system_control(board, &a_priv->tms9914_priv, request_control);
+Thanks,
+
+Yanteng
+
+> ---
+>   drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c | 6 ++++--
+>   1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> index bfe6e2d631bd..73a6715a93e6 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+> @@ -11,6 +11,8 @@
+>   #include "dwmac_dma.h"
+>   #include "dwmac1000.h"
+>   
+> +#define DRIVER_NAME "dwmac-loongson-pci"
 > +
-> +	return retval;
-
-Get rid of the retval variable.  This should be:
-
-	return tms9914_request_system_control(board, &a_priv->tms9914_priv, request_control);
-
-> diff --git a/drivers/staging/gpib/common/iblib.c b/drivers/staging/gpib/common/iblib.c
-> index fd2874c2fff4..3d51a093fc8b 100644
-> --- a/drivers/staging/gpib/common/iblib.c
-> +++ b/drivers/staging/gpib/common/iblib.c
-> @@ -418,12 +418,19 @@ int ibsic(gpib_board_t *board, unsigned int usec_duration)
->  	return 0;
->  }
->  
-> -	/* FIXME make int */
-> -void ibrsc(gpib_board_t *board, int request_control)
-> +int ibrsc(gpib_board_t *board, int request_control)
->  {
-> -	board->master = request_control != 0;
-> +	int retval;
-> +
->  	if (board->interface->request_system_control)
-> -		board->interface->request_system_control(board, request_control);
-> +		retval = board->interface->request_system_control(board, request_control);
-> +	else
-> +		retval = -EPERM;
-> +
-> +	if (!retval)
-> +		board->master = request_control != 0;
-> +
-> +	return retval;
->  }
->  
-
-It would be better to reverse some of these conditions are return earlier
-where it's possible.  (Always do failure handling, not success handling).
-
-int ibrsc(gpib_board_t *board, int request_control)
-{
-        int ret;
-
-        if (!board->interface->request_system_control)
-                return -EPERM;
-        ret = board->interface->request_system_control(board, request_control);
-        if (ret)
-                return ret;
-
-        board->master = !request_control;
-
-        return 0;
-}
-
-regards,
-dan carpenter
+>   /* Normal Loongson Tx Summary */
+>   #define DMA_INTR_ENA_NIE_TX_LOONGSON	0x00040000
+>   /* Normal Loongson Rx Summary */
+> @@ -555,7 +557,7 @@ static int loongson_dwmac_probe(struct pci_dev *pdev, const struct pci_device_id
+>   	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>   		if (pci_resource_len(pdev, i) == 0)
+>   			continue;
+> -		ret = pcim_iomap_regions(pdev, BIT(0), pci_name(pdev));
+> +		ret = pcim_iomap_regions(pdev, BIT(0), DRIVER_NAME);
+>   		if (ret)
+>   			goto err_disable_device;
+>   		break;
+> @@ -673,7 +675,7 @@ static const struct pci_device_id loongson_dwmac_id_table[] = {
+>   MODULE_DEVICE_TABLE(pci, loongson_dwmac_id_table);
+>   
+>   static struct pci_driver loongson_dwmac_driver = {
+> -	.name = "dwmac-loongson-pci",
+> +	.name = DRIVER_NAME,
+>   	.id_table = loongson_dwmac_id_table,
+>   	.probe = loongson_dwmac_probe,
+>   	.remove = loongson_dwmac_remove,
