@@ -1,141 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8571448E3;
-	Tue, 25 Feb 2025 20:35:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E5120F096
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 20:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740515726; cv=none; b=sAopNrkMYS+SNcrEPCtupiUD23TLIGfeUxN0Qtk3GR1TqzsT+YQqOpgP9eJQgxpyLqtkLpg4lYn9E60I64Jj3ywtd0aXHdjENd1foqXP5ZTzpBWjhGWqi8u7xu89/kbV5JVH4pmcpCYpM94wVfIZ4T2N3h5/Iv04U15JgciLcw0=
+	t=1740515741; cv=none; b=mIj0JCtPdy9HBhvTRuw7ZLSpy28MEBnRSXFl/XVJ5Kz0Js3Ck4bmi9yj26Yw7NDTxT35ZwjEp/oTNIL3WIi4k94k1S4VKnWNO96NOcrZ4k/VRc5z31zfVWsdg5kmduBjiB3fh1wsA9zbZu12efn1o0vpdimx1B6qaVuvYeDrNmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740515726; c=relaxed/simple;
-	bh=7Wg1p0f2ypkxnC0TFBuDHULqBARMpNOuEl5fgz8O5K4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=OKkkLlMrIiTBLy2y30CoeHBqDTIjkPSOumJE9yiUVQkGPbFtIu/pZnlXTns8oLTN4+SsOGU/41F7c2KNjpPnC08YXs2R1uwnej0LEuamYL3DAljoG9S3+uL1dszuCx5Z3B3Aar5jvvfJW5qBPIKvkeVeEf1A9yK9le/TxF5nxdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u1o+YzKQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740515741; c=relaxed/simple;
+	bh=5y8DG4ujk6UmFDd045bFEiAUyfoxOhfeUGFPPetLBmQ=;
+	h=Content-Type:Message-ID:Date:MIME-Version:To:From:Subject; b=io34FY5qmRifqyGwg2s0PwM84eHVdZMMLSpMpbspO7gpl1CdVXIei6x7vPhUvUoVaEqaL7A6uVTDOAz29WlxpEkrnP3/u24FPV1iFYU97UkQFWJTqdbfL0jNLlMKDEtkqpQd6ip6TV58IDOEoVxiCKCMNjMktKFAfJrj7qYFwYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AOqf8PvQ; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u1o+YzKQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F4012C4CEDD;
-	Tue, 25 Feb 2025 20:35:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740515726;
-	bh=7Wg1p0f2ypkxnC0TFBuDHULqBARMpNOuEl5fgz8O5K4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=u1o+YzKQTjiHFa378K9/JNzh8aDmB6+8eSlzj2e0oqKfk3HNpjqojfcknEQf7dasY
-	 03hMuuQtgsENKquMorrWqUGoeNDbnhT8OWNv2SkWWLV2eGDqCJKtwkf01YgUUcP3em
-	 0vF1gkPM7D3w3aowShgQuXbYAygbru0he6FEP1lpDrHz9VHeTVcmNxKMqIdyJgFqm4
-	 XCKGzWr5q/xPyIjix/RGoEOSV0Bbd2ZAqusDGXt9sZ/henPtK7X/J0rhcR9MmW6NaV
-	 yjkjWzQ+We+5C2wMW9aH5ZtmatdkVY+qCKe3UQk5io0s0ECF90mFWsoYbS4vjIrMLR
-	 29Dh1G9eqw+eQ==
-Date: Tue, 25 Feb 2025 14:35:24 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Niklas Schnelle <schnelle@linux.ibm.com>
-Cc: Christoph Hellwig <hch@lst.de>,
-	Alexandra Winter <wintera@linux.ibm.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Gerd Bayer <gbayer@linux.ibm.com>,
-	Matthew Rosato <mjrosato@linux.ibm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Thorsten Winkler <twinkler@linux.ibm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Julian Ruess <julianr@linux.ibm.com>,
-	Halil Pasic <pasic@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 0/3] vfio/pci: s390: Fix issues preventing
- VFIO_PCI_MMAP=y for s390 and enable it
-Message-ID: <20250225203524.GA516498@bhelgaas>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AOqf8PvQ"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2fbfe16cc39so11949873a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 12:35:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740515739; x=1741120539; darn=vger.kernel.org;
+        h=subject:from:to:content-language:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=X1xzEggswaTEG+QKVHsNuG5EsN89J5nNnjSLHcL01hE=;
+        b=AOqf8PvQbeKpH6LmpX9PO+jEcJIOJL5MHy1M/4P3x0xRpAhczQXRv4LdGya5Tf5C0Q
+         NGw/jEswIL1gJd7JMtElnSKWKEGBx1yRQlOjRWDfm0GkLTlW9QEORL484uuUuW/vh3Dz
+         Wb14NcPqt8ZoglANnezDB2UZq8Y/CIbTGhRoeoAmsxQbX4pAIPjW23FbYqbCBmE1Q/DS
+         dYeuLmu+cMCuxNDFmx4wXrdOYuStqw9Kv6KtTNGgziRjQ2YmA9Yfo4e06wZqp0LQ2EMF
+         bTGI21GDnVfUnDpxZ7Cd8Wje2/DcJTAt89AlBhOl+zK1v+HixzgBkLNlMhgEzlNgJkm5
+         8C1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740515739; x=1741120539;
+        h=subject:from:to:content-language:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=X1xzEggswaTEG+QKVHsNuG5EsN89J5nNnjSLHcL01hE=;
+        b=uKTVDZWK2QtxLVZRi/RvCYEbbkz5+9JqjvcEJHQ9b8Hvyc+j3Z0zxEXlcmY9jtf8wK
+         P2GUiWhpXJ/IB9q1vjp+p9yJN1XB8vLoTbtWEmjLDv1VF0rXzjUwrnS0hOHnp5rEEs1j
+         WwxIXtaYMBZY+/BisaJ+9jSQiwKBDdGtJd0esLB6PhSOFXzBapgJZmCvkFkGsUiNSKBd
+         I4BqRiS/rH3ImTce25fPmhBBnhIXTPt9P59macDthjFZjmPffllI4PrBEyC4mlctDF9D
+         Cd/PTUa3utuithIVbmgAGT4JMuCEQGGd8Rttel2fjc0vUvM9fRSiW1VYeElh55V4xSn/
+         liaw==
+X-Gm-Message-State: AOJu0YxZjlBOsm5kaGa9NrAE23xNxNG5HSKBU4fxbsr0HTql+Ak7cn/l
+	Y3myifulkLcsO3PP4qgO9O/MIGWe8Iugo55g5Lck5atVxy+3UPIfA3v7mbp3TXXH4Q==
+X-Gm-Gg: ASbGncu43lbkuozrWnLajG84FAvuToYw5G7PRUjcwcQD+qZQKfWSP01AWLIfqduwfQf
+	2RPubZKQ0GFfWmPsAOui3t/z5giObUQKTXR3i7b/S+hNc66DszGczyBSCXNcUdHOaC1HEke3eNT
+	jDrG4HpgOa2tZ4//bCrAhpzK9Kdll+yvaaGkMUuGqYHebcUVlVZ11s0HOoUE6ct3o7U97l7nXWf
+	4OBgGD8AEJltP/9qYFs0ahDzmpqO8exziJi/uvjf+1+h0JpOpT8HNbFNaYI59ps+5McdOc5yddI
+	3CeUE6GpMVBriF6NQINxdrNg9J5073M/ZIX5bt+xxO656bM67MIBd9oU8+KJmTpH9yJFEAlQScj
+	Q5//dIw==
+X-Google-Smtp-Source: AGHT+IE4I61BvY0WA2H/PPUAU74a+Kk77pbH678Q2yDCbI1QsTYdMAWcpLHiZj97tRFpHHxHyWsqwA==
+X-Received: by 2002:a17:90b:3c84:b0:2fc:c262:ef4b with SMTP id 98e67ed59e1d1-2fce86cf0e0mr34669501a91.18.1740515738822;
+        Tue, 25 Feb 2025 12:35:38 -0800 (PST)
+Received: from ?IPV6:2401:4900:1c74:28d5:d718:bd21:53c1:5a5? ([2401:4900:1c74:28d5:d718:bd21:53c1:5a5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe6a3dec52sm2036044a91.20.2025.02.25.12.35.37
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2025 12:35:38 -0800 (PST)
+Content-Type: multipart/mixed; boundary="------------04bi2qATsvkNlMS6wjtWZbhg"
+Message-ID: <c876024e-f9a0-43d7-ad4b-116b5fa638fa@gmail.com>
+Date: Wed, 26 Feb 2025 02:06:01 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7bcd6de5f40b2ee6d4d6758e3d2473172bd9b990.camel@linux.ibm.com>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: linux-kernel@vger.kernel.org
+From: Pranjal Prasad <prasadpranjal213@gmail.com>
+Subject: Follow-up on HFS+ Kernel Improvement Patch
 
-On Tue, Feb 25, 2025 at 09:59:13AM +0100, Niklas Schnelle wrote:
-> On Mon, 2025-02-24 at 14:53 -0600, Bjorn Helgaas wrote:
-> > On Fri, Feb 14, 2025 at 02:10:51PM +0100, Niklas Schnelle wrote:
-> > > With the introduction of memory I/O (MIO) instructions enbaled in commit
-> > > 71ba41c9b1d9 ("s390/pci: provide support for MIO instructions") s390
-> > > gained support for direct user-space access to mapped PCI resources.
-> > > Even without those however user-space can access mapped PCI resources
-> > > via the s390 specific MMIO syscalls. There is thus nothing fundamentally
-> > > preventing s390 from supporting VFIO_PCI_MMAP, allowing user-space
-> > > drivers to access PCI resources without going through the pread()
-> > > interface. To actually enable VFIO_PCI_MMAP a few issues need fixing
-> > > however.
-> > > 
-> > > Firstly the s390 MMIO syscalls do not cause a page fault when
-> > > follow_pte() fails due to the page not being present. This breaks
-> > > vfio-pci's mmap() handling which lazily maps on first access.
-> > > 
-> > > Secondly on s390 there is a virtual PCI device called ISM which has
-> > > a few oddities. For one it claims to have a 256 TiB PCI BAR (not a typo)
-> > > which leads to any attempt to mmap() it fail with the following message:
-> > > 
-> > >     vmap allocation for size 281474976714752 failed: use vmalloc=<size> to increase size
-> > > 
-> > > Even if one tried to map this BAR only partially the mapping would not
-> > > be usable on systems with MIO support enabled. So just block mapping
-> > > BARs which don't fit between IOREMAP_START and IOREMAP_END. Solve this
-> > > by keeping the vfio-pci mmap() blocking behavior around for this
-> > > specific device via a PCI quirk and new pdev->non_mappable_bars
-> > > flag.
-> > > 
-> > > As noted by Alex Williamson With mmap() enabled in vfio-pci it makes
-> > > sense to also enable HAVE_PCI_MMAP with the same restriction for pdev->
-> > > non_mappable_bars. So this is added in patch 3 and I tested this with
-> > > another small test program.
-> > > 
-> > > Note:
-> > > For your convenience the code is also available in the tagged
-> > > b4/vfio_pci_mmap branch on my git.kernel.org site below:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/niks/linux.git/
-> > > 
-> > > Thanks,
-> > > Niklas
-> > > 
-> > > Link: https://lore.kernel.org/all/c5ba134a1d4f4465b5956027e6a4ea6f6beff969.camel@linux.ibm.com/
-> > > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> > > ---
-> > > Changes in v6:
-> > > - Add a patch to also enable PCI resource mmap() via sysfs and proc
-> > >   exlcluding pdev->non_mappable_bars devices (Alex Williamson)
-> > > - Added Acks
-> > > - Link to v5: https://lore.kernel.org/r/20250212-vfio_pci_mmap-v5-0-633ca5e056da@linux.ibm.com
-> > 
-> > I think the series would be more readable if patch 2/3 included all
-> > the core changes (adding pci_dev.non_mappable_bars, the 3/3
-> > pci-sysfs.c and proc.c changes to test it, and I suppose the similar
-> > vfio_pci_core.c change), and we moved all the s390 content from 2/3 to
-> > 3/3.
-> 
-> Maybe we could do the following:
-> 
-> 1/3: As is
-> 
-> 2/3: Introduces pdev->non_mappable_bars and the checks in vfio and
-> proc.c/pci-sysfs.c. To make the flag handle the vfio case with
-> VFIO_PCI_MMAP gone, a one-line change in s390 will set pdev-
-> >non_mappable_bars = 1 for all PCI devices.
+This is a multi-part message in MIME format.
+--------------04bi2qATsvkNlMS6wjtWZbhg
+Content-Type: multipart/alternative;
+ boundary="------------09iHugoz7H0VvvA0KViIZiL8"
 
-What if you moved the vfio_pci_core.c change to patch 3?  Then I think
-patch 2 would do nothing at all (since there's nothing that sets
-non_mappable_bars), and all the s390 stuff would be in patch 3?
+--------------09iHugoz7H0VvvA0KViIZiL8
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Not sure if that's possible, but I think it's a little confusing to
-have the s390 changes split across patch 2 and 3.
+Hi,
 
-> 3/3: Changes setting pdev->non_mappable_bars = 1 in s390 to only the
-> ISM device using the quirk handling and adds HAVE_PCI_MMAP.
-> 
-> Thanks,
-> Niklas
+I recently submitted a patch to improve the HFS+ filesystem support in 
+the kernel. Upon review, I realized I forgot to include the 
+*"Signed-off-by"* line, which is a requirement for kernel submissions. I 
+have updated the patch with the appropriate line and have attached the 
+corrected version of the patch.
+
+I would appreciate it if you could consider this updated patch for review.
+
+Best regards,
+Pranjal Prasad
+
+--------------09iHugoz7H0VvvA0KViIZiL8
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+    <p data-start="917" data-end="920">Hi,</p>
+    <p data-start="922" data-end="1230">I recently submitted a patch to
+      improve the HFS+ filesystem support in the kernel. Upon review, I
+      realized I forgot to include the <strong data-start="1053"
+        data-end="1072">"Signed-off-by"</strong> line, which is a
+      requirement for kernel submissions. I have updated the patch with
+      the appropriate line and have attached the corrected version of
+      the patch.</p>
+    <p data-start="1232" data-end="1306">I would appreciate it if you
+      could consider this updated patch for review.</p>
+    <p data-start="1308" data-end="1338">Best regards,<br
+        data-start="1321" data-end="1324">
+      Pranjal Prasad</p>
+    <p></p>
+  </body>
+</html>
+
+--------------09iHugoz7H0VvvA0KViIZiL8--
+--------------04bi2qATsvkNlMS6wjtWZbhg
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-Added-comments-to-xattr_security.c-in-hfs.patch"
+Content-Disposition: attachment;
+ filename="0001-Added-comments-to-xattr_security.c-in-hfs.patch"
+Content-Transfer-Encoding: base64
+
+RnJvbSA3NzU2MDViZDYzZGU5OTYyMmZhYTYzZDdmOGIwMWI4NjhiMGU1MmFlIE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBQcmFuamFsIFByYXNhZCA8cHJhc2FkcHJhbmphbDIx
+M0BnbWFpbC5jb20+CkRhdGU6IFdlZCwgMjYgRmViIDIwMjUgMDI6MDQ6MjkgKzA1MzAKU3Vi
+amVjdDogW1BBVENIXSBBZGRlZCBjb21tZW50cyB0byB4YXR0cl9zZWN1cml0eS5jIGluIGhm
+cysKClNpZ25lZC1vZmYtYnk6IFByYW5qYWwgUHJhc2FkIDxwcmFzYWRwcmFuamFsMjEzQGdt
+YWlsLmNvbT4KLS0tCiBmcy9oZnNwbHVzL3hhdHRyX3NlY3VyaXR5LmMgfCAzICsrKwogMSBm
+aWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2ZzL2hmc3BsdXMv
+eGF0dHJfc2VjdXJpdHkuYyBiL2ZzL2hmc3BsdXMveGF0dHJfc2VjdXJpdHkuYwppbmRleCBk
+YjM5YTg2MzJiMmMuLjg3NmViYzU1NTMzNyAxMDA2NDQKLS0tIGEvZnMvaGZzcGx1cy94YXR0
+cl9zZWN1cml0eS5jCisrKyBiL2ZzL2hmc3BsdXMveGF0dHJfc2VjdXJpdHkuYwpAQCAtNSw2
+ICs1LDkgQEAKICAqIFZ5YWNoZXNsYXYgRHViZXlrbyA8c2xhdmFAZHViZXlrby5jb20+CiAg
+KgogICogSGFuZGxlciBmb3Igc3RvcmluZyBzZWN1cml0eSBsYWJlbHMgYXMgZXh0ZW5kZWQg
+YXR0cmlidXRlcy4KKyAqCisgKiBQcmFuamFsIFByYXNhZCA8cHJhc2FkcHJhbmphbDIxM0Bn
+bWFpbC5jb20+CisgKiBJbXByb3ZlZCBhbmQgYWRkZWQgY29tbWVudHMKICAqLwogCiAjaW5j
+bHVkZSA8bGludXgvc2VjdXJpdHkuaD4KLS0gCjIuNDguMQoK
+
+--------------04bi2qATsvkNlMS6wjtWZbhg--
