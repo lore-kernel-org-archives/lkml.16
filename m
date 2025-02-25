@@ -1,91 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9404D21577D;
-	Tue, 25 Feb 2025 08:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2326721577D;
+	Tue, 25 Feb 2025 08:09:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740470934; cv=none; b=tGkO4OygFPUuB7Bx2g9AlGYF+LhUrySqNlpu4HUWrRf/53xt9oPhPdlxOfmMhEPGpIukPnpaDEYq1A36G4+uG0APCrVqJSyB3d2FIfWllGer39Sz/XcVtNbMjLnnIg5Z5zM7PY3REvjktqo97sTODjmFjKodfMTS93ImFdVU0eg=
+	t=1740470945; cv=none; b=rL9vpfOMSAW0eoBgL5EHNhET7uRYvoe+KaE2dWp3smmOCokz1JuQDaXehU1V8nT95YS3l/Mx/y8RcTJ0n+M3d3LgCQlMADlcoiknynSg3jl7qNvWoohhI70tV0MNpns1687XQQar+BDXCM+J/9ieZ/u+bBW/tMD3Xweqb73z1uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740470934; c=relaxed/simple;
-	bh=sQAfVvcp7n1ezVIbtvacOocV6jhjjc+IvNo1mmfimAs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=D41EiHktmVu9RDjtpqW72wLKG4bcScMQYeK3CXKcehWJymzsUrxKSI7tjn6zZjH3fZe73eRoO0ig3mV8UNFjnpYa6CHR1soOdlFjJgEw9wfyOu3Jpj1CVNi0piTLfDksGYRWpuBjdw63fekFZpLHew/TD29D+MGdyj+OsHqenjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QltTdTC7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740470945; c=relaxed/simple;
+	bh=if/K5ifJjQhGo9fJAHtECjgZfMv5sn7c240Wxr1rsio=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KHRXO5wfW/R9AQX46Q5jEpUt/aGScqro/VsLXSIhZ5GZVh60su+Z5XFW8cpC7hM+FSnc3mZtwZ7eWXRg5TaFCiM3EGYQJ674cOsvM23LkkfP5lGUN0Fj+tP+JAwxbt6MH0/pZMNc69VJMR4tjrmfFmfZ/39sBec/mdkRIZMIpWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UFc+8kXi; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QltTdTC7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA7FBC4CEDD;
-	Tue, 25 Feb 2025 08:08:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740470934;
-	bh=sQAfVvcp7n1ezVIbtvacOocV6jhjjc+IvNo1mmfimAs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=QltTdTC730e2XfTORBjLo/b8UfZZHeQCwQEBANfSrd3lgpPqdyodmLREjd7sM6I9m
-	 yOWRZ9+4ZYl9EjB97+sSBOv0rTolcXjcuU1rNOiRrgRncJcBlTBf350QHcjtVKrAfT
-	 5mTgpIXWX2iWvvI3xzQECPy4zQIFNVhu0OKqdZERZfSP4IP5GzvuvEHVymTUDi5vEb
-	 HDFcoY3qcmDxMEmtiDtvTcKqlsf1Wb3LSU5BAzSjodWkdxu9rN8rKa8g6Ba09VQFYn
-	 Hp0lWx0rSpJoALlhgDFjH3+rUsW8yGU4SIGE5Bc8X9K4ULxKdRXbZesZAc8RZZ83X8
-	 3PKaUilpjMvJw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
-Cc: "Janne Grunau" <j@jannau.net>,  "Miguel Ojeda" <ojeda@kernel.org>,
-  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
- <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno Lossin" <benno.lossin@proton.me>,
-  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Masahiro Yamada" <masahiroy@kernel.org>,  "Nathan Chancellor"
- <nathan@kernel.org>,  "Nicolas Schier" <nicolas@fjasle.eu>,  "Luis
- Chamberlain" <mcgrof@kernel.org>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  "Adam Bratschi-Kaye"
- <ark.email@gmail.com>,  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu"
- <petr.pavlu@suse.com>,  "Sami Tolvanen" <samitolvanen@google.com>,
-  "Daniel Gomez" <da.gomez@samsung.com>,  "Simona Vetter"
- <simona.vetter@ffwll.ch>,  "Greg KH" <gregkh@linuxfoundation.org>,
-  <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v7 5/6] rust: str: add radix prefixed integer parsing
- functions
-In-Reply-To: <CANiq72ns264CeAHPKv9m4rUxS7b8J6+2Mwrk=+xSEQs5wPNoxg@mail.gmail.com>
- (Miguel
-	Ojeda's message of "Tue, 25 Feb 2025 02:51:33 +0100")
-References: <20250218-module-params-v3-v7-0-5e1afabcac1b@kernel.org>
-	<20250218-module-params-v3-v7-5-5e1afabcac1b@kernel.org>
-	<20250224223032.GA615664@robin.jannau.net>
-	<d65H4u7WH99Iku0t8049xM2-SeBQVjpkNmYJdZadlG0WENXnb9BmG3U8DXYAQedZSSZ3C4ruU4D_cpEgwxgSxw==@protonmail.internalid>
-	<CANiq72ns264CeAHPKv9m4rUxS7b8J6+2Mwrk=+xSEQs5wPNoxg@mail.gmail.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Tue, 25 Feb 2025 09:07:51 +0100
-Message-ID: <87ikoyxx9k.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UFc+8kXi"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 40EB12047A;
+	Tue, 25 Feb 2025 08:08:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740470941;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5ri51JMHrUhsyawDrOSXF+WzWQ8+V6f2roN/j/66SbI=;
+	b=UFc+8kXijIJ/vi7zxnkNkRIzfmWZ7pnrziCRqHE8qfs2iLJxD8wIR66Z/Ym1V7odS7ky7w
+	Mak7jwgVTdgOMPyEvig0rQn9+xrfErJGhMo0LTDB7XekV3Bdr+i4moz81Sabov+jR6Bpl/
+	BWCtj2gLtbXSyL5thGbpqFTwP1wWOfpTGrpjwkBVdElQ4868XmfilTLWc07c9dz61d9LZ7
+	BhnJbJLoEcgiAG00Mj4AArpufJbo4Djsn2/b8jfw/IYih/H6cMzxYsEuiqwFV/j5wwvdWT
+	2ZBqP5mqAfLviIGq8waUgTAiadwDQIBajJo1Zprfrng5IGyZ1OgWaKeFpQ/+6Q==
+Date: Tue, 25 Feb 2025 09:08:58 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Andrew Lunn <andrew@lunn.ch>, =?UTF-8?B?QmrDuHJu?= Mork <bjorn@mork.no>,
+ davem@davemloft.net, Jakub Kicinski <kuba@kernel.org>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, Florian
+ Fainelli <f.fainelli@gmail.com>, =?UTF-8?B?S8O2cnk=?= Maincent
+ <kory.maincent@bootlin.com>, Simon Horman <horms@kernel.org>, Romain
+ Gantois <romain.gantois@bootlin.com>, Antoine Tenart <atenart@kernel.org>,
+ Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
+Subject: Re: [PATCH net-next 0/2] net: phy: sfp: Add single-byte SMBus SFP
+ access
+Message-ID: <20250225090858.0d07cc24@fedora.home>
+In-Reply-To: <20250224172407.32a2b3f8@fedora>
+References: <20250223172848.1098621-1-maxime.chevallier@bootlin.com>
+	<87r03otsmm.fsf@miraculix.mork.no>
+	<Z7uFhc1EiPpWHGfa@shell.armlinux.org.uk>
+	<3c6b7b3f-04a2-48ce-b3a9-2ea71041c6d2@lunn.ch>
+	<87ikozu86l.fsf@miraculix.mork.no>
+	<7c456101-6643-44d1-812a-2eae3bce9068@lunn.ch>
+	<Z7x4oxR5_KtyvSYg@shell.armlinux.org.uk>
+	<20250224172407.32a2b3f8@fedora>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekuddulecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegveeltddvveeuhefhvefhlefhkeevfedtgfeiudefffeiledttdfgfeeuhfeukeenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedujedprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepsghjohhrnhesmhhorhhkrdhnohdprhgtphhtthhopegurghvv
+ ghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomh
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-"Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com> writes:
+On Mon, 24 Feb 2025 17:24:07 +0100
+Maxime Chevallier <maxime.chevallier@bootlin.com> wrote:
 
-> On Mon, Feb 24, 2025 at 11:30=E2=80=AFPM Janne Grunau <j@jannau.net> wrot=
-e:
->>
->> The errors go away after exchanging i128 with i64 (while breaking the
->> parsing for large values).
->
-> I don't think we can use 128-bit integers unconditionally for all
-> architectures (we could eventually get it to work for some though). So
-> we should do one of the other approaches discussed in the previous
-> versions, like call into the C one.
+> On Mon, 24 Feb 2025 13:48:19 +0000
+> "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+> 
+> > On Mon, Feb 24, 2025 at 02:31:42PM +0100, Andrew Lunn wrote:  
+> > > > What do you think will be the effect of such a warning?  Who is the
+> > > > target audience?    
+> > > 
+> > > It will act as a disclaimer. The kernel is doing its best with broken
+> > > hardware, but don't blame the kernel when it does not work
+> > > correctly....    
+> > 
+> > Indeed.
+> >   
+> > > > You can obviously add it, and I don't really care.  But I believe the
+> > > > result will be an endless stream of end users worrying about this scary
+> > > > warning and wanting to know what they can do about it.  What will be
+> > > > your answer?    
+> > > 
+> > > I agree that the wording needs to be though about. Maybe something
+> > > like:
+> > > 
+> > > This hardware is broken by design, and there is nothing the kernel, or
+> > > the community can do about it. The kernel will try its best, but some
+> > > standard SFP features are disabled, and the features which are
+> > > implemented may not work correctly because of the design errors. Use
+> > > with caution, and don't blame the kernel when it all goes horribly
+> > > wrong.    
+> > 
+> > I was hoping for something shorter, but I think it needs to be expansive
+> > so that users can fully understand. Another idea based on your
+> > suggestion above:
+> > 
+> > "Please note:
+> > This hardware is broken by design. There is nothing that the kernel or
+> > community can do to fix it. The kernel will try best efforts, but some
+> > features are disabled, other features may be unreliable or sporadically
+> > fail. Use with caution. Please verify any problems on hardware that
+> > supports multi-byte I2C transactions."
+> >   
+> 
+> I think what's missing in this message is some indication about what is
+> actually wrong with the hardware, so :
 
-I don't want to call into the C functions for this task if I can stay in
-safe Rust.
+I realise that I have formulated the sentence above a bit strongly, of
+course this is a suggestion :)
 
-I think I can solve the issue by parsing into a unsigned version of the
-integer and then test the sign bit, or compare against the max value for
-the signed version.
+> "Please note:
+> This SFP cage is accessed via an SMBus only capable of single byte
+> transactions. Some features are disabled, other may be unreliable or
+> sporadically fail. Use with caution. There is nothing that the kernel
+> or community can do to fix it, the kernel will try best efforts. Please
+> verify any problems on hardware that supports multi-byte I2C transactions."
 
-
-Best regards,
-Andreas Hindborg
-
+Maxime
