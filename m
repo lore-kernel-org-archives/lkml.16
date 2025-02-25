@@ -1,41 +1,45 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B256E26738F
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:41:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740476493; cv=none; b=a9NTlzUGvAmArlC3RGEJiCwwgw9efhDQFKqEEnnDdXhrD0wzovlNrSLkLTlsryiT1Ex5Zz1UWx0lW7uvRzg6bgs+MgtQyDWCTGAIyLyzfxruOL6K+wKVY7cL5eBjuKBgBE74om4OCYlhT2wD0y7Y0yIDolU/F5bVXAmf2qIoGF4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740476493; c=relaxed/simple;
-	bh=umBuQl2QuBFeO9IxtwbPuUMLEtLD5ox0Hz4hVd/Q4JE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=G1j4jJAWyBMHp8bBiTfZs6g3/9MSXN07Do+IxdBUk8Xzh3ousCDcYx070lxmPODSOp0+FNu/pNOkUh2ZplLe+rLqWcAjYVwCDHR/4nBcZe6cmBH9KMV44FCrTewOJ0s0Tbo+pjwKxQXLMGHinL4OaYPLQlnS1iHTl3EBgFhJfDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=g80bBMzR; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FDDE2627E9;
+	Tue, 25 Feb 2025 09:41:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740476506; cv=pass; b=caMMjEPVWVlcoZlFoT91JceypAQ9UxXPXGGeTKidsmQdLBbdM74xADkJJdpzoMzUEfNIBEm5a0XhfnaouPi0BC1XlbxvFFCKE5LakMaJVEi52w4QUP/719mXvj2VbFQlK3CfO9aER+trAkZkIULwsE4HrPBiKbxMGVOyHSUi2yA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740476506; c=relaxed/simple;
+	bh=vZriED9Fp3nlM81wvXcPSkXsPrSVPE/tj+vNK999p0U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=iTV9wQDPm9XsQbWDsTEpXDAWh/mUum1Q32oSyZsbcMBvBMk3dQO2RURrssSuybNhUaLPIUDKAj32eGGkM+MesRD+Uq269o51VwGU3DhpiYOB611FGFWPF3rWrduBwfiCUyzIusiIAwF/6IuEf3KUaz+xi8V1gmINijDMq2YnVnE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b=FjytpZCG; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="g80bBMzR"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740476488;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=FSnRdmhAXCNG5wX/lQk1babI2j58rDjAV131IDGWdyI=;
-	b=g80bBMzRzAMxcAYS974A5/dRA0qkOeAEES2zpvFW3TWPKX2tuTB/O01ifs7pzhaVMsJM0L
-	+x9/N3ZwZI/rgXAbH8007GRDKmq/oVmWyJn3dyrMnZhpU8t3ggnf6iaxV+2YJCkpy1IeZi
-	262j01ErZq73lXdNqbGprfCvTZdZUkI=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Don Brace <don.brace@microchip.com>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	storagedev@microchip.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] scsi: hpsa: Use str_enabled_disabled() helper function
-Date: Tue, 25 Feb 2025 10:41:08 +0100
-Message-ID: <20250211102643.614133-1-thorsten.blum@linux.dev>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b="FjytpZCG"
+ARC-Seal: i=1; a=rsa-sha256; t=1740476480; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=FpIAXatxbkP6A6pNhrKSgWAyx7jisDzhS271q3zEfE2c0MrVbbH3dOki0MepARwXWRwOfzj3ijm0om/Pd6EvieT+/gv0JJ6vBHWISZXDzJrBVdSNdzT7Niuf1MozohhAWf7fDevsJB9NOpgMgzYmA+eigQoQAcC3pA+ojkZcoA4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1740476480; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=hxN3jzC16EMS8sC831bVLnOP4XuP4WpSvwKW+swAeco=; 
+	b=FvoSTEalzaqDz42jKY6zVXlgTAQiJWN2sjtKXjiIPinUvU7L3OuGXInX0Ir7T9BHHCj8cjZlrpCe7kIU8mOIu6BVFPQoQ79sWedaV6bowkB9GPZITlsFTDzQ1Fm6/YA2HIaCp5vUPirFmIFZApLzWcvcsMvB5mPXbPscFOj30kM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.fricke@collabora.com;
+	dmarc=pass header.from=<sebastian.fricke@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740476480;
+	s=zohomail; d=collabora.com; i=sebastian.fricke@collabora.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=hxN3jzC16EMS8sC831bVLnOP4XuP4WpSvwKW+swAeco=;
+	b=FjytpZCGsif3QEOHQ1KASwaCleYZdav6scWUhWRD+yPE1noWyGQLDrShlahM4A0b
+	OaC4qhMQR8THggrduhzeu2bMctboZ+dCr04saTCOyQGicYqNdUB7OQSekF0qM+tULHr
+	52q+RqJ+Sck52423LxGh6dkpAHc/iXGONdTEfYFE=
+Received: by mx.zohomail.com with SMTPS id 1740476475018610.7472651019332;
+	Tue, 25 Feb 2025 01:41:15 -0800 (PST)
+From: Sebastian Fricke <sebastian.fricke@collabora.com>
+Date: Tue, 25 Feb 2025 10:40:25 +0100
+Subject: [PATCH v7 04/12] media: rkvdec: h264: Don't hardcode SPS/PPS
+ parameters
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,48 +47,86 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-Message-ID: <20250225094108.yqDeWUIAi5BR5vW08rCu7S4nGFGWkdZA_m_ykgwgJgk@z>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250225-rkvdec_h264_high10_and_422_support-v7-4-7992a68a4910@collabora.com>
+References: <20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
+In-Reply-To: <20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Hans Verkuil <hverkuil@xs4all.nl>, 
+ Boris Brezillon <boris.brezillon@collabora.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev, 
+ Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, 
+ Alex Bee <knaerzche@gmail.com>, 
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>, 
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+ Detlev Casanova <detlev.casanova@collabora.com>, 
+ Dan Carpenter <dan.carpenter@linaro.org>, Jonas Karlman <jonas@kwiboo.se>, 
+ Christopher Obbard <christopher.obbard@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740476426; l=2525;
+ i=sebastian.fricke@collabora.com; s=linux-media; h=from:subject:message-id;
+ bh=VqNk0668C4194kJOyR2Z8yV5w4cuXj1PlaUvbKsk8pY=;
+ b=m1UyqA38qOz+K7beTtpG/BBwcRC3/ZrfgZq7IzC2iRe/7+kLH5bN57ni0aT6Y07PnuvxdkmHZzSx
+ 00c1GEF0A1IKqsVEKSIqDJzcejgqo6gWgS5HCbrQYQXWp3/Mg32y
+X-Developer-Key: i=sebastian.fricke@collabora.com; a=ed25519;
+ pk=pYXedPwrTtErcj7ERYeo/IpTrpe4QbJuEzSB52fslBg=
+X-ZohoMailClient: External
 
-Remove hard-coded strings by using the str_enabled_disabled() helper
-function.
+From: Alex Bee <knaerzche@gmail.com>
 
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Some SPS/PPS parameters are currently hardcoded in the driver even
+though they exist in the stable uapi controls.
+
+Use values from SPS/PPS controls instead of hardcoding them.
+
+Signed-off-by: Alex Bee <knaerzche@gmail.com>
+[jonas@kwiboo.se: constraint_set_flags condition, commit message]
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Tested-by: Christopher Obbard <chris.obbard@collabora.com>
 ---
- drivers/scsi/hpsa.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/staging/media/rkvdec/rkvdec-h264.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
-index 84d8de07b7ae..ff49e93df4ed 100644
---- a/drivers/scsi/hpsa.c
-+++ b/drivers/scsi/hpsa.c
-@@ -36,6 +36,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/completion.h>
- #include <linux/moduleparam.h>
-+#include <linux/string_choices.h>
- #include <scsi/scsi.h>
- #include <scsi/scsi_cmnd.h>
- #include <scsi/scsi_device.h>
-@@ -469,7 +470,7 @@ static ssize_t host_store_hp_ssd_smart_path_status(struct device *dev,
- 	h->acciopath_status = !!status;
- 	dev_warn(&h->pdev->dev,
- 		"hpsa: HP SSD Smart Path %s via sysfs update.\n",
--		h->acciopath_status ? "enabled" : "disabled");
-+		str_enabled_disabled(h->acciopath_status));
- 	return count;
- }
+diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
+index 7a1e76d423df55bd01c1ff26ff2c6d1b81ee7169..8bce8902b8dda39bb2058c8504bd52ccae6b4204 100644
+--- a/drivers/staging/media/rkvdec/rkvdec-h264.c
++++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
+@@ -655,13 +655,14 @@ static void assemble_hw_pps(struct rkvdec_ctx *ctx,
  
-@@ -560,7 +561,7 @@ static ssize_t host_show_hp_ssd_smart_path_status(struct device *dev,
+ #define WRITE_PPS(value, field) set_ps_field(hw_ps->info, field, value)
+ 	/* write sps */
+-	WRITE_PPS(0xf, SEQ_PARAMETER_SET_ID);
+-	WRITE_PPS(0xff, PROFILE_IDC);
+-	WRITE_PPS(1, CONSTRAINT_SET3_FLAG);
++	WRITE_PPS(sps->seq_parameter_set_id, SEQ_PARAMETER_SET_ID);
++	WRITE_PPS(sps->profile_idc, PROFILE_IDC);
++	WRITE_PPS(!!(sps->constraint_set_flags & (1 << 3)), CONSTRAINT_SET3_FLAG);
+ 	WRITE_PPS(sps->chroma_format_idc, CHROMA_FORMAT_IDC);
+ 	WRITE_PPS(sps->bit_depth_luma_minus8, BIT_DEPTH_LUMA);
+ 	WRITE_PPS(sps->bit_depth_chroma_minus8, BIT_DEPTH_CHROMA);
+-	WRITE_PPS(0, QPPRIME_Y_ZERO_TRANSFORM_BYPASS_FLAG);
++	WRITE_PPS(!!(sps->flags & V4L2_H264_SPS_FLAG_QPPRIME_Y_ZERO_TRANSFORM_BYPASS),
++		  QPPRIME_Y_ZERO_TRANSFORM_BYPASS_FLAG);
+ 	WRITE_PPS(sps->log2_max_frame_num_minus4, LOG2_MAX_FRAME_NUM_MINUS4);
+ 	WRITE_PPS(sps->max_num_ref_frames, MAX_NUM_REF_FRAMES);
+ 	WRITE_PPS(sps->pic_order_cnt_type, PIC_ORDER_CNT_TYPE);
+@@ -688,8 +689,8 @@ static void assemble_hw_pps(struct rkvdec_ctx *ctx,
+ 		  DIRECT_8X8_INFERENCE_FLAG);
  
- 	h = shost_to_hba(shost);
- 	return snprintf(buf, 30, "HP SSD Smart Path %s\n",
--		(h->acciopath_status == 1) ?  "enabled" : "disabled");
-+		str_enabled_disabled(h->acciopath_status == 1));
- }
- 
- /* List of controllers which cannot be hard reset on kexec with reset_devices */
+ 	/* write pps */
+-	WRITE_PPS(0xff, PIC_PARAMETER_SET_ID);
+-	WRITE_PPS(0x1f, PPS_SEQ_PARAMETER_SET_ID);
++	WRITE_PPS(pps->pic_parameter_set_id, PIC_PARAMETER_SET_ID);
++	WRITE_PPS(pps->seq_parameter_set_id, PPS_SEQ_PARAMETER_SET_ID);
+ 	WRITE_PPS(!!(pps->flags & V4L2_H264_PPS_FLAG_ENTROPY_CODING_MODE),
+ 		  ENTROPY_CODING_MODE_FLAG);
+ 	WRITE_PPS(!!(pps->flags & V4L2_H264_PPS_FLAG_BOTTOM_FIELD_PIC_ORDER_IN_FRAME_PRESENT),
+
 -- 
-2.48.1
+2.25.1
 
