@@ -1,139 +1,143 @@
-Received: from mail-lf1-f67.google.com (mail-lf1-f67.google.com [209.85.167.67])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F83CA52;
-	Tue, 25 Feb 2025 16:45:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF36CA52
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 16:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740501939; cv=none; b=lKMZTmOx3sIi4AVqNzCaK52u0q2tVJ9kVVM7GvLj5+YWIiAti8W026j3CvcSUgfpOrjoApubQm8y/dgh+/kILr4hgC8xHyOE7CY+osxVJDQggSRkUpGV+7zcBCZonSXIfKt7rZPVhUyRypUufRtImPY9yRt5vcRa2vXKtqLQZ38=
+	t=1740501962; cv=none; b=sl3G7e/kUmLDmFSpVdH9vyo4KrySfUWmm1QBqIdzsHIwtePJBv3NoMeeSLXXob6FHwtMBXYn5bEbAT3LwcD4XIX3XBoAo5DQOJjhcx/xukiiKjB0U01wXuidCCDU0WG2O+5E4KH+KUYQ3/QHVXkcTp2aOLC4FAlwQ6RW9VIsvfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740501939; c=relaxed/simple;
-	bh=hwF6kbqLpp3QELXgKHrPeWegET4R6Y1jIN6cmKBZeuc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JqmzBn7YFv8AjQPofCaMMtbwpnanpKHPZzBvse1/RUEup/AGAXsR7H7kpCxafB1SqVcW1Mtsn1UpyM9Z+hmTMt+V3EAKPyjul3n1Ii5IohYKptexiYYJVBnz0ImMJemXc0rHzupIl+xoEPf0Er9YvApyMCbfGXXAQS6K+XkEfE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VL7kdjDn; arc=none smtp.client-ip=209.85.167.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740501962; c=relaxed/simple;
+	bh=3pkC9Zan/5soR9iiYT3dS1raXOelzZooR8jSMhW1DW4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jDj6pu7Wur09PT9B3V4b5Vuw4BIcgOzZmjYvXAS9M6B7uxlSwgB+4Nyz0uBTmqU+dvLszw0642jAcbVl39PJ0M3HLTakEMjhx6SFuTB4pds6DhSMH+4XLn5uz1uX5KQByRUkvkJneFr1CHoZG58Gai/7nEkxDmPHehn0gwVc1zQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3OXbNl0F; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VL7kdjDn"
-Received: by mail-lf1-f67.google.com with SMTP id 2adb3069b0e04-5439a6179a7so6499492e87.1;
-        Tue, 25 Feb 2025 08:45:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3OXbNl0F"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2212222d4cdso172585ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 08:46:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740501935; x=1741106735; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m7AjPiUKufcUCuCRwM7KdiACvN7KG8NT17WOPwc4KLM=;
-        b=VL7kdjDnO70OCZFfE7bP5JJQcHL2w7TDIBLW/0Fc1FqPNcnG9esHISp7flhHWCtEhz
-         zDy1bHsfPi81Rr8NMiUcNIO/BqmtDsyFEfVR76gCWa7PdZ9NMsRqlpGKsW7vMO3x1b/J
-         tBkmWCFLCKqxKsl/UepacoNVCDcWavXnvtOqQygQmFzw2s3T9BzVm5m/V7rSsmsWHJk5
-         FzCTM30nWdQ7tK82BAeGL5FmeWXt4a7J6dNljFgcU87M8rra+Ea5jpvFwvEZGbtku2Th
-         fVUjYh9KdzhRYyAhbXJTyWZIa5/YPjrHisWvPk/gRAP3vbzdBTXWJqF88yciFNZmNIv3
-         u6uQ==
+        d=google.com; s=20230601; t=1740501960; x=1741106760; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DvJy2eU2NKOX06+H5Vs2S45nqKcJ32b1n8dkLQorqiw=;
+        b=3OXbNl0FmQhnBdz6jgjsTg84gcwmwcN6RiQ27ezIdnf8Nz5HO+Nn7DcT4dmzHynpQj
+         hD5uoexR93icrEKisIiCIv/KqCF4XOXl2KBM6LlptZyPFF6lo0alxk82Kf2Goyvo7Wn9
+         YB6nln/odKfL8J6Z2hJRj1XKWXJHlLaOp4K6O7PHU17cqtgljSSK5F+x/6URpbZb5Vff
+         fIOR7Th/kIaiki3fgE6k7N68M4wmwW0e/GxovKAm5l4H94VDngJ+XJz7Ww6fjH0bQ7Eo
+         KL+HhDxeZbutkWDyXQsXq22JQ0Qs/2qc5IypJEyk1aMc/HZekjS5J/bgS7QEhXJ9u5ff
+         yIxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740501935; x=1741106735;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=m7AjPiUKufcUCuCRwM7KdiACvN7KG8NT17WOPwc4KLM=;
-        b=P56nw8D0LvDO4E0pBbltztpf+tqLba0UJOK6yCrynq4TKg7v88pmboNAv2JLWvWSm/
-         qjTHBq8QJYZdxdccGHFxZPw4A9mHRP27z5ycocqt7VyB2oUNwreWiVdB/hUN4edM0YGO
-         3tTx6mnkWPASKoaxCTNU6YWry9R/XRMLV3NQqeV3vn79t9JmfAVRMSktNgUl7d12lKur
-         A9p0WJZlIGCcLZCBI9q0wjrZexosIVCngr/9BqlkJm1hBq/eHn6qMeB9aXM0mWzuSxyH
-         7o4YAQ8lJo7+pjj72vNjbIqqmkac7OWA8ISzkw//iNP9YvtxciWZsGnpSjulh3iaKuDC
-         HbkA==
-X-Forwarded-Encrypted: i=1; AJvYcCVIvCzXymwTtbwDojPV5QM9kpVNXqK+TRWgaXcNfH5f+PDLfw2DxmKcCtcCOZOAJY4xI+fjSZbGfH2C9X2Plzk=@vger.kernel.org, AJvYcCX63CALXX0/pUSKCPRK4kO+4caHN0fpc0jWtuE+KNBt+WQahXnSSYatMFx5LS3y1d5dfTcVGIqb2aYh9Dg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHseCAbPr5F3lCiZslxYf+xdUZFkyT44N09urDmWTWEyFE/R9G
-	+IvUfyXrPVYenmnDhLxayic0nW9bVtUfcWkBwWP/Xp7v0sACqIZf+3rBCJUvG3xSKd3TrVHciiS
-	gVDF/pqtSW4TAq2uLgLxOqiAFDpI=
-X-Gm-Gg: ASbGncsVt1LrWw/Dv6aajoEL8FgenbNsj3i/eZAt6kAIhwUiGu5oxQx82/xD5FjbQiE
-	T4qEQKtNy+bImSIufBL5udXUwCy632ugAZkb+VTRQHRPNnTYMSg8alVmwVcNl3Ugt6dZyzPA3Yb
-	auq30wr6Gj
-X-Google-Smtp-Source: AGHT+IGPElTgJGuOIFhoQpvigEoyqAazYmo6oGpLNuo3kczlQ8IZTKJj1630KfSBCVkmPCJZM70leOjvb/aBqpDdaF4=
-X-Received: by 2002:a19:641d:0:b0:548:878b:ccb3 with SMTP id
- 2adb3069b0e04-548878bd500mr1171731e87.25.1740501934971; Tue, 25 Feb 2025
- 08:45:34 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740501960; x=1741106760;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DvJy2eU2NKOX06+H5Vs2S45nqKcJ32b1n8dkLQorqiw=;
+        b=YsLF5odRsouJUYRxcN7mjzXXA97/r1BG+WgG44V1L2cVHJA2PkmWlUumla0HGAWxlZ
+         9OJ39RREnDXELRygz6wvdFcFB1YrWgq7EFY6R75AyJ0ZQsBvOh1yRCEyeWdYmzoTcahP
+         7qeNVuNF+3AxzktcFbxhSIEdZy0WCegxnITClmUwq3HAPK6d/SL4fK6W41MxJ2LuQ+BY
+         v1pAplwBlUoanDk3YOYix3+Ecb6hf0R0F7FWqzdCmcx92+B8EZNEmbWSKd4CbmLRHA+g
+         B1yPdJ1zLOu9XUchX1RAhm08gzVD6MgJLgfmLzeEAohccuIIccJWX/a8msX1flkaeHLJ
+         VZBw==
+X-Forwarded-Encrypted: i=1; AJvYcCXArskJpsOxKdsDeCGmelc4Rd4PuxGPizOM4UtVAAVOwgUVwpSmnEkxrl+/gtBnkSdHHRxEeVMQQ3g8z+I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJegUpJowjHKzHNg+XhAlae1YhdBratp8UcpMor/PqXqaeCGRG
+	tYj/xf9uFsGnEkKNsMP12RcECjlDj2l0TDQ9kEbNpX8i+hYYDxeojOpoCdufAg==
+X-Gm-Gg: ASbGncvJQqRmEC1rGc5kFYTy5+hh8UWkwOm5jrByhRaDb/uS5lVClPFixf7sHxw+eK8
+	jUfeYBwk/NAW3Qw06rqnoN2i5/+HqSro6TkRXppeSAtHvWsJ5RzPbYa7SqPvM3KBjku/1EjmXSJ
+	LCQyt8YlRZiw8Tm1NssXdjVCIKcJVDEDyC1hOu1qMFINlg26xolSCXMCA2dRB+yIVUBQjiMfYq5
+	6b/7ibGyx1ir9KH4TmkV5BC7RKeTs7EthoS/5SQe9hw9MscfWgOMBmlPiWqqDIGlltGRF9vVmFX
+	+x/kVmniwcjqTN2jiTzYSM82KLPlMHNaMl2ljBXIVcnzYfA18J0izGA2iP+JNvM=
+X-Google-Smtp-Source: AGHT+IEN5DYqq3Kc3cWdCDht37pR+ox7Pyn1fNUO9eOSCsjsyhHHqegeAVtSYgiTkCHpwG2cFWbA4w==
+X-Received: by 2002:a17:903:2445:b0:215:9ab0:402 with SMTP id d9443c01a7336-22307a98a03mr3458305ad.18.1740501959581;
+        Tue, 25 Feb 2025 08:45:59 -0800 (PST)
+Received: from google.com (169.224.198.35.bc.googleusercontent.com. [35.198.224.169])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7347a6fa230sm1709220b3a.70.2025.02.25.08.45.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 08:45:58 -0800 (PST)
+Date: Tue, 25 Feb 2025 16:45:48 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Nicolin Chen <nicolinc@nvidia.com>, kevin.tian@intel.com,
+	corbet@lwn.net, will@kernel.org, joro@8bytes.org,
+	suravee.suthikulpanit@amd.com, robin.murphy@arm.com,
+	dwmw2@infradead.org, baolu.lu@linux.intel.com, shuah@kernel.org,
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
+	eric.auger@redhat.com, jean-philippe@linaro.org, mdf@kernel.org,
+	mshavit@google.com, shameerali.kolothum.thodi@huawei.com,
+	smostafa@google.com, ddutile@redhat.com, yi.l.liu@intel.com,
+	patches@lists.linux.dev
+Subject: Re: [PATCH v7 12/14] iommu/arm-smmu-v3: Introduce struct
+ arm_smmu_vmaster
+Message-ID: <Z73zvIbsXzJMCaNt@google.com>
+References: <cover.1740238876.git.nicolinc@nvidia.com>
+ <be799951a817557ac093ac3e18d02a631306aa35.1740238876.git.nicolinc@nvidia.com>
+ <Z7zYLBLZGKim-5UL@google.com>
+ <Z7zlH74/orq9HF7Q@Asurada-Nvidia>
+ <Z7zqdrQn7Q8yXfcn@google.com>
+ <Z7zxsbJsOFp41Dzd@Asurada-Nvidia>
+ <Z70EnQ5CXacc4ysT@Asurada-Nvidia>
+ <20250225160225.GA593877@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAFJgqgRZ1w0ONj2wbcczx2=boXYHoLOd=-ke7tHGBAcifSfPUw@mail.gmail.com>
- <9610C397-39C8-479B-A727-1091BB8548C9@zytor.com>
-In-Reply-To: <9610C397-39C8-479B-A727-1091BB8548C9@zytor.com>
-From: Ventura Jack <venturajack85@gmail.com>
-Date: Tue, 25 Feb 2025 09:45:22 -0700
-X-Gm-Features: AWEUYZli3Ui7LBmGdvVD9YHbwR1WaUThZgdEiI6e9ZyhcahuU4aeXJ5WC0fMPyI
-Message-ID: <CAFJgqgQZoG8VrLUFtCFaMtodvFZEZV-aeFvugCnF+w7WLbS_qQ@mail.gmail.com>
-Subject: Re: C aggregate passing (Rust kernel policy)
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: torvalds@linux-foundation.org, airlied@gmail.com, boqun.feng@gmail.com, 
-	david.laight.linux@gmail.com, ej@inai.de, gregkh@linuxfoundation.org, 
-	hch@infradead.org, ksummit@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	miguel.ojeda.sandonis@gmail.com, rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225160225.GA593877@nvidia.com>
 
-On Tue, Feb 25, 2025 at 8:42=E2=80=AFAM H. Peter Anvin <hpa@zytor.com> wrot=
-e:
->
-> On February 22, 2025 2:03:48 AM PST, Ventura Jack <venturajack85@gmail.co=
-m> wrote:
-> >>Gcc used to initialize it all, but as of gcc-15 it apparently says
-> >>"Oh, the standard allows this crazy behavior, so we'll do it by
-> >default".
-> >>
-> >>Yeah. People love to talk about "safe C", but compiler people have
-> >>actively tried to make C unsafer for decades. The C standards
-> >>committee has been complicit. I've ranted about the crazy C alias
-> >>rules before.
-> >
-> >Unsafe Rust actually has way stricter rules for aliasing than C. For you
-> >and others who don't like C's aliasing, it may be best to avoid unsafe R=
-ust.
->
-> From what I was reading in this tree, Rust doesn't actually have any rule=
-s at all?!
+On Tue, Feb 25, 2025 at 12:02:25PM -0400, Jason Gunthorpe wrote:
+> On Mon, Feb 24, 2025 at 03:45:33PM -0800, Nicolin Chen wrote:
+> 
+> > --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
+> > +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
+> > @@ -95,8 +95,6 @@ int arm_smmu_attach_prepare_vmaster(struct arm_smmu_attach_state *state,
+> >  
+> >  	iommu_group_mutex_assert(state->master->dev);
+> >  
+> > -	if (domain->type != IOMMU_DOMAIN_NESTED)
+> > -		return 0;
+> >  	nested_domain = to_smmu_nested_domain(domain);
+> >  
+> >  	/* Skip invalid vSTE */
+> > @@ -122,19 +120,9 @@ void arm_smmu_attach_commit_vmaster(struct arm_smmu_attach_state *state)
+> >  {
+> >  	struct arm_smmu_master *master = state->master;
+> >  
+> > -	mutex_lock(&master->smmu->streams_mutex);
+> > -	if (state->vmaster != master->vmaster) {
+> > -		kfree(master->vmaster);
+> > -		master->vmaster = state->vmaster;
+> > -	}
+> > -	mutex_unlock(&master->smmu->streams_mutex);
+> > -}
+> > -
+> > -void arm_smmu_master_clear_vmaster(struct arm_smmu_master *master)
+> > -{
+> >  	mutex_lock(&master->smmu->streams_mutex);
+> >  	kfree(master->vmaster);
+> > -	master->vmaster = NULL;
+> > +	master->vmaster = state->vmaster;
+> >  	mutex_unlock(&master->smmu->streams_mutex);
+> >  }
+> 
+> I'd leave the clear_vmaster just for clarity. Commit should not be
+> unpaired with prepare in the other functions.
+> 
 
-One way to describe it may be that Rust currently has no full
-official rules for aliasing, and no full specification. There are
-multiple experimental research models, including stacked
-borrows and tree borrows, and work on trying to officially
-figure out, model, and specify the rules. Currently, people
-loosely and unofficially assume some rules, as I understand
-it, often with conservative assumptions of what the rules
-are or could be, as Miguel Ojeda discussed. I do not know
-if there is any official partial specification of the aliasing
-rules, apart from the general Rust documentation.
+Ack. I'd like to pair prepare and commit as well. I'm just confused
+about the check if (state->vmaster != master->vmaster). Maybe a helpful
+comment about what are we checking for would make things cleaner.
 
-The unofficial aliasing rules that a Rust compiler
-implementation uses, have to be followed when writing
-unsafe Rust, otherwise you may get undefined behavior
-and memory safety bugs. Some people have argued that
-a lack of specification of the aliasing rules for Rust is one
-reason why writing unsafe Rust is harder than C, among
-other reasons.
+With this nit:
 
-A lot of Rust developers use MIRI, but MIRI cannot catch
-everything. One version of MIRI explicitly mentions that it
-uses stacked borrows as one rule set, and MIRI also
-mentions that its stacked borrow rules are still experimental:
+Reviewed-by: Pranjal Shrivastavat <praan@google.com>
 
-    "=3D help: this indicates a potential bug in the program: it
-    performed an invalid operation, but the Stacked Borrows
-    rules it violated are still experimental
+Thanks,
+Praan
 
-    =3D help: see
-    https://github.com/rust-lang/unsafe-code-guidelines/blob/master/wip/sta=
-cked-borrows.md
-    for further information"
-
-There is only one major compiler for Rust so far, rustc,
-and rustc has LLVM as a primary backend. I do not know
-the status of rustc's other backends. gccrs is another
-compiler for Rust that is a work in progress, Philip
-Herron (read also his email in the tree) and others are
-working on gccrs as I understand it.
-
-Best, VJ.
