@@ -1,205 +1,323 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B7A1FC7DA;
-	Tue, 25 Feb 2025 17:15:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740503760; cv=none; b=K8TxOH0pNiSzHsdei5KyijCUrs3wKECocj3d1PaMa2mT36QqG1NuBoytFM776T7QZZ7+/T087Tc1M/fEj1SWXzt+V6DLjK54vMcdBLPPDNteYOYoMArLUj3j0vv60xbHXYe52BsF5p86ejUT3INGXK+f6OR4OCWdQSYBNxVHhbY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740503760; c=relaxed/simple;
-	bh=ezGAIeWPAxlOHhFgXBsoCU/huFK7irSzPAfTK2ZAJS8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aydX+5BztW5/9ZOZat4JmgnxUJcN3O9Tn087btyCvPY8Kr5Pn5Cw5LVc0kSzcAhpTJzrIBmDsBKbwc/Mcgb2WwJtcnwguRk4moa0OX+GC1aKyN9ZdzfxFD6ZEx7SqNLD25rdHGRFuH+p7a/dzEvTCvVfCsCJOKqkzqaknzHKM3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=1yVAKjmb; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034B11A073F;
+	Tue, 25 Feb 2025 17:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740503780; cv=fail; b=SRVdKAECv7QK+Kxbcesk7MxSQpc+Fo6ODBeAKKhVkBrf9KQ8xGixzGfi9MA0W59IobZNCFRiEFjHmLtkwZ5RWSR42G+wf4Ko9qOMxBL/aRc/oh2XfrRAMB9C9STueAS23xw4blR1vtRU2ZkpESuqNKByo1XF8bNU6hf59mRapP4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740503780; c=relaxed/simple;
+	bh=WMMijnMVt61XHKjdhQYKyzAuaVYz1yR3writiBLvum0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=EX+h/+71qpiWfgf+BJVEjflDR4EoqYV3EfKPpAXG7flGYr4wC9iCKnshTM+RZjksPIrKI9pf5Jt5MvWsAydhHFwEUTne8o9sxQhFvXdesy+Lz/GBMRLD6tbp5kSu2cy53HcNkLozKErHmtp4PFrQv+4aMNDXlcGNe9FvfC1wCR4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mb8KY84c; arc=fail smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="1yVAKjmb"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=/FcX+G+I0G7bVNTYmPL3UUc4quzJ0eDdIDeI93mfRq4=; b=1yVAKjmbmU93d92TuCfnf1frpT
-	Ctf7Dl/Dn1l9OVlm84zGxCeBlX9Zv9JEVa6tjGwapcEtkUtsGTuZ7t+K2wJhfdlwEvcJKpkX5sFI3
-	BGP9rghzWaJoFB0ZNBRdIqJobvwLoYMiNcpamgI8sn2P/L167nbuejfNXIz9DBSKlK2Sd6Z5UcpYw
-	ww+g6HT3LJ0mDrE47fL8Ub3g9Pu+3yGH4V9OsvMicaTw9+7CfeQHGmKGRMsNM4m1OKvN0EDPKmy+O
-	WNkems2wavszyCNaSshvxuPTEQ8qtvBocuSKQEd5XrGVt5qQYhmbIiFy7qA1d3VvBySy1ec8eXqQr
-	+EM822Pw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:38584)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tmyWy-00023F-0v;
-	Tue, 25 Feb 2025 17:15:40 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tmyWu-0006Bl-33;
-	Tue, 25 Feb 2025 17:15:36 +0000
-Date: Tue, 25 Feb 2025 17:15:36 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: =?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>, davem@davemloft.net,
-	Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
-	Simon Horman <horms@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Antoine Tenart <atenart@kernel.org>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Subject: Re: [PATCH net-next 0/2] net: phy: sfp: Add single-byte SMBus SFP
- access
-Message-ID: <Z736uAVe5MqRn7Se@shell.armlinux.org.uk>
-References: <20250223172848.1098621-1-maxime.chevallier@bootlin.com>
- <Z7tdlaGfVHuaWPaG@shell.armlinux.org.uk>
- <87o6yqrygp.fsf@miraculix.mork.no>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mb8KY84c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740503778; x=1772039778;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=WMMijnMVt61XHKjdhQYKyzAuaVYz1yR3writiBLvum0=;
+  b=mb8KY84cxpBfAeaP4pfWrcwGYDgRIvey4tg1PdT2xz184QPziGRhwmTe
+   oOO82hKYVuCCVCTiW/QJvkEJv6aHx39232wBDlo/5b/ST/AmoJY8oPM1P
+   cYFUZurg0r4rnlV0HsR/bpvxJZ6sX/5mnHCCOFbyyvG3ldtchA1jGDcFR
+   HmyUA2LD9mV3YMvSNZaxfZo9Z4FeJNjOB0qhaNFJkCWMHoCbqbpjzGGiS
+   T33izRTglg4i5Iz3qiX0FhkoRDIw0snm1bg4p/IPvpPfSrHFnVU+iXrwe
+   52Rh6/y3KCebogV67LOa80Seq8Y+E01U1OmDchrxFMOYy22fbkoFfDxy2
+   g==;
+X-CSE-ConnectionGUID: vrDvS4BMSf6sKrJF6Uj/3Q==
+X-CSE-MsgGUID: xP0iF89LQ8CYn/U3J5XgLg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="52320072"
+X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
+   d="scan'208";a="52320072"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 09:16:16 -0800
+X-CSE-ConnectionGUID: tTIGqqffRcePwPwKqO4qaA==
+X-CSE-MsgGUID: oB9N0/5HR6uBNw0a3Cja6A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
+   d="scan'208";a="121061741"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 09:16:13 -0800
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 25 Feb 2025 09:16:12 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Tue, 25 Feb 2025 09:16:12 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.43) by
+ edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 25 Feb 2025 09:16:12 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gsxUZsvyRe2IrfKP78ZnESso2J3sxNmsM537jQlaoW5/H6E35gp1kih6JSA9VwT5n9k1qMBz7A4Z6+x/3oJs2+a4gzygvNX0+k/S/do4wGsOkxFCAeBUyv6GbWmjyWdYgzzJEuKjP1IxS4vE4ymAB4FAzKqkbXk4PxmrqbB0hVkW1SuBmtUgDGLRy1DacPc3RZvicmzGOH4w0/6hRdHV5JfmjttyPlLoLbH440wVeMjMZi7fPW+8nBBIU2zlldZMtyLkS1yNWBnCf8uZv+Jlq+9F3zHIH3txrrx0488njvltazd6NrRT1VSf4AfZzmGIj+dbG9oCvxUZeJSMhgZzwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CYdQUc4W3E0jEX9rH4QwVN0saR32zGHdq6c2NCUWUVQ=;
+ b=ZxT3ssY5/Zt7fnhyNqlAhXihH9srASt0x9yXtYrxuxK816yV1IkdImuEtdtLKcFwfQCI3bEIoZQPimyuxQq2qhQCujI2rx7OMpVQoloBLuBb73vWtO2ffThrwT42OIgJOGoQFpB31wzb4nihSYksKsCrIM8RMBiNYbEpQGyLZWJ++yUREZiTf065I7qkpKLnYen0iAfRSjfVi/9gAZJ2nh+IgKt+EpfMOe5L+zSoH3LGxLohgkzkO07eaBXSTI/vPdxNVmUut02AiRF65ncwcwPzMOCrL0ntPGWfAr9vTOyGrjB/MiEPyH+JpG95CLogYMAOYOb8gmzXV7uXkn3pYQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from MN0PR11MB6231.namprd11.prod.outlook.com (2603:10b6:208:3c4::15)
+ by BL4PR11MB8872.namprd11.prod.outlook.com (2603:10b6:208:5a8::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Tue, 25 Feb
+ 2025 17:16:08 +0000
+Received: from MN0PR11MB6231.namprd11.prod.outlook.com
+ ([fe80::a137:ffd0:97a3:1db4]) by MN0PR11MB6231.namprd11.prod.outlook.com
+ ([fe80::a137:ffd0:97a3:1db4%4]) with mapi id 15.20.8466.016; Tue, 25 Feb 2025
+ 17:16:08 +0000
+Date: Tue, 25 Feb 2025 18:15:27 +0100
+From: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+To: Andrey Konovalov <andreyknvl@gmail.com>
+CC: <kees@kernel.org>, <julian.stecklina@cyberus-technology.de>,
+	<kevinloughlin@google.com>, <peterz@infradead.org>, <tglx@linutronix.de>,
+	<justinstitt@google.com>, <catalin.marinas@arm.com>,
+	<wangkefeng.wang@huawei.com>, <bhe@redhat.com>, <ryabinin.a.a@gmail.com>,
+	<kirill.shutemov@linux.intel.com>, <will@kernel.org>, <ardb@kernel.org>,
+	<jason.andryuk@amd.com>, <dave.hansen@linux.intel.com>,
+	<pasha.tatashin@soleen.com>, <ndesaulniers@google.com>,
+	<guoweikang.kernel@gmail.com>, <dwmw@amazon.co.uk>, <mark.rutland@arm.com>,
+	<broonie@kernel.org>, <apopple@nvidia.com>, <bp@alien8.de>,
+	<rppt@kernel.org>, <kaleshsingh@google.com>, <richard.weiyang@gmail.com>,
+	<luto@kernel.org>, <glider@google.com>, <pankaj.gupta@amd.com>,
+	<pawan.kumar.gupta@linux.intel.com>, <kuan-ying.lee@canonical.com>,
+	<tony.luck@intel.com>, <tj@kernel.org>, <jgross@suse.com>,
+	<dvyukov@google.com>, <baohua@kernel.org>, <samuel.holland@sifive.com>,
+	<dennis@kernel.org>, <akpm@linux-foundation.org>,
+	<thomas.weissschuh@linutronix.de>, <surenb@google.com>,
+	<kbingham@kernel.org>, <ankita@nvidia.com>, <nathan@kernel.org>,
+	<ziy@nvidia.com>, <xin@zytor.com>, <rafael.j.wysocki@intel.com>,
+	<andriy.shevchenko@linux.intel.com>, <cl@linux.com>, <jhubbard@nvidia.com>,
+	<hpa@zytor.com>, <scott@os.amperecomputing.com>, <david@redhat.com>,
+	<jan.kiszka@siemens.com>, <vincenzo.frascino@arm.com>, <corbet@lwn.net>,
+	<maz@kernel.org>, <mingo@redhat.com>, <arnd@arndb.de>, <ytcoode@gmail.com>,
+	<xur@google.com>, <morbo@google.com>, <thiago.bauermann@linaro.org>,
+	<linux-doc@vger.kernel.org>, <kasan-dev@googlegroups.com>,
+	<linux-kernel@vger.kernel.org>, <llvm@lists.linux.dev>, <linux-mm@kvack.org>,
+	<linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>
+Subject: Re: [PATCH v2 13/14] x86: runtime_const used for KASAN_SHADOW_END
+Message-ID: <uov3nar7yt7p3gb76mrmtw6fjfbxm5nmurn3hl72bkz6qwsfmv@ztvxz235oggw>
+References: <cover.1739866028.git.maciej.wieczor-retman@intel.com>
+ <2a2f08bc8118b369610d34e4d190a879d44f76b8.1739866028.git.maciej.wieczor-retman@intel.com>
+ <CA+fCnZdtJj7VcEJfsjkjr3UhmkcKS25SEPTs=dB9k3cEFvfX2g@mail.gmail.com>
+ <lcbigfjrgkckybimqx6cjoogon7nwyztv2tbet62wxbkm7hsyr@nyssicid3kwb>
+ <CA+fCnZcOjyFrT7HKeSEvAEW05h8dFPMJKMB=PC_11h2W6g5eMw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+fCnZcOjyFrT7HKeSEvAEW05h8dFPMJKMB=PC_11h2W6g5eMw@mail.gmail.com>
+X-ClientProxiedBy: DU7P250CA0017.EURP250.PROD.OUTLOOK.COM
+ (2603:10a6:10:54f::20) To MN0PR11MB6231.namprd11.prod.outlook.com
+ (2603:10b6:208:3c4::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87o6yqrygp.fsf@miraculix.mork.no>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR11MB6231:EE_|BL4PR11MB8872:EE_
+X-MS-Office365-Filtering-Correlation-Id: c9c4d76a-5c14-4c0f-7574-08dd55c01832
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?bEVPL08vYUU2ZHQzTHY4WDVJMlV0NEZMcHkyV1NsNWNJSXhNdzZ0aEFOTldN?=
+ =?utf-8?B?YjVrVjdyUjl5QnZMVXdDOTNpTVFFQ0orSjBZSzExZkVIT2ZCa2VJdnFweWtL?=
+ =?utf-8?B?VTJRb3VyK2FjR2JncXhHRFEzS1pKaFNSMFd6ckxzRDA3bmw1eFYwZDVnQUc5?=
+ =?utf-8?B?VVFtQmhpakNndzZXcEFIdzRlaWsrODU5YTdvVWM4TWpGTU1mQVRXZUt0ZmlK?=
+ =?utf-8?B?YnNNVkV5TVJHN1creDIxMnRDZnZTM0NiQ1Z5Y09IMnZPQ05EZzB3TWRCbHVl?=
+ =?utf-8?B?dTBlRlZGR3RMWDNVdUVRMDEzOUY1a1YrQ0NIK0RxQzRTQ05ReE5vNFpvQ05z?=
+ =?utf-8?B?NzhWT1VxZkE4bE1qZVlOMDl5cEtQcTBXejhWK1FFS1VBTU14S3hpT04zUW1r?=
+ =?utf-8?B?TDZDcEZRVEpSMDVndDFHMTR3YkNOUmFHaGpvMjVBdXV2VVFRZ2g2eWw1bEFo?=
+ =?utf-8?B?R0NWaGlKay9XTEV6ek9MeHZPOFpKcThnVmlTR25PSmJYZFQ5ZlRHTDAvZHlk?=
+ =?utf-8?B?bFYxMjBWVWNhbk1uNkJaNDhDR2IrQnFwK2IwZ0NKVENiZDJFQW4yQWFTS3ZU?=
+ =?utf-8?B?RzZNZ2xldlJMQmFUMXd3SlF6Q0ZiOGZ4c1NmMEJJeGVTZEV0S1RNU1J5aFll?=
+ =?utf-8?B?bkREUy9lUGFlWTdmVzJqYlUxU3k4UFdwQy8wUUR0OWxObjRpN2tUc0dUclll?=
+ =?utf-8?B?QVhoWS9UYzJvZ1ViQ0Y0T0dYYlpEaWJreTRmS1pUbnhGbWt0eHVDb1NtNlkr?=
+ =?utf-8?B?YWg4ejZQb0NJWGJLSUJmTi8vV1hRVGpTNjgwS3BybnkzbHNabldHL3AyZjNH?=
+ =?utf-8?B?UUFUeVVyYUFkdkVmVmQwWXR0WTl0QWlmSXdCR1FVWGNNaTlQNVdSZkhmR2c2?=
+ =?utf-8?B?Ry9ZWGFLOFVyTkZlRUlneFY0ZlpaMGtFVGpWQ0ViYVZyUkVtMlljeWZ6K29h?=
+ =?utf-8?B?Z1ZCejd5d2JvbkhWTkdKaXlJUWdDQlNnWnFDam81RHBRQzdqSUdocHRGVDNB?=
+ =?utf-8?B?MjlrSURBaFJXWXRwSGxWWG9UT2RrU1Z3K09yTWNTVlNOQ3ZSenJuOVFTUkdl?=
+ =?utf-8?B?UC9mT2wzdG96WUdnMXZicVFaOTVabEM5SEJzMU1uYURsNlB5QWJmTVBzNDBw?=
+ =?utf-8?B?ajB1eU1nMGtSSGYySkl0V05QTmpRemVZL202aFhhNUpMMTZGY3VkZFJMVXpo?=
+ =?utf-8?B?QlBub3dreStzL1UzNG9qemMvaWpqakdEZUFqNDJkQ0UwN1FtOHRnMmdUNTUv?=
+ =?utf-8?B?T2txMy90R2VOVWY5eHNaRHNDRm1DQ0R2S3Z5TFlDL0Zsbk4ySDVQN2ErdXkz?=
+ =?utf-8?B?bkhmUVZYSStuMklNbTN0cDhFanpNOC9ENTk4OExjeldiTjA5YlZZaFBVbHJN?=
+ =?utf-8?B?T1JNM0tWQlZ3Mk9kRXFLTkdlQmxyMVBhbDVqV1VnL05VM1N6ckRUZ0w2OTdK?=
+ =?utf-8?B?WndCNGoyNTVpb0g2czMrRlNWcStCYktMWE5lc1JGWFppRE1TS25mRUM3ZTRU?=
+ =?utf-8?B?VGdEUjJBdWxBM0twNmdqQmJvdGxRbmdEVktKYmFmWWZZZWtGYkVKc1o1YlBD?=
+ =?utf-8?B?YXNPMjhlNkYvVnVEQS9EYlErOW9FVVFNY1FjcDBmd0RQcTNOVkZHQzJ3b3Zi?=
+ =?utf-8?B?N3UrSGpYZ3FSS3RKeG5HaVhjTkw1amRiN1lvNzlRaDgzdzNNL3B3cWxvYTRY?=
+ =?utf-8?B?S2FYWHVUWVRJaUlqSktVcERNRWRhUi9talVRdTNSa0x1R2pHNnExOC9oNHJj?=
+ =?utf-8?B?SW8zQ1hZb3J4a2xiSmJTYW5DQXYvcWdaOUZoQTdMdlU3N3hUQ2JHcEhFSnZK?=
+ =?utf-8?B?VlhBMHkrcTVhN2tNNldTdz09?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB6231.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UGpkdTRaS1FoT0RrWHpjZFNsanJxbU9IOHprZm5vR3RGcXd4R1RtRXBVQmlp?=
+ =?utf-8?B?VFMzYUZJcXIrK3owN3lWN3pGbkRiVU5jRWdibmY5dDMydWF4Q1NEdXFPQWpF?=
+ =?utf-8?B?d2ZlYVYxWVFxOUZkMVZrdGYrUHNCNU9Damlad0JLT0hKYjJuVXNONUxsaWw0?=
+ =?utf-8?B?amU0SGkvZzc5eGpxNnJheUo3RjdjLytNK2JPVVM3OFROZk4zZ1NjRFNMUU82?=
+ =?utf-8?B?bmREYVMvOWlHOEZyNnZTaG9hV1phUUtNRWk5dnJLSUc2N2wvUFN2N2xqUWtL?=
+ =?utf-8?B?dlhlb3UyTnZaRHZzK21hUExta2N5RFp6WTl6MzNveGVmSlE2RHNnTzArVGxh?=
+ =?utf-8?B?N3RHazdWeHRRRVVRQkY1azYrMzNuTDlSNVFyY1FxRjZzVWhlNkJsRmxJK1RP?=
+ =?utf-8?B?SVkwOVdNMzRBTW41KzBPSm96QVNPUUE3eFRMUHExeTZlYUhBWVJxSmtqNS9G?=
+ =?utf-8?B?UVh2Vkc4eDdsY1hkMUJ0Yno4VTFWWGZaVG5WbmtWUHROSDV6U2lSNHIyMFY0?=
+ =?utf-8?B?MHdnZ3VEaGo4b3ZRcjJ0QnBNQ1llbWNINEVhWk9UdytBQXpzditjMEcrcjNp?=
+ =?utf-8?B?WXd6OGEzM3EyZXdFZEhLZ1VodjdTNFRsMlpneDJMNUFUY0VLVGxNZ0xiSTJ4?=
+ =?utf-8?B?MXB0TVJBaDl2YXJPVXc2VUVFTEpUY055SHVmNjRYNS9FaldDZHF4eHlqRnBj?=
+ =?utf-8?B?YTE5dmQxc3BuekxsNWFycFlaOHNlckJ5ZVZWck1wNmU5UDNhaWpWZVF5Vmo1?=
+ =?utf-8?B?b2tiV0c4Wk5XcXh4ZHRDajJGTlU0SUZaZGNCamRnaDdidUp1dUVGaytXeWdX?=
+ =?utf-8?B?RUk0WnlFdC90cjNIcENzKzkyRjZETEw0dXRvbmxnaXB1QlRUVi95TFE4Qitl?=
+ =?utf-8?B?cU5WRi9KVE5rUDVUdzlmVGNpZiszblZpd1JyajVUTFNWbnloekZuR1Z3YWx1?=
+ =?utf-8?B?L0cySDBsdUNzSHMxRnNXdkdPRGJLMnRteGpuVXBtcHIyUEhoaUdCYWc3Ynlq?=
+ =?utf-8?B?YXZTT2hhVzlFZzdtSjd0QVB3Z3pkK0FocHQ5Q2ZiRUNya01LTzdPOWZvQWhw?=
+ =?utf-8?B?b2pzQUtqMXlLZXBiRkl5MndEcWpOTmVaVEMvY1VLRlFVOUlseEpRTXNrNmlZ?=
+ =?utf-8?B?RngxK0JjTmlnWGxtTWhMQ3g4cnpvVUxCUThGRHM1UzJWRTgxbkx4djhMU0Nn?=
+ =?utf-8?B?aU9nR0NDckkwMEcxeWRlTW1wRG5QeGpoYlZ6SEVaekpLaGV1R203Uk1BYUNs?=
+ =?utf-8?B?bHRIVXRoR3pEb2hqdWFoU3dkNzNoMEFKTGNhWVBKQ0l4WTFiL2duWnM1amlm?=
+ =?utf-8?B?UnIzRlJtcGk2Zm5XbW0xN29UNTNwSVlZSXdRb2lCODlZVnowYmk4bUxGSm15?=
+ =?utf-8?B?TTVZdUd2U0F6L0k4NVNRRmczbExsVmNUMXRoeXNNcEIzd1ZpMDQyV0VhOUFK?=
+ =?utf-8?B?M1dHYkNtSllhVlE2ZVA3NWppYkxMWmZvS05FLzZpa09xY001aWkrYnozZnUx?=
+ =?utf-8?B?STFHZVZtaG9uaUlqL2xWU29iUXV3WmkvbkxYbXBYUHBNWmRFNkZqZmd6Q1ND?=
+ =?utf-8?B?T204UlhVUUNUbTduamJEN3FnZEZPdmZBRW9xUGtOV0RObFQ2T3FndUpVVDZL?=
+ =?utf-8?B?QTdCNUpLZ003TWhxandZWlJaQU1ZNWUyTDNzd1VMbDRZbFlTNVVJbHpoWitO?=
+ =?utf-8?B?OFZ1dTVZbFp0MW5yZFdQT1lEUlJVc2NzNUNSd3gvZUFwTHRWYldmM2s2NHVv?=
+ =?utf-8?B?a2lMdDcrMzVIdHYvd3h4WVltTXVtU1FkMWJqVW5HQzlsZnMzb0pKVTBVTVZi?=
+ =?utf-8?B?Rm5jY01XTWtMMDJaOVlZdEFoS20yUk9jTnFBUVFML2NMOXZDS1kxZTJ5MHUr?=
+ =?utf-8?B?N1NNaUUvaTVYZ3dOdCtEb256ZHU0eUpKWk9iQkowUWlWWDhwcytTanVoZ00v?=
+ =?utf-8?B?VUVMS1J5MEo1bUFMRzdLZW5kRG15NHFlZU9iZytnYzIyTk1pSEhvSzlLVFF4?=
+ =?utf-8?B?SGpnRFFtQmtWbVdvQ3N4aUZEVnY1K05odmZ3RDhDYVh2MmhQOVJ4TzlKS0pI?=
+ =?utf-8?B?QmsrVUw4Tnk5UHFBdktKa0pMeVBUQXJrT2tYUUg3Q1FNOE9HYWlhekFJUFBZ?=
+ =?utf-8?B?Qk9rMitXRFZzbzJuUG5PUmdkTi9KSVp5Ty9OUW1XaEdVNVcyUGhaTmg1eHNH?=
+ =?utf-8?Q?DMxSdeGGFi9u5aTi3WZl6rg=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9c4d76a-5c14-4c0f-7574-08dd55c01832
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB6231.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2025 17:16:08.7572
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mix8vEUzIPdUGC3yg7NIM8ULeej/GCcj1Gxtd3wEjOLGT6PBVD/i9aH9gHgvSHdjws9Wi0WrGSuvqMjSKmqnEB8rHVVlkkeXjLZMg1wH4ts=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL4PR11MB8872
+X-OriginatorOrg: intel.com
 
-On Tue, Feb 25, 2025 at 01:38:30PM +0100, Bj�rn Mork wrote:
-> "Russell King (Oracle)" <linux@armlinux.org.uk> writes:
-> > On Sun, Feb 23, 2025 at 06:28:45PM +0100, Maxime Chevallier wrote:
-> >> Hi everyone,
-> >> 
-> >> Some PHYs such as the VSC8552 have embedded "Two-wire Interfaces" designed to
-> >> access SFP modules downstream. These controllers are actually SMBus controllers
-> >> that can only perform single-byte accesses for read and write.
-> >
-> > This goes against SFF-8472, and likely breaks atomic access to 16-bit
-> > PHY registers.
-> >
-> > For the former, I quote from SFF-8472:
-> >
-> > "To guarantee coherency of the diagnostic monitoring data, the host is
-> > required to retrieve any multi-byte fields from the diagnostic
-> > monitoring data structure (e.g. Rx Power MSB - byte 104 in A2h, Rx
-> > Power LSB - byte 105 in A2h) by the use of a single two-byte read
-> > sequence across the 2-wire interface."
-> >
-> > So, if using a SMBus controller, I think we should at the very least
-> > disable exporting the hwmon parameters as these become non-atomic
-> > reads.
-> 
-> Would SMBus word reads be an alternative for hwmon, if the SMBus
-> controller support those?  Should qualify as "a single two-byte read
-> sequence across the 2-wire interface."
+On 2025-02-22 at 16:07:20 +0100, Andrey Konovalov wrote:
+>On Fri, Feb 21, 2025 at 4:11 PM Maciej Wieczor-Retman
+><maciej.wieczor-retman@intel.com> wrote:
+>>
+>> On 2025-02-20 at 00:31:08 +0100, Andrey Konovalov wrote:
+>> >On Tue, Feb 18, 2025 at 9:20 AM Maciej Wieczor-Retman
+>> ><maciej.wieczor-retman@intel.com> wrote:
+>> >>
+>> >> On x86, generic KASAN is setup in a way that needs a single
+>> >> KASAN_SHADOW_OFFSET value for both 4 and 5 level paging. It's required
+>> >> to facilitate boot time switching and it's a compiler ABI so it can't be
+>> >> changed during runtime.
+>> >>
+>> >> Software tag-based mode doesn't tie shadow start and end to any linear
+>> >> addresses as part of the compiler ABI so it can be changed during
+>> >> runtime.
+>> >
+>> >KASAN_SHADOW_OFFSET is passed to the compiler via
+>> >hwasan-mapping-offset, see scripts/Makefile.kasan (for the INLINE
+>> >mode). So while we can change its value, it has to be known at compile
+>> >time. So I don't think using a runtime constant would work.
+>>
+>> I don't know about arm64, but this doesn't seem to work right now on x86.
+>
+>You mean it _does_ seem to work? Or otherwise if runtime constant
+>doesn't work on x86, then we shouldn't use it?
 
-Looking at the SNIA documents, this should work, so if a SMBus supports
-two-byte reads, then we should be able to support hwmon with such a
-controller. However, if only single-byte reads are supported, then I
-think we should disable hwmon as we'd be going against the statement
-I provided above from the docs.
+I mean in my tests, with setting offset in runtime, everything works correctly
+in inline mode. Even though hwasan-mapping-offset ends up empty and doesn't end
+up in CFLAGS_KASAN. I assume this means that the inline mode is pretty much the
+same as outline mode with the runtime offset setting?
 
-> > Whether PHY access works correctly or not is probably module specific.
-> > E.g. reading the MII_BMSR register may not return latched link status
-> > because the reads of the high and low bytes may be interpreted as two
-> > seperate distinct accesses.
-> 
-> Bear with me.  Trying to learn here.  AFAIU, we only have a defacto
-> specification of the clause 22 phy interface over i2c, based on the
-> 88E1111 implementation.  As Maxime pointed out, this explicitly allows
-> two sequential distinct byte transactions to read or write the 16bit
-> registers. See figures 27 and 30 in
-> https://www.marvell.com/content/dam/marvell/en/public-collateral/transceivers/marvell-phys-transceivers-alaska-88e1111-datasheet.pdf
+I also tested if hwasan-mapping-offset does anything if I passed random values
+to it by hardcoding them in the makefile and still everything seemed to work
+just fine. Therefore I assumed that this option doesn't have any effect on x86.
 
-However, note that it's:
+>
+>> I
+>> think I recall that hwasan-mapping-offset isn't implemented on the x86 LLVM or
+>> something like that? I'm sure I saw some note about it a while ago on the
+>> internet but I couldn't find it today.
+>
+>In LLVM sources, ShadowBase gets calculated [1] based on
+>Mapping.Offset [2], which is in turn taken [3] from
+>hwasan-mapping-offset [4]. And then ShadowBase is used to calculate
+>[5] the shadow memory address.
+>
+>All of this happens in the common code, so this should affect both x86
+>and arm64.
+>
+>[1] https://github.com/llvm/llvm-project/blob/llvmorg-20-init/llvm/lib/Transforms/Instrumentation/HWAddressSanitizer.cpp#L1305
+>[2] https://github.com/llvm/llvm-project/blob/llvmorg-20-init/llvm/lib/Transforms/Instrumentation/HWAddressSanitizer.cpp#L761
+>[3] https://github.com/llvm/llvm-project/blob/llvmorg-20-init/llvm/lib/Transforms/Instrumentation/HWAddressSanitizer.cpp#L1863
+>[4] https://github.com/llvm/llvm-project/blob/llvmorg-20-init/llvm/lib/Transforms/Instrumentation/HWAddressSanitizer.cpp#L171
+>[5] https://github.com/llvm/llvm-project/blob/llvmorg-20-init/llvm/lib/Transforms/Instrumentation/HWAddressSanitizer.cpp#L899
 
- START ADDR(W) REG RE-START ADDR(R) HIGH STOP
- START ADDR(W) REG RE-START ADDR(R) LOW STOP
+Hmm indeed it does. Then I'm not sure why I didn't crash when I started putting
+in random variables. I'll dive into assembly and see what's up in there.
 
-and not:
+>
+>>
+>> Anyway if KASAN_SHADOW_OFFSET is not set at compile time it defaults to nothing
+>> and just doesn't get passed into kasan-params a few lines below. I assume that
+>> result seems a little too makeshift for runtime const to make sense here?
+>
+>Sorry, I don't understand this question.
+>
+>If hwasan-mapping-offset is not set properly, then in the inline
+>instrumentation mode, the compiler won't generate the right
+>instructions to calculate the shadow memory address.
 
- START ADDR(W) REG STOP START ADDR(R) HIGH STOP
- ...
+I meant that if we end up with "hwasan-mapping-offset=" because
+$(KASAN_SHADOW_OFFSET) didn't return anything, then
+$(call check-args, cc-param, $(kasan_params)) drops hwasan-mapping-offset and
+doesn't pass it to CFLAGS_KASAN. So I guess then it isn't an issue for the
+compiler and inline mode is essentially outline mode.
 
-I forget whether SMBus can do re-starts.
+But anyway I have an idea how to setup the x86 offset for tag-based mode so it
+works for both paging modes. I did some testing and value
+	0xffeffc0000000000
+seems to work fine and has at least some of the benefits I was hoping for when
+doing the runtime_const thing. It works in both paging modes because in 5 levels
+it's just a little bit below the 0xffe0000000000000 that I was thinking about
+first and in 4 levels, because of LAM, it becomes 0xfffffc0000000000 (because in
+4 level paging bits 62:48 are masked from address translation. So it's the same
+as the end of generic mode shadow memory space.
 
-> Looks like the latch timing restrictions are missing, but I still do not
-> think that's enough reason to disallow access to phys over SMBus.  If
-> this is all the interface specification we have?
+The alignment doesn't fit the shadow memory size so it's not optimal but I'm not
+sure it can be if we want to have the inline mode and python scripts working at
+the same time. At the very least I think the KASAN_SHADOW_END won't collide with
+other things in the tab-based mode in 5 level paging mode, so no extra steps are
+needed (arch/x86/mm/kasan_init_64.c in kasan_init()).
 
-I'm not sure what you're referring to here with "latch timing
-restrictions".
+Do you see any problems with this offset for x86 tag-based mode?
 
-Reading more of the 88E1111, if one only transfers an odd number of
-bytes for a register, it looks like that could cause problems. It
-doesn't appear to specify what happens if it receives a write e.g.
-for upper byte of register 0, and then receives a write for
-register 4 (as a hypothetical example - caused where the lower byte of
-register 0 transfer failed.)
 
-We do need to think about these corner cases!
-
-> I have been digging around for the RollBall protocol spec, but Google
-> isn't very helpful.  This list and the mdio-i2c.c implementation is all
-> that comes up.  It does use 4 and 6 byte transactions which will be
-> difficult to emulate on SMBus.  But the
-> 
-> 	/* By experiment it takes up to 70 ms to access a register for these
-> 	 * SFPs. Sleep 20ms between iterations and try 10 times.
-> 	 */
-> 
-> comment in i2c_rollball_mii_poll() indicates that it isn't very timing
-> sensitive at all. The RollBall SFP+ I have ("FS", "SFP-10G-T") is faster
-> than the comment indicates, but still leaves plenty of time for the
-> single byte SMBus transactions to complete.
-
-The "RollBall" protocol isn't official afaics. It got called that
-because of the first module that Marek happened to have that implemented
-it. Having taken several of these modules apart, it's implemented by a
-microcontroller, which may be an Arm Cortex based controller, or might
-be 8051 based. Whether the firmware implementation at the high-level
-code is the same or not is anyone's guess. We just don't know. It
-could be entirely different implementations - and that's the problem.
-We already know that the timings for this protocol vary depending on
-the module (possibly because of differing implementations) which brings
-questions up about the behaviour in obscure cases like single-byte
-reads.
-
-> Haven't found any formal specification of i2c clause 45 access either.
-> But some SFP+ vendors have been nice enough to document their protocol
-> in datasheets.  Examples:
-> 
-> https://www.repotec.com/download/managed-ethernet/ds-ml/01-MOD-M10GTP-DS-verB.pdf
-> https://www.apacoe.com.tw/files/ASFPT-TNBT-X-NA%20V1.4.pdf
-> 
-> They all seem to agree that 2/4/6 byte accesses are required, and they
-> offer no single byte alternative even if the presence of a "smart"
-> bridge should allow intelligent latching.  So this might be
-> "impossible" (aka "hard") to do over SMBus.   I have no such SFP+ so I
-> cannot even try.
-
-Indeed. So maybe we need a stronger kernel message to basically blame
-the hardware designer and refuse to operate with modules that _might_
-use the Rollball protocol. (Note, it's "might" because if we can't
-access the PHY, we don't know for certain that this module is a
-copper module.)
-
-> > In an ideal world, I'd prefer to say no to hardware designs like this,
-> > but unfortunately, hardware designers don't know these details of the
-> > protocol, and all they see is "two wire, oh SMBus will do".
-> 
-> I believe you are reading more into the spec than what's actually there.
-
-So I'm making up the quote above from SFF-8472.  Okay, if that's where
-this discussion is going, I'm done here.
-
-NAK to this patch set.
+Btw I think kasan_check_range() can be optimized on x86 if we use
+addr_has_metadata() that doesn't use KASAN_SHADOW_START. Getting rid of it from
+the implementation will remove pgtable_l5_enabled() which is pretty slow so
+kasan_check_range() which is called a lot would probably work much faster.
+Do you see any way in which addr_has_metadata() will make sense but won't use
+KASAN_SHADOW_START? Every one of my ideas ends up using pgtable_l5_enabled()
+because the metadata can have 6 or 15 bits depending on paging level.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Kind regards
+Maciej Wieczór-Retman
