@@ -1,123 +1,265 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5CB21ABD9;
-	Tue, 25 Feb 2025 14:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C3221ABA2
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740494995; cv=none; b=Bgi8XV7QsAXDSy+BpdB4+bHIY4sh0/muotMiKIF+Yi5fh49LcQEdYzG3g80oMRhRXMwUNpWnqsPYPrCjNpPoucgnGA3W/1ZLp8VPFEOkkei5oP9H9vrEoBjTxXRunnupB16AKwCmNsLRwYL3QsV8t+Jsqbz8pj95FHZljfZcdx0=
+	t=1740495128; cv=none; b=LVuWgbbPHqeYV625Xvh2FP1uVRVFjsfi+bTN8i60qDyuiNeqDC36Rf3C8YYwApB8omQvMqx+QCcdqbVzbnvm7F5ACJjQhLpRx8yfjBYtZ9lOfDYI0IBdPA8hHzOFqOQznzKQLHspM/UCJNvdrB6iujyS9hxuVDFJgZbAQA1ywlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740494995; c=relaxed/simple;
-	bh=iAtUl7zwcz1Now21mC+GJk1Tn22R4znqqgsbJoAzsVY=;
-	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FQtwPbMzSr9wcFdbTQjuRQw2cer+ahYnjiWjJIuxncIACNOkwVQQ1wmvf0DdJgyCrhKi+9AgaxHqrACnn/rxQc70hu1e1VKXnfDwMy4Zmk/5bRh6W/u11IL/aGd+jqLlc+mM4DxOU529UkXMiGH7pQSG9X4/1LLT7SF/+EAnebE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=YZp6zgol; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1740495128; c=relaxed/simple;
+	bh=XL6Y8Ue4UX2AcVMROAhI+8cR7pMUyhVI3kHk7llgoXk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q6MVqX1Dd1fmBeQN6r4sGOoYiOgNtwbimQcjMBNjzUXU2HnR/RuN5hY03DOEVjH0xjOvrwmScrV6qCZzjjYtdKXTWKDtZJ5ene/xp1oiPi8C1T2mXbK4OHNVdR1vcYLGEPcRopCsY6HvL5G5QFS0hq4bsJ9X2U4mBoH6Td8M5pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GrZMSiuY; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="YZp6zgol"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51PBQGDH002601;
-	Tue, 25 Feb 2025 15:49:45 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	iAtUl7zwcz1Now21mC+GJk1Tn22R4znqqgsbJoAzsVY=; b=YZp6zgolHnko3Lbj
-	M0bUrLXBgl37e5ErO+judU+SzkC95RiIpYbFybh+oFw/zXOSJ+HeQX1mwEIXjWs4
-	2AsPKjj0Ye8zCrVo+SyO/xEsP/Nka3OrjlgnH5fGaWSCXP+qSwv63CT3H5k3Q6A+
-	ELIUg3p1FVEXcAFfxG5Wdx+AhFckyd9kqbzoOQKFGm6sNPTqqRmwpjic59XBdgwM
-	8eJpSPysX2fUTEnB1RkMgdAgxNt+NxAtJGzTn0pKt4VVntrwVOytCFO/5XUWgDD0
-	nWi/QCFVNgt1UlyiUMJWinxd/22SjItFfPwEirmTT1W4nRKnF2aGA9IYxdOoapsI
-	JVGvHQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4512spkxf5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 15:49:45 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 7B15A4007A;
-	Tue, 25 Feb 2025 15:48:45 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E8C195E2380;
-	Tue, 25 Feb 2025 14:19:49 +0100 (CET)
-Received: from [192.168.8.15] (10.48.86.14) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 25 Feb
- 2025 14:19:49 +0100
-Message-ID: <ca48a3e6586ca5b1afd6e1bd81c612545df60e52.camel@foss.st.com>
-Subject: Re: [PATCH 1/8] gpiolib: check the return value of
- gpio_chip::get_direction()
-From: Antonio Borneo <antonio.borneo@foss.st.com>
-To: Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartosz Golaszewski
-	<brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC: <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Bartosz
- Golaszewski" <bartosz.golaszewski@linaro.org>,
-        <stable@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>
-Date: Tue, 25 Feb 2025 14:19:46 +0100
-In-Reply-To: <dfe03f88-407e-4ef1-ad30-42db53bbd4e4@samsung.com>
-References: <20250210-gpio-sanitize-retvals-v1-0-12ea88506cb2@linaro.org>
-	 <20250210-gpio-sanitize-retvals-v1-1-12ea88506cb2@linaro.org>
-	 <CGME20250219083836eucas1p1b7ecc6e5fdc34d66ef7565bfcf399254@eucas1p1.samsung.com>
-	 <dfe03f88-407e-4ef1-ad30-42db53bbd4e4@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.48.4 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GrZMSiuY"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30795988ebeso59138641fa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 06:52:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740495124; x=1741099924; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3tuPHequGzMuR1EjYE/aLgHiotFNF4oRKllhFvzBpe4=;
+        b=GrZMSiuYdoMDt2hNjYsl0k2ExhPG2qVEIJHVFXdANo9b+EB49I/PizdLx8c+bvT4gE
+         /Q6z8tC18JL71sLndAvEyAgjkF7q1zXzyfMIqA0SduVj2q2Hdyo2gKqxfmZ8B49sAnOq
+         vFirW9tUZjIy2ELV0atWfKO/+pxAsSBWckoFNTYXSai1lVPRIuwumDjNsIntrz99ysAQ
+         TxbjMDgCk/nSNXBO3j7eYWfJsRJv45p3MtoBEGaend5s1yDARZwqtThFud3hU0UWM7bN
+         21vI2n3FtEDxGtwhyvCuuKZL23GzLmStHefbwwz0QH9uJhHNv2+gopWYt9kaS8/P54Oe
+         Md9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740495124; x=1741099924;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3tuPHequGzMuR1EjYE/aLgHiotFNF4oRKllhFvzBpe4=;
+        b=ZDey1qu6sJzAMhIbvcMRbqQBWPubjihGuq3j5bPuOaunevd916naIPozGF2mRIdGdk
+         aB1cWgiGLuMTMavPP75opOIBwvtWx1+Pty44pZjfhYP29zAQReabyVQSVTjpIu1hHAwa
+         skTy7ejBwVz4c59ZY0DJLeI2i48y0Nyvx2wutDRaeiL8WVQiCfBb4PQOQEujlZScoRy3
+         XeyiqPHVBXRgZAJteIEZK47VG0j5B7PXfaS6HtB4KDG0NcbQyxSK2wOuoAv6YtuXhUv+
+         NTiWCHZtrWGGSQLBRAypisXDpVYyyarOQxTJsiZxB6ISn51ZP4na1Is4hQclMLvzvfxw
+         LL/A==
+X-Forwarded-Encrypted: i=1; AJvYcCWhSxBeFOXLDD4qrJTqoPqKyDCfj6gqzG++bt47ml7FdiC0AzNvZlCSus3eBZFFNCnoWxAAwunLN0bzdoA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztAlV5cSwR7FefkJ4lF/eIMJXW5qanIsN4lJMcsdlNR0LKqRkx
+	m4kV+1doKkPu5XyFMk8wyApsd87KUmuaMmTE3kkcln6nGEf0Gxg9ef/vMnkRaew4e5gwW9WE6yB
+	Yn1cETjSe4flujVVEJ/DXD2gzfwZQ8j4vZ3oA
+X-Gm-Gg: ASbGncvF/mGyICPxzUPs11UdyqVtqvIxGQ+l5LDzR9GfDihXEHhNlS6CO792SXgLxex
+	oyD+G/5bUpf47j16Vs2l3wFPUbMNfEmZS396/lFul5Q5dtKqp6f5SqTpGRsOn5oNdSkmDuzv7oj
+	dyEMPX8JSM/Ymdr33Z07p1qxpZiuAQOaRZXrn3osyH
+X-Google-Smtp-Source: AGHT+IEvl4Xp01m/kppPffjbL0eDt/euUOdlf9I44GRPPQliiNFucatiPdpuDRc0W2rY2o86qqMn3vYGjkVwcPXQoRk=
+X-Received: by 2002:a2e:9207:0:b0:304:d8e7:7ea1 with SMTP id
+ 38308e7fff4ca-30a80c99384mr15641891fa.23.1740495124392; Tue, 25 Feb 2025
+ 06:52:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_04,2025-02-25_03,2024-11-22_01
+References: <cover.1740403209.git.dvyukov@google.com> <4e93f7da6dfa450d488fafa3599306349e6e34e8.1740403209.git.dvyukov@google.com>
+ <b18e6478-ef4b-42b3-8cc4-42467b3a0a7f@efficios.com> <CACT4Y+YxmkW6opFVJFOOFd=c73gz7yFvwBBCnjMndj-jffjBCw@mail.gmail.com>
+ <b42dc8d7-2f2e-466f-bdca-0d532a0d5928@efficios.com>
+In-Reply-To: <b42dc8d7-2f2e-466f-bdca-0d532a0d5928@efficios.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Tue, 25 Feb 2025 15:51:52 +0100
+X-Gm-Features: AQ5f1JrdanOBkPkT1d4jyQL0fz7Spx-npcfmQUgm9CxzN_uowr3ptYoR1j91ol8
+Message-ID: <CACT4Y+Y9RodZO7T2RSJGohwjAdgBktgySCvCZ9xaPdVJafYzJw@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] rseq: Make rseq work with protection keys
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: peterz@infradead.org, boqun.feng@gmail.com, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, 
+	aruna.ramakrishna@oracle.com, elver@google.com, 
+	"Paul E. McKenney" <paulmck@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-T24gV2VkLCAyMDI1LTAyLTE5IGF0IDA5OjM4ICswMTAwLCBNYXJlayBTenlwcm93c2tpIHdyb3Rl
-Ogo+IEhpIEJhcnRvc3osCj4gCj4gT24gMTAuMDIuMjAyNSAxMTo1MSwgQmFydG9zeiBHb2xhc3pl
-d3NraSB3cm90ZToKPiA+IEZyb206IEJhcnRvc3ogR29sYXN6ZXdza2kgPGJhcnRvc3ouZ29sYXN6
-ZXdza2lAbGluYXJvLm9yZz4KPiA+IAo+ID4gQXMgcGVyIHRoZSBBUEkgY29udHJhY3QgLSBncGlv
-X2NoaXA6OmdldF9kaXJlY3Rpb24oKSBtYXkgZmFpbCBhbmQgcmV0dXJuCj4gPiBhIG5lZ2F0aXZl
-IGVycm9yIG51bWJlci4gSG93ZXZlciwgd2UgdHJlYXQgaXQgYXMgaWYgaXQgYWx3YXlzIHJldHVy
-bmVkIDAKPiA+IG9yIDEuIENoZWNrIHRoZSByZXR1cm4gdmFsdWUgb2YgdGhlIGNhbGxiYWNrIGFu
-ZCBwcm9wYWdhdGUgdGhlIGVycm9yCj4gPiBudW1iZXIgdXAgdGhlIHN0YWNrLgo+ID4gCj4gPiBD
-Yzogc3RhYmxlQHZnZXIua2VybmVsLm9yZwo+ID4gU2lnbmVkLW9mZi1ieTogQmFydG9zeiBHb2xh
-c3pld3NraSA8YmFydG9zei5nb2xhc3pld3NraUBsaW5hcm8ub3JnPgo+ID4gLS0tCj4gPiDCoCBk
-cml2ZXJzL2dwaW8vZ3Bpb2xpYi5jIHwgNDQgKysrKysrKysrKysrKysrKysrKysrKysrKysrKyst
-LS0tLS0tLS0tLS0tLS0KPiA+IMKgIDEgZmlsZSBjaGFuZ2VkLCAyOSBpbnNlcnRpb25zKCspLCAx
-NSBkZWxldGlvbnMoLSkKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3Bpby9ncGlvbGli
-LmMgYi9kcml2ZXJzL2dwaW8vZ3Bpb2xpYi5jCj4gPiBpbmRleCA2NzllZDc2NGNiMTQuLjVkMzc3
-NGRjNzQ4YiAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvZ3Bpby9ncGlvbGliLmMKPiA+ICsrKyBi
-L2RyaXZlcnMvZ3Bpby9ncGlvbGliLmMKPiA+IEBAIC0xMDU3LDggKzEwNTcsMTEgQEAgaW50IGdw
-aW9jaGlwX2FkZF9kYXRhX3dpdGhfa2V5KHN0cnVjdCBncGlvX2NoaXAgKmdjLCB2b2lkICpkYXRh
-LAo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBkZXNjLT5nZGV2ID0gZ2RldjsK
-PiA+IMKgIAo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAoZ2MtPmdldF9k
-aXJlY3Rpb24gJiYgZ3Bpb2NoaXBfbGluZV9pc192YWxpZChnYywgZGVzY19pbmRleCkpIHsKPiA+
-IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgYXNzaWduX2Jp
-dChGTEFHX0lTX09VVCwKPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgJmRlc2MtPmZsYWdzLCAhZ2MtPmdldF9kaXJl
-Y3Rpb24oZ2MsIGRlc2NfaW5kZXgpKTsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgcmV0ID0gZ2MtPmdldF9kaXJlY3Rpb24oZ2MsIGRlc2NfaW5kZXgp
-Owo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAo
-cmV0IDwgMCkKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoGdvdG8gZXJyX2NsZWFudXBfZGVzY19zcmN1Owo+ID4gKwo+ID4g
-K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBhc3NpZ25fYml0
-KEZMQUdfSVNfT1VULCAmZGVzYy0+ZmxhZ3MsICFyZXQpOwo+ID4gwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqB9IGVsc2Ugewo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgYXNzaWduX2JpdChGTEFHX0lTX09VVCwKPiA+IMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-ICZkZXNjLT5mbGFncywgIWdjLT5kaXJlY3Rpb25faW5wdXQpOwo+IAo+IFRoaXMgY2hhbmdlIGJy
-ZWFrcyBiY20yODM1IHBpbmNvbnRyb2wvZ3BpbyBkcml2ZXIgKGFuZCBwcm9iYWJseSBvdGhlcnMp
-IAo+IGluIG5leHQtMjAyNTAyMTguIFRoZSBwcm9ibGVtIGlzIHRoYXQgc29tZSBncGlvIGxpbmVz
-IGFyZSBpbml0aWFsbHkgCj4gY29uZmlndXJlZCBhcyBhbHRlcm5hdGUgZnVuY3Rpb24gKGkuZS4g
-dWFydCkgYW5kIC5nZXRfZGlyZWN0aW9uIHJldHVybnMgCj4gLUVJTlZBTCBmb3IgdGhlbSwgd2hh
-dCBpbiB0dXJuIGNhdXNlcyB0aGUgd2hvbGUgZ3BpbyBjaGlwIGZhaWwgdG8gCj4gcmVnaXN0ZXIu
-IEhlcmUgaXMgdGhlIGxvZyB3aXRoIFdBUk5fT04oKSBhZGRlZCB0byBsaW5lIAo+IGRyaXZlcnMv
-cGluY3RybC9iY20vcGluY3RybC1iY20yODM1LmM6MzUwIGZyb20gUmFzcGJlcnJ5IFBpIDRCOgoK
-U2FtZSBpc3N1ZSB3aXRoIFNUTTMyIHBpbmN0cmwuCgpJIHdpbGwgc2VuZCBvdXQgc2hvcnRseSBh
-IHBhdGNoLCBzaW1pbGFyIHRvCmh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2FsbC8yMDI1MDIxOTEw
-Mjc1MC4zODUxOS0xLWJyZ2xAYmdkZXYucGwvCgpSZWdhcmRzLApBbnRvbmlvCgo=
+On Tue, 25 Feb 2025 at 15:28, Mathieu Desnoyers
+<mathieu.desnoyers@efficios.com> wrote:
+>
+> On 2025-02-25 09:07, Dmitry Vyukov wrote:
+> > On Mon, 24 Feb 2025 at 20:18, Mathieu Desnoyers
+> > <mathieu.desnoyers@efficios.com> wrote:
+> >>
+> >> On 2025-02-24 08:20, Dmitry Vyukov wrote:
+> >>> If an application registers rseq, and ever switches to another pkey
+> >>> protection (such that the rseq becomes inaccessible), then any
+> >>> context switch will cause failure in __rseq_handle_notify_resume()
+> >>> attempting to read/write struct rseq and/or rseq_cs. Since context
+> >>> switches are asynchronous and are outside of the application control
+> >>> (not part of the restricted code scope), temporarily switch to
+> >>> pkey value that allows access to the 0 (default) PKEY.
+> >>
+> >> This is a good start, but the plan Dave and I discussed went further
+> >> than this. Those additions are needed:
+> >>
+> >> 1) Add validation at rseq registration that the struct rseq is indeed
+> >>      pkey-0 memory (return failure if not).
+> >
+> > I don't think this is worth it for multiple reasons:
+> >   - a program may first register it and then assign a key, which means
+> > we also need to check in pkey_mprotect
+> >   - pkey_mprotect may be applied to rseq of another thread, so ensuring
+> > that will require complex code with non-trivial synchronization and
+> > will add considerable overhead to pkey_mprotect call
+> >   - a program may assign non-0 pkey but have it always accessible, such
+> > programs will break by the new check
+> >   - the misuse is already detected by rseq code, and UNIX errno-based
+> > reporting is not very informative and does not add much value on top
+> > of existing reporting
+> >   - this is not different from registering rseq and then unmap'ing the
+> > memory, checking that does not look like a good idea, and checking
+> > only subset of misuses is inconsistent
+> >
+> > Based on my experience with rseq, what would be useful is reporting a
+> > meaningful siginfo for access errors (address/unique code) and fixing
+> > signal delivery. That would solve all of the above problems, and
+> > provide useful info for the user (not just confusing EINVAL from
+> > mprotect/munmap).
+> >
+> > But I would prefer to not mix these unrelated usability improvements
+> > and bug fixes with this change. That's not related to this change.
+>
+> I agree with your arguments. If Dave is OK with it, I'd be fine with
+> leaving out the pkey-0 validation on rseq registration, and eventually
+> bring meaningful siginfo access errors as future improvements.
+>
+> So the new behavior would be that both rseq and rseq_cs are required
+> to be pkey-0. If they are not and their pkey is not accessible in the
+> current context, it would trigger a segmentation fault. Ideally we'd
+> want to document this somewhere in the UAPI header.
 
+Makes sense. I will wait for Dave comments/ack before sending v6. But
+to save a round-trip, does this look reasonable?
+
+--- a/include/uapi/linux/rseq.h
++++ b/include/uapi/linux/rseq.h
+@@ -58,6 +58,10 @@ struct rseq_cs {
+  * contained within a single cache-line.
+  *
+  * A single struct rseq per thread is allowed.
++ *
++ * If struct rseq or struct rseq_cs is used with Memory Protection Keys,
++ * then the assigned pkey should either be accessible whenever these structs
++ * are registered/installed, or they should be protected with pkey 0.
+  */
+ struct rseq {
+
+
+
+> >> 2) The pkey-0 requirement is only for struct rseq, which we can check
+> >>      for at rseq registration, and happens to be the fast path. For struct
+> >>      rseq_cs, this is not the same tradeoff: we cannot easily check its
+> >>      associated pkey because the rseq_cs pointer is updated by userspace
+> >>      when entering a critical section. But the good news is that reading
+> >>      the content of struct rseq_cs is *not* a fast-path: it's only done
+> >>      when preempting/delivering a signal over a thread which has a
+> >>      non-NULL rseq_cs pointer.
+> >
+> > rseq_cs is usually accessed on a hot path since rseq_cs pointer is not
+> > cleared on critical section exit (at least that's what we do).
+>
+> Fair point.
+>
+> >
+> >>      Therefore reading the struct rseq_cs content should be done with
+> >>      write_permissive_pkey_val(), giving access to all pkeys.
+> >
+> > You just asked me to redo the code to simplify it, won't this
+> > complicate it back again? ;)
+>
+> I'm fine with the pkey-0 approach for both rseq and rseq_cs if Dave is
+> also OK with it.
+
+It should work for my current use case, at least how I currently see
+it. Ways people use pkeys are pretty unique, so it's hard to
+extrapolate. But there is one more possibility: when a program
+switches PKEYs, it may also clear stale rseq_cs pointer from rseq.
+This way rseq_cs may have non-0 keys assigned, but they are always
+accessible while installed.
+
+
+
+> Thanks,
+>
+> Mathieu
+>
+> >
+> >
+> >> Thanks,
+> >>
+> >> Mathieu
+> >>
+> >>>
+> >>> Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+> >>> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> >>> Cc: Peter Zijlstra <peterz@infradead.org>
+> >>> Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> >>> Cc: Boqun Feng <boqun.feng@gmail.com>
+> >>> Cc: Thomas Gleixner <tglx@linutronix.de>
+> >>> Cc: Ingo Molnar <mingo@redhat.com>
+> >>> Cc: Borislav Petkov <bp@alien8.de>
+> >>> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> >>> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> >>> Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
+> >>> Cc: x86@kernel.org
+> >>> Cc: linux-kernel@vger.kernel.org
+> >>> Fixes: d7822b1e24f2 ("rseq: Introduce restartable sequences system call")
+> >>>
+> >>> ---
+> >>> Changes in v4:
+> >>>    - Added Fixes tag
+> >>>
+> >>> Changes in v3:
+> >>>    - simplify control flow to always enable access to 0 pkey
+> >>>
+> >>> Changes in v2:
+> >>>    - fixed typos and reworded the comment
+> >>> ---
+> >>>    kernel/rseq.c | 11 +++++++++++
+> >>>    1 file changed, 11 insertions(+)
+> >>>
+> >>> diff --git a/kernel/rseq.c b/kernel/rseq.c
+> >>> index 2cb16091ec0ae..9d9c976d3b78c 100644
+> >>> --- a/kernel/rseq.c
+> >>> +++ b/kernel/rseq.c
+> >>> @@ -10,6 +10,7 @@
+> >>>
+> >>>    #include <linux/sched.h>
+> >>>    #include <linux/uaccess.h>
+> >>> +#include <linux/pkeys.h>
+> >>>    #include <linux/syscalls.h>
+> >>>    #include <linux/rseq.h>
+> >>>    #include <linux/types.h>
+> >>> @@ -402,11 +403,19 @@ static int rseq_ip_fixup(struct pt_regs *regs)
+> >>>    void __rseq_handle_notify_resume(struct ksignal *ksig, struct pt_regs *regs)
+> >>>    {
+> >>>        struct task_struct *t = current;
+> >>> +     pkey_reg_t saved_pkey;
+> >>>        int ret, sig;
+> >>>
+> >>>        if (unlikely(t->flags & PF_EXITING))
+> >>>                return;
+> >>>
+> >>> +     /*
+> >>> +      * Enable access to the default (0) pkey in case the thread has
+> >>> +      * currently disabled access to it and struct rseq/rseq_cs has
+> >>> +      * 0 pkey assigned (the only supported value for now).
+> >>> +      */
+> >>> +     saved_pkey = enable_zero_pkey_val();
+> >>> +
+> >>>        /*
+> >>>         * regs is NULL if and only if the caller is in a syscall path.  Skip
+> >>>         * fixup and leave rseq_cs as is so that rseq_sycall() will detect and
+> >>> @@ -419,9 +428,11 @@ void __rseq_handle_notify_resume(struct ksignal *ksig, struct pt_regs *regs)
+> >>>        }
+> >>>        if (unlikely(rseq_update_cpu_node_id(t)))
+> >>>                goto error;
+> >>> +     write_pkey_val(saved_pkey);
+> >>>        return;
+> >>>
+> >>>    error:
+> >>> +     write_pkey_val(saved_pkey);
+> >>>        sig = ksig ? ksig->sig : 0;
+> >>>        force_sigsegv(sig);
+> >>>    }
