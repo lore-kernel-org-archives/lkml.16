@@ -1,149 +1,206 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 642492561B3
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 06:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31DA42561B3;
+	Tue, 25 Feb 2025 06:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740466130; cv=none; b=hLhrUTkV/sBh4xCua7kSkhqfv1jIQtO1kcnqpfcqfbn6g5y44OoBmRMPPTE9QW2HgIbXX5aVuc3qZmKfQRLBl6AFDa2WJKOVfTC4flTf9HGQIMlB8H3WJNYun/XNRKlpsIKdylnE2+uMbUNwQZADKIrC/Y3s4fSCzznMAynR4uc=
+	t=1740466162; cv=none; b=B6WzKWkPOxESg9B8lJnVnDEgqoIsp3So3yREdkeMjjy2J5Z73eTyysB/5rw3VurJeq8p242v3/6X4gOH/oPy5Y3ajO1E5KWVmZSVgzUWYZphDScasK/5ppe3CVJb9IDGH3vXQN5aQXNJp88iRbhm2DGJzk47IcVK3h8aEKQr9tM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740466130; c=relaxed/simple;
-	bh=qkNshxsIu1VNvGOtXlviStG5GAuRjYKkl0IXRJMBtiM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=n9pQ8jCfO9lwIzHJygYGs17gNrZf7IQybeNRIWSaj1ZhOEptw34MhYEJsp+68gJzdOb1WbhPpZE6ou7yowK4jUJg3b/VqVQNABW665CRuE+4o+S3OH6H3rxDSvCT2xxjM75QbpuyK5cVeDgt6gptc6EDyT5lN5aG6J2WmuW2yH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=HZ/TbVv0; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1740466162; c=relaxed/simple;
+	bh=Q9FoDkZSLzBO3uLnwxAJiVZ0J/SdbLNq20V8O4+/LmU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nyiF0ulBGckn2MfOoOWATwgkzjJeCYrMuq/IX2658WAwpWLKiNyfL7CuaR8EKK9CRI4E37o7e0HFCw4TwUGE5v+0zgi2nnr+kiHztnZEKHJr7YCFThgfI7Mu5saoUOWHGFfYNOB1OLFj0KWSOxaXDjN+4uoCI+kWpUnb/oAfpbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=DpxSgB0j; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="HZ/TbVv0"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2212a930001so29813975ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 22:48:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1740466126; x=1741070926; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bZ0t40lf3Zpqp9U9xvw/UOaqAJ7hNs97Z58vlfZM6bM=;
-        b=HZ/TbVv0oyXvprNKlgQZkgKIQ6TFkNJU7nOW5RkBAMeccOFHMM1n3oAjjeb11KhWFD
-         R9ZCP9c5bDHRgD1ePOnmrFJ/cFPzE1/3YSbpglrZuYRchiNhjVMVNzNvef3o9WWwsRVn
-         E/zzR9N9bi8yuxc9hLkPd6+Fqwka4tJjL11bycH0JdCPcB81Qgzb8ImVfyiqx8j+MznQ
-         yZKl/NJx9FloSdyaqdoMQX1/wjsLB7wv+LNtt7lSJURiV0SHLtc9fRf2pIOIr7/k/usw
-         UojHVknvfBRQQRIdQJ2kz3YPWT86F0tJFERy5yVIWMxlOwJQAg3TOe4qDbHoYo0jIsBP
-         /Hnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740466126; x=1741070926;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bZ0t40lf3Zpqp9U9xvw/UOaqAJ7hNs97Z58vlfZM6bM=;
-        b=DiwlcXOC6i8MBpsfkWch2Yq5l8zJ+lhX1bCEXnVudCFR+g4k3lw3XlHZ2UDtPA0Xnt
-         w1HUa3p1ohau+0FoWJ7JH3y72aSAxggmSDNkcU1094ioU9pdpgH/G8Y7XCxPJQoXUbrE
-         WSlA3EaieK8+nq0a4VMQqIPfEBvYaAiBZlvvAXXGJHBM9hE17Vux4+xvmpWMZVrsr66v
-         80ygbf3Y3MpaqwR+4mqDTzSw4R4hGswB74BLEKGpiHkuRxavFvwA6ip7FWVreMKiOfUo
-         xiYlDLWJmmV5gD/kFrtWmim5Rv/8/ULzRVqY+p0As1K6OO9JIVZHZq2+r9F9gCLpYLUx
-         JkxA==
-X-Forwarded-Encrypted: i=1; AJvYcCWL6O7w07T44Ls0DVwQXvHQMSN1HkOz6ZtnyRrB+7UMvLZnmaamn7L1cohxhSINBGOHrbCnqrdPjpV5XeI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrPkzZIw1MJ34s0YLlrSbJP8Wv1L1K2m1yGCUey72k0HFah2Xj
-	n4Jas8vAz707HOov2dYzEPSvXoLq+MQ+VEneMCrObU2pEaPtxWE+dT5Bw//1GNI=
-X-Gm-Gg: ASbGncuq88oxlFruhPpdgb+TS1qBBMnUJW+qCaVmZFfkF3yyNXrFteS0TIrsbtOx1JD
-	VrNI/dDxFCobjqbO2qbqjf7w1CCZxWsU2VRFBbWIb0GM+jMrLIbjBjkuKDTdwQdNZYogJ8xZMgF
-	XnMabrX1FwJKKTuP/BPn/358rM/mCJ0Xfl8dzCQehJsFYPZ+QMn+/Ty9o8FvlmrM8GKQDzuETsx
-	GRRiBt1dBqjcD1LXhyzPnO5g1A1O3EeuuMmau1SkhkUqG5JsKqeUpAKj/0BsVvlp8tcjGdRXOrs
-	87nB7Tr+619AYSPMTDLbtJmHXryMdSOeb5T2eFh1s1TNCSlJ+kSeinabTh57
-X-Google-Smtp-Source: AGHT+IEmF+kunrtV4SwQahUfF+lqeGQraTMFNE8ukoY7seNYajrO7afhAsgjmW/AtFIgoZ9t/QM0lw==
-X-Received: by 2002:a17:902:cec8:b0:215:b190:de6 with SMTP id d9443c01a7336-221a0ec33a0mr200283845ad.3.1740466126612;
-        Mon, 24 Feb 2025 22:48:46 -0800 (PST)
-Received: from L6YN4KR4K9.bytedance.net ([139.177.225.253])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a00a8fcsm6903775ad.53.2025.02.24.22.48.42
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 24 Feb 2025 22:48:45 -0800 (PST)
-From: Yunhui Cui <cuiyunhui@bytedance.com>
-To: dwmw2@infradead.org,
-	baolu.lu@linux.intel.com,
-	joro@8bytes.org,
-	will@kernel.org,
-	robin.murphy@arm.com,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Yunhui Cui <cuiyunhui@bytedance.com>,
-	Ethan Zhao <haifeng.zhao@linux.intel.com>
-Subject: [PATCH v2] iommu/vt-d: fix system hang on reboot -f
-Date: Tue, 25 Feb 2025 14:48:31 +0800
-Message-Id: <20250225064831.63348-1-cuiyunhui@bytedance.com>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="DpxSgB0j"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51OKOGC8009083;
+	Tue, 25 Feb 2025 06:49:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=5SPtJPP2jf0Y9rMAcgQ8GG
+	IE4pKb/GbqmjpNEwIn/8c=; b=DpxSgB0jqHtuh+khb/t2RYko0+ERTWD9EiE+2k
+	W43dQV0k7+46TQp13K2t+mA8zLTZX7bRU5/26omUFqnmuUV4gkVdYJFz89rijZOE
+	v42K7/nPG63uDT8E2pwT26epJh9Zc/rF2y7x8wiJ18Va4RE+hiZmS1ac9VFaSHTc
+	n4AOeT0U7wt1NiD7AdGYZ0T3LKHMdhCkaPMM45pDjwk85xrcnkysa1CV+/eqyKdf
+	Zak8+D5pqm7b5UpqFRoFxJXgPEi1NSQBSxjcaGzbKSeK9VmR2hBAeCf8+/qdhRfG
+	trtZGoOJSv5CoNpkwrkQ9CvkROwEqFTBPIPx12BLPIeV3Ebg==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44y6y6qtq4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Feb 2025 06:49:05 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51P6n49E015976
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Feb 2025 06:49:04 GMT
+Received: from hu-rajkbhag-blr.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Mon, 24 Feb 2025 22:49:01 -0800
+From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+To: <ath12k@lists.infradead.org>
+CC: Johannes Berg <johannes@sipsolutions.net>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
+        <linux-wireless@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Raj Kumar
+ Bhagat" <quic_rajkbhag@quicinc.com>
+Subject: [PATCH v6 00/13] wifi: ath12k: add Ath12k AHB driver support for IPQ5332
+Date: Tue, 25 Feb 2025 12:18:21 +0530
+Message-ID: <20250225064834.2002499-1-quic_rajkbhag@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: A-yN2m5TjfdNYQGo3N0Zk0P1vvdPtAOq
+X-Proofpoint-GUID: A-yN2m5TjfdNYQGo3N0Zk0P1vvdPtAOq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-25_02,2025-02-24_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 spamscore=0
+ malwarescore=0 phishscore=0 adultscore=0 lowpriorityscore=0
+ mlxlogscore=999 impostorscore=0 priorityscore=1501 bulkscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502250043
 
-We found that executing the command ./a.out &;reboot -f (where a.out is a
-program that only executes a while(1) infinite loop) can probabilistically
-cause the system to hang in the intel_iommu_shutdown() function, rendering
-it unresponsive. Through analysis, we identified that the factors
-contributing to this issue are as follows:
+Currently, Ath12k driver only supports WiFi devices that are based on
+PCI bus. New Ath12k device IPQ5332 is based on AHB bus. Hence, add
+Ath12k AHB support for IPQ5332.
 
-1. The reboot -f command does not prompt the kernel to notify the
-application layer to perform cleanup actions, allowing the application to
-continue running.
+IPQ5332 is IEEE802.11be 2 GHz 2x2 Wifi device. To bring-up IPQ5332
+device:
+- Add hardware parameters for IPQ5332.
+- CE register address space in IPQ5332 is separate from WCSS register
+  space. Hence, add logic to remap CE register address.
+- Add support for fixed QMI firmware memory for IPQ5332.
+- Support userPD handling for WCSS secure PIL driver to enable ath12k
+  AHB support.
 
-2. When the kernel reaches the intel_iommu_shutdown() function, only the
-BSP (Bootstrap Processor) CPU is operational in the system.
+NOTE:
+The working upstream DTS changes for this series have been posted as a
+separate series.
+[PATCH v2] arm64: dts: qcom: add wifi node for IPQ5332 based RDP441
 
-3. During the execution of intel_iommu_shutdown(), the function down_write
-(&dmar_global_lock) causes the process to sleep and be scheduled out.
+v6:
+- DT binding: binding doc renamed from qcom,ath12k-ahb.yaml to
+  qcom,ipq5332-wifi.yaml.
+- DT binding: rephrased memory-region description.
+- DT binding: dropped description for memory-region-names.
+- DT binding: updated maintainers in binding doc.
+- The API ath12k_core_get_reserved_mem_by_name() has been simplified and
+  renamed to ath12k_core_get_reserved_mem()
+- Removed unnecessary NULL check in devm_clk_get() error handling.
+- Dropped all ath12k_ahb_clock_* wrappers for single clock.
+- Removed shutdown callback for the ath12k AHB driver.
+- Reference count leak handled for rproc and rproc phandle.
 
-4. At this point, though the processor's interrupt flag is not cleared,
- allowing interrupts to be accepted. However, only legacy devices and NMI
-(Non-Maskable Interrupt) interrupts could come in, as other interrupts
-routing have already been disabled. If no legacy or NMI interrupts occur
-at this stage, the scheduler will not be able to run.
+v5: https://lore.kernel.org/all/20250130043508.1885026-1-quic_rajkbhag@quicinc.com/
+- DT binding: Added `memory-region-names` property to address undocumented
+  ABIs.
+- DT binding: Added four complete items to `memory-region`, required by
+  ath12k firmware.
+- All calls to `of_find_node_by_name()` are removed. Introduced helper
+  function `ath12k_core_get_reserved_mem_by_name()` to get the reserved
+  memory by name.
+- Removed unused include headers.
+- Removed error prints for impossible scenarios.
+- Used proper phandle API `of_parse_phandle()` to read `qcom,rproc`.
+- Used `dev_err_probe()` API for logging errors wherever applicable.
+- Changed hardware parameter `needs_m3_fw` to `enum ath12k_m3_fw_loaders`.
+- Changed hardware parameter `bdf_addr` to `bdf_addr_offset` to store the
+  offset for BDF memory from the q6-memory as base.
 
-5. If the application got scheduled at this time is executing a while(1)-
-type loop, it will be unable to be preempted, leading to an infinite loop
-and causing the system to become unresponsive.
+v4: https://lore.kernel.org/all/20241210074159.2637933-1-quic_rajkbhag@quicinc.com/
+- Missed to include some review list in v3. Hence sending v4 with
+  all review list as per - scripts/get_maintainers.pl
 
-To resolve this issue, the intel_iommu_shutdown() function should not
-execute down_write(), which can potentially cause the process to be
-scheduled out. Furthermore, since only the BSP is running during the later
-stages of the reboot, there is no need for protection against parallel
-access to the DMAR (DMA Remapping) unit. Therefore, the following lines
-could be removed:
+v3: https://lore.kernel.org/all/20241209165644.1680167-1-quic_rajkbhag@quicinc.com/
+- DT binding: clock name changed from gcc_xo_clk to xo.
+- DT binding: Upper constraint added for memory-region property.
+- DT binding: The description for "qcom,rproc" phandle updated to represent
+  the hardware aspect.
+- DT binding: Added property qcom,ath12k-calibration-variant.
+- Squashed patch[2/22] to patch[8/22] of v2 into a single patch.
+- Patch reordering is done.
+- The hardware parameter "m3_fw_support" renamed to "needs_m3_fw".
+- CMEM remap and CMEM register handling are dropped. CMEM registers are
+  accessed within WCSS register space (ab->mem).
+- The devm APIs are used for interrupts handling.
+- Logic updated in ath12k_ahb_map_service_to_pipe().
+- Dependency path series from other subsystem are dropped.
 
-down_write(&dmar_global_lock);
-up_write(&dmar_global_lock);
+v2: https://lore.kernel.org/all/20241015182637.955753-1-quic_rajkbhag@quicinc.com/
+- "qcom,board_id" property is dropped. This is not the direct dependency
+  for Ath12k AHB support, hence it can be taken up separately.
+- "qcom,bdf-addr" property is dropped in device-tree and moved to ath12k
+  driver.
+- Currently we have only one compatible enum (qcom,ipq5332-wifi), hence
+  conditional if() check for defining the binding is removed.
+- "reserved-memory" node is dropped from example DTS.
+- "status" property is dropped in wifi node of example DTS.
+- Integrated the “Support userPD handling for WCSS secure PIL driver”
+  patch series with the Ath12k AHB bring-up patch.
+- Removed the RFC tag as all dependency patch series are now compilable.
 
-After testing, the issue has been resolved.
+v1: https://lore.kernel.org/all/20240814094323.3927603-1-quic_rajkbhag@quicinc.com/
 
-Fixes: 6c3a44ed3c55 ("iommu/vt-d: Turn off translations at shutdown")
-Co-developed-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
-Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
-Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
----
- drivers/iommu/intel/iommu.c | 4 ----
- 1 file changed, 4 deletions(-)
+Balamurugan S (6):
+  wifi: ath12k: fix incorrect CE addresses
+  wifi: ath12k: add ath12k_hw_params for IPQ5332
+  wifi: ath12k: avoid m3 firmware download in AHB device IPQ5332
+  wifi: ath12k: Add hw_params to remap CE register space for IPQ5332
+  wifi: ath12k: add AHB driver support for IPQ5332
+  wifi: ath12k: enable ath12k AHB support
 
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index cc46098f875b..6d9f2e56ce88 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -2871,16 +2871,12 @@ void intel_iommu_shutdown(void)
- 	if (no_iommu || dmar_disabled)
- 		return;
- 
--	down_write(&dmar_global_lock);
--
- 	/* Disable PMRs explicitly here. */
- 	for_each_iommu(iommu, drhd)
- 		iommu_disable_protect_mem_regions(iommu);
- 
- 	/* Make sure the IOMMUs are switched off */
- 	intel_disable_iommus();
--
--	up_write(&dmar_global_lock);
- }
- 
- static struct intel_iommu *dev_to_intel_iommu(struct device *dev)
+P Praneesh (1):
+  wifi: ath12k: refactor ath12k_hw_regs structure
+
+Raj Kumar Bhagat (2):
+  dt-bindings: net: wireless: describe the ath12k AHB module for IPQ5332
+  wifi: ath12k: add support for fixed QMI firmware memory
+
+Sowmiya Sree Elavalagan (4):
+  wifi: ath12k: Power up root PD
+  wifi: ath12k: Register various userPD interrupts and save SMEM entries
+  wifi: ath12k: Power up userPD
+  wifi: ath12k: Power down userPD
+
+ .../net/wireless/qcom,ipq5332-wifi.yaml       |  315 +++++
+ drivers/net/wireless/ath/ath12k/Kconfig       |    6 +
+ drivers/net/wireless/ath/ath12k/Makefile      |    1 +
+ drivers/net/wireless/ath/ath12k/ahb.c         | 1155 +++++++++++++++++
+ drivers/net/wireless/ath/ath12k/ahb.h         |   80 ++
+ drivers/net/wireless/ath/ath12k/ce.c          |   92 +-
+ drivers/net/wireless/ath/ath12k/ce.h          |   18 +-
+ drivers/net/wireless/ath/ath12k/core.c        |   60 +-
+ drivers/net/wireless/ath/ath12k/core.h        |   14 +-
+ drivers/net/wireless/ath/ath12k/hal.c         |   84 +-
+ drivers/net/wireless/ath/ath12k/hal.h         |   68 +-
+ drivers/net/wireless/ath/ath12k/hw.c          |  479 ++++++-
+ drivers/net/wireless/ath/ath12k/hw.h          |   22 +-
+ drivers/net/wireless/ath/ath12k/pci.c         |   10 +-
+ drivers/net/wireless/ath/ath12k/pci.h         |    4 +-
+ drivers/net/wireless/ath/ath12k/qmi.c         |  208 ++-
+ drivers/net/wireless/ath/ath12k/qmi.h         |    3 +-
+ 17 files changed, 2502 insertions(+), 117 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/wireless/qcom,ipq5332-wifi.yaml
+ create mode 100644 drivers/net/wireless/ath/ath12k/ahb.c
+ create mode 100644 drivers/net/wireless/ath/ath12k/ahb.h
+
+
+base-commit: 13a84b4e7dd5d843dfaa54283adb4bbbe0adee15
 -- 
-2.39.2
+2.34.1
 
