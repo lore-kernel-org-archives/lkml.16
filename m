@@ -1,175 +1,123 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A22268C56
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 12:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4946A38DE0;
+	Tue, 25 Feb 2025 12:54:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740488077; cv=none; b=CsI1b1zZbg6mJIOLscqJV6sLTNNkC5LQRPgCDJTDwc6oTuBovJlEY0wI5iZbfwIuYiD04L3Hp39lC+E8EsC70wyV7AI1cktUL5ZMiLzDbe7sFxFlhV7fOcjRizeJYMO3EgVLYX+EfpqOqklSOIOIdKuUOuRKT/iFZZD9g0r9VNs=
+	t=1740488087; cv=none; b=Wtd5ElYlTmjsGPaf0bbxaC0SNhkgv5lEGmSqEZi+E0W/2fYZ/CSDQddt5a2mLSJZfrBOZaWHbYa9qgwRTQAhYzKMKg4lyIEPrlW0+qOp7KI2mbN8sE6HbSHMSg2otjNnrTD/FqO5mSNVLOG6p5TADgN7w7v8p3DBNO+VY7yRgEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740488077; c=relaxed/simple;
-	bh=W8LIqF7kkH6cCLj3gN0Tz1ix7jTva4xQTCeEx72fA+w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=czr7i4QQgbLLMK1HYhtXXDjKt6Gs/++7dP/wr3Is4CZMajoOg6M2nd1v2nl/EtzO4FyeAS2mEWHmbKyWyW3S7LAcMsfmGoGijde6v7YWmaSI3aM94jkcRoNnTsGHr8KtPz44sYHJI2pl2Bet1yNM9m5zQPmAwtt/+9rRG4EKTvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net; spf=pass smtp.mailfrom=posteo.net; dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b=mjILcAIk; arc=none smtp.client-ip=185.67.36.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.net
+	s=arc-20240116; t=1740488087; c=relaxed/simple;
+	bh=K8hIYu68rnMk8PuN3JrllsDdE9qN2sKwvnV/8hDc6p0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=dQ8UxHZsKIN4ylJTmjF0poTQ5QJ8sbauT5L4k8smBPbsI14Cx/e04NlYwCPg/aINSPOmSO9DBbr6NYcNSsgBjrsG6gRCHAEWvtI89tYZa0r2tIs5t3YfQvgTMv/q4Y5QlyK0FBAXPJlsy4nxo0X6Hgk+bMvchYuYT08HPhXasVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ClrOZbsT; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=posteo.net header.i=@posteo.net header.b="mjILcAIk"
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 7381D240029
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:54:33 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.net; s=2017;
-	t=1740488073; bh=W8LIqF7kkH6cCLj3gN0Tz1ix7jTva4xQTCeEx72fA+w=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:Content-Transfer-Encoding:From;
-	b=mjILcAIkXqzqNKdVJx8aNZciCsFDMgWk1hSEOtkfGbO6HFVdhu5Vy04vupoKrYvbv
-	 c6on3zliqSDojlPicjEIhjGdw22NRnh01nANE/3jRMwtf45rqgaGqjBEPbDvvOZQgg
-	 s4Jb6KbceFTD97AcdgGFKHeQkXDlrBbwG3iChrbmjhflZJIT8e5l8aV2shsyZ4sXKo
-	 6ofVmK+sYqzNywRiys2+yrDszLO59sxgwWTEXz+wqj0Y8Kj8BPrm6dHb8ttxz+aByz
-	 WtF5CLyU4itMYTueMHGswR3Km+h6T3R2kOXkZBOleO2kFLusG00NHpXaxrg6YwUFTp
-	 3ou6TTWtB7XpA==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4Z2HcG3WCTz9rxG;
-	Tue, 25 Feb 2025 13:54:21 +0100 (CET)
-Date: Tue, 25 Feb 2025 12:54:21 +0000
-From: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-To: =?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
-Cc: Frank Li <Frank.li@nxp.com>, devicetree@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	Krzysztof Kozlowski <krzk@kernel.org>, imx@lists.linux.dev,
-	Scott Wood <oss@buserror.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <cassel@kernel.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	=?utf-8?Q?J=2E_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>, Mark Brown <broonie@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-kernel@vger.kernel.org,
-	linux-ide@vger.kernel.org, linux-crypto@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-spi@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Subject: Re: [PATCH v2 05/12] dt-bindings: dma: Convert fsl,elo*-dma to YAML
-Message-ID: <Z729fRBNLAxdYD22@probook>
-References: <20250207-ppcyaml-v2-0-8137b0c42526@posteo.net>
- <20250207-ppcyaml-v2-5-8137b0c42526@posteo.net>
- <Z6pV4eauZj75+911@lizhi-Precision-Tower-5810>
- <Z684nUnDX4Sb98rQ@probook>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ClrOZbsT"
+Received: from mail.ideasonboard.com (unknown [223.190.81.179])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8778EA30;
+	Tue, 25 Feb 2025 13:53:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1740487996;
+	bh=K8hIYu68rnMk8PuN3JrllsDdE9qN2sKwvnV/8hDc6p0=;
+	h=From:Subject:Date:To:Cc:From;
+	b=ClrOZbsTTH3DFN6wyn7XRIdWSNmRUQOenqTON8mDFWaaecoAKayo7wfkldy88kzIj
+	 +WkWCtf8F38ZoVrUeXhdADCYcYlhNeTg0os08ccJIlpsq5+u3obe/gt3LTU9xM5fgM
+	 knG0E664+BWc1QyCxotQVOnTuCWl6MMMqLwTWSX4=
+From: Jai Luthra <jai.luthra@ideasonboard.com>
+Subject: [PATCH v3 0/2] media: rockchip: rkisp1: Add support for WDR and
+ AWB64
+Date: Tue, 25 Feb 2025 18:23:03 +0530
+Message-Id: <20250225-awb64-v3-0-af29b1201e48@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z684nUnDX4Sb98rQ@probook>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAC+9vWcC/22MQQ7CIBBFr9LMWgxDoagr72FcQDu1s7AYMKhpe
+ ndpE10Yl+/nvzdBosiU4FBNEClz4jAWqDcVtIMbLyS4KwxKKo2qlsI9fKOF3Ssr5X5HaAjK9xa
+ p5+faOZ0LD5zuIb7WbMZl/S1kFCiU9ZKoMb0xeOSOXAqjDy522zZcYQll9ZGNRPzKqsgSve29t
+ qgb80ee5/kNj7Bkud4AAAA=
+X-Change-ID: 20241230-awb64-79270098e15e
+To: Dafna Hirschfeld <dafna@fastmail.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Heiko Stuebner <heiko@sntech.de>
+Cc: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Stefan Klug <stefan.klug@ideasonboard.com>, 
+ Jai Luthra <jai.luthra@ideasonboard.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2127;
+ i=jai.luthra@ideasonboard.com; h=from:subject:message-id;
+ bh=K8hIYu68rnMk8PuN3JrllsDdE9qN2sKwvnV/8hDc6p0=;
+ b=owEBbQKS/ZANAwAIAUPekfkkmnFFAcsmYgBnvb2C0Sz5JW3o1cB9kaxxMhz3Co6XvCbcwa+yt
+ ERkLN8E8KOJAjMEAAEIAB0WIQRN4NgY5dV16NRar8VD3pH5JJpxRQUCZ729ggAKCRBD3pH5JJpx
+ RSEOEACmkSF2j1EvX0tKWSiVJJoKSMR1M3KwyauCfPpS8pNOq3ZDvdopd9//jpCoXQH3UBdfiXZ
+ bpJR50h+tmP6PL8T3Ce28lxyJMbxW2iHQwXpw2kJf7SNwj7j5k4QwE+pG/Et74MpvLSZUi+ObHw
+ YhpjpacxX7bhQP5weDBxEYQRZ0rPJbyS3/4zfIudidmYqYGCVrCqShBXvBwbVUaw+qA2tPSfneW
+ AwLW5d9u7TTFklxU7jnj5DnqY9OITUfDb+4WxZ75so/21DGCaQXWOd+RVsLOyZuWwX6xCeQxvss
+ ncCcofForN6WSIewgNBntA+aTify6GzJGXvYgsHZdm7u6f0Wt9Oa7Hp2bfaZJ4aG65iOHBRP/L4
+ Ogx6ixXEKfEqiTffFtSSnZ2PTLq0Sb//+DI33+eozLu9DiQwtz3h8ceO63uYMWJ8o84GnXGCeBF
+ FGyZlKQ5Eq5jBgq3EGohhoiFtgdj7rRWJ+tdI/Vd6K3dLflxbGGz8h76LlOkKg3ATrVfSH8kn13
+ FF0PfQq60+Z08TNJGlkTYB/UL+NRaro3Ah8L/vP9ginucPo/o5oY7aqOhWzaXoLnYvLMMn6zhod
+ sO7vraJbSIUF8l31zrUrsYJe5KmeWjFjyjmi/z75I1QPM58/ZFei353LSzYNabYxx6TjT8FTQ6t
+ LoywyKrqHaKfWjg==
+X-Developer-Key: i=jai.luthra@ideasonboard.com; a=openpgp;
+ fpr=4DE0D818E5D575E8D45AAFC543DE91F9249A7145
 
-On Fri, Feb 14, 2025 at 12:35:41PM +0000, J. Neuschäfer wrote:
-> On Mon, Feb 10, 2025 at 02:39:13PM -0500, Frank Li wrote:
-> > On Fri, Feb 07, 2025 at 10:30:22PM +0100, J. Neuschäfer via B4 Relay wrote:
-> > > From: "J. Neuschäfer" <j.ne@posteo.net>
-> > >
-> > > The devicetree bindings for Freescale DMA engines have so far existed as
-> > > a text file. This patch converts them to YAML, and specifies all the
-> > > compatible strings currently in use in arch/powerpc/boot/dts.
-> > >
-> > > Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
-> > > ---
-[...]
-> > Need ref to dma-common.yaml?
-> 
-> Sounds good, but I'm not sure what to do about the #dma-cells property,
-> which is required by dma-common.yaml.
-> 
-> There aren't many examples of DMA channels being explicitly declared in
-> device trees. One example that I could find is the the xilinx_dma.txt
-> binding:
-> 
-> 
-> 	axi_vdma_0: axivdma@40030000 {
-> 		compatible = "xlnx,axi-vdma-1.00.a";
-> 		#dma_cells = <1>;
-> 		reg = < 0x40030000 0x10000 >;
-> 		dma-ranges = <0x00000000 0x00000000 0x40000000>;
-> 		xlnx,num-fstores = <0x8>;
-> 		xlnx,flush-fsync = <0x1>;
-> 		xlnx,addrwidth = <0x20>;
-> 		clocks = <&clk 0>, <&clk 1>, <&clk 2>, <&clk 3>, <&clk 4>;
-> 		clock-names = "s_axi_lite_aclk", "m_axi_mm2s_aclk", "m_axi_s2mm_aclk",
-> 			      "m_axis_mm2s_aclk", "s_axis_s2mm_aclk";
-> 		dma-channel@40030000 {
-> 			compatible = "xlnx,axi-vdma-mm2s-channel";
-> 			interrupts = < 0 54 4 >;
-> 			xlnx,datawidth = <0x40>;
-> 		};
-> 		dma-channel@40030030 {
-> 			compatible = "xlnx,axi-vdma-s2mm-channel";
-> 			interrupts = < 0 53 4 >;
-> 			xlnx,datawidth = <0x40>;
-> 		};
-> 	};
-> 
-> 	...
-> 
-> 	vdmatest_0: vdmatest@0 {
-> 		compatible ="xlnx,axi-vdma-test-1.00.a";
-> 		dmas = <&axi_vdma_0 0
-> 			&axi_vdma_0 1>;
-> 		dma-names = "vdma0", "vdma1";
-> 	};
-> 
-> It has #dma_cells (I'm sure #dma-cells was intended) on the controller.
-> 
-> 
-> Another example is in arch/powerpc/boot/dts/fsl/p1022si-post.dtsi:
-> 
-> 	dma@c300 {
-> 		dma00: dma-channel@0 {
-> 			compatible = "fsl,ssi-dma-channel";
-> 		};
-> 		dma01: dma-channel@80 {
-> 			compatible = "fsl,ssi-dma-channel";
-> 		};
-> 	};
-> 
-> 	...
-> 
-> 	ssi@15000 {
-> 		compatible = "fsl,mpc8610-ssi";
-> 		cell-index = <0>;
-> 		reg = <0x15000 0x100>;
-> 		interrupts = <75 2 0 0>;
-> 		fsl,playback-dma = <&dma00>;
-> 		fsl,capture-dma = <&dma01>;
-> 		fsl,fifo-depth = <15>;
-> 	};
-> 
-> 
-> There, the DMA channels are used directly and without additional
-> information (i.e. #dma-cells = <0>, althought it isn't specified).
+Add support for Wide Dynamic Range and Auto White Balance 64 modules of
+the ISP.
 
-I had another look at dma-common.yaml and it explicitly requires
-#dma-cells to have a value of at least 1, so this second idea won't
-work.
+This series is in continuation of the v2 posted earlier that enabled
+only AWB64. We add a new patch enabling WDR, and rebase the AWB64
+patch on top of it, as WDR is a simpler module which is present across
+different variants of the ISP.
 
+Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
+---
+Changes in v3:
+- Add a new patch that enables support for WDR module, and rebase AWB64
+  support on top of it
+- Document the fractional bits used for AWB64 configuration parameters
+- Link to v2: https://lore.kernel.org/r/20250110-awb64-v2-1-01b7fb471465@ideasonboard.com
+
+Changes in v2:
+- Fix register offsets
+- Drop the _v10 suffix from awb64 functions
+- Combine the min and max for R, G, B components into a single value in
+  the struct
+- Move all the configuration except IRQ and module enable in the
+  meas_config() routine, making sure the bool bits are cleared if
+  userspace updates the struct
+- Fix documentation and indent at various places
+- Create a single function for getting both AWB and AWB64 stats for
+  IMX8MP
+- Rename accumulator fields to only specify RGB and not YUV, as AWB64
+  block does not operate on YUV colorspace
+- Link to v1: https://lore.kernel.org/r/20241230-awb64-v1-1-27b0ee65f551@ideasonboard.com
+
+---
+Jai Luthra (2):
+      media: rockchip: rkisp1: Add support for Wide Dynamic Range
+      media: rockchip: rkisp1: Add support for AWB64
+
+ .../media/platform/rockchip/rkisp1/rkisp1-common.h |   2 +
+ .../media/platform/rockchip/rkisp1/rkisp1-dev.c    |   3 +-
+ .../media/platform/rockchip/rkisp1/rkisp1-params.c | 215 +++++++++++++++++++++
+ .../media/platform/rockchip/rkisp1/rkisp1-regs.h   | 140 +++++++-------
+ .../media/platform/rockchip/rkisp1/rkisp1-stats.c  |  40 ++++
+ include/uapi/linux/rkisp1-config.h                 | 208 ++++++++++++++++++++
+ 6 files changed, 533 insertions(+), 75 deletions(-)
+---
+base-commit: d082ecbc71e9e0bf49883ee4afd435a77a5101b6
+change-id: 20241230-awb64-79270098e15e
 
 Best regards,
-J. Neuschäfer
+-- 
+Jai Luthra <jai.luthra@ideasonboard.com>
+
