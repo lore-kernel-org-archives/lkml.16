@@ -1,151 +1,148 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A743E1A23A9
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 18:55:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6891A00E7;
+	Tue, 25 Feb 2025 18:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740509708; cv=none; b=qBvR9MDRlUqLVAJ6Iak/W2MQMD8OQvG9n115tUkxSF/P8qVSe/ULmikKVbGCp17KPrk/VvWq8CjAb8qnjHX8kFuwsueopVZQwqfl+3CQs9e+pFTLvI2l/NU3Tr9CXYn2QxgGrgcGNMgulSw6+3WNPva9AxxaegCaStcCzMUpoc0=
+	t=1740509735; cv=none; b=Oh0iQpBOwFPcP2KMfVEdFLeToEiP+Zr7FM1H85+iqbNcuNHHPFW4KdN2cjb1fGtU3KHsnkfTUwMr4Np5KQLm4/34ANBO/UxTBvxaM/KxrCo0L248mgL6bnMWHf/BRM6cyAyZ/oJf9IvI5Ld750EzJVJSBgZvR5AUgzhbUngBXoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740509708; c=relaxed/simple;
-	bh=PYHSgLO7lQsS8Kx+B9mtZoE1y7zDRkButLc9RwemdLY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=REBE6RHYw05zKbp5dYlQbLW0tsiWQlqKt4y1fkT+cn222oVACpG9iqTNC1kTlPzFp59L9XjMkJnRpS8radWJz/xjEZuGwQOWVuJeoBmozPI5Q0YrWGOwvXwZ5/+iPv1KgEh5jIfhsJerklXJGqnpQoF7JDhsy/hyA3om2PWfJWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ELaoWmCq; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ELaoWmCq"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-abbda4349e9so871926366b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 10:55:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1740509705; x=1741114505; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=i+rWhtD5x8D6XUhYZf1P7I+awMTvGfoNgd9n4DqDTvI=;
-        b=ELaoWmCqO4eg5spGLL2TEeE9Crn7uH81+THRp8z29jMY+Jd3nucMxsQMYSwAQ0pQep
-         gkB+xak+oQ5KVIEKmLj7D8kZgKAa/yBqqaFzyIovCYY7l+0KKSwweNDI2nM6+/vDmb1e
-         MAtY3ugPb7VM5sx3nfxmvN6GqRwR88/xbLG/k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740509705; x=1741114505;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=i+rWhtD5x8D6XUhYZf1P7I+awMTvGfoNgd9n4DqDTvI=;
-        b=Bc0fY09KywX2nPLfk00wIHxYdite7hRT+tRePAZUEbYUPxZK7XBuupuEzD+BnQx2XP
-         DpLHeUoUq9nhCO5KCTPe7/jWV+z2/UHrmKtaNUNEIlVuO3oUDYEOwCMZnNQeY7mWsYFY
-         nP4QqDetV8HZ4aYFznf+Wpps3Rk94oUyiwWuOqKL0LWJ9k7rVRB4S5EMHxrdauVG3QPX
-         rVJePs0jmodXGj8a4qkURMhXkhHRVSv66LEKSa/tBAWR16vUgeKfvm8szmNbSzeAsEOY
-         oZZrITEhfL5qSaGtEB0qIjwyxU4YeIec7cGwYWifdI619N1tFyy2u4VwiFGLovZYgRJ3
-         pWTg==
-X-Forwarded-Encrypted: i=1; AJvYcCVFbki36WXJZAV8VJXDCaNHj6JiAlivZNpU/7KNGRG0za3zvtmUdvADRMS0lQAyoTFBOtjslA0X3mrBgIg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1+4rGY7X7d6v7dJmBxq36b2my4YwLrc2jXrIyRm7uoeEn61Gm
-	8arNT1oEKDBwUusQfb9ZHrw9UNibROqJ+PrzvjFn6xe4lyB4EWZ/qt1KHUfiFEODMQgcsItrbEC
-	oeCU=
-X-Gm-Gg: ASbGncsLD6ZpEeHT3GACsGXtENBRHfrNdISPVonOuV4hS3+9XObxa/MIWBJQwzm08qo
-	cwwDEpFn7efuyFePTdMOj34mSZuPb3fQ7FlsWBo+DQFOt9aw0lBmUArS3u0MCFZHzMbnhD5qMfM
-	65ieI3I0GR2vb+rxBCuVPyrhQ5nsolBJEL57d0HjNG9wdimMrhvYNJ9AdGhEhg6lmQ+Ktzzx6o5
-	ZNh++I0n+3VQrpW1375i6UWaJtBBzqi7OO/LgFAxz8tIlrvVcPo5HxnP4FB6DSKChDxr5R97JK+
-	FeUnr/n8ewYpioCOUzjXoPze8frMxZtWpCiNg3lJEdSXZfAfF5Tt52Z0JPPzYF3OHSOiSf2bPyi
-	c
-X-Google-Smtp-Source: AGHT+IEyilJbscHJ1rg4gw7JaDIMymrEUAMTJGr6021Bbkq1AISN6tyzfJlADh1b6i5j0Z4395yZVQ==
-X-Received: by 2002:a17:906:310b:b0:ab7:da56:af95 with SMTP id a640c23a62f3a-abc0d97c68cmr1718407266b.2.1740509704759;
-        Tue, 25 Feb 2025 10:55:04 -0800 (PST)
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com. [209.85.208.45])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed1cdbf06sm184589466b.23.2025.02.25.10.55.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2025 10:55:03 -0800 (PST)
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e08064b4ddso8040010a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 10:55:03 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXAhgP+9Mpu3KzJMDKjA8vcKB4CUDlAy42hC0t6Xv6xgDu7NcdPUu67ADy/IlBj8BtGbaIrKTKeMPrEEkA=@vger.kernel.org
-X-Received: by 2002:a05:6402:2b86:b0:5d9:a54:f8b4 with SMTP id
- 4fb4d7f45d1cf-5e0b70dc05emr16845178a12.11.1740509703150; Tue, 25 Feb 2025
- 10:55:03 -0800 (PST)
+	s=arc-20240116; t=1740509735; c=relaxed/simple;
+	bh=e55btSmzwT+hxbQtmW4K8hhRNif0xkEz8Shghfp3xbM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=FZeyMdHCXV8M8BdARNihfn5c8W8fZmXkyYpLrc7YuK7ayZmRCNu3PYFK33RQe2uw+X6UrkUk1+wVfIndMlvIGFKd0e1qXqKo0H4ZvXKTAnFT5CnL710Fez5hZ56ybv6kKzpGZmQwAmTDL6f9JEDqWyBLcf/lWhPRysl7l03kblU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7482AC4CEDD;
+	Tue, 25 Feb 2025 18:55:33 +0000 (UTC)
+Date: Tue, 25 Feb 2025 13:56:11 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-mm@kvack.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Michael Petlan <mpetlan@redhat.com>, Veronika
+  Molnarova <vmolnaro@redhat.com>, Suren Baghdasaryan <surenb@google.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [RESEND][PATCH] tracing: gfp: Remove duplication of recording GFP
+ flags
+Message-ID: <20250225135611.1942b65c@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAFJgqgRygssuSya_HCdswguuj3nDf_sP9y2zq4GGrN1-d7RMRw@mail.gmail.com>
- <20250222141521.1fe24871@eugeo> <CAFJgqgSG4iZE12Yg6deX3_VYSOLxkm5yr5yu25HxN+y4wPD5bg@mail.gmail.com>
- <6pwjvkejyw2wjxobu6ffeyolkk2fppuuvyrzqpigchqzhclnhm@v5zhfpmirk2c>
- <CAHk-=wgq1DvgNVoodk7JKc6BuU1m9UnoN+k=TLtxCAL7xTP=Dg@mail.gmail.com>
- <CAFJgqgSqMO724SQxinNqVGCGc7=ibUvVq-f7Qk1=S3A47Mr-ZQ@mail.gmail.com> <CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
-In-Reply-To: <CAH5fLgh7Be0Eg=7UipL7PXqeV1Jq-1rpMJRa_sBkeiOgA7W9Cg@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 25 Feb 2025 10:54:46 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgJQAPaYubnD3YNu8TYCLmmqs89ET4xE8LAe2AVFc_q9A@mail.gmail.com>
-X-Gm-Features: AWEUYZk0cXay_isXRx72KKy4FfsgUiBHKihS09o_3cl8pFnpf_e0Ez6oe_KpUXU
-Message-ID: <CAHk-=wgJQAPaYubnD3YNu8TYCLmmqs89ET4xE8LAe2AVFc_q9A@mail.gmail.com>
-Subject: Re: C aggregate passing (Rust kernel policy)
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Ventura Jack <venturajack85@gmail.com>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	Gary Guo <gary@garyguo.net>, airlied@gmail.com, boqun.feng@gmail.com, 
-	david.laight.linux@gmail.com, ej@inai.de, gregkh@linuxfoundation.org, 
-	hch@infradead.org, hpa@zytor.com, ksummit@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, miguel.ojeda.sandonis@gmail.com, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 25 Feb 2025 at 08:12, Alice Ryhl <aliceryhl@google.com> wrote:
->
-> I think all of this worrying about Rust not having defined its
-> aliasing model is way overblown. Ultimately, the status quo is that
-> each unsafe operation that has to do with aliasing falls into one of
-> three categories:
->
-> * This is definitely allowed.
-> * This is definitely UB.
-> * We don't know whether we want to allow this yet.
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Side note: can I please ask that the Rust people avoid the "UD" model
-as much as humanly possible?
+The gfp_flags when recorded in the trace require being converted from
+their numbers to values. Various macros are used to help facilitate this,
+but there's two sets of macros that need to keep track of the same GFP
+flags to stay in sync.
 
-In particular, if there is something that is undefined behavior - even
-if it's in some "unsafe" mode, please please please make the rule be
-that
+Commit 60295b944ff68 ("tracing: gfp: Fix the GFP enum values shown for
+user space tracing tools") added a TRACE_GFP_FLAGS macro that holds the
+enum ___GFP_*_BIT defined bits, and creates the TRACE_DEFINE_ENUM()
+wrapper around them.
 
- (a) either the compiler ends up being constrained to doing things in
-some "naive" code generation
+The __def_gfpflag_names() macro creates the mapping of various flags or
+multiple flags to give them human readable names via the __print_flags()
+tracing helper macro.
 
-or it's a clear UB situation, and
+As the TRACE_GFP_FLAGS is a subset of the __def_gfpflags_names(), it can
+be used to cover the individual bit names, by redefining the internal
+macro TRACE_GFP_EM():
 
- (b) the compiler will warn about it
+  #undef TRACE_GFP_EM
+  #define TRACE_GFP_EM(a) gfpflag_string(__GFP_##a),
 
-IOW, *please* avoid the C model of "Oh, I'll generate code that
-silently takes advantage of the fact that if I'm wrong, this case is
-undefined".
+This will remove the bits that are duplicate between the two macros. If a
+new bit is created, only the TRACE_GFP_FLAGS needs to be updated and that
+will also update the __def_gfpflags_names() macro.
 
-And BTW, I think this is _particularly_ true for unsafe rust. Yes,
-it's "unsafe", but at the same time, the unsafe parts are the fragile
-parts and hopefully not _so_ hugely performance-critical that you need
-to do wild optimizations.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Last version: https://lore.kernel.org/20250116214439.046082618@goodmis.org
 
-So the cases I'm talking about is literally re-ordering accesses past
-each other ("Hey, I don't know if these alias or not, but based on
-some paper standard - rather than the source code - I will assume they
-do not"), and things like integer overflow behavior ("Oh, maybe this
-overflows and gives a different answer than the naive case that the
-source code implies, but overflow is undefined so I can screw it up").
+  This was originally sent with a patch that fixed the output of gfp flags
+  in trace events to show human readable flags and not hex numbers.
 
-I'd just like to point to one case where the C standards body seems to
-have actually at least consider improving on undefined behavior (so
-credit where credit is due, since I often complain about the C
-standards body):
+  This patch on the other hand is a clean up as the there's now two macros
+  that define the bits to print. This makes the one macro use the other
+  macro that is a subset of the first.
 
-   https://www9.open-std.org/JTC1/SC22/WG14/www/docs/n3203.htm
+  Can someone in the memory management subsystem either give me an acked-by
+  and I can take this through my tree, or you can just take this through
+  the memory management tree. Either way works for me.
 
-where the original "this is undefined" came from the fact that
-compilers were simple and restricting things like evaluation order
-caused lots of problems. These days, a weak ordering definition causes
-*many* more problems, and compilers are much smarter, and just saying
-that the code has to act as if there was a strict ordering of
-operations still allows almost all the normal optimizations in
-practice.
+ include/trace/events/mmflags.h | 41 +++++++++-------------------------
+ 1 file changed, 10 insertions(+), 31 deletions(-)
 
-This is just a general "please avoid the idiocies of the past". The
-potential code generation improvements are not worth the pain.
+diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
+index 72fbfe3caeaf..82371177ef79 100644
+--- a/include/trace/events/mmflags.h
++++ b/include/trace/events/mmflags.h
+@@ -78,6 +78,13 @@ TRACE_DEFINE_ENUM(___GFP_LAST_BIT);
+ 
+ #define gfpflag_string(flag) {(__force unsigned long)flag, #flag}
+ 
++/*
++ * For the values that match the bits, use the TRACE_GFP_FLAGS
++ * which will allow any updates to be included automatically.
++ */
++#undef TRACE_GFP_EM
++#define TRACE_GFP_EM(a) gfpflag_string(__GFP_##a),
++
+ #define __def_gfpflag_names			\
+ 	gfpflag_string(GFP_TRANSHUGE),		\
+ 	gfpflag_string(GFP_TRANSHUGE_LIGHT),	\
+@@ -91,41 +98,13 @@ TRACE_DEFINE_ENUM(___GFP_LAST_BIT);
+ 	gfpflag_string(GFP_NOIO),		\
+ 	gfpflag_string(GFP_NOWAIT),		\
+ 	gfpflag_string(GFP_DMA),		\
+-	gfpflag_string(__GFP_HIGHMEM),		\
+ 	gfpflag_string(GFP_DMA32),		\
+-	gfpflag_string(__GFP_HIGH),		\
+-	gfpflag_string(__GFP_IO),		\
+-	gfpflag_string(__GFP_FS),		\
+-	gfpflag_string(__GFP_NOWARN),		\
+-	gfpflag_string(__GFP_RETRY_MAYFAIL),	\
+-	gfpflag_string(__GFP_NOFAIL),		\
+-	gfpflag_string(__GFP_NORETRY),		\
+-	gfpflag_string(__GFP_COMP),		\
+-	gfpflag_string(__GFP_ZERO),		\
+-	gfpflag_string(__GFP_NOMEMALLOC),	\
+-	gfpflag_string(__GFP_MEMALLOC),		\
+-	gfpflag_string(__GFP_HARDWALL),		\
+-	gfpflag_string(__GFP_THISNODE),		\
+-	gfpflag_string(__GFP_RECLAIMABLE),	\
+-	gfpflag_string(__GFP_MOVABLE),		\
+-	gfpflag_string(__GFP_ACCOUNT),		\
+-	gfpflag_string(__GFP_WRITE),		\
+ 	gfpflag_string(__GFP_RECLAIM),		\
+-	gfpflag_string(__GFP_DIRECT_RECLAIM),	\
+-	gfpflag_string(__GFP_KSWAPD_RECLAIM),	\
+-	gfpflag_string(__GFP_ZEROTAGS)
+-
+-#ifdef CONFIG_KASAN_HW_TAGS
+-#define __def_gfpflag_names_kasan ,			\
+-	gfpflag_string(__GFP_SKIP_ZERO),		\
+-	gfpflag_string(__GFP_SKIP_KASAN)
+-#else
+-#define __def_gfpflag_names_kasan
+-#endif
++	TRACE_GFP_FLAGS				\
++	{ 0, "none" }
+ 
+ #define show_gfp_flags(flags)						\
+-	(flags) ? __print_flags(flags, "|",				\
+-	__def_gfpflag_names __def_gfpflag_names_kasan			\
++	(flags) ? __print_flags(flags, "|", __def_gfpflag_names		\
+ 	) : "none"
+ 
+ #ifdef CONFIG_MMU
+-- 
+2.47.2
 
-              Linus
