@@ -1,108 +1,98 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E188726770B;
-	Tue, 25 Feb 2025 14:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB1A126C18;
+	Tue, 25 Feb 2025 14:26:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740493524; cv=none; b=VtEEcjaFS7233tT4dhsUqTVU2rtF0C+GI7FgC+BDQ/kYtSdzRQPVPGI0oQ8V0NrrTHGRgj3vMX++YzGfC4b3cxD8fXfsEz6v4xHifImJfHXPSutb3zjByqB3jbGNqvanfZSwr20rz7utRvvd6AJua+yjqMXk5VSvPiJYa24b5wM=
+	t=1740493565; cv=none; b=mOGDfmiMAa0jrFSORDM4Glp584scycujEsIrlfz6LZFZYB26S5JXbIPGw22ok1wWTA0zVheZHoj87lHJ75xsgbJjPAW0+eaXZr4/FztIUYeQyCaRtVZwNvTR73sqFdh7vK5NDTysSI2ZEFshs2ae/6xTWudTunCOuZf4pCfMGm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740493524; c=relaxed/simple;
-	bh=Q3RJil+VHeqSzKmw90XF0Ub/vSs2FGhiO8M1TWVwjXY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MKZh4biwZ1DxlhTKoGROFGZXRZLQ7/yLAXohfvzItqvsz5ATabphmio4vRtG/Bi9+AdOI9PU72pKofe1XHTFk4Ma2Fafy/aPdLYk3JtaoQjWFZXfh977wzp7fuS7WTYallOKkNnR9EdmISczr8u8eqUZTfJeOjwdwmIMFn8fR8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=bKo/+XI2; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1740493565; c=relaxed/simple;
+	bh=362uBNCJSL6/D4zf+C/aqFC5d3W5hFLgF8NaryGLpW4=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=a272LvG0xyLMzt4f4cT/vmpZ0EDKdsZZeWNpNXoPXIquGjKRw6w7IufFAQp54OmsRqxSWLnAMaYdRgO4V7UPz/LVTgaxfxCGLL1YKkrNc+bS5+sgYSnrliY0W7/cWto83KlmILfSKNfXGwtiMJLtuAGLwm4maWhQBfZZzvrDEtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=Z1X26bi7; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="bKo/+XI2"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso57208065e9.1;
-        Tue, 25 Feb 2025 06:25:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1740493521; x=1741098321; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AZf/o+N6Kz1RJg00ifbZNFSz2scXP1N3IPoo+w/Gz88=;
-        b=bKo/+XI2aLEcD29B3+8d/h0kkJFq+X4Y3g5QOYNCRWXSnOLF5QGqzdqlHZ+Z+dSbWE
-         LbWWJSYpl4wIjr24sux+/+/VE4j+c6FUAZsoIw/rQAtryaxAWaGgMC1Zup8XncTHQqeP
-         vrpgZ2i3AFBgBQy6eGrnAV1CyfJHmZsRqAVwaH2/XphMaA8qAmr2Wtnu/9Oj3lxFY+pe
-         ypyTqRV5gDHu8nGE0u4gaXDruxCRn6DgZT4B+3sPg0PURABm1ATagOyOyN6jWxjXYYlS
-         epPHHlxRTrVYQX5oAkUJAyULqwYtX+hR1e5jLhh8pm2Cliyi8n1fkVdyMKC1t29ihW7J
-         EzAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740493521; x=1741098321;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AZf/o+N6Kz1RJg00ifbZNFSz2scXP1N3IPoo+w/Gz88=;
-        b=FG7U4IK27ojM0+c6Q183yVv1S3bS0LV/KXOR16Sp/S3VqiqHUzzGshVNRvjvJBwSwt
-         z8WrgospxNgypiTYzPhvd06AXznlUq9bLkcTfSCSu60FwQAFf1qCKPHNoJvev0qdIKTJ
-         tSEvl+FVa03DsevPBsRPnBepRQYtN7Q5wKpY2MRr0tYh0IjygaC+f5uvSD7E2KwCk4Cj
-         W/+nCmHzF4iOWoBVmjEWodskuMkA0ETpcv5R9j1njx2jT8prNhCMa0osledn8ZYf40dE
-         zlWxkzOSK9KvHRE96HPKqcuZAij5CqG7yPF2+f3ZB8hupOcIVZiFefQNrTTu41LpsQoa
-         3G3w==
-X-Forwarded-Encrypted: i=1; AJvYcCUOv8mMYkbSPpi8MHxPDBFN20FATBC0lpSSYAoYcizhqef8Wm11K8fZ9CQzNBDFn+lx6Hg2naPF8BS6pl4=@vger.kernel.org, AJvYcCVeI0cJeD1HbydKCUOD1hi5NNisN50gn9i+Ij+qyh0mydPyNokw6OO12CsbmZZxGsghauGUya7J@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdeflfRmRGFQbv4EDUKZzFrYoL/yrRFgCfGq54XRECf1H3CzlJ
-	Lan7H6dvxbsM/zhNyJNwI+oGPExSB5295p3FvNJ4f1YxORGmN4jQHxP0IxD0Cw==
-X-Gm-Gg: ASbGnctrwTXDFuneYeOqbWVVupJq0NOYjDT/3jJHSZthuqPbD61MfwYtk+/BAZjSvmG
-	zWpqMz7f1olyz8I8ibmy6XbfWSYSePxvc+onKpGFNYxP0vWdP6mCaFftdLrH79cNn0q/f9NEHV4
-	HJprpfgHXH70wq5BYOU2asCvaBZea/7khre+pajsQZOO5dKM49N6LTA/8DSKn+yn8vu1ZIrWjww
-	WrAruRKZtm44g+BZUISnK3NmJ87netXTGo65fUAa89PrQ5CG76M3wQ6g3dHTPov4g4FBsNdJ67t
-	oc0jPQmVAMN+WPmF+lYIiix9b0bMrfZqF7id6on9Ozq7XgdsctNQTw7xpYUJYlK3CnXYvJoN5R5
-	MGRdM
-X-Google-Smtp-Source: AGHT+IGhdhiXQ4ECqTY9URWLiprLLnF779OXP/tKMzgBk9NQek5Qvqkfk5EpfkDRo1p5zSibaF4ZuQ==
-X-Received: by 2002:a05:600c:4446:b0:439:9274:81cd with SMTP id 5b1f17b1804b1-43ab0f2566emr37255015e9.4.1740493520894;
-        Tue, 25 Feb 2025 06:25:20 -0800 (PST)
-Received: from [192.168.1.3] (p5b2aca7c.dip0.t-ipconnect.de. [91.42.202.124])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b02e6cffsm142049515e9.19.2025.02.25.06.25.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2025 06:25:20 -0800 (PST)
-Message-ID: <8301ce47-ce5b-498e-b2e3-412a0741c4a3@googlemail.com>
-Date: Tue, 25 Feb 2025 15:25:19 +0100
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="Z1X26bi7"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.12 000/153] 6.12.17-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250225064751.133174920@linuxfoundation.org>
-Content-Language: de-DE
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250225064751.133174920@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1740493553;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WyyxfZ8er5WqZOvIZ6mxo74JK7+5Nk5jVOc6g/QyEzY=;
+	b=Z1X26bi7ygLBS3+YP89D2JR7/QWR7eXXN3q1RGtCQ3+EEEyHxoYQpXbp52wPDrgNXaWacW
+	Ounh1eXsGBBwxBLd/7Di5n93VbT9HhQvf9jl6Vim2qNKGD88nD/ML295fQfTRkhorE6Uh1
+	y9/DreYBRT9Ekl/916EWFharGXpsOWZAg8lKC7+bIk95ZpLm9A2QquEqUmFbsIvtuqNN1C
+	4ZcGeWx8hn/TuKWiLzmG9cjzglaqrwc+FI0Mp947mgR3+gwUWye4wIzhBT3xLoaC/9pm3l
+	jLiZSSPJRpbr5cs+7oCYYjNE6rHgNRvYE+JeSFarEusZ3TABB7gKfJhq1GWuSg==
+Date: Tue, 25 Feb 2025 15:25:52 +0100
+From: Dragan Simic <dsimic@manjaro.org>
+To: Justin Klaassen <justin@tidylabs.net>
+Cc: Tianling Shen <cnsztl@gmail.com>, Kever Yang
+ <kever.yang@rock-chips.com>, Johan Jonker <jbx6244@gmail.com>, Heiko
+ Stuebner <heiko@sntech.de>, Conor Dooley <conor+dt@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: rockchip: fix u2phy1_host status for NanoPi
+ R4S
+In-Reply-To: <20250224170925.39126-1-justin@tidylabs.net>
+References: <20250224170925.39126-1-justin@tidylabs.net>
+Message-ID: <48c705e65cc8e8d4716b41a4a87170e3@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-Am 25.02.2025 um 07:49 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.12.17 release.
-> There are 153 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Hello Justin,
 
-Like -rc1, no problems with -rc2 here. Builds, boots and works on my 2-socket Ivy Bridge 
-Xeon E5-2697 v2 server. No dmesg oddities or regressions found.
+Thanks for the patch!  Please, see a few comments below.
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+On 2025-02-24 18:09, Justin Klaassen wrote:
+> The u2phy1_host should always have the same status as usb_host1_ehci,
+> otherwise the ehci driver may be initialized for a disabled usb port.
+> 
+> Signed-off-by: Justin Klaassen <justin@tidylabs.net>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dtsi
+> b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dtsi
+> index b1c9bd0e63ef..8d94d9f91a5c 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-r4s.dtsi
+> @@ -115,7 +115,7 @@ &u2phy0_host {
+>  };
+> 
+>  &u2phy1_host {
+> -	status = "disabled";
+> +	phy-supply = <&vdd_5v>;
+>  };
+> 
+>  &uart0 {
 
+Indeed, the rk3399-nanopi4.dtsi file, which rk3399-nanopi-r4s.dtsi
+extends, enables u2phy1_host, usb_host1_ehci and usb_host1_ohci,
+so disabling u2phy1_host in rk3399-nanopi-r4s.dtsi makes no sense.
 
-Beste Grüße,
-Peter Schneider
+After checking the NanoPi R4S schematic, I can confirm that the
+phy-supply references the right regulator.  There are some strange
+things in the schematic, but they're unrelated to this patch.
 
--- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
+However, there should be a v2 of this patch with the proper Fixes
+and CC: stable tags, so this bugfix also gets propagated into the
+long-term kernels.  Please, feel free to also include
 
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
+Reviewed-by: Dragan Simic <dsimic@manjaro.org>
