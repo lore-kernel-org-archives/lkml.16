@@ -1,114 +1,89 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D4421ABBF
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:40:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43A721ABDA;
+	Tue, 25 Feb 2025 14:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740494426; cv=none; b=ubpl2bpV0AYMTbRpUwvN+iuxSkJDwTInVHE9iu71i9Kpop7+ULQ1IwIX/Oq3Kg4zdUblRGxnDs5o2diMUX1D9Q27kq22PbDkHBt+KoO2Wpfq4H8yTlDJZ8nXrAR394iFbiK1RRSlNCXeMLArRYi367L8LA4AT9nCz53a1T2xZrY=
+	t=1740494440; cv=none; b=MwEtYThDVWwZSSdbSqK8EmqhLVWn/1zBrmxse3GF8SfPVLAJbImGgdjnlqFWpCbgyVayFYJJHmL+50Cy/jU2H0LgKSWalpStNt1z+m9rpvRTdkZdTJrg0rqpPUqNmbIawvYcUreeKMXO0Jbvs1lOeDx7x2e4ZOhfOHv+qN5MRRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740494426; c=relaxed/simple;
-	bh=OZfTVkvVnd2ATJnLV7c72Ww8Jh0nTmUH+7NVTIMLuw4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sVTSMNX2XaistDn807sMXbpGlQcZX0IRlu66kSKYoJtuYeynnkUwFqlxp3Ts4DtkY2yR4cWsjOsw8C4MsS8PClNmJ7KCtL8ICnsjgYEw3katub8TrTltIH4QJusvIQ9BeL9mM9XPDXS+j7ZNOaNXgN9t33muFmDVajlWBLKCbEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=R1wzgBf9; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1740494440; c=relaxed/simple;
+	bh=AYjrae84t0alupk1jpkw8gvE8OxPjRpVWE2iYxMspZs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pi6Y0P36D7IaCDPyrXNvayGHokjf+Cb0yoSS9V3hMfexeQV8kG0RDzy4UftbWtocJV2MF8vVel3LQbVWqGfXZ2+TY+9jfFFEO8ATfwcg+ot4N8jTvyUNzuxdXw+OncXK4d1vLo4rxkp3hFqi05eXrA0+wZfY/sI9qxAqFQHUHlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fe/2Mwjk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="R1wzgBf9"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740494421;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OXSrSpLtmLGLsFjhz36tFMFjVePBC+E+1caV/MkW3ZE=;
-	b=R1wzgBf9KhfmXUVxIwII1Ps62lITvnwbgacq8liUe72/AkKQQ1r+PJWhdoPhFt++XDJbnp
-	nmUrhWZ7dx7AWygL3LMJQr5oWPMJDz6YwRLqSkyo2WqX/pq6lebv89jmiwsICCnzPtvn3L
-	5/7soBWw+7Wcq68PNtwkc7SFmD7TgrU=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: horms@kernel.org,
-	kuba@kernel.org
-Cc: bpf@vger.kernel.org,
-	netdev@vger.kernel.org,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	ricardo@marliere.net,
-	viro@zeniv.linux.org.uk,
-	dmantipov@yandex.ru,
-	aleksander.lobakin@intel.com,
-	linux-ppp@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mrpre@163.com,
-	Jiayuan Chen <jiayuan.chen@linux.dev>,
-	syzbot+853242d9c9917165d791@syzkaller.appspotmail.com
-Subject: [PATCH net-next 1/1] ppp: Fix KMSAN warning by initializing 2-byte header
-Date: Tue, 25 Feb 2025 22:40:04 +0800
-Message-ID: <20250225144004.277169-2-jiayuan.chen@linux.dev>
-In-Reply-To: <20250225144004.277169-1-jiayuan.chen@linux.dev>
-References: <20250225144004.277169-1-jiayuan.chen@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fe/2Mwjk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24BDBC4CEE8;
+	Tue, 25 Feb 2025 14:40:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740494440;
+	bh=AYjrae84t0alupk1jpkw8gvE8OxPjRpVWE2iYxMspZs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fe/2MwjkyiKWE+JXgg7zimg0A0OrZhiJmAVudNyrhW49GgfSE9smaTVNTUO0qmNiN
+	 mkyfQ3XI7b8PLfd9P6u5w6Isu0TLH/u8OW1FpvZecdWtyBc/rQFQt4phDrwRe7r8Qw
+	 h0G73DgEA2Tx//WnUASWE1AnDvdpk+m8mMIYmNbP+AfoOWhaUewOlnl/XlQiWpX+po
+	 IN/WaPCOrHZIWdGFlq+wLT2dvP9dL7hGjHXfxLIs6W47nFoDf3GZVcJjrPViAmzWtc
+	 LZmvz7H6CLKkLz9H8+I+H9aSgDhZKoqUAoRQxrd1/8fcUlPFV3p++A+583VT5v9fb0
+	 FrlQsVNexWLJA==
+Date: Tue, 25 Feb 2025 14:40:35 +0000
+From: Simon Horman <horms@kernel.org>
+To: Uday Shankar <ushankar@purestorage.com>
+Cc: Breno Leitao <leitao@debian.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH net-next v5 2/2] netconsole: allow selection of egress
+ interface via MAC address
+Message-ID: <20250225144035.GY1615191@kernel.org>
+References: <20250220-netconsole-v5-0-4aeafa71debf@purestorage.com>
+ <20250220-netconsole-v5-2-4aeafa71debf@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250220-netconsole-v5-2-4aeafa71debf@purestorage.com>
 
-The PPP driver adds an extra 2-byte header to enable socket filters to run
-correctly. However, the driver only initializes the first byte, which
-indicates the direction. For normal BPF programs, this is not a problem
-since they only read the first byte.
+On Thu, Feb 20, 2025 at 06:29:21PM -0700, Uday Shankar wrote:
+> Currently, netconsole has two methods of configuration - module
+> parameter and configfs. The former interface allows for netconsole
+> activation earlier during boot (by specifying the module parameter on
+> the kernel command line), so it is preferred for debugging issues which
+> arise before userspace is up/the configfs interface can be used. The
+> module parameter syntax requires specifying the egress interface name.
+> This requirement makes it hard to use for a couple reasons:
+> - The egress interface name can be hard or impossible to predict. For
+>   example, installing a new network card in a system can change the
+>   interface names assigned by the kernel.
+> - When constructing the module parameter, one may have trouble
+>   determining the original (kernel-assigned) name of the interface
+>   (which is the name that should be given to netconsole) if some stable
+>   interface naming scheme is in effect. A human can usually look at
+>   kernel logs to determine the original name, but this is very painful
+>   if automation is constructing the parameter.
+> 
+> For these reasons, allow selection of the egress interface via MAC
+> address when configuring netconsole using the module parameter. Update
+> the netconsole documentation with an example of the new syntax.
+> Selection of egress interface by MAC address via configfs is far less
+> interesting (since when this interface can be used, one should be able
+> to easily convert between MAC address and interface name), so it is left
+> unimplemented.
+> 
+> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+> Reviewed-by: Breno Leitao <leitao@debian.org>
+> Tested-by: Breno Leitao <leitao@debian.org>
 
-Nevertheless, for carefully crafted BPF programs, if they read the second
-byte, this will trigger a KMSAN warning for reading uninitialized data.
-
-Reported-by: syzbot+853242d9c9917165d791@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/bpf/000000000000dea025060d6bc3bc@google.com/
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
----
- drivers/net/ppp/ppp_generic.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ppp/ppp_generic.c b/drivers/net/ppp/ppp_generic.c
-index 4583e15ad03a..4019bc959a2a 100644
---- a/drivers/net/ppp/ppp_generic.c
-+++ b/drivers/net/ppp/ppp_generic.c
-@@ -72,6 +72,10 @@
- #define PPP_PROTO_LEN	2
- #define PPP_LCP_HDRLEN	4
- 
-+/* These are fields recognized by libpcap */
-+#define PPP_FILTER_OUTBOUND_TAG 0x0100
-+#define PPP_FILTER_INBOUND_TAG  0x0000
-+
- /*
-  * An instance of /dev/ppp can be associated with either a ppp
-  * interface unit or a ppp channel.  In both cases, file->private_data
-@@ -1762,10 +1766,15 @@ ppp_send_frame(struct ppp *ppp, struct sk_buff *skb)
- 
- 	if (proto < 0x8000) {
- #ifdef CONFIG_PPP_FILTER
--		/* check if we should pass this packet */
--		/* the filter instructions are constructed assuming
--		   a four-byte PPP header on each packet */
--		*(u8 *)skb_push(skb, 2) = 1;
-+		/* Check if we should pass this packet.
-+		 * The filter instructions are constructed assuming
-+		 * a four-byte PPP header on each packet. The first byte
-+		 * indicates the direction, and the second byte is meaningless,
-+		 * but we still need to initialize it to prevent crafted BPF
-+		 * programs from reading them which would cause reading of
-+		 * uninitialized data.
-+		 */
-+		*(u16 *)skb_push(skb, 2) = htons(PPP_FILTER_OUTBOUND_TAG);
- 		if (ppp->pass_filter &&
- 		    bpf_prog_run(ppp->pass_filter, skb) == 0) {
- 			if (ppp->debug & 1)
--- 
-2.47.1
+Reviewed-by: Simon Horman <horms@kernel.org>
 
