@@ -1,170 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3221627701;
-	Tue, 25 Feb 2025 15:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C446D199B9;
+	Tue, 25 Feb 2025 15:46:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740498319; cv=none; b=BpFxwbypgL4dDeLpd56fzAA3f1jl0465fUnmR9hA1V4zIK0f1qJ/HHKh2F03Gp74FZsOG2ftJ6oIEecId+WfhRnTW48hXYxcPkmI5EIfFT/WlnszHg1XOj2B5H6K+7WNhQj26HKCol+zh1K4abHJ057NL4lb0nBpXwHAgAIe8g0=
+	t=1740498389; cv=none; b=QmoY/w4KU15hzDmtMcoRvKmpFZPlHxQdB+0La2SurEfjymDyQaTNv5BuQvNrpW/k0KyE6NgKja3HLJ2GL9LcmJDusYO8OWC5O3r417Fdmny3UcloqrBdI0SxBNTZExHR6L85rgaNUUFPrT1Qr+z9mGukQqwxG0jyKRZf4tv0Nks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740498319; c=relaxed/simple;
-	bh=J5MY8MNJZjjXvPf3aaubOgBeUIi+hFPi+Z9UdY1nir8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nK9pU3kwkxs2liFoJgNs7SIU6m6mRJfMALg4oAbNUr+fB5plefHRRmSimoh0bJIMhZOEfMTUN/0WA3H/9KLDXn/DlonfBo+u8FiIot/ivRjV2XVjCS9OCBkOEL96ubnihLgyVeaSriJmFTNynj9MgLe4APwpAPKxYBxk/3LwEbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B16DDC4CEDD;
-	Tue, 25 Feb 2025 15:45:14 +0000 (UTC)
-Date: Tue, 25 Feb 2025 10:45:52 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Arnd Bergmann" <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-kbuild@vger.kernel.org, bpf <bpf@vger.kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org, "Masami
- Hiramatsu" <mhiramat@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>,
- "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "Andrew Morton"
- <akpm@linux-foundation.org>, "Peter Zijlstra" <peterz@infradead.org>,
- "Linus Torvalds" <torvalds@linux-foundation.org>, "Masahiro Yamada"
- <masahiroy@kernel.org>, "Nathan Chancellor" <nathan@kernel.org>, "Nicolas
- Schier" <nicolas@fjasle.eu>, "Zheng Yejian" <zhengyejian1@huawei.com>,
- "Martin Kelly" <martin.kelly@crowdstrike.com>, "Christophe Leroy"
- <christophe.leroy@csgroup.eu>, "Josh Poimboeuf" <jpoimboe@redhat.com>,
- "Heiko Carstens" <hca@linux.ibm.com>, "Catalin Marinas"
- <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>, "Vasily Gorbik"
- <gor@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>
-Subject: Re: [PATCH v5 2/6] scripts/sorttable: Have mcount rela sort use
- direct values
-Message-ID: <20250225104552.2acc5909@gandalf.local.home>
-In-Reply-To: <91523154-072b-437b-bbdc-0b70e9783fd0@app.fastmail.com>
-References: <20250218195918.255228630@goodmis.org>
-	<20250218200022.538888594@goodmis.org>
-	<893cd8f1-8585-4d25-bf0f-4197bf872465@app.fastmail.com>
-	<20250224172147.1de3fda5@gandalf.local.home>
-	<20250224211102.33e264fc@gandalf.local.home>
-	<91523154-072b-437b-bbdc-0b70e9783fd0@app.fastmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1740498389; c=relaxed/simple;
+	bh=MFvmP9LovArK9OERLzzbnLEOunRvxAUL0nHnW9lN2zc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Qe9utyhhaUZ/ErQtDb5OYCbL/FToo3dp6708ekrQnBeqEgbeDHvO75HPS9BkSQqpj1MtBV0RsZyG8FOZHkfkCu5xaynFOCIGFNftWRVBUIF5RAC3aT/DvtF6P0Ve7Im6Z2zUVqENgq5ftAtj9W/qeVjgMtqxuU0bzYkPxcgSqjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JB8OjMCt; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JB8OjMCt"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D59644429F;
+	Tue, 25 Feb 2025 15:46:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740498385;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0QMFPn7v0dvtqEnFRRWaHTTHu3sj+oRLzfepMtxanK8=;
+	b=JB8OjMCtCzJ1YInn4tNfeR0v0PbEPGZGOGVlzbzrit48JNQTeiTdt+9vYx4sh+wmawS/6N
+	CETWdosaxauFkwlusUa9edkiZgRA6Ds9BO18Zl/y2+e36l0G7BDMOGrYrL+wG0xPiz6kvh
+	NdCEI9zw1kowE2dr151TWTPB2obKNZHjLQsEqqALDY4IBajPhsJh8KGxAekJtz2SszH+ra
+	P9Cv91kFMMvIoKx0qeykfMlaoVZSoamphKkqkcGwSiatDie1PU6n+6jTGQN1TvfxkqrFaX
+	2IbDUk+L0Evph8E7rEmZiInCnG2QeentPxoE4AE7iwU5AZ8q75g5aRQAGmX7Ew==
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+Date: Tue, 25 Feb 2025 16:46:22 +0100
+Subject: [PATCH] drm/vkms: Add "hardware limitation" emulation TODO
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250225-vkms-update-todo-v1-1-afb1e6f7d714@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAM3lvWcC/zWMQQrCMBBFr1Jm7WAaGpVeRbpIk1EHSVIzaSmU3
+ t1gcfffh/c2EMpMAn2zQaaFhVOs0J4acC8bn4TsK4NW2iitDS7vIDhP3hbCknxCo66q1d1ldP4
+ GVZsyPXj9Je/DwZk+cy2X44TRCqFLIXDpG58DBhZ3/g+MtBYY9v0LdOQsTJwAAAA=
+X-Change-ID: 20250225-vkms-update-todo-50701246bcd8
+To: Haneen Mohammed <hamohammed.sa@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, Melissa Wen <melissa.srw@gmail.com>, 
+ David Airlie <airlied@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: thomas.petazzoni@bootlin.com, dri-devel@lists.freedesktop.org, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Louis Chauvet <louis.chauvet@bootlin.com>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1429;
+ i=louis.chauvet@bootlin.com; h=from:subject:message-id;
+ bh=MFvmP9LovArK9OERLzzbnLEOunRvxAUL0nHnW9lN2zc=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBnveXPQ2q8V3VeN1NbMRQPdRMMaL4QjQAynIylm
+ AUfAMv05wWJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZ73lzwAKCRAgrS7GWxAs
+ 4t5VEACUFayeAdbvJqZBoi1QRKlqceU3JOBr31o/wBKDiJ1qzS2UbREIJvAB+a1RFRfgaNByGFB
+ qDaAN6Af8AbAkWVEu7MWzsUwelIPNlKCB9jm6GZCTiGBi21qUicgPWN/4jlAmx6BQ0Lpjg+ICBC
+ sqzNO9Rg7oUx0zMnh8JquaWLKrqOf68L/mKA7auEA2eXmqOlxbdJFmsDWwLwCZPJ+9wgobGzjr8
+ jETrvKjGZMIUIdJb1d5AjcLlqcWdb9Dn1rOUHDFfie+M5mRWSdk2w+1njLp1qTYjmefWF6Uqq8o
+ xmkdirueb4RhqN09hCI9vREVFdBJGgwuTTDsoQx2g0JhMlVQlllWvtibZv47yzzh41a0wD9tVDp
+ aT+7GEAXDHR3I3C+TY8rMm9plPimKKE9OwympO+6AWdAcOgtYK/HFYej+ilLmTZcgVgc7n7qLJJ
+ qctsn8kr43fmptBxeWt6OMUtdE6eEj8+/llY20vqK25HY1hTonNusLSaJ6L2CQkTJl+qjWF6dkr
+ DGMtcJ+Ieze+qYFErhzTDnwIpbOnYjiSAwd3CWyWgVfdT+MYD3yEJP1ShVpA/GXtK56Z+XQJ8ax
+ YaP406FvqC6KPgq1XzlIMmmcp121MBO/+JFKlLXw9t+yVJ7FH2cOVXLHMCl/7y65RECPD7oktku
+ ZYCZrvKztktDC7w==
+X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
+ fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekvddutdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkffvvefosehtjeertdertdejnecuhfhrohhmpefnohhuihhsucevhhgruhhvvghtuceolhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepueetjeeggeffvdegkeetudekjeevkeehheduledtgeejhfduvdeuleehleffgefgnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegludejvddrudekrddtrddungdpmhgrihhlfhhrohhmpehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohephhgrmhhohhgrmhhmvggurdhsrgesghhmrghilhdrtghomhdprhgtphhtthhopegtohhrsggvtheslhifnhdrnhgvthdprhgtphhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhouhhis
+ hdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdprhgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthh
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-On Tue, 25 Feb 2025 09:45:52 +0100
-"Arnd Bergmann" <arnd@arndb.de> wrote:
+Add the hardware limitation todo.
 
-> It fixes the build issue for me. I tried booting as well, but ran
-> into a BUG() when I enable ftrace. I assume this is an unrelated
-> issue, but you can find the output for reference in case this is
-> relevant.
+Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
+---
+ Documentation/gpu/vkms.rst | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Thanks, can you try this patch instead? I'll be breaking it up if this works.
-
-This also removes the kaslr_offset() code.
-
--- Steve
-
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 27c8def2139d..fdd5ffe268de 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -7004,7 +7004,6 @@ static int ftrace_process_locs(struct module *mod,
- 	unsigned long count;
- 	unsigned long *p;
- 	unsigned long addr;
--	unsigned long kaslr;
- 	unsigned long flags = 0; /* Shut up gcc */
- 	unsigned long pages;
- 	int ret = -ENOMEM;
-@@ -7056,25 +7055,37 @@ static int ftrace_process_locs(struct module *mod,
- 		ftrace_pages->next = start_pg;
- 	}
+diff --git a/Documentation/gpu/vkms.rst b/Documentation/gpu/vkms.rst
+index ba04ac7c2167..d5bc602547e7 100644
+--- a/Documentation/gpu/vkms.rst
++++ b/Documentation/gpu/vkms.rst
+@@ -147,6 +147,15 @@ module. Use/Test-cases:
+ - Change output configuration: Plug/unplug screens, change EDID, allow changing
+   the refresh rate.
  
--	/* For zeroed locations that were shifted for core kernel */
--	kaslr = !mod ? kaslr_offset() : 0;
--
- 	p = start;
- 	pg = start_pg;
- 	while (p < end) {
- 		unsigned long end_offset;
--		addr = ftrace_call_adjust(*p++);
++- Emulating Hardware Limitations with eBPF for MST and Atomic Checks
++  Hardware limitations can often prevent valid DRM configurations during
++  atomic checks. Examples of such limitations include bandwidth constraints in
++  MST and limited clock signals for multiple CRTCs.
++  These limitations are dynamic and require extensive checks, making them
++  difficult to describe statically. To address this, we propose creating an
++  eBPF interface for atomic checks. This interface will allow userspace applications
++  to simulate and enforce custom hardware limitations.
 +
-+		addr = *p++;
-+
- 		/*
- 		 * Some architecture linkers will pad between
- 		 * the different mcount_loc sections of different
- 		 * object files to satisfy alignments.
- 		 * Skip any NULL pointers.
- 		 */
--		if (!addr || addr == kaslr) {
-+		if (!addr) {
-+			skipped++;
-+			continue;
-+		}
-+
-+		/*
-+		 * If this is core kernel, make sure the address is in core
-+		 * or inittext, as weak functions get zeroed and KASLR can
-+		 * move them to something other than zero. It just will not
-+		 * move it to an area where kernel text is.
-+		 */
-+		if (!mod && !(is_kernel_text(addr) || is_kernel_inittext(addr))) {
- 			skipped++;
- 			continue;
- 		}
- 
-+		addr = ftrace_call_adjust(addr);
-+
- 		end_offset = (pg->index+1) * sizeof(pg->records[0]);
- 		if (end_offset > PAGE_SIZE << pg->order) {
- 			/* We should have allocated enough */
-diff --git a/scripts/sorttable.c b/scripts/sorttable.c
-index 23c7e0e6c024..10aff2aeb868 100644
---- a/scripts/sorttable.c
-+++ b/scripts/sorttable.c
-@@ -611,13 +611,16 @@ static int add_field(uint64_t addr, uint64_t size)
- 	return 0;
- }
- 
-+/* Used for when mcount/fentry is before the function entry */
-+static int before_func;
-+
- /* Only return match if the address lies inside the function size */
- static int cmp_func_addr(const void *K, const void *A)
- {
- 	uint64_t key = *(const uint64_t *)K;
- 	const struct func_info *a = A;
- 
--	if (key < a->addr)
-+	if (key + before_func < a->addr)
- 		return -1;
- 	return key >= a->addr + a->size;
- }
-@@ -827,9 +830,14 @@ static void *sort_mcount_loc(void *arg)
- 		pthread_exit(m_err);
- 	}
- 
--	if (sort_reloc)
-+	if (sort_reloc) {
- 		count = fill_relocs(vals, size, ehdr, emloc->start_mcount_loc);
--	else
-+		/* gcc may use relocs to save the addresses, but clang does not. */
-+		if (!count) {
-+			count = fill_addrs(vals, size, start_loc);
-+			sort_reloc = 0;
-+		}
-+	} else
- 		count = fill_addrs(vals, size, start_loc);
- 
- 	if (count < 0) {
-@@ -1248,6 +1256,8 @@ static int do_file(char const *const fname, void *addr)
- #ifdef MCOUNT_SORT_ENABLED
- 		sort_reloc = true;
- 		rela_type = 0x403;
-+		/* arm64 uses patchable function entry placing before function */
-+		before_func = 8;
- #endif
- 		/* fallthrough */
- 	case EM_386:
+ The currently proposed solution is to expose vkms configuration through
+ configfs. All existing module options should be supported through configfs
+ too.
+
+---
+base-commit: acf3256160bdabcb5c07032f3bf6eb5a21f5b95f
+change-id: 20250225-vkms-update-todo-50701246bcd8
+
+Best regards,
+-- 
+Louis Chauvet <louis.chauvet@bootlin.com>
+
