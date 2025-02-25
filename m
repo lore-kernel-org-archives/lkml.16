@@ -1,88 +1,164 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C800156F3A;
-	Tue, 25 Feb 2025 17:52:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F08B14F9C4;
+	Tue, 25 Feb 2025 17:53:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740505964; cv=none; b=U5vV1bU1/RuLWM5npAFhQyYm2D+i87AL6dafSrY3cRrU7cZ+QupPUoPx20cwH91/ZB9xxTDEiqR1Fhc5QnzS/9WpNkgHXNoJHumBU699NjmmGL2kkYGOO80h4vz8wYuluRTg80aUovS6EAG/Y+YrVF5iIqOdtoMWoulTPwiHcW8=
+	t=1740505999; cv=none; b=iMLI+xY/QvVTUhT/kJtgsr3soBAhhrRl+Xf+uIuXttuTZYMyogBwrWNFhG2XqCyZxvbbQznFvif2G+qlpustb53YZbZsAHXOTpbFmcuoF86OOnve4pneWoTH8TbWpBx5RwQzy/CRqifI4aw9w5NxQ9Zb7f1CWHg1I9hM96lFpvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740505964; c=relaxed/simple;
-	bh=w0EkbHkGHBYElQYWfADsG+yNVibDYgCQClR6E5omnNM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dX4ge9Nv3YjZ5MlHKJPbE0pfy97sk82ZTT9xUFIy16041r8lE38v9q9kXetDa/ZTmwIjVgY5Zkd4VTN9A6k/5oCLcCh2zKE0Zgg/GUTE3N63QWHd7I+D98eZdlViX3vTJSFgsvURxa2pv8Qbl6R8nXod7rf7aC+xQ9bNTGl0Nek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VFzZAOVB; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VFzZAOVB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59DBBC4CEE7;
-	Tue, 25 Feb 2025 17:52:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740505964;
-	bh=w0EkbHkGHBYElQYWfADsG+yNVibDYgCQClR6E5omnNM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=VFzZAOVB1a78DBjHDtOtuMrJTGr8jVuKit5KqKgfyh/fX73Y6Is0do1MFFrz+Jemp
-	 Lbhlg7xS6yHIZaTOWiszvYatZeN/iv+ogT1Za46h/vkopmjCPLm5TwsWwEC80+Kt07
-	 A2YDXuIPr6QRVYzYIUlUVeZADuuoe/qm/7R47h6ErvqrkGpSsmCqggvlOE/uz7f8zz
-	 peh/7+xGpi7QJ/r4uV9nNEC+HJHbHk6OThzJxJrC/S4+QyoUX2cChMnnIOXLrUZe49
-	 1NjBsFrGwjtJxyM4ounylZapEAZfSXeiQ/IIMS6S+yDeBzA19sVB5M3X7cEVJvyy5p
-	 eYbjFj/YbZxNg==
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e04064af07so9230833a12.0;
-        Tue, 25 Feb 2025 09:52:44 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCV8eYc5sR/gFaVIk+9oCiwZ3Gs3qQIhSbmZN3cXW3pNlpRxJmRikGhspPyuCSgZjcqsOA4R+hFdmKJD@vger.kernel.org, AJvYcCVVP2runIw3YrhzgGEasoPeD1tnjJ5SpIJxaP3OmoNyMCqQMKe/1BO+UktAYMGKuRc9BYrsMvonFygk6Hg=@vger.kernel.org, AJvYcCVqsuHg5mqRDKfhS+VvfRxozmLs+Ovq4GkW5Az3bWZZAfkMNVLgnW/uV+m+x7AKUrBaJBiT69wcVLQ2+ki8@vger.kernel.org, AJvYcCWX+almcJFNsA4PquVXwmpJUqsPiMvAcLd7VUAKizYuFYioAiAkGBkzs+w67COdun0bAMXbVo/tO8p6@vger.kernel.org, AJvYcCXc1HEujqh8hCzedc+KPpz1BAyCcQdgGyVTxnilKsoJ2DEfhf2nY1UuofG/1Io823t4pJdp9epB4LE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy++dwbSqQS47iDgUqmAc2EWhfeiDq8jQUpvKYZAJ4oEH1mHKw5
-	TW/tWpulKoHKvXceA6MiwgjdLl2YXnostCDlN2uuNcJuUI9x4ZyXHc2SpeySqImuWORASxNp0i1
-	8jJHPoIE/l+k+6oLOAHOhf+XIdA==
-X-Google-Smtp-Source: AGHT+IF6yxHJA3YSV+Mc7KCSIMedD8jUXEbB4xXTDLc0/UNGPOBcZs5+0oQlFOlVb1ificfP0x+i/oVnnr4HgeYGyas=
-X-Received: by 2002:a05:6402:440b:b0:5de:aa54:dc30 with SMTP id
- 4fb4d7f45d1cf-5e444481387mr4585735a12.5.1740505962886; Tue, 25 Feb 2025
- 09:52:42 -0800 (PST)
+	s=arc-20240116; t=1740505999; c=relaxed/simple;
+	bh=PFetlwZIjtDHSeCjjYgYXTvGCoSFeYK5lIXFMoq1cNc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=u+RssE96UOUOcf8RnbmlSl9TyamVG/ycOA3+jFQdgVX3uQDFeX67VnoE3v+VrzAruS1P2gusGCW9cBOEE5eVkx8YXMHd1YJCQC7mpu+E6WQoy9m8LQAKSPt+7O2UhrKxj+XgODzTNBj9tYZ0YJQZgZrr3SEsbIBrpsLy+kjFeJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C338C4CEDD;
+	Tue, 25 Feb 2025 17:53:17 +0000 (UTC)
+Date: Tue, 25 Feb 2025 12:53:56 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Tomas Glozar <tglozar@redhat.com>, Tom
+ Zanussi <zanussi@kernel.org>
+Subject: [PATCH] tracing: Fix bad hist from corrupting named_triggers list
+Message-ID: <20250225125356.29236cd1@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20241226050205.30241-1-val@packett.cool> <20241226050205.30241-5-val@packett.cool>
- <173920541986.1887800.1972669785800121190.b4-ty@kernel.org>
-In-Reply-To: <173920541986.1887800.1972669785800121190.b4-ty@kernel.org>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 25 Feb 2025 11:52:31 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+PPYeFxr=utwZLemUVCzk5iabtMckOJmNy1-LO39cqeQ@mail.gmail.com>
-X-Gm-Features: AQ5f1Jq1Iz82X3jYxZcNLZTXQB24STg7TFTfP3ZcCT_Tig0_TFrubDNC8pk8KUg
-Message-ID: <CAL_Jsq+PPYeFxr=utwZLemUVCzk5iabtMckOJmNy1-LO39cqeQ@mail.gmail.com>
-Subject: Re: (subset) [PATCH 4/9] mfd: mt6397: Add support for MT6392 pmic
-To: Lee Jones <lee@kernel.org>
-Cc: Val Packett <val@packett.cool>, Fabien Parent <parent.f@gmail.com>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Sen Chu <sen.chu@mediatek.com>, 
-	Sean Wang <sean.wang@mediatek.com>, Macpaul Lin <macpaul.lin@mediatek.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Eddie Huang <eddie.huang@mediatek.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>, Yassine Oudjana <y.oudjana@protonmail.com>, 
-	Chen Zhong <chen.zhong@mediatek.com>, linux-input@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 10, 2025 at 10:37=E2=80=AFAM Lee Jones <lee@kernel.org> wrote:
->
-> On Thu, 26 Dec 2024 01:58:04 -0300, Val Packett wrote:
-> > Update the MT6397 MFD driver to support the MT6392 PMIC.
-> >
-> >
->
-> Applied, thanks!
->
-> [4/9] mfd: mt6397: Add support for MT6392 pmic
->       commit: 896b1eb4ca771b37ea50feb4d90a78dd4e9cb388
+From: Steven Rostedt <rostedt@goodmis.org>
 
-This should be dropped. Missing the sender's S-o-b and the rest of the
-series has issues still.
+The following commands causes a crash:
 
+ ~# cd /sys/kernel/tracing/events/rcu/rcu_callback
+ ~# echo 'hist:name=bad:keys=common_pid:onmax(bogus).save(common_pid)' > trigger
+ bash: echo: write error: Invalid argument
+ ~# echo 'hist:name=bad:keys=common_pid' > trigger
 
-Rob
+Because the following occurs:
+
+event_trigger_write() {
+  trigger_process_regex() {
+    event_hist_trigger_parse() {
+
+      data = event_trigger_alloc(..);
+
+      event_trigger_register(.., data) {
+        cmd_ops->reg(.., data, ..) [hist_register_trigger()] {
+          data->ops->init() [event_hist_trigger_init()] {
+            save_named_trigger(name, data) {
+              list_add(&data->named_list, &named_triggers);
+            }
+          }
+        }
+      }
+
+      ret = create_actions(); (return -EINVAL)
+      if (ret)
+        goto out_unreg;
+[..]
+      ret = hist_trigger_enable(data, ...) {
+        list_add_tail_rcu(&data->list, &file->triggers); <<<---- SKIPPED!!! (this is important!)
+[..]
+ out_unreg:
+      event_hist_unregister(.., data) {
+        cmd_ops->unreg(.., data, ..) [hist_unregister_trigger()] {
+          list_for_each_entry(iter, &file->triggers, list) {
+            if (!hist_trigger_match(data, iter, named_data, false))   <- never matches
+                continue;
+            [..]
+            test = iter;
+          }
+          if (test && test->ops->free) <<<-- test is NULL
+
+            test->ops->free(test) [event_hist_trigger_free()] {
+              [..]
+              if (data->name)
+                del_named_trigger(data) {
+                  list_del(&data->named_list);  <<<<-- NEVER gets removed!
+                }
+              }
+           }
+         }
+
+         [..]
+         kfree(data); <<<-- frees item but it is still on list
+
+The next time a hist with name is registered, it causes an u-a-f bug and
+the kernel can crash.
+
+Move the code around such that if event_trigger_register() succeeds, the
+next thing called is hist_trigger_enable() which adds it to the list.
+
+A bunch of actions is called if get_named_trigger_data() returns false.
+But that doesn't need to be called after event_trigger_register(), so it
+can be moved up, allowing event_trigger_register() to be called just
+before hist_trigger_enable() keeping them together and allowing the
+file->triggers to be properly populated.
+
+Cc: stable@vger.kernel.org
+Fixes: 067fe038e70f6 ("tracing: Add variable reference handling to hist triggers")
+Reported-by: Tomas Glozar <tglozar@redhat.com>
+Closes: https://lore.kernel.org/all/CAP4=nvTsxjckSBTz=Oe_UYh8keD9_sZC4i++4h72mJLic4_W4A@mail.gmail.com/
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events_hist.c | 31 ++++++++++++++++---------------
+ 1 file changed, 16 insertions(+), 15 deletions(-)
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 261163b00137..c32adc372808 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -6724,27 +6724,28 @@ static int event_hist_trigger_parse(struct event_command *cmd_ops,
+ 	if (existing_hist_update_only(glob, trigger_data, file))
+ 		goto out_free;
+ 
+-	ret = event_trigger_register(cmd_ops, file, glob, trigger_data);
+-	if (ret < 0)
+-		goto out_free;
++	if (!get_named_trigger_data(trigger_data)) {
+ 
+-	if (get_named_trigger_data(trigger_data))
+-		goto enable;
++		ret = create_actions(hist_data);
++		if (ret)
++			goto out_free;
+ 
+-	ret = create_actions(hist_data);
+-	if (ret)
+-		goto out_unreg;
++		if (has_hist_vars(hist_data) || hist_data->n_var_refs) {
++			ret = save_hist_vars(hist_data);
++			if (ret)
++				goto out_free;
++		}
+ 
+-	if (has_hist_vars(hist_data) || hist_data->n_var_refs) {
+-		ret = save_hist_vars(hist_data);
++		ret = tracing_map_init(hist_data->map);
+ 		if (ret)
+-			goto out_unreg;
++			goto out_free;
+ 	}
+ 
+-	ret = tracing_map_init(hist_data->map);
+-	if (ret)
+-		goto out_unreg;
+-enable:
++	ret = event_trigger_register(cmd_ops, file, glob, trigger_data);
++	if (ret < 0)
++		goto out_free;
++
++
+ 	ret = hist_trigger_enable(trigger_data, file);
+ 	if (ret)
+ 		goto out_unreg;
+-- 
+2.47.2
+
