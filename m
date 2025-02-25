@@ -1,268 +1,122 @@
-Received: from smtp.smtpout.orange.fr (smtp-82.smtpout.orange.fr [80.12.242.82])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB5F115539D
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 22:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C2015539D;
+	Tue, 25 Feb 2025 22:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740521860; cv=none; b=cPo5rWEOaVwJWrs6HOUaL6lSxeQSaNUItpYAFQUHeyjDpjYkzuxKXy3Vo86GYGLGxhsXySetM5vEGE3FxkhjpPldyuI6zPJIxjTfZ0kGM9YXtenu0WLUnY46xHHqS9tdngrJ8bZlLzk4r23XDhjy/xWLIu0HkAZOBoFuvH3Rjbw=
+	t=1740521903; cv=none; b=faxF27lHenxWDavCTNor9qIS878DrHVpUpvJKaDh/Wq1nhzvebFPV5lH9hbMP1Bf6Pm1LO1DHvZY0XwTyw76mu4bZznVVcVYO26FLMaa3jNLGJz8/9p6AFyZdzC4e7ll40ViEpzRNnBx95gOqsM38MDH3/OtCrsXG6ZSUigzfmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740521860; c=relaxed/simple;
-	bh=2xAg+xR9isAxludX2aUTlS5HqVo83GXFqkd+I9LuITo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O2NgrrAWFLOgbDTMFjSdFyzgbKzIqd0zzwgrXggRuJDrUxyDw9pvvAw5pjX+o3nXQcYcgh0ngsN0jRWc2pA2zWsXyeF58TMtaH78cnLrOPrWeW+ZD8US6Xjm40a+01ER8JqBwmzWetugFZ+TPoIGPQmFjUTsSOdzhq8JE0sVz7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=qJwTKFMt; arc=none smtp.client-ip=80.12.242.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1740521903; c=relaxed/simple;
+	bh=viw/irv5FYM22IZHK1n8uTxMVClyAZnRSx0477w/Koc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=am6cMc/enmmRgFAcmg0mPGFWm93BJEDi+/MFdrv7+wcDEOTl6tdZNA9Q3aPTYwhixAhzAvAGyxGaePbhTt/+j1nXVXq5ygPpiSIOcDgZuVco2BjD/xkTE4ZI7u52vpmUffvpStNc3Tra/225oBJY3U0C9JkEP2fo828cg/0XRZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gCbcoe1F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="qJwTKFMt"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id n3DytzpBQbR3dn3E1tCdOf; Tue, 25 Feb 2025 23:16:26 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1740521786;
-	bh=d9A0JlJ4dz6HSjR6M0xdjKOHwvXf88YPRD+thZxM7BQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=qJwTKFMt9rHvzotJVhTQaLoATYLyaH4afQchZJZ2G6INFBu7WIu6ctwB/qZAQJdzJ
-	 nNq2HZfbTX8gRF9cWzr2rQWPHKh81W7Cuq0IGp7NDz2+In+8vzUsysBkYBWqnf1G7i
-	 lj/HZXkTSSL4ttQsLHmjf0weaoQrD60zfO9hCxRYe8aFZ2kj/G3bFtMB4uAN2cQ5f0
-	 Iu4w7vdeRYAQ9Eb35bv/oJyS2suxR5jhVjskWYUxQawqVUHbDQkYnXVkNRFU3pUDX5
-	 lheOj9JKUaT5GfbVa/9AUJfRnELdVTUjkKf5w5L5/q9o8dllm3pe4dk0DCgCwLyymB
-	 G4SG4vtKJDBfQ==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Tue, 25 Feb 2025 23:16:26 +0100
-X-ME-IP: 90.11.132.44
-Message-ID: <7a8e6b9f-2fa2-4794-bb4f-3abdb784fbc3@wanadoo.fr>
-Date: Tue, 25 Feb 2025 23:16:21 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gCbcoe1F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C835EC4CEDD;
+	Tue, 25 Feb 2025 22:18:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740521903;
+	bh=viw/irv5FYM22IZHK1n8uTxMVClyAZnRSx0477w/Koc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gCbcoe1FnWAkKkuivz0Ld9lqqBS4AgOIa9ysfvtOoCndfjUBbAIznfzW4O+zRQ53X
+	 7i9jwLmsvP3bPXO3GhN01JEwreGc+tMywVAe75sYEs9e2EedPocFDz+peOGPBXXnbV
+	 TdRuf1qo+Q4tdG4WGlSOOSVn10dyWdYDMPWIizqrIgob/NFWIzpmadvVZ0DhRK+3z2
+	 46QE4El0fvJpbEAohIyW2HetDWLTxPTgirKpKIya72I5N3cHvHQ/tzKaGqT+H5eR+a
+	 slzjYb3AlhpaPXDiqa+UzwCCbelVHxPePg0al6q6kQCAheTaao/TjccKU36K2E0FB7
+	 iu9j+Fj87Pe4w==
+Date: Tue, 25 Feb 2025 22:18:13 +0000
+From: Will Deacon <will@kernel.org>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Arnd Bergmann <arnd@arndb.de>, Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	David Hildenbrand <david@redhat.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Dev Jain <dev.jain@arm.com>, Kevin Brodsky <kevin.brodsky@arm.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] arm64: hugetlb: Fix huge_ptep_get_and_clear() for
+ non-present ptes
+Message-ID: <20250225221812.GA23870@willie-the-truck>
+References: <20250217140419.1702389-1-ryan.roberts@arm.com>
+ <20250217140419.1702389-3-ryan.roberts@arm.com>
+ <20250221153156.GC20567@willie-the-truck>
+ <6ebf36f2-2e55-49b2-8764-90fd972d6e66@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] phy: rockchip: usbdp: move type-orientation-switch
- further down
-To: Heiko Stuebner <heiko@sntech.de>, vkoul@kernel.org, kishon@kernel.org
-Cc: linux-phy@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- quentin.schulz@cherry.de, sebastian.reichel@collabora.com,
- Heiko Stuebner <heiko.stuebner@cherry.de>
-References: <20250225184519.3586926-1-heiko@sntech.de>
- <20250225184519.3586926-2-heiko@sntech.de>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20250225184519.3586926-2-heiko@sntech.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6ebf36f2-2e55-49b2-8764-90fd972d6e66@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Le 25/02/2025 à 19:45, Heiko Stuebner a écrit :
-> From: Heiko Stuebner <heiko.stuebner@cherry.de>
+On Mon, Feb 24, 2025 at 12:11:19PM +0000, Ryan Roberts wrote:
+> On 21/02/2025 15:31, Will Deacon wrote:
+> > On Mon, Feb 17, 2025 at 02:04:15PM +0000, Ryan Roberts wrote:
+> >> +	pte = __ptep_get_and_clear(mm, addr, ptep);
+> >> +	present = pte_present(pte);
+> >> +	while (--ncontig) {
+> >> +		ptep++;
+> >> +		addr += pgsize;
+> >> +		tmp_pte = __ptep_get_and_clear(mm, addr, ptep);
+> >> +		if (present) {
+> >> +			if (pte_dirty(tmp_pte))
+> >> +				pte = pte_mkdirty(pte);
+> >> +			if (pte_young(tmp_pte))
+> >> +				pte = pte_mkyoung(pte);
+> >> +		}
+> >>  	}
+> > 
+> > nit: With the loop now structured like this, we really can't handle
+> > num_contig_ptes() returning 0 if it gets an unknown size. Granted, that
+> > really shouldn't happen, but perhaps it would be better to add a 'default'
+> > case with a WARN() to num_contig_ptes() and then add an early return here?
 > 
-> Move the typec-orientation-switch functionality further down, next to
-> the typec-mux code. Not only brings this the typec-related functionality
-> closer together, but also the following change needs access to other
-> driver functions, that are below the current position.
+> Looking at other users of num_contig_ptes() it looks like huge_ptep_get()
+> already assumes at least 1 pte (it calls __ptep_get() before calling
+> num_contig_ptes()) and set_huge_pte_at() assumes 1 pte for the "present and
+> non-contig" case. So num_contig_ptes() returning 0 is already not really
+> consumed consistently.
 > 
-> No functional change.
-> 
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
-> ---
->   drivers/phy/rockchip/phy-rockchip-usbdp.c | 166 +++++++++++-----------
->   1 file changed, 83 insertions(+), 83 deletions(-)
-> 
-> diff --git a/drivers/phy/rockchip/phy-rockchip-usbdp.c b/drivers/phy/rockchip/phy-rockchip-usbdp.c
-> index 5b1e8a3806ed..7b17c82ebcfc 100644
-> --- a/drivers/phy/rockchip/phy-rockchip-usbdp.c
-> +++ b/drivers/phy/rockchip/phy-rockchip-usbdp.c
-> @@ -616,89 +616,6 @@ static void rk_udphy_dp_hpd_event_trigger(struct rk_udphy *udphy, bool hpd)
->   	rk_udphy_grfreg_write(udphy->vogrf, &cfg->vogrfcfg[udphy->id].hpd_trigger, hpd);
->   }
->   
-> -static void rk_udphy_set_typec_default_mapping(struct rk_udphy *udphy)
-> -{
-> -	if (udphy->flip) {
-> -		udphy->dp_lane_sel[0] = 0;
-> -		udphy->dp_lane_sel[1] = 1;
-> -		udphy->dp_lane_sel[2] = 3;
-> -		udphy->dp_lane_sel[3] = 2;
-> -		udphy->lane_mux_sel[0] = PHY_LANE_MUX_DP;
-> -		udphy->lane_mux_sel[1] = PHY_LANE_MUX_DP;
-> -		udphy->lane_mux_sel[2] = PHY_LANE_MUX_USB;
-> -		udphy->lane_mux_sel[3] = PHY_LANE_MUX_USB;
-> -		udphy->dp_aux_dout_sel = PHY_AUX_DP_DATA_POL_INVERT;
-> -		udphy->dp_aux_din_sel = PHY_AUX_DP_DATA_POL_INVERT;
-> -		gpiod_set_value_cansleep(udphy->sbu1_dc_gpio, 1);
-> -		gpiod_set_value_cansleep(udphy->sbu2_dc_gpio, 0);
-> -	} else {
-> -		udphy->dp_lane_sel[0] = 2;
-> -		udphy->dp_lane_sel[1] = 3;
-> -		udphy->dp_lane_sel[2] = 1;
-> -		udphy->dp_lane_sel[3] = 0;
-> -		udphy->lane_mux_sel[0] = PHY_LANE_MUX_USB;
-> -		udphy->lane_mux_sel[1] = PHY_LANE_MUX_USB;
-> -		udphy->lane_mux_sel[2] = PHY_LANE_MUX_DP;
-> -		udphy->lane_mux_sel[3] = PHY_LANE_MUX_DP;
-> -		udphy->dp_aux_dout_sel = PHY_AUX_DP_DATA_POL_NORMAL;
-> -		udphy->dp_aux_din_sel = PHY_AUX_DP_DATA_POL_NORMAL;
-> -		gpiod_set_value_cansleep(udphy->sbu1_dc_gpio, 0);
-> -		gpiod_set_value_cansleep(udphy->sbu2_dc_gpio, 1);
-> -	}
-> -
-> -	udphy->mode = UDPHY_MODE_DP_USB;
-> -}
-> -
-> -static int rk_udphy_orien_sw_set(struct typec_switch_dev *sw,
-> -				 enum typec_orientation orien)
-> -{
-> -	struct rk_udphy *udphy = typec_switch_get_drvdata(sw);
-> -
-> -	mutex_lock(&udphy->mutex);
-> -
-> -	if (orien == TYPEC_ORIENTATION_NONE) {
-> -		gpiod_set_value_cansleep(udphy->sbu1_dc_gpio, 0);
-> -		gpiod_set_value_cansleep(udphy->sbu2_dc_gpio, 0);
-> -		/* unattached */
-> -		rk_udphy_usb_bvalid_enable(udphy, false);
-> -		goto unlock_ret;
-> -	}
-> -
-> -	udphy->flip = (orien == TYPEC_ORIENTATION_REVERSE) ? true : false;
-> -	rk_udphy_set_typec_default_mapping(udphy);
-> -	rk_udphy_usb_bvalid_enable(udphy, true);
-> -
-> -unlock_ret:
-> -	mutex_unlock(&udphy->mutex);
-> -	return 0;
-> -}
-> -
-> -static void rk_udphy_orien_switch_unregister(void *data)
-> -{
-> -	struct rk_udphy *udphy = data;
-> -
-> -	typec_switch_unregister(udphy->sw);
-> -}
-> -
-> -static int rk_udphy_setup_orien_switch(struct rk_udphy *udphy)
-> -{
-> -	struct typec_switch_desc sw_desc = { };
-> -
-> -	sw_desc.drvdata = udphy;
-> -	sw_desc.fwnode = dev_fwnode(udphy->dev);
-> -	sw_desc.set = rk_udphy_orien_sw_set;
-> -
-> -	udphy->sw = typec_switch_register(udphy->dev, &sw_desc);
-> -	if (IS_ERR(udphy->sw)) {
-> -		dev_err(udphy->dev, "Error register typec orientation switch: %ld\n",
-> -			PTR_ERR(udphy->sw));
-> -		return PTR_ERR(udphy->sw);
-> -	}
-> -
-> -	return devm_add_action_or_reset(udphy->dev,
-> -					rk_udphy_orien_switch_unregister, udphy);
-> -}
-> -
->   static int rk_udphy_refclk_set(struct rk_udphy *udphy)
->   {
->   	unsigned long rate;
-> @@ -1323,6 +1240,89 @@ static const struct phy_ops rk_udphy_usb3_phy_ops = {
->   	.owner		= THIS_MODULE,
->   };
->   
-> +static void rk_udphy_set_typec_default_mapping(struct rk_udphy *udphy)
-> +{
-> +	if (udphy->flip) {
-> +		udphy->dp_lane_sel[0] = 0;
-> +		udphy->dp_lane_sel[1] = 1;
-> +		udphy->dp_lane_sel[2] = 3;
-> +		udphy->dp_lane_sel[3] = 2;
-> +		udphy->lane_mux_sel[0] = PHY_LANE_MUX_DP;
-> +		udphy->lane_mux_sel[1] = PHY_LANE_MUX_DP;
-> +		udphy->lane_mux_sel[2] = PHY_LANE_MUX_USB;
-> +		udphy->lane_mux_sel[3] = PHY_LANE_MUX_USB;
-> +		udphy->dp_aux_dout_sel = PHY_AUX_DP_DATA_POL_INVERT;
-> +		udphy->dp_aux_din_sel = PHY_AUX_DP_DATA_POL_INVERT;
-> +		gpiod_set_value_cansleep(udphy->sbu1_dc_gpio, 1);
-> +		gpiod_set_value_cansleep(udphy->sbu2_dc_gpio, 0);
-> +	} else {
-> +		udphy->dp_lane_sel[0] = 2;
-> +		udphy->dp_lane_sel[1] = 3;
-> +		udphy->dp_lane_sel[2] = 1;
-> +		udphy->dp_lane_sel[3] = 0;
-> +		udphy->lane_mux_sel[0] = PHY_LANE_MUX_USB;
-> +		udphy->lane_mux_sel[1] = PHY_LANE_MUX_USB;
-> +		udphy->lane_mux_sel[2] = PHY_LANE_MUX_DP;
-> +		udphy->lane_mux_sel[3] = PHY_LANE_MUX_DP;
-> +		udphy->dp_aux_dout_sel = PHY_AUX_DP_DATA_POL_NORMAL;
-> +		udphy->dp_aux_din_sel = PHY_AUX_DP_DATA_POL_NORMAL;
-> +		gpiod_set_value_cansleep(udphy->sbu1_dc_gpio, 0);
-> +		gpiod_set_value_cansleep(udphy->sbu2_dc_gpio, 1);
-> +	}
-> +
-> +	udphy->mode = UDPHY_MODE_DP_USB;
-> +}
-> +
-> +static int rk_udphy_orien_sw_set(struct typec_switch_dev *sw,
-> +				 enum typec_orientation orien)
-> +{
-> +	struct rk_udphy *udphy = typec_switch_get_drvdata(sw);
-> +
-> +	mutex_lock(&udphy->mutex);
-> +
-> +	if (orien == TYPEC_ORIENTATION_NONE) {
-> +		gpiod_set_value_cansleep(udphy->sbu1_dc_gpio, 0);
-> +		gpiod_set_value_cansleep(udphy->sbu2_dc_gpio, 0);
-> +		/* unattached */
-> +		rk_udphy_usb_bvalid_enable(udphy, false);
-> +		goto unlock_ret;
-> +	}
-> +
-> +	udphy->flip = (orien == TYPEC_ORIENTATION_REVERSE) ? true : false;
-> +	rk_udphy_set_typec_default_mapping(udphy);
-> +	rk_udphy_usb_bvalid_enable(udphy, true);
-> +
-> +unlock_ret:
-> +	mutex_unlock(&udphy->mutex);
-> +	return ret;
+> How about we change the default num_contig_ptes() return value to 1 and add a
+> warning if size is invalid:
 
-This will break built.
+Fine by me!
 
-It was return 0 preivously.
-This change should be aprt of 2/2 where "int ret;" is introduced.
+I assume you'll fold that in and send a new version, along with the typo
+fixes?
 
-CJ
+Cheers,
 
-
-> +}
-> +
-> +static void rk_udphy_orien_switch_unregister(void *data)
-> +{
-> +	struct rk_udphy *udphy = data;
-> +
-> +	typec_switch_unregister(udphy->sw);
-> +}
-> +
-> +static int rk_udphy_setup_orien_switch(struct rk_udphy *udphy)
-> +{
-> +	struct typec_switch_desc sw_desc = { };
-> +
-> +	sw_desc.drvdata = udphy;
-> +	sw_desc.fwnode = dev_fwnode(udphy->dev);
-> +	sw_desc.set = rk_udphy_orien_sw_set;
-> +
-> +	udphy->sw = typec_switch_register(udphy->dev, &sw_desc);
-> +	if (IS_ERR(udphy->sw)) {
-> +		dev_err(udphy->dev, "Error register typec orientation switch: %ld\n",
-> +			PTR_ERR(udphy->sw));
-> +		return PTR_ERR(udphy->sw);
-> +	}
-> +
-> +	return devm_add_action_or_reset(udphy->dev,
-> +					rk_udphy_orien_switch_unregister, udphy);
-> +}
-> +
->   static int rk_udphy_typec_mux_set(struct typec_mux_dev *mux,
->   				  struct typec_mux_state *state)
->   {
-
+Will
