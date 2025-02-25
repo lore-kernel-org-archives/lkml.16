@@ -1,295 +1,101 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2080.outbound.protection.outlook.com [40.107.212.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C50726AA93;
-	Tue, 25 Feb 2025 15:24:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740497089; cv=fail; b=bHwelGPm8Tr1/asYcUNp2zkCPhmh9o6sWj71RU6BqGuu86i+DefpX+HixJItnrnq0+bB0f/QwUKc8W/yORgTiwFXHlF2OOptdSdGd0AGZpdmYQI3wMvfkH9OrDCCMojT64nvR1434/3n13NboJqXl/DjSXX5ukh73gbHjdau6yI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740497089; c=relaxed/simple;
-	bh=yRYAjMsXbuUpdW026idBvCUTU5Cjczg2UXZWMyV8Jkg=;
-	h=Content-Type:Date:Message-Id:Subject:From:To:Cc:References:
-	 In-Reply-To:MIME-Version; b=QYs87vPi1W0tLOecv+FIK/oD5hM2VYESJGQMDX7jQfx8R/94arT/5gCY2vhy2W3eZG2ORAZmiagsazd1DyyMmTAQHvlzRHDOv4T93W28UjxgsFWxt+hbZ/9Vhj+5QGao1udcrgSVMklkiEIbWlbWBYUJ/UjfSbqIDG1s55uZ5E4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=GqCYE4NL; arc=fail smtp.client-ip=40.107.212.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C303526BDB9
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 15:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740497099; cv=none; b=eMx+R7od6EFrMG+wx/U5Zt1ofYJVJ/UlCalNYPXu2xfvbTa171gFRweRhRgrmScnbgbzV0gLijzxO2+vbc8PBEF74ORiAIEqAR11/pBRu/jLLV33cLvQEXmHvFR+UYhRWwRbAvWmHOZ9Iq3+pUhvl2RhXwOgUpdE0Vn00myxXSY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740497099; c=relaxed/simple;
+	bh=/kEmc1RisEmZzLUP6Bb9mGVdImTgWmIIc9sRmzZjAb0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=NJWu5MY4QeyU2rALi9G1VALEnornbqs31kuHpe03qStCtXlsxY0QuiaIeN+AyQuw1aVSZ8ICA+BEhj/Ej/CdY4cvIphqkrdxNgu78+LE+dEq6f0002KGpDXJEtFRq/5bmyh2fff/uGl3mezc1lcZogfhQbH5Pj0oul5R8m9uwO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CpLrUep1; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="GqCYE4NL"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=U8pqeFP0/ybdFlD8O3ZEU9G9K0lKnlxaAwgP5zCf/icTxbUa+3mlroUXLLMFTlMs6puAiiYDZ9XXX+vzcbNxvhtFiDdqdw60ZT+uejIoGxjxQGWqJBHnCM05yWNeYkp6IOz6n2WUySdi8JTUoB7KpQWdKZQS02geo8L4SNrQkw5OwqGTpR5abwyOlbMRPuPVkRdT07g3uefFD1CdUklLlWgwH1ckJvD7KX/JuDIALwXwjZ6gVCDz2NYd42AJ5gA5jc0ibLc3f8gtkVDyYilq7zTEclC4YyXlq+O6WdWNmMIQW/CFPeVx3UrIzMfDwecaEQ/7g+XlHHrhlubOH7L46A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=j1XRnt5uJ/SHga63cVIKjgO8xyPh6IxjVLMvp8nAXpM=;
- b=k1YPujxQTA9dPwaIMNVjXAfI/Akn30okMDAoExzI1F6VPETHHrVw7U/GB2LKRvOgoTGEOvldUVurLKiVNFsayU3dyCP/3krHUAQ+4ieYzBxeZrGjkfS7TxrXWFzhlvFCUxpSrg6wpEfkOYJSCfiiDaBzq+5Fy3jkNc0/CKc5Uj0jFaxzeDr3KICT6qc1BGoE1EI41wABn3ooIJaOyHIAHsRa2doXEhJs/rv9mNe2IP6IvqHz4G2GVHjt4Z53RjSFqoPCaYCSCF/c65n5Y2xgDAVdkaUfJD8qKbzyAqduAtFKNU7l8LlephSJc8vxD061fR82aQuUpx8M5wl8MPATvA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=j1XRnt5uJ/SHga63cVIKjgO8xyPh6IxjVLMvp8nAXpM=;
- b=GqCYE4NLg84YCjrKLgR+Z4LWFXHrKzGBojN5wXqYRF3rezSc58eFnbvkmvXw320SE9P+fvliyiuRzsTvnmlomsnbyvXzWEGgwkIQkTcpwBQdPMEKhzqpF4VFvLlUOrBZZniKbcc7TWhF6u0yV8UQhso5Xf6OLuwT7FuaCfszVW6qqdujLEnj8bpbpDUVu7OQatMkpx+MDeNqRvP8YCsDzr2YaMoeN6o+oppia/A9gsEVpQzSpSDmBWZvGVOuqiXyeY0JrD310dxPbyEBBkz8gVFPNpSjxjDYpZjAZPMuU1ZGQxAEm+pPbY30lRV1xtbx0q7L9IEREsQqdTP49ZSAsg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MN2PR12MB3997.namprd12.prod.outlook.com (2603:10b6:208:161::11)
- by DS7PR12MB9476.namprd12.prod.outlook.com (2603:10b6:8:250::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8489.18; Tue, 25 Feb
- 2025 15:24:38 +0000
-Received: from MN2PR12MB3997.namprd12.prod.outlook.com
- ([fe80::d161:329:fdd3:e316]) by MN2PR12MB3997.namprd12.prod.outlook.com
- ([fe80::d161:329:fdd3:e316%6]) with mapi id 15.20.8466.016; Tue, 25 Feb 2025
- 15:24:38 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 26 Feb 2025 00:23:40 +0900
-Message-Id: <D81MP8Y5ME66.3SLPVNXERH1HU@nvidia.com>
-Subject: Re: [RFC PATCH 0/3] gpu: nova-core: add basic timer subdevice
- implementation
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-To: "Danilo Krummrich" <dakr@kernel.org>
-Cc: "Dave Airlie" <airlied@gmail.com>, "Gary Guo" <gary@garyguo.net>, "Joel
- Fernandes" <joel@joelfernandes.org>, "Boqun Feng" <boqun.feng@gmail.com>,
- "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>,
- <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
- <nouveau@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
- "Nouveau" <nouveau-bounces@lists.freedesktop.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250217-nova_timer-v1-0-78c5ace2d987@nvidia.com>
- <Z7OrKX3zzjrzZdyz@pollux>
- <CAPM=9tyu84z4Xk5X0fykO3Dazby2UqRgwtN4woNKe4Z2yMyDZg@mail.gmail.com>
- <D80AK2CLL4AZ.1G6R7OBHOF08O@nvidia.com> <Z7xg8uArPlr2gQBU@pollux>
- <D81L5PE1SPWC.O56MB6SRS0XK@nvidia.com> <Z73cXGkookq5-NON@cassiopeiae>
-In-Reply-To: <Z73cXGkookq5-NON@cassiopeiae>
-X-ClientProxiedBy: TY2PR02CA0025.apcprd02.prod.outlook.com
- (2603:1096:404:a6::13) To CH2PR12MB3990.namprd12.prod.outlook.com
- (2603:10b6:610:28::18)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CpLrUep1"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fc1e7efe00so11842507a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 07:24:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740497096; x=1741101896; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=htA+KOz3hwOpVDUGhryEfyIW89CbLqdlKndxYP8BGHY=;
+        b=CpLrUep199DOdagcEmyW/NLD8D91tT8cvWgdBy+wZB+nSiFfuesOpVS7JzbWJRI4gP
+         L4gfkE0NQ8tfTXxxwAu+zT8pwoDq5EFHhLgv55QzvdyGrJxCjmUqBEGMSWvzivBNTcdU
+         HGvhm7kRzknwG3bQUjYUl2B1EOpdj7+C1DhfJ9IZ8p+jkf1Ya8rfSmrnhfKJbmjDKt5q
+         llKoUkNFvy2GJK7pmtnkMTlN2mbjijr5rhJ1h5KN/LsB3qAxIN+jgIolzNdvIVL79UmN
+         GORHAH/pHbwRABIShDzRf8YQuqEOdYAez/dEewyAHYCvk8ETOT2dwEOHrwtbdyYfGXAr
+         /7Pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740497096; x=1741101896;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=htA+KOz3hwOpVDUGhryEfyIW89CbLqdlKndxYP8BGHY=;
+        b=mMI2KuJHstk9UyLOEdG/w/8QNw0KMIfEZoWz387xDvydIe1GG89rw2j5ThG2AhxoDG
+         yg8uVf9x4jI0qoaLWeXoF58vF29LPr3YVQeSJ3ghO0sJUyzRj05eRX4dSp7Lphrnu+xj
+         lDp6PNMfSvO5b5h5XAFfhDWL/QtuLLy7ONw17jw6bty22S/4H+HOrfojiqg1NnVHJu7x
+         pXKM6I1HrBbjYK5d5sLWhCTFa0Do5Leb1OruWZwGwXyblhceHveuDntxWF1b7jtG7VPV
+         ptLlL5tl1w4+VTPUtAXPNCZFXjT7fa/tR0nKcYF9FE2ccRGt1SIXegp6qSNNzfFwkpCU
+         P9OA==
+X-Forwarded-Encrypted: i=1; AJvYcCVXS/eJ7myE4d2IB+JlrtRwgQlFxUN6zYIE2nRN3f8jK3+pCxxsXTtEXueJi+TlFPToBDY/cbvy2DBxHc8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz30tHorH9z3dUN8cYRLleXR7JrSdT1B/deuJRnKiDKgVKrHdGR
+	YjQanUxw3LlM3wYUWuQpTktJ9iUM1haFlFIZeFtwic9CIOFgIWcltt+L5OYyrgjGnXQrNnpCwyy
+	+TA==
+X-Google-Smtp-Source: AGHT+IEfGwMFBrSc1PtpNIxEeqJE1KnFkO2G8V6lYOf7bmlh6CIlg9FiV9Y9zAZ7X+CiVfk9lHXS5gclkAA=
+X-Received: from pjbtb3.prod.google.com ([2002:a17:90b:53c3:b0:2f4:465d:5c61])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5202:b0:2fa:b8e:3d26
+ with SMTP id 98e67ed59e1d1-2fce875bd28mr27277979a91.30.1740497096080; Tue, 25
+ Feb 2025 07:24:56 -0800 (PST)
+Date: Tue, 25 Feb 2025 07:24:54 -0800
+In-Reply-To: <22d4574b-7e2d-4cd8-91bd-f5208e82369e@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3997:EE_|DS7PR12MB9476:EE_
-X-MS-Office365-Filtering-Correlation-Id: 02dceb35-5446-4a54-ad78-08dd55b06ee1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|10070799003|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RGd1cTkyZkhmamovdGtTMHBNZXRLSXEvcFVzVldVb2FyREtoeUZWWHFBeDFI?=
- =?utf-8?B?dVVrejBDemtkcVdTejl6TUdLaFJ1UGtabS9FVm10c1Q2YXBaOXJIZFdHbG5G?=
- =?utf-8?B?WWNtaUowN3o2UEVVNm96eWRCWndMdjJIYjhseXJaWnJuOVRQdVBUNkhzTXQy?=
- =?utf-8?B?cHNTczZnWjFwSnZpRW1ndWVSaG4zdDQxL05ZdjlrRzREbXdlOTRGWlByd0hm?=
- =?utf-8?B?UWE5Nkhpb2NFYVNFbC93QllJWklXSnB1ZDAzZGhITlhwQXNxTTU5Ymw2bUdz?=
- =?utf-8?B?bmdlb25RNHkvWHhoQ1pJVGI3RnlhaW43UmE4NmtxV2JUdlZvUVZYRmdmYzZR?=
- =?utf-8?B?Y09JRDNMVVpkd0dNUHdramVFY3p6b3RMSDdaeFltck4wUGx2Q3Y5Vm5uNS9i?=
- =?utf-8?B?dlVOa2IrMURZdWtsVnFJUSt2M3JFK01hOG1BODg4dnpYUkFJMENEU2NqWGZL?=
- =?utf-8?B?VElZTm1XZzFVRUZCcUU4aUE2TDB4NDBJSzFhdWZza0EwRloyU3UyL0lWc1Vy?=
- =?utf-8?B?eklZbUhQa2YvZWJqelp3SzVaVjdrelY4cThjTmtRNENJSnZvZ1gwSUFiY1gy?=
- =?utf-8?B?d3UrZHE1cDNkcFU5T01uOU1KY1RKWjdZN3AybWxCUzhNTHF5dlFETDQ4MlVm?=
- =?utf-8?B?a0N5cEViN3Q4Z2E3d2lZWmtvaVkrRkdMQjBjRjZsckRQSjc2NzBJc3pUQnpy?=
- =?utf-8?B?ZU55bUZyL3FjZzY0WkRBZ3hmd2VwdERod3VibTdaVWdSOEVvUUdvdWMwbWN0?=
- =?utf-8?B?UGdTOUdNVW9HK0M2WmhrSFpWb1B4Sks1U3RtZlZnYWtCeEgvcjBFVXhvQlll?=
- =?utf-8?B?Q2paemluNnVXQ2hlQmRJN2FmVG5tMm0vaVBFYnZ6QU5HLzZnV2tydDBsVGFZ?=
- =?utf-8?B?ZFZQU3A5MGo4QlpRbExQK2wvTnFQYm5ydHJLVXlnakVST3FuSVUzdEhiaGlI?=
- =?utf-8?B?M1JzYlMvWkR0eHowamdMeG1sR3BpNnNUemhVMXg0T2VRWVNNb2NXWUZyb3p5?=
- =?utf-8?B?S2lQVTBSYldZejRObm4yUGRNVkRNSFh6TGNiU29PMkZVaFNqNzZLK0ZSdEdQ?=
- =?utf-8?B?UzhGdW5QWEcvWlViZE9VeVJJdnFQMlQzZzZPMEpERnBCUXdVRDFxb0hmdTJn?=
- =?utf-8?B?amZBbXdoYU5GcDZNdU03cVUvd1NZZjVnZlZmZ0dmQlhlaExJa0tQV2J3ZUVL?=
- =?utf-8?B?RUZmOEtsSXhTNEN4OTNrczA2cGV5bHZHdmJoY1puRnd0VStwQlFDZko3ZWRL?=
- =?utf-8?B?cDVQaldrMWtLRWpRTW15MFJ6MWx2bklING53a2dhVGdmMWJzbjhuVjBQUVgr?=
- =?utf-8?B?SXRONkFmd2REL2ZtdVBjSktlYjJZdmJNaXQxeWlTZy9lQ3pHVnR0NzJlTzh3?=
- =?utf-8?B?RFhJMm5HS0VseGthL0tlc2VkaUZFWEZQaWNVTEhUOStQVlRicGlDVlRTOEFz?=
- =?utf-8?B?Y01aTXRocyt5cTdPR0ZJTytaM2pZdmU2R2tJaHN6TGxpR0tuU2prRlhyRkJs?=
- =?utf-8?B?WEZqeVRXalhkalpBUHdlSzQySzJ4RGx4ZXpHWWNjdlNLdFhWbUtYQ2d1SFdE?=
- =?utf-8?B?akpGNTNJZjQ4L0l5SjBKS0p3WjFMSit2bTN0SktlZzhOS2JOYkxoMUovRk5x?=
- =?utf-8?B?TlowMmpkTHNWVk81ODQ5OFhsdi9ONzZwUU5zNHdiRmp0MDNUbEM5Nnd2RjZ3?=
- =?utf-8?B?aGt1SXFva1g0Qk1ORklqUzMwa3E1Ym1XNGxIZys1bmpXR3EvckY2ME1oYXJG?=
- =?utf-8?B?bjhqNWlkekxhTVdXWmhFbE4vRTRHMkE0ejdIUnpSYWV0dGxic2NxQld3SUFS?=
- =?utf-8?B?N0N5aU9oSTBkU3ZZeHJwN3hUbkY4clNZNkdKcVNoditmcGJRY2lPbWlXenAz?=
- =?utf-8?Q?Z0Mal5wwWswvR?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3997.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(10070799003)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cFg5TjVUUVJ1bGpzQWltQUk1d2ZPYWVFQ0R4cjN6RXJHeUlHUXVoRVExT0R5?=
- =?utf-8?B?bzBPTkVsTml3V1IxUW81Z3ptRVk1ejJSbGR1K3hRWU9PNDdZNVMvZC9BbXo0?=
- =?utf-8?B?aGM4YXJsOWFUTDlodkZTdVNtU05HZXd0VGNHdFk1elpQUVBzcDdWVjk1MVkw?=
- =?utf-8?B?R1pyVE9lYmhWNFBOdGhjZUxvS3g0QnRLMzdYVVBrcG5DZkI0YzBHdXBLZnYv?=
- =?utf-8?B?TlQ2SXRxT3grRjZudjZVaVhJcEFBT2N4d3JjeDQ3d01hbVVrSGZ2MnZpVjZy?=
- =?utf-8?B?VTJQNmdzcDB3NFJqY2U1WTRZamF6WXRXWG0wOHoyNUdrbWVYS0JzNHpDc0Q2?=
- =?utf-8?B?djRpWFFhb2ZHcU1qaDU1UGlreTVlSDlqQXVnSi9YVU5BWXR5VFRxNTRFY2lE?=
- =?utf-8?B?a3E2ZlhqNEtSWGJMWkZzSlpsUjBhUkVHWm9zT3RZdlIrNjIwcjB4czk0MVJt?=
- =?utf-8?B?OTc5N3VBbldCRmdZOXBheG9rYlU3amM1aVFWeTZEZmxmR01EL0VGVHQxdW5O?=
- =?utf-8?B?ZlQza1hJWEd4R2pzcWVuZEpWVjJ3L0JxYjVjR3FSRC9KeDVFMlRaRk9kTWMw?=
- =?utf-8?B?WjduZXdSRm16ZkpCWkNISERyZXBkdjk5ZURqdFFRbXJuVkxqcEtRU1RuTUl0?=
- =?utf-8?B?ckoxZVd0U1ZFZWtvb2RFenZhZTF1Vkl0WkxMK283VFNwd0s5VERtT0RTcnNK?=
- =?utf-8?B?RnpsNmV4dWl4ZXIvcE5MYU9WK0tXdTdEanhwK3dNcVBjYU1oQmR2Ym9naHpv?=
- =?utf-8?B?Sk8rWkhuVWhLVHIyT1pHYnlZZ1lGbTR4YXFGKzJPeFRpbUdNWEtrSE5KODNx?=
- =?utf-8?B?TVM2anNhZGZwWWExREVTVnBlR3F3YjNOM0xraUJkU0JaWnRDa2pENitYdFJS?=
- =?utf-8?B?Ulp1KzczcWFvN2YwbitPUW0yQ3QvemhuUUhJRFoyeUhIMm04cEd1RGg5VjAr?=
- =?utf-8?B?anlhL1lNZk5PeHlIVEk1L3YraVZPY0UvSTFJaHlqMU5ycnVPeEtDY2ZRRlNH?=
- =?utf-8?B?TkM5Y055T3UrNWxOQytKdERVbE56VzRJcEsrNmY4OUtERnVtUTNiSFFSU0U5?=
- =?utf-8?B?OTByaTQvcWNqcklVV1NGV0tDbXBsRnZJZUFyTm9RRnE0b3hqUlZaazVSQTdI?=
- =?utf-8?B?ellsbFFtWHRqRVc4RFNvc0FhTVpHYkVUV1ljbjZMQmxzWWZlL3dWazZuL05G?=
- =?utf-8?B?NTQ0N25pMVYzZlZtUGJmS0JxZzlxQmFURnZ2L1RaWTBQY25xOE8yblpNV2ZB?=
- =?utf-8?B?ellKdUJURTN1Wk1sdFQ1b2x0YktYaWtpSG5rbThZVkxMVEMwektvRXcwc2pq?=
- =?utf-8?B?K1UxMW9DRHJaTUd3RTlVb2t1WDFRZ0Fxai9ZN3IzYVBoanBSNHlIQk9kKzAx?=
- =?utf-8?B?WWNaYTd2T3Jybm9ZWVdVZGRmWDlnRDIzWmQvMFJ3dzVLMlVVdk5YUnJHUk9a?=
- =?utf-8?B?bHp2Q1JKaWhVZGF2WkFSQk5WdUdwaUZOcVJpUDgzbUR4azNJaFI5bDFvUmw0?=
- =?utf-8?B?SDY0VW5xbVM5a1FXM0RZdkVFL3c2VGNOa0FLQXJ6blh2RXkzKzdwZStyNGdw?=
- =?utf-8?B?d3diSExiVGtFb0pDcjdTaVYyUG92M0tycjdvZGZRd3RRN3U4eHp0eDZyZ3l0?=
- =?utf-8?B?czcxYk0vc2xWb2tuemNLamF0b3dFMlFIOCtIQkNxREhRTjk1VHo2SDh1aVJJ?=
- =?utf-8?B?aHFTRlJCWEpTVzYyOTUvL1BMR3l5S2x6Um1YNDF5RWc2Rkl4N1huMVJRRHhJ?=
- =?utf-8?B?Z000SHZGZ1piZlVmckorWU5JRDFJVlQ0TlhZNVdKTzlJNnpkRU9uak5MZFdz?=
- =?utf-8?B?Y2lxY0ExZVNYL0F6QTd1ZEpuZ2E1TDYzdDJIN1hWd1Z6Qm12czd5TEVrWERs?=
- =?utf-8?B?eitIaTdQTFVvQlFRMjhFZVJmUS9raXJXSmM0aGlET05TS3hYbkZZVVh2dU10?=
- =?utf-8?B?aW9nenJlaWF1YTFPcHQ1cUltSWxXbWthOWdZYldlcVdabHJyejgxekhTTEYw?=
- =?utf-8?B?dG1wNzFhMkkzQ1phSjNZN3BTOU1GZmdYeDhBaVJQSThoWVBHMXNac05YV05r?=
- =?utf-8?B?eXlnUGk1bDFBODBydlZQL2hPUGR4cnJIdUVlSWFvZnlSTVNtQ3oyZVZxMzZh?=
- =?utf-8?B?R1JFZjRqVEEzR2tOcXJvTUdCNDlWLzlJRGVrZmhyQ3p0U3dzekU2aVJCRm94?=
- =?utf-8?Q?IrkBO/B6Ohe+WdMuyyblAcrvT7f0seKSZ+Z5sUqETUqU?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02dceb35-5446-4a54-ad78-08dd55b06ee1
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2025 15:24:38.3119
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6S2UvTJVlqZlsZdlgjNZ0KvaVBFexXkuq0XjYjn88SuPBaE0ddKhfFSLBemcSvSl9uRx+gDWA2ei64yradapKw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB9476
+Mime-Version: 1.0
+References: <20241001050110.3643764-1-xin@zytor.com> <22d4574b-7e2d-4cd8-91bd-f5208e82369e@zytor.com>
+Message-ID: <Z73gxklugkYpwJiZ@google.com>
+Subject: Re: [PATCH v3 00/27] Enable FRED with KVM VMX
+From: Sean Christopherson <seanjc@google.com>
+To: Xin Li <xin@zytor.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, Chao Gao <chao.gao@intel.com>, pbonzini@redhat.com, 
+	corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, luto@kernel.org, 
+	peterz@infradead.org, andrew.cooper3@citrix.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed Feb 26, 2025 at 12:06 AM JST, Danilo Krummrich wrote:
-> On Tue, Feb 25, 2025 at 11:11:07PM +0900, Alexandre Courbot wrote:
->> On Mon Feb 24, 2025 at 9:07 PM JST, Danilo Krummrich wrote:
->> > CC: Gary
->> >
->> > On Mon, Feb 24, 2025 at 10:40:00AM +0900, Alexandre Courbot wrote:
->> >> This inability to sleep while we are accessing registers seems very
->> >> constraining to me, if not dangerous. It is pretty common to have
->> >> functions intermingle hardware accesses with other operations that mi=
-ght
->> >> sleep, and this constraint means that in such cases the caller would
->> >> need to perform guard lifetime management manually:
->> >>=20
->> >>   let bar_guard =3D bar.try_access()?;
->> >>   /* do something non-sleeping with bar_guard */
->> >>   drop(bar_guard);
->> >>=20
->> >>   /* do something that might sleep */
->> >>=20
->> >>   let bar_guard =3D bar.try_access()?;
->> >>   /* do something non-sleeping with bar_guard */
->> >>   drop(bar_guard);
->> >>=20
->> >>   ...
->> >>=20
->> >> Failure to drop the guard potentially introduces a race condition, wh=
-ich
->> >> will receive no compile-time warning and potentialy not even a runtim=
-e
->> >> one unless lockdep is enabled. This problem does not exist with the
->> >> equivalent C code AFAICT, which makes the Rust version actually more
->> >> error-prone and dangerous, the opposite of what we are trying to achi=
-eve
->> >> with Rust. Or am I missing something?
->> >
->> > Generally you are right, but you have to see it from a different persp=
-ective.
->> >
->> > What you describe is not an issue that comes from the design of the AP=
-I, but is
->> > a limitation of Rust in the kernel. People are aware of the issue and =
-with klint
->> > [1] there are solutions for that in the pipeline, see also [2] and [3]=
-.
->> >
->> > [1] https://rust-for-linux.com/klint
->> > [2] https://github.com/Rust-for-Linux/klint/blob/trunk/doc/atomic_cont=
-ext.md
->> > [3] https://www.memorysafety.org/blog/gary-guo-klint-rust-tools/
->>=20
->> Thanks, I wasn't aware of klint and it looks indeed cool, even if not pe=
-rfect by
->> its own admission. But even if the ignore the safety issue, the other on=
-e
->> (ergonomics) is still there.
->>=20
->> Basically this way of accessing registers imposes quite a mental burden =
-on its
->> users. It requires a very different (and harsher) discipline than when w=
-riting
->> the same code in C
->
-> We need similar solutions in C too, see drm_dev_enter() / drm_dev_exit() =
-and
-> drm_dev_unplug().
+On Tue, Feb 18, 2025, Xin Li wrote:
+> On 9/30/2024 10:00 PM, Xin Li (Intel) wrote:
+> While I'm waiting for the CET patches for native Linux and KVM to be
+> upstreamed, do you think if it's worth it for you to take the cleanup
+> and some of the preparation patches first?
 
-Granted, but the use of these is much more coarsed-grained than what is
-expected of IO resources, right?
+Yes, definitely.  I'll go through the series and see what I can grab now.
 
->
->> and the correct granularity to use is unclear to me.
->>=20
->> For instance, if I want to do the equivalent of Nouveau's nvkm_usec() to=
- poll a
->> particular register in a busy loop, should I call try_access() once befo=
-re the
->> loop? Or every time before accessing the register?
->
-> I think we should re-acquire the guard in each iteration and drop it befo=
-re the
-> delay. I think a simple closure would work very well for this pattern?
->
->> I'm afraid having to check
->> that the resource is still alive before accessing any register is going =
-to
->> become tedious very quickly.
->>=20
->> I understand that we want to protect against accessing the IO region of =
-an
->> unplugged device ; but still there is no guarantee that the device won't=
- be
->> unplugged in the middle of a critical section, however short. Thus the d=
-river
->> code should be able to recognize that the device has fallen off the bus =
-when it
->> e.g. gets a bunch of 0xff instead of a valid value. So do we really need=
- to
->> extra protection that AFAICT isn't used in C?
->
-> As mentioned above, we already do similar things in C.
->
-> Also, think about what's the alternative. If we remove the Devres wrapper=
- of
-> pci::Bar, we lose the control over the lifetime of the bar mapping and it=
- can
-> easily out-live the device / driver binding. This makes the API unsound.
+Thanks!
 
-Oh my issue is not with the Devres wrapper, I think it makes sense -
-it's more the use of RCU to control access to the resource that I find
-too constraining. And I'm pretty sure there will be more users of the
-same opinion as more drivers using it get written.
-
->
-> With this drivers would be able to keep resources acquired. What if after=
- a
-> hotplug the physical address region is re-used and to be mapped by anothe=
-r
-> driver?
-
-Actually - wouldn't that issue also be addressed by a PCI equivalent to
-drm_dev_enter() and friends that ensures the device (and thus its
-devres resources) stay in place?
-
-Using Rust, I can imagine (but not picture precisely yet) some method of
-the device that returns a reference to an inner structure containing its
-resources, available with immediate access. Since it would be
-coarser-grained, it could rely on something less constraining than RCU
-without a noticeable performance penalty.
+> Top of my mind are:
+>     KVM: x86: Use a dedicated flow for queueing re-injected exceptions
+>     KVM: VMX: Don't modify guest XFD_ERR if CR0.TS=1
+>     KVM: VMX: Pass XFD_ERR as pseudo-payload when injecting #NM
+>     KVM: nVMX: Add a prerequisite to existence of VMCS fields
+>     KVM: nVMX: Add a prerequisite to SHADOW_FIELD_R[OW] macros
+> 
+> Then specially, the nested exception tracking patch seems a good one as
+> Chao Gao suggested to decouple the nested tracking from FRED:
+>     KVM: VMX: Virtualize nested exception tracking
+> 
+> Lastly the patches to add support for the secondary VM exit controls might
+> go in early as well:
+>     KVM: VMX: Add support for the secondary VM exit controls
+>     KVM: nVMX: Add support for the secondary VM exit controls
+> 
+> But if you don't like the idea please just let me know.
+> 
+> Thanks!
+>     Xin
