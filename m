@@ -1,47 +1,80 @@
-Received: from relay-us1.mymailcheap.com (relay-us1.mymailcheap.com [51.81.35.219])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB5B2571CD;
-	Tue, 25 Feb 2025 07:34:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.35.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ECA01F60A
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 07:37:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740468868; cv=none; b=dCZk1EgSEjIGTOIuDHeKpel/xPD9BO6Tfnfx6t1hspo0+XyL8ZBEfM1nTYtaTFf+jF87/QfVrZDeRh/uVKueu+t5SF5BHQPHJ3wlSztwnCQkp+EoHtUlxb+r9RGQKvQm9mjhFREjtuuKyaRXhsKhB0wGcf4aaMv23fXiotppDjU=
+	t=1740469062; cv=none; b=okseadggbK1a8o1stU++jgh9s2bSF0j1KRQyPMd4cn4GzBU9Z15icapXXTS3HCB3AkWrYxwjDuGo6niN3/LDQ1QvlOB1F1IPYVsIkFHHYXYjezLWH2mqGrZ1Ni2aIkyRhkOnvFhJS7EinGEHBjBDh3o2L7IXcS4BUWu65xzwsTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740468868; c=relaxed/simple;
-	bh=+JalhccGD3dfKX7N9TtFSk3UBg6wqIoop1+xyjVxPsc=;
+	s=arc-20240116; t=1740469062; c=relaxed/simple;
+	bh=4TJxAcbMgjIuf77+szboTESgqOPtZ39HKIBt02Li7Rs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bXjYp2QnYS2+sAPd+OH67aravKD7pTebmmLIFln4kv2N2fUThm/IbxxIpHG+0RL0evB3kairLNYY6grm+QrCXuLUYJhTWBq5yDKBFzinn+2PMrwzdiMCLqyH+gJgaw6pLKuSuemlS0T8nZKQ/067zZGqJEbR3Rl8BXue0zDgeO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=yeBdoqTK; arc=none smtp.client-ip=51.81.35.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	 In-Reply-To:Content-Type; b=k/oMNDx99r10sktI3gIVbPZFgp5LnLDyRtVlYfKn/+Dq9+2us3krtlJBbqfbBa6qGcF4FZRKGXk8umh0pUB+tb+z/5TA3lkk0HvQCUwbqFW7rRJVyudcTz0Kw/bhIS3gVcb7IThqonpATiXC/pwsLn1RYmVMV82xtJsc07+DYqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dgIRHSuu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=YS+zGVaF; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dgIRHSuu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=YS+zGVaF; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="yeBdoqTK"
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.241.64])
-	by relay-us1.mymailcheap.com (Postfix) with ESMTPS id 75B8F20099;
-	Tue, 25 Feb 2025 07:28:54 +0000 (UTC)
-Received: from relay3.mymailcheap.com (relay3.mymailcheap.com [217.182.119.155])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id D91BC200C2;
-	Tue, 25 Feb 2025 07:28:45 +0000 (UTC)
-Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
-	by relay3.mymailcheap.com (Postfix) with ESMTPS id 09D753E917;
-	Tue, 25 Feb 2025 07:28:38 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf2.mymailcheap.com (Postfix) with ESMTPSA id 26F6A40078;
-	Tue, 25 Feb 2025 07:28:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1740468516; bh=+JalhccGD3dfKX7N9TtFSk3UBg6wqIoop1+xyjVxPsc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=yeBdoqTKWCxFwETv4ogWkB7Q50+lbpJs7iCgHkzukBIH2zdOJLp8/uIy6PiPGQ26d
-	 lL+Oum+a/dnd67OEHIQyhMfoQurMEOkot1KfpGT/ES4uaYJiH8UtreGZ4R0PaAJ5Kt
-	 dMrge6+74qs+MG43sHeEvQktU9wGb5+3T0SLiduM=
-Received: from [172.29.0.1] (unknown [203.175.14.48])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dgIRHSuu";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="YS+zGVaF";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dgIRHSuu";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="YS+zGVaF"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 028F243C7E;
-	Tue, 25 Feb 2025 07:28:28 +0000 (UTC)
-Message-ID: <7db41baa-c435-4478-baef-d3d658b050b4@aosc.io>
-Date: Tue, 25 Feb 2025 15:28:24 +0800
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B206C21189;
+	Tue, 25 Feb 2025 07:37:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740469052; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Y5WDztHzk/ESA1ZcgwdQycKbRCQMy9XUvHwa8HMzFSE=;
+	b=dgIRHSuuaT7Z6EHqtDd4xCwHgMTHcP+GT+98DsoyaBzeoqq6eao2amGhx0+NkLjQj6urJU
+	DlF0woXf+eU46iEUxciZWw316EayrTngox1oBdjekgZZR/iLT9JGvBlFOIHpvdY4y6eCAw
+	7PcER7k6PvmEtZmK9tq+Hh5oci1T778=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740469052;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Y5WDztHzk/ESA1ZcgwdQycKbRCQMy9XUvHwa8HMzFSE=;
+	b=YS+zGVaF7J3n30ywrN9k3abQLo/GH20KMwnecYGsorDqxdPEHCs4ZNdclZ/wZjPDyZ37XN
+	vB0jl1mJqxBa4qDA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740469052; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Y5WDztHzk/ESA1ZcgwdQycKbRCQMy9XUvHwa8HMzFSE=;
+	b=dgIRHSuuaT7Z6EHqtDd4xCwHgMTHcP+GT+98DsoyaBzeoqq6eao2amGhx0+NkLjQj6urJU
+	DlF0woXf+eU46iEUxciZWw316EayrTngox1oBdjekgZZR/iLT9JGvBlFOIHpvdY4y6eCAw
+	7PcER7k6PvmEtZmK9tq+Hh5oci1T778=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740469052;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Y5WDztHzk/ESA1ZcgwdQycKbRCQMy9XUvHwa8HMzFSE=;
+	b=YS+zGVaF7J3n30ywrN9k3abQLo/GH20KMwnecYGsorDqxdPEHCs4ZNdclZ/wZjPDyZ37XN
+	vB0jl1mJqxBa4qDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 67F6313332;
+	Tue, 25 Feb 2025 07:37:32 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id hUYMGDxzvWdcbgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 25 Feb 2025 07:37:32 +0000
+Message-ID: <466c38c3-7f74-46db-8270-bebafacf0007@suse.de>
+Date: Tue, 25 Feb 2025 08:37:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,85 +82,151 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] drm/xe/regs: remove a duplicate definition for
- RING_CTL_SIZE(size)
-To: linux-kernel@vger.kernel.org
-Cc: Kexy Biscuit <kexybiscuit@aosc.io>, stable@vger.kernel.org,
- Lucas De Marchi <lucas.demarchi@intel.com>,
- =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Matt Roper <matthew.d.roper@intel.com>,
- Ashutosh Dixit <ashutosh.dixit@intel.com>,
- Niranjana Vishwanathapura <niranjana.vishwanathapura@intel.com>,
- Ilia Levi <ilia.levi@intel.com>, Gustavo Sousa <gustavo.sousa@intel.com>,
- =?UTF-8?Q?Jos=C3=A9_Roberto_de_Souza?= <jose.souza@intel.com>,
- intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-References: <20250225071832.864133-1-jeffbai@aosc.io>
+Subject: Re: [PATCH v4 1/2] drm/format-helper: Add conversion from XRGB8888 to
+ BGR888
+To: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
+ Aditya Garg <gargaditya08@live.com>
+Cc: "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "mripard@kernel.org" <mripard@kernel.org>,
+ "airlied@gmail.com" <airlied@gmail.com>, "simona@ffwll.ch"
+ <simona@ffwll.ch>, Kerem Karabay <kekrby@gmail.com>,
+ Atharva Tiwari <evepolonium@gmail.com>, Aun-Ali Zaidi <admin@kodeit.net>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+References: <B08444CD-38A8-4B82-94B2-4162D6D2EABD@live.com>
+ <03FA573F-6D01-40E8-A666-CEA17A917036@live.com>
+ <Z7yCLxBN4Cl4btQm@smile.fi.intel.com>
 Content-Language: en-US
-From: Mingcong Bai <jeffbai@aosc.io>
-In-Reply-To: <20250225071832.864133-1-jeffbai@aosc.io>
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <Z7yCLxBN4Cl4btQm@smile.fi.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 26F6A40078
-X-Rspamd-Server: nf2.mymailcheap.com
-X-Spamd-Result: default: False [-0.10 / 10.00];
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.997];
 	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	RCVD_TLS_ALL(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
 	ARC_NA(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,live.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[19];
+	FREEMAIL_TO(0.00)[linux.intel.com,live.com];
 	MID_RHS_MATCH_FROM(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	FROM_HAS_DN(0.00)[];
-	SPFBL_URIBL_EMAIL_FAIL(0.00)[jeffbai.aosc.io:server fail,stable.vger.kernel.org:server fail];
+	FREEMAIL_CC(0.00)[linux.intel.com,kernel.org,gmail.com,ffwll.ch,kodeit.net,vger.kernel.org,lists.freedesktop.org];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	FROM_EQ_ENVFROM(0.00)[];
-	FREEMAIL_CC(0.00)[aosc.io,vger.kernel.org,intel.com,linux.intel.com,kernel.org,suse.de,gmail.com,ffwll.ch,lists.freedesktop.org];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Action: no action
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Hi all,
+Hi
 
-在 2025/2/25 15:18, Mingcong Bai 写道:
-> Commit b79e8fd954c4 ("drm/xe: Remove dependency on intel_engine_regs.h")
-> introduced an internal set of engine registers, however, as part of this
-> change, it has also introduced two duplicate `define' lines for
-> `RING_CTL_SIZE(size)'. This commit was introduced to the tree in v6.8-rc1.
-> 
-> While this is harmless as the definitions did not change, so no compiler
-> warning was observed.
-> 
-> Drop this line anyway for the sake of correctness.
-> 
-> Cc: <stable@vger.kernel.org> # v6.8-rc1+
-> Fixes: b79e8fd954c4 ("drm/xe: Remove dependency on intel_engine_regs.h")
-> Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
-> ---
->   drivers/gpu/drm/xe/regs/xe_engine_regs.h | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/xe/regs/xe_engine_regs.h b/drivers/gpu/drm/xe/regs/xe_engine_regs.h
-> index d86219dedde2a..b732c89816dff 100644
-> --- a/drivers/gpu/drm/xe/regs/xe_engine_regs.h
-> +++ b/drivers/gpu/drm/xe/regs/xe_engine_regs.h
-> @@ -53,7 +53,6 @@
->   
->   #define RING_CTL(base)				XE_REG((base) + 0x3c)
->   #define   RING_CTL_SIZE(size)			((size) - PAGE_SIZE) /* in bytes -> pages */
-> -#define   RING_CTL_SIZE(size)			((size) - PAGE_SIZE) /* in bytes -> pages */
->   
->   #define RING_START_UDW(base)			XE_REG((base) + 0x48)
->   
+Am 24.02.25 um 15:29 schrieb andriy.shevchenko@linux.intel.com:
+> On Mon, Feb 24, 2025 at 01:38:32PM +0000, Aditya Garg wrote:
+>> From: Kerem Karabay <kekrby@gmail.com>
+>>
+>> Add XRGB8888 emulation helper for devices that only support BGR888.
+> ...
+>
+>> +static void drm_fb_xrgb8888_to_bgr888_line(void *dbuf, const void *sbuf, unsigned int pixels)
+> Okay the xrgb8888 is the actual pixel format independently on
+> the CPU endianess.
+>
+>> +{
+>> +	u8 *dbuf8 = dbuf;
+>> +	const __le32 *sbuf32 = sbuf;
+> But here we assume that sbuf is __le32.
+> And I think we may benefit from the __be32 there.
 
-Sorry about the series header, this was meant to be a single patch. I'm 
-re-sending a copy now.
+No, please. XRGB is the logical order. The raw physical byte order for 
+DRM formats is always* little endian, hence reversed from the logical 
+one. sbuf points to raw memory and is therefore __le32. DRM-format byte 
+order is impossible to understand, I know. But that code is correct.
 
-Best Regards,
-Mingcong Bai
+Best regards
+Thomas
+
+*) White lie: there's a DRM format flag signalling physical big 
+endianess. That isn't the case here. So nothing here should ever 
+indicate big endianess.
+
+
+>
+>> +	unsigned int x;
+>> +	u32 pix;
+>> +
+>> +	for (x = 0; x < pixels; x++) {
+>> +		pix = le32_to_cpu(sbuf32[x]);
+>> +		/* write red-green-blue to output in little endianness */
+>> +		*dbuf8++ = (pix & 0x00ff0000) >> 16;
+>> +		*dbuf8++ = (pix & 0x0000ff00) >> 8;
+>> +		*dbuf8++ = (pix & 0x000000ff) >> 0;
+> 		pix = be32_to_cpu(sbuf[4 * x]) >> 8;
+> 		put_unaligned_le24(pix, &dbuf[3 * x]);
+>
+>> +	}
+> Or, after all, this __le32 magic might be not needed at all. Wouldn't the below
+> be the equivalent
+>
+> static void drm_fb_xrgb8888_to_bgr888_line(void *dbuf, const void *sbuf, unsigned int pixels)
+> {
+> 	unsigned int x;
+> 	u32 pix;
+>
+> 	for (x = 0; x < pixels; x++) {
+> 		/* Read red-green-blue from input in big endianess and... */
+> 		pix = get_unaligned_be24(sbuf + x * 4 + 1);
+> 		/* ...write it to output in little endianness. */
+> 		put_unaligned_le24(pix, dbuf + x * 3);
+> 	}
+> }
+>
+> The comments can even be dropped as the code quite clear about what's going on.
+>
+>> +}
+> But it's up to you. I don't know which solution gives better code generation
+> either.
+>
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
