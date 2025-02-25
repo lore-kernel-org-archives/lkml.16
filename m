@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B5126A0AE;
-	Tue, 25 Feb 2025 13:38:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63A7B26A1C1;
+	Tue, 25 Feb 2025 13:38:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740490733; cv=none; b=glYN2LdIurbt5UrolSUOnc0ZcrtNeUX4dkYaQhRGAVBavQyd5hn65v8ftEOSFukQ03vx4alTGLB0oDqoGG+EKQ6zJe/5UiZG15uQ4pivTkS3N5ff1edKXlohFSvuPTixgLb9S17nBlAtZDnbf++MAqx5zW1/KvV2MeIo5yE5MtU=
+	t=1740490736; cv=none; b=gfaV0AVRPHFVHyzb/CZlOt3ZFq+zgGBveaQ9yW2Pp9/uUkI46gCVcpOXjjjprioKHalQhPQaQFbvOmmYodMFSOEHkYcvAK6GuHLNU+DPKA9FqFQBzTU7LjdVeCC3p1hAonO1xb9IzV+ZqUwMVAatadmoI+NVqeTZakJzr9xJh9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740490733; c=relaxed/simple;
-	bh=v/BNU5heKZpu2nBxSPPaeh+4XqT8mTNPloSVQ5SDHYM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=HJAvNlGKrwGrdbdKyUqKXQwA0+kJCic4sF4qRUWT4aTpK/y3cPdt8yuJ/7N+wufGiEvErG3aN8CJC3VtgVQu+Ub3OzwBI/HZKwZxiqXwrrXFe9ZKNAL+a1scdgy41PnTWKOgSYU2IJHCf+zye4J9veOtrcdiAcd+cgmFjUklZ0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IKctaJM2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740490736; c=relaxed/simple;
+	bh=w7BtHlDsE/wNj/6FsWMNUTOpXSl/xAGx5czTS7gbsro=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=buV8SmdS8d+A3q8zMd6VYl5AaE9md92lQTuZSZjawSHmYPXAwHzF3ZfZu+OJ1o4G50du9V688AxRQxg/cvvazw3YNKbuDBS8HHaIQGVOcR8h0sUZQ2nJDxFC/9HNs5Z4So267RJMCSR0BMywPWuzeWHzWHoe2mMPW9Ks90lAxIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AuVH1J1i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IKctaJM2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23804C4CEE8;
-	Tue, 25 Feb 2025 13:38:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AuVH1J1i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEFBDC4CEEA;
+	Tue, 25 Feb 2025 13:38:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740490733;
-	bh=v/BNU5heKZpu2nBxSPPaeh+4XqT8mTNPloSVQ5SDHYM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=IKctaJM2Cg/8lZx1mcHTa9gef5xJdr7i/pSJcDoQMUztJynwV17YCAQprIqaY+ytD
-	 GD85x+DhXFoLqvuLaJabw19WSSIV73Idd7RCaybMX1eCslk2Hig/oRM+sCoyHOvA2K
-	 DU1XL0KgUB0CJA0pMYsxQlOOf3Glsn8lb9aIOHaSLyzHH2WAnVnBybJmXjPKXRFjX0
-	 FKfj3oPM9WipiGWyPByyUSWCccwXWVAtmL7x1BlsXZpo96cgPqchRBIHtyMaTC4nTd
-	 0/Fm6kqGvzdjZHQmbUtjCb9tjtmxsK2rNRDa4/sKQ2FthiXycoLWFB1J95a5pjXIp8
-	 hjraPtCNJMllg==
+	s=k20201202; t=1740490735;
+	bh=w7BtHlDsE/wNj/6FsWMNUTOpXSl/xAGx5czTS7gbsro=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=AuVH1J1i9uyNpC5b4VeLzwaHmMLldiBmSCC+XM4hylJmAvWmBRRxMG/rZdTTy1mFo
+	 pjQQteuXqSRlEL+q4WaijfPkoSOmsVTMjZfGh/keTQ+rG3M95RIDCTd2mpsr1HyqWN
+	 FpUpMYqcJ1RflInsQvQIQdFLmwEhgHlWr3algs8xZzUOWyy/RNDVUbw82fZtwzMFci
+	 l1UaRLq9tjSm7m4XzZE25WzL6jtlUf7Xcq2KgA5dHRRmltm+tpLbhcxYO0MWFx78MU
+	 qT2pEbjXbhRJFKwnPZ7YgBYINfqizVk8XYQuyMDAleCxcUHbvImltKmuYWXb42CVqs
+	 tFtP2v1jzEabA==
 From: Mark Brown <broonie@kernel.org>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: kernel@collabora.com, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250221-dapm-graph-node-colour-v1-1-514ed0aa7069@collabora.com>
-References: <20250221-dapm-graph-node-colour-v1-1-514ed0aa7069@collabora.com>
-Subject: Re: [PATCH] ASoC: dapm-graph: set fill colour of turned on nodes
-Message-Id: <174049073185.42497.3918767630550396939.b4-ty@kernel.org>
-Date: Tue, 25 Feb 2025 13:38:51 +0000
+To: shengjiu.wang@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com, 
+ nicoleotsuka@gmail.com, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ linux-sound@vger.kernel.org, Chancel Liu <chancel.liu@nxp.com>
+In-Reply-To: <20250217010437.258621-1-chancel.liu@nxp.com>
+References: <20250217010437.258621-1-chancel.liu@nxp.com>
+Subject: Re: [PATCH v3] ASoC: fsl: Rename stream name of SAI DAI driver
+Message-Id: <174049073341.42497.16361417560871466113.b4-ty@kernel.org>
+Date: Tue, 25 Feb 2025 13:38:53 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,16 +46,15 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-1b0d6
 
-On Fri, 21 Feb 2025 21:39:32 +0100, Nicolas Frattaroli wrote:
-> Some tools like KGraphViewer interpret the "ON" nodes not having an
-> explicitly set fill colour as them being entirely black, which obscures
-> the text on them and looks funny. In fact, I thought they were off for
-> the longest time. Comparing to the output of the `dot` tool, I assume
-> they are supposed to be white.
+On Mon, 17 Feb 2025 10:04:37 +0900, Chancel Liu wrote:
+> If stream names of DAI driver are duplicated there'll be warnings when
+> machine driver tries to add widgets on a route:
 > 
-> Instead of speclawyering over who's in the wrong and must immediately
-> atone for their wickedness at the altar of RFC2119, just be explicit
-> about it, set the fillcolor to white, and nobody gets confused.
+> [    8.831335] fsl-asoc-card sound-wm8960: ASoC: sink widget CPU-Playback overwritten
+> [    8.839917] fsl-asoc-card sound-wm8960: ASoC: source widget CPU-Capture overwritten
+> 
+> Use different stream names to avoid such warnings.
+> DAI names in AUDMIX are also updated accordingly.
 > 
 > [...]
 
@@ -65,8 +64,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: dapm-graph: set fill colour of turned on nodes
-      commit: d31babd7e304d3b800d36ff74be6739405b985f2
+[1/1] ASoC: fsl: Rename stream name of SAI DAI driver
+      commit: 0da83ab025bc45e9742e87c2cce19bff423377c8
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
