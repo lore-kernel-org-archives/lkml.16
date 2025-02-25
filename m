@@ -1,110 +1,139 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7114481727
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 03:14:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE176220686
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 03:14:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740453275; cv=none; b=b7Gn1pt2IsTW1RzJO8sd1p6ZIuXG2oThH99xV3syWve8oxBSOtoVS5XdKPg1PO6n/VDLpWpWtkyW0/+7/gGTnsSgTj8hTkTjkcoqdKuR9cReGwyxR+nG/SXuQeVCqH8cNrkLr7gCzf0pWatwCRyXwIwgIOfQg3OY5nT6bPE2BCc=
+	t=1740453290; cv=none; b=dB9m83M/3xMMMd14xw3AxGcFqdcoTlQAM3KSdqYqOOZUwJS+UioaNxcBh/tlBjb3+cQyBdoEJYRCCCxrdD1Ze4p8GKl4eZjjyV6BmDLnQut3B5itICglZ/N/XhJeM9u2A3rRNlGMraydqt3JqRzMtZMTScjPb4iXNmP5PHr3onQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740453275; c=relaxed/simple;
-	bh=MTiii+zQqPJopvoIqRNCl49x8lpdFSLa6UIMeGztj1o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=oF2cv+FirVe9wq6/efT0GeQabVfVIwk772WhljBwagc4JVkdVlcOtaW3+2B7ABJVOI0W7masaWuIUENbIFIArecL7zyV3JuAXOWDJfmPzbRiY1OV5KG0B9VwGuo7F6bQwKUYac72ArUs0jgcsNZEEdJCG4DHqONSJboWy+WAKRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VTSd+a/o; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740453290; c=relaxed/simple;
+	bh=TphJlHkGQkegZ4mR6BB6NDXfabo6wFsuGSGu/WTHIlU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j9NONqdKfl6OCmQE5PlYzeqta4xuA8Zrbul54sfYCA8Q+Zy0q7TnLiCMe+bbIKLfFGvdYih0Lwi5jA0zEBXyNtvjWWNm/r2odhvmudTPOe0PVpG4xAjG64a74o8lUPArSybhbrQfJydmkfmTuD6pgB4P2L0jR2JtmvLexyek4PQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Hzn7An60; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VTSd+a/o"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-220cb083491so10642655ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 19:14:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hzn7An60"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-6ef9b8b4f13so45010327b3.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 19:14:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740453274; x=1741058074; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MTiii+zQqPJopvoIqRNCl49x8lpdFSLa6UIMeGztj1o=;
-        b=VTSd+a/o6JmPO5HNpNbuh/n3LNPE4l1PgRiBb/QCAZFOaN9A9/HecRPR9lWbeexmG1
-         g6w1R8pt5K3RWiHRqMw+mOs+kV7tFvfZVXgVwEL+oTKXTMKGBH9TOC+7+HzJwvwftUBh
-         0IyLWX+c+ZD5zfSQLaZSAp/8aF4UeAoptG7OkJNOi2GWfoVrfrvfKlxbHChV1Ec5fSEI
-         aSUvJ6sqnmEvdSflQAeYns+96g+9WGoUxH03ffCdG0eGmlUKgzChDTxsn290ABGAeg3n
-         jOFqC3qy9vFWCn1quNSs8l2DPktzyp3H/k2PF2K5u2UJjzTz7qliHKpIYNpc7++RpIuL
-         RDCg==
+        d=linaro.org; s=google; t=1740453288; x=1741058088; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=IQVbEzx9kvB0TrPeedrtx7i8ImP/tXHPwCaZo2eyYPM=;
+        b=Hzn7An609xryNLkibRfNmLwbAP3dY5kSBhYkFXZWh3dJNLdPNKM09AiHQC7ESCETSL
+         OyszX3dt9yIZkyW1qvsQHSQsUa+cSDEwd6ToZZtv1Soyw2xs/0Xz+BKF0VSyj9FQG2aG
+         eg58fs9lYbFUOiCkxj6Q/1/dURt9nXV8qv8bCTeWL/oTPdJVVuPqmUoLnjf6b/bx4TAH
+         MKgi5IED7rNKW6T7qoRQFjqc8B5o+xTdjlgeFOorGf+NC6vGANwBtv/ejKqZv4+bW4mx
+         y1mTrCkEIDVKX2x/Z9Bay2AUGZPUyY+qI55tZ2FGT6rq2v2t7b08la/NdR+0bJmrzVE5
+         59eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740453274; x=1741058074;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MTiii+zQqPJopvoIqRNCl49x8lpdFSLa6UIMeGztj1o=;
-        b=pq0Qm+bDAINsHHJfhJn6FqHUphSu+ul53JhynTE72NDjFuGknplqfUdpYZHysAncrN
-         bBG+ZNw3pz/7ESrQYQz4pKphHPszQrb3FBs6e26lEdbiAUZFh2hvwHnmS/0KHnQ2Ofbg
-         mfnZYFD7RNajCF+oIZKiDbhpFsMh5NkMvCwD0f5PBeOswA++LlVEClIpcGSuDGXUURvl
-         JXbUI2CkzUFpgfwASCapZ3Xm8gVpXd+E6F2iQcrqAPrqsND+BxdLtTY3X+KkCdwMt2jC
-         22hEhg5YErp/vySDNwpzn90HKHhYbnarfg+18ykyGspwOF1wkRjnu8+87O9YXz73PbxT
-         JhuA==
-X-Forwarded-Encrypted: i=1; AJvYcCVZpZPz1CseojIZ8BOn7oTCfjmuTlMEI3cuWH8WHkPK+TXNT9QMDdnkRNOfpJg38umZDjS7Y3ZC3EmvqFM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJ0ht+NMNJHsySN2O0++PsIcMAXRDAaZJNscs1MZHnmkhhl143
-	f7pI0T5izqsiiVOxAhc64KvQtnEP35Fgcozj7incNQVuJVwxswIo
-X-Gm-Gg: ASbGncsOxv9NkjfUdFfjNZ2KwXzxV3ToqeCxwXXRsi0OPgQ+3Ox8GZSCHy7kvD1szIu
-	FdN1MFrMwojvnIYb7K3Gdbf3+Oj33iUlOke/KwZsRQkTMxxbm2cToBG9Dfx+f7GyVBB9cx71BN8
-	H1pryEH3/ZJndCGxn5+QQ4A2eNGP2hj6jKMFcjFSSmlJyR1ettkPGshP3svXzvdweqRNCkjug6N
-	g+mhPA7QVxGGxEKsgWFKU1Y/R3ZP7QivgB4w3nuptsf/canciT4NZVA1vf1v4QM9aoHkWiCDmoS
-	RgWl4loziNKIbhIU9TWJquZ7SpRLr0sapljXKazoeD/SUTkiJ3JYmz5sxL4LXIep38CV2Dh/xyD
-	q4wU=
-X-Google-Smtp-Source: AGHT+IENisR31wnapQP5UILjmjga6+1j4+iRyv5pEpuKq0rZqZjB5Dc4GFMjy8dLP7W44x5xyZLSqw==
-X-Received: by 2002:a17:902:da90:b0:212:48f0:5b6f with SMTP id d9443c01a7336-2219ffbdf18mr96244445ad.9.1740453273602;
-        Mon, 24 Feb 2025 19:14:33 -0800 (PST)
-Received: from localhost.localdomain (210-61-187-174.hinet-ip.hinet.net. [210.61.187.174])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a0ae9acsm3491085ad.225.2025.02.24.19.14.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 19:14:33 -0800 (PST)
-From: Qianyi Liu <liuqianyi125@gmail.com>
-To: phasta@mailbox.org
-Cc: airlied@gmail.com,
-	ckoenig.leichtzumerken@gmail.com,
-	dakr@kernel.org,
-	daniel@ffwll.ch,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	liuqianyi125@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	matthew.brost@intel.com,
-	mripard@kernel.org,
-	phasta@kernel.org,
-	tzimmermann@suse.de
-Subject: Re: [PATCH] drm/scheduler: Fix mem leak when last_scheduled signaled
-Date: Tue, 25 Feb 2025 11:12:25 +0800
-Message-Id: <20250225031225.44102-1-liuqianyi125@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <3b369e1a49b354852f361b103999673e4f7906a9.camel@mailbox.org>
-References: <3b369e1a49b354852f361b103999673e4f7906a9.camel@mailbox.org>
+        d=1e100.net; s=20230601; t=1740453288; x=1741058088;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IQVbEzx9kvB0TrPeedrtx7i8ImP/tXHPwCaZo2eyYPM=;
+        b=jryF4MOa8jBWHb1ktab1gi0AJBhJji+j2sbpEl+731hii8YxalnQNSXvq/NGaTY4wb
+         O9XHvn6jkmEvvzrVVGFKAIQXz+HLKtULpDT0DcvjIvVsE3mPM1bbvB6eomNApRxiKsVW
+         +Q3qffmcmAkgaC2BtTwW5+qw1HQRItam0YTZSukaaW8ierW2J2znpNjOUnMm/iShYwbG
+         myE69zLoxqlWAYa5PghIV9e3k3l4ZkmpchMdlblEev7+2lYTWjBin7sCbWJbUJGEQNqy
+         GHJZ3sG7idY3ZeShUaEgVvf/lIbz94vcBOb6DIE/3QdBWyG2lR9IvzexAI2HJNtwEHDd
+         ZJvg==
+X-Forwarded-Encrypted: i=1; AJvYcCWd5NYLWb39EgC9eN3Ee7tPBT3diThyBbkMFPGFSM8fQeTTYU/SFWY3/5IJUEqBMdyRSY30yzQRUDoj/l4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvnZxvmWSlBSwVg1ojv3wQoWCaSD8URpSI7SeehumqJgn9WXA8
+	7LCx7Goj1RStUOWErxI/NlCdWf3qqHOvCFlc9lISfKK0k9Kl3kqQarB7uCBOtaoT8Cmc1J393pD
+	P3sbolpzUCxKdEXsn7/3jNn0kR6N+/y0x6vd5jw==
+X-Gm-Gg: ASbGncuZ1HdmtASh7laofXx1dR4FLy7tq2upXA2OLK92rEzViROI2ikr5eTHCnyKFt+
+	gsVQsAY9Vje0ct5tpF2fNqsKX3Kg1/t7/Fj991b5Eh5YfeorMh9InU0zHnHUpUujudiWw9s6IRp
+	WtZiFyYIYz
+X-Google-Smtp-Source: AGHT+IHc41JPGJ088b37b3aIhRMn8lVQtQIt1tmL70qMB6qKKdFyKRe9bfOCM8ADQNOIRUFDSenHC0fF71QDngeKPHY=
+X-Received: by 2002:a05:6902:2e82:b0:e5d:d016:989e with SMTP id
+ 3f1490d57ef6-e5e246719d8mr13282250276.39.1740453287851; Mon, 24 Feb 2025
+ 19:14:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250217-b4-sm8750-display-v2-0-d201dcdda6a4@linaro.org>
+ <20250217-b4-sm8750-display-v2-5-d201dcdda6a4@linaro.org> <aqpuik4zitdfuk4pahn4wyzxdvxldy4dcqjs3mhr6fqtxpoxhf@ssfzzbfce2nu>
+ <2dfe466c-ad94-4683-a2e9-a49e77a61f4f@linaro.org> <h2shpen65r7v4in54avsez7qtlwojbt2cthyomqrsgs5ewprwb@bn53suqrzkac>
+ <4e82404a-0ea5-4641-829a-bba666edd352@quicinc.com>
+In-Reply-To: <4e82404a-0ea5-4641-829a-bba666edd352@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Tue, 25 Feb 2025 05:14:36 +0200
+X-Gm-Features: AWEUYZmkKWazMeNY444Pg0IY6jEqBfAoPZAv6AXrcyFb_NB6yz312AR5esudyLk
+Message-ID: <CAA8EJpoWEuqKkreUTu1gO-Pr=VFNNP_vBfNZpitJiJH728vjPA@mail.gmail.com>
+Subject: Re: [PATCH v2 05/16] dt-bindings: display/msm: dp-controller: Add SM8750
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Rob Clark <robdclark@gmail.com>, 
+	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Krishna Manikandan <quic_mkrishn@quicinc.com>, Jonathan Marek <jonathan@marek.ca>, 
+	Kuogee Hsieh <quic_khsieh@quicinc.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Srini Kandagatla <srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hello Philipp,
+On Mon, 24 Feb 2025 at 20:59, Abhinav Kumar <quic_abhinavk@quicinc.com> wrote:
+>
+>
+>
+> On 2/19/2025 9:08 AM, Dmitry Baryshkov wrote:
+> > On Wed, Feb 19, 2025 at 06:02:20PM +0100, Krzysztof Kozlowski wrote:
+> >> On 17/02/2025 19:58, Dmitry Baryshkov wrote:
+> >>> On Mon, Feb 17, 2025 at 05:41:26PM +0100, Krzysztof Kozlowski wrote:
+> >>>> Add DisplayPort controller for Qualcomm SM8750 SoC which so far looks
+> >>>> fully compatible with earlier SM8650 variant.
+> >>>
+> >>> As that became a question for QCS8300, does SM8750 also support exactly
+> >>> two MST streams?
+> >>
+> >> v1.5 of DP (starting from SA8775p , then SM8650 and SM8750) support 4x
+> >> MST for DPTX0 and 2x MST for DPTX1.
+> >>
+> >> The DP in SM8650 and SM8750 are identical, according to datasheet (v1.5.1).
+> >
+> > Hmm. This also means that QCS8300 is compatible with SM8650. I'll let
+> > Abhinav comment here.
+> >
+>
+> DP version by itself is not a good measure of whether the controller can
+> support 4 streams or not.
+>
+> Firstly, sm8650/sm8750 do not have a DPTX1 so we are only discussing
+> about DP TX0.
+>
+> Coming to the QCS8300 Vs sm8650/sm8750, even though the DP controller
+> version is the same, there is no HW support for more than 2 streams on
+> sm8650/sm8750 because there are no INTF blocks to drive 4 streams.
+>
+> On sm8650/sm8750, only INTF_0 and INTF_3 can be used for DP. Hence 2
+> streams.
+>
+> Whereas on Monaco, we have INTF_0, INTF_3, INTF_6 and INTF_7 capable of
 
-Thank you for your patient reply. Let's first clarify the issue and send a new
-patch if necessary.
+No idea what Monaco is, most likely it is some platform. Please use
+SoC names in public.
 
-As soon as it enters the drm_sched_entity_kill function, the entity
-->last_scheduled reference count is incremented by 1. If there are still jobs in
-the current entity, it will enter the while loop, assuming there is only one job
-left. If entity->last_scheduled has already been signaled, it will enter
-drm_sched_entity_kill_jobs_cb, but because null is passed in, the
-last_scheduled reference count will not be correctly reduced by 1.
+> driving DP. Hence 4 streams.
+>
+> Let me know if there are more questions.
 
-Because the prev pointer has been updated to &s_fence->finished, the
-dma_fence_put in the last line only reduces the reference count of s_fence->finished.
-The reference count of entity->last_scheduled was not reduced by
-1, causing a memory leak.
+How many stream clocks are present on those platforms? I'm asking
+because there is a small, but not non-existing difference between 'DPs
+are not completely compatible / the same' and 'DPs are fully
+compatible but different DPU blocks impose different restrictions on
+the number of MST streams'.
 
-We should subtract 1 from the reference count of the prev when dma_fence_add_callback
-fails, which is called balance.
-
-Best Regards.
-QianYi.
+-- 
+With best wishes
+Dmitry
