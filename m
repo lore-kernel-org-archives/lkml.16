@@ -1,147 +1,133 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F38268C40
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D681EBFE6;
+	Tue, 25 Feb 2025 13:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740489083; cv=none; b=BuJSw8cngGM+7sFKJT7HmSZFwSKFkhv37beLIgf2R9l5ved98p3GEKNF+HN1EDmAxFCPjJqy5AgjRQ8UCBgaq8sviJZzeHLAzNB+fsb2I400jbFhdFymIqMtXQzrQOyCu24vXIdW3se6nFejJ4ffgcK4cS1szhq4o1EhdCZhSLk=
+	t=1740489113; cv=none; b=W+fkG1Bf+Eu8h2eGlfMbIPP9DEcHybxn++0zD1Gmssz9PCgzlbt5J9hFkiGJp1kjaULSTyuo9n4PmpM8eXtWV+P9DWjvl3othYWZk/qSjEa8ajWTkQqnrXnJvJV+jvN7aql5TTgQbHD4iRvGTgfD5PzerWmmXqgz/Aryx6wEwVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740489083; c=relaxed/simple;
-	bh=7FuRH89tDCOSNH1jKBMPZKH3DWaM3tBKPCcUh0VE6As=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uemScaBpUU2v8HzF06MqjXgqVP/4bdXjYaVgH3ltCVIyZMFCJQfAEkOsZ7ydMLqH8+QtHVmlSzRroP2L/JTFAOJ+hfo+pFi9EkGg6ImPPSR+ueIVE5Z7uKDGXRi1PYb/b70yTKlKmFt24pwodFZul7FUOPk2reTmKazcCjZBBFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Q7QgPDQg; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Q7QgPDQg"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P8TFRX002205
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:11:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	uuwVfqXUmGXRoU+kSMckG71FjFzg8qfTg24k4ONKjKE=; b=Q7QgPDQgDt0t1CeK
-	ncM6P5dXSfVXjSbuTvW5j326SSv+P5RtKcgmfvrWC7mlW+rNYU8oiZMqIhyzCQ1b
-	S57rKzVVpRE9S6vUu/vufoSH9/1ar7WOjCP1r87uhhMFOAACB6vm51/Sxdxfzbgn
-	S6gE6GjCeacByhW8T85L1FsMHwBadCeruDJMirLF0IseQAzcXpAdqRMnZBXpaaKT
-	tSS612lp898nrWFnjLMlIpqKLWvnuJsvNgzait4f4KDVJr/6nbcAnl2rgtTENaJe
-	SfcME86DQwJ3qsND+ywAmeutEH8InBpkfZ2uhkNUbRR5kmXwsPONCfhDMq6IWAYQ
-	f51syg==
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44y7rk0rxd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:11:21 +0000 (GMT)
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-471f5a13ba5so6557611cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 05:11:20 -0800 (PST)
+	s=arc-20240116; t=1740489113; c=relaxed/simple;
+	bh=Tc06KpHhdncY5vHPplX6+roo60GBAPDBnABoT57FjX8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ndxiqQHTqEEgFSLqSShj/ERrVAbkc1z13ALCzDdiAtWFZrIOd5CLlfPcxI28gtfV9I6XhfCx+8MBZzAXLjuFTt1EDXuaLdTzjNnYh5ucXcVo5bUisCBuxSLhMynT02L9hGRY2zpyVbzMGWbd2QtfhxBsCqrXpbBIaAnlDRmNuo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-abec8b750ebso214848666b.0;
+        Tue, 25 Feb 2025 05:11:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740489079; x=1741093879;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uuwVfqXUmGXRoU+kSMckG71FjFzg8qfTg24k4ONKjKE=;
-        b=JH493MBwogm2bNeQnxHG+uXNIwQFWuYhXTj8D0jjJpx0Z0K18KbPrgfoUWVuTI+Arl
-         ijd6o5S2pOpTBwmfXXtwn1eDArAyToY9T9xZ6w13GJ2fwN+C/E2sFF3Sf0fDjh9amN/J
-         1VoeX6E2pYM/484CN2pfZidol+LnmIQbGSf+hqmeCMNoQCFUJBuwKc6XVE3O4IDWsIR0
-         crlRfoRX2rrIESuJGtGifOBC9X5biRHqZ0aLFCqBv+xVHSfdBKdm9dq8Uae24NYy8s8Z
-         54p8dqPivNQz10bnI8Xi6nCY66XipHBkBGJd4KdC17Qgb8qwQTeJj7lW4gkkw62MA/9b
-         QJLw==
-X-Forwarded-Encrypted: i=1; AJvYcCVPtvYn9RCbXKGjcJ2hsZQCindskz4ypta5E2EbrTFTyskLf9entQgxPISlKWriOq4zF1GSeeUPpBjQiRE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAWN0/QOoBXob9A04+Jb2F2zXRHYo+3JQ20NN4tWn+oX5sGatb
-	BjNAXD+t7RRAhk4DSTFnJorvZ2XlSy6O8JMRdzeRNViVvEcXipCJ/uXPNEn0XAQZR1B1opnzXub
-	WiMySAcNR5KDmMsjsiyjJGkdWTXQnNh+7UVLEjGi36qKSQBz7Xbc4by1cesEN1vA=
-X-Gm-Gg: ASbGncsXv9b3OQS0m6McpRQIXMV8RTs1FBlfRl8qwvnFqJgpXc8o5Sfvy5TBm9u9B0m
-	RB7s93On/VLc4HCxOXh1YOllf1TtljcO3kw+66kO/rBMKpt/b3N7p7PcudYQrRsaeBYAJHxyWHL
-	D6XEf3uPDFpSqFsASBbjsuT+69g3B0f6lVsVqLuZVbgkoGcRsi8Kc3A7LycQkZAwmgkeGy69bKN
-	6XER8vTBKQOK+w4EanmIIk/Jg85xZ+WF13fIxMTfTzAoCb5bAYG59O1xQFQxoMf/2mC2vcPT5OI
-	gxEvTDvFQ5jCXHlDMEVRXQV1IfeBVQAD9AKtK/IR1JSMB3/NYuRgvMlYxOPOBuHvQNoZyw==
-X-Received: by 2002:ac8:5a43:0:b0:472:14b8:ee01 with SMTP id d75a77b69052e-472228d7e30mr71677941cf.6.1740489079613;
-        Tue, 25 Feb 2025 05:11:19 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IErDUxqjVZVeKivo2X+WzYQGTk3m9wBnXFgnKFF8mPGrQ+En9HUm/GLFcoa+lNQennqXJ70qw==
-X-Received: by 2002:ac8:5a43:0:b0:472:14b8:ee01 with SMTP id d75a77b69052e-472228d7e30mr71677541cf.6.1740489079098;
-        Tue, 25 Feb 2025 05:11:19 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abee36dddecsm37813166b.61.2025.02.25.05.11.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2025 05:11:18 -0800 (PST)
-Message-ID: <3b91b340-2d01-4685-bb73-818924c4ec29@oss.qualcomm.com>
-Date: Tue, 25 Feb 2025 14:11:15 +0100
+        d=1e100.net; s=20230601; t=1740489110; x=1741093910;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bWZOk7RRTPc+ZkJlzirhO5rrxb3g158YcdwUTbEdDw4=;
+        b=wrbTf7ye80IbNV6wsoXQuylnFBcomRrzkUdugE8PXgSOmOWxbACLt33khj1WxaOHZi
+         c5bNt7c9MlUcwDgH2/VF7dNs8pDZFwrmSysgZHHkhnGwdGFj/bPp1u2yEir2o0Rx+xi9
+         RRSTMy5ojbyHpbvclS7Yk4CtsBJDncTvZvVgPmoT5NwN7cALuGlQunLy09vOE4iSG7I0
+         NMpp4FSBfsWpWHsisuKOUHaPhOV+Qg1yfdaotPCjWNrGtcCXn9FWYjd7mMVA0DIz9Lrc
+         Y56IWOTicshOOAIBbfharFaC7MahfElwSXHYgOGwpBBomKAyDyfPiLwnByWoT8HoEYKL
+         9Lgw==
+X-Forwarded-Encrypted: i=1; AJvYcCU4ykirT6upriIeMshKlZjdsFfoXh7zOT7qLj89Fxz1glTpsDqQjAEj53GgpCAttZ05ChKMHrSymQM1ZauQIwLX@vger.kernel.org, AJvYcCU8faJf3v2IGYqkMn/dZId8hI9U9vR2mZspGh88izXFgkHkYQUuHjc/z0t9mS++Twu2i6RoAww+WgM=@vger.kernel.org, AJvYcCVnPZM//mx8FozPXR3ZJBqG34tuZdun8Gd9VIN+BzVVKYsVQrTatsF2dg+ob8YlwrPLPk2NCHVk@vger.kernel.org, AJvYcCWeIBz+8DklpxHTH6jbpNhtL9csjfm9rST06lJKiUMYW8C4GqLKgiQWnQH1nyUz3W7FDkG8IeHvOqQQAxkS@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLmhaqZBB+2Z0KPczejHjjDqTacTLwHtg1B+NFaFuGnkfQe7E/
+	U4USfjXBQCuYNVMpQugdgFeue9YMOmz+ITKypABu5pWj6nt789k5
+X-Gm-Gg: ASbGnctGGbNN539bejVkkf7cZSdsrPx9YupE5neCQtZSkxRmOCWCYQZ/Gckycbnb51K
+	XAu4JgtX2AhBswMKsn+V9yNYJDz+Vqn9P7W2uOQ7K4rSRdpfsYra3PdqcCZuPbp/8eTW4JyvpDA
+	2OxHs5LwWUXA9rUjkBB2pD+iTk6cS7j3b9KeOMgmeVhdyknHTgs6Iz1cWs8EWsshvictlNfg8jO
+	43HZtAbXQIZgD9ClnNUfW61fpgjXw7SbLJ2zym1I2X6Y/ruT8TnJh6hCQqeIJcEB/Iv9+qL85FH
+	v0S/8epvRg6Xuw7I8A==
+X-Google-Smtp-Source: AGHT+IGFvHYwvYql3mUsikF1Ks4rOTcJOh62lrefJB9Zvc8mdhl4bBBxZZYSPaW8NxhpSJFjRt6GQg==
+X-Received: by 2002:a17:907:724f:b0:ab7:bf87:d9de with SMTP id a640c23a62f3a-abc0de146b4mr1561996666b.37.1740489110209;
+        Tue, 25 Feb 2025 05:11:50 -0800 (PST)
+Received: from gmail.com ([2a03:2880:30ff:72::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed2054d58sm139993866b.148.2025.02.25.05.11.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 05:11:49 -0800 (PST)
+Date: Tue, 25 Feb 2025 05:11:47 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Simon Horman <horms@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH net-next 5/7] netconsole: add task name to extra data
+ fields
+Message-ID: <20250225-bright-jasmine-butterfly-aa1bb0@leitao>
+References: <20250221-netcons_current-v1-0-21c86ae8fc0d@debian.org>
+ <20250221-netcons_current-v1-5-21c86ae8fc0d@debian.org>
+ <20250225101910.GM1615191@kernel.org>
+ <20250225-doberman-of-scientific-champagne-640c69@leitao>
+ <d0e43d0a-621d-46ee-8cb7-1e5c41e76b8c@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/11] arm64: dts: qcom: sa8775p-ride: enable Display
- serial interface
-To: Ayushi Makhija <quic_amakhija@quicinc.com>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: robdclark@gmail.com, dmitry.baryshkov@linaro.org, sean@poorly.run,
-        marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
-        robh+dt@kernel.org, krzk+dt@kernel.org, konradybcio@kernel.org,
-        conor+dt@kernel.org, andrzej.hajda@intel.com,
-        neil.armstrong@linaro.org, rfoss@kernel.org,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
-        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
-        quic_jesszhan@quicinc.com
-References: <20250225121824.3869719-1-quic_amakhija@quicinc.com>
- <20250225121824.3869719-9-quic_amakhija@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250225121824.3869719-9-quic_amakhija@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: bEUkqdStsDFgUBW4PtlqWpZTG-TJ7hva
-X-Proofpoint-ORIG-GUID: bEUkqdStsDFgUBW4PtlqWpZTG-TJ7hva
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_04,2025-02-25_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- phishscore=0 impostorscore=0 malwarescore=0 adultscore=0 spamscore=0
- priorityscore=1501 mlxlogscore=999 lowpriorityscore=0 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502250091
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d0e43d0a-621d-46ee-8cb7-1e5c41e76b8c@redhat.com>
 
-On 25.02.2025 1:18 PM, Ayushi Makhija wrote:
-> Enable both DSI to DP bridge ports on SA8775P Ride plaftrom.
+Hello Paolo,
+
+On Tue, Feb 25, 2025 at 12:53:49PM +0100, Paolo Abeni wrote:
+> On 2/25/25 12:17 PM, Breno Leitao wrote:
+> > On Tue, Feb 25, 2025 at 10:19:10AM +0000, Simon Horman wrote:
+> >> On Fri, Feb 21, 2025 at 05:52:10AM -0800, Breno Leitao wrote:
+> >>> This is the core patch for this whole patchset. Add support for
+> >>> including the current task's name in netconsole's extra data output.
+> >>> This adds a new append_taskname() function that writes the task name
+> >>> (from current->comm) into the target's extradata buffer, similar to how
+> >>> CPU numbers are handled.
+> >>>
+> >>> The task name is included when the SYSDATA_TASKNAME field is set,
+> >>> appearing in the format "taskname=<name>" in the output. This additional
+> >>> context can help with debugging by showing which task generated each
+> >>> console message.
+> >>>
+> >>> Signed-off-by: Breno Leitao <leitao@debian.org>
+> >>> ---
+> >>>  drivers/net/netconsole.c | 14 +++++++++++++-
+> >>>  1 file changed, 13 insertions(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/drivers/net/netconsole.c b/drivers/net/netconsole.c
+> >>> index 5a29144ae37ee7b487b1a252b0f2ce8574f9cefa..625f4c0be11d8deb454139b1c526abc842697219 100644
+> >>> --- a/drivers/net/netconsole.c
+> >>> +++ b/drivers/net/netconsole.c
+> >>> @@ -1179,12 +1179,22 @@ static int append_cpu_nr(struct netconsole_target *nt, int offset)
+> >>>  			 raw_smp_processor_id());
+> >>>  }
+> >>>  
+> >>> +static int append_taskname(struct netconsole_target *nt, int offset)
+> >>> +{
+> >>> +	if (WARN_ON_ONCE(!current))
+> >>> +		return 0;
+> >>
+> >> Hi Breno,
+> >>
+> >> I gather that theoretically this could occur, but it isn't expected
+> >> to happen in practice. Is that right?
+> > 
+> > That's correct. `current` isn't expected to be NULL in practice.
+> > I've been running this code on several servers for days and have never
+> > encountered this warning. 
+> > 
+> > While the taskname feature isn't enabled during early boot, netconsole
+> > might be active at that time, which is why I exercised extra caution
+> > here.
 > 
-> Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi | 66 +++++++++++++++++++++-
->  1 file changed, 64 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
-> index 151f66512303..02d8a9c2c909 100644
-> --- a/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi
-> @@ -128,6 +128,30 @@ dp1_connector_in: endpoint {
->  			};
->  		};
->  	};
-> +
-> +	dsi0-connector {
-> +		compatible = "dp-connector";
-> +		label = "DSI0";
+> So `current` can't be NULL here. I think it's better to drop such check,
+> it's presence would be misleading. i.e. like adding checks for UDP stack
+> being initialized before calling send_msg_fragmented()
 
-DP0
+Ack. I will remove the check then, and check if the UDP stack has been
+initialized before calling netpoll helpers.
 
-> +		type = "full-size";
-> +
-> +		port {
-> +			dsi0_connector_in: endpoint {
-> +				remote-endpoint = <&anx7625_1_out>;
-> +			};
-> +		};
-> +	};
-> +
-> +	dsi1-connector {
-> +		compatible = "dp-connector";
-> +		label = "DSI1";
+What is the best way to make sure taht the UDP stack has been
+initialized?
 
-DP1
-
-Konrad
+Thanks for the review,
+--breno
