@@ -1,86 +1,283 @@
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B28974C80;
-	Tue, 25 Feb 2025 11:38:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23FE7266B5E
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 11:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740483528; cv=none; b=kyZ0b8T8fOYCNWhVB2N3NlnKwOMSRTFcmGuVcx4p6oiQbY+0cW/IBZ65XTkWFNkRQ8DxE4ng2JRjzoNAhz7tpdnBpcBeInP0TT/9BhMqG86MRs7Aoc7s9sc2oMpWOrIaKDm022QCz4810oDnb2NPUXfJHdLlnaGRuWZD0zlk9v0=
+	t=1740483540; cv=none; b=oOGekOnNpcojeWM5wJW0Ex76Rne3VnVb0WGn8Yx9Q5CylVx4nI5Bo49/IajonI6iMxaNUz/zzTMK/Bn+AoXtWG0WlAwCFIqcQu0H/PS3oFDNCWMFdJj1aAt2F2AUDKIs9xWwDEEuq5xb/MTIUEWk0mY778gSPrKVouYYjOu8HkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740483528; c=relaxed/simple;
-	bh=7o1LhwlAcsJgqFTK4J681khp+AvnA4zXAdW/ZK8fgcY=;
-	h=From:To:Cc:Subject:Mime-Version:Content-Type:Date:Message-ID:
-	 References:In-Reply-To; b=cqALK0FjI1FTDIVOabHs0Y2T2wARYNGaVAclDlGqg5Y4GghsOfToPY83tyvw8msMPVb4U10bcrbrz1IVjggSm1oap2CcqC5Y5Gbm3JEUu4V58x+r9Y8swN4HybFEmYouR5n+XygWUvYv5ORzImdkcmCvnJaEar725UB5XVkX8rE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=Fx8DmUwN; arc=none smtp.client-ip=54.254.200.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1740483540; c=relaxed/simple;
+	bh=oTQLEnucV542M6ZP7k68h/PprEj6H6WKWkGdXbGouV0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oTItwQmpMtDFwlBXzz5+wCisU6WsTxcKZ7B6aBot9PbSzNJDPX86NXeTeRnvA8clthMMx77tswLOXxNu7mVZk8kHgg+uv/ifUVOnONiTZIY+thBZv4SjpfDbP4evfrVy7UIMw4QzhPFr4pSV62oEYlUBXaBddn1wPBWy+4bAEZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=FcL3YFbE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0qVbW/6+; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=FcL3YFbE; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0qVbW/6+; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="Fx8DmUwN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1740483461;
-	bh=7o1LhwlAcsJgqFTK4J681khp+AvnA4zXAdW/ZK8fgcY=;
-	h=From:To:Subject:Mime-Version:Date:Message-ID;
-	b=Fx8DmUwNZJewxD15LNTJ5vMNr/YQUsIpa6YNjUaamLHwwREp5btz+eurbZ1nHB4Cj
-	 +68/+D+/+9PuWQ4s4rf1GSyKtGfScO1zkgdZia3BxEZtylhuL2UfgEItxvv/q13d/o
-	 2pzYSNqO29PCoNmypHUZINnrOA1qE0UEIk503a8I=
-X-QQ-GoodBg: 1
-X-QQ-SSF: 00400000000000F0
-X-QQ-FEAT: D4aqtcRDiqT6iyfUez+DXx4B7ybItHVbSxkDlA8/kMI=
-X-QQ-BUSINESS-ORIGIN: 2
-X-QQ-Originating-IP: Xptfm9en8kSztH5x5sLIfL3u/YSEDpg5TCpVOgsGmtg=
-X-QQ-STYLE: 
-X-QQ-mid: v3sz3a-6t1740483459t397160
-From: "=?utf-8?B?V2VudGFvIEd1YW4=?=" <guanwentao@uniontech.com>
-To: "=?utf-8?B?U2xhZGUgV2F0a2lucw==?=" <srw@sladewatkins.net>, "=?utf-8?B?R3JlZyBLSA==?=" <gregkh@linuxfoundation.org>
-Cc: "=?utf-8?B?Sm9obiBLZWVwaW5n?=" <jkeeping@inmusicbrands.com>, "=?utf-8?B?SmlyaSBTbGFieQ==?=" <jirislaby@kernel.org>, "=?utf-8?B?RmVycnkgVG90aA==?=" <ftoth@exalondelft.nl>, "=?utf-8?B?SWxwbyBKw6RydmluZW4=?=" <ilpo.jarvinen@linux.intel.com>, "=?utf-8?B?bGludXgta2VybmVs?=" <linux-kernel@vger.kernel.org>, "=?utf-8?B?bGludXgtc2VyaWFs?=" <linux-serial@vger.kernel.org>, "=?utf-8?B?c3RhYmxl?=" <stable@vger.kernel.org>
-Subject: Re: [PATCH] serial: 8250_dma: terminate correct DMA in tx_dma_flush()
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FcL3YFbE";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0qVbW/6+";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="FcL3YFbE";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0qVbW/6+"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 304B321166;
+	Tue, 25 Feb 2025 11:38:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740483536; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=9ABMn7Jnj5cUGatJDRKKEvt77TfWyRb9+YXDUVL7Yu0=;
+	b=FcL3YFbELTx/aoLFqOZ24dpe6vTz+A7ywqjE2yHsCtjrT0lI3hvZuYnqDrKbGkgAvDjBsY
+	g+RV8AwwEBu5/HAj84arrCNVdq7u1+lGyKJ0v+pq1pyD1FgfC7AFxxdbKvZCYxyHBlcSMe
+	MXezsJCWwHjFlI1gsmnyEJrDx5P17z4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740483536;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=9ABMn7Jnj5cUGatJDRKKEvt77TfWyRb9+YXDUVL7Yu0=;
+	b=0qVbW/6+Xz6goX9bcZCpXGXPLU5P9zeiDr6Ny5P+j6tAHOONtpAuNmYS+iWS89F6qIYx6e
+	5SZRnnSrp0mR++CQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740483536; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=9ABMn7Jnj5cUGatJDRKKEvt77TfWyRb9+YXDUVL7Yu0=;
+	b=FcL3YFbELTx/aoLFqOZ24dpe6vTz+A7ywqjE2yHsCtjrT0lI3hvZuYnqDrKbGkgAvDjBsY
+	g+RV8AwwEBu5/HAj84arrCNVdq7u1+lGyKJ0v+pq1pyD1FgfC7AFxxdbKvZCYxyHBlcSMe
+	MXezsJCWwHjFlI1gsmnyEJrDx5P17z4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740483536;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=9ABMn7Jnj5cUGatJDRKKEvt77TfWyRb9+YXDUVL7Yu0=;
+	b=0qVbW/6+Xz6goX9bcZCpXGXPLU5P9zeiDr6Ny5P+j6tAHOONtpAuNmYS+iWS89F6qIYx6e
+	5SZRnnSrp0mR++CQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CE0C913332;
+	Tue, 25 Feb 2025 11:38:54 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id oyCqMM6rvWfoPwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 25 Feb 2025 11:38:54 +0000
+Message-ID: <0e6817b1-d52e-407f-bdb9-93919f849edc@suse.de>
+Date: Tue, 25 Feb 2025 12:38:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-Date: Tue, 25 Feb 2025 19:37:38 +0800
-X-Priority: 3
-Message-ID: <tencent_729B631A3339DFCB4BFA873E@qq.com>
-X-QQ-MIME: TCMime 1.0 by Tencent
-X-Mailer: QQMail 2.x
-X-QQ-Mailer: QQMail 2.x
-References: <20250224121831.1429323-1-jkeeping@inmusicbrands.com>
-	<tencent_09E5A20410369ED253A21788@qq.com>
-	<2025022434-subsiding-esquire-1de2@gregkh>
-	<tencent_013690E01596D03C0362D092@qq.com>
-	<2faa8912-a699-47d9-b9d6-dc2fb22fe7c8@sladewatkins.net>
-In-Reply-To: <2faa8912-a699-47d9-b9d6-dc2fb22fe7c8@sladewatkins.net>
-X-QQ-ReplyHash: 829435416
-X-BIZMAIL-ID: 9039354056843283055
-X-QQ-SENDSIZE: 520
-Received: from qq.com (unknown [127.0.0.1])
-	by smtp.qq.com (ESMTP) with SMTP
-	id ; Tue, 25 Feb 2025 19:37:40 +0800 (CST)
-Feedback-ID: v:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MgQY1K25Ph0m1naNLl6PTlAFYKFI+WJ3bVu4EThSbzozVxcMfEWbbzRW
-	4N7uMs+393LogP+FLkIofNR0nsWjS2BN6UF1YAIr/gACxhPL2xyPJ9lf5T0R+mh5kPbkdgc
-	NaE7RdGocNgBAOkmmuN+6ecjMuw7H4StlEk/OS8pEB+xyCdV3MWoQeb3p/nQye6ICleV7sn
-	uGtDZneJklQ/Jn//jJ1C7KgTx5jr8SzbnL4NeBkETJvf2OH5AFmCRDq49FP90vWZXLM4qF2
-	oFyzo2eJ2sCi+PlvNTPB/EpCubrqGfYnrPgT0d54yVbcToQHM92t2UR35bazj2KJ4vugHB+
-	MlmmaHQYldK5smP0g+w6C8X40XwldoB5c8ReLbb0e0s3R0ifUDonYzdrdW3i6EpjpvelwzQ
-	U6tikRNjBAkrPLGsIUPVYAVCwzqRMpHfWAcpBHUzsfRz8ZSf7K8dFAo8bsgqIR5EBZuH5nM
-	XdpWFvBfoiw35y4TI4da/ZDShTOagmckk7mEKgPV194vLHjy5zkJGKY66o3weON0iRmEvkF
-	15g5/WgprvwVRKZfbN8N/wtjINikYh3QvnTUcAlxPe4vpYdrbGuxNWYv4I2X75QvSqY/8sQ
-	1NVOL8ZTWNSrnVd3QjXAylK6tCb5kGE9/UQqKzqfwyGCPCFpaDJiC9ahGjw7hzXOtz+7lmk
-	7MB3zOIDDpd74SkE1un7X141YvA+2lWmjtsokUt+Q0/oPypW3yUBYCOc358Ys04b0rR2VTR
-	viJypw/uawzgxsA0/PsTL6Lzwhm/Wox883so+s0o49/m25FGeG1xy4TDiFg88DjDa/sJBrV
-	ev/O8HnxoyJZ4CpoqfkiCJVJ4TQPU2Y4274+n75Y6wkgSb6cYN7gt9b6SVWTAqrW8PTOeAl
-	jg5i3xpDasIAKUKtBjIlwT/iv7RcX6fe6aIb9kC9/n5vjvYUCH7m83QvQADt9xxAuwWLvkw
-	0xJ7ErqmVSdDY309erRfxQ6MLgLkRTPl2eDDdzLwpB6uivlLK8/hZ0PmrMvRV2CCAJMZEF/
-	GrZOZAQA==
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-X-QQ-RECHKSPAM: 0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 8/9] drm/vgem/vgem_drv convert to use faux_device
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-kernel@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Lukas Wunner <lukas@wunner.de>,
+ Mark Brown <broonie@kernel.org>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
+ <mairacanal@riseup.net>, Robin Murphy <robin.murphy@arm.com>,
+ Simona Vetter <simona.vetter@ffwll.ch>, Zijun Hu <quic_zijuhu@quicinc.com>,
+ linux-usb@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org
+References: <2025021023-sandstorm-precise-9f5d@gregkh>
+ <2025021028-brigade-create-37de@gregkh>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <2025021028-brigade-create-37de@gregkh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[intel.com,linux.intel.com,google.com,huawei.com,gmail.com,wunner.de,kernel.org,riseup.net,arm.com,ffwll.ch,quicinc.com,vger.kernel.org,lists.freedesktop.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,suse.de:mid]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-SGVsbG8gU2xhZGUsDQoNClRoYW5rcyBmb3IgcmVwbHkgbXkgcXVlc3Rpb24uDQoNCkJScw0K
-V2VudGFvIEd1YW4=
+Hi
+
+Am 10.02.25 um 13:30 schrieb Greg Kroah-Hartman:
+> The vgem driver does not need to create a platform device, as there is
+> no real platform resources associated it,  it only did so because it was
+> simple to do that in order to get a device to use for resource
+> management of drm resources.  Change the driver to use the faux device
+> instead as this is NOT a real platform device.
+>
+> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: David Airlie <airlied@gmail.com>
+> Cc: Simona Vetter <simona@ffwll.ch>
+> Cc: dri-devel@lists.freedesktop.org
+> Reviewed-by: Lyude Paul <lyude@redhat.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+
+Should this patch be merged through DRM trees?
+
+Best regards
+Thomas
+
+> ---
+> v4: - api tweaked due to parent pointer added to faux_device create
+>        function.
+>   v3: new patch in the series.  For an example of the api working, does
+>       not have to be merged at this time, but I can take it if the
+>       maintainers give an ack.
+>   drivers/gpu/drm/vgem/vgem_drv.c | 30 +++++++++++++++---------------
+>   1 file changed, 15 insertions(+), 15 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/vgem/vgem_drv.c b/drivers/gpu/drm/vgem/vgem_drv.c
+> index 2752ab4f1c97..260c64733972 100644
+> --- a/drivers/gpu/drm/vgem/vgem_drv.c
+> +++ b/drivers/gpu/drm/vgem/vgem_drv.c
+> @@ -32,7 +32,7 @@
+>   
+>   #include <linux/dma-buf.h>
+>   #include <linux/module.h>
+> -#include <linux/platform_device.h>
+> +#include <linux/device/faux.h>
+>   #include <linux/shmem_fs.h>
+>   #include <linux/vmalloc.h>
+>   
+> @@ -52,7 +52,7 @@
+>   
+>   static struct vgem_device {
+>   	struct drm_device drm;
+> -	struct platform_device *platform;
+> +	struct faux_device *faux_dev;
+>   } *vgem_device;
+>   
+>   static int vgem_open(struct drm_device *dev, struct drm_file *file)
+> @@ -127,27 +127,27 @@ static const struct drm_driver vgem_driver = {
+>   static int __init vgem_init(void)
+>   {
+>   	int ret;
+> -	struct platform_device *pdev;
+> +	struct faux_device *fdev;
+>   
+> -	pdev = platform_device_register_simple("vgem", -1, NULL, 0);
+> -	if (IS_ERR(pdev))
+> -		return PTR_ERR(pdev);
+> +	fdev = faux_device_create("vgem", NULL, NULL);
+> +	if (!fdev)
+> +		return -ENODEV;
+>   
+> -	if (!devres_open_group(&pdev->dev, NULL, GFP_KERNEL)) {
+> +	if (!devres_open_group(&fdev->dev, NULL, GFP_KERNEL)) {
+>   		ret = -ENOMEM;
+>   		goto out_unregister;
+>   	}
+>   
+> -	dma_coerce_mask_and_coherent(&pdev->dev,
+> +	dma_coerce_mask_and_coherent(&fdev->dev,
+>   				     DMA_BIT_MASK(64));
+>   
+> -	vgem_device = devm_drm_dev_alloc(&pdev->dev, &vgem_driver,
+> +	vgem_device = devm_drm_dev_alloc(&fdev->dev, &vgem_driver,
+>   					 struct vgem_device, drm);
+>   	if (IS_ERR(vgem_device)) {
+>   		ret = PTR_ERR(vgem_device);
+>   		goto out_devres;
+>   	}
+> -	vgem_device->platform = pdev;
+> +	vgem_device->faux_dev = fdev;
+>   
+>   	/* Final step: expose the device/driver to userspace */
+>   	ret = drm_dev_register(&vgem_device->drm, 0);
+> @@ -157,19 +157,19 @@ static int __init vgem_init(void)
+>   	return 0;
+>   
+>   out_devres:
+> -	devres_release_group(&pdev->dev, NULL);
+> +	devres_release_group(&fdev->dev, NULL);
+>   out_unregister:
+> -	platform_device_unregister(pdev);
+> +	faux_device_destroy(fdev);
+>   	return ret;
+>   }
+>   
+>   static void __exit vgem_exit(void)
+>   {
+> -	struct platform_device *pdev = vgem_device->platform;
+> +	struct faux_device *fdev = vgem_device->faux_dev;
+>   
+>   	drm_dev_unregister(&vgem_device->drm);
+> -	devres_release_group(&pdev->dev, NULL);
+> -	platform_device_unregister(pdev);
+> +	devres_release_group(&fdev->dev, NULL);
+> +	faux_device_destroy(fdev);
+>   }
+>   
+>   module_init(vgem_init);
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
