@@ -1,90 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ci74p00im-qukt09090101.me.com (ci74p00im-qukt09090101.me.com [17.57.156.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C92A26BDA4;
-	Tue, 25 Feb 2025 15:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E1726B098
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 15:24:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.57.156.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740497010; cv=none; b=AP3dSoFad1Yz8Ug2x5SdawANMS9zZ7ljsAQHd6bPXGYdP0rlWCzQjIn1Ub5KHfsmY0+7o+6Y6V3O4RXY5CZAqtRkbSAcGglUQbhkb2jLcBGTjLf9RBTReUvvEaXo3NQrfQokxII/+lAYIc21ClVzzlU0uJjD4/nNmbQ3LIwQKyk=
+	t=1740497059; cv=none; b=qcGzz9dPqGqNvCvnjdm0J0TwztdlfJN4BdlKDRU7I37jT2STUuUz/Ap0b/vjfu1+cBZ4rjZ5S5woOMRUZRLf4cB4XkWVpH0LLEQbUJ+1atG23HkgILxc8d3enlr8LwlFJk/1y0ZcJHSLC/apm/npsOYphuoiHH9E6pjvNo+rBcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740497010; c=relaxed/simple;
-	bh=Tzn/9eNWuHdFVskUYV6vkNglzOC0sJhfMg7yZDmW82U=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=GdUjAu/YLGsz4qLFBSxlKPjdMPgxUAKD7CvrdqS8z3qfDTrBvFGLMYNbh8BshgYVMqBGNnqggHgevsmDkwTNnUJAfu2ZvrCEFIhvKuTbbDsFpa5eZvxQRnI3g/98xAnAOnw6oAikub3W9XaMi0bKgoNYEFW9B6jMZ0sRx/zt6lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gu/o1aR/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740497059; c=relaxed/simple;
+	bh=KKCgr4XOuwhlA0iWbXJwU/5OQ3sqThFzQ7RQy/OTe44=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JMqyunXZoF36+1KIrwmlKq/UHKADY5hoFMS0nL5Zuuq4apbZFhoTHGjoF/oyoX2LYkFhN8GiEsBCxYnU4rKYqldti0Yca2VjZbmfqNLyeytudB8NX+1uiffbgMFnWGKF/t12eakjLUWFtgpFimWpBa+V6tSsfX4mqDwf3h+pPeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=CIanoWiO; arc=none smtp.client-ip=17.57.156.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gu/o1aR/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BF54C4CEDD;
-	Tue, 25 Feb 2025 15:23:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740497010;
-	bh=Tzn/9eNWuHdFVskUYV6vkNglzOC0sJhfMg7yZDmW82U=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=gu/o1aR/lmSVyHK9F3eiDPcxFDUTIlT4zmj7kAA6rXq5qDsAzvYeKtvIMfg9CGxvH
-	 tKUAuBEbQbFjkhqkeyX9jF82FMatB+xSVMi0x6xxd7XWz+tOxCZ9EC7ttH/QF4WO99
-	 ZkzfxK/71Hg2hSCrf3tmH9O+IPTygZI99kwZzcGxij95lbGAp2o+HziAECGvBPJhd9
-	 8FTYsX37A06nIBlT2pWeos/wsRQGTxgJpf4tZxJ3f6ILzG3tVAt5OmZCvt1ZLyEPGK
-	 lbndOS4DltfphidRKZv07ru2tgifG7PRDcn1f3zQoYHVEOjrjjvVQvosEoVJ7w1Fgd
-	 25ii37gvR0HRQ==
-From: Mark Brown <broonie@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, Vijendar Mukunda <Vijendar.Mukunda@amd.com>, 
- Venkata Prasad Potturu <venkataprasad.potturu@amd.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
- Peter Zijlstra <peterz@infradead.org>, 
- Thorsten Blum <thorsten.blum@linux.dev>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250224221214.199849-2-thorsten.blum@linux.dev>
-References: <20250224221214.199849-2-thorsten.blum@linux.dev>
-Subject: Re: (subset) [PATCH] ASoC: amd: acp: acp70: Remove unnecessary
- if-check
-Message-Id: <174049700783.77394.8393718992202773075.b4-ty@kernel.org>
-Date: Tue, 25 Feb 2025 15:23:27 +0000
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="CIanoWiO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=KKCgr4XOuwhlA0iWbXJwU/5OQ3sqThFzQ7RQy/OTe44=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
+	b=CIanoWiO8J8PtwZ9J6YcNggtSK4U6hbju7kVkMu7k3fdtwWReomoyWbaJd4EuSCp4
+	 XDG+TLp7JEh3BXwLJt6JJJBNHGx58Hf0RprD+XB/G6QPsNsin1NdfNcjxq6yyay0ej
+	 CR7oiWzF6Qpb6azWRDUZji88f2o0tOe3xtukChB/Ho7V4KwWoHLsitXxHKzA3LbCCy
+	 +ppDDD7w9H03Z27giG3XLMokamkKLKt41XPI4/DhupYuICwmf3ruqV/La04E/bvCz7
+	 pZ9oZcQgSAbMN2zVqGfHoMhD3Kled8ppXjXNF2PztJ3Ml6ngkosV0vOcGJb6bvtR55
+	 uaVPLu3LkV4cw==
+Received: from [192.168.1.26] (ci77p00im-dlb-asmtp-mailmevip.me.com [17.57.156.26])
+	by ci74p00im-qukt09090101.me.com (Postfix) with ESMTPSA id 7D7CA35C05F0;
+	Tue, 25 Feb 2025 15:24:13 +0000 (UTC)
+Message-ID: <cd4ec50b-dadd-490b-ab15-078dcf4bb02a@icloud.com>
+Date: Tue, 25 Feb 2025 23:24:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/5] of: Do not change property state under
+ __of_add_property() failure
+To: Rob Herring <robh@kernel.org>
+Cc: Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+References: <20250224-of_bugfix-v1-0-03640ae8c3a6@quicinc.com>
+ <20250224-of_bugfix-v1-4-03640ae8c3a6@quicinc.com>
+ <20250225144108.GB2279028-robh@kernel.org>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <20250225144108.GB2279028-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-1b0d6
+X-Proofpoint-ORIG-GUID: 7BBuBFw4b3gV4JIpSCjkpo_q-vHQT-Ln
+X-Proofpoint-GUID: 7BBuBFw4b3gV4JIpSCjkpo_q-vHQT-Ln
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-25_04,2025-02-25_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=706 mlxscore=0 adultscore=0
+ clxscore=1015 suspectscore=0 malwarescore=0 bulkscore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2502250102
 
-On Mon, 24 Feb 2025 23:12:12 +0100, Thorsten Blum wrote:
-> Since list_for_each_entry() expects the list to not be empty, the
-> iterator variable cannot be NULL and the unnecessary if-check can be
-> removed. Remove it and indent the code accordingly.
-> 
-> Compile-tested only.
-> 
-> 
-> [...]
+On 2025/2/25 22:41, Rob Herring wrote:
+> On Mon, Feb 24, 2025 at 10:28:00PM +0800, Zijun Hu wrote:
+>> From: Zijun Hu <quic_zijuhu@quicinc.com>
+>>
+>> Do not remove the property from list @np->deadprops if
+>> __of_add_property() encounters -EEXIST failure.
+> A property can never be on both np->deadprops and np->props.
 
-Applied to
+i made this patch based on convention that
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+This change is made base on convention that tasks which have
+been done successfully needs to be undid if fails to do the
+remaining task.
 
-Thanks!
 
-[1/1] ASoC: amd: acp: acp70: Remove unnecessary if-check
-      commit: 8fd0e127d8da856e34391399df40b33af2b307e0
+It is okay to drop this patch based on condition you mentioned.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+thank you. (^^)(^^)
