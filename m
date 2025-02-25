@@ -1,127 +1,131 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7758926A1B4
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:20:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FE926B089
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:21:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740493255; cv=none; b=eu+H36cu4zaCWlqb+rkMBh+K9NWJRil27ye/sWiqRg2MqB1eFPQqRI2dLbj4m3+kMcycmot61Cbch3OJLtOhhVz9gEnLmQH/wPHg2LaWJSbEHpSRom5QU1h9ims3zJMZBhYTpEDT0Fm0mjEyu+jNAMRDhTrvuzYThD6Tqyv0VHg=
+	t=1740493296; cv=none; b=plVvoD4kGhpaosEK2va+nyxHQV1o8BiaA7cAOBylPAFaIMBImG8gFOEs015T8QU9Je843CQLQ1R/MADrVdCkP549/bAAyOjFt8YdfdCajRFNCVfybtHwiERkaCC2dNp9pzPySkFX9nZONqqBrQAICG7pTvMSvd7jDjZC89XdOSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740493255; c=relaxed/simple;
-	bh=4aRVcR1MtxzUuDinO58olTCgo2qDQEdNqepuqBaC/20=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=USM7iuzc4KBq9mpZG+5DCEYk+78PQuuvurDn3Ep4Gi7SEI3ZJSfQzHqLHJefa/zXAVIyqgXiOQR6LA9f6GKdA6W3KMpUAWPFxqDMAgBq9a8XYIyan5xTIG/3LJKQL3IYAnkmemzxkUxc9pztmXZI2wH6XhT8g9zSbur2c3MAgnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=nIsJWFUV; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+	s=arc-20240116; t=1740493296; c=relaxed/simple;
+	bh=JOzSXnruxMx8fo4ynquuHZbCjEVyeQDk3Gw08yi3rfc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tdGBYj7GOFB4E6+kdhXf/CpTLjtc8o3CaJaFu5jlXnPNZydODy2E014LiXrWBVvi6WUw+sbOUteUrzfUl3jmvIi1dgYOqhrDad8MbaVoqFaR4FKvzP/7E2ZeMTdheSC5APTE3A1mor6KniTaw2brEn+5oEL3oQa6Cp5jSHrieIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dV+gF3aB; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="nIsJWFUV"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e5ad75ca787so4593661276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 06:20:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1740493252; x=1741098052; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=yLGj3f01/5YqskB/AMHKol9KSvNGpbV7f974e7GtQ0U=;
-        b=nIsJWFUVPNvfheUD0MUZufKF654v4pxGi87gALKIYaHHUUQuyeU5xFijZM0cJ2RYqG
-         phYCIFwesyEK4kRNVgrTrDApp8aDCjaF5XMJTh7oYacvAvPFUdcOTA+mrm2veSm5OA9O
-         rnjDunJ8Itk42bUf8qlqQVQm72kx2oZAhSFLglqTIg15K0WShjUmB2Z/FExjSaV16wI2
-         WDu6gUMuEFpU8Z1OzSNdXYShzINVOrzpRN8pYUsqtGayndG9ykZkzx1tzcCarUrdl2uP
-         Crg/YSNkSq3i9dmLuA5s/fLI4baibikpicY8gAVfxBRDrYjs3lnku29eFfDLOn7t979l
-         bbFg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dV+gF3aB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740493293;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SFFVttm850UqVz1pmb+AlnJQK6y1OGWuLBvoqE/ivD0=;
+	b=dV+gF3aBJG2ObjJtIOteRp5o4ZeAAdcEKWswESee9ZMQmGHBUaahzzAvaGbeDOp5nEvgMS
+	yxigvz2BdKIrv3feZK9uw/ziY+BM2BRNPAMbzrRQzSoNbao8v6JweV1l/2DhQ6xb2pjIi7
+	JzGOCritUGnPMlHVwgTaJeMHu1uAWP4=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-26-SlvQuh7qOKaDcKbtNNjm9Q-1; Tue, 25 Feb 2025 09:21:31 -0500
+X-MC-Unique: SlvQuh7qOKaDcKbtNNjm9Q-1
+X-Mimecast-MFC-AGG-ID: SlvQuh7qOKaDcKbtNNjm9Q_1740493290
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-38f255d44acso2473719f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 06:21:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740493252; x=1741098052;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yLGj3f01/5YqskB/AMHKol9KSvNGpbV7f974e7GtQ0U=;
-        b=guKZXrkooDd7DUkHuRKOyIpG2BgMgEAGiWT2bJ7xPOfG4Quz5TuKWJJa5DdhGbikkm
-         /TdTxcBRxdFAAQ5IcaK3SuYqw0pc9Lqy7dMKUwfQcylO/Q0yeafKZv8PjeZBeR2xfxUg
-         Jyv9PY0woC6nSwLp4oEPGpYhcUhl1Ir4aM6JXjwM+VTYOgcHuKthjvJ5HeZ73shrGfw5
-         EG3TGIt2W1SDGdO8QhQiCgr5W9LuMEYFuZLr68oizGyFJlpF+RNNXP265q40B08XBxB1
-         KR25iUIxmGOheXJUSn91OrV2LoYMbLSyR5Ux/WSZAUXCdNsTElWcJ6EOX6QJUjLpN0Hu
-         +gLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXUVolD+T/YUAosny5uC73Slj6B4sKRJJHslnO0YuEX6JEi2orReYtFpBHGjpz50VAXEdVUbNJlJ39woWU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxFynJ9RrSY4OIyqyO5AQaAtNezcpHGEas4hXTkalMEGnMElm4
-	l6OvnLd7C8QOVUb0JVqBfE6wtE287Uv8eZHI75RP3vW4YTedcwk9ph/E6nqlUT914iw9uymigdI
-	QN769fE0xAxiezEfWXi3ilVmRYCgN0fcTC2Sxbw==
-X-Gm-Gg: ASbGncvg4Dh1XqYoFOQUlO2c1uD6SVEfEgMP/5nmB0qZpc6uYUHlg4DZvSxVYf45/tB
-	GP3x4IuSXLP7DyaHHdc0DpQKKhbCIeCLJKrg4scPaLUFiwKXEhNSEWrOhqaDv+Xu7O4uyJbeeV/
-	nOuXP2DSyoK3G4PxaPCvQB6ErKI2kXaGb6lIYG424=
-X-Google-Smtp-Source: AGHT+IENualTBjQ0gC23IsPS4Y3OAVTdoidslIODPAXgztEQkt/QwuDATXiFsWJ/F2T2gnPhUdShHIX8sQEr6smL7nA=
-X-Received: by 2002:a05:6902:2493:b0:e5b:43dd:cf18 with SMTP id
- 3f1490d57ef6-e5e2490dc3amr14360779276.22.1740493251235; Tue, 25 Feb 2025
- 06:20:51 -0800 (PST)
+        d=1e100.net; s=20230601; t=1740493290; x=1741098090;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SFFVttm850UqVz1pmb+AlnJQK6y1OGWuLBvoqE/ivD0=;
+        b=cbHF/fGP7WUgOuej4Rg7mxMscgfEJgDr9JTTnZt1nTYz9ruPsi2sQv8yTQJIoWlW/8
+         o4Cb/GSD1NFFfvjo67k8VgOnD/H4Nk2ZCXaqGUsKrw9PSMVl0/7nbfYOaGJuPQALNzKc
+         XqbT3H0WtB7rrPRlDidEw+FgzsKpMmCuouMpk0VKPTeF5Sw4owRZQ8peBUg98VHCrw3C
+         kenI8VY1Kml3+13hMYktxNjGe+D0KOpnLEIeNS4PPSqf+pEppohlbzU2ZE0g/I7K53Tr
+         HoRs5tVUjEOpgcYqbZEiJeiw1W37zlHu4fO4cCXfWkpesE5oax9rfkTqC9Pj5MA9jaEz
+         4xNw==
+X-Forwarded-Encrypted: i=1; AJvYcCXFbxsT3CDfX7CnJmxJ5P7Hybe+9VQXcXpW2ZGAIecCBHbD4OwaTJDtBivGcP+qth5ZqUfIiEMdvh0BPP4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywg8yb+Uj3fVAhavXegWWCTKvrfQzXdKwXdZnURTk9TZxpZU076
+	ssCL2XF2hJIqCJgdj0klIJ0avbzOF8s2FQqJFeym/KBSaUkkpabc7wXMSgjXQwklcLjiVBlGusl
+	mow1MgXL9otPOIMfyxbW4E5l3ZMIsiZS/WF4uOD7xehth75GIpcZWfH8cDykYUA==
+X-Gm-Gg: ASbGncsa3PN6F+54nlt8wmoxHst015DoEcn69ar07/+4WPRx0is8VstIFTgmnUl/qX+
+	DAbuPtF8CtPsMVreo6pr5HUPY5zu51LYLoCvE01b3rWWL+ZFJVuXjms8Nv0z14J1JicCJ1Z/xDz
+	Gb8gdUhkRTRsKpBEPa29wJS5i1QXwjwgAO+CrG2BmQUaIgcIuoiZhxhhLa61o+a9TUI/ui+1Io+
+	Ax6l5bGFdQ+wFP2SMkgaBXeNkV5VSP7lLm+zjCLK0UvbV3Fkh+uuMZI0SYqMF4jgygW5+5Vid9p
+X-Received: by 2002:a05:6000:401e:b0:38f:210b:693f with SMTP id ffacd0b85a97d-38f6f0ae79cmr12378093f8f.52.1740493290294;
+        Tue, 25 Feb 2025 06:21:30 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFPzWsgH9v1k2HVPYkFXNJ3hhFz69OOLf5Yi+p9svSln8YhJs1OVyxaR00ASzjgQujycgWCZQ==
+X-Received: by 2002:a05:6000:401e:b0:38f:210b:693f with SMTP id ffacd0b85a97d-38f6f0ae79cmr12378040f8f.52.1740493289721;
+        Tue, 25 Feb 2025 06:21:29 -0800 (PST)
+Received: from redhat.com ([2.52.7.97])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390cd86cb08sm2423039f8f.29.2025.02.25.06.21.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 06:21:29 -0800 (PST)
+Date: Tue, 25 Feb 2025 09:21:24 -0500
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Simon Horman <horms@kernel.org>
+Cc: Peter Hilber <quic_philber@quicinc.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Trilok Soni <quic_tsoni@quicinc.com>,
+	Srivatsa Vaddagiri <quic_svaddagi@quicinc.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+	netdev@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>,
+	"Ridoux, Julien" <ridouxj@amazon.com>,
+	Marc Zyngier <maz@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Parav Pandit <parav@nvidia.com>,
+	Matias Ezequiel Vara Larsen <mvaralar@redhat.com>,
+	Cornelia Huck <cohuck@redhat.com>, virtio-dev@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v5 2/4] virtio_rtc: Add PTP clocks
+Message-ID: <20250225092115-mutt-send-email-mst@kernel.org>
+References: <20250219193306.1045-1-quic_philber@quicinc.com>
+ <20250219193306.1045-3-quic_philber@quicinc.com>
+ <20250224175618.GG1615191@kernel.org>
+ <vhlhes7wepjrtfo6qsnw5tmtvw6pdt2tfi4woqdejlit5ruczj@4cs2yvffhx74>
+ <20250225141240.GW1615191@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250225-b4-ov9282-gain-v1-0-a24af2820dde@linux.dev> <20250225-b4-ov9282-gain-v1-2-a24af2820dde@linux.dev>
-In-Reply-To: <20250225-b4-ov9282-gain-v1-2-a24af2820dde@linux.dev>
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Tue, 25 Feb 2025 14:20:34 +0000
-X-Gm-Features: AQ5f1JpnFy2Fej1Tv3LO4JDgq3THZkPkBcXgbtSirWhgQwozrTWSiHSj1Na7Bi0
-Message-ID: <CAPY8ntCoerdGgM1CjLWzNPx-0gACR1O9yaccRoHByq-B3D-rJg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] media: i2c: ov9282: add AEC Manual register definition
-To: Richard Leitner <richard.leitner@linux.dev>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225141240.GW1615191@kernel.org>
 
-Hi Richard
+On Tue, Feb 25, 2025 at 02:12:40PM +0000, Simon Horman wrote:
+> On Tue, Feb 25, 2025 at 12:28:24PM +0100, Peter Hilber wrote:
+> > On Mon, Feb 24, 2025 at 05:56:18PM +0000, Simon Horman wrote:
+> > > On Wed, Feb 19, 2025 at 08:32:57PM +0100, Peter Hilber wrote:
+> > > 
+> > > ...
+> > > 
+> > > > +/**
+> > > > + * viortc_ptp_gettimex64() - PTP clock gettimex64 op
+> > > > + *
+> > > 
+> > > Hi Peter,
+> > > 
+> > > Tooling recognises this as a kernel doc, and complains
+> > > that there is no documentation present for the function's
+> > > parameters: ptp, ts, and sts.
+> > > 
+> > > Flagged by W=1 builds.
+> > > 
+> > 
+> > Thanks, I will change the offending documentation to non kernel-doc. I
+> > was not aware that these warnings are always considered a problem.
+> 
+> Likewise, thanks.
+> 
+> I guess it depends on the subsystem. And perhaps this is fine for virtio.
+> But for Networking at large the rule of thumb is not to add new warnings.
 
-Thanks for the patch
+Nope.
 
-On Tue, 25 Feb 2025 at 13:09, Richard Leitner <richard.leitner@linux.dev> wrote:
->
-> Add #define's for the "AEC MANUAL" (0x3503) register and its
-> values/flags. Use those in the registers single usage within the
-> `common_regs` struct.
->
-> All values are based on the OV9281 datasheet v1.01 (09.18.2015).
->
-> Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
-
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-
-> ---
->  drivers/media/i2c/ov9282.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/media/i2c/ov9282.c b/drivers/media/i2c/ov9282.c
-> index c926842257893c4da3319b847fab9908b5bdaec6..c882a021cf18852237bf9b9524d3de0c5b48cbcb 100644
-> --- a/drivers/media/i2c/ov9282.c
-> +++ b/drivers/media/i2c/ov9282.c
-> @@ -44,6 +44,15 @@
->  #define OV9282_EXPOSURE_STEP   1
->  #define OV9282_EXPOSURE_DEFAULT        0x0282
->
-> +/* AEC/AGC manual */
-> +#define OV9282_REG_AEC_MANUAL          0x3503
-> +#define OV9282_DIGFRAC_GAIN_DELAY      BIT(6)
-> +#define OV9282_GAIN_CHANGE_DELAY       BIT(5)
-> +#define OV9282_GAIN_DELAY              BIT(4)
-> +#define OV9282_GAIN_PREC16_EN          BIT(3)
-> +#define OV9282_GAIN_MANUAL_AS_SENSGAIN BIT(2)
-> +#define OV9282_AEC_MANUAL_DEFAULT      0x00
-> +
->  /* Analog gain control */
->  #define OV9282_REG_AGAIN       0x3509
->  #define OV9282_AGAIN_MIN       0x10
-> @@ -214,7 +223,7 @@ static const struct ov9282_reg common_regs[] = {
->         {0x3030, 0x10},
->         {0x3039, 0x32},
->         {0x303a, 0x00},
-> -       {0x3503, 0x08},
-> +       {OV9282_REG_AEC_MANUAL, OV9282_GAIN_PREC16_EN},
->         {0x3505, 0x8c},
->         {0x3507, 0x03},
->         {0x3508, 0x00},
->
-> --
-> 2.47.2
->
->
