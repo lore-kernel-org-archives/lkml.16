@@ -1,120 +1,349 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F0D2686A8
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757801FC7D5;
+	Tue, 25 Feb 2025 14:05:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740492322; cv=none; b=cnR9NTcbMWOAsH5pQRirjNpNVr7vcKdJN/5irv/gjYNmpZyH0v2M+m5jx+lFFNvoI6vLqdKrsVGwtJ9g8/osgfWwyoesiaeQDJJ6chg9kV8hBA8/Jk6HZI32RZrrZFBL1Amt2cqq9lK+6teqcNr4DYZX3it/gr1+JY2WZR7kymU=
+	t=1740492328; cv=none; b=qwuZ0+NDqFcx0996WyraIntISdsSYYJm4Ts2aPY2MaQtMx5TgPayC7IXHLiC945PW3MztI16LjF93Jpz6PBx7D8Se3lJoOxepMyfWTV7/1ucytVf1Vg37229WdJKjb6nrdnVQ88Kf7StZJpHY2gw6gqSrBlGfctIOri+nTq8b5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740492322; c=relaxed/simple;
-	bh=gpcDjd2ys+1/GXZMy58GrQmGAViqOhk10U5APZI1bwM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q5T0gEtFrgKyCW+XCbC+KurmmTl5yu8pp6I7Zy0UGpxEY8x+9DGNvYXg9pDfBm8WvjZk13p3f5YI62Mr4xHrudp0ygdVMnSpXVJWpOyOKz2Xcm7vO/ybORe/SL2ihsj4z0mK6+NugoUf/kpiWTcFsqvUlEPg6m+Cyy7yo4zivmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloud.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=cloud.com header.i=@cloud.com header.b=FBk6w/H2; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1740492328; c=relaxed/simple;
+	bh=MRXLTjehIE10KAbbp3iCpL5NeG3pAuNZ+yln9NJGlpU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HuW6Vw47H2MOVG6wtCrX9+2IOHEigNvsUp1yZFTMLOCjreUcOpGap/di1opHqo/y6aUrVHxwtCWJuBJUXhCtmpdV32QnnWRHpyq49ra81L+/0j8cQSEeD9MRbSDDCgmC9kGhROcjBuOp4mFzlmDmI6emzUI7KAoJHkeag7pmfbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AK5bKZFb; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloud.com header.i=@cloud.com header.b="FBk6w/H2"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e058ca6806so10152872a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 06:05:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.com; s=cloud; t=1740492317; x=1741097117; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6461ban+1g2qu9SgG0oSTcJISIZ7Z8nL0LN7J32hL00=;
-        b=FBk6w/H2hfu2V57tLOxoATVhBm2/Rjh59E4qy5NseJ6liU/IeqGAg3aoYxgiZE+OiO
-         0p0mS50pR7gSrox6nNft5kNIk+B3YoV0OJ3m6wmBC4u5ljfpYdFI9hVrL7SXZpeN3X6+
-         +T3AuG6yYcqKnS6XBrLvKJ+H9KKsft/cVAwZ8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740492317; x=1741097117;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6461ban+1g2qu9SgG0oSTcJISIZ7Z8nL0LN7J32hL00=;
-        b=VG8R/bXamRtemp7nlsqn/FYtQWbKHJ8RrRexfCObd6rH33uL8d0/Zcro9WP9kRMSOu
-         B6rYd91biUr83JlLci7FuIN8ZQ6VsLeX9eKI8AiMn0XEJmbiRrjHRDeIsjSBKuXiHwfO
-         L5Ddf3T7iHFz4ZknwmDCZS9C5byTDUpllhFGCHvRfO93KzUj7lqfZwYXsxmy2SP2/4Y0
-         oUh3khM89ETf0DxQ6zkrj2cvPx0Bcm65ERNcR5FMxpNoi9u5tZ6KLu+6zr2AoQLopRMS
-         koGeVgvM/7RAKN/FAornR8T2Cs/3Ee/ELdiA1IXxd2NBoiDBYSv/J4n2W2TCTUHDt3X7
-         mRgw==
-X-Forwarded-Encrypted: i=1; AJvYcCUlkYj32fe5AEndL4h4QRmB91DhiZIVaUuKonoE08zTGMai4XxEQC6rlRiOTPrkkKlIfTMi2SZKagmF1TA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDSsKNoZ61rGmE7cATYWt460yomaHN22/yKCOH6iai1JCOKURw
-	Tg7g0S/WNFaZ209bBb+HJJ14W9rJID3nsCZ+YFupqOl4hPH88tYqN38IHbXyY+c=
-X-Gm-Gg: ASbGncshlfJ+r/ZaM8PcV8zg0H+yOq9qc0OsxtLaWDg1l6FjthAxtQNNf0Wn7bRwcTU
-	JHdVicRnLpyVaUmcyqp3N14xEWy6eAbW4/j0Wj4WBCemikzcflD0RdOkY59UDdi1cmTii9TFbhO
-	y5CPNISnJqFi2l0aGx0kWSrfuWI8mrtfb5WuT01F/wPICAhgO1K6bc2ay02Jx7RuWeIvSEv50Ry
-	GGdI9EbP+jEadGPDhGXPbwtemFt/yV80Yu/56NEB380saE9FmbKMv9+BuMKysYx1gCV5D1meNqA
-	EJm80yHxkGvQEFHp2kS/BSZl1wWUq2twG8BocMGJyMVKRRfY4zJx8QkGO0L2RFcdVQ==
-X-Google-Smtp-Source: AGHT+IF9aVZ271pd7Rivr+4PMLzSxl4QN0DdFXBiXSE8kbbx+f24AkB2D93JM67HV9at4+50ibsh4g==
-X-Received: by 2002:a17:906:7950:b0:ab7:63fa:e4ab with SMTP id a640c23a62f3a-abc0cd0b6bamr1855443966b.0.1740492317294;
-        Tue, 25 Feb 2025 06:05:17 -0800 (PST)
-Received: from fziglio-xenia-fedora.eng.citrite.net ([185.25.67.249])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed1cdbef5sm149367966b.14.2025.02.25.06.05.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 06:05:16 -0800 (PST)
-From: Frediano Ziglio <frediano.ziglio@cloud.com>
-To: xen-devel@lists.xenproject.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AK5bKZFb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740492327; x=1772028327;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=MRXLTjehIE10KAbbp3iCpL5NeG3pAuNZ+yln9NJGlpU=;
+  b=AK5bKZFbpaQ0XL4obPawQngCEd5PMAR+i0AktPIT7QsrevlvJqqi9V2a
+   0tRki9cSovBD0GPX6BfeBnE7ApZkGGJ63l8ItHoWkrvIamqQkdNY9GGkQ
+   4gZcPUHUxXIvKvwiesnrnc8xkkRNjvYKBpf6zpn/HHuAYohDGlV3L9ml2
+   XuZiI1F8wYQJPcxjR+eA8lAgsOUYcVxXvma8yj9UJOQsDliWXMx3P7yfy
+   6SDbk087GQ7jvZ++gpy07DADEWww7rQBGqyPVmRQ2yYvPG5bUs2lRSJBb
+   xL5fFgjfNu2prRTzu3oMzNuLHvJh34+iBVrt7B06e/OOmgwWQ+OXsW62D
+   Q==;
+X-CSE-ConnectionGUID: xYMNd1nyRN2/MzkP0wd6rA==
+X-CSE-MsgGUID: CN6aLz18Qdi9GoSLwkR0Wg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="58720185"
+X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
+   d="scan'208";a="58720185"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 06:05:26 -0800
+X-CSE-ConnectionGUID: jQaiv7nJRRiPCgEZItUVGQ==
+X-CSE-MsgGUID: BxXGW796SFaKvlUgJxOdPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
+   d="scan'208";a="147217658"
+Received: from chenyu-dev.sh.intel.com ([10.239.62.107])
+  by orviesa002.jf.intel.com with ESMTP; 25 Feb 2025 06:05:20 -0800
+From: Chen Yu <yu.c.chen@intel.com>
+To: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Rik van Riel <riel@redhat.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Huang, Ying" <ying.huang@linux.alibaba.com>,
+	Tim Chen <tim.c.chen@intel.com>,
+	Aubrey Li <aubrey.li@intel.com>,
+	Michael Wang <yun.wang@linux.alibaba.com>,
+	Kaiyang Zhao <kaiyang2@cs.cmu.edu>,
+	David Rientjes <rientjes@google.com>,
+	Raghavendra K T <raghavendra.kt@amd.com>,
+	cgroups@vger.kernel.org,
+	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Cc: Frediano Ziglio <frediano.ziglio@cloud.com>,
-	"Juergen Gross" <jgross@suse.com>,
-	"Stefano Stabellini" <sstabellini@kernel.org>,
-	"Oleksandr Tyshchenko" <oleksandr_tyshchenko@epam.com>,
-	"Bjorn Helgaas" <bhelgaas@google.com>
-Subject: [PATCH] xen: Add support for XenServer 6.1 platform device
-Date: Tue, 25 Feb 2025 14:03:53 +0000
-Message-ID: <20250225140400.23992-1-frediano.ziglio@cloud.com>
-X-Mailer: git-send-email 2.48.1
+	Chen Yu <yu.c.chen@intel.com>
+Subject: [RFC PATCH 2/3] sched/numa: Introduce per cgroup numa balance control
+Date: Tue, 25 Feb 2025 22:00:15 +0800
+Message-Id: <b3f1f6c478127a38b9091a8341374ba160d25c5a.1740483690.git.yu.c.chen@intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1740483690.git.yu.c.chen@intel.com>
+References: <cover.1740483690.git.yu.c.chen@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On XenServer on Windows machine a platform device with ID 2 instead of
-1 is used.
-This device is mainly identical to device 1 but due to some Windows
-update behaviour it was decided to use a device with a different ID.
-This causes compatibility issues with Linux which expects, if Xen
-is detected, to find a Xen platform device (5853:0001) otherwise code
-will crash due to some missing initialization (specifically grant
-tables).
-The device 2 is presented by Xapi adding device specification to
-Qemu command line.
+[Problem Statement]
+Currently, NUMA balancing is configured system-wide. However,
+in some production environments, different containers may have
+varying requirements for NUMA balancing. Some containers are
+CPU-intensive, while others are memory-intensive. Some do not
+benefit from NUMA balancing due to the overhead associated with
+VMA scanning, while the other prefers NUMA balancing as it helps
+improve memory locality. In this case, system-wide NUMA balancing
+is usually disabled to produce stable results.
 
-Signed-off-by: Frediano Ziglio <frediano.ziglio@cloud.com>
+[Proposal]
+Introduce a per-cgroup interface to enable NUMA balancing for specific
+cgroups. The system administrator must set the NUMA balancing mode
+to NUMA_BALANCING_CGROUP=4 to enable this feature. When in global
+NUMA_BALANCING_CGROUP mode, all cgroups' NUMA balancing is disabled by
+default. After the administrator enables this feature for a specific
+cgroup, NUMA balancing for that cgroup is enabled.
+
+A simple example to show how to use per-cgroup Numa balancing:
+
+Step1
+//switch to global per cgroup Numa balancing,
+//All cgroup's Numa balance is disabled by default.
+echo 4 > /proc/sys/kernel/numa_balancing
+
+Step2
+//created a cgroup named mytest, enable its Numa balancing
+echo 1 > /sys/fs/cgroup/mytest/cpu.numa_load_balance
+
+[Benchmark]
+Tested on two systems. Both systems have 4 nodes. Created a
+cgroup mytest which is bind to node0 and node1(cpu affinity
+as well as memory allocation policy). Launched autonumabench
+NUMA01_THREADLOCAL via mmtests.
+
+echo 0 > /sys/fs/cgroup/mytest/cpu.numa_load_balance
+cgexec -g cpuset:mytest  ./run-mmtests.sh --no-monitor \
+	--config config-numa baseline
+echo 1 > /sys/fs/cgroup/mytest/cpu.numa_load_balance \
+cgexec -g cpuset:mytest  ./run-mmtests.sh --no-monitor
+	--config config-numa nb_cgroup
+
+system1: 4 nodes, 24 Cores(48 CPUs)/node.
+baseline took a total of 191.32 seconds to finish, while cgroup
+numa balancing took a total of 104.46 seconds. There is around
+45% improvement.
+
+                                                 baselin               nb_cgrou
+                                                baseline              nb_cgroup
+Min       syst-NUMA01_THREADLOCAL       69.65 (   0.00%)      106.73 ( -53.24%)
+Min       elsp-NUMA01_THREADLOCAL      191.32 (   0.00%)      104.46 (  45.40%)
+Amean     syst-NUMA01_THREADLOCAL       69.65 (   0.00%)      106.73 * -53.24%*
+Amean     elsp-NUMA01_THREADLOCAL      191.32 (   0.00%)      104.46 *  45.40%*  <---
+Stddev    syst-NUMA01_THREADLOCAL        0.00 (   0.00%)        0.00 (   0.00%)
+Stddev    elsp-NUMA01_THREADLOCAL        0.00 (   0.00%)        0.00 (   0.00%)
+CoeffVar  syst-NUMA01_THREADLOCAL        0.00 (   0.00%)        0.00 (   0.00%)
+CoeffVar  elsp-NUMA01_THREADLOCAL        0.00 (   0.00%)        0.00 (   0.00%)
+Max       syst-NUMA01_THREADLOCAL       69.65 (   0.00%)      106.73 ( -53.24%)
+Max       elsp-NUMA01_THREADLOCAL      191.32 (   0.00%)      104.46 (  45.40%)
+BAmean-50 syst-NUMA01_THREADLOCAL       69.65 (   0.00%)      106.73 ( -53.24%)
+BAmean-50 elsp-NUMA01_THREADLOCAL      191.32 (   0.00%)      104.46 (  45.40%)
+BAmean-95 syst-NUMA01_THREADLOCAL       69.65 (   0.00%)      106.73 ( -53.24%)
+BAmean-95 elsp-NUMA01_THREADLOCAL      191.32 (   0.00%)      104.46 (  45.40%)
+BAmean-99 syst-NUMA01_THREADLOCAL       69.65 (   0.00%)      106.73 ( -53.24%)
+BAmean-99 elsp-NUMA01_THREADLOCAL      191.32 (   0.00%)      104.46 (  45.40%)
+
+The run-to-run deviation downgrading occurs because sometimes the
+per-cgroup NUMA balancing does not improve the score, although no
+performance downgrading is observed.
+
+delta of /sys/fs/cgroup/mytest/memory.stat during the test:
+numa_pages_migrated: 979933
+numa_pte_updates:    21007548  <-- introduced in previous patch
+numa_hint_faults:    19663982  <-- introduced in previous patch
+
+system1: 4 nodes, 40 Cores(80 CPUs)/node.
+baseline took a total of 212.94 seconds to finish, while cgroup numa
+balance took a total of 127.05 second, which is of 40.34% improvment.
+
+                                                 baselin               nb_cgrou
+                                                baseline              nb_cgroup
+Min       syst-NUMA01_THREADLOCAL     8356.05 (   0.00%)     8921.84 (  -6.77%)
+Min       elsp-NUMA01_THREADLOCAL      212.94 (   0.00%)      127.05 (  40.34%)
+Amean     syst-NUMA01_THREADLOCAL     8356.05 (   0.00%)     8921.84 (  -6.77%)
+Amean     elsp-NUMA01_THREADLOCAL      212.94 (   0.00%)      127.05 (  40.34%)  <---
+Stddev    syst-NUMA01_THREADLOCAL        0.00 (   0.00%)        0.00 (   0.00%)
+Stddev    elsp-NUMA01_THREADLOCAL        0.00 (   0.00%)        0.00 (   0.00%)
+CoeffVar  syst-NUMA01_THREADLOCAL        0.00 (   0.00%)        0.00 (   0.00%)
+CoeffVar  elsp-NUMA01_THREADLOCAL        0.00 (   0.00%)        0.00 (   0.00%)
+Max       syst-NUMA01_THREADLOCAL     8356.05 (   0.00%)     8921.84 (  -6.77%)
+Max       elsp-NUMA01_THREADLOCAL      212.94 (   0.00%)      127.05 (  40.34%)
+BAmean-50 syst-NUMA01_THREADLOCAL     8356.05 (   0.00%)     8921.84 (  -6.77%)
+BAmean-50 elsp-NUMA01_THREADLOCAL      212.94 (   0.00%)      127.05 (  40.34%)
+BAmean-95 syst-NUMA01_THREADLOCAL     8356.05 (   0.00%)     8921.84 (  -6.77%)
+BAmean-95 elsp-NUMA01_THREADLOCAL      212.94 (   0.00%)      127.05 (  40.34%)
+BAmean-99 syst-NUMA01_THREADLOCAL     8356.05 (   0.00%)     8921.84 (  -6.77%)
+BAmean-99 elsp-NUMA01_THREADLOCAL      212.94 (   0.00%)      127.05 (  40.34%)
+
+The Numa statistics delta during the test:
+numa_pages_migrated:  785848
+numa_pte_updates:     2359714
+numa_hint_faults:     2349857
+
+[Shortage]
+It has been observed that even with per-cgroup NUMA balancing enabled,
+there is still remote node access, and the benchmark score does not
+increase compared to the baseline. According to the NUMA statistics,
+not much NUMA page migration is detected. Further testing shows that
+global NUMA balancing has the same issue—sometimes NUMA balancing
+does not help. This could be a generic issue in the current kernel
+code, possibly due to either the NUMA page migration or task migration
+strategy, and it needs to be further investigated.
+
+Suggested-by: Tim Chen <tim.c.chen@intel.com>
+Signed-off-by: Chen Yu <yu.c.chen@intel.com>
 ---
- drivers/xen/platform-pci.c | 2 ++
- include/linux/pci_ids.h    | 1 +
- 2 files changed, 3 insertions(+)
+ include/linux/sched/sysctl.h |  1 +
+ kernel/sched/core.c          | 32 ++++++++++++++++++++++++++++++++
+ kernel/sched/fair.c          | 18 ++++++++++++++++++
+ kernel/sched/sched.h         |  3 +++
+ mm/mprotect.c                |  5 +++--
+ 5 files changed, 57 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/xen/platform-pci.c b/drivers/xen/platform-pci.c
-index 544d3f9010b9..9cefc7d6bcba 100644
---- a/drivers/xen/platform-pci.c
-+++ b/drivers/xen/platform-pci.c
-@@ -174,6 +174,8 @@ static int platform_pci_probe(struct pci_dev *pdev,
- static const struct pci_device_id platform_pci_tbl[] = {
- 	{PCI_VENDOR_ID_XEN, PCI_DEVICE_ID_XEN_PLATFORM,
- 		PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0},
-+	{PCI_VENDOR_ID_XEN, PCI_DEVICE_ID_XEN_PLATFORM_XS61,
-+		PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0},
- 	{0,}
+diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
+index 5a64582b086b..1e4d5a9ddb26 100644
+--- a/include/linux/sched/sysctl.h
++++ b/include/linux/sched/sysctl.h
+@@ -22,6 +22,7 @@ enum sched_tunable_scaling {
+ #define NUMA_BALANCING_DISABLED		0x0
+ #define NUMA_BALANCING_NORMAL		0x1
+ #define NUMA_BALANCING_MEMORY_TIERING	0x2
++#define NUMA_BALANCING_CGROUP		0x4
+ 
+ #ifdef CONFIG_NUMA_BALANCING
+ extern int sysctl_numa_balancing_mode;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 44efc725054a..f4f048b3da68 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -10023,6 +10023,31 @@ static ssize_t cpu_max_write(struct kernfs_open_file *of,
+ }
+ #endif
+ 
++#ifdef CONFIG_NUMA_BALANCING
++static DEFINE_MUTEX(numa_balance_mutex);
++static int numa_balance_write_u64(struct cgroup_subsys_state *css,
++				  struct cftype *cftype, u64 enable)
++{
++	struct task_group *tg;
++	int ret;
++
++	guard(mutex)(&numa_balance_mutex);
++	tg = css_tg(css);
++	if (tg->nlb_enabled == enable)
++		return 0;
++
++	tg->nlb_enabled = enable;
++
++	return ret;
++}
++
++static u64 numa_balance_read_u64(struct cgroup_subsys_state *css,
++				 struct cftype *cft)
++{
++	return css_tg(css)->nlb_enabled;
++}
++#endif /* CONFIG_NUMA_BALANCING */
++
+ static struct cftype cpu_files[] = {
+ #ifdef CONFIG_GROUP_SCHED_WEIGHT
+ 	{
+@@ -10071,6 +10096,13 @@ static struct cftype cpu_files[] = {
+ 		.seq_show = cpu_uclamp_max_show,
+ 		.write = cpu_uclamp_max_write,
+ 	},
++#endif
++#ifdef CONFIG_NUMA_BALANCING
++	{
++		.name = "numa_load_balance",
++		.read_u64 = numa_balance_read_u64,
++		.write_u64 = numa_balance_write_u64,
++	},
+ #endif
+ 	{ }	/* terminate */
+ };
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 1c0ef435a7aa..526cb33b007c 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -3146,6 +3146,18 @@ void task_numa_free(struct task_struct *p, bool final)
+ 	}
+ }
+ 
++/* return true if the task group has enabled the numa balance */
++static bool tg_numa_balance_enabled(struct task_struct *p)
++{
++	struct task_group *tg = task_group(p);
++
++	if (tg && (sysctl_numa_balancing_mode & NUMA_BALANCING_CGROUP) &&
++	    !tg->nlb_enabled)
++		return false;
++
++	return true;
++}
++
+ /*
+  * Got a PROT_NONE fault for a page on @node.
+  */
+@@ -3174,6 +3186,9 @@ void task_numa_fault(int last_cpupid, int mem_node, int pages, int flags)
+ 	     !cpupid_valid(last_cpupid)))
+ 		return;
+ 
++	if (!tg_numa_balance_enabled(p))
++		return;
++
+ 	/* Allocate buffer to track faults on a per-node basis */
+ 	if (unlikely(!p->numa_faults)) {
+ 		int size = sizeof(*p->numa_faults) *
+@@ -3596,6 +3611,9 @@ static void task_tick_numa(struct rq *rq, struct task_struct *curr)
+ 	if (!curr->mm || (curr->flags & (PF_EXITING | PF_KTHREAD)) || work->next != work)
+ 		return;
+ 
++	if (!tg_numa_balance_enabled(curr))
++		return;
++
+ 	/*
+ 	 * Using runtime rather than walltime has the dual advantage that
+ 	 * we (mostly) drive the selection from busy threads and that the
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 38e0e323dda2..9f478fb2c03a 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -491,6 +491,9 @@ struct task_group {
+ 	/* Effective clamp values used for a task group */
+ 	struct uclamp_se	uclamp[UCLAMP_CNT];
+ #endif
++#ifdef CONFIG_NUMA_BALANCING
++	u64			nlb_enabled;
++#endif
+ 
  };
  
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 1a2594a38199..e4791fd97ee0 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -3241,6 +3241,7 @@
+diff --git a/mm/mprotect.c b/mm/mprotect.c
+index 516b1d847e2c..ddaaf20ef94c 100644
+--- a/mm/mprotect.c
++++ b/mm/mprotect.c
+@@ -155,10 +155,11 @@ static long change_pte_range(struct mmu_gather *tlb,
+ 				toptier = node_is_toptier(nid);
  
- #define PCI_VENDOR_ID_XEN		0x5853
- #define PCI_DEVICE_ID_XEN_PLATFORM	0x0001
-+#define PCI_DEVICE_ID_XEN_PLATFORM_XS61	0x0002
- 
- #define PCI_VENDOR_ID_OCZ		0x1b85
- 
+ 				/*
+-				 * Skip scanning top tier node if normal numa
++				 * Skip scanning top tier node if normal/cgroup numa
+ 				 * balancing is disabled
+ 				 */
+-				if (!(sysctl_numa_balancing_mode & NUMA_BALANCING_NORMAL) &&
++				if (!(sysctl_numa_balancing_mode &
++				    (NUMA_BALANCING_CGROUP | NUMA_BALANCING_NORMAL)) &&
+ 				    toptier)
+ 					continue;
+ 				if (folio_use_access_time(folio))
 -- 
-2.48.1
+2.25.1
 
