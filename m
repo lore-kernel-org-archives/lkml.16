@@ -1,130 +1,177 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DE826AA93
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:53:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 120B526B2C6
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740491613; cv=none; b=jO/YbMkX+KgUj9Q+QgbqIMIW038kvZrlYyDEB8wtJM6nwbRRGoAaM1sr5kOa1E+EfUsiyzkzWQxx90Adn9EWR6UOGQmVL8qzVb5HL64zHUqezeTMMOC+Ly2+9/0YUmYq9ktaU+jud/hp90sevprQEDsVJNZekC8rvX6RMEcMDRQ=
+	t=1740491616; cv=none; b=Gyzk+7IUMQQXDHPr4ZBZBAZbVEZ+m+Si3LX8WnpVS6bWBmjxCziCFDrdjFWwVQ9cvTJbB7LIzQBqMgpjpJ4ky8q4ZpYfh/F4k7fIyOcF7VYOXE35MqZ1KIn7unDVr+FJ5AoN25qcC8vUNFJ+PKfC7ZkHQNUtv2a3CDifYMCLLJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740491613; c=relaxed/simple;
-	bh=0fm8dD2GSkal7pX6wfp5ldr/EGe8/x09E5/sp8nkiRw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WRB+a2UeRr88cUu+vQbz59PlPVTkA6Mv0Va30h6x7BVRgn2expwOj0b9q6mF0oatbH7MPrlif6HCOcnvlfL/G+/ZiDmcgOrT/Kn1gEqV+wJzq3anwt56UC0noJYnL8p66CK06Sbwf4PQEpt1O/IQtIUIiKLJeYSjDrsLm3HkxSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=G1mPuaKt; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="G1mPuaKt"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51PCtUlA001910
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:53:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	7+T0FemeMk1vQ5gyh6YIRlKas8xebx73MY0rmeqa9fo=; b=G1mPuaKtVzc6rcuV
-	CU+lzck6KziTNtt/ZgpmsArrjlHL+NEMOTTaeNr/IPFeGriD11MDKpbekFXtI4OL
-	YNjCet3WyBgSK+JkvsCbU7+trRI7JcSbt+xM14QE+tsT6WNkLqVxT7VWdVh8lBbj
-	fvoFwhHXrJOw6XPONF0k+fpDz3vE7HOV60c1f4J+CRdyuud4wCYfTEXyJVVuj2Pt
-	rnxxZLpd/T9Uw0l/4RgBWB8vuFKa23ZZQmBu3ASB7GO+tVe0TIlSsRsT+ZFnl8We
-	cE7SCbU8+4Yvvpq6pszcklsQcCs0JH7Yz2/cJ6UbCc1KAN3CDyb0cfluxNblP3B+
-	GyzvTg==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4516nm9kpd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:53:31 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6e66b3359f7so6749936d6.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 05:53:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740491610; x=1741096410;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7+T0FemeMk1vQ5gyh6YIRlKas8xebx73MY0rmeqa9fo=;
-        b=kwYJzextE0aa5TwNBYqAF1M0+/HBrrBa4tk5EAUkW9G5eQVDv/SFkA0qUcC07FxUDg
-         TX7TsGKlMoaDyTzXLMyoyU8EAOjROd9Rurp9CPwb69M5Z6kXxSrpWRE9mhg/MrUNHyTt
-         4yMgPUG2GD1l8h8d4s4RyQnvITj+ZU0zvbKGVpCXAe1wEA8LWAu5thYctV8lQ8oJmgWS
-         kJcVwDQFnfRtXzj66kARi3j3N+wcsO6dNX04hWjL5hQmnTJoqv7EJIRTS06tHfL1X3ir
-         PeGoeSmM+vu/q4dfT7w+WZC+CTXPs5n6K7GFaQSizIxYVSlyST5vQbnAhP7e6PIf651X
-         CsoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUuG5qgzF7kOAW98V8sXSqzG2Ffw7feu7u41hJvgh0vGsIffWmtFrrlYNYchj8xBgpkEd94uHIuepbv3vo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDWqimTOU5Dj297Kdx3XWXF4+gke7OVToLTce9Crdks91f7CrF
-	2XJ84aNBewPzfkovyRaAeXSgye8G/xOQrnnC2cUwgVwEthDEnDVKOFMXX5LOPSMOu8r25dEEsZs
-	tQ81hBf1EFIoCZxYKg9kSFWY27dg0z3cvShDWafgyjxR7UVoQqNCHcEUBdeomX5M=
-X-Gm-Gg: ASbGncts/qOfBe+UCgdPzvh8a1iAKi1ZoG/OTSkbAnMEmc6GjXNbeDt37RXHkTcHNb/
-	nlQ80AoGjGE177Dqs3OkVGGuGTNIpyRLT7z73NQVTiA+w/IYctIXhZf4zxjStMZ8LFhgww9QUop
-	eLNCJu6vQtPZkGnz0tr8vGZxik+YSvZVXNSXGdQPJkmbBoU7qWRhec8ZeEtbdKTPSnStOKyUMgD
-	Jyik6AuGeZHsfXcVJloT1YNP+J6ESuaRvrlQLlbWKOQqx4m76kD9QIrVA3ULW3E+flk93YqPFei
-	ki3FSfkVVYkDRncvA//4/24obDXoeRDBY5P/w+uO4Kq4s/By21d8G04WiUXWEaYJcyB4Pw==
-X-Received: by 2002:ad4:5b8d:0:b0:6e6:60f6:56db with SMTP id 6a1803df08f44-6e6ae96757cmr86033956d6.6.1740491609837;
-        Tue, 25 Feb 2025 05:53:29 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFpLsxtECdHESHTNPzz/+xdF8LEgDeZCxkFo9jJSwp7RyqzIE6McvZorZtxRBNonQfFw/rxRg==
-X-Received: by 2002:ad4:5b8d:0:b0:6e6:60f6:56db with SMTP id 6a1803df08f44-6e6ae96757cmr86033856d6.6.1740491609479;
-        Tue, 25 Feb 2025 05:53:29 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abee2fe29fcsm45391666b.123.2025.02.25.05.53.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2025 05:53:28 -0800 (PST)
-Message-ID: <be947420-f37d-40e5-aedc-01acfaf25060@oss.qualcomm.com>
-Date: Tue, 25 Feb 2025 14:53:26 +0100
+	s=arc-20240116; t=1740491616; c=relaxed/simple;
+	bh=kQMr7lWB3rM6vME9JhMVerK8QenMCmn2LtBMP2BTz08=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Ehq+DeNv7mzhzxBWztmHoJK0A3TI3uaY0WUZV5D9blp1KgMPIFnmAOR3kJUHXzo+4GUSMFyrOezCbNH4ZLg0wBUfl2JJoULhxS/+6od3JUjwZZ5i7wZbqy/fWS6dWP1WrK+fWB/l526ymfhqc2mzZsn1GzvKPojEwS8sA9kh7Jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B11E21E4D;
+	Tue, 25 Feb 2025 05:53:50 -0800 (PST)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A56593F6A8;
+	Tue, 25 Feb 2025 05:53:32 -0800 (PST)
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: suzuki.poulose@arm.com,
+	mike.leach@linaro.org,
+	james.clark@linaro.org,
+	alexander.shishkin@linux.intel.com,
+	bigeasy@linutronix.de,
+	clrkwllms@kernel.org,
+	rostedt@goodmis.org
+Cc: coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev,
+	Yeoreum Yun <yeoreum.yun@arm.com>
+Subject: [PATCH v5 3/9] coresight: change coresight_trace_id_map's lock type to raw_spinlock_t
+Date: Tue, 25 Feb 2025 13:52:54 +0000
+Message-Id: <20250225135300.339976-4-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250225135300.339976-1-yeoreum.yun@arm.com>
+References: <20250225135300.339976-1-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: qcs615: add TRNG node
-To: Abhinaba Rakshit <quic_arakshit@quicinc.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250224-enable-trng-for-qcs615-v1-0-3243eb7d345a@quicinc.com>
- <20250224-enable-trng-for-qcs615-v1-2-3243eb7d345a@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250224-enable-trng-for-qcs615-v1-2-3243eb7d345a@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: HR6_hYrhfofI-lN6UWxsIleh6XAv2R1Z
-X-Proofpoint-GUID: HR6_hYrhfofI-lN6UWxsIleh6XAv2R1Z
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_04,2025-02-25_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- lowpriorityscore=0 mlxscore=0 phishscore=0 priorityscore=1501
- impostorscore=0 suspectscore=0 adultscore=0 clxscore=1015 spamscore=0
- malwarescore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2502100000 definitions=main-2502250095
+Content-Transfer-Encoding: 8bit
 
-On 24.02.2025 10:50 AM, Abhinaba Rakshit wrote:
-> The qcs615 SoC has a True Random Number Generator, add the node
-> with the correct compatible set.
-> 
-> Signed-off-by: Abhinaba Rakshit <quic_arakshit@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/qcs615.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> index f4abfad474ea62dea13d05eb874530947e1e8d3e..ab0bf68fdd8c2e223c242f70e779a3d9374292ea 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> @@ -973,6 +973,11 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
->  			};
->  		};
->  
-> +		rng@793000 {
-> +			compatible = "qcom,qcs615-trng", "qcom,trng";
-> +			reg = <0x0 0x00793000 0x0 0x1000>;
-> +		};
+coresight_trace_id_map->lock can be acquired while coresight devices'
+drvdata_lock.
 
-Please move it so that the nodes are sorted address-wise
+But the drvdata_lock can be raw_spinlock_t (i.e) coresight-etm4x.
 
-Konrad
+To address this, change type of coresight_trace_id_map->lock to
+raw_spinlock_t
+
+Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+Reviewed-by: James Clark <james.clark@linaro.org>
+Reviewed-by: Mike Leach <mike.leach@linaro.org>
+---
+ drivers/hwtracing/coresight/coresight-core.c  |  2 +-
+ .../hwtracing/coresight/coresight-trace-id.c  | 22 +++++++++----------
+ include/linux/coresight.h                     |  2 +-
+ 3 files changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
+index 0a9380350fb5..82dc1bacb144 100644
+--- a/drivers/hwtracing/coresight/coresight-core.c
++++ b/drivers/hwtracing/coresight/coresight-core.c
+@@ -1239,7 +1239,7 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
+ 
+ 	if (csdev->type == CORESIGHT_DEV_TYPE_SINK ||
+ 	    csdev->type == CORESIGHT_DEV_TYPE_LINKSINK) {
+-		spin_lock_init(&csdev->perf_sink_id_map.lock);
++		raw_spin_lock_init(&csdev->perf_sink_id_map.lock);
+ 		csdev->perf_sink_id_map.cpu_map = alloc_percpu(atomic_t);
+ 		if (!csdev->perf_sink_id_map.cpu_map) {
+ 			kfree(csdev);
+diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
+index 378af743be45..7ed337d54d3e 100644
+--- a/drivers/hwtracing/coresight/coresight-trace-id.c
++++ b/drivers/hwtracing/coresight/coresight-trace-id.c
+@@ -22,7 +22,7 @@ enum trace_id_flags {
+ static DEFINE_PER_CPU(atomic_t, id_map_default_cpu_ids) = ATOMIC_INIT(0);
+ static struct coresight_trace_id_map id_map_default = {
+ 	.cpu_map = &id_map_default_cpu_ids,
+-	.lock = __SPIN_LOCK_UNLOCKED(id_map_default.lock)
++	.lock = __RAW_SPIN_LOCK_UNLOCKED(id_map_default.lock)
+ };
+ 
+ /* #define TRACE_ID_DEBUG 1 */
+@@ -131,11 +131,11 @@ static void coresight_trace_id_release_all(struct coresight_trace_id_map *id_map
+ 	unsigned long flags;
+ 	int cpu;
+ 
+-	spin_lock_irqsave(&id_map->lock, flags);
++	raw_spin_lock_irqsave(&id_map->lock, flags);
+ 	bitmap_zero(id_map->used_ids, CORESIGHT_TRACE_IDS_MAX);
+ 	for_each_possible_cpu(cpu)
+ 		atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
+-	spin_unlock_irqrestore(&id_map->lock, flags);
++	raw_spin_unlock_irqrestore(&id_map->lock, flags);
+ 	DUMP_ID_MAP(id_map);
+ }
+ 
+@@ -144,7 +144,7 @@ static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map
+ 	unsigned long flags;
+ 	int id;
+ 
+-	spin_lock_irqsave(&id_map->lock, flags);
++	raw_spin_lock_irqsave(&id_map->lock, flags);
+ 
+ 	/* check for existing allocation for this CPU */
+ 	id = _coresight_trace_id_read_cpu_id(cpu, id_map);
+@@ -171,7 +171,7 @@ static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map
+ 	atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), id);
+ 
+ get_cpu_id_out_unlock:
+-	spin_unlock_irqrestore(&id_map->lock, flags);
++	raw_spin_unlock_irqrestore(&id_map->lock, flags);
+ 
+ 	DUMP_ID_CPU(cpu, id);
+ 	DUMP_ID_MAP(id_map);
+@@ -188,12 +188,12 @@ static void _coresight_trace_id_put_cpu_id(int cpu, struct coresight_trace_id_ma
+ 	if (!id)
+ 		return;
+ 
+-	spin_lock_irqsave(&id_map->lock, flags);
++	raw_spin_lock_irqsave(&id_map->lock, flags);
+ 
+ 	coresight_trace_id_free(id, id_map);
+ 	atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
+ 
+-	spin_unlock_irqrestore(&id_map->lock, flags);
++	raw_spin_unlock_irqrestore(&id_map->lock, flags);
+ 	DUMP_ID_CPU(cpu, id);
+ 	DUMP_ID_MAP(id_map);
+ }
+@@ -204,9 +204,9 @@ static int coresight_trace_id_map_get_system_id(struct coresight_trace_id_map *i
+ 	unsigned long flags;
+ 	int id;
+ 
+-	spin_lock_irqsave(&id_map->lock, flags);
++	raw_spin_lock_irqsave(&id_map->lock, flags);
+ 	id = coresight_trace_id_alloc_new_id(id_map, preferred_id, traceid_flags);
+-	spin_unlock_irqrestore(&id_map->lock, flags);
++	raw_spin_unlock_irqrestore(&id_map->lock, flags);
+ 
+ 	DUMP_ID(id);
+ 	DUMP_ID_MAP(id_map);
+@@ -217,9 +217,9 @@ static void coresight_trace_id_map_put_system_id(struct coresight_trace_id_map *
+ {
+ 	unsigned long flags;
+ 
+-	spin_lock_irqsave(&id_map->lock, flags);
++	raw_spin_lock_irqsave(&id_map->lock, flags);
+ 	coresight_trace_id_free(id, id_map);
+-	spin_unlock_irqrestore(&id_map->lock, flags);
++	raw_spin_unlock_irqrestore(&id_map->lock, flags);
+ 
+ 	DUMP_ID(id);
+ 	DUMP_ID_MAP(id_map);
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index a4fe4da335ac..96fffd2c56e6 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -238,7 +238,7 @@ struct coresight_trace_id_map {
+ 	DECLARE_BITMAP(used_ids, CORESIGHT_TRACE_IDS_MAX);
+ 	atomic_t __percpu *cpu_map;
+ 	atomic_t perf_cs_etm_session_active;
+-	spinlock_t lock;
++	raw_spinlock_t lock;
+ };
+ 
+ /**
+-- 
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+
