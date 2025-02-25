@@ -1,197 +1,97 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 600C7DF59
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 20:25:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.69.130.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B655218596
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 20:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740515121; cv=none; b=ZV0g+dGGbwXdKa8HWUZ6XVsB51uAI5jTM32olZMJbzvNCvsed3VvGEVgBXUhyotRUN/Lu1p1cNI3kBJ2bez8Rk/kdTSG4I6PNY5srVJZuR1Vz9mK51bJJM4Of4ew4R9iGAqGbI5CTzewi9CeJe2ZzC9mBHgrO7kjy7wjl/+EhbI=
+	t=1740515125; cv=none; b=kJjPrQ32bCg6o+w25GeLa3Cdy8BxPek8ZlarvZmYXxSkaMbRTY9/MzsTppuytA9k+Gk86BMNYwm4uhfkCIWGVqDIQC4Oy9YWchAgksSpIPIIj60yhcbN8v9Get0BFp/9vZ/oWjls34SgFZ7EnXzsRKVcGY6kIJYV7mR8M1/UJUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740515121; c=relaxed/simple;
-	bh=+AXwTOe1fNXbIfy3G6xxCA9w9PU2Jg87wXlnjFL4Nwo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=symTVmTsGSG4c7vhDGGqIVwNap0YEgNmJhdonLZxilMl4CtmrHe8G9FdFB1XWjVmu7bfO292yrad3mTcbmY9aMvOrEs1mk2fnItTh0+88YGFNwsfE4ulpFRpeCqmhrxh8ArBoZYh1CFFWqB6FmU3U1RVxAJOsUvGtE5fgR+V20w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=BHrXhyu1; arc=none smtp.client-ip=158.69.130.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	s=arc-20240116; t=1740515125; c=relaxed/simple;
+	bh=26zXTX2qkqMR5XC6w6a+GTaQlbF0/k5vATONaxaPGjw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jdzBJMeD4Dbd04EGA6UmeO4bEK95PPQaiQVxIMA6qc23FT2OqDsIW74aCbCObph6bmUJGxSvPfujtL/UWCT6u6n0lTE99+h75kgmsXfJwNoQKr2hs2Ie+yiW3OSWh3hS9xt6lr1dhWfLbvP8MDI6X8+LSCxe3+E8QG8JseADXyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bhAXgbMa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="BHrXhyu1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1740515118;
-	bh=+AXwTOe1fNXbIfy3G6xxCA9w9PU2Jg87wXlnjFL4Nwo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=BHrXhyu1rjNdDlUJDPxKZw2bD2N/oT11iOJx7lkciF8OXG3RpxaqqstfjoQv72G7B
-	 Gbt/yQCFQvmQ68P6p/8NY2WHZ4MOYpylotI3C/TD339d1YKPnnQCwRYS4pKje+JGPW
-	 IRGc2NGowBieVrNS8QKeWasN4qpHKyJZisC9QtHE/5m2Fo46mIAuSHSYs87RY59S9n
-	 jOjt5k2TSUogUK0Zjo5kXdjhvVZ6UeUCehNxCVx/SPczvIBT0XfZOJO1iQaoW6fMeL
-	 KvpNojsCQxg3zfl34KOd5095dQZ6GnylFYkCfLja0sAOUuRUQrwaIUVdW2EinFuNub
-	 L0xflUWTCrbtw==
-Received: from laptop-mjeanson.internal.efficios.com (96-127-217-162.qc.cable.ebox.net [96.127.217.162])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4Z2TcZ0dhfzTxM;
-	Tue, 25 Feb 2025 15:25:18 -0500 (EST)
-From: Michael Jeanson <mjeanson@efficios.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Michael Jeanson <mjeanson@efficios.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] rseq: update kernel fields in lockstep with CONFIG_DEBUG_RSEQ
-Date: Tue, 25 Feb 2025 15:24:46 -0500
-Message-ID: <20250225202500.731245-1-mjeanson@efficios.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bhAXgbMa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC101C4CEE7;
+	Tue, 25 Feb 2025 20:25:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740515125;
+	bh=26zXTX2qkqMR5XC6w6a+GTaQlbF0/k5vATONaxaPGjw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bhAXgbMaFR2Pbn64J7z67DxEa3ESArtNY8s8PR1ntW+LkpUo2S6OCa/yl/2kH5dAa
+	 9wYXLk4lrh+lx55/bOmFTNpOyE51ZdDFRF+2RpOWz2/rb1b03x3P7xMVK5TOiMLlXo
+	 tI3L4M5p44qWEyvc/x17kYetKUB2BQFn8Cp+/ttMMp42w0VUxCLDkAD35vl7ZBWn33
+	 +2PV26h+TzWoyRLY6yOY5j0LNjM0QU8VGPv/56gvVqtpPIZF9jarNCKif/PJiH1Xpm
+	 8fGrK2AKJm3UVfQCuOvuenO1JuViVplt24vOlyzluM+Ed3ue3gijct9fXT9NWa6vcg
+	 4cFnsexk8KNMg==
+Date: Tue, 25 Feb 2025 21:25:12 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Roman Kisel <romank@linux.microsoft.com>
+Cc: akpm@linux-foundation.org, bhe@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com, kai.huang@intel.com,
+	kirill.shutemov@linux.intel.com, mingo@redhat.com,
+	pbonzini@redhat.com, tglx@linutronix.de, x86@kernel.org,
+	linux-kernel@vger.kernel.org, apais@microsoft.com,
+	benhill@microsoft.com, ssengar@microsoft.com,
+	sunilmut@microsoft.com, vdso@hexbites.dev
+Subject: Re: [PATCH] x86/reboot: Don't corrupt memory on non-BIOS systems
+Message-ID: <Z74nKGVfkhmYppCo@gmail.com>
+References: <20250109204352.1720337-1-romank@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250109204352.1720337-1-romank@linux.microsoft.com>
 
-With CONFIG_DEBUG_RSEQ=y, an in-kernel copy of the read-only fields is
-kept synchronized with the user-space fields. Ensure the updates are
-done in lockstep in case we error out on a write to user-space.
 
-Fixes: 7d5265ffcd8b ("rseq: Validate read-only fields under DEBUG_RSEQ config")
-Signed-off-by: Michael Jeanson <mjeanson@efficios.com>
-Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
----
- kernel/rseq.c | 80 +++++++++++++++++++++++++--------------------------
- 1 file changed, 40 insertions(+), 40 deletions(-)
+* Roman Kisel <romank@linux.microsoft.com> wrote:
 
-diff --git a/kernel/rseq.c b/kernel/rseq.c
-index 2cb16091ec0a..a7d81229eda0 100644
---- a/kernel/rseq.c
-+++ b/kernel/rseq.c
-@@ -78,24 +78,24 @@ static int rseq_validate_ro_fields(struct task_struct *t)
- 	return -EFAULT;
- }
- 
--static void rseq_set_ro_fields(struct task_struct *t, u32 cpu_id_start, u32 cpu_id,
--			       u32 node_id, u32 mm_cid)
--{
--	rseq_kernel_fields(t)->cpu_id_start = cpu_id;
--	rseq_kernel_fields(t)->cpu_id = cpu_id;
--	rseq_kernel_fields(t)->node_id = node_id;
--	rseq_kernel_fields(t)->mm_cid = mm_cid;
--}
-+/*
-+ * Update an rseq field and its in-kernel copy in lock-step to keep a coherent
-+ * state.
-+ */
-+#define rseq_unsafe_put_user(t, value, field, error_label)		\
-+	do {								\
-+		unsafe_put_user(value, &t->rseq->field, error_label);	\
-+		rseq_kernel_fields(t)->field = value;			\
-+	} while (0)
-+
- #else
- static int rseq_validate_ro_fields(struct task_struct *t)
- {
- 	return 0;
- }
- 
--static void rseq_set_ro_fields(struct task_struct *t, u32 cpu_id_start, u32 cpu_id,
--			       u32 node_id, u32 mm_cid)
--{
--}
-+#define rseq_unsafe_put_user(t, value, field, error_label)		\
-+	unsafe_put_user(value, &t->rseq->field, error_label)
- #endif
- 
- /*
-@@ -173,17 +173,18 @@ static int rseq_update_cpu_node_id(struct task_struct *t)
- 	WARN_ON_ONCE((int) mm_cid < 0);
- 	if (!user_write_access_begin(rseq, t->rseq_len))
- 		goto efault;
--	unsafe_put_user(cpu_id, &rseq->cpu_id_start, efault_end);
--	unsafe_put_user(cpu_id, &rseq->cpu_id, efault_end);
--	unsafe_put_user(node_id, &rseq->node_id, efault_end);
--	unsafe_put_user(mm_cid, &rseq->mm_cid, efault_end);
-+
-+	rseq_unsafe_put_user(t, cpu_id, cpu_id_start, efault_end);
-+	rseq_unsafe_put_user(t, cpu_id, cpu_id, efault_end);
-+	rseq_unsafe_put_user(t, node_id, node_id, efault_end);
-+	rseq_unsafe_put_user(t, mm_cid, mm_cid, efault_end);
-+
- 	/*
- 	 * Additional feature fields added after ORIG_RSEQ_SIZE
- 	 * need to be conditionally updated only if
- 	 * t->rseq_len != ORIG_RSEQ_SIZE.
- 	 */
- 	user_write_access_end();
--	rseq_set_ro_fields(t, cpu_id, cpu_id, node_id, mm_cid);
- 	trace_rseq_update(t);
- 	return 0;
- 
-@@ -195,6 +196,7 @@ static int rseq_update_cpu_node_id(struct task_struct *t)
- 
- static int rseq_reset_rseq_cpu_node_id(struct task_struct *t)
- {
-+	struct rseq __user *rseq = t->rseq;
- 	u32 cpu_id_start = 0, cpu_id = RSEQ_CPU_ID_UNINITIALIZED, node_id = 0,
- 	    mm_cid = 0;
- 
-@@ -202,38 +204,36 @@ static int rseq_reset_rseq_cpu_node_id(struct task_struct *t)
- 	 * Validate read-only rseq fields.
- 	 */
- 	if (rseq_validate_ro_fields(t))
--		return -EFAULT;
--	/*
--	 * Reset cpu_id_start to its initial state (0).
--	 */
--	if (put_user(cpu_id_start, &t->rseq->cpu_id_start))
--		return -EFAULT;
--	/*
--	 * Reset cpu_id to RSEQ_CPU_ID_UNINITIALIZED, so any user coming
--	 * in after unregistration can figure out that rseq needs to be
--	 * registered again.
--	 */
--	if (put_user(cpu_id, &t->rseq->cpu_id))
--		return -EFAULT;
--	/*
--	 * Reset node_id to its initial state (0).
--	 */
--	if (put_user(node_id, &t->rseq->node_id))
--		return -EFAULT;
-+		goto efault;
-+
-+	if (!user_write_access_begin(rseq, t->rseq_len))
-+		goto efault;
-+
- 	/*
--	 * Reset mm_cid to its initial state (0).
-+	 * Reset all fields to their initial state.
-+	 *
-+	 * All fields have an initial state of 0 except cpu_id which is set to
-+	 * RSEQ_CPU_ID_UNINITIALIZED, so that any user coming in after
-+	 * unregistration can figure out that rseq needs to be registered
-+	 * again.
- 	 */
--	if (put_user(mm_cid, &t->rseq->mm_cid))
--		return -EFAULT;
--
--	rseq_set_ro_fields(t, cpu_id_start, cpu_id, node_id, mm_cid);
-+	rseq_unsafe_put_user(t, cpu_id_start, cpu_id_start, efault_end);
-+	rseq_unsafe_put_user(t, cpu_id, cpu_id, efault_end);
-+	rseq_unsafe_put_user(t, node_id, node_id, efault_end);
-+	rseq_unsafe_put_user(t, mm_cid, mm_cid, efault_end);
- 
- 	/*
- 	 * Additional feature fields added after ORIG_RSEQ_SIZE
- 	 * need to be conditionally reset only if
- 	 * t->rseq_len != ORIG_RSEQ_SIZE.
- 	 */
-+	user_write_access_end();
- 	return 0;
-+
-+efault_end:
-+	user_write_access_end();
-+efault:
-+	return -EFAULT;
- }
- 
- static int rseq_get_rseq_cs(struct task_struct *t, struct rseq_cs *rseq_cs)
--- 
-2.43.0
+> native_machine_emergency_restart() writes unconditionally
+> to the physical address of 0x472 to pass the warm reboot
+> flags to BIOS. The BIOS reads this on booting to bypass memory
+> test and do the warm boot. On the non-BIOS systems, other
+> means have to be employed, and this write is a memory corruption.
+> 
+> Fix that by moving the offending write into the case where
+> the machine is rebooted via BIOS.
+> 
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> ---
+>  arch/x86/kernel/reboot.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+> index 615922838c51..6eec8653493f 100644
+> --- a/arch/x86/kernel/reboot.c
+> +++ b/arch/x86/kernel/reboot.c
+> @@ -637,9 +637,8 @@ static void native_machine_emergency_restart(void)
+>  
+>  	tboot_shutdown(TB_SHUTDOWN_REBOOT);
+>  
+> -	/* Tell the BIOS if we want cold or warm reboot */
+> +	/* Tell the firmware if we want cold or warm reboot */
+>  	mode = reboot_mode == REBOOT_WARM ? 0x1234 : 0;
+> -	*((unsigned short *)__va(0x472)) = mode;
+>  
+>  	/*
+>  	 * If an EFI capsule has been registered with the firmware then
+> @@ -681,6 +680,7 @@ static void native_machine_emergency_restart(void)
+>  			break;
+>  
+>  		case BOOT_BIOS:
+> +			*((unsigned short *)__va(0x472)) = mode;
+>  			machine_real_restart(MRR_BIOS);
 
+If the value of 0x472 is only meaningful in the legacy 'BOOT_BIOS' 
+case, then at minimum the whole block should be moved to that case, not 
+just the setting.
+
+Thanks,
+
+	Ingo
