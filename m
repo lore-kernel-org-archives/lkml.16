@@ -1,103 +1,102 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D252264A62
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 12:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF4A2686A8;
+	Tue, 25 Feb 2025 12:32:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740486730; cv=none; b=SefQYPq7TV7xu0Z76Ic+oxqRnNaEZ2NIUEiBMyC5NaimGvREnOsCU6GveCJFiLbD2uoafpdD7HeDfuSQen3nrUvA+ciNiQWuW5n0VQ51oXDb04WnIcRef/BROJTaOY5WuS/Glii9zSRqmkaWr1J3rgyxtO5S04+jG9QiMEDe7RM=
+	t=1740486731; cv=none; b=Y+i7xeJsCiX/++CoPHJWCFRfMxabfrP1+j8aVLHC2ZOJtZVfgAhygp7HuZVx73UtPEZL2/HSDuVBpg68OQJGhLC3v70OXgEOMuUifemX2Q7WmRIQUn6llsN1fZTZYZFwSLxKUaNvoQPUydpqfC/5WDDDiizPhYjDKcRQG4jet64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740486730; c=relaxed/simple;
-	bh=QpXoEDkYKpSmRt4xZzQ8pfU/exILKuqfy05zUgcayWE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bGTg0eeh9t1l+NOM1eSKchinx6INQEvUex8A7POzN2RF8Ouml4K5PQf72iRo5rSWue32mZocO3qzYuiFBz5AbR5L5AuTqy6uQvSFk9A8GFSQwBD7uX5yNxzbiR2I+CXAgw8UbzEyhSuza9xFdVhwMMOy/3D++iRzBEC/f8Ok23M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DDA16152B;
-	Tue, 25 Feb 2025 04:32:23 -0800 (PST)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 32AEF3F6A8;
-	Tue, 25 Feb 2025 04:32:06 -0800 (PST)
-Date: Tue, 25 Feb 2025 12:32:03 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64/mm: Explicit cast conversions to correct data type
-Message-ID: <Z724Q1ofM1GvKquV@J2N7QTR9R3>
-References: <20250219035646.536707-1-anshuman.khandual@arm.com>
+	s=arc-20240116; t=1740486731; c=relaxed/simple;
+	bh=1pyD4SZ5Q/Lc9AqUwjBxII6k9+7yhxDr5m+K9ELoDbo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VE4ce1+xTag8NngqpnGBlwb1oBXwuMVT5NcgExm3r+092qJHTAOA07DCcQxc/CAX5wX/YWEDwQzmMUrOC6EcycwmtTngow3DoNpNpb7qyvPD2IlWPegPNb0DYQn6YWiciwUnMGR0oZeOvu2pvwkv4lJOP8mdM4MhXhgvHZAfiiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U//oaj6w; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U//oaj6w"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2fcff77ff9bso6249760a91.0;
+        Tue, 25 Feb 2025 04:32:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740486729; x=1741091529; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7hQ9PSnky3hzUHJ3r5I6w65ox232hzZUXn+oYcw3lsM=;
+        b=U//oaj6whFaW1Y9WF2s+r9c12W1TMarw1dgqGToyjyAEadXNzQVrJIq1FP1gVUB4Y1
+         s0NjCbLWy+XZoVi2sd+ZYuLO8AbG5Z1egr50nAKIbd4CEePEwd104cLF5Tw9z7SaAG7n
+         mR9IxSIy63IevXJOPTTL/3id625o2TDfXQGJGUkzufBU9W94orx+Pv+Gb/DgmfaAdTLg
+         1MdmkeLYw3XGe/c/5n3bevrduoeIcgPk7HUXroK44rKisSA5eluGISYT8AGI0fFgtZH6
+         PWAkPFezVmg2+0fLIEMXyt+oX2GhRnIPHSYUVExzNHUcTaLkQ3XcV1VjVY1Bt33Sqdsf
+         gQlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740486729; x=1741091529;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7hQ9PSnky3hzUHJ3r5I6w65ox232hzZUXn+oYcw3lsM=;
+        b=xKltorvYcBqAh1Yvc+hazOp3hqiCmYPWM5CF2yt1xva0dxbLh2g/0L1d2ClZL7Gw0B
+         ZLrZULD30j7UmAvBb9LNepAGrpAsiVFXDgl17gWHhH0oAxlyxDMRxAR1cCY2k+gfMLGL
+         1UT4c6yC2yoIMNBjovLI4Nb8+WMCU9sndFaJDh6O6TZ06LcKCLZ2FXShUHPX6TGvE9k1
+         6zd8XfAy10pmy2g/iTEwy4VZfbh1iQuevFEs28hYRnX+/OfSLMhUulxKqa24czxRrcx/
+         24YkwbOrsL6og3RrH5MuSGvqsWnBLbU6TNbIxMApbCnFBWokRnb7T2RGWP6yz2NpMMZH
+         WYmg==
+X-Forwarded-Encrypted: i=1; AJvYcCVLUrh8F3OLec9OaQNlXDx6weaQMXzxv6OSfLRBaURVW4m/QVceKGCDTSbHZp3gUtQnYqNp4qXdAejoqMgG@vger.kernel.org, AJvYcCXmURMu4Fj/GbJAomrFrVGHl39JpgMPAF/YCwucn0A1qfE9fAcphJK4Gp6S4QB1/Ge36X9I9kSrXMbB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2eywYVnrFKwIQ+stC2vwIL9x8nZrBqrz2Rj+VkQeaqBRmKHaJ
+	xIwBzTuj0ew6urgwwVnG54+MDeJ7T2LXMrRefjcyo2oyRWUWaNRWEBz6SiUS3Cb2GgyYFizzMys
+	bmPxu2lbWL0NKnitdgsjdq3QdIVQ=
+X-Gm-Gg: ASbGncs78N1IKkSRyIt8OOSJhXi2BrdkNKy7jLw7owj1xtz91GzqVv2fPk4CQiXypdP
+	1fpp8zNAPNNa7aX0qOyuZFppJYJXiAyaPF7znDQyTEFX9ODtV0C+pEBcSBg7scBzmV2yhoDCoG8
+	kCvxtX
+X-Google-Smtp-Source: AGHT+IEhj54F35PZEsJYYrzaWJyBanI+coj2uAU8OTJp3NVm093Jk0fuCJf+AJB+0L8a6Juozj6iHZgPqCZQO9GBPqA=
+X-Received: by 2002:a17:90b:2751:b0:2ee:df70:1ff3 with SMTP id
+ 98e67ed59e1d1-2fe68a312b8mr6037629a91.0.1740486729075; Tue, 25 Feb 2025
+ 04:32:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250219035646.536707-1-anshuman.khandual@arm.com>
+References: <20250225120707.2658709-1-m.felsch@pengutronix.de>
+In-Reply-To: <20250225120707.2658709-1-m.felsch@pengutronix.de>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Date: Tue, 25 Feb 2025 14:33:45 +0200
+X-Gm-Features: AWEUYZlyvb2cM0-5vtqGVculafUAJm4OWsTkAKrC0Tw7wQoPYmnk7k-oBG7QuOM
+Message-ID: <CAEnQRZAoPxFN1ce0MEY34KpJO=SS4n33ehABH4auxWTDq8_R8g@mail.gmail.com>
+Subject: Re: [PATCH 1/3] arm64: dts: imx8mn: fix micfil dmas settings
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: "robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, shawnguo@kernel.org, Sascha Hauer" <s.hauer@pengutronix.de>, kernel@pengutronix.de, aford173@gmail.com, 
+	devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Joy Zou <joy.zou@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 19, 2025 at 09:26:46AM +0530, Anshuman Khandual wrote:
-> From: Ryan Roberts <ryan.roberts@arm.com>
-> 
-> When CONFIG_ARM64_PA_BITS_52 is enabled, page table helpers __pte_to_phys()
-> and __phys_to_pte_val() are functions which return phys_addr_t and pteval_t
-> respectively as expected. But otherwise without this config being enabled,
-> they are defined as macros and their return types are implicit.
-> 
-> Until now this has worked out correctly as both pte_t and phys_addr_t data
-> types have been 64 bits. But with the introduction of 128 bit page tables,
-> pte_t becomes 128 bits. Hence this ends up with incorrect widths after the
-> conversions, which leads to compiler warnings.
+On Tue, Feb 25, 2025 at 2:12=E2=80=AFPM Marco Felsch <m.felsch@pengutronix.=
+de> wrote:
+>
+> The third dma cell is used for priority information not to encode
+> something else. The NXP downstream kernel use the third cell to encode
+> more information:
+>
+>  - Bit31: sw_done feature enable/disable
+>  - Bit15~Bit8: selector
+>  - Bit7~Bit0: priority level
+>
+> but this was never mainlined. Therefore drop the further information and
+> just specify the priority which is 0.
+>
+> FTR: The sw_done feature was mainlined without making use of the
+> devicetree.
+>
+> Fixes: cca69ef6eba5 ("arm64: dts: imx8mn: Add support for micfil")
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 
-Does 128-bit page table not imply 52-bit PAs?
+For all series:
 
-> Fix the warnings by explicitly casting to the correct type after doing the
-> conversion.
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
 
-I think it would be simpler and clearer if we replaced the macros with
-functions, such that __pte_to_phys() and __phys_to_pte_val() are
-*always* functions.
-
-That way it's easier to compar the CONFIG_ARM64_PA_BITS_52=y and
-CONFIG_ARM64_PA_BITS_52=n versions, and the types are always explciit
-for inputs and outputs, so there'd be less room for error and the
-compiler can warn us of type safety issues in any configuration.
-
-That and we can delete the comment block immediately above at the same
-time.
-
-Mark.
-
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
-> This patch applies on v6.14-rc3
-> 
->  arch/arm64/include/asm/pgtable.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-> index 0b2a2ad1b9e8..1da2421c9a15 100644
-> --- a/arch/arm64/include/asm/pgtable.h
-> +++ b/arch/arm64/include/asm/pgtable.h
-> @@ -84,8 +84,8 @@ static inline pteval_t __phys_to_pte_val(phys_addr_t phys)
->  	return (phys | (phys >> PTE_ADDR_HIGH_SHIFT)) & PHYS_TO_PTE_ADDR_MASK;
->  }
->  #else
-> -#define __pte_to_phys(pte)	(pte_val(pte) & PTE_ADDR_LOW)
-> -#define __phys_to_pte_val(phys)	(phys)
-> +#define __pte_to_phys(pte)	((phys_addr_t)(pte_val(pte) & PTE_ADDR_LOW))
-> +#define __phys_to_pte_val(phys)	((pteval_t)(phys))
->  #endif
->  
->  #define pte_pfn(pte)		(__pte_to_phys(pte) >> PAGE_SHIFT)
-> -- 
-> 2.25.1
-> 
-> 
+Marco I couldn't find the cover letter for this series so I add my R-b tag =
+here.
