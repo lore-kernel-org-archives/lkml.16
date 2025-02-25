@@ -1,229 +1,107 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from smtpcmd0987.aruba.it (smtpcmd0987.aruba.it [62.149.156.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FF926B0B8
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:27:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE2626B09C
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:27:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740493644; cv=none; b=Pbgz2eNgx5m5bi8n41CtEOY+VkKDnvfS+DMKyayzq0HnIRWABVuEsugYLWAqMLrl4EtDeBFJNnwwTMYIjhIouznXp4AKQsWIBNkEoPv3JhYlgE4BU6n3GzYdQpTbEQvW7txScjgQYeze6hxldQ/17cbhXynMnsclSfmKT5KBmSA=
+	t=1740493646; cv=none; b=qU7TOhOwEmAPqrX7xYOh9Usd0TZ8lvyhN8B5/QiR7lo3rytuCV7ej9pD1iaFWadUQynkTCawSmCwLl3d7C/jjB7ceyJVmXu9TAt+6D04EZ3RzC/qO+V1W9DMOgcbt4e4dxhtI6GVNa+hC8HK9hDwvkfg8SLRue8wATa0kHKjHQo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740493644; c=relaxed/simple;
-	bh=VOyeap2V4VvrNDUc/T4wa2Ycc1cF0m6fX095b2mIBOM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=opN8rmYGV6T5SrBOgbftWDiXl649dX8pTseRk6ND9KGxs8EPuNpdSd13fb29aRzdH5+MevjStnwzEWOSBVNjLOjmQ8JyJ57LDzYmWJtiB3SLwNuthEftudHP05/z40ip0Dfc2hvO5RfQR0Lq9HUCNENQT5zzgAlJhyEnfqAyyr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UxkQG5db; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1740493646; c=relaxed/simple;
+	bh=Q1PAwSYP5N2acovyf6NbSeLosza1uVnYcw4+mKEx22I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Uq2zkhhOIpGo9NN+MEXxueSHe+5lATWGEKxp0iBoFMjNxL8bRo0+ei8fT6T9iDkjzNEC+uCP22ubgeVMTMeWeWP0/zhoeNl3RXY7aFr53jPczlsy6JC0cvx/8SbSCjbsPIVNkfIRNQm9UHJXgR80RCEBE8NdXPUjzHjYh0uk0s4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b=Urj+lX3X; arc=none smtp.client-ip=62.149.156.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UxkQG5db"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 551F04442F;
-	Tue, 25 Feb 2025 14:27:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1740493641;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ksF7rsjoy0iP9hn3MuB5+OiMn4k7YbnH9STHuf8uDAI=;
-	b=UxkQG5dbGt+tSDyvxdAcaQ/tAsfRGtqmGzlChs+y3LOyB+9jX5jmFEjf72H1Ggym+k/DOC
-	VB3I5kz6N9L6lZ4Mh3gX6BB+QcUYL30eCPPQlmM/XCzXNNTv7zYUs1vxP2lAVe0HjVAMu+
-	TC/x4zncUiWxlS3OzqnZYt7X24Q8eNWpD2rvWIVLIR0AGOKXHVRSdu306xqArgB4vKd4hT
-	8+BCY2Evu4EA03yeu6W6+0QVlzUv0bPTcDnzp5mBrxb4XerQG8iwEtOslZ3ZYh85v/LXrp
-	2AWL+RWAavDiFqE8FmNarRvJGRjPi8fPlPTtI1/SeqXW4VqM7lZHMIuMecz/7g==
-Date: Tue, 25 Feb 2025 15:27:19 +0100
-From: Louis Chauvet <louis.chauvet@bootlin.com>
-To: Jim Cromie <jim.cromie@gmail.com>, linux-kernel@vger.kernel.org,
-	jbaron@akamai.com, gregkh@linuxfoundation.org, ukaszb@chromium.org
-Cc: intel-gfx-trybot@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	amd-gfx@lists.freedesktop.org, intel-gvt-dev@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org, daniel.vetter@ffwll.ch,
-	tvrtko.ursulin@linux.intel.com, jani.nikula@intel.com,
-	ville.syrjala@linux.intel.com
-Subject: Re: [PATCH 23/63] dyndbg: fail modprobe on
- ddebug_class_range_overlap()
-Message-ID: <6234628f-4085-40ad-b521-4590db2cb5f5@bootlin.com>
-Mail-Followup-To: Jim Cromie <jim.cromie@gmail.com>,
-	linux-kernel@vger.kernel.org, jbaron@akamai.com,
-	gregkh@linuxfoundation.org, ukaszb@chromium.org,
-	intel-gfx-trybot@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-	intel-gvt-dev@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org, daniel.vetter@ffwll.ch,
-	tvrtko.ursulin@linux.intel.com, jani.nikula@intel.com,
-	ville.syrjala@linux.intel.com
-References: <20250125064619.8305-1-jim.cromie@gmail.com>
- <20250125064619.8305-24-jim.cromie@gmail.com>
+	dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b="Urj+lX3X"
+Received: from [192.168.1.58] ([79.0.204.227])
+	by Aruba SMTP with ESMTPSA
+	id mvr2tADX4S934mvr3tLfyb; Tue, 25 Feb 2025 15:24:13 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1740493453; bh=Q1PAwSYP5N2acovyf6NbSeLosza1uVnYcw4+mKEx22I=;
+	h=Date:MIME-Version:Subject:To:From:Content-Type;
+	b=Urj+lX3XOgoF5r8UyKJBnvytqgZFIgFAle77rggZzJ1TVO9ak/r1fU30m5kRCeoD5
+	 Ug8ms+xEeAhPoCxvAMWp7Pp6gBqPtkUj8UkcRrvjZgZtMsJXQRR7a6E7fhOITQkXtB
+	 ko7jdVrJupKCxEB7onDWPrTG5oWfvH++dHPFMbicGUXy07R6JCbPgHrA/31YOzJT+e
+	 U74vwUjiY3QY+G/Tcuqyx45KcdEZ3V4yWpeM9QlJu4aYRJb92pRVjyYuxo2WwDfuUZ
+	 lgAD1pNcJOtOLwNbV3P9KAPW51fX/0+9+ugBNuToYwPIBeMXjDp8M4LyAy/vBXGgt2
+	 v20VRmZEJY75g==
+Message-ID: <a0f5aff2-3437-4b70-baa0-fe1555ec81e7@enneenne.com>
+Date: Tue, 25 Feb 2025 15:24:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250125064619.8305-24-jim.cromie@gmail.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekudelfecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttddunecuhfhrohhmpefnohhuihhsucevhhgruhhvvghtuceolhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepudeiffduffeivdejgfejheeuudekkedvjeeuffegfefghfffkeelgffgieevudejnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohhuihhsqdgthhgruhhvvghtqdhlrghpthhophdpmhgrihhlfhhrohhmpehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedugedprhgtphhtthhopehjihhmrdgtrhhomhhivgesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehjsggrrhhonhesrghkrghmrghirdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnr
- dhorhhgpdhrtghpthhtohepuhhkrghsiigssegthhhrohhmihhumhdrohhrghdprhgtphhtthhopehinhhtvghlqdhgfhigqdhtrhihsghotheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtoheprghmugdqghhfgieslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrgh
-X-GND-Sasl: louis.chauvet@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pps: add epoll support
+Content-Language: en-US
+To: Denis OSTERLAND-HEIM <denis.osterland@diehl.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <05ac823e44504921a6e864fe6fb283d6@diehl.com>
+From: Rodolfo Giometti <giometti@enneenne.com>
+In-Reply-To: <05ac823e44504921a6e864fe6fb283d6@diehl.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfMus3A2SkhhuTmS+mVuI/mlCoA2xpL+S4kqrUhYYapOtC/S+ulAzxwrjoRGj80n0F6Y2OK138lqLQoBcuYfnnMQV2WXPal4YPg44Tg6tgXjzw8rju1p5
+ s2+lyI9s62C2Z+76mxhZq+Gz8nq+V7g+AFh+L6e5MdP0VWND989FZhLEz+NH+17yQZ2fQK5eywyOEPu877OVS8XPsxOwHGJeHjG3EDos6I3nMODqnPcBNg5D
+ gfoYssdUOjVKfnm3bg1irA==
 
+On 25/02/25 14:39, Denis OSTERLAND-HEIM wrote:
+> Hi,
+> 
+> I fixed-up s/pps->fetched_ev/pps->last_fetched_ev/ and tested it.
+> 
+> With one process it works well.
+> 
+> ```
+> # cat /sys/class/pps/pps1/assert; PpsPollTest /dev/pps1; cat /sys/class/pps/pps1/assert
+> 1520599383.268749168#29
+> assert: 29
+> time: 1520599383.268749168
+> assert: 30
+> time: 1520599384.292728352
+> assert: 31
+> time: 1520599385.316788416
+> 1520599385.316788416#31
+> ```
 
+OK.
 
-Le 25/01/2025 à 07:45, Jim Cromie a écrit :
-> 1. All classes used by a module (declared DYNDBG_CLASSMAP_{DEFINE,USE}
-> by module code) must share 0..62 class-id space; ie their respective
-> base,+length reservations shouldn't overlap.  Overlaps would lead to
-> unintended changes in ddebug enablements.
+> If I start multiple user space programs data races are visible.
 > 
-> Detecting these class-id range overlaps at compile-time would be ideal
-> but is not obvious how; failing at modprobe at least insures that the
-> developer sees and fixes the conflict.
-> 
-> ddebug_class_range_overlap() implements the range check, accumulating
-> the reserved-ids as it examines each class.  It probably should use
-> bitmaps.
-> 
-> A previous commit reworked the modprobe callchain to allow failure,
-> now call ddebug_class_range_overlap() to check when classid conflicts
-> happen, and signal that failure.
-> 
-> NB: this can only happen when a module defines+uses several classmaps,
-> 
-> TBD: failing modprobe is kinda harsh, maybe warn and proceed ?
-> 
-> test_dynamic_debug*.ko:
-> 
-> If built with -DFORCE_CLASSID_CONFLICT_MODPROBE, the modules get 2 bad
-> DYNDBG_CLASS_DEFINE declarations, into parent and the _submod.  These
-> conflict with one of the good ones in the parent (D2_CORE..etc),
-> causing the modprobe(s) to fail.  TODO: do in submod only, since fail
-> of parent prevents submod from ever trying.
-> 
-> Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
-> ---
-> ---
->   lib/dynamic_debug.c      | 30 ++++++++++++++++++++++++------
->   lib/test_dynamic_debug.c | 11 ++++++++++-
->   2 files changed, 34 insertions(+), 7 deletions(-)
-> 
-> diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-> index 8afcd4111531..8e1e087e07c3 100644
-> --- a/lib/dynamic_debug.c
-> +++ b/lib/dynamic_debug.c
-> @@ -1211,6 +1211,21 @@ static void ddebug_apply_params(const struct ddebug_class_map *cm, const char *m
->   	}
->   }
->   
-> +static int ddebug_class_range_overlap(struct ddebug_class_map *cm,
-> +				      u64 *reserved_ids)
-> +{
-> +	u64 range = (((1ULL << cm->length) - 1) << cm->base);
-> +
-> +	if (range & *reserved_ids) {
-> +		pr_err("[%d..%d] on %s conflicts with %llx\n", cm->base,
-> +		       cm->base + cm->length - 1, cm->class_names[0],
-> +		       *reserved_ids);
-> +		return -EINVAL;
-> +	}
-> +	*reserved_ids |= range;
-> +	return 0;
-> +}
-> +
->   /*
->    * scan the named array: @_vec, ref'd from inside @_box, for the
->    * start,len of the sub-array of elements matching on ->mod_name;
-> @@ -1242,9 +1257,11 @@ static int ddebug_module_apply_class_maps(struct ddebug_table *dt,
->   	struct ddebug_class_map *cm;
->   	int i;
->   
-> -	for_subvec(i, cm, &dt->info, maps)
-> +	for_subvec(i, cm, &dt->info, maps) {
-> +		if (ddebug_class_range_overlap(cm, reserved_ids))
-> +			return -EINVAL;
->   		ddebug_apply_params(cm, cm->mod_name);
-> -
-> +	}
->   	vpr_info("module:%s attached %d classmaps\n", dt->mod_name, dt->info.maps.len);
->   	return 0;
->   }
-> @@ -1255,10 +1272,11 @@ static int ddebug_module_apply_class_users(struct ddebug_table *dt,
->   	struct ddebug_class_user *cli;
->   	int i;
->   
-> -	/* now iterate dt */
-> -	for_subvec(i, cli, &dt->info, users)
-> +	for_subvec(i, cli, &dt->info, users) {
-> +		if (ddebug_class_range_overlap(cli->map, reserved_ids))
-> +			return -EINVAL;
->   		ddebug_apply_params(cli->map, cli->mod_name);
-> -
-> +	}
->   	vpr_info("module:%s attached %d classmap uses\n", dt->mod_name, dt->info.users.len);
->   	return 0;
->   }
-> @@ -1311,11 +1329,11 @@ static int ddebug_add_module(struct _ddebug_info *di, const char *modname)
->   			return rc;
->   		}
->   	}
-> +
->   	mutex_lock(&ddebug_lock);
->   	list_add_tail(&dt->link, &ddebug_tables);
->   	mutex_unlock(&ddebug_lock);
->   
-> -
+> ```
+> # for i in 0 1 2 3 4 5 6; do PpsPollTest /dev/pps1 > log$i & done
+> # sleep 6
+> # tail log*
+> ==> log0 <==
+> timeout
+> assert: 196
+> time: 1520599554.276752928
+> assert: 197
+> time: 1520599555.300692704
 
-Hi Jim,
+This is the same behavior we have when working with a serial port: if more than 
+one process gets access to it, data is stolen.
 
-Strange line issues, can you squash it with the correct patch?
+>>From my point of view it would be great to fix this bug without such an limitation.
 
-Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
+I disagree, it is not a limitation! It is like a normal char device work.
 
-Thanks,
+What we have to test now is if your initial goal has been addressed! That is, in 
+an application that has more to do than just dealing with one PPS device, we can 
+use poll()/select() in order to avoid using threads.
 
->   	if (dt->info.users.len) {
->   		rc = ddebug_module_apply_class_users(dt, &reserved_ids);
->   		if (rc)
-> diff --git a/lib/test_dynamic_debug.c b/lib/test_dynamic_debug.c
-> index b1555b0a2bb1..74b98adc4ed0 100644
-> --- a/lib/test_dynamic_debug.c
-> +++ b/lib/test_dynamic_debug.c
-> @@ -81,7 +81,7 @@ enum cat_disjoint_bits {
->   	D2_DRMRES };
->   
->   /* numeric verbosity, V2 > V1 related */
-> -enum cat_level_num { V0 = 14, V1, V2, V3, V4, V5, V6, V7 };
-> +enum cat_level_num { V0 = 16, V1, V2, V3, V4, V5, V6, V7 };
->   
->   /* recapitulate DRM's parent(drm.ko) <-- _submod(drivers,helpers) */
->   #if !defined(TEST_DYNAMIC_DEBUG_SUBMOD)
-> @@ -90,6 +90,7 @@ enum cat_level_num { V0 = 14, V1, V2, V3, V4, V5, V6, V7 };
->    * classmaps on the client enums above, and then declares the PARAMS
->    * ref'g the classmaps.  Each is exported.
->    */
-> +
->   DYNDBG_CLASSMAP_DEFINE(map_disjoint_bits, DD_CLASS_TYPE_DISJOINT_BITS,
->   		       D2_CORE,
->   		       "D2_CORE",
-> @@ -113,6 +114,14 @@ DYNDBG_CLASSMAP_DEFINE(map_level_num, DD_CLASS_TYPE_LEVEL_NUM,
->   DYNDBG_CLASSMAP_PARAM(disjoint_bits, p);
->   DYNDBG_CLASSMAP_PARAM(level_num, p);
->   
-> +#ifdef FORCE_CLASSID_CONFLICT_MODPROBE
-> +/*
-> + * Enable with -Dflag on compile to test overlapping class-id range
-> + * detection.  This should break on modprobe.
-> + */
-> +DYNDBG_CLASSMAP_DEFINE(classid_range_conflict, 0, D2_CORE + 1, "D3_CORE");
-> +#endif
-> +
->   #else /* TEST_DYNAMIC_DEBUG_SUBMOD */
->   
->   /*
+Ciao,
+
+Rodolfo
 
 -- 
-Louis Chauvet, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+GNU/Linux Solutions                  e-mail: giometti@enneenne.com
+Linux Device Driver                          giometti@linux.it
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming
 
