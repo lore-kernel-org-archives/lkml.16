@@ -1,71 +1,110 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from ganesha.gnumonks.org (ganesha.gnumonks.org [213.95.27.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7B0203709;
-	Tue, 25 Feb 2025 12:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5674D268FE9
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 12:59:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.27.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740488351; cv=none; b=bghKyYsmIwvDmm4zohZqpozjodpOQQXSQCOL7K1G38JZKSC0Ypdf32bCPcM1vijos5flDcb+YXBGlR9gpdfp0XWQMtZIJJ5DcWHf8nGnMat4ra6GaB4xcBcEnQhO/O3SaM1asEu6O7koGKSQCxeiqHcRPLk40jpaXqFyqWnASn8=
+	t=1740488357; cv=none; b=fib4VrdVsh8ZBxBy/Yx+lUHdrAXlCwtVM6kz2E+xxplDHoWrB7kzBA8NiRkwrh8DKuBK4CyR7hMmazfPOqgLActLL9+6kP/3k7m8GP0+JKLORpHxhNJf2o8TjZdT9RJpYggmNuW541ByHWbDll5sKa0bVonBZ77moXfdF4gQ5DY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740488351; c=relaxed/simple;
-	bh=QshVbSM0TlGRRooWWGrXwSW/K9vqcrxovLs/pTGnm/Y=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=UBGwiQik/m/U00pj9CbXiAnsfrInYVdMJon4QADj9ejPG8VWOUXSZBnyqBoGoFl9XUHxddLTxaUf+0KR5A+YdDHqtyQUUQV/IlRDZeMDja0gWzCBlLOU6cKUx9NGuA5z7KPI10qTSR6JrhAQnRDr1YQ2JsOoqDwy/CXB6uMjXSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YdhA+z7U; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YdhA+z7U"
-Content-Type: text/plain;
-	charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1740488344;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aYCRA4lOKUkv6A0x2e0ErFK6w+Mpd9VIqmWibbcbvD0=;
-	b=YdhA+z7UcuRgwYL69v8xEUqIziVy4Hq21+nfUzRc3yoIts6qhj43w67T7JTgujjZvQRJ4W
-	8Dtir4unbtjy/32nJNLRDgXquAxcGilKFu3kMPnxNO9Pm5PM9olV4fBm0srEVwf6pFxQX1
-	t7I3ImQomGuBFsjWa7fNxRFh6XZeHEk=
+	s=arc-20240116; t=1740488357; c=relaxed/simple;
+	bh=9MDAaOkzjRCOz3MuMWw4HXIQo4co0NCFHKCaS5GZhbs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=awQeG7B/ZyGocrfpUeon8zksHElOErJA9cjftFCayh+IUx2qzIp7wsbqt8yVTNFyelleAAYY48OVDaMfTGVCVlx/p4UOKDHGi3hkh75ziqiM2CJSApy7AnotxkP7b4yx4QN6I9nLVsfmE+uzuHSKFsIgcGQg2yf+jwvgDV1lGA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gnumonks.org; spf=pass smtp.mailfrom=gnumonks.org; arc=none smtp.client-ip=213.95.27.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gnumonks.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnumonks.org
+Received: from uucp by ganesha.gnumonks.org with local-bsmtp (Exim 4.94.2)
+	(envelope-from <laforge@gnumonks.org>)
+	id 1tmu7y-003Gx0-L0; Tue, 25 Feb 2025 13:33:34 +0100
+Received: from laforge by nataraja.fritz.box with local (Exim 4.98)
+	(envelope-from <laforge@gnumonks.org>)
+	id 1tmu7r-00000000YTm-4306;
+	Tue, 25 Feb 2025 13:33:27 +0100
+Date: Tue, 25 Feb 2025 13:33:27 +0100
+From: Harald Welte <laforge@gnumonks.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux <linux@treblig.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, david@rowetel.com
+Subject: Re: users of drivers/misc/echo ?
+Message-ID: <Z724l3DFJbGevtPF@nataraja>
+References: <Z7tZhYET41DAoHVf@gallifrey>
+ <07afd3cb-3ab1-4dc9-b0c1-3fef2d52f60b@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51.11.1\))
-Subject: Re: [PATCH] btrfs: Replace deprecated strncpy() with strscpy_pad()
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Thorsten Blum <thorsten.blum@linux.dev>
-In-Reply-To: <20250225122828.GM5777@twin.jikos.cz>
-Date: Tue, 25 Feb 2025 13:58:50 +0100
-Cc: Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>,
- David Sterba <dsterba@suse.com>,
- linux-hardening@vger.kernel.org,
- linux-btrfs@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <7144F578-88DC-46F3-926F-7652503149A6@linux.dev>
-References: <20250225092949.287300-2-thorsten.blum@linux.dev>
- <20250225122828.GM5777@twin.jikos.cz>
-To: dsterba@suse.cz
-X-Migadu-Flow: FLOW_OUT
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <07afd3cb-3ab1-4dc9-b0c1-3fef2d52f60b@app.fastmail.com>
 
-On 25. Feb 2025, at 13:28, David Sterba wrote:
-> On Tue, Feb 25, 2025 at 10:29:49AM +0100, Thorsten Blum wrote:
->> strncpy() is deprecated for NUL-terminated destination buffers. Use
->> strscpy_pad() instead and don't zero-initialize the param array.
->> 
->> Compile-tested only.
->> 
->> Link: https://github.com/KSPP/linux/issues/90
->> Cc: linux-hardening@vger.kernel.org
->> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
->> ---
+Hi Arnd,
+
+> Adding Harald to Cc, might know more about it.
+
+thanks for Cc'ing me on this thread.
+
+On Sun, Feb 23, 2025 at 09:38:12PM +0100, Arnd Bergmann wrote:
+> I don't see any in-tree users for it either, but I found one
+> project using the exported symbols, and there is a debian
+> package for it as well:
 > 
-> I don't think we need the padding, so strscpy is probably ok. We copy
-> input string to a temporary modifiable buffer and then match it against
-> a table, so the NUL termination is ok.
+> https://tracker.debian.org/pkg/osmocom-dahdi-linux
+> https://gitea.osmocom.org/retronetworking/dahdi-linux/src/branch/master/drivers/dahdi/dahdi_echocan_oslec.c#L34
 
-Ok thanks, I'll submit a v2 later today.
+Note: The official upstream of DAHDI is maintained as part of the Asterisk soft switch project,
+the Osmocom fork has just become more popular in recent years due to very slow maintenance of
+upstream.
+
+Any of the DAHDI forks is used in production deployments by a number of
+different telephony / softswitch / telecom software projects (like
+Asterisk, FreeSWITCH, yate or many osmocom sub-projects) in order to
+interface with classic anaolog or TDM (time division multiplex)
+telephony technology.  
+
+Even today this TDM technology (most likely in most instances without
+open source softswitches) is still relevant in commercial production
+deployments, including many (but not all) cellular carriers
+around the world, but for example also as part of GSM-R (railway
+communications systems) for at least until 2035.  I personally also know
+of present-day production deployments in satellite telephony
+infrastructure.
+
+However, those DAHDI-using deployments that I personally am familiar
+with do not use the software echo canceller discussed here.  On the
+other hand, I'm quite certain that there are many PBX/IVR related
+systems out there (unrelated to my area of cellular or trunked radio)
+that would still use the echo canceller discussed here.
+
+In any case, for this discussion, it doesn't matter, as all DAHDI
+flavours make use of the same API function.
+
+> With our normal rules, we should just remove it as there is no
+> way to use the code without external modules, but I don't know
+> how we even got to this state.
+
+I'd expect the echo cancellation code was used by mISDN for as long as
+that was still in upstream.  As mISDN has (sadly, but understandably)
+been removed, the echo canceller likely remained in the tree without any
+other in-tree users.
+
+DAHDI has been using the in-kernel echo canceller for decades.  If it's
+removed now, it will likely mean that DAHDI will carry a copy of it and
+selectively compile that as out-of-tree module for future kernel
+versions.
+
+I personally wouldn't see that as a big problem, as DAHDI itself has
+always been out-of-tree anyway, and adding one more module to that is
+not a big deal.  Note that I cannot speak officially for the DAHDI
+project as I'm just maintaining the Osmocom fork.
+
+Kind regards,
+	Harald
+-- 
+- Harald Welte <laforge@gnumonks.org>          https://laforge.gnumonks.org/
+============================================================================
+"Privacy in residential applications is a desirable marketing option."
+                                                  (ETSI EN 300 175-7 Ch. A6)
