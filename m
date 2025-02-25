@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC53262819;
-	Tue, 25 Feb 2025 09:05:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A9A263C7C;
+	Tue, 25 Feb 2025 09:05:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740474304; cv=none; b=EsdDOLEOjiktrKiBQjrzpfKRYmezb5RRHUyY+50Vq8lqAsuztZvWz/I+TVoBqYKN2Syz+i3TjkwSceZAzjMnE/HIXY0f3M8NmF+S62ezhNGrRM9rzw+2DdoN8XpuqaZpPRfg3fBs9FL/DCmDL3mDxO6Lwh44VIEPAs3NgOTH+ws=
+	t=1740474309; cv=none; b=c7oJL+pFI7f7XQomHXYJ+Z5qFbGhNvZWOJ+6s1da190NAFyXGM8xEvv5UdwtRHNyj9foIrDjUHxVM/alZpx6Dq81ywCR1wDZHusrqAgbco9DBcE4/KLM7zXzwwAZDgPwBiTcm2BHHnuUFb9pZ4rEBPvW/gx1wUaz0mtUjXjv/sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740474304; c=relaxed/simple;
-	bh=QpB2cB+Ah0o7G8Dz7AotytdVXCkzeeV/lQdLbBCTQC0=;
+	s=arc-20240116; t=1740474309; c=relaxed/simple;
+	bh=NyHEQgvLE7O2czGyw9kOf6jBpywmIwe7uLlUw5iQ80o=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=BEPCEbH7/rn3Ji9iAlCCk1qP5FnF6GgcxyduVX6DR721viCDfuG52XD0cv41zsB9h6G2dzPyhuI5CCXSKY/6CliyRXDL09+4ACkQX0OHWZ5GGPi1r1HK3Q1iRjm9QqiISv3X8RR3/kOg+ZZyBa3Ai7Yo2auP0pHXJeJKF/IlyBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XfNGW/r6; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=dJU6fBRHEibQ27SuXyeNpVsc62rmdh23zopNXguOj85gvdPZtwXS9/ZJuZCK5LKoTLD6xYTc0EDrOtVQgDpoO7qpdtzaryHgxsEg0wtG2zaE1ee3g+mfrkcQ8bxKx2PINlQZrB3HMVCh3DCbjGcZYDtnpfNTQg/rAwJS507A9GU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f07vn4vY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XfNGW/r6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83E08C4CEDD;
-	Tue, 25 Feb 2025 09:04:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f07vn4vY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92B8CC4CEE2;
+	Tue, 25 Feb 2025 09:05:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740474303;
-	bh=QpB2cB+Ah0o7G8Dz7AotytdVXCkzeeV/lQdLbBCTQC0=;
+	s=k20201202; t=1740474309;
+	bh=NyHEQgvLE7O2czGyw9kOf6jBpywmIwe7uLlUw5iQ80o=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=XfNGW/r6cQ5YMvUoWokmMmdLWDlqI2jAjqu/aT3mIiFn+c/G8KjccHhmvYONverHF
-	 1hlXqL3SrcYbc2w+Xx/RKA2gykWJU5dQ8U/MUWGcDz3tWO2KpP/S3cW+wCMiWujSig
-	 rxwsLajhBJo6yaWqB2yay68h4MVkX+FyiMRTVt4ODCutJEBo/7s5JRnfrTAznwGLXp
-	 SNYh9szWGFM5j5hmkV6gWclhjAza8cniSR60Hl8M+5VoQMb4JDumabpbdwwlrzruX0
-	 peDO5pEvy36+sSZ85f0zq2ep/OZ+ipQ4y4wQQcd8EAxRfvG+g4MsBrtugYuhvXnXh9
-	 xZTaaKB37cHFw==
+	b=f07vn4vYD8d7AzBvbbenYgA/Cadt0cKhjZQ6uzelHZppMYtXwMDS7HGng6nwZJvQu
+	 USHF09zJQfF8KllYEkRpoQNbhPMUkLGtuLFB2TEaVKnUx4SUIbjC6BZxH4RJC2lK7L
+	 FlmNgjHcgPcayoz+vys4FRG6sQqTZtoktCYKglW/OLtcEu2DfTg0Hcir0WOF4r3MBF
+	 e+0OgUKYSRT4lvvBmfscJLGzdjsEvKuSCBsH3FkSg/DVW96wGYwRLHQP1tPjWB4Sir
+	 XJeZ50r+f7kESgiXQw9pfkfaFcKehKUXxVJFg8OhA71nuAzi64z1H/jYqjvl8r0wcZ
+	 VF3sOVk4kaymg==
 From: Andreas Hindborg <a.hindborg@kernel.org>
 To: "Lyude Paul" <lyude@redhat.com>
 Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Anna-Maria Behnsen"
@@ -40,17 +40,17 @@ Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Anna-Maria Behnsen"
   "Daniel Almeida" <daniel.almeida@collabora.com>,  "Tamir Duberstein"
  <tamird@gmail.com>,  <rust-for-linux@vger.kernel.org>,
   <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v9 04/13] rust: hrtimer: allow timer restart from timer
- handler
-In-Reply-To: <0fb37c2b2d1a28d2096ffdb08df15404d870d68a.camel@redhat.com>
-	(Lyude Paul's message of "Mon, 24 Feb 2025 18:23:14 -0500")
+Subject: Re: [PATCH v9 07/13] rust: hrtimer: implement
+ `UnsafeHrTimerPointer` for `Pin<&T>`
+In-Reply-To: <832fbd60f5c3d78955bd77fce8539423d7669a39.camel@redhat.com>
+	(Lyude Paul's message of "Mon, 24 Feb 2025 18:32:11 -0500")
 References: <20250224-hrtimer-v3-v6-12-rc2-v9-0-5bd3bf0ce6cc@kernel.org>
-	<20250224-hrtimer-v3-v6-12-rc2-v9-4-5bd3bf0ce6cc@kernel.org>
-	<bbtTga1W7J8Ur61sLLE4K8a3B0oe5iDhuHVNs9dTAf8EX2PUf_jloAt7U3xki4WZB3IkWyPHErVMMLx_vwXXlg==@protonmail.internalid>
-	<0fb37c2b2d1a28d2096ffdb08df15404d870d68a.camel@redhat.com>
+	<20250224-hrtimer-v3-v6-12-rc2-v9-7-5bd3bf0ce6cc@kernel.org>
+	<YFJT5Me9IKOD3qR_oRWAcCpIdCw26VdTrqopzgm67j4y9hJzdvN3aljtIlJkO6fQV4FI-mnA2_SpjNVa6Fj3uA==@protonmail.internalid>
+	<832fbd60f5c3d78955bd77fce8539423d7669a39.camel@redhat.com>
 User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Tue, 25 Feb 2025 09:58:41 +0100
-Message-ID: <877c5exuwu.fsf@kernel.org>
+Date: Tue, 25 Feb 2025 10:01:37 +0100
+Message-ID: <871pvmxury.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,67 +62,69 @@ Content-Type: text/plain
 "Lyude Paul" <lyude@redhat.com> writes:
 
 > On Mon, 2025-02-24 at 13:03 +0100, Andreas Hindborg wrote:
->> This patch allows timer handlers to report that they want a timer to be
->> restarted after the timer handler has finished executing.
->>
->> Also update the `hrtimer` documentation to showcase the new feature.
+>> Allow pinned references to structs that contain a `HrTimer` node to be
+>> scheduled with the `hrtimer` subsystem.
 >>
 >> Acked-by: Frederic Weisbecker <frederic@kernel.org>
 >> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 >> ---
->>  rust/kernel/time/hrtimer.rs     | 19 ++++++++++++++++++-
->>  rust/kernel/time/hrtimer/arc.rs |  4 +---
->>  2 files changed, 19 insertions(+), 4 deletions(-)
+>>  rust/kernel/time/hrtimer.rs     |  2 +
+>>  rust/kernel/time/hrtimer/pin.rs | 99 +++++++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 101 insertions(+)
 >>
 >> diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
->> index d08fd7de158d..a431c8b728ae 100644
+>> index 64b769ad59cc..52a3dd1c3984 100644
 >> --- a/rust/kernel/time/hrtimer.rs
 >> +++ b/rust/kernel/time/hrtimer.rs
->> @@ -207,7 +207,7 @@ pub trait HrTimerCallback {
->>      type Pointer<'a>: RawHrTimerCallback;
+>> @@ -428,3 +428,5 @@ unsafe fn raw_get_timer(ptr: *const Self) ->
 >>
->>      /// Called by the timer logic when the timer fires.
->> -    fn run(this: <Self::Pointer<'_> as RawHrTimerCallback>::CallbackTarget<'_>)
->> +    fn run(this: <Self::Pointer<'_> as RawHrTimerCallback>::CallbackTarget<'_>) -> HrTimerRestart
->>      where
->>          Self: Sized;
->>  }
->> @@ -313,6 +313,23 @@ unsafe fn start(self_ptr: *const Self, expires: Ktime) {
->>      }
->>  }
->>
->> +/// Restart policy for timers.
->> +pub enum HrTimerRestart {
->> +    /// Timer should not be restarted.
->> +    NoRestart,
->> +    /// Timer should be restarted.
->> +    Restart,
+>>  mod arc;
+>>  pub use arc::ArcHrTimerHandle;
+>> +mod pin;
+>> +pub use pin::PinHrTimerHandle;
+>> diff --git a/rust/kernel/time/hrtimer/pin.rs b/rust/kernel/time/hrtimer/pin.rs
+>> new file mode 100644
+>> index 000000000000..6c9f2190f8e1
+>> --- /dev/null
+>> +++ b/rust/kernel/time/hrtimer/pin.rs
+>> @@ -0,0 +1,99 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +
+>> +use super::HasHrTimer;
+>> +use super::HrTimer;
+>> +use super::HrTimerCallback;
+>> +use super::HrTimerHandle;
+>> +use super::RawHrTimerCallback;
+>> +use super::UnsafeHrTimerPointer;
+>> +use crate::time::Ktime;
+>> +use core::pin::Pin;
+>> +
+>> +/// A handle for a `Pin<&HasHrTimer>`. When the handle exists, the timer might be
+>> +/// running.
+>> +pub struct PinHrTimerHandle<'a, T>
+>> +where
+>> +    T: HasHrTimer<T>,
+>> +{
+>> +    pub(crate) inner: Pin<&'a T>,
 >> +}
 >
-> Should we have #[derive(Copy, Clone, PartialEq, Eq)] here?
+> Any reason this isn't just:
+>
+> pub struct PinHrTimerHandle<'a, T: HasHrTimer<T>>(Pin<&'a T>)
+> where
+>      T: HasHrTimer<T>;
+>
+> With that nit (feel free to take it or leave it) resolved:
 
-Yea, lets do that. `Debug` as well?
+I had review comments in the past asking me to not use tuple structs.
+The rationale being that the name carries context/intent. In this
+particular case, I don't think the name helps a lot, but I also don't
+mind having it there.
 
 >
-> Also, I feel like I might have asked this a few versions ago so hopefully i'm
-> not asking again: but what's the reason for us not just using the
-> discriminants of `HrTimerRestart` here:
->
-> /// Restart policy for timers.
-> #[repr(u32)]
-> pub enum HrTimerRestart {
->     /// Timer should not be restarted.
->     NoRestart = bindings::hrtimer_restart_HRTIMER_NORESTART,
->     /// Timer should be restarted.
->     Restart = bindings::hrtimer_restart_HRTIMER_RESTART,
-> }
+> Reviewed-by: Lyude Paul <lyude@redhat.com>
 
-I forget if we discussed this, but it does not make much of a
-difference, does it?
-
-With a Rust enum, we get a smaller storage type maybe with better
-support for niche optimizations? And then pay a bit more for conversion.
-All in all, I don't think it makes much difference.
+Thanks you!
 
 
 Best regards,
