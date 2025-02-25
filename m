@@ -1,50 +1,33 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp116.iad3a.emailsrvr.com (smtp116.iad3a.emailsrvr.com [173.203.187.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81571632C8;
-	Tue, 25 Feb 2025 16:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19C121ABAB
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 16:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.203.187.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740500352; cv=none; b=YFrv3m6f/9IJHifTyROcrHmLKdkGOXXXQ+gWLw4goT1Tq3UBvLkAW7OWgbd0YAukyiV8AIcovfjBAzixtDSndI7ldmLavfF07iLb0XLasFy6gGX4XCE1UU350L3psjOTM31CGvLdKRU2N9D2IOG6bjyUo0T9XgnJxIb43sU766k=
+	t=1740500366; cv=none; b=qstmMuSpQCvTTCwZgoaZOYcbDCZDduD8kAOChrcwR+qBUOIMIuQRj3vODYFmliaUSz9RkxjKhf78KSLxsOWRMhA7S8LpgvBtHrKVaR7Q2+HxMWpuXErDEP2dP5Wt68lvvjGNzwetjlaMTjSZKyDZ9nilqkSjxFB4ix7dn3sULKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740500352; c=relaxed/simple;
-	bh=+EjWCET6v674qjOenEVjythFERNBnRl7O6pWOnch6gw=;
+	s=arc-20240116; t=1740500366; c=relaxed/simple;
+	bh=MIlfoTq3cpPNlqKt95zak0Gvvkg2kSKrp1gEQG5RJ3g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KXlm8s7BeabjYbJ5IwM5IK2P8nTJageX5r++5/jCkN4+3dBnl/27iz2CqPjTknKwAD0rSwWjuTZ4tAH8rrvE+nXPB3+6SEE6pzJyiqYfTek5tCWb6rnECzmf9dhLd+BTgRgpThLSlk9McRnREeb/a387neW+JGi/tkBS1zUbukA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HrSMdm5x; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=ZgMRqsLEjvy+jeqh5z3fLKl4/ruTo08YQ5fbNzrYhf9bSVobW+bX5ILa2TN/3j4hqtCGmSEHHCZqtP+YQ9T0VlrTl7L1i7gdptML8B1pos7U4HyTQkhpsettSw2xAFMUpAzFMOcU7IUsTierGs4qd6BgfyAktrD56adol+sZvgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=x3jk79Mk; arc=none smtp.client-ip=173.203.187.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HrSMdm5x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740500351; x=1772036351;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=+EjWCET6v674qjOenEVjythFERNBnRl7O6pWOnch6gw=;
-  b=HrSMdm5xfC1d5cFb3/D6uUmYB65ZCvjCd51goE+fpDFGvYSFaonZSm+l
-   e7aoqcn4P+vpNojt5aRGh0h1+PMTxiYTx9tu8knezt/uS57D4au8EhybV
-   p1v+emHQnUYThBogzi/y2KNwWOgANEX+RqOm/ipVuskBuqQ2YK77HW0Fb
-   LJAQWr0sGgjGSGJsiQfUI2E2VdgHuG8eNj+Jf65iKpCVhcWk5W+bzTJKt
-   6EfMB1u3EydrfP0n88s8N9wjd1TzCpHbGtvRp46gBklkZBPFZ5ePc1h+P
-   ++pmPwOvO0tekq/U1kzrEVHHV1GqJT9+bVyfAqJr+X5DC868TyVpBdjdu
-   A==;
-X-CSE-ConnectionGUID: NgtDAI5KQRSC/RolKto39w==
-X-CSE-MsgGUID: PZuwV9SCQhOSiRE2GUy2+A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="41160711"
-X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
-   d="scan'208";a="41160711"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 08:19:11 -0800
-X-CSE-ConnectionGUID: jL2zoDiJSt+DLXjtBLT28A==
-X-CSE-MsgGUID: jFDHBEY/SrqF2rf1DRcQFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="120546345"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 08:19:07 -0800
-Message-ID: <5380c4fd-d0bd-4a20-8fb1-1ecad76e96b2@intel.com>
-Date: Wed, 26 Feb 2025 00:19:03 +0800
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="x3jk79Mk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+	s=20221208-6x11dpa4; t=1740495581;
+	bh=MIlfoTq3cpPNlqKt95zak0Gvvkg2kSKrp1gEQG5RJ3g=;
+	h=Date:Subject:To:From:From;
+	b=x3jk79MkbkEF+b1MHrrQYMpcWG3wrdrxrOT5O1lo7Qmwgy+fBvwv8hZyy2fNyQTgm
+	 QZFF2aaEh1YfY2jBcsKBFuhFFHZbqoTbrSzH5XIB3wYkwkM9Nf0qw+e/RomEvLiWTf
+	 EoEYo4KW39gS4WYoOAvU03xU+qpgs98W35rncDyY=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp15.relay.iad3a.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 6FF4C4253;
+	Tue, 25 Feb 2025 09:59:40 -0500 (EST)
+Message-ID: <ad6bff81-5f8e-4f14-ab35-97b76edd8c82@mev.co.uk>
+Date: Tue, 25 Feb 2025 14:59:39 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,107 +35,65 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] KVM: x86: Snapshot the host's DEBUGCTL in common x86
-To: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- rangemachine@gmail.com, whanos@sergal.fun,
- Ravi Bangoria <ravi.bangoria@amd.com>, Peter Zijlstra <peterz@infradead.org>
-References: <20250224181315.2376869-1-seanjc@google.com>
- <20250224181315.2376869-2-seanjc@google.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20250224181315.2376869-2-seanjc@google.com>
+Subject: Re: [PATCH] [RESEND] comedi: ni_atmio: avoid warning for unused
+ device_ids[] table
+To: Arnd Bergmann <arnd@kernel.org>,
+ H Hartley Sweeten <hsweeten@visionengravers.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org
+References: <20250225145310.1110575-1-arnd@kernel.org>
+Content-Language: en-GB
+From: Ian Abbott <abbotti@mev.co.uk>
+Organization: MEV Ltd.
+In-Reply-To: <20250225145310.1110575-1-arnd@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Classification-ID: 75ed46d9-5491-4dea-85e3-a7d6dc623d5e-1-1
 
-On 2/25/2025 2:13 AM, Sean Christopherson wrote:
-> Move KVM's snapshot of DEBUGCTL to kvm_vcpu_arch and take the snapshot in
-> common x86, so that SVM can also use the snapshot.
+On 2025-02-25 14:53, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> Opportunistically change the field to a u64.  While bits 63:32 are reserved
-> on AMD, not mentioned at all in Intel's SDM, and managed as an "unsigned
-> long" by the kernel, DEBUGCTL is an MSR and therefore a 64-bit value.
+> When the driver is built-in, it produces a W=1 warning:
 > 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-
-Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
-
+> drivers/comedi/drivers/ni_atmio.c:209:35: error: 'device_ids' defined but not used [-Werror=unused-const-variable=]
+>    209 | static const struct pnp_device_id device_ids[] = {
+> 
+> The actual probe() function has a different way of identifying
+> the hardware, so just mark this one as __maybe_unused so it
+> can be dropped when built-in.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->   arch/x86/include/asm/kvm_host.h | 1 +
->   arch/x86/kvm/vmx/vmx.c          | 8 ++------
->   arch/x86/kvm/vmx/vmx.h          | 2 --
->   arch/x86/kvm/x86.c              | 1 +
->   4 files changed, 4 insertions(+), 8 deletions(-)
+> I sent this a year ago but there were no comments, resending now
+> without changes.
+> ---
+>   drivers/comedi/drivers/ni_atmio.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 3506f497741b..02bffe6b54c8 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -781,6 +781,7 @@ struct kvm_vcpu_arch {
->   	u32 pkru;
->   	u32 hflags;
->   	u64 efer;
-> +	u64 host_debugctl;
->   	u64 apic_base;
->   	struct kvm_lapic *apic;    /* kernel irqchip context */
->   	bool load_eoi_exitmap_pending;
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index b71392989609..729c224b72dd 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1514,16 +1514,12 @@ void vmx_vcpu_load_vmcs(struct kvm_vcpu *vcpu, int cpu,
->    */
->   void vmx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
->   {
-> -	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> -
->   	if (vcpu->scheduled_out && !kvm_pause_in_guest(vcpu->kvm))
->   		shrink_ple_window(vcpu);
+> diff --git a/drivers/comedi/drivers/ni_atmio.c b/drivers/comedi/drivers/ni_atmio.c
+> index 330ae1c58800..b4e759e5703f 100644
+> --- a/drivers/comedi/drivers/ni_atmio.c
+> +++ b/drivers/comedi/drivers/ni_atmio.c
+> @@ -215,7 +215,7 @@ static const int ni_irqpin[] = {
 >   
->   	vmx_vcpu_load_vmcs(vcpu, cpu, NULL);
+>   #include "ni_mio_common.c"
 >   
->   	vmx_vcpu_pi_load(vcpu, cpu);
-> -
-> -	vmx->host_debugctlmsr = get_debugctlmsr();
->   }
->   
->   void vmx_vcpu_put(struct kvm_vcpu *vcpu)
-> @@ -7458,8 +7454,8 @@ fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit)
->   	}
->   
->   	/* MSR_IA32_DEBUGCTLMSR is zeroed on vmexit. Restore it if needed */
-> -	if (vmx->host_debugctlmsr)
-> -		update_debugctlmsr(vmx->host_debugctlmsr);
-> +	if (vcpu->arch.host_debugctl)
-> +		update_debugctlmsr(vcpu->arch.host_debugctl);
->   
->   #ifndef CONFIG_X86_64
->   	/*
-> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-> index 8b111ce1087c..951e44dc9d0e 100644
-> --- a/arch/x86/kvm/vmx/vmx.h
-> +++ b/arch/x86/kvm/vmx/vmx.h
-> @@ -340,8 +340,6 @@ struct vcpu_vmx {
->   	/* apic deadline value in host tsc */
->   	u64 hv_deadline_tsc;
->   
-> -	unsigned long host_debugctlmsr;
-> -
->   	/*
->   	 * Only bits masked by msr_ia32_feature_control_valid_bits can be set in
->   	 * msr_ia32_feature_control. FEAT_CTL_LOCKED is always included
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 58b82d6fd77c..09c3d27cc01a 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -4991,6 +4991,7 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
->   
->   	/* Save host pkru register if supported */
->   	vcpu->arch.host_pkru = read_pkru();
-> +	vcpu->arch.host_debugctl = get_debugctlmsr();
->   
->   	/* Apply any externally detected TSC adjustments (due to suspend) */
->   	if (unlikely(vcpu->arch.tsc_offset_adjustment)) {
+> -static const struct pnp_device_id device_ids[] = {
+> +static const struct pnp_device_id __maybe_unused device_ids[] = {
+>   	{.id = "NIC1900", .driver_data = 0},
+>   	{.id = "NIC2400", .driver_data = 0},
+>   	{.id = "NIC2500", .driver_data = 0},
+
+Looks good, thanks!
+
+Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
+
+(Greg, would you be kind enough to commit this to one of your trees if 
+OK with it? Thanks.)
+
+-- 
+-=( Ian Abbott <abbotti@mev.co.uk> || MEV Ltd. is a company  )=-
+-=( registered in England & Wales.  Regd. number: 02862268.  )=-
+-=( Regd. addr.: S11 & 12 Building 67, Europa Business Park, )=-
+-=( Bird Hall Lane, STOCKPORT, SK3 0XA, UK. || www.mev.co.uk )=-
 
