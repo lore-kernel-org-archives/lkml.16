@@ -1,99 +1,94 @@
-Received: from smtp116.iad3a.emailsrvr.com (smtp116.iad3a.emailsrvr.com [173.203.187.116])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19C121ABAB
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 16:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.203.187.116
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66DA718DB03
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 16:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740500366; cv=none; b=qstmMuSpQCvTTCwZgoaZOYcbDCZDduD8kAOChrcwR+qBUOIMIuQRj3vODYFmliaUSz9RkxjKhf78KSLxsOWRMhA7S8LpgvBtHrKVaR7Q2+HxMWpuXErDEP2dP5Wt68lvvjGNzwetjlaMTjSZKyDZ9nilqkSjxFB4ix7dn3sULKk=
+	t=1740500382; cv=none; b=JqkpOPAbeqo9Rl3LeOxrHatOadYbe0eK0GaNWzH8S+5T3Hti/cK3xvXVr7xramZH3q1xhsVQmgoV874Inm2KSVVJr3Zbuf7jNISKVy+mhcLQJbb/T5Rgak78xlR7Rd/+cd+qhSB21h50J/vVA0dkhGpO/MwcuIEptTMcmH7zOmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740500366; c=relaxed/simple;
-	bh=MIlfoTq3cpPNlqKt95zak0Gvvkg2kSKrp1gEQG5RJ3g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZgMRqsLEjvy+jeqh5z3fLKl4/ruTo08YQ5fbNzrYhf9bSVobW+bX5ILa2TN/3j4hqtCGmSEHHCZqtP+YQ9T0VlrTl7L1i7gdptML8B1pos7U4HyTQkhpsettSw2xAFMUpAzFMOcU7IUsTierGs4qd6BgfyAktrD56adol+sZvgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk; spf=pass smtp.mailfrom=mev.co.uk; dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b=x3jk79Mk; arc=none smtp.client-ip=173.203.187.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mev.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mev.co.uk
+	s=arc-20240116; t=1740500382; c=relaxed/simple;
+	bh=Tyh+RhXcKnxQU4MXzN9oE4S19Yl573Q7D+3G4DQFujQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jkO2liEJgAbZA8LJbiHS+roDlKe7cJwf7PArJRpimX/3aL/8YQsiGHzGlFdsRvjcW5DsRd1RAUVmNlSFEAv1ro32cCDnqQQFylLYzGrmgnvqQxWjSjv12f4VF6HaIgrXQkoxBFh3E92VgfNu2W72AV/B5xEdyDYg+Av+9OB+oWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=k7MP4qPq; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="x3jk79Mk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-	s=20221208-6x11dpa4; t=1740495581;
-	bh=MIlfoTq3cpPNlqKt95zak0Gvvkg2kSKrp1gEQG5RJ3g=;
-	h=Date:Subject:To:From:From;
-	b=x3jk79MkbkEF+b1MHrrQYMpcWG3wrdrxrOT5O1lo7Qmwgy+fBvwv8hZyy2fNyQTgm
-	 QZFF2aaEh1YfY2jBcsKBFuhFFHZbqoTbrSzH5XIB3wYkwkM9Nf0qw+e/RomEvLiWTf
-	 EoEYo4KW39gS4WYoOAvU03xU+qpgs98W35rncDyY=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp15.relay.iad3a.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 6FF4C4253;
-	Tue, 25 Feb 2025 09:59:40 -0500 (EST)
-Message-ID: <ad6bff81-5f8e-4f14-ab35-97b76edd8c82@mev.co.uk>
-Date: Tue, 25 Feb 2025 14:59:39 +0000
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k7MP4qPq"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54529e15643so6212715e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 08:19:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740500377; x=1741105177; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Tyh+RhXcKnxQU4MXzN9oE4S19Yl573Q7D+3G4DQFujQ=;
+        b=k7MP4qPqpYeHRONUsUaB3AQiPzI+tT17PAiYqwe2IlNhl31Dvapsrxra/EJ0H9j72L
+         B+dt+i9rDsNtc8ts/OlZ7DAQ7m4MHo3AccVCLDYM//BX6La1heOfZbhuvV92Xyzw2hjt
+         gExQYfX7ghdb2zt3rw5D2GRSN66mG98ky/dnzNfUX+MEOtR5NdFXoRz+IP7o4CoxydCf
+         uLOCBMeHeUE45a+B22Ag5IaWbTrotJLkx5IS5XNoLTZM3i6xcfLik7HBKw2QyNZVFsR5
+         BzUhG0VxQPnHg00vjvHJKWvekPRTyGai9J07q0K/tsm7kqvgJUUqZhqa5kayoFh5FJre
+         VM2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740500377; x=1741105177;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Tyh+RhXcKnxQU4MXzN9oE4S19Yl573Q7D+3G4DQFujQ=;
+        b=ID3SRqSDoO1isxZ/W/bzxd6kWVh06Ha+ErmCklVrBQa68HlATvweladji62q69tD8D
+         D/jZ6jfWYmymoyFELCSAQPnaC04TEPhlxONTCVsVwe0kF4veURE/zFoenscpc5VT5SZX
+         ixvuAhkoYnIOsx+Sb4diRUl5jX3GVd7QiGIZB9kRNxrsOr86ekUZSl28wChrrdJMAHru
+         AM+DBvMiKbooVW3dmUtkowsQZ/dYMwrf5BfS9lcRtTmp0iDkUXmw1Xp++RdNVh/PHj95
+         KoyetMWHB8q+wqN0LS6jIBKp4Qi/bG6zGmY27ILoYxP79vd3k1DsuoUKxq09QO1+NDGd
+         2yJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWkCb2Q7bkMPEIR9dJMh5lTA761bOCqNxweMJnyuzZWDoTW/664TtYHUFsZW8zbdTC2k9g/FWx+Ratlp5Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGuGeZD5eidFjSP072vGtAS+33bsKUIRl53LTfzFjborv2tOYM
+	KxrLFo+VS5VBFWfIgEYZHJL+H663w1fFUTFvmG1QWs5zR1XxFEvhg+/3NVkbPZgvCDU0xq9R7CT
+	sewoRyhz54KT869BUVaYoc/c3gdQ8e4gACR/3vA==
+X-Gm-Gg: ASbGncvtEyrCUgtxAJ+lv0hDEFku65OxQx7szvmzvBal1yEJxAoVMblf/S8t85eiH0w
+	B4007mWKHPa6+T3MZwvfpUOPkaCwMH4mz/CEzWxekXrkHE7NdwLXvFgrwr015/wcwMpLUTIXnkF
+	+iIYG/jls=
+X-Google-Smtp-Source: AGHT+IFPKsmkV/8GrQlu1UecaEKHzDdnmY+GOqvsye/6W95YDRH8BC1ZvlN9fdjoiYBCyRDAZX7jrfC7MDoNbdARl/s=
+X-Received: by 2002:a05:6512:2353:b0:545:240:55ba with SMTP id
+ 2adb3069b0e04-54838cd2edcmr5801739e87.26.1740500377437; Tue, 25 Feb 2025
+ 08:19:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] [RESEND] comedi: ni_atmio: avoid warning for unused
- device_ids[] table
-To: Arnd Bergmann <arnd@kernel.org>,
- H Hartley Sweeten <hsweeten@visionengravers.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org
-References: <20250225145310.1110575-1-arnd@kernel.org>
-Content-Language: en-GB
-From: Ian Abbott <abbotti@mev.co.uk>
-Organization: MEV Ltd.
-In-Reply-To: <20250225145310.1110575-1-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Classification-ID: 75ed46d9-5491-4dea-85e3-a7d6dc623d5e-1-1
+References: <20250223-03-k1-gpio-v6-0-db2e4adeef1c@gentoo.org> <20250223-03-k1-gpio-v6-2-db2e4adeef1c@gentoo.org>
+In-Reply-To: <20250223-03-k1-gpio-v6-2-db2e4adeef1c@gentoo.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 25 Feb 2025 17:19:26 +0100
+X-Gm-Features: AWEUYZlYJub0FzdxL7Mpr1knr2_W3_lmRrr6Vhou8bb5JqpMdWieVnvejFVMY8M
+Message-ID: <CACRpkda5=nSnYZ5XJsC_A5MhfdPHwcTndjNr4vGfSb4YJ4Bi6w@mail.gmail.com>
+Subject: Re: [PATCH v6 2/4] gpio: spacemit: add support for K1 SoC
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Conor Dooley <conor@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Yangyu Chen <cyy@cyyself.name>, 
+	Jisheng Zhang <jszhang@kernel.org>, Jesse Taube <mr.bossman075@gmail.com>, 
+	Inochi Amaoto <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>, 
+	Meng Zhang <zhangmeng.kevin@linux.spacemit.com>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-02-25 14:53, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> When the driver is built-in, it produces a W=1 warning:
-> 
-> drivers/comedi/drivers/ni_atmio.c:209:35: error: 'device_ids' defined but not used [-Werror=unused-const-variable=]
->    209 | static const struct pnp_device_id device_ids[] = {
-> 
-> The actual probe() function has a different way of identifying
-> the hardware, so just mark this one as __maybe_unused so it
-> can be dropped when built-in.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> I sent this a year ago but there were no comments, resending now
-> without changes.
-> ---
->   drivers/comedi/drivers/ni_atmio.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/comedi/drivers/ni_atmio.c b/drivers/comedi/drivers/ni_atmio.c
-> index 330ae1c58800..b4e759e5703f 100644
-> --- a/drivers/comedi/drivers/ni_atmio.c
-> +++ b/drivers/comedi/drivers/ni_atmio.c
-> @@ -215,7 +215,7 @@ static const int ni_irqpin[] = {
->   
->   #include "ni_mio_common.c"
->   
-> -static const struct pnp_device_id device_ids[] = {
-> +static const struct pnp_device_id __maybe_unused device_ids[] = {
->   	{.id = "NIC1900", .driver_data = 0},
->   	{.id = "NIC2400", .driver_data = 0},
->   	{.id = "NIC2500", .driver_data = 0},
+On Sun, Feb 23, 2025 at 12:50=E2=80=AFPM Yixun Lan <dlan@gentoo.org> wrote:
 
-Looks good, thanks!
+> Implement GPIO functionality which capable of setting pin as
+> input, output. Also, each pin can be used as interrupt which
+> support rising, falling, or both edge type trigger.
+>
+> Signed-off-by: Yixun Lan <dlan@gentoo.org>
 
-Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
+I really like how this turned out! :)
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-(Greg, would you be kind enough to commit this to one of your trees if 
-OK with it? Thanks.)
-
--- 
--=( Ian Abbott <abbotti@mev.co.uk> || MEV Ltd. is a company  )=-
--=( registered in England & Wales.  Regd. number: 02862268.  )=-
--=( Regd. addr.: S11 & 12 Building 67, Europa Business Park, )=-
--=( Bird Hall Lane, STOCKPORT, SK3 0XA, UK. || www.mev.co.uk )=-
-
+Yours,
+Linus Walleij
