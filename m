@@ -1,102 +1,116 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D7C2676DA;
-	Tue, 25 Feb 2025 13:00:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8491D203709
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740488410; cv=none; b=BBXlw1nKKODWcO+ZWgM6J5rKk88iCzno7SPZ5M51R2jqOdsC1XKvtZ/2LJSRiVuNuuGQhrePrFUqxluqbSYWJOx6NOvu1eCOyyBgDDMB25ST8kaIhaD5qlUTVGlkNfnb4NMqkXMgEJD5LKscdyJZYR3Y8BDdilJT+Xm8b/UkVHk=
+	t=1740488444; cv=none; b=qpVQYnZvlxB96Irems14RSduLf3nbvbT1ARPKSK7VDxKJcsQ/5mXyWogWqbg2lhUfmygcH3YtW6BmRRxRSUFC8PYTNVjZ399WJsNvHYL+1rDJQQ6aq+elDRlgvlrXtrbLuMTthv+C25S3LfOcQimnVCglU5oIoKNK7r8upVZVJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740488410; c=relaxed/simple;
-	bh=bvMpoQhDog3/J1ZwGwsnib37zReYIuMapBWpIzR68DI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dzBXURPRddVrt85qdV3Fe3YsmbpwiQlWkDDlVtCaFRv5YrfmhLMvn+F9e2s0QN5SovU8Jj1CMrwU+0OGYk91I5boDpI8ZeQdUh5lUPcG5tH40jBoec/zJueYKwumRBBKQDDKG32/biJTOIqQeuxETUEKuBwTnbOH7LlfbEqoLs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BG8uNxup; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BG8uNxup"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-38f5fc33602so3176903f8f.0;
-        Tue, 25 Feb 2025 05:00:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740488407; x=1741093207; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mL9gUXt1ZdkJEy9Fw6Q/1gDLR1RV1GDWUbxOHo/kh70=;
-        b=BG8uNxups75D2Gp9gygRn9+E81QAezBoE65Qll5ba9eeIQ5wHtIGTsB4plO8p7tvFP
-         eMGobO/G++56Gw5+5YV7iXvjD8jtP/MXK6yZ7tHxII7zfCsYhS+dVt6E/xwEOEl+g/tt
-         hiiFQoeL3K5uQswKfOH+zo0KF6QqRkGt+Pi0fjNeVbz+ARZKSawvQ6UFrJfRxfp2bdC4
-         sOfZDKB8jyGWTnvytL2NAs5RSi8YQ4HjAVqXVbzcMwfL5NrIpZ7bY3RPXNrKzJzuInkx
-         j8Ca664Jw5TdhGeErZ/7JbiDjSdOPZbgz6evf1231mLGa+lRQKi95xZ3hwAt2boJHIEu
-         kZ7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740488407; x=1741093207;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mL9gUXt1ZdkJEy9Fw6Q/1gDLR1RV1GDWUbxOHo/kh70=;
-        b=wlclq+nCa8PTWi21y3OFlhC/Y8J+gPO9U0lygUNQ0l/0ZNEKc3cZ65qA2Ul3Pcu1Dv
-         rUneXN30UvgRf5sxA2rp84MV4Zbe0Y/r8O+Oro0KD5k1cIVCsO7Kb86WT1PuN8Kd4BR5
-         r8bQdANUNQclpzWtuib7laNrorsWxwG5Um/0fqgihVkVUi3x8gRQuyAOhcM6VWpM+o0A
-         3zTTsmxzRby8XjKZL+CTWw1BIEO8FsoHH0noG0eKdZbKn+8+B0oW68MAztVgvNXWFegX
-         GJcY6QtkXj6w41fnZnPXcrSQl6k3F2Sht7vhhPI/5Lh+4w+Sn7sGSQTPZjCNp73CeIkv
-         VHJg==
-X-Forwarded-Encrypted: i=1; AJvYcCWZHJBln6tM9o9KkhUFO8NkDRrkBUU0fG+1DarPL1NHh/T5OeDF7T6/AZZOZ7xlgmKdKlejjS5UoG9pw+c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPWw+HwA3lruE1CssRGkLJ3TSVCUVUizZ7E2wCGfIF132xx27x
-	bt+BeRtY+ofTXevSkJgGScMeJrD0Ddj/b/PyOQ2ZgTsTXMnMtHQwIytGo9/8
-X-Gm-Gg: ASbGncsQXIbWEkIL9/NMcBJNdxa7vRIuYswthwau7sxOKkvgW+7POKJPRnSMUEvX6nA
-	WAl0/DcD1OS2LqUVwxGSnwRj8yAW5adV5jt9C5E2KyMOhXoayOfqZJrwvrj2ranQSMSoK8e1oEA
-	rnqW8ku9YP83qkWnVBWIPDU2OkENatFtgXqbdHHazZH2RDQDBb7gIMG2N3tYyRz82a1eZ2JR/C3
-	xmzEqItVysBMczTuW0jb+T2cpe8hdPTvMTe5XkNeq8zN+M1r4znOcsTNXptLHoaPvhZI+JMcjfv
-	zbCD7aYKSs6O7eOmeO0sYafkAKE1vBYPvfCngbE=
-X-Google-Smtp-Source: AGHT+IGOQtdn0FjBSqnsv1taRF7VQLWRqAxKS2YZHeDb+Wnh6ZnELJGTdawhV5WhDMT+jiIHe6ogRg==
-X-Received: by 2002:a05:6000:401e:b0:38d:d414:124d with SMTP id ffacd0b85a97d-38f6160faedmr17035240f8f.19.1740488406501;
-        Tue, 25 Feb 2025 05:00:06 -0800 (PST)
-Received: from localhost.localdomain ([2a02:c7c:6696:8300:7c3b:8f00:8531:eaa])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390cd8fb9d8sm2176358f8f.83.2025.02.25.05.00.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 05:00:06 -0800 (PST)
-From: Qasim Ijaz <qasdev00@gmail.com>
-To: sakari.ailus@linux.intel.com,
-	benjamin.mugnier@foss.st.com,
-	sylvain.petinot@foss.st.com,
-	mchehab@kernel.org
-Cc: linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] media: i2c: Replace nested min() with single min3()
-Date: Tue, 25 Feb 2025 12:59:37 +0000
-Message-Id: <20250225125937.20413-1-qasdev00@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1740488444; c=relaxed/simple;
+	bh=gbblQILdYnGULp8hvJ7cxtzaBr5jOaGjLT9aI8IXaoA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DcWozsFGsW94vV+aFF6G/k6xG7v3+n1hWLJnRqZpbay80Q2BwpmVQ9d70BBqF7j0T4acwywM+U9INP6P6uG05oCInovM/smlYlwJX6AbQjyhkMhX4t7eaPZ9xTc0MzJblCqSJ0oEnN9iNZN+GikL4rEokujORmWZuB+Zvln3e90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36F4A152B;
+	Tue, 25 Feb 2025 05:00:59 -0800 (PST)
+Received: from [10.1.27.154] (unknown [10.1.27.154])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 001043F5A1;
+	Tue, 25 Feb 2025 05:00:41 -0800 (PST)
+Message-ID: <9e1721a1-54a4-4007-a0f5-d651f5f21ae2@arm.com>
+Date: Tue, 25 Feb 2025 13:00:40 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64/mm: Explicit cast conversions to correct data type
+Content-Language: en-GB
+To: Mark Rutland <mark.rutland@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ linux-kernel@vger.kernel.org
+References: <20250219035646.536707-1-anshuman.khandual@arm.com>
+ <Z724Q1ofM1GvKquV@J2N7QTR9R3>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <Z724Q1ofM1GvKquV@J2N7QTR9R3>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Use min3() macro instead of nesting min() to simplify the return
-statement.
+On 25/02/2025 12:32, Mark Rutland wrote:
+> On Wed, Feb 19, 2025 at 09:26:46AM +0530, Anshuman Khandual wrote:
+>> From: Ryan Roberts <ryan.roberts@arm.com>
+>>
+>> When CONFIG_ARM64_PA_BITS_52 is enabled, page table helpers __pte_to_phys()
+>> and __phys_to_pte_val() are functions which return phys_addr_t and pteval_t
+>> respectively as expected. But otherwise without this config being enabled,
+>> they are defined as macros and their return types are implicit.
+>>
+>> Until now this has worked out correctly as both pte_t and phys_addr_t data
+>> types have been 64 bits. But with the introduction of 128 bit page tables,
+>> pte_t becomes 128 bits. Hence this ends up with incorrect widths after the
+>> conversions, which leads to compiler warnings.
+> 
+> Does 128-bit page table not imply 52-bit PAs?
 
-Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
----
- drivers/media/i2c/vgxy61.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Not to my knowledge. For now the prototype code base is explicitly sticking to
+48-bit PA and 44-bit VA (for initial simplicitly because that's the limit for 4
+levels).
 
-diff --git a/drivers/media/i2c/vgxy61.c b/drivers/media/i2c/vgxy61.c
-index d77468c8587b..5b0479f3a3c0 100644
---- a/drivers/media/i2c/vgxy61.c
-+++ b/drivers/media/i2c/vgxy61.c
-@@ -892,8 +892,8 @@ static u32 vgxy61_get_expo_long_max(struct vgxy61_dev *sensor,
- 	third_rot_max_expo = (sensor->frame_length / 71) * short_expo_ratio;
- 
- 	/* Take the minimum from all rules */
--	return min(min(first_rot_max_expo, second_rot_max_expo),
--		   third_rot_max_expo);
-+	return min3(first_rot_max_expo, second_rot_max_expo,
-+		    third_rot_max_expo);
- }
- 
- static int vgxy61_update_exposure(struct vgxy61_dev *sensor, u16 new_expo_long,
--- 
-2.39.5
+> 
+>> Fix the warnings by explicitly casting to the correct type after doing the
+>> conversion.
+> 
+> I think it would be simpler and clearer if we replaced the macros with
+> functions, such that __pte_to_phys() and __phys_to_pte_val() are
+> *always* functions.
+
+Yeah, agreed. This was initially just a hack I did to get things working.
+
+> 
+> That way it's easier to compar the CONFIG_ARM64_PA_BITS_52=y and
+> CONFIG_ARM64_PA_BITS_52=n versions, and the types are always explciit
+> for inputs and outputs, so there'd be less room for error and the
+> compiler can warn us of type safety issues in any configuration.
+> 
+> That and we can delete the comment block immediately above at the same
+> time.
+> 
+> Mark.
+> 
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>> This patch applies on v6.14-rc3
+>>
+>>  arch/arm64/include/asm/pgtable.h | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+>> index 0b2a2ad1b9e8..1da2421c9a15 100644
+>> --- a/arch/arm64/include/asm/pgtable.h
+>> +++ b/arch/arm64/include/asm/pgtable.h
+>> @@ -84,8 +84,8 @@ static inline pteval_t __phys_to_pte_val(phys_addr_t phys)
+>>  	return (phys | (phys >> PTE_ADDR_HIGH_SHIFT)) & PHYS_TO_PTE_ADDR_MASK;
+>>  }
+>>  #else
+>> -#define __pte_to_phys(pte)	(pte_val(pte) & PTE_ADDR_LOW)
+>> -#define __phys_to_pte_val(phys)	(phys)
+>> +#define __pte_to_phys(pte)	((phys_addr_t)(pte_val(pte) & PTE_ADDR_LOW))
+>> +#define __phys_to_pte_val(phys)	((pteval_t)(phys))
+>>  #endif
+>>  
+>>  #define pte_pfn(pte)		(__pte_to_phys(pte) >> PAGE_SHIFT)
+>> -- 
+>> 2.25.1
+>>
+>>
 
