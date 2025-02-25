@@ -1,62 +1,64 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F9018C32C
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 21:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759001922DD
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 21:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740518048; cv=none; b=j0TfD/upHMkJrNI8JaJ1QLBlYA8xnMnuTDilK0oQ+7MkRJBjph3tTbPwsbpjjMqQIKSpKdNKcc4Q2ShiIpnAqx8U+A8Pu8cbJ65+OsL96BYYAWVIt24jEYRD1wEg2JEovDHsqDA1Lex0hEuY4+NUFrdDlYoRHT3OJnJUN9nF8nc=
+	t=1740518092; cv=none; b=ma5EVqa7CJsNPtPpoRXhYM/h+1R7sPpJCAppYu0Fz8F24rxB//MJ7XCzbxwTXvXNXuPAWNqEGM37ySHbBfUYRYI3Cp8x7DHYNHZplLtOfyDiZJ/mZlTcwo8f0ZEViSqTe8kmT9KTGpDstzfhICstnRt0bLbMmh3Rm6GJXv22Z9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740518048; c=relaxed/simple;
-	bh=UwV8tIzQ/kkRrMjPobHsQMREbEg8Jr5i7VKUMg0xJ4Y=;
+	s=arc-20240116; t=1740518092; c=relaxed/simple;
+	bh=z/htcAKy8BejW6BaJDus/dUUa71EVLTzM8XjVA5Dt6U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dfPKgbBqBhcJXVDK82SUg55r/Iog+DASoRbh0Kew9ZuIOhhwdhKV9Kjhwy40Uif3MA8qES5EzvWihSSQ8j4NVnAoekOssxBaP3OTB7BGkRn7WCUJQk2xBInIWfNMidwXZGmqfD+13Opk9TktgT/tyQo28QuTMNNYuzxyVxY65fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=lzaH+gN1; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	 In-Reply-To:Content-Type; b=jtjbpUCNIHOwhTIVEOwlPsGhm/b1ypX8fHJ3VGlcG38KTo0tvozme99xxvubLnHOXS3lmYMHqcgo3ZdjBEo7Bhmw1Jz/iaYMnfrhiTFPk3VgJbFaVkFXlWR6bfr14p6FfIDUCJKbXuOk/t4UtIuK37eRaRIc5gmePxk/Lc4Co4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=EIlwq+CF; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="lzaH+gN1"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-38f378498c9so5999919f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:14:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="EIlwq+CF"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3d1a428471fso46016595ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:14:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1740518044; x=1741122844; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=UwV8tIzQ/kkRrMjPobHsQMREbEg8Jr5i7VKUMg0xJ4Y=;
-        b=lzaH+gN1ASLshUcCBHVeGevBy3OqSuPe0MZnCsAHpEbSeia62WOWUvZ9CJ2hzE4BkP
-         f5HTlMyfY0AFmwNnCHi+deQ0ltNyI4iUl+WbZRkhNacTUPkTYB8FZeKASMXjnS2N/QT1
-         VnaPcTuhQJ7bw8s4tlOHFGKHk1X0VXgHqP65I=
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1740518089; x=1741122889; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Xh2s6sLjIXbWIAOmjMi7Yyx9NKVsC0mal+LFgBmzJUY=;
+        b=EIlwq+CFdz4mG+Xrh0uEGEZ54MGQdEFFbeVFENLfhrkpm6ZwY/nlaE0VtqAioJlvUa
+         21/pO1bYfmgkwAnyyEDn9bGhNLVf2qrdL0IxZnfIFNQffzXiml1XymG37H2RP3j2Z5bE
+         7xx8+sQcYCBP6C7YT/p/LvaUJMFU6KPeQu2JoGYNWZAoGOnCUFewtzlGUYDE6C5//tyo
+         ToImm8uFeOmwsdOJwGvD4J17L7g69K1ROU3mbNqJiFhoeFZHUun9bX5mRkGOPT5pq80h
+         UzAeZ2Uss1XrjNKymjEPRSQdxIp6AQ2cHgBCAJpuVR/e/uSU7uina2lb4AUff5RnWvNF
+         owBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740518044; x=1741122844;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UwV8tIzQ/kkRrMjPobHsQMREbEg8Jr5i7VKUMg0xJ4Y=;
-        b=vEVuwYff/LaUYakDqlR5yUNt/xqo91peihHBoW+W9l89o+cxB7kMhG0IvPPB2KZaGf
-         lPATVhZcqzuxd+kCLuhoe9RUJyo7kILgbgmnI8LpAn39ugzkUMGMrbTkloVY8FfB+yJk
-         nC00H4xJptwgvcJbsdUVDnBJ8IZnqIiIs54NY+0enKa8PcRdDxI/31zMV2YwKhHy71Dk
-         CEChBCy8XoJmYi+mmsX7k5cXt4fV3KUzjQq+WB9iRi5w9XZP9HLP7onslCLqyw5s2I7s
-         pyWeiTh+QszgmQ6RdLHA1qraMDg7si2gyXscCR+1UraKRFUL0+dq7T8T2gFJySdnBX48
-         5Ohg==
-X-Forwarded-Encrypted: i=1; AJvYcCUernKyi2eisWzj2Oiaw3oMmU5gLoaSAVoTJaUBOwToj9UgTvd7scyj1KeGE3MZ61h2OwBo2WWtpT/mr9k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKgwR1jBpRLpTPr5hgg+ugHvM0zznfRQnBI4ORaaicpEi+35Bk
-	WgYwj9aZyEG8Ubu+wjqoFZituOyluOVIC/3o0isHz6RcE40lWir1HOnE82NAAEY=
-X-Gm-Gg: ASbGncsaNR2uEL5jqm6xG4CP3EkpeH05cMxPfU3KZw5q3U/4dADpbhci4woo/gOHAO1
-	a20/LApQNzHzvWqM3Fvt1r+qkmSw74RK4ZCWWMpCYmv4Do27YRgZHsqmESHG1EsDy6ZHCKCebMo
-	aSyNMWRzhpYi2RZ0mzzC2NP3M8QCvAXmu1k8xEqQzbihnxXrak57OJyk1NgGWPWmUFK3zDkciT+
-	BXC/iKrT06QOcp78inXIfnic6C4bhB9twMhIHgS/Swv7FLovUVLfdnVdv6dPT3sUjC3IAFj0uKv
-	1dq0AUQN7aXtjCQKomfTUD2MYjh1tW/ATTYz53WS3M7sY9bUO14eDp7G/aoA7/9V/A==
-X-Google-Smtp-Source: AGHT+IEWYxKQ9QzWVT7ZqwAXeMq2j4PIhd0iSWqTf6Pa3b6xmSis2v9Yhrtwfjpn04n1UI19T4mkGQ==
-X-Received: by 2002:a05:6000:178e:b0:38f:3ee0:7026 with SMTP id ffacd0b85a97d-390cc605060mr4692130f8f.22.1740518044362;
-        Tue, 25 Feb 2025 13:14:04 -0800 (PST)
-Received: from [192.168.1.10] (host-92-26-98-202.as13285.net. [92.26.98.202])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43aba5327f0sm178165e9.9.2025.02.25.13.14.02
+        d=1e100.net; s=20230601; t=1740518089; x=1741122889;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xh2s6sLjIXbWIAOmjMi7Yyx9NKVsC0mal+LFgBmzJUY=;
+        b=OgjR5Dek9Sy5C+8OsMIKXlekV4QO3sYuXpOgfyE2bcSawj+ifWh3oLYaKBjS0vWFOc
+         Q9tEf3GNeUkqaKlGJGf2pAfTJGRIsMc+U7Xu0y3eKFrPxqyptOrFnwMioNbrUViNrFM4
+         OE0TcAgaD9U3pqWA7sZrVS+I91/g5nW+fzyxxQaZDMjSZdaplA3TJrpgNbMoS8b1oyLS
+         h7gsomZlJyZij/3/vBwWQfKqabL8McJw6GV6k7U+4qsSFjHFUoaW5qcgHpHaqW7BcyAA
+         11YaQY06kbQCv9/EuXTxC4R1UW2UWFy9WPK0UYfbQ4ewiWsDrPREgZQ2+2NhzOWueRtJ
+         V4eQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWlTeSKcSA1bGbChThP7B30ZJ41nkT77QjSe6WesUL0WaiRlYmYU6u+Z23i93AQX3o1P1m+YJzzIBEJzWY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpxbpJZuwjGW+731jJoq1aubG/X0n9Ujt3s21El8XG2o2EwZIS
+	FbfjHPouqT8M8cb9N9YicAh+MhJM4tVfiHCqxaBAUGQstUoJubjueUaRZkEoOCA=
+X-Gm-Gg: ASbGncsMUPo5HU0jeQVwzkHmQ4l2A9hk2+7QR7l8ZHKXW4wu9rPjRg9c82j2JyboxLJ
+	W3PMv3KnOfO0R+o62z+lXz8cI4elePmyUyQeSbFJVgNRbn4yxau9AasYu4+Q6xmpS1jkIMEpp0X
+	V1hiZYqaEG7BLn/s9BQfmwhz3K5c8RYkFvjpG/yxRjIq/H/4RSVXfGr4V/dBKKfd1/Zb8oNcTnl
+	xpBOaxPp92yUb1lZdcy8WC/GLvbSEk28IkydwcvYCrU4npMKsKXYlFrV2/juVyvMLeBMH4Q2Jpm
+	hc8OU5jx/MMvgiLy2tYYm1iI/UQi44sliQ6CIIO8ZAxOmPnGXFTws/CKJr1ZFepQHw==
+X-Google-Smtp-Source: AGHT+IFYiGdbqXZivMiTUNph/SuErSNuziRQ4+AzafOTADCcFATdduAQ55CPRDAy/XVPlsW8jn+L5Q==
+X-Received: by 2002:a92:ca0f:0:b0:3d0:1fc4:edf0 with SMTP id e9e14a558f8ab-3d3048802e7mr47557345ab.15.1740518089508;
+        Tue, 25 Feb 2025 13:14:49 -0800 (PST)
+Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d361ca210bsm4894255ab.55.2025.02.25.13.14.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2025 13:14:03 -0800 (PST)
-Message-ID: <8b82b394-3f54-437b-bd3a-7ac0eabda687@citrix.com>
-Date: Tue, 25 Feb 2025 21:14:01 +0000
+        Tue, 25 Feb 2025 13:14:48 -0800 (PST)
+Message-ID: <34666c12-d10d-49a1-8316-bdd18cf1319b@riscstar.com>
+Date: Tue, 25 Feb 2025 15:14:47 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,164 +66,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] Circumventing FineIBT Via Entrypoints
-To: Rudolf Marek <r.marek@assembler.cz>, Jann Horn <jannh@google.com>
-Cc: jmill@asu.edu, joao@overdrivepizza.com, luto@kernel.org,
- samitolvanen@google.com, "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- linux-hardening@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
- x86 maintainers <x86@kernel.org>
-References: <CAG48ez09JuZPt112nnE6N=hS6cfCLkT-iHUAmidQ-QGNGMVoBw@mail.gmail.com>
- <c46f5614-a82e-42fc-91eb-05e483a7df9c@citrix.com>
- <CAG48ez0h0wUS6y+W1HTOwN14V95gKmmFZ_2TamAX+JKTmXT=DA@mail.gmail.com>
- <1cf8d5a5-bf3e-4667-bc6a-d1b1d662d822@citrix.com>
- <e46ca730-8858-4f57-bdd0-2fd0db086500@assembler.cz>
- <fa66e2f1-4770-45f5-aa4d-1a0ebec8a912@citrix.com>
- <d50dac43-51da-4b18-9fab-214896bdc9a5@assembler.cz>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <d50dac43-51da-4b18-9fab-214896bdc9a5@assembler.cz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v4 2/4] dt-bindings: soc: spacemit: Add spacemit,k1-syscon
+To: Krzysztof Kozlowski <krzk@kernel.org>, Haylen Chu <heylenay@4d2.org>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Haylen Chu <heylenay@outlook.com>,
+ Yixun Lan <dlan@gentoo.org>, linux-riscv@lists.infradead.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Inochi Amaoto <inochiama@outlook.com>,
+ Chen Wang <unicornxdotw@foxmail.com>, Jisheng Zhang <jszhang@kernel.org>,
+ Meng Zhang <zhangmeng.kevin@linux.spacemit.com>,
+ Guodong Xu <guodong@riscstar.com>
+References: <aw2vqnz5vcccqqvrrhz5tgawj7fnzzg3tds7nnepuorit37a7r@jcj3wrs7d73h>
+ <Z6rdBhQ7s2ReOgBL@ketchup> <19e5129b-8423-4660-8e4f-8b898214d275@kernel.org>
+ <Z63T_EDvXiuRQbvb@ketchup> <2ab715bd-e26c-41bb-ac64-baa864d90414@kernel.org>
+ <Z7BTVu10EKHMqOnJ@ketchup>
+ <7c697e9a-d6d9-4672-9738-93ce3a71beb6@riscstar.com>
+ <4f7bf109-bf18-42be-971c-5d5edd9595b5@kernel.org> <Z7mrdrACFp3m-7sy@ketchup>
+ <6ea8ac17-42c8-46fa-b970-77ba89de66c4@kernel.org> <Z7xHRAFE4-QEA6PO@ketchup>
+ <976a2029-c0c0-4093-a3cd-71e1524db032@kernel.org>
+Content-Language: en-US
+From: Alex Elder <elder@riscstar.com>
+In-Reply-To: <976a2029-c0c0-4093-a3cd-71e1524db032@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 25/02/2025 8:06 pm, Rudolf Marek wrote:
-> Hi Andrew,
->
-> Dne 25. 02. 25 v 19:10 Andrew Cooper napsal(a):
->> Very cunning.  Yes it does, but the state needs to be safe to IRET back
->> to, and ...
->
-> ... And intellectually very pleasing!
->
->>> Would it work to have KERNEL_CS as last entry in the GDT table?
->>> Therefore executing SYSCALL would set the CS as usual,
->>> but the numeric value of SS selector would be larger than GDT limit?
->>
->> ... this isn't safe.  Any exception/interrupt will yield #SS when trying
->> to load an out-of-limit %ss.> i.e. a wrongly-timed NMI will take out
->> the system with a very bizarre
->> looking oops.
->
-> Hmm I was hoping that "the reader" will perform this NMI/#MC exercise :)
+On 2/25/25 2:12 AM, Krzysztof Kozlowski wrote:
+>>> They were brought here to discuss for some reason. Long discussions,
+>>> long emails, unrelated topics like hardware or different devices - all
+>>> this is not making it easier for me to understand.
+>>>
+>>> Best regards,
+>>> Krzysztof
+>> By the way, I made a summary on the hardware covered by this series in
+>> one of my earlier reply[1]. Could you please comment further on my
+>> proposal[2] according it, or pointing out anything that's unclear or
+>> missing? It will be helpful for things to improve.
+> Thanks, it looks good.
 
-As stand-in for "the reader", I'll point out that you need to add #DB to
-that list or you're in for a rude surprise when running the x86 selftests.
+Sorry about my earlier message; I hadn't reviewed the discussion
+carefully enough, and what I said didn't help.  It seems like
+Haylen is on the right track now, and I'll wait for the next
+version of the series to comment again.
 
->
-> The SYSCALL/SYSENTER startup has interrupts disabled, so it is the
-> problem of NMI/#MC
-> handler which would need deal with the normal case and attack case.
-
-Right, but in the case of the attack, regular interrupts are most likely
-enabled too.  And writing this has just caused me to realise a
-yet-more-fun case.
-
-An interrupt hitting the syscall entry path (prior to SWAPGS) will cause
-the interrupt handler's CPL check and conditional SWAPGS to do the wrong
-thing and switch onto the user GS base too.  (Prior research e.g.
-GhostRace has shown how to get an hrtimer to reliably hit an instruction
-boundary.)
-
-i.e. you'd need paranoid_entry on every vector, not just the IST ones.
-
->
-> It would need to check if it was executing that critical part of
-> syscall64 entry
-> from endbr64 to checkselector section, and if yes, the saved %ss needs
-> to be
-> "impossible" one. If it isn't -> panic.
->
-> For non-attack case it just needs to forward RIP after the check...
->
->> You can do this in a less fatal way by e.g. having in-GDT form have a
->> segment limit, but any exception/interrupt will resync the out-of-sync
->> state, and break detection.  Also it would make the segment unusable for
->> compatibility userspace, where the limit would take effect.
->
-> Yeah couldn't figure out what else could work "vice-versa" :(
->  
->> Finally, while this potentially gives us an option for SYSCALL and maybe
->> SYSENTER, it doesn't help with any of the main IDT entrypoints which can
->> also be attacked.
->
-> I see, sorry I wasn't aware of this. But if I recall correctly only
-> "paranoid"
-> IDT entries do something with swapgs. But is there also some stack
-> pivot where
-> it would depend on GS? Or is it somewhat unrelated issue, that you
-> might just
-> redirect to "any endbr64" which are IDT entrypoints?
->
-> Maybe you can share some details of how the attack would work in this
-> case,
-> or point me somewhere where I can read about it.
->
-> If it is "any endbr64" case, would it work to just do "sanity check"
-> of the exception stackframe?
-
-The problem is type confusion.  Because ENDBR marks both the regular
-function callees, and the system entrypoints (256*IDT + 2*SYSCALL +
-SYSENTER), a function pointer corrupted to refer to a system entrypoint
-will pass the CET-IBT check and not yield #CP.
-
-All entrypoints then conditionally (IDT) or unconditionally
-(SYSCALL/SYSENTER) SWAPGS.  For the attack case, this switches back onto
-the user gs base.
-
-Interrupts and exceptions look at %cs in the IRET frame to judge whether
-to SWAPGS or not (and this is one of the main things that paranoid_entry
-does differently).  In the case of the attack, there's no IRET frame
-pushed on the stack and the read of %cs is out-of-bounds, most likely
-the stack frame of the function which followed the corrupt function pointer.
-
-The SYSCALL entrypoint is simply the easiest to pivot on, but all can be
-attacked in this manner.  Fixing only the SYSCALL entrypoint doesn't
-improve things much.
-
-Peter Zijlstra has added a FineIBT=paranoid mode which performs the hash
-check ahead of calling the function pointer, which ought to mitigate
-this but at even higher overhead.
-
-~Andrew
+					-Alex
