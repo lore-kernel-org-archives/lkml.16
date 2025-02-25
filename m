@@ -1,97 +1,126 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C1B256C62
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24C3256C62;
+	Tue, 25 Feb 2025 14:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740493040; cv=none; b=DMg+t7X644WyWVQT2IqpiINTIvi+2drBlynaY7Bp0/xtMzZkuyyjnp9sadKnEdwsw30QBwM2QW1c10dEuN19TCcWKfhAZ7rdYbY8AS2Bt7uGFTzYnXqUnr3qj69gvdvgr3DlY2w1kt3kaDWS3i9Q+3tNIE+lwsF+1czPtBFD+T8=
+	t=1740493045; cv=none; b=hfpVhLTum841mlS1t5BFqv1JgayTWr5xG/9sniUqzdrKp60bbObpHENjNr+ghf/y0ajPuMWwV7XLJlU7K3tWmo0JKJLkcajDaI4B0Tz9A4gC+sf+qdjEv651Wh7E3ivzP+JlCp2vpEbP1GjA6Ndj4dsdbNwcRT/Wlz4a1SUrdj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740493040; c=relaxed/simple;
-	bh=OBXcVx5bNTD6D2IRnummVu9gH/H+dTrk0ExjvPTnOBs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c/1P4PsLV/wPP7Dn7pIAApLOuJ+m1NfUhTEWrABasJU8M5RPi+q8SRsO5oUUn59NRtka8Kd+a3IU2wTzoeHAh18I90NCICewkEo1fqqceEB4doBIft+bepm4W1sqgs/1jzUnE9Qe9RrfwhhdCJAoeJTetTyf/ZFs2Y/hzjhyCFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=EGgnJIZ6; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1740493045; c=relaxed/simple;
+	bh=b/ETh82ccROWlFBnVJoGXaUDJ3XwJUdAkS0sAfZEHpA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K/HIz0ydc/DJDWZpOlwribjzGU3nLOQ8xq2Eo2Zw55V3curdTDNYIQjiWNHxgPT1SV+eaF7/XZ3+2PuBT3zyD+2PMVWLUK59t1DuvluUzs4d5PdTvzk2DgmtLccLV4sYf58BplE7nhaJSCud5e7wxVQuTladYx1EOvQM87N0s/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hGy97bFZ; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="EGgnJIZ6"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7be49f6b331so547740385a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 06:17:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1740493036; x=1741097836; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GZ7PZq9etPp3tzaQLi/WkFQh7VYqZPINYGOK+qulRlA=;
-        b=EGgnJIZ6nA+E/iu9F5c/s5s7p76ZrsVMxIEpe1eAEjzDKoWn09E55odVWUHDxJ8OaQ
-         KCOOLm4oApxiXRSkYsK1JF8INQBvG2UVNI/6iTHfd9DCfpvIEyJLYSDzegxewg5SIidW
-         5Syf/RFWiku8+CNxBsOuIGAWdbxcDsamr2tva16ASJtUSU9L82TY2E/OKJ5iA/V+s99v
-         10/r6cpbkEretFgvec+pKkdnq+17k9j6h1Yr1ddeBxI6kkiy9K7h5Jc5+2Cs2dobs44T
-         8xyYaMOuM0hLu+wpb5Nnaa678R8Bz6o29rdG4D9pBtspzMoyDz7JwR79Uvx6lkj42TSo
-         bVEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740493036; x=1741097836;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GZ7PZq9etPp3tzaQLi/WkFQh7VYqZPINYGOK+qulRlA=;
-        b=M3mlTCQ3P03SA4J2bIIVLPlLWDf+xtQPFkXwwdcYnDt7M3uv8Ct8oczWj94JsqU0Yt
-         I/SVCzEgcLaC2IsmKBbPpKDQwT0K6Te3rB+H7YCPub5VT/yNuxgyKDw/jzfDZGuv7vGJ
-         40mY1rSa8oPiumI9V3UQTfbC+NG77GJCQDwbrDEv3bZEpirbbM3oOgyc5royJUfoE0rx
-         gvsayDYLJrspscEIhqfBzr4Ovpdmj2AnFaZrJsHMo4qhgovVCYrmx4ykQmdEIiBNlF/O
-         nGSqEVIBg2qYk8aZqnEOLfXjzCF/QAZWpXJxwuuoOioTwr1euoCK1nRc/QuMYnNUiowv
-         gTew==
-X-Forwarded-Encrypted: i=1; AJvYcCXnkSdd0U/25G7WMsDnDK6krMyVCnfCydz7D2bz8WKXnKvgkZXLzLNABdeeGtqIjG3Z07nbBova8TrSiwk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiTzPVJlDLIvCVNMYvLzyH0bEmFXtJVGaFLAOWDUjwBTUAbTHK
-	u+S83iGJ0pjy9NzJN6uu0dXmLK6VDx7scx6JgP7/pcY//hrok7fqr4CZ0aoMLcw=
-X-Gm-Gg: ASbGncvODhCp4VYFPO2BHWtP7QDqcGHT4rxUMJR/69xhxyLt336MUmFqW6zp++ZC3gb
-	Q+YCKsmXTWHvQz3Tvxi3HAui3yn3XAu74hIsJQ92AQnidiiM3reKq5LTOdF8n7VSg09lO0SPzfW
-	fYHOTrqR+kOPSnA8z6ZhwmKH5JuUZPKfg/5HMDdbL2CRuCUO1IbBSGb+p0gCe9rluCOOH9K+f1p
-	HDvUnA3fy5aO4oLAe5FdoBZJ7XtkA8n3M0dP4Ae1dAtq5VyYxK/BhNx6X7qtkTtyCQRrrB5l3g6
-X-Google-Smtp-Source: AGHT+IH0VQRMAlIy3yGeI1Ow4RW2x77HcwDm9aKWUZP87RBlSWNky3yZmlg6PMNUTdEURaKUdZk6eQ==
-X-Received: by 2002:a05:620a:394f:b0:7c0:acf6:3726 with SMTP id af79cd13be357-7c0cf8afa39mr2124678185a.10.1740493035845;
-        Tue, 25 Feb 2025 06:17:15 -0800 (PST)
-Received: from ziepe.ca ([130.41.10.206])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c23c33cc1csm109415285a.95.2025.02.25.06.17.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 06:17:15 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1tmvkD-00000002SwQ-2lHf;
-	Tue, 25 Feb 2025 10:17:09 -0400
-Date: Tue, 25 Feb 2025 10:17:09 -0400
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Christoph Hellwig <hch@lst.de>
-Cc: torvalds@linux-foundation.org, m.szyprowski@samsung.com,
-	robin.murphy@arm.com, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dma-mapping: update MAINTAINERS
-Message-ID: <20250225141709.GA545008@ziepe.ca>
-References: <20250224162724.349679-1-hch@lst.de>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hGy97bFZ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B6E4043425;
+	Tue, 25 Feb 2025 14:17:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740493042;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mY5FfQ+FK/SGrOr5TQi4sZrUW2dqPRYoNVeQLnDmxMg=;
+	b=hGy97bFZf5CYDUbjbclD2/EryWItej2SmmkPIpvJcm5/vQRnqwCPoMwpaE3Sc4N0n4ncS9
+	264lUdNYZvNOG1I4IIS55EMlKC5aR7vuW6jpEIIlX2+rS+vN4tszJTsidhgFuDUpbSZAZZ
+	FlPZc8RU1Fwz7Mdw4YyqsaCgTa25u0Pp8zqV2pC/nkpfeUoYxsv6/eFApt2jekCY8FIj0D
+	/zlP+xkMS5jrI0JIr6F4b2QZh8SFabLUItIcMb0JPiNH8qmGETMMbF314nj6cBzM69ZLm0
+	Kn+IQM5qQwr73LZVAm6HZsqwaXSIuNSo7kcqx4c5ZRQQKN94uFLd8/vWLXAfDg==
+Date: Tue, 25 Feb 2025 15:17:20 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, davem@davemloft.net,
+ Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Heiner
+ Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+ linux-arm-kernel@lists.infradead.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Vladimir Oltean
+ <vladimir.oltean@nxp.com>, Oleksij Rempel <o.rempel@pengutronix.de>, Simon
+ Horman <horms@kernel.org>, Romain Gantois <romain.gantois@bootlin.com>
+Subject: Re: [PATCH net-next 12/13] net: phy: phylink: Use phy_caps_lookup
+ for fixed-link configuration
+Message-ID: <20250225151720.29911b4b@fedora.home>
+In-Reply-To: <20250224150440.7fe5458d@kmaincent-XPS-13-7390>
+References: <20250222142727.894124-1-maxime.chevallier@bootlin.com>
+	<20250222142727.894124-13-maxime.chevallier@bootlin.com>
+	<20250224144431.2dca9d19@kmaincent-XPS-13-7390>
+	<Z7x52C5dE3eXWomq@shell.armlinux.org.uk>
+	<20250224150440.7fe5458d@kmaincent-XPS-13-7390>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250224162724.349679-1-hch@lst.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekudelvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegveeltddvveeuhefhvefhlefhkeevfedtgfeiudefffeiledttdfgfeeuhfeukeenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemtggtfegtmeeglehfgeemfeeiheehmegsheejgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegttgeftgemgeelfhegmeefieehheemsgehjeegpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduledprhgtphhtthhopehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhof
+ hhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomh
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Mon, Feb 24, 2025 at 08:27:21AM -0800, Christoph Hellwig wrote:
-> Marek has graciously offered to maintain the dma-mapping tree.
+On Mon, 24 Feb 2025 15:04:40 +0100
+Kory Maincent <kory.maincent@bootlin.com> wrote:
+
+> On Mon, 24 Feb 2025 13:53:28 +0000
+> "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  MAINTAINERS | 1 -
->  1 file changed, 1 deletion(-)
+> > On Mon, Feb 24, 2025 at 02:44:31PM +0100, Kory Maincent wrote:  
+> > > On Sat, 22 Feb 2025 15:27:24 +0100
+> > > Maxime Chevallier <maxime.chevallier@bootlin.com> wrote:
+> > >     
+> > > > When phylink creates a fixed-link configuration, it finds a matching
+> > > > linkmode to set as the advertised, lp_advertising and supported modes
+> > > > based on the speed and duplex of the fixed link.
+> > > > 
+> > > > Use the newly introduced phy_caps_lookup to get these modes instead of
+> > > > phy_lookup_settings(). This has the side effect that the matched
+> > > > settings and configured linkmodes may now contain several linkmodes (the
+> > > > intersection of supported linkmodes from the phylink settings and the
+> > > > linkmodes that match speed/duplex) instead of the one from
+> > > > phy_lookup_settings().    
+> > > 
+> > > ...
+> > >     
+> > > >  
+> > > >  	linkmode_set_bit(ETHTOOL_LINK_MODE_Pause_BIT, mask);
+> > > >  	linkmode_set_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT, mask);
+> > > > @@ -588,9 +591,9 @@ static int phylink_parse_fixedlink(struct phylink *pl,
+> > > >  
+> > > >  	phylink_set(pl->supported, MII);
+> > > >  
+> > > > -	if (s) {
+> > > > -		__set_bit(s->bit, pl->supported);
+> > > > -		__set_bit(s->bit, pl->link_config.lp_advertising);
+> > > > +	if (c) {
+> > > > +		linkmode_or(pl->supported, pl->supported, match);
+> > > > +		linkmode_or(pl->link_config.lp_advertising,
+> > > > pl->supported, match);    
+> > > 
+> > > You are doing the OR twice. You should use linkmode_copy() instead.    
+> > 
+> > No, we don't want to copy pl->supported to
+> > pl->link_config.lp_advertising. We just want to set the linkmode bit
+> > that corresponds to the speed/duplex in each mask.
+> > 
+> > That will result in e.g. the pause mode bits will be overwritten despite
+> > being appropriately set in the advertising mask in the code above this.  
+> 
+> Ok, so the right thing should be this:
+> linkmode_or(pl->link_config.lp_advertising, pl->link_config.lp_advertising,
+> 	    match)
 
-Thank you for all you've done. Your technical leadership on the DMA
-API over all these years was sound and appreciated. I view it as one
-of the cornerstone pieces of linux infrastructure that made a big
-impact on the project.
+That looks right indeed, I'll address that for the next iteration.
 
-To repeat Uladzislau's words: this is sad.
+Thanks for reviewing,
 
-Regards,
-Jason
+Maxime
