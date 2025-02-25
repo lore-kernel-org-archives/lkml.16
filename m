@@ -1,130 +1,63 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDAB20E6F1
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 17:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C10520E70B
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 17:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740503577; cv=none; b=Z9joDr/Rz2TKTXIWpUpx3BK8fR2igQGL/eJVUrpFb42m/wXagGVVnmVVBpr+IixeTUUiMOwezcmcQOQgk05yTamDUdRZqI6ObhizuEh4ccZwDV1yEF4C6VSt/8Bv1nGbrkt/zywyEbIv+w/ouw4OG0z1/DH5POJFb4IpH/C1Juw=
+	t=1740503578; cv=none; b=Iyf1R5lZR9kayTOK6HQ+ZZniooqaWbEqnLky+OTTWenAiyPQY3L/lNuyShCfw7T3C10hTLHQSVNMBhQ/kTFRJxtBqb2uVvfc3nRUDjuPasmyLtuBG3kDSksvRH69Nbj1kikch7VKWciyiXN3uPauCfQylY643Lq4q5lJD7e2QhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740503577; c=relaxed/simple;
-	bh=+tGGIMv06lp+ks8XnH860+Gw5Lwd/dSbE8h71qHq7Wk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=A6Ly9gcRtvS9lEEed8Nhu3irrSZwNS2/xwFxvio2AS4tKCxc5cl43gdN/AJ21ElQ0Xwu79fjOzsGXlny9bmNsXCJnf2k/raSFdGmEM8gSJ5wUPzwLblNNRs0M3b/YAgpYdbJcyNAc6IpcIVWTOpYA8BYCdixsxXmPgA3N8wHYAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W4y/yAJs; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740503578; c=relaxed/simple;
+	bh=YjEUZwsogp1BXu+m+BGgPWuKELg/DQ7OzuV1i8GVl4I=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=t1g9j2gnDlDV3NyCS9DBQ0f1VNg6GWUuRP8KsWxbTD8s/FMlgb+T0mWDp5Cuv+CZ9X84Mx2UwOuhMgsxbP2A/PH2t2ln1S+SeKQ6vxNmczqpKtUPsqLWbtdCX0ivtQgo66RmoSjTqGjvHVqn6fA9vk7Dii9JmKSFFH1zTdQpGGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FnUQt0r+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W4y/yAJs"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-220c8cf98bbso39474995ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:12:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740503575; x=1741108375; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k2A4Pw1OXG2cGpbo5o64UmI83DrJNfZOQBEMUYC4MwM=;
-        b=W4y/yAJs8GoxR5cax841iWfWeGUr5x+eZgtcIdQXKDJ/RsyKbNnlRJAaIZjd9DT66O
-         M0r9CU0QbDNJYVP8YqVIh2phMb0pkOXEPXQ7WyjgpX1VHEaKFFa7gkf4K3XcW2hl9AKd
-         dafJr/X3wBWdfkl8XxGGIXGhBbjCvmT2UfLIDrIz/cNgFumyiTMIWcKBg2qDKBSjA+qJ
-         OaNnaw5vDDAPcD26CndOHe/ksYdWXbJpGNdB+3FG1Q3gs5aIlVRmBPrgLxuKHJBBUwtc
-         7dtxGT+wQiumYMTzxjNQ9qNf3/0nf662ekf4WQdlO8WTYoqCWfVgP0vTei5sUP34r7WO
-         OtMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740503575; x=1741108375;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k2A4Pw1OXG2cGpbo5o64UmI83DrJNfZOQBEMUYC4MwM=;
-        b=JSHWVJANmW5eoScOA92cUiLzoz+0PRHIOoBH6Zu+XSiV9+oHJMjVGVLUGw8mPvdIJP
-         WOmLiXRPH7Qgqz789yvPAW7jah6bz7JGGwjF77vz157SIc0BxSbzOej/LBRAyj04r1Bd
-         /I5/wjxftU3CRP7iAi4DUyp96/WRMW8uaAAP+HNHXRsNmn9dPEwaXuhGf3MZyC3/bkl6
-         2UI9OxdqzcQb0Zlyy6fOmEgiXWQiT230WRfY2QNLjhMUBVnRflKZRbxN9GSvCcj3091w
-         AMXwWhI8uYHiooy5IeetYPcOAjIYiQunkdh/2tGGn3rhGsl/w+h1j+y6gYw2rI+b603A
-         EMew==
-X-Forwarded-Encrypted: i=1; AJvYcCWU9L/jOJC6W1xh1M+8vJtWpa/73gRzqUlC7oHvIi6Nnmrc5hUMpxK3ECGXdGjZG6E4YqelLIwqGkgIQqg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7rABI05U4mJOYAqOXn1HjdF4JAIfiMbW/Ub0hjNeJin8byqoI
-	82WwGpD0K1G3qOcrCX0eCB9EqA2kCFu6hoQebWAfBrceuLolspf/mWlNl2iirWSjiiIIDCGlBHU
-	=
-X-Gm-Gg: ASbGncuFsdq5S5NjmhDlRU4B7NZmMfmd/zCq6Be7/ZN4fcvOmvMXclnX1qWFchLAZrK
-	lwLlLJj99TqN12rrcT2/FSmey03m+DPWW7HT96zVCo6m+Rd5adaqdO5T03BRICxsu4vY5BzI+gw
-	yCur1NvuDzLpMJtyG/MqzYOKsfEupV8VUyC0EI1GE1j+ZDiTwqbc25gfc13cgH7uSr6sxX74Wda
-	jd0S0DLAbwOK8qDFX1SkMDDGJdee8RHwBk4ElPPvvcm7Bt8NtfRkGkH5Gda1yByVhGhbZuWTIHT
-	pARcQuoQfzuOyRiAhNvuS5kWIrbS2kTCmrqiQ7hx4ysBhHiU7qvKxw==
-X-Google-Smtp-Source: AGHT+IF0H7ee+2m65dVm/sTEhXmntHs5M4Jmtg3yLBFmQYpcVS+0owZYZL1XMbzJ3AMwJRYXJcklRQ==
-X-Received: by 2002:a17:902:e54e:b0:220:f1db:d96b with SMTP id d9443c01a7336-221a1148be7mr311401165ad.41.1740503575534;
-        Tue, 25 Feb 2025 09:12:55 -0800 (PST)
-Received: from localhost.localdomain ([120.60.68.212])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a095f40sm16844925ad.144.2025.02.25.09.12.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 09:12:55 -0800 (PST)
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: jingoohan1@gmail.com,
-	lpieralisi@kernel.org,
-	kw@linux.com
-Cc: robh@kernel.org,
-	bhelgaas@google.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	shradha.t@samsung.com,
-	cassel@kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 2/2] PCI: dwc-debugfs: Return -EOPNOTSUPP if an event counter is not supported
-Date: Tue, 25 Feb 2025 22:42:39 +0530
-Message-Id: <20250225171239.19574-3-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250225171239.19574-1-manivannan.sadhasivam@linaro.org>
-References: <20250225171239.19574-1-manivannan.sadhasivam@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FnUQt0r+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92410C4CEE2;
+	Tue, 25 Feb 2025 17:12:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740503577;
+	bh=YjEUZwsogp1BXu+m+BGgPWuKELg/DQ7OzuV1i8GVl4I=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=FnUQt0r+xfs9pmhrbbR3tha+iad4eITPdLohj8Vo3/L4zs48UxngSZvX5rAxiEMju
+	 9UYb4HWMpNlg29SGUreQpmbR4YxqfdYfIP9m1cmDniLJAblvMwnGSH7MDf2Etxp5le
+	 9/GxTFliE7dL7Nt36Q7+VF9ChsIlcX3Vw+77qDA59xKY0vYboShicOlS71d2gxVOy/
+	 G6lKXfR02IFyHcVd7GXH3yPAswYMifeyfGw6awRZY6kCugUTckKlNLUBZZYd4FmHuQ
+	 B30a8HiXbLTPPWCacxs32TK9phtT6oudhdQ/JZ2QAX1txRM4VVXQpNbx3qI4kyYblk
+	 qO1+wlmncsOrQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70BF6380CEE8;
+	Tue, 25 Feb 2025 17:13:30 +0000 (UTC)
+Subject: Re: [GIT PULL] RISC-V Fixes for 6.14-rc5
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <mhng-179f0b99-b80c-48dd-8eab-c795872207d0@palmer-ri-x1c9a>
+References: <mhng-179f0b99-b80c-48dd-8eab-c795872207d0@palmer-ri-x1c9a>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <mhng-179f0b99-b80c-48dd-8eab-c795872207d0@palmer-ri-x1c9a>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.14-rc5
+X-PR-Tracked-Commit-Id: 245aece3750d3692ae7a44516c1096936bded7ab
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 2a1944bff54907a4e68f167dcdf772b1e4c3ce6d
+Message-Id: <174050360902.52791.9049622524104197339.pr-tracker-bot@kernel.org>
+Date: Tue, 25 Feb 2025 17:13:29 +0000
+To: Palmer Dabbelt <palmer@rivosinc.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-If the platform doesn't support an event counter, enabling it using the
-'counter_enable' debugfs attribute currently will succeed. But reading the
-debugfs attribute back will return 'Counter Disabled'.
+The pull request you sent on Mon, 24 Feb 2025 09:46:58 -0800 (PST):
 
-This could cause confusion to the users. So while enabling an event
-counter in counter_enable_write(), always read back the status to check if
-the counter is enabled or not. If not, return -EOPNOTSUPP to let the users
-know that the event counter is not supported.
+> git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.14-rc5
 
-Fixes: 9f99c304c467 ("PCI: dwc: Add debugfs based Statistical Counter support for DWC")
-Suggested-by: Niklas Cassel <cassel@kernel.org>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- .../pci/controller/dwc/pcie-designware-debugfs.c  | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/2a1944bff54907a4e68f167dcdf772b1e4c3ce6d
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-debugfs.c b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-index 9ff4d45e80f1..1f1bd9888327 100644
---- a/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-debugfs.c
-@@ -352,6 +352,21 @@ static ssize_t counter_enable_write(struct file *file, const char __user *buf,
- 		val |= FIELD_PREP(EVENT_COUNTER_ENABLE, PER_EVENT_OFF);
- 
- 	dw_pcie_writel_dbi(pci, rinfo->ras_cap_offset + RAS_DES_EVENT_COUNTER_CTRL_REG, val);
-+
-+	/*
-+	 * While enabling the counter, always read back the status to check if
-+	 * it is enabled or not. Return error if it is not enabled to let the
-+	 * users know that the counter is not supported on the platform.
-+	 */
-+	if (enable) {
-+		val = dw_pcie_readl_dbi(pci, rinfo->ras_cap_offset +
-+					RAS_DES_EVENT_COUNTER_CTRL_REG);
-+		if (!FIELD_GET(EVENT_COUNTER_STATUS, val)) {
-+			mutex_unlock(&rinfo->reg_event_lock);
-+			return -EOPNOTSUPP;
-+		}
-+	}
-+
- 	mutex_unlock(&rinfo->reg_event_lock);
- 
- 	return count;
+Thank you!
+
 -- 
-2.25.1
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
