@@ -1,104 +1,92 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8EC268FF8;
-	Tue, 25 Feb 2025 13:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC086268FF8
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740490510; cv=none; b=YVw3xvIHFsr2GsE3B7PavYo3qQ0t/QsrhO22h+6od4VXVdTjwdRtdWhNLyipN+L/HyFloqXO2hmV5E1eO2eOcivJyfwc1Qp6yzYXPoKewJ4BSm9cH44VJHux14lvdX8fDig5YZuoH6xvR/HKhnLOzA78MLx2jjHJs7GQiR/J594=
+	t=1740490521; cv=none; b=f6+TPbFH25EKtV4B7KUd+8XWTjnqQk62N14aX9sGFjmFLkgLITP2nxILF7n/NW2/PZAzm1f6GHmADwSK6M8sCsgquEQ7jV7Y75BnQVHMzRfyr8IwABkexe3n/uzjJCG2OIMIp3GiaQTyBwUJvwoEhQ5w/X0KwiugZ0+3h1Pzyvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740490510; c=relaxed/simple;
-	bh=NuCCD+5ngYYpDJxMD83rbVh1YsowJ6J+qnTPt45lKqg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AGUy7IJv6aHD3PiEBzGmDP3yp6x6lT8yJMn4LTIbpov9SQXZq/f/h1zOnJ94PXhuI745jW2mY/D3PuSatqgZHienMBC1CRn/6VS7ecbdIUmt4MiOXcqQNPXHahQ0IqZ/v8xjMESGYHSXcopNzQ1s5KEJjzyFKKGVuHMnOlUjcRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZVGsj+OK; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740490521; c=relaxed/simple;
+	bh=vpWPcNVLmkBSbC5ElRatTgDIB7BIfVf5XaBoa9gZcN4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L2BiZTYy2U7k8FrZH1zxNZx3AKYsjGefAhRXnzNukQv6TuQON3cJI85a/+2BoClPFGwhcB+IvgeO3/z8uUd6cFS6j7ymHVgK8lN70861W8Hqh3XAw9WH2BfeRBg5lDKac/HVLluTAtvum84n3K3BqnGstDz2MZtvq6E+QseLNTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q4Ds20wG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZVGsj+OK"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43994ef3872so34328895e9.2;
-        Tue, 25 Feb 2025 05:35:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740490505; x=1741095305; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vgOIooV+vPcoX74/jt4WArZdHKkpzYkOZYv/SCbrW0s=;
-        b=ZVGsj+OK/4Qmcz1rjhYoCTOMdU8T+dkDszzYVq7AgfGpvyhcTYgEIJsEWaNwhxCZgn
-         gmb9C6VKfdhMWa+1DMJEZyhT5TSk/Rsq6nFsHi7YbL6V0S9qHjn5Soxz+YkDb8SqABKo
-         UYPpnlG0pfc4h3c6yXYFzPwcTR8BO13Lk4avZtHe/DFfXbZsln+9HyviLjW5ewZjGQPw
-         73btpAjExFRGIJ/qRedUsnkSRfl2L1Dp+S57hLm+jHURVL8icSo3v5FEH6MAcQb6ThxF
-         VzYc/9cuteOHkbYPCduV3NfdLPaJ+VTsTso/63qb7MUii02qA1djv2J1OVJklovfVjCR
-         htBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740490505; x=1741095305;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vgOIooV+vPcoX74/jt4WArZdHKkpzYkOZYv/SCbrW0s=;
-        b=PIskpif3UhCU6ceVU7ZvA1xEvyaZmpRDRjhASuplunK25bTMJ7zUSsf1yPRFvq6KGe
-         e6GObfxFatz1Nq6Ku5XNMfZpRNY8x9HoZVKT3p0LfdPIdg5Zi3uLGM8p+dj+1aQ5tVid
-         e0nr5ltLWoAafs7DzOnesXqwLEy8A0IN/kBNO6ePeU2fcv7kzLzALoL+ifsu6lvvvc0U
-         DS3k6KtWSPZrjgor4qEv8ow1HdKXbC0zZB0rCxzrUB/pT7V/49Abdcz+w49jWFW8hMFZ
-         CMbcYXbVjtNdkqy7XNOswokvkLFNqXQcennq5wQi5i0kiRIUPCcdcB+5XtOud4ChQ2If
-         95DA==
-X-Forwarded-Encrypted: i=1; AJvYcCVnHvhja22XEp/wytmigGX4la2WBbS0y2qnSBJG4ODx1FdvplisqxPwUPuS58zWYxjDaXUpWez2Mg5sWdM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6NWpJIHqF0vDV2L1pASla1F5FoDWoV0f7ZwPuOfqAIi9K38u4
-	cSVA9oh7dZ8voq9VuH5QSof+mVUZlzAqX+8aMsdbpLNowiQ+4lNl
-X-Gm-Gg: ASbGncuTHurKnTPQPKmnvxlCW/f1EgUmNaDnx+3CI/5ryOsKxXD9Y5MgdjKC5tgFbYq
-	EqAxpbYbjNxOWauwp5+RJfIU00P3xITpWqMpuxZaNOWTfHzn4RSaxddkAVMKhEpCCIhpOFaez1P
-	s++Dy5+cweKqx0lnOy2IVF8h3V4v7TYo+FNryAKxejP2f081hXDMrIvXtiOHjklWW9OmZng2tQy
-	AHanNJ6hyjWmkvFKiD8sg6AZ2I1GLW7ItKHWsvnjj2X/rOnDNkj8iTYWa1j2TMEN7WA5QFfTs5B
-	prO6uQeHEkJd6yzB8NK7bd43g6uEkobQIP9mSp0=
-X-Google-Smtp-Source: AGHT+IFgIttL2OJHMfhu55YCgKpGUWOUuIqNz+zWdPlkkQCExtB2rK2ob3PSZBKrarWdAmTUjdMOHg==
-X-Received: by 2002:a05:600c:1d94:b0:439:9a40:aa09 with SMTP id 5b1f17b1804b1-43ab3be40d7mr18392495e9.25.1740490505165;
-        Tue, 25 Feb 2025 05:35:05 -0800 (PST)
-Received: from localhost.localdomain ([2a02:c7c:6696:8300:7c3b:8f00:8531:eaa])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ab153a803sm25743175e9.12.2025.02.25.05.35.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 05:35:04 -0800 (PST)
-From: Qasim Ijaz <qasdev00@gmail.com>
-To: sumit.semwal@linaro.org,
-	benjamin.gaignard@collabora.com,
-	Brian.Starkey@arm.com,
-	jstultz@google.com,
-	tjmercier@google.com,
-	christian.koenig@amd.com
-Cc: linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dma-buf: Use max3() instead of nested max()
-Date: Tue, 25 Feb 2025 13:35:02 +0000
-Message-Id: <20250225133502.28084-1-qasdev00@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q4Ds20wG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4434AC4CEDD;
+	Tue, 25 Feb 2025 13:35:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740490521;
+	bh=vpWPcNVLmkBSbC5ElRatTgDIB7BIfVf5XaBoa9gZcN4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=q4Ds20wGywnswOj7inuhX6Uc5uieTRA9OUPyOCP3zN0n03DHgD5xjrKjQnf9dR9sP
+	 IbpDBbT7+8cGbYJDOCCxXpOmnY1XMrLpH+7dUWJ3Q6oQx1tyUzyGQQld9vdSo6OCdT
+	 PUg6nPgQwtB2LWKqLBufE8uW6t7O4U9/WJuuvQFTQ7heMtko/2Q0BC0hM2gGMvcsSW
+	 BYYSYf9XbNbEmMPeCyPJhfa4ZUwT0auOQJ0GTbN1XmvV1I2Sp84klIj1p9OW5P1LJy
+	 L9jrrUGV+o39UdYEX0oJaOOhSxjl4V55b1RPwB/pb3rGHq/xm3/3+3HjcVRfVMskU2
+	 sRp5l6R8b0HaA==
+Date: Tue, 25 Feb 2025 14:35:10 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/mtrr: Remove unnecessary strlen() in mtrr_write()
+Message-ID: <Z73HDk9p2P_Zigu2@gmail.com>
+References: <20250225131621.329699-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225131621.329699-2-thorsten.blum@linux.dev>
 
-Use the well-known max3() macro instead of nesting max()
-to find the maximum between in_size, out_size and drv_size.
 
-Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
----
- drivers/dma-buf/dma-heap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+* Thorsten Blum <thorsten.blum@linux.dev> wrote:
 
-diff --git a/drivers/dma-buf/dma-heap.c b/drivers/dma-buf/dma-heap.c
-index 3cbe87d4a464..96cb9ab5731a 100644
---- a/drivers/dma-buf/dma-heap.c
-+++ b/drivers/dma-buf/dma-heap.c
-@@ -147,7 +147,7 @@ static long dma_heap_ioctl(struct file *file, unsigned int ucmd,
- 		in_size = 0;
- 	if ((ucmd & kcmd & IOC_OUT) == 0)
- 		out_size = 0;
--	ksize = max(max(in_size, out_size), drv_size);
-+	ksize = max3(in_size, out_size, drv_size);
- 
- 	/* If necessary, allocate buffer for ioctl argument */
- 	if (ksize > sizeof(stack_kdata)) {
--- 
-2.39.5
+> The local variable length already holds the string length after calling
+> strncpy_from_user(). Using another local variable linlen and calling
+> strlen() is therefore unnecessary and can be removed. Remove linlen
+> and strlen() and use length instead.
+> 
+> Compile-tested only.
+> 
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>  arch/x86/kernel/cpu/mtrr/if.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/mtrr/if.c b/arch/x86/kernel/cpu/mtrr/if.c
+> index a5c506f6da7f..4049235b1bfe 100644
+> --- a/arch/x86/kernel/cpu/mtrr/if.c
+> +++ b/arch/x86/kernel/cpu/mtrr/if.c
+> @@ -99,7 +99,6 @@ mtrr_write(struct file *file, const char __user *buf, size_t len, loff_t * ppos)
+>  	char *ptr;
+>  	char line[LINE_SIZE];
+>  	int length;
+> -	size_t linelen;
+>  
+>  	memset(line, 0, LINE_SIZE);
+>  
+> @@ -108,9 +107,8 @@ mtrr_write(struct file *file, const char __user *buf, size_t len, loff_t * ppos)
+>  	if (length < 0)
+>  		return length;
+>  
+> -	linelen = strlen(line);
+> -	ptr = line + linelen - 1;
+> -	if (linelen && *ptr == '\n')
+> +	ptr = line + length - 1;
+> +	if (length && *ptr == '\n')
+>  		*ptr = '\0';
 
+I see no corner-case analysis in the changelog about what may happen if 
+the copy fails partially.
+
+Thanks,
+
+	Ingo
