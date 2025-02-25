@@ -1,56 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A4D266B62;
-	Tue, 25 Feb 2025 10:23:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F238F4A;
+	Tue, 25 Feb 2025 10:24:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740479024; cv=none; b=R7mXsi1WmoubIqdpWM0zAOR2b901IhnVX0tMyRDG55GqsegpbVX5+QpN8qbGu3lrRpI/DvMZfpDT0jE7292jWI5DipdSvVYVKBrAjUr5o+z6ljy2QLcAQYXHKxEttKRmO1WRCFKSztTwCFSjm0h2MU5w20DceheSVHj8jZsY2ak=
+	t=1740479053; cv=none; b=cWQFnJvPYVNGb12It5eyzRQ/1ms3taqTYWd4wizM78Pj/E7U2FGn2lKqigS7DkVXbskkzGgsDGr94+Yv/Y4pjb2ScDz2g6tYYhGmlwLJUumrDuLp6GxIQqtKWnuvuoDJ9JI/UWHM/oi7jI5tpGR2wexeQlCSjvkGb9pRDkCH18Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740479024; c=relaxed/simple;
-	bh=OL7+WhfqMOlCT5NqZZrkzMvgJrl1fo1sSNbR/WMWItM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=NoOv9x/UW7hE8ptCB26fj0NMMk/1r4VinNUNlaR2RSwu6zd2kSB0KiE4qijY0yofY9X//9OSTdwA7FaaN8450ZOGt7cz4a1+YpIv+ZgoPzSgkMhCPB2jnKjlubTrUBAHTaRAp2pORCuM0r/W1HsKZBrHw8JomY/IV+1lHR7K8Fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VA+Re3qo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740479053; c=relaxed/simple;
+	bh=6h84qLfGwbImfITzfTzkYlb6/rJQLyKiI2OtAkuKs38=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ik6b8VcklNyVlNNtbIiPOC2XTQVUqMwZzpor/HfG938MokR2hnwYbpvk+VmbYFglCYQfA1wXVRz/4FJjRfVEaqxJslwhMlA81GJoY1CkPGIe1uLHPQk1Jv5b8WEcpsmSXFn5hW9SStyndpn37rtmXiFctyHWB9OQwIn+GlfiKZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=n0J+ghyw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VA+Re3qo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D86CBC4CEDD;
-	Tue, 25 Feb 2025 10:23:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740479023;
-	bh=OL7+WhfqMOlCT5NqZZrkzMvgJrl1fo1sSNbR/WMWItM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=VA+Re3qoylvKvbXFzQkmRV9ABh85iVOXJub7z4pDJrhRZKI02nzLKpC0uTXFu4LMB
-	 /hB8zIW+EKnR03s6TiKoNzE7TwW6mSrZfs4TnLg2s9DACupBAna/Mc2NlUzYUDPk7i
-	 KRP+LjahDFczzI3mFxrX/YdUXNWwZf0558obPR/XL2WVsT6yj6K3tyyk3t6koeACdb
-	 nQnskVCEXPLRKnIEWQASvJj/Zmre9YYpu8z3TgN+tVWIeEgwgraNVrXU2uc5hHji5u
-	 yGJaFP1yJd1DUkkkrvkiG6ReScTr/14o+umXrzA1UK82R57hQg/9Zazmg83lAGq7Ah
-	 0rX4i/11wpDAQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Daniel Almeida" <daniel.almeida@collabora.com>
-Cc: "Danilo Krummrich" <dakr@kernel.org>,  "Miguel Ojeda"
- <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
- <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno Lossin" <benno.lossin@proton.me>,
-  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Joel Becker" <jlbec@evilplan.org>,  "Christoph Hellwig" <hch@lst.de>,
-  "Peter Zijlstra" <peterz@infradead.org>,  "Ingo Molnar"
- <mingo@redhat.com>,  "Will Deacon" <will@kernel.org>,  "Waiman Long"
- <longman@redhat.com>,  "Fiona Behrens" <me@kloenk.dev>,  "Charalampos
- Mitrodimas" <charmitro@posteo.net>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 3/4] rust: configfs: add a sample demonstrating
- configfs usage
-In-Reply-To: <CB975A56-A8D5-4615-8755-04D7B0BBBCA5@collabora.com> (Daniel
-	Almeida's message of "Tue, 25 Feb 2025 06:37:33 -0300")
-References: <20250224-configfs-v4-0-9af9b5e611f6@kernel.org>
-	<20250224-configfs-v4-3-9af9b5e611f6@kernel.org>
-	<gFsQNuXNmyVQmdawZnfoGhTe3Fu7W0K5VeoiM5tjROpKWVojf48IOHIQT0JY77AFiTPPLHk3f_gjzEGilH7vLQ==@protonmail.internalid>
-	<CB975A56-A8D5-4615-8755-04D7B0BBBCA5@collabora.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Tue, 25 Feb 2025 11:23:30 +0100
-Message-ID: <87jz9ewcf1.fsf@kernel.org>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="n0J+ghyw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9B74C4CEDD;
+	Tue, 25 Feb 2025 10:24:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1740479053;
+	bh=6h84qLfGwbImfITzfTzkYlb6/rJQLyKiI2OtAkuKs38=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n0J+ghyw53Zmv7eUA0gehh3FmrVJ1Qb0IFjnKgl5/Qjyr5h+kz7UQ8v7iVUnWW7HI
+	 nu19c2c2h09tgoSNtxWHfLlaKjn3OqMk0MUXNLAitT4k4PqNQonrKeTDPN4SjYiiWJ
+	 nE0W3Jkw5MmcUsPbal/ExLmJ3ORuSmLofw7H+pRI=
+Date: Tue, 25 Feb 2025 11:23:03 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rust: miscdevice: change how f_ops vtable is constructed
+Message-ID: <2025022523-charbroil-overtime-4e68@gregkh>
+References: <20250117-miscdevice-fops-change-v1-1-ec04b701c076@google.com>
+ <2025021926-transport-fridge-bc43@gregkh>
+ <CAH5fLggCjB0ePQvPFeTuy9m0UC_KkHa6-qU8AhQ+P8oHbAhZLA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,211 +46,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH5fLggCjB0ePQvPFeTuy9m0UC_KkHa6-qU8AhQ+P8oHbAhZLA@mail.gmail.com>
 
-"Daniel Almeida" <daniel.almeida@collabora.com> writes:
+On Tue, Feb 25, 2025 at 11:10:17AM +0100, Alice Ryhl wrote:
+> On Wed, Feb 19, 2025 at 4:58 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Fri, Jan 17, 2025 at 02:22:32PM +0000, Alice Ryhl wrote:
+> > > I was helping someone with writing a new Rust abstraction, and we were
+> > > using the miscdevice abstraction as an example. While doing this, it
+> > > became clear to me that the way I implemented the f_ops vtable is
+> > > confusing to new Rust users, and that the approach used by the block
+> > > abstractions is less confusing.
+> > >
+> > > Thus, update the miscdevice abstractions to use the same approach as
+> > > rust/kernel/block/mq/operations.rs.
+> > >
+> > > Sorry about the large diff. This changes the indentation of a large
+> > > amount of code.
+> > >
+> > > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> > > ---
+> > >  rust/kernel/miscdevice.rs | 295 ++++++++++++++++++++++------------------------
+> > >  1 file changed, 141 insertions(+), 154 deletions(-)
+> >
+> > This doesn't apply against a clean 6.14-rc2 tree, what is is made
+> > against?
+> 
+> I will rebase.
+> 
+> Are there any other miscdevice commits that have landed this cycle
+> that it might conflict with? If so, I can base it on your branch to
+> avoid such conflicts.
 
-> Hi Andreas,
->
->> On 24 Feb 2025, at 10:21, Andreas Hindborg <a.hindborg@kernel.org> wrote:
->>
->> Add a sample to the samples folder, demonstrating the intended use of the
->> rust configfs API.
->
-> nit: this is not the first time I see Rust not capitalized in this series.
+Nope, I don't see any at the moment, or in my review queue, so it should
+be fine.
 
-Will fix =F0=9F=91=8D
+thanks,
 
-[...]
-
->> +impl kernel::InPlaceModule for RustConfigfs {
->> +    fn init(_module: &'static ThisModule) -> impl PinInit<Self, Error> {
->> +        pr_info!("Rust configfs sample (init)\n");
->> +
->> +        let item_type =3D configfs_attrs! {
->> +            container: configfs::Subsystem<Configuration>,
->> +            data: Configuration,
->> +            child: Child,
->> +            attributes: [
->> +                message: 0,
->> +                bar: 1,
->> +            ],
->> +        };
->
-> As I said in the previous patch, this macro is a bit complex. Is there an=
-ything more you can do with it?
->
-> If so, it better be in this driver, because I hardly think anybody will g=
-o through the source code itself
-> to figure out. My 2c.
-
-I can add some inline comments on the usage here. Is that what you are
-thinking of?
-
->
->
->> +
->> +        try_pin_init!(Self {
->> +            config <- configfs::Subsystem::new(
->> +                c_str!("rust_configfs"), item_type, Configuration::new()
->> +            ),
->> +        })
->> +    }
->> +}
->> +
->> +#[vtable]
->> +impl configfs::GroupOperations for Configuration {
->> +    type Child =3D Child;
->> +
->> +    fn make_group(&self, name: &CStr) -> Result<impl PinInit<configfs::=
-Group<Child>, Error>> {
->> +        let tpe =3D configfs_attrs! {
->> +            container: configfs::Group<Child>,
->> +            data: Child,
->> +            child: GrandChild,
->> +            attributes: [
->> +                baz: 0,
->> +            ],
->> +        };
->> +
->> +        Ok(configfs::Group::new(name.try_into()?, tpe, Child::new()))
->> +    }
->> +}
->> +
->> +#[vtable]
->> +impl configfs::AttributeOperations<0> for Configuration {
->> +    type Data =3D Configuration;
->> +
->> +    fn show(container: &Configuration, page: &mut [u8; PAGE_SIZE]) -> R=
-esult<usize> {
->> +        pr_info!("Show message\n");
->> +        let data =3D container.message;
->> +        page[0..data.len()].copy_from_slice(data);
->> +        Ok(data.len())
->> +    }
->> +}
->> +
->> +#[vtable]
->> +impl configfs::AttributeOperations<1> for Configuration {
->> +    type Data =3D Configuration;
->> +
->> +    fn show(container: &Configuration, page: &mut [u8; PAGE_SIZE]) -> R=
-esult<usize> {
->> +        pr_info!("Show bar\n");
->> +        let guard =3D container.bar.lock();
->> +        let data =3D guard.0.as_slice();
->> +        let len =3D guard.1;
->> +        page[0..len].copy_from_slice(&data[0..len]);
->> +        Ok(len)
->> +    }
->> +
->> +    fn store(container: &Configuration, page: &[u8]) -> Result {
->> +        pr_info!("Store bar\n");
->> +        let mut guard =3D container.bar.lock();
->> +        guard.0[0..page.len()].copy_from_slice(page);
->> +        guard.1 =3D page.len();
->> +        Ok(())
->> +    }
->> +}
->> +
->> +#[pin_data]
->> +struct Child {}
->
-> nit: you don=E2=80=99t need the braces here
-
-Can't do that. The `pin_data` macro won't eat it. I'll add a comment.
-
->
->> +
->> +impl Child {
->> +    fn new() -> impl PinInit<Self, Error> {
->> +        try_pin_init!(Self {})
->> +    }
->> +}
->> +
->> +#[vtable]
->> +impl configfs::GroupOperations for Child {
->> +    type Child =3D GrandChild;
->> +
->> +    fn make_group(&self, name: &CStr) -> Result<impl PinInit<configfs::=
-Group<GrandChild>, Error>> {
->> +        let tpe =3D configfs_attrs! {
->> +            container: configfs::Group<GrandChild>,
->> +            data: GrandChild,
->> +            attributes: [
->> +                gc: 0,
->> +            ],
->> +        };
->> +
->> +        Ok(configfs::Group::new(
->> +            name.try_into()?,
->> +            tpe,
->> +            GrandChild::new(),
->> +        ))
->> +    }
->> +}
->> +
->> +#[vtable]
->> +impl configfs::AttributeOperations<0> for Child {
->> +    type Data =3D Child;
->> +
->> +    fn show(_container: &Child, page: &mut [u8; PAGE_SIZE]) -> Result<u=
-size> {
->> +        pr_info!("Show baz\n");
->> +        let data =3D c"Hello Baz\n".to_bytes();
->> +        page[0..data.len()].copy_from_slice(data);
->> +        Ok(data.len())
->> +    }
->> +}
->> +
->> +#[pin_data]
->> +struct GrandChild {}
->
-> =E2=80=A6nor here
-
->
->> +
->> +impl GrandChild {
->> +    fn new() -> impl PinInit<Self, Error> {
->> +        try_pin_init!(Self {})
->> +    }
->> +}
->> +
->> +#[vtable]
->> +impl configfs::AttributeOperations<0> for GrandChild {
->> +    type Data =3D GrandChild;
->> +
->> +    fn show(_container: &GrandChild, page: &mut [u8; PAGE_SIZE]) -> Res=
-ult<usize> {
->> +        pr_info!("Show baz\n");
->
-> As I said in the cover letter, perhaps this one slip through :)
-
-Yes, thank you.
-
->
->> +        let data =3D c"Hello GC\n".to_bytes();
->> +        page[0..data.len()].copy_from_slice(data);
->> +        Ok(data.len())
->> +    }
->> +}
->>
->> --
->> 2.47.0
->>
->>
->
-> I=E2=80=99m OK with this patch. It works, and it does what it=E2=80=99s s=
-upposed to do, i.e.: showcase the API.
->
-> With the =E2=80=9CShow baz=E2=80=9D nit fixed:
->
-> Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
-
-Thanks!
-
-
-Best regards,
-Andreas Hindborg
-
-
+greg k-h
