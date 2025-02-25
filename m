@@ -1,109 +1,162 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFE820F076;
-	Tue, 25 Feb 2025 14:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED4B26B0A2
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740493063; cv=none; b=hwAYexNBN1BbVOahypBP2npyFPGB4wMY4nZw16Tbn+UeN28az8kogFnkK8aqa2JTYWn8k2aptMKZiHKd0HoEBw9YQmPhbYuGgiflPeNc2w8mHD1iLR6189Sak5cmGaxGFs6Ib5dPRRffzAuoFlmFcJvxBFDRGNRO5djG/w1cqpM=
+	t=1740493066; cv=none; b=YuaEKSnVzJlSe68yWFq3D+WDKkz9KBetA5E6sga752z8vp28O4Laf/nby07CXA1jCHX3Q8uG30hZFYBzKtGR34fUngoka1hy/8XPUjYUl37HWaw4W1ReXI9FUmz0v5psRsc7VtXRyfn2aA7XgPpuv/uyt7Pg3KVXXQgqpEfFmbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740493063; c=relaxed/simple;
-	bh=Knb+Fwyr4oljGu5E97sQ1+52xmCIUT7m2z1VnduXuIQ=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=SutP91Odutkb/xf68zuJqH6WBtt7woc2nmC9D1W1PUi7wIFULY8gE5qz0MrYaaXncmpreEjX3SDy6FqQzsqM5P8kmfIr19Y0lwVqBxkxFXcXxeJlbYwU3XsfWIO+so0ojGu0KcJZbnlrgA1X+SrqZtfv1CVimU/FrI2Rji9VPkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=K5+bAzWv; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1740493066; c=relaxed/simple;
+	bh=lo3+cbd6dYJ5eg3PHIuyiAb/5v6vgRiC8GZKvU9kk0I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FAEk0TKQyrKIbsBj0LykSc0F4rqavBNkUTiR9UOQMt/Y8CYUa/tn8CODcmMPM+gtTza3oz1/TRmY6yLvwvJ9xau21MPKs48DbL2+qCJJOt30OR2LLmGWKZEK6c60rVNTOfbZh8CNL4fDK2d+kpA2wfFG/16+YBsEjjYja8NySc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KCXZaeAm; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="K5+bAzWv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1740493041; x=1741097841; i=markus.elfring@web.de;
-	bh=3PiIP1hxD1m9jYMgoVMW46TApIDu6OVW3nV0YlKWXjk=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=K5+bAzWvbJIt2/LVkJyhAchWK0YioCBbAhlBP1CIId69Dt7dcr0Xx9mCJo/FZO2F
-	 MGaWN/QWRJ2rc74NfcVQEZSOBHD5w3hVXS5MA08WdJjL0UTpfXh+N5Q9/e7s7quGK
-	 T/qMTyz8+aEEqq+xiDWnx4h3WtMXLw04nSpNvFfBvfiB60eA5V75lLz0ltceYwLGE
-	 BDnKWho1fRFDbmjm0Fl8faxVY52tCbQI7LMNhBVwM7IIpxq8jT2L9CvjLL8En9tQs
-	 /SF9yJ2aWVjzzBJpXNSF8tdz3TcjB4mB8QTJ8j86hxc4vh45K5iFDFHrWOeo5Ihyc
-	 bo+lIlSXNiDmRqL+Dw==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.36]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MqIB7-1t0gss0JxT-00gmDH; Tue, 25
- Feb 2025 15:17:21 +0100
-Message-ID: <2fabe78f-a527-494f-8c3e-f2226ecbc43d@web.de>
-Date: Tue, 25 Feb 2025 15:17:18 +0100
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KCXZaeAm"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6FD9C44280;
+	Tue, 25 Feb 2025 14:17:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1740493063;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ngybRTkc4Ma7pkH5YlW7U8BggN94fh6wjcbQZdI+hvg=;
+	b=KCXZaeAmRCKEY3wCI5qXmG3E8oXXOA7mBd4a8am1/VBIYqTIW47xfzDAwF2R661XZcqXBs
+	5o9ZP9g9TH+U6SPFZN13pcP1ze98Re+EK+2my1wYejaKE6lR1NlGaSP69jVu/kKREzRgoB
+	9my1O71pITSNMPsHCXptMGRHeBbX146zXF39dsHPcO8Sqwm2uFRX6pIEzgq2e1OXgYEUTq
+	9kNmVT8uhkAUdNOvCiqmN5xpC/UdSAMOaCxdGE73LDEC+/wtyymbewb339U58AspSO808r
+	3uZIA1ceneXIXQebaxzRCLBzRCTcnVrZhlzvc3nPs9CuvtZQ1Y6tBwpqBQZ10w==
+Date: Tue, 25 Feb 2025 15:17:40 +0100
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+To: Jim Cromie <jim.cromie@gmail.com>, linux-kernel@vger.kernel.org,
+	jbaron@akamai.com, gregkh@linuxfoundation.org, ukaszb@chromium.org
+Cc: intel-gfx-trybot@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	amd-gfx@lists.freedesktop.org, intel-gvt-dev@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org, daniel.vetter@ffwll.ch,
+	tvrtko.ursulin@linux.intel.com, jani.nikula@intel.com,
+	ville.syrjala@linux.intel.com
+Subject: Re: [PATCH 17/63] dyndbg: check DYNDBG_CLASSMAP_DEFINE args at
+ compile-time
+Message-ID: <29ca1dc2-3a21-405f-a9b6-06bea7bd75ae@bootlin.com>
+Mail-Followup-To: Jim Cromie <jim.cromie@gmail.com>,
+	linux-kernel@vger.kernel.org, jbaron@akamai.com,
+	gregkh@linuxfoundation.org, ukaszb@chromium.org,
+	intel-gfx-trybot@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+	intel-gvt-dev@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org, daniel.vetter@ffwll.ch,
+	tvrtko.ursulin@linux.intel.com, jani.nikula@intel.com,
+	ville.syrjala@linux.intel.com
+References: <20250125064619.8305-1-jim.cromie@gmail.com>
+ <20250125064619.8305-18-jim.cromie@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Qianyi Liu <liuqianyi125@gmail.com>, dri-devel@lists.freedesktop.org
-Cc: stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Danilo Krummrich <dakr@kernel.org>,
- David Airlie <airlied@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Matthew Brost <matthew.brost@intel.com>, Maxime Ripard <mripard@kernel.org>,
- Philipp Stanner <phasta@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
-References: <20250225094125.224580-1-liuqianyi125@gmail.com>
-Subject: Re: [PATCH V2] drm/sched: fix fence reference count leak
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250225094125.224580-1-liuqianyi125@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:F4njyynBkRmF31L8qtqh4Qa/sWddqfZ2QogbbKK+kIBC4X8wbf/
- pPcTQOkimUZiYhAGwREn1U46cchQMYvR/IbNYffLU7axxSAS1BinPzHsOAikpsNt5eId7uU
- D2aTkglmAebxcGRlR1czM7zLkBVsysleiCtbaqdKacmptIAhxZHqYi1/JirfBy03UvApvyQ
- go3ig5hY+sTj20lu1nsBw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:0cMJcX94lzI=;yBRbMs+81Yg541y+4Gipxuzhesp
- Q0ZRKRTW65QhBr/QLXJpf4uFoF3yQkt4fqdd0LyLvo4VDEbs682nOw2sWxMAyMpXvstXt69LE
- 2Pt2R5adkO2KUHQgBKFMFjxoqiNjJ1WSoJ+xhNYYqqYOJz0ay31+3msNjQrSlxP7cwm9hCuT6
- MCsOFwd3pNvP6qSvrwnPfOULquqLpROYbubSyPc/TK37RdFQjNIJz4I/xGgk6tyYscwwKkQmh
- ++u+3f5yqq5t/0A6qaJ1DuQ6p9Z7xoxi3HO53u77XK5YccsOkFPOrIATvFTQNUgiHg4xNLlhx
- O+0oiNIaliAdh6FhGsl6IVliZ17y1E68liV/4JpLOjOZq++t0LvFpwmHqDeny84RCUbjyvs+q
- 3jeJ6Ry5LsigisuuYF2gS3rguUV761USIOddg49AHpd92GRKSYwCfVEf6hqL5uG6dsVNWPbk+
- DRh5A+VT3zCjPnWy15T2HMAU9j2VcZM++yLzEIO8rcCFMo4JXoQzLhw5PDBsMVkvprzo4WbLV
- gVaI1keTsbB26nIMRLruwdKeWLaPcGIfsWsCNskqSpmHg0pbt0+0oeeG8BYRa3YN+8kqZ7c8j
- 8yi9TJVygeZtnLo0bBXhHqsddkwlUBbbINVm/FwH4e0vxRmhNdu5Wdv3sKM8wKoTmSiFr6uO7
- kERAQ3fh1j6kPEshCZWRzDCbwFXC8wLU4ZKZUqKGpGJsotWc80/7XhpM4GlCRpx6WfoJjWJd+
- rVRpaBW1ariusrH/2FatkHucJ2y2GQ7JRo1dLRod8JNXEB3EL4NFBY5/tkt1gAJ5VaIvRwuTc
- 78AFXQaUGUex98Itb0vj0Vw+7HaXzDWktDe9jENX/8X9uNMV6EStPyXuWHV+0bYM9ZQxDQ+jj
- CmAHUHJtclVC99JM0nI+WSAEQCqoJi86cyOc5BjBQPQy0MGyY8d1G4GpFMGJum2MY1GBo4Bgx
- wq4ZU+bOPqJ8munQzDTobx6EO3h3R30iXvePKIjc8MMxpZlQ7HYvMjXZoUsQmt+O8xhYnQYsB
- 0BA9PMnqk0fPfqWkjYUHw00vwGJd/eQzsA5KjJtowwKI2X40q5bEtoqSRiNO83so17j0XKPZY
- d0r30eTivbghLrqIeut+Nzet8rBC4GSxwUIHrXgeOyMySBK6WZRcAla+QX7F/tWxXmlrhQEuK
- /7kCeUD3BO5ELYgMQIO6BPIefc3W+gqvrrkgtpYM0D9hWHNvsY01UpTMT6yu2kZjCzuFRdJHv
- zpFoc33BYN6TteylaMOMZqgC1jRiz3796Mhk09/Qm0MjTRlsIPlHETObdy3yBa0O8IRL86BiA
- GcfRrpeAGJSF+E9cFflT02P73VFi+ocbMkgM70RlNVbjskVowYkl2jeJEfT7RbfU2dQ6a5Oib
- pCkIX2eBkIOrq1WK7NgFyr4kAj8k0cXsfIvImDu2YqB0+y+jR54nYfbamOwvxsTvKFQ7qAbVO
- TRAS1uu42yscrPScUDj4u6jJPt1M=
-
-=E2=80=A6
-> fence callback add fails.
-
-                     failed?
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250125064619.8305-18-jim.cromie@gmail.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekudelvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddttddunecuhfhrohhmpefnohhuihhsucevhhgruhhvvghtuceolhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepudeiffduffeivdejgfejheeuudekkedvjeeuffegfefghfffkeelgffgieevudejnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohhuihhsqdgthhgruhhvvghtqdhlrghpthhophdpmhgrihhlfhhrohhmpehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedugedprhgtphhtthhopehjihhmrdgtrhhomhhivgesghhmrghilhdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehjsggrrhhonhesrghkrghmrghirdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnr
+ dhorhhgpdhrtghpthhtohepuhhkrghsiigssegthhhrohhmihhumhdrohhrghdprhgtphhtthhopehinhhtvghlqdhgfhigqdhtrhihsghotheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopegurhhiqdguvghvvghlsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtoheprghmugdqghhfgieslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrgh
+X-GND-Sasl: louis.chauvet@bootlin.com
 
 
-> To fix this, we should decrement the reference count of prev when
-=E2=80=A6
 
-See also:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.14-rc4#n94
+Le 25/01/2025 à 07:45, Jim Cromie a écrit :
+> Add __DYNDBG_CLASSMAP_CHECK to implement these arg-checks at compile:
+> 	0 <= _base < 63
+> 	class_names is not empty
+> 	class_names[0] is a string
+> 	(class_names.length + _base) < 63
+> 
+> These compile-time checks will prevent several misuses; 4 such
+> examples are added to test_dynamic_debug_submod.ko, and will fail
+> compilation if -DDD_MACRO_ARGCHECK is added to cflags.
+> 
+> Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+> ---
+> - split static-asserts to __DYNDBG_CLASSMAP_CHECK
+> - move __DYNDBG_CLASSMAP_CHECK above kdoc for DYNDBG_CLASSMAP_DEFINE
+>    silences kernel-doc warnings
+> ---
+>   include/linux/dynamic_debug.h |  9 +++++++++
+>   lib/test_dynamic_debug.c      | 11 +++++++++++
+>   2 files changed, 20 insertions(+)
+> 
+> diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
+> index dc610a12b91c..2b0c943af330 100644
+> --- a/include/linux/dynamic_debug.h
+> +++ b/include/linux/dynamic_debug.h
+> @@ -99,6 +99,14 @@ struct ddebug_class_map {
+>   	enum ddebug_class_map_type map_type;
+>   };
+>   
+> +#define __DYNDBG_CLASSMAP_CHECK(_clnames, _base)			\
+> +	static_assert(((_base) >= 0 && (_base) < _DPRINTK_CLASS_DFLT),	\
+> +		      "_base must be in 0..62");			\
+> +	static_assert(ARRAY_SIZE(_clnames) > 0,				\
+> +		      "classnames array size must be > 0");		\
+> +	static_assert((ARRAY_SIZE(_clnames) + (_base)) < _DPRINTK_CLASS_DFLT, \
+> +		      "_base + classnames.length exceeds range")
+> +
+>   /**
+>    * DYNDBG_CLASSMAP_DEFINE - define debug classes used by a module.
+>    * @_var:   name of the classmap, exported for other modules coordinated use.
+> @@ -112,6 +120,7 @@ struct ddebug_class_map {
+>    */
+>   #define DYNDBG_CLASSMAP_DEFINE(_var, _mapty, _base, ...)		\
+>   	static const char *_var##_classnames[] = { __VA_ARGS__ };	\
+> +	__DYNDBG_CLASSMAP_CHECK(_var##_classnames, (_base));		\
+>   	extern struct ddebug_class_map _var;				\
+>   	struct ddebug_class_map __aligned(8) __used			\
+>   		__section("__dyndbg_classes") _var = {			\
+> diff --git a/lib/test_dynamic_debug.c b/lib/test_dynamic_debug.c
+> index 1838f62738c4..b1555b0a2bb1 100644
+> --- a/lib/test_dynamic_debug.c
+> +++ b/lib/test_dynamic_debug.c
+> @@ -123,8 +123,19 @@ DYNDBG_CLASSMAP_PARAM(level_num, p);
+>   DYNDBG_CLASSMAP_USE(map_disjoint_bits);
+>   DYNDBG_CLASSMAP_USE(map_level_num);
+>   
+> +#if defined(DD_MACRO_ARGCHECK)
+> +/*
+> + * Exersize compile-time arg-checks in DYNDBG_CLASSMAP_DEFINE.
+> + * These will break compilation.
+> + */
+> +DYNDBG_CLASSMAP_DEFINE(fail_base_neg, 0, -1, "NEGATIVE_BASE_ARG");
+> +DYNDBG_CLASSMAP_DEFINE(fail_base_big, 0, 100, "TOOBIG_BASE_ARG");
+> +DYNDBG_CLASSMAP_DEFINE(fail_str_type, 0, 0, 1 /* not a string */);
+> +DYNDBG_CLASSMAP_DEFINE(fail_emptyclass, 0, 0 /* ,empty */);
 
+Hi Jim,
 
-> v2:
+This test is nice, but can we move it in the *_submod.c directly? They 
+don't need anything from this file.
 
-Patch version descriptions may be specified behind the marker line.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.14-rc4#n763
+Tested-by: Louis Chauvet <louis.chauvet@bootlin.com>
 
-Regards,
-Markus
+Thanks,
+Louis Chauvet
+
+>   #endif
+>   
+> +#endif /* TEST_DYNAMIC_DEBUG_SUBMOD */
+> +
+>   /* stand-in for all pr_debug etc */
+>   #define prdbg(SYM) __pr_debug_cls(SYM, #SYM " msg\n")
+>   
+
+-- 
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
