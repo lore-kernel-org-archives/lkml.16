@@ -1,72 +1,80 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B03D26A1BD
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:52:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA093596D
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740491564; cv=none; b=Gv5cz8+w4pLhUKPOCE3+89U6UWpe5ftIx2xaMxNQlYntKsvyqhFCPkzcg0FI+ux8mkeOiU6mLGXKFf+K1GiMp5hxxC53PCJfvw9pTzhxqRVJ5caajO5DXV+Oj/PGroJf0k2JExOZWUbjrKq2CHHoC4ZR1f2onwyKzVKQWDQOCNg=
+	t=1740491600; cv=none; b=qmDiGYBCgJnQhQiDnTqaHDjQKuGloFWqsVzF47+GOZ7tqH2aDTW3+CGDvEwqQnj+pzeNxbRjgD7bVznlQas1xfWSk23eETHIhkaJAvXT8NwsfMU4kVXFXieVIbSQ1qyKxVnd0atuWMipaP3e3pQ3e0U7K5t/lt1GlD4DHc0DaNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740491564; c=relaxed/simple;
-	bh=SG8DHOJCeuSEggx0B2RENp3Asd1fFAb7tSeGnSgTABc=;
+	s=arc-20240116; t=1740491600; c=relaxed/simple;
+	bh=dOPN6nXTok8B1BoqJyx4fV9fB7JJvaJoxOzwPjjtYYI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bQXP4Dx3WSazIfy7IjrGYNN2udp//pbPKZTQn+J31+SBFVaHPRqmJUcRrgkjqFUJQGIuW7pKbBtIdU8psZjrWu6tqEkW87UuBxehst97JAtRVyOZQS5vf/6nYIdU+1z96ebYgzFUaNnPE4uLbNnXiwg7hDKiaPJAbS3oEBKq0Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=CW4QPMex; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=UlxxaNYmYNkEIiUqbCj1aGTFlWCvaoR9nUgf+9ZfRnm/JGwOYUsJ5sAXrXpae5+U+xX1594W4+PIbP3X9DXP7xxb/diidZc6djSJ59uAzmnHygxMc+q8szGqYmwyqPYm6frQ2YwLT1AxPOzmO3cNJee7f9sslFrftQJoI4bzWaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Lg/FhHK3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=q5YnVTfP; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Lg/FhHK3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=q5YnVTfP; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="CW4QPMex"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P8KS0i001958
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:52:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	pkYjMjlyL9qlFVDtlQSmo2wWruGUfEQTSoc87Y2iaD4=; b=CW4QPMexAWZvghEj
-	3WTQxc9O/RPIZZWd24Z7nil+ysQswwuuWnSt0x2M90WkQB40r/kH6c3r32811qvZ
-	AbKGEPwqBWdt0HPVTMTqdjRh2Gzu58zif7h6U2tDaFVlJ5j8JRTK8HupbDvUhWYB
-	WjbdY4T3RCM0S+NdB3Lc/TaueuWuM5sERtdPnLLoQpVs8JXbA4jO3R+ZV6vHE+9w
-	Tpewj+sh2SyBLUZRjMZwofd4VhLNjghvUe36FiXuxA5chZoJE4GzI+4ucrrRLwJa
-	R9CwW/IsmfZak71eTCz8GonzQo/yB55hZP1xJsUhdf/gzonA784jCj6a4ZGNNou4
-	Aa91fQ==
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44y7rk0v47-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 13:52:41 +0000 (GMT)
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6e665343a70so10037936d6.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 05:52:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740491560; x=1741096360;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pkYjMjlyL9qlFVDtlQSmo2wWruGUfEQTSoc87Y2iaD4=;
-        b=OGQXj0hQRoS8LATTtZZCzXhvtckEgoXJ58bjEzT1MN2DTdwTXB9rUwfj4dAY3nJ4/f
-         QC7DbqpSfbWMfxnupHxVUbfM80xZLIqeQl+DVz0Izk2qlL0D4+Y7SxmGmVbVlqRngseg
-         EM/7IYlv/5YVfAsFlh7dJ4UkkGb6aJJD/za4FXAzolJbt3KyNCKiGc0lk96+CdI2PP/V
-         H6o70lmODCXvpBzWQNXuAaWrttt5qct5vJgkZ1+BoUpzAxVT8DY7ar/eBrOpaMLCIkg9
-         pFikNBMz05/JgRdUQRtTbxwdcr799bV7/iW3zq5LIpbCVa2q/UWmwubRrD4vCDsFRUXm
-         ss2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUEoWGi6/Kjw7IGJHB+piErn6UfFBJS8FwYO2y8eMz1R6bqRLmQUyCxsGGSXhCiXjivmYdHRrjMSursTPA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLlIXIvcAY/kAzvBX17mZEKD27s60RNtbSBRNeRol/W+UxruiM
-	ecKcjsu2vXHrdAy2L83+v+mnRgR67pdfeBSrp0QRrV3oM8q99V9V1CYeR9tkB49aC/SxfSzJjti
-	FoqWbr3EcyR17lSitj5CQ1SJeEdrnhbJeYn6gcWO8oJJ495OP2c2+Vf6OJeiK4Rk=
-X-Gm-Gg: ASbGncs29Z5LqTUJFkhOzAcaSRVXY0Ixdl68yo4ksK+Tu+TF0pAwWJTAlpfLYJibNF4
-	CQKesx2ckbLfCUs92jEg/zI3x+y6KQnVXw1tM8fV9GmA6H8F4xfKHjVPj9LC8oCA+zN1ATNbT1j
-	HwxgASH4v0RQUfndX5iBwv0DxV5eUZltk5MgLZ7qVpOR8WILE0s1E4XoftA/y234EImg9RVUvWY
-	yqhuBY5PVJ2ecaA9USNIpHz2U7zra8i/eoFxnKqeqIM/JELMYtVRk2gcwRR4fHeJbu+SloYhGWD
-	kFMAVUVklalUZNI5NhSCEC+nrsKQr6So8/5QhqiUwx18H6JpSuVhwzngEOb7/Ffy1tGgmQ==
-X-Received: by 2002:ad4:594d:0:b0:6e6:5d69:ec2f with SMTP id 6a1803df08f44-6e6ae9d2e05mr76539496d6.8.1740491559827;
-        Tue, 25 Feb 2025 05:52:39 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHdG6abw6+5nJUhZinHf+B2SwaAbatR9WjVdL2aV+/rZoPV2zlBUW+WrC4fHzaGB/EILXLE/Q==
-X-Received: by 2002:ad4:594d:0:b0:6e6:5d69:ec2f with SMTP id 6a1803df08f44-6e6ae9d2e05mr76539306d6.8.1740491559491;
-        Tue, 25 Feb 2025 05:52:39 -0800 (PST)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed20b6cfbsm144913566b.175.2025.02.25.05.52.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Feb 2025 05:52:39 -0800 (PST)
-Message-ID: <ac161039-af36-4e6c-90ea-ef858ea31e86@oss.qualcomm.com>
-Date: Tue, 25 Feb 2025 14:52:36 +0100
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Lg/FhHK3";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="q5YnVTfP";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Lg/FhHK3";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="q5YnVTfP"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1DE3721181;
+	Tue, 25 Feb 2025 13:53:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740491596; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ZR+IZ+FqsrMUdlv/qeQhFiRUd/RUOCb3H3oMKfDplb8=;
+	b=Lg/FhHK3ujrzwTlZTmJbXDETx809scMacD7XDqyIVQn02IJPyvYt2o6RJfP8+uL15c4lvK
+	gkTkwbhVIZTHngHD+L5i0HKaqCLq5WJS8tjjbx7SQ/rGATn4F6jMNXmoXQNIlM5Xt+oxf/
+	T966ZQ+ejsMciA6J1gRLjxh7AZuhA9I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740491596;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ZR+IZ+FqsrMUdlv/qeQhFiRUd/RUOCb3H3oMKfDplb8=;
+	b=q5YnVTfPy/gjtaxC0uLmRRm4XshmkjJRiCaD+CVPZbVNk0+dE0OoF55QfCYwPmTkcqfhhM
+	6NbSCRmr/wh7cLDg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740491596; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ZR+IZ+FqsrMUdlv/qeQhFiRUd/RUOCb3H3oMKfDplb8=;
+	b=Lg/FhHK3ujrzwTlZTmJbXDETx809scMacD7XDqyIVQn02IJPyvYt2o6RJfP8+uL15c4lvK
+	gkTkwbhVIZTHngHD+L5i0HKaqCLq5WJS8tjjbx7SQ/rGATn4F6jMNXmoXQNIlM5Xt+oxf/
+	T966ZQ+ejsMciA6J1gRLjxh7AZuhA9I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740491596;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ZR+IZ+FqsrMUdlv/qeQhFiRUd/RUOCb3H3oMKfDplb8=;
+	b=q5YnVTfPy/gjtaxC0uLmRRm4XshmkjJRiCaD+CVPZbVNk0+dE0OoF55QfCYwPmTkcqfhhM
+	6NbSCRmr/wh7cLDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C899C13332;
+	Tue, 25 Feb 2025 13:53:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id qY6DL0vLvWfXawAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 25 Feb 2025 13:53:15 +0000
+Message-ID: <71123020-f345-4de3-9044-ad58f8066d86@suse.de>
+Date: Tue, 25 Feb 2025 14:53:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,79 +82,152 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: qcs615: add QCrypto nodes
-To: Abhinaba Rakshit <quic_arakshit@quicinc.com>,
-        Thara Gopinath <thara.gopinath@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250224-enable-qce-for-qcs615-v1-0-e7c665347eef@quicinc.com>
- <20250224-enable-qce-for-qcs615-v1-2-e7c665347eef@quicinc.com>
+Subject: Re: [PATCH v5 2/2] drm/tiny: add driver for Apple Touch Bars in x86
+ Macs
+To: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
+Cc: Aditya Garg <gargaditya08@live.com>,
+ "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "mripard@kernel.org" <mripard@kernel.org>,
+ "airlied@gmail.com" <airlied@gmail.com>, "simona@ffwll.ch"
+ <simona@ffwll.ch>, Kerem Karabay <kekrby@gmail.com>,
+ Atharva Tiwari <evepolonium@gmail.com>, Aun-Ali Zaidi <admin@kodeit.net>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+References: <3457BF95-0E50-4B70-86DE-EE5EE95D3ACE@live.com>
+ <4D7C00B4-7B75-4715-8D37-0059B22C030D@live.com>
+ <Z72chunE_vvxtjLQ@smile.fi.intel.com>
+ <PN3PR01MB9597BF95EC490951D75748F1B8C32@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <Z72foRL3diil9icd@smile.fi.intel.com>
+ <PN3PR01MB9597B5ECF47B04E3201DD56BB8C32@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <Z72jHeCG6-ByMyhh@smile.fi.intel.com>
+ <9efdb233-2bca-4a5d-a6bc-de81fa96efb3@suse.de>
+ <Z73FSWR-DK0HxMb2@smile.fi.intel.com>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250224-enable-qce-for-qcs615-v1-2-e7c665347eef@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: 3RhAPAOAWSkdyRlf5IvgBJwW2pkQ-iof
-X-Proofpoint-ORIG-GUID: 3RhAPAOAWSkdyRlf5IvgBJwW2pkQ-iof
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_04,2025-02-25_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- phishscore=0 impostorscore=0 malwarescore=0 adultscore=0 spamscore=0
- priorityscore=1501 mlxlogscore=977 lowpriorityscore=0 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502250095
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <Z73FSWR-DK0HxMb2@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,live.com];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[live.com,linux.intel.com,kernel.org,gmail.com,ffwll.ch,kodeit.net,vger.kernel.org,lists.freedesktop.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:url,intel.com:email]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-On 24.02.2025 11:04 AM, Abhinaba Rakshit wrote:
-> Add the QCE and Crypto BAM DMA nodes.
-> 
-> Signed-off-by: Abhinaba Rakshit <quic_arakshit@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/qcs615.dtsi | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> index f4abfad474ea62dea13d05eb874530947e1e8d3e..25e98d20ec1d941f0b45cc3d94f298065c9a5566 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> @@ -1114,6 +1114,31 @@ ufs_mem_phy: phy@1d87000 {
->  			status = "disabled";
->  		};
->  
-> +		cryptobam: dma-controller@1dc4000 {
-> +			compatible = "qcom,bam-v1.7.4", "qcom,bam-v1.7.0";
-> +			reg = <0x0 0x01dc4000 0x0 0x24000>;
-> +			interrupts = <GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>;
-> +			#dma-cells = <1>;
-> +			qcom,ee = <0>;
-> +			qcom,controlled-remotely;
-> +			num-channels = <16>;
-> +			qcom,num-ees = <4>;
-> +			iommus = <&apps_smmu 0x0104 0x0011>,
-> +				 <&apps_smmu 0x0114 0x0011>;
+Hi
 
-(0x0114 & ~ 0x0011) == (0x0104 & ~0x0011), try dropping the second entry
-here and below and see if things still work
+Am 25.02.25 um 14:27 schrieb andriy.shevchenko@linux.intel.com:
+> On Tue, Feb 25, 2025 at 12:59:43PM +0100, Thomas Zimmermann wrote:
+>> Am 25.02.25 um 12:01 schrieb andriy.shevchenko@linux.intel.com:
+>>> On Tue, Feb 25, 2025 at 10:48:53AM +0000, Aditya Garg wrote:
+>>>>> On 25 Feb 2025, at 4:17 PM, andriy.shevchenko@linux.intel.com wrote:
+>>>>> On Tue, Feb 25, 2025 at 10:36:03AM +0000, Aditya Garg wrote:
+>>>>>>>> On 25 Feb 2025, at 4:03 PM, andriy.shevchenko@linux.intel.com wrote:
+>>>>>>> On Tue, Feb 25, 2025 at 10:09:42AM +0000, Aditya Garg wrote:
+>   ...
+>
+>>>>>>>> +static int appletbdrm_probe(struct usb_interface *intf,
+>>>>>>>> +                const struct usb_device_id *id)
+>>>>>>>> +{
+>>>>>>>> +    struct usb_endpoint_descriptor *bulk_in, *bulk_out;
+>>>>>>>> +    struct device *dev = &intf->dev;
+>>>>>>>> +    struct appletbdrm_device *adev;
+>>>>>>>> +    struct drm_device *drm;
+>>>>>>>> +    int ret;
+>>>>>>>> +
+>>>>>>>> +    ret = usb_find_common_endpoints(intf->cur_altsetting, &bulk_in, &bulk_out, NULL, NULL);
+>>>>>>>> +    if (ret) {
+>>>>>>>> +        drm_err(drm, "Failed to find bulk endpoints\n");
+>>>>>>> This is simply wrong (and in this case even lead to crash in some circumstances).
+>>>>>>> drm_err() may not be used here. That's my point in previous discussions.
+>>>>>>> Independently on the subsystem the ->probe() for the sake of consistency and
+>>>>>>> being informative should only rely on struct device *dev,
+>>>>>> I'm not sure how drm_err works,
+>>>>> It's a macro.
+>>>>>
+>>>>>> but struct drm_device does have a struct device *dev as well.
+>>>>> Yes, but only when it's initialized.
+>>>>>
+>>>>>> Anyways, this is something I'll leave for Thomas to reply.
+>>>>> The code above is wrong independently on his reply :-)
+>>>> I'm kinda stuck between contrasting views of 2 kernel maintainers lol,
+>>>> so I said let Thomas reply.
+>>> Sure. I also want him to clarify my question about potential drm_err_probe().
+>> These threads get a little lengthy. What is the question?
+> How drm_err_probe() can be (consistently) implemented as there are and will be
+> cases when we want to return an error code with the message and having DRM devce
+> not being available, please?
 
-> +		};
-> +
-> +		crypto: crypto@1dfa000 {
-> +			compatible = "qcom,qcs615-qce", "qcom,sm8150-qce", "qcom,qce";
-> +			reg = <0x0 0x01dfa000 0x0 0x6000>;
-> +			dmas = <&cryptobam 4>, <&cryptobam 5>;
-> +			dma-names = "rx", "tx";
-> +			iommus = <&apps_smmu 0x0104 0x0011>,
-> +				 <&apps_smmu 0x0114 0x0011>;
-> +			interconnects = <&aggre1_noc MASTER_CRYPTO QCOM_ICC_TAG_ALWAYS
-> +					&mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
+The DRM logging works with a DRM device pointer of NULL. It'll simply 
+leave out device infos.
 
-Please align the '&'s
+>
+> Also, drm_err() has a downside of not checking for deferred probe and
+> potentially leads to the noisy log floods.
 
-Konrad
+I think it should be possible to export __dev_probe_failed() [1] from 
+the core and write drm_err_probe() and drm_warn_probe() around this. The 
+output then looks like a DRM logging, but behaves like dev-based 
+logging. Note that DRM logging already is an elaborate wrapper around 
+the dev-based logging, so it will be more of the same.
+
+Best regards
+Thomas
+
+[1] 
+https://elixir.bootlin.com/linux/v6.13.4/source/drivers/base/core.c#L5008
+
+>
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
+
