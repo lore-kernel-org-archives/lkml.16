@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CC4B1A073F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D219D1A23AD
 	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 17:09:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740503372; cv=none; b=uP0V2FgHWaL7bIc0VmuKzoyqpNwd2090521hBqDo15G29VFjO+cnLijBZ1h60TSmIlhdAW8m0921yECecV/9FvynMSPy1KnlNOwgw8kHzxK23abE4ybzDa9i65qNWk/JJBvzhbvgWcXM2tQR4bNjqw0ims853ekl6lxY1Xb1UPI=
+	t=1740503374; cv=none; b=o5ljidqg65e4iQ12Itm/VeeCirUO2LjFG5mW1q6fcCtGzWpyjbYqFcFxCpKeWRjOcO+azxNdER791Ta+I/xxiR1I0QwDXFGfLpZmX9Us8FSQbO2G2xYTMdQ4GnzDCicRuDhFD9JlSghnwKwKgHhncKECIxk+8bfIeGCW0zKGMoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740503372; c=relaxed/simple;
-	bh=sOe+wXZR4BqZvyAanWB7XKCQ40k5e6zY2rFmlzubbGg=;
+	s=arc-20240116; t=1740503374; c=relaxed/simple;
+	bh=wti/elsG0RUA51ZuaoWFp0gCHmZQuf9hhQuWRGremoI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=F/KfA+wzguulEWOzphjxmbAXtXV6hUJcXKIobCc/W8ni33+uWbM6En+DHXqcWaQDcfDaQRP5ySZfO/yJYHicfBH92XsDRnwNkAaRIIlTZtBJEv5VyoaE3z7WEoS4Nv3RcC7HmPsc9AxJFm/LFovLLKtOa5PJhucwnCXAq4SOF7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UveOwL8a; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vZXPygKI; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=WmKhHrwBHjeVQR8ZL90nE8/LC9Dzr6kLsLKYD9gKrgCAd3GGJQv7ZVK6yaxHdjpIiSzw55Y5cnZcJabAgwA7DvnDPtIpOWnXtF8qkRHanlWdTeywAfaTvqNlJtYppjL4m0Ahsj3FgocpZ098i6weAzpJCBp+plNi2PEUSaB3WuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XIcfGlfL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L1Mx7pSF; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UveOwL8a";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vZXPygKI"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XIcfGlfL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L1Mx7pSF"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1740503362;
+	s=2020; t=1740503363;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aAMRbscoUAdf49hvJ3tjIaA97RO0pYHBV4A0ahIJ7q4=;
-	b=UveOwL8aN2oBbR5anr81lBR2dmCGhlzas1qbNz4by/visEz2upi688DiOod/rUw5bHrtQC
-	2zLFOZy6rRtvnxdPEpBgcEaWBgjMdp0WQCgGMVCQjDlSPr1hpAtu8NSNSadU90u7mrvC8V
-	nIEZGq3ci8OlFd0mZU1O9tB7863oqPzA9hc7kqTpkdduVVpc8ryR4lpY9FvgGRIP2rrY6a
-	sGTrbuwrHydttQCNUPz0owPJByb89gAo2PXl/Pl8EXF0RE5mbZS23Ye4iUZux8j0NE9DnZ
-	TFzPOcBStNCI5AkCNBVotT3KIDCLy4z10FdfGHZXByxTe5IQKl+ZZAqEkLoOBQ==
+	bh=NGxmewyhId8hTpegAx9z2qlG4UsFCP4k2p/HLIL5dR8=;
+	b=XIcfGlfLP7/y6ekYjUcCidr3F6yKoYKKg6oLG0KB99XmSF44mzzlTERbKvvtO1Y269QakZ
+	p9Oljcu8U6QvbnVPwglnOFLk3UGzPbBwZXDJmpma/m+70ddOP9ELwNOBFp/OQiVn4o04Dj
+	zfIk6pFcIvs5zJfj205HL2nyID8QXX6jXudwdz7LLsrM+sPSSKyt9F6bDwf0ZY9Y3UXeMO
+	7JTC6N7jYJbCD6BpWo3V7KO/z68stCTkR26g6RrET38sFC4hWDoX2GM3/iqa3TBNIIy864
+	Ixup3CRBWw4AkaSo6DHwQfyzQ85BIImO2VH9xRiCzbhR3h3CpY+BA5nJdXSRTg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1740503362;
+	s=2020e; t=1740503363;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=aAMRbscoUAdf49hvJ3tjIaA97RO0pYHBV4A0ahIJ7q4=;
-	b=vZXPygKIp5df2UDgsR6gHbxJzGKZZty2r4MBO/WRxAGe38lrtwDCqK3v0EE+c1dV2WNz+r
-	eqm0d6EKODB+7IAQ==
+	bh=NGxmewyhId8hTpegAx9z2qlG4UsFCP4k2p/HLIL5dR8=;
+	b=L1Mx7pSFLkKChNb7XCKOoCf4zEov1BRmg8bYonPVAXdx+Nm6y84AgDLLnb1Ilx57wsfvR3
+	TSRENU0m2+LtjXCw==
 To: linux-kernel@vger.kernel.org
 Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
 	Darren Hart <dvhart@infradead.org>,
@@ -50,9 +50,9 @@ Cc: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
 	Valentin Schneider <vschneid@redhat.com>,
 	Waiman Long <longman@redhat.com>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v9 06/11] futex: Decrease the waiter count before the unlock operation.
-Date: Tue, 25 Feb 2025 18:09:09 +0100
-Message-ID: <20250225170914.289358-7-bigeasy@linutronix.de>
+Subject: [PATCH v9 08/11] futex: Acquire a hash reference in futex_wait_multiple_setup().
+Date: Tue, 25 Feb 2025 18:09:11 +0100
+Message-ID: <20250225170914.289358-9-bigeasy@linutronix.de>
 In-Reply-To: <20250225170914.289358-1-bigeasy@linutronix.de>
 References: <20250225170914.289358-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -63,89 +63,121 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-To support runtime resizing of the process private hash, it's required
-to not use the obtained hash bucket once the reference count has been
-dropped. The reference will be dropped after the unlock of the hash
-bucket.
-The amount of waiters is decremented after the unlock operation. There
-is no requirement that this needs to happen after the unlock. The
-increment happens before acquiring the lock to signal early that there
-will be a waiter. The waiter can avoid blocking on the lock if it is
-known that there will be no waiter.
-There is no difference in terms of ordering if the decrement happens
-before or after the unlock.
+futex_wait_multiple_setup() changes task_struct::__state to
+!TASK_RUNNING and then enqueues on multiple futexes. Every
+futex_q_lock() acquires a reference on the global hash which is dropped
+later.
+If a rehash is in progress then the loop will block on
+mm_struct::futex_hash_bucket for the rehash to complete and this will
+lose the previously set task_struct::__state.
 
-Decrease the waiter count before the unlock operation.
+Acquire a reference on the local hash to avoiding blocking on
+mm_struct::futex_hash_bucket.
 
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- kernel/futex/core.c    | 2 +-
- kernel/futex/requeue.c | 8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ kernel/futex/core.c     | 10 ++++++++++
+ kernel/futex/futex.h    |  2 ++
+ kernel/futex/waitwake.c | 21 +++++++++++++++++++--
+ 3 files changed, 31 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-index e4e0bc7722d78..a66623524a952 100644
+index 239179e9ed9d5..b08bca2ed0342 100644
 --- a/kernel/futex/core.c
 +++ b/kernel/futex/core.c
-@@ -554,8 +554,8 @@ void futex_q_lock(struct futex_q *q, struct futex_hash_=
-bucket *hb)
- void futex_q_unlock(struct futex_hash_bucket *hb)
- 	__releases(&hb->lock)
- {
--	spin_unlock(&hb->lock);
- 	futex_hb_waiters_dec(hb);
-+	spin_unlock(&hb->lock);
+@@ -129,6 +129,11 @@ static struct futex_hash_bucket *futex_hash_private(un=
+ion futex_key *key,
+ 	return &fhb[hash & hash_mask];
  }
 =20
- void __futex_queue(struct futex_q *q, struct futex_hash_bucket *hb,
-diff --git a/kernel/futex/requeue.c b/kernel/futex/requeue.c
-index 992e3ce005c6f..023c028d2fce3 100644
---- a/kernel/futex/requeue.c
-+++ b/kernel/futex/requeue.c
-@@ -456,8 +456,8 @@ int futex_requeue(u32 __user *uaddr1, unsigned int flag=
-s1,
- 			ret =3D futex_get_value_locked(&curval, uaddr1);
++struct futex_private_hash *futex_get_private_hash(void)
++{
++	return NULL;
++}
++
+ /**
+  * futex_hash - Return the hash bucket in the global or local hash
+  * @key:	Pointer to the futex key for which the hash is calculated
+@@ -152,6 +157,11 @@ struct futex_hash_bucket *__futex_hash(union futex_key=
+ *key)
+ 	return &futex_queues[hash & (futex_hashsize - 1)];
+ }
 =20
- 			if (unlikely(ret)) {
--				double_unlock_hb(hb1, hb2);
- 				futex_hb_waiters_dec(hb2);
-+				double_unlock_hb(hb1, hb2);
++bool futex_put_private_hash(struct futex_private_hash *hb_p)
++{
++	return false;
++}
++
+ /**
+  * futex_hash_get - Get an additional reference for the local hash.
+  * @hb:		    ptr to the private local hash.
+diff --git a/kernel/futex/futex.h b/kernel/futex/futex.h
+index e6f8f2f9281aa..0a76ee6e7dc10 100644
+--- a/kernel/futex/futex.h
++++ b/kernel/futex/futex.h
+@@ -206,6 +206,8 @@ futex_setup_timer(ktime_t *time, struct hrtimer_sleeper=
+ *timeout,
+ extern struct futex_hash_bucket *__futex_hash(union futex_key *key);
+ extern void futex_hash_get(struct futex_hash_bucket *hb);
+ extern void futex_hash_put(struct futex_hash_bucket *hb);
++extern struct futex_private_hash *futex_get_private_hash(void);
++extern bool futex_put_private_hash(struct futex_private_hash *hb_p);
 =20
- 				ret =3D get_user(curval, uaddr1);
- 				if (ret)
-@@ -542,8 +542,8 @@ int futex_requeue(u32 __user *uaddr1, unsigned int flag=
-s1,
- 				 * waiter::requeue_state is correct.
- 				 */
- 			case -EFAULT:
--				double_unlock_hb(hb1, hb2);
- 				futex_hb_waiters_dec(hb2);
-+				double_unlock_hb(hb1, hb2);
- 				ret =3D fault_in_user_writeable(uaddr2);
- 				if (!ret)
- 					goto retry;
-@@ -556,8 +556,8 @@ int futex_requeue(u32 __user *uaddr1, unsigned int flag=
-s1,
- 				 *   exit to complete.
- 				 * - EAGAIN: The user space value changed.
- 				 */
--				double_unlock_hb(hb1, hb2);
- 				futex_hb_waiters_dec(hb2);
-+				double_unlock_hb(hb1, hb2);
- 				/*
- 				 * Handle the case where the owner is in the middle of
- 				 * exiting. Wait for the exit to complete otherwise
-@@ -674,8 +674,8 @@ int futex_requeue(u32 __user *uaddr1, unsigned int flag=
-s1,
- 		put_pi_state(pi_state);
+ DEFINE_CLASS(hb, struct futex_hash_bucket *,
+ 	     if (_T) futex_hash_put(_T),
+diff --git a/kernel/futex/waitwake.c b/kernel/futex/waitwake.c
+index 44034dee7a48c..67eebb5b4b212 100644
+--- a/kernel/futex/waitwake.c
++++ b/kernel/futex/waitwake.c
+@@ -385,7 +385,7 @@ int futex_unqueue_multiple(struct futex_vector *v, int =
+count)
+ }
 =20
- out_unlock:
--		double_unlock_hb(hb1, hb2);
- 		futex_hb_waiters_dec(hb2);
-+		double_unlock_hb(hb1, hb2);
- 	}
- 	wake_up_q(&wake_q);
- 	return ret ? ret : task_count;
+ /**
+- * futex_wait_multiple_setup - Prepare to wait and enqueue multiple futexes
++ * __futex_wait_multiple_setup - Prepare to wait and enqueue multiple fute=
+xes
+  * @vs:		The futex list to wait on
+  * @count:	The size of the list
+  * @woken:	Index of the last woken futex, if any. Used to notify the
+@@ -400,7 +400,7 @@ int futex_unqueue_multiple(struct futex_vector *v, int =
+count)
+  *  -  0 - Success
+  *  - <0 - -EFAULT, -EWOULDBLOCK or -EINVAL
+  */
+-int futex_wait_multiple_setup(struct futex_vector *vs, int count, int *wok=
+en)
++static int __futex_wait_multiple_setup(struct futex_vector *vs, int count,=
+ int *woken)
+ {
+ 	bool retry =3D false;
+ 	int ret, i;
+@@ -491,6 +491,23 @@ int futex_wait_multiple_setup(struct futex_vector *vs,=
+ int count, int *woken)
+ 	return 0;
+ }
+=20
++int futex_wait_multiple_setup(struct futex_vector *vs, int count, int *wok=
+en)
++{
++	struct futex_private_hash *hb_p;
++	int ret;
++
++	/*
++	 * Assume to have a private futex and acquire a reference on the private
++	 * hash to avoid blocking on mm_struct::futex_hash_bucket during rehash
++	 * after changing the task state.
++	 */
++	hb_p =3D futex_get_private_hash();
++	ret =3D __futex_wait_multiple_setup(vs, count, woken);
++	if (hb_p)
++		futex_put_private_hash(hb_p);
++	return ret;
++}
++
+ /**
+  * futex_sleep_multiple - Check sleeping conditions and sleep
+  * @vs:    List of futexes to wait for
 --=20
 2.47.2
 
