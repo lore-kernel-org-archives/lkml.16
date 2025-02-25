@@ -1,180 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71A9183CB0;
-	Tue, 25 Feb 2025 16:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1561624CD
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 16:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740499782; cv=none; b=K9rTEDZb7inbzW+vs1ZIugnwDjosOXo9RKJTvz7eUPMa+Xj/bCKBSo2QRUUnjjMDfjzR30WIu3RQFDeyBu1srZxk71tpJ8cSVJPuGhKa5tH0rWan2aQ7GwUQp0X5baqGVNejJdeBCOPqVQdnNBYAomNc10jPLNNi15hAa7na8O0=
+	t=1740499912; cv=none; b=cDoamHJQlbmmtXwbb5MLbkMkv1zmg5AVREdIrqovNVXI0V0sJEvDTT+l31TpVJ3YJ8UVJmXThMqc40+aaTp49M2z4nHku+KVcHzZ3wcLSBYpB2Z5twJ37MKRp99gEFGbEH6QC0cUW2upFmNe+CjXIlJrNuexAEpvP4l49Gnt7Ko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740499782; c=relaxed/simple;
-	bh=I20S5zLsI09uH923+Gw4yF8I4LEHCIvUKO/1coMGedA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KYtDljTosHeVTMnFnww8T0HpZSzkhujHq8DoCX4nbCQNrig8O2FO41ZEp1wd0ET1XCZg4aW5d8Sml0LxPy4PQTgBwK6MqscmVupSblpgcQfkvItNtNLVskdh5eQI38R7J/zOM+CSMpobWEnAf20fQf0exTC9IGf0+hmrlyWca18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aQepiuiJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740499912; c=relaxed/simple;
+	bh=rCByvJMOjUxh8ZzB5E/B1+AmONBCyWA+/sUB1yHUqbk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=vBElISt3kep84LHbzZqlVKz/fdGBgYHkICpEc5rp4sxAiAmy3HsfTUi5qa/iR7iOkhiCqnIvCYK8nRRBa8STe5lwpG/NEhrqE1G3I8vTSZQpB51/70eWTo/OqqkUPU7oUnKga0d7hGMq+I4UURjPO6yPH7dOoDLKQv8tRuLi0QA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=k9BnQAh1; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aQepiuiJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7965AC4CEDD;
-	Tue, 25 Feb 2025 16:09:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740499781;
-	bh=I20S5zLsI09uH923+Gw4yF8I4LEHCIvUKO/1coMGedA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aQepiuiJ+Omgulrzo81kfMVxOpMfNzcQRfXL1T88akjWoX6V1Kk1ZRyRtuZC6NVwt
-	 DB1PJJTchvpYWXsgmmtQkmPPKI56uOYi73bkWk1YP1HZd6pELL8s1MuZ9H8WGBW4SH
-	 iCTROOx4YTc8KqwLhIfZeNrQfQRGbHLaENXXDx+a5yg41ct2f/t841Y29XmZ32qBwa
-	 OyzEpRPCP3tBnQUjP3/OeAoU9iwb2b53bTht7xD72BqPKU26dOqL5OTgsnh+Ddq4Qz
-	 R9KmyqvyE9OFY0kCHmtNOp5Y+1UwcrUimbENPzYdmvbxoe/Tej9g2j8JQoTZtQfjrs
-	 iiNv/1Ga057cA==
-Date: Tue, 25 Feb 2025 17:09:35 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: Alexandre Courbot <acourbot@nvidia.com>,
-	Dave Airlie <airlied@gmail.com>, Gary Guo <gary@garyguo.net>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	paulmck@kernel.org
-Subject: Re: [RFC PATCH 0/3] gpu: nova-core: add basic timer subdevice
- implementation
-Message-ID: <Z73rP4secPlUMIoS@cassiopeiae>
-References: <20250217-nova_timer-v1-0-78c5ace2d987@nvidia.com>
- <Z7OrKX3zzjrzZdyz@pollux>
- <CAPM=9tyu84z4Xk5X0fykO3Dazby2UqRgwtN4woNKe4Z2yMyDZg@mail.gmail.com>
- <D80AK2CLL4AZ.1G6R7OBHOF08O@nvidia.com>
- <Z7xg8uArPlr2gQBU@pollux>
- <Z7xh5bEyh_MII4WV@pollux>
- <20250224184502.GA1599486@joelnvbox>
- <Z70EcwNIX0KtWy36@cassiopeiae>
- <2f062199-8d69-48a2-baa6-abb755479a16@nvidia.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="k9BnQAh1"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e0516e7a77so8921385a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 08:11:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1740499908; x=1741104708; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lwUSC8OCkUHVVAACMeGE7Ik1ANgp9jf6fyVgqusnzdY=;
+        b=k9BnQAh1Xwo2S4DrTPkb/F3Vstn3eNQfa/J/aKMjtGu0PtkUPfjMgsTtciXiBEcswC
+         URbIPvUwbw/QFwc1PwdHS5eQvMgo0fmljEAhI8Mig+1aBKrJsZ4SN3KWj45cgJZRrbWs
+         XyTbfhIyrsSWavF0cJBE4pO/ftFJ/TOcE1+50=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740499908; x=1741104708;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lwUSC8OCkUHVVAACMeGE7Ik1ANgp9jf6fyVgqusnzdY=;
+        b=t+dc9cU+gMsvfQtEDyI7hCDcMS7Npa4pB1eBpgw4Z9jfDBDTGiRbChOFp64mbLikHI
+         AuHUBOGkrTKLmv4P8FXw9hwIgu45DVtMyBqk9TcQh2c/GP/I7uheBzD5X5jMo46Dj0t5
+         g+14FSPy1o+H8TaBgEncDsnqxMXd1IFyZ4eucFBYk7o7qsnB9B7vcbxAFq2x+R5yuWWI
+         23l83V8lBI0DL7frkh9/5Vqvn/F7KCu7tuW7MtkY17Q2a/GpDXFqwQfH4v5v3KFyLYyp
+         ptVvqBEUxivZUcrVwvM6Cc99HStJP32JOsH/YxkdY+ySVVD4zZRZPldujtK+uXvrmAox
+         l5ug==
+X-Forwarded-Encrypted: i=1; AJvYcCXNIF3PrpeY+8cPvz5vVHmlKEcxmtGuhsW50BbxhJ2EqKsaG+YE8ijj16VkP0iQKAxF9dCsUt3XRoxzgbY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0uwtscastCbFwzZfvyeF86kgDYf2be9HcU535oTCQELCd/wLz
+	qKhC8Kv/xQiktIA7yVvNvVsP5ACc4Av7IRmgULrTetBv2FZrsXGF4nmG0uagG0g67jAjmZdhkLG
+	aaF/G
+X-Gm-Gg: ASbGncsR2zTlLtvEyLEmcw3IVS5gGNPK6rCPacvpXVoyzpvdLWM3wdInMa2uca1/ico
+	t5rWH3FF08q9iWJ5ogP7Iq6tluPduG1Ew4s15rFYmfNAml3J+qA5ypuQt9mchvvdrNzxR+HbjmP
+	JcrDPkQXTX490uC0NV4baaBs62MKZu+LSUF9oDPq/Z75YF+mX8xdn8judzPWdGWzIAkhagIHFai
+	7KIPkRbZQmg7ME6dXUDXz2vYnrpIyMUJyfT2P0rqoqFBz4uTdpL9fgdlY0IJdsw2t2hC79A3hq2
+	A+Xr6CjAidm9Ig32zRAID/eKmVa6yYu8Uq6OoZ06uqo32T0QJod5yI0AxHQ6x7k4bA==
+X-Google-Smtp-Source: AGHT+IF172n9G+WG7Mj1EEpvmgy+XQO5kMd8rsQa6NaftxSdjWp4xpgFEGWlXhLmz5e1rbNJ5STY3g==
+X-Received: by 2002:a05:6402:1ec9:b0:5e0:8c55:501 with SMTP id 4fb4d7f45d1cf-5e0b70cb891mr16791870a12.7.1740499908133;
+        Tue, 25 Feb 2025 08:11:48 -0800 (PST)
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e459b4b671sm1451475a12.7.2025.02.25.08.11.47
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Feb 2025 08:11:47 -0800 (PST)
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e0516e7a77so8921336a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 08:11:47 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWVfnDkqrXrnB0brsxNhmwOKycZp73nxT8B3xh8/TAOfvHR6FqSN0nGifQMsKoYSRqY6V8RyRWrf4ZW4P0=@vger.kernel.org
+X-Received: by 2002:a05:6512:1241:b0:547:6723:93b6 with SMTP id
+ 2adb3069b0e04-5483909d1d1mr6678553e87.0.1740499509419; Tue, 25 Feb 2025
+ 08:05:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2f062199-8d69-48a2-baa6-abb755479a16@nvidia.com>
+References: <20250218-aux-device-create-helper-v4-0-c3d7dfdea2e6@baylibre.com> <20250218-aux-device-create-helper-v4-3-c3d7dfdea2e6@baylibre.com>
+In-Reply-To: <20250218-aux-device-create-helper-v4-3-c3d7dfdea2e6@baylibre.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Tue, 25 Feb 2025 08:04:57 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=Vb+Wb6wJ42jUBxVVNp9P87BiqHZgoY+Tw6W3fO==FF6g@mail.gmail.com>
+X-Gm-Features: AWEUYZm3vRrajChqqVao9eJTA9wadMF2aiVVZGdKkNeW96YTlQauMsPFnVVKvC0
+Message-ID: <CAD=FV=Vb+Wb6wJ42jUBxVVNp9P87BiqHZgoY+Tw6W3fO==FF6g@mail.gmail.com>
+Subject: Re: [PATCH v4 3/8] drm/bridge: ti-sn65dsi86: use the auxiliary device
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dave Ertman <david.m.ertman@intel.com>, 
+	Ira Weiny <ira.weiny@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Danilo Krummrich <dakr@kernel.org>, 
+	Conor Dooley <conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Hans de Goede <hdegoede@redhat.com>, =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+	"Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, 
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+	Gregory CLEMENT <gregory.clement@bootlin.com>, =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Abel Vesa <abelvesa@kernel.org>, 
+	Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Kevin Hilman <khilman@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, dri-devel@lists.freedesktop.org, 
+	platform-driver-x86@vger.kernel.org, linux-mips@vger.kernel.org, 
+	linux-clk@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 25, 2025 at 10:52:41AM -0500, Joel Fernandes wrote:
-> 
-> 
-> On 2/24/2025 6:44 PM, Danilo Krummrich wrote:
-> > On Mon, Feb 24, 2025 at 01:45:02PM -0500, Joel Fernandes wrote:
-> >> Hi Danilo,
-> >>
-> >> On Mon, Feb 24, 2025 at 01:11:17PM +0100, Danilo Krummrich wrote:
-> >>> On Mon, Feb 24, 2025 at 01:07:19PM +0100, Danilo Krummrich wrote:
-> >>>> CC: Gary
-> >>>>
-> >>>> On Mon, Feb 24, 2025 at 10:40:00AM +0900, Alexandre Courbot wrote:
-> >>>>> This inability to sleep while we are accessing registers seems very
-> >>>>> constraining to me, if not dangerous. It is pretty common to have
-> >>>>> functions intermingle hardware accesses with other operations that might
-> >>>>> sleep, and this constraint means that in such cases the caller would
-> >>>>> need to perform guard lifetime management manually:
-> >>>>>
-> >>>>>   let bar_guard = bar.try_access()?;
-> >>>>>   /* do something non-sleeping with bar_guard */
-> >>>>>   drop(bar_guard);
-> >>>>>
-> >>>>>   /* do something that might sleep */
-> >>>>>
-> >>>>>   let bar_guard = bar.try_access()?;
-> >>>>>   /* do something non-sleeping with bar_guard */
-> >>>>>   drop(bar_guard);
-> >>>>>
-> >>>>>   ...
-> >>>>>
-> >>>>> Failure to drop the guard potentially introduces a race condition, which
-> >>>>> will receive no compile-time warning and potentialy not even a runtime
-> >>>>> one unless lockdep is enabled. This problem does not exist with the
-> >>>>> equivalent C code AFAICT
-> >>>
-> >>> Without klint [1] it is exactly the same as in C, where I have to remember to
-> >>> not call into something that might sleep from atomic context.
-> >>>
-> >>
-> >> Sure, but in C, a sequence of MMIO accesses don't need to be constrained to
-> >> not sleeping?
-> > 
-> > It's not that MMIO needs to be constrained to not sleeping in Rust either. It's
-> > just that the synchronization mechanism (RCU) used for the Revocable type
-> > implies that.
-> > 
-> > In C we have something that is pretty similar with drm_dev_enter() /
-> > drm_dev_exit() even though it is using SRCU instead and is specialized to DRM.
-> > 
-> > In DRM this is used to prevent accesses to device resources after the device has
-> > been unplugged.
-> 
-> Thanks a lot for the response. Might it make more sense to use SRCU then? The
-> use of RCU seems overly restrictive due to the no-sleep-while-guard-held thing.
+Hi,
 
-Allowing to hold on to the guard for too long is a bit contradictive to the goal
-of detecting hotunplug I guess.
+On Tue, Feb 18, 2025 at 11:30=E2=80=AFAM Jerome Brunet <jbrunet@baylibre.co=
+m> wrote:
+>
+> The auxiliary device creation of this driver is simple enough to
+> use the available auxiliary device creation helper.
+>
+> Use it and remove some boilerplate code.
+>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 49 +++++------------------------=
+------
+>  1 file changed, 7 insertions(+), 42 deletions(-)
 
-Besides that I don't really see why we can't just re-acquire it after we sleep?
-Rust provides good options to implement it ergonimcally I think.
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
 
-> 
-> Another colleague told me RDMA also uses SRCU for a similar purpose as well.
+I'll snooze this for a bunch of weeks and check back to see if this
+can be landed in drm-misc-next every once in a while. If you notice
+that drm-misc-next has the necessary patches before I do then feel
+free to poke me and I'll commit it.
 
-See the reasoning against SRCU from Sima [1], what's the reasoning of RDMA?
-
-[1] https://lore.kernel.org/nouveau/Z7XVfnnrRKrtQbB6@phenom.ffwll.local/
-
-> 
-> >> I am fairly new to rust, could you help elaborate more about why these MMIO
-> >> accesses need to have RevocableGuard in Rust? What problem are we trying to
-> >> solve that C has but Rust doesn't with the aid of a RCU read-side section? I
-> >> vaguely understand we are trying to "wait for an MMIO access" using
-> >> synchronize here, but it is just a guest.
-> > 
-> > Similar to the above, in Rust it's a safety constraint to prevent MMIO accesses
-> > to unplugged devices.
-> > 
-> > The exact type in Rust in this case is Devres<pci::Bar>. Within Devres, the
-> > pci::Bar is placed in a Revocable. The Revocable is revoked when the device
-> > is detached from the driver (for instance because it has been unplugged).
-> 
-> I guess the Devres concept of revoking resources on driver detach is not a rust
-> thing (even for PCI)... but correct me if I'm wrong.
-
-I'm not sure what you mean with that, can you expand a bit?
-
-> 
-> > By revoking the Revocable, the pci::Bar is dropped, which implies that it's also
-> > unmapped; a subsequent call to try_access() would fail.
-> > 
-> > But yes, if the device is unplugged while holding the RCU guard, one is on their
-> > own; that's also why keeping the critical sections short is desirable.
-> 
-> I have heard some concern around whether Rust is changing the driver model when
-> it comes to driver detach / driver remove.  Can you elaborate may be a bit about
-> how Rust changes that mechanism versus C, when it comes to that?
-
-I think that one is simple, Rust does *not* change the driver model.
-
-What makes you think so?
-
-> Ideally we
-> would not want Rust drivers to have races with user space accesses when they are
-> detached/remove. But we also don't want accesses to be non-sleepable sections
-> where this guard is held, it seems restrictive (though to your point the
-> sections are expected to be small).
-
-In the very extreme case, nothing prevents you from implementing a wrapper like:
-
-	fn my_write32(bar: &Devres<pci::Bar>, offset: usize) -> Result<u32> {
-		let bar = bar.try_access()?;
-		bar.read32(offset);
-	}
-
-Which limits the RCU read side critical section to my_write32().
-
-Similarly you can have custom functions for short sequences of I/O ops, or use
-closures. I don't understand the concern.
+-Doug
