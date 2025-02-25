@@ -1,224 +1,180 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE43210F5B
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 18:00:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF4F219D88F;
+	Tue, 25 Feb 2025 18:00:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740506403; cv=none; b=qtmV6Joxm+36tVnRz5QlNJGof3PYr4dmFv/CWY2kTDquKjTWvpa1irWURxibE2WM8DYzb9+dRB4HJh4UHH3/ZTNHrYhuPptheUL2Pplry2IUNwp21gIpAZhdHxnQEgJxJ0RfIRAHTfkGJFPW4gkgXMNgi9dE2SHS1NgJhUg76aI=
+	t=1740506452; cv=none; b=EiZM7lrjnZA4Tb74SgwrCoX5F/u8Y7l1vaztMTNRhQfGK6gd1E+SSJyIxaP9J4mEswFYPxQ1yCdeuBLA2ztMhceEqVatm8u6BIlr53aAOz97PEnzioPszv0KtpD285YRjgMOfiDLGqOBEvgbSYVNMih55oG9M+9WYepsM9zajQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740506403; c=relaxed/simple;
-	bh=ap0abf7pYKvLuYyghIBsdol1SAK7DKp7h/sxPesUTKk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=phL916LHeMan3c3WaSz98muxNcMOSs5XJjgv9vrQ3dGVp3hI3gkLixmm/BLsevxgsWCFjPg0bKRIv6vdVyNu5chE/WVeZLOrCB7VItUWiNg+GPbEhsaQHWOO5Ah8wTlp3RgoqZ6tHo7+9XbdUIUffOO9EO1yFwQqFKmvP8dw8s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AvALjABw; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740506452; c=relaxed/simple;
+	bh=HlX8DGTi9nlLo2x1LU/ru3/CQMoDi9iaqMlhlLom/Dw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QlOICuQaK27WPwRYTyrMDasTZ21EjHn65MUJc3HlrJhM/f+Mz3AzMZDJ/1Q5ZjFpXRLrr3xAe3llXuGpMTWCOCTzkdCO1tGt4n+75J3S5CqpxCeWMUewGEgzUaXRRpeB3i6K7hDDJDWqtgIJZbSGn2xpD7dhZ5eqtWoYxnStI8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AkkGLWS7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AvALjABw"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4399deda38cso36717545e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 10:00:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740506399; x=1741111199; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yGxwG+6bGnNIthEQL+F1Y0qNbK+3kLrCEEdzMCdmayU=;
-        b=AvALjABw+isMGaS9lGQqlkoBlrxI7lA5aiHyS4B0PKLqpRWpSKa+D/7H8qAkq1FpDL
-         xVbURyy0OdnpzBb2zfmiKLqe4Qi7OJuQsy0l9IRGPMkLiplH9yg3IT3H283NGqrKMSkI
-         BgNb1tub4btT90rTw1EWQqRASERKa+YvivcHtnepEad0fBz6UdyGODZ9XDN0MuOyI8Di
-         hjadgq6T6y1bFCNmkaPwYntMh9QgihP9E61lGfZZzLGhaYxJj7NazFxhA3r7Sy+0J4C+
-         Ad4osfygQuAnLa3rvMueC8zGkeYJ+UH1pZAiu+sI2U3ymkn8VcdLc+1Qe+RjYVSxOQ1n
-         6rMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740506399; x=1741111199;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yGxwG+6bGnNIthEQL+F1Y0qNbK+3kLrCEEdzMCdmayU=;
-        b=qj54j1jTnlNhN8Qv3ThUP+yyrdcCZKNUmEkPouyf/Xg4tx8/ibPpbAu6IHR5/sWuUJ
-         WIwodzE+0UAg/HF0+beUWjWsZMepUJhtLc2taHqZueiM52S5toUj6I5S7WkEfQp3VylV
-         bj5e39eClnpbGLGB3NAoT97Dzuzo+g+Ef3kAfx6D4LG4wpURZjKQDEFxi8/gB0zEriGV
-         Pxs30PTQcXmnFC3YIPxRpWdgWkPQRIY1Q+Pgxgzyxv3YLsCwyU+23C+6U4BmDeiVzk+7
-         +FZVJGiiCDGVEawVDehOS+eTJy4giqxnfB7AsrQ2AAWEJWWDYcAskYZsRrCnYHgfhx99
-         jjiw==
-X-Forwarded-Encrypted: i=1; AJvYcCW1DomXhAvaea++daTyboDCPb+DzXVeggHNnO4s0yBXPJQSHo54FLgosbzrmknCzOIcoYyf/SAnpbtHoNo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRcUt/9R8Q0e/rmjJu2iKN6yxdg+OPUMt2PBk8+lfIRpPJ2ci1
-	ypdKQaVkoIIDXB+6Ic6WacYUH72mpVCMU3GmQ/75v/fswGHuBwco
-X-Gm-Gg: ASbGncvCRFim+7UiT9NaqoGtzj2ABewf6VCpDlK0vzSXWLFv0JOvEmZpT7J58W40z0e
-	Tw94QQpXZYNhMu28TdtE/3W/31J0CseAbPCHgRyKej0apPWrNMd25wafTgc8X+KeitGTOz0rRVU
-	8bEOUD5i5DEekMiaNlwCwK61fKI8O2yWFkXavquLBI5v0qpHrcIN9lWUc8Ns8+qY/d0Zv69hMan
-	nCCrwff5UwLM4oF8EawogDXs1YTuDyxBo2TTHI17JcC0jzXGONfRlFx1I5rRzMm1Ytr25hX3pgh
-	8boM1YCL1lD2KOBVeKAXgZ5mYDHM
-X-Google-Smtp-Source: AGHT+IGqBZvURkcaxlMPmAxOYXrBfupjLCf9BWOro848BGonvQQbFRhIpMLdNCyILndFVpqQPjDTTQ==
-X-Received: by 2002:a5d:53cf:0:b0:38d:a90c:d489 with SMTP id ffacd0b85a97d-390cc6384a1mr3115400f8f.45.1740506399191;
-        Tue, 25 Feb 2025 09:59:59 -0800 (PST)
-Received: from fedora.. ([213.94.27.232])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b02f3e15sm149063655e9.22.2025.02.25.09.59.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 09:59:58 -0800 (PST)
-From: =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-To: louis.chauvet@bootlin.com
-Cc: hamohammed.sa@gmail.com,
-	simona@ffwll.ch,
-	melissa.srw@gmail.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
-Subject: [PATCH v2 16/16] drm/vkms: Allow to configure connector status via configfs
-Date: Tue, 25 Feb 2025 18:59:36 +0100
-Message-ID: <20250225175936.7223-17-jose.exposito89@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250225175936.7223-1-jose.exposito89@gmail.com>
-References: <20250225175936.7223-1-jose.exposito89@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AkkGLWS7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83C29C4CEDD;
+	Tue, 25 Feb 2025 18:00:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740506451;
+	bh=HlX8DGTi9nlLo2x1LU/ru3/CQMoDi9iaqMlhlLom/Dw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AkkGLWS7I4U/Tu8ufmRHEFa5dZlmB0zA/1VzZkqyK4uMLmiWLepcNXTZ07W9vTqC8
+	 QYyzE5opMVpatD+MjawiqGwK45AUlHwbAYPe3I9esEw2mloPUPZRYUJXDIAdk7JkE4
+	 Ydy1yYUFFBIFuSTms75YI4yz3Ynbbb+PsYLBQQ0zj0bCQAGYo+3g5JOu8bBlL+QPnv
+	 z8p65oX7D4E7apD1UlPlvA2xTZDRiNNwfq+t8wsEjn/vM562WhJMoh1NmXe8LULRM3
+	 m579cJNTcOzgbsn4pHlWcZxDffmvFC0DZPpfV+oJNobbBLz+hNO4OGooZLBEISCQ/T
+	 jFuCpsbg589Aw==
+Date: Tue, 25 Feb 2025 11:00:44 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	bpf <bpf@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Zheng Yejian <zhengyejian1@huawei.com>,
+	Martin Kelly <martin.kelly@crowdstrike.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Josh Poimboeuf <jpoimboe@redhat.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>
+Subject: Re: [for-next][PATCH 4/6] scripts/sorttable: Zero out weak functions
+ in mcount_loc table
+Message-ID: <20250225180044.GA3655100@ax162>
+References: <20250219151815.734900568@goodmis.org>
+ <20250219151904.476350486@goodmis.org>
+ <20250225025631.GA271248@ax162>
+ <20250224222833.0a9f2f4c@batman.local.home>
+ <20250225104726.5e4eed32@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225104726.5e4eed32@gandalf.local.home>
 
-When a connector is created, add a `status` file to allow to update the
-connector status to:
+On Tue, Feb 25, 2025 at 10:47:26AM -0500, Steven Rostedt wrote:
+> On Mon, 24 Feb 2025 22:28:33 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > Thanks, I'm about to go to bed soon and I'll take a look more into it tomorrow.
+> 
+> Can you try this patch (it has the clang fix too).
 
- - 1 connector_status_connected
- - 2 connector_status_disconnected
- - 3 connector_status_unknown
+Yup, that appears to fix all my issues with my initial tests.
 
-If the device is enabled, updating the status hot-plug or unplugs the
-connector.
+Tested-by: Nathan Chancellor <nathan@kernel.org>
 
-Signed-off-by: José Expósito <jose.exposito89@gmail.com>
----
- Documentation/gpu/vkms.rst            |  5 +++
- drivers/gpu/drm/vkms/vkms_configfs.c  | 46 +++++++++++++++++++++++++++
- drivers/gpu/drm/vkms/vkms_connector.c |  7 ++++
- drivers/gpu/drm/vkms/vkms_connector.h |  6 ++++
- 4 files changed, 64 insertions(+)
-
-diff --git a/Documentation/gpu/vkms.rst b/Documentation/gpu/vkms.rst
-index c551241fe873..7c54099b1dc6 100644
---- a/Documentation/gpu/vkms.rst
-+++ b/Documentation/gpu/vkms.rst
-@@ -108,6 +108,11 @@ Last but not least, create one or more connectors::
- 
-   sudo mkdir /config/vkms/my-vkms/connectors/connector0
- 
-+Connectors have 1 configurable attribute:
-+
-+- status: Connection status: 1 connected, 2 disconnected, 3 unknown (same values
-+  as those exposed by the "status" property of a connector)
-+
- To finish the configuration, link the different pipeline items::
- 
-   sudo ln -s /config/vkms/my-vkms/crtcs/crtc0 /config/vkms/my-vkms/planes/plane0/possible_crtcs
-diff --git a/drivers/gpu/drm/vkms/vkms_configfs.c b/drivers/gpu/drm/vkms/vkms_configfs.c
-index d4d36d2c8f3d..76afb0245388 100644
---- a/drivers/gpu/drm/vkms/vkms_configfs.c
-+++ b/drivers/gpu/drm/vkms/vkms_configfs.c
-@@ -7,6 +7,7 @@
- #include "vkms_drv.h"
- #include "vkms_config.h"
- #include "vkms_configfs.h"
-+#include "vkms_connector.h"
- 
- /* To avoid registering configfs more than once or unregistering on error */
- static bool is_configfs_registered;
-@@ -496,6 +497,50 @@ static const struct config_item_type encoder_group_type = {
- 	.ct_owner	= THIS_MODULE,
- };
- 
-+static ssize_t connector_status_show(struct config_item *item, char *page)
-+{
-+	struct vkms_configfs_connector *connector;
-+
-+	connector = connector_item_to_vkms_configfs_connector(item);
-+
-+	guard(mutex)(&connector->dev->lock);
-+	return sprintf(page, "%u",
-+		       vkms_config_connector_get_status(connector->config));
-+}
-+
-+static ssize_t connector_status_store(struct config_item *item,
-+				      const char *page, size_t count)
-+{
-+	struct vkms_configfs_connector *connector;
-+	enum drm_connector_status status;
-+
-+	connector = connector_item_to_vkms_configfs_connector(item);
-+
-+	if (kstrtouint(page, 10, &status))
-+		return -EINVAL;
-+
-+	if (status != connector_status_connected &&
-+	    status != connector_status_disconnected &&
-+	    status != connector_status_unknown)
-+		return -EINVAL;
-+
-+	guard(mutex)(&connector->dev->lock);
-+
-+	vkms_config_connector_set_status(connector->config, status);
-+
-+	if (connector->dev->enabled)
-+		vkms_trigger_connector_hotplug(connector->dev->config->dev);
-+
-+	return (ssize_t)count;
-+}
-+
-+CONFIGFS_ATTR(connector_, status);
-+
-+static struct configfs_attribute *connector_item_attrs[] = {
-+	&connector_attr_status,
-+	NULL,
-+};
-+
- static void connector_release(struct config_item *item)
- {
- 	struct vkms_configfs_connector *connector;
-@@ -514,6 +559,7 @@ static struct configfs_item_operations connector_item_operations = {
- };
- 
- static const struct config_item_type connector_item_type = {
-+	.ct_attrs	= connector_item_attrs,
- 	.ct_item_ops	= &connector_item_operations,
- 	.ct_owner	= THIS_MODULE,
- };
-diff --git a/drivers/gpu/drm/vkms/vkms_connector.c b/drivers/gpu/drm/vkms/vkms_connector.c
-index b03a00b5803a..ed99270c590f 100644
---- a/drivers/gpu/drm/vkms/vkms_connector.c
-+++ b/drivers/gpu/drm/vkms/vkms_connector.c
-@@ -76,3 +76,10 @@ struct vkms_connector *vkms_connector_init(struct vkms_device *vkmsdev,
- 
- 	return connector;
- }
-+
-+void vkms_trigger_connector_hotplug(struct vkms_device *vkmsdev)
-+{
-+	struct drm_device *dev = &vkmsdev->drm;
-+
-+	drm_kms_helper_hotplug_event(dev);
-+}
-diff --git a/drivers/gpu/drm/vkms/vkms_connector.h b/drivers/gpu/drm/vkms/vkms_connector.h
-index 5ab8a6d65182..7865f54a313c 100644
---- a/drivers/gpu/drm/vkms/vkms_connector.h
-+++ b/drivers/gpu/drm/vkms/vkms_connector.h
-@@ -33,4 +33,10 @@ struct vkms_connector {
- struct vkms_connector *vkms_connector_init(struct vkms_device *vkmsdev,
- 					   struct vkms_config_connector *connector_cfg);
- 
-+/**
-+ * struct vkms_device *vkmsdev() - Update the device's connectors status
-+ * @vkmsdev: VKMS device to update
-+ */
-+void vkms_trigger_connector_hotplug(struct vkms_device *vkmsdev);
-+
- #endif /* _VKMS_CONNECTOR_H_ */
--- 
-2.48.1
-
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 27c8def2139d..bec7b5dbdb3b 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -7004,7 +7004,6 @@ static int ftrace_process_locs(struct module *mod,
+>  	unsigned long count;
+>  	unsigned long *p;
+>  	unsigned long addr;
+> -	unsigned long kaslr;
+>  	unsigned long flags = 0; /* Shut up gcc */
+>  	unsigned long pages;
+>  	int ret = -ENOMEM;
+> @@ -7056,25 +7055,37 @@ static int ftrace_process_locs(struct module *mod,
+>  		ftrace_pages->next = start_pg;
+>  	}
+>  
+> -	/* For zeroed locations that were shifted for core kernel */
+> -	kaslr = !mod ? kaslr_offset() : 0;
+> -
+>  	p = start;
+>  	pg = start_pg;
+>  	while (p < end) {
+>  		unsigned long end_offset;
+> -		addr = ftrace_call_adjust(*p++);
+> +
+> +		addr = *p++;
+> +
+>  		/*
+>  		 * Some architecture linkers will pad between
+>  		 * the different mcount_loc sections of different
+>  		 * object files to satisfy alignments.
+>  		 * Skip any NULL pointers.
+>  		 */
+> -		if (!addr || addr == kaslr) {
+> +		if (!addr) {
+> +			skipped++;
+> +			continue;
+> +		}
+> +
+> +		/*
+> +		 * If this is core kernel, make sure the address is in core
+> +		 * or inittext, as weak functions get zeroed and KASLR can
+> +		 * move them to something other than zero. It just will not
+> +		 * move it to an area where kernel text is.
+> +		 */
+> +		if (!mod && !(is_kernel_text(addr) || is_kernel_inittext(addr))) {
+>  			skipped++;
+>  			continue;
+>  		}
+>  
+> +		addr = ftrace_call_adjust(addr);
+> +
+>  		end_offset = (pg->index+1) * sizeof(pg->records[0]);
+>  		if (end_offset > PAGE_SIZE << pg->order) {
+>  			/* We should have allocated enough */
+> diff --git a/scripts/sorttable.c b/scripts/sorttable.c
+> index 23c7e0e6c024..7b4b3714b1af 100644
+> --- a/scripts/sorttable.c
+> +++ b/scripts/sorttable.c
+> @@ -611,13 +611,16 @@ static int add_field(uint64_t addr, uint64_t size)
+>  	return 0;
+>  }
+>  
+> +/* Used for when mcount/fentry is before the function entry */
+> +static int before_func;
+> +
+>  /* Only return match if the address lies inside the function size */
+>  static int cmp_func_addr(const void *K, const void *A)
+>  {
+>  	uint64_t key = *(const uint64_t *)K;
+>  	const struct func_info *a = A;
+>  
+> -	if (key < a->addr)
+> +	if (key + before_func < a->addr)
+>  		return -1;
+>  	return key >= a->addr + a->size;
+>  }
+> @@ -827,9 +830,14 @@ static void *sort_mcount_loc(void *arg)
+>  		pthread_exit(m_err);
+>  	}
+>  
+> -	if (sort_reloc)
+> +	if (sort_reloc) {
+>  		count = fill_relocs(vals, size, ehdr, emloc->start_mcount_loc);
+> -	else
+> +		/* gcc may use relocs to save the addresses, but clang does not. */
+> +		if (!count) {
+> +			count = fill_addrs(vals, size, start_loc);
+> +			sort_reloc = 0;
+> +		}
+> +	} else
+>  		count = fill_addrs(vals, size, start_loc);
+>  
+>  	if (count < 0) {
+> @@ -1248,6 +1256,8 @@ static int do_file(char const *const fname, void *addr)
+>  #ifdef MCOUNT_SORT_ENABLED
+>  		sort_reloc = true;
+>  		rela_type = 0x403;
+> +		/* arm64 uses patchable function entry placing before function */
+> +		before_func = 8;
+>  #endif
+>  		/* fallthrough */
+>  	case EM_386:
