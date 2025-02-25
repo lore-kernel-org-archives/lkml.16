@@ -1,135 +1,114 @@
-Received: from out203-205-221-173.mail.qq.com (out203-205-221-173.mail.qq.com [203.205.221.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89CA2676F3
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 10:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734FB199931
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 10:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740478821; cv=none; b=NUZJyZL7fPZuMZLEH5AIvMyExbg1XsD5NgQQ2D5x75+Q7KgL/mrISzHxdM1aGaSyHfYsB/YIBvU+u1nJ9SSTElO/aKmmmFVC1aMsG3eaoWnqeRrPQrj4jNimmBHEChLo7n6nQngB+OxxIrdImkkIWIFm6voARLFj59oUWSQ9P8M=
+	t=1740478842; cv=none; b=JwmusdT488LQbuNmB9CPhoAH7Zl92CoscjbVEFdJVvSMXuXiI9qD60RFAmd5jH9zur+FNQi03Z1nVN06A3TIyqd0pz9lptrLRmOKsUEVHp7JVxUrvOZUM7LDoP1BGS5RxwBfqEfHTmOa95GbewqvZvG/qUe9bsUXmuG1ELDfuQM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740478821; c=relaxed/simple;
-	bh=HXYMQk6Q5qjstW8AzPZaBN/NxihEkseKJVA6tCZYbR8=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MAdqke32KDFtkkzHWBaGsaeyacumRf91l1TBJZvTVuc5VXi1FKZ8Y3dLJ/tnK59PkJcry69pIwmioFfHtqx0cztZw5VRKcPFdrRiYmelVA3aaGW21sG/CaGF4acf04EazwHiaLV/ucBKefIw8bQsisWVTWFTHq8PCwUcAvUzIVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=uPiS2Qb7; arc=none smtp.client-ip=203.205.221.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1740478842; c=relaxed/simple;
+	bh=3gNOUzctXpsYMZme95M0wK8S8AMUTll3AeAdeanqip8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d8AskXtXAjeb27OLH/yUfo07PX4kg+OkAdoulOsD8vAbFnXPN9y2knp05vKijff9pwKS8xBSgKlLT7Ilo24pw6sFNKeGak9JOiT4xfjovnwXx8PO/UUZcqO2QtQ7LewYhinrBPYjRreDKveLCmAdruLqq/Fb9iWaj4oO4JjjXwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FUFXCAYa; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="uPiS2Qb7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1740478505;
-	bh=WHk30TQCK6fHKAx9chiiU56jqg5Tx3OtjBK/RushLTg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=uPiS2Qb7sxppwHHjyP3VQmFdP+FLKw9fMK5Rwp6mzwUDJrq7jKf4rl1YT4JtZOkMP
-	 XzUQtZTQjej4Py5hNQVKIRFHyFzktoiIpaL24FbEwq6mwKp0SqhE0NImrFJLxfPVO2
-	 oJ1TyMQwkqxjxxwAzHKyJWlAZVKWfi7ap86tMchc=
-Received: from chenyu5-mobl2 ([118.114.56.201])
-	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
-	id 3C22FE25; Tue, 25 Feb 2025 18:15:02 +0800
-X-QQ-mid: xmsmtpt1740478502t2skedu9q
-Message-ID: <tencent_0B09A23682D4B42D38B522ECD8C0A0ACE507@qq.com>
-X-QQ-XMAILINFO: N8gUu3qZAm+43Tl3BVaECV5cnZ+uhRKH1wbR/N5ptOEz086/eWjLWnkEGyJvm1
-	 9KqYqzNJZQYh/Q8WrY5tlnq+yrms5um+7O1Pt756lW9TjwIcM8d+mTnlq5icOpbc6pANDBBxmEXb
-	 8pi/+/szoKVf8oX7TLcm+nl/fLnIgQlGKyXmfCh6po2XYlHccw2HrW75Gaf9yPPE2qE5PR6U4Njj
-	 NpyOEFzoX8ziNG6szzHeA6S1VMWiKzHKPS/c9g94uakv5stHstcmdVik9JahHQJHxpTlp58yGKgc
-	 DS3nPc+QbrP/k3kHIsQ9AK8xURVB+hK9jwyYipNTBFiIDCjGE7Oy5R8AtT/arCX10yrc3i1+7epM
-	 2V+DRj+7DDUNUAbTm21BYTZPoIWD5J52Px8UIisvSJfvz1L2WHyH7hJUqmMfwnstP5wnFaDJobW2
-	 aVfXrVYLkKfbuPTQwhOm7wKTtCtiga67iUzoq6JDpK6QVR9lb4GbrYf9zYh82sFDgIXUUy3Mcosq
-	 fQnCFGDrdOwdhn71OjB528RXYrWB64SOvxH/JDseCG+R2Uxh3NDq4VK65WXQSpksZJwdINJWeBes
-	 7KaRNLfdvsKkmOvkrleQIuVoYqWpI2TudGW/fXgQSRSCysbEqBvDq8VjMZ/0mExV9nndLvZC3AEb
-	 jeihqkR7SG+t9sSdMecRqtS3MkUhag2D4Omrr7zYyDlwT8e2EVIn/Q32d7XosPG5GkYl0TNHq9c/
-	 rNp1xgVAcIX3iqnWEc/LZn8hkZbn65f3aoowZaj3yJau1t6YtFkLkVcaUgVgbt4Rgwm4XAqPHP43
-	 fFCugrdwTIKY0iWPuRcVOZkWdl8OVo6qApgPlc4Fruea7cZjurrD7CkrvgE+sdTTYYJKSHlS4szu
-	 8xmu+7hSQoZvxo4is2q4mIPEbzvdINaaLflX2lZIhReMd3/X+xOCGYqqztyNi6IjNEqoQCbQJCDM
-	 1UVZpz7IN/KlyHlHIpjLuUp+K69JfakkJ5UnHgLaSAQ1UZHHLNuC/dW3BoVXwMVsdMua9e45E=
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-Date: Tue, 25 Feb 2025 18:15:35 +0800
-From: Chen Yu <yu.chen.surf@foxmail.com>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: zihan zhou <15645113830zzh@gmail.com>, oe-lkp@lists.linux.dev,
-	kernel test robot <oliver.sang@intel.com>, lkp@intel.com,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	Peter Zijlstra <peterz@infradead.org>, aubrey.li@linux.intel.com,
-	yu.c.chen@intel.com, yu.chen.surf@gmail.com
-Subject: Re: [tip:sched/core] [sched] 2ae891b826: hackbench.throughput 6.2%
- regression
-X-OQ-MSGID: <Z72YRwXvIm6C5uUq@chenyu5-mobl2>
-References: <202502251026.bb927780-lkp@intel.com>
- <tencent_6D9B516AFF16965A3BB652A049D6CA847706@qq.com>
- <CAKfTPtBWDFSj8E53i=qSK7kR1qsT68xLvVp4+HGr5FXrna-xRg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FUFXCAYa"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-abb9e81c408so93185766b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 02:20:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740478839; x=1741083639; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aMAiIGxOhs/NRNnqxe1Q5w1Z2sjpATlomzVPp7WhyYE=;
+        b=FUFXCAYatArtXh0+NYN2nKxxLEcH13WbLIgXiNf/g4TiC4tRIGXJD3Tw9oVebktSUa
+         PabbevfRoIqoa13TlKs8ABOrtSZAmw86F96l8BfNOdsu4+3/yhjCr5PFnvVtvZ4W/Nl5
+         mUBiw+gz/XByG7GkIu8V6/n4COzM7lb7Sg6gqnHvU1Rb8M5g2pT/dX518E1r0Jg1+5Od
+         0iksDgZLkPWVGVOb+17xzmpxQwZz0oJUwBgF07qd6Hex822SWqdHpLUI0SSWO2gqSQiO
+         EJXOMtPm48X1Nnu+n3cxOZp4KBnjohmxSXP9IOVEneyKX/KfcTrG0jXW310aVbmPXe5N
+         hiJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740478839; x=1741083639;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aMAiIGxOhs/NRNnqxe1Q5w1Z2sjpATlomzVPp7WhyYE=;
+        b=oxUMOCVelz3ArmjJkzboVO7wdY5DW9uiSKeVFHDtc5SzOIACLQFwIJSSmTpmwPFsrv
+         LVduLU6dp6RWD7xChtUz9HvmHK1JeCKT/pviTfv7fpzW9NcehAdOUb4FkWn9bdLcWmse
+         /ZPigGl7Vm5U3QjJYw4nCsciwWatR2chIPXaDoxKJpyEfWg9Ia1utMu28eyGTpE1Jo2u
+         TCRTFi2C/C+s2IQcWM664qvoUuOH6JblCsVYXtGXj+oBpzn5zkNFCuZ+9VN5jNnbybBI
+         FeVn5e7tn453t8YgUZdi1wHGF4siq2tU7/K2r+duXmufSm4OIDSCB5p/cvEFB6xm97pw
+         136g==
+X-Forwarded-Encrypted: i=1; AJvYcCWTfcGz0k5ruJustdBM+C97EsOWvtdiEkA2hCNsZ68erHlJhUCGbrVH0YDLEdRAHEnjjHCwEWoKkd7rl+A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBFWyhg/H6dfN7L78nDrxgOZHaSnBRDm2J6P8CHxY+JtQBI7y2
+	wLf+NzmK2/ij+F0ofVtzJMbVvYYZPb43Mynr9M8F8o4goxVftIZrnL9XGeaoS1c=
+X-Gm-Gg: ASbGncuvid8bil+VYb8H/J7I+I9/7dvJaG7iVaYZgpg9EJFcVu96xypaolC9jXKNm5B
+	YqRjblvVjez5hsIUxp9pa3I9+zZhOmdjGkxuaiZ0k/sA8CVklzmDQRlsz92nU27tptiTjniQupc
+	r4wotQQjDTSLtuhc2CytV20+SfQTvVacNXXVvpboPm7kKCuRQ3+ZMe3TmschoDTGfw0ghNbBay9
+	hM0pnqQTzsuuPTIG966JYWmQgDdVsY2fX2B7qJRBr5V8K+QQck90NRkuY/BiwcG9/olheH2U+eH
+	T/hslUNPsp85gomb8L+W1lkeJ5nvwLM/6NAjkfq2ifqwXieVzannIjZ192d7602+V5G4XFfDNVw
+	=
+X-Google-Smtp-Source: AGHT+IEZErkXFchQBHcjhpLOcz0ntlnRWjG+dqb6HL0cgbpdGQt3G9rUQQ9bKlCBwVV+K4XlTqA59A==
+X-Received: by 2002:a17:906:fb09:b0:abe:9c69:b71e with SMTP id a640c23a62f3a-abe9c69c1d6mr280644666b.3.1740478838702;
+        Tue, 25 Feb 2025 02:20:38 -0800 (PST)
+Received: from krzk-bin.. (78-11-220-99.static.ip.netia.com.pl. [78.11.220.99])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed2010decsm116931666b.98.2025.02.25.02.20.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 02:20:38 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH RFC] arm64: dts: rockchip: Switch to undeprecated qcom,calibration-variant on RK3399
+Date: Tue, 25 Feb 2025 11:20:36 +0100
+Message-ID: <20250225102036.107913-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKfTPtBWDFSj8E53i=qSK7kR1qsT68xLvVp4+HGr5FXrna-xRg@mail.gmail.com>
 
-On 2025-02-25 at 10:45:35 +0100, Vincent Guittot wrote:
-> On Tue, 25 Feb 2025 at 10:31, Chen Yu <yu.chen.surf@foxmail.com> wrote:
-> >
-> > On 2025-02-25 at 10:32:13 +0800, kernel test robot wrote:
-> > >
-> > >
-> > > Hello,
-> > >
-> > > kernel test robot noticed a 6.2% regression of hackbench.throughput on:
-> > >
-> > >
-> > > commit: 2ae891b826958b60919ea21c727f77bcd6ffcc2c ("sched: Reduce the default slice to avoid tasks getting an extra tick")
-> > > https://git.kernel.org/cgit/linux/kernel/git/tip/tip.git sched/core
-> > >
-> > > [test failed on linux-next/master d4b0fd87ff0d4338b259dc79b2b3c6f7e70e8afa]
-> > >
-> > > testcase: hackbench
-> > > config: x86_64-rhel-9.4
-> > > compiler: gcc-12
-> > > test machine: 128 threads 2 sockets Intel(R) Xeon(R) Gold 6338 CPU @ 2.00GHz (Ice Lake) with 256G memory
-> > > parameters:
-> > >
-> > >       nr_threads: 100%
-> > >       iterations: 4
-> > >       mode: process
-> > >       ipc: socket
-> > >       cpufreq_governor: performance
-> > >
-> > >
-> > >   39754543 ą  3%     +56.8%   62349308        hackbench.time.involuntary_context_switches
-> > >
-> >
-> > This patch shrinks the base_slice so the deadline is reached earlier to trigger the
-> > tick preemption IIUC. For the hackbench case, my assumption is that hackbench seems to
-> 
-> For systems with more than 8 CPUs, the base slice was
-> 0.75*(1+ilog2(8)) = 3ms which is exactly 3 tick periods at 1000hz but
-> because the tick period is almost never fully accounted to the task,
-> the task was running 4 tick periods instead of 3. The normalized
-> base_slice has been reduced from 0.75 to 0.70ms so the base slice
-> becomes 2.8ms for 8 CPUs and more and the main result is that tasks
-> will run 3 tick periods instead of 4.
->
+The property qcom,ath10k-calibration-variant was deprecated in favor of
+recently introduced generic qcom,calibration-variant, common to all
+Qualcomm Atheros WiFi bindings.
 
-Thanks for the detailed explanation; I now understand the background.
-It is a correct fix for tick preemption and slightly affects wakeup
-preemption (smaller deadline in place_entity())
+Change will affect out of tree users, like other projects, of this DTS.
 
-thanks,
-Chenyu
- 
-> > encounter more wakeup preemption and hurts throughtput. If more frequent tick preemption
-> > is needed, but more frequent wakeup preemption is not, are we able to do this base_slice
-> > shrink for tick preemption only rather than the wakeup preemption? A wild guess, can we
-> > add smaller base_slice 0.7 in update_deadline() for tick preemption, but remains the old
-> > value 0.75 in update_deadline() for wakeup preemption during enqueue.
-> >
-> > But consider that the 6% regression is not that high, and the user might customize
-> > base_slice via debugfs on-demand, we can keep an eye on this and revist it in the
-> > future(we have encountered some SPECjbb regression due to over-preemption).
-> >
-> > thanks,
-> > Chenyu
-> >
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+---
+
+Dependency/RFC!
+
+RFC, because this should be merged release after driver support is
+merged:
+https://lore.kernel.org/linux-devicetree/20250225-b-wifi-qcom-calibration-variant-v1-0-3b2aa3f89c53@linaro.org/T/#t
+---
+ arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-dumo.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-dumo.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-dumo.dts
+index 9e4b12ed62cb..be3ae473e562 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-dumo.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-dumo.dts
+@@ -36,6 +36,6 @@ wifi@0,0 {
+ 		compatible = "qcom,ath10k";
+ 		reg = <0x00000000 0x0 0x00000000 0x0 0x00000000>,
+ 		      <0x03000010 0x0 0x00000000 0x0 0x00200000>;
+-		qcom,ath10k-calibration-variant = "GO_DUMO";
++		qcom,calibration-variant = "GO_DUMO";
+ 	};
+ };
+-- 
+2.43.0
 
