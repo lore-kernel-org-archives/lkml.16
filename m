@@ -1,25 +1,50 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A72C21ABDE
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:54:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201C421ABC8;
+	Tue, 25 Feb 2025 14:54:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740495281; cv=none; b=slhjagVoMHNg5FECJI95rMNUaVpDx5wZyGdm7k3xJtsd7UoUDPy+uulWOp5fCQJQ0ulhAkzTQ4uTVtW0WII7ZepbSr2+m4JjXaaRAGWP4yJHjgRDMIDrIVdCQ57OC0r/7QdFS1f1mcy7s/0s48hiThWmx/08yok0t7sAuw/okUU=
+	t=1740495292; cv=none; b=qCjMOUzqvOduCHwmxtV/sJiWHVaxePmNidmSAZwuYR9G99dQ+oSNN3A8OUSS/HDGjO9sFeNvAqHQIPURTuNyzA+4lqksC1JgIRF8YwpVHzbcX/BAxNlVEvdpfKyUj5DFoVQUmRi7Gk6WpTgoQ0f8XrlQstYC9OVb83kdO55cIm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740495281; c=relaxed/simple;
-	bh=kwTo9338g4qpp97NasrZXAc4mVGqCi372qG39LHHeU8=;
+	s=arc-20240116; t=1740495292; c=relaxed/simple;
+	bh=i56r8FelMwZUrbrkv/IGFWT2rnJfRb9fgSFnQoHsSyo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BKVR2CTib0lw0mkNwFxoH7EnlsV+FhgEfJMJrxNelHausFwCJ5gyLf8bT4IYqMVegfopUmQ1qOhCPhaV9dX8OU8l6LqMiTr9d62/+0PJMi3gW21Yy0TiDUX3N73IneYXnoaFs2NzVqA/1klpSBsP7X/oBd8mlIPp+B5SOcfh1zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC1CB1BCB;
-	Tue, 25 Feb 2025 06:54:54 -0800 (PST)
-Received: from [10.1.27.154] (XHFQ2J9959.cambridge.arm.com [10.1.27.154])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ABFED3F5A1;
-	Tue, 25 Feb 2025 06:54:37 -0800 (PST)
-Message-ID: <5edf6a80-1fbd-4be2-912b-497c044ba0f8@arm.com>
-Date: Tue, 25 Feb 2025 14:54:36 +0000
+	 In-Reply-To:Content-Type; b=YHEJxCsJ6nlTBPvKY5LEEc+XhAf9I7iflRSlk5j09+2M/nRPZbEExOzuHgB6ttcVdvKwLSIENkqhzIpFJ1Le4i1pkgSx02VdQ9XNseWGkARWnhwwK7RQC+xs44jmTIn1qTT9gJlhuBoM/lbVg1yTcxhYGb8diXsqsahEcyd73Vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TECqFc7h; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TECqFc7h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740495291; x=1772031291;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=i56r8FelMwZUrbrkv/IGFWT2rnJfRb9fgSFnQoHsSyo=;
+  b=TECqFc7hvtjM2YP/0aCOmZMF4s53cLa308ynUlbZ6X4T0rRupO8DIP2m
+   +PdTGKXQr7eoMAaE12lHL3jIXxo6wckFpE7O9xjwT76A8/ECThr72huQL
+   4H5hdhza4+QisuC6vfIlFeyyJucwaGUcDtGZc1KfpD7fa+lwU8aU7/2DU
+   Sqqz4WrUTlYf/TLwzF+RmmjcfwVWeTGBkX31oIvlA7P5D2LjaF38bDAuS
+   0HAZPInoCbCFDgel9MF0FEmRbTrSxy5Gqze0gf6GWY5JWXoS04GzKdISK
+   F4CVkIUm2QFExliY+7Lgw6fXDhMj7RxEQobtPqLZ2b0WTomp/TSkvfwPb
+   Q==;
+X-CSE-ConnectionGUID: gIfOjBXIRV6axAsvw54ktA==
+X-CSE-MsgGUID: It4XKAGaTHyjRiHbUlVZ6Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="41556962"
+X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
+   d="scan'208";a="41556962"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 06:54:50 -0800
+X-CSE-ConnectionGUID: +vupiwwHRNSqxTeqvBDbKw==
+X-CSE-MsgGUID: nk9z2/cxSYK5e0A4gepgSw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
+   d="scan'208";a="116219279"
+Received: from unknown (HELO [10.237.72.199]) ([10.237.72.199])
+  by fmviesa006.fm.intel.com with ESMTP; 25 Feb 2025 06:54:49 -0800
+Message-ID: <b82f9543-2730-48af-81e8-1612b0d30ed9@linux.intel.com>
+Date: Tue, 25 Feb 2025 16:55:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,98 +52,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3] arm64/hugetlb: Consistently use pud_sect_supported()
-Content-Language: en-GB
-To: Anshuman Khandual <anshuman.khandual@arm.com>,
- linux-arm-kernel@lists.infradead.org
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- linux-kernel@vger.kernel.org
-References: <20250220050534.799645-1-anshuman.khandual@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250220050534.799645-1-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v2 2/3] usb: xhci: Simplify moving HW Dequeue Pointer past
+ cancelled TDs
+To: Michal Pecio <michal.pecio@gmail.com>,
+ Mathias Nyman <mathias.nyman@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250225125750.1b345e2c@foxbook>
+ <20250225125939.7a248e38@foxbook>
+Content-Language: en-US
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+In-Reply-To: <20250225125939.7a248e38@foxbook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 20/02/2025 05:05, Anshuman Khandual wrote:
-> Let's be consistent in using pud_sect_supported() for PUD_SIZE sized pages.
-> Hence change hugetlb_mask_last_page() and arch_make_huge_pte() as required.
-> Also re-arranged the switch statement for a common warning message.
+On 25.2.2025 13.59, Michal Pecio wrote:
+> xhci_move_dequeue_past_td() uses a relatively complex and inefficient
+> procedure to find new dequeue position after the cancelled TD.
+> 
+> Replace it with a simpler function which moves dequeue immediately to
+> the first pending TD, or to enqueue if the ring is empty.
+> 
+> The outcome should be basically equivalent, because we only clear xHC
+> cache if it stopped or halted on some cancelled TD and moving past the
+> TD effectively means moving to the first remaining TD, if any.
 
-Thanks, Anshuman, this looks much cleaner now, to my eye at least.
+This new way relies on td_list being in sync and up to date.
+i.e. hardware dequeue can't be ahead of first TD in list.
 
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+One bad scenario could be something like:
 
-Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+class driver queues TD1
+class driver queues TD2
+Class driver cancels TD2, queue stop endpoint command
+(Class driver cancels TD1) (optional)
 
-> ---
-> This patch applies on v6.14-rc3
-> 
-> Changes in V3:
-> 
-> - Re-arranged the switch statement for a common warning message per Ryan
-> 
-> Changes in V2:
-> 
-> https://lore.kernel.org/linux-arm-kernel/20250218113639.475947-1-anshuman.khandual@arm.com/
-> 
-> - Added an warning when PUD_SIZE is requested but not supported per Ryan
-> 
-> Changes in V1:
-> 
-> https://lore.kernel.org/linux-arm-kernel/20250217065414.49489-1-anshuman.khandual@arm.com/
-> 
->  arch/arm64/mm/hugetlbpage.c | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-> index 98a2a0e64e25..fd7448bb8c80 100644
-> --- a/arch/arm64/mm/hugetlbpage.c
-> +++ b/arch/arm64/mm/hugetlbpage.c
-> @@ -342,7 +342,9 @@ unsigned long hugetlb_mask_last_page(struct hstate *h)
->  	switch (hp_size) {
->  #ifndef __PAGETABLE_PMD_FOLDED
->  	case PUD_SIZE:
-> -		return PGDIR_SIZE - PUD_SIZE;
-> +		if (pud_sect_supported())
-> +			return PGDIR_SIZE - PUD_SIZE;
-> +		break;
->  #endif
->  	case CONT_PMD_SIZE:
->  		return PUD_SIZE - CONT_PMD_SIZE;
-> @@ -364,23 +366,21 @@ pte_t arch_make_huge_pte(pte_t entry, unsigned int shift, vm_flags_t flags)
->  	switch (pagesize) {
->  #ifndef __PAGETABLE_PMD_FOLDED
->  	case PUD_SIZE:
-> -		entry = pud_pte(pud_mkhuge(pte_pud(entry)));
-> +		if (pud_sect_supported())
-> +			return pud_pte(pud_mkhuge(pte_pud(entry)));
->  		break;
->  #endif
->  	case CONT_PMD_SIZE:
-> -		entry = pmd_pte(pmd_mkcont(pte_pmd(entry)));
-> -		fallthrough;
-> +		return pmd_pte(pmd_mkhuge(pmd_mkcont(pte_pmd(entry))));
->  	case PMD_SIZE:
-> -		entry = pmd_pte(pmd_mkhuge(pte_pmd(entry)));
-> -		break;
-> +		return pmd_pte(pmd_mkhuge(pte_pmd(entry)));
->  	case CONT_PTE_SIZE:
-> -		entry = pte_mkcont(entry);
-> -		break;
-> +		return pte_mkcont(entry);
->  	default:
-> -		pr_warn("%s: unrecognized huge page size 0x%lx\n",
-> -			__func__, pagesize);
->  		break;
->  	}
-> +	pr_warn("%s: unrecognized huge page size 0x%lx\n",
-> +		__func__, pagesize);
->  	return entry;
->  }
->  
+xHC hardware just completed TD1 and stop endpoint command at the same time,
+xHC hw may have advanced the hw dequeue to TD2, write event for stop endpoint command, and
+then write transfer event for TD1 completion. (xHC hardware may do things in odd order)
+
+Now we detect that hw dequeue is in the cancelled TD2 but with TD1 is till in the td_list.
+This new solution would move dequeue back to TD1 beginning, and process it again.
+
+Thanks
+Mathias
 
