@@ -1,61 +1,46 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12B7256C6A;
-	Tue, 25 Feb 2025 05:50:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC87C1527B4;
+	Tue, 25 Feb 2025 05:51:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740462618; cv=none; b=RyStwVwpVnzVdcHcQQXWyd/bjlqW+Mt09OaE3/e6R0Zm/jAVcL4qRmv714s352d8mc2Zkg56YsTzrlPsiz9OjdbublQMqEwTSM/rCSO5VCUkU1LK5itFjNQV2jaUBsHV5yvMG7JmgGg9jndrtT1MvqeH1bSGOIdEfDTORpCSKKY=
+	t=1740462692; cv=none; b=TsAsCJZoeFVco/S7dnWgV4I4skEfgeVinVThe6yF2NrK+6c3jBM8mMYHfhhV5+tmdvh9904j4dBn3cYOU7ypI4ONuvKhCDy0GU9o63kxqnPLYFdiiJinn3CzOW6s8BqvNi4ogRZfb+P7Bknl7eUGja6LaQ/u7wObVpAPDVkS0Mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740462618; c=relaxed/simple;
-	bh=t8sdQCeTTX8RFNuY4/UZFxd3x4bZVIhocjtE7FRwH4Q=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=uyhV95JaxDOdZRRP3bA5L/lOU6VuFlGGtZtZv8dOnKW73euKaqnjAmmfx92809vbAzIYVxtWR9OqvfW/42tnQ65o3OSyg4gICqkLoLtMakYHoqDyv8qkaEESnliMDjvoxjgKlDh3dIkqVX3zwXGc5Tv6YaCFCmd+jwGhAHYGWac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pcLSdeYF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740462692; c=relaxed/simple;
+	bh=uSeNCFcf9l+vWtdG/0tKAMg223d8tkTSUki3qIrQlxA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LGw35dUBsse0kMUiBs6SyCARYCz9Axw/yTSjeQRlocFEmC05YDwnyrfQSAOz42jTM8qWqDbv2oNumzwn8Ad/gDWCuoUEPWQHG9p2NcCiJzboys04YfurQEgbpss+l+01oQTNJAHqiGMZCFlgYI5vDKhXdEoS0/YgpRaq4CwqzU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=NfPhTd+4; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pcLSdeYF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E389DC4CEDD;
-	Tue, 25 Feb 2025 05:50:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740462617;
-	bh=t8sdQCeTTX8RFNuY4/UZFxd3x4bZVIhocjtE7FRwH4Q=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=pcLSdeYF2uwgdKN18NTuJjZ8qapOh38MSQJpaWef4g5OKoGjcqOUHbVcwB4hcbs4x
-	 1J9aY3PUWihYsyOAzFuHyyQuqOiPirQ6pzJmZ0lm0jMpvkSDeNb1QRavHmebGX4mcE
-	 mPvpdDTa/WpJK5/9016U8JPThzqyrPDNzgXoKdZNVFQshtX6Prevy1n5IsdT8MWFHp
-	 6fdC2qmh593yL67IMPMOpJUa7Ek4ZC9qZpRFaBwam0FrigKdfugu4A4T1Qfus8Gyom
-	 p+K251bKoWgVYnBIxuzTjlrUA17DAZ+jDP+sx91/INOAGL9fhi2r74KvrIiDYA4cZz
-	 gmEHPQ1Y0cA5Q==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Boqun Feng" <boqun.feng@gmail.com>
-Cc: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>,  "Frederic Weisbecker"
- <frederic@kernel.org>,  "Anna-Maria Behnsen" <anna-maria@linutronix.de>,
-  "Thomas Gleixner" <tglx@linutronix.de>,  "Danilo Krummrich"
- <dakr@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno
- Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
-  "Trevor Gross" <tmgross@umich.edu>,  "Lyude Paul" <lyude@redhat.com>,
-  "Guangbo Cui" <2407018371@qq.com>,  "Dirk Behme" <dirk.behme@gmail.com>,
-  "Daniel Almeida" <daniel.almeida@collabora.com>,  "Tamir Duberstein"
- <tamird@gmail.com>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  "Miguel Ojeda" <ojeda@kernel.org>
-Subject: Re: [PATCH v9 01/13] rust: hrtimer: introduce hrtimer support
-In-Reply-To: <Z7zVE_CvmIVukkXB@boqun-archlinux> (Boqun Feng's message of "Mon,
-	24 Feb 2025 12:22:43 -0800")
-References: <Z7yUTNEg6gMW0G7b@Mac.home>
-	<CANiq72kx31exTFohb3+9_=PGUq_JtqpCvG8=oQUc_gZB+De5og@mail.gmail.com>
-	<Z7ye0MsACNWe7Mbr@Mac.home>
-	<CANiq72=qayfPk+W4BRiXe9xBGcgP2zPf-Q3K6GXTg8MKy-Kg=Q@mail.gmail.com>
-	<WlwmQ3r8VXTu77m77jclUgLjPh65ztwxUu_mXaElarFHBBiG2kWi0ZLYWNxKAUF9LK2QYrOWhtlFYhwaaNjYRA==@protonmail.internalid>
-	<Z7yl-LsSkVIDAfMF@Mac.home> <87msebyxtv.fsf@kernel.org>
-	<4UoaifxB7JgBVKsNQyFR_T8yc3Vtn5TLAEdxdXrojNmOzJSEncopauEyjDpnbqzr8Z74ZWjd_N-bB-BwBS-7aQ==@protonmail.internalid>
-	<Z7zF8KF9qTCr_n4l@boqun-archlinux> <87bjuryvb0.fsf@kernel.org>
-	<063qoO_vJBc-GBX1qwkecM_QHJE1_67s71TdEk7Nlc-sDOjDXhvV3FVKAt_81jGxJY6S-oCv5i-gLatkQPfj3Q==@protonmail.internalid>
-	<Z7zVE_CvmIVukkXB@boqun-archlinux>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Tue, 25 Feb 2025 06:50:01 +0100
-Message-ID: <875xkyzi7q.fsf@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="NfPhTd+4"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1740462677; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
+	bh=0r00Uji6tpD1hBuVL7S7gy2Eu/d/pslK9pXro2M2coM=;
+	b=NfPhTd+4Rn3OfJez/IGJX8a32L/+AouDT9jXbZed3dRg2YUL8DsDDbSbsRTiL/gCMZ+hmasq/MO0LV2bzX7/1lcJVc1IxDVnZz5Xq3+re3y4r7e+Hag03OTOAM/ieJU+sf+/pVq2O4JVvN8/4rbkT4O0McYbZ1al9Vg26Hvh4w0=
+Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WQDSZrT_1740462675 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 25 Feb 2025 13:51:16 +0800
+Date: Tue, 25 Feb 2025 13:51:15 +0800
+From: Feng Tang <feng.tang@linux.alibaba.com>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Lukas Wunner <lukas@wunner.de>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Liguang Zhang <zhangliguang@linux.alibaba.com>,
+	Guanghui Feng <guanghuifeng@linux.alibaba.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Markus Elfring <Markus.Elfring@web.de>, lkp@intel.com,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 2/4] PCI/portdrv: Add necessary wait for disabling
+ hotplug events
+Message-ID: <Z71aU3ZOQf2xGHp_@U-2FWC9VHC-2323.local>
+References: <20250224034500.23024-1-feng.tang@linux.alibaba.com>
+ <20250224034500.23024-3-feng.tang@linux.alibaba.com>
+ <abb50795-df83-511a-8850-cdf30f187935@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,147 +48,120 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <abb50795-df83-511a-8850-cdf30f187935@linux.intel.com>
 
-"Boqun Feng" <boqun.feng@gmail.com> writes:
+Hi Ilpo, 
 
-> On Mon, Feb 24, 2025 at 08:52:35PM +0100, Andreas Hindborg wrote:
->> "Boqun Feng" <boqun.feng@gmail.com> writes:
->>
->> > On Mon, Feb 24, 2025 at 07:58:04PM +0100, Andreas Hindborg wrote:
->> >> > On Mon, Feb 24, 2025 at 05:45:03PM +0100, Miguel Ojeda wrote:
->> >> >> On Mon, Feb 24, 2025 at 5:31=E2=80=AFPM Boqun Feng <boqun.feng@gma=
-il.com> wrote:
->> >> >> >
->> >> >> > On Mon, Feb 24, 2025 at 05:23:59PM +0100, Miguel Ojeda wrote:
->> >> >> > >
->> >> >> > > side -- Andreas and I discussed it the other day. The descript=
-ion of
->> >> >> > > the issue has some lines, but perhaps the commit message could
->> >> >> >
->> >> >> > Do you have a link to the issue?
->> >> >>
->> >> >> Sorry, I meant "description of the symbol", i.e. the description f=
-ield
->> >> >> in the patch.
->> >> >>
->> >> >
->> >> > Oh, I see. Yes, the patch description should provide more informati=
-on
->> >> > about what the kconfig means for hrtimer maintainers' development.
->> >>
->> >> Right, I neglected to update the commit message. I will do that if we
->> >> have another version.
->> >>
->> >> >
->> >> >> > I asked because hrtimer API is always available regardless of the
->> >> >> > configuration, and it's such a core API, so it should always be =
-there
->> >> >> > (Rust or C).
->> >> >>
->> >> >> It may not make sense for something that is always built on the C
->> >> >> side, yeah. I think the intention here may be that one can easily
->> >> >> disable it while "developing" a change on the C side. I am not sure
->> >> >> what "developing" means here, though, and we need to be careful --
->> >> >> after all, Kconfig options are visible to users and they do not ca=
-re
->> >> >> about that.
->> >> >>
->> >> >
->> >> > Personally, I don't think CONFIG_RUST_HRTIMER is necessarily becaus=
-e as
->> >> > you mentioned below, people can disable Rust entirely during
->> >> > "developing".
->> >> >
->> >> > And if I understand the intention correctly, the CONFIG_RUST_HRTIMER
->> >> > config provides hrtimer maintainers a way that they could disable R=
-ust
->> >> > hrtimer abstraction (while enabling other Rust component) when they=
-'re
->> >> > developing a change on the C side, right? If so, it's hrtimer
->> >> > maintainers' call, and this patch should provide more information on
->> >> > this.
->> >> >
->> >> > Back to my personal opinion, I don't think this is necessary ;-)
->> >> > Particularly because I can fix if something breaks Rust side, and I=
-'m
->> >> > confident and happy to do so for hrtimer ;-)
->> >>
->> >> As Miguel said, the idea for this came up in the past week in one of =
-the
->> >> mega threads discussing rust in general. We had a lot of "what happens
->> >> if I change something in my subsystem and that breaks rust" kind of
->> >> discussions.
->> >>
->> >
->> > So far we haven't heard such a question from hrtimer maintainers, I
->> > would only add such a kconfig if explicitly requested.
->>
->> It gives flexibility and has no negative side effects. Of course, if it
->
-> The negative side effects that I can think of:
->
-> * It doubles the work for testing, it's a Kconfig after all, so every
->   reasonable test run will have to run at least one build with it and
->   one build without it combined with other configs.
->
-> * It may compelicate other component. For example, if I would like
->   use hrtimer in a doc test of a lock component (the component itself
->   doesn't depend on hrtimer, so it exists with CONFIG_RUST_HRTIMER=3Dn),
->   because I would like to unlock something after a certain time. Now
->   since CONFIG_RUST_HRTIMER can be unset, how would I write the test?
->
->   #[cfg(CONFIG_RUST_HRTIMER)]
->   <use the Rust timer>
->   #[cfg(not(CONFIG_RUST_HRTIMER))]
->   <use the C timer? with unsafe??>
->
-> A new kconfig is not something free. We will need to cope with it in
-> multiple places.
+On Mon, Feb 24, 2025 at 05:00:03PM +0200, Ilpo Järvinen wrote:
+> On Mon, 24 Feb 2025, Feng Tang wrote:
+> 
+> > There was problem reported by firmware developers that they received
+> > two PCIe hotplug commands in very short intervals on an ARM server,
+> > which doesn't comply with PCIe spec, and broke their state machine and
+> > work flow. According to PCIe 6.1 spec, section 6.7.3.2, software needs
+> > to wait at least 1 second for the command-complete event, before
+> > resending the command or sending a new command.
+> > 
+> > In the failure case, the first PCIe hotplug command firmware received
+> > is from get_port_device_capability(), which sends command to disable
+> > PCIe hotplug interrupts without waiting for its completion, and the
+> > second command comes from pcie_enable_notification() of pciehp driver,
+> > which enables hotplug interrupts again.
+> > 
+> > Fix it by adding the necessary wait to comply with PCIe spec.
+> > 
+> > Fixes: 2bd50dd800b5 ("PCI: PCIe: Disable PCIe port services during port initialization")
+> > Originally-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+> > Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
+> > ---
+> >  drivers/pci/pci.h          |  2 ++
+> >  drivers/pci/pcie/portdrv.c | 19 +++++++++++++++++--
+> >  2 files changed, 19 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > index 4c94a589de4a..a1138ebc2689 100644
+> > --- a/drivers/pci/pci.h
+> > +++ b/drivers/pci/pci.h
+> > @@ -760,6 +760,7 @@ static inline void pcie_ecrc_get_policy(char *str) { }
+> >  void pcie_reset_lbms_count(struct pci_dev *port);
+> >  int pcie_lbms_count(struct pci_dev *port, unsigned long *val);
+> >  int pcie_poll_sltctl_cmd(struct pci_dev *dev, int timeout_ms);
+> > +void pcie_disable_hp_interrupts_early(struct pci_dev *dev);
+> >  #else
+> >  static inline void pcie_reset_lbms_count(struct pci_dev *port) {}
+> >  static inline int pcie_lbms_count(struct pci_dev *port, unsigned long *val)
+> > @@ -770,6 +771,7 @@ static inline int pcie_poll_sltctl_cmd(struct pci_dev *dev, int timeout_ms)
+> >  {
+> >  	return 0;
+> >  }
+> > +static inline void pcie_disable_hp_interrupts_early(struct pci_dev *dev) {}
+> >  #endif
+> >  
+> >  struct pci_dev_reset_methods {
+> > diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+> > index bb00ba45ee51..ca4f21dff486 100644
+> > --- a/drivers/pci/pcie/portdrv.c
+> > +++ b/drivers/pci/pcie/portdrv.c
+> > @@ -230,6 +230,22 @@ int pcie_poll_sltctl_cmd(struct pci_dev *dev, int timeout_ms)
+> >  	return  ret;
+> >  }
+> >  
+> > +void pcie_disable_hp_interrupts_early(struct pci_dev *dev)
+> > +{
+> > +	u16 slot_ctrl = 0;
+> 
+> Unnecessary initialization
+ 
+The reason I put it to 0 is, very unlikely, the pcie_capability_read_word()
+might fail, and 0 can avoid the early return.
 
-Alright, those are valid arguments.
+> > +
+> > +	pcie_capability_read_word(dev, PCI_EXP_SLTCTL, &slot_ctrl);
+> > +	/* Bail out early if it is already disabled */
+> > +	if (!(slot_ctrl & (PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE)))
+> > +		return;
+> > +
+> > +	pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
+> > +		  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
+> 
+> Align to (. You might need to put the bits to own lines.
 
->
->> is unwanted, we can just remove it. But I would like to understand the
->> deeper rationale.
->>
->>
->> >
->> >> For subsystems where the people maintaining the C subsystem is not the
->> >> same people maintaining the Rust abstractions, this switch might be
->> >> valuable. It would allow making breaking changes to the C code of a
->> >> subsystem without refactoring the Rust code in the same sitting. Rath=
-er
->> >
->> > That's why I asked Frederic to be a reviewer of Rust hrtimer API. In
->> > longer-term, more and more people will get more or less Rust knowledge,
->> > and I'd argue that's the direction we should head to. So my vision is a
->> > significant amount of core kernel developers would be able to make C a=
-nd
->> > Rust changes at the same time. It's of course not mandatory, but it's
->> > better collaboration.
->>
->> Having this switch does not prevent longer term plans or change
->> directions of anything. It's simply a convenience feature made
->> available. I also expect the future you envision. But it is an
->> envisioned _future_. It is not the present reality.
->>
->
-> The reality is: we haven't heard hrtimer maintainers ask for this,
-> right? I know you're trying to do something nice, I do appreciate your
-> intention, but if hrtimer maintainers haven't asked for this, maybe it
-> implies that they can handle or trust that wouldn't be a problem?
+OK.
 
-Thanks for explaining.
+> > +
+> > +	if (pcie_poll_sltctl_cmd(dev, 1000))
+> > +		pci_info(dev, "Timeout on disabling PCIe hot-plug interrupt\n");
+> > +}
+> > +
+> >  /**
+> >   * get_port_device_capability - discover capabilities of a PCI Express port
+> >   * @dev: PCI Express port to examine
+> > @@ -255,8 +271,7 @@ static int get_port_device_capability(struct pci_dev *dev)
+> >  		 * Disable hot-plug interrupts in case they have been enabled
+> >  		 * by the BIOS and the hot-plug service driver is not loaded.
+> >  		 */
+> > -		pcie_capability_clear_word(dev, PCI_EXP_SLTCTL,
+> > -			  PCI_EXP_SLTCTL_CCIE | PCI_EXP_SLTCTL_HPIE);
+> > +		pcie_disable_hp_interrupts_early(dev);
+> 
+> Doesn't calling this here delay setup for all portdrv services, not just 
+> hotplug? And the delay can be relatively long.
 
-For reference, we do not have this feature in block, and it was not a
-problem yet.
+I don't quite follow, physically there is only one root port, the code
+from commit 2bd50dd800b5 just does it once. Also the 1 second is just the
+maxim waiting time, the wait will end once the command completed event
+bit is set. The exact time depends on platform (x86 and ARM) and the
+firmeware implementation, and it is much smaller than 1 second AFAIK.
 
-Let's await hrtimer maintainers and follow their lead.
+Thanks,
+Feng
 
-
-
-Best regards,
-Andreas Hindborg
-
-
+> >  	}
+> >  
+> >  #ifdef CONFIG_PCIEAER
+> > 
+> 
+> -- 
+>  i.
