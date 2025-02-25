@@ -1,108 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5AE818E34A;
-	Tue, 25 Feb 2025 17:50:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262A914F9C4;
+	Tue, 25 Feb 2025 17:51:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740505846; cv=none; b=KIYgvyUjA6S9Leu5/nsarZhpi7Fo0lnYRGXhPBXT3/W3mzrCt8l18MLndUib87B2ySsYDWei6NzRlThZJtJrpt3TTBvExSyElmic88hqo1zLwUT75/vYJy/b7HAd9POj14FuO1+USdiICuZ+0v4u88ABwu8GNxRqBHi71VL2hhs=
+	t=1740505916; cv=none; b=o+f9gj5lhuJIWFqmDac9meTwjVeM/xOrMMTGhouNUq/3yFixQst8rMeljLM4ncuJajsU9av72/uQw3SdbTe74r1inKZaJaLviXOzqxwTXZZjDdl1nBQBslfmhc+zE1NiWLBj5DxhRWjElGN0Oy5Agpi1fNG+4MNyhgr2ECyRTJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740505846; c=relaxed/simple;
-	bh=O7jDYX7iRfrB1UVmAe+E/vNwrykYgFudqrrJuLaSk8Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=gJpw9DOis9q8HV4pdNJeEOjyov2qZU0Hy6+whGLXBPfq9x0Uua5WutyTRnuRj3HlkWAgsTeFZPK0K5Na4SxqUgqsquA4CVulCSHEoJsGbBVINvW+8nFK9rdbtCjTDN8ZT84xLbUVV4ZJ25w8TVqgHCaMrTtlsmxd6C+7wkssKqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fBu8XFIc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740505916; c=relaxed/simple;
+	bh=6OJuVi2QVz37WuJ/yt0tL5/TEJdcMac3xwN99wyFgSw=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Rf0hKp4lLgZRCOjFCC8F+bP55MHhPiErr8Gf1hDyUchA3n2Od/VB7RmOP0IA2gVUZB6YMhuPfRaRQIH0B7OuNbC3J8bvPVMMQwK2nb8UlovO1xmbKlsfCWCQ9qnP2Xeb0jQnb0lq/L8mv9CsLtvJ1QrkSCpnhEq8JWAwkvjtYJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MvwV8xpi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fBu8XFIc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECE98C4CEDD;
-	Tue, 25 Feb 2025 17:50:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MvwV8xpi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 896E3C4CEDD;
+	Tue, 25 Feb 2025 17:51:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740505846;
-	bh=O7jDYX7iRfrB1UVmAe+E/vNwrykYgFudqrrJuLaSk8Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=fBu8XFIcBwXzPCuLucy0C2svFoYEU7W3Qe5lu2eqGEffvvnNv0C0iCPp8VORRutU3
-	 5uyHQFGoNTYDjQkY4fY31ezuZEtnFIihih/DII6i2X52enZ7LkErjBNUKOpLMy8u7p
-	 BBNv7jZ5EEcnVdWHgvufYa0XyFu+HBSQxbPrGkqH7boD0AFZOtAi4aty6G02iNg0fv
-	 WNnftdTe3QrC/vx7KxIjB5UaGeorD5QutGt+yqSlrfYUQHZueIRyA8p+KBtjzxix9T
-	 WvBbJVXxSJS7G2onhV18w40avekUuD0Z1KNoWMH9wx8OakVnqoHyk2c4SVpzeNV7Ye
-	 CMl9laZL1JrSQ==
-Date: Tue, 25 Feb 2025 11:50:44 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Frediano Ziglio <frediano.ziglio@cloud.com>
-Cc: xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH] xen: Add support for XenServer 6.1 platform device
-Message-ID: <20250225175044.GA511149@bhelgaas>
+	s=k20201202; t=1740505915;
+	bh=6OJuVi2QVz37WuJ/yt0tL5/TEJdcMac3xwN99wyFgSw=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=MvwV8xpi23gFdavOHd6WX1fEkKX8U2t0bJ6mQGEAaZWLWmlcbQvpSwxEnRxdbh8A6
+	 aoX2nqhX+mgP1tCi394VAgAkjDmNTwRe9aoRZfuyMH4c4raxg0rJx9b+nj2PeKqzbZ
+	 PwJS6Inpidux0nNv+pYcCY+BcxRmdMLZHqj2me8SE4PGm+l0RKe65nj+RSgvh8RmkW
+	 EyVQB6bAq7LnZN9HKtDC69pDyrRAoaJ/qkwkNFJzVE/ADe2A89TTRfrqx9h76wpfSp
+	 4kUTNPrf6YwRPIdvEux7NxbrdvPVvXdyq2C69vmsh5QQP2WBQq3QbhWnhO+7+STLSW
+	 8x27OOztAubug==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 71158380CEE8;
+	Tue, 25 Feb 2025 17:52:28 +0000 (UTC)
+Subject: Re: [GIT PULL] Btrfs fixes for 6.14-rc5
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <cover.1740498490.git.dsterba@suse.com>
+References: <cover.1740498490.git.dsterba@suse.com>
+X-PR-Tracked-List-Id: <linux-btrfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <cover.1740498490.git.dsterba@suse.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.14-rc4-tag
+X-PR-Tracked-Commit-Id: efa11fd269c139e29b71ec21bc9c9c0063fde40d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: cc8a0934d099b8153fc880a3588eec4791a7bccb
+Message-Id: <174050594702.66280.5164113758737539434.pr-tracker-bot@kernel.org>
+Date: Tue, 25 Feb 2025 17:52:27 +0000
+To: David Sterba <dsterba@suse.com>
+Cc: torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250225140400.23992-1-frediano.ziglio@cloud.com>
 
-On Tue, Feb 25, 2025 at 02:03:53PM +0000, Frediano Ziglio wrote:
-> On XenServer on Windows machine a platform device with ID 2 instead of
-> 1 is used.
-> This device is mainly identical to device 1 but due to some Windows
-> update behaviour it was decided to use a device with a different ID.
-> This causes compatibility issues with Linux which expects, if Xen
-> is detected, to find a Xen platform device (5853:0001) otherwise code
-> will crash due to some missing initialization (specifically grant
-> tables).
-> The device 2 is presented by Xapi adding device specification to
-> Qemu command line.
+The pull request you sent on Tue, 25 Feb 2025 17:12:34 +0100:
 
-Add blank lines between paragraphs.
+> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.14-rc4-tag
 
-A crash seems unfortunate.  And it sounds like a user mistake, e.g., a
-typo in the Qemu device specification, could also cause a crash?
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/cc8a0934d099b8153fc880a3588eec4791a7bccb
 
-If the crash is distinctive, a hint here like a dmesg line or two
-might help users.
+Thank you!
 
-> Signed-off-by: Frediano Ziglio <frediano.ziglio@cloud.com>
-> ---
->  drivers/xen/platform-pci.c | 2 ++
->  include/linux/pci_ids.h    | 1 +
->  2 files changed, 3 insertions(+)
-> 
-> diff --git a/drivers/xen/platform-pci.c b/drivers/xen/platform-pci.c
-> index 544d3f9010b9..9cefc7d6bcba 100644
-> --- a/drivers/xen/platform-pci.c
-> +++ b/drivers/xen/platform-pci.c
-> @@ -174,6 +174,8 @@ static int platform_pci_probe(struct pci_dev *pdev,
->  static const struct pci_device_id platform_pci_tbl[] = {
->  	{PCI_VENDOR_ID_XEN, PCI_DEVICE_ID_XEN_PLATFORM,
->  		PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0},
-> +	{PCI_VENDOR_ID_XEN, PCI_DEVICE_ID_XEN_PLATFORM_XS61,
-> +		PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0},
->  	{0,}
->  };
->  
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 1a2594a38199..e4791fd97ee0 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -3241,6 +3241,7 @@
->  
->  #define PCI_VENDOR_ID_XEN		0x5853
->  #define PCI_DEVICE_ID_XEN_PLATFORM	0x0001
-> +#define PCI_DEVICE_ID_XEN_PLATFORM_XS61	0x0002
-
-If this is the only place PCI_DEVICE_ID_XEN_PLATFORM_XS61 is used, we
-would put this in platform-pci.c, per the pci_ids.h comment:
-
- *      Do not add new entries to this file unless the definitions
- *      are shared between multiple drivers.
-
->  #define PCI_VENDOR_ID_OCZ		0x1b85
->  
-> -- 
-> 2.48.1
-> 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
