@@ -1,205 +1,260 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mail-gw01.astralinux.ru (mail-gw01.astralinux.ru [37.230.196.243])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D651220101A
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D14B2627FB;
+	Tue, 25 Feb 2025 09:35:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.230.196.243
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740476108; cv=none; b=VP2uBjz+W6AZoiqckuW6zaeQONALMOHgAJ0bJH/T3iZuC23qp6be/GKWT+reDbGAhXXHqFK+8OcQkijo6kO01yLDSz1SV3wkzbZRo2qfoH17JRWMzVLVjrhEvu/ksZKO4jpx9hnc95/6VFWlkHxZT7HTRHd3wTGhhruEAaFEJPM=
+	t=1740476110; cv=none; b=A5E4kk+3upLDusqPidSrMj306NF/IEDBwbRU4pgXpCmS9Ps/Yf0+ZzjwQ4gLOKqwWMCbIIZ+uW2KA29SL62BaF/iBMrTirlVvx6mbIoLrxVVpyutPBCTNnx7FLARiM9xX/i4AXRvdvMaVAoDhnr+s9ve2hwUiHqeQVwUyUfyz4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740476108; c=relaxed/simple;
-	bh=cqpieFQ4yffdW6JHTht9pnvXXQf74NR7jAV+Si840rI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ct8Z3c1TU6L3p/kwGz4t965aCIPU0DF/Z26Uq/Wg2w8qv7AJbpoGNqaXRZBA3VARUSxJkfnWqixwsgoACtyY3oZ6IqG43voowcSXNCqTsAyfO2miBxnqBgeRzpzwZ1MzNdu7P5xfESBrvJFETCs4RWo6mWMrYHtarHsJ2Bg7O9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=eEpfqewR; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="eEpfqewR"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P8IhYV003773
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:35:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Q6YFxMqM846mSc+Tr4fu5o2Zex5KCBKuxSN2OETBscc=; b=eEpfqewRcfRH6YD+
-	DBSxYoqYgtZz0y2m3w50VuW0uulaGMz6dmXNh5Ajcf5MIu8W6A8Yd2XHCY9c3Uhm
-	d0/kRR5MQdRqWgP5BITIFdzvo0PF11oQtfxeXls0UiEdEyj/0p6ZPN5reSTWek5H
-	i5BTuf0ebHHTUkJlbfAuM92+zMLoTxSbfedrDvr10cc8d1PHsynwk8IWBYubYDqb
-	LxeYXK3UXXYm25Wqxx0cJYFQnZHI8V6o+uMJorFFuk9cGp65HI+1m3pDZYlLbcn3
-	N6WTGECJooTWBx4SNAbziLHeNYKtfu8XkTTy5icxOMlwPBkzFQDVD/uEnTxhfS4Z
-	zZjUfw==
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 450m3dcc8t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:35:06 +0000 (GMT)
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2fc46431885so18105311a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 01:35:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740476105; x=1741080905;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q6YFxMqM846mSc+Tr4fu5o2Zex5KCBKuxSN2OETBscc=;
-        b=EuT9NQoCOWtKeKIyy0oQ1M4tEed91sxdrEKJS9Q4uKYack5qVLG3rl7AJ/dLJtrJju
-         NAhefdqohGM9m7UODOKSjiuMHZU4kq7QiAfgnWBFAJ7XtI4OLk1QB/WOYe8HXsoPyUaA
-         /PVccl11Q1jbJs18zwd61NfLV6CEzeQoj21s47I4Lj/ef3bNUMzY99lpTY6f3VyhxzwG
-         h2neEgOAHo5TFxnQ7JOyaU/epNXPtO+qHHlv2fkiq4odPWJeVFJLtV8B9KGCJhu4AkPn
-         LfiwPligDFtsDu35qlgUx7w7iKMtuWuMn0rM7+fCna/37dn+yuNXF/fAkLQYA7gYB4cp
-         GJ3w==
-X-Forwarded-Encrypted: i=1; AJvYcCWbIgDh9KyJ19BN93O1zmql9KQP5LBPUUVNAJ6s0wMFR88yrXxIBwdrjqsN/VVG40tZeYTdNC5zfdxu7Bk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygZev4jxJz/bHhzuXTpijAV5POCm/XGM8c5+z8he9ANeGWu0Kl
-	X4CF19O5dzCahlQFQ6QrBp7eG3w39gP5GSMWQFagrP1gqYPMowYzGdtZiHXktijObjBKShVdkH7
-	gjsmr6o8nvONxOLU8IU2ZV/Z/TXmbP+vx6Kk2Guwz7TWTnm3S/Ym4Vd/jKCn0IsY=
-X-Gm-Gg: ASbGncuXOBj4fe4Sa2sdr3Dt7LieEZhdn0/dg2nl33IhdfwmolUz8vKA6I9rQoa6Fts
-	4NIeYk+680ibo4I51Kzf63JBihxDzHzPGZErJd0Z6A++CnYnz+vKSHmQ6Z4ouLCNFBkpNx2v37h
-	X+oJE7mN2BElM9rbell5RPxxAuPhi4wT0F0bnrpjZOu6GegJPg39W+CHN1CDHXaQjAxmM3ahCEN
-	nEdqqBITIOA7zmQaB2XNjMdOl/5pr9nAYgv9RpKdQnHlQcGMftDmDIiibB9iFt3vCiGj7whvUBe
-	FllfA4Dt0xrMknsGtC/CsQEyMbDH8uVu7sTZpDSGDFoYn5TXcL8=
-X-Received: by 2002:a17:90b:2b8b:b0:2f9:9ddd:689c with SMTP id 98e67ed59e1d1-2fce87247d0mr27790235a91.25.1740476105377;
-        Tue, 25 Feb 2025 01:35:05 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHboVQx19IAka22tTopEyPevYSp2q5hMkX4eBoo9O54pF2jebrtXh/oJ5rVUGppNyCKsX3M1Q==
-X-Received: by 2002:a17:90b:2b8b:b0:2f9:9ddd:689c with SMTP id 98e67ed59e1d1-2fce87247d0mr27790209a91.25.1740476105011;
-        Tue, 25 Feb 2025 01:35:05 -0800 (PST)
-Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe6a3dec52sm1080770a91.20.2025.02.25.01.34.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 01:35:04 -0800 (PST)
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Date: Tue, 25 Feb 2025 15:04:03 +0530
-Subject: [PATCH v4 06/10] PCI: qcom: Add support for host_stop_link() &
- host_start_link()
+	s=arc-20240116; t=1740476110; c=relaxed/simple;
+	bh=ZzsodoARg8d22q1kMhsC7unErXL2OdZ7SV6ILRvCZwQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=gN1QHR3gDuzOFgK9/fNQlCoWS6jbLm3PRAU7etnV5w8FgRch9xO+LFWozsTv7S1tKOPGK8QKaIOTF6uyf3yD7AGOQTlIowNO92k3R7zTkzFPOeWt2UJDOlSKRQAYkIS63jwJ+46IQ8YaXwM5gLrPGaObDGGi/3aJGZ+S5YP/peQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=37.230.196.243
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
+Received: from gca-sc-a-srv-ksmg01.astralinux.ru (localhost [127.0.0.1])
+	by mail-gw01.astralinux.ru (Postfix) with ESMTP id 3B1D024CAA;
+	Tue, 25 Feb 2025 12:34:57 +0300 (MSK)
+Received: from new-mail.astralinux.ru (gca-yc-ruca-srv-mail03.astralinux.ru [10.177.185.108])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-gw01.astralinux.ru (Postfix) with ESMTPS;
+	Tue, 25 Feb 2025 12:34:56 +0300 (MSK)
+Received: from localhost.localdomain (unknown [10.177.20.114])
+	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4Z2CB80mfdz1h0Mh;
+	Tue, 25 Feb 2025 12:34:56 +0300 (MSK)
+From: Anastasia Belova <abelova@astralinux.ru>
+To: stable@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Anastasia Belova <abelova@astralinux.ru>,
+	Steve French <sfrench@samba.org>,
+	linux-cifs@vger.kernel.org,
+	samba-technical@lists.samba.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	lvc-patches@linuxtesting.org,
+	Enzo Matsumiya <ematsumiya@suse.de>,
+	Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.10/5.15 1/2] smb: client: fix UAF in async decryption
+Date: Tue, 25 Feb 2025 12:34:23 +0300
+Message-ID: <20250225093428.611253-2-abelova@astralinux.ru>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250225093428.611253-1-abelova@astralinux.ru>
+References: <20250225093428.611253-1-abelova@astralinux.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250225-qps615_v4_1-v4-6-e08633a7bdf8@oss.qualcomm.com>
-References: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
-In-Reply-To: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        chaitanya chundru <quic_krichai@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org, Jingoo Han <jingoohan1@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: quic_vbadigan@quicnic.com, amitk@kernel.org, dmitry.baryshkov@linaro.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        jorge.ramirez@oss.qualcomm.com,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740476062; l=2776;
- i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
- bh=cqpieFQ4yffdW6JHTht9pnvXXQf74NR7jAV+Si840rI=;
- b=OwTMhSAouVxaRKBcVHXa8wc0KbtbtdhzaEINWGVy2gtJDOSqmekSlFwT9uTan0CDSLZLOzBJM
- r94UKKFN0PlBpeTayxKvpRzS4wTFncZfLUtc44YTr/74U4yw8AglTnu
-X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-Proofpoint-GUID: JPcrJ7Kgh8hVsqwB6zdXW0K-gHEkbjO_
-X-Proofpoint-ORIG-GUID: JPcrJ7Kgh8hVsqwB6zdXW0K-gHEkbjO_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_03,2025-02-24_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- bulkscore=0 impostorscore=0 phishscore=0 mlxscore=0 mlxlogscore=999
- clxscore=1015 malwarescore=0 lowpriorityscore=0 adultscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502250066
+Content-Transfer-Encoding: 8bit
+X-KSMG-AntiPhishing: NotDetected
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Envelope-From: abelova@astralinux.ru
+X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {Tracking_from_domain_doesnt_match_to}, astralinux.ru:7.1.1;127.0.0.199:7.1.2;new-mail.astralinux.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 191262 [Feb 25 2025]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.11
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/02/25 08:32:00 #27449984
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-LinksScanning: NotDetected
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 1
 
-Add support for host_stop_link() and host_start_link() for switches like
-TC956x, which require configuration before the PCIe link is established.
+From: Enzo Matsumiya <ematsumiya@suse.de>
 
-Assert PERST# and disable LTSSM bit to prevent the PCIe controller from
-participating in link training during host_stop_link(). De-assert PERST#
-and enable LTSSM bit during host_start_link().
+commit b0abcd65ec545701b8793e12bc27dc98042b151a upstream.
 
-Introduce ltssm_disable function op to stop link training.
-For the switches like TC956x, which needs to configure it before
-the PCIe link is established.
+Doing an async decryption (large read) crashes with a
+slab-use-after-free way down in the crypto API.
 
-Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Reproducer:
+    # mount.cifs -o ...,seal,esize=1 //srv/share /mnt
+    # dd if=/mnt/largefile of=/dev/null
+    ...
+    [  194.196391] ==================================================================
+    [  194.196844] BUG: KASAN: slab-use-after-free in gf128mul_4k_lle+0xc1/0x110
+    [  194.197269] Read of size 8 at addr ffff888112bd0448 by task kworker/u77:2/899
+    [  194.197707]
+    [  194.197818] CPU: 12 UID: 0 PID: 899 Comm: kworker/u77:2 Not tainted 6.11.0-lku-00028-gfca3ca14a17a-dirty #43
+    [  194.198400] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.2-3-gd478f380-prebuilt.qemu.org 04/01/2014
+    [  194.199046] Workqueue: smb3decryptd smb2_decrypt_offload [cifs]
+    [  194.200032] Call Trace:
+    [  194.200191]  <TASK>
+    [  194.200327]  dump_stack_lvl+0x4e/0x70
+    [  194.200558]  ? gf128mul_4k_lle+0xc1/0x110
+    [  194.200809]  print_report+0x174/0x505
+    [  194.201040]  ? __pfx__raw_spin_lock_irqsave+0x10/0x10
+    [  194.201352]  ? srso_return_thunk+0x5/0x5f
+    [  194.201604]  ? __virt_addr_valid+0xdf/0x1c0
+    [  194.201868]  ? gf128mul_4k_lle+0xc1/0x110
+    [  194.202128]  kasan_report+0xc8/0x150
+    [  194.202361]  ? gf128mul_4k_lle+0xc1/0x110
+    [  194.202616]  gf128mul_4k_lle+0xc1/0x110
+    [  194.202863]  ghash_update+0x184/0x210
+    [  194.203103]  shash_ahash_update+0x184/0x2a0
+    [  194.203377]  ? __pfx_shash_ahash_update+0x10/0x10
+    [  194.203651]  ? srso_return_thunk+0x5/0x5f
+    [  194.203877]  ? crypto_gcm_init_common+0x1ba/0x340
+    [  194.204142]  gcm_hash_assoc_remain_continue+0x10a/0x140
+    [  194.204434]  crypt_message+0xec1/0x10a0 [cifs]
+    [  194.206489]  ? __pfx_crypt_message+0x10/0x10 [cifs]
+    [  194.208507]  ? srso_return_thunk+0x5/0x5f
+    [  194.209205]  ? srso_return_thunk+0x5/0x5f
+    [  194.209925]  ? srso_return_thunk+0x5/0x5f
+    [  194.210443]  ? srso_return_thunk+0x5/0x5f
+    [  194.211037]  decrypt_raw_data+0x15f/0x250 [cifs]
+    [  194.212906]  ? __pfx_decrypt_raw_data+0x10/0x10 [cifs]
+    [  194.214670]  ? srso_return_thunk+0x5/0x5f
+    [  194.215193]  smb2_decrypt_offload+0x12a/0x6c0 [cifs]
+
+This is because TFM is being used in parallel.
+
+Fix this by allocating a new AEAD TFM for async decryption, but keep
+the existing one for synchronous READ cases (similar to what is done
+in smb3_calc_signature()).
+
+Also remove the calls to aead_request_set_callback() and
+crypto_wait_req() since it's always going to be a synchronous operation.
+
+Signed-off-by: Enzo Matsumiya <ematsumiya@suse.de>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+[ Anastasia: in old kernels dec and enc fields
+  are named ccmaesdecrypt and ccmaesencrypt. ]
+Signed-off-by: Anastasia Belova <abelova@astralinux.ru>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 35 ++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+Backport fix for CVE-2024-50047
+ fs/cifs/smb2ops.c | 48 +++++++++++++++++++++++++++--------------------
+ fs/cifs/smb2pdu.c |  6 ++++++
+ 2 files changed, 34 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index e4d3366ead1f..8c9c89417440 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -247,6 +247,7 @@ struct qcom_pcie_ops {
- 	void (*host_post_init)(struct qcom_pcie *pcie);
- 	void (*deinit)(struct qcom_pcie *pcie);
- 	void (*ltssm_enable)(struct qcom_pcie *pcie);
-+	void (*ltssm_disable)(struct qcom_pcie *pcie);
- 	int (*config_sid)(struct qcom_pcie *pcie);
- };
- 
-@@ -618,6 +619,37 @@ static int qcom_pcie_post_init_1_0_0(struct qcom_pcie *pcie)
- 	return 0;
- }
- 
-+static int qcom_pcie_host_start_link(struct dw_pcie *pci)
-+{
-+	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-+
-+	qcom_ep_reset_deassert(pcie);
-+
-+	if (pcie->cfg->ops->ltssm_enable)
-+		pcie->cfg->ops->ltssm_enable(pcie);
-+
-+	return 0;
-+}
-+
-+static void qcom_pcie_host_stop_link(struct dw_pcie *pci)
-+{
-+	struct qcom_pcie *pcie = to_qcom_pcie(pci);
-+
-+	qcom_ep_reset_assert(pcie);
-+
-+	if (pcie->cfg->ops->ltssm_disable)
-+		pcie->cfg->ops->ltssm_disable(pcie);
-+}
-+
-+static void qcom_pcie_2_3_2_ltssm_disable(struct qcom_pcie *pcie)
-+{
-+	u32 val;
-+
-+	val = readl(pcie->parf + PARF_LTSSM);
-+	val &= ~LTSSM_EN;
-+	writel(val, pcie->parf + PARF_LTSSM);
-+}
-+
- static void qcom_pcie_2_3_2_ltssm_enable(struct qcom_pcie *pcie)
+diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
+index 68f93de2b152..8cfce01cf699 100644
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -4291,7 +4291,7 @@ smb2_get_enc_key(struct TCP_Server_Info *server, __u64 ses_id, int enc, u8 *key)
+  */
+ static int
+ crypt_message(struct TCP_Server_Info *server, int num_rqst,
+-	      struct smb_rqst *rqst, int enc)
++	      struct smb_rqst *rqst, int enc, struct crypto_aead *tfm)
  {
- 	u32 val;
-@@ -1362,6 +1394,7 @@ static const struct qcom_pcie_ops ops_1_9_0 = {
- 	.host_post_init = qcom_pcie_host_post_init_2_7_0,
- 	.deinit = qcom_pcie_deinit_2_7_0,
- 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
-+	.ltssm_disable = qcom_pcie_2_3_2_ltssm_disable,
- 	.config_sid = qcom_pcie_config_sid_1_9_0,
- };
+ 	struct smb2_transform_hdr *tr_hdr =
+ 		(struct smb2_transform_hdr *)rqst[0].rq_iov[0].iov_base;
+@@ -4302,8 +4302,6 @@ crypt_message(struct TCP_Server_Info *server, int num_rqst,
+ 	u8 key[SMB3_ENC_DEC_KEY_SIZE];
+ 	struct aead_request *req;
+ 	u8 *iv;
+-	DECLARE_CRYPTO_WAIT(wait);
+-	struct crypto_aead *tfm;
+ 	unsigned int crypt_len = le32_to_cpu(tr_hdr->OriginalMessageSize);
+ 	void *creq;
  
-@@ -1429,6 +1462,8 @@ static const struct qcom_pcie_cfg cfg_sc8280xp = {
- static const struct dw_pcie_ops dw_pcie_ops = {
- 	.link_up = qcom_pcie_link_up,
- 	.start_link = qcom_pcie_start_link,
-+	.host_start_link = qcom_pcie_host_start_link,
-+	.host_stop_link = qcom_pcie_host_stop_link,
- };
+@@ -4314,15 +4312,6 @@ crypt_message(struct TCP_Server_Info *server, int num_rqst,
+ 		return rc;
+ 	}
  
- static int qcom_pcie_icc_init(struct qcom_pcie *pcie)
-
+-	rc = smb3_crypto_aead_allocate(server);
+-	if (rc) {
+-		cifs_server_dbg(VFS, "%s: crypto alloc failed\n", __func__);
+-		return rc;
+-	}
+-
+-	tfm = enc ? server->secmech.ccmaesencrypt :
+-						server->secmech.ccmaesdecrypt;
+-
+ 	if ((server->cipher_type == SMB2_ENCRYPTION_AES256_CCM) ||
+ 		(server->cipher_type == SMB2_ENCRYPTION_AES256_GCM))
+ 		rc = crypto_aead_setkey(tfm, key, SMB3_GCM256_CRYPTKEY_SIZE);
+@@ -4361,11 +4350,7 @@ crypt_message(struct TCP_Server_Info *server, int num_rqst,
+ 	aead_request_set_crypt(req, sg, sg, crypt_len, iv);
+ 	aead_request_set_ad(req, assoc_data_len);
+ 
+-	aead_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG,
+-				  crypto_req_done, &wait);
+-
+-	rc = crypto_wait_req(enc ? crypto_aead_encrypt(req)
+-				: crypto_aead_decrypt(req), &wait);
++	rc = enc ? crypto_aead_encrypt(req) : crypto_aead_decrypt(req);
+ 
+ 	if (!rc && enc)
+ 		memcpy(&tr_hdr->Signature, sign, SMB2_SIGNATURE_SIZE);
+@@ -4454,7 +4439,7 @@ smb3_init_transform_rq(struct TCP_Server_Info *server, int num_rqst,
+ 	/* fill the 1st iov with a transform header */
+ 	fill_transform_hdr(tr_hdr, orig_len, old_rq, server->cipher_type);
+ 
+-	rc = crypt_message(server, num_rqst, new_rq, 1);
++	rc = crypt_message(server, num_rqst, new_rq, 1, server->secmech.ccmaesencrypt);
+ 	cifs_dbg(FYI, "Encrypt message returned %d\n", rc);
+ 	if (rc)
+ 		goto err_free;
+@@ -4480,8 +4465,9 @@ decrypt_raw_data(struct TCP_Server_Info *server, char *buf,
+ 		 unsigned int npages, unsigned int page_data_size,
+ 		 bool is_offloaded)
+ {
+-	struct kvec iov[2];
++	struct crypto_aead *tfm;
+ 	struct smb_rqst rqst = {NULL};
++	struct kvec iov[2];
+ 	int rc;
+ 
+ 	iov[0].iov_base = buf;
+@@ -4496,9 +4482,31 @@ decrypt_raw_data(struct TCP_Server_Info *server, char *buf,
+ 	rqst.rq_pagesz = PAGE_SIZE;
+ 	rqst.rq_tailsz = (page_data_size % PAGE_SIZE) ? : PAGE_SIZE;
+ 
+-	rc = crypt_message(server, 1, &rqst, 0);
++	if (is_offloaded) {
++		if ((server->cipher_type == SMB2_ENCRYPTION_AES128_GCM) ||
++		    (server->cipher_type == SMB2_ENCRYPTION_AES256_GCM))
++			tfm = crypto_alloc_aead("gcm(aes)", 0, 0);
++		else
++			tfm = crypto_alloc_aead("ccm(aes)", 0, 0);
++		if (IS_ERR(tfm)) {
++			rc = PTR_ERR(tfm);
++			cifs_server_dbg(VFS, "%s: Failed alloc decrypt TFM, rc=%d\n", __func__, rc);
++
++			return rc;
++		}
++	} else {
++		if (unlikely(!server->secmech.ccmaesdecrypt))
++			return -EIO;
++
++		tfm = server->secmech.ccmaesdecrypt;
++	}
++
++	rc = crypt_message(server, 1, &rqst, 0, tfm);
+ 	cifs_dbg(FYI, "Decrypt message returned %d\n", rc);
+ 
++	if (is_offloaded)
++		crypto_free_aead(tfm);
++
+ 	if (rc)
+ 		return rc;
+ 
+diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
+index 03651cc6b7a5..245e2dd5a194 100644
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -998,6 +998,12 @@ SMB2_negotiate(const unsigned int xid, struct cifs_ses *ses)
+ 		else
+ 			cifs_server_dbg(VFS, "Missing expected negotiate contexts\n");
+ 	}
++
++	if (server->cipher_type && !rc) {
++		rc = smb3_crypto_aead_allocate(server);
++		if (rc)
++			cifs_server_dbg(VFS, "%s: crypto alloc failed, rc=%d\n", __func__, rc);
++	}
+ neg_exit:
+ 	free_rsp_buf(resp_buftype, rsp);
+ 	return rc;
 -- 
-2.34.1
+2.43.0
 
