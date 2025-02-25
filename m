@@ -1,153 +1,146 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B1918DB10;
-	Tue, 25 Feb 2025 17:06:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C900E197A7A;
+	Tue, 25 Feb 2025 17:06:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740503179; cv=none; b=jbrRrJLz/T1j8+fWCrEJNrxnEt59rE4VNCvy/ChfmbApAHWOB9Gl2n5qXUOEi2P3ELFFRC9v1IwQDGwGs2jKbVpGMrpB+uvHekPXCKqyyKHQKUZ3+lIACjD41LuTiqkXuvEDB9tT+FuEaxOsjadtdtUVdEtjF/6QJRXuUT1UK7Q=
+	t=1740503183; cv=none; b=kOjIJmQTBermYGv2qTBNZ4AToPvShTGnGre3YT+f/0slG5si5QSszht19MUn0P33be2FaPQPH3ZBrg0wT/kHI55XVqcgwwp+FSBllywU6vDKvMQch9Nj4+NZcejKw/RgKs7XYtMz6aM4DPfmAvhA7GuTty8bFWNKDuP1mdMorUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740503179; c=relaxed/simple;
-	bh=F9arj9XlSPYLFUn2cFiuuIjkriGaXcT4MDgLxONyaic=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sierku1h2MRLTvTRDibG3Mu+Rd1de+ltrvlsK0LyM0K7tIykgX6GowUFjusek1MGzUjDD193cbwC73cZPnhZwFCYii0cDw4JVYBZvHXLJkwcKoXWmvlluvfsRWbBfdMfSsVM9uPhIcWli7cdr0A4TbzvrdrhUjwxiTEpK/ZEesg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EBZKXIXv; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740503183; c=relaxed/simple;
+	bh=et/hYYiFKsZDNd97JleZ75B5fUQEghUreDr7RCcT2Jw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ua6r2DAmnw2MjX726jQCEAdh2EH51D8ayVtdb8cGqfbg3j1n+Kdrg3neWBrp26ENEV0E7lcGizaYm8in9fFXQNV9i9w08G/AH/sMVqUjrzqxKDXmA/EVBR5/VqRhQN+m6eKlKAXPH6Ed377Mv6dqgDZmPGUPJlyfjUnHeL3EGe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=k39Lam0r; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EBZKXIXv"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-220d28c215eso91758715ad.1;
-        Tue, 25 Feb 2025 09:06:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740503176; x=1741107976; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qs/0+j89mqn1YHcz/KkekbDc2+h2ZGxPg7HFDR1eoNA=;
-        b=EBZKXIXvF0PvKSeTLMjDGEUIu9+X06iHwI4Qw4sAJqQSSRV4QfLneovxNgfeSVfRbE
-         TRYwh887EUQVa3/vrhfIVkICxOBzGPKGg0r7lFz9UfI04iTTpD+EXud4sDLxhgQs198t
-         szhtsF2znv80o9km1vPeTOYEbYgfgVUmkjV5l4YCB+TJwR0URpQozog4tuWJAMGChA6e
-         T7g2fGiSNk97Zitj/WHJoyNJUXBbHgHu61hoCxUxsV4+3cW47mSGyo2aQkUqn/Cjn79e
-         fVVQVbCNzGUn/EnGBmaHVZjnE9TNgmdTQptpFu+SnXc6qINzgY9pzfTCwk53VWPFJHAq
-         8RdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740503176; x=1741107976;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qs/0+j89mqn1YHcz/KkekbDc2+h2ZGxPg7HFDR1eoNA=;
-        b=J0AajdfKix87caP6E2OCuKQgh8T3SjaXjpNh9a9unZ6heyK0qDdkehJUg4I7DO2T3v
-         s90LtmUy3lNMmc5s2EPKcK+8csZKsGrcdQK4VyN3ZI4ANd+DPatMQ1vJEpnA20XAN2Nu
-         oyLsJXuttBV/u69u6eIgfMmXvQnfBTa5OSmNtVDI6sxrTJ1yJ17H28INFeKWYAXAmdll
-         GEoA2Crxo/X8Tx1447ccuS5wOyNBG5E/xUt42ueiU/Hh6uTxQZYPSl0GgMHIyGs3lzUB
-         9tajk/SMvsD2axc/uwrpZO3sV1e3o+76vlsi5yujm+IwmY0zRJWxajNr352Bv2NB5p34
-         orWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVzNyE91mOW5tMtU72yG1w7qg21N+YBsGYO8zSdWs1rJsU35Vm0ekj/K1hCvATuPffHZZFoRvOJT0TGXlc=@vger.kernel.org, AJvYcCWBLS632r8izg13frT38gouzAEAXYMF7vGU7+D38l2XZKMz4ta4L3ymGuwXx5GkjYm5/y+fC73X/qxW7Q==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUuAHhm5IxCtNmLxlnFRAY8Z7NyAccRravHXm+Ib5qnNBm1ZZR
-	QdTp3+HSQNKMMvpruj7TUoRC0bMoweIiGRESf0bPjRluR2bgWe7OdHsb6PhF
-X-Gm-Gg: ASbGncuE1pa8SBh1yWlToEEswnVeACGkddufk8lERzCZqPOdqUNzoUCB0h4tllG73hK
-	60n2nPHTppVzxsZWHaM0aB9hIMIOs2NAlopBhc3YyJwtv+cmjOlkXAg7nek+aFgBlg6XHqir8yl
-	U1nABE4H3sku8pwfoVwxHJwCajPVjTSwxkLuOO8qodpkxpZH73xh7K0eMQFAW3a18g1ndQq6wyU
-	iHkxG28FOjBHNFqX7XFOWE9lRrIeXKFRIUMH9lTBA2S0hEKzdNg7vSKJIqhkYo+mHqvbjN4FTCA
-	QXW+Sx19EaSJo8JTkuttFOkZojapfwY17EE3ZVJ7IL5PyEc=
-X-Google-Smtp-Source: AGHT+IG251AWdoXj3YPsOiyV3kX25AqOqmYbGwvFLLj7JBzdt+vcWebCY6rP9OGkXxr6pLe8CTfV/Q==
-X-Received: by 2002:a17:902:d4d0:b0:21f:7082:1146 with SMTP id d9443c01a7336-22307b5b90fmr61113065ad.30.1740503176553;
-        Tue, 25 Feb 2025 09:06:16 -0800 (PST)
-Received: from DESKTOP-P76LG1N.localdomain ([14.162.192.11])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7347a6abb63sm1759887b3a.9.2025.02.25.09.06.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 09:06:16 -0800 (PST)
-From: Nam Tran <trannamatk@gmail.com>
-To: pavel@kernel.org,
-	lee@kernel.org,
-	krzk+dt@kernel.org,
-	robh@kernel.org,
-	conor+dt@kernel.org
-Cc: devicetree@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Nam Tran <trannamatk@gmail.com>
-Subject: [PATCH v2 1/2] dt-bindings: leds: Add LP5812 LED driver bindings
-Date: Wed, 26 Feb 2025 00:06:00 +0700
-Message-Id: <20250225170601.21334-2-trannamatk@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250225170601.21334-1-trannamatk@gmail.com>
-References: <20250225170601.21334-1-trannamatk@gmail.com>
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="k39Lam0r"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.2.1)
+ id d66218f4c9878363; Tue, 25 Feb 2025 18:06:19 +0100
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 31CC422C28BF;
+	Tue, 25 Feb 2025 18:06:19 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1740503179;
+	bh=et/hYYiFKsZDNd97JleZ75B5fUQEghUreDr7RCcT2Jw=;
+	h=From:Subject:Date;
+	b=k39Lam0rNmbqxbnt1nIb+8I/Fg26wE0UDZGNhYWzjv/tX4vzgLy/eXuRLvawJPaMF
+	 tKM5zNsAp5/bKpl5E/QXkeTe48zdntu2NqXgfZELc0xVk68gPrRkFsDfGyOwHeqNaa
+	 ocAwFlo1pUsbN0+HSYgLPgYOkBL8lp/isbvMASOnHVmIUpplwiP1jzxXyXRFZ+TbrW
+	 QqmqUHzJlUWAPbnxjcQjsvlJe0n02eMiCT5QgBvNXCB4dZuiUMcCnceBGyKXN9ES5P
+	 2cvik9G6FTZYfU5RJL+Ynrye1ItkdXV7NR2ADiQszl+X9iG96BqleGi0zqDoZY9p2B
+	 Jp2abcFdOAmOg==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Oliver Neukum <oneukum@suse.com>, Ajay Agarwal <ajayagarwal@google.com>,
+ Brian Norris <briannorris@google.com>, Raag Jadav <raag.jadav@intel.com>
+Subject:
+ [PATCH v2] PM: runtime: Unify error handling during suspend and resume
+Date: Tue, 25 Feb 2025 18:06:18 +0100
+Message-ID: <12620037.O9o76ZdvQC@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekvddviecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpeffffffkefgheehffelteeiveeffeevhfelteejvddvieejjeelvdeiheeuveeuffenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeekpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshhtvghrnhesrhhofihlrghnugdrhhgrrhhvrghrugdrvgguuhdprhgtphhtthhopehulhhfrdhhrghnshhsohhnsehlihhnrghrohdrohhrghdprhgtphhtthhopehonhgvuhhkuhhmsehsuhhsvgdrtghomhdprhgtphhtthh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=8 Fuz1=8 Fuz2=8
 
-This documentation ensures proper integration of the LP5812
-in Device Tree-based systems.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Signed-off-by: Nam Tran <trannamatk@gmail.com>
+There is a confusing difference in error handling between rpm_suspend()
+and rpm_resume() related to the special way in which -EAGAIN and -EBUSY
+error values are treated by the former.  Also, converting -EACCES coming
+from the callback to I/O error, which it quite likely is not, may
+confuse runtime PM users.
+
+To address the above, modify rpm_callback() to convert -EACCES coming
+from the driver to -EAGAIN and to set power.runtime_error only if the
+return value is not -EAGAIN or -EBUSY.
+
+This will cause the error handling in rpm_resume() and rpm_suspend() to
+work consistently, so drop the no longer needed -EAGAIN or -EBUSY
+special case from the latter and make it retry autosuspend if
+power.runtime_error is unset.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- .../devicetree/bindings/leds/ti,lp5812.yaml   | 34 +++++++++++++++++++
- MAINTAINERS                                   |  6 ++++
- 2 files changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/ti,lp5812.yaml
 
-diff --git a/Documentation/devicetree/bindings/leds/ti,lp5812.yaml b/Documentation/devicetree/bindings/leds/ti,lp5812.yaml
-new file mode 100644
-index 000000000000..1eb395230531
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/ti,lp5812.yaml
-@@ -0,0 +1,34 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+
-+title: LED driver for LP5812 LED from Texas Instruments.
-+
-+maintainers:
-+
-+description: |
-+  The LP5812 is an I2C LED Driver that can support LED matrix 4x3.
-+
-+properties:
-+  compatible:
-+    const: ti,lp5812
-+
-+  reg:
-+    description: I2C slave address
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    i2c1 {
-+      lp5812@1b {
-+        compatible = "ti,lp5812";
-+        reg = <0x1b>;
-+      };
-+    };
-+
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4ff26fa94895..32312959d595 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -23494,6 +23494,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/leds/backlight/ti,lp8864.yaml
- F:	drivers/leds/leds-lp8864.c
+v1 -> v2: Add comment explaining the -EACCES error code conversion (Raag)
+
+---
+ drivers/base/power/runtime.c |   40 ++++++++++++++++++++++++----------------
+ 1 file changed, 24 insertions(+), 16 deletions(-)
+
+--- a/drivers/base/power/runtime.c
++++ b/drivers/base/power/runtime.c
+@@ -448,8 +448,19 @@
+ 		retval = __rpm_callback(cb, dev);
+ 	}
  
-+TEXAS INSTRUMENTS' LP5812 LED DRIVER
-+M:	Nam Tran <trannamatk@gmail.com>
-+L:	linux-leds@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/leds/ti,lp5812.yaml
+-	dev->power.runtime_error = retval;
+-	return retval != -EACCES ? retval : -EIO;
++	/*
++	 * Since -EACCES means that runtime PM is disabled for the given device,
++	 * it should not be returned by runtime PM callbacks.  If it is returned
++	 * nevertheless, assume it to be a transient error and convert it to
++	 * -EAGAIN.
++	 */
++	if (retval == -EACCES)
++		retval = -EAGAIN;
 +
- TEXAS INSTRUMENTS' SYSTEM CONTROL INTERFACE (TISCI) PROTOCOL DRIVER
- M:	Nishanth Menon <nm@ti.com>
- M:	Tero Kristo <kristo@kernel.org>
--- 
-2.25.1
++	if (retval != -EAGAIN && retval != -EBUSY)
++		dev->power.runtime_error = retval;
++
++	return retval;
+ }
+ 
+ /**
+@@ -725,21 +736,18 @@
+ 	dev->power.deferred_resume = false;
+ 	wake_up_all(&dev->power.wait_queue);
+ 
+-	if (retval == -EAGAIN || retval == -EBUSY) {
+-		dev->power.runtime_error = 0;
++	/*
++	 * On transient errors, if the callback routine failed an autosuspend,
++	 * and if the last_busy time has been updated so that there is a new
++	 * autosuspend expiration time, automatically reschedule another
++	 * autosuspend.
++	 */
++	if (!dev->power.runtime_error && (rpmflags & RPM_AUTO) &&
++	    pm_runtime_autosuspend_expiration(dev) != 0)
++		goto repeat;
++
++	pm_runtime_cancel_pending(dev);
+ 
+-		/*
+-		 * If the callback routine failed an autosuspend, and
+-		 * if the last_busy time has been updated so that there
+-		 * is a new autosuspend expiration time, automatically
+-		 * reschedule another autosuspend.
+-		 */
+-		if ((rpmflags & RPM_AUTO) &&
+-		    pm_runtime_autosuspend_expiration(dev) != 0)
+-			goto repeat;
+-	} else {
+-		pm_runtime_cancel_pending(dev);
+-	}
+ 	goto out;
+ }
+ 
+
+
 
