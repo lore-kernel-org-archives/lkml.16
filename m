@@ -1,141 +1,188 @@
-Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA5A18FDAA;
-	Tue, 25 Feb 2025 16:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3044183CB0;
+	Tue, 25 Feb 2025 16:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740500730; cv=none; b=c5ebHC0ufS9G28muSX0jnNW5ggZ+I4XBrE8le3Ewt09CclbUawyABh5r3FK9kxUc7ruthjoHOlehZX72NDvPU9V39MC8ft9t8cR9rEKRcj9ZXLN/pawcA0gCf0VbgSiwTSoaKHpuWYoptm8wfBUvUb2O+LDWIp+Nd8wElc0ZRbk=
+	t=1740500856; cv=none; b=nuS33hCiEUi2e0+Ts2vMXJ5Mjbfq7ZbLpAlsipAkC7WMcX4IoOIHoknyMOaMWWfS4++c0tsDDAe9DqhiwMz7R1rVdAh5qzv2iidxVXZ1Q78AaM/6lLgIyAM5dCqPo8f9b/RvQ20taPOH4mH1G2ge2PiUdyym9VnC8iodXYUJYks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740500730; c=relaxed/simple;
-	bh=W7vDGYr9AWUHy42wWnsHFFo2msgoho242tXHNbm/1zg=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Xl07VIl51eU62+y+UV6nJKDNsLrAPudl7D+uy9ktp+yf6LUOdcIeLSmM/bWkPFfhrL2vs/F6gbCRKM6wDEcHcE8r/6W0gRExgfMN4k2NDMMyMDdVWq7W9TSlU24sgCWP2kAryVe89/jUiz24f42uDJCa28AMJlJ8oPe+KaPwFxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Ts+5z7ME; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=7IMscJv+; arc=none smtp.client-ip=202.12.124.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1740500856; c=relaxed/simple;
+	bh=BdJtZnTV2i07SNC32yy0QgGJM8y0+NMRw9EmWllffYk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X7mkq2C5OvZduYvCm69P8SyeHT2Wj4sud4G/7oupN0hFy1u6J6rekSON5/E1zQsAgtiYnG5+ync5RD28ZR6Z97eu+Ei/0KbEKnWKH77C73Dm49NJ4nGMMgxea3NVK4iMpA77w1RxaOaddvQxmptz+/+3ktqUyT+Jvv69FbwfFxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=tNP/9R0o; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Ts+5z7ME";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="7IMscJv+"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfout.stl.internal (Postfix) with ESMTP id 6204311400FF;
-	Tue, 25 Feb 2025 11:25:27 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-11.internal (MEProxy); Tue, 25 Feb 2025 11:25:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1740500727;
-	 x=1740587127; bh=NgNWJz4/ej91tUlb/G6+Viw2nzrffwayT6pC5YFAhO8=; b=
-	Ts+5z7ME5Q8OC30nbJVhSMKsOdYysD4nm6jTVI4jooMa2+sO/0wBLKqZZ5V5bbdG
-	LxgOcxD/iZCSCmj6NPcMvNaToFkyCe7hPLhDw685n4CzTBChKu9j8QYfS1Opp1ZR
-	y/kS2NdLPJEFoODJI4bAMhfoeAp3BcvqlgX2wmILD5LO+WW6fa5Rt0wCsPrR2Fkt
-	mPtzfb5E4OApxqwkMp8ZlYej3DAxTnDNIzt9uPlhSOzgTxKmw+a5BRcDhcUo+bv9
-	ffySlOeAQLneC0mPDWxBJg7ioHDmWCtUx1qEZpwfuArf3+SoLHqWVGH1bwFDV3zu
-	yBPKhWjqFBIrh08VnspmoA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740500727; x=
-	1740587127; bh=NgNWJz4/ej91tUlb/G6+Viw2nzrffwayT6pC5YFAhO8=; b=7
-	IMscJv+4prsSX8+62EfnIXjp33+Cap/59Fm7j9L6MPjVCg1h9+D2tV5f+mnsi+Iw
-	yrkpybyHb8IL70gX5I5c5bL9xRAduilaZUnyBBYKH4LmrXxFosBzgqCr8eyTqTsq
-	MQCYnjBQ5TZ9V1LN3vgGD1do4Pxji+vMWREjvNlr8TYVX6YwrDowUT1zQFOipd3H
-	hbXSjuEg0vfrndit2+/op2bgFYQ/1vQh6/rOx9KB7SsUi2a7sGsgx41VmqMRZ7aD
-	BbgAwlMKUr/JxtBQRJFxlJZvLmrzYct2trhc4zyUeUcQKYtwUBDhrjcLixQlQ6Xz
-	RrKUOPLyhMPcOoaIbFH9g==
-X-ME-Sender: <xms:9e69Z07XuZLCb2mg1ZRkabdFDyqSIvS9qkpiGvKb-qNtTP-YVf06Pg>
-    <xme:9e69Z17cbtisUffNy5O8_ocMYcYeIGrPXdt-Jl3BL51QGh8OjQVoCzS4WSRnXdsoc
-    Dv5akB7NOyD5O3KBQ0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekvddujecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthhqredtredt
-    jeenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpedvhfdvkeeuudevfffftefgvdevfedvleehvddv
-    geejvdefhedtgeegveehfeeljeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopedu
-    vddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepuhdrkhhlvghinhgvqdhkohgvnh
-    highessggrhihlihgsrhgvrdgtohhmpdhrtghpthhtoheprghlvgigrghnughrvgdrthho
-    rhhguhgvsehfohhsshdrshhtrdgtohhmpdhrtghpthhtohepughmihhtrhihrdhtohhroh
-    hkhhhovhesghhmrghilhdrtghomhdprhgtphhtthhopehmtghoqhhuvghlihhnrdhsthhm
-    fedvsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopeholhhivhgvrhdrghhrrghuthgvsehkohgtohgtohhnnhgvtghtohhr
-    rdgtohhmpdhrtghpthhtohepkhhriiihshiithhofhdrkhhoiihlohifshhkiheslhhinh
-    grrhhordhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhs
-    thhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqshhtmhefvd
-    esshhtqdhmugdqmhgrihhlmhgrnhdrshhtohhrmhhrvghplhihrdgtohhm
-X-ME-Proxy: <xmx:9e69ZzegOGN6bUlJD2UGbVzh35QPUiFSoFF3xeY7tCxHjW-lGUaYEg>
-    <xmx:9e69Z5INpchUfssxhI6lz-Fnuj6gjsNMslOX57YqjYGZ_w8yg9x_KQ>
-    <xmx:9e69Z4K3UxN9cBGMVc8Aq2knw8HXcPrwkI6mnDOYjnS0aPPpW82qOg>
-    <xmx:9e69Z6yKQtoTIfgtx_8LGs0EDnXR_l7EzCykHIjUAyOttInnOdpBWA>
-    <xmx:9-69Z2yggIQFeBrIjCRTyRbAFT6agWMy-ansv0zzLMebHgySR2eqe0QQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id B96FD2220072; Tue, 25 Feb 2025 11:25:25 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="tNP/9R0o"
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 16C972E0904A;
+	Tue, 25 Feb 2025 18:27:24 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1740500845;
+	bh=NnGd3+Erk9r9ZZ2TFe6MqU7NYineZtnKsCzncysHX0s=;
+	h=Received:From:Subject:To;
+	b=tNP/9R0oSfESPQvz6pGPWLQN7SYMjYF109sGAiCVnAcvKQyc4FJikUZ2y/kOXaczp
+	 scQ+s5tlnY9dzvRRR+gkXLwGBFF5iIL1AxIVUAx6tkugK26vIpUzcNF8waqK7CoVZu
+	 U/cpy3SJ7h9xl/Py+0j5oH6KwBMHv99F5CtCl0wQ=
+Authentication-Results: linux1587.grserver.gr;
+        spf=pass (sender IP is 209.85.208.170) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f170.google.com
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f170.google.com with SMTP id
+ 38308e7fff4ca-30613802a59so60210751fa.0;
+        Tue, 25 Feb 2025 08:27:24 -0800 (PST)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCUHM9XlKBIkKC8BYIbEM/4fXekR8ofFfQyRLhWDJTO4QAF20STNBBNzSK2htSVaPN0iUVxIFGE0Lvxe@vger.kernel.org,
+ AJvYcCWOGnnRXvWVdPmnadjcvR12mJUELGay17EmXP0SQIzRsaaP3B2prXjuQG3sO5DsgFOGpwTXCbOHpa2vFqXg@vger.kernel.org,
+ AJvYcCWSD8SRbWQT5MekTgn+zRF4HpB6dCY+l4Ty1+rg3HbJgmv8bgeq2y0wAxkvcglRadpbcVfDn+uJEtEGUUD1mxvnlxlBgA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiJiO+7aC/kBN4tdlPJccXgGK4C+ejEopqgJYXCPx5IH3cKzh2
+	p8d9UEfdrfa1Y9NrALQNryBTUvKb+7bxobg7C3ou4e2uOjJye0Wkm/lFslZXxjPjkdnEXztdfdT
+	Nq6O8LLG0rfSj8f/wvK/CIW8nyAw=
+X-Google-Smtp-Source: 
+ AGHT+IFsEd4oylDEyrfYtIXluntvlN8HJd7l3mUHfTBfJ4KDbootcyCrzrgRIjvvg0uN4xvbU3BUYWc5Q5DfEy0x9AI=
+X-Received: by 2002:a2e:9ecd:0:b0:308:fedf:8c12 with SMTP id
+ 38308e7fff4ca-30b79133d87mr2041851fa.5.1740500843364; Tue, 25 Feb 2025
+ 08:27:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 25 Feb 2025 17:25:05 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- "Maxime Coquelin" <mcoquelin.stm32@gmail.com>,
- "Alexandre Torgue" <alexandre.torgue@foss.st.com>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>,
- "Yu Jiaoliang" <yujiaoliang@vivo.com>,
- "Oliver Graute" <oliver.graute@kococonnector.com>,
- linux-input@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Message-Id: <a6d10d80-79d3-426f-9dc8-0ddab77e89d9@app.fastmail.com>
-In-Reply-To: 
- <6xoycaft6wnd4sm74f2o4koc7lvyl2mtxp2kc6lc4dzpjvby53@ejm5ssbfzbph>
-References: <20250225145332.1116557-1-arnd@kernel.org>
- <6xoycaft6wnd4sm74f2o4koc7lvyl2mtxp2kc6lc4dzpjvby53@ejm5ssbfzbph>
-Subject: Re: [PATCH] [v2] Input: stmpe-ts - mark OF related data as maybe unused
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20250224195059.10185-1-lkml@antheas.dev>
+ <1c0c988b-8fe6-4857-9556-6ac6880b76ff@app.fastmail.com>
+ <633bbd2d5469db5595f66c9eb6ea3172ab7c56b7.camel@ljones.dev>
+ <CAGwozwGmDHMRbURuCvWsk8VTJEf-eFXTh+mamB1sKaHX5DO8WA@mail.gmail.com>
+ <f5d39d3c932a78a5021877230c212c620edc586e.camel@ljones.dev>
+ <CAGwozwEWZxWzcTjPby4OeUz+CCXbvQAkvCExo-Qc7=r-0-6BCg@mail.gmail.com>
+ <5cff4286-2800-4bc0-b243-5244d19a64b7@gmx.de>
+In-Reply-To: <5cff4286-2800-4bc0-b243-5244d19a64b7@gmx.de>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Tue, 25 Feb 2025 17:27:10 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwFS_D4k-Q-QUums8FMZ82p_5-RzBvZZJX1k7_YP2E1cfg@mail.gmail.com>
+X-Gm-Features: AQ5f1JpbOG7dozqD-mEqecwiGnoINaSfPy5IByhYBSLlH1eBPPJoAtDSCeMqdxM
+Message-ID: 
+ <CAGwozwFS_D4k-Q-QUums8FMZ82p_5-RzBvZZJX1k7_YP2E1cfg@mail.gmail.com>
+Subject: Re: [PATCH 0/3] ACPI: platform_profile: fix legacy sysfs with
+ multiple handlers
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: Luke Jones <luke@ljones.dev>, Mark Pearson <mpearson-lenovo@squebb.ca>,
+	"Limonciello, Mario" <mario.limonciello@amd.com>,
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Len Brown <lenb@kernel.org>,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	linux-kernel@vger.kernel.org,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+ me@kylegospodneti.ch
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <174050084442.5352.9862764441592976971@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-On Tue, Feb 25, 2025, at 16:47, Uwe Kleine-K=C3=B6nig wrote:
-> On Tue, Feb 25, 2025 at 03:53:26PM +0100, Arnd Bergmann wrote:
->> diff --git a/drivers/input/touchscreen/stmpe-ts.c b/drivers/input/tou=
-chscreen/
+On Tue, 25 Feb 2025 at 16:56, Armin Wolf <W_Armin@gmx.de> wrote:
 >
-> With=20
+> Am 25.02.25 um 03:26 schrieb Antheas Kapenekakis:
 >
-> diff --git a/include/linux/module.h b/include/linux/module.h
-> index 30e5b19bafa9..014f033ef1ba 100644
-> --- a/include/linux/module.h
-> +++ b/include/linux/module.h
-> @@ -250,7 +250,8 @@ extern void cleanup_module(void);
->  extern typeof(name) __mod_device_table__##type##__##name		\
->    __attribute__ ((unused, alias(__stringify(name))))
->  #else  /* !MODULE */
-> -#define MODULE_DEVICE_TABLE(type, name)
-> +#define MODULE_DEVICE_TABLE(type, name)					\
-> +static const typeof(name) *__mod_device_table__##type##__##name##_ptr=20
-> __attribute__((unused)) =3D &(name)
->  #endif
->=20
->  /* Version of form [<epoch>:]<version>[-<extra-version>].
+> >> If these "scripts" use `platform_profile_choices` to get their
+> >> selections and verify they are available then there should be zero
+> >> breakage. If they don't then they should be updated to be correct.
+> > Yeah, if any Asus users wrote scripts for their laptops to e.g., "echo
+> > quiet | sudo tee /sys/firmware/acpi/platform_profile" or used TLP let
+> > them spend a few days finding out why kernel 6.14 does not work. They
+> > should have written a 300 line bash script instead.
 >
-> the warning goes away and stmpe_ts_ids isn't included in the .o file
-> without having to add __maybe_unused to the driver.
+> Hi,
 >
-> I would consider that a superior approach.
+> using "echo quiet | sudo tee /sys/firmware/acpi/platform_profile" is quite
+> brittle, as some hardware will populate the available profiles dynamically.
+>
+> Still breaking userspace is indeed not an option here, so we have to think
+> of something else.
 
-Not sure, I can see how this avoids some warnings, but this is
-currently the only remaining instance of this problem (I fixed
-another two recently), and in most cases a MODULE_DEVICE_TABLE()
-entry that is completely unused ends up pointing to a real bug,
-where there is a table but it's not also part of the
-device_driver definition.
+e.g., for example I had a tdp handler for the ally and had to
+transplant it to thermal_throttle_profile when the breakage with
+amd_pmf started happening.
 
-      Arnd
+> snip
+>
+> This whole driver was likely written by someone as a hobby, so you already
+> depend on a hobby here.
+>
+> That being said, i agree that fixes have a priority over new features, and
+> i think everyone agrees on that.
+
+Indeed.In which case, saying people should use your hobby code perhaps
+is a bit overreaching. Haha.
+
+> Maybe the current strategy of the legacy platform-profile interface can be extended
+> without introducing the "secondary handler" concept.
+>
+> The current strategy only advertises platform profiles supported by all handlers, and
+> as you pointed out this causes problems for users on certain devices.
+>
+> I was thinking that be can change this strategy to advertise all platform profiles supported
+> by at least one handler can then do something like this:
+>
+>   - handler 1: supports low_power, balanced and performance
+>
+>   - handler 2: supports quiet, balanced and balanced-performance
+>
+> -> legacy interface advertises low_power, quiet, balanced, balanced-performance and performance
+>
+> When setting low_power, the closes equivalent is picked for handlers which do not support low_power:
+>
+>   - handler 1: setting low_power
+>
+>   - handler 2: setting quiet
+>
+> When setting quiet, the same happens:
+>
+>   - handler 1: setting balanced
+>
+>   - handler 2: setting quiet
+>
+> Basically all profiles get treated like a range:
+>
+> low_power <- lower end of the performance range
+> cool,
+> quiet,
+> balanced,
+> balanced-performance,
+> performance <- upper end of the performance range
+>
+> The only problem will be that getting the current platform profile would be more difficult, as
+> the legacy handler has to determine the lowest currently selected platform profile.
+>
+> Would this approach be OK?
+>
+> Thanks,
+> Armin Wolf
+>
+
+So the way this patch series is designed is that the new
+/sys/class/platform-profileX works exactly the same.
+
+Then, when asus-wmi is loaded, regardless of whether amd-pmf is
+loaded, you get quiet, balanced, and performance. Like it was before.
+Setting it to quiet makes amd-pmf use its low power setting. And it
+will work the same with all WMI drivers, regardless of whether they
+use cool, low-power, quiet, or balanced-power
+
+When asus-wmi is unloaded, you get low-power, balanced, and
+performance. As you would with amd-pmf on its own. 0 ABI changes.
+
+Series is small enough so that if you don't like it, it is easy to
+refactor out during the 6.15 merge window.
+
+$ cat /sys/firmware/acpi/platform_profile_choices
+quiet balanced performance
+$ sudo rmmod asus-nb-wmi
+$ cat /sys/firmware/acpi/platform_profile_choices
+low-power balanced performance
+
+Antheas
