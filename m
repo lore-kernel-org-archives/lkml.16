@@ -1,117 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A7E1A0BD6
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 20:00:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014492907
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 20:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740513650; cv=none; b=gPnu4YbjWn5X2kL6kUDeFy4hXGFJJTFbkH079PM7C/+h1U+48aVNYSh0BKugM4wERMukZxamieVGiMHsOwEplDbiST5cFygTwK8acgdUTi3Kh9UcjJ632BH4bnrNQu1RcQCYN+5MXYQOQoVK3npcIpDbtKAWaO43o5L4W6QZFZs=
+	t=1740513767; cv=none; b=PApstFI57BI4WgP2tJGESrhFtxKlYsQqZh+cDgfRX/6YoYcgdGPoNyYnOLHRDr5M6c9rjHzSBTQLY+bEY8WZCrFCmbQAOlTHfxONpiKnBDlLQg1R5yYShvaOmpXHBdfDNQDIbbxtXN0GpHVhb2TtlLMbg2DLnmhWjVtDa8c8esg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740513650; c=relaxed/simple;
-	bh=oLTkvWNLPVYhtsMmPnDmBjn+UY0z6FDAOmaxpoJigrc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oMHB1z/JlpyzyC7hOu6ENssL81s9M78qfR3piSFXNDWlSNCcVIk0hzg7v0/PstsHxssoM8y7h14R8KF/rCJcg1Jsh+aNBsxe2A+N+eUj88fViumRbyqN3+KVgJUUAC/AjOnhaLIgw/ajCBMwmZqsRv+H0KNy6AOVlwQrZ6E4jDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I/Bm221U; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740513767; c=relaxed/simple;
+	bh=4qrl5bjmSVCvMCMSFa+LqAuS8aSu3VYul17BVNW5q48=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eqRM1zJxxn4fsm74Ke5NJU9qxCqMk0vID7ugoMxtjVAU6ykZS6AHHgWnOPrKnUN7k2/TiNJcf6XfGnhuOYalC1Vd+JxFQW1yri288G6/3z40oUYq/D8qcrum12cqaSBlRQ59iC2BN68SyUFTH2H8ePmqdwCHUb7wjUm6TCZkb6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EEQnu2Oj; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I/Bm221U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740513649; x=1772049649;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=oLTkvWNLPVYhtsMmPnDmBjn+UY0z6FDAOmaxpoJigrc=;
-  b=I/Bm221UmZpJq2+ALf79L4fdYegDyB99d28Rrv/Iww0ZUiQgICcs4A7h
-   3/7aHdSCrj85DuDlJdTk6B6OBssjLebka8MvpsSiP+V7CmlhYsrCFnCL/
-   3Tn3eamMupPW2Q/W/RSuGUCZa7rbkIAUQjy3512bH+weyC2/Ovbb9TfJY
-   jvFZGKVkDsCBP2Bt7Jm6+zbG9DECw/vLlttZSFi5BDjH/IFPHF1WcU8pf
-   1soMoVVRxfn8LvvLX4tiNU/P/OVIyh6Nq+3oop05GL5sB1z+dzETIy3sd
-   9B23zHyQBT2bdTYOKcYIdrwUJVyqaDlmdCbhfFUS02fOJl2hVjOye0JIX
-   A==;
-X-CSE-ConnectionGUID: aQjZFnTeRlGOd69gXpfOfA==
-X-CSE-MsgGUID: XMeNPcxTRui5LTrOhL1kqA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="51970640"
-X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
-   d="scan'208";a="51970640"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 12:00:48 -0800
-X-CSE-ConnectionGUID: GuX5MFcnSNa27PE9Oirm8A==
-X-CSE-MsgGUID: dIJ8GuMdRv2/lw0k41mvvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
-   d="scan'208";a="117099588"
-Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 25 Feb 2025 12:00:47 -0800
-Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tn16e-000Aig-2d;
-	Tue, 25 Feb 2025 20:00:41 +0000
-Date: Wed, 26 Feb 2025 04:00:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: undefined reference to `gen_pool_size'
-Message-ID: <202502260351.kWkpfnZB-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EEQnu2Oj"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5dccaaca646so337878a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 12:02:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740513764; x=1741118564; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pu4wgS23muTwabbH8/wdDm76fiP9CrNOTURYvidM7Ww=;
+        b=EEQnu2OjusOEf9YIlOmC1qo+3MttgrcWO9ObU6coVbLDpg1G1xstir39zuyvnu6YKp
+         GBodxwT99w7My+TE5GpW/KiJhpJsBjgMI5s4lUOB6JR6WrcBEDj45ZZor/dRK+lQJcAz
+         EZZJPK3/u6URDoGaCkUEWAtbOEUwsEI8MvopEznJFLprY2Fyh6sidvTz61nO2HefKwmp
+         cwpHZFRIpBRYf+MPJE1m6gG2lFiQRzS+1nZ7u0ljy8LLZQo0YQh+TnOCoptDEFlK9Zpy
+         9ngeuZKtnL36TI43zXV2+kc3LqUSgFsdSkQLo97WMzDXIP3OgKIwjvQVXuPHlxH1bPAY
+         LhDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740513764; x=1741118564;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Pu4wgS23muTwabbH8/wdDm76fiP9CrNOTURYvidM7Ww=;
+        b=SCHEQRpMlaSmWxkMHoeCLAIQChZRO2auv8r62CQUuX+GxDwjL2sbZnvLF+D+jMO1uY
+         7R//mbnMQPZTvWNtlZs3z31T5Bc6OK0avKbRnJ9HNdLU6sor5K6TlO5OisjmeunM6tq5
+         d/VkcIV6tFnPLvX6DUVUiw40iKK2PWkOKlgPv8NEG8u1lF1mXUjxONo2yLgcktAVUW+O
+         sHy48JULoHe67sXbhpK4rtiI/bDl3P7q6V/y5MeDs7d3wHm3IW2M2obM1Mb8Sic7YjaC
+         jaeJBim9/FPcFIE1EnblV1fiCARIK1rKY9u5h/34VdotDaxX5Xjvl4klqwk0Dhim+w/y
+         OTlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWHRgRvGUBKkvGUEQOKQBYOmQWZa8qg6iF+nyeE1F40gjtbaOYomji1hc0kUFEFW92+I8tnhdRTjqSsgT4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2XJKrt/dpfaYya2fsjHtYq12932IIrnxuxfQqYyOmeCH4FoWF
+	S4oEs81C49+6BfVJ2hgnUfqU/SYX5xTbY/MJfHkbYzv7O212HLnY
+X-Gm-Gg: ASbGncs8o9uNPoho/XYEiKyDuprzjEXJaB6rcIhCikrwAg+FUDJ3x59NQFFTJW0KqoM
+	OLH06IkathDCslQQAvsmJ5FjjSmiZjhXcjGtNdCeCm9gHHKHhLincOObzIXOsXMTD4CVIPGbsOd
+	kHnBbSP6zWUqR3x8+Wxd8LAwObUzENN/S7HfUekDao0aG2kZ8LVwgHZdSws2RqImlkJjL/ZEck9
+	vQOquV2nzgzooX7iMbttKHZSfxNl8s6HMoBln3EUz77C6DBxqZRfkkghZ/dPqPM2AzyOpZ4xnyx
+	j+o/31eCaH0MLsQ3drXJ6beZ+jWHlayFzTc=
+X-Google-Smtp-Source: AGHT+IFLUcxnEXQoTE1kvdNpckk1fwMflWZ3Dy1anPYIeDmYOiPOJHN8DHAbZO8h//Fv5u6UPtFW2A==
+X-Received: by 2002:a05:6402:524b:b0:5de:50b4:b71f with SMTP id 4fb4d7f45d1cf-5e0a12baa86mr18751217a12.12.1740513763995;
+        Tue, 25 Feb 2025 12:02:43 -0800 (PST)
+Received: from localhost.localdomain ([46.248.82.114])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e45a8b8b48sm1683613a12.20.2025.02.25.12.02.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 12:02:43 -0800 (PST)
+From: Uros Bizjak <ubizjak@gmail.com>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Uros Bizjak <ubizjak@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: [PATCH] x86/percpu: Construct __percpu_seg_override from __percpu_seg
+Date: Tue, 25 Feb 2025 21:02:20 +0100
+Message-ID: <20250225200235.48007-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hi Grygorii,
+Construct __percpu_seg_override macro from __percpu_seg by
+concatenating the later with __seg_ prefix to reduce ifdeffery.
 
-FYI, the error/warning still remains.
+No functional change intended.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   d082ecbc71e9e0bf49883ee4afd435a77a5101b6
-commit: 99f629718272974405e8d180d2fa70c03c06d61f net: ethernet: ti: cpsw: drop TI_DAVINCI_CPDMA config option
-date:   6 years ago
-config: alpha-randconfig-r004-20230123 (https://download.01.org/0day-ci/archive/20250226/202502260351.kWkpfnZB-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250226/202502260351.kWkpfnZB-lkp@intel.com/reproduce)
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+---
+ arch/x86/include/asm/percpu.h | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502260351.kWkpfnZB-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   alpha-linux-ld: warning: arch/alpha/lib/styncpy.o: missing .note.GNU-stack section implies executable stack
-   alpha-linux-ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
-   alpha-linux-ld: warning: arch/alpha/lib/styncpy.o: missing .note.GNU-stack section implies executable stack
-   alpha-linux-ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
-   alpha-linux-ld: warning: .tmp_vmlinux1 has a LOAD segment with RWX permissions
-   alpha-linux-ld: drivers/net/ethernet/ti/davinci_cpdma.o: in function `cpdma_desc_pool_destroy':
->> (.text+0x34): undefined reference to `gen_pool_size'
->> alpha-linux-ld: (.text+0x38): undefined reference to `gen_pool_size'
->> alpha-linux-ld: (.text+0x48): undefined reference to `gen_pool_avail'
-   alpha-linux-ld: (.text+0x50): undefined reference to `gen_pool_avail'
-   alpha-linux-ld: (.text+0xb4): undefined reference to `gen_pool_size'
-   alpha-linux-ld: (.text+0xb8): undefined reference to `gen_pool_size'
-   alpha-linux-ld: (.text+0xc8): undefined reference to `gen_pool_avail'
-   alpha-linux-ld: (.text+0xd0): undefined reference to `gen_pool_avail'
-   alpha-linux-ld: drivers/net/ethernet/ti/davinci_cpdma.o: in function `cpdma_desc_pool_create.constprop.0':
->> (.text+0x3f4): undefined reference to `devm_gen_pool_create'
->> alpha-linux-ld: (.text+0x428): undefined reference to `devm_gen_pool_create'
-   alpha-linux-ld: (.text+0x4a4): undefined reference to `gen_pool_add_virt'
-   alpha-linux-ld: (.text+0x4ac): undefined reference to `gen_pool_add_virt'
-   alpha-linux-ld: drivers/net/ethernet/ti/davinci_cpdma.o: in function `__cpdma_chan_free':
->> (.text+0x714): undefined reference to `gen_pool_free'
-   alpha-linux-ld: (.text+0x71c): undefined reference to `gen_pool_free'
-   alpha-linux-ld: drivers/net/ethernet/ti/davinci_cpdma.o: in function `cpdma_chan_submit':
->> (.text+0x1bcc): undefined reference to `gen_pool_alloc'
-   alpha-linux-ld: (.text+0x1bd8): undefined reference to `gen_pool_alloc'
-   alpha-linux-ld: (.text+0x205c): undefined reference to `gen_pool_free'
-   alpha-linux-ld: (.text+0x206c): undefined reference to `gen_pool_free'
-   alpha-linux-ld: drivers/net/ethernet/ti/davinci_cpdma.o: in function `cpdma_check_free_tx_desc':
->> (.text+0x20f4): undefined reference to `gen_pool_avail'
-   alpha-linux-ld: (.text+0x20f8): undefined reference to `gen_pool_avail'
-
+diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percpu.h
+index c456e54adb73..8a8cf86dded3 100644
+--- a/arch/x86/include/asm/percpu.h
++++ b/arch/x86/include/asm/percpu.h
+@@ -22,6 +22,7 @@
+ 
+ #else /* !__ASSEMBLY__: */
+ 
++#include <linux/args.h>
+ #include <linux/build_bug.h>
+ #include <linux/stringify.h>
+ #include <asm/asm.h>
+@@ -35,12 +36,7 @@
+ # define __seg_fs		__attribute__((address_space(__seg_fs)))
+ #endif
+ 
+-#ifdef CONFIG_X86_64
+-# define __percpu_seg_override	__seg_gs
+-#else
+-# define __percpu_seg_override	__seg_fs
+-#endif
+-
++#define __percpu_seg_override	CONCATENATE(__seg_, __percpu_seg)
+ #define __percpu_prefix		""
+ 
+ #else /* !CONFIG_CC_HAS_NAMED_AS: */
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.42.0
+
