@@ -1,126 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B2E263C8C;
-	Tue, 25 Feb 2025 08:57:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2DD8263C8C;
+	Tue, 25 Feb 2025 08:57:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740473847; cv=none; b=JTuKFKbRQEnBlOs5Vt5ZpRPOLRRHbBOBLJ5SqGsPIt1HuJAQBoB5mD5JLhVEHzY/gE+7bc9Rg5ukDOpBKulvi5Wr+3jGhcAYEg+6aRtpsnrE/pHcbcAUUNF7owQIguMTuJWsDj3S5Ef3gme35Xo36UwOeIdnVkmFJKKOhip8huE=
+	t=1740473853; cv=none; b=A/eABWSgKxzHnG/mJtVCMVZnoZw+V+A+PgFdQtwpxoDkWMu9GMdbfefAMohkSSHGSChu3bxe+203LORtsBIE0RzxtN1eSjiNyltJyWowsidSZ6nXy20HLA4MYbW15EN1PMyVJau7ZRjAzbuTixhrquMLKKHH8j1G2KHbOM5D3hM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740473847; c=relaxed/simple;
-	bh=FyBG6tA5eQjNICDy5BX7avRDr58XxtQW2yTJbNVviTM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WzvJYPAEp7sZGdELP2gBYYpRh5RdJcBgZC/6/D73S8SC3y7fUL2QEWfCVoWKjcEmZuPnKglwp4Sop6D9g1voBPClv+nH1ZSTUpnRD7rG0sKQ7mW9wHiMIl6urI4xqnqfxAQ8Tr42ruHGrM/tKBxcLGatofc1ZVeXsJ06gziOjY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GtiaaGUo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740473853; c=relaxed/simple;
+	bh=BamJIIzhLRsvyP/Ug9CblE0TNfEWffLUxxb/nAagAIQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=UdNi2nJUui5VHFcY+Wl33JGLXpHiVNhWCFFQHJH9s01ZMRgrSzJS356WEFaYzk1ccZmmVauRTBW/udB0zN3gdXq2sSdn6RB6FAylhS+szVqsh4KtLw1WAS4liUEITxBDmuAvz5S2y1nbkJzwPYKl9HwXrINfy8Q2tEcgDuB51tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=L5l6jvia; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GtiaaGUo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B0AEC4CEDD;
-	Tue, 25 Feb 2025 08:57:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740473847;
-	bh=FyBG6tA5eQjNICDy5BX7avRDr58XxtQW2yTJbNVviTM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=GtiaaGUo3aPf+gOojB+AY84ddiie2lVkWZoFai/gBLK50pkUTfB1C7wLtSrVf0VQb
-	 Vc6IfMrCuYkCAVlxUw/93qI2dHiAbg4rOgmo2R4JBnBNbw/kjMaGs6HPhfb0M1/LbC
-	 0jga9g/c1oJ4cRL0twIEMt10hE/zRFkRj6IWlGi/j26Hm17dnvwPZ5LTRo6o5w7tmP
-	 qTT/69TsIEw1yG4Tq5sr4jymJR8OITjfW2hhl4BN9weaR5CUUsJjybsikkSZwMpFMP
-	 p+XN8Mdtp64Sz04Ixc35ss2YVYU6O9QzZUt1mQAHhWCqknPFWtxzjhm/xFLTMzvHPR
-	 XNbpdLfPjkemw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Simon Horman <horms@kernel.org>,
-	Peter Seiderer <ps.report@gmx.net>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] pktgen: avoid unused-const-variable warning
-Date: Tue, 25 Feb 2025 09:57:14 +0100
-Message-Id: <20250225085722.469868-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="L5l6jvia"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P7jf7w018116;
+	Tue, 25 Feb 2025 09:57:21 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	20owZPyvCqdzO67jL6iAj7bGP8jkca0HcDebvg0pgwc=; b=L5l6jviacu61kees
+	gmuQAzj44Wv1uU1hXNRC4tdmrJzs69SjLDcpOxCsNHw7R1TVPFMAi5qwtrJ08hD6
+	fUEKAxySxmBP3P45t7Rkrr55xaTDyeRY0euFdEd3J8uaTby5lMhkLyOOqa1pdkj2
+	JZ9UmxD8W0XDLy19MF7qO7b4PvIkihC+0+Vl86MZ8QDKgeqG0JKsKaieM2B7162z
+	FXsilfzu5CJXet5Bsu6z1/6+/i3OH83YERGyc5ujDUzSM0GFfC56/FAI4+J2FEYB
+	ojr6Nt3hHvS3bJg97iuLKELzHr6LdW91VQFXf+VVEzGce0sG3g+0b8jztx4WkoTa
+	DJ1fyw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4512sqsssk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Feb 2025 09:57:21 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 792D84008D;
+	Tue, 25 Feb 2025 09:56:12 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B5AA647D0EE;
+	Tue, 25 Feb 2025 09:54:31 +0100 (CET)
+Received: from localhost (10.48.87.120) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 25 Feb
+ 2025 09:54:31 +0100
+From: Amelie Delaunay <amelie.delaunay@foss.st.com>
+Date: Tue, 25 Feb 2025 09:54:06 +0100
+Subject: [PATCH v2 03/10] arm64: Kconfig: expand STM32 Armv8 SoC with
+ STM32MP21/STM32MP23 SoCs family
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250225-b4-stm32mp2_new_dts-v2-3-1a628c1580c7@foss.st.com>
+References: <20250225-b4-stm32mp2_new_dts-v2-0-1a628c1580c7@foss.st.com>
+In-Reply-To: <20250225-b4-stm32mp2_new_dts-v2-0-1a628c1580c7@foss.st.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Christophe Roullier
+	<christophe.roullier@foss.st.com>
+CC: <devicetree@vger.kernel.org>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>,
+        Amelie Delaunay <amelie.delaunay@foss.st.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-25_03,2025-02-24_02,2024-11-22_01
 
-From: Arnd Bergmann <arnd@arndb.de>
+Expand config ARCH_STM32 with two new SoCs families:
+- STM32MP21 SoCs family, which is composed of STM32MP211, STM32MP213 and
+  STM32MP215 SoCs;
+- STM32MP23 SoCs family, which is composed of STM32MP231, STM32MP233 and
+  STM32MP235 SoCs.
 
-When extra warnings are enable, there are configurations that build
-pktgen without CONFIG_XFRM, which leaves a static const variable unused:
+Signed-off-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
 
-net/core/pktgen.c:213:1: error: unused variable 'F_IPSEC' [-Werror,-Wunused-const-variable]
-  213 | PKT_FLAGS
-      | ^~~~~~~~~
-net/core/pktgen.c:197:2: note: expanded from macro 'PKT_FLAGS'
-  197 |         pf(IPSEC)               /* ipsec on for flows */                \
-      |         ^~~~~~~~~
-
-This could be marked as __maybe_unused, or by making the one use visible
-to the compiler by slightly rearranging the #ifdef blocks. The second
-variant looks slightly nicer here, so use that.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- net/core/pktgen.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+Changes in v2:
+- STM32MP21 and STM32MP23 added in a single patch
+---
+ arch/arm64/Kconfig.platforms | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/net/core/pktgen.c b/net/core/pktgen.c
-index 55064713223e..402e01a2ce19 100644
---- a/net/core/pktgen.c
-+++ b/net/core/pktgen.c
-@@ -158,9 +158,7 @@
- #include <net/udp.h>
- #include <net/ip6_checksum.h>
- #include <net/addrconf.h>
--#ifdef CONFIG_XFRM
- #include <net/xfrm.h>
--#endif
- #include <net/netns/generic.h>
- #include <asm/byteorder.h>
- #include <linux/rcupdate.h>
-@@ -2363,13 +2361,13 @@ static inline int f_pick(struct pktgen_dev *pkt_dev)
- }
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 02f9248f7c84da36619ddb8dac55a4bfd96d65e3..6b7ca916c9c1e21d4fb2d7edf444780745c8d926 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -321,6 +321,10 @@ config ARCH_STM32
+ 	help
+ 	  This enables support for ARMv8 based STMicroelectronics
+ 	  STM32 family, including:
++		- STM32MP21:
++			- STM32MP211, STM32MP213, STM32MP215.
++		- STM32MP23:
++			- STM32MP231, STM32MP233, STM32MP235.
+ 		- STM32MP25:
+ 			- STM32MP251, STM32MP253, STM32MP255 and STM32MP257.
  
- 
--#ifdef CONFIG_XFRM
- /* If there was already an IPSEC SA, we keep it as is, else
-  * we go look for it ...
- */
- #define DUMMY_MARK 0
- static void get_ipsec_sa(struct pktgen_dev *pkt_dev, int flow)
- {
-+#ifdef CONFIG_XFRM
- 	struct xfrm_state *x = pkt_dev->flows[flow].x;
- 	struct pktgen_net *pn = net_generic(dev_net(pkt_dev->odev), pg_net_id);
- 	if (!x) {
-@@ -2395,11 +2393,10 @@ static void get_ipsec_sa(struct pktgen_dev *pkt_dev, int flow)
- 		}
- 
- 	}
--}
- #endif
-+}
- static void set_cur_queue_map(struct pktgen_dev *pkt_dev)
- {
--
- 	if (pkt_dev->flags & F_QUEUE_MAP_CPU)
- 		pkt_dev->cur_queue_map = smp_processor_id();
- 
-@@ -2574,10 +2571,8 @@ static void mod_cur_headers(struct pktgen_dev *pkt_dev)
- 				pkt_dev->flows[flow].flags |= F_INIT;
- 				pkt_dev->flows[flow].cur_daddr =
- 				    pkt_dev->cur_daddr;
--#ifdef CONFIG_XFRM
- 				if (pkt_dev->flags & F_IPSEC)
- 					get_ipsec_sa(pkt_dev, flow);
--#endif
- 				pkt_dev->nflows++;
- 			}
- 		}
+
 -- 
-2.39.5
+2.25.1
 
