@@ -1,39 +1,65 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 340BA182D9
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 06:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66485182D9;
+	Tue, 25 Feb 2025 06:20:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740464406; cv=none; b=SKx2Wuuaf2iyUPavYL4QZr+SuKWqf/qISYYZ4BorR7EsTNZLtMc472LiA3jEvsgYYj3T3p7Yw2qsew6OkEVHvhf4FfdabW3lRIDDz9dQ/J61qJMtkdAANG5eow6HU2yabMBZ9I+pvwcsmqgrWGe+n2VLq12ZUXSBKFsZNWTwbdg=
+	t=1740464458; cv=none; b=fh1azbrfDBj/RDY3ltjhJqtCx3kqMmqp+5vO27pO6RX6NlvgnXZ39LJldZ5+332690XbQX7Fejbp4bUknjoUGlKnNDOipwqUQxMqGNKIK8djoLhSMtv0A6sYfJuv+7oaQL2e/E7fIzyvnvi0pje07F0NMVEe4UgrcOn75yfbZ24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740464406; c=relaxed/simple;
-	bh=M5sjgCLlrkVS/JMZgfvAxx2+vxK03cBBp+YT4TdRVtg=;
+	s=arc-20240116; t=1740464458; c=relaxed/simple;
+	bh=5OKb51izA80yh4zy5cydeniYSGVGNjdKJPweeJv8nx8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n7oF0zOpLrwQ6t9lWJPLkqkzcWc57bAJrcyDjfgDiHAaDrRn43PGa8ePic7gSN9dHdDxbMQ2BCweFcVuhRGnEiZLJRfZZftIAVzChmV78oNLJWK0xRj1leJjM9bGvAxUUcz7qnsKJaHQZQpnxF9mfTJqwlIs7KsDycDQ/Qe7Jv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4Z26Nj44jNz9sSH;
-	Tue, 25 Feb 2025 06:58:45 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id elWzm5hk9ksV; Tue, 25 Feb 2025 06:58:45 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4Z26Nj2zRWz9sS8;
-	Tue, 25 Feb 2025 06:58:45 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 422BB8B780;
-	Tue, 25 Feb 2025 06:58:45 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id k1t4mJHItepu; Tue, 25 Feb 2025 06:58:45 +0100 (CET)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id A74F38B77C;
-	Tue, 25 Feb 2025 06:58:44 +0100 (CET)
-Message-ID: <a7a135c9-c65b-48a8-a3a8-6aa98afe77d0@csgroup.eu>
-Date: Tue, 25 Feb 2025 06:58:44 +0100
+	 In-Reply-To:Content-Type; b=Pj9MB2eZ+ghH/7ccZMrmsnS4n87J9b3hD7phJMsq5kNzxOXhNFlCsz0pPA6smC7fvhQtoZVbR7VXPjckh+/essP66hidea+AI/J/cB0vMnCpkHzY+h3dFmphIBi4bvdhGPJLBoTZO/I9Cym335InuhbI2iYuo89QF1ElG6kVcTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dzPr87bH; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dzPr87bH"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22128b7d587so100474635ad.3;
+        Mon, 24 Feb 2025 22:20:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740464456; x=1741069256; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ULxxZ3EpvZ0eV4eBI5zdwhpaLVGTbquNxWTjT5AEwZk=;
+        b=dzPr87bHzaUpAXechKA+FE7MiM6Gu5ZHwPaxLfA1eCPSzpL+SwRDYZCS/FeYEi4CkJ
+         Eyo0oCgs5g6gHgrSXsvXS8BqiBLqK8r6MsRP0+Jb56Jaa9j0c4+h+fpN5oAqV4pknd7R
+         3dvTkn6F5ryZoi1bQ9P8YVJGc0JR/pHWXZWEDLKFtslH/azOhhePv5QgxbbXka534/85
+         pSEbEW8QplSyKXP7xtRHy1qwBWQaFgiffBy4a6A8KAKQn6AaLpfQY7KL+uTv9cX/jvJa
+         4gk1/q5QbvYSvfEuv3HtkntLDJxf6wPUZPfqvROMtpfE/QmcSsmsl9iyqBLAdJjLVdEJ
+         KEOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740464456; x=1741069256;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ULxxZ3EpvZ0eV4eBI5zdwhpaLVGTbquNxWTjT5AEwZk=;
+        b=xUUqlZjsWRKWQCAOPXU1j+v8XiMkXcja+VjxT1owWtUMnq7h0ywKQoEBHSI3hqGKQ/
+         x1wW5e8EMlUvTcAzQM0dinesvzNs0zdYfEK6YnowdiptNy47ZO9r4MI1HONLvBz+bZOs
+         CyuvgdO0RNHxXJyx/B2z7onfyGcBOUTf1TmOQ6ni9TN42NuIdO66WZa4rbm+khRmpslt
+         aGvD35LxVXTPJlFhmiWew4aoFifpkivr3qas9tX/L5zTA7f2zkZZUy6DsnRaREPLWvlN
+         /M0ORNo6UBTlwLdJyEGvK8oi78yist9C2SCXTmfAGNxxu/us4WSMyHrg/801jwidOqiB
+         oTlg==
+X-Forwarded-Encrypted: i=1; AJvYcCUUF8KhYu+98V2FrRHsR7oVPtubS6771n3u+C5Vf6tbvaNPiOmOnBw6WZhKi649RDcefCSjV2Ra@vger.kernel.org, AJvYcCVffPBoC3D7WKL8M7zwNpx2cYS4iPdCgBqKS+4+9oStKGCqlzeaR5fSihnhbeWssFkK0978T3jmA5CJ6+Y=@vger.kernel.org, AJvYcCWvgFo2hpBpnxxFsPOQIOLMws2XEqmSQaHNL5mI2SirUIMkEWvPcmNx5Dq6azUPRGAj5hWhOkJfolXb@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz51kPPKP2yjvOgmSTcuITAiS0EiRareDkAo/hG1u3bk87zqgx4
+	0DpCIZYRNTXxEPlBwacGVBJr1tx7zmXvjO0TK+nujkSKmj9rJg2p
+X-Gm-Gg: ASbGncu3l++2gj1J5zCoHLIoRmYQ4kNy64OBk8jhUrANsGr8m8j/bGreNJ4Rr6bFP5w
+	Eq8U/Ue/8jjQsqWGMbarr/Ow1NwIckI3x9cFsKBW3ir8CKUbh0xRXj7R4Lf0imrly/dsvYoIBSF
+	TsxhBhoDjL7pOL2EliNdUOnQGzT2aR6B83t5gj5l2wulVzJ8WPpe4zcudVIuG2L8YEikigaVcS/
+	tR4kQ8oZBj+rShQrA6oA1gfiDU5F1v8ideX8i92+y9MKMkFevaYpAFLw4Oy8db4L8FQlIGQ7rYY
+	L4YaFOEi1XrLSefdKyleDG+L8RgFuTqmuvBT03ZhKinpHGa/gX+rZnwLMOS2BqSXSAhReFBAuRl
+	kcrpbtQ==
+X-Google-Smtp-Source: AGHT+IGZuSb5qFFIyeaeG2RR3Qcw8TbVF5PhtTliQgdhjGn7cRZjmzdvZC1t+L7d4J6FNqz8dddNrA==
+X-Received: by 2002:a17:902:ce86:b0:21f:4c65:6290 with SMTP id d9443c01a7336-2219ff32f58mr258970425ad.1.1740464456487;
+        Mon, 24 Feb 2025 22:20:56 -0800 (PST)
+Received: from ?IPV6:2402:3a80:428b:35ff:dd92:c12f:8ec5:287b? ([2402:3a80:428b:35ff:dd92:c12f:8ec5:287b])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a0008b4sm6398785ad.31.2025.02.24.22.20.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2025 22:20:56 -0800 (PST)
+Message-ID: <d22a1b92-294c-498c-8719-9776c48984ed@gmail.com>
+Date: Tue, 25 Feb 2025 11:50:42 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,104 +67,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] powerpc: Don't use %pK through printk
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Naveen N Rao <naveen@kernel.org>, linuxppc-dev@lists.ozlabs.org,
- linux-kernel@vger.kernel.org
-References: <20250217-restricted-pointers-powerpc-v1-1-32c6bff63c9a@linutronix.de>
- <ffd5dd44-babc-480a-b1bc-61bd7ff1e920@csgroup.eu>
- <alpine.DEB.2.21.2502241840360.65342@angie.orcam.me.uk>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <alpine.DEB.2.21.2502241840360.65342@angie.orcam.me.uk>
+Subject: Re: [PATCH] ppp: Prevent out-of-bounds access in ppp_sync_txmunge
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, linux-kernel@vger.kernel.org, linux-ppp@vger.kernel.org,
+ netdev@vger.kernel.org, pabeni@redhat.com, skhan@linuxfoundation.org,
+ syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
+References: <1e906059-83c7-4f29-a026-76cd73d8b6fa@gmail.com>
+ <20250218185033.26399-1-kuniyu@amazon.com>
+Content-Language: en-US
+From: Purva Yeshi <purvayeshi550@gmail.com>
+In-Reply-To: <20250218185033.26399-1-kuniyu@amazon.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-
-
-Le 24/02/2025 à 19:54, Maciej W. Rozycki a écrit :
-> ***ATTENTION, Sopra Steria Group cannot confirm the identity of this email sender (SPF record failure). This might be a fake email from an attacker, if you have any doubts report and delete the email.***
-> 
-> ***ATTENTION, Sopra Steria Group ne peut pas confirmer l’identité de l’émetteur de ce message (SPF record failure). Il pourrait s’agir d’un faux message, à détruire si vous avez un doute ***
-> 
-> On Mon, 24 Feb 2025, Christophe Leroy wrote:
-> 
->>> Restricted pointers ("%pK") are not meant to be used through printk().
->>> It can unintentionally expose security sensitive, raw pointer values.
+On 19/02/25 00:20, Kuniyuki Iwashima wrote:
+> From: Purva Yeshi <purvayeshi550@gmail.com>
+> Date: Tue, 18 Feb 2025 11:58:17 +0530
+>> On 18/02/25 02:46, Kuniyuki Iwashima wrote:
+>>> From: Purva Yeshi <purvayeshi550@gmail.com>
+>>> Date: Sun, 16 Feb 2025 11:34:46 +0530
+>>>> Fix an issue detected by syzbot with KMSAN:
+>>>>
+>>>> BUG: KMSAN: uninit-value in ppp_sync_txmunge
+>>>> drivers/net/ppp/ppp_synctty.c:516 [inline]
+>>>> BUG: KMSAN: uninit-value in ppp_sync_send+0x21c/0xb00
+>>>> drivers/net/ppp/ppp_synctty.c:568
+>>>>
+>>>> Ensure sk_buff is valid and has at least 3 bytes before accessing its
+>>>> data field in ppp_sync_txmunge(). Without this check, the function may
+>>>> attempt to read uninitialized or invalid memory, leading to undefined
+>>>> behavior.
+>>>>
+>>>> To address this, add a validation check at the beginning of the function
+>>>> to safely handle cases where skb is NULL or too small. If either condition
+>>>> is met, free the skb and return NULL to prevent processing an invalid
+>>>> packet.
+>>>>
+>>>> Reported-by: syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
+>>>> Closes: https://syzkaller.appspot.com/bug?extid=29fc8991b0ecb186cf40
+>>>> Tested-by: syzbot+29fc8991b0ecb186cf40@syzkaller.appspotmail.com
+>>>> Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+>>>> ---
+>>>>    drivers/net/ppp/ppp_synctty.c | 6 ++++++
+>>>>    1 file changed, 6 insertions(+)
+>>>>
+>>>> diff --git a/drivers/net/ppp/ppp_synctty.c b/drivers/net/ppp/ppp_synctty.c
+>>>> index 644e99fc3..e537ea3d9 100644
+>>>> --- a/drivers/net/ppp/ppp_synctty.c
+>>>> +++ b/drivers/net/ppp/ppp_synctty.c
+>>>> @@ -506,6 +506,12 @@ ppp_sync_txmunge(struct syncppp *ap, struct sk_buff *skb)
+>>>>    	unsigned char *data;
+>>>>    	int islcp;
+>>>>    
+>>>> +	/* Ensure skb is not NULL and has at least 3 bytes */
+>>>> +	if (!skb || skb->len < 3) {
 >>>
->>> Use regular pointer formatting instead.
->>>
->>> Link:
->>> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flkml%2F20250113171731-dc10e3c1-da64-4af0-b767-7c7070468023%40linutronix.de%2F&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C9079ef2ec60e4717ec8e08dd5504b718%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638760200949886583%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=d2QCtnssTlVmKOKR57rui%2Fq73UsAAoZrim%2FABaz5IFs%3D&reserved=0
->>> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+>>> When is skb NULL ?
 >>
->> Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+>> skb pointer can be NULL in cases where memory allocation for the socket
+>> buffer fails, or if an upstream function incorrectly passes a NULL
+>> reference due to improper error handling.
+> 
+> Which caller passes NULL skb ?
+> 
+> If it's really possible, you'll see null-ptr-deref at
+> 
+>    data = skb->data;
+> 
+> below instead of KMSAN's uninit splat.
+
+Understood. I’ll check where the skb pointer is receiving uninitialized 
+data.
+
+> 
+> 
 >>
->>> ---
->>>    arch/powerpc/kernel/eeh_driver.c | 2 +-
->>>    arch/powerpc/perf/hv-24x7.c      | 8 ++++----
->>>    2 files changed, 5 insertions(+), 5 deletions(-)
+>> Additionally, skb->len being less than 3 can occur if the received
+>> packet is truncated or malformed, leading to out-of-bounds memory access
+>> when attempting to read data[2].
+>>
 >>>
->>> diff --git a/arch/powerpc/kernel/eeh_driver.c
->>> b/arch/powerpc/kernel/eeh_driver.c
->>> index
->>> 7efe04c68f0fe3fb1c3c13d97d58e79e47cf103b..10ce6b3bd3b7c54f91544ae7f7fd3f32a51ee09a
->>> 100644
->>> --- a/arch/powerpc/kernel/eeh_driver.c
->>> +++ b/arch/powerpc/kernel/eeh_driver.c
->>> @@ -907,7 +907,7 @@ void eeh_handle_normal_event(struct eeh_pe *pe)
->>>              /* FIXME: Use the same format as dump_stack() */
->>>              pr_err("EEH: Call Trace:\n");
->>>              for (i = 0; i < pe->trace_entries; i++)
->>> -                   pr_err("EEH: [%pK] %pS\n", ptrs[i], ptrs[i]);
->>> +                   pr_err("EEH: [%p] %pS\n", ptrs[i], ptrs[i]);
->>>                      pe->trace_entries = 0;
->>>      }
-> 
->   But shouldn't this be using `%px' then instead?  It would be sad if all
-> the address information from error reports such as below:
-> 
-> EEH: Call Trace:
-> EEH: [000000008985bc3b] __eeh_send_failure_event+0x78/0x150
-> EEH: [000000008c4c5782] eeh_dev_check_failure+0x388/0x6b0
-> EEH: [000000001fb766c1] eeh_check_failure+0x98/0x100
-> EEH: [000000004b9af8c6] dfx_port_read_long+0xb0/0x130 [defxx]
-> EEH: [00000000e23999c1] dfx_interrupt+0x80/0x8c0 [defxx]
-> EEH: [00000000c7884fb7] __handle_irq_event_percpu+0x9c/0x2f0
-> EEH: [000000008d4e9afd] handle_irq_event_percpu+0x44/0xc0
-> EEH: [000000008c39ece4] handle_irq_event+0x74/0xc0
-> EEH: [00000000d85114a9] handle_fasteoi_irq+0xd4/0x220
-> EEH: [00000000a692ef4e] generic_handle_irq+0x54/0x80
-> EEH: [00000000a6db243b] __do_irq+0x68/0x200
-> EEH: [0000000040ccff9e] call_do_irq+0x14/0x24
-> EEH: [00000000e8e9ddf7] do_IRQ+0x78/0xd0
-> EEH: [0000000031916539] replay_soft_interrupts+0x180/0x370
-> EEH: [000000001b7e5728] arch_local_irq_restore+0x48/0xc0
-> EEH: [00000000088691b7] cpuidle_enter_state+0x108/0x560
-> EEH: [00000000e6e26f30] cpuidle_enter+0x50/0x70
-> EEH: [000000007c26474c] call_cpuidle+0x4c/0x80
-> EEH: [0000000036b8a2fc] do_idle+0x360/0x3b0
-> EEH: [0000000048702083] cpu_startup_entry+0x38/0x40
-> EEH: [00000000d3b1fb8d] start_secondary+0x62c/0x660
-> EEH: [0000000041a9a815] start_secondary_prolog+0x10/0x14
-> 
-> was suddenly lost from the kernel log, the access to which unprivileged
-> users can be denied if so desired according to the site policy.  Whereas
-> running the kernel such as to have all output from plain `%p' exposed just
-> to cope with this proposed change, now that seems like a security risk.
+>>>
+>>>> +		kfree_skb(skb);
+>>>> +		return NULL;
+>>>> +	}
+>>>> +
+>>>>    	data  = skb->data;
+>>>>    	proto = get_unaligned_be16(data);
+>>>>    
+>>>> -- 
+>>>> 2.34.1
 
-The purpose of hashed addresses is to avoid kernel addresses to leak to 
-the kernel log. Here you have function names, if you get real function 
-addresses at the same time, then you know everything about kernel 
-addresses and for instance KASLR becomes just pointless.
-
-By the way, why do you need the addresses at all in addition to function 
-names ? When I look at x86 dump stack, they only print function name, 
-using %pBb
-
-Christophe
