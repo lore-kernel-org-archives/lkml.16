@@ -1,105 +1,167 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9CF0FC1D;
-	Tue, 25 Feb 2025 01:45:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5EA502BE
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 01:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740447932; cv=none; b=ZeFnJXXOywbFZAVgbTp51v18e5eK4n8LfjuIHrc+t7DdqzTjeSqon7gJ+NmFKI7fSefb/RqqCP6kdAHPERwk829cQwxfSd6f4yW20GO93Buu0ghwMKgzr8XDnItzhdjhLaNHSmQoVsaVW3tQdVTqZKnMQcuZhvO6dw5xaARsSTA=
+	t=1740448102; cv=none; b=Rg+uG6ByfkRM5PSETn6/zE3RDSnMD5rvCGSMiNmg5Bbs2y5vwUIVVsHwmRjSBGegp1Z15yaWme/DWP/qZO+9bPqvxJbUZbsYF1D8CIpOmfkOw7ac3MDWZ79GMs797V8rqAyO4SnAwJ40DREeqOS+6qKcGD6Y1u1rfPXMY+ExNk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740447932; c=relaxed/simple;
-	bh=2+6V7qQVaa6iDdECCvN7iEz0i0TmM7x99EjDo6Sdr7M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=fYX2S9cy9EJ7PgrmBxYzCRVJr/tSIsxvs35GUlb6CFJZWegeTIjioSYFZO3B1JAV9H2o6lKQbpMUZ/SH6QBV10U/7FBpxwlGPq4wwkDmJ7rWKqgR8SalbaJEVoUKPuukSPmRd7Gd2vPbQ1D6aAmW7ulDsCoYMmtlJmbTdzJpZpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Z20fz3Lz5zdb7N;
-	Tue, 25 Feb 2025 09:40:43 +0800 (CST)
-Received: from kwepemg200005.china.huawei.com (unknown [7.202.181.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id 137501402C3;
-	Tue, 25 Feb 2025 09:45:27 +0800 (CST)
-Received: from [10.174.176.70] (10.174.176.70) by
- kwepemg200005.china.huawei.com (7.202.181.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 25 Feb 2025 09:45:25 +0800
-Message-ID: <df5b1deb-7d72-4f52-86c2-959ea4dffad4@huawei.com>
-Date: Tue, 25 Feb 2025 09:45:12 +0800
+	s=arc-20240116; t=1740448102; c=relaxed/simple;
+	bh=ANDk1f1ewGyRyWWZvJv7bwXf/B8TgaiUTyfdL2L3ZVE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VPils3bnnD7rkM42W6q1+Q/j+RUQPcbN0RQ5hb6HtXj0HV/Mwv+N9Yrgls8fflObumSo3aH9Z+mn2vw1/4uz1NYVWUeAMWgXGzOvhzBoetFGvuozqF1QyUIkqmhDdIQvvQYSjxxzv1up3hPu2t4K1EEKl4Ta2trWeyI6LiKeBSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IfWjzwHX; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IfWjzwHX"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ab771575040so1053153066b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 17:48:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1740448098; x=1741052898; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=loyJuf6zNk03z78etJFgemOo09eYVwdWkJ6KQXv4Jfk=;
+        b=IfWjzwHXvdyecVmy3uZVuJF3KOFLD3a3AiwJ8fClVGA1l8k7IyJgilcbbDp9FyUzPC
+         odtLjEz/UMJgEDKuLXTOndQ4RUxCsKx9fcpRodKJqWKFfSHSWJarEvuzEpy1PW5bCU76
+         yPV5YJ5BoxnWC2Bm3HQvB/l4by6HgNGDeAsyE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740448098; x=1741052898;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=loyJuf6zNk03z78etJFgemOo09eYVwdWkJ6KQXv4Jfk=;
+        b=o9EPUW9hxlyEkEJkHhJ3if3thNxl4A48u88DcrOGEky9akVdYPh5yp/vnE+DbsrT73
+         Pt0rOh60Yhg3bRIaYKH2RankywA/cNMdrhVtQYqDJiDdLXt9NtDVqnaTjfxbx9BmKDrT
+         3bXro2Jy8dkhWPbX5d8hdmUahn3jAaVREqeOT+I3AK+hWydKm7RS3KFMgknI2LcKcvet
+         yspZMB0FbWQX/iXRfgaEjYV2NLoNlM2rR0HxQ+2YObJ4j07ayXb9zM7exLvlzcET1xNB
+         v7FESSER0s7GBVXc/rG3vOvvCcNswmJzZnkdvmU4tjM4YQ1lMcdCQiTajYsCXvXtU+i4
+         ooWA==
+X-Forwarded-Encrypted: i=1; AJvYcCV2DSyWQi7duR31Bxvwg/crxff20NQYlQp49QUmB7y0wWghWDJGXsinTWNmg+yY99yQBUNXAcmDr+pQ1nw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8KEjOMd0c8QNMVpiiQFcQhXcjRYln4BqauemRWoJ0qby7n3rs
+	FLTvdC79WVleQFao8flfhdb+1MPa3OZ+W2fD3r/03GDhQp/imbqcwsXS2P1ED/LKxaDaX/3mJyZ
+	YD9Wa
+X-Gm-Gg: ASbGncu5iiY9GnrugKtuFuH8rjoVZiMXdYCdwinms5bxi5EHKXvqNo/KslQj44bxdrx
+	D+DpR8omG8NTvg5XqsLCTamMWQKm69AmLbMOVSftyhq3ekX0WW2BAqPE+x+K3aiX1CvYC1ZWduA
+	6LplZnd9vVDYu/n0IFaRVULbqwgTPviPDXkerEvO3opj8FbQWcHbrl8M9CmrlmGMzrtkw2hzwum
+	DZnxg1c3IRnORo4388KIytGfBwAgidvrJzbMFdozCzuDZi//rwVjlGzT1ekNkbmpkZUsgpvOxt/
+	3ZnzCtGD0JNL66s6e4mHJFI+xK2WV4GKF/tG0FesB9O0JWJD0Vh2c8gaxSvpGphHQw==
+X-Google-Smtp-Source: AGHT+IHjS9eKRaZp4Hw9D0pt5iU853ce2qC4Kes8k4/OPWnxvoBKVYStAA1r7FuXwWY6/uO9CPP7Mg==
+X-Received: by 2002:a17:907:8995:b0:ab7:cf7c:f9ed with SMTP id a640c23a62f3a-abbedf564b1mr1836052866b.24.1740448098265;
+        Mon, 24 Feb 2025 17:48:18 -0800 (PST)
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com. [209.85.208.43])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed2012360sm53133366b.114.2025.02.24.17.48.17
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2025 17:48:17 -0800 (PST)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5debbced002so9175396a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 17:48:17 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUViIIWfPT6Wi5SrALZetlmOuMsyCRdoKQQrnoTDIXe6ZjbIMjNkmmdJ/ZIMCiAJw8JpWPVcoz6Os8GvYE=@vger.kernel.org
+X-Received: by 2002:a05:6512:1253:b0:545:6a2:e59 with SMTP id
+ 2adb3069b0e04-54838cb627cmr5635189e87.18.1740447736562; Mon, 24 Feb 2025
+ 17:42:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] xsk: fix __xsk_generic_xmit() error code when cq is
- full
-To: Magnus Karlsson <magnus.karlsson@gmail.com>, Stanislav Fomichev
-	<stfomichev@gmail.com>
-CC: <bjorn@kernel.org>, <magnus.karlsson@intel.com>,
-	<maciej.fijalkowski@intel.com>, <jonathan.lemon@gmail.com>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <horms@kernel.org>, <ast@kernel.org>,
-	<daniel@iogearbox.net>, <hawk@kernel.org>, <john.fastabend@gmail.com>,
-	<yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>,
-	<netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20250222093007.3607691-1-wangliang74@huawei.com>
- <CAJ8uoz1fZ3zYVKergPn-QYRQEpPfC_jNgtY3wzoxxJWFF22LKA@mail.gmail.com>
- <Z7yXhHezJTgYh76T@mini-arch>
- <CAJ8uoz12bmCPsr_LFwCDypiwzmH+U7TeLqqykgRhp=8vKX4nQw@mail.gmail.com>
-From: Wang Liang <wangliang74@huawei.com>
-In-Reply-To: <CAJ8uoz12bmCPsr_LFwCDypiwzmH+U7TeLqqykgRhp=8vKX4nQw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemg200005.china.huawei.com (7.202.181.32)
+References: <20250224081325.96724-1-damon.ding@rock-chips.com> <20250224081325.96724-11-damon.ding@rock-chips.com>
+In-Reply-To: <20250224081325.96724-11-damon.ding@rock-chips.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Mon, 24 Feb 2025 17:42:05 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=WS_2JAKMyFFmrNtaN7-O4dh2hOXHc25FytDxXAjAr+5A@mail.gmail.com>
+X-Gm-Features: AWEUYZkb9AduQv4S2t7Q6Lb4ouepbii0QdSB144heJ2UJlKArYXhKCxoqxEOhvg
+Message-ID: <CAD=FV=WS_2JAKMyFFmrNtaN7-O4dh2hOXHc25FytDxXAjAr+5A@mail.gmail.com>
+Subject: Re: [PATCH v7 10/15] drm/rockchip: analogix_dp: Add support to get
+ panel from the DP AUX bus
+To: Damon Ding <damon.ding@rock-chips.com>
+Cc: heiko@sntech.de, andy.yan@rock-chips.com, hjc@rock-chips.com, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org, 
+	Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se, jernej.skrabec@gmail.com, 
+	dmitry.baryshkov@linaro.org, sebastian.reichel@collabora.com, 
+	cristian.ciocaltea@collabora.com, boris.brezillon@collabora.com, 
+	l.stach@pengutronix.de, dri-devel@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Mon, Feb 24, 2025 at 12:14=E2=80=AFAM Damon Ding <damon.ding@rock-chips.=
+com> wrote:
+>
+> @@ -392,11 +393,27 @@ static const struct component_ops rockchip_dp_compo=
+nent_ops =3D {
+>         .unbind =3D rockchip_dp_unbind,
+>  };
+>
+> +static int rockchip_dp_link_panel(struct drm_dp_aux *aux)
+> +{
+> +       struct analogix_dp_plat_data *plat_data =3D analogix_dp_aux_to_pl=
+at_data(aux);
+> +       struct rockchip_dp_device *dp =3D pdata_encoder_to_dp(plat_data);
+> +       int ret;
+> +
+> +       ret =3D drm_of_find_panel_or_bridge(dp->dev->of_node, 1, 0, &plat=
+_data->panel, NULL);
+> +       if (ret && ret !=3D -ENODEV)
+> +               return ret;
+
+Can you explain why you treat -ENODEV as a non-error case here? Maybe
+this is for the non-eDP case (AKA the DP case) where there's no
+further panels or bridges? Maybe a comment would be helpful to remind
+us?
 
 
-在 2025/2/25 1:14, Magnus Karlsson 写道:
-> On Mon, 24 Feb 2025 at 17:00, Stanislav Fomichev <stfomichev@gmail.com> wrote:
->> On 02/24, Magnus Karlsson wrote:
->>> On Sat, 22 Feb 2025 at 10:18, Wang Liang <wangliang74@huawei.com> wrote:
->>>> When the cq reservation is failed, the error code is not set which is
->>>> initialized to zero in __xsk_generic_xmit(). That means the packet is not
->>>> send successfully but sendto() return ok.
->>>>
->>>> Set the error code and make xskq_prod_reserve_addr()/xskq_prod_reserve()
->>>> return values more meaningful when the queue is full.
->>> Hi Wang,
->>>
->>> I agree that this would have been a really good idea if it was
->>> implemented from day one, but now I do not dare to change this since
->>> it would be changing the uapi. Let us say you have the following quite
->>> common code snippet for sending a packet with AF_XDP in skb mode:
->>>
->>> err = sendmsg();
->>> if (err && err != -EAGAIN && err != -EBUSY)
->>>      goto die_due_to_error;
->>> continue with code
->>>
->>> This code would with your change go and die suddenly when the
->>> completion ring is full instead of working. Maybe there is a piece of
->>> code that cleans the completion ring after these lines of code and
->>> next time sendmsg() is called, the packet will get sent, so the
->>> application used to work.
->>>
->>> So I say: let us not do this. But if anyone has another opinion, please share.
->> Can we return -EBUSY from this 'if (xsk_cq_reserve_addr_locked())' case as
->> well?
-> That is a good idea! Though I would return -EAGAIN. When -EBUSY is
-> returned, the buffer was consumed but not sent. But -EAGAIN means that
-> the user just has to perform then sendmsg() again and that is exactly
-> what the user has to do here too.
+> +       ret =3D component_add(dp->dev, &rockchip_dp_component_ops);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return ret;
+
+nit: the above could just be:
+
+return component_add(dp->dev, &rockchip_dp_component_ops);
 
 
-Thank you for the suggestion!
-Changing the uapi is indeed a high-risk act. Return -EAGAIN is a much 
-better choice.
-The cq is full usually because it is not released in time, try to send 
-msg again is appropriate.
-I will send a new patch later, and look forward to getting more advice. 
-Thanks.
+> @@ -448,9 +460,16 @@ static int rockchip_dp_probe(struct platform_device =
+*pdev)
+>         if (IS_ERR(dp->adp))
+>                 return PTR_ERR(dp->adp);
+>
+> -       ret =3D component_add(dev, &rockchip_dp_component_ops);
+> -       if (ret)
+> -               return ret;
+> +       ret =3D devm_of_dp_aux_populate_bus(analogix_dp_get_aux(dp->adp),=
+ rockchip_dp_link_panel);
+> +       if (ret) {
+> +               if (ret !=3D -ENODEV)
+> +                       return dev_err_probe(dp->dev, ret,
+> +                                            "failed to populate aux bus =
+: %d\n", ret);
+
+IIRC this -ENODEV case is for old legacy panels that aren't listed
+under the aux bus in the device tree. Maybe a comment would be helpful
+to remind us?
+
+nit: don't need the %d in your error message. dev_err_probe() already
+prints the error code.
 
 
+> +               ret =3D rockchip_dp_link_panel(analogix_dp_get_aux(dp->ad=
+p));
+> +               if (ret)
+> +                       return ret;
+> +       }
+>
+>         return 0;
+
+You can get rid of a few of your return cases by just returning "ret" here.
+
+
+-Doug
