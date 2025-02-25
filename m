@@ -1,109 +1,96 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE5F33EC
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 02:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4A71465B4;
+	Tue, 25 Feb 2025 02:30:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740450515; cv=none; b=Zo6Zr1+s1dcCRJDxQbTSZ4iutljbZ+RMgqXax34UP60A83VOB+hhWIhTVUp0HsBilPeojvSt60j9q3sbJrJyg/zWJYSmt/srrp+f2wBwWNytZ6KNSP3V/RJz4Yy7k/IAlxq5ZS8fddhMEaylkyN/q3b5qoPRErcLo1nJPrEf86I=
+	t=1740450604; cv=none; b=kX4FLmca20sXLPfm1zCPnSL+SqkbxuJKG1Lr684+OCFAMN6iPa/dBliwuyVeijtopG0xqoVT+IMT29SxGQaTQ1rpY8ErDoWPnXKmqZL/a93o4YUpd95u5+ogHQfQjw7mwiyx23QmRAkKb9G4w3twBjFeE4zc18h9H4Ffj7CrJBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740450515; c=relaxed/simple;
-	bh=uMcY4G3651ZFYEbBk3k62ogT1HEqLUJ1RFlcVnUn5mM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=il25dhM4Py6LE0k1GPB7xPSqx70WueAU7yIMfCTAKNWdGBY958d36cg6ZZCDYKkfVCnU6R+BX0FKszlgfn0s8W2fTNBqRipXpKrsqlBprlg8b0lxOgMNx1Pu10OLXebyWBA1ph5Exqxb3W7LTvFmY677/PvSAKBb/uDRJgEH91g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UsiQINCa; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740450604; c=relaxed/simple;
+	bh=071BG79VHNUJFvscUKhMIqdR5q6V+Edmq9WBd/sK5Fs=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=b5i1HnKnuU/Ef+j/6JBEup1Tv2Q5YNsDN1hiipZXmEWtAke2/s3FpRQ7hHB0MdKhNuGbWDkXR6d7r9tkZYJBDb10XdaVgM+9JGP3Ui0aXtxlElBh/nJFrgFs7oJYMLBH5EbwrlmfpD0crG/wxL1Izyce0TtSXmGW0yio7F2pixU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BIrzoer9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UsiQINCa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740450512;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2giTZHStMn+eSIeoZsooVzDmKiBSO2mDY/bn03jyBAQ=;
-	b=UsiQINCadikBWxy1BoztuQyQVW0efod9/P14yQ+5IdkbLi2AFxt4FJMcrDa0V3snGHfzMz
-	jY1ST+AdtdQaMmdXsYfvD9kaIXw42E7ddruQ3v561c3PYzL5LRLw1CHpgOr6VQrPzY8YfM
-	FE0YomiCLMECn/sLM1gNw44BAjS9GKc=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-659-qI7JLcOwOdCDMw59u4ccWA-1; Mon,
- 24 Feb 2025 21:28:28 -0500
-X-MC-Unique: qI7JLcOwOdCDMw59u4ccWA-1
-X-Mimecast-MFC-AGG-ID: qI7JLcOwOdCDMw59u4ccWA_1740450507
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1B24E180087B;
-	Tue, 25 Feb 2025 02:28:27 +0000 (UTC)
-Received: from fedora (unknown [10.72.120.21])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8D2931800357;
-	Tue, 25 Feb 2025 02:28:18 +0000 (UTC)
-Date: Tue, 25 Feb 2025 10:28:13 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: tj@kernel.org, josef@toxicpanda.com, axboe@kernel.dk,
-	cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
-	yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
-Subject: Re: [PATCH 2/2] blk-throttle: fix off-by-one jiffies wait_time
-Message-ID: <Z70qvZEBdq6L3-Yb@fedora>
-References: <20250222092823.210318-1-yukuai1@huaweicloud.com>
- <20250222092823.210318-3-yukuai1@huaweicloud.com>
- <Z7nAJSKGANoC0Glb@fedora>
- <f2f54206-b5c0-7486-d607-337d29e9c145@huaweicloud.com>
- <Z7vnTyk6Y6X4JWQB@fedora>
- <e6a29a6a-f5ec-7953-14e9-2550a549f955@huaweicloud.com>
- <Z7w0P8ImJiZhRsPD@fedora>
- <611f02a8-8430-16cf-46e5-e9417982b077@huaweicloud.com>
- <Z70btzRaN83FbTJp@fedora>
- <8473fca2-16ab-b2a6-ede7-d1449aa7d463@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BIrzoer9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33B7BC4CED6;
+	Tue, 25 Feb 2025 02:30:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740450604;
+	bh=071BG79VHNUJFvscUKhMIqdR5q6V+Edmq9WBd/sK5Fs=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=BIrzoer9J1bfyCitNIYvk8GFnFfKR8T8ah4in2QMl6wOHlr9KbRBDJJkxqXKigsSc
+	 dy8NJC/GXZAJr6n2lSREEavh/MkrUKCKuT2H+GlEySzyCjfVYIUbIaurnBhJ9ovWSB
+	 2T2aWUA8RamT100nNyZmIXxCMUsQM5IwjvcS6ihR0F8HkyLR4IdCvOg6F0YNexoYbV
+	 P8OtXCpLUvu/rg5VKebMwpnon36D7iXf2PwDvUs3I/qJNmgBvTRJxfxKY8fT3s60TD
+	 NQBwBF1m+3o5fyvUfTcotNtrmHYpGVTzXIMfqKLUdYTdd7YEPSC3lNQ1gBXuAX1V/N
+	 MX2UEh3IhXiew==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB3F0380CFD8;
+	Tue, 25 Feb 2025 02:30:36 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8473fca2-16ab-b2a6-ede7-d1449aa7d463@huaweicloud.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Subject: Re: [PATCH net-next 0/8] net/mlx5e: Move IPSec policy check after
+ decryption
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174045063562.3682145.9099775003229462046.git-patchwork-notify@kernel.org>
+Date: Tue, 25 Feb 2025 02:30:35 +0000
+References: <20250220213959.504304-1-tariqt@nvidia.com>
+In-Reply-To: <20250220213959.504304-1-tariqt@nvidia.com>
+To: Tariq Toukan <tariqt@nvidia.com>
+Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+ edumazet@google.com, andrew+netdev@lunn.ch, gal@nvidia.com,
+ mbloch@nvidia.com, saeedm@nvidia.com, leon@kernel.org,
+ netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, jianbol@nvidia.com
 
-On Tue, Feb 25, 2025 at 10:07:06AM +0800, Yu Kuai wrote:
+Hello:
+
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Thu, 20 Feb 2025 23:39:50 +0200 you wrote:
 > Hi,
 > 
-> 在 2025/02/25 9:24, Ming Lei 写道:
-> > > -       if (!time_elapsed)
-> > > +       /* don't trim slice until at least 2 slice is used */
-> > > +       if (time_elapsed < tg->td->throtl_slice * 2)
-> > >                  return;
-> > 
-> > If you just want to fix throtl/001, the above patch might
-> > work(sometimes, it might not, and timer may expire by 2 jiffies), but it
-> > is easy to fail other tests, such as, reduce the bps limit a bit, and
-> > increase BS a bit to make the IO cross exactly two slices.
+> This series by Jianbo adds IPsec policy check after decryption.
 > 
-> That's fine, the key point is the following code, above code is
-> just to make sure there is still at least one slice to trim after
-> removing the last slice.
+> In current mlx5 driver, the policy check is done before decryption for
+> IPSec crypto and packet offload. This series changes that order to
+> make it consistent with the processing in kernel xfrm. Besides, RX
+> state with UPSPEC selector is supported correctly after new steering
+> table is added after decryption and before the policy check.
 > 
-> +       /* dispite the last slice, trim previous slice */
-> +       time_elapsed -= tg->td->throtl_slice;
-> 
-> In this case, if one BIO cross 1+ slices, the rate is the same as
-> expected in the previous slices, we can trim them without any negative
-> impact.
+> [...]
 
-Can you explain in details why it signals that the rate is expected now?
+Here is the summary with links:
+  - [net-next,1/8] net/mlx5e: Add helper function to update IPSec default destination
+    https://git.kernel.org/netdev/net-next/c/3400ae49cd1a
+  - [net-next,2/8] net/mlx5e: Change the destination of IPSec RX SA miss rule
+    https://git.kernel.org/netdev/net-next/c/20d5fdc8951a
+  - [net-next,3/8] net/mlx5e: Add correct match to check IPSec syndromes for switchdev mode
+    https://git.kernel.org/netdev/net-next/c/85e4a808af25
+  - [net-next,4/8] net/mlx5e: Move IPSec policy check after decryption
+    https://git.kernel.org/netdev/net-next/c/7d9e292ecd67
+  - [net-next,5/8] net/mlx5e: Skip IPSec RX policy check for crypto offload
+    https://git.kernel.org/netdev/net-next/c/aa2961e19ff6
+  - [net-next,6/8] net/mlx5e: Add num_reserved_entries param for ipsec_ft_create()
+    https://git.kernel.org/netdev/net-next/c/e20674a7e5b1
+  - [net-next,7/8] net/mlx5e: Add pass flow group for IPSec RX status table
+    https://git.kernel.org/netdev/net-next/c/78e77a41e401
+  - [net-next,8/8] net/mlx5e: Support RX xfrm state selector's UPSPEC for packet offload
+    https://git.kernel.org/netdev/net-next/c/c69046c3f2dc
 
-If rate isn't expected, it will cause trouble to trim, even just the
-previous part.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-
-Thanks,
-Ming
 
