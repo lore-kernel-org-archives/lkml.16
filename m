@@ -1,114 +1,79 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1590725A329
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 06:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3820625A33A;
+	Tue, 25 Feb 2025 06:29:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740464994; cv=none; b=Hi6CTuH4eLAgcW1y2O4OI046pdhJIugIDfomgpAX0IJe/ZA1aSYF6A93KwAFbLSkHnlzLYgdn0KJ6YKz3st1ILE+EHsQ5ZVE4Mo88mq8j6m8R+7l7AE77LQY89vCde/wneESthoFafrmLKeCIIGnhPmVxn/epRBLBgnznACt0QE=
+	t=1740464998; cv=none; b=C561REXg5uBICAS5Jtby6q3u22UFhucgVtqMXkzpVI78RZ+xyb7MmoZtvXvTd39iVnzGxXDLb0Z53Gay86BvYft8ecfS3jP97rUpFhuSjQi9r9VjH9wzk7MZNxy5N+3xGBnFkW9aXYkvCw8f6C6rORxBWCXL0xRV3sZRZxvPCu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740464994; c=relaxed/simple;
-	bh=ZBHnfwZYwn4I2BQkXindYSZKHPhm1XSFyZ6IYKOObxY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MlHKt2BV9z5ZMsMzAnci1QEOptngsD91y2rUIaLKWpn9hd0uUpLNGlThWTu94Kf+eEdZPqOsNGpwMLQd23NBp/c+gAaO6UiU1NgRtlUh2N/gCxb23fU1l9Hqfn9CrErSrakWtDAp9NPBPebOmpAA+h3cpFh7P3vmJ1qk3qbNgbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=CXzqGwHG; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="CXzqGwHG"
-Received: from eig-obgw-5001a.ext.cloudfilter.net ([10.0.29.139])
-	by cmsmtp with ESMTPS
-	id mbi3tZxbTMETlmoRztpuyl; Tue, 25 Feb 2025 06:29:51 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id moRytJzMrHEACmoRytU2W5; Tue, 25 Feb 2025 06:29:51 +0000
-X-Authority-Analysis: v=2.4 cv=HdLfTTE8 c=1 sm=1 tr=0 ts=67bd635f
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=3f8LB4XS3dq57Z55X223F1fJxodVBl44Tiv5wJ1zFio=; b=CXzqGwHGCIaSV+5lewCLCbTHm8
-	JFi6aaMpzIoGP3tOQ1WlfbyZdaoorP7lRK5OdKIpoDJi8v8YaeGvfV3Vqs+AudhjToXCNJjydOPoJ
-	wl1FYuqffUQiK8R+FPUzE2gAVGem8/v5VRTCjYq9e6Wfl+GgNOECVdzQVoKBaI4qN1XP/r1UvWCem
-	4XJ/SEN54/7WP8U3KVQZ77MKFQNu6R686SSZACSIn5x5HUYz2iOEaKVwWrUTlR7+eeG6XrMKqLKJu
-	HfSOGDlpuZaCWuQKcQDEHL30BHa76BcqMhoHFhudGyVIymx9GEtXll3OrYHiv/xXaFXAOwYgYx0MD
-	gcScMqMA==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:48638 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.96.2)
-	(envelope-from <re@w6rz.net>)
-	id 1tmoRw-004BYc-1f;
-	Mon, 24 Feb 2025 23:29:48 -0700
-Message-ID: <f252d815-81e1-4711-8e2f-f362272c3d28@w6rz.net>
-Date: Mon, 24 Feb 2025 22:29:44 -0800
+	s=arc-20240116; t=1740464998; c=relaxed/simple;
+	bh=tJ5FBU+5TMpti3LqxM1ZB6it/0K30EwD+JVo+/Y3HBg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=edFsBqi/NE9eLPw/vyEpRP/6Q5CjVXdkiPjaWlGjXJK/cn7k79wr05GD4eAe9SUkuZe8MBJdKNxaglLa2wG1JlHQQrff8GW9w/E/wKe0cz3A8mvPOWi62XRi4eXc7FmWMmR6BIxpWPBjpB0WThQPt71zf62dVnb96d5v2qbZz5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Z270g59JGzCs9V;
+	Tue, 25 Feb 2025 14:26:27 +0800 (CST)
+Received: from kwepemg500006.china.huawei.com (unknown [7.202.181.43])
+	by mail.maildlp.com (Postfix) with ESMTPS id D4CED18032E;
+	Tue, 25 Feb 2025 14:29:53 +0800 (CST)
+Received: from huawei.com (10.50.165.33) by kwepemg500006.china.huawei.com
+ (7.202.181.43) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 25 Feb
+ 2025 14:29:53 +0800
+From: Longfang Liu <liulongfang@huawei.com>
+To: <alex.williamson@redhat.com>, <jgg@nvidia.com>,
+	<shameerali.kolothum.thodi@huawei.com>, <jonathan.cameron@huawei.com>
+CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@openeuler.org>, <liulongfang@huawei.com>
+Subject: [PATCH v4 4/5] hisi_acc_vfio_pci: bugfix the problem of uninstalling driver
+Date: Tue, 25 Feb 2025 14:27:56 +0800
+Message-ID: <20250225062757.19692-5-liulongfang@huawei.com>
+X-Mailer: git-send-email 2.24.0
+In-Reply-To: <20250225062757.19692-1-liulongfang@huawei.com>
+References: <20250225062757.19692-1-liulongfang@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 000/140] 6.6.80-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250224142602.998423469@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250224142602.998423469@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1tmoRw-004BYc-1f
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:48638
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 54
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfMaXcD8AZ5Rc2d8b4LpWOcRGGY3G0gwCvP5dVLkT/7+vNDXulqZVaicFEwzcAwf0gjQ8Su3GUEzHdkdRTUoPzn87nMc0d2hPKfTAIOAUMFTJmJnKSjTN
- 3sTS8i6u1q9WlWCkXdzweZGskQegZqOewe1h/KYYoz6YnahIaHuKn5UZJJDzHziqGr2JJR/ThP3IIUfx4sJMyyM6fCSnrFe5S2I=
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemg500006.china.huawei.com (7.202.181.43)
 
-On 2/24/25 06:33, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.80 release.
-> There are 140 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 26 Feb 2025 14:25:29 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.80-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+In a live migration scenario. If the number of VFs at the
+destination is greater than the source, the recovery operation
+will fail and qemu will not be able to complete the process and
+exit after shutting down the device FD.
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+This will cause the driver to be unable to be unloaded normally due
+to abnormal reference counting of the live migration driver caused
+by the abnormal closing operation of fd.
 
-Tested-by: Ron Economos <re@w6rz.net>
+Fixes: b0eed085903e ("hisi_acc_vfio_pci: Add support for VFIO live migration")
+Signed-off-by: Longfang Liu <liulongfang@huawei.com>
+Reviewed-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
+---
+ drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+index 54c59c92df13..3f0bcd855839 100644
+--- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
++++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+@@ -1507,6 +1507,7 @@ static void hisi_acc_vfio_pci_close_device(struct vfio_device *core_vdev)
+ 	struct hisi_acc_vf_core_device *hisi_acc_vdev = hisi_acc_get_vf_dev(core_vdev);
+ 	struct hisi_qm *vf_qm = &hisi_acc_vdev->vf_qm;
+ 
++	hisi_acc_vf_disable_fds(hisi_acc_vdev);
+ 	mutex_lock(&hisi_acc_vdev->open_mutex);
+ 	hisi_acc_vdev->dev_opened = false;
+ 	iounmap(vf_qm->io_base);
+-- 
+2.24.0
 
