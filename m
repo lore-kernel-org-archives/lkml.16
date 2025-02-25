@@ -1,126 +1,165 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD712676EA;
-	Tue, 25 Feb 2025 09:41:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740476520; cv=none; b=gWivCpwEJX/Al3yVdvmqzl6+iJbWum+FI8JhF7EDYCoCZg3ZBZ1ErlOijM7xsj/lM/HbeQyg2BY+CzP+/S74ZURwZkoxN+yG7Jfe7OupMAaio487n/oF/r7j35xqhsJ6IuwFtiZcXbOtuu1vFzgRXLYv20PJmt0M5T7vuOFmXmo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740476520; c=relaxed/simple;
-	bh=1rX3Tw5OEZ9iVi69R/Vz5QGBAg03OkLYqvziaLFw+lE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GI8Jpvtv13McvD638J1nApl7MhiooOJ2fVgemgWuxTqI3yGJ9Ro2yDYGLY2jgqgASrv3xZ+B2mLaOXMnLi6s/EDhwHEiOcRRsSt1GE/qZBXY1zueBkgThljvmjkel/Juo5+8+KiKfln3CCIMGbvIOJQf6OnquuYWDD9bnN4dGeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JQLnok9r; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84EF267710;
+	Tue, 25 Feb 2025 09:42:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740476524; cv=pass; b=E30aduytBgvZZrMoL8cBwth5tNtHIuPQT2xjMmNPqGoJM8dqKNEXPLcfY0rdET/IF1QDmUNMsaDv4ax0fiMnQzg9jG7a3ofwbQd2aFzs5IDk/vBA3bm6AnwrC8nMUAlTFk9gV5RjyJHgJ+HUM1PPUotEyZeC+kux8oo3oPjaMp8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740476524; c=relaxed/simple;
+	bh=qV5/mFgVOaJlsgL7j+PIweNWTAqfECWHE8IDvYZkZSE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=LeVL6X3e/JBiFyVY65XPYw6QWOsWKN8InDK3IseIPu06PqGyCkwn0l04dyHYJILhYyyqCHYB3/YNP9B6sAWysXd2eiyTZB7UKNH7U9si7SiiA3FUKEZdnWlp7VJBrfriT0KdulcAylXYioLedcJZcnV2o5907O3XmhY4+S41xGI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b=F3o+DmJz; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JQLnok9r"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2217875d103so12386975ad.3;
-        Tue, 25 Feb 2025 01:41:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740476518; x=1741081318; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xl+Y1l5voHQwtJP92LWp/7002pAoHO14kkZNlQkkxFE=;
-        b=JQLnok9rnpqSsFLMPMTHuMsGj5JwiFRVYM4GIMP/CKER6QfjdZIPmr0NcXYSIbeYzV
-         CQwqd0aNk9XfL0V+HzLN3R1gMBKcJ6NGzBsaokACMLnrqYeC95ekBYoBnY7JQyAbA5sK
-         e6zcS+3b+10wvfpAjgwwkAxxKjjwOsbTp8sBKYlfMDMab0Ax27YGamTMzO1PSzpdXXnY
-         60ziJIy0t5tWSU2u0HvQgnqWmBGyZJI1yqiat6oZeXu2F/BtKPRYgfUJ2svGjeWP0yw0
-         Szce6O8heqJaZVEt/tcODL7iVHQ/0QIl3tpvYbAo9PnTvMngQt28Rp0WmROugcPm/8GN
-         lBJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740476518; x=1741081318;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Xl+Y1l5voHQwtJP92LWp/7002pAoHO14kkZNlQkkxFE=;
-        b=S4O73sBzMTOFULiPeqKH9nRmupHG20cWPajPGvUW3g71k7ai3jZcW+yFXyVjQBUZzi
-         rYhp8JQTCjAHiYIksAFq98RQVUIBd4comVFyn0u0ZtRrGvCn3dJnPU6oLZAVuAXLmrgr
-         Kn2IftE8MjKtAegWsKkB1ESEpGeSmbL7l/2Uchb34f+uxW26/CbBBAIMztx3bklnko7w
-         CzRXdWvgJwTo+w170B5xW5TaBILcY/fjpxwMTUz3DP6O9WlnXY0u7NESAxESkAWcxAzn
-         Fpv2758Hp9/z72OgKCjO8/IMmTVqkkbrZhqRwyZhF1txM9Crau8TnW/VGWLWLFPcStL3
-         ruCA==
-X-Forwarded-Encrypted: i=1; AJvYcCW4flXJIa6enKzyJYIIfPdqtQgObLz0h8hXcRzuussVuvQZDhYbovgq06/tJQZKijxR/fO/gu8ZujlljiM=@vger.kernel.org, AJvYcCWroyHgZ630GE09Tijqvb32Hq9qoK5eL5/WqCvUYMe1DkQPCW2yxvrRK0baPG57UoXbSFFm/b1w@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxj3l0D62vunp1sng3xEQN/NJtDaLn/bwC06h1NVTBsTLnabRYp
-	m7Kld2+nqiw8DVhoqCotwpCKrWnz5IjS1PQKiL5plV32EP5WdHb1
-X-Gm-Gg: ASbGncsX9g/gVNwN3tGK6Gc/VCr23XzGHGNhqDBjGTR+k9UaPpzjxLV5FwHLYMI8hlW
-	tn9hcJ+sgo6gP0pDv8/+ZQpxar/x+j5NQdsyI5ryRGnTqMs+X8ekNJLJ2M+AEwC5h2+iO1su6xA
-	bN+rAUp0dZdDGbZqOJlyFrIMTZmPBalq3ic+GWY6+e2kIGTtdQK+6Bxw0AcYNyjkeHPUuyE26J2
-	/qs6r+nsZEDXxwkHwooJos2SaUhlf+e3i833cFOxeHdqPQisM9MNS+KzulTJCoTcSxLQkkyAQRg
-	1JA9topc93E5LfXLCmqscXFAVGG+tVcahbbvREr6Sg==
-X-Google-Smtp-Source: AGHT+IGtCeMHEORvZ0nZqeqoPBF/JydV8dIFt56d4Ce/z/GzK8FrT+PFRSwZV3bo/lzU5Od9Izv+Zw==
-X-Received: by 2002:a17:902:dace:b0:221:7854:7618 with SMTP id d9443c01a7336-2219ff78bafmr97636405ad.8.1740476517699;
-        Tue, 25 Feb 2025 01:41:57 -0800 (PST)
-Received: from localhost.localdomain ([182.148.13.61])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a0b0d61sm9986085ad.240.2025.02.25.01.41.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 01:41:57 -0800 (PST)
-From: Qianyi Liu <liuqianyi125@gmail.com>
-To: matthew.brost@intel.com,
-	airlied@gmail.com,
-	ckoenig.leichtzumerken@gmail.com,
-	dakr@kernel.org,
-	daniel@ffwll.ch,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	phasta@kernel.org,
-	tzimmermann@suse.de
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	liuqianyi125@gmail.com,
-	stable@vger.kernel.org
-Subject: [PATCH V2] drm/sched: fix fence reference count leak
-Date: Tue, 25 Feb 2025 17:41:25 +0800
-Message-Id: <20250225094125.224580-1-liuqianyi125@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b="F3o+DmJz"
+ARC-Seal: i=1; a=rsa-sha256; t=1740476500; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=b1G1tij8w9MUsFuZwjNJ2J996DTQsiE+sqDZkt6emWKQQcTxdDElrRqQD93BXmpaejD3XFoIkvUqJWx0gPkTpWOHVzGXDUB0DLoueJduBhG2b6/S6gbNxF+cTW1GBULUliUoO/GO19LFENaXFUu4zmXK1clpRKdLUYzD6QHrpHQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1740476500; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ydaNwD+QExLtqdUUDLYZNGa0VEDDTPQCaGJLdokEAl8=; 
+	b=lYIHbqz5b0p065bgzQCedV9SAqeadHViTVIb66AavBKPjrPHu5v90Mhurv14ZjSW5X/SHGFTvdmk9EfXsKE/hY/2Grwf2fQGnIRjmeC1YBVbYLqU8/YdI0Z/s5UVLHT2SqNUb+uoP+O6nt/6X3M2cLqMLXQ5G2LxYRG90TuI9XE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.fricke@collabora.com;
+	dmarc=pass header.from=<sebastian.fricke@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740476500;
+	s=zohomail; d=collabora.com; i=sebastian.fricke@collabora.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=ydaNwD+QExLtqdUUDLYZNGa0VEDDTPQCaGJLdokEAl8=;
+	b=F3o+DmJzzUuoHQJvR+212nn/N36QFIbvz0s2vkUamjcegnRsrNYJlbIcJ310YW7b
+	pzGVCV78y09/X2IGae2SoqXF8e5suUoeHbOgK67sjknwjqYn3p6+/eWozOc1CbnFL6i
+	VcbbAvG9YgcjrJY1vr245UnpsPddenW9CpiCTV/A=
+Received: by mx.zohomail.com with SMTPS id 1740476498610405.11605187345197;
+	Tue, 25 Feb 2025 01:41:38 -0800 (PST)
+From: Sebastian Fricke <sebastian.fricke@collabora.com>
+Date: Tue, 25 Feb 2025 10:40:27 +0100
+Subject: [PATCH v7 06/12] media: rkvdec: Move rkvdec_reset_decoded_fmt
+ helper
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250225-rkvdec_h264_high10_and_422_support-v7-6-7992a68a4910@collabora.com>
+References: <20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
+In-Reply-To: <20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Hans Verkuil <hverkuil@xs4all.nl>, 
+ Boris Brezillon <boris.brezillon@collabora.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev, 
+ Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, 
+ Alex Bee <knaerzche@gmail.com>, 
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>, 
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+ Detlev Casanova <detlev.casanova@collabora.com>, 
+ Dan Carpenter <dan.carpenter@linaro.org>, Jonas Karlman <jonas@kwiboo.se>, 
+ Christopher Obbard <christopher.obbard@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740476426; l=3227;
+ i=sebastian.fricke@collabora.com; s=linux-media; h=from:subject:message-id;
+ bh=3QFkEuQGNgb1BZvE0V8lmT5neA542UdT7PYjbWxjjM0=;
+ b=aC/0vaGnjPQBM1T6M3cY3P/gToBjWStjuLJeKQunm2wkhfMBoiQg9BM9aJnfQp32y+eAp4LoDQ7h
+ 6+sRSJLTALU1rBfMC9AqMOR+CqJr9kvf/UMR5cwomBwr/NCHTlTf
+X-Developer-Key: i=sebastian.fricke@collabora.com; a=ed25519;
+ pk=pYXedPwrTtErcj7ERYeo/IpTrpe4QbJuEzSB52fslBg=
+X-ZohoMailClient: External
 
-From: qianyi liu <liuqianyi125@gmail.com>
+From: Jonas Karlman <jonas@kwiboo.se>
 
-We leaked last_scheduled fences when the entity was being killed and the
-fence callback add fails.
+Move rkvdec_reset_decoded_fmt() and the called rkvdec_reset_fmt() helper
+functions in preparation for adding a new caller in an upcoming patch.
 
-To fix this, we should decrement the reference count of prev when
-dma_fence_add_callback() fails, ensuring proper balance.
-
-v2:
- * Make commit message more clearly. (Philipp and Matt)
- * Add "Fixes: " tag and put the stable kernel on Cc. (Philipp)
- * Correct subject line from "drm/scheduler" to "drm/sched". (Philipp)
-
-Cc: stable@vger.kernel.org
-Fixes: 2fdb8a8f07c2 ("drm/scheduler: rework entity flush, kill and fini")
-
-Signed-off-by: qianyi liu <liuqianyi125@gmail.com>
+Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Tested-by: Christopher Obbard <chris.obbard@collabora.com>
 ---
- drivers/gpu/drm/scheduler/sched_entity.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/staging/media/rkvdec/rkvdec.c | 46 +++++++++++++++++------------------
+ 1 file changed, 23 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/gpu/drm/scheduler/sched_entity.c b/drivers/gpu/drm/scheduler/sched_entity.c
-index 69bcf0e99d57..1c0c14bcf726 100644
---- a/drivers/gpu/drm/scheduler/sched_entity.c
-+++ b/drivers/gpu/drm/scheduler/sched_entity.c
-@@ -259,9 +259,12 @@ static void drm_sched_entity_kill(struct drm_sched_entity *entity)
- 		struct drm_sched_fence *s_fence = job->s_fence;
+diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
+index e354360f4acc1fe9b7c4b90745f0a818fa2b7cab..1f8f98cf91dc205f4a9da2712c81e90b726a6e57 100644
+--- a/drivers/staging/media/rkvdec/rkvdec.c
++++ b/drivers/staging/media/rkvdec/rkvdec.c
+@@ -37,6 +37,29 @@ static void rkvdec_fill_decoded_pixfmt(struct rkvdec_ctx *ctx,
+ 		DIV_ROUND_UP(pix_mp->height, 16);
+ }
  
- 		dma_fence_get(&s_fence->finished);
--		if (!prev || dma_fence_add_callback(prev, &job->finish_cb,
--					   drm_sched_entity_kill_jobs_cb))
-+		if (!prev ||
-+		    dma_fence_add_callback(prev, &job->finish_cb,
-+					   drm_sched_entity_kill_jobs_cb)) {
-+			dma_fence_put(prev);
- 			drm_sched_entity_kill_jobs_cb(NULL, &job->finish_cb);
-+		}
++static void rkvdec_reset_fmt(struct rkvdec_ctx *ctx, struct v4l2_format *f,
++			     u32 fourcc)
++{
++	memset(f, 0, sizeof(*f));
++	f->fmt.pix_mp.pixelformat = fourcc;
++	f->fmt.pix_mp.field = V4L2_FIELD_NONE;
++	f->fmt.pix_mp.colorspace = V4L2_COLORSPACE_REC709;
++	f->fmt.pix_mp.ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
++	f->fmt.pix_mp.quantization = V4L2_QUANTIZATION_DEFAULT;
++	f->fmt.pix_mp.xfer_func = V4L2_XFER_FUNC_DEFAULT;
++}
++
++static void rkvdec_reset_decoded_fmt(struct rkvdec_ctx *ctx)
++{
++	struct v4l2_format *f = &ctx->decoded_fmt;
++
++	rkvdec_reset_fmt(ctx, f, ctx->coded_fmt_desc->decoded_fmts[0]);
++	f->type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
++	f->fmt.pix_mp.width = ctx->coded_fmt.fmt.pix_mp.width;
++	f->fmt.pix_mp.height = ctx->coded_fmt.fmt.pix_mp.height;
++	rkvdec_fill_decoded_pixfmt(ctx, &f->fmt.pix_mp);
++}
++
+ static int rkvdec_try_ctrl(struct v4l2_ctrl *ctrl)
+ {
+ 	struct rkvdec_ctx *ctx = container_of(ctrl->handler, struct rkvdec_ctx, ctrl_hdl);
+@@ -169,18 +192,6 @@ rkvdec_find_coded_fmt_desc(u32 fourcc)
+ 	return NULL;
+ }
  
- 		prev = &s_fence->finished;
- 	}
+-static void rkvdec_reset_fmt(struct rkvdec_ctx *ctx, struct v4l2_format *f,
+-			     u32 fourcc)
+-{
+-	memset(f, 0, sizeof(*f));
+-	f->fmt.pix_mp.pixelformat = fourcc;
+-	f->fmt.pix_mp.field = V4L2_FIELD_NONE;
+-	f->fmt.pix_mp.colorspace = V4L2_COLORSPACE_REC709;
+-	f->fmt.pix_mp.ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
+-	f->fmt.pix_mp.quantization = V4L2_QUANTIZATION_DEFAULT;
+-	f->fmt.pix_mp.xfer_func = V4L2_XFER_FUNC_DEFAULT;
+-}
+-
+ static void rkvdec_reset_coded_fmt(struct rkvdec_ctx *ctx)
+ {
+ 	struct v4l2_format *f = &ctx->coded_fmt;
+@@ -196,17 +207,6 @@ static void rkvdec_reset_coded_fmt(struct rkvdec_ctx *ctx)
+ 		ctx->coded_fmt_desc->ops->adjust_fmt(ctx, f);
+ }
+ 
+-static void rkvdec_reset_decoded_fmt(struct rkvdec_ctx *ctx)
+-{
+-	struct v4l2_format *f = &ctx->decoded_fmt;
+-
+-	rkvdec_reset_fmt(ctx, f, ctx->coded_fmt_desc->decoded_fmts[0]);
+-	f->type = V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE;
+-	f->fmt.pix_mp.width = ctx->coded_fmt.fmt.pix_mp.width;
+-	f->fmt.pix_mp.height = ctx->coded_fmt.fmt.pix_mp.height;
+-	rkvdec_fill_decoded_pixfmt(ctx, &f->fmt.pix_mp);
+-}
+-
+ static int rkvdec_enum_framesizes(struct file *file, void *priv,
+ 				  struct v4l2_frmsizeenum *fsize)
+ {
+
 -- 
 2.25.1
 
