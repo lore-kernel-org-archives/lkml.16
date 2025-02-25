@@ -1,213 +1,173 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D902263C7C
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A652676C0
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740476126; cv=none; b=mfntniNCrzKae2yfrlbCjn1bCw+t5jiw8ifP+kMgaeYo469fJ1ZwWlQ6VgwmkF1qDQs4G+GtUJsxGoQWGoWmZ3Qsn9ntBFNNkHGpL9RsizR9JeJXVBm4/fLciA1op/sME39FbO4tKjivFTmiptMk5sNky4gaIALFXPWdKv0SwzI=
+	t=1740476127; cv=none; b=HoHVV8seDNP5W+n9UPBNa/S5NkUaikj291JGNBl+DkrJo/4ptce6LVfB1NO34ZT46NG/mJDfSOp6cnXAKpPQgUBHmfbnim8URkTV6KQpp7wbMgQEAoGRWp7dZm4zAcRLOZbIIOq/4xX55zT05OpGusUvzwsuaO9kP41JJ8Mv/ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740476126; c=relaxed/simple;
-	bh=XqCC82gN7Ax+Edng+oAk3lNgokxpfuy53+8WAujaTnU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RmlDi10wThXa/6rmiFMVz1jls4pREmt189dQ1nT8QxTjf4uk/D7PqfdczuvwROoUbWDwLZHMV4DsxwZ4+Zz85kcFvS01GJcDmqmq+1goMO4KFOAgOSBI5QpssSJGl8UWhfYqwVhncDxgnrd0CpyBWv0Qh8dkBswqacvj6e+r8Bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xw5OlW/T; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PEfabdvd; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ChdH3SHs; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HVd+TvcY; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1740476127; c=relaxed/simple;
+	bh=O6QdMw9pPsUSonExw1v1X4uasyeeZLrOu/yWsY9TlUk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=oSq61+KyvwCGieBjUgVMGIcQUIYXFRrUnsEjljNZls4H/f21vS0W+CUcnjr3DUgP+i29sRLhs2yUieG1TwCAqxMkt775Xlw0Q2W6EzQu5PN3UlP0eUIopQzRhBE32ZWvaPE2bZ4ydZ2Zx3D4Wb1LgboeISr56D9QdXa2FfAUKns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=eNm5N69b; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xw5OlW/T";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PEfabdvd";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ChdH3SHs";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HVd+TvcY"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 612112116F;
-	Tue, 25 Feb 2025 09:35:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1740476122; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=0hjlv3pwtvm7CLkK6D7gSMixWOvwntnGrnvPq2AR1Ew=;
-	b=xw5OlW/T+rAd2to0uX2hzoEnn3yX4kK1Tm4L0Bt28wHwd0nAzSaAf0boghvxb9X8foEBVm
-	PUJkwEyqf/6yR6A8L3x/gg3VFk1s3hiB0Q6ePrE3g69TCLN89UuqagFFLvnZlhzNvtrmCk
-	t+yoyTyVZlZA5PwyQeLRKwIW6cUONag=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1740476122;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=0hjlv3pwtvm7CLkK6D7gSMixWOvwntnGrnvPq2AR1Ew=;
-	b=PEfabdvdOwTjL+Ck5IvbKA4xxbe7+QHZjbcEBgPWfBvEoeb5ZYwcVLEOehnz/zhKwc7rOP
-	N6SCPMFEjovEz2Cg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ChdH3SHs;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=HVd+TvcY
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1740476121; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=0hjlv3pwtvm7CLkK6D7gSMixWOvwntnGrnvPq2AR1Ew=;
-	b=ChdH3SHsqwj3nNTJA+P+ydIh2XcdaFR3aJSEU+cBWV+FfSNyhxnBypMZCiJZxnX1I69f5m
-	xN/gjMpSwibrsRXMGR8VVdo+ETEYN1sVrlG7WAGb1DjDevX4HsrjIC/qCKEpWE2si38fHo
-	1mHntAIrWUVFT5OQWY3PQ7W3CMilDVE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1740476121;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=0hjlv3pwtvm7CLkK6D7gSMixWOvwntnGrnvPq2AR1Ew=;
-	b=HVd+TvcYLdBQ/wVgrzL/+hNM6H++htk8KcjG/c0eN0msIFrWwuCZtNFmCUdShMPYlT5s6p
-	zwXQdVoUD+t0asBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0F23813332;
-	Tue, 25 Feb 2025 09:35:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id EZwsAtmOvWfmFgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Tue, 25 Feb 2025 09:35:21 +0000
-Message-ID: <a4bc0440-5451-49e7-b7a3-9299c5200a2e@suse.de>
-Date: Tue, 25 Feb 2025 10:35:20 +0100
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="eNm5N69b"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P8N4mj020060
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:35:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	4aoaq0mjDOgIfsvFB0lVTIIe96cGBXl/hbTV2ZPb/9Q=; b=eNm5N69b5os5DY5X
+	e+LeoRScIDgVKhf7EfRP8vq+aTAGREow7fMMROK7+gNMQOOioxoKjTj8pPPyOKIx
+	ZGBeUqgwn1m3yHaj5OT+Pyxh6vu3CY5ZzIwpsDFvVIhS4YvhMgsS4fNPqWBEuQns
+	hKu6n3f66OjMb8ubIQJnUXrxw0ywQYZIYnC+7jMlH9Ksn6y/rg1e+Vpd1DjBMdB5
+	GFs+qjYMx4NMA1AAWdFTshA4CRPb4bF4bSENGELPl1IS5K1zeWvGB5U1Z3TLtS6u
+	6Kdphgy7Nw1jKsHruG43KXq/ha33C1674IamyiSEsEMWDaiMC7ZPxge9u9n9xHY6
+	RaA7rA==
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44y6t2r796-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:35:24 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2f2a9f056a8so11805243a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 01:35:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740476124; x=1741080924;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4aoaq0mjDOgIfsvFB0lVTIIe96cGBXl/hbTV2ZPb/9Q=;
+        b=YlPM4TBquy2TIGN9zcgfhKfDW5PGVViodi0SRksqX+5gF2ppwyhEd23HcQP2o3vJEo
+         YoEyv6AprRKLsF6nCxfP0qoBDMAYLvSCSsAANPiFm1YWsAIU17yZea+NrDYAW1Hnrc2G
+         4UhUmvwCVuQkweoPYev/0aI1oJ9/OZK2Tw1LPBjBWsjhNDL32SGwuntXcIvCApJV+O5W
+         39MRzuSLNCw0Nmw/Tokl9WNKRf6bN9It2zbc0nGL8MOiLLocnFjllEoizl/yR2ZM7G7G
+         CEVr2pfriHGxaU2+ofLt0OJrCeIWhH1i10uE0FcyruZtLv1mW+5vxO1k7MZaLIw/BOGH
+         kglQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWBV0vEEJ7bcM2MOr6Z+1PzdK95DUNUs3auZkwwyFrLfq25f0Z4AvJH9CpXJ4/WiD8vp5iJQwOC90+DzbE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6XMQ7sjnxokUHt5QsV0uyc6KDcMT3wTQF4OzQo8EPGwJeuorm
+	WHgkQgjKKWU/zTFqJQekyutX3VKQAHjqpV6752YjIi7swaMo9jy0htsFts3Tvu4GZJuUdWj9QAX
+	+rHedj7W7/PUjpGMgbTik2m64CjgDeMbzFPlKQUpDLKnVmYIHTnCYKCU8IU5uC6w=
+X-Gm-Gg: ASbGncvIfFfwk2gXHaBK0mMQHr1/U8jlMONhGxjR/e+zO04q5giVRGOGiQCZKgcgNRQ
+	pwXpoAiuvN11NWGwgipIyVx8jgexlWtC9t1pxxclQ1oeFhEOdgssi0a/tdjdobR263HsauXXE8b
+	VJGkSwSFx09aagNBqBtSQm/ka4jE4u8kj+53fHuT9GPbqyYdzvbdYgOLumC+dhH6KXwIaMu0Wut
+	t6n2soM7WDzCpQ368SSZJ2PgzkvvlpbGW234+zzg1VJeGnnNUhb1oqfPMRIoCGMu453lDbTF+Hy
+	4Tw0exQiR9Tx3Fls3DiUlZoMOqrBcB6GQn4Sum+JdCE9PlAK57g=
+X-Received: by 2002:a17:90a:d643:b0:2ee:8031:cdbc with SMTP id 98e67ed59e1d1-2fce7af3f27mr23590177a91.23.1740476123975;
+        Tue, 25 Feb 2025 01:35:23 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IEx8Q/7kpUvvQms6TaGdhGF/1FWj1acg1b6gZtuWR3LDxMd/AjBckVUsJULl3AKvVV8BfYDKQ==
+X-Received: by 2002:a17:90a:d643:b0:2ee:8031:cdbc with SMTP id 98e67ed59e1d1-2fce7af3f27mr23590147a91.23.1740476123583;
+        Tue, 25 Feb 2025 01:35:23 -0800 (PST)
+Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe6a3dec52sm1080770a91.20.2025.02.25.01.35.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 01:35:23 -0800 (PST)
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Date: Tue, 25 Feb 2025 15:04:06 +0530
+Subject: [PATCH v4 09/10] dt-bindings: PCI: qcom,pcie-sc7280: Add 'global'
+ interrupt
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] drm/tiny: add driver for Apple Touch Bars in x86
- Macs
-To: Aditya Garg <gargaditya08@live.com>
-Cc: "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
- "mripard@kernel.org" <mripard@kernel.org>,
- "airlied@gmail.com" <airlied@gmail.com>, "simona@ffwll.ch"
- <simona@ffwll.ch>,
- "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
- Kerem Karabay <kekrby@gmail.com>, Atharva Tiwari <evepolonium@gmail.com>,
- Aun-Ali Zaidi <admin@kodeit.net>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-References: <B08444CD-38A8-4B82-94B2-4162D6D2EABD@live.com>
- <844C1D39-4891-4DC2-8458-F46FA1B59FA0@live.com>
- <PN3PR01MB95974D5EB5A25386A8BF6FDAB8C02@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <ca34309a-f2b2-4082-92df-86a775952348@suse.de>
- <PN3PR01MB95979D1B21250604F834357FB8C32@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <PN3PR01MB959719792308EBB9370993DFB8C32@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <PN3PR01MB959719792308EBB9370993DFB8C32@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 612112116F
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,live.com];
-	RCVD_TLS_ALL(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_TO(0.00)[live.com];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux.intel.com,kernel.org,gmail.com,ffwll.ch,kodeit.net,vger.kernel.org,lists.freedesktop.org];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250225-qps615_v4_1-v4-9-e08633a7bdf8@oss.qualcomm.com>
+References: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
+In-Reply-To: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
+To: Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        chaitanya chundru <quic_krichai@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org, Jingoo Han <jingoohan1@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: quic_vbadigan@quicnic.com, amitk@kernel.org, dmitry.baryshkov@linaro.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        jorge.ramirez@oss.qualcomm.com,
+        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740476062; l=2266;
+ i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
+ bh=O6QdMw9pPsUSonExw1v1X4uasyeeZLrOu/yWsY9TlUk=;
+ b=b1gIs1M9+w2uwq8aKEXnUyCHK9+vOyRbRv5s4qKcQEAZdCgZPuRWhO+GdKlQIBt9b/Bn2pEXT
+ uruNXKmtI+CCHawO8jaBl+e3bTGGIRKv6bJTzcR/Oz3rUUio2gnzg1U
+X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
+ pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
+X-Proofpoint-ORIG-GUID: OpB3mEGys2B_6hsePvxbKCHOHUd96aUh
+X-Proofpoint-GUID: OpB3mEGys2B_6hsePvxbKCHOHUd96aUh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-25_03,2025-02-24_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ spamscore=0 priorityscore=1501 mlxscore=0 phishscore=0 malwarescore=0
+ adultscore=0 bulkscore=0 lowpriorityscore=0 impostorscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502250066
 
-Hi
+Qcom PCIe RC controllers are capable of generating 'global' SPI interrupt
+to the host CPU. This interrupt can be used by the device driver to handle
+PCIe link specific events such as Link up and Link down, which give the
+driver a chance to start bus enumeration on its own when link is up and
+initiate link training if link goes to a bad state. The PCIe driver can
+still work without this interrupt but it will provide a nice user
+experience when device gets plugged and removed.
 
-Am 25.02.25 um 10:07 schrieb Aditya Garg:
->
->> On 25 Feb 2025, at 2:34 PM, Aditya Garg <gargaditya08@live.com> wrote:
->>
->> ﻿
->>
->>> On 25 Feb 2025, at 1:27 PM, Thomas Zimmermann <tzimmermann@suse.de> wrote:
->>>
->>> ﻿Hi
->>>
->>> Am 24.02.25 um 17:58 schrieb Aditya Garg:
->>> [...]
->>>>> +config DRM_APPLETBDRM
->>>>> +    tristate "DRM support for Apple Touch Bars"
->>>>> +    depends on DRM && USB && MMU
->>>>> +    select DRM_GEM_SHMEM_HELPER
->>>>> +    select DRM_KMS_HELPER
->>>>> +    select HID_APPLETB_BL
->>>> Btw I have a doubt regarding this dependency. While hid-appletb-bl has made into the linux-next tree, it has still not been merged into Linus' tree, and neither the drm tree I assume. It potentially could cause issues?
->>> Yes. We cannot merge this driver until we have this symbol in our tree. But that will happen sooner or later.
->>>
->>> More problematic is that your driver selects HID_APPLETB_BL. From what I've seen, this symbol is user configurable, so the driver shouldn't select it. You need to use 'depends on' instead of 'select' here.
->> Looking at this again, maybe it should be selected. If you see the kernel config of TINYDRM_HX8357D, which is also in drm/tiny, it is selecting BACKLIGHT_CLASS_DEVICE.
+Hence, document it in the binding along with the existing MSI interrupts.
+Global interrupt is parsed as optional in driver, so adding it in bindings
+will not break the ABI.
 
-This driver does it wrong.
+Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+---
+ Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-> To make things more clear,
->
-> 1. hid-appletb-bl is for the backlight of the touchbar. The DRM code remains separate.
-> 2. hid-multitouch is to make the touchbar a touch screen. You can still use the driver without the touch functionality.
-
-If your driver does not require this, it shouldn't select or depend on it.
-
-Best regards
-Thomas
-
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
+index 76cb9fbfd476..7ae09ba8da60 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie-sc7280.yaml
+@@ -54,7 +54,7 @@ properties:
+ 
+   interrupts:
+     minItems: 8
+-    maxItems: 8
++    maxItems: 9
+ 
+   interrupt-names:
+     items:
+@@ -66,6 +66,7 @@ properties:
+       - const: msi5
+       - const: msi6
+       - const: msi7
++      - const: global
+ 
+   resets:
+     maxItems: 1
+@@ -149,9 +150,10 @@ examples:
+                          <GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH>,
+                          <GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH>,
+                          <GIC_SPI 374 IRQ_TYPE_LEVEL_HIGH>,
+-                         <GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>;
++                         <GIC_SPI 375 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>;
+             interrupt-names = "msi0", "msi1", "msi2", "msi3",
+-                              "msi4", "msi5", "msi6", "msi7";
++                              "msi4", "msi5", "msi6", "msi7", "global";
+             #interrupt-cells = <1>;
+             interrupt-map-mask = <0 0 0 0x7>;
+             interrupt-map = <0 0 0 1 &intc 0 0 0 434 IRQ_TYPE_LEVEL_HIGH>,
 
 -- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+2.34.1
 
