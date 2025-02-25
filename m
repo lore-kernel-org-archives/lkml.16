@@ -1,141 +1,171 @@
-Received: from fhigh-a3-smtp.messagingengine.com (fhigh-a3-smtp.messagingengine.com [103.168.172.154])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1421925B8;
-	Tue, 25 Feb 2025 21:42:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A00741925B8
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 21:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740519722; cv=none; b=skwww6YlXrVFLQMKBakj5WgIE+NmXjEEMFxYKUobFIeUssYfIqWM9xL2rG0Rzci1bMJEkmk7AMSG5onxKZQsyKGwlsF88bRyyk+ttZlil7NwndPu05sY67+eqml0FCRUfziM9Y5ZgwNtxVaYrYfYazYTPbZIK4eRAG1naWA1lhg=
+	t=1740519729; cv=none; b=LGnahDK2OBl/ousiM16NZ0YBoSEH43vXrj5ou0amp2AgAgGINqhf+TwzuA7rVWXmhGcaI7WGdy8KAytLPi8QuhejuSZDNBbydOC2Le+w4SZf7+a04ODpGIxwqW79T5PleBCo5kRlm1bFgEX0HTB8UFsm2V0VlaMOZMktocMeNCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740519722; c=relaxed/simple;
-	bh=HdTv9CB5HWU9vWfOn/u4h3nvvKwIS2GLS6S2i62V/B8=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=iImCm6LlvvEeSCuu/xNuTPRfH2vXcS0uinaSggPcveJfFi0iwu7IO5zH18/3qS/Oh1X1T4lcAoC1XxloK7lMag3tVhwKMyd3KA8REKNs3a+vbbxpMvQGnxfrFnKQV7MhKKw4YCLkAFMt5GtoQzNZnFGjxsyvEavm6XKFF7Xtt5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Ezp6ZY0K; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Lv997lUg; arc=none smtp.client-ip=103.168.172.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1740519729; c=relaxed/simple;
+	bh=+m8HxXrazlI5rmU9XsM5YUxoBH4XrRg35pxI1d/+5cI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uCiLps7Bdq7OS0rhNyXTBBjRceDaTHTle6XO+h0EqLwT+/Vq7QTTrRjN2oLD5zfGcHC0aNxZ++UG+UoHLgWsYX01sTRW7fiRYxV9+qA/oA0Sb68Gy52Own73KraJo95Zl+BCyqZ5A4SCvSI2mMv326VjNiSzMUh9F69pWtkvH8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lOJjeeM8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Ezp6ZY0K";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Lv997lUg"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 83EAC11400FA;
-	Tue, 25 Feb 2025 16:41:59 -0500 (EST)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-11.internal (MEProxy); Tue, 25 Feb 2025 16:41:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1740519719;
-	 x=1740606119; bh=MtYdg6N3u1ZvNXN25E9k3h9XmFGTIiZ/1bHuhQqIar8=; b=
-	Ezp6ZY0KYr4iDDMxa4MKeExP6HHLI6z5iWLlb740zBnbdNh7lx1f9pfXWz9RXNXu
-	sWWyCjoBURL5fLCZiykljyNnPEWTgMCItEi5Lvqp/jpRhAs3vzlGvZAGStXpGuG2
-	kb9Lxt5bx/4/359HSmtgYEfb91xPxJsoroV6WeWllwrfYrphITTBfAF3wj5vV4HN
-	3nMRPK8p/nvSPwZFu7Ajfs2nDn7goqF4oclbzAvL8dH+K0MmuztBrndTs8SucTxZ
-	blnoxiHWR0Z/3O37rWidrcbugK0GzuvcaprJu6UpTgkz1xb4UUmuRQpVYxOAmmXA
-	pg+x7yxuh0l6t/MLNhLPZw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1740519719; x=
-	1740606119; bh=MtYdg6N3u1ZvNXN25E9k3h9XmFGTIiZ/1bHuhQqIar8=; b=L
-	v997lUg6tL38799F8UHUN2MLk8X3jEVGDdqA33/ICRugznJi1xdic/WH9Tq+rBDt
-	7wcaPNv6y8CQRIq2FxseGHqoUk2jETGtHwgRQ+Hkj1Xp401y8yBtDuYfbHvuPS4a
-	czNxgTnaa+OCmLRSZgqb6almiScgBtG53CzIY6aD8vMp/EfetBZMgdzi2RezwW/V
-	aG7GsF/NuA+z+kLwLgXNkrDKPMkRJYACdRdXUqjGDJr/N5Ptrh/LKHoaTy3Iam4k
-	ns6S+BpbnqGWjNyKt4C+GZ72diLPbqEaSO0KMo4TLIW7NBA9M1lqXxB2g3R5ZCza
-	YZqouaweitfG0eQVWiaKA==
-X-ME-Sender: <xms:JDm-Z_q8MzMHtAh7pT2j-ng-G4p1_G_Rs_-9cyznx3AzeWO1p1HrEg>
-    <xme:JDm-Z5ouPpMwU9Swmjb11x-oDgBEruk4xDLga3kD0VP1VV-skGx3oa2xW8ouQFdmT
-    twdh1nYSIIUq0HuvUY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekvdektdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpeefhfehteffuddvgfeigefhjeetvdekteekjeef
-    keekleffjeetvedvgefhhfeihfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuve
-    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegr
-    rhhnuggsrdguvgdpnhgspghrtghpthhtohepvdefpdhmohguvgepshhmthhpohhuthdprh
-    gtphhtthhopehtshgsohhgvghnugesrghlphhhrgdrfhhrrghnkhgvnhdruggvpdhrtghp
-    thhtoheptggrthgrlhhinhdrmhgrrhhinhgrshesrghrmhdrtghomhdprhgtphhtthhope
-    gurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohephhgvrhgsvghrthes
-    ghhonhguohhrrdgrphgrnhgrrdhorhhgrdgruhdprhgtphhtthhopegvsghighhgvghrsh
-    esghhoohhglhgvrdgtohhmpdhrtghpthhtohepjhgrmhgvshdrsghothhtohhmlhgvhies
-    hhgrnhhsvghnphgrrhhtnhgvrhhshhhiphdrtghomhdprhgtphhtthhopegrrhgusgeskh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdrohhrghdprhgt
-    phhtthhopehjrghrkhhkoheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:JDm-Z8OLsAjQ42FKZOMswmncgdeROZ5HMpfdpAWHzhG8dDeDkar93w>
-    <xmx:JDm-Zy4gZIf74q1lPhb4QYKJh-ea1LN_b_gETUIYCiEvjsONRqxJdw>
-    <xmx:JDm-Z-7LNmU_lC_lHZpmEvWmuzmOWpuXNE6ys97GnqGk-WYy-2QiDQ>
-    <xmx:JDm-Z6hE2zcb6nYEqjh5RXGgoTASshLoGlCvc19584xMSM2AYtzwhg>
-    <xmx:Jzm-ZzrcPJvnTgL1FXzopat1UXwNfaql9--z12dfOkhI7qJOAHcp5cWJ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id CE9722220072; Tue, 25 Feb 2025 16:41:56 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lOJjeeM8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FBFEC4CEDD;
+	Tue, 25 Feb 2025 21:42:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740519729;
+	bh=+m8HxXrazlI5rmU9XsM5YUxoBH4XrRg35pxI1d/+5cI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lOJjeeM8bJQClIPp8RrESQBwOSYFDx1500jeKeIk+GPFcL47QZ7JeXGKGWo7Lyp81
+	 8EnGoKmxJ2VMpPblzx62+Gm/cBxRkHIXneAPEdPiHAJ+UsBw9xbP5to4y7oO3Q9b2E
+	 SeZ1hatHcAcRls1jBwD7+wjyGQQiPR78360UU9RP5lXBbEAJAPJ2qlKp59tnYqHpht
+	 0teKYCRzKYEzEVGWT4TujBP0rICDzcHLBPDojV7r0pg5mnkOMgDybGpz1IORD0ZW0e
+	 fRd9eSAah6J3GFhsix+PrI4jN4BOXlIbQFaJp8+ALnJGDlOUWSkuwFBYb9XVkkzJvp
+	 IM6Keyj7W66EA==
+Date: Tue, 25 Feb 2025 22:41:59 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Russell Senior <russell@personaltelco.net>
+Cc: Matthew Whitehead <tedheadster@gmail.com>, linux-kernel@vger.kernel.org,
+	tglx@linutronix.de, luto@kernel.org,
+	Jonas Gorski <jonas.gorski@gmail.com>
+Subject: [PATCH] x86/CPU: Fix warm boot hang regression on AMD SC1100 SoC
+ systems
+Message-ID: <Z745J8VCJ7YNbUiX@gmail.com>
+References: <CAHP3WfMgm_rYWBL9DAeWUn0ERsdFjb+ySSFxsRLNkj2us6UNQg@mail.gmail.com>
+ <CAHP3WfOgs3Ms4Z+L9i0-iBOE21sdMk5erAiJurPjnrL9LSsgRA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Tue, 25 Feb 2025 22:40:37 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Will Deacon" <will@kernel.org>, "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Herbert Xu" <herbert@gondor.apana.org.au>,
- "David S . Miller" <davem@davemloft.net>,
- "Catalin Marinas" <catalin.marinas@arm.com>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Harald Freudenberger" <freude@linux.ibm.com>,
- "Holger Dengler" <dengler@linux.ibm.com>,
- "Heiko Carstens" <hca@linux.ibm.com>, "Vasily Gorbik" <gor@linux.ibm.com>,
- "Alexander Gordeev" <agordeev@linux.ibm.com>,
- "Christian Borntraeger" <borntraeger@linux.ibm.com>,
- "Sven Schnelle" <svens@linux.ibm.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- "Ard Biesheuvel" <ardb@kernel.org>, "Eric Biggers" <ebiggers@google.com>,
- "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
- "Jarkko Sakkinen" <jarkko@kernel.org>, linux-crypto@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-s390@vger.kernel.org
-Message-Id: <f7c298b8-7989-49e7-90a2-5356029a6283@app.fastmail.com>
-In-Reply-To: <20250225213344.GA23792@willie-the-truck>
-References: <20250225164216.4807-1-arnd@kernel.org>
- <20250225213344.GA23792@willie-the-truck>
-Subject: Re: [PATCH] crypto: lib/Kconfig - fix chacha/poly1305 dependencies more more
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHP3WfOgs3Ms4Z+L9i0-iBOE21sdMk5erAiJurPjnrL9LSsgRA@mail.gmail.com>
 
-On Tue, Feb 25, 2025, at 22:33, Will Deacon wrote:
-> On Tue, Feb 25, 2025 at 05:42:07PM +0100, Arnd Bergmann wrote:
->> From: Arnd Bergmann <arnd@arndb.de>
->> 
->> A recent change tries to fix Kconfig dependencies, but introduced
->> two problems in the process:
->> 
->>  - only arm, powerpc and x86 are changed, while mips, arm64 and s390
->>    are now broken
->> 
->>  - there are now configurations where the architecture enables its
->>    own helper functions as loadable modules, but they remain silently
->>    unused because CRYPTO_LIB_* falls back to the generic helpers
->> 
->> Address both by changing the logic again: the architecture functions
->> select CRYPTO_ARCH_MAY_HAVE_LIB_CHACHA, which may be a loadable
->> module or built-in, and this controls whether the library is
->> also built-in.
->> 
->> Fixes: 04f9ccc955c7 ("crypto: lib/Kconfig - Fix lib built-in failure when arch is modular")
->
-> Which tree contains this change? I can't seem to resolve the SHA locally.
 
-Sorry, that must have been an older commit ID. Today's linux-next
-contains 56b8e4bb7622 ("crypto: lib/Kconfig - Fix lib built-in failure
-when arch is modular")
+* Russell Senior <russell@personaltelco.net> wrote:
 
-which is in
-git://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git
+> More poking/prodding and coaching from Jonas Gorski (cc'd), it looks
+> like this test patch fixes the problem on my board: Tested against
+> v6.6.67 and v4.14.113:
+> 
+> --- a/arch/x86/kernel/cpu/cyrix.c
+> +++ b/arch/x86/kernel/cpu/cyrix.c
+> @@ -153,8 +153,8 @@ static void geode_configure(void)
+>         u8 ccr3;
+>         local_irq_save(flags);
+> 
+> -       /* Suspend on halt power saving and enable #SUSP pin */
+> -       setCx86(CX86_CCR2, getCx86(CX86_CCR2) | 0x88);
+> +       /* Suspend on halt power saving */
+> +       setCx86(CX86_CCR2, getCx86(CX86_CCR2) | 0x08);
+> 
+>         ccr3 = getCx86(CX86_CCR3);
+>         setCx86(CX86_CCR3, (ccr3 & 0x0f) | 0x10);       /* enable MAPEN */
 
-    Arnd
+That's really useful - thank you!
+
+I've constructed a fix patch from your mails, attached below. I added 
+your Signed-off-by to the fix, let me know if that's OK with you.
+
+I have applied your fix to the x86 tree, if everything goes fine it 
+ought to go upstream during the next merge window in ~4 weeks, with 
+v6.15.
+
+Thanks,
+
+	Ingo
+
+==========================>
+From f5b2656ee7616f595b4e1735893d1371f216619f Mon Sep 17 00:00:00 2001
+From: Russell Senior <russell@personaltelco.net>
+Date: Tue, 25 Feb 2025 22:31:20 +0100
+Subject: [PATCH] x86/CPU: Fix warm boot hang regression on AMD SC1100 SoC systems
+
+I still have some Soekris net4826 in a Community Wireless Network I
+volunteer with. These devices use an AMD SC1100 SoC. I am running
+OpenWrt on them, which uses a patched kernel, that naturally has
+evolved over time.  I haven't updated the ones in the field in a
+number of years (circa 2017), but have one in a test bed, where I have
+intermittently tried out test builds.
+
+A few years ago, I noticed some trouble, particularly when "warm
+booting", that is, doing a reboot without removing power, and noticed
+the device was hanging after the kernel message:
+
+  [    0.081615] Working around Cyrix MediaGX virtual DMA bugs.
+
+If I removed power and then restarted, it would boot fine, continuing
+through the message above, thusly:
+
+  [    0.081615] Working around Cyrix MediaGX virtual DMA bugs.
+  [    0.090076] Enable Memory-Write-back mode on Cyrix/NSC processor.
+  [    0.100000] Enable Memory access reorder on Cyrix/NSC processor.
+  [    0.100070] Last level iTLB entries: 4KB 0, 2MB 0, 4MB 0
+  [    0.110058] Last level dTLB entries: 4KB 0, 2MB 0, 4MB 0, 1GB 0
+  [    0.120037] CPU: NSC Geode(TM) Integrated Processor by National Semi (family: 0x5, model: 0x9, stepping: 0x1)
+  [...]
+
+In order to continue using modern tools, like ssh, to interact with
+the software on these old devices, I need modern builds of the OpenWrt
+firmware on the devices. I confirmed that the warm boot hang was still
+an issue in modern OpenWrt builds (currently using a patched linux
+v6.6.65).
+
+Last night, I decided it was time to get to the bottom of the warm
+boot hang, and began bisecting. From preserved builds, I narrowed down
+the bisection window from late February to late May 2019. During this
+period, the OpenWrt builds were using 4.14.x. I was able to build
+using period-correct Ubuntu 18.04.6. After a number of bisection
+iterations, I identified a kernel bump from 4.14.112 to 4.14.113 as
+the commit that introduced the warm boot hang.
+
+  https://github.com/openwrt/openwrt/commit/07aaa7e3d62ad32767d7067107db64b6ade81537
+
+Looking at the upstream changes in the stable kernel between 4.14.112
+and 4.14.113 (tig v4.14.112..v4.14.113), I spotted a likely suspect:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=20afb90f730982882e65b01fb8bdfe83914339c5
+
+So, I tried reverting just that kernel change on top of the breaking
+OpenWrt commit, and my warm boot hang went away.
+
+Presumably, the warm boot hang is due to some register not getting
+cleared in the same way that a loss of power does. That is
+approximately as much as I understand about the problem.
+
+More poking/prodding and coaching from Jonas Gorski, it looks
+like this test patch fixes the problem on my board: Tested against
+v6.6.67 and v4.14.113.
+
+Fixes: 18fb053f9b82 ("x86/cpu/cyrix: Use correct macros for Cyrix calls on Geode processors")
+Debugged-by: Jonas Gorski <jonas.gorski@gmail.com>
+Signed-off-by: Russell Senior <russell@personaltelco.net>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/CAHP3WfOgs3Ms4Z+L9i0-iBOE21sdMk5erAiJurPjnrL9LSsgRA@mail.gmail.com
+Cc: Matthew Whitehead <tedheadster@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/kernel/cpu/cyrix.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/cyrix.c b/arch/x86/kernel/cpu/cyrix.c
+index 9651275aecd1..dfec2c61e354 100644
+--- a/arch/x86/kernel/cpu/cyrix.c
++++ b/arch/x86/kernel/cpu/cyrix.c
+@@ -153,8 +153,8 @@ static void geode_configure(void)
+ 	u8 ccr3;
+ 	local_irq_save(flags);
+ 
+-	/* Suspend on halt power saving and enable #SUSP pin */
+-	setCx86(CX86_CCR2, getCx86(CX86_CCR2) | 0x88);
++	/* Suspend on halt power saving */
++	setCx86(CX86_CCR2, getCx86(CX86_CCR2) | 0x08);
+ 
+ 	ccr3 = getCx86(CX86_CCR3);
+ 	setCx86(CX86_CCR3, (ccr3 & 0x0f) | 0x10);	/* enable MAPEN */
