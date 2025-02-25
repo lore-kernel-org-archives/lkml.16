@@ -1,135 +1,63 @@
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88A0210F4A
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 20:30:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE6B20F068;
+	Tue, 25 Feb 2025 20:30:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740515443; cv=none; b=dH+FjNq54zFhFlfnJDun6DvfuW5o5kYevY5qVaMRle+0NIMlU+N/b2they98xcVQPcfaJ14USiOd761LCBK6nDdoFFrnntS8+7XI/yPVs5NK5Fvng+HIo9Q16ndX/VreEqjizw10+N6pIqzXFjc1FNrocBb3Xis671SBj5OzQTc=
+	t=1740515458; cv=none; b=JhwgILq1TUNnw+7DBd29cobmwFRWUXFjNyTxw17du32EdWJrSfi4DmKCfrLUUTCZ1Fv2qpAViWfYHVcDweDdXgKsS+je9T8T2m26DsIRc6D7EEwb71xuEZ17/LxsZzHqhf3J9EC+RsN3EEWC0jOuHFm2OyJx+W/xQXHSYiCKMlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740515443; c=relaxed/simple;
-	bh=2mVGB3ONfKEx7GJ+S6y95LCKLGj9XhJhILt75fQVfOw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Bra3v/73L7ymHO9qXqaFivGv0Eug6gMIwSkjeX2HGd2p7Qs5I3dEb4GCQX2VFAGgYq+/95Kpg4cgtEIM7wejlZbXkS4TSncun4C1/hFabuJZb9qffhG53eAnQs5+24ihE0BTaqzex6FxI+xckXA5X8pEeuDtE9JKfGFj83htfEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=QDk/Ac62; arc=none smtp.client-ip=209.85.166.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1740515458; c=relaxed/simple;
+	bh=5lzorwQ9uVenvnTndGvYngI3rEucdxUuYqRALUMd8bg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RMo8ixIUlxMuQgzYMukV2hax7+JsQoBcLMiiYhUzS8kKlNMtzCCuuDe8VdQJ4Gw/oRzAjENfuEA88/Aal+MAv4AW9vxhTRAqkns9bMamHvTD1YKLZbbDLBazYnBqDpOIMEtH0r9PceijYpo8HHZ9I2TBQMYmnWE/eFW7x2gFW8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XTqj0hob; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="QDk/Ac62"
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-855a1f50a66so157307339f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 12:30:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1740515440; x=1741120240; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pLp9Ea62UroP9Hu5zCjkj8kz5zOw20u3Q4aJrEzL0tk=;
-        b=QDk/Ac62IhNXGzKqngYdxZCSXbG5x8xmDSsbPgHkPXGRGhqIjqDGUiGjOIbLEotfcn
-         se3HyG1DX3SZks3sHjaY6okoeRFvBB28UNNWCtKlmSS+QyAwGicvJqcauIZFVZXiYKQU
-         GgzXL1VOQXUMriHNRAZrFoShny2wIC/1+jmbs9w9ym9u1Gc8Z0PCpMhRpodbcGwM+P4G
-         uwqOS3GH+wGHNc+y/i6iy5FR0l3xZ4BM2o5/R3ldtNz9Ln85GoYjxESZTB5rcK8ul0rU
-         mXkT0l3LrxssCkjCIwxLzbEHfq1DkRgLLy3fvpgeykTgkFbAUQqMwfGga9Lhpd3vXWDD
-         W+JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740515440; x=1741120240;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pLp9Ea62UroP9Hu5zCjkj8kz5zOw20u3Q4aJrEzL0tk=;
-        b=v3YCdf1jUbCnhyEu8QrB1rv8uoFDeMVcNd74cn6BhUvkBq2QbdWP171fNMJrN5yeNX
-         hgxXuSxwEiRlP7q0YXJloA7JB6sQHdvg9g2TXTbKJ8Aj7nctETJBkzqtsrr3234FpYhC
-         Iv1damX2seqlnxN9egyeeGzAwC318lZwtxbn8c6SCrSC3BCEb+p1FkmdHwd1VWmAeA4/
-         s/xF5oz9gcK9xLBm9bAEMOD5HZjn+qk+OEkGDr9dhrRZv/yMQ/BOqzx3w2Wg6hOVeuWC
-         IQ5dnGyG3Dy8p4JrFoj2Tg1asZtQu2/pUIDB3eNIpce+4ia7Tkgr7ed4dzzgSLJeiFP2
-         5KHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVHNnw4rF8n5YG4Qg9x7as/JVhfTzRHWb4DIuDgCPKeby5i1eUCblJxi5q+64TgeFA/SaunZO3byphvpCI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzw01PK/wrBgvhAaGetvn2A9eCTyLl/zpD/bYUqzrVVbfEPWE4F
-	VWlAxVgrjvnECTNlrMHgsp4te7mhOQmsctIb3NCPFuZrkfY9YBQbt7e+DnaEKJ4=
-X-Gm-Gg: ASbGncth0V1S3sI1CUaAMV2sruPGv7BbajqGRwP31e3noOGnSXuuGmEXRqCt2ENcjeQ
-	9TQL1Dr7fnqT4aUbHOKMLi1LMoSlPrgja2UMmQyS81VZkzu5eiq4L9ZiLKG1Hcxs+rAAuhyLMG5
-	xnTccRUolDRv4g1XJDRBJRV1RzfzP/4JBvp1xDUh/SGWuqf95RetvUfzLswj+05k5yAukbfMtGh
-	nUSAONAA2lJQoz0tSlKVawqBsE9O/EsRL2x42zYnbjJUkIXoPc5cZm2fkRa+38qhRFztyPU/XDa
-	L9tGLfhA5rIo2lmp
-X-Google-Smtp-Source: AGHT+IEI1HpA9fGHJ1GdkYmfu92FscKbuH3o9L2lVKiqa4D5puwjeIXVc4djLm6mFSVg2XH039gtQg==
-X-Received: by 2002:a05:6e02:b2a:b0:3d1:968a:6d46 with SMTP id e9e14a558f8ab-3d3d1f40415mr9808255ab.6.1740515439644;
-        Tue, 25 Feb 2025 12:30:39 -0800 (PST)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d361ca3896sm4764255ab.53.2025.02.25.12.30.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 12:30:38 -0800 (PST)
-From: Jens Axboe <axboe@kernel.dk>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- Yaron Avizrat <yaron.avizrat@intel.com>, Oded Gabbay <ogabbay@kernel.org>, 
- Julia Lawall <Julia.Lawall@inria.fr>, Nicolas Palix <nicolas.palix@imag.fr>, 
- James Smart <james.smart@broadcom.com>, 
- Dick Kennedy <dick.kennedy@broadcom.com>, 
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
- "Martin K. Petersen" <martin.petersen@oracle.com>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
- David Sterba <dsterba@suse.com>, Ilya Dryomov <idryomov@gmail.com>, 
- Dongsheng Yang <dongsheng.yang@easystack.cn>, Xiubo Li <xiubli@redhat.com>, 
- Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
- Carlos Maiolino <cem@kernel.org>, "Darrick J. Wong" <djwong@kernel.org>, 
- Sebastian Reichel <sre@kernel.org>, Keith Busch <kbusch@kernel.org>, 
- Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
- Frank Li <Frank.Li@nxp.com>, Mark Brown <broonie@kernel.org>, 
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>, 
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
- Hans de Goede <hdegoede@redhat.com>, 
- =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
- Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
- Selvin Xavier <selvin.xavier@broadcom.com>, 
- Kalesh AP <kalesh-anakkur.purayil@broadcom.com>, 
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
- Easwar Hariharan <eahariha@linux.microsoft.com>
-Cc: cocci@inria.fr, linux-kernel@vger.kernel.org, 
- linux-scsi@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- linux-sound@vger.kernel.org, linux-btrfs@vger.kernel.org, 
- ceph-devel@vger.kernel.org, linux-block@vger.kernel.org, 
- linux-ide@vger.kernel.org, linux-xfs@vger.kernel.org, 
- linux-pm@vger.kernel.org, linux-nvme@lists.infradead.org, 
- linux-spi@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
- ibm-acpi-devel@lists.sourceforge.net, linux-rdma@vger.kernel.org, 
- Takashi Iwai <tiwai@suse.de>, Carlos Maiolino <cmaiolino@redhat.com>
-In-Reply-To: <20250225-converge-secs-to-jiffies-part-two-v3-0-a43967e36c88@linux.microsoft.com>
-References: <20250225-converge-secs-to-jiffies-part-two-v3-0-a43967e36c88@linux.microsoft.com>
-Subject: Re: (subset) [PATCH v3 00/16] Converge on using secs_to_jiffies()
- part two
-Message-Id: <174051543709.2186691.13969880655903967909.b4-ty@kernel.dk>
-Date: Tue, 25 Feb 2025 13:30:37 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XTqj0hob"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C4A6C4CEDD;
+	Tue, 25 Feb 2025 20:30:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740515457;
+	bh=5lzorwQ9uVenvnTndGvYngI3rEucdxUuYqRALUMd8bg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XTqj0hob6dfdeoU2tltWFbGA1wrb4LVWI8L7U3AtI73FrdSqEvUGcbuA8pwlN0X0u
+	 bCwts15U8rPWqryXGt0L04NtdT2hWKU7LjZTc1SVkw4WYUDhn91S7bfXYuqNZS3L97
+	 O9F3Iv2pzpYwzw/fcJYfFnat5adjR4b7bWonXgRcpfbKfpEzhg8U8wYsTJBTuhm/ne
+	 7A7zIgPFVWGWOzTQmJ5FEfsFThnMXQIukm1Cc/Emsl9Tf6D41ucbhJ/ptsvCycxjj2
+	 eiDoSihUMCINecsBdc+8J4b6nbLm3MOXTw/Nau9HjfytRE4faVMzgsz/pqSKVE8bex
+	 rr48MRdPoOVtA==
+Date: Tue, 25 Feb 2025 10:30:56 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: ming.lei@redhat.com, josef@toxicpanda.com, axboe@kernel.dk,
+	cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, yukuai3@huawei.com,
+	yi.zhang@huawei.com, yangerkun@huawei.com
+Subject: Re: [PATCH 1/2] blk-throttle: cleanup throtl_extend_slice()
+Message-ID: <Z74ogC_stfgF3kQY@slm.duckdns.org>
+References: <20250222092823.210318-1-yukuai1@huaweicloud.com>
+ <20250222092823.210318-2-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-94c79
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250222092823.210318-2-yukuai1@huaweicloud.com>
 
-
-On Tue, 25 Feb 2025 20:17:14 +0000, Easwar Hariharan wrote:
-> This is the second series (part 1*) that converts users of msecs_to_jiffies() that
-> either use the multiply pattern of either of:
-> - msecs_to_jiffies(N*1000) or
-> - msecs_to_jiffies(N*MSEC_PER_SEC)
+On Sat, Feb 22, 2025 at 05:28:22PM +0800, Yu Kuai wrote:
+> From: Yu Kuai <yukuai3@huawei.com>
 > 
-> where N is a constant or an expression, to avoid the multiplication.
+> Merge time_before() from caller into throtl_extend_slice() to make code
+> cleaner.
 > 
-> [...]
+> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 
-Applied, thanks!
+Acked-by: Tejun Heo <tj@kernel.org>
 
-[06/16] rbd: convert timeouts to secs_to_jiffies()
-        commit: c02eea7eeaebd7270cb8ff09049cc7e0fc9bc8da
+Thanks.
 
-Best regards,
 -- 
-Jens Axboe
-
-
-
+tejun
