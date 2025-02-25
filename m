@@ -1,62 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84A3199B9;
-	Tue, 25 Feb 2025 03:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BAB151991;
+	Tue, 25 Feb 2025 03:09:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740452949; cv=none; b=sdLgVJeWQGMEenMwsuFWodQVQNZUcTw63BEKrHIwOld0uy5PZz6/Sao2qs5AX9OvYodDj/W1NARVjqTVAJajFujFC09ruBK+uKA3C5xRdntJCt2LbtkZt4h2C1ZYPttFv8v3avDgYGdaRtuljJ6ZMgOywgWke0LYGoAKqEzj/fc=
+	t=1740452952; cv=none; b=GtpVwRhCRkn8+6dyCTkc7iTUzYj/t2BW7MOB8MwOMSCZAGhiyOkTDPQtgrxCYVNwFMp+Fu6mO/1IhRMR4hFfvSias2camQmXq0lCVwWBjV+6d7yb7w4MWmnSR8WS54kSVSmALvBwMWzzp5y4x7vj2r7g+jAKFw1WRw7zv8j4jjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740452949; c=relaxed/simple;
-	bh=Gu/8lJ9QVz5G73e/GMvq7QOK+xTz3/H/pqcRLEym0C0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RgmYxEPqmvpRyv9xND5QNhbgcwRy6Ck8fZXngoLH2OTI4+spJZGg5xbninqO7DQhL613u2qXGQrxHONuvGPsF10etOq8qbJIKzatuHWpqPOWKHU+eDpYf54seUkwgXZof/OITTwocpreNuPgSr5tJ8pyATcI+FJWAkst8G/43zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qds7/a+x; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qds7/a+x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2621C4CED6;
-	Tue, 25 Feb 2025 03:09:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740452949;
-	bh=Gu/8lJ9QVz5G73e/GMvq7QOK+xTz3/H/pqcRLEym0C0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=qds7/a+xSfZmt4rw0TlIjjFaZg+C7tC5FM+j/J5A0cvt6vnIAzCIKY2b3d82Pi5TJ
-	 ajkHzb26UeC5kxcKr9Z3cyKEGhwcas8crf4Vplqj1y5ip8rU+894PYR86/rKjxTLw2
-	 qg9FuaoEMU+56B0jpgqF7VRysLvhpHPY3PyXJJXBywFcmEJ4ZTfRUlzQ+ZHhA4n/d7
-	 8Y4vSjMesYLyOlA3Tvs+4D9iU+pwnsRppdZGBUwCJYAOUtf/sYsPyFm8YwH0oACeVA
-	 IW80/Jocp9Hrpa2kiE9gjmiCyQ8aV1mH94xyCU/xe/U3xxqcHhXSeVji6yTwr/uI+Y
-	 Mglf9aRrmDqTQ==
-Date: Mon, 24 Feb 2025 19:09:08 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jijie Shao <shaojijie@huawei.com>
-Cc: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
- <andrew+netdev@lunn.ch>, <horms@kernel.org>, <shenjian15@huawei.com>,
- <wangpeiyang1@huawei.com>, <liuyonglong@huawei.com>,
- <chenhao418@huawei.com>, <sudongming1@huawei.com>, <xujunsheng@huawei.com>,
- <shiyongbang@huawei.com>, <libaihan@huawei.com>,
- <jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
- <salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <kalesh-anakkur.purayil@broadcom.com>
-Subject: Re: [PATCH v3 net-next 4/6] net: hibmcge: Add support for mac link
- exception handling feature
-Message-ID: <20250224190908.1a5ba74e@kernel.org>
-In-Reply-To: <20250221115526.1082660-5-shaojijie@huawei.com>
-References: <20250221115526.1082660-1-shaojijie@huawei.com>
-	<20250221115526.1082660-5-shaojijie@huawei.com>
+	s=arc-20240116; t=1740452952; c=relaxed/simple;
+	bh=qtwoiW+wjxdwfniv8ENqabrlCk5LMOdfrqjAEX8Z+1U=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=r8pTCQYMWQOxdnORL4pkjfqzgyPmMmbu2TpyAVlL8fN+6K2GYAEAAE6jnW/Yk9dWinlxlTHUBeHuik2FagPUHRwEJ2sch8gU6c0cUvPT9LhOI1nUidRUXOV+stIVR3C+eNEL5/r+FHKfP1g+rnmkpDPLU6RbNAsse8Qt3KjwFYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P2DuUF002099;
+	Mon, 24 Feb 2025 19:08:52 -0800
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 44yar7juc7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 24 Feb 2025 19:08:52 -0800 (PST)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Mon, 24 Feb 2025 19:08:51 -0800
+Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Mon, 24 Feb 2025 19:08:48 -0800
+From: <jianqi.ren.cn@windriver.com>
+To: <stable@vger.kernel.org>
+CC: <patches@lists.linux.dev>, <mchehab@kernel.org>, <fullwaywang@outlook.com>,
+        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+        <tiffany.lin@mediatek.com>, <andrew-ct.chen@mediatek.com>,
+        <yunfei.dong@mediatek.com>, <matthias.bgg@gmail.com>,
+        <linux-media@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [PATCH 6.1.y] media: mtk-vcodec: potential null pointer deference in SCP
+Date: Tue, 25 Feb 2025 11:08:47 +0800
+Message-ID: <20250225030847.3829454-1-jianqi.ren.cn@windriver.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: jbfNddqTegbxnga7WbzmBe77Awe98qSA
+X-Authority-Analysis: v=2.4 cv=Be0i0qt2 c=1 sm=1 tr=0 ts=67bd3444 cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=T2h4t0Lz3GQA:10 a=VwQbUJbxAAAA:8 a=UqCG9HQmAAAA:8 a=t7CeM3EgAAAA:8 a=7f2alXSBUxmpNkzq_swA:9 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: jbfNddqTegbxnga7WbzmBe77Awe98qSA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-24_12,2025-02-24_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ phishscore=0 suspectscore=0 spamscore=0 impostorscore=0 mlxscore=0
+ malwarescore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1011
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.21.0-2502100000
+ definitions=main-2502250020
 
-On Fri, 21 Feb 2025 19:55:24 +0800 Jijie Shao wrote:
-> +	if (!(priv->stats.np_link_fail_cnt % HBG_NP_LINK_FAIL_RETRY_TIMES)) {
+From: Fullway Wang <fullwaywang@outlook.com>
 
-This adds a 64b divide which breaks the build on some 32b arches:
+[ Upstream commit 53dbe08504442dc7ba4865c09b3bbf5fe849681b ]
 
-ERROR: modpost: "__umoddi3" [drivers/net/ethernet/hisilicon/hibmcge/hibmcge.ko] undefined!
+The return value of devm_kzalloc() needs to be checked to avoid
+NULL pointer deference. This is similar to CVE-2022-3113.
+
+Link: https://lore.kernel.org/linux-media/PH7PR20MB5925094DAE3FD750C7E39E01BF712@PH7PR20MB5925.namprd20.prod.outlook.com
+Signed-off-by: Fullway Wang <fullwaywang@outlook.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+[ To fix CVE-2024-40973, change the file path from drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_scp.c
+ to drivers/media/platform/mediatek/vcodec/mtk_vcodec_fw_scp.c and minor conflict resolution ]
+Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+Verified the build test.
+---
+ drivers/media/platform/mediatek/vcodec/mtk_vcodec_fw_scp.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/media/platform/mediatek/vcodec/mtk_vcodec_fw_scp.c b/drivers/media/platform/mediatek/vcodec/mtk_vcodec_fw_scp.c
+index d8e66b645bd8..27f08b1d34d1 100644
+--- a/drivers/media/platform/mediatek/vcodec/mtk_vcodec_fw_scp.c
++++ b/drivers/media/platform/mediatek/vcodec/mtk_vcodec_fw_scp.c
+@@ -65,6 +65,8 @@ struct mtk_vcodec_fw *mtk_vcodec_fw_scp_init(struct mtk_vcodec_dev *dev)
+ 	}
+ 
+ 	fw = devm_kzalloc(&dev->plat_dev->dev, sizeof(*fw), GFP_KERNEL);
++	if (!fw)
++		return ERR_PTR(-ENOMEM);
+ 	fw->type = SCP;
+ 	fw->ops = &mtk_vcodec_rproc_msg;
+ 	fw->scp = scp;
 -- 
-pw-bot: cr
+2.25.1
+
