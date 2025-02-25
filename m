@@ -1,78 +1,134 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375182698A8;
-	Tue, 25 Feb 2025 14:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0A326A0DE
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740493569; cv=none; b=az5v+OyGL31Co7ngi0eQKuwmoVlX114r7z1AF3CaLYcSEkeQE4CQFviOnhRhuPgmP8FJQ1ViUBPpNRS5OwSt2TrRs9WQ4KrHpS1vknQnTQ1jS/eTNGibIzowLxTr6GP5BVRiXMGamncXInDRel3Wx2wqLyB2+T1qF9Fu/1NQGVY=
+	t=1740493575; cv=none; b=AGB2NaM9Zrq91idRSVO2cgqI8KVLHvBI0pUmNHMGt0op/KAzYVQ5rz1AWRHooVMkdB7dzoOzyIqi0fxSfLGD/beem30x70BjsQ6mNtUBgxMuPtYkmuYOQMljQPEfzc5oewH27oUo2GAljZZnoaSVNVuLquSMe5x2hkHgcuJBJBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740493569; c=relaxed/simple;
-	bh=jpEqmQ45wBRCVC0jxGc+LOlCURwWWVUWO5MCp8cspTs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BFrxg4VAXGOzgiobKobycA8iPMLqNXZp96gyPTxQON0EcR7/tgBZ5iD8w9s9DLxqf/yyZ0vvHXSkA+3puv+BW3kBwUws9VAe2bHnzU/VcwHcC6X1R3Nh4QmWb7LzGYSuiXKRGLABYb16auYvtUuTdC73e0qmRleoxItax8qoHGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=terzUy0u; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1740493575; c=relaxed/simple;
+	bh=Plm3zhceI2EsfgR0QC5YmTkIcALi4hgt2KqwRV6YhxI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hsu4xl+i0tDxK7klK3QPVIP4/j7FQ+5d+XDvgB4lWkDrSUCvjJfzK5riB7so1htbuUVA0+OPitS0hLY9umSK4pz9WVClgxZRM/1QO4QDEUimw7jRDNBJlw0zvPnmkSsbT/kcUj4kGvKyDhhT+vgjyk60WPKpPWwS/x+RObF3H6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=cWTu6Ji6; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="terzUy0u"
-Received: from localhost.localdomain (unknown [IPv6:2a05:f6c2:511b:0:8d8a:5967:d692:ea4e])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 8A6372E08B57;
-	Tue, 25 Feb 2025 16:25:59 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1740493560;
-	bh=jpEqmQ45wBRCVC0jxGc+LOlCURwWWVUWO5MCp8cspTs=; h=From:To:Subject;
-	b=terzUy0utYQeZbKu94hIf8N7x1dL0dIxBLhFvqoOD1qLJRuaCooqJ1pd6vihfgwdq
-	 5uWQLr3+c0DY9nNA2su6xb/2cVbqjQFGXbEVdl75aYWXlofeR7YrfxzWDg1vCrH/6H
-	 y9zfsCHz8h/ilVia6S/B2iXIKzTep1N7MrZrW0hc=
-Authentication-Results: linux1587.grserver.gr;
-	spf=pass (sender IP is 2a05:f6c2:511b:0:8d8a:5967:d692:ea4e) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-From: Antheas Kapenekakis <lkml@antheas.dev>
-To: luke@ljones.dev,
-	mario.limonciello@amd.com
-Cc: corentin.chary@gmail.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: RE: [PATCH] platform/x86: asus-wmi: change quiet to low-power
-Date: Tue, 25 Feb 2025 15:25:55 +0100
-Message-ID: <20250225142555.14005-1-lkml@antheas.dev>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250224223551.16918-1-luke@ljones.dev>
-References: <20250224223551.16918-1-luke@ljones.dev>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="cWTu6Ji6"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-471fabc5bf5so30953011cf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 06:26:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1740493572; x=1741098372; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=k4i0Vgd5RfbJH8MJ8ai1ZPYpkgJMwx/lYshgGsgkxWc=;
+        b=cWTu6Ji6CzU80wB2gqCiFq13z8HT6jciD7Qo5tLiI64qWTmYPWoSnHWkHfCV1BJb+S
+         r7Kw5cJzD+AI7m0hNKdPxaGxzotj5zCn7ztAn450ZcshgP+u3fhU1PR8BcytF2JLnrmM
+         k9DtgWuZBHJQQ3oP0YDF6tVXgYmPgehPFcvroS9RyKObpOwGbFxRlNacuChYTP46fPfd
+         4M5IrJe9dLQ5Wbe7rsTL94yT0u8V2WH65szkcJzTnJ7Z6s3QSAxxHa3Vy2vC0XlNaFBe
+         O22q5TY8AA8EcVq80ySAciauDL8j0nxb9Rj4aIW6BmlH7ksZRaY/lECoR8PPH6k0HDEM
+         GxHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740493572; x=1741098372;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=k4i0Vgd5RfbJH8MJ8ai1ZPYpkgJMwx/lYshgGsgkxWc=;
+        b=jv7v06ZL1ryXnkivZCQIX1ni0wMZKMmi0LAS/nRMamiPO54w9s7uCtQR5MVTvV1+pn
+         vJXacJf2E1JWHDKtVBOrc6et9FF8QPwYs0/IvUzsfSIGrXBHlhS70o2ADB4jVDEBnyUD
+         kBKJOj9ZH/up+ZiPZ0G/SYqNKUZH8yJfaEB+hnWk3yLcS+w6mRGRPJi0ID0w0pf/k3QZ
+         qvQ8RWjfbRzEsTsm9md1+18Ay1u0dhJoElWPsW/lKjUWa0jRNeOA5fSQ0FN8Zi+6KzRS
+         uOhY0ah/PwKYkKzJscIjGV3sQVJhH4+5UHg/bxpGPweErcMprgMmikVQa7suxtdmwjZh
+         I3bw==
+X-Forwarded-Encrypted: i=1; AJvYcCVbnDD7vaQtcsRlfQvxM+0cSiNojVzoh3zZezHyYH/5Qad1egQM/DXdWRWksX9uh35lqylFHcFcgZSBYqo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyI4Z48ykmkkhyAHo8Z1D9WZuNTasZ87pmkFpIrPCuaPSXZASPW
+	oQm/XiN54CLxCkr1SamlyczzxZuBSOY6199yjg45NK0VqJBornP6L+Bpb0uIlhA=
+X-Gm-Gg: ASbGncvPhRFdH5JtEC9nMGA+U3l9NYqj/EP6mKSyYMgmbOyVLf/Dqw+YWDptv5EEonB
+	2MvKZDN41E4rs2OSTI2uIeEKDn0ePO8vnAocicBQuh3jArTJiyXFvh/LF3ZUoeNaRoQlkqV4kqq
+	qX69eR3PdvRGISZ9IVXQGGn1HLXA8RM1BddqHiKGTslEtEAL2yKfOlXlnL1p+caFqWc4I08dJtD
+	wdvKVjshaM76UTpM+El5fqyNz3QXO9LT30u+twe6BsntHDS9iX+489eIeGYGeIq1ET/e30yKKYI
+X-Google-Smtp-Source: AGHT+IHgdn2BGwPZLyzqvQVUbs/cFzFmDkgeqEMG0KDyXW3S8CcuC7D8hSNeNQK7BC7I60PEYyZD0Q==
+X-Received: by 2002:a05:622a:1394:b0:471:f869:8d4c with SMTP id d75a77b69052e-4722295ded2mr175422951cf.48.1740493572264;
+        Tue, 25 Feb 2025 06:26:12 -0800 (PST)
+Received: from ziepe.ca ([130.41.10.206])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47377e19aa4sm10461611cf.32.2025.02.25.06.26.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 06:26:11 -0800 (PST)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1tmvsw-00000002T1K-3qkO;
+	Tue, 25 Feb 2025 10:26:10 -0400
+Date: Tue, 25 Feb 2025 10:26:10 -0400
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Ethan Zhao <haifeng.zhao@linux.intel.com>
+Cc: Baolu Lu <baolu.lu@linux.intel.com>,
+	Yunhui Cui <cuiyunhui@bytedance.com>, dwmw2@infradead.org,
+	joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] iommu/vt-d: fix system hang on reboot -f
+Message-ID: <20250225142610.GB545008@ziepe.ca>
+References: <20250225064831.63348-1-cuiyunhui@bytedance.com>
+ <0691a295-0883-47b3-84a6-47d9a94af69a@linux.intel.com>
+ <c059fb19-9e03-426c-a06a-41f46a07b30a@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <174049356048.12946.16381279399138541255@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+In-Reply-To: <c059fb19-9e03-426c-a06a-41f46a07b30a@linux.intel.com>
 
-Hi Luke,
-please add appropriate attribution.
+On Tue, Feb 25, 2025 at 04:54:54PM +0800, Ethan Zhao wrote:
+> > On 2025/2/25 14:48, Yunhui Cui wrote:
+> > > We found that executing the command ./a.out &;reboot -f (where a.out
+> > > is a
+> > > program that only executes a while(1) infinite loop) can
+> > > probabilistically
+> > > cause the system to hang in the intel_iommu_shutdown() function,
+> > > rendering
+> > > it unresponsive. Through analysis, we identified that the factors
+> > > contributing to this issue are as follows:
+> > > 
+> > > 1. The reboot -f command does not prompt the kernel to notify the
+> > > application layer to perform cleanup actions, allowing the
+> > > application to
+> > > continue running.
+> > > 
+> > > 2. When the kernel reaches the intel_iommu_shutdown() function, only the
+> > > BSP (Bootstrap Processor) CPU is operational in the system.
+> > > 
+> > > 3. During the execution of intel_iommu_shutdown(), the function
+> > > down_write
+> > > (&dmar_global_lock) causes the process to sleep and be scheduled out.
 
-Closes: https://lore.kernel.org/all/20250224195059.10185-1-lkml@antheas.dev/
-Reported-by: Antheas Kapenekakis <lkml@antheas.dev>
+Why does this happen? If the kernel has shutdown other CPUs then what
+thread is holding the other side of this lock and why?
 
-For me, this patch series plus the multi-platform profile one constitute
-a double ABI break. Not only does the legacy sysfs for platform profile
-regress when there is a second profile handler for a device, but all
-hardcoded scripts for Asus devices will have to be updated.
+> > > 4. At this point, though the processor's interrupt flag is not cleared,
+> > >   allowing interrupts to be accepted. However, only legacy devices
+> > > and NMI
+> > > (Non-Maskable Interrupt) interrupts could come in, as other interrupts
+> > > routing have already been disabled. If no legacy or NMI interrupts occur
+> > > at this stage, the scheduler will not be able to run.
 
-While I would personally like to avoid this, I am ok with it, given
-appropriate attribution, since I did go through the effort of reporting it
-and providing a mitigation.
+> > > 5. If the application got scheduled at this time is executing a
+> > > while(1)-
+> > > type loop, it will be unable to be preempted, leading to an infinite
+> > > loop
+> > > and causing the system to become unresponsive.
 
-@Mario: you added Reviewed-by to a patch without proper attribution. Let's
-not rehash our discussion from few days ago. Please try to do better when
-it comes to attributions in the future.
+If the schedular doesn't run how did we get from 4 -> 5?
 
-Antheas
+Maybe the issue is the shutdown handler here is running in the wrong
+time and it should not be running after the scheduler has been shut
+down.
+
+I don't think removing the lock is a great idea without more
+explanation.
+
+Jason
