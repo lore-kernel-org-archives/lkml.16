@@ -1,183 +1,136 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16852267B84
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 11:31:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EA626657B
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 11:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740483078; cv=none; b=dwotlMxa773Tc6johZle1azZZFVeiQwmeeSE8uGJOR424Kd2UxhHFgI5plXf8DsimN+3G69HTeciJoXfGQsMJhzK/UPBhRuls335eozvRSGICDFUDweMyL/ivjqG02NbyaLrgBGVOFywj0PZUY/Wsfy+dmfI6ojRwnunoItx0Vo=
+	t=1740483222; cv=none; b=lVEvCcuUvTw6OKwQPx8hv44yyXdu5RSJLUayC9ajHo0zku7//yVa3ofBm5SPvNKUnINNJRSpeldfCeneWMV5PkKU/Y7L63q/PRF8WqwnOtcUzXvLoYdeaigmNy7YZSv59rz5MbQGBV2r5g+XazVHLjdxTfsC1NsPUArNec61tNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740483078; c=relaxed/simple;
-	bh=JNsvBkbU/xeGUA2wB24yiaAwvMR0TShWcVfnwYO9psk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gBnCEF8ZuVdKrbYm9wWzJpJ29pykUc8F/g0vi6lvxCT2yT6LA7+4F1wKXTjfTfzbAPdMLDdc4ZFmcMJN9T2T6XghTTrkewCTE8rzfb6pQ1YY9leKfBARJe10fWAPcr0i6j373i7Wf2/buNpPeWcN2ZLNwuUTxuy+kjt/mgBD4Go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BAuU4mwF; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740483222; c=relaxed/simple;
+	bh=Ta4BgpxfxjKDJ20mL6RIarb8PIWbJrvt0mlVBqL08Js=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Fmn8/mMangv0ZwS1OLmaA2fbbYDScXijHvhpQijA1EAH9Y5Q0KrM0iB2U3WpJw+Pk8x7RKduV8dJNcljXlt7CPCqP1z8evFjzW0yvVjb+xOwty+8rTgkbPcMtcEm0+zCIxBQeu8krs1Iocx5mUk/PN6PQqIZIWtLBzglidqm6l0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QdwwyCcL; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BAuU4mwF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740483075;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=amu6qNJ2XLnE1PzLc9Jh3MOyLPKxqhaqigKuNJC2nTU=;
-	b=BAuU4mwFFyQQo5LANcgQnZZzzO3DGucodasAnZm846hFNCRnGZfludpvM8Nq39k0O3bA2m
-	v89YOZdfNoiNcfMl8PD6QlWM/m8pdfMlIp1Q7FlB2GcRkZOsY1H3thNgKBgzkVwHwcSWUk
-	RijtBHlycow7b8aPy169mAfhla2YlVs=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-523-upGo8e87OAKAGh8GDNse3w-1; Tue, 25 Feb 2025 06:31:14 -0500
-X-MC-Unique: upGo8e87OAKAGh8GDNse3w-1
-X-Mimecast-MFC-AGG-ID: upGo8e87OAKAGh8GDNse3w_1740483073
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38f36fcf4b3so3398475f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 03:31:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QdwwyCcL"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-472098e6e75so246691cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 03:33:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740483219; x=1741088019; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ta4BgpxfxjKDJ20mL6RIarb8PIWbJrvt0mlVBqL08Js=;
+        b=QdwwyCcLk3wx6X3YCkSpS835qrM0/Da7OtLvFtCG5/+1KP8PzLM6vRl6HJH0ICD/f5
+         n4rd9rSVs+ygnw0caP/mSur4uBpPq/9HkHJxXxwLt5cFQlk7znLTGy+KxOdJ01dbT1Ey
+         VmkbPZV/tmmWOTEEYUqBFlCUy4yv10xtrEZyq/WqyYmvcPcD2EBKphoQuBEY2MC2SBPf
+         Ua2LM0ObRs7X7cpPaLh4p8qbcDGY0uzLzIl6ckjAiUjo3O6AYJpIOUoUc4XKcSPYGJoC
+         /NE0zrDtbMDNcNDVS2kZfWCDgWS98AwE4bj8oEx0vRcY1MJAuq5TXdssCyaYG2qvReJD
+         FoSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740483073; x=1741087873;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=amu6qNJ2XLnE1PzLc9Jh3MOyLPKxqhaqigKuNJC2nTU=;
-        b=SAkIZNeeMeM0VS16QPYfbLE07JPjirFSQuNdnsjvPuhv85CWV6flm9EIgi8Y3P/Ya6
-         aQt0gPUb3H7Kv6cZzlzNpT3XjIU1h3DYh8Z0gWse0hhoNWNiF9R1mLQbeDt/+OjaFsXC
-         Eu/pM4vMeiUj+V262i9pSndcV/qADERUQpg2TvVXv0eep3XnJABXG/JqotIW0Ed6uHed
-         fiHQ1Ttd0wrRcafPagrdbK03E0Z4OuGXWxtPd4Pg4TWtBfYLHd0l83tNW0bY5fkqCN0Z
-         dvhuG+Oc5uMk6iX7wOk3PFLroSJ3iZO0yVT4j3h3WHFOYN+ZrHmAoAWyzlWFpTp+3Xoy
-         6twg==
-X-Forwarded-Encrypted: i=1; AJvYcCXOM8Dan56jg0UqXmFVQoLkqnN0mKg/3AU3W9b51FaCnHEi4f4CGIL4p7VB6kSJyxERQEvbS40WAMyIm5k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzifxs1JG1+YO71Y1lSGSShzi6RAM+9ymLdI0jZawyY9H2LemNx
-	cvuKwW1mjzw7jrfZNwOc82y4VITnU6bAp94e2lHcY4aRHVUkfDqHsN/g6sE3S+90QAtHieVLWjy
-	vi1dnBjXQK7QEN9ZKKRCR0YmyjUdRuDlqxXAK1PCKa9JiS+9Z7NKPeZ27KMLkYQ==
-X-Gm-Gg: ASbGncv0GO0M8RyXpmuIRoN6SqCRcGOBGvPPLWJKIgDDa37oVT39bh+QP7un19TDah4
-	kCjWy90RJ6Nx6XMCUf2hparBLVKc5XdWe/qHBV8E26Y56KB0FZe2aDK0eDlcJyxuygFIrqYAHtc
-	yeTCONPqngh8rhy53+HYvrl4kkg0Rgdh7wL6I2paihIsCtqIRO4VbmFZLL1zrIPOLn8XV4u8/Zb
-	moaPJ6k4vSHmH1rXfe+bm6d2svhL90vdwUJOMyfVFlNH9O3R2pgh5IisM+lC+V45BHGJq1Q/+wl
-	MVkPwdaarrGuoUM=
-X-Received: by 2002:a5d:584f:0:b0:38f:1e87:cc6e with SMTP id ffacd0b85a97d-38f6e74f270mr14234549f8f.9.1740483073110;
-        Tue, 25 Feb 2025 03:31:13 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFtz5zkAxf+n06y+uM0vFkhN66Z0eIXxRWu45tZA+nsHTF3VLjPSb93B6lqTibRPrNYImW8BA==
-X-Received: by 2002:a5d:584f:0:b0:38f:1e87:cc6e with SMTP id ffacd0b85a97d-38f6e74f270mr14234497f8f.9.1740483072522;
-        Tue, 25 Feb 2025 03:31:12 -0800 (PST)
-Received: from sgarzare-redhat ([5.77.102.3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390cd883934sm1996643f8f.59.2025.02.25.03.31.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 03:31:12 -0800 (PST)
-Date: Tue, 25 Feb 2025 12:31:05 +0100
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Cindy Lu <lulu@redhat.com>
-Cc: jasowang@redhat.com, mst@redhat.com, michael.christie@oracle.com, 
-	linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, 
-	netdev@vger.kernel.org
-Subject: Re: [PATCH v6 5/6] vhost: Add new UAPI to support change to task mode
-Message-ID: <6vadeadshznfijaugusnwqprssqirxjtbtpprvokdk6yvvo6br@5ngvuz7peqoz>
-References: <20250223154042.556001-1-lulu@redhat.com>
- <20250223154042.556001-6-lulu@redhat.com>
+        d=1e100.net; s=20230601; t=1740483219; x=1741088019;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ta4BgpxfxjKDJ20mL6RIarb8PIWbJrvt0mlVBqL08Js=;
+        b=S2AizxcSnp6zYmaOyWLFfvHBV7tEfpZITl311on9h1YV1VxGYnqAHL1NVOiEbLcqYC
+         RT8LaRvujCMXxbKCCV90ufhWqipXwowRRQ+1s5Jz2ROmtnwqP5sgWZRKCl0xjFIfS5IH
+         BwTdRvqikuB/d79dJjbQCGiZNIeDEhC1tzeqPDJV63/YjUXm/sMURICdmYTV3B58E82F
+         DM/qiPZLiEAkCET4lgId4/+60LoUNC9kdc63/nw/t/Z020EoYzl24mFPSqWd4si0tgIp
+         KjptkyeD5kIm3e/OebWfj7vLbRyrvYL8HhzVxat+vhDygCzPJY6TIBAcf5K0OVB1xgGX
+         S2Dw==
+X-Forwarded-Encrypted: i=1; AJvYcCWopRys6J9y292nATZcHkuw/tp7XHnnU3U5AiJ80yrMgttisIpRkmIjyeDK0WdLuKUzu5B2cgce2vOQxpY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtGZqZ2YCKSgbJeXIjlQNKrHW2LADv/u4e8cExQtOwW0E+fEvu
+	RZRiaeZItI1+pqUxVNjXlQdXf7Lj48lJTuOFsSy7A3rviclXmARQekI4aYxzQC/A2aE680v6eRV
+	s1Y565Q2NpEscEeC3N+YnJlz7Vltm1ZZERykh55M81Xh67AegRdwqa2Q=
+X-Gm-Gg: ASbGncsDpIb17nfreLCS1nP4oBxIgWIrIPOb27pESU9rjIUVTHE1GDrdh2uO505bphz
+	G2eaG3O8+CPPN+lJuqQmP87XueTlOyngi/Ob15mtcdEghnYPxy1DuDwn51rIpA3KSYvBp25kpCF
+	2WkgguC/JbPthikCBA9NTNl8t+BTQKp2GvpTCrgw==
+X-Google-Smtp-Source: AGHT+IET/v27MCIkeaaMC3Gh/ajvYpr8Wix2qBvkNFg05Vp2NIsgPAEPOcq4Gkpw/hgEpYSU4WtOvrGwdF70tW94tpc=
+X-Received: by 2002:a05:622a:1a95:b0:471:f34d:1d83 with SMTP id
+ d75a77b69052e-47376e6f153mr3752441cf.7.1740483218972; Tue, 25 Feb 2025
+ 03:33:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250223154042.556001-6-lulu@redhat.com>
+References: <20250115-checkpatch-ignore-v2-0-8467750bf713@google.com> <763bd905-6f1a-42a9-9f81-acecd98131a4@oss.qualcomm.com>
+In-Reply-To: <763bd905-6f1a-42a9-9f81-acecd98131a4@oss.qualcomm.com>
+From: Brendan Jackman <jackmanb@google.com>
+Date: Tue, 25 Feb 2025 12:33:27 +0100
+X-Gm-Features: AQ5f1Jr1-wymxOiYtkrlZ1UkFRedAs2kEf4aoYC-u6d7-yufgGTqA5eKvVIMl6g
+Message-ID: <CA+i-1C30dTL4H2ELNzvYV_yOc+WT=bVKW7R3KQe6=XjRX_jzfw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] checkpatch: Add support for checkpatch-ignore note
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Cc: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, 
+	Dwaipayan Ray <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Konstantin Ryabitsev <konstantin@linuxfoundation.org>, 
+	linux-kernel@vger.kernel.org, workflows@vger.kernel.org, 
+	linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Feb 23, 2025 at 11:36:20PM +0800, Cindy Lu wrote:
->Add a new UAPI to enable setting the vhost device to task mode.
->The userspace application can use VHOST_SET_INHERIT_FROM_OWNER
->to configure the mode if necessary.
->This setting must be applied before VHOST_SET_OWNER, as the worker
->will be created in the VHOST_SET_OWNER function
+On Mon, 24 Feb 2025 at 20:09, Jeff Johnson
+<jeff.johnson@oss.qualcomm.com> wrote:
 >
->Signed-off-by: Cindy Lu <lulu@redhat.com>
->---
-> drivers/vhost/vhost.c      | 24 ++++++++++++++++++++++--
-> include/uapi/linux/vhost.h | 18 ++++++++++++++++++
-> 2 files changed, 40 insertions(+), 2 deletions(-)
+> On 1/15/2025 7:33 AM, Brendan Jackman wrote:
+> > Checkpatch sometimes has false positives. This makes it less useful for
+> > automatic usage: tools like b4 [0] can run checkpatch on all of your
+> > patches and give you a quick overview. When iterating on a branch, it's
+> > tiresome to manually re-check that any errors are known false positives.
+> >
+> > This patch adds a feature to record in the patch "graveyard" (after the
+> > "---" that a patch might produce a certain checkpatch error, and that
+> > this is an expected false positive.
+> >
+> > Note, for Git users this will require some configuration changes to
+> > adopt (see documentation patch), and not all tools that wrap Checkpatch
+> > will automatically be able to take advantage. Changes are required for
+> > `b4 prep --check` to work [0], I'll send that separately if this patch
+> > is accepted.
+> >
+> > [0] https://github.com/bjackman/b4/tree/checkpatch-ignore
 >
->diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
->index d8c0ea118bb1..45d8f5c5bca9 100644
->--- a/drivers/vhost/vhost.c
->+++ b/drivers/vhost/vhost.c
->@@ -1133,7 +1133,7 @@ void vhost_dev_reset_owner(struct vhost_dev *dev, struct vhost_iotlb *umem)
-> 	int i;
+> While this addresses one issue with checkpatch, it doesn't solve what I
+> consider to be a bigger issue, namely to have a way for checkpatch to ignore
+> false positives (or deliberate use of non-compliant code) when run with the -f
+> flag.
 >
-> 	vhost_dev_cleanup(dev);
->-
->+	dev->inherit_owner = true;
-> 	dev->umem = umem;
-> 	/* We don't need VQ locks below since vhost_dev_cleanup makes sure
-> 	 * VQs aren't running.
->@@ -2278,15 +2278,35 @@ long vhost_dev_ioctl(struct vhost_dev *d, unsigned int ioctl, void __user *argp)
-> {
-> 	struct eventfd_ctx *ctx;
-> 	u64 p;
->-	long r;
->+	long r = 0;
-> 	int i, fd;
->+	u8 inherit_owner;
+> I don't know how many times I've seen new kernel contributors try to "fix"
+> checkpatch issues as their first commit, and contribute broken code in the
+> process. This is especially true when trying to "fix" macros.
 >
-> 	/* If you are not the owner, you can become one */
-> 	if (ioctl == VHOST_SET_OWNER) {
-> 		r = vhost_dev_set_owner(d);
-> 		goto done;
-> 	}
->+	if (ioctl == VHOST_FORK_FROM_OWNER) {
->+		/*inherit_owner can only be modified before owner is set*/
->+		if (vhost_dev_has_owner(d)) {
->+			r = -EBUSY;
->+			goto done;
->+		}
->+		if (copy_from_user(&inherit_owner, argp, sizeof(u8))) {
->+			r = -EFAULT;
->+			goto done;
->+		}
->+		/* Validate the inherit_owner value, ensuring it is either 0 or 1 */
->+		if (inherit_owner > 1) {
->+			r = -EINVAL;
->+			goto done;
->+		}
->+
->+		d->inherit_owner = (bool)inherit_owner;
+> So IMO what would be more useful is to have some way to document these
+> overrides in the tree so that they could be honored both when processing
+> patches as well as when processing files.
 >
->+		goto done;
->+	}
-> 	/* You must be the owner to do anything else */
-> 	r = vhost_dev_check_owner(d);
-> 	if (r)
->diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
->index b95dd84eef2d..8f558b433536 100644
->--- a/include/uapi/linux/vhost.h
->+++ b/include/uapi/linux/vhost.h
->@@ -235,4 +235,22 @@
->  */
-> #define VHOST_VDPA_GET_VRING_SIZE	_IOWR(VHOST_VIRTIO, 0x82,	\
-> 					      struct vhost_vring_state)
->+
->+/**
->+ * VHOST_FORK_FROM_OWNER - Set the inherit_owner flag for the vhost device
->+ *
->+ * @param inherit_owner: An 8-bit value that determines the vhost thread mode
->+ *
->+ * When inherit_owner is set to 1:
->+ *   - The VHOST worker threads inherit its values/checks from
->+ *     the thread that owns the VHOST device, The vhost threads will
->+ *     be counted in the nproc rlimits.
->+ *
->+ * When inherit_owner is set to 0:
->+ *   - The VHOST worker threads will use the traditional kernel thread (kthread)
->+ *     implementation, which may be preferred by older userspace applications that
->+ *     do not utilize the newer vhost_task concept.
->+ */
->+#define VHOST_FORK_FROM_OWNER _IOW(VHOST_VIRTIO, 0x83, __u8)
+> Note that thanks to Kalle's work, the wireless/ath drivers have their own way
+> of doing this, but of course that only works if you run the scripts.
+> checkpatch run normally would still flag the issues.
+>
+> more surgical:
+> <https://github.com/qca/qca-swiss-army-knife/blob/master/tools/scripts/ath12k/ath12k-check>
+>
+> less surgical:
+> <https://github.com/qca/qca-swiss-army-knife/blob/master/tools/scripts/ath11k/ath11k-check>
+> <https://github.com/qca/qca-swiss-army-knife/blob/master/tools/scripts/ath10k/ath10k-check>
 
-I don't think we really care of the size of the parameter, so can we 
-just use `bool` or `unsigned int` or `int` for this IOCTL?
+Yeah I think the best solution for that would be something like a
+.checkpatch-ignore file in the spirit of .gitignore.
 
-As we did for other IOCTLs where we had to enable/disable something (e.g 
-VHOST_VSOCK_SET_RUNNING, VHOST_VDPA_SET_VRING_ENABLE).
+Maybe other tools have solutions for that that checkpatch could copy.
+The only one I know of is pylint which solves it with code comments.
+That makes a real visual mess of the code in my experience. And based
+on Konstantin's comments on v1 of this patch, comments _definitely_
+wouldn't fly with the kernel community! So I think it would have to be
+an out-of-band config, and if that comes at the expense of granularity
+then so be it.
 
-Thanks,
-Stefano
+(I would support the inline-config approach for a very high-precision
+linter, like Rust and Go have, but Checkpatch Dot P.L. is never gonna
+be one of those).
 
+Anyway, solving the -f case shouldn't be required for merging this feature IMO.
