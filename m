@@ -1,170 +1,105 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8BC91990D9;
-	Tue, 25 Feb 2025 17:12:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD791DC9B1
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 17:12:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740503557; cv=none; b=g7Ra1fre2u9RT40bYWF+JwYxI205KmdPr2JdCJk5jkXYnnz/BQYJ2q8WoxHTFWY47Rw8Ntu4WkhlQLzq992+uI/7sMiOcYmSf0w4Oew5TrNkGr4mgUyUzRwOtuFtJ7iWbPYEIhgjqaMsjG//BZr5WLlhKV8Y2S2JDPbrzT3QP7Y=
+	t=1740503570; cv=none; b=MuTzZMvGKFygWkL98CO/oHclvABDgKCQMsD+ckUR4155EhFnRnhGlE4dyhTuUeHXwGrmlLYGqTRxeeEGjWpIPvszuI+0ez06/Diq04/dMAibO6Zn0J463yob/Q6GsJSV/+jpCGeh0yIqwhdNgImbmQetvZEmxvDgM2HbfugrXlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740503557; c=relaxed/simple;
-	bh=SFIcUyN26PFdGS1xQAZHSdinxS1e1K2TCA4eKm/UVFE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WLP6x0VoYCLcFqRrMa3hSGezWlQnuVoio22ZVYHPrFV2hknejwyRklPcK+2F3E6QwSAbkhNqFWV6jZ4/5ypVP64sejvYFyy0+viO1j6JGcRd4XP18aylbCLxGsAtKi0aFE57sJ51eNBqaAg80qdsIdxK2I9mOocFq0dTAe3rkgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Nrq3B2Bx; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1740503570; c=relaxed/simple;
+	bh=ednjTSjvw9Gt99tA22MMvDogCLInNdUvhE7Mq9C+1L4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lxS76n0XgV90XoswX2EBp/I9tAJqgv30HilqgR4JNBK+rqlhfU7KQs4N3y5L1451ymBWzxM0KO9gTaPrCyk4/yDUMXNJdyQteA14Wr+CAaRxkJTIKpwS1sQtISC0YktG8KOg9vjhGyz1MCbuOfzoPYOVfmtw4nxNoVzp9hLKd28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r0mOhkKe; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Nrq3B2Bx"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51PFJbae032256;
-	Tue, 25 Feb 2025 18:12:23 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	b7ilTU0nfN/VhX4AMlIMGSs7WY/ZNM9E5SfWaQXtVJA=; b=Nrq3B2BxNYdXhmuF
-	+jmL73KaSfStcX8QKPExFFoP7RqoSXYGRppAkI6ARlaK53KL1dyVyO4IMN3JVCnu
-	tGYXS6HfgioN2NTwRJczUCCAzE/57xH5+kkV2Cxd+AHYpSo3/5Rp4fedb48NofFU
-	yRjXtSt7zrXgOVoz1WW7amsqH28Yp3rUjJrK+GLhi7HIdO+d3IRP3u2GRmnhln0m
-	wPzqD2UC/k8vmQbeA/rNHAVlwELmzgPuiainGS0hQhjKPcssCNvWe615sk4+RGOy
-	/wQR2a7PFRz4SNwGT2jVCzJbDqAn0mnb30eauFGVK8qKkbI8fMakiei+0nXKNr1q
-	eIqVKw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4512sp4ukf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 25 Feb 2025 18:12:23 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 69B38400E3;
-	Tue, 25 Feb 2025 18:11:14 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 72F044DBF82;
-	Tue, 25 Feb 2025 16:51:36 +0100 (CET)
-Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 25 Feb
- 2025 16:51:35 +0100
-Message-ID: <91f19306-4b31-41fe-8ad2-680b1a339204@foss.st.com>
-Date: Tue, 25 Feb 2025 16:51:35 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r0mOhkKe"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4398c8c8b2cso59636035e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:12:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1740503567; x=1741108367; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ednjTSjvw9Gt99tA22MMvDogCLInNdUvhE7Mq9C+1L4=;
+        b=r0mOhkKe52C5HSBcSuZib+01ooiaaXSa8OeULguCFDcuOUlBBec4b4bsNwAmhh7LhX
+         pImjvjtHsEUr+NIL8ekHZHzIFmnjHK7RAP19zt65Gv905ZFC+9z9s9spGvti+jwlE3h6
+         sWtl3AF094JttZd8Zlnu+E9OCTdv0UwdxE1c/m0OAjMZA1RRsuDzhzashXa5RY1NWdeX
+         P7+o3ugmbKIKha43Qmw3KLGS+YUrTKYzt77gJ1Jx0kP0viM0FFo0ev5IwQhlSWY1JOsY
+         ucO9JdJ5flqRygi0xl9nsd72kjwjkUWErL6K8unClBs+33NWuBD03oVhjdN0wN6qfC2T
+         FHvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740503567; x=1741108367;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ednjTSjvw9Gt99tA22MMvDogCLInNdUvhE7Mq9C+1L4=;
+        b=LcqHvdfQLgWgR5xFWuB2bXwt5MJNvdpNc9nbzTGwC+GUpNRm3FKGbTi4DWqib7dkLS
+         WpGpWY7puMRr35yBa4qGtTL3XD1rXQmuQPs6gnzGpX6MRbWLear4ExIWAN3pgC3F0HFe
+         0OShGHqWwPCzB3Xukw3jJiSd9y2Z4iTPuPf6AOQJZk5oQzOolJnZu1j/NJ4qnpx3Yl3H
+         Hon3ESU2rvxq8KkLTgYZPSP4pdhkhUQb6xNf7IejL99xMquEiF8463ni+wTzoWXWuQep
+         eeI2mmeKwGfsKb1lH0Cfpde21SSEnPQBoVXubVGcW9aFfQb9N/Ko279Qd9tQ3BiUW9a+
+         YffQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUk//IiOU0AO8iwikZp0bbg0CHIcZYHWh11Hvqm79iEM5t9nSF2EH+gFFWQ5Kn/HV7pP4Ynty+NDoBUQ8Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmvQX6Rxqv9bfr0o/NgA0amnhv1HofKWo2EQk1kxVUIi8FJkKK
+	N8nsYiBPI/D6eD8kun5BxCJ9qCeMBRTg8h/hkBxB5gsNseNNlpb93pqpx+xRX3DO096r6qJYCpb
+	fbHVNGd2E8upAdc2eECsJhDorQ3Ak9uwye3T4
+X-Gm-Gg: ASbGnctUU8mjh0oEnpXXHM9HqAw2f88qjgNuU/gOQ89yNtcbGBwAQ5Z5g9uiyq+6i4I
+	BEFoqPa4Y96xe+81NN6Uhh/IjG/yDGLYlDE0QT9U4ygANT+Mn4Ak3L+9trrNiELaP/s7J2vX8vG
+	qd8RD4aF8HZbEGeynrUfk8uNQek4H3eHUJMY6YXw==
+X-Google-Smtp-Source: AGHT+IENL3tkr5YY1W1LPao/+fxPS1FpvFsCT1UPYovJTPV5D1zitQeIdtwEVZnuTIAS+IO71JyVmXj+d+y+IFJL6GI=
+X-Received: by 2002:a5d:6c6e:0:b0:38d:dce1:f207 with SMTP id
+ ffacd0b85a97d-390cc631a3emr4656547f8f.44.1740503567098; Tue, 25 Feb 2025
+ 09:12:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/9] dt-bindings: pinctrl: stm32: Introduce HDP
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Linus Walleij
-	<linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime
- Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250225-hdp-upstream-v1-0-9d049c65330a@foss.st.com>
- <20250225-hdp-upstream-v1-2-9d049c65330a@foss.st.com>
- <6fc80544-6fc3-4450-a0cc-bfc740fe97bb@kernel.org>
-Content-Language: en-US
-From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
-In-Reply-To: <6fc80544-6fc3-4450-a0cc-bfc740fe97bb@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_05,2025-02-25_03,2024-11-22_01
+References: <cover.1740475625.git.viresh.kumar@linaro.org> <68ac0f0ee3c0ebd3d3cc078a6270752778a1b732.1740475625.git.viresh.kumar@linaro.org>
+ <CAH5fLgg7o7hs5B4mMzPd6RzYm+RcX8gw1Aw8voJqnmfnA_aM4Q@mail.gmail.com>
+ <20250225114830.64p56bndn4hkkkgq@vireshk-i7> <CAH5fLghUDz8tpkTuvWZgwT2_VKgxuS+iZKnoT4prKwS9tbp8wA@mail.gmail.com>
+ <CAKohpo=uiCS6nyissb3ugiyniwnZYu5kCf4+bp32dDzRhgGfCQ@mail.gmail.com>
+In-Reply-To: <CAKohpo=uiCS6nyissb3ugiyniwnZYu5kCf4+bp32dDzRhgGfCQ@mail.gmail.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Tue, 25 Feb 2025 18:12:35 +0100
+X-Gm-Features: AQ5f1JrsvkSYfxf47nMcctFkIDr7cuUGNXZJBCZDafLE5kFdCo2jxMcIoSYI5eI
+Message-ID: <CAH5fLggyEXyyaFNnmBCPOSX051TiFyAp0B8GfahbPg=+LrtUWA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] rust: Add initial cpumask abstractions
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, linux-kernel@vger.kernel.org, 
+	Danilo Krummrich <dakr@redhat.com>, rust-for-linux@vger.kernel.org, 
+	Vincent Guittot <vincent.guittot@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/25/25 14:04, Krzysztof Kozlowski wrote:
-> On 25/02/2025 09:48, Clément Le Goffic wrote:
->> +
->> +maintainers:
->> +  - Clément LE GOFFIC <clement.legoffic@foss.st.com>
->> +
->> +description: |
-> 
-> 
-> Do not need '|' unless you need to preserve formatting.
+On Tue, Feb 25, 2025 at 6:02=E2=80=AFPM Viresh Kumar <viresh.kumar@linaro.o=
+rg> wrote:
+>
+> On Tue, 25 Feb 2025 at 17:23, Alice Ryhl <aliceryhl@google.com> wrote:
+>
+> > Is it a problem if a value of type struct cpumask is moved? It looks
+> > like it is just an array of longs?
+>
+> With the current code, if I replace the Box with an on-stack variable,
+> the kernel crashes.
+>
+> In my usecase, the pointer to the cpumask array is sent to the OPP
+> core, which may update the content, though it doesn't save the pointer.
+>
+> But for another usecase, the C code may end up saving the pointer.
 
-Ok
+I don't think that case applies here. Variables that could be stashed
+like that need a destructor that removes the pointer from the relevant
+C structures. This is because pinning only prevents the owner from
+moving the variable - it doesn't prevent the owner from destroying it.
 
->> +  STMicroelectronics's STM32 MPUs integrate a Hardware Debug Port (HDP).
->> +  It allows to output internal signals on SoC's GPIO.
->> +
->> +properties:
->> +  compatible:
->> +    const: st,stm32mp-hdp
-> 
-> There is a mess in STM SoCs. Sometimes you call SoC stm32, sometimes
-> stm32mp and sometimes stm32mpXX.
-> 
-> Define for all your STM contributions what is the actual SoC. This
-> feedback was already given to ST.
-> 
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +patternProperties:
->> +  '-pins$':
->> +    type: object
->> +    $ref: pinmux-node.yaml#
->> +
->> +    properties:
->> +      function:
->> +        enum: [ "0", "1", "2", "3", "4", "5", "6", "7",
->> +                "8", "9", "10", "11", "12", "13", "14",
->> +                "15" ]
-> 
-> Function which has a number is not really useful. What does it even express?
-
-As said in my previous answer, function names are very different from 
-one platform to another. Numbers were used as string to be generic.
-I'll consider it in a V2.
-
-> 
->> +
->> +      pins:
->> +        enum: [ hdp0, hdp1, hdp2, hdp3, hdp4, hdp5, hdp6, hdp7 ]
->> +
->> +    required:
->> +      - function
->> +      - pins
->> +
->> +    additionalProperties: false
->> +
->> +allOf:
->> +  - $ref: pinctrl.yaml#
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/stm32mp1-clks.h>
->> +    #include <dt-bindings/pinctrl/stm32mp15-hdp.h>
->> +    //Example 1
-> 
-> Drop
-
-Ok
-
-> 
-> Best regards,
-> Krzysztof
-
+Alice
