@@ -1,156 +1,146 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ABC121B9C8;
-	Tue, 25 Feb 2025 22:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D830F21D3E2;
+	Tue, 25 Feb 2025 22:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740522324; cv=none; b=HfuKMZxk9bmAQ7hUkex0t9dVyHraIZAqAWlr8lG7DaAuwgIVwZ+kyk3c9UtRSlpqVO7gyg7PiUJjksJF77buIzegv9awMj39xydUALuEBpgVjNapZXgv4zp1W+Bmqa5P0OJi1mfVIwmPonhkk9oq/gh1LJWZQ6ALfZWQkKmArLs=
+	t=1740522327; cv=none; b=d5Mte+cQAZY9R8EAki3CjTCrtuoOpa1Yupcxn1Ez0SWFzeaxlTAoh8bWoTDGYKoD4cQJ4vBOXde8ItdAGfN1flnFtPO/UCTl0wdL11C7mOx2tA/8JYE4AjGAlAu72oMVbXEbJEzWh5GRVrUHKfdyFZqCb4vEyJFQLVahftbrZQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740522324; c=relaxed/simple;
-	bh=jY2SGVCgrNBhQUg7x35oBl8V0TTD1k/yXqx1d/A08ko=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Qbt6+CT23Lj0RiIDIh2sfZC1TPrBV26BbsxfsY3oK7YKFUuvASwM2DBnRS6hAPJcf9AJJEjE+CtsoLTPl8Eabkehg7zdPLkAAVENvufAyC3LvNGsoqPYnVMh1J0bNUdtUARMlbb9rYQFiURHvuQ7cfoP6AKiQnOnC0BNTud/dow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XXSZopGw; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740522327; c=relaxed/simple;
+	bh=t5XHU8FuzTxYJsQJ0aplVsiqJvj2QQrZy+BDGGLfJeY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VYfC3F3K9wMOXY+843JE3lM826/fK5k29FP2oU2FiETg9DhsXFk4z85Bcx5ES/x6OqilSfsBGpak2nfDe2/GNj3OUydrU9WGnEcgWn+xCyQxMaCTUb2lt/h9DxB0Le0boL7cFRHNdB7QDK3axMZMcDmALZcAqKpoxuFcEOeTbyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GmOF2vVu; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XXSZopGw"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e5dd164ee34so5654232276.2;
-        Tue, 25 Feb 2025 14:25:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740522321; x=1741127121; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ngqJYv9awp2JsLWCM6W7g9eJMrp9NEn4ebDw819xeHE=;
-        b=XXSZopGwTfgSPl/mgOzyPOfrM3zfRn0avBE2KgCyGsCsD+scKzAwPEa6InPwLNNtI+
-         rAC46WdHkmt0MxLLfT4C4ZDwpH4ecFC7uzIzaiAhLYaruQkw3y1rZjW6D+VNLfOLd8Z3
-         8ETjfMFvAjNgBr1XQ7piYfWxKgBzFbAUp7KkI7Q8gsfnz6NlSw97BkIU7txm51ejwHjA
-         r5uTA3xA3pBM2AiyW4V+J6taZtvuBbCzlf/ytBGUCgrGu88ljEVA7w8+ympMgHJ0Hsed
-         o2r7ezTOOEjO2qTXga6IBCubCLR3sDp+VYMhcJargrIY3Jy17n3Ie6AeWwGj3kv/wqPA
-         vibQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740522321; x=1741127121;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ngqJYv9awp2JsLWCM6W7g9eJMrp9NEn4ebDw819xeHE=;
-        b=MAO8HCxqBuauP/Q+fYG/WwsNixpaToMZTWesMHc3e9vTgYO5iMpvZLnNnIMb8AKLOJ
-         +0gFc7qEEOaZi9BW4LW/sN6wlpPXRWUUswpE11Y1y1NAS8hEOqMN5nFDjxTPD1h98msn
-         qpz8RffUuJjHJ4/IujYSF+A2q0TRaYQwl/HB+wqVps6YKuxFHC/KD+aWbd1GPxmqk6qi
-         knAODkuBCQc4I/fE9qdqLzCBd2INyZ5jOd5DptwhsjaW7XFXvCKxd1YCyzlHpfikBXC8
-         c+0U/aWWLzT2Tp92i1VpspyRg+cmqf64W0Ihj2SM2dMnj9qBdo56ci2hliGEnHB2Gboy
-         7j+g==
-X-Forwarded-Encrypted: i=1; AJvYcCVuoSGhDmzbt0qeAHwvLn8mjnMFecplUjCZ5JvjjvU8lrw8hhFitIJLOnwN4FwjhI+I8PCy6b5J4sooc18=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVHCCIk5GlcQO5We2A90HLg6Lblhz9atY4651gjQr7+B45qF8+
-	XfQJuNVh/dZVD6PxvyItq/qd28lB2HXczK6thKH8+BCUguJDiw7AlsZG3sxE
-X-Gm-Gg: ASbGncu2aQYkgU4nXTj1lt1AWZK6SkHU5Ktp/a6q5NnTJCPA3JYCGRjM1xqnt8m8asW
-	8ucOWIjyabxzcrFN38tl9RH/CpW7r4A6jMIyDtEJ3MGhpkSEtZy0Iuf28tR6TylySRkDxNibv18
-	dFxSY53Wf/yJQby3+koV8Utp+ZhArsIpuLaS37+cUh0PJyS1sFO/QyEJBSO58gq3K14vULwEfs8
-	8ztQIsLxTjdnW7CVOGeccKvF0hjwdesLAdfDXkBuay6VzTcS81rcZ/3PHeGrhap3+XWG4g9xaYI
-	93lRZL6ca++OC/x1bvulJ5cc1L9woJvNEw==
-X-Google-Smtp-Source: AGHT+IGYOij5ZuQoY9KfrwWS0qxEZXFcfmgWdkuM6+jvBTjVH63lAJruoejb5Vqv9Y92DF9MBRXHUA==
-X-Received: by 2002:a05:6902:2085:b0:e5b:171c:35ee with SMTP id 3f1490d57ef6-e5e8b0726d8mr14067487276.48.1740522321321;
-        Tue, 25 Feb 2025 14:25:21 -0800 (PST)
-Received: from localhost.localdomain ([2800:bf0:82:3d2:9e61:1a62:1a8c:3e62])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e607b3ead63sm595466276.19.2025.02.25.14.25.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 14:25:21 -0800 (PST)
-From: Kurt Borja <kuurtb@gmail.com>
-To: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	"Armin Wolf" <W_Armin@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org,
-	"Hans de Goede" <hdegoede@redhat.com>,
-	Dell.Client.Kernel@dell.com,
-	linux-kernel@vger.kernel.org,
-	Kurt Borja <kuurtb@gmail.com>
-Subject: [PATCH v2 06/10] platform/x86: alienware-wmi-wmax: Add support for the "custom" thermal profile
-Date: Tue, 25 Feb 2025 17:24:56 -0500
-Message-ID: <20250225222500.23535-7-kuurtb@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250225222500.23535-1-kuurtb@gmail.com>
-References: <20250225222500.23535-1-kuurtb@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GmOF2vVu"
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 1BF1D203CDFE;
+	Tue, 25 Feb 2025 14:25:25 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1BF1D203CDFE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1740522325;
+	bh=4snbY5kKjPs+fqnW4bDVzUWCVcYb+NMujdrOx1UsTIo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GmOF2vVuCkJZ1DfUd1ljj8/fusb2yUMbDy2WmYxFrMMfaTTzbAqkWEUBwLUg55zpF
+	 Eal2Uv7psJ6AMd7GHQIuT0F5bT24oqPS+VN9NVDy5j/15vSuizsFBxdX1p+w7B0n5d
+	 f2jfhVcFODVbMweP0SK+AakuXEGuKdQiYOukQldU=
+Message-ID: <a96f9469-a22e-43e7-825d-f67ef550898f@linux.microsoft.com>
+Date: Tue, 25 Feb 2025 14:25:24 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v4 1/6] arm64: hyperv: Use SMCCC to detect
+ hypervisor presence
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: benhill@microsoft.com, bperkins@microsoft.com, sunilmut@microsoft.com,
+ bhelgaas@google.com, Borislav Petkov <bp@alien8.de>,
+ Catalin Marinas <catalin.marinas@arm.com>, Conor Dooley
+ <conor+dt@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Dexuan Cui <decui@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, krzk+dt@kernel.org,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Ingo Molnar <mingo@redhat.com>, Rob Herring <robh@kernel.org>,
+ ssengar@linux.microsoft.com, Thomas Gleixner <tglx@linutronix.de>,
+ Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>,
+ devicetree@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, x86@kernel.org
+References: <20250212014321.1108840-1-romank@linux.microsoft.com>
+ <20250212014321.1108840-2-romank@linux.microsoft.com>
+ <1b14e3de-4d3e-420c-819c-31ffb2d448bd@app.fastmail.com>
+ <593c22ca-6544-423d-84ee-7a06c6b8b5b9@linux.microsoft.com>
+ <97887849-faa8-429b-862b-daf6faf89481@app.fastmail.com>
+ <6e4685fe-68e9-43bd-96c5-b871edb1b971@linux.microsoft.com>
+ <14a199d8-1cf3-49bc-8e0d-92d9c8407b4f@linux.microsoft.com>
+ <55b65ba6-4abe-478c-a173-4622c30ddd7b@app.fastmail.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <55b65ba6-4abe-478c-a173-4622c30ddd7b@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-All models with the "AWCC" WMAX device support a "custom" thermal
-profile. In some models this profile signals user-space that the user
-wants to manually control the fans, which are always unlocked. In other
-models it actually unlocks manual fan control.
 
-Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
----
- .../platform/x86/dell/alienware-wmi-wmax.c    | 23 +++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-index 965b427f8f0a..bbe87f91fcb6 100644
---- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
-+++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
-@@ -29,8 +29,6 @@
- #define AWCC_METHOD_THERMAL_CONTROL		0x15
- #define AWCC_METHOD_GAME_SHIFT_STATUS		0x25
- 
--#define AWCC_THERMAL_MODE_GMODE			0xAB
--
- #define AWCC_FAILURE_CODE			0xFFFFFFFF
- #define AWCC_FAILURE_CODE_2			0xFFFFFFFE
- #define AWCC_THERMAL_TABLE_MASK			GENMASK(7, 4)
-@@ -176,6 +174,11 @@ enum AWCC_THERMAL_TABLES {
- 	AWCC_THERMAL_TABLE_USTT			= 0xA,
- };
- 
-+enum AWCC_SPECIAL_THERMAL_CODES {
-+	AWCC_SPECIAL_PROFILE_CUSTOM		= 0x00,
-+	AWCC_SPECIAL_PROFILE_GMODE		= 0xAB,
-+};
-+
- enum awcc_thermal_profile {
- 	AWCC_PROFILE_USTT_BALANCED,
- 	AWCC_PROFILE_USTT_BALANCED_PERFORMANCE,
-@@ -578,9 +581,15 @@ static int awcc_platform_profile_get(struct device *dev,
- 	if (ret < 0)
- 		return ret;
- 
--	if (out_data == AWCC_THERMAL_MODE_GMODE) {
-+	switch (out_data) {
-+	case AWCC_SPECIAL_PROFILE_CUSTOM:
-+		*profile = PLATFORM_PROFILE_CUSTOM;
-+		return 0;
-+	case AWCC_SPECIAL_PROFILE_GMODE:
- 		*profile = PLATFORM_PROFILE_PERFORMANCE;
- 		return 0;
-+	default:
-+		break;
- 	}
- 
- 	if (!is_awcc_thermal_profile_id(out_data))
-@@ -670,11 +679,17 @@ static int awcc_platform_profile_probe(void *drvdata, unsigned long *choices)
- 
- 	if (awcc->gmode) {
- 		priv->supported_profiles[PLATFORM_PROFILE_PERFORMANCE] =
--			AWCC_THERMAL_MODE_GMODE;
-+			AWCC_SPECIAL_PROFILE_GMODE;
- 
- 		__set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
- 	}
- 
-+	/* Every model supports the "custom" profile */
-+	priv->supported_profiles[PLATFORM_PROFILE_CUSTOM] =
-+		AWCC_SPECIAL_PROFILE_CUSTOM;
-+
-+	__set_bit(PLATFORM_PROFILE_CUSTOM, choices);
-+
- 	return 0;
- }
- 
+On 2/24/2025 11:24 PM, Arnd Bergmann wrote:
+> On Tue, Feb 25, 2025, at 00:22, Roman Kisel wrote:
+>> Hi Arnd,
+
+[...]
+
+> If you want to declare a uuid here, I think you should remove the
+> ARM_SMCCC_VENDOR_HYP_UID_HYPERV_REG_{0,1,2,3} macros and just
+> have UUID in normal UUID_INIT() notation as we do for
+> other UUIDs.
+
+I'd gladly stick to that provided I have your support of touching
+KVM's code! As the SMCCC document states, there shall be an UUID,
+and in the kernel, there would be
+
+#define ARM_SMCCC_VENDOR_KVM_UID UUID_INIT(.......)
+#define ARM_SMCCC_VENDOR_HYP_UID UUID_INIT(.......)
+
+Hence, the ARM_SMCCC_VENDOR_HYP_UID_*_REG_{0,1,2,3} can be removed as
+you're suggesting.
+
+That looks enticing enough semantically as though we're building layers
+from the SMCCC spec down to the "on-wire format" -- the only part that
+needs "deserializing" the UUID from `struct arm_smccc_res` the
+hypervisor returns.
+
+To add to that, anyone who wishes to implement a hypervisor for arm64
+will have to use some RFC 9562-compliant UUID generating facility. Thus,
+the UUID predates these 4 dwords. Using UUIDs in the kernel code will
+relieve of the chore of figuring out the 4 dwords from the UUID.
+
+Also, for the Gunyah folks will be pretty easy to use this infra:
+define the UUID in the header (1 line), call the new function (1 line),
+done.
+
+> 
+> If you want to keep the four 32-bit values and pass them into
+> arm_smccc_hyp_present() directly, I think that is also fine,
+> but in that case, I would try to avoid calling it a UUID.
+
+IMO, that approach provides a simplicity where anyone can see if the
+code is wrong from a quick glance: just compare 4 dwords. The fact that
+the 4 dwords form an UUID is bypassed though (as it is in the existing
+code). Somehow feels not spec-accurate imo. Also when I remove the UID
+part from the names, I'm going to have a rather weak justification as
+to why this is a benefit.
+
+Likely, there are two levels of improvement here:
+
+1. Just refactor the common parts out and have
+    `bool arm_smccc_hyp_present(u32 reg0, u32 reg1, u32 reg2, u32 reg2);`
+
+2. Introduce the UUID usage throughout and have a spec-accurate
+    prototype of
+    `bool arm_smccc_hyp_present(const uuid_t *hyp_uuid);`
+
+and would be great to go for the second one :)
+
+> 
+> How are the kvm and hyperv values specified originally?
+>>From the SMCCC document it seems like they are meant to be
+> UUIDs, so I would expect them to be in canonical form rather
+> than the smccc return values, but I could not find a document
+> for them.
+
+For hyperv case, `uuidgen` produced the UUID and that is used.
+Likely the same for kvm.
+
+> 
+>       Arnd
+
 -- 
-2.48.1
+Thank you,
+Roman
 
