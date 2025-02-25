@@ -1,33 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63421990D9;
-	Tue, 25 Feb 2025 17:12:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8BC91990D9;
+	Tue, 25 Feb 2025 17:12:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740503537; cv=none; b=Io9AQoiFA5vWdd5SO8cJFTWfxxZj074MguEqkNMhGQOdOB53PWBJk3SqygwZPiX0v+RR+u5IZBU2SwEP9b8//zgJ39d0AkU5tRK3Zj/7uq/6yUFMZsxok28BT4RO6fT1StWqEp6LTmQbRkvj2kTTpiHVueBo0m1l+IEDKZste/0=
+	t=1740503557; cv=none; b=g7Ra1fre2u9RT40bYWF+JwYxI205KmdPr2JdCJk5jkXYnnz/BQYJ2q8WoxHTFWY47Rw8Ntu4WkhlQLzq992+uI/7sMiOcYmSf0w4Oew5TrNkGr4mgUyUzRwOtuFtJ7iWbPYEIhgjqaMsjG//BZr5WLlhKV8Y2S2JDPbrzT3QP7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740503537; c=relaxed/simple;
-	bh=0tsEGBF4+62SqxUWuZBqRpjVFHz1hKwfwFSAlIUvlrE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KLWuKoBeyt6hPBCuZ/fc3u6vjPn3Ew7NDhtm4WdMx1bHJEm9S2H9v0gW7zyQJTGJ/K5GL2biNQxD14nHhuGqz9/dneaB/lpeFzyUoRH9lVcNBgFF+lCmrZZlggMjg2YP0aGNQhmM9NPxnvNwMeKuyFwB/mt9Ju3BotXzSQgboRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KNkpn9BZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740503557; c=relaxed/simple;
+	bh=SFIcUyN26PFdGS1xQAZHSdinxS1e1K2TCA4eKm/UVFE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=WLP6x0VoYCLcFqRrMa3hSGezWlQnuVoio22ZVYHPrFV2hknejwyRklPcK+2F3E6QwSAbkhNqFWV6jZ4/5ypVP64sejvYFyy0+viO1j6JGcRd4XP18aylbCLxGsAtKi0aFE57sJ51eNBqaAg80qdsIdxK2I9mOocFq0dTAe3rkgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Nrq3B2Bx; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KNkpn9BZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1D45C4CEDD;
-	Tue, 25 Feb 2025 17:12:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740503535;
-	bh=0tsEGBF4+62SqxUWuZBqRpjVFHz1hKwfwFSAlIUvlrE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KNkpn9BZE/ne6JF9yvtoUZ3yjGrtuLIUSiH+Ma3onyjuU4MV8Cd174nDM5rXI4yW0
-	 yGFZBs0CG8bijSyaE/BMgjKWx088DVmhZoYkXt7yUbVs9kWrZm0e2g6j7Gd676TkAx
-	 eohh4rSOZ1xB7sJCFeRQZDjoqwGFxBDHcD1vls00KOMIrr/dKzN5ewlXp1JEwelgBW
-	 VlohS25NVd+cUx6+4EHWYLN7ws/uN6aCczUHcPYc+5HwV6WuS3+Kbyu4nFn9PBUNw8
-	 EEJu+0qiexTT1i2ndE3tmycQ8rl6/LftYQYCzSptxyBXP9vOhj4tsI+cFnzeCRUvDV
-	 r1RpoZn0gmjxw==
-Message-ID: <db184d51-db88-4f90-bf6b-dd92d3089eb3@kernel.org>
-Date: Tue, 25 Feb 2025 18:12:10 +0100
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Nrq3B2Bx"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51PFJbae032256;
+	Tue, 25 Feb 2025 18:12:23 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	b7ilTU0nfN/VhX4AMlIMGSs7WY/ZNM9E5SfWaQXtVJA=; b=Nrq3B2BxNYdXhmuF
+	+jmL73KaSfStcX8QKPExFFoP7RqoSXYGRppAkI6ARlaK53KL1dyVyO4IMN3JVCnu
+	tGYXS6HfgioN2NTwRJczUCCAzE/57xH5+kkV2Cxd+AHYpSo3/5Rp4fedb48NofFU
+	yRjXtSt7zrXgOVoz1WW7amsqH28Yp3rUjJrK+GLhi7HIdO+d3IRP3u2GRmnhln0m
+	wPzqD2UC/k8vmQbeA/rNHAVlwELmzgPuiainGS0hQhjKPcssCNvWe615sk4+RGOy
+	/wQR2a7PFRz4SNwGT2jVCzJbDqAn0mnb30eauFGVK8qKkbI8fMakiei+0nXKNr1q
+	eIqVKw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4512sp4ukf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Feb 2025 18:12:23 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 69B38400E3;
+	Tue, 25 Feb 2025 18:11:14 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 72F044DBF82;
+	Tue, 25 Feb 2025 16:51:36 +0100 (CET)
+Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 25 Feb
+ 2025 16:51:35 +0100
+Message-ID: <91f19306-4b31-41fe-8ad2-680b1a339204@foss.st.com>
+Date: Tue, 25 Feb 2025 16:51:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,74 +52,119 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rtc: fsl-ftm: remove incorrect ACPI_PTR annotation
-To: Arnd Bergmann <arnd@kernel.org>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-rtc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250225163427.4168570-1-arnd@kernel.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 2/9] dt-bindings: pinctrl: stm32: Introduce HDP
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime
+ Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+CC: <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20250225-hdp-upstream-v1-0-9d049c65330a@foss.st.com>
+ <20250225-hdp-upstream-v1-2-9d049c65330a@foss.st.com>
+ <6fc80544-6fc3-4450-a0cc-bfc740fe97bb@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250225163427.4168570-1-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+In-Reply-To: <6fc80544-6fc3-4450-a0cc-bfc740fe97bb@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-25_05,2025-02-25_03,2024-11-22_01
 
-On 25/02/2025 17:34, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On 2/25/25 14:04, Krzysztof Kozlowski wrote:
+> On 25/02/2025 09:48, Clément Le Goffic wrote:
+>> +
+>> +maintainers:
+>> +  - Clément LE GOFFIC <clement.legoffic@foss.st.com>
+>> +
+>> +description: |
 > 
-> Building with W=1 shows a warning about ftm_imx_acpi_ids being unused when
-> CONFIG_ACPI is disabled:
 > 
-> drivers/rtc/rtc-fsl-ftm-alarm.c:312:36: error: unused variable 'ftm_imx_acpi_ids' [-Werror,-Wunused-const-variable]
+> Do not need '|' unless you need to preserve formatting.
+
+Ok
+
+>> +  STMicroelectronics's STM32 MPUs integrate a Hardware Debug Port (HDP).
+>> +  It allows to output internal signals on SoC's GPIO.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: st,stm32mp-hdp
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> There is a mess in STM SoCs. Sometimes you call SoC stm32, sometimes
+> stm32mp and sometimes stm32mpXX.
+> 
+> Define for all your STM contributions what is the actual SoC. This
+> feedback was already given to ST.
+> 
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +patternProperties:
+>> +  '-pins$':
+>> +    type: object
+>> +    $ref: pinmux-node.yaml#
+>> +
+>> +    properties:
+>> +      function:
+>> +        enum: [ "0", "1", "2", "3", "4", "5", "6", "7",
+>> +                "8", "9", "10", "11", "12", "13", "14",
+>> +                "15" ]
+> 
+> Function which has a number is not really useful. What does it even express?
 
-I already sent a fix for this few days ago:
+As said in my previous answer, function names are very different from 
+one platform to another. Numbers were used as string to be generic.
+I'll consider it in a V2.
 
-https://lore.kernel.org/all/20250222114146.162835-1-krzysztof.kozlowski@linaro.org/
+> 
+>> +
+>> +      pins:
+>> +        enum: [ hdp0, hdp1, hdp2, hdp3, hdp4, hdp5, hdp6, hdp7 ]
+>> +
+>> +    required:
+>> +      - function
+>> +      - pins
+>> +
+>> +    additionalProperties: false
+>> +
+>> +allOf:
+>> +  - $ref: pinctrl.yaml#
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/clock/stm32mp1-clks.h>
+>> +    #include <dt-bindings/pinctrl/stm32mp15-hdp.h>
+>> +    //Example 1
+> 
+> Drop
 
-Best regards,
-Krzysztof
+Ok
+
+> 
+> Best regards,
+> Krzysztof
+
