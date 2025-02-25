@@ -1,221 +1,192 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CC07264A7C;
-	Tue, 25 Feb 2025 12:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B17267AE8;
+	Tue, 25 Feb 2025 12:26:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740486336; cv=none; b=SU17EFMJJ/zafnxBPuOmSCZSiUh80SfOXOe9J4plMsiUCYY75/8Rfl0YtFOhYjvq3ZZXjNzmeizlPSwquxQu+vSJ73VFGY3UiTSTwM0C78UVTxen4yaFcIDePNPvQTkkO4fdp4i8xQ2JPb4HVTV0Gb5Z4Vo0cv1bEisuuWHKwII=
+	t=1740486388; cv=none; b=BobQjnQFAIJahwVgB2UnFsDP4WhfBl8yLlNkh4pWBEdZGh0UhG0WHjVjJSKcC28jI+GIsvkAgM3NtGjv5hOgRbro7p1pJqxuqmY7kR1B2eCn4HZtBxmURM9UOy2KIWRUi9132yh4eA09CpceE7xStyTNbF5LRU770z9C5kEHE9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740486336; c=relaxed/simple;
-	bh=EUNR7x+ErTX7SwFbNwN3cTFManKB3FcLuuXplKAYYS8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UX2fKG0Pt2OUuwl/WHona0QL+y9k8vNegTumRabKej3T8Eb4DN6LxHIXLQ7EeLFosbaZTKWIEi4TvF+KgE1XoDQqOTOlrleKPK1YZqVcAZqbXAiCD8D7zm/0gkvkohoDXCIK8y7YaeYIlckVTdw51L7+OGODzzQZKzYp5iunJ70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=GLnD6WDj; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1740486388; c=relaxed/simple;
+	bh=aPaDn3HfERJVM/5TKH97CigEo7w3sFZnIJP1P+qN76s=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B0OsYhbxUyshVzfXXdhLALMNMQguyzFKw8J8C2xFHMNfm/DK+S+tIAh5d+VJWl9zEpyChhPKQAISSk1hE8e22oiaSnNQDtBdw9BZdYMphNkkEg9uFDOvFd3GbcUJto2Q8xEGRRAIsZMdXwdYwMX3egwnqXDGKveCo9Yg3bw/LXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MgZ1qVeM; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="GLnD6WDj"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=RW9/j1aXxH33eV1Xb7A0zQmmh3OO9ZTRX9XziHJWwh4=;
-	t=1740486334; x=1741695934; b=GLnD6WDj6fIiUDyjRmxQ08Rraz9j3nkHSCUbkOyuCoaP49J
-	q4wWNQCIQjGKO5SrZFf2TlmsOtjvmRLBCpzPu9K9EDeQS/rhHpvsetFoue6JfLsiFvfJOdrFJLNxe
-	/DcPVZERVmXxq7oahuR78HWxntwqcm2r8dievGCX106abDEQPdH2MhRq3ZuVf26no4zrvBTS53WAu
-	9iFpi+YiOwmuJQqKP8rNpr/jLl8jfBSZgFrbugGQCfQX1Zbw5WUsO5K1eMzYsMeFCKkFUDSLGPpxT
-	XD4GO6OWQKtcJH6l6YLgZv+BjbuCtio0rimHQ4Za6I2texPYYdcQNXHc658G8jiQ==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <benjamin@sipsolutions.net>)
-	id 1tmtzX-00000009sLI-41WK;
-	Tue, 25 Feb 2025 13:24:52 +0100
-Message-ID: <7e91bea34552472757a8eec425d1d10643ca584b.camel@sipsolutions.net>
-Subject: Re: [PATCH v7 5/7] mseal, system mappings: enable uml architecture
-From: Benjamin Berg <benjamin@sipsolutions.net>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: "jeffxu@chromium.org" <jeffxu@chromium.org>, "Jason@zx2c4.com"	
- <Jason@zx2c4.com>, "adobriyan@gmail.com" <adobriyan@gmail.com>,
- "deller@gmx.de"	 <deller@gmx.de>, "gerg@kernel.org" <gerg@kernel.org>, 
- "anna-maria@linutronix.de"	 <anna-maria@linutronix.de>,
- "davem@davemloft.net" <davem@davemloft.net>,  "avagin@gmail.com"	
- <avagin@gmail.com>, "mhocko@suse.com" <mhocko@suse.com>, "enh@google.com"	
- <enh@google.com>, "thomas.weissschuh@linutronix.de"	
- <thomas.weissschuh@linutronix.de>, "hch@lst.de" <hch@lst.de>, 
- "hca@linux.ibm.com"	 <hca@linux.ibm.com>, "peterz@infradead.org"
- <peterz@infradead.org>,  "adhemerval.zanella@linaro.org"	
- <adhemerval.zanella@linaro.org>, "linux-kernel@vger.kernel.org"	
- <linux-kernel@vger.kernel.org>, "ojeda@kernel.org" <ojeda@kernel.org>, 
- "jannh@google.com"	 <jannh@google.com>, "f.fainelli@gmail.com"
- <f.fainelli@gmail.com>,  "sroettger@google.com"	 <sroettger@google.com>,
- "ardb@google.com" <ardb@google.com>,  "jorgelo@chromium.org"	
- <jorgelo@chromium.org>, "rdunlap@infradead.org" <rdunlap@infradead.org>, 
- "mark.rutland@arm.com"	 <mark.rutland@arm.com>, "Liam.Howlett@oracle.com"
- <Liam.Howlett@oracle.com>,  "vbabka@suse.cz"	 <vbabka@suse.cz>,
- "mpe@ellerman.id.au" <mpe@ellerman.id.au>, "oleg@redhat.com"	
- <oleg@redhat.com>, "willy@infradead.org" <willy@infradead.org>, 
- "keescook@chromium.org"	 <keescook@chromium.org>, "peterx@redhat.com"
- <peterx@redhat.com>,  "mike.rapoport@gmail.com"	 <mike.rapoport@gmail.com>,
- "mingo@kernel.org" <mingo@kernel.org>,  "rientjes@google.com"	
- <rientjes@google.com>, "groeck@chromium.org" <groeck@chromium.org>, 
- "linus.walleij@linaro.org"	 <linus.walleij@linaro.org>,
- "pedro.falcato@gmail.com" <pedro.falcato@gmail.com>,  "ardb@kernel.org"	
- <ardb@kernel.org>, "42.hyeyoo@gmail.com" <42.hyeyoo@gmail.com>, 
- "linux-mm@kvack.org"	 <linux-mm@kvack.org>, "johannes@sipsolutions.net"
- <johannes@sipsolutions.net>,  "linux-hardening@vger.kernel.org"	
- <linux-hardening@vger.kernel.org>, "torvalds@linux-foundation.org"	
- <torvalds@linux-foundation.org>, "akpm@linux-foundation.org"	
- <akpm@linux-foundation.org>, "dave.hansen@linux.intel.com"	
- <dave.hansen@linux.intel.com>, "aleksandr.mikhalitsyn@canonical.com"	
- <aleksandr.mikhalitsyn@canonical.com>
-Date: Tue, 25 Feb 2025 13:24:49 +0100
-In-Reply-To: <d2aeeb56-ba8c-49f3-957d-1ac790522233@lucifer.local>
-References: <20250224225246.3712295-1-jeffxu@google.com>
-		 <20250224225246.3712295-6-jeffxu@google.com>
-		 <c5d3927e-06e3-49e7-a1d6-f4c9e817def4@lucifer.local>
-		 <96ebddf3fe31353c89f6a4680eaeb2793c25cd09.camel@intel.com>
-		 <d2aeeb56-ba8c-49f3-957d-1ac790522233@lucifer.local>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MgZ1qVeM"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P8opm3017279;
+	Tue, 25 Feb 2025 12:26:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=0IHovyha28nioMj0jqE8NRML
+	QetpUZ7DfOvIv8poExM=; b=MgZ1qVeMHziA3NjUeIktz0lRkFkt84zUSVCHzFOF
+	ftahvEwnHUo2X9IQKvrYmUYKq3sE8TU0JCA6sPeVm88RZXGtSHmRhD5lZvYH1Ff4
+	4nF2R+dLz9nVZaAG52/awz01r18ezkIee+LNcOj0v2QZOpVdOlmZzmsmWm0AkIvZ
+	NNXDLNO/SSjrLJvCNQOfJ4iUFuckZZ/f56VbQdn4pQw1sQvgL/t2F0HcAaqfhzpS
+	lgFULua2cNK+oIR/yu/22vWF0QwuKX1v1IhK6IUe4tTaKdmOnIP/+KbaHngfPkKV
+	Oqzm4YX0K6OUhldPHDYAXG6GEj9lmKpJ6NZx7WOrFNQT4Q==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44y5k68y11-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Feb 2025 12:26:02 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51PCQ1K8028313
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Feb 2025 12:26:01 GMT
+Received: from PHILBER.na.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 25 Feb 2025 04:25:56 -0800
+Date: Tue, 25 Feb 2025 13:25:53 +0100
+From: Peter Hilber <quic_philber@quicinc.com>
+To: Simon Horman <horms@kernel.org>
+CC: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+        Trilok Soni <quic_tsoni@quicinc.com>,
+        Srivatsa Vaddagiri
+	<quic_svaddagi@quicinc.com>,
+        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+        Eugenio
+ =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>,
+        Richard Cochran
+	<richardcochran@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <virtualization@lists.linux.dev>,
+        <netdev@vger.kernel.org>, David Woodhouse
+	<dwmw2@infradead.org>,
+        "Ridoux, Julien" <ridouxj@amazon.com>, Marc Zyngier
+	<maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Lezcano
+	<daniel.lezcano@linaro.org>,
+        Alexandre Belloni
+	<alexandre.belloni@bootlin.com>,
+        Parav Pandit <parav@nvidia.com>,
+        "Matias
+ Ezequiel Vara Larsen" <mvaralar@redhat.com>,
+        Cornelia Huck
+	<cohuck@redhat.com>, <virtio-dev@lists.linux.dev>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-rtc@vger.kernel.org>
+Subject: Re: [PATCH v5 1/4] virtio_rtc: Add module and driver core
+Message-ID: <uj7g35pvelxwnukbkii6d7kzc4pjsj6wrtbcuomg3vhdluoxap@owoy3uy3xcrr>
+References: <20250219193306.1045-1-quic_philber@quicinc.com>
+ <20250219193306.1045-2-quic_philber@quicinc.com>
+ <20250224175527.GF1615191@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250224175527.GF1615191@kernel.org>
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: OOjFz1sTOj6eqEabv-mV79KYBvcBXkId
+X-Proofpoint-GUID: OOjFz1sTOj6eqEabv-mV79KYBvcBXkId
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-25_04,2025-02-25_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ bulkscore=0 spamscore=0 phishscore=0 clxscore=1015 impostorscore=0
+ mlxlogscore=999 suspectscore=0 priorityscore=1501 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502100000 definitions=main-2502250087
 
-Hi,
+On Mon, Feb 24, 2025 at 05:55:27PM +0000, Simon Horman wrote:
+> On Wed, Feb 19, 2025 at 08:32:56PM +0100, Peter Hilber wrote:
+> 
+> ...
+> 
+> > +/**
+> > + * VIORTC_MSG() - extract message from message handle
+> > + * @hdl: message handle
+> > + *
+> > + * Return: struct viortc_msg
+> > + */
+> > +#define VIORTC_MSG(hdl) ((hdl).msg)
+> > +
+> > +/**
+> > + * VIORTC_MSG_INIT() - initialize message handle
+> > + * @hdl: message handle
+> > + * @viortc: device data (struct viortc_dev *)
+> > + *
+> > + * Context: Process context.
+> > + * Return: 0 on success, -ENOMEM otherwise.
+> > + */
+> > +#define VIORTC_MSG_INIT(hdl, viortc)                                         \
+> > +	({                                                                   \
+> > +		typeof(hdl) *_hdl = &(hdl);                                  \
+> > +									     \
+> > +		_hdl->msg = viortc_msg_init((viortc), _hdl->msg_type,        \
+> > +					    _hdl->req_size, _hdl->resp_cap); \
+> > +		if (_hdl->msg) {                                             \
+> > +			_hdl->req = _hdl->msg->req;                          \
+> > +			_hdl->resp = _hdl->msg->resp;                        \
+> > +		}                                                            \
+> > +		_hdl->msg ? 0 : -ENOMEM;                                     \
+> > +	})
+> > +
+> > +/**
+> > + * VIORTC_MSG_WRITE() - write a request message field
+> > + * @hdl: message handle
+> > + * @dest_member: request message field name
+> > + * @src_ptr: pointer to data of compatible type
+> > + *
+> > + * Writes the field in little-endian format.
+> > + */
+> > +#define VIORTC_MSG_WRITE(hdl, dest_member, src_ptr)                         \
+> > +	do {                                                                \
+> > +		typeof(hdl) _hdl = (hdl);                                   \
+> > +		typeof(src_ptr) _src_ptr = (src_ptr);                       \
+> > +									    \
+> > +		/* Sanity check: must match the member's type */            \
+> > +		typecheck(typeof(_hdl.req->dest_member), *_src_ptr);        \
+> 
+> Hi Peter,
+> 
+> FWIIW, this trips up sparse because from it's perspective
+> there is an endianness mismatch between the two types.
+> 
 
-On Tue, 2025-02-25 at 10:37 +0000, Lorenzo Stoakes wrote:
-> On Tue, Feb 25, 2025 at 08:45:21AM +0000, Berg, Benjamin wrote:
-> > Hi,
-> >=20
-> > On Tue, 2025-02-25 at 06:22 +0000, Lorenzo Stoakes wrote:
-> > > On Mon, Feb 24, 2025 at 10:52:44PM +0000, jeffxu@chromium.org=C2=A0wr=
-ote:
-> > > > From: Jeff Xu <jeffxu@chromium.org>
-> > > >=20
-> > > > Provide support for CONFIG_MSEAL_SYSTEM_MAPPINGS on UML, covering
-> > > > the vdso.
-> > > >=20
-> > > > Testing passes on UML.
-> > >=20
-> > > Maybe expand on this by stating that it has been confirmed by Benjami=
-n (I
-> > > _believe_) that UML has no need for problematic relocation so this is=
- known to
-> > > be good.
-> >=20
-> > I may well be misreading this message, but this sounds to me that this
-> > is a misinterpretation. So, just to clarify in case that is needed.
-> >=20
-> > CONFIG_MSEAL_SYSTEM_MAPPINGS does work fine for the UML kernel.
-> > However, the UML kernel is a normal userspace application itself and
-> > for this application to run, the host kernel must have the feature
-> > disabled.
-> >=20
-> > So, UML supports the feature. But it still *cannot* run on a host
-> > machine that has the feature enabled.
->=20
-> Sigh ok. Apologies if I misunderstood.
->=20
-> Is there any point having this for the 'guest' system? I mean security wi=
-se are
-> we concerned about sealing of system mappings?
->=20
-> I feel like having this here might just add confusion and churn if it's n=
-ot
-> useful.
->=20
-> If this is useless for UML guest, let's just drop this patch.
+Thanks, I took a closer look and I think a virtio_le_to_cpu() inside the
+typeof()s will both keep the sanity check working and keep sparse from
+complaining - in the below case as well.
 
-I figured it is not a lot of churn and there isn't really any cost to
-enabling the feature.
+Peter
 
-That said, the only possible real-life use case I can see is doing MM
-subsystem testing using UML. We certainly do not need the feature to
-run our UML based wireless stack and driver tests.
-
-Benjamin
-
->=20
-> >=20
-> > Benjamin
-> >=20
-> > >=20
-> > > >=20
-> > > > Signed-off-by: Jeff Xu <jeffxu@chromium.org>
-> > > > Tested-by: Benjamin Berg <benjamin.berg@intel.com>
-> > >=20
-> > > Anyway I know UML has at any rate been confirmed to be good to go +
-> > > patch looks
-> > > fine, so:
-> > >=20
-> > > Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
->=20
-> OK guess drop this tag please until we can figure this out, sorry Jeff.
->=20
-> > >=20
-> > > > ---
-> > > > =C2=A0arch/um/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 1=
- +
-> > > > =C2=A0arch/x86/um/vdso/vma.c | 6 ++++--
-> > > > =C2=A02 files changed, 5 insertions(+), 2 deletions(-)
-> > > >=20
-> > > > diff --git a/arch/um/Kconfig b/arch/um/Kconfig
-> > > > index 18051b1cfce0..eb2d439a5334 100644
-> > > > --- a/arch/um/Kconfig
-> > > > +++ b/arch/um/Kconfig
-> > > > @@ -10,6 +10,7 @@ config UML
-> > > > =C2=A0	select ARCH_HAS_FORTIFY_SOURCE
-> > > > =C2=A0	select ARCH_HAS_GCOV_PROFILE_ALL
-> > > > =C2=A0	select ARCH_HAS_KCOV
-> > > > +	select ARCH_HAS_MSEAL_SYSTEM_MAPPINGS
-> > > > =C2=A0	select ARCH_HAS_STRNCPY_FROM_USER
-> > > > =C2=A0	select ARCH_HAS_STRNLEN_USER
-> > > > =C2=A0	select HAVE_ARCH_AUDITSYSCALL
-> > > > diff --git a/arch/x86/um/vdso/vma.c b/arch/x86/um/vdso/vma.c
-> > > > index f238f7b33cdd..fdfba858ffc9 100644
-> > > > --- a/arch/x86/um/vdso/vma.c
-> > > > +++ b/arch/x86/um/vdso/vma.c
-> > > > @@ -54,6 +54,7 @@ int arch_setup_additional_pages(struct
-> > > > linux_binprm *bprm, int uses_interp)
-> > > > =C2=A0{
-> > > > =C2=A0	struct vm_area_struct *vma;
-> > > > =C2=A0	struct mm_struct *mm =3D current->mm;
-> > > > +	unsigned long vm_flags;
-> > > > =C2=A0	static struct vm_special_mapping vdso_mapping =3D {
-> > > > =C2=A0		.name =3D "[vdso]",
-> > > > =C2=A0	};
-> > > > @@ -65,9 +66,10 @@ int arch_setup_additional_pages(struct
-> > > > linux_binprm *bprm, int uses_interp)
-> > > > =C2=A0		return -EINTR;
-> > > >=20
-> > > > =C2=A0	vdso_mapping.pages =3D vdsop;
-> > > > +	vm_flags =3D
-> > > > VM_READ|VM_EXEC|VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC;
-> > > > +	vm_flags |=3D VM_SEALED_SYSMAP;
-> > > > =C2=A0	vma =3D _install_special_mapping(mm, um_vdso_addr,
-> > > > PAGE_SIZE,
-> > > > -		VM_READ|VM_EXEC|
-> > > > -		VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC,
-> > > > +		vm_flags,
-> > > > =C2=A0		&vdso_mapping);
-> > > >=20
-> > > > =C2=A0	mmap_write_unlock(mm);
-> > > > --
-> > > > 2.48.1.658.g4767266eb4-goog
-> > > >=20
-> >=20
-> > Intel Deutschland GmbH
-> > Registered Address: Am Campeon 10, 85579 Neubiberg, Germany
-> > Tel: +49 89 99 8853-0, www.intel.de
-> > Managing Directors: Sean Fennelly, Jeffrey Schneiderman, Tiffany Doon S=
-ilva
-> > Chairperson of the Supervisory Board: Nicole Lau
-> > Registered Office: Munich
-> > Commercial Register: Amtsgericht Muenchen HRB 186928
-
+> > +									    \
+> > +		_hdl.req->dest_member =                                     \
+> > +			virtio_cpu_to_le(*_src_ptr, _hdl.req->dest_member); \
+> > +	} while (0)
+> > +
+> > +/**
+> > + * VIORTC_MSG_READ() - read from a response message field
+> > + * @hdl: message handle
+> > + * @src_member: response message field name
+> > + * @dest_ptr: pointer to data of compatible type
+> > + *
+> > + * Converts from little-endian format and writes to dest_ptr.
+> > + */
+> > +#define VIORTC_MSG_READ(hdl, src_member, dest_ptr)                     \
+> > +	do {                                                           \
+> > +		typeof(dest_ptr) _dest_ptr = (dest_ptr);               \
+> > +								       \
+> > +		/* Sanity check: must match the member's type */       \
+> > +		typecheck(typeof((hdl).resp->src_member), *_dest_ptr); \
+> 
+> Ditto.
+> 
+> > +								       \
+> > +		*_dest_ptr = virtio_le_to_cpu((hdl).resp->src_member); \
+> > +	} while (0)
+> > +
+> > +/*
+> > + * read requests
+> > + */
+> 
+> ...
