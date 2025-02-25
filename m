@@ -1,85 +1,375 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31069254B18;
-	Tue, 25 Feb 2025 06:06:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1C933981;
+	Tue, 25 Feb 2025 06:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740463614; cv=none; b=RI8LK6ddrqZ/lhelHd+zfS6Z6GP0FRjLcPJy9ECOSoaXQGsfysZhz/UwO9wLQWhPuU3G5IPumJL1cNF5j4chIv7v3Xc8ySko34dY6MGYSTD7UVDTDrL24+J9s0ydf6Zuulxyv+QP92scbR12Is/rtE1cmVB/PRCg4bY8sGNm9cU=
+	t=1740463676; cv=none; b=hCW8MPayMqcHH9odHqoTiKR7SKEvRQpFlDXibsgJolQvmhR2Zk23qvlL5VkeYIdFqezXg8fmmh8J3cfry1w7WLaYo95t9ECJzdGvkLcVOQUGGl7HI1UGzBldZBXkBEPV6QZ5rQQ4a0PLqk+TS+sN48FJnP09af37m52eUkPHmiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740463614; c=relaxed/simple;
-	bh=fU1fqUnYw2h+EOVeTywhFqS4gkbUcn4MgBI6LtkruSg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dnA1jzLEUsrd+89xC7iJoAza9IppN8OuagZzM5Nn8ayg0S0sUi5oG8dX9Xpxg0L6G+7VjS1+JIRw8udMJMpSBAyOpWo6ut816e/LG2w5puYwgax7z2p8DMuzLCjCjkKLjGE1wlz6ZhxkIYNCkkh+RPZnPujQfNctaksh3M7/h8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d8h69YGi; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d8h69YGi"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-22128b7d587so100318525ad.3;
-        Mon, 24 Feb 2025 22:06:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740463612; x=1741068412; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qpLbYY3a8G6+noHchTGji9pm7nDKnaJPinYLsobaH7c=;
-        b=d8h69YGidtPoI2dwxdugtE6TZ2UemnxQxtPpTxsLYsED8bAp/ZdL3TG1uIOSeYfstF
-         HOGadKv1Cfp5bW6bfZ3e//bwsAaaALjfvZ2f3fbpbv4KXIzaCYtdvfaW3iUjGvJv54u4
-         QmX+Oc8U/ObVPrsVS7ClV4iNlW6eAGB35b6CrljrXlu4kLpcheYZlUzyM165tl8bjF0J
-         mWxo9rh8b4aJU7/U1YTAgu59yY6xTv3e4YKlNcHcqqCfM08gZm4d6p74Qhhamgr/Hhxf
-         O7TKC4foNmyf12rZAGatUqJilQ1Mq1UB6x/PAPeu9OHTkR0sAXQf3E4aP25F91v5FJ12
-         oAaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740463612; x=1741068412;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qpLbYY3a8G6+noHchTGji9pm7nDKnaJPinYLsobaH7c=;
-        b=jHFMP3fZSofQudrgFIwfyA3i5Ixa0uabsvCZNn/KEantqFLsM80e3IZrvYXKnPB+uK
-         lnlhiIxteEJAXQGRjBAUpBwL5PyF76c3dNUkqYy/o5nOmJk2YsTypzaENLkVXYcAfLve
-         tR+2ukJ2mqsrBMtp7iv8Msvj8mSdSwAj4Y39Tp5OQUb7keeusrOJQ4JJHIIn59HYfI5M
-         XOdM7bJuJSv8IoSAAcEgLFOciI+qD9/CcfAqdUWAYqgsVyUdapHhG/aMx/2MCqdIsDNq
-         TO3Zmad21kjLCI46w2PA9xvSthuHSPwteRAGdo5LhtFvDr6W/TOxAp8fg9YT90iUEW/A
-         27ig==
-X-Forwarded-Encrypted: i=1; AJvYcCUGLYZ9eU71tFA95B3u9LsWirGyj/IZH4XaWSg2wDCiXkMvMNdCSomiIISX2Ou8A63zGTfxJ0YE/bWWOX0=@vger.kernel.org, AJvYcCWNWTPm5HXKugXocVsH0Cfu67EY2o/cws84FkcCoc1E9twZtO0EkcAcJPBLpOTlyhdExXj9XwWdAi7jCQ==@vger.kernel.org, AJvYcCX+D4q1oqbA/3eiYJ72WPP7KSxQMjDtDbHXDxWRzESyZcJtcmx5E1khfzmi87kxTvuMpHYWRPNVHDPu+oEO@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+WahWGGVIOoAW/t3lGD8MTJSVpUL/qzJmAuceE+hgA1/B87x2
-	vV5QvnkGoBZqtc39DlkX5EqYGEk/vDgEa7YzaNukt+YHqJJVUogk
-X-Gm-Gg: ASbGncvq+wleOwPZbdeg1A9NQSVy1OvrhwDpx8evu6i1cz6WO7qV+Lrk9BbIwdudeTw
-	8K8QpibtZlXuQU/DVbyG9NABH8zkxHBpbGqFQpteF47q8JmyPhuKDGYsdshl9Y9+i/O+eGUW7+5
-	wtw0rWc7bcALGOM/6wnvXkrOWWo0atNbJVFFm8QnSQ2i75yZPY02KDgwBRMjJANkYdcxfLiilfr
-	u3FITWOsEHsX++TdjSdInSxRFTW+k0DeXY7/CEpcgaWseK/4pw/4XolY9oTetw4N2hBLWb0YGlT
-	1K440GIHSe41feTZuTyE73901bE=
-X-Google-Smtp-Source: AGHT+IEaNuk7hgbrxOieRM9csy171AjtxJkiET5sWOVsdbQD7Gu7W6CKINnNRbiZrXi6/5JgfJzDKA==
-X-Received: by 2002:a05:6a00:4649:b0:730:9567:c3d4 with SMTP id d2e1a72fcca58-73426c8d910mr29554264b3a.3.1740463612112;
-        Mon, 24 Feb 2025 22:06:52 -0800 (PST)
-Received: from google.com ([2620:15c:9d:2:464c:6229:2280:227e])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7347a6fa079sm681486b3a.58.2025.02.24.22.06.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 22:06:51 -0800 (PST)
-Date: Mon, 24 Feb 2025 22:06:49 -0800
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Andras Sebok <sebokandris2009@gmail.com>
-Cc: markuss.broks@gmail.com, linux-input@vger.kernel.org,
-	phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] input/touchscreen: imagis: document ist3038h
-Message-ID: <Z71d-YFUTkJZ4fp7@google.com>
-References: <20250224090354.102903-2-sebokandris2009@gmail.com>
- <20250224090354.102903-4-sebokandris2009@gmail.com>
+	s=arc-20240116; t=1740463676; c=relaxed/simple;
+	bh=s0KR5NFOSbI3uPWqY8ch+TeQyRQ+DhGs6ESH2KL3cH0=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=OkYlGVggVFgEfGgjna5qWrFUvgRgAdKwqXKzH8D4Bme9kPlT8GjkELcqempET9UNDeXX0KKLw8BA47Dkki02cjc0hv9NItDTAyZpfT3gyeuUL3rKN0a4pKLipQH7sN0zrNjza2/jZ3KA2JM8cnOlGno69g1Y2MqtYSobdd9YJiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4Z26VV67NDzJ1FM;
+	Tue, 25 Feb 2025 14:03:46 +0800 (CST)
+Received: from kwepemg500006.china.huawei.com (unknown [7.202.181.43])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9E62914037C;
+	Tue, 25 Feb 2025 14:07:49 +0800 (CST)
+Received: from [10.67.121.110] (10.67.121.110) by
+ kwepemg500006.china.huawei.com (7.202.181.43) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 25 Feb 2025 14:07:49 +0800
+Subject: Re: [PATCH 3/3] migration: adapt to new migration configuration
+To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
+	"alex.williamson@redhat.com" <alex.williamson@redhat.com>, "jgg@nvidia.com"
+	<jgg@nvidia.com>, Jonathan Cameron <jonathan.cameron@huawei.com>
+CC: "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linuxarm@openeuler.org" <linuxarm@openeuler.org>
+References: <20250218021507.40740-1-liulongfang@huawei.com>
+ <20250218021507.40740-4-liulongfang@huawei.com>
+ <23e896a0788f4fc59b25b58be059a0f8@huawei.com>
+From: liulongfang <liulongfang@huawei.com>
+Message-ID: <ed716078-edfe-4f8b-3728-3287ba722c40@huawei.com>
+Date: Tue, 25 Feb 2025 14:07:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250224090354.102903-4-sebokandris2009@gmail.com>
+In-Reply-To: <23e896a0788f4fc59b25b58be059a0f8@huawei.com>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemg500006.china.huawei.com (7.202.181.43)
 
-On Mon, Feb 24, 2025 at 10:03:56AM +0100, Andras Sebok wrote:
-> Signed-off-by: Andras Sebok <sebokandris2009@gmail.com>
+On 2025/2/18 18:58, Shameerali Kolothum Thodi wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: liulongfang <liulongfang@huawei.com>
+>> Sent: Tuesday, February 18, 2025 2:15 AM
+>> To: alex.williamson@redhat.com; jgg@nvidia.com; Shameerali Kolothum
+>> Thodi <shameerali.kolothum.thodi@huawei.com>; Jonathan Cameron
+>> <jonathan.cameron@huawei.com>
+>> Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> linuxarm@openeuler.org; liulongfang <liulongfang@huawei.com>
+>> Subject: [PATCH 3/3] migration: adapt to new migration configuration
+>>
+>> On the new hardware platform, the migration region is moved from
+>> VF to PF. the driver also needs to be modified accordingly to adapt
+>> to the new hardware device.
+>>
+>> Use PF's io base directly on the new hardware platform. and no mmap
+>> operation is required.
+>> If it is on an old platform, the driver needs to be compatible with
+>> the old solution.
+> 
+> 
+> I see that you have used "new hardware platform" everywhere and I think
+> it is better we make it more specific, like QM_HW_V4?
+> 
+> Also it is not clear to me, what happens if you try migration between
+> QM_HW_V3 <--> QM_HW_V4? Is that going to be success or we are
+> failing it somewhere? I see only the dev_id check in vf_qm_check_match().
+> 
 
-Applied after updating commit description, thank you.
+The hardware platforms that support live migration are begin from QM_HW_V3.
+Before that, there is no support for live migration. After that, all migration
+configuration registers  will be placed in the PF configuration space.
+Therefore.so there is no need to make special configurations for QM_HW_V4.
 
--- 
-Dmitry
+Thanks.
+Longfang.
+
+> Thanks,
+> Shameer
+> 
+>> Signed-off-by: Longfang Liu <liulongfang@huawei.com>
+>> ---
+>>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 165 ++++++++++++------
+>>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.h    |   7 +
+>>  2 files changed, 119 insertions(+), 53 deletions(-)
+>>
+>> diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+>> b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+>> index 599905dbb707..cf5a807c2199 100644
+>> --- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+>> +++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+>> @@ -125,6 +125,72 @@ static int qm_get_cqc(struct hisi_qm *qm, u64
+>> *addr)
+>>  	return 0;
+>>  }
+>>
+>> +static int qm_get_xqc_regs(struct hisi_acc_vf_core_device *hisi_acc_vdev,
+>> +			   struct acc_vf_data *vf_data)
+>> +{
+>> +	struct hisi_qm *qm = &hisi_acc_vdev->vf_qm;
+>> +	struct device *dev = &qm->pdev->dev;
+>> +	u32 eqc_addr, aeqc_addr;
+>> +	int ret;
+>> +
+>> +	if (qm->ver == QM_HW_V3) {
+>> +		eqc_addr = QM_EQC_DW0;
+>> +		aeqc_addr = QM_AEQC_DW0;
+>> +	} else {
+>> +		eqc_addr = QM_EQC_PF_DW0;
+>> +		aeqc_addr = QM_AEQC_PF_DW0;
+>> +	}
+>> +
+>> +	/* QM_EQC_DW has 7 regs */
+>> +	ret = qm_read_regs(qm, eqc_addr, vf_data->qm_eqc_dw, 7);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to read QM_EQC_DW\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	/* QM_AEQC_DW has 7 regs */
+>> +	ret = qm_read_regs(qm, aeqc_addr, vf_data->qm_aeqc_dw, 7);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to read QM_AEQC_DW\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int qm_set_xqc_regs(struct hisi_acc_vf_core_device *hisi_acc_vdev,
+>> +			   struct acc_vf_data *vf_data)
+>> +{
+>> +	struct hisi_qm *qm = &hisi_acc_vdev->vf_qm;
+>> +	struct device *dev = &qm->pdev->dev;
+>> +	u32 eqc_addr, aeqc_addr;
+>> +	int ret;
+>> +
+>> +	if (qm->ver == QM_HW_V3) {
+>> +		eqc_addr = QM_EQC_DW0;
+>> +		aeqc_addr = QM_AEQC_DW0;
+>> +	} else {
+>> +		eqc_addr = QM_EQC_PF_DW0;
+>> +		aeqc_addr = QM_AEQC_PF_DW0;
+>> +	}
+>> +
+>> +	/* QM_EQC_DW has 7 regs */
+>> +	ret = qm_write_regs(qm, eqc_addr, vf_data->qm_eqc_dw, 7);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to write QM_EQC_DW\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	/* QM_AEQC_DW has 7 regs */
+>> +	ret = qm_write_regs(qm, aeqc_addr, vf_data->qm_aeqc_dw, 7);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to write QM_AEQC_DW\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static int qm_get_regs(struct hisi_qm *qm, struct acc_vf_data *vf_data)
+>>  {
+>>  	struct device *dev = &qm->pdev->dev;
+>> @@ -167,20 +233,6 @@ static int qm_get_regs(struct hisi_qm *qm, struct
+>> acc_vf_data *vf_data)
+>>  		return ret;
+>>  	}
+>>
+>> -	/* QM_EQC_DW has 7 regs */
+>> -	ret = qm_read_regs(qm, QM_EQC_DW0, vf_data->qm_eqc_dw, 7);
+>> -	if (ret) {
+>> -		dev_err(dev, "failed to read QM_EQC_DW\n");
+>> -		return ret;
+>> -	}
+>> -
+>> -	/* QM_AEQC_DW has 7 regs */
+>> -	ret = qm_read_regs(qm, QM_AEQC_DW0, vf_data->qm_aeqc_dw,
+>> 7);
+>> -	if (ret) {
+>> -		dev_err(dev, "failed to read QM_AEQC_DW\n");
+>> -		return ret;
+>> -	}
+>> -
+>>  	return 0;
+>>  }
+>>
+>> @@ -238,20 +290,6 @@ static int qm_set_regs(struct hisi_qm *qm, struct
+>> acc_vf_data *vf_data)
+>>  		return ret;
+>>  	}
+>>
+>> -	/* QM_EQC_DW has 7 regs */
+>> -	ret = qm_write_regs(qm, QM_EQC_DW0, vf_data->qm_eqc_dw, 7);
+>> -	if (ret) {
+>> -		dev_err(dev, "failed to write QM_EQC_DW\n");
+>> -		return ret;
+>> -	}
+>> -
+>> -	/* QM_AEQC_DW has 7 regs */
+>> -	ret = qm_write_regs(qm, QM_AEQC_DW0, vf_data->qm_aeqc_dw,
+>> 7);
+>> -	if (ret) {
+>> -		dev_err(dev, "failed to write QM_AEQC_DW\n");
+>> -		return ret;
+>> -	}
+>> -
+>>  	return 0;
+>>  }
+>>
+>> @@ -470,6 +508,10 @@ static int vf_qm_load_data(struct
+>> hisi_acc_vf_core_device *hisi_acc_vdev,
+>>  		return ret;
+>>  	}
+>>
+>> +	ret = qm_set_xqc_regs(hisi_acc_vdev, vf_data);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>>  	ret = hisi_qm_mb(qm, QM_MB_CMD_SQC_BT, qm->sqc_dma, 0, 0);
+>>  	if (ret) {
+>>  		dev_err(dev, "set sqc failed\n");
+>> @@ -544,6 +586,10 @@ static int vf_qm_state_save(struct
+>> hisi_acc_vf_core_device *hisi_acc_vdev,
+>>  		return ret;
+>>  	}
+>>
+>> +	ret = qm_get_xqc_regs(hisi_acc_vdev, vf_data);
+>> +	if (ret)
+>> +		return -EINVAL;
+>> +
+>>  	ret = vf_qm_read_data(vf_qm, vf_data);
+>>  	if (ret)
+>>  		return -EINVAL;
+>> @@ -1131,34 +1177,46 @@ static int hisi_acc_vf_qm_init(struct
+>> hisi_acc_vf_core_device *hisi_acc_vdev)
+>>  {
+>>  	struct vfio_pci_core_device *vdev = &hisi_acc_vdev->core_device;
+>>  	struct hisi_qm *vf_qm = &hisi_acc_vdev->vf_qm;
+>> +	struct hisi_qm *pf_qm = hisi_acc_vdev->pf_qm;
+>>  	struct pci_dev *vf_dev = vdev->pdev;
+>>
+>> -	/*
+>> -	 * ACC VF dev BAR2 region consists of both functional register space
+>> -	 * and migration control register space. For migration to work, we
+>> -	 * need access to both. Hence, we map the entire BAR2 region here.
+>> -	 * But unnecessarily exposing the migration BAR region to the Guest
+>> -	 * has the potential to prevent/corrupt the Guest migration. Hence,
+>> -	 * we restrict access to the migration control space from
+>> -	 * Guest(Please see mmap/ioctl/read/write override functions).
+>> -	 *
+>> -	 * Please note that it is OK to expose the entire VF BAR if migration
+>> -	 * is not supported or required as this cannot affect the ACC PF
+>> -	 * configurations.
+>> -	 *
+>> -	 * Also the HiSilicon ACC VF devices supported by this driver on
+>> -	 * HiSilicon hardware platforms are integrated end point devices
+>> -	 * and the platform lacks the capability to perform any PCIe P2P
+>> -	 * between these devices.
+>> -	 */
+>> +	if (pf_qm->ver == QM_HW_V3) {
+>> +		/*
+>> +		 * ACC VF dev BAR2 region consists of both functional
+>> register space
+>> +		 * and migration control register space. For migration to
+>> work, we
+>> +		 * need access to both. Hence, we map the entire BAR2
+>> region here.
+>> +		 * But unnecessarily exposing the migration BAR region to
+>> the Guest
+>> +		 * has the potential to prevent/corrupt the Guest migration.
+>> Hence,
+>> +		 * we restrict access to the migration control space from
+>> +		 * Guest(Please see mmap/ioctl/read/write override
+>> functions).
+>> +		 *
+>> +		 * Please note that it is OK to expose the entire VF BAR if
+>> migration
+>> +		 * is not supported or required as this cannot affect the ACC
+>> PF
+>> +		 * configurations.
+>> +		 *
+>> +		 * Also the HiSilicon ACC VF devices supported by this driver
+>> on
+>> +		 * HiSilicon hardware platforms are integrated end point
+>> devices
+>> +		 * and the platform lacks the capability to perform any PCIe
+>> P2P
+>> +		 * between these devices.
+>> +		 */
+>>
+>> -	vf_qm->io_base =
+>> -		ioremap(pci_resource_start(vf_dev,
+>> VFIO_PCI_BAR2_REGION_INDEX),
+>> -			pci_resource_len(vf_dev,
+>> VFIO_PCI_BAR2_REGION_INDEX));
+>> -	if (!vf_qm->io_base)
+>> -		return -EIO;
+>> +		vf_qm->io_base =
+>> +			ioremap(pci_resource_start(vf_dev,
+>> VFIO_PCI_BAR2_REGION_INDEX),
+>> +				pci_resource_len(vf_dev,
+>> VFIO_PCI_BAR2_REGION_INDEX));
+>> +		if (!vf_qm->io_base)
+>> +			return -EIO;
+>>
+>> -	vf_qm->fun_type = QM_HW_VF;
+>> +		vf_qm->fun_type = QM_HW_VF;
+>> +		vf_qm->ver = pf_qm->ver;
+>> +	} else {
+>> +		/*
+>> +		 * In the new HW platform, the migration function register
+>> space is in BAR2 of PF,
+>> +		 * and each VF occupies 8KB address space.
+>> +		 */
+>> +		vf_qm->io_base = pf_qm->io_base +
+>> QM_MIG_REGION_OFFSET +
+>> +				hisi_acc_vdev->vf_id *
+>> QM_MIG_REGION_SIZE;
+>> +		vf_qm->fun_type = QM_HW_PF;
+>> +	}
+>>  	vf_qm->pdev = vf_dev;
+>>  	mutex_init(&vf_qm->mailbox_lock);
+>>
+>> @@ -1488,7 +1546,8 @@ static void hisi_acc_vfio_pci_close_device(struct
+>> vfio_device *core_vdev)
+>>
+>>  	mutex_lock(&hisi_acc_vdev->open_mutex);
+>>  	hisi_acc_vdev->dev_opened = false;
+>> -	iounmap(vf_qm->io_base);
+>> +	if (vf_qm->ver == QM_HW_V3)
+>> +		iounmap(vf_qm->io_base);
+>>  	mutex_unlock(&hisi_acc_vdev->open_mutex);
+>>  	vfio_pci_core_close_device(core_vdev);
+>>  }
+>> diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
+>> b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
+>> index 245d7537b2bc..b01eb54525d3 100644
+>> --- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
+>> +++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
+>> @@ -50,6 +50,13 @@
+>>  #define QM_EQC_DW0		0X8000
+>>  #define QM_AEQC_DW0		0X8020
+>>
+>> +#define QM_MIG_REGION_OFFSET	0x180000
+>> +#define QM_MIG_REGION_SIZE	0x2000
+>> +
+>> +#define QM_SUB_VERSION_ID		0x100210
+>> +#define QM_EQC_PF_DW0		0x1c00
+>> +#define QM_AEQC_PF_DW0		0x1c20
+>> +
+>>  struct acc_vf_data {
+>>  #define QM_MATCH_SIZE offsetofend(struct acc_vf_data, qm_rsv_state)
+>>  	/* QM match information */
+>> --
+>> 2.24.0
+> 
+> .
+> 
