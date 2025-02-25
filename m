@@ -1,803 +1,213 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4B8263C69
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D902263C7C
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740476121; cv=none; b=G0k5/vGw47Vek0eNccSjRLTTKtcOQiwhVfvy7kdzUoBVWp9/nUQ/f23P4Q5MpgMQ9GJirWlgwGin2+6oafHwclQDvau1UEZ3eXlKygWy7MCy8Ex5XwEh4JRsmyKf+jDaBVHPQmQDFBomP/FQZbxDGp2xnsO0g07rfMfh7qAsle0=
+	t=1740476126; cv=none; b=mfntniNCrzKae2yfrlbCjn1bCw+t5jiw8ifP+kMgaeYo469fJ1ZwWlQ6VgwmkF1qDQs4G+GtUJsxGoQWGoWmZ3Qsn9ntBFNNkHGpL9RsizR9JeJXVBm4/fLciA1op/sME39FbO4tKjivFTmiptMk5sNky4gaIALFXPWdKv0SwzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740476121; c=relaxed/simple;
-	bh=LMnw2grkYulPRTIzz/uk3BUBKeG6SeucXy3zupQY8Lo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ONynwuvfXLnl4PPlVzzrTJsNj5DtoaGKiZJWsKGAnEzxxRdvySOqT5sCxpxz/MfMBDXb3NcMqwVX4F5c0smfHcQxi0G4TlutWS6MULyUfHC6QiAAC2Ka4dDWpnr9yj2EeS51CxgmeCOvEnIv1xCnCYCTlrrCWCUVygygzo263Es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=M023T7U3; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1740476126; c=relaxed/simple;
+	bh=XqCC82gN7Ax+Edng+oAk3lNgokxpfuy53+8WAujaTnU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RmlDi10wThXa/6rmiFMVz1jls4pREmt189dQ1nT8QxTjf4uk/D7PqfdczuvwROoUbWDwLZHMV4DsxwZ4+Zz85kcFvS01GJcDmqmq+1goMO4KFOAgOSBI5QpssSJGl8UWhfYqwVhncDxgnrd0CpyBWv0Qh8dkBswqacvj6e+r8Bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xw5OlW/T; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PEfabdvd; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ChdH3SHs; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HVd+TvcY; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="M023T7U3"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P7msxk003808
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:35:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	A9fZdEtJLTLJ8I/rg1Bh+UlQAgG6IA4uwVW+hCCb4w0=; b=M023T7U3bPOMZASj
-	/uS7BmWDLnG08iGcFBTPRKXQWmxfP1XflkDulWwP7jXxYayJVWhCjkICvzwpc1X0
-	yuMupGJ/9OXZi5R5FEu0MZvpeYxnu4epS4bonULx10ApqneIUjpU3ko5D7iHx549
-	4eYffLU/dPleLfqmNeBMN2BkfX08LViEo7SB14xB4yjHg3wm4alrMa9VgHBr6C9m
-	C5kRj4lIXiadQwxanWNKpUDUiQ6weCsuOjEbu76f2FUVIaYr4EcicT5IRPyTNmZw
-	rqQ5YyfZPePZP2V6dkpJWCwKkUIFkJ5wRaN6ll1sUpUU0ugxXqvRSupL76ZQ1bWw
-	7Wr2eQ==
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 450m3dcc9p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:35:19 +0000 (GMT)
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-2fc1a70935fso11417480a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 01:35:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740476118; x=1741080918;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A9fZdEtJLTLJ8I/rg1Bh+UlQAgG6IA4uwVW+hCCb4w0=;
-        b=XcVTZg/5S9oNCc09jFVsLpJEJOnDEcmfRuk4ghznIAsG+groGHAr8UMfA5NCWIvoFe
-         CuJQejL1RYFGqLYoUkMfegwqs6nRfhMflkS+tmUhhU+fHMojShN8rtVu5LrX9GpX4BfK
-         VH5MF/anq5c21CkN2oApAOOexDFYjCnG6W1Hkv0QWrXaGqD3A3lbwdweDVPUANTh0o+D
-         Ancj5zGRYBnogO1olHcAdz12l1rGlnhc/EP/GHKqt4x0R8vLoPUZbAlu/aRB9lYm1BKr
-         JJ1olZ2dRbva0dmT53XYrtfdo7LYF6V1Y2csv+sek5OJll099JmC6KxN4X835y9RaZTt
-         oObQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0d3MuoLgR47Lm8LNrs+M6F0+K1VbE4myDiZJJIF1UGtNzcN9moOwfJx+QE0oJB8wBKr2bLv0ZFmhUhHo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYDhP8U2mPI4jHOuXB15vqtZJwTbBEpKaKezKF/Zq4Ekly0mSb
-	vxno99I91HeyoR8eq8sOZG9ajbOUuBm3v/Cf8UqIttVesE0PfEB5EgDFdAQI4uW15krqPVwPtqQ
-	4+brHxsr8QFmd0wFWAxGjtGrPm5CcEOQA9+91JGf56CMVY7STRQnzHG3CwA0Vdd4=
-X-Gm-Gg: ASbGncv2WPD0QTloFJ0feRC361WxNZetbANq7Snqn7YfmFh504NY3RQLMsB67NfXTfs
-	GCM2jwOfti5a9r/6HcntAcWfUMItlxEWBE3yjZyDI5GoDKJtZLWzHz0nOt6VSXKrvwUoZ4hHVVS
-	40Wmdkb8CducwtP1Q0syT0BjVDpKXwSTGCzwTeiedeKCnMZjcCF/XGoHWmMXCYFp0jAfBuUBPKj
-	WmhVb5dCbNFRpgVkNieFR99a4L6STqxTVfQ7ayF8nRRY2xOjRm9DJGqnEj3Yh+7vcs2IxKxUtEu
-	KsYE+JojPhlLQmOwRN5Sdtc/yyqiO/0qsh8d6Phdj6XrsNjJdBs=
-X-Received: by 2002:a17:90b:56d0:b0:2f5:747:cbd with SMTP id 98e67ed59e1d1-2fe68ae292bmr4764998a91.18.1740476118010;
-        Tue, 25 Feb 2025 01:35:18 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEpKoyaLC9BE0PgW+pLRLJ3ZL5Zr6S+ZXgHJQ0EqFLNIC8xFmJzelvUpI4UhVYHawu5ZXamxQ==
-X-Received: by 2002:a17:90b:56d0:b0:2f5:747:cbd with SMTP id 98e67ed59e1d1-2fe68ae292bmr4764958a91.18.1740476117514;
-        Tue, 25 Feb 2025 01:35:17 -0800 (PST)
-Received: from hu-krichai-hyd.qualcomm.com ([202.46.23.25])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2fe6a3dec52sm1080770a91.20.2025.02.25.01.35.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 01:35:17 -0800 (PST)
-From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Date: Tue, 25 Feb 2025 15:04:05 +0530
-Subject: [PATCH v4 08/10] PCI: pwrctrl: Add power control driver for tc956x
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xw5OlW/T";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PEfabdvd";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ChdH3SHs";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HVd+TvcY"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 612112116F;
+	Tue, 25 Feb 2025 09:35:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740476122; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=0hjlv3pwtvm7CLkK6D7gSMixWOvwntnGrnvPq2AR1Ew=;
+	b=xw5OlW/T+rAd2to0uX2hzoEnn3yX4kK1Tm4L0Bt28wHwd0nAzSaAf0boghvxb9X8foEBVm
+	PUJkwEyqf/6yR6A8L3x/gg3VFk1s3hiB0Q6ePrE3g69TCLN89UuqagFFLvnZlhzNvtrmCk
+	t+yoyTyVZlZA5PwyQeLRKwIW6cUONag=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740476122;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=0hjlv3pwtvm7CLkK6D7gSMixWOvwntnGrnvPq2AR1Ew=;
+	b=PEfabdvdOwTjL+Ck5IvbKA4xxbe7+QHZjbcEBgPWfBvEoeb5ZYwcVLEOehnz/zhKwc7rOP
+	N6SCPMFEjovEz2Cg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ChdH3SHs;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=HVd+TvcY
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1740476121; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=0hjlv3pwtvm7CLkK6D7gSMixWOvwntnGrnvPq2AR1Ew=;
+	b=ChdH3SHsqwj3nNTJA+P+ydIh2XcdaFR3aJSEU+cBWV+FfSNyhxnBypMZCiJZxnX1I69f5m
+	xN/gjMpSwibrsRXMGR8VVdo+ETEYN1sVrlG7WAGb1DjDevX4HsrjIC/qCKEpWE2si38fHo
+	1mHntAIrWUVFT5OQWY3PQ7W3CMilDVE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1740476121;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=0hjlv3pwtvm7CLkK6D7gSMixWOvwntnGrnvPq2AR1Ew=;
+	b=HVd+TvcYLdBQ/wVgrzL/+hNM6H++htk8KcjG/c0eN0msIFrWwuCZtNFmCUdShMPYlT5s6p
+	zwXQdVoUD+t0asBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0F23813332;
+	Tue, 25 Feb 2025 09:35:21 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id EZwsAtmOvWfmFgAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 25 Feb 2025 09:35:21 +0000
+Message-ID: <a4bc0440-5451-49e7-b7a3-9299c5200a2e@suse.de>
+Date: Tue, 25 Feb 2025 10:35:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250225-qps615_v4_1-v4-8-e08633a7bdf8@oss.qualcomm.com>
-References: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
-In-Reply-To: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        chaitanya chundru <quic_krichai@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org, Jingoo Han <jingoohan1@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: quic_vbadigan@quicnic.com, amitk@kernel.org, dmitry.baryshkov@linaro.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        jorge.ramirez@oss.qualcomm.com,
-        Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740476062; l=19426;
- i=krishna.chundru@oss.qualcomm.com; s=20230907; h=from:subject:message-id;
- bh=LMnw2grkYulPRTIzz/uk3BUBKeG6SeucXy3zupQY8Lo=;
- b=Cv10bXTLgL5Oc+3lVkZ9LI4O1smWriwz9Z1xqx/d9AISdVgq1ccCvbQUruiIlTfIY3FQAzuDQ
- AM2ZSSmUUD9A7OPZMFTDz23i7s9rFAcwNYmKV8+QYyT8cAR/FWHsPKH
-X-Developer-Key: i=krishna.chundru@oss.qualcomm.com; a=ed25519;
- pk=10CL2pdAKFyzyOHbfSWHCD0X0my7CXxj8gJScmn1FAg=
-X-Proofpoint-GUID: 28R2BvIvCNjBUr9oXnsNkM_yz5eKX9rw
-X-Proofpoint-ORIG-GUID: 28R2BvIvCNjBUr9oXnsNkM_yz5eKX9rw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_03,2025-02-24_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- bulkscore=0 impostorscore=0 phishscore=0 mlxscore=0 mlxlogscore=999
- clxscore=1015 malwarescore=0 lowpriorityscore=0 adultscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502100000 definitions=main-2502250066
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] drm/tiny: add driver for Apple Touch Bars in x86
+ Macs
+To: Aditya Garg <gargaditya08@live.com>
+Cc: "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "mripard@kernel.org" <mripard@kernel.org>,
+ "airlied@gmail.com" <airlied@gmail.com>, "simona@ffwll.ch"
+ <simona@ffwll.ch>,
+ "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
+ Kerem Karabay <kekrby@gmail.com>, Atharva Tiwari <evepolonium@gmail.com>,
+ Aun-Ali Zaidi <admin@kodeit.net>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+References: <B08444CD-38A8-4B82-94B2-4162D6D2EABD@live.com>
+ <844C1D39-4891-4DC2-8458-F46FA1B59FA0@live.com>
+ <PN3PR01MB95974D5EB5A25386A8BF6FDAB8C02@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <ca34309a-f2b2-4082-92df-86a775952348@suse.de>
+ <PN3PR01MB95979D1B21250604F834357FB8C32@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <PN3PR01MB959719792308EBB9370993DFB8C32@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <PN3PR01MB959719792308EBB9370993DFB8C32@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 612112116F
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com,live.com];
+	RCVD_TLS_ALL(0.00)[];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_TO(0.00)[live.com];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux.intel.com,kernel.org,gmail.com,ffwll.ch,kodeit.net,vger.kernel.org,lists.freedesktop.org];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-TC956x is a PCIe switch which has one upstream and three downstream
-ports. To one of the downstream ports ethernet MAC is connected as endpoint
-device. Other two downstream ports are supposed to connect to external
-device. One Host can connect to TC956x by upstream port. TC956x switch
-needs to be configured after powering on and before PCIe link was up.
+Hi
 
-The PCIe controller driver already enables link training at the host side
-even before this driver probe happens, due to this when driver enables
-power to the switch it participates in the link training and PCIe link
-may come up before configuring the switch through i2c. Once the link is
-up the configuration done through i2c will not have any affect.To prevent
-the host from participating in link training, disable link training on the
-host side to ensure the link does not come up before the switch is
-configured via I2C.
+Am 25.02.25 um 10:07 schrieb Aditya Garg:
+>
+>> On 25 Feb 2025, at 2:34 PM, Aditya Garg <gargaditya08@live.com> wrote:
+>>
+>> ﻿
+>>
+>>> On 25 Feb 2025, at 1:27 PM, Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>>>
+>>> ﻿Hi
+>>>
+>>> Am 24.02.25 um 17:58 schrieb Aditya Garg:
+>>> [...]
+>>>>> +config DRM_APPLETBDRM
+>>>>> +    tristate "DRM support for Apple Touch Bars"
+>>>>> +    depends on DRM && USB && MMU
+>>>>> +    select DRM_GEM_SHMEM_HELPER
+>>>>> +    select DRM_KMS_HELPER
+>>>>> +    select HID_APPLETB_BL
+>>>> Btw I have a doubt regarding this dependency. While hid-appletb-bl has made into the linux-next tree, it has still not been merged into Linus' tree, and neither the drm tree I assume. It potentially could cause issues?
+>>> Yes. We cannot merge this driver until we have this symbol in our tree. But that will happen sooner or later.
+>>>
+>>> More problematic is that your driver selects HID_APPLETB_BL. From what I've seen, this symbol is user configurable, so the driver shouldn't select it. You need to use 'depends on' instead of 'select' here.
+>> Looking at this again, maybe it should be selected. If you see the kernel config of TINYDRM_HX8357D, which is also in drm/tiny, it is selecting BACKLIGHT_CLASS_DEVICE.
 
-Based up on dt property and type of the port, tc956x is configured
-through i2c.
+This driver does it wrong.
 
-Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Reviewed-by: Bjorn Andersson <andersson@kernel.org>
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/pci/pwrctrl/Kconfig              |   6 +
- drivers/pci/pwrctrl/Makefile             |   1 +
- drivers/pci/pwrctrl/pci-pwrctrl-tc956x.c | 625 +++++++++++++++++++++++++++++++
- 3 files changed, 632 insertions(+)
+> To make things more clear,
+>
+> 1. hid-appletb-bl is for the backlight of the touchbar. The DRM code remains separate.
+> 2. hid-multitouch is to make the touchbar a touch screen. You can still use the driver without the touch functionality.
 
-diff --git a/drivers/pci/pwrctrl/Kconfig b/drivers/pci/pwrctrl/Kconfig
-index 54589bb2403b..ae8a0a39f586 100644
---- a/drivers/pci/pwrctrl/Kconfig
-+++ b/drivers/pci/pwrctrl/Kconfig
-@@ -10,3 +10,9 @@ config PCI_PWRCTL_PWRSEQ
- 	tristate
- 	select POWER_SEQUENCING
- 	select PCI_PWRCTL
-+
-+config PCI_PWRCTRL_TC956X
-+	tristate "PCI Power Control driver for TC956x PCIe switch"
-+	select PCI_PWRCTL
-+	help
-+	  Say Y here to enable the pwrctrl driver for TC956x PCIe switch.
-diff --git a/drivers/pci/pwrctrl/Makefile b/drivers/pci/pwrctrl/Makefile
-index 75c7ce531c7e..93f32871260b 100644
---- a/drivers/pci/pwrctrl/Makefile
-+++ b/drivers/pci/pwrctrl/Makefile
-@@ -4,3 +4,4 @@ obj-$(CONFIG_PCI_PWRCTL)		+= pci-pwrctrl-core.o
- pci-pwrctrl-core-y			:= core.o
- 
- obj-$(CONFIG_PCI_PWRCTL_PWRSEQ)		+= pci-pwrctrl-pwrseq.o
-+obj-$(CONFIG_PCI_PWRCTRL_TC956X)	+= pci-pwrctrl-tc956x.o
-diff --git a/drivers/pci/pwrctrl/pci-pwrctrl-tc956x.c b/drivers/pci/pwrctrl/pci-pwrctrl-tc956x.c
-new file mode 100644
-index 000000000000..bf72bbcae536
---- /dev/null
-+++ b/drivers/pci/pwrctrl/pci-pwrctrl-tc956x.c
-@@ -0,0 +1,625 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2024 Qualcomm Innovation Center, Inc. All rights reserved.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/i2c.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/pci.h>
-+#include <linux/pci-pwrctrl.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/string.h>
-+#include <linux/types.h>
-+#include <linux/unaligned.h>
-+
-+#include "../pci.h"
-+
-+#define TC956X_GPIO_CONFIG		0x801208
-+#define TC956X_RESET_GPIO		0x801210
-+
-+#define TC956X_BUS_CONTROL		0x801014
-+
-+#define TC956X_PORT_L0S_DELAY		0x82496c
-+#define TC956X_PORT_L1_DELAY		0x824970
-+
-+#define TC956X_EMBEDDED_ETH_DELAY	0x8200d8
-+#define TC956X_ETH_L1_DELAY_MASK	GENMASK(27, 18)
-+#define TC956X_ETH_L1_DELAY_VALUE(x)	FIELD_PREP(TC956X_ETH_L1_DELAY_MASK, x)
-+#define TC956X_ETH_L0S_DELAY_MASK	GENMASK(17, 13)
-+#define TC956X_ETH_L0S_DELAY_VALUE(x)	FIELD_PREP(TC956X_ETH_L0S_DELAY_MASK, x)
-+
-+#define TC956X_NFTS_2_5_GT		0x824978
-+#define TC956X_NFTS_5_GT		0x82497c
-+
-+#define TC956X_PORT_LANE_ACCESS_ENABLE	0x828000
-+
-+#define TC956X_PHY_RATE_CHANGE_OVERRIDE	0x828040
-+#define TC956X_PHY_RATE_CHANGE		0x828050
-+
-+#define TC956X_TX_MARGIN		0x828234
-+
-+#define TC956X_DFE_ENABLE		0x828a04
-+#define TC956X_DFE_EQ0_MODE		0x828a08
-+#define TC956X_DFE_EQ1_MODE		0x828a0c
-+#define TC956X_DFE_EQ2_MODE		0x828a14
-+#define TC956X_DFE_PD_MASK		0x828254
-+
-+#define TC956X_PORT_SELECT		0x82c02c
-+#define TC956X_PORT_ACCESS_ENABLE	0x82c030
-+
-+#define TC956X_POWER_CONTROL		0x82b09c
-+#define TC956X_POWER_CONTROL_OVREN	0x82b2c8
-+
-+#define TC956X_GPIO_MASK		0xfffffff3
-+
-+#define TC956X_TX_MARGIN_MIN_VAL	400000
-+
-+struct tc956x_pwrctrl_reg_setting {
-+	unsigned int offset;
-+	unsigned int val;
-+};
-+
-+enum tc956x_pwrctrl_ports {
-+	TC956X_USP,
-+	TC956X_DSP1,
-+	TC956X_DSP2,
-+	TC956X_DSP3,
-+	TC956X_ETHERNET,
-+	TC956X_MAX
-+};
-+
-+struct tc956x_pwrctrl_cfg {
-+	u32 l0s_delay;
-+	u32 l1_delay;
-+	u32 tx_amp;
-+	u8 nfts[2]; /* GEN1 & GEN2*/
-+	bool disable_dfe;
-+	bool disable_port;
-+};
-+
-+#define TC956X_PWRCTL_MAX_SUPPLY	6
-+
-+struct tc956x_pwrctrl_ctx {
-+	struct regulator_bulk_data supplies[TC956X_PWRCTL_MAX_SUPPLY];
-+	struct tc956x_pwrctrl_cfg cfg[TC956X_MAX];
-+	struct gpio_desc *reset_gpio;
-+	struct i2c_adapter *adapter;
-+	struct i2c_client *client;
-+	struct pci_pwrctrl pwrctrl;
-+};
-+
-+/*
-+ * downstream port power off sequence, hardcoding the address
-+ * as we don't know register names for these register offsets.
-+ */
-+static const struct tc956x_pwrctrl_reg_setting common_pwroff_seq[] = {
-+	{0x82900c, 0x1},
-+	{0x829010, 0x1},
-+	{0x829018, 0x0},
-+	{0x829020, 0x1},
-+	{0x82902c, 0x1},
-+	{0x829030, 0x1},
-+	{0x82903c, 0x1},
-+	{0x829058, 0x0},
-+	{0x82905c, 0x1},
-+	{0x829060, 0x1},
-+	{0x8290cc, 0x1},
-+	{0x8290d0, 0x1},
-+	{0x8290d8, 0x1},
-+	{0x8290e0, 0x1},
-+	{0x8290e8, 0x1},
-+	{0x8290ec, 0x1},
-+	{0x8290f4, 0x1},
-+	{0x82910c, 0x1},
-+	{0x829110, 0x1},
-+	{0x829114, 0x1},
-+};
-+
-+static const struct tc956x_pwrctrl_reg_setting dsp1_pwroff_seq[] = {
-+	{TC956X_PORT_ACCESS_ENABLE, 0x2},
-+	{TC956X_PORT_LANE_ACCESS_ENABLE, 0x3},
-+	{TC956X_POWER_CONTROL, 0x014f4804},
-+	{TC956X_POWER_CONTROL_OVREN, 0x1},
-+	{TC956X_PORT_ACCESS_ENABLE, 0x4},
-+};
-+
-+static const struct tc956x_pwrctrl_reg_setting dsp2_pwroff_seq[] = {
-+	{TC956X_PORT_ACCESS_ENABLE, 0x8},
-+	{TC956X_PORT_LANE_ACCESS_ENABLE, 0x1},
-+	{TC956X_POWER_CONTROL, 0x014f4804},
-+	{TC956X_POWER_CONTROL_OVREN, 0x1},
-+	{TC956X_PORT_ACCESS_ENABLE, 0x8},
-+};
-+
-+/*
-+ * Since all transfers are initiated by the probe, no locks are necessary,
-+ * as there are no concurrent calls.
-+ */
-+static int tc956x_pwrctrl_i2c_write(struct i2c_client *client,
-+				    u32 reg_addr, u32 reg_val)
-+{
-+	struct i2c_msg msg;
-+	u8 msg_buf[7];
-+	int ret;
-+
-+	msg.addr = client->addr;
-+	msg.len = 7;
-+	msg.flags = 0;
-+
-+	/* Big Endian for reg addr */
-+	put_unaligned_be24(reg_addr, &msg_buf[0]);
-+
-+	/* Little Endian for reg val */
-+	put_unaligned_le32(reg_val, &msg_buf[3]);
-+
-+	msg.buf = msg_buf;
-+	ret = i2c_transfer(client->adapter, &msg, 1);
-+	return ret == 1 ? 0 : ret;
-+}
-+
-+static int tc956x_pwrctrl_i2c_read(struct i2c_client *client,
-+				   u32 reg_addr, u32 *reg_val)
-+{
-+	struct i2c_msg msg[2];
-+	u8 wr_data[3];
-+	u32 rd_data;
-+	int ret;
-+
-+	msg[0].addr = client->addr;
-+	msg[0].len = 3;
-+	msg[0].flags = 0;
-+
-+	/* Big Endian for reg addr */
-+	put_unaligned_be24(reg_addr, &wr_data[0]);
-+
-+	msg[0].buf = wr_data;
-+
-+	msg[1].addr = client->addr;
-+	msg[1].len = 4;
-+	msg[1].flags = I2C_M_RD;
-+
-+	msg[1].buf = (u8 *)&rd_data;
-+
-+	ret = i2c_transfer(client->adapter, &msg[0], 2);
-+	if (ret == 2) {
-+		*reg_val = get_unaligned_le32(&rd_data);
-+		return 0;
-+	}
-+
-+	/* If only one message successfully completed, return -EIO */
-+	return ret == 1 ? -EIO : ret;
-+}
-+
-+static int tc956x_pwrctrl_i2c_bulk_write(struct i2c_client *client,
-+					 const struct tc956x_pwrctrl_reg_setting *seq, int len)
-+{
-+	int ret, i;
-+
-+	for (i = 0; i < len; i++) {
-+		ret = tc956x_pwrctrl_i2c_write(client, seq[i].offset, seq[i].val);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int tc956x_pwrctrl_disable_port(struct tc956x_pwrctrl_ctx *ctx,
-+				       enum tc956x_pwrctrl_ports port)
-+{
-+	struct tc956x_pwrctrl_cfg *cfg  = &ctx->cfg[port];
-+	const struct tc956x_pwrctrl_reg_setting *seq;
-+	int ret, len;
-+
-+	if (!cfg->disable_port)
-+		return 0;
-+
-+	if (port == TC956X_DSP1) {
-+		seq = dsp1_pwroff_seq;
-+		len = ARRAY_SIZE(dsp1_pwroff_seq);
-+	} else {
-+		seq = dsp2_pwroff_seq;
-+		len = ARRAY_SIZE(dsp2_pwroff_seq);
-+	}
-+
-+	ret = tc956x_pwrctrl_i2c_bulk_write(ctx->client, seq, len);
-+	if (ret)
-+		return ret;
-+
-+	return tc956x_pwrctrl_i2c_bulk_write(ctx->client,
-+					    common_pwroff_seq, ARRAY_SIZE(common_pwroff_seq));
-+}
-+
-+static int tc956x_pwrctrl_set_l0s_l1_entry_delay(struct tc956x_pwrctrl_ctx *ctx,
-+						 enum tc956x_pwrctrl_ports port, bool is_l1, u32 ns)
-+{
-+	u32 rd_val, units;
-+	int ret;
-+
-+	if (!ns)
-+		return 0;
-+
-+	/* convert to units of 256ns */
-+	units = ns / 256;
-+
-+	if (port == TC956X_ETHERNET) {
-+		ret = tc956x_pwrctrl_i2c_read(ctx->client, TC956X_EMBEDDED_ETH_DELAY, &rd_val);
-+		if (ret)
-+			return ret;
-+
-+		if (is_l1)
-+			rd_val = u32_replace_bits(rd_val, units, TC956X_ETH_L1_DELAY_MASK);
-+		else
-+			rd_val = u32_replace_bits(rd_val, units, TC956X_ETH_L0S_DELAY_MASK);
-+
-+		return tc956x_pwrctrl_i2c_write(ctx->client, TC956X_EMBEDDED_ETH_DELAY, rd_val);
-+	}
-+
-+	ret = tc956x_pwrctrl_i2c_write(ctx->client, TC956X_PORT_SELECT, BIT(port));
-+	if (ret)
-+		return ret;
-+
-+	return tc956x_pwrctrl_i2c_write(ctx->client,
-+				       is_l1 ? TC956X_PORT_L1_DELAY : TC956X_PORT_L0S_DELAY, units);
-+}
-+
-+static int tc956x_pwrctrl_set_tx_amplitude(struct tc956x_pwrctrl_ctx *ctx,
-+					   enum tc956x_pwrctrl_ports port, u32 amp)
-+{
-+	int port_access;
-+
-+	if (amp < TC956X_TX_MARGIN_MIN_VAL)
-+		return 0;
-+
-+	/*  txmargin = (Amp(uV) - 400000) / 3125 */
-+	amp = (amp - TC956X_TX_MARGIN_MIN_VAL) / 3125;
-+
-+	switch (port) {
-+	case TC956X_USP:
-+		port_access = 0x1;
-+		break;
-+	case TC956X_DSP1:
-+		port_access = 0x2;
-+		break;
-+	case TC956X_DSP2:
-+		port_access = 0x8;
-+		break;
-+	default:
-+		return -EINVAL;
-+	};
-+
-+	struct tc956x_pwrctrl_reg_setting tx_amp_seq[] = {
-+		{TC956X_PORT_ACCESS_ENABLE, port_access},
-+		{TC956X_PORT_LANE_ACCESS_ENABLE, 0x3},
-+		{TC956X_TX_MARGIN, amp},
-+	};
-+
-+	return tc956x_pwrctrl_i2c_bulk_write(ctx->client, tx_amp_seq, ARRAY_SIZE(tx_amp_seq));
-+}
-+
-+static int tc956x_pwrctrl_disable_dfe(struct tc956x_pwrctrl_ctx *ctx,
-+				      enum tc956x_pwrctrl_ports port)
-+{
-+	struct tc956x_pwrctrl_cfg *cfg  = &ctx->cfg[port];
-+	int port_access, lane_access = 0x3;
-+	u32 phy_rate = 0x21;
-+
-+	if (!cfg->disable_dfe)
-+		return 0;
-+
-+	switch (port) {
-+	case TC956X_USP:
-+		phy_rate = 0x1;
-+		port_access = 0x1;
-+		break;
-+	case TC956X_DSP1:
-+		port_access = 0x2;
-+		break;
-+	case TC956X_DSP2:
-+		port_access = 0x8;
-+		lane_access = 0x1;
-+		break;
-+	default:
-+		return -EINVAL;
-+	};
-+
-+	struct tc956x_pwrctrl_reg_setting disable_dfe_seq[] = {
-+		{TC956X_PORT_ACCESS_ENABLE, port_access},
-+		{TC956X_PORT_LANE_ACCESS_ENABLE, lane_access},
-+		{TC956X_DFE_ENABLE, 0x0},
-+		{TC956X_DFE_EQ0_MODE, 0x411},
-+		{TC956X_DFE_EQ1_MODE, 0x11},
-+		{TC956X_DFE_EQ2_MODE, 0x11},
-+		{TC956X_DFE_PD_MASK, 0x7},
-+		{TC956X_PHY_RATE_CHANGE_OVERRIDE, 0x10},
-+		{TC956X_PHY_RATE_CHANGE, phy_rate},
-+		{TC956X_PHY_RATE_CHANGE, 0x0},
-+		{TC956X_PHY_RATE_CHANGE_OVERRIDE, 0x0},
-+	};
-+
-+	return tc956x_pwrctrl_i2c_bulk_write(ctx->client,
-+					    disable_dfe_seq, ARRAY_SIZE(disable_dfe_seq));
-+}
-+
-+static int tc956x_pwrctrl_set_nfts(struct tc956x_pwrctrl_ctx *ctx,
-+				   enum tc956x_pwrctrl_ports port, u8 *nfts)
-+{
-+	struct tc956x_pwrctrl_reg_setting nfts_seq[] = {
-+		{TC956X_NFTS_2_5_GT, nfts[0]},
-+		{TC956X_NFTS_5_GT, nfts[1]},
-+	};
-+	int ret;
-+
-+	if (!nfts[0])
-+		return 0;
-+
-+	ret =  tc956x_pwrctrl_i2c_write(ctx->client, TC956X_PORT_SELECT, BIT(port));
-+	if (ret)
-+		return ret;
-+
-+	return tc956x_pwrctrl_i2c_bulk_write(ctx->client, nfts_seq, ARRAY_SIZE(nfts_seq));
-+}
-+
-+static int tc956x_pwrctrl_assert_deassert_reset(struct tc956x_pwrctrl_ctx *ctx, bool deassert)
-+{
-+	int ret, val;
-+
-+	ret = tc956x_pwrctrl_i2c_write(ctx->client, TC956X_GPIO_CONFIG, TC956X_GPIO_MASK);
-+	if (ret)
-+		return ret;
-+
-+	val = deassert ? 0xc : 0;
-+
-+	return tc956x_pwrctrl_i2c_write(ctx->client, TC956X_RESET_GPIO, val);
-+}
-+
-+static int tc956x_pwrctrl_parse_device_dt(struct tc956x_pwrctrl_ctx *ctx, struct device_node *node,
-+					  enum tc956x_pwrctrl_ports port)
-+{
-+	struct tc956x_pwrctrl_cfg *cfg;
-+	int ret;
-+
-+	cfg = &ctx->cfg[port];
-+
-+	/* Disable port if the status of the port is disabled. */
-+	if (!of_device_is_available(node)) {
-+		cfg->disable_port = true;
-+		return 0;
-+	};
-+
-+	ret = of_property_read_u32(node, "aspm-l0s-entry-delay-ns", &cfg->l0s_delay);
-+	if (ret && ret != -EINVAL)
-+		return ret;
-+
-+	ret = of_property_read_u32(node, "aspm-l1-entry-delay-ns", &cfg->l1_delay);
-+	if (ret && ret != -EINVAL)
-+		return ret;
-+
-+	ret = of_property_read_u32(node, "qcom,tx-amplitude-microvolt", &cfg->tx_amp);
-+	if (ret && ret != -EINVAL)
-+		return ret;
-+
-+	ret = of_property_read_u8_array(node, "nfts", cfg->nfts, 2);
-+	if (ret && ret != -EINVAL)
-+		return ret;
-+
-+	cfg->disable_dfe = of_property_read_bool(node, "qcom,no-dfe-support");
-+
-+	return 0;
-+}
-+
-+static void tc956x_pwrctrl_power_off(struct tc956x_pwrctrl_ctx *ctx)
-+{
-+	gpiod_set_value(ctx->reset_gpio, 1);
-+
-+	regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-+}
-+
-+static int tc956x_pwrctrl_bring_up(struct tc956x_pwrctrl_ctx *ctx)
-+{
-+	struct tc956x_pwrctrl_cfg *cfg;
-+	int ret, i;
-+
-+	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-+	if (ret < 0)
-+		return dev_err_probe(ctx->pwrctrl.dev, ret, "cannot enable regulators\n");
-+
-+	gpiod_set_value(ctx->reset_gpio, 0);
-+
-+	 /* wait for the internal osc frequency to stablise */
-+	usleep_range(10000, 10500);
-+
-+	ret = tc956x_pwrctrl_assert_deassert_reset(ctx, false);
-+	if (ret)
-+		goto power_off;
-+
-+	for (i = 0; i < TC956X_MAX; i++) {
-+		cfg = &ctx->cfg[i];
-+		ret = tc956x_pwrctrl_disable_port(ctx, i);
-+		if (ret) {
-+			dev_err(ctx->pwrctrl.dev, "Disabling port failed\n");
-+			goto power_off;
-+		}
-+
-+		ret = tc956x_pwrctrl_set_l0s_l1_entry_delay(ctx, i, false, cfg->l0s_delay);
-+		if (ret) {
-+			dev_err(ctx->pwrctrl.dev, "Setting L0s entry delay failed\n");
-+			goto power_off;
-+		}
-+
-+		ret = tc956x_pwrctrl_set_l0s_l1_entry_delay(ctx, i, true, cfg->l1_delay);
-+		if (ret) {
-+			dev_err(ctx->pwrctrl.dev, "Setting L1 entry delay failed\n");
-+			goto power_off;
-+		}
-+
-+		ret = tc956x_pwrctrl_set_tx_amplitude(ctx, i, cfg->tx_amp);
-+		if (ret) {
-+			dev_err(ctx->pwrctrl.dev, "Setting Tx amplitube failed\n");
-+			goto power_off;
-+		}
-+
-+		ret = tc956x_pwrctrl_set_nfts(ctx, i, cfg->nfts);
-+		if (ret) {
-+			dev_err(ctx->pwrctrl.dev, "Setting nfts failed\n");
-+			goto power_off;
-+		}
-+
-+		ret = tc956x_pwrctrl_disable_dfe(ctx, i);
-+		if (ret) {
-+			dev_err(ctx->pwrctrl.dev, "Disabling DFE failed\n");
-+			goto power_off;
-+		}
-+	}
-+
-+	ret = tc956x_pwrctrl_assert_deassert_reset(ctx, true);
-+	if (!ret)
-+		return 0;
-+
-+power_off:
-+	tc956x_pwrctrl_power_off(ctx);
-+	return ret;
-+}
-+
-+static int tc956x_pwrctrl_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct pci_dev *pci_dev = to_pci_dev(dev->parent);
-+	struct pci_host_bridge *bridge = pci_find_host_bridge(pci_dev->bus);
-+	enum tc956x_pwrctrl_ports port;
-+	struct tc956x_pwrctrl_ctx *ctx;
-+	int ret, addr;
-+
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ret = of_property_read_u32_index(pdev->dev.of_node, "i2c-parent", 1, &addr);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to read i2c-parent property\n");
-+
-+	ctx->adapter = of_find_i2c_adapter_by_node(of_parse_phandle(dev->of_node, "i2c-parent", 0));
-+	of_node_put(dev->of_node);
-+	if (!ctx->adapter)
-+		return dev_err_probe(dev, -EPROBE_DEFER, "Failed to find I2C adapter\n");
-+
-+	ctx->client = i2c_new_dummy_device(ctx->adapter, addr);
-+	if (IS_ERR(ctx->client)) {
-+		dev_err(dev, "Failed to create I2C client\n");
-+		i2c_put_adapter(ctx->adapter);
-+		return PTR_ERR(ctx->client);
-+	}
-+
-+	ctx->supplies[0].supply = "vddc";
-+	ctx->supplies[1].supply = "vdd18";
-+	ctx->supplies[2].supply = "vdd09";
-+	ctx->supplies[3].supply = "vddio1";
-+	ctx->supplies[4].supply = "vddio2";
-+	ctx->supplies[5].supply = "vddio18";
-+	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ctx->supplies), ctx->supplies);
-+	if (ret) {
-+		dev_err_probe(dev, ret,
-+			      "failed to get supply regulator\n");
-+		goto remove_i2c;
-+	}
-+
-+	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(ctx->reset_gpio)) {
-+		ret = dev_err_probe(dev, PTR_ERR(ctx->reset_gpio), "failed to get reset GPIO\n");
-+		goto remove_i2c;
-+	}
-+
-+	pci_pwrctrl_init(&ctx->pwrctrl, dev);
-+
-+	port = TC956X_USP;
-+	ret = tc956x_pwrctrl_parse_device_dt(ctx, pdev->dev.of_node, port);
-+	if (ret) {
-+		dev_err(dev, "failed to parse device tree properties: %d\n", ret);
-+		goto remove_i2c;
-+	}
-+
-+	/*
-+	 * Downstream ports are always children of the upstream port.
-+	 * The first node represents DSP1, the second node represents DSP2, and so on.
-+	 */
-+	for_each_child_of_node_scoped(pdev->dev.of_node, child) {
-+		ret = tc956x_pwrctrl_parse_device_dt(ctx, child, port++);
-+		if (ret)
-+			break;
-+		/* Embedded ethernet device are under DSP3 */
-+		if (port == TC956X_DSP3)
-+			for_each_child_of_node_scoped(child, child1) {
-+				ret = tc956x_pwrctrl_parse_device_dt(ctx, child1, port++);
-+				if (ret)
-+					break;
-+			}
-+	}
-+	if (ret) {
-+		dev_err(dev, "failed to parse device tree properties: %d\n", ret);
-+		goto remove_i2c;
-+	}
-+
-+	if (!pcie_is_link_active(pci_dev) && bridge->ops->stop_link)
-+		bridge->ops->stop_link(pci_dev->bus);
-+
-+	ret = tc956x_pwrctrl_bring_up(ctx);
-+	if (ret)
-+		goto remove_i2c;
-+
-+	if (!pcie_is_link_active(pci_dev) && bridge->ops->start_link) {
-+		ret = bridge->ops->start_link(pci_dev->bus);
-+		if (ret)
-+			goto power_off;
-+	}
-+
-+	ret = devm_pci_pwrctrl_device_set_ready(dev, &ctx->pwrctrl);
-+	if (ret)
-+		goto power_off;
-+
-+	platform_set_drvdata(pdev, ctx);
-+
-+	return 0;
-+
-+power_off:
-+	tc956x_pwrctrl_power_off(ctx);
-+remove_i2c:
-+	i2c_unregister_device(ctx->client);
-+	i2c_put_adapter(ctx->adapter);
-+	return ret;
-+}
-+
-+static void tc956x_pwrctrl_remove(struct platform_device *pdev)
-+{
-+	struct tc956x_pwrctrl_ctx *ctx = platform_get_drvdata(pdev);
-+
-+	tc956x_pwrctrl_power_off(ctx);
-+	i2c_unregister_device(ctx->client);
-+	i2c_put_adapter(ctx->adapter);
-+}
-+
-+static const struct of_device_id tc956x_pwrctrl_of_match[] = {
-+	{ .compatible = "pci1179,0623"},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, tc956x_pwrctrl_of_match);
-+
-+static struct platform_driver tc956x_pwrctrl_driver = {
-+	.driver = {
-+		.name = "pwrctrl-tc956x",
-+		.of_match_table = tc956x_pwrctrl_of_match,
-+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+	},
-+	.probe = tc956x_pwrctrl_probe,
-+	.remove = tc956x_pwrctrl_remove,
-+};
-+module_platform_driver(tc956x_pwrctrl_driver);
-+
-+MODULE_AUTHOR("Krishna chaitanya chundru <quic_krichai@quicinc.com>");
-+MODULE_DESCRIPTION("TC956x power control driver");
-+MODULE_LICENSE("GPL");
+If your driver does not require this, it shouldn't select or depend on it.
+
+Best regards
+Thomas
+
 
 -- 
-2.34.1
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
