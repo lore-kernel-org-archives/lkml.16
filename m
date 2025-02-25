@@ -1,255 +1,208 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141C233981;
-	Tue, 25 Feb 2025 06:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740463682; cv=fail; b=R9E5UaIh0Vm1tVei4TPmk8cxDo9AP7cUmt8cNFPNIFXzH34lZGL/A3eXC3s2C+tcUwhEBB723AaEFQkE2sPFn6GekJYG+JArJ72sLm0C2kzT0SYjjQskhvo1z5HQ3t/oNzmcIB7K8GW1kdngJdGQ1L81z9qqkY0svOecVNjVD6E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740463682; c=relaxed/simple;
-	bh=F3g0y8H2pxam8JVmLZI/67CGQBh6M2WTtu6EMXcmtz0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=TXClOnhyifnT8HZg5RUbvL8sEsht+2WDgZ+z0zaJPyC5G+g5E9mk61gpwYab9fnUXhIqoSgvzhb1X1kOuxDWl8pHrD+k6XN2cauewHYUNlr17W64uMb4vTRZWjxfbV++VrIJYOrCni6TNOgQXBGL+k4Lv3Zudc8PvOugzH59wGU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=WHpC3sHw; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=wId406dm; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WHpC3sHw";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="wId406dm"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P1BlT5001671;
-	Tue, 25 Feb 2025 06:07:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2023-11-20; bh=f4ScejQ7+gE7rDCUFw
-	xa5dNmaUKOY0NWO4N+RMdYVH8=; b=WHpC3sHwdo9vwC+xDgm1g+0Hbt8fF6BWYm
-	xaTV3KaGTkA1HCoJPA+O2MabAi8kstIB5bZS3j97WZ+l8z2LsjSAVIXkQAjnaOVa
-	KlMAJSdjE0AVjn6X1IYF/kblMEvm7Pq6WwPtZh7nvFlxCksBhW14Ko0KDWsWeToL
-	FHD9bCZnh5LbyP7UIFwoljDwq4PMAOkFdMfDwer63dFJ6FJh3TL+IfMiVlrp43gT
-	L1jkAsvvD1sW9XC9+pNarJbjx3E8J6Le9YxQj4uWtVszCA/JVRPZrH2HKkdfQ/+7
-	mi20Eeoueqp2nKybWuE7OD1E+UriCTuyK+AJ9i7ZTnezn54Q3gxw==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 44y560492h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Feb 2025 06:07:17 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 51P5UxLG002799;
-	Tue, 25 Feb 2025 06:07:17 GMT
-Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2041.outbound.protection.outlook.com [104.47.57.41])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 44y518xvyb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 25 Feb 2025 06:07:17 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=W3Y3k4Cq20cN3Rw5SUbFdlCj6RDrGRoZECyAe1R0i9kb8uDfV+NZb6kJcQh//scxtfE3SIu3SB7VGLR27ZO5eyAo2JtglbrwrAWNS0Jidc5hPzyMkcXGTqihlrFdwAGH0cX4xRQMCLIygoEbqwdCn+I/VWXd2mB0rzMVXJ3hgAev34ZO6rPH13Pz0eg6Lzr1agpuvpzuD3EkTMLYLdRNF/Yj+AOBmYcRG9D3qZQQd23HlGZBHEqPvFLJ1ReK0H1XRJyfU6A60xNGWoYzPFL+erBjNEfWPKYHbxqP0NMuEiARN3iazuqRvW8ww5pFW63Pv4vWZr5fhG+fsxharuSDgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=f4ScejQ7+gE7rDCUFwxa5dNmaUKOY0NWO4N+RMdYVH8=;
- b=VRHyaoe6h5In1znsRaMSj1/uybkvs99b6f7fpxOYn/Pcoh1Oh639JUdEJ3HgMwaN8TADS9Cqu5c9ip0HBPVwqW/AKI9LqO/qHiJflRf854atocnxqdk3fkkiT22xE40RTnHydcu9TmSNOxSlCFjVzjFtgQV6c/SU9zGCGkvP0T77PMgGwhZWs1PQPaHpPmpAzntdpU1xVZ+bx0zmIivtzwOS9elIHFkR3I4QXnxrRWdeTf8vCL3XmXYLSxVQKad7xrpcD0CH3zHY21/E2Ct28niSMje6GO7rjqtdcyNnLzSQuuX+ODBddUpFTQZl7bsiIfGpPfEXVBdCKRjTr3MS6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f4ScejQ7+gE7rDCUFwxa5dNmaUKOY0NWO4N+RMdYVH8=;
- b=wId406dm/kJc83fBZvTKKegX86a7gojbEUH/olTPY7o9xTSt/tom4vjfxw5RQYC+TvOr1jDKwqbQxSEKQqVQ7n8PGnpi0HUyCbG5mQmoqZYaAccOnBLDjPfHvAxB+qhVzbXyFo2oe33wgee78OhRmIOvaOc5Z7St6P+iYv8fnXM=
-Received: from MN2PR10MB4112.namprd10.prod.outlook.com (2603:10b6:208:11e::33)
- by DS0PR10MB6031.namprd10.prod.outlook.com (2603:10b6:8:cd::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.21; Tue, 25 Feb
- 2025 06:07:13 +0000
-Received: from MN2PR10MB4112.namprd10.prod.outlook.com
- ([fe80::3256:3c8c:73a9:5b9c]) by MN2PR10MB4112.namprd10.prod.outlook.com
- ([fe80::3256:3c8c:73a9:5b9c%7]) with mapi id 15.20.8466.016; Tue, 25 Feb 2025
- 06:07:13 +0000
-Date: Tue, 25 Feb 2025 06:07:11 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: jeffxu@chromium.org
-Cc: akpm@linux-foundation.org, keescook@chromium.org, jannh@google.com,
-        torvalds@linux-foundation.org, vbabka@suse.cz, Liam.Howlett@oracle.com,
-        adhemerval.zanella@linaro.org, oleg@redhat.com, avagin@gmail.com,
-        benjamin@sipsolutions.net, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-mm@kvack.org,
-        jorgelo@chromium.org, sroettger@google.com, hch@lst.de,
-        ojeda@kernel.org, thomas.weissschuh@linutronix.de, adobriyan@gmail.com,
-        johannes@sipsolutions.net, pedro.falcato@gmail.com, hca@linux.ibm.com,
-        willy@infradead.org, anna-maria@linutronix.de, mark.rutland@arm.com,
-        linus.walleij@linaro.org, Jason@zx2c4.com, deller@gmx.de,
-        rdunlap@infradead.org, davem@davemloft.net, peterx@redhat.com,
-        f.fainelli@gmail.com, gerg@kernel.org, dave.hansen@linux.intel.com,
-        mingo@kernel.org, ardb@kernel.org, mhocko@suse.com,
-        42.hyeyoo@gmail.com, peterz@infradead.org, ardb@google.com,
-        enh@google.com, rientjes@google.com, groeck@chromium.org,
-        mpe@ellerman.id.au, aleksandr.mikhalitsyn@canonical.com,
-        mike.rapoport@gmail.com
-Subject: Re: [PATCH v6 7/7] mseal, system mappings: update mseal.rst
-Message-ID: <7e1bfbf2-3115-408d-a40c-ae51a7ffffe4@lucifer.local>
-References: <20250224174513.3600914-1-jeffxu@google.com>
- <20250224174513.3600914-8-jeffxu@google.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250224174513.3600914-8-jeffxu@google.com>
-X-ClientProxiedBy: LO4P302CA0035.GBRP302.PROD.OUTLOOK.COM
- (2603:10a6:600:317::11) To MN2PR10MB4112.namprd10.prod.outlook.com
- (2603:10b6:208:11e::33)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2242512CD
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 06:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740463732; cv=none; b=MRPf8gnIUGHQU49QA4OxFFlRTlhu6j/ehs834zQ7QfqhpTHPd066o2Zjo48WqLWaX2N4TUbnZvHuR3jUm8ZlOc9RSL/N7oc3DcAFIwMhSe+H7DTYF3Q2Dmq0Fs/8R0GIFg7dg6Y7YcJepDs8uXGYU6lHmcIzrEfIcMZW92daZGU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740463732; c=relaxed/simple;
+	bh=QRwPOIkwUosvoITQm+whjqnlHGYKUY+PhOqgRUa1iEg=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Jo87sJURbLLlYGfhrvYjOUz4R3wExLu5wNXCWxnz4XrB53F/qG7oUH/Fv9EF/ZKrWkhrNwmS5wJcSuc4wAtCJ3A0HlUC71Bu0uU20oTeRykv0nyIHQEZZArBserxD5zjtWbWEwapM6gCkU4K/0j0V34nLSYw9ffv2WbYrO7RZvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4Z26Xl21DTz21nvV;
+	Tue, 25 Feb 2025 14:05:43 +0800 (CST)
+Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5F8381402CA;
+	Tue, 25 Feb 2025 14:08:47 +0800 (CST)
+Received: from [10.174.178.247] (10.174.178.247) by
+ dggpemf500002.china.huawei.com (7.185.36.57) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 25 Feb 2025 14:08:46 +0800
+Subject: Re: [PATCH v11 3/4] arm64: topology: Support SMT control on ACPI
+ based system
+To: Yicong Yang <yangyicong@huawei.com>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <sudeep.holla@arm.com>, <tglx@linutronix.de>,
+	<peterz@infradead.org>, <mpe@ellerman.id.au>,
+	<linux-arm-kernel@lists.infradead.org>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <pierre.gondois@arm.com>,
+	<dietmar.eggemann@arm.com>
+CC: <linuxppc-dev@lists.ozlabs.org>, <x86@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <morten.rasmussen@arm.com>,
+	<msuchanek@suse.de>, <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
+	<jonathan.cameron@huawei.com>, <prime.zeng@hisilicon.com>,
+	<linuxarm@huawei.com>, <yangyicong@hisilicon.com>, <xuwei5@huawei.com>,
+	<sshegde@linux.ibm.com>
+References: <20250218141018.18082-1-yangyicong@huawei.com>
+ <20250218141018.18082-4-yangyicong@huawei.com>
+From: Hanjun Guo <guohanjun@huawei.com>
+Message-ID: <92193a09-271e-895e-f77f-d3952bdfdf49@huawei.com>
+Date: Tue, 25 Feb 2025 14:08:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN2PR10MB4112:EE_|DS0PR10MB6031:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0c902c7f-9ee7-471e-9db2-08dd5562a5d3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|7416014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?uujWXKfejDJnKGsv8znXjjOpigOiqPfMk9NRqzlKZ2NKGR2Z7vuz9HsG/EIM?=
- =?us-ascii?Q?GlxvCctwzfoNOibVR7n96Fo6jl0f/k4ZuTAAMN19V18ocaG6Ppsij1LzR3XP?=
- =?us-ascii?Q?8TZNBVEeG1urSRHOExalA1aWolGVl27N8jWbZlSGDXkhh3px+P+eN1UszFEo?=
- =?us-ascii?Q?ldH1LAUa8ybVCv+3PbFju1ih6bo+xs5eW0ccpXtp0vzhSFj+sOsNLNo9laP3?=
- =?us-ascii?Q?PTEJAHo1Qp92LXNbHyYzrB+5vOx2UcdL2WbgEaIZvmJcklDRIBtT+gr7jd7j?=
- =?us-ascii?Q?NjZp50l312VM4XOfD6klsQhtpoLb175HNpb9X9sDjp9PKAHFP+/l80rMys8E?=
- =?us-ascii?Q?aE/iWIq4LMG0G/vVPRvpmWcV2ApISIRne6RCEKJ3F2p1TMmMXuIpXLdnxb+E?=
- =?us-ascii?Q?X6RxQADa7QXa09Wcw2EBKXBmp6dYiQI6yvPM3EvoYZQfNZsU49k5XNP28yVA?=
- =?us-ascii?Q?V7wSWgeSR56I+hhQZchmCy+yzGYDHToL2PIg+I9mkbWB01XALPPofcQwsz4e?=
- =?us-ascii?Q?+0sWmkyQ7csB4yIQNhZXdHcZwYJt9TsMJFHRmMzOv5+YVQMhIUbLImo1n836?=
- =?us-ascii?Q?90JMveH2PUqBeanmTUsQotjbS/+NCj6UvbbtJz6UXNRrBblrI1/Q3SnoAasq?=
- =?us-ascii?Q?faSfLTjUJjLAzYWi1dh85rp7jepYtRlM5TEX+gfShu7n3s/2jraqJ0RWuWSF?=
- =?us-ascii?Q?XLfcwq/DMpY7kqOOqiOe7V/tiHxTDY9W+3+dNRSxaM9AsMqAirGAlwkHGrdv?=
- =?us-ascii?Q?mGJD3FDJX7kqteKtCr5En+NkxhJ985pdorcjKbdDxh7sI5tGQcOtE/AGBKFy?=
- =?us-ascii?Q?5vxwq5fvuumz2Kw+bOr/LWfb0R3l7TCpd+0c0bx0F4XpyFNR62enlqgYVDiG?=
- =?us-ascii?Q?IAZQ78I2LSRyjB9QYPjtH/C2rUaGNob4CwkMNPwzLy7DGji74NARoyzy85JU?=
- =?us-ascii?Q?WQbuQNN96AaKc6d4XWhwJ2L3EqHyOFzfF5GOZzNpFkmgKZvzMLlIDnAlby0N?=
- =?us-ascii?Q?j/jg4JOhg+T4TMcQ0eTmD35a+pRRyI5gNnG2caR49r9h3BXKB62Ha4t1Sxdq?=
- =?us-ascii?Q?xIbl1PRz6UjhPUvQ1WQy2ujuA0HznPZqxLi/oCEk24f3etRTyPjAzAJB8095?=
- =?us-ascii?Q?Qd6PAIRFtR5SYWrabKxbbMQJ+yNFwzrzREjJQOE82eIZCl/dOrISmefkCSOh?=
- =?us-ascii?Q?KB/aLwacZyDMDNtj9JL67fNfIrqt9FE/bbziEJpu69gHwmqPqOA676ncV03o?=
- =?us-ascii?Q?KQoMFDH4bM2yHQ1XKGM07wodPuKEW4J/FZjZ5AXOgg2YVL5nDPBZntuvilIq?=
- =?us-ascii?Q?Z3puZB8ZY3xuiCsXlOcyQA3cCKJ0UrGDSknD47r5ySO0NRDKPEL3fEqa5pH3?=
- =?us-ascii?Q?d/ISzkaj9tiABNdqYUQjZjY5WiQX?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR10MB4112.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9wx6EB52LsfYqXGGsCcVQqnWioWWeVHvj2IrJBl5xtMIjyTLE1VNcut5A1nH?=
- =?us-ascii?Q?N2xlrWnpfHNrgFLXAi0VNg7GjI8QtFC1BJSvQi+blDqJJTjMlWvjfAlKpZTo?=
- =?us-ascii?Q?JmGEOUA12gRAlp2oNEmuKULCPeOurn3nEY1k3KgT9PYz1Yx4jK43WwhEpZrV?=
- =?us-ascii?Q?h6IWrKTr3tLBlcKa0RGKXycVofud8MsCKCv9euu24s8qAXXo3BQ1XkDand98?=
- =?us-ascii?Q?PsxRqSJG7Df9bCmuHtMnvTiFc2I0cRYV3xZYsPuX8qWY19wOTiPuLLJvAeiW?=
- =?us-ascii?Q?t3h4vnJ0jLGIsuiBF5DtMYNswA22es6lTw8UYpRPSLgMJVuj4zsOzKy4Qa1r?=
- =?us-ascii?Q?ISGP99TwfRvu+GKWrXNVQ7fMak0bd/6m5UAy/ERxyw7mmcSYgZe2KWy0EU6v?=
- =?us-ascii?Q?h67ml354NMPZxXed881JCdbsP/vjxsAwXUvvoOt4JAWS26UgVRgB+32r6Uf/?=
- =?us-ascii?Q?30iPdBRm8Vx+T/m/6wrwdYv9Jqiaf98MLt5ezrrdHNiaaoIlFf+75BjYnU7i?=
- =?us-ascii?Q?lcFqV3l+BWlFfxCgElWbwVqRDXVQw4dRQo6af+zJo/9vLd8iVSI3hcivaeKF?=
- =?us-ascii?Q?mio6hNU4snnkRHWKBefl2ubTkFU+TDF8RDxjzUlBf5uf1Tz1YTKrr9sfsXsP?=
- =?us-ascii?Q?keHG+SQR87sGff/Q/SUqefgPU4vkXyrG0lxNd9+13AbgAnN4ZKpceHypUAqi?=
- =?us-ascii?Q?HJAM3iJYYwu3miW0GAkol9iHu9+2tiSxkGJvHjrc+6z5A0xCyOEc0rYKEcpt?=
- =?us-ascii?Q?n/RxaRlH6yHYJ4NAsSDU51qxw8fqH/89tAR29h690EBYqMcvCdRBXaIQEPLS?=
- =?us-ascii?Q?9LtBxdMDiyVMv8FbyPlcMvbWcxMKoch+WrRMZHVr4lPU871QK4JNpNBULXkB?=
- =?us-ascii?Q?wyfG/7MlhTIW3CIUrQS8vaOcTIyh9B/HCqjIG513ARwCyRBO+73sM8IRt9z9?=
- =?us-ascii?Q?cay6Pa5aB4YYOUdJbUHTV2tz6+RFs48VXxMicB4cv9pk26yl90pDXXwP02MP?=
- =?us-ascii?Q?xRfAReg6kFgnUU5+mTIm2Pk7QbqIfhLcgE1qA1aBKzXofiBcIkjK4ZtcvU5b?=
- =?us-ascii?Q?UC5FinyaRFOccqT3ZwLfkGeVBdWxsjKPdY2DwfCBuPQQaaeKUh7ZwvaZLeem?=
- =?us-ascii?Q?gGyE8uXcq0KXCckw0VnldQ0mHmCTFkTl+Nk+VbplULaDbhKYQrt4X5JTuG+T?=
- =?us-ascii?Q?b49/biWab3K7nPOE4gb8/2Ofwus5YkQIPRgPCLaa8GGBSrzE824fyshmCtdT?=
- =?us-ascii?Q?mmMQLUb1MYO0/sQwYZfmXA9KCxH6gG2uQWUEvVuW5CtJP8A+tQHgDFYNfZZz?=
- =?us-ascii?Q?88yOz+vyeNi6TPgLqI8C11iwtSIrrWObJYOnyWnct5cxyFNy1kIdFoeWz+/I?=
- =?us-ascii?Q?4qpNaruELEyraa7PymOCiF1nRr+WXyBnDXXCeLy+A5Dixi5wsc2/ETq9TopJ?=
- =?us-ascii?Q?Vbuebd5JfiH94we6+MMKnfoT2nCTgtAGDwXShfTT94+xEPlTmHALxGwKeC1+?=
- =?us-ascii?Q?iJVrW2WxAj/r1Gzytt/PDEg2j0TOOf3jKTNnjUE8u0j9CrUIvYbQoVFn+2pM?=
- =?us-ascii?Q?R09eyGWx3LiyC3MZNaFwzGGtBy29kEMzknrz1dIeazRGDL/Ep2cF4WS+7TdX?=
- =?us-ascii?Q?Qg=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	sFVHa2iWLRi04qShGrSardTnzReeLepXDJmvOdCC5d9wKN/gJYaGLczOh1bSolpRR4gXC6XCz6wWTj4/Ad2/zihcdX5kF+7Ku2xwMX83U3pnF1cpxe1lVxlLv1qlPeWTr1vlBIDgC07CJ6Zpxp/CZ2Zk5sQzNyvU+GNN6CSwLkbRdT7nhhdAnaNAL+6+1z5LMCVH6CxF++imiPgV/5A7mAjgMd67Jv6HhNistNtBYUJLgAU0LOdfQumPudQ3Sn/JikNTsaT7Re7+msLFw0eRJrmSfUq/JlfLHhdGwlKEO6R/sw7z+2Z2CYpOH/v/FSHKSvTsePjoxfBtkYtHwxRDJPVr/fZd4tKxBCL5ctxuK2uIZkxtou5Q3S4YYny6lA6wWV461BM/mq2pYICn2OxCBXyn4juQXZ0KQOrgULEJbieI+xC2wEiu0KsG7FEOsX5Qly1Wzq3q+AgWmQu4EGv10E3j4z4oZ4eUc5AvKgYOC9YzlWuACh6ycSoW7G0QodCHAmEWTkSAqhD2nPJeZZC3WJmQ164ScDks4dvDCKaOvAojfYtDVkYZHHeLxvXHDdvFedCHIweoUndQzSLwg0ETETgJMwSr3YmTgZe8+ROYy2A=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c902c7f-9ee7-471e-9db2-08dd5562a5d3
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR10MB4112.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2025 06:07:13.6900
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2Z/58UwroQ75zYRlNWdujK0rXejwAEzQZdN5FceMuKb+6bA4bz1Rzep+PZaDBKMup6Ihfs5PEm7d2qka7/g8rguauNYz4lqc8/ExmVEOqVk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB6031
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-02-25_02,2025-02-24_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- mlxscore=0 adultscore=0 bulkscore=0 phishscore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2502100000 definitions=main-2502250038
-X-Proofpoint-GUID: zIjjpKq5dVCMFpkq7mWUFLhOpe8LXC7K
-X-Proofpoint-ORIG-GUID: zIjjpKq5dVCMFpkq7mWUFLhOpe8LXC7K
+In-Reply-To: <20250218141018.18082-4-yangyicong@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemf500002.china.huawei.com (7.185.36.57)
 
-On Mon, Feb 24, 2025 at 05:45:13PM +0000, jeffxu@chromium.org wrote:
-> From: Jeff Xu <jeffxu@chromium.org>
->
-> Update memory sealing documentation to include details about system
-> mappings.
->
-> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
+On 2025/2/18 22:10, Yicong Yang wrote:
+> From: Yicong Yang <yangyicong@hisilicon.com>
+> 
+> For ACPI we'll build the topology from PPTT and we cannot directly
+> get the SMT number of each core. Instead using a temporary xarray
+> to record the heterogeneous information (from ACPI_PPTT_ACPI_IDENTICAL)
+> and SMT information of the first core in its heterogeneous CPU cluster
+> when building the topology. Then we can know the largest SMT number
+> in the system. If a homogeneous system's using ACPI 6.2 or later,
+> all the CPUs should be under the root node of PPTT. There'll be
+> only one entry in the xarray and all the CPUs in the system will
+> be assumed identical.
+> 
+> The core's SMT control provides two interface to the users [1]:
+> 1) enable/disable SMT by writing on/off
+> 2) enable/disable SMT by writing thread number 1/max_thread_number
+> 
+> If a system have more than one SMT thread number the 2) may
+> not handle it well, since there're multiple thread numbers in the
+> system and 2) only accept 1/max_thread_number. So issue a warning
+> to notify the users if such system detected.
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/ABI/testing/sysfs-devices-system-cpu#n542
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 > ---
->  Documentation/userspace-api/mseal.rst | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/Documentation/userspace-api/mseal.rst b/Documentation/userspace-api/mseal.rst
-> index 41102f74c5e2..10147281bf2d 100644
-> --- a/Documentation/userspace-api/mseal.rst
-> +++ b/Documentation/userspace-api/mseal.rst
-> @@ -130,6 +130,13 @@ Use cases
->
->  - Chrome browser: protect some security sensitive data structures.
->
-> +- System mappings:
-> +  If supported by an architecture (via CONFIG_ARCH_HAS_MSEAL_SYSTEM_MAPPINGS),
-> +  the CONFIG_MSEAL_SYSTEM_MAPPINGS seals system mappings, e.g. vdso, vvar,
-> +  uprobes, sigpage, vectors, etc. CHECKPOINT_RESTORE, UML, gVisor, rr are
-> +  known to relocate or unmap system mapping, therefore this config can't be
-> +  enabled universally.
-
-Thanks for adding this.
-
-Similar comments to the Kconfig update - you are listing features that do not
-exist yet, please just list what you're doing, specifically, and avoid the vague
-'etc.', we don't need to be vague.
-
-As per the Kconfig comment - you need to be a lot more clear, I think you're
-duplicating the text from there to here, so again I suggest something like:
-
-WARNING: This feature breaks programs which rely on relocating or
-         unmapping system mappings.
-
-         Known broken software at the time of writing includes
-         CHECKPOINT_RESTORE, UML, gVisor and rr.
-
-You also seem to be writing very little here, it's a documentation page, you can
-be as verbose as you like :)
-
-You really need to add some more detail here in general - you aren't explaining
-why people would want to enable this, what you're mitigating, etc. from that you
-explain _why_ it doesn't work for some things.
-
-You're also not mentioning architectural limitations here, for instance that you
-can only do this on arches that don't require VDSO relocation and listing
-known-good arches.
-
-This is a documentation file, you can go wild :) the more information here the
-better.
-
-WARNING
-=======
-
+>   arch/arm64/kernel/topology.c | 66 ++++++++++++++++++++++++++++++++++++
+>   1 file changed, 66 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
+> index 1a2c72f3e7f8..6eba1ac091ee 100644
+> --- a/arch/arm64/kernel/topology.c
+> +++ b/arch/arm64/kernel/topology.c
+> @@ -15,8 +15,10 @@
+>   #include <linux/arch_topology.h>
+>   #include <linux/cacheinfo.h>
+>   #include <linux/cpufreq.h>
+> +#include <linux/cpu_smt.h>
+>   #include <linux/init.h>
+>   #include <linux/percpu.h>
+> +#include <linux/xarray.h>
+>   
+>   #include <asm/cpu.h>
+>   #include <asm/cputype.h>
+> @@ -37,17 +39,28 @@ static bool __init acpi_cpu_is_threaded(int cpu)
+>   	return !!is_threaded;
+>   }
+>   
+> +struct cpu_smt_info {
+> +	unsigned int thread_num;
+> +	int core_id;
+> +};
 > +
->  When not to use mseal
->  =====================
->  Applications can apply sealing to any virtual memory region from userspace,
-> --
-> 2.48.1.601.g30ceb7b040-goog
->
+>   /*
+>    * Propagate the topology information of the processor_topology_node tree to the
+>    * cpu_topology array.
+>    */
+>   int __init parse_acpi_topology(void)
+>   {
+> +	unsigned int max_smt_thread_num = 0;
+> +	struct cpu_smt_info *entry;
+> +	struct xarray hetero_cpu;
+> +	unsigned long hetero_id;
+>   	int cpu, topology_id;
+>   
+>   	if (acpi_disabled)
+>   		return 0;
+>   
+> +	xa_init(&hetero_cpu);
+> +
+>   	for_each_possible_cpu(cpu) {
+>   		topology_id = find_acpi_cpu_topology(cpu, 0);
+>   		if (topology_id < 0)
+> @@ -57,6 +70,34 @@ int __init parse_acpi_topology(void)
+>   			cpu_topology[cpu].thread_id = topology_id;
+>   			topology_id = find_acpi_cpu_topology(cpu, 1);
+>   			cpu_topology[cpu].core_id   = topology_id;
+> +
+> +			/*
+> +			 * In the PPTT, CPUs below a node with the 'identical
+> +			 * implementation' flag have the same number of threads.
+> +			 * Count the number of threads for only one CPU (i.e.
+> +			 * one core_id) among those with the same hetero_id.
+> +			 * See the comment of find_acpi_cpu_topology_hetero_id()
+> +			 * for more details.
+> +			 *
+> +			 * One entry is created for each node having:
+> +			 * - the 'identical implementation' flag
+> +			 * - its parent not having the flag
+> +			 */
+> +			hetero_id = find_acpi_cpu_topology_hetero_id(cpu);
+> +			entry = xa_load(&hetero_cpu, hetero_id);
+> +			if (!entry) {
+> +				entry = kzalloc(sizeof(*entry), GFP_KERNEL);
+> +				WARN_ON_ONCE(!entry);
+> +
+> +				if (entry) {
+> +					entry->core_id = topology_id;
+> +					entry->thread_num = 1;
+> +					xa_store(&hetero_cpu, hetero_id,
+> +						 entry, GFP_KERNEL);
+> +				}
+> +			} else if (entry->core_id == topology_id) {
+> +				entry->thread_num++;
+> +			}
+>   		} else {
+>   			cpu_topology[cpu].thread_id  = -1;
+>   			cpu_topology[cpu].core_id    = topology_id;
+> @@ -67,6 +108,31 @@ int __init parse_acpi_topology(void)
+>   		cpu_topology[cpu].package_id = topology_id;
+>   	}
+>   
+> +	/*
+> +	 * This should be a short loop depending on the number of heterogeneous
+> +	 * CPU clusters. Typically on a homogeneous system there's only one
+> +	 * entry in the XArray.
+> +	 */
+> +	xa_for_each(&hetero_cpu, hetero_id, entry) {
+> +		if (entry->thread_num != max_smt_thread_num && max_smt_thread_num)
+> +			pr_warn_once("Heterogeneous SMT topology is partly supported by SMT control\n");
+> +
+> +		max_smt_thread_num = max(max_smt_thread_num, entry->thread_num);
+> +		xa_erase(&hetero_cpu, hetero_id);
+> +		kfree(entry);
+> +	}
+> +
+> +	/*
+> +	 * Notify the CPU framework of the SMT support. Initialize the
+> +	 * max_smt_thread_num to 1 if no SMT support detected. A thread
+> +	 * number of 1 can be handled by the framework so we don't need
+> +	 * to check max_smt_thread_num to see we support SMT or not.
+> +	 */
+> +	if (!max_smt_thread_num)
+> +		max_smt_thread_num = 1;
+> +
+> +	cpu_smt_set_num_threads(max_smt_thread_num, max_smt_thread_num);
+> +	xa_destroy(&hetero_cpu);
+>   	return 0;
+>   }
+>   #endif
+
+Looks good to me,
+
+Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+
+Thanks
+Hanjun
