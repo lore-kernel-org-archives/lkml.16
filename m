@@ -1,255 +1,213 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC5915E96
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 00:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5FE328E3F
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 00:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740444443; cv=none; b=plgWeRaEs2a2QqUjWQo5PtiWzqlMzrfEntjHFf0rumzVLX51+I9kevW6OBmFtSgoIA4XFBzN0wODyClQ7ObJeCIGG7anruK36j3oHqqJLF8u7mSIVlmUgbJ+Lh75qFPaL1xBO/JQ/TLNo18kTIybR/Aa/sdarWBvdgyV38Sbqqc=
+	t=1740444445; cv=none; b=bMY1TuVkMoPhAGzN0QDKJAwpWxRRKzB2pEyC+wnK/gRMRzhWESif5WIdLtQQp7nmmJOe9yga+vM2nX76rmwRqBMphKEsLX2lz8w9Ls6eCXwHyvytTe/e4a9D657mqNMOpxfphROcQawJMXxm0gISdtEND0tHo2iqkbYECAA1hMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740444443; c=relaxed/simple;
-	bh=9VyoE5rqBPdWDwAYMqaw+sWflGZ3yC3uju/Z14kM9NY=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Bx1mD9qvGUsdMrfSs+liniPHtbV/y9MBPxZZPRAIorpZl9pTVLMWOJnxXvNbUIGpQ9+U/Dj7bxjxgyB6hH1bjjynNrHqMRq2M+Jc5VojZg+5R+Umm97HzqTw0i/xjl404gMXH1/k7FAtwN5UiwqMjUCnu9uVggZJ1nUxTY2BmqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jmattson.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ue3Zy9F4; arc=none smtp.client-ip=209.85.216.73
+	s=arc-20240116; t=1740444445; c=relaxed/simple;
+	bh=iHJaUeFoAWphLfCjsYML3X/VoIYmwlw5kToWD4VsQ0k=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=i8caD1L+gweynbLVyd1at06f1mYQT0c8ieNpr7Ze/eaB7E5Y27JDyf0xl1C3FnKUV9p1ooOvdNaDBOhP+gL1uHj4OBJHaxNlKrOh7lnvSCfsjPXBXa/oV1wM/ZuWmnhHJmImW7UoMUIRIlsOfpSqhSEFzLOo8IUBh/tc2PLT07o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vannapurve.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CFwYHChJ; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jmattson.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vannapurve.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ue3Zy9F4"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fce2954a10so13886315a91.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 16:47:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CFwYHChJ"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-220e62c4fc2so110165795ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Feb 2025 16:47:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740444441; x=1741049241; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=LLn0ouDWavOo+k23cGEFyx3GWlevLRlbuFWAFagmycY=;
-        b=ue3Zy9F4/lVYxCTqL1P2UsOLfyLvZMzv2LJENCSTrfWocqFa5PNhSNEwvB5xsOavbr
-         mo4TOHMJa3zA9pcVVsRUe7Ve06Fepwqv16m2IaMRMcbjxoAl9OdsF9KoWNQmBH6Xe9iq
-         8IGUd0xDz8PFqqwsq+mYo2Wi3G3TUSiaMqO9A7dTCu0jn2gM3SUO1gVj4veXuKMAv1M3
-         rcmbXibEDBbVUNgyHnvDgUj4FZUKNZ4XnfRP1iot+7pyQnWANIbd4p0UvvJJxdMhQUqv
-         AjBxXVH37wiBRGGHs59fnSNv7MKAW9wlWug7ogJVbWwuqJO5lafwa3VPpec0MfwC3mQd
-         X62w==
+        d=google.com; s=20230601; t=1740444443; x=1741049243; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GSwXzpaQg6jWvjSpCxDF7Wv8BuKNQfehCGdAdnzxu5w=;
+        b=CFwYHChJivUDw99FvIi6zE9G4hyehkakbESp47UREFTbSfsXdraG/ASxJhD+Lmz9ui
+         fyTMFKuL8hTJovo71INfofVREOnhnbFyQG71xBzQoQO1B2PSIyueS8teqeegows0qAc9
+         nVx2+1IQ8lW7KOPudreKfCpFsoHgioNqXDWlEfFjBoIWD36izxwiKHmufqw8+r0TivEp
+         jRcyWzD+bOksIctq8MRnMduI4ks5PCKlv+Up5/Mam3g667WzpjkxOu+i/UOeg8V+/53b
+         bNbXzpCuHXST4pdQdSrsOGMaCQZ2tWlEBOhEdtc/pOHKMKxC+T/6QD+p3rYvSjP7tb0D
+         kBhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740444441; x=1741049241;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LLn0ouDWavOo+k23cGEFyx3GWlevLRlbuFWAFagmycY=;
-        b=wGikZJG4bcEz+UUxREe+f03zx6C/H9WL8qJ+DSUsNsU4MPS6ocEUoqdnBenK6v3xyU
-         ZMtJNQ+D809+q50xTtGuXp2oZY+bJgD0sOCFs7W1S6ZkHY9MYAI8uiERwFTwtVaBj3s6
-         +g6m3fpV3olBAI/fRICmrGF5ETA/p052L5XMkMrFHoqLsaXKaAb6ycDFUDvy/CQYSs3O
-         Sz7YwIdfge6xbMDOsUpfLxpwOL4tmc2FHY7jMGaFCYIh0kMPpkSIVw3icK2C2CtvLfQO
-         cFiT02eMUPgIymPMnngO41NafNDawyRHWgpx/O/HNvY3k5DuakwFZ1rLfDFVZ1Xhdnfw
-         95XQ==
-X-Gm-Message-State: AOJu0YxUBsAUoA4wMxqr5luhQaJh6BqCXX9Kp4Dyq8lI2d31LvmZKGG2
-	5+LkB4kPctm62pqh2h8A9UUmx0+4LO5GHrBWXGORazrbQ2OiQfJHYLkNE2pHGNFLB/ClWEhHX/V
-	ge2YDfEcFbMVjQCsvB4S64GAzv6aROFl8XpzCqQiCb1+ktPaRAwRojxr3y54w95mdJWIVGXy7d0
-	5d6umCBHgoXv9XMx9AW6OlKfdHHpzexhlt7mIGJ8S85HIQpPNklfo=
-X-Google-Smtp-Source: AGHT+IGjTB7OqTkNMNzcfyv0LdWUXTWhbdIyRa+cJKyKRwTrcEIT6xduBck8PQaOscdeB6AJZA6OXuOCQQ8MTQ==
-X-Received: from pjbqx15.prod.google.com ([2002:a17:90b:3e4f:b0:2fc:3022:36b8])
- (user=jmattson job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:3b83:b0:2f6:d266:f45c with SMTP id 98e67ed59e1d1-2fce868c637mr26094804a91.2.1740444440607;
- Mon, 24 Feb 2025 16:47:20 -0800 (PST)
-Date: Mon, 24 Feb 2025 16:45:45 -0800
+        d=1e100.net; s=20230601; t=1740444443; x=1741049243;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GSwXzpaQg6jWvjSpCxDF7Wv8BuKNQfehCGdAdnzxu5w=;
+        b=OTB85vT6CTFJ0r0QgLB9mUZE+7gVeEje/gyzfZ8lLfc6f45rb8lnPtJqHA0ylKRzm0
+         nQL3iGjEv90ByBQ+3/eMDkjo2SHv9GiPYhJYxjmq7hBcUGZ3VdCJufuBBKpvQ1P5aBBb
+         qs7EBNALuGs5tKA2QJMVC3yI0BJpbFLI7DPZFCzo5f9OK+Q8z+3V0hTU/y5TDiv0OIjQ
+         IIo3JS/u95DYQFq/tk+Hon73XxJ4hksOqrYQrU4Af9nxP3hslPnIaVj8KVzRhz2Asouk
+         LnFmbPJpmj90zs8yCTA3WnRIw4tyWGQQjaOVNr5xhWjeZOp+gdHB4WnsIC1TdWmxBzru
+         5VVA==
+X-Forwarded-Encrypted: i=1; AJvYcCX/NUA9sT6mm7rEGHrlYKENRprUnTUsTjI/4T4fzueHZFg10E2ibOt8IRCpOTzutL+jaP2JBzlzf6PRG0o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBP2soXKsbzHRH+3F5uVG47bXvW/W/q/DKm3il8SNmNtpoiRab
+	G+8bycyfI/iix8uFbEM+S0/q4eNWSiTg1+uupDUb7rbclbnxq5Rzw9v1tjafKPMxD7Dss07KBI1
+	2w7UUBxdJEl1sZfFxZw==
+X-Google-Smtp-Source: AGHT+IENsRnPp7jn8IuysVjH0YnI4eclJId+egEJWA+BbEYzZDe3tiL9fs29LuBPMsnBKu2yRyxTuOgeH23qbt74
+X-Received: from plfn11.prod.google.com ([2002:a17:902:e54b:b0:21f:4ecc:af8d])
+ (user=vannapurve job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:902:f705:b0:220:d257:cdbd with SMTP id d9443c01a7336-2219ffbf52emr272898735ad.48.1740444442957;
+ Mon, 24 Feb 2025 16:47:22 -0800 (PST)
+Date: Tue, 25 Feb 2025 00:47:03 +0000
+In-Reply-To: <20250225004704.603652-1-vannapurve@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250225004704.603652-1-vannapurve@google.com>
 X-Mailer: git-send-email 2.48.1.658.g4767266eb4-goog
-Message-ID: <20250225004708.1001320-1-jmattson@google.com>
-Subject: [PATCH] KVM: x86: Provide a capability to disable APERF/MPERF read intercepts
-From: Jim Mattson <jmattson@google.com>
-To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: Jim Mattson <jmattson@google.com>
+Message-ID: <20250225004704.603652-3-vannapurve@google.com>
+Subject: [PATCH v6 2/3] x86/tdx: Fix arch_safe_halt() execution for TDX VMs
+From: Vishal Annapurve <vannapurve@google.com>
+To: dave.hansen@linux.intel.com, kirill.shutemov@linux.intel.com, 
+	jgross@suse.com, ajay.kaher@broadcom.com, ak@linux.intel.com, 
+	tony.luck@intel.com, thomas.lendacky@amd.com
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, 
+	pbonzini@redhat.com, seanjc@google.com, kai.huang@intel.com, 
+	chao.p.peng@linux.intel.com, isaku.yamahata@gmail.com, 
+	sathyanarayanan.kuppuswamy@linux.intel.com, erdemaktas@google.com, 
+	ackerleytng@google.com, jxgao@google.com, sagis@google.com, 
+	afranji@google.com, kees@kernel.org, jikos@kernel.org, peterz@infradead.org, 
+	x86@kernel.org, linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev, 
+	virtualization@lists.linux.dev, bcm-kernel-feedback-list@broadcom.com, 
+	Vishal Annapurve <vannapurve@google.com>, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Allow a guest to read the physical IA32_APERF and IA32_MPERF MSRs
-without interception.
+Direct HLT instruction execution causes #VEs for TDX VMs which is routed
+to hypervisor via TDCALL. If HLT is executed in STI-shadow, resulting #VE
+handler will enable interrupts before TDCALL is routed to hypervisor
+leading to missed wakeup events.
 
-The IA32_APERF and IA32_MPERF MSRs are not virtualized. Writes are not
-handled at all. The MSR values are not zeroed on vCPU creation, saved
-on suspend, or restored on resume. No accommodation is made for
-processor migration or for sharing a logical processor with other
-tasks. No adjustments are made for non-unit TSC multipliers. The MSRs
-do not account for time the same way as the comparable PMU events,
-whether the PMU is virtualized by the traditional emulation method or
-the new mediated pass-through approach.
+Current TDX spec doesn't expose interruptibility state information to
+allow #VE handler to selectively enable interrupts. To bypass this
+issue, TDX VMs need to replace "sti;hlt" execution with direct TDCALL
+followed by explicit interrupt flag update.
 
-Nonetheless, in a properly constrained environment, this capability
-can be combined with a guest CPUID table that advertises support for
-CPUID.6:ECX.APERFMPERF[bit 0] to induce a Linux guest to report the
-effective physical CPU frequency in /proc/cpuinfo. Moreover, there is
-no performance cost for this capability.
+Commit bfe6ed0c6727 ("x86/tdx: Add HLT support for TDX guests")
+prevented the idle routines from executing HLT instruction in STI-shadow.
+But it missed the paravirt routine which can be reached like this as an
+example:
+        acpi_safe_halt() =>
+        raw_safe_halt()  =>
+        arch_safe_halt() =>
+        irq.safe_halt()  =>
+        pv_native_safe_halt()
 
-Signed-off-by: Jim Mattson <jmattson@google.com>
+To reliably handle arch_safe_halt() for TDX VMs, introduce explicit
+dependency on CONFIG_PARAVIRT and override paravirt halt()/safe_halt()
+routines with TDX-safe versions that execute direct TDCALL and needed
+interrupt flag updates. Executing direct TDCALL brings in additional
+benefit of avoiding HLT related #VEs altogether.
+
+Cc: stable@vger.kernel.org
+Fixes: bfe6ed0c6727 ("x86/tdx: Add HLT support for TDX guests")
+Signed-off-by: Vishal Annapurve <vannapurve@google.com>
 ---
- Documentation/virt/kvm/api.rst  | 1 +
- arch/x86/include/asm/kvm_host.h | 1 +
- arch/x86/kvm/svm/svm.c          | 7 +++++++
- arch/x86/kvm/svm/svm.h          | 2 +-
- arch/x86/kvm/vmx/vmx.c          | 4 ++++
- arch/x86/kvm/x86.c              | 7 +++++--
- arch/x86/kvm/x86.h              | 5 +++++
- include/uapi/linux/kvm.h        | 1 +
- tools/include/uapi/linux/kvm.h  | 4 +++-
- 9 files changed, 28 insertions(+), 4 deletions(-)
+ arch/x86/Kconfig           |  1 +
+ arch/x86/coco/tdx/tdx.c    | 26 +++++++++++++++++++++++++-
+ arch/x86/include/asm/tdx.h |  2 +-
+ arch/x86/kernel/process.c  |  2 +-
+ 4 files changed, 28 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 2b52eb77e29c..6431cd33f06a 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -7684,6 +7684,7 @@ Valid bits in args[0] are::
-   #define KVM_X86_DISABLE_EXITS_HLT              (1 << 1)
-   #define KVM_X86_DISABLE_EXITS_PAUSE            (1 << 2)
-   #define KVM_X86_DISABLE_EXITS_CSTATE           (1 << 3)
-+  #define KVM_X86_DISABLE_EXITS_APERFMPERF       (1 << 4)
- 
- Enabling this capability on a VM provides userspace with a way to no
- longer intercept some instructions for improved latency in some
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 0b7af5902ff7..53de91fccc20 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1380,6 +1380,7 @@ struct kvm_arch {
- 	bool hlt_in_guest;
- 	bool pause_in_guest;
- 	bool cstate_in_guest;
-+	bool aperfmperf_in_guest;
- 
- 	unsigned long irq_sources_bitmap;
- 	s64 kvmclock_offset;
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index a713c803a3a3..5ebcbff341bc 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -111,6 +111,8 @@ static const struct svm_direct_access_msrs {
- 	{ .index = MSR_IA32_CR_PAT,			.always = false },
- 	{ .index = MSR_AMD64_SEV_ES_GHCB,		.always = true  },
- 	{ .index = MSR_TSC_AUX,				.always = false },
-+	{ .index = MSR_IA32_APERF,			.always = false },
-+	{ .index = MSR_IA32_MPERF,			.always = false },
- 	{ .index = X2APIC_MSR(APIC_ID),			.always = false },
- 	{ .index = X2APIC_MSR(APIC_LVR),		.always = false },
- 	{ .index = X2APIC_MSR(APIC_TASKPRI),		.always = false },
-@@ -1359,6 +1361,11 @@ static void init_vmcb(struct kvm_vcpu *vcpu)
- 	if (boot_cpu_has(X86_FEATURE_V_SPEC_CTRL))
- 		set_msr_interception(vcpu, svm->msrpm, MSR_IA32_SPEC_CTRL, 1, 1);
- 
-+	if (kvm_aperfmperf_in_guest(vcpu->kvm)) {
-+		set_msr_interception(vcpu, svm->msrpm, MSR_IA32_APERF, 1, 0);
-+		set_msr_interception(vcpu, svm->msrpm, MSR_IA32_MPERF, 1, 0);
-+	}
-+
- 	if (kvm_vcpu_apicv_active(vcpu))
- 		avic_init_vmcb(svm, vmcb);
- 
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 9d7cdb8fbf87..3ee2b7e07395 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -44,7 +44,7 @@ static inline struct page *__sme_pa_to_page(unsigned long pa)
- #define	IOPM_SIZE PAGE_SIZE * 3
- #define	MSRPM_SIZE PAGE_SIZE * 2
- 
--#define MAX_DIRECT_ACCESS_MSRS	48
-+#define MAX_DIRECT_ACCESS_MSRS	50
- #define MSRPM_OFFSETS	32
- extern u32 msrpm_offsets[MSRPM_OFFSETS] __read_mostly;
- extern bool npt_enabled;
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 6c56d5235f0f..88a555328932 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7597,6 +7597,10 @@ int vmx_vcpu_create(struct kvm_vcpu *vcpu)
- 		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
- 		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
- 	}
-+	if (kvm_aperfmperf_in_guest(vcpu->kvm)) {
-+		vmx_disable_intercept_for_msr(vcpu, MSR_IA32_APERF, MSR_TYPE_R);
-+		vmx_disable_intercept_for_msr(vcpu, MSR_IA32_MPERF, MSR_TYPE_R);
-+	}
- 
- 	vmx->loaded_vmcs = &vmx->vmcs01;
- 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 02159c967d29..98f3df24ac9a 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -4533,7 +4533,7 @@ static inline bool kvm_can_mwait_in_guest(void)
- 
- static u64 kvm_get_allowed_disable_exits(void)
- {
--	u64 r = KVM_X86_DISABLE_EXITS_PAUSE;
-+	u64 r = KVM_X86_DISABLE_EXITS_PAUSE | KVM_X86_DISABLE_EXITS_APERFMPERF;
- 
- 	if (!mitigate_smt_rsb) {
- 		r |= KVM_X86_DISABLE_EXITS_HLT |
-@@ -6543,7 +6543,8 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
- 
- 		if (!mitigate_smt_rsb && boot_cpu_has_bug(X86_BUG_SMT_RSB) &&
- 		    cpu_smt_possible() &&
--		    (cap->args[0] & ~KVM_X86_DISABLE_EXITS_PAUSE))
-+		    (cap->args[0] & ~(KVM_X86_DISABLE_EXITS_PAUSE |
-+				      KVM_X86_DISABLE_EXITS_APERFMPERF)))
- 			pr_warn_once(SMT_RSB_MSG);
- 
- 		if (cap->args[0] & KVM_X86_DISABLE_EXITS_PAUSE)
-@@ -6554,6 +6555,8 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
- 			kvm->arch.hlt_in_guest = true;
- 		if (cap->args[0] & KVM_X86_DISABLE_EXITS_CSTATE)
- 			kvm->arch.cstate_in_guest = true;
-+		if (cap->args[0] & KVM_X86_DISABLE_EXITS_APERFMPERF)
-+			kvm->arch.aperfmperf_in_guest = true;
- 		r = 0;
- disable_exits_unlock:
- 		mutex_unlock(&kvm->lock);
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index 91e50a513100..0c3ac99454e5 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -488,6 +488,11 @@ static inline bool kvm_cstate_in_guest(struct kvm *kvm)
- 	return kvm->arch.cstate_in_guest;
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index be2c311f5118..933c046e8966 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -902,6 +902,7 @@ config INTEL_TDX_GUEST
+ 	depends on X86_64 && CPU_SUP_INTEL
+ 	depends on X86_X2APIC
+ 	depends on EFI_STUB
++	depends on PARAVIRT
+ 	select ARCH_HAS_CC_PLATFORM
+ 	select X86_MEM_ENCRYPT
+ 	select X86_MCE
+diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
+index 32809a06dab4..6aad910d119d 100644
+--- a/arch/x86/coco/tdx/tdx.c
++++ b/arch/x86/coco/tdx/tdx.c
+@@ -14,6 +14,7 @@
+ #include <asm/ia32.h>
+ #include <asm/insn.h>
+ #include <asm/insn-eval.h>
++#include <asm/paravirt_types.h>
+ #include <asm/pgtable.h>
+ #include <asm/set_memory.h>
+ #include <asm/traps.h>
+@@ -398,7 +399,7 @@ static int handle_halt(struct ve_info *ve)
+ 	return ve_instr_len(ve);
  }
  
-+static inline bool kvm_aperfmperf_in_guest(struct kvm *kvm)
+-void __cpuidle tdx_safe_halt(void)
++void __cpuidle tdx_halt(void)
+ {
+ 	const bool irq_disabled = false;
+ 
+@@ -409,6 +410,16 @@ void __cpuidle tdx_safe_halt(void)
+ 		WARN_ONCE(1, "HLT instruction emulation failed\n");
+ }
+ 
++static void __cpuidle tdx_safe_halt(void)
 +{
-+	return kvm->arch.aperfmperf_in_guest;
++	tdx_halt();
++	/*
++	 * "__cpuidle" section doesn't support instrumentation, so stick
++	 * with raw_* variant that avoids tracing hooks.
++	 */
++	raw_local_irq_enable();
 +}
 +
- static inline bool kvm_notify_vmexit_enabled(struct kvm *kvm)
+ static int read_msr(struct pt_regs *regs, struct ve_info *ve)
  {
- 	return kvm->arch.notify_vmexit_flags & KVM_X86_NOTIFY_VMEXIT_ENABLED;
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 45e6d8fca9b9..b4a4eb52f6df 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -617,6 +617,7 @@ struct kvm_ioeventfd {
- #define KVM_X86_DISABLE_EXITS_HLT            (1 << 1)
- #define KVM_X86_DISABLE_EXITS_PAUSE          (1 << 2)
- #define KVM_X86_DISABLE_EXITS_CSTATE         (1 << 3)
-+#define KVM_X86_DISABLE_EXITS_APERFMPERF     (1 << 4)
+ 	struct tdx_module_args args = {
+@@ -1109,6 +1120,19 @@ void __init tdx_early_init(void)
+ 	x86_platform.guest.enc_kexec_begin	     = tdx_kexec_begin;
+ 	x86_platform.guest.enc_kexec_finish	     = tdx_kexec_finish;
  
- /* for KVM_ENABLE_CAP */
- struct kvm_enable_cap {
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index 502ea63b5d2e..9b60f0509cdc 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -617,10 +617,12 @@ struct kvm_ioeventfd {
- #define KVM_X86_DISABLE_EXITS_HLT            (1 << 1)
- #define KVM_X86_DISABLE_EXITS_PAUSE          (1 << 2)
- #define KVM_X86_DISABLE_EXITS_CSTATE         (1 << 3)
-+#define KVM_X86_DISABLE_EXITS_APERFMPERF     (1 << 4)
- #define KVM_X86_DISABLE_VALID_EXITS          (KVM_X86_DISABLE_EXITS_MWAIT | \
-                                               KVM_X86_DISABLE_EXITS_HLT | \
-                                               KVM_X86_DISABLE_EXITS_PAUSE | \
--                                              KVM_X86_DISABLE_EXITS_CSTATE)
-+					      KVM_X86_DISABLE_EXITS_CSTATE | \
-+					      KVM_X86_DISABLE_EXITS_APERFMPERF)
++	/*
++	 * Avoid "sti;hlt" execution in TDX guests as HLT induces a #VE that
++	 * will enable interrupts before HLT TDCALL invocation if executed
++	 * in STI-shadow, possibly resulting in missed wakeup events.
++	 *
++	 * Modify all possible HLT execution paths to use TDX specific routines
++	 * that directly execute TDCALL and toggle the interrupt state as
++	 * needed after TDCALL completion. This also reduces HLT related #VEs
++	 * in addition to having a reliable halt logic execution.
++	 */
++	pv_ops.irq.safe_halt = tdx_safe_halt;
++	pv_ops.irq.halt = tdx_halt;
++
+ 	/*
+ 	 * TDX intercepts the RDMSR to read the X2APIC ID in the parallel
+ 	 * bringup low level code. That raises #VE which cannot be handled
+diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
+index b4b16dafd55e..393ee2dfaab1 100644
+--- a/arch/x86/include/asm/tdx.h
++++ b/arch/x86/include/asm/tdx.h
+@@ -58,7 +58,7 @@ void tdx_get_ve_info(struct ve_info *ve);
  
- /* for KVM_ENABLE_CAP */
- struct kvm_enable_cap {
+ bool tdx_handle_virt_exception(struct pt_regs *regs, struct ve_info *ve);
+ 
+-void tdx_safe_halt(void);
++void tdx_halt(void);
+ 
+ bool tdx_early_handle_ve(struct pt_regs *regs);
+ 
+diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
+index 6da6769d7254..d11956a178df 100644
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -934,7 +934,7 @@ void __init select_idle_routine(void)
+ 		static_call_update(x86_idle, mwait_idle);
+ 	} else if (cpu_feature_enabled(X86_FEATURE_TDX_GUEST)) {
+ 		pr_info("using TDX aware idle routine\n");
+-		static_call_update(x86_idle, tdx_safe_halt);
++		static_call_update(x86_idle, tdx_halt);
+ 	} else {
+ 		static_call_update(x86_idle, default_idle);
+ 	}
 -- 
 2.48.1.658.g4767266eb4-goog
 
