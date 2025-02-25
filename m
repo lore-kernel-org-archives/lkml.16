@@ -1,169 +1,154 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2040.outbound.protection.outlook.com [40.107.101.40])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8A01885A1;
-	Tue, 25 Feb 2025 16:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740499524; cv=fail; b=Zsb7KYJOVB2Rafkp4o6UEwmQWdgW0Fk/lK6p1H7xgRQ19qkjbCvYvIOxUfr23MMriIpSV+x+qAOm3+Ythiw+Nsi6cmsGOcbLmpFCTU5Rk5wkykLL1mqXcsfFrhgV+43JYZBONMJkd4069ZYuDo9EuFdBQI4OjFinVSkKHzfSduQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740499524; c=relaxed/simple;
-	bh=jx1CuTq1NGW/ccCoenzf5Ya1dH52O0QNhWFRUSc3wOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=GnQbL+jw98NLJnMH+QcS0313bYXzcalDXDmta8lcmcwpLSGaYI1MuSqXlVkwZYwvtuqFiab0MIbrV0kRv4neX3tQCNKdLvEHGoJ3akN4WZHA3tjpzVFM2Cd0D2wbjhY5kqzH+Cg8GeBO6Mfn0qA+Bkb2xmKXjKRSS96oVLyW4x8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=CmkNAtdT; arc=fail smtp.client-ip=40.107.101.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C98215DBB3;
+	Tue, 25 Feb 2025 16:05:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740499545; cv=none; b=DVpyWO7rWtN+g59jbjkWmKCs8bgGOq0eI+L7085hDkOTk+vP/0wmHhO0QtjVa9k7ZjqlLepDeRCpVUQGObNRsWeYL34/v+LcXeYoWBX3N1y7tL47IzsAV+HFBK1u5vY4baLbIGVJXHlHwfSv2HsldJiMnj5TeENz18xpYWUEhV4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740499545; c=relaxed/simple;
+	bh=tlTvOMZwj97UVNjSaaTvJei+ugzd5xJk1GS03Pt4Yhc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Uved1QGIGLDbIpktCio4NF+dmA65hTCqRjo6NnDQVGftpvMLQdrqQTCegLKGTpRjPKmS9m6xbrd1py1bM3gk0UPZ2emMaTHIhnnsPACyEni+XXbqLKE9DVqXpIukxk/TrqmWWbwvzL0ZkryC/dgCiqHLf4vtFH+F30CWj36lZ6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g+A2GzTS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="CmkNAtdT"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uAgOslnx6ILb5S7Efz+xVOb3H94BCXMvluAtKD/GkmoF74eTCsbpL2Xe0yYmXcvTQE1BGEA1hj+/1FlniLCXQVikVVFOPoRImx7yFIbSO8G7zY7+ko3ost+tY1+n7T+WMCxjKqHN6L5rv41y94cAJaDe9bKCJQog0mQqMjFaJr7RATKc39N+WWoTnqgSwevhjIWgd5kFsoB/FmiUOGAgDA1Bdr68DDqlm5TRfzE9Wic1bJ2IfLLWA/SJmkFeIRynRlev3XDOlajipJrfiu99AURLrX38JmGQeGBY2iyxa5V94tpK/BcBSnRyCKc2JKm8PkdmdkhI4gNJEBQ6irxYKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7V15IJVb9dOIZyR1nAYZltqFctN17C+1CwRBmHcqqNQ=;
- b=wkdH5qDIBjncCWsaA/QvYI3m+9bE39Fobf633sJdOleen01bq7hhqyOGNfCH389/x52KiONOsvc+9PVmkr8M03OAbtesCu8cNKlQALlZTFxHkR+wuhfS7qPGiWuu6DmE4kZ++xbc7zgTSyKIWlF3j0htUkChRGYkvn423ljlH8e6VgJPLOZ2JaPyFBcwiblC2bztV5F7+pD4r2AG1jPliU3/0gED8b5HnAekxDBSdNg5VjS7P1pbUUIcmB37xIWT3nJhtRSAcLUGwJp48xcULyhYuCmU2CMkjI1PCeA1U80yVDg655vSCdxfXwZRX5kaBnOCzpNosbpmO/2Nv1wzuA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7V15IJVb9dOIZyR1nAYZltqFctN17C+1CwRBmHcqqNQ=;
- b=CmkNAtdT7po63wMwjnIE0LBBCC5FEdrkQMo2jFD0ihdt4Ocy0keQaCIRHfa6AdFSFykaXL/fOmLt7/lRqE+F1vNSLVg6JgEj+Qv8NNDGTlYl+BLtrDwRiUEliddgrJlWndPZN76Hk6mCLThVh2j3pekRPprRaBkCxcKY4sctKYdddz6HLt5jaYrORvFeb+EmkGCaBK9Z9EceoLgKep8d69cF+DIhLzET7dq/8szoVgS+iRfL+omCm9upsOpcHQKTUVB6laSCAMgVT4e9NIPAwQhQW4Sy/Wv500OI/gWyBR/EUb0fgnMFCg9B1AM8iJAcpY+l0QWD2qnZAuIHCq6kaw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by MN2PR12MB4455.namprd12.prod.outlook.com (2603:10b6:208:265::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.21; Tue, 25 Feb
- 2025 16:05:20 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8466.016; Tue, 25 Feb 2025
- 16:05:20 +0000
-Date: Tue, 25 Feb 2025 12:05:18 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: kevin.tian@intel.com, corbet@lwn.net, will@kernel.org, joro@8bytes.org,
-	suravee.suthikulpanit@amd.com, robin.murphy@arm.com,
-	dwmw2@infradead.org, baolu.lu@linux.intel.com, shuah@kernel.org,
-	linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
-	eric.auger@redhat.com, jean-philippe@linaro.org, mdf@kernel.org,
-	mshavit@google.com, shameerali.kolothum.thodi@huawei.com,
-	smostafa@google.com, ddutile@redhat.com, yi.l.liu@intel.com,
-	praan@google.com, patches@lists.linux.dev
-Subject: Re: [PATCH v7 13/14] iommu/arm-smmu-v3: Report events that belong to
- devices attached to vIOMMU
-Message-ID: <20250225160518.GD587949@nvidia.com>
-References: <cover.1740238876.git.nicolinc@nvidia.com>
- <b1930038cf828dc13c080e2b46b3003a8c98ef24.1740238876.git.nicolinc@nvidia.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b1930038cf828dc13c080e2b46b3003a8c98ef24.1740238876.git.nicolinc@nvidia.com>
-X-ClientProxiedBy: YQBPR0101CA0132.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:5::35) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g+A2GzTS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5615C4CEDD;
+	Tue, 25 Feb 2025 16:05:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740499543;
+	bh=tlTvOMZwj97UVNjSaaTvJei+ugzd5xJk1GS03Pt4Yhc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=g+A2GzTSFFbK4mzi4EkihsKJcLfvmGL2MOcrFjgSVZwq+NsA1SqgBighAyr48AEYv
+	 u/2dpAxXLjx2gV+hujvr5fA6iCxr7DCPRYBYwN+Nw0wCrb1skECCvYy5FJVvc4phck
+	 JzkHj6J5yooVncOgCMlLffNHBJADthz/UQ97vD16srnbnh5q58AtCiH+uo/mCHFH8V
+	 Aa4BFZf7Bw8Kswb4R3lBa1RPZQWn4/LcNiRFUA0IQGyTGYA9SRnXDI/y0Fc4jMZckw
+	 /Sm76hNf593+fBfpLQPGzASwx5sD+zBP/CHJ79MbDbBgdN/qkM2gikgF1mXKXe8dfG
+	 Lqy7IjqZba8qg==
+Date: Tue, 25 Feb 2025 10:05:42 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Leon Romanovsky <leonro@nvidia.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	linux-pci@vger.kernel.org, Ariel Almog <ariela@nvidia.com>,
+	Aditya Prabhune <aprabhune@nvidia.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Arun Easi <aeasi@marvell.com>, Jonathan Chocron <jonnyc@amazon.com>,
+	Bert Kenward <bkenward@solarflare.com>,
+	Matt Carlson <mcarlson@broadcom.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	Jean Delvare <jdelvare@suse.de>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	Jakub Kicinski <kuba@kernel.org>,
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+	Stephen Hemminger <stephen@networkplumber.org>
+Subject: Re: [PATCH v4] PCI/sysfs: Change read permissions for VPD attributes
+Message-ID: <20250225160542.GA507421@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|MN2PR12MB4455:EE_
-X-MS-Office365-Filtering-Correlation-Id: e9cd42f2-5ef2-403a-8315-08dd55b633c4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?UqduUrPW8kHd44Fk5Hvx9KHJOH152kQYQdBEnGnuQtx0CFdLByUSIEyJgO3D?=
- =?us-ascii?Q?mdUbmKSRlQJcStJ3jYLioDEAr+Q68qV8QD+qbXCE7C4X4pelFBOlsXvRCnYb?=
- =?us-ascii?Q?jawjndGBFn0+T/jqtZYXji+2B9MHOqARx6kjgHkyJqnZ2nrMLQj1EZJTIAgQ?=
- =?us-ascii?Q?hU2Rq5zM1Mz6exU1E0Kq9GLufPNwL6TonxAqlEOSKOtOn06GWtNn8LtxUuBZ?=
- =?us-ascii?Q?C3x0sAegtz89Gcn7qlvugfUFKIz0caQGMYY0pEB+f64AdZJBZ33O2VmAz8vt?=
- =?us-ascii?Q?PmSQo5pBoX16/tqsfu4fslJOI6Pt4gkKu4DMBg3oXcX9Ez617VCAFX1TcJh6?=
- =?us-ascii?Q?DfPmYhRU2nR+DZAuE4TMqeuZ3cn5M708PACfw6GEcwfSh1FlauEtLS2Nqr4U?=
- =?us-ascii?Q?+WENo0TVXgm0oxClrESWBoVVUMECtZrviAT8bNWIyiCRdedwQicqaW+Zc3ED?=
- =?us-ascii?Q?I0/+Mt2+XPsg1B8djZcywrPfDrbtBnuQZq3p4Cml8BKDokmyBY/PW3gj9ga3?=
- =?us-ascii?Q?MX7hu2TafrYIPUfOK9M24r2YFlRgG30vpZmanU+mCj9YYfW4+jrVlGAZkMAb?=
- =?us-ascii?Q?PkmUioOtrw2nQxO0IN2OOXbUxmP0jzr1k8NVkOaqZJ4FaUyF80S/qkbLc3c1?=
- =?us-ascii?Q?i/bski8uM4wRHnTDG+9Zh9wsxmtn/xYVyk9zXB+KZYxBZeEoA4O7hwpcwFj/?=
- =?us-ascii?Q?IFub3QMB3PK+sBOdp44IKz7+bCQO5ODn+MPgwgyqGAAJdfGZaxR7nlRhWFLR?=
- =?us-ascii?Q?lDEc28WvkMxKMm+QhiVrjEkvTD3FZgJUlH/aCq+0C6AOeO6sRLQR6dPrD6P2?=
- =?us-ascii?Q?2m9kftEkyt+Mc9u2nLAbrm6VFqbQq6Vbjk2a7zOFWptG69dz1Cs1Xhh1r/Lq?=
- =?us-ascii?Q?UENTu9wY+XtatpH0ABaRgt7mgNTzr9U2bx99N8d2SRSmXG8dxQ0jliaYHGOA?=
- =?us-ascii?Q?HFch4LO7XezbA3EnXDuPcslHiboOyQA884/kIDk1qVCO7MmKWDfgxMo75XAE?=
- =?us-ascii?Q?0A/mPIV17PKNxVn/zwwd81VG4+QUM9dsYddukQa8HNflkmruVexsqEwD8Z/f?=
- =?us-ascii?Q?jDQfmZS7j7bxWuJfKxkqwlgcLEdPLiVdjrfZt9W0kFQL2Wbzgj4CuMC07vur?=
- =?us-ascii?Q?MOwK6/usK5aKuyap7Im7czqzo65K4AZroPEJ3ozB9yDBD4fqW2rVKOi/uBqh?=
- =?us-ascii?Q?85Mb3FOo4fCq91epirlTNhtC+axT0kOrLFBiQM2lSDd09Q8kMIk0Uo9dcVEg?=
- =?us-ascii?Q?4zoQk7rb7i4za7eZizXW7xgNFizKh3/2mggQRonOYRZe0UuzvNZ+EHjyKAtD?=
- =?us-ascii?Q?lXPQm3210UbIH3vOwT7ENMCPkrj5kAp+6zfMD6xnLWQNADHf+12LzZJt7aLh?=
- =?us-ascii?Q?QTos8pU0/eKrqV+edJRMn3Q7fjt/?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?YLwII4HwY3cwGCTOJyX+BcCoPjsOU89+0sR42nZ0JGndU6ZHH2kSW5UTL5jI?=
- =?us-ascii?Q?v6GfcgV+NTEW5Ms42wSD4HUsBFcUvk/Ipx8PyGT5ko1QHz+rlJLQDl9fdSud?=
- =?us-ascii?Q?nmaypIYPoZhc/j3TC1A0nqE3Nyci9IPxDfCWNE0a5QUiboTJaii1W+zGfRJn?=
- =?us-ascii?Q?SUP+ImB7qijWxFaJreF4Rw3IsWECEV1HopBfKuWJyec6ohjaD8cx+0Z9aIFj?=
- =?us-ascii?Q?OxSggvdQi40rnes60+hCmKnEcjXeajL7bGPQm22uwkVAwaixMr2bVy2LaY9F?=
- =?us-ascii?Q?de7SdUq+ONZkTmNZCgXHBBBsjl3foh/KrJ5xXTrlC7F9IXxdse478I7EEfOf?=
- =?us-ascii?Q?FBjGWao0lvYLqfIZAvJO1RMkWpdzAKAOhotms9R3oHXD4ymOyPWIkWBaDSjZ?=
- =?us-ascii?Q?FAesaBrbiNtHAIDgxM8Va6LEPyz/bfB8UGsl0fFOc3RDkQtKMHgO494U457L?=
- =?us-ascii?Q?S98/V7USTtdliVbeKTgNpRWvbDvfPK4i6OrEHExNftNv/EL4nqN3Xa4TxrhL?=
- =?us-ascii?Q?O3qYwr/ElKTbq7Iy+Qr+4PFvuQov0nEkqK9H8lTpEL6fYNZd3yiGEq30idpW?=
- =?us-ascii?Q?yr4O2tJn0AGmtIekCtQ+pcfEV5jRaZwnqdBxlCpCoqyakrUu/7wExNKaR1Kr?=
- =?us-ascii?Q?G6nbWkvkmpXy+7wNAwKIEgNaDrj390iM/aousOvTPvgYHIaxNYdQ4DEFsVid?=
- =?us-ascii?Q?CW3F1+ykR7dzAtP/wicp5bcas17r+YVkz0XDKCYi8njxmVzP1miIjX3wKyga?=
- =?us-ascii?Q?HjZ8yOeZ19NhAYB0QulvfeYnxmZTFIiPO8rx4QFOJSHJhSEbntSn8Dxu/yEk?=
- =?us-ascii?Q?MDb/5R13VFqrKluKHQkFCGgaN8qX7pJlZL+ImA9duxJOkfXmacgTkK5iW8B+?=
- =?us-ascii?Q?BFhyGygfCJiRBJMtWecH7B1ObqbhmX8wIf158QfnI5jFrBKGvDGP9X/9Nd9f?=
- =?us-ascii?Q?DwcMmY6rRxMen31fAXB7Htq+mHT3UnBVUaybpsaRbBbZF0ECPJUnR+4oZZ5E?=
- =?us-ascii?Q?CCu05Y6RUPzM3rOAE5JadY5D9lgKGgaoSxAqpH/YbKSnmKV3mxmDrEhHHswZ?=
- =?us-ascii?Q?/ni0RQDregQGz06i+AzQ+AHSfVmAQZCM/2qzlGEQ9EN3s2nVPTOZyiyN5CJk?=
- =?us-ascii?Q?U6/mKT2M/q+z1s7iWXlb/ok8lJc+gUtHUA6mOTlBV+4ZDjEAALjgFV/Vuynj?=
- =?us-ascii?Q?qsHFFhMV7XfqIgzu+cYV/hCGKznQ+q4mef/pz23n55IxFaGCJhvsFKPijPUw?=
- =?us-ascii?Q?g0RKJN+gnkeAmmERK5XR2ssWgYpy91oiA/Egck2+ZYwaSoLiRyRPfPtIJshZ?=
- =?us-ascii?Q?tIIh7UyLu0mfJiKhSWBzCj/Z0+xnJEg9yysPQDy/rN1xKkoXhDOTfCUEMaXd?=
- =?us-ascii?Q?zCsTb99ck6KRYEqOf8bEGCfhHgdu682iUHX9huW+veQmGC1BmawZeAcgiZN9?=
- =?us-ascii?Q?ekV8XTGTSDBwhnRn/bb+K9wW5hRvLoH8TCFjDMFe8s5tUjRcWjxJNdNyxHxo?=
- =?us-ascii?Q?fU2/6dxEVXzmn45OGjYlwj9hfJmyE3eKP1vvB+IEW2mr72xEeTgMFYEHfTaq?=
- =?us-ascii?Q?nrfOnpkYABoVxzU0LzF4pfrVxBeNopH7HlkULINT?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9cd42f2-5ef2-403a-8315-08dd55b633c4
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2025 16:05:19.9991
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aJUuxKBkhiKgREMn0gcweTedGeYJRjup1boTS7FslcFM0Ov0QQrIxokQS7cobeUj
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4455
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c93a253b24701513dbeeb307cb2b9e3afd4c74b5.1737271118.git.leon@kernel.org>
 
-On Sat, Feb 22, 2025 at 07:54:10AM -0800, Nicolin Chen wrote:
-> Aside from the IOPF framework, iommufd provides an additional pathway to
-> report hardware events, via the vEVENTQ of vIOMMU infrastructure.
+On Sun, Jan 19, 2025 at 09:27:54AM +0200, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@nvidia.com>
 > 
-> Define an iommu_vevent_arm_smmuv3 uAPI structure, and report stage-1 events
-> in the threaded IRQ handler. Also, add another four event record types that
-> can be forwarded to a VM.
+> The Vital Product Data (VPD) attribute is not readable by regular
+> user without root permissions. Such restriction is not needed at
+> all for Mellanox devices, as data presented in that VPD is not
+> sensitive and access to the HW is safe and well tested.
 > 
-> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+> This change changes the permissions of the VPD attribute to be accessible
+> for read by all users for Mellanox devices, while write continue to be
+> restricted to root only.
+> 
+> The main use case is to remove need to have root/setuid permissions
+> while using monitoring library [1].
+
+As far as I can tell, this is basically a device identification
+problem, which would be better handled by the Vendor, Device, and
+Revision IDs.  If that would solve the problem, it would also make
+standard unprivileged lspci output more specific.
+
+VPD has never been user readable, so I assume you have some existing
+method for device identification?
+
+Other concerns raised in previous threads include:
+
+  - Potential for sensitive information in VPD, similar to dmesg and
+    dmidecode
+
+  - Kernel complexity of reading VPD (mutex, address/data registers)
+
+  - Performance and potential denial of service as a consequence of
+    mutex and hardware interaction
+
+  - Missing EEPROMs or defective or incompletely-installed firmware
+    breaking VPD read
+
+  - Broken devices that crash when VPD is read
+
+  - Potential for issues with future Mellanox devices, even though all
+    current ones work fine
+
+This is basically similar to mmapping a device BAR, for which we also
+require root.
+
+> [leonro@vm ~]$ lspci |grep nox
+> 00:09.0 Ethernet controller: Mellanox Technologies MT2910 Family [ConnectX-7]
+> 
+> Before:
+> [leonro@vm ~]$ ls -al /sys/bus/pci/devices/0000:00:09.0/vpd
+> -rw------- 1 root root 0 Nov 13 12:30 /sys/bus/pci/devices/0000:00:09.0/vpd
+> After:
+> [leonro@vm ~]$ ls -al /sys/bus/pci/devices/0000:00:09.0/vpd
+> -rw-r--r-- 1 root root 0 Nov 13 12:30 /sys/bus/pci/devices/0000:00:09.0/vpd
+> 
+> [1] https://developer.nvidia.com/management-library-nvml
+> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 > ---
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h   |  7 +++
->  include/uapi/linux/iommufd.h                  | 23 +++++++
->  .../arm/arm-smmu-v3/arm-smmu-v3-iommufd.c     | 17 ++++++
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   | 60 +++++++++++--------
->  4 files changed, 82 insertions(+), 25 deletions(-)
-
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-
-Jason
+> Changelog:
+> v4:
+>  * Change comment to the variant suggested by Stephen
+> v3: https://lore.kernel.org/all/18f36b3cbe2b7e67eed876337f8ba85afbc12e73.1733227737.git.leon@kernel.org
+>  * Used | to change file attributes
+>  * Remove WARN_ON
+> v2: https://lore.kernel.org/all/61a0fa74461c15edfae76222522fa445c28bec34.1731502431.git.leon@kernel.org
+>  * Another implementation to make sure that user is presented with
+>    correct permissions without need for driver intervention.
+> v1: https://lore.kernel.org/all/cover.1731005223.git.leonro@nvidia.com
+>  * Changed implementation from open-read-to-everyone to be opt-in
+>  * Removed stable and Fixes tags, as it seems like feature now.
+> v0: https://lore.kernel.org/all/65791906154e3e5ea12ea49127cf7c707325ca56.1730102428.git.leonro@nvidia.com/
+> ---
+>  drivers/pci/vpd.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/pci/vpd.c b/drivers/pci/vpd.c
+> index a469bcbc0da7..c873ab47526b 100644
+> --- a/drivers/pci/vpd.c
+> +++ b/drivers/pci/vpd.c
+> @@ -332,6 +332,13 @@ static umode_t vpd_attr_is_visible(struct kobject *kobj,
+>  	if (!pdev->vpd.cap)
+>  		return 0;
+>  
+> +	/*
+> +	 * On Mellanox devices reading VPD is safe for unprivileged users,
+> +	 * so just add needed bits to allow read.
+> +	 */
+> +	if (unlikely(pdev->vendor == PCI_VENDOR_ID_MELLANOX))
+> +		return a->attr.mode | 0044;
+> +
+>  	return a->attr.mode;
+>  }
+>  
+> -- 
+> 2.47.1
+> 
