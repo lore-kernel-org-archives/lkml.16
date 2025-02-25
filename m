@@ -1,138 +1,280 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2102.outbound.protection.outlook.com [40.107.249.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF446267B82
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 12:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740485990; cv=none; b=pEM7YSi5s7JRbzGBXxjNxX/Qw3gAby4AebfwNO7Zhn2h2TwpQpLaHbnTiDQANjgjOcMxnHe+5AwIS8nXked2GfnzAG92dKvEXNVW6Xgvv7tt74znbPJ756SqMdxC+8HOUXUYQPgIofGf68SSE7JkcnezgIz3hvRUuzhmbbxUfXU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740485990; c=relaxed/simple;
-	bh=lRMt6jA061lprurvx0VShzAqXayV8eltmOsW49Zjb3A=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=Div8wPIL0u/RTG07laOQdlEWQ1Ws53Mx2xbXBvCAaPhMC0SmEw3kK5+Oj1crl8Fqs5d/ZsyKdUE81DS68dbctOWnRKwB/NL2kEXR0rgyy7CJA2IvLbMtfDH3wCwbfu1rR+Bg663wVZSAe0LY2rOFHsUuSPWrqks6MH9R/Mo5V0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=IVCv8PTj; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 105CB19C54F;
+	Tue, 25 Feb 2025 12:24:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.102
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740486257; cv=fail; b=dToXv5VvTKII/mp9dUScTeVynb08RtFNKIBztZiJdd3Fxsh9iRS2+9wWeD9ufbLDtnGsHlxPC6tPvUqiaPXPnKpl2PKtbmBx/Y+gLz9rrPiF9QiAu9SUCEOcS+/unlI9rsNF71zqK31HSNP3QHEXeRIv+WaGP2s/EZafvKgtMYM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740486257; c=relaxed/simple;
+	bh=d7weKjZz+ZHmIw4XnMzEwDLnpTVSDWqySPUaclt6rME=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=GccVajdmIBQPoEkh8hn9CbzqsiL8LaNqpbhMc/HbvR04lDzx0wbUCCokOiY5udlA8dqk+pTj36gluD4My3scIYMi8TMtdV/ddw6IwoHpYVaUqPWOAjklUorkWimSiEPvxo1vrbvq2ur/9Qut7vJLiJtsZyWRDSzAzObewK2m0WE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gocontroll.com; spf=pass smtp.mailfrom=gocontroll.com; dkim=pass (2048-bit key) header.d=gocontrollcom.onmicrosoft.com header.i=@gocontrollcom.onmicrosoft.com header.b=mLpk/US7; arc=fail smtp.client-ip=40.107.249.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gocontroll.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gocontroll.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IVCv8PTj"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250225121945epoutp0447f8875a534e0b26dd42020dbcb7f8c9~ncshRmfP22669026690epoutp04O
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 12:19:45 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250225121945epoutp0447f8875a534e0b26dd42020dbcb7f8c9~ncshRmfP22669026690epoutp04O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1740485985;
-	bh=q0NY9q1nH4ABhU1WMsGxQmu1gQKIvkrPnNiTaH8G9/k=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=IVCv8PTjCQMxhb78NVUuSVmb0pGligpqCZ8R3yFKxKm318oiV2q6Ctxi1fnqI1EN8
-	 QFbV05PMszOqy8v+0HbNgVrprEmEkBy9NfLGGyRrRHcimxPQw3meAJHsxVsKMs284V
-	 S405u8BbxRG6bhLl95vjliyo57fdV7dHeH5AwiJY=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-	20250225121945epcas5p317219048972b9afbf040470ae890559d~ncsg6xqUN0319603196epcas5p3f;
-	Tue, 25 Feb 2025 12:19:45 +0000 (GMT)
-Received: from epsmges5p3new.samsung.com (unknown [182.195.38.174]) by
-	epsnrtp1.localdomain (Postfix) with ESMTP id 4Z2GrH6dR2z4x9Pv; Tue, 25 Feb
-	2025 12:19:43 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	EE.F3.19956.F55BDB76; Tue, 25 Feb 2025 21:19:43 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250225121943epcas5p129c54f2e9ad44af2ce342c26267fe38a~ncsfTJMmY1323613236epcas5p1-;
-	Tue, 25 Feb 2025 12:19:43 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250225121943epsmtrp27a9dbdc10ee791740565f0d6c55cec2f~ncsfSjkFB0616406164epsmtrp23;
-	Tue, 25 Feb 2025 12:19:43 +0000 (GMT)
-X-AuditID: b6c32a4b-fd1f170000004df4-c4-67bdb55f6b91
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	3A.5F.18729.F55BDB76; Tue, 25 Feb 2025 21:19:43 +0900 (KST)
-Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
-	[107.109.115.6]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250225121936epsmtip2fed77c88d0b19afab8241a8d8987f4a9~ncsZEwLhq1286612866epsmtip2J;
-	Tue, 25 Feb 2025 12:19:35 +0000 (GMT)
-From: Anindya Sundar Gayen <anindya.sg@samsung.com>
-To: andi.shyti@kernel.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: aswani.reddy@samsung.com, pankaj.dubey@samsung.com
-Subject: [PATCH] i2c-algo-bit: cpu_relax/ yield replaced with cond_resched
-Date: Tue, 25 Feb 2025 17:07:24 +0530
-Message-Id: <20250225113724.14653-1-anindya.sg@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAKsWRmVeSWpSXmKPExsWy7bCmpm781r3pBlseGFrc/9rBaHFo81Z2
-	i46/XxgtLu+aw2axaOsXdgdWj02rOtk8+rasYvT4vEkugDkq2yYjNTEltUghNS85PyUzL91W
-	yTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DXLTMHaKWSQlliTilQKCCxuFhJ386mKL+0JFUh
-	I7+4xFYptSAlp8CkQK84Mbe4NC9dLy+1xMrQwMDIFKgwITtj69zrzAXX2Ss2r3vG1sC4iq2L
-	kZNDQsBEYs6OJ8xdjFwcQgK7GSWe/bvKCuF8YpT4e+ALlPONUWLCmXcsMC3XH99jg0jsZZQ4
-	dG8WC4TTzCRx++1Nxi5GDg42AWOJtgeVIA0iAiES33r2M4LYzAJmEjPvngYbJCzgJXFux1Z2
-	EJtFQFXi2cunYDW8AtYSD35tYoJYJi+xesMBsPskBPrZJQ7//wqVcJFYt283I4QtLPHq+BZ2
-	CFtK4vO7vWwgN0gI5EssOZsNEc6ROLD8AVSrvcSBK3NYQEqYBTQl1u/ShziNT6L39xMmiE5e
-	iY42IQhTRWJiBwvM7Nk/djBD2B4SF172gO0UEoiVuPdhO/MERplZCDMXMDKuYpRMLSjOTU8t
-	Ni0wzksth8dMcn7uJkZw0tHy3sH46MEHvUOMTByMhxglOJiVRHg5M/ekC/GmJFZWpRblxxeV
-	5qQWH2I0BQbSRGYp0eR8YNrLK4k3NLE0MDEzMzOxNDYzVBLnbd7Zki4kkJ5YkpqdmlqQWgTT
-	x8TBKdXAJPs04a3IbVfb1TXqD1T9r23097yaY7m2s0to36plj/98Ti72O3W3s3H6g+Kge6/u
-	yE1va32a4ftyrsBBv4g/L/itGSLt75gELtD7srrDx2qxPcO1hrM10gvbmCaWLrEJOhFitNhH
-	/iNvXNqUv//e6b8OnHvtz5OeRKPE9TOOP+9kWnHu3hNtlfPPaxboN1mvYvYJnr07qYW/LspR
-	1F6dSX1C6NfVdpuenPt/zD0ieuWudxNy2NccSnGt/vJ57oGlvIpxd7+tzvI8WaYdanfk5pbd
-	hpp7xfZdmzRte6ClAHdHYskHFrf6xsUKH7N0b+o3Hr284lzGBy3ty+aT1HLaV22c9S0h+nOg
-	9S8+QZ4+FSWW4oxEQy3mouJEAIUAhDzDAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBJMWRmVeSWpSXmKPExsWy7bCSvG781r3pBiv+yVjc/9rBaHFo81Z2
-	i46/XxgtLu+aw2axaOsXdgdWj02rOtk8+rasYvT4vEkugDmKyyYlNSezLLVI3y6BK2Pr3OvM
-	BdfZKzave8bWwLiKrYuRk0NCwETi+uN7YLaQwG5GiTMLtCHiUhK3/3cyQtjCEiv/PWfvYuQC
-	qmlkkri+oIO1i5GDg03AWKLtQSWIKSIQJvF5kw5IObOAhcTKLQeZQWxhAS+Jczu2soPYLAKq
-	Es9ePgUbyStgLfHg1yYmiPHyEqs3HGCewMizgJFhFaNkakFxbnpusWGBYV5quV5xYm5xaV66
-	XnJ+7iZGcGBoae5g3L7qg94hRiYOxkOMEhzMSiK8nJl70oV4UxIrq1KL8uOLSnNSiw8xSnOw
-	KInzir/oTRESSE8sSc1OTS1ILYLJMnFwSjUwya7yOFdV5DX9kX6s1Llp5cJCGbNmPIw7Ipjx
-	fE3qoQszcu7sF5X78NPq5zpe1kuiOYobKg1/cl5z67+UuNm5f3+SYfT7H3l7VGezeClnP/5X
-	G2Le/YC3103g/tr1KnvcBILurNv2y2b/nMXmnQaVOR3To1gPlEsvXfxaJzDgS8uao6qSneaT
-	xKK3TeY6eTjUzvvUR6nT31iLGlNrl15qs5rhsY39ldl7/9i41x7fZ8zTy5/RuK1xU+OUnmDO
-	qzbtp/+K9Lx4xHSFddLv9yVr10/5lNfokJ7V9OJZkMeKJVF1oUpbg6a6TjG7lZnwreSVefHr
-	fXe3aC3Xlv4zR/5swL2T15nkn+2ZdXiLy6RjVUosxRmJhlrMRcWJAFY+Pql7AgAA
-X-CMS-MailID: 20250225121943epcas5p129c54f2e9ad44af2ce342c26267fe38a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250225121943epcas5p129c54f2e9ad44af2ce342c26267fe38a
-References: <CGME20250225121943epcas5p129c54f2e9ad44af2ce342c26267fe38a@epcas5p1.samsung.com>
+	dkim=pass (2048-bit key) header.d=gocontrollcom.onmicrosoft.com header.i=@gocontrollcom.onmicrosoft.com header.b="mLpk/US7"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=zBqUMYwgidIaxsaiBbXS9BWf/Qs/RqiQr9CZ8ktkwqKNVPfAdYILVV9ejOEScu/eClPqhymI2sYLg6TsJ4+wvzobxjMFdRrjRO30VpM+PwhsmqXkyZQI42sqeYdan5x5OY77QnF4eM8QbR0zvT+dMQSxXgQqnSCWY+gaAD8LCYMIjcgHvDE6Vfw3v6buVBJ2C9lfgBLg0BPV5aigsdW9B9Q1LgQMupgtd2xMcvQLe9BX/NGFIkF6H3M1tDy24nWn/PlNW8IIndR7Djv7Lq2a5KlRbNoVgIL4/6b0vErTqX4/3C7mDjC3xJo02g7EBttRGK7qlKTnic+TJwGOB88KwA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=d7weKjZz+ZHmIw4XnMzEwDLnpTVSDWqySPUaclt6rME=;
+ b=VluapiWOF0rCuwsIvf/sHZVsVHyRoaUwIPWw4t/rYolNEyqcqTIrp4OTTPxN4D4OcpoPQ3Istk0Nl8OIGgxEYJj0XkYsgv/t/vjuezTnd1FqC1ayGzF+ppUY0A9p9fx0Nedqb9/VHCHrPjRRnC22J8hA7MHsdiS9w3yjCAJU7t+S3b33WrR4xC1ro5D0/mkGUR+J78Qn0mu4J9E506tIUTw7lA/7Y9860ScZAbjPOyGdHCIHYgz/f6q6QXKDBtKtvFZT6I4+v1bphbgsGkHUBVm4Knb5Ou6yXB8fHpBchb2f4lDPBllX7NGnyf3hsyxelSwEHguNrmyL/oe+rRRD4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=gocontroll.com; dmarc=pass action=none
+ header.from=gocontroll.com; dkim=pass header.d=gocontroll.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=gocontrollcom.onmicrosoft.com; s=selector1-gocontrollcom-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d7weKjZz+ZHmIw4XnMzEwDLnpTVSDWqySPUaclt6rME=;
+ b=mLpk/US7Gdnbr3RTP298WWttKFoyuREH3tTxA1AtGPvgG2m6THeTTf2Ak53BQzsEygGs/Bv77fejyhBPe0nQP7yOQxt51TYqrvBqtgjH8duRtksrvIYzOzI1ULIUMZIJ/TkOFJcl84MoLcSOgTAz3YaxbjW+oD5f3zgkTDfFfxTX5pMyAbKWsTWA99bdGEBmxsnBRqkO/D8h2tZ901SwqRRPf1ZpKbXF7afbg5MrVlKGMNdZH631j6yhruPHkKaP4qdM9DuTwIqzfyBXxaQ+s9Gop+n8Fk1A2RFEiMz8GkW6R8UK2xhTiysSltjKFmCSxbEVPI4CbR8cOo5Xh+5Aqg==
+Received: from PA4PR04MB7630.eurprd04.prod.outlook.com (2603:10a6:102:ec::16)
+ by VI0PR04MB10784.eurprd04.prod.outlook.com (2603:10a6:800:266::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.20; Tue, 25 Feb
+ 2025 12:24:09 +0000
+Received: from PA4PR04MB7630.eurprd04.prod.outlook.com
+ ([fe80::311b:ad3a:4a62:7b5f]) by PA4PR04MB7630.eurprd04.prod.outlook.com
+ ([fe80::311b:ad3a:4a62:7b5f%4]) with mapi id 15.20.8466.016; Tue, 25 Feb 2025
+ 12:24:09 +0000
+From: Maud Spierings | GOcontroll <maudspierings@gocontroll.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: Rob Herring <robh@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Thierry Reding
+	<thierry.reding@gmail.com>, Sam Ravnborg <sam@ravnborg.org>, Liu Ying
+	<victor.liu@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+	<s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 05/14] dt-bindings: trivial-devices: add GOcontroll
+ Moduline IO modules
+Thread-Topic: [PATCH 05/14] dt-bindings: trivial-devices: add GOcontroll
+ Moduline IO modules
+Thread-Index: AQHbhsMosk0/ripJzU6HkH3zRHdpDrNW7EQAgACtnhWAAFAuAIAABT4Z
+Date: Tue, 25 Feb 2025 12:24:09 +0000
+Message-ID:
+ <PA4PR04MB76306D77C93FF2C51524BD95C5C32@PA4PR04MB7630.eurprd04.prod.outlook.com>
+References: <20250224-initial_display-v1-0-5ccbbf613543@gocontroll.com>
+ <20250224-initial_display-v1-5-5ccbbf613543@gocontroll.com>
+ <20250224204428.GA4050751-robh@kernel.org>
+ <PA4PR04MB763009E88F6406CD84ACBD33C5C32@PA4PR04MB7630.eurprd04.prod.outlook.com>
+ <20250225-smart-industrious-groundhog-41deb2@krzk-bin>
+In-Reply-To: <20250225-smart-industrious-groundhog-41deb2@krzk-bin>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=gocontroll.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PA4PR04MB7630:EE_|VI0PR04MB10784:EE_
+x-ms-office365-filtering-correlation-id: fec05d91-8d6e-4128-3ca3-08dd55974ddb
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|376014|7416014|1800799024|366016|10070799003|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?z6JpjhtmQvVZRjCMxgcH2NzT7A0DW9k5PTql1yUoIA01yHHKbXfZpb3UY7?=
+ =?iso-8859-1?Q?+AWc+4bSZZ4OM4fsxdUzBnKPqs0zG+DsySeFVZedllOIH0+lKFynMopSJ2?=
+ =?iso-8859-1?Q?BaBoparlBIyq9KMLGL6jZIMz4hYgxU9ZAjpgMX9W/Sd4K/kbIp6raDNtcI?=
+ =?iso-8859-1?Q?U8THooCNLNrE8+TJwiSzkaDylaiv6t/Uv0brquZvmdSxG+ak0wTbTXGVlp?=
+ =?iso-8859-1?Q?8pUmnlTHzZgbfEEnBwmXEIeR+f4PcrRfpfuCH778nEMxmT5bwONb2zK37B?=
+ =?iso-8859-1?Q?0WrgiH8pyW75QLkWdGYhj8PDVrHtMqcmfM/1k2nnDu7V042orBn1H3Yr/l?=
+ =?iso-8859-1?Q?LJEI0UiiAhufkQSG256g4vr79lF7q58l9UPHSJVxEWpNSmtWF/n5AelevF?=
+ =?iso-8859-1?Q?Jq/KWnEFsnANhFkrM6gAi88/nmQ/YWyrNyY/XLQToT6+d3V4evaMZb3rjU?=
+ =?iso-8859-1?Q?4R5kt6LVDPPbHmkEODk5tiE5eAxhU6i0zRS96Gu62mhX2I64tLLl6rsyjz?=
+ =?iso-8859-1?Q?cvi03c9J692UuPIo0FJGPnMvyl4ocAqS0281mUhkZ+8pZpGgeSq6env2Af?=
+ =?iso-8859-1?Q?cbP/g5Vgsu39HLyAgRkv8GFSa+VEB9Cdn1glOuTe/vjDI41E6GMIJyJjBz?=
+ =?iso-8859-1?Q?pcyX5AzyG72OHQ5C2Jn7xIMfu5wHNsXFenE1AWCJThkCkbkzWYZwSAU1Cj?=
+ =?iso-8859-1?Q?5hxiuaIh5pwyvOMw6acy1O4zlGZW8qhE4ZGtRijndg5ug1p1Y+Gok49LVJ?=
+ =?iso-8859-1?Q?kdZQcXGVLW1yuHsvSSDKgRDj5klIA+u/IziV7hCqw8b+5F7b1Ga3ksPwU3?=
+ =?iso-8859-1?Q?9GyfS/m9jX5vm6R2ty33eXb3GeAwgqjF3YwODyefBquAbU1i8y71CSUe1u?=
+ =?iso-8859-1?Q?8qPREyOC9ZelOil/b1nOKAv/mU6wpJU4J0JyjI7gtt/kuAM7XbJKTQPbFK?=
+ =?iso-8859-1?Q?M3SwRQxpDSoOvtbLVFV97r3t9KCyrINh4bgXce2KudU7X7XWD02g0n4mKx?=
+ =?iso-8859-1?Q?gzTnRt+8pGcoOGnVKOHWEYCOBtqZRjbQoQTX/9czPq9NYxKE/soKGbsy0y?=
+ =?iso-8859-1?Q?l1kLc4lFgJ64OAUIxWNwliUs3I1+k5HPsaxsdNDb0iYY3yg9FwIx01KsqT?=
+ =?iso-8859-1?Q?11oUYXNgeDaDYVCAvpnCQPvhABd2MWV6/6A/pAKbnN2s1PsVRd0V9MtsYo?=
+ =?iso-8859-1?Q?ZDLpHdQ8761s+RNUiNC39sw7vKvWdVn6tJntzAGHeg/t7s0AuyHnmjUky3?=
+ =?iso-8859-1?Q?KRWymHQ2e13sEg93i3MFzdBKzB1wtCrZ9SXTLJINKH6erFrvCpl5tQ8PXA?=
+ =?iso-8859-1?Q?rbL9VoRsT2zWTsJCgCUaME1IjcprpnV4UPsdL7gIdxjj9lgzjnReS5hmWA?=
+ =?iso-8859-1?Q?YLWaOs1Uv1BZHs2ffTVjK4+QUqTdLgq22kb+ViBStWsCi11v3kk1MdbEh/?=
+ =?iso-8859-1?Q?q3PpcwwhZ9KMgwz0zOfhgWQFMoHG7H2ZLM1ZTD2nBK3qer5PGCfZTBSW7q?=
+ =?iso-8859-1?Q?TolcvNI5nc1A6CrfudpSDy?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR04MB7630.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(10070799003)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?JWhKC3yf/S9xKaWKgySku0xjjqXa3fK8l09pYa++5YvYzBMYzZIwnE8/vK?=
+ =?iso-8859-1?Q?S64vvtT1Hn3crK2NibkPdhbQYlPs30SZnWmAjwKnW+Lxd5E7tFBYTKk2tA?=
+ =?iso-8859-1?Q?JEm/phBMvxhcH79IvoFEfpA325BfxQ8yG4Kdo+GQdKxxGbGMLGvZIClpNj?=
+ =?iso-8859-1?Q?/EYPBoY9mD6l1Ms71BjsO+QWZu8YiNcASJjlqSmPw05emXMFNr0IIj+1ud?=
+ =?iso-8859-1?Q?kqTQPspGjgmB4sgVQjOepj6lE4szdh9kSPcCmiha+/qk6MuNo0EnJMpXZT?=
+ =?iso-8859-1?Q?oRbtMN8Thlvx8zWtDmoOk63Epns8dlml/UZnwf585nmvdUAe4nNREMVh5w?=
+ =?iso-8859-1?Q?mLt9bsJ/oBoPs6DvRAsUQds0yslmnLYEeIOgvW2KR+zKBAYnOZpq0ttHJl?=
+ =?iso-8859-1?Q?6ITj1G3S5vD+DfnScknENAQZAUQa7Tvigr68Z6MgfChPBv8/2Ded/CQXyK?=
+ =?iso-8859-1?Q?RhwVGFHCIEUW426fMqKKZj8NJwByxtokXsFnxkTLAqoAptVVi17CEXDpjy?=
+ =?iso-8859-1?Q?b7Pxr5ay9RO+7WbOOxnxF5ROtPB5UIVZEjFGkY7V+PScvwC9C2XHmtXgHS?=
+ =?iso-8859-1?Q?CjNCaAxNwsTpnl6HCpD5Qt7eLkS/ushwVdJzryc3+iASGI1uq2P/eAhaAi?=
+ =?iso-8859-1?Q?WeQ26crD53cRbg7tr3sIDacjWNuQB+xdLWYpj81bwh3Bxmg8pq79vTMC7K?=
+ =?iso-8859-1?Q?BTIo3FuKISRHeeHqMrtRrSruG7lLWTBXkNTt01LUzXfmCZ0OTmIX0qHv3N?=
+ =?iso-8859-1?Q?9yTj2Cw1c56ZFQDZzDJWEzEbrhXqxaPwIEQf9h456GXcj8FUBcA9sMorRc?=
+ =?iso-8859-1?Q?Iw4EuxWMQCs8GQ7c3yfDSUOA+wytqD8H+JjvPQwfSI855wX1ueFyDQatDg?=
+ =?iso-8859-1?Q?PbMF01ZOJp1BR+jEgJa4MoYAjygZGaa3RFIrDQ8ZuDN0meYpy2ARKm2f7R?=
+ =?iso-8859-1?Q?TVyHYlofK/P5KtO4t2ZFcShQp1SqGqbHc8Pno+vQCDHYP+irBcTqg5/04u?=
+ =?iso-8859-1?Q?dqAALuUsTvjLHgJbALO7/36nATeRXSsxTVk21uzUJHCcasW0V2wvtEil1H?=
+ =?iso-8859-1?Q?+pwBaZ8RkZQPbwnr/vcMB6BOCJmQY0eXWwzl3JEWkb/qI295Wu3jNs6o0K?=
+ =?iso-8859-1?Q?tcZCnqfnuM3GIvjsQM1jLKRqa6EIb2VRV9JW74VD/h7gPVe5XdfiiWttJW?=
+ =?iso-8859-1?Q?e/tYQQ/Q2CbvPE1knXrJr2fPzsd0xkBtGPtcfi0sr/dyOQkGy1M6MGN2YF?=
+ =?iso-8859-1?Q?CwZ048+z7HDbhK0dhO6/Uz8Q80cou9crS+Xple/RjPDzRDD2BrpO0jPkZg?=
+ =?iso-8859-1?Q?CHHv01hhoCPQ58D88ObxY1DCbXfAVIZyTni4tiiU5/cS1KwW0iWP6ZkTzB?=
+ =?iso-8859-1?Q?U6ij5+wmm4kv0Y/UZGoCyYVeBy55G3GRY5k1e03jDmsmhjVqBKmiUhj4ev?=
+ =?iso-8859-1?Q?hkTWmNUjMAXkPJI1Ku3FAHXqv1tPnucRJz55hxFpzi+eaj+IaOtfNaQpqV?=
+ =?iso-8859-1?Q?CQV33NJTpWMa6CM1lbbgbTB9DfNVJ/AfO9FkZQNu8FgWhjhy6O2dBuzWl7?=
+ =?iso-8859-1?Q?IgQqNOxkmaw/E8/7fyAOXxZ7DmXhlNbHf6SYAcxjywyTZldE63mlSQN9za?=
+ =?iso-8859-1?Q?8FIzs868C0IpZ0UUSl/9yc/CpiJShodMFTwwexSvlbeK8D+EPYjgUcxl+o?=
+ =?iso-8859-1?Q?FdyWyhFFqrPMRsFk0QdqOC/X956f8eNNaUQo6wIvAaBa3p8errYdpUlXMg?=
+ =?iso-8859-1?Q?zMwQ=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-OriginatorOrg: gocontroll.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB7630.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fec05d91-8d6e-4128-3ca3-08dd55974ddb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Feb 2025 12:24:09.0995
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4c8512ff-bac0-4d26-919a-ee6a4cecfc9d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mtmDnLrkqNqTXZiEyYhjqVi/G5RKv2F3oCTmOG2EGENM6b1qXGPWiWlbKc08C/adfYQYpfL+BaBz5Y7ccWlxZDtsZ2G4+Ks6qto0Ab69ekU=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10784
 
-cpu_relax/ yield replaced with better flexible approach in kernel
-with cond_resched.
-
-Signed-off-by: Anindya Sundar Gayen <anindya.sg@samsung.com>
----
- drivers/i2c/algos/i2c-algo-bit.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/i2c/algos/i2c-algo-bit.c b/drivers/i2c/algos/i2c-algo-bit.c
-index eddf25b90ca8..4168fd901957 100644
---- a/drivers/i2c/algos/i2c-algo-bit.c
-+++ b/drivers/i2c/algos/i2c-algo-bit.c
-@@ -97,7 +97,7 @@ static int sclhi(struct i2c_algo_bit_data *adap)
- 				break;
- 			return -ETIMEDOUT;
- 		}
--		cpu_relax();
-+		cond_resched();
- 	}
- #ifdef DEBUG
- 	if (jiffies != start && i2c_debug >= 3)
-@@ -329,7 +329,7 @@ static int try_address(struct i2c_adapter *i2c_adap,
- 		bit_dbg(3, &i2c_adap->dev, "emitting stop condition\n");
- 		i2c_stop(adap);
- 		udelay(adap->udelay);
--		yield();
-+		cond_resched();
- 		bit_dbg(3, &i2c_adap->dev, "emitting start condition\n");
- 		i2c_start(adap);
- 	}
--- 
-2.17.1
-
+From:=A0Krzysztof Kozlowski <krzk@kernel.org>=0A=
+Sent:=A0Tuesday, February 25, 2025 12:52 PM=0A=
+=A0=0A=
+>On Tue, Feb 25, 2025 at 07:39:52AM +0000, Maud Spierings | GOcontroll wrot=
+e:=0A=
+>> From:=A0Rob Herring <robh@kernel.org>=0A=
+>> Sent:=A0Monday, February 24, 2025 9:44 PM=0A=
+>> =A0=0A=
+>> >On Mon, Feb 24, 2025 at 02:50:55PM +0100, Maud Spierings wrote:=0A=
+>> >> The main point of the Moduline series of embedded controllers is its=
+=0A=
+>> >> ecosystem of IO modules, these currently are operated through the spi=
+dev=0A=
+>> >> interface. Ideally there will be a full dedicated driver in the futur=
+e.=0A=
+>> >>=0A=
+>> >> Add the gocontroll moduline-module-slot device to enable the required=
+=0A=
+>> >> spidev interface.=0A=
+>> >>=0A=
+>> >> Signed-off-by: Maud Spierings <maudspierings@gocontroll.com>=0A=
+>> >> ---=0A=
+>> >>=A0 Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++=0A=
+>> >>=A0 1 file changed, 2 insertions(+)=0A=
+>> >>=0A=
+>> >> diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b=
+/Documentation/devicetree/bindings/trivial-devices.yaml=0A=
+>> >> index 8255bb590c0cc619d15b27dcbfd3aa85389c0a54..24ba810f91b73efdc615c=
+7fb46f771a300926f05 100644=0A=
+>> >> --- a/Documentation/devicetree/bindings/trivial-devices.yaml=0A=
+>> >> +++ b/Documentation/devicetree/bindings/trivial-devices.yaml=0A=
+>> >> @@ -107,6 +107,8 @@ properties:=0A=
+>> >>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 - fsl,mpl3115=0A=
+>> >>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 # MPR121: Proximity Capacitive=
+ Touch Sensor Controller=0A=
+>> >>=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 - fsl,mpr121=0A=
+>> >> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 # GOcontroll Moduline module slot =
+for spi based IO modules=0A=
+>> >=0A=
+>> >I couldn't find anything about SPI for GOcontroll Moduline. Can you=0A=
+>> >point me to what this hardware looks like. Based on what I did find,=0A=
+>> >this seems incomplete and not likely a trivial device.=0A=
+>>=0A=
+>> I'll give some more details, if there is a v2 of this patch I will also=
+=0A=
+>> add more information in the commit message.=0A=
+>>=0A=
+>> The module slots have a number of pins, a lot of them currently unused a=
+s=0A=
+>> they have not found a function yet, this is very much still a developing=
+=0A=
+>> product. The currently used interfaces to the SoC are:=0A=
+>> 1. SPI bus as a spidev to ease developing new modules and quickly=0A=
+>> integrate them. This is the main communication interface for control and=
+=0A=
+>> firmware updates.=0A=
+>> 2. A reset pin, this is/was driven with the gpio-led driver but I doubt=
+=0A=
+>> that would get accepted upstream so I intend to switch to the much bette=
+r=0A=
+>> suited libgpio.=0A=
+>=0A=
+>reset-gpios is not in trivial devices, so that's already a hint you=0A=
+>cannot use this binding.=0A=
+>=0A=
+>> 3. An interrupt pin, this is currently only used in the firmware update=
+=0A=
+>> utility [2] to speed up the update process. Other communication is done =
+at=0A=
+>> a regular interval.=0A=
+>>=0A=
+>> What is unused:=0A=
+>> 1. A potentially multi-master i2c bus between all the module slots and=
+=0A=
+>> the SoC=0A=
+>> 2. An SMBus alert line is shared between the modules, but not the SoC.=
+=0A=
+>> 3. A shared line designated as a clock line, intended to in the future=
+=0A=
+>> aid with synchronizing modules to each other for time critical control.=
+=0A=
+>>=0A=
+>> current software that is used to work with the modules can be found at=
+=0A=
+>> [2] and [3], one of them is a Node-RED module the other is a blockset fo=
+r=0A=
+>> Matlab/Simulink generated code.=0A=
+>>=0A=
+>> If you know a better way I could describe this in the devicetree then I=
+=0A=
+>=0A=
+>You need dedicated binding where you describe entire device, entire=0A=
+>hardware, not what your driver supports in current release.=0A=
+=0A=
+I see now that I also forgot the patch that adds this compatible to the=0A=
+spidev driver. Didn't check for the spidevs in testing I guess.=0A=
+=0A=
+Could I write bindings for this device, and then add the compatible to the=
+=0A=
+spidev driver for now? So it probes that driver, and then later when there=
+=0A=
+is a driver remove the compatible there and keep it only in the purpose=0A=
+built driver?=0A=
+=0A=
+So I'll write gocontroll,moduline-module-slot.yaml, don't quite know where=
+=0A=
+that would go. Define all these attributes in there and then add the =0A=
+compatible to drivers/spi/spidev.c=0A=
+=0A=
+Is that okay?=0A=
+=0A=
+Kind regards,=0A=
+Maud=0A=
