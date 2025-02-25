@@ -1,171 +1,360 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B97F2770B;
-	Tue, 25 Feb 2025 09:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740476298; cv=none; b=oA6g9XO1E9MxYJ7Aw2xZ+8Cyhkvo1hfNvI4d3XDNAvC2G7DmJg+hiDLpT0CjD/0yGvqZpLJH9HhkJtoKZPo9g4CnpB1Jj07KSLapoxLAaLuADrb4ymh3yrlKI8XF9XibN6XNt4K5PQCqTn7PzNLpJTOYxge60dSZPFL71RZGNUA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740476298; c=relaxed/simple;
-	bh=KOoru/UvM5K/f5JN6eTxK6IWzYJgPBeHvrjFH+jOpOs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IQ3ielaSXMjcvRurahYJSDRdhf8huglCqrzDds9H4trIE7ec73BTBZSexmTA92YsxBOwHkss7cxxsguMsxXLA68HBwdO2NPoNk1ckt8WE3yP1uw5J2+/cE9T7aA/CxsK5B5TYiHLKz7hlMTu8RfylYPSix/IzWHUP8Rjo5ByHEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HK3/pkvQ; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B54D2770B;
+	Tue, 25 Feb 2025 09:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740476318; cv=pass; b=cI1B/Bf4IJYXL+09cYlUQTEGoIjHyb69kCLF2Sn4xo/b8IjRcWpCNCeCR5udagUENzeUPeCFVGNqq4wnRCWw6GESacXMx9fnACJK0H/we4KMzV7SDtKsgnBOnkcF/u/o1fFfzmtp955r0TiyaiHqZ/nsGtxhEWYiQrPyOOi0I2g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740476318; c=relaxed/simple;
+	bh=WepjCdKpfsDunMZVmF4JsfqfzSNxfOKfCAManVRjDIE=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=H+R/d2w3wgITZB3QvLqZMZ4MnezEYT2q0Wjxo0k/hgVHrUytD/3wkDBrxogKd3F7LchN770MdYdn+4AzLYxC9nca7Ez62fNhCTWAJ+EPmO4cADYp3BwHXbYxCx8dTAbTTfc2DcVtWZQKnD45uArf/74Z8Rv6q5eTTAhVV2D9YpQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=kfBhauOp; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HK3/pkvQ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 600024427A;
-	Tue, 25 Feb 2025 09:38:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1740476294;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cLaYPj5f0Xs15lU0/MmHpF+ePqgHzxkdSGZO99S/riM=;
-	b=HK3/pkvQCXh4EvM47VppHUM/fN4OOUDgSH+BCI6umBBl56Ie70o5ZIDCn9Rex1VLBbd6Nv
-	aoAqxO9BftN/DDMajrXpOUv+vyJJ/fL19pknSOBOii4OmICT/jd717uJbTHcjGi+dmKVX8
-	avMvare7yTcSS4pUbXMCPTmSAg78uAYE1sjgVGfwav8dtKHBBC3pnTA7ApxZvitUSKjBi/
-	ugjHCT2i4pIvhySxk5d+aEydQgt7StUt+7V7zYwfmD+VsOeF/2Ztw735gsc0feXnPwTWFP
-	LcfzK4U1P+Jkdx0JxQpy3TB6bhUZr8fYFEuX7iXSwsV1OSwHHrWYbEJG68wfAw==
-Date: Tue, 25 Feb 2025 10:38:12 +0100
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Hans-Frieder Vogt <hfdevel@gmx.net>
-Cc: Hans-Frieder Vogt via B4 Relay <devnull+hfdevel.gmx.net@kernel.org>,
- Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
- Russell King <linux@armlinux.org.uk>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, FUJITA Tomonori
- <fujita.tomonori@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v5 4/7] net: phy: aquantia: add essential
- functions to aqr105 driver
-Message-ID: <20250225103812.7e436d17@fedora.home>
-In-Reply-To: <d944c0bd-a652-4bfe-b6e8-c264f5b36562@gmx.net>
-References: <20250222-tn9510-v3a-v5-0-99365047e309@gmx.net>
-	<20250222-tn9510-v3a-v5-4-99365047e309@gmx.net>
-	<20250223113232.3092a990@fedora.home>
-	<d944c0bd-a652-4bfe-b6e8-c264f5b36562@gmx.net>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="kfBhauOp"
+ARC-Seal: i=1; a=rsa-sha256; t=1740476275; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=iaTLHNWzZANWkSHvQcnjLdTiITwmdvrVbtSt5VyOreKwgtOBOEZwnyiqL+yBSNJxRD7WU6/p0nC88LBMtQP4WeFgHQgWR45lreSsc+jkUrTus3cp0qnLiIKq2JJyLc8QwYEEYXC7dX1xRRuQB00p3b3P1kiNUC98hcFJqPpruPg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1740476275; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=mbIJtXwXjtJlIQdygGWRyuQlQVKs6xykb4NhbVC0jk0=; 
+	b=PAkZYUXivVj1LZkFibsPdym0/v4lm/bmG0WQFIl71w+JQMewJ+pymYDhAdlz5Awbz0dt8fGKe7BXKVDRjsROvD8ty2MZkTzWiKOtqnU3sUxUvo1ZrJ32l8Iq7TkMuUb1o9a7P4Nj1njNU1gU97Umh6tfmcuqCayEqaZg1L8JRhg=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740476275;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=mbIJtXwXjtJlIQdygGWRyuQlQVKs6xykb4NhbVC0jk0=;
+	b=kfBhauOpyXn5U3+2bHhvOFmpCeKRSeksX8Sr/JDXvYSeqKuCcHOvnWcicNlsfcOG
+	pWutrWUidti8m3p+hwBUM2QoYSpqr+7uV1mbZOyEiHSmt3NEhks1MJlSM290VsxF1MH
+	NKqb5HQfPVoq496TRo+jcZamq40WPJBwSGQ2Lmig=
+Received: by mx.zohomail.com with SMTPS id 1740476271960416.2806493078207;
+	Tue, 25 Feb 2025 01:37:51 -0800 (PST)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
+Subject: Re: [PATCH v4 3/4] rust: configfs: add a sample demonstrating
+ configfs usage
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <20250224-configfs-v4-3-9af9b5e611f6@kernel.org>
+Date: Tue, 25 Feb 2025 06:37:33 -0300
+Cc: Danilo Krummrich <dakr@kernel.org>,
+ Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Joel Becker <jlbec@evilplan.org>,
+ Christoph Hellwig <hch@lst.de>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>,
+ Will Deacon <will@kernel.org>,
+ Waiman Long <longman@redhat.com>,
+ Fiona Behrens <me@kloenk.dev>,
+ Charalampos Mitrodimas <charmitro@posteo.net>,
+ rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekudefiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthhqredtredtjeenucfhrhhomhepofgrgihimhgvucevhhgvvhgrlhhlihgvrhcuoehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeuhfefgffgtdfhgffhvdfhhffhteeutdektefghfetveehheejjefgudeiudehudenucfkphepvdgrtddumegtsgduleemkegugegtmeelfhdttdemsggtvddumeekkeelleemheegtdgtmegvheelvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegtgemlehftddtmegstgdvudemkeekleelmeehgedttgemvgehlegvpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopehhfhguvghvvghlsehgmhigrdhnvghtpdhrtghpthhtohepuggvvhhnuhhllhdohhhfuggvvhgvlhdrghhmgidrnhgvtheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughrvgifsehluhhnn
- hdrtghhpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Message-Id: <CB975A56-A8D5-4615-8755-04D7B0BBBCA5@collabora.com>
+References: <20250224-configfs-v4-0-9af9b5e611f6@kernel.org>
+ <20250224-configfs-v4-3-9af9b5e611f6@kernel.org>
+To: Andreas Hindborg <a.hindborg@kernel.org>
+X-Mailer: Apple Mail (2.3826.300.87.4.3)
+X-ZohoMailClient: External
 
-On Sun, 23 Feb 2025 23:26:49 +0100
-Hans-Frieder Vogt <hfdevel@gmx.net> wrote:
+Hi Andreas,
 
-> Hi Maxime,
+> On 24 Feb 2025, at 10:21, Andreas Hindborg <a.hindborg@kernel.org> =
+wrote:
 >=20
-> On 23.02.2025 11.32, Maxime Chevallier wrote:
-> > Hi,
-> >
-> > On Sat, 22 Feb 2025 10:49:31 +0100
-> > Hans-Frieder Vogt via B4 Relay <devnull+hfdevel.gmx.net@kernel.org>
-> > wrote:
-> > =20
-> >> From: Hans-Frieder Vogt <hfdevel@gmx.net>
-> >>
-> >> This patch makes functions that were provided for aqr107 applicable to
-> >> aqr105, or replaces generic functions with specific ones. Since the aq=
-r105
-> >> was introduced before NBASE-T was defined (or 802.3bz), there are a nu=
-mber
-> >> of vendor specific registers involved in the definition of the
-> >> advertisement, in auto-negotiation and in the setting of the speed. The
-> >> functions have been written following the downstream driver for TN4010
-> >> cards with aqr105 PHY, and use code from aqr107 functions wherever it
-> >> seemed to make sense.
-> >>
-> >> Signed-off-by: Hans-Frieder Vogt <hfdevel@gmx.net>
-> >> ---
-> >>   drivers/net/phy/aquantia/aquantia_main.c | 242 +++++++++++++++++++++=
-+++++++++-
-> >>   1 file changed, 240 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/net/phy/aquantia/aquantia_main.c b/drivers/net/ph=
-y/aquantia/aquantia_main.c
-> >> index 86b0e63de5d88fa1050919a8826bdbec4bbcf8ba..38c6cf7814da1fb9a4e715=
-f242249eee15a3cc85 100644
-> >> --- a/drivers/net/phy/aquantia/aquantia_main.c
-> >> +++ b/drivers/net/phy/aquantia/aquantia_main.c
-> >> @@ -33,6 +33,9 @@
-> >>   #define PHY_ID_AQR115C	0x31c31c33
-> >>   #define PHY_ID_AQR813	0x31c31cb2
-> >>
-> >> +#define MDIO_AN_10GBT_CTRL_ADV_LTIM		BIT(0) =20
-> > This is a standard C45 definition, from :
-> > 45.2.7.10.15 10GBASE-T LD loop timing ability (7.32.0)
-> >
-> > So if you need this advertising capability, you should add that in the
-> > generic definitions for C45 registers in include/uapi/linux/mdio.h =20
-> Thanks. Wasn't aware this being a standard definition.
+> Add a sample to the samples folder, demonstrating the intended use of =
+the
+> rust configfs API.
+
+nit: this is not the first time I see Rust not capitalized in this =
+series.
+
 >=20
-> Wouldn't the definition
-> #define ADVERTISE_XNP=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(12)
-> then need to go to include/uapi/linux/mii.h accordingly?
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+> ---
+> samples/rust/Kconfig          |  11 +++
+> samples/rust/Makefile         |   1 +
+> samples/rust/rust_configfs.rs | 179 =
+++++++++++++++++++++++++++++++++++++++++++
+> 3 files changed, 191 insertions(+)
+>=20
+> diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
+> index 918dbead2c0b..2f97bf9a7b4c 100644
+> --- a/samples/rust/Kconfig
+> +++ b/samples/rust/Kconfig
+> @@ -10,6 +10,17 @@ menuconfig SAMPLES_RUST
+>=20
+> if SAMPLES_RUST
+>=20
+> +config SAMPLE_RUST_CONFIGFS
+> + tristate "Configfs sample"
+> + depends on CONFIGFS_FS
+> + help
+> +  This option builds the Rust configfs sample.
+> +
+> +  To compile this as a module, choose M here:
+> +  the module will be called rust_configfs.
+> +
+> +  If unsure, say N.
+> +
+> config SAMPLE_RUST_MINIMAL
+> tristate "Minimal"
+> help
+> diff --git a/samples/rust/Makefile b/samples/rust/Makefile
+> index 5a8ab0df0567..72122f010caf 100644
+> --- a/samples/rust/Makefile
+> +++ b/samples/rust/Makefile
+> @@ -6,6 +6,7 @@ obj-$(CONFIG_SAMPLE_RUST_MISC_DEVICE) +=3D =
+rust_misc_device.o
+> obj-$(CONFIG_SAMPLE_RUST_PRINT) +=3D rust_print.o
+> obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI) +=3D rust_driver_pci.o
+> obj-$(CONFIG_SAMPLE_RUST_DRIVER_PLATFORM) +=3D rust_driver_platform.o
+> +obj-$(CONFIG_SAMPLE_RUST_CONFIGFS) +=3D rust_configfs.o
+>=20
+> rust_print-y :=3D rust_print_main.o rust_print_events.o
+>=20
+> diff --git a/samples/rust/rust_configfs.rs =
+b/samples/rust/rust_configfs.rs
+> new file mode 100644
+> index 000000000000..36a2c848a979
+> --- /dev/null
+> +++ b/samples/rust/rust_configfs.rs
+> @@ -0,0 +1,179 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Rust configfs sample.
+> +
+> +use kernel::alloc::flags;
+> +use kernel::c_str;
+> +use kernel::configfs;
+> +use kernel::configfs_attrs;
+> +use kernel::new_mutex;
+> +use kernel::page::PAGE_SIZE;
+> +use kernel::prelude::*;
+> +use kernel::sync::Mutex;
+> +
+> +module! {
+> +    type: RustConfigfs,
+> +    name: "rust_configfs",
+> +    author: "Rust for Linux Contributors",
+> +    description: "Rust configfs sample",
+> +    license: "GPL",
+> +}
+> +
+> +#[pin_data]
+> +struct RustConfigfs {
+> +    #[pin]
+> +    config: configfs::Subsystem<Configuration>,
+> +}
+> +
+> +#[pin_data]
+> +struct Configuration {
+> +    message: &'static CStr,
+> +    #[pin]
+> +    bar: Mutex<(KBox<[u8; PAGE_SIZE]>, usize)>,
+> +}
+> +
+> +impl Configuration {
+> +    fn new() -> impl PinInit<Self, Error> {
+> +        try_pin_init!(Self {
+> +            message: c_str!("Hello World\n"),
+> +            bar <- new_mutex!((KBox::new([0; PAGE_SIZE], =
+flags::GFP_KERNEL)?, 0)),
+> +        })
+> +    }
+> +}
+> +
+> +impl kernel::InPlaceModule for RustConfigfs {
+> +    fn init(_module: &'static ThisModule) -> impl PinInit<Self, =
+Error> {
+> +        pr_info!("Rust configfs sample (init)\n");
+> +
+> +        let item_type =3D configfs_attrs! {
+> +            container: configfs::Subsystem<Configuration>,
+> +            data: Configuration,
+> +            child: Child,
+> +            attributes: [
+> +                message: 0,
+> +                bar: 1,
+> +            ],
+> +        };
 
-Looks like this is indeed part of the standard now, in=20
+As I said in the previous patch, this macro is a bit complex. Is there =
+anything more you can do with it?
 
-28.2.4.1.3 Auto-Negotiation advertisement register (Register 4), so it seems
-to be the right move to modify ADVERTISE_RESV into  ADVERTISE_XNP.
+If so, it better be in this driver, because I hardly think anybody will =
+go through the source code itself
+to figure out. My 2c.
 
-> There, bit 12 is currently named ADVERTISE_RESV and commented as unused
-> (which it obviously is not, because it is used in
-> drivers/net/ethernet/sfc/falcon/mdio_10g.c
 
-One note is that this driver uses the C45 MMD 7 AN register layout :
+> +
+> +        try_pin_init!(Self {
+> +            config <- configfs::Subsystem::new(
+> +                c_str!("rust_configfs"), item_type, =
+Configuration::new()
+> +            ),
+> +        })
+> +    }
+> +}
+> +
+> +#[vtable]
+> +impl configfs::GroupOperations for Configuration {
+> +    type Child =3D Child;
+> +
+> +    fn make_group(&self, name: &CStr) -> Result<impl =
+PinInit<configfs::Group<Child>, Error>> {
+> +        let tpe =3D configfs_attrs! {
+> +            container: configfs::Group<Child>,
+> +            data: Child,
+> +            child: GrandChild,
+> +            attributes: [
+> +                baz: 0,
+> +            ],
+> +        };
+> +
+> +        Ok(configfs::Group::new(name.try_into()?, tpe, Child::new()))
+> +    }
+> +}
+> +
+> +#[vtable]
+> +impl configfs::AttributeOperations<0> for Configuration {
+> +    type Data =3D Configuration;
+> +
+> +    fn show(container: &Configuration, page: &mut [u8; PAGE_SIZE]) -> =
+Result<usize> {
+> +        pr_info!("Show message\n");
+> +        let data =3D container.message;
+> +        page[0..data.len()].copy_from_slice(data);
+> +        Ok(data.len())
+> +    }
+> +}
+> +
+> +#[vtable]
+> +impl configfs::AttributeOperations<1> for Configuration {
+> +    type Data =3D Configuration;
+> +
+> +    fn show(container: &Configuration, page: &mut [u8; PAGE_SIZE]) -> =
+Result<usize> {
+> +        pr_info!("Show bar\n");
+> +        let guard =3D container.bar.lock();
+> +        let data =3D guard.0.as_slice();
+> +        let len =3D guard.1;
+> +        page[0..len].copy_from_slice(&data[0..len]);
+> +        Ok(len)
+> +    }
+> +
+> +    fn store(container: &Configuration, page: &[u8]) -> Result {
+> +        pr_info!("Store bar\n");
+> +        let mut guard =3D container.bar.lock();
+> +        guard.0[0..page.len()].copy_from_slice(page);
+> +        guard.1 =3D page.len();
+> +        Ok(())
+> +    }
+> +}
+> +
+> +#[pin_data]
+> +struct Child {}
 
-45.2.7.1 AN control register (Register 7.0)
+nit: you don=E2=80=99t need the braces here
 
-in which the eXtended Next Page bit is BIT(13).
+> +
+> +impl Child {
+> +    fn new() -> impl PinInit<Self, Error> {
+> +        try_pin_init!(Self {})
+> +    }
+> +}
+> +
+> +#[vtable]
+> +impl configfs::GroupOperations for Child {
+> +    type Child =3D GrandChild;
+> +
+> +    fn make_group(&self, name: &CStr) -> Result<impl =
+PinInit<configfs::Group<GrandChild>, Error>> {
+> +        let tpe =3D configfs_attrs! {
+> +            container: configfs::Group<GrandChild>,
+> +            data: GrandChild,
+> +            attributes: [
+> +                gc: 0,
+> +            ],
+> +        };
+> +
+> +        Ok(configfs::Group::new(
+> +            name.try_into()?,
+> +            tpe,
+> +            GrandChild::new(),
+> +        ))
+> +    }
+> +}
+> +
+> +#[vtable]
+> +impl configfs::AttributeOperations<0> for Child {
+> +    type Data =3D Child;
+> +
+> +    fn show(_container: &Child, page: &mut [u8; PAGE_SIZE]) -> =
+Result<usize> {
+> +        pr_info!("Show baz\n");
+> +        let data =3D c"Hello Baz\n".to_bytes();
+> +        page[0..data.len()].copy_from_slice(data);
+> +        Ok(data.len())
+> +    }
+> +}
+> +
+> +#[pin_data]
+> +struct GrandChild {}
 
-That actually leads to an interesting point, as it appears the at803x.c
-driver mixes both, which looks incorrect to me :
+=E2=80=A6nor here
 
-	/* Ar803x extended next page bit is enabled by default. Cisco
-	 * multigig switches read this bit and attempt to negotiate 10Gbps
-	 * rates even if the next page bit is disabled. This is incorrect
-	 * behaviour but we still need to accommodate it. XNP is only needed
-	 * for 10Gbps support, so disable XNP.
-	 */
-	return phy_modify(phydev, MII_ADVERTISE, MDIO_AN_CTRL1_XNP, 0);
+> +
+> +impl GrandChild {
+> +    fn new() -> impl PinInit<Self, Error> {
+> +        try_pin_init!(Self {})
+> +    }
+> +}
+> +
+> +#[vtable]
+> +impl configfs::AttributeOperations<0> for GrandChild {
+> +    type Data =3D GrandChild;
+> +
+> +    fn show(_container: &GrandChild, page: &mut [u8; PAGE_SIZE]) -> =
+Result<usize> {
+> +        pr_info!("Show baz\n");
 
-In such case, BIT(13) fot MII_ADVERTISE is ADVERTISE_RFAULT, if my
-understanding of the spec is correct.
+As I said in the cover letter, perhaps this one slip through :)
 
-> I think, for now, I will just do the same as in the falcon driver and
-> use ADVERTISE_RESV instead. Then it may be renamed later in all places.
+> +        let data =3D c"Hello GC\n".to_bytes();
+> +        page[0..data.len()].copy_from_slice(data);
+> +        Ok(data.len())
+> +    }
+> +}
+>=20
+> --=20
+> 2.47.0
+>=20
+>=20
 
-Make sure you use the BIT(12) in your case indeed, looks to be the
-right way in that case.=20
+I=E2=80=99m OK with this patch. It works, and it does what it=E2=80=99s =
+supposed to do, i.e.: showcase the API.
 
-> >
-> > That being said, as it looks this is the first driver using this
-> > feature, do you actually need to advertise Loop Timing ability here ?
-> > I guess it comes from the vendor driver ? =20
-> you are right. The code just tries to replicate the vendor code.
-> However, I have now tested the driver without this flag and haven't
-> noticed any unusual behavior. So, I guess, it works indeed without.
-> I'll remove the flag in the next revision of the patch.
+With the =E2=80=9CShow baz=E2=80=9D nit fixed:
 
-So in that case, no need to define MDIO_AN_10GBT_CTRL_ADV_LTIM at all :)
-
-Thanks,
-
-Maxime
+Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
 
