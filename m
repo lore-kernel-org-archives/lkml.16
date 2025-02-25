@@ -1,102 +1,121 @@
-Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA860267B18;
-	Tue, 25 Feb 2025 11:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740481203; cv=pass; b=chAJQQynesXPYyFV8ZVwGN+wVHQOQLsDhedOGLodzwggAxWn8WV1iHathV1dpovu/doJkNqstDnxG45EfcljOEgUhqzWfgpY87PFXi5AfIbgXl4A/O0DBANX7lt3G7vseul7LD63II4NXPsjPlEf6GapVPrSKv6sDkdo4A/6pIc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740481203; c=relaxed/simple;
-	bh=kMJF5RSaJ61dbim2W+thvBAvxXWLB/VBFcKTy/Oq1fs=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=XpPO3E0epPVnsyvfgm0d6yj1pGqsCQEehZ7k0RaEhZxCvqBc5bNQQSCPZWWugHalKzKkfchuHg5bUxuoL/SbZIG5vbUBrReWQIYhCNXncK6KfABpOYokyd49onvZQ2/vmO7ZqKL/4XKVpnDHMdM/6yZ3LyblWZdyHQoQfrjH2Os=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=gs9tJBBj; arc=pass smtp.client-ip=136.143.184.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2D81C84A4;
+	Tue, 25 Feb 2025 11:00:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740481219; cv=none; b=bNs34YOCDGGM91E2X59iC5yFIirIBM7wtHCMyc4uQcGOmfYVVb7EYxXd+hiKDAymHtMdhg+ii6tf7r/UhBo8UNqrK3GxiZ9RRNY9I9XROvqPP5D8zOTdf1cxyuU4TZkUITOWq1VB8HA5jiyeDDGdRrcc/VYJ+faCkAVhuo9sM5U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740481219; c=relaxed/simple;
+	bh=OIAYG0DTu1dbYqV7zeemEwB6CnpNfpQ2N8t5mKh6jvA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P+htZa+RsGBQHI7tEKk56BRl9Yxw0Sjpc3qH1xPhFCDv2BdJ5/Wi94Gt64HmhrEFuX1r5lZK4yUPeF84ZxeBA/Wer0em/LCRolIb0QvPigONKfPY65q3ThomdtgWSWlUDVv1YQu5TSwtuZvm1W7ekpn0SScHjqIvzqPG84Hel+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Jgkdqvb7; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="gs9tJBBj"
-ARC-Seal: i=1; a=rsa-sha256; t=1740481157; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=EEOktX0Ife7MXXH/CydtCb+of+IdoQY8sPzF9qw+AIVj0BXhzRCEKxj9yQovTZ1xs5U1aYWGm82OplGqPtfveycV7rlPsklHz5wtON5m0isbiYak7ZLxfC6bsnPhqfKKD97gHDGe2WSRNbMaNfxPtZ4Lgt1ym6I5iN0EDZzGO/o=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740481157; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=kMJF5RSaJ61dbim2W+thvBAvxXWLB/VBFcKTy/Oq1fs=; 
-	b=egVWqt3dpXAKwR1H8Ap+krgj0jnBOHFu8dCv664ce42cAGg53HtLNFNANr4kJp2NieuI9T9Y655Y3R03YghkXWUgtk0/fnhx8Zik466WJt+55Kj/PQQsHgYlhf6rn3kwyGFgMMWu3HbjwgMHKORjE2m6s1o5ru7fVn5pwQmYb/o=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740481157;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=kMJF5RSaJ61dbim2W+thvBAvxXWLB/VBFcKTy/Oq1fs=;
-	b=gs9tJBBjU5wjlAeRpSVZNDM9Cv4pqPytKW1YT6grFjwuFh0zQAOslFSHzyzpFzLa
-	t3VIVorJVI2t+h4NJb2sH1aDOg0kGfCZ8Lg21y/ae3nWX7cJMLW0U5KGnywghoFo0Xr
-	Sytpbk0s4dqQoKk5UUX0/bE//funywJHL3reCaWk=
-Received: by mx.zohomail.com with SMTPS id 1740481154165258.02998640409817;
-	Tue, 25 Feb 2025 02:59:14 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Jgkdqvb7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=X2opscf7XUW1j6O0X55tJb+3c775cxiqTofDgsyFe/Y=; b=Jgkdqvb7s4a0Rh/GZwdTMHhQJW
+	cR484LNq2IM+vKyXTxn5adBmJ/FoStGMvW+6lzoHsV0W3PDSNNMC5T9mnbjdJaWyUWj4Mr90q78wN
+	uL8B9BaGCH6VuzHgpNNYT5qHpQ5Q8533RdUuktVOQUQ6wCDKJtLPviE6Mpm8nfs/kt0Tn9vTrHk15
+	WiS+B9VkIu+LARgpjcCE7ja8vLyy/3yNSjERu7AUSKqGpf/VCAu8RqbWrYQywSpVlz5Pwq1APq+T1
+	bOxwZnvxgEF7f4rypYStpdcGm4wUE25wZ8UaKUrQeMoJMbri9dSujE4B+69HblRoLmR1RVvdr/fPV
+	jRb6QZqg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98 #2 (Red Hat Linux))
+	id 1tmsfc-0000000B1Or-1tYN;
+	Tue, 25 Feb 2025 11:00:12 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 0E448300472; Tue, 25 Feb 2025 12:00:12 +0100 (CET)
+Date: Tue, 25 Feb 2025 12:00:12 +0100
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
+Subject: Re: [Patch v2 10/24] perf/x86/intel: Process arch-PEBS records or
+ record fragments
+Message-ID: <20250225110012.GK31462@noisy.programming.kicks-ass.net>
+References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
+ <20250218152818.158614-11-dapeng1.mi@linux.intel.com>
+ <20250225103927.GJ11590@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.300.87.4.3\))
-Subject: Re: [PATCH v4 3/4] rust: configfs: add a sample demonstrating
- configfs usage
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <87jz9ewcf1.fsf@kernel.org>
-Date: Tue, 25 Feb 2025 07:58:56 -0300
-Cc: Danilo Krummrich <dakr@kernel.org>,
- Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Joel Becker <jlbec@evilplan.org>,
- Christoph Hellwig <hch@lst.de>,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>,
- Will Deacon <will@kernel.org>,
- Waiman Long <longman@redhat.com>,
- Fiona Behrens <me@kloenk.dev>,
- Charalampos Mitrodimas <charmitro@posteo.net>,
- rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <9E46FCD7-E913-43DF-91F7-417EF41A35B7@collabora.com>
-References: <20250224-configfs-v4-0-9af9b5e611f6@kernel.org>
- <20250224-configfs-v4-3-9af9b5e611f6@kernel.org>
- <gFsQNuXNmyVQmdawZnfoGhTe3Fu7W0K5VeoiM5tjROpKWVojf48IOHIQT0JY77AFiTPPLHk3f_gjzEGilH7vLQ==@protonmail.internalid>
- <CB975A56-A8D5-4615-8755-04D7B0BBBCA5@collabora.com>
- <87jz9ewcf1.fsf@kernel.org>
-To: Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: Apple Mail (2.3826.300.87.4.3)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225103927.GJ11590@noisy.programming.kicks-ass.net>
+
+On Tue, Feb 25, 2025 at 11:39:27AM +0100, Peter Zijlstra wrote:
+> On Tue, Feb 18, 2025 at 03:28:04PM +0000, Dapeng Mi wrote:
+> > A significant difference with adaptive PEBS is that arch-PEBS record
+> > supports fragments which means an arch-PEBS record could be split into
+> > several independent fragments which have its own arch-PEBS header in
+> > each fragment.
+> > 
+> > This patch defines architectural PEBS record layout structures and add
+> > helpers to process arch-PEBS records or fragments. Only legacy PEBS
+> > groups like basic, GPR, XMM and LBR groups are supported in this patch,
+> > the new added YMM/ZMM/OPMASK vector registers capturing would be
+> > supported in subsequent patches.
+> > 
+> > Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> > ---
+> >  arch/x86/events/intel/core.c      |   9 ++
+> >  arch/x86/events/intel/ds.c        | 219 ++++++++++++++++++++++++++++++
+> >  arch/x86/include/asm/msr-index.h  |   6 +
+> >  arch/x86/include/asm/perf_event.h | 100 ++++++++++++++
+> >  4 files changed, 334 insertions(+)
+> > 
+> > diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> > index 37540eb80029..184f69afde08 100644
+> > --- a/arch/x86/events/intel/core.c
+> > +++ b/arch/x86/events/intel/core.c
+> > @@ -3124,6 +3124,15 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
+> >  			wrmsrl(MSR_IA32_PEBS_ENABLE, cpuc->pebs_enabled);
+> >  	}
+> >  
+> > +	/*
+> > +	 * Arch PEBS sets bit 54 in the global status register
+> > +	 */
+> > +	if (__test_and_clear_bit(GLOBAL_STATUS_ARCH_PEBS_THRESHOLD_BIT,
+> > +				 (unsigned long *)&status)) {
+> 
+> Will arch_pebs hardware ever toggle bit 62?
+
+This had me looking at the bit 62 handling, and I noticed the thing from
+commit 8077eca079a2 ("perf/x86/pebs: Add workaround for broken OVFL
+status on HSW+").
+
+Did that ever get fixed in later chips; notably I'm assuming ARCH PEBS
+does not suffer this?
+
+Also, should that workaround have been extended to also include
+GLOBAL_STATUS_PERF_METRICS_OVF in that mask, or was that defect fixed
+for every chip capable of metrics stuff?
+
+In any case, I think we want a patch clarifying the situation with a
+comment.
 
 
->>=20
->> As I said in the previous patch, this macro is a bit complex. Is =
-there anything more you can do with it?
->>=20
->> If so, it better be in this driver, because I hardly think anybody =
-will go through the source code itself
->> to figure out. My 2c.
->=20
-> I can add some inline comments on the usage here. Is that what you are
-> thinking of?
->=20
-
-That can=E2=80=99t hurt, but my point is, if you can think of any other =
-example that is substantially different from
-what you have, include it, specially if it involves some different =
-syntax somehow.
-
-Otherwise this is fine as is.
-
-=E2=80=94 Daniel=
+> > +		handled++;
+> > +		x86_pmu.drain_pebs(regs, &data);
+> 
+> 		static_call(x86_pmu_drain_pebs)(regs, &data);
+> 
+> > +	}
+> 
