@@ -1,70 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726CD186E2F;
-	Tue, 25 Feb 2025 16:05:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E77017E472
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 16:05:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.222.135.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740499524; cv=none; b=DzraU2wjfRq2nabLamC228eYsYk7ub1x5vkR1dSa4JoNzn35VS75JU1DT7axP07WjAVKENp/B9wMrIBqsB2Ca8U9UGk7Hh5qNrUcjr/J/w7rSWA20sR8v5rNbgzOcLedlo02VR7imzPbG1w7mjYiT6+K/ulEDQ5pQtDPgiGu42A=
+	t=1740499524; cv=none; b=Z8Iv9mRsrRMnJSMuWKcCRijGSegvX3NFry0Z0KTumtF5e7qvah6F5S9EkqABBF/Ojtck5fuMu4kHCXXcJ0U5SUK8oMMZdJ4WN2IBpJuCNbEM1P0TM0Gfh199hNX92OzRuDYUC68+mrp1JJ9ndbGBIjHmfkWzWHK4bcUtDLNJuWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740499524; c=relaxed/simple;
-	bh=cFi9U2kTnzP+grVkXJv06JPxyOEcEWtyZx/m6rp9CB4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MzW2pZMVVCBia94SC9wLwAdz6rSPZElYeHnNJjzlROkjFScEEM6mqrJ36tpjpCUzOrJHK6oWU3WsM6e2Sy2xK8lcFCkQfwGJEIUgLfExuWsDCA44tgDg1wMLOxNzD5rTFRVoinvMBzkPGkSzEXp4LamW7wAOR6CF9NSMoRF8RHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t00Pzmwv; arc=none smtp.client-ip=10.30.226.201
+	bh=XK1zkzaCikUXtEYmYx2k7/oNH03FbT61gtjPhljYPkg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UuEcKjivsLYVgIyLwfTL3jDiK9SRw20bV0Be8RWcTdTfieO3K3h+z+xWDM3N/YV/IB0WH1GdLu+KHTaSbapB+dg4YeYYR3o00Yf9PcFREHNQ0J8EJgvxB/8BPKmlu/uJGUEfiAGfv0ZL5lwBYwThg5CcCAbGXIf4FGYd7GkpEaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl; spf=pass smtp.mailfrom=o2.pl; dkim=pass (2048-bit key) header.d=o2.pl header.i=@o2.pl header.b=UWnZVUMZ; arc=none smtp.client-ip=193.222.135.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=o2.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=o2.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t00Pzmwv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7F83C4CEE6;
-	Tue, 25 Feb 2025 16:05:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740499523;
-	bh=cFi9U2kTnzP+grVkXJv06JPxyOEcEWtyZx/m6rp9CB4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t00PzmwvglZ4g/SQQLkqQQGCCVIYyxZWpDWqpSB5s+QK/VSaKclPS1UrdZgXJZAz3
-	 uSDoyZDWTgMncBW9cYeoVUhmtgnr7xgM9wCdlysnqTWWH1Q/RDsg8X8nUs7f3sS8sd
-	 Zhs/UAPEzFlO4x/iZ+iipXFFG/mrFN9Pwqv5qHPRYXbQsc3tSStHnORRG87LkY+QW+
-	 UW35Tww/NRD97ZpOYH0HAD5FKx0E9P9EpG024fIpLTlv39B299cYgfUOP//RMggHWR
-	 fvsPR3KRWiYaU1eS44ejV5W8cR/6wWBPwVMQgrO6QoIriiHDAk4J04nPnWE1Y00Z/x
-	 Sml7t+ldFep0Q==
-Date: Tue, 25 Feb 2025 10:05:21 -0600
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Andras Sebok <sebokandris2009@gmail.com>
-Cc: krzk+dt@kernel.org, linux-input@vger.kernel.org,
-	dmitry.torokhov@gmail.com, markuss.broks@gmail.com,
-	conor+dt@kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-	devicetree@vger.kernel.org, phone-devel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=o2.pl header.i=@o2.pl header.b="UWnZVUMZ"
+Received: (wp-smtpd smtp.tlen.pl 24648 invoked from network); 25 Feb 2025 16:58:40 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=20241105;
+          t=1740499120; bh=Hj7qAEgiQ50fp7uhcmsq7NZfp8iIKRdHrawCOPWVFaQ=;
+          h=From:To:Cc:Subject;
+          b=UWnZVUMZfiARyp73UoCOgpAM09aKIAYMW2srVFZsG7NEHuGXbEUzd6xB4NJSgybhX
+           wgr/OzibQBxJJeaYOxRU11iaPHl8ruXXN4yQRubRaQWIdjFTnhB1/uwZLlH1IeCh9e
+           B4QIdxkj3yv8/2ZCTgEeHEpiyEd3rrBPAmEJjV8Km7v388dJezu1hIQuiGPZs0YDXC
+           ipYODhWwdeInT3Gz/i5IviIHg+Jl+3/+r2diLYAzi0wS5gLmnFPI/RyrX1QtsBtJSI
+           YA6u3oelgMKAgLw4PwIt4P6sx3mxoAmkpreh5WUioIcltJYTEoZeNKdgIchNh9Dkbs
+           l71Y9H1gY5atw==
+Received: from public-gprs689392.centertel.pl (HELO M73..) (mprnk@o2.pl@[5.184.236.49])
+          (envelope-sender <mprnk@o2.pl>)
+          by smtp.tlen.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <marcel@holtmann.org>; 25 Feb 2025 16:58:40 +0100
+From: Michal Piernik <mprnk@o2.pl>
+To: Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Michal Piernik <mprnk@o2.pl>,
+	linux-bluetooth@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: input/touchscreen: imagis: add
- compatible for ist3038h
-Message-ID: <174049952156.2586588.3267651143072217754.robh@kernel.org>
-References: <20250225084914.81715-1-sebokandris2009@gmail.com>
+Subject: [PATCH] Bluetooth: btusb: Add Mercusys MA530 HWID 0x2c4e/0x0115 for Realtek 8761BUV
+Date: Tue, 25 Feb 2025 16:58:25 +0100
+Message-Id: <20250225155825.1504841-1-mprnk@o2.pl>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250225084914.81715-1-sebokandris2009@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-WP-MailID: 400995f43b953aaecd84dd38b06430a3
+X-WP-AV: skaner antywirusowy Poczty o2
+X-WP-SPAM: NO 0000000 [gTPE]                               
 
+/sys/kernel/debug/usb/devices:
+T:  Bus=03 Lev=01 Prnt=01 Port=05 Cnt=03 Dev#=  4 Spd=12   MxCh= 0
+D:  Ver= 1.10 Cls=e0(wlcon) Sub=01 Prot=01 MxPS=64 #Cfgs=  1
+P:  Vendor=2c4e ProdID=0115 Rev= 2.00
+S:  Manufacturer=
+S:  Product=Mercusys MA530 Adapter
+S:  SerialNumber=30169D905719
+C:* #Ifs= 2 Cfg#= 1 Atr=e0 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 3 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=81(I) Atr=03(Int.) MxPS=  16 Ivl=1ms
+E:  Ad=02(O) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+E:  Ad=82(I) Atr=02(Bulk) MxPS=  64 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=   0 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=   0 Ivl=1ms
+I:  If#= 1 Alt= 1 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=   9 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=   9 Ivl=1ms
+I:  If#= 1 Alt= 2 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  17 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  17 Ivl=1ms
+I:  If#= 1 Alt= 3 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  25 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  25 Ivl=1ms
+I:  If#= 1 Alt= 4 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  33 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  33 Ivl=1ms
+I:  If#= 1 Alt= 5 #EPs= 2 Cls=e0(wlcon) Sub=01 Prot=01 Driver=btusb
+E:  Ad=03(O) Atr=01(Isoc) MxPS=  49 Ivl=1ms
+E:  Ad=83(I) Atr=01(Isoc) MxPS=  49 Ivl=1ms
 
-On Tue, 25 Feb 2025 09:47:00 +0100, Andras Sebok wrote:
-> IST3038H is a touchscreen IC which seems mostly compatible with IST3038C
-> except that it reports a different chip ID value.
-> 
-> Signed-off-by: Andras Sebok <sebokandris2009@gmail.com>
-> Link: https://lore.kernel.org/r/20250224090354.102903-4-sebokandris2009@gmail.com
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
-> 
-> This is the fixed version of the patch, which is already applied to
-> Dmitry Torokhov's input tree.
-> Sorry for not CC-ing the devicetree list and maintainers before.
-> 
->  .../devicetree/bindings/input/touchscreen/imagis,ist3038c.yaml   | 1 +
->  1 file changed, 1 insertion(+)
-> 
+dmesg:
+[11106.761376] Bluetooth: hci0: RTL: examining hci_ver=0a hci_rev=000b lmp_ver=0a lmp_subver=8761
+[11106.762370] Bluetooth: hci0: RTL: rom_version status=0 version=1
+[11106.762374] Bluetooth: hci0: RTL: loading rtl_bt/rtl8761bu_fw.bin
+[11106.762554] Bluetooth: hci0: RTL: loading rtl_bt/rtl8761bu_config.bin
+[11106.762579] Bluetooth: hci0: RTL: cfg_sz 6, total sz 30210
+[11106.910393] Bluetooth: hci0: RTL: fw version 0xdfc6d922
+[11106.977569] Bluetooth: MGMT ver 1.22
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Michal Piernik <mprnk@o2.pl>
+---
+ drivers/bluetooth/btusb.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index f5609110f..0fc1dde8f 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -739,6 +739,8 @@ static const struct usb_device_id quirks_table[] = {
+ 	{ USB_DEVICE(0x2ff8, 0xb011), .driver_info = BTUSB_REALTEK },
+ 
+ 	/* Additional Realtek 8761BUV Bluetooth devices */
++	{ USB_DEVICE(0x2c4e, 0x0115), .driver_info = BTUSB_REALTEK |
++						     BTUSB_WIDEBAND_SPEECH },
+ 	{ USB_DEVICE(0x2357, 0x0604), .driver_info = BTUSB_REALTEK |
+ 						     BTUSB_WIDEBAND_SPEECH },
+ 	{ USB_DEVICE(0x0b05, 0x190e), .driver_info = BTUSB_REALTEK |
+-- 
+2.34.1
 
