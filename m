@@ -1,131 +1,264 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678A33D984;
-	Tue, 25 Feb 2025 06:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF8314D2BB;
+	Tue, 25 Feb 2025 06:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740465660; cv=none; b=kg4WQwO497k7iafjye4rFzXuwYYQmcvRTeoHSc0dqe6ioUZgJNqthCf2SEopl+xigR2Pz6UUd7Dqh8/e7bpQx8hJg7ARHv8/AS3MI/R97WCgpnYUW98baaM/jU4+HPDGwXj/1xcrEZs4nDFfmhs2qMsnudIhFqp7zGgeji6aWqY=
+	t=1740465804; cv=none; b=fkohm8cQsl4OesKFajtd2FuQQleCwSqGluR0yDzZUgXIArbffKPVsSRWqamSd578dJDXpnnNTvnBUttfpbaDt4WXthdS0ace+5QjLGfRNQ6fh5U5kKGZTdYe70s4mMjjQ0+qR5oYqXcqLLulaSvX90i69Fverp25EUbrZKIL0EA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740465660; c=relaxed/simple;
-	bh=bP75iQdWMfulJf6yXOUhCLzS3q7ljtZNdMT5g3yO9kk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RgdGnJabGUQ6h1HgqVkknIkLkGZUY0LGo8eUu+Tq3Q60WfojnvBhvY7fISPxZXmo32Jdm3tghcuaOxB6mxFe2wodYAo0nYBFVFntL1LJtv/FrjtN/ZcDn8ZQLUcN3mShQPs9gx/FhoV99uurSAc1JL1XRytrNDRZ2o3YxPpzQOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gDWMu4N3; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740465804; c=relaxed/simple;
+	bh=zhSa0y8IU1iJ0MvV+FSzR83Oi1hhyhyeq0st+ZunzWA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=psAcVYSzAoxnDRQ9bWVl84Nz52UM8RmD+asBWxHqiJUygI5vnXtBtLOPCewJxu7tT1s5Rd/3VHBsbn+8lIk7EE7FhBIYKvwHcEiF4lVECW7PxC8kSQzacpUl40WsWvwCLbH9Jsw/sNzvfggMY9zPYaKh6L1E+ZekILkVDcc9piw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O2OkrZlE; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gDWMu4N3"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-220ecbdb4c2so29921575ad.3;
-        Mon, 24 Feb 2025 22:40:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740465658; x=1741070458; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=t2P/2v/Klk6zqg9pFD4grzPc6MwHkHIHVcHBwEQXLhQ=;
-        b=gDWMu4N3YcRxW4gEaGEwMPtkGKoJ0NOednBiXiSxtM6IlMZxTV5QRLegaPtvkZSWTR
-         UOuui23gHDP0g41JC+8m33SGaQaYwpJ1r8VhHZocoaAAedm3Zx8i/qp8dMi+Ke3dmoGb
-         r//KkVusF2dBkkJAcYfW71iU4LxdhcIVdGTe7CtuKNUyJAwAD+rv0h/vvVYFeDvwvD5Z
-         J33P9jTzqwEYifSQ0fFt+WFHjWCwhoRN/EzBcER68Fa972z4hyseWbskmXyGkawjuDzJ
-         s64xhpjGIIJ9vPc9ZkHHMJntSwADtMJCAGmrrtVUkvKd2P4groferjQrYPieNsUM7n9G
-         RpKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740465658; x=1741070458;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t2P/2v/Klk6zqg9pFD4grzPc6MwHkHIHVcHBwEQXLhQ=;
-        b=jaY0FTPOpafmQXlk5UaOVt4F/VdduAEB27ZI6Gthr9mNtQso7/d/0bvhWaJSxVTECK
-         RV190tX162VSSvHiW3m+Pi0imIiiqO1VJG7FM2xXYHfDxetVUomjskjwLvUlDoAvAKQQ
-         0O2f77ZaZ21qqJsdgZZP0Tt5d0lnugQGF/hbmc0CCN5C9+cr0X8IyqsmFHvlXJ5tTHBR
-         PxPB8TGIxHAvEHQlrrBV2FAD+KyYQ8aJddnP5e7Oh1PuH8Kh/9DkoXy0R9iDzQYyr3fD
-         rDYr8Mj42Q8j0ll/2y5ApzKrJpnhHxztEtwABXJMVaVP9q8EymGqvC5C0F53nj/vub2r
-         rF2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWq2uFWvbFyUE+TxXM/H+7XvZPvgFMfAnKItiarIZyzn1Hzg8Io28OSXpMM08sOND3H/qIljxxJSBtO0FQ=@vger.kernel.org, AJvYcCXILrTbTVjbyPKIUxx8Swt8uLM+i90BI1Q2XHFhDBxqCj7p+0EremoXbxqtpOgKTOoopBBZA3f81iBj@vger.kernel.org, AJvYcCXcylexuwGQL0JbFAHUILLhZJ4OADb54HZI1dC1wYfeNKN4iQr8AQpUGkAgQI3unzv4FTDErcobp+RBRq5x@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLAF75VwOgspM/GfNR19uJwsIN3aAENRcbIcHK7k77VnFJUApI
-	LeaSYdlRkv9Wiv2S6HzSrc4YVrsN5+WBoH+XhGuXT7RcCsS6Wu29
-X-Gm-Gg: ASbGncupPo0QIV8HjevSLLJoXgkwFQE5W2zEtuw9+5MQ2xcOFCurNyW2aQMmnqpL74Z
-	Ii1gR78m7eO0p9qf9vJ+bWfh1H01cV8BKDUd8B7AGBIQpbY7kzftzU5z28uXGum/1QixZRvlQUF
-	zg/RTdRuczaxqA0a694kK9So9kz4TIBkGCFce16ywSLwDD1jK3/mOgo5xbebF1fhZHln0tO2Miw
-	xzrOSRPAS3tseiSh4eCYk4VKkqSFHiUQtH5ZRzuhfKAC2Hn0Nyx+MpTKQbzqECmHxeQku1YsrDq
-	E0EDqdnabYEQxeXxApC/9QhwQnU=
-X-Google-Smtp-Source: AGHT+IEOk1x5AoIYZW+55H4hzFIVfeVeIvyzhHdJ23TfluHygEQbpPwlmqAbahw8Whoj+DhzHTCW8A==
-X-Received: by 2002:a17:902:d501:b0:21f:dbb:20a6 with SMTP id d9443c01a7336-221a1148f3amr234622445ad.33.1740465658520;
-        Mon, 24 Feb 2025 22:40:58 -0800 (PST)
-Received: from google.com ([2620:15c:9d:2:464c:6229:2280:227e])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a092edasm6677905ad.130.2025.02.24.22.40.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 22:40:58 -0800 (PST)
-Date: Mon, 24 Feb 2025 22:40:55 -0800
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Manuel Traut <manuel.traut@mt.com>
-Cc: Markus Burri <markus.burri@mt.com>, linux-kernel@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Marek Vasut <marek.vasut@gmail.com>, linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v5 1/7] Input: matrix_keypad - use fsleep for variable
- delay duration
-Message-ID: <Z71l9046XyjxicFf@google.com>
-References: <20250110054906.354296-1-markus.burri@mt.com>
- <20250110054906.354296-2-markus.burri@mt.com>
- <Z7YIKaG0jBHV2FSE@mt.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O2OkrZlE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740465804; x=1772001804;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=zhSa0y8IU1iJ0MvV+FSzR83Oi1hhyhyeq0st+ZunzWA=;
+  b=O2OkrZlEv3hFUxRIhkhKiT8II0Y9T015h+lWX5Ka08lkKCI1pPRNpiuY
+   DNEHweeoYOKn8wdpiu2n8wSEXO7Iol5Fga2OJxGkhRD/xKPhpoQ7+DMCr
+   /fk2uaHw6FfHhUh18gamYK60tu69nNFPaVp0TYWqUOBtQO4BsM2CTmjOY
+   HEzf34e/+DZ9fqo9aiQ5+Cb+hHdamrvhrtQ8iFgmo3c8isPgMQZZ8Er0E
+   c3bFA0B4Np4z60uaCfKwRB2/1wFiYTjW2yz6U5P2JaWHOjr9O401wGVIP
+   Tn1bXRt7j/xfQogw9FSzWDXNZ0BYhgc20M9TXLxpILTEJW01lm74HoU57
+   g==;
+X-CSE-ConnectionGUID: L4k/Mr8pR/KrDiLkz+TY0g==
+X-CSE-MsgGUID: tBDgIpEWQZ2hDOTPdj+VPg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11355"; a="41101477"
+X-IronPort-AV: E=Sophos;i="6.13,313,1732608000"; 
+   d="scan'208";a="41101477"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 22:43:23 -0800
+X-CSE-ConnectionGUID: LxPxWLFrQf6SAGthAv49eA==
+X-CSE-MsgGUID: trZNmStcS9WTJllyoPVHvw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,313,1732608000"; 
+   d="scan'208";a="147130898"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2025 22:43:17 -0800
+Message-ID: <5cbb181c-f226-4d50-8b92-04775e8b65e0@intel.com>
+Date: Tue, 25 Feb 2025 14:43:14 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7YIKaG0jBHV2FSE@mt.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 07/12] KVM: TDX: restore host xsave state when exit
+ from the guest TD
+To: Adrian Hunter <adrian.hunter@intel.com>, pbonzini@redhat.com,
+ seanjc@google.com
+Cc: kvm@vger.kernel.org, rick.p.edgecombe@intel.com, kai.huang@intel.com,
+ reinette.chatre@intel.com, tony.lindgren@linux.intel.com,
+ binbin.wu@linux.intel.com, dmatlack@google.com, isaku.yamahata@intel.com,
+ nik.borisov@suse.com, linux-kernel@vger.kernel.org, yan.y.zhao@intel.com,
+ chao.gao@intel.com, weijiang.yang@intel.com
+References: <20250129095902.16391-1-adrian.hunter@intel.com>
+ <20250129095902.16391-8-adrian.hunter@intel.com>
+Content-Language: en-US
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <20250129095902.16391-8-adrian.hunter@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 19, 2025 at 05:34:49PM +0100, Manuel Traut wrote:
-> On Fri, Jan 10, 2025 at 06:49:00AM +0100, Markus Burri wrote:
-> > The delay is retrieved from a device-tree property, so the duration is
-> > variable. fsleep guesses the best delay function based on duration.
-> > 
-> > see Documentation/timers/delay_sleep_functions.rst
-> > 
-> > Signed-off-by: Markus Burri <markus.burri@mt.com>
+On 1/29/2025 5:58 PM, Adrian Hunter wrote:
+> From: Isaku Yamahata <isaku.yamahata@intel.com>
 > 
-> Reviewed-by: Manuel Traut <manuel.traut@mt.com> 
-
-As I mentioned in other review activate_col() may be called in atomic
-context where we can not sleep:
-
-"activate_col() may be called in atomic context, and if fsleep() turns
-into usleep_range() or msleep() we are going to have a bad time.
-
-We should either stop using request_any_context_irq() or figure out if
-interrupt handler can sleep or not and adjust behavior properly."
-
-Unfortunately this was completely ignored.
-
+> On exiting from the guest TD, xsave state is clobbered.  Restore xsave
+> state on TD exit.
 > 
-> > ---
-> >  drivers/input/keyboard/matrix_keypad.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/input/keyboard/matrix_keypad.c b/drivers/input/keyboard/matrix_keypad.c
-> > index 2a3b3bf..5571d2e 100644
-> > --- a/drivers/input/keyboard/matrix_keypad.c
-> > +++ b/drivers/input/keyboard/matrix_keypad.c
-> > @@ -68,7 +68,7 @@ static void activate_col(struct matrix_keypad *keypad, int col, bool on)
-> >  	__activate_col(keypad, col, on);
-> >  
-> >  	if (on && keypad->col_scan_delay_us)
-> > -		udelay(keypad->col_scan_delay_us);
-> > +		fsleep(keypad->col_scan_delay_us);
-> >  }
-> >  
-> >  static void activate_all_cols(struct matrix_keypad *keypad, bool on)
-> > -- 
-> > 2.39.5
-> > 
+> Set up guest state so that existing kvm_load_host_xsave_state() can be
+> used. Do not allow VCPU entry if guest state conflicts with the TD's
+> configuration.
+> 
+> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+> TD vcpu enter/exit v2:
+>   - Drop PT and CET feature flags (Chao)
+>   - Use cpu_feature_enabled() instead of static_cpu_has() (Chao)
+>   - Restore PKRU only if the host value differs from defined
+>     exit value (Chao)
+>   - Use defined masks to separate XFAM bits into XCR0/XSS (Adrian)
+>   - Use existing kvm_load_host_xsave_state() in place of
+>     tdx_restore_host_xsave_state() by defining guest CR4, XCR0, XSS
+>     and PKRU (Sean)
+>   - Do not enter if vital guest state is invalid (Adrian)
+> 
+> TD vcpu enter/exit v1:
+>   - Remove noinstr on tdx_vcpu_enter_exit() (Sean)
+>   - Switch to kvm_host struct for xcr0 and xss
+> 
+> v19:
+>   - Add EXPORT_SYMBOL_GPL(host_xcr0)
+> 
+> v15 -> v16:
+>   - Added CET flag mask
+> ---
+>   arch/x86/kvm/vmx/tdx.c | 72 ++++++++++++++++++++++++++++++++++++++----
+>   1 file changed, 66 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+> index 3f3d61935a58..e4355553569a 100644
+> --- a/arch/x86/kvm/vmx/tdx.c
+> +++ b/arch/x86/kvm/vmx/tdx.c
+> @@ -83,16 +83,21 @@ static u64 tdx_get_supported_attrs(const struct tdx_sys_info_td_conf *td_conf)
+>   	return val;
+>   }
+>   
+> +/*
+> + * Before returning from TDH.VP.ENTER, the TDX Module assigns:
+> + *   XCR0 to the TD’s user-mode feature bits of XFAM (bits 7:0, 9, 18:17)
+> + *   IA32_XSS to the TD's supervisor-mode feature bits of XFAM (bits 8, 16:10)
+> + */
+> +#define TDX_XFAM_XCR0_MASK	(GENMASK(7, 0) | BIT(9) | GENMASK(18, 17))
+> +#define TDX_XFAM_XSS_MASK	(BIT(8) | GENMASK(16, 10))
+> +#define TDX_XFAM_MASK		(TDX_XFAM_XCR0_MASK | TDX_XFAM_XSS_MASK)
 
-Thanks.
+No need to define TDX-specific mask for XFAM. kernel defines 
+XFEATURE_MASK_* and you can define XFEATURE_XCR0_MASK and 
+XFEATURE_XSS_MASK with XFEATURE_MASK_*.
 
--- 
-Dmitry
+>   static u64 tdx_get_supported_xfam(const struct tdx_sys_info_td_conf *td_conf)
+>   {
+>   	u64 val = kvm_caps.supported_xcr0 | kvm_caps.supported_xss;
+>   
+> -	/*
+> -	 * PT and CET can be exposed to TD guest regardless of KVM's XSS, PT
+> -	 * and, CET support.
+> -	 */
+> -	val |= XFEATURE_MASK_PT | XFEATURE_MASK_CET_USER |
+> -	       XFEATURE_MASK_CET_KERNEL;
+> +	/* Ensure features are in the masks */
+> +	val &= TDX_XFAM_MASK;
+
+It's unncessary.
+
+kvm_caps.supported_xcr0 | kvm_caps.supported_xss must be the subset of 
+TDX_XFAM_MASK;
+
+>   	if ((val & td_conf->xfam_fixed1) != td_conf->xfam_fixed1)
+>   		return 0;
+> @@ -724,6 +729,19 @@ int tdx_vcpu_pre_run(struct kvm_vcpu *vcpu)
+>   	return 1;
+>   }
+>   
+> +static bool tdx_guest_state_is_invalid(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_tdx *kvm_tdx = to_kvm_tdx(vcpu->kvm);
+> +
+> +	return vcpu->arch.xcr0 != (kvm_tdx->xfam & TDX_XFAM_XCR0_MASK) ||
+> +	       vcpu->arch.ia32_xss != (kvm_tdx->xfam & TDX_XFAM_XSS_MASK) ||
+> +	       vcpu->arch.pkru ||
+> +	       (cpu_feature_enabled(X86_FEATURE_XSAVE) &&
+> +		!kvm_is_cr4_bit_set(vcpu, X86_CR4_OSXSAVE)) ||
+> +	       (cpu_feature_enabled(X86_FEATURE_XSAVES) &&
+> +		!guest_cpu_cap_has(vcpu, X86_FEATURE_XSAVES));
+
+guest_cpu_cap_has() is better to put into the path when userspace 
+configures the vcpu model. So that KVM can return error to userspace 
+earlier before running the vcpu.
+
+ > +}> +
+>   static noinstr void tdx_vcpu_enter_exit(struct kvm_vcpu *vcpu)
+>   {
+>   	struct vcpu_tdx *tdx = to_tdx(vcpu);
+> @@ -740,6 +758,8 @@ static noinstr void tdx_vcpu_enter_exit(struct kvm_vcpu *vcpu)
+>   
+>   fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit)
+>   {
+> +	struct vcpu_tdx *tdx = to_tdx(vcpu);
+> +
+>   	/*
+>   	 * force_immediate_exit requires vCPU entering for events injection with
+>   	 * an immediately exit followed. But The TDX module doesn't guarantee
+> @@ -750,10 +770,22 @@ fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu, bool force_immediate_exit)
+>   	 */
+>   	WARN_ON_ONCE(force_immediate_exit);
+>   
+> +	if (WARN_ON_ONCE(tdx_guest_state_is_invalid(vcpu))) {
+> +		/*
+> +		 * Invalid exit_reason becomes KVM_EXIT_INTERNAL_ERROR, refer
+> +		 * tdx_handle_exit().
+> +		 */
+> +		tdx->vt.exit_reason.full = -1u;
+> +		tdx->vp_enter_ret = -1u;
+> +		return EXIT_FASTPATH_NONE;
+> +	}
+> +
+>   	trace_kvm_entry(vcpu, force_immediate_exit);
+>   
+>   	tdx_vcpu_enter_exit(vcpu);
+>   
+> +	kvm_load_host_xsave_state(vcpu);
+> +
+>   	vcpu->arch.regs_avail &= ~TDX_REGS_UNSUPPORTED_SET;
+>   
+>   	trace_kvm_exit(vcpu, KVM_ISA_VMX);
+> @@ -1878,9 +1910,23 @@ static int tdx_vcpu_get_cpuid(struct kvm_vcpu *vcpu, struct kvm_tdx_cmd *cmd)
+>   	return r;
+>   }
+>   
+> +static u64 tdx_guest_cr0(struct kvm_vcpu *vcpu, u64 cr4)
+> +{
+> +	u64 cr0 = ~CR0_RESERVED_BITS;
+> +
+> +	if (cr4 & X86_CR4_CET)
+> +		cr0 |= X86_CR0_WP;
+> +
+> +	cr0 |= X86_CR0_PE | X86_CR0_NE;
+> +	cr0 &= ~(X86_CR0_NW | X86_CR0_CD);
+> +
+> +	return cr0;
+> +}
+> +
+>   static int tdx_vcpu_init(struct kvm_vcpu *vcpu, struct kvm_tdx_cmd *cmd)
+>   {
+>   	u64 apic_base;
+> +	struct kvm_tdx *kvm_tdx = to_kvm_tdx(vcpu->kvm);
+>   	struct vcpu_tdx *tdx = to_tdx(vcpu);
+>   	int ret;
+>   
+> @@ -1903,6 +1949,20 @@ static int tdx_vcpu_init(struct kvm_vcpu *vcpu, struct kvm_tdx_cmd *cmd)
+>   	if (ret)
+>   		return ret;
+>   
+> +	vcpu->arch.cr4 = ~vcpu->arch.cr4_guest_rsvd_bits;
+
+when userspace doesn't configure XFEATURE_MASK_PKRU in XFAM, it seems 
+kvm_load_host_xsave_state() will skip restore host's PKRU value.
+
+Besides, vcpu->arch.cr4_guest_rsvd_bits depends on KVM_SET_CPUID*, we 
+need enfore the dependency that tdx_vcpu_init() needs to be called after 
+vcpu model is configured.
+
+> +	vcpu->arch.cr0 = tdx_guest_cr0(vcpu, vcpu->arch.cr4);
+> +	/*
+> +	 * On return from VP.ENTER, the TDX Module sets XCR0 and XSS to the
+> +	 * maximal values supported by the guest, and zeroes PKRU, so from
+> +	 * KVM's perspective, those are the guest's values at all times.
+> +	 */
+
+It's better to also call out that this is only to make 
+kvm_load_host_xsave_state() work for TDX. They don't represent the real 
+guest value.
+
+> +	vcpu->arch.ia32_xss = kvm_tdx->xfam & TDX_XFAM_XSS_MASK;
+> +	vcpu->arch.xcr0 = kvm_tdx->xfam & TDX_XFAM_XCR0_MASK;
+> +	vcpu->arch.pkru = 0;
+> +
+> +	/* TODO: freeze vCPU model before kvm_update_cpuid_runtime() */
+> +	kvm_update_cpuid_runtime(vcpu);
+> +
+>   	tdx->state = VCPU_TD_STATE_INITIALIZED;
+>   
+>   	return 0;
+
