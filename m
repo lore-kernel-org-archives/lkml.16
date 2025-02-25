@@ -1,75 +1,125 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06DE81A2389;
-	Tue, 25 Feb 2025 16:44:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1C720C488
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 16:44:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740501881; cv=none; b=dkkIAwEOjW954HFJe87d642EltImTDP81+GADv3OudMcI+pqmicLe6SYu4qKjNhmN/W9ahipU1X8Dlerim/Y1sYLK9FW1Jm6sHXJBDjWWs4PQsZn0HyLG+M31elSC8j8rpRDMHwgbEHqHmTF3zbIt7jallEWLqsT8cViL/MsIFs=
+	t=1740501882; cv=none; b=h5tAvgawPmwtj3Hv1tAX/u4etYwX3fxKrZSruMrlk/63PXlRTGE1033M0it/ESNSOMKtP97JLFwSb/0hhi+uFRhlklvitxOYCZgm3qUJt6K4ej39OY1HTP5CbL7CHY6Z3jcijnlv79faU6OZlqF9dVNkhPwLyYhSA4oj1Sww+cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740501881; c=relaxed/simple;
-	bh=ZX5eNqfG2UfwSXd6a7upCgYYCJX3G4CmXLdSAOkFdSg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G4Vb8wPFaUGmeSvZiE2QjDFnZu6EM1BlvJ9VpdA46HC+uPwr/p3yl2nrgtoUqB9NUac8RhAWAKDGHywL7LIxwCCo7QghHlYCyuBRHYTNSCdctEn/4RMKcmNhkxCKdzNvjxArF18BDObBTO33maQoaU2LA2djJSqT/FSNLKiUufU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SuNk+zdQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740501882; c=relaxed/simple;
+	bh=N9o+5lkH2lEqI5Z0LkHvN3UcudIkKdRGUvoC3mBiKdc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=D8Dc9nuB3tNY3TjmEsh+miIcIFY/YFS/XN4JSw0xgZWivMApx0hNwaxcR+UUFlIl2fKGpRqfbFfjWm3o+5HXjYnuLS2jVFv3ljvBDadvlyw7QiXjvAXQ80NJQuZdEKGrmgXlww+kmDbcxrGuQ/1J6smICUyj1DBD0aAoaHWSOF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vGjkMEAV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SuNk+zdQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1971CC4CEEC;
-	Tue, 25 Feb 2025 16:44:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vGjkMEAV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EE32C4CEED;
+	Tue, 25 Feb 2025 16:44:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1740501880;
-	bh=ZX5eNqfG2UfwSXd6a7upCgYYCJX3G4CmXLdSAOkFdSg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=SuNk+zdQlyrpthP0q5lo3IgJRdelSpuQfAw3eUDvMCuvc3oczkl84KZsDd0KMNZfk
-	 y86wUN5PYNfThF0Z8diUpfOyllDDJoJvm14DlAFKGpdQx6vVngAvcZr+ip6IJiXJ/t
-	 cZ3VpsqFPJGHK44Q+yxJJGBipYOaybJ0nJiIDzVNpd94Q4vM10Bxoe1JwLJJTHrGqF
-	 fEbmXuA0KKGVQ2V79J2UiHMjpuVx0DCYR0UddJGpG0aFvg7Cqn6LH5FKel9R6wpMpd
-	 YJXF7Oa3Z5ES2Wn1LRO6j18IM3Y4i8Q00+9QPyvgpyEEHv0OG5t5wTUW7oiyXIX2ic
-	 efdrgUHKDy8nQ==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Helge Deller <deller@gmx.de>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] dummycon: only build module if there are users
-Date: Tue, 25 Feb 2025 17:44:21 +0100
-Message-Id: <20250225164436.56654-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	bh=N9o+5lkH2lEqI5Z0LkHvN3UcudIkKdRGUvoC3mBiKdc=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=vGjkMEAVHcGMpKRMUlafJAGrQmk61NTDZa4iS592v/SBnMo0S0gBsg5Wwl1EPzrnD
+	 UvHY1AqOn2IFB46+xAu6C0W4kU8Q0uNCpWRtTJpOBgKjC/s0SGFfOSj6watW/SgSmZ
+	 MTI4qntlN0sLtb3WVGrFC3Rpeh8sAA+6894IOegpgYcIkhBRkElvNuYwJ16O9Mog3i
+	 wOXfGTVg6GAjElUZ4GmobHBwrgjQVJbD2U7GVMvXfAdR633r1N3W7D5w17chz+71Yb
+	 okrtOCKI9Nn7jtxUvW2hVcXS45B6kcSiCWUs/i8ETcA73Z/OJlbqa9AJoHynax5oGJ
+	 4rrMwa1NyAtaA==
+From: Maxime Ripard <mripard@kernel.org>
+Date: Tue, 25 Feb 2025 17:44:01 +0100
+Subject: [PATCH v4 13/15] drm/bridge: tc358768: Stop disabling when failing
+ to enable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250225-bridge-connector-v4-13-7ecb07b09cad@kernel.org>
+References: <20250225-bridge-connector-v4-0-7ecb07b09cad@kernel.org>
+In-Reply-To: <20250225-bridge-connector-v4-0-7ecb07b09cad@kernel.org>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Douglas Anderson <dianders@chromium.org>
+Cc: Herve Codina <herve.codina@bootlin.com>, 
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Maxime Ripard <mripard@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2122; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=N9o+5lkH2lEqI5Z0LkHvN3UcudIkKdRGUvoC3mBiKdc=;
+ b=owGbwMvMwCmsHn9OcpHtvjLG02pJDOl7P/t/vmHzfumZU7O1LHzvfzkxV6C5vn+jULbWD6+EX
+ 5O/XDwS2TGVhUGYk0FWTJHliUzY6eXti6sc7Ff+gJnDygQyhIGLUwAmMvk9Y8M3dcNpqhVfH1k/
+ +qoq0yweWxwpENVyYubmHqMrjb5nVuXXRXEEMVtsevqRNYWbZ/1ObsYqZk3Fk/uF5n5/bzO772P
+ AD/uECZoSrvHy5wNfMVkLu3FKRf0+EC5eMVu84oHoXyvXZ7MA
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-From: Arnd Bergmann <arnd@arndb.de>
+The tc358768 bridge driver, if enabling it fails, tries to disable it.
+This is pretty uncommon in bridge drivers, and also stands in the way
+for further reworks.
 
-Dummycon is used as a fallback conswitchp for vgacon and fbcon
-in the VT code, and there are no references to it if all three
-are disabled, so just leave it out of the kernel image for
-configurations without those.
+Worse, since pre_enable and enable aren't expected to fail, disable and
+post_disable might be called twice: once to handle the failure, and once
+to actually disable the bridge.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Since post_disable uses regulators and clocks, this would lead to enable
+count imbalances.
+
+In order to prevent that imbalance, and to allow further reworks, let's
+drop the calls to disable and post_disable, but keep the warning to let
+users know about what's going on.
+
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
 ---
- drivers/video/console/Kconfig | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/gpu/drm/bridge/tc358768.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/video/console/Kconfig b/drivers/video/console/Kconfig
-index bc31db6ef7d2..1c4263c164ce 100644
---- a/drivers/video/console/Kconfig
-+++ b/drivers/video/console/Kconfig
-@@ -47,8 +47,7 @@ config SGI_NEWPORT_CONSOLE
- 	  card of your Indy.  Most people say Y here.
+diff --git a/drivers/gpu/drm/bridge/tc358768.c b/drivers/gpu/drm/bridge/tc358768.c
+index 6db18d1e8824dd7d387211d6d1e668645cf88bbe..6b65ba8aed86012bc0f464bd5ee44325dae677c6 100644
+--- a/drivers/gpu/drm/bridge/tc358768.c
++++ b/drivers/gpu/drm/bridge/tc358768.c
+@@ -1075,15 +1075,12 @@ static void tc358768_bridge_pre_enable(struct drm_bridge *bridge)
+ 	val = TC358768_DSI_CONFW_MODE_CLR | TC358768_DSI_CONFW_ADDR_DSI_CONTROL;
+ 	val |= TC358768_DSI_CONTROL_DIS_MODE; /* DSI mode */
+ 	tc358768_write(priv, TC358768_DSI_CONFW, val);
  
- config DUMMY_CONSOLE
--	bool
--	default y
-+	def_bool VT || VGA_CONSOLE || FRAMEBUFFER_CONSOLE
+ 	ret = tc358768_clear_error(priv);
+-	if (ret) {
++	if (ret)
+ 		dev_err(dev, "Bridge pre_enable failed: %d\n", ret);
+-		tc358768_bridge_disable(bridge);
+-		tc358768_bridge_post_disable(bridge);
+-	}
+ }
  
- config DUMMY_CONSOLE_COLUMNS
- 	int "Initial number of console screen columns"
+ static void tc358768_bridge_enable(struct drm_bridge *bridge)
+ {
+ 	struct tc358768_priv *priv = bridge_to_tc358768(bridge);
+@@ -1099,15 +1096,12 @@ static void tc358768_bridge_enable(struct drm_bridge *bridge)
+ 
+ 	/* set PP_en */
+ 	tc358768_update_bits(priv, TC358768_CONFCTL, BIT(6), BIT(6));
+ 
+ 	ret = tc358768_clear_error(priv);
+-	if (ret) {
++	if (ret)
+ 		dev_err(priv->dev, "Bridge enable failed: %d\n", ret);
+-		tc358768_bridge_disable(bridge);
+-		tc358768_bridge_post_disable(bridge);
+-	}
+ }
+ 
+ #define MAX_INPUT_SEL_FORMATS	1
+ 
+ static u32 *
+
 -- 
-2.39.5
+2.48.1
 
