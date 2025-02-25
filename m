@@ -1,157 +1,117 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C189D260A50
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 08:17:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9744D261360;
+	Tue, 25 Feb 2025 08:17:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740471472; cv=none; b=MVEwVL7FTCn0qUrPd1eN8sbtRDeKUoa9RIGqZ7KGs8UFsVQZd7oE1Qam3MBAbiugoDvrE2lZ1vmOqP/SXYvSjBcSKAksxQzmaNvYrhly18zCXpcKHOKZ6sru1jPf8SB6LHj8xzZE7fltXpQLnlij9n474MP0edwpUktJFO7i9DE=
+	t=1740471475; cv=none; b=goesgCRCGaYVRsNA1JUiQ6N4rhXlSK8pThVxbXXZf1uSwOHbJ+cMpg/lBChcDSxP93RsUPiFR29hU+u3vPc3j0ACe7s+Vs1Y5Ix6nZzWpHZF+TmQEcp/l0xSQR5uyxBJ6kpISYvcfHntJWvbElRd1ihoBQxt/JR7jFdo/xIJ214=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740471472; c=relaxed/simple;
-	bh=iKdnUTC2SL9RWox/NZyjSQlFZl5BzggDAPhGbl4SBLE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qPkznjCSyKcCQbO1TRTvE1fpoqHJECX7MK73uWuIip9a1SfjvLRwpb0wf8aSetWCNl2OiSsQIzuQYa7318cG3zNkmui7zD/LmtPotA75KP8xTO5LcBDNQUrXEkYpLRRIb33oMY4zOd41HzugdBlca6nNUjAHnTty67zBw7vgwcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CQ4h2EQh; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1740471475; c=relaxed/simple;
+	bh=+U8N0q/4tVwBbUeq2+WhDUghvs71woUXYAKsqO4KBIw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TBajCOqQ45l9y/ijWFttli6JfBN3CJPJ0WA7QJWce1Zwj5810aDsYAF4snIKhuW5pi4NkiOLnC1V8vR8PZQrGGkhLY3Nl9ZvI7Ynt0J8qK62jm2VcsAxClNSWXhtwUOvPENDyI6s1XdClWr5RIjOQ9L+knnst9PjMp5ntw84VPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=QX/Bvna7; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LP3VBxZg; arc=none smtp.client-ip=103.168.172.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CQ4h2EQh"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-220c92c857aso89644175ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 00:17:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1740471470; x=1741076270; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=K5qgM7poxXm8j+OGJ1RCh5kOjLjfZERLhGhbtMwbOUg=;
-        b=CQ4h2EQhtBg+LRtoyp7ke3wIeASvEC5PdobVXgfiOIhJlSyt0MfC2w5S/fUg8poSGx
-         OFCb8ATGqon0MTaK2P34I9S2lyI537r15D6Ktj+sXUFvlazEMX9D8hu6fYRXfMkVMkqi
-         MKQGiWRLmaiRHaFyUPhpI+eYCp8G7rBND0A9uvQx6yEbG+3qGFbldACtfEtbvipqUTWT
-         xBW4Ik/ZQakQrYzJ8mXaPuLM8yCa5sgSv39Ag65aWCimOjaHGCZRLkiKzQ6Utpfze2Sv
-         3gsLuVdJSA7h4sfYB9Pw/HwKwBfzOTrvfmxZC/hmGf+H8eGGT5CISWl1iZspkNfOs6Id
-         PtoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740471470; x=1741076270;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K5qgM7poxXm8j+OGJ1RCh5kOjLjfZERLhGhbtMwbOUg=;
-        b=WgyqWIcpqF2rq2d/i4+hjXb8UI+yTlAbXHIrosl2yOn4FxD8y4LlSC/LbcIEORklZG
-         2oS8PpPxIOyhFsNxonLgSUiWlJNGjyZvFLkrR+FZKp2E1OL+lUg9vjRciHc/r1E3kMR6
-         ckUUDd0X8P8/Amb+RCHjX6tPG7JgdIblbLFCn6xMjRopwZZQVpJQuoEz7XltOPIGthT6
-         pYkDR28/6XBsNiIzSjp5xaaUcUetyv6OdGOJFHx4Zwxuo3mWmglwA96WijLOH8DzlYzn
-         DwJHvgHkDXgg4RYFvhZe3DmuYcgldw5hkMDNyaf8HnYnPtOqGtBPq8QuTkmTPjDxIWfG
-         oOrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUpVAezM2+xvN8uE8iCrSgqWbEHjhik21atkGE3PMz5Cz4Sj84/yIwMjknaSs/sdaXmR7VfzgN6zUj0ey4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yztx1SlO26mwCdWrHApGSmpgh4k/plhikoxjUtZoE7fS62IF9MP
-	F+AfBZAVmKOv0EsHXf7g2Fhy6ImPR97WtQRLz+5iuHNXu0t5PKoOwjjcXoAUQg==
-X-Gm-Gg: ASbGncsGCmCKZ6LB+YDWyRhODW9VyXF8dFVxVD+Cg8KcXO0tvcfeXtx4ugsrhhFNW25
-	d8hGoPMjjFiUTxsvYDA6Cu3gDTd4j5l53IaMXTShgdtOcXj2kz1j51WC04qwbbGjqKgRHbR867L
-	ReH0bYIqKt3AMqyAJINeIPNEagMZBsfO8x2y1uA0IJiN5Q2+gDquABNR4Py1O5FdFBwTxH1brqp
-	iHRZHbJ1LHvndK4Ge6Vgei+O1L8S/akRkix1wqCeG/UHFPn9erHiBfBrXQMtGnIFmPAbSxMa7QB
-	STvrNYkjrEKmfChtRq3dOCspDdO0OLdCAYW1
-X-Google-Smtp-Source: AGHT+IEpO/yJbCJfiyxz5Zgl+Ab9e8pW5yGytcKSCdHEpsimzdcIh/9jYIizG0EAUBk3flqU4p1GwA==
-X-Received: by 2002:a17:902:ce11:b0:21f:6167:183a with SMTP id d9443c01a7336-2218c3f434fmr337409465ad.15.1740471469949;
-        Tue, 25 Feb 2025 00:17:49 -0800 (PST)
-Received: from thinkpad ([36.255.17.214])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2230a092eb0sm8545385ad.142.2025.02.25.00.17.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 00:17:49 -0800 (PST)
-Date: Tue, 25 Feb 2025 13:47:44 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: "Wenbin Yao (Consultant)" <quic_wenbyao@quicinc.com>
-Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, vkoul@kernel.org,
-	kishon@kernel.org, p.zabel@pengutronix.de,
-	dmitry.baryshkov@linaro.org, abel.vesa@linaro.org,
-	quic_qianyu@quicinc.com, neil.armstrong@linaro.org,
-	quic_devipriy@quicinc.com, linux-arm-msm@vger.kernel.org,
-	linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] phy: qcom: qmp-pcie: Add PHY register retention
- support
-Message-ID: <20250225081744.3aprpztylrdgs2cl@thinkpad>
-References: <20250220102253.755116-1-quic_wenbyao@quicinc.com>
- <20250220102253.755116-3-quic_wenbyao@quicinc.com>
- <20250224073301.aqbw3gxjnupbejfy@thinkpad>
- <7ffb09cd-9c77-4407-9087-3e789cd8bf44@quicinc.com>
- <ea5de507-1252-4ff3-9b18-40981624afea@oss.qualcomm.com>
- <20250224122439.njrcoyrfsisddoer@thinkpad>
- <eea55dfa-3dd3-488b-958c-cd20e18a7d7d@quicinc.com>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="QX/Bvna7";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LP3VBxZg"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfout.phl.internal (Postfix) with ESMTP id 626F31381684;
+	Tue, 25 Feb 2025 03:17:52 -0500 (EST)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Tue, 25 Feb 2025 03:17:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm2; t=1740471472; x=1740557872; bh=bdIllsSKWBpK9vaOW5DvD
+	l4NNgJuhqdEomPLmN+ytAA=; b=QX/Bvna7Q5Bk650sS0FtRueZco53KDOdvjtmP
+	ROtsXWCvYEjuV+IA7tZgh320E12GYd+ErtPVXqVkQWFzYZiqCpwpgTBx04uKwaeE
+	wlGaC5psouT3Qn1Oc+P+Z5T+WGWU6FPBLk5d/9Rc1U+BDyp7VHbDE4ZOXUE84Cxf
+	T7uS8aLW9ntYgtqHAYit72x65KinpPgLGv5mVUJK0jtwihn/On/zjJZB0nGd5UX4
+	2E/NwaHrB6hxovB+qwCxJ06G05i91vYAdaP9usklR+KF/z/j7eld4ZYO9pDYwZhs
+	0qZuAgifZtnpxNzLQCjPNzDBCxvjKhckm5FgraqBbKekOLlBQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1740471472; x=1740557872; bh=bdIllsSKWBpK9vaOW5DvDl4NNgJuhqdEomP
+	LmN+ytAA=; b=LP3VBxZgDQ+OK0y2CZotJg2dzv2SMvMaYa6yV05y9s7KyYSLbLw
+	6nnapv/oA/Pmf4X57M+8gG6pZ7vCLAvPLtbFuoysdW1Tu+kH7zQcCyMZs3ms05Xn
+	5yGDwxZwRdr8ZJlZNBRGiselYFQkZJ+M/Lv/iweOX6eSMxzdUNTOkrLgcUi/j4FL
+	kKiRpATgJZLnUY4hRJYAXffDepdrgDXcS6E95MNNDXjbvt0GkBILwMGqkOKKHykZ
+	gHH8Po28YAUd8HQWwhK6mT1PNV8upaEvn0AlbevXvj0WLwWIhHpHk8bwPcxaMwhR
+	4D2o1YKlJucvYUzAcQYxGU6DmxXAF5BL+YQ==
+X-ME-Sender: <xms:r3y9Z747xVkjSwoKD1mfX8K0QkpQhVqf5SKYHDQoYNsjSgrF7D9b_Q>
+    <xme:r3y9Zw5AxYtavcuVhw9jG4PtcDEJq8ze6kv67hAW-DzZFSZxK2jVPSuTCwZw4g_Zx
+    K3NZPcsFQF-MFOpqAI>
+X-ME-Received: <xmr:r3y9Zycy0eJqZqnGS-9INZvYSfoVj2gWcJ_Z-CK95Z88FGAkixHYyEjTLeQH4cqa4WhtY9MPZ0oUM9Sgyw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekuddvtdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
+    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhephffvve
+    fufffkofgggfestdekredtredttdenucfhrhhomhepnfhukhgvucflohhnvghsuceolhhu
+    khgvsehljhhonhgvshdruggvvheqnecuggftrfgrthhtvghrnheptdektdeitdetueehue
+    etteffffeggfefhfeitddvgeeifeejheelheffjefggfehnecuvehluhhsthgvrhfuihii
+    vgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvh
+    dpnhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhi
+    nhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohephh
+    guvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrhhv
+    ihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepphhlrghtfhhorh
+    hmqdgurhhivhgvrhdqgiekieesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pehlihhnuhigqdhinhhpuhhtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
+    epsggvnhhtihhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhikhhosheskhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtoheplhhukhgvsehljhhonhgvshdruggvvh
+X-ME-Proxy: <xmx:r3y9Z8LQ-NjSBWs7btz_OQi93yjr0wsYVuhWKvfowFf3e8hzNe3ZeQ>
+    <xmx:r3y9Z_Lymtivsx3a4kfMmAiPsxjivQB1Gt1pVbZPPA9ZQGoY9-47tg>
+    <xmx:r3y9Z1x5PcRS0wc01Xi3Irq48tk3_9Q2gy5-e-S5XnRnUHqCXJH_Lg>
+    <xmx:r3y9Z7LlouR3llojwESBJN7jh7SQb2Oi6uoFD9g4BsYFLuSD-90MHw>
+    <xmx:sHy9Z8rpVkA8w7Z-S9UgUweEOeMyic2PMHFOY3ZeaHNVy49GORCy9uXZ>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 25 Feb 2025 03:17:48 -0500 (EST)
+From: Luke Jones <luke@ljones.dev>
+To: linux-kernel@vger.kernel.org
+Cc: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	platform-driver-x86@vger.kernel.org,
+	linux-input@vger.kernel.org,
+	bentiss@kernel.org,
+	jikos@kernel.org,
+	Luke Jones <luke@ljones.dev>
+Subject: [PATCH 0/2] hid-asus: asus-wmi: refactor Ally suspend/resume
+Date: Tue, 25 Feb 2025 21:17:42 +1300
+Message-ID: <20250225081744.92841-1-luke@ljones.dev>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <eea55dfa-3dd3-488b-958c-cd20e18a7d7d@quicinc.com>
 
-On Tue, Feb 25, 2025 at 04:06:16PM +0800, Wenbin Yao (Consultant) wrote:
-> On 2/24/2025 8:24 PM, Manivannan Sadhasivam wrote:
-> > On Mon, Feb 24, 2025 at 12:46:44PM +0100, Konrad Dybcio wrote:
-> > > On 24.02.2025 9:46 AM, Wenbin Yao (Consultant) wrote:
-> > > > On 2/24/2025 3:33 PM, Manivannan Sadhasivam wrote:
-> > > > > On Thu, Feb 20, 2025 at 06:22:53PM +0800, Wenbin Yao wrote:
-> > > > > > From: Qiang Yu <quic_qianyu@quicinc.com>
-> > > > > > 
-> > > > > > Some QCOM PCIe PHYs support no_csr reset. Unlike BCR reset which resets the
-> > > > > > whole PHY (hardware and register), no_csr reset only resets PHY hardware
-> > > > > > but retains register values, which means PHY setting can be skipped during
-> > > > > > PHY init if PCIe link is enabled in booltloader and only no_csr is toggled
-> > > > > > after that.
-> > > > > > 
-> > > > > > Hence, determine whether the PHY has been enabled in bootloader by
-> > > > > > verifying QPHY_START_CTRL register. If it's programmed and no_csr reset is
-> > > > > > available, skip BCR reset and PHY register setting to establish the PCIe
-> > > > > > link with bootloader - programmed PHY settings.
-> > > > > > 
-> > > > > > Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
-> > > > > > Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
-> > > > > Some nitpicks below.
-> > > > > 
-> > > > > > ---
-> > > [...]
-> > > 
-> > > > > > +     * In this way, no matter whether the PHY settings were initially
-> > > > > > +     * programmed by bootloader or PHY driver itself, we can reuse them
-> > > > > It is really possible to have bootloader not programming the init sequence for
-> > > > > no_csr reset platforms? The comment sounds like it is possible. But I heard the
-> > > > > opposite.
-> > > > PCIe3 on X1E80100 QCP is disabled by default in UEFI. We need to enable it
-> > > > manually in UEFI shell if we want.
-> > > IIUC this will not be a concern going forward, and this is a special case
-> > > 
-> > I'm wondering how many *special* cases we may have to deal with going forward.
-> > Anyhow, I would propose to atleast throw an error and fail probe() if:
-> > 
-> > * the platform has no_csr reset AND
-> > * bootloader has not initialized the PHY AND
-> > * there are no init sequences in the kernel
-> > 
-> > - Mani
-> 
-> Hmmm, regardless of whether it's a special case, we can't assume that UEFI
-> will enable the PHY supporting no_csr reset on all platforms. It's a bit
-> risky. If we make such an assumption, we also won't need to check whether
-> the PHY is enabled by UEFI during powering on. We just need to check
-> whether no_csr reset is available.
-> 
+This short series refactors the Ally suspend/resume functionality in the
+asus-wmi driver along with adding support for ROG Ally MCU version checking.
 
-I am not supportive of this assumption to be clear. While I am OK with relying
-on no_csr reset and bootloader programming the PHY, we should also make sure to
-catch if the PHY doesn't initialize it. Otherwise, the driver would assume that
-the PHY is working, but the users won't see any PCIe devices.
+The version checking is then used to toggle the use of older CSEE call hacks
+that were initially used to combat Ally suspend/wake issues arising from the MCU
+not clearing a particular flag on resume. ASUS have since corrected this
+especially for Linux in newer firmware versions.
 
-> But it makes sense to check the exsitence of PHY senquence. How about
-> adding the check in qmp_pcie_init, if a PHY supports no_csr reset and isn't
-> initialized in UEFI and there is no cfg->tbls, return error and print some
-> error log so that the PCIe controller will fail to probe.
-> 
+- hid-asus requests the MCU version and displays a warning if the version is
+  older than the one that fixes the issue.
+- hid-asus awill also toggle the CSEE hack off, and mcu_powersave to on if the
+version is high enough.
 
-Sounds good to me.
+Luke D. Jones (2):
+  hid-asus: check ROG Ally MCU version and warn
+  platform/x86: asus-wmi: Refactor Ally suspend/resume
 
-- Mani
+ drivers/hid/hid-asus.c                     | 101 ++++++++++++++++-
+ drivers/platform/x86/asus-wmi.c            | 124 ++++++++++++++-------
+ include/linux/platform_data/x86/asus-wmi.h |  15 +++
+ 3 files changed, 199 insertions(+), 41 deletions(-)
 
--- 
-மணிவண்ணன் சதாசிவம்
+--
+2.48.1
