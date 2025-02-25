@@ -1,154 +1,91 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CC1268C7D;
-	Tue, 25 Feb 2025 15:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8EC26BD8A
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 15:27:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740497265; cv=none; b=E5K/dv0wYCyV6bcBt3iVC9JTSGtibgyluMUfo0Zi/WYKo8fJoZZUkuG6MLmaiXqmETZIiIXsP1Cf3gIoGWdeKnjxNv3r4q0Eo7DO1asHReBtkNM0MwhLlaARzvyPvHKfP/lgTuDR7k8vef3+UwbwaXR65yHZZHut/qJCVD06YPM=
+	t=1740497267; cv=none; b=nZiUQ5xXGDEGvnIoQJXCU8irGdIExlRhQJdy3pMCC42jX7FtbDLzLg5ciV35iqvMTpxLF+JXb3F9Mnzhe7P1QhXVRp/G7+bP0c0OPs3GN05fwIaOwiVyXOuuUWCqDTabti/ONoN+XJGEeiYO4dV5XV0ftwdqsBWDaRtDDavuWlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740497265; c=relaxed/simple;
-	bh=A3Y5LEMr0FObgFw5//qt/N703D8BZZFeuCXY982Ay8s=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=UoLZUsv2Iizowdnzz3dp+GzamSX8+UMA1U60RK7+/yduP4mnqOry/iA/0QD6PkD5q8VqXjO2V2sQmlLGEsFBBqcZHG2oCFAB2j6TOAU1jwuEqF6S8UgXbSI/JIgjKkLNGDDTS2uqq4+MMKqDEyldbOypL/WQSDwNwnuGs95SDKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=gFS3Qbg9; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1740497267; c=relaxed/simple;
+	bh=7S0+Zh7bx00KedsQeG+Vi+B61V2GRVFmBCadrSzhX3s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jSugUZ1tTP2t5oYpF4DTecqBaOiDOjgZMz/2aer4RfTNMwlOHxWAYeVyeyODUMSOREX2DKe2eru1lSRo7GVLcQmIKkXyfygO9TorJ4+dXM6EJBxK6NGDcAQVANCI/c/0EDpabDu6BO1bsIHG70Moz7RvXSFBCv5csnYFDeKqrz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dSYmaP9Y; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="gFS3Qbg9"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 51PFOHRf1324298
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 25 Feb 2025 07:24:17 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 51PFOHRf1324298
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1740497060;
-	bh=WwBGNG5GOM5EDBRYNhpg1dowM06WZaFYwprnE0ohGQo=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=gFS3Qbg9090zqrxMgWpV3QU2nlXkwzE0x821QukbyGIMgBkSQpuzxodk+NhODEkKN
-	 5h6k3fzgqnVQszi++Fm0zAWkcXoyd9Xkym/XQkMSrQQkzB32FJgavtpnoFmVqMt5+b
-	 Ut+jJOF2NsSesEP0cpHx79zg+1Hhp0iTas+P77VsgeosF4jA4YmppCVoZ6lUr/TsQ7
-	 y4TM2oB0LvUl/CGxwpwp0kGuvR8IUIGcaH+wHv+nRaIl2wg+GbRlNP1tQskp4yCPjq
-	 ++07dWpeKgWMhBWMggv61l0UzN3t+dVy4CTbKFqF+E15aNijxWhLEtzbDpNrb3YhKe
-	 U8ZjPhiVMLIiw==
-Date: Tue, 25 Feb 2025 07:24:16 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: David Laight <david.laight.linux@gmail.com>,
-        Jiri Slaby <jirislaby@kernel.org>
-CC: Kuan-Wei Chiu <visitorckw@gmail.com>, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        jk@ozlabs.org, joel@jms.id.au, eajames@linux.ibm.com,
-        andrzej.hajda@intel.com, neil.armstrong@linaro.org, rfoss@kernel.org,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
-        dmitry.torokhov@gmail.com, mchehab@kernel.org, awalls@md.metrocast.net,
-        hverkuil@xs4all.nl, miquel.raynal@bootlin.com, richard@nod.at,
-        vigneshr@ti.com, louis.peens@corigine.com, andrew+netdev@lunn.ch,
-        davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
-        parthiban.veerasooran@microchip.com, arend.vanspriel@broadcom.com,
-        johannes@sipsolutions.net, gregkh@linuxfoundation.org,
-        yury.norov@gmail.com, akpm@linux-foundation.org, alistair@popple.id.au,
-        linux@rasmusvillemoes.dk, Laurent.pinchart@ideasonboard.com,
-        jonas@kwiboo.se, jernej.skrabec@gmail.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsi@lists.ozlabs.org,
-        dri-devel@lists.freedesktop.org, linux-input@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
-        oss-drivers@corigine.com, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev,
-        brcm80211-dev-list.pdl@broadcom.com, linux-serial@vger.kernel.org,
-        bpf@vger.kernel.org, jserv@ccns.ncku.edu.tw,
-        Yu-Chun Lin <eleanor15x@gmail.com>
-Subject: Re: [PATCH 02/17] bitops: Add generic parity calculation for u64
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250224133431.2c38213f@pumpkin>
-References: <20250223164217.2139331-1-visitorckw@gmail.com> <20250223164217.2139331-3-visitorckw@gmail.com> <bde62fee-4617-4db7-b92c-59fb958c4ca6@kernel.org> <20250224133431.2c38213f@pumpkin>
-Message-ID: <3BC57C78-1DFF-4B83-85AA-A908DBF2B958@zytor.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dSYmaP9Y"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-548409cd2a8so4027925e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 07:27:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1740497263; x=1741102063; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7S0+Zh7bx00KedsQeG+Vi+B61V2GRVFmBCadrSzhX3s=;
+        b=dSYmaP9YWad+LzNZDn18QkcctWuSJ6F0/bh61H3UgmObOGxy1Kat7E9UGvyGH1pCFk
+         8acntJYeuQ7LUak08BFvyqfwsu0rIUjGP+PRCNoO5K1AgxbZ6h3/fKWzgnMsC8urh21L
+         ffDfvut5fpvI7RB8AMJI8ZXQpnr2OM72mnGzUa5JEToriOTx2NXeFSMKrY4C5bDh6ldm
+         bYvLLF0QQGtT+TJaYxkCzyvnYaYBk5JrIFXyRt1j3BtAAS02m8INNouLqy+nBBRbRzgK
+         CX7khHqrYqCVgu4S9z/oPL/GyTOGE1U87layRiGbXT6ZV/LxfeQaXTGVT5p9HMQgndyO
+         HIcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740497263; x=1741102063;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7S0+Zh7bx00KedsQeG+Vi+B61V2GRVFmBCadrSzhX3s=;
+        b=dewgcRM+WVMFRAaaL/6F+qjyClhY/0YkdScl8RSoyzYI8ni20ktfnFqzGAQmGDMOTL
+         fl3k41jE2fU/x7FHAep8yhsUk+m6tmSlNPerIqHUSareJbDHITaGZRIu8a/CUaqjlb2c
+         MxtnSd+zpr3pHCrBvunpFIYvIVOsXC2eJS0uke8kLEBg0auJujYgWQsjCVlz/6bpU+1A
+         vrHyfRsYVgZnCYXg18LszDo16z6yClXZKSYwhtYEq6NxcjyzXjkeqralNV/25F34pfGI
+         HWGom35ebRZ6ov7oRR1LYeHNH6pP+6vhfebSdvGjKJEH69CoTv92c9bxLl55c6hQOvuh
+         VAhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX5Jptii7TQShZWamVjMPRxO+khjz6hYrb2auBPQQwjOTkdluspwHTa30AiHiXGhtL2LMWPuunH9axIqEY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5Hv5f+5EVd/fd1DjRH83epAERGHKx1RdoVheQDy33ycLFC78S
+	u4SSO2ul1L93mjuvwOZj7jF8FS+vnV7Y9rygebpIOk209Xg120q3OMtrX7PAXGNVDRqtv7E0qqv
+	kl2Ar9QrYkXw90yaMSbkUfVJPxK6Tziid15ShSQ==
+X-Gm-Gg: ASbGnctR23hpMbcTUENezJepZO4rJnOoEhvVmotjYYubkOo8xBn2qf1YkcAMVqVMOR7
+	NYqxgKun0JY2TGOiJOQWGD78pauT5OmyBggxisPHvl9KkkvmUioKoA3HH5W+mLIR7TFRCGi9Ojn
+	4/yUVzDks=
+X-Google-Smtp-Source: AGHT+IFgTJGE+RjBrEO8OC8TeDJzFMHUlzAIhSFbfMnj8/Q8uFWtMIjrMUGLsz+zRCyCJyT9lKeUrhXtO4KqUE8JmSg=
+X-Received: by 2002:a05:6512:a93:b0:546:2f7a:38b9 with SMTP id
+ 2adb3069b0e04-548510ce891mr1958352e87.3.1740497263319; Tue, 25 Feb 2025
+ 07:27:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <20250220180427.3382482-1-vincenzo.frascino@arm.com> <20250220180427.3382482-4-vincenzo.frascino@arm.com>
+In-Reply-To: <20250220180427.3382482-4-vincenzo.frascino@arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 25 Feb 2025 16:27:31 +0100
+X-Gm-Features: AWEUYZlv7NPRpHplJoYHtLorhg9CL7rEI01TWd7nd5BSlHowCiDOAXdzpMqpzHs
+Message-ID: <CACRpkdY8TdiDyZU7Wye=hj5csC=8HKBghPwFxggrhc=7nbwtnQ@mail.gmail.com>
+Subject: Re: [PATCH v6 03/10] dt-bindings: arm: Add Morello fvp compatibility
+To: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Russell King <linux@armlinux.org.uk>, 
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Jessica Clarke <jrtc27@jrtc27.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On February 24, 2025 5:34:31 AM PST, David Laight <david=2Elaight=2Elinux@g=
-mail=2Ecom> wrote:
->On Mon, 24 Feb 2025 08:09:43 +0100
->Jiri Slaby <jirislaby@kernel=2Eorg> wrote:
->
->> On 23=2E 02=2E 25, 17:42, Kuan-Wei Chiu wrote:
->> > Several parts of the kernel open-code parity calculations using
->> > different methods=2E Add a generic parity64() helper implemented with=
- the
->> > same efficient approach as parity8()=2E
->> >=20
->> > Co-developed-by: Yu-Chun Lin <eleanor15x@gmail=2Ecom>
->> > Signed-off-by: Yu-Chun Lin <eleanor15x@gmail=2Ecom>
->> > Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail=2Ecom>
->> > ---
->> >   include/linux/bitops=2Eh | 22 ++++++++++++++++++++++
->> >   1 file changed, 22 insertions(+)
->> >=20
->> > diff --git a/include/linux/bitops=2Eh b/include/linux/bitops=2Eh
->> > index fb13dedad7aa=2E=2E67677057f5e2 100644
->> > --- a/include/linux/bitops=2Eh
->> > +++ b/include/linux/bitops=2Eh
->> > @@ -281,6 +281,28 @@ static inline int parity32(u32 val)
->> >   	return (0x6996 >> (val & 0xf)) & 1;
->> >   }
->> >  =20
->> > +/**
->> > + * parity64 - get the parity of an u64 value
->> > + * @value: the value to be examined
->> > + *
->> > + * Determine the parity of the u64 argument=2E
->> > + *
->> > + * Returns:
->> > + * 0 for even parity, 1 for odd parity
->> > + */
->> > +static inline int parity64(u64 val)
->> > +{
->> > +	/*
->> > +	 * One explanation of this algorithm:
->> > +	 * https://funloop=2Eorg/codex/problem/parity/README=2Ehtml
->> > +	 */
->> > +	val ^=3D val >> 32; =20
->>=20
->> Do we need all these implementations? Can't we simply use parity64() fo=
-r=20
->> any 8, 16 and 32-bit values too? I=2Ee=2E have one parity()=2E
->
->I'm not sure you can guarantee that the compiler will optimise away
->the unnecessary operations=2E
->
->But:
->static inline int parity64(u64 val)
->{
->	return parity32(val ^ (val >> 32))
->}
->
->should be ok=2E
->It will also work on x86-32 where parity32() can just check the parity fl=
-ag=2E
->Although you are unlikely to manage to use the the PF the xor sets=2E
->
->	David
->
->>=20
->> > +	val ^=3D val >> 16;
->> > +	val ^=3D val >> 8;
->> > +	val ^=3D val >> 4;
->> > +	return (0x6996 >> (val & 0xf)) & 1;
->> > +}
->> > +
->> >   /**
->> >    * __ffs64 - find first set bit in a 64 bit word
->> >    * @word: The 64 bit word =20
->>=20
->>=20
->
+On Thu, Feb 20, 2025 at 7:04=E2=80=AFPM Vincenzo Frascino
+<vincenzo.frascino@arm.com> wrote:
 
-Incidentally, in all of this, didn't anyone notice __builtin_parity()?
+> Add compatibility to Arm Morello Fixed Virtual Platform.
+>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
