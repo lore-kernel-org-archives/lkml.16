@@ -1,552 +1,300 @@
-Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE67212B3B;
-	Tue, 25 Feb 2025 21:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E37D1A9B46;
+	Tue, 25 Feb 2025 21:15:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740518104; cv=none; b=sAjpyF5fy/Ek7U1cEvJqgO2EFlP5Q1uxvfffu9nO3K7NkU5Vv2HueldF5IwQKtW9ZhW7kVHfrq4Y7cBitYzqvRwcp1+QcuDKzaU3jPPVeCj1Wvuh+RFNmj16pKn/Y/xOdhN6N27mOAtnzfudTr6PGur8ZDT95U0pgPFs9L1iF7M=
+	t=1740518124; cv=none; b=Apr/vRGhEfFmAeG4p/GAAMsmd1TDWDnR3nxjNwnHAjgzr/yEykbctaGYbeaKMTiOLE6G5y5MJFB8SXHX+7VbJuPt9+D1yMcNo6ppcKHIdSdCEEPxHLoGNIojB/570GybKyjnunmlxrjn3mmOod1LJOUTwniofvEGAS1rwFIJPCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740518104; c=relaxed/simple;
-	bh=LzC72GBUUK82fAL3bxvfOpXyG/ep/Ha3xaemd2OmV8s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PF9NLRBVoLzwakzmO77yQ3bF/DzCAamOhBjF8S6/IBMmWRbYmpCWQ9Es2I/lGdZSGYMiaY/MEWbwcIrujJzLNbOGKNn2WqZ/TYCqZkKsalomShX0cp7SFwY1UlWkYW3oAiwxfJkoPt4pwzLnCDU9qSZt3+zfdtkGfDrao2FXAsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=8Ak4m8kf; arc=none smtp.client-ip=128.199.32.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
+	s=arc-20240116; t=1740518124; c=relaxed/simple;
+	bh=lQJAQbZ4oPUDgplqxFG+FyGE3lJA+KrNuHVzwt4QK/M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rp7RFKT81kHryxpDsFPKV1A1jFXCSk3e8/WTgzqA0683ovxFzObEl/PJD3uc8PQj4Td8bUBNpCpXG9OCDBqEVYAlVEc+c1bLBhPrdwTOGzC+zc9vBJ6uLnjsJrL7BmRy80UYXO8ODBxz5+b4aFHB5VrZA3ffZ6B55NJS39FpCNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ry2BuTOd; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="8Ak4m8kf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
-	t=1740518094; bh=LzC72GBUUK82fAL3bxvfOpXyG/ep/Ha3xaemd2OmV8s=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=8Ak4m8kffugv8vGfr4vrnYPQTX4+o0pcRngviI9URza//jy+jRX0R1naCKU/qPbAL
-	 Zem8RiFhmEw4dJVOG8aFVlD2rE+MESExgzZtQ92IpRIyUo44SSHeVoOoza6ZcKKti3
-	 Ru7W3Qqbs8/m9916Msr3S8EJ85ACnVUoxOU3mC8I=
-From: Luca Weiss <luca@lucaweiss.eu>
-Date: Tue, 25 Feb 2025 22:14:31 +0100
-Subject: [PATCH v2 3/4] drm/panel: Add driver for DJN HX83112B LCD panel
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ry2BuTOd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1740518121; x=1772054121;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lQJAQbZ4oPUDgplqxFG+FyGE3lJA+KrNuHVzwt4QK/M=;
+  b=Ry2BuTOdagmTj/H+tz8Fsd0BPpFOo1LjdlJgO/n18Seyw7/vHh1rcM8w
+   bIEGtWb1WlMLcn10MiQdjMAKCurKMSDOaxPIEX466B+wxax0gdc/3Y5aK
+   SgMGn8v69MO3OsaIznDb/0K4xFdBAEuoFTKagMddno6mzXC3MaPmNnDEy
+   Y0H5qgVXX5D/HrE7dreBGHSXZvUf5fGrYTvUmCDPV7lHgPXaR3fTFUk46
+   dmiPBp7cAwG8we/Zzyhp8vD4PTfAjVv0w1ydcXHPXxTu16YWeR+9zOQNQ
+   YtnnKShSGtTg692hkX0z+vAfVaikZsYJZx9qVHhanSGlBi2JJI+OWR74s
+   Q==;
+X-CSE-ConnectionGUID: U1lFmua4To+UYMLITozHVg==
+X-CSE-MsgGUID: MCel8il/ShitD+6LCjKXNg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="58768958"
+X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
+   d="scan'208";a="58768958"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 13:15:20 -0800
+X-CSE-ConnectionGUID: qRzw28haSNq80Ckope3R6Q==
+X-CSE-MsgGUID: +LE8dPfEQiCVv6itHhBgbQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
+   d="scan'208";a="121122947"
+Received: from lkp-server02.sh.intel.com (HELO 76cde6cc1f07) ([10.239.97.151])
+  by fmviesa005.fm.intel.com with ESMTP; 25 Feb 2025 13:15:18 -0800
+Received: from kbuild by 76cde6cc1f07 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tn2Gp-000Amd-26;
+	Tue, 25 Feb 2025 21:15:15 +0000
+Date: Wed, 26 Feb 2025 05:14:41 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev,
+	Wim Van Sebroeck <wim@linux-watchdog.org>
+Subject: Re: [PATCH v1 1/1] watchdog: nic7018_wdt: tidy up ACPI ID table
+Message-ID: <202502260415.PSbWYkXd-lkp@intel.com>
+References: <20250225095804.360899-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250225-fp3-display-v2-3-0b1f05915fae@lucaweiss.eu>
-References: <20250225-fp3-display-v2-0-0b1f05915fae@lucaweiss.eu>
-In-Reply-To: <20250225-fp3-display-v2-0-0b1f05915fae@lucaweiss.eu>
-To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- Luca Weiss <luca@lucaweiss.eu>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=18946; i=luca@lucaweiss.eu;
- h=from:subject:message-id; bh=LzC72GBUUK82fAL3bxvfOpXyG/ep/Ha3xaemd2OmV8s=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBnvjLKZM9fkBzWEgq3sGqZ9TdS8APhr88w+fv/d
- 72rKACNdpSJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZ74yygAKCRBy2EO4nU3X
- VkhTD/9A6tF123kduryqei8FojeBZYjh872qEEfKg2Az1FfawnRMoFEDpwuOhUaYGu/mfT2qSp9
- +bWJ8JZjTbEYrRFWnV/7H8l0EehE4xEEJWToeLI8NaQLFyUYzvaD9FGzSxe1m+hBQfacqVGCPL6
- EcbhhR9jgs/lgbhr799W7fNKxpXDTTAM2iRHGiO5V4+RV6BsCwdt51VhJK4yYfsyK7Q0+hHlUjI
- ooAKqm3peFfVYHLRuRISSzFfOC8IlNpok2mO5oatm8/rfqdzhS7pgK1Kuu9Pg64QoqMwoCZeAYt
- z3gAOC/bTfcW9nAINkfRJnhIhd1VI8o/EhNyG4w7/6si0rsKS9aYW+JUeRoMV7pemf0xthlPEu/
- 7EPpPOlucqG0JzW8YEJOid+TTakZd5FrIXviawHxx+394ZJDg1X72AQpZQtxyHy1s81vE4VepGW
- fOIl3B33PWwxbls/wApkIUJOgyiSvZu9dJGSZ9AjRIUuYCpPlBl8zAaubDsjWIgwNaBW9+Y4KYJ
- o2++NUOVpi9U1v6Ax9BBYRXnuqB8uig1HBfPo+P6+5W+6CRrdhRC+rn/VLMwi733IqoOpkIwTjK
- 9V4x2IA/NXVKCFdf+lVgyBpf/qIZBFiQbKGCG6Ae5SxQmoOh2g22qwt34FgW/IUDVqiydzpcZwi
- ZnpUPDP1mbLhWHQ==
-X-Developer-Key: i=luca@lucaweiss.eu; a=openpgp;
- fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250225095804.360899-1-andriy.shevchenko@linux.intel.com>
 
-Add support for the 2160x1080 LCD panel from DJN (98-03057-6598B-I)
-bundled with a HX83112B driver IC, as found on the Fairphone 3
-smartphone.
+Hi Andy,
 
-Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
----
- drivers/gpu/drm/panel/Kconfig                |  10 +
- drivers/gpu/drm/panel/Makefile               |   1 +
- drivers/gpu/drm/panel/panel-himax-hx83112b.c | 430 +++++++++++++++++++++++++++
- 3 files changed, 441 insertions(+)
+kernel test robot noticed the following build errors:
 
-diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index d7469c565d1db8b8e974dd6c45d03d9352d99d63..b32e300c563a3fd94134d61140f66cad18b4ebb6 100644
---- a/drivers/gpu/drm/panel/Kconfig
-+++ b/drivers/gpu/drm/panel/Kconfig
-@@ -173,6 +173,16 @@ config DRM_PANEL_HIMAX_HX83112A
- 	  Say Y here if you want to enable support for Himax HX83112A-based
- 	  display panels, such as the one found in the Fairphone 4 smartphone.
- 
-+config DRM_PANEL_HIMAX_HX83112B
-+	tristate "Himax HX83112B-based DSI panel"
-+	depends on OF
-+	depends on DRM_MIPI_DSI
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	select DRM_KMS_HELPER
-+	help
-+	  Say Y here if you want to enable support for Himax HX83112B-based
-+	  display panels, such as the one found in the Fairphone 3 smartphone.
-+
- config DRM_PANEL_HIMAX_HX8394
- 	tristate "HIMAX HX8394 MIPI-DSI LCD panels"
- 	depends on OF
-diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index 7dcf72646cacff11bab90c78e3b8b1f357e5f14a..6257c3cd48b57b808c95c2e535f5624fd0e06efa 100644
---- a/drivers/gpu/drm/panel/Makefile
-+++ b/drivers/gpu/drm/panel/Makefile
-@@ -18,6 +18,7 @@ obj-$(CONFIG_DRM_PANEL_FEIXIN_K101_IM2BA02) += panel-feixin-k101-im2ba02.o
- obj-$(CONFIG_DRM_PANEL_FEIYANG_FY07024DI26A30D) += panel-feiyang-fy07024di26a30d.o
- obj-$(CONFIG_DRM_PANEL_HIMAX_HX83102) += panel-himax-hx83102.o
- obj-$(CONFIG_DRM_PANEL_HIMAX_HX83112A) += panel-himax-hx83112a.o
-+obj-$(CONFIG_DRM_PANEL_HIMAX_HX83112B) += panel-himax-hx83112b.o
- obj-$(CONFIG_DRM_PANEL_HIMAX_HX8394) += panel-himax-hx8394.o
- obj-$(CONFIG_DRM_PANEL_ILITEK_IL9322) += panel-ilitek-ili9322.o
- obj-$(CONFIG_DRM_PANEL_ILITEK_ILI9341) += panel-ilitek-ili9341.o
-diff --git a/drivers/gpu/drm/panel/panel-himax-hx83112b.c b/drivers/gpu/drm/panel/panel-himax-hx83112b.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..d9b37416a30a221fd956c7754e00108166f364ab
---- /dev/null
-+++ b/drivers/gpu/drm/panel/panel-himax-hx83112b.c
-@@ -0,0 +1,430 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Generated with linux-mdss-dsi-panel-driver-generator from vendor device tree.
-+ * Copyright (c) 2025 Luca Weiss <luca@lucaweiss.eu>
-+ */
-+
-+#include <linux/backlight.h>
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include <video/mipi_display.h>
-+
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_modes.h>
-+#include <drm/drm_panel.h>
-+#include <drm/drm_probe_helper.h>
-+
-+/* Manufacturer specific DSI commands */
-+#define HX83112B_SETPOWER1	0xb1
-+#define HX83112B_SETDISP	0xb2
-+#define HX83112B_SETDRV		0xb4
-+#define HX83112B_SETEXTC	0xb9
-+#define HX83112B_SETBANK	0xbd
-+#define HX83112B_SETDGCLUT	0xc1
-+#define HX83112B_SETDISMO	0xc2
-+#define HX83112B_UNKNOWN1	0xc6
-+#define HX83112B_SETPANEL	0xcc
-+#define HX83112B_UNKNOWN2	0xd1
-+#define HX83112B_SETPOWER2	0xd2
-+#define HX83112B_SETGIP0	0xd3
-+#define HX83112B_SETGIP1	0xd5
-+#define HX83112B_SETGIP2	0xd6
-+#define HX83112B_SETGIP3	0xd8
-+#define HX83112B_SETIDLE	0xdd
-+#define HX83112B_UNKNOWN3	0xe7
-+#define HX83112B_UNKNOWN4	0xe9
-+
-+struct hx83112b_panel {
-+	struct drm_panel panel;
-+	struct mipi_dsi_device *dsi;
-+	struct regulator_bulk_data *supplies;
-+	struct gpio_desc *reset_gpio;
-+};
-+
-+static const struct regulator_bulk_data hx83112b_supplies[] = {
-+	{ .supply = "iovcc" },
-+	{ .supply = "vsn" },
-+	{ .supply = "vsp" },
-+};
-+
-+static inline struct hx83112b_panel *to_hx83112b_panel(struct drm_panel *panel)
-+{
-+	return container_of(panel, struct hx83112b_panel, panel);
-+}
-+
-+static void hx83112b_reset(struct hx83112b_panel *ctx)
-+{
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-+	usleep_range(10000, 11000);
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+	usleep_range(10000, 11000);
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 0);
-+	usleep_range(10000, 11000);
-+}
-+
-+static int hx83112b_on(struct hx83112b_panel *ctx)
-+{
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = ctx->dsi };
-+
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETEXTC, 0x83, 0x11, 0x2b);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETBANK, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETDISMO, 0x08, 0x70);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETBANK, 0x03);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETDISP, 0x04, 0x38, 0x08, 0x70);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETBANK, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETPOWER1,
-+				     0xf8, 0x27, 0x27, 0x00, 0x00, 0x0b, 0x0e,
-+				     0x0b, 0x0e, 0x33);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETPOWER2, 0x2d, 0x2d);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETDISP,
-+				     0x80, 0x02, 0x18, 0x80, 0x70, 0x00, 0x08,
-+				     0x1c, 0x08, 0x11, 0x05);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN4, 0xd1);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETDISP, 0x00, 0x08);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN4, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETBANK, 0x02);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETDISP, 0xb5, 0x0a);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETBANK, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETIDLE,
-+				     0x00, 0x00, 0x08, 0x1c, 0x08, 0x34, 0x34,
-+				     0x88);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETDRV,
-+				     0x65, 0x6b, 0x00, 0x00, 0xd0, 0xd4, 0x36,
-+				     0xcf, 0x06, 0xce, 0x00, 0xce, 0x00, 0x00,
-+				     0x00, 0x07, 0x00, 0x2a, 0x07, 0x01, 0x07,
-+				     0x00, 0x00, 0x2a);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETBANK, 0x03);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN4, 0xc3);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETDRV, 0x01, 0x67, 0x2a);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN4, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETBANK, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETDGCLUT, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETBANK, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETDGCLUT,
-+				     0xff, 0xfb, 0xf9, 0xf6, 0xf4, 0xf1, 0xef,
-+				     0xea, 0xe7, 0xe5, 0xe2, 0xdf, 0xdd, 0xda,
-+				     0xd8, 0xd5, 0xd2, 0xcf, 0xcc, 0xc5, 0xbe,
-+				     0xb7, 0xb0, 0xa8, 0xa0, 0x98, 0x8e, 0x85,
-+				     0x7b, 0x72, 0x69, 0x5e, 0x53, 0x48, 0x3e,
-+				     0x35, 0x2b, 0x22, 0x17, 0x0d, 0x09, 0x07,
-+				     0x05, 0x01, 0x00, 0x26, 0xf0, 0x86, 0x25,
-+				     0x6e, 0xb6, 0xdd, 0xf3, 0xd8, 0xcc, 0x9b,
-+				     0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETBANK, 0x02);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETDGCLUT,
-+				     0xff, 0xfb, 0xf9, 0xf6, 0xf4, 0xf1, 0xef,
-+				     0xea, 0xe7, 0xe5, 0xe2, 0xdf, 0xdd, 0xda,
-+				     0xd8, 0xd5, 0xd2, 0xcf, 0xcc, 0xc5, 0xbe,
-+				     0xb7, 0xb0, 0xa8, 0xa0, 0x98, 0x8e, 0x85,
-+				     0x7b, 0x72, 0x69, 0x5e, 0x53, 0x48, 0x3e,
-+				     0x35, 0x2b, 0x22, 0x17, 0x0d, 0x09, 0x07,
-+				     0x05, 0x01, 0x00, 0x26, 0xf0, 0x86, 0x25,
-+				     0x6e, 0xb6, 0xdd, 0xf3, 0xd8, 0xcc, 0x9b,
-+				     0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETBANK, 0x03);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETDGCLUT,
-+				     0xff, 0xfb, 0xf9, 0xf6, 0xf4, 0xf1, 0xef,
-+				     0xea, 0xe7, 0xe5, 0xe2, 0xdf, 0xdd, 0xda,
-+				     0xd8, 0xd5, 0xd2, 0xcf, 0xcc, 0xc5, 0xbe,
-+				     0xb7, 0xb0, 0xa8, 0xa0, 0x98, 0x8e, 0x85,
-+				     0x7b, 0x72, 0x69, 0x5e, 0x53, 0x48, 0x3e,
-+				     0x35, 0x2b, 0x22, 0x17, 0x0d, 0x09, 0x07,
-+				     0x05, 0x01, 0x00, 0x26, 0xf0, 0x86, 0x25,
-+				     0x6e, 0xb6, 0xdd, 0xf3, 0xd8, 0xcc, 0x9b,
-+				     0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETBANK, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETDISMO, 0xc8);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETPANEL, 0x08);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETGIP0,
-+				     0x81, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00,
-+				     0x04, 0x00, 0x01, 0x13, 0x40, 0x04, 0x09,
-+				     0x09, 0x0b, 0x0b, 0x32, 0x10, 0x08, 0x00,
-+				     0x08, 0x32, 0x10, 0x08, 0x00, 0x08, 0x32,
-+				     0x10, 0x08, 0x00, 0x08, 0x00, 0x00, 0x0a,
-+				     0x08, 0x7b);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN4, 0xc5);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN1, 0xf7);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN4, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN4, 0xd4);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN1, 0x6e);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN4, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN4, 0xef);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETGIP0, 0x0c);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN4, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETBANK, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN4, 0xc8);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETGIP0, 0xa1);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN4, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETBANK, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETGIP1,
-+				     0x18, 0x18, 0x19, 0x18, 0x18, 0x20, 0x18,
-+				     0x18, 0x18, 0x10, 0x10, 0x18, 0x18, 0x00,
-+				     0x00, 0x18, 0x18, 0x01, 0x01, 0x18, 0x18,
-+				     0x28, 0x28, 0x18, 0x18, 0x18, 0x18, 0x18,
-+				     0x2f, 0x2f, 0x30, 0x30, 0x31, 0x31, 0x35,
-+				     0x35, 0x36, 0x36, 0x37, 0x37, 0x18, 0x18,
-+				     0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0xfc,
-+				     0xfc, 0x00, 0x00, 0xfc, 0xfc, 0x00, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETGIP2,
-+				     0x18, 0x18, 0x19, 0x18, 0x18, 0x20, 0x19,
-+				     0x18, 0x18, 0x10, 0x10, 0x18, 0x18, 0x00,
-+				     0x00, 0x18, 0x18, 0x01, 0x01, 0x18, 0x18,
-+				     0x28, 0x28, 0x18, 0x18, 0x18, 0x18, 0x18,
-+				     0x2f, 0x2f, 0x30, 0x30, 0x31, 0x31, 0x35,
-+				     0x35, 0x36, 0x36, 0x37, 0x37, 0x18, 0x18,
-+				     0x18, 0x18, 0x18, 0x18, 0x18, 0x18);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETGIP3,
-+				     0xaa, 0xaa, 0xaa, 0xaf, 0xea, 0xaa, 0xaa,
-+				     0xaa, 0xaa, 0xaf, 0xea, 0xaa, 0xaa, 0xaa,
-+				     0xab, 0xaf, 0xef, 0xaa, 0xaa, 0xaa, 0xaa,
-+				     0xaf, 0xea, 0xaa);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETBANK, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETGIP3,
-+				     0xaa, 0xaa, 0xab, 0xaf, 0xea, 0xaa, 0xaa,
-+				     0xaa, 0xae, 0xaf, 0xea, 0xaa);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETBANK, 0x02);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETGIP3,
-+				     0xaa, 0xaa, 0xaa, 0xaf, 0xea, 0xaa, 0xaa,
-+				     0xaa, 0xaa, 0xaf, 0xea, 0xaa);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETBANK, 0x03);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETGIP3,
-+				     0xba, 0xaa, 0xaa, 0xaf, 0xea, 0xaa, 0xaa,
-+				     0xaa, 0xaa, 0xaf, 0xea, 0xaa, 0xba, 0xaa,
-+				     0xaa, 0xaf, 0xea, 0xaa, 0xaa, 0xaa, 0xaa,
-+				     0xaf, 0xea, 0xaa);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETBANK, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN4, 0xe4);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN3, 0x17, 0x69);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN4, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN3,
-+				     0x09, 0x09, 0x00, 0x07, 0xe8, 0x00, 0x26,
-+				     0x00, 0x07, 0x00, 0x00, 0xe8, 0x32, 0x00,
-+				     0xe9, 0x0a, 0x0a, 0x00, 0x00, 0x00, 0x01,
-+				     0x01, 0x00, 0x12, 0x04);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETBANK, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN3,
-+				     0x02, 0x00, 0x01, 0x20, 0x01, 0x18, 0x08,
-+				     0xa8, 0x09);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETBANK, 0x02);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN3, 0x20, 0x20, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETBANK, 0x03);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN3,
-+				     0x00, 0xdc, 0x11, 0x70, 0x00, 0x20);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN4, 0xc9);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN3,
-+				     0x2a, 0xce, 0x02, 0x70, 0x01, 0x04);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN4, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_SETBANK, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83112B_UNKNOWN2, 0x27);
-+	mipi_dsi_dcs_exit_sleep_mode_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 120);
-+	mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 20);
-+	mipi_dsi_dcs_set_display_brightness_multi(&dsi_ctx, 0x0000);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, MIPI_DCS_WRITE_CONTROL_DISPLAY,
-+				     0x24);
-+	mipi_dsi_dcs_set_tear_on_multi(&dsi_ctx, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
-+
-+	return dsi_ctx.accum_err;
-+}
-+
-+static int hx83112b_off(struct hx83112b_panel *ctx)
-+{
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = ctx->dsi };
-+
-+	mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 20);
-+	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
-+	mipi_dsi_msleep(&dsi_ctx, 120);
-+
-+	return dsi_ctx.accum_err;
-+}
-+
-+static int hx83112b_prepare(struct drm_panel *panel)
-+{
-+	struct hx83112b_panel *ctx = to_hx83112b_panel(panel);
-+	struct device *dev = &ctx->dsi->dev;
-+	int ret;
-+
-+	ret = regulator_bulk_enable(ARRAY_SIZE(hx83112b_supplies), ctx->supplies);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to enable regulators: %d\n", ret);
-+		return ret;
-+	}
-+
-+	hx83112b_reset(ctx);
-+
-+	ret = hx83112b_on(ctx);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to initialize panel: %d\n", ret);
-+		gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+		regulator_bulk_disable(ARRAY_SIZE(hx83112b_supplies), ctx->supplies);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int hx83112b_unprepare(struct drm_panel *panel)
-+{
-+	struct hx83112b_panel *ctx = to_hx83112b_panel(panel);
-+	struct device *dev = &ctx->dsi->dev;
-+	int ret;
-+
-+	ret = hx83112b_off(ctx);
-+	if (ret < 0)
-+		dev_err(dev, "Failed to un-initialize panel: %d\n", ret);
-+
-+	gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-+	regulator_bulk_disable(ARRAY_SIZE(hx83112b_supplies), ctx->supplies);
-+
-+	return 0;
-+}
-+
-+static const struct drm_display_mode hx83112b_mode = {
-+	.clock = (1080 + 40 + 4 + 12) * (2160 + 32 + 2 + 2) * 60 / 1000,
-+	.hdisplay = 1080,
-+	.hsync_start = 1080 + 40,
-+	.hsync_end = 1080 + 40 + 4,
-+	.htotal = 1080 + 40 + 4 + 12,
-+	.vdisplay = 2160,
-+	.vsync_start = 2160 + 32,
-+	.vsync_end = 2160 + 32 + 2,
-+	.vtotal = 2160 + 32 + 2 + 2,
-+	.width_mm = 65,
-+	.height_mm = 128,
-+	.type = DRM_MODE_TYPE_DRIVER,
-+};
-+
-+static int hx83112b_get_modes(struct drm_panel *panel,
-+				  struct drm_connector *connector)
-+{
-+	return drm_connector_helper_get_modes_fixed(connector, &hx83112b_mode);
-+}
-+
-+static const struct drm_panel_funcs hx83112b_panel_funcs = {
-+	.prepare = hx83112b_prepare,
-+	.unprepare = hx83112b_unprepare,
-+	.get_modes = hx83112b_get_modes,
-+};
-+
-+static int hx83112b_bl_update_status(struct backlight_device *bl)
-+{
-+	struct mipi_dsi_device *dsi = bl_get_data(bl);
-+	u16 brightness = backlight_get_brightness(bl);
-+	int ret;
-+
-+	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-+
-+	ret = mipi_dsi_dcs_set_display_brightness_large(dsi, brightness);
-+	if (ret < 0)
-+		return ret;
-+
-+	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-+
-+	return 0;
-+}
-+
-+static const struct backlight_ops hx83112b_bl_ops = {
-+	.update_status = hx83112b_bl_update_status,
-+};
-+
-+static struct backlight_device *
-+hx83112b_create_backlight(struct mipi_dsi_device *dsi)
-+{
-+	struct device *dev = &dsi->dev;
-+	const struct backlight_properties props = {
-+		.type = BACKLIGHT_RAW,
-+		.brightness = 4095,
-+		.max_brightness = 4095,
-+	};
-+
-+	return devm_backlight_device_register(dev, dev_name(dev), dev, dsi,
-+					      &hx83112b_bl_ops, &props);
-+}
-+
-+static int hx83112b_probe(struct mipi_dsi_device *dsi)
-+{
-+	struct device *dev = &dsi->dev;
-+	struct hx83112b_panel *ctx;
-+	int ret;
-+
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+
-+	ret = devm_regulator_bulk_get_const(dev,
-+					    ARRAY_SIZE(hx83112b_supplies),
-+					    hx83112b_supplies,
-+					    &ctx->supplies);
-+	if (ret < 0)
-+		return ret;
-+
-+	ctx->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(ctx->reset_gpio))
-+		return dev_err_probe(dev, PTR_ERR(ctx->reset_gpio),
-+				     "Failed to get reset-gpios\n");
-+
-+	ctx->dsi = dsi;
-+	mipi_dsi_set_drvdata(dsi, ctx);
-+
-+	dsi->lanes = 4;
-+	dsi->format = MIPI_DSI_FMT_RGB888;
-+	dsi->mode_flags = MIPI_DSI_MODE_VIDEO_BURST |
-+			  MIPI_DSI_CLOCK_NON_CONTINUOUS |
-+			  MIPI_DSI_MODE_VIDEO_NO_HSA | MIPI_DSI_MODE_LPM;
-+
-+	drm_panel_init(&ctx->panel, dev, &hx83112b_panel_funcs,
-+		       DRM_MODE_CONNECTOR_DSI);
-+	ctx->panel.prepare_prev_first = true;
-+
-+	ctx->panel.backlight = hx83112b_create_backlight(dsi);
-+	if (IS_ERR(ctx->panel.backlight))
-+		return dev_err_probe(dev, PTR_ERR(ctx->panel.backlight),
-+				     "Failed to create backlight\n");
-+
-+	drm_panel_add(&ctx->panel);
-+
-+	ret = mipi_dsi_attach(dsi);
-+	if (ret < 0) {
-+		drm_panel_remove(&ctx->panel);
-+		return dev_err_probe(dev, ret, "Failed to attach to DSI host\n");
-+	}
-+
-+	return 0;
-+}
-+
-+static void hx83112b_remove(struct mipi_dsi_device *dsi)
-+{
-+	struct hx83112b_panel *ctx = mipi_dsi_get_drvdata(dsi);
-+	int ret;
-+
-+	ret = mipi_dsi_detach(dsi);
-+	if (ret < 0)
-+		dev_err(&dsi->dev, "Failed to detach from DSI host: %d\n", ret);
-+
-+	drm_panel_remove(&ctx->panel);
-+}
-+
-+static const struct of_device_id hx83112b_of_match[] = {
-+	{ .compatible = "djn,98-03057-6598b-i" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, hx83112b_of_match);
-+
-+static struct mipi_dsi_driver hx83112b_driver = {
-+	.probe = hx83112b_probe,
-+	.remove = hx83112b_remove,
-+	.driver = {
-+		.name = "panel-himax-hx83112b",
-+		.of_match_table = hx83112b_of_match,
-+	},
-+};
-+module_mipi_dsi_driver(hx83112b_driver);
-+
-+MODULE_DESCRIPTION("DRM driver for hx83112b-equipped DSI panels");
-+MODULE_LICENSE("GPL");
+[auto build test ERROR on groeck-staging/hwmon-next]
+[also build test ERROR on linus/master v6.14-rc4 next-20250225]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/watchdog-nic7018_wdt-tidy-up-ACPI-ID-table/20250225-180908
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-next
+patch link:    https://lore.kernel.org/r/20250225095804.360899-1-andriy.shevchenko%40linux.intel.com
+patch subject: [PATCH v1 1/1] watchdog: nic7018_wdt: tidy up ACPI ID table
+config: s390-allyesconfig (https://download.01.org/0day-ci/archive/20250226/202502260415.PSbWYkXd-lkp@intel.com/config)
+compiler: s390-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250226/202502260415.PSbWYkXd-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502260415.PSbWYkXd-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from arch/s390/include/asm/io.h:95,
+                    from include/linux/io.h:14,
+                    from drivers/watchdog/nic7018_wdt.c:8:
+   drivers/watchdog/nic7018_wdt.c: In function 'nic7018_remove':
+>> include/asm-generic/io.h:596:15: error: call to '_outb' declared with attribute error: outb() requires CONFIG_HAS_IOPORT
+     596 | #define _outb _outb
+   include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
+     655 | #define outb _outb
+         |              ^~~~~
+   drivers/watchdog/nic7018_wdt.c:229:9: note: in expansion of macro 'outb'
+     229 |         outb(LOCK, wdt->io_base + WDT_REG_LOCK);
+         |         ^~~~
+   drivers/watchdog/nic7018_wdt.c: In function 'nic7018_set_timeout':
+>> include/asm-generic/io.h:596:15: error: call to '_outb' declared with attribute error: outb() requires CONFIG_HAS_IOPORT
+     596 | #define _outb _outb
+   include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
+     655 | #define outb _outb
+         |              ^~~~~
+   drivers/watchdog/nic7018_wdt.c:96:9: note: in expansion of macro 'outb'
+      96 |         outb(counter << 4 | config->divider,
+         |         ^~~~
+   drivers/watchdog/nic7018_wdt.c: In function 'nic7018_ping':
+>> include/asm-generic/io.h:596:15: error: call to '_outb' declared with attribute error: outb() requires CONFIG_HAS_IOPORT
+     596 | #define _outb _outb
+   include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
+     655 | #define outb _outb
+         |              ^~~~~
+   drivers/watchdog/nic7018_wdt.c:138:9: note: in expansion of macro 'outb'
+     138 |         outb(1, wdt->io_base + WDT_RELOAD_PORT);
+         |         ^~~~
+   drivers/watchdog/nic7018_wdt.c: In function 'nic7018_stop':
+>> include/asm-generic/io.h:596:15: error: call to '_outb' declared with attribute error: outb() requires CONFIG_HAS_IOPORT
+     596 | #define _outb _outb
+   include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
+     655 | #define outb _outb
+         |              ^~~~~
+   drivers/watchdog/nic7018_wdt.c:127:9: note: in expansion of macro 'outb'
+     127 |         outb(0, wdt->io_base + WDT_CTRL);
+         |         ^~~~
+>> include/asm-generic/io.h:596:15: error: call to '_outb' declared with attribute error: outb() requires CONFIG_HAS_IOPORT
+     596 | #define _outb _outb
+   include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
+     655 | #define outb _outb
+         |              ^~~~~
+   drivers/watchdog/nic7018_wdt.c:128:9: note: in expansion of macro 'outb'
+     128 |         outb(0, wdt->io_base + WDT_RELOAD_CTRL);
+         |         ^~~~
+>> include/asm-generic/io.h:596:15: error: call to '_outb' declared with attribute error: outb() requires CONFIG_HAS_IOPORT
+     596 | #define _outb _outb
+   include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
+     655 | #define outb _outb
+         |              ^~~~~
+   drivers/watchdog/nic7018_wdt.c:129:9: note: in expansion of macro 'outb'
+     129 |         outb(0xF0, wdt->io_base + WDT_PRESET_PRESCALE);
+         |         ^~~~
+   drivers/watchdog/nic7018_wdt.c: In function 'nic7018_get_timeleft':
+>> include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
+     542 | #define _inb _inb
+   include/asm-generic/io.h:643:13: note: in expansion of macro '_inb'
+     643 | #define inb _inb
+         |             ^~~~
+   drivers/watchdog/nic7018_wdt.c:148:17: note: in expansion of macro 'inb'
+     148 |         count = inb(wdt->io_base + WDT_COUNT) & 0xF;
+         |                 ^~~
+   drivers/watchdog/nic7018_wdt.c: In function 'nic7018_start':
+>> include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
+     542 | #define _inb _inb
+   include/asm-generic/io.h:643:13: note: in expansion of macro '_inb'
+     643 | #define inb _inb
+         |             ^~~~
+   drivers/watchdog/nic7018_wdt.c:112:19: note: in expansion of macro 'inb'
+     112 |         control = inb(wdt->io_base + WDT_RELOAD_CTRL);
+         |                   ^~~
+>> include/asm-generic/io.h:596:15: error: call to '_outb' declared with attribute error: outb() requires CONFIG_HAS_IOPORT
+     596 | #define _outb _outb
+   include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
+     655 | #define outb _outb
+         |              ^~~~~
+   drivers/watchdog/nic7018_wdt.c:113:9: note: in expansion of macro 'outb'
+     113 |         outb(control | WDT_RELOAD_PORT_EN, wdt->io_base + WDT_RELOAD_CTRL);
+         |         ^~~~
+>> include/asm-generic/io.h:596:15: error: call to '_outb' declared with attribute error: outb() requires CONFIG_HAS_IOPORT
+     596 | #define _outb _outb
+   include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
+     655 | #define outb _outb
+         |              ^~~~~
+   drivers/watchdog/nic7018_wdt.c:115:9: note: in expansion of macro 'outb'
+     115 |         outb(1, wdt->io_base + WDT_RELOAD_PORT);
+         |         ^~~~
+>> include/asm-generic/io.h:542:14: error: call to '_inb' declared with attribute error: inb()) requires CONFIG_HAS_IOPORT
+     542 | #define _inb _inb
+   include/asm-generic/io.h:643:13: note: in expansion of macro '_inb'
+     643 | #define inb _inb
+         |             ^~~~
+   drivers/watchdog/nic7018_wdt.c:117:19: note: in expansion of macro 'inb'
+     117 |         control = inb(wdt->io_base + WDT_CTRL);
+         |                   ^~~
+>> include/asm-generic/io.h:596:15: error: call to '_outb' declared with attribute error: outb() requires CONFIG_HAS_IOPORT
+     596 | #define _outb _outb
+   include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
+     655 | #define outb _outb
+         |              ^~~~~
+   drivers/watchdog/nic7018_wdt.c:118:9: note: in expansion of macro 'outb'
+     118 |         outb(control | WDT_CTRL_RESET_EN, wdt->io_base + WDT_CTRL);
+         |         ^~~~
+   drivers/watchdog/nic7018_wdt.c: In function 'nic7018_probe':
+>> include/asm-generic/io.h:596:15: error: call to '_outb' declared with attribute error: outb() requires CONFIG_HAS_IOPORT
+     596 | #define _outb _outb
+   include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
+     655 | #define outb _outb
+         |              ^~~~~
+   drivers/watchdog/nic7018_wdt.c:209:9: note: in expansion of macro 'outb'
+     209 |         outb(UNLOCK, wdt->io_base + WDT_REG_LOCK);
+         |         ^~~~
+>> include/asm-generic/io.h:596:15: error: call to '_outb' declared with attribute error: outb() requires CONFIG_HAS_IOPORT
+     596 | #define _outb _outb
+   include/asm-generic/io.h:655:14: note: in expansion of macro '_outb'
+     655 | #define outb _outb
+         |              ^~~~~
+   drivers/watchdog/nic7018_wdt.c:213:17: note: in expansion of macro 'outb'
+     213 |                 outb(LOCK, wdt->io_base + WDT_REG_LOCK);
+         |                 ^~~~
+
+
+vim +/_outb +596 include/asm-generic/io.h
+
+3f7e212df82ca0 Arnd Bergmann   2009-05-13  534  
+9216efafc52ff9 Thierry Reding  2014-10-01  535  /*
+9216efafc52ff9 Thierry Reding  2014-10-01  536   * {in,out}{b,w,l}() access little endian I/O. {in,out}{b,w,l}_p() can be
+9216efafc52ff9 Thierry Reding  2014-10-01  537   * implemented on hardware that needs an additional delay for I/O accesses to
+9216efafc52ff9 Thierry Reding  2014-10-01  538   * take effect.
+9216efafc52ff9 Thierry Reding  2014-10-01  539   */
+9216efafc52ff9 Thierry Reding  2014-10-01  540  
+f009c89df79abe John Garry      2020-03-28  541  #if !defined(inb) && !defined(_inb)
+f009c89df79abe John Garry      2020-03-28 @542  #define _inb _inb
+6f043e75744596 Niklas Schnelle 2024-10-24  543  #ifdef CONFIG_HAS_IOPORT
+214ba3584b2e2c Stafford Horne  2020-07-26  544  static inline u8 _inb(unsigned long addr)
+9216efafc52ff9 Thierry Reding  2014-10-01  545  {
+87fe2d543f8173 Sinan Kaya      2018-04-05  546  	u8 val;
+87fe2d543f8173 Sinan Kaya      2018-04-05  547  
+87fe2d543f8173 Sinan Kaya      2018-04-05  548  	__io_pbr();
+87fe2d543f8173 Sinan Kaya      2018-04-05  549  	val = __raw_readb(PCI_IOBASE + addr);
+abbbbc83a210e9 Will Deacon     2019-02-22  550  	__io_par(val);
+87fe2d543f8173 Sinan Kaya      2018-04-05  551  	return val;
+9216efafc52ff9 Thierry Reding  2014-10-01  552  }
+6f043e75744596 Niklas Schnelle 2024-10-24  553  #else
+6f043e75744596 Niklas Schnelle 2024-10-24  554  u8 _inb(unsigned long addr)
+6f043e75744596 Niklas Schnelle 2024-10-24  555  	__compiletime_error("inb()) requires CONFIG_HAS_IOPORT");
+6f043e75744596 Niklas Schnelle 2024-10-24  556  #endif
+9216efafc52ff9 Thierry Reding  2014-10-01  557  #endif
+9216efafc52ff9 Thierry Reding  2014-10-01  558  
+f009c89df79abe John Garry      2020-03-28  559  #if !defined(inw) && !defined(_inw)
+f009c89df79abe John Garry      2020-03-28  560  #define _inw _inw
+6f043e75744596 Niklas Schnelle 2024-10-24  561  #ifdef CONFIG_HAS_IOPORT
+f009c89df79abe John Garry      2020-03-28  562  static inline u16 _inw(unsigned long addr)
+9216efafc52ff9 Thierry Reding  2014-10-01  563  {
+87fe2d543f8173 Sinan Kaya      2018-04-05  564  	u16 val;
+87fe2d543f8173 Sinan Kaya      2018-04-05  565  
+87fe2d543f8173 Sinan Kaya      2018-04-05  566  	__io_pbr();
+c1d55d50139bea Stafford Horne  2020-07-29  567  	val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+abbbbc83a210e9 Will Deacon     2019-02-22  568  	__io_par(val);
+87fe2d543f8173 Sinan Kaya      2018-04-05  569  	return val;
+9216efafc52ff9 Thierry Reding  2014-10-01  570  }
+6f043e75744596 Niklas Schnelle 2024-10-24  571  #else
+6f043e75744596 Niklas Schnelle 2024-10-24  572  u16 _inw(unsigned long addr)
+6f043e75744596 Niklas Schnelle 2024-10-24  573  	__compiletime_error("inw() requires CONFIG_HAS_IOPORT");
+6f043e75744596 Niklas Schnelle 2024-10-24  574  #endif
+9216efafc52ff9 Thierry Reding  2014-10-01  575  #endif
+9216efafc52ff9 Thierry Reding  2014-10-01  576  
+f009c89df79abe John Garry      2020-03-28  577  #if !defined(inl) && !defined(_inl)
+f009c89df79abe John Garry      2020-03-28  578  #define _inl _inl
+6f043e75744596 Niklas Schnelle 2024-10-24  579  #ifdef CONFIG_HAS_IOPORT
+214ba3584b2e2c Stafford Horne  2020-07-26  580  static inline u32 _inl(unsigned long addr)
+9216efafc52ff9 Thierry Reding  2014-10-01  581  {
+87fe2d543f8173 Sinan Kaya      2018-04-05  582  	u32 val;
+87fe2d543f8173 Sinan Kaya      2018-04-05  583  
+87fe2d543f8173 Sinan Kaya      2018-04-05  584  	__io_pbr();
+c1d55d50139bea Stafford Horne  2020-07-29  585  	val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+abbbbc83a210e9 Will Deacon     2019-02-22  586  	__io_par(val);
+87fe2d543f8173 Sinan Kaya      2018-04-05  587  	return val;
+9216efafc52ff9 Thierry Reding  2014-10-01  588  }
+6f043e75744596 Niklas Schnelle 2024-10-24  589  #else
+6f043e75744596 Niklas Schnelle 2024-10-24  590  u32 _inl(unsigned long addr)
+6f043e75744596 Niklas Schnelle 2024-10-24  591  	__compiletime_error("inl() requires CONFIG_HAS_IOPORT");
+6f043e75744596 Niklas Schnelle 2024-10-24  592  #endif
+9216efafc52ff9 Thierry Reding  2014-10-01  593  #endif
+9216efafc52ff9 Thierry Reding  2014-10-01  594  
+f009c89df79abe John Garry      2020-03-28  595  #if !defined(outb) && !defined(_outb)
+f009c89df79abe John Garry      2020-03-28 @596  #define _outb _outb
+6f043e75744596 Niklas Schnelle 2024-10-24  597  #ifdef CONFIG_HAS_IOPORT
+f009c89df79abe John Garry      2020-03-28  598  static inline void _outb(u8 value, unsigned long addr)
+9216efafc52ff9 Thierry Reding  2014-10-01  599  {
+a7851aa54c0cdd Sinan Kaya      2018-04-05  600  	__io_pbw();
+a7851aa54c0cdd Sinan Kaya      2018-04-05  601  	__raw_writeb(value, PCI_IOBASE + addr);
+a7851aa54c0cdd Sinan Kaya      2018-04-05  602  	__io_paw();
+9216efafc52ff9 Thierry Reding  2014-10-01  603  }
+6f043e75744596 Niklas Schnelle 2024-10-24  604  #else
+6f043e75744596 Niklas Schnelle 2024-10-24  605  void _outb(u8 value, unsigned long addr)
+6f043e75744596 Niklas Schnelle 2024-10-24  606  	__compiletime_error("outb() requires CONFIG_HAS_IOPORT");
+6f043e75744596 Niklas Schnelle 2024-10-24  607  #endif
+9216efafc52ff9 Thierry Reding  2014-10-01  608  #endif
+9216efafc52ff9 Thierry Reding  2014-10-01  609  
 
 -- 
-2.48.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
