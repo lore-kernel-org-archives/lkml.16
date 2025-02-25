@@ -1,112 +1,199 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89D2718E34A;
-	Tue, 25 Feb 2025 18:35:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B49118E34A;
+	Tue, 25 Feb 2025 18:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740508525; cv=none; b=BvFdyJwH1NGwnBIiW5mMSUMBUmCL6ho3eCGx9waJ/qkdlN50bRBUPnDjKBWnscNuIwA2BZT9fdB8d+wRGDayMPUw2ipd+GJG5J05yyA45yrFtd2zccNMgzRFxjwgElykcyB5UT5nTAFxzuRBPnTacslRSb49tdNNDwtpplVJMm4=
+	t=1740508572; cv=none; b=mTlBfRhzXrYol7kUvdfKIyDGZ0sGHl0doYyZUrEc/tlCpaWzMk+ArYYetxTCsAXLrdIuzmF/0F2Nt8E0heWc1gMA0+RKQ3thkq6eYlAXCzEEHpSOce8krUn/lyyR4EriBo0gDhnzjIuxhrnnMRsfCddgae7sC7fZ8Y4EAbjhFX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740508525; c=relaxed/simple;
-	bh=neE6Y//ifJeGR4oQHArgzrz7Pt53aD02tH8Z1xoqXRs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q2RXSvfCLeuqRQPAli7cpVFj7SN2G6tPc5fpijGJ113p2FOIM+47BelhPrZfyAseIPN651oi8MSYbvYZKBBnB/WNelaXwoo5aC0ubU53R1eKLOhurreuTcV794OKIpHnvtMslYDCfnuSZ/rwNS1CmTQD0VvpSAz500EgBWVRkOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=oGQjoobX; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1740508572; c=relaxed/simple;
+	bh=FBm4oUcbXFtTEDZ7FDmVHPI2qkkxttQ4wonvfbj3Ujk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WO4wFbxCmlmVG1HHUBdmGnc3qjAQhrZ4kZTKG8hm/aWX5jjyqq+UT1fKD57b82VATWEkVJQIqlY1ihcjhiSu8lrDMmwSF1V0TkM1eGbPU/+TwFltVPxZ16eJ4JXy7edFIRTeZDtk1WqM1drMzGbPK4qR/5SChT2/5bp22GaFQww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=pcefXTgq; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="oGQjoobX"
-Received: from [10.17.64.147] (unknown [131.107.1.147])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 95078203CDDE;
-	Tue, 25 Feb 2025 10:35:22 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 95078203CDDE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1740508523;
-	bh=oAPMpgeQTX575axIRAvAGNwitPSc2FROHu2Kj3FuMr4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oGQjoobXgkyRRqjRFRYg+q70hz6uhg5zsrVj8sKaiZST2hHQzUfdy24mpz723gJq3
-	 wk6LbK9qyHkwSvnY/nWhMXJ+/pbvW5MV3urcV4jMxmRXdRhzymB2vjTgPaLEvtvDsr
-	 QnlelFhG8GfsJ2T3GYOr1XpVnIav81F+3bT3m/g4=
-Message-ID: <8504fd93-8fff-4fd9-8d2d-26b4e1e84bee@linux.microsoft.com>
-Date: Tue, 25 Feb 2025 10:35:22 -0800
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="pcefXTgq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=sft+T4Fu+5ncTC4aZbVc33XxpCTJMgxMtgqsT/dZoSI=; b=pcefXTgqcJecgqrtf3kiYdmEjv
+	0hDns2PRtXTxOs5U7Mho/c/b58VYp7GSWDz4hVMXfUkpQTqnhG/iNh2pcPTE12V8uPMrxJbj+ISNO
+	PQPabcnjKbPTsWQ/k5phEiClW2r2+HNqTapX+Akfz6vBuSksLckiVW7OOTMoVqPxlkGiUtjWwtg0o
+	dg7TECgMm7lo0mzDDWw4+FffDnYjhMu5AbB2hMDiVeSyWwH/B2QAvNry2adz2dQQmuFVTHTPfJZ/X
+	knrbgSaIeJMRNkEunPumciel9nFGjJaYyu7wsgIgiRRZXyP2awJ+xXyGd22CsScXIMVMRPI3SA9UW
+	9kah/TxQ==;
+Received: from [191.204.194.148] (helo=localhost.localdomain)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1tmzmW-000WtH-7o; Tue, 25 Feb 2025 19:35:54 +0100
+From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Arnd Bergmann <arnd@arndb.de>,
+	sonicadvance1@gmail.com
+Cc: linux-kernel@vger.kernel.org,
+	kernel-dev@igalia.com,
+	linux-api@vger.kernel.org,
+	Vinicius Peixoto <vpeixoto@lkcamp.dev>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+Subject: [PATCH v4 4/5] futex: Remove the limit of elements for sys_set_robust_list2 lists
+Date: Tue, 25 Feb 2025 15:35:30 -0300
+Message-ID: <20250225183531.682556-5-andrealmeid@igalia.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250225183531.682556-1-andrealmeid@igalia.com>
+References: <20250225183531.682556-1-andrealmeid@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/7] kexec: define functions to map and unmap segments
-To: Baoquan He <bhe@redhat.com>
-Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
- roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
- eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
- code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
- kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
- linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
- nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
- vgoyal@redhat.com, dyoung@redhat.com
-References: <20250218225502.747963-1-chenste@linux.microsoft.com>
- <20250218225502.747963-3-chenste@linux.microsoft.com>
- <Z7wOPiDfy/vtrkCS@MiWiFi-R3L-srv>
- <658b52e4-a4bb-40fc-a00b-bfdb3bf15b52@linux.microsoft.com>
- <Z70MZD+BssRG4R1H@MiWiFi-R3L-srv>
-Content-Language: en-US
-From: steven chen <chenste@linux.microsoft.com>
-In-Reply-To: <Z70MZD+BssRG4R1H@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 2/24/2025 4:18 PM, Baoquan He wrote:
-> On 02/24/25 at 03:05pm, steven chen wrote:
->> On 2/23/2025 10:14 PM, Baoquan He wrote:
->>> Hi Steve, Mimi,
->>>
->>> On 02/18/25 at 02:54pm, steven chen wrote:
->>>> Currently, the mechanism to map and unmap segments to the kimage
->>>> structure is not available to the subsystems outside of kexec.  This
->>>> functionality is needed when IMA is allocating the memory segments
->>>> during kexec 'load' operation.  Implement functions to map and unmap
->>>> segments to kimage.
->>> I am done with the whole patchset understanding. My concern is if this
->>> TPM PCRs content can be carried over through newly introduced KHO. I can
->>> see that these patchset doesn't introduce too much new code changes,
->>> while if many conponents need do this, kexec reboot will be patched all
->>> over its body and become ugly and hard to maintain.
->>>
->>> Please check Mike Rapoport's v4 patchset to see if IMA can register
->>> itself to KHO and do somthing during 2nd kernel init to restore those
->>> TPM PCRs content to make sure all measurement logs are read correctly.
->>> [PATCH v4 00/14] kexec: introduce Kexec HandOver (KHO)
->>>
->>> Thanks
->>> Baoquan
->> Hi Baoquan,
->>
->> For IMA, it appears that there are no current issues with TPM PCRs after a
->> kernel soft reboot.
-> I mean using KHO to hold in 1st kernel and restore the IMA log in 2nd
-> kernel.
->
->> This patches is used to get currently missed IMA measurements during the
->> kexec process copied to new kernel after the kernel soft reboot. I think
->> it's ok to leave it at current location: it will be easy to maintain for
->> IMA.
-> Yeah, but I am saying this patchset increase unnecessary code
-> complexity in kexec code maintaining.
->
->> Overall, for these patches, do you see any major blockers for kexec?
->>
->> If you have any specific concerns or need further details, please let me
->> know.
-> I have no concerns for this patchset implementation itself, I saw you using
-> vmap to maping the possible scattered source pages smartly and taking
-> the mapped buffer pointers to update later duing kexec jumping. That's very
-> great and clever method. BUT I am concerned about the solution, if we
-> can make use of the existed way of KHO to implement it more simply. Could
-> you please do investigation?
+Remove the limit of ROBUST_LIST_LIMIT elements that a robust list can
+have, for the ones created with the new interface. This is done by
+overwritten the list as it's proceeded in a way that we avoid circular
+lists.
 
-Hi Baoquan,
+For the old interface, we keep the limited behavior to avoid changing
+the API.
 
-I will conduct an investigation. Thank you for your comments.
+Signed-off-by: André Almeida <andrealmeid@igalia.com>
+---
+ kernel/futex/core.c | 50 ++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 36 insertions(+), 14 deletions(-)
 
-Steven
+diff --git a/kernel/futex/core.c b/kernel/futex/core.c
+index 07a7e5e9bc8d..bfd4443208ea 100644
+--- a/kernel/futex/core.c
++++ b/kernel/futex/core.c
+@@ -777,7 +777,8 @@ static inline int fetch_robust_entry(struct robust_list __user **entry,
+  * We silently return on any sign of list-walking problem.
+  */
+ static void exit_robust_list64(struct task_struct *curr,
+-			       struct robust_list_head __user *head)
++			       struct robust_list_head __user *head,
++			       bool destroyable)
+ {
+ 	struct robust_list __user *entry, *next_entry, *pending;
+ 	unsigned int limit = ROBUST_LIST_LIMIT, pi, pip;
+@@ -821,13 +822,17 @@ static void exit_robust_list64(struct task_struct *curr,
+ 		}
+ 		if (rc)
+ 			return;
+-		entry = next_entry;
+-		pi = next_pi;
++
+ 		/*
+ 		 * Avoid excessively long or circular lists:
+ 		 */
+-		if (!--limit)
++		if (!destroyable && !--limit)
+ 			break;
++		else
++			put_user(&head->list, &entry->next);
++
++		entry = next_entry;
++		pi = next_pi;
+ 
+ 		cond_resched();
+ 	}
+@@ -839,7 +844,8 @@ static void exit_robust_list64(struct task_struct *curr,
+ }
+ #else
+ static void exit_robust_list64(struct task_struct *curr,
+-			      struct robust_list_head __user *head)
++			      struct robust_list_head __user *head,
++			      bool destroyable)
+ {
+ 	pr_warn("32bit kernel should not allow ROBUST_LIST_64BIT");
+ }
+@@ -877,7 +883,8 @@ fetch_robust_entry32(u32 *uentry, struct robust_list __user **entry,
+  * We silently return on any sign of list-walking problem.
+  */
+ static void exit_robust_list32(struct task_struct *curr,
+-			       struct robust_list_head32 __user *head)
++			       struct robust_list_head32 __user *head,
++			       bool destroyable)
+ {
+ 	struct robust_list __user *entry, *next_entry, *pending;
+ 	unsigned int limit = ROBUST_LIST_LIMIT, pi, pip;
+@@ -926,14 +933,17 @@ static void exit_robust_list32(struct task_struct *curr,
+ 		}
+ 		if (rc)
+ 			return;
+-		uentry = next_uentry;
+-		entry = next_entry;
+-		pi = next_pi;
+ 		/*
+ 		 * Avoid excessively long or circular lists:
+ 		 */
+-		if (!--limit)
++		if (!destroyable && !--limit)
+ 			break;
++		else
++			put_user((struct robust_list __user *) &head->list, &entry->next);
++
++		uentry = next_uentry;
++		entry = next_entry;
++		pi = next_pi;
+ 
+ 		cond_resched();
+ 	}
+@@ -1087,26 +1097,38 @@ static void exit_pi_state_list(struct task_struct *curr)
+ static inline void exit_pi_state_list(struct task_struct *curr) { }
+ #endif
+ 
++/*
++ * futex_cleanup - After the task exists, process the robust lists
++ *
++ * Walk through the linked list, parsing robust lists and freeing the
++ * allocated lists. Lists created with the set_robust_list2 don't have a limit
++ * for sizing and can be destroyed while we walk on it to avoid circular list.
++ */
+ static void futex_cleanup(struct task_struct *tsk)
+ {
+ 	struct robust_list2_entry *curr, *n;
+ 	struct list_head *list2 = &tsk->robust_list2;
++	bool destroyable = true;
++	int i = 0;
+ 
+ 	/*
+-	 * Walk through the linked list, parsing robust lists and freeing the
+-	 * allocated lists
+ 	 */
+ 	if (unlikely(!list_empty(list2))) {
+ 		list_for_each_entry_safe(curr, n, list2, list) {
++			destroyable = true;
++			if (tsk->robust_list_index == i)
++				destroyable = false;
++
+ 			if (curr->head != NULL) {
+ 				if (curr->list_type == ROBUST_LIST_64BIT)
+-					exit_robust_list64(tsk, curr->head);
++					exit_robust_list64(tsk, curr->head, destroyable);
+ 				else if (curr->list_type == ROBUST_LIST_32BIT)
+-					exit_robust_list32(tsk, curr->head);
++					exit_robust_list32(tsk, curr->head, destroyable);
+ 				curr->head = NULL;
+ 			}
+ 			list_del_init(&curr->list);
+ 			kfree(curr);
++			i++;
+ 		}
+ 	}
+ 
+-- 
+2.48.1
 
