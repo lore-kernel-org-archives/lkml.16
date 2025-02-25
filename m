@@ -1,131 +1,126 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D3E280A2F;
-	Tue, 25 Feb 2025 14:35:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F46280A2A
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:35:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740494144; cv=none; b=r4nPyckg6FkJyVsb3nvYnBJfe8K+IbxEfpTEDhosprVQR5h8cMMVtZOC3m6gQodnNL9T0f/DyTxjB+F4/vpW39qgHMAFfyLmHoYTAf3EBTPd2vy+8uMjhQqg5brLHdpmF4GRSft0QyVpRSWCcmI6axgGnbZ5KIiVe62xc+BKOKA=
+	t=1740494144; cv=none; b=MeYrCb/2fF4ejgqVV5F5kKrGm/nj7dUztfX2PFC64l6swi4OTgYSJhnXeiqnRDswImBpmE0RNdZEA2AbKOeycR+1ZrCe3+kAEIQVnVSDvyffNfxd/JJag0Mx9dgz76w0y4PjTA1vBxGH8tL37huwuUFr8WRxyyFqMomM4Im9GwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1740494144; c=relaxed/simple;
-	bh=AhcIJhV4yLswOEUuGSGgPF7pjwa852iGWyL2UiPULL0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mi1QriLOz16Q8MzcyhI2vu7KX0m7nA6gqxzqzhtik5mX62PStLvwjgLiFcAeEfjAzMriCdJmrwK8UWd/tBDAY7mI5v2SoiiBvVdab7tnTOdTsB5lpd2bBTAx30e3gq12UJ3GsX1NrjRXS0eX6Y/Q/0GmC8b71or2nw3xI1xMZbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DiUKxTy/; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=9hyuXWtcrt6qYFRuvHO0bnjXrHF/CkXG7yP6ynsJrjs=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=X2G39f92x/6pk5NQvHwBNiaAUNey6JQ3eiZWLrYQG+T5L1lBHm9NjzrnFGWDa8dzrqv9WPNUOpU+h21J2gtIdokQWW8VP0pldEXD7Bg/yujeuWzt74pKSLWUfOOJKQXajAIK++ejXM8P6Y6GR5P2nS1+x+EKSTlAuZp3joVt+zY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4TBIAJdx; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DiUKxTy/"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e04861e7a6so10639190a12.1;
-        Tue, 25 Feb 2025 06:35:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4TBIAJdx"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2fc1a4c14d4so11902101a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 06:35:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740494141; x=1741098941; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b+3H1MoTfJUW5Vok3BUIG/mXBVTmp88K5j121VYxdZA=;
-        b=DiUKxTy/TURQiDQl5pbExPvN5mM88ZWtPVdNP87MR5/iqoC/qy/pvqoabPA5f6L3Io
-         jyJSOLqXtUTpW3quP1kBdct351Gi6bgpt/K7o3PCSK71F4MwAMMb8pv8B0muZtScpl3F
-         +U7IFbp2YQ6FSy8TJjUjjAmyYogNCoAd9l7+ov7TOiFeZ4d45af3lAuoLAZTq4I3re5P
-         S/yREnxdjdtDpnEu3yoAN0HYOXOi5yF9zIS1bXUc9HAfSFxw6hlIXJ2YCbqIR/WYOoqQ
-         bgU2/EXQ6QgdhM4bWO7PJ0IJvLWaTbFH8KF+nqYy8na1RKYOaOsNqMG/yvbwRE+ji6zM
-         tMtg==
+        d=google.com; s=20230601; t=1740494142; x=1741098942; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=u3OyWMfMyDgx+55Ind0kZ2lpQA8/mHOXTjN2aQVmO4M=;
+        b=4TBIAJdxZuNNjUSEmpRBFjteVkgFAruncnIrqJ4LUXIwes9texKhNKx3yNMu5nj2Of
+         +1XkL1NFqyOB7QG8mnvtMp3ijTF95zE0RA4z2SvTGB1nlPPiW9hdQLxReFkrEDpbSiSL
+         VYUBQmJ7bUXnfeYuKh4q93nUVzNyWLbYgJ37mfr/ueg8MUL1N/4IODoeGagy715MnVN4
+         ywbuIQyb3eZM+wwMI/jwVXmUkCe3X3S+L0yifLjE0mVl4BlROlAbA+vAY7JJmp0gOcbA
+         1RMPsJLfSaT94Kzk61YdJCSnh/K5L0Gs40VHLn8BCvMlLFRT7qR9AJTDLw8cOq6Kw2ii
+         0lvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740494141; x=1741098941;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b+3H1MoTfJUW5Vok3BUIG/mXBVTmp88K5j121VYxdZA=;
-        b=jOYPtXZFKlL/LM9oGesKHY1jCdc/1prtXmo9rpj9zN8M0wNNc7p7F7CBuUJM43Wph/
-         It5w0b3KI71stH9tWye5VFmq/45tZkJFHdzJdg+PjxsVtIZ2lH36JYRVHT6do7AXgD4/
-         RUQ4iakrK4QBzNhKLDhyCw93Qadx0CFjfTJ/kbPE36fq9VcC9G3XOXmMppVNyzu/3INC
-         0+DJoTgtKjC4U1/Rc3A/gwGXV/i8PUB3VtZzWAYuvu7az8FscrWpSfG6aFebxiTR3fs8
-         TitXx+2CTP03fqMswJhEJLDF6gkUhfFQWApF0bzYQkZZTQsLNfnssDL7gxtb/S+7isrJ
-         S78A==
-X-Forwarded-Encrypted: i=1; AJvYcCUyoOHfmBtR9oTvVLIYbmNLWnv9LP6o5iQLBdRV0gij0K0UwbbSyn3BUjBDrcQALIluz4cVusMGDK5W@vger.kernel.org, AJvYcCWYjQpE+MR/YWehmCl7bnAfARcBqYQ269mneX+HAKoPzXv5RgjuejIt+NTXEsuK0JR2pATxRzfMibkvb9U=@vger.kernel.org, AJvYcCXJCKnSczcKXjoqxwwoleNBX2uHsopuTXzsVzk/d+lB0irJaHDGoXuowE1ZJKUABr38unJHKEASn7KF@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMk8keLOC6beTrllTJY+4rSbM2cJrVGD+lDBV6ZuByU1u2lYix
-	IWaThgy/LiwErwi87QFnVoX0ehe4w4wCL1X5AKQGCqSVrc9WbNYl
-X-Gm-Gg: ASbGncuMb2Z4kBEuX6xs4ZL+Uns7CLDQgy5cEMit3UmT6i78b/qtAG6/Ut9WsW4OB7G
-	Qcyug3RI3x99CG8OuRCV8sT2Af/yR025e8uM35raDE5m4jMtEm6i/abJwptEFZUmVxPeOF36sWp
-	KCA9w7RNh3war4djcsJUtXf0U8QSBjEH0UCyMi8bdQ8tiv6qWV3ossUjoANet8+KtAPeNfbUQ/z
-	1u0Z7RQVP9QBSGeBGVInVAco1mE4WzAL1HosMsQ1QEVG9dQB9W6q+fbyHRD4zaU0N2SHx6p0utC
-	kX0ow3QyTghXuHy9GQ==
-X-Google-Smtp-Source: AGHT+IGnRuSR6Fs7dfc2FP4u8JrslCMC4kNB5ICvHn2Ldkys9z2rkHNE06NEhCeWvro/cO2gw7N9nw==
-X-Received: by 2002:a05:6402:5213:b0:5e0:95ae:af91 with SMTP id 4fb4d7f45d1cf-5e44b66b888mr3294900a12.29.1740494140688;
-        Tue, 25 Feb 2025 06:35:40 -0800 (PST)
-Received: from xeon.. ([188.163.112.51])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e460ff8629sm1298750a12.59.2025.02.25.06.35.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 06:35:40 -0800 (PST)
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Peter De Schrijver <pdeschrijver@nvidia.com>,
-	Prashant Gaikwad <pgaikwad@nvidia.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Svyatoslav Ryhel <clamor95@gmail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Georgi Djakov <djakov@kernel.org>,
-	Dmitry Osipenko <digetx@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-tegra@vger.kernel.org,
-	linux-clk@vger.kernel.org
-Subject: [PATCH v1 8/9] ARM: tegra: Add External Memory Controller node on Tegra114
-Date: Tue, 25 Feb 2025 16:35:00 +0200
-Message-ID: <20250225143501.68966-9-clamor95@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250225143501.68966-1-clamor95@gmail.com>
-References: <20250225143501.68966-1-clamor95@gmail.com>
+        d=1e100.net; s=20230601; t=1740494142; x=1741098942;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u3OyWMfMyDgx+55Ind0kZ2lpQA8/mHOXTjN2aQVmO4M=;
+        b=LSq7pKYfnNDYUpzJKCc1qEHIX3buFB0cQ286FXarDIMiaiAAI3hWx/cWCfk1EsMWAr
+         JQi9oBdvSTR0OpOqml+MYJCg5Idy4Q9/YvYSgDTsOE2d6MEJKi6s9Qkf9BglBo/1TNAi
+         T2x1BRmAtR91Jai01M4nfDY/I5oko8gdB6iBl+ZD4nEX1/rbKVhia6lUDuVDNIvVQnfE
+         h/rUKcqKVi9rQjbvijVmgHPV9FSH6kB/zXZEMnf8c9J7xCVEWCI5s/fmXZg8w10lhGlo
+         qSWhIyOLg/n+qOTVKvJ5hRxi4I0unpo/hEgqupXz32VTPkiKXjR3HFJ4MlVH1UwapFPN
+         +TBw==
+X-Forwarded-Encrypted: i=1; AJvYcCVxIs5pXo/IaeNQUGMyGLJSpz2a4jy6t+w+WcUI4Hp0TXdTnuYggSbj+Q9WV13gMPnL+8ima25g2C6GSxQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjYpgZpRNs9RybC3A4sxSB+V+wgvOawnP+C3KMFicMPKwb8RNO
+	p2weLmzlQpd5+PllvnNtCDn7ZY/9dPvY8CFTORccNG2bhKQ5Y46CDl5LNTbqY3v0LBMLMJuFf8l
+	uAw==
+X-Google-Smtp-Source: AGHT+IFXh/XOoHWCgjyYmqDQFrw6VQ+lwV1XpaGwsHvB9OE+S78BXcvOxN0p4LNeKFLBgsLwKA4Y+N0kitA=
+X-Received: from pjbdj6.prod.google.com ([2002:a17:90a:d2c6:b0:2fa:1fac:269c])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1f8e:b0:2ee:c9b6:c26a
+ with SMTP id 98e67ed59e1d1-2fe68ada3bemr5889698a91.11.1740494141828; Tue, 25
+ Feb 2025 06:35:41 -0800 (PST)
+Date: Tue, 25 Feb 2025 06:35:40 -0800
+In-Reply-To: <Z71sOEu7/ewnWZU2@yzhao56-desk.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250224235542.2562848-1-seanjc@google.com> <20250224235542.2562848-4-seanjc@google.com>
+ <Z71sOEu7/ewnWZU2@yzhao56-desk.sh.intel.com>
+Message-ID: <Z73U38mSuk_tOpqT@google.com>
+Subject: Re: [PATCH 3/7] KVM: Assert that a destroyed/freed vCPU is no longer visible
+From: Sean Christopherson <seanjc@google.com>
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, Bibo Mao <maobibo@loongson.cn>, 
+	Huacai Chen <chenhuacai@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	kvm@vger.kernel.org, loongarch@lists.linux.dev, linux-mips@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Aaron Lewis <aaronlewis@google.com>, Jim Mattson <jmattson@google.com>, 
+	Rick P Edgecombe <rick.p.edgecombe@intel.com>, Kai Huang <kai.huang@intel.com>, 
+	Isaku Yamahata <isaku.yamahata@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Add External Memory Controller node to the device-tree.
+On Tue, Feb 25, 2025, Yan Zhao wrote:
+> On Mon, Feb 24, 2025 at 03:55:38PM -0800, Sean Christopherson wrote:
+> > After freeing a vCPU, assert that it is no longer reachable, and that
+> > kvm_get_vcpu() doesn't return garbage or a pointer to some other vCPU.
+> > While KVM obviously shouldn't be attempting to access a freed vCPU, it's
+> > all too easy for KVM to make a VM-wide request, e.g. via KVM_BUG_ON() or
+> > kvm_flush_remote_tlbs().
+> > 
+> > Alternatively, KVM could short-circuit problematic paths if the VM's
+> > refcount has gone to zero, e.g. in kvm_make_all_cpus_request(), or KVM
+> > could try disallow making global requests during teardown.  But given that
+> > deleting the vCPU from the array Just Works, adding logic to the requests
+> > path is unnecessary, and trying to make requests illegal during teardown
+> > would be a fool's errand.
+> > 
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >  virt/kvm/kvm_main.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> > index 201c14ff476f..991e8111e88b 100644
+> > --- a/virt/kvm/kvm_main.c
+> > +++ b/virt/kvm/kvm_main.c
+> > @@ -489,6 +489,14 @@ void kvm_destroy_vcpus(struct kvm *kvm)
+> >  	kvm_for_each_vcpu(i, vcpu, kvm) {
+> >  		kvm_vcpu_destroy(vcpu);
+> >  		xa_erase(&kvm->vcpu_array, i);
+> > +
+> > +		/*
+> > +		 * Assert that the vCPU isn't visible in any way, to ensure KVM
+> > +		 * doesn't trigger a use-after-free if destroying vCPUs results
+> > +		 * in VM-wide request, e.g. to flush remote TLBs when tearing
+> > +		 * down MMUs, or to mark the VM dead if a KVM_BUG_ON() fires.
+> > +		 */
+> > +		WARN_ON_ONCE(xa_load(&kvm->vcpu_array, i) || kvm_get_vcpu(kvm, i));
+> As xa_erase() says "After this function returns, loading from @index will return
+> %NULL", is this checking of xa_load() necessary?
 
-Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
----
- arch/arm/boot/dts/nvidia/tegra114.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+None of this is "necessary".  My goal with the assert is to (a) document that KVM
+relies the vCPU to be NULL/unreachable and (b) to help ensure that doesn't change
+in the future.  Checking xa_load() is mostly about (a).
 
-diff --git a/arch/arm/boot/dts/nvidia/tegra114.dtsi b/arch/arm/boot/dts/nvidia/tegra114.dtsi
-index a309999e7988..caf6024d6413 100644
---- a/arch/arm/boot/dts/nvidia/tegra114.dtsi
-+++ b/arch/arm/boot/dts/nvidia/tegra114.dtsi
-@@ -193,6 +193,8 @@ tegra_car: clock@60006000 {
- 		reg = <0x60006000 0x1000>;
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
-+
-+		nvidia,external-memory-controller = <&emc>;
- 	};
- 
- 	flow-controller@60007000 {
-@@ -588,6 +590,16 @@ mc: memory-controller@70019000 {
- 		#iommu-cells = <1>;
- 	};
- 
-+	emc: external-memory-controller@7001b000 {
-+		compatible = "nvidia,tegra114-emc";
-+		reg = <0x7001b000 0x1000>;
-+		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&tegra_car TEGRA114_CLK_EMC>;
-+		clock-names = "emc";
-+
-+		nvidia,memory-controller = <&mc>;
-+	};
-+
- 	ahub@70080000 {
- 		compatible = "nvidia,tegra114-ahub";
- 		reg = <0x70080000 0x200>,
--- 
-2.43.0
-
+That said, I agree checking xa_load() is more than a bit gratuitous.  I have no
+objection to checking only kvm_get_vcpu().
