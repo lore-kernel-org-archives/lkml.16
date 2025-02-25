@@ -1,152 +1,295 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91EDF19993B
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 17:47:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0761E195B1A;
+	Tue, 25 Feb 2025 17:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740505629; cv=none; b=PPu8UJg8pb9yY8P3ArQE6Y6pizoc18rhFY6yNBnoZJCCjko1LsA5pFxzjZ0nt54fWxS3Z0nQkpd6vcbAVMfPvJ95SG2cdSIgNIdTaofUm/jlqNExBCrUJ0xIRDhf6U3ycrdDX4SxLhPtuefVmXEXIfbpiGAmc4uROS3qd4XzgWc=
+	t=1740505649; cv=none; b=g9aN5ftgnHbWhiRkxaHmfvrS3UW3/RsuNOPKxhUHHYzI4IIHw5g7PjXnCIQE/R6/B4y2zf7dDayuKaF3DsPSJJT54y1ACe/Q5igH8cYUn0SDlCzfED8fDv7p1bIhlnwbUtlTNF+5P9NKQirWqYbVMz+Dm57cOpCa5Eo543H8BAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740505629; c=relaxed/simple;
-	bh=MCWMSFV6nXivXnq09n2EPqxUtKNTa60LR94dGwUmokY=;
+	s=arc-20240116; t=1740505649; c=relaxed/simple;
+	bh=9uuqhp6RkiJhtMT5zR1Cc/fblk44OMPAt2hYASfkTws=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nL+zliAK13EWBC1y0aQgFP0L76xvZ28SRM53rD/AYRoobDB/OYKU8sr8G/NcDS3OWFDFKG9Kei7pAbiqjYrntZF4otba/M7y5x/OaU2TqvA74D8Dg5O43PBkvFI9ObxHBFmXScUwtRGKPGmeRuA+3WcafT/MzJzQ8GTMxqTHEfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1vFnG4Z0; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=tw+mszZdnWV2GQNX/uNEAtwIP/uEGzAoAZyz8Q9NZqB1qGeWIdABwEQcruqGs48Ra/D+N7hX7v904PGcFRHDInQD6oUOdHDKEZPa2LXrN5n1tIVGNN5LV8QqFXHpsr+pUEOkrh8ucG1z4Ply2rc7dkdiQIB+wuDi/p6cVGxAOdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N1hDAtND; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1vFnG4Z0"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-22185cddbffso733825ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:47:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1740505627; x=1741110427; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4Xd8E5UB+Vof823rP7txgr2JDe+GKD1zXqyWtuRc9C0=;
-        b=1vFnG4Z0vrm9UZtdLORdft+7gzW6Bfnu2Ux8qPxCA2HXMeo7Kd1TZarlqolABXmOa8
-         47CS3Rfch6q8+o1PlmFadWA0d7ueoQqQNL2hS3hL1IsrKPmc+R4tV/VS25+JJLEvqve7
-         Zh/vw6l0zRcCA+iqiw9GrmL/SQpUU/uqjKVbIfieTBb0CKeO2h2jDX/7BJKeVOWDDegM
-         +sYdJq5Dy1LCKdKqZQQEYC0QqBLUj3eDr+JyCxdD5HJ+px8QVDTigeJLpUaDABCByyQO
-         nIasOSYi71GyC9Q8ocIyG41bA/CXU3MknASVDxffUiElaTkDm5j3Fdbx5nYZ9oLb6lGh
-         rpBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740505627; x=1741110427;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Xd8E5UB+Vof823rP7txgr2JDe+GKD1zXqyWtuRc9C0=;
-        b=G0iKUbhvqYjrxd7XKqCgKj+uorzN3QAI0WNkkiTtgc3UjMAJahownA/WOOCBPLPP1e
-         79DFWERg1hklAfx4Eq78hh63E1nCh3fuX927VSfpcq+7vRgKJzkhq7a8/dZPPjDk+lHV
-         fO5+aQKhbgzZur5TG+q/nGaRmVMCju8S49GsRaem5mHSAE+Y+neCDAEvBwR3LWPzywQZ
-         5cpOts7LxJdQia/4Yw3c34989w+9gO+jP+2nVIT3OWCDTNC4Z4LicFx5klFeJx9SzXU7
-         Hk6NnZfHCs8jePsRwfdKHrx0IDSNJ68l+job8japlAl3JUQDpYfizPDxRPiLGIiSjcq+
-         E6Xg==
-X-Forwarded-Encrypted: i=1; AJvYcCVRXwVtmqOIpYa9IoxrWwrC3ekJrPRU1U0oiVw+zrijBWbzksW1urQKO/HmcFNZ+WtsD88DrhxPSuMUxhI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3K/VH2WKESPwqmr3pVkw0wUs9CRcv9SzKjx15rKO8AiEAnawA
-	/dpNjX87Q+Ws3PicZBwz1e9tV2JyvweI9iGX7nbdSQ9ecpnS5yHrmpmNReuLoA==
-X-Gm-Gg: ASbGnct72xHz/QdoofqsyRpjMh3s4rAtoQPcKW7KY6oLE/de7rkje/2yS9Z7qUikcD0
-	HVnNiupDb7nWYdVE5RbhhLhj31NAsuGuBaOOfDxwGpFpYXmFMiH9NNWAOcwM+o/zoTDL50TLvaH
-	Se5UBcqC73yetAe1FcgK0C0Vlv023Ou+k5kXman8kJsuwabIQ+Z/V8O2i2frG3bBpH+ctuU55Uo
-	6WaIZwpY/jWGOuSwdDBr4tLvCqz2PYuznJX6WzQk0G5CF9waCMwH67eEldWW11UvljRe6p6izSC
-	+AEM1wmNDqFNq6MzFHcXewO2pDGhhQ9GJQEsWgKVG3cKIOGP8DprDipC3Zdo9jA8N71Ob1uo
-X-Google-Smtp-Source: AGHT+IGTeDFei68HewM3dx5h3RiuvvIIbvQKg40aSHvOB+DMfEC6ObIGktd+BXdT7pjqngdDsIJhig==
-X-Received: by 2002:a05:6a20:8409:b0:1ed:d780:feaf with SMTP id adf61e73a8af0-1eef3c8ed2emr30176078637.6.1740505626579;
-        Tue, 25 Feb 2025 09:47:06 -0800 (PST)
-Received: from google.com (198.103.247.35.bc.googleusercontent.com. [35.247.103.198])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-aedaa643b0fsm1412226a12.59.2025.02.25.09.47.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 09:47:06 -0800 (PST)
-Date: Tue, 25 Feb 2025 09:46:54 -0800
-From: William McVicker <willmcvicker@google.com>
-To: Zijun Hu <quic_zijuhu@quicinc.com>
-Cc: Rob Herring <robh@kernel.org>, Zijun Hu <zijun_hu@icloud.com>,
-	Saravana Kannan <saravanak@google.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Grant Likely <grant.likely@secretlab.ca>,
-	Marc Zyngier <maz@kernel.org>,
-	Andreas Herrmann <andreas.herrmann@calxeda.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Oreoluwa Babatunde <quic_obabatun@quicinc.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH v4 09/14] of: reserved-memory: Fix using wrong number of
- cells to get property 'alignment'
-Message-ID: <Z74CDp6FNm9ih3Nf@google.com>
-References: <20250109-of_core_fix-v4-0-db8a72415b8c@quicinc.com>
- <20250109-of_core_fix-v4-9-db8a72415b8c@quicinc.com>
- <20250113232551.GB1983895-robh@kernel.org>
- <Z70aTw45KMqTUpBm@google.com>
- <97ac58b1-e37c-4106-b32b-74e041d7db44@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N1hDAtND"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 661EDC4CEDD;
+	Tue, 25 Feb 2025 17:47:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740505648;
+	bh=9uuqhp6RkiJhtMT5zR1Cc/fblk44OMPAt2hYASfkTws=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N1hDAtNDBKcWq3l+2TtaxUcY1SdWwI+2HJ1SKw/KP9e95d1ebfzEE+PS5uUcsppOD
+	 PArlM2tieL8GgmNdsXRuORZP3wYf1fJFwsHLgI4xZa+6z7+Z/nLolYmDOZeIZXPA/d
+	 9wOXCEaUF/1iEfJ+q8NN01MoZTtmFhLSJaWdyO3zrxuO0/QWAS5RPX4j9tr+k2ACOT
+	 myVchm/lwOyLaxEEWD9KTosuLud9sEKVnamSaVyEy+Bu04fYAW6YSQJMdsVGY2WoMJ
+	 sC1fYYirgvZhO/JEIQM2h9RemKV0nA6z2WMeVrbE0dJ5HbjSBuJ0R4Jhx38gBlrAf1
+	 5uPAb/boF6YRg==
+Date: Tue, 25 Feb 2025 09:47:27 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, cem@kernel.org, dchinner@redhat.com, hch@lst.de,
+	linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ojaswin@linux.ibm.com,
+	ritesh.list@gmail.com, martin.petersen@oracle.com, tytso@mit.edu,
+	linux-ext4@vger.kernel.org
+Subject: Re: [PATCH v2 07/11] xfs: iomap CoW-based atomic write support
+Message-ID: <20250225174727.GF6242@frogsfrogsfrogs>
+References: <20250213135619.1148432-1-john.g.garry@oracle.com>
+ <20250213135619.1148432-8-john.g.garry@oracle.com>
+ <20250224201333.GD21808@frogsfrogsfrogs>
+ <4e78abd2-4f84-4002-b84c-6f90e2f869a8@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <97ac58b1-e37c-4106-b32b-74e041d7db44@quicinc.com>
+In-Reply-To: <4e78abd2-4f84-4002-b84c-6f90e2f869a8@oracle.com>
 
-On 02/25/2025, Zijun Hu wrote:
-> On 2/25/2025 9:18 AM, William McVicker wrote:
-> > Hi Zijun and Rob,
+On Tue, Feb 25, 2025 at 11:06:50AM +0000, John Garry wrote:
+> On 24/02/2025 20:13, Darrick J. Wong wrote:
+> > On Thu, Feb 13, 2025 at 01:56:15PM +0000, John Garry wrote:
+> > > In cases of an atomic write occurs for misaligned or discontiguous disk
+> > > blocks, we will use a CoW-based method to issue the atomic write.
+> > > 
+> > > So, for that case, return -EAGAIN to request that the write be issued in
+> > > CoW atomic write mode. The dio write path should detect this, similar to
+> > > how misaligned regalar DIO writes are handled.
+> > > 
+> > > For normal HW-based mode, when the range which we are atomic writing to
+> > > covers a shared data extent, try to allocate a new CoW fork. However, if
+> > > we find that what we allocated does not meet atomic write requirements
+> > > in terms of length and alignment, then fallback on the CoW-based mode
+> > > for the atomic write.
+> > > 
+> > > Signed-off-by: John Garry <john.g.garry@oracle.com>
+> > > ---
+> > >   fs/xfs/xfs_iomap.c | 72 ++++++++++++++++++++++++++++++++++++++++++++--
+> > >   1 file changed, 69 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
+> > > index ab79f0080288..c5ecfafbba60 100644
+> > > --- a/fs/xfs/xfs_iomap.c
+> > > +++ b/fs/xfs/xfs_iomap.c
+> > > @@ -795,6 +795,23 @@ imap_spans_range(
+> > >   	return true;
+> > >   }
+> > > +static bool
+> > > +imap_range_valid_for_atomic_write(
 > > 
-> > On 01/13/2025, Rob Herring wrote:
-> >> On Thu, Jan 09, 2025 at 09:27:00PM +0800, Zijun Hu wrote:
-> >>> From: Zijun Hu <quic_zijuhu@quicinc.com>
-> >>>
-> >>> According to DT spec, size of property 'alignment' is based on parent
-> >>> node’s #size-cells property.
-> >>>
-> >>> But __reserved_mem_alloc_size() wrongly uses @dt_root_addr_cells to get
-> >>> the property obviously.
-> >>>
-> >>> Fix by using @dt_root_size_cells instead of @dt_root_addr_cells.
-> >>
-> >> I wonder if changing this might break someone. It's been this way for 
-> >> a long time. It might be better to change the spec or just read 
-> >> 'alignment' as whatever size it happens to be (len / 4). It's not really 
-> >> the kernel's job to validate the DT. We should first have some 
-> >> validation in place to *know* if there are any current .dts files that 
-> >> would break. That would probably be easier to implement in dtc than 
-> >> dtschema. Cases of #address-cells != #size-cells should be pretty rare, 
-> >> but that was the default for OpenFirmware.
-> >>
-> >> As the alignment is the base address alignment, it can be argued that 
-> >> "#address-cells" makes more sense to use than "#size-cells". So maybe 
-> >> the spec was a copy-n-paste error.
-> > 
-> > Yes, this breaks our Pixel downstream DT :( Also, the upstream Pixel 6 device
-> > tree has cases where #address-cells != #size-cells.
-> > 
+> > xfs_bmap_valid_for_atomic_write()
 > 
-> it seems upstream upstream Pixel 6 has no property 'alignment'
-> git grep alignment arch/arm64/boot/dts/exynos/google/
-> so it should not be broken.
-
-That's right. I was responding to Rob's statement about #address-cells !=
-#size-cells being pretty rare. And wanted to give credance to the idea that
-this change could possible break someone.
-
+> I'm ok with this.
 > 
-> > I would prefer to not have this change, but if that's not possible, could we
-> > not backport it to all the stable branches? That way we can just force new
-> > devices to fix this instead of existing devices on older LTS kernels?
+> But we do have other private functions without "xfs" prefix - like
+> imap_needs_cow(), so a bit inconsistent to begin with.
+
+Yeah, others prefer shorter names but I try at least to maintain
+consistent prefixes for namespacing.
+
 > > 
+> > > +	struct xfs_bmbt_irec	*imap,
+> > > +	xfs_fileoff_t		offset_fsb,
+> > > +	xfs_fileoff_t		end_fsb)
+> > > +{
+> > > +	/* Misaligned start block wrt size */
+> > > +	if (!IS_ALIGNED(imap->br_startblock, imap->br_blockcount))
+> > > +		return false;
+> > > +
+> > > +	/* Discontiguous or mixed extents */
+> > > +	if (!imap_spans_range(imap, offset_fsb, end_fsb))
+> > > +		return false;
+> > > +
+> > > +	return true;
+> > > +}
+> > > +
+> > >   static int
+> > >   xfs_direct_write_iomap_begin(
+> > >   	struct inode		*inode,
+> > > @@ -809,12 +826,20 @@ xfs_direct_write_iomap_begin(
+> > >   	struct xfs_bmbt_irec	imap, cmap;
+> > >   	xfs_fileoff_t		offset_fsb = XFS_B_TO_FSBT(mp, offset);
+> > >   	xfs_fileoff_t		end_fsb = xfs_iomap_end_fsb(mp, offset, length);
+> > > +	bool			atomic_cow = flags & IOMAP_ATOMIC_COW;
+> > > +	bool			atomic_hw = flags & IOMAP_ATOMIC_HW;
+> > >   	int			nimaps = 1, error = 0;
+> > >   	bool			shared = false;
+> > >   	u16			iomap_flags = 0;
+> > > +	xfs_fileoff_t		orig_offset_fsb;
+> > > +	xfs_fileoff_t		orig_end_fsb;
+> > > +	bool			needs_alloc;
+> > >   	unsigned int		lockmode;
+> > >   	u64			seq;
+> > > +	orig_offset_fsb = offset_fsb;
+> > 
+> > When does offset_fsb change?
 > 
-> the fix have stable and fix tags. not sure if we can control its
-> backporting. the fix has been backported to 6.1/6.6/6.12/6.13 automatically.
+> It doesn't, so this is not really required.
+> 
+> > 
+> > > +	orig_end_fsb = end_fsb;
+> > 
+> > Set this in the variable declaration?
+> 
+> ok
+> 
+> > 
+> > > +
+> > >   	ASSERT(flags & (IOMAP_WRITE | IOMAP_ZERO));
+> > >   	if (xfs_is_shutdown(mp))
+> > > @@ -832,7 +857,7 @@ xfs_direct_write_iomap_begin(
+> > >   	 * COW writes may allocate delalloc space or convert unwritten COW
+> > >   	 * extents, so we need to make sure to take the lock exclusively here.
+> > >   	 */
+> > > -	if (xfs_is_cow_inode(ip))
+> > > +	if (xfs_is_cow_inode(ip) || atomic_cow)
+> > >   		lockmode = XFS_ILOCK_EXCL;
+> > >   	else
+> > >   		lockmode = XFS_ILOCK_SHARED;
+> > > @@ -857,6 +882,22 @@ xfs_direct_write_iomap_begin(
+> > >   	if (error)
+> > >   		goto out_unlock;
+> > > +	if (flags & IOMAP_ATOMIC_COW) {
+> > 
+> > 	if (atomic_cow) ?
+> > 
+> > Or really, atomic_sw?
+> 
+> Yes, will change.
+> 
+> > 
+> > > +		error = xfs_reflink_allocate_cow(ip, &imap, &cmap, &shared,
+> > > +				&lockmode,
+> > > +				(flags & IOMAP_DIRECT) || IS_DAX(inode), true);
+> > > +		/*
+> > > +		 * Don't check @shared. For atomic writes, we should error when
+> > > +		 * we don't get a CoW fork.
+> > 
+> > "Get a CoW fork"?  What does that mean?  The cow fork should be
+> > automatically allocated when needed, right?  Or should this really read
+> > "...when we don't get a COW mapping"?
+> 
+> ok, I can change as you suggest
+> 
+> > 
+> > > +		 */
+> > > +		if (error)
+> > > +			goto out_unlock;
+> > > +
+> > > +		end_fsb = imap.br_startoff + imap.br_blockcount;
+> > > +		length = XFS_FSB_TO_B(mp, end_fsb) - offset;
+> > > +		goto out_found_cow;
+> > > +	}
+> > 
+> > Can this be a separate ->iomap_begin (and hence iomap ops)?  I am trying
+> > to avoid the incohesion (still) plaguing most of the other iomap users.
+> 
+> I can try, and would then need to try to factor out what would be much
+> duplicated code.
 
-Right, I think it's already backported to the LTS kernels, but if it breaks any
-in-tree users then we'd have to revert it. I just like Rob's idea to instead
-change the spec for obvious reasons :)
+<nod> I think it's pretty straightforward:
 
-Regards,
-Will
+xfs_direct_cow_write_iomap_begin()
+{
+	ASSERT(flags & IOMAP_WRITE);
+	ASSERT(flags & IOMAP_DIRECT);
+	ASSERT(flags & IOMAP_ATOMIC_SW);
 
-<snip>
+	if (xfs_is_shutdown(mp))
+		return -EIO;
+
+	/*
+	 * Writes that span EOF might trigger an IO size update on
+	 * completion, so consider them to be dirty for the purposes of
+	 * O_DSYNC even if there is no other metadata changes pending or
+	 * have been made here.
+	 */
+	if (offset + length > i_size_read(inode))
+		iomap_flags |= IOMAP_F_DIRTY;
+
+	lockmode = XFS_ILOCK_EXCL;
+	error = xfs_ilock_for_iomap(ip, flags, &lockmode);
+	if (error)
+		return error;
+
+	error = xfs_bmapi_read(ip, offset_fsb, end_fsb - offset_fsb,
+			&imap, &nimaps, 0);
+	if (error)
+		goto out_unlock;
+
+	error = xfs_reflink_allocate_cow(ip, &imap, &cmap, &shared,
+			&lockmode, true, true);
+	if (error)
+		goto out_unlock;
+
+	endoff = XFS_FSB_TO_B(mp, cmap.br_startoff + cmap.br_blockcount);
+	trace_xfs_iomap_found(ip, offset, endoff - offset, XFS_COW_FORK,
+			&cmap);
+	if (imap.br_startblock != HOLESTARTBLOCK) {
+		seq = xfs_iomap_inode_sequence(ip, 0);
+		error = xfs_bmbt_to_iomap(ip, srcmap, &imap, flags, 0,
+				seq);
+		if (error)
+			goto out_unlock;
+	}
+	seq = xfs_iomap_inode_sequence(ip, IOMAP_F_SHARED);
+	xfs_iunlock(ip, lockmode);
+	return xfs_bmbt_to_iomap(ip, iomap, &cmap, flags,
+			IOMAP_F_SHARED, seq);
+
+out_unlock:
+	if (lockmode)
+		xfs_iunlock(ip, lockmode);
+	return error;
+}
+
+--D
+
+> > > +
+> > >   	if (imap_needs_cow(ip, flags, &imap, nimaps)) {
+> > >   		error = -EAGAIN;
+> > >   		if (flags & IOMAP_NOWAIT)
+> > > @@ -868,13 +909,38 @@ xfs_direct_write_iomap_begin(
+> > >   				(flags & IOMAP_DIRECT) || IS_DAX(inode), false);
+> > >   		if (error)
+> > >   			goto out_unlock;
+> > > -		if (shared)
+> > > +		if (shared) {
+> > > +			if (atomic_hw &&
+> > > +			    !imap_range_valid_for_atomic_write(&cmap,
+> > > +					orig_offset_fsb, orig_end_fsb)) {
+> > > +				error = -EAGAIN;
+> > > +				goto out_unlock;
+> > > +			}
+> > >   			goto out_found_cow;
+> > > +		}
+> > >   		end_fsb = imap.br_startoff + imap.br_blockcount;
+> > >   		length = XFS_FSB_TO_B(mp, end_fsb) - offset;
+> > >   	}
+> > > -	if (imap_needs_alloc(inode, flags, &imap, nimaps))
+> > > +	needs_alloc = imap_needs_alloc(inode, flags, &imap, nimaps);
+> > > +
+> > > +	if (atomic_hw) {
+> > > +		error = -EAGAIN;
+> > > +		/*
+> > > +		 * Use CoW method for when we need to alloc > 1 block,
+> > > +		 * otherwise we might allocate less than what we need here and
+> > > +		 * have multiple mappings.
+> > > +		*/
+> > > +		if (needs_alloc && orig_end_fsb - orig_offset_fsb > 1)
+> > > +			goto out_unlock;
+> > > +
+> > > +		if (!imap_range_valid_for_atomic_write(&imap, orig_offset_fsb,
+> > > +						orig_end_fsb)) {
+> > 
+> > You only need to indent by two more tabs for a continuation line.
+> 
+> ok
+> 
+> Thanks,
+> John
+> 
