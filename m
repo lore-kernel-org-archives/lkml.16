@@ -1,71 +1,76 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84AEA26138C
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:49:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF194263895
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740476985; cv=none; b=mbVWB3GB3ZR7iKLHoKDL1AmsDkCpfbP5CmJq9hFRb78bN44iZrGksS6+SMB+VVKrOl6fCt1BjnjdDBItAX5K9giOfHHniVxsvBF252fLB8qNBw3FaR4SkEEWTN3O3azBNgsXLFsKnktE4MpHAeRqfL71a9+iqUPNX3EMESkI34s=
+	t=1740477014; cv=none; b=c5XbI57a7j6ftiekZ4ZX24Gzxj2oSLGL2MTzNfFsNwJpOVzJ89xpXlekm/uhXCXEc3sKBN8RtoaCO/hF/+Fznr3poPTR3cztarTdh/T3Qfy4HhMrve6duBcBUds97LC/592zKowNBitrRsOgDqGMJc6izz/4GNkkvmUs+Sw0k2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740476985; c=relaxed/simple;
-	bh=wL3PdThfznU+ssmT8Zjs11BbPOAuu8A4VcaI5t/5CWU=;
+	s=arc-20240116; t=1740477014; c=relaxed/simple;
+	bh=YdYi+jldxRySwOYGSHC4IgPILTJajrReelAUFvdPiF4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=btQ3jUNPJy8RdJOpeMHIQnWxg9FrHqVeMioD1FPpAeIpSW+2UhjOK3SNOK6ng9WYpv4r5QuZgNmzsDvsDsYM0XLidcvZ4QYBWhmDqmaCD8AUzW+DFWYRPmYI0ZQ97zO6rcnApnENviKvt/cgrKcKzioVx1KNnMSCQ4+Y0qrQOTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=nQQEd6gE; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=gxg5SoTmcCRE3rYCe4StI3igZS1060I7n4l4oLz4iggtZFtkKrgu7NzSStgjSQVbtolfXwih3HFcXot5MPEARRtlA2b2qxirLKey930IFgtc9l13WFc2uH/GZMtVpxqr0cjd+hh3yIR2BXc9XQwsI+7DLSgFRt+J6iReTlGZ6eQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r8AvmQiz; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="nQQEd6gE"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4394036c0efso33454735e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 01:49:42 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r8AvmQiz"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-307325f2436so52551391fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 01:50:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1740476981; x=1741081781; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1740477009; x=1741081809; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ly0Mss/tFEwBQunMihP20nUWX/1m9yFcz2xqz8x9JMw=;
-        b=nQQEd6gEAxfzhwduJyEbJWZX32s2iln8wnFHQmmX8o402q5Gbx2xptjupc1ux5OPAV
-         a76FXeIcHsJwE1aSEN9P2HJPy4qWN0r2R+CtYOtSPqCBAadLHCoaxmliYDoBKnI2iYDs
-         cYUVEaE+euRUcdvHut6ZUTD849lv82hnonATR3n///whbrqlMek7gEHYvPS4GE74XKBF
-         Ok6/gPPcRg7qkoONHwP6aI1eutOn6BFg4qCxGlQLe71WuW95+y/4/pA4m3CPZUXlVEN1
-         Rlyq/k+qZhGKNraRt2s4dHKuval/LtGmHwVtAqEjHzPSBK+lyFpG5yjLDtbqdYb3KNmI
-         x1bA==
+        bh=otofrhCMJrvXe4MXmMzw0/uFlwKxINjHvm8fHlxwC3Y=;
+        b=r8AvmQizahU6zwlj049X3atHHXm/PY1CdXkHt6keJhhoOjdi3Ow/9LtBtN4POxgVv/
+         beaPwBezrnfGbdv8iq9SGvdwitY3Q9cDCYv4uFqd3Ptsv6/k7xUyyCaJHQgG5rqq2CTo
+         IkOgugnhFuBvfSeUbFM5mA/f5Tnl9HL/fh7+VhedvKKYgZWlIl6qCaPwaF5gNX+zyuzL
+         guhL0Udl3O1WGim97hky/HGm3o2eGPAnEIHOhcPe0Yjh1KCQHXcguSI1uceXv+v7PFy3
+         O4HVJQYBUUn12PUIPmyCJpS+o53DpObjGjuc2rmduZx7DpgAtLw6rjxgTLDAgyPsstJX
+         LGdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740476981; x=1741081781;
+        d=1e100.net; s=20230601; t=1740477009; x=1741081809;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ly0Mss/tFEwBQunMihP20nUWX/1m9yFcz2xqz8x9JMw=;
-        b=oQ8+dLThVczBsfX+YpslNvBjI34znVxYbA1jEAxnJ5f4f4X7Fi2uiUXQCJQ4LBx43/
-         Axia7wBrRHCe/+/w/b+5JohfFz9FNUiNl01VWU/jH0HySe6hERLbSQiueLBypIMgxvlA
-         Z4oIHBw7tMRLooy4kOcKD0OaxGI9iE2HLWnH8tNeyPSrrcYBIewAuvW5+/099i0AsJe+
-         CbZLWBP1jEbZZDbvecCH0g/wQ1c3+IiON+EUqhROcrFzpsuqTaVC+Lyg/xS7S+w64ouh
-         9YOdDoYbjDHWY9q7lfZYJMo74uzTimn+/iCIq96TCsVOmGJL40DTwhBjo1gAtCWNbLEi
-         YHcA==
-X-Forwarded-Encrypted: i=1; AJvYcCUG6ctx8HKLYLKj9/c87HujPiDT3ZvclsQ/DZKrlwL8tpYqc0X0/WyNOGQJ8D9DxLsNQkl6wnoig8hPPVQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzI0XbAd+HvTzyINbJYQqHgVC/tMz4DsyhNA8hXZd5Ydk8aV/9s
-	T1MU4japScHLGwq4H3X7p6TWWmoMDsRIKuOPR1A0a1+5FcD0bIHDPCS7/5VTbzE=
-X-Gm-Gg: ASbGnctCX/IEoD8IoP/vV+iEPVw+fLFnzuJ83Lri/bRXcrVPGfFO2ce6SjLB5KKroyo
-	/WXDfnqvvzMJ7BaA6sIFsdMgu6vzeix1JSDXXoRDrcuxTHR2qBIQDuq53D5xo5hrSdHzff0TysU
-	dvx2qpzM4ol3AfXO5ZS/muj0fX4CA85UaLG/9SwWaLnPVqlFFXgDiPshgtSDBVx8C07ezf1dmAC
-	f5B8UuD/qchjMnsFxNJayV13jXeEszPxpyVK6t5V8LqHgDi6RgCyGPtIkFx50qqYn8/2Dt9NChQ
-	hU5IQFTvkJNiMqMqECWBPnFGd/rGIVPMBGlAZRKzP+aZKZJYqVx3qh0ZbP6jjVA=
-X-Google-Smtp-Source: AGHT+IHDpACS1MnrA3tOIvm+mE84/YCNTQv6apljqfHYR6JMn0FuV3pFbWZzIk6oKljI24iAYt3pig==
-X-Received: by 2002:a05:600c:4e8c:b0:439:932c:e0d9 with SMTP id 5b1f17b1804b1-439ae1e62efmr151996865e9.10.1740476980709;
-        Tue, 25 Feb 2025 01:49:40 -0800 (PST)
-Received: from dfj (host-79-54-50-21.retail.telecomitalia.it. [79.54.50.21])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b02ce651sm133990665e9.8.2025.02.25.01.49.39
+        bh=otofrhCMJrvXe4MXmMzw0/uFlwKxINjHvm8fHlxwC3Y=;
+        b=Gm3ocMi0IsAq2xqKj6cRK/juL/iKWf4NVS2vsdY0MLgprPJnfvWo3TKsmwEeJo/u95
+         uhvMXzNlJuATDUiJsnkQzs/hg73WFWOAX66SvVoWj5XHAL72iEm8cgdX+ssu95J1vqy1
+         ql11SY857BCNxC44x6aIj5WD8YDvtgV+JBpxulK0Lb7vgLN0SLSr/HbOn2LFfvB9Isb0
+         aKbYP3s7nJ/3X1RRCSXTeDSKIYPacvbNvciiUuOgteLIWNOJ8oZJtd5Twp0C0pn6WT01
+         KqcFGZv4s1D9HH3hxqcvfdOwYfSUk/3TyCz9Zvi4oItugkytzMZkMonfunUj2m2aoLdo
+         mEjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUNCrtOreQfcOqopSK+ko2Gz9vZGEP+cHxPQaT5yz66whXrx5+3ENe8Ble0F+DD6XFMn/PijBWXxv46LzY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxnj/sbvAXaIOkuM21QsID2VN8nBkQeZuhmENx4F1m2XxfEMq7Q
+	OVLn+Lk7/Ps5eSEG5zH97Pi4rQRRqR2umJo8z2ViUKa9EDgnJprQKzrStScw/5VisVpDyvwckp2
+	s
+X-Gm-Gg: ASbGncsyO4dPSA5fOk1z+yVodbrbw7cA1EFnlrFodXrVwOLjwbwA+hWvCjIsv5HSdIP
+	yUizMVmuEyD/FmYuLj3/arfnT63oLrZ++pIAXPaW+FIhGxrMyOzk29/IYXETYP/yixh4Fbzw3QC
+	kTQafLiLGTyadnVtMD2PhssZsO0eoap1nitm5k6xUmRWmH2aOrJlh2C/7dWd2Nj09HARXqIJQ0Q
+	VPApqWY8rJVqkRXvrFKpzzTBqneXy9+1aQTjF4ufIowdM8WFESOldkSEq95IonvRW+xFSHB9MNb
+	1+oIJNzILQR6WL39E6wzVG6pPeo2C33yOelTEdaiOwtYAxx6Gkz7BI/54L5RlXrzGJl8KYZMhHa
+	5c6fITQ==
+X-Google-Smtp-Source: AGHT+IEtY9MXnrKuueCiRzVzb7OItS2ebjSxuUsGBPUIBg/R3EahURMlwlNSOkla7VNzEjmEglWcsg==
+X-Received: by 2002:a05:651c:21c:b0:308:f3b4:ea66 with SMTP id 38308e7fff4ca-30a59987bc2mr54809491fa.28.1740477008948;
+        Tue, 25 Feb 2025 01:50:08 -0800 (PST)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30a81ae819esm1788281fa.103.2025.02.25.01.50.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 01:49:40 -0800 (PST)
-Date: Tue, 25 Feb 2025 10:48:25 +0100
-From: Angelo Dureghello <adureghello@baylibre.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: ad7380: add support for SPI offload
-Message-ID: <ypaiae3flszokbvrk773pzcqxx53j6amjnhbkwq3oeopnmlyv5@2b3wfzqlpqtd>
-References: <20250220-wip-bl-spi-offload-ad7380-v1-1-838aa873e62a@baylibre.com>
- <7b64c6a9-0606-45ba-be45-7ae11c4fdf39@baylibre.com>
+        Tue, 25 Feb 2025 01:50:07 -0800 (PST)
+Date: Tue, 25 Feb 2025 11:50:05 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Jeff Johnson <jjohnson@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ath12k@lists.infradead.org
+Subject: Re: [PATCH] arm64: dts: qcom: x1e80100-slim7x: Drop incorrect
+ qcom,ath12k-calibration-variant
+Message-ID: <sfhcmlz3x254fdowufeeuh4uiwxfgkphm4ch4laceivbrs3zir@qvqk6jxi6zhf>
+References: <20250225093051.58406-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,90 +79,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7b64c6a9-0606-45ba-be45-7ae11c4fdf39@baylibre.com>
+In-Reply-To: <20250225093051.58406-1-krzysztof.kozlowski@linaro.org>
 
-Hi,
+On Tue, Feb 25, 2025 at 10:30:51AM +0100, Krzysztof Kozlowski wrote:
+> There is no such property as qcom,ath12k-calibration-variant: neither in
+> the bindings nor in the driver.  See dtbs_check:
+> 
+>   x1e80100-lenovo-yoga-slim7x.dtb: wifi@0: 'qcom,ath12k-calibration-variant' does not match any of the regexes: 'pinctrl-[0-9]+'
+> 
 
-On 22.02.2025 11:31, David Lechner wrote:
-> On 2/20/25 12:03 PM, Angelo Dureghello wrote:
-> > From: Angelo Dureghello <adureghello@baylibre.com>
-> > 
-> > Add support for SPI offload to the ad7380 driver. SPI offload allows
-> > sampling data at the max sample rate (2MSPS with one SDO line).
-> > 
-> > This is developed and tested against the ADI example FPGA design for
-> > this family of ADCs [1].
-> > 
-> > [1]: http://analogdevicesinc.github.io/hdl/projects/ad738x_fmc/index.html
-> > 
-> > Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
-> > ---
-> 
-> We forgot to also update Documentation/iio/ad7380.rst. We can follow up
-> with a separate patch later though.
-> 
-> >  drivers/iio/adc/Kconfig  |   2 +
-> >  drivers/iio/adc/ad7380.c | 509 +++++++++++++++++++++++++++++++++++++++++++----
-> >  2 files changed, 475 insertions(+), 36 deletions(-)
-> > 
-> 
-> ...
-> 
-> >  #define _AD7380_CHANNEL(index, bits, diff, sign, gain) {			\
-> >  	.type = IIO_VOLTAGE,							\
-> >  	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |				\
-> > @@ -237,48 +335,123 @@ static const struct iio_scan_type ad7380_scan_type_16_u[] = {
-> >  	.num_event_specs = ARRAY_SIZE(ad7380_events),				\
-> >  }
-> >  
-> > +#define _AD7380_OFFLOAD_CHANNEL(index, bits, diff, sign, gain) {		\
-> > +	.type = IIO_VOLTAGE,							\
-> > +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |                          \
-> > +		((gain) ? BIT(IIO_CHAN_INFO_SCALE) : 0) |			\
-> > +		((diff) ? 0 : BIT(IIO_CHAN_INFO_OFFSET)),			\
-> > +	.info_mask_shared_by_type = ((gain) ? 0 : BIT(IIO_CHAN_INFO_SCALE)) |   \
-> > +		BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) |				\
-> > +		BIT(IIO_CHAN_INFO_SAMP_FREQ),					\
-> 
-> Not sure if this is worth troubling with, but it might make more sense to make
-> IIO_CHAN_INFO_SAMP_FREQ info_mask_separate instead of info_mask_shared_by_type,
-> at least in the case of the single-ended chips.
-> 
-> This family of chips does simultaneous conversions so shared_by_type (or shared_by_all)
-> would typically be the right thing to do here. However, the single-ended versions
-> of these chips also have a multiplexer, so there are 2 banks of simultaneously
-> sampled inputs. So the effective sample rate as far as IIO is concerned would
-> actually be 1/2 of the sampling_frequency attribute value.
-> 
-> Since we have a channel mask restriction where we force all channels in a bank
-> to be enabled at once, I think it would work to make IIO_CHAN_INFO_SAMP_FREQ
-> info_mask_separate where the reported sampling frequency is the conversion rate
-> divided by the number of channels in a bank.
->
+Adding Jeff and ath12k@ to the cc list. Is the driver able to find the
+calibration variant in case it is not running on the ACPI system? I see
+that it uses dmi_walk. Does it work in the non-ACPI case?
 
-so if i understand properly,
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts b/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
+> index a3d53f2ba2c3..9aff5a1f044d 100644
+> --- a/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
+> +++ b/arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts
+> @@ -674,8 +674,6 @@ &pcie4_port0 {
+>  	wifi@0 {
+>  		compatible = "pci17cb,1107";
+>  		reg = <0x10000 0x0 0x0 0x0 0x0>;
+> -
+> -		qcom,ath12k-calibration-variant = "LES790";
+>  	};
+>  };
+>  
+> -- 
+> 2.43.0
+> 
 
-for ad7386/7/8 i should use info_mask_separate, so that if a single bank
-(called st->ch in the driver) is enabled, user can control that specific
-bank sample rate. But user can also set the device in sequencer mode, so in this
-case the sample rate is unique. So we could find 2 different sample rates in use
-and the management of this seems probably unusual.
-
-Could have sense to stay as we are now ?
- 
-> > +	.info_mask_shared_by_type_available =					\
-> > +		BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) |				\
-> > +		BIT(IIO_CHAN_INFO_SAMP_FREQ),					\
-> > +	.indexed = 1,                                                           \
-> > +	.differential = (diff),                                                 \
-> > +	.channel = (diff) ? (2 * (index)) : (index),                            \
-> > +	.channel2 = (diff) ? (2 * (index) + 1) : 0,                             \
-> > +	.scan_index = (index),                                                  \
-> > +	.has_ext_scan_type = 1,                                                 \
-> > +	.ext_scan_type = ad7380_scan_type_##bits##_##sign##_offload,            \
-> > +	.num_ext_scan_type =                                                    \
-> > +		ARRAY_SIZE(ad7380_scan_type_##bits##_##sign##_offload),		\
-> > +	.event_spec = ad7380_events,                                            \
-> > +	.num_event_specs = ARRAY_SIZE(ad7380_events),                           \
-> > +}
-> > +
+-- 
+With best wishes
+Dmitry
