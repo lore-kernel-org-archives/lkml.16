@@ -1,203 +1,132 @@
-Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
+Received: from mx25lb.world4you.com (mx25lb.world4you.com [81.19.149.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A462036EB;
-	Tue, 25 Feb 2025 19:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC46020C006;
+	Tue, 25 Feb 2025 19:39:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.19.149.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740512373; cv=none; b=nLBiFzItVzkRj6z6ly6+8hqbVCiu9ZPmCiHb+VIj19u5gTIN63xm7dOgCn+XZcue4mCBcq9LuWTJJzuFO+H0YoBad04ocyTMzLqzluF0vaxbJ6J4dWLdEP7Oxgv4+iXCALX1T/RaWBPj0e0nPC8L2L9kOjvARO4Bi5zyaEaPR0g=
+	t=1740512375; cv=none; b=WIgPDOBp5OzShCh5/uizX45sxIvj3yNw6CHd2v2jjptSjEhKlpHe/oR2yzGUZrTa6GIbhVmskNIYcVtFjVrrjA5ZBtQffwBtrsgnQxsyEa5bWbu16FSkX8wOZr6sfzvu27aS7bVeeJ+WXNdJ6qdgq0nIiaqXZQZ5YqOqgpqNxLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740512373; c=relaxed/simple;
-	bh=12jSNbr/O7Q1kvbb9tzLOBuiGrS73Qz9TCIgyAJGh9k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kxKy1NAgrbRdPQuHoUgnZxEGVgJHOV2Mcn4dj8IVAOn2ilVywyp7franFQcQ+1g3S+yJLHq3qOAbfBPxRBJ7XUTDZagjLDlQZmOlJsffTBl/060Oq6GJjF95DmZICxrm0TKxO6eknQzmzi+RdI6bF2qjVXhbYkgFTyhCDrglTq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=idosch.org; spf=none smtp.mailfrom=idosch.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=k1h9NN+v; arc=none smtp.client-ip=202.12.124.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=idosch.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=idosch.org
+	s=arc-20240116; t=1740512375; c=relaxed/simple;
+	bh=Xvt8IjPQniAU3unHdTZNJ7+x2xb6VbQHY3p2fi8W+EQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hy9vqKpWpJ6eckuR9YYG7b705V0yVkYrZ5RbiFwK0Uf2XCBBqaDI+lskqsPmgSlb1yOdpOD2wPEdHYV8D/lk85lyk2KNdMx0+dqHFukZp+P5Cr2GAQ4k3KvkIGCLcrIlNCqxVkANgnbTA3E+aq3naD26VLDL4yrpMl76+DRqodI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engleder-embedded.com; spf=pass smtp.mailfrom=engleder-embedded.com; dkim=pass (1024-bit key) header.d=engleder-embedded.com header.i=@engleder-embedded.com header.b=NSZHyqkx; arc=none smtp.client-ip=81.19.149.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engleder-embedded.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engleder-embedded.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="k1h9NN+v"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfout.stl.internal (Postfix) with ESMTP id 11B4E11400DD;
-	Tue, 25 Feb 2025 14:39:30 -0500 (EST)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-09.internal (MEProxy); Tue, 25 Feb 2025 14:39:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1740512369; x=1740598769; bh=tNpHy374sw+alC5l8BsffCVK88jBzGOVtLI
-	rpfQdpMA=; b=k1h9NN+vlkzReBZoUj7kD0/VPnmlSJ0veTe8nXDG4gsoLEVS9EP
-	ZfLrL8wEZmQpCyUXmctwdB3KEFyP+lLPKByi+SXIDOQl9Ikl3go7tRzNRkvoVR9c
-	sXwNiTnKuP2D7mjmU0gMVKEj14dPor6uNErVuisSuWp4hin9oP0Sxl3bzmOsU5yn
-	CppS5zY7fhRjBVy3psq2TqFO9Abp2uZy5JQxmsdWvLhHoOB2RoHlZtiXajDHpqem
-	+T0VgAR7JB7VgVH6io1uO3g1goAWsGRI0hKvm1C1UW9qLQWHxM6R8L9OLU7IhdKs
-	+P6fpYALyImD2xMlDdc4EJxZjAIFKSf8fVQ==
-X-ME-Sender: <xms:cRy-Z5mzCLParHuQi63QdnKmpk-SOeEG-K2GQyqWkcLFTS4bgUx63w>
-    <xme:cRy-Z00KEpOYjG9TvbKgjgOtEedc1t0FB7jJSKMnbQqv8q9Q99sY3nvw5TGlFRTdP
-    GEIemLXKdAljuA>
-X-ME-Received: <xmr:cRy-Z_roSxA3kyf1FxUmVbl_JuHozi4J0PwGPNoNTEiPA6cRfxr1i9YnO6bdvRrc8pzEgBUk7ncP_vwJ1JY1HjOUhHOgWA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdekvdehjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddv
-    necuhfhrohhmpefkughoucfutghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrd
-    horhhgqeenucggtffrrghtthgvrhhnpeehhfdtjedviefffeduuddvffegteeiieeguefg
-    udffvdfftdefheeijedthfejkeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuve
-    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepihguohhstghh
-    sehiughoshgthhdrohhrghdpnhgspghrtghpthhtohepuddvpdhmohguvgepshhmthhpoh
-    huthdprhgtphhtthhopehoshgtmhgrvghsledvsehgmhgrihhlrdgtohhmpdhrtghpthht
-    ohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrvh
-    gvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghho
-    ohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtph
-    htthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohephhhorhhmshes
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepvhhirhhoseiivghnihhvrdhlihhnuhigrd
-    horhhgrdhukhdprhgtphhtthhopehjihhrihesrhgvshhnuhhllhhirdhush
-X-ME-Proxy: <xmx:cRy-Z5k6_vouBe6jFlqc1nKqnztF7iSLOrZqnJEdE2R-IqhNqsYxkQ>
-    <xmx:cRy-Z30tNDb7bMKc_kEErQEUcHDmvPD2Xvb1ZqQu7hGF_ECV0878qw>
-    <xmx:cRy-Z4tIOMs-P9HywUUxZ2JpwQgMlhDvxuXfLFXO7zTa60gpT-xhhA>
-    <xmx:cRy-Z7VW5fRh4Igf3kyJ36KUFCmL8iwo3dAnh6duGgkXneLXuNYSQg>
-    <xmx:cRy-ZwuUbUfsB_0GqtY7xl6oxNyHFGR808nxMBIXd2H02Fe3TKyH3QBT>
-Feedback-ID: i494840e7:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 25 Feb 2025 14:39:28 -0500 (EST)
-Date: Tue, 25 Feb 2025 21:39:25 +0200
-From: Ido Schimmel <idosch@idosch.org>
-To: Oscar Maes <oscmaes92@gmail.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
-	viro@zeniv.linux.org.uk, jiri@resnulli.us,
-	linux-kernel@vger.kernel.org, security@kernel.org,
-	syzbot <syzbot+91161fe81857b396c8a0@syzkaller.appspotmail.com>
-Subject: Re: [PATCH net] net: 802: enforce underlying device type for GARP
- and MRP
-Message-ID: <Z74cbT8aNIPn__FF@shredder>
-References: <20250212113218.9859-1-oscmaes92@gmail.com>
- <Z6ywV4OkFu52AB8P@shredder>
- <20250225141157-oscmaes92@gmail.com>
+	dkim=pass (1024-bit key) header.d=engleder-embedded.com header.i=@engleder-embedded.com header.b="NSZHyqkx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=engleder-embedded.com; s=dkim11; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=4kLJhwKp4a4wG/8lLsj5hZ9Nkskn7kgFDs+gfjkBo4s=; b=NSZHyqkxgDLzxO93hgamLOrlIJ
+	zM+fgXC2R6B9QK0a5KlebUd9xD+0F7OBzc9edJuaQZ/OzGobQPZ8Uolv9zMWIDhFingFAOw24LhDw
+	9LHjOO4LDVIZh4g6qLz3owCRtSiaBoI3sxW4fMcP4KyKvMPeiNLepUkVF513HIi28OxY=;
+Received: from [88.117.55.1] (helo=[10.0.0.160])
+	by mx25lb.world4you.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <gerhard@engleder-embedded.com>)
+	id 1tn0Xc-000000003XD-0rtK;
+	Tue, 25 Feb 2025 20:24:28 +0100
+Message-ID: <085f0a9b-654d-4ce7-986c-043a6ca135de@engleder-embedded.com>
+Date: Tue, 25 Feb 2025 20:24:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250225141157-oscmaes92@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] selftests: drv-net: Check if combined-count exists
+To: Joe Damato <jdamato@fastly.com>
+Cc: dw@davidwei.uk, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Shuah Khan <shuah@kernel.org>,
+ "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org
+References: <20250225181455.224309-1-jdamato@fastly.com>
+Content-Language: en-US
+From: Gerhard Engleder <gerhard@engleder-embedded.com>
+In-Reply-To: <20250225181455.224309-1-jdamato@fastly.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AV-Do-Run: Yes
 
-On Tue, Feb 25, 2025 at 03:11:57PM +0100, Oscar Maes wrote:
-> On Wed, Feb 12, 2025 at 04:29:43PM +0200, Ido Schimmel wrote:
-> > On Wed, Feb 12, 2025 at 12:32:18PM +0100, Oscar Maes wrote:
-> > > When creating a VLAN device, we initialize GARP (garp_init_applicant)
-> > > and MRP (mrp_init_applicant) for the underlying device.
-> > > 
-> > > As part of the initialization process, we add the multicast address of
-> > > each applicant to the underlying device, by calling dev_mc_add.
-> > > 
-> > > __dev_mc_add uses dev->addr_len to determine the length of the new
-> > > multicast address.
-> > > 
-> > > This causes an out-of-bounds read if dev->addr_len is greater than 6,
-> > > since the multicast addresses provided by GARP and MRP are only 6 bytes
-> > > long.
-> > > 
-> > > This behaviour can be reproduced using the following commands:
-> > > 
-> > > ip tunnel add gretest mode ip6gre local ::1 remote ::2 dev lo
-> > > ip l set up dev gretest
-> > > ip link add link gretest name vlantest type vlan id 100
-> > > 
-> > > Then, the following command will display the address of garp_pdu_rcv:
-> > > 
-> > > ip maddr show | grep 01:80:c2:00:00:21
-> > > 
-> > > Fix this by enforcing the type and address length of
-> > > the underlying device during GARP and MRP initialization.
-> > > 
-> > > Fixes: 22bedad3ce11 ("net: convert multicast list to list_head")
-> > > Reported-by: syzbot <syzbot+91161fe81857b396c8a0@syzkaller.appspotmail.com>
-> > > Closes: https://lore.kernel.org/netdev/000000000000ca9a81061a01ec20@google.com/
-> > > Signed-off-by: Oscar Maes <oscmaes92@gmail.com>
-> > > ---
-> > >  net/802/garp.c | 5 +++++
-> > >  net/802/mrp.c  | 5 +++++
-> > >  2 files changed, 10 insertions(+)
-> > > 
-> > > diff --git a/net/802/garp.c b/net/802/garp.c
-> > > index 27f0ab146..2f383ee73 100644
-> > > --- a/net/802/garp.c
-> > > +++ b/net/802/garp.c
-> > > @@ -9,6 +9,7 @@
-> > >  #include <linux/skbuff.h>
-> > >  #include <linux/netdevice.h>
-> > >  #include <linux/etherdevice.h>
-> > > +#include <linux/if_arp.h>
-> > >  #include <linux/rtnetlink.h>
-> > >  #include <linux/llc.h>
-> > >  #include <linux/slab.h>
-> > > @@ -574,6 +575,10 @@ int garp_init_applicant(struct net_device *dev, struct garp_application *appl)
-> > >  
-> > >  	ASSERT_RTNL();
-> > >  
-> > > +	err = -EINVAL;
-> > > +	if (dev->type != ARPHRD_ETHER || dev->addr_len != ETH_ALEN)
-> > 
-> > Checking for 'ARPHRD_ETHER' is not enough? Other virtual devices such as
-> > macsec, macvlan and ipvlan only look at 'dev->type' AFAICT.
+On 25.02.25 19:14, Joe Damato wrote:
+> Some drivers, like tg3, do not set combined-count:
 > 
-> Agreed, I will change this.
+> $ ethtool -l enp4s0f1
+> Channel parameters for enp4s0f1:
+> Pre-set maximums:
+> RX:		4
+> TX:		4
+> Other:		n/a
+> Combined:	n/a
+> Current hardware settings:
+> RX:		4
+> TX:		1
+> Other:		n/a
+> Combined:	n/a
 > 
-> > 
-> > Also, how about moving this to vlan_check_real_dev()? It's common to
-> > both the IOCTL and netlink paths.
+> In the case where combined-count is not set, the ethtool netlink code
+> in the kernel elides the value and the code in the test:
 > 
-> {garp,mrp}_init_applicant assume that the address length is 6-bytes, when they call dev_mc_add
-> with a 6-byte buffer.
-> I think that the ARPHRD check should be right before calling dev_mc_add.
+>    netnl.channels_get(...)
 > 
-> Currently, GARP is only used by VLAN, which means your suggestion would technically work,
-> but this assumption might be violated by future protocol implementations like GMRP, which
-> could potentially resurface this bug.
+> With a tg3 device, the returned dictionary looks like:
+> 
+> {'header': {'dev-index': 3, 'dev-name': 'enp4s0f1'},
+>   'rx-max': 4,
+>   'rx-count': 4,
+>   'tx-max': 4,
+>   'tx-count': 1}
+> 
+> Note that the key 'combined-count' is missing. As a result of this
+> missing key the test raises an exception:
+> 
+>   # Exception|     if channels['combined-count'] == 0:
+>   # Exception|        ~~~~~~~~^^^^^^^^^^^^^^^^^^
+>   # Exception| KeyError: 'combined-count'
+> 
+> Change the test to check if 'combined-count' is a key in the dictionary
+> first and if not assume that this means the driver has separate RX and
+> TX queues.
+> 
+> With this change, the test now passes successfully on tg3 and mlx5
+> (which does have a 'combined-count').
+> 
+> Fixes: 1cf270424218 ("net: selftest: add test for netdev netlink queue-get API")
+> Signed-off-by: Joe Damato <jdamato@fastly.com>
+> ---
+>   tools/testing/selftests/drivers/net/queues.py | 9 ++++++---
+>   1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/drivers/net/queues.py b/tools/testing/selftests/drivers/net/queues.py
+> index 38303da957ee..baa8845d9f64 100755
+> --- a/tools/testing/selftests/drivers/net/queues.py
+> +++ b/tools/testing/selftests/drivers/net/queues.py
+> @@ -45,10 +45,13 @@ def addremove_queues(cfg, nl) -> None:
+>   
+>       netnl = EthtoolFamily()
+>       channels = netnl.channels_get({'header': {'dev-index': cfg.ifindex}})
+> -    if channels['combined-count'] == 0:
+> -        rx_type = 'rx'
+> +    if 'combined-count' in channels:
+> +        if channels['combined-count'] == 0:
+> +            rx_type = 'rx'
+> +        else:
+> +            rx_type = 'combined'
+>       else:
+> -        rx_type = 'combined'
+> +        rx_type = 'rx'
+>   
+>       expected = curr_queues - 1
+>       cmd(f"ethtool -L {cfg.dev['ifname']} {rx_type} {expected}", timeout=10)
+> 
+> base-commit: bc50682128bde778a1ddc457a02d92a637c20c6f
 
-I disagree. The problem is in the caller (the VLAN driver). It should
-explicitly check for the error condition (real device not being
-Ethernet) and bail out as soon as possible (in vlan_check_real_dev())
-with an appropriate error message. It should not rely on the first
-function where this error condition happened to explode to do the
-verification, especially when this function can be compiled out (e.g.,
-CONFIG_VLAN_8021Q_GVRP=n).
-
-> 
-> > 
-> > > +		goto err1;
-> > > +
-> > >  	if (!rtnl_dereference(dev->garp_port)) {
-> > >  		err = garp_init_port(dev);
-> > >  		if (err < 0)
-> > > diff --git a/net/802/mrp.c b/net/802/mrp.c
-> > > index e0c96d0da..1efee0b39 100644
-> > > --- a/net/802/mrp.c
-> > > +++ b/net/802/mrp.c
-> > > @@ -12,6 +12,7 @@
-> > >  #include <linux/skbuff.h>
-> > >  #include <linux/netdevice.h>
-> > >  #include <linux/etherdevice.h>
-> > > +#include <linux/if_arp.h>
-> > >  #include <linux/rtnetlink.h>
-> > >  #include <linux/slab.h>
-> > >  #include <linux/module.h>
-> > > @@ -859,6 +860,10 @@ int mrp_init_applicant(struct net_device *dev, struct mrp_application *appl)
-> > >  
-> > >  	ASSERT_RTNL();
-> > >  
-> > > +	err = -EINVAL;
-> > > +	if (dev->type != ARPHRD_ETHER || dev->addr_len != ETH_ALEN)
-> > > +		goto err1;
-> > > +
-> > >  	if (!rtnl_dereference(dev->mrp_port)) {
-> > >  		err = mrp_init_port(dev);
-> > >  		if (err < 0)
-> > > -- 
-> > > 2.39.5
-> > > 
-> > > 
+Reviewed-by: Gerhard Engleder <gerhard@engleder-embedded.com>
