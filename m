@@ -1,33 +1,39 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207421DB15B;
-	Tue, 25 Feb 2025 07:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 994D7204C31
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 07:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740469736; cv=none; b=tM1EagzkLeP1MPT1O8N3V4kj9CvORh7//COJQSChjlyejM6O0B+vhKps0MbNOPEIBsYwdO0UJWlL0GKlJojL6ail5JoPUCcpppqVMA5FKELOxq3IrTrBiJV0OeXGpiTgoayM63bREjz2h/Ee/IstefmnFGhT83RRq29Ch4v7Xwc=
+	t=1740469805; cv=none; b=d8qSJI/wnaWnTQhtkpctGvChtfBrIjQRDSIl991llVBfQDwtXAkDlWfZctyqhTOZnqRUHljfmLDltfcgxQjtHwVjyX6RUnmDNBjwYw4TyVIAu3SoxYiw9dcdsFbR8jBiW4GVqwzdwkM5kZ8e0fcTprX3T2qvrEwlZINzuwg/BOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740469736; c=relaxed/simple;
-	bh=/ncftbb9PfkRY5I1SEo5KWByGpqMh87THSvXX1b1/Ms=;
+	s=arc-20240116; t=1740469805; c=relaxed/simple;
+	bh=09ibOkxEH89zpgu/YOvZXAOdkjAqyD57M71vN9DlDIs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U/4yFpb/Xta9ou1NNik8sHIiRkVJdTz+b4KeRlx03pSGx/jpN5FAOgGPawpyW5yRb8pWfrNXP0Jwx6EmQfWq8KD2ceofVxXiboG51MPU3Y1/+qbB2uB424e5Gp+Sr8WqpEIfwrM926bcXa/p+u7uc2a/j/n2hadTjqXTBlpyrtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9gyG2n+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9gyG2n+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67958C4CEDD;
-	Tue, 25 Feb 2025 07:48:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740469735;
-	bh=/ncftbb9PfkRY5I1SEo5KWByGpqMh87THSvXX1b1/Ms=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=R9gyG2n+2ROXnP/X14vbm0q8n+lZHTumKXJ+xYnR3rnd6Kki+WFokVrVDe/VHevZz
-	 524z+obxKDc9qExkVKSXDHccqC6g6NT7TIaJ1dtxwswccxcoRtdqXSwc3WQArKBjrv
-	 vmGvBgOhNjnQsLziIrMi1gtmnKy/rNC1HrnD7HDhy8YMYoEOevt4wGpmZJD0Yae5N+
-	 HREYavAgE4QRHSFMsONHOHl0JCWzx7Iq+25ur3DrmFw5lVb8K+dh6NXYQkMNgEjjMk
-	 e9gN2yAD5xAGNxwhKj4TFhq22nJNoVq5MPx+8Rjk/DzBI3WhXkMXXsCD6+vxoOUwDJ
-	 0sjMYMZgATXsw==
-Message-ID: <f76a3a6c-795e-4fc8-905f-4655115ea99d@kernel.org>
-Date: Tue, 25 Feb 2025 08:48:48 +0100
+	 In-Reply-To:Content-Type; b=XaLm0UWPGBagvDyPdcgogLw0iGYN24KxJLbX+cD9OE+SB2yjYQTlKO4mEGJJavuTE9d8s6Se7heidc248VKjk1cDCKWJ+gTreJgcRjBWc183AKc0AdGThImWXRa20Q33MIBxUaQCywTOOXIqAiwfMtRgHQ0IZDt8lf/XtQZBf+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4Z28XW5p6Cz9sSH;
+	Tue, 25 Feb 2025 08:35:39 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id LNoX8tsTPzIV; Tue, 25 Feb 2025 08:35:39 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4Z28XW50Xsz9sS8;
+	Tue, 25 Feb 2025 08:35:39 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 98D598B780;
+	Tue, 25 Feb 2025 08:35:39 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id D597ggcl3448; Tue, 25 Feb 2025 08:35:39 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 283828B77C;
+	Tue, 25 Feb 2025 08:35:39 +0100 (CET)
+Message-ID: <7d23db63-6909-48e2-8262-fb000aa714a5@csgroup.eu>
+Date: Tue, 25 Feb 2025 08:35:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,76 +41,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/8] arm64: defconfig: enable STM32 LP timers drivers
-To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>, lee@kernel.org,
- ukleinek@kernel.org, alexandre.torgue@foss.st.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, wbg@kernel.org, jic23@kernel.org,
- daniel.lezcano@linaro.org, tglx@linutronix.de
-Cc: catalin.marinas@arm.com, will@kernel.org, devicetree@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
- olivier.moysan@foss.st.com
-References: <20250224180150.3689638-1-fabrice.gasnier@foss.st.com>
- <20250224180150.3689638-8-fabrice.gasnier@foss.st.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250224180150.3689638-8-fabrice.gasnier@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-On 24/02/2025 19:01, Fabrice Gasnier wrote:
-> Enable the STM32 timer drivers: MFD, counter, PWM and trigger as modules.
-> Clocksource is a bool, hence set to y. These drivers can be used on
-> STM32MP25.
+Subject: Re: [RFC PATCH] objtool: Skip unannotated intra-function call warning
+ for bl+mflr pattern
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Sathvika Vasireddy <sv@linux.ibm.com>, jpoimboe@kernel.org,
+ peterz@infradead.org, npiggin@gmail.com, maddy@linux.ibm.com,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ llvm@lists.linux.dev
+References: <20250219162014.10334-1-sv@linux.ibm.com>
+ <3223ec0e-c445-4bbf-ae72-276688e40908@csgroup.eu>
+ <d5ada017-1ba2-4a89-8a58-4555f09f9d97@csgroup.eu>
+ <8f4ec6d4-2646-4a87-b3a1-edfaecff2a01@csgroup.eu>
+ <20250224170922.GA585841@ax162>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250224170922.GA585841@ax162>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-Which upstream board? If you do not have upstream board, the defconfig
-is pointless for us. It's not defconfig for your downstream forks.
 
+Le 24/02/2025 à 18:09, Nathan Chancellor a écrit :
+> On Mon, Feb 24, 2025 at 02:19:14PM +0100, Christophe Leroy wrote:
+>> Well, this problem already exists on clang 18 it seems:
+>>
+>> 00000004 <btext_map>:
+>>     4:   7c 08 02 a6     mflr    r0
+>>     8:   94 21 ff e0     stwu    r1,-32(r1)
+>>     c:   93 c1 00 18     stw     r30,24(r1)
+>>    10:   90 01 00 24     stw     r0,36(r1)
+>>    14:   93 a1 00 14     stw     r29,20(r1)
+>>    18:   48 00 00 05     bl      1c <btext_map+0x18>
+>>    1c:   38 a0 00 00     li      r5,0
+>>    20:   7f c8 02 a6     mflr    r30
+>>
+>> While GCC generates:
+>>
+>> 00000418 <btext_map>:
+>>   418:   94 21 ff e0     stwu    r1,-32(r1)
+>>   41c:   7c 08 02 a6     mflr    r0
+>>   420:   42 9f 00 05     bcl     20,4*cr7+so,424 <btext_map+0xc>
+>>   424:   39 20 00 00     li      r9,0
+>>   428:   93 c1 00 18     stw     r30,24(r1)
+>>   42c:   7f c8 02 a6     mflr    r30
+>>
+>> So lets make the kernel tolerate it allthough it should be fixed on clang at
+>> the end.
+>>
+>> I can't find any related issue in the clang issues database
+>> (https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgithub.com%2Fllvm%2Fllvm-project%2Fissues&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C3c10d37fecd94c692acb08dd54f5ff51%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638760137702082512%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=qOjbONjWUuXFKUNb42yEPXgXmvU6x%2BuwbGSg2Ep6WRk%3D&reserved=0), should we open one ?
+> 
+> Yes please, especially if you happen to have a simplified reproducer
+> (but no worries if not). I can make sure it gets labeled for the PowerPC
+> backend folks to take a look at.
+> 
 
-Best regards,
-Krzysztof
+Done, see https://github.com/llvm/llvm-project/issues/128644
