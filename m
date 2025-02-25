@@ -1,117 +1,122 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86D7225EF95
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 08:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3243A21CC58
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 08:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740471608; cv=none; b=FBKShFqa4oVxjLUhxffKu4gOyujOpWZW7KCQ8s9tbaQpt2X+1b+o9XIRdYOhpLtZ5exv2j/KFyLQIWuzW6/7kcQmdVfQ1UZX2UsOQC80DIA40EmZem5g/PFbPBuUwEf5Rzzlk8oJLtfbqXrN7S1Ypcv9FT2uHCZLriTCgOT3Azo=
+	t=1740471709; cv=none; b=oUhC2e/D756RLX4v901KEkdLajxleIqqexnjtcPpmxebNAZP5uEQ5VDJCId63vlbXXmGzblKjYLptuO1mYDgwoljSlSXjobfo63kAlCgCyew2tWYsiLpF4v3rMwMTxtvcYWDFYlrQICXDJuRX89zK15eqYwXXp8IoT32cxu6tOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740471608; c=relaxed/simple;
-	bh=8JbHItkDNTqx7ppT/iSayCN1jPwzTMbHToRWPnGXZ+8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Sh3yOI5r3JIx8ErxMrYQtXNsrzb2IXl1/rJxekBVUl0MnHTb0cPpMcSnL/tSkKs5wDK1Rp8f43TqCJ08Pf/SrYwa/0+9QDJeSvW4GtCfZBwGQyUsETbgUIxKxEtLkgf5EktQ6kXJTw69ofBkIjNOX653MZsbdaYu4QHENWUEWN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4Z29CQ5nnmz9sSd;
-	Tue, 25 Feb 2025 09:05:54 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id IOg3G3RLLwfI; Tue, 25 Feb 2025 09:05:54 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4Z29CM62YDz9sSY;
-	Tue, 25 Feb 2025 09:05:51 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id B84C28B780;
-	Tue, 25 Feb 2025 09:05:51 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id 0Az_q5mFkqk4; Tue, 25 Feb 2025 09:05:51 +0100 (CET)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.202.221])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 0385A8B77C;
-	Tue, 25 Feb 2025 09:05:50 +0100 (CET)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	Segher Boessenkool <segher@kewrnel.crashing.org>
-Subject: [PATCH v5 2/4] objtool/powerpc: Add support for decoding all types of uncond branches
-Date: Tue, 25 Feb 2025 09:05:49 +0100
-Message-ID: <bf0b4d554547bc34fa3d1af5b4e62a84c0bc182b.1740470510.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <0ca71a4b0ac679ea52bd9fdd1f607195d72b499f.1733245362.git.christophe.leroy@csgroup.eu>
-References: <cover.1733245362.git.christophe.leroy@csgroup.eu>
+	s=arc-20240116; t=1740471709; c=relaxed/simple;
+	bh=6LbLbk2Hi/cJhAyDERiL/9BQ/9IckNqbv1Bsg0nAn0s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JYAKQLitv6CYAykfFvXyWtXNzp7RAH69EaWA4vduK3JSjRhLn7C8QgoFLLF3Xa3Rlp++Yhyv7ORDHiqZrAjpCcSdwH65E1Qg4jv7y130VDE211i8A03q3nkgupYj3PGxgGmZRLh637fUiSDmysZdPgWEg0a+xhkk6r1q0ukNYlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UFC5HBQd; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UFC5HBQd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1740471706;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JGVEBgr6yIICt4OFYjSxGo52A+94TcAFJZUxRZ8kPXw=;
+	b=UFC5HBQdSV2OnuZ/6DM7oNkMATWNyCEYWPoufNXobVrlJwuFVupbLEHk4YhmkbDW8OTwlj
+	kwnheHv6GhWS7M+NcgU0ZFVZzx/4DWn9Ah6sh63l3vU/qmCSylvN5Nl6nZqwQeZrrsrnFL
+	h4kW+ovKVDDah87VytYe5IUfMxRSvVk=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-691-V37hrS02P2u-zcID8-HCQw-1; Tue,
+ 25 Feb 2025 03:21:39 -0500
+X-MC-Unique: V37hrS02P2u-zcID8-HCQw-1
+X-Mimecast-MFC-AGG-ID: V37hrS02P2u-zcID8-HCQw_1740471697
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2AC4C18EB2C3;
+	Tue, 25 Feb 2025 08:21:36 +0000 (UTC)
+Received: from fedora (unknown [10.72.120.31])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9F6B01800358;
+	Tue, 25 Feb 2025 08:21:27 +0000 (UTC)
+Date: Tue, 25 Feb 2025 16:21:22 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: tj@kernel.org, josef@toxicpanda.com, axboe@kernel.dk,
+	cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
+	yangerkun@huawei.com, "yukuai (C)" <yukuai3@huawei.com>
+Subject: Re: [PATCH 2/2] blk-throttle: fix off-by-one jiffies wait_time
+Message-ID: <Z719gj8GOl0itRwV@fedora>
+References: <Z7nAJSKGANoC0Glb@fedora>
+ <f2f54206-b5c0-7486-d607-337d29e9c145@huaweicloud.com>
+ <Z7vnTyk6Y6X4JWQB@fedora>
+ <e6a29a6a-f5ec-7953-14e9-2550a549f955@huaweicloud.com>
+ <Z7w0P8ImJiZhRsPD@fedora>
+ <611f02a8-8430-16cf-46e5-e9417982b077@huaweicloud.com>
+ <Z70btzRaN83FbTJp@fedora>
+ <8473fca2-16ab-b2a6-ede7-d1449aa7d463@huaweicloud.com>
+ <Z70qvZEBdq6L3-Yb@fedora>
+ <084e25a1-5ed7-3097-5bae-b87addeaf01f@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740470749; l=1915; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=8JbHItkDNTqx7ppT/iSayCN1jPwzTMbHToRWPnGXZ+8=; b=kDGs0rx51ssFnmq55d2aoKmsBU2DAAmDzguoyq3tyjbjJbM4jrsG8ij4o0PNedE9Vme8j9BUr x0rsWe/Na1UAXrX4N8/CmGrpflO/ZQFmsAwWzcfysb78yw/g0I16gKg
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <084e25a1-5ed7-3097-5bae-b87addeaf01f@huaweicloud.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Add support for 'bla' instruction.
+On Tue, Feb 25, 2025 at 11:12:24AM +0800, Yu Kuai wrote:
+> Hi, Ming!
+> 
+> 在 2025/02/25 10:28, Ming Lei 写道:
+> > Can you explain in details why it signals that the rate is expected now?
+> > 
+> > If rate isn't expected, it will cause trouble to trim, even just the
+> > previous part.
+> 
+> Ok, for example, assume bps_limit is 1000bytes, 1 jiffes is 10ms, and
+> slice is 20ms(2 jiffies).
+> 
 
-This is done by 'flagging' the address as an absolute address so that
-arch_jump_destination() can calculate it as expected. Because code is
-_always_ 4 bytes aligned, use bit 30 as flag.
+We all know how it works, but I didn't understand the behind idea why it
+is correct. Now I figured it out: 
 
-Also add support for 'b' and 'ba' instructions. Objtool call them jumps.
+1) increase default slice window to 2 * td->throttle_slice
 
-And make sure the special 'bl .+4' used by clang in relocatable code is
-not seen as an 'unannotated intra-function call'. clang should use the
-special 'bcl 20,31,.+4' form like gcc but for the time being it does not
-so lets work around that.
+2) slice window is set as [jiffies - td->throttle_slice, jiffies + td->throttle_slice]
 
-Link: https://github.com/llvm/llvm-project/issues/128644
-Reviewed-by: Segher Boessenkool <segher@kewrnel.crashing.org>
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
-v5: Add a special case for clang to ignore 'bl .+4' form.
----
- tools/objtool/arch/powerpc/decode.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+3) initialize td->bytes_disp[]/td->io_dis[] as actual dispatched bytes/ios
+done [jiffies - td->throttle_slice, 0]
 
-diff --git a/tools/objtool/arch/powerpc/decode.c b/tools/objtool/arch/powerpc/decode.c
-index 53b55690f320..26d5050424a9 100644
---- a/tools/objtool/arch/powerpc/decode.c
-+++ b/tools/objtool/arch/powerpc/decode.c
-@@ -55,12 +55,17 @@ int arch_decode_instruction(struct objtool_file *file, const struct section *sec
- 
- 	switch (opcode) {
- 	case 18: /* b[l][a] */
--		if ((ins & 3) == 1) /* bl */
-+		if (ins == 0x48000005)	/* bl .+4 */
-+			typ = INSN_OTHER;
-+		else if (ins & 1)	/* bl[a] */
- 			typ = INSN_CALL;
-+		else		/* b[a] */
-+			typ = INSN_JUMP_UNCONDITIONAL;
- 
- 		imm = ins & 0x3fffffc;
- 		if (imm & 0x2000000)
- 			imm -= 0x4000000;
-+		imm |= ins & 2;	/* AA flag */
- 		break;
- 	}
- 
-@@ -77,6 +82,9 @@ int arch_decode_instruction(struct objtool_file *file, const struct section *sec
- 
- unsigned long arch_jump_destination(struct instruction *insn)
- {
-+	if (insn->immediate & 2)
-+		return insn->immediate & ~2;
-+
- 	return insn->offset + insn->immediate;
- }
- 
--- 
-2.47.0
+This approach looks smart, and it should work well for any deviation which is <= 1
+throttle_slice.
+
+Probably it is enough for fixing the issue in throtl/001, even though 2 jiffies
+timer drift still may be observed, see the below log collected in my VM(HZ_100)
+by just running one time of blktests './check throtl':
+
+@timer_expire_delay:
+[1, 2)               387 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[2, 3)                11 |@                                                   |
+
+bpftrace -e 'kfunc:throtl_pending_timer_fn { @timer_expire_delay = lhist(jiffies - args->t->expires, 0, 16, 1);}'
+
+
+Also I'd suggest to remove ->carryover_bytes/ios since blk-throttle algorithm is
+supposed to be adaptive, and the approach I suggested may cover this area,
+what do you think of this cleanup? I have one local patchset, which can
+pass all blktest throtl tests with removing ->carryover_bytes/ios.
+
+
+
+Thanks,
+Ming
 
