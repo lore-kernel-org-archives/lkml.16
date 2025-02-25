@@ -1,100 +1,102 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B05E1A8F79;
-	Tue, 25 Feb 2025 18:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740508377; cv=pass; b=DN5AeWN+Pxvstq/XQrXwDinCNymcI2/9wNKZ6SI+cJ1FyJcsw5DZx9ZNp467CuyEjydkn+D0KEkMurKL0FCYG6/szSVocIX8G4AeO4XObOoJPoo4Num4ffIVLdTCmSIjC17Cu+dgJ4qf0w47/M0Dp/fnrU+gVmYgYHK4Ah/euYg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740508377; c=relaxed/simple;
-	bh=710on4FianZf50Zr3diy6L+j+7/aC3MoxnjIw+csFKE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A3OSwtEL9zC6LsVTq1V6Wgtu4Qz8BcNL4j+rwZeKV5qKGKE3ErrTctNDy85KGJYC434uSTieG4QBvZKeCLByOgP8oL5I9X8UP7B7K/Lc5sZInrSQzaU84KrP/b/mxsf07TFoxOZMyMCuIGXtNHNIrDMpK1WbMHqygefJeXZORMc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=Uc/2dSvg; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176B41C8602;
+	Tue, 25 Feb 2025 18:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740508391; cv=none; b=mjsK5FLcKaidL/u36BL/Nw9ZpWaiUYUmJuXcNLGsGD60EtmksKwXa3w+1CaKCivOC8weY4GzeOK5UYgM+4ugnwLTC6ZiXCybLV42ZG46EVrAVXlx+VZqVadak1/9Pq8vbve1hW3V6jEfQms7E9HukK3SCEVqeCfyMkaUxMJfd/E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740508391; c=relaxed/simple;
+	bh=03NqTDrUs0oMO9xVqWE+ZbeCfpofpmt7PAlvxMuUudU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fdBCsxzkQlr16SNByPhMQeEM6yf9paeOLZhRDt4jwFNmpfCJXeONxyZM1BsD93wzfdge2XKz1io/VeTLdUjcaCZ8COJeDuBOBryfEcswwAC7FFhcf5QRD295jzW8mTv0oxrxBX8keSxiuiDXAg/gyEBDOeSY324ymKSNcSEvm8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VVOiPB79; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="Uc/2dSvg"
-ARC-Seal: i=1; a=rsa-sha256; t=1740508336; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=NAVluGKpp/hHUVVj+JxBpRBCQBz+X/4naBTk3fwp8FFJVh9jWYEsdF+C9gnx+4gP+cpCdwqg4IRFIdbVuo8hhMvXWSaXfMSQQTvKVYLm8sBOwNXf57Lr9zgKjSVLKm7q7N4piaS+61abaF/P3X+S0YDCTHiYCIZcN5ypYrBKKAM=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740508336; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=tCejzOVQqwKvlJ+w4GPysB0BnrgHd030RmrjnYJfw9M=; 
-	b=mF8QfykBvKtsu8Y1GMsiDt10MHDqSo9xZQj6t1HjOGd4vM3TOZS1BXyPjOddToTitoJVWTnuCtOZQt0kuzyCGAjc+OBALvyy08ft934zLcGF6LPMGzOzQEy0xAQzvQsbpbY9iZdeP4OI0Ik7KePaAt/QhniFLCxCQYxLOn5gPi4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740508336;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=tCejzOVQqwKvlJ+w4GPysB0BnrgHd030RmrjnYJfw9M=;
-	b=Uc/2dSvgq6Z/Ci2LMENGCAL/8uH67vuWViuP/LSjtvVwe3Z2T+qTCqbWQ2ztfAbE
-	0oz9ZcfUJM1MvjkxrdTOQ4mZpRQROouuO2tWvgutw5S9bv6TRodaeucsFRBlZf4ahaF
-	Cd97yYKvWC7cfMYv/DWjHzYFr70xqt5Mgdg1+SGk=
-Received: by mx.zohomail.com with SMTPS id 1740508334520703.6738518506259;
-	Tue, 25 Feb 2025 10:32:14 -0800 (PST)
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-To: Shreeya Patel <shreeya.patel@collabora.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	jose.abreu@synopsys.com,
-	nelson.costa@synopsys.com,
-	shawn.wen@rock-chips.com,
-	nicolas.dufresne@collabora.com,
-	Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: kernel@collabora.com,
-	linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	Tim Surber <me@timsurber.de>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH v10 6/6] arm64: defconfig: Enable Synopsys HDMI receiver
-Date: Tue, 25 Feb 2025 21:30:58 +0300
-Message-ID: <20250225183058.607047-7-dmitry.osipenko@collabora.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250225183058.607047-1-dmitry.osipenko@collabora.com>
-References: <20250225183058.607047-1-dmitry.osipenko@collabora.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VVOiPB79"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DAD8C4CEDD;
+	Tue, 25 Feb 2025 18:33:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740508390;
+	bh=03NqTDrUs0oMO9xVqWE+ZbeCfpofpmt7PAlvxMuUudU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VVOiPB79Rqw0x71AHmLqjt0kR1L9ieScgWEwU0ZJ2MZ3duW88KCLUaChtLjPMAklC
+	 fD61BHnainx9uHmhCHl77RITR5IeMNOvLjXJudrpH5k7kMQ+kFbZHHYm7R7JA9GLEc
+	 blYxFgwEjm7gYKte3ihH7iURUBuBrgQiMyiDbQm6Fkbw2ejjTZ5COFEPxzbrAKJ5Fm
+	 0tqxD8bV2ZcdFZuihHebw0t0PqDQq3fBHman/m8Ux3ODYhqfW5lm9SrnOevNCJVptI
+	 3dY8QghUDmtgKs+W9qqXkTe6l8LrVe8ApUGULNvv/6IJpBHsdFFAE3XF6K5OfJgO+l
+	 woc06mva7u0uQ==
+Date: Tue, 25 Feb 2025 10:33:08 -0800
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Yafang Shao <laoar.shao@gmail.com>
+Cc: jikos@kernel.org, mbenes@suse.cz, pmladek@suse.com,
+	joe.lawrence@redhat.com, live-patching@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] livepatch: Replace tasklist_lock with RCU
+Message-ID: <20250225183308.yjtgdl3esisvlhab@jpoimboe>
+References: <20250223062046.2943-1-laoar.shao@gmail.com>
+ <20250223062046.2943-3-laoar.shao@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250223062046.2943-3-laoar.shao@gmail.com>
 
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
+On Sun, Feb 23, 2025 at 02:20:46PM +0800, Yafang Shao wrote:
+> +++ b/kernel/livepatch/patch.c
+> @@ -95,7 +95,12 @@ static void notrace klp_ftrace_handler(unsigned long ip,
+>  
+>  		patch_state = current->patch_state;
+>  
+> -		WARN_ON_ONCE(patch_state == KLP_TRANSITION_IDLE);
+> +		/* If the patch_state is KLP_TRANSITION_IDLE, it indicates the
+> +		 * task was forked after klp_init_transition(). For this newly
+> +		 * forked task, it is safe to switch it to klp_target_state.
+> +		 */
+> +		if (patch_state == KLP_TRANSITION_IDLE)
+> +			current->patch_state = klp_target_state;
 
-The Rockchip RK3588 has a built-in HDMI receiver block from
-Synopsys. Let's enable the driver for it.
+Hm, but then the following line is:
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
----
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+>  		if (patch_state == KLP_TRANSITION_UNPATCHED) {
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index cb7da4415599..3dccc9e1c4aa 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -859,6 +859,8 @@ CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC=m
- CONFIG_VIDEO_SAMSUNG_S5P_JPEG=m
- CONFIG_VIDEO_SAMSUNG_S5P_MFC=m
- CONFIG_VIDEO_SUN6I_CSI=m
-+CONFIG_VIDEO_SYNOPSYS_HDMIRX=m
-+CONFIG_VIDEO_SYNOPSYS_HDMIRX_LOAD_DEFAULT_EDID=y
- CONFIG_VIDEO_TI_J721E_CSI2RX=m
- CONFIG_VIDEO_HANTRO=m
- CONFIG_VIDEO_IMX219=m
+Shouldn't the local 'patch_state' variable be updated?
+
+It also seems unnecessary to update 'current->patch_state' here.
+
+> @@ -294,6 +294,13 @@ static int klp_check_and_switch_task(struct task_struct *task, void *arg)
+>  {
+>  	int ret;
+>  
+> +	/* If the patch_state remains KLP_TRANSITION_IDLE at this point, it
+> +	 * indicates that the task was forked after klp_init_transition(). For
+> +	 * this newly forked task, it is now safe to perform the switch.
+> +	 */
+> +	if (task->patch_state == KLP_TRANSITION_IDLE)
+> +		goto out;
+> +
+
+This also seems unnecessary.  No need to transition the patch if the
+ftrace handler is already doing the right thing.  klp_try_switch_task()
+can just return early on !TIF_PATCH_PENDING.
+
+> @@ -466,11 +474,11 @@ void klp_try_complete_transition(void)
+>  	 * Usually this will transition most (or all) of the tasks on a system
+>  	 * unless the patch includes changes to a very common function.
+>  	 */
+> -	read_lock(&tasklist_lock);
+> +	rcu_read_lock();
+>  	for_each_process_thread(g, task)
+>  		if (!klp_try_switch_task(task))
+>  			complete = false;
+> -	read_unlock(&tasklist_lock);
+> +	rcu_read_unlock();
+
+Can this also be done for the idle tasks?
+
 -- 
-2.48.1
-
+Josh
