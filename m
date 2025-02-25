@@ -1,36 +1,37 @@
 Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDBE14F9C4;
-	Tue, 25 Feb 2025 18:36:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A1E1A23BA;
+	Tue, 25 Feb 2025 18:36:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740508573; cv=none; b=syRDSmsGIvaF1516YM5Hrm69XgkBeHZDVOw4Dz0B3zsNRh2xYNwfK99IcBlkH4oOUM4xa64DAA0H0BLuziN64wpeWU6j3XmrOxCfsKS1wZz6+dvdAxrETFUqCVpcmxVG+wlmzYKusw4KaXr4c4wl1boSC4oeB/xy8qcG2ufI6NI=
+	t=1740508574; cv=none; b=UdwnVmEZKaOmrSUmlN+YVqQWz26YtdHjfyfAFUR7i/e2XQ+ojQQxPEqwUz3C4KEUjpHHjbGJdX6rrmsx3QA8fx9Hk4EGoYUdBIMsLZNKoXndaIkf4jR+Cih4dYSUdCO68RsnQGojlwLN7r2U/UyBSFukCxNX8jjzWpfE5j7+oC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740508573; c=relaxed/simple;
-	bh=VDjHXY7UAfm3OqARVr8+whmUDAKt7q8yiIBcPqR/KBA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RZ43SK6dPCdY24p8jkAHrL6/CLjNcPMyxzAikSZ69sxWuWiwF/opQMCZbefPbUo5hqydnD7qt7ALMfFSwlW3c92GC0C8f2nbq/CyJYoKGINLEQ2Jbam/tRW0OPkRLpsociTnxoqPXw4GkDxr55TSlM1yrNZWX/unNicvgQq3YIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=CzfeiXFc; arc=none smtp.client-ip=178.60.130.6
+	s=arc-20240116; t=1740508574; c=relaxed/simple;
+	bh=8ie6mdcEpoxrr+6qJXWh27A/NpVno+bkcZ+GTlfHJnk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=avJyJR3EwnBGnRkO3ZKwzOEE9kU97y0EbCbF2mhM3xEe6ndrnZ6x9d8NiMX2TrX5kIzFHTZsH4BPeDWMt6u9x+dZ/G6zVxhIEV/0iXCTBgkDNuu3HUmGJeyFAQMDorPivuJAVjCs7gGMBbi/km1TlKjQFx4xHZnasvRg0guf238=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=ErsqfNHt; arc=none smtp.client-ip=178.60.130.6
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="CzfeiXFc"
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="ErsqfNHt"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
-	Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
 	List-Post:List-Owner:List-Archive;
-	bh=KeJQbvljd4XNcCRe+d6cHRdp4CkIaz6wNQGBG3xQq5w=; b=CzfeiXFcbk5gH63QJ9la65fivg
-	8Cyjig/AKyDhA37/IiS15/ZPmOmNXdGVLD2iUR5290BIvejAEtN9B1xrxRF8HxR/L/5n8ov0FnXzH
-	w86g4x9giWuPBgVi0RTzF3dQgV0+poZEDa/RarpSPErH8m4NB5TjdXuf/w/r7ER0OwGlx/gpPXvnW
-	mRi3clQzDPwVaalBx1Zukem58PZhBrp+oPxDUjEBS+icpM593K9S1UwR+uOn/mm4hGakWThluAEq1
-	zfg2qZTm4mqsKlBgEVeE9HOVtGPeLYmpnmu+gzpx1ZtFWX25nQTpOrN3GEh53XPdoikGnCxtCBezx
-	7JEN6bRQ==;
+	bh=pLrj0EitBwAWnlaub054mvi38qvRFG/38Y7ATxZkKl0=; b=ErsqfNHtW+Adyh/vurGdK9So4C
+	mwpdv7uVOrWXpAbKnvTd+IcGHa5LW6RPmwOVdsdKccKubj/P8F3B1kU0RJ9ECFvRMpAFqRxbiAGm4
+	XXYRCSwsLNwudEUa1fkfj2MHjh9gPX59NG+zsEYiWrLtNon7aBl5Y1Kefqmvyj3L0Pvl0SddJTjWF
+	aCNsQl2CKPM41ct4DwRSYN12y4fDDbLa76OpM4k+iJp/bH+/X3Mvh/fX+QgAptL1hwYkRTMq+2FjX
+	wiHLzjXXRAKwd0cvirZLCdVcIg4FLgS+q6UMmKLmiOoVyr37SPS+0OItiEp5U85euXl+feGNr8hTw
+	WS1IValw==;
 Received: from [191.204.194.148] (helo=localhost.localdomain)
 	by fanzine2.igalia.com with esmtpsa 
 	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1tmzmH-000WtH-7g; Tue, 25 Feb 2025 19:35:39 +0100
+	id 1tmzmS-000WtH-Hc; Tue, 25 Feb 2025 19:35:50 +0100
 From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
 To: Thomas Gleixner <tglx@linutronix.de>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -45,10 +46,12 @@ Cc: linux-kernel@vger.kernel.org,
 	Vinicius Peixoto <vpeixoto@lkcamp.dev>,
 	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
 	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
-Subject: [PATCH v4 0/5] futex: Create set_robust_list2
-Date: Tue, 25 Feb 2025 15:35:26 -0300
-Message-ID: <20250225183531.682556-1-andrealmeid@igalia.com>
+Subject: [PATCH v4 3/5] futex: Wire up set_robust_list2 syscall
+Date: Tue, 25 Feb 2025 15:35:29 -0300
+Message-ID: <20250225183531.682556-4-andrealmeid@igalia.com>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250225183531.682556-1-andrealmeid@igalia.com>
+References: <20250225183531.682556-1-andrealmeid@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,154 +61,188 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This patch adds a new robust_list() syscall. The current syscall
-can't be expanded to cover the following use case, so a new one is
-needed. This new syscall allows users to set multiple robust lists per
-process and to have either 32bit or 64bit pointers in the list.
+Wire up the new set_robust_list2 syscall in all available architectures.
 
-* Use case
+Signed-off-by: André Almeida <andrealmeid@igalia.com>
+---
+ arch/alpha/kernel/syscalls/syscall.tbl      | 1 +
+ arch/arm/tools/syscall.tbl                  | 1 +
+ arch/m68k/kernel/syscalls/syscall.tbl       | 1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl | 1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl   | 1 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl   | 1 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl   | 1 +
+ arch/parisc/kernel/syscalls/syscall.tbl     | 1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl    | 1 +
+ arch/s390/kernel/syscalls/syscall.tbl       | 1 +
+ arch/sh/kernel/syscalls/syscall.tbl         | 1 +
+ arch/sparc/kernel/syscalls/syscall.tbl      | 1 +
+ arch/x86/entry/syscalls/syscall_32.tbl      | 1 +
+ arch/x86/entry/syscalls/syscall_64.tbl      | 1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl     | 1 +
+ kernel/sys_ni.c                             | 1 +
+ scripts/syscall.tbl                         | 1 +
+ 17 files changed, 17 insertions(+)
 
-FEX-Emu[1] is an application that runs x86 and x86-64 binaries on an
-AArch64 Linux host. One of the tasks of FEX-Emu is to translate syscalls
-from one platform to another. Existing set_robust_list() can't be easily
-translated because of two limitations:
-
-1) x86 apps can have 32bit pointers robust lists. For a x86-64 kernel
-   this is not a problem, because of the compat entry point. But there's
-   no such compat entry point for AArch64, so the kernel would do the
-   pointer arithmetic wrongly. Is also unviable to userspace to keep
-   track every addition/removal to the robust list and keep a 64bit
-   version of it somewhere else to feed the kernel. Thus, the new
-   interface has an option of telling the kernel if the list is filled
-   with 32bit or 64bit pointers.
-
-2) Apps can set just one robust list (in theory, x86-64 can set two if
-   they also use the compat entry point). That means that when a x86 app
-   asks FEX-Emu to call set_robust_list(), FEX have two options: to
-   overwrite their own robust list pointer and make the app robust, or
-   to ignore the app robust list and keep the emulator robust. The new
-   interface allows for multiple robust lists per application, solving
-   this.
-
-* Interface
-
-This is the proposed interface:
-
-	long set_robust_list2(void *head, int index, unsigned int flags)
-
-`head` is the head of the userspace struct robust_list_head, just as old
-set_robust_list(). It needs to be a void pointer since it can point to a normal
-robust_list_head or a compat_robust_list_head.
-
-`flags` can be used for defining the list type:
-
-	enum robust_list_type {
-	 	ROBUST_LIST_32BIT,
-		ROBUST_LIST_64BIT,
-	 };
-
-`index` is the index in the internal robust_list's linked list (the naming
-starts to get confusing, I reckon). If `index == -1`, that means that user wants
-to set a new robust_list, and the kernel will append it in the end of the list,
-assign a new index and return this index to the user. If `index >= 0`, that
-means that user wants to re-set `*head` of an already existing list (similarly
-to what happens when you call set_robust_list() twice with different `*head`).
-
-If `index` is out of range, or it points to a non-existing robust_list, or if
-the internal list is full, an error is returned.
-
-* Implementation
-
-The implementation re-uses most of the existing robust list interface as
-possible. The new task_struct member `struct list_head robust_list2` is just a
-linked list where new lists are appended as the user requests more lists, and by
-futex_cleanup(), the kernel walks through the internal list feeding
-exit_robust_list() with the robust_list's.
-
-This implementation supports up to 10 lists (defined at ROBUST_LISTS_PER_TASK),
-but it was an arbitrary number for this RFC. For the described use case above, 4
-should be enough, I'm not sure which should be the limit.
-
-It doesn't support list removal (should it support?). It doesn't have a proper
-get_robust_list2() yet as well, but I can add it in a next revision. We could
-also have a generic robust_list() syscall that can be used to set/get and be
-controlled by flags.
-
-The new interface has a `unsigned int flags` argument, making it
-extensible for future use cases as well.
-
-It refuses unaligned `head` addresses. It doesn't have a limit for elements in a
-single list (like ROBUST_LIST_LIMIT), it destroys the list as it is parsed to be
-safe against circular lists.
-
-* Testing
-
-This patcheset has a selftest patch that expands this one:
-https://lore.kernel.org/lkml/20250212131123.37431-1-andrealmeid@igalia.com/
-
-Also, FEX-Emu added support for this interface to validate it:
-https://github.com/FEX-Emu/FEX/pull/3966
-
-Feedback is very welcomed!
-
-Thanks,
-	André
-
-[1] https://github.com/FEX-Emu/FEX
-
-Changelog:
-- Refuse unaligned head pointers
-- Ignore ROBUST_LIST_LIMIT for lists created with this interface and make it
-  robust against circular lists
-- Fix a get_robust_list() syscall bug for getting the list from another thread
-- Adapt selftest to use the new interface
-v3: https://lore.kernel.org/lkml/20241217174958.477692-1-andrealmeid@igalia.com/
-
-- Old syscall set_robust_list() adds new head to the internal linked list of
-  robust lists pointers, instead of having a field just for them. Remove
-  tsk->robust_list and use only tsk->robust_list2
-v2: https://lore.kernel.org/lkml/20241101162147.284993-1-andrealmeid@igalia.com/
-
-- Added a patch to properly deal with exit_robust_list() in 64bit vs 32bit
-- Wired-up syscall for all archs
-- Added more of the cover letter to the commit message
-v1: https://lore.kernel.org/lkml/20241024145735.162090-1-andrealmeid@igalia.com/
-
-André Almeida (5):
-  futex: Use explicit sizes for compat_exit_robust_list
-  futex: Create set_robust_list2
-  futex: Wire up set_robust_list2 syscall
-  futex: Remove the limit of elements for sys_set_robust_list2 lists
-  selftests: futex: Expand robust list test for the new interface
-
- arch/alpha/kernel/syscalls/syscall.tbl        |   1 +
- arch/arm/tools/syscall.tbl                    |   1 +
- arch/m68k/kernel/syscalls/syscall.tbl         |   1 +
- arch/microblaze/kernel/syscalls/syscall.tbl   |   1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl     |   1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl     |   1 +
- arch/mips/kernel/syscalls/syscall_o32.tbl     |   1 +
- arch/parisc/kernel/syscalls/syscall.tbl       |   1 +
- arch/powerpc/kernel/syscalls/syscall.tbl      |   1 +
- arch/s390/kernel/syscalls/syscall.tbl         |   1 +
- arch/sh/kernel/syscalls/syscall.tbl           |   1 +
- arch/sparc/kernel/syscalls/syscall.tbl        |   1 +
- arch/x86/entry/syscalls/syscall_32.tbl        |   1 +
- arch/x86/entry/syscalls/syscall_64.tbl        |   1 +
- arch/xtensa/kernel/syscalls/syscall.tbl       |   1 +
- include/linux/compat.h                        |  12 +-
- include/linux/futex.h                         |  16 +-
- include/linux/sched.h                         |   5 +-
- include/uapi/asm-generic/unistd.h             |   4 +-
- include/uapi/linux/futex.h                    |  24 +++
- kernel/futex/core.c                           | 165 ++++++++++++++----
- kernel/futex/futex.h                          |   5 +
- kernel/futex/syscalls.c                       |  85 ++++++++-
- kernel/sys_ni.c                               |   1 +
- scripts/syscall.tbl                           |   1 +
- .../selftests/futex/functional/robust_list.c  | 160 ++++++++++++++++-
- 26 files changed, 436 insertions(+), 57 deletions(-)
-
+diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
+index c59d53d6d3f3..d1193a7f948e 100644
+--- a/arch/alpha/kernel/syscalls/syscall.tbl
++++ b/arch/alpha/kernel/syscalls/syscall.tbl
+@@ -506,3 +506,4 @@
+ 574	common	getxattrat			sys_getxattrat
+ 575	common	listxattrat			sys_listxattrat
+ 576	common	removexattrat			sys_removexattrat
++577	common	set_robust_list2		sys_robust_list2
+diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
+index 49eeb2ad8dbd..269721f54a5c 100644
+--- a/arch/arm/tools/syscall.tbl
++++ b/arch/arm/tools/syscall.tbl
+@@ -481,3 +481,4 @@
+ 464	common	getxattrat			sys_getxattrat
+ 465	common	listxattrat			sys_listxattrat
+ 466	common	removexattrat			sys_removexattrat
++467	common	set_robust_list2		sys_set_robust_list2
+diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
+index f5ed71f1910d..75a387585b3a 100644
+--- a/arch/m68k/kernel/syscalls/syscall.tbl
++++ b/arch/m68k/kernel/syscalls/syscall.tbl
+@@ -466,3 +466,4 @@
+ 464	common	getxattrat			sys_getxattrat
+ 465	common	listxattrat			sys_listxattrat
+ 466	common	removexattrat			sys_removexattrat
++467	common  set_robust_list2		sys_set_robust_list2
+diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
+index 680f568b77f2..176f84b79c1c 100644
+--- a/arch/microblaze/kernel/syscalls/syscall.tbl
++++ b/arch/microblaze/kernel/syscalls/syscall.tbl
+@@ -472,3 +472,4 @@
+ 464	common	getxattrat			sys_getxattrat
+ 465	common	listxattrat			sys_listxattrat
+ 466	common	removexattrat			sys_removexattrat
++467	common	set_robust_list2		sys_set_robust_list2
+diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
+index 0b9b7e25b69a..47e28d67ca8a 100644
+--- a/arch/mips/kernel/syscalls/syscall_n32.tbl
++++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
+@@ -405,3 +405,4 @@
+ 464	n32	getxattrat			sys_getxattrat
+ 465	n32	listxattrat			sys_listxattrat
+ 466	n32	removexattrat			sys_removexattrat
++467	n32	set_robust_list2		sys_set_robust_list2
+diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
+index c844cd5cda62..488c1bca7715 100644
+--- a/arch/mips/kernel/syscalls/syscall_n64.tbl
++++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
+@@ -381,3 +381,4 @@
+ 464	n64	getxattrat			sys_getxattrat
+ 465	n64	listxattrat			sys_listxattrat
+ 466	n64	removexattrat			sys_removexattrat
++467	n64	set_robust_list2		sys_set_robust_list2
+diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
+index 349b8aad1159..f983086695a8 100644
+--- a/arch/mips/kernel/syscalls/syscall_o32.tbl
++++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
+@@ -454,3 +454,4 @@
+ 464	o32	getxattrat			sys_getxattrat
+ 465	o32	listxattrat			sys_listxattrat
+ 466	o32	removexattrat			sys_removexattrat
++467	o32	set_robust_list2		sys_set_robust_list2
+diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
+index d9fc94c86965..f8735cb8046b 100644
+--- a/arch/parisc/kernel/syscalls/syscall.tbl
++++ b/arch/parisc/kernel/syscalls/syscall.tbl
+@@ -465,3 +465,4 @@
+ 464	common	getxattrat			sys_getxattrat
+ 465	common	listxattrat			sys_listxattrat
+ 466	common	removexattrat			sys_removexattrat
++467	common	set_robust_list2		sys_set_robust_list2
+diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
+index d8b4ab78bef0..1da55a6a3bb5 100644
+--- a/arch/powerpc/kernel/syscalls/syscall.tbl
++++ b/arch/powerpc/kernel/syscalls/syscall.tbl
+@@ -557,3 +557,4 @@
+ 464	common	getxattrat			sys_getxattrat
+ 465	common	listxattrat			sys_listxattrat
+ 466	common	removexattrat			sys_removexattrat
++467	common	set_robust_list2		sys_set_robust_list2
+diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
+index e9115b4d8b63..93bda0d6580b 100644
+--- a/arch/s390/kernel/syscalls/syscall.tbl
++++ b/arch/s390/kernel/syscalls/syscall.tbl
+@@ -469,3 +469,4 @@
+ 464  common	getxattrat		sys_getxattrat			sys_getxattrat
+ 465  common	listxattrat		sys_listxattrat			sys_listxattrat
+ 466  common	removexattrat		sys_removexattrat		sys_removexattrat
++467  common	set_robust_list2	sys_set_robust_list2		sys_set_robust_list2
+diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
+index c8cad33bf250..dd591da98af5 100644
+--- a/arch/sh/kernel/syscalls/syscall.tbl
++++ b/arch/sh/kernel/syscalls/syscall.tbl
+@@ -470,3 +470,4 @@
+ 464	common	getxattrat			sys_getxattrat
+ 465	common	listxattrat			sys_listxattrat
+ 466	common	removexattrat			sys_removexattrat
++467	common	set_robust_list2		sys_set_robust_list2
+diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
+index 727f99d333b3..a4ee76e234a3 100644
+--- a/arch/sparc/kernel/syscalls/syscall.tbl
++++ b/arch/sparc/kernel/syscalls/syscall.tbl
+@@ -512,3 +512,4 @@
+ 464	common	getxattrat			sys_getxattrat
+ 465	common	listxattrat			sys_listxattrat
+ 466	common	removexattrat			sys_removexattrat
++467	common	set_robust_list2		sys_set_robust_list2
+diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+index 4d0fb2fba7e2..8d609abda75b 100644
+--- a/arch/x86/entry/syscalls/syscall_32.tbl
++++ b/arch/x86/entry/syscalls/syscall_32.tbl
+@@ -472,3 +472,4 @@
+ 464	i386	getxattrat		sys_getxattrat
+ 465	i386	listxattrat		sys_listxattrat
+ 466	i386	removexattrat		sys_removexattrat
++467	i386	set_robust_list2	sys_set_robust_list2
+diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+index 5eb708bff1c7..2c6461df154b 100644
+--- a/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -390,6 +390,7 @@
+ 464	common	getxattrat		sys_getxattrat
+ 465	common	listxattrat		sys_listxattrat
+ 466	common	removexattrat		sys_removexattrat
++467	common	set_robust_list2	sys_set_robust_list2
+ 
+ #
+ # Due to a historical design error, certain syscalls are numbered differently
+diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
+index 37effc1b134e..fa46635d7380 100644
+--- a/arch/xtensa/kernel/syscalls/syscall.tbl
++++ b/arch/xtensa/kernel/syscalls/syscall.tbl
+@@ -437,3 +437,4 @@
+ 464	common	getxattrat			sys_getxattrat
+ 465	common	listxattrat			sys_listxattrat
+ 466	common	removexattrat			sys_removexattrat
++467	common	set_robust_list2		sys_set_robust_list2
+diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+index c00a86931f8c..71fbac6176c8 100644
+--- a/kernel/sys_ni.c
++++ b/kernel/sys_ni.c
+@@ -195,6 +195,7 @@ COND_SYSCALL(move_pages);
+ COND_SYSCALL(set_mempolicy_home_node);
+ COND_SYSCALL(cachestat);
+ COND_SYSCALL(mseal);
++COND_SYSCALL(set_robust_list2);
+ 
+ COND_SYSCALL(perf_event_open);
+ COND_SYSCALL(accept4);
+diff --git a/scripts/syscall.tbl b/scripts/syscall.tbl
+index ebbdb3c42e9f..615a3043c982 100644
+--- a/scripts/syscall.tbl
++++ b/scripts/syscall.tbl
+@@ -407,3 +407,4 @@
+ 464	common	getxattrat			sys_getxattrat
+ 465	common	listxattrat			sys_listxattrat
+ 466	common	removexattrat			sys_removexattrat
++467	common	set_robust_list2		sys_set_robust_list2
 -- 
 2.48.1
 
