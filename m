@@ -1,80 +1,70 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C0533CFC;
-	Tue, 25 Feb 2025 14:05:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F0D2686A8
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 14:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740492303; cv=none; b=uSTur4GZnTFuvUJ7rmgBwwyqMTwjxkyrIcdwfQPXTBDqmixt+GVm9J2cWyLG85jgWoQD79tCEpKSagzeA/3ZHQXZDJMlMZWRSJTGYFhkV/sCUjMW0k95NU8NAaRL4BAWnP0yNhGUkOhxvQ1cgnQqtFDovzOadmVxyTz7JibQbfA=
+	t=1740492322; cv=none; b=cnR9NTcbMWOAsH5pQRirjNpNVr7vcKdJN/5irv/gjYNmpZyH0v2M+m5jx+lFFNvoI6vLqdKrsVGwtJ9g8/osgfWwyoesiaeQDJJ6chg9kV8hBA8/Jk6HZI32RZrrZFBL1Amt2cqq9lK+6teqcNr4DYZX3it/gr1+JY2WZR7kymU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740492303; c=relaxed/simple;
-	bh=hdQzrrNE52j/1pPIwjImRAwPDZ4EG0HB8b/6MuOnZsA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VCVceGWcF4RNXqANeiKr+UKHp58JPufiHhay+XBhU5CjrM0yzvuu0385Ch8L0oCqafVbe7K2CwfCPsVAFeZDgkErtaUfTrwtgPzwpMm8nuRhLSm19y/Din6cwm54VxIjLH8aNzYliUjICphIeQCXa/7IZJfcOW/UBVlbaq7r8cM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D5szGzZD; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1740492322; c=relaxed/simple;
+	bh=gpcDjd2ys+1/GXZMy58GrQmGAViqOhk10U5APZI1bwM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=q5T0gEtFrgKyCW+XCbC+KurmmTl5yu8pp6I7Zy0UGpxEY8x+9DGNvYXg9pDfBm8WvjZk13p3f5YI62Mr4xHrudp0ygdVMnSpXVJWpOyOKz2Xcm7vO/ybORe/SL2ihsj4z0mK6+NugoUf/kpiWTcFsqvUlEPg6m+Cyy7yo4zivmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloud.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=cloud.com header.i=@cloud.com header.b=FBk6w/H2; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D5szGzZD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740492302; x=1772028302;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hdQzrrNE52j/1pPIwjImRAwPDZ4EG0HB8b/6MuOnZsA=;
-  b=D5szGzZDfn1JT+NYprq2nNa+60QZ05C0TdIUT6vIQCF9AjozjcfyrLuy
-   cIaQJfuqdlT0zKZ+EM56fCCBN+ZBF13I2JKvLMrb0a1MloQBmtssyTaWl
-   a/9fjQuHS0A5NOFvrX7V7TsYk07ts5CxAenjOtBTXY1patibmQxvGQ1S7
-   O+WgyqKQ6/PAhgh2dYS3kczyJu2ev991PTh+E95g31h3Qeh6rFqJ8oqao
-   2jADKZpNh2ib28OeNJb7SxzjqvKF5jl90v9FBjHihY5d1JQIcw2UFoHA0
-   gzmBx+QNvuxyQADNz17wrI49A2flWbIWI8GMREqDOd41SHA2qURDR4u+U
-   g==;
-X-CSE-ConnectionGUID: VTCZTJuQTSmsFuMHa2rKPw==
-X-CSE-MsgGUID: YqaiZC5LQ1KUsLiwl84qSQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="41424598"
-X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
-   d="scan'208";a="41424598"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 06:05:01 -0800
-X-CSE-ConnectionGUID: jOvlhMYcRna49H6HM95Otg==
-X-CSE-MsgGUID: aHIhg91ZQQexTDVfL18beg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
-   d="scan'208";a="116590762"
-Received: from chenyu-dev.sh.intel.com ([10.239.62.107])
-  by fmviesa008.fm.intel.com with ESMTP; 25 Feb 2025 06:04:56 -0800
-From: Chen Yu <yu.c.chen@intel.com>
-To: Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Rik van Riel <riel@redhat.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Huang, Ying" <ying.huang@linux.alibaba.com>,
-	Tim Chen <tim.c.chen@intel.com>,
-	Aubrey Li <aubrey.li@intel.com>,
-	Michael Wang <yun.wang@linux.alibaba.com>,
-	Kaiyang Zhao <kaiyang2@cs.cmu.edu>,
-	David Rientjes <rientjes@google.com>,
-	Raghavendra K T <raghavendra.kt@amd.com>,
-	cgroups@vger.kernel.org,
-	linux-mm@kvack.org,
+	dkim=pass (1024-bit key) header.d=cloud.com header.i=@cloud.com header.b="FBk6w/H2"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e058ca6806so10152872a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 06:05:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloud.com; s=cloud; t=1740492317; x=1741097117; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6461ban+1g2qu9SgG0oSTcJISIZ7Z8nL0LN7J32hL00=;
+        b=FBk6w/H2hfu2V57tLOxoATVhBm2/Rjh59E4qy5NseJ6liU/IeqGAg3aoYxgiZE+OiO
+         0p0mS50pR7gSrox6nNft5kNIk+B3YoV0OJ3m6wmBC4u5ljfpYdFI9hVrL7SXZpeN3X6+
+         +T3AuG6yYcqKnS6XBrLvKJ+H9KKsft/cVAwZ8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740492317; x=1741097117;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6461ban+1g2qu9SgG0oSTcJISIZ7Z8nL0LN7J32hL00=;
+        b=VG8R/bXamRtemp7nlsqn/FYtQWbKHJ8RrRexfCObd6rH33uL8d0/Zcro9WP9kRMSOu
+         B6rYd91biUr83JlLci7FuIN8ZQ6VsLeX9eKI8AiMn0XEJmbiRrjHRDeIsjSBKuXiHwfO
+         L5Ddf3T7iHFz4ZknwmDCZS9C5byTDUpllhFGCHvRfO93KzUj7lqfZwYXsxmy2SP2/4Y0
+         oUh3khM89ETf0DxQ6zkrj2cvPx0Bcm65ERNcR5FMxpNoi9u5tZ6KLu+6zr2AoQLopRMS
+         koGeVgvM/7RAKN/FAornR8T2Cs/3Ee/ELdiA1IXxd2NBoiDBYSv/J4n2W2TCTUHDt3X7
+         mRgw==
+X-Forwarded-Encrypted: i=1; AJvYcCUlkYj32fe5AEndL4h4QRmB91DhiZIVaUuKonoE08zTGMai4XxEQC6rlRiOTPrkkKlIfTMi2SZKagmF1TA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDSsKNoZ61rGmE7cATYWt460yomaHN22/yKCOH6iai1JCOKURw
+	Tg7g0S/WNFaZ209bBb+HJJ14W9rJID3nsCZ+YFupqOl4hPH88tYqN38IHbXyY+c=
+X-Gm-Gg: ASbGncshlfJ+r/ZaM8PcV8zg0H+yOq9qc0OsxtLaWDg1l6FjthAxtQNNf0Wn7bRwcTU
+	JHdVicRnLpyVaUmcyqp3N14xEWy6eAbW4/j0Wj4WBCemikzcflD0RdOkY59UDdi1cmTii9TFbhO
+	y5CPNISnJqFi2l0aGx0kWSrfuWI8mrtfb5WuT01F/wPICAhgO1K6bc2ay02Jx7RuWeIvSEv50Ry
+	GGdI9EbP+jEadGPDhGXPbwtemFt/yV80Yu/56NEB380saE9FmbKMv9+BuMKysYx1gCV5D1meNqA
+	EJm80yHxkGvQEFHp2kS/BSZl1wWUq2twG8BocMGJyMVKRRfY4zJx8QkGO0L2RFcdVQ==
+X-Google-Smtp-Source: AGHT+IF9aVZ271pd7Rivr+4PMLzSxl4QN0DdFXBiXSE8kbbx+f24AkB2D93JM67HV9at4+50ibsh4g==
+X-Received: by 2002:a17:906:7950:b0:ab7:63fa:e4ab with SMTP id a640c23a62f3a-abc0cd0b6bamr1855443966b.0.1740492317294;
+        Tue, 25 Feb 2025 06:05:17 -0800 (PST)
+Received: from fziglio-xenia-fedora.eng.citrite.net ([185.25.67.249])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-abed1cdbef5sm149367966b.14.2025.02.25.06.05.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 06:05:16 -0800 (PST)
+From: Frediano Ziglio <frediano.ziglio@cloud.com>
+To: xen-devel@lists.xenproject.org,
 	linux-kernel@vger.kernel.org,
-	Chen Yu <yu.c.chen@intel.com>
-Subject: [RFC PATCH 1/3] sched/numa: Introduce numa balance task migration and swap in schedstats
-Date: Tue, 25 Feb 2025 22:00:01 +0800
-Message-Id: <1847c5ef828ad4835a35e3a54b88d2e13bce0eea.1740483690.git.yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1740483690.git.yu.c.chen@intel.com>
-References: <cover.1740483690.git.yu.c.chen@intel.com>
+	linux-pci@vger.kernel.org
+Cc: Frediano Ziglio <frediano.ziglio@cloud.com>,
+	"Juergen Gross" <jgross@suse.com>,
+	"Stefano Stabellini" <sstabellini@kernel.org>,
+	"Oleksandr Tyshchenko" <oleksandr_tyshchenko@epam.com>,
+	"Bjorn Helgaas" <bhelgaas@google.com>
+Subject: [PATCH] xen: Add support for XenServer 6.1 platform device
+Date: Tue, 25 Feb 2025 14:03:53 +0000
+Message-ID: <20250225140400.23992-1-frediano.ziglio@cloud.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,125 +73,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There is a requirement to track task activities during NUMA
-balancing. NUMA balancing has two mechanisms for task migration:
-one is to migrate the task to an idle CPU in its preferred node,
-and the other is to swap tasks on different nodes if they are
-on each other's preferred node. The kernel already has NUMA page
-migration statistics. Add the task migration and swap count
-described above in the per-task/cgroup scope. The data will be
-displayed at
+On XenServer on Windows machine a platform device with ID 2 instead of
+1 is used.
+This device is mainly identical to device 1 but due to some Windows
+update behaviour it was decided to use a device with a different ID.
+This causes compatibility issues with Linux which expects, if Xen
+is detected, to find a Xen platform device (5853:0001) otherwise code
+will crash due to some missing initialization (specifically grant
+tables).
+The device 2 is presented by Xapi adding device specification to
+Qemu command line.
 
-/sys/fs/cgroup/mytest/memory.stat and
-/proc/{PID}/sched.
-
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+Signed-off-by: Frediano Ziglio <frediano.ziglio@cloud.com>
 ---
- include/linux/sched.h         |  4 ++++
- include/linux/vm_event_item.h |  2 ++
- kernel/sched/core.c           | 10 ++++++++--
- kernel/sched/debug.c          |  4 ++++
- mm/memcontrol.c               |  2 ++
- mm/vmstat.c                   |  2 ++
- 6 files changed, 22 insertions(+), 2 deletions(-)
+ drivers/xen/platform-pci.c | 2 ++
+ include/linux/pci_ids.h    | 1 +
+ 2 files changed, 3 insertions(+)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 9632e3318e0d..01faa608ed7c 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -527,6 +527,10 @@ struct sched_statistics {
- 	u64				nr_failed_migrations_running;
- 	u64				nr_failed_migrations_hot;
- 	u64				nr_forced_migrations;
-+#ifdef CONFIG_NUMA_BALANCING
-+	u64				nr_numa_migrations;
-+	u64				nr_numa_swap;
-+#endif
- 
- 	u64				nr_wakeups;
- 	u64				nr_wakeups_sync;
-diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
-index f70d0958095c..aef817474781 100644
---- a/include/linux/vm_event_item.h
-+++ b/include/linux/vm_event_item.h
-@@ -64,6 +64,8 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
- 		NUMA_HINT_FAULTS,
- 		NUMA_HINT_FAULTS_LOCAL,
- 		NUMA_PAGE_MIGRATE,
-+		NUMA_TASK_MIGRATE,
-+		NUMA_TASK_SWAP,
- #endif
- #ifdef CONFIG_MIGRATION
- 		PGMIGRATE_SUCCESS, PGMIGRATE_FAIL,
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 165c90ba64ea..44efc725054a 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3348,6 +3348,11 @@ void set_task_cpu(struct task_struct *p, unsigned int new_cpu)
- #ifdef CONFIG_NUMA_BALANCING
- static void __migrate_swap_task(struct task_struct *p, int cpu)
- {
-+	__schedstat_inc(p->stats.nr_numa_swap);
-+
-+	if (p->mm)
-+		count_memcg_events_mm(p->mm, NUMA_TASK_SWAP, 1);
-+
- 	if (task_on_rq_queued(p)) {
- 		struct rq *src_rq, *dst_rq;
- 		struct rq_flags srf, drf;
-@@ -7901,8 +7906,9 @@ int migrate_task_to(struct task_struct *p, int target_cpu)
- 	if (!cpumask_test_cpu(target_cpu, p->cpus_ptr))
- 		return -EINVAL;
- 
--	/* TODO: This is not properly updating schedstats */
--
-+	__schedstat_inc(p->stats.nr_numa_migrations);
-+	if (p->mm)
-+		count_memcg_events_mm(p->mm, NUMA_TASK_MIGRATE, 1);
- 	trace_sched_move_numa(p, curr_cpu, target_cpu);
- 	return stop_one_cpu(curr_cpu, migration_cpu_stop, &arg);
- }
-diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-index ef047add7f9e..ed801cc00bf1 100644
---- a/kernel/sched/debug.c
-+++ b/kernel/sched/debug.c
-@@ -1204,6 +1204,10 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
- 		P_SCHEDSTAT(nr_failed_migrations_running);
- 		P_SCHEDSTAT(nr_failed_migrations_hot);
- 		P_SCHEDSTAT(nr_forced_migrations);
-+#ifdef CONFIG_NUMA_BALANCING
-+		P_SCHEDSTAT(nr_numa_migrations);
-+		P_SCHEDSTAT(nr_numa_swap);
-+#endif
- 		P_SCHEDSTAT(nr_wakeups);
- 		P_SCHEDSTAT(nr_wakeups_sync);
- 		P_SCHEDSTAT(nr_wakeups_migrate);
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 46f8b372d212..496b5edc3db6 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -460,6 +460,8 @@ static const unsigned int memcg_vm_event_stat[] = {
- 	NUMA_PAGE_MIGRATE,
- 	NUMA_PTE_UPDATES,
- 	NUMA_HINT_FAULTS,
-+	NUMA_TASK_MIGRATE,
-+	NUMA_TASK_SWAP,
- #endif
+diff --git a/drivers/xen/platform-pci.c b/drivers/xen/platform-pci.c
+index 544d3f9010b9..9cefc7d6bcba 100644
+--- a/drivers/xen/platform-pci.c
++++ b/drivers/xen/platform-pci.c
+@@ -174,6 +174,8 @@ static int platform_pci_probe(struct pci_dev *pdev,
+ static const struct pci_device_id platform_pci_tbl[] = {
+ 	{PCI_VENDOR_ID_XEN, PCI_DEVICE_ID_XEN_PLATFORM,
+ 		PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0},
++	{PCI_VENDOR_ID_XEN, PCI_DEVICE_ID_XEN_PLATFORM_XS61,
++		PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0},
+ 	{0,}
  };
  
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 16bfe1c694dd..d6651778e4bf 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1339,6 +1339,8 @@ const char * const vmstat_text[] = {
- 	"numa_hint_faults",
- 	"numa_hint_faults_local",
- 	"numa_pages_migrated",
-+	"numa_task_migrated",
-+	"numa_task_swaped",
- #endif
- #ifdef CONFIG_MIGRATION
- 	"pgmigrate_success",
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 1a2594a38199..e4791fd97ee0 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -3241,6 +3241,7 @@
+ 
+ #define PCI_VENDOR_ID_XEN		0x5853
+ #define PCI_DEVICE_ID_XEN_PLATFORM	0x0001
++#define PCI_DEVICE_ID_XEN_PLATFORM_XS61	0x0002
+ 
+ #define PCI_VENDOR_ID_OCZ		0x1b85
+ 
 -- 
-2.25.1
+2.48.1
 
