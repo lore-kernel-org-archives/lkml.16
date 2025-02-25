@@ -1,223 +1,196 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E68F262D25;
-	Tue, 25 Feb 2025 09:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740476464; cv=pass; b=MhUUZZp7bQ0iGQzaM2bObYT29SRloW/4abUDeme/8iMFaz/eLAcBre2sY7kTY1wtM0HsjyLHVGjwPT0XpX/G2U1q3Mu7RRQhEhQYzPyTxXbSgDv2WDCn8bJmzvhhNEqY0ytqqxQGPa4HrSpempdFWx16xlLjnnx2QeiUj/tLfQw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740476464; c=relaxed/simple;
-	bh=Ums4+YJ6/mdB6OJJs/VVAlfEGxXlqH5U5JaUczjzwVo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=R9QXckVeS+kK5D5KdCyMp6k7L7T8J17rc2PAIJkqMd1nHnZyi3jTTffHjXkTKTceKRRuAiKljEoRJIvI9KPQiZYVXpMwcV1I3eWUd8DaG+ysx3Koh9pfrl44zV7Du/9QfF/acWn838xHKuVV7Ft12gT+PhQephmrNckgez43OUY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b=HkPBfRBn; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E42263C75;
+	Tue, 25 Feb 2025 09:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740476466; cv=none; b=GBrguCSZjS/5xv3xjRZirnhu/VIubySzx8amcDpUsvihRcy7QCACfTjZK8ucMF/PvY/BO4cPxpTBymKjOK0Gyp7CZh8chHSstuwfmeuY7CMy82Ndq7Iv1L0KcMVkGQJmgC9e4/Kjw9rNKHbM7ZTKz0MU2SFMDGLI8/bQZ9oA8TA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740476466; c=relaxed/simple;
+	bh=BEzs8YbLaCpXnNQyZJ+tusTm4nslyHs9SxGIY6yBz3k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BuIdWr89wnSue4/dRPqv8IDCpNOvRZIYlfMuF2MdVyc1bjTxRJOFbh/c08xbX9/oQp0pQdpuf1a3IWthek9T+JqAM1HrhxATDN/bAnC6mo/1D1LV5fi+DOoYN4+nffVbTEajTJ2e4aplB8VnyDlX3TTY032uGIJGCIKwiiIw8Jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cjko5+IK; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.fricke@collabora.com header.b="HkPBfRBn"
-ARC-Seal: i=1; a=rsa-sha256; t=1740476438; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=nhN3Rt+pUbXhrV5nTGDXRMtP2Ar3cg1wHU3cPNr1J4ofqZZXDo9z2s/WvKBjqzwJVvW3u12Zno2mh9bXoh19QFXjnneu9h3divVcwLOEc5lchxdikJKkAmoDPjhqVTYN6DN5fqI1u/OuvAp1F3S2uq8syRRdd+MCCuKu4CCgmwA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1740476438; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=6KHN1scQcppw8pT0cPhUgdCDwEZk4zFF85SfonaTG9o=; 
-	b=Ko7lqHOuIqf7mRVBVVTH+NDyMfZVwbPrU64AUBvQqJY2WAroSPAE2UIfngczqtdQs0H26kr5TUKbxbFJ+NsFYTCL9zPtm3WyVifywDUrspexgHXZ9v7xxNE9DdgV+iQSExRetvPQMTWC7irVjsJ9ij+RX5KDg8YwvzueFjNti/I=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.fricke@collabora.com;
-	dmarc=pass header.from=<sebastian.fricke@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1740476438;
-	s=zohomail; d=collabora.com; i=sebastian.fricke@collabora.com;
-	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
-	bh=6KHN1scQcppw8pT0cPhUgdCDwEZk4zFF85SfonaTG9o=;
-	b=HkPBfRBnlt3LKckhrQ11wmHPMx03H0Ew+5pfzKOQHU2MKRyktJj0SvAB2PwDvl4f
-	lNAxwLUMxzydQlNK6Uqy8E5prEX5Kc7wXDvrsCXSaaNRenDv1GH4Wv8CE+UH5LSVsQU
-	2ziF2HXMfDmM+6ivvyLIe07nzajc0GspRVEv1eNU=
-Received: by mx.zohomail.com with SMTPS id 174047643563359.41477366289905;
-	Tue, 25 Feb 2025 01:40:35 -0800 (PST)
-From: Sebastian Fricke <sebastian.fricke@collabora.com>
-Subject: [PATCH v7 00/12] media: rkvdec: Add H.264 High 10 and 4:2:2
- profile support
-Date: Tue, 25 Feb 2025 10:40:21 +0100
-Message-Id: <20250225-rkvdec_h264_high10_and_422_support-v7-0-7992a68a4910@collabora.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cjko5+IK"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-220ec47991aso73768835ad.1;
+        Tue, 25 Feb 2025 01:41:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740476464; x=1741081264; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OCGnd0iVXOo+JNaWHHfQALr3MIKC4v3263hGTUjjNTU=;
+        b=cjko5+IKqScFFM2o/7F7KghvtMFjYORKUGU+rUqDBVAH8cFOlg6a+WEHLocHgu9tEV
+         uLQihiAjOBwmxNTRHSIaI22GY928jgh+xmN4bBA4jIiMTDuUgIzkTZnV+m/XsxkdRwBp
+         by5iGZcIWDqLcLl2pA7CkGwK9lLBNURGwdcNP4DeI//0EqidhmW/NIUGILxfySoIERLd
+         b/afRuqJ6WauTMS5SiwGngPjXE4H5i0NVYX/1zHk+rrN15UJPBBuxzjqYfaAeUUlDzpS
+         G6j/dXNg5e1pB8fQMzV+QFyr+9Y5QgidaQ9XZWS5t9QWioh3hseZNIZ7oCMOghToovND
+         MHaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740476464; x=1741081264;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OCGnd0iVXOo+JNaWHHfQALr3MIKC4v3263hGTUjjNTU=;
+        b=o6L0CU50ADYSucQ3LsMe5Fh4PBp4vX9BtgtXBEauLbH7G0l4U22n6iQCdTHV1Smecg
+         iw716qECQOSrlrd9xaBNZWf2X/IixHE47uKFFJFOq3E4c9Q/jVS3NEbC2eTXP3M+dfg2
+         fdZZWCXcPvcXDP1cGUUN5hFh7oFNyhrINH56Ha4HiqSge5xVtOG1U6qooN9Y+UxaS9n8
+         vqXylzfdCkNlhiktr9obEygLX8qUUkM7bjavcZuCxuT6m+fOFRZ/TLg17tg/F5b0hvtK
+         kHfzI9dUXoi2IvA9Dp31rBALONXQP7n1FNe8TxrXJHpeSGGPtMrRkDUzkKFZUHm/j+UJ
+         PQhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUgxeat5geXOPcDwoImnlVIYzFZmuzMwxP6hKKzsOuH3WqQrEQ0iO8kHY2yt80jpWBNjGWHZ/wdDe+Zp7M=@vger.kernel.org, AJvYcCWuH1H6WS1AOSQXNOp1c12SN5t/SF+kiHQD4LwCgqW8upknKlrIOgGfES7A3jHJy26rQV4LNp56cORtL6WF0b/d@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHBNgyybCRPHjbKaPIm5w5W2t+Ph87NcndqyOGjSbc/rv2Nc/d
+	Aqb8rc5lhjYAxgIccHJt1ytTht70Is7IAacsOd7RrEP5LayR63FQcxDHuHIbB7s/iw==
+X-Gm-Gg: ASbGnctgAYlh1cZ/tmN6EhfVc64qldsr02/F6jSuCRMk8OLmACu2ffAbM51LpRxpqZE
+	1w/l0yx6JajNLSxnJnYBK4z++dKijcOB6dPV9w0oNPgELv0xUwAMFZpHSuU26JWFxfODzLkFutE
+	LQvRagETBq8SlmACEN0bWvCvkVGyHXpqM5gP+LndEmIQWDPTWYQ7+s7L8R0RjN+0UljqWOM/nr9
+	M+HU5NgaUbsiznqNqQ7dj10cMv64D9nS/T9wiAIhIDSigbn3D/jmPphg0AeNw0lWV3lNMtrYSwN
+	iW2lISp76MhM8uZUSkJZZzT1IRShr9vOZgQ0hI73PnfFNg==
+X-Google-Smtp-Source: AGHT+IEFzn5DHnpazMBJ2UhcKkfBsGgPLtZe9b8aR3mBBWinCqfQBNuc3ZSZ0NUGYqjQZn+NYN5EFA==
+X-Received: by 2002:a05:6a00:1898:b0:732:5164:3cc with SMTP id d2e1a72fcca58-73426d728b6mr28039130b3a.19.1740476463722;
+        Tue, 25 Feb 2025 01:41:03 -0800 (PST)
+Received: from fedora.dns.podman ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7347a6f9e6dsm1065597b3a.64.2025.02.25.01.40.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Feb 2025 01:41:03 -0800 (PST)
+From: Hangbin Liu <liuhangbin@gmail.com>
+To: netdev@vger.kernel.org
+Cc: Jay Vosburgh <jv@jvosburgh.net>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Simon Horman <horms@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Tariq Toukan <tariqt@nvidia.com>,
+	Jianbo Liu <jianbol@nvidia.com>,
+	Jarod Wilson <jarod@redhat.com>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Cosmin Ratiu <cratiu@nvidia.com>,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hangbin Liu <liuhangbin@gmail.com>
+Subject: [PATCHv2 net 1/3] bonding: move mutex lock to a work queue for XFRM GC tasks
+Date: Tue, 25 Feb 2025 09:40:47 +0000
+Message-ID: <20250225094049.20142-2-liuhangbin@gmail.com>
+X-Mailer: git-send-email 2.46.0
+In-Reply-To: <20250225094049.20142-1-liuhangbin@gmail.com>
+References: <20250225094049.20142-1-liuhangbin@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAWQvWcC/zXNTQrDIBBA4asE1zWMg/mxq96jFLFxEm2oBk3TQ
- sjdK4Uuv817O8uUPGV2rnaWaPPZx1DQnSo2OBMm4t4WMwRsQIiWp3mzNGiHrdTOT06ANsFqiaj
- za1liWrnpR7SmN6CoZSW0JBr95ze53orHFJ98dYnMPy1BgRIKG8RaQNd2IDnyRwwmX+a3v8dYZ
- 2LH8QVHx3ZArwAAAA==
-X-Change-ID: 20250116-rkvdec_h264_high10_and_422_support-a8f2da8a09e6
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Hans Verkuil <hverkuil@xs4all.nl>, 
- Boris Brezillon <boris.brezillon@collabora.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev, 
- Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, 
- Alex Bee <knaerzche@gmail.com>, 
- Nicolas Dufresne <nicolas.dufresne@collabora.com>, 
- Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
- Detlev Casanova <detlev.casanova@collabora.com>, 
- Dan Carpenter <dan.carpenter@linaro.org>, Jonas Karlman <jonas@kwiboo.se>, 
- Sebastian Fricke <sebastian.fricke@collabora.com>, 
- Christopher Obbard <christopher.obbard@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740476425; l=6209;
- i=sebastian.fricke@collabora.com; s=linux-media; h=from:subject:message-id;
- bh=Ums4+YJ6/mdB6OJJs/VVAlfEGxXlqH5U5JaUczjzwVo=;
- b=vHLchJj5VFzCe3N1yVf2hTKmia00n+p0wa99spFFYTcCB83QjeVgz6KVy4LcQatYwa4YdY9IlKrO
- 9SOEYGMvB+tQ5oNpE+8h+aHSldt930GVc1n3iPKgxlH7ZJ2es86j
-X-Developer-Key: i=sebastian.fricke@collabora.com; a=ed25519;
- pk=pYXedPwrTtErcj7ERYeo/IpTrpe4QbJuEzSB52fslBg=
-X-ZohoMailClient: External
+Content-Transfer-Encoding: 8bit
 
-This series add H.264 High 10 and 4:2:2 profile support to the Rockchip
-Video Decoder driver.
+The fixed commit placed mutex_lock() inside spin_lock_bh(), which triggers
+a warning like:
 
-Patch 1 add helpers for calculating plane bytesperline and sizeimage.
-Patch 2 add two new pixelformats for semi-planer 10-bit 4:2:0/4:2:2 YUV.
+BUG: sleeping function called from invalid context at...
 
-Patch 3 change to use bytesperline and buffer height to configure strides.
-Patch 4 change to use values from SPS/PPS control to configure the HW.
+Fix this by moving the mutex_lock() operation to a work queue.
 
-Patch 5-9 refactor code to support filtering of CAPUTRE formats based
-on the image format returned from a get_image_fmt ops.
-
-Patch 10 add final bits to support H.264 High 10 and 4:2:2 profiles.
-
-Patch 11 Limit minimum profile to constrained baseline due to
-unsupported features in the full baseline profile
-
-Patch 12 add a fix for enumerated frame sizes returned to userspace.
-
-Tested with Fluster on a ROCK Pi 4 (RK3399)
-
-129/135 on JVT-AVC_V1
-44/69 on JVT-FR-EXT
-
-Changes in v7:
-- Split out the change with the minimum profile
-- s/v4l2_format_plane_width/v4l2_format_plane_stride/
-- Move V4L2_PIX_FMT_NV15/V4L2_PIX_FMT_NV20 documentation as suggested
-- Change return value from int to bool on rkvdec_image_fmt_match
-- Add reviewed-by tags
-Link to v6: https://lore.kernel.org/linux-media/20240909192522.1076704-1-jonas@kwiboo.se/
-
-Changes in v6:
-- Change to use fmt_idx instead of j++ tucked inside a condition (Dan)
-- Add patch to fix enumerated frame sizes returned to userspace (Alex)
-- Fluster test score is same as v4 and v5, see [4] and [5]
-Link to v5: https://lore.kernel.org/linux-media/20240618194647.742037-1-jonas@kwiboo.se/
-
-Changes in v5:
-- Drop Remove SPS validation at streaming start patch
-- Move buffer align from rkvdec_fill_decoded_pixfmt to min/step_width
-- Use correct profiles for V4L2_CID_MPEG_VIDEO_H264_PROFILE
-- Collect r-b and t-b tags
-- Fluster test score is same as v4, see [4] and [5]
-Link to v4: https://lore.kernel.org/linux-media/20231105165521.3592037-1-jonas@kwiboo.se/
-
-Changes in v4:
-- Fix failed v4l2-compliance tests related to CAPTURE queue
-- Rework CAPTURE format filter anv validate to use an image format
-- Run fluster test suite JVT-FR-EXT [4] and JVT-AVC_V1 [5]
-Link to v3: https://lore.kernel.org/linux-media/20231029183427.1781554-1-jonas@kwiboo.se/
-
-Changes in v3:
-- Drop merged patches
-- Use bpp and bpp_div instead of prior misuse of block_w/block_h
-- New patch to use values from SPS/PPS control to configure the HW
-- New patch to remove an unnecessary call to validate sps at streaming start
-- Reworked pixel format validation
-Link to v2: https://lore.kernel.org/linux-media/20200706215430.22859-1-jonas@kwiboo.se/
-
-Changes in v2:
-- Collect r-b tags
-- SPS pic width and height in mbs validation moved to rkvdec_try_ctrl
-- New patch to not override output buffer sizeimage
-- Reworked pixel format validation
-- Only align decoded buffer instead of changing frmsize step_width
-Link to v1: https://lore.kernel.org/linux-media/20200701215616.30874-1-jonas@kwiboo.se/
-
-To fully runtime test this series you may need FFmpeg patches from [1]
-and fluster patches from [2], this series is also available at [3].
-
-[1] https://github.com/Kwiboo/FFmpeg/commits/v4l2request-2024-v2-rkvdec/
-[2] https://github.com/Kwiboo/fluster/commits/ffmpeg-v4l2request-rkvdec/
-[3] https://github.com/Kwiboo/linux-rockchip/commits/linuxtv-rkvdec-high-10-v6/
-[4] https://gist.github.com/Kwiboo/f4ac15576b2c72887ae2bc5d58b5c865
-[5] https://gist.github.com/Kwiboo/459a1c8f1dcb56e45dc7a7a29cc28adf
-
-Regards,
-Jonas
-
-Alex Bee (1):
-  media: rkvdec: h264: Don't hardcode SPS/PPS parameters
-
-Jonas Karlman (10):
-  media: v4l2-common: Add helpers to calculate bytesperline and
-    sizeimage
-  media: v4l2: Add NV15 and NV20 pixel formats
-  media: rkvdec: h264: Use bytesperline and buffer height as virstride
-  media: rkvdec: Extract rkvdec_fill_decoded_pixfmt into helper
-  media: rkvdec: Move rkvdec_reset_decoded_fmt helper
-  media: rkvdec: Extract decoded format enumeration into helper
-  media: rkvdec: Add image format concept
-  media: rkvdec: Add get_image_fmt ops
-  media: rkvdec: h264: Support High 10 and 4:2:2 profiles
-  media: rkvdec: Fix enumerate frame sizes
-
- .../media/v4l/pixfmt-yuv-planar.rst           | 128 ++++++++++
- drivers/media/v4l2-core/v4l2-common.c         |  80 +++---
- drivers/media/v4l2-core/v4l2-ioctl.c          |   2 +
- drivers/staging/media/rkvdec/rkvdec-h264.c    |  64 +++--
- drivers/staging/media/rkvdec/rkvdec.c         | 239 +++++++++++++-----
- drivers/staging/media/rkvdec/rkvdec.h         |  18 +-
- include/uapi/linux/videodev2.h                |   2 +
- 7 files changed, 410 insertions(+), 123 deletions(-)
-
---
-2.46.0
-
+Fixes: 2aeeef906d5a ("bonding: change ipsec_lock from spin lock to mutex")
+Reported-by: Jakub Kicinski <kuba@kernel.org>
+Closes: https://lore.kernel.org/netdev/20241212062734.182a0164@kernel.org
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
 ---
-Alex Bee (1):
-      media: rkvdec: h264: Don't hardcode SPS/PPS parameters
+ drivers/net/bonding/bond_main.c | 41 +++++++++++++++++++++++++--------
+ include/net/bonding.h           |  6 +++++
+ 2 files changed, 37 insertions(+), 10 deletions(-)
 
-Jonas Karlman (10):
-      media: v4l2-common: Add helpers to calculate bytesperline and sizeimage
-      media: v4l2: Add NV15 and NV20 pixel formats
-      media: rkvdec: h264: Use bytesperline and buffer height as virstride
-      media: rkvdec: Extract rkvdec_fill_decoded_pixfmt into helper
-      media: rkvdec: Move rkvdec_reset_decoded_fmt helper
-      media: rkvdec: Extract decoded format enumeration into helper
-      media: rkvdec: Add image format concept
-      media: rkvdec: Add get_image_fmt ops
-      media: rkvdec: h264: Support High 10 and 4:2:2 profiles
-      media: rkvdec: Fix frame size enumeration
-
-Sebastian Fricke (1):
-      media: rkvdec: h264: Limit minimum profile to constrained baseline
-
- .../userspace-api/media/v4l/pixfmt-yuv-planar.rst  | 128 +++++++++++
- drivers/media/v4l2-core/v4l2-common.c              |  80 +++----
- drivers/media/v4l2-core/v4l2-ioctl.c               |   2 +
- drivers/staging/media/rkvdec/rkvdec-h264.c         |  64 ++++--
- drivers/staging/media/rkvdec/rkvdec.c              | 239 +++++++++++++++------
- drivers/staging/media/rkvdec/rkvdec.h              |  18 +-
- include/uapi/linux/videodev2.h                     |   2 +
- 7 files changed, 410 insertions(+), 123 deletions(-)
----
-base-commit: c2b96a6818159fba8a3bcc38262da9e77f9b3ec7
-change-id: 20250116-rkvdec_h264_high10_and_422_support-a8f2da8a09e6
-
-Best regards,
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index e45bba240cbc..cc7064aa4b35 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -551,6 +551,25 @@ static void bond_ipsec_add_sa_all(struct bonding *bond)
+ 	mutex_unlock(&bond->ipsec_lock);
+ }
+ 
++static void bond_xfrm_state_gc_work(struct work_struct *work)
++{
++	struct bond_xfrm_work *xfrm_work = container_of(work, struct bond_xfrm_work, work);
++	struct bonding *bond = xfrm_work->bond;
++	struct xfrm_state *xs = xfrm_work->xs;
++	struct bond_ipsec *ipsec;
++
++	mutex_lock(&bond->ipsec_lock);
++	list_for_each_entry(ipsec, &bond->ipsec_list, list) {
++		if (ipsec->xs == xs) {
++			list_del(&ipsec->list);
++			kfree(ipsec);
++			xfrm_state_put(xs);
++			break;
++		}
++	}
++	mutex_unlock(&bond->ipsec_lock);
++}
++
+ /**
+  * bond_ipsec_del_sa - clear out this specific SA
+  * @xs: pointer to transformer state struct
+@@ -558,9 +577,9 @@ static void bond_ipsec_add_sa_all(struct bonding *bond)
+ static void bond_ipsec_del_sa(struct xfrm_state *xs)
+ {
+ 	struct net_device *bond_dev = xs->xso.dev;
++	struct bond_xfrm_work *xfrm_work;
+ 	struct net_device *real_dev;
+ 	netdevice_tracker tracker;
+-	struct bond_ipsec *ipsec;
+ 	struct bonding *bond;
+ 	struct slave *slave;
+ 
+@@ -592,15 +611,17 @@ static void bond_ipsec_del_sa(struct xfrm_state *xs)
+ 	real_dev->xfrmdev_ops->xdo_dev_state_delete(xs);
+ out:
+ 	netdev_put(real_dev, &tracker);
+-	mutex_lock(&bond->ipsec_lock);
+-	list_for_each_entry(ipsec, &bond->ipsec_list, list) {
+-		if (ipsec->xs == xs) {
+-			list_del(&ipsec->list);
+-			kfree(ipsec);
+-			break;
+-		}
+-	}
+-	mutex_unlock(&bond->ipsec_lock);
++
++	xfrm_work = kmalloc(sizeof(*xfrm_work), GFP_ATOMIC);
++	if (!xfrm_work)
++		return;
++
++	INIT_WORK(&xfrm_work->work, bond_xfrm_state_gc_work);
++	xfrm_work->bond = bond;
++	xfrm_work->xs = xs;
++	xfrm_state_hold(xs);
++
++	queue_work(bond->wq, &xfrm_work->work);
+ }
+ 
+ static void bond_ipsec_del_sa_all(struct bonding *bond)
+diff --git a/include/net/bonding.h b/include/net/bonding.h
+index 8bb5f016969f..d54ba5e3affb 100644
+--- a/include/net/bonding.h
++++ b/include/net/bonding.h
+@@ -209,6 +209,12 @@ struct bond_ipsec {
+ 	struct xfrm_state *xs;
+ };
+ 
++struct bond_xfrm_work {
++	struct work_struct work;
++	struct bonding *bond;
++	struct xfrm_state *xs;
++};
++
+ /*
+  * Here are the locking policies for the two bonding locks:
+  * Get rcu_read_lock when reading or RTNL when writing slave list.
 -- 
-Sebastian Fricke <sebastian.fricke@collabora.com>
+2.46.0
 
