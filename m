@@ -1,90 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88EDD18DB04;
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2606C183CB0;
 	Tue, 25 Feb 2025 20:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740516268; cv=none; b=kt44mWrAQRJvMLpnhOGhhTKk8FjjLnxMsuCj/iFJxPEOkwQO8olXwHhRyvWM7O9ArL/RhkGgO/jhlPJUsb2cCZvdQDV9iFACNWZimNpTBOTBo5DNsEYh0rRxGWRnuY4/nqPPNMzpTuyP/bpXBbUzOtnqNbkEE8tGWlY0AdXRRrM=
+	t=1740516270; cv=none; b=jcq9V3qjjyYoPIQCQB90EYWBi+O6/mJWuIQ3JWmH/S97oz7s8H25Hmp/7Nr1Gr+Gb9ULB+HdZStMyy4C2Kaxp4vXCtjFViNpg/cMDL2brWbsxf+m88XNtrr7zWcF4GNkyq2kjTS3w+wucLcKnTyo0XDYSjRH7F7giwd4cM63a+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740516268; c=relaxed/simple;
-	bh=8c+cC5lywIS30v3vT3waAuhItMGBSfA5Du7xRmhoqJI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K1EqR+T5Sq9Swv9QbNzWtEeW5BdDPczqoD26HMh7F26Gwlm9DgVXq14XStB1zUkCDjJLjdiRaz6GIkJD8HVm7o9mgGzFJqXMEMskJJ2bKmXOjS6d0aalDJorJrbAojxYcerm0LQbgHilij+YneJaXfRkPjN8+YYm4PT9lS4Pv6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TtofTuYC; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TtofTuYC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1740516268; x=1772052268;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8c+cC5lywIS30v3vT3waAuhItMGBSfA5Du7xRmhoqJI=;
-  b=TtofTuYC8LTfNGj6QFrbhrCreWjDfaWnwbwL572Yo/8s53MvnFl/XRia
-   +yF47CVI//9yWJmL6vM405RRt2pI5Hvj0Opx3seQrIjzWaEC4NZ+1YnBO
-   xwGPiVKoMr4+HHNzVZqPcWPnRCRZoii8OfGtoErEjNlq34mTkNeF2Ekq5
-   sZK7BF98X9AvKKQr2vjThe+GW+JGez/ufgfAMrUbtipjBBxV25acOQg3G
-   uEGor3ZlcP0vB9d7OAoPoxvafMRnF+nZIt8T/VYl0itrj1LcDNkdZIKdf
-   hQfvIasa9vrg2/B547DraWnMnsU4xFElPgQIy1C7pSHOF7AO+GNGNoB36
-   w==;
-X-CSE-ConnectionGUID: 7bY/PndMQ6ecYitA4NRbJw==
-X-CSE-MsgGUID: CSYu7yPAQhe6lJXYZd5EBw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11356"; a="52740926"
-X-IronPort-AV: E=Sophos;i="6.13,314,1732608000"; 
-   d="scan'208";a="52740926"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 12:44:27 -0800
-X-CSE-ConnectionGUID: rSzZ/ZARSoCY8G+f2OuarA==
-X-CSE-MsgGUID: 1dsOlILYT4+fQu0/yxq8WQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.12,224,1728975600"; 
-   d="scan'208";a="153674298"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2025 12:44:27 -0800
-Date: Tue, 25 Feb 2025 12:44:25 -0800
-From: Andi Kleen <ak@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>
-Subject: Re: [Patch v2 15/24] perf/x86/intel: Add SSP register support for
- arch-PEBS
-Message-ID: <Z74rqf5V6bfTZxhG@tassilo>
-References: <20250218152818.158614-1-dapeng1.mi@linux.intel.com>
- <20250218152818.158614-16-dapeng1.mi@linux.intel.com>
- <20250225115450.GO11590@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1740516270; c=relaxed/simple;
+	bh=PH5YdRnivR9kB6Smke+lsCS/cQYYOFOc+a/7o9cCsl4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=hjvF8rzX1U0/97AFfKcozSFMf6PnjuWwqoEI8Mlblzf5tRK/X/FxYqnitnFwQAxM+bK5Y0lgyJGf1G6fDbzwJRoKmYrycrIMjEZ2ChnAbPqI0JpbG8HCLWoF/J1yQ4nyHySHenub40dkdutbWHu7ueE6tKMa2Njl2ndAH3zl+2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+	id DC8B492009C; Tue, 25 Feb 2025 21:44:20 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by angie.orcam.me.uk (Postfix) with ESMTP id D8F6A92009B;
+	Tue, 25 Feb 2025 20:44:20 +0000 (GMT)
+Date: Tue, 25 Feb 2025 20:44:20 +0000 (GMT)
+From: "Maciej W. Rozycki" <macro@orcam.me.uk>
+To: Richard Henderson <richard.henderson@linaro.org>, 
+    Ivan Kokshaysky <ink@unseen.parts>, Matt Turner <mattst88@gmail.com>
+cc: Arnd Bergmann <arnd@arndb.de>, 
+    John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
+    Magnus Lindholm <linmag7@gmail.com>, 
+    "Paul E. McKenney" <paulmck@kernel.org>, 
+    Linus Torvalds <torvalds@linux-foundation.org>, 
+    Al Viro <viro@zeniv.linux.org.uk>, linux-alpha@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Alpha: Emulate unaligned LDx_L/STx_C for data
+ consistency
+In-Reply-To: <alpine.DEB.2.21.2502181912230.65342@angie.orcam.me.uk>
+Message-ID: <alpine.DEB.2.21.2502252030380.65342@angie.orcam.me.uk>
+References: <alpine.DEB.2.21.2502181912230.65342@angie.orcam.me.uk>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250225115450.GO11590@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=US-ASCII
 
-On Tue, Feb 25, 2025 at 12:54:50PM +0100, Peter Zijlstra wrote:
-> On Tue, Feb 18, 2025 at 03:28:09PM +0000, Dapeng Mi wrote:
+On Wed, 19 Feb 2025, Maciej W. Rozycki wrote:
+
+> Interestingly enough no kernel mode traps have triggered with a kernel 
+> built with GCC 12 (and with most user traps coming from GCC verification):
 > 
-> > @@ -651,6 +651,16 @@ int x86_pmu_hw_config(struct perf_event *event)
-> >  			return -EINVAL;
-> >  	}
-> >  
-> > +	/* sample_regs_user never support SSP register. */
-> > +	if (unlikely(event->attr.sample_regs_user & BIT_ULL(PERF_REG_X86_SSP)))
-> > +		return -EINVAL;
+> kernel unaligned acc	: 0 (pc=0,va=0)
+> user unaligned acc	: 1766720 (pc=20000053064,va=120020189)
 > 
-> We can easily enough read user SSP, no?
+> but with GCC 15 a small quantity happened (even before I ran GCC testing):
+> 
+> kernel unaligned acc    : 78 (pc=fffffc0000ad5194,va=fffffc0002db5784)
+> user unaligned acc      : 883452 (pc=20000053064,va=120020189)
+> 
+> It seems a compiler regression worth checking -- the trap recorded was in 
+> `icmp6_dst_alloc' with a pair of quadword writes to `rt->rt6i_dst.addr', 
+> which however by its type (`struct in6_addr') is only longword-aligned and 
+> indeed starts at offset 148 from the outermost struct.  I have a sneaking 
+> suspicion one of my earlier GCC changes might be at fault.  At least I now 
+> have a test case to experiment with.
 
-Not for multi record PEBS.
+ FYI my suspicion wasn't wrong, I have submitted a compiler fix now[1].  
 
-Also technically it may not be precise.
+ My plan has been to complete the GCC side first as it's more urgent given 
+its annual only release cycle model targetting April/May, whereas I think 
+the Linux side can slip a release or two in our roughly bi-monthly cycle.  
+I'm going to schedule my time accordinly and with my upcoming holiday also 
+in the picture I may not be able to post v2 of this proposal until around 
+end of March the earliest.
 
--andi
+References:
+
+[1] "Alpha: Fix base block alignment calculation regression", 
+    <https://inbox.sourceware.org/gcc-patches/alpine.DEB.2.21.2502251934260.65342@angie.orcam.me.uk/>
+
+  Maciej
