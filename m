@@ -1,328 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D1D3F9D2;
-	Tue, 25 Feb 2025 08:03:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B08D4A1A;
+	Tue, 25 Feb 2025 08:06:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740470585; cv=none; b=RDggA4sYvDybkSOAhnuszywKMMaXhJ1GWBNI03bIlbZ2uuX6CNE2zYP7G5osjCw3sC2SsBZMFScIauLvfOI1jeHLXsYkJZTNela8EM3jd9SD2usaCnGc/tPuwsEC7jILkL0xJVNlwJqTgjbKRUn+YLI2Oj6qQA5cEeuJJzTsLvU=
+	t=1740470797; cv=none; b=YUJ/qVs8e+MbZIle4Ltva0FM7ZbMm5L+BabgS/FKFtkgnWP75wcPtPw8HSTRTAaUMq3rDoxAwfVyAjTD6SCIhNsLM9h97QWleXU/EWFOCq1t/b7JH/WVv+EC/+3X3Exz/H49J3GGe25a58g0tImzJkF2795/XPJTm7FKJk6yoOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740470585; c=relaxed/simple;
-	bh=2eHIphndq2uDMmUAi5YKrcovaUYO7tN2516cB/KGSJE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=QuSNn4PUlcpWcprZnIs8FdltXI/tDrMVEpmSUs9jFnKpXwf887FkgP+BJhRTwl8cC+KzYzyDz4H+wF3jWp1lkaUnfUVnYoP5ePODDto1I6XI+rS4w00s7ARYJ/bw1i8y1y10PEqXptUKuknz/ac3MKQoKbiR7mUu+ziIeeQ7O7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nx/7M07h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740470797; c=relaxed/simple;
+	bh=nTVauD8mUtF0eeGZkVyKSxs/AAJdpcyUJOrGpJCMI/M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=PVsBUnvwe/4+CKq7SVUkXQ7KrRMoDVaCNzAJGYp0MparqZZ5zuY7IewoK4bh7/t/QG5GD63BPfbx6OMTTga0X/D2ONnSNukKmD3TkOr/mqAMdwtoYz5VJgYrmOVOLJS+vdgYaDkKvU8Sbia3MV0M1lHmRedNX1Sxmkr7eGPDtEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TiNpYwCR; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nx/7M07h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DFC5C4CEDD;
-	Tue, 25 Feb 2025 08:02:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740470584;
-	bh=2eHIphndq2uDMmUAi5YKrcovaUYO7tN2516cB/KGSJE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Nx/7M07hAEBi0dLlOognbXKP6zq06Mb+JLcy+hbp6Hw3vWiiOFg/cm80dQ6uNtGHV
-	 +/03BHv396IAmmIoHUMtxlb8bVJfKk4Qii+Bg7WDbDbeSO5Nf3d4K8PDgsO1uznoEg
-	 eWsClj93xEpdFNIQOlWQNv0nsZI7Y31QGKvBZDpK/So0Av3ctaVqwA9NAjZFS+YFo9
-	 THHdDUh+4ThoEQ7Fujacm4SdarEdXljz98nU5gRSBQ+u78no0N7hhNpG+M3B0BykSr
-	 2J7UO/So99wxDo3Ug4vK0reQDkh3ldYSXakmo3Z1TbziV3nvjMBP8I2xcmXj6XjwG+
-	 JFF2ctpbpF5tg==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Daniel Almeida" <daniel.almeida@collabora.com>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno
- Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
-  "Trevor Gross" <tmgross@umich.edu>,  "Masahiro Yamada"
- <masahiroy@kernel.org>,  "Nathan Chancellor" <nathan@kernel.org>,
-  "Nicolas Schier" <nicolas@fjasle.eu>,  "Luis Chamberlain"
- <mcgrof@kernel.org>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>,  "Adam Bratschi-Kaye"
- <ark.email@gmail.com>,  <linux-kbuild@vger.kernel.org>,  "Petr Pavlu"
- <petr.pavlu@suse.com>,  "Sami Tolvanen" <samitolvanen@google.com>,
-  "Daniel Gomez" <da.gomez@samsung.com>,  "Simona Vetter"
- <simona.vetter@ffwll.ch>,  "Greg KH" <gregkh@linuxfoundation.org>,
-  <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v7 6/6] rust: add parameter support to the `module!` macro
-In-Reply-To: <8AF85A37-76AC-4937-BD59-115BB432B738@collabora.com> (Daniel
-	Almeida's message of "Mon, 24 Feb 2025 12:28:56 -0300")
-References: <20250218-module-params-v3-v7-0-5e1afabcac1b@kernel.org>
-	<20250218-module-params-v3-v7-6-5e1afabcac1b@kernel.org>
-	<oUH3AFSXY_kfA4fHRG_JpLCzAsZp4wujRwtOGwjKUuaB0-xVhRPPIQZ41nWZaJGFqTkbqBNKHTg3OskxIN7g5g==@protonmail.internalid>
-	<8AF85A37-76AC-4937-BD59-115BB432B738@collabora.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Tue, 25 Feb 2025 09:02:52 +0100
-Message-ID: <87o6yqxxhv.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TiNpYwCR"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51OKOYRu010037;
+	Tue, 25 Feb 2025 08:06:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	5O68Mj+7dFmG6ZMWG24pX3oU3pJbZ3qlRJlq0dxmRLk=; b=TiNpYwCRISTP0hn1
+	oHcyOtzTB+YDPJAXv7bHpSBwZelaQmM0WuhiH5fbCFvnemUbIsqJmiltlsAC9n6K
+	dNNqqRaPMqnw6BBTSt5pRXxdMNGodVeBkf+2smhD+JdqU7uZYX/odFImlbGV9QAe
+	uAXe5l9c2rmTNzqxIeKYzlmFtumBihJdyz6oz7KNgIlSYt92xCaDmQQkzl7s4b25
+	v2pWLMN+E49EXk3ucTU2Ryd9l65lVUAMpDbNqjTCWtBge59vpIwxd7H0U1EUGvVw
+	UfuB78l3jqVwuc90qDxIdowSOu+8qASwXa1znsm7FUdq7D8b6pfKwIcDHTm/GKE6
+	Zk5ovw==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 44y3xnga4w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Feb 2025 08:06:23 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 51P86MEc008205
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Feb 2025 08:06:22 GMT
+Received: from [10.233.19.224] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 25 Feb
+ 2025 00:06:19 -0800
+Message-ID: <eea55dfa-3dd3-488b-958c-cd20e18a7d7d@quicinc.com>
+Date: Tue, 25 Feb 2025 16:06:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] phy: qcom: qmp-pcie: Add PHY register retention
+ support
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Konrad Dybcio
+	<konrad.dybcio@oss.qualcomm.com>
+CC: <vkoul@kernel.org>, <kishon@kernel.org>, <p.zabel@pengutronix.de>,
+        <dmitry.baryshkov@linaro.org>, <abel.vesa@linaro.org>,
+        <quic_qianyu@quicinc.com>, <neil.armstrong@linaro.org>,
+        <quic_devipriy@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20250220102253.755116-1-quic_wenbyao@quicinc.com>
+ <20250220102253.755116-3-quic_wenbyao@quicinc.com>
+ <20250224073301.aqbw3gxjnupbejfy@thinkpad>
+ <7ffb09cd-9c77-4407-9087-3e789cd8bf44@quicinc.com>
+ <ea5de507-1252-4ff3-9b18-40981624afea@oss.qualcomm.com>
+ <20250224122439.njrcoyrfsisddoer@thinkpad>
+Content-Language: en-US
+From: "Wenbin Yao (Consultant)" <quic_wenbyao@quicinc.com>
+In-Reply-To: <20250224122439.njrcoyrfsisddoer@thinkpad>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: aJUzIFz9JneBG7BE_VGzNqbmuREjOsMs
+X-Proofpoint-GUID: aJUzIFz9JneBG7BE_VGzNqbmuREjOsMs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-25_03,2025-02-24_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
+ suspectscore=0 mlxscore=0 lowpriorityscore=0 adultscore=0 clxscore=1015
+ priorityscore=1501 spamscore=0 malwarescore=0 phishscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2502250053
 
-"Daniel Almeida" <daniel.almeida@collabora.com> writes:
-
-> Hi Andreas, thanks for working on this, I can see that this patch took a =
-lot
-> of effort.
-
-Thanks! It's not all me though, it's based on old code from the
-pre-merge days.
-
-[...]
-
->> index 0000000000000..0047126c917f4
->> --- /dev/null
->> +++ b/rust/kernel/module_param.rs
->> @@ -0,0 +1,226 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +//! Types for module parameters.
->
-> nit: maybe =E2=80=9CSupport for module parameters=E2=80=9D?
->
-> Or anything else other than =E2=80=9Ctypes=E2=80=9D, really :)
-
-I agree. I think originally the naming came from this being types
-backing the macro implementation.
-
->
->> +//!
->> +//! C header: [`include/linux/moduleparam.h`](srctree/include/linux/mod=
-uleparam.h)
->> +
->> +use crate::prelude::*;
->> +use crate::str::BStr;
->> +
->> +/// Newtype to make `bindings::kernel_param` [`Sync`].
->> +#[repr(transparent)]
->> +#[doc(hidden)]
->> +pub struct RacyKernelParam(pub ::kernel::bindings::kernel_param);
->> +
->> +// SAFETY: C kernel handles serializing access to this type. We never a=
-ccess
->
-> nit: perhaps: =E2=80=9Cwe never access *it* from *a* Rust module=E2=80=9D=
- ?
-
-Right =F0=9F=91=8D
-
->
->> +// from Rust module.
->> +unsafe impl Sync for RacyKernelParam {}
->> +
->> +/// Types that can be used for module parameters.
->> +///
->> +/// Note that displaying the type in `sysfs` will fail if
->> +/// [`Display`](core::fmt::Display) implementation would write more than
->
-> nit: perhaps `implementation writes more than`? Although it=E2=80=99d be =
-great if a
-> native speaker could chime in on this one.
-
-Actually, we removed the support for displaying in sysfs from the
-series, so I will just yank that note.
-
->
->> +/// [`PAGE_SIZE`] - 1 bytes.
->> +///
->> +/// [`PAGE_SIZE`]: `bindings::PAGE_SIZE`
->> +pub trait ModuleParam: Sized {
->> +    /// The [`ModuleParam`] will be used by the kernel module through t=
-his type.
->> +    ///
->> +    /// This may differ from `Self` if, for example, `Self` needs to tr=
-ack
->> +    /// ownership without exposing it or allocate extra space for other=
- possible
->> +    /// parameter values.
->
-> I don=E2=80=99t understand what=E2=80=99s being said here. e.g.: what doe=
-s =E2=80=9CSelf needs to track
-> ownership without exposing it=E2=80=9D mean? Can you expand on this?
-
-For some parameter types, such as string values, the parameter may
-assume a reference value or an owned value. The reference value would be
-used as default (as a reference to a static string), while an owned
-value would be passed in when the value is set. For that, `Value` can be
-an enum.
-
-We yanked support for anything but integer parameters from this series,
-but I would like to keep this around to make adding string parameters
-less churn in the near future.
-
-If you follow link [1] in the cover letter, you can see the original
-code from the pre-merge branch that this patch is based on.
-
->
-> Also this is pub. It should perhaps also be sealed?
-
-We might in the future allow users to implement their own parsers.
-
->
->
->> +    // This is required to support string parameters in the future.
->> +    type Value: ?Sized;
->
-> Why? Can you also expand on this a tad further?
-
-As explained above.
-
->
->> +
->> +    /// Parse a parameter argument into the parameter value.
->> +    ///
->> +    /// `Err(_)` should be returned when parsing of the argument fails.
->> +    ///
->> +    /// Parameters passed at boot time will be set before [`kmalloc`] is
->> +    /// available (even if the module is loaded at a later time). Howev=
-er, in
->> +    /// this case, the argument buffer will be valid for the entire lif=
-etime of
->> +    /// the kernel. So implementations of this method which need to all=
-ocate
->> +    /// should first check that the allocator is available (with
->> +    /// [`crate::bindings::slab_is_available`]) and when it is not avai=
-lable
->> +    /// provide an alternative implementation which doesn't allocate. I=
-n cases
->> +    /// where the allocator is not available it is safe to save referen=
-ces to
->> +    /// `arg` in `Self`, but in other cases a copy should be made.
->> +    ///
->> +    /// [`kmalloc`]: srctree/include/linux/slab.h
->> +    fn try_from_param_arg(arg: &'static [u8]) -> Result<Self>;
->> +}
->> +
->> +/// Set the module parameter from a string.
->> +///
->> +/// Used to set the parameter value at kernel initialization, when load=
-ing
->> +/// the module or when set through `sysfs`.
->> +///
->> +/// `param.arg` is a pointer to `*mut T` as set up by the [`module!`]
->> +/// macro.
->
-> Perhaps the above should also be an invariant?
-
-Actually, I think it should be part of the safety requirements.
-
-[...]
-
->> +
->> +impl<T> ModuleParamAccess<T> {
->> +    #[doc(hidden)]
->> +    pub const fn new(value: T) -> Self {
->
-> I assume that this is pub so that the macro can find it? If so, can you l=
-eave a note
-> outlining this?
-
-Yes, it must be accessible from other crates (modules). Will add a note.
-
->
->> +        Self {
->> +            data: core::cell::UnsafeCell::new(value),
->> +        }
->> +    }
->> +
->> +    /// Get a shared reference to the parameter value.
->> +    // Note: When sysfs access to parameters are enabled, we have to pa=
-ss in a
->> +    // held lock guard here.
->
-> What lock guard, guarding what exactly?
-
-That is yet to be determined. When we enable sysfs, we will have async
-access to the parameter value when user space interacts with sysfs.
-Thus, we need to apply synchronization on parameter value access. I
-envision a lock being taken before this method is called and a lock
-guard passed in to access the data.
-
-The code has deviated quite a bit from the original, but you can see a
-possible implementation here [1].
-
-[1] https://github.com/Rust-for-Linux/linux/blob/bc22545f38d74473cfef3e9fd6=
-5432733435b79f/rust/macros/module.rs#L410
-
-
-[...]
-
->> +    fn emit_params(&mut self, info: &ModuleInfo) {
->> +        let Some(params) =3D &info.params else {
->> +            return;
->> +        };
->
-> Shouldn=E2=80=99t this panic? A call to emit_params() where there=E2=80=
-=99s nothing to emit doesn=E2=80=99t
-> look right at a first glance.
-
-No, having no parameters is a valid configuration. If the "params" key
-is left out in the module macro call, the option will be `None`. The
-call to this function when generating code is unconditional.
-
-[...]
-
->> -    if let Some(firmware) =3D info.firmware {
->> +    if let Some(firmware) =3D &info.firmware {
->>         for fw in firmware {
->> -            modinfo.emit("firmware", &fw);
->> +            modinfo.emit("firmware", fw);
->>         }
->>     }
->
-> These seem a bit unrelated?
-
-They could be split in a precursor patch, but they are required for this
-change set. If you insist I will split them out, but I am also happy to
-keep them as one big change.
-
->
+On 2/24/2025 8:24 PM, Manivannan Sadhasivam wrote:
+> On Mon, Feb 24, 2025 at 12:46:44PM +0100, Konrad Dybcio wrote:
+>> On 24.02.2025 9:46 AM, Wenbin Yao (Consultant) wrote:
+>>> On 2/24/2025 3:33 PM, Manivannan Sadhasivam wrote:
+>>>> On Thu, Feb 20, 2025 at 06:22:53PM +0800, Wenbin Yao wrote:
+>>>>> From: Qiang Yu <quic_qianyu@quicinc.com>
+>>>>>
+>>>>> Some QCOM PCIe PHYs support no_csr reset. Unlike BCR reset which resets the
+>>>>> whole PHY (hardware and register), no_csr reset only resets PHY hardware
+>>>>> but retains register values, which means PHY setting can be skipped during
+>>>>> PHY init if PCIe link is enabled in booltloader and only no_csr is toggled
+>>>>> after that.
+>>>>>
+>>>>> Hence, determine whether the PHY has been enabled in bootloader by
+>>>>> verifying QPHY_START_CTRL register. If it's programmed and no_csr reset is
+>>>>> available, skip BCR reset and PHY register setting to establish the PCIe
+>>>>> link with bootloader - programmed PHY settings.
+>>>>>
+>>>>> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
+>>>>> Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
+>>>> Some nitpicks below.
+>>>>
+>>>>> ---
+>> [...]
 >>
->>     // Built-in modules also export the `file` modinfo string.
->>     let file =3D
->>         std::env::var("RUST_MODFILE").expect("Unable to fetch RUST_MODFI=
-LE environmental variable");
->> -    modinfo.emit_only_builtin("file", &file);
->> +    modinfo.emit_only_builtin("file", &file, false);
->> +
->> +    modinfo.emit_params(&info);
+>>>>> +     * In this way, no matter whether the PHY settings were initially
+>>>>> +     * programmed by bootloader or PHY driver itself, we can reuse them
+>>>> It is really possible to have bootloader not programming the init sequence for
+>>>> no_csr reset platforms? The comment sounds like it is possible. But I heard the
+>>>> opposite.
+>>> PCIe3 on X1E80100 QCP is disabled by default in UEFI. We need to enable it
+>>> manually in UEFI shell if we want.
+>> IIUC this will not be a concern going forward, and this is a special case
 >>
->>     format!(
->>         "
->> @@ -362,14 +514,17 @@ unsafe fn __exit() {{
->>                             __MOD.assume_init_drop();
->>                         }}
->>                     }}
->> -
->>                     {modinfo}
->>                 }}
->>             }}
->> +            mod module_parameters {{
->> +                {params}
->> +            }}
->>         ",
->>         type_ =3D info.type_,
->>         name =3D info.name,
->>         modinfo =3D modinfo.buffer,
->> +        params =3D modinfo.param_buffer,
->>         initcall_section =3D ".initcall6.init"
->>     )
->>     .parse()
->> diff --git a/samples/rust/rust_minimal.rs b/samples/rust/rust_minimal.rs
->> index 4aaf117bf8e3c..d999a77c6eb9a 100644
+> I'm wondering how many *special* cases we may have to deal with going forward.
+> Anyhow, I would propose to atleast throw an error and fail probe() if:
 >
-> I wonder if the changes to rust_minimal.rs should be a separate patch.
+> * the platform has no_csr reset AND
+> * bootloader has not initialized the PHY AND
+> * there are no init sequences in the kernel
+>
+> - Mani
 
-Either way works for me.
+Hmmm, regardless of whether it's a special case, we can't assume that UEFI
+will enable the PHY supporting no_csr reset on all platforms. It's a bit
+risky. If we make such an assumption, we also won't need to check whether
+the PHY is enabled by UEFI during powering on. We just need to check
+whether no_csr reset is available.
 
+But it makes sense to check the exsitence of PHY senquence. How about
+adding the check in qmp_pcie_init, if a PHY supports no_csr reset and isn't
+initialized in UEFI and there is no cfg->tbls, return error and print some
+error log so that the PCIe controller will fail to probe.
 
-Thanks for the comments!
-
-
-Best regards,
-Andreas Hindborg
-
+-- 
+With best wishes
+Wenbin
 
