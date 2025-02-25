@@ -1,150 +1,90 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from pv50p00im-tydg10021701.me.com (pv50p00im-tydg10021701.me.com [17.58.6.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 863808C11
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 12:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263551DD874
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 12:17:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.6.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740485739; cv=none; b=mDhI/nx2JP4uKLkDAF6MofF2/6v0GQJwxvjhv7HQ1GREOw4475dJVKx7H1WIG+50FV5/Rk02WKMryzi2Mfldz26AuBJqlEVlfinNH8Vfxk+B4l94s9ZDd41Qhb8yRppX31ZQ0pmI0FMiVm0U6+Z8Zv8Pj1Us+8TQ4SpdJ9ICwGY=
+	t=1740485857; cv=none; b=B/IY15L82itr18cp15hOdxUf5pnEJL0khHyM2p7NoefLO35TeDTq/2CQCnkhXiyBj2HC2BWEXdX+pzD5r2xjRvmLNUcU2EakkTdrPenqFc+mhha0O7Rpy+rZFKZEoDzfHFfrWkX2vRzcEyZ7eyKCWLonzanEpJ0cD7roGuX0138=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740485739; c=relaxed/simple;
-	bh=n0qtHPUUpsqeZMp8vdvkoyvxCkxVZB87dbJPrhvR5C0=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=kXuLu4TwgJqpeoTaJEqfrOBnAaXgXgT9uIEgF+9jMlUet9EUFUJnn+jQbq/86m2KZZxhsI2XaqSxtTNoZv1DFSD9tLH3qxKSS3CetWytV5nsfk3aqNshIGqAIes2xKw1IZfLm7uAadndxWjDoZiHEbLu20WaoywDt4u89+CsVks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Rgn+28v4; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1740485857; c=relaxed/simple;
+	bh=icoN91cmWBN01191An2uItH1mFg3GCSkgD5Hl99R4Ko=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XXv1XvTwDA10gDdRzeAZy4GhjX8waQR9SJTugR7ScG2P1+tiTzJY0czAqMDDutPan83Iek/tkuCDG5ZSs2784oTNu4ZM1XV3WG8z3k+9ieKa3fXkdl8GhM4sh2MaX4e2Xwi4wytQv7D7gq15VdpdlHsLLJhI6ci3RRTumNkFTWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=e+uRd4ZU; arc=none smtp.client-ip=17.58.6.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Rgn+28v4"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250225121535epoutp011907559d9651eae6043598d89166b1eb~nco4gWAVT0776007760epoutp01N
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 12:15:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250225121535epoutp011907559d9651eae6043598d89166b1eb~nco4gWAVT0776007760epoutp01N
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1740485735;
-	bh=gXCuKyfIyNL+Jw6N7X9ie6bhyy40mSO9kKIdHahq8NA=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=Rgn+28v4ATHc2wq1xIM3K0pDK58LGF/5HXzwoeW9yD2mbXxPWYPOMYvRpFJ0KigDN
-	 Go5NhMD1rBtS9+WB2Ms/WKQBcM3f270K91/TarYGjIgLfK0zIxf/ziSb4EDNE8B/JO
-	 x3vKzyT9OS0PWshv2hYy8GWkl3mQg6PWIS4u1xu0=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20250225121535epcas5p40740b4f93583e80a6b958bb8c82d1067~nco30fUnU1608716087epcas5p4v;
-	Tue, 25 Feb 2025 12:15:35 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.177]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4Z2GlT2Gklz4x9Pw; Tue, 25 Feb
-	2025 12:15:33 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
-	epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	36.FE.19933.564BDB76; Tue, 25 Feb 2025 21:15:33 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250225121532epcas5p2343d6b813b78d92203cb06b54dfd1970~nco1BfpNw2438324383epcas5p2T;
-	Tue, 25 Feb 2025 12:15:32 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250225121532epsmtrp1f63b3cb7834312bbf4119908db82664b~nco1A8W611727217272epsmtrp1k;
-	Tue, 25 Feb 2025 12:15:32 +0000 (GMT)
-X-AuditID: b6c32a4a-c1fda70000004ddd-7a-67bdb465d9b9
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	D9.3F.23488.364BDB76; Tue, 25 Feb 2025 21:15:31 +0900 (KST)
-Received: from Jaguar.sa.corp.samsungelectronics.net (unknown
-	[107.109.115.6]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250225121528epsmtip28ad80b8c5f6611b0883d6dc06598800b~ncox7FvSB1051010510epsmtip2T;
-	Tue, 25 Feb 2025 12:15:27 +0000 (GMT)
-From: Anindya Sundar Gayen <anindya.sg@samsung.com>
-To: andi.shyti@kernel.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: aswani.reddy@samsung.com, pankaj.dubey@samsung.com
-Subject: [PATCH] i2c-algo-bit: Added the bus lock during a i2c transaction
-Date: Tue, 25 Feb 2025 17:03:14 +0530
-Message-Id: <20250225113314.12353-1-anindya.sg@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPKsWRmVeSWpSXmKPExsWy7bCmhm7qlr3pBi828Vvc/9rBaHFo81Z2
-	i46/XxgtLu+aw2axaOsXdgdWj02rOtk8+rasYvT4vEkugDkq2yYjNTEltUghNS85PyUzL91W
-	yTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DXLTMHaKWSQlliTilQKCCxuFhJ386mKL+0JFUh
-	I7+4xFYptSAlp8CkQK84Mbe4NC9dLy+1xMrQwMDIFKgwITtj7+OtjAU3uSs2zVnM1MB4irOL
-	kZNDQsBEYtuSA+wgtpDAbkaJDTfjuhi5gOxPjBKtq+4yQTjfGCVWT/nIBNMx68weqMReRonZ
-	Wy6wQDjNTBIt716wdjFycLAJGEu0PagEaRARCJH41rOfEcRmFjCTmHn3NAuILSzgJbHp7BE2
-	EJtFQFVi+sZ1YGfwClhLLPo8nRlimbzE6g0HmEHmSwj0s0tcWTOZBSLhIrHtwBWoImGJV8e3
-	sEPYUhIv+9vYQW6QEMiXWHI2GyKcI3Fg+QOoB+wlDlyZwwJSwiygKbF+lz7EaXwSvb+fMEF0
-	8kp0tAlBmCoSEztYYGbP/rEDaqeHxIept1gh4RYrsevdc7YJjDKzEGYuYGRcxSiZWlCcm55a
-	bFpglJdaDo+Y5PzcTYzglKPltYPx4YMPeocYmTgYDzFKcDArifByZu5JF+JNSaysSi3Kjy8q
-	zUktPsRoCgykicxSosn5wKSXVxJvaGJpYGJmZmZiaWxmqCTO27yzJV1IID2xJDU7NbUgtQim
-	j4mDU6qByf/EXV6zrXpJXrU7TXf3fC6S6fiz8Quz1WNGvl1WmxafYXjBW5RQZl/meDNNq7/s
-	rP2e+8wZ/Z84Nm19qLlyZvq5Sb5zLFct7bhSO3+yt2bU35WHTqzJjfSMVz3h/nHelpeZjPE/
-	DEONJ0276xk8L3p3/+Xif+5Kh9nZ/V+zd5gxS2/8eMUws/Bzl7PexQAxoeS6QtW7T8pt485I
-	Wwf8VlqbHhZ4WWrhHC4eU7slTu4a4rfNYiLCf62MW8x/a0vt7IO/vHk6z7e/LS6bJn7/5W7O
-	zR9/CYot9WLhlew1vafGoPxKPeLVP+eeimrv/fcWn5y2ZuIcnrOC3QF/jHvtAte8jurIeh2n
-	uOQRwzx3JZbijERDLeai4kQAglNWwsIDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrJJMWRmVeSWpSXmKPExsWy7bCSvG7ylr3pBmsumVrc/9rBaHFo81Z2
-	i46/XxgtLu+aw2axaOsXdgdWj02rOtk8+rasYvT4vEkugDmKyyYlNSezLLVI3y6BK2Pv462M
-	BTe5KzbNWczUwHiKs4uRk0NCwERi1pk9TF2MXBxCArsZJS4uaWSCSEhJ3P7fyQhhC0us/Pec
-	HaKokUli8vHNLF2MHBxsAsYSbQ8qQUwRgTCJz5t0QMqZBSwkVm45yAxiCwt4SWw6e4QNxGYR
-	UJWYvnEdO4jNK2AtsejzdGaI8fISqzccYJ7AyLOAkWEVo2RqQXFuem6yYYFhXmq5XnFibnFp
-	Xrpecn7uJkZwaGhp7GB8961J/xAjEwfjIUYJDmYlEV7OzD3pQrwpiZVVqUX58UWlOanFhxil
-	OViUxHlXGkakCwmkJ5akZqemFqQWwWSZODilGpjCLFiqWba/P9HoHPa4YuX1XRa/p26xmDBR
-	4MHChc+3fuz8VMzyrFlQ9UCbaqxEQPqvGSfkpu68NOUGrwTn9NqZFqXnhBaturVUl/Np97Oq
-	K438hjx5dzKMYxVbea2uCp9xK2epnLSrZOrKtJzeyyaOrQKaZr76VqwrTd+vnv9wbZlGSars
-	ldTHemsvlHqYV8tudz224GqDi8JS1ZNCtdmVhwLbuSstnRZPzw269TsgcW6t4q2K/92bnxlc
-	//vyJIfq7Qq9HxI7i+ax3Zsv89XnJt++VO+EjsY/gTpSrWtU3XjzJ9TY25/yvjFFNvZ0l2Rx
-	V4bvprjF0/7my6kvkV9ReKyp7aaInozUgrdPKpVYijMSDbWYi4oTAQppW/d8AgAA
-X-CMS-MailID: 20250225121532epcas5p2343d6b813b78d92203cb06b54dfd1970
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250225121532epcas5p2343d6b813b78d92203cb06b54dfd1970
-References: <CGME20250225121532epcas5p2343d6b813b78d92203cb06b54dfd1970@epcas5p2.samsung.com>
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="e+uRd4ZU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=tQVDiJM72BgasMuPn0E8GujAR5KguG27heLo2tUkt5E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
+	b=e+uRd4ZU1VAu519YY62aDnwBuPiGbz+bWxHHbAjdrshEv4Kcxex2SYMGVfqezk73J
+	 ygl2jG3IJjwWNCQJDuTijwEP73BcKmDpsXY9dWTUMIiCIw2HfIPvW0ML+Bp1eDcN3q
+	 F/8OifILc0jpE5naSoXySxq9cjW49Cp+w39hqL2vtbOWy9n67r0c+fDCd1v5BeQNMY
+	 IJ3sUJnuAawDrU0UTfM2LMRHKhYdtrQZ7lgpyjL1MtLd6lJyv8sfYsUZ+aeNFGICwv
+	 xmNNQQaHwQYTR4vI4Xvma20mtK3cWNHiGEIQnuKbPXZfxZ50zM0apj/r5fznqVezNT
+	 2EKweQKkHkG5Q==
+Received: from [192.168.1.26] (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+	by pv50p00im-tydg10021701.me.com (Postfix) with ESMTPSA id 45652CC6951;
+	Tue, 25 Feb 2025 12:17:28 +0000 (UTC)
+Message-ID: <4e6ed786-4e72-4f22-9ce1-cdf6c384a5bb@icloud.com>
+Date: Tue, 25 Feb 2025 20:17:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/9] of: fix bugs about refcount
+To: Rob Herring <robh@kernel.org>
+Cc: Saravana Kannan <saravanak@google.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Marc Zyngier <maz@kernel.org>,
+ Stefan Wiehler <stefan.wiehler@nokia.com>, Tony Lindgren <tony@atomide.com>,
+ Thierry Reding <thierry.reding@gmail.com>,
+ Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+ Julia Lawall <Julia.Lawall@lip6.fr>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>,
+ stable@vger.kernel.org
+References: <20250209-of_irq_fix-v2-0-93e3a2659aa7@quicinc.com>
+ <20250224232645.GA117818-robh@kernel.org>
+Content-Language: en-US
+From: Zijun Hu <zijun_hu@icloud.com>
+In-Reply-To: <20250224232645.GA117818-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: buODABNUr5CF9BrUMMIQ-7sGwBIbv_Rh
+X-Proofpoint-ORIG-GUID: buODABNUr5CF9BrUMMIQ-7sGwBIbv_Rh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-25_04,2025-02-25_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=834
+ spamscore=0 suspectscore=0 clxscore=1015 bulkscore=0 malwarescore=0
+ adultscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2502250086
 
-Earlier i2c-bus lock was not available to i2c-algo-bit driver
-for that reason if there are back to back i2c transaction occurs
-it may be possible to occur a race condition.
+On 2025/2/25 07:26, Rob Herring wrote:
+>> ---
+>> Zijun Hu (9):
+>>       of: unittest: Add a case to test if API of_irq_parse_one() leaks refcount
+>>       of/irq: Fix device node refcount leakage in API of_irq_parse_one()
+>>       of: unittest: Add a case to test if API of_irq_parse_raw() leaks refcount
+>>       of/irq: Fix device node refcount leakage in API of_irq_parse_raw()
+>>       of/irq: Fix device node refcount leakages in of_irq_count()
+>>       of/irq: Fix device node refcount leakage in API irq_of_parse_and_map()
+>>       of/irq: Fix device node refcount leakages in of_irq_init()
+>>       of/irq: Add comments about refcount for API of_irq_find_parent()
+>>       of: resolver: Fix device node refcount leakage in of_resolve_phandles()
+>>
+>>  drivers/of/irq.c                               | 34 ++++++++++---
+>>  drivers/of/resolver.c                          |  2 +
+>>  drivers/of/unittest-data/tests-interrupts.dtsi | 13 +++++
+>>  drivers/of/unittest.c                          | 67 ++++++++++++++++++++++++++
+>>  4 files changed, 110 insertions(+), 6 deletions(-)
+> I've applied the series. I made a few adjustments to use __free() 
+> cleanup and simplify things.
 
-To avoid the race condition we added a mutex lock mechanism which will
-help to protect the i2c_outb()with a proper lock.
-
-Signed-off-by: Anindya Sundar Gayen <anindya.sg@samsung.com>
----
- drivers/i2c/algos/i2c-algo-bit.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/i2c/algos/i2c-algo-bit.c b/drivers/i2c/algos/i2c-algo-bit.c
-index eddf25b90ca8..18021dd9eef3 100644
---- a/drivers/i2c/algos/i2c-algo-bit.c
-+++ b/drivers/i2c/algos/i2c-algo-bit.c
-@@ -31,7 +31,7 @@
- #endif /* DEBUG */
- 
- /* ----- global variables ---------------------------------------------	*/
--
-+static DEFINE_MUTEX(i2c_bus_lock);
- static int bit_test;	/* see if the line-setting functions work	*/
- module_param(bit_test, int, S_IRUGO);
- MODULE_PARM_DESC(bit_test, "lines testing - 0 off; 1 report; 2 fail if stuck");
-@@ -349,6 +349,8 @@ static int sendbytes(struct i2c_adapter *i2c_adap, struct i2c_msg *msg)
- 	int retval;
- 	int wrcount = 0;
- 
-+	/* Aquire the lock before accessing the I2C bus */
-+	mutex_lock(&i2c_bus_lock);
- 	while (count > 0) {
- 		retval = i2c_outb(i2c_adap, *temp);
- 
-@@ -379,6 +381,7 @@ static int sendbytes(struct i2c_adapter *i2c_adap, struct i2c_msg *msg)
- 			return retval;
- 		}
- 	}
-+	mutex_unlock(&i2c_bus_lock);
- 	return wrcount;
- }
- 
--- 
-2.17.1
-
+thank you, LGTM for all adjustments but perhaps a mistake fixed by
+https://lore.kernel.org/all/20250225-fix_auto-v1-1-cf8b91a311dd@quicinc.com/
