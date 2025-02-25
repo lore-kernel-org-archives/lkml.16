@@ -1,1150 +1,810 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013021.outbound.protection.outlook.com [40.107.162.21])
+Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19010004.outbound.protection.outlook.com [52.103.68.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A935C25B669;
-	Tue, 25 Feb 2025 08:00:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FEE51A316A
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 08:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.4
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740470414; cv=fail; b=vCwovgi1uuKXdzKIqvFQFOPxDj9D8cbIChGb6UTjK25yGB9qtbywTaVwJGH3qcuu+XB/6MmSuS0+GNtcNCpogirfz5syXp+Gm2Z6YS5M4fzb+bB1IzjzVSu2nMYsU9o5ZNhqC9OWmjGcChzSgfCJvPlGUnMETR8p3CO0PaF5g3E=
+	t=1740470430; cv=fail; b=Td9ZcWV17n1JPp322NbyCtHXB6YeFluUJWW7GvobyPWWIQ+qe1u32hujvlRw84M8rJW0BqJGKenws8aOzC49PQmbrqISqA/3P6thVAdFk9y8P49zAiXHZIcgZhuiQQSk8HVI7r2JmHaOby/g8Usg40fR3H8YNlVJaNJRVR161rM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740470414; c=relaxed/simple;
-	bh=lEwZ2bnLSaWh9BcTdhEWfmp54RS5yPeGdeJCXhQoeJg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=m4UupAQEAjypWHQ+TAgeyUHp89iD67IpRyI9OEiVeZC493a10gnirAzyvF7GgW2ZU3RotgFE7rJcBWdl7XOoaTU4CGSh9jwylAlg4wSOVtfws4Ta58dE4FZldI0Z0WI/PIOCHbUZHvUfUN69yjU3I0HdlSygFepmik/qx9DVTNo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=kv2yrPBk; arc=fail smtp.client-ip=40.107.162.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	s=arc-20240116; t=1740470430; c=relaxed/simple;
+	bh=ef3LHsNV0fgxMw0hP67wT0mo7QR/v5lOam4CPxQbPm8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=NUVvVGrju35e8uGRc9x885OxmomWIKolC44tKmS3EncPnix+V5RJVrwbsoMjPBf+jSYw9ST/6K9oGpBkP0dpAzpA2U+aJ2EqtddqAUke7jP1GYOCwpfaRkfQn8fIKvWmGncDB7fjiPzWEbxsCUhZrE7UxbDy5vbkcx6MLj9DUsM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=FVbcCGcV; arc=fail smtp.client-ip=52.103.68.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="kv2yrPBk"
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="FVbcCGcV"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZGVf0spAF8T1I1+hCfXU81kmnw0pYVfwS1p6ajjGJs/LpuyEE7pUfEefSW76kFYWDSAPJAqS1F+7Ztl6OiP6a3E2pxHJB9JUS1tXA/CuS3UkNLOjwGXrnPv8FzbaxUHGFmuIRtPVYS8PhniVj/rIiL9doIxcSy4VTKnqA+qwhs67WJFvi0uWc2aMJAWaJBeNQZV4sG9kGpqjpSUkGBANVLfSrtMmG/p+xDSxUw0UF6JybDX3Q/LOMb9EyuiNojOR0gz64uklMsAv2y8V85FyjBTsq1yzA5FtprWuxwURXtSr6A8PgBg2lYJJQbpBH1tEkIWOEFDRLIJohCxRaT2M/A==
+ b=hkNryv4QWwgo2H1PYHKCu7BwKz7dC4sVIYk+cUt9ye3+Wv6FPYmsY1j+STqOBcUSrlY9cnbkbRWdwry4MVtnXLOc3AT1JUgbACbioVTsmAbwkUTN93AahmrbQ6zAojinv2JC2SO08QVfkMeV2eb8pIFF/N9MMfxDLp6xZWyXReX3lsL+Gholw9Wxqhw2fjKTkcv34g3glyS7Cmp32DVwKI9+MwWbW7DLbh5GCumYAyFqUzgaVkxo9PDe5LjFWHbqp39XtmK/AMHn/xZHKn4iClby5yF9aYj3tVVKKHSORPQdJka6hk1OdrUFhzP1/vIItWBMf7EPGzRla7h+/03qpg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wpZhP94DxOhPV/5bJXAP3DLMnD+ujQBYztA+xWZNLew=;
- b=eQMK+XX7b//ckWRRon2MYCd67m72MZOm8/zQoA38plBvo+7KtJ1pzMdBPjhKGkk4s0ld7Qi/PBdJfyCtBm+0YRnzRBNf+PowAMnsyoXpCXztppVKf8c+xMUWMyk5m7ZHN60Rkt+whMoBPeC4L0BQP2iJIs9FlDcGx+bbyxwIfSENDdhlymDDD1cy6gqhjbad3J7Xr4d+sOZDBcgT/j0Fqz7f9dSMqDzInzE9hiznzFdGC9YFWSDPdK0/V6StHPH2Jqh1jx7Z5jJ4uE6SXgDYvwIkcu2yj25Pqhl3+w2Cci21MLIY/vUAHWBiMWsMvcCiaZAye+P8lJ/8fdQAOnD6RQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
+ bh=ef3LHsNV0fgxMw0hP67wT0mo7QR/v5lOam4CPxQbPm8=;
+ b=BbUxfwacBEfraXMOpDMZLXLnDRqcwqo1XmCyOthooaLeCycFefsMLd6fvT9VlREBWGOunfVjJ9L8XnfTqcgGYyM9dht58+hW6+TGOMxN4TUUc7sPMVLqTWxG+Wb0LvLi+p0c/04WRkgyPiS/AHjmyR8+QjNse+j6ROVGa6vN3jvUHcj/URrjMdrJT3FvtKj1i6GcSfbACB2i3gRgpdpsA7XfBoGcL7ViQv3g8VmkeXmhs/HF5aRA5+UYsjrFt/ApC9icMgZauahFsATP7iyKXh8V9NTGOKjGYEFKKSAXCf1J4Fd4q83M1Ye9wq2joEAV6de3PwfDaMfxoTNzuZXzjQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wpZhP94DxOhPV/5bJXAP3DLMnD+ujQBYztA+xWZNLew=;
- b=kv2yrPBkkugQPQY/0CDgogafgnVMiIGrpBJIWrcsv90Kv0kx134+YfrbdFsexwM64MIVKP4EM/KaL6ve+gYjYmsgOihaYKFT3xOINad+r5q7fAD2jd7+DZa8WtSIk8zwoShJnW8dFXInfzKUwZ0gb8z6iGNnS2v+2EpIju0rsFdPGpKt6PWz3RQUtzXfzwJZs+V8yy1924L7dSWAVFwlZkeZZIs2km8FLrZsXlXI6iHJmPhwUO6hh4bNDXw4jl6vqUxqEt/jkCMQpOWT6U6xCB2cYGmIqHFaCIW3EeosAnBR1gWbKxvEYqH+Bfkg9j5ANMnO1PU+RRRaGQOKgZ/NeQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by AS8PR04MB8849.eurprd04.prod.outlook.com (2603:10a6:20b:42c::17) with
+ bh=ef3LHsNV0fgxMw0hP67wT0mo7QR/v5lOam4CPxQbPm8=;
+ b=FVbcCGcVJKkUBmmxs6f/APS/XkEY9yMnyCn1IGksFoRFVGVs1Ucwi4JvXICU2lCPmliE5IStxR1nAl8V1zMI2CJ6LIjRLnKGwquqeHF1QasLasbmHHBn16Y2hN5lmxEN+6o1oC2PChA7VWWvsORwuXkizt+OIZ3hOt4H3iUcbaM+PlsRcv+kbT3u0mTVZBX4hr5U0CJc2ZIO9VC/pBmKrcDmonwb6MwG5bde902hkPNKalo2sc71gsxkbIwSyR9NzZ/SMQdguqvp7qXoJ7Dhf1cDRDyq1QPA7kunLFBg9mDp29+j41SvBY0M0MPqMvoOq/Ln7FOttCP+o7kfnH+3Qw==
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
+ by PN3PR01MB7893.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:8d::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.13; Tue, 25 Feb
- 2025 08:00:01 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%4]) with mapi id 15.20.8466.013; Tue, 25 Feb 2025
- 08:00:01 +0000
-Date: Tue, 25 Feb 2025 17:07:09 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Cristian Marussi <cristian.marussi@arm.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	linux-kernel@vger.kernel.org, arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	devicetree@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v2 1/7] firmware: arm_scmi: imx: Add LMM and CPU
- documentation
-Message-ID: <20250225090709.GA25303@nxa18884-linux>
-References: <20250212-imx-lmm-cpu-v2-0-3aee005968c1@nxp.com>
- <20250212-imx-lmm-cpu-v2-1-3aee005968c1@nxp.com>
- <Z7xl8h8Sh_UWYbI3@pluto>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z7xl8h8Sh_UWYbI3@pluto>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: SI1PR02CA0002.apcprd02.prod.outlook.com
- (2603:1096:4:1f7::16) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8466.21; Tue, 25 Feb
+ 2025 08:00:21 +0000
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77%7]) with mapi id 15.20.8466.016; Tue, 25 Feb 2025
+ 08:00:21 +0000
+From: Aditya Garg <gargaditya08@live.com>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+CC: "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+	"mripard@kernel.org" <mripard@kernel.org>, "airlied@gmail.com"
+	<airlied@gmail.com>, "simona@ffwll.ch" <simona@ffwll.ch>,
+	"andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
+	Kerem Karabay <kekrby@gmail.com>, Atharva Tiwari <evepolonium@gmail.com>,
+	Aun-Ali Zaidi <admin@kodeit.net>, Linux Kernel Mailing List
+	<linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v4 2/2] drm/tiny: add driver for Apple Touch Bars in x86
+ Macs
+Thread-Topic: [PATCH v4 2/2] drm/tiny: add driver for Apple Touch Bars in x86
+ Macs
+Thread-Index: AQHbhsGm46fWR/3mxEipqc6+PMbxkrNXpu6AgAACLxA=
+Date: Tue, 25 Feb 2025 08:00:20 +0000
+Message-ID:
+ <PN3PR01MB959702F55F747E5D87D9AD56B8C32@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+References: <B08444CD-38A8-4B82-94B2-4162D6D2EABD@live.com>
+ <844C1D39-4891-4DC2-8458-F46FA1B59FA0@live.com>
+ <91a39a2e-a3ad-499d-86cd-0e621a68e282@suse.de>
+In-Reply-To: <91a39a2e-a3ad-499d-86cd-0e621a68e282@suse.de>
+Accept-Language: en-IN, en-US
+Content-Language: en-IN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PN3PR01MB9597:EE_|PN3PR01MB7893:EE_
+x-ms-office365-filtering-correlation-id: a5166906-76de-4235-1e9e-08dd5572738c
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|461199028|8062599003|12121999004|15080799006|8060799006|6072599003|7092599003|19110799003|440099028|3412199025|10035399004|4302099013|12091999003|41001999003|102099032|1602099012;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?WTJTVjV5ZUpmY1RwQXN4U3NDNmNRaU15UXg2emZ6YUNlSXNPWEEyVnVQbXJD?=
+ =?utf-8?B?bUozZjI3WDFIdzNCditGREF5dUo5WkFybVdGV3drc0Jub1JhM2IxSjlyeXJj?=
+ =?utf-8?B?QW9KWFQ1YkpOYWRrbk41dmlmOUh6cGJBL2cxSUJZZ0NIalo0N21GUWVqODhE?=
+ =?utf-8?B?Mm9VR1QyN29TUG5ZeGRpckxPQmFZUGtqNmcwZmdxK1g4K2NrT0szT1RtYS9E?=
+ =?utf-8?B?M2F5MmRncndDZjZkcjFQa2xWL3ZyT2NrMXJ0TjBrOWgrdVVIaHNFYVVzSVFF?=
+ =?utf-8?B?LzJxWThZTFdLeSt2K3dDSTFhRDJ1WGdpNzlvOHI1NS85VmxlbHltTUViRk5L?=
+ =?utf-8?B?RUtoNThDUWlUTmFlUitMWVVRbm9Gd21PVkxKRllCQ0c0bjg1a01IMWVuSFQy?=
+ =?utf-8?B?bVZQTkRPSWN6QkVIRVhNa2R4em1wbFNRalJrampzQTNhVXdONEJiNVN6bEVH?=
+ =?utf-8?B?OUZaLzBVdWdJWk1wU1lqWDZxamRTTTV6N1dwSDhHdmUrUzNjM0ZsYzMrcTAy?=
+ =?utf-8?B?TTMzbHpVRURyNEFjbWJjT1lTUkVpQ0I1RGZVUm8vbXNPR2x0OThVQk1GUFhj?=
+ =?utf-8?B?RDJaak1pMWM0bkdsQnFDM1ZVdmJsbytCS0F5SjBKTWx3RzIwWkpRc1FuejFz?=
+ =?utf-8?B?L3lJZ3VuWlZyR0JIclV3bU1uWFJpclk0SDZJbnRiN2E1blBoK2RIbTdzOHpp?=
+ =?utf-8?B?SlFkYzFUQ0M0MHAyY0hnOXpSZU13NHJhWnpaUGZCLzVaSEx1MVJuNG1RQXNi?=
+ =?utf-8?B?LzNBMld1ZTU5NTM5NVJNUCt2NEdiT1RIWXlBb0Y2clMyaWJFR3VNTUw3d1Vp?=
+ =?utf-8?B?VXRsWkorU0NNK0JvSEhrbkpyTnN2YUFObzhYdHp0ckJaQUVpa1JGU2lpWjJG?=
+ =?utf-8?B?OHdzTjlPM0lla2RHajJKTmtLcTVFcFBZU2dTOU5TU1dNektBQmlLWURrU1l4?=
+ =?utf-8?B?dzFRL2trQ056bXArQ1pITHJZK3VNV25kVHF0bjFnOUJ0QldXYUNVaWRkQ3Bj?=
+ =?utf-8?B?OW1tVHh6TkFDQXVFWHFiY3dpOVU0c01kTTJ4QnlRVktQVm9Lc25wOGN0UTQz?=
+ =?utf-8?B?cjQzY0dGMnFUK0J3UjRQd1MzL2l5bkxSV052NjVpRXQzQ09NLy93YkpuRVBS?=
+ =?utf-8?B?Q0J2alR4enJ5c1hFc3ZOcVFoTXNOWU1CWTdVUDFjNmMvWENZT3FCVTVEd1VQ?=
+ =?utf-8?B?MWdZRmw0a3AvRVM0WDFmRzduM2pCUytMcXRLcVplc3FWaU5JbWNTenh6MlZz?=
+ =?utf-8?B?UWs4clBkckU4dFlKZklrdWZ3TnZmTENCZGRHU2J5RXF4V2FIOTk4T3lhcXA3?=
+ =?utf-8?B?eDQ5TFpET1cxNXh1SWNVb3dZaDFZVi9KTWFtTmRZTXlIL3o5UHQzYnN6RmZm?=
+ =?utf-8?B?ZlJ6bExhdXpIeEFwOFZQcTFFZGRkRjdweXBMVTdRZnV5NmxieE5ZOFg0MHNQ?=
+ =?utf-8?B?eUZyVXAwSWRKZUtES2gvUzEzbU8xK3pXdi9kMDc3Qzh4VG9wMXJuaHY2UG1F?=
+ =?utf-8?B?QWo2RmlJOVNHMjhvWk5yMmtld1JwZHZvU2E4L25QRlByWi9SYXhtZkdIR2RS?=
+ =?utf-8?B?ZjdYL1dGRzVUaXlpVFJaMnh2K0FwYXRFWDZmeVlRV1lWMWxCWnFMZDdRTEg0?=
+ =?utf-8?B?Zm9Xdi9xUE9pUVYxRzZKS0pWRGN2T2JRTU9NR2w4TkhQYTdZdU9pNkptamdw?=
+ =?utf-8?B?UXk5R0xkckJtVmxCOHFKYkhuaHlNSVU1RXJEQnozd0N0V0JvaG9rWHZyZlhZ?=
+ =?utf-8?Q?NlyAqzeFqQoMv08OhkkqMyPzNKlYJXNbryenT66?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?aVFycjdLd1oxUUVNMDJ3R3ljS05xYkRrZjZBU3doMFZ6NmxEcEpCS0dYRW1k?=
+ =?utf-8?B?OHNJeSt3bDVtdkcxZTFMUHNyVGozY3NzYm4rVWcxRFpNZ3VwMmhQRk14Wmgv?=
+ =?utf-8?B?b3Vvb0RsWDRrNGdFbVNRQUp3anBOM1gvU1FHWUZFbTVlT0RzR3o5dXVQRjk4?=
+ =?utf-8?B?YlhIZW1ZYUJSRmlpSXBsc2R0UXdYUFBCN0h0NVlxOGI4L2pmdktiSGMxTVIz?=
+ =?utf-8?B?RlZreVlHOG1vVElMaXhwd3VLQ0pDcnZINzFjaytEV3BEY1M4c0VwWGlXZmhy?=
+ =?utf-8?B?bktkY0ZLbzBEcW1lK0xBQWw3NytGOFBXQU9lWE5hZjk4bDdCWW5UaFhiS1BV?=
+ =?utf-8?B?N3lvRW5pUE1hMzlWdkJSdWpNUjRaSHFFbk00TCtOdnd1anlmUkFpMUhHQjJC?=
+ =?utf-8?B?L1NpNFRRd0ZLd2t5MS9hVkVHQ3ZHTGFMd0RTV2FaaHlZTGtSeHFqODN4TVhR?=
+ =?utf-8?B?cUNCQjBlU3I3UjJIQWZPbjlDOVlPQzZiaVJsZ1p2SFJWYzBpYjRuZkhVYlZk?=
+ =?utf-8?B?WWFjcmVGNmh4MEVzN2JOeWtPMWNoYzdLeHkwWVNNNThIRkx1aUJQMFZZSXcz?=
+ =?utf-8?B?c3RhQkVUY3R5NHdJSS9hVHlsTHF3MGtIZ05WQUhQSzJXUU1aYXVkYjFtUitT?=
+ =?utf-8?B?c0dJNjdETjZOS0NUYXBpMFJVa0tvY2tCQ0xtNktIKzJJU2hPdzFSTVplaXVT?=
+ =?utf-8?B?RURXd3Zja1M2QjhwSmtHY0RkSzJ2OUhJMTBRaGlhQXI5Q1doRUpPcXgxRlFR?=
+ =?utf-8?B?RmxRTWNTOHdLMGROY1ZPVWpzcm9GR1ZpY3hlNmxGdGtGdkp5Q2hyY0w5bUhH?=
+ =?utf-8?B?alE4eFhSUUhRQ3J0TWhMdjVtYTlIQW1NQ0cxdytyTjRzRHlRMDA3SlRBdzha?=
+ =?utf-8?B?a0xveUY1ZmRwS2g1VVZBRFVySDZMUU4yTlNsWGE0K01rejdTUXYrQytha2pR?=
+ =?utf-8?B?MUpXVnl0TSs5SERRRmpPOGQybjNMYkx2NHZSUURJT0U0UVNPYmtlaGQyODhp?=
+ =?utf-8?B?VlhNS3VsRnBldkszbFpkdWlUS2R5c2h6V1B1cEh1UElOd2pjR2pnK2JHL3cw?=
+ =?utf-8?B?N1JFSk1xalozSXhWVkhCMTAvMGV1bmhkbnk2UnhkZzVTaTlXMWx5ekU3aTd2?=
+ =?utf-8?B?aWs5WXR5RU93d3NTZmVLV0hJd3ZQVHBUREtQcEpDM1lFN0dRam1abzM0YmNj?=
+ =?utf-8?B?NnBJWjFYVzRsWWltdzhuVWlsZnZEbDgzd3Z6NWdQK2ZBczUybkg4VkFRLzNY?=
+ =?utf-8?B?aGsvZWhGWTRpem9qclEvTE0wK0Q1c3NxS2dobHpzcTJldDVwT0xQK0ZHL0t4?=
+ =?utf-8?B?M3E3T0YydnQ5WDR6T3hOVngzWmQ2V0FEVHNUbC9QTDRDaER2TUtVbmFsMHo3?=
+ =?utf-8?B?QmQ4OWplTzNWdjRMaUEzdjc4djhFNlVtVVZVSlgvTDJKYVg4RTUwaVFrUm5H?=
+ =?utf-8?B?TlNCdmc1M0FubVhFQjFBdTNYNmE5b3ZlaHRVQm9QRHVzemVxL3VhRkxucWJ5?=
+ =?utf-8?B?WDdrYmhZUGZOWDdsNHVDSzFxK0RKRGpyVzg2ako0UW0yMU15S2daeCt3ckxk?=
+ =?utf-8?B?ays0OHRNbzNHMUVFcTBIcTExNmhEbzlMeG5QMGFlMnNlVTBOb3hScXF3T1hn?=
+ =?utf-8?Q?86Jd/9qRlSrDwa2aQcYeTo0hkDfxcJqEBA2eJU13Jm/I=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|AS8PR04MB8849:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4020be2e-d8a5-483d-02bf-08dd5572679b
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|1800799024|366016|376014|52116014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?zzP95g39JjBfnhI8KxyTb9mnoWVDowjkBDZ24F+0A8oLmFnbwfNmZHzMyXo7?=
- =?us-ascii?Q?McQHAZp2M9Seil3oK6BNY8no2iKo1nG5F1X6nr3f8Rry5ZNkpdbwK1Jkz2XW?=
- =?us-ascii?Q?wipdwX1fTUJYbQglAkpCmNh+KHYtjWjuUZiJzt2VDhHgGOiAqP52m+UczBs5?=
- =?us-ascii?Q?ZtZJ0x2GgCLU/ugsjB6zPGjZutw5ZZ+4Rkfrao8U+kamMA6wgq4Kgc5Jx/oP?=
- =?us-ascii?Q?RGXPNdVZxaN5yykjYSjcb2EDJgHx4VewqstI8AlQhJez5XaWlLWt7hep9LHV?=
- =?us-ascii?Q?ZQj+UTEvomlZLRJsUCnPkfpPpEvJXnvQb6lMcVcr7WQaOSxhsoLHKb1G/AF6?=
- =?us-ascii?Q?qm2yITx2JRNRfFVATS8dINfPFCeDnJiWjhdE+Lnrn6KhOzgzZD0bDtynsRw4?=
- =?us-ascii?Q?+zpgHg52RTTadel8ZDctuybssAQyokIxcLHbUqUM6+FXTOLBnk9BT1sfBKeq?=
- =?us-ascii?Q?XrTcL97y8nnclDdd1/uu3QiY4LqXC/OhvVdxABJjDlhgN2ISeNhsQGjC9jwc?=
- =?us-ascii?Q?kg/HmfoqWAJ2rplCWCnuNsU7Z+mahO0pJiX9gV7iEF9+VeCcyQ7lWI1O1zHY?=
- =?us-ascii?Q?ErlaKU1PKRhRob3BNsM0Drf3yoeupiLEaLFOH1C5UFhaORoTeIYKRRYNyoVg?=
- =?us-ascii?Q?HtCGI1CYOvtMEmRinKLXPJbMm0gcp/5YY2/++1C2yI9dyt4rQ99aaKxKijI3?=
- =?us-ascii?Q?U+10p3x+egzmZNsnfoSm/zI+x/mWv1k6+2rQgpscWGcSNuWgjKXT39DY8hcc?=
- =?us-ascii?Q?G+gP0j9ocJH9DhxhelCmc3ZbIBGShMukEpxQpUTNR357UVUMdN0xYiCHsTTr?=
- =?us-ascii?Q?lEzLTIjn1rpC+ajdjX35FhlQRwqbNGr4K0ZfvNKuFM1C6pzbPSf/Ni8Ysey4?=
- =?us-ascii?Q?nTNQr9q398mcHkpwhQIsylxdg4Rac4Obmrdd3wVjKnCrAZQkcTLKaP31zW7C?=
- =?us-ascii?Q?LsRNDvoopjy7xvylD50LLqFgeEOH8UW7FRKgpjFH+x1e5XxNBJVV5Oi6WNxj?=
- =?us-ascii?Q?I+4OW5tyAUTZ2MrI2FDYXUIBkfCkb6I5/+fkgfyQhQQjCrXsaqeCKN65//5b?=
- =?us-ascii?Q?epSOorJDaVSLSwttP7aDf5G0IiBK7JCnu/e1SjfBK9N4YwEjxGOz9gmMjWG8?=
- =?us-ascii?Q?m6oq3mJMmK/Q/ZrQZlcf7dv1uF0NE0CqKwncEgo7wUBF1IN9Sv1jCneglMxM?=
- =?us-ascii?Q?xWjQi1McM6QdaZahI4TN1zUrrhhlMlvUf5V13wVhjs3ek43ytZpEDqe7ew2W?=
- =?us-ascii?Q?QU0iUhoWsJ9viScrPW5UoNfebMsXh2tw6HXp2mPQ8VORXlwyhjym0gZuaNMJ?=
- =?us-ascii?Q?pKcVfCtoYVkjiqpEsW+CO7HX/cKBCX9oU/WbgtPUjsK6+SG1RKFr/ipNDDP1?=
- =?us-ascii?Q?9sDyE1ZTe+GB9J5SZj1J7/Qyq3/ldm6wEa6uKNE4I6haAnRiXGRlnrBb+Aqa?=
- =?us-ascii?Q?NLB2OJv7EXzGPt+SFWE1Zvdkg6VeH3PN?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?bzHsWoIFY1ax5j1DGxjHXb6eGbtor/nggELUD/qhSZ3RVBk2xeRxT+3pd0re?=
- =?us-ascii?Q?vdhzic3Hjo+zDhOiBIabVcAWRF3yl9VrVPSyFyBx8Rm0385RIoHW8PqSvWce?=
- =?us-ascii?Q?VCQx9W2Xm9I402KqVoupezXTvqqum+1J/dueC7PkCLsUqV4l6Eq3GqiRLLOr?=
- =?us-ascii?Q?47RFlaP411Y9VwdP8GNjtS13y2Ki/fyNS/P4fGr9f/hkaAgCFxpONU86zuck?=
- =?us-ascii?Q?Zvo9rNXiT9n5gWjWTn+0VA0i4qUs6YMWWqk4aQLo+lIlwCmMjVD4AZ80nHfD?=
- =?us-ascii?Q?j9UFJ0hmbMqHLbpRbBcmkHKokKWksFh5h/ncPiflFdvxE3S0rJNuf/U2d8f4?=
- =?us-ascii?Q?qN1eNtPqypFlbMg7WgaK7XSpMO6eGFe8TXqEJlB3Lg1HI7KWC0xQ+TPXCpOt?=
- =?us-ascii?Q?oE6tkwHVbVokiYZ3p/35EUDwrqJj/3Vyon24F88UxTNOO38h+B/4nMZNBJRh?=
- =?us-ascii?Q?zDMopwOQ5Cfbyq5VhHDFnPMUy6DdhRM9UmefovpYX/wO2xM7cM0UO+upY5PZ?=
- =?us-ascii?Q?BClCQ31bhcwVZZ2NmtyD+aycVnaPshlUnyaDkR5h2vr8/59VVG5UKDRwlO0U?=
- =?us-ascii?Q?vcyGz13+Lp3/Mu46YRHZ1qQDBfri4ryAXZ0QLOHtEtlia+AWLUrdOGXCzqxd?=
- =?us-ascii?Q?McCVv/LvW2TBMpyPLIAeqNF+ITS1yQozFrat2dm24gSORHmDxQIBR+gqv/05?=
- =?us-ascii?Q?kOyvAvBM3TlF7LhC4FaWZo2yEDJSEGJvY0CTWwobpogz9Jbpy/l9efY00VuB?=
- =?us-ascii?Q?itopDdDDZgwnWzaOM5dcWyoH+uLKG84i/Zy8k9D6EHS4yu3dlIb99p+de5o7?=
- =?us-ascii?Q?Jf1TSy6RtAFpbNiYOzquQmhEAUffpbTcX0ubzZeSzEMrS/e1gp0PCf26vAX7?=
- =?us-ascii?Q?QgHT/b2aZVmfHPRfAx6ANP1FX+8zy/7+KWUFkOhY1t3Q6hcO4gZVI/WQCOU8?=
- =?us-ascii?Q?hAwc4RjL8svjYypDsl0X9yf2h2kvkUf2S0nMlkcXSTuS8N3QuOSBSUfo6B5S?=
- =?us-ascii?Q?/rFEILG75z4Lt6V++gvACMITglNqpi6p4wb5QAlSgWlDO7IaB1IG8N/3KRtF?=
- =?us-ascii?Q?pL+0LIYf/UsuZKvpXk45KA6EJxQP6Mb4FC5qdKmx3VI9jwJfXrIcxqcSkCZI?=
- =?us-ascii?Q?pavjYKoeiLOVCfRDVp6h2LiquQhspQ27E+jDzl62XuNZ/uklfgPI2y7ObpkT?=
- =?us-ascii?Q?q6mnfXn/AvQJXhH67wbJlmGRhW9ppoqRUlxekrsAihOYXmymDITpPMnptiEr?=
- =?us-ascii?Q?1rULOKSDbz4rVlOrEoTC2gecUwWPRCQarlUTVdgr/Y2nUrF+tojNLFOOVFFS?=
- =?us-ascii?Q?HBvGCuW7FtEiTKbAjyd0Vt4o6X+kE5owjwXH2IU6RQyiZ+xA0Xd6PDzf2BaG?=
- =?us-ascii?Q?3utmo9d56otRyVY57k8W/Oo2NrsMEgsXLsnDWSpMRPyUL6TLXGlRyWS/bkhi?=
- =?us-ascii?Q?2nn9eA8VCI35LLfc370bkDZ+TAuD3+y5Wsod2YWnnq4j08tk8KSzHJzwfc/d?=
- =?us-ascii?Q?LmUKs4+KLP4RrjFjohroOiqrP8L/UzpKoWoJKYabFAFDVK2m2Sg1u9e5RPtb?=
- =?us-ascii?Q?HxzNNdB3sxomdyvFA3QHa0B/DUYAE93pgmVKkeCZ?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4020be2e-d8a5-483d-02bf-08dd5572679b
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2025 08:00:01.5787
+X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5166906-76de-4235-1e9e-08dd5572738c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Feb 2025 08:00:20.9179
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KY3qKw2+jzvVH9w5vU8uTB7GNcVhKWK/8FGXmSuKTIknivNb8x52sWN8IvC3WHsh1oncC0R3NFbO8OrGGS9Bqw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8849
-
-Hi Cristian,
-
-On Mon, Feb 24, 2025 at 12:28:34PM +0000, Cristian Marussi wrote:
->On Wed, Feb 12, 2025 at 03:40:23PM +0800, Peng Fan (OSS) wrote:
->> From: Peng Fan <peng.fan@nxp.com>
->> 
->> Add i.MX95 Logical Machine Management and CPU Protocol documentation.
->> 
->
->Hi,
->
->a few comments below.
->
->> Signed-off-by: Peng Fan <peng.fan@nxp.com>
->> ---
->>  drivers/firmware/arm_scmi/vendors/imx/imx95.rst | 737 ++++++++++++++++++++++++
->>  1 file changed, 737 insertions(+)
->> 
->> diff --git a/drivers/firmware/arm_scmi/vendors/imx/imx95.rst b/drivers/firmware/arm_scmi/vendors/imx/imx95.rst
->> index b2dfd6c46ca2f5f12f0475c24cb54c060e9fa421..78a09cd8102becd5584d28bdef18df2d77fb7e7c 100644
->> --- a/drivers/firmware/arm_scmi/vendors/imx/imx95.rst
->> +++ b/drivers/firmware/arm_scmi/vendors/imx/imx95.rst
->> @@ -32,6 +32,461 @@ port, and deploy the SM on supported processors.
->>  The SM implements an interface compliant with the Arm SCMI Specification
->>  with additional vendor specific extensions.
->>  
->
->In general I noticed that there is NOT specified anywhere if all the
->following commands are mandatory or optional in your protocol: would be
->better to be specified, as it is I will assume that are all mandatory.
-
-The Doc from [1] does not specify optional or mandatory, I need check
-with firmware owner to see whether this could be added.
-
-[1]https://github.com/nxp-imx/imx-sm
-
->
->> +SCMI_LMM: System Control and Management Logical Machine Management Vendor Protocol
->> +==================================================================================
->> +
->> +
-[...]
->> +PROTOCOL_ATTRIBUTES
->> +~~~~~~~~~~~~~~~~~~~
->> +
->> +message_id: 0x1
->> +protocol_id: 0x80
->> +
->> ++------------------+-----------------------------------------------------------+
->> +|Return values                                                                 |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|int32 status      | See ARM SCMI Specification for status code definitions.   |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 attributes |Protocol attributes:                                       |
->> +|                  |Bits[31:8] Reserved, must be zero.                         |
->> +|                  |Bits[7:0] Number of Logical Machines                       |
->
->...so this states how many LMs you have...ok...
->
->> ++------------------+-----------------------------------------------------------+
->> +
->> +PROTOCOL_MESSAGE_ATTRIBUTES
->> +~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> +
->> +message_id: 0x2
->> +protocol_id: 0x80
->> +
->> ++------------------+-----------------------------------------------------------+
->> +|Return values                                                                 |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|int32 status      |SUCCESS: in case the message is implemented and available  |
->> +|                  |to use.                                                    |
->> +|                  |NOT_FOUND: if the message identified by message_id is      |
->> +|                  |invalid or not implemented                                 |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 attributes |Flags that are associated with a specific function in the  |
->> +|                  |protocol. For all functions in this protocol, this         |
->> +|                  |parameter has a value of 0                                 |
->> ++------------------+-----------------------------------------------------------+
->> +
->> +LMM_ATTRIBUTES
->> +~~~~~~~~~~~~~~
->> +
->> +message_id: 0x3
->> +protocol_id: 0x80
->> +
->> ++------------------+-----------------------------------------------------------+
->> +|Parameters                                                                    |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 lmid       |ID of the Logical Machine                                  |
->> ++------------------+-----------------------------------------------------------+
->> +|Return values                                                                 |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|int32 status      |SUCCESS: if valid attributes are returned.                 |
->> +|                  |NOT_FOUND: if lmId not points to a valid logical machine.  |
->> +|                  |DENIED: if the agent does not have permission to get info  |
->> +|                  |for the LM specified by lmid.                              |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 attributes | Bits[31:8] reserved.                                      |
->> +|                  | Bits[7:0] Number of Logical Machines.                     |
->
->...BUT this returns again the number of LMs while asking the attributes
->of a specific LM ? .... is it a typo or what ? ...if it is just as a
->sort of placeholder for when you'll have really LM's attributes to show,
->consider that once this is documented and supported in this version of
->your vendor protocol it will be needed to be kept and maintained...maybe
->better just to declare this as zero in this version of the protocol if
->you dont really have anything for this command in this version...(like
->many times are defined the attributes fields in PROTOCOL_MESSAGE_ATTRIBUTES
->above, if you really know you could want/need this command in the
->future...is it used now ?
-
-My bad. This should be updated with below
-+------------------+-----------------------------------------------------------+
-|uint32 attributes | Bits[31:0] reserved. must be zero                         |
-+------------------+-----------------------------------------------------------+
-|uint32 state      | Current state of the LM                                   |
-+------------------+-----------------------------------------------------------+
-|uint32 errStatus  | Last error status recorded                                |
-+------------------+-----------------------------------------------------------+
-|char name[16]     | A NULL terminated ASCII string with the LM name, of up    |
-|                  | to 16 bytes                                               |
-+------------------+-----------------------------------------------------------+
-
->
->> ++------------------+-----------------------------------------------------------+
->> +
->> +LMM_BOOT
->> +~~~~~~~~
->> +
->> +message_id: 0x4
->> +protocol_id: 0x80
->> +
->> ++------------------+-----------------------------------------------------------+
->> +|Parameters                                                                    |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 lmid       |ID of the Logical Machine                                  |
->> ++------------------+-----------------------------------------------------------+
->> +|Return values                                                                 |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|int32 status      |SUCCESS: if LM successfully booted.                        |
->
->...this and other commands below that cause a transition are a bit
->ambiguos in their description IMHO...does this mean that on reception of
->a SUCCESS the LM identified by lmid has successfully completed the boot ?
->
->...or, as I suppose, this being an immmediate command, SUCCESS means something
->like 'boot succesfully started', NOT that when this SUCCESS reply comes back the
->LM has booted...also becuse I can see a lot of notifications defined down below to
->signal the completion of such operations...
->
->..if this is the case please clarify...
-
-right. This means the LM has been boot successfully started. Not means
-LM fully function up.
-
-I will updated this with "SUCCESS: if LM boots successfully started"
-
-
->
->...if this is NOT the case and this is intended to return synchronoulsy
->when the required operation has completed, even though such machines are
->maybe (?) minimal/tiny compute systems, can you guarantee that they can boot/shutdown
->etc in a reasonably short time not to hog the channel for too long (I mean
->well before the configured transport timeout)...
->
->> +|                  |NOT_FOUND: if lmId not points to a valid logical machine.  |
->> +|                  |INVALID_PARAMETERS: if lmId is same as the caller.         |
->> +|                  |DENIED: if the agent does not have permission to manage the|
->> +|                  |the LM specified by lmid.                                  |
->> ++------------------+-----------------------------------------------------------+
->> +
->> +LMM_RESET
->> +~~~~~~~~~
->> +
->> +message_id: 0x5
->> +protocol_id: 0x80
->> +
->> ++------------------+-----------------------------------------------------------+
->> +|Parameters                                                                    |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 lmid       |ID of the Logical Machine                                  |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 flags      |Reset flags:                                               |
->> +|                  |Bits[31:1] Reserved, must be zero.                         |
->> +|                  |Bit[0] Graceful request:                                   |
->> +|                  |Set to 1 if the request is a graceful request.             |
->> +|                  |Set to 0 if the request is a forceful request.             |
->> ++------------------+-----------------------------------------------------------+
->> +|Return values                                                                 |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|int32 status      |SUCCESS: if LM successfully resets.                        |
->
->Same ... does this simply mean LM reset issued successfully ?
-
-For graceful reset, platform will issue a notification to agent and just return,
-agent will do the reset, as linux reboot.
-For forceful reset, platform will do the force reset of agent, this is longer
-time.
-
-I will update with "The LMM RESET command finished successfully in graceful reset
-or LM successfully resets in forceful reset"
-
->
->> +|                  |NOT_FOUND: if lmId not points to a valid logical machine.  |
->> +|                  |INVALID_PARAMETERS: if lmId is same as the caller.         |
->> +|                  |DENIED: if the agent does not have permission to manage the|
->> +|                  |the LM specified by lmid.                                  |
->> ++------------------+-----------------------------------------------------------+
->> +
->> +LMM_SHUTDOWN
->> +~~~~~~~~~~~~
->> +
->> +message_id: 0x6
->> +protocol_id: 0x80
->> +
->> ++------------------+-----------------------------------------------------------+
->> +|Parameters                                                                    |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 lmid       |ID of the Logical Machine                                  |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 flags      |Reset flags:                                               |
->> +|                  |Bits[31:1] Reserved, must be zero.                         |
->> +|                  |Bit[0] Graceful request:                                   |
->> +|                  |Set to 1 if the request is a graceful request.             |
->> +|                  |Set to 0 if the request is a forceful request.             |
->> ++------------------+-----------------------------------------------------------+
->> +|Return values                                                                 |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|int32 status      |SUCCESS: if LM successfully shutdowns.                     |
->
->Same...I suppose the shutdown has been sucessfully issued and could be
->still in progress...if this is not the case I fear this immediate
->command will potentially hog the channel for too long....
-
-For graceful shutdown, platform will issue a notification to agent and just return,
-agent will do shutdown.
-For forceful shutdown, platform will do the force shutdown of agent, this is longer
-time.
-
-I will update with "The LMM shutdown command finished successfully in graceful request 
-or LM successfully shutdown in forceful request"
-
->
->> +|                  |NOT_FOUND: if lmId not points to a valid logical machine.  |
->> +|                  |INVALID_PARAMETERS: if lmId is same as the caller.         |
->> +|                  |DENIED: if the agent does not have permission to manage the|
->> +|                  |the LM specified by lmid.                                  |
->> ++------------------+-----------------------------------------------------------+
->> +
->> +LMM_WAKE
->> +~~~~~~~~
->> +
->> +message_id: 0x7
->> +protocol_id: 0x80
->> +
->> ++------------------+-----------------------------------------------------------+
->> +|Parameters                                                                    |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 lmid       |ID of the Logical Machine                                  |
->> ++------------------+-----------------------------------------------------------+
->> +|Return values                                                                 |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|int32 status      |SUCCESS: if LM successfully wakes.                         |
->
->Same...I suppose you can know when an LM is fully woken only from the
->dedicated notification receipt...
-
-I will updated this with "SUCCESS: if LM wake command successfully returns"
-
->
->> +|                  |NOT_FOUND: if lmId not points to a valid logical machine.  |
->> +|                  |INVALID_PARAMETERS: if lmId is same as the caller.         |
->> +|                  |DENIED: if the agent does not have permission to manage the|
->> +|                  |the LM specified by lmid.                                  |
->> ++------------------+-----------------------------------------------------------+
->> +
->> +LMM_SUSPEND
->> +~~~~~~~~~~~
->> +
->> +message_id: 0x8
->> +protocol_id: 0x80
->> +
->> ++------------------+-----------------------------------------------------------+
->> +|Parameters                                                                    |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 lmid       |ID of the Logical Machine                                  |
->> ++------------------+-----------------------------------------------------------+
->> +|Return values                                                                 |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|int32 status      |SUCCESS: if LM successfully suspends.                      |
->
->Same..I suppose the SCMI server will know when the suspend for this LM is
->effective and will send a notification, so this is again only an indication
->that the suspend process has started...
-
-Right.
-I will updated this with "SUCCESS: if LM suspend command successfully returns"
-
->
->> +|                  |NOT_FOUND: if lmId not points to a valid logical machine.  |
->> +|                  |INVALID_PARAMETERS: if lmId is same as the caller.         |
->> +|                  |DENIED: if the agent does not have permission to manage the|
->> +|                  |the LM specified by lmid.                                  |
->> ++------------------+-----------------------------------------------------------+
->> +
->
->In general, you could also think to make the bahvour of all this
->operation configurable like teh RESET protocol does...so you could ask
->for an LMM op to complete synchronously OR instead let it happen
->asynchnously in the background after the command-request has completed
->and then wait for one of the existing notification...
->
->...again if this is already the expected behaviour please clarifiy the sync/async
->kind of execution that is expected when you issue such commands
-
-Yes, for graceful, it is async; for forceful, it is sync.
-If command not has graceful/forceful, such as lm wake/suspend, it is async
-
->
->> +LMM_NOTIFY
->> +~~~~~~~~~~
->> +
->> +message_id: 0x9
->> +protocol_id: 0x80
->> +
->> ++------------------+-----------------------------------------------------------+
->> +|Parameters                                                                    |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 lmid       |ID of the Logical Machine                                  |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 flags      |Notification flags:                                        |
->> +|                  |Bits[31:3] Reserved, must be zero.                         |
->> +|                  |Bit[3] Wake (resume) notification:                         |
->> +|                  |Set to 1 to send notification.                             |
->> +|                  |Set to 0 if no notification.                               |
->> +|                  |Bit[2] Suspend (sleep) notification:                       |
->> +|                  |Set to 1 to send notification.                             |
->> +|                  |Set to 0 if no notification.                               |
->> +|                  |Bit[1] Shutdown (off) notification:                        |
->> +|                  |Set to 1 to send notification.                             |
->> +|                  |Set to 0 if no notification.                               |
->> +|                  |Bit[0] Boot (on) notification:                             |
->> +|                  |Set to 1 to send notification.                             |
->> +|                  |Set to 0 if no notification                                |
->> ++------------------+-----------------------------------------------------------+
->> +|Return values                                                                 |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|int32 status      |SUCCESS: if the notification state successfully updated.   |
->> +|                  |NOT_FOUND: if lmId not points to a valid logical machine.  |
->> +|                  |INVALID_PARAMETERS: if input attributes flag specifies     |
->> +|                  |unsupported or invalid configurations.                     |
->> +|                  |DENIED: if the agent does not have permission to request   |
->> +|                  |the notification.                                          |
->> ++------------------+-----------------------------------------------------------+
->> +
->> +LMM_RESET_REASON
->> +~~~~~~~~~~~~~~~~
->> +
->> +message_id: 0xA
->> +protocol_id: 0x80
->
->What is this...a bit of explanation would be fine given that this
->command is not straightforward to understand like the previous
->boot/suspend etc...
-
-This function returns the boot/shutdown/reset reason for an LM.
-
-Such as POR, WDOG and etc.
-
->
->> +
->> ++---------------------+--------------------------------------------------------+
->> +|Parameters                                                                    |
->> ++---------------------+--------------------------------------------------------+
->> +|Name                 |Description                                             |
->> ++---------------------+--------------------------------------------------------+
->> +|uint32 lmid          |ID of the Logical Machine                               |
->> ++---------------------+--------------------------------------------------------+
->> +|Return values                                                                 |
->> ++---------------------+--------------------------------------------------------+
->> +|Name                 |Description                                             |
->> ++---------------------+--------------------------------------------------------+
->> +|int32 status         |SUCCESS: if LM successfully suspends.                   |
->
->? typo ?
-
-Sorry. This should be "the reset reason of the LM successfully updated"
-
->
->> +|                     |NOT_FOUND: if lmId not points to a valid logical machine|
->> +|                     |DENIED: if the agent does not have permission to request|
->> +|                     |the reset reason.                                       |
->> ++---------------------+--------------------------------------------------------+
->> +|uint32 bootflags     |Boot reason flags. This parameter has the format:       |
->> +|                     |Bits[31] Valid.                                         |
->> +|                     |Set to 1 if the entire reason is valid.                 |
->> +|                     |Set to 0 if the entire reason is not valid.             |
->> +|                     |Bits[30:29] Reserved, must be zero.                     |
->> +|                     |Bit[28] Valid origin:                                   |
->> +|                     |Set to 1 if the origin field is valid.                  |
->> +|                     |Set to 0 if the origin field is not valid.              |
->> +|                     |Bits[27:24] Origin.                                     |
->
->Are this origin values defined anywhere ?
-
-It varies in the current imx-sm implementation, there is no spec
-defining this, it could be a LMID or BBM register value or else.
-
->
->> +|                     |Bit[23] Valid err ID:                                   |
->> +|                     |Set to 1 if the error ID field is valid.                |
->> +|                     |Set to 0 if the error ID field is not valid.            |
->
->And this errors ID ? which value should I expect here...and to what this
->errors refer to...
->
->> +|                     |Bits[22:8] Error ID.                                    |
-
-There is not doc defining this. It just varies,
-It could be BBM button, agentID, faultID or a peripheral ID or else.
-
->> +|                     |Bit[7:0] Reason(WDOG, POR, FCCU and etc)                |
->> ++---------------------+--------------------------------------------------------+
->> +|uint32 shutdownflags |Shutdown reason flags. This parameter has the format:   |
->> +|                     |Bits[31] Valid.                                         |
->> +|                     |Set to 1 if the entire reason is valid.                 |
->> +|                     |Set to 0 if the entire reason is not valid.             |
->> +|                     |Bits[30:29] Number of valid extended info words.        |
->> +|                     |Bit[28] Valid origin:                                   |
->> +|                     |Set to 1 if the origin field is valid.                  |
->> +|                     |Set to 0 if the origin field is not valid.              |
->
->Ditto.
->> +|                     |Bits[27:24] Origin.                                     |
->> +|                     |Bit[23] Valid err ID:                                   |
->> +|                     |Set to 1 if the error ID field is valid.                |
->> +|                     |Set to 0 if the error ID field is not valid.            |
->> +|                     |Bits[22:8] Error ID.                                    |
->Ditto.
->> +|                     |Bit[7:0] Reason                                         |
->Ditto.
-
-I will check imx-sm code and add more info for upper all three,
-but there is no documentation and it varies in imx-sm code repo.
-
->> ++---------------------+--------------------------------------------------------+
->> +|uint32 extinfo[0,20] |Array of extended info words(e.g. fault pc)             |
->> ++---------------------+--------------------------------------------------------+
->
->..so what does this field represent....is this a fixed sized array ? seems more likely
->to be dynamically sized in range [0,20] AFAICU...
-
-This should be updated with "extinfo[3]". The length has been speicified in 
-"Bits[30:29] Number of valid extended info words."
-
->
->...now...if it is dynamically sized:
->
->+ there should be a size field declaring the size of the returned
->answer, if not you should rely on the transport size to know where the
->message ends (unless if hard-coded based on the above flags...in that
->case explain and document)
-
-already specified in shutdownflags BITS[30:29]
-
->
->+ you cannot assume that such a potentially big reply reply fit into a
->single message due to possible limitations of the transport
->sizes...IOW you should think about a 'multi-part' message like many
->exist in SCMI where the reply reports returned+remaining entries...
->..how can yo be sure to fit in any transport...this message has
->currently a potential max payload reply of 96 bytes ...
->
->> +
->> +LMM_POWER_ON
->> +~~~~~~~~~~~~
->> +
->> +message_id: 0xB
->> +protocol_id: 0x80
->> +
->> ++------------------+-----------------------------------------------------------+
->> +|Parameters                                                                    |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 lmid       |ID of the Logical Machine                                  |
->> ++------------------+-----------------------------------------------------------+
->> +|Return values                                                                 |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|int32 status      |SUCCESS: if LM successfully powers on.                     |
->
->Beside the same consideration as above regarding what this SUCCESS
->mean...what is meant to be the difference between LMM_POWER_ON and LMM_BOOT ?
-
-POWER ON, it is just power up, not means the LMM is kicked out to boot.
-BOOT, means LMM is kicked out to boot
-
-For example, CPU has power and reset release function.
-power on, means power up the CPU
-boot, means reset release to let CPU run.
-
-Especially for Cortex-M core, the TCM is in same power domain
-as Cortex-M. before booting the core, need power up the core to loading
-images to TCM, then boot the core.
-
->
->> +|                  |NOT_FOUND: if lmId not points to a valid logical machine.  |
->> +|                  |INVALID_PARAMETERS: if lmId is same as the caller.         |
->> +|                  |DENIED: if the agent does not have permission to manage the|
->> +|                  |the LM specified by lmid.                                  |
->> ++------------------+-----------------------------------------------------------+
->> +
->> +LMM_RESET_VECTOR_SET
->> +~~~~~~~~~~~~~~~~~~~~
->> +
->> +message_id: 0xC
->> +protocol_id: 0x80
->> +
->> ++-----------------------+------------------------------------------------------+
->> +|Parameters                                                                    |
->> ++-----------------------+------------------------------------------------------+
->> +|Name                   |Description                                           |
->> ++-----------------------+------------------------------------------------------+
->> +|uint32 lmid            |ID of the Logical Machine                             |
->> ++-----------------------+------------------------------------------------------+
->> +|uint32 cpuid           |ID of the CPU inside the LM                           |
->> ++-----------------------+------------------------------------------------------+
->> +|uint32 flags           |Reset vector flags                                    |
->> +|                       |Bits[31:1] Reserved, must be zero.                    |
->> +|                       |Bit[0] Table flag.                                    |
->> +|                       |Set to 1 if vector is the vector table base address   |
->
->So what is this when Bit[0] is set to zero instead ?
-
-Per current imx-sm, this flags is not used as of now, just a reserved
-flag for future extension. So 0 or 1 does not matter here.
-I will update with Bits[31:0] Reserved.
-
->
->> ++-----------------------+------------------------------------------------------+
->> +|uint32 resetVectorLow  |Lower vector                                          |
->> ++-----------------------+------------------------------------------------------+
->> +|uint32 resetVectorHigh |Higher vector                                         |
->> ++-----------------------+------------------------------------------------------+
->> +|Return values                                                                 |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|int32 status      |SUCCESS: if LM successfully powers on.                     |
->
->...typo ?...
-
-"If reset vector is set successfully"
-
->
->> +|                  |NOT_FOUND: if lmId not points to a valid logical machine,  |
->> +|                  |or cpuId is not valid.
->> +|                  |INVALID_PARAMETERS: if reset vector is invalid.            |
->> +|                  |DENIED: if the agent does not have permission to set the   |
->> +|                  |the reset vector for the CPU in the LM.                    |
->> ++------------------+-----------------------------------------------------------+
->> +
->> +NEGOTIATE_PROTOCOL_VERSION
->> +~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> +
->> +message_id: 0x10
->> +protocol_id: 0x80
->> +
->> ++--------------------+---------------------------------------------------------+
->> +|Parameters                                                                    |
->> ++--------------------+---------------------------------------------------------+
->> +|Name                |Description                                              |
->> ++--------------------+---------------------------------------------------------+
->> +|uint32 version      |The negotiated protocol version the agent intends to use |
->> ++--------------------+---------------------------------------------------------+
->> +|Return values                                                                 |
->> ++--------------------+---------------------------------------------------------+
->> +|Name                |Description                                              |
->> ++--------------------+---------------------------------------------------------+
->> +|int32 status        |SUCCESS: if the negotiated protocol version is supported |
->> +|                    |by the platform. All commands, responses, and            |
->> +|                    |notifications post successful return of this command must|
->> +|                    |comply with the negotiated version.                      |
->> +|                    |NOT_SUPPORTED: if the protocol version is not supported. |
->> ++--------------------+---------------------------------------------------------+
->> +
->> +Notifications
->> +_____________
->> +
->> +LMM_EVENT
->> +~~~~~~~~~
->> +
->> +message_id: 0x0
->> +protocol_id: 0x80
->> +
->> ++------------------+-----------------------------------------------------------+
->> +|Parameters                                                                    |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 lmid       |Identifier for the LM that caused the transition.          |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 eventlm    |Identifier for the LM the event is for.                    |
->
->So this is the LM that the event refer to ? i.e. this LM eventlm is the
->one that is booting/resetting/shutdown ? 
->if this is the case, maybe better as:
->
->	"Identifier of the LM this event refers to."
-
-Thanks, will update as you suggest.
-
->
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 flags      |LM events:                                                 |
->> +|                  |Bits[31:3] Reserved, must be zero.                         |
->> +|                  |Bit[3] Wake (resume) event:                                |
->> +|                  |1 LM has awakened.                                         |
->> +|                  |0 not a wake event.                                        |
->> +|                  |Bit[2] Suspend (sleep) event:                              |
->> +|                  |1 LM has suspended.                                        |
->> +|                  |0 not a suspend event.                                     |
->> +|                  |Bit[1] Shutdown (off) event:                               |
->> +|                  |1 LM has shutdown.                                         |
->> +|                  |0 not a shutdown event.                                    |
->> +|                  |Bit[0] Boot (on) event:                                    |
->> +|                  |1 LM has booted.                                           |
->> +|                  |0 not a boot event.                                        |
->> ++------------------+-----------------------------------------------------------+
->> +
->>  SCMI_BBM: System Control and Management BBM Vendor Protocol
->>  ==============================================================
->>  
->> @@ -436,6 +891,288 @@ protocol_id: 0x81
->>  |                  |0 no button change detected.                               |
->>  +------------------+-----------------------------------------------------------+
->>  
->> +SCMI_CPU: System Control and Management CPU Vendor Protocol
->> +==============================================================
->> +
->> +This protocol allows an agent to start or stop a CPU. It is used to manage
->> +auxiliary CPUs in an LM (e.g. additional cores in an AP cluster or
->> +Cortex-M cores).
->> +Note: For cores in AP cluster, ATF will use CPU protocol to handle them.
->
->So this is sort of a PSCI-by-proxy in which you ask the server to turn
->on/off some of the LM CPUs ?
-
-Yes. A55 cores are in one LM, so in ATF one A55 use cpu protocol to manage other
-A55 cores.
-
->
->First question would be is not enough to just ask for a specific LM to
->be booted with LMM ? or add to the LMM protocol a way to specifiy the
-
-LMM is a large scope, CPU could be inside LMM.
-
->'level' of boot that you ask for an LM...I may miss many details but it
->seems to me a bit odd that you are allowd to ask, from the agent that
->could have just requested an LM to boot to have some CPUs ON or OFF...
->...and specify the boot/resume address vectors here to use when turning
->ON...
-
-There is case the M7 and A55 are in the same LM, so in such case, if A55 core
-needs to manage M7, need use CPU protocol.
-
-If A55 and M7 are in two separate LMs, A55 needs use LMM protocol to manage
-M7 LM.
-
->
->Maybe a bit more of explanation of the rationale and expectations here
->could help understanding the differet needs from LMM
-
-There are some internal discussion between NXP and ARM if you search
-your mail "NXP-ARM SCMI OEM extension".
-
-I could not post them all here.
-
->
->> +
->> +The CPU protocol provides functions to:
->> +
->> +- Describe the protocol version.
->> +- Discover implementation attributes.
->> +- Discover the CPUs defined in the system.
->> +- Start a CPU.
->> +- Stop a CPU.
->> +- Set the boot and resume addresses for a CPU.
->> +- Set the sleep mode of a CPU.
->> +- Configure wake-up sources for a CPU.
->> +- Configure power domain reactions (LPM mode and retention mask) for a CPU.
->> +- The CPU IDs can be found in the CPU section of the SoC DEVICE: SM Device
->> +  Interface. They can also be found in the SoC RM. See the CPU Mode Control
->> +  (CMC) list in General Power Controller (GPC) section.
->> +
->> +CPU settings are not aggregated and setting their state is normally exclusive
->> +to one client.
->> +
->> +Commands:
->> +_________
->> +
->> +PROTOCOL_VERSION
->> +~~~~~~~~~~~~~~~~
->> +
->> +message_id: 0x0
->> +protocol_id: 0x82
->> +
->> ++---------------+--------------------------------------------------------------+
->> +|Return values                                                                 |
->> ++---------------+--------------------------------------------------------------+
->> +|Name           |Description                                                   |
->> ++---------------+--------------------------------------------------------------+
->> +|int32 status   | See ARM SCMI Specification for status code definitions.      |
->> ++---------------+--------------------------------------------------------------+
->> +|uint32 version | For this revision of the specification, this value must be   |
->> +|               | 0x10000.                                                     |
->> ++---------------+--------------------------------------------------------------+
->> +
->> +PROTOCOL_ATTRIBUTES
->> +~~~~~~~~~~~~~~~~~~~
->> +
->> +message_id: 0x1
->> +protocol_id: 0x82
->> +
->> ++---------------+--------------------------------------------------------------+
->> +|Return values                                                                 |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|int32 status      | See ARM SCMI Specification for status code definitions.   |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 attributes |Protocol attributes:                                       |
->> +|                  |Bits[31:16] Reserved, must be zero.                        |
->> +|                  |Bits[15:0] Number of CPUs                                  |
->> ++------------------+-----------------------------------------------------------+
->> +
->> +PROTOCOL_MESSAGE_ATTRIBUTES
->> +~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> +
->> +message_id: 0x2
->> +protocol_id: 0x82
->> +
->> ++---------------+--------------------------------------------------------------+
->> +|Return values                                                                 |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|int32 status      |SUCCESS: in case the message is implemented and available  |
->> +|                  |to use.                                                    |
->> +|                  |NOT_FOUND: if the message identified by message_id is      |
->> +|                  |invalid or not implemented                                 |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 attributes |Flags that are associated with a specific function in the  |
->> +|                  |protocol. For all functions in this protocol, this         |
->> +|                  |parameter has a value of 0                                 |
->> ++------------------+-----------------------------------------------------------+
->> +
->> +CPU_ATTRIBUTES
->> +~~~~~~~~~~~~~~
->> +
->> +message_id: 0x4
->> +protocol_id: 0x82
->> +
->> ++------------------+-----------------------------------------------------------+
->> +|Parameters                                                                    |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 cpuid      |Identifier for the CPU                                     |
->> ++------------------+-----------------------------------------------------------+
->> +|Return values                                                                 |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|int32 status      |SUCCESS: if valid attributes are returned successfully.    |
->> +|                  |NOT_FOUND: if the cpuid is not valid.                      |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 attributes |Bits[31:0] Reserved, must be zero                          |
->> ++------------------+-----------------------------------------------------------+
->> +|char name[16]     |NULL terminated ASCII string with CPU name up to 16 bytes  |
->> ++------------------+-----------------------------------------------------------+
->> +
->> +CPU_START
->> +~~~~~~~~~
->> +
->> +message_id: 0x4
->> +protocol_id: 0x82
->> +
->
->Any constraint to call this only after having successfully called RESET_VECROR_SET ?
-
-No constraint, if not called RESET_VECROR_SET, it will use default value 0.
-
->
->> ++------------------+-----------------------------------------------------------+
->> +|Parameters                                                                    |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 cpuid      |Identifier for the CPU                                     |
->> ++------------------+-----------------------------------------------------------+
->> +|Return values                                                                 |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|int32 status      |SUCCESS: if the cpu is started successfully.               |
->> +|                  |NOT_FOUND: if cpuid is not valid.                          |
->> +|                  |DENIED: the calling agent is not allowed to start this CPU.|
->> ++------------------+-----------------------------------------------------------+
->> +
->> +CPU_STOP
->> +~~~~~~~~
->> +
->> +message_id: 0x5
->> +protocol_id: 0x82
->> +
->> ++------------------+-----------------------------------------------------------+
->> +|Parameters                                                                    |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|uint32 cpuid      |Identifier for the CPU                                     |
->> ++------------------+-----------------------------------------------------------+
->> +|Return values                                                                 |
->> ++------------------+-----------------------------------------------------------+
->> +|Name              |Description                                                |
->> ++------------------+-----------------------------------------------------------+
->> +|int32 status      |SUCCESS: if the cpu is started successfully.               |
->> +|                  |NOT_FOUND: if cpuid is not valid.                          |
->> +|                  |DENIED: the calling agent is not allowed to stop this CPU. |
->> ++------------------+-----------------------------------------------------------+
->> +
->> +CPU_RESET_VECTOR_SET
->> +~~~~~~~~~~~~~~~~~~~~
->> +
->> +message_id: 0x6
->> +protocol_id: 0x82
->> +
->> ++----------------------+-------------------------------------------------------+
->> +|Parameters                                                                    |
->> ++----------------------+-------------------------------------------------------+
->> +|Name                  |Description                                            |
->> ++----------------------+-------------------------------------------------------+
->> +|uint32 cpuid          |Identifier for the CPU                                 |
->> ++----------------------+-------------------------------------------------------+
->> +|uint32 flags          |Reset vector flags:                                    |
->> +|                      |Bit[31] Resume flag.                                   |
->> +|                      |Set to 1 to update the reset vector used on resume.    |
->> +|                      |Bit[30] Boot flag.                                     |
->> +|                      |Set to 1 to update the reset vector used for boot.     |
->> +|                      |Bits[29:1] Reserved, must be zero.                     |
->> +|                      |Bit[0] Table flag.                                     |
->> +|                      |Set to 1 if vector is the vector table base address.   |
->> ++----------------------+-------------------------------------------------------+
->> +|uint32 resetVectorLow |Lower vector:                                          |
->> +|                      |If bit[0] of flags is 0, the lower 32 bits of the      |
->> +|                      |physical address where the CPU should execute from on  |
->> +|                      |reset. If bit[0] of flags is 1, the lower 32 bits of   |
->> +|                      |the vector table base address                          |
->> ++----------------------+-------------------------------------------------------+
->> +|uint32 resetVectorhigh|Upper vector:                                          |
->> +|                      |If bit[0] of flags is 0, the upper 32 bits of the      |
->> +|                      |physical address where the CPU should execute from on  |
->> +|                      |reset. If bit[0] of flags is 1, the upper 32 bits of   |
->> +|                      |the vector table base address                          |
->> ++----------------------+-------------------------------------------------------+
->> +|Return values                                                                 |
->> ++----------------------+-------------------------------------------------------+
->> +|Name                  |Description                                            |
->> ++----------------------+-------------------------------------------------------+
->> +|int32 status          |SUCCESS: if the CPU reset vector is set successfully.  |
->> +|                      |NOT_FOUND: if cpuId does not point to a valid CPU.     |
->> +|                      |INVALID_PARAMETERS: the requested vector type is not   |
->> +|                      |supported by this CPU.                                 |
->> +|                      |DENIED: the calling agent is not allowed to set the    |
->> +|                      |reset vector of this CPU                               |
->> ++----------------------+-------------------------------------------------------+
->> +
->> +CPU_SLEEP_MODE_SET
->> +~~~~~~~~~~~~~~~~~~
->> +message_id: 0x7
->> +protocol_id: 0x82
->> +
->> ++----------------------+-------------------------------------------------------+
->> +|Parameters                                                                    |
->> ++----------------------+-------------------------------------------------------+
->> +|Name                  |Description                                            |
->> ++----------------------+-------------------------------------------------------+
->> +|uint32 cpuid          |Identifier for the CPU                                 |
->> ++----------------------+-------------------------------------------------------+
->> +|uint32 flags          |Sleep mode flags:                                      |
->> +|                      |Bits[31:1] Reserved, must be zero.                     |
->> +|                      |Bit[0] IRQ mux:                                        |
->> +|                      |If set to 1 the wakeup mux source is the GIC, else if 0|
->> +|                      |then the GPC                                           |
->
->What is the GPC in this context ?
-
-General Power Controller.
-
->
->> ++----------------------+-------------------------------------------------------+
->> +|uint32 sleepmode      |target sleep mode                                      |
->
->What values can this assume ? Is there any predefined sleep value here ?
-
-From imx-sm, the define is hardware related. I could list in next version.
-
-#define CPU_SLEEP_MODE_RUN      0U
-#define CPU_SLEEP_MODE_WAIT     1U
-#define CPU_SLEEP_MODE_STOP     2U
-#define CPU_SLEEP_MODE_SUSPEND  3U
-
-RUN, WAIT, STOP, SUSPEND is GPC concept. it means when wfi, the GPC will
-do what action.
-
->
->> ++----------------------+-------------------------------------------------------+
->> +|Return values                                                                 |
->> ++----------------------+-------------------------------------------------------+
->> +|Name                  |Description                                            |
->> ++----------------------+-------------------------------------------------------+
->> +|int32 status          |SUCCESS: if the CPU sleep mode is set successfully.    |
->> +|                      |NOT_FOUND: if cpuId does not point to a valid CPU.     |
->> +|                      |INVALID_PARAMETERS: the sleepmode or flags is invalid. |
->> +|                      |DENIED: the calling agent is not allowed to configure  |
->> +|                      |the CPU                                                |
->> ++----------------------+-------------------------------------------------------+
->> +
->> +CPU_INFO_GET
->> +~~~~~~~~~~~~
->> +message_id: 0xC
->> +protocol_id: 0x82
->> +
->> ++----------------------+-------------------------------------------------------+
->> +|Parameters                                                                    |
->> ++----------------------+-------------------------------------------------------+
->> +|Name                  |Description                                            |
->> ++----------------------+-------------------------------------------------------+
->> +|uint32 cpuid          |Identifier for the CPU                                 |
->> ++----------------------+-------------------------------------------------------+
->> +|Return values                                                                 |
->> ++----------------------+-------------------------------------------------------+
->> +|Name                  |Description                                            |
->> ++----------------------+-------------------------------------------------------+
->> +|int32 status          |SUCCESS: if valid attributes are returned successfully.|
->> +|                      |NOT_FOUND: if the cpuid is not valid.                  |
->> ++----------------------+-------------------------------------------------------+
->> +|uint32 runmode        |Run mode for the CPU                                   |
->
->What are the possible runmode values ?
-
-#define CPU_RUN_MODE_START      0U // start cpu
-#define CPU_RUN_MODE_HOLD       1U // power up and hold cpu
-#define CPU_RUN_MODE_STOP       2U // reset and hold cpu
-#define CPU_RUN_MODE_SLEEP      3U // in cpuidle
-
-Appreciate for detailed reviewing on the documentation.
-
-Thanks,
-Peng
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN3PR01MB7893
+
+DQoNCj4gT24gMjUgRmViIDIwMjUsIGF0IDE6MjLigK9QTSwgVGhvbWFzIFppbW1lcm1hbm4gPHR6
+aW1tZXJtYW5uQHN1c2UuZGU+IHdyb3RlOg0KPiANCj4g77u/SGkNCj4gDQo+PiBBbSAyNC4wMi4y
+NSB1bSAxNDo0MCBzY2hyaWViIEFkaXR5YSBHYXJnOg0KPj4gRnJvbTogS2VyZW0gS2FyYWJheSA8
+a2VrcmJ5QGdtYWlsLmNvbT4NCj4+IA0KPj4gVGhlIFRvdWNoIEJhcnMgZm91bmQgb24geDg2IE1h
+Y3Mgc3VwcG9ydCB0d28gVVNCIGNvbmZpZ3VyYXRpb25zOiBvbmUNCj4+IHdoZXJlIHRoZSBkZXZp
+Y2UgcHJlc2VudHMgaXRzZWxmIGFzIGEgSElEIGtleWJvYXJkIGFuZCBjYW4gZGlzcGxheQ0KPj4g
+cHJlZGVmaW5lZCBzZXRzIG9mIGtleXMsIGFuZCBvbmUgd2hlcmUgdGhlIG9wZXJhdGluZyBzeXN0
+ZW0gaGFzIGZ1bGwNCj4+IGNvbnRyb2wgb3ZlciB3aGF0IGlzIGRpc3BsYXllZC4NCj4+IA0KPj4g
+VGhpcyBjb21taXQgYWRkcyBzdXBwb3J0IGZvciB0aGUgZGlzcGxheSBmdW5jdGlvbmFsaXR5IG9m
+IHRoZSBzZWNvbmQNCj4+IGNvbmZpZ3VyYXRpb24uIEZ1bmN0aW9uYWxpdHkgZm9yIHRoZSBmaXJz
+dCBjb25maWd1cmF0aW9uIGhhcyBiZWVuDQo+PiBtZXJnZWQgaW4gdGhlIEhJRCB0cmVlLg0KPj4g
+DQo+PiBOb3RlIHRoYXQgdGhpcyBkcml2ZXIgaGFzIG9ubHkgYmVlbiB0ZXN0ZWQgb24gVDIgTWFj
+cywgYW5kIG9ubHkgaW5jbHVkZXMNCj4+IHRoZSBVU0IgZGV2aWNlIElEIGZvciB0aGVzZSBkZXZp
+Y2VzLiBUZXN0aW5nIG9uIFQxIE1hY3Mgd291bGQgYmUNCj4+IGFwcHJlY2lhdGVkLg0KPj4gDQo+
+PiBDcmVkaXQgZ29lcyB0byBCZW4gKEJpbmd4aW5nKSBXYW5nIG9uIEdpdEh1YiBmb3IgcmV2ZXJz
+ZSBlbmdpbmVlcmluZw0KPj4gbW9zdCBvZiB0aGUgcHJvdG9jb2wuDQo+PiANCj4+IEFsc28sIGFz
+IHJlcXVlc3RlZCBieSBBbmR5LCBJIHdvdWxkIGxpa2UgdG8gY2xhcmlmeSB0aGUgdXNlIG9mIF9f
+cGFja2VkDQo+PiBzdHJ1Y3RzIGluIHRoaXMgZHJpdmVyOg0KPj4gDQo+PiAtIEFsbCB0aGUgcGFj
+a2VkIHN0cnVjdHMgYXJlIGFsaWduZWQgZXhjZXB0IGZvciBhcHBsZXRiZHJtX21zZ19pbmZvcm1h
+dGlvbi4NCj4+IC0gV2UgaGF2ZSB0byBwYWNrIGFwcGxldGJkcm1fbXNnX2luZm9ybWF0aW9uIHNp
+bmNlIGl0IGlzIHJlcXVpcmVtZW50IG9mDQo+PiAgIHRoZSBwcm90b2NvbC4NCj4+IC0gV2UgY29t
+cGFyZWQgYmluYXJpZXMgY29tcGlsZWQgYnkga2VlcGluZyB0aGUgcmVzdCBzdHJ1Y3RzIF9fcGFj
+a2VkIGFuZA0KPj4gICBub3QgX19wYWNrZWQgdXNpbmcgYmxvYXQtby1tZXRlciwgYW5kIF9fcGFj
+a2VkIHdhcyBub3QgYWZmZWN0aW5nIGNvZGUNCj4+ICAgZ2VuZXJhdGlvbi4NCj4+IC0gVG8gbWFp
+bnRhaW4gY29uc2lzdGVuY3ksIHJlc3Qgc3RydWN0cyBoYXZlIGJlZW4ga2VwdCBfX3BhY2tlZC4N
+Cj4+IA0KPj4gTGluazogaHR0cHM6Ly9naXRodWIuY29tL2ltYnVzaHVvL0RGUkRpc3BsYXlLbQ0K
+Pj4gU2lnbmVkLW9mZi1ieTogS2VyZW0gS2FyYWJheSA8a2VrcmJ5QGdtYWlsLmNvbT4NCj4+IENv
+LWRldmVsb3BlZC1ieTogQXRoYXJ2YSBUaXdhcmkgPGV2ZXBvbG9uaXVtQGdtYWlsLmNvbT4NCj4+
+IFNpZ25lZC1vZmYtYnk6IEF0aGFydmEgVGl3YXJpIDxldmVwb2xvbml1bUBnbWFpbC5jb20+DQo+
+PiBDby1kZXZlbG9wZWQtYnk6IEFkaXR5YSBHYXJnIDxnYXJnYWRpdHlhMDhAbGl2ZS5jb20+DQo+
+PiBTaWduZWQtb2ZmLWJ5OiBBZGl0eWEgR2FyZyA8Z2FyZ2FkaXR5YTA4QGxpdmUuY29tPg0KPj4g
+U2lnbmVkLW9mZi1ieTogQXVuLUFsaSBaYWlkaSA8YWRtaW5Aa29kZWl0Lm5ldD4NCj4+IC0tLQ0K
+Pj4gdjIgLT4NCj4+IC0gQWRkIHRoZSBkcml2ZXIgdG8gTUFJTlRBSU5FUlMuDQo+PiAtIEFsbG9j
+YXRlIG1lbW9yeSBmb3IgcmVxdWVzdCBhbmQgcmVzcG9uc2UgaW4gcGxhbmUncyBhdG9taWMtY2hl
+Y2sgaGVscGVyDQo+PiAtIFZvaWQgdGhlIHVzZSBvZiBkcm1fZmJfYmxpdCgpDQo+PiAtIEltcGxl
+bWVudCBhdG9taWNfZGlzYWJsZQ0KPj4gLSBNYWtlIFBSSU1FIHdvcmsNCj4+IC0gUmVtb3ZlIHRo
+ZSBkYXRlIGZpZWxkIGZyb20gc3RydWN0IGRybV9kcml2ZXINCj4+IC0gaW50ZXJzZWN0IGRhbWFn
+ZSB3aXRoIGRzdF9jbGlwDQo+PiAtIFJlZ2lzdGVyIERSTSBkZXZpY2UgaW4gYXBwbGV0YmRybV9w
+cm9iZQ0KPj4gLSBDbGVhciB0aGUgZGlzcGxheSBhcyB0aGUgZmluYWwgY2FsbCBpbiBwcm9iZQ0K
+Pj4gLSBTZWxlY3QgaGlkX211bHRpdG91Y2ggYXMgd2VsbCBpbiBrY29uZmlnDQo+PiANCj4+IHYz
+IC0+DQo+PiAtIENoYW5nZSBjb21taXQgbWVzc2FnZSB0byBjcmVkaXQgQmVuIChCaW5neGluZykg
+V2FuZw0KPj4gDQo+PiB2NCAtPg0KPj4gLSBVc2UgIkxpbms6IiBpbiBjb21taXQgbWVzc2FnZQ0K
+Pj4gLSBTcGVjaWZ5IHdoeSBfX3BhY2tlZCBoYXMgYmVlbiB1c2VkIGluIGNvbW1pdCBtZXNzYWdl
+DQo+PiAtIFVzZSAlcDRjYyBpbnN0ZWFkIG9mICVwNGNoIGZvciBlcnJvcnMNCj4+IC0gQWRkIG15
+c2VsZiB0byBNYWludGFpbmVycw0KPj4gLSBSZW1vdmUgI2RlZmluZSBwcl9mbXQoZm10KSBLQlVJ
+TERfTU9ETkFNRSAiOiAiIGZtdA0KPj4gLSBBZGQgbWlzc2luZyBoZWFkZXIgZmlsZXMNCj4+IC0g
+VXNlIHJldHVybiAwOyBpbnN0ZWFkIG9mIHJldHVybiByZXQ7IGluIHN0YXRpYyBpbnQgYXBwbGV0
+YmRybV9zZW5kX3JlcXVlc3QNCj4+IC0gQmV0dGVyIGVycm5vIHR5cGVzIHVzZWQgaW4gYXBwbGV0
+YmRybV9yZWFkX3Jlc3BvbnNlDQo+PiAtIFVzZSBCSVRTX1RPX0JZVEVTKCkgdG8gY29udmVydCBB
+UFBMRVRCRFJNX0JJVFNfUEVSX1BJWEVMIHRvIGJ5dGVzDQo+PiAtIFJlbW92ZSByZWR1bmRhbnQg
+ZWxzZSBpbiBwbGFuZV9oZWxwZXJfYXRvbWljX2NoZWNrDQo+PiAtIFJlbW92ZSB1bm5lY2Vzc2Fy
+eSB1c2Ugb2YgMHhmZiBpbiByZXF1ZXN0LT5tc2dfaWQgPSB0aW1lc3RhbXAgJiAweGZmOw0KPj4g
+LSBSZW1vdmUgZHVwbGljYXRlZCBzdHJ1Y3QgZGV2aWNlIGluIHN0cnVjdCBhcHBsZXRiZHJtX2Rl
+dmljZQ0KPj4gLSBjbGVhciBmcmFtZXNfc2l6ZSBhbmQgcmVxdWVzdF9zaXplIGFzIHdlbGwgaW4g
+cHJpbWFyeV9wbGFuZV9oZWxwZXJfYXRvbWljX3VwZGF0ZQ0KPj4gLSBBbGxvY2F0ZSB1c2luZyBr
+emFsbG9jIGluc3RlYWQgb2Yga21lbWR1cA0KPj4gLSBVc2UgZHJtX2VycigpIGluc3RlYWQgb2Yg
+ZGV2X2Vycl9wcm9iZSgpDQo+PiAtIEF2b2lkIGNsZWFyaW5nIGRybS0+bW9kZV9jb25maWcubWlu
+X3dpZHRoIGFuZCBoZWlnaHQgdG8gMA0KPj4gLSBVc2UgcHV0X2RldmljZSgpIHRvIHJlbGVhc2Ug
+dGhlIERNQSBkZXZpY2UgaW4gYXBwbGV0YmRybV9kaXNjb25uZWN0DQo+PiANCj4+ICBNQUlOVEFJ
+TkVSUyAgICAgICAgICAgICAgICAgICAgICAgfCAgIDggKw0KPj4gIGRyaXZlcnMvZ3B1L2RybS90
+aW55L0tjb25maWcgICAgICB8ICAxNCArDQo+PiAgZHJpdmVycy9ncHUvZHJtL3RpbnkvTWFrZWZp
+bGUgICAgIHwgICAxICsNCj4+ICBkcml2ZXJzL2dwdS9kcm0vdGlueS9hcHBsZXRiZHJtLmMgfCA4
+MzUgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+PiAgNCBmaWxlcyBjaGFuZ2VkLCA4
+NTggaW5zZXJ0aW9ucygrKQ0KPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
+dGlueS9hcHBsZXRiZHJtLmMNCj4+IA0KPj4gZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIvTUFJ
+TlRBSU5FUlMNCj4+IGluZGV4IGVmZWU0MGVhNS4uZjdjOTdlYjI0IDEwMDY0NA0KPj4gLS0tIGEv
+TUFJTlRBSU5FUlMNCj4+ICsrKyBiL01BSU5UQUlORVJTDQo+PiBAQCAtNzE0OCw2ICs3MTQ4LDE0
+IEBAIFM6ICAgIFN1cHBvcnRlZA0KPj4gIFQ6ICAgIGdpdCBodHRwczovL2dpdGxhYi5mcmVlZGVz
+a3RvcC5vcmcvZHJtL21pc2Mva2VybmVsLmdpdA0KPj4gIEY6ICAgIGRyaXZlcnMvZ3B1L2RybS9z
+dW40aS9zdW44aSoNCj4+ICArRFJNIERSSVZFUiBGT1IgQVBQTEUgVE9VQ0ggQkFSUw0KPj4gK006
+ICAgIEF1bi1BbGkgWmFpZGkgPGFkbWluQGtvZGVpdC5uZXQ+DQo+PiArTTogICAgQWRpdHlhIEdh
+cmcgPGdhcmdhZGl0eWEwOEBsaXZlLmNvbT4NCj4gDQo+IFRoYXQncyBiZXR0ZXIuIFNpbmNlIHlv
+dSBkaWQgYWxsIHRoZSB3b3JrIHNvIGZhciwgeW91IHNob3VsZCBiZSBsaXN0ZWQgYXMgbWFpbnRh
+aW5lciBhcyB3ZWxsLCB1bnRpbCBBbGkgaGFzIGRvbmUgYSBudW1iZXIgb2YgY29tbWl0cy4gSXQg
+ZG9lc24ndCBmZWVsIHJpZ2h0IHRvIGxpc3Qgc29tZW9uZSBhcyAgYSBtYWludGFpbmVyIHdpdGgg
+bm8gY2hhbmdlcyBpbiB0aGUgZHJpdmVyLg0KDQpDYW4gd2Uga2VlcCBib3RoPw0KPiANCj4+ICtM
+OiAgICBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnDQo+PiArUzogICAgTWFpbnRhaW5l
+ZA0KPj4gK1Q6ICAgIGdpdCBodHRwczovL2dpdGxhYi5mcmVlZGVza3RvcC5vcmcvZHJtL21pc2Mv
+a2VybmVsLmdpdA0KPj4gK0Y6ICAgIGRyaXZlcnMvZ3B1L2RybS90aW55L2FwcGxldGJkcm0uYw0K
+Pj4gKw0KPj4gIERSTSBEUklWRVIgRk9SIEFSTSBQTDExMSBDTENEDQo+PiAgTTogICAgTGludXMg
+V2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPg0KPj4gIFM6ICAgIE1haW50YWluZWQN
+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdGlueS9LY29uZmlnIGIvZHJpdmVycy9n
+cHUvZHJtL3RpbnkvS2NvbmZpZw0KPj4gaW5kZXggOTRjYmRiMTMzLi4yNTQ3MTc5MWMgMTAwNjQ0
+DQo+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vdGlueS9LY29uZmlnDQo+PiArKysgYi9kcml2ZXJz
+L2dwdS9kcm0vdGlueS9LY29uZmlnDQo+PiBAQCAtMSw1ICsxLDE5IEBADQo+PiAgIyBTUERYLUxp
+Y2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMC1vbmx5DQo+PiAgK2NvbmZpZyBEUk1fQVBQTEVUQkRS
+TQ0KPj4gKyAgICB0cmlzdGF0ZSAiRFJNIHN1cHBvcnQgZm9yIEFwcGxlIFRvdWNoIEJhcnMiDQo+
+PiArICAgIGRlcGVuZHMgb24gRFJNICYmIFVTQiAmJiBNTVUNCj4+ICsgICAgc2VsZWN0IERSTV9H
+RU1fU0hNRU1fSEVMUEVSDQo+PiArICAgIHNlbGVjdCBEUk1fS01TX0hFTFBFUg0KPj4gKyAgICBz
+ZWxlY3QgSElEX0FQUExFVEJfQkwNCj4+ICsgICAgc2VsZWN0IEhJRF9NVUxUSVRPVUNIDQo+PiAr
+ICAgIGhlbHANCj4+ICsgICAgICBTYXkgWSBoZXJlIGlmIHlvdSB3YW50IHN1cHBvcnQgZm9yIHRo
+ZSBkaXNwbGF5IG9mIFRvdWNoIEJhcnMgb24geDg2DQo+PiArICAgICAgTWFjQm9vayBQcm9zLg0K
+Pj4gKw0KPj4gKyAgICAgIFRvIGNvbXBpbGUgdGhpcyBkcml2ZXIgYXMgYSBtb2R1bGUsIGNob29z
+ZSBNIGhlcmU6IHRoZQ0KPj4gKyAgICAgIG1vZHVsZSB3aWxsIGJlIGNhbGxlZCBhcHBsZXRiZHJt
+Lg0KPj4gKw0KPj4gIGNvbmZpZyBEUk1fQVJDUEdVDQo+PiAgICAgIHRyaXN0YXRlICJBUkMgUEdV
+Ig0KPj4gICAgICBkZXBlbmRzIG9uIERSTSAmJiBPRg0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS90aW55L01ha2VmaWxlIGIvZHJpdmVycy9ncHUvZHJtL3RpbnkvTWFrZWZpbGUNCj4+
+IGluZGV4IDYwODE2ZDJlYi4uMGEzYTc4MzdhIDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9ncHUv
+ZHJtL3RpbnkvTWFrZWZpbGUNCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS90aW55L01ha2VmaWxl
+DQo+PiBAQCAtMSw1ICsxLDYgQEANCj4+ICAjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwt
+Mi4wLW9ubHkNCj4+ICArb2JqLSQoQ09ORklHX0RSTV9BUFBMRVRCRFJNKSAgICAgICAgKz0gYXBw
+bGV0YmRybS5vDQo+PiAgb2JqLSQoQ09ORklHX0RSTV9BUkNQR1UpICAgICAgICArPSBhcmNwZ3Uu
+bw0KPj4gIG9iai0kKENPTkZJR19EUk1fQk9DSFMpICAgICAgICAgICAgKz0gYm9jaHMubw0KPj4g
+IG9iai0kKENPTkZJR19EUk1fQ0lSUlVTX1FFTVUpICAgICAgICArPSBjaXJydXMtcWVtdS5vDQo+
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3RpbnkvYXBwbGV0YmRybS5jIGIvZHJpdmVy
+cy9ncHUvZHJtL3RpbnkvYXBwbGV0YmRybS5jDQo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPj4g
+aW5kZXggMDAwMDAwMDAwLi41OWEyYjIwZDQNCj4+IC0tLSAvZGV2L251bGwNCj4+ICsrKyBiL2Ry
+aXZlcnMvZ3B1L2RybS90aW55L2FwcGxldGJkcm0uYw0KPj4gQEAgLTAsMCArMSw4MzUgQEANCj4+
+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPj4gKy8qDQo+PiArICogQXBw
+bGUgVG91Y2ggQmFyIERSTSBEcml2ZXINCj4+ICsgKg0KPj4gKyAqIENvcHlyaWdodCAoYykgMjAy
+MyBLZXJlbSBLYXJhYmF5IDxrZWtyYnlAZ21haWwuY29tPg0KPj4gKyAqLw0KPj4gKw0KPj4gKyNp
+bmNsdWRlIDxsaW51eC9hbGlnbi5oPg0KPj4gKyNpbmNsdWRlIDxsaW51eC9hcnJheV9zaXplLmg+
+DQo+PiArI2luY2x1ZGUgPGxpbnV4L2JpdG9wcy5oPg0KPj4gKyNpbmNsdWRlIDxsaW51eC9idWcu
+aD4NCj4+ICsjaW5jbHVkZSA8bGludXgvY29udGFpbmVyX29mLmg+DQo+PiArI2luY2x1ZGUgPGxp
+bnV4L2Rldl9wcmludGsuaD4NCj4+ICsjaW5jbHVkZSA8bGludXgvZXJyLmg+DQo+PiArI2luY2x1
+ZGUgPGxpbnV4L21vZHVsZS5oPg0KPj4gKyNpbmNsdWRlIDxsaW51eC9vdmVyZmxvdy5oPg0KPj4g
+KyNpbmNsdWRlIDxsaW51eC9zbGFiLmg+DQo+PiArI2luY2x1ZGUgPGxpbnV4L3R5cGVzLmg+DQo+
+PiArI2luY2x1ZGUgPGxpbnV4L3VuYWxpZ25lZC5oPg0KPj4gKyNpbmNsdWRlIDxsaW51eC91c2Iu
+aD4NCj4+ICsNCj4+ICsjaW5jbHVkZSA8ZHJtL2RybV9hdG9taWMuaD4NCj4+ICsjaW5jbHVkZSA8
+ZHJtL2RybV9hdG9taWNfaGVscGVyLmg+DQo+PiArI2luY2x1ZGUgPGRybS9kcm1fY3J0Yy5oPg0K
+Pj4gKyNpbmNsdWRlIDxkcm0vZHJtX2RhbWFnZV9oZWxwZXIuaD4NCj4+ICsjaW5jbHVkZSA8ZHJt
+L2RybV9kcnYuaD4NCj4+ICsjaW5jbHVkZSA8ZHJtL2RybV9lbmNvZGVyLmg+DQo+PiArI2luY2x1
+ZGUgPGRybS9kcm1fZm9ybWF0X2hlbHBlci5oPg0KPj4gKyNpbmNsdWRlIDxkcm0vZHJtX2ZvdXJj
+Yy5oPg0KPj4gKyNpbmNsdWRlIDxkcm0vZHJtX2ZyYW1lYnVmZmVyLmg+DQo+PiArI2luY2x1ZGUg
+PGRybS9kcm1fZ2VtX2F0b21pY19oZWxwZXIuaD4NCj4+ICsjaW5jbHVkZSA8ZHJtL2RybV9nZW1f
+ZnJhbWVidWZmZXJfaGVscGVyLmg+DQo+PiArI2luY2x1ZGUgPGRybS9kcm1fZ2VtX3NobWVtX2hl
+bHBlci5oPg0KPj4gKyNpbmNsdWRlIDxkcm0vZHJtX3BsYW5lLmg+DQo+PiArI2luY2x1ZGUgPGRy
+bS9kcm1fcHJvYmVfaGVscGVyLmg+DQo+PiArDQo+PiArI2RlZmluZSBfX0FQUExFVEJEUk1fTVNH
+X1NUUjQoc3RyNCkgICAgKChfX2xlMzIgX19mb3JjZSkoKHN0cjRbMF0gPDwgMjQpIHwgKHN0cjRb
+MV0gPDwgMTYpIHwgKHN0cjRbMl0gPDwgOCkgfCBzdHI0WzNdKSkNCj4+ICsjZGVmaW5lIF9fQVBQ
+TEVUQkRSTV9NU0dfVE9LNCh0b2s0KSAgICBfX0FQUExFVEJEUk1fTVNHX1NUUjQoI3RvazQpDQo+
+PiArDQo+PiArI2RlZmluZSBBUFBMRVRCRFJNX1BJWEVMX0ZPUk1BVCAgICAgICAgX19BUFBMRVRC
+RFJNX01TR19UT0s0KFJHQkEpIC8qIFRoZSBhY3R1YWwgZm9ybWF0IGlzIEJHUjg4OCAqLw0KPj4g
+KyNkZWZpbmUgQVBQTEVUQkRSTV9CSVRTX1BFUl9QSVhFTCAgICAyNA0KPj4gKw0KPj4gKyNkZWZp
+bmUgQVBQTEVUQkRSTV9NU0dfQ0xFQVJfRElTUExBWSAgICBfX0FQUExFVEJEUk1fTVNHX1RPSzQo
+Q0xSRCkNCj4+ICsjZGVmaW5lIEFQUExFVEJEUk1fTVNHX0dFVF9JTkZPUk1BVElPTiAgICBfX0FQ
+UExFVEJEUk1fTVNHX1RPSzQoR0lORikNCj4+ICsjZGVmaW5lIEFQUExFVEJEUk1fTVNHX1VQREFU
+RV9DT01QTEVURSAgICBfX0FQUExFVEJEUk1fTVNHX1RPSzQoVURDTCkNCj4+ICsjZGVmaW5lIEFQ
+UExFVEJEUk1fTVNHX1NJR05BTF9SRUFESU5FU1MgICAgX19BUFBMRVRCRFJNX01TR19UT0s0KFJF
+RFkpDQo+PiArDQo+PiArI2RlZmluZSBBUFBMRVRCRFJNX0JVTEtfTVNHX1RJTUVPVVQgICAgMTAw
+MA0KPj4gKw0KPj4gKyNkZWZpbmUgZHJtX3RvX2FkZXYoX2RybSkgICAgICAgIGNvbnRhaW5lcl9v
+ZihfZHJtLCBzdHJ1Y3QgYXBwbGV0YmRybV9kZXZpY2UsIGRybSkNCj4+ICsjZGVmaW5lIGFkZXZf
+dG9fdWRldihhZGV2KSAgICAgICAgaW50ZXJmYWNlX3RvX3VzYmRldih0b191c2JfaW50ZXJmYWNl
+KGFkZXYtPmRldikpDQo+PiArDQo+PiArc3RydWN0IGFwcGxldGJkcm1fbXNnX3JlcXVlc3RfaGVh
+ZGVyIHsNCj4+ICsgICAgX19sZTE2IHVua18wMDsNCj4+ICsgICAgX19sZTE2IHVua18wMjsNCj4+
+ICsgICAgX19sZTMyIHVua18wNDsNCj4+ICsgICAgX19sZTMyIHVua18wODsNCj4+ICsgICAgX19s
+ZTMyIHNpemU7DQo+PiArfSBfX3BhY2tlZDsNCj4+ICsNCj4+ICtzdHJ1Y3QgYXBwbGV0YmRybV9t
+c2dfcmVzcG9uc2VfaGVhZGVyIHsNCj4+ICsgICAgdTggdW5rXzAwWzE2XTsNCj4+ICsgICAgX19s
+ZTMyIG1zZzsNCj4+ICt9IF9fcGFja2VkOw0KPj4gKw0KPj4gK3N0cnVjdCBhcHBsZXRiZHJtX21z
+Z19zaW1wbGVfcmVxdWVzdCB7DQo+PiArICAgIHN0cnVjdCBhcHBsZXRiZHJtX21zZ19yZXF1ZXN0
+X2hlYWRlciBoZWFkZXI7DQo+PiArICAgIF9fbGUzMiBtc2c7DQo+PiArICAgIHU4IHVua18xNFs4
+XTsNCj4+ICsgICAgX19sZTMyIHNpemU7DQo+PiArfSBfX3BhY2tlZDsNCj4+ICsNCj4+ICtzdHJ1
+Y3QgYXBwbGV0YmRybV9tc2dfaW5mb3JtYXRpb24gew0KPj4gKyAgICBzdHJ1Y3QgYXBwbGV0YmRy
+bV9tc2dfcmVzcG9uc2VfaGVhZGVyIGhlYWRlcjsNCj4+ICsgICAgdTggdW5rXzE0WzEyXTsNCj4+
+ICsgICAgX19sZTMyIHdpZHRoOw0KPj4gKyAgICBfX2xlMzIgaGVpZ2h0Ow0KPj4gKyAgICB1OCBi
+aXRzX3Blcl9waXhlbDsNCj4+ICsgICAgX19sZTMyIGJ5dGVzX3Blcl9yb3c7DQo+PiArICAgIF9f
+bGUzMiBvcmllbnRhdGlvbjsNCj4+ICsgICAgX19sZTMyIGJpdG1hcF9pbmZvOw0KPj4gKyAgICBf
+X2xlMzIgcGl4ZWxfZm9ybWF0Ow0KPj4gKyAgICBfX2xlMzIgd2lkdGhfaW5jaGVzOyAgICAvKiBm
+bG9hdGluZyBwb2ludCAqLw0KPj4gKyAgICBfX2xlMzIgaGVpZ2h0X2luY2hlczsgICAgLyogZmxv
+YXRpbmcgcG9pbnQgKi8NCj4+ICt9IF9fcGFja2VkOw0KPj4gKw0KPj4gK3N0cnVjdCBhcHBsZXRi
+ZHJtX2ZyYW1lIHsNCj4+ICsgICAgX19sZTE2IGJlZ2luX3g7DQo+PiArICAgIF9fbGUxNiBiZWdp
+bl95Ow0KPj4gKyAgICBfX2xlMTYgd2lkdGg7DQo+PiArICAgIF9fbGUxNiBoZWlnaHQ7DQo+PiAr
+ICAgIF9fbGUzMiBidWZfc2l6ZTsNCj4+ICsgICAgdTggYnVmW107DQo+PiArfSBfX3BhY2tlZDsN
+Cj4+ICsNCj4+ICtzdHJ1Y3QgYXBwbGV0YmRybV9mYl9yZXF1ZXN0X2Zvb3RlciB7DQo+PiArICAg
+IHU4IHVua18wMFsxMl07DQo+PiArICAgIF9fbGUzMiB1bmtfMGM7DQo+PiArICAgIHU4IHVua18x
+MFsxMl07DQo+PiArICAgIF9fbGUzMiB1bmtfMWM7DQo+PiArICAgIF9fbGU2NCB0aW1lc3RhbXA7
+DQo+PiArICAgIHU4IHVua18yOFsxMl07DQo+PiArICAgIF9fbGUzMiB1bmtfMzQ7DQo+PiArICAg
+IHU4IHVua18zOFsyMF07DQo+PiArICAgIF9fbGUzMiB1bmtfNGM7DQo+PiArfSBfX3BhY2tlZDsN
+Cj4+ICsNCj4+ICtzdHJ1Y3QgYXBwbGV0YmRybV9mYl9yZXF1ZXN0IHsNCj4+ICsgICAgc3RydWN0
+IGFwcGxldGJkcm1fbXNnX3JlcXVlc3RfaGVhZGVyIGhlYWRlcjsNCj4+ICsgICAgX19sZTE2IHVu
+a18xMDsNCj4+ICsgICAgdTggbXNnX2lkOw0KPj4gKyAgICB1OCB1bmtfMTNbMjldOw0KPj4gKyAg
+ICAvKg0KPj4gKyAgICAgKiBDb250ZW50cyBvZiBgZGF0YWA6DQo+PiArICAgICAqIC0gc3RydWN0
+IGFwcGxldGJkcm1fZnJhbWUgZnJhbWVzW107DQo+PiArICAgICAqIC0gc3RydWN0IGFwcGxldGJk
+cm1fZmJfcmVxdWVzdF9mb290ZXIgZm9vdGVyOw0KPj4gKyAgICAgKiAtIHBhZGRpbmcgdG8gbWFr
+ZSB0aGUgdG90YWwgc2l6ZSBhIG11bHRpcGxlIG9mIDE2DQo+PiArICAgICAqLw0KPj4gKyAgICB1
+OCBkYXRhW107DQo+PiArfSBfX3BhY2tlZDsNCj4+ICsNCj4+ICtzdHJ1Y3QgYXBwbGV0YmRybV9m
+Yl9yZXF1ZXN0X3Jlc3BvbnNlIHsNCj4+ICsgICAgc3RydWN0IGFwcGxldGJkcm1fbXNnX3Jlc3Bv
+bnNlX2hlYWRlciBoZWFkZXI7DQo+PiArICAgIHU4IHVua18xNFsxMl07DQo+PiArICAgIF9fbGU2
+NCB0aW1lc3RhbXA7DQo+PiArfSBfX3BhY2tlZDsNCj4+ICsNCj4+ICtzdHJ1Y3QgYXBwbGV0YmRy
+bV9kZXZpY2Ugew0KPj4gKyAgICBzdHJ1Y3QgZGV2aWNlICpkZXY7DQo+IA0KPiBUaGlzIGZpZWxk
+IHNob3VsZCBnbyBhd2F5LCBwbGVhc2UuIFRoZXJlJ3MgZHJtLmRldiwgd2hpY2ggY29udGFpbnMg
+dGhlIHNhbWUgYWRkcmVzcy4NCj4gDQo+IFNvIHNlZW1zIHRvIGhhdmUgcmVtb3ZlIHRoZSBkbWFk
+ZXYgZmllbGQgaW5zdGVhZCwgd2hpY2ggeW91J2xsIG5lZWQgZm9yIGRtYS1idWYgc2hhcmluZy4g
+V2FzIHRoYXQgYSBtaXN1bmRlcnN0YW5kaW5nIGZyb20gdGhlIGxhc3QgcmV2aWV3Pw0KDQpZZWFo
+IHRoYXQgd2FzIGEgbWlzdW5kZXJzdGFuZGluZy4gSSB0aG91Z2ggeW91IG1lYW50IHRvIHJlbW92
+ZSBkbWFkZXYuDQo+IA0KPiBUaGUgcmVzdCBvZiB0aGUgZHJpdmVyIGxvb2tzIGdvb2QuDQoNCk1h
+eWJlIHlvdSBtaXNzZWQgdGhlIGxlZnQgb3ZlciBkZXZfZXJyX3Byb2JlIGxlZnQgaW4gdGhpcyBw
+YXRjaD8gSSdsbCBmaXggdGhlbS4NCj4gDQo+IEJlc3QgcmVnYXJkcw0KPiBUaG9tYXMNCj4gDQo+
+PiArDQo+PiArICAgIHVuc2lnbmVkIGludCBpbl9lcDsNCj4+ICsgICAgdW5zaWduZWQgaW50IG91
+dF9lcDsNCj4+ICsNCj4+ICsgICAgdW5zaWduZWQgaW50IHdpZHRoOw0KPj4gKyAgICB1bnNpZ25l
+ZCBpbnQgaGVpZ2h0Ow0KPj4gKw0KPj4gKyAgICBzdHJ1Y3QgZHJtX2RldmljZSBkcm07DQo+PiAr
+ICAgIHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIG1vZGU7DQo+PiArICAgIHN0cnVjdCBkcm1fY29u
+bmVjdG9yIGNvbm5lY3RvcjsNCj4+ICsgICAgc3RydWN0IGRybV9wbGFuZSBwcmltYXJ5X3BsYW5l
+Ow0KPj4gKyAgICBzdHJ1Y3QgZHJtX2NydGMgY3J0YzsNCj4+ICsgICAgc3RydWN0IGRybV9lbmNv
+ZGVyIGVuY29kZXI7DQo+PiArfTsNCj4+ICsNCj4+ICtzdHJ1Y3QgYXBwbGV0YmRybV9wbGFuZV9z
+dGF0ZSB7DQo+PiArICAgIHN0cnVjdCBkcm1fc2hhZG93X3BsYW5lX3N0YXRlIGJhc2U7DQo+PiAr
+ICAgIHN0cnVjdCBhcHBsZXRiZHJtX2ZiX3JlcXVlc3QgKnJlcXVlc3Q7DQo+PiArICAgIHN0cnVj
+dCBhcHBsZXRiZHJtX2ZiX3JlcXVlc3RfcmVzcG9uc2UgKnJlc3BvbnNlOw0KPj4gKyAgICBzaXpl
+X3QgcmVxdWVzdF9zaXplOw0KPj4gKyAgICBzaXplX3QgZnJhbWVzX3NpemU7DQo+PiArfTsNCj4+
+ICsNCj4+ICtzdGF0aWMgaW5saW5lIHN0cnVjdCBhcHBsZXRiZHJtX3BsYW5lX3N0YXRlICp0b19h
+cHBsZXRiZHJtX3BsYW5lX3N0YXRlKHN0cnVjdCBkcm1fcGxhbmVfc3RhdGUgKnN0YXRlKQ0KPj4g
+K3sNCj4+ICsgICAgcmV0dXJuIGNvbnRhaW5lcl9vZihzdGF0ZSwgc3RydWN0IGFwcGxldGJkcm1f
+cGxhbmVfc3RhdGUsIGJhc2UuYmFzZSk7DQo+PiArfQ0KPj4gKw0KPj4gK3N0YXRpYyBpbnQgYXBw
+bGV0YmRybV9zZW5kX3JlcXVlc3Qoc3RydWN0IGFwcGxldGJkcm1fZGV2aWNlICphZGV2LA0KPj4g
+KyAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgYXBwbGV0YmRybV9tc2dfcmVxdWVzdF9oZWFkZXIg
+KnJlcXVlc3QsIHNpemVfdCBzaXplKQ0KPj4gK3sNCj4+ICsgICAgc3RydWN0IHVzYl9kZXZpY2Ug
+KnVkZXYgPSBhZGV2X3RvX3VkZXYoYWRldik7DQo+PiArICAgIHN0cnVjdCBkcm1fZGV2aWNlICpk
+cm0gPSAmYWRldi0+ZHJtOw0KPj4gKyAgICBpbnQgcmV0LCBhY3R1YWxfc2l6ZTsNCj4+ICsNCj4+
+ICsgICAgcmV0ID0gdXNiX2J1bGtfbXNnKHVkZXYsIHVzYl9zbmRidWxrcGlwZSh1ZGV2LCBhZGV2
+LT5vdXRfZXApLA0KPj4gKyAgICAgICAgICAgICAgIHJlcXVlc3QsIHNpemUsICZhY3R1YWxfc2l6
+ZSwgQVBQTEVUQkRSTV9CVUxLX01TR19USU1FT1VUKTsNCj4+ICsgICAgaWYgKHJldCkgew0KPj4g
+KyAgICAgICAgZHJtX2Vycihkcm0sICJGYWlsZWQgdG8gc2VuZCBtZXNzYWdlICglZClcbiIsIHJl
+dCk7DQo+PiArICAgICAgICByZXR1cm4gcmV0Ow0KPj4gKyAgICB9DQo+PiArDQo+PiArICAgIGlm
+IChhY3R1YWxfc2l6ZSAhPSBzaXplKSB7DQo+PiArICAgICAgICBkcm1fZXJyKGRybSwgIkFjdHVh
+bCBzaXplICglZCkgZG9lc24ndCBtYXRjaCBleHBlY3RlZCBzaXplICglbHUpXG4iLA0KPj4gKyAg
+ICAgICAgICAgIGFjdHVhbF9zaXplLCBzaXplKTsNCj4+ICsgICAgICAgIHJldHVybiAtRUlPOw0K
+Pj4gKyAgICB9DQo+PiArDQo+PiArICAgIHJldHVybiAwOw0KPj4gK30NCj4+ICsNCj4+ICtzdGF0
+aWMgaW50IGFwcGxldGJkcm1fcmVhZF9yZXNwb25zZShzdHJ1Y3QgYXBwbGV0YmRybV9kZXZpY2Ug
+KmFkZXYsDQo+PiArICAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgYXBwbGV0YmRybV9tc2dfcmVz
+cG9uc2VfaGVhZGVyICpyZXNwb25zZSwNCj4+ICsgICAgICAgICAgICAgICAgICAgIHNpemVfdCBz
+aXplLCBfX2xlMzIgZXhwZWN0ZWRfcmVzcG9uc2UpDQo+PiArew0KPj4gKyAgICBzdHJ1Y3QgdXNi
+X2RldmljZSAqdWRldiA9IGFkZXZfdG9fdWRldihhZGV2KTsNCj4+ICsgICAgc3RydWN0IGRybV9k
+ZXZpY2UgKmRybSA9ICZhZGV2LT5kcm07DQo+PiArICAgIGludCByZXQsIGFjdHVhbF9zaXplOw0K
+Pj4gKyAgICBib29sIHJlYWRpbmVzc19zaWduYWxfcmVjZWl2ZWQgPSBmYWxzZTsNCj4+ICsNCj4+
+ICtyZXRyeToNCj4+ICsgICAgcmV0ID0gdXNiX2J1bGtfbXNnKHVkZXYsIHVzYl9yY3ZidWxrcGlw
+ZSh1ZGV2LCBhZGV2LT5pbl9lcCksDQo+PiArICAgICAgICAgICAgICAgcmVzcG9uc2UsIHNpemUs
+ICZhY3R1YWxfc2l6ZSwgQVBQTEVUQkRSTV9CVUxLX01TR19USU1FT1VUKTsNCj4+ICsgICAgaWYg
+KHJldCkgew0KPj4gKyAgICAgICAgZHJtX2Vycihkcm0sICJGYWlsZWQgdG8gcmVhZCByZXNwb25z
+ZSAoJWQpXG4iLCByZXQpOw0KPj4gKyAgICAgICAgcmV0dXJuIHJldDsNCj4+ICsgICAgfQ0KPj4g
+Kw0KPj4gKyAgICAvKg0KPj4gKyAgICAgKiBUaGUgZGV2aWNlIHJlc3BvbmRzIHRvIHRoZSBmaXJz
+dCByZXF1ZXN0IHNlbnQgaW4gYSBwYXJ0aWN1bGFyDQo+PiArICAgICAqIHRpbWVmcmFtZSBhZnRl
+ciB0aGUgVVNCIGRldmljZSBjb25maWd1cmF0aW9uIGlzIHNldCB3aXRoIGEgcmVhZGluZXNzDQo+
+PiArICAgICAqIHNpZ25hbCwgaW4gd2hpY2ggY2FzZSB0aGUgcmVzcG9uc2Ugc2hvdWxkIGJlIHJl
+YWQgYWdhaW4NCj4+ICsgICAgICovDQo+PiArICAgIGlmIChyZXNwb25zZS0+bXNnID09IEFQUExF
+VEJEUk1fTVNHX1NJR05BTF9SRUFESU5FU1MpIHsNCj4+ICsgICAgICAgIGlmICghcmVhZGluZXNz
+X3NpZ25hbF9yZWNlaXZlZCkgew0KPj4gKyAgICAgICAgICAgIHJlYWRpbmVzc19zaWduYWxfcmVj
+ZWl2ZWQgPSB0cnVlOw0KPj4gKyAgICAgICAgICAgIGdvdG8gcmV0cnk7DQo+PiArICAgICAgICB9
+DQo+PiArDQo+PiArICAgICAgICBkcm1fZXJyKGRybSwgIkVuY291bnRlcmVkIHVuZXhwZWN0ZWQg
+cmVhZGluZXNzIHNpZ25hbFxuIik7DQo+PiArICAgICAgICByZXR1cm4gLUVJTlRSOw0KPj4gKyAg
+ICB9DQo+PiArDQo+PiArICAgIGlmIChhY3R1YWxfc2l6ZSAhPSBzaXplKSB7DQo+PiArICAgICAg
+ICBkcm1fZXJyKGRybSwgIkFjdHVhbCBzaXplICglZCkgZG9lc24ndCBtYXRjaCBleHBlY3RlZCBz
+aXplICglbHUpXG4iLA0KPj4gKyAgICAgICAgICAgIGFjdHVhbF9zaXplLCBzaXplKTsNCj4+ICsg
+ICAgICAgIHJldHVybiAtRUJBRE1TRzsNCj4+ICsgICAgfQ0KPj4gKw0KPj4gKyAgICBpZiAocmVz
+cG9uc2UtPm1zZyAhPSBleHBlY3RlZF9yZXNwb25zZSkgew0KPj4gKyAgICAgICAgZHJtX2Vycihk
+cm0sICJVbmV4cGVjdGVkIHJlc3BvbnNlIGZyb20gZGV2aWNlIChleHBlY3RlZCAlcDRjYyBmb3Vu
+ZCAlcDRjYylcbiIsDQo+PiArICAgICAgICAgICAgJmV4cGVjdGVkX3Jlc3BvbnNlLCAmcmVzcG9u
+c2UtPm1zZyk7DQo+PiArICAgICAgICByZXR1cm4gLUVJTzsNCj4+ICsgICAgfQ0KPj4gKw0KPj4g
+KyAgICByZXR1cm4gMDsNCj4+ICt9DQo+PiArDQo+PiArc3RhdGljIGludCBhcHBsZXRiZHJtX3Nl
+bmRfbXNnKHN0cnVjdCBhcHBsZXRiZHJtX2RldmljZSAqYWRldiwgX19sZTMyIG1zZykNCj4+ICt7
+DQo+PiArICAgIHN0cnVjdCBhcHBsZXRiZHJtX21zZ19zaW1wbGVfcmVxdWVzdCAqcmVxdWVzdDsN
+Cj4+ICsgICAgaW50IHJldDsNCj4+ICsNCj4+ICsgICAgcmVxdWVzdCA9IGt6YWxsb2Moc2l6ZW9m
+KCpyZXF1ZXN0KSwgR0ZQX0tFUk5FTCk7DQo+PiArICAgIGlmICghcmVxdWVzdCkNCj4+ICsgICAg
+ICAgIHJldHVybiAtRU5PTUVNOw0KPj4gKw0KPj4gKyAgICByZXF1ZXN0LT5oZWFkZXIudW5rXzAw
+ID0gY3B1X3RvX2xlMTYoMik7DQo+PiArICAgIHJlcXVlc3QtPmhlYWRlci51bmtfMDIgPSBjcHVf
+dG9fbGUxNigweDE1MTIpOw0KPj4gKyAgICByZXF1ZXN0LT5oZWFkZXIuc2l6ZSA9IGNwdV90b19s
+ZTMyKHNpemVvZigqcmVxdWVzdCkgLSBzaXplb2YocmVxdWVzdC0+aGVhZGVyKSk7DQo+PiArICAg
+IHJlcXVlc3QtPm1zZyA9IG1zZzsNCj4+ICsgICAgcmVxdWVzdC0+c2l6ZSA9IHJlcXVlc3QtPmhl
+YWRlci5zaXplOw0KPj4gKw0KPj4gKyAgICByZXQgPSBhcHBsZXRiZHJtX3NlbmRfcmVxdWVzdChh
+ZGV2LCAmcmVxdWVzdC0+aGVhZGVyLCBzaXplb2YoKnJlcXVlc3QpKTsNCj4+ICsNCj4+ICsgICAg
+a2ZyZWUocmVxdWVzdCk7DQo+PiArDQo+PiArICAgIHJldHVybiByZXQ7DQo+PiArfQ0KPj4gKw0K
+Pj4gK3N0YXRpYyBpbnQgYXBwbGV0YmRybV9jbGVhcl9kaXNwbGF5KHN0cnVjdCBhcHBsZXRiZHJt
+X2RldmljZSAqYWRldikNCj4+ICt7DQo+PiArICAgIHJldHVybiBhcHBsZXRiZHJtX3NlbmRfbXNn
+KGFkZXYsIEFQUExFVEJEUk1fTVNHX0NMRUFSX0RJU1BMQVkpOw0KPj4gK30NCj4+ICsNCj4+ICtz
+dGF0aWMgaW50IGFwcGxldGJkcm1fc2lnbmFsX3JlYWRpbmVzcyhzdHJ1Y3QgYXBwbGV0YmRybV9k
+ZXZpY2UgKmFkZXYpDQo+PiArew0KPj4gKyAgICByZXR1cm4gYXBwbGV0YmRybV9zZW5kX21zZyhh
+ZGV2LCBBUFBMRVRCRFJNX01TR19TSUdOQUxfUkVBRElORVNTKTsNCj4+ICt9DQo+PiArDQo+PiAr
+c3RhdGljIGludCBhcHBsZXRiZHJtX2dldF9pbmZvcm1hdGlvbihzdHJ1Y3QgYXBwbGV0YmRybV9k
+ZXZpY2UgKmFkZXYpDQo+PiArew0KPj4gKyAgICBzdHJ1Y3QgYXBwbGV0YmRybV9tc2dfaW5mb3Jt
+YXRpb24gKmluZm87DQo+PiArICAgIHN0cnVjdCBkcm1fZGV2aWNlICpkcm0gPSAmYWRldi0+ZHJt
+Ow0KPj4gKyAgICB1OCBiaXRzX3Blcl9waXhlbDsNCj4+ICsgICAgX19sZTMyIHBpeGVsX2Zvcm1h
+dDsNCj4+ICsgICAgaW50IHJldDsNCj4+ICsNCj4+ICsgICAgaW5mbyA9IGt6YWxsb2Moc2l6ZW9m
+KCppbmZvKSwgR0ZQX0tFUk5FTCk7DQo+PiArICAgIGlmICghaW5mbykNCj4+ICsgICAgICAgIHJl
+dHVybiAtRU5PTUVNOw0KPj4gKw0KPj4gKyAgICByZXQgPSBhcHBsZXRiZHJtX3NlbmRfbXNnKGFk
+ZXYsIEFQUExFVEJEUk1fTVNHX0dFVF9JTkZPUk1BVElPTik7DQo+PiArICAgIGlmIChyZXQpDQo+
+PiArICAgICAgICByZXR1cm4gcmV0Ow0KPj4gKw0KPj4gKyAgICByZXQgPSBhcHBsZXRiZHJtX3Jl
+YWRfcmVzcG9uc2UoYWRldiwgJmluZm8tPmhlYWRlciwgc2l6ZW9mKCppbmZvKSwNCj4+ICsgICAg
+ICAgICAgICAgICAgICAgICAgIEFQUExFVEJEUk1fTVNHX0dFVF9JTkZPUk1BVElPTik7DQo+PiAr
+ICAgIGlmIChyZXQpDQo+PiArICAgICAgICBnb3RvIGZyZWVfaW5mbzsNCj4+ICsNCj4+ICsgICAg
+Yml0c19wZXJfcGl4ZWwgPSBpbmZvLT5iaXRzX3Blcl9waXhlbDsNCj4+ICsgICAgcGl4ZWxfZm9y
+bWF0ID0gZ2V0X3VuYWxpZ25lZCgmaW5mby0+cGl4ZWxfZm9ybWF0KTsNCj4+ICsNCj4+ICsgICAg
+YWRldi0+d2lkdGggPSBnZXRfdW5hbGlnbmVkX2xlMzIoJmluZm8tPndpZHRoKTsNCj4+ICsgICAg
+YWRldi0+aGVpZ2h0ID0gZ2V0X3VuYWxpZ25lZF9sZTMyKCZpbmZvLT5oZWlnaHQpOw0KPj4gKw0K
+Pj4gKyAgICBpZiAoYml0c19wZXJfcGl4ZWwgIT0gQVBQTEVUQkRSTV9CSVRTX1BFUl9QSVhFTCkg
+ew0KPj4gKyAgICAgICAgZHJtX2Vycihkcm0sICJFbmNvdW50ZXJlZCB1bmV4cGVjdGVkIGJpdHMg
+cGVyIHBpeGVsIHZhbHVlICglZClcbiIsIGJpdHNfcGVyX3BpeGVsKTsNCj4+ICsgICAgICAgIHJl
+dCA9IC1FSU5WQUw7DQo+PiArICAgICAgICBnb3RvIGZyZWVfaW5mbzsNCj4+ICsgICAgfQ0KPj4g
+Kw0KPj4gKyAgICBpZiAocGl4ZWxfZm9ybWF0ICE9IEFQUExFVEJEUk1fUElYRUxfRk9STUFUKSB7
+DQo+PiArICAgICAgICBkcm1fZXJyKGRybSwgIkVuY291bnRlcmVkIHVua25vd24gcGl4ZWwgZm9y
+bWF0ICglcDRjYylcbiIsICZwaXhlbF9mb3JtYXQpOw0KPj4gKyAgICAgICAgcmV0ID0gLUVJTlZB
+TDsNCj4+ICsgICAgICAgIGdvdG8gZnJlZV9pbmZvOw0KPj4gKyAgICB9DQo+PiArDQo+PiArZnJl
+ZV9pbmZvOg0KPj4gKyAgICBrZnJlZShpbmZvKTsNCj4+ICsNCj4+ICsgICAgcmV0dXJuIHJldDsN
+Cj4+ICt9DQo+PiArDQo+PiArc3RhdGljIHUzMiByZWN0X3NpemUoc3RydWN0IGRybV9yZWN0ICpy
+ZWN0KQ0KPj4gK3sNCj4+ICsgICAgcmV0dXJuIGRybV9yZWN0X3dpZHRoKHJlY3QpICogZHJtX3Jl
+Y3RfaGVpZ2h0KHJlY3QpICoNCj4+ICsgICAgICAgIChCSVRTX1RPX0JZVEVTKEFQUExFVEJEUk1f
+QklUU19QRVJfUElYRUwpKTsNCj4+ICt9DQo+PiArDQo+PiArc3RhdGljIGludCBhcHBsZXRiZHJt
+X2Nvbm5lY3Rvcl9oZWxwZXJfZ2V0X21vZGVzKHN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0
+b3IpDQo+PiArew0KPj4gKyAgICBzdHJ1Y3QgYXBwbGV0YmRybV9kZXZpY2UgKmFkZXYgPSBkcm1f
+dG9fYWRldihjb25uZWN0b3ItPmRldik7DQo+PiArDQo+PiArICAgIHJldHVybiBkcm1fY29ubmVj
+dG9yX2hlbHBlcl9nZXRfbW9kZXNfZml4ZWQoY29ubmVjdG9yLCAmYWRldi0+bW9kZSk7DQo+PiAr
+fQ0KPj4gKw0KPj4gK3N0YXRpYyBjb25zdCB1MzIgYXBwbGV0YmRybV9wcmltYXJ5X3BsYW5lX2Zv
+cm1hdHNbXSA9IHsNCj4+ICsgICAgRFJNX0ZPUk1BVF9CR1I4ODgsDQo+PiArICAgIERSTV9GT1JN
+QVRfWFJHQjg4ODgsIC8qIGVtdWxhdGVkICovDQo+PiArfTsNCj4+ICsNCj4+ICtzdGF0aWMgaW50
+IGFwcGxldGJkcm1fcHJpbWFyeV9wbGFuZV9oZWxwZXJfYXRvbWljX2NoZWNrKHN0cnVjdCBkcm1f
+cGxhbmUgKnBsYW5lLA0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBkcm1f
+YXRvbWljX3N0YXRlICpzdGF0ZSkNCj4+ICt7DQo+PiArICAgIHN0cnVjdCBkcm1fcGxhbmVfc3Rh
+dGUgKm5ld19wbGFuZV9zdGF0ZSA9IGRybV9hdG9taWNfZ2V0X25ld19wbGFuZV9zdGF0ZShzdGF0
+ZSwgcGxhbmUpOw0KPj4gKyAgICBzdHJ1Y3QgZHJtX3BsYW5lX3N0YXRlICpvbGRfcGxhbmVfc3Rh
+dGUgPSBkcm1fYXRvbWljX2dldF9vbGRfcGxhbmVfc3RhdGUoc3RhdGUsIHBsYW5lKTsNCj4+ICsg
+ICAgc3RydWN0IGRybV9jcnRjICpuZXdfY3J0YyA9IG5ld19wbGFuZV9zdGF0ZS0+Y3J0YzsNCj4+
+ICsgICAgc3RydWN0IGRybV9jcnRjX3N0YXRlICpuZXdfY3J0Y19zdGF0ZSA9IE5VTEw7DQo+PiAr
+ICAgIHN0cnVjdCBhcHBsZXRiZHJtX3BsYW5lX3N0YXRlICphcHBsZXRiZHJtX3N0YXRlID0gdG9f
+YXBwbGV0YmRybV9wbGFuZV9zdGF0ZShuZXdfcGxhbmVfc3RhdGUpOw0KPj4gKyAgICBzdHJ1Y3Qg
+ZHJtX2F0b21pY19oZWxwZXJfZGFtYWdlX2l0ZXIgaXRlcjsNCj4+ICsgICAgc3RydWN0IGRybV9y
+ZWN0IGRhbWFnZTsNCj4+ICsgICAgc2l6ZV90IGZyYW1lc19zaXplID0gMDsNCj4+ICsgICAgc2l6
+ZV90IHJlcXVlc3Rfc2l6ZTsNCj4+ICsgICAgaW50IHJldDsNCj4+ICsNCj4+ICsgICAgaWYgKG5l
+d19jcnRjKQ0KPj4gKyAgICAgICAgbmV3X2NydGNfc3RhdGUgPSBkcm1fYXRvbWljX2dldF9uZXdf
+Y3J0Y19zdGF0ZShzdGF0ZSwgbmV3X2NydGMpOw0KPj4gKw0KPj4gKyAgICByZXQgPSBkcm1fYXRv
+bWljX2hlbHBlcl9jaGVja19wbGFuZV9zdGF0ZShuZXdfcGxhbmVfc3RhdGUsIG5ld19jcnRjX3N0
+YXRlLA0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgRFJNX1BMQU5FX05PX1NDQUxJTkcs
+DQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICBEUk1fUExBTkVfTk9fU0NBTElORywNCj4+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgIGZhbHNlLCBmYWxzZSk7DQo+PiArICAgIGlmIChy
+ZXQpDQo+PiArICAgICAgICByZXR1cm4gcmV0Ow0KPj4gKw0KPj4gKyAgICBpZiAoIW5ld19wbGFu
+ZV9zdGF0ZS0+dmlzaWJsZSkNCj4+ICsgICAgICAgIHJldHVybiAwOw0KPj4gKw0KPj4gKyAgICBk
+cm1fYXRvbWljX2hlbHBlcl9kYW1hZ2VfaXRlcl9pbml0KCZpdGVyLCBvbGRfcGxhbmVfc3RhdGUs
+IG5ld19wbGFuZV9zdGF0ZSk7DQo+PiArICAgIGRybV9hdG9taWNfZm9yX2VhY2hfcGxhbmVfZGFt
+YWdlKCZpdGVyLCAmZGFtYWdlKSB7DQo+PiArICAgICAgICBmcmFtZXNfc2l6ZSArPSBzdHJ1Y3Rf
+c2l6ZSgoc3RydWN0IGFwcGxldGJkcm1fZnJhbWUgKikwLCBidWYsIHJlY3Rfc2l6ZSgmZGFtYWdl
+KSk7DQo+PiArICAgIH0NCj4+ICsNCj4+ICsgICAgaWYgKCFmcmFtZXNfc2l6ZSkNCj4+ICsgICAg
+ICAgIHJldHVybiAwOw0KPj4gKw0KPj4gKyAgICByZXF1ZXN0X3NpemUgPSBBTElHTihzaXplb2Yo
+c3RydWN0IGFwcGxldGJkcm1fZmJfcmVxdWVzdCkgKw0KPj4gKyAgICAgICAgICAgICAgIGZyYW1l
+c19zaXplICsNCj4+ICsgICAgICAgICAgICAgICBzaXplb2Yoc3RydWN0IGFwcGxldGJkcm1fZmJf
+cmVxdWVzdF9mb290ZXIpLCAxNik7DQo+PiArDQo+PiArICAgIGFwcGxldGJkcm1fc3RhdGUtPnJl
+cXVlc3QgPSBremFsbG9jKHJlcXVlc3Rfc2l6ZSwgR0ZQX0tFUk5FTCk7DQo+PiArDQo+PiArICAg
+IGlmICghYXBwbGV0YmRybV9zdGF0ZS0+cmVxdWVzdCkNCj4+ICsgICAgICAgIHJldHVybiAtRU5P
+TUVNOw0KPj4gKw0KPj4gKyAgICBhcHBsZXRiZHJtX3N0YXRlLT5yZXNwb25zZSA9IGt6YWxsb2Mo
+c2l6ZW9mKCphcHBsZXRiZHJtX3N0YXRlLT5yZXNwb25zZSksIEdGUF9LRVJORUwpOw0KPj4gKw0K
+Pj4gKyAgICBpZiAoIWFwcGxldGJkcm1fc3RhdGUtPnJlc3BvbnNlKQ0KPj4gKyAgICAgICAgcmV0
+dXJuIC1FTk9NRU07DQo+PiArDQo+PiArICAgIGFwcGxldGJkcm1fc3RhdGUtPnJlcXVlc3Rfc2l6
+ZSA9IHJlcXVlc3Rfc2l6ZTsNCj4+ICsgICAgYXBwbGV0YmRybV9zdGF0ZS0+ZnJhbWVzX3NpemUg
+PSBmcmFtZXNfc2l6ZTsNCj4+ICsNCj4+ICsgICAgcmV0dXJuIDA7DQo+PiArfQ0KPj4gKw0KPj4g
+K3N0YXRpYyBpbnQgYXBwbGV0YmRybV9mbHVzaF9kYW1hZ2Uoc3RydWN0IGFwcGxldGJkcm1fZGV2
+aWNlICphZGV2LA0KPj4gKyAgICAgICAgICAgICAgICAgICBzdHJ1Y3QgZHJtX3BsYW5lX3N0YXRl
+ICpvbGRfc3RhdGUsDQo+PiArICAgICAgICAgICAgICAgICAgIHN0cnVjdCBkcm1fcGxhbmVfc3Rh
+dGUgKnN0YXRlKQ0KPj4gK3sNCj4+ICsgICAgc3RydWN0IGFwcGxldGJkcm1fcGxhbmVfc3RhdGUg
+KmFwcGxldGJkcm1fc3RhdGUgPSB0b19hcHBsZXRiZHJtX3BsYW5lX3N0YXRlKHN0YXRlKTsNCj4+
+ICsgICAgc3RydWN0IGRybV9zaGFkb3dfcGxhbmVfc3RhdGUgKnNoYWRvd19wbGFuZV9zdGF0ZSA9
+IHRvX2RybV9zaGFkb3dfcGxhbmVfc3RhdGUoc3RhdGUpOw0KPj4gKyAgICBzdHJ1Y3QgYXBwbGV0
+YmRybV9mYl9yZXF1ZXN0X3Jlc3BvbnNlICpyZXNwb25zZSA9IGFwcGxldGJkcm1fc3RhdGUtPnJl
+c3BvbnNlOw0KPj4gKyAgICBzdHJ1Y3QgYXBwbGV0YmRybV9mYl9yZXF1ZXN0X2Zvb3RlciAqZm9v
+dGVyOw0KPj4gKyAgICBzdHJ1Y3QgZHJtX2F0b21pY19oZWxwZXJfZGFtYWdlX2l0ZXIgaXRlcjsN
+Cj4+ICsgICAgc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAqZmIgPSBzdGF0ZS0+ZmI7DQo+PiArICAg
+IHN0cnVjdCBhcHBsZXRiZHJtX2ZiX3JlcXVlc3QgKnJlcXVlc3QgPSBhcHBsZXRiZHJtX3N0YXRl
+LT5yZXF1ZXN0Ow0KPj4gKyAgICBzdHJ1Y3QgZHJtX2RldmljZSAqZHJtID0gJmFkZXYtPmRybTsN
+Cj4+ICsgICAgc3RydWN0IGFwcGxldGJkcm1fZnJhbWUgKmZyYW1lOw0KPj4gKyAgICB1NjQgdGlt
+ZXN0YW1wID0ga3RpbWVfZ2V0X25zKCk7DQo+PiArICAgIHN0cnVjdCBkcm1fcmVjdCBkYW1hZ2U7
+DQo+PiArICAgIHNpemVfdCBmcmFtZXNfc2l6ZSA9IGFwcGxldGJkcm1fc3RhdGUtPmZyYW1lc19z
+aXplOw0KPj4gKyAgICBzaXplX3QgcmVxdWVzdF9zaXplID0gYXBwbGV0YmRybV9zdGF0ZS0+cmVx
+dWVzdF9zaXplOw0KPj4gKyAgICBpbnQgcmV0Ow0KPj4gKw0KPj4gKyAgICBpZiAoIWZyYW1lc19z
+aXplKQ0KPj4gKyAgICAgICAgcmV0dXJuIDA7DQo+PiArDQo+PiArICAgIHJldCA9IGRybV9nZW1f
+ZmJfYmVnaW5fY3B1X2FjY2VzcyhmYiwgRE1BX0ZST01fREVWSUNFKTsNCj4+ICsgICAgaWYgKHJl
+dCkgew0KPj4gKyAgICAgICAgZHJtX2Vycihkcm0sICJGYWlsZWQgdG8gc3RhcnQgQ1BVIGZyYW1l
+YnVmZmVyIGFjY2VzcyAoJWQpXG4iLCByZXQpOw0KPj4gKyAgICAgICAgZ290byBlbmRfZmJfY3B1
+X2FjY2VzczsNCj4+ICsgICAgfQ0KPj4gKw0KPj4gKyAgICByZXF1ZXN0LT5oZWFkZXIudW5rXzAw
+ID0gY3B1X3RvX2xlMTYoMik7DQo+PiArICAgIHJlcXVlc3QtPmhlYWRlci51bmtfMDIgPSBjcHVf
+dG9fbGUxNigweDEyKTsNCj4+ICsgICAgcmVxdWVzdC0+aGVhZGVyLnVua18wNCA9IGNwdV90b19s
+ZTMyKDkpOw0KPj4gKyAgICByZXF1ZXN0LT5oZWFkZXIuc2l6ZSA9IGNwdV90b19sZTMyKHJlcXVl
+c3Rfc2l6ZSAtIHNpemVvZihyZXF1ZXN0LT5oZWFkZXIpKTsNCj4+ICsgICAgcmVxdWVzdC0+dW5r
+XzEwID0gY3B1X3RvX2xlMTYoMSk7DQo+PiArICAgIHJlcXVlc3QtPm1zZ19pZCA9IHRpbWVzdGFt
+cDsNCj4+ICsNCj4+ICsgICAgZnJhbWUgPSAoc3RydWN0IGFwcGxldGJkcm1fZnJhbWUgKilyZXF1
+ZXN0LT5kYXRhOw0KPj4gKw0KPj4gKyAgICBkcm1fYXRvbWljX2hlbHBlcl9kYW1hZ2VfaXRlcl9p
+bml0KCZpdGVyLCBvbGRfc3RhdGUsIHN0YXRlKTsNCj4+ICsgICAgZHJtX2F0b21pY19mb3JfZWFj
+aF9wbGFuZV9kYW1hZ2UoJml0ZXIsICZkYW1hZ2UpIHsNCj4+ICsgICAgICAgIHN0cnVjdCBkcm1f
+cmVjdCBkc3RfY2xpcCA9IHN0YXRlLT5kc3Q7DQo+PiArICAgICAgICBzdHJ1Y3QgaW9zeXNfbWFw
+IGRzdCA9IElPU1lTX01BUF9JTklUX1ZBRERSKGZyYW1lLT5idWYpOw0KPj4gKyAgICAgICAgdTMy
+IGJ1Zl9zaXplID0gcmVjdF9zaXplKCZkYW1hZ2UpOw0KPj4gKw0KPj4gKyAgICAgICAgaWYgKCFk
+cm1fcmVjdF9pbnRlcnNlY3QoJmRzdF9jbGlwLCAmZGFtYWdlKSkNCj4+ICsgICAgICAgICAgICBj
+b250aW51ZTsNCj4+ICsNCj4+ICsgICAgICAgIC8qDQo+PiArICAgICAgICAgKiBUaGUgY29vcmRp
+bmF0ZXMgbmVlZCB0byBiZSB0cmFuc2xhdGVkIHRvIHRoZSBjb29yZGluYXRlDQo+PiArICAgICAg
+ICAgKiBzeXN0ZW0gdGhlIGRldmljZSBleHBlY3RzLCBzZWUgdGhlIGNvbW1lbnQgaW4NCj4+ICsg
+ICAgICAgICAqIGFwcGxldGJkcm1fc2V0dXBfbW9kZV9jb25maWcNCj4+ICsgICAgICAgICAqLw0K
+Pj4gKyAgICAgICAgZnJhbWUtPmJlZ2luX3ggPSBjcHVfdG9fbGUxNihkYW1hZ2UueTEpOw0KPj4g
+KyAgICAgICAgZnJhbWUtPmJlZ2luX3kgPSBjcHVfdG9fbGUxNihhZGV2LT5oZWlnaHQgLSBkYW1h
+Z2UueDIpOw0KPj4gKyAgICAgICAgZnJhbWUtPndpZHRoID0gY3B1X3RvX2xlMTYoZHJtX3JlY3Rf
+aGVpZ2h0KCZkYW1hZ2UpKTsNCj4+ICsgICAgICAgIGZyYW1lLT5oZWlnaHQgPSBjcHVfdG9fbGUx
+Nihkcm1fcmVjdF93aWR0aCgmZGFtYWdlKSk7DQo+PiArICAgICAgICBmcmFtZS0+YnVmX3NpemUg
+PSBjcHVfdG9fbGUzMihidWZfc2l6ZSk7DQo+PiArDQo+PiArICAgICAgICBzd2l0Y2ggKGZiLT5m
+b3JtYXQtPmZvcm1hdCkgew0KPj4gKyAgICAgICAgY2FzZSBEUk1fRk9STUFUX1hSR0I4ODg4Og0K
+Pj4gKyAgICAgICAgICAgIGRybV9mYl94cmdiODg4OF90b19iZ3I4ODgoJmRzdCwgTlVMTCwgJnNo
+YWRvd19wbGFuZV9zdGF0ZS0+ZGF0YVswXSwgZmIsICZkYW1hZ2UsICZzaGFkb3dfcGxhbmVfc3Rh
+dGUtPmZtdGNudl9zdGF0ZSk7DQo+PiArICAgICAgICAgICAgYnJlYWs7DQo+PiArICAgICAgICBk
+ZWZhdWx0Og0KPj4gKyAgICAgICAgICAgIGRybV9mYl9tZW1jcHkoJmRzdCwgTlVMTCwgJnNoYWRv
+d19wbGFuZV9zdGF0ZS0+ZGF0YVswXSwgZmIsICZkYW1hZ2UpOw0KPj4gKyAgICAgICAgICAgIGJy
+ZWFrOw0KPj4gKyAgICAgICAgfQ0KPj4gKw0KPj4gKyAgICAgICAgZnJhbWUgPSAodm9pZCAqKWZy
+YW1lICsgc3RydWN0X3NpemUoZnJhbWUsIGJ1ZiwgYnVmX3NpemUpOw0KPj4gKyAgICB9DQo+PiAr
+DQo+PiArICAgIGZvb3RlciA9IChzdHJ1Y3QgYXBwbGV0YmRybV9mYl9yZXF1ZXN0X2Zvb3RlciAq
+KSZyZXF1ZXN0LT5kYXRhW2ZyYW1lc19zaXplXTsNCj4+ICsNCj4+ICsgICAgZm9vdGVyLT51bmtf
+MGMgPSBjcHVfdG9fbGUzMigweGZmZmUpOw0KPj4gKyAgICBmb290ZXItPnVua18xYyA9IGNwdV90
+b19sZTMyKDB4ODAwMDEpOw0KPj4gKyAgICBmb290ZXItPnVua18zNCA9IGNwdV90b19sZTMyKDB4
+ODAwMDIpOw0KPj4gKyAgICBmb290ZXItPnVua180YyA9IGNwdV90b19sZTMyKDB4ZmZmZik7DQo+
+PiArICAgIGZvb3Rlci0+dGltZXN0YW1wID0gY3B1X3RvX2xlNjQodGltZXN0YW1wKTsNCj4+ICsN
+Cj4+ICsgICAgcmV0ID0gYXBwbGV0YmRybV9zZW5kX3JlcXVlc3QoYWRldiwgJnJlcXVlc3QtPmhl
+YWRlciwgcmVxdWVzdF9zaXplKTsNCj4+ICsgICAgaWYgKHJldCkNCj4+ICsgICAgICAgIGdvdG8g
+ZW5kX2ZiX2NwdV9hY2Nlc3M7DQo+PiArDQo+PiArICAgIHJldCA9IGFwcGxldGJkcm1fcmVhZF9y
+ZXNwb25zZShhZGV2LCAmcmVzcG9uc2UtPmhlYWRlciwgc2l6ZW9mKCpyZXNwb25zZSksDQo+PiAr
+ICAgICAgICAgICAgICAgICAgICAgICBBUFBMRVRCRFJNX01TR19VUERBVEVfQ09NUExFVEUpOw0K
+Pj4gKyAgICBpZiAocmV0KQ0KPj4gKyAgICAgICAgZ290byBlbmRfZmJfY3B1X2FjY2VzczsNCj4+
+ICsNCj4+ICsgICAgaWYgKHJlc3BvbnNlLT50aW1lc3RhbXAgIT0gZm9vdGVyLT50aW1lc3RhbXAp
+IHsNCj4+ICsgICAgICAgIGRybV9lcnIoZHJtLCAiUmVzcG9uc2UgdGltZXN0YW1wICglbGx1KSBk
+b2Vzbid0IG1hdGNoIHJlcXVlc3QgdGltZXN0YW1wICglbGx1KVxuIiwNCj4+ICsgICAgICAgICAg
+ICBsZTY0X3RvX2NwdShyZXNwb25zZS0+dGltZXN0YW1wKSwgdGltZXN0YW1wKTsNCj4+ICsgICAg
+ICAgIGdvdG8gZW5kX2ZiX2NwdV9hY2Nlc3M7DQo+PiArICAgIH0NCj4+ICsNCj4+ICtlbmRfZmJf
+Y3B1X2FjY2VzczoNCj4+ICsgICAgZHJtX2dlbV9mYl9lbmRfY3B1X2FjY2VzcyhmYiwgRE1BX0ZS
+T01fREVWSUNFKTsNCj4+ICsNCj4+ICsgICAgcmV0dXJuIHJldDsNCj4+ICt9DQo+PiArDQo+PiAr
+c3RhdGljIHZvaWQgYXBwbGV0YmRybV9wcmltYXJ5X3BsYW5lX2hlbHBlcl9hdG9taWNfdXBkYXRl
+KHN0cnVjdCBkcm1fcGxhbmUgKnBsYW5lLA0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgc3RydWN0IGRybV9hdG9taWNfc3RhdGUgKm9sZF9zdGF0ZSkNCj4+ICt7DQo+PiArICAgIHN0
+cnVjdCBhcHBsZXRiZHJtX2RldmljZSAqYWRldiA9IGRybV90b19hZGV2KHBsYW5lLT5kZXYpOw0K
+Pj4gKyAgICBzdHJ1Y3QgZHJtX2RldmljZSAqZHJtID0gcGxhbmUtPmRldjsNCj4+ICsgICAgc3Ry
+dWN0IGRybV9wbGFuZV9zdGF0ZSAqcGxhbmVfc3RhdGUgPSBwbGFuZS0+c3RhdGU7DQo+PiArICAg
+IHN0cnVjdCBkcm1fcGxhbmVfc3RhdGUgKm9sZF9wbGFuZV9zdGF0ZSA9IGRybV9hdG9taWNfZ2V0
+X29sZF9wbGFuZV9zdGF0ZShvbGRfc3RhdGUsIHBsYW5lKTsNCj4+ICsgICAgaW50IGlkeDsNCj4+
+ICsNCj4+ICsgICAgaWYgKCFkcm1fZGV2X2VudGVyKGRybSwgJmlkeCkpDQo+PiArICAgICAgICBy
+ZXR1cm47DQo+PiArDQo+PiArICAgIGFwcGxldGJkcm1fZmx1c2hfZGFtYWdlKGFkZXYsIG9sZF9w
+bGFuZV9zdGF0ZSwgcGxhbmVfc3RhdGUpOw0KPj4gKw0KPj4gKyAgICBkcm1fZGV2X2V4aXQoaWR4
+KTsNCj4+ICt9DQo+PiArDQo+PiArc3RhdGljIHZvaWQgYXBwbGV0YmRybV9wcmltYXJ5X3BsYW5l
+X2hlbHBlcl9hdG9taWNfZGlzYWJsZShzdHJ1Y3QgZHJtX3BsYW5lICpwbGFuZSwNCj4+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGRybV9hdG9taWNfc3RhdGUgKnN0YXRl
+KQ0KPj4gK3sNCj4+ICsgICAgc3RydWN0IGRybV9kZXZpY2UgKmRldiA9IHBsYW5lLT5kZXY7DQo+
+PiArICAgIHN0cnVjdCBhcHBsZXRiZHJtX2RldmljZSAqYWRldiA9IGRybV90b19hZGV2KGRldik7
+DQo+PiArICAgIGludCBpZHg7DQo+PiArDQo+PiArICAgIGlmICghZHJtX2Rldl9lbnRlcihkZXYs
+ICZpZHgpKQ0KPj4gKyAgICAgICAgcmV0dXJuOw0KPj4gKw0KPj4gKyAgICBhcHBsZXRiZHJtX2Ns
+ZWFyX2Rpc3BsYXkoYWRldik7DQo+PiArDQo+PiArICAgIGRybV9kZXZfZXhpdChpZHgpOw0KPj4g
+K30NCj4+ICsNCj4+ICtzdGF0aWMgdm9pZCBhcHBsZXRiZHJtX3ByaW1hcnlfcGxhbmVfcmVzZXQo
+c3RydWN0IGRybV9wbGFuZSAqcGxhbmUpDQo+PiArew0KPj4gKyAgICBzdHJ1Y3QgYXBwbGV0YmRy
+bV9wbGFuZV9zdGF0ZSAqYXBwbGV0YmRybV9zdGF0ZTsNCj4+ICsNCj4+ICsgICAgV0FSTl9PTihw
+bGFuZS0+c3RhdGUpOw0KPj4gKw0KPj4gKyAgICBhcHBsZXRiZHJtX3N0YXRlID0ga3phbGxvYyhz
+aXplb2YoKmFwcGxldGJkcm1fc3RhdGUpLCBHRlBfS0VSTkVMKTsNCj4+ICsgICAgaWYgKCFhcHBs
+ZXRiZHJtX3N0YXRlKQ0KPj4gKyAgICAgICAgcmV0dXJuOw0KPj4gKw0KPj4gKyAgICBfX2RybV9n
+ZW1fcmVzZXRfc2hhZG93X3BsYW5lKHBsYW5lLCAmYXBwbGV0YmRybV9zdGF0ZS0+YmFzZSk7DQo+
+PiArfQ0KPj4gKw0KPj4gK3N0YXRpYyBzdHJ1Y3QgZHJtX3BsYW5lX3N0YXRlICphcHBsZXRiZHJt
+X3ByaW1hcnlfcGxhbmVfZHVwbGljYXRlX3N0YXRlKHN0cnVjdCBkcm1fcGxhbmUgKnBsYW5lKQ0K
+Pj4gK3sNCj4+ICsgICAgc3RydWN0IGRybV9zaGFkb3dfcGxhbmVfc3RhdGUgKm5ld19zaGFkb3df
+cGxhbmVfc3RhdGU7DQo+PiArICAgIHN0cnVjdCBhcHBsZXRiZHJtX3BsYW5lX3N0YXRlICpvbGRf
+YXBwbGV0YmRybV9zdGF0ZTsNCj4+ICsgICAgc3RydWN0IGFwcGxldGJkcm1fcGxhbmVfc3RhdGUg
+KmFwcGxldGJkcm1fc3RhdGU7DQo+PiArDQo+PiArICAgIGlmIChXQVJOX09OKCFwbGFuZS0+c3Rh
+dGUpKQ0KPj4gKyAgICAgICAgcmV0dXJuIE5VTEw7DQo+PiArDQo+PiArICAgIG9sZF9hcHBsZXRi
+ZHJtX3N0YXRlID0gdG9fYXBwbGV0YmRybV9wbGFuZV9zdGF0ZShwbGFuZS0+c3RhdGUpOw0KPj4g
+KyAgICBhcHBsZXRiZHJtX3N0YXRlID0ga3phbGxvYyhzaXplb2YoKmFwcGxldGJkcm1fc3RhdGUp
+LCBHRlBfS0VSTkVMKTsNCj4+ICsgICAgaWYgKCFhcHBsZXRiZHJtX3N0YXRlKQ0KPj4gKyAgICAg
+ICAgcmV0dXJuIE5VTEw7DQo+PiArDQo+PiArICAgIC8qIFJlcXVlc3QgYW5kIHJlc3BvbnNlIGFy
+ZSBub3QgZHVwbGljYXRlZCBhbmQgYXJlIGFsbG9jYXRlZCBpbiAuYXRvbWljX2NoZWNrICovDQo+
+PiArICAgIGFwcGxldGJkcm1fc3RhdGUtPnJlcXVlc3QgPSBOVUxMOw0KPj4gKyAgICBhcHBsZXRi
+ZHJtX3N0YXRlLT5yZXNwb25zZSA9IE5VTEw7DQo+PiArDQo+PiArICAgIGFwcGxldGJkcm1fc3Rh
+dGUtPnJlcXVlc3Rfc2l6ZSA9IDA7DQo+PiArICAgIGFwcGxldGJkcm1fc3RhdGUtPmZyYW1lc19z
+aXplID0gMDsNCj4+ICsNCj4+ICsgICAgbmV3X3NoYWRvd19wbGFuZV9zdGF0ZSA9ICZhcHBsZXRi
+ZHJtX3N0YXRlLT5iYXNlOw0KPj4gKw0KPj4gKyAgICBfX2RybV9nZW1fZHVwbGljYXRlX3NoYWRv
+d19wbGFuZV9zdGF0ZShwbGFuZSwgbmV3X3NoYWRvd19wbGFuZV9zdGF0ZSk7DQo+PiArDQo+PiAr
+ICAgIHJldHVybiAmbmV3X3NoYWRvd19wbGFuZV9zdGF0ZS0+YmFzZTsNCj4+ICt9DQo+PiArDQo+
+PiArc3RhdGljIHZvaWQgYXBwbGV0YmRybV9wcmltYXJ5X3BsYW5lX2Rlc3Ryb3lfc3RhdGUoc3Ry
+dWN0IGRybV9wbGFuZSAqcGxhbmUsDQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgc3Ry
+dWN0IGRybV9wbGFuZV9zdGF0ZSAqc3RhdGUpDQo+PiArew0KPj4gKyAgICBzdHJ1Y3QgYXBwbGV0
+YmRybV9wbGFuZV9zdGF0ZSAqYXBwbGV0YmRybV9zdGF0ZSA9IHRvX2FwcGxldGJkcm1fcGxhbmVf
+c3RhdGUoc3RhdGUpOw0KPj4gKw0KPj4gKyAgICBrZnJlZShhcHBsZXRiZHJtX3N0YXRlLT5yZXF1
+ZXN0KTsNCj4+ICsgICAga2ZyZWUoYXBwbGV0YmRybV9zdGF0ZS0+cmVzcG9uc2UpOw0KPj4gKw0K
+Pj4gKyAgICBfX2RybV9nZW1fZGVzdHJveV9zaGFkb3dfcGxhbmVfc3RhdGUoJmFwcGxldGJkcm1f
+c3RhdGUtPmJhc2UpOw0KPj4gKw0KPj4gKyAgICBrZnJlZShhcHBsZXRiZHJtX3N0YXRlKTsNCj4+
+ICt9DQo+PiArDQo+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fcGxhbmVfaGVscGVyX2Z1bmNz
+IGFwcGxldGJkcm1fcHJpbWFyeV9wbGFuZV9oZWxwZXJfZnVuY3MgPSB7DQo+PiArICAgIERSTV9H
+RU1fU0hBRE9XX1BMQU5FX0hFTFBFUl9GVU5DUywNCj4+ICsgICAgLmF0b21pY19jaGVjayA9IGFw
+cGxldGJkcm1fcHJpbWFyeV9wbGFuZV9oZWxwZXJfYXRvbWljX2NoZWNrLA0KPj4gKyAgICAuYXRv
+bWljX3VwZGF0ZSA9IGFwcGxldGJkcm1fcHJpbWFyeV9wbGFuZV9oZWxwZXJfYXRvbWljX3VwZGF0
+ZSwNCj4+ICsgICAgLmF0b21pY19kaXNhYmxlID0gYXBwbGV0YmRybV9wcmltYXJ5X3BsYW5lX2hl
+bHBlcl9hdG9taWNfZGlzYWJsZSwNCj4+ICt9Ow0KPj4gKw0KPj4gK3N0YXRpYyBjb25zdCBzdHJ1
+Y3QgZHJtX3BsYW5lX2Z1bmNzIGFwcGxldGJkcm1fcHJpbWFyeV9wbGFuZV9mdW5jcyA9IHsNCj4+
+ICsgICAgLnVwZGF0ZV9wbGFuZSA9IGRybV9hdG9taWNfaGVscGVyX3VwZGF0ZV9wbGFuZSwNCj4+
+ICsgICAgLmRpc2FibGVfcGxhbmUgPSBkcm1fYXRvbWljX2hlbHBlcl9kaXNhYmxlX3BsYW5lLA0K
+Pj4gKyAgICAucmVzZXQgPSBhcHBsZXRiZHJtX3ByaW1hcnlfcGxhbmVfcmVzZXQsDQo+PiArICAg
+IC5hdG9taWNfZHVwbGljYXRlX3N0YXRlID0gYXBwbGV0YmRybV9wcmltYXJ5X3BsYW5lX2R1cGxp
+Y2F0ZV9zdGF0ZSwNCj4+ICsgICAgLmF0b21pY19kZXN0cm95X3N0YXRlID0gYXBwbGV0YmRybV9w
+cmltYXJ5X3BsYW5lX2Rlc3Ryb3lfc3RhdGUsDQo+PiArICAgIC5kZXN0cm95ID0gZHJtX3BsYW5l
+X2NsZWFudXAsDQo+PiArfTsNCj4+ICsNCj4+ICtzdGF0aWMgZW51bSBkcm1fbW9kZV9zdGF0dXMg
+YXBwbGV0YmRybV9jcnRjX2hlbHBlcl9tb2RlX3ZhbGlkKHN0cnVjdCBkcm1fY3J0YyAqY3J0YywN
+Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3Bs
+YXlfbW9kZSAqbW9kZSkNCj4+ICt7DQo+PiArICAgIHN0cnVjdCBhcHBsZXRiZHJtX2RldmljZSAq
+YWRldiA9IGRybV90b19hZGV2KGNydGMtPmRldik7DQo+PiArDQo+PiArICAgIHJldHVybiBkcm1f
+Y3J0Y19oZWxwZXJfbW9kZV92YWxpZF9maXhlZChjcnRjLCBtb2RlLCAmYWRldi0+bW9kZSk7DQo+
+PiArfQ0KPj4gKw0KPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX21vZGVfY29uZmlnX2Z1bmNz
+IGFwcGxldGJkcm1fbW9kZV9jb25maWdfZnVuY3MgPSB7DQo+PiArICAgIC5mYl9jcmVhdGUgPSBk
+cm1fZ2VtX2ZiX2NyZWF0ZV93aXRoX2RpcnR5LA0KPj4gKyAgICAuYXRvbWljX2NoZWNrID0gZHJt
+X2F0b21pY19oZWxwZXJfY2hlY2ssDQo+PiArICAgIC5hdG9taWNfY29tbWl0ID0gZHJtX2F0b21p
+Y19oZWxwZXJfY29tbWl0LA0KPj4gK307DQo+PiArDQo+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBk
+cm1fY29ubmVjdG9yX2Z1bmNzIGFwcGxldGJkcm1fY29ubmVjdG9yX2Z1bmNzID0gew0KPj4gKyAg
+ICAucmVzZXQgPSBkcm1fYXRvbWljX2hlbHBlcl9jb25uZWN0b3JfcmVzZXQsDQo+PiArICAgIC5k
+ZXN0cm95ID0gZHJtX2Nvbm5lY3Rvcl9jbGVhbnVwLA0KPj4gKyAgICAuZmlsbF9tb2RlcyA9IGRy
+bV9oZWxwZXJfcHJvYmVfc2luZ2xlX2Nvbm5lY3Rvcl9tb2RlcywNCj4+ICsgICAgLmF0b21pY19k
+ZXN0cm95X3N0YXRlID0gZHJtX2F0b21pY19oZWxwZXJfY29ubmVjdG9yX2Rlc3Ryb3lfc3RhdGUs
+DQo+PiArICAgIC5hdG9taWNfZHVwbGljYXRlX3N0YXRlID0gZHJtX2F0b21pY19oZWxwZXJfY29u
+bmVjdG9yX2R1cGxpY2F0ZV9zdGF0ZSwNCj4+ICt9Ow0KPj4gKw0KPj4gK3N0YXRpYyBjb25zdCBz
+dHJ1Y3QgZHJtX2Nvbm5lY3Rvcl9oZWxwZXJfZnVuY3MgYXBwbGV0YmRybV9jb25uZWN0b3JfaGVs
+cGVyX2Z1bmNzID0gew0KPj4gKyAgICAuZ2V0X21vZGVzID0gYXBwbGV0YmRybV9jb25uZWN0b3Jf
+aGVscGVyX2dldF9tb2RlcywNCj4+ICt9Ow0KPj4gKw0KPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qg
+ZHJtX2NydGNfaGVscGVyX2Z1bmNzIGFwcGxldGJkcm1fY3J0Y19oZWxwZXJfZnVuY3MgPSB7DQo+
+PiArICAgIC5tb2RlX3ZhbGlkID0gYXBwbGV0YmRybV9jcnRjX2hlbHBlcl9tb2RlX3ZhbGlkLA0K
+Pj4gK307DQo+PiArDQo+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fY3J0Y19mdW5jcyBhcHBs
+ZXRiZHJtX2NydGNfZnVuY3MgPSB7DQo+PiArICAgIC5yZXNldCA9IGRybV9hdG9taWNfaGVscGVy
+X2NydGNfcmVzZXQsDQo+PiArICAgIC5kZXN0cm95ID0gZHJtX2NydGNfY2xlYW51cCwNCj4+ICsg
+ICAgLnNldF9jb25maWcgPSBkcm1fYXRvbWljX2hlbHBlcl9zZXRfY29uZmlnLA0KPj4gKyAgICAu
+cGFnZV9mbGlwID0gZHJtX2F0b21pY19oZWxwZXJfcGFnZV9mbGlwLA0KPj4gKyAgICAuYXRvbWlj
+X2R1cGxpY2F0ZV9zdGF0ZSA9IGRybV9hdG9taWNfaGVscGVyX2NydGNfZHVwbGljYXRlX3N0YXRl
+LA0KPj4gKyAgICAuYXRvbWljX2Rlc3Ryb3lfc3RhdGUgPSBkcm1fYXRvbWljX2hlbHBlcl9jcnRj
+X2Rlc3Ryb3lfc3RhdGUsDQo+PiArfTsNCj4+ICsNCj4+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGRy
+bV9lbmNvZGVyX2Z1bmNzIGFwcGxldGJkcm1fZW5jb2Rlcl9mdW5jcyA9IHsNCj4+ICsgICAgLmRl
+c3Ryb3kgPSBkcm1fZW5jb2Rlcl9jbGVhbnVwLA0KPj4gK307DQo+PiArDQo+PiArc3RhdGljIHN0
+cnVjdCBkcm1fZ2VtX29iamVjdCAqYXBwbGV0YmRybV9kcml2ZXJfZ2VtX3ByaW1lX2ltcG9ydChz
+dHJ1Y3QgZHJtX2RldmljZSAqZGV2LA0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHN0cnVjdCBkbWFfYnVmICpkbWFfYnVmKQ0KPj4gK3sNCj4+ICsgICAgc3RydWN0IGFwcGxl
+dGJkcm1fZGV2aWNlICphZGV2ID0gZHJtX3RvX2FkZXYoZGV2KTsNCj4+ICsNCj4+ICsgICAgaWYg
+KCFhZGV2LT5kZXYpDQo+PiArICAgICAgICByZXR1cm4gRVJSX1BUUigtRU5PREVWKTsNCj4+ICsN
+Cj4+ICsgICAgcmV0dXJuIGRybV9nZW1fcHJpbWVfaW1wb3J0X2RldihkZXYsIGRtYV9idWYsIGFk
+ZXYtPmRldik7DQo+PiArfQ0KPj4gKw0KPj4gK0RFRklORV9EUk1fR0VNX0ZPUFMoYXBwbGV0YmRy
+bV9kcm1fZm9wcyk7DQo+PiArDQo+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZHJpdmVyIGFw
+cGxldGJkcm1fZHJtX2RyaXZlciA9IHsNCj4+ICsgICAgRFJNX0dFTV9TSE1FTV9EUklWRVJfT1BT
+LA0KPj4gKyAgICAuZ2VtX3ByaW1lX2ltcG9ydCAgICA9IGFwcGxldGJkcm1fZHJpdmVyX2dlbV9w
+cmltZV9pbXBvcnQsDQo+PiArICAgIC5uYW1lICAgICAgICAgICAgPSAiYXBwbGV0YmRybSIsDQo+
+PiArICAgIC5kZXNjICAgICAgICAgICAgPSAiQXBwbGUgVG91Y2ggQmFyIERSTSBEcml2ZXIiLA0K
+Pj4gKyAgICAubWFqb3IgICAgICAgICAgICA9IDEsDQo+PiArICAgIC5taW5vciAgICAgICAgICAg
+ID0gMCwNCj4+ICsgICAgLmRyaXZlcl9mZWF0dXJlcyAgICA9IERSSVZFUl9NT0RFU0VUIHwgRFJJ
+VkVSX0dFTSB8IERSSVZFUl9BVE9NSUMsDQo+PiArICAgIC5mb3BzICAgICAgICAgICAgPSAmYXBw
+bGV0YmRybV9kcm1fZm9wcywNCj4+ICt9Ow0KPj4gKw0KPj4gK3N0YXRpYyBpbnQgYXBwbGV0YmRy
+bV9zZXR1cF9tb2RlX2NvbmZpZyhzdHJ1Y3QgYXBwbGV0YmRybV9kZXZpY2UgKmFkZXYpDQo+PiAr
+ew0KPj4gKyAgICBzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yID0gJmFkZXYtPmNvbm5l
+Y3RvcjsNCj4+ICsgICAgc3RydWN0IGRybV9wbGFuZSAqcHJpbWFyeV9wbGFuZTsNCj4+ICsgICAg
+c3RydWN0IGRybV9jcnRjICpjcnRjOw0KPj4gKyAgICBzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29k
+ZXI7DQo+PiArICAgIHN0cnVjdCBkcm1fZGV2aWNlICpkcm0gPSAmYWRldi0+ZHJtOw0KPj4gKyAg
+ICBpbnQgcmV0Ow0KPj4gKw0KPj4gKyAgICByZXQgPSBkcm1tX21vZGVfY29uZmlnX2luaXQoZHJt
+KTsNCj4+ICsgICAgaWYgKHJldCkgew0KPj4gKyAgICAgICAgZHJtX2Vycihkcm0sICJGYWlsZWQg
+dG8gaW5pdGlhbGl6ZSBtb2RlIGNvbmZpZ3VyYXRpb25cbiIpOw0KPj4gKyAgICAgICAgcmV0dXJu
+IHJldDsNCj4+ICsgICAgfQ0KPj4gKw0KPj4gKyAgICBwcmltYXJ5X3BsYW5lID0gJmFkZXYtPnBy
+aW1hcnlfcGxhbmU7DQo+PiArICAgIHJldCA9IGRybV91bml2ZXJzYWxfcGxhbmVfaW5pdChkcm0s
+IHByaW1hcnlfcGxhbmUsIDAsDQo+PiArICAgICAgICAgICAgICAgICAgICAgICAmYXBwbGV0YmRy
+bV9wcmltYXJ5X3BsYW5lX2Z1bmNzLA0KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgYXBwbGV0
+YmRybV9wcmltYXJ5X3BsYW5lX2Zvcm1hdHMsDQo+PiArICAgICAgICAgICAgICAgICAgICAgICBB
+UlJBWV9TSVpFKGFwcGxldGJkcm1fcHJpbWFyeV9wbGFuZV9mb3JtYXRzKSwNCj4+ICsgICAgICAg
+ICAgICAgICAgICAgICAgIE5VTEwsDQo+PiArICAgICAgICAgICAgICAgICAgICAgICBEUk1fUExB
+TkVfVFlQRV9QUklNQVJZLCBOVUxMKTsNCj4+ICsgICAgaWYgKHJldCkgew0KPj4gKyAgICAgICAg
+ZHJtX2Vycihkcm0sICJGYWlsZWQgdG8gaW5pdGlhbGl6ZSB1bml2ZXJzYWwgcGxhbmUgb2JqZWN0
+XG4iKTsNCj4+ICsgICAgICAgIHJldHVybiByZXQ7DQo+PiArICAgIH0NCj4+ICsNCj4+ICsgICAg
+ZHJtX3BsYW5lX2hlbHBlcl9hZGQocHJpbWFyeV9wbGFuZSwgJmFwcGxldGJkcm1fcHJpbWFyeV9w
+bGFuZV9oZWxwZXJfZnVuY3MpOw0KPj4gKyAgICBkcm1fcGxhbmVfZW5hYmxlX2ZiX2RhbWFnZV9j
+bGlwcyhwcmltYXJ5X3BsYW5lKTsNCj4+ICsNCj4+ICsgICAgY3J0YyA9ICZhZGV2LT5jcnRjOw0K
+Pj4gKyAgICByZXQgPSBkcm1fY3J0Y19pbml0X3dpdGhfcGxhbmVzKGRybSwgY3J0YywgcHJpbWFy
+eV9wbGFuZSwgTlVMTCwNCj4+ICsgICAgICAgICAgICAgICAgICAgICZhcHBsZXRiZHJtX2NydGNf
+ZnVuY3MsIE5VTEwpOw0KPj4gKyAgICBpZiAocmV0KSB7DQo+PiArICAgICAgICBkcm1fZXJyKGRy
+bSwgIkZhaWxlZCB0byBpbml0aWFsaXplIENSVEMgb2JqZWN0XG4iKTsNCj4+ICsgICAgICAgIHJl
+dHVybiByZXQ7DQo+PiArICAgIH0NCj4+ICsNCj4+ICsgICAgZHJtX2NydGNfaGVscGVyX2FkZChj
+cnRjLCAmYXBwbGV0YmRybV9jcnRjX2hlbHBlcl9mdW5jcyk7DQo+PiArDQo+PiArICAgIGVuY29k
+ZXIgPSAmYWRldi0+ZW5jb2RlcjsNCj4+ICsgICAgcmV0ID0gZHJtX2VuY29kZXJfaW5pdChkcm0s
+IGVuY29kZXIsICZhcHBsZXRiZHJtX2VuY29kZXJfZnVuY3MsDQo+PiArICAgICAgICAgICAgICAg
+ICAgIERSTV9NT0RFX0VOQ09ERVJfREFDLCBOVUxMKTsNCj4+ICsgICAgaWYgKHJldCkgew0KPj4g
+KyAgICAgICAgZHJtX2Vycihkcm0sICJGYWlsZWQgdG8gaW5pdGlhbGl6ZSBlbmNvZGVyXG4iKTsN
+Cj4+ICsgICAgICAgIHJldHVybiByZXQ7DQo+PiArICAgIH0NCj4+ICsNCj4+ICsgICAgZW5jb2Rl
+ci0+cG9zc2libGVfY3J0Y3MgPSBkcm1fY3J0Y19tYXNrKGNydGMpOw0KPj4gKw0KPj4gKyAgICAv
+Kg0KPj4gKyAgICAgKiBUaGUgY29vcmRpbmF0ZSBzeXN0ZW0gdXNlZCBieSB0aGUgZGV2aWNlIGlz
+IGRpZmZlcmVudCBmcm9tIHRoZQ0KPj4gKyAgICAgKiBjb29yZGluYXRlIHN5c3RlbSBvZiB0aGUg
+ZnJhbWVidWZmZXIgaW4gdGhhdCB0aGUgeCBhbmQgeSBheGVzIGFyZQ0KPj4gKyAgICAgKiBzd2Fw
+cGVkLCBhbmQgdGhhdCB0aGUgeSBheGlzIGlzIGludmVydGVkOyBzbyB3aGF0IHRoZSBkZXZpY2Ug
+cmVwb3J0cw0KPj4gKyAgICAgKiBhcyB0aGUgaGVpZ2h0IGlzIGFjdHVhbGx5IHRoZSB3aWR0aCBv
+ZiB0aGUgZnJhbWVidWZmZXIgYW5kIHZpY2UNCj4+ICsgICAgICogdmVyc2ENCj4+ICsgICAgICov
+DQo+PiArICAgIGRybS0+bW9kZV9jb25maWcubWF4X3dpZHRoID0gbWF4KGFkZXYtPmhlaWdodCwg
+RFJNX1NIQURPV19QTEFORV9NQVhfV0lEVEgpOw0KPj4gKyAgICBkcm0tPm1vZGVfY29uZmlnLm1h
+eF9oZWlnaHQgPSBtYXgoYWRldi0+d2lkdGgsIERSTV9TSEFET1dfUExBTkVfTUFYX0hFSUdIVCk7
+DQo+PiArICAgIGRybS0+bW9kZV9jb25maWcucHJlZmVycmVkX2RlcHRoID0gQVBQTEVUQkRSTV9C
+SVRTX1BFUl9QSVhFTDsNCj4+ICsgICAgZHJtLT5tb2RlX2NvbmZpZy5mdW5jcyA9ICZhcHBsZXRi
+ZHJtX21vZGVfY29uZmlnX2Z1bmNzOw0KPj4gKw0KPj4gKyAgICBhZGV2LT5tb2RlID0gKHN0cnVj
+dCBkcm1fZGlzcGxheV9tb2RlKSB7DQo+PiArICAgICAgICBEUk1fTU9ERV9JTklUKDYwLCBhZGV2
+LT5oZWlnaHQsIGFkZXYtPndpZHRoLA0KPj4gKyAgICAgICAgICAgICAgICAgIERSTV9NT0RFX1JF
+U19NTShhZGV2LT5oZWlnaHQsIDIxOCksDQo+PiArICAgICAgICAgICAgICAgICAgRFJNX01PREVf
+UkVTX01NKGFkZXYtPndpZHRoLCAyMTgpKQ0KPj4gKyAgICB9Ow0KPj4gKw0KPj4gKyAgICByZXQg
+PSBkcm1fY29ubmVjdG9yX2luaXQoZHJtLCBjb25uZWN0b3IsDQo+PiArICAgICAgICAgICAgICAg
+ICAmYXBwbGV0YmRybV9jb25uZWN0b3JfZnVuY3MsIERSTV9NT0RFX0NPTk5FQ1RPUl9VU0IpOw0K
+Pj4gKyAgICBpZiAocmV0KSB7DQo+PiArICAgICAgICBkcm1fZXJyKGRybSwgIkZhaWxlZCB0byBp
+bml0aWFsaXplIGNvbm5lY3RvclxuIik7DQo+PiArICAgICAgICByZXR1cm4gcmV0Ow0KPj4gKyAg
+ICB9DQo+PiArDQo+PiArICAgIGRybV9jb25uZWN0b3JfaGVscGVyX2FkZChjb25uZWN0b3IsICZh
+cHBsZXRiZHJtX2Nvbm5lY3Rvcl9oZWxwZXJfZnVuY3MpOw0KPj4gKw0KPj4gKyAgICByZXQgPSBk
+cm1fY29ubmVjdG9yX3NldF9wYW5lbF9vcmllbnRhdGlvbihjb25uZWN0b3IsDQo+PiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICBEUk1fTU9ERV9QQU5FTF9PUklFTlRBVElPTl9SSUdIVF9VUCk7
+DQo+PiArICAgIGlmIChyZXQpIHsNCj4+ICsgICAgICAgIGRybV9lcnIoZHJtLCAiRmFpbGVkIHRv
+IHNldCBwYW5lbCBvcmllbnRhdGlvblxuIik7DQo+PiArICAgICAgICByZXR1cm4gcmV0Ow0KPj4g
+KyAgICB9DQo+PiArDQo+PiArICAgIGNvbm5lY3Rvci0+ZGlzcGxheV9pbmZvLm5vbl9kZXNrdG9w
+ID0gdHJ1ZTsNCj4+ICsgICAgcmV0ID0gZHJtX29iamVjdF9wcm9wZXJ0eV9zZXRfdmFsdWUoJmNv
+bm5lY3Rvci0+YmFzZSwNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICBkcm0tPm1vZGVfY29u
+ZmlnLm5vbl9kZXNrdG9wX3Byb3BlcnR5LCB0cnVlKTsNCj4+ICsgICAgaWYgKHJldCkgew0KPj4g
+KyAgICAgICAgZHJtX2Vycihkcm0sICJGYWlsZWQgdG8gc2V0IG5vbi1kZXNrdG9wIHByb3BlcnR5
+XG4iKTsNCj4+ICsgICAgICAgIHJldHVybiByZXQ7DQo+PiArICAgIH0NCj4+ICsNCj4+ICsgICAg
+cmV0ID0gZHJtX2Nvbm5lY3Rvcl9hdHRhY2hfZW5jb2Rlcihjb25uZWN0b3IsIGVuY29kZXIpOw0K
+Pj4gKw0KPj4gKyAgICBpZiAocmV0KSB7DQo+PiArICAgICAgICBkcm1fZXJyKGRybSwgIkZhaWxl
+ZCB0byBpbml0aWFsaXplIHNpbXBsZSBkaXNwbGF5IHBpcGVcbiIpOw0KPj4gKyAgICAgICAgcmV0
+dXJuIHJldDsNCj4+ICsgICAgfQ0KPj4gKw0KPj4gKyAgICBkcm1fbW9kZV9jb25maWdfcmVzZXQo
+ZHJtKTsNCj4+ICsNCj4+ICsgICAgcmV0dXJuIDA7DQo+PiArfQ0KPj4gKw0KPj4gK3N0YXRpYyBp
+bnQgYXBwbGV0YmRybV9wcm9iZShzdHJ1Y3QgdXNiX2ludGVyZmFjZSAqaW50ZiwNCj4+ICsgICAg
+ICAgICAgICAgICAgY29uc3Qgc3RydWN0IHVzYl9kZXZpY2VfaWQgKmlkKQ0KPj4gK3sNCj4+ICsg
+ICAgc3RydWN0IHVzYl9lbmRwb2ludF9kZXNjcmlwdG9yICpidWxrX2luLCAqYnVsa19vdXQ7DQo+
+PiArICAgIHN0cnVjdCBkZXZpY2UgKmRldiA9ICZpbnRmLT5kZXY7DQo+PiArICAgIHN0cnVjdCBh
+cHBsZXRiZHJtX2RldmljZSAqYWRldjsNCj4+ICsgICAgc3RydWN0IGRybV9kZXZpY2UgKmRybTsN
+Cj4+ICsgICAgaW50IHJldDsNCj4+ICsNCj4+ICsgICAgcmV0ID0gdXNiX2ZpbmRfY29tbW9uX2Vu
+ZHBvaW50cyhpbnRmLT5jdXJfYWx0c2V0dGluZywgJmJ1bGtfaW4sICZidWxrX291dCwgTlVMTCwg
+TlVMTCk7DQo+PiArICAgIGlmIChyZXQpDQo+PiArICAgICAgICByZXR1cm4gZGV2X2Vycl9wcm9i
+ZShkZXYsIHJldCwgIkZhaWxlZCB0byBmaW5kIGJ1bGsgZW5kcG9pbnRzXG4iKTsNCj4+ICsNCj4+
+ICsgICAgYWRldiA9IGRldm1fZHJtX2Rldl9hbGxvYyhkZXYsICZhcHBsZXRiZHJtX2RybV9kcml2
+ZXIsIHN0cnVjdCBhcHBsZXRiZHJtX2RldmljZSwgZHJtKTsNCj4+ICsgICAgaWYgKElTX0VSUihh
+ZGV2KSkNCj4+ICsgICAgICAgIHJldHVybiBQVFJfRVJSKGFkZXYpOw0KPj4gKw0KPj4gKyAgICBh
+ZGV2LT5kZXYgPSBkZXY7DQo+PiArICAgIGFkZXYtPmluX2VwID0gYnVsa19pbi0+YkVuZHBvaW50
+QWRkcmVzczsNCj4+ICsgICAgYWRldi0+b3V0X2VwID0gYnVsa19vdXQtPmJFbmRwb2ludEFkZHJl
+c3M7DQo+PiArDQo+PiArICAgIGRybSA9ICZhZGV2LT5kcm07DQo+PiArDQo+PiArICAgIHVzYl9z
+ZXRfaW50ZmRhdGEoaW50ZiwgYWRldik7DQo+PiArDQo+PiArICAgIHJldCA9IGFwcGxldGJkcm1f
+Z2V0X2luZm9ybWF0aW9uKGFkZXYpOw0KPj4gKyAgICBpZiAocmV0KQ0KPj4gKyAgICAgICAgcmV0
+dXJuIGRldl9lcnJfcHJvYmUoZGV2LCByZXQsICJGYWlsZWQgdG8gZ2V0IGRpc3BsYXkgaW5mb3Jt
+YXRpb25cbiIpOw0KPj4gKw0KPj4gKyAgICByZXQgPSBhcHBsZXRiZHJtX3NpZ25hbF9yZWFkaW5l
+c3MoYWRldik7DQo+PiArICAgIGlmIChyZXQpDQo+PiArICAgICAgICByZXR1cm4gZGV2X2Vycl9w
+cm9iZShkZXYsIHJldCwgIkZhaWxlZCB0byBzaWduYWwgcmVhZGluZXNzXG4iKTsNCj4+ICsNCj4+
+ICsgICAgcmV0ID0gYXBwbGV0YmRybV9zZXR1cF9tb2RlX2NvbmZpZyhhZGV2KTsNCj4+ICsgICAg
+aWYgKHJldCkNCj4+ICsgICAgICAgIHJldHVybiBkZXZfZXJyX3Byb2JlKGRldiwgcmV0LCAiRmFp
+bGVkIHRvIHNldHVwIG1vZGUgY29uZmlnXG4iKTsNCj4+ICsNCj4+ICsgICAgcmV0ID0gZHJtX2Rl
+dl9yZWdpc3Rlcihkcm0sIDApOw0KPj4gKyAgICBpZiAocmV0KQ0KPj4gKyAgICAgICAgcmV0dXJu
+IGRldl9lcnJfcHJvYmUoZGV2LCByZXQsICJGYWlsZWQgdG8gcmVnaXN0ZXIgRFJNIGRldmljZVxu
+Iik7DQo+PiArDQo+PiArICAgIHJldCA9IGFwcGxldGJkcm1fY2xlYXJfZGlzcGxheShhZGV2KTsN
+Cj4+ICsgICAgaWYgKHJldCkNCj4+ICsgICAgICAgIHJldHVybiBkZXZfZXJyX3Byb2JlKGRldiwg
+cmV0LCAiRmFpbGVkIHRvIGNsZWFyIGRpc3BsYXlcbiIpOw0KPj4gKw0KPj4gKyAgICByZXR1cm4g
+MDsNCj4+ICt9DQo+PiArDQo+PiArc3RhdGljIHZvaWQgYXBwbGV0YmRybV9kaXNjb25uZWN0KHN0
+cnVjdCB1c2JfaW50ZXJmYWNlICppbnRmKQ0KPj4gK3sNCj4+ICsgICAgc3RydWN0IGFwcGxldGJk
+cm1fZGV2aWNlICphZGV2ID0gdXNiX2dldF9pbnRmZGF0YShpbnRmKTsNCj4+ICsgICAgc3RydWN0
+IGRybV9kZXZpY2UgKmRybSA9ICZhZGV2LT5kcm07DQo+PiArDQo+PiArICAgIHB1dF9kZXZpY2Uo
+YWRldi0+ZGV2KTsNCj4+ICsgICAgZHJtX2Rldl91bnBsdWcoZHJtKTsNCj4+ICsgICAgZHJtX2F0
+b21pY19oZWxwZXJfc2h1dGRvd24oZHJtKTsNCj4+ICt9DQo+PiArDQo+PiArc3RhdGljIHZvaWQg
+YXBwbGV0YmRybV9zaHV0ZG93bihzdHJ1Y3QgdXNiX2ludGVyZmFjZSAqaW50ZikNCj4+ICt7DQo+
+PiArICAgIHN0cnVjdCBhcHBsZXRiZHJtX2RldmljZSAqYWRldiA9IHVzYl9nZXRfaW50ZmRhdGEo
+aW50Zik7DQo+PiArDQo+PiArICAgIC8qDQo+PiArICAgICAqIFRoZSBmcmFtZWJ1ZmZlciBuZWVk
+cyB0byBiZSBjbGVhcmVkIG9uIHNodXRkb3duIHNpbmNlIGl0cyBjb250ZW50DQo+PiArICAgICAq
+IHBlcnNpc3RzIGFjcm9zcyBib290cw0KPj4gKyAgICAgKi8NCj4+ICsgICAgZHJtX2F0b21pY19o
+ZWxwZXJfc2h1dGRvd24oJmFkZXYtPmRybSk7DQo+PiArfQ0KPj4gKw0KPj4gK3N0YXRpYyBjb25z
+dCBzdHJ1Y3QgdXNiX2RldmljZV9pZCBhcHBsZXRiZHJtX3VzYl9pZF90YWJsZVtdID0gew0KPj4g
+KyAgICB7IFVTQl9ERVZJQ0VfSU5URVJGQUNFX0NMQVNTKDB4MDVhYywgMHg4MzAyLCBVU0JfQ0xB
+U1NfQVVESU9fVklERU8pIH0sDQo+PiArICAgIHt9DQo+PiArfTsNCj4+ICtNT0RVTEVfREVWSUNF
+X1RBQkxFKHVzYiwgYXBwbGV0YmRybV91c2JfaWRfdGFibGUpOw0KPj4gKw0KPj4gK3N0YXRpYyBz
+dHJ1Y3QgdXNiX2RyaXZlciBhcHBsZXRiZHJtX3VzYl9kcml2ZXIgPSB7DQo+PiArICAgIC5uYW1l
+ICAgICAgICA9ICJhcHBsZXRiZHJtIiwNCj4+ICsgICAgLnByb2JlICAgICAgICA9IGFwcGxldGJk
+cm1fcHJvYmUsDQo+PiArICAgIC5kaXNjb25uZWN0ICAgID0gYXBwbGV0YmRybV9kaXNjb25uZWN0
+LA0KPj4gKyAgICAuc2h1dGRvd24gICAgPSBhcHBsZXRiZHJtX3NodXRkb3duLA0KPj4gKyAgICAu
+aWRfdGFibGUgICAgPSBhcHBsZXRiZHJtX3VzYl9pZF90YWJsZSwNCj4+ICt9Ow0KPj4gK21vZHVs
+ZV91c2JfZHJpdmVyKGFwcGxldGJkcm1fdXNiX2RyaXZlcik7DQo+PiArDQo+PiArTU9EVUxFX0FV
+VEhPUigiS2VyZW0gS2FyYWJheSA8a2VrcmJ5QGdtYWlsLmNvbT4iKTsNCj4+ICtNT0RVTEVfREVT
+Q1JJUFRJT04oIkFwcGxlIFRvdWNoIEJhciBEUk0gRHJpdmVyIik7DQo+PiArTU9EVUxFX0xJQ0VO
+U0UoIkdQTCIpOw0KPiANCj4gLS0NCj4gLS0NCj4gVGhvbWFzIFppbW1lcm1hbm4NCj4gR3JhcGhp
+Y3MgRHJpdmVyIERldmVsb3Blcg0KPiBTVVNFIFNvZnR3YXJlIFNvbHV0aW9ucyBHZXJtYW55IEdt
+YkgNCj4gRnJhbmtlbnN0cmFzc2UgMTQ2LCA5MDQ2MSBOdWVybmJlcmcsIEdlcm1hbnkNCj4gR0Y6
+IEl2byBUb3RldiwgQW5kcmV3IE15ZXJzLCBBbmRyZXcgTWNEb25hbGQsIEJvdWRpZW4gTW9lcm1h
+bg0KPiBIUkIgMzY4MDkgKEFHIE51ZXJuYmVyZykNCj4gDQo=
