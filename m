@@ -1,153 +1,96 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mout.web.de (mout.web.de [212.227.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92EAA2571AD
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 12:31:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1CAE2571AD
+	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 12:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740486674; cv=none; b=kPH1Mk8ogJQpgIloi53pcsWoefOQAIpaNahDN3JVICDJD85HA0duLek4G+2/2ZJLK0oM3RceTctVUEUYSK+6lqNUsuUT34MFTXmAya6AgWEP/S/aC8nXJtsTlgDwFCPKZUb6Rw8ZVDTSzLK7/aCgGQHFb8L+t+o5r6Z/TG1UNoM=
+	t=1740486714; cv=none; b=VIJilzqDsj+wj2SXZu4shP+Q5Ow2GwA8JXubQTwsQ5H0iTt7hdfJ7agK7mRmC4nLhUSZRyBb7N0voQR2FvtQWGxZ8cYSYzy0e7+hHxVySZT6Cuy4z9BWr1XPCWxBYxjtzpRqVu7GLlBQ8o/JnrNu//sOPDyWB/J7f6R8n/Eg/X8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740486674; c=relaxed/simple;
-	bh=epBzChFWqyXGC78otuPSiM2PC+xIZf6jGDfUxUyxyFQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=izl6a09CMOPfInLwZPS70xXys2ndJ/kwfvNJ1pizhFLBg5kZAtYtT6EQriuK8fTT07HnaKs2h9BlhV/OLzVs8X9+VrC5hu+a0jhua6LmWXO9eEVCIn3Xi4CJYtQPYIxATN3VDNwAfOLZ8M4TG6SXCT3hKPv+LChWnOdZvsicytQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cl4uzAFT; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740486714; c=relaxed/simple;
+	bh=BE3dddq/PJ2LGVwbssOwVpXeFrwbodiYdIqHe8+jSQ8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=WO2DamCrCCu0M2mPW/Q88154Bm+IlunWDbN1/7czSNSaVLqGR9vW+I79mYYHNREb+DZn44tDpECPIvz/Wz8VlfBtm3JVUSdmrco5GpFbi3ZPtjOJHJ/WaI/D/pYi22FH4vgw0F6uEQmOemEHTJ+QCqX35unErb9IUI4qBqQ+FyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=P5YmsyYX; arc=none smtp.client-ip=212.227.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cl4uzAFT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740486670;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oKyNSexWiDKwCqu9HObEPednC2sw0nkOY/VAAlgGvIY=;
-	b=cl4uzAFT9aHEUpDHYm+Jn/C0/KRc32crCqV2B/LXHks1wBEObBbv3tFoXumDF0XlGa+Of5
-	r5WsQFv9/urffQy+uFXVg0p0TuFhCIeuyVAlOWGeyxTDi3N8n1CcLY2OhpJxubN23rQDzZ
-	OTZFSM7L0fZAamLnp4IsAdbFrjWlvpw=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-58-w_AlnDQ6MWKdhzpjCRok2w-1; Tue, 25 Feb 2025 07:31:09 -0500
-X-MC-Unique: w_AlnDQ6MWKdhzpjCRok2w-1
-X-Mimecast-MFC-AGG-ID: w_AlnDQ6MWKdhzpjCRok2w_1740486668
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4398e841963so44713235e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 04:31:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740486668; x=1741091468;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oKyNSexWiDKwCqu9HObEPednC2sw0nkOY/VAAlgGvIY=;
-        b=BMT15++Ew108iHBJ3THqLdU7k/JDwqzx3s/QpKT1BPpOiKDPmwNY0xZeGkhxvR3kW6
-         2aB7V7axnE1+Zs0bnA3FIV8D0CD3A4+NYSzq7l0k180JCVYfJnrZE9jGuqtzxd7uKKCb
-         rXSVfE2E8OsKGLhP8SqzFmlVCs2OwhqbBavAwvHG1GUdo0/yGSFqkecm/kV85hRjiQxt
-         3JPtccB7CBnfptEkNBhyBZY5VGRPa9gM/FV0AcCofyamc6RLl/p9UCxPQRLGwl1Eoos7
-         BE2AHdHtE4Aldj+7s6O4SGOweONqhwvdqR0U6rYV7M1N3pwlrN2LcHc1RbzKy+aw9o5u
-         8dYg==
-X-Forwarded-Encrypted: i=1; AJvYcCUu/85d/cTPVn3DEphXEKYEItVwkLvXyNSSDqYSBhI1QObAbM5QdnEGJ0uUvm32MptV7AMXH2fJz+4Asls=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvH9pYHJTB3TEN4XJuwvd04n6QR7ZeK8nCAbIMLF8YvQxaaine
-	mdYbjqOikhcz+VA+K8npSBGmGGlEYhpYCYSuwcpkSUBzQiHRfI/LcUe/7p+2tiq4BPD3tMdVzTS
-	wV1//e39CpooPW6wwxOBxJsXHU/D7zdMQfY5uC0FIMLo2u5pCBtWDelSL1LTwZw==
-X-Gm-Gg: ASbGncv6MFzdpt+S5SDRvJJyB/vc4SV7UILAF1r8FY8t3h1DRGnfKXhZRTArY5j5Hlx
-	k1Aq73ygPBXlD1TFkJoMqD3y0yupv7fOX2YihftSCJV3LDjypRga0JN+GByLzm+pJT1tzGnPpuV
-	HwsnwVPo1FXfG326W2kI+N0KdKuCbrCtK07qf8KDHHa0JmLFkPHzrAJrA99kVL3WxoNQu9IHaqq
-	kjoSQK8PySxw+A56bEdu2TvdsSqtIzJ83o9OYEfRfMZ5Ri9Bnuz1ifcuU5ikyzel3GmRuh0IwjZ
-X-Received: by 2002:a05:600c:1c16:b0:439:8346:506b with SMTP id 5b1f17b1804b1-439aebb2e0fmr135928455e9.19.1740486667907;
-        Tue, 25 Feb 2025 04:31:07 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG8IQnXGA03kjD9l5gPzLgfWvd950pwDLmUbGGnKrhkB4ZzLB2aleYySGlP1eeJx4R7L/lfNw==
-X-Received: by 2002:a05:600c:1c16:b0:439:8346:506b with SMTP id 5b1f17b1804b1-439aebb2e0fmr135928265e9.19.1740486667515;
-        Tue, 25 Feb 2025 04:31:07 -0800 (PST)
-Received: from redhat.com ([2.52.7.97])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-390cd882644sm2100289f8f.42.2025.02.25.04.31.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 04:31:06 -0800 (PST)
-Date: Tue, 25 Feb 2025 07:31:03 -0500
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Eugenio Perez Martin <eperezma@redhat.com>
-Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Hanna Reitz <hreitz@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Jason Wang <jasowang@redhat.com>,
-	German Maglione <gmaglione@redhat.com>, stefanha@redhat.com
-Subject: Re: [PATCH] vduse: add virtio_fs to allowed dev id
-Message-ID: <20250225072222-mutt-send-email-mst@kernel.org>
-References: <20250121103346.1030165-1-eperezma@redhat.com>
- <20250224164956-mutt-send-email-mst@kernel.org>
- <CAJaqyWfir7+oVtC3Z+eC+jbDxkACs0J9a4-wnx_dgU5VeFhr8A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="P5YmsyYX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1740486703; x=1741091503; i=markus.elfring@web.de;
+	bh=BE3dddq/PJ2LGVwbssOwVpXeFrwbodiYdIqHe8+jSQ8=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=P5YmsyYXGHN9ZDoNse3XScWxylVITeZpAIWcAOUmyhrmA68rPjTm0sZ22D1WyTvK
+	 BOxMec3dWIxSQXHym+YEnGigQp/+GT5foQ2vBMamjnCDDa6F5/uLE8yi4YaYMa0sE
+	 9zr+7tO9tnsgr+n2W4ZfvrZbQUNiO1UAe3cwS7Ldgmz5nja893r+355qLWl20BrHX
+	 xlczbC4QTb9GLY3fWUejz02PH2Ozf76zwLted6YcPF8Uip9hbfn4PmLxrbJsbdKFF
+	 U4D8iMTN18F80ZrlxOJWo5QEjh3iNimfIDCPyORlJt8A+dueZqZMFReMwlXjI58s6
+	 17RQJY6/nt/IvSrT2g==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.36]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1M9qhD-1th7LG2WVZ-004otk; Tue, 25
+ Feb 2025 13:31:43 +0100
+Message-ID: <9bc553de-2266-4134-b370-bb287d3538dd@web.de>
+Date: Tue, 25 Feb 2025 13:31:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJaqyWfir7+oVtC3Z+eC+jbDxkACs0J9a4-wnx_dgU5VeFhr8A@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+To: Dave Penkler <dpenkler@gmail.com>, linux-staging@lists.linux.dev
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20250222202301.3729-1-dpenkler@gmail.com>
+Subject: Re: [PATCH] staging: gpib: Add return value to request_control
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20250222202301.3729-1-dpenkler@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:A4K7lIFDn9B7GUN6vCI4Ifk5k7USBdi47WS54kZMNLKMDtceSNI
+ OTCseK2vw1k7OinV996DZAUzfi/i6KBUdU/NsON/bGTiAchru/KqlEa+9xmsyUmGnKe6bjR
+ lB2t/YBzjKGt4H1TZg3iKrlAw0gJtcW7FaSy4sNe/q/NpEYh03uQMOd54PDyF4OyTp5bc4F
+ NOPFaV2vEBnMXdfUckb4Q==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:8uJ62oDRgss=;bxudl0MtuFdFeSmj6qNLHwpY+HW
+ gb0Mv0Cwwbsqbq/4UeogT6P2Hc8yrhV+aWXP2xnmWD21Qb6raqZGqlHdEnb1HzWzMMHFW2sGo
+ uX9SmW2+bYAJx7msKV1rjLBloLwsLc0e++at2hCQNN+M4jlP8eu9a8i2uwolB/mHpz3J524fD
+ KcMQMWEKU2M9VOXrXlWTfbIanOey2x/BOPGhzRTl7WexvKKd4FwOJEiasq12axFjTUOnEnH/V
+ ibTB413iaiqaBM0Ljihk0QsmXPNlIzMmBOAfgtsed4+oELK8PRm+hafZN3N+F/wnMDwzkiTep
+ foPjI2yFRjdZRlrNcf9kgYssOKKtz6ERegBgkpPMlNPNVNMUYnEZglD0bCx1psxfsVNJsUzk6
+ Jazm3wq70jO5/r7V+9lc5te3wWwaFDgBptVi+MBApTz0X/9/W0rXzM54aZYq7q9WGHttkcIWz
+ sW40upVDh7Qrz9L+QYriEuxj+cYYJ7M1IeEY6Nl01rUhcljNDIO0HmBkCdpZiEsIeJ5R8LGm+
+ Hwsrn9AbG6Q4Je4b1GSBdFbkhrc1D+daezZLV4pzxvclxDssxje32Of3N+n5sK9IzDDLYyIrK
+ Q2FnUnY8aCuw2rLr0uEXEY8ZSDFSK7CWkNmb1eUD+hhxhrnM9f48Uz0KV1j/TSMB5g/YDWeAb
+ Jgs/lynZrxvIymK3ZsAz/shxsWruJF665mlj1sRmMXzCKSOn0CCmO5g1qSUgKmWgqu/yw4ij4
+ JG+dp1CmRsJpaffXhOWufZ0CLSref6f7Yj5K809mn38qOEuMi1M0PUvMytJcNmpyVY5HDdNgX
+ A/VJbIAJOkVWnDUMUxU8FZGghXIz3R37teb0hTLiRXv5c84ErmhUVtfQ8+HcmKPCVIhvBMkff
+ vxV0WD1juuIbzJeAmwRSomwijOxHc0tjrg1ZE2KmtZG5lNjByaHf9y6OTqlPcB2cjHHGGDeVC
+ sTp7okPLeQz8e6x5TC+5yB+5qRubQSlWK0DRBq3LExlq90dEh0F/wDzUG90PlvoG9wKSTezPK
+ +MPjBHokEdKwT3sFfDvV6KgmoCkQwayYOo14Xv2Y/EUACwe72TTGBS3N04bdM9c7an+ElKQh6
+ TcFnNjtIVkOz+9vo0cIIn32Yg2LE7YDdkkl0PFNrLeGU3gpk9+dxCi80G6A0z+pKKBj9I06Om
+ /Q7p6qCUgZC0cEeP8ODJ66uBFOR1nD6Y+ieJm3mMQtsLi++2+nv4Heed5DMPSWvZVyB7jueHN
+ jWQis1Y87kjpurM6VzG3PvQ2OSRT5gutE8cgra+M3m/uUhrTcNd/vn5+RHIm2oRwbQOxmdx8J
+ YzW2yt1JswZ3SigNSqYnERomkw0g1WiPwYj7a4V0+/Nezd5i26BxoUP20D9H5vFRPbhYUyc+p
+ uHE2kvVQu/MlJ8qOiiUOfB0kEN0pvD/1oL9N8Zbvc63VHIUaSDZo9QI/itFmE/sqNz6of2a9T
+ 3h43GgZPjIdvTbq+7k7Csx7Sn3aE=
 
-On Tue, Feb 25, 2025 at 01:17:02PM +0100, Eugenio Perez Martin wrote:
-> On Mon, Feb 24, 2025 at 10:51 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> >
-> > On Tue, Jan 21, 2025 at 11:33:46AM +0100, Eugenio Pérez wrote:
-> > > A VDUSE device that implements virtiofs device works fine just by
-> > > adding the device id to the whitelist.
-> > >
-> > > Signed-off-by: Eugenio Pérez <eperezma@redhat.com>
-> >
-> >
-> > OK, but the commit log really should say why
-> > you are doing this.
-> 
-> Sure I can expand on the motivation.
-> 
-> Something like "Allowing VDUSE FS type allows to build filesystems
-> that run in userspace and can be presented transparently to the host
-> and the guest. After modifying userland's libfuse, this allows to
-> expose a good amount to already available userland FS through vDPA."
-> 
-> I'd add using the high performance virtio protocol but I still need to
-> do more tests for this TBH.
-> 
-> > And also why is it safe.
-> >
-> 
-> Can you expand on the scenarios you think this is insecure? While I
-> understand it's security sensitive, you already need root to perform
-> vdpa device operations. Is FS different from net or block?
-> 
-> Thanks!
+=E2=80=A6
+> This patch changes the prototype of request_control to int
+=E2=80=A6
 
-I did not say it was insecure, just that you need to explain the
-security considerations in the commit log.
-The issue is that when one gave access to vdpa user device previously
-it would only allow mounting blk now a filesystem.
+You may occasionally put more than 58 characters into text lines
+of such a change description.
 
-Net is different, it is gated by CAP_NET_ADMIN.
 
-When net was introduced, selinux was there initially then it
-was deferred and never surfaced.
-Maybe we should revive it so it is possible to control which
-devices can be created in a granular way.
+See also:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
+cumentation/process/submitting-patches.rst?h=3Dv6.14-rc4#n94
 
-> > > ---
-> > >  drivers/vdpa/vdpa_user/vduse_dev.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/drivers/vdpa/vdpa_user/vduse_dev.c b/drivers/vdpa/vdpa_user/vduse_dev.c
-> > > index 7ae99691efdf..6a9a37351310 100644
-> > > --- a/drivers/vdpa/vdpa_user/vduse_dev.c
-> > > +++ b/drivers/vdpa/vdpa_user/vduse_dev.c
-> > > @@ -144,6 +144,7 @@ static struct workqueue_struct *vduse_irq_bound_wq;
-> > >  static u32 allowed_device_id[] = {
-> > >       VIRTIO_ID_BLOCK,
-> > >       VIRTIO_ID_NET,
-> > > +     VIRTIO_ID_FS,
-> > >  };
-> > >
-> > >  static inline struct vduse_dev *vdpa_to_vduse(struct vdpa_device *vdpa)
-> > > --
-> > > 2.48.1
-> >
-
+Regards,
+Markus
