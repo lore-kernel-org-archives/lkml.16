@@ -1,165 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC796263C83
-	for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 09:15:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906DB265CDD;
+	Tue, 25 Feb 2025 09:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740474911; cv=none; b=Hd11ajiMaZRaWdeKuIXZ+Z/KWFoWkS1/sTLidp6/raNviR80rfJ9bvMP4uA6VZsQzPj43O8vg9n1fHVsy+e9VYi5s2OZhLjHQMFvxpDq+ADeCDTnLkVgvm6KNFyygMr8IWhlXfUmkjwoUteA3uSreo3LhWdWC3eC56pKD4/waX8=
+	t=1740474924; cv=none; b=FM+aH3Jmr9Wc8NZH+IK1MUBSNQ06LMww7hnvVVQjZ17WyHZDdN0xsIiv+wJg67isva5MSm5A7MMQbPJJLIeXlUGDrhfbmr6B5tR9+jLU9AMruRunx1CVmamFA/I9vSNs9RR/AvZZPeQ1aGEoWtE8UO4NtdozgqXa0Xx7qVwoP9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740474911; c=relaxed/simple;
-	bh=fHGpW80fYUJHEoegs7hdiagul4opbNfZJrlcvH16f+k=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=muPmt4Zl6912Uo8Be0Z/H+sISJ4n/hZvNSsAjiA0ac4Qn1xNz2RXZFvBqPOQPwkwXgGw+R0DXxpQBgZT6EBxxa9kE3PhsO4WNIBpMoHOQO7KJk2d9ZByx4iyQGuL8eMJvLIp6rGDGyh7Tegui1aQpi/hCBbJqPouz20xwdKG6zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MsCAJDir; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740474924; c=relaxed/simple;
+	bh=7WcjelV31lrY8G6I07VmlKtcD76/c/2s50z0eMD/3vo=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=QeJKV4UH8zl1TlLzbEiK/hHrlWgHmRA4MJVjDZQekAEvXyuMtcAG52Vom3f68TAHqpQfOi1FyZaqYHNorgMmOoKj0ll5yh7kPOqt7dwS++O6Fwmkyr3SfF3dCY4G6EQZdSBGUiVmJlGIu/OE/DuLCCrWH4NSYAr45sACkQ3+aRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=1xsRNF2J; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MsCAJDir"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740474908;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5mY0Y8NDtCq9U6kZXa7z7cTNd5hZ8Jf2lYO6g2P04nc=;
-	b=MsCAJDira7fBdWqqIboShoJUxzfqpXAG7ElCMPF/xP2oRROfTeO3MrdvKzSEmcNVB576LF
-	znW5PjWuLu9gBINYkw8KiNGv/0zkOqEl6ed+oS8hCBN1duR3R9mR6ygeaGIGYHQTScPi3n
-	NgVP9SpcFNZ0m7n8YBAyhKdNYP0idQc=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-187-lKPlpMCDNg26HOCRUz_8tg-1; Tue, 25 Feb 2025 04:15:07 -0500
-X-MC-Unique: lKPlpMCDNg26HOCRUz_8tg-1
-X-Mimecast-MFC-AGG-ID: lKPlpMCDNg26HOCRUz_8tg_1740474906
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-438e180821aso26927555e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Feb 2025 01:15:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740474906; x=1741079706;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5mY0Y8NDtCq9U6kZXa7z7cTNd5hZ8Jf2lYO6g2P04nc=;
-        b=ojzufIiHuJTcew0Ug0LmgnQQbwQj4y1s6AyPkVQn8wmQEYUDcaEEB6qU5nZGxKLiHg
-         kYf4TjL3mzgXBNdJ080HekhVqv2UZ0hj/igTyYFOXbCuBSucfOOSRm5x/3HHLT1zH2st
-         TBdubZcA4DbD5uJTldqRJWC1mQHs95+76DLz+dBoalFyn5lxIIlGiMkOA3qHZhqdgNdJ
-         znelmfBnxC9Owzz/DMmL8O5mvfmlQF/og6HqeqVW+A6fvNVx5APDy3BNeAn9EryZlOdC
-         SIhYCUG1wqMHAqgGGK1GKrQ9KNe9sx1Q/36GPJadwKKrJd0HR5JHuNmwFHQQTK7+FgJz
-         X/eg==
-X-Forwarded-Encrypted: i=1; AJvYcCWerngKU6w5GMXdTTUPu5C/Oeegeva+0SRp+8VC3iD01E6fQCVKCPPvKAYImT/+0xlc4QgsQnFmeZYp5Uo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yylj69cJ927DG2rnGe9TpYKjctfodi7Q6d6JCVZg+nGkF16U2ef
-	4RE09MomqUPKtYrsXYAgmQV2xtWjjZcQtbVn3bff0cxbpg93TYLoutV0WG6K4NF8Bp9iRiV8G/r
-	Esmuxh1D09byhyX1WNvuJFfXVNMcZa1P99jkRHafNNGUBCgIFhUR0VG2BmfGR3A==
-X-Gm-Gg: ASbGncsMn6ZXVP5XaJLJXYKuothfDQjb+FJKRKQdatBJrSWhSlKqdArf84qQfotpXCd
-	Znk8p9589oZc3QaFf76l7G++aoUBkYfzEAr8hvx5z3mMhnxZjWzQZLY+mRq+Q/I4Q78NKvjw56+
-	cFyfRXg34ydChwvfONDRVmEIft+Zi/YDlWgGl/saXHsINvE2BYF0qgTxoM7LCXqs4FtjfpgSULa
-	Xo1MGtpIqfMTnSAKWnd/0Jk6LqpmUgct9r/7VGq2+oFchunqy8yDGGyUMXQBoVIXsMdjeXnwbhF
-	JetWVkcAYGZUtV1pxeqIPbv336cC4k16cirnOAFB/g==
-X-Received: by 2002:a05:600c:1546:b0:439:9946:af60 with SMTP id 5b1f17b1804b1-43ab0f72b03mr17377105e9.25.1740474905742;
-        Tue, 25 Feb 2025 01:15:05 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFv74YgG8Iolf174w9Y9ybHGXlvSToIfrToEGjP2c4/7Rl0aROxWh/UMKakDjj4UqxbgXB2bQ==
-X-Received: by 2002:a05:600c:1546:b0:439:9946:af60 with SMTP id 5b1f17b1804b1-43ab0f72b03mr17376785e9.25.1740474905347;
-        Tue, 25 Feb 2025 01:15:05 -0800 (PST)
-Received: from [10.32.64.164] (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43ab1532f0asm18718845e9.4.2025.02.25.01.15.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 01:15:04 -0800 (PST)
-Message-ID: <7df6e1846ed6932c789a913c6a10aa8df5e26519.camel@redhat.com>
-Subject: Re: [PATCH net-next v3 2/4] stmmac: loongson: Remove surplus loop
-From: Philipp Stanner <pstanner@redhat.com>
-To: Yanteng Si <si.yanteng@linux.dev>, Philipp Stanner <phasta@kernel.org>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
- <mcoquelin.stm32@gmail.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Huacai Chen <chenhuacai@kernel.org>,
- Yinggang Gu <guyinggang@loongson.cn>, Feiyang Chen
- <chenfeiyang@loongson.cn>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Qing
- Zhang <zhangqing@loongson.cn>
-Cc: netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Date: Tue, 25 Feb 2025 10:15:03 +0100
-In-Reply-To: <437d4fad-6cd4-4f90-a1bb-07193d015cad@linux.dev>
-References: <20250224135321.36603-2-phasta@kernel.org>
-	 <20250224135321.36603-4-phasta@kernel.org>
-	 <437d4fad-6cd4-4f90-a1bb-07193d015cad@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="1xsRNF2J"
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 51P68E9B032103;
+	Tue, 25 Feb 2025 04:15:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=NdbmMSBSFj7Txm2ujfxK89J7NWZ
+	VgZ9A3lxLDEClkFY=; b=1xsRNF2JFLOLieWIgGvkjJkufSZQYPtlHo5l+RdEUNb
+	cKWIRSwwLIVTyw9alEKqLEqi2qC5XQCpEyuYeVgPUmrH9hMUjY+IZDjo3MuOjeRO
+	3cv/VM+A6pVj0I+PHj9qedrYkKXmiKAualalNW38McC6T71E7+TAPzkWpw1747Mx
+	jrrp/eHTZtN/0+mbYfvlvsbiOxkcb+PpJ1Lw61NieJN/uii3Axt9EhP0BhNKyumA
+	mbI25p0s7eMnL37ldbrhWc4uk47p0R/ezqhTKR3yURZGyhEriLEmBwxZMBYd8jbQ
+	GP/xJtb7jiwo5MpAUAdDWZnP4D5jDcadTCBktZcNwaA==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 44yccanu28-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Feb 2025 04:15:08 -0500 (EST)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 51P9F7x7003897
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 25 Feb 2025 04:15:07 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Tue, 25 Feb
+ 2025 04:15:07 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Tue, 25 Feb 2025 04:15:07 -0500
+Received: from ATORRENO-L02.ad.analog.com (ATORRENO-L02.ad.analog.com [10.116.45.25])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 51P9Eof8011564;
+	Tue, 25 Feb 2025 04:14:53 -0500
+From: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
+Subject: [PATCH 0/2] Add support for ADP5055 triple buck regulator.
+Date: Tue, 25 Feb 2025 17:08:32 +0800
+Message-ID: <20250225-upstream-adp5055-v1-0-a5a7f8e46986@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJCIvWcC/x2MQQ5AMBAAvyJ71qQ2VvAVcShd7EE1LSJp/F3jN
+ JnDTILIQThCXyQIfEuUw2WpygLmzbiVldjsgBpJI5K6fDwDm10Z60kTZU7cYINL19aQMx94ked
+ fDuP7flGHlwdiAAAA
+X-Change-ID: 20250225-upstream-adp5055-adbe6262f984
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Rob
+ Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor
+ Dooley <conor+dt@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Alexis
+ Czezar Torreno <alexisczezar.torreno@analog.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740474891; l=1217;
+ i=alexisczezar.torreno@analog.com; s=20250213; h=from:subject:message-id;
+ bh=7WcjelV31lrY8G6I07VmlKtcD76/c/2s50z0eMD/3vo=;
+ b=naQrGPODQ4Bge+/jRmNft5q8qlTsAtkBTUwXLov1NZGkOKIHuAkLYSrSGYjGCELSOEJsTn5xl
+ 1glTV3rSiR6DFnsXSgJCYXfRxIge85l4gZvNos6K9ztHvOwk4/Fzhr+
+X-Developer-Key: i=alexisczezar.torreno@analog.com; a=ed25519;
+ pk=XpXmJnRjnsKdDil6YpOlj9+44S+XYXVFnxvkbmaZ+10=
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-GUID: F0JV4oo9XMbONpf_yyXvwkPgqzluIzCh
+X-Authority-Analysis: v=2.4 cv=SPa4VPvH c=1 sm=1 tr=0 ts=67bd8a1c cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=IkcTkHD0fZMA:10 a=T2h4t0Lz3GQA:10 a=gAnH3GRIAAAA:8 a=pX8K7AMcFWmkIJv9s54A:9 a=QEXdDO2ut3YA:10
+ a=oVHKYsEdi7-vN-J5QA_j:22
+X-Proofpoint-ORIG-GUID: F0JV4oo9XMbONpf_yyXvwkPgqzluIzCh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1057,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-02-25_03,2025-02-24_02,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=983
+ spamscore=0 impostorscore=0 clxscore=1011 bulkscore=0 priorityscore=1501
+ lowpriorityscore=0 adultscore=0 malwarescore=0 suspectscore=0 mlxscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502100000
+ definitions=main-2502250063
 
-On Tue, 2025-02-25 at 17:06 +0800, Yanteng Si wrote:
->=20
-> =E5=9C=A8 2/24/25 9:53 PM, Philipp Stanner =E5=86=99=E9=81=93:
-> > loongson_dwmac_probe() contains a loop which doesn't have an
-> > effect,
-> > because it tries to call pcim_iomap_regions() with the same
-> > parameters
-> > several times. The break statement at the loop's end furthermore
-> > ensures
-> > that the loop only runs once anyways.
-> >=20
-> > Remove the surplus loop.
-> >=20
-> > Signed-off-by: Philipp Stanner <phasta@kernel.org>
->=20
-> It seems that the fix-tag has been forgotten, next two patches as
-> well.
+Introduce a regulator driver support for ADP5055. The device combines 3
+high performance buck regulators in a 43-termminal land grid array
+package. The device enables direct connection to high input voltages up
+to 18V with no preregulator. Channel 1 and 2 deliver a programmable
+output current of 3.5A or 7.5A or provide a single output with up to 14A
+in parallel operation. Channel 3 has a programmable output current of
+1.5A or 3A.
 
-Not forgotten, I just think that patches 2-4 are code improvements, not
-bug fixes.
+Signed-off-by: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
+---
+Alexis Czezar Torreno (2):
+      dt-bindings: regulator: add adi,adp5055-regulator
+      regulator: adp5055: Add driver for adp5055
 
-The issue in patch 1 would cause actual misbehavior (a useless debug
-information print in case of a resource collision), whereas 2-4 are
-just ugly code, but not actual bugs: the loop always just runs once;
-and unmapping the PCI resources manually is valid, but obviously
-unnecessary.
+ .../bindings/regulator/adi,adp5055-regulator.yaml  | 214 +++++++++
+ MAINTAINERS                                        |   7 +
+ drivers/regulator/Kconfig                          |  11 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/adp5055-regulator.c              | 490 +++++++++++++++++++++
+ 5 files changed, 723 insertions(+)
+---
+base-commit: 7fef39f0e82ff02282797d9ae2589b39b16ab614
+change-id: 20250225-upstream-adp5055-adbe6262f984
 
-Agreed?
-
-P.
-
->=20
->=20
-> Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
->=20
-> Thanks,
-> Yanteng
->=20
-> > ---
-> > =C2=A0 drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c | 11 +++---=
--
-> > ----
-> > =C2=A0 1 file changed, 3 insertions(+), 8 deletions(-)
-> >=20
-> > diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> > b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> > index 73a6715a93e6..e3cacd085b3f 100644
-> > --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> > +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
-> > @@ -554,14 +554,9 @@ static int loongson_dwmac_probe(struct pci_dev
-> > *pdev, const struct pci_device_id
-> > =C2=A0=C2=A0	pci_set_master(pdev);
-> > =C2=A0=20
-> > =C2=A0=C2=A0	/* Get the base address of device */
-> > -	for (i =3D 0; i < PCI_STD_NUM_BARS; i++) {
-> > -		if (pci_resource_len(pdev, i) =3D=3D 0)
-> > -			continue;
-> > -		ret =3D pcim_iomap_regions(pdev, BIT(0),
-> > DRIVER_NAME);
-> > -		if (ret)
-> > -			goto err_disable_device;
-> > -		break;
-> > -	}
-> > +	ret =3D pcim_iomap_regions(pdev, BIT(0), DRIVER_NAME);
-> > +	if (ret)
-> > +		goto err_disable_device;
-> > =C2=A0=20
-> > =C2=A0=C2=A0	memset(&res, 0, sizeof(res));
-> > =C2=A0=C2=A0	res.addr =3D pcim_iomap_table(pdev)[0];
+Best regards,
+-- 
+Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
 
