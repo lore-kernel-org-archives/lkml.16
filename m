@@ -1,66 +1,66 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5093B197A67;
-	Tue, 25 Feb 2025 16:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F7F197A7F;
+	Tue, 25 Feb 2025 16:39:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740501578; cv=none; b=pT2OLH+ANml6Bt0l8WQsyPmYhlFNWLttbUTOMfJy2GqwITWO51RYO01z6cNUsRi6XSpSpig8eLeTQ/ZBXfc3w615vhQJkNNnwfkNPBhXH6SR1WGHKtri8ThOFq17CL6GbKTdnMfdhqahkQ1jlLNRPrkFe0ypFCF6adb4BVt95uQ=
+	t=1740501580; cv=none; b=T2JOjzQhtMdb2C1+/ICxFJQ9f+WUT1hmxlpw4ZTcJGVPX7OCWQcYYcnjV3GNIDPehTOCo6i09CmV68ghApgTU1+QURXlhZTbx+c4lZtbr7tOccP8JANGMtpnuDkt2+v7FveQTUGvAQ6LwEMxeFbbcrzjqdGe3kO/QE3XjNpwElg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740501578; c=relaxed/simple;
-	bh=kit8ZJ2Sl67QYuVYSKVIaJfE5+49IGTXWdpdwz98ZmM=;
+	s=arc-20240116; t=1740501580; c=relaxed/simple;
+	bh=xrAEb0z/qkdG9ztjXy+2zCpd7gB4vIYTjNV/wiNhyGU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fbFzwyNYZWrXYuoE7Ni56kCK+QKIPz2xQYfNFqvSAVvLL2ckFH+WyanN0xpurLhDuEQ9981COspJBgnYzQ9ccoBoWtigeCdMRTTw4+lA9Kse1aLnJL0oIi3Kx7NbtW66BPCmk5K4EloIVfMlby7ZSQ4zF2DOjMS4bjejjenezBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=emdxpO0z; arc=none smtp.client-ip=209.85.218.53
+	 In-Reply-To:To:Cc; b=VPn2klMh8xcuCKKGKb04YERhRU8RiHh6Ioxq9/qwzaaWsahogjg99yP9r9t/L9/tbGDvX6Soe53f/OuKkUfaz9cDjcjmoK8bnJr7TMfm8eTx94YkLqha1QOpxOfuKWCk1WO05REfbXGuGhQDukQGwwAfdWqDt5w4LJYQ23Vl5Yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D3pmvKzw; arc=none smtp.client-ip=209.85.208.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="emdxpO0z"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-abbdf897503so1188697866b.0;
-        Tue, 25 Feb 2025 08:39:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D3pmvKzw"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5ded51d31f1so10375755a12.3;
+        Tue, 25 Feb 2025 08:39:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740501573; x=1741106373; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1740501576; x=1741106376; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=olwzXUkbl7L3Ijdgy9FaKldLZmtXz3S1t0tQ8+qrEJk=;
-        b=emdxpO0zf7xyCoouLnTDF+MeyEYBOApHamqahYpjVXkUy26iiC3r2/aa3z0vzM2kIV
-         DL+eG28ILlp+VWKViSzD0oVvR3dwlCllj6hH7AN1RS5N7hILAlVdy0nyki3Fj47gdcmX
-         ZCc2rI2E604P38dwCUPtdLQwZ+y3T+3EqzHBd7M8q3sqPVv7wIO2o/YdxxbsGARBWO4K
-         lLNkGxLhSMwCSCcBMymjJeC8goE09BPV5MJhcRovNvzAdX3zkzI8ZNETFvVnwJsY1wN/
-         pOxaOV/OFborKhpHkpT03wXda8Y4B5V6EpD9dlrEreT46QmsqDYrcw0eXU6JHgDZeEuo
-         i7MA==
+        bh=01JPrlnBcJ3WUwQ0/094vAUTVLT4EA/0K17pj4zgOio=;
+        b=D3pmvKzwbEM9Ij/Kmk0WQWMjo42PmMDa1qiEowww6tLIDrEUEuCnX8ImIZBwk5QXuE
+         1vGlj0YOSpxY7k86Hq9Jg1bOig3v5pCWtLrqOVVVeq5g1098ayA91R+wBSkggxTgdoBK
+         B0Vq+VYo2DhrKyhEGVxV57s8i5HAAtBS5UNHqVASjQizeneJ04hadBLqDszUiCy5+cOT
+         yi9GpgTjb3MRLbkfKqstn7S9Ge2onFdrxlocZ7mUWQcgDhOXc8ixTMAjVw5owQiXU+RZ
+         JztjLTUIvIjXUZWH2u/GR24YuTQWR72+g+Pa8mee2d9ix/+w75FtaF3ocmJ6gzTp63TW
+         b7aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740501573; x=1741106373;
+        d=1e100.net; s=20230601; t=1740501576; x=1741106376;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=olwzXUkbl7L3Ijdgy9FaKldLZmtXz3S1t0tQ8+qrEJk=;
-        b=Fl13OpxHqpwUQlgvLKmR2FPBKUmVBbTEqW4d75rbgDB42v9hHoNzbNDiZm6FgbBngj
-         R/cvbCkfx2zBHgiPeviWR0IFKhLLUBUCz8r2c6TutH8ZkWxNTPmPju2ilE4Zs1JJuR8/
-         DpDnUjnwkXOolKSCGBaXaBLQVl5iMDUzndHKaIWOOXXfPf4Rio5hnJltnpgjxBzn0FWg
-         vGsFTN9sY57xKmqwJLPiEMkRxDzF4WbiURvGyWw/6cKH4/DUqOTqKcEqdKRPSRfDrnSn
-         gN1NjjdW0mJQPlZ/mQYBPv2VcwxxSjDruP41/iWlEufbePNH1uiPDZY3GixzAmlPsHQf
-         sm7A==
-X-Forwarded-Encrypted: i=1; AJvYcCVK1RQ56uaDA14Nh4sKpLRn9nC29PJSIRbv7y7osvX0hc8Ds8m2/IMg3u/6aH621tj4aQ2mpz5RP0pHJrvr@vger.kernel.org, AJvYcCVpzuFqxDHPzxzQlfQ99fxbeEyydkSO2X1Mn+29eiaaw3enp/oPhyGXjzrfhLALgXE8rJCcthjBUttF+8Y=@vger.kernel.org, AJvYcCWPeJOq2j0rOh3RASpy3I+PJ7rsAsFVFoZYAN9YVjLmN070qAtpOTt5j0FWvATgzqB1szflVPaYysJq@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpFGnes+QwN6tIJdRRgIrItx10W4joPx1gMn4vQoU8hRFr8Kl1
-	an9KjN9f6ItErREn/LR0DQB/3AE+gtPU/9UjRJtyGGQlCPtRmugp
-X-Gm-Gg: ASbGncsAiUhvgLmnxvzNl8eejIIv0OoFW8q0a/zpcWuVmywMmztRi0wKx0RMtg8oGOu
-	iMzppRC81iOURW8Tuh9drLxln6ehBFDOUbY0qWpBjFhZzAhQt/n1LZMjcqzyreO6xA6eowajwOS
-	Vijm5xDtXqnexcxbVEQGiUbmQWyfkIqpiht16cjBqIZOXBpupFCckMFafs6R7fHr68eB6aVk99i
-	GWNeggqmJE7w0uQYgYPyRG6djvg3dX4JiwtvWaeIjxUzytFTcBK5gXoynuUUilLZM60cmdSlT47
-	i+WW2kJ/Ti+EuihAHgONDZe9
-X-Google-Smtp-Source: AGHT+IFNR0TZBtXf1FvVm8Hgptd31Nd/vkSeUF99U1jQcXF8dJuqOesoPdRa3c3SfomN8IrJMSl93g==
-X-Received: by 2002:a17:907:7a88:b0:ab7:d44b:355f with SMTP id a640c23a62f3a-abc0b0c6077mr1640173766b.25.1740501573389;
-        Tue, 25 Feb 2025 08:39:33 -0800 (PST)
+        bh=01JPrlnBcJ3WUwQ0/094vAUTVLT4EA/0K17pj4zgOio=;
+        b=ts7WyiTP43Eg6nCQXhGPW6PqrlkoBdAjf+18T0IPz8IXGEbFIoaF8cqqQapVFcp1RS
+         ykU2sD5Ie96WNEhJCktecJzJNPCpJ9M8npsSFSUjOmJ01pb99j6YIXAf4qlkb67tdzI+
+         n7FOcYAp2zQWT1DTslM4sr0GdvsN4LyI+PNml+hUo5m3uClJcyPGoo4sbhJQnzM96c2F
+         8pGKUSLyh9j1LaUUlr+p4+nyfctpo+GsN/kINYzm7XoSYLXcuqfXx7b3/7ODdDk7vHGF
+         9enlQGiaUrYLVGNzBs5i2uoie6wrb1nVEmXCa/MENgPXQUNwdl57vGDMW6wI02NyLl5e
+         QtKg==
+X-Forwarded-Encrypted: i=1; AJvYcCUrSZrjlpwzQtJOHtndCz9l9VIQqXtzwYiD6LbMW25lRaJD9QZSyKiOpt9MBjoUnymxDONBVSkeemIwYCqM@vger.kernel.org, AJvYcCVOexy2E4LORimdAibfpcyE83KNL4062PepQ0iLCf1wep1hLZ65Qk509TJ2PvDHZVQIQkhF9vxzwsb7@vger.kernel.org, AJvYcCXBJxyatPzol4wLgXJt1lO4EC7E5l0G0sAHFq2puyvnSOMKgseioWQIhj6bhdImqpZIxZWWMQDqAJs/tqk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiOcZc8z4P3iFaoAtgdNBWrZQsiETxaCIgvpUy6wkRnBHyJTsm
+	Mv8lVNgmpkycOnUkOcWlrAks+UXPXFEVZBrkegaPgxkzeFW79zbS
+X-Gm-Gg: ASbGncvp15Pw1Diz/FafPLu9BEX6W1lJYVFHdR9GbM41LuttbUppBWugNsku3i1nFPj
+	OcfZqdpW/rh+d5Bb7T5sXnKcDr3DQ7o4h244fkCWdPYYGIsFU3B7mrJDo/81ANKm6kuFUoOtmUF
+	QtPvz821Zt59xTTgTosd1qLdzJX+YZBgHvIYXBq+DQtKeq/2H1+gd/kL/DLoJRHmjY/UqxqoL1g
+	hUvB3xa1Fiv83LdM5z2XK7PsXe7pMcwLo6G0kb8nCzsL3UbU3LsUWU/HXgDrp01AKKw1mNpsxPi
+	wp7Bj65EHvVWQq5XL+9JYy7w
+X-Google-Smtp-Source: AGHT+IEusbU057iuTbWxdivOFCMG6+GVgf1b7ZRR5oRsq2SXAPdgQohkbfS8uhzsTk+ne4Z5SeUClA==
+X-Received: by 2002:a17:907:72d2:b0:a9e:b2da:b4a3 with SMTP id a640c23a62f3a-abc09d36101mr1814672766b.42.1740501576404;
+        Tue, 25 Feb 2025 08:39:36 -0800 (PST)
 Received: from [127.0.1.1] ([46.53.242.22])
-        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-abed2055011sm163999866b.156.2025.02.25.08.39.32
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-abed2055011sm163999866b.156.2025.02.25.08.39.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Feb 2025 08:39:33 -0800 (PST)
+        Tue, 25 Feb 2025 08:39:36 -0800 (PST)
 From: Dzmitry Sankouski <dsankouski@gmail.com>
-Date: Tue, 25 Feb 2025 19:39:01 +0300
-Subject: [PATCH v9 10/12] arm64: dts: qcom: sdm845-starqltechn: add initial
- sound support
+Date: Tue, 25 Feb 2025 19:39:03 +0300
+Subject: [PATCH v9 12/12] arm64: dts: qcom: sdm845-starqltechn: add modem
+ support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250225-starqltechn_integration_upstream-v9-10-a5d80375cb66@gmail.com>
+Message-Id: <20250225-starqltechn_integration_upstream-v9-12-a5d80375cb66@gmail.com>
 References: <20250225-starqltechn_integration_upstream-v9-0-a5d80375cb66@gmail.com>
 In-Reply-To: <20250225-starqltechn_integration_upstream-v9-0-a5d80375cb66@gmail.com>
 To: cros-qcom-dts-watchers@chromium.org, 
@@ -82,288 +82,97 @@ To: cros-qcom-dts-watchers@chromium.org,
  Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
 Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, 
- Dzmitry Sankouski <dsankouski@gmail.com>
+ Dzmitry Sankouski <dsankouski@gmail.com>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1740501555; l=5702;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1740501555; l=2227;
  i=dsankouski@gmail.com; s=20240619; h=from:subject:message-id;
- bh=kit8ZJ2Sl67QYuVYSKVIaJfE5+49IGTXWdpdwz98ZmM=;
- b=vthhdut8GUTrLazWOg0Q94n74AlgwUq7+p5IyGvAtO7LSCsC6GLnqiOv0muNqAH12gvbc5bsJ
- y5SDcxRrE85Ar3z5/lun1hMRgXSU4xP/bd0K0g4UrHJTAOtCzAWpjmA
+ bh=xrAEb0z/qkdG9ztjXy+2zCpd7gB4vIYTjNV/wiNhyGU=;
+ b=qKlsxcJRnwbudjxUFoWxzgXqpaOWnDTnYAIrHEZ1lJJLtpStwIBuj6nZHhKWnMVPfmpBwpjjH
+ IEHW2bmC/JPB3qwgnXcCwAlSp0HnmCW9PSa9/ZvQBoqXQuT6DYQLZCy
 X-Developer-Key: i=dsankouski@gmail.com; a=ed25519;
  pk=YJcXFcN1EWrzBYuiE2yi5Mn6WLn6L1H71J+f7X8fMag=
 
-Add support for sound (headphones and mics only)
-Also redefine slpi reserved memory, because adsp_mem overlaps with
-slpi_mem inherited from sdm845.dtsi.
+Add support for modem and ipa(IP Accelerator).
+Add spss reserved memory node.
 
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 Signed-off-by: Dzmitry Sankouski <dsankouski@gmail.com>
-
 ---
-Changes in v9:
-- sort nodes alphabetically
-
-Changes in v8:
-- clarify FM with FM -> FM radio
-
-Changes in v7:
-- replace indeces with constants from dt-bindings/sound/qcom,wcd9340.h
-- add spaces after 'link-name' node
-- remove not connected digital mics from audio routing
-- add DMIC(0|2) -> MCLK routing, because digital mics
-  need clocks
-- align mapping comments, add dmics comment
-
 Changes in v6:
 - refactor: s/starqltechn/sdm845-starqltechn in subject.
 ---
- arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dts | 223 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 223 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dts | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dts b/arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dts
-index 320add4697bf..762182331dc5 100644
+index 1202d8fc6b9d..d686531bf4ea 100644
 --- a/arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dts
 +++ b/arch/arm64/boot/dts/qcom/sdm845-samsung-starqltechn.dts
-@@ -11,8 +11,16 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/leds/common.h>
- #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-+#include <dt-bindings/sound/qcom,q6afe.h>
-+#include <dt-bindings/sound/qcom,q6asm.h>
-+#include <dt-bindings/sound/qcom,wcd934x.h>
-+
- #include "sdm845.dtsi"
+@@ -19,6 +19,8 @@
  #include "pm8998.dtsi"
-+#include "sdm845-wcd9340.dtsi"
-+
-+/delete-node/ &adsp_mem;
-+/delete-node/ &slpi_mem;
+ #include "sdm845-wcd9340.dtsi"
  
- / {
- 	chassis-type = "handset";
-@@ -97,6 +105,16 @@ memory@a1300000 {
- 			ftrace-size = <0x40000>;
++/delete-node/ &rmtfs_mem;
++/delete-node/ &spss_mem;
+ /delete-node/ &adsp_mem;
+ /delete-node/ &slpi_mem;
+ 
+@@ -106,15 +108,39 @@ memory@a1300000 {
  			pmsg-size = <0x40000>;
  		};
-+
-+		slpi_mem: slpi@96700000 {
-+			reg = <0 0x96700000 0 0xf00000>;
+ 
++		/*
++		 * It seems like reserving the old rmtfs_mem region is also needed to prevent
++		 * random crashes which are most likely modem related, more testing needed.
++		 */
++		removed_region: removed-region@88f00000 {
++			reg = <0 0x88f00000 0 0x1c00000>;
 +			no-map;
 +		};
 +
-+		adsp_mem: memory@97800000 {
-+			reg = <0 0x97800000 0 0x2000000>;
+ 		slpi_mem: slpi@96700000 {
+ 			reg = <0 0x96700000 0 0xf00000>;
+ 			no-map;
+ 		};
+ 
++		spss_mem: spss@97700000 {
++			reg = <0 0x97700000 0 0x100000>;
 +			no-map;
++		};
++
+ 		adsp_mem: memory@97800000 {
+ 			reg = <0 0x97800000 0 0x2000000>;
+ 			no-map;
+ 		};
++
++		rmtfs_mem: rmtfs-mem@fde00000 {
++			compatible = "qcom,rmtfs-mem";
++			reg = <0 0xfde00000 0 0x202000>;
++			qcom,use-guard-pages;
++			no-map;
++
++			qcom,client-id = <1>;
++			qcom,vmid = <QCOM_SCM_VMID_MSS_MSA>;
 +		};
  	};
  
  	i2c21 {
-@@ -595,6 +613,211 @@ touchscreen@48 {
- 	};
+@@ -864,6 +890,19 @@ &wcd9340 {
+ 	qcom,micbias4-microvolt = <1800000>;
  };
  
-+&adsp_pas {
-+	firmware-name = "qcom/sdm845/starqltechn/adsp.mbn";
++&mss_pil {
++	firmware-name = "qcom/sdm845/starqltechn/mba.mbn",
++			"qcom/sdm845/starqltechn/modem.mbn";
 +	status = "okay";
 +};
 +
-+&lpasscc {
++&ipa {
++	qcom,gsi-loader = "self";
++	memory-region = <&ipa_fw_mem>;
++	firmware-name = "qcom/sdm845/starqltechn/ipa_fws.mbn";
 +	status = "okay";
-+};
-+
-+&sound {
-+	compatible = "qcom,sdm845-sndcard";
-+	model = "Samsung Galaxy S9";
-+	pinctrl-0 = <&quat_mi2s_active &quat_mi2s_sd0_active &quat_mi2s_sd1_active>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+
-+	audio-routing =	"RX_BIAS", "MCLK",
-+			"AMIC2", "MIC BIAS2",	/* Headset Mic */
-+			"AMIC3", "MIC BIAS2",	/* FM radio left Tx */
-+			"AMIC4", "MIC BIAS2",	/* FM radio right Tx */
-+			"DMIC0", "MCLK",	/* Bottom Mic */
-+			"DMIC0", "MIC BIAS1",
-+			"DMIC2", "MCLK",	/* Top Mic */
-+			"DMIC2", "MIC BIAS3";
-+
-+	mm1-dai-link {
-+		link-name = "MultiMedia1";
-+
-+		cpu {
-+			sound-dai = <&q6asmdai MSM_FRONTEND_DAI_MULTIMEDIA1>;
-+		};
-+	};
-+
-+	mm2-dai-link {
-+		link-name = "MultiMedia2";
-+
-+		cpu {
-+			sound-dai = <&q6asmdai MSM_FRONTEND_DAI_MULTIMEDIA2>;
-+		};
-+	};
-+
-+	mm3-dai-link {
-+		link-name = "MultiMedia3";
-+
-+		cpu {
-+			sound-dai = <&q6asmdai MSM_FRONTEND_DAI_MULTIMEDIA3>;
-+		};
-+	};
-+
-+	mm4-dai-link {
-+		link-name = "MultiMedia4";
-+
-+		cpu {
-+			sound-dai = <&q6asmdai MSM_FRONTEND_DAI_MULTIMEDIA4>;
-+		};
-+	};
-+
-+	mm5-dai-link {
-+		link-name = "MultiMedia5";
-+
-+		cpu {
-+			sound-dai = <&q6asmdai MSM_FRONTEND_DAI_MULTIMEDIA5>;
-+		};
-+	};
-+
-+	mm6-dai-link {
-+		link-name = "MultiMedia6";
-+
-+		cpu {
-+			sound-dai = <&q6asmdai MSM_FRONTEND_DAI_MULTIMEDIA6>;
-+		};
-+	};
-+
-+	slim-dai-link {
-+		link-name = "SLIM Playback 1";
-+
-+		codec {
-+			sound-dai = <&wcd9340 AIF1_PB>;
-+		};
-+
-+		cpu {
-+			sound-dai = <&q6afedai SLIMBUS_0_RX>;
-+		};
-+
-+		platform {
-+			sound-dai = <&q6routing>;
-+		};
-+	};
-+
-+	slimcap-dai-link {
-+		link-name = "SLIM Capture 1";
-+
-+		codec {
-+			sound-dai = <&wcd9340 AIF1_CAP>;
-+		};
-+
-+		cpu {
-+			sound-dai = <&q6afedai SLIMBUS_0_TX>;
-+		};
-+
-+		platform {
-+			sound-dai = <&q6routing>;
-+		};
-+	};
-+
-+	slim2-dai-link {
-+		link-name = "SLIM Playback 2";
-+
-+		codec {
-+			sound-dai = <&wcd9340 AIF2_PB>;
-+		};
-+
-+		cpu {
-+			sound-dai = <&q6afedai SLIMBUS_1_RX>;
-+		};
-+
-+		platform {
-+			sound-dai = <&q6routing>;
-+		};
-+	};
-+
-+	slimcap2-dai-link {
-+		link-name = "SLIM Capture 2";
-+
-+		codec {
-+			sound-dai = <&wcd9340 AIF2_CAP>;
-+		};
-+
-+		cpu {
-+			sound-dai = <&q6afedai SLIMBUS_1_TX>;
-+		};
-+
-+		platform {
-+			sound-dai = <&q6routing>;
-+		};
-+	};
-+
-+	slimcap3-dai-link {
-+		link-name = "SLIM Capture 3";
-+
-+		codec {
-+			sound-dai = <&wcd9340 AIF3_CAP>;
-+		};
-+
-+		cpu {
-+			sound-dai = <&q6afedai SLIMBUS_2_TX>;
-+		};
-+
-+		platform {
-+			sound-dai = <&q6routing>;
-+		};
-+	};
-+};
-+
-+&q6afedai {
-+	dai@22 {
-+		reg = <22>;
-+		qcom,sd-lines = <1>;
-+	};
-+
-+	dai@23 {
-+		reg = <23>;
-+		qcom,sd-lines = <0>;
-+	};
-+};
-+
-+&q6asmdai {
-+	dai@0 {
-+		reg = <0>;
-+	};
-+
-+	dai@1 {
-+		reg = <1>;
-+	};
-+
-+	dai@2 {
-+		reg = <2>;
-+	};
-+
-+	dai@3 {
-+		reg = <3>;
-+	};
-+
-+	dai@4 {
-+		reg = <4>;
-+	};
-+
-+	dai@5 {
-+		reg = <5>;
-+	};
-+};
-+
-+&wcd9340 {
-+	reset-gpios = <&tlmm 64 GPIO_ACTIVE_HIGH>;
-+	vdd-buck-supply = <&vreg_s4a_1p8>;
-+	vdd-buck-sido-supply = <&vreg_s4a_1p8>;
-+	vdd-tx-supply = <&vreg_s4a_1p8>;
-+	vdd-rx-supply = <&vreg_s4a_1p8>;
-+	vdd-io-supply = <&vreg_s4a_1p8>;
-+	qcom,micbias1-microvolt = <1800000>;
-+	qcom,micbias2-microvolt = <2700000>;
-+	qcom,micbias3-microvolt = <1800000>;
-+	qcom,micbias4-microvolt = <1800000>;
 +};
 +
  &usb_1 {
